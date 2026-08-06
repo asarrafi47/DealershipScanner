@@ -11,19 +11,19 @@
     "LE": [
       {
         "label": "Engine Options",
-        "value": "Base hybrid trim; Automatic (AV-S6)"
+        "value": "Base hybrid trim; Hybrid 2.5L I4 (SIDI & PFI; Hybrid)"
       }
     ],
     "SE": [
       {
         "label": "Engine Options",
-        "value": "Automatic (AV-S6); All-Wheel Drive"
+        "value": "Hybrid 2.5L I4 (SIDI & PFI; Hybrid)"
       }
     ],
     "XLE": [
       {
         "label": "Engine Options",
-        "value": "Automatic (AV-S6); All-Wheel Drive"
+        "value": "Hybrid 2.5L I4 (SIDI & PFI; Hybrid)"
       },
       {
         "label": "Audio System Layout",
@@ -33,7 +33,7 @@
     "XSE": [
       {
         "label": "Engine Options",
-        "value": "Automatic (AV-S6); All-Wheel Drive"
+        "value": "Hybrid 2.5L I4 (SIDI & PFI; Hybrid)"
       }
     ]
   }

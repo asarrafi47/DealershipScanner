@@ -12,25 +12,25 @@
     "AMG": [
       {
         "label": "Engine Options",
-        "value": "5.4L V8 Turbo; Automatic (S7)"
+        "value": "5.4L V8 Turbo"
       }
     ],
     "SLK 55 AMG": [
       {
         "label": "Engine Options",
-        "value": "3.5L V6 Turbo; Automatic 7-spd"
+        "value": "3.5L V6 Turbo; 5.4L V8 Turbo"
       }
     ],
     "SLK 350": [
       {
         "label": "Engine Options",
-        "value": "3.5L V6 Turbo; Automatic 7-spd"
+        "value": "3.5L V6 Turbo; 5.4L V8 Turbo"
       }
     ],
     "SLK 280": [
       {
         "label": "Engine Options",
-        "value": "3.5L V6 Turbo; Automatic 7-spd"
+        "value": "3.5L V6 Turbo; 5.4L V8 Turbo"
       }
     ]
   }

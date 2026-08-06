@@ -9,22 +9,16 @@
   "year_max": 2020,
   "source": "generated",
   "trims": {
-    "Turbo": [
-      {
-        "label": "Engine Options",
-        "value": "Equipment and features typical of the Turbo trim."
-      }
-    ],
     "GTS": [
       {
         "label": "Engine Options",
-        "value": "3.4L V6 Turbo; Manual 6-spd"
+        "value": "3.4L V6 (SIDI)"
       }
     ],
     "S": [
       {
         "label": "Engine Options",
-        "value": "3.4L V6 Turbo; Manual 6-spd"
+        "value": "3.4L V6 (SIDI)"
       }
     ]
   }

@@ -12,25 +12,19 @@
     "AMG": [
       {
         "label": "Engine Options",
-        "value": "2.0L I4 Turbo; Automatic (AM8)"
+        "value": "2.0L I4 (SIDI)"
       }
     ],
     "AMG GLB35": [
       {
         "label": "Engine Options",
-        "value": "2.0L I4 Turbo; Automatic (AM8)"
+        "value": "2.0L I4 (SIDI)"
       }
     ],
     "GLB250": [
       {
         "label": "Engine Options",
-        "value": "2.0L I4 Turbo; Automatic (AM8)"
-      }
-    ],
-    "Sport": [
-      {
-        "label": "Engine Options",
-        "value": "Electric motor 2x asynchronous electric motors"
+        "value": "2.0L I4 (SIDI)"
       }
     ]
   }

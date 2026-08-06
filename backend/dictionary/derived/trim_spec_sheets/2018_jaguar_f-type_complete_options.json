@@ -12,19 +12,19 @@
     "S": [
       {
         "label": "Engine Options",
-        "value": "3.0L V6 Turbo; Automatic (S8)"
+        "value": "3.0L V6 (SIDI)"
       }
     ],
     "R Convertible": [
       {
         "label": "Engine Options",
-        "value": "3.0L V6 Turbo; Automatic (S8)"
+        "value": "3.0L V6 (SIDI); 5.0L V8 (SIDI)"
       }
     ],
     "R Coupe": [
       {
         "label": "Engine Options",
-        "value": "3.0L V6 Turbo; Automatic (S8)"
+        "value": "3.0L V6 (SIDI); 5.0L V8 (SIDI)"
       }
     ]
   }

@@ -3,116 +3,561 @@
   "year": 2022,
   "make": "Dodge",
   "model": "Charger",
-  "ladder_id": "brochure_2022__dodge__charger",
-  "source": "brochure_llm",
+  "source": "brochure_text_quoted",
+  "layouts": [
+    "adds_to_block"
+  ],
   "trims_available": [
-    "SRT Hellcat Redeye Widebody",
-    "SRT Hellcat Redeye",
-    "SRT Hellcat",
-    "Hellcat",
-    "Scat Pack Widebody",
-    "Scat Pack",
-    "Daytona",
     "R/T",
+    "Scat Pack",
+    "Scat Pack Widebody",
+    "SRT HELLCAT WIDEBODY"
+  ],
+  "trims_quoted": [
+    "R/T",
+    "Scat Pack",
+    "Scat Pack Widebody",
+    "SRT HELLCAT WIDEBODY"
+  ],
+  "rung_order": [
     "GT",
-    "Limited",
-    "Premium",
-    "SXT"
+    "R/T",
+    "Scat Pack",
+    "Scat Pack Widebody",
+    "SRT HELLCAT WIDEBODY"
+  ],
+  "order_basis": {
+    "GT": {
+      "basis": "adds_to_edge",
+      "trim": "GT",
+      "direction": "named_as_baseline_by",
+      "edge": {
+        "trim": "R/T",
+        "below": "GT",
+        "source": "derived/brochure_text/2022__dodge__charger.json",
+        "page": 39,
+        "layout": "adds_to_block",
+        "trim_quote": "R/T",
+        "below_quote": "ADDS TO GT"
+      }
+    },
+    "R/T": {
+      "basis": "adds_to_edge",
+      "trim": "R/T",
+      "direction": "states_its_baseline",
+      "edge": {
+        "trim": "R/T",
+        "below": "GT",
+        "source": "derived/brochure_text/2022__dodge__charger.json",
+        "page": 39,
+        "layout": "adds_to_block",
+        "trim_quote": "R/T",
+        "below_quote": "ADDS TO GT"
+      }
+    },
+    "Scat Pack": {
+      "basis": "adds_to_edge",
+      "trim": "Scat Pack",
+      "direction": "states_its_baseline",
+      "edge": {
+        "trim": "Scat Pack",
+        "below": "R/T",
+        "source": "derived/brochure_text/2022__dodge__charger.json",
+        "page": 40,
+        "layout": "adds_to_block",
+        "trim_quote": "SCAT PACK",
+        "below_quote": "ADDS TO R/T"
+      }
+    },
+    "Scat Pack Widebody": {
+      "basis": "adds_to_edge",
+      "trim": "Scat Pack Widebody",
+      "direction": "states_its_baseline",
+      "edge": {
+        "trim": "Scat Pack Widebody",
+        "below": "Scat Pack",
+        "source": "derived/brochure_text/2022__dodge__charger.json",
+        "page": 41,
+        "layout": "adds_to_block",
+        "trim_quote": "SCAT PACK WIDEBODY",
+        "below_quote": "ADDS TO SCAT PACK"
+      },
+      "tiebreak": "page_sequence",
+      "tied_with": [
+        "SRT HELLCAT WIDEBODY"
+      ]
+    },
+    "SRT HELLCAT WIDEBODY": {
+      "basis": "adds_to_edge",
+      "trim": "SRT HELLCAT WIDEBODY",
+      "direction": "states_its_baseline",
+      "edge": {
+        "trim": "SRT HELLCAT WIDEBODY",
+        "below": "Scat Pack",
+        "source": "derived/brochure_text/2022__dodge__charger.json",
+        "page": 42,
+        "layout": "adds_to_block",
+        "trim_quote": "SRT HELLCAT® WIDEBODY",
+        "below_quote": "ADDS TO SCAT PACK"
+      },
+      "tiebreak": "page_sequence",
+      "tied_with": [
+        "Scat Pack Widebody"
+      ]
+    }
+  },
+  "rung_edges": [
+    {
+      "trim": "R/T",
+      "below": "GT",
+      "source": "derived/brochure_text/2022__dodge__charger.json",
+      "page": 39,
+      "layout": "adds_to_block",
+      "trim_quote": "R/T",
+      "below_quote": "ADDS TO GT"
+    },
+    {
+      "trim": "Scat Pack",
+      "below": "R/T",
+      "source": "derived/brochure_text/2022__dodge__charger.json",
+      "page": 40,
+      "layout": "adds_to_block",
+      "trim_quote": "SCAT PACK",
+      "below_quote": "ADDS TO R/T"
+    },
+    {
+      "trim": "Scat Pack Widebody",
+      "below": "Scat Pack",
+      "source": "derived/brochure_text/2022__dodge__charger.json",
+      "page": 41,
+      "layout": "adds_to_block",
+      "trim_quote": "SCAT PACK WIDEBODY",
+      "below_quote": "ADDS TO SCAT PACK"
+    },
+    {
+      "trim": "SRT HELLCAT WIDEBODY",
+      "below": "Scat Pack",
+      "source": "derived/brochure_text/2022__dodge__charger.json",
+      "page": 42,
+      "layout": "adds_to_block",
+      "trim_quote": "SRT HELLCAT® WIDEBODY",
+      "below_quote": "ADDS TO SCAT PACK"
+    }
   ],
   "adds_by_trim": {
-    "SXT": [
-      "3.6L 292-hp Pentastar V6 engine",
-      "8-speed automatic transmission",
-      "Touring suspension with 4-wheel ABS and ESC",
-      "17-inch painted aluminum wheels",
-      "Integrated dual bright exhaust tips",
-      "Charger decklid badge",
-      "ParkView Rear Back-Up Camera",
-      "ParkSense Rear Park Assist",
-      "Auto headlamps and daytime running lamps",
-      "7-inch reconfigurable cluster display with Uconnect 4"
-    ],
-    "Premium": [],
-    "Limited": [],
-    "GT": [
-      "Adds performance suspension",
-      "Upgraded to 20-inch Satin Carbon aluminum wheels",
-      "Adds GT and Dodge grille badges",
-      "Adds Performance Black grille",
-      "Adds Performance hood, fascias and sills",
-      "Adds projector LED fog lamps",
-      "Adds rear body-color spoiler"
-    ],
     "R/T": [
-      "Upgraded to 5.7L HEMI V8 engine",
-      "Adds high-speed engine controller",
-      "Adds active exhaust",
-      "Adds R/T badge",
-      "Adds tire service kit"
+      "5.7L HEMI® V8 engine",
+      "370 hp and 395 lb-ft of torque",
+      "High-speed engine controller",
+      "2.62 rear axle ratio",
+      "20 by 8-inch Satin Carbon aluminum wheels",
+      "Active exhaust",
+      "R/T badge",
+      "Tire service kit"
     ],
-    "Daytona": [],
     "Scat Pack": [
-      "Upgraded to 392 HEMI V8 engine",
-      "Upgraded to 4-piston Brembo brakes with black-painted calipers",
-      "Adds high-performance suspension",
-      "Adds Launch Assist",
-      "Adds limited-slip differential",
-      "Adds 3.09 rear axle ratio",
-      "Upgraded to 20-inch Low-Gloss Granite Crystal aluminum wheels",
-      "Adds SRT Drive Modes",
-      "Adds SRT Performance Pages"
+      "392 HEMI® V8 engine",
+      "485 hp and 475 lb-ft of torque",
+      "Engine oil cooler",
+      "Limited-slip differential",
+      "4-piston Brembo® brakes",
+      "High-performance suspension",
+      "3.09 rear axle ratio",
+      "20 by 9-inch Low-Gloss Granite Crystal aluminum wheels",
+      "Heated steering wheel",
+      "Black-painted calipers",
+      "Launch Assist",
+      "Severe-Duty II cooling"
     ],
     "Scat Pack Widebody": [
-      "Adds widebody package",
-      "Upgraded to 305/35ZR20 All-Season Performance tires",
-      "Adds Adaptive Damping Suspension",
-      "Adds All-Speed Traction Control",
-      "Adds body-color fender flares",
-      "Upgraded to 6-piston fixed front caliper Brembo brakes",
-      "Adds flat-bottom steering wheel",
-      "Adds performance shift indicator"
+      "Adaptive Damping Suspension",
+      "Brembo® 6-piston fixed front caliper brakes",
+      "Widebody competition suspension",
+      "Widebody Package",
+      "305/35ZR20 (107Y) All-Season Performance tires",
+      "All-Speed Traction Control",
+      "Body-color fender flares",
+      "Flat-bottom steering wheel",
+      "Performance shift indicator",
+      "Pirelli® brand tires"
     ],
-    "Hellcat": [
-      "Advanced SRT multistage front air bags",
-      "200-mph primary speedometer with red-faced gauges",
-      "SRT Configurable Drive Modes",
-      "SRT Performance Pages",
-      "Premium leather-wrapped SRT flat-bottom steering wheel",
-      "Alcantara wrapped SRT flat-bottom steering wheel with Alcantara Package",
-      "Dark Engine Turn aluminum interior accents",
-      "SRT Hellcat premium floor mats"
-    ],
-    "SRT Hellcat": [
-      "Upgraded to supercharged 6.2L HEMI V8 engine",
-      "Upgraded to 6-piston Brembo brakes",
-      "Adds Adaptive Damping Suspension",
-      "Adds competition suspension",
-      "Adds after-run cooling system",
-      "Upgraded to 20-inch Carbon Black aluminum wheels",
-      "Adds performance hood with extractors",
-      "Adds Bi-functional High Intensity Discharge (HID) headlamps",
-      "Upgraded to Laguna leather trim Performance seats with Hellcat logo"
-    ],
-    "SRT Hellcat Redeye": [
-      "Adds SRT Power Chiller",
-      "Adds Redeye decklid badge",
-      "Adds Redeye fender badge",
-      "Adds Redeye grille badge",
-      "Adds 220-mph speedometer",
-      "Adds Jailbreak IP badge",
-      "Upgraded to Alcantara/Laguna leather seats with logo",
-      "Adds Blind Spot Monitoring (BSM) and Rear Cross-Path Detection System"
-    ],
-    "SRT Hellcat Redeye Widebody": [
-      "Adds dual stripes in multiple colors",
-      "Adds SRT hood, roof and decklid stripe",
-      "Adds interior accents in Dub Plate, Hectic Mesh and Real Carbon Fiber",
-      "Adds gloss black-painted roof option",
-      "Adds satin black-painted hood/roof/trunk/spoiler option",
-      "Adds Harman Kardon Audio Group",
-      "Adds Navigation & Travel Group",
-      "Adds Power sunroof",
-      "Adds suede headliner option"
+    "SRT HELLCAT WIDEBODY": [
+      "Supercharged 6.2L HEMI® V8 engine",
+      "717 hp and 650 lb-ft of torque",
+      "Dark Engine Turn Aluminum interior accents",
+      "6-piston Brembo® brakes",
+      "Adaptive Damping Suspension",
+      "Competition suspension",
+      "2.62 axle ratio",
+      "20 by 11-inch Carbon Black aluminum wheels",
+      "Laguna leather trim Performance seats with Hellcat logo",
+      "Heated/ventilated front seats",
+      "Heated rear seats",
+      "After-run cooling system"
     ]
+  },
+  "adds_provenance": {
+    "R/T": [
+      {
+        "text": "5.7L HEMI® V8 engine",
+        "source": "derived/brochure_text/2022__dodge__charger.json",
+        "page": 39,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "370 hp and 395 lb-ft of torque",
+        "source": "derived/brochure_text/2022__dodge__charger.json",
+        "page": 39,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "High-speed engine controller",
+        "source": "derived/brochure_text/2022__dodge__charger.json",
+        "page": 39,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "2.62 rear axle ratio",
+        "source": "derived/brochure_text/2022__dodge__charger.json",
+        "page": 39,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "20 by 8-inch Satin Carbon aluminum wheels",
+        "source": "derived/brochure_text/2022__dodge__charger.json",
+        "page": 39,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Active exhaust",
+        "source": "derived/brochure_text/2022__dodge__charger.json",
+        "page": 39,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "R/T badge",
+        "source": "derived/brochure_text/2022__dodge__charger.json",
+        "page": 39,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Tire service kit",
+        "source": "derived/brochure_text/2022__dodge__charger.json",
+        "page": 39,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      }
+    ],
+    "Scat Pack": [
+      {
+        "text": "392 HEMI® V8 engine",
+        "source": "derived/brochure_text/2022__dodge__charger.json",
+        "page": 40,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "485 hp and 475 lb-ft of torque",
+        "source": "derived/brochure_text/2022__dodge__charger.json",
+        "page": 40,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Engine oil cooler",
+        "source": "derived/brochure_text/2022__dodge__charger.json",
+        "page": 40,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Limited-slip differential",
+        "source": "derived/brochure_text/2022__dodge__charger.json",
+        "page": 40,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "4-piston Brembo® brakes",
+        "source": "derived/brochure_text/2022__dodge__charger.json",
+        "page": 40,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "High-performance suspension",
+        "source": "derived/brochure_text/2022__dodge__charger.json",
+        "page": 40,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "3.09 rear axle ratio",
+        "source": "derived/brochure_text/2022__dodge__charger.json",
+        "page": 40,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "20 by 9-inch Low-Gloss Granite Crystal aluminum wheels",
+        "source": "derived/brochure_text/2022__dodge__charger.json",
+        "page": 40,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Heated steering wheel",
+        "source": "derived/brochure_text/2022__dodge__charger.json",
+        "page": 40,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Black-painted calipers",
+        "source": "derived/brochure_text/2022__dodge__charger.json",
+        "page": 40,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Launch Assist",
+        "source": "derived/brochure_text/2022__dodge__charger.json",
+        "page": 40,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Severe-Duty II cooling",
+        "source": "derived/brochure_text/2022__dodge__charger.json",
+        "page": 40,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      }
+    ],
+    "Scat Pack Widebody": [
+      {
+        "text": "Adaptive Damping Suspension",
+        "source": "derived/brochure_text/2022__dodge__charger.json",
+        "page": 41,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Brembo® 6-piston fixed front caliper brakes",
+        "source": "derived/brochure_text/2022__dodge__charger.json",
+        "page": 41,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Widebody competition suspension",
+        "source": "derived/brochure_text/2022__dodge__charger.json",
+        "page": 41,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Widebody Package",
+        "source": "derived/brochure_text/2022__dodge__charger.json",
+        "page": 41,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "305/35ZR20 (107Y) All-Season Performance tires",
+        "source": "derived/brochure_text/2022__dodge__charger.json",
+        "page": 41,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "All-Speed Traction Control",
+        "source": "derived/brochure_text/2022__dodge__charger.json",
+        "page": 41,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Body-color fender flares",
+        "source": "derived/brochure_text/2022__dodge__charger.json",
+        "page": 41,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Flat-bottom steering wheel",
+        "source": "derived/brochure_text/2022__dodge__charger.json",
+        "page": 41,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Performance shift indicator",
+        "source": "derived/brochure_text/2022__dodge__charger.json",
+        "page": 41,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Pirelli® brand tires",
+        "source": "derived/brochure_text/2022__dodge__charger.json",
+        "page": 41,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      }
+    ],
+    "SRT HELLCAT WIDEBODY": [
+      {
+        "text": "Supercharged 6.2L HEMI® V8 engine",
+        "source": "derived/brochure_text/2022__dodge__charger.json",
+        "page": 42,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "717 hp and 650 lb-ft of torque",
+        "source": "derived/brochure_text/2022__dodge__charger.json",
+        "page": 42,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Dark Engine Turn Aluminum interior accents",
+        "source": "derived/brochure_text/2022__dodge__charger.json",
+        "page": 42,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "6-piston Brembo® brakes",
+        "source": "derived/brochure_text/2022__dodge__charger.json",
+        "page": 42,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Adaptive Damping Suspension",
+        "source": "derived/brochure_text/2022__dodge__charger.json",
+        "page": 42,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Competition suspension",
+        "source": "derived/brochure_text/2022__dodge__charger.json",
+        "page": 42,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "2.62 axle ratio",
+        "source": "derived/brochure_text/2022__dodge__charger.json",
+        "page": 42,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "20 by 11-inch Carbon Black aluminum wheels",
+        "source": "derived/brochure_text/2022__dodge__charger.json",
+        "page": 42,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Laguna leather trim Performance seats with Hellcat logo",
+        "source": "derived/brochure_text/2022__dodge__charger.json",
+        "page": 42,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Heated/ventilated front seats",
+        "source": "derived/brochure_text/2022__dodge__charger.json",
+        "page": 42,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Heated rear seats",
+        "source": "derived/brochure_text/2022__dodge__charger.json",
+        "page": 42,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "After-run cooling system",
+        "source": "derived/brochure_text/2022__dodge__charger.json",
+        "page": 42,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      }
+    ]
+  },
+  "source_brochure_text": "derived/brochure_text/2022__dodge__charger.json",
+  "pages_used": [
+    39,
+    40,
+    41,
+    42
+  ],
+  "replaced_source": "brochure_text_quoted",
+  "source_pdf_name": "2022_Dodge_Charger_Brochure.pdf",
+  "source_pdf_sha256": "303c2159c2168a509e9709254d530815cd5847f9da764d975fae41a87bd4eb9d",
+  "citation_verification": {
+    "verifier": "verify_trim_citations.py",
+    "version": "2026-08-02.1",
+    "checked_at": "2026-08-03T01:48:50+00:00",
+    "source_pdf": "2022_Dodge_Charger_Brochure.pdf",
+    "verified": 42,
+    "total": 42
   }
 }

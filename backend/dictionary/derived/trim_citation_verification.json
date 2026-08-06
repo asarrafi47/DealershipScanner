@@ -1,0 +1,1271 @@
+{
+ "verifier_version": "2026-08-02.1",
+ "checked_at": "2026-08-03T01:48:53+00:00",
+ "applied": true,
+ "totals": {
+  "source_pdf_not_held": 17,
+  "verified": 460,
+  "text_not_printed_on_cited_page": 132,
+  "text_printed_but_footnote_digit_glued_to_word": 11
+ },
+ "overlays": [
+  {
+   "file": "2010__audi__q5.json",
+   "catalog_key": "2010|audi|q5",
+   "source": "brochure_text_quoted",
+   "source_pdf": null,
+   "outcomes": {
+    "source_pdf_not_held": 17
+   },
+   "failures": [
+    {
+     "trim": "Premium Plus",
+     "page": 22,
+     "text": "Heated front seats",
+     "why": "source_pdf_not_held"
+    },
+    {
+     "trim": "Premium Plus",
+     "page": 22,
+     "text": "Panorama sunroof",
+     "why": "source_pdf_not_held"
+    },
+    {
+     "trim": "Premium Plus",
+     "page": 22,
+     "text": "Audi music interface with iPod® integration",
+     "why": "source_pdf_not_held"
+    },
+    {
+     "trim": "Premium Plus",
+     "page": 22,
+     "text": "Audi xenon plus headlights with LED daytime running lights",
+     "why": "source_pdf_not_held"
+    },
+    {
+     "trim": "Premium Plus",
+     "page": 22,
+     "text": "Stainless steel trunk edge trim and doorsills",
+     "why": "source_pdf_not_held"
+    },
+    {
+     "trim": "Premium Plus",
+     "page": 22,
+     "text": "Memory for driver seat and exterior mirrors",
+     "why": "source_pdf_not_held"
+    },
+    {
+     "trim": "Premium Plus",
+     "page": 22,
+     "text": "Power adjustable, auto-dimming and heated side mirrors with integrated LED turn signals and power-folding feature",
+     "why": "source_pdf_not_held"
+    },
+    {
+     "trim": "Premium Plus",
+     "page": 22,
+     "text": "Auto-dimming interior mirror with compass",
+     "why": "source_pdf_not_held"
+    },
+    {
+     "trim": "Premium Plus",
+     "page": 22,
+     "text": "HomeLink® remote transmitter",
+     "why": "source_pdf_not_held"
+    },
+    {
+     "trim": "Premium Plus",
+     "page": 22,
+     "text": "Bluetooth®‡ preparation for mobile phone",
+     "why": "source_pdf_not_held"
+    },
+    {
+     "trim": "Premium Plus",
+     "page": 22,
+     "text": "Power tailgate",
+     "why": "source_pdf_not_held"
+    },
+    {
+     "trim": "Prestige",
+     "page": 22,
+     "text": "Audi MMI® Navigation plus§: HDD navigation with voice control, Audi parking system advanced with rearview camera, color driver information display, single CD/DVD player",
+     "why": "source_pdf_not_held"
+    },
+    {
+     "trim": "Prestige",
+     "page": 22,
+     "text": "Bang & Olufsen® Sound System – 505 watt audio system with 14 speakers and ten-channel amplifier",
+     "why": "source_pdf_not_held"
+    },
+    {
+     "trim": "Prestige",
+     "page": 22,
+     "text": "19\" five-arm wheels with 235/55 all-season tires",
+     "why": "source_pdf_not_held"
+    },
+    {
+     "trim": "Prestige",
+     "page": 22,
+     "text": "Color trip computer with driver information display",
+     "why": "source_pdf_not_held"
+    },
+    {
+     "trim": "Prestige",
+     "page": 22,
+     "text": "Audi advanced key – keyless start, stop and entry",
+     "why": "source_pdf_not_held"
+    },
+    {
+     "trim": "Prestige",
+     "page": 22,
+     "text": "Audi side assist",
+     "why": "source_pdf_not_held"
+    }
+   ]
+  },
+  {
+   "file": "2018__mazda__mazda6.json",
+   "catalog_key": "2018|mazda|mazda6",
+   "source": "brochure_text_quoted",
+   "source_pdf": "2018_Mazda_MAZDA6_Brochure.pdf",
+   "outcomes": {
+    "verified": 24
+   },
+   "failures": []
+  },
+  {
+   "file": "2019__mazda__mazdacx9.json",
+   "catalog_key": "2019|mazda|mazdacx9",
+   "source": "brochure_text_quoted",
+   "source_pdf": "2019_Mazda_Mazda_CX-9_Brochure.pdf",
+   "outcomes": {
+    "verified": 18
+   },
+   "failures": []
+  },
+  {
+   "file": "2019__nissan__titanxd.json",
+   "catalog_key": "2019|nissan|titanxd",
+   "source": "brochure_text_quoted",
+   "source_pdf": "2019_Nissan_Titan_XD_Brochure.pdf",
+   "outcomes": {
+    "text_not_printed_on_cited_page": 24
+   },
+   "failures": [
+    {
+     "trim": "SL",
+     "page": 9,
+     "text": "Remote Engine Start System with Intelligent Climate Control",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "SL",
+     "page": 9,
+     "text": "Class IV tow hitch receiver with 4-pin/7-pin wiring harness",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "SL",
+     "page": 9,
+     "text": "Nissan Door to Door Navigation with Premium Traffic",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "SL",
+     "page": 9,
+     "text": "leather-wrapped steering wheel",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "SL",
+     "page": 9,
+     "text": "leather-appointed seats",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "SL",
+     "page": 9,
+     "text": "20\" Aluminum-alloy wheels with all-season tires",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "SL",
+     "page": 9,
+     "text": "LED headlights/Daytime Running Lights",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "SL",
+     "page": 9,
+     "text": "body-color rear bumper",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "SL",
+     "page": 9,
+     "text": "power-folding and auto-dimming driver’s outside mirror",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "SL",
+     "page": 9,
+     "text": "Front and Rear Sonar System",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "SL",
+     "page": 9,
+     "text": "Utili-track® Channel System with four tie-down cleats",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "SL",
+     "page": 9,
+     "text": "NissanConnect Services powered by SiriusXM",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "Pro-4X",
+     "page": 9,
+     "text": "Switch-operated 2-speed transfer case (4WD)",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "Pro-4X",
+     "page": 9,
+     "text": "Bilstein® off-road performance shocks",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "Pro-4X",
+     "page": 9,
+     "text": "Class IV tow hitch receiver with 4-pin/7-pin wiring harness",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "Pro-4X",
+     "page": 9,
+     "text": "Nissan Door to Door Navigation with Premium Traffic",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "Pro-4X",
+     "page": 9,
+     "text": "leather-wrapped steering wheel",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "Pro-4X",
+     "page": 9,
+     "text": "18\" dark-finished aluminum-alloy wheels with all-terrain tires",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "Pro-4X",
+     "page": 9,
+     "text": "LED headlights/Daytime Running Lights",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "Pro-4X",
+     "page": 9,
+     "text": "spray-on bedliner",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "Pro-4X",
+     "page": 9,
+     "text": "SiriusXM® Traffic and Travel Link",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "Pro-4X",
+     "page": 9,
+     "text": "Nissan Intelligent Key® with door handle request switch",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "Pro-4X",
+     "page": 9,
+     "text": "Dual Zone Automatic Temperature Control",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "Pro-4X",
+     "page": 9,
+     "text": "Blind Spot Warning and Rear Cross Traffic Alert",
+     "why": "text_not_printed_on_cited_page"
+    }
+   ]
+  },
+  {
+   "file": "2020__dodge__charger.json",
+   "catalog_key": "2020|dodge|charger",
+   "source": "brochure_text_quoted",
+   "source_pdf": "2020_Dodge_Charger_Brochure.pdf",
+   "outcomes": {
+    "verified": 17
+   },
+   "failures": []
+  },
+  {
+   "file": "2020__dodge__durango.json",
+   "catalog_key": "2020|dodge|durango",
+   "source": "brochure_text_quoted",
+   "source_pdf": "2020_Dodge_Durango_Brochure.pdf",
+   "outcomes": {
+    "verified": 40,
+    "text_printed_but_footnote_digit_glued_to_word": 2,
+    "text_not_printed_on_cited_page": 2
+   },
+   "failures": [
+    {
+     "trim": "GT",
+     "page": 28,
+     "text": "SiriusXM® Radio",
+     "why": "text_printed_but_footnote_digit_glued_to_word"
+    },
+    {
+     "trim": "GT",
+     "page": 28,
+     "text": "ParkSense® Rear Park Assist",
+     "why": "text_printed_but_footnote_digit_glued_to_word"
+    },
+    {
+     "trim": "R/T",
+     "page": 29,
+     "text": "SmartBeam™ High-Intensity Discharge (HID) headlamps",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "Citadel",
+     "page": 30,
+     "text": "SmartBeam™ High-Intensity Discharge (HID) headlamps",
+     "why": "text_not_printed_on_cited_page"
+    }
+   ]
+  },
+  {
+   "file": "2021__dodge__challenger.json",
+   "catalog_key": "2021|dodge|challenger",
+   "source": "brochure_text_quoted",
+   "source_pdf": "2021_Dodge_Challenger_Brochure.pdf",
+   "outcomes": {
+    "verified": 21
+   },
+   "failures": []
+  },
+  {
+   "file": "2021__dodge__durango.json",
+   "catalog_key": "2021|dodge|durango",
+   "source": "brochure_text_quoted",
+   "source_pdf": "2021_Dodge_Durango_Brochure.pdf",
+   "outcomes": {
+    "verified": 27,
+    "text_printed_but_footnote_digit_glued_to_word": 2,
+    "text_not_printed_on_cited_page": 1
+   },
+   "failures": [
+    {
+     "trim": "GT",
+     "page": 42,
+     "text": "ParkSense® Rear Park Assist",
+     "why": "text_printed_but_footnote_digit_glued_to_word"
+    },
+    {
+     "trim": "R/T",
+     "page": 43,
+     "text": "SmartBeam™ High Intensity Discharge (HID) headlamps",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "Citadel",
+     "page": 44,
+     "text": "Adaptive Cruise Control with Stop",
+     "why": "text_printed_but_footnote_digit_glued_to_word"
+    }
+   ]
+  },
+  {
+   "file": "2021__volkswagen__passat.json",
+   "catalog_key": "2021|volkswagen|passat",
+   "source": "brochure_text_quoted",
+   "source_pdf": "2021_Volkswagen_Passat_Brochure.pdf",
+   "outcomes": {
+    "verified": 16,
+    "text_not_printed_on_cited_page": 2
+   },
+   "failures": [
+    {
+     "trim": "SE",
+     "page": 3,
+     "text": "Tex Leatherette seating surfaces",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "R-Line",
+     "page": 3,
+     "text": "Line® grille, front bumper, fender badges & exterior trim; black trunk lid lip spoiler",
+     "why": "text_not_printed_on_cited_page"
+    }
+   ]
+  },
+  {
+   "file": "2022__dodge__challenger.json",
+   "catalog_key": "2022|dodge|challenger",
+   "source": "brochure_text_quoted",
+   "source_pdf": "2022_Dodge_Challenger_Brochure.pdf",
+   "outcomes": {
+    "verified": 23
+   },
+   "failures": []
+  },
+  {
+   "file": "2022__dodge__charger.json",
+   "catalog_key": "2022|dodge|charger",
+   "source": "brochure_text_quoted",
+   "source_pdf": "2022_Dodge_Charger_Brochure.pdf",
+   "outcomes": {
+    "verified": 42
+   },
+   "failures": []
+  },
+  {
+   "file": "2022__dodge__durango.json",
+   "catalog_key": "2022|dodge|durango",
+   "source": "brochure_text_quoted",
+   "source_pdf": "2022_Dodge_Durango_Brochure.pdf",
+   "outcomes": {
+    "verified": 28,
+    "text_printed_but_footnote_digit_glued_to_word": 5,
+    "text_not_printed_on_cited_page": 1
+   },
+   "failures": [
+    {
+     "trim": "GT",
+     "page": 29,
+     "text": "Remote Start System",
+     "why": "text_printed_but_footnote_digit_glued_to_word"
+    },
+    {
+     "trim": "GT PLUS",
+     "page": 30,
+     "text": "Advanced Brake Assist",
+     "why": "text_printed_but_footnote_digit_glued_to_word"
+    },
+    {
+     "trim": "R/T",
+     "page": 31,
+     "text": "SmartBeam™ High Intensity Discharge (HID) headlamps",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "R/T Plus",
+     "page": 32,
+     "text": "Advanced Brake Assist",
+     "why": "text_printed_but_footnote_digit_glued_to_word"
+    },
+    {
+     "trim": "R/T Plus",
+     "page": 32,
+     "text": "Adaptive Cruise Control (ACC) with Stop",
+     "why": "text_printed_but_footnote_digit_glued_to_word"
+    },
+    {
+     "trim": "R/T Plus",
+     "page": 32,
+     "text": "Forward Collision Warning with Active Braking",
+     "why": "text_printed_but_footnote_digit_glued_to_word"
+    }
+   ]
+  },
+  {
+   "file": "2022__nissan__titanxd.json",
+   "catalog_key": "2022|nissan|titanxd",
+   "source": "brochure_text_quoted",
+   "source_pdf": "2022_Nissan_Titan_XD_Brochure.pdf",
+   "outcomes": {
+    "text_not_printed_on_cited_page": 31,
+    "verified": 2
+   },
+   "failures": [
+    {
+     "trim": "Pro-4X",
+     "page": 9,
+     "text": "2-speed transfer case (4WD)",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "Pro-4X",
+     "page": 9,
+     "text": "Transfer case skid plates",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "Pro-4X",
+     "page": 9,
+     "text": "Bilstein® off-road performance shocks",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "Pro-4X",
+     "page": 9,
+     "text": "Lava Red front tow hooks",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "Pro-4X",
+     "page": 9,
+     "text": "Class IV tow hitch receiver with 4-pin/7-pin wiring harness",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "Pro-4X",
+     "page": 9,
+     "text": "NissanConnect® 9\" color touch-screen display",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "Pro-4X",
+     "page": 9,
+     "text": "Nissan Door to Door Navigation with Premium Traffic",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "Pro-4X",
+     "page": 9,
+     "text": "Front captain’s chairs with 8-way power adjustable driver’s seat and power lumbar",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "Pro-4X",
+     "page": 9,
+     "text": "Leather-wrapped steering wheel",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "Pro-4X",
+     "page": 9,
+     "text": "18\" Dark-finished aluminum-alloy wheels with all-terrain tires",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "Pro-4X",
+     "page": 9,
+     "text": "Electronic locking rear differential",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "Pro-4X",
+     "page": 9,
+     "text": "Traffic Sign Recognition",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "Platinum Reserve",
+     "page": 9,
+     "text": "Remote Engine Start System with Intelligent Climate Control",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "Platinum Reserve",
+     "page": 9,
+     "text": "Trailer brake controller",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "Platinum Reserve",
+     "page": 9,
+     "text": "Front tow hooks",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "Platinum Reserve",
+     "page": 9,
+     "text": "Class IV tow hitch receiver with 4-pin/7-pin wiring harness",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "Platinum Reserve",
+     "page": 9,
+     "text": "NissanConnect® 9\" color touch-screen display",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "Platinum Reserve",
+     "page": 9,
+     "text": "Nissan Door to Door Navigation with Premium Traffic",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "Platinum Reserve",
+     "page": 9,
+     "text": "Front captain’s chairs with 8-way power adjustable driver’s seat and power lumbar",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "Platinum Reserve",
+     "page": 9,
+     "text": "4-way power adjustable passenger seat",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "Platinum Reserve",
+     "page": 9,
+     "text": "Climate-controlled front seats (heated and cooled)",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "Platinum Reserve",
+     "page": 9,
+     "text": "Premium leather-appointed seats with Platinum Reserve logo",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "Platinum Reserve",
+     "page": 9,
+     "text": "Heated leather-wrapped steering wheel",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "SV",
+     "page": 9,
+     "text": "Front tow hooks (4x only)",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "SV",
+     "page": 9,
+     "text": "18\" Dark-painted machine-finished aluminum-alloy wheels (TITAN only)",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "SV",
+     "page": 9,
+     "text": "Intelligent Cruise Control",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "SV",
+     "page": 9,
+     "text": "Removable front aero spoiler (TITAN only)",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "SV",
+     "page": 9,
+     "text": "Prewiring for off-road lighting",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "SV",
+     "page": 9,
+     "text": "LED taillights",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "SV",
+     "page": 9,
+     "text": "Body-color front and rear bumpers",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "SV",
+     "page": 9,
+     "text": "Power heated black outside mirrors",
+     "why": "text_not_printed_on_cited_page"
+    }
+   ]
+  },
+  {
+   "file": "2022__volkswagen__taos.json",
+   "catalog_key": "2022|volkswagen|taos",
+   "source": "brochure_text_quoted",
+   "source_pdf": "2022_Volkswagen_Taos_Brochure.pdf",
+   "outcomes": {
+    "verified": 9,
+    "text_not_printed_on_cited_page": 2
+   },
+   "failures": [
+    {
+     "trim": "SE",
+     "page": 5,
+     "text": "Front Comfort seats",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "SEL",
+     "page": 5,
+     "text": "Vienna Leather seating surfaces (1st row & outboard 2nd row seating positions)",
+     "why": "text_not_printed_on_cited_page"
+    }
+   ]
+  },
+  {
+   "file": "2023__dodge__hornet.json",
+   "catalog_key": "2023|dodge|hornet",
+   "source": "brochure_text_quoted",
+   "source_pdf": "2023_Dodge_Hornet_Brochure.pdf",
+   "outcomes": {
+    "verified": 6,
+    "text_printed_but_footnote_digit_glued_to_word": 1
+   },
+   "failures": [
+    {
+     "trim": "R/T",
+     "page": 8,
+     "text": "Class-Exclusive PowerShot",
+     "why": "text_printed_but_footnote_digit_glued_to_word"
+    }
+   ]
+  },
+  {
+   "file": "2023__hyundai__ioniq5.json",
+   "catalog_key": "2023|hyundai|ioniq5",
+   "source": "brochure_text_quoted",
+   "source_pdf": "2023_Hyundai_Ioniq_5_Brochure.pdf",
+   "outcomes": {
+    "verified": 4
+   },
+   "failures": []
+  },
+  {
+   "file": "2023__nissan__titanxd.json",
+   "catalog_key": "2023|nissan|titanxd",
+   "source": "brochure_text_quoted",
+   "source_pdf": "2023_Nissan_Titan_XD_Brochure.pdf",
+   "outcomes": {
+    "text_not_printed_on_cited_page": 31,
+    "verified": 2
+   },
+   "failures": [
+    {
+     "trim": "Pro-4X",
+     "page": 9,
+     "text": "2-speed transfer case (4WD)",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "Pro-4X",
+     "page": 9,
+     "text": "Transfer case skid plates",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "Pro-4X",
+     "page": 9,
+     "text": "Bilstein® off-road performance shocks",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "Pro-4X",
+     "page": 9,
+     "text": "Lava Red front tow hooks",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "Pro-4X",
+     "page": 9,
+     "text": "Class IV tow hitch receiver with 4-pin/7-pin wiring harness",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "Pro-4X",
+     "page": 9,
+     "text": "NissanConnect® 9\" color touch-screen display",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "Pro-4X",
+     "page": 9,
+     "text": "Nissan Door to Door Navigation with Premium Traffic",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "Pro-4X",
+     "page": 9,
+     "text": "Front captain’s chairs with 8-way power adjustable driver’s seat and power lumbar",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "Pro-4X",
+     "page": 9,
+     "text": "Leather-wrapped steering wheel",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "Pro-4X",
+     "page": 9,
+     "text": "18\" Dark-finished aluminum-alloy wheels with all-terrain tires",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "Pro-4X",
+     "page": 9,
+     "text": "Electronic locking rear differential",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "Pro-4X",
+     "page": 9,
+     "text": "Traffic Sign Recognition",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "Platinum Reserve",
+     "page": 9,
+     "text": "Remote Engine Start System with Intelligent Climate Control",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "Platinum Reserve",
+     "page": 9,
+     "text": "Trailer brake controller",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "Platinum Reserve",
+     "page": 9,
+     "text": "Front tow hooks",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "Platinum Reserve",
+     "page": 9,
+     "text": "Class IV tow hitch receiver with 4-pin/7-pin wiring harness",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "Platinum Reserve",
+     "page": 9,
+     "text": "NissanConnect® 9\" color touch-screen display",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "Platinum Reserve",
+     "page": 9,
+     "text": "Nissan Door to Door Navigation with Premium Traffic",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "Platinum Reserve",
+     "page": 9,
+     "text": "Front captain’s chairs with 8-way power adjustable driver’s seat and power lumbar",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "Platinum Reserve",
+     "page": 9,
+     "text": "4-way power adjustable passenger seat",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "Platinum Reserve",
+     "page": 9,
+     "text": "Climate-controlled front seats (heated and cooled)",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "Platinum Reserve",
+     "page": 9,
+     "text": "Premium leather-appointed seats with Platinum Reserve logos",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "Platinum Reserve",
+     "page": 9,
+     "text": "Heated leather-wrapped steering wheel",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "SV",
+     "page": 9,
+     "text": "Front tow hooks (4x only)",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "SV",
+     "page": 9,
+     "text": "18\" Dark-painted machine-finished aluminum-alloy wheels (TITAN only)",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "SV",
+     "page": 9,
+     "text": "Intelligent Cruise Control",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "SV",
+     "page": 9,
+     "text": "Removable front aero spoiler (TITAN only)",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "SV",
+     "page": 9,
+     "text": "Prewiring for off-road lighting",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "SV",
+     "page": 9,
+     "text": "LED taillights",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "SV",
+     "page": 9,
+     "text": "Body-color front and rear bumpers",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "SV",
+     "page": 9,
+     "text": "Power heated black outside mirrors",
+     "why": "text_not_printed_on_cited_page"
+    }
+   ]
+  },
+  {
+   "file": "2023__volkswagen__taos.json",
+   "catalog_key": "2023|volkswagen|taos",
+   "source": "brochure_text_quoted",
+   "source_pdf": "2023_Volkswagen_Taos_Brochure.pdf",
+   "outcomes": {
+    "verified": 11,
+    "text_not_printed_on_cited_page": 1
+   },
+   "failures": [
+    {
+     "trim": "SEL",
+     "page": 4,
+     "text": "Vienna Leather seating surfaces (1st row & outboard 2nd row seating positions)",
+     "why": "text_not_printed_on_cited_page"
+    }
+   ]
+  },
+  {
+   "file": "2024__dodge__hornet.json",
+   "catalog_key": "2024|dodge|hornet",
+   "source": "brochure_text_quoted",
+   "source_pdf": "2024_Dodge_Hornet_Brochure.pdf",
+   "outcomes": {
+    "verified": 6,
+    "text_printed_but_footnote_digit_glued_to_word": 1
+   },
+   "failures": [
+    {
+     "trim": "R/T",
+     "page": 8,
+     "text": "Class-Exclusive PowerShot",
+     "why": "text_printed_but_footnote_digit_glued_to_word"
+    }
+   ]
+  },
+  {
+   "file": "2025__toyota__grandhighlander.json",
+   "catalog_key": "2025|toyota|grandhighlander",
+   "source": "brochure_text_quoted",
+   "source_pdf": "2025_Toyota_Grand_Highlander_Brochure.pdf",
+   "outcomes": {
+    "verified": 24
+   },
+   "failures": []
+  },
+  {
+   "file": "2025__toyota__highlander.json",
+   "catalog_key": "2025|toyota|highlander",
+   "source": "brochure_text_quoted",
+   "source_pdf": "2025_Toyota_Highlander_Brochure.pdf",
+   "outcomes": {
+    "verified": 39
+   },
+   "failures": []
+  },
+  {
+   "file": "2026__nissan__pathfinder.json",
+   "catalog_key": "2026|nissan|pathfinder",
+   "source": "brochure_text_quoted",
+   "source_pdf": "2026_NISSAN_Pathfinder_Brochure.pdf",
+   "outcomes": {
+    "text_not_printed_on_cited_page": 36
+   },
+   "failures": [
+    {
+     "trim": "SL",
+     "page": 8,
+     "text": "12.3\" Digital dashboard with fully digital gauges",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "SL",
+     "page": 8,
+     "text": "Heated steering wheel",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "SL",
+     "page": 8,
+     "text": "18\" Machine-finished aluminum-alloy wheels",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "SL",
+     "page": 8,
+     "text": "HD Enhanced Intelligent Around View® Monitor",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "SL",
+     "page": 8,
+     "text": "Traffic Sign Recognition",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "SL",
+     "page": 8,
+     "text": "Power outside mirrors with LED turn signal indicators",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "SL",
+     "page": 8,
+     "text": "Auto-dimming inside rearview mirror",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "SL",
+     "page": 8,
+     "text": "HomeLink® Universal Transceiver",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "SL",
+     "page": 8,
+     "text": "TailorFit®-appointed seats",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "SL",
+     "page": 8,
+     "text": "Five USB-C ports",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "SL",
+     "page": 8,
+     "text": "Wireless charger",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "SL",
+     "page": 8,
+     "text": "Two 12-volt DC power outlets",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "Platinum",
+     "page": 8,
+     "text": "Tow hitch receiver with 7-pin wiring harness",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "Platinum",
+     "page": 8,
+     "text": "Head-Up Display",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "Platinum",
+     "page": 8,
+     "text": "Bose Premium Audio System with 13 speakers",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "Platinum",
+     "page": 8,
+     "text": "Panoramic moonroof",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "Platinum",
+     "page": 8,
+     "text": "10-way power front-passenger’s seat",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "Platinum",
+     "page": 8,
+     "text": "Semi-aniline leather-appointed seats with quilted inserts",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "Platinum",
+     "page": 8,
+     "text": "Climate-controlled front seats (heated and ventilated)",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "Platinum",
+     "page": 8,
+     "text": "20\" Machine-finished aluminum-alloy wheels",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "Platinum",
+     "page": 8,
+     "text": "Motion Activated Liftgate",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "Platinum",
+     "page": 8,
+     "text": "Power folding outside mirrors",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "Platinum",
+     "page": 8,
+     "text": "Outside mirrors with reverse tilt-down feature",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "Platinum",
+     "page": 8,
+     "text": "Chrome body side moldings",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "Rock Creek",
+     "page": 8,
+     "text": "3.5-liter V6 engine with 295 hp and 270 lb-ft of torque",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "Rock Creek",
+     "page": 8,
+     "text": "Standard Intelligent 4x4",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "Rock Creek",
+     "page": 8,
+     "text": "Tow hitch receiver with 7-pin wiring harness",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "Rock Creek",
+     "page": 8,
+     "text": "Off-road tuned suspension",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "Rock Creek",
+     "page": 8,
+     "text": "18\" Black-painted beadlock-style aluminum-alloy wheels with P265/60R18 all-terrain tires",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "Rock Creek",
+     "page": 8,
+     "text": "HD Enhanced Intelligent Around View® Monitor",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "Rock Creek",
+     "page": 8,
+     "text": "Black tubular roof rack",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "Rock Creek",
+     "page": 8,
+     "text": "Unique Rock Creek front fascia and grille",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "Rock Creek",
+     "page": 8,
+     "text": "Rock Creek black exterior badging",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "Rock Creek",
+     "page": 8,
+     "text": "LED fog lights",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "Rock Creek",
+     "page": 8,
+     "text": "Power outside mirrors with LED turn signal indicators",
+     "why": "text_not_printed_on_cited_page"
+    },
+    {
+     "trim": "Rock Creek",
+     "page": 8,
+     "text": "Exclusive Rock Creek leatherette-appointed seats with unique centers and Rock Creek badging",
+     "why": "text_not_printed_on_cited_page"
+    }
+   ]
+  },
+  {
+   "file": "2026__toyota__corollahybrid.json",
+   "catalog_key": "2026|toyota|corollahybrid",
+   "source": "brochure_text_quoted",
+   "source_pdf": "2026_Toyota_Corolla_Hybrid_Brochure.pdf",
+   "outcomes": {
+    "verified": 13
+   },
+   "failures": []
+  },
+  {
+   "file": "2026__toyota__grandhighlander.json",
+   "catalog_key": "2026|toyota|grandhighlander",
+   "source": "brochure_text_quoted",
+   "source_pdf": "2026_Toyota_Grand_Highlander_Brochure.pdf",
+   "outcomes": {
+    "verified": 25
+   },
+   "failures": []
+  },
+  {
+   "file": "2026__toyota__highlander.json",
+   "catalog_key": "2026|toyota|highlander",
+   "source": "brochure_text_quoted",
+   "source_pdf": "2026_Toyota_Highlander_Brochure.pdf",
+   "outcomes": {
+    "verified": 26
+   },
+   "failures": []
+  },
+  {
+   "file": "2026__toyota__rav4.json",
+   "catalog_key": "2026|toyota|rav4",
+   "source": "brochure_text_quoted",
+   "source_pdf": "2026_Toyota_RAV4_Brochure.pdf",
+   "outcomes": {
+    "verified": 33
+   },
+   "failures": []
+  },
+  {
+   "file": "2026__toyota__sequoia.json",
+   "catalog_key": "2026|toyota|sequoia",
+   "source": "brochure_text_quoted",
+   "source_pdf": "2026_Toyota_Sequoia_Brochure.pdf",
+   "outcomes": {
+    "verified": 4,
+    "text_not_printed_on_cited_page": 1
+   },
+   "failures": [
+    {
+     "trim": "Limited",
+     "page": 19,
+     "text": "One rear and one cargo-area 120V/400W 13 auxiliary AC power outlets",
+     "why": "text_not_printed_on_cited_page"
+    }
+   ]
+  }
+ ]
+}

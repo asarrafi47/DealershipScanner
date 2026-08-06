@@ -24,7 +24,7 @@
     "Tradesman HFE": [
       {
         "label": "Engine Options",
-        "value": "Automatic 8-spd; Rear-Wheel Drive"
+        "value": "Hybrid 3.6L V6 (Mild Hybrid; eTorque)"
       }
     ],
     "Lone Star": [
@@ -70,15 +70,15 @@
     "TRX": [
       {
         "label": "Engine Options",
-        "value": "Supercharged 6.2L HEMI V8 — 702 hp and 650 lb-ft torque; 8-speed automatic transmission"
-      },
-      {
-        "label": "Suspension",
-        "value": "Bilstein Black Hawk e2 adaptive performance shocks with remote reservoirs; wide-body desert-rated suspension"
+        "value": "Supercharged 6.2L HEMI V8 — 702 hp and 650 lb-ft torque"
       },
       {
         "label": "Screen Size",
-        "value": "12-inch Uconnect 5 NAV touchscreen with navigation"
+        "value": "Uconnect 5 NAV with 12-inch touchscreen display"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Leather-/suede-wrapped flat-bottom steering wheel with paddle shifters"
       },
       {
         "label": "Audio System Layout",

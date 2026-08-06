@@ -12,19 +12,19 @@
     "SRT Hellcat Redeye Widebody": [
       {
         "label": "Engine Options",
-        "value": "Automatic 8-spd; Rear-Wheel Drive"
+        "value": "6.2L V8 (Hellcat engine)"
       }
     ],
     "SRT Hellcat Redeye": [
       {
         "label": "Engine Options",
-        "value": "Supercharged Hellcat V8 with track-oriented cooling.; Automatic 8-spd"
+        "value": "Supercharged Hellcat V8 with track-oriented cooling.; 6.2L V8 (Hellcat engine)"
       }
     ],
     "SRT Hellcat": [
       {
         "label": "Engine Options",
-        "value": "707+ hp supercharged HEMI and performance brakes.; Automatic 8-spd"
+        "value": "707+ hp supercharged HEMI and performance brakes.; 6.2L V8 (Hellcat engine)"
       }
     ],
     "Scat Pack Widebody": [
@@ -42,7 +42,7 @@
     "R/T": [
       {
         "label": "Engine Options",
-        "value": "5.7L HEMI V8 and sport-tuned suspension.; Automatic 8-spd"
+        "value": "5.7L HEMI V8 and sport-tuned suspension.; 6.2L V8 (Hellcat engine)"
       }
     ],
     "GT": [

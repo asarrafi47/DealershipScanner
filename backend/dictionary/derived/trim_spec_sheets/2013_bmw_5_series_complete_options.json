@@ -12,19 +12,19 @@
     "550i": [
       {
         "label": "Engine Options",
-        "value": "4.4L V8 Twin Turbo; Manual 6-spd"
+        "value": "4.4L V8 (SIDI)"
       }
     ],
     "535i": [
       {
         "label": "Engine Options",
-        "value": "3.0L I6 Turbo; Manual 6-spd"
+        "value": "3.0L V6 (SIDI)"
       }
     ],
     "528i": [
       {
         "label": "Engine Options",
-        "value": "3.0L I6 Turbo; Automatic (S8)"
+        "value": "3.0L I6 Turbo"
       }
     ]
   }

@@ -3,43 +3,180 @@
   "year": 2022,
   "make": "Volkswagen",
   "model": "Taos",
-  "ladder_id": "brochure_llm_2022__volkswagen__taos",
-  "source": "brochure_llm",
-  "trims_available": [
-    "SEL",
-    "SE",
-    "S"
+  "source": "brochure_text_quoted",
+  "layouts": [
+    "marker_grid"
   ],
+  "trims_available": [
+    "SE",
+    "SEL"
+  ],
+  "trims_quoted": [
+    "SE",
+    "SEL"
+  ],
+  "rung_order": [
+    "S",
+    "SE",
+    "SEL"
+  ],
+  "order_basis": {
+    "S": {
+      "basis": "printed_sequence",
+      "trim": "S",
+      "source": "derived/brochure_text/2022__volkswagen__taos.json",
+      "column_index": 0,
+      "pages": [
+        5
+      ],
+      "layout": "marker_grid"
+    },
+    "SE": {
+      "basis": "printed_sequence",
+      "trim": "SE",
+      "source": "derived/brochure_text/2022__volkswagen__taos.json",
+      "column_index": 1,
+      "pages": [
+        5
+      ],
+      "layout": "marker_grid"
+    },
+    "SEL": {
+      "basis": "printed_sequence",
+      "trim": "SEL",
+      "source": "derived/brochure_text/2022__volkswagen__taos.json",
+      "column_index": 2,
+      "pages": [
+        5
+      ],
+      "layout": "marker_grid"
+    }
+  },
+  "rung_edges": [],
   "adds_by_trim": {
-    "SEL": [
-      "Volkswagen Digital Cockpit Pro with 10.25-inch configurable digital instrument display",
-      "MIB3 Discover Media 8-inch touchscreen navigation with AM/FM/HD Radio",
-      "Dynamic Road Sign Display with road sign recognition",
-      "Park Distance Control for rear parking assistance",
-      "Full suite of IQ.DRIVE advanced driver assistance technologies standard",
-      "Active Blind Spot Monitor integrated into IQ.DRIVE system",
-      "Light Assist for automatic high beam control on headlights"
-    ],
     "SE": [
-      "Volkswagen Digital Cockpit with 8-inch non-configurable digital instrument display",
-      "MIB3 Composition Media 8-inch touchscreen with AM/FM/HD Radio and USB-C",
-      "Rear View Camera System with dynamic guidelines",
-      "Keyless access (KESSY) for front doors and liftgate",
-      "Anti-theft alarm system with engine immobilizer",
-      "Remote engine start feature",
-      "Voice control system",
-      "Front Assist and Rear Traffic Alert standard"
+      "Body color side mirror caps",
+      "Tinted privacy glass for 2nd row & cargo area windows",
+      "Silver anodized roof rails",
+      "Driver's seat: power adjustable, including power lumbar support",
+      "Front Comfort seats",
+      "CloudTex & cloth seating surfaces",
+      "Metal door sill scuff plates"
     ],
-    "S": [
-      "1.5T 4-cylinder turbocharged engine with 8-speed automatic transmission (FWD)",
-      "Composition Color 6.5-inch touchscreen AM/FM radio with USB input",
-      "Rear View Camera System standard",
-      "Push-button engine start",
-      "Power door locks with remote panic button",
-      "Hill Hold Control",
-      "Dual front airbags with front-side airbags and Side Curtain Protection",
-      "Tire Pressure Monitoring System",
-      "4G LTE Wi-Fi capability with limited trial"
+    "SEL": [
+      "Vienna Leather seating surfaces (1st row & outboard 2nd row seating positions)",
+      "Projector headlamps w/ signature DRLs",
+      "Adaptive Front Lighting System (AFS) w/ dynamic cornering lights",
+      "Front Comfort Sport seats"
     ]
+  },
+  "adds_provenance": {
+    "SE": [
+      {
+        "text": "Body color side mirror caps",
+        "source": "derived/brochure_text/2022__volkswagen__taos.json",
+        "page": 5,
+        "layout": "marker_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Tinted privacy glass for 2nd row & cargo area windows",
+        "source": "derived/brochure_text/2022__volkswagen__taos.json",
+        "page": 5,
+        "layout": "marker_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Silver anodized roof rails",
+        "source": "derived/brochure_text/2022__volkswagen__taos.json",
+        "page": 5,
+        "layout": "marker_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Driver's seat: power adjustable, including power lumbar support",
+        "source": "derived/brochure_text/2022__volkswagen__taos.json",
+        "page": 5,
+        "layout": "marker_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Front Comfort seats",
+        "source": "derived/brochure_text/2022__volkswagen__taos.json",
+        "page": 5,
+        "layout": "marker_grid",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "CloudTex & cloth seating surfaces",
+        "source": "derived/brochure_text/2022__volkswagen__taos.json",
+        "page": 5,
+        "layout": "marker_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Metal door sill scuff plates",
+        "source": "derived/brochure_text/2022__volkswagen__taos.json",
+        "page": 5,
+        "layout": "marker_grid",
+        "verified": true,
+        "verified_why": "verified"
+      }
+    ],
+    "SEL": [
+      {
+        "text": "Vienna Leather seating surfaces (1st row & outboard 2nd row seating positions)",
+        "source": "derived/brochure_text/2022__volkswagen__taos.json",
+        "page": 5,
+        "layout": "marker_grid",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "Projector headlamps w/ signature DRLs",
+        "source": "derived/brochure_text/2022__volkswagen__taos.json",
+        "page": 5,
+        "layout": "marker_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Adaptive Front Lighting System (AFS) w/ dynamic cornering lights",
+        "source": "derived/brochure_text/2022__volkswagen__taos.json",
+        "page": 5,
+        "layout": "marker_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Front Comfort Sport seats",
+        "source": "derived/brochure_text/2022__volkswagen__taos.json",
+        "page": 5,
+        "layout": "marker_grid",
+        "verified": true,
+        "verified_why": "verified"
+      }
+    ]
+  },
+  "source_brochure_text": "derived/brochure_text/2022__volkswagen__taos.json",
+  "pages_used": [
+    5
+  ],
+  "replaced_source": "brochure_text_quoted",
+  "source_pdf_name": "2022_Volkswagen_Taos_Brochure.pdf",
+  "source_pdf_sha256": "33ec0d7d1114aa6ca8ee92916d177dff8a049bbb2d96aa2cc47d992e9af05154",
+  "citation_verification": {
+    "verifier": "verify_trim_citations.py",
+    "version": "2026-08-02.1",
+    "checked_at": "2026-08-03T01:48:50+00:00",
+    "source_pdf": "2022_Volkswagen_Taos_Brochure.pdf",
+    "verified": 9,
+    "total": 11
   }
 }

@@ -12,25 +12,25 @@
     "AMG": [
       {
         "label": "Engine Options",
-        "value": "5.5L V8 Twin Turbo; Automatic 7-spd"
+        "value": "5.5L V8 (SIDI); 6.0L V12"
       }
     ],
     "S400": [
       {
         "label": "Engine Options",
-        "value": "3.5L V6 Turbo; Automatic 7-spd"
+        "value": "Hybrid 3.5L V6"
       }
     ],
     "S550": [
       {
         "label": "Engine Options",
-        "value": "5.5L V8 Turbo; Automatic 7-spd"
+        "value": "5.5L V8 Turbo"
       }
     ],
     "S600": [
       {
         "label": "Engine Options",
-        "value": "5.5L V12 Turbo; Automatic 5-spd"
+        "value": "5.5L V12"
       }
     ]
   }

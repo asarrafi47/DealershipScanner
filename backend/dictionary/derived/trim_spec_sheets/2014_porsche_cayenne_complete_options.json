@@ -12,19 +12,19 @@
     "Turbo S": [
       {
         "label": "Engine Options",
-        "value": "Equipment and features typical of the Turbo S trim.; 4.8L V8 Twin Turbo"
+        "value": "4.8L V8 (SIDI)"
       }
     ],
     "Turbo": [
       {
         "label": "Engine Options",
-        "value": "Equipment and features typical of the Turbo trim.; 4.8L V8 Twin Turbo"
+        "value": "4.8L V8 (SIDI)"
       }
     ],
     "S": [
       {
         "label": "Engine Options",
-        "value": "4.8L V8 Turbo; Automatic 8-spd"
+        "value": "4.8L V8 (SIDI); Hybrid 3.0L V6 (SIDI)"
       }
     ]
   }

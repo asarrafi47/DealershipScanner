@@ -18,10 +18,6 @@
     ],
     "Platinum": [
       {
-        "label": "Engine Options",
-        "value": "Engine 5.7 L L31 V8 (gasoline)"
-      },
-      {
         "label": "Interior Materials",
         "value": "Semi-Aniline leather and executive seating options"
       },
@@ -31,10 +27,6 @@
       }
     ],
     "Premium Luxury": [
-      {
-        "label": "Engine Options",
-        "value": "Engine 5.7 L L31 V8 (gasoline)"
-      },
       {
         "label": "Screen Size",
         "value": "Advanced driver assistance and navigation"
@@ -48,12 +40,6 @@
       {
         "label": "Screen Size",
         "value": "55-inch curved pillar-to-pillar display (2025+ refresh)"
-      }
-    ],
-    "Sport": [
-      {
-        "label": "Engine Options",
-        "value": "F4 (Front-engine, four-wheel drive); L LM7 V8"
       }
     ]
   }

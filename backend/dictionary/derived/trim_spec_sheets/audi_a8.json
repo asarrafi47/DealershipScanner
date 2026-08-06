@@ -13,7 +13,7 @@
     "L": [
       {
         "label": "Engine Options",
-        "value": "3.0L V6 Turbo; Automatic (S8)"
+        "value": "3.0L V6 (SIDI); 4.0L V8 (SIDI)"
       }
     ],
     "60 TFSI": [
@@ -39,10 +39,6 @@
       }
     ],
     "Premium": [
-      {
-        "label": "Screen Size",
-        "value": "MMI navigation plus"
-      },
       {
         "label": "Interior Materials",
         "value": "Leather seating surfaces"

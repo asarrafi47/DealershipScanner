@@ -12,31 +12,31 @@
     "AMG SL65": [
       {
         "label": "Engine Options",
-        "value": "6.0L V12 Turbo; Automatic 7-spd"
+        "value": "6.0L V12; 5.5L V8 (SIDI)"
       }
     ],
     "AMG": [
       {
         "label": "Engine Options",
-        "value": "6.0L V12 Turbo; Automatic 7-spd"
+        "value": "6.0L V12; 5.5L V8 (SIDI)"
       }
     ],
     "AMG SL63": [
       {
         "label": "Engine Options",
-        "value": "6.0L V12 Turbo; Automatic 7-spd"
+        "value": "6.0L V12; 5.5L V8 (SIDI)"
       }
     ],
     "SL 550": [
       {
         "label": "Engine Options",
-        "value": "4.7L V8 Turbo; Automatic 7-spd"
+        "value": "4.7L V8 (SIDI); 6.0L V12"
       }
     ],
     "SL 450": [
       {
         "label": "Engine Options",
-        "value": "4.7L V8 Turbo; Automatic 7-spd"
+        "value": "4.7L V8 (SIDI); 6.0L V12"
       }
     ]
   }

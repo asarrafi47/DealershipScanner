@@ -12,25 +12,25 @@
     "C15": [
       {
         "label": "Engine Options",
-        "value": "Automatic 6-spd; Rear-Wheel Drive"
+        "value": "FFV 5.3L V8 (SIDI; FFV); FFV 4.3L V6 (SIDI; FFV)"
       }
     ],
     "C15 Cab Chassis": [
       {
         "label": "Engine Options",
-        "value": "Automatic 6-spd; Rear-Wheel Drive"
+        "value": "FFV 5.3L V8 (SIDI; FFV); FFV 4.3L V6 (SIDI; FFV)"
       }
     ],
     "K15": [
       {
         "label": "Engine Options",
-        "value": "Automatic 6-spd; Four-Wheel Drive"
+        "value": "FFV 5.3L V8 (SIDI; FFV); FFV 4.3L V6 (SIDI; FFV)"
       }
     ],
     "K15 Cab Chassis": [
       {
         "label": "Engine Options",
-        "value": "Automatic 6-spd; Four-Wheel Drive"
+        "value": "FFV 5.3L V8 (SIDI; FFV); FFV 4.3L V6 (SIDI; FFV)"
       }
     ]
   }

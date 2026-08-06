@@ -12,19 +12,19 @@
     "xDrive50i": [
       {
         "label": "Engine Options",
-        "value": "4.4L V8 Twin Turbo; Automatic (S8)"
+        "value": "4.4L V8 (SIDI)"
       }
     ],
     "xDrive40e": [
       {
         "label": "Engine Options",
-        "value": "Automatic (S8); All-Wheel Drive"
+        "value": "Plug-in Hybrid 2.0L I4 (SIDI; PHEV)"
       }
     ],
     "sDrive35i": [
       {
         "label": "Engine Options",
-        "value": "3.0L I6 Turbo; Automatic (S8)"
+        "value": "3.0L V6 (SIDI)"
       }
     ]
   }

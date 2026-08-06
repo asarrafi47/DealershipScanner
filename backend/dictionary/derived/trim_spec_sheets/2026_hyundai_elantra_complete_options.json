@@ -12,21 +12,13 @@
     "N": [
       {
         "label": "Engine Options",
-        "value": "Automatic (AV-S1); Front-Wheel Drive"
-      },
-      {
-        "label": "Interior Materials",
-        "value": "The only major option was a Kenwood MP3/CD deck."
-      },
-      {
-        "label": "Audio System Layout",
-        "value": "[Brochure] Bose audio"
+        "value": "1.6L I4 (SIDI); 2.0L I4 (SIDI)"
       }
     ],
     "Blue": [
       {
         "label": "Engine Options",
-        "value": "1.6L I4 Turbo; Automatic (AM-S6)"
+        "value": "Hybrid 1.6L I4 (SIDI; Hybrid)"
       }
     ]
   }

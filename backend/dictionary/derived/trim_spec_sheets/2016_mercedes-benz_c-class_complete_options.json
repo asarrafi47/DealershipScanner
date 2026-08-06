@@ -12,19 +12,19 @@
     "AMG": [
       {
         "label": "Engine Options",
-        "value": "6.2L V8 Twin Turbo; Automatic 7-spd"
+        "value": "6.2L V8 (SIDI)"
       }
     ],
     "AMG C63": [
       {
         "label": "Engine Options",
-        "value": "6.2L V8 Twin Turbo; Automatic 7-spd"
+        "value": "6.2L V8 (SIDI)"
       }
     ],
     "C300": [
       {
         "label": "Engine Options",
-        "value": "3.5L V6 Turbo; Automatic 7-spd"
+        "value": "3.5L V6 (SIDI; PZEV (SULEV) emissions); FFV 3.5L V6 (SIDI; FFV)"
       }
     ]
   }

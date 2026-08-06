@@ -12,19 +12,19 @@
     "XLE": [
       {
         "label": "Engine Options",
-        "value": "Automatic (S8); Front-Wheel Drive"
+        "value": "3.5L V6 (SIDI & PFI)"
       }
     ],
     "SE": [
       {
         "label": "Engine Options",
-        "value": "Automatic (S8); Front-Wheel Drive"
+        "value": "3.5L V6 (SIDI & PFI)"
       }
     ],
     "LE": [
       {
         "label": "Engine Options",
-        "value": "Automatic (S8); Front-Wheel Drive"
+        "value": "3.5L V6 (SIDI & PFI); Hybrid 3.5L V6 (SIDI & PFI)"
       }
     ]
   }

@@ -12,19 +12,19 @@
     "AMG": [
       {
         "label": "Engine Options",
-        "value": "3.0L V6 Turbo; Automatic 9-spd"
+        "value": "3.0L V6 (SIDI)"
       }
     ],
     "AMG SLC43": [
       {
         "label": "Engine Options",
-        "value": "3.0L V6 Turbo; Automatic 9-spd"
+        "value": "3.0L V6 (SIDI)"
       }
     ],
     "SLC 300": [
       {
         "label": "Engine Options",
-        "value": "2.0L I4 Turbo; Automatic 9-spd"
+        "value": "2.0L I4 (SIDI); 3.0L V6 (SIDI)"
       }
     ]
   }

@@ -12,17 +12,13 @@
     "R": [
       {
         "label": "Engine Options",
-        "value": "2.0L I4 Turbo; Automatic (AM-S6)"
-      },
-      {
-        "label": "Audio System Layout",
-        "value": "8-speaker system; 8-speaker system; [Brochure] 8-speaker system | [Brochure] 8-speaker system | [Backfilled from 2014]"
+        "value": "2.0L I4 (SIDI); 1.8L I4 (SIDI)"
       }
     ],
     "GTI": [
       {
         "label": "Engine Options",
-        "value": "2.0L I4 Turbo; Automatic (AM-S6)"
+        "value": "2.0L I4 (SIDI)"
       }
     ]
   }

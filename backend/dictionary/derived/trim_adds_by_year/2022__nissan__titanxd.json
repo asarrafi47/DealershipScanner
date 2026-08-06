@@ -1,0 +1,449 @@
+{
+  "catalog_key": "2022|nissan|titanxd",
+  "year": 2022,
+  "make": "Nissan",
+  "model": "Titan XD",
+  "source": "brochure_text_quoted",
+  "layouts": [
+    "column_block"
+  ],
+  "trims_available": [
+    "SV",
+    "Pro-4X",
+    "Platinum Reserve"
+  ],
+  "trims_quoted": [
+    "SV",
+    "Pro-4X",
+    "Platinum Reserve"
+  ],
+  "rung_order": [
+    "S",
+    "SV",
+    "Pro-4X",
+    "Platinum Reserve"
+  ],
+  "order_basis": {
+    "S": {
+      "basis": "adds_to_edge",
+      "trim": "S",
+      "direction": "named_as_baseline_by",
+      "edge": {
+        "trim": "SV",
+        "below": "S",
+        "source": "derived/brochure_text/2022__nissan__titanxd.json",
+        "page": 9,
+        "layout": "column_block",
+        "trim_quote": "SV",
+        "below_quote": "INCLUDES S EQUIPMENT PLUS:"
+      }
+    },
+    "SV": {
+      "basis": "adds_to_edge",
+      "trim": "SV",
+      "direction": "states_its_baseline",
+      "edge": {
+        "trim": "SV",
+        "below": "S",
+        "source": "derived/brochure_text/2022__nissan__titanxd.json",
+        "page": 9,
+        "layout": "column_block",
+        "trim_quote": "SV",
+        "below_quote": "INCLUDES S EQUIPMENT PLUS:"
+      }
+    },
+    "Pro-4X": {
+      "basis": "adds_to_edge",
+      "trim": "Pro-4X",
+      "direction": "states_its_baseline",
+      "edge": {
+        "trim": "Pro-4X",
+        "below": "SV",
+        "source": "derived/brochure_text/2022__nissan__titanxd.json",
+        "page": 9,
+        "layout": "column_block",
+        "trim_quote": "PRO-4X®",
+        "below_quote": "INCLUDES SV EQUIPMENT PLUS:"
+      },
+      "tiebreak": "page_sequence",
+      "tied_with": [
+        "Platinum Reserve"
+      ]
+    },
+    "Platinum Reserve": {
+      "basis": "adds_to_edge",
+      "trim": "Platinum Reserve",
+      "direction": "states_its_baseline",
+      "edge": {
+        "trim": "Platinum Reserve",
+        "below": "SV",
+        "source": "derived/brochure_text/2022__nissan__titanxd.json",
+        "page": 9,
+        "layout": "column_block",
+        "trim_quote": "PLATINUM RESERVE",
+        "below_quote": "INCLUDES SV EQUIPMENT PLUS:"
+      },
+      "tiebreak": "page_sequence",
+      "tied_with": [
+        "Pro-4X"
+      ]
+    }
+  },
+  "rung_edges": [
+    {
+      "trim": "SV",
+      "below": "S",
+      "source": "derived/brochure_text/2022__nissan__titanxd.json",
+      "page": 9,
+      "layout": "column_block",
+      "trim_quote": "SV",
+      "below_quote": "INCLUDES S EQUIPMENT PLUS:"
+    },
+    {
+      "trim": "Pro-4X",
+      "below": "SV",
+      "source": "derived/brochure_text/2022__nissan__titanxd.json",
+      "page": 9,
+      "layout": "column_block",
+      "trim_quote": "PRO-4X®",
+      "below_quote": "INCLUDES SV EQUIPMENT PLUS:"
+    },
+    {
+      "trim": "Platinum Reserve",
+      "below": "SV",
+      "source": "derived/brochure_text/2022__nissan__titanxd.json",
+      "page": 9,
+      "layout": "column_block",
+      "trim_quote": "PLATINUM RESERVE",
+      "below_quote": "INCLUDES SV EQUIPMENT PLUS:"
+    }
+  ],
+  "adds_by_trim": {
+    "Pro-4X": [
+      "2-speed transfer case (4WD)",
+      "Transfer case skid plates",
+      "Bilstein® off-road performance shocks",
+      "Lava Red front tow hooks",
+      "Class IV tow hitch receiver with 4-pin/7-pin wiring harness",
+      "NissanConnect® 9\" color touch-screen display",
+      "Nissan Door to Door Navigation with Premium Traffic",
+      "Front captain’s chairs with 8-way power adjustable driver’s seat and power lumbar",
+      "Leather-wrapped steering wheel",
+      "18\" Dark-finished aluminum-alloy wheels with all-terrain tires",
+      "Electronic locking rear differential",
+      "Traffic Sign Recognition"
+    ],
+    "Platinum Reserve": [
+      "Remote Engine Start System with Intelligent Climate Control",
+      "Trailer brake controller",
+      "Front tow hooks",
+      "Class IV tow hitch receiver with 4-pin/7-pin wiring harness",
+      "NissanConnect® 9\" color touch-screen display",
+      "Nissan Door to Door Navigation with Premium Traffic",
+      "Fender® premium audio system with 12 speakers",
+      "Front captain’s chairs with 8-way power adjustable driver’s seat and power lumbar",
+      "4-way power adjustable passenger seat",
+      "Climate-controlled front seats (heated and cooled)",
+      "Premium leather-appointed seats with Platinum Reserve logo",
+      "Heated leather-wrapped steering wheel"
+    ],
+    "SV": [
+      "Front tow hooks (4x only)",
+      "18\" Dark-painted machine-finished aluminum-alloy wheels (TITAN only)",
+      "Intelligent Cruise Control",
+      "Removable front aero spoiler (TITAN only)",
+      "Prewiring for off-road lighting",
+      "LED taillights",
+      "Body-color front and rear bumpers",
+      "Power heated black outside mirrors",
+      "Carpeted flooring"
+    ]
+  },
+  "adds_provenance": {
+    "Pro-4X": [
+      {
+        "text": "2-speed transfer case (4WD)",
+        "source": "derived/brochure_text/2022__nissan__titanxd.json",
+        "page": 9,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "Transfer case skid plates",
+        "source": "derived/brochure_text/2022__nissan__titanxd.json",
+        "page": 9,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "Bilstein® off-road performance shocks",
+        "source": "derived/brochure_text/2022__nissan__titanxd.json",
+        "page": 9,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "Lava Red front tow hooks",
+        "source": "derived/brochure_text/2022__nissan__titanxd.json",
+        "page": 9,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "Class IV tow hitch receiver with 4-pin/7-pin wiring harness",
+        "source": "derived/brochure_text/2022__nissan__titanxd.json",
+        "page": 9,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "NissanConnect® 9\" color touch-screen display",
+        "source": "derived/brochure_text/2022__nissan__titanxd.json",
+        "page": 9,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "Nissan Door to Door Navigation with Premium Traffic",
+        "source": "derived/brochure_text/2022__nissan__titanxd.json",
+        "page": 9,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "Front captain’s chairs with 8-way power adjustable driver’s seat and power lumbar",
+        "source": "derived/brochure_text/2022__nissan__titanxd.json",
+        "page": 9,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "Leather-wrapped steering wheel",
+        "source": "derived/brochure_text/2022__nissan__titanxd.json",
+        "page": 9,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "18\" Dark-finished aluminum-alloy wheels with all-terrain tires",
+        "source": "derived/brochure_text/2022__nissan__titanxd.json",
+        "page": 9,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "Electronic locking rear differential",
+        "source": "derived/brochure_text/2022__nissan__titanxd.json",
+        "page": 9,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "Traffic Sign Recognition",
+        "source": "derived/brochure_text/2022__nissan__titanxd.json",
+        "page": 9,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      }
+    ],
+    "Platinum Reserve": [
+      {
+        "text": "Remote Engine Start System with Intelligent Climate Control",
+        "source": "derived/brochure_text/2022__nissan__titanxd.json",
+        "page": 9,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "Trailer brake controller",
+        "source": "derived/brochure_text/2022__nissan__titanxd.json",
+        "page": 9,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "Front tow hooks",
+        "source": "derived/brochure_text/2022__nissan__titanxd.json",
+        "page": 9,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "Class IV tow hitch receiver with 4-pin/7-pin wiring harness",
+        "source": "derived/brochure_text/2022__nissan__titanxd.json",
+        "page": 9,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "NissanConnect® 9\" color touch-screen display",
+        "source": "derived/brochure_text/2022__nissan__titanxd.json",
+        "page": 9,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "Nissan Door to Door Navigation with Premium Traffic",
+        "source": "derived/brochure_text/2022__nissan__titanxd.json",
+        "page": 9,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "Fender® premium audio system with 12 speakers",
+        "source": "derived/brochure_text/2022__nissan__titanxd.json",
+        "page": 9,
+        "layout": "column_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Front captain’s chairs with 8-way power adjustable driver’s seat and power lumbar",
+        "source": "derived/brochure_text/2022__nissan__titanxd.json",
+        "page": 9,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "4-way power adjustable passenger seat",
+        "source": "derived/brochure_text/2022__nissan__titanxd.json",
+        "page": 9,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "Climate-controlled front seats (heated and cooled)",
+        "source": "derived/brochure_text/2022__nissan__titanxd.json",
+        "page": 9,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "Premium leather-appointed seats with Platinum Reserve logo",
+        "source": "derived/brochure_text/2022__nissan__titanxd.json",
+        "page": 9,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "Heated leather-wrapped steering wheel",
+        "source": "derived/brochure_text/2022__nissan__titanxd.json",
+        "page": 9,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      }
+    ],
+    "SV": [
+      {
+        "text": "Front tow hooks (4x only)",
+        "source": "derived/brochure_text/2022__nissan__titanxd.json",
+        "page": 9,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "18\" Dark-painted machine-finished aluminum-alloy wheels (TITAN only)",
+        "source": "derived/brochure_text/2022__nissan__titanxd.json",
+        "page": 9,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "Intelligent Cruise Control",
+        "source": "derived/brochure_text/2022__nissan__titanxd.json",
+        "page": 9,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "Removable front aero spoiler (TITAN only)",
+        "source": "derived/brochure_text/2022__nissan__titanxd.json",
+        "page": 9,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "Prewiring for off-road lighting",
+        "source": "derived/brochure_text/2022__nissan__titanxd.json",
+        "page": 9,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "LED taillights",
+        "source": "derived/brochure_text/2022__nissan__titanxd.json",
+        "page": 9,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "Body-color front and rear bumpers",
+        "source": "derived/brochure_text/2022__nissan__titanxd.json",
+        "page": 9,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "Power heated black outside mirrors",
+        "source": "derived/brochure_text/2022__nissan__titanxd.json",
+        "page": 9,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "Carpeted flooring",
+        "source": "derived/brochure_text/2022__nissan__titanxd.json",
+        "page": 9,
+        "layout": "column_block",
+        "verified": true,
+        "verified_why": "verified"
+      }
+    ]
+  },
+  "source_brochure_text": "derived/brochure_text/2022__nissan__titanxd.json",
+  "pages_used": [
+    9
+  ],
+  "replaced_source": "brochure_text_quoted",
+  "source_pdf_name": "2022_Nissan_Titan_XD_Brochure.pdf",
+  "source_pdf_sha256": "f2f10598b501d489832d95869c24ffaa2041097a59447eb1d30597b2eacc00b9",
+  "citation_verification": {
+    "verifier": "verify_trim_citations.py",
+    "version": "2026-08-02.1",
+    "checked_at": "2026-08-03T01:48:50+00:00",
+    "source_pdf": "2022_Nissan_Titan_XD_Brochure.pdf",
+    "verified": 2,
+    "total": 33
+  }
+}

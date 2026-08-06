@@ -1,0 +1,841 @@
+{
+ "catalog_key": "2026|honda|passport",
+ "year": 2026,
+ "make": "Honda",
+ "model": "Passport",
+ "source": "html_spec_quoted",
+ "source_document": "backend/dictionary/derived/html_spec_text/2026__honda__passport.json",
+ "source_url": "https://hondanews.com/en-US/honda-automobiles/releases/release-23f31490f1d4a2c6ce015fc1f108bf72-2026-honda-passport-specifications-features",
+ "layouts": [
+  "html_mark_grid"
+ ],
+ "trims_available": [
+  "RTL",
+  "RTL Towing",
+  "RTL Blackout",
+  "TrailSport",
+  "TrailSport Blackout",
+  "TrailSport Elite",
+  "TrailSport Elite Blackout"
+ ],
+ "trims_quoted": [
+  "RTL Towing",
+  "RTL Blackout",
+  "TrailSport",
+  "TrailSport Elite"
+ ],
+ "adds_by_trim": {
+  "RTL Towing": [
+   "Trailer Hitch (Class III) with Harness and Hitch Panel"
+  ],
+  "RTL Blackout": [
+   "Black Lug Nuts",
+   "Black Honda Badges"
+  ],
+  "TrailSport": [
+   "Underbody Skid Plate",
+   "Off-Road Tuned Suspension",
+   "Rear Camera Washer",
+   "115-Volt Power Outlets (2nd Row and Rear Cargo)",
+   "Durable Leatherette and Cloth Seats with TrailSport Orange Stiching and Accents",
+   "Ambient LED Lighting - Amber",
+   "TrailSport All-Season Floor Mats",
+   "LED TrailSport Amber Daytime Running Lights (DRL)",
+   "LED Fog Lights",
+   "Panoramic Moonroof with Tilt and Slide Function",
+   "Heated Wiper Zone",
+   "Side Mirror Turn Indicator",
+   "Gloss Black Power Folding Side Mirrors",
+   "High Visibility Recovery Hooks"
+  ],
+  "TrailSport Elite": [
+   "Multi-View Camera System",
+   "Front Camera Washer",
+   "TrailWatch",
+   "Bose Premium Sound System with 12 Speakers, including Subwoofer",
+   "Perforated Leather with Contrast Stitching and Accents and Black Piping",
+   "Ventilated Front Seats",
+   "Rear Outboard Heated Seats",
+   "Heated Steering Wheel",
+   "Integrated Rear Door Sunshades",
+   "Acoustic Front Side Glass",
+   "Smart Entry with Walk Away Auto Lock® (All Doors and Tailgate)",
+   "Puddle Lights",
+   "Power Lift Tailgate with Hands Free Access and Walk Away Close",
+   "Auto-Dimming Side Mirrors",
+   "Rain-Sensing Windshield Wipers"
+  ]
+ },
+ "adds_provenance": {
+  "RTL Towing": [
+   {
+    "text": "Trailer Hitch (Class III) with Harness and Hitch Panel",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-23f31490f1d4a2c6ce015fc1f108bf72-2026-honda-passport-specifications-features",
+    "retrieved_at": "2026-08-02T19:51:51Z",
+    "document_sha256": "a4c87d0351e75fce0a738668b7f49b6d4b85769a0d6442b8321cf6722f004d73",
+    "locator": "table[0]/row[207]/col[2]",
+    "column_header": "RTL Towing",
+    "section": "POWER UNIT > HONDA SENSING®",
+    "relative_to": "RTL",
+    "relative_locator": "table[0]/row[207]/col[1]",
+    "absent_columns": [
+     1
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2026__honda__passport.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:39Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   }
+  ],
+  "RTL Blackout": [
+   {
+    "text": "Black Lug Nuts",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-23f31490f1d4a2c6ce015fc1f108bf72-2026-honda-passport-specifications-features",
+    "retrieved_at": "2026-08-02T19:51:51Z",
+    "document_sha256": "a4c87d0351e75fce0a738668b7f49b6d4b85769a0d6442b8321cf6722f004d73",
+    "locator": "table[0]/row[59]/col[3]",
+    "column_header": "RTL Blackout",
+    "section": "POWER UNIT > DRIVETRAIN",
+    "relative_to": "RTL Towing",
+    "relative_locator": "table[0]/row[59]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2026__honda__passport.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:39Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Black Honda Badges",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-23f31490f1d4a2c6ce015fc1f108bf72-2026-honda-passport-specifications-features",
+    "retrieved_at": "2026-08-02T19:51:51Z",
+    "document_sha256": "a4c87d0351e75fce0a738668b7f49b6d4b85769a0d6442b8321cf6722f004d73",
+    "locator": "table[0]/row[210]/col[3]",
+    "column_header": "RTL Blackout",
+    "section": "POWER UNIT > HONDA SENSING®",
+    "relative_to": "RTL Towing",
+    "relative_locator": "table[0]/row[210]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2026__honda__passport.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:39Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   }
+  ],
+  "TrailSport": [
+   {
+    "text": "Underbody Skid Plate",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-23f31490f1d4a2c6ce015fc1f108bf72-2026-honda-passport-specifications-features",
+    "retrieved_at": "2026-08-02T19:51:51Z",
+    "document_sha256": "a4c87d0351e75fce0a738668b7f49b6d4b85769a0d6442b8321cf6722f004d73",
+    "locator": "table[0]/row[47]/col[4]",
+    "column_header": "TrailSport",
+    "section": "POWER UNIT > DRIVETRAIN",
+    "relative_to": "RTL Blackout",
+    "relative_locator": "table[0]/row[47]/col[3]",
+    "absent_columns": [
+     1,
+     2,
+     3
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2026__honda__passport.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:39Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Off-Road Tuned Suspension",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-23f31490f1d4a2c6ce015fc1f108bf72-2026-honda-passport-specifications-features",
+    "retrieved_at": "2026-08-02T19:51:51Z",
+    "document_sha256": "a4c87d0351e75fce0a738668b7f49b6d4b85769a0d6442b8321cf6722f004d73",
+    "locator": "table[0]/row[50]/col[4]",
+    "column_header": "TrailSport",
+    "section": "POWER UNIT > DRIVETRAIN",
+    "relative_to": "RTL Blackout",
+    "relative_locator": "table[0]/row[50]/col[3]",
+    "absent_columns": [
+     1,
+     2,
+     3
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2026__honda__passport.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:39Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Rear Camera Washer",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-23f31490f1d4a2c6ce015fc1f108bf72-2026-honda-passport-specifications-features",
+    "retrieved_at": "2026-08-02T19:51:51Z",
+    "document_sha256": "a4c87d0351e75fce0a738668b7f49b6d4b85769a0d6442b8321cf6722f004d73",
+    "locator": "table[0]/row[121]/col[4]",
+    "column_header": "TrailSport",
+    "section": "POWER UNIT > HONDA SENSING®",
+    "relative_to": "RTL Blackout",
+    "relative_locator": "table[0]/row[121]/col[3]",
+    "absent_columns": [
+     1,
+     2,
+     3
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2026__honda__passport.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:40Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "115-Volt Power Outlets (2nd Row and Rear Cargo)",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-23f31490f1d4a2c6ce015fc1f108bf72-2026-honda-passport-specifications-features",
+    "retrieved_at": "2026-08-02T19:51:51Z",
+    "document_sha256": "a4c87d0351e75fce0a738668b7f49b6d4b85769a0d6442b8321cf6722f004d73",
+    "locator": "table[0]/row[161]/col[4]",
+    "column_header": "TrailSport",
+    "section": "POWER UNIT > HONDA SENSING®",
+    "relative_to": "RTL Blackout",
+    "relative_locator": "table[0]/row[161]/col[3]",
+    "absent_columns": [
+     1,
+     2,
+     3
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2026__honda__passport.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:40Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Durable Leatherette and Cloth Seats with TrailSport Orange Stiching and Accents",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-23f31490f1d4a2c6ce015fc1f108bf72-2026-honda-passport-specifications-features",
+    "retrieved_at": "2026-08-02T19:51:51Z",
+    "document_sha256": "a4c87d0351e75fce0a738668b7f49b6d4b85769a0d6442b8321cf6722f004d73",
+    "locator": "table[0]/row[166]/col[4]",
+    "column_header": "TrailSport",
+    "section": "POWER UNIT > HONDA SENSING®",
+    "relative_to": "RTL Blackout",
+    "relative_locator": "table[0]/row[166]/col[3]",
+    "absent_columns": [
+     1,
+     2,
+     3
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2026__honda__passport.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:40Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Ambient LED Lighting - Amber",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-23f31490f1d4a2c6ce015fc1f108bf72-2026-honda-passport-specifications-features",
+    "retrieved_at": "2026-08-02T19:51:51Z",
+    "document_sha256": "a4c87d0351e75fce0a738668b7f49b6d4b85769a0d6442b8321cf6722f004d73",
+    "locator": "table[0]/row[180]/col[4]",
+    "column_header": "TrailSport",
+    "section": "POWER UNIT > HONDA SENSING®",
+    "relative_to": "RTL Blackout",
+    "relative_locator": "table[0]/row[180]/col[3]",
+    "absent_columns": [
+     1,
+     2,
+     3
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2026__honda__passport.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:40Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "TrailSport All-Season Floor Mats",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-23f31490f1d4a2c6ce015fc1f108bf72-2026-honda-passport-specifications-features",
+    "retrieved_at": "2026-08-02T19:51:51Z",
+    "document_sha256": "a4c87d0351e75fce0a738668b7f49b6d4b85769a0d6442b8321cf6722f004d73",
+    "locator": "table[0]/row[183]/col[4]",
+    "column_header": "TrailSport",
+    "section": "POWER UNIT > HONDA SENSING®",
+    "relative_to": "RTL Blackout",
+    "relative_locator": "table[0]/row[183]/col[3]",
+    "absent_columns": [
+     1,
+     2,
+     3
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2026__honda__passport.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:40Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "LED TrailSport Amber Daytime Running Lights (DRL)",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-23f31490f1d4a2c6ce015fc1f108bf72-2026-honda-passport-specifications-features",
+    "retrieved_at": "2026-08-02T19:51:51Z",
+    "document_sha256": "a4c87d0351e75fce0a738668b7f49b6d4b85769a0d6442b8321cf6722f004d73",
+    "locator": "table[0]/row[192]/col[4]",
+    "column_header": "TrailSport",
+    "section": "POWER UNIT > HONDA SENSING®",
+    "relative_to": "RTL Blackout",
+    "relative_locator": "table[0]/row[192]/col[3]",
+    "absent_columns": [
+     1,
+     2,
+     3
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2026__honda__passport.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:40Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "LED Fog Lights",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-23f31490f1d4a2c6ce015fc1f108bf72-2026-honda-passport-specifications-features",
+    "retrieved_at": "2026-08-02T19:51:51Z",
+    "document_sha256": "a4c87d0351e75fce0a738668b7f49b6d4b85769a0d6442b8321cf6722f004d73",
+    "locator": "table[0]/row[194]/col[4]",
+    "column_header": "TrailSport",
+    "section": "POWER UNIT > HONDA SENSING®",
+    "relative_to": "RTL Blackout",
+    "relative_locator": "table[0]/row[194]/col[3]",
+    "absent_columns": [
+     1,
+     2,
+     3
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2026__honda__passport.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:40Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Panoramic Moonroof with Tilt and Slide Function",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-23f31490f1d4a2c6ce015fc1f108bf72-2026-honda-passport-specifications-features",
+    "retrieved_at": "2026-08-02T19:51:51Z",
+    "document_sha256": "a4c87d0351e75fce0a738668b7f49b6d4b85769a0d6442b8321cf6722f004d73",
+    "locator": "table[0]/row[195]/col[4]",
+    "column_header": "TrailSport",
+    "section": "POWER UNIT > HONDA SENSING®",
+    "relative_to": "RTL Blackout",
+    "relative_locator": "table[0]/row[195]/col[3]",
+    "absent_columns": [
+     1,
+     2,
+     3
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2026__honda__passport.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:40Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Heated Wiper Zone",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-23f31490f1d4a2c6ce015fc1f108bf72-2026-honda-passport-specifications-features",
+    "retrieved_at": "2026-08-02T19:51:51Z",
+    "document_sha256": "a4c87d0351e75fce0a738668b7f49b6d4b85769a0d6442b8321cf6722f004d73",
+    "locator": "table[0]/row[198]/col[4]",
+    "column_header": "TrailSport",
+    "section": "POWER UNIT > HONDA SENSING®",
+    "relative_to": "RTL Blackout",
+    "relative_locator": "table[0]/row[198]/col[3]",
+    "absent_columns": [
+     1,
+     2,
+     3
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2026__honda__passport.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:40Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Side Mirror Turn Indicator",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-23f31490f1d4a2c6ce015fc1f108bf72-2026-honda-passport-specifications-features",
+    "retrieved_at": "2026-08-02T19:51:51Z",
+    "document_sha256": "a4c87d0351e75fce0a738668b7f49b6d4b85769a0d6442b8321cf6722f004d73",
+    "locator": "table[0]/row[202]/col[4]",
+    "column_header": "TrailSport",
+    "section": "POWER UNIT > HONDA SENSING®",
+    "relative_to": "RTL Blackout",
+    "relative_locator": "table[0]/row[202]/col[3]",
+    "absent_columns": [
+     1,
+     2,
+     3
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2026__honda__passport.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:40Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Gloss Black Power Folding Side Mirrors",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-23f31490f1d4a2c6ce015fc1f108bf72-2026-honda-passport-specifications-features",
+    "retrieved_at": "2026-08-02T19:51:51Z",
+    "document_sha256": "a4c87d0351e75fce0a738668b7f49b6d4b85769a0d6442b8321cf6722f004d73",
+    "locator": "table[0]/row[209]/col[4]",
+    "column_header": "TrailSport",
+    "section": "POWER UNIT > HONDA SENSING®",
+    "relative_to": "RTL Blackout",
+    "relative_locator": "table[0]/row[209]/col[3]",
+    "absent_columns": [
+     1,
+     2,
+     3
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2026__honda__passport.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:40Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "High Visibility Recovery Hooks",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-23f31490f1d4a2c6ce015fc1f108bf72-2026-honda-passport-specifications-features",
+    "retrieved_at": "2026-08-02T19:51:51Z",
+    "document_sha256": "a4c87d0351e75fce0a738668b7f49b6d4b85769a0d6442b8321cf6722f004d73",
+    "locator": "table[0]/row[211]/col[4]",
+    "column_header": "TrailSport",
+    "section": "POWER UNIT > HONDA SENSING®",
+    "relative_to": "RTL Blackout",
+    "relative_locator": "table[0]/row[211]/col[3]",
+    "absent_columns": [
+     1,
+     2,
+     3
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2026__honda__passport.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:40Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   }
+  ],
+  "TrailSport Elite": [
+   {
+    "text": "Multi-View Camera System",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-23f31490f1d4a2c6ce015fc1f108bf72-2026-honda-passport-specifications-features",
+    "retrieved_at": "2026-08-02T19:51:51Z",
+    "document_sha256": "a4c87d0351e75fce0a738668b7f49b6d4b85769a0d6442b8321cf6722f004d73",
+    "locator": "table[0]/row[119]/col[6]",
+    "column_header": "TrailSport Elite",
+    "section": "POWER UNIT > HONDA SENSING®",
+    "relative_to": "TrailSport Blackout",
+    "relative_locator": "table[0]/row[119]/col[5]",
+    "absent_columns": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2026__honda__passport.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:40Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Front Camera Washer",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-23f31490f1d4a2c6ce015fc1f108bf72-2026-honda-passport-specifications-features",
+    "retrieved_at": "2026-08-02T19:51:51Z",
+    "document_sha256": "a4c87d0351e75fce0a738668b7f49b6d4b85769a0d6442b8321cf6722f004d73",
+    "locator": "table[0]/row[120]/col[6]",
+    "column_header": "TrailSport Elite",
+    "section": "POWER UNIT > HONDA SENSING®",
+    "relative_to": "TrailSport Blackout",
+    "relative_locator": "table[0]/row[120]/col[5]",
+    "absent_columns": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2026__honda__passport.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:40Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "TrailWatch",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-23f31490f1d4a2c6ce015fc1f108bf72-2026-honda-passport-specifications-features",
+    "retrieved_at": "2026-08-02T19:51:51Z",
+    "document_sha256": "a4c87d0351e75fce0a738668b7f49b6d4b85769a0d6442b8321cf6722f004d73",
+    "locator": "table[0]/row[123]/col[6]",
+    "column_header": "TrailSport Elite",
+    "section": "POWER UNIT > HONDA SENSING®",
+    "relative_to": "TrailSport Blackout",
+    "relative_locator": "table[0]/row[123]/col[5]",
+    "absent_columns": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2026__honda__passport.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:40Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Bose Premium Sound System with 12 Speakers, including Subwoofer",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-23f31490f1d4a2c6ce015fc1f108bf72-2026-honda-passport-specifications-features",
+    "retrieved_at": "2026-08-02T19:51:51Z",
+    "document_sha256": "a4c87d0351e75fce0a738668b7f49b6d4b85769a0d6442b8321cf6722f004d73",
+    "locator": "table[0]/row[146]/col[6]",
+    "column_header": "TrailSport Elite",
+    "section": "POWER UNIT > HONDA SENSING®",
+    "relative_to": "TrailSport Blackout",
+    "relative_locator": "table[0]/row[146]/col[5]",
+    "absent_columns": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2026__honda__passport.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:40Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Perforated Leather with Contrast Stitching and Accents and Black Piping",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-23f31490f1d4a2c6ce015fc1f108bf72-2026-honda-passport-specifications-features",
+    "retrieved_at": "2026-08-02T19:51:51Z",
+    "document_sha256": "a4c87d0351e75fce0a738668b7f49b6d4b85769a0d6442b8321cf6722f004d73",
+    "locator": "table[0]/row[167]/col[6]",
+    "column_header": "TrailSport Elite",
+    "section": "POWER UNIT > HONDA SENSING®",
+    "relative_to": "TrailSport Blackout",
+    "relative_locator": "table[0]/row[167]/col[5]",
+    "absent_columns": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2026__honda__passport.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:40Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Ventilated Front Seats",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-23f31490f1d4a2c6ce015fc1f108bf72-2026-honda-passport-specifications-features",
+    "retrieved_at": "2026-08-02T19:51:51Z",
+    "document_sha256": "a4c87d0351e75fce0a738668b7f49b6d4b85769a0d6442b8321cf6722f004d73",
+    "locator": "table[0]/row[169]/col[6]",
+    "column_header": "TrailSport Elite",
+    "section": "POWER UNIT > HONDA SENSING®",
+    "relative_to": "TrailSport Blackout",
+    "relative_locator": "table[0]/row[169]/col[5]",
+    "absent_columns": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2026__honda__passport.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:40Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Rear Outboard Heated Seats",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-23f31490f1d4a2c6ce015fc1f108bf72-2026-honda-passport-specifications-features",
+    "retrieved_at": "2026-08-02T19:51:51Z",
+    "document_sha256": "a4c87d0351e75fce0a738668b7f49b6d4b85769a0d6442b8321cf6722f004d73",
+    "locator": "table[0]/row[172]/col[6]",
+    "column_header": "TrailSport Elite",
+    "section": "POWER UNIT > HONDA SENSING®",
+    "relative_to": "TrailSport Blackout",
+    "relative_locator": "table[0]/row[172]/col[5]",
+    "absent_columns": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2026__honda__passport.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:40Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Heated Steering Wheel",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-23f31490f1d4a2c6ce015fc1f108bf72-2026-honda-passport-specifications-features",
+    "retrieved_at": "2026-08-02T19:51:51Z",
+    "document_sha256": "a4c87d0351e75fce0a738668b7f49b6d4b85769a0d6442b8321cf6722f004d73",
+    "locator": "table[0]/row[175]/col[6]",
+    "column_header": "TrailSport Elite",
+    "section": "POWER UNIT > HONDA SENSING®",
+    "relative_to": "TrailSport Blackout",
+    "relative_locator": "table[0]/row[175]/col[5]",
+    "absent_columns": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2026__honda__passport.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:40Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Integrated Rear Door Sunshades",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-23f31490f1d4a2c6ce015fc1f108bf72-2026-honda-passport-specifications-features",
+    "retrieved_at": "2026-08-02T19:51:51Z",
+    "document_sha256": "a4c87d0351e75fce0a738668b7f49b6d4b85769a0d6442b8321cf6722f004d73",
+    "locator": "table[0]/row[187]/col[6]",
+    "column_header": "TrailSport Elite",
+    "section": "POWER UNIT > HONDA SENSING®",
+    "relative_to": "TrailSport Blackout",
+    "relative_locator": "table[0]/row[187]/col[5]",
+    "absent_columns": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2026__honda__passport.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:40Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Acoustic Front Side Glass",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-23f31490f1d4a2c6ce015fc1f108bf72-2026-honda-passport-specifications-features",
+    "retrieved_at": "2026-08-02T19:51:51Z",
+    "document_sha256": "a4c87d0351e75fce0a738668b7f49b6d4b85769a0d6442b8321cf6722f004d73",
+    "locator": "table[0]/row[197]/col[6]",
+    "column_header": "TrailSport Elite",
+    "section": "POWER UNIT > HONDA SENSING®",
+    "relative_to": "TrailSport Blackout",
+    "relative_locator": "table[0]/row[197]/col[5]",
+    "absent_columns": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2026__honda__passport.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:40Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Smart Entry with Walk Away Auto Lock® (All Doors and Tailgate)",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-23f31490f1d4a2c6ce015fc1f108bf72-2026-honda-passport-specifications-features",
+    "retrieved_at": "2026-08-02T19:51:51Z",
+    "document_sha256": "a4c87d0351e75fce0a738668b7f49b6d4b85769a0d6442b8321cf6722f004d73",
+    "locator": "table[0]/row[201]/col[6]",
+    "column_header": "TrailSport Elite",
+    "section": "POWER UNIT > HONDA SENSING®",
+    "relative_to": "TrailSport Blackout",
+    "relative_locator": "table[0]/row[201]/col[5]",
+    "absent_columns": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2026__honda__passport.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:40Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Puddle Lights",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-23f31490f1d4a2c6ce015fc1f108bf72-2026-honda-passport-specifications-features",
+    "retrieved_at": "2026-08-02T19:51:51Z",
+    "document_sha256": "a4c87d0351e75fce0a738668b7f49b6d4b85769a0d6442b8321cf6722f004d73",
+    "locator": "table[0]/row[204]/col[6]",
+    "column_header": "TrailSport Elite",
+    "section": "POWER UNIT > HONDA SENSING®",
+    "relative_to": "TrailSport Blackout",
+    "relative_locator": "table[0]/row[204]/col[5]",
+    "absent_columns": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2026__honda__passport.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:40Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Power Lift Tailgate with Hands Free Access and Walk Away Close",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-23f31490f1d4a2c6ce015fc1f108bf72-2026-honda-passport-specifications-features",
+    "retrieved_at": "2026-08-02T19:51:51Z",
+    "document_sha256": "a4c87d0351e75fce0a738668b7f49b6d4b85769a0d6442b8321cf6722f004d73",
+    "locator": "table[0]/row[206]/col[6]",
+    "column_header": "TrailSport Elite",
+    "section": "POWER UNIT > HONDA SENSING®",
+    "relative_to": "TrailSport Blackout",
+    "relative_locator": "table[0]/row[206]/col[5]",
+    "absent_columns": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2026__honda__passport.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:40Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Auto-Dimming Side Mirrors",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-23f31490f1d4a2c6ce015fc1f108bf72-2026-honda-passport-specifications-features",
+    "retrieved_at": "2026-08-02T19:51:51Z",
+    "document_sha256": "a4c87d0351e75fce0a738668b7f49b6d4b85769a0d6442b8321cf6722f004d73",
+    "locator": "table[0]/row[212]/col[6]",
+    "column_header": "TrailSport Elite",
+    "section": "POWER UNIT > HONDA SENSING®",
+    "relative_to": "TrailSport Blackout",
+    "relative_locator": "table[0]/row[212]/col[5]",
+    "absent_columns": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2026__honda__passport.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:40Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Rain-Sensing Windshield Wipers",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-23f31490f1d4a2c6ce015fc1f108bf72-2026-honda-passport-specifications-features",
+    "retrieved_at": "2026-08-02T19:51:51Z",
+    "document_sha256": "a4c87d0351e75fce0a738668b7f49b6d4b85769a0d6442b8321cf6722f004d73",
+    "locator": "table[0]/row[214]/col[6]",
+    "column_header": "TrailSport Elite",
+    "section": "POWER UNIT > HONDA SENSING®",
+    "relative_to": "TrailSport Blackout",
+    "relative_locator": "table[0]/row[214]/col[5]",
+    "absent_columns": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2026__honda__passport.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:40Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   }
+  ]
+ }
+}

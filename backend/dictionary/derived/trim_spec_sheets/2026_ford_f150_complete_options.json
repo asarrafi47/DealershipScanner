@@ -1,0 +1,31 @@
+{
+  "ladder_id": "2026_ford_f150_complete_options",
+  "make": "Ford",
+  "models": [
+    "F150",
+    "F150"
+  ],
+  "year_min": 2024,
+  "year_max": 2028,
+  "source": "generated",
+  "trims": {
+    "Raptor R": [
+      {
+        "label": "Engine Options",
+        "value": "3.5L V6 (SIDI & PFI)"
+      }
+    ],
+    "Raptor": [
+      {
+        "label": "Engine Options",
+        "value": "3.5L V6 (SIDI & PFI)"
+      }
+    ],
+    "Tremor": [
+      {
+        "label": "Engine Options",
+        "value": "3.5L V6 (SIDI & PFI); 5.0L V8 (SIDI & PFI)"
+      }
+    ]
+  }
+}

@@ -12,25 +12,13 @@
     "Turbo S": [
       {
         "label": "Engine Options",
-        "value": "Equipment and features typical of the Turbo S trim.; EV Electricity"
+        "value": "EV Electricity"
       }
     ],
     "Turbo": [
       {
         "label": "Engine Options",
-        "value": "Equipment and features typical of the Turbo trim.; EV Electricity"
-      }
-    ],
-    "GTS": [
-      {
-        "label": "Engine Options",
-        "value": "kWh (82.3 kWh net battery energy content) liquid-cooled lithium-ion; awarded the Taycan five stars out of five in its review of the car. In Apri"
-      }
-    ],
-    "Sport": [
-      {
-        "label": "Engine Options",
-        "value": "kWh (82.3 kWh net battery energy content) liquid-cooled lithium-ion; awarded the Taycan five stars out of five in its review of the car. In Apri"
+        "value": "EV Electricity"
       }
     ]
   }

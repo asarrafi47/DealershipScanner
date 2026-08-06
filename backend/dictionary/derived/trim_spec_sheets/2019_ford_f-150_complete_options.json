@@ -12,19 +12,19 @@
     "Raptor": [
       {
         "label": "Engine Options",
-        "value": "3.5L V6 Twin Turbo; Automatic (S10)"
+        "value": "3.5L V6 (SIDI)"
       }
     ],
     "Base": [
       {
         "label": "Engine Options",
-        "value": "3.5L V6 Twin Turbo; Automatic (S10)"
+        "value": "3.5L V6 (SIDI); 2.7L V6 (SIDI)"
       }
     ],
     "LT": [
       {
         "label": "Engine Options",
-        "value": "3.5L V6 Twin Turbo; Automatic (S10)"
+        "value": "3.5L V6 (SIDI); 2.7L V6 (SIDI)"
       }
     ]
   }

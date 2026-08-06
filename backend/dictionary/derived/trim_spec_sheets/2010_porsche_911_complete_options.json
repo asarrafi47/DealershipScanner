@@ -9,28 +9,16 @@
   "year_max": 2012,
   "source": "generated",
   "trims": {
-    "GT3 RS": [
-      {
-        "label": "Engine Options",
-        "value": "Manual 6-spd; Rear-Wheel Drive"
-      }
-    ],
-    "GT3": [
-      {
-        "label": "Engine Options",
-        "value": "Manual 6-spd; Rear-Wheel Drive"
-      }
-    ],
     "Turbo S": [
       {
         "label": "Engine Options",
-        "value": "Equipment and features typical of the Turbo S trim.; 3.6L V6 Twin Turbo"
+        "value": "3.6L V6 Twin Turbo"
       }
     ],
     "Turbo": [
       {
         "label": "Engine Options",
-        "value": "Equipment and features typical of the Turbo trim.; 3.6L V6 Twin Turbo"
+        "value": "3.6L V6 Twin Turbo"
       }
     ]
   }

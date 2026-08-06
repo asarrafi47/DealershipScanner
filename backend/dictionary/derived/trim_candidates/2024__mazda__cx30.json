@@ -1,0 +1,26 @@
+{
+  "catalog_key": "2024|mazda|cx30",
+  "year": 2024,
+  "make": "MAZDA",
+  "model": "CX-30",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Turbo Premium Plus",
+    "Turbo Premium",
+    "Signature",
+    "Premium Plus",
+    "Premium",
+    "Carbon Turbo",
+    "Carbon Edition",
+    "Preferred",
+    "Select",
+    "Sport",
+    "LE",
+    "S"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

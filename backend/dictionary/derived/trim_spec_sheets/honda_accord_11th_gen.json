@@ -1,0 +1,69 @@
+{
+  "ladder_id": "honda_accord_11th_gen",
+  "make": "Honda",
+  "models": [
+    "Accord",
+    "Accord Sedan"
+  ],
+  "year_min": 2023,
+  "year_max": 2030,
+  "source": "generated",
+  "trims": {
+    "Touring Hybrid": [
+      {
+        "label": "Engine Options",
+        "value": "Hybrid 2.0L I4 (SIDI; Hybrid)"
+      },
+      {
+        "label": "Screen Size",
+        "value": "Head-Up Display"
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "Bose Premium Sound System"
+      }
+    ],
+    "Sport-L Hybrid": [
+      {
+        "label": "Engine Options",
+        "value": "Hybrid 2.0L I4 (SIDI; Hybrid)"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Leather-Trimmed Seating"
+      }
+    ],
+    "EX-L Hybrid": [
+      {
+        "label": "Engine Options",
+        "value": "Hybrid 2.0L I4 (SIDI; Hybrid)"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Leather-Trimmed Seating"
+      }
+    ],
+    "Sport Hybrid": [
+      {
+        "label": "Engine Options",
+        "value": "204-hp Hybrid Powertrain; Hybrid 2.0L I4 (SIDI; Hybrid)"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Leather-Wrapped Steering Wheel"
+      }
+    ],
+    "SE": [
+      {
+        "label": "Interior Materials",
+        "value": "Heated Front Seats; 60/40 Split Fold-Down Rear Seats"
+      }
+    ],
+    "LX": [
+      {
+        "label": "Engine Options",
+        "value": "192-hp Turbocharged Engine"
+      }
+    ]
+  }
+}

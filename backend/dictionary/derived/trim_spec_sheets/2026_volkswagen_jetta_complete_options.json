@@ -12,23 +12,19 @@
     "SEL": [
       {
         "label": "Engine Options",
-        "value": "1.5L I4 Turbo; Automatic (S8)"
+        "value": "1.5L I4 (SIDI)"
       }
     ],
     "SE": [
       {
         "label": "Engine Options",
-        "value": "1.5L I4 Turbo; Automatic (S8)"
-      },
-      {
-        "label": "Interior Materials",
-        "value": "Its ten-color customizable ambient interior lighting includes lighting across th"
+        "value": "1.5L I4 (SIDI)"
       }
     ],
     "Sport": [
       {
         "label": "Engine Options",
-        "value": "1.5L I4 Turbo; Automatic (S8)"
+        "value": "1.5L I4 (SIDI)"
       }
     ]
   }

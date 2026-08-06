@@ -1,0 +1,1945 @@
+{
+  "schema_version": 2,
+  "catalog_key": "2023|gmc|sierra1500",
+  "year": 2023,
+  "make": "GMC",
+  "model": "Sierra 1500",
+  "source_pdf": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2023_GMC_Sierra_1500_Brochure.pdf",
+  "source_pdf_name": "2023_GMC_Sierra_1500_Brochure.pdf",
+  "source_pdf_sha256": "9866e1aaa70e29283b7db2355e45cfdd3ac38e69910951d481727bbdc8a28460",
+  "source_pdf_bytes": 42399818,
+  "page_count": 84,
+  "pages_captured": 84,
+  "capture": "lossless",
+  "layout_captured": true,
+  "all_pages": true,
+  "trim_hint_pages": [
+    84
+  ],
+  "warnings": [],
+  "pages": [
+    {
+      "page": 1,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 2436.0,
+      "height": 1125.0,
+      "text": "2023 GMC\nSIERRA",
+      "table_lines": [
+        "2023 GMC\nSIERRA"
+      ],
+      "lines": [
+        {"top":74.9,"cells":[[73.5,444.5,"2023 GMC"]]},
+        {"top":150.9,"cells":[[61.2,1001.7,"SIERRA"]]}
+      ]
+    },
+    {
+      "page": 2,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 2436.0,
+      "height": 1125.0,
+      "text": "NAVIGATION GUIDE CCLLIICCKK TTHHEE HHOOMMEE BBUUTTTTOONN TTOO\n33\nRREETTUURRNN TTOO TTHHEE TTAABBLLEE OOFF CCOONNTTEENNTTSS..\n1\nROTATE FOR A BETTER VIEWING EXPERIENCE.\nUSB Ports1\n4\nCLICK THE X T0 CLOSE DISCLOSURES.\nCCLLIICCKK OONN UUNNDDEERRLLIINNEEDD TTEEXXTT TTOO RREEVVEEAALL\n22\nIIMMPPOORRTTAANNTT LLEEGGAALL IINNFFOORRMMAATTIIOONN..\n1N ot compatible with all devices.",
+      "table_lines": [],
+      "lines": [
+        {"top":53.2,"cells":[[94.9,693.6,"NAVIGATION GUIDE"],[1784.3,2115.4,"CCLLIICCKK TTHHEE HHOOMMEE BBUUTTTTOONN TTOO"]]},
+        {"top":61.2,"cells":[[1689.0,1713.9,"33"]]},
+        {"top":88.0,"cells":[[1784.3,2223.5,"RREETTUURRNN TTOO TTHHEE TTAABBLLEE OOFF CCOONNTTEENNTTSS.."]]},
+        {"top":268.0,"cells":[[126.1,144.7,"1"]]},
+        {"top":677.4,"cells":[[219.3,752.3,"ROTATE FOR A BETTER VIEWING EXPERIENCE."]]},
+        {"top":856.0,"cells":[[499.6,573.6,"Ports1"]]},
+        {"top":856.8,"cells":[[436.8,491.6,"USB"]]},
+        {"top":887.4,"cells":[[1652.7,1677.8,"4"]]},
+        {"top":892.1,"cells":[[1747.3,2185.0,"CLICK THE X T0 CLOSE DISCLOSURES."]]},
+        {"top":991.3,"cells":[[219.3,683.2,"CCLLIICCKK OONN UUNNDDEERRLLIINNEEDD TTEEXXTT TTOO RREEVVEEAALL"]]},
+        {"top":999.4,"cells":[[124.8,149.7,"22"]]},
+        {"top":1026.1,"cells":[[219.3,618.1,"IIMMPPOORRTTAANNTT LLEEGGAALL IINNFFOORRMMAATTIIOONN.."]]},
+        {"top":1063.7,"cells":[[1638.0,1665.2,"1N"]]},
+        {"top":1064.4,"cells":[[1665.2,2016.9,"ot compatible with all devices."]]}
+      ]
+    },
+    {
+      "page": 3,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 2436.0,
+      "height": 1125.0,
+      "text": "SIERRA 1500\nCLICK ANY TITLE TO EXPLORE A SPECIFIC CHAPTER.\nC ONTENTS\nDENALI PROGRADE INTERIOR COLORS\n3 16 46 57 72\nINTRODUCTION SLE\nULTIMATE TRAILERING AND TEXTURES\n5 21 47 62 74\nTECHNOLOGY AT4 GMC PRO SAFETY TRUCK BED WHEELS\nFIRST-CLASS NEW SAFETY AND\n8 26 48 63 78\nMULTIPRO ACCESSORIES\nLUXURY 2023 AT4X TECHNOLOGY\nSIERRA IMPORTANT WORDS AND\n9 37 50 67 82\nSLT CARBONPRO CONNECTIVITY\nMODELS LEGAL DISCLOSURES\n11 42 52 71\nDENALI ELEVATION POWERTRAINS EXTERIOR COLORS",
+      "table_lines": [],
+      "lines": [
+        {"top":143.7,"cells":[[89.0,594.8,"SIERRA 1500"]]},
+        {"top":208.7,"cells":[[1037.9,1894.1,"CLICK ANY TITLE TO EXPLORE A SPECIFIC CHAPTER."]]},
+        {"top":222.0,"cells":[[88.5,595.2,"C ONTENTS"]]},
+        {"top":394.8,"cells":[[652.3,767.1,"DENALI"],[1485.1,1655.3,"PROGRADE"],[1967.7,2248.6,"INTERIOR COLORS"]]},
+        {"top":406.8,"cells":[[120.8,146.3,"3"],[544.1,586.5,"16"],[907.7,958.5,"46"],[1377.3,1423.8,"57"],[1859.2,1905.7,"72"]]},
+        {"top":412.1,"cells":[[222.3,456.6,"INTRODUCTION"],[1020.0,1077.8,"SLE"]]},
+        {"top":429.8,"cells":[[652.4,804.8,"ULTIMATE"],[1482.8,1672.3,"TRAILERING"],[1967.7,2202.5,"AND TEXTURES"]]},
+        {"top":539.5,"cells":[[121.4,147.1,"5"],[545.1,588.6,"21"],[911.9,957.3,"47"],[1374.3,1423.9,"62"],[1859.4,1904.8,"74"]]},
+        {"top":545.0,"cells":[[219.9,424.8,"TECHNOLOGY"],[650.4,708.4,"AT4"],[1018.3,1285.5,"GMC PRO SAFETY"],[1482.8,1656.3,"TRUCK BED"],[1968.6,2096.4,"WHEELS"]]},
+        {"top":660.3,"cells":[[218.9,420.5,"FIRST-CLASS"],[652.3,723.1,"NEW"],[1485.0,1678.8,"SAFETY AND"]]},
+        {"top":672.3,"cells":[[120.7,147.4,"8"],[542.3,591.5,"26"],[907.3,958.7,"48"],[1374.0,1423.6,"63"],[1858.5,1905.8,"78"]]},
+        {"top":677.8,"cells":[[1018.1,1175.8,"MULTIPRO"],[1967.3,2184.0,"ACCESSORIES"]]},
+        {"top":695.3,"cells":[[218.9,341.3,"LUXURY"],[652.4,814.0,"2023 AT4X"],[1482.8,1687.8,"TECHNOLOGY"]]},
+        {"top":792.7,"cells":[[218.8,336.4,"SIERRA"],[1969.0,2346.6,"IMPORTANT WORDS AND"]]},
+        {"top":804.7,"cells":[[121.0,147.1,"9"],[544.8,591.2,"37"],[908.0,958.2,"50"],[1376.9,1424.0,"67"],[1859.2,1909.1,"82"]]},
+        {"top":810.2,"cells":[[652.2,707.3,"SLT"],[1018.3,1212.8,"CARBONPRO"],[1485.0,1713.3,"CONNECTIVITY"]]},
+        {"top":827.7,"cells":[[218.9,346.4,"MODELS"],[1968.8,2290.7,"LEGAL DISCLOSURES"]]},
+        {"top":936.7,"cells":[[113.9,150.7,"11"],[541.9,592.5,"42"],[908.7,957.8,"52"],[1376.6,1417.7,"71"]]},
+        {"top":942.2,"cells":[[219.1,333.9,"DENALI"],[652.3,821.9,"ELEVATION"],[1018.1,1248.1,"POWERTRAINS"],[1484.8,1772.3,"EXTERIOR COLORS"]]}
+      ]
+    },
+    {
+      "page": 4,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 2436.0,
+      "height": 1125.0,
+      "text": "3 I N T R O D U C T I O N\nMEET THE 2023\nSIERRA\nThe 2023 GMC Sierra 1500 sets the\nProfessional Grade standard. With powerful\ncapability, bold presence and advanced\ntechnology, Sierra delivers what it takes\nto handle what life throws your way.",
+      "table_lines": [],
+      "lines": [
+        {"top":44.5,"cells":[[34.7,49.1,"3"],[233.6,422.9,"I N T R O D U C T I O N"]]},
+        {"top":138.4,"cells":[[94.0,693.6,"MEET THE 2023"]]},
+        {"top":472.8,"cells":[[90.0,693.8,"SIERRA"]]},
+        {"top":763.1,"cells":[[101.1,674.3,"The 2023 GMC Sierra 1500 sets the"]]},
+        {"top":811.1,"cells":[[101.1,785.2,"Professional Grade standard. With powerful"]]},
+        {"top":859.1,"cells":[[101.1,714.7,"capability, bold presence and advanced"]]},
+        {"top":907.1,"cells":[[101.1,717.3,"technology, Sierra delivers what it takes"]]},
+        {"top":955.2,"cells":[[101.1,667.9,"to handle what life throws your way."]]}
+      ]
+    },
+    {
+      "page": 5,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 2436.0,
+      "height": 1125.0,
+      "text": "4 I N T R O D U C T I O N\nSIERRA DENALI ULTIMATE IS\nGet after it on the road or the trail in the premium and capable\n2023 Sierra featuring the Sierra Denali Ultimate. With robust\nTHE MOST ADVANCED AND\npower, bold styling and an ultra-premium interior, Sierra is\nLUXURIOUS PICKUP IN ITS CLASS1\nengineered and crafted to exceed your expectations.",
+      "table_lines": [],
+      "lines": [
+        {"top":44.5,"cells":[[35.7,50.3,"4"],[233.6,422.9,"I N T R O D U C T I O N"]]},
+        {"top":846.8,"cells":[[132.0,1034.0,"SIERRA DENALI ULTIMATE IS"]]},
+        {"top":852.4,"cells":[[1352.0,2301.4,"Get after it on the road or the trail in the premium and capable"]]},
+        {"top":900.4,"cells":[[1352.0,2302.3,"2023 Sierra featuring the Sierra Denali Ultimate. With robust"]]},
+        {"top":916.8,"cells":[[132.0,983.2,"THE MOST ADVANCED AND"]]},
+        {"top":948.4,"cells":[[1352.0,2261.3,"power, bold styling and an ultra-premium interior, Sierra is"]]},
+        {"top":984.5,"cells":[[970.2,1201.4,"CLASS1"]]},
+        {"top":986.8,"cells":[[132.0,955.1,"LUXURIOUS PICKUP IN ITS"]]},
+        {"top":996.4,"cells":[[1352.0,2167.7,"engineered and crafted to exceed your expectations."]]}
+      ]
+    },
+    {
+      "page": 6,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 2436.0,
+      "height": 1125.0,
+      "text": "5 T E C H N O L O G Y\nSUPER CRUISE HANDS-FREE\nDRIVER-ASSISTANCE TECHNOLOGY:\nTHE NEXT GENERATION OF TRAVEL\nThe future starts now. Travel hands-free on more\nthan 400,000 miles, and counting, of compatible\nroads in the U.S. and Canada with available\nSuper Cruise1 driver-assistance technology.\nEngineered for a new kind of freedom, this advanced\ntechnology performs automatic hands-free lane\nchanging to maintain your set speed or allows you\nto pull your trailer hands-free.",
+      "table_lines": [],
+      "lines": [
+        {"top":44.5,"cells":[[34.4,48.8,"5"],[233.6,400.4,"T E C H N O L O G Y"]]},
+        {"top":143.7,"cells":[[100.0,994.6,"SUPER CRUISE HANDS-FREE"]]},
+        {"top":213.7,"cells":[[100.9,1222.1,"DRIVER-ASSISTANCE TECHNOLOGY:"]]},
+        {"top":283.7,"cells":[[102.8,1207.6,"THE NEXT GENERATION OF TRAVEL"]]},
+        {"top":525.3,"cells":[[106.2,884.5,"The future starts now. Travel hands-free on more"]]},
+        {"top":573.3,"cells":[[106.2,865.8,"than 400,000 miles, and counting, of compatible"]]},
+        {"top":621.3,"cells":[[106.2,780.5,"roads in the U.S. and Canada with available"]]},
+        {"top":668.2,"cells":[[206.8,314.1,"Cruise1"]]},
+        {"top":669.3,"cells":[[106.2,196.7,"Super"],[324.0,771.7,"driver-assistance technology."]]},
+        {"top":753.3,"cells":[[106.3,900.5,"Engineered for a new kind of freedom, this advanced"]]},
+        {"top":801.3,"cells":[[106.3,844.4,"technology performs automatic hands-free lane"]]},
+        {"top":849.3,"cells":[[106.3,871.4,"changing to maintain your set speed or allows you"]]},
+        {"top":897.3,"cells":[[106.3,552.3,"to pull your trailer hands-free."]]}
+      ]
+    },
+    {
+      "page": 7,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 2436.0,
+      "height": 1125.0,
+      "text": "6 T E C H N O L O G Y\nOVER 40\" (DIAGONAL) OF CUSTOMIZABLE SCREENS\nAvailable Trailer Tire Pressure Monitoring System shown requires installation\nof trailer tire pressure monitor sensors.\nInside Sierra, large, gorgeous screens enhance your driving 13.4\" Diagonal Center Touch-Screen Is Available\nexperience, offering over 40\" (diagonal) of combined driver-focused\nMulticolor 15\" Diagonal Head-Up Display Is Available\ndigital displays\u2014the most in its class.1\n12.3\" Diagonal Customizable Driver Information Center Is Available",
+      "table_lines": [],
+      "lines": [
+        {"top":44.5,"cells":[[34.1,48.8,"6"],[233.6,400.4,"T E C H N O L O G Y"]]},
+        {"top":106.1,"cells":[[405.2,2030.6,"OVER 40\" (DIAGONAL) OF CUSTOMIZABLE SCREENS"]]},
+        {"top":719.4,"cells":[[36.0,710.9,"Available Trailer Tire Pressure Monitoring System shown requires installation"]]},
+        {"top":741.0,"cells":[[36.0,377.0,"of trailer tire pressure monitor sensors."]]},
+        {"top":888.3,"cells":[[1442.8,2042.6,"13.4\" Diagonal Center Touch-Screen Is Available"]]},
+        {"top":889.1,"cells":[[161.5,1072.3,"Inside Sierra, large, gorgeous screens enhance your driving"]]},
+        {"top":937.1,"cells":[[161.5,1165.0,"experience, offering over 40\" (diagonal) of combined driver-focused"]]},
+        {"top":952.8,"cells":[[1442.8,2102.9,"Multicolor 15\" Diagonal Head-Up Display Is Available"]]},
+        {"top":984.1,"cells":[[161.5,736.8,"digital displays\u2014the most in its class.1"]]},
+        {"top":1017.3,"cells":[[1442.8,2271.9,"12.3\" Diagonal Customizable Driver Information Center Is Available"]]}
+      ]
+    },
+    {
+      "page": 8,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 2436.0,
+      "height": 1125.0,
+      "text": "7 T E C H N O L O G Y\nYOUR SCREENS\nYOUR WAY\nThe 13.4\" diagonal GMC Infotainment\nSystem,1 standard on SLE, Elevation, SLT,\nAT4, AT4X, Denali and Denali Ultimate,\noffers a wide range of screen combinations,\nfeatures and reconfigurability, taking\npersonalization to a whole new level.\nAvailable features shown.",
+      "table_lines": [],
+      "lines": [
+        {"top":44.5,"cells":[[35.3,47.8,"7"],[233.6,400.4,"T E C H N O L O G Y"]]},
+        {"top":303.7,"cells":[[131.0,623.1,"YOUR SCREENS"]]},
+        {"top":373.7,"cells":[[131.0,464.3,"YOUR WAY"]]},
+        {"top":614.4,"cells":[[131.0,721.8,"The 13.4\" diagonal GMC Infotainment"]]},
+        {"top":661.4,"cells":[[131.0,768.8,"System,1 standard on SLE, Elevation, SLT,"]]},
+        {"top":710.4,"cells":[[131.0,732.8,"AT4, AT4X, Denali and Denali Ultimate,"]]},
+        {"top":758.4,"cells":[[131.0,781.6,"offers a wide range of screen combinations,"]]},
+        {"top":806.5,"cells":[[131.0,709.2,"features and reconfigurability, taking"]]},
+        {"top":854.5,"cells":[[131.0,692.1,"personalization to a whole new level."]]},
+        {"top":1075.9,"cells":[[2172.9,2400.0,"Available features shown."]]}
+      ]
+    },
+    {
+      "page": 9,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 2436.0,
+      "height": 1125.0,
+      "text": "8 F I R S T- C L A S S L U X U R Y\nAN UNCOMPROMISINGLY\nBeautiful styling, first-class comfort and available high-end\nleather seating make the 2023 Sierra the most luxurious\nPREMIUM INTERIOR\nSierra ever. Depending on the trim, Sierra offers a variety\nof luxurious upgrades and premium enhancements.",
+      "table_lines": [],
+      "lines": [
+        {"top":44.5,"cells":[[34.8,49.8,"8"],[233.6,513.3,"F I R S T- C L A S S L U X U R Y"]]},
+        {"top":894.6,"cells":[[272.5,1051.0,"AN UNCOMPROMISINGLY"]]},
+        {"top":899.3,"cells":[[1256.5,2152.4,"Beautiful styling, first-class comfort and available high-end"]]},
+        {"top":947.3,"cells":[[1256.5,2147.1,"leather seating make the 2023 Sierra the most luxurious"]]},
+        {"top":964.6,"cells":[[272.5,902.0,"PREMIUM INTERIOR"]]},
+        {"top":995.3,"cells":[[1256.5,2160.0,"Sierra ever. Depending on the trim, Sierra offers a variety"]]},
+        {"top":1043.3,"cells":[[1256.5,2050.1,"of luxurious upgrades and premium enhancements."]]}
+      ]
+    },
+    {
+      "page": 10,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 2436.0,
+      "height": 1125.0,
+      "text": "9 S I E R R A M O D E L S\nSIERRA OFFERS THE\nPREMIUM AND CAPABLE TRUCK YOU NEED\nGet it done in the rugged, Boldly rise above in the Monochromatic styling Work or play hard in the\ncapable and all-business premium cloth interior of stands out everywhere innovative, premium and\nSierra Pro. Sierra SLE. you go in Sierra Elevation. capable Sierra SLT.",
+      "table_lines": [],
+      "lines": [
+        {"top":44.5,"cells":[[35.1,49.8,"9"],[233.6,439.1,"S I E R R A M O D E L S"]]},
+        {"top":124.7,"cells":[[890.1,1544.0,"SIERRA OFFERS THE"]]},
+        {"top":194.7,"cells":[[546.9,1888.9,"PREMIUM AND CAPABLE TRUCK YOU NEED"]]},
+        {"top":817.6,"cells":[[135.5,523.4,"Get it done in the rugged,"],[727.9,1089.2,"Boldly rise above in the"],[1316.0,1667.7,"Monochromatic styling"],[1912.2,2283.3,"Work or play hard in the"]]},
+        {"top":865.6,"cells":[[135.5,513.5,"capable and all-business"],[727.9,1088.3,"premium cloth interior of"],[1316.0,1673.7,"stands out everywhere"],[1912.2,2285.5,"innovative, premium and"]]},
+        {"top":913.6,"cells":[[135.5,304.4,"Sierra Pro."],[727.9,903.7,"Sierra SLE."],[1316.0,1725.9,"you go in Sierra Elevation."],[1912.2,2215.0,"capable Sierra SLT."]]}
+      ]
+    },
+    {
+      "page": 11,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 2436.0,
+      "height": 1125.0,
+      "text": "10 S I E R R A M O D E L S\nSIERRA OFFERS THE\nPREMIUM AND CAPABLE TRUCK YOU NEED\nTake on the tough backcountry Next-level adventure starts Rise to the upper limits Take on the world\nwith a factory-installed 2\" with advanced capability of what premium and in the most advanced\nsuspension lift in Sierra AT4. features such as front and capable luxury can be and luxurious pickup\nrear e-locking differentials in in Sierra Denali. in its class,1 the 2023\nthe New 2023 Sierra AT4X. Sierra Denali Ultimate.",
+      "table_lines": [],
+      "lines": [
+        {"top":44.5,"cells":[[35.6,61.0,"10"],[233.6,439.1,"S I E R R A M O D E L S"]]},
+        {"top":124.7,"cells":[[890.1,1544.0,"SIERRA OFFERS THE"]]},
+        {"top":194.7,"cells":[[546.9,1888.9,"PREMIUM AND CAPABLE TRUCK YOU NEED"]]},
+        {"top":817.6,"cells":[[134.8,603.9,"Take on the tough backcountry"],[1320.0,1668.3,"Rise to the upper limits"],[1912.2,2184.3,"Take on the world"]]},
+        {"top":820.3,"cells":[[726.3,1140.7,"Next-level adventure starts"]]},
+        {"top":865.6,"cells":[[134.8,531.1,"with a factory-installed 2\""],[1320.0,1649.5,"of what premium and"],[1912.2,2241.7,"in the most advanced"]]},
+        {"top":868.3,"cells":[[726.3,1108.6,"with advanced capability"]]},
+        {"top":913.6,"cells":[[134.8,571.6,"suspension lift in Sierra AT4."],[1320.0,1655.6,"capable luxury can be"],[1912.2,2224.3,"and luxurious pickup"]]},
+        {"top":916.3,"cells":[[726.3,1125.2,"features such as front and"]]},
+        {"top":960.6,"cells":[[1991.8,2078.4,"class,1"]]},
+        {"top":961.6,"cells":[[1320.0,1576.7,"in Sierra Denali."],[1912.2,1982.8,"in its"],[2087.2,2222.3,"the 2023"]]},
+        {"top":964.3,"cells":[[726.3,1157.8,"rear e-locking differentials in"]]},
+        {"top":1009.6,"cells":[[1912.2,2275.9,"Sierra Denali Ultimate."]]},
+        {"top":1012.3,"cells":[[726.3,1153.0,"the New 2023 Sierra AT4X."]]}
+      ]
+    },
+    {
+      "page": 12,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 2436.0,
+      "height": 1125.0,
+      "text": "11 D E N A L I\nDENALI SETS\nTHE STANDARD\nFeaturing amenities reserved for the finest\nvehicles along with signature Denali styling,\nSierra Denali is first-class in every way.",
+      "table_lines": [],
+      "lines": [
+        {"top":44.5,"cells":[[39.1,60.8,"11"],[233.6,324.9,"D E N A L I"]]},
+        {"top":163.4,"cells":[[128.8,552.5,"DENALI SETS"]]},
+        {"top":233.4,"cells":[[128.8,631.5,"THE STANDARD"]]},
+        {"top":476.1,"cells":[[134.8,807.5,"Featuring amenities reserved for the finest"]]},
+        {"top":524.2,"cells":[[134.8,830.2,"vehicles along with signature Denali styling,"]]},
+        {"top":572.2,"cells":[[134.8,757.1,"Sierra Denali is first-class in every way."]]}
+      ]
+    },
+    {
+      "page": 13,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 2436.0,
+      "height": 1125.0,
+      "text": "12 D E N A L I E X T E R I O R F E AT U R E S\nSTAND APART WITH SIGNATURE STYLING\nDenali includes eye-catching features Bold Front Fascia Design Includes Unique Denali Chrome Vertical Front Recovery Hooks1\nChrome Grille, Along With Exclusive Available\nthat give the vehicle its signature,\nDual-Projector LED Headlamps\n22\" Painted Aluminum Wheels With Machining\nstandout good looks.\nand Bright Chrome Inserts\nGMC Daytime Running Lamps With\nSignature C-Shape Design\nGMC MultiPro\u2122 Power Assist Steps Are Available",
+      "table_lines": [],
+      "lines": [
+        {"top":44.5,"cells":[[33.8,58.5,"12"],[233.6,325.0,"D E N A L I"],[337.8,607.3,"E X T E R I O R F E AT U R E S"]]},
+        {"top":127.4,"cells":[[557.9,1878.1,"STAND APART WITH SIGNATURE STYLING"]]},
+        {"top":808.8,"cells":[[135.0,715.9,"Denali includes eye-catching features"],[957.0,1556.0,"Bold Front Fascia Design Includes Unique Denali"],[1813.0,2299.2,"Chrome Vertical Front Recovery Hooks1"]]},
+        {"top":850.1,"cells":[[957.0,1521.3,"Chrome Grille, Along With Exclusive Available"]]},
+        {"top":857.5,"cells":[[135.0,655.7,"that give the vehicle its signature,"]]},
+        {"top":874.1,"cells":[[1813.0,2193.6,"Dual-Projector LED Headlamps"]]},
+        {"top":890.6,"cells":[[957.0,1541.8,"22\" Painted Aluminum Wheels With Machining"]]},
+        {"top":905.5,"cells":[[135.0,459.7,"standout good looks."]]},
+        {"top":931.1,"cells":[[957.0,1283.1,"and Bright Chrome Inserts"]]},
+        {"top":938.6,"cells":[[1813.0,2257.7,"GMC Daytime Running Lamps With"]]},
+        {"top":979.1,"cells":[[1813.0,2141.2,"Signature C-Shape Design"]]},
+        {"top":995.6,"cells":[[957.0,1571.6,"GMC MultiPro\u2122 Power Assist Steps Are Available"]]}
+      ]
+    },
+    {
+      "page": 14,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 2436.0,
+      "height": 1125.0,
+      "text": "13 D E N A L I I N T E R I O R\nENJOY DENALI LUXURY\nDue to current supply-chain shortages, certain features shown have limited or late availability, or are no longer available. See the window label\nor a dealer regarding the features on an individual vehicle.",
+      "table_lines": [
+        "ENJOY DENALI LUXURY\nDue to current supply-chain shortages, certain features shown have limited or late availability, or are no longer available. See the window label\nor a dealer regarding the features on an individual vehicle."
+      ],
+      "lines": [
+        {"top":44.5,"cells":[[36.0,60.7,"13"],[233.6,325.0,"D E N A L I"],[337.8,456.4,"I N T E R I O R"]]},
+        {"top":945.4,"cells":[[1365.0,2106.5,"ENJOY DENALI LUXURY"]]},
+        {"top":1054.3,"cells":[[1102.0,2361.8,"Due to current supply-chain shortages, certain features shown have limited or late availability, or are no longer available. See the window label"]]},
+        {"top":1075.9,"cells":[[1102.0,1615.3,"or a dealer regarding the features on an individual vehicle."]]}
+      ]
+    },
+    {
+      "page": 15,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 2436.0,
+      "height": 1125.0,
+      "text": "14 D E N A L I I N T E R I O R F E AT U R E S\nFIRST-CLASS Spacious Interior Features Best-in-Class1 Crew Cab Embroidered Denali Logo on Front Seatbacks\nFront Head and Leg Room\nALL THE WAY 10-Way Power Driver and Front-Passenger\nPerforated Forge Leather Seating Surfaces With Seats, Including Two-Way Lumbar Control,\nContrasting Stitch Pattern Power-Rake/-Telescoping Steering Column\nand Driver-Seat Memory\nPatterned Aluminum Trim and Chrome Accents\nEtched Stainless-Steel Speaker Grille Details\nPremium Instrument Panel and Door Trim With Chrome\nand Authentic Open-Pore Walnut Wood Detailing",
+      "table_lines": [],
+      "lines": [
+        {"top":44.5,"cells":[[35.8,61.3,"14"],[233.6,325.0,"D E N A L I"],[337.8,599.8,"I N T E R I O R F E AT U R E S"]]},
+        {"top":705.2,"cells":[[127.0,549.0,"FIRST-CLASS"]]},
+        {"top":708.1,"cells":[[1132.4,1303.9,"Best-in-Class1"]]},
+        {"top":708.9,"cells":[[810.0,1125.0,"Spacious Interior Features"],[1311.3,1432.7,"Crew Cab"],[1742.0,2301.8,"Embroidered Denali Logo on Front Seatbacks"]]},
+        {"top":749.4,"cells":[[810.0,1138.5,"Front Head and Leg Room"]]},
+        {"top":773.4,"cells":[[1742.0,2279.2,"10-Way Power Driver and Front-Passenger"]]},
+        {"top":775.2,"cells":[[127.0,552.8,"ALL THE WAY"]]},
+        {"top":813.9,"cells":[[810.0,1409.7,"Perforated Forge Leather Seating Surfaces With"],[1742.0,2283.2,"Seats, Including Two-Way Lumbar Control,"]]},
+        {"top":854.4,"cells":[[810.0,1131.7,"Contrasting Stitch Pattern"],[1742.0,2265.4,"Power-Rake/-Telescoping Steering Column"]]},
+        {"top":894.9,"cells":[[1742.0,2047.0,"and Driver-Seat Memory"]]},
+        {"top":918.9,"cells":[[810.0,1393.1,"Patterned Aluminum Trim and Chrome Accents"]]},
+        {"top":959.4,"cells":[[1742.0,2286.9,"Etched Stainless-Steel Speaker Grille Details"]]},
+        {"top":983.4,"cells":[[810.0,1482.4,"Premium Instrument Panel and Door Trim With Chrome"]]},
+        {"top":1023.9,"cells":[[810.0,1425.9,"and Authentic Open-Pore Walnut Wood Detailing"]]}
+      ]
+    },
+    {
+      "page": 16,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 2436.0,
+      "height": 1125.0,
+      "text": "15 D E N A L I T E C H N O L O G Y\nSIERRA DENALI FEATURES ADVANCED TECH:\nUp to 14 Available Camera Views,1 Including 12.3\" Diagonal Reconfigurable Driver With Google built-in Compatibility,2 With 3-Year\nTransparent Trailer View Information Center GMC Connected Vehicle3 Subscription Included\nBose\u00ae Audio System With Richbass Woofer 13.4\" Diagonal Customizable Center Touch-Screen Multicolor 15\" Diagonal Head-Up Display\nand Rear Camera Mirror4 Are Available\nRainsense Wipers",
+      "table_lines": [],
+      "lines": [
+        {"top":44.5,"cells":[[36.0,60.6,"15"],[233.6,325.0,"D E N A L I"],[337.8,504.7,"T E C H N O L O G Y"]]},
+        {"top":814.2,"cells":[[131.8,767.1,"SIERRA DENALI FEATURES ADVANCED TECH:"]]},
+        {"top":879.8,"cells":[[203.7,752.1,"Up to 14 Available Camera Views,1 Including"],[1977.3,2149.1,"Compatibility,2"]]},
+        {"top":881.4,"cells":[[934.0,1394.1,"12.3\" Diagonal Reconfigurable Driver"],[1726.0,1969.9,"With Google built-in"],[2156.6,2303.4,"With 3-Year"]]},
+        {"top":921.1,"cells":[[203.8,505.7,"Transparent Trailer View"],[1929.3,2022.2,"Vehicle3"]]},
+        {"top":921.9,"cells":[[934.0,1164.6,"Information Center"],[1726.0,1922.0,"GMC Connected"],[2029.2,2281.9,"Subscription Included"]]},
+        {"top":984.8,"cells":[[203.7,744.9,"Bose\u00ae Audio System With Richbass Woofer"]]},
+        {"top":986.4,"cells":[[934.0,1558.8,"13.4\" Diagonal Customizable Center Touch-Screen"],[1726.0,2236.8,"Multicolor 15\" Diagonal Head-Up Display"]]},
+        {"top":1026.1,"cells":[[1953.5,2037.3,"Mirror4"]]},
+        {"top":1026.9,"cells":[[1726.0,1945.5,"and Rear Camera"],[2045.2,2210.3,"Are Available"]]},
+        {"top":1050.1,"cells":[[203.7,428.3,"Rainsense Wipers"]]}
+      ]
+    },
+    {
+      "page": 17,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 2436.0,
+      "height": 1125.0,
+      "text": "16 D E N A L I U LT I M AT E\nSIERRA DENALI ULTIMATE:\nSierra Denali Ultimate is the ultimate expression of signature\nDenali style, luxury and technological innovation.\nTHE MOST ADVANCED AND\nLUXURIOUS PICKUP IN ITS CLASS1",
+      "table_lines": [],
+      "lines": [
+        {"top":44.5,"cells":[[35.9,60.8,"16"],[233.6,325.0,"D E N A L I"],[337.8,460.4,"U LT I M AT E"]]},
+        {"top":850.0,"cells":[[130.0,983.3,"SIERRA DENALI ULTIMATE:"]]},
+        {"top":853.7,"cells":[[1360.0,2299.6,"Sierra Denali Ultimate is the ultimate expression of signature"]]},
+        {"top":901.7,"cells":[[1360.0,2124.3,"Denali style, luxury and technological innovation."]]},
+        {"top":920.0,"cells":[[133.1,984.3,"THE MOST ADVANCED AND"]]},
+        {"top":990.0,"cells":[[130.9,1201.8,"LUXURIOUS PICKUP IN ITS CLASS1"]]}
+      ]
+    },
+    {
+      "page": 18,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 2436.0,
+      "height": 1125.0,
+      "text": "17 D E N A L I U LT I M AT E H I G H L I G H T S\nSIERRA DENALI ULTIMATE IS THE APEX OF PROFESSIONAL GRADE\nSIERRA DENALI ULTIMATE FEATURES: Over 40\" (Diagonal) of Combined Driver-Focused World\u2019s First Six-Function MultiPro Tailgate\nDigital Displays\u2014the Most in Its Class1 With KICKER\u00ae3 Audio System\nUp to 14 Available Camera Views,2 Including CarbonProTM Carbon-Fiber Composite Bed\nTransparent Trailer View Is Available",
+      "table_lines": [],
+      "lines": [
+        {"top":44.5,"cells":[[35.7,59.1,"17"],[233.6,325.0,"D E N A L I"],[337.8,624.4,"U LT I M AT E H I G H L I G H T S"]]},
+        {"top":127.4,"cells":[[172.7,2263.3,"SIERRA DENALI ULTIMATE IS THE APEX OF PROFESSIONAL GRADE"]]},
+        {"top":889.0,"cells":[[134.0,672.5,"SIERRA DENALI ULTIMATE FEATURES:"],[930.0,1512.3,"Over 40\" (Diagonal) of Combined Driver-Focused"],[1770.0,2303.4,"World\u2019s First Six-Function MultiPro Tailgate"]]},
+        {"top":928.7,"cells":[[1839.2,1955.4,"KICKER\u00ae3"]]},
+        {"top":929.3,"cells":[[930.0,1409.4,"Digital Displays\u2014the Most in Its Class1"],[1770.0,1831.2,"With"],[1963.2,2133.8,"Audio System"]]},
+        {"top":993.2,"cells":[[1770.0,1923.4,"CarbonProTM"]]},
+        {"top":993.8,"cells":[[930.0,1473.9,"Up to 14 Available Camera Views,2 Including"],[1931.2,2291.1,"Carbon-Fiber Composite Bed"]]},
+        {"top":1034.5,"cells":[[930.0,1230.4,"Transparent Trailer View"],[1770.0,1911.3,"Is Available"]]}
+      ]
+    },
+    {
+      "page": 19,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 2436.0,
+      "height": 1125.0,
+      "text": "18 D E N A L I U LT I M AT E E X T E R I O R F E AT U R E S\nTURN HEADS WITH\nULTIMATE STYLE\nSIERRA DENALI ULTIMATE EXTERIOR FEATURES:\nDual-Projector LED Headlamps and Daytime Running\nLamps With Fade-On/Fade-Off Animated Lighting Sequences\nSignature Denali Grille Finished in Exclusive Vader Chrome\nVader Chrome GMC Badging\nUnique Denali Ultimate Fender Badging\nExclusive 22\" 7-Spoke Ultra-Bright Machined Aluminum\nWheels With Bright Chrome Accents and Dark Paint\nGMC MultiPro Power Assist Steps\nWorld\u2019s First Six-Function MultiPro Tailgate with\nKICKER\u00ae1 Audio System\nCarbonPro Carbon-Fiber Composite Bed Is Available",
+      "table_lines": [],
+      "lines": [
+        {"top":44.5,"cells":[[35.5,60.6,"18"],[233.6,325.0,"D E N A L I"],[337.8,742.7,"U LT I M AT E E X T E R I O R F E AT U R E S"]]},
+        {"top":124.8,"cells":[[90.4,689.6,"TURN HEADS WITH"]]},
+        {"top":194.8,"cells":[[98.5,636.0,"ULTIMATE STYLE"]]},
+        {"top":390.3,"cells":[[101.9,792.5,"SIERRA DENALI ULTIMATE EXTERIOR FEATURES:"]]},
+        {"top":456.7,"cells":[[173.9,827.8,"Dual-Projector LED Headlamps and Daytime Running"]]},
+        {"top":497.2,"cells":[[173.9,916.0,"Lamps With Fade-On/Fade-Off Animated Lighting Sequences"]]},
+        {"top":561.7,"cells":[[173.9,895.2,"Signature Denali Grille Finished in Exclusive Vader Chrome"]]},
+        {"top":626.2,"cells":[[173.9,533.0,"Vader Chrome GMC Badging"]]},
+        {"top":690.7,"cells":[[173.9,665.4,"Unique Denali Ultimate Fender Badging"]]},
+        {"top":755.2,"cells":[[173.9,862.6,"Exclusive 22\" 7-Spoke Ultra-Bright Machined Aluminum"]]},
+        {"top":795.7,"cells":[[173.9,824.9,"Wheels With Bright Chrome Accents and Dark Paint"]]},
+        {"top":860.2,"cells":[[173.9,591.6,"GMC MultiPro Power Assist Steps"]]},
+        {"top":924.7,"cells":[[173.9,769.6,"World\u2019s First Six-Function MultiPro Tailgate with"]]},
+        {"top":964.4,"cells":[[173.9,468.2,"KICKER\u00ae1 Audio System"]]},
+        {"top":1029.7,"cells":[[173.9,823.7,"CarbonPro Carbon-Fiber Composite Bed Is Available"]]}
+      ]
+    },
+    {
+      "page": 20,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 2436.0,
+      "height": 1125.0,
+      "text": "19 D E N A L I U LT I M AT E I N T E R I O R\nLUXURIOUS DETAILS TELL\nSierra Denali Ultimate\u2019s signature styling and technological innovations\ndeliver first-class luxury with full-grain leather seating, laser-etched Paldao\nTHE ULTIMATE STORY\nwood and stunning, massive screens, providing first-class comfort all around.\nDue to current supply-chain shortages, certain features shown have limited or late availability, or are\nno longer available. See the window label or a dealer regarding the features on an individual vehicle.",
+      "table_lines": [],
+      "lines": [
+        {"top":44.5,"cells":[[35.8,60.8,"19"],[233.6,325.0,"D E N A L I"],[337.8,591.8,"U LT I M AT E I N T E R I O R"]]},
+        {"top":871.7,"cells":[[131.9,949.0,"LUXURIOUS DETAILS TELL"]]},
+        {"top":879.4,"cells":[[1157.0,2255.9,"Sierra Denali Ultimate\u2019s signature styling and technological innovations"]]},
+        {"top":927.4,"cells":[[1157.0,2293.7,"deliver first-class luxury with full-grain leather seating, laser-etched Paldao"]]},
+        {"top":941.7,"cells":[[135.3,821.8,"THE ULTIMATE STORY"]]},
+        {"top":975.4,"cells":[[1157.0,2300.1,"wood and stunning, massive screens, providing first-class comfort all around."]]},
+        {"top":1054.3,"cells":[[1158.0,2046.6,"Due to current supply-chain shortages, certain features shown have limited or late availability, or are"]]},
+        {"top":1075.9,"cells":[[1158.0,2042.5,"no longer available. See the window label or a dealer regarding the features on an individual vehicle."]]}
+      ]
+    },
+    {
+      "page": 21,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 2436.0,
+      "height": 1125.0,
+      "text": "20 D E N A L I U LT I M AT E I N T E R I O R F E AT U R E S\nTAKING PREMIUM\nTO EXCITING PLACES\nSIERRA DENALI ULTIMATE INTERIOR FEATURES:\nRefined Alpine Umber Interior With Full-Grain Leather Seating\nand Double Helix, Plaited Contrast Stitching\nHeated and Ventilated Best-in-Class1 16-Way Power Front Seats\nWith Massaging Feature\nDue to current supply-chain shortages, certain features shown have limited or late availability, or are no longer available.\nSee the window label or a dealer regarding the features on an individual vehicle.\nExclusive Denali Ultimate Metal Badging on Front Seatbacks\nand Doors\nAuthentic Open-Pore Paldao Wood-Accented Instrument\nPanel and Doors\nTopographical Map Patterns of Mt. Denali\u2019s Summit Embossed\nand Laser-Etched Across the Interior\nPremium Microsuede Headliner, Sun Visors and Pillars\nOver 40\" (Diagonal) of Combined Driver-Focused Digital\nDisplays\u2014the Most in Its Class1",
+      "table_lines": [],
+      "lines": [
+        {"top":44.5,"cells":[[34.6,63.8,"20"],[233.6,325.0,"D E N A L I"],[337.8,735.2,"U LT I M AT E I N T E R I O R F E AT U R E S"]]},
+        {"top":100.0,"cells":[[121.2,678.3,"TAKING PREMIUM"]]},
+        {"top":170.0,"cells":[[121.2,787.1,"TO EXCITING PLACES"]]},
+        {"top":372.3,"cells":[[134.6,816.9,"SIERRA DENALI ULTIMATE INTERIOR FEATURES:"]]},
+        {"top":438.7,"cells":[[206.6,959.6,"Refined Alpine Umber Interior With Full-Grain Leather Seating"]]},
+        {"top":479.2,"cells":[[206.6,741.4,"and Double Helix, Plaited Contrast Stitching"]]},
+        {"top":542.9,"cells":[[206.6,999.1,"Heated and Ventilated Best-in-Class1 16-Way Power Front Seats"]]},
+        {"top":584.2,"cells":[[206.6,513.5,"With Massaging Feature"]]},
+        {"top":622.0,"cells":[[1146.2,2212.4,"Due to current supply-chain shortages, certain features shown have limited or late availability, or are no longer available."]]},
+        {"top":643.6,"cells":[[1146.2,1853.1,"See the window label or a dealer regarding the features on an individual vehicle."]]},
+        {"top":648.7,"cells":[[206.6,931.6,"Exclusive Denali Ultimate Metal Badging on Front Seatbacks"]]},
+        {"top":689.2,"cells":[[206.6,332.3,"and Doors"]]},
+        {"top":753.7,"cells":[[206.6,912.4,"Authentic Open-Pore Paldao Wood-Accented Instrument"]]},
+        {"top":794.2,"cells":[[206.6,412.8,"Panel and Doors"]]},
+        {"top":858.7,"cells":[[206.6,977.8,"Topographical Map Patterns of Mt. Denali\u2019s Summit Embossed"]]},
+        {"top":899.2,"cells":[[206.6,656.6,"and Laser-Etched Across the Interior"]]},
+        {"top":963.7,"cells":[[206.6,873.7,"Premium Microsuede Headliner, Sun Visors and Pillars"]]},
+        {"top":1028.2,"cells":[[206.6,914.8,"Over 40\" (Diagonal) of Combined Driver-Focused Digital"]]},
+        {"top":1067.9,"cells":[[206.6,597.3,"Displays\u2014the Most in Its Class1"]]}
+      ]
+    },
+    {
+      "page": 22,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 2436.0,
+      "height": 1125.0,
+      "text": "21 AT4\nSATISFY YOUR HUNGER\nFOR ADVENTURE\nThe end of the road is only the beginning\nbecause Sierra AT4 is created to go beyond\nthe boundaries and discover what\u2019s out there.\nDue to current supply-chain shortages, certain features shown have limited or late availability, or are\nno longer available. See the window label or a dealer regarding the features on an individual vehicle.",
+      "table_lines": [
+        "21 AT4",
+        "SATISFY YOUR HUNGER\nFOR ADVENTURE\nThe end of the road is only the beginning\nbecause Sierra AT4 is created to go beyond\nthe boundaries and discover what\u2019s out there.",
+        "T\nb\nt | h | h\ne | e | e\nc | a\nb | e",
+        "Due to current supply-chain shortages, certain features shown have limited or late availability, or are\nno longer available. See the window label or a dealer regarding the features on an individual vehicle."
+      ],
+      "lines": [
+        {"top":44.5,"cells":[[38.4,63.8,"21"],[233.6,277.1,"AT4"]]},
+        {"top":227.1,"cells":[[1562.0,2301.1,"SATISFY YOUR HUNGER"]]},
+        {"top":297.1,"cells":[[1562.9,2107.4,"FOR ADVENTURE"]]},
+        {"top":538.3,"cells":[[1568.0,2205.6,"The end of the road is only the beginning"]]},
+        {"top":586.3,"cells":[[1568.0,2242.1,"because Sierra AT4 is created to go beyond"]]},
+        {"top":634.3,"cells":[[1568.0,2262.6,"the boundaries and discover what\u2019s out there."]]},
+        {"top":1054.3,"cells":[[36.0,924.6,"Due to current supply-chain shortages, certain features shown have limited or late availability, or are"]]},
+        {"top":1075.9,"cells":[[36.0,920.5,"no longer available. See the window label or a dealer regarding the features on an individual vehicle."]]}
+      ]
+    },
+    {
+      "page": 23,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 2436.0,
+      "height": 1125.0,
+      "text": "22 AT4 E X T E R I O R F E AT U R E S\nEXPLORE BEYOND THE BOUNDARIES: SIERRA AT4\nDue to current supply-chain shortages, certain features shown have limited or late\navailability, or are no longer available. See the window label or a dealer regarding\nthe features on an individual vehicle.\nFactory-Installed 2\" Suspension Lift High-Clearance Off-Road Steps Are Available Off-Road Mud Terrain-Rated Goodyear\u00ae\nWrangler Tires\n2-Speed AutoTrac Transfer Case, Automatic-Locking Distinct Exterior Design With Black\nRear Differential and Skid Plates Chrome Accents 3.0L Duramax Turbo Diesel Engine Is Standard\nOff-Road-Tuned Rancho\u00ae Monotube Shock Absorbers Red Vertical Recovery Hooks1 6.2L Gas V8 Engine Is Available",
+      "table_lines": [
+        "Due to current supply-chain shortages, certain features shown have limited or late\navailability, or are no longer available. See the window label or a dealer regarding\nthe features on an individual vehicle."
+      ],
+      "lines": [
+        {"top":44.5,"cells":[[34.6,63.1,"22"],[233.6,559.4,"AT4 E X T E R I O R F E AT U R E S"]]},
+        {"top":120.1,"cells":[[435.6,2000.4,"EXPLORE BEYOND THE BOUNDARIES: SIERRA AT4"]]},
+        {"top":682.3,"cells":[[1656.0,2380.8,"Due to current supply-chain shortages, certain features shown have limited or late"]]},
+        {"top":703.9,"cells":[[1656.0,2377.1,"availability, or are no longer available. See the window label or a dealer regarding"]]},
+        {"top":725.5,"cells":[[1656.0,1977.5,"the features on an individual vehicle."]]},
+        {"top":841.8,"cells":[[170.0,611.6,"Factory-Installed 2\" Suspension Lift"],[996.0,1564.0,"High-Clearance Off-Road Steps Are Available"],[1725.5,2225.3,"Off-Road Mud Terrain-Rated Goodyear\u00ae"]]},
+        {"top":883.1,"cells":[[1725.5,1909.5,"Wrangler Tires"]]},
+        {"top":907.1,"cells":[[170.0,804.1,"2-Speed AutoTrac Transfer Case, Automatic-Locking"],[996.0,1431.4,"Distinct Exterior Design With Black"]]},
+        {"top":947.6,"cells":[[170.0,572.8,"Rear Differential and Skid Plates"],[996.0,1198.7,"Chrome Accents"],[1725.5,2303.8,"3.0L Duramax Turbo Diesel Engine Is Standard"]]},
+        {"top":1011.3,"cells":[[170.0,835.7,"Off-Road-Tuned Rancho\u00ae Monotube Shock Absorbers"],[996.0,1363.2,"Red Vertical Recovery Hooks1"],[1725.5,2119.3,"6.2L Gas V8 Engine Is Available"]]}
+      ]
+    },
+    {
+      "page": 24,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 2436.0,
+      "height": 1125.0,
+      "text": "23 AT4 C A PA B I L I T Y\nCONQUER ROUGH\nBACKCOUNTRY\nThe 2\" factory-installed suspension lift\nand Traction Select System with Off-Road\nmode help to take on off-road obstacles.\nDue to current supply-chain shortages, certain features shown have\nlimited or late availability, or are no longer available. See the window\nlabel or a dealer regarding the features on an individual vehicle.",
+      "table_lines": [],
+      "lines": [
+        {"top":44.5,"cells":[[35.7,64.2,"23"],[233.6,440.7,"AT4 C A PA B I L I T Y"]]},
+        {"top":188.0,"cells":[[130.0,677.9,"CONQUER ROUGH"]]},
+        {"top":258.0,"cells":[[130.0,615.5,"BACKCOUNTRY"]]},
+        {"top":498.7,"cells":[[134.8,731.6,"The 2\" factory-installed suspension lift"]]},
+        {"top":546.7,"cells":[[134.8,779.0,"and Traction Select System with Off-Road"]]},
+        {"top":594.7,"cells":[[134.8,762.7,"mode help to take on off-road obstacles."]]},
+        {"top":1032.7,"cells":[[134.0,732.0,"Due to current supply-chain shortages, certain features shown have"]]},
+        {"top":1054.3,"cells":[[134.0,742.4,"limited or late availability, or are no longer available. See the window"]]},
+        {"top":1075.9,"cells":[[134.0,695.1,"label or a dealer regarding the features on an individual vehicle."]]}
+      ]
+    },
+    {
+      "page": 25,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 2436.0,
+      "height": 1125.0,
+      "text": "24 AT4 I N T E R I O R\nTAKE PREMIUM BEYOND\nTHE BOUNDARIES\nInside AT4, you\u2019ll find an athletic, purposeful interior\ndesigned for your active lifestyle. It features unique\ndarkened brushed aluminum trim, perforated front\nleather seating surfaces in Jet Black with Kalahari\naccents and smart storage compartments.\nDue to current supply-chain shortages, certain features shown have limited or late availability, or are no longer available.\nSee the window label or a dealer regarding the features on an individual vehicle.",
+      "table_lines": [
+        "I\nl | d\nd\na | n\ne | e\na\nc | s | a | i\ns\nr\nc | t | i | d\nk\ne | h | g\ne | e\nn"
+      ],
+      "lines": [
+        {"top":44.5,"cells":[[35.6,64.7,"24"],[233.6,408.5,"AT4 I N T E R I O R"]]},
+        {"top":217.9,"cells":[[1504.4,2273.8,"TAKE PREMIUM BEYOND"]]},
+        {"top":287.9,"cells":[[1504.4,2067.1,"THE BOUNDARIES"]]},
+        {"top":528.5,"cells":[[1512.0,2288.5,"Inside AT4, you\u2019ll find an athletic, purposeful interior"]]},
+        {"top":576.6,"cells":[[1512.0,2301.2,"designed for your active lifestyle. It features unique"]]},
+        {"top":624.6,"cells":[[1512.0,2289.0,"darkened brushed aluminum trim, perforated front"]]},
+        {"top":672.6,"cells":[[1512.0,2300.6,"leather seating surfaces in Jet Black with Kalahari"]]},
+        {"top":720.6,"cells":[[1512.0,2173.4,"accents and smart storage compartments."]]},
+        {"top":1049.3,"cells":[[34.0,1100.2,"Due to current supply-chain shortages, certain features shown have limited or late availability, or are no longer available."]]},
+        {"top":1070.9,"cells":[[34.0,740.9,"See the window label or a dealer regarding the features on an individual vehicle."]]}
+      ]
+    },
+    {
+      "page": 26,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 2436.0,
+      "height": 1125.0,
+      "text": "25 AT4 I N T E R I O R F E AT U R E S\nADVENTURE WILL Premium AT4 Interior in Jet Black 12.3\" Diagonal Reconfigurable Driver\nWith Kalahari Accents Information Center\nNEVER BE THE SAME\nPremium All-Weather Floor Liners 13.4\" Diagonal Customizable Center Touch-Screen\nWith Removable Carpet Inserts\nMulticolor 15\" Diagonal Head-Up Display and\nRainsense Wipers Rear Camera Mirror1 Are Available\nDue to current supply-chain shortages, certain features shown have limited or late availability, or are no longer available. See the window label or a dealer regarding the features on an individual vehicle.",
+      "table_lines": [],
+      "lines": [
+        {"top":44.5,"cells":[[35.5,64.0,"25"],[233.6,552.0,"AT4 I N T E R I O R F E AT U R E S"]]},
+        {"top":785.3,"cells":[[127.2,698.2,"ADVENTURE WILL"],[1026.0,1430.1,"Premium AT4 Interior in Jet Black"],[1680.0,2140.1,"12.3\" Diagonal Reconfigurable Driver"]]},
+        {"top":826.6,"cells":[[1025.6,1302.9,"With Kalahari Accents"],[1681.1,1911.7,"Information Center"]]},
+        {"top":855.3,"cells":[[129.7,795.4,"NEVER BE THE SAME"]]},
+        {"top":891.1,"cells":[[1026.0,1445.5,"Premium All-Weather Floor Liners"],[1680.0,2304.8,"13.4\" Diagonal Customizable Center Touch-Screen"]]},
+        {"top":931.6,"cells":[[1025.6,1416.3,"With Removable Carpet Inserts"]]},
+        {"top":955.6,"cells":[[1680.0,2246.2,"Multicolor 15\" Diagonal Head-Up Display and"]]},
+        {"top":995.2,"cells":[[1026.0,1250.5,"Rainsense Wipers"],[1681.1,2107.6,"Rear Camera Mirror1 Are Available"]]},
+        {"top":1070.9,"cells":[[34.0,1812.8,"Due to current supply-chain shortages, certain features shown have limited or late availability, or are no longer available. See the window label or a dealer regarding the features on an individual vehicle."]]}
+      ]
+    },
+    {
+      "page": 27,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 2436.0,
+      "height": 1125.0,
+      "text": "26 N E W 2 0 2 3 AT4 X\nNEW 2023 SIERRA AT4X:\nTHE PEAK OF PREMIUM\nOFF-ROADING\nThe New 2023 Sierra AT4X is taking capability\nand luxury to new summits. Inspired by the\nFirst Ever AEV Edition, the New 2023 Sierra AT4X\nreceives key off-road enhancements for added\ncapability and even more assertive styling.\nAvailable accessories shown.",
+      "table_lines": [
+        "26 N E W 2 0 2 3 AT4 X\nNEW 2023 SIERRA AT4X:\nTHE PEAK OF PREMIUM\nOFF-ROADING\nThe New 2023 Sierra AT4X is taking capability\nand luxury to new summits. Inspired by the\nFirst Ever AEV Edition, the New 2023 Sierra AT4X\nreceives key off-road enhancements for added\ncapability and even more assertive styling.",
+        "Available accessories shown."
+      ],
+      "lines": [
+        {"top":44.5,"cells":[[35.5,64.2,"26"],[233.6,436.2,"N E W 2 0 2 3 AT4 X"]]},
+        {"top":245.1,"cells":[[127.4,905.0,"NEW 2023 SIERRA AT4X:"]]},
+        {"top":315.1,"cells":[[128.1,868.8,"THE PEAK OF PREMIUM"]]},
+        {"top":385.1,"cells":[[127.1,566.8,"OFF-ROADING"]]},
+        {"top":625.7,"cells":[[126.5,834.5,"The New 2023 Sierra AT4X is taking capability"]]},
+        {"top":673.7,"cells":[[126.5,782.1,"and luxury to new summits. Inspired by the"]]},
+        {"top":721.8,"cells":[[126.5,865.9,"First Ever AEV Edition, the New 2023 Sierra AT4X"]]},
+        {"top":769.8,"cells":[[126.5,833.1,"receives key off-road enhancements for added"]]},
+        {"top":817.8,"cells":[[126.5,774.1,"capability and even more assertive styling."]]},
+        {"top":1075.9,"cells":[[129.0,383.3,"Available accessories shown."]]}
+      ]
+    },
+    {
+      "page": 28,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 2436.0,
+      "height": 1125.0,
+      "text": "27 N E W 2 0 2 3 AT4 X\nNEW 2023 AT4X\nAT4X AEV EDITION\nTHE NEW 2023 SIERRA AT4X RECEIVES THESE AEV-INSPIRED ENHANCEMENTS:\nAEV Stamped-Steel Front Bumper With 34-Degree Front Approach Angle and Winch Capability New Larger 33\" Goodyear Wrangler Territory Mud-Terrain Tires\nUltra-High-Strength Boron Steel Front Approach Skid Plate Redesigned Front Fascia and Grille With Gloss-Black\nUpper and Dark Nickel Inserts\nAvailable accessories shown.",
+      "table_lines": [],
+      "lines": [
+        {"top":44.5,"cells":[[37.0,64.2,"27"],[233.6,436.2,"N E W 2 0 2 3 AT4 X"]]},
+        {"top":716.0,"cells":[[134.6,307.4,"NEW 2023 AT4X"]]},
+        {"top":740.0,"cells":[[1884.9,2085.1,"AT4X AEV EDITION"]]},
+        {"top":816.7,"cells":[[134.0,1249.8,"THE NEW 2023 SIERRA AT4X RECEIVES THESE AEV-INSPIRED ENHANCEMENTS:"]]},
+        {"top":881.9,"cells":[[206.0,1375.6,"AEV Stamped-Steel Front Bumper With 34-Degree Front Approach Angle and Winch Capability"],[1536.0,2301.7,"New Larger 33\" Goodyear Wrangler Territory Mud-Terrain Tires"]]},
+        {"top":946.4,"cells":[[206.0,921.9,"Ultra-High-Strength Boron Steel Front Approach Skid Plate"],[1536.0,2189.4,"Redesigned Front Fascia and Grille With Gloss-Black"]]},
+        {"top":986.9,"cells":[[1536.0,1907.1,"Upper and Dark Nickel Inserts"]]},
+        {"top":1075.9,"cells":[[135.0,389.3,"Available accessories shown."]]}
+      ]
+    },
+    {
+      "page": 29,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 2436.0,
+      "height": 1125.0,
+      "text": "28 N E W 2 0 2 3 AT4 X H I G H L I G H T S\nAvailable accessories shown. Available features shown.\nNEW 2023 SIERRA AT4X FEATURES: ULTRA-PREMIUM INTERIOR FEATURES INCLUDE:\nFront and Rear Electronic-Locking Differentials, Exclusive Obsidian Rush Interior With Over 40\" (Diagonal) of Combined Driver-Focused\na Combination Not Offered on Any Competitor Full-Grain Leather Seats Digital Displays\u2014the Most in Its Class3\nin Its Class1\nTechnical-Grain Leather-Accented Seats\nAdvanced Off-Road Suspension With and Door Panels\nMultimatic\u2122 DSSV Dampers\nPremium Leather-Trimmed Instrument Panel\nWorld\u2019s First Six-Function MultiPro Tailgate and Door Panels Accented With Black-Finished\nwith KICKER\u00ae2 Audio System Authentic Vanta Ash Wood Trim",
+      "table_lines": [
+        "28 N E W 2 0 2 3 AT4 X H I G H L I G H T S",
+        "Available accessories shown.",
+        "Available features shown."
+      ],
+      "lines": [
+        {"top":44.5,"cells":[[33.8,62.8,"28"],[233.6,600.9,"N E W 2 0 2 3 AT4 X H I G H L I G H T S"]]},
+        {"top":621.8,"cells":[[35.0,289.3,"Available accessories shown."],[1259.0,1486.1,"Available features shown."]]},
+        {"top":704.1,"cells":[[134.0,637.3,"NEW 2023 SIERRA AT4X FEATURES:"],[891.0,1573.7,"ULTRA-PREMIUM INTERIOR FEATURES INCLUDE:"]]},
+        {"top":770.5,"cells":[[206.0,775.9,"Front and Rear Electronic-Locking Differentials,"],[963.0,1425.9,"Exclusive Obsidian Rush Interior With"],[1707.0,2301.4,"Over 40\" (Diagonal) of Combined Driver-Focused"]]},
+        {"top":810.4,"cells":[[206.0,777.6,"a Combination Not Offered on Any Competitor"],[963.0,1265.0,"Full-Grain Leather Seats"],[1707.0,2187.6,"Digital Displays\u2014the Most in Its Class3"]]},
+        {"top":850.7,"cells":[[273.2,348.5,"Class1"]]},
+        {"top":851.5,"cells":[[206.0,265.5,"in Its"]]},
+        {"top":875.5,"cells":[[963.0,1461.1,"Technical-Grain Leather-Accented Seats"]]},
+        {"top":916.0,"cells":[[206.0,672.7,"Advanced Off-Road Suspension With"],[963.0,1168.7,"and Door Panels"]]},
+        {"top":956.5,"cells":[[206.0,559.6,"Multimatic\u2122 DSSV Dampers"]]},
+        {"top":980.5,"cells":[[963.0,1508.0,"Premium Leather-Trimmed Instrument Panel"]]},
+        {"top":1021.0,"cells":[[206.0,739.4,"World\u2019s First Six-Function MultiPro Tailgate"],[963.0,1548.9,"and Door Panels Accented With Black-Finished"]]},
+        {"top":1060.7,"cells":[[268.4,384.4,"KICKER\u00ae2"]]},
+        {"top":1061.5,"cells":[[206.0,260.4,"with"],[392.2,562.8,"Audio System"],[963.0,1363.7,"Authentic Vanta Ash Wood Trim"]]}
+      ]
+    },
+    {
+      "page": 30,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 2436.0,
+      "height": 1125.0,
+      "text": "29 N E W 2 0 2 3 AT4 X C A PA B I L I T Y\nGO BEYOND THE LIMITS WITH ADVANCED OFF-ROAD CAPABILITY\nAT4X FEATURES:\nSpecific Off-Road Chassis and Tuning Multimatic DSSV Dampers, Featuring Three Protected Dual-Outlet Exhaust\nSeparate Spool Valves to Control Damping and\nTerrain Mode, Ideal for Low-Speed, Off-Road Front and Rear Electronic-Locking Differentials\nThree Connected Chambers for Fluid Flow\nConditions. It Provides Extreme Control\nUnique 18'' Wheels With High-Gloss Black Finish and New\nand Is Precision-Enabled for One-Pedal1 Uniquely Tuned Springs to Increase Maximum\nLarger 33\" Goodyear Wrangler Territory Mud-Terrain Tires\nRock Crawling, Using Only the Accelerator. Front and Rear Suspension Travel\nUltra-High-Strength Boron Steel Front Approach\nAvailable Accessory Rocker Protection\nSkid Plate and Large Steel Transfer Case Skid Plate",
+      "table_lines": [],
+      "lines": [
+        {"top":44.5,"cells":[[33.8,62.5,"29"],[233.6,599.8,"N E W 2 0 2 3 AT4 X C A PA B I L I T Y"]]},
+        {"top":106.1,"cells":[[209.1,2226.9,"GO BEYOND THE LIMITS WITH ADVANCED OFF-ROAD CAPABILITY"]]},
+        {"top":716.9,"cells":[[100.0,339.3,"AT4X FEATURES:"]]},
+        {"top":783.3,"cells":[[172.0,630.9,"Specific Off-Road Chassis and Tuning"],[871.0,1411.9,"Multimatic DSSV Dampers, Featuring Three"]]},
+        {"top":785.1,"cells":[[1611.0,1991.6,"Protected Dual-Outlet Exhaust"]]},
+        {"top":823.9,"cells":[[871.0,1455.2,"Separate Spool Valves to Control Damping and"]]},
+        {"top":847.8,"cells":[[172.0,717.4,"Terrain Mode, Ideal for Low-Speed, Off-Road"]]},
+        {"top":849.6,"cells":[[1611.0,2187.3,"Front and Rear Electronic-Locking Differentials"]]},
+        {"top":864.4,"cells":[[871.0,1392.3,"Three Connected Chambers for Fluid Flow"]]},
+        {"top":888.3,"cells":[[172.0,644.2,"Conditions. It Provides Extreme Control"]]},
+        {"top":914.1,"cells":[[1611.0,2328.7,"Unique 18'' Wheels With High-Gloss Black Finish and New"]]},
+        {"top":928.0,"cells":[[518.6,658.5,"One-Pedal1"]]},
+        {"top":928.8,"cells":[[172.0,511.2,"and Is Precision-Enabled for"],[871.0,1435.9,"Uniquely Tuned Springs to Increase Maximum"]]},
+        {"top":954.6,"cells":[[1611.0,2315.6,"Larger 33\" Goodyear Wrangler Territory Mud-Terrain Tires"]]},
+        {"top":969.3,"cells":[[172.0,688.4,"Rock Crawling, Using Only the Accelerator."],[871.0,1287.4,"Front and Rear Suspension Travel"]]},
+        {"top":1019.1,"cells":[[1611.0,2198.2,"Ultra-High-Strength Boron Steel Front Approach"]]},
+        {"top":1033.9,"cells":[[871.0,1344.2,"Available Accessory Rocker Protection"]]},
+        {"top":1059.6,"cells":[[1611.0,2233.9,"Skid Plate and Large Steel Transfer Case Skid Plate"]]}
+      ]
+    },
+    {
+      "page": 31,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 2436.0,
+      "height": 1125.0,
+      "text": "30 N E W 2 0 2 3 AT4 X I N T E R I O R\nCAPABILITY WITHOUT\nCOMPROMISE\nDue to current supply-chain shortages, certain features shown have limited or late availability, or are\nno longer available. See the window label or a dealer regarding the features on an individual vehicle.",
+      "table_lines": [],
+      "lines": [
+        {"top":44.5,"cells":[[34.4,63.5,"30"],[233.6,567.6,"N E W 2 0 2 3 AT4 X I N T E R I O R"]]},
+        {"top":957.5,"cells":[[129.3,829.0,"CAPABILITY WITHOUT"]]},
+        {"top":1027.5,"cells":[[129.3,563.7,"COMPROMISE"]]},
+        {"top":1052.5,"cells":[[1412.0,2300.6,"Due to current supply-chain shortages, certain features shown have limited or late availability, or are"]]},
+        {"top":1074.1,"cells":[[1412.0,2296.5,"no longer available. See the window label or a dealer regarding the features on an individual vehicle."]]}
+      ]
+    },
+    {
+      "page": 32,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 2436.0,
+      "height": 1125.0,
+      "text": "31 N E W 2 0 2 3 AT4 X I N T E R I O R\nEXPLORE THE\nULTRA-PREMIUM\nINTERIOR\nThe New 2023 AT4X features a luxurious,\nathletic Obsidian Rush interior designed\nto let you explore beyond the boundaries\nof the road in ultra-premium style. AT4X also\nfeatures heated and ventilated best-in-class1\n16-way power front seats with a massage\nfeature, making all your travels first-class.\nDue to current supply-chain shortages, certain features shown have limited or late availability, or are\nno longer available. See the window label or a dealer regarding the features on an individual vehicle.",
+      "table_lines": [
+        "31 N E W 2 0 2 3 AT4 X I N T E R I O R | EXPLORE THE\nULTRA-PREMIUM\nINTERIOR\nThe New 2023 AT4X features a luxurious,\nathletic Obsidian Rush interior designed\nto let you explore beyond the boundaries\nof the road in ultra-premium style. AT4X also\nfeatures heated and ventilated best-in-class1\n16-way power front seats with a massage\nfeature, making all your travels first-class."
+      ],
+      "lines": [
+        {"top":44.5,"cells":[[34.4,59.7,"31"],[233.6,567.6,"N E W 2 0 2 3 AT4 X I N T E R I O R"]]},
+        {"top":217.4,"cells":[[1667.7,2110.8,"EXPLORE THE"]]},
+        {"top":287.4,"cells":[[1667.7,2211.3,"ULTRA-PREMIUM"]]},
+        {"top":357.4,"cells":[[1667.7,1976.0,"INTERIOR"]]},
+        {"top":598.1,"cells":[[1667.7,2319.9,"The New 2023 AT4X features a luxurious,"]]},
+        {"top":646.1,"cells":[[1667.7,2297.0,"athletic Obsidian Rush interior designed"]]},
+        {"top":694.1,"cells":[[1667.7,2301.4,"to let you explore beyond the boundaries"]]},
+        {"top":742.1,"cells":[[1667.7,2331.0,"of the road in ultra-premium style. AT4X also"]]},
+        {"top":789.1,"cells":[[1667.7,2334.2,"features heated and ventilated best-in-class1"]]},
+        {"top":838.1,"cells":[[1667.8,2306.2,"16-way power front seats with a massage"]]},
+        {"top":886.1,"cells":[[1667.8,2313.6,"feature, making all your travels first-class."]]},
+        {"top":1053.8,"cells":[[33.0,921.6,"Due to current supply-chain shortages, certain features shown have limited or late availability, or are"]]},
+        {"top":1075.4,"cells":[[33.0,917.5,"no longer available. See the window label or a dealer regarding the features on an individual vehicle."]]}
+      ]
+    },
+    {
+      "page": 33,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 2436.0,
+      "height": 1125.0,
+      "text": "32 N E W 2 0 2 3 AT4 X I N T E R I O R F E AT U R E S\nREFINED INTERIOR DETAILS\nNEW 2023 AT4X INTERIOR FEATURES:\nRefined Obsidian Rush Interior With Full-Grain Premium Leather-Trimmed Instrument Panel Etched Stainless-Steel Speaker Grille Details\nLeather Seats, Red and White Double-Needle and Door Panels Accented With Black-Finished\nBest-in-Class1 16-Way Power-Adjustable\nStitching and Technical-Grain Leather Accents Authentic Vanta Ash Wood Trim\nFront Seats With Massage Feature\nMetal AT4X Badging on Front Seatbacks and Doors Premium Microsuede Headliner, Sun Visors and Pillars",
+      "table_lines": [],
+      "lines": [
+        {"top":44.5,"cells":[[35.5,64.0,"32"],[233.6,711.1,"N E W 2 0 2 3 AT4 X I N T E R I O R F E AT U R E S"]]},
+        {"top":106.1,"cells":[[776.2,1659.8,"REFINED INTERIOR DETAILS"]]},
+        {"top":810.4,"cells":[[132.8,664.3,"NEW 2023 AT4X INTERIOR FEATURES:"]]},
+        {"top":876.8,"cells":[[204.7,778.7,"Refined Obsidian Rush Interior With Full-Grain"],[973.9,1518.9,"Premium Leather-Trimmed Instrument Panel"],[1771.7,2304.7,"Etched Stainless-Steel Speaker Grille Details"]]},
+        {"top":917.3,"cells":[[204.7,785.2,"Leather Seats, Red and White Double-Needle"],[973.9,1559.8,"and Door Panels Accented With Black-Finished"]]},
+        {"top":941.5,"cells":[[1771.7,2283.4,"Best-in-Class1 16-Way Power-Adjustable"]]},
+        {"top":957.8,"cells":[[204.7,776.3,"Stitching and Technical-Grain Leather Accents"],[973.9,1374.6,"Authentic Vanta Ash Wood Trim"]]},
+        {"top":982.8,"cells":[[1771.7,2206.3,"Front Seats With Massage Feature"]]},
+        {"top":1022.3,"cells":[[204.7,830.3,"Metal AT4X Badging on Front Seatbacks and Doors"],[973.9,1627.2,"Premium Microsuede Headliner, Sun Visors and Pillars"]]}
+      ]
+    },
+    {
+      "page": 34,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 2436.0,
+      "height": 1125.0,
+      "text": "33 AT4 X A E V E D I T I O N\nEQUIPPED TO MASTER\nUNFORGIVING TERRAIN\nTHE FIRST EVER SIERRA AT4X AEV EDITION\nTake on the rigors of untamed backcountry\nand the challenges of off-road adventure in\nthe First Ever Sierra AT4X AEV Edition.\nEquipped by AEV\u2014top off-road recreational driving\nand overland adventure travel customizers\u2014the\nSierra AT4X AEV Edition brings you the next level\nof AT4X off-road capability.\nAvailable accessories shown.",
+      "table_lines": [
+        "33 AT4 X A E V E D I T I O N\nEQUIPPED TO MASTER\nUNFORGIVING TERRAIN\nTHE FIRST EVER SIERRA AT4X AEV EDITION\nTake on the rigors of untamed backcountry\nand the challenges of off-road adventure in\nthe First Ever Sierra AT4X AEV Edition.\nEquipped by AEV\u2014top off-road recreational driving\nand overland adventure travel customizers\u2014the\nSierra AT4X AEV Edition brings you the next level\nof AT4X off-road capability.",
+        "Available accessories shown."
+      ],
+      "lines": [
+        {"top":44.5,"cells":[[34.9,63.3,"33"],[233.6,469.2,"AT4 X A E V E D I T I O N"]]},
+        {"top":154.4,"cells":[[83.8,795.0,"EQUIPPED TO MASTER"]]},
+        {"top":224.4,"cells":[[83.4,830.8,"UNFORGIVING TERRAIN"]]},
+        {"top":460.6,"cells":[[82.9,823.4,"THE FIRST EVER SIERRA AT4X AEV EDITION"]]},
+        {"top":513.1,"cells":[[82.9,734.5,"Take on the rigors of untamed backcountry"]]},
+        {"top":561.1,"cells":[[82.9,741.6,"and the challenges of off-road adventure in"]]},
+        {"top":609.1,"cells":[[82.9,668.3,"the First Ever Sierra AT4X AEV Edition."]]},
+        {"top":693.1,"cells":[[82.9,867.5,"Equipped by AEV\u2014top off-road recreational driving"]]},
+        {"top":741.1,"cells":[[82.9,813.0,"and overland adventure travel customizers\u2014the"]]},
+        {"top":789.1,"cells":[[82.9,831.9,"Sierra AT4X AEV Edition brings you the next level"]]},
+        {"top":837.1,"cells":[[82.9,496.0,"of AT4X off-road capability."]]},
+        {"top":1073.9,"cells":[[2145.7,2400.0,"Available accessories shown."]]}
+      ]
+    },
+    {
+      "page": 35,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 2436.0,
+      "height": 1125.0,
+      "text": "34 AT4 X A E V E D I T I O N\nAEV STAMPED-STEEL\nSummit rugged topography with a 32.5-degree front approach angle\nand an optimized 23.4-degree departure angle with AEV heavy-duty,\nFRONT AND REAR BUMPERS\nhot-stamped-steel powder-coated and e-coated front and rear bumpers.\nAvailable accessories shown.",
+      "table_lines": [],
+      "lines": [
+        {"top":44.5,"cells":[[33.6,62.9,"34"],[233.6,469.2,"AT4 X A E V E D I T I O N"]]},
+        {"top":203.0,"cells":[[132.2,817.1,"AEV STAMPED-STEEL"]]},
+        {"top":209.7,"cells":[[1173.6,2266.2,"Summit rugged topography with a 32.5-degree front approach angle"]]},
+        {"top":257.7,"cells":[[1173.6,2255.6,"and an optimized 23.4-degree departure angle with AEV heavy-duty,"]]},
+        {"top":273.0,"cells":[[129.9,1030.8,"FRONT AND REAR BUMPERS"]]},
+        {"top":305.7,"cells":[[1173.6,2301.7,"hot-stamped-steel powder-coated and e-coated front and rear bumpers."]]},
+        {"top":1074.9,"cells":[[37.0,291.3,"Available accessories shown."]]}
+      ]
+    },
+    {
+      "page": 36,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 2436.0,
+      "height": 1125.0,
+      "text": "35 AT4 X A E V E D I T I O N\nAEV HOT-STAMPED BORON\nSTEEL SKID PLATES\nTake on tough terrain and keep on going thanks\nto rugged underbody protection with press-hardened\nboron steel skid plates.\nThese ultra-high-strength skid plates, more than\n3.5 times stronger than equivalent cold-stamped\nhigh-strength steel, help protect vital components\nsuch as the front approach, steering gear, transfer case,\nfuel tank and rear differential from rocks, stumps\nand other adversities of the trail.\nAvailable accessories shown.",
+      "table_lines": [
+        "35 AT4 X A E V E D I T I O N\nAEV HOT-STAMPED BORON\nSTEEL SKID PLATES\nTake on tough terrain and keep on going thanks\nto rugged underbody protection with press-hardened\nboron steel skid plates.\nThese ultra-high-strength skid plates, more than\n3.5 times stronger than equivalent cold-stamped\nhigh-strength steel, help protect vital components\nsuch as the front approach, steering gear, transfer case,\nfuel tank and rear differential from rocks, stumps\nand other adversities of the trail.",
+        "Available accessories shown."
+      ],
+      "lines": [
+        {"top":44.5,"cells":[[34.0,62.4,"35"],[233.6,469.2,"AT4 X A E V E D I T I O N"]]},
+        {"top":159.0,"cells":[[132.5,983.3,"AEV HOT-STAMPED BORON"]]},
+        {"top":229.0,"cells":[[133.9,768.1,"STEEL SKID PLATES"]]},
+        {"top":469.7,"cells":[[134.0,876.4,"Take on tough terrain and keep on going thanks"]]},
+        {"top":517.7,"cells":[[134.0,943.6,"to rugged underbody protection with press-hardened"]]},
+        {"top":565.7,"cells":[[134.0,490.4,"boron steel skid plates."]]},
+        {"top":649.7,"cells":[[134.0,886.0,"These ultra-high-strength skid plates, more than"]]},
+        {"top":697.7,"cells":[[134.0,905.8,"3.5 times stronger than equivalent cold-stamped"]]},
+        {"top":745.7,"cells":[[134.0,905.2,"high-strength steel, help protect vital components"]]},
+        {"top":793.7,"cells":[[134.0,961.5,"such as the front approach, steering gear, transfer case,"]]},
+        {"top":841.7,"cells":[[134.0,888.9,"fuel tank and rear differential from rocks, stumps"]]},
+        {"top":889.8,"cells":[[134.0,636.0,"and other adversities of the trail."]]},
+        {"top":1075.9,"cells":[[2145.7,2400.0,"Available accessories shown."]]}
+      ]
+    },
+    {
+      "page": 37,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 2436.0,
+      "height": 1125.0,
+      "text": "36 AT4 X A E V E D I T I O N\nEXCLUSIVE AEV EDITION DESIGN ELEMENTS\nThe AT4X AEV Edition\u2019s bold styling stands Gloss-Black Door Handles and Black Tailgate Accent AEV Racing-Inspired Salta Wheels\nWith 12-Spoke Design and Recessed\nout with the exclusive details you expect\nAEV Badging on the Exterior and Interior\nValve Stems\nfrom a true overland custom build.",
+      "table_lines": [],
+      "lines": [
+        {"top":44.5,"cells":[[34.9,63.5,"36"],[233.6,469.2,"AT4 X A E V E D I T I O N"]]},
+        {"top":127.4,"cells":[[523.1,1912.8,"EXCLUSIVE AEV EDITION DESIGN ELEMENTS"]]},
+        {"top":889.5,"cells":[[135.0,791.3,"The AT4X AEV Edition\u2019s bold styling stands"],[991.0,1643.9,"Gloss-Black Door Handles and Black Tailgate Accent"],[1842.0,2273.7,"AEV Racing-Inspired Salta Wheels"]]},
+        {"top":930.7,"cells":[[1842.0,2303.5,"With 12-Spoke Design and Recessed"]]},
+        {"top":937.5,"cells":[[135.0,762.9,"out with the exclusive details you expect"]]},
+        {"top":954.7,"cells":[[991.0,1497.4,"AEV Badging on the Exterior and Interior"]]},
+        {"top":971.2,"cells":[[1842.0,1994.1,"Valve Stems"]]},
+        {"top":985.5,"cells":[[135.0,666.6,"from a true overland custom build."]]}
+      ]
+    },
+    {
+      "page": 38,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 2436.0,
+      "height": 1125.0,
+      "text": "37 S LT\nTHE REAL DEAL\nSierra SLT delivers the style, refinement, capability,\npower and efficiency your life demands of your truck.\nDue to current supply-chain shortages, certain features shown have limited or late availability, or are\nno longer available. See the window label or a dealer regarding the features on an individual vehicle.",
+      "table_lines": [
+        "37 S LT\nTHE REAL DEAL\nSierra SLT delivers the style, refinement, capability,\npower and efficiency your life demands of your truck.",
+        "Due to current supply-chain shortages, certain features shown have limited or late availability, or are\nno longer available. See the window label or a dealer regarding the features on an individual vehicle."
+      ],
+      "lines": [
+        {"top":44.5,"cells":[[34.3,61.4,"37"],[233.6,276.9,"S LT"]]},
+        {"top":229.0,"cells":[[133.7,640.1,"THE REAL DEAL"]]},
+        {"top":469.7,"cells":[[133.0,901.6,"Sierra SLT delivers the style, refinement, capability,"]]},
+        {"top":517.7,"cells":[[133.0,937.7,"power and efficiency your life demands of your truck."]]},
+        {"top":1053.8,"cells":[[134.0,1022.6,"Due to current supply-chain shortages, certain features shown have limited or late availability, or are"]]},
+        {"top":1075.4,"cells":[[134.0,1018.5,"no longer available. See the window label or a dealer regarding the features on an individual vehicle."]]}
+      ]
+    },
+    {
+      "page": 39,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 2436.0,
+      "height": 1125.0,
+      "text": "38 S LT E X T E R I O R F E AT U R E S\nTake control with SLT\u2019s bold stance and large SIERRA SLT FEATURES:\nbed and stand out with high-intensity LED\nWide, Bold Bumper, Fascia and Grille Design\n20\" Polished Aluminum Wheels\nheadlamps, LED taillamps and chrome accents.\nWith Technical Gray Painted\nDual-Projector LED Headlamps With Signature\nAccents Are Available\nC-Shape Design\nDue to current supply-chain shortages, certain features shown have limited or late availability, or are no longer available. See the window label or a dealer regarding the features on an individual vehicle.",
+      "table_lines": [],
+      "lines": [
+        {"top":44.5,"cells":[[34.3,63.3,"38"],[233.6,559.2,"S LT E X T E R I O R F E AT U R E S"]]},
+        {"top":159.5,"cells":[[1044.0,1378.0,"SIERRA SLT FEATURES:"]]},
+        {"top":161.6,"cells":[[134.8,837.9,"Take control with SLT\u2019s bold stance and large"]]},
+        {"top":209.6,"cells":[[134.8,794.5,"bed and stand out with high-intensity LED"]]},
+        {"top":226.0,"cells":[[1116.0,1669.0,"Wide, Bold Bumper, Fascia and Grille Design"]]},
+        {"top":230.6,"cells":[[1915.0,2305.2,"20\" Polished Aluminum Wheels"]]},
+        {"top":257.6,"cells":[[134.8,868.5,"headlamps, LED taillamps and chrome accents."]]},
+        {"top":271.1,"cells":[[1915.0,2267.2,"With Technical Gray Painted"]]},
+        {"top":290.5,"cells":[[1116.0,1697.9,"Dual-Projector LED Headlamps With Signature"]]},
+        {"top":311.6,"cells":[[1915.0,2186.5,"Accents Are Available"]]},
+        {"top":331.0,"cells":[[1116.0,1313.8,"C-Shape Design"]]},
+        {"top":1075.4,"cells":[[134.0,1912.8,"Due to current supply-chain shortages, certain features shown have limited or late availability, or are no longer available. See the window label or a dealer regarding the features on an individual vehicle."]]}
+      ]
+    },
+    {
+      "page": 40,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 2436.0,
+      "height": 1125.0,
+      "text": "39 S LT C A PA B I L I T Y\nMAKE THINGS HAPPEN\nSIERRA SLT FEATURES:\nCargo Bed Volume1: 62.9 cu. ft. (Short Bed) or 71.7 cu. ft. (Standard Bed)\nCornerStep Rear Bumper\n5.3L V8 Engine Paired With a 10-Speed Automatic Transmission\nIs Standard\nWorld\u2019s First Six-Function GMC MultiPro Tailgate2 Is Available\n6.2L Gas V8 and 3.0L Duramax Turbo Diesel Engines Are Available\nX31 Off-Road Package Is Available\nDue to current supply-chain shortages, certain features shown have limited or late availability, or are\nno longer available. See the window label or a dealer regarding the features on an individual vehicle.",
+      "table_lines": [
+        "39 S LT C A PA B I L I T Y\nMAKE THINGS HAPPEN\nSIERRA SLT FEATURES:\nCargo Bed Volume1: 62.9 cu. ft. (Short Bed) or 71.7 cu. ft. (Standard Bed)\nCornerStep Rear Bumper\n5.3L V8 Engine Paired With a 10-Speed Automatic Transmission\nIs Standard\nWorld\u2019s First Six-Function GMC MultiPro Tailgate2 Is Available\n6.2L Gas V8 and 3.0L Duramax Turbo Diesel Engines Are Available\nX31 Off-Road Package Is Available\nDue to current supply-chain shortages, certain features shown have limited or late availability, or are\nno longer available. See the window label or a dealer regarding the features on an individual vehicle."
+      ],
+      "lines": [
+        {"top":44.5,"cells":[[35.1,63.7,"39"],[233.6,440.5,"S LT C A PA B I L I T Y"]]},
+        {"top":170.5,"cells":[[129.0,861.9,"MAKE THINGS HAPPEN"]]},
+        {"top":414.3,"cells":[[129.1,463.2,"SIERRA SLT FEATURES:"]]},
+        {"top":479.9,"cells":[[200.1,1079.6,"Cargo Bed Volume1: 62.9 cu. ft. (Short Bed) or 71.7 cu. ft. (Standard Bed)"]]},
+        {"top":545.2,"cells":[[200.1,511.2,"CornerStep Rear Bumper"]]},
+        {"top":609.7,"cells":[[200.1,1000.8,"5.3L V8 Engine Paired With a 10-Speed Automatic Transmission"]]},
+        {"top":650.2,"cells":[[201.2,342.9,"Is Standard"]]},
+        {"top":713.9,"cells":[[200.1,961.2,"World\u2019s First Six-Function GMC MultiPro Tailgate2 Is Available"]]},
+        {"top":779.2,"cells":[[200.1,1014.8,"6.2L Gas V8 and 3.0L Duramax Turbo Diesel Engines Are Available"]]},
+        {"top":843.7,"cells":[[200.1,635.9,"X31 Off-Road Package Is Available"]]},
+        {"top":1054.3,"cells":[[135.0,1005.2,"Due to current supply-chain shortages, certain features shown have limited or late availability, or are"]]},
+        {"top":1075.9,"cells":[[135.0,1001.3,"no longer available. See the window label or a dealer regarding the features on an individual vehicle."]]}
+      ]
+    },
+    {
+      "page": 41,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 2436.0,
+      "height": 1125.0,
+      "text": "40 S LT I N T E R I O R\nRISE ABOVE\nIN SIERRA SLT\nSierra SLT\u2019s upgraded interior heightens\nyour driving experience with a driver-centric\ninstrument panel, along with an available center\nconsole featuring Electronic Precision Shift.\nDue to current supply-chain shortages, certain features shown have\nlimited or late availability, or are no longer available. See the window\nlabel or a dealer regarding the features on an individual vehicle.",
+      "table_lines": [
+        "40 S LT I N T E R I O R",
+        "RISE ABOVE\nIN SIERRA SLT\nSierra SLT\u2019s upgraded interior heightens\nyour driving experience with a driver-centric\ninstrument panel, along with an available center\nconsole featuring Electronic Precision Shift.\nDue to current supply-chain shortages, certain features shown have\nlimited or late availability, or are no longer available. See the window\nlabel or a dealer regarding the features on an individual vehicle."
+      ],
+      "lines": [
+        {"top":44.5,"cells":[[36.0,66.0,"40"],[234.6,409.3,"S LT I N T E R I O R"]]},
+        {"top":489.4,"cells":[[1613.9,1996.5,"RISE ABOVE"]]},
+        {"top":559.4,"cells":[[1613.4,2068.7,"IN SIERRA SLT"]]},
+        {"top":801.0,"cells":[[1615.0,2233.9,"Sierra SLT\u2019s upgraded interior heightens"]]},
+        {"top":849.0,"cells":[[1615.0,2280.7,"your driving experience with a driver-centric"]]},
+        {"top":897.0,"cells":[[1615.0,2315.0,"instrument panel, along with an available center"]]},
+        {"top":945.0,"cells":[[1615.0,2263.9,"console featuring Electronic Precision Shift."]]},
+        {"top":1030.0,"cells":[[1616.0,2214.0,"Due to current supply-chain shortages, certain features shown have"]]},
+        {"top":1051.6,"cells":[[1616.0,2224.4,"limited or late availability, or are no longer available. See the window"]]},
+        {"top":1073.2,"cells":[[1616.0,2177.1,"label or a dealer regarding the features on an individual vehicle."]]}
+      ]
+    },
+    {
+      "page": 42,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 2436.0,
+      "height": 1125.0,
+      "text": "41 S LT I N T E R I O R F E AT U R E S\nLarge 13.4\" Diagonal Color Touch-Screen Is Complemented 10-Way Power Driver and Front-Passenger Seats, Including Two-Way Lumbar Control,\nby a 12.3\" Diagonal Configurable Driver Information Center Driver-Seat Memory and Available Power-Rake/-Telescoping Steering Column\nStorage Areas in Rear Seatback and Under Rear Seat Front Leather-Appointed Bucket Seats Are Available\nDue to current supply-chain shortages, certain features shown have limited or late availability, or are no longer available. See the window label or a dealer regarding the features on an individual vehicle.",
+      "table_lines": [],
+      "lines": [
+        {"top":44.5,"cells":[[36.5,61.4,"41"],[234.6,552.8,"S LT I N T E R I O R F E AT U R E S"]]},
+        {"top":884.3,"cells":[[172.0,906.6,"Large 13.4\" Diagonal Color Touch-Screen Is Complemented"],[1231.0,2306.8,"10-Way Power Driver and Front-Passenger Seats, Including Two-Way Lumbar Control,"]]},
+        {"top":924.8,"cells":[[172.0,904.4,"by a 12.3\" Diagonal Configurable Driver Information Center"],[1231.0,2188.8,"Driver-Seat Memory and Available Power-Rake/-Telescoping Steering Column"]]},
+        {"top":989.3,"cells":[[172.0,839.4,"Storage Areas in Rear Seatback and Under Rear Seat"],[1231.0,1878.5,"Front Leather-Appointed Bucket Seats Are Available"]]},
+        {"top":1070.9,"cells":[[136.0,1914.8,"Due to current supply-chain shortages, certain features shown have limited or late availability, or are no longer available. See the window label or a dealer regarding the features on an individual vehicle."]]}
+      ]
+    },
+    {
+      "page": 43,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 2436.0,
+      "height": 1125.0,
+      "text": "42 E L E VAT I O N\nALTITUDE\nIS EVERYTHING\nSierra Elevation goes all in with bold\nmonochromatic styling and premium\nupgrades that confidently announce\nthat something truly unique has arrived.\nAvailable accessories shown.",
+      "table_lines": [],
+      "lines": [
+        {"top":44.5,"cells":[[34.3,63.7,"42"],[234.6,372.7,"E L E VAT I O N"]]},
+        {"top":151.0,"cells":[[66.5,378.8,"ALTITUDE"]]},
+        {"top":221.0,"cells":[[68.4,560.7,"IS EVERYTHING"]]},
+        {"top":461.7,"cells":[[68.0,632.0,"Sierra Elevation goes all in with bold"]]},
+        {"top":509.7,"cells":[[68.0,646.3,"monochromatic styling and premium"]]},
+        {"top":557.7,"cells":[[68.0,627.4,"upgrades that confidently announce"]]},
+        {"top":605.7,"cells":[[68.0,687.3,"that something truly unique has arrived."]]},
+        {"top":1074.9,"cells":[[74.0,328.3,"Available accessories shown."]]}
+      ]
+    },
+    {
+      "page": 44,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 2436.0,
+      "height": 1125.0,
+      "text": "43 E L E VAT I O N I N T E R I O R\nTOUGH AND\nCloth Interior and 40/20/40 Front Bench Seat Best-in-Class1 Crew Cab Front Head and Leg Room\nELEVATED INTERIOR Customizable 13.4\" Diagonal Center Heated Driver and Front Outboard Passenger Seats\nTouch-Screen and a 12.3\" Diagonal\nDue to current supply-chain shortages, certain features shown have\nlimited or late availability, or are no longer available. See the window\nConfigurable Driver Information Center\nlabel or a dealer regarding the features on an individual vehicle.",
+      "table_lines": [],
+      "lines": [
+        {"top":44.5,"cells":[[34.3,63.6,"43"],[233.6,503.1,"E L E VAT I O N I N T E R I O R"]]},
+        {"top":890.0,"cells":[[135.3,507.7,"TOUGH AND"]]},
+        {"top":895.8,"cells":[[1653.0,1828.0,"Best-in-Class1"]]},
+        {"top":896.6,"cells":[[930.7,1487.9,"Cloth Interior and 40/20/40 Front Bench Seat"],[1835.8,2295.5,"Crew Cab Front Head and Leg Room"]]},
+        {"top":960.0,"cells":[[132.6,774.4,"ELEVATED INTERIOR"],[930.7,1378.8,"Customizable 13.4\" Diagonal Center"],[1653.0,2296.1,"Heated Driver and Front Outboard Passenger Seats"]]},
+        {"top":1001.6,"cells":[[930.7,1367.7,"Touch-Screen and a 12.3\" Diagonal"]]},
+        {"top":1015.6,"cells":[[1616.0,2214.0,"Due to current supply-chain shortages, certain features shown have"]]},
+        {"top":1037.2,"cells":[[1616.0,2224.4,"limited or late availability, or are no longer available. See the window"]]},
+        {"top":1042.1,"cells":[[930.7,1398.6,"Configurable Driver Information Center"]]},
+        {"top":1058.8,"cells":[[1616.0,2177.1,"label or a dealer regarding the features on an individual vehicle."]]}
+      ]
+    },
+    {
+      "page": 45,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 2436.0,
+      "height": 1125.0,
+      "text": "44 E L E VAT I O N I N T E R I O R\nRUGGED YET REFINED\nThe available Elevation Premium Package includes first-class\nJet Black leather-appointed front bucket seats, tech-savvy\nfeatures such as available wireless charging1 and more.\nDue to current supply-chain shortages, certain features shown have limited or late availability, or are\nno longer available. See the window label or a dealer regarding the features on an individual vehicle.",
+      "table_lines": [
+        "44 E L E VAT I O N I N T E R I O R"
+      ],
+      "lines": [
+        {"top":44.5,"cells":[[36.3,66.5,"44"],[233.6,503.1,"E L E VAT I O N I N T E R I O R"]]},
+        {"top":627.7,"cells":[[1382.9,2067.3,"RUGGED YET REFINED"]]},
+        {"top":868.4,"cells":[[1382.0,2306.4,"The available Elevation Premium Package includes first-class"]]},
+        {"top":916.4,"cells":[[1382.0,2282.9,"Jet Black leather-appointed front bucket seats, tech-savvy"]]},
+        {"top":963.4,"cells":[[1932.2,2077.5,"charging1"]]},
+        {"top":964.4,"cells":[[1382.0,1922.2,"features such as available wireless"],[2087.4,2243.1,"and more."]]},
+        {"top":1050.3,"cells":[[1383.0,2271.6,"Due to current supply-chain shortages, certain features shown have limited or late availability, or are"]]},
+        {"top":1071.9,"cells":[[1383.0,2267.5,"no longer available. See the window label or a dealer regarding the features on an individual vehicle."]]}
+      ]
+    },
+    {
+      "page": 46,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 2436.0,
+      "height": 1125.0,
+      "text": "45 E L E VAT I O N E X T E R I O R F E AT U R E S\nELEVATED DETAILS\nSignature Front Fascia and Grille Design 2.7L Turbo High-Output Engine With Active Fuel Management Is Standard\n20\" Gloss-Black Painted Aluminum Wheels 5.3L Gas V8 or 3.0L Duramax Turbo Diesel Engines Are Available",
+      "table_lines": [],
+      "lines": [
+        {"top":44.5,"cells":[[34.4,63.6,"45"],[234.6,655.0,"E L E VAT I O N E X T E R I O R F E AT U R E S"]]},
+        {"top":120.6,"cells":[[912.7,1523.3,"ELEVATED DETAILS"]]},
+        {"top":931.9,"cells":[[338.0,835.4,"Signature Front Fascia and Grille Design"],[1218.0,2139.9,"2.7L Turbo High-Output Engine With Active Fuel Management Is Standard"]]},
+        {"top":996.4,"cells":[[338.0,872.5,"20\" Gloss-Black Painted Aluminum Wheels"],[1218.0,2027.5,"5.3L Gas V8 or 3.0L Duramax Turbo Diesel Engines Are Available"]]}
+      ]
+    },
+    {
+      "page": 47,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 2436.0,
+      "height": 1125.0,
+      "text": "46 S L E\nA JOB WELL DONE\nIS A JOB DONE WELL\nSierra SLE has what it takes to get the job done right.\nRobust capability and premium comfort help to make\ntime spent behind the wheel the best part of your day.",
+      "table_lines": [
+        "46 S L E\nA JOB WELL DONE\nIS A JOB DONE WELL\nSierra SLE has what it takes to get the job done right.\nRobust capability and premium comfort help to make\ntime spent behind the wheel the best part of your day."
+      ],
+      "lines": [
+        {"top":44.5,"cells":[[36.2,65.7,"46"],[234.6,279.9,"S L E"]]},
+        {"top":592.5,"cells":[[124.5,697.4,"A JOB WELL DONE"]]},
+        {"top":662.5,"cells":[[126.4,776.9,"IS A JOB DONE WELL"]]},
+        {"top":904.7,"cells":[[132.8,975.8,"Sierra SLE has what it takes to get the job done right."]]},
+        {"top":952.7,"cells":[[132.8,950.2,"Robust capability and premium comfort help to make"]]},
+        {"top":1000.7,"cells":[[132.8,970.2,"time spent behind the wheel the best part of your day."]]}
+      ]
+    },
+    {
+      "page": 48,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 2436.0,
+      "height": 1125.0,
+      "text": "47 G M C P R O S A F E T Y\nGO FORTH WITH GMC PRO SAFETY1 IS STANDARD ON 2023 SIERRA MODELS AND INCLUDES:\nCONFIDENCE Lane Keep Assist With Lane Departure Warning Following Distance Indicator\nAutomatic Emergency Braking Front Pedestrian Braking\nForward Collision Alert IntelliBeam\u2014Auto High Beams",
+      "table_lines": [
+        "47 G M C P R O S A F E T Y\nGO FORTH WITH GMC PRO SAFETY1 IS STANDARD ON 2023 SIERRA MODELS AND INCLUDES:\nCONFIDENCE Lane Keep Assist With Lane Departure Warning Following Distance Indicator\nAutomatic Emergency Braking Front Pedestrian Braking\nForward Collision Alert IntelliBeam\u2014Auto High Beams"
+      ],
+      "lines": [
+        {"top":44.5,"cells":[[34.6,61.1,"47"],[233.6,456.8,"G M C P R O S A F E T Y"]]},
+        {"top":794.9,"cells":[[128.8,638.6,"GO FORTH WITH"]]},
+        {"top":796.9,"cells":[[904.0,1953.9,"GMC PRO SAFETY1 IS STANDARD ON 2023 SIERRA MODELS AND INCLUDES:"]]},
+        {"top":864.3,"cells":[[128.8,534.9,"CONFIDENCE"],[976.0,1576.9,"Lane Keep Assist With Lane Departure Warning"],[1918.0,2267.0,"Following Distance Indicator"]]},
+        {"top":928.8,"cells":[[976.0,1351.7,"Automatic Emergency Braking"],[1918.0,2225.8,"Front Pedestrian Braking"]]},
+        {"top":993.3,"cells":[[976.0,1258.5,"Forward Collision Alert"],[1918.0,2302.4,"IntelliBeam\u2014Auto High Beams"]]}
+      ]
+    },
+    {
+      "page": 49,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 2436.0,
+      "height": 1125.0,
+      "text": "48 M U LT I P R O\nMULTIFACETED,\nMULTIFUNCTIONAL\nINNOVATION\nThe available MultiPro Tailgate1 adds even more\nfunctionality to Sierra.\nAVAILABLE MULTIPRO ACCESSORIES:\nTake Your Music Outdoors With the Accessory MultiPro\nAudio System by KICKER\u00ae2\u2014Standard on AT4X and\nDenali Ultimate and Available on SLE, Elevation, SLT,\nAT4 and Denali\nIlluminate Your Destination With Available Dealer-\nInstalled Accessory LED Lighting",
+      "table_lines": [],
+      "lines": [
+        {"top":44.5,"cells":[[35.9,65.7,"48"],[233.6,358.1,"M U LT I P R O"]]},
+        {"top":143.7,"cells":[[1534.0,2038.0,"MULTIFACETED,"]]},
+        {"top":213.7,"cells":[[1534.0,2141.5,"MULTIFUNCTIONAL"]]},
+        {"top":283.7,"cells":[[1534.0,1928.0,"INNOVATION"]]},
+        {"top":523.4,"cells":[[1888.3,2021.2,"Tailgate1"]]},
+        {"top":524.4,"cells":[[1534.0,1879.3,"The available MultiPro"],[2031.0,2279.7,"adds even more"]]},
+        {"top":572.4,"cells":[[1534.0,1873.8,"functionality to Sierra."]]},
+        {"top":659.6,"cells":[[1534.0,2062.6,"AVAILABLE MULTIPRO ACCESSORIES:"]]},
+        {"top":726.0,"cells":[[1606.0,2273.4,"Take Your Music Outdoors With the Accessory MultiPro"]]},
+        {"top":765.7,"cells":[[1822.1,2082.2,"KICKER\u00ae2\u2014Standard"]]},
+        {"top":766.5,"cells":[[1606.0,1814.4,"Audio System by"],[2090.2,2248.6,"on AT4X and"]]},
+        {"top":807.0,"cells":[[1606.0,2258.1,"Denali Ultimate and Available on SLE, Elevation, SLT,"]]},
+        {"top":847.5,"cells":[[1606.0,1795.1,"AT4 and Denali"]]},
+        {"top":912.0,"cells":[[1606.0,2212.8,"Illuminate Your Destination With Available Dealer-"]]},
+        {"top":952.5,"cells":[[1606.0,2007.1,"Installed Accessory LED Lighting"]]}
+      ]
+    },
+    {
+      "page": 50,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 2436.0,
+      "height": 1125.0,
+      "text": "49 M U LT I P R O\nPRIMARY GATE PRIMARY GATE LOAD STOP EASY ACCESS\nFULL-WIDTH STEP INNER GATE LOAD STOP INNER GATE WITH WORK SURFACE",
+      "table_lines": [],
+      "lines": [
+        {"top":44.5,"cells":[[33.5,63.0,"49"],[233.6,358.1,"M U LT I P R O"]]},
+        {"top":564.3,"cells":[[34.0,251.1,"PRIMARY GATE"],[850.5,1235.5,"PRIMARY GATE LOAD STOP"],[1668.0,1866.2,"EASY ACCESS"]]},
+        {"top":1072.5,"cells":[[34.0,291.9,"FULL-WIDTH STEP"],[850.1,1189.8,"INNER GATE LOAD STOP"],[1668.0,2155.9,"INNER GATE WITH WORK SURFACE"]]}
+      ]
+    },
+    {
+      "page": 51,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 2436.0,
+      "height": 1125.0,
+      "text": "50 C A R B O N P R O\nMADE TO STAND TOUGH\nTackle tough tasks with the available CarbonPro\nbed, purpose-built from a carbon-fiber composite\nfor hard-bitten resiliency and tenacious durability\nto help protect against scratches, dents and corrosion.",
+      "table_lines": [
+        "50 C A R B O N P R O\nMADE TO STAND TOUGH\nTackle tough tasks with the available CarbonPro\nbed, purpose-built from a carbon-fiber composite\nfor hard-bitten resiliency and tenacious durability\nto help protect against scratches, dents and corrosion."
+      ],
+      "lines": [
+        {"top":44.5,"cells":[[30.2,59.4,"50"],[233.6,388.1,"C A R B O N P R O"]]},
+        {"top":234.9,"cells":[[133.9,895.7,"MADE TO STAND TOUGH"]]},
+        {"top":475.5,"cells":[[133.0,883.8,"Tackle tough tasks with the available CarbonPro"]]},
+        {"top":523.6,"cells":[[133.0,911.0,"bed, purpose-built from a carbon-fiber composite"]]},
+        {"top":571.6,"cells":[[133.0,893.5,"for hard-bitten resiliency and tenacious durability"]]},
+        {"top":619.6,"cells":[[133.0,937.3,"to help protect against scratches, dents and corrosion."]]}
+      ]
+    },
+    {
+      "page": 52,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 2436.0,
+      "height": 1125.0,
+      "text": "51 C A R B O N P R O\nTHE AVAILABLE CARBONPRO BED OFFERS:\nSTRENGTH, DURABILITY AND SCRATCH RESISTANCE:\nCarbonPro\u2019s Carbon-Fiber Composite Bed Material Offers\nExcellent Scratch, Dent and Corrosion Resistance\nCORROSION RESISTANCE: CarbonPro Composite Naturally\nResists Corrosion, Helping the Bed Withstand Weathering\nto Maintain a Premium Appearance\nREDUCED WEIGHT: CarbonPro Weighs 25 Percent Less\nThan the Steel Bed, Eliminating Roughly 60 lbs of Vehicle Mass\nMORE VOLUME: CarbonPro Increases the Already-Generous\nCargo Volume of Sierra\u2019s Steel Bed by 1 cu. ft.\nMORE FUNCTIONALITY: CarbonPro Features Three Molded-in\nSections for Wheels and Two Additional Tie-Downs (14 Total)\nto Ease the Loading and Securing of Dirt Bikes and ATVs",
+      "table_lines": [
+        "51 C A R B O N P R O\nTHE AVAILABLE CARBONPRO BED OFFERS:\nSTRENGTH, DURABILITY AND SCRATCH RESISTANCE:\nCarbonPro\u2019s Carbon-Fiber Composite Bed Material Offers\nExcellent Scratch, Dent and Corrosion Resistance\nCORROSION RESISTANCE: CarbonPro Composite Naturally\nResists Corrosion, Helping the Bed Withstand Weathering\nto Maintain a Premium Appearance\nREDUCED WEIGHT: CarbonPro Weighs 25 Percent Less\nThan the Steel Bed, Eliminating Roughly 60 lbs of Vehicle Mass\nMORE VOLUME: CarbonPro Increases the Already-Generous\nCargo Volume of Sierra\u2019s Steel Bed by 1 cu. ft.\nMORE FUNCTIONALITY: CarbonPro Features Three Molded-in\nSections for Wheels and Two Additional Tie-Downs (14 Total)\nto Ease the Loading and Securing of Dirt Bikes and ATVs"
+      ],
+      "lines": [
+        {"top":44.5,"cells":[[39.1,64.5,"51"],[233.6,388.1,"C A R B O N P R O"]]},
+        {"top":260.8,"cells":[[99.2,701.2,"THE AVAILABLE CARBONPRO BED OFFERS:"]]},
+        {"top":327.6,"cells":[[171.2,926.2,"STRENGTH, DURABILITY AND SCRATCH RESISTANCE:"]]},
+        {"top":367.8,"cells":[[171.2,882.8,"CarbonPro\u2019s Carbon-Fiber Composite Bed Material Offers"]]},
+        {"top":408.3,"cells":[[171.2,778.1,"Excellent Scratch, Dent and Corrosion Resistance"]]},
+        {"top":472.8,"cells":[[171.2,935.9,"CORROSION RESISTANCE: CarbonPro Composite Naturally"]]},
+        {"top":513.3,"cells":[[171.2,892.9,"Resists Corrosion, Helping the Bed Withstand Weathering"]]},
+        {"top":553.8,"cells":[[171.2,610.6,"to Maintain a Premium Appearance"]]},
+        {"top":618.3,"cells":[[171.2,885.9,"REDUCED WEIGHT: CarbonPro Weighs 25 Percent Less"]]},
+        {"top":658.8,"cells":[[171.2,935.0,"Than the Steel Bed, Eliminating Roughly 60 lbs of Vehicle Mass"]]},
+        {"top":723.3,"cells":[[171.2,935.5,"MORE VOLUME: CarbonPro Increases the Already-Generous"]]},
+        {"top":763.8,"cells":[[171.2,739.8,"Cargo Volume of Sierra\u2019s Steel Bed by 1 cu. ft."]]},
+        {"top":828.3,"cells":[[171.2,958.2,"MORE FUNCTIONALITY: CarbonPro Features Three Molded-in"]]},
+        {"top":868.8,"cells":[[171.2,933.8,"Sections for Wheels and Two Additional Tie-Downs (14 Total)"]]},
+        {"top":909.3,"cells":[[171.2,876.7,"to Ease the Loading and Securing of Dirt Bikes and ATVs"]]}
+      ]
+    },
+    {
+      "page": 53,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 2436.0,
+      "height": 1125.0,
+      "text": "52 P O W E R T R A I N S\nREADY, WILLING\nMake it happen with Sierra\u2019s impressive capability with up to\n13,200 lbs1 of max trailering (8,800 lbs1 as shown). Sierra offers\nAND INCREDIBLY ABLE\na choice of available robust engines to give you the power to take\non the open road or the trail to get the job done.\nAvailable accessories shown.",
+      "table_lines": [],
+      "lines": [
+        {"top":44.5,"cells":[[34.2,62.8,"52"],[233.6,418.9,"P O W E R T R A I N S"]]},
+        {"top":203.0,"cells":[[227.7,745.8,"READY, WILLING"]]},
+        {"top":210.7,"cells":[[1182.3,2138.9,"Make it happen with Sierra\u2019s impressive capability with up to"]]},
+        {"top":257.7,"cells":[[1182.3,2172.5,"13,200 lbs1 of max trailering (8,800 lbs1 as shown). Sierra offers"]]},
+        {"top":273.0,"cells":[[225.3,940.6,"AND INCREDIBLY ABLE"]]},
+        {"top":306.7,"cells":[[1182.3,2199.8,"a choice of available robust engines to give you the power to take"]]},
+        {"top":354.7,"cells":[[1182.3,1934.7,"on the open road or the trail to get the job done."]]},
+        {"top":1076.0,"cells":[[36.1,290.4,"Available accessories shown."]]}
+      ]
+    },
+    {
+      "page": 54,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 2436.0,
+      "height": 1125.0,
+      "text": "53 P O W E R T R A I N S\n6.2L V8 ENGINE\n420 Horsepower\n460 lb-ft of Torque\n10-Speed Automatic Transmission\nDynamic Fuel Management\nEPA-Estimated 15 mpg City/19 mpg Highway\nfor SLT, Denali and Denali Ultimate\nEPA-Estimated 14 mpg City/17 mpg Highway\nfor AT4 and AT4X With Mud-Terrain Tires\nStandard on AT4X and Denali Ultimate\nAvailable on 4WD-Equipped SLT, AT4 and Denali",
+      "table_lines": [],
+      "lines": [
+        {"top":44.5,"cells":[[36.8,65.3,"53"],[233.6,418.9,"P O W E R T R A I N S"]]},
+        {"top":230.0,"cells":[[98.5,582.5,"6.2L V8 ENGINE"]]},
+        {"top":405.3,"cells":[[170.0,376.3,"420 Horsepower"]]},
+        {"top":469.8,"cells":[[170.0,403.4,"460 lb-ft of Torque"]]},
+        {"top":534.3,"cells":[[170.0,594.2,"10-Speed Automatic Transmission"]]},
+        {"top":598.8,"cells":[[170.0,510.1,"Dynamic Fuel Management"]]},
+        {"top":663.3,"cells":[[170.0,737.7,"EPA-Estimated 15 mpg City/19 mpg Highway"]]},
+        {"top":700.3,"cells":[[171.3,602.3,"for SLT, Denali and Denali Ultimate"]]},
+        {"top":764.8,"cells":[[170.0,736.3,"EPA-Estimated 14 mpg City/17 mpg Highway"]]},
+        {"top":801.8,"cells":[[177.7,687.3,"for AT4 and AT4X With Mud-Terrain Tires"]]},
+        {"top":866.3,"cells":[[170.0,649.1,"Standard on AT4X and Denali Ultimate"]]},
+        {"top":930.8,"cells":[[170.0,778.0,"Available on 4WD-Equipped SLT, AT4 and Denali"]]}
+      ]
+    },
+    {
+      "page": 55,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 2436.0,
+      "height": 1125.0,
+      "text": "54 P O W E R T R A I N S\n3.OL DURAMAX\nT URBO DIESEL ENGINE\n305 Horsepower\n495 lb-ft of Torque\n10-Speed Automatic Transmission\nActive Thermal Management\nEPA-Estimated 24 mpg City/29 mpg Highway (2WD),\nWith a Maximum Highway Range of 638 Miles1 per Tank\nEPA-Estimated 22 mpg City/27 mpg Highway (4WD),\nWith a Maximum Highway Range of 648 Miles1 per Tank\nEPA-Estimated 21 mpg City/23 mpg Highway (4WD With Mud-Terrain\nTires), With a Maximum Highway Range of 552 Miles1 per Tank\nStandard on AT4 (Not Available on AT4X)\nAvailable on SLE, Elevation, SLT, Denali and Denali Ultimate\nDue to current supply-chain shortages, certain features shown have limited or late availability, or are no longer available.\nSee the window label or a dealer regarding the features on an individual vehicle.",
+      "table_lines": [
+        "54 P O W E R T R A I N S\n3.OL DURAMAX\nT URBO DIESEL ENGINE\n305 Horsepower\n495 lb-ft of Torque\n10-Speed Automatic Transmission\nActive Thermal Management\nEPA-Estimated 24 mpg City/29 mpg Highway (2WD),\nWith a Maximum Highway Range of 638 Miles1 per Tank\nEPA-Estimated 22 mpg City/27 mpg Highway (4WD),\nWith a Maximum Highway Range of 648 Miles1 per Tank\nEPA-Estimated 21 mpg City/23 mpg Highway (4WD With Mud-Terrain\nTires), With a Maximum Highway Range of 552 Miles1 per Tank\nStandard on AT4 (Not Available on AT4X)\nAvailable on SLE, Elevation, SLT, Denali and Denali Ultimate",
+        "Due to current supply-chain shortages, certain features shown have limited or late availability, or are no longer available.\nSee the window label or a dealer regarding the features on an individual vehicle."
+      ],
+      "lines": [
+        {"top":44.5,"cells":[[34.3,63.7,"54"],[233.6,418.9,"P O W E R T R A I N S"]]},
+        {"top":158.9,"cells":[[84.3,576.5,"3.OL DURAMAX"]]},
+        {"top":228.9,"cells":[[82.6,792.9,"T URBO DIESEL ENGINE"]]},
+        {"top":404.1,"cells":[[157.0,365.0,"305 Horsepower"]]},
+        {"top":463.6,"cells":[[157.0,389.7,"495 lb-ft of Torque"]]},
+        {"top":523.1,"cells":[[157.0,581.2,"10-Speed Automatic Transmission"]]},
+        {"top":582.6,"cells":[[157.0,516.6,"Active Thermal Management"]]},
+        {"top":642.1,"cells":[[157.0,815.3,"EPA-Estimated 24 mpg City/29 mpg Highway (2WD),"]]},
+        {"top":681.8,"cells":[[156.6,861.8,"With a Maximum Highway Range of 638 Miles1 per Tank"]]},
+        {"top":742.1,"cells":[[157.0,814.4,"EPA-Estimated 22 mpg City/27 mpg Highway (4WD),"]]},
+        {"top":781.8,"cells":[[156.6,862.4,"With a Maximum Highway Range of 648 Miles1 per Tank"]]},
+        {"top":842.1,"cells":[[157.0,1024.9,"EPA-Estimated 21 mpg City/23 mpg Highway (4WD With Mud-Terrain"]]},
+        {"top":881.8,"cells":[[155.0,939.9,"Tires), With a Maximum Highway Range of 552 Miles1 per Tank"]]},
+        {"top":942.1,"cells":[[157.0,660.9,"Standard on AT4 (Not Available on AT4X)"]]},
+        {"top":1001.6,"cells":[[157.0,879.5,"Available on SLE, Elevation, SLT, Denali and Denali Ultimate"]]},
+        {"top":1053.3,"cells":[[1145.0,2211.2,"Due to current supply-chain shortages, certain features shown have limited or late availability, or are no longer available."]]},
+        {"top":1074.9,"cells":[[1145.0,1851.9,"See the window label or a dealer regarding the features on an individual vehicle."]]}
+      ]
+    },
+    {
+      "page": 56,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 2436.0,
+      "height": 1125.0,
+      "text": "55 P O W E R T R A I N S\n5.3L V8 ENGINE\n355 Horsepower\n383 lb-ft of Torque\n10-Speed Automatic Transmission\nEPA-Estimated 16 mpg City/21 mpg Highway (2WD)\nStandard on SLT and Denali\nAvailable on Pro, SLE and Elevation\nDue to current supply-chain shortages, certain features shown have\nlimited or late availability, or are no longer available. See the window\nlabel or a dealer regarding the features on an individual vehicle.",
+      "table_lines": [
+        "55 P O W E R T R A I N S\n5.3L V8 ENGINE\n355 Horsepower\n383 lb-ft of Torque\n10-Speed Automatic Transmission\nEPA-Estimated 16 mpg City/21 mpg Highway (2WD)\nStandard on SLT and Denali\nAvailable on Pro, SLE and Elevation",
+        "Due to current supply-chain shortages, certain features shown have\nlimited or late availability, or are no longer available. See the window\nlabel or a dealer regarding the features on an individual vehicle."
+      ],
+      "lines": [
+        {"top":44.5,"cells":[[35.2,63.8,"55"],[233.6,418.9,"P O W E R T R A I N S"]]},
+        {"top":206.0,"cells":[[99.9,585.5,"5.3L V8 ENGINE"]]},
+        {"top":381.3,"cells":[[171.0,378.2,"355 Horsepower"]]},
+        {"top":445.8,"cells":[[171.0,404.0,"383 lb-ft of Torque"]]},
+        {"top":510.3,"cells":[[171.0,595.2,"10-Speed Automatic Transmission"]]},
+        {"top":574.8,"cells":[[171.0,816.7,"EPA-Estimated 16 mpg City/21 mpg Highway (2WD)"]]},
+        {"top":639.3,"cells":[[171.0,518.8,"Standard on SLT and Denali"]]},
+        {"top":703.8,"cells":[[171.0,610.1,"Available on Pro, SLE and Elevation"]]},
+        {"top":1031.7,"cells":[[135.0,733.0,"Due to current supply-chain shortages, certain features shown have"]]},
+        {"top":1053.3,"cells":[[135.0,743.4,"limited or late availability, or are no longer available. See the window"]]},
+        {"top":1074.9,"cells":[[135.0,696.1,"label or a dealer regarding the features on an individual vehicle."]]}
+      ]
+    },
+    {
+      "page": 57,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 2436.0,
+      "height": 1125.0,
+      "text": "56 P O W E R T R A I N S\n2.7L TURBO\nHIGH-OUTPUT ENGINE\n310 Horsepower\n430 lb-ft of Torque\n8-Speed Automatic Transmission\nActive Fuel Management\nEPA-Estimated 19 mpg City/22 mpg Highway (2WD)\nEPA-Estimated 18 mpg City/20 mpg Highway (4WD)\nEPA-Estimated 17 mpg City/18 mpg Highway\n(4WD With Mud-Terrain Tires)\nStandard on Pro, SLE and Elevation\nAvailable accessories shown.",
+      "table_lines": [],
+      "lines": [
+        {"top":44.5,"cells":[[32.1,60.8,"56"],[233.6,418.9,"P O W E R T R A I N S"]]},
+        {"top":211.5,"cells":[[118.5,483.3,"2.7L TURBO"]]},
+        {"top":281.5,"cells":[[118.9,809.1,"HIGH-OUTPUT ENGINE"]]},
+        {"top":456.8,"cells":[[190.0,395.2,"310 Horsepower"]]},
+        {"top":521.3,"cells":[[190.0,422.7,"430 lb-ft of Torque"]]},
+        {"top":585.8,"cells":[[190.0,598.8,"8-Speed Automatic Transmission"]]},
+        {"top":650.3,"cells":[[190.0,498.6,"Active Fuel Management"]]},
+        {"top":714.8,"cells":[[190.0,843.4,"EPA-Estimated 19 mpg City/22 mpg Highway (2WD)"]]},
+        {"top":779.3,"cells":[[190.0,842.1,"EPA-Estimated 18 mpg City/20 mpg Highway (4WD)"]]},
+        {"top":843.8,"cells":[[190.0,752.0,"EPA-Estimated 17 mpg City/18 mpg Highway"]]},
+        {"top":884.3,"cells":[[189.9,564.3,"(4WD With Mud-Terrain Tires)"]]},
+        {"top":948.8,"cells":[[190.0,629.6,"Standard on Pro, SLE and Elevation"]]},
+        {"top":1074.9,"cells":[[2144.0,2398.3,"Available accessories shown."]]}
+      ]
+    },
+    {
+      "page": 58,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 2436.0,
+      "height": 1125.0,
+      "text": "57 P R O G R A D E T R A I L E R I N G\nPULL IT ALL TOGETHER WITH\nSierra offers the most trailering-assistance\ntechnologies in its class.1\nPROGRADE\u2122 TRAILERING",
+      "table_lines": [],
+      "lines": [
+        {"top":44.5,"cells":[[35.8,62.9,"57"],[233.6,533.8,"P R O G R A D E T R A I L E R I N G"]]},
+        {"top":929.2,"cells":[[361.9,1287.3,"PULL IT ALL TOGETHER WITH"]]},
+        {"top":934.5,"cells":[[1488.2,2148.0,"Sierra offers the most trailering-assistance"]]},
+        {"top":981.4,"cells":[[1488.2,1869.9,"technologies in its class.1"]]},
+        {"top":999.2,"cells":[[361.9,1164.4,"PROGRADE\u2122 TRAILERING"]]}
+      ]
+    },
+    {
+      "page": 59,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 2436.0,
+      "height": 1125.0,
+      "text": "58 P R O G R A D E T R A I L E R I N G\nADVANCED TRAILERING TECH\nA suite of available advanced technology and\ncapability features comes together to provide\nan enhanced trailering experience.\nSUPER CRUISE DRIVER-ASSISTANCE TECHNOLOGY\nWITH TRAILERING\nHands-free trailering is a reality\u2014now you can pull\nyour trailer with added comfort and confidence\nwith available Super Cruise1 driver-assistance\ntechnology for compatible roads. The system\nworks by adjusting specific calibrations designed\nto account for the additional drag and increased\nbraking distance that come with trailering.\nDue to current supply-chain shortages, certain features shown have limited or late availability, or are\nno longer available. See the window label or a dealer regarding the features on an individual vehicle.",
+      "table_lines": [
+        "Due to current supply-chain shortages, certain features shown have limited or late availability, or are\nno longer available. See the window label or a dealer regarding the features on an individual vehicle."
+      ],
+      "lines": [
+        {"top":44.5,"cells":[[34.7,63.8,"58"],[233.6,533.8,"P R O G R A D E T R A I L E R I N G"]]},
+        {"top":173.3,"cells":[[91.8,514.2,"ADVANCED TRAILERING TECH"]]},
+        {"top":296.1,"cells":[[91.8,784.5,"A suite of available advanced technology and"]]},
+        {"top":344.1,"cells":[[91.8,778.1,"capability features comes together to provide"]]},
+        {"top":392.1,"cells":[[91.8,613.4,"an enhanced trailering experience."]]},
+        {"top":527.3,"cells":[[91.8,803.5,"SUPER CRUISE DRIVER-ASSISTANCE TECHNOLOGY"]]},
+        {"top":579.3,"cells":[[91.8,350.6,"WITH TRAILERING"]]},
+        {"top":703.1,"cells":[[91.8,866.0,"Hands-free trailering is a reality\u2014now you can pull"]]},
+        {"top":751.1,"cells":[[91.8,835.4,"your trailer with added comfort and confidence"]]},
+        {"top":798.1,"cells":[[426.1,535.9,"Cruise1"]]},
+        {"top":799.1,"cells":[[91.8,415.7,"with available Super"],[546.3,808.9,"driver-assistance"]]},
+        {"top":847.1,"cells":[[91.7,796.8,"technology for compatible roads. The system"]]},
+        {"top":895.1,"cells":[[91.7,865.4,"works by adjusting specific calibrations designed"]]},
+        {"top":943.2,"cells":[[91.7,844.8,"to account for the additional drag and increased"]]},
+        {"top":991.2,"cells":[[91.7,753.3,"braking distance that come with trailering."]]},
+        {"top":1054.1,"cells":[[1004.0,1892.6,"Due to current supply-chain shortages, certain features shown have limited or late availability, or are"]]},
+        {"top":1075.7,"cells":[[1004.0,1888.5,"no longer available. See the window label or a dealer regarding the features on an individual vehicle."]]}
+      ]
+    },
+    {
+      "page": 60,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 2436.0,
+      "height": 1125.0,
+      "text": "59 P R O G R A D E T R A I L E R I N G\nADAPTIVE CRUISE CONTROL CAMERA VIEWS AND MORE ADDITIONAL SAFETY FEATURES\nSierra offers available Adaptive Cruise Up to 14 available camera views2 including Sierra is engineered for safety and driver\nControl1 that can be used when trailering. transparent trailer view, an available assistance with trailering in mind, including\nin-vehicle Trailering App3 and more comprise available Trailer Side Blind Zone Alert,4 which\nSierra\u2019s suite of towing technologies. accounts for the length of a compatible trailer\nwhen changing lanes.",
+      "table_lines": [
+        "59 P R O G R A D E T R A I L E R I N G"
+      ],
+      "lines": [
+        {"top":44.5,"cells":[[35.1,63.8,"59"],[233.6,533.8,"P R O G R A D E T R A I L E R I N G"]]},
+        {"top":721.3,"cells":[[98.8,500.7,"ADAPTIVE CRUISE CONTROL"],[866.2,1251.5,"CAMERA VIEWS AND MORE"],[1661.5,2116.5,"ADDITIONAL SAFETY FEATURES"]]},
+        {"top":843.1,"cells":[[1276.1,1374.7,"views2"]]},
+        {"top":844.1,"cells":[[98.8,680.1,"Sierra offers available Adaptive Cruise"],[866.2,1266.7,"Up to 14 available camera"],[1384.0,1519.0,"including"],[1661.5,2279.6,"Sierra is engineered for safety and driver"]]},
+        {"top":891.1,"cells":[[98.8,217.9,"Control1"]]},
+        {"top":892.1,"cells":[[227.2,729.0,"that can be used when trailering."],[866.3,1432.0,"transparent trailer view, an available"],[1661.5,2313.1,"assistance with trailering in mind, including"]]},
+        {"top":939.1,"cells":[[866.3,1529.4,"in-vehicle Trailering App3 and more comprise"],[1661.5,2330.4,"available Trailer Side Blind Zone Alert,4 which"]]},
+        {"top":988.1,"cells":[[866.3,1417.2,"Sierra\u2019s suite of towing technologies."],[1661.5,2336.5,"accounts for the length of a compatible trailer"]]},
+        {"top":1036.1,"cells":[[1661.5,2001.6,"when changing lanes."]]}
+      ]
+    },
+    {
+      "page": 61,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 2436.0,
+      "height": 1125.0,
+      "text": "60 P R O G R A D E T R A I L E R I N G\nAVAILABLE IN-VEHICLE\nTRAILERING APP1\nCreate up to Five Defined Trailer Profiles\nPredeparture Checklists\nTrailer Light Sequence Test\nTrailer Tire Pressure and Temperature\nMonitoring System2\nCounter for Trailer Mileage",
+      "table_lines": [],
+      "lines": [
+        {"top":44.5,"cells":[[31.7,61.2,"60"],[233.6,533.8,"P R O G R A D E T R A I L E R I N G"]]},
+        {"top":278.4,"cells":[[119.5,851.1,"AVAILABLE IN-VEHICLE"]]},
+        {"top":346.1,"cells":[[532.3,685.8,"APP1"]]},
+        {"top":348.4,"cells":[[124.9,519.3,"TRAILERING"]]},
+        {"top":523.7,"cells":[[193.0,690.7,"Create up to Five Defined Trailer Profiles"]]},
+        {"top":588.2,"cells":[[193.0,488.8,"Predeparture Checklists"]]},
+        {"top":652.7,"cells":[[193.0,526.0,"Trailer Light Sequence Test"]]},
+        {"top":717.2,"cells":[[193.0,657.4,"Trailer Tire Pressure and Temperature"]]},
+        {"top":756.8,"cells":[[194.1,433.3,"Monitoring System2"]]},
+        {"top":822.2,"cells":[[193.0,519.0,"Counter for Trailer Mileage"]]}
+      ]
+    },
+    {
+      "page": 62,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 2436.0,
+      "height": 1125.0,
+      "text": "61 P R O G R A D E T R A I L E R I N G\nSMART TRAILERING\nAVAILABLE myGMC MOBILE APP1 FEATURES:\nCreate and Manage Trailer Profiles\nRun Trailer Light Sequence Tests\nReference Predeparture Checklists\nUse the Trailer Load Calculator to Determine\nthe Combined Weight of Your Truck and Trailer\nView and Receive Alerts on Key Components\nof Your Trailer Such as Tire Pressure Monitoring2\nand Trailer Miles",
+      "table_lines": [],
+      "lines": [
+        {"top":44.5,"cells":[[37.6,63.3,"61"],[233.6,533.8,"P R O G R A D E T R A I L E R I N G"]]},
+        {"top":236.1,"cells":[[84.0,729.5,"SMART TRAILERING"]]},
+        {"top":478.9,"cells":[[84.0,712.2,"AVAILABLE myGMC MOBILE APP1 FEATURES:"]]},
+        {"top":546.4,"cells":[[156.0,585.0,"Create and Manage Trailer Profiles"]]},
+        {"top":610.9,"cells":[[156.0,560.0,"Run Trailer Light Sequence Tests"]]},
+        {"top":675.4,"cells":[[156.0,583.1,"Reference Predeparture Checklists"]]},
+        {"top":739.9,"cells":[[156.0,704.1,"Use the Trailer Load Calculator to Determine"]]},
+        {"top":780.4,"cells":[[156.0,732.6,"the Combined Weight of Your Truck and Trailer"]]},
+        {"top":844.9,"cells":[[156.0,716.5,"View and Receive Alerts on Key Components"]]},
+        {"top":884.6,"cells":[[156.0,748.6,"of Your Trailer Such as Tire Pressure Monitoring2"]]},
+        {"top":925.9,"cells":[[156.0,357.9,"and Trailer Miles"]]}
+      ]
+    },
+    {
+      "page": 63,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 2436.0,
+      "height": 1125.0,
+      "text": "62 T R U C K B E D\nCARRY THE LOAD\nRoll-Formed High-Strength Steel Bed Floor 12 Tie-Downs: Three in Each Corner Rated 120-Volt Power Outlet2 Is Available\nat 500 lbs1 per Corner\nSpray-on Bedliner Is Available LED Cargo Area Lamps Are Available\nUp to Nine Movable Accessory Upper\nLarge Footwells in CornerStep Rear Bumper\nTie-Downs Are Available",
+      "table_lines": [],
+      "lines": [
+        {"top":44.5,"cells":[[34.7,63.5,"62"],[234.6,376.1,"T R U C K B E D"]]},
+        {"top":666.1,"cells":[[937.2,1498.8,"CARRY THE LOAD"]]},
+        {"top":894.1,"cells":[[269.1,799.8,"Roll-Formed High-Strength Steel Bed Floor"],[1008.0,1539.8,"12 Tie-Downs: Three in Each Corner Rated"],[1737.0,2172.6,"120-Volt Power Outlet2 Is Available"]]},
+        {"top":934.6,"cells":[[1008.0,1281.2,"at 500 lbs1 per Corner"]]},
+        {"top":959.4,"cells":[[269.1,641.5,"Spray-on Bedliner Is Available"],[1737.0,2202.0,"LED Cargo Area Lamps Are Available"]]},
+        {"top":999.9,"cells":[[1008.0,1470.5,"Up to Nine Movable Accessory Upper"]]},
+        {"top":1023.9,"cells":[[269.1,814.5,"Large Footwells in CornerStep Rear Bumper"]]},
+        {"top":1040.4,"cells":[[1008.0,1317.2,"Tie-Downs Are Available"]]}
+      ]
+    },
+    {
+      "page": 64,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 2436.0,
+      "height": 1125.0,
+      "text": "63 S A F E T Y A N D T E C H N O L O G Y\nCONFIDENCE\nIN SIGHT\nIn Sierra, your confidence is enhanced by\nup to 14 available camera views1\u2014including\nHitch View and the industry-first available\ntransparent trailer view, which helps you\nvirtually see right through a compatible trailer.",
+      "table_lines": [
+        "63 S A F E T Y A N D T E C H N O L O G Y"
+      ],
+      "lines": [
+        {"top":44.5,"cells":[[34.4,63.3,"63"],[233.6,572.9,"S A F E T Y A N D T E C H N O L O G Y"]]},
+        {"top":296.2,"cells":[[1609.8,2015.9,"CONFIDENCE"]]},
+        {"top":366.2,"cells":[[1609.8,1887.2,"IN SIGHT"]]},
+        {"top":606.9,"cells":[[1609.8,2257.5,"In Sierra, your confidence is enhanced by"]]},
+        {"top":653.9,"cells":[[1609.7,2295.3,"up to 14 available camera views1\u2014including"]]},
+        {"top":702.9,"cells":[[1609.7,2267.0,"Hitch View and the industry-first available"]]},
+        {"top":750.9,"cells":[[1609.7,2244.0,"transparent trailer view, which helps you"]]},
+        {"top":798.9,"cells":[[1609.7,2306.0,"virtually see right through a compatible trailer."]]}
+      ]
+    },
+    {
+      "page": 65,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 2436.0,
+      "height": 1125.0,
+      "text": "64 S A F E T Y A N D T E C H N O L O G Y\nUP TO\n14\nAVAILABLE\nCAMERA\nVIEWS1\n1. TRANSPARENT TRAILER VIEW 9. FRONT SIDE VIEW\n(REQUIRES COMPATIBLE\n10. REAR SIDE VIEW (WITH TRAILER\nCONVENTIONAL TRAILER)\nBIASING) (REQUIRES COMPATIBLE\n2. HITCH VIEW CONVENTIONAL TRAILER)\n3. C ARGO BED VIEW (WITH ZOOM 11. REAR TRAILER VIEW (WITH\nVIEW AND HITCH GUIDELINE) GUIDELINES AND TRAILER\nANGLE INDICATOR) (REQUIRES\n4. FRONT CAMERA VIEW\nCOMPATIBLE CONVENTIONAL\nTRAILER)\n5. REAR CAMERA VIEW\n12. INSIDE TRAILER VIEW\n6. SURROUND VIEW\n13. PICTURE-IN-PICTURE SIDE VIEW\n7. FRONT TOP-DOWN VIEW\n14. REAR CAMERA MIRROR\n8. REAR TOP-DOWN VIEW",
+      "table_lines": [
+        "64 S A F E T Y A N D T E C H N O L O G Y\nUP TO\n14\nAVAILABLE\nCAMERA\nVIEWS1\n1. TRANSPARENT TRAILER VIEW 9. FRONT SIDE VIEW\n(REQUIRES COMPATIBLE\n10. REAR SIDE VIEW (WITH TRAILER\nCONVENTIONAL TRAILER)\nBIASING) (REQUIRES COMPATIBLE\n2. HITCH VIEW CONVENTIONAL TRAILER)\n3. C ARGO BED VIEW (WITH ZOOM 11. REAR TRAILER VIEW (WITH\nVIEW AND HITCH GUIDELINE) GUIDELINES AND TRAILER\nANGLE INDICATOR) (REQUIRES\n4. FRONT CAMERA VIEW\nCOMPATIBLE CONVENTIONAL\nTRAILER)\n5. REAR CAMERA VIEW\n12. INSIDE TRAILER VIEW\n6. SURROUND VIEW\n13. PICTURE-IN-PICTURE SIDE VIEW\n7. FRONT TOP-DOWN VIEW\n14. REAR CAMERA MIRROR\n8. REAR TOP-DOWN VIEW"
+      ],
+      "lines": [
+        {"top":44.5,"cells":[[34.3,63.9,"64"],[233.6,572.9,"S A F E T Y A N D T E C H N O L O G Y"]]},
+        {"top":151.1,"cells":[[133.6,247.8,"UP TO"]]},
+        {"top":184.3,"cells":[[131.8,404.4,"14"]]},
+        {"top":205.2,"cells":[[427.0,643.9,"AVAILABLE"]]},
+        {"top":252.9,"cells":[[421.6,750.9,"CAMERA"]]},
+        {"top":345.8,"cells":[[421.6,687.7,"VIEWS1"]]},
+        {"top":494.9,"cells":[[134.6,154.1,"1."],[189.6,600.4,"TRANSPARENT TRAILER VIEW"],[742.0,767.4,"9."],[797.0,1034.8,"FRONT SIDE VIEW"]]},
+        {"top":530.9,"cells":[[189.6,515.2,"(REQUIRES COMPATIBLE"]]},
+        {"top":555.9,"cells":[[742.0,778.9,"10."],[797.0,1233.0,"REAR SIDE VIEW (WITH TRAILER"]]},
+        {"top":566.9,"cells":[[189.6,540.4,"CONVENTIONAL TRAILER)"]]},
+        {"top":591.9,"cells":[[797.0,1247.4,"BIASING) (REQUIRES COMPATIBLE"]]},
+        {"top":627.9,"cells":[[134.6,159.7,"2."],[189.6,351.3,"HITCH VIEW"],[797.0,1147.8,"CONVENTIONAL TRAILER)"]]},
+        {"top":688.9,"cells":[[134.6,159.6,"3."],[189.6,597.9,"C ARGO BED VIEW (WITH ZOOM"],[742.0,773.6,"11."],[797.0,1165.4,"REAR TRAILER VIEW (WITH"]]},
+        {"top":724.9,"cells":[[189.6,573.0,"VIEW AND HITCH GUIDELINE)"],[797.0,1148.3,"GUIDELINES AND TRAILER"]]},
+        {"top":760.9,"cells":[[797.0,1203.1,"ANGLE INDICATOR) (REQUIRES"]]},
+        {"top":785.9,"cells":[[134.6,160.6,"4."],[189.6,485.7,"FRONT CAMERA VIEW"]]},
+        {"top":796.9,"cells":[[797.0,1193.1,"COMPATIBLE CONVENTIONAL"]]},
+        {"top":832.9,"cells":[[797.0,925.1,"TRAILER)"]]},
+        {"top":846.9,"cells":[[134.6,159.8,"5."],[189.6,470.2,"REAR CAMERA VIEW"]]},
+        {"top":893.9,"cells":[[742.0,778.1,"12."],[797.0,1088.7,"INSIDE TRAILER VIEW"]]},
+        {"top":907.9,"cells":[[134.6,160.1,"6."],[189.6,419.0,"SURROUND VIEW"]]},
+        {"top":954.9,"cells":[[742.0,778.2,"13."],[798.0,1227.5,"PICTURE-IN-PICTURE SIDE VIEW"]]},
+        {"top":968.9,"cells":[[134.6,154.8,"7."],[189.6,516.7,"FRONT TOP-DOWN VIEW"]]},
+        {"top":1015.9,"cells":[[742.0,779.9,"14."],[797.0,1116.4,"REAR CAMERA MIRROR"]]},
+        {"top":1029.9,"cells":[[134.6,160.6,"8."],[189.6,501.1,"REAR TOP-DOWN VIEW"]]}
+      ]
+    },
+    {
+      "page": 66,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 2436.0,
+      "height": 1125.0,
+      "text": "65 S A F E T Y A N D T E C H N O L O G Y\nAvailable Rear Trailer View shown, which requires an available accessory camera and installation.\nJACK-KNIFE ALERT\nIncluded with available High Definition Surround Vision, Jack-Knife Alert tracks the position\nof a compatible trailer in relation to the vehicle and an alert is displayed if the front of the\ntrailer approaches the rear of the vehicle. Based on vehicle equipment and user settings,\nthe visual alert may be accompanied by audible or Safety Alert Seat notifications if equipped.\nJack-Knife Alert is not compatible with gooseneck or fifth-wheel trailers.\nSafety or driver-assistance features are no substitute for the driver\u2019s responsibility to operate the vehicle in a safe manner. The driver should\nremain attentive to traffic, surroundings and road conditions at all times. Visibility, weather and road conditions may affect feature\nperformance. Read the vehicle Owner\u2019s Manual for more important feature limitations and information.",
+      "table_lines": [
+        "65 | S A F E T Y A N D T E C H N O L O G Y",
+        "Avai | lable Rear Trailer View shown, which requires an available accessory camera and installation."
+      ],
+      "lines": [
+        {"top":44.5,"cells":[[34.2,63.1,"65"],[234.6,573.9,"S A F E T Y A N D T E C H N O L O G Y"]]},
+        {"top":536.7,"cells":[[1251.0,2114.4,"Available Rear Trailer View shown, which requires an available accessory camera and installation."]]},
+        {"top":660.7,"cells":[[132.8,746.1,"JACK-KNIFE ALERT"]]},
+        {"top":665.3,"cells":[[891.1,2298.8,"Included with available High Definition Surround Vision, Jack-Knife Alert tracks the position"]]},
+        {"top":713.3,"cells":[[891.1,2303.2,"of a compatible trailer in relation to the vehicle and an alert is displayed if the front of the"]]},
+        {"top":761.3,"cells":[[891.1,2288.7,"trailer approaches the rear of the vehicle. Based on vehicle equipment and user settings,"]]},
+        {"top":809.3,"cells":[[891.1,2309.8,"the visual alert may be accompanied by audible or Safety Alert Seat notifications if equipped."]]},
+        {"top":857.3,"cells":[[891.1,1979.5,"Jack-Knife Alert is not compatible with gooseneck or fifth-wheel trailers."]]},
+        {"top":956.1,"cells":[[891.1,2272.0,"Safety or driver-assistance features are no substitute for the driver\u2019s responsibility to operate the vehicle in a safe manner. The driver should"]]},
+        {"top":984.2,"cells":[[891.1,2236.1,"remain attentive to traffic, surroundings and road conditions at all times. Visibility, weather and road conditions may affect feature"]]},
+        {"top":1012.2,"cells":[[891.1,1926.4,"performance. Read the vehicle Owner\u2019s Manual for more important feature limitations and information."]]}
+      ]
+    },
+    {
+      "page": 67,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 2436.0,
+      "height": 1125.0,
+      "text": "66 S A F E T Y A N D T E C H N O L O G Y\nTRAILER LENGTH\nINDICATOR\nWhen enabled and driving forward with the\nturn signal activated, the available Trailer\nLength Indicator displays as a red overlay\ntwice the length of a compatible trailer to\nshow when other vehicles are present and\nmay interfere with a lane-change maneuver.\nTrailer Length Indicator is not compatible with\ngooseneck or fifth-wheel trailers.\nSafety or driver-assistance features are no substitute for the driver\u2019s\nresponsibility to operate the vehicle in a safe manner. The driver\nshould remain attentive to traffic, surroundings and road conditions\nat all times. Visibility, weather and road conditions may affect feature\nperformance. Read the vehicle Owner\u2019s Manual for more important\nfeature limitations and information.",
+      "table_lines": [],
+      "lines": [
+        {"top":44.5,"cells":[[34.1,63.1,"66"],[234.6,575.4,"S A F E T Y A N D T E C H N O L O G Y"]]},
+        {"top":95.5,"cells":[[1608.0,2160.4,"TRAILER LENGTH"]]},
+        {"top":165.5,"cells":[[1608.0,1953.4,"INDICATOR"]]},
+        {"top":406.7,"cells":[[1610.0,2295.0,"When enabled and driving forward with the"]]},
+        {"top":454.7,"cells":[[1610.0,2259.6,"turn signal activated, the available Trailer"]]},
+        {"top":502.7,"cells":[[1610.0,2265.9,"Length Indicator displays as a red overlay"]]},
+        {"top":550.7,"cells":[[1610.0,2249.6,"twice the length of a compatible trailer to"]]},
+        {"top":598.7,"cells":[[1610.0,2255.3,"show when other vehicles are present and"]]},
+        {"top":646.7,"cells":[[1610.0,2294.8,"may interfere with a lane-change maneuver."]]},
+        {"top":742.7,"cells":[[1610.0,2303.3,"Trailer Length Indicator is not compatible with"]]},
+        {"top":790.7,"cells":[[1610.0,2118.9,"gooseneck or fifth-wheel trailers."]]},
+        {"top":933.1,"cells":[[1610.0,2297.2,"Safety or driver-assistance features are no substitute for the driver\u2019s"]]},
+        {"top":961.1,"cells":[[1610.0,2265.9,"responsibility to operate the vehicle in a safe manner. The driver"]]},
+        {"top":989.1,"cells":[[1610.0,2298.0,"should remain attentive to traffic, surroundings and road conditions"]]},
+        {"top":1017.1,"cells":[[1610.0,2310.3,"at all times. Visibility, weather and road conditions may affect feature"]]},
+        {"top":1045.1,"cells":[[1610.0,2278.8,"performance. Read the vehicle Owner\u2019s Manual for more important"]]},
+        {"top":1073.1,"cells":[[1610.0,1963.2,"feature limitations and information."]]}
+      ]
+    },
+    {
+      "page": 68,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 2436.0,
+      "height": 1125.0,
+      "text": "67 C O N N E C T I V I T Y\nKEEP YOUR CONNECTIONS STRONG\nThree years of the OnStar\u00ae and Connected Services Premium ONSTAR AND CONNECTED SERVICES PREMIUM PLAN INCLUDES:\nPlan1 are included on select Sierra 1500 models. With this plan, In-Vehicle App5 Access Automatic Crash Response9 Stolen Vehicle\neligible vehicles2 can enjoy the added peace of mind of the OnStar\n(Not Available on Pro) Assistance11\nEmergency Services\nSafety & Security Plan3 and the complete suite of available In-Vehicle Wi-Fi\u00ae Hotspot Data6 With Google\nCrisis Assist\nbuilt-in12 (Not\nconnectivity features included in the Connected Vehicle Plan.4 OnStar Guardian\u2122 app7\nRoadside Assistance10\nAvailable on Pro)\nmyGMC Mobile App8\nAT4X shown with available accessories. Due to current supply-chain shortages, certain features shown have limited or late availability, or are no longer available. See the window label or a dealer regarding the features on an individual vehicle.",
+      "table_lines": [],
+      "lines": [
+        {"top":44.5,"cells":[[35.7,63.2,"67"],[233.6,421.5,"C O N N E C T I V I T Y"]]},
+        {"top":596.5,"cells":[[81.6,1194.9,"KEEP YOUR CONNECTIONS STRONG"]]},
+        {"top":773.3,"cells":[[1127.0,2030.8,"ONSTAR AND CONNECTED SERVICES PREMIUM PLAN INCLUDES:"]]},
+        {"top":775.4,"cells":[[373.6,497.7,"OnStar\u00ae"]]},
+        {"top":776.4,"cells":[[87.2,364.3,"Three years of the"],[507.0,1021.1,"and Connected Services Premium"]]},
+        {"top":823.4,"cells":[[87.2,163.6,"Plan1"]]},
+        {"top":824.4,"cells":[[172.4,1031.3,"are included on select Sierra 1500 models. With this plan,"]]},
+        {"top":826.9,"cells":[[1199.0,1477.1,"In-Vehicle App5 Access"],[1694.0,2032.8,"Automatic Crash Response9"],[2140.0,2312.3,"Stolen Vehicle"]]},
+        {"top":868.1,"cells":[[1199.0,1469.3,"(Not Available on Pro)"],[2140.0,2291.4,"Assistance11"]]},
+        {"top":871.4,"cells":[[87.2,1057.5,"eligible vehicles2 can enjoy the added peace of mind of the OnStar"]]},
+        {"top":877.4,"cells":[[1694.0,1943.1,"Emergency Services"]]},
+        {"top":916.4,"cells":[[1199.0,1587.1,"In-Vehicle Wi-Fi\u00ae Hotspot Data6"],[2140.0,2296.4,"With Google"]]},
+        {"top":919.4,"cells":[[87.2,978.9,"Safety & Security Plan3 and the complete suite of available"]]},
+        {"top":926.4,"cells":[[1694.0,1843.2,"Crisis Assist"]]},
+        {"top":957.6,"cells":[[2140.0,2302.6,"built-in12 (Not"]]},
+        {"top":965.4,"cells":[[1199.0,1494.7,"OnStar Guardian\u2122 app7"]]},
+        {"top":967.4,"cells":[[87.2,1019.0,"connectivity features included in the Connected Vehicle Plan.4"]]},
+        {"top":974.6,"cells":[[1694.0,1968.7,"Roadside Assistance10"]]},
+        {"top":998.9,"cells":[[2140.0,2349.6,"Available on Pro)"]]},
+        {"top":1014.4,"cells":[[1199.0,1456.7,"myGMC Mobile App8"]]},
+        {"top":1076.3,"cells":[[90.0,2222.6,"AT4X shown with available accessories. Due to current supply-chain shortages, certain features shown have limited or late availability, or are no longer available. See the window label or a dealer regarding the features on an individual vehicle."]]}
+      ]
+    },
+    {
+      "page": 69,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 2436.0,
+      "height": 1125.0,
+      "text": "68 C O N N E C T I V I T Y\nHELP WHEN\nYOU NEED IT\nWith 3 years of OnStar Safety and Security on most\nSierra models,1 you\u2019ll have added peace of mind knowing\nan Emergency Advisor2 is ready to help. Whether it\u2019s\na crash, a vehicle theft or an emergency situation,\nhelp is available 24/7.\nThe Safety & Security Plan3 includes the OnStar Guardian\napp,4 which lets you access the key OnStar safety services\nyou depend on right from your phone. Help in a crash,\nassistance with a flat tire and more are available through\nyour smartphone. Best of all, you can share OnStar Guardian\nwith up to seven of your loved ones at no additional cost.\nGMC Acadia shown.",
+      "table_lines": [],
+      "lines": [
+        {"top":44.5,"cells":[[33.8,63.2,"68"],[233.6,421.5,"C O N N E C T I V I T Y"]]},
+        {"top":170.3,"cells":[[103.8,482.7,"HELP WHEN"]]},
+        {"top":240.3,"cells":[[103.8,498.6,"YOU NEED IT"]]},
+        {"top":480.9,"cells":[[103.8,883.6,"With 3 years of OnStar Safety and Security on most"]]},
+        {"top":527.9,"cells":[[199.8,323.4,"models,1"]]},
+        {"top":528.9,"cells":[[103.8,191.2,"Sierra"],[332.2,959.7,"you\u2019ll have added peace of mind knowing"]]},
+        {"top":575.9,"cells":[[331.9,459.7,"Advisor2"]]},
+        {"top":576.9,"cells":[[103.8,322.2,"an Emergency"],[469.6,925.0,"is ready to help. Whether it\u2019s"]]},
+        {"top":624.9,"cells":[[103.8,886.1,"a crash, a vehicle theft or an emergency situation,"]]},
+        {"top":673.0,"cells":[[103.8,437.2,"help is available 24/7."]]},
+        {"top":755.9,"cells":[[437.6,515.0,"Plan3"]]},
+        {"top":756.9,"cells":[[103.8,428.6,"The Safety & Security"],[523.8,962.4,"includes the OnStar Guardian"]]},
+        {"top":803.9,"cells":[[103.7,990.5,"app,4 which lets you access the key OnStar safety services"]]},
+        {"top":852.9,"cells":[[103.7,939.9,"you depend on right from your phone. Help in a crash,"]]},
+        {"top":901.0,"cells":[[103.7,1000.2,"assistance with a flat tire and more are available through"]]},
+        {"top":949.0,"cells":[[103.7,1009.4,"your smartphone. Best of all, you can share OnStar Guardian"]]},
+        {"top":997.0,"cells":[[103.7,971.4,"with up to seven of your loved ones at no additional cost."]]},
+        {"top":1075.9,"cells":[[2223.6,2400.0,"GMC Acadia shown."]]}
+      ]
+    },
+    {
+      "page": 70,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 2436.0,
+      "height": 1125.0,
+      "text": "69 C O N N E C T I V I T Y\nSTAY IN COMMAND\nWHEREVER THE\nACTION LEADS\nDue to current supply-chain shortages, certain features shown on this spread have limited or late availability,\nWireless Apple CarPlay\u00ae Compatibility1\nor are no longer available. See the window label or a dealer regarding the features on an individual vehicle.\nIs Available\nWireless Android Auto\u2122 Compatibility2\nIs Available\nWireless Charging3 Is Available\nAAppppllee CCaarrPPllaayy\u00ae\u00ae sshhoowwnn..",
+      "table_lines": [
+        "69 C O N N E C T I V I T Y\nSTAY IN COMMAND\nWHEREVER THE\nACTION LEADS\nDue to current supply-chain shortages, certain features shown on this spread have limited or late availability,\nWireless Apple CarPlay\u00ae Compatibility1\nor are no longer available. See the window label or a dealer regarding the features on an individual vehicle.\nIs Available\nWireless Android Auto\u2122 Compatibility2\nIs Available\nWireless Charging3 Is Available\nAAppppllee CCaarrPPllaayy\u00ae\u00ae sshhoowwnn.."
+      ],
+      "lines": [
+        {"top":44.5,"cells":[[34.7,63.8,"69"],[233.6,421.5,"C O N N E C T I V I T Y"]]},
+        {"top":283.6,"cells":[[128.7,731.8,"STAY IN COMMAND"]]},
+        {"top":353.6,"cells":[[131.8,642.2,"WHEREVER THE"]]},
+        {"top":423.6,"cells":[[131.0,606.3,"ACTION LEADS"]]},
+        {"top":586.1,"cells":[[900.0,1861.4,"Due to current supply-chain shortages, certain features shown on this spread have limited or late availability,"]]},
+        {"top":598.1,"cells":[[396.8,687.3,"CarPlay\u00ae Compatibility1"]]},
+        {"top":598.9,"cells":[[200.7,388.8,"Wireless Apple"]]},
+        {"top":607.7,"cells":[[900.0,1842.2,"or are no longer available. See the window label or a dealer regarding the features on an individual vehicle."]]},
+        {"top":639.4,"cells":[[201.8,343.1,"Is Available"]]},
+        {"top":703.1,"cells":[[512.4,684.4,"Compatibility2"]]},
+        {"top":703.9,"cells":[[200.7,504.7,"Wireless Android Auto\u2122"]]},
+        {"top":744.4,"cells":[[201.8,343.1,"Is Available"]]},
+        {"top":808.1,"cells":[[316.2,438.2,"Charging3"]]},
+        {"top":808.9,"cells":[[200.7,308.2,"Wireless"],[446.0,587.3,"Is Available"]]},
+        {"top":1096.6,"cells":[[897.0,1099.7,"AAppppllee CCaarrPPllaayy\u00ae\u00ae sshhoowwnn.."]]}
+      ]
+    },
+    {
+      "page": 71,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 2436.0,
+      "height": 1125.0,
+      "text": "70 C O N N E C T I V I T Y\nGET THERE WITH\nGOOGLE BUILT-IN\nWith Google built-in1 compatibility and a 3-year\nGMC Connected Vehicle subscription included\non most Sierra trims,2 you will receive a helpful,\npersonalized and seamless way to enhance your\nin-vehicle experience. With Google Assistant,\nGoogle Maps and more on Google Play, you get\naccess to hands-free help, live traffic updates,\nsome of your favorite apps and more.",
+      "table_lines": [],
+      "lines": [
+        {"top":44.5,"cells":[[36.3,64.1,"70"],[233.6,421.5,"C O N N E C T I V I T Y"]]},
+        {"top":261.4,"cells":[[130.0,671.5,"GET THERE WITH"]]},
+        {"top":331.4,"cells":[[130.0,663.3,"GOOGLE BUILT-IN"]]},
+        {"top":571.0,"cells":[[336.2,452.5,"built-in1"]]},
+        {"top":572.1,"cells":[[130.0,326.3,"With Google"],[462.4,871.8,"compatibility and a 3-year"]]},
+        {"top":620.1,"cells":[[130.0,839.0,"GMC Connected Vehicle subscription included"]]},
+        {"top":667.0,"cells":[[130.0,858.3,"on most Sierra trims,2 you will receive a helpful,"]]},
+        {"top":716.1,"cells":[[130.0,885.3,"personalized and seamless way to enhance your"]]},
+        {"top":764.1,"cells":[[130.0,830.5,"in-vehicle experience. With Google Assistant,"]]},
+        {"top":812.1,"cells":[[130.0,870.0,"Google Maps and more on Google Play, you get"]]},
+        {"top":860.1,"cells":[[130.0,842.1,"access to hands-free help, live traffic updates,"]]},
+        {"top":908.1,"cells":[[130.0,709.6,"some of your favorite apps and more."]]}
+      ]
+    },
+    {
+      "page": 72,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 2436.0,
+      "height": 1125.0,
+      "text": "71 E X T E R I O R C O L O R S\nFIND YOUR TRUE COLORS\nClick the swatches to explore the available vehicle colors.",
+      "table_lines": [],
+      "lines": [
+        {"top":43.7,"cells":[[233.5,471.6,"E X T E R I O R C O L O R S"]]},
+        {"top":44.5,"cells":[[38.9,62.9,"71"]]},
+        {"top":163.3,"cells":[[73.9,874.5,"FIND YOUR TRUE COLORS"]]},
+        {"top":304.5,"cells":[[78.0,768.0,"Click the swatches to explore the available vehicle colors."]]}
+      ]
+    },
+    {
+      "page": 73,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 2436.0,
+      "height": 1125.0,
+      "text": "72 I N T E R I O R C O L O R S A N D T E X T U R E S\nPRO SLE ELEVATION SLT\nJET BLACK/ DARK WALNUT/ JET BLACK/ DARK WALNUT/SLATE\nJET BLACK CLOTH SLATE CLOTH JET BLACK CLOTH PERFORATED FRONT OUTBOARD\nLEATHER-APPOINTED\nAVAILABLE JET BLACK/\nJET BLACK/ JET BLACK/ JET BLACK/JET BLACK\nJET BLACK CLOTH\nJET BLACK CLOTH JET BLACK FRONT PERFORATED FRONT OUTBOARD\nLEATHER-APPOINTED LEATHER-APPOINTED\nJET BLACK/ ARENITE TONE ARENITE TONE CYPRESS WOOD TONE\nJET BLACK VINYL\nAEGIS AEGIS AEGIS\nPATTERNED ALUMINUM PATTERNED ALUMINUM PATTERNED ALUMINUM\nSee your GMC dealer or gmc.com for more interior color details.",
+      "table_lines": [],
+      "lines": [
+        {"top":43.7,"cells":[[233.5,672.8,"I N T E R I O R C O L O R S A N D T E X T U R E S"]]},
+        {"top":44.5,"cells":[[36.5,63.6,"72"]]},
+        {"top":162.9,"cells":[[275.3,332.7,"PRO"],[885.9,940.1,"SLE"],[1443.6,1598.5,"ELEVATION"],[2105.3,2156.7,"SLT"]]},
+        {"top":341.4,"cells":[[238.1,369.9,"JET BLACK/"],[828.4,997.6,"DARK WALNUT/"],[1455.1,1586.9,"JET BLACK/"],[2011.2,2250.8,"DARK WALNUT/SLATE"]]},
+        {"top":371.4,"cells":[[204.3,403.6,"JET BLACK CLOTH"],[838.0,988.0,"SLATE CLOTH"],[1421.5,1620.4,"JET BLACK CLOTH"],[1955.3,2306.7,"PERFORATED FRONT OUTBOARD"]]},
+        {"top":401.4,"cells":[[2013.8,2248.2,"LEATHER-APPOINTED"]]},
+        {"top":559.8,"cells":[[176.4,433.5,"AVAILABLE JET BLACK/"]]},
+        {"top":564.8,"cells":[[847.1,978.9,"JET BLACK/"],[1455.1,1586.9,"JET BLACK/"],[2006.0,2255.9,"JET BLACK/JET BLACK"]]},
+        {"top":589.8,"cells":[[205.2,404.7,"JET BLACK CLOTH"]]},
+        {"top":594.8,"cells":[[813.6,1012.4,"JET BLACK CLOTH"],[1421.2,1620.7,"JET BLACK FRONT"],[1954.8,2307.2,"PERFORATED FRONT OUTBOARD"]]},
+        {"top":624.8,"cells":[[1403.8,1638.2,"LEATHER-APPOINTED"],[2013.8,2248.2,"LEATHER-APPOINTED"]]},
+        {"top":799.0,"cells":[[238.1,369.8,"JET BLACK/"],[832.8,993.2,"ARENITE TONE"],[1440.9,1601.2,"ARENITE TONE"],[2011.6,2250.4,"CYPRESS WOOD TONE"]]},
+        {"top":829.0,"cells":[[209.2,398.7,"JET BLACK VINYL"]]},
+        {"top":984.4,"cells":[[880.3,945.7,"AEGIS"],[1488.3,1553.7,"AEGIS"],[2098.3,2163.7,"AEGIS"]]},
+        {"top":1014.3,"cells":[[786.8,1039.2,"PATTERNED ALUMINUM"],[1394.9,1647.2,"PATTERNED ALUMINUM"],[2004.8,2257.2,"PATTERNED ALUMINUM"]]},
+        {"top":1071.3,"cells":[[36.0,580.1,"See your GMC dealer or gmc.com for more interior color details."]]}
+      ]
+    },
+    {
+      "page": 74,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 2436.0,
+      "height": 1125.0,
+      "text": "73 I N T E R I O R C O L O R S A N D T E X T U R E S\nAT4 AT4X DENALI DENALI ULTIMATE\nJET BLACK/JET BLACK PERFORATED OBSIDIAN RUSH PERFORATED FRONT AND REAR ATMOSPHERE/BROWNSTONE ALPINE UMBER PERFORATED\nFRONT LEATHER SEATING SURFACES LEATHER SEATING WITH TECHNICAL-GRAIN FORGE PERFORATED LEATHER FRONT AND REAR FULL-GRAIN\nWITH KALAHARI ACCENTS LEATHER ACCENTS AND RED STITCHING SEATING SURFACES LEATHER SEATING\nTECHNICAL VANTA ASH WOOD JET BLACK/JET BLACK OPEN-PORE PALDAO WOOD\nAPPEARANCE FORGE PERFORATED LEATHER WITH HAND-BRUSHED\nSEATING SURFACES DARK FINISH\nDARK BRUSHED DARK BRUSHED OPEN-PORE WALNUT GEIGER PATTERNED ALUMINUM\nALUMINUM ALUMINUM OMBRE WOOD\nPREMIUM MICROSUEDE ATREIDES PATTERNED PREMIUM MICROSUEDE\nALUMINUM\nSee your GMC dealer or gmc.com for more interior color details.",
+      "table_lines": [],
+      "lines": [
+        {"top":43.7,"cells":[[233.5,672.8,"I N T E R I O R C O L O R S A N D T E X T U R E S"]]},
+        {"top":44.5,"cells":[[36.2,63.3,"73"]]},
+        {"top":162.9,"cells":[[277.9,330.0,"AT4"],[951.1,1022.0,"AT4X"],[1579.1,1683.9,"DENALI"],[2043.7,2293.3,"DENALI ULTIMATE"]]},
+        {"top":341.5,"cells":[[104.0,503.8,"JET BLACK/JET BLACK PERFORATED"],[726.6,1245.5,"OBSIDIAN RUSH PERFORATED FRONT AND REAR"],[1472.6,1790.4,"ATMOSPHERE/BROWNSTONE"],[2011.3,2323.7,"ALPINE UMBER PERFORATED"]]},
+        {"top":371.4,"cells":[[104.0,503.9,"FRONT LEATHER SEATING SURFACES"],[752.5,1219.6,"LEATHER SEATING WITH TECHNICAL-GRAIN"],[1466.8,1796.3,"FORGE PERFORATED LEATHER"],[2003.4,2331.6,"FRONT AND REAR FULL-GRAIN"]]},
+        {"top":401.4,"cells":[[159.7,448.2,"WITH KALAHARI ACCENTS"],[773.0,1199.1,"LEATHER ACCENTS AND RED STITCHING"],[1523.9,1739.2,"SEATING SURFACES"],[2067.7,2267.4,"LEATHER SEATING"]]},
+        {"top":564.8,"cells":[[241.6,366.3,"TECHNICAL"],[888.7,1085.3,"VANTA ASH WOOD"],[1506.5,1756.4,"JET BLACK/JET BLACK"],[2020.4,2314.6,"OPEN-PORE PALDAO WOOD"]]},
+        {"top":594.8,"cells":[[230.6,377.3,"APPEARANCE"],[1466.8,1796.3,"FORGE PERFORATED LEATHER"],[2047.5,2287.5,"WITH HAND-BRUSHED"]]},
+        {"top":624.8,"cells":[[1523.9,1739.2,"SEATING SURFACES"],[2098.6,2236.4,"DARK FINISH"]]},
+        {"top":799.0,"cells":[[219.3,388.6,"DARK BRUSHED"],[900.7,1071.2,"DARK BRUSHED"],[1517.6,1745.4,"OPEN-PORE WALNUT"],[1999.6,2336.6,"GEIGER PATTERNED ALUMINUM"]]},
+        {"top":829.0,"cells":[[245.0,362.9,"ALUMINUM"],[927.0,1044.9,"ALUMINUM"],[1556.4,1706.6,"OMBRE WOOD"]]},
+        {"top":984.4,"cells":[[862.7,1110.9,"PREMIUM MICROSUEDE"],[1510.5,1752.6,"ATREIDES PATTERNED"],[2043.4,2291.6,"PREMIUM MICROSUEDE"]]},
+        {"top":1014.4,"cells":[[1572.6,1690.4,"ALUMINUM"]]},
+        {"top":1071.3,"cells":[[36.0,580.1,"See your GMC dealer or gmc.com for more interior color details."]]}
+      ]
+    },
+    {
+      "page": 75,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 2436.0,
+      "height": 1125.0,
+      "text": "74 W H E E L S\nPRECISION-CRAFTED FROM THE GROUND UP\n17\" 17\" 18\" 18\" 18\" 18\"\n17\" Bright Silver 17\" 6-Spoke Bright 18\" 6-Spoke 18\" Machined 18\" High-Gloss 18\" 12-Spoke High-Gloss\nPainted Steel (RD6) Silver Painted Machined Aluminum Aluminum With Black Painted Black Aluminum With\nStandard on Pro Aluminum (Q5U) With Dark Gray Dark Gray Aluminum (RQ8) Laser Etching and\nStandard on SLE; Metallic Accents (UHN) Accents (RT5) Standard on AT4X AEV Center Cap (Q89)\nAvailable on Pro Standard on SLT; Standard on AT4 Included and only\nAvailable on Pro available with AT4X\nand SLE AEV Edition\nSee your GMC dealer or gmc.com for more wheel details and requirements.",
+      "table_lines": [],
+      "lines": [
+        {"top":43.7,"cells":[[233.5,336.3,"W H E E L S"]]},
+        {"top":44.5,"cells":[[36.8,63.2,"74"]]},
+        {"top":103.9,"cells":[[517.2,1920.7,"PRECISION-CRAFTED FROM THE GROUND UP"]]},
+        {"top":525.6,"cells":[[25.6,231.0,"17\""],[431.0,636.4,"17\""],[825.0,1032.0,"18\""],[1278.0,1495.3,"18\""],[1623.0,1840.3,"18\""],[1993.0,2210.3,"18\""]]},
+        {"top":743.8,"cells":[[33.2,290.3,"17\" Bright Silver"],[438.6,741.1,"17\" 6-Spoke Bright"],[832.6,1029.6,"18\" 6-Spoke"],[1285.6,1503.6,"18\" Machined"],[1630.6,1871.2,"18\" High-Gloss"],[2000.6,2399.9,"18\" 12-Spoke High-Gloss"]]},
+        {"top":791.8,"cells":[[33.2,343.2,"Painted Steel (RD6)"],[438.6,655.1,"Silver Painted"],[832.6,1154.9,"Machined Aluminum"],[1285.6,1533.7,"Aluminum With"],[1630.6,1847.5,"Black Painted"],[2000.6,2345.1,"Black Aluminum With"]]},
+        {"top":839.8,"cells":[[33.2,282.4,"Standard on Pro"],[438.6,701.5,"Aluminum (Q5U)"],[832.6,1083.3,"With Dark Gray"],[1285.6,1448.1,"Dark Gray"],[1630.6,1892.9,"Aluminum (RQ8)"],[2000.6,2284.6,"Laser Etching and"]]},
+        {"top":887.8,"cells":[[438.6,702.4,"Standard on SLE;"],[832.6,1197.2,"Metallic Accents (UHN)"],[1285.6,1507.9,"Accents (RT5)"],[1630.6,1907.6,"Standard on AT4X"],[2000.6,2350.7,"AEV Center Cap (Q89)"]]},
+        {"top":935.8,"cells":[[438.6,686.8,"Available on Pro"],[832.6,1090.3,"Standard on SLT;"],[1285.6,1541.6,"Standard on AT4"],[2000.6,2269.1,"Included and only"]]},
+        {"top":983.8,"cells":[[832.6,1075.7,"Available on Pro"],[2000.6,2302.2,"available with AT4X"]]},
+        {"top":1031.9,"cells":[[832.6,957.9,"and SLE"],[2000.6,2182.0,"AEV Edition"]]},
+        {"top":1075.9,"cells":[[36.0,692.8,"See your GMC dealer or gmc.com for more wheel details and requirements."]]}
+      ]
+    },
+    {
+      "page": 76,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 2436.0,
+      "height": 1125.0,
+      "text": "75 W H E E L S\nPRECISION-CRAFTED FROM THE GROUND UP\n20\" 20\" 20\" 20\"\n20\" Gloss-Black Painted 20\" Machined 20\" Polished Aluminum 20\" Multidimensional\nAluminum (RD3) Aluminum With With Technical Gray Polished Aluminum\nStandard on Elevation; Carbon Gray Metallic Painted Accents (NZD) (RTL)\nAvailable on Pro Accents (NZH) Available on SLE and SLT Standard on Denali\nAvailable on AT4\nSee your GMC dealer or gmc.com for more wheel details and requirements.",
+      "table_lines": [],
+      "lines": [
+        {"top":44.5,"cells":[[36.6,63.7,"75"],[233.6,336.3,"W H E E L S"]]},
+        {"top":103.9,"cells":[[517.2,1920.7,"PRECISION-CRAFTED FROM THE GROUND UP"]]},
+        {"top":577.0,"cells":[[127.0,354.2,"20\""],[760.7,987.9,"20\""],[1332.3,1559.6,"20\""],[1960.7,2187.9,"20\""]]},
+        {"top":795.2,"cells":[[134.6,515.5,"20\" Gloss-Black Painted"],[768.3,985.9,"20\" Machined"],[1339.9,1707.0,"20\" Polished Aluminum"],[1968.3,2298.3,"20\" Multidimensional"]]},
+        {"top":843.2,"cells":[[768.3,1016.4,"Aluminum With"],[1339.9,1659.4,"With Technical Gray"],[1968.3,2270.2,"Polished Aluminum"]]},
+        {"top":843.8,"cells":[[134.6,394.8,"Aluminum (RD3)"]]},
+        {"top":891.2,"cells":[[1968.3,2053.9,"(RTL)"]]},
+        {"top":891.4,"cells":[[134.6,476.9,"Standard on Elevation;"],[768.3,1100.1,"Carbon Gray Metallic"],[1339.9,1698.1,"Painted Accents (NZD)"]]},
+        {"top":939.2,"cells":[[134.6,382.8,"Available on Pro"],[768.3,997.2,"Accents (NZH)"],[1339.9,1729.3,"Available on SLE and SLT"],[1968.3,2262.4,"Standard on Denali"]]},
+        {"top":987.5,"cells":[[768.3,1023.2,"Available on AT4"]]},
+        {"top":1075.9,"cells":[[36.0,692.8,"See your GMC dealer or gmc.com for more wheel details and requirements."]]}
+      ]
+    },
+    {
+      "page": 77,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 2436.0,
+      "height": 1125.0,
+      "text": "76 W H E E L S\nPRECISION-CRAFTED FROM THE GROUND UP\n22\" 22\"\n22\" Painted Aluminum With Machining 22\" 7-Spoke Ultra-Bright\nand Bright Chrome Inserts (SH0) Machined Aluminum With\nAvailable on Denali Bright Chrome Accents\nand Dark Paint (SMR)\nStandard on Denali Ultimate\nSee your GMC dealer or gmc.com for more wheel details and requirements.",
+      "table_lines": [],
+      "lines": [
+        {"top":43.7,"cells":[[233.5,336.3,"W H E E L S"]]},
+        {"top":44.5,"cells":[[35.4,62.7,"76"]]},
+        {"top":103.9,"cells":[[517.2,1920.7,"PRECISION-CRAFTED FROM THE GROUND UP"]]},
+        {"top":591.0,"cells":[[551.0,787.1,"22\""],[1395.5,1631.6,"22\""]]},
+        {"top":809.2,"cells":[[558.6,1173.8,"22\" Painted Aluminum With Machining"],[1403.1,1795.7,"22\" 7-Spoke Ultra-Bright"]]},
+        {"top":857.2,"cells":[[558.6,1075.4,"and Bright Chrome Inserts (SH0)"],[1403.1,1813.5,"Machined Aluminum With"]]},
+        {"top":905.2,"cells":[[558.6,851.6,"Available on Denali"],[1403.1,1767.2,"Bright Chrome Accents"]]},
+        {"top":953.2,"cells":[[1403.1,1747.7,"and Dark Paint (SMR)"]]},
+        {"top":1001.2,"cells":[[1403.1,1835.1,"Standard on Denali Ultimate"]]},
+        {"top":1075.9,"cells":[[36.0,692.8,"See your GMC dealer or gmc.com for more wheel details and requirements."]]}
+      ]
+    },
+    {
+      "page": 78,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 2436.0,
+      "height": 1125.0,
+      "text": "77 W H E E L S\nPRECISION-CRAFTED FROM THE GROUND UP\n22\" 22\" 22\" 22\"\n22\" High-Gloss Black 22\" Low-Gloss Black 22\" High-Gloss 22\" Carbon Flash\nWith Multi-Spoke (SRV) With Machined Black (SGM) Metallic (SEZ)\nAccessory Wheel1 Outer Spokes (SRL) Accessory Wheel1 Accessory Wheel1\nAvailable on SLT Accessory Wheel1 Available on SLT Available on SLT\nand Denali Available on SLT and Denali and Denali\nand Denali\n22\" 222222\"\"\" 22\" 22\"\n22\" Polished Aluminum 222222\"\"\" BBBrrriiiggghhhttt CCChhhrrrooommmeee 22\" Bright Chrome 22\" 6-Spoke Low-Gloss\n(SEU) Accessory Wheel1 MMMuuullltttiii---SSSpppoookkkeee (((SSSSSSWWW))) Split-Spoke (SSI) Black With Machined\nAvailable on SLT AAAcccccceeessssssooorrryyy WWWhhheeeeeelll111 Accessory Wheel1 Accents (SEV)\nand Denali AAAvvvaaaiiilllaaabbbllleee ooonnn SSSLLLTTT Available on SLT Accessory Wheel1\naaannnddd DDDeeennnaaallliii and Denali Available on SLT\nand Denali\nFind the full selection of Sierra accessory wheels at gmc.com/accessories.",
+      "table_lines": [],
+      "lines": [
+        {"top":43.7,"cells":[[233.5,336.3,"W H E E L S"]]},
+        {"top":44.5,"cells":[[36.9,62.7,"77"]]},
+        {"top":103.9,"cells":[[517.2,1920.7,"PRECISION-CRAFTED FROM THE GROUND UP"]]},
+        {"top":280.4,"cells":[[344.2,507.2,"22\""],[962.5,1125.5,"22\""],[1544.4,1707.5,"22\""],[2092.9,2255.9,"22\""]]},
+        {"top":431.0,"cells":[[349.4,582.9,"22\" High-Gloss Black"],[967.7,1195.5,"22\" Low-Gloss Black"],[1549.7,1716.3,"22\" High-Gloss"],[2098.1,2288.5,"22\" Carbon Flash"]]},
+        {"top":464.2,"cells":[[349.4,611.5,"With Multi-Spoke (SRV)"],[967.7,1134.7,"With Machined"],[1549.7,1684.1,"Black (SGM)"],[2098.1,2247.6,"Metallic (SEZ)"]]},
+        {"top":496.6,"cells":[[349.4,546.4,"Accessory Wheel1"],[967.7,1181.3,"Outer Spokes (SRL)"],[1549.7,1746.7,"Accessory Wheel1"],[2098.1,2295.1,"Accessory Wheel1"]]},
+        {"top":529.8,"cells":[[349.4,524.9,"Available on SLT"],[967.7,1164.7,"Accessory Wheel1"],[1549.7,1725.2,"Available on SLT"],[2098.1,2270.1,"Available on SLT"]]},
+        {"top":563.6,"cells":[[349.4,463.9,"and Denali"],[967.7,1143.3,"Available on SLT"],[1549.7,1664.2,"and Denali"],[2098.1,2210.5,"and Denali"]]},
+        {"top":596.7,"cells":[[967.7,1082.3,"and Denali"]]},
+        {"top":694.5,"cells":[[344.2,507.2,"22\""],[962.5,1125.5,"222222\"\"\""],[1544.4,1707.5,"22\""],[2090.7,2253.8,"22\""]]},
+        {"top":845.1,"cells":[[349.4,604.0,"22\" Polished Aluminum"],[967.7,1006.0,"222222\"\"\""],[1012.7,1079.8,"BBBrrriiiggghhhttt"],[1086.6,1171.7,"CCChhhrrrooommmeee"],[1549.7,1753.7,"22\" Bright Chrome"],[2096.0,2355.0,"22\" 6-Spoke Low-Gloss"]]},
+        {"top":877.5,"cells":[[349.4,614.7,"(SEU) Accessory Wheel1"],[967.7,1097.8,"MMMuuullltttiii---SSSpppoookkkeee"],[1104.5,1176.5,"(((SSSSSSWWW)))"],[1549.7,1732.5,"Split-Spoke (SSI)"],[2096.0,2329.8,"Black With Machined"]]},
+        {"top":910.7,"cells":[[1085.9,1164.7,"WWWhhheeeeeelll111"],[1667.9,1746.7,"Wheel1"]]},
+        {"top":911.4,"cells":[[349.4,524.9,"Available on SLT"],[967.7,1079.1,"AAAcccccceeessssssooorrryyy"],[1549.7,1661.1,"Accessory"],[2096.0,2252.5,"Accents (SEV)"]]},
+        {"top":943.8,"cells":[[349.4,463.9,"and Denali"],[967.7,1064.7,"AAAvvvaaaiiilllaaabbbllleee"],[1071.1,1097.7,"ooonnn"],[1104.1,1143.3,"SSSLLLTTT"],[1549.7,1725.2,"Available on SLT"],[2096.0,2293.0,"Accessory Wheel1"]]},
+        {"top":977.7,"cells":[[967.7,1008.6,"aaannnddd"],[1015.0,1082.3,"DDDeeennnaaallliii"],[1549.7,1664.2,"and Denali"],[2096.0,2271.5,"Available on SLT"]]},
+        {"top":1010.8,"cells":[[2096.0,2210.5,"and Denali"]]},
+        {"top":1075.2,"cells":[[1763.0,2406.9,"Find the full selection of Sierra accessory wheels at gmc.com/accessories."]]}
+      ]
+    },
+    {
+      "page": 79,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 2436.0,
+      "height": 1125.0,
+      "text": "78 A C C E S S O R I E S\nPERSONALIZE YOUR SIERRA\nGMC Accessories are a great way to personalize your Sierra\u2014inside and out.\nWe also offer accessories from a lineup of other renowned and proven\nmanufacturers. Find a full selection of Sierra accessories at gmc.com/accessories.",
+      "table_lines": [],
+      "lines": [
+        {"top":44.5,"cells":[[34.5,62.0,"78"],[233.6,410.7,"A C C E S S O R I E S"]]},
+        {"top":163.6,"cells":[[69.6,969.1,"PERSONALIZE YOUR SIERRA"]]},
+        {"top":168.3,"cells":[[1084.0,2288.9,"GMC Accessories are a great way to personalize your Sierra\u2014inside and out."]]},
+        {"top":216.3,"cells":[[1084.0,2195.5,"We also offer accessories from a lineup of other renowned and proven"]]},
+        {"top":264.3,"cells":[[1084.0,2358.6,"manufacturers. Find a full selection of Sierra accessories at gmc.com/accessories."]]}
+      ]
+    },
+    {
+      "page": 80,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 2436.0,
+      "height": 1125.0,
+      "text": "79 A C C E S S O R I E S\nPREMIUM ALL-WEATHER CENTER CONSOLE HARD FOLDING TONNEAU\nOFF-ROAD HIGH-CLEARANCE STEPS\nFLOOR LINERS LOCKABLE STORAGE BOX COVER BY REV\u00ae\nFind a full selection of Sierra accessories at gmc.com/accessories.",
+      "table_lines": [],
+      "lines": [
+        {"top":44.5,"cells":[[35.3,62.7,"79"],[233.6,410.7,"A C C E S S O R I E S"]]},
+        {"top":156.4,"cells":[[148.2,505.8,"PREMIUM ALL-WEATHER"],[788.6,1053.5,"CENTER CONSOLE"],[1328.1,1701.9,"HARD FOLDING TONNEAU"]]},
+        {"top":173.4,"cells":[[1843.0,2375.0,"OFF-ROAD HIGH-CLEARANCE STEPS"]]},
+        {"top":190.4,"cells":[[221.6,432.4,"FLOOR LINERS"],[733.0,1109.0,"LOCKABLE STORAGE BOX"],[1398.3,1631.7,"COVER BY REV\u00ae"]]},
+        {"top":1075.2,"cells":[[1825.7,2399.9,"Find a full selection of Sierra accessories at gmc.com/accessories."]]}
+      ]
+    },
+    {
+      "page": 81,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 2436.0,
+      "height": 1125.0,
+      "text": "80 FA M I LY O F V E H I C L E S\nPOWERED BY PROFESSIONAL GRADE\nSIERRA 1500\nACADIA\nTERRAIN\nCANYON\nYUKON\nSIERRA HEAVY DUTY\nHUMMER EV PICKUP\nDue to current supply-chain shortages, certain features shown have limited or late availability, or are no longer available. See the window label or a dealer regarding the features on an individual vehicle. Sierra 1500 AT4X shown with available accessories.\nCanyon AT4X shown available spring 2023. Reservations for HUMMER EV are currently full.",
+      "table_lines": [],
+      "lines": [
+        {"top":44.5,"cells":[[33.2,62.8,"80"],[233.6,500.0,"FA M I LY O F V E H I C L E S"]]},
+        {"top":141.9,"cells":[[633.5,1802.5,"POWERED BY PROFESSIONAL GRADE"]]},
+        {"top":842.0,"cells":[[149.3,286.6,"SIERRA 1500"]]},
+        {"top":854.0,"cells":[[2202.9,2288.5,"ACADIA"]]},
+        {"top":866.0,"cells":[[1910.0,2005.4,"TERRAIN"]]},
+        {"top":872.0,"cells":[[455.2,548.8,"CANYON"]]},
+        {"top":878.0,"cells":[[1610.4,1687.6,"YUKON"]]},
+        {"top":884.0,"cells":[[700.5,925.5,"SIERRA HEAVY DUTY"]]},
+        {"top":902.0,"cells":[[1076.9,1295.1,"HUMMER EV PICKUP"]]},
+        {"top":1054.3,"cells":[[36.0,2276.6,"Due to current supply-chain shortages, certain features shown have limited or late availability, or are no longer available. See the window label or a dealer regarding the features on an individual vehicle. Sierra 1500 AT4X shown with available accessories."]]},
+        {"top":1075.9,"cells":[[36.0,838.5,"Canyon AT4X shown available spring 2023. Reservations for HUMMER EV are currently full."]]}
+      ]
+    },
+    {
+      "page": 82,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 2436.0,
+      "height": 1125.0,
+      "text": "81 D R I V E T H E C O N V E R S AT I O N\nDRIVE THE CONVERSATION\n#GMCSIERRA | #DENALI | #AT4\nSome features shown may have limited, late or no availability. See dealer for feature availability.\nSierra 1500 12w\nShare your GMC experience and get in on the action.\nDue to current supply-chain shortages, certain features shown on this spread have limited\nor late availability, or are no longer available. See the window label or a dealer regarding the\nfeatures on an individual vehicle.\nAvailable accessories shown.",
+      "table_lines": [
+        "81 D R I V E T H E C O N V E R S AT I O N\nDRIVE THE CONVERSATION\n#GMCSIERRA | #DENALI | #AT4\nSome features shown may have limited, late or no availability. See dealer for feature availability.\nSierra 1500 12w\nShare your GMC experience and get in on the action.\nDue to current supply-chain shortages, certain features shown on this spread have limited\nor late availability, or are no longer available. See the window label or a dealer regarding the\nfeatures on an individual vehicle.\nAvailable accessories shown.",
+        "Available accessories shown.",
+        "Some features shown may have limited, late or no availability. See dealer for feature availability.",
+        "Sierra 1500 12w"
+      ],
+      "lines": [
+        {"top":44.5,"cells":[[37.5,63.5,"81"],[233.6,576.5,"D R I V E T H E C O N V E R S AT I O N"]]},
+        {"top":339.3,"cells":[[71.6,930.6,"DRIVE THE CONVERSATION"]]},
+        {"top":423.8,"cells":[[274.2,483.9,"#GMCSIERRA |"],[496.7,644.0,"#DENALI |"],[656.7,731.0,"#AT4"]]},
+        {"top":520.9,"cells":[[983.0,1315.4,"Some features shown may have limited, late or no availability. See dealer for feature availability."]]},
+        {"top":577.6,"cells":[[990.0,1063.1,"Sierra 1500"],[1087.5,1112.4,"12w"]]},
+        {"top":699.0,"cells":[[77.9,899.2,"Share your GMC experience and get in on the action."]]},
+        {"top":1032.7,"cells":[[36.0,829.2,"Due to current supply-chain shortages, certain features shown on this spread have limited"]]},
+        {"top":1054.3,"cells":[[36.0,852.7,"or late availability, or are no longer available. See the window label or a dealer regarding the"]]},
+        {"top":1075.9,"cells":[[36.0,324.1,"features on an individual vehicle."]]},
+        {"top":1090.7,"cells":[[2003.0,2088.4,"Available accessories shown."]]}
+      ]
+    },
+    {
+      "page": 83,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 2436.0,
+      "height": 1125.0,
+      "text": "82 I M P O R TA N T W O R D S A N D L E G A L D I S C L O S U R E S\nIMPORTANT WORDS\nAND\nLEGAL DISCLOSURES",
+      "table_lines": [],
+      "lines": [
+        {"top":44.5,"cells":[[34.0,63.1,"82"],[233.6,824.0,"I M P O R TA N T W O R D S A N D L E G A L D I S C L O S U R E S"]]},
+        {"top":332.1,"cells":[[419.4,2014.4,"IMPORTANT WORDS"]]},
+        {"top":498.1,"cells":[[1037.0,1392.1,"AND"]]},
+        {"top":664.1,"cells":[[381.4,2053.5,"LEGAL DISCLOSURES"]]}
+      ]
+    },
+    {
+      "page": 84,
+      "trim_hint": true,
+      "has_text_layer": true,
+      "width": 2436.0,
+      "height": 1125.0,
+      "text": "83 I M P O R TA N T W O R D S A N D L E G A L D I S C L O S U R E S\nNEW VEHICLE LIMITED WARRANTY\n3-YEAR/36,000-MILE BUMPER-TO-BUMPER LIMITED WARRANTY GMC will warrant each 2023 Sierra from bumper IMPORTANT WORDS ABOUT THIS CATALOG We have tried to make this catalog comprehensive and factual. We reserve\nto bumper for 3 years/36,000 miles (whichever comes first; see dealer for details), with no deductible, from the original the right, however, to make changes at any time, without notice, in prices, colors, materials, equipment, specifications, models\nin-service date of the vehicle, for warrantable repairs that are required as a result of defects due to materials and/or and availability. Specifications, dimensions, measurements, ratings and other numbers in this catalog and other printed\nworkmanship. Cosmetic corrosion resulting from defects is also covered under the Bumper-to-Bumper Limited Warranty. materials provided at the dealership or affixed to vehicles are approximations based on design and engineering drawings,\nIn addition, rust-through corrosion will be covered for 6 years/100,000 miles (whichever comes first; see dealer for details). prototypes and laboratory tests. Your vehicle may differ due to variations in manufacture and equipment. Since some\ninformation may have been updated since the time of publication, please check with your GMC dealer for complete details.\nPOWERTRAIN LIMITED WARRANTY Every 2023 GMC Sierra comes with a 5-year/60,000-mile (whichever comes first)\nGMC reserves the right to lengthen or shorten the model year for any product for any reason or to start and end model\ntransferable Powertrain Limited Warranty. 24/7 Roadside Assistance and Courtesy Transportation are also offered for the\nyears at different times. Certain vehicle features may lose their usefulness over time due to obsolescence from technological\nduration of the Powertrain Limited Warranty. Sierra 1500 Light-Duty (LD) pickups equipped with a 3.0L Duramax Turbo\nchanges. Unless otherwise noted, all claims based on GM Large Pickup segment and latest available competitive information\nDiesel engine are covered by a 5-year/100,000-mile (whichever comes first) transferable Powertrain Limited Warranty.\navailable at time of publication. Excludes other GM vehicles.\n24/7 Roadside Assistance and Courtesy Transportation are also offered for the duration of the Powertrain Limited Warranty.\nPlease see your GMC dealer for details. AN IMPORTANT NOTE ABOUT ALTERATIONS AND WARRANTIES Installations or alterations to the original equipment\nvehicle (or chassis) as distributed by General Motors are not covered by the General Motors New Vehicle Limited Warranty.\nONSTAR AND GMC CONNECTED SERVICES\nThe special body company, assembler, equipment installer or upfitter is solely responsible for warranties on the body\nConnected vehicle services vary by vehicle model and require working electrical system, cell reception and GPS signal.\nor equipment and any alterations (or any effect of the alterations) to any of the parts, components, systems or assemblies\nRequires active service plan. OnStar links to emergency services. See onstar.com for details and limitations.\ninstalled by GM. General Motors is not responsible for the safety or quality of design, features, materials or workmanship\nGMC CERTIFIED SERVICE of any alterations by such employers.\nTo help your Sierra live up to its performance promise, GMC Certified Service\u2014found exclusively at your GMC\nASSEMBLY GMC vehicles and their components are assembled or produced by different operating units of General Motors,\ndealer\u2014is there. With all the engineering excellence in Sierra, GM-trained technicians have the expertise to help care for it.\nits subsidiaries or suppliers to GM worldwide. We sometimes find it necessary to produce GMC vehicles with different\nADDITIONAL NOTES or differently sourced components than originally scheduled. Since some options may be unavailable when your vehicle\nis assembled, we suggest you verify that your vehicle includes the equipment you ordered and that, if there were changes,\nA NOTE ON CHILD SAFETY Always use seat belts and the correct child restraint for your child\u2019s age and size, even with\nthey are acceptable to you.\nairbags. Even in vehicles equipped with the Passenger Sensing System, children are safer when properly secured in a rear seat\nin the appropriate infant, child or booster seat. Never place a rear-facing infant restraint in the front seat of any vehicle equipped GMMOBILITY.COM (1-800-323-9935) GM Mobility offers financial assistance for eligible adaptive equipment to make\nwith an active frontal airbag. See the Owner\u2019s Manual and the child safety seat instructions for more safety information. automotive travel easier for persons with disabilities or special transportation needs. To learn more about special GM Mobility\noffers, visit gmmobility.com.\nTRAILERING AND OFF-ROAD DRIVING INFORMATION Please go to gmc.com and carefully review the vehicle Owner\u2019s\nManual for important safety information about trailering or off-road driving in your vehicle. \u00a92023 General Motors. All rights reserved. GM, the GM logo, GMC, the slogans, emblems, vehicle model names, vehicle\nbody designs and other marks appearing in this catalog are the trademarks and/or service marks of General Motors,\nFLEET ORDERS Some standard content may be deleted on fleet orders. See dealer for details.\nits subsidiaries, affiliates or licensors. Facebook is a registered trademark of Meta Platforms, Inc. Twitter is a registered\ntrademark of Twitter, Inc. Instagram is a registered trademark of Instagram, LLC. Sirius, XM and all related marks and\nENGINES GMC products are equipped with engines produced by GM Powertrain or other suppliers to GM worldwide.\nlogos are trademarks of SiriusXM Radio, Inc. Google, Android, Android Auto, Google Maps and other marks are trademarks\nThe engines in GMC products may also be used in other GM makes and models.\nof Google LLC. Apple, CarPlay, iPhone and Siri are registered trademarks of Apple, Inc.\nGMC.COM See more of Sierra on our website: gmc.com/sierra. More photos and information; hot links to related subjects;\nconvenient dealer locator; pricing guide; spec out your own vehicle. Or call 1-800-GMC-8782.",
+      "table_lines": [],
+      "lines": [
+        {"top":43.7,"cells":[[233.5,823.9,"I M P O R TA N T W O R D S A N D L E G A L D I S C L O S U R E S"]]},
+        {"top":44.5,"cells":[[33.8,62.8,"83"]]},
+        {"top":204.1,"cells":[[134.8,457.8,"NEW VEHICLE LIMITED WARRANTY"]]},
+        {"top":237.7,"cells":[[134.8,1125.3,"3-YEAR/36,000-MILE BUMPER-TO-BUMPER LIMITED WARRANTY GMC will warrant each 2023 Sierra from bumper"],[1270.0,2293.3,"IMPORTANT WORDS ABOUT THIS CATALOG We have tried to make this catalog comprehensive and factual. We reserve"]]},
+        {"top":259.3,"cells":[[134.8,1107.3,"to bumper for 3 years/36,000 miles (whichever comes first; see dealer for details), with no deductible, from the original"],[1270.0,2300.7,"the right, however, to make changes at any time, without notice, in prices, colors, materials, equipment, specifications, models"]]},
+        {"top":280.9,"cells":[[134.8,1086.9,"in-service date of the vehicle, for warrantable repairs that are required as a result of defects due to materials and/or"],[1270.0,2269.8,"and availability. Specifications, dimensions, measurements, ratings and other numbers in this catalog and other printed"]]},
+        {"top":302.5,"cells":[[134.8,1125.8,"workmanship. Cosmetic corrosion resulting from defects is also covered under the Bumper-to-Bumper Limited Warranty."],[1270.0,2273.2,"materials provided at the dealership or affixed to vehicles are approximations based on design and engineering drawings,"]]},
+        {"top":324.1,"cells":[[134.8,1137.6,"In addition, rust-through corrosion will be covered for 6 years/100,000 miles (whichever comes first; see dealer for details)."],[1270.0,2253.4,"prototypes and laboratory tests. Your vehicle may differ due to variations in manufacture and equipment. Since some"]]},
+        {"top":345.8,"cells":[[1270.0,2276.5,"information may have been updated since the time of publication, please check with your GMC dealer for complete details."]]},
+        {"top":357.7,"cells":[[134.8,1133.5,"POWERTRAIN LIMITED WARRANTY Every 2023 GMC Sierra comes with a 5-year/60,000-mile (whichever comes first)"]]},
+        {"top":367.4,"cells":[[1270.0,2265.7,"GMC reserves the right to lengthen or shorten the model year for any product for any reason or to start and end model"]]},
+        {"top":379.3,"cells":[[134.8,1138.9,"transferable Powertrain Limited Warranty. 24/7 Roadside Assistance and Courtesy Transportation are also offered for the"]]},
+        {"top":389.0,"cells":[[1270.0,2287.4,"years at different times. Certain vehicle features may lose their usefulness over time due to obsolescence from technological"]]},
+        {"top":400.9,"cells":[[134.8,1121.7,"duration of the Powertrain Limited Warranty. Sierra 1500 Light-Duty (LD) pickups equipped with a 3.0L Duramax Turbo"]]},
+        {"top":410.6,"cells":[[1270.0,2298.1,"changes. Unless otherwise noted, all claims based on GM Large Pickup segment and latest available competitive information"]]},
+        {"top":422.5,"cells":[[134.8,1113.5,"Diesel engine are covered by a 5-year/100,000-mile (whichever comes first) transferable Powertrain Limited Warranty."]]},
+        {"top":432.2,"cells":[[1270.0,1761.3,"available at time of publication. Excludes other GM vehicles."]]},
+        {"top":444.1,"cells":[[134.7,1149.4,"24/7 Roadside Assistance and Courtesy Transportation are also offered for the duration of the Powertrain Limited Warranty."]]},
+        {"top":465.7,"cells":[[134.7,457.2,"Please see your GMC dealer for details."],[1270.0,2279.9,"AN IMPORTANT NOTE ABOUT ALTERATIONS AND WARRANTIES Installations or alterations to the original equipment"]]},
+        {"top":487.4,"cells":[[1270.0,2278.9,"vehicle (or chassis) as distributed by General Motors are not covered by the General Motors New Vehicle Limited Warranty."]]},
+        {"top":499.3,"cells":[[134.7,519.9,"ONSTAR AND GMC CONNECTED SERVICES"]]},
+        {"top":509.0,"cells":[[1270.0,2248.1,"The special body company, assembler, equipment installer or upfitter is solely responsible for warranties on the body"]]},
+        {"top":520.9,"cells":[[134.7,1107.2,"Connected vehicle services vary by vehicle model and require working electrical system, cell reception and GPS signal."]]},
+        {"top":530.6,"cells":[[1270.0,2270.7,"or equipment and any alterations (or any effect of the alterations) to any of the parts, components, systems or assemblies"]]},
+        {"top":542.5,"cells":[[134.7,1016.5,"Requires active service plan. OnStar links to emergency services. See onstar.com for details and limitations."]]},
+        {"top":552.2,"cells":[[1270.0,2260.1,"installed by GM. General Motors is not responsible for the safety or quality of design, features, materials or workmanship"]]},
+        {"top":573.8,"cells":[[134.7,358.5,"GMC CERTIFIED SERVICE"],[1270.0,1575.8,"of any alterations by such employers."]]},
+        {"top":597.7,"cells":[[134.7,1052.1,"To help your Sierra live up to its performance promise, GMC Certified Service\u2014found exclusively at your GMC"]]},
+        {"top":607.4,"cells":[[1270.0,2284.0,"ASSEMBLY GMC vehicles and their components are assembled or produced by different operating units of General Motors,"]]},
+        {"top":619.3,"cells":[[134.7,1119.7,"dealer\u2014is there. With all the engineering excellence in Sierra, GM-trained technicians have the expertise to help care for it."]]},
+        {"top":629.0,"cells":[[1270.0,2257.0,"its subsidiaries or suppliers to GM worldwide. We sometimes find it necessary to produce GMC vehicles with different"]]},
+        {"top":650.6,"cells":[[1270.0,2270.9,"or differently sourced components than originally scheduled. Since some options may be unavailable when your vehicle"]]},
+        {"top":652.9,"cells":[[134.7,318.6,"ADDITIONAL NOTES"]]},
+        {"top":672.2,"cells":[[1270.0,2275.7,"is assembled, we suggest you verify that your vehicle includes the equipment you ordered and that, if there were changes,"]]},
+        {"top":686.5,"cells":[[134.7,1132.0,"A NOTE ON CHILD SAFETY Always use seat belts and the correct child restraint for your child\u2019s age and size, even with"]]},
+        {"top":693.8,"cells":[[1270.0,1492.2,"they are acceptable to you."]]},
+        {"top":708.1,"cells":[[134.7,1156.3,"airbags. Even in vehicles equipped with the Passenger Sensing System, children are safer when properly secured in a rear seat"]]},
+        {"top":727.4,"cells":[[1270.0,2259.2,"GMMOBILITY.COM (1-800-323-9935) GM Mobility offers financial assistance for eligible adaptive equipment to make"]]},
+        {"top":729.7,"cells":[[134.7,1166.0,"in the appropriate infant, child or booster seat. Never place a rear-facing infant restraint in the front seat of any vehicle equipped"]]},
+        {"top":749.0,"cells":[[1270.0,2278.2,"automotive travel easier for persons with disabilities or special transportation needs. To learn more about special GM Mobility"]]},
+        {"top":751.3,"cells":[[134.7,1123.8,"with an active frontal airbag. See the Owner\u2019s Manual and the child safety seat instructions for more safety information."]]},
+        {"top":770.6,"cells":[[1270.0,1498.2,"offers, visit gmmobility.com."]]},
+        {"top":785.0,"cells":[[134.7,1138.3,"TRAILERING AND OFF-ROAD DRIVING INFORMATION Please go to gmc.com and carefully review the vehicle Owner\u2019s"]]},
+        {"top":804.2,"cells":[[1270.0,2251.5,"\u00a92023 General Motors. All rights reserved. GM, the GM logo, GMC, the slogans, emblems, vehicle model names, vehicle"]]},
+        {"top":806.6,"cells":[[134.7,877.2,"Manual for important safety information about trailering or off-road driving in your vehicle."]]},
+        {"top":825.8,"cells":[[1270.0,2246.7,"body designs and other marks appearing in this catalog are the trademarks and/or service marks of General Motors,"]]},
+        {"top":840.2,"cells":[[134.7,913.0,"FLEET ORDERS Some standard content may be deleted on fleet orders. See dealer for details."]]},
+        {"top":847.4,"cells":[[1270.0,2223.2,"its subsidiaries, affiliates or licensors. Facebook is a registered trademark of Meta Platforms, Inc. Twitter is a registered"]]},
+        {"top":869.0,"cells":[[1270.0,2251.4,"trademark of Twitter, Inc. Instagram is a registered trademark of Instagram, LLC. Sirius, XM and all related marks and"]]},
+        {"top":873.8,"cells":[[134.7,1099.6,"ENGINES GMC products are equipped with engines produced by GM Powertrain or other suppliers to GM worldwide."]]},
+        {"top":890.6,"cells":[[1270.0,2263.4,"logos are trademarks of SiriusXM Radio, Inc. Google, Android, Android Auto, Google Maps and other marks are trademarks"]]},
+        {"top":895.4,"cells":[[134.7,793.4,"The engines in GMC products may also be used in other GM makes and models."]]},
+        {"top":912.2,"cells":[[1270.0,1980.2,"of Google LLC. Apple, CarPlay, iPhone and Siri are registered trademarks of Apple, Inc."]]},
+        {"top":929.0,"cells":[[134.7,1128.3,"GMC.COM See more of Sierra on our website: gmc.com/sierra. More photos and information; hot links to related subjects;"]]},
+        {"top":950.6,"cells":[[134.7,901.2,"convenient dealer locator; pricing guide; spec out your own vehicle. Or call 1-800-GMC-8782."]]}
+      ]
+    }
+  ],
+  "combined_trim_pages_text": "--- page 84 ---\n83 I M P O R TA N T W O R D S A N D L E G A L D I S C L O S U R E S\nNEW VEHICLE LIMITED WARRANTY\n3-YEAR/36,000-MILE BUMPER-TO-BUMPER LIMITED WARRANTY GMC will warrant each 2023 Sierra from bumper IMPORTANT WORDS ABOUT THIS CATALOG We have tried to make this catalog comprehensive and factual. We reserve\nto bumper for 3 years/36,000 miles (whichever comes first; see dealer for details), with no deductible, from the original the right, however, to make changes at any time, without notice, in prices, colors, materials, equipment, specifications, models\nin-service date of the vehicle, for warrantable repairs that are required as a result of defects due to materials and/or and availability. Specifications, dimensions, measurements, ratings and other numbers in this catalog and other printed\nworkmanship. Cosmetic corrosion resulting from defects is also covered under the Bumper-to-Bumper Limited Warranty. materials provided at the dealership or affixed to vehicles are approximations based on design and engineering drawings,\nIn addition, rust-through corrosion will be covered for 6 years/100,000 miles (whichever comes first; see dealer for details). prototypes and laboratory tests. Your vehicle may differ due to variations in manufacture and equipment. Since some\ninformation may have been updated since the time of publication, please check with your GMC dealer for complete details.\nPOWERTRAIN LIMITED WARRANTY Every 2023 GMC Sierra comes with a 5-year/60,000-mile (whichever comes first)\nGMC reserves the right to lengthen or shorten the model year for any product for any reason or to start and end model\ntransferable Powertrain Limited Warranty. 24/7 Roadside Assistance and Courtesy Transportation are also offered for the\nyears at different times. Certain vehicle features may lose their usefulness over time due to obsolescence from technological\nduration of the Powertrain Limited Warranty. Sierra 1500 Light-Duty (LD) pickups equipped with a 3.0L Duramax Turbo\nchanges. Unless otherwise noted, all claims based on GM Large Pickup segment and latest available competitive information\nDiesel engine are covered by a 5-year/100,000-mile (whichever comes first) transferable Powertrain Limited Warranty.\navailable at time of publication. Excludes other GM vehicles.\n24/7 Roadside Assistance and Courtesy Transportation are also offered for the duration of the Powertrain Limited Warranty.\nPlease see your GMC dealer for details. AN IMPORTANT NOTE ABOUT ALTERATIONS AND WARRANTIES Installations or alterations to the original equipment\nvehicle (or chassis) as distributed by General Motors are not covered by the General Motors New Vehicle Limited Warranty.\nONSTAR AND GMC CONNECTED SERVICES\nThe special body company, assembler, equipment installer or upfitter is solely responsible for warranties on the body\nConnected vehicle services vary by vehicle model and require working electrical system, cell reception and GPS signal.\nor equipment and any alterations (or any effect of the alterations) to any of the parts, components, systems or assemblies\nRequires active service plan. OnStar links to emergency services. See onstar.com for details and limitations.\ninstalled by GM. General Motors is not responsible for the safety or quality of design, features, materials or workmanship\nGMC CERTIFIED SERVICE of any alterations by such employers.\nTo help your Sierra live up to its performance promise, GMC Certified Service\u2014found exclusively at your GMC\nASSEMBLY GMC vehicles and their components are assembled or produced by different operating units of General Motors,\ndealer\u2014is there. With all the engineering excellence in Sierra, GM-trained technicians have the expertise to help care for it.\nits subsidiaries or suppliers to GM worldwide. We sometimes find it necessary to produce GMC vehicles with different\nADDITIONAL NOTES or differently sourced components than originally scheduled. Since some options may be unavailable when your vehicle\nis assembled, we suggest you verify that your vehicle includes the equipment you ordered and that, if there were changes,\nA NOTE ON CHILD SAFETY Always use seat belts and the correct child restraint for your child\u2019s age and size, even with\nthey are acceptable to you.\nairbags. Even in vehicles equipped with the Passenger Sensing System, children are safer when properly secured in a rear seat\nin the appropriate infant, child or booster seat. Never place a rear-facing infant restraint in the front seat of any vehicle equipped GMMOBILITY.COM (1-800-323-9935) GM Mobility offers financial assistance for eligible adaptive equipment to make\nwith an active frontal airbag. See the Owner\u2019s Manual and the child safety seat instructions for more safety information. automotive travel easier for persons with disabilities or special transportation needs. To learn more about special GM Mobility\noffers, visit gmmobility.com.\nTRAILERING AND OFF-ROAD DRIVING INFORMATION Please go to gmc.com and carefully review the vehicle Owner\u2019s\nManual for important safety information about trailering or off-road driving in your vehicle. \u00a92023 General Motors. All rights reserved. GM, the GM logo, GMC, the slogans, emblems, vehicle model names, vehicle\nbody designs and other marks appearing in this catalog are the trademarks and/or service marks of General Motors,\nFLEET ORDERS Some standard content may be deleted on fleet orders. See dealer for details.\nits subsidiaries, affiliates or licensors. Facebook is a registered trademark of Meta Platforms, Inc. Twitter is a registered\ntrademark of Twitter, Inc. Instagram is a registered trademark of Instagram, LLC. Sirius, XM and all related marks and\nENGINES GMC products are equipped with engines produced by GM Powertrain or other suppliers to GM worldwide.\nlogos are trademarks of SiriusXM Radio, Inc. Google, Android, Android Auto, Google Maps and other marks are trademarks\nThe engines in GMC products may also be used in other GM makes and models.\nof Google LLC. Apple, CarPlay, iPhone and Siri are registered trademarks of Apple, Inc.\nGMC.COM See more of Sierra on our website: gmc.com/sierra. More photos and information; hot links to related subjects;\nconvenient dealer locator; pricing guide; spec out your own vehicle. Or call 1-800-GMC-8782."
+}

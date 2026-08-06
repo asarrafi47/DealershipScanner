@@ -1,0 +1,591 @@
+{
+ "catalog_key": "2027|honda|hrv",
+ "year": 2027,
+ "make": "Honda",
+ "model": "HR-V",
+ "source": "html_spec_quoted",
+ "source_document": "backend/dictionary/derived/html_spec_text/2027__honda__hrv.json",
+ "source_url": "https://hondanews.com/en-US/honda-automobiles/releases/release-8fa536ee8b843d5cf766c5861600c43c-2027-honda-hr-v-specifications-and-features",
+ "layouts": [
+  "html_mark_grid"
+ ],
+ "trims_available": [
+  "LX",
+  "Sport",
+  "EX-L"
+ ],
+ "trims_quoted": [
+  "Sport",
+  "EX-L"
+ ],
+ "adds_by_trim": {
+  "Sport": [
+   "Black Lug Nuts",
+   "Blind Spot Information System (BSI)",
+   "Rear Cross Traffic Monitor (CTM)",
+   "Key Fob Activated Remote Engine Start",
+   "180-Watt Audio System with 6 Speakers",
+   "Power Windows with Auto Up/Down Passenger's Window",
+   "Heated Front Seats",
+   "Leather-Wrapped Shift Knob",
+   "Leather-Wrapped Steering Wheel",
+   "Illuminated Sunvisor Vanity (Driver & Passenger)",
+   "LED Side Mirror Turn Indicator",
+   "Heated Side Mirrors",
+   "Gloss Black Roofline Spoiler",
+   "Gloss Black Mirror Covers",
+   "Sport Grille",
+   "Chrome Exhaust Finisher",
+   "Smart Entry with Walk Away Auto Lock®"
+  ],
+  "EX-L": [
+   "Low-Speed Braking Control",
+   "Parking Sensors (4 Front & 4 Rear)",
+   "Automatic-Dimming Rearview Mirror",
+   "180-Watt Audio System with 8 Speakers",
+   "Leather-Trimmed Seats",
+   "Driver's Seat with 8-Way Power Adjustment",
+   "Dual-Zone Climate Control",
+   "One-Touch Power Moonroof with Tilt Feature"
+  ]
+ },
+ "adds_provenance": {
+  "Sport": [
+   {
+    "text": "Black Lug Nuts",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-8fa536ee8b843d5cf766c5861600c43c-2027-honda-hr-v-specifications-and-features",
+    "retrieved_at": "2026-08-02T19:46:03Z",
+    "document_sha256": "2ff9f01bc98d9a59b15e14cba4dbc4282b9fd45209cb5d0aca5caa66a61f62b1",
+    "locator": "table[0]/row[45]/col[2]",
+    "column_header": "Sport",
+    "section": "POWER UNIT > CHASSIS",
+    "relative_to": "LX",
+    "relative_locator": "table[0]/row[45]/col[1]",
+    "absent_columns": [
+     1
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2027__honda__hrv.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:41Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Blind Spot Information System (BSI)",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-8fa536ee8b843d5cf766c5861600c43c-2027-honda-hr-v-specifications-and-features",
+    "retrieved_at": "2026-08-02T19:46:03Z",
+    "document_sha256": "2ff9f01bc98d9a59b15e14cba4dbc4282b9fd45209cb5d0aca5caa66a61f62b1",
+    "locator": "table[0]/row[82]/col[2]",
+    "column_header": "Sport",
+    "section": "FEATURES > HONDA SENSING®",
+    "relative_to": "LX",
+    "relative_locator": "table[0]/row[82]/col[1]",
+    "absent_columns": [
+     1
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2027__honda__hrv.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:41Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Rear Cross Traffic Monitor (CTM)",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-8fa536ee8b843d5cf766c5861600c43c-2027-honda-hr-v-specifications-and-features",
+    "retrieved_at": "2026-08-02T19:46:03Z",
+    "document_sha256": "2ff9f01bc98d9a59b15e14cba4dbc4282b9fd45209cb5d0aca5caa66a61f62b1",
+    "locator": "table[0]/row[83]/col[2]",
+    "column_header": "Sport",
+    "section": "FEATURES > HONDA SENSING®",
+    "relative_to": "LX",
+    "relative_locator": "table[0]/row[83]/col[1]",
+    "absent_columns": [
+     1
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2027__honda__hrv.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:41Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Key Fob Activated Remote Engine Start",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-8fa536ee8b843d5cf766c5861600c43c-2027-honda-hr-v-specifications-and-features",
+    "retrieved_at": "2026-08-02T19:46:03Z",
+    "document_sha256": "2ff9f01bc98d9a59b15e14cba4dbc4282b9fd45209cb5d0aca5caa66a61f62b1",
+    "locator": "table[0]/row[116]/col[2]",
+    "column_header": "Sport",
+    "section": "FEATURES > DRIVER CONVENIENCE",
+    "relative_to": "LX",
+    "relative_locator": "table[0]/row[116]/col[1]",
+    "absent_columns": [
+     1
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2027__honda__hrv.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:41Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "180-Watt Audio System with 6 Speakers",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-8fa536ee8b843d5cf766c5861600c43c-2027-honda-hr-v-specifications-and-features",
+    "retrieved_at": "2026-08-02T19:46:03Z",
+    "document_sha256": "2ff9f01bc98d9a59b15e14cba4dbc4282b9fd45209cb5d0aca5caa66a61f62b1",
+    "locator": "table[0]/row[127]/col[2]",
+    "column_header": "Sport",
+    "section": "FEATURES > AUDIO & CONNECTIVITY",
+    "relative_to": "LX",
+    "relative_locator": "table[0]/row[127]/col[1]",
+    "absent_columns": [
+     1
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2027__honda__hrv.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:41Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Power Windows with Auto Up/Down Passenger's Window",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-8fa536ee8b843d5cf766c5861600c43c-2027-honda-hr-v-specifications-and-features",
+    "retrieved_at": "2026-08-02T19:46:03Z",
+    "document_sha256": "2ff9f01bc98d9a59b15e14cba4dbc4282b9fd45209cb5d0aca5caa66a61f62b1",
+    "locator": "table[0]/row[143]/col[2]",
+    "column_header": "Sport",
+    "section": "FEATURES > INTERIOR",
+    "relative_to": "LX",
+    "relative_locator": "table[0]/row[143]/col[1]",
+    "absent_columns": [
+     1
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2027__honda__hrv.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:41Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Heated Front Seats",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-8fa536ee8b843d5cf766c5861600c43c-2027-honda-hr-v-specifications-and-features",
+    "retrieved_at": "2026-08-02T19:46:03Z",
+    "document_sha256": "2ff9f01bc98d9a59b15e14cba4dbc4282b9fd45209cb5d0aca5caa66a61f62b1",
+    "locator": "table[0]/row[144]/col[2]",
+    "column_header": "Sport",
+    "section": "FEATURES > INTERIOR",
+    "relative_to": "LX",
+    "relative_locator": "table[0]/row[144]/col[1]",
+    "absent_columns": [
+     1
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2027__honda__hrv.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:41Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Leather-Wrapped Shift Knob",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-8fa536ee8b843d5cf766c5861600c43c-2027-honda-hr-v-specifications-and-features",
+    "retrieved_at": "2026-08-02T19:46:03Z",
+    "document_sha256": "2ff9f01bc98d9a59b15e14cba4dbc4282b9fd45209cb5d0aca5caa66a61f62b1",
+    "locator": "table[0]/row[151]/col[2]",
+    "column_header": "Sport",
+    "section": "FEATURES > INTERIOR",
+    "relative_to": "LX",
+    "relative_locator": "table[0]/row[151]/col[1]",
+    "absent_columns": [
+     1
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2027__honda__hrv.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:41Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Leather-Wrapped Steering Wheel",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-8fa536ee8b843d5cf766c5861600c43c-2027-honda-hr-v-specifications-and-features",
+    "retrieved_at": "2026-08-02T19:46:03Z",
+    "document_sha256": "2ff9f01bc98d9a59b15e14cba4dbc4282b9fd45209cb5d0aca5caa66a61f62b1",
+    "locator": "table[0]/row[152]/col[2]",
+    "column_header": "Sport",
+    "section": "FEATURES > INTERIOR",
+    "relative_to": "LX",
+    "relative_locator": "table[0]/row[152]/col[1]",
+    "absent_columns": [
+     1
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2027__honda__hrv.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:41Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Illuminated Sunvisor Vanity (Driver & Passenger)",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-8fa536ee8b843d5cf766c5861600c43c-2027-honda-hr-v-specifications-and-features",
+    "retrieved_at": "2026-08-02T19:46:03Z",
+    "document_sha256": "2ff9f01bc98d9a59b15e14cba4dbc4282b9fd45209cb5d0aca5caa66a61f62b1",
+    "locator": "table[0]/row[156]/col[2]",
+    "column_header": "Sport",
+    "section": "FEATURES > INTERIOR",
+    "relative_to": "LX",
+    "relative_locator": "table[0]/row[156]/col[1]",
+    "absent_columns": [
+     1
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2027__honda__hrv.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:41Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "LED Side Mirror Turn Indicator",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-8fa536ee8b843d5cf766c5861600c43c-2027-honda-hr-v-specifications-and-features",
+    "retrieved_at": "2026-08-02T19:46:03Z",
+    "document_sha256": "2ff9f01bc98d9a59b15e14cba4dbc4282b9fd45209cb5d0aca5caa66a61f62b1",
+    "locator": "table[0]/row[164]/col[2]",
+    "column_header": "Sport",
+    "section": "FEATURES > EXTERIOR",
+    "relative_to": "LX",
+    "relative_locator": "table[0]/row[164]/col[1]",
+    "absent_columns": [
+     1
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2027__honda__hrv.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:41Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Heated Side Mirrors",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-8fa536ee8b843d5cf766c5861600c43c-2027-honda-hr-v-specifications-and-features",
+    "retrieved_at": "2026-08-02T19:46:03Z",
+    "document_sha256": "2ff9f01bc98d9a59b15e14cba4dbc4282b9fd45209cb5d0aca5caa66a61f62b1",
+    "locator": "table[0]/row[166]/col[2]",
+    "column_header": "Sport",
+    "section": "FEATURES > EXTERIOR",
+    "relative_to": "LX",
+    "relative_locator": "table[0]/row[166]/col[1]",
+    "absent_columns": [
+     1
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2027__honda__hrv.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:41Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Gloss Black Roofline Spoiler",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-8fa536ee8b843d5cf766c5861600c43c-2027-honda-hr-v-specifications-and-features",
+    "retrieved_at": "2026-08-02T19:46:03Z",
+    "document_sha256": "2ff9f01bc98d9a59b15e14cba4dbc4282b9fd45209cb5d0aca5caa66a61f62b1",
+    "locator": "table[0]/row[171]/col[2]",
+    "column_header": "Sport",
+    "section": "FEATURES > EXTERIOR",
+    "relative_to": "LX",
+    "relative_locator": "table[0]/row[171]/col[1]",
+    "absent_columns": [
+     1
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2027__honda__hrv.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:41Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Gloss Black Mirror Covers",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-8fa536ee8b843d5cf766c5861600c43c-2027-honda-hr-v-specifications-and-features",
+    "retrieved_at": "2026-08-02T19:46:03Z",
+    "document_sha256": "2ff9f01bc98d9a59b15e14cba4dbc4282b9fd45209cb5d0aca5caa66a61f62b1",
+    "locator": "table[0]/row[172]/col[2]",
+    "column_header": "Sport",
+    "section": "FEATURES > EXTERIOR",
+    "relative_to": "LX",
+    "relative_locator": "table[0]/row[172]/col[1]",
+    "absent_columns": [
+     1
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2027__honda__hrv.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:41Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Sport Grille",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-8fa536ee8b843d5cf766c5861600c43c-2027-honda-hr-v-specifications-and-features",
+    "retrieved_at": "2026-08-02T19:46:03Z",
+    "document_sha256": "2ff9f01bc98d9a59b15e14cba4dbc4282b9fd45209cb5d0aca5caa66a61f62b1",
+    "locator": "table[0]/row[173]/col[2]",
+    "column_header": "Sport",
+    "section": "FEATURES > EXTERIOR",
+    "relative_to": "LX",
+    "relative_locator": "table[0]/row[173]/col[1]",
+    "absent_columns": [
+     1
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2027__honda__hrv.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:41Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Chrome Exhaust Finisher",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-8fa536ee8b843d5cf766c5861600c43c-2027-honda-hr-v-specifications-and-features",
+    "retrieved_at": "2026-08-02T19:46:03Z",
+    "document_sha256": "2ff9f01bc98d9a59b15e14cba4dbc4282b9fd45209cb5d0aca5caa66a61f62b1",
+    "locator": "table[0]/row[174]/col[2]",
+    "column_header": "Sport",
+    "section": "FEATURES > EXTERIOR",
+    "relative_to": "LX",
+    "relative_locator": "table[0]/row[174]/col[1]",
+    "absent_columns": [
+     1
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2027__honda__hrv.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:41Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Smart Entry with Walk Away Auto Lock®",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-8fa536ee8b843d5cf766c5861600c43c-2027-honda-hr-v-specifications-and-features",
+    "retrieved_at": "2026-08-02T19:46:03Z",
+    "document_sha256": "2ff9f01bc98d9a59b15e14cba4dbc4282b9fd45209cb5d0aca5caa66a61f62b1",
+    "locator": "table[0]/row[178]/col[2]",
+    "column_header": "Sport",
+    "section": "FEATURES > EXTERIOR",
+    "relative_to": "LX",
+    "relative_locator": "table[0]/row[178]/col[1]",
+    "absent_columns": [
+     1
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2027__honda__hrv.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:41Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   }
+  ],
+  "EX-L": [
+   {
+    "text": "Low-Speed Braking Control",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-8fa536ee8b843d5cf766c5861600c43c-2027-honda-hr-v-specifications-and-features",
+    "retrieved_at": "2026-08-02T19:46:03Z",
+    "document_sha256": "2ff9f01bc98d9a59b15e14cba4dbc4282b9fd45209cb5d0aca5caa66a61f62b1",
+    "locator": "table[0]/row[84]/col[3]",
+    "column_header": "EX-L",
+    "section": "FEATURES > HONDA SENSING®",
+    "relative_to": "Sport",
+    "relative_locator": "table[0]/row[84]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2027__honda__hrv.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:41Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Parking Sensors (4 Front & 4 Rear)",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-8fa536ee8b843d5cf766c5861600c43c-2027-honda-hr-v-specifications-and-features",
+    "retrieved_at": "2026-08-02T19:46:03Z",
+    "document_sha256": "2ff9f01bc98d9a59b15e14cba4dbc4282b9fd45209cb5d0aca5caa66a61f62b1",
+    "locator": "table[0]/row[88]/col[3]",
+    "column_header": "EX-L",
+    "section": "FEATURES > HONDA SENSING®",
+    "relative_to": "Sport",
+    "relative_locator": "table[0]/row[88]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2027__honda__hrv.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:41Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Automatic-Dimming Rearview Mirror",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-8fa536ee8b843d5cf766c5861600c43c-2027-honda-hr-v-specifications-and-features",
+    "retrieved_at": "2026-08-02T19:46:03Z",
+    "document_sha256": "2ff9f01bc98d9a59b15e14cba4dbc4282b9fd45209cb5d0aca5caa66a61f62b1",
+    "locator": "table[0]/row[121]/col[3]",
+    "column_header": "EX-L",
+    "section": "FEATURES > DRIVER CONVENIENCE",
+    "relative_to": "Sport",
+    "relative_locator": "table[0]/row[121]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2027__honda__hrv.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:41Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "180-Watt Audio System with 8 Speakers",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-8fa536ee8b843d5cf766c5861600c43c-2027-honda-hr-v-specifications-and-features",
+    "retrieved_at": "2026-08-02T19:46:03Z",
+    "document_sha256": "2ff9f01bc98d9a59b15e14cba4dbc4282b9fd45209cb5d0aca5caa66a61f62b1",
+    "locator": "table[0]/row[128]/col[3]",
+    "column_header": "EX-L",
+    "section": "FEATURES > AUDIO & CONNECTIVITY",
+    "relative_to": "Sport",
+    "relative_locator": "table[0]/row[128]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2027__honda__hrv.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:41Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Leather-Trimmed Seats",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-8fa536ee8b843d5cf766c5861600c43c-2027-honda-hr-v-specifications-and-features",
+    "retrieved_at": "2026-08-02T19:46:03Z",
+    "document_sha256": "2ff9f01bc98d9a59b15e14cba4dbc4282b9fd45209cb5d0aca5caa66a61f62b1",
+    "locator": "table[0]/row[145]/col[3]",
+    "column_header": "EX-L",
+    "section": "FEATURES > INTERIOR",
+    "relative_to": "Sport",
+    "relative_locator": "table[0]/row[145]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2027__honda__hrv.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:41Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Driver's Seat with 8-Way Power Adjustment",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-8fa536ee8b843d5cf766c5861600c43c-2027-honda-hr-v-specifications-and-features",
+    "retrieved_at": "2026-08-02T19:46:03Z",
+    "document_sha256": "2ff9f01bc98d9a59b15e14cba4dbc4282b9fd45209cb5d0aca5caa66a61f62b1",
+    "locator": "table[0]/row[147]/col[3]",
+    "column_header": "EX-L",
+    "section": "FEATURES > INTERIOR",
+    "relative_to": "Sport",
+    "relative_locator": "table[0]/row[147]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2027__honda__hrv.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:41Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Dual-Zone Climate Control",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-8fa536ee8b843d5cf766c5861600c43c-2027-honda-hr-v-specifications-and-features",
+    "retrieved_at": "2026-08-02T19:46:03Z",
+    "document_sha256": "2ff9f01bc98d9a59b15e14cba4dbc4282b9fd45209cb5d0aca5caa66a61f62b1",
+    "locator": "table[0]/row[150]/col[3]",
+    "column_header": "EX-L",
+    "section": "FEATURES > INTERIOR",
+    "relative_to": "Sport",
+    "relative_locator": "table[0]/row[150]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2027__honda__hrv.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:41Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "One-Touch Power Moonroof with Tilt Feature",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-8fa536ee8b843d5cf766c5861600c43c-2027-honda-hr-v-specifications-and-features",
+    "retrieved_at": "2026-08-02T19:46:03Z",
+    "document_sha256": "2ff9f01bc98d9a59b15e14cba4dbc4282b9fd45209cb5d0aca5caa66a61f62b1",
+    "locator": "table[0]/row[167]/col[3]",
+    "column_header": "EX-L",
+    "section": "FEATURES > EXTERIOR",
+    "relative_to": "Sport",
+    "relative_locator": "table[0]/row[167]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2027__honda__hrv.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:41Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   }
+  ]
+ }
+}

@@ -12,31 +12,25 @@
     "AMG": [
       {
         "label": "Engine Options",
-        "value": "2.0L I4 Turbo; Automatic (AM8)"
+        "value": "2.0L I4 (SIDI)"
       }
     ],
     "AMG GLA45": [
       {
         "label": "Engine Options",
-        "value": "2.0L I4 Turbo; Automatic (AM8)"
+        "value": "2.0L I4 (SIDI)"
       }
     ],
     "AMG GLA35": [
       {
         "label": "Engine Options",
-        "value": "2.0L I4 Turbo; Automatic (AM8)"
+        "value": "2.0L I4 (SIDI)"
       }
     ],
     "GLA250": [
       {
         "label": "Engine Options",
-        "value": "2.0L I4 Turbo; Automatic (AM8)"
-      }
-    ],
-    "Sport": [
-      {
-        "label": "Engine Options",
-        "value": "L OM607 turbo I4"
+        "value": "2.0L I4 (SIDI)"
       }
     ]
   }

@@ -9,22 +9,16 @@
   "year_max": 2029,
   "source": "generated",
   "trims": {
-    "Sport": [
-      {
-        "label": "Engine Options",
-        "value": "L Prince turbocharged I4 (Cooper S); L BMW N47 diesel I4 (Cooper D and One D)"
-      }
-    ],
     "SE": [
       {
         "label": "Engine Options",
-        "value": "EV Electricity; Automatic (A1)"
+        "value": "EV Electricity"
       }
     ],
     "S": [
       {
         "label": "Engine Options",
-        "value": "2.0L I4 Turbo; Automatic (AM-S7)"
+        "value": "2.0L I4 (SIDI & PFI); EV Electricity"
       }
     ]
   }

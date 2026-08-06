@@ -12,31 +12,31 @@
     "AMG": [
       {
         "label": "Engine Options",
-        "value": "3.0L V6 Turbo; Automatic 9-spd"
+        "value": "3.0L V6 (SIDI); 5.5L V8 (SIDI)"
       }
     ],
     "AMG GLE63": [
       {
         "label": "Engine Options",
-        "value": "3.0L V6 Turbo; Automatic 9-spd"
+        "value": "3.0L V6 (SIDI); 5.5L V8 (SIDI)"
       }
     ],
     "AMG GLE43": [
       {
         "label": "Engine Options",
-        "value": "3.0L V6 Turbo; Automatic 9-spd"
+        "value": "3.0L V6 (SIDI); 5.5L V8 (SIDI)"
       }
     ],
     "GLE350": [
       {
         "label": "Engine Options",
-        "value": "3.5L V6 Turbo; Automatic 7-spd"
+        "value": "3.5L V6 (SIDI); FFV 3.5L V6 (SIDI; FFV)"
       }
     ],
     "GLE550e": [
       {
         "label": "Engine Options",
-        "value": "Automatic 7-spd; Four-Wheel Drive"
+        "value": "Plug-in Hybrid 3.0L V6 (SIDI; PHEV)"
       }
     ]
   }

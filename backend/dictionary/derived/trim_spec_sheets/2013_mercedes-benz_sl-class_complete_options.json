@@ -12,25 +12,25 @@
     "SL 65 AMG": [
       {
         "label": "Engine Options",
-        "value": "5.5L V8 Turbo; Automatic 7-spd"
+        "value": "5.5L V8 Turbo; 6.3L V8 Twin Turbo"
       }
     ],
     "AMG": [
       {
         "label": "Engine Options",
-        "value": "6.3L V8 Twin Turbo; Automatic 7-spd"
+        "value": "6.3L V8 Twin Turbo; 6.0L V12"
       }
     ],
     "SL 63 AMG": [
       {
         "label": "Engine Options",
-        "value": "5.5L V8 Turbo; Automatic 7-spd"
+        "value": "5.5L V8 Turbo; 6.3L V8 Twin Turbo"
       }
     ],
     "SL 550": [
       {
         "label": "Engine Options",
-        "value": "5.5L V8 Turbo; Automatic 7-spd"
+        "value": "5.5L V8 Turbo; 6.3L V8 Twin Turbo"
       }
     ]
   }

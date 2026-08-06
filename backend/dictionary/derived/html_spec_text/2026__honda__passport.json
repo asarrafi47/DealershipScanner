@@ -1,0 +1,1932 @@
+{
+ "catalog_key": "2026|honda|passport",
+ "year": 2026,
+ "make": "Honda",
+ "model": "Passport",
+ "source_media_type": "text/html",
+ "source_html": "backend/data/spec_pages/2026__honda__passport.html",
+ "source_html_sha256": "a4c87d0351e75fce0a738668b7f49b6d4b85769a0d6442b8321cf6722f004d73",
+ "source_url": "https://hondanews.com/en-US/honda-automobiles/releases/release-23f31490f1d4a2c6ce015fc1f108bf72-2026-honda-passport-specifications-features",
+ "source_title": "",
+ "retrieved_at": "2026-08-02T19:51:51Z",
+ "bytes": 209455,
+ "text_transformations": [
+  "sup-elements dropped",
+  "entities decoded",
+  "whitespace collapsed"
+ ],
+ "page_count": 1,
+ "pages": [
+  {
+   "page": 0,
+   "trim_hint": true,
+   "trims": [
+    "RTL",
+    "RTL Towing",
+    "RTL Blackout",
+    "TrailSport",
+    "TrailSport Blackout",
+    "TrailSport Elite",
+    "TrailSport Elite Blackout"
+   ],
+   "header_row": 0,
+   "column_groups": [],
+   "refused_rows": {
+    "not_a_mark_row": 73
+   },
+   "text": "2026 HONDA PASSPORT SPECIFICATIONS & FEATURES\nRTL\tRTL Towing\tRTL Blackout\tTrailSport\tTrailSport Blackout\tTrailSport Elite\tTrailSport Elite Blackout\nPOWER UNIT > ENGINE\tDirect Fuel Injection\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > ENGINE\tEco Assist™ System\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > ENGINE\tVariable Cylinder Management™ (VCM®)\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > ENGINE\tActive Control Engine Mount System (ACM)\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > ENGINE\tIdle-Stop\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > ENGINE\tDirect Ignition System with Immobilizer\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > ENGINE\tHonda Maintenance Program 1yr / 12k miles\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > DRIVETRAIN\t2nd-Gen Intelligent Variable Torque Management™ (i-VTM4™) AWD System\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > DRIVETRAIN\tTrail Torque Logic\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > DRIVETRAIN\t10-Speed Automatic Transmission (10AT) with Shift-By-Wire (SBW) and Paddle Shifters\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > DRIVETRAIN\tUnit-Body Construction\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > DRIVETRAIN\tUnderbody Skid Plate\tabsent\tabsent\tabsent\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > DRIVETRAIN\tMacPherson Strut Front Suspension\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > DRIVETRAIN\tMulti-Link Rear Suspension\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > DRIVETRAIN\tOff-Road Tuned Suspension\tabsent\tabsent\tabsent\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > DRIVETRAIN\tAgile Handling Assist®\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > DRIVETRAIN\tElectric Power-Assisted Rack-and-Pinion Steering (EPS)\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > DRIVETRAIN\tBlack Lug Nuts\tabsent\tabsent\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tCollision Mitigation Braking System™ (CMBS™) with Advanced Pedestrian Detection\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tRoad Departure Mitigation System (RDM)\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tForward Collision Warning (FCW)\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tLane Departure Warning (LDW)\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tLane Keeping Assist System (LKAS)\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tAdaptive Cruise Control (ACC) with Low-Speed Follow\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tTraffic Sign Recognition System (TSR)\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tTraffic Jam Assist\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tBlind Spot Information System (BSI) with Lane Change Assist\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tCross Traffic Monitor (CTM)\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tLow Speed Braking Control\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tDriver Attention Monitor\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tAuto High-Beam Headlights\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tParking Sensors (4 Front & 4 Rear)\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tAdvanced Compatibility Engineering™ (ACE™) Body Structure\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tAdvanced Front Airbags\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tFront Side Airbags\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tSide Curtain Airbags with Rollover Sensor\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tFront Knee Airbags\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tLower Anchors and Tethers for CHildren (LATCH): Lower Anchors (2nd-Row All), Tether Anchors (2nd-Row All)\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tSeat Belt Reminder for all Seating Positions\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tRear Seat Reminder (RSR)\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tAnti-Lock Braking System (ABS)\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tVehicle Stability Assist® (VSA®) with Traction Control\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tElectronic Brake Distribution (EBD)\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tBrake Assist\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tRearview Camera\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tMulti-View Camera System\tabsent\tabsent\tabsent\tabsent\tabsent\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tFront Camera Washer\tabsent\tabsent\tabsent\tabsent\tabsent\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tRear Camera Washer\tabsent\tabsent\tabsent\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tRollover Mitigation\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tTrailWatch\tabsent\tabsent\tabsent\tabsent\tabsent\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tTire Pressure Monitoring System (TPMS) with Tire Fill Assist and Location and Pressure Indicators\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tPush Button Start\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tElectronic Parking Brake with Brake Hold\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tKey Fob Activated Remote Engine Start\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tAuto Up/Down Power Windows\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tOne-Touch Turn Indicators\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tTilt and Telescopic Steering Column\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tSliding Sunvisor (Driver & Passenger)\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tRear-Window Defroster with Timer\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tCapless Fuel Filler\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tIlluminated Steering Wheel-Mounted Controls\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tAutomatic-Dimming Rearview Mirror\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tHill Start Assist\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tHill Descent Control\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tTrailer Stability Assist\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\t10.2-Inch Digital Instrument Cluster\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\t12.3-Inch Color Touchscreen\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tAudio System with 9 Speakers, including Subwoofer\tstandard\tstandard\tstandard\tstandard\tstandard\tabsent\tabsent\nPOWER UNIT > HONDA SENSING®\tBose Premium Sound System with 12 Speakers, including Subwoofer\tabsent\tabsent\tabsent\tabsent\tabsent\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tSpeed-Sensitive Volume Compensation (SVC)\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\t12-Volt Power Outlets (Front & Cargo)\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tWireless Apple CarPlay® Compatibility\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tWireless Android Auto™ Compatibility\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tAlexa Built-In\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tGoogle built-in (includes 3-Years Unlimited Data Plan for In-Vehicle Apps)\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tWireless Phone Charger (Qi)\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tHD Radio™\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tUSB-C 3.0A Data Port - Front Console (1 Port)\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tUSB-C 3.0A Charging Port - Front Console (1 Port)\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tUSB-C 3.0A Charging Port - Rear Console (2 Ports)\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tHondaLink®\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tHondaLink® Subscription Services\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tWi-Fi Hotspot Capability\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\t115-Volt Power Outlets (2nd Row and Rear Cargo)\tabsent\tabsent\tabsent\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\t5-Person Seating Capacity\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tLeather and Cloth Seats\tstandard\tstandard\tstandard\tabsent\tabsent\tabsent\tabsent\nPOWER UNIT > HONDA SENSING®\tDurable Leatherette and Cloth Seats with TrailSport Orange Stiching and Accents\tabsent\tabsent\tabsent\tstandard\tstandard\tabsent\tabsent\nPOWER UNIT > HONDA SENSING®\tPerforated Leather with Contrast Stitching and Accents and Black Piping\tabsent\tabsent\tabsent\tabsent\tabsent\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tHeated Front Seats\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tVentilated Front Seats\tabsent\tabsent\tabsent\tabsent\tabsent\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tDriver's Seat with 10-Way Power Adjustment, including Memory and Power Lumbar Support\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tFront Passenger's Seat with 4-Way Power Adjustment\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tRear Outboard Heated Seats\tabsent\tabsent\tabsent\tabsent\tabsent\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\t60 / 40 Split-Folding 2nd-Row Seats\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tLeather-Wrapped Steering Wheel\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tHeated Steering Wheel\tabsent\tabsent\tabsent\tabsent\tabsent\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tTri-Zone Automatic Climate Control System with Humidity Control and Air Filtration\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tIlluminated Driver's and Front Passenger's Vanity Mirrors\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tFront & Rear LED Map Lights\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tAmbient LED Lighting - White\tstandard\tstandard\tstandard\tabsent\tabsent\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tAmbient LED Lighting - Amber\tabsent\tabsent\tabsent\tstandard\tstandard\tabsent\tabsent\nPOWER UNIT > HONDA SENSING®\tActive Sound Control\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tFloor Mats\tstandard\tstandard\tstandard\tabsent\tabsent\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tTrailSport All-Season Floor Mats\tabsent\tabsent\tabsent\tstandard\tstandard\tabsent\tabsent\nPOWER UNIT > HONDA SENSING®\tCargo Bins with Hidden Storage Well\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tSunglasses Holder\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tLockable Glove Compartment\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tIntegrated Rear Door Sunshades\tabsent\tabsent\tabsent\tabsent\tabsent\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tLED Headlights with Auto-On / Off\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tLED Bright White Daytime Running Lights (DRL)\tstandard\tstandard\tstandard\tabsent\tabsent\tabsent\tabsent\nPOWER UNIT > HONDA SENSING®\tLED TrailSport Amber Daytime Running Lights (DRL)\tabsent\tabsent\tabsent\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tLED Taillights\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tLED Fog Lights\tabsent\tabsent\tabsent\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tPanoramic Moonroof with Tilt and Slide Function\tabsent\tabsent\tabsent\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tAcoustic Windshield\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tAcoustic Front Side Glass\tabsent\tabsent\tabsent\tabsent\tabsent\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tHeated Wiper Zone\tabsent\tabsent\tabsent\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tRear Privacy Glass\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tSmart Entry with Walk Away Auto Lock® (Front Door and Tailgate)\tstandard\tstandard\tstandard\tstandard\tstandard\tabsent\tabsent\nPOWER UNIT > HONDA SENSING®\tSmart Entry with Walk Away Auto Lock® (All Doors and Tailgate)\tabsent\tabsent\tabsent\tabsent\tabsent\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tSide Mirror Turn Indicator\tabsent\tabsent\tabsent\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tSecurity System\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tPuddle Lights\tabsent\tabsent\tabsent\tabsent\tabsent\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tPower Tailgate\tstandard\tstandard\tstandard\tstandard\tstandard\tabsent\tabsent\nPOWER UNIT > HONDA SENSING®\tPower Lift Tailgate with Hands Free Access and Walk Away Close\tabsent\tabsent\tabsent\tabsent\tabsent\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tTrailer Hitch (Class III) with Harness and Hitch Panel\tabsent\tstandard\tabsent\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tHeated Side Mirrors\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tGloss Black Power Folding Side Mirrors\tabsent\tabsent\tabsent\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tBlack Honda Badges\tabsent\tabsent\tstandard\tabsent\tstandard\tabsent\tstandard\nPOWER UNIT > HONDA SENSING®\tHigh Visibility Recovery Hooks\tabsent\tabsent\tabsent\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tAuto-Dimming Side Mirrors\tabsent\tabsent\tabsent\tabsent\tabsent\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tActive Shutter Grille\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tRain-Sensing Windshield Wipers\tabsent\tabsent\tabsent\tabsent\tabsent\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tPush-to-Release Fuel Filler Door\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > HONDA SENSING®\tBlack Roof Rails\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard",
+   "rows": [
+    {
+     "row": 11,
+     "section": "POWER UNIT > ENGINE",
+     "label": "Direct Fuel Injection",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 12,
+     "section": "POWER UNIT > ENGINE",
+     "label": "Eco Assist™ System",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 13,
+     "section": "POWER UNIT > ENGINE",
+     "label": "Variable Cylinder Management™ (VCM®)",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 14,
+     "section": "POWER UNIT > ENGINE",
+     "label": "Active Control Engine Mount System (ACM)",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 15,
+     "section": "POWER UNIT > ENGINE",
+     "label": "Idle-Stop",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 17,
+     "section": "POWER UNIT > ENGINE",
+     "label": "Direct Ignition System with Immobilizer",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 19,
+     "section": "POWER UNIT > ENGINE",
+     "label": "Honda Maintenance Program 1yr / 12k miles",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 22,
+     "section": "POWER UNIT > DRIVETRAIN",
+     "label": "2nd-Gen Intelligent Variable Torque Management™ (i-VTM4™) AWD System",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 23,
+     "section": "POWER UNIT > DRIVETRAIN",
+     "label": "Trail Torque Logic",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 24,
+     "section": "POWER UNIT > DRIVETRAIN",
+     "label": "10-Speed Automatic Transmission (10AT) with Shift-By-Wire (SBW) and Paddle Shifters",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 46,
+     "section": "POWER UNIT > DRIVETRAIN",
+     "label": "Unit-Body Construction",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 47,
+     "section": "POWER UNIT > DRIVETRAIN",
+     "label": "Underbody Skid Plate",
+     "marks": [
+      "absent",
+      "absent",
+      "absent",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 48,
+     "section": "POWER UNIT > DRIVETRAIN",
+     "label": "MacPherson Strut Front Suspension",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 49,
+     "section": "POWER UNIT > DRIVETRAIN",
+     "label": "Multi-Link Rear Suspension",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 50,
+     "section": "POWER UNIT > DRIVETRAIN",
+     "label": "Off-Road Tuned Suspension",
+     "marks": [
+      "absent",
+      "absent",
+      "absent",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 51,
+     "section": "POWER UNIT > DRIVETRAIN",
+     "label": "Agile Handling Assist®",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 52,
+     "section": "POWER UNIT > DRIVETRAIN",
+     "label": "Electric Power-Assisted Rack-and-Pinion Steering (EPS)",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 59,
+     "section": "POWER UNIT > DRIVETRAIN",
+     "label": "Black Lug Nuts",
+     "marks": [
+      "absent",
+      "absent",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 90,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Collision Mitigation Braking System™ (CMBS™) with Advanced Pedestrian Detection",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 91,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Road Departure Mitigation System (RDM)",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 92,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Forward Collision Warning (FCW)",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 93,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Lane Departure Warning (LDW)",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 94,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Lane Keeping Assist System (LKAS)",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 95,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Adaptive Cruise Control (ACC) with Low-Speed Follow",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 96,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Traffic Sign Recognition System (TSR)",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 97,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Traffic Jam Assist",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 98,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Blind Spot Information System (BSI) with Lane Change Assist",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 99,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Cross Traffic Monitor (CTM)",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 100,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Low Speed Braking Control",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 101,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Driver Attention Monitor",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 102,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Auto High-Beam Headlights",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 103,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Parking Sensors (4 Front & 4 Rear)",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 106,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Advanced Compatibility Engineering™ (ACE™) Body Structure",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 107,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Advanced Front Airbags",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 108,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Front Side Airbags",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 109,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Side Curtain Airbags with Rollover Sensor",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 110,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Front Knee Airbags",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 111,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Lower Anchors and Tethers for CHildren (LATCH): Lower Anchors (2nd-Row All), Tether Anchors (2nd-Row All)",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 112,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Seat Belt Reminder for all Seating Positions",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 113,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Rear Seat Reminder (RSR)",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 114,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Anti-Lock Braking System (ABS)",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 115,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Vehicle Stability Assist® (VSA®) with Traction Control",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 116,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Electronic Brake Distribution (EBD)",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 117,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Brake Assist",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 118,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Rearview Camera",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 119,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Multi-View Camera System",
+     "marks": [
+      "absent",
+      "absent",
+      "absent",
+      "absent",
+      "absent",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 120,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Front Camera Washer",
+     "marks": [
+      "absent",
+      "absent",
+      "absent",
+      "absent",
+      "absent",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 121,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Rear Camera Washer",
+     "marks": [
+      "absent",
+      "absent",
+      "absent",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 122,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Rollover Mitigation",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 123,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "TrailWatch",
+     "marks": [
+      "absent",
+      "absent",
+      "absent",
+      "absent",
+      "absent",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 124,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Tire Pressure Monitoring System (TPMS) with Tire Fill Assist and Location and Pressure Indicators",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 127,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Push Button Start",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 128,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Electronic Parking Brake with Brake Hold",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 129,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Key Fob Activated Remote Engine Start",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 130,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Auto Up/Down Power Windows",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 131,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "One-Touch Turn Indicators",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 132,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Tilt and Telescopic Steering Column",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 133,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Sliding Sunvisor (Driver & Passenger)",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 134,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Rear-Window Defroster with Timer",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 135,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Capless Fuel Filler",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 136,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Illuminated Steering Wheel-Mounted Controls",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 137,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Automatic-Dimming Rearview Mirror",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 138,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Hill Start Assist",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 139,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Hill Descent Control",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 140,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Trailer Stability Assist",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 143,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "10.2-Inch Digital Instrument Cluster",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 144,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "12.3-Inch Color Touchscreen",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 145,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Audio System with 9 Speakers, including Subwoofer",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "absent",
+      "absent"
+     ]
+    },
+    {
+     "row": 146,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Bose Premium Sound System with 12 Speakers, including Subwoofer",
+     "marks": [
+      "absent",
+      "absent",
+      "absent",
+      "absent",
+      "absent",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 147,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Speed-Sensitive Volume Compensation (SVC)",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 148,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "12-Volt Power Outlets (Front & Cargo)",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 149,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Wireless Apple CarPlay® Compatibility",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 150,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Wireless Android Auto™ Compatibility",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 151,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Alexa Built-In",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 152,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Google built-in (includes 3-Years Unlimited Data Plan for In-Vehicle Apps)",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 153,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Wireless Phone Charger (Qi)",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 154,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "HD Radio™",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 155,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "USB-C 3.0A Data Port - Front Console (1 Port)",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 156,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "USB-C 3.0A Charging Port - Front Console (1 Port)",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 157,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "USB-C 3.0A Charging Port - Rear Console (2 Ports)",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 158,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "HondaLink®",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 159,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "HondaLink® Subscription Services",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 160,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Wi-Fi Hotspot Capability",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 161,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "115-Volt Power Outlets (2nd Row and Rear Cargo)",
+     "marks": [
+      "absent",
+      "absent",
+      "absent",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 164,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "5-Person Seating Capacity",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 165,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Leather and Cloth Seats",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "absent",
+      "absent",
+      "absent",
+      "absent"
+     ]
+    },
+    {
+     "row": 166,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Durable Leatherette and Cloth Seats with TrailSport Orange Stiching and Accents",
+     "marks": [
+      "absent",
+      "absent",
+      "absent",
+      "standard",
+      "standard",
+      "absent",
+      "absent"
+     ]
+    },
+    {
+     "row": 167,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Perforated Leather with Contrast Stitching and Accents and Black Piping",
+     "marks": [
+      "absent",
+      "absent",
+      "absent",
+      "absent",
+      "absent",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 168,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Heated Front Seats",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 169,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Ventilated Front Seats",
+     "marks": [
+      "absent",
+      "absent",
+      "absent",
+      "absent",
+      "absent",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 170,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Driver's Seat with 10-Way Power Adjustment, including Memory and Power Lumbar Support",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 171,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Front Passenger's Seat with 4-Way Power Adjustment",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 172,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Rear Outboard Heated Seats",
+     "marks": [
+      "absent",
+      "absent",
+      "absent",
+      "absent",
+      "absent",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 173,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "60 / 40 Split-Folding 2nd-Row Seats",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 174,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Leather-Wrapped Steering Wheel",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 175,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Heated Steering Wheel",
+     "marks": [
+      "absent",
+      "absent",
+      "absent",
+      "absent",
+      "absent",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 176,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Tri-Zone Automatic Climate Control System with Humidity Control and Air Filtration",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 177,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Illuminated Driver's and Front Passenger's Vanity Mirrors",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 178,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Front & Rear LED Map Lights",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 179,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Ambient LED Lighting - White",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "absent",
+      "absent",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 180,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Ambient LED Lighting - Amber",
+     "marks": [
+      "absent",
+      "absent",
+      "absent",
+      "standard",
+      "standard",
+      "absent",
+      "absent"
+     ]
+    },
+    {
+     "row": 181,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Active Sound Control",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 182,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Floor Mats",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "absent",
+      "absent",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 183,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "TrailSport All-Season Floor Mats",
+     "marks": [
+      "absent",
+      "absent",
+      "absent",
+      "standard",
+      "standard",
+      "absent",
+      "absent"
+     ]
+    },
+    {
+     "row": 184,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Cargo Bins with Hidden Storage Well",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 185,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Sunglasses Holder",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 186,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Lockable Glove Compartment",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 187,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Integrated Rear Door Sunshades",
+     "marks": [
+      "absent",
+      "absent",
+      "absent",
+      "absent",
+      "absent",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 190,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "LED Headlights with Auto-On / Off",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 191,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "LED Bright White Daytime Running Lights (DRL)",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "absent",
+      "absent",
+      "absent",
+      "absent"
+     ]
+    },
+    {
+     "row": 192,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "LED TrailSport Amber Daytime Running Lights (DRL)",
+     "marks": [
+      "absent",
+      "absent",
+      "absent",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 193,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "LED Taillights",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 194,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "LED Fog Lights",
+     "marks": [
+      "absent",
+      "absent",
+      "absent",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 195,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Panoramic Moonroof with Tilt and Slide Function",
+     "marks": [
+      "absent",
+      "absent",
+      "absent",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 196,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Acoustic Windshield",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 197,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Acoustic Front Side Glass",
+     "marks": [
+      "absent",
+      "absent",
+      "absent",
+      "absent",
+      "absent",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 198,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Heated Wiper Zone",
+     "marks": [
+      "absent",
+      "absent",
+      "absent",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 199,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Rear Privacy Glass",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 200,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Smart Entry with Walk Away Auto Lock® (Front Door and Tailgate)",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "absent",
+      "absent"
+     ]
+    },
+    {
+     "row": 201,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Smart Entry with Walk Away Auto Lock® (All Doors and Tailgate)",
+     "marks": [
+      "absent",
+      "absent",
+      "absent",
+      "absent",
+      "absent",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 202,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Side Mirror Turn Indicator",
+     "marks": [
+      "absent",
+      "absent",
+      "absent",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 203,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Security System",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 204,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Puddle Lights",
+     "marks": [
+      "absent",
+      "absent",
+      "absent",
+      "absent",
+      "absent",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 205,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Power Tailgate",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "absent",
+      "absent"
+     ]
+    },
+    {
+     "row": 206,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Power Lift Tailgate with Hands Free Access and Walk Away Close",
+     "marks": [
+      "absent",
+      "absent",
+      "absent",
+      "absent",
+      "absent",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 207,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Trailer Hitch (Class III) with Harness and Hitch Panel",
+     "marks": [
+      "absent",
+      "standard",
+      "absent",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 208,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Heated Side Mirrors",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 209,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Gloss Black Power Folding Side Mirrors",
+     "marks": [
+      "absent",
+      "absent",
+      "absent",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 210,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Black Honda Badges",
+     "marks": [
+      "absent",
+      "absent",
+      "standard",
+      "absent",
+      "standard",
+      "absent",
+      "standard"
+     ]
+    },
+    {
+     "row": 211,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "High Visibility Recovery Hooks",
+     "marks": [
+      "absent",
+      "absent",
+      "absent",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 212,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Auto-Dimming Side Mirrors",
+     "marks": [
+      "absent",
+      "absent",
+      "absent",
+      "absent",
+      "absent",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 213,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Active Shutter Grille",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 214,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Rain-Sensing Windshield Wipers",
+     "marks": [
+      "absent",
+      "absent",
+      "absent",
+      "absent",
+      "absent",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 215,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Push-to-Release Fuel Filler Door",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 216,
+     "section": "POWER UNIT > HONDA SENSING®",
+     "label": "Black Roof Rails",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    }
+   ]
+  }
+ ]
+}

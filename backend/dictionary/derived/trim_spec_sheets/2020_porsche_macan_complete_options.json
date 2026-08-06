@@ -12,13 +12,13 @@
     "Turbo": [
       {
         "label": "Engine Options",
-        "value": "Equipment and features typical of the Turbo trim.; 3.6L V6 Twin Turbo"
+        "value": "3.6L V6 (SIDI)"
       }
     ],
     "GTS": [
       {
         "label": "Engine Options",
-        "value": "3.0L V6 Turbo; Automatic (AM-S7)"
+        "value": "3.0L V6 (SIDI)"
       }
     ]
   }

@@ -12,25 +12,25 @@
     "Turbo S": [
       {
         "label": "Engine Options",
-        "value": "Equipment and features typical of the Turbo S trim.; 3.8L V6 Twin Turbo"
+        "value": "3.8L V6 (SIDI)"
       }
     ],
     "Turbo": [
       {
         "label": "Engine Options",
-        "value": "Equipment and features typical of the Turbo trim.; 3.8L V6 Twin Turbo"
+        "value": "3.8L V6 (SIDI)"
       }
     ],
     "Carrera S": [
       {
         "label": "Engine Options",
-        "value": "3.6L V6 Turbo; Automatic 7-spd"
+        "value": "3.6L V6 (SIDI); 3.8L V6 (SIDI)"
       }
     ],
     "Carrera": [
       {
         "label": "Engine Options",
-        "value": "3.6L V6 Turbo; Automatic 7-spd"
+        "value": "3.6L V6 (SIDI); 3.8L V6 (SIDI)"
       }
     ]
   }

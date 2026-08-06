@@ -12,31 +12,19 @@
     "Sport": [
       {
         "label": "Engine Options",
-        "value": "2.9L V6 Twin Turbo; Automatic (S8)"
-      },
-      {
-        "label": "Audio System Layout",
-        "value": "Options include a Bose sound system, boot/trunk or in-dash mounted 6-disc CD cha"
+        "value": "2.9L V6 (SIDI)"
       }
     ],
     "A3 Sportback": [
       {
         "label": "Engine Options",
-        "value": "2.9L V6 Twin Turbo; Automatic (S8)"
-      },
-      {
-        "label": "Audio System Layout",
-        "value": "Options include a Bose sound system, boot/trunk or in-dash mounted 6-disc CD cha"
+        "value": "2.9L V6 (SIDI)"
       }
     ],
     "S3 Sportback": [
       {
         "label": "Engine Options",
-        "value": "2.9L V6 Twin Turbo; Automatic (S8)"
-      },
-      {
-        "label": "Audio System Layout",
-        "value": "Options include a Bose sound system, boot/trunk or in-dash mounted 6-disc CD cha"
+        "value": "2.9L V6 (SIDI)"
       }
     ]
   }

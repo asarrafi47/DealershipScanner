@@ -12,17 +12,13 @@
     "R": [
       {
         "label": "Engine Options",
-        "value": "2.0L I4 Turbo; Automatic (AM-S7)"
-      },
-      {
-        "label": "Screen Size",
-        "value": "In terms of interior technology, the Golf featured a 12.3\" TFT display as an opt"
+        "value": "2.0L I4 (SIDI)"
       }
     ],
     "GTI": [
       {
         "label": "Engine Options",
-        "value": "2.0L I4 Turbo; Automatic (AM-S7)"
+        "value": "2.0L I4 (SIDI)"
       }
     ]
   }

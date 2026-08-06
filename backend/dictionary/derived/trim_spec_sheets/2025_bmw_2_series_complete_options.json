@@ -12,25 +12,25 @@
     "M240i": [
       {
         "label": "Engine Options",
-        "value": "3.0L I6 Turbo; Automatic (S8)"
+        "value": "3.0L V6 (SIDI)"
       }
     ],
     "M235": [
       {
         "label": "Engine Options",
-        "value": "2.0L I4 Turbo; Automatic (S8)"
+        "value": "2.0L I4 (SIDI)"
       }
     ],
     "230i": [
       {
         "label": "Engine Options",
-        "value": "2.0L I4 Turbo; Automatic (S8)"
+        "value": "2.0L I4 (SIDI)"
       }
     ],
     "228": [
       {
         "label": "Engine Options",
-        "value": "2.0L I4 Turbo; Automatic (S8)"
+        "value": "2.0L I4 (SIDI)"
       }
     ]
   }

@@ -1,0 +1,736 @@
+{
+ "catalog_key": "2026|honda|prologue",
+ "year": 2026,
+ "make": "Honda",
+ "model": "Prologue",
+ "source": "html_spec_quoted",
+ "source_document": "backend/dictionary/derived/html_spec_text/2026__honda__prologue.json",
+ "source_url": "https://hondanews.com/en-US/honda-automobiles/releases/release-e5d30c25af38c0c6604e43e79c015883-2026-honda-prologue-specifications-features",
+ "layouts": [
+  "html_mark_grid"
+ ],
+ "trims_available": [
+  "EX (FWD)",
+  "EX (AWD)",
+  "Touring (FWD)",
+  "Touring (AWD)",
+  "Elite (AWD)"
+ ],
+ "trims_quoted": [
+  "EX (AWD)",
+  "Touring (FWD)",
+  "Elite (AWD)"
+ ],
+ "adds_by_trim": {
+  "EX (AWD)": [
+   "Dual Motor All-Wheel Drive"
+  ],
+  "Touring (FWD)": [
+   "Front & Rear Park Assist (4 Front & 4 Rear)",
+   "Bose Premium Audio System with 12 Speakers",
+   "Leather Seats",
+   "Leather Steering Wheel",
+   "Driver's Seat with Two-Position Memory",
+   "Passenger Seat with 6-way Power Adjustment",
+   "Instrument Panel Illumination",
+   "Automatic-Dimming Rearview Mirror",
+   "LED Foglights",
+   "Panoramic Moonroof",
+   "Power Tailgate with Hands Free Access",
+   "Roof Rails",
+   "Welcome Light (Rear Kick Sensor)"
+  ],
+  "Elite (AWD)": [
+   "Self-Sealing Tires",
+   "Rear Pedestrian Alert",
+   "Key Card",
+   "Surround Vision System",
+   "Head-up Display (HUD)",
+   "110V Power Outlet - Rear Console",
+   "Heated Steering Wheel",
+   "Ventilated Front Seats",
+   "Illuminated Footwells",
+   "Illuminated Beverage Holders",
+   "Illuminated Door Panels (Front & Rear)",
+   "Power Folding Sideview Mirrors",
+   "Automatic Dimming Sideview Mirrors",
+   "Heated Wiper Zone",
+   "Welcome Light (Door Mirrors)"
+  ]
+ },
+ "adds_provenance": {
+  "EX (AWD)": [
+   {
+    "text": "Dual Motor All-Wheel Drive",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-e5d30c25af38c0c6604e43e79c015883-2026-honda-prologue-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:11Z",
+    "document_sha256": "89021ee6543d5230929b9110e72414e439dd083332b9e4916999fc5250787a00",
+    "locator": "table[0]/row[4]/col[2]",
+    "column_header": "EX (AWD)",
+    "section": "POWER UNIT > ELECTRIC DRIVETRAIN",
+    "relative_to": "EX (FWD)",
+    "relative_locator": "table[0]/row[4]/col[1]",
+    "absent_columns": [
+     1
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2026__honda__prologue.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:40Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   }
+  ],
+  "Touring (FWD)": [
+   {
+    "text": "Front & Rear Park Assist (4 Front & 4 Rear)",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-e5d30c25af38c0c6604e43e79c015883-2026-honda-prologue-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:11Z",
+    "document_sha256": "89021ee6543d5230929b9110e72414e439dd083332b9e4916999fc5250787a00",
+    "locator": "table[0]/row[74]/col[3]",
+    "column_header": "Touring (FWD)",
+    "section": "FEATURES > HONDA SENSING®",
+    "relative_to": "EX (AWD)",
+    "relative_locator": "table[0]/row[74]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2026__honda__prologue.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:41Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Bose Premium Audio System with 12 Speakers",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-e5d30c25af38c0c6604e43e79c015883-2026-honda-prologue-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:11Z",
+    "document_sha256": "89021ee6543d5230929b9110e72414e439dd083332b9e4916999fc5250787a00",
+    "locator": "table[0]/row[112]/col[3]",
+    "column_header": "Touring (FWD)",
+    "section": "FEATURES > AUDIO & CONNECTIVITY",
+    "relative_to": "EX (AWD)",
+    "relative_locator": "table[0]/row[112]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2026__honda__prologue.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:41Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Leather Seats",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-e5d30c25af38c0c6604e43e79c015883-2026-honda-prologue-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:11Z",
+    "document_sha256": "89021ee6543d5230929b9110e72414e439dd083332b9e4916999fc5250787a00",
+    "locator": "table[0]/row[131]/col[3]",
+    "column_header": "Touring (FWD)",
+    "section": "FEATURES > INTERIOR",
+    "relative_to": "EX (AWD)",
+    "relative_locator": "table[0]/row[131]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2026__honda__prologue.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:41Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Leather Steering Wheel",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-e5d30c25af38c0c6604e43e79c015883-2026-honda-prologue-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:11Z",
+    "document_sha256": "89021ee6543d5230929b9110e72414e439dd083332b9e4916999fc5250787a00",
+    "locator": "table[0]/row[132]/col[3]",
+    "column_header": "Touring (FWD)",
+    "section": "FEATURES > INTERIOR",
+    "relative_to": "EX (AWD)",
+    "relative_locator": "table[0]/row[132]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2026__honda__prologue.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:41Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Driver's Seat with Two-Position Memory",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-e5d30c25af38c0c6604e43e79c015883-2026-honda-prologue-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:11Z",
+    "document_sha256": "89021ee6543d5230929b9110e72414e439dd083332b9e4916999fc5250787a00",
+    "locator": "table[0]/row[135]/col[3]",
+    "column_header": "Touring (FWD)",
+    "section": "FEATURES > INTERIOR",
+    "relative_to": "EX (AWD)",
+    "relative_locator": "table[0]/row[135]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2026__honda__prologue.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:41Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Passenger Seat with 6-way Power Adjustment",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-e5d30c25af38c0c6604e43e79c015883-2026-honda-prologue-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:11Z",
+    "document_sha256": "89021ee6543d5230929b9110e72414e439dd083332b9e4916999fc5250787a00",
+    "locator": "table[0]/row[137]/col[3]",
+    "column_header": "Touring (FWD)",
+    "section": "FEATURES > INTERIOR",
+    "relative_to": "EX (AWD)",
+    "relative_locator": "table[0]/row[137]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2026__honda__prologue.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:41Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Instrument Panel Illumination",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-e5d30c25af38c0c6604e43e79c015883-2026-honda-prologue-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:11Z",
+    "document_sha256": "89021ee6543d5230929b9110e72414e439dd083332b9e4916999fc5250787a00",
+    "locator": "table[0]/row[141]/col[3]",
+    "column_header": "Touring (FWD)",
+    "section": "FEATURES > INTERIOR",
+    "relative_to": "EX (AWD)",
+    "relative_locator": "table[0]/row[141]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2026__honda__prologue.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:41Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Automatic-Dimming Rearview Mirror",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-e5d30c25af38c0c6604e43e79c015883-2026-honda-prologue-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:11Z",
+    "document_sha256": "89021ee6543d5230929b9110e72414e439dd083332b9e4916999fc5250787a00",
+    "locator": "table[0]/row[147]/col[3]",
+    "column_header": "Touring (FWD)",
+    "section": "FEATURES > INTERIOR",
+    "relative_to": "EX (AWD)",
+    "relative_locator": "table[0]/row[147]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2026__honda__prologue.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:41Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "LED Foglights",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-e5d30c25af38c0c6604e43e79c015883-2026-honda-prologue-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:11Z",
+    "document_sha256": "89021ee6543d5230929b9110e72414e439dd083332b9e4916999fc5250787a00",
+    "locator": "table[0]/row[157]/col[3]",
+    "column_header": "Touring (FWD)",
+    "section": "FEATURES > EXTERIOR",
+    "relative_to": "EX (AWD)",
+    "relative_locator": "table[0]/row[157]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2026__honda__prologue.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:41Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Panoramic Moonroof",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-e5d30c25af38c0c6604e43e79c015883-2026-honda-prologue-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:11Z",
+    "document_sha256": "89021ee6543d5230929b9110e72414e439dd083332b9e4916999fc5250787a00",
+    "locator": "table[0]/row[162]/col[3]",
+    "column_header": "Touring (FWD)",
+    "section": "FEATURES > EXTERIOR",
+    "relative_to": "EX (AWD)",
+    "relative_locator": "table[0]/row[162]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2026__honda__prologue.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:41Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Power Tailgate with Hands Free Access",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-e5d30c25af38c0c6604e43e79c015883-2026-honda-prologue-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:11Z",
+    "document_sha256": "89021ee6543d5230929b9110e72414e439dd083332b9e4916999fc5250787a00",
+    "locator": "table[0]/row[163]/col[3]",
+    "column_header": "Touring (FWD)",
+    "section": "FEATURES > EXTERIOR",
+    "relative_to": "EX (AWD)",
+    "relative_locator": "table[0]/row[163]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2026__honda__prologue.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:41Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Roof Rails",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-e5d30c25af38c0c6604e43e79c015883-2026-honda-prologue-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:11Z",
+    "document_sha256": "89021ee6543d5230929b9110e72414e439dd083332b9e4916999fc5250787a00",
+    "locator": "table[0]/row[164]/col[3]",
+    "column_header": "Touring (FWD)",
+    "section": "FEATURES > EXTERIOR",
+    "relative_to": "EX (AWD)",
+    "relative_locator": "table[0]/row[164]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2026__honda__prologue.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:41Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Welcome Light (Rear Kick Sensor)",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-e5d30c25af38c0c6604e43e79c015883-2026-honda-prologue-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:11Z",
+    "document_sha256": "89021ee6543d5230929b9110e72414e439dd083332b9e4916999fc5250787a00",
+    "locator": "table[0]/row[168]/col[3]",
+    "column_header": "Touring (FWD)",
+    "section": "FEATURES > EXTERIOR",
+    "relative_to": "EX (AWD)",
+    "relative_locator": "table[0]/row[168]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2026__honda__prologue.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:41Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   }
+  ],
+  "Elite (AWD)": [
+   {
+    "text": "Self-Sealing Tires",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-e5d30c25af38c0c6604e43e79c015883-2026-honda-prologue-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:11Z",
+    "document_sha256": "89021ee6543d5230929b9110e72414e439dd083332b9e4916999fc5250787a00",
+    "locator": "table[0]/row[34]/col[5]",
+    "column_header": "Elite (AWD)",
+    "section": "CHASSIS",
+    "relative_to": "Touring (AWD)",
+    "relative_locator": "table[0]/row[34]/col[4]",
+    "absent_columns": [
+     1,
+     2,
+     3,
+     4
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2026__honda__prologue.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:41Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Rear Pedestrian Alert",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-e5d30c25af38c0c6604e43e79c015883-2026-honda-prologue-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:11Z",
+    "document_sha256": "89021ee6543d5230929b9110e72414e439dd083332b9e4916999fc5250787a00",
+    "locator": "table[0]/row[76]/col[5]",
+    "column_header": "Elite (AWD)",
+    "section": "FEATURES > HONDA SENSING®",
+    "relative_to": "Touring (AWD)",
+    "relative_locator": "table[0]/row[76]/col[4]",
+    "absent_columns": [
+     1,
+     2,
+     3,
+     4
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2026__honda__prologue.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:41Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Key Card",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-e5d30c25af38c0c6604e43e79c015883-2026-honda-prologue-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:11Z",
+    "document_sha256": "89021ee6543d5230929b9110e72414e439dd083332b9e4916999fc5250787a00",
+    "locator": "table[0]/row[94]/col[5]",
+    "column_header": "Elite (AWD)",
+    "section": "FEATURES > DRIVER CONVENIENCE",
+    "relative_to": "Touring (AWD)",
+    "relative_locator": "table[0]/row[94]/col[4]",
+    "absent_columns": [
+     1,
+     2,
+     3,
+     4
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2026__honda__prologue.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:41Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Surround Vision System",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-e5d30c25af38c0c6604e43e79c015883-2026-honda-prologue-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:11Z",
+    "document_sha256": "89021ee6543d5230929b9110e72414e439dd083332b9e4916999fc5250787a00",
+    "locator": "table[0]/row[99]/col[5]",
+    "column_header": "Elite (AWD)",
+    "section": "FEATURES > DRIVER CONVENIENCE",
+    "relative_to": "Touring (AWD)",
+    "relative_locator": "table[0]/row[99]/col[4]",
+    "absent_columns": [
+     1,
+     2,
+     3,
+     4
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2026__honda__prologue.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:41Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Head-up Display (HUD)",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-e5d30c25af38c0c6604e43e79c015883-2026-honda-prologue-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:11Z",
+    "document_sha256": "89021ee6543d5230929b9110e72414e439dd083332b9e4916999fc5250787a00",
+    "locator": "table[0]/row[109]/col[5]",
+    "column_header": "Elite (AWD)",
+    "section": "FEATURES > AUDIO & CONNECTIVITY",
+    "relative_to": "Touring (AWD)",
+    "relative_locator": "table[0]/row[109]/col[4]",
+    "absent_columns": [
+     1,
+     2,
+     3,
+     4
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2026__honda__prologue.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:41Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "110V Power Outlet - Rear Console",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-e5d30c25af38c0c6604e43e79c015883-2026-honda-prologue-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:11Z",
+    "document_sha256": "89021ee6543d5230929b9110e72414e439dd083332b9e4916999fc5250787a00",
+    "locator": "table[0]/row[123]/col[5]",
+    "column_header": "Elite (AWD)",
+    "section": "FEATURES > AUDIO & CONNECTIVITY",
+    "relative_to": "Touring (AWD)",
+    "relative_locator": "table[0]/row[123]/col[4]",
+    "absent_columns": [
+     1,
+     2,
+     3,
+     4
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2026__honda__prologue.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:41Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Heated Steering Wheel",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-e5d30c25af38c0c6604e43e79c015883-2026-honda-prologue-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:11Z",
+    "document_sha256": "89021ee6543d5230929b9110e72414e439dd083332b9e4916999fc5250787a00",
+    "locator": "table[0]/row[133]/col[5]",
+    "column_header": "Elite (AWD)",
+    "section": "FEATURES > INTERIOR",
+    "relative_to": "Touring (AWD)",
+    "relative_locator": "table[0]/row[133]/col[4]",
+    "absent_columns": [
+     1,
+     2,
+     3,
+     4
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2026__honda__prologue.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:41Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Ventilated Front Seats",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-e5d30c25af38c0c6604e43e79c015883-2026-honda-prologue-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:11Z",
+    "document_sha256": "89021ee6543d5230929b9110e72414e439dd083332b9e4916999fc5250787a00",
+    "locator": "table[0]/row[138]/col[5]",
+    "column_header": "Elite (AWD)",
+    "section": "FEATURES > INTERIOR",
+    "relative_to": "Touring (AWD)",
+    "relative_locator": "table[0]/row[138]/col[4]",
+    "absent_columns": [
+     1,
+     2,
+     3,
+     4
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2026__honda__prologue.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:41Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Illuminated Footwells",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-e5d30c25af38c0c6604e43e79c015883-2026-honda-prologue-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:11Z",
+    "document_sha256": "89021ee6543d5230929b9110e72414e439dd083332b9e4916999fc5250787a00",
+    "locator": "table[0]/row[142]/col[5]",
+    "column_header": "Elite (AWD)",
+    "section": "FEATURES > INTERIOR",
+    "relative_to": "Touring (AWD)",
+    "relative_locator": "table[0]/row[142]/col[4]",
+    "absent_columns": [
+     1,
+     2,
+     3,
+     4
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2026__honda__prologue.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:41Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Illuminated Beverage Holders",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-e5d30c25af38c0c6604e43e79c015883-2026-honda-prologue-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:11Z",
+    "document_sha256": "89021ee6543d5230929b9110e72414e439dd083332b9e4916999fc5250787a00",
+    "locator": "table[0]/row[143]/col[5]",
+    "column_header": "Elite (AWD)",
+    "section": "FEATURES > INTERIOR",
+    "relative_to": "Touring (AWD)",
+    "relative_locator": "table[0]/row[143]/col[4]",
+    "absent_columns": [
+     1,
+     2,
+     3,
+     4
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2026__honda__prologue.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:41Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Illuminated Door Panels (Front & Rear)",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-e5d30c25af38c0c6604e43e79c015883-2026-honda-prologue-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:11Z",
+    "document_sha256": "89021ee6543d5230929b9110e72414e439dd083332b9e4916999fc5250787a00",
+    "locator": "table[0]/row[144]/col[5]",
+    "column_header": "Elite (AWD)",
+    "section": "FEATURES > INTERIOR",
+    "relative_to": "Touring (AWD)",
+    "relative_locator": "table[0]/row[144]/col[4]",
+    "absent_columns": [
+     1,
+     2,
+     3,
+     4
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2026__honda__prologue.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:41Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Power Folding Sideview Mirrors",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-e5d30c25af38c0c6604e43e79c015883-2026-honda-prologue-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:11Z",
+    "document_sha256": "89021ee6543d5230929b9110e72414e439dd083332b9e4916999fc5250787a00",
+    "locator": "table[0]/row[160]/col[5]",
+    "column_header": "Elite (AWD)",
+    "section": "FEATURES > EXTERIOR",
+    "relative_to": "Touring (AWD)",
+    "relative_locator": "table[0]/row[160]/col[4]",
+    "absent_columns": [
+     1,
+     2,
+     3,
+     4
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2026__honda__prologue.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:41Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Automatic Dimming Sideview Mirrors",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-e5d30c25af38c0c6604e43e79c015883-2026-honda-prologue-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:11Z",
+    "document_sha256": "89021ee6543d5230929b9110e72414e439dd083332b9e4916999fc5250787a00",
+    "locator": "table[0]/row[161]/col[5]",
+    "column_header": "Elite (AWD)",
+    "section": "FEATURES > EXTERIOR",
+    "relative_to": "Touring (AWD)",
+    "relative_locator": "table[0]/row[161]/col[4]",
+    "absent_columns": [
+     1,
+     2,
+     3,
+     4
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2026__honda__prologue.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:41Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Heated Wiper Zone",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-e5d30c25af38c0c6604e43e79c015883-2026-honda-prologue-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:11Z",
+    "document_sha256": "89021ee6543d5230929b9110e72414e439dd083332b9e4916999fc5250787a00",
+    "locator": "table[0]/row[166]/col[5]",
+    "column_header": "Elite (AWD)",
+    "section": "FEATURES > EXTERIOR",
+    "relative_to": "Touring (AWD)",
+    "relative_locator": "table[0]/row[166]/col[4]",
+    "absent_columns": [
+     1,
+     2,
+     3,
+     4
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2026__honda__prologue.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:41Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Welcome Light (Door Mirrors)",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-e5d30c25af38c0c6604e43e79c015883-2026-honda-prologue-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:11Z",
+    "document_sha256": "89021ee6543d5230929b9110e72414e439dd083332b9e4916999fc5250787a00",
+    "locator": "table[0]/row[167]/col[5]",
+    "column_header": "Elite (AWD)",
+    "section": "FEATURES > EXTERIOR",
+    "relative_to": "Touring (AWD)",
+    "relative_locator": "table[0]/row[167]/col[4]",
+    "absent_columns": [
+     1,
+     2,
+     3,
+     4
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2026__honda__prologue.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:41Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   }
+  ]
+ }
+}

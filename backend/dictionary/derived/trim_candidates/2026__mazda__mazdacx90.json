@@ -1,0 +1,24 @@
+{
+  "catalog_key": "2026|mazda|mazdacx90",
+  "year": 2026,
+  "make": "Mazda",
+  "model": "Mazda CX-90",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Turbo Premium Plus",
+    "Turbo Premium",
+    "Signature",
+    "Premium Plus",
+    "Premium",
+    "Preferred",
+    "Select",
+    "Sport",
+    "SEL",
+    "EX"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

@@ -3,79 +3,422 @@
   "year": 2021,
   "make": "Dodge",
   "model": "Durango",
-  "ladder_id": "brochure_llm_2021__dodge__durango",
-  "source": "brochure_llm",
+  "source": "brochure_text_quoted",
+  "layouts": [
+    "adds_to_block"
+  ],
   "trims_available": [
-    "SRT HELLCAT",
-    "SRT 392",
-    "R/T",
-    "CITADEL",
     "GT",
-    "SXT"
+    "R/T",
+    "Citadel"
+  ],
+  "trims_quoted": [
+    "GT",
+    "R/T",
+    "Citadel"
+  ],
+  "rung_order": [
+    "SXT",
+    "GT",
+    "R/T",
+    "Citadel"
+  ],
+  "order_basis": {
+    "SXT": {
+      "basis": "adds_to_edge",
+      "trim": "SXT",
+      "direction": "named_as_baseline_by",
+      "edge": {
+        "trim": "GT",
+        "below": "SXT",
+        "source": "derived/brochure_text/2021__dodge__durango.json",
+        "page": 42,
+        "layout": "adds_to_block",
+        "trim_quote": "GT",
+        "below_quote": "ADDS TO SXT"
+      }
+    },
+    "GT": {
+      "basis": "adds_to_edge",
+      "trim": "GT",
+      "direction": "states_its_baseline",
+      "edge": {
+        "trim": "GT",
+        "below": "SXT",
+        "source": "derived/brochure_text/2021__dodge__durango.json",
+        "page": 42,
+        "layout": "adds_to_block",
+        "trim_quote": "GT",
+        "below_quote": "ADDS TO SXT"
+      }
+    },
+    "R/T": {
+      "basis": "adds_to_edge",
+      "trim": "R/T",
+      "direction": "states_its_baseline",
+      "edge": {
+        "trim": "R/T",
+        "below": "GT",
+        "source": "derived/brochure_text/2021__dodge__durango.json",
+        "page": 43,
+        "layout": "adds_to_block",
+        "trim_quote": "R/T",
+        "below_quote": "ADDS TO GT"
+      },
+      "tiebreak": "page_sequence",
+      "tied_with": [
+        "Citadel"
+      ]
+    },
+    "Citadel": {
+      "basis": "adds_to_edge",
+      "trim": "Citadel",
+      "direction": "states_its_baseline",
+      "edge": {
+        "trim": "Citadel",
+        "below": "GT",
+        "source": "derived/brochure_text/2021__dodge__durango.json",
+        "page": 44,
+        "layout": "adds_to_block",
+        "trim_quote": "CITADEL",
+        "below_quote": "ADDS TO GT"
+      },
+      "tiebreak": "page_sequence",
+      "tied_with": [
+        "R/T"
+      ]
+    }
+  },
+  "rung_edges": [
+    {
+      "trim": "GT",
+      "below": "SXT",
+      "source": "derived/brochure_text/2021__dodge__durango.json",
+      "page": 42,
+      "layout": "adds_to_block",
+      "trim_quote": "GT",
+      "below_quote": "ADDS TO SXT"
+    },
+    {
+      "trim": "R/T",
+      "below": "GT",
+      "source": "derived/brochure_text/2021__dodge__durango.json",
+      "page": 43,
+      "layout": "adds_to_block",
+      "trim_quote": "R/T",
+      "below_quote": "ADDS TO GT"
+    },
+    {
+      "trim": "Citadel",
+      "below": "GT",
+      "source": "derived/brochure_text/2021__dodge__durango.json",
+      "page": 44,
+      "layout": "adds_to_block",
+      "trim_quote": "CITADEL",
+      "below_quote": "ADDS TO GT"
+    }
   ],
   "adds_by_trim": {
-    "SRT HELLCAT": [
-      "6.2L Supercharged SRT Hellcat V8 engine",
-      "Performance-tuned All-Wheel Drive (AWD)",
-      "Brembo 6-piston front, 4-piston rear brakes",
-      "Bilstein adaptive damping high-performance suspension",
-      "20 by 10-inch Mid-Gloss Black pockets machined face wheels",
-      "Auto-leveling headlamps",
-      "6-passenger seating with 2nd-row Captain's Chairs",
-      "Nappa leather with perforated suede inserts",
-      "SRT paddle shifters and SRT Performance Pages Plus",
-      "High-performance exhaust with 4-inch tips"
-    ],
-    "SRT 392": [
-      "6.4L 392 HEMI V8 engine",
-      "Performance-tuned All-Wheel Drive (AWD)",
-      "Brembo 6-piston brakes",
-      "Bilstein adaptive damping suspension",
-      "20 by 10-inch Hyper Black wheels",
-      "Auto-leveling headlamps",
-      "6-passenger seating with 2nd-row Captain's Chairs",
-      "Nappa leather with perforated suede inserts",
-      "SRT paddle shifters and SRT Performance Pages Plus"
-    ],
-    "R/T": [
-      "5.7L HEMI V8 engine",
-      "Performance steering and sport suspension",
-      "Rear load-leveling suspension",
-      "Performance hood",
-      "SmartBeam HID headlamps",
-      "Capri leather-trimmed seating with suede inserts",
-      "Heated 1st- and 2nd-row seating",
-      "Alpine Premium Audio System with 9 speakers and subwoofer",
-      "Uconnect 5 NAV with 10.1-inch display",
-      "Power liftgate"
-    ],
-    "CITADEL": [
-      "20 by 8-inch Satin Carbon wheels",
-      "Platinum chrome door handles, grille and mirrors",
-      "SmartBeam HID headlamps",
-      "6-passenger seating with 2nd-row Captain's Chairs",
-      "Capri leather with embossed logo",
-      "Power sunroof",
-      "Forward Collision Warning with Active Braking",
-      "Adaptive Cruise Control with Stop",
-      "LaneSense Lane Departure Warning with Lane Keep Assist",
-      "Class IV hitch receiver with integrated trailer brake controller"
-    ],
     "GT": [
       "20 by 8-inch Fine Silver wheels",
+      "Leather flat-bottom steering wheel",
+      "12-way power driver’s seat",
       "Dual exhaust with bright tips",
       "7-passenger seating",
-      "Leather flat-bottom steering wheel",
-      "12-way power driver's seat",
-      "ParkSense Rear Park Assist"
+      "ParkSense® Rear Park Assist"
     ],
-    "SXT": [
-      "3.6L Pentastar V6 with TorqueFlite 8-speed automatic",
-      "Antilock four-wheel disc brakes",
-      "Electric power steering",
-      "Rear-Wheel-Drive (RWD) or All-Wheel-Drive (AWD)",
-      "24.6-gallon fuel tank",
-      "Push-push fuel door"
+    "R/T": [
+      "5.7L HEMI® V8 engine",
+      "Performance steering and sport suspension",
+      "Rear load-leveling suspension",
+      "Uconnect® 5 NAV with 10.1-inch display",
+      "Alpine® Premium Audio System with 9 speakers and subwoofer",
+      "Capri leather-trimmed seating with suede inserts",
+      "12-way power passenger seat",
+      "Heated leather flat-bottom steering wheel",
+      "Performance hood",
+      "SmartBeam™ High Intensity Discharge (HID) headlamps",
+      "Heated 1st- and 2nd-row seating",
+      "Memory seats, mirrors and radio"
+    ],
+    "Citadel": [
+      "Advanced Brake Assist",
+      "Integrated trailer brake controller",
+      "Trailer-Tow Group IV",
+      "20 by 8-inch Satin Carbon wheels",
+      "Uconnect® 5 NAV with 10.1-inch display",
+      "Alpine® Premium Audio System with 9 speakers and subwoofer",
+      "Capri leather-trimmed seating with “//” embossed logo",
+      "Heated perforated leather-wrapped steering wheel",
+      "Power sunroof",
+      "Ventilated front seats",
+      "Dinamica suede headliner",
+      "Adaptive Cruise Control with Stop"
     ]
+  },
+  "adds_provenance": {
+    "GT": [
+      {
+        "text": "20 by 8-inch Fine Silver wheels",
+        "source": "derived/brochure_text/2021__dodge__durango.json",
+        "page": 42,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Leather flat-bottom steering wheel",
+        "source": "derived/brochure_text/2021__dodge__durango.json",
+        "page": 42,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "12-way power driver’s seat",
+        "source": "derived/brochure_text/2021__dodge__durango.json",
+        "page": 42,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Dual exhaust with bright tips",
+        "source": "derived/brochure_text/2021__dodge__durango.json",
+        "page": 42,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "7-passenger seating",
+        "source": "derived/brochure_text/2021__dodge__durango.json",
+        "page": 42,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "ParkSense® Rear Park Assist",
+        "source": "derived/brochure_text/2021__dodge__durango.json",
+        "page": 42,
+        "layout": "adds_to_block",
+        "verified": false,
+        "verified_why": "text_printed_but_footnote_digit_glued_to_word"
+      }
+    ],
+    "R/T": [
+      {
+        "text": "5.7L HEMI® V8 engine",
+        "source": "derived/brochure_text/2021__dodge__durango.json",
+        "page": 43,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Performance steering and sport suspension",
+        "source": "derived/brochure_text/2021__dodge__durango.json",
+        "page": 43,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Rear load-leveling suspension",
+        "source": "derived/brochure_text/2021__dodge__durango.json",
+        "page": 43,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Uconnect® 5 NAV with 10.1-inch display",
+        "source": "derived/brochure_text/2021__dodge__durango.json",
+        "page": 43,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Alpine® Premium Audio System with 9 speakers and subwoofer",
+        "source": "derived/brochure_text/2021__dodge__durango.json",
+        "page": 43,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Capri leather-trimmed seating with suede inserts",
+        "source": "derived/brochure_text/2021__dodge__durango.json",
+        "page": 43,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "12-way power passenger seat",
+        "source": "derived/brochure_text/2021__dodge__durango.json",
+        "page": 43,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Heated leather flat-bottom steering wheel",
+        "source": "derived/brochure_text/2021__dodge__durango.json",
+        "page": 43,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Performance hood",
+        "source": "derived/brochure_text/2021__dodge__durango.json",
+        "page": 43,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "SmartBeam™ High Intensity Discharge (HID) headlamps",
+        "source": "derived/brochure_text/2021__dodge__durango.json",
+        "page": 43,
+        "layout": "adds_to_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "Heated 1st- and 2nd-row seating",
+        "source": "derived/brochure_text/2021__dodge__durango.json",
+        "page": 43,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Memory seats, mirrors and radio",
+        "source": "derived/brochure_text/2021__dodge__durango.json",
+        "page": 43,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      }
+    ],
+    "Citadel": [
+      {
+        "text": "Advanced Brake Assist",
+        "source": "derived/brochure_text/2021__dodge__durango.json",
+        "page": 44,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Integrated trailer brake controller",
+        "source": "derived/brochure_text/2021__dodge__durango.json",
+        "page": 44,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Trailer-Tow Group IV",
+        "source": "derived/brochure_text/2021__dodge__durango.json",
+        "page": 44,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "20 by 8-inch Satin Carbon wheels",
+        "source": "derived/brochure_text/2021__dodge__durango.json",
+        "page": 44,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Uconnect® 5 NAV with 10.1-inch display",
+        "source": "derived/brochure_text/2021__dodge__durango.json",
+        "page": 44,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Alpine® Premium Audio System with 9 speakers and subwoofer",
+        "source": "derived/brochure_text/2021__dodge__durango.json",
+        "page": 44,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Capri leather-trimmed seating with “//” embossed logo",
+        "source": "derived/brochure_text/2021__dodge__durango.json",
+        "page": 44,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Heated perforated leather-wrapped steering wheel",
+        "source": "derived/brochure_text/2021__dodge__durango.json",
+        "page": 44,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Power sunroof",
+        "source": "derived/brochure_text/2021__dodge__durango.json",
+        "page": 44,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Ventilated front seats",
+        "source": "derived/brochure_text/2021__dodge__durango.json",
+        "page": 44,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Dinamica suede headliner",
+        "source": "derived/brochure_text/2021__dodge__durango.json",
+        "page": 44,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Adaptive Cruise Control with Stop",
+        "source": "derived/brochure_text/2021__dodge__durango.json",
+        "page": 44,
+        "layout": "adds_to_block",
+        "verified": false,
+        "verified_why": "text_printed_but_footnote_digit_glued_to_word"
+      }
+    ]
+  },
+  "source_brochure_text": "derived/brochure_text/2021__dodge__durango.json",
+  "pages_used": [
+    42,
+    43,
+    44
+  ],
+  "replaced_source": "brochure_text_quoted",
+  "source_pdf_name": "2021_Dodge_Durango_Brochure.pdf",
+  "source_pdf_sha256": "da77bddd7e6d618692bceebd255ddf25303f2587d9d9b24a62d6778a545ba0d8",
+  "citation_verification": {
+    "verifier": "verify_trim_citations.py",
+    "version": "2026-08-02.1",
+    "checked_at": "2026-08-03T01:48:50+00:00",
+    "source_pdf": "2021_Dodge_Durango_Brochure.pdf",
+    "verified": 27,
+    "total": 30
   }
 }

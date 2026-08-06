@@ -12,25 +12,25 @@
     "Turbo S": [
       {
         "label": "Engine Options",
-        "value": "Equipment and features typical of the Turbo S trim.; 4.8L V8 Twin Turbo"
+        "value": "4.8L V8 (SIDI)"
       }
     ],
     "Turbo": [
       {
         "label": "Engine Options",
-        "value": "Equipment and features typical of the Turbo trim.; 4.8L V8 Twin Turbo"
+        "value": "4.8L V8 (SIDI)"
       }
     ],
     "GTS": [
       {
         "label": "Engine Options",
-        "value": "3.6L V6 Turbo; Automatic (S8)"
+        "value": "3.6L V6 (SIDI)"
       }
     ],
     "S": [
       {
         "label": "Engine Options",
-        "value": "3.6L V6 Turbo; Automatic (S8)"
+        "value": "3.6L V6 (SIDI); 4.8L V8 (SIDI)"
       }
     ]
   }

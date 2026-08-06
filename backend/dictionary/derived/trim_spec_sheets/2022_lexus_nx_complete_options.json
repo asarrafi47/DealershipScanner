@@ -9,38 +9,16 @@
   "year_max": 2024,
   "source": "generated",
   "trims": {
-    "Luxury": [
-      {
-        "label": "Engine Options",
-        "value": "Hybrid drivetrain Power-split (NX 300h)"
-      }
-    ],
     "F Sport": [
       {
         "label": "Engine Options",
-        "value": "2.0L I4 Turbo; Automatic (S6)"
+        "value": "2.0L I4 (SIDI & PFI)"
       }
     ],
     "Sport": [
       {
         "label": "Engine Options",
-        "value": "2.0L I4 Turbo; Automatic (S6)"
-      }
-    ],
-    "EX": [
-      {
-        "label": "Engine Options",
-        "value": "Front-engine, all-wheel-drive; Electric motor"
-      }
-    ],
-    "SE": [
-      {
-        "label": "Engine Options",
-        "value": "Front-engine, front-wheel-drive"
-      },
-      {
-        "label": "Screen Size",
-        "value": "A head-up display and wireless smartphone charging are both optional."
+        "value": "2.0L I4 (SIDI & PFI)"
       }
     ]
   }

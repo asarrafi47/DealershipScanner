@@ -12,49 +12,19 @@
     "Elite": [
       {
         "label": "Engine Options",
-        "value": "Automatic (S10); All-Wheel Drive"
+        "value": "3.5L V6 (SIDI)"
       }
     ],
     "Touring": [
       {
         "label": "Engine Options",
-        "value": "Automatic (S10); All-Wheel Drive"
-      }
-    ],
-    "EX-L": [
-      {
-        "label": "Engine Options",
-        "value": "Front-engine, front-wheel-drive (2006–present); L J35Z1 V6 (2006+ FWD)"
+        "value": "3.5L V6 (SIDI)"
       }
     ],
     "TrailSport": [
       {
         "label": "Engine Options",
-        "value": "Automatic (S10); All-Wheel Drive"
-      }
-    ],
-    "EX": [
-      {
-        "label": "Engine Options",
-        "value": "Front-engine, front-wheel-drive (2006–present); L J35Z1 V6 (2006+ FWD)"
-      }
-    ],
-    "LX": [
-      {
-        "label": "Engine Options",
-        "value": "Front-engine, front-wheel-drive (2006–present)"
-      }
-    ],
-    "SE": [
-      {
-        "label": "Engine Options",
-        "value": "Front-engine, four-wheel-drive (2003–present); Front-engine, front-wheel-drive (2006–present)"
-      }
-    ],
-    "Base": [
-      {
-        "label": "Engine Options",
-        "value": "Front-engine, four-wheel-drive (2003–present); Front-engine, front-wheel-drive (2006–present)"
+        "value": "3.5L V6 (SIDI)"
       }
     ]
   }

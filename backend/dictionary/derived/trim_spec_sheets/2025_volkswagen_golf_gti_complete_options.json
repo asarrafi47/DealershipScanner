@@ -12,21 +12,13 @@
     "R": [
       {
         "label": "Engine Options",
-        "value": "2.0L I4 Turbo; Manual 6-spd"
-      },
-      {
-        "label": "Interior Materials",
-        "value": "Plaid upholstery is standard like on the GTI, but grey highlights are used rathe; Inside, plaid upholstery is standard, with additional red accents on the seats a"
+        "value": "2.0L I4 (SIDI)"
       }
     ],
     "GTI": [
       {
         "label": "Engine Options",
-        "value": "2.0L I4 Turbo; Automatic (AM-S7)"
-      },
-      {
-        "label": "Interior Materials",
-        "value": "Plaid upholstery is standard like on the GTI, but grey highlights are used rathe"
+        "value": "2.0L I4 (SIDI)"
       }
     ]
   }

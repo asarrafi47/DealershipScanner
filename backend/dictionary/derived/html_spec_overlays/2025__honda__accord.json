@@ -1,0 +1,703 @@
+{
+ "catalog_key": "2025|honda|accord",
+ "year": 2025,
+ "make": "Honda",
+ "model": "Accord",
+ "source": "html_spec_quoted",
+ "source_document": "backend/dictionary/derived/html_spec_text/2025__honda__accord.json",
+ "source_url": "https://hondanews.com/en-US/honda-automobiles/releases/release-008e554add341b8444085beaa2074089-2025-honda-accord-specifications-features",
+ "layouts": [
+  "html_mark_grid"
+ ],
+ "trims_available": [
+  "LX",
+  "SE",
+  "Sport",
+  "EX-L",
+  "Sport-L",
+  "Touring"
+ ],
+ "trims_quoted": [
+  "SE",
+  "EX-L",
+  "Touring"
+ ],
+ "adds_by_trim": {
+  "SE": [
+   "Blind Spot Information System (BSI)",
+   "Rear Cross Traffic Monitor (CTM)",
+   "180-Watt Audio System with 8 Speakers",
+   "60/40 Split Fold-Down Rear Seatback",
+   "Heated Front Seats",
+   "Driver's Seat with 10-Way Power Adjustment, including 2-Way Power Lumbar Support",
+   "Dual Zone Climate Control",
+   "Heated Side Mirrors",
+   "Gloss Black Mirror Covers",
+   "One-Touch Power Moonroof with Tilt Feature"
+  ],
+  "EX-L": [
+   "Parking Sensors (4 Front & 4 Rear)",
+   "Automatic-Dimming Rearview Mirror",
+   "Leather-Trimmed Seats",
+   "Two-Position Driver's Seat Memory",
+   "Passenger Seat with 4-Way Power Adjustment",
+   "Heated Side Mirrors",
+   "Side Mirrors with Integrated LED Turn Indicators"
+  ],
+  "Touring": [
+   "Low Speed Braking Control",
+   "Heated Steering Wheel",
+   "Rain-Sensing Windshield Wipers",
+   "6-Inch Head-Up Display (HUD)",
+   "Google built-In (includes 3-Years Unlimited Data Plan for In-Vehicle Apps)",
+   "Bose Premium Sound System with 12 Speakers",
+   "HD Radio™",
+   "Ventilated Front Seats",
+   "Rear Outboard Heated Seats",
+   "Side Mirrors with Reverse Gear Tilt-Down",
+   "Acoustic Laminate Windshield",
+   "Acoustic Front Door Glass"
+  ]
+ },
+ "adds_provenance": {
+  "SE": [
+   {
+    "text": "Blind Spot Information System (BSI)",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-008e554add341b8444085beaa2074089-2025-honda-accord-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:39Z",
+    "document_sha256": "826c3bdb533f07fadc0be99bb26d55bdf41be15017529c3e381742d1ced29f02",
+    "locator": "table[0]/row[82]/col[2]",
+    "column_header": "SE",
+    "section": "FEATURES > HONDA SENSING®",
+    "relative_to": "LX",
+    "relative_locator": "table[0]/row[82]/col[1]",
+    "absent_columns": [
+     1
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__accord.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:36Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Rear Cross Traffic Monitor (CTM)",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-008e554add341b8444085beaa2074089-2025-honda-accord-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:39Z",
+    "document_sha256": "826c3bdb533f07fadc0be99bb26d55bdf41be15017529c3e381742d1ced29f02",
+    "locator": "table[0]/row[83]/col[2]",
+    "column_header": "SE",
+    "section": "FEATURES > HONDA SENSING®",
+    "relative_to": "LX",
+    "relative_locator": "table[0]/row[83]/col[1]",
+    "absent_columns": [
+     1
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__accord.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:36Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "180-Watt Audio System with 8 Speakers",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-008e554add341b8444085beaa2074089-2025-honda-accord-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:39Z",
+    "document_sha256": "826c3bdb533f07fadc0be99bb26d55bdf41be15017529c3e381742d1ced29f02",
+    "locator": "table[0]/row[130]/col[2]",
+    "column_header": "SE",
+    "section": "FEATURES > AUDIO & CONNECTIVITY",
+    "relative_to": "LX",
+    "relative_locator": "table[0]/row[130]/col[1]",
+    "absent_columns": [
+     1
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__accord.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:36Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "60/40 Split Fold-Down Rear Seatback",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-008e554add341b8444085beaa2074089-2025-honda-accord-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:39Z",
+    "document_sha256": "826c3bdb533f07fadc0be99bb26d55bdf41be15017529c3e381742d1ced29f02",
+    "locator": "table[0]/row[148]/col[2]",
+    "column_header": "SE",
+    "section": "FEATURES > INTERIOR",
+    "relative_to": "LX",
+    "relative_locator": "table[0]/row[148]/col[1]",
+    "absent_columns": [
+     1
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__accord.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:36Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Heated Front Seats",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-008e554add341b8444085beaa2074089-2025-honda-accord-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:39Z",
+    "document_sha256": "826c3bdb533f07fadc0be99bb26d55bdf41be15017529c3e381742d1ced29f02",
+    "locator": "table[0]/row[151]/col[2]",
+    "column_header": "SE",
+    "section": "FEATURES > INTERIOR",
+    "relative_to": "LX",
+    "relative_locator": "table[0]/row[151]/col[1]",
+    "absent_columns": [
+     1
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__accord.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Driver's Seat with 10-Way Power Adjustment, including 2-Way Power Lumbar Support",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-008e554add341b8444085beaa2074089-2025-honda-accord-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:39Z",
+    "document_sha256": "826c3bdb533f07fadc0be99bb26d55bdf41be15017529c3e381742d1ced29f02",
+    "locator": "table[0]/row[155]/col[2]",
+    "column_header": "SE",
+    "section": "FEATURES > INTERIOR",
+    "relative_to": "LX",
+    "relative_locator": "table[0]/row[155]/col[1]",
+    "absent_columns": [
+     1
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__accord.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Dual Zone Climate Control",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-008e554add341b8444085beaa2074089-2025-honda-accord-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:39Z",
+    "document_sha256": "826c3bdb533f07fadc0be99bb26d55bdf41be15017529c3e381742d1ced29f02",
+    "locator": "table[0]/row[159]/col[2]",
+    "column_header": "SE",
+    "section": "FEATURES > INTERIOR",
+    "relative_to": "LX",
+    "relative_locator": "table[0]/row[159]/col[1]",
+    "absent_columns": [
+     1
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__accord.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Heated Side Mirrors",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-008e554add341b8444085beaa2074089-2025-honda-accord-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:39Z",
+    "document_sha256": "826c3bdb533f07fadc0be99bb26d55bdf41be15017529c3e381742d1ced29f02",
+    "locator": "table[0]/row[181]/col[2]",
+    "column_header": "SE",
+    "section": "FEATURES > EXTERIOR",
+    "relative_to": "LX",
+    "relative_locator": "table[0]/row[181]/col[1]",
+    "absent_columns": [
+     1
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__accord.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Gloss Black Mirror Covers",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-008e554add341b8444085beaa2074089-2025-honda-accord-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:39Z",
+    "document_sha256": "826c3bdb533f07fadc0be99bb26d55bdf41be15017529c3e381742d1ced29f02",
+    "locator": "table[0]/row[182]/col[2]",
+    "column_header": "SE",
+    "section": "FEATURES > EXTERIOR",
+    "relative_to": "LX",
+    "relative_locator": "table[0]/row[182]/col[1]",
+    "absent_columns": [
+     1
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__accord.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "One-Touch Power Moonroof with Tilt Feature",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-008e554add341b8444085beaa2074089-2025-honda-accord-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:39Z",
+    "document_sha256": "826c3bdb533f07fadc0be99bb26d55bdf41be15017529c3e381742d1ced29f02",
+    "locator": "table[0]/row[185]/col[2]",
+    "column_header": "SE",
+    "section": "FEATURES > EXTERIOR",
+    "relative_to": "LX",
+    "relative_locator": "table[0]/row[185]/col[1]",
+    "absent_columns": [
+     1
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__accord.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   }
+  ],
+  "EX-L": [
+   {
+    "text": "Parking Sensors (4 Front & 4 Rear)",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-008e554add341b8444085beaa2074089-2025-honda-accord-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:39Z",
+    "document_sha256": "826c3bdb533f07fadc0be99bb26d55bdf41be15017529c3e381742d1ced29f02",
+    "locator": "table[0]/row[87]/col[4]",
+    "column_header": "EX-L",
+    "section": "FEATURES > HONDA SENSING®",
+    "relative_to": "Sport",
+    "relative_locator": "table[0]/row[87]/col[3]",
+    "absent_columns": [
+     3
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__accord.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Automatic-Dimming Rearview Mirror",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-008e554add341b8444085beaa2074089-2025-honda-accord-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:39Z",
+    "document_sha256": "826c3bdb533f07fadc0be99bb26d55bdf41be15017529c3e381742d1ced29f02",
+    "locator": "table[0]/row[115]/col[4]",
+    "column_header": "EX-L",
+    "section": "FEATURES > DRIVER CONVENIENCE",
+    "relative_to": "Sport",
+    "relative_locator": "table[0]/row[115]/col[3]",
+    "absent_columns": [
+     3
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__accord.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Leather-Trimmed Seats",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-008e554add341b8444085beaa2074089-2025-honda-accord-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:39Z",
+    "document_sha256": "826c3bdb533f07fadc0be99bb26d55bdf41be15017529c3e381742d1ced29f02",
+    "locator": "table[0]/row[154]/col[4]",
+    "column_header": "EX-L",
+    "section": "FEATURES > INTERIOR",
+    "relative_to": "Sport",
+    "relative_locator": "table[0]/row[154]/col[3]",
+    "absent_columns": [
+     3
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__accord.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Two-Position Driver's Seat Memory",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-008e554add341b8444085beaa2074089-2025-honda-accord-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:39Z",
+    "document_sha256": "826c3bdb533f07fadc0be99bb26d55bdf41be15017529c3e381742d1ced29f02",
+    "locator": "table[0]/row[156]/col[4]",
+    "column_header": "EX-L",
+    "section": "FEATURES > INTERIOR",
+    "relative_to": "Sport",
+    "relative_locator": "table[0]/row[156]/col[3]",
+    "absent_columns": [
+     3
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__accord.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Passenger Seat with 4-Way Power Adjustment",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-008e554add341b8444085beaa2074089-2025-honda-accord-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:39Z",
+    "document_sha256": "826c3bdb533f07fadc0be99bb26d55bdf41be15017529c3e381742d1ced29f02",
+    "locator": "table[0]/row[157]/col[4]",
+    "column_header": "EX-L",
+    "section": "FEATURES > INTERIOR",
+    "relative_to": "Sport",
+    "relative_locator": "table[0]/row[157]/col[3]",
+    "absent_columns": [
+     3
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__accord.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Heated Side Mirrors",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-008e554add341b8444085beaa2074089-2025-honda-accord-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:39Z",
+    "document_sha256": "826c3bdb533f07fadc0be99bb26d55bdf41be15017529c3e381742d1ced29f02",
+    "locator": "table[0]/row[181]/col[4]",
+    "column_header": "EX-L",
+    "section": "FEATURES > EXTERIOR",
+    "relative_to": "Sport",
+    "relative_locator": "table[0]/row[181]/col[3]",
+    "absent_columns": [
+     3
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__accord.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Side Mirrors with Integrated LED Turn Indicators",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-008e554add341b8444085beaa2074089-2025-honda-accord-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:39Z",
+    "document_sha256": "826c3bdb533f07fadc0be99bb26d55bdf41be15017529c3e381742d1ced29f02",
+    "locator": "table[0]/row[183]/col[4]",
+    "column_header": "EX-L",
+    "section": "FEATURES > EXTERIOR",
+    "relative_to": "Sport",
+    "relative_locator": "table[0]/row[183]/col[3]",
+    "absent_columns": [
+     3
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__accord.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   }
+  ],
+  "Touring": [
+   {
+    "text": "Low Speed Braking Control",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-008e554add341b8444085beaa2074089-2025-honda-accord-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:39Z",
+    "document_sha256": "826c3bdb533f07fadc0be99bb26d55bdf41be15017529c3e381742d1ced29f02",
+    "locator": "table[0]/row[85]/col[6]",
+    "column_header": "Touring",
+    "section": "FEATURES > HONDA SENSING®",
+    "relative_to": "Sport-L",
+    "relative_locator": "table[0]/row[85]/col[5]",
+    "absent_columns": [
+     3,
+     4,
+     5
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__accord.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Heated Steering Wheel",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-008e554add341b8444085beaa2074089-2025-honda-accord-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:39Z",
+    "document_sha256": "826c3bdb533f07fadc0be99bb26d55bdf41be15017529c3e381742d1ced29f02",
+    "locator": "table[0]/row[109]/col[6]",
+    "column_header": "Touring",
+    "section": "FEATURES > DRIVER CONVENIENCE",
+    "relative_to": "Sport-L",
+    "relative_locator": "table[0]/row[109]/col[5]",
+    "absent_columns": [
+     3,
+     4,
+     5
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__accord.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Rain-Sensing Windshield Wipers",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-008e554add341b8444085beaa2074089-2025-honda-accord-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:39Z",
+    "document_sha256": "826c3bdb533f07fadc0be99bb26d55bdf41be15017529c3e381742d1ced29f02",
+    "locator": "table[0]/row[117]/col[6]",
+    "column_header": "Touring",
+    "section": "FEATURES > DRIVER CONVENIENCE",
+    "relative_to": "Sport-L",
+    "relative_locator": "table[0]/row[117]/col[5]",
+    "absent_columns": [
+     3,
+     4,
+     5
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__accord.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "6-Inch Head-Up Display (HUD)",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-008e554add341b8444085beaa2074089-2025-honda-accord-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:39Z",
+    "document_sha256": "826c3bdb533f07fadc0be99bb26d55bdf41be15017529c3e381742d1ced29f02",
+    "locator": "table[0]/row[126]/col[6]",
+    "column_header": "Touring",
+    "section": "FEATURES > AUDIO & CONNECTIVITY",
+    "relative_to": "Sport-L",
+    "relative_locator": "table[0]/row[126]/col[5]",
+    "absent_columns": [
+     3,
+     4,
+     5
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__accord.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Google built-In (includes 3-Years Unlimited Data Plan for In-Vehicle Apps)",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-008e554add341b8444085beaa2074089-2025-honda-accord-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:39Z",
+    "document_sha256": "826c3bdb533f07fadc0be99bb26d55bdf41be15017529c3e381742d1ced29f02",
+    "locator": "table[0]/row[127]/col[6]",
+    "column_header": "Touring",
+    "section": "FEATURES > AUDIO & CONNECTIVITY",
+    "relative_to": "Sport-L",
+    "relative_locator": "table[0]/row[127]/col[5]",
+    "absent_columns": [
+     3,
+     4,
+     5
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__accord.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Bose Premium Sound System with 12 Speakers",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-008e554add341b8444085beaa2074089-2025-honda-accord-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:39Z",
+    "document_sha256": "826c3bdb533f07fadc0be99bb26d55bdf41be15017529c3e381742d1ced29f02",
+    "locator": "table[0]/row[131]/col[6]",
+    "column_header": "Touring",
+    "section": "FEATURES > AUDIO & CONNECTIVITY",
+    "relative_to": "Sport-L",
+    "relative_locator": "table[0]/row[131]/col[5]",
+    "absent_columns": [
+     3,
+     4,
+     5
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__accord.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "HD Radio™",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-008e554add341b8444085beaa2074089-2025-honda-accord-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:39Z",
+    "document_sha256": "826c3bdb533f07fadc0be99bb26d55bdf41be15017529c3e381742d1ced29f02",
+    "locator": "table[0]/row[140]/col[6]",
+    "column_header": "Touring",
+    "section": "FEATURES > AUDIO & CONNECTIVITY",
+    "relative_to": "Sport-L",
+    "relative_locator": "table[0]/row[140]/col[5]",
+    "absent_columns": [
+     3,
+     4,
+     5
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__accord.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Ventilated Front Seats",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-008e554add341b8444085beaa2074089-2025-honda-accord-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:39Z",
+    "document_sha256": "826c3bdb533f07fadc0be99bb26d55bdf41be15017529c3e381742d1ced29f02",
+    "locator": "table[0]/row[152]/col[6]",
+    "column_header": "Touring",
+    "section": "FEATURES > INTERIOR",
+    "relative_to": "Sport-L",
+    "relative_locator": "table[0]/row[152]/col[5]",
+    "absent_columns": [
+     3,
+     4,
+     5
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__accord.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Rear Outboard Heated Seats",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-008e554add341b8444085beaa2074089-2025-honda-accord-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:39Z",
+    "document_sha256": "826c3bdb533f07fadc0be99bb26d55bdf41be15017529c3e381742d1ced29f02",
+    "locator": "table[0]/row[153]/col[6]",
+    "column_header": "Touring",
+    "section": "FEATURES > INTERIOR",
+    "relative_to": "Sport-L",
+    "relative_locator": "table[0]/row[153]/col[5]",
+    "absent_columns": [
+     3,
+     4,
+     5
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__accord.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Side Mirrors with Reverse Gear Tilt-Down",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-008e554add341b8444085beaa2074089-2025-honda-accord-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:39Z",
+    "document_sha256": "826c3bdb533f07fadc0be99bb26d55bdf41be15017529c3e381742d1ced29f02",
+    "locator": "table[0]/row[184]/col[6]",
+    "column_header": "Touring",
+    "section": "FEATURES > EXTERIOR",
+    "relative_to": "Sport-L",
+    "relative_locator": "table[0]/row[184]/col[5]",
+    "absent_columns": [
+     3,
+     4,
+     5
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__accord.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Acoustic Laminate Windshield",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-008e554add341b8444085beaa2074089-2025-honda-accord-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:39Z",
+    "document_sha256": "826c3bdb533f07fadc0be99bb26d55bdf41be15017529c3e381742d1ced29f02",
+    "locator": "table[0]/row[186]/col[6]",
+    "column_header": "Touring",
+    "section": "FEATURES > EXTERIOR",
+    "relative_to": "Sport-L",
+    "relative_locator": "table[0]/row[186]/col[5]",
+    "absent_columns": [
+     3,
+     4,
+     5
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__accord.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Acoustic Front Door Glass",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-008e554add341b8444085beaa2074089-2025-honda-accord-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:39Z",
+    "document_sha256": "826c3bdb533f07fadc0be99bb26d55bdf41be15017529c3e381742d1ced29f02",
+    "locator": "table[0]/row[187]/col[6]",
+    "column_header": "Touring",
+    "section": "FEATURES > EXTERIOR",
+    "relative_to": "Sport-L",
+    "relative_locator": "table[0]/row[187]/col[5]",
+    "absent_columns": [
+     3,
+     4,
+     5
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__accord.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   }
+  ]
+ }
+}

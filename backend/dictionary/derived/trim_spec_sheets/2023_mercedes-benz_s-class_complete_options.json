@@ -12,19 +12,19 @@
     "Maybach": [
       {
         "label": "Engine Options",
-        "value": "4.0L V8 Turbo; Automatic 9-spd"
+        "value": "Hybrid 4.0L V8 (SIDI; Mild Hybrid)"
       }
     ],
     "S500": [
       {
         "label": "Engine Options",
-        "value": "3.0L V6 Turbo; Automatic 9-spd"
+        "value": "Hybrid 3.0L V6 (SIDI; Mild Hybrid)"
       }
     ],
     "S580": [
       {
         "label": "Engine Options",
-        "value": "4.0L V8 Turbo; Automatic 9-spd"
+        "value": "Hybrid 4.0L V8 (SIDI; Mild Hybrid)"
       }
     ]
   }

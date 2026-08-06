@@ -12,23 +12,19 @@
     "Limited": [
       {
         "label": "Engine Options",
-        "value": "Automatic (S8); Four-Wheel Drive"
+        "value": "2.4L I4 (3-mode Trans (Spt/Normal/Eco)); 2.4L I4 (SIDI & PFI)"
       }
     ],
     "SR5": [
       {
         "label": "Engine Options",
-        "value": "Automatic (S8); Rear-Wheel Drive"
+        "value": "2.4L I4 (3-mode Trans (Spt/Normal/Eco)); 2.4L I4 (SIDI & PFI; with Stop-Start)"
       }
     ],
     "Sport": [
       {
         "label": "Engine Options",
-        "value": "Automatic (S8); Rear-Wheel Drive"
-      },
-      {
-        "label": "Maximum Towing Capacity",
-        "value": "The second level also added a towing package (oil and transmission coolers, fan"
+        "value": "2.4L I4 (3-mode Trans (Spt/Normal/Eco)); 2.4L I4 (SIDI & PFI; with Stop-Start)"
       }
     ]
   }

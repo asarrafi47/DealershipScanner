@@ -1,0 +1,4022 @@
+{
+  "documents": {
+    "0187b7e54dfb1f909ce95e31527da611f84d64464b7ebc0bb28becca8fd32d6d": {
+      "sha256": "0187b7e54dfb1f909ce95e31527da611f84d64464b7ebc0bb28becca8fd32d6d",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2019_Mazda_Mazda_CX-9_Brochure.pdf",
+      "bytes": 342480,
+      "source_urls": [
+        "https://news.mazdausa.com/download/2019-Mazda-CX-9-Spec-Deck_Version-1.pdf"
+      ],
+      "catalog_keys": [
+        "2019|mazda|mazdacx9"
+      ],
+      "first_seen_at": "2026-07-31T22:55:50.523764+00:00",
+      "tier": ""
+    },
+    "019965892be62e76b4d34102b0af09564cd31f30648d50f2065d15eb61c38b46": {
+      "sha256": "019965892be62e76b4d34102b0af09564cd31f30648d50f2065d15eb61c38b46",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2026_Lexus_ES_HYBRID_Brochure.pdf",
+      "bytes": 1483374,
+      "source_urls": [
+        "https://lexus-cms-media.s3.us-east-2.amazonaws.com/wp-content/uploads/2025/05/2026-Lexus-ES-350h-Hybrid-Specifications-5-7-26.pdf"
+      ],
+      "catalog_keys": [
+        "2026|lexus|eshybrid"
+      ],
+      "first_seen_at": "2026-07-31T22:59:31.565344+00:00",
+      "tier": ""
+    },
+    "02399fbd159d744f14c0d2c7ad51238d2042918936602704f75dc8f1a3976b35": {
+      "sha256": "02399fbd159d744f14c0d2c7ad51238d2042918936602704f75dc8f1a3976b35",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2021_GMC_Sierra_2500HD_Brochure.pdf",
+      "bytes": 19793905,
+      "source_urls": [
+        "https://www.gmc.com/content/dam/gmc/na/us/english/index/about/download-brochures/2021-models/GMTR21CT100_2021_GMC%20Sierra%20HD_DIGITAL_82021.pdf"
+      ],
+      "catalog_keys": [
+        "2021|gmc|sierra2500hd"
+      ],
+      "first_seen_at": "2026-07-31T22:52:18.446991+00:00",
+      "tier": ""
+    },
+    "0407262a1da5c91f136d0f475a6ae1ffa71d390d6f6ed06f8ada0e79391c598e": {
+      "sha256": "0407262a1da5c91f136d0f475a6ae1ffa71d390d6f6ed06f8ada0e79391c598e",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2011_Mazda_Mazda2_Brochure.pdf",
+      "bytes": 137052,
+      "source_urls": [
+        "https://news.mazdausa.com/download/2011-MAZDA2-Specifications.pdf"
+      ],
+      "catalog_keys": [
+        "2011|mazda|mazda2"
+      ],
+      "first_seen_at": "2026-07-31T22:56:54.334207+00:00",
+      "tier": ""
+    },
+    "048e911456fd29acaafe6f5c2ede61612d87a536a39097ac397fb45c44a5d739": {
+      "sha256": "048e911456fd29acaafe6f5c2ede61612d87a536a39097ac397fb45c44a5d739",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2017_BMW_3_Series_Brochure.pdf",
+      "bytes": 22464278,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/BMW/3 Series/BMW_US 3Series_2017.pdf"
+      ],
+      "catalog_keys": [
+        "2017|bmw|3series"
+      ],
+      "first_seen_at": "2026-08-01T23:53:09.509045+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "Adobe PDF Library 15.0",
+          "creator": "Adobe InDesign CC 2017 (Macintosh)",
+          "title": "",
+          "author": "",
+          "subject": "",
+          "creation_date": "D:20170418171444-04'00'",
+          "mod_date": "D:20171203090241-06'00'",
+          "page_count": 28,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 28,
+        "page_count": 28,
+        "has_text_layer": true
+      }
+    },
+    "051fbcad6cc27be77ab0329e149a5093f04167c08a5244c12cad8eb38c51c867": {
+      "sha256": "051fbcad6cc27be77ab0329e149a5093f04167c08a5244c12cad8eb38c51c867",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2018_Nissan_Rogue_Sport_Brochure.pdf",
+      "bytes": 4842091,
+      "source_urls": [
+        "https://www.nissanusa.com/content/dam/Nissan/us/vehicle-brochures/2018/2018-nissan-rogue-sport-brochure-en.pdf"
+      ],
+      "catalog_keys": [
+        "2018|nissan|roguesport"
+      ],
+      "first_seen_at": "2026-07-31T22:53:30.565379+00:00",
+      "tier": ""
+    },
+    "06cd6b33130e5c8d23cbb33f83ab797ac69d9d53e311aeb4eba38bc2948b3a52": {
+      "sha256": "06cd6b33130e5c8d23cbb33f83ab797ac69d9d53e311aeb4eba38bc2948b3a52",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2015_Mazda_MAZDA3_Brochure.pdf",
+      "bytes": 3047119,
+      "source_urls": [
+        "https://news.mazdausa.com/download/2015-Mazda3-Specifications.pdf"
+      ],
+      "catalog_keys": [
+        "2015|mazda|mazda3"
+      ],
+      "first_seen_at": "2026-07-31T22:57:06.748843+00:00",
+      "tier": ""
+    },
+    "070bb8521fc24daf3f11e436d071e04abd7adeec096d5b089af6ea49fee8a4b5": {
+      "sha256": "070bb8521fc24daf3f11e436d071e04abd7adeec096d5b089af6ea49fee8a4b5",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2026_Lexus_IS_Brochure.pdf",
+      "bytes": 991862,
+      "source_urls": [
+        "https://lexus-cms-media.s3.us-east-2.amazonaws.com/wp-content/uploads/2025/09/2026-IS-Spec-Sheet.pdf"
+      ],
+      "catalog_keys": [
+        "2026|lexus|is"
+      ],
+      "first_seen_at": "2026-07-31T22:59:21.532335+00:00",
+      "tier": ""
+    },
+    "075f0c841de5323c83286ce0969a74187b92364d868fbc4faec1af2b46a2c736": {
+      "sha256": "075f0c841de5323c83286ce0969a74187b92364d868fbc4faec1af2b46a2c736",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2018_Mercedes-Benz_GLS_Brochure.pdf",
+      "bytes": 7781690,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Mercedes_Benz/GLS-Class/Mercedes Benz_US GLS-Class_2018.pdf"
+      ],
+      "catalog_keys": [
+        "2018|mercedesbenz|gls"
+      ],
+      "first_seen_at": "2026-08-01T23:50:57.652953+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "Adobe PDF Library 15.0",
+          "creator": "Adobe InDesign CC 2017 (Macintosh)",
+          "title": "2018 Mercedes-Benz GLS",
+          "author": "Mercedes-Benz USA",
+          "subject": "",
+          "creation_date": "D:20171106152358-05'00'",
+          "mod_date": "D:20171106161939-05'00'",
+          "page_count": 14,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 14,
+        "page_count": 14,
+        "has_text_layer": true
+      }
+    },
+    "0803c1f8610f992d58fb99a3b0643e2a6fc9bc39ae2ca1564ecc371107b47f5e": {
+      "sha256": "0803c1f8610f992d58fb99a3b0643e2a6fc9bc39ae2ca1564ecc371107b47f5e",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2025_Toyota_RAV4_Brochure.pdf",
+      "bytes": 265029,
+      "source_urls": [
+        "https://toyota-cms-media.s3.amazonaws.com/wp-content/uploads/2024/10/2025-Toyota-RAV4-Product-Information_FINAL.pdf"
+      ],
+      "catalog_keys": [
+        "2025|toyota|rav4"
+      ],
+      "first_seen_at": "2026-07-31T22:53:03.376546+00:00",
+      "tier": ""
+    },
+    "08ba0c4ed293b9c4f973f8cf1e19508389ba299215e6dc3dc5c43a25d7606303": {
+      "sha256": "08ba0c4ed293b9c4f973f8cf1e19508389ba299215e6dc3dc5c43a25d7606303",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2018_Mazda_MAZDA6_Brochure.pdf",
+      "bytes": 355898,
+      "source_urls": [
+        "https://news.mazdausa.com/download/2018-Mazda6-Spec-Deck_Version-3.pdf"
+      ],
+      "catalog_keys": [
+        "2018|mazda|mazda6"
+      ],
+      "first_seen_at": "2026-07-31T22:55:38.436308+00:00",
+      "tier": ""
+    },
+    "0e57f74add4a6e2d3211ccc64c911b3afd2e7d9a423bd6f2229fd8490032f61d": {
+      "sha256": "0e57f74add4a6e2d3211ccc64c911b3afd2e7d9a423bd6f2229fd8490032f61d",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2026_Toyota_C-HR_Brochure.pdf",
+      "bytes": 187595,
+      "source_urls": [
+        "https://toyota-cms-media.s3.amazonaws.com/wp-content/uploads/2025/05/2026_Toyota_C-HR_Product_Information_FINAL-1.pdf"
+      ],
+      "catalog_keys": [
+        "2026|toyota|chr"
+      ],
+      "first_seen_at": "2026-07-31T22:52:53.376063+00:00",
+      "tier": ""
+    },
+    "0eba04b2d4ed6b12a4f74edbce066de5a2ae8be77ab77d94bbbf20f81ff12b9d": {
+      "sha256": "0eba04b2d4ed6b12a4f74edbce066de5a2ae8be77ab77d94bbbf20f81ff12b9d",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2024_GMC_Sierra_1500_Brochure.pdf",
+      "bytes": 4130586,
+      "source_urls": [
+        "https://www.gmc.com/content/dam/gmc/na/us/english/index/about/download-brochures/2024-models/GMTR23CT300_2024_SIERRA_LD_FO_011024_FINAL.pdf"
+      ],
+      "catalog_keys": [
+        "2024|gmc|sierra1500"
+      ],
+      "first_seen_at": "2026-07-31T22:51:53.917789+00:00",
+      "tier": ""
+    },
+    "101174719fcc6e68df45f2947593d738328a16b438ac1dfa03015da73648ec9d": {
+      "sha256": "101174719fcc6e68df45f2947593d738328a16b438ac1dfa03015da73648ec9d",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2017_Mercedes-Benz_S-Class_Brochure.pdf",
+      "bytes": 20630469,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Mercedes_Benz/S-Class/Mercedes Benz_US S-Class_2017.pdf"
+      ],
+      "catalog_keys": [
+        "2017|mercedesbenz|sclass"
+      ],
+      "first_seen_at": "2026-08-01T23:45:23.299559+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "Adobe PDF Library 15.0",
+          "creator": "Adobe InDesign CC 2017 (Macintosh)",
+          "title": "2017 Mercedes-Benz S-Class Sedan",
+          "author": "Mercedes-Benz USA",
+          "subject": "",
+          "creation_date": "D:20170301102052-05'00'",
+          "mod_date": "D:20170314114144-04'00'",
+          "page_count": 16,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 14,
+        "page_count": 16,
+        "has_text_layer": true
+      }
+    },
+    "11bba20a1af3b63989d87a3a2e1c5de83ba7c56326605376a1ef99c817d7ec04": {
+      "sha256": "11bba20a1af3b63989d87a3a2e1c5de83ba7c56326605376a1ef99c817d7ec04",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2021_GMC_Sierra_1500_Brochure.pdf",
+      "bytes": 21885213,
+      "source_urls": [
+        "https://www.gmc.com/content/dam/gmc/na/us/english/index/about/download-brochures/2021-models/GMTR21CT000_2021_GMC%20Sierra%20LD_DIGITAL_144_11-9.pdf"
+      ],
+      "catalog_keys": [
+        "2021|gmc|sierra1500"
+      ],
+      "first_seen_at": "2026-07-31T22:52:02.060858+00:00",
+      "tier": ""
+    },
+    "12a9098108301d22ae6ca34dd5bd88df0ba6470ebf372b42aa25f2fe4eac21e3": {
+      "sha256": "12a9098108301d22ae6ca34dd5bd88df0ba6470ebf372b42aa25f2fe4eac21e3",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2026_Toyota_GR_Corolla_Brochure.pdf",
+      "bytes": 15534758,
+      "source_urls": [
+        "https://www.toyota.com/content/dam/toyota/brochures/pdf/2026/2026-grcorolla-brochure.pdf"
+      ],
+      "catalog_keys": [
+        "2026|toyota|grcorolla"
+      ],
+      "first_seen_at": "2026-07-31T22:05:11.911769+00:00",
+      "tier": ""
+    },
+    "136805d473300532db1c41370ad1ff814c4288170238d0add07c7bf32df97cd2": {
+      "sha256": "136805d473300532db1c41370ad1ff814c4288170238d0add07c7bf32df97cd2",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2026_Toyota_Highlander_Hybrid_Brochure.pdf",
+      "bytes": 266611,
+      "source_urls": [
+        "https://toyota-cms-media.s3.amazonaws.com/wp-content/uploads/2025/09/2026-Toyota-Highlander-Hybrid-Product-Information.pdf"
+      ],
+      "catalog_keys": [
+        "2026|toyota|highlanderhybrid"
+      ],
+      "first_seen_at": "2026-07-31T22:54:13.433855+00:00",
+      "tier": ""
+    },
+    "1a265ea6605290f0694869f385889277a8f50e294729612b98ef346da3b60597": {
+      "sha256": "1a265ea6605290f0694869f385889277a8f50e294729612b98ef346da3b60597",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2018_Mercedes-Benz_GLC_Brochure.pdf",
+      "bytes": 18072642,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Mercedes_Benz/GLC-Class/Mercedes Benz_US GLC-Class_2018.pdf"
+      ],
+      "catalog_keys": [
+        "2018|mercedesbenz|glc"
+      ],
+      "first_seen_at": "2026-08-01T23:48:10.013465+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "Adobe PDF Library 15.0",
+          "creator": "Adobe InDesign CC 2017 (Macintosh)",
+          "title": "2018 Mercedes-Benz GLC",
+          "author": "Mercedes-Benz USA",
+          "subject": "",
+          "creation_date": "D:20180130114652-05'00'",
+          "mod_date": "D:20180130114828-05'00'",
+          "page_count": 22,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 22,
+        "page_count": 22,
+        "has_text_layer": true
+      }
+    },
+    "206952949abc360cec5a8ae9ed277c1dab6c51c873238aadfb12224a364be1f9": {
+      "sha256": "206952949abc360cec5a8ae9ed277c1dab6c51c873238aadfb12224a364be1f9",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2023_Hyundai_Ioniq_5_Brochure.pdf",
+      "bytes": 7518313,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Hyundai/Ioniq 5/Hyundai_US Ioniq 5_2023.pdf"
+      ],
+      "catalog_keys": [
+        "2023|hyundai|ioniq5"
+      ],
+      "first_seen_at": "2026-08-01T14:30:03.861636+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "Adobe PDF Library 17.0",
+          "creator": "Adobe InDesign 18.0 (Macintosh)",
+          "title": "",
+          "author": "",
+          "subject": "",
+          "creation_date": "D:20230225124529-08'00'",
+          "mod_date": "D:20230225124559-08'00'",
+          "page_count": 7,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 2,
+        "page_count": 7,
+        "has_text_layer": true
+      }
+    },
+    "20a28a11539763b63283a53d9f93416b35c06b5cc5090fefb66cf43479119127": {
+      "sha256": "20a28a11539763b63283a53d9f93416b35c06b5cc5090fefb66cf43479119127",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2018_Nissan_Rogue_Brochure.pdf",
+      "bytes": 4753343,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Nissan/Rogue/Nissan_US Rogue_2018.pdf"
+      ],
+      "catalog_keys": [
+        "2018|nissan|rogue"
+      ],
+      "first_seen_at": "2026-08-01T13:52:57.917088+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "Creo Normalizer JTP",
+          "creator": "",
+          "title": "",
+          "author": "",
+          "subject": "",
+          "creation_date": "D:20171005165312-07'00'",
+          "mod_date": "D:20171005165415-07'00'",
+          "page_count": 8,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 8,
+        "page_count": 8,
+        "has_text_layer": true
+      }
+    },
+    "22363c306f049f686aa5dcc37d57505f8af41aa0a62af5ff44965d419b012860": {
+      "sha256": "22363c306f049f686aa5dcc37d57505f8af41aa0a62af5ff44965d419b012860",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2026_Toyota_Corolla_Brochure.pdf",
+      "bytes": 18522947,
+      "source_urls": [
+        "https://www.toyota.com/content/dam/toyota/brochures/pdf/2026/corolla_ebrochure.pdf"
+      ],
+      "catalog_keys": [
+        "2026|toyota|corolla"
+      ],
+      "first_seen_at": "2026-08-01T22:57:51.965325+00:00",
+      "tier": "oem"
+    },
+    "236e0e1d28a2e757b7a1734ca5c06290779d3e01bdad996830b44f0e7de9c6ed": {
+      "sha256": "236e0e1d28a2e757b7a1734ca5c06290779d3e01bdad996830b44f0e7de9c6ed",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2026_Toyota_RAV4_Brochure.pdf",
+      "bytes": 366275,
+      "source_urls": [
+        "https://toyota-cms-media.s3.amazonaws.com/wp-content/uploads/2025/05/2026_Toyota_RAV4-Hybrid_Product-Information_05282026.pdf"
+      ],
+      "catalog_keys": [
+        "2026|toyota|rav4"
+      ],
+      "first_seen_at": "2026-07-31T22:50:53.306222+00:00",
+      "tier": ""
+    },
+    "24db1e5c00c1e7afc839ff019ed42f72c8d0cd3f6b21807d98277f07d1988193": {
+      "sha256": "24db1e5c00c1e7afc839ff019ed42f72c8d0cd3f6b21807d98277f07d1988193",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2016_Hyundai_Tucson_Brochure.pdf",
+      "bytes": 7269924,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Hyundai/Tucson/Hyundai_US Tucson_2016.pdf"
+      ],
+      "catalog_keys": [
+        "2016|hyundai|tucson"
+      ],
+      "first_seen_at": "2026-08-01T23:46:22.536930+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "iText 2.1.7 by 1T3XT",
+          "creator": "",
+          "title": "",
+          "author": "",
+          "subject": "",
+          "creation_date": "D:20150708174719Z",
+          "mod_date": "D:20150708174719Z",
+          "page_count": 12,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 12,
+        "page_count": 12,
+        "has_text_layer": true
+      }
+    },
+    "255a51374c0962f079c9bce4b4a2582ee5aa252624b55b21c2de10aafc4b2de1": {
+      "sha256": "255a51374c0962f079c9bce4b4a2582ee5aa252624b55b21c2de10aafc4b2de1",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2018_Subaru_Crosstrek_Brochure.pdf",
+      "bytes": 16458139,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Subaru/XV Crosstrek/Subaru_US Crosstrek_2018.pdf"
+      ],
+      "catalog_keys": [
+        "2018|subaru|crosstrek"
+      ],
+      "first_seen_at": "2026-08-01T23:46:11.355767+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "Creo Normalizer JTP",
+          "creator": "",
+          "title": "",
+          "author": "",
+          "subject": "",
+          "creation_date": "D:20170718091142-07'00'",
+          "mod_date": "D:20170918093030-05'00'",
+          "page_count": 13,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 13,
+        "page_count": 13,
+        "has_text_layer": true
+      }
+    },
+    "2588dca78b04412c6a5593afd9c9e9b63818632ca834c0843cd02a2d25a320cc": {
+      "sha256": "2588dca78b04412c6a5593afd9c9e9b63818632ca834c0843cd02a2d25a320cc",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2026_Lexus_GX_Brochure.pdf",
+      "bytes": 291129,
+      "source_urls": [
+        "https://lexus-cms-media.s3.us-east-2.amazonaws.com/wp-content/uploads/2025/10/2026-GX-Spec-Sheet-FINAL.pdf"
+      ],
+      "catalog_keys": [
+        "2026|lexus|gx"
+      ],
+      "first_seen_at": "2026-07-31T23:04:50.615990+00:00",
+      "tier": ""
+    },
+    "258a2b9f53da4b88f01752a3d787b20754049bd6f095a3ba3f0db9c43a88e1b1": {
+      "sha256": "258a2b9f53da4b88f01752a3d787b20754049bd6f095a3ba3f0db9c43a88e1b1",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2023_INFINITI_QX80_Brochure.pdf",
+      "bytes": 4441019,
+      "source_urls": [
+        "https://www.infinitiusa.com/content/dam/Infiniti/US/vehicle-brochures/2023/2023-infiniti-qx80-brochure-en.pdf"
+      ],
+      "catalog_keys": [
+        "2023|infiniti|qx80"
+      ],
+      "first_seen_at": "2026-07-31T22:49:54.312940+00:00",
+      "tier": ""
+    },
+    "263d4b6a42925f3efb216087f34d43a28459a2d2771df5810f6ea844fcf0da91": {
+      "sha256": "263d4b6a42925f3efb216087f34d43a28459a2d2771df5810f6ea844fcf0da91",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2026_Ram_3500_Chassis_Cab_Brochure.pdf",
+      "bytes": 33487118,
+      "source_urls": [],
+      "catalog_keys": [],
+      "first_seen_at": "",
+      "tier": ""
+    },
+    "27b161cdb5546a1590184317b94c2ba1bd7a88974e24857ac49a77bce7921adc": {
+      "sha256": "27b161cdb5546a1590184317b94c2ba1bd7a88974e24857ac49a77bce7921adc",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2025_Toyota_Sienna_Brochure.pdf",
+      "bytes": 426050,
+      "source_urls": [
+        "https://toyota-cms-media.s3.amazonaws.com/wp-content/uploads/2024/09/2025-Toyota-Sienna-Product-Information_10292024.pdf"
+      ],
+      "catalog_keys": [
+        "2025|toyota|sienna"
+      ],
+      "first_seen_at": "2026-07-31T22:54:43.530598+00:00",
+      "tier": ""
+    },
+    "29ee8cd679a1d0f61124468ddf8df792930093b6f1623850ecb4fea494054115": {
+      "sha256": "29ee8cd679a1d0f61124468ddf8df792930093b6f1623850ecb4fea494054115",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2022_GMC_Sierra_2500HD_Brochure.pdf",
+      "bytes": 513588,
+      "source_urls": [
+        "https://www.gmc.com/content/dam/gmc/na/us/english/index/about/download-brochures/2022-models/02-pdf/GMTR22CT000FO_MY22_GMC%20SIERRAHD_4-6.pdf"
+      ],
+      "catalog_keys": [
+        "2022|gmc|sierra2500hd"
+      ],
+      "first_seen_at": "2026-07-31T22:55:46.477121+00:00",
+      "tier": ""
+    },
+    "2c7cc84e31a035524b83d9ee80096b729b5fec1b0a3239ee7c8cedabd50650f2": {
+      "sha256": "2c7cc84e31a035524b83d9ee80096b729b5fec1b0a3239ee7c8cedabd50650f2",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2022_INFINITI_QX80_Brochure.pdf",
+      "bytes": 14174403,
+      "source_urls": [
+        "https://www.infinitiusa.com/content/dam/Infiniti/US/vehicle-brochures/2022/2022-infiniti-qx80-brochure-en.pdf"
+      ],
+      "catalog_keys": [
+        "2022|infiniti|qx80"
+      ],
+      "first_seen_at": "2026-07-31T22:50:08.277566+00:00",
+      "tier": ""
+    },
+    "2d1a3754257b506c745e9a28fe4588dffcf55cf115d69910df16bc7305ed8ed9": {
+      "sha256": "2d1a3754257b506c745e9a28fe4588dffcf55cf115d69910df16bc7305ed8ed9",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2025_Nissan_Ariya_Brochure.pdf",
+      "bytes": 4769129,
+      "source_urls": [
+        "https://www.nissanusa.com/content/dam/Nissan/us/vehicle-brochures/2025/2025-nissan-ariya-brochure-en.pdf"
+      ],
+      "catalog_keys": [
+        "2025|nissan|ariya"
+      ],
+      "first_seen_at": "2026-07-31T22:46:38.996415+00:00",
+      "tier": ""
+    },
+    "2d2de9347d758c39915602362f8735b66ac549bfb5f55802d750977529af6026": {
+      "sha256": "2d2de9347d758c39915602362f8735b66ac549bfb5f55802d750977529af6026",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2018_MERCEDES-BENZ_E-Class_Brochure.pdf",
+      "bytes": 13904028,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Mercedes_Benz/E-Class/Mercedes Benz_US E-Class_2018.pdf"
+      ],
+      "catalog_keys": [
+        "2018|mercedesbenz|eclass"
+      ],
+      "first_seen_at": "2026-08-01T13:52:34.633998+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "Adobe PDF Library 15.0",
+          "creator": "Adobe InDesign CC 2017 (Macintosh)",
+          "title": "2018 Mercedes-Benz E-Class Family",
+          "author": "Mercedes-Benz USA",
+          "subject": "",
+          "creation_date": "D:20170929143402-04'00'",
+          "mod_date": "D:20171006111821-04'00'",
+          "page_count": 30,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 29,
+        "page_count": 30,
+        "has_text_layer": true
+      }
+    },
+    "2d3b9da817eac6614217eacced3ff5e175bafcd9f33fc6729e5e45eeffd55608": {
+      "sha256": "2d3b9da817eac6614217eacced3ff5e175bafcd9f33fc6729e5e45eeffd55608",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2019_GMC_Sierra_2500HD_Brochure.pdf",
+      "bytes": 3828132,
+      "source_urls": [
+        "https://www.gmc.com/content/dam/gmc/na/us/english/index/about/download-brochures/2019-models/2019-gmc-sierra-hd-brochure.pdf"
+      ],
+      "catalog_keys": [
+        "2019|gmc|sierra2500hd"
+      ],
+      "first_seen_at": "2026-07-31T22:52:33.982930+00:00",
+      "tier": ""
+    },
+    "303c2159c2168a509e9709254d530815cd5847f9da764d975fae41a87bd4eb9d": {
+      "sha256": "303c2159c2168a509e9709254d530815cd5847f9da764d975fae41a87bd4eb9d",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2022_Dodge_Charger_Brochure.pdf",
+      "bytes": 10511089,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Dodge/Charger/Dodge_US Charger_2022.pdf"
+      ],
+      "catalog_keys": [
+        "2022|dodge|charger"
+      ],
+      "first_seen_at": "2026-08-01T14:29:02.760800+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "",
+          "creator": "",
+          "title": "",
+          "author": "",
+          "subject": "",
+          "creation_date": "",
+          "mod_date": "",
+          "page_count": 47,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 46,
+        "page_count": 47,
+        "has_text_layer": true
+      }
+    },
+    "33383df52349ec7cfdc6816c9463f7d2bde67c39ee4ca6248b5476d06c863ac7": {
+      "sha256": "33383df52349ec7cfdc6816c9463f7d2bde67c39ee4ca6248b5476d06c863ac7",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2019_Mazda_MAZDA3_Brochure.pdf",
+      "bytes": 2249287,
+      "source_urls": [
+        "https://news.mazdausa.com/download/2019-Mazda-3-Vehicle-Spec-Deck-3.pdf"
+      ],
+      "catalog_keys": [
+        "2019|mazda|mazda3"
+      ],
+      "first_seen_at": "2026-07-31T22:58:02.982466+00:00",
+      "tier": ""
+    },
+    "33ec0d7d1114aa6ca8ee92916d177dff8a049bbb2d96aa2cc47d992e9af05154": {
+      "sha256": "33ec0d7d1114aa6ca8ee92916d177dff8a049bbb2d96aa2cc47d992e9af05154",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2022_Volkswagen_Taos_Brochure.pdf",
+      "bytes": 561048,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Volkswagen/Taos/VW_US Taos_2022-og.pdf"
+      ],
+      "catalog_keys": [
+        "2022|volkswagen|taos"
+      ],
+      "first_seen_at": "2026-08-01T14:29:26.383015+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "Acrobat Distiller 21.0 (Windows)",
+          "creator": "PScript5.dll Version 5.2.2",
+          "title": "VW MY22 Price and Order Guide for CW28-2021 - Taos 2021-07-09.pub",
+          "author": "masseal",
+          "subject": "",
+          "creation_date": "D:20210709013243-04'00'",
+          "mod_date": "D:20210709095420-07'00'",
+          "page_count": 6,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 6,
+        "page_count": 6,
+        "has_text_layer": true
+      }
+    },
+    "34cc699d5d52898e5c85839e47348c5f8f1f3ab21c3d52e8d08152eaf11c1773": {
+      "sha256": "34cc699d5d52898e5c85839e47348c5f8f1f3ab21c3d52e8d08152eaf11c1773",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2026_Lexus_RX_Brochure.pdf",
+      "bytes": 1638896,
+      "source_urls": [
+        "https://lexus-cms-media.s3.us-east-2.amazonaws.com/wp-content/uploads/2025/08/2026_RX_SpecSheet_08212025.pdf"
+      ],
+      "catalog_keys": [
+        "2026|lexus|rx"
+      ],
+      "first_seen_at": "2026-07-31T22:58:52.298965+00:00",
+      "tier": ""
+    },
+    "383eef11d2fce9fe81b1e3996d4c2ccb05dbfdc5f2cb2dd6c380a29fee764ad0": {
+      "sha256": "383eef11d2fce9fe81b1e3996d4c2ccb05dbfdc5f2cb2dd6c380a29fee764ad0",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2026_Dodge_Durango_Brochure.pdf",
+      "bytes": 8283907,
+      "source_urls": [],
+      "catalog_keys": [],
+      "first_seen_at": "",
+      "tier": ""
+    },
+    "3b1e8f74d03806aba5772485f1627c1f47127355cd78bf8db0a7fac7b3894705": {
+      "sha256": "3b1e8f74d03806aba5772485f1627c1f47127355cd78bf8db0a7fac7b3894705",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2026_Toyota_Grand_Highlander_Brochure.pdf",
+      "bytes": 438472,
+      "source_urls": [
+        "https://toyota-cms-media.s3.amazonaws.com/wp-content/uploads/2025/07/2026-Toyota-Grand-Highlander-Product-Information.pdf"
+      ],
+      "catalog_keys": [
+        "2026|toyota|grandhighlander"
+      ],
+      "first_seen_at": "2026-07-31T22:52:23.404251+00:00",
+      "tier": ""
+    },
+    "3b69cd5392a5eb280a6d736e0464c4113f06ff6b27372c0a8954328945421c4e": {
+      "sha256": "3b69cd5392a5eb280a6d736e0464c4113f06ff6b27372c0a8954328945421c4e",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2023_Nissan_Titan_XD_Brochure.pdf",
+      "bytes": 15788597,
+      "source_urls": [
+        "https://www.nissanusa.com/content/dam/Nissan/us/vehicle-brochures/2023/2023-nissan-titan-xd-brochure-en.pdf"
+      ],
+      "catalog_keys": [
+        "2023|nissan|titanxd"
+      ],
+      "first_seen_at": "2026-07-31T22:53:37.989852+00:00",
+      "tier": ""
+    },
+    "3b858557a9aa2b37c1061b019f5ebe6f6bae2297d50afe07e7b2b513bfbaf01f": {
+      "sha256": "3b858557a9aa2b37c1061b019f5ebe6f6bae2297d50afe07e7b2b513bfbaf01f",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2024_Mazda_CX-50_Brochure.pdf",
+      "bytes": 307181,
+      "source_urls": [
+        "https://news.mazdausa.com/download/2024_CX-50_Spec_Deck.pdf"
+      ],
+      "catalog_keys": [
+        "2024|mazda|cx50"
+      ],
+      "first_seen_at": "2026-07-31T17:37:10.646414+00:00",
+      "tier": ""
+    },
+    "3c29a0ee31cc3606c4182e681421dec4ac66a6ef7d17de75356d70d2f6750e60": {
+      "sha256": "3c29a0ee31cc3606c4182e681421dec4ac66a6ef7d17de75356d70d2f6750e60",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2026_Ram_2500_Brochure.pdf",
+      "bytes": 45933079,
+      "source_urls": [],
+      "catalog_keys": [],
+      "first_seen_at": "",
+      "tier": ""
+    },
+    "3fac435bb55584ca6387b9a3f138ba056e6074e704c11b6810bbccf424f528a6": {
+      "sha256": "3fac435bb55584ca6387b9a3f138ba056e6074e704c11b6810bbccf424f528a6",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2025_Toyota_Corolla_Cross_Brochure.pdf",
+      "bytes": 273099,
+      "source_urls": [
+        "https://toyota-cms-media.s3.amazonaws.com/wp-content/uploads/2024/12/2025_Toyota_Corolla-Cross_Product-Information.pdf"
+      ],
+      "catalog_keys": [
+        "2025|toyota|corollacross"
+      ],
+      "first_seen_at": "2026-07-31T22:55:13.510137+00:00",
+      "tier": ""
+    },
+    "43deec6bad7894be564def410b3641c0804051791263ea496ded681313d5f666": {
+      "sha256": "43deec6bad7894be564def410b3641c0804051791263ea496ded681313d5f666",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2016_Toyota_Sequoia_Brochure.pdf",
+      "bytes": 2414162,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Toyota/Sequoia/Toyota_US Sequoia_2016.pdf"
+      ],
+      "catalog_keys": [
+        "2016|toyota|sequoia"
+      ],
+      "first_seen_at": "2026-08-01T23:52:45.164561+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "Adobe PDF Library 10.0.1",
+          "creator": "Adobe InDesign CS6 (Macintosh)",
+          "title": "2016 Sequoia eBrochure",
+          "author": "",
+          "subject": "",
+          "creation_date": "D:20150721120224-07'00'",
+          "mod_date": "D:20150721120444-07'00'",
+          "page_count": 18,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 18,
+        "page_count": 18,
+        "has_text_layer": true
+      }
+    },
+    "448495f4d0f1ebdb92b3f9400e337e4662742bb2a736e4108037018e13d66715": {
+      "sha256": "448495f4d0f1ebdb92b3f9400e337e4662742bb2a736e4108037018e13d66715",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2026_Toyota_Corolla_Cross_Brochure.pdf",
+      "bytes": 241289,
+      "source_urls": [
+        "https://toyota-cms-media.s3.amazonaws.com/wp-content/uploads/2025/05/2026_Toyota_Corolla-Cross_Product-Information-1.pdf"
+      ],
+      "catalog_keys": [
+        "2026|toyota|corollacross"
+      ],
+      "first_seen_at": "2026-07-31T22:51:13.287055+00:00",
+      "tier": ""
+    },
+    "45417a258ebdc8b34205d03deefa5cc38a284eabe49092c41917e783e1126556": {
+      "sha256": "45417a258ebdc8b34205d03deefa5cc38a284eabe49092c41917e783e1126556",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2026_INFINITI_QX60_Brochure.pdf",
+      "bytes": 36280861,
+      "source_urls": [
+        "https://www.infinitiusa.com/content/dam/Infiniti/US/vehicle-brochures/2026/2026-infiniti-qx60-brochure-en.pdf"
+      ],
+      "catalog_keys": [
+        "2026|infiniti|qx60"
+      ],
+      "first_seen_at": "2026-07-31T22:49:19.110276+00:00",
+      "tier": ""
+    },
+    "4576eb22c93389f8fd0b3a35965b3dee74de84da12a92838d6065de613756eee": {
+      "sha256": "4576eb22c93389f8fd0b3a35965b3dee74de84da12a92838d6065de613756eee",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2026_Toyota_GR86_Brochure.pdf",
+      "bytes": 15215190,
+      "source_urls": [
+        "https://www.toyota.com/content/dam/toyota/brochures/pdf/2026/2026-gr86-brochure.pdf"
+      ],
+      "catalog_keys": [
+        "2026|toyota|gr86"
+      ],
+      "first_seen_at": "2026-07-31T22:05:07.588934+00:00",
+      "tier": ""
+    },
+    "461e7d788e215db9a20a9873062eae8ff73dd09ad79f712ce0567216c7088483": {
+      "sha256": "461e7d788e215db9a20a9873062eae8ff73dd09ad79f712ce0567216c7088483",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2026_Toyota_Corolla_Cross_Hybrid_Brochure.pdf",
+      "bytes": 200659,
+      "source_urls": [
+        "https://toyota-cms-media.s3.amazonaws.com/wp-content/uploads/2025/05/2026_Toyota_Corolla_Cross_Hybrid_Product_Information-1.pdf"
+      ],
+      "catalog_keys": [
+        "2026|toyota|corollacrosshybrid"
+      ],
+      "first_seen_at": "2026-07-31T22:53:53.413898+00:00",
+      "tier": ""
+    },
+    "468271579fe1588bc0dd07d54d182e15c219c91a528b403fd8b3b212a08140d4": {
+      "sha256": "468271579fe1588bc0dd07d54d182e15c219c91a528b403fd8b3b212a08140d4",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2017_Mazda_Mazda6_Brochure.pdf",
+      "bytes": 277631,
+      "source_urls": [
+        "https://news.mazdausa.com/download/2017.5-Mazda6-Spec-Deck.pdf"
+      ],
+      "catalog_keys": [
+        "2017|mazda|mazda6"
+      ],
+      "first_seen_at": "2026-07-31T22:54:30.130120+00:00",
+      "tier": ""
+    },
+    "47a54ad96adb3ff50ba3f87dd2d6ab667231d122394a73729a372b7576aab53b": {
+      "sha256": "47a54ad96adb3ff50ba3f87dd2d6ab667231d122394a73729a372b7576aab53b",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2026_Toyota_Crown_Brochure.pdf",
+      "bytes": 22213309,
+      "source_urls": [
+        "https://www.toyota.com/content/dam/toyota/brochures/pdf/2026/crown_ebrochure.pdf"
+      ],
+      "catalog_keys": [
+        "2026|toyota|crown"
+      ],
+      "first_seen_at": "2026-08-01T22:58:15.890141+00:00",
+      "tier": "oem"
+    },
+    "489a359ac353c5bb32a49aa7a6444d84dae3abdfde09ce37dcc95dbac866f287": {
+      "sha256": "489a359ac353c5bb32a49aa7a6444d84dae3abdfde09ce37dcc95dbac866f287",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2026_Toyota_Prius_Plug-in_Hybrid_Brochure.pdf",
+      "bytes": 19138216,
+      "source_urls": [
+        "https://www.toyota.com/content/dam/toyota/brochures/pdf/2026/priuspluginhybrid_ebrochure.pdf"
+      ],
+      "catalog_keys": [
+        "2026|toyota|priuspluginhybrid"
+      ],
+      "first_seen_at": "2026-07-31T22:05:03.930052+00:00",
+      "tier": ""
+    },
+    "48a704555e6d60a63d3cb6be986983afbb25893d237d4aee33abc11dbb9cc2e3": {
+      "sha256": "48a704555e6d60a63d3cb6be986983afbb25893d237d4aee33abc11dbb9cc2e3",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2018_Toyota_Corolla_iM_Brochure.pdf",
+      "bytes": 898567,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Toyota/Corolla iM/Toyota_US Corolla-iM_2018.pdf"
+      ],
+      "catalog_keys": [
+        "2018|toyota|corollaim"
+      ],
+      "first_seen_at": "2026-08-01T23:51:20.972241+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "Acrobat Distiller 17.0 (Macintosh)",
+          "creator": "",
+          "title": "2018 Corolla iM eBrochure",
+          "author": "",
+          "subject": "",
+          "creation_date": "D:20170804140155-07'00'",
+          "mod_date": "D:20170804140548-07'00'",
+          "page_count": 10,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 10,
+        "page_count": 10,
+        "has_text_layer": true
+      }
+    },
+    "4cc3875c44111f091dad606ab16e79f3f1f1511cdea50282ba7b4667a3092bd2": {
+      "sha256": "4cc3875c44111f091dad606ab16e79f3f1f1511cdea50282ba7b4667a3092bd2",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2026_Mazda_Mazda_CX-90_Brochure.pdf",
+      "bytes": 379411,
+      "source_urls": [
+        "https://news.mazdausa.com/download/2026+CX-90+Spec+Deck.pdf"
+      ],
+      "catalog_keys": [
+        "2026|mazda|mazdacx90"
+      ],
+      "first_seen_at": "2026-07-31T17:33:12.514548+00:00",
+      "tier": ""
+    },
+    "4cca326eee37f789f97277dc3e2e87ae1e61b8b728f248c1d4276da2703c7bea": {
+      "sha256": "4cca326eee37f789f97277dc3e2e87ae1e61b8b728f248c1d4276da2703c7bea",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2026_Toyota_Mirai_Brochure.pdf",
+      "bytes": 163596,
+      "source_urls": [
+        "https://toyota-cms-media.s3.amazonaws.com/wp-content/uploads/2025/11/2026-Toyota-Mirai_Product-Info-Guide.pdf"
+      ],
+      "catalog_keys": [
+        "2026|toyota|mirai"
+      ],
+      "first_seen_at": "2026-07-31T23:04:09.599809+00:00",
+      "tier": ""
+    },
+    "4dbf3012c836ca59b89cc4ba9865851ac7cf47320b6dc370a24dea6b6454da35": {
+      "sha256": "4dbf3012c836ca59b89cc4ba9865851ac7cf47320b6dc370a24dea6b6454da35",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2017_MERCEDES-BENZ_C-Class_Brochure.pdf",
+      "bytes": 15528069,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Mercedes_Benz/C-Class/Mercedes Benz_US C-Class_2017.pdf"
+      ],
+      "catalog_keys": [
+        "2017|mercedesbenz|cclass"
+      ],
+      "first_seen_at": "2026-08-01T23:46:34.981810+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "Adobe PDF Library 15.0",
+          "creator": "Adobe InDesign CC 2017 (Macintosh)",
+          "title": "2017 Mercedes-Benz C-Class Sedan",
+          "author": "Mercedes-Benz USA",
+          "subject": "",
+          "creation_date": "D:20170119150924-05'00'",
+          "mod_date": "D:20170127110314-05'00'",
+          "page_count": 28,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 22,
+        "page_count": 28,
+        "has_text_layer": true
+      }
+    },
+    "4e5f0e533ee7066729709ae0db70218db0bcdcc3bd71c5d9af607c2280f95cd4": {
+      "sha256": "4e5f0e533ee7066729709ae0db70218db0bcdcc3bd71c5d9af607c2280f95cd4",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2022_MAZDA_Mazda3_Brochure.pdf",
+      "bytes": 176242,
+      "source_urls": [
+        "https://news.mazdausa.com/download/2022+Mazda3+Spec+Deck.pdf"
+      ],
+      "catalog_keys": [
+        "2022|mazda|mazda3"
+      ],
+      "first_seen_at": "2026-07-31T22:55:02.477258+00:00",
+      "tier": ""
+    },
+    "4e75a26bb9b84fb3314db5eb0815d634400f3abea9271aae2c5aabd28ff7ffa6": {
+      "sha256": "4e75a26bb9b84fb3314db5eb0815d634400f3abea9271aae2c5aabd28ff7ffa6",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2024_Nissan_Ariya_Brochure.pdf",
+      "bytes": 5168005,
+      "source_urls": [
+        "https://www.nissanusa.com/content/dam/Nissan/us/vehicle-brochures/2024/2024-nissan-ariya-brochure-en.pdf"
+      ],
+      "catalog_keys": [
+        "2024|nissan|ariya"
+      ],
+      "first_seen_at": "2026-07-31T22:46:30.825684+00:00",
+      "tier": ""
+    },
+    "4e968b3e98d1a25bbc61d6b633536d4117618661ab1e45fe432afa0c0212bdd1": {
+      "sha256": "4e968b3e98d1a25bbc61d6b633536d4117618661ab1e45fe432afa0c0212bdd1",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2027_Toyota_Prius_Plug-in_Hybrid_Brochure.pdf",
+      "bytes": 438010,
+      "source_urls": [
+        "https://toyota-cms-media.s3.amazonaws.com/wp-content/uploads/2026/07/2027-Toyota-Prius-PHEV-Product-Information.pdf"
+      ],
+      "catalog_keys": [
+        "2027|toyota|priuspluginhybrid"
+      ],
+      "first_seen_at": "2026-07-31T22:54:03.499192+00:00",
+      "tier": ""
+    },
+    "509597a92caa2ca979eb21724763bcda616f7afc08262527ac6bb8dd359b9166": {
+      "sha256": "509597a92caa2ca979eb21724763bcda616f7afc08262527ac6bb8dd359b9166",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2017_Mercedes-benz_E-Class_Brochure.pdf",
+      "bytes": 11940746,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Mercedes_Benz/E-Class/Mercedes Benz_US E-Class_2017.pdf"
+      ],
+      "catalog_keys": [
+        "2017|mercedesbenz|eclass"
+      ],
+      "first_seen_at": "2026-08-01T23:46:47.146511+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "Adobe PDF Library 15.0",
+          "creator": "Adobe InDesign CC 2015 (Macintosh)",
+          "title": "2017 Mercedes_Benz E-Class Sedan Wagon",
+          "author": "Mercedes-Benz USA",
+          "subject": "",
+          "creation_date": "D:20160817104224-04'00'",
+          "mod_date": "D:20160817105336-04'00'",
+          "page_count": 28,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 21,
+        "page_count": 28,
+        "has_text_layer": true
+      }
+    },
+    "52aaa988a117a21ae9bf99e0bcf829a7b9ee8883e2bfcbfdd9e97f30dbb66cae": {
+      "sha256": "52aaa988a117a21ae9bf99e0bcf829a7b9ee8883e2bfcbfdd9e97f30dbb66cae",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2020_Dodge_Charger_Brochure.pdf",
+      "bytes": 6461237,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Dodge/Charger/Dodge_US Charger_2020.pdf"
+      ],
+      "catalog_keys": [
+        "2020|dodge|charger"
+      ],
+      "first_seen_at": "2026-08-01T14:27:50.946150+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "Adobe PDF Library 15.0",
+          "creator": "Adobe InDesign CC 14.0 (Macintosh)",
+          "title": "",
+          "author": "",
+          "subject": "",
+          "creation_date": "D:20191213154202-05'00'",
+          "mod_date": "D:20191213154311-05'00'",
+          "page_count": 41,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 41,
+        "page_count": 41,
+        "has_text_layer": true
+      }
+    },
+    "53ca9aeeb48d0f07468d8dd6b74f29f7b72b22367b2f661bf7397e8180d0b4d1": {
+      "sha256": "53ca9aeeb48d0f07468d8dd6b74f29f7b72b22367b2f661bf7397e8180d0b4d1",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures_archive_quarantine/2016_Mercedes-Benz_GLC_Brochure.pdf",
+      "bytes": 12438918,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Mercedes_Benz/GL-Class/Mercedes Benz_US GL-Class_2016.pdf"
+      ],
+      "catalog_keys": [
+        "2016|mercedesbenz|glc"
+      ],
+      "first_seen_at": "2026-08-01T23:52:22.424037+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "Adobe PDF Library 15.0",
+          "creator": "Adobe InDesign CC 2015 (Macintosh)",
+          "title": "2016 Mercedes-Benz GL",
+          "author": "Mercedes-Benz USA",
+          "subject": "",
+          "creation_date": "D:20151116123513-05'00'",
+          "mod_date": "D:20151116133948-05'00'",
+          "page_count": 32,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 29,
+        "page_count": 32,
+        "has_text_layer": true
+      }
+    },
+    "53ef3c7ea4fd38c33a9298dbd65d4724896113463cdc02131c797f05ee27ba36": {
+      "sha256": "53ef3c7ea4fd38c33a9298dbd65d4724896113463cdc02131c797f05ee27ba36",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2017_MERCEDES-BENZ_GLS_Brochure.pdf",
+      "bytes": 9720755,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Mercedes_Benz/GLS-Class/Mercedes Benz_US GLS-Class_2017.pdf"
+      ],
+      "catalog_keys": [
+        "2017|mercedesbenz|gls"
+      ],
+      "first_seen_at": "2026-08-01T23:53:57.670629+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "Adobe PDF Library 15.0",
+          "creator": "Adobe InDesign CC 2015 (Macintosh)",
+          "title": "",
+          "author": "",
+          "subject": "",
+          "creation_date": "D:20160613151853-04'00'",
+          "mod_date": "D:20160613152127-04'00'",
+          "page_count": 16,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 14,
+        "page_count": 16,
+        "has_text_layer": true
+      }
+    },
+    "5514f857a595eba57272e3cf03a65320ef1158e516f0ade8919ce0ad441183e6": {
+      "sha256": "5514f857a595eba57272e3cf03a65320ef1158e516f0ade8919ce0ad441183e6",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2026_Ram_1500_Brochure.pdf",
+      "bytes": 86842754,
+      "source_urls": [],
+      "catalog_keys": [],
+      "first_seen_at": "",
+      "tier": ""
+    },
+    "55a67059f468bb7eea907c6ef18bc72adc51092bec8ef1705fa7d2676922bf62": {
+      "sha256": "55a67059f468bb7eea907c6ef18bc72adc51092bec8ef1705fa7d2676922bf62",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2026_TOYOTA_Corolla_Hatchback_Brochure.pdf",
+      "bytes": 18744186,
+      "source_urls": [
+        "https://www.toyota.com/content/dam/toyota/brochures/pdf/2026/corollahatchback_ebrochure.pdf"
+      ],
+      "catalog_keys": [
+        "2026|toyota|corollahatchback"
+      ],
+      "first_seen_at": "2026-08-01T22:58:08.262366+00:00",
+      "tier": "oem"
+    },
+    "5676e68567c7ca74171f0dcdcc73e4f665b1c06377405271bf021a3ecaf6cdd6": {
+      "sha256": "5676e68567c7ca74171f0dcdcc73e4f665b1c06377405271bf021a3ecaf6cdd6",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2020_Dodge_Durango_Brochure.pdf",
+      "bytes": 9184939,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Dodge/Durango/Dodge_US Durango_2020.pdf"
+      ],
+      "catalog_keys": [
+        "2020|dodge|durango"
+      ],
+      "first_seen_at": "2026-08-01T14:26:27.709436+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "",
+          "creator": "",
+          "title": "",
+          "author": "",
+          "subject": "",
+          "creation_date": "D:20190920135448-04'00'",
+          "mod_date": "D:20191001123831-04'00'",
+          "page_count": 38,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 32,
+        "page_count": 38,
+        "has_text_layer": true
+      }
+    },
+    "58d5af8a06d094122fcb29ccf9dccd3dbb85b373c2bc2d315a7b0e6c90f878e0": {
+      "sha256": "58d5af8a06d094122fcb29ccf9dccd3dbb85b373c2bc2d315a7b0e6c90f878e0",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2021_Dodge_Challenger_Brochure.pdf",
+      "bytes": 8543010,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Dodge/Challenger/Dodge_US Challenger_2021.pdf"
+      ],
+      "catalog_keys": [
+        "2021|dodge|challenger"
+      ],
+      "first_seen_at": "2026-08-01T14:28:03.225001+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "Adobe PDF Library 15.0",
+          "creator": "Adobe InDesign 15.0 (Macintosh)",
+          "title": "",
+          "author": "",
+          "subject": "",
+          "creation_date": "D:20210105114554-05'00'",
+          "mod_date": "D:20210105114802-05'00'",
+          "page_count": 63,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 63,
+        "page_count": 63,
+        "has_text_layer": true
+      }
+    },
+    "59259b57c024afd6763591fc563554e449ecd731c2a5f3aff0eeebb8398f132f": {
+      "sha256": "59259b57c024afd6763591fc563554e449ecd731c2a5f3aff0eeebb8398f132f",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2018_Nissan_Murano_Brochure.pdf",
+      "bytes": 4932631,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Nissan/Murano/Nissan_US Murano_2018.pdf"
+      ],
+      "catalog_keys": [
+        "2018|nissan|murano"
+      ],
+      "first_seen_at": "2026-08-01T23:48:33.324416+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "Creo Normalizer JTP",
+          "creator": "",
+          "title": "",
+          "author": "",
+          "subject": "",
+          "creation_date": "D:20171016063857-07'00'",
+          "mod_date": "D:20171016065047-07'00'",
+          "page_count": 8,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 8,
+        "page_count": 8,
+        "has_text_layer": true
+      }
+    },
+    "5a693b0129cb3bb19e501648d6b4205cb14295cbdc7a43fa30dd5a90c8a9ea1a": {
+      "sha256": "5a693b0129cb3bb19e501648d6b4205cb14295cbdc7a43fa30dd5a90c8a9ea1a",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2023_GMC_Sierra_2500HD_Brochure.pdf",
+      "bytes": 35830973,
+      "source_urls": [
+        "https://www.gmc.com/content/dam/gmc/na/us/english/index/about/download-brochures/2023-models/02-pdf/GMTR23CT000_MY23_GMC%20SIERRAHD_DESKTOP_031723_INTERACTIVE.pdf"
+      ],
+      "catalog_keys": [
+        "2023|gmc|sierra2500hd"
+      ],
+      "first_seen_at": "2026-07-31T22:52:30.642573+00:00",
+      "tier": ""
+    },
+    "5c06de6562be3613afcddd3140c19ac479d059cf9811db1cb4a7b15543bb3bbf": {
+      "sha256": "5c06de6562be3613afcddd3140c19ac479d059cf9811db1cb4a7b15543bb3bbf",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2025_Toyota_Tacoma_Brochure.pdf",
+      "bytes": 265698,
+      "source_urls": [
+        "https://toyota-cms-media.s3.amazonaws.com/wp-content/uploads/2024/12/2025_Toyota_Tacoma_Product_Information.pdf"
+      ],
+      "catalog_keys": [
+        "2025|toyota|tacoma"
+      ],
+      "first_seen_at": "2026-07-31T22:53:23.373187+00:00",
+      "tier": ""
+    },
+    "5d110905e889caf70003f11b1edebbdc17f00c0adc23a99234a82a404df4c414": {
+      "sha256": "5d110905e889caf70003f11b1edebbdc17f00c0adc23a99234a82a404df4c414",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2015_Nissan_Rogue_Select_Brochure.pdf",
+      "bytes": 592900,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Nissan/Rogue/Nissan_US RogueSelect_2015.pdf"
+      ],
+      "catalog_keys": [
+        "2015|nissan|rogueselect"
+      ],
+      "first_seen_at": "2026-08-01T23:51:32.953101+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "Adobe PDF Library 11.0",
+          "creator": "Adobe InDesign CC 2014 (Macintosh)",
+          "title": "",
+          "author": "",
+          "subject": "",
+          "creation_date": "D:20150605131948-06'00'",
+          "mod_date": "D:20150605131957-06'00'",
+          "page_count": 2,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 2,
+        "page_count": 2,
+        "has_text_layer": true
+      }
+    },
+    "5eb9c2f7752880fdea432bfdfb2084770bda3c518520e2d2a092eec1f3dcf0a4": {
+      "sha256": "5eb9c2f7752880fdea432bfdfb2084770bda3c518520e2d2a092eec1f3dcf0a4",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2026_Lexus_NX_Brochure.pdf",
+      "bytes": 1331087,
+      "source_urls": [
+        "https://lexus-cms-media.s3.us-east-2.amazonaws.com/wp-content/uploads/2025/08/2026_NX_ProductSpecs_082825.pdf"
+      ],
+      "catalog_keys": [
+        "2026|lexus|nx"
+      ],
+      "first_seen_at": "2026-07-31T22:59:11.685773+00:00",
+      "tier": ""
+    },
+    "606c2f77099ded463f7c2eff844b5d56796ea484e234282d8d3d3958b18102fb": {
+      "sha256": "606c2f77099ded463f7c2eff844b5d56796ea484e234282d8d3d3958b18102fb",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2017_Mercedes-Benz_GLE_Brochure.pdf",
+      "bytes": 9771245,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Mercedes_Benz/GLE-Class/Mercedes Benz_US GLE-Class_2017.pdf"
+      ],
+      "catalog_keys": [
+        "2017|mercedesbenz|gle"
+      ],
+      "first_seen_at": "2026-08-01T23:53:45.663725+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "Adobe PDF Library 15.0",
+          "creator": "Adobe InDesign CC 2015 (Macintosh)",
+          "title": "2017 Mercedes-Benz GLE SUV",
+          "author": "Mercedes-Benz USA",
+          "subject": "",
+          "creation_date": "D:20161117111132-05'00'",
+          "mod_date": "D:20161117112336-05'00'",
+          "page_count": 32,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 23,
+        "page_count": 32,
+        "has_text_layer": true
+      }
+    },
+    "61b4c638305820a63b98d39337f43c6f4e78d83c44468ccb3666999bba84dd48": {
+      "sha256": "61b4c638305820a63b98d39337f43c6f4e78d83c44468ccb3666999bba84dd48",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2019_Nissan_Titan_XD_Brochure.pdf",
+      "bytes": 7113165,
+      "source_urls": [
+        "https://www.nissanusa.com/content/dam/Nissan/us/vehicle-brochures/2019/2019-nissan-titan-xd-brochure-en.pdf"
+      ],
+      "catalog_keys": [
+        "2019|nissan|titanxd"
+      ],
+      "first_seen_at": "2026-07-31T22:47:01.003940+00:00",
+      "tier": ""
+    },
+    "62e49620be6b03e8456cfc32b4f1f4d7e06040951bec01c6bfef1b135cf61e39": {
+      "sha256": "62e49620be6b03e8456cfc32b4f1f4d7e06040951bec01c6bfef1b135cf61e39",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2025_Toyota_4Runner_Brochure.pdf",
+      "bytes": 171206,
+      "source_urls": [
+        "https://toyota-cms-media.s3.amazonaws.com/wp-content/uploads/2024/04/2025_Toyota_4Runner_Product_Information-NPP.pdf"
+      ],
+      "catalog_keys": [
+        "2025|toyota|4runner"
+      ],
+      "first_seen_at": "2026-07-31T22:54:23.335884+00:00",
+      "tier": ""
+    },
+    "6400834ecfdae82f4d696a03791abbd67ffdff7d0ed5a3fce7b1b73fedc8ed0e": {
+      "sha256": "6400834ecfdae82f4d696a03791abbd67ffdff7d0ed5a3fce7b1b73fedc8ed0e",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2026_Lexus_LC_500_Brochure.pdf",
+      "bytes": 1083388,
+      "source_urls": [
+        "https://lexus-cms-media.s3.us-east-2.amazonaws.com/wp-content/uploads/2025/07/2026-Lexus-LC500-Specifications-071625.pdf"
+      ],
+      "catalog_keys": [
+        "2026|lexus|lc500"
+      ],
+      "first_seen_at": "2026-07-31T23:02:01.628389+00:00",
+      "tier": ""
+    },
+    "641b424e721807960645a3a571d728dd732bbe0e94c62fba43ff6d1425e00f0e": {
+      "sha256": "641b424e721807960645a3a571d728dd732bbe0e94c62fba43ff6d1425e00f0e",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2020_Mazda_Mazda3_Brochure.pdf",
+      "bytes": 153712,
+      "source_urls": [
+        "https://news.mazdausa.com/download/2020+Mazda3+Speculations.pdf"
+      ],
+      "catalog_keys": [
+        "2020|mazda|mazda3"
+      ],
+      "first_seen_at": "2026-07-31T22:54:42.499602+00:00",
+      "tier": ""
+    },
+    "64521455bf8127e02ae5e5e8299defdd5051d66b111e646bc290e6a6de9414c0": {
+      "sha256": "64521455bf8127e02ae5e5e8299defdd5051d66b111e646bc290e6a6de9414c0",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2027_Toyota_Land_Cruiser_Brochure.pdf",
+      "bytes": 154411,
+      "source_urls": [
+        "https://toyota-cms-media.s3.amazonaws.com/wp-content/uploads/2026/04/2027_Toyota_Land_Cruiser_Product_Information.pdf"
+      ],
+      "catalog_keys": [
+        "2027|toyota|landcruiser"
+      ],
+      "first_seen_at": "2026-07-31T22:52:33.329395+00:00",
+      "tier": ""
+    },
+    "646baff9875382c8b05ef5ad7fe4bc06ae24ff143feb6c33ba04471d6351740a": {
+      "sha256": "646baff9875382c8b05ef5ad7fe4bc06ae24ff143feb6c33ba04471d6351740a",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2026_Toyota_Crown_Signia_Brochure.pdf",
+      "bytes": 199741,
+      "source_urls": [
+        "https://toyota-cms-media.s3.amazonaws.com/wp-content/uploads/2025/11/2026_Toyota_Crown-Signia_Product-Information.pdf"
+      ],
+      "catalog_keys": [
+        "2026|toyota|crownsignia"
+      ],
+      "first_seen_at": "2026-07-31T22:53:13.385490+00:00",
+      "tier": ""
+    },
+    "6663b778964b9a148bb3796c17432539b7c7bbfc26e7cb057c301b6fd05b50e6": {
+      "sha256": "6663b778964b9a148bb3796c17432539b7c7bbfc26e7cb057c301b6fd05b50e6",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2022_Dodge_Durango_Brochure.pdf",
+      "bytes": 8840147,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Dodge/Durango/Dodge_US Durango_2022.pdf"
+      ],
+      "catalog_keys": [
+        "2022|dodge|durango"
+      ],
+      "first_seen_at": "2026-08-01T14:29:14.700215+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "",
+          "creator": "",
+          "title": "",
+          "author": "",
+          "subject": "",
+          "creation_date": "",
+          "mod_date": "",
+          "page_count": 37,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 37,
+        "page_count": 37,
+        "has_text_layer": true
+      }
+    },
+    "673f4f1b636784812bc913d26d476ba2b60d5be6e431892f1e274155fcb1fe09": {
+      "sha256": "673f4f1b636784812bc913d26d476ba2b60d5be6e431892f1e274155fcb1fe09",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures_archive_quarantine/2015_BMW_5_Series_Brochure.pdf",
+      "bytes": 11045461,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/BMW/5 Series/BMW_US M5_2015.pdf"
+      ],
+      "catalog_keys": [
+        "2015|bmw|5series"
+      ],
+      "first_seen_at": "2026-08-01T23:55:10.084342+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "iText 2.1.7 by 1T3XT",
+          "creator": "",
+          "title": "",
+          "author": "",
+          "subject": "",
+          "creation_date": "D:20141022173033Z",
+          "mod_date": "D:20141022173034Z",
+          "page_count": 46,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 44,
+        "page_count": 46,
+        "has_text_layer": true
+      }
+    },
+    "67744df8c94a2edee52de97a087d09ed7839a310e7aa71960d005306a087455c": {
+      "sha256": "67744df8c94a2edee52de97a087d09ed7839a310e7aa71960d005306a087455c",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2024_Mazda_CX-90_Brochure.pdf",
+      "bytes": 395093,
+      "source_urls": [
+        "https://news.mazdausa.com/download/CX-90+2024+Spec+Deck.pdf"
+      ],
+      "catalog_keys": [
+        "2024|mazda|cx90"
+      ],
+      "first_seen_at": "2026-07-31T17:37:19.087156+00:00",
+      "tier": ""
+    },
+    "6794e2d6e50231d4750b5c3fab119e213d692b7a8ac3d0012ac3ca717ef62817": {
+      "sha256": "6794e2d6e50231d4750b5c3fab119e213d692b7a8ac3d0012ac3ca717ef62817",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2025_Lexus_NX_Brochure.pdf",
+      "bytes": 250873,
+      "source_urls": [
+        "https://lexus-cms-media.s3.us-east-2.amazonaws.com/wp-content/uploads/2024/03/2025_NX_Product_Specs.pdf"
+      ],
+      "catalog_keys": [
+        "2025|lexus|nx"
+      ],
+      "first_seen_at": "2026-07-31T23:00:41.602465+00:00",
+      "tier": ""
+    },
+    "6a9998672dd98bb0dfac49d1b70a930fdefde984303f14b1ef53f9471262597f": {
+      "sha256": "6a9998672dd98bb0dfac49d1b70a930fdefde984303f14b1ef53f9471262597f",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2024_INFINITI_Q50_Brochure.pdf",
+      "bytes": 3934353,
+      "source_urls": [
+        "https://www.infinitiusa.com/content/dam/Infiniti/US/vehicle-brochures/2024/2024-infiniti-q50-brochure-en.pdf"
+      ],
+      "catalog_keys": [
+        "2024|infiniti|q50"
+      ],
+      "first_seen_at": "2026-07-31T22:50:27.827686+00:00",
+      "tier": ""
+    },
+    "6b5412a3a54ad47046c1ca69a59eb6a79ccd6da9079f66421f571e4380e86f17": {
+      "sha256": "6b5412a3a54ad47046c1ca69a59eb6a79ccd6da9079f66421f571e4380e86f17",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2018_Mazda_Mazda3_Brochure.pdf",
+      "bytes": 603745,
+      "source_urls": [
+        "https://news.mazdausa.com/download/2018-Mazda3-Specification-Deck.pdf"
+      ],
+      "catalog_keys": [
+        "2018|mazda|mazda3"
+      ],
+      "first_seen_at": "2026-07-31T22:57:34.706591+00:00",
+      "tier": ""
+    },
+    "6e44b73792761e7060fd0e772ae4b534db15e94f06ec14324e181f28e3913af4": {
+      "sha256": "6e44b73792761e7060fd0e772ae4b534db15e94f06ec14324e181f28e3913af4",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2026_Mazda_Mazda_CX-30_Brochure.pdf",
+      "bytes": 1738266,
+      "source_urls": [
+        "https://news.mazdausa.com/download/2026+CX-30+Spec+Deck.pdf"
+      ],
+      "catalog_keys": [
+        "2026|mazda|cx30"
+      ],
+      "first_seen_at": "2026-07-31T22:38:21.269834+00:00",
+      "tier": ""
+    },
+    "6f5e28d0abd098ad54c20528df404fc550c9e36be4c67878ca900935c0434d38": {
+      "sha256": "6f5e28d0abd098ad54c20528df404fc550c9e36be4c67878ca900935c0434d38",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2017_Jeep_Cherokee_Brochure.pdf",
+      "bytes": 2765202,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Jeep/Cherokee/Jeep_US Cherokee_2017.pdf"
+      ],
+      "catalog_keys": [
+        "2017|jeep|cherokee"
+      ],
+      "first_seen_at": "2026-08-01T23:53:33.166137+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "Adobe PDF Library 15.0",
+          "creator": "Adobe InDesign CC 2015 (Macintosh)",
+          "title": "",
+          "author": "",
+          "subject": "",
+          "creation_date": "D:20160909105839-04'00'",
+          "mod_date": "D:20160909110031-04'00'",
+          "page_count": 21,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 21,
+        "page_count": 21,
+        "has_text_layer": true
+      }
+    },
+    "6f9be2946496a8305816b2b7a8eed689753b76a14ded4ab402cddb3ca112b9f3": {
+      "sha256": "6f9be2946496a8305816b2b7a8eed689753b76a14ded4ab402cddb3ca112b9f3",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2015_Buick_Encore_Brochure.pdf",
+      "bytes": 2236979,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Buick/Encore/Buick_US Encore_2015.pdf"
+      ],
+      "catalog_keys": [
+        "2015|buick|encore"
+      ],
+      "first_seen_at": "2026-08-01T23:55:45.661481+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "Adobe PDF Library 10.0.1",
+          "creator": "Adobe InDesign CS6 (Macintosh)",
+          "title": "",
+          "author": "",
+          "subject": "",
+          "creation_date": "D:20140729164906-04'00'",
+          "mod_date": "D:20140729165047-04'00'",
+          "page_count": 20,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 20,
+        "page_count": 20,
+        "has_text_layer": true
+      }
+    },
+    "703d991081833d64805ca865f8e43d8a3f01a11d8623ca756f117e983d2f00aa": {
+      "sha256": "703d991081833d64805ca865f8e43d8a3f01a11d8623ca756f117e983d2f00aa",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2020_Mazda_Mazda_CX-30_Brochure.pdf",
+      "bytes": 535941,
+      "source_urls": [
+        "https://news.mazdausa.com/download/2020-Mazda-CX30-Vehicle-Press-Kit-021420-150-Spec-Deck.pdf"
+      ],
+      "catalog_keys": [
+        "2020|mazda|mazdacx30"
+      ],
+      "first_seen_at": "2026-07-31T22:58:30.523730+00:00",
+      "tier": ""
+    },
+    "717a612b67713a2c3a82797893f0b8b1b91cbc03b3e004838fcae7ab3250a449": {
+      "sha256": "717a612b67713a2c3a82797893f0b8b1b91cbc03b3e004838fcae7ab3250a449",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2018_Nissan_Pathfinder_Brochure.pdf",
+      "bytes": 5462925,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Nissan/Pathfinder/Nissan_US Pathfinder_2018.pdf"
+      ],
+      "catalog_keys": [
+        "2018|nissan|pathfinder"
+      ],
+      "first_seen_at": "2026-08-01T23:54:45.600234+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "Creo Normalizer JTP",
+          "creator": "",
+          "title": "",
+          "author": "",
+          "subject": "",
+          "creation_date": "D:20170908083540-07'00'",
+          "mod_date": "D:20170908085232-07'00'",
+          "page_count": 8,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 8,
+        "page_count": 8,
+        "has_text_layer": true
+      }
+    },
+    "7244022480ee385bb9d29266121ba3725e655563b76cbc778c48660dc3acb912": {
+      "sha256": "7244022480ee385bb9d29266121ba3725e655563b76cbc778c48660dc3acb912",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2022_Dodge_Challenger_Brochure.pdf",
+      "bytes": 9156805,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Dodge/Challenger/Dodge_US Challenger_2022.pdf"
+      ],
+      "catalog_keys": [
+        "2022|dodge|challenger"
+      ],
+      "first_seen_at": "2026-08-01T14:28:50.827833+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "iLovePDF",
+          "creator": "PDFium",
+          "title": "",
+          "author": "",
+          "subject": "",
+          "creation_date": "D:20220504142900",
+          "mod_date": "D:20220504183015Z",
+          "page_count": 49,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 49,
+        "page_count": 49,
+        "has_text_layer": true
+      }
+    },
+    "72f6700f3eba1c525c64b8c8cd841fa293683a4f78a63fe23ee4e924fe76e6c4": {
+      "sha256": "72f6700f3eba1c525c64b8c8cd841fa293683a4f78a63fe23ee4e924fe76e6c4",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2025_Toyota_Highlander_Brochure.pdf",
+      "bytes": 295040,
+      "source_urls": [
+        "https://toyota-cms-media.s3.amazonaws.com/wp-content/uploads/2024/09/2025-Toyota-Highlander-2L-Turbo-Product-Information.pdf"
+      ],
+      "catalog_keys": [
+        "2025|toyota|highlander"
+      ],
+      "first_seen_at": "2026-07-31T22:54:53.467073+00:00",
+      "tier": ""
+    },
+    "7322bdc6b666ea8542ac9c95c95f1c88fb2c9ab3d4274432e1489f88e6ed9322": {
+      "sha256": "7322bdc6b666ea8542ac9c95c95f1c88fb2c9ab3d4274432e1489f88e6ed9322",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2025_INFINITI_QX60_Brochure.pdf",
+      "bytes": 27321164,
+      "source_urls": [
+        "https://www.infinitiusa.com/content/dam/Infiniti/US/vehicle-brochures/2025/2025-infiniti-qx60-brochure-en.pdf"
+      ],
+      "catalog_keys": [
+        "2025|infiniti|qx60"
+      ],
+      "first_seen_at": "2026-07-31T22:50:32.773796+00:00",
+      "tier": ""
+    },
+    "73a3209a29fec054f1d169992f96892cb676a38f7e7ef8514fda8dfeab20c85c": {
+      "sha256": "73a3209a29fec054f1d169992f96892cb676a38f7e7ef8514fda8dfeab20c85c",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2018_Chevrolet_Equinox_Brochure.pdf",
+      "bytes": 36188974,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Chevrolet/Equinox/Chevrolet_US Equinox_2018.pdf"
+      ],
+      "catalog_keys": [
+        "2018|chevrolet|equinox"
+      ],
+      "first_seen_at": "2026-08-01T23:47:45.709179+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "Adobe PDF Library 15.0",
+          "creator": "Adobe InDesign CC 2015 (Macintosh)",
+          "title": "2018 Chevrolet Equinox Catalog",
+          "author": "Chevrolet",
+          "subject": "Catalog for the 2018 Chevrolet Equinox Compact SUV",
+          "creation_date": "D:20170511144007-04'00'",
+          "mod_date": "D:20170515153123-04'00'",
+          "page_count": 29,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 29,
+        "page_count": 29,
+        "has_text_layer": true
+      }
+    },
+    "74420a4e5db1f12d83c233e9fff357db6fec3f821deabb46974acefde66d3c36": {
+      "sha256": "74420a4e5db1f12d83c233e9fff357db6fec3f821deabb46974acefde66d3c36",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2016_Mercedes-Benz_C-Class_Brochure.pdf",
+      "bytes": 12986801,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Mercedes_Benz/C-Class/Mercedes Benz_US C-Class_2016.pdf"
+      ],
+      "catalog_keys": [
+        "2016|mercedesbenz|cclass"
+      ],
+      "first_seen_at": "2026-08-01T23:49:21.864888+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "Adobe PDF Library 15.0",
+          "creator": "Adobe InDesign CC 2015 (Macintosh)",
+          "title": "2016 Mercedes-Benz C-Class Sedan",
+          "author": "Mercedes-Benz",
+          "subject": "",
+          "creation_date": "D:20151102160343-05'00'",
+          "mod_date": "D:20151102163343-05'00'",
+          "page_count": 36,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 33,
+        "page_count": 36,
+        "has_text_layer": true
+      }
+    },
+    "77bf072007b2544e1ca36a146095b7f39474fb19fc0e78ce3bc6fc377331ef06": {
+      "sha256": "77bf072007b2544e1ca36a146095b7f39474fb19fc0e78ce3bc6fc377331ef06",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2015_BMW_X1_Brochure.pdf",
+      "bytes": 14515000,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/BMW/X1/BMW_US X1_2015.pdf"
+      ],
+      "catalog_keys": [
+        "2015|bmw|x1"
+      ],
+      "first_seen_at": "2026-08-01T23:55:34.625596+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "iText 2.1.7 by 1T3XT",
+          "creator": "",
+          "title": "",
+          "author": "",
+          "subject": "",
+          "creation_date": "D:20141023174415Z",
+          "mod_date": "D:20141023174416Z",
+          "page_count": 66,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 66,
+        "page_count": 66,
+        "has_text_layer": true
+      }
+    },
+    "79aed1a26f3c218fbc605fa081c657b3c1ce1231964eaf50108edc74e4ce35db": {
+      "sha256": "79aed1a26f3c218fbc605fa081c657b3c1ce1231964eaf50108edc74e4ce35db",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2024_GMC_Acadia_Brochure.pdf",
+      "bytes": 1871984,
+      "source_urls": [
+        "https://www.gmc.com/content/dam/gmc/na/us/english/index/about/download-brochures/2024-models/new/GMTK23CT1002024ACADIAF-O-081924FINAL.pdf"
+      ],
+      "catalog_keys": [
+        "2024|gmc|acadia"
+      ],
+      "first_seen_at": "2026-07-31T22:52:21.999672+00:00",
+      "tier": ""
+    },
+    "7a228dd6dcbdc18ed138e68ab2b0b81ae7f7963b496e375446ad9f0cc941c84a": {
+      "sha256": "7a228dd6dcbdc18ed138e68ab2b0b81ae7f7963b496e375446ad9f0cc941c84a",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2025_Mazda_CX-50_Brochure.pdf",
+      "bytes": 2883838,
+      "source_urls": [
+        "https://news.mazdausa.com/download/2025-CX-50+Spec+Deck.pdf"
+      ],
+      "catalog_keys": [
+        "2025|mazda|cx50"
+      ],
+      "first_seen_at": "2026-07-31T22:38:49.217125+00:00",
+      "tier": ""
+    },
+    "7b2f1a3f4ee3f22a63ba9cdb9a0509c8a8bd35b835c0e6394b81f07ea636ef18": {
+      "sha256": "7b2f1a3f4ee3f22a63ba9cdb9a0509c8a8bd35b835c0e6394b81f07ea636ef18",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2025_INFINITI_QX80_Brochure.pdf",
+      "bytes": 27597430,
+      "source_urls": [
+        "https://www.infinitiusa.com/content/dam/Infiniti/US/vehicle-brochures/2025/2025-infiniti-qx80-brochure-en.pdf"
+      ],
+      "catalog_keys": [
+        "2025|infiniti|qx80"
+      ],
+      "first_seen_at": "2026-07-31T22:49:42.602480+00:00",
+      "tier": ""
+    },
+    "7b886e26ddd2299b50f9a9c5930781527e7bae0ff320857a65f24383e13de268": {
+      "sha256": "7b886e26ddd2299b50f9a9c5930781527e7bae0ff320857a65f24383e13de268",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2026_Jeep_Grand_Wagoneer_L_Brochure.pdf",
+      "bytes": 27706245,
+      "source_urls": [],
+      "catalog_keys": [],
+      "first_seen_at": "",
+      "tier": ""
+    },
+    "7d3e0054a2f8df06f138e4e345ea5898cdb874b2ab373d2af15e5e176f4a3d9a": {
+      "sha256": "7d3e0054a2f8df06f138e4e345ea5898cdb874b2ab373d2af15e5e176f4a3d9a",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2027_Nissan_Nissan_Z_Brochure.pdf",
+      "bytes": 7564385,
+      "source_urls": [
+        "https://www.nissanusa.com/content/dam/Nissan/us/vehicle-brochures/2027/2027-nissan-z-brochure-en.pdf"
+      ],
+      "catalog_keys": [
+        "2027|nissan|z"
+      ],
+      "first_seen_at": "2026-07-31T22:45:45.617177+00:00",
+      "tier": ""
+    },
+    "7dd93ae8f8bec107f59dbef7dd44e8223c3e544c89fc3654433790137518f6d9": {
+      "sha256": "7dd93ae8f8bec107f59dbef7dd44e8223c3e544c89fc3654433790137518f6d9",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2018_Nissan_Altima_Brochure.pdf",
+      "bytes": 4689159,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Nissan/Altima/Nissan_US Altima_2018.pdf"
+      ],
+      "catalog_keys": [
+        "2018|nissan|altima"
+      ],
+      "first_seen_at": "2026-08-01T23:48:21.406493+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "Creo Normalizer JTP",
+          "creator": "",
+          "title": "",
+          "author": "",
+          "subject": "",
+          "creation_date": "D:20170926075017-07'00'",
+          "mod_date": "D:20170926075230-07'00'",
+          "page_count": 8,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 8,
+        "page_count": 8,
+        "has_text_layer": true
+      }
+    },
+    "7eeeba4c64d3ee6972800e24b382fc8af7f5888b4df6b8301fe317e923a82585": {
+      "sha256": "7eeeba4c64d3ee6972800e24b382fc8af7f5888b4df6b8301fe317e923a82585",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2016_Subaru_Crosstrek_Brochure.pdf",
+      "bytes": 27900936,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Subaru/XV Crosstrek/Subaru_US Crosstrek_2016.pdf"
+      ],
+      "catalog_keys": [
+        "2016|subaru|crosstrek"
+      ],
+      "first_seen_at": "2026-08-01T23:52:34.215800+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "Adobe PDF Library 11.0",
+          "creator": "Adobe InDesign CC 2014 (Macintosh)",
+          "title": "",
+          "author": "",
+          "subject": "",
+          "creation_date": "D:20151013103942-07'00'",
+          "mod_date": "D:20151013105030-07'00'",
+          "page_count": 14,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 14,
+        "page_count": 14,
+        "has_text_layer": true
+      }
+    },
+    "7fd463c4d23d25c3b6c7a7e437a4303256e0a7d67859d7f9380223c85c41544f": {
+      "sha256": "7fd463c4d23d25c3b6c7a7e437a4303256e0a7d67859d7f9380223c85c41544f",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2024_GMC_Yukon_XL_Brochure.pdf",
+      "bytes": 3444316,
+      "source_urls": [
+        "https://www.gmc.com/content/dam/gmc/na/us/english/index/about/download-brochures/2024-models/GMTY23CT200_2024_YUKON_FO_011024_FINAL.pdf"
+      ],
+      "catalog_keys": [
+        "2024|gmc|yukonxl"
+      ],
+      "first_seen_at": "2026-07-31T22:55:42.552880+00:00",
+      "tier": ""
+    },
+    "80d945150bc98e7bf1b77c093524d62011d938f136c1a9faf6e923c0f365caa4": {
+      "sha256": "80d945150bc98e7bf1b77c093524d62011d938f136c1a9faf6e923c0f365caa4",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2024_INFINITI_QX80_Brochure.pdf",
+      "bytes": 4816510,
+      "source_urls": [
+        "https://www.infinitiusa.com/content/dam/Infiniti/US/vehicle-brochures/2024/2024-infiniti-qx80-brochure-en.pdf"
+      ],
+      "catalog_keys": [
+        "2024|infiniti|qx80"
+      ],
+      "first_seen_at": "2026-07-31T22:49:14.449327+00:00",
+      "tier": ""
+    },
+    "82a162b38f81932d755a2f7cdab85c365f4ad3ecf5ed9d47cb97fae2bf6e085d": {
+      "sha256": "82a162b38f81932d755a2f7cdab85c365f4ad3ecf5ed9d47cb97fae2bf6e085d",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2026_Lexus_RZ_Brochure.pdf",
+      "bytes": 1306054,
+      "source_urls": [
+        "https://lexus-cms-media.s3.us-east-2.amazonaws.com/wp-content/uploads/2025/05/Final_2026_RZ_Specifications_091125Update.pdf"
+      ],
+      "catalog_keys": [
+        "2026|lexus|rz"
+      ],
+      "first_seen_at": "2026-07-31T23:00:22.200788+00:00",
+      "tier": ""
+    },
+    "83559d6181267899bb77eeeb79187077a2c26f378ec5364240fe984832ea4fb1": {
+      "sha256": "83559d6181267899bb77eeeb79187077a2c26f378ec5364240fe984832ea4fb1",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2021_Volkswagen_Passat_Brochure.pdf",
+      "bytes": 340172,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Volkswagen/Passat/VW_US Passat_2021-og.pdf"
+      ],
+      "catalog_keys": [
+        "2021|volkswagen|passat"
+      ],
+      "first_seen_at": "2026-08-01T14:28:38.431060+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "Acrobat Distiller 21.0 (Windows)",
+          "creator": "PScript5.dll Version 5.2.2",
+          "title": "",
+          "author": "masseal",
+          "subject": "",
+          "creation_date": "D:20210602000429-04'00'",
+          "mod_date": "D:20210602093509-04'00'",
+          "page_count": 3,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 3,
+        "page_count": 3,
+        "has_text_layer": true
+      }
+    },
+    "8438ee077c4c14f68fdf8e077d76e425c720b90fdad7003f17dd1861f0c5a7e3": {
+      "sha256": "8438ee077c4c14f68fdf8e077d76e425c720b90fdad7003f17dd1861f0c5a7e3",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2018_Mercedes-Benz_C-Class_Brochure.pdf",
+      "bytes": 15124217,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Mercedes_Benz/C-Class/Mercedes Benz_US C-Class_2018.pdf"
+      ],
+      "catalog_keys": [
+        "2018|mercedesbenz|cclass"
+      ],
+      "first_seen_at": "2026-08-01T13:50:46.760697+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "Adobe PDF Library 15.0",
+          "creator": "Adobe InDesign CC 2017 (Macintosh)",
+          "title": "2018 Mercedes-Benz C-Class ",
+          "author": "Mercedes-Benz USA",
+          "subject": "",
+          "creation_date": "D:20170913122912-04'00'",
+          "mod_date": "D:20170913151907-04'00'",
+          "page_count": 31,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 31,
+        "page_count": 31,
+        "has_text_layer": true
+      }
+    },
+    "860331fece63e82b983ee0e92698fa6a3abade9e767833f68b1213d9fd1d2ed0": {
+      "sha256": "860331fece63e82b983ee0e92698fa6a3abade9e767833f68b1213d9fd1d2ed0",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2025_Mazda_CX-70_Brochure.pdf",
+      "bytes": 304946,
+      "source_urls": [
+        "https://news.mazdausa.com/download/2025_CX-70_Spec_Deck.pdf"
+      ],
+      "catalog_keys": [
+        "2025|mazda|cx70"
+      ],
+      "first_seen_at": "2026-07-31T22:40:41.596231+00:00",
+      "tier": ""
+    },
+    "864d1b523e89e2cf2079caf60c114ce9278e33da823b5634bd9a2e79609596e5": {
+      "sha256": "864d1b523e89e2cf2079caf60c114ce9278e33da823b5634bd9a2e79609596e5",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2023_Mazda_CX-30_Brochure.pdf",
+      "bytes": 183795,
+      "source_urls": [
+        "https://news.mazdausa.com/download/2023+CX-30+Spec+Deck.pdf"
+      ],
+      "catalog_keys": [
+        "2023|mazda|cx30"
+      ],
+      "first_seen_at": "2026-07-31T17:33:55.847200+00:00",
+      "tier": ""
+    },
+    "8761ba4e198427ce67765378aa88b919431631f1741f3339be7b3109d9e484a4": {
+      "sha256": "8761ba4e198427ce67765378aa88b919431631f1741f3339be7b3109d9e484a4",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2021_INFINITI_QX80_Brochure.pdf",
+      "bytes": 3618876,
+      "source_urls": [
+        "https://www.infinitiusa.com/content/dam/Infiniti/US/vehicle-brochures/2021/2021-infiniti-qx80-brochure-en.pdf"
+      ],
+      "catalog_keys": [
+        "2021|infiniti|qx80"
+      ],
+      "first_seen_at": "2026-07-31T22:50:12.134233+00:00",
+      "tier": ""
+    },
+    "89deea1653ea466c5f81459d66518b2a5aa2106969e5971b4202402d7cb5ede8": {
+      "sha256": "89deea1653ea466c5f81459d66518b2a5aa2106969e5971b4202402d7cb5ede8",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2026_Lexus_ESe_Brochure.pdf",
+      "bytes": 1774928,
+      "source_urls": [
+        "https://lexus-cms-media.s3.us-east-2.amazonaws.com/wp-content/uploads/2026/05/2026-Lexus-ES-350e-ES-500e-Specifications-5-8-26-1.pdf"
+      ],
+      "catalog_keys": [
+        "2026|lexus|ese"
+      ],
+      "first_seen_at": "2026-07-31T23:00:31.720743+00:00",
+      "tier": ""
+    },
+    "8a494a8ac1f7740ea54d95be7f3806fcf7c25859abb317acd640b67e36362795": {
+      "sha256": "8a494a8ac1f7740ea54d95be7f3806fcf7c25859abb317acd640b67e36362795",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2026_Jeep_Compass_Brochure.pdf",
+      "bytes": 8144931,
+      "source_urls": [],
+      "catalog_keys": [],
+      "first_seen_at": "",
+      "tier": ""
+    },
+    "8ad66e866f9ac46537f36f1715842fcd0936019190dc00a037a9f432a0de3812": {
+      "sha256": "8ad66e866f9ac46537f36f1715842fcd0936019190dc00a037a9f432a0de3812",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2023_Mazda_MAZDA3_Brochure.pdf",
+      "bytes": 263539,
+      "source_urls": [
+        "https://news.mazdausa.com/download/2023+Mazda3+Spec+Deck.pdf"
+      ],
+      "catalog_keys": [
+        "2023|mazda|mazda3"
+      ],
+      "first_seen_at": "2026-07-31T22:56:22.896577+00:00",
+      "tier": ""
+    },
+    "8ae85c871f6ff805834bbcba49939578b31909755cf028aa06685e8609cd812c": {
+      "sha256": "8ae85c871f6ff805834bbcba49939578b31909755cf028aa06685e8609cd812c",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2026_Jeep_Gladiator_Brochure.pdf",
+      "bytes": 7588204,
+      "source_urls": [],
+      "catalog_keys": [],
+      "first_seen_at": "",
+      "tier": ""
+    },
+    "8cca3af5457a95e3fd48b7d271eacc6acc4e12c53947437562d70764745105fa": {
+      "sha256": "8cca3af5457a95e3fd48b7d271eacc6acc4e12c53947437562d70764745105fa",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2024_MAZDA_CX-30_Brochure.pdf",
+      "bytes": 316643,
+      "source_urls": [
+        "https://news.mazdausa.com/download/2024+CX-30+Spec+Deck.pdf"
+      ],
+      "catalog_keys": [
+        "2024|mazda|cx30"
+      ],
+      "first_seen_at": "2026-07-31T17:37:02.212976+00:00",
+      "tier": ""
+    },
+    "8dbfd898068ecc98c3d9416cef10112c649f7b7492626ff8405c72f4ae6baa9d": {
+      "sha256": "8dbfd898068ecc98c3d9416cef10112c649f7b7492626ff8405c72f4ae6baa9d",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2026_Nissan_Rogue_Plug-In_Hybrid_Brochure.pdf",
+      "bytes": 10857193,
+      "source_urls": [
+        "https://www.nissanusa.com/content/dam/Nissan/us/vehicle-brochures/2026/2026-nissan-rogue-plug-in-hybrid-brochure-en.pdf"
+      ],
+      "catalog_keys": [
+        "2026|nissan|roguepluginhybrid"
+      ],
+      "first_seen_at": "2026-07-31T22:05:35.857696+00:00",
+      "tier": ""
+    },
+    "8f662a474e017cc09313e8f101ca5019fc9f82d819d83dd73d6be8887d196fe2": {
+      "sha256": "8f662a474e017cc09313e8f101ca5019fc9f82d819d83dd73d6be8887d196fe2",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2022_GMC_Yukon_XL_Brochure.pdf",
+      "bytes": 265452,
+      "source_urls": [
+        "https://www.gmc.com/content/dam/gmc/na/us/english/index/about/download-brochures/2022-models/02-pdf/GMTY22CT000FO_MY22_GMC_YUKON_5-2.pdf"
+      ],
+      "catalog_keys": [
+        "2022|gmc|yukonxl"
+      ],
+      "first_seen_at": "2026-07-31T22:55:50.581386+00:00",
+      "tier": ""
+    },
+    "8f9a93ef06502e32132843d8c549f745ae3de192a4b03b1be883d33cf5753852": {
+      "sha256": "8f9a93ef06502e32132843d8c549f745ae3de192a4b03b1be883d33cf5753852",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2019_GMC_Sierra_1500_Brochure.pdf",
+      "bytes": 5497155,
+      "source_urls": [
+        "https://www.gmc.com/content/dam/gmc/na/us/english/index/about/download-brochures/2019-models/2019-gmc-sierra-ld-brochure.pdf"
+      ],
+      "catalog_keys": [
+        "2019|gmc|sierra1500"
+      ],
+      "first_seen_at": "2026-07-31T22:52:13.934008+00:00",
+      "tier": ""
+    },
+    "8fb0665108d11651f8a1d8f09d8586169900f49a7f8546b7cf7bacd00ac3acae": {
+      "sha256": "8fb0665108d11651f8a1d8f09d8586169900f49a7f8546b7cf7bacd00ac3acae",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2025_Mazda_CX-90_Brochure.pdf",
+      "bytes": 552789,
+      "source_urls": [
+        "https://news.mazdausa.com/download/2025+CX-90+Spec+Deck.pdf"
+      ],
+      "catalog_keys": [
+        "2025|mazda|cx90"
+      ],
+      "first_seen_at": "2026-07-31T22:40:29.564640+00:00",
+      "tier": ""
+    },
+    "90ba2390a069aef5b569d7af5c7609761f6965fd75778a24a7658ba8b76cb082": {
+      "sha256": "90ba2390a069aef5b569d7af5c7609761f6965fd75778a24a7658ba8b76cb082",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2026_Jeep_Cherokee_Brochure.pdf",
+      "bytes": 18920385,
+      "source_urls": [],
+      "catalog_keys": [],
+      "first_seen_at": "",
+      "tier": ""
+    },
+    "919fd33decc5b9c03ef26ff53e987559cb9af33c485f5bbf15d133718cc8f637": {
+      "sha256": "919fd33decc5b9c03ef26ff53e987559cb9af33c485f5bbf15d133718cc8f637",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2026_Toyota_Sequoia_Brochure.pdf",
+      "bytes": 21303532,
+      "source_urls": [
+        "https://www.toyota.com/content/dam/toyota/brochures/pdf/2026/sequoia_ebrochure.pdf"
+      ],
+      "catalog_keys": [
+        "2026|toyota|sequoia"
+      ],
+      "first_seen_at": "2026-08-01T22:58:03.838440+00:00",
+      "tier": "oem"
+    },
+    "935a4fe1dc1665eeb54d164c7a648ad2725c7c640795a247aff98ac4c7cbc325": {
+      "sha256": "935a4fe1dc1665eeb54d164c7a648ad2725c7c640795a247aff98ac4c7cbc325",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2018_Mercedes-Benz_GLA_Brochure.pdf",
+      "bytes": 3694445,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Mercedes_Benz/GLA-Class/Mercedes Benz_US GLA-Class_2018.pdf"
+      ],
+      "catalog_keys": [
+        "2018|mercedesbenz|gla"
+      ],
+      "first_seen_at": "2026-08-01T23:50:33.232179+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "Adobe PDF Library 15.0",
+          "creator": "Adobe InDesign CC 2017 (Macintosh)",
+          "title": "2018 Mercedes-Benz GLA-Class ",
+          "author": "Mercedes-Benz USA",
+          "subject": "",
+          "creation_date": "D:20170530152021-04'00'",
+          "mod_date": "D:20170530154511-04'00'",
+          "page_count": 14,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 13,
+        "page_count": 14,
+        "has_text_layer": true
+      }
+    },
+    "941d24b627ce7b660d3dec2d85c010abd91a3a1b3218ff7a3016b056c7497c59": {
+      "sha256": "941d24b627ce7b660d3dec2d85c010abd91a3a1b3218ff7a3016b056c7497c59",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2023_Chevrolet_Colorado_Brochure.pdf",
+      "bytes": 4426440,
+      "source_urls": [
+        "https://www.chevrolet.com/content/dam/chevrolet/na/us/english/index/shopping-tools/download-catalog/11-pdf/2023-chevrolet-colorado-ebrochure.pdf"
+      ],
+      "catalog_keys": [
+        "2023|chevrolet|colorado"
+      ],
+      "first_seen_at": "2026-07-31T22:52:09.988310+00:00",
+      "tier": ""
+    },
+    "972eea80d22c346f39c045692074470c1e9ee286de0f6961aa81dba02c1fac32": {
+      "sha256": "972eea80d22c346f39c045692074470c1e9ee286de0f6961aa81dba02c1fac32",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2024_INFINITI_QX60_Brochure.pdf",
+      "bytes": 2147014,
+      "source_urls": [
+        "https://www.infinitiusa.com/content/dam/Infiniti/US/vehicle-brochures/2024/2024-infiniti-qx60-brochure-en.pdf"
+      ],
+      "catalog_keys": [
+        "2024|infiniti|qx60"
+      ],
+      "first_seen_at": "2026-07-31T22:50:43.371589+00:00",
+      "tier": ""
+    },
+    "984e0f55dba57e75ff65b651fddbb10fd7cdcb6d872bffe56209c3e6a5f017cd": {
+      "sha256": "984e0f55dba57e75ff65b651fddbb10fd7cdcb6d872bffe56209c3e6a5f017cd",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2017_Chevrolet_Suburban_Brochure.pdf",
+      "bytes": 15961020,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Chevrolet/Suburban/Chevrolet_US Suburban_2017.pdf"
+      ],
+      "catalog_keys": [
+        "2017|chevrolet|suburban"
+      ],
+      "first_seen_at": "2026-08-01T23:53:21.425195+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "Adobe PDF Library 15.0",
+          "creator": "Adobe InDesign CC 2015 (Macintosh)",
+          "title": "2017 Chevrolet Suburban Catalog",
+          "author": "Chevrolet",
+          "subject": "Catalog for the 2017 Chevrolet Suburban Large SUV",
+          "creation_date": "D:20161121100508-05'00'",
+          "mod_date": "D:20161128130956-05'00'",
+          "page_count": 24,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 24,
+        "page_count": 24,
+        "has_text_layer": true
+      }
+    },
+    "9866e1aaa70e29283b7db2355e45cfdd3ac38e69910951d481727bbdc8a28460": {
+      "sha256": "9866e1aaa70e29283b7db2355e45cfdd3ac38e69910951d481727bbdc8a28460",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2023_GMC_Sierra_1500_Brochure.pdf",
+      "bytes": 42399818,
+      "source_urls": [
+        "https://www.gmc.com/content/dam/gmc/na/us/english/index/about/download-brochures/2023-models/02-pdf/updated/GMTR23CT100_MY23_GMC_SIERRALD_DESKTOP_060623_INTERACTIVE.pdf"
+      ],
+      "catalog_keys": [
+        "2023|gmc|sierra1500"
+      ],
+      "first_seen_at": "2026-07-31T22:46:51.841477+00:00",
+      "tier": ""
+    },
+    "99e4b9f27fd0b385c730100b3d18be0fcbe9f97ed795ab23f06936ae94d0d3d6": {
+      "sha256": "99e4b9f27fd0b385c730100b3d18be0fcbe9f97ed795ab23f06936ae94d0d3d6",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures_archive_quarantine/2015_BMW_4_Series_Brochure.pdf",
+      "bytes": 9763083,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/BMW/4 Series/BMW_US 4Series_2015.pdf"
+      ],
+      "catalog_keys": [
+        "2015|bmw|4series"
+      ],
+      "first_seen_at": "2026-08-01T23:54:57.974523+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "iText 2.1.7 by 1T3XT",
+          "creator": "",
+          "title": "",
+          "author": "",
+          "subject": "",
+          "creation_date": "D:20141009152315Z",
+          "mod_date": "D:20141009152316Z",
+          "page_count": 46,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 44,
+        "page_count": 46,
+        "has_text_layer": true
+      }
+    },
+    "9abcaef85f0ec32f46f2ff1949ef6a8a70009e8e8b388f708bd5ed3ab29f14b6": {
+      "sha256": "9abcaef85f0ec32f46f2ff1949ef6a8a70009e8e8b388f708bd5ed3ab29f14b6",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2018_Acura_MDX_Brochure.pdf",
+      "bytes": 10989192,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/acura/mdx/Acura_US MDX_2018.pdf"
+      ],
+      "catalog_keys": [
+        "2018|acura|mdx"
+      ],
+      "first_seen_at": "2026-08-01T13:52:09.938597+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "Adobe PDF Library 15.0",
+          "creator": "Adobe InDesign CC 13.0 (Macintosh)",
+          "title": "",
+          "author": "",
+          "subject": "",
+          "creation_date": "D:20171215163014-08'00'",
+          "mod_date": "D:20180125150751-08'00'",
+          "page_count": 26,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 26,
+        "page_count": 26,
+        "has_text_layer": true
+      }
+    },
+    "9bb1cf738f7889a439b110022ae865397d3c1cb3aa10a88d44d598d5eb4e6df7": {
+      "sha256": "9bb1cf738f7889a439b110022ae865397d3c1cb3aa10a88d44d598d5eb4e6df7",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2026_Mazda_Mazda_CX-5_Brochure.pdf",
+      "bytes": 878425,
+      "source_urls": [
+        "https://news.mazdausa.com/download/26MY+CX5+Spec+Deck+FINAL.pdf"
+      ],
+      "catalog_keys": [
+        "2026|mazda|cx5"
+      ],
+      "first_seen_at": "2026-07-31T22:38:09.218377+00:00",
+      "tier": ""
+    },
+    "9c85d408f3a37e4483281b59bc5d381c704b92694c44ff6ef60d9eb1433512c1": {
+      "sha256": "9c85d408f3a37e4483281b59bc5d381c704b92694c44ff6ef60d9eb1433512c1",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2026_Lexus_LX_600_Brochure.pdf",
+      "bytes": 264774,
+      "source_urls": [
+        "https://lexus-cms-media.s3.us-east-2.amazonaws.com/wp-content/uploads/2025/09/2026-Lexus-LX-Specification-Sheet_FINAL.pdf"
+      ],
+      "catalog_keys": [
+        "2026|lexus|lx600"
+      ],
+      "first_seen_at": "2026-07-31T23:01:32.034275+00:00",
+      "tier": ""
+    },
+    "9ca2d132a01af8b58f74d43139c1fbf4c2564d9e3ffbd1269e889cc039643e2e": {
+      "sha256": "9ca2d132a01af8b58f74d43139c1fbf4c2564d9e3ffbd1269e889cc039643e2e",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2026_Jeep_Wrangler_Brochure.pdf",
+      "bytes": 29470304,
+      "source_urls": [],
+      "catalog_keys": [],
+      "first_seen_at": "",
+      "tier": ""
+    },
+    "9ff3b20b89de4d9161a5cd9c55895c94ce9208cb13cfaa2aaf7a6503b1003134": {
+      "sha256": "9ff3b20b89de4d9161a5cd9c55895c94ce9208cb13cfaa2aaf7a6503b1003134",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2016_Volkswagen_Golf_SportWagen_Brochure.pdf",
+      "bytes": 4472101,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Volkswagen/Golf/VW_US Golf_SportWagen_2016.pdf"
+      ],
+      "catalog_keys": [
+        "2016|volkswagen|golfsportwagen"
+      ],
+      "first_seen_at": "2026-08-01T23:52:57.234862+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "Acrobat Distiller 15.0 (Macintosh)",
+          "creator": "Adobe InDesign CS6 (Macintosh)",
+          "title": "VWA-10335771_MY16_GSW_Brochure_FC-BC_DIG_Singles.indd",
+          "author": "mike.andrus",
+          "subject": "",
+          "creation_date": "D:20151211155643-08'00'",
+          "mod_date": "D:20151211155855-08'00'",
+          "page_count": 9,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 9,
+        "page_count": 9,
+        "has_text_layer": true
+      }
+    },
+    "a04afcbccba8e0aa7bd2bd75aa0687aff6d784f98c42954723bd0144ea18be02": {
+      "sha256": "a04afcbccba8e0aa7bd2bd75aa0687aff6d784f98c42954723bd0144ea18be02",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures_archive_quarantine/2018_Hyundai_Tucson_Brochure.pdf",
+      "bytes": 8822454,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Hyundai/Tucson/Hyundai_US Tucson_2018.pdf"
+      ],
+      "catalog_keys": [
+        "2018|hyundai|tucson"
+      ],
+      "first_seen_at": "2026-08-01T13:51:22.875986+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "Adobe PDF Library 10.0.1",
+          "creator": "Adobe InDesign CS6 (Macintosh)",
+          "title": "",
+          "author": "",
+          "subject": "",
+          "creation_date": "D:20180103095646-08'00'",
+          "mod_date": "D:20180103095736-08'00'",
+          "page_count": 7,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 1,
+        "page_count": 7,
+        "has_text_layer": true
+      }
+    },
+    "a219a72ffb069a0e47f687f5765d035679ec86390e707d6fd541ed70922ec488": {
+      "sha256": "a219a72ffb069a0e47f687f5765d035679ec86390e707d6fd541ed70922ec488",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2018_HYUNDAI_Elantra_Brochure.pdf",
+      "bytes": 9125652,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Hyundai/Elantra/Hyundai_US Elantra_2018.pdf"
+      ],
+      "catalog_keys": [
+        "2018|hyundai|elantra"
+      ],
+      "first_seen_at": "2026-08-01T23:47:58.529445+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "Adobe PDF Library 10.0.1",
+          "creator": "Adobe InDesign CS6 (Macintosh)",
+          "title": "",
+          "author": "",
+          "subject": "",
+          "creation_date": "D:20170802115918-07'00'",
+          "mod_date": "D:20170802120010-07'00'",
+          "page_count": 16,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 4,
+        "page_count": 16,
+        "has_text_layer": true
+      }
+    },
+    "a501625dcc81f027b1522c1ccd8b2dd85db4768af2e43f5528038877f2bd9f14": {
+      "sha256": "a501625dcc81f027b1522c1ccd8b2dd85db4768af2e43f5528038877f2bd9f14",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2014_Mazda_Mazda3_Brochure.pdf",
+      "bytes": 297112,
+      "source_urls": [
+        "https://news.mazdausa.com/download/2014-Mazda3-Overview-FINAL.pdf"
+      ],
+      "catalog_keys": [
+        "2014|mazda|mazda3"
+      ],
+      "first_seen_at": "2026-07-31T22:42:01.642235+00:00",
+      "tier": ""
+    },
+    "a7be5cced7115a286522c7154ef6762ef7d516f29736118ec0425b75ec9697ff": {
+      "sha256": "a7be5cced7115a286522c7154ef6762ef7d516f29736118ec0425b75ec9697ff",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2016_Mazda_Mazda6_Brochure.pdf",
+      "bytes": 280186,
+      "source_urls": [
+        "https://news.mazdausa.com/download/2016-Mazda6-Spec-Deck.pdf"
+      ],
+      "catalog_keys": [
+        "2016|mazda|mazda6"
+      ],
+      "first_seen_at": "2026-07-31T22:41:17.347360+00:00",
+      "tier": ""
+    },
+    "a7ca9af39bcd430103ca3b5e1445f660757aa4f60faed93cc1568a8889d061ee": {
+      "sha256": "a7ca9af39bcd430103ca3b5e1445f660757aa4f60faed93cc1568a8889d061ee",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2018_Chevrolet_Impala_Brochure.pdf",
+      "bytes": 45118523,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Chevrolet/Impala/Chevrolet_US Impala_2018.pdf"
+      ],
+      "catalog_keys": [
+        "2018|chevrolet|impala"
+      ],
+      "first_seen_at": "2026-08-01T23:50:10.336093+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "Adobe PDF Library 15.0",
+          "creator": "Adobe InDesign CC 2015 (Macintosh)",
+          "title": "2018 Chevrolet Impala Catalog",
+          "author": "Chevrolet",
+          "subject": "Catalog for the 2018 Chevrolet Impala Full Size Car",
+          "creation_date": "D:20170727112825-04'00'",
+          "mod_date": "D:20170803100020-04'00'",
+          "page_count": 25,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 25,
+        "page_count": 25,
+        "has_text_layer": true
+      }
+    },
+    "a8723ce00235a8269d9f58e55e2c70572ec943c71f424fcbe682ba5f8d16a098": {
+      "sha256": "a8723ce00235a8269d9f58e55e2c70572ec943c71f424fcbe682ba5f8d16a098",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2026_Mazda_Mazda_CX-50_Brochure.pdf",
+      "bytes": 342917,
+      "source_urls": [
+        "https://news.mazdausa.com/download/2026+Mazda+CX-50+Spec+Deck.pdf"
+      ],
+      "catalog_keys": [
+        "2026|mazda|cx50",
+        "2026|mazda|mazdacx50"
+      ],
+      "first_seen_at": "2026-07-31T17:33:03.927723+00:00",
+      "tier": ""
+    },
+    "acdb6123e1c25f2d34ce02dffc008a11cc8aa010f07a311bf24ee6e6f4d82adf": {
+      "sha256": "acdb6123e1c25f2d34ce02dffc008a11cc8aa010f07a311bf24ee6e6f4d82adf",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2026_Toyota_Camry_Brochure.pdf",
+      "bytes": 21425409,
+      "source_urls": [
+        "https://www.toyota.com/content/dam/toyota/brochures/pdf/2026/camry_ebrochure.pdf"
+      ],
+      "catalog_keys": [
+        "2026|toyota|camry"
+      ],
+      "first_seen_at": "2026-08-01T22:57:34.982765+00:00",
+      "tier": "oem"
+    },
+    "adb57178eaf53eecb1b85a7ce69a774ae994f4a5bb74c5b45154a9a726191350": {
+      "sha256": "adb57178eaf53eecb1b85a7ce69a774ae994f4a5bb74c5b45154a9a726191350",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2020_Mazda_Mazda6_Brochure.pdf",
+      "bytes": 217909,
+      "source_urls": [
+        "https://news.mazdausa.com/download/2020+Mazda6+Speculations.pdf"
+      ],
+      "catalog_keys": [
+        "2020|mazda|mazda6"
+      ],
+      "first_seen_at": "2026-07-31T22:56:02.586220+00:00",
+      "tier": ""
+    },
+    "add78758e31ea729e43593ad231eb4d3920548d89e1b03eff68f7650d4caf0b3": {
+      "sha256": "add78758e31ea729e43593ad231eb4d3920548d89e1b03eff68f7650d4caf0b3",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2023_Chevrolet_Silverado_2500HD_Brochure.pdf",
+      "bytes": 5447116,
+      "source_urls": [
+        "https://www.chevrolet.com/content/dam/chevrolet/na/us/english/index/shopping-tools/download-catalog/11-pdf/2023-chevrolet-silverado-hd-commercial-ebrochure.pdf"
+      ],
+      "catalog_keys": [
+        "2023|chevrolet|silverado2500hd"
+      ],
+      "first_seen_at": "2026-07-31T22:52:25.646661+00:00",
+      "tier": ""
+    },
+    "b07b1accbf6115642d46a7eab6c00f56de6ce2c4c929b41bdb2381e04c628d33": {
+      "sha256": "b07b1accbf6115642d46a7eab6c00f56de6ce2c4c929b41bdb2381e04c628d33",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2026_Chrysler_Pacifica_Brochure.pdf",
+      "bytes": 4001393,
+      "source_urls": [],
+      "catalog_keys": [],
+      "first_seen_at": "",
+      "tier": ""
+    },
+    "b6b3e6452dfbc32f703a9e845df187942fa0e62506a06773e0aa7b31b0ebf411": {
+      "sha256": "b6b3e6452dfbc32f703a9e845df187942fa0e62506a06773e0aa7b31b0ebf411",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2027_INFINITI_QX65_Brochure.pdf",
+      "bytes": 92737900,
+      "source_urls": [
+        "https://www.infinitiusa.com/content/dam/Infiniti/US/vehicle-brochures/2027/2027-infiniti-qx65-brochure-en-v2.pdf"
+      ],
+      "catalog_keys": [
+        "2027|infiniti|qx65"
+      ],
+      "first_seen_at": "2026-07-31T22:50:16.590024+00:00",
+      "tier": ""
+    },
+    "b98deda2493d361a54195104672c3573921f76b0ad3911598969c13af783f4b7": {
+      "sha256": "b98deda2493d361a54195104672c3573921f76b0ad3911598969c13af783f4b7",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2017_Chevrolet_Tahoe_Brochure.pdf",
+      "bytes": 16743081,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Chevrolet/Tahoe/Chevrolet_US Tahoe_2017.pdf"
+      ],
+      "catalog_keys": [
+        "2017|chevrolet|tahoe"
+      ],
+      "first_seen_at": "2026-08-01T13:51:45.743967+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "Adobe PDF Library 15.0",
+          "creator": "Adobe InDesign CC 2015 (Macintosh)",
+          "title": "2017 Chevrolet Tahoe Catalog",
+          "author": "Chevrolet",
+          "subject": "Catalog for the 2017 Chevrolet Tahoe Full Size SUV",
+          "creation_date": "D:20161121100353-05'00'",
+          "mod_date": "D:20161128131058-05'00'",
+          "page_count": 25,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 25,
+        "page_count": 25,
+        "has_text_layer": true
+      }
+    },
+    "bac043841657fdfba141fd2642fdf9d51d05870418b93b6c8316f9a4fb17a731": {
+      "sha256": "bac043841657fdfba141fd2642fdf9d51d05870418b93b6c8316f9a4fb17a731",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2016_Buick_Enclave_Brochure.pdf",
+      "bytes": 2691191,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Buick/Enclave/Buick_US Enclave_2016.pdf"
+      ],
+      "catalog_keys": [
+        "2016|buick|enclave"
+      ],
+      "first_seen_at": "2026-08-01T23:48:45.025860+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "Adobe PDF Library 11.0",
+          "creator": "Adobe InDesign CC 2014 (Macintosh)",
+          "title": "",
+          "author": "",
+          "subject": "",
+          "creation_date": "D:20150616094846-04'00'",
+          "mod_date": "D:20150616101456-04'00'",
+          "page_count": 20,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 20,
+        "page_count": 20,
+        "has_text_layer": true
+      }
+    },
+    "bb419b17d89b9d06fddfd3e7261a23e74525f030cab35e2c4feb2bbdd1802e31": {
+      "sha256": "bb419b17d89b9d06fddfd3e7261a23e74525f030cab35e2c4feb2bbdd1802e31",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2024_Mazda_CX-5_Brochure.pdf",
+      "bytes": 349724,
+      "source_urls": [
+        "https://news.mazdausa.com/download/2024_CX-5+Spec+Deck.pdf"
+      ],
+      "catalog_keys": [
+        "2024|mazda|cx5"
+      ],
+      "first_seen_at": "2026-07-31T17:34:04.561341+00:00",
+      "tier": ""
+    },
+    "be031523df6237535a7f5c4b1b1c0bcbaca4f3f0206aeb8fa82bab59e580e116": {
+      "sha256": "be031523df6237535a7f5c4b1b1c0bcbaca4f3f0206aeb8fa82bab59e580e116",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures_archive_quarantine/2015_BMW_6_Series_Brochure.pdf",
+      "bytes": 2830780,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/BMW/6 Series/BMW_US 6Series-Alpina_2015.pdf"
+      ],
+      "catalog_keys": [
+        "2015|bmw|6series"
+      ],
+      "first_seen_at": "2026-08-01T23:55:21.173687+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "iText 2.1.7 by 1T3XT",
+          "creator": "",
+          "title": "",
+          "author": "",
+          "subject": "",
+          "creation_date": "D:20140611140544Z",
+          "mod_date": "D:20150301090335-06'00'",
+          "page_count": 12,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 9,
+        "page_count": 12,
+        "has_text_layer": true
+      }
+    },
+    "be732646acf4b22e921efcc0d373a35c201dc9b99bf6abd3030899d5548bf843": {
+      "sha256": "be732646acf4b22e921efcc0d373a35c201dc9b99bf6abd3030899d5548bf843",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2021_Nissan_Rogue_Sport_Brochure.pdf",
+      "bytes": 8334064,
+      "source_urls": [
+        "https://www.nissanusa.com/content/dam/Nissan/us/vehicle-brochures/2021/2021-nissan-rogue-sport-brochure-en.pdf"
+      ],
+      "catalog_keys": [
+        "2021|nissan|roguesport"
+      ],
+      "first_seen_at": "2026-07-31T22:46:54.740179+00:00",
+      "tier": ""
+    },
+    "c024a878585cce7085c620112e125cf9172ad5ca97d6f52f5336e5c00b664f91": {
+      "sha256": "c024a878585cce7085c620112e125cf9172ad5ca97d6f52f5336e5c00b664f91",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2018_Mercedes-Benz_GLE_Brochure.pdf",
+      "bytes": 9775087,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Mercedes_Benz/GLE-Class/Mercedes Benz_US GLE-Class_2018.pdf"
+      ],
+      "catalog_keys": [
+        "2018|mercedesbenz|gle"
+      ],
+      "first_seen_at": "2026-08-01T23:50:45.895141+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "Adobe PDF Library 15.0",
+          "creator": "Adobe InDesign CC 2017 (Macintosh)",
+          "title": "2018 Mercedes-Benz GLE",
+          "author": "Mercedes-Benz USA",
+          "subject": "",
+          "creation_date": "D:20171020104256-04'00'",
+          "mod_date": "D:20171020104752-04'00'",
+          "page_count": 22,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 22,
+        "page_count": 22,
+        "has_text_layer": true
+      }
+    },
+    "c0f2f2579074bb334829464c9a5871588d99f63b74bba261d2730aee1751ff8e": {
+      "sha256": "c0f2f2579074bb334829464c9a5871588d99f63b74bba261d2730aee1751ff8e",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2026_Toyota_Sienna_Brochure.pdf",
+      "bytes": 17598936,
+      "source_urls": [
+        "https://www.toyota.com/content/dam/toyota/brochures/pdf/2026/sienna_brochure.pdf"
+      ],
+      "catalog_keys": [
+        "2026|toyota|sienna"
+      ],
+      "first_seen_at": "2026-07-31T22:04:58.783449+00:00",
+      "tier": ""
+    },
+    "c26159b899e1c6aa90a3ac368541d71f45e5b155ac0dee0121fad9d12bd8de61": {
+      "sha256": "c26159b899e1c6aa90a3ac368541d71f45e5b155ac0dee0121fad9d12bd8de61",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2022_Nissan_Versa_Brochure.pdf",
+      "bytes": 7758273,
+      "source_urls": [
+        "https://www.nissanusa.com/content/dam/Nissan/us/vehicle-brochures/2022/2022-nissan-versa-brochure-en.pdf"
+      ],
+      "catalog_keys": [
+        "2022|nissan|versa"
+      ],
+      "first_seen_at": "2026-07-31T22:53:45.787118+00:00",
+      "tier": ""
+    },
+    "c3f457407e87261554205a182c9437f1e6aff40f5f1dde6f53b517d403abb5d8": {
+      "sha256": "c3f457407e87261554205a182c9437f1e6aff40f5f1dde6f53b517d403abb5d8",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures_archive_quarantine/2018_BMW_M2_Brochure.pdf",
+      "bytes": 13210527,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/BMW/X5/BMW_US X5M_2018.pdf"
+      ],
+      "catalog_keys": [
+        "2018|bmw|m2"
+      ],
+      "first_seen_at": "2026-08-01T23:54:21.253098+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "Adobe PDF Library 15.0",
+          "creator": "Adobe InDesign CC 2017 (Macintosh)",
+          "title": "",
+          "author": "",
+          "subject": "",
+          "creation_date": "D:20170418171541-04'00'",
+          "mod_date": "D:20171129190503-06'00'",
+          "page_count": 16,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 16,
+        "page_count": 16,
+        "has_text_layer": true
+      }
+    },
+    "c5550ec46a62117c35b53c5d9b562720d6a0c30c77ef29051552b55ff0351069": {
+      "sha256": "c5550ec46a62117c35b53c5d9b562720d6a0c30c77ef29051552b55ff0351069",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2026_NISSAN_Pathfinder_Brochure.pdf",
+      "bytes": 7624156,
+      "source_urls": [
+        "https://www.nissanusa.com/content/dam/Nissan/us/vehicle-brochures/2026/2026-nissan-pathfinder-brochure-en.pdf"
+      ],
+      "catalog_keys": [
+        "2026|nissan|pathfinder"
+      ],
+      "first_seen_at": "2026-07-31T22:05:31.479357+00:00",
+      "tier": ""
+    },
+    "c598eb725eec6c2616af8522d3790cf1be8f86fcce1f2de5f9169ae1740a8dd3": {
+      "sha256": "c598eb725eec6c2616af8522d3790cf1be8f86fcce1f2de5f9169ae1740a8dd3",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2026_Lexus_TX_Brochure.pdf",
+      "bytes": 306337,
+      "source_urls": [
+        "https://lexus-cms-media.s3.us-east-2.amazonaws.com/wp-content/uploads/2025/08/2026_TX_ProductSpecs.pdf"
+      ],
+      "catalog_keys": [
+        "2026|lexus|tx"
+      ],
+      "first_seen_at": "2026-07-31T22:59:01.533164+00:00",
+      "tier": ""
+    },
+    "c622386c4338975f8ed55a58b410e8f4c436d439886ce05d7a657bec86942896": {
+      "sha256": "c622386c4338975f8ed55a58b410e8f4c436d439886ce05d7a657bec86942896",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2025_Chrysler_Pacifica_Brochure.pdf",
+      "bytes": 9257434,
+      "source_urls": [],
+      "catalog_keys": [],
+      "first_seen_at": "",
+      "tier": ""
+    },
+    "c6e9f89c3c1a4a44de4065f2776375e2d6f1e1ef485e141838364d3ba3ce64f6": {
+      "sha256": "c6e9f89c3c1a4a44de4065f2776375e2d6f1e1ef485e141838364d3ba3ce64f6",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2017_Mercedes-Benz_G-Class_Brochure.pdf",
+      "bytes": 19150020,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Mercedes_Benz/G-Class/Mercedes Benz_US G-Class_2017.pdf"
+      ],
+      "catalog_keys": [
+        "2017|mercedesbenz|gclass"
+      ],
+      "first_seen_at": "2026-08-01T23:46:59.228116+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "Adobe PDF Library 15.0",
+          "creator": "Adobe InDesign CC 2017 (Macintosh)",
+          "title": "2017 Mercedes-Benz G-Class",
+          "author": "Mercedes-Benz USA",
+          "subject": "",
+          "creation_date": "D:20170322101626-04'00'",
+          "mod_date": "D:20170322101842-04'00'",
+          "page_count": 16,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 14,
+        "page_count": 16,
+        "has_text_layer": true
+      }
+    },
+    "c789839eb650b008b1af67f2882f3b67460c6225ca6e6b7b1c7c655e4dbe3760": {
+      "sha256": "c789839eb650b008b1af67f2882f3b67460c6225ca6e6b7b1c7c655e4dbe3760",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2025_Toyota_Land_Cruiser_Brochure.pdf",
+      "bytes": 181314,
+      "source_urls": [
+        "https://toyota-cms-media.s3.amazonaws.com/wp-content/uploads/2024/10/2025_Toyota_Land_Cruiser_Product_Information.pdf"
+      ],
+      "catalog_keys": [
+        "2025|toyota|landcruiser"
+      ],
+      "first_seen_at": "2026-07-31T22:54:33.386988+00:00",
+      "tier": ""
+    },
+    "c7ad3a98d13045d9f286a91b59c22ddea6b634858fd31ff4f669a509031ee6e8": {
+      "sha256": "c7ad3a98d13045d9f286a91b59c22ddea6b634858fd31ff4f669a509031ee6e8",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2015_Volkswagen_Golf_GTI_Brochure.pdf",
+      "bytes": 5790903,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Volkswagen/Golf/VW_US Golf_GTI_2015.pdf"
+      ],
+      "catalog_keys": [
+        "2015|volkswagen|golfgti"
+      ],
+      "first_seen_at": "2026-08-01T23:51:57.139651+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "Acrobat Distiller 10.1.9 (Macintosh)",
+          "creator": "Adobe InDesign CS6 (Macintosh)",
+          "title": "VWA-10185727_MY15_GTI_Brochure_FC_BC_Singles",
+          "author": "mike.andrus",
+          "subject": "",
+          "creation_date": "D:20140509115959-07'00'",
+          "mod_date": "D:20140509120150-07'00'",
+          "page_count": 9,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 9,
+        "page_count": 9,
+        "has_text_layer": true
+      }
+    },
+    "c8fc41aa916ece47c26b476a1c4c5f1f3df601038e5cc4df2d230c2c0af65c91": {
+      "sha256": "c8fc41aa916ece47c26b476a1c4c5f1f3df601038e5cc4df2d230c2c0af65c91",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2020_GMC_Sierra_1500_Brochure.pdf",
+      "bytes": 10497599,
+      "source_urls": [
+        "https://www.gmc.com/content/dam/gmc/na/us/english/index/about/download-brochures/2020-models/updated-2020-pdfs/2020-gmc-sierra-1500-catalog.pdf"
+      ],
+      "catalog_keys": [
+        "2020|gmc|sierra1500"
+      ],
+      "first_seen_at": "2026-07-31T22:55:34.697546+00:00",
+      "tier": ""
+    },
+    "cb010b3171c60777346a2bab2368191173534e46cdc1339b6d56d10bd88682a7": {
+      "sha256": "cb010b3171c60777346a2bab2368191173534e46cdc1339b6d56d10bd88682a7",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2026_Lexus_LS_Brochure.pdf",
+      "bytes": 983462,
+      "source_urls": [
+        "https://lexus-cms-media.s3.us-east-2.amazonaws.com/wp-content/uploads/2025/09/2026_Lexus_LS_Specs_092325.pdf"
+      ],
+      "catalog_keys": [
+        "2026|lexus|ls"
+      ],
+      "first_seen_at": "2026-07-31T23:01:51.734171+00:00",
+      "tier": ""
+    },
+    "cc8d5a5478b44343d6f9d7ddcef233deb7a12c24d9d07d4c3c1de6ae111cba89": {
+      "sha256": "cc8d5a5478b44343d6f9d7ddcef233deb7a12c24d9d07d4c3c1de6ae111cba89",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2024_GMC_Sierra_2500HD_Brochure.pdf",
+      "bytes": 5883009,
+      "source_urls": [
+        "https://www.gmc.com/content/dam/gmc/na/us/english/index/about/download-brochures/2024-models/GMTR23CT200_2024_SIERRA_HD%20FO_010924_FINAL.pdf"
+      ],
+      "catalog_keys": [
+        "2024|gmc|sierra2500hd"
+      ],
+      "first_seen_at": "2026-07-31T22:51:57.925257+00:00",
+      "tier": ""
+    },
+    "cc9e8e8b9735bb59f7833ab543c80ce0e108f1f6aad04b6923913b9a8c98eaff": {
+      "sha256": "cc9e8e8b9735bb59f7833ab543c80ce0e108f1f6aad04b6923913b9a8c98eaff",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2026_Toyota_Corolla_Hybrid_Brochure.pdf",
+      "bytes": 273186,
+      "source_urls": [
+        "https://toyota-cms-media.s3.amazonaws.com/wp-content/uploads/2025/07/2026-Corolla-Hybrid-Product-Information_FINAL.pdf"
+      ],
+      "catalog_keys": [
+        "2026|toyota|corollahybrid"
+      ],
+      "first_seen_at": "2026-07-31T22:51:53.340803+00:00",
+      "tier": ""
+    },
+    "cd925bc64b3c9be5bf0964b14ef84cb70eb670fdfabcb94997d37a914190399b": {
+      "sha256": "cd925bc64b3c9be5bf0964b14ef84cb70eb670fdfabcb94997d37a914190399b",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2026_TOYOTA_Tundra_Brochure.pdf",
+      "bytes": 28079742,
+      "source_urls": [
+        "https://www.toyota.com/content/dam/toyota/brochures/pdf/2026/tundra_ebrochure.pdf"
+      ],
+      "catalog_keys": [
+        "2026|toyota|tundra"
+      ],
+      "first_seen_at": "2026-08-01T22:57:48.154064+00:00",
+      "tier": "oem"
+    },
+    "cfc424e91f8c693c088b6035d8172296676b979d6ed56ec980a2c26e0a906d6a": {
+      "sha256": "cfc424e91f8c693c088b6035d8172296676b979d6ed56ec980a2c26e0a906d6a",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2018_Chevrolet_Suburban_Brochure.pdf",
+      "bytes": 16925074,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Chevrolet/Suburban/Chevrolet_US Suburban_2018.pdf"
+      ],
+      "catalog_keys": [
+        "2018|chevrolet|suburban"
+      ],
+      "first_seen_at": "2026-08-01T23:50:21.375578+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "Adobe PDF Library 15.0",
+          "creator": "Adobe InDesign CC 2015 (Macintosh)",
+          "title": "",
+          "author": "",
+          "subject": "",
+          "creation_date": "D:20170824135415-04'00'",
+          "mod_date": "D:20170829133958-04'00'",
+          "page_count": 25,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 25,
+        "page_count": 25,
+        "has_text_layer": true
+      }
+    },
+    "d05338e287339fe6ddedd64adc0edfab29b9094f8d6d17d4e3c4ca45407ee9bd": {
+      "sha256": "d05338e287339fe6ddedd64adc0edfab29b9094f8d6d17d4e3c4ca45407ee9bd",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2016_Buick_Encore_Brochure.pdf",
+      "bytes": 4741288,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Buick/Encore/Buick_US Encore_2016.pdf"
+      ],
+      "catalog_keys": [
+        "2016|buick|encore"
+      ],
+      "first_seen_at": "2026-08-01T13:53:21.574531+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "Adobe PDF Library 11.0",
+          "creator": "Adobe InDesign CC 2014 (Macintosh)",
+          "title": "",
+          "author": "",
+          "subject": "",
+          "creation_date": "D:20150825174028-04'00'",
+          "mod_date": "D:20150825174327-04'00'",
+          "page_count": 20,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 20,
+        "page_count": 20,
+        "has_text_layer": true
+      }
+    },
+    "d1201c59676d775d3b7ac1ca2762edf214b72f43ad1f5aa6ee726cf1705e1ef3": {
+      "sha256": "d1201c59676d775d3b7ac1ca2762edf214b72f43ad1f5aa6ee726cf1705e1ef3",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2016_Chevrolet_Tahoe_Brochure.pdf",
+      "bytes": 8146318,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Chevrolet/Tahoe/Chevrolet_US Tahoe_2016.pdf"
+      ],
+      "catalog_keys": [
+        "2016|chevrolet|tahoe"
+      ],
+      "first_seen_at": "2026-08-01T13:51:33.761547+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "Adobe PDF Library 11.0",
+          "creator": "Adobe InDesign CC 2014 (Macintosh)",
+          "title": "",
+          "author": "",
+          "subject": "",
+          "creation_date": "D:20151106140421-05'00'",
+          "mod_date": "D:20151106140551-05'00'",
+          "page_count": 23,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 23,
+        "page_count": 23,
+        "has_text_layer": true
+      }
+    },
+    "d21e9ab5373a478d350448ecefcbf7c9849a44e92fe1cad2c44f1543a518038b": {
+      "sha256": "d21e9ab5373a478d350448ecefcbf7c9849a44e92fe1cad2c44f1543a518038b",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2026_Toyota_Prius_Brochure.pdf",
+      "bytes": 19044202,
+      "source_urls": [
+        "https://www.toyota.com/content/dam/toyota/brochures/pdf/2026/prius_ebrochure.pdf"
+      ],
+      "catalog_keys": [
+        "2026|toyota|prius"
+      ],
+      "first_seen_at": "2026-08-01T22:58:12.889368+00:00",
+      "tier": "oem"
+    },
+    "d25977250a19ef9a0d3bdfde4dcc049d37f24a532dabd5648a86aa8785541e37": {
+      "sha256": "d25977250a19ef9a0d3bdfde4dcc049d37f24a532dabd5648a86aa8785541e37",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2023_MAZDA_CX-9_Brochure.pdf",
+      "bytes": 207090,
+      "source_urls": [
+        "https://news.mazdausa.com/download/2023+CX-9+Spec+Deck.pdf"
+      ],
+      "catalog_keys": [
+        "2023|mazda|cx9"
+      ],
+      "first_seen_at": "2026-07-31T22:40:17.552151+00:00",
+      "tier": ""
+    },
+    "d286d8cd77fc88d1b34f969e97f622a57a6ba7dfc2418976215645aec3ac62cc": {
+      "sha256": "d286d8cd77fc88d1b34f969e97f622a57a6ba7dfc2418976215645aec3ac62cc",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2021_Mazda_Mazda6_Brochure.pdf",
+      "bytes": 281241,
+      "source_urls": [
+        "https://news.mazdausa.com/download/2021+Mazda6+Spec+Deck.pdf"
+      ],
+      "catalog_keys": [
+        "2021|mazda|mazda6"
+      ],
+      "first_seen_at": "2026-07-31T22:58:50.889808+00:00",
+      "tier": ""
+    },
+    "d2f559d69abb7d1bb37ad3d5845df54d7ebaa01cd6257dc91253e47fb07eae8f": {
+      "sha256": "d2f559d69abb7d1bb37ad3d5845df54d7ebaa01cd6257dc91253e47fb07eae8f",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2025_Mazda_CX-5_Brochure.pdf",
+      "bytes": 1188915,
+      "source_urls": [
+        "https://news.mazdausa.com/download/2025+CX-5+Spec+Deck.pdf"
+      ],
+      "catalog_keys": [
+        "2025|mazda|cx5"
+      ],
+      "first_seen_at": "2026-07-31T22:39:41.420880+00:00",
+      "tier": ""
+    },
+    "d4e30056205d35b980fc512a112ebefe1b9d79b03f09993954e55889c0d65321": {
+      "sha256": "d4e30056205d35b980fc512a112ebefe1b9d79b03f09993954e55889c0d65321",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2020_Buick_Encore_GX_Brochure.pdf",
+      "bytes": 11626419,
+      "source_urls": [
+        "https://www.buick.com/content/dam/buick/na/us/en/index/shopping-tools/download-catalog/02-pdfs/GMBC20CT100_020_Encore_GX%20Catalog_digital.pdf"
+      ],
+      "catalog_keys": [
+        "2020|buick|encoregx"
+      ],
+      "first_seen_at": "2026-07-31T22:52:46.079721+00:00",
+      "tier": ""
+    },
+    "d4fa231c4933e8f61ed345009502419011747addf2fe945353a2214620925540": {
+      "sha256": "d4fa231c4933e8f61ed345009502419011747addf2fe945353a2214620925540",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2027_Chrysler_Pacifica_Brochure.pdf",
+      "bytes": 21540936,
+      "source_urls": [],
+      "catalog_keys": [],
+      "first_seen_at": "",
+      "tier": ""
+    },
+    "d597d0328bd7c4d93c11e864c6e3ad395c91ea6b608510b32ee08d5f130c0282": {
+      "sha256": "d597d0328bd7c4d93c11e864c6e3ad395c91ea6b608510b32ee08d5f130c0282",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2016_Mercedes-Benz_GLE_Brochure.pdf",
+      "bytes": 11936965,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Mercedes_Benz/GLE-Class/Mercedes Benz_US GLE-Class_2016.pdf"
+      ],
+      "catalog_keys": [
+        "2016|mercedesbenz|gle"
+      ],
+      "first_seen_at": "2026-08-01T23:49:33.922123+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "Adobe PDF Library 15.0",
+          "creator": "Adobe InDesign CC 2015 (Macintosh)",
+          "title": "2016 Mercedes-Benz GLE SUV",
+          "author": "Mercedes-Benz USA",
+          "subject": "",
+          "creation_date": "D:20150923132830-04'00'",
+          "mod_date": "D:20150923135140-04'00'",
+          "page_count": 32,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 29,
+        "page_count": 32,
+        "has_text_layer": true
+      }
+    },
+    "d6ff1d39d545bc30b70973d9d69b1134ee4c0a36ee6316f38a3223f0bc78793a": {
+      "sha256": "d6ff1d39d545bc30b70973d9d69b1134ee4c0a36ee6316f38a3223f0bc78793a",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2017_Chevrolet_Traverse_Brochure.pdf",
+      "bytes": 11859991,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Chevrolet/Traverse/Chevrolet_US Traverse_2017.pdf"
+      ],
+      "catalog_keys": [
+        "2017|chevrolet|traverse"
+      ],
+      "first_seen_at": "2026-08-01T23:49:45.218025+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "Adobe PDF Library 15.0",
+          "creator": "Adobe InDesign CC 2015 (Macintosh)",
+          "title": "2017 Chevrolet Traverse Catalog",
+          "author": "Chevrolet",
+          "subject": "Catalog for the 2017 Chevrolet Traverse Mid-Size SUV",
+          "creation_date": "D:20161202112907-05'00'",
+          "mod_date": "D:20161205133902-05'00'",
+          "page_count": 22,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 22,
+        "page_count": 22,
+        "has_text_layer": true
+      }
+    },
+    "d75bd105ac65f39b8e76b0da43891faf93119ba9891883b328fefd550de528fa": {
+      "sha256": "d75bd105ac65f39b8e76b0da43891faf93119ba9891883b328fefd550de528fa",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2027_INFINITI_QX60_Brochure.pdf",
+      "bytes": 35051886,
+      "source_urls": [
+        "https://www.infinitiusa.com/content/dam/Infiniti/US/vehicle-brochures/2027/2027-infiniti-qx60-brochure-en.pdf"
+      ],
+      "catalog_keys": [
+        "2027|infiniti|qx60"
+      ],
+      "first_seen_at": "2026-07-31T22:49:30.435387+00:00",
+      "tier": ""
+    },
+    "d7750c2a7266dd8e9cca59f486b5133ec48495e4d02e6d8c157cb238c7b7eda5": {
+      "sha256": "d7750c2a7266dd8e9cca59f486b5133ec48495e4d02e6d8c157cb238c7b7eda5",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2023_Volkswagen_Taos_Brochure.pdf",
+      "bytes": 368263,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Volkswagen/Taos/VW_US Taos_2023-og.pdf"
+      ],
+      "catalog_keys": [
+        "2023|volkswagen|taos"
+      ],
+      "first_seen_at": "2026-08-01T14:30:14.437856+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "Acrobat Distiller 22.0 (Windows)",
+          "creator": "PScript5.dll Version 5.2.2",
+          "title": "",
+          "author": "masseal",
+          "subject": "",
+          "creation_date": "D:20221123051835-05'00'",
+          "mod_date": "D:20221123095756-06'00'",
+          "page_count": 5,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 5,
+        "page_count": 5,
+        "has_text_layer": true
+      }
+    },
+    "d975b85e958ef354a0c19ef82266cedbf46420a27fca03aa33cc113a73fa5556": {
+      "sha256": "d975b85e958ef354a0c19ef82266cedbf46420a27fca03aa33cc113a73fa5556",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2018_Chevrolet_Tahoe_Brochure.pdf",
+      "bytes": 16656947,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Chevrolet/Tahoe/Chevrolet_US Tahoe_2018.pdf"
+      ],
+      "catalog_keys": [
+        "2018|chevrolet|tahoe"
+      ],
+      "first_seen_at": "2026-08-01T13:53:45.843607+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "Adobe PDF Library 15.0",
+          "creator": "Adobe InDesign CC 2015 (Macintosh)",
+          "title": "2018 Chevrolet Tahoe Catalog",
+          "author": "Chevrolet",
+          "subject": "Catalog for the 2018 Chevrolet Tahoe Full Size SUV",
+          "creation_date": "D:20170821092258-04'00'",
+          "mod_date": "D:20170922104509-04'00'",
+          "page_count": 25,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 25,
+        "page_count": 25,
+        "has_text_layer": true
+      }
+    },
+    "d9d5afa89f1a7be6fe5e5a977c7202f4f2cc023505554c430372ecb60da90bf0": {
+      "sha256": "d9d5afa89f1a7be6fe5e5a977c7202f4f2cc023505554c430372ecb60da90bf0",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2026_Toyota_Tacoma_Brochure.pdf",
+      "bytes": 265160,
+      "source_urls": [
+        "https://toyota-cms-media.s3.amazonaws.com/wp-content/uploads/2025/11/2026_Toyota_Tacoma_Product_Information.pdf"
+      ],
+      "catalog_keys": [
+        "2026|toyota|tacoma"
+      ],
+      "first_seen_at": "2026-07-31T22:50:24.779159+00:00",
+      "tier": ""
+    },
+    "da77bddd7e6d618692bceebd255ddf25303f2587d9d9b24a62d6778a545ba0d8": {
+      "sha256": "da77bddd7e6d618692bceebd255ddf25303f2587d9d9b24a62d6778a545ba0d8",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2021_Dodge_Durango_Brochure.pdf",
+      "bytes": 7941606,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Dodge/Durango/Dodge_US Durango_2021.pdf"
+      ],
+      "catalog_keys": [
+        "2021|dodge|durango"
+      ],
+      "first_seen_at": "2026-08-01T14:28:15.181714+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "Adobe PDF Library 15.0",
+          "creator": "Adobe InDesign 15.0 (Macintosh)",
+          "title": "",
+          "author": "",
+          "subject": "",
+          "creation_date": "D:20201216183811-05'00'",
+          "mod_date": "D:20201216183924-05'00'",
+          "page_count": 53,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 53,
+        "page_count": 53,
+        "has_text_layer": true
+      }
+    },
+    "da8ea19b76a485574f92834189560dd6458ae67e8294e12a3f1d28d31c6ad460": {
+      "sha256": "da8ea19b76a485574f92834189560dd6458ae67e8294e12a3f1d28d31c6ad460",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2023_Dodge_Hornet_Brochure.pdf",
+      "bytes": 10247301,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Dodge/Hornet/Dodge_US Hornet_2023.pdf"
+      ],
+      "catalog_keys": [
+        "2023|dodge|hornet"
+      ],
+      "first_seen_at": "2026-08-01T14:29:38.601630+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "Adobe PDF Library 16.0.5",
+          "creator": "Adobe InDesign 17.1 (Macintosh)",
+          "title": "",
+          "author": "",
+          "subject": "",
+          "creation_date": "D:20230208122448-05'00'",
+          "mod_date": "D:20230208122604-05'00'",
+          "page_count": 13,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 13,
+        "page_count": 13,
+        "has_text_layer": true
+      }
+    },
+    "dbf07ab38f2924c7aedfd4fab86e453b373504bd0d2d4f53ccbe0ba2c47f4016": {
+      "sha256": "dbf07ab38f2924c7aedfd4fab86e453b373504bd0d2d4f53ccbe0ba2c47f4016",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2026_INFINITI_QX80_Brochure.pdf",
+      "bytes": 16242806,
+      "source_urls": [
+        "https://www.infinitiusa.com/content/dam/Infiniti/US/vehicle-brochures/2026/2026-infiniti-qx80-brochure-en.pdf"
+      ],
+      "catalog_keys": [
+        "2026|infiniti|qx80"
+      ],
+      "first_seen_at": "2026-07-31T22:49:58.489830+00:00",
+      "tier": ""
+    },
+    "dcb4686c5c216707e0c4a45003323b553300ec78e789924fb81ad63812f6fcda": {
+      "sha256": "dcb4686c5c216707e0c4a45003323b553300ec78e789924fb81ad63812f6fcda",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2026_Toyota_Highlander_Brochure.pdf",
+      "bytes": 279864,
+      "source_urls": [
+        "https://toyota-cms-media.s3.amazonaws.com/wp-content/uploads/2025/09/2026-Toyota-Highlander-Gas-Product-Information-1.pdf"
+      ],
+      "catalog_keys": [
+        "2026|toyota|highlander"
+      ],
+      "first_seen_at": "2026-07-31T22:53:43.359625+00:00",
+      "tier": ""
+    },
+    "ddd13677a486ba79eef75600d940f9e2b28705b4c2d7ab07c56b39c8162fd616": {
+      "sha256": "ddd13677a486ba79eef75600d940f9e2b28705b4c2d7ab07c56b39c8162fd616",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2025_Toyota_Grand_Highlander_Brochure.pdf",
+      "bytes": 415688,
+      "source_urls": [
+        "https://toyota-cms-media.s3.amazonaws.com/wp-content/uploads/2024/11/2025ToyotaGrandHighlanderProductInformation.pdf"
+      ],
+      "catalog_keys": [
+        "2025|toyota|grandhighlander"
+      ],
+      "first_seen_at": "2026-07-31T22:55:03.531840+00:00",
+      "tier": ""
+    },
+    "decf550e98662cc761f33776698f6016da6dd5409ef2ddb9ec00c338734ca1e5": {
+      "sha256": "decf550e98662cc761f33776698f6016da6dd5409ef2ddb9ec00c338734ca1e5",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2017_Toyota_Yaris_iA_Brochure.pdf",
+      "bytes": 1045744,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Toyota/Yaris iA/Toyota_US Yaris-iA_2017.pdf"
+      ],
+      "catalog_keys": [
+        "2017|toyota|yarisia"
+      ],
+      "first_seen_at": "2026-08-01T23:54:09.044416+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "Adobe PDF Library 15.0",
+          "creator": "Adobe InDesign CC 2015 (Macintosh)",
+          "title": "MY17 Yaris iA eBrochure",
+          "author": "",
+          "subject": "",
+          "creation_date": "D:20160927121833-07'00'",
+          "mod_date": "D:20160927122444-07'00'",
+          "page_count": 10,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 10,
+        "page_count": 10,
+        "has_text_layer": true
+      }
+    },
+    "e214bd43763cb2be406b16b2380ee8121b88c9e6cba8dbf3f3a7ee62ae9459bb": {
+      "sha256": "e214bd43763cb2be406b16b2380ee8121b88c9e6cba8dbf3f3a7ee62ae9459bb",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2018_BMW_3_Series_Brochure.pdf",
+      "bytes": 4603311,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/BMW/3 Series/BMW_US M3_2018.pdf"
+      ],
+      "catalog_keys": [
+        "2018|bmw|3series"
+      ],
+      "first_seen_at": "2026-08-01T23:45:46.337107+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "Adobe PDF Library 15.0",
+          "creator": "Adobe InDesign CC 2017 (Macintosh)",
+          "title": "",
+          "author": "",
+          "subject": "",
+          "creation_date": "D:20170419101310-04'00'",
+          "mod_date": "D:20170913091755-05'00'",
+          "page_count": 9,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 9,
+        "page_count": 9,
+        "has_text_layer": true
+      }
+    },
+    "e262ee37f22b13cd063f928522329012df68797f95bf81891e1ef2e58146dfb1": {
+      "sha256": "e262ee37f22b13cd063f928522329012df68797f95bf81891e1ef2e58146dfb1",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2026_Mazda_Mazda_CX-70_Brochure.pdf",
+      "bytes": 335478,
+      "source_urls": [
+        "https://news.mazdausa.com/download/2026+CX-70+Spec+Deck.pdf"
+      ],
+      "catalog_keys": [
+        "2026|mazda|cx70"
+      ],
+      "first_seen_at": "2026-07-31T22:39:01.331102+00:00",
+      "tier": ""
+    },
+    "e3b000a4fcae5fa4058c2f5c6936ca750e7ffd7f8c3f8d18b35492d528deb371": {
+      "sha256": "e3b000a4fcae5fa4058c2f5c6936ca750e7ffd7f8c3f8d18b35492d528deb371",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2026_Toyota_bZ_Brochure.pdf",
+      "bytes": 229941,
+      "source_urls": [
+        "https://toyota-cms-media.s3.amazonaws.com/wp-content/uploads/2025/05/2026_Toyota_bZ_Product_Information-7.pdf"
+      ],
+      "catalog_keys": [
+        "2026|toyota|bz"
+      ],
+      "first_seen_at": "2026-07-31T22:51:03.323865+00:00",
+      "tier": ""
+    },
+    "e51cdc8999de7883e842d5d5ff9172b7e1ca26de37f05516c5e61b3b313da753": {
+      "sha256": "e51cdc8999de7883e842d5d5ff9172b7e1ca26de37f05516c5e61b3b313da753",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2016_Chevrolet_Equinox_Brochure.pdf",
+      "bytes": 6407917,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Chevrolet/Equinox/Chevrolet_US Equinox_2016.pdf"
+      ],
+      "catalog_keys": [
+        "2016|chevrolet|equinox"
+      ],
+      "first_seen_at": "2026-08-01T23:48:57.128721+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "Adobe PDF Library 11.0",
+          "creator": "Adobe InDesign CC 2014 (Macintosh)",
+          "title": "",
+          "author": "",
+          "subject": "",
+          "creation_date": "D:20151020131541-04'00'",
+          "mod_date": "D:20151020131745-04'00'",
+          "page_count": 25,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 25,
+        "page_count": 25,
+        "has_text_layer": true
+      }
+    },
+    "e815509c719b2e498acb2c56c3bbf41b6f8654f2eaaa3fcad19314882fd36259": {
+      "sha256": "e815509c719b2e498acb2c56c3bbf41b6f8654f2eaaa3fcad19314882fd36259",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2026_Jeep_Grand_Wagoneer_Brochure.pdf",
+      "bytes": 3936164,
+      "source_urls": [],
+      "catalog_keys": [],
+      "first_seen_at": "",
+      "tier": ""
+    },
+    "e8243c9bdb19849df7de78d97b01de2e45b59ed547d991bf2c5dd30aaa44d2c3": {
+      "sha256": "e8243c9bdb19849df7de78d97b01de2e45b59ed547d991bf2c5dd30aaa44d2c3",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures_archive_quarantine/2010_Audi_Q5_Brochure.pdf",
+      "bytes": 5927103,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Audi/Q5/Audi_US Q5_2010.pdf"
+      ],
+      "catalog_keys": [
+        "2010|audi|q5"
+      ],
+      "first_seen_at": "2026-08-01T14:27:27.304511+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "Adobe PDF Library 9.0",
+          "creator": "Adobe InDesign CS4 (6.0.3)",
+          "title": "",
+          "author": "",
+          "subject": "",
+          "creation_date": "D:20090805160004-06'00'",
+          "mod_date": "D:20090805161312-06'00'",
+          "page_count": 27,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 26,
+        "page_count": 27,
+        "has_text_layer": true
+      }
+    },
+    "eaea852bb5e53ba30649353fad8f8bc24124ab004733268844e29ef205596a57": {
+      "sha256": "eaea852bb5e53ba30649353fad8f8bc24124ab004733268844e29ef205596a57",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2027_Toyota_Prius_Brochure.pdf",
+      "bytes": 384275,
+      "source_urls": [
+        "https://toyota-cms-media.s3.amazonaws.com/wp-content/uploads/2026/07/2027_Toyota_Prius_Product-Information.pdf"
+      ],
+      "catalog_keys": [
+        "2027|toyota|prius"
+      ],
+      "first_seen_at": "2026-07-31T22:53:33.392453+00:00",
+      "tier": ""
+    },
+    "ebbdc4c1f3b3733362d82678965b2aa1424e50ac655d70546367a1d782a4b945": {
+      "sha256": "ebbdc4c1f3b3733362d82678965b2aa1424e50ac655d70546367a1d782a4b945",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2017_Buick_Enclave_Brochure.pdf",
+      "bytes": 2734542,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Buick/Enclave/Buick_US Enclave_2017.pdf"
+      ],
+      "catalog_keys": [
+        "2017|buick|enclave"
+      ],
+      "first_seen_at": "2026-08-01T23:44:58.763938+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "Adobe PDF Library 15.0",
+          "creator": "Adobe InDesign CC 2015 (Macintosh)",
+          "title": "",
+          "author": "",
+          "subject": "",
+          "creation_date": "D:20160511173412-04'00'",
+          "mod_date": "D:20160511173446-04'00'",
+          "page_count": 18,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 18,
+        "page_count": 18,
+        "has_text_layer": true
+      }
+    },
+    "ec62a34216c4597a4bdeb5570f4f69847675113e1fd122ae88146bb3131e248b": {
+      "sha256": "ec62a34216c4597a4bdeb5570f4f69847675113e1fd122ae88146bb3131e248b",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2026_Jeep_Grand_Cherokee_Brochure.pdf",
+      "bytes": 3983640,
+      "source_urls": [],
+      "catalog_keys": [],
+      "first_seen_at": "",
+      "tier": ""
+    },
+    "ed707617d8d3cc70b2dc62491098df404ba3965ef127927605ff3d289bb450d9": {
+      "sha256": "ed707617d8d3cc70b2dc62491098df404ba3965ef127927605ff3d289bb450d9",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2025_Mazda_CX-30_Brochure.pdf",
+      "bytes": 205895,
+      "source_urls": [
+        "https://news.mazdausa.com/download/2025+CX-30+Spec+Deck.pdf"
+      ],
+      "catalog_keys": [
+        "2025|mazda|cx30"
+      ],
+      "first_seen_at": "2026-07-31T22:39:29.408525+00:00",
+      "tier": ""
+    },
+    "f0078124ee9f11e7cb09caabb5237e0c44ac62f30bce1d3a092586f793f69d9e": {
+      "sha256": "f0078124ee9f11e7cb09caabb5237e0c44ac62f30bce1d3a092586f793f69d9e",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2016_Jeep_Grand_Cherokee_Brochure.pdf",
+      "bytes": 6851224,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Jeep/Grand Cherokee/Jeep_US GrandCherokee_2016.pdf"
+      ],
+      "catalog_keys": [
+        "2016|jeep|grandcherokee"
+      ],
+      "first_seen_at": "2026-08-01T13:54:56.422233+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "Adobe PDF Library 11.0",
+          "creator": "Adobe InDesign CC 2014 (Macintosh)",
+          "title": "",
+          "author": "",
+          "subject": "",
+          "creation_date": "D:20151104095848-05'00'",
+          "mod_date": "D:20151104100937-05'00'",
+          "page_count": 29,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 29,
+        "page_count": 29,
+        "has_text_layer": true
+      }
+    },
+    "f07ef3811390446b9df6aec00e0ba16517059f7ea91a9d24806d163c55e9fb14": {
+      "sha256": "f07ef3811390446b9df6aec00e0ba16517059f7ea91a9d24806d163c55e9fb14",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2026_Lexus_UX_HYBRID_Brochure.pdf",
+      "bytes": 421776,
+      "source_urls": [
+        "https://lexus-cms-media.s3.us-east-2.amazonaws.com/wp-content/uploads/2025/11/2026_Lexus_UXh_Specifications.pdf"
+      ],
+      "catalog_keys": [
+        "2026|lexus|uxhybrid"
+      ],
+      "first_seen_at": "2026-07-31T23:00:51.600436+00:00",
+      "tier": ""
+    },
+    "f0b288e39633baffc1538a0e4d1aa24cd9909873da1a356d15990261d301feae": {
+      "sha256": "f0b288e39633baffc1538a0e4d1aa24cd9909873da1a356d15990261d301feae",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2026_Toyota_RAV4_Plug-in_Hybrid_Brochure.pdf",
+      "bytes": 288603,
+      "source_urls": [
+        "https://toyota-cms-media.s3.amazonaws.com/wp-content/uploads/2025/05/2026_Toyota_RAV4_PHEV_Product_Information_05082026.pdf"
+      ],
+      "catalog_keys": [
+        "2026|toyota|rav4pluginhybrid"
+      ],
+      "first_seen_at": "2026-07-31T22:51:23.298725+00:00",
+      "tier": ""
+    },
+    "f0f58c6b569542780cfa7f8d978b12e0e6c7bdb16143a3f0614eac0d8f5ae499": {
+      "sha256": "f0f58c6b569542780cfa7f8d978b12e0e6c7bdb16143a3f0614eac0d8f5ae499",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2023_Nissan_Ariya_Brochure.pdf",
+      "bytes": 4785797,
+      "source_urls": [
+        "https://www.nissanusa.com/content/dam/Nissan/us/vehicle-brochures/2023/2023-nissan-ariya-brochure-en.pdf"
+      ],
+      "catalog_keys": [
+        "2023|nissan|ariya"
+      ],
+      "first_seen_at": "2026-07-31T22:46:34.656611+00:00",
+      "tier": ""
+    },
+    "f2f10598b501d489832d95869c24ffaa2041097a59447eb1d30597b2eacc00b9": {
+      "sha256": "f2f10598b501d489832d95869c24ffaa2041097a59447eb1d30597b2eacc00b9",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2022_Nissan_Titan_XD_Brochure.pdf",
+      "bytes": 17511523,
+      "source_urls": [
+        "https://www.nissanusa.com/content/dam/Nissan/us/vehicle-brochures/2022/2022-nissan-titan-xd-brochure-en.pdf"
+      ],
+      "catalog_keys": [
+        "2022|nissan|titanxd"
+      ],
+      "first_seen_at": "2026-07-31T22:53:41.845555+00:00",
+      "tier": ""
+    },
+    "f317b677713464ff747b48390f07ebc15f3b0de21784aee025c17bf5d66d2ea4": {
+      "sha256": "f317b677713464ff747b48390f07ebc15f3b0de21784aee025c17bf5d66d2ea4",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2022_GMC_Sierra_1500_Brochure.pdf",
+      "bytes": 440390,
+      "source_urls": [
+        "https://www.gmc.com/content/dam/gmc/na/us/english/index/about/download-brochures/2022-models/02-pdf/GMTR22CT100FO_MY22_GMC%20SIERRALD_080822.pdf"
+      ],
+      "catalog_keys": [
+        "2022|gmc|sierra1500"
+      ],
+      "first_seen_at": "2026-07-31T22:55:38.519034+00:00",
+      "tier": ""
+    },
+    "f35ae49eccb9d911fe10b90ca9a0c4be3d4390c5e75a2cb132fae5e05fbf9b56": {
+      "sha256": "f35ae49eccb9d911fe10b90ca9a0c4be3d4390c5e75a2cb132fae5e05fbf9b56",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2024_Dodge_Hornet_Brochure.pdf",
+      "bytes": 9949118,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Dodge/Hornet/Dodge_US Hornet_2024.pdf"
+      ],
+      "catalog_keys": [
+        "2024|dodge|hornet"
+      ],
+      "first_seen_at": "2026-08-01T14:30:26.659663+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "Adobe PDF Library 16.0.7",
+          "creator": "Adobe InDesign 17.4 (Macintosh)",
+          "title": "",
+          "author": "",
+          "subject": "",
+          "creation_date": "D:20231020161253-04'00'",
+          "mod_date": "D:20231020161403-04'00'",
+          "page_count": 13,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 13,
+        "page_count": 13,
+        "has_text_layer": true
+      }
+    },
+    "f376f46d0fdaa5509f72dad64a0ff09a5d26b143d81391a54ac6603d2d7d39d2": {
+      "sha256": "f376f46d0fdaa5509f72dad64a0ff09a5d26b143d81391a54ac6603d2d7d39d2",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2026_Toyota_Tundra_i-FORCE_MAX_Brochure.pdf",
+      "bytes": 354808,
+      "source_urls": [
+        "https://toyota-cms-media.s3.amazonaws.com/wp-content/uploads/2025/07/2026_Toyota_Tundra_Product_Information.pdf"
+      ],
+      "catalog_keys": [
+        "2026|toyota|tundraiforcemax"
+      ],
+      "first_seen_at": "2026-07-31T22:52:13.370180+00:00",
+      "tier": ""
+    },
+    "f5007f52e839ad9e4a23b791fe4c433423da08dca4cb66bbe73fef3657bc9725": {
+      "sha256": "f5007f52e839ad9e4a23b791fe4c433423da08dca4cb66bbe73fef3657bc9725",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2023_GMC_Yukon_XL_Brochure.pdf",
+      "bytes": 560766,
+      "source_urls": [
+        "https://www.gmc.com/content/dam/gmc/na/us/english/index/about/download-brochures/2023-models/02-pdf/GMTY23CT000FO_MY23_GMC_YUKON_071123.pdf"
+      ],
+      "catalog_keys": [
+        "2023|gmc|yukonxl"
+      ],
+      "first_seen_at": "2026-07-31T22:55:30.460758+00:00",
+      "tier": ""
+    },
+    "f5396bdbcde475ec6215b6601e45c8a6915e03ba65920795bf449c05817dae0e": {
+      "sha256": "f5396bdbcde475ec6215b6601e45c8a6915e03ba65920795bf449c05817dae0e",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2026_Toyota_4Runner_Brochure.pdf",
+      "bytes": 388955,
+      "source_urls": [
+        "https://toyota-cms-media.s3.amazonaws.com/wp-content/uploads/2025/10/2026_Toyota_4Runner_Product_Information.pdf"
+      ],
+      "catalog_keys": [
+        "2026|toyota|4runner"
+      ],
+      "first_seen_at": "2026-07-31T22:51:33.313053+00:00",
+      "tier": ""
+    },
+    "f8fc0e35630a3dd2fd53b42266f3c08d89cdecf6db3d1aeb71cc044d614a333f": {
+      "sha256": "f8fc0e35630a3dd2fd53b42266f3c08d89cdecf6db3d1aeb71cc044d614a333f",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2017_Toyota_Prius_Prime_Brochure.pdf",
+      "bytes": 2822234,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Toyota/Prius/Toyota_US PriusPrime_2017.pdf"
+      ],
+      "catalog_keys": [
+        "2017|toyota|priusprime"
+      ],
+      "first_seen_at": "2026-08-01T23:47:33.055805+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "Acrobat Distiller 15.0 (Macintosh)",
+          "creator": "",
+          "title": "2017 Prius Prime eBrochure",
+          "author": "",
+          "subject": "",
+          "creation_date": "D:20161014162637-07'00'",
+          "mod_date": "D:20161014162838-07'00'",
+          "page_count": 13,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 13,
+        "page_count": 13,
+        "has_text_layer": true
+      }
+    },
+    "f91d4de700e0608f9d024812514344171629e1547a6fd7ae9eab073138c24bc0": {
+      "sha256": "f91d4de700e0608f9d024812514344171629e1547a6fd7ae9eab073138c24bc0",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2021_Mazda_Mazda_CX-3_Brochure.pdf",
+      "bytes": 189857,
+      "source_urls": [
+        "https://news.mazdausa.com/download/2021+CX-3+Spec+Deck.pdf"
+      ],
+      "catalog_keys": [
+        "2021|mazda|mazdacx3"
+      ],
+      "first_seen_at": "2026-07-31T22:59:03.119034+00:00",
+      "tier": ""
+    },
+    "fa936796706351b960c578b73bf46b153b46a19b71a6d7bf6b5f6db628f21a7a": {
+      "sha256": "fa936796706351b960c578b73bf46b153b46a19b71a6d7bf6b5f6db628f21a7a",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2020_GMC_Sierra_2500HD_Brochure.pdf",
+      "bytes": 9085511,
+      "source_urls": [
+        "https://www.gmc.com/content/dam/gmc/na/us/english/index/about/download-brochures/2020-models/updated-2020-pdfs/2020-gmc-sierra-hd-catalog.pdf"
+      ],
+      "catalog_keys": [
+        "2020|gmc|sierra2500hd"
+      ],
+      "first_seen_at": "2026-07-31T22:52:37.953109+00:00",
+      "tier": ""
+    },
+    "fb6d3990796a4e1ee89bd295ee8779c1585368385740fc1b99c29cf6b3870525": {
+      "sha256": "fb6d3990796a4e1ee89bd295ee8779c1585368385740fc1b99c29cf6b3870525",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2026_Dodge_Charger_Brochure.pdf",
+      "bytes": 7603208,
+      "source_urls": [],
+      "catalog_keys": [],
+      "first_seen_at": "",
+      "tier": ""
+    },
+    "fbb52ebb89359c9d0e18cb6ef8971515287909e8e587afd276774e1c27e8f7ae": {
+      "sha256": "fbb52ebb89359c9d0e18cb6ef8971515287909e8e587afd276774e1c27e8f7ae",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2022_Nissan_Rogue_Sport_Brochure.pdf",
+      "bytes": 8192518,
+      "source_urls": [
+        "https://www.nissanusa.com/content/dam/Nissan/us/vehicle-brochures/2022/2022-nissan-rogue-sport-brochure-en.pdf"
+      ],
+      "catalog_keys": [
+        "2022|nissan|roguesport"
+      ],
+      "first_seen_at": "2026-07-31T22:46:46.728800+00:00",
+      "tier": ""
+    }
+  }
+}

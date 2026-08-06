@@ -1,0 +1,253 @@
+{
+  "catalog_key": "2019|mazda|mazdacx9",
+  "year": 2019,
+  "make": "Mazda",
+  "model": "Mazda CX-9",
+  "source": "brochure_text_quoted",
+  "layouts": [
+    "cell_grid"
+  ],
+  "trims_available": [
+    "Touring",
+    "Signature"
+  ],
+  "trims_quoted": [
+    "Touring",
+    "Signature"
+  ],
+  "rung_order": [
+    "Sport",
+    "Touring",
+    "Signature"
+  ],
+  "order_basis": {
+    "Sport": {
+      "basis": "printed_sequence",
+      "trim": "Sport",
+      "source": "derived/brochure_text/2019__mazda__mazdacx9.json",
+      "column_index": 0,
+      "pages": [
+        4,
+        5,
+        6
+      ],
+      "layout": "cell_grid"
+    },
+    "Touring": {
+      "basis": "printed_sequence",
+      "trim": "Touring",
+      "source": "derived/brochure_text/2019__mazda__mazdacx9.json",
+      "column_index": 1,
+      "pages": [
+        4,
+        5,
+        6
+      ],
+      "layout": "cell_grid"
+    },
+    "Signature": {
+      "basis": "printed_sequence",
+      "trim": "Signature",
+      "source": "derived/brochure_text/2019__mazda__mazdacx9.json",
+      "column_index": 2,
+      "pages": [
+        4,
+        5,
+        6
+      ],
+      "layout": "cell_grid"
+    }
+  },
+  "rung_edges": [],
+  "adds_by_trim": {
+    "Touring": [
+      "8\" full-color touch-screen display",
+      "Seat material - Leather-trimmed (first and second row outboard seating positions)",
+      "Homelink® and auto-dimming mirror (Frameless type New)",
+      "Power open / close rear liftgate with adjustable height",
+      "Power front passenger seat",
+      "Remote Keyless Entry - Mazda Advanced Keyless Entry and Start System"
+    ],
+    "Signature": [
+      "Active Driving Display (Head-Up Display) with Traffic Sign Recognition",
+      "Heated second row seats",
+      "Seat material - Nappa Leather-trimmed (first and second row outboard seating positions)",
+      "Steering wheel – leather-wrapped w/unique stitch",
+      "20 x 8.5J aluminum alloy wheels",
+      "Auto fold door mirrors",
+      "Signature model badge",
+      "Headlights - Adaptive Front-Lighting System",
+      "LED grille lighting accent",
+      "Windshield wiper de-icer",
+      "Illumination LED - A/T shifter area accent lighting",
+      "Illumination LED - Overhead A/T shifter area"
+    ]
+  },
+  "adds_provenance": {
+    "Touring": [
+      {
+        "text": "8\" full-color touch-screen display",
+        "source": "derived/brochure_text/2019__mazda__mazdacx9.json",
+        "page": 5,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Seat material - Leather-trimmed (first and second row outboard seating positions)",
+        "source": "derived/brochure_text/2019__mazda__mazdacx9.json",
+        "page": 5,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Homelink® and auto-dimming mirror (Frameless type New)",
+        "source": "derived/brochure_text/2019__mazda__mazdacx9.json",
+        "page": 4,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Power open / close rear liftgate with adjustable height",
+        "source": "derived/brochure_text/2019__mazda__mazdacx9.json",
+        "page": 4,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Power front passenger seat",
+        "source": "derived/brochure_text/2019__mazda__mazdacx9.json",
+        "page": 5,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Remote Keyless Entry - Mazda Advanced Keyless Entry and Start System",
+        "source": "derived/brochure_text/2019__mazda__mazdacx9.json",
+        "page": 4,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      }
+    ],
+    "Signature": [
+      {
+        "text": "Active Driving Display (Head-Up Display) with Traffic Sign Recognition",
+        "source": "derived/brochure_text/2019__mazda__mazdacx9.json",
+        "page": 5,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Heated second row seats",
+        "source": "derived/brochure_text/2019__mazda__mazdacx9.json",
+        "page": 5,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Seat material - Nappa Leather-trimmed (first and second row outboard seating positions)",
+        "source": "derived/brochure_text/2019__mazda__mazdacx9.json",
+        "page": 5,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Steering wheel – leather-wrapped w/unique stitch",
+        "source": "derived/brochure_text/2019__mazda__mazdacx9.json",
+        "page": 5,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "20 x 8.5J aluminum alloy wheels",
+        "source": "derived/brochure_text/2019__mazda__mazdacx9.json",
+        "page": 4,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Auto fold door mirrors",
+        "source": "derived/brochure_text/2019__mazda__mazdacx9.json",
+        "page": 4,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Signature model badge",
+        "source": "derived/brochure_text/2019__mazda__mazdacx9.json",
+        "page": 4,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Headlights - Adaptive Front-Lighting System",
+        "source": "derived/brochure_text/2019__mazda__mazdacx9.json",
+        "page": 4,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "LED grille lighting accent",
+        "source": "derived/brochure_text/2019__mazda__mazdacx9.json",
+        "page": 4,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Windshield wiper de-icer",
+        "source": "derived/brochure_text/2019__mazda__mazdacx9.json",
+        "page": 4,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Illumination LED - A/T shifter area accent lighting",
+        "source": "derived/brochure_text/2019__mazda__mazdacx9.json",
+        "page": 4,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Illumination LED - Overhead A/T shifter area",
+        "source": "derived/brochure_text/2019__mazda__mazdacx9.json",
+        "page": 4,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      }
+    ]
+  },
+  "source_brochure_text": "derived/brochure_text/2019__mazda__mazdacx9.json",
+  "pages_used": [
+    4,
+    5,
+    6
+  ],
+  "replaced_source": "brochure_text_quoted",
+  "source_pdf_name": "2019_Mazda_Mazda_CX-9_Brochure.pdf",
+  "source_pdf_sha256": "0187b7e54dfb1f909ce95e31527da611f84d64464b7ebc0bb28becca8fd32d6d",
+  "citation_verification": {
+    "verifier": "verify_trim_citations.py",
+    "version": "2026-08-02.1",
+    "checked_at": "2026-08-03T01:48:49+00:00",
+    "source_pdf": "2019_Mazda_Mazda_CX-9_Brochure.pdf",
+    "verified": 18,
+    "total": 18
+  }
+}

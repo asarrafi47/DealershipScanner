@@ -1,0 +1,456 @@
+{
+  "catalog_key": "2026|toyota|rav4",
+  "year": 2026,
+  "make": "Toyota",
+  "model": "RAV4",
+  "source": "brochure_text_quoted",
+  "layouts": [
+    "cell_grid"
+  ],
+  "trims_available": [
+    "XLE Premium",
+    "SE",
+    "XSE",
+    "Limited"
+  ],
+  "trims_quoted": [
+    "XLE Premium",
+    "SE",
+    "XSE",
+    "Limited"
+  ],
+  "rung_order": [
+    "LE",
+    "XLE Premium",
+    "SE",
+    "XSE",
+    "Limited"
+  ],
+  "order_basis": {
+    "LE": {
+      "basis": "printed_sequence",
+      "trim": "LE",
+      "source": "derived/brochure_text/2026__toyota__rav4.json",
+      "column_index": 0,
+      "pages": [
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "layout": "cell_grid"
+    },
+    "XLE Premium": {
+      "basis": "printed_sequence",
+      "trim": "XLE Premium",
+      "source": "derived/brochure_text/2026__toyota__rav4.json",
+      "column_index": 1,
+      "pages": [
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "layout": "cell_grid"
+    },
+    "SE": {
+      "basis": "printed_sequence",
+      "trim": "SE",
+      "source": "derived/brochure_text/2026__toyota__rav4.json",
+      "column_index": 2,
+      "pages": [
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "layout": "cell_grid"
+    },
+    "XSE": {
+      "basis": "printed_sequence",
+      "trim": "XSE",
+      "source": "derived/brochure_text/2026__toyota__rav4.json",
+      "column_index": 3,
+      "pages": [
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "layout": "cell_grid"
+    },
+    "Limited": {
+      "basis": "printed_sequence",
+      "trim": "Limited",
+      "source": "derived/brochure_text/2026__toyota__rav4.json",
+      "column_index": 4,
+      "pages": [
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "layout": "cell_grid"
+    }
+  },
+  "rung_edges": [],
+  "adds_by_trim": {
+    "XLE Premium": [
+      "Leather-trimmed shift lever with sequential mode",
+      "Chrome painted dash with soft touch dash panels and leather wrapped armrests",
+      "SofTex®-trimmed seats, heated front seats (high-low); 8-way power-adjustable driver's seat with lumbar support; 6-way manual front passenger seat with seatback pocket",
+      "18-in. dark gray metallic wheels",
+      "Piano black heated power outside mirrors with turn signal and blind spot warning indicators",
+      "Variable intermittent windshield wipers and intermittent rear window wiper",
+      "Height-adjustable power liftgate with jam protection",
+      "Silver interior door handles",
+      "Single Qi-compatible wireless smartphone charging with charge indicator light",
+      "2 - 45w Front USB-C, 2 - 15w Rear USB-C Charging Ports and 1 center console media USB-C charging port",
+      "Black in-dash storage trays",
+      "Smart Key System on front doors and liftgate with Push Button Start, remote keyless entry system with lock, unlock, and panic functions, power liftgate and remote illuminated entry"
+    ],
+    "SE": [
+      "Fabric-trimmed, heated front seats (high-low); 8-way power-adjustable driver's seat with lumbar support; 6-way manual front passenger seat with seatback pocket",
+      "18-in multi-spoke black sport alloy wheels with black lug nuts",
+      "Color-keyed upper front bumper, silver-painted rear bumper valance, piano black overfenders, rear bumper, and lower front bumper",
+      "Body-colored grille with dark chrome accents",
+      "2 - 15w front USB-C, 2 rear 15w USB-C charging ports and 1 center console media USB-C charging port"
+    ],
+    "XSE": [
+      "Power tilt/slide moonroof with one-touch open/close",
+      "20-in. multi-spoke black sport alloy wheels with black lug nuts",
+      "Piano black, heated, power outside mirrors with turn signal and blind spot warning indicators, and puddle lights",
+      "Vertical LED front bumper accent lights",
+      "Height-adjustable, hands-free power liftgate with jam protection",
+      "Auto-dimming rearview mirror with HomeLink® universal transceiver"
+    ],
+    "Limited": [
+      "Panoramic glass roof with front power tilt/slide moonroof",
+      "Overhead console with maplights, sunglasses storage, Safety Connect® button and power tilt/slide moonroof controls",
+      "18-in. machined 5-spoke dark gray metallic wheels",
+      "Body-colored grille with satin chrome accents",
+      "Color-keyed upper front bumper, satin black overfenders, chrome lower front bumper and rear bumper",
+      "Integrated LED fog lights",
+      "Rain-sensing variable intermittent windshield wipers with de-icer function and intermittent rear window wiper",
+      "Dual Qi-compatible wireless smartphone charging with charge indicator light",
+      "Toggle shift-by-wire shifter lever",
+      "Digital rearview mirror with HomeLink® universal transceiver"
+    ]
+  },
+  "adds_provenance": {
+    "XLE Premium": [
+      {
+        "text": "Leather-trimmed shift lever with sequential mode",
+        "source": "derived/brochure_text/2026__toyota__rav4.json",
+        "page": 9,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Chrome painted dash with soft touch dash panels and leather wrapped armrests",
+        "source": "derived/brochure_text/2026__toyota__rav4.json",
+        "page": 11,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "SofTex®-trimmed seats, heated front seats (high-low); 8-way power-adjustable driver's seat with lumbar support; 6-way manual front passenger seat with seatback pocket",
+        "source": "derived/brochure_text/2026__toyota__rav4.json",
+        "page": 13,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "18-in. dark gray metallic wheels",
+        "source": "derived/brochure_text/2026__toyota__rav4.json",
+        "page": 8,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Piano black heated power outside mirrors with turn signal and blind spot warning indicators",
+        "source": "derived/brochure_text/2026__toyota__rav4.json",
+        "page": 6,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Variable intermittent windshield wipers and intermittent rear window wiper",
+        "source": "derived/brochure_text/2026__toyota__rav4.json",
+        "page": 7,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Height-adjustable power liftgate with jam protection",
+        "source": "derived/brochure_text/2026__toyota__rav4.json",
+        "page": 7,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Silver interior door handles",
+        "source": "derived/brochure_text/2026__toyota__rav4.json",
+        "page": 10,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Single Qi-compatible wireless smartphone charging with charge indicator light",
+        "source": "derived/brochure_text/2026__toyota__rav4.json",
+        "page": 11,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "2 - 45w Front USB-C, 2 - 15w Rear USB-C Charging Ports and 1 center console media USB-C charging port",
+        "source": "derived/brochure_text/2026__toyota__rav4.json",
+        "page": 12,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Black in-dash storage trays",
+        "source": "derived/brochure_text/2026__toyota__rav4.json",
+        "page": 12,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Smart Key System on front doors and liftgate with Push Button Start, remote keyless entry system with lock, unlock, and panic functions, power liftgate and remote illuminated entry",
+        "source": "derived/brochure_text/2026__toyota__rav4.json",
+        "page": 9,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      }
+    ],
+    "SE": [
+      {
+        "text": "Fabric-trimmed, heated front seats (high-low); 8-way power-adjustable driver's seat with lumbar support; 6-way manual front passenger seat with seatback pocket",
+        "source": "derived/brochure_text/2026__toyota__rav4.json",
+        "page": 13,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "18-in multi-spoke black sport alloy wheels with black lug nuts",
+        "source": "derived/brochure_text/2026__toyota__rav4.json",
+        "page": 7,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Color-keyed upper front bumper, silver-painted rear bumper valance, piano black overfenders, rear bumper, and lower front bumper",
+        "source": "derived/brochure_text/2026__toyota__rav4.json",
+        "page": 6,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Body-colored grille with dark chrome accents",
+        "source": "derived/brochure_text/2026__toyota__rav4.json",
+        "page": 6,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "2 - 15w front USB-C, 2 rear 15w USB-C charging ports and 1 center console media USB-C charging port",
+        "source": "derived/brochure_text/2026__toyota__rav4.json",
+        "page": 11,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      }
+    ],
+    "XSE": [
+      {
+        "text": "Power tilt/slide moonroof with one-touch open/close",
+        "source": "derived/brochure_text/2026__toyota__rav4.json",
+        "page": 7,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "20-in. multi-spoke black sport alloy wheels with black lug nuts",
+        "source": "derived/brochure_text/2026__toyota__rav4.json",
+        "page": 8,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Piano black, heated, power outside mirrors with turn signal and blind spot warning indicators, and puddle lights",
+        "source": "derived/brochure_text/2026__toyota__rav4.json",
+        "page": 6,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Vertical LED front bumper accent lights",
+        "source": "derived/brochure_text/2026__toyota__rav4.json",
+        "page": 6,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Height-adjustable, hands-free power liftgate with jam protection",
+        "source": "derived/brochure_text/2026__toyota__rav4.json",
+        "page": 7,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Auto-dimming rearview mirror with HomeLink® universal transceiver",
+        "source": "derived/brochure_text/2026__toyota__rav4.json",
+        "page": 13,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      }
+    ],
+    "Limited": [
+      {
+        "text": "Panoramic glass roof with front power tilt/slide moonroof",
+        "source": "derived/brochure_text/2026__toyota__rav4.json",
+        "page": 7,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Overhead console with maplights, sunglasses storage, Safety Connect® button and power tilt/slide moonroof controls",
+        "source": "derived/brochure_text/2026__toyota__rav4.json",
+        "page": 12,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "18-in. machined 5-spoke dark gray metallic wheels",
+        "source": "derived/brochure_text/2026__toyota__rav4.json",
+        "page": 7,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Body-colored grille with satin chrome accents",
+        "source": "derived/brochure_text/2026__toyota__rav4.json",
+        "page": 6,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Color-keyed upper front bumper, satin black overfenders, chrome lower front bumper and rear bumper",
+        "source": "derived/brochure_text/2026__toyota__rav4.json",
+        "page": 7,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Integrated LED fog lights",
+        "source": "derived/brochure_text/2026__toyota__rav4.json",
+        "page": 7,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Rain-sensing variable intermittent windshield wipers with de-icer function and intermittent rear window wiper",
+        "source": "derived/brochure_text/2026__toyota__rav4.json",
+        "page": 7,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Dual Qi-compatible wireless smartphone charging with charge indicator light",
+        "source": "derived/brochure_text/2026__toyota__rav4.json",
+        "page": 9,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Toggle shift-by-wire shifter lever",
+        "source": "derived/brochure_text/2026__toyota__rav4.json",
+        "page": 12,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Digital rearview mirror with HomeLink® universal transceiver",
+        "source": "derived/brochure_text/2026__toyota__rav4.json",
+        "page": 13,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      }
+    ]
+  },
+  "source_brochure_text": "derived/brochure_text/2026__toyota__rav4.json",
+  "pages_used": [
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13
+  ],
+  "replaced_source": "brochure_text_quoted",
+  "source_pdf_name": "2026_Toyota_RAV4_Brochure.pdf",
+  "source_pdf_sha256": "236e0e1d28a2e757b7a1734ca5c06290779d3e01bdad996830b44f0e7de9c6ed",
+  "citation_verification": {
+    "verifier": "verify_trim_citations.py",
+    "version": "2026-08-02.1",
+    "checked_at": "2026-08-03T01:48:53+00:00",
+    "source_pdf": "2026_Toyota_RAV4_Brochure.pdf",
+    "verified": 33,
+    "total": 33
+  }
+}

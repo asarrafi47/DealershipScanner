@@ -9,28 +9,22 @@
   "year_max": 2028,
   "source": "generated",
   "trims": {
-    "Sport": [
-      {
-        "label": "Engine Options",
-        "value": "In 2010, all XC90 models received painted wheel arches (previously they were opt; In 2010, all XC90 models received painted wheel arches (previously they were optional)."
-      }
-    ],
     "B5": [
       {
         "label": "Engine Options",
-        "value": "2.0L I4 Turbo; Automatic (S8)"
+        "value": "Hybrid 2.0L I4 (SIDI; Mild Hybrid)"
       }
     ],
     "B6": [
       {
         "label": "Engine Options",
-        "value": "2.0L I4 Turbo; Automatic (S8)"
+        "value": "Hybrid 2.0L I4 (SIDI; Mild Hybrid)"
       }
     ],
     "T8": [
       {
         "label": "Engine Options",
-        "value": "Automatic (S8); All-Wheel Drive"
+        "value": "Plug-in Hybrid 2.0L I4"
       }
     ]
   }

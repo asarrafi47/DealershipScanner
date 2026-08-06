@@ -12,19 +12,19 @@
     "AMG": [
       {
         "label": "Engine Options",
-        "value": "2.0L I4 Turbo; Automatic (AM7)"
+        "value": "2.0L I4 (SIDI)"
       }
     ],
     "AMG GLA45": [
       {
         "label": "Engine Options",
-        "value": "2.0L I4 Turbo; Automatic (AM7)"
+        "value": "2.0L I4 (SIDI)"
       }
     ],
     "GLA250": [
       {
         "label": "Engine Options",
-        "value": "2.0L I4 Turbo; Automatic (AM7)"
+        "value": "FFV 2.0L I4 (SIDI; FFV); 2.0L I4 (SIDI)"
       }
     ]
   }

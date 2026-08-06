@@ -3,63 +3,266 @@
   "year": 2020,
   "make": "Dodge",
   "model": "Charger",
-  "ladder_id": "brochure_llm_2020__dodge__charger",
-  "source": "brochure_llm",
+  "source": "brochure_text_quoted",
+  "layouts": [
+    "adds_to_block"
+  ],
   "trims_available": [
-    "HELLCAT®",
-    "SRT",
-    "R/T",
     "GT",
-    "SXT",
-    "SE"
+    "R/T"
+  ],
+  "trims_quoted": [
+    "GT",
+    "R/T"
+  ],
+  "rung_order": [
+    "SXT AWD",
+    "GT",
+    "R/T"
+  ],
+  "order_basis": {
+    "SXT AWD": {
+      "basis": "adds_to_edge",
+      "trim": "SXT AWD",
+      "direction": "named_as_baseline_by",
+      "edge": {
+        "trim": "GT",
+        "below": "SXT AWD",
+        "source": "derived/brochure_text/2020__dodge__charger.json",
+        "page": 30,
+        "layout": "adds_to_block",
+        "trim_quote": "GT",
+        "below_quote": "ADDS TO SXT AWD"
+      }
+    },
+    "GT": {
+      "basis": "adds_to_edge",
+      "trim": "GT",
+      "direction": "states_its_baseline",
+      "edge": {
+        "trim": "GT",
+        "below": "SXT AWD",
+        "source": "derived/brochure_text/2020__dodge__charger.json",
+        "page": 30,
+        "layout": "adds_to_block",
+        "trim_quote": "GT",
+        "below_quote": "ADDS TO SXT AWD"
+      }
+    },
+    "R/T": {
+      "basis": "adds_to_edge",
+      "trim": "R/T",
+      "direction": "states_its_baseline",
+      "edge": {
+        "trim": "R/T",
+        "below": "GT",
+        "source": "derived/brochure_text/2020__dodge__charger.json",
+        "page": 31,
+        "layout": "adds_to_block",
+        "trim_quote": "R/T",
+        "below_quote": "ADDS TO GT"
+      }
+    }
+  },
+  "rung_edges": [
+    {
+      "trim": "GT",
+      "below": "SXT AWD",
+      "source": "derived/brochure_text/2020__dodge__charger.json",
+      "page": 30,
+      "layout": "adds_to_block",
+      "trim_quote": "GT",
+      "below_quote": "ADDS TO SXT AWD"
+    },
+    {
+      "trim": "R/T",
+      "below": "GT",
+      "source": "derived/brochure_text/2020__dodge__charger.json",
+      "page": 31,
+      "layout": "adds_to_block",
+      "trim_quote": "R/T",
+      "below_quote": "ADDS TO GT"
+    }
   ],
   "adds_by_trim": {
-    "HELLCAT®": [
-      "Advanced SRT multistage front air bags",
-      "200-mph primary speedometer with red-faced gauges",
-      "SRT Configurable Drive Modes",
-      "SRT Performance Pages",
-      "Premium leather-wrapped SRT flat-bottom steering wheel",
-      "Alcantara wrapped SRT flat-bottom steering wheel with Alcantara Package",
-      "Dark Engine Turn aluminum interior accents",
-      "SRT Hellcat premium floor mats"
-    ],
-    "SRT": [
-      "Performance steering wheel with mounted paddle shifters",
-      "180-mph primary speedometer",
-      "SRT Performance Pages",
-      "SRT Configurable Drive Modes",
-      "Leather flat-bottom performance steering wheel with Performance Handling Group"
+    "GT": [
+      "Performance suspension",
+      "20 by 8-inch Satin Carbon aluminum wheels",
+      "3-Mode Electronic Stability Control (ESC)1",
+      "GT and Dodge grille badges",
+      "Performance Black grille",
+      "Performance hood, fascias and sills",
+      "Projector LED fog lamps",
+      "Rear body-color spoiler",
+      "Houndstooth cloth Performance seats",
+      "Universal garage door opener"
     ],
     "R/T": [
-      "Leather flat-bottom performance steering wheel with Performance Handling Group",
-      "160-mph primary speedometer",
-      "Paddle shifters on steering wheel",
-      "Dodge Performance Pages"
-    ],
-    "GT": [
-      "160-mph primary speedometer",
-      "Dodge Performance Pages",
-      "Mounted paddle shifters on steering wheel",
-      "Dynamica suede headliner with Carbon & Suede Group",
-      "Real Carbon Fiber interior accents with Carbon & Suede Group"
-    ],
-    "SXT": [
-      "140-mph primary speedometer",
-      "Dodge Performance Pages",
-      "Leather-wrapped steering wheel",
-      "Mounted paddle shifters on steering wheel",
-      "UConnect 4C NAV with 8.4-inch display"
-    ],
-    "SE": [
-      "Heated front seats",
-      "Heated steering wheel with Plus Group, Daytona Edition, or Cold Weather Group",
-      "6 speakers audio system",
-      "UConnect 4 with 7-inch touchscreen display",
-      "Remote Keyless Enter 'N Go keyless entry",
-      "ParkView rear back-up camera",
-      "ParkSense rear park assist",
-      "Advanced multistage front air bags"
+      "5.7L HEMI® V8 engine",
+      "High-speed engine controller",
+      "2.62 rear axle ratio",
+      "20 by 8-inch Satin Carbon aluminum wheels",
+      "Active exhaust",
+      "R/T badge",
+      "Tire service kit"
     ]
+  },
+  "adds_provenance": {
+    "GT": [
+      {
+        "text": "Performance suspension",
+        "source": "derived/brochure_text/2020__dodge__charger.json",
+        "page": 30,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "20 by 8-inch Satin Carbon aluminum wheels",
+        "source": "derived/brochure_text/2020__dodge__charger.json",
+        "page": 30,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "3-Mode Electronic Stability Control (ESC)1",
+        "source": "derived/brochure_text/2020__dodge__charger.json",
+        "page": 30,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "GT and Dodge grille badges",
+        "source": "derived/brochure_text/2020__dodge__charger.json",
+        "page": 30,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Performance Black grille",
+        "source": "derived/brochure_text/2020__dodge__charger.json",
+        "page": 30,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Performance hood, fascias and sills",
+        "source": "derived/brochure_text/2020__dodge__charger.json",
+        "page": 30,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Projector LED fog lamps",
+        "source": "derived/brochure_text/2020__dodge__charger.json",
+        "page": 30,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Rear body-color spoiler",
+        "source": "derived/brochure_text/2020__dodge__charger.json",
+        "page": 30,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Houndstooth cloth Performance seats",
+        "source": "derived/brochure_text/2020__dodge__charger.json",
+        "page": 30,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Universal garage door opener",
+        "source": "derived/brochure_text/2020__dodge__charger.json",
+        "page": 30,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      }
+    ],
+    "R/T": [
+      {
+        "text": "5.7L HEMI® V8 engine",
+        "source": "derived/brochure_text/2020__dodge__charger.json",
+        "page": 31,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "High-speed engine controller",
+        "source": "derived/brochure_text/2020__dodge__charger.json",
+        "page": 31,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "2.62 rear axle ratio",
+        "source": "derived/brochure_text/2020__dodge__charger.json",
+        "page": 31,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "20 by 8-inch Satin Carbon aluminum wheels",
+        "source": "derived/brochure_text/2020__dodge__charger.json",
+        "page": 31,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Active exhaust",
+        "source": "derived/brochure_text/2020__dodge__charger.json",
+        "page": 31,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "R/T badge",
+        "source": "derived/brochure_text/2020__dodge__charger.json",
+        "page": 31,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Tire service kit",
+        "source": "derived/brochure_text/2020__dodge__charger.json",
+        "page": 31,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      }
+    ]
+  },
+  "source_brochure_text": "derived/brochure_text/2020__dodge__charger.json",
+  "pages_used": [
+    30,
+    31
+  ],
+  "replaced_source": "brochure_text_quoted",
+  "source_pdf_name": "2020_Dodge_Charger_Brochure.pdf",
+  "source_pdf_sha256": "52aaa988a117a21ae9bf99e0bcf829a7b9ee8883e2bfcbfdd9e97f30dbb66cae",
+  "citation_verification": {
+    "verifier": "verify_trim_citations.py",
+    "version": "2026-08-02.1",
+    "checked_at": "2026-08-03T01:48:49+00:00",
+    "source_pdf": "2020_Dodge_Charger_Brochure.pdf",
+    "verified": 17,
+    "total": 17
   }
 }

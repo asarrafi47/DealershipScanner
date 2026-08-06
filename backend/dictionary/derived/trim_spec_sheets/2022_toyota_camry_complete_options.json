@@ -9,28 +9,22 @@
   "year_max": 2024,
   "source": "generated",
   "trims": {
-    "Limited": [
-      {
-        "label": "Engine Options",
-        "value": "Layout Front-engine, rear-wheel drive"
-      }
-    ],
     "XLE": [
       {
         "label": "Engine Options",
-        "value": "Automatic (S8); Front-Wheel Drive"
+        "value": "2.5L I4 (SIDI & PFI); Hybrid 2.5L I4 (SIDI & PFI; Hybrid)"
       }
     ],
     "SE": [
       {
         "label": "Engine Options",
-        "value": "Automatic (S8); Front-Wheel Drive"
+        "value": "3.5L V6 (SIDI & PFI); 2.5L I4 (SIDI & PFI)"
       }
     ],
     "LE": [
       {
         "label": "Engine Options",
-        "value": "Automatic (S8); Front-Wheel Drive"
+        "value": "2.5L I4 (SIDI & PFI); Hybrid 2.5L I4 (SIDI & PFI; Hybrid)"
       }
     ]
   }

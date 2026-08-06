@@ -1,0 +1,1407 @@
+{
+ "catalog_key": "2025|honda|crv",
+ "year": 2025,
+ "make": "Honda",
+ "model": "CR-V",
+ "source_media_type": "text/html",
+ "source_html": "backend/data/spec_pages/2025__honda__crv.html",
+ "source_html_sha256": "e862a13a1863051fc00c463cd83aedb79e1c2972e5d5c9ae55782d1355cef7b6",
+ "source_url": "https://hondanews.com/en-US/honda-automobiles/releases/release-f43bcac5ded8efe77b071fcb0c097416-2025-honda-cr-v-specifications-and-features",
+ "source_title": "",
+ "retrieved_at": "2026-08-02T19:52:23Z",
+ "bytes": 112087,
+ "text_transformations": [
+  "sup-elements dropped",
+  "entities decoded",
+  "whitespace collapsed"
+ ],
+ "page_count": 1,
+ "pages": [
+  {
+   "page": 0,
+   "trim_hint": true,
+   "trims": [
+    "LX",
+    "EX",
+    "EX-L",
+    "Sport",
+    "Sport-L",
+    "Sport Touring"
+   ],
+   "header_row": 0,
+   "column_groups": [],
+   "refused_rows": {
+    "not_a_mark_row": 65,
+    "no_row_label": 4
+   },
+   "text": "2025 HONDA CR-V SPECIFICATIONS & FEATURES\nLX\tEX\tEX-L\tSport\tSport-L\tSport Touring\nPOWER UNIT > ENGINE\tIdle-Stop\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > DRIVETRAIN\tFront-Wheel Drive\tstandard\tstandard\tstandard\tstandard\tstandard\tabsent\nPOWER UNIT > DRIVETRAIN\tReal-Time AWD with Intelligent Control System™\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nPOWER UNIT > DRIVETRAIN\tContinuously Variable Transmission (CVT)\tstandard\tstandard\tstandard\tabsent\tabsent\tabsent\nCHASSIS\tAdvanced Compatibility Engineering™ (ACE™) Body Structure\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nCHASSIS\tMacPherson Strut Front Suspension\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nCHASSIS\tMulti-Link Rear Suspension\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nCHASSIS\tDual Pinion Assist Electric Power Steering (EPS)\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nCHASSIS\tElectronic Parking Brake (EPB) with Automatic Brake Hold\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nFEATURES > HONDA SENSING®\tCollision Mitigation Braking System™ (CMBS™)\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nFEATURES > HONDA SENSING®\tRoad Departure Mitigation System (RDM)\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nFEATURES > HONDA SENSING®\tLane Departure Warning (LDW)\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nFEATURES > HONDA SENSING®\tForward Collision Warning (FCW)\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nFEATURES > HONDA SENSING®\tAdaptive Cruise Control (ACC) with Low-Speed Follow\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nFEATURES > HONDA SENSING®\tLane Keeping Assist System (LKAS)\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nFEATURES > HONDA SENSING®\tTraffic Sign Recognition System (TSR)\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nFEATURES > HONDA SENSING®\tBlind Spot Information System (BSI)\tabsent\tstandard\tstandard\tstandard\tstandard\tstandard\nFEATURES > HONDA SENSING®\tCross Traffic Monitor (CTM)\tabsent\tstandard\tstandard\tstandard\tstandard\tstandard\nFEATURES > HONDA SENSING®\tTraffic Jam Assist (Traffic Jam Driving Support Function)\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nFEATURES > HONDA SENSING®\tLow Speed Braking Control\tabsent\tabsent\tstandard\tabsent\tstandard\tstandard\nFEATURES > HONDA SENSING®\tAuto High Beam Headlights\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nFEATURES > HONDA SENSING®\tParking Sensors (4 Front & 4 Rear)\tabsent\tabsent\tstandard\tabsent\tstandard\tstandard\nFEATURES > SAFETY & DRIVER ASSISTIVE TECHNOLOGY\tDriver & Passenger i-SRS Airbag System\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nFEATURES > SAFETY & DRIVER ASSISTIVE TECHNOLOGY\tDriver & Passenger Knee Airbag System\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nFEATURES > SAFETY & DRIVER ASSISTIVE TECHNOLOGY\tFront i-side Airbag System\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nFEATURES > SAFETY & DRIVER ASSISTIVE TECHNOLOGY\tRear i-side Airbag System\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nFEATURES > SAFETY & DRIVER ASSISTIVE TECHNOLOGY\tSide Curtain Airbag System\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nFEATURES > SAFETY & DRIVER ASSISTIVE TECHNOLOGY\tSeat-Belt Reminder for Front Seats\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nFEATURES > SAFETY & DRIVER ASSISTIVE TECHNOLOGY\tSeat-Belt Reminder for Rear Seats\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nFEATURES > SAFETY & DRIVER ASSISTIVE TECHNOLOGY\tVehicle Stability Assist® (VSA®) with Traction Control\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nFEATURES > SAFETY & DRIVER ASSISTIVE TECHNOLOGY\tAnti-Lock Braking System (ABS)\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nFEATURES > SAFETY & DRIVER ASSISTIVE TECHNOLOGY\tTire Pressure Monitoring System (TPMS)\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nFEATURES > SAFETY & DRIVER ASSISTIVE TECHNOLOGY\tMulti-Angle Rearview Camera with Dynamic Guidelines\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nFEATURES > DRIVER CONVENIENCE\tAuto-On/Off Headlight Operation\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nFEATURES > DRIVER CONVENIENCE\tDeceleration Selectors\tabsent\tabsent\tabsent\tstandard\tstandard\tstandard\nFEATURES > DRIVER CONVENIENCE\tHill Start Assist\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nFEATURES > DRIVER CONVENIENCE\tHill Descent Control\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nFEATURES > DRIVER CONVENIENCE\tBrake Hold\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nFEATURES > DRIVER CONVENIENCE\tCruise Control\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nFEATURES > DRIVER CONVENIENCE\tOne-Touch Turn Indicators\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nFEATURES > DRIVER CONVENIENCE\tRear Seat Reminder (RSR)\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nFEATURES > DRIVER CONVENIENCE\tSeat Belt Reminder for all Seating Positions\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nFEATURES > DRIVER CONVENIENCE\tCapless Fuel Filler\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nFEATURES > DRIVER CONVENIENCE\tLower Anchors and Tethers for Children (LATCH): Lower Anchors (2nd-Row Outboard), Tether Anchors (2nd-Row All)\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nFEATURES > DRIVER CONVENIENCE\tKey Fob Activated Remote Engine Start\tabsent\tstandard\tstandard\tstandard\tstandard\tstandard\nFEATURES > AUDIO & CONNECTIVITY\t7-inch Color Touchscreen\tstandard\tstandard\tabsent\tstandard\tabsent\tabsent\nFEATURES > AUDIO & CONNECTIVITY\t9-inch Color Touchscreen\tabsent\tabsent\tstandard\tabsent\tstandard\tstandard\nFEATURES > AUDIO & CONNECTIVITY\t7-Inch TFT Meter Display\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nFEATURES > AUDIO & CONNECTIVITY\tHonda Satellite-Linked Navigation System™ with Voice Recognition and Honda HD Digital Traffic\tabsent\tabsent\tabsent\tabsent\tabsent\tstandard\nFEATURES > AUDIO & CONNECTIVITY\t160-Watt Audio System with 4 Speakers\tstandard\tabsent\tabsent\tabsent\tabsent\tabsent\nFEATURES > AUDIO & CONNECTIVITY\t240-Watt Audio System with 6 Speakers\tabsent\tstandard\tabsent\tstandard\tabsent\tabsent\nFEATURES > AUDIO & CONNECTIVITY\t320-Watt Audio System with 8 Speakers\tabsent\tabsent\tstandard\tabsent\tstandard\tabsent\nFEATURES > AUDIO & CONNECTIVITY\tBose® Premium Sound System with 12 Speakers\tabsent\tabsent\tabsent\tabsent\tabsent\tstandard\nFEATURES > AUDIO & CONNECTIVITY\tApple CarPlay® Compatibility\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nFEATURES > AUDIO & CONNECTIVITY\tAndroid Auto™ Compatibility\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nFEATURES > AUDIO & CONNECTIVITY\tWireless Apple CarPlay® Compatibility\tabsent\tabsent\tstandard\tabsent\tstandard\tstandard\nFEATURES > AUDIO & CONNECTIVITY\tWireless Android Auto™ Compatibility\tabsent\tabsent\tstandard\tabsent\tstandard\tstandard\nFEATURES > AUDIO & CONNECTIVITY\tBluetooth® Streaming Audio\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nFEATURES > AUDIO & CONNECTIVITY\tUSB-A 2.5A Smartphone / Audio Interface (x1) - Front Seats\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nFEATURES > AUDIO & CONNECTIVITY\tUSB-C 3.0A Charging Port (x1) - Front Seats\tabsent\tstandard\tstandard\tstandard\tstandard\tstandard\nFEATURES > AUDIO & CONNECTIVITY\tUSB-C 3.0A Charging Port (x2) - Rear Seats\tabsent\tstandard\tstandard\tstandard\tstandard\tstandard\nFEATURES > AUDIO & CONNECTIVITY\tSiriusXM®\tabsent\tabsent\tstandard\tabsent\tstandard\tstandard\nFEATURES > AUDIO & CONNECTIVITY\tHD Radio™\tabsent\tabsent\tstandard\tabsent\tstandard\tstandard\nFEATURES > AUDIO & CONNECTIVITY\tWi-Fi Hotspot Capability\tabsent\tabsent\tabsent\tabsent\tabsent\tstandard\nFEATURES > AUDIO & CONNECTIVITY\tWireless Charging Pad (Qi)\tabsent\tabsent\tstandard\tabsent\tstandard\tstandard\nFEATURES > AUDIO & CONNECTIVITY\tHondaLink Subscription Services\tabsent\tabsent\tabsent\tabsent\tabsent\tstandard\nFEATURES > INTERIOR\tPower Windows with Auto Up/Down Driver & Passenger Window\tstandard\tstandard\tabsent\tstandard\tabsent\tabsent\nFEATURES > INTERIOR\tPower Windows with Auto Up/Down All Windows\tabsent\tabsent\tstandard\tabsent\tstandard\tstandard\nFEATURES > INTERIOR\tSunvisor Vanity (Driver & Passenger)\tstandard\tabsent\tabsent\tabsent\tabsent\tabsent\nFEATURES > INTERIOR\tIlluminated Sunvisor Vanity (Driver & Passenger)\tabsent\tstandard\tstandard\tstandard\tstandard\tstandard\nFEATURES > INTERIOR\tDriver & Passenger Heated Seat\tabsent\tstandard\tstandard\tstandard\tstandard\tstandard\nFEATURES > INTERIOR\tLeather-Trimmed Seats\tabsent\tabsent\tstandard\tabsent\tstandard\tstandard\nFEATURES > INTERIOR\tDriver's Seat with Manual Height Adjustment\tstandard\tabsent\tabsent\tabsent\tabsent\tabsent\nFEATURES > INTERIOR\tDriver's Seat with 10-Way Power Adjustment with 2-Way Power Lumbar Support\tabsent\tstandard\tstandard\tstandard\tstandard\tstandard\nFEATURES > INTERIOR\tTwo-Position Driver's Seat Memory\tabsent\tabsent\tstandard\tabsent\tstandard\tstandard\nFEATURES > INTERIOR\tPassenger Seat with Manual Height Adjustment\tstandard\tstandard\tabsent\tstandard\tabsent\tabsent\nFEATURES > INTERIOR\tPassenger Seat with 4-Way Power Adjustment\tabsent\tabsent\tstandard\tabsent\tstandard\tstandard\nFEATURES > INTERIOR\tAir Conditioning with Air-Filtration System\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nFEATURES > INTERIOR\tDual Zone Climate Control\tabsent\tstandard\tstandard\tstandard\tstandard\tstandard\nFEATURES > INTERIOR\tPush Button Start\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nFEATURES > INTERIOR\tAutomatic-Dimming Rearview Mirror\tabsent\tabsent\tstandard\tabsent\tstandard\tstandard\nFEATURES > INTERIOR\tLED Front & Rear Map Lights\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nFEATURES > INTERIOR\tFront Foot & Door Handle Ambient Lighting\tabsent\tabsent\tabsent\tabsent\tabsent\tstandard\nFEATURES > INTERIOR\tHeated Steering Wheel\tabsent\tabsent\tabsent\tabsent\tabsent\tstandard\nFEATURES > INTERIOR\tLeather Wrapped Steering Wheel & Shifter\tabsent\tabsent\tstandard\tstandard\tstandard\tstandard\nFEATURES > INTERIOR\tUnique Sport Interior Styling\tabsent\tabsent\tabsent\tstandard\tabsent\tstandard\nFEATURES > INTERIOR\tSmart Entry with Walk Away Auto Lock®\tabsent\tstandard\tstandard\tstandard\tstandard\tstandard\nFEATURES > EXTERIOR\tLED Headlights & Taillights\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nFEATURES > EXTERIOR\tAuto On/Off Headlights\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nFEATURES > EXTERIOR\tLED Front Turn Indicators\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nFEATURES > EXTERIOR\tLED Daytime Running Light (DRL)\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nFEATURES > EXTERIOR\tLED Side Mirror Turn Indicator\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nFEATURES > EXTERIOR\tHalogen Rear Turn Indicators\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nFEATURES > EXTERIOR\tHeated Side Mirrors\tabsent\tstandard\tstandard\tstandard\tstandard\tstandard\nFEATURES > EXTERIOR\tTailgate\tstandard\tstandard\tabsent\tstandard\tabsent\tabsent\nFEATURES > EXTERIOR\tPower Tailgate\tabsent\tabsent\tstandard\tabsent\tstandard\tabsent\nFEATURES > EXTERIOR\tPower Tailgate with Hands-Free Access\tabsent\tabsent\tabsent\tabsent\tabsent\tstandard\nFEATURES > EXTERIOR\tOne-Touch Power Moonroof with Tilt Feature\tabsent\tstandard\tstandard\tstandard\tstandard\tstandard\nFEATURES > EXTERIOR\tPush-to-Release Fuel Filler Door\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nFEATURES > EXTERIOR\tSmart Clear Wiper\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard\nFEATURES > EXTERIOR\tRain Sensing Wipers\tabsent\tabsent\tabsent\tabsent\tabsent\tstandard\nFEATURES > EXTERIOR\tBlack Roof Rails\tabsent\tabsent\tabsent\tstandard\tstandard\tstandard\nFEATURES > EXTERIOR\tDual Chrome Exhaust Finishers\tabsent\tabsent\tabsent\tstandard\tstandard\tstandard\nFEATURES > EXTERIOR\tUnique Sport Exterior Styling\tabsent\tabsent\tabsent\tstandard\tstandard\tstandard\nFEATURES > EXTERIOR\tPrivacy Glass\tstandard\tstandard\tstandard\tstandard\tstandard\tstandard",
+   "rows": [
+    {
+     "row": 15,
+     "section": "POWER UNIT > ENGINE",
+     "label": "Idle-Stop",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 20,
+     "section": "POWER UNIT > DRIVETRAIN",
+     "label": "Front-Wheel Drive",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "absent"
+     ]
+    },
+    {
+     "row": 21,
+     "section": "POWER UNIT > DRIVETRAIN",
+     "label": "Real-Time AWD with Intelligent Control System™",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 22,
+     "section": "POWER UNIT > DRIVETRAIN",
+     "label": "Continuously Variable Transmission (CVT)",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "absent",
+      "absent",
+      "absent"
+     ]
+    },
+    {
+     "row": 35,
+     "section": "CHASSIS",
+     "label": "Advanced Compatibility Engineering™ (ACE™) Body Structure",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 37,
+     "section": "CHASSIS",
+     "label": "MacPherson Strut Front Suspension",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 38,
+     "section": "CHASSIS",
+     "label": "Multi-Link Rear Suspension",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 41,
+     "section": "CHASSIS",
+     "label": "Dual Pinion Assist Electric Power Steering (EPS)",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 46,
+     "section": "CHASSIS",
+     "label": "Electronic Parking Brake (EPB) with Automatic Brake Hold",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 83,
+     "section": "FEATURES > HONDA SENSING®",
+     "label": "Collision Mitigation Braking System™ (CMBS™)",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 84,
+     "section": "FEATURES > HONDA SENSING®",
+     "label": "Road Departure Mitigation System (RDM)",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 85,
+     "section": "FEATURES > HONDA SENSING®",
+     "label": "Lane Departure Warning (LDW)",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 86,
+     "section": "FEATURES > HONDA SENSING®",
+     "label": "Forward Collision Warning (FCW)",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 87,
+     "section": "FEATURES > HONDA SENSING®",
+     "label": "Adaptive Cruise Control (ACC) with Low-Speed Follow",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 88,
+     "section": "FEATURES > HONDA SENSING®",
+     "label": "Lane Keeping Assist System (LKAS)",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 89,
+     "section": "FEATURES > HONDA SENSING®",
+     "label": "Traffic Sign Recognition System (TSR)",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 90,
+     "section": "FEATURES > HONDA SENSING®",
+     "label": "Blind Spot Information System (BSI)",
+     "marks": [
+      "absent",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 91,
+     "section": "FEATURES > HONDA SENSING®",
+     "label": "Cross Traffic Monitor (CTM)",
+     "marks": [
+      "absent",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 92,
+     "section": "FEATURES > HONDA SENSING®",
+     "label": "Traffic Jam Assist (Traffic Jam Driving Support Function)",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 93,
+     "section": "FEATURES > HONDA SENSING®",
+     "label": "Low Speed Braking Control",
+     "marks": [
+      "absent",
+      "absent",
+      "standard",
+      "absent",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 94,
+     "section": "FEATURES > HONDA SENSING®",
+     "label": "Auto High Beam Headlights",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 95,
+     "section": "FEATURES > HONDA SENSING®",
+     "label": "Parking Sensors (4 Front & 4 Rear)",
+     "marks": [
+      "absent",
+      "absent",
+      "standard",
+      "absent",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 98,
+     "section": "FEATURES > SAFETY & DRIVER ASSISTIVE TECHNOLOGY",
+     "label": "Driver & Passenger i-SRS Airbag System",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 99,
+     "section": "FEATURES > SAFETY & DRIVER ASSISTIVE TECHNOLOGY",
+     "label": "Driver & Passenger Knee Airbag System",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 100,
+     "section": "FEATURES > SAFETY & DRIVER ASSISTIVE TECHNOLOGY",
+     "label": "Front i-side Airbag System",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 101,
+     "section": "FEATURES > SAFETY & DRIVER ASSISTIVE TECHNOLOGY",
+     "label": "Rear i-side Airbag System",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 102,
+     "section": "FEATURES > SAFETY & DRIVER ASSISTIVE TECHNOLOGY",
+     "label": "Side Curtain Airbag System",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 103,
+     "section": "FEATURES > SAFETY & DRIVER ASSISTIVE TECHNOLOGY",
+     "label": "Seat-Belt Reminder for Front Seats",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 104,
+     "section": "FEATURES > SAFETY & DRIVER ASSISTIVE TECHNOLOGY",
+     "label": "Seat-Belt Reminder for Rear Seats",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 105,
+     "section": "FEATURES > SAFETY & DRIVER ASSISTIVE TECHNOLOGY",
+     "label": "Vehicle Stability Assist® (VSA®) with Traction Control",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 106,
+     "section": "FEATURES > SAFETY & DRIVER ASSISTIVE TECHNOLOGY",
+     "label": "Anti-Lock Braking System (ABS)",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 107,
+     "section": "FEATURES > SAFETY & DRIVER ASSISTIVE TECHNOLOGY",
+     "label": "Tire Pressure Monitoring System (TPMS)",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 108,
+     "section": "FEATURES > SAFETY & DRIVER ASSISTIVE TECHNOLOGY",
+     "label": "Multi-Angle Rearview Camera with Dynamic Guidelines",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 111,
+     "section": "FEATURES > DRIVER CONVENIENCE",
+     "label": "Auto-On/Off Headlight Operation",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 112,
+     "section": "FEATURES > DRIVER CONVENIENCE",
+     "label": "Deceleration Selectors",
+     "marks": [
+      "absent",
+      "absent",
+      "absent",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 113,
+     "section": "FEATURES > DRIVER CONVENIENCE",
+     "label": "Hill Start Assist",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 114,
+     "section": "FEATURES > DRIVER CONVENIENCE",
+     "label": "Hill Descent Control",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 115,
+     "section": "FEATURES > DRIVER CONVENIENCE",
+     "label": "Brake Hold",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 116,
+     "section": "FEATURES > DRIVER CONVENIENCE",
+     "label": "Cruise Control",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 117,
+     "section": "FEATURES > DRIVER CONVENIENCE",
+     "label": "One-Touch Turn Indicators",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 118,
+     "section": "FEATURES > DRIVER CONVENIENCE",
+     "label": "Rear Seat Reminder (RSR)",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 119,
+     "section": "FEATURES > DRIVER CONVENIENCE",
+     "label": "Seat Belt Reminder for all Seating Positions",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 120,
+     "section": "FEATURES > DRIVER CONVENIENCE",
+     "label": "Capless Fuel Filler",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 121,
+     "section": "FEATURES > DRIVER CONVENIENCE",
+     "label": "Lower Anchors and Tethers for Children (LATCH): Lower Anchors (2nd-Row Outboard), Tether Anchors (2nd-Row All)",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 122,
+     "section": "FEATURES > DRIVER CONVENIENCE",
+     "label": "Key Fob Activated Remote Engine Start",
+     "marks": [
+      "absent",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 125,
+     "section": "FEATURES > AUDIO & CONNECTIVITY",
+     "label": "7-inch Color Touchscreen",
+     "marks": [
+      "standard",
+      "standard",
+      "absent",
+      "standard",
+      "absent",
+      "absent"
+     ]
+    },
+    {
+     "row": 126,
+     "section": "FEATURES > AUDIO & CONNECTIVITY",
+     "label": "9-inch Color Touchscreen",
+     "marks": [
+      "absent",
+      "absent",
+      "standard",
+      "absent",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 127,
+     "section": "FEATURES > AUDIO & CONNECTIVITY",
+     "label": "7-Inch TFT Meter Display",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 128,
+     "section": "FEATURES > AUDIO & CONNECTIVITY",
+     "label": "Honda Satellite-Linked Navigation System™ with Voice Recognition and Honda HD Digital Traffic",
+     "marks": [
+      "absent",
+      "absent",
+      "absent",
+      "absent",
+      "absent",
+      "standard"
+     ]
+    },
+    {
+     "row": 129,
+     "section": "FEATURES > AUDIO & CONNECTIVITY",
+     "label": "160-Watt Audio System with 4 Speakers",
+     "marks": [
+      "standard",
+      "absent",
+      "absent",
+      "absent",
+      "absent",
+      "absent"
+     ]
+    },
+    {
+     "row": 130,
+     "section": "FEATURES > AUDIO & CONNECTIVITY",
+     "label": "240-Watt Audio System with 6 Speakers",
+     "marks": [
+      "absent",
+      "standard",
+      "absent",
+      "standard",
+      "absent",
+      "absent"
+     ]
+    },
+    {
+     "row": 131,
+     "section": "FEATURES > AUDIO & CONNECTIVITY",
+     "label": "320-Watt Audio System with 8 Speakers",
+     "marks": [
+      "absent",
+      "absent",
+      "standard",
+      "absent",
+      "standard",
+      "absent"
+     ]
+    },
+    {
+     "row": 132,
+     "section": "FEATURES > AUDIO & CONNECTIVITY",
+     "label": "Bose® Premium Sound System with 12 Speakers",
+     "marks": [
+      "absent",
+      "absent",
+      "absent",
+      "absent",
+      "absent",
+      "standard"
+     ]
+    },
+    {
+     "row": 133,
+     "section": "FEATURES > AUDIO & CONNECTIVITY",
+     "label": "Apple CarPlay® Compatibility",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 134,
+     "section": "FEATURES > AUDIO & CONNECTIVITY",
+     "label": "Android Auto™ Compatibility",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 135,
+     "section": "FEATURES > AUDIO & CONNECTIVITY",
+     "label": "Wireless Apple CarPlay® Compatibility",
+     "marks": [
+      "absent",
+      "absent",
+      "standard",
+      "absent",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 136,
+     "section": "FEATURES > AUDIO & CONNECTIVITY",
+     "label": "Wireless Android Auto™ Compatibility",
+     "marks": [
+      "absent",
+      "absent",
+      "standard",
+      "absent",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 137,
+     "section": "FEATURES > AUDIO & CONNECTIVITY",
+     "label": "Bluetooth® Streaming Audio",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 138,
+     "section": "FEATURES > AUDIO & CONNECTIVITY",
+     "label": "USB-A 2.5A Smartphone / Audio Interface (x1) - Front Seats",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 139,
+     "section": "FEATURES > AUDIO & CONNECTIVITY",
+     "label": "USB-C 3.0A Charging Port (x1) - Front Seats",
+     "marks": [
+      "absent",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 140,
+     "section": "FEATURES > AUDIO & CONNECTIVITY",
+     "label": "USB-C 3.0A Charging Port (x2) - Rear Seats",
+     "marks": [
+      "absent",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 141,
+     "section": "FEATURES > AUDIO & CONNECTIVITY",
+     "label": "SiriusXM®",
+     "marks": [
+      "absent",
+      "absent",
+      "standard",
+      "absent",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 142,
+     "section": "FEATURES > AUDIO & CONNECTIVITY",
+     "label": "HD Radio™",
+     "marks": [
+      "absent",
+      "absent",
+      "standard",
+      "absent",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 143,
+     "section": "FEATURES > AUDIO & CONNECTIVITY",
+     "label": "Wi-Fi Hotspot Capability",
+     "marks": [
+      "absent",
+      "absent",
+      "absent",
+      "absent",
+      "absent",
+      "standard"
+     ]
+    },
+    {
+     "row": 144,
+     "section": "FEATURES > AUDIO & CONNECTIVITY",
+     "label": "Wireless Charging Pad (Qi)",
+     "marks": [
+      "absent",
+      "absent",
+      "standard",
+      "absent",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 145,
+     "section": "FEATURES > AUDIO & CONNECTIVITY",
+     "label": "HondaLink Subscription Services",
+     "marks": [
+      "absent",
+      "absent",
+      "absent",
+      "absent",
+      "absent",
+      "standard"
+     ]
+    },
+    {
+     "row": 148,
+     "section": "FEATURES > INTERIOR",
+     "label": "Power Windows with Auto Up/Down Driver & Passenger Window",
+     "marks": [
+      "standard",
+      "standard",
+      "absent",
+      "standard",
+      "absent",
+      "absent"
+     ]
+    },
+    {
+     "row": 149,
+     "section": "FEATURES > INTERIOR",
+     "label": "Power Windows with Auto Up/Down All Windows",
+     "marks": [
+      "absent",
+      "absent",
+      "standard",
+      "absent",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 150,
+     "section": "FEATURES > INTERIOR",
+     "label": "Sunvisor Vanity (Driver & Passenger)",
+     "marks": [
+      "standard",
+      "absent",
+      "absent",
+      "absent",
+      "absent",
+      "absent"
+     ]
+    },
+    {
+     "row": 151,
+     "section": "FEATURES > INTERIOR",
+     "label": "Illuminated Sunvisor Vanity (Driver & Passenger)",
+     "marks": [
+      "absent",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 152,
+     "section": "FEATURES > INTERIOR",
+     "label": "Driver & Passenger Heated Seat",
+     "marks": [
+      "absent",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 153,
+     "section": "FEATURES > INTERIOR",
+     "label": "Leather-Trimmed Seats",
+     "marks": [
+      "absent",
+      "absent",
+      "standard",
+      "absent",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 154,
+     "section": "FEATURES > INTERIOR",
+     "label": "Driver's Seat with Manual Height Adjustment",
+     "marks": [
+      "standard",
+      "absent",
+      "absent",
+      "absent",
+      "absent",
+      "absent"
+     ]
+    },
+    {
+     "row": 155,
+     "section": "FEATURES > INTERIOR",
+     "label": "Driver's Seat with 10-Way Power Adjustment with 2-Way Power Lumbar Support",
+     "marks": [
+      "absent",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 156,
+     "section": "FEATURES > INTERIOR",
+     "label": "Two-Position Driver's Seat Memory",
+     "marks": [
+      "absent",
+      "absent",
+      "standard",
+      "absent",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 157,
+     "section": "FEATURES > INTERIOR",
+     "label": "Passenger Seat with Manual Height Adjustment",
+     "marks": [
+      "standard",
+      "standard",
+      "absent",
+      "standard",
+      "absent",
+      "absent"
+     ]
+    },
+    {
+     "row": 158,
+     "section": "FEATURES > INTERIOR",
+     "label": "Passenger Seat with 4-Way Power Adjustment",
+     "marks": [
+      "absent",
+      "absent",
+      "standard",
+      "absent",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 159,
+     "section": "FEATURES > INTERIOR",
+     "label": "Air Conditioning with Air-Filtration System",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 160,
+     "section": "FEATURES > INTERIOR",
+     "label": "Dual Zone Climate Control",
+     "marks": [
+      "absent",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 161,
+     "section": "FEATURES > INTERIOR",
+     "label": "Push Button Start",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 162,
+     "section": "FEATURES > INTERIOR",
+     "label": "Automatic-Dimming Rearview Mirror",
+     "marks": [
+      "absent",
+      "absent",
+      "standard",
+      "absent",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 163,
+     "section": "FEATURES > INTERIOR",
+     "label": "LED Front & Rear Map Lights",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 164,
+     "section": "FEATURES > INTERIOR",
+     "label": "Front Foot & Door Handle Ambient Lighting",
+     "marks": [
+      "absent",
+      "absent",
+      "absent",
+      "absent",
+      "absent",
+      "standard"
+     ]
+    },
+    {
+     "row": 165,
+     "section": "FEATURES > INTERIOR",
+     "label": "Heated Steering Wheel",
+     "marks": [
+      "absent",
+      "absent",
+      "absent",
+      "absent",
+      "absent",
+      "standard"
+     ]
+    },
+    {
+     "row": 166,
+     "section": "FEATURES > INTERIOR",
+     "label": "Leather Wrapped Steering Wheel & Shifter",
+     "marks": [
+      "absent",
+      "absent",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 167,
+     "section": "FEATURES > INTERIOR",
+     "label": "Unique Sport Interior Styling",
+     "marks": [
+      "absent",
+      "absent",
+      "absent",
+      "standard",
+      "absent",
+      "standard"
+     ]
+    },
+    {
+     "row": 168,
+     "section": "FEATURES > INTERIOR",
+     "label": "Smart Entry with Walk Away Auto Lock®",
+     "marks": [
+      "absent",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 171,
+     "section": "FEATURES > EXTERIOR",
+     "label": "LED Headlights & Taillights",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 172,
+     "section": "FEATURES > EXTERIOR",
+     "label": "Auto On/Off Headlights",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 173,
+     "section": "FEATURES > EXTERIOR",
+     "label": "LED Front Turn Indicators",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 174,
+     "section": "FEATURES > EXTERIOR",
+     "label": "LED Daytime Running Light (DRL)",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 175,
+     "section": "FEATURES > EXTERIOR",
+     "label": "LED Side Mirror Turn Indicator",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 176,
+     "section": "FEATURES > EXTERIOR",
+     "label": "Halogen Rear Turn Indicators",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 177,
+     "section": "FEATURES > EXTERIOR",
+     "label": "Heated Side Mirrors",
+     "marks": [
+      "absent",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 178,
+     "section": "FEATURES > EXTERIOR",
+     "label": "Tailgate",
+     "marks": [
+      "standard",
+      "standard",
+      "absent",
+      "standard",
+      "absent",
+      "absent"
+     ]
+    },
+    {
+     "row": 179,
+     "section": "FEATURES > EXTERIOR",
+     "label": "Power Tailgate",
+     "marks": [
+      "absent",
+      "absent",
+      "standard",
+      "absent",
+      "standard",
+      "absent"
+     ]
+    },
+    {
+     "row": 180,
+     "section": "FEATURES > EXTERIOR",
+     "label": "Power Tailgate with Hands-Free Access",
+     "marks": [
+      "absent",
+      "absent",
+      "absent",
+      "absent",
+      "absent",
+      "standard"
+     ]
+    },
+    {
+     "row": 181,
+     "section": "FEATURES > EXTERIOR",
+     "label": "One-Touch Power Moonroof with Tilt Feature",
+     "marks": [
+      "absent",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 182,
+     "section": "FEATURES > EXTERIOR",
+     "label": "Push-to-Release Fuel Filler Door",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 183,
+     "section": "FEATURES > EXTERIOR",
+     "label": "Smart Clear Wiper",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 184,
+     "section": "FEATURES > EXTERIOR",
+     "label": "Rain Sensing Wipers",
+     "marks": [
+      "absent",
+      "absent",
+      "absent",
+      "absent",
+      "absent",
+      "standard"
+     ]
+    },
+    {
+     "row": 185,
+     "section": "FEATURES > EXTERIOR",
+     "label": "Black Roof Rails",
+     "marks": [
+      "absent",
+      "absent",
+      "absent",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 186,
+     "section": "FEATURES > EXTERIOR",
+     "label": "Dual Chrome Exhaust Finishers",
+     "marks": [
+      "absent",
+      "absent",
+      "absent",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 187,
+     "section": "FEATURES > EXTERIOR",
+     "label": "Unique Sport Exterior Styling",
+     "marks": [
+      "absent",
+      "absent",
+      "absent",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    },
+    {
+     "row": 188,
+     "section": "FEATURES > EXTERIOR",
+     "label": "Privacy Glass",
+     "marks": [
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard",
+      "standard"
+     ]
+    }
+   ]
+  }
+ ]
+}

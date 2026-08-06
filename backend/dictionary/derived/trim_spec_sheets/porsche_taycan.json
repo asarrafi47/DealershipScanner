@@ -13,19 +13,13 @@
     "Turbo S": [
       {
         "label": "Engine Options",
-        "value": "EV Electricity; Automatic (A2)"
+        "value": "EV Electricity"
       }
     ],
     "Turbo": [
       {
         "label": "Engine Options",
         "value": "High-performance dual motor; EV Electricity"
-      }
-    ],
-    "GTS": [
-      {
-        "label": "Engine Options",
-        "value": "kWh (82.3 kWh net battery energy content) liquid-cooled lithium-ion; awarded the Taycan five stars out of five in its review of the car. In Apri"
       }
     ],
     "4S": [

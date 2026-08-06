@@ -12,19 +12,19 @@
     "AMG": [
       {
         "label": "Engine Options",
-        "value": "5.4L V8 Turbo; Automatic (S5)"
+        "value": "5.4L V8 Turbo"
       }
     ],
     "E320": [
       {
         "label": "Engine Options",
-        "value": "3.2L V6 Turbo; Automatic 5-spd"
+        "value": "3.2L V6 Turbo"
       }
     ],
     "E500": [
       {
         "label": "Engine Options",
-        "value": "5.0L V8 Turbo; Automatic 7-spd"
+        "value": "5.0L V8 Turbo"
       }
     ]
   }

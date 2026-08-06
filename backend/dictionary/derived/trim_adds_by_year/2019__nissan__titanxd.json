@@ -1,0 +1,338 @@
+{
+  "catalog_key": "2019|nissan|titanxd",
+  "year": 2019,
+  "make": "Nissan",
+  "model": "Titan XD",
+  "source": "brochure_text_quoted",
+  "layouts": [
+    "column_block"
+  ],
+  "trims_available": [
+    "SL",
+    "Pro-4X"
+  ],
+  "trims_quoted": [
+    "SL",
+    "Pro-4X"
+  ],
+  "rung_order": [
+    "SV",
+    "SL",
+    "Pro-4X"
+  ],
+  "order_basis": {
+    "SV": {
+      "basis": "adds_to_edge",
+      "trim": "SV",
+      "direction": "named_as_baseline_by",
+      "edge": {
+        "trim": "SL",
+        "below": "SV",
+        "source": "derived/brochure_text/2019__nissan__titanxd.json",
+        "page": 9,
+        "layout": "column_block",
+        "trim_quote": "SL",
+        "below_quote": "INCLUDES SV EQUIPMENT PLUS:"
+      }
+    },
+    "SL": {
+      "basis": "adds_to_edge",
+      "trim": "SL",
+      "direction": "states_its_baseline",
+      "edge": {
+        "trim": "SL",
+        "below": "SV",
+        "source": "derived/brochure_text/2019__nissan__titanxd.json",
+        "page": 9,
+        "layout": "column_block",
+        "trim_quote": "SL",
+        "below_quote": "INCLUDES SV EQUIPMENT PLUS:"
+      },
+      "tiebreak": "page_sequence",
+      "tied_with": [
+        "Pro-4X"
+      ]
+    },
+    "Pro-4X": {
+      "basis": "adds_to_edge",
+      "trim": "Pro-4X",
+      "direction": "states_its_baseline",
+      "edge": {
+        "trim": "Pro-4X",
+        "below": "SV",
+        "source": "derived/brochure_text/2019__nissan__titanxd.json",
+        "page": 9,
+        "layout": "column_block",
+        "trim_quote": "PRO-4X®",
+        "below_quote": "INCLUDES SV EQUIPMENT PLUS:"
+      },
+      "tiebreak": "page_sequence",
+      "tied_with": [
+        "SL"
+      ]
+    }
+  },
+  "rung_edges": [
+    {
+      "trim": "SL",
+      "below": "SV",
+      "source": "derived/brochure_text/2019__nissan__titanxd.json",
+      "page": 9,
+      "layout": "column_block",
+      "trim_quote": "SL",
+      "below_quote": "INCLUDES SV EQUIPMENT PLUS:"
+    },
+    {
+      "trim": "Pro-4X",
+      "below": "SV",
+      "source": "derived/brochure_text/2019__nissan__titanxd.json",
+      "page": 9,
+      "layout": "column_block",
+      "trim_quote": "PRO-4X®",
+      "below_quote": "INCLUDES SV EQUIPMENT PLUS:"
+    }
+  ],
+  "adds_by_trim": {
+    "SL": [
+      "Remote Engine Start System with Intelligent Climate Control",
+      "Class IV tow hitch receiver with 4-pin/7-pin wiring harness",
+      "Nissan Door to Door Navigation with Premium Traffic",
+      "leather-wrapped steering wheel",
+      "leather-appointed seats",
+      "20\" Aluminum-alloy wheels with all-season tires",
+      "LED headlights/Daytime Running Lights",
+      "body-color rear bumper",
+      "power-folding and auto-dimming driver’s outside mirror",
+      "Front and Rear Sonar System",
+      "Utili-track® Channel System with four tie-down cleats",
+      "NissanConnect Services powered by SiriusXM"
+    ],
+    "Pro-4X": [
+      "Switch-operated 2-speed transfer case (4WD)",
+      "Bilstein® off-road performance shocks",
+      "Class IV tow hitch receiver with 4-pin/7-pin wiring harness",
+      "Nissan Door to Door Navigation with Premium Traffic",
+      "leather-wrapped steering wheel",
+      "18\" dark-finished aluminum-alloy wheels with all-terrain tires",
+      "LED headlights/Daytime Running Lights",
+      "spray-on bedliner",
+      "SiriusXM® Traffic and Travel Link",
+      "Nissan Intelligent Key® with door handle request switch",
+      "Dual Zone Automatic Temperature Control",
+      "Blind Spot Warning and Rear Cross Traffic Alert"
+    ]
+  },
+  "adds_provenance": {
+    "SL": [
+      {
+        "text": "Remote Engine Start System with Intelligent Climate Control",
+        "source": "derived/brochure_text/2019__nissan__titanxd.json",
+        "page": 9,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "Class IV tow hitch receiver with 4-pin/7-pin wiring harness",
+        "source": "derived/brochure_text/2019__nissan__titanxd.json",
+        "page": 9,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "Nissan Door to Door Navigation with Premium Traffic",
+        "source": "derived/brochure_text/2019__nissan__titanxd.json",
+        "page": 9,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "leather-wrapped steering wheel",
+        "source": "derived/brochure_text/2019__nissan__titanxd.json",
+        "page": 9,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "leather-appointed seats",
+        "source": "derived/brochure_text/2019__nissan__titanxd.json",
+        "page": 9,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "20\" Aluminum-alloy wheels with all-season tires",
+        "source": "derived/brochure_text/2019__nissan__titanxd.json",
+        "page": 9,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "LED headlights/Daytime Running Lights",
+        "source": "derived/brochure_text/2019__nissan__titanxd.json",
+        "page": 9,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "body-color rear bumper",
+        "source": "derived/brochure_text/2019__nissan__titanxd.json",
+        "page": 9,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "power-folding and auto-dimming driver’s outside mirror",
+        "source": "derived/brochure_text/2019__nissan__titanxd.json",
+        "page": 9,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "Front and Rear Sonar System",
+        "source": "derived/brochure_text/2019__nissan__titanxd.json",
+        "page": 9,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "Utili-track® Channel System with four tie-down cleats",
+        "source": "derived/brochure_text/2019__nissan__titanxd.json",
+        "page": 9,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "NissanConnect Services powered by SiriusXM",
+        "source": "derived/brochure_text/2019__nissan__titanxd.json",
+        "page": 9,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      }
+    ],
+    "Pro-4X": [
+      {
+        "text": "Switch-operated 2-speed transfer case (4WD)",
+        "source": "derived/brochure_text/2019__nissan__titanxd.json",
+        "page": 9,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "Bilstein® off-road performance shocks",
+        "source": "derived/brochure_text/2019__nissan__titanxd.json",
+        "page": 9,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "Class IV tow hitch receiver with 4-pin/7-pin wiring harness",
+        "source": "derived/brochure_text/2019__nissan__titanxd.json",
+        "page": 9,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "Nissan Door to Door Navigation with Premium Traffic",
+        "source": "derived/brochure_text/2019__nissan__titanxd.json",
+        "page": 9,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "leather-wrapped steering wheel",
+        "source": "derived/brochure_text/2019__nissan__titanxd.json",
+        "page": 9,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "18\" dark-finished aluminum-alloy wheels with all-terrain tires",
+        "source": "derived/brochure_text/2019__nissan__titanxd.json",
+        "page": 9,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "LED headlights/Daytime Running Lights",
+        "source": "derived/brochure_text/2019__nissan__titanxd.json",
+        "page": 9,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "spray-on bedliner",
+        "source": "derived/brochure_text/2019__nissan__titanxd.json",
+        "page": 9,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "SiriusXM® Traffic and Travel Link",
+        "source": "derived/brochure_text/2019__nissan__titanxd.json",
+        "page": 9,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "Nissan Intelligent Key® with door handle request switch",
+        "source": "derived/brochure_text/2019__nissan__titanxd.json",
+        "page": 9,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "Dual Zone Automatic Temperature Control",
+        "source": "derived/brochure_text/2019__nissan__titanxd.json",
+        "page": 9,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "Blind Spot Warning and Rear Cross Traffic Alert",
+        "source": "derived/brochure_text/2019__nissan__titanxd.json",
+        "page": 9,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      }
+    ]
+  },
+  "source_brochure_text": "derived/brochure_text/2019__nissan__titanxd.json",
+  "pages_used": [
+    9
+  ],
+  "replaced_source": "brochure_text_quoted",
+  "source_pdf_name": "2019_Nissan_Titan_XD_Brochure.pdf",
+  "source_pdf_sha256": "61b4c638305820a63b98d39337f43c6f4e78d83c44468ccb3666999bba84dd48",
+  "citation_verification": {
+    "verifier": "verify_trim_citations.py",
+    "version": "2026-08-02.1",
+    "checked_at": "2026-08-03T01:48:49+00:00",
+    "source_pdf": "2019_Nissan_Titan_XD_Brochure.pdf",
+    "verified": 0,
+    "total": 24
+  }
+}

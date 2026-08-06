@@ -1,0 +1,364 @@
+{
+  "catalog_key": "2026|toyota|highlander",
+  "year": 2026,
+  "make": "Toyota",
+  "model": "Highlander",
+  "source": "brochure_text_quoted",
+  "layouts": [
+    "cell_grid"
+  ],
+  "trims_available": [
+    "XSE",
+    "Limited",
+    "Platinum"
+  ],
+  "trims_quoted": [
+    "XSE",
+    "Limited",
+    "Platinum"
+  ],
+  "rung_order": [
+    "XLE",
+    "XSE",
+    "Limited",
+    "Platinum"
+  ],
+  "order_basis": {
+    "XLE": {
+      "basis": "printed_sequence",
+      "trim": "XLE",
+      "source": "derived/brochure_text/2026__toyota__highlander.json",
+      "column_index": 0,
+      "pages": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        11,
+        12
+      ],
+      "layout": "cell_grid"
+    },
+    "XSE": {
+      "basis": "printed_sequence",
+      "trim": "XSE",
+      "source": "derived/brochure_text/2026__toyota__highlander.json",
+      "column_index": 1,
+      "pages": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        11,
+        12
+      ],
+      "layout": "cell_grid"
+    },
+    "Limited": {
+      "basis": "printed_sequence",
+      "trim": "Limited",
+      "source": "derived/brochure_text/2026__toyota__highlander.json",
+      "column_index": 2,
+      "pages": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        11,
+        12
+      ],
+      "layout": "cell_grid"
+    },
+    "Platinum": {
+      "basis": "printed_sequence",
+      "trim": "Platinum",
+      "source": "derived/brochure_text/2026__toyota__highlander.json",
+      "column_index": 3,
+      "pages": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        11,
+        12
+      ],
+      "layout": "cell_grid"
+    }
+  },
+  "rung_edges": [],
+  "adds_by_trim": {
+    "XSE": [
+      "Dynamic Torque Vectoring AWD with Driveline Disconnect; Multi-Terrain Select (MTS) with dial",
+      "20-in. black alloy wheels and P235/55R20 tires",
+      "Black mesh front grille with sporty front bumper and lower spoiler",
+      "Black-capped heated power outside mirrors with turn signal and blind spot warning indicators, and manual folding feature",
+      "Color-keyed side rocker panels with chrome-plated lower trim"
+    ],
+    "Limited": [
+      "20-in. chrome-finished wheels and P235/55R20 tires",
+      "LED projector headlights with LED-strip Daytime Running Lights (DRL)",
+      "Ornamental dash trim and faux wood door trim",
+      "Metal front doorsill",
+      "Cargo area tonneau cover",
+      "Black-painted front grille with chrome-plated surround",
+      "High-output LED fog lights",
+      "Color-keyed heated power outside mirrors with turn signal and blind spot warning indicators, power folding, reverse tilt-down with memory feature, and puddle lights with integrated Highlander logo",
+      "Acoustic noise-reducing front side windows",
+      "Rear lower bumper in dark gray metallic finish",
+      "Backup camera with dynamic gridlines",
+      "Front and Rear Parking Assist with Automatic Braking (PA w/AB)"
+    ],
+    "Platinum": [
+      "10-in. color Head-Up Display (HUD) with speedometer and Road Sign Assist (RSA), and navigation",
+      "Panoramic glass roof with sunshade and front power tilt/slide moonroof",
+      "Panoramic View Monitor —includes 360-degree Overhead View in low-speed drive and reverse, and Curb View",
+      "20-in. alloy wheels and P235/55R20 tires",
+      "LED projector headlights with Adaptive Front-Lighting System (AFS), auto leveling and LED-strip Daytime Running Lights (DRL)",
+      "Digital rearview mirror with HomeLink® universal garage door opener",
+      "Illuminated metal front doorsill",
+      "Rain-sensing washer-linked variable intermittent windshield wipers and intermittent rear wiper",
+      "Black-painted front grille with chrome-plated surround and front lower bumper in silver finish"
+    ]
+  },
+  "adds_provenance": {
+    "XSE": [
+      {
+        "text": "Dynamic Torque Vectoring AWD with Driveline Disconnect; Multi-Terrain Select (MTS) with dial",
+        "source": "derived/brochure_text/2026__toyota__highlander.json",
+        "page": 11,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "20-in. black alloy wheels and P235/55R20 tires",
+        "source": "derived/brochure_text/2026__toyota__highlander.json",
+        "page": 8,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Black mesh front grille with sporty front bumper and lower spoiler",
+        "source": "derived/brochure_text/2026__toyota__highlander.json",
+        "page": 8,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Black-capped heated power outside mirrors with turn signal and blind spot warning indicators, and manual folding feature",
+        "source": "derived/brochure_text/2026__toyota__highlander.json",
+        "page": 9,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Color-keyed side rocker panels with chrome-plated lower trim",
+        "source": "derived/brochure_text/2026__toyota__highlander.json",
+        "page": 9,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      }
+    ],
+    "Limited": [
+      {
+        "text": "20-in. chrome-finished wheels and P235/55R20 tires",
+        "source": "derived/brochure_text/2026__toyota__highlander.json",
+        "page": 8,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "LED projector headlights with LED-strip Daytime Running Lights (DRL)",
+        "source": "derived/brochure_text/2026__toyota__highlander.json",
+        "page": 8,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Ornamental dash trim and faux wood door trim",
+        "source": "derived/brochure_text/2026__toyota__highlander.json",
+        "page": 7,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Metal front doorsill",
+        "source": "derived/brochure_text/2026__toyota__highlander.json",
+        "page": 7,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Cargo area tonneau cover",
+        "source": "derived/brochure_text/2026__toyota__highlander.json",
+        "page": 7,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Black-painted front grille with chrome-plated surround",
+        "source": "derived/brochure_text/2026__toyota__highlander.json",
+        "page": 8,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "High-output LED fog lights",
+        "source": "derived/brochure_text/2026__toyota__highlander.json",
+        "page": 9,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Color-keyed heated power outside mirrors with turn signal and blind spot warning indicators, power folding, reverse tilt-down with memory feature, and puddle lights with integrated Highlander logo",
+        "source": "derived/brochure_text/2026__toyota__highlander.json",
+        "page": 9,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Acoustic noise-reducing front side windows",
+        "source": "derived/brochure_text/2026__toyota__highlander.json",
+        "page": 9,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Rear lower bumper in dark gray metallic finish",
+        "source": "derived/brochure_text/2026__toyota__highlander.json",
+        "page": 9,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Backup camera with dynamic gridlines",
+        "source": "derived/brochure_text/2026__toyota__highlander.json",
+        "page": 12,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Front and Rear Parking Assist with Automatic Braking (PA w/AB)",
+        "source": "derived/brochure_text/2026__toyota__highlander.json",
+        "page": 12,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      }
+    ],
+    "Platinum": [
+      {
+        "text": "10-in. color Head-Up Display (HUD) with speedometer and Road Sign Assist (RSA), and navigation",
+        "source": "derived/brochure_text/2026__toyota__highlander.json",
+        "page": 5,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Panoramic glass roof with sunshade and front power tilt/slide moonroof",
+        "source": "derived/brochure_text/2026__toyota__highlander.json",
+        "page": 9,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Panoramic View Monitor —includes 360-degree Overhead View in low-speed drive and reverse, and Curb View",
+        "source": "derived/brochure_text/2026__toyota__highlander.json",
+        "page": 12,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "20-in. alloy wheels and P235/55R20 tires",
+        "source": "derived/brochure_text/2026__toyota__highlander.json",
+        "page": 8,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "LED projector headlights with Adaptive Front-Lighting System (AFS), auto leveling and LED-strip Daytime Running Lights (DRL)",
+        "source": "derived/brochure_text/2026__toyota__highlander.json",
+        "page": 8,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Digital rearview mirror with HomeLink® universal garage door opener",
+        "source": "derived/brochure_text/2026__toyota__highlander.json",
+        "page": 7,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Illuminated metal front doorsill",
+        "source": "derived/brochure_text/2026__toyota__highlander.json",
+        "page": 7,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Rain-sensing washer-linked variable intermittent windshield wipers and intermittent rear wiper",
+        "source": "derived/brochure_text/2026__toyota__highlander.json",
+        "page": 8,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Black-painted front grille with chrome-plated surround and front lower bumper in silver finish",
+        "source": "derived/brochure_text/2026__toyota__highlander.json",
+        "page": 8,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      }
+    ]
+  },
+  "source_brochure_text": "derived/brochure_text/2026__toyota__highlander.json",
+  "pages_used": [
+    5,
+    6,
+    7,
+    8,
+    9,
+    11,
+    12
+  ],
+  "replaced_source": "brochure_text_quoted",
+  "source_pdf_name": "2026_Toyota_Highlander_Brochure.pdf",
+  "source_pdf_sha256": "dcb4686c5c216707e0c4a45003323b553300ec78e789924fb81ad63812f6fcda",
+  "citation_verification": {
+    "verifier": "verify_trim_citations.py",
+    "version": "2026-08-02.1",
+    "checked_at": "2026-08-03T01:48:53+00:00",
+    "source_pdf": "2026_Toyota_Highlander_Brochure.pdf",
+    "verified": 26,
+    "total": 26
+  }
+}

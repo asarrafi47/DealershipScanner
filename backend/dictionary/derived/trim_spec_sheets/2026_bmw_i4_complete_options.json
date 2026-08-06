@@ -12,25 +12,25 @@
     "M60 xDrive": [
       {
         "label": "Engine Options",
-        "value": "EV Electricity; Automatic (A1)"
+        "value": "EV Electricity"
       }
     ],
     "xDrive40": [
       {
         "label": "Engine Options",
-        "value": "EV Electricity; Automatic (A1)"
+        "value": "EV Electricity"
       }
     ],
     "eDrive40": [
       {
         "label": "Engine Options",
-        "value": "EV Electricity; Automatic (A1)"
+        "value": "EV Electricity"
       }
     ],
     "eDrive35": [
       {
         "label": "Engine Options",
-        "value": "EV Electricity; Automatic (A1)"
+        "value": "EV Electricity"
       }
     ]
   }

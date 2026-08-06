@@ -1,0 +1,1457 @@
+{
+ "catalog_key": "2023|honda|pilot",
+ "year": 2023,
+ "make": "Honda",
+ "model": "Pilot",
+ "source": "html_spec_quoted",
+ "source_document": "backend/dictionary/derived/html_spec_text/2023__honda__pilot.json",
+ "source_url": "https://hondanews.com/en-US/honda-automobiles/releases/release-4e58b4e0fcd795affa5685a66a1953ae-2023-honda-pilot-specifications-features",
+ "layouts": [
+  "html_mark_grid"
+ ],
+ "trims_available": [
+  "LX",
+  "Sport",
+  "EX-L",
+  "EX-L (7P)",
+  "TrailSport",
+  "Touring",
+  "Elite"
+ ],
+ "trims_quoted": [
+  "Sport",
+  "EX-L",
+  "EX-L (7P)",
+  "TrailSport",
+  "Touring",
+  "Elite"
+ ],
+ "adds_by_trim": {
+  "Sport": [
+   "Blind Spot Information System (BSI)",
+   "Cross Traffic Monitor",
+   "Key Fob Activated Remote Engine Start",
+   "Leather-Wrapped Steering Wheel",
+   "Front Passenger's Seat with 4-Way Power Adjustment",
+   "Driver's and Front Passenger's Seatback Pockets",
+   "LED Fog Lights",
+   "Gloss Black Roof Rails",
+   "Dual Chrome Exhaust Finishers"
+  ],
+  "EX-L": [
+   "Low Speed Braking Control",
+   "Parking Sensors (4 Front & 4 Rear)",
+   "Tri-Zone Automatic Climate Control System with Humidity Control, Air Filtration",
+   "HomeLink® Remote System",
+   "Automatic-Dimming Rearview Mirror",
+   "9-Inch Color Touchscreen",
+   "245-Watt Audio System with 9 Speakers, including Subwoofer",
+   "12-Volt Power Outlet (Rear Cargo)",
+   "Wireless Apple CarPlay® Compatibility",
+   "Wireless Android Auto™ Compatibility",
+   "Wireless Phone Charger (Qi)",
+   "SiriusXM®",
+   "HD Radio™",
+   "2.5-Amp USB Type-A Charging Port - 3rd Row (2 Ports)",
+   "CabinTalk® In-Car PA System",
+   "Integrated Rear Door Sunshades",
+   "Driver's and Front Passenger's Illuminated Vanity Mirrors",
+   "Conversation Mirror",
+   "Acoustic Laminate Windshield",
+   "Power Lift Tailgate"
+  ],
+  "EX-L (7P)": [
+   "Beverage Holders (Front Row-4 / 2nd-Row-4 / 3rd-Row-4 )"
+  ],
+  "TrailSport": [
+   "Trail Torque Logic",
+   "Full-Size Spare Tire",
+   "Multiview Camera System",
+   "Front Camera Washer",
+   "Trailwatch",
+   "Heated Steering Wheel",
+   "110-Volt Power Outlet (2nd Row)",
+   "Panoramic Moonroof with Tilt and Slide Function",
+   "Heated Windshield",
+   "Gloss Black Front Grille",
+   "Gloss Black Door Handles",
+   "Underbody Skid Plates with Integrated Front Recovery Point",
+   "Standard Trailer Hitch Receiver with Rear Recovery Point (without Connector or Ball)"
+  ],
+  "Touring": [
+   "Bose Premium Sound System with 12 Speakers, including Subwoofer",
+   "Wi-Fi® Hotspot Capability",
+   "Honda Satellite-Linked Navigation System™ with Voice Recognition and Honda RealTime Traffic",
+   "HondaLink® Subscription Services",
+   "Multi-Zone Audio",
+   "Multi-Function 2nd-Row with Removable Middle Seat",
+   "On-Demand In-Trunk Seat Storage",
+   "Illuminated Beverage Holders (Front Console)",
+   "Courtesy Door Lights (Front Row)",
+   "Acoustic Laminate Windshield and Front Side Glass",
+   "Power Lift Tailgate with Hands-Free Access and Walk Away Close",
+   "Gloss Black Rear Roof Spoiler Sides"
+  ],
+  "Elite": [
+   "Heads Up Display",
+   "10.2-Inch Digital Instrument Cluster",
+   "Ventilated Front Seats"
+  ]
+ },
+ "adds_provenance": {
+  "Sport": [
+   {
+    "text": "Blind Spot Information System (BSI)",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-4e58b4e0fcd795affa5685a66a1953ae-2023-honda-pilot-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:56Z",
+    "document_sha256": "837f1d29a50aaf65a70429d67586482cfc9b9d8d92cb2c4d3f822caaf1589d54",
+    "locator": "table[0]/row[106]/col[2]",
+    "column_header": "Sport",
+    "section": "FEATURES > HONDA SENSING®",
+    "relative_to": "LX",
+    "relative_locator": "table[0]/row[106]/col[1]",
+    "absent_columns": [
+     1
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2023__honda__pilot.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:35Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Cross Traffic Monitor",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-4e58b4e0fcd795affa5685a66a1953ae-2023-honda-pilot-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:56Z",
+    "document_sha256": "837f1d29a50aaf65a70429d67586482cfc9b9d8d92cb2c4d3f822caaf1589d54",
+    "locator": "table[0]/row[107]/col[2]",
+    "column_header": "Sport",
+    "section": "FEATURES > HONDA SENSING®",
+    "relative_to": "LX",
+    "relative_locator": "table[0]/row[107]/col[1]",
+    "absent_columns": [
+     1
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2023__honda__pilot.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:35Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Key Fob Activated Remote Engine Start",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-4e58b4e0fcd795affa5685a66a1953ae-2023-honda-pilot-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:56Z",
+    "document_sha256": "837f1d29a50aaf65a70429d67586482cfc9b9d8d92cb2c4d3f822caaf1589d54",
+    "locator": "table[0]/row[139]/col[2]",
+    "column_header": "Sport",
+    "section": "FEATURES > DRIVER CONVENIENCE",
+    "relative_to": "LX",
+    "relative_locator": "table[0]/row[139]/col[1]",
+    "absent_columns": [
+     1
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2023__honda__pilot.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:35Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Leather-Wrapped Steering Wheel",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-4e58b4e0fcd795affa5685a66a1953ae-2023-honda-pilot-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:56Z",
+    "document_sha256": "837f1d29a50aaf65a70429d67586482cfc9b9d8d92cb2c4d3f822caaf1589d54",
+    "locator": "table[0]/row[152]/col[2]",
+    "column_header": "Sport",
+    "section": "FEATURES > DRIVER CONVENIENCE",
+    "relative_to": "LX",
+    "relative_locator": "table[0]/row[152]/col[1]",
+    "absent_columns": [
+     1
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2023__honda__pilot.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:35Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Front Passenger's Seat with 4-Way Power Adjustment",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-4e58b4e0fcd795affa5685a66a1953ae-2023-honda-pilot-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:56Z",
+    "document_sha256": "837f1d29a50aaf65a70429d67586482cfc9b9d8d92cb2c4d3f822caaf1589d54",
+    "locator": "table[0]/row[198]/col[2]",
+    "column_header": "Sport",
+    "section": "FEATURES > INTERIOR",
+    "relative_to": "LX",
+    "relative_locator": "table[0]/row[198]/col[1]",
+    "absent_columns": [
+     1
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2023__honda__pilot.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:35Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Driver's and Front Passenger's Seatback Pockets",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-4e58b4e0fcd795affa5685a66a1953ae-2023-honda-pilot-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:56Z",
+    "document_sha256": "837f1d29a50aaf65a70429d67586482cfc9b9d8d92cb2c4d3f822caaf1589d54",
+    "locator": "table[0]/row[200]/col[2]",
+    "column_header": "Sport",
+    "section": "FEATURES > INTERIOR",
+    "relative_to": "LX",
+    "relative_locator": "table[0]/row[200]/col[1]",
+    "absent_columns": [
+     1
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2023__honda__pilot.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:35Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "LED Fog Lights",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-4e58b4e0fcd795affa5685a66a1953ae-2023-honda-pilot-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:56Z",
+    "document_sha256": "837f1d29a50aaf65a70429d67586482cfc9b9d8d92cb2c4d3f822caaf1589d54",
+    "locator": "table[0]/row[230]/col[2]",
+    "column_header": "Sport",
+    "section": "FEATURES > EXTERIOR",
+    "relative_to": "LX",
+    "relative_locator": "table[0]/row[230]/col[1]",
+    "absent_columns": [
+     1
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2023__honda__pilot.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:35Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Gloss Black Roof Rails",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-4e58b4e0fcd795affa5685a66a1953ae-2023-honda-pilot-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:56Z",
+    "document_sha256": "837f1d29a50aaf65a70429d67586482cfc9b9d8d92cb2c4d3f822caaf1589d54",
+    "locator": "table[0]/row[247]/col[2]",
+    "column_header": "Sport",
+    "section": "FEATURES > EXTERIOR",
+    "relative_to": "LX",
+    "relative_locator": "table[0]/row[247]/col[1]",
+    "absent_columns": [
+     1
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2023__honda__pilot.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:35Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Dual Chrome Exhaust Finishers",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-4e58b4e0fcd795affa5685a66a1953ae-2023-honda-pilot-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:56Z",
+    "document_sha256": "837f1d29a50aaf65a70429d67586482cfc9b9d8d92cb2c4d3f822caaf1589d54",
+    "locator": "table[0]/row[251]/col[2]",
+    "column_header": "Sport",
+    "section": "FEATURES > EXTERIOR",
+    "relative_to": "LX",
+    "relative_locator": "table[0]/row[251]/col[1]",
+    "absent_columns": [
+     1
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2023__honda__pilot.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:35Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   }
+  ],
+  "EX-L": [
+   {
+    "text": "Low Speed Braking Control",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-4e58b4e0fcd795affa5685a66a1953ae-2023-honda-pilot-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:56Z",
+    "document_sha256": "837f1d29a50aaf65a70429d67586482cfc9b9d8d92cb2c4d3f822caaf1589d54",
+    "locator": "table[0]/row[105]/col[3]",
+    "column_header": "EX-L",
+    "section": "FEATURES > HONDA SENSING®",
+    "relative_to": "Sport",
+    "relative_locator": "table[0]/row[105]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2023__honda__pilot.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:35Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Parking Sensors (4 Front & 4 Rear)",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-4e58b4e0fcd795affa5685a66a1953ae-2023-honda-pilot-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:56Z",
+    "document_sha256": "837f1d29a50aaf65a70429d67586482cfc9b9d8d92cb2c4d3f822caaf1589d54",
+    "locator": "table[0]/row[110]/col[3]",
+    "column_header": "EX-L",
+    "section": "FEATURES > HONDA SENSING®",
+    "relative_to": "Sport",
+    "relative_locator": "table[0]/row[110]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2023__honda__pilot.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:35Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Tri-Zone Automatic Climate Control System with Humidity Control, Air Filtration",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-4e58b4e0fcd795affa5685a66a1953ae-2023-honda-pilot-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:56Z",
+    "document_sha256": "837f1d29a50aaf65a70429d67586482cfc9b9d8d92cb2c4d3f822caaf1589d54",
+    "locator": "table[0]/row[147]/col[3]",
+    "column_header": "EX-L",
+    "section": "FEATURES > DRIVER CONVENIENCE",
+    "relative_to": "Sport",
+    "relative_locator": "table[0]/row[147]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2023__honda__pilot.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:35Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "HomeLink® Remote System",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-4e58b4e0fcd795affa5685a66a1953ae-2023-honda-pilot-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:56Z",
+    "document_sha256": "837f1d29a50aaf65a70429d67586482cfc9b9d8d92cb2c4d3f822caaf1589d54",
+    "locator": "table[0]/row[150]/col[3]",
+    "column_header": "EX-L",
+    "section": "FEATURES > DRIVER CONVENIENCE",
+    "relative_to": "Sport",
+    "relative_locator": "table[0]/row[150]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2023__honda__pilot.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:35Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Automatic-Dimming Rearview Mirror",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-4e58b4e0fcd795affa5685a66a1953ae-2023-honda-pilot-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:56Z",
+    "document_sha256": "837f1d29a50aaf65a70429d67586482cfc9b9d8d92cb2c4d3f822caaf1589d54",
+    "locator": "table[0]/row[151]/col[3]",
+    "column_header": "EX-L",
+    "section": "FEATURES > DRIVER CONVENIENCE",
+    "relative_to": "Sport",
+    "relative_locator": "table[0]/row[151]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2023__honda__pilot.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:35Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "9-Inch Color Touchscreen",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-4e58b4e0fcd795affa5685a66a1953ae-2023-honda-pilot-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:56Z",
+    "document_sha256": "837f1d29a50aaf65a70429d67586482cfc9b9d8d92cb2c4d3f822caaf1589d54",
+    "locator": "table[0]/row[159]/col[3]",
+    "column_header": "EX-L",
+    "section": "FEATURES > AUDIO & CONNECTIVITY",
+    "relative_to": "Sport",
+    "relative_locator": "table[0]/row[159]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2023__honda__pilot.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:35Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "245-Watt Audio System with 9 Speakers, including Subwoofer",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-4e58b4e0fcd795affa5685a66a1953ae-2023-honda-pilot-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:56Z",
+    "document_sha256": "837f1d29a50aaf65a70429d67586482cfc9b9d8d92cb2c4d3f822caaf1589d54",
+    "locator": "table[0]/row[161]/col[3]",
+    "column_header": "EX-L",
+    "section": "FEATURES > AUDIO & CONNECTIVITY",
+    "relative_to": "Sport",
+    "relative_locator": "table[0]/row[161]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2023__honda__pilot.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:35Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "12-Volt Power Outlet (Rear Cargo)",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-4e58b4e0fcd795affa5685a66a1953ae-2023-honda-pilot-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:56Z",
+    "document_sha256": "837f1d29a50aaf65a70429d67586482cfc9b9d8d92cb2c4d3f822caaf1589d54",
+    "locator": "table[0]/row[168]/col[3]",
+    "column_header": "EX-L",
+    "section": "FEATURES > AUDIO & CONNECTIVITY",
+    "relative_to": "Sport",
+    "relative_locator": "table[0]/row[168]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2023__honda__pilot.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:35Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Wireless Apple CarPlay® Compatibility",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-4e58b4e0fcd795affa5685a66a1953ae-2023-honda-pilot-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:56Z",
+    "document_sha256": "837f1d29a50aaf65a70429d67586482cfc9b9d8d92cb2c4d3f822caaf1589d54",
+    "locator": "table[0]/row[172]/col[3]",
+    "column_header": "EX-L",
+    "section": "FEATURES > AUDIO & CONNECTIVITY",
+    "relative_to": "Sport",
+    "relative_locator": "table[0]/row[172]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2023__honda__pilot.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:35Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Wireless Android Auto™ Compatibility",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-4e58b4e0fcd795affa5685a66a1953ae-2023-honda-pilot-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:56Z",
+    "document_sha256": "837f1d29a50aaf65a70429d67586482cfc9b9d8d92cb2c4d3f822caaf1589d54",
+    "locator": "table[0]/row[173]/col[3]",
+    "column_header": "EX-L",
+    "section": "FEATURES > AUDIO & CONNECTIVITY",
+    "relative_to": "Sport",
+    "relative_locator": "table[0]/row[173]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2023__honda__pilot.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:35Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Wireless Phone Charger (Qi)",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-4e58b4e0fcd795affa5685a66a1953ae-2023-honda-pilot-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:56Z",
+    "document_sha256": "837f1d29a50aaf65a70429d67586482cfc9b9d8d92cb2c4d3f822caaf1589d54",
+    "locator": "table[0]/row[175]/col[3]",
+    "column_header": "EX-L",
+    "section": "FEATURES > AUDIO & CONNECTIVITY",
+    "relative_to": "Sport",
+    "relative_locator": "table[0]/row[175]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2023__honda__pilot.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:35Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "SiriusXM®",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-4e58b4e0fcd795affa5685a66a1953ae-2023-honda-pilot-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:56Z",
+    "document_sha256": "837f1d29a50aaf65a70429d67586482cfc9b9d8d92cb2c4d3f822caaf1589d54",
+    "locator": "table[0]/row[177]/col[3]",
+    "column_header": "EX-L",
+    "section": "FEATURES > AUDIO & CONNECTIVITY",
+    "relative_to": "Sport",
+    "relative_locator": "table[0]/row[177]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2023__honda__pilot.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:35Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "HD Radio™",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-4e58b4e0fcd795affa5685a66a1953ae-2023-honda-pilot-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:56Z",
+    "document_sha256": "837f1d29a50aaf65a70429d67586482cfc9b9d8d92cb2c4d3f822caaf1589d54",
+    "locator": "table[0]/row[178]/col[3]",
+    "column_header": "EX-L",
+    "section": "FEATURES > AUDIO & CONNECTIVITY",
+    "relative_to": "Sport",
+    "relative_locator": "table[0]/row[178]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2023__honda__pilot.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:35Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "2.5-Amp USB Type-A Charging Port - 3rd Row (2 Ports)",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-4e58b4e0fcd795affa5685a66a1953ae-2023-honda-pilot-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:56Z",
+    "document_sha256": "837f1d29a50aaf65a70429d67586482cfc9b9d8d92cb2c4d3f822caaf1589d54",
+    "locator": "table[0]/row[182]/col[3]",
+    "column_header": "EX-L",
+    "section": "FEATURES > AUDIO & CONNECTIVITY",
+    "relative_to": "Sport",
+    "relative_locator": "table[0]/row[182]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2023__honda__pilot.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:35Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "CabinTalk® In-Car PA System",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-4e58b4e0fcd795affa5685a66a1953ae-2023-honda-pilot-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:56Z",
+    "document_sha256": "837f1d29a50aaf65a70429d67586482cfc9b9d8d92cb2c4d3f822caaf1589d54",
+    "locator": "table[0]/row[186]/col[3]",
+    "column_header": "EX-L",
+    "section": "FEATURES > AUDIO & CONNECTIVITY",
+    "relative_to": "Sport",
+    "relative_locator": "table[0]/row[186]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2023__honda__pilot.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:35Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Integrated Rear Door Sunshades",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-4e58b4e0fcd795affa5685a66a1953ae-2023-honda-pilot-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:56Z",
+    "document_sha256": "837f1d29a50aaf65a70429d67586482cfc9b9d8d92cb2c4d3f822caaf1589d54",
+    "locator": "table[0]/row[206]/col[3]",
+    "column_header": "EX-L",
+    "section": "FEATURES > INTERIOR",
+    "relative_to": "Sport",
+    "relative_locator": "table[0]/row[206]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2023__honda__pilot.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:35Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Driver's and Front Passenger's Illuminated Vanity Mirrors",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-4e58b4e0fcd795affa5685a66a1953ae-2023-honda-pilot-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:56Z",
+    "document_sha256": "837f1d29a50aaf65a70429d67586482cfc9b9d8d92cb2c4d3f822caaf1589d54",
+    "locator": "table[0]/row[207]/col[3]",
+    "column_header": "EX-L",
+    "section": "FEATURES > INTERIOR",
+    "relative_to": "Sport",
+    "relative_locator": "table[0]/row[207]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2023__honda__pilot.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:35Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Conversation Mirror",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-4e58b4e0fcd795affa5685a66a1953ae-2023-honda-pilot-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:56Z",
+    "document_sha256": "837f1d29a50aaf65a70429d67586482cfc9b9d8d92cb2c4d3f822caaf1589d54",
+    "locator": "table[0]/row[217]/col[3]",
+    "column_header": "EX-L",
+    "section": "FEATURES > INTERIOR",
+    "relative_to": "Sport",
+    "relative_locator": "table[0]/row[217]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2023__honda__pilot.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:35Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Acoustic Laminate Windshield",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-4e58b4e0fcd795affa5685a66a1953ae-2023-honda-pilot-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:56Z",
+    "document_sha256": "837f1d29a50aaf65a70429d67586482cfc9b9d8d92cb2c4d3f822caaf1589d54",
+    "locator": "table[0]/row[234]/col[3]",
+    "column_header": "EX-L",
+    "section": "FEATURES > EXTERIOR",
+    "relative_to": "Sport",
+    "relative_locator": "table[0]/row[234]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2023__honda__pilot.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:35Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Power Lift Tailgate",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-4e58b4e0fcd795affa5685a66a1953ae-2023-honda-pilot-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:56Z",
+    "document_sha256": "837f1d29a50aaf65a70429d67586482cfc9b9d8d92cb2c4d3f822caaf1589d54",
+    "locator": "table[0]/row[243]/col[3]",
+    "column_header": "EX-L",
+    "section": "FEATURES > EXTERIOR",
+    "relative_to": "Sport",
+    "relative_locator": "table[0]/row[243]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2023__honda__pilot.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:35Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   }
+  ],
+  "EX-L (7P)": [
+   {
+    "text": "Beverage Holders (Front Row-4 / 2nd-Row-4 / 3rd-Row-4 )",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-4e58b4e0fcd795affa5685a66a1953ae-2023-honda-pilot-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:56Z",
+    "document_sha256": "837f1d29a50aaf65a70429d67586482cfc9b9d8d92cb2c4d3f822caaf1589d54",
+    "locator": "table[0]/row[213]/col[4]",
+    "column_header": "EX-L (7P)",
+    "section": "FEATURES > INTERIOR",
+    "relative_to": "EX-L",
+    "relative_locator": "table[0]/row[213]/col[3]",
+    "absent_columns": [
+     1,
+     2,
+     3
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2023__honda__pilot.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:35Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   }
+  ],
+  "TrailSport": [
+   {
+    "text": "Trail Torque Logic",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-4e58b4e0fcd795affa5685a66a1953ae-2023-honda-pilot-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:56Z",
+    "document_sha256": "837f1d29a50aaf65a70429d67586482cfc9b9d8d92cb2c4d3f822caaf1589d54",
+    "locator": "table[0]/row[23]/col[5]",
+    "column_header": "TrailSport",
+    "section": "DRIVETRAIN",
+    "relative_to": "EX-L (7P)",
+    "relative_locator": "table[0]/row[23]/col[4]",
+    "absent_columns": [
+     1,
+     2,
+     3,
+     4
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2023__honda__pilot.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:35Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Full-Size Spare Tire",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-4e58b4e0fcd795affa5685a66a1953ae-2023-honda-pilot-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:56Z",
+    "document_sha256": "837f1d29a50aaf65a70429d67586482cfc9b9d8d92cb2c4d3f822caaf1589d54",
+    "locator": "table[0]/row[59]/col[5]",
+    "column_header": "TrailSport",
+    "section": "CHASSIS",
+    "relative_to": "EX-L (7P)",
+    "relative_locator": "table[0]/row[59]/col[4]",
+    "absent_columns": [
+     1,
+     2,
+     3,
+     4
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2023__honda__pilot.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:35Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Multiview Camera System",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-4e58b4e0fcd795affa5685a66a1953ae-2023-honda-pilot-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:56Z",
+    "document_sha256": "837f1d29a50aaf65a70429d67586482cfc9b9d8d92cb2c4d3f822caaf1589d54",
+    "locator": "table[0]/row[131]/col[5]",
+    "column_header": "TrailSport",
+    "section": "FEATURES > SAFETY & DRIVER ASSISTIVE TECHNOLOGY",
+    "relative_to": "EX-L (7P)",
+    "relative_locator": "table[0]/row[131]/col[4]",
+    "absent_columns": [
+     1,
+     2,
+     3,
+     4
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2023__honda__pilot.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:35Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Front Camera Washer",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-4e58b4e0fcd795affa5685a66a1953ae-2023-honda-pilot-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:56Z",
+    "document_sha256": "837f1d29a50aaf65a70429d67586482cfc9b9d8d92cb2c4d3f822caaf1589d54",
+    "locator": "table[0]/row[132]/col[5]",
+    "column_header": "TrailSport",
+    "section": "FEATURES > SAFETY & DRIVER ASSISTIVE TECHNOLOGY",
+    "relative_to": "EX-L (7P)",
+    "relative_locator": "table[0]/row[132]/col[4]",
+    "absent_columns": [
+     1,
+     2,
+     3,
+     4
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2023__honda__pilot.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:35Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Trailwatch",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-4e58b4e0fcd795affa5685a66a1953ae-2023-honda-pilot-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:56Z",
+    "document_sha256": "837f1d29a50aaf65a70429d67586482cfc9b9d8d92cb2c4d3f822caaf1589d54",
+    "locator": "table[0]/row[133]/col[5]",
+    "column_header": "TrailSport",
+    "section": "FEATURES > SAFETY & DRIVER ASSISTIVE TECHNOLOGY",
+    "relative_to": "EX-L (7P)",
+    "relative_locator": "table[0]/row[133]/col[4]",
+    "absent_columns": [
+     1,
+     2,
+     3,
+     4
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2023__honda__pilot.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:35Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Heated Steering Wheel",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-4e58b4e0fcd795affa5685a66a1953ae-2023-honda-pilot-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:56Z",
+    "document_sha256": "837f1d29a50aaf65a70429d67586482cfc9b9d8d92cb2c4d3f822caaf1589d54",
+    "locator": "table[0]/row[153]/col[5]",
+    "column_header": "TrailSport",
+    "section": "FEATURES > DRIVER CONVENIENCE",
+    "relative_to": "EX-L (7P)",
+    "relative_locator": "table[0]/row[153]/col[4]",
+    "absent_columns": [
+     1,
+     2,
+     3,
+     4
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2023__honda__pilot.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:35Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "110-Volt Power Outlet (2nd Row)",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-4e58b4e0fcd795affa5685a66a1953ae-2023-honda-pilot-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:56Z",
+    "document_sha256": "837f1d29a50aaf65a70429d67586482cfc9b9d8d92cb2c4d3f822caaf1589d54",
+    "locator": "table[0]/row[169]/col[5]",
+    "column_header": "TrailSport",
+    "section": "FEATURES > AUDIO & CONNECTIVITY",
+    "relative_to": "EX-L (7P)",
+    "relative_locator": "table[0]/row[169]/col[4]",
+    "absent_columns": [
+     1,
+     2,
+     3,
+     4
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2023__honda__pilot.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:35Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Panoramic Moonroof with Tilt and Slide Function",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-4e58b4e0fcd795affa5685a66a1953ae-2023-honda-pilot-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:56Z",
+    "document_sha256": "837f1d29a50aaf65a70429d67586482cfc9b9d8d92cb2c4d3f822caaf1589d54",
+    "locator": "table[0]/row[232]/col[5]",
+    "column_header": "TrailSport",
+    "section": "FEATURES > EXTERIOR",
+    "relative_to": "EX-L (7P)",
+    "relative_locator": "table[0]/row[232]/col[4]",
+    "absent_columns": [
+     1,
+     2,
+     3,
+     4
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2023__honda__pilot.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:35Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Heated Windshield",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-4e58b4e0fcd795affa5685a66a1953ae-2023-honda-pilot-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:56Z",
+    "document_sha256": "837f1d29a50aaf65a70429d67586482cfc9b9d8d92cb2c4d3f822caaf1589d54",
+    "locator": "table[0]/row[236]/col[5]",
+    "column_header": "TrailSport",
+    "section": "FEATURES > EXTERIOR",
+    "relative_to": "EX-L (7P)",
+    "relative_locator": "table[0]/row[236]/col[4]",
+    "absent_columns": [
+     1,
+     2,
+     3,
+     4
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2023__honda__pilot.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:35Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Gloss Black Front Grille",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-4e58b4e0fcd795affa5685a66a1953ae-2023-honda-pilot-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:56Z",
+    "document_sha256": "837f1d29a50aaf65a70429d67586482cfc9b9d8d92cb2c4d3f822caaf1589d54",
+    "locator": "table[0]/row[248]/col[5]",
+    "column_header": "TrailSport",
+    "section": "FEATURES > EXTERIOR",
+    "relative_to": "EX-L (7P)",
+    "relative_locator": "table[0]/row[248]/col[4]",
+    "absent_columns": [
+     1,
+     2,
+     3,
+     4
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2023__honda__pilot.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:35Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Gloss Black Door Handles",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-4e58b4e0fcd795affa5685a66a1953ae-2023-honda-pilot-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:56Z",
+    "document_sha256": "837f1d29a50aaf65a70429d67586482cfc9b9d8d92cb2c4d3f822caaf1589d54",
+    "locator": "table[0]/row[250]/col[5]",
+    "column_header": "TrailSport",
+    "section": "FEATURES > EXTERIOR",
+    "relative_to": "EX-L (7P)",
+    "relative_locator": "table[0]/row[250]/col[4]",
+    "absent_columns": [
+     1,
+     2,
+     3,
+     4
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2023__honda__pilot.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:35Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Underbody Skid Plates with Integrated Front Recovery Point",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-4e58b4e0fcd795affa5685a66a1953ae-2023-honda-pilot-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:56Z",
+    "document_sha256": "837f1d29a50aaf65a70429d67586482cfc9b9d8d92cb2c4d3f822caaf1589d54",
+    "locator": "table[0]/row[252]/col[5]",
+    "column_header": "TrailSport",
+    "section": "FEATURES > EXTERIOR",
+    "relative_to": "EX-L (7P)",
+    "relative_locator": "table[0]/row[252]/col[4]",
+    "absent_columns": [
+     1,
+     2,
+     3,
+     4
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2023__honda__pilot.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:35Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Standard Trailer Hitch Receiver with Rear Recovery Point (without Connector or Ball)",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-4e58b4e0fcd795affa5685a66a1953ae-2023-honda-pilot-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:56Z",
+    "document_sha256": "837f1d29a50aaf65a70429d67586482cfc9b9d8d92cb2c4d3f822caaf1589d54",
+    "locator": "table[0]/row[253]/col[5]",
+    "column_header": "TrailSport",
+    "section": "FEATURES > EXTERIOR",
+    "relative_to": "EX-L (7P)",
+    "relative_locator": "table[0]/row[253]/col[4]",
+    "absent_columns": [
+     1,
+     2,
+     3,
+     4
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2023__honda__pilot.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:35Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   }
+  ],
+  "Touring": [
+   {
+    "text": "Bose Premium Sound System with 12 Speakers, including Subwoofer",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-4e58b4e0fcd795affa5685a66a1953ae-2023-honda-pilot-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:56Z",
+    "document_sha256": "837f1d29a50aaf65a70429d67586482cfc9b9d8d92cb2c4d3f822caaf1589d54",
+    "locator": "table[0]/row[162]/col[6]",
+    "column_header": "Touring",
+    "section": "FEATURES > AUDIO & CONNECTIVITY",
+    "relative_to": "TrailSport",
+    "relative_locator": "table[0]/row[162]/col[5]",
+    "absent_columns": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2023__honda__pilot.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:35Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Wi-Fi® Hotspot Capability",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-4e58b4e0fcd795affa5685a66a1953ae-2023-honda-pilot-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:56Z",
+    "document_sha256": "837f1d29a50aaf65a70429d67586482cfc9b9d8d92cb2c4d3f822caaf1589d54",
+    "locator": "table[0]/row[174]/col[6]",
+    "column_header": "Touring",
+    "section": "FEATURES > AUDIO & CONNECTIVITY",
+    "relative_to": "TrailSport",
+    "relative_locator": "table[0]/row[174]/col[5]",
+    "absent_columns": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2023__honda__pilot.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:35Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Honda Satellite-Linked Navigation System™ with Voice Recognition and Honda RealTime Traffic",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-4e58b4e0fcd795affa5685a66a1953ae-2023-honda-pilot-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:56Z",
+    "document_sha256": "837f1d29a50aaf65a70429d67586482cfc9b9d8d92cb2c4d3f822caaf1589d54",
+    "locator": "table[0]/row[183]/col[6]",
+    "column_header": "Touring",
+    "section": "FEATURES > AUDIO & CONNECTIVITY",
+    "relative_to": "TrailSport",
+    "relative_locator": "table[0]/row[183]/col[5]",
+    "absent_columns": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2023__honda__pilot.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:35Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "HondaLink® Subscription Services",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-4e58b4e0fcd795affa5685a66a1953ae-2023-honda-pilot-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:56Z",
+    "document_sha256": "837f1d29a50aaf65a70429d67586482cfc9b9d8d92cb2c4d3f822caaf1589d54",
+    "locator": "table[0]/row[184]/col[6]",
+    "column_header": "Touring",
+    "section": "FEATURES > AUDIO & CONNECTIVITY",
+    "relative_to": "TrailSport",
+    "relative_locator": "table[0]/row[184]/col[5]",
+    "absent_columns": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2023__honda__pilot.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:35Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Multi-Zone Audio",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-4e58b4e0fcd795affa5685a66a1953ae-2023-honda-pilot-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:56Z",
+    "document_sha256": "837f1d29a50aaf65a70429d67586482cfc9b9d8d92cb2c4d3f822caaf1589d54",
+    "locator": "table[0]/row[185]/col[6]",
+    "column_header": "Touring",
+    "section": "FEATURES > AUDIO & CONNECTIVITY",
+    "relative_to": "TrailSport",
+    "relative_locator": "table[0]/row[185]/col[5]",
+    "absent_columns": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2023__honda__pilot.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:35Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Multi-Function 2nd-Row with Removable Middle Seat",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-4e58b4e0fcd795affa5685a66a1953ae-2023-honda-pilot-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:56Z",
+    "document_sha256": "837f1d29a50aaf65a70429d67586482cfc9b9d8d92cb2c4d3f822caaf1589d54",
+    "locator": "table[0]/row[203]/col[6]",
+    "column_header": "Touring",
+    "section": "FEATURES > INTERIOR",
+    "relative_to": "TrailSport",
+    "relative_locator": "table[0]/row[203]/col[5]",
+    "absent_columns": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2023__honda__pilot.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:35Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "On-Demand In-Trunk Seat Storage",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-4e58b4e0fcd795affa5685a66a1953ae-2023-honda-pilot-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:56Z",
+    "document_sha256": "837f1d29a50aaf65a70429d67586482cfc9b9d8d92cb2c4d3f822caaf1589d54",
+    "locator": "table[0]/row[205]/col[6]",
+    "column_header": "Touring",
+    "section": "FEATURES > INTERIOR",
+    "relative_to": "TrailSport",
+    "relative_locator": "table[0]/row[205]/col[5]",
+    "absent_columns": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2023__honda__pilot.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:35Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Illuminated Beverage Holders (Front Console)",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-4e58b4e0fcd795affa5685a66a1953ae-2023-honda-pilot-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:56Z",
+    "document_sha256": "837f1d29a50aaf65a70429d67586482cfc9b9d8d92cb2c4d3f822caaf1589d54",
+    "locator": "table[0]/row[211]/col[6]",
+    "column_header": "Touring",
+    "section": "FEATURES > INTERIOR",
+    "relative_to": "TrailSport",
+    "relative_locator": "table[0]/row[211]/col[5]",
+    "absent_columns": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2023__honda__pilot.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:35Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Courtesy Door Lights (Front Row)",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-4e58b4e0fcd795affa5685a66a1953ae-2023-honda-pilot-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:56Z",
+    "document_sha256": "837f1d29a50aaf65a70429d67586482cfc9b9d8d92cb2c4d3f822caaf1589d54",
+    "locator": "table[0]/row[212]/col[6]",
+    "column_header": "Touring",
+    "section": "FEATURES > INTERIOR",
+    "relative_to": "TrailSport",
+    "relative_locator": "table[0]/row[212]/col[5]",
+    "absent_columns": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2023__honda__pilot.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:35Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Acoustic Laminate Windshield and Front Side Glass",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-4e58b4e0fcd795affa5685a66a1953ae-2023-honda-pilot-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:56Z",
+    "document_sha256": "837f1d29a50aaf65a70429d67586482cfc9b9d8d92cb2c4d3f822caaf1589d54",
+    "locator": "table[0]/row[235]/col[6]",
+    "column_header": "Touring",
+    "section": "FEATURES > EXTERIOR",
+    "relative_to": "TrailSport",
+    "relative_locator": "table[0]/row[235]/col[5]",
+    "absent_columns": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2023__honda__pilot.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:35Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Power Lift Tailgate with Hands-Free Access and Walk Away Close",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-4e58b4e0fcd795affa5685a66a1953ae-2023-honda-pilot-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:56Z",
+    "document_sha256": "837f1d29a50aaf65a70429d67586482cfc9b9d8d92cb2c4d3f822caaf1589d54",
+    "locator": "table[0]/row[244]/col[6]",
+    "column_header": "Touring",
+    "section": "FEATURES > EXTERIOR",
+    "relative_to": "TrailSport",
+    "relative_locator": "table[0]/row[244]/col[5]",
+    "absent_columns": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2023__honda__pilot.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:35Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Gloss Black Rear Roof Spoiler Sides",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-4e58b4e0fcd795affa5685a66a1953ae-2023-honda-pilot-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:56Z",
+    "document_sha256": "837f1d29a50aaf65a70429d67586482cfc9b9d8d92cb2c4d3f822caaf1589d54",
+    "locator": "table[0]/row[249]/col[6]",
+    "column_header": "Touring",
+    "section": "FEATURES > EXTERIOR",
+    "relative_to": "TrailSport",
+    "relative_locator": "table[0]/row[249]/col[5]",
+    "absent_columns": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2023__honda__pilot.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:35Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   }
+  ],
+  "Elite": [
+   {
+    "text": "Heads Up Display",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-4e58b4e0fcd795affa5685a66a1953ae-2023-honda-pilot-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:56Z",
+    "document_sha256": "837f1d29a50aaf65a70429d67586482cfc9b9d8d92cb2c4d3f822caaf1589d54",
+    "locator": "table[0]/row[137]/col[7]",
+    "column_header": "Elite",
+    "section": "FEATURES > DRIVER CONVENIENCE",
+    "relative_to": "Touring",
+    "relative_locator": "table[0]/row[137]/col[6]",
+    "absent_columns": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2023__honda__pilot.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:35Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "10.2-Inch Digital Instrument Cluster",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-4e58b4e0fcd795affa5685a66a1953ae-2023-honda-pilot-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:56Z",
+    "document_sha256": "837f1d29a50aaf65a70429d67586482cfc9b9d8d92cb2c4d3f822caaf1589d54",
+    "locator": "table[0]/row[157]/col[7]",
+    "column_header": "Elite",
+    "section": "FEATURES > AUDIO & CONNECTIVITY",
+    "relative_to": "Touring",
+    "relative_locator": "table[0]/row[157]/col[6]",
+    "absent_columns": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2023__honda__pilot.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:35Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Ventilated Front Seats",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-4e58b4e0fcd795affa5685a66a1953ae-2023-honda-pilot-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:56Z",
+    "document_sha256": "837f1d29a50aaf65a70429d67586482cfc9b9d8d92cb2c4d3f822caaf1589d54",
+    "locator": "table[0]/row[194]/col[7]",
+    "column_header": "Elite",
+    "section": "FEATURES > INTERIOR",
+    "relative_to": "Touring",
+    "relative_locator": "table[0]/row[194]/col[6]",
+    "absent_columns": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2023__honda__pilot.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:35Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   }
+  ]
+ }
+}

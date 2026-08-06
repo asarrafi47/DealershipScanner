@@ -12,19 +12,19 @@
     "Laramie": [
       {
         "label": "Engine Options",
-        "value": "6.7L V6 Turbo; Automatic 6-spd"
+        "value": "6.7L Cummins Turbo Diesel I6"
       }
     ],
     "Big Horn": [
       {
         "label": "Engine Options",
-        "value": "Automatic 8-spd; Four-Wheel Drive"
+        "value": "6.4L V8 HEMI"
       }
     ],
     "Tradesman": [
       {
         "label": "Engine Options",
-        "value": "Automatic 8-spd; Rear-Wheel Drive"
+        "value": "6.4L V8 HEMI"
       }
     ]
   }

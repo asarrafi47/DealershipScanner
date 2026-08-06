@@ -3,29 +3,189 @@
   "year": 2023,
   "make": "Volkswagen",
   "model": "Taos",
-  "ladder_id": "brochure_llm_2023__volkswagen__taos",
-  "source": "brochure_llm",
-  "trims_available": [
-    "SEL",
-    "SE",
-    "S"
+  "source": "brochure_text_quoted",
+  "layouts": [
+    "marker_grid"
   ],
+  "trims_available": [
+    "SE",
+    "SEL"
+  ],
+  "trims_quoted": [
+    "SE",
+    "SEL"
+  ],
+  "rung_order": [
+    "S",
+    "SE",
+    "SEL"
+  ],
+  "order_basis": {
+    "S": {
+      "basis": "printed_sequence",
+      "trim": "S",
+      "source": "derived/brochure_text/2023__volkswagen__taos.json",
+      "column_index": 0,
+      "pages": [
+        4
+      ],
+      "layout": "marker_grid"
+    },
+    "SE": {
+      "basis": "printed_sequence",
+      "trim": "SE",
+      "source": "derived/brochure_text/2023__volkswagen__taos.json",
+      "column_index": 1,
+      "pages": [
+        4
+      ],
+      "layout": "marker_grid"
+    },
+    "SEL": {
+      "basis": "printed_sequence",
+      "trim": "SEL",
+      "source": "derived/brochure_text/2023__volkswagen__taos.json",
+      "column_index": 2,
+      "pages": [
+        4
+      ],
+      "layout": "marker_grid"
+    }
+  },
+  "rung_edges": [],
   "adds_by_trim": {
-    "SEL": [
-      "7-speed DSG® Automatic transmission with Tiptronic®",
-      "4MOTION® all-wheel drive standard",
-      "Panoramic sunroof with power tilt and slide (standard)"
-    ],
     "SE": [
-      "8-speed Automatic transmission with Tiptronic® (FWD) or 7-speed DSG® (4MOTION®)",
-      "Panoramic sunroof available (requires P01 package)",
-      "P01 package option for sunroof and certain exterior colors"
+      "Body color side mirror caps",
+      "Tinted privacy glass for 2nd row & cargo area windows",
+      "Silver anodized roof rails",
+      "Driver's seat: power adjustable, including power lumbar support",
+      "Front Comfort seats",
+      "CloudTex & cloth seating surfaces",
+      "Metal door sill scuff plates"
     ],
-    "S": [
-      "1.5L TSI® 4-cylinder turbocharged engine with 158 HP",
-      "Choice of FWD with 8-speed automatic or 4MOTION® with 7-speed DSG®",
-      "IQ.DRIVE® advanced driver assistance package available",
-      "Heated leatherette-wrapped steering wheel available"
+    "SEL": [
+      "Power tilting & sliding panoramic sunroof w/ retractable shade",
+      "Vienna Leather seating surfaces (1st row & outboard 2nd row seating positions)",
+      "Projector headlamps w/ signature DRLs",
+      "Adaptive Front Lighting System (AFS) w/ dynamic cornering lights",
+      "Front Comfort Sport seats"
     ]
+  },
+  "adds_provenance": {
+    "SE": [
+      {
+        "text": "Body color side mirror caps",
+        "source": "derived/brochure_text/2023__volkswagen__taos.json",
+        "page": 4,
+        "layout": "marker_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Tinted privacy glass for 2nd row & cargo area windows",
+        "source": "derived/brochure_text/2023__volkswagen__taos.json",
+        "page": 4,
+        "layout": "marker_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Silver anodized roof rails",
+        "source": "derived/brochure_text/2023__volkswagen__taos.json",
+        "page": 4,
+        "layout": "marker_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Driver's seat: power adjustable, including power lumbar support",
+        "source": "derived/brochure_text/2023__volkswagen__taos.json",
+        "page": 4,
+        "layout": "marker_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Front Comfort seats",
+        "source": "derived/brochure_text/2023__volkswagen__taos.json",
+        "page": 4,
+        "layout": "marker_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "CloudTex & cloth seating surfaces",
+        "source": "derived/brochure_text/2023__volkswagen__taos.json",
+        "page": 4,
+        "layout": "marker_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Metal door sill scuff plates",
+        "source": "derived/brochure_text/2023__volkswagen__taos.json",
+        "page": 4,
+        "layout": "marker_grid",
+        "verified": true,
+        "verified_why": "verified"
+      }
+    ],
+    "SEL": [
+      {
+        "text": "Power tilting & sliding panoramic sunroof w/ retractable shade",
+        "source": "derived/brochure_text/2023__volkswagen__taos.json",
+        "page": 4,
+        "layout": "marker_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Vienna Leather seating surfaces (1st row & outboard 2nd row seating positions)",
+        "source": "derived/brochure_text/2023__volkswagen__taos.json",
+        "page": 4,
+        "layout": "marker_grid",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "Projector headlamps w/ signature DRLs",
+        "source": "derived/brochure_text/2023__volkswagen__taos.json",
+        "page": 4,
+        "layout": "marker_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Adaptive Front Lighting System (AFS) w/ dynamic cornering lights",
+        "source": "derived/brochure_text/2023__volkswagen__taos.json",
+        "page": 4,
+        "layout": "marker_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Front Comfort Sport seats",
+        "source": "derived/brochure_text/2023__volkswagen__taos.json",
+        "page": 4,
+        "layout": "marker_grid",
+        "verified": true,
+        "verified_why": "verified"
+      }
+    ]
+  },
+  "source_brochure_text": "derived/brochure_text/2023__volkswagen__taos.json",
+  "pages_used": [
+    4
+  ],
+  "replaced_source": "brochure_text_quoted",
+  "source_pdf_name": "2023_Volkswagen_Taos_Brochure.pdf",
+  "source_pdf_sha256": "d7750c2a7266dd8e9cca59f486b5133ec48495e4d02e6d8c157cb238c7b7eda5",
+  "citation_verification": {
+    "verifier": "verify_trim_citations.py",
+    "version": "2026-08-02.1",
+    "checked_at": "2026-08-03T01:48:51+00:00",
+    "source_pdf": "2023_Volkswagen_Taos_Brochure.pdf",
+    "verified": 11,
+    "total": 12
   }
 }

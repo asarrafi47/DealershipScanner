@@ -12,31 +12,31 @@
     "550i": [
       {
         "label": "Engine Options",
-        "value": "4.8L V8 Twin Turbo; Manual 6-spd"
+        "value": "4.8L V8 Twin Turbo"
       }
     ],
     "550": [
       {
         "label": "Engine Options",
-        "value": "4.8L V8 Twin Turbo; Manual 6-spd"
+        "value": "4.8L V8 Twin Turbo"
       }
     ],
     "535i": [
       {
         "label": "Engine Options",
-        "value": "3.0L I6 Turbo; Automatic (S6)"
+        "value": "3.0L I6 Turbo"
       }
     ],
     "528i": [
       {
         "label": "Engine Options",
-        "value": "3.0L I6 Turbo; Manual 6-spd"
+        "value": "3.0L I6 Turbo"
       }
     ],
     "Sport": [
       {
         "label": "Engine Options",
-        "value": "3.0L I6 Turbo; Automatic (S6)"
+        "value": "3.0L I6 Turbo"
       }
     ]
   }

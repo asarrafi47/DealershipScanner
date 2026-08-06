@@ -1,0 +1,212 @@
+{
+  "catalog_key": "2026|toyota|corollahybrid",
+  "year": 2026,
+  "make": "Toyota",
+  "model": "Corolla Hybrid",
+  "source": "brochure_text_quoted",
+  "layouts": [
+    "cell_grid"
+  ],
+  "trims_available": [
+    "SE",
+    "XLE"
+  ],
+  "trims_quoted": [
+    "SE",
+    "XLE"
+  ],
+  "rung_order": [
+    "LE",
+    "SE",
+    "XLE"
+  ],
+  "order_basis": {
+    "LE": {
+      "basis": "printed_sequence",
+      "trim": "LE",
+      "source": "derived/brochure_text/2026__toyota__corollahybrid.json",
+      "column_index": 0,
+      "pages": [
+        4,
+        5,
+        6,
+        10
+      ],
+      "layout": "cell_grid"
+    },
+    "SE": {
+      "basis": "printed_sequence",
+      "trim": "SE",
+      "source": "derived/brochure_text/2026__toyota__corollahybrid.json",
+      "column_index": 1,
+      "pages": [
+        4,
+        5,
+        6,
+        10
+      ],
+      "layout": "cell_grid"
+    },
+    "XLE": {
+      "basis": "printed_sequence",
+      "trim": "XLE",
+      "source": "derived/brochure_text/2026__toyota__corollahybrid.json",
+      "column_index": 2,
+      "pages": [
+        4,
+        5,
+        6,
+        10
+      ],
+      "layout": "cell_grid"
+    }
+  },
+  "rung_edges": [],
+  "adds_by_trim": {
+    "SE": [
+      "18-in. alloy wheels with graphite-colored finish and P225/40R18 tires",
+      "Color-keyed heated power outside mirrors with Blind Spot Monitor warning indicators",
+      "Sport mesh gloss-black front grille",
+      "Single exhaust with dual chrome tips",
+      "Variable intermittent windshield wipers",
+      "Gray metallic sport side rocker panels and color-keyed rear spoiler",
+      "Sport seats with sport fabric inserts with 6-way adjustable driver's seat and 4-way adjustable front passenger seat",
+      "Metallic interior trim with chrome interior door handles",
+      "Driver and front passenger sun visors with illuminated vanity mirrors",
+      "Smart Key System on front doors and trunk with Push Button Start, remote keyless entry system with lock, two-stage unlock, panic, and trunk-release functions"
+    ],
+    "XLE": [
+      "Power tilt/slide moonroof with sliding sunshade",
+      "16-in. alloy wheels and P205/55R16 tires",
+      "Heated driver and front passenger seats"
+    ]
+  },
+  "adds_provenance": {
+    "SE": [
+      {
+        "text": "18-in. alloy wheels with graphite-colored finish and P225/40R18 tires",
+        "source": "derived/brochure_text/2026__toyota__corollahybrid.json",
+        "page": 4,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Color-keyed heated power outside mirrors with Blind Spot Monitor warning indicators",
+        "source": "derived/brochure_text/2026__toyota__corollahybrid.json",
+        "page": 4,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Sport mesh gloss-black front grille",
+        "source": "derived/brochure_text/2026__toyota__corollahybrid.json",
+        "page": 4,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Single exhaust with dual chrome tips",
+        "source": "derived/brochure_text/2026__toyota__corollahybrid.json",
+        "page": 4,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Variable intermittent windshield wipers",
+        "source": "derived/brochure_text/2026__toyota__corollahybrid.json",
+        "page": 4,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Gray metallic sport side rocker panels and color-keyed rear spoiler",
+        "source": "derived/brochure_text/2026__toyota__corollahybrid.json",
+        "page": 4,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Sport seats with sport fabric inserts with 6-way adjustable driver's seat and 4-way adjustable front passenger seat",
+        "source": "derived/brochure_text/2026__toyota__corollahybrid.json",
+        "page": 5,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Metallic interior trim with chrome interior door handles",
+        "source": "derived/brochure_text/2026__toyota__corollahybrid.json",
+        "page": 5,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Driver and front passenger sun visors with illuminated vanity mirrors",
+        "source": "derived/brochure_text/2026__toyota__corollahybrid.json",
+        "page": 6,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Smart Key System on front doors and trunk with Push Button Start, remote keyless entry system with lock, two-stage unlock, panic, and trunk-release functions",
+        "source": "derived/brochure_text/2026__toyota__corollahybrid.json",
+        "page": 5,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      }
+    ],
+    "XLE": [
+      {
+        "text": "Power tilt/slide moonroof with sliding sunshade",
+        "source": "derived/brochure_text/2026__toyota__corollahybrid.json",
+        "page": 4,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "16-in. alloy wheels and P205/55R16 tires",
+        "source": "derived/brochure_text/2026__toyota__corollahybrid.json",
+        "page": 4,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Heated driver and front passenger seats",
+        "source": "derived/brochure_text/2026__toyota__corollahybrid.json",
+        "page": 6,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      }
+    ]
+  },
+  "source_brochure_text": "derived/brochure_text/2026__toyota__corollahybrid.json",
+  "pages_used": [
+    4,
+    5,
+    6,
+    10
+  ],
+  "replaced_source": "brochure_text_quoted",
+  "source_pdf_name": "2026_Toyota_Corolla_Hybrid_Brochure.pdf",
+  "source_pdf_sha256": "cc9e8e8b9735bb59f7833ab543c80ce0e108f1f6aad04b6923913b9a8c98eaff",
+  "citation_verification": {
+    "verifier": "verify_trim_citations.py",
+    "version": "2026-08-02.1",
+    "checked_at": "2026-08-03T01:48:52+00:00",
+    "source_pdf": "2026_Toyota_Corolla_Hybrid_Brochure.pdf",
+    "verified": 13,
+    "total": 13
+  }
+}

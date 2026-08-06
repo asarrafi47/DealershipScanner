@@ -3,82 +3,520 @@
   "year": 2022,
   "make": "Dodge",
   "model": "Durango",
-  "ladder_id": "brochure_llm_2022__dodge__durango",
-  "source": "brochure_llm",
+  "source": "brochure_text_quoted",
+  "layouts": [
+    "adds_to_block"
+  ],
   "trims_available": [
-    "SRT 392",
-    "CITADEL",
-    "R/T PLUS",
-    "R/T",
-    "GT PLUS",
     "GT",
-    "SXT"
+    "GT PLUS",
+    "R/T",
+    "R/T Plus",
+    "Citadel"
+  ],
+  "trims_quoted": [
+    "GT",
+    "GT PLUS",
+    "R/T",
+    "R/T Plus",
+    "Citadel"
+  ],
+  "rung_order": [
+    "SXT",
+    "GT",
+    "GT PLUS",
+    "R/T",
+    "R/T Plus",
+    "Citadel"
+  ],
+  "order_basis": {
+    "SXT": {
+      "basis": "adds_to_edge",
+      "trim": "SXT",
+      "direction": "named_as_baseline_by",
+      "edge": {
+        "trim": "GT",
+        "below": "SXT",
+        "source": "derived/brochure_text/2022__dodge__durango.json",
+        "page": 29,
+        "layout": "adds_to_block",
+        "trim_quote": "GT",
+        "below_quote": "ADDS TO SXT"
+      }
+    },
+    "GT": {
+      "basis": "adds_to_edge",
+      "trim": "GT",
+      "direction": "states_its_baseline",
+      "edge": {
+        "trim": "GT",
+        "below": "SXT",
+        "source": "derived/brochure_text/2022__dodge__durango.json",
+        "page": 29,
+        "layout": "adds_to_block",
+        "trim_quote": "GT",
+        "below_quote": "ADDS TO SXT"
+      }
+    },
+    "GT PLUS": {
+      "basis": "adds_to_edge",
+      "trim": "GT PLUS",
+      "direction": "states_its_baseline",
+      "edge": {
+        "trim": "GT PLUS",
+        "below": "GT",
+        "source": "derived/brochure_text/2022__dodge__durango.json",
+        "page": 30,
+        "layout": "adds_to_block",
+        "trim_quote": "GT PLUS",
+        "below_quote": "ADDS TO GT"
+      }
+    },
+    "R/T": {
+      "basis": "adds_to_edge",
+      "trim": "R/T",
+      "direction": "states_its_baseline",
+      "edge": {
+        "trim": "R/T",
+        "below": "GT PLUS",
+        "source": "derived/brochure_text/2022__dodge__durango.json",
+        "page": 31,
+        "layout": "adds_to_block",
+        "trim_quote": "R/T",
+        "below_quote": "ADDS TO GT PLUS"
+      }
+    },
+    "R/T Plus": {
+      "basis": "adds_to_edge",
+      "trim": "R/T Plus",
+      "direction": "states_its_baseline",
+      "edge": {
+        "trim": "R/T Plus",
+        "below": "R/T",
+        "source": "derived/brochure_text/2022__dodge__durango.json",
+        "page": 32,
+        "layout": "adds_to_block",
+        "trim_quote": "R/T PLUS",
+        "below_quote": "ADDS TO R/T"
+      },
+      "tiebreak": "page_sequence",
+      "tied_with": [
+        "Citadel"
+      ]
+    },
+    "Citadel": {
+      "basis": "adds_to_edge",
+      "trim": "Citadel",
+      "direction": "states_its_baseline",
+      "edge": {
+        "trim": "Citadel",
+        "below": "R/T",
+        "source": "derived/brochure_text/2022__dodge__durango.json",
+        "page": 33,
+        "layout": "adds_to_block",
+        "trim_quote": "CITADEL",
+        "below_quote": "ADDS TO R/T"
+      },
+      "tiebreak": "page_sequence",
+      "tied_with": [
+        "R/T Plus"
+      ]
+    }
+  },
+  "rung_edges": [
+    {
+      "trim": "GT",
+      "below": "SXT",
+      "source": "derived/brochure_text/2022__dodge__durango.json",
+      "page": 29,
+      "layout": "adds_to_block",
+      "trim_quote": "GT",
+      "below_quote": "ADDS TO SXT"
+    },
+    {
+      "trim": "GT PLUS",
+      "below": "GT",
+      "source": "derived/brochure_text/2022__dodge__durango.json",
+      "page": 30,
+      "layout": "adds_to_block",
+      "trim_quote": "GT PLUS",
+      "below_quote": "ADDS TO GT"
+    },
+    {
+      "trim": "R/T",
+      "below": "GT PLUS",
+      "source": "derived/brochure_text/2022__dodge__durango.json",
+      "page": 31,
+      "layout": "adds_to_block",
+      "trim_quote": "R/T",
+      "below_quote": "ADDS TO GT PLUS"
+    },
+    {
+      "trim": "R/T Plus",
+      "below": "R/T",
+      "source": "derived/brochure_text/2022__dodge__durango.json",
+      "page": 32,
+      "layout": "adds_to_block",
+      "trim_quote": "R/T PLUS",
+      "below_quote": "ADDS TO R/T"
+    },
+    {
+      "trim": "Citadel",
+      "below": "R/T",
+      "source": "derived/brochure_text/2022__dodge__durango.json",
+      "page": 33,
+      "layout": "adds_to_block",
+      "trim_quote": "CITADEL",
+      "below_quote": "ADDS TO R/T"
+    }
   ],
   "adds_by_trim": {
-    "SRT 392": [
-      "6.4L 392 HEMI V8 engine with 475 hp and 470 lb-ft torque",
-      "Performance-tuned All-Wheel-Drive system",
-      "TorqueFlite 8-speed automatic transmission",
-      "Brembo 6-piston brakes with performance pads",
-      "Bilstein adaptive damping suspension",
-      "20 by 10-inch Hyper Black wheels",
-      "Heated SRT flat-bottom steering wheel with paddle shifters",
-      "SRT Performance Pages Plus and drive modes",
-      "Performance rear spoiler and hood"
-    ],
-    "CITADEL": [
-      "Wrapped instrument panel with accent stitching",
-      "Crypto Sweep hydros with laser etch",
-      "20 by 8-inch Satin Carbon wheels",
-      "Platinum chrome door handles, grille and mirrors",
-      "Capri leather trim seating with embossed logo",
-      "Ventilated front seats with power sunroof",
-      "Forward Collision Warning with Active Braking",
-      "Class IV hitch receiver with integrated trailer brake controller",
-      "Dinamica suede headliner"
-    ],
-    "R/T PLUS": [
-      "Nappa leather trim seating",
-      "Power sunroof",
-      "Forward Collision Warning with Active Braking",
-      "Harman Kardon Premium Audio System",
-      "LaneSense Lane Departure Warning with Lane Keep Assist",
-      "Adaptive Cruise Control with Stop"
-    ],
-    "R/T": [
-      "5.7L HEMI V8 engine",
-      "Performance steering and sport suspension",
-      "Rear load-leveling suspension",
-      "SmartBeam High Intensity Discharge headlamps",
-      "12-way power passenger seat and power tilt/telescoping steering wheel",
-      "Uconnect 5 NAV with 10.1-inch touchscreen",
-      "Alpine Premium Audio System with 9 speakers and subwoofer",
-      "Full-size spare tire"
-    ],
-    "GT PLUS": [
-      "Capri leather trim seating with suede inserts",
-      "Heated 1st and 2nd-row seats",
-      "Memory seats, mirrors and radio",
-      "Heated steering wheel",
-      "10-way power passenger seat",
-      "Rain-sensitive windshield wipers",
-      "Remote Start System and security alarm"
-    ],
     "GT": [
       "20 by 8-inch Fine Silver wheels",
-      "Dual exhaust with bright tips",
       "Leather flat-bottom steering wheel",
-      "Heated front seats and heated steering wheel",
-      "Power liftgate",
+      "Heated front seats",
+      "Heated steering wheel",
+      "Dual exhaust with bright tips",
       "Remote Start System"
     ],
-    "SXT": [
-      "3.6L Pentastar V6 engine",
-      "Dual-zone automatic temperature control",
-      "7-passenger seating with roof rails",
-      "Cloth interior trim",
-      "8-inch touchscreen infotainment system",
-      "Backup camera with ParkSense rear park assist"
+    "GT PLUS": [
+      "Advanced Brake Assist",
+      "Capri leather trim seating with suede inserts",
+      "Heated steering wheel",
+      "10-way power passenger seat",
+      "Heated 1st- and 2nd-row seats",
+      "Memory seats, mirrors and radio"
+    ],
+    "R/T": [
+      "5.7L HEMI® V8 engine",
+      "HEMI fender badge",
+      "Performance steering and sport suspension",
+      "Rear load-leveling suspension",
+      "Uconnect® 5 NAV with 10.1-inch touchscreen display",
+      "Alpine® Premium Audio System with 9 speakers and subwoofer",
+      "12-way power passenger seat",
+      "Performance hood",
+      "SmartBeam™ High Intensity Discharge (HID) headlamps",
+      "Power tilt/telescoping steering wheel",
+      "Dodge Performance Pages",
+      "Wireless charging pad"
+    ],
+    "R/T Plus": [
+      "Advanced Brake Assist",
+      "Nappa leather trim seating",
+      "Power sunroof",
+      "Adaptive Cruise Control (ACC) with Stop",
+      "Forward Collision Warning with Active Braking"
+    ],
+    "Citadel": [
+      "20 by 8-inch Satin Carbon wheels",
+      "Wrapped instrument panel with accent stitching",
+      "Crypto Sweep hydros with laser etch",
+      "Liquid titanium-painted speaker trims",
+      "Platinum chrome door handles, grille and mirrors"
     ]
+  },
+  "adds_provenance": {
+    "GT": [
+      {
+        "text": "20 by 8-inch Fine Silver wheels",
+        "source": "derived/brochure_text/2022__dodge__durango.json",
+        "page": 29,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Leather flat-bottom steering wheel",
+        "source": "derived/brochure_text/2022__dodge__durango.json",
+        "page": 29,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Heated front seats",
+        "source": "derived/brochure_text/2022__dodge__durango.json",
+        "page": 29,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Heated steering wheel",
+        "source": "derived/brochure_text/2022__dodge__durango.json",
+        "page": 29,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Dual exhaust with bright tips",
+        "source": "derived/brochure_text/2022__dodge__durango.json",
+        "page": 29,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Remote Start System",
+        "source": "derived/brochure_text/2022__dodge__durango.json",
+        "page": 29,
+        "layout": "adds_to_block",
+        "verified": false,
+        "verified_why": "text_printed_but_footnote_digit_glued_to_word"
+      }
+    ],
+    "GT PLUS": [
+      {
+        "text": "Advanced Brake Assist",
+        "source": "derived/brochure_text/2022__dodge__durango.json",
+        "page": 30,
+        "layout": "adds_to_block",
+        "verified": false,
+        "verified_why": "text_printed_but_footnote_digit_glued_to_word"
+      },
+      {
+        "text": "Capri leather trim seating with suede inserts",
+        "source": "derived/brochure_text/2022__dodge__durango.json",
+        "page": 30,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Heated steering wheel",
+        "source": "derived/brochure_text/2022__dodge__durango.json",
+        "page": 30,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "10-way power passenger seat",
+        "source": "derived/brochure_text/2022__dodge__durango.json",
+        "page": 30,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Heated 1st- and 2nd-row seats",
+        "source": "derived/brochure_text/2022__dodge__durango.json",
+        "page": 30,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Memory seats, mirrors and radio",
+        "source": "derived/brochure_text/2022__dodge__durango.json",
+        "page": 30,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      }
+    ],
+    "R/T": [
+      {
+        "text": "5.7L HEMI® V8 engine",
+        "source": "derived/brochure_text/2022__dodge__durango.json",
+        "page": 31,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "HEMI fender badge",
+        "source": "derived/brochure_text/2022__dodge__durango.json",
+        "page": 31,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Performance steering and sport suspension",
+        "source": "derived/brochure_text/2022__dodge__durango.json",
+        "page": 31,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Rear load-leveling suspension",
+        "source": "derived/brochure_text/2022__dodge__durango.json",
+        "page": 31,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Uconnect® 5 NAV with 10.1-inch touchscreen display",
+        "source": "derived/brochure_text/2022__dodge__durango.json",
+        "page": 31,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Alpine® Premium Audio System with 9 speakers and subwoofer",
+        "source": "derived/brochure_text/2022__dodge__durango.json",
+        "page": 31,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "12-way power passenger seat",
+        "source": "derived/brochure_text/2022__dodge__durango.json",
+        "page": 31,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Performance hood",
+        "source": "derived/brochure_text/2022__dodge__durango.json",
+        "page": 31,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "SmartBeam™ High Intensity Discharge (HID) headlamps",
+        "source": "derived/brochure_text/2022__dodge__durango.json",
+        "page": 31,
+        "layout": "adds_to_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "Power tilt/telescoping steering wheel",
+        "source": "derived/brochure_text/2022__dodge__durango.json",
+        "page": 31,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Dodge Performance Pages",
+        "source": "derived/brochure_text/2022__dodge__durango.json",
+        "page": 31,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Wireless charging pad",
+        "source": "derived/brochure_text/2022__dodge__durango.json",
+        "page": 31,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      }
+    ],
+    "R/T Plus": [
+      {
+        "text": "Advanced Brake Assist",
+        "source": "derived/brochure_text/2022__dodge__durango.json",
+        "page": 32,
+        "layout": "adds_to_block",
+        "verified": false,
+        "verified_why": "text_printed_but_footnote_digit_glued_to_word"
+      },
+      {
+        "text": "Nappa leather trim seating",
+        "source": "derived/brochure_text/2022__dodge__durango.json",
+        "page": 32,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Power sunroof",
+        "source": "derived/brochure_text/2022__dodge__durango.json",
+        "page": 32,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Adaptive Cruise Control (ACC) with Stop",
+        "source": "derived/brochure_text/2022__dodge__durango.json",
+        "page": 32,
+        "layout": "adds_to_block",
+        "verified": false,
+        "verified_why": "text_printed_but_footnote_digit_glued_to_word"
+      },
+      {
+        "text": "Forward Collision Warning with Active Braking",
+        "source": "derived/brochure_text/2022__dodge__durango.json",
+        "page": 32,
+        "layout": "adds_to_block",
+        "verified": false,
+        "verified_why": "text_printed_but_footnote_digit_glued_to_word"
+      }
+    ],
+    "Citadel": [
+      {
+        "text": "20 by 8-inch Satin Carbon wheels",
+        "source": "derived/brochure_text/2022__dodge__durango.json",
+        "page": 33,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Wrapped instrument panel with accent stitching",
+        "source": "derived/brochure_text/2022__dodge__durango.json",
+        "page": 33,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Crypto Sweep hydros with laser etch",
+        "source": "derived/brochure_text/2022__dodge__durango.json",
+        "page": 33,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Liquid titanium-painted speaker trims",
+        "source": "derived/brochure_text/2022__dodge__durango.json",
+        "page": 33,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Platinum chrome door handles, grille and mirrors",
+        "source": "derived/brochure_text/2022__dodge__durango.json",
+        "page": 33,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      }
+    ]
+  },
+  "source_brochure_text": "derived/brochure_text/2022__dodge__durango.json",
+  "pages_used": [
+    29,
+    30,
+    31,
+    32,
+    33
+  ],
+  "replaced_source": "brochure_text_quoted",
+  "source_pdf_name": "2022_Dodge_Durango_Brochure.pdf",
+  "source_pdf_sha256": "6663b778964b9a148bb3796c17432539b7c7bbfc26e7cb057c301b6fd05b50e6",
+  "citation_verification": {
+    "verifier": "verify_trim_citations.py",
+    "version": "2026-08-02.1",
+    "checked_at": "2026-08-03T01:48:50+00:00",
+    "source_pdf": "2022_Dodge_Durango_Brochure.pdf",
+    "verified": 28,
+    "total": 34
   }
 }

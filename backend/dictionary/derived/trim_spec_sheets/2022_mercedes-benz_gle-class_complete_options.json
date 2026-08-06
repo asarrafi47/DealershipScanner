@@ -12,25 +12,19 @@
     "GLE580": [
       {
         "label": "Engine Options",
-        "value": "4.0L V8 Turbo; Automatic 9-spd"
+        "value": "Hybrid 4.0L V8 (SIDI; Mild Hybrid)"
       }
     ],
     "GLE450": [
       {
         "label": "Engine Options",
-        "value": "3.0L V6 Turbo; Automatic 9-spd"
+        "value": "Hybrid 3.0L V6 (SIDI; Mild Hybrid)"
       }
     ],
     "GLE350": [
       {
         "label": "Engine Options",
-        "value": "2.0L I4 Turbo; Automatic 9-spd"
-      }
-    ],
-    "Sport": [
-      {
-        "label": "Engine Options",
-        "value": "A 48V electric system like in the GLE 450 features EQ Boost for an extra 21 hp ("
+        "value": "2.0L I4 (SIDI)"
       }
     ]
   }

@@ -1,0 +1,598 @@
+{
+ "catalog_key": "2023|honda|ridgeline",
+ "year": 2023,
+ "make": "Honda",
+ "model": "Ridgeline",
+ "source": "html_spec_quoted",
+ "source_document": "backend/dictionary/derived/html_spec_text/2023__honda__ridgeline.json",
+ "source_url": "https://hondanews.com/en-US/honda-automobiles/releases/release-d8e7e3d744b0a8d7736d6e20aa032327-2023-honda-ridgeline-specifications-features",
+ "layouts": [
+  "html_mark_grid"
+ ],
+ "trims_available": [
+  "Sport",
+  "RTL",
+  "RTL-E",
+  "Black Edition"
+ ],
+ "trims_quoted": [
+  "RTL",
+  "RTL-E"
+ ],
+ "adds_by_trim": {
+  "RTL": [
+   "Blind Spot Information System (BSI) with Cross Traffic Monitor",
+   "Acoustic Windshield",
+   "Power Sliding Rear Window",
+   "SiriusXM®",
+   "Front Passenger's Seat with 4-Way Power Adjustment",
+   "Leather-Trimmed Interior",
+   "Heated Front Seats",
+   "Automatic-Dimming Rearview Mirror",
+   "LED Side Mirror Turn Indicator",
+   "Heated Side Mirrors",
+   "One-Touch Power Moonroof with Tilt Feature"
+  ],
+  "RTL-E": [
+   "Auto High-Beam Headlights",
+   "150-Watt / 400-Watt Truck-Bed Power Outlet",
+   "540-Watt Premium Audio System with 8 Speakers, including Subwoofer",
+   "HD Radio™",
+   "Wireless Phone Charger",
+   "Honda Satellite-Linked Navigation System™ with Voice Recognition and Honda HD Digital Traffic",
+   "Truck-Bed Audio System",
+   "Compass",
+   "Turn-By-Turn Directions",
+   "Conversation Mirror with Sunglasses Holder",
+   "Courtesy Door Lights (front row)",
+   "Illuminated Beverage Holders (front row)",
+   "Parking Sensors (Front & Rear)",
+   "Walk Away Auto Lock®"
+  ]
+ },
+ "adds_provenance": {
+  "RTL": [
+   {
+    "text": "Blind Spot Information System (BSI) with Cross Traffic Monitor",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-d8e7e3d744b0a8d7736d6e20aa032327-2023-honda-ridgeline-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:52Z",
+    "document_sha256": "fd68597adf4be999d1ff8c7ee5d0044306dc60db8ee52fa0ee5e4abac63b4cb8",
+    "locator": "table[0]/row[115]/col[2]",
+    "column_header": "RTL",
+    "section": "FEATURES > SAFETY & DRIVER ASSISTIVE TECHNOLOGY",
+    "relative_to": "Sport",
+    "relative_locator": "table[0]/row[115]/col[1]",
+    "absent_columns": [
+     1
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2023__honda__ridgeline.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:35Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Acoustic Windshield",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-d8e7e3d744b0a8d7736d6e20aa032327-2023-honda-ridgeline-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:52Z",
+    "document_sha256": "fd68597adf4be999d1ff8c7ee5d0044306dc60db8ee52fa0ee5e4abac63b4cb8",
+    "locator": "table[0]/row[129]/col[2]",
+    "column_header": "RTL",
+    "section": "FEATURES > DRIVER CONVENIENCE",
+    "relative_to": "Sport",
+    "relative_locator": "table[0]/row[129]/col[1]",
+    "absent_columns": [
+     1
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2023__honda__ridgeline.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:35Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Power Sliding Rear Window",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-d8e7e3d744b0a8d7736d6e20aa032327-2023-honda-ridgeline-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:52Z",
+    "document_sha256": "fd68597adf4be999d1ff8c7ee5d0044306dc60db8ee52fa0ee5e4abac63b4cb8",
+    "locator": "table[0]/row[130]/col[2]",
+    "column_header": "RTL",
+    "section": "FEATURES > DRIVER CONVENIENCE",
+    "relative_to": "Sport",
+    "relative_locator": "table[0]/row[130]/col[1]",
+    "absent_columns": [
+     1
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2023__honda__ridgeline.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:35Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "SiriusXM®",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-d8e7e3d744b0a8d7736d6e20aa032327-2023-honda-ridgeline-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:52Z",
+    "document_sha256": "fd68597adf4be999d1ff8c7ee5d0044306dc60db8ee52fa0ee5e4abac63b4cb8",
+    "locator": "table[0]/row[148]/col[2]",
+    "column_header": "RTL",
+    "section": "FEATURES > AUDIO & CONNECTIVITY",
+    "relative_to": "Sport",
+    "relative_locator": "table[0]/row[148]/col[1]",
+    "absent_columns": [
+     1
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2023__honda__ridgeline.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:35Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Front Passenger's Seat with 4-Way Power Adjustment",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-d8e7e3d744b0a8d7736d6e20aa032327-2023-honda-ridgeline-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:52Z",
+    "document_sha256": "fd68597adf4be999d1ff8c7ee5d0044306dc60db8ee52fa0ee5e4abac63b4cb8",
+    "locator": "table[0]/row[160]/col[2]",
+    "column_header": "RTL",
+    "section": "FEATURES > INTERIOR",
+    "relative_to": "Sport",
+    "relative_locator": "table[0]/row[160]/col[1]",
+    "absent_columns": [
+     1
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2023__honda__ridgeline.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:35Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Leather-Trimmed Interior",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-d8e7e3d744b0a8d7736d6e20aa032327-2023-honda-ridgeline-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:52Z",
+    "document_sha256": "fd68597adf4be999d1ff8c7ee5d0044306dc60db8ee52fa0ee5e4abac63b4cb8",
+    "locator": "table[0]/row[162]/col[2]",
+    "column_header": "RTL",
+    "section": "FEATURES > INTERIOR",
+    "relative_to": "Sport",
+    "relative_locator": "table[0]/row[162]/col[1]",
+    "absent_columns": [
+     1
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2023__honda__ridgeline.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:35Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Heated Front Seats",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-d8e7e3d744b0a8d7736d6e20aa032327-2023-honda-ridgeline-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:52Z",
+    "document_sha256": "fd68597adf4be999d1ff8c7ee5d0044306dc60db8ee52fa0ee5e4abac63b4cb8",
+    "locator": "table[0]/row[163]/col[2]",
+    "column_header": "RTL",
+    "section": "FEATURES > INTERIOR",
+    "relative_to": "Sport",
+    "relative_locator": "table[0]/row[163]/col[1]",
+    "absent_columns": [
+     1
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2023__honda__ridgeline.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:35Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Automatic-Dimming Rearview Mirror",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-d8e7e3d744b0a8d7736d6e20aa032327-2023-honda-ridgeline-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:52Z",
+    "document_sha256": "fd68597adf4be999d1ff8c7ee5d0044306dc60db8ee52fa0ee5e4abac63b4cb8",
+    "locator": "table[0]/row[194]/col[2]",
+    "column_header": "RTL",
+    "section": "FEATURES > INTERIOR",
+    "relative_to": "Sport",
+    "relative_locator": "table[0]/row[194]/col[1]",
+    "absent_columns": [
+     1
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2023__honda__ridgeline.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:35Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "LED Side Mirror Turn Indicator",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-d8e7e3d744b0a8d7736d6e20aa032327-2023-honda-ridgeline-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:52Z",
+    "document_sha256": "fd68597adf4be999d1ff8c7ee5d0044306dc60db8ee52fa0ee5e4abac63b4cb8",
+    "locator": "table[0]/row[206]/col[2]",
+    "column_header": "RTL",
+    "section": "FEATURES > EXTERIOR",
+    "relative_to": "Sport",
+    "relative_locator": "table[0]/row[206]/col[1]",
+    "absent_columns": [
+     1
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2023__honda__ridgeline.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:36Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Heated Side Mirrors",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-d8e7e3d744b0a8d7736d6e20aa032327-2023-honda-ridgeline-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:52Z",
+    "document_sha256": "fd68597adf4be999d1ff8c7ee5d0044306dc60db8ee52fa0ee5e4abac63b4cb8",
+    "locator": "table[0]/row[207]/col[2]",
+    "column_header": "RTL",
+    "section": "FEATURES > EXTERIOR",
+    "relative_to": "Sport",
+    "relative_locator": "table[0]/row[207]/col[1]",
+    "absent_columns": [
+     1
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2023__honda__ridgeline.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:36Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "One-Touch Power Moonroof with Tilt Feature",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-d8e7e3d744b0a8d7736d6e20aa032327-2023-honda-ridgeline-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:52Z",
+    "document_sha256": "fd68597adf4be999d1ff8c7ee5d0044306dc60db8ee52fa0ee5e4abac63b4cb8",
+    "locator": "table[0]/row[218]/col[2]",
+    "column_header": "RTL",
+    "section": "FEATURES > EXTERIOR",
+    "relative_to": "Sport",
+    "relative_locator": "table[0]/row[218]/col[1]",
+    "absent_columns": [
+     1
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2023__honda__ridgeline.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:36Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   }
+  ],
+  "RTL-E": [
+   {
+    "text": "Auto High-Beam Headlights",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-d8e7e3d744b0a8d7736d6e20aa032327-2023-honda-ridgeline-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:52Z",
+    "document_sha256": "fd68597adf4be999d1ff8c7ee5d0044306dc60db8ee52fa0ee5e4abac63b4cb8",
+    "locator": "table[0]/row[120]/col[3]",
+    "column_header": "RTL-E",
+    "section": "FEATURES > DRIVER CONVENIENCE",
+    "relative_to": "RTL",
+    "relative_locator": "table[0]/row[120]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2023__honda__ridgeline.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:36Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "150-Watt / 400-Watt Truck-Bed Power Outlet",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-d8e7e3d744b0a8d7736d6e20aa032327-2023-honda-ridgeline-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:52Z",
+    "document_sha256": "fd68597adf4be999d1ff8c7ee5d0044306dc60db8ee52fa0ee5e4abac63b4cb8",
+    "locator": "table[0]/row[131]/col[3]",
+    "column_header": "RTL-E",
+    "section": "FEATURES > DRIVER CONVENIENCE",
+    "relative_to": "RTL",
+    "relative_locator": "table[0]/row[131]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2023__honda__ridgeline.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:36Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "540-Watt Premium Audio System with 8 Speakers, including Subwoofer",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-d8e7e3d744b0a8d7736d6e20aa032327-2023-honda-ridgeline-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:52Z",
+    "document_sha256": "fd68597adf4be999d1ff8c7ee5d0044306dc60db8ee52fa0ee5e4abac63b4cb8",
+    "locator": "table[0]/row[136]/col[3]",
+    "column_header": "RTL-E",
+    "section": "FEATURES > AUDIO & CONNECTIVITY",
+    "relative_to": "RTL",
+    "relative_locator": "table[0]/row[136]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2023__honda__ridgeline.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:36Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "HD Radio™",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-d8e7e3d744b0a8d7736d6e20aa032327-2023-honda-ridgeline-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:52Z",
+    "document_sha256": "fd68597adf4be999d1ff8c7ee5d0044306dc60db8ee52fa0ee5e4abac63b4cb8",
+    "locator": "table[0]/row[149]/col[3]",
+    "column_header": "RTL-E",
+    "section": "FEATURES > AUDIO & CONNECTIVITY",
+    "relative_to": "RTL",
+    "relative_locator": "table[0]/row[149]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2023__honda__ridgeline.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:36Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Wireless Phone Charger",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-d8e7e3d744b0a8d7736d6e20aa032327-2023-honda-ridgeline-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:52Z",
+    "document_sha256": "fd68597adf4be999d1ff8c7ee5d0044306dc60db8ee52fa0ee5e4abac63b4cb8",
+    "locator": "table[0]/row[150]/col[3]",
+    "column_header": "RTL-E",
+    "section": "FEATURES > AUDIO & CONNECTIVITY",
+    "relative_to": "RTL",
+    "relative_locator": "table[0]/row[150]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2023__honda__ridgeline.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:36Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Honda Satellite-Linked Navigation System™ with Voice Recognition and Honda HD Digital Traffic",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-d8e7e3d744b0a8d7736d6e20aa032327-2023-honda-ridgeline-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:52Z",
+    "document_sha256": "fd68597adf4be999d1ff8c7ee5d0044306dc60db8ee52fa0ee5e4abac63b4cb8",
+    "locator": "table[0]/row[151]/col[3]",
+    "column_header": "RTL-E",
+    "section": "FEATURES > AUDIO & CONNECTIVITY",
+    "relative_to": "RTL",
+    "relative_locator": "table[0]/row[151]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2023__honda__ridgeline.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:36Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Truck-Bed Audio System",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-d8e7e3d744b0a8d7736d6e20aa032327-2023-honda-ridgeline-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:52Z",
+    "document_sha256": "fd68597adf4be999d1ff8c7ee5d0044306dc60db8ee52fa0ee5e4abac63b4cb8",
+    "locator": "table[0]/row[152]/col[3]",
+    "column_header": "RTL-E",
+    "section": "FEATURES > AUDIO & CONNECTIVITY",
+    "relative_to": "RTL",
+    "relative_locator": "table[0]/row[152]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2023__honda__ridgeline.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:36Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Compass",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-d8e7e3d744b0a8d7736d6e20aa032327-2023-honda-ridgeline-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:52Z",
+    "document_sha256": "fd68597adf4be999d1ff8c7ee5d0044306dc60db8ee52fa0ee5e4abac63b4cb8",
+    "locator": "table[0]/row[169]/col[3]",
+    "column_header": "RTL-E",
+    "section": "FEATURES > INTERIOR",
+    "relative_to": "RTL",
+    "relative_locator": "table[0]/row[169]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2023__honda__ridgeline.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:36Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Turn-By-Turn Directions",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-d8e7e3d744b0a8d7736d6e20aa032327-2023-honda-ridgeline-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:52Z",
+    "document_sha256": "fd68597adf4be999d1ff8c7ee5d0044306dc60db8ee52fa0ee5e4abac63b4cb8",
+    "locator": "table[0]/row[170]/col[3]",
+    "column_header": "RTL-E",
+    "section": "FEATURES > INTERIOR",
+    "relative_to": "RTL",
+    "relative_locator": "table[0]/row[170]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2023__honda__ridgeline.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:36Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Conversation Mirror with Sunglasses Holder",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-d8e7e3d744b0a8d7736d6e20aa032327-2023-honda-ridgeline-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:52Z",
+    "document_sha256": "fd68597adf4be999d1ff8c7ee5d0044306dc60db8ee52fa0ee5e4abac63b4cb8",
+    "locator": "table[0]/row[195]/col[3]",
+    "column_header": "RTL-E",
+    "section": "FEATURES > INTERIOR",
+    "relative_to": "RTL",
+    "relative_locator": "table[0]/row[195]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2023__honda__ridgeline.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:36Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Courtesy Door Lights (front row)",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-d8e7e3d744b0a8d7736d6e20aa032327-2023-honda-ridgeline-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:52Z",
+    "document_sha256": "fd68597adf4be999d1ff8c7ee5d0044306dc60db8ee52fa0ee5e4abac63b4cb8",
+    "locator": "table[0]/row[196]/col[3]",
+    "column_header": "RTL-E",
+    "section": "FEATURES > INTERIOR",
+    "relative_to": "RTL",
+    "relative_locator": "table[0]/row[196]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2023__honda__ridgeline.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:36Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Illuminated Beverage Holders (front row)",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-d8e7e3d744b0a8d7736d6e20aa032327-2023-honda-ridgeline-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:52Z",
+    "document_sha256": "fd68597adf4be999d1ff8c7ee5d0044306dc60db8ee52fa0ee5e4abac63b4cb8",
+    "locator": "table[0]/row[197]/col[3]",
+    "column_header": "RTL-E",
+    "section": "FEATURES > INTERIOR",
+    "relative_to": "RTL",
+    "relative_locator": "table[0]/row[197]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2023__honda__ridgeline.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:36Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Parking Sensors (Front & Rear)",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-d8e7e3d744b0a8d7736d6e20aa032327-2023-honda-ridgeline-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:52Z",
+    "document_sha256": "fd68597adf4be999d1ff8c7ee5d0044306dc60db8ee52fa0ee5e4abac63b4cb8",
+    "locator": "table[0]/row[208]/col[3]",
+    "column_header": "RTL-E",
+    "section": "FEATURES > EXTERIOR",
+    "relative_to": "RTL",
+    "relative_locator": "table[0]/row[208]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2023__honda__ridgeline.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:36Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Walk Away Auto Lock®",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-d8e7e3d744b0a8d7736d6e20aa032327-2023-honda-ridgeline-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:52Z",
+    "document_sha256": "fd68597adf4be999d1ff8c7ee5d0044306dc60db8ee52fa0ee5e4abac63b4cb8",
+    "locator": "table[0]/row[217]/col[3]",
+    "column_header": "RTL-E",
+    "section": "FEATURES > EXTERIOR",
+    "relative_to": "RTL",
+    "relative_locator": "table[0]/row[217]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2023__honda__ridgeline.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:36Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   }
+  ]
+ }
+}

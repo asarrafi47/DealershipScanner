@@ -12,23 +12,19 @@
     "Sport": [
       {
         "label": "Engine Options",
-        "value": "EV Electricity; Automatic (A1)"
-      },
-      {
-        "label": "Screen Size",
-        "value": "There is the option of a 10.9-inch infotainment display for the front passenger; 10.9-inch infotainment display"
+        "value": "EV Electricity"
       }
     ],
     "Quattro": [
       {
         "label": "Engine Options",
-        "value": "EV Electricity; Automatic (A1)"
+        "value": "EV Electricity"
       }
     ],
     "Ultra": [
       {
         "label": "Engine Options",
-        "value": "EV Electricity; Automatic (A1)"
+        "value": "EV Electricity"
       }
     ]
   }

@@ -12,25 +12,25 @@
     "Scat Pack": [
       {
         "label": "Engine Options",
-        "value": "EV Electricity; Automatic (A1)"
+        "value": "EV Electricity"
       }
     ],
     "Daytona Scat Pack": [
       {
         "label": "Engine Options",
-        "value": "EV Electricity; Automatic (A1)"
+        "value": "EV Electricity"
       }
     ],
     "Daytona": [
       {
         "label": "Engine Options",
-        "value": "EV Electricity; Automatic (A1)"
+        "value": "EV Electricity"
       }
     ],
     "R/T": [
       {
         "label": "Engine Options",
-        "value": "EV Electricity; Automatic (A1)"
+        "value": "EV Electricity"
       }
     ]
   }

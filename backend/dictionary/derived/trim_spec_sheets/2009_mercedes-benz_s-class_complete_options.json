@@ -12,19 +12,19 @@
     "AMG": [
       {
         "label": "Engine Options",
-        "value": "6.0L V12 Turbo; Automatic (S5)"
+        "value": "6.0L V12"
       }
     ],
     "S550": [
       {
         "label": "Engine Options",
-        "value": "5.5L V8 Turbo; Automatic 7-spd"
+        "value": "5.5L V8 Turbo"
       }
     ],
     "S600": [
       {
         "label": "Engine Options",
-        "value": "5.5L V12 Turbo; Automatic 5-spd"
+        "value": "5.5L V12"
       }
     ]
   }

@@ -12,25 +12,25 @@
     "AMG": [
       {
         "label": "Engine Options",
-        "value": "6.2L V8 Twin Turbo; Automatic 7-spd"
+        "value": "6.2L V8 (SIDI); 4.0L V8 (SIDI)"
       }
     ],
     "AMG C63": [
       {
         "label": "Engine Options",
-        "value": "6.2L V8 Twin Turbo; Automatic 7-spd"
+        "value": "6.2L V8 (SIDI); 4.0L V8 (SIDI)"
       }
     ],
     "AMG C43": [
       {
         "label": "Engine Options",
-        "value": "6.2L V8 Twin Turbo; Automatic 7-spd"
+        "value": "6.2L V8 (SIDI); 4.0L V8 (SIDI)"
       }
     ],
     "C300": [
       {
         "label": "Engine Options",
-        "value": "2.0L I4 Turbo; Automatic 7-spd"
+        "value": "2.0L I4 (SIDI)"
       }
     ]
   }

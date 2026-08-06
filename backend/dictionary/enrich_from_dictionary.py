@@ -41,22 +41,46 @@ from typing import Any
 ROOT = Path(__file__).resolve().parent
 # Repo root is two levels up: backend/dictionary/ → backend/ → repo root
 _REPO_ROOT = ROOT.parent.parent
-os.chdir(_REPO_ROOT)
-sys.path.insert(0, str(ROOT.parent))  # backend/ on sys.path for package imports
 
-try:
-    from backend.utils.project_env import load_project_dotenv
-    load_project_dotenv()
-except ImportError:
-    pass
+# The legacy top-level ``extract_keffer_colors`` script this used to import is
+# gone from the repo, so the ``except ImportError: None`` fallback had silently
+# disabled description-based color fill everywhere. The function is now
+# vendored in ``backend.dictionary.color_extract`` and always importable.
+from backend.dictionary.color_extract import extract_color_from_description
 
-try:
-    from extract_keffer_colors import extract_color_from_description
-except ImportError:
-    extract_color_from_description = None  # type: ignore[misc, assignment]
-
-logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s", datefmt="%Y-%m-%d %H:%M:%S")
 logger = logging.getLogger("enrich_dict")
+
+
+def _configure_cli_process() -> None:
+    """Process-wide setup for the ``__main__`` entry point ONLY.
+
+    ``os.chdir``, ``sys.path`` mutation, ``.env`` loading and ``logging.basicConfig``
+    used to run at import time. This module is not only a script: ``epa_engine``
+    imports ``_load_epa_csv`` / ``_best_row`` / ``_is_empty`` from it lazily inside
+    ``resolve_engine_display_from_epa``, which runs on ordinary car serialization.
+    Every one of those side effects therefore fired inside the web app and the test
+    suite the first time a car was serialized -- changing the process working
+    directory (which relative DB paths resolve against), installing a root log
+    handler, and re-injecting ``.env`` over the running process's environment.
+    In pytest that last one restored ``INVENTORY_DATABASE_URL`` after conftest had
+    cleared it, so every DB call after the first serialization in the session went
+    to the real Postgres inventory instead of the test SQLite file.
+    """
+    os.chdir(_REPO_ROOT)
+    backend_dir = str(ROOT.parent)
+    if backend_dir not in sys.path:
+        sys.path.insert(0, backend_dir)  # backend/ on sys.path for package imports
+    try:
+        from backend.utils.project_env import load_project_dotenv
+
+        load_project_dotenv()
+    except ImportError:
+        pass
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s [%(levelname)s] %(message)s",
+        datefmt="%Y-%m-%d %H:%M:%S",
+    )
 
 # CSVs live in the same directory as this script (backend/dictionary/)
 DICTIONARY = ROOT
@@ -541,6 +565,7 @@ _SQL_JUNK_TEXT_IN = (
 
 
 def main():
+    _configure_cli_process()
     ap = argparse.ArgumentParser(description="Enrich cars from DICTIONARY EPA data")
     ap.add_argument("--all", action="store_true", help="Reapply to all cars (not just those with gaps)")
     ap.add_argument("--dry-run", action="store_true", help="Show what would be filled without writing")
@@ -598,7 +623,9 @@ def main():
 
     logger.info(
         "inventory backend: %s",
-        "Postgres" if is_inventory_postgres() else os.path.abspath(DB_PATH),
+        "Postgres"
+        if is_inventory_postgres()
+        else os.path.abspath(os.environ.get("INVENTORY_DB_PATH") or _default_db_path()),
     )
 
     for car in cars:

@@ -1,0 +1,1028 @@
+{
+ "catalog_key": "2025|honda|crv",
+ "year": 2025,
+ "make": "Honda",
+ "model": "CR-V",
+ "source": "html_spec_quoted",
+ "source_document": "backend/dictionary/derived/html_spec_text/2025__honda__crv.json",
+ "source_url": "https://hondanews.com/en-US/honda-automobiles/releases/release-f43bcac5ded8efe77b071fcb0c097416-2025-honda-cr-v-specifications-and-features",
+ "layouts": [
+  "html_mark_grid"
+ ],
+ "trims_available": [
+  "LX",
+  "EX",
+  "EX-L",
+  "Sport",
+  "Sport-L",
+  "Sport Touring"
+ ],
+ "trims_quoted": [
+  "EX",
+  "EX-L",
+  "Sport",
+  "Sport Touring"
+ ],
+ "adds_by_trim": {
+  "EX": [
+   "Blind Spot Information System (BSI)",
+   "Cross Traffic Monitor (CTM)",
+   "Key Fob Activated Remote Engine Start",
+   "240-Watt Audio System with 6 Speakers",
+   "USB-C 3.0A Charging Port (x1) - Front Seats",
+   "USB-C 3.0A Charging Port (x2) - Rear Seats",
+   "Illuminated Sunvisor Vanity (Driver & Passenger)",
+   "Driver & Passenger Heated Seat",
+   "Driver's Seat with 10-Way Power Adjustment with 2-Way Power Lumbar Support",
+   "Dual Zone Climate Control",
+   "Smart Entry with Walk Away Auto Lock®",
+   "Heated Side Mirrors",
+   "One-Touch Power Moonroof with Tilt Feature"
+  ],
+  "EX-L": [
+   "Low Speed Braking Control",
+   "Parking Sensors (4 Front & 4 Rear)",
+   "9-inch Color Touchscreen",
+   "320-Watt Audio System with 8 Speakers",
+   "Wireless Apple CarPlay® Compatibility",
+   "Wireless Android Auto™ Compatibility",
+   "SiriusXM®",
+   "HD Radio™",
+   "Wireless Charging Pad (Qi)",
+   "Power Windows with Auto Up/Down All Windows",
+   "Leather-Trimmed Seats",
+   "Two-Position Driver's Seat Memory",
+   "Passenger Seat with 4-Way Power Adjustment",
+   "Automatic-Dimming Rearview Mirror",
+   "Leather Wrapped Steering Wheel & Shifter",
+   "Power Tailgate"
+  ],
+  "Sport": [
+   "Deceleration Selectors",
+   "Unique Sport Interior Styling",
+   "Black Roof Rails",
+   "Dual Chrome Exhaust Finishers",
+   "Unique Sport Exterior Styling"
+  ],
+  "Sport Touring": [
+   "Honda Satellite-Linked Navigation System™ with Voice Recognition and Honda HD Digital Traffic",
+   "Bose® Premium Sound System with 12 Speakers",
+   "Wi-Fi Hotspot Capability",
+   "HondaLink Subscription Services",
+   "Front Foot & Door Handle Ambient Lighting",
+   "Heated Steering Wheel",
+   "Power Tailgate with Hands-Free Access",
+   "Rain Sensing Wipers"
+  ]
+ },
+ "adds_provenance": {
+  "EX": [
+   {
+    "text": "Blind Spot Information System (BSI)",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-f43bcac5ded8efe77b071fcb0c097416-2025-honda-cr-v-specifications-and-features",
+    "retrieved_at": "2026-08-02T19:52:23Z",
+    "document_sha256": "e862a13a1863051fc00c463cd83aedb79e1c2972e5d5c9ae55782d1355cef7b6",
+    "locator": "table[0]/row[90]/col[2]",
+    "column_header": "EX",
+    "section": "FEATURES > HONDA SENSING®",
+    "relative_to": "LX",
+    "relative_locator": "table[0]/row[90]/col[1]",
+    "absent_columns": [
+     1
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__crv.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Cross Traffic Monitor (CTM)",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-f43bcac5ded8efe77b071fcb0c097416-2025-honda-cr-v-specifications-and-features",
+    "retrieved_at": "2026-08-02T19:52:23Z",
+    "document_sha256": "e862a13a1863051fc00c463cd83aedb79e1c2972e5d5c9ae55782d1355cef7b6",
+    "locator": "table[0]/row[91]/col[2]",
+    "column_header": "EX",
+    "section": "FEATURES > HONDA SENSING®",
+    "relative_to": "LX",
+    "relative_locator": "table[0]/row[91]/col[1]",
+    "absent_columns": [
+     1
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__crv.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Key Fob Activated Remote Engine Start",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-f43bcac5ded8efe77b071fcb0c097416-2025-honda-cr-v-specifications-and-features",
+    "retrieved_at": "2026-08-02T19:52:23Z",
+    "document_sha256": "e862a13a1863051fc00c463cd83aedb79e1c2972e5d5c9ae55782d1355cef7b6",
+    "locator": "table[0]/row[122]/col[2]",
+    "column_header": "EX",
+    "section": "FEATURES > DRIVER CONVENIENCE",
+    "relative_to": "LX",
+    "relative_locator": "table[0]/row[122]/col[1]",
+    "absent_columns": [
+     1
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__crv.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "240-Watt Audio System with 6 Speakers",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-f43bcac5ded8efe77b071fcb0c097416-2025-honda-cr-v-specifications-and-features",
+    "retrieved_at": "2026-08-02T19:52:23Z",
+    "document_sha256": "e862a13a1863051fc00c463cd83aedb79e1c2972e5d5c9ae55782d1355cef7b6",
+    "locator": "table[0]/row[130]/col[2]",
+    "column_header": "EX",
+    "section": "FEATURES > AUDIO & CONNECTIVITY",
+    "relative_to": "LX",
+    "relative_locator": "table[0]/row[130]/col[1]",
+    "absent_columns": [
+     1
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__crv.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "USB-C 3.0A Charging Port (x1) - Front Seats",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-f43bcac5ded8efe77b071fcb0c097416-2025-honda-cr-v-specifications-and-features",
+    "retrieved_at": "2026-08-02T19:52:23Z",
+    "document_sha256": "e862a13a1863051fc00c463cd83aedb79e1c2972e5d5c9ae55782d1355cef7b6",
+    "locator": "table[0]/row[139]/col[2]",
+    "column_header": "EX",
+    "section": "FEATURES > AUDIO & CONNECTIVITY",
+    "relative_to": "LX",
+    "relative_locator": "table[0]/row[139]/col[1]",
+    "absent_columns": [
+     1
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__crv.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "USB-C 3.0A Charging Port (x2) - Rear Seats",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-f43bcac5ded8efe77b071fcb0c097416-2025-honda-cr-v-specifications-and-features",
+    "retrieved_at": "2026-08-02T19:52:23Z",
+    "document_sha256": "e862a13a1863051fc00c463cd83aedb79e1c2972e5d5c9ae55782d1355cef7b6",
+    "locator": "table[0]/row[140]/col[2]",
+    "column_header": "EX",
+    "section": "FEATURES > AUDIO & CONNECTIVITY",
+    "relative_to": "LX",
+    "relative_locator": "table[0]/row[140]/col[1]",
+    "absent_columns": [
+     1
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__crv.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Illuminated Sunvisor Vanity (Driver & Passenger)",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-f43bcac5ded8efe77b071fcb0c097416-2025-honda-cr-v-specifications-and-features",
+    "retrieved_at": "2026-08-02T19:52:23Z",
+    "document_sha256": "e862a13a1863051fc00c463cd83aedb79e1c2972e5d5c9ae55782d1355cef7b6",
+    "locator": "table[0]/row[151]/col[2]",
+    "column_header": "EX",
+    "section": "FEATURES > INTERIOR",
+    "relative_to": "LX",
+    "relative_locator": "table[0]/row[151]/col[1]",
+    "absent_columns": [
+     1
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__crv.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Driver & Passenger Heated Seat",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-f43bcac5ded8efe77b071fcb0c097416-2025-honda-cr-v-specifications-and-features",
+    "retrieved_at": "2026-08-02T19:52:23Z",
+    "document_sha256": "e862a13a1863051fc00c463cd83aedb79e1c2972e5d5c9ae55782d1355cef7b6",
+    "locator": "table[0]/row[152]/col[2]",
+    "column_header": "EX",
+    "section": "FEATURES > INTERIOR",
+    "relative_to": "LX",
+    "relative_locator": "table[0]/row[152]/col[1]",
+    "absent_columns": [
+     1
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__crv.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Driver's Seat with 10-Way Power Adjustment with 2-Way Power Lumbar Support",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-f43bcac5ded8efe77b071fcb0c097416-2025-honda-cr-v-specifications-and-features",
+    "retrieved_at": "2026-08-02T19:52:23Z",
+    "document_sha256": "e862a13a1863051fc00c463cd83aedb79e1c2972e5d5c9ae55782d1355cef7b6",
+    "locator": "table[0]/row[155]/col[2]",
+    "column_header": "EX",
+    "section": "FEATURES > INTERIOR",
+    "relative_to": "LX",
+    "relative_locator": "table[0]/row[155]/col[1]",
+    "absent_columns": [
+     1
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__crv.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Dual Zone Climate Control",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-f43bcac5ded8efe77b071fcb0c097416-2025-honda-cr-v-specifications-and-features",
+    "retrieved_at": "2026-08-02T19:52:23Z",
+    "document_sha256": "e862a13a1863051fc00c463cd83aedb79e1c2972e5d5c9ae55782d1355cef7b6",
+    "locator": "table[0]/row[160]/col[2]",
+    "column_header": "EX",
+    "section": "FEATURES > INTERIOR",
+    "relative_to": "LX",
+    "relative_locator": "table[0]/row[160]/col[1]",
+    "absent_columns": [
+     1
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__crv.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Smart Entry with Walk Away Auto Lock®",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-f43bcac5ded8efe77b071fcb0c097416-2025-honda-cr-v-specifications-and-features",
+    "retrieved_at": "2026-08-02T19:52:23Z",
+    "document_sha256": "e862a13a1863051fc00c463cd83aedb79e1c2972e5d5c9ae55782d1355cef7b6",
+    "locator": "table[0]/row[168]/col[2]",
+    "column_header": "EX",
+    "section": "FEATURES > INTERIOR",
+    "relative_to": "LX",
+    "relative_locator": "table[0]/row[168]/col[1]",
+    "absent_columns": [
+     1
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__crv.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Heated Side Mirrors",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-f43bcac5ded8efe77b071fcb0c097416-2025-honda-cr-v-specifications-and-features",
+    "retrieved_at": "2026-08-02T19:52:23Z",
+    "document_sha256": "e862a13a1863051fc00c463cd83aedb79e1c2972e5d5c9ae55782d1355cef7b6",
+    "locator": "table[0]/row[177]/col[2]",
+    "column_header": "EX",
+    "section": "FEATURES > EXTERIOR",
+    "relative_to": "LX",
+    "relative_locator": "table[0]/row[177]/col[1]",
+    "absent_columns": [
+     1
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__crv.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "One-Touch Power Moonroof with Tilt Feature",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-f43bcac5ded8efe77b071fcb0c097416-2025-honda-cr-v-specifications-and-features",
+    "retrieved_at": "2026-08-02T19:52:23Z",
+    "document_sha256": "e862a13a1863051fc00c463cd83aedb79e1c2972e5d5c9ae55782d1355cef7b6",
+    "locator": "table[0]/row[181]/col[2]",
+    "column_header": "EX",
+    "section": "FEATURES > EXTERIOR",
+    "relative_to": "LX",
+    "relative_locator": "table[0]/row[181]/col[1]",
+    "absent_columns": [
+     1
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__crv.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   }
+  ],
+  "EX-L": [
+   {
+    "text": "Low Speed Braking Control",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-f43bcac5ded8efe77b071fcb0c097416-2025-honda-cr-v-specifications-and-features",
+    "retrieved_at": "2026-08-02T19:52:23Z",
+    "document_sha256": "e862a13a1863051fc00c463cd83aedb79e1c2972e5d5c9ae55782d1355cef7b6",
+    "locator": "table[0]/row[93]/col[3]",
+    "column_header": "EX-L",
+    "section": "FEATURES > HONDA SENSING®",
+    "relative_to": "EX",
+    "relative_locator": "table[0]/row[93]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__crv.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Parking Sensors (4 Front & 4 Rear)",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-f43bcac5ded8efe77b071fcb0c097416-2025-honda-cr-v-specifications-and-features",
+    "retrieved_at": "2026-08-02T19:52:23Z",
+    "document_sha256": "e862a13a1863051fc00c463cd83aedb79e1c2972e5d5c9ae55782d1355cef7b6",
+    "locator": "table[0]/row[95]/col[3]",
+    "column_header": "EX-L",
+    "section": "FEATURES > HONDA SENSING®",
+    "relative_to": "EX",
+    "relative_locator": "table[0]/row[95]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__crv.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "9-inch Color Touchscreen",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-f43bcac5ded8efe77b071fcb0c097416-2025-honda-cr-v-specifications-and-features",
+    "retrieved_at": "2026-08-02T19:52:23Z",
+    "document_sha256": "e862a13a1863051fc00c463cd83aedb79e1c2972e5d5c9ae55782d1355cef7b6",
+    "locator": "table[0]/row[126]/col[3]",
+    "column_header": "EX-L",
+    "section": "FEATURES > AUDIO & CONNECTIVITY",
+    "relative_to": "EX",
+    "relative_locator": "table[0]/row[126]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__crv.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "320-Watt Audio System with 8 Speakers",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-f43bcac5ded8efe77b071fcb0c097416-2025-honda-cr-v-specifications-and-features",
+    "retrieved_at": "2026-08-02T19:52:23Z",
+    "document_sha256": "e862a13a1863051fc00c463cd83aedb79e1c2972e5d5c9ae55782d1355cef7b6",
+    "locator": "table[0]/row[131]/col[3]",
+    "column_header": "EX-L",
+    "section": "FEATURES > AUDIO & CONNECTIVITY",
+    "relative_to": "EX",
+    "relative_locator": "table[0]/row[131]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__crv.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Wireless Apple CarPlay® Compatibility",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-f43bcac5ded8efe77b071fcb0c097416-2025-honda-cr-v-specifications-and-features",
+    "retrieved_at": "2026-08-02T19:52:23Z",
+    "document_sha256": "e862a13a1863051fc00c463cd83aedb79e1c2972e5d5c9ae55782d1355cef7b6",
+    "locator": "table[0]/row[135]/col[3]",
+    "column_header": "EX-L",
+    "section": "FEATURES > AUDIO & CONNECTIVITY",
+    "relative_to": "EX",
+    "relative_locator": "table[0]/row[135]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__crv.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Wireless Android Auto™ Compatibility",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-f43bcac5ded8efe77b071fcb0c097416-2025-honda-cr-v-specifications-and-features",
+    "retrieved_at": "2026-08-02T19:52:23Z",
+    "document_sha256": "e862a13a1863051fc00c463cd83aedb79e1c2972e5d5c9ae55782d1355cef7b6",
+    "locator": "table[0]/row[136]/col[3]",
+    "column_header": "EX-L",
+    "section": "FEATURES > AUDIO & CONNECTIVITY",
+    "relative_to": "EX",
+    "relative_locator": "table[0]/row[136]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__crv.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "SiriusXM®",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-f43bcac5ded8efe77b071fcb0c097416-2025-honda-cr-v-specifications-and-features",
+    "retrieved_at": "2026-08-02T19:52:23Z",
+    "document_sha256": "e862a13a1863051fc00c463cd83aedb79e1c2972e5d5c9ae55782d1355cef7b6",
+    "locator": "table[0]/row[141]/col[3]",
+    "column_header": "EX-L",
+    "section": "FEATURES > AUDIO & CONNECTIVITY",
+    "relative_to": "EX",
+    "relative_locator": "table[0]/row[141]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__crv.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "HD Radio™",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-f43bcac5ded8efe77b071fcb0c097416-2025-honda-cr-v-specifications-and-features",
+    "retrieved_at": "2026-08-02T19:52:23Z",
+    "document_sha256": "e862a13a1863051fc00c463cd83aedb79e1c2972e5d5c9ae55782d1355cef7b6",
+    "locator": "table[0]/row[142]/col[3]",
+    "column_header": "EX-L",
+    "section": "FEATURES > AUDIO & CONNECTIVITY",
+    "relative_to": "EX",
+    "relative_locator": "table[0]/row[142]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__crv.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Wireless Charging Pad (Qi)",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-f43bcac5ded8efe77b071fcb0c097416-2025-honda-cr-v-specifications-and-features",
+    "retrieved_at": "2026-08-02T19:52:23Z",
+    "document_sha256": "e862a13a1863051fc00c463cd83aedb79e1c2972e5d5c9ae55782d1355cef7b6",
+    "locator": "table[0]/row[144]/col[3]",
+    "column_header": "EX-L",
+    "section": "FEATURES > AUDIO & CONNECTIVITY",
+    "relative_to": "EX",
+    "relative_locator": "table[0]/row[144]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__crv.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Power Windows with Auto Up/Down All Windows",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-f43bcac5ded8efe77b071fcb0c097416-2025-honda-cr-v-specifications-and-features",
+    "retrieved_at": "2026-08-02T19:52:23Z",
+    "document_sha256": "e862a13a1863051fc00c463cd83aedb79e1c2972e5d5c9ae55782d1355cef7b6",
+    "locator": "table[0]/row[149]/col[3]",
+    "column_header": "EX-L",
+    "section": "FEATURES > INTERIOR",
+    "relative_to": "EX",
+    "relative_locator": "table[0]/row[149]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__crv.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Leather-Trimmed Seats",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-f43bcac5ded8efe77b071fcb0c097416-2025-honda-cr-v-specifications-and-features",
+    "retrieved_at": "2026-08-02T19:52:23Z",
+    "document_sha256": "e862a13a1863051fc00c463cd83aedb79e1c2972e5d5c9ae55782d1355cef7b6",
+    "locator": "table[0]/row[153]/col[3]",
+    "column_header": "EX-L",
+    "section": "FEATURES > INTERIOR",
+    "relative_to": "EX",
+    "relative_locator": "table[0]/row[153]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__crv.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Two-Position Driver's Seat Memory",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-f43bcac5ded8efe77b071fcb0c097416-2025-honda-cr-v-specifications-and-features",
+    "retrieved_at": "2026-08-02T19:52:23Z",
+    "document_sha256": "e862a13a1863051fc00c463cd83aedb79e1c2972e5d5c9ae55782d1355cef7b6",
+    "locator": "table[0]/row[156]/col[3]",
+    "column_header": "EX-L",
+    "section": "FEATURES > INTERIOR",
+    "relative_to": "EX",
+    "relative_locator": "table[0]/row[156]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__crv.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Passenger Seat with 4-Way Power Adjustment",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-f43bcac5ded8efe77b071fcb0c097416-2025-honda-cr-v-specifications-and-features",
+    "retrieved_at": "2026-08-02T19:52:23Z",
+    "document_sha256": "e862a13a1863051fc00c463cd83aedb79e1c2972e5d5c9ae55782d1355cef7b6",
+    "locator": "table[0]/row[158]/col[3]",
+    "column_header": "EX-L",
+    "section": "FEATURES > INTERIOR",
+    "relative_to": "EX",
+    "relative_locator": "table[0]/row[158]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__crv.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Automatic-Dimming Rearview Mirror",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-f43bcac5ded8efe77b071fcb0c097416-2025-honda-cr-v-specifications-and-features",
+    "retrieved_at": "2026-08-02T19:52:23Z",
+    "document_sha256": "e862a13a1863051fc00c463cd83aedb79e1c2972e5d5c9ae55782d1355cef7b6",
+    "locator": "table[0]/row[162]/col[3]",
+    "column_header": "EX-L",
+    "section": "FEATURES > INTERIOR",
+    "relative_to": "EX",
+    "relative_locator": "table[0]/row[162]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__crv.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Leather Wrapped Steering Wheel & Shifter",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-f43bcac5ded8efe77b071fcb0c097416-2025-honda-cr-v-specifications-and-features",
+    "retrieved_at": "2026-08-02T19:52:23Z",
+    "document_sha256": "e862a13a1863051fc00c463cd83aedb79e1c2972e5d5c9ae55782d1355cef7b6",
+    "locator": "table[0]/row[166]/col[3]",
+    "column_header": "EX-L",
+    "section": "FEATURES > INTERIOR",
+    "relative_to": "EX",
+    "relative_locator": "table[0]/row[166]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__crv.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Power Tailgate",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-f43bcac5ded8efe77b071fcb0c097416-2025-honda-cr-v-specifications-and-features",
+    "retrieved_at": "2026-08-02T19:52:23Z",
+    "document_sha256": "e862a13a1863051fc00c463cd83aedb79e1c2972e5d5c9ae55782d1355cef7b6",
+    "locator": "table[0]/row[179]/col[3]",
+    "column_header": "EX-L",
+    "section": "FEATURES > EXTERIOR",
+    "relative_to": "EX",
+    "relative_locator": "table[0]/row[179]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__crv.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   }
+  ],
+  "Sport": [
+   {
+    "text": "Deceleration Selectors",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-f43bcac5ded8efe77b071fcb0c097416-2025-honda-cr-v-specifications-and-features",
+    "retrieved_at": "2026-08-02T19:52:23Z",
+    "document_sha256": "e862a13a1863051fc00c463cd83aedb79e1c2972e5d5c9ae55782d1355cef7b6",
+    "locator": "table[0]/row[112]/col[4]",
+    "column_header": "Sport",
+    "section": "FEATURES > DRIVER CONVENIENCE",
+    "relative_to": "EX-L",
+    "relative_locator": "table[0]/row[112]/col[3]",
+    "absent_columns": [
+     1,
+     2,
+     3
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__crv.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Unique Sport Interior Styling",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-f43bcac5ded8efe77b071fcb0c097416-2025-honda-cr-v-specifications-and-features",
+    "retrieved_at": "2026-08-02T19:52:23Z",
+    "document_sha256": "e862a13a1863051fc00c463cd83aedb79e1c2972e5d5c9ae55782d1355cef7b6",
+    "locator": "table[0]/row[167]/col[4]",
+    "column_header": "Sport",
+    "section": "FEATURES > INTERIOR",
+    "relative_to": "EX-L",
+    "relative_locator": "table[0]/row[167]/col[3]",
+    "absent_columns": [
+     1,
+     2,
+     3
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__crv.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Black Roof Rails",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-f43bcac5ded8efe77b071fcb0c097416-2025-honda-cr-v-specifications-and-features",
+    "retrieved_at": "2026-08-02T19:52:23Z",
+    "document_sha256": "e862a13a1863051fc00c463cd83aedb79e1c2972e5d5c9ae55782d1355cef7b6",
+    "locator": "table[0]/row[185]/col[4]",
+    "column_header": "Sport",
+    "section": "FEATURES > EXTERIOR",
+    "relative_to": "EX-L",
+    "relative_locator": "table[0]/row[185]/col[3]",
+    "absent_columns": [
+     1,
+     2,
+     3
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__crv.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Dual Chrome Exhaust Finishers",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-f43bcac5ded8efe77b071fcb0c097416-2025-honda-cr-v-specifications-and-features",
+    "retrieved_at": "2026-08-02T19:52:23Z",
+    "document_sha256": "e862a13a1863051fc00c463cd83aedb79e1c2972e5d5c9ae55782d1355cef7b6",
+    "locator": "table[0]/row[186]/col[4]",
+    "column_header": "Sport",
+    "section": "FEATURES > EXTERIOR",
+    "relative_to": "EX-L",
+    "relative_locator": "table[0]/row[186]/col[3]",
+    "absent_columns": [
+     1,
+     2,
+     3
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__crv.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Unique Sport Exterior Styling",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-f43bcac5ded8efe77b071fcb0c097416-2025-honda-cr-v-specifications-and-features",
+    "retrieved_at": "2026-08-02T19:52:23Z",
+    "document_sha256": "e862a13a1863051fc00c463cd83aedb79e1c2972e5d5c9ae55782d1355cef7b6",
+    "locator": "table[0]/row[187]/col[4]",
+    "column_header": "Sport",
+    "section": "FEATURES > EXTERIOR",
+    "relative_to": "EX-L",
+    "relative_locator": "table[0]/row[187]/col[3]",
+    "absent_columns": [
+     1,
+     2,
+     3
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__crv.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   }
+  ],
+  "Sport Touring": [
+   {
+    "text": "Honda Satellite-Linked Navigation System™ with Voice Recognition and Honda HD Digital Traffic",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-f43bcac5ded8efe77b071fcb0c097416-2025-honda-cr-v-specifications-and-features",
+    "retrieved_at": "2026-08-02T19:52:23Z",
+    "document_sha256": "e862a13a1863051fc00c463cd83aedb79e1c2972e5d5c9ae55782d1355cef7b6",
+    "locator": "table[0]/row[128]/col[6]",
+    "column_header": "Sport Touring",
+    "section": "FEATURES > AUDIO & CONNECTIVITY",
+    "relative_to": "Sport-L",
+    "relative_locator": "table[0]/row[128]/col[5]",
+    "absent_columns": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__crv.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Bose® Premium Sound System with 12 Speakers",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-f43bcac5ded8efe77b071fcb0c097416-2025-honda-cr-v-specifications-and-features",
+    "retrieved_at": "2026-08-02T19:52:23Z",
+    "document_sha256": "e862a13a1863051fc00c463cd83aedb79e1c2972e5d5c9ae55782d1355cef7b6",
+    "locator": "table[0]/row[132]/col[6]",
+    "column_header": "Sport Touring",
+    "section": "FEATURES > AUDIO & CONNECTIVITY",
+    "relative_to": "Sport-L",
+    "relative_locator": "table[0]/row[132]/col[5]",
+    "absent_columns": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__crv.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Wi-Fi Hotspot Capability",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-f43bcac5ded8efe77b071fcb0c097416-2025-honda-cr-v-specifications-and-features",
+    "retrieved_at": "2026-08-02T19:52:23Z",
+    "document_sha256": "e862a13a1863051fc00c463cd83aedb79e1c2972e5d5c9ae55782d1355cef7b6",
+    "locator": "table[0]/row[143]/col[6]",
+    "column_header": "Sport Touring",
+    "section": "FEATURES > AUDIO & CONNECTIVITY",
+    "relative_to": "Sport-L",
+    "relative_locator": "table[0]/row[143]/col[5]",
+    "absent_columns": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__crv.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "HondaLink Subscription Services",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-f43bcac5ded8efe77b071fcb0c097416-2025-honda-cr-v-specifications-and-features",
+    "retrieved_at": "2026-08-02T19:52:23Z",
+    "document_sha256": "e862a13a1863051fc00c463cd83aedb79e1c2972e5d5c9ae55782d1355cef7b6",
+    "locator": "table[0]/row[145]/col[6]",
+    "column_header": "Sport Touring",
+    "section": "FEATURES > AUDIO & CONNECTIVITY",
+    "relative_to": "Sport-L",
+    "relative_locator": "table[0]/row[145]/col[5]",
+    "absent_columns": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__crv.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Front Foot & Door Handle Ambient Lighting",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-f43bcac5ded8efe77b071fcb0c097416-2025-honda-cr-v-specifications-and-features",
+    "retrieved_at": "2026-08-02T19:52:23Z",
+    "document_sha256": "e862a13a1863051fc00c463cd83aedb79e1c2972e5d5c9ae55782d1355cef7b6",
+    "locator": "table[0]/row[164]/col[6]",
+    "column_header": "Sport Touring",
+    "section": "FEATURES > INTERIOR",
+    "relative_to": "Sport-L",
+    "relative_locator": "table[0]/row[164]/col[5]",
+    "absent_columns": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__crv.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Heated Steering Wheel",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-f43bcac5ded8efe77b071fcb0c097416-2025-honda-cr-v-specifications-and-features",
+    "retrieved_at": "2026-08-02T19:52:23Z",
+    "document_sha256": "e862a13a1863051fc00c463cd83aedb79e1c2972e5d5c9ae55782d1355cef7b6",
+    "locator": "table[0]/row[165]/col[6]",
+    "column_header": "Sport Touring",
+    "section": "FEATURES > INTERIOR",
+    "relative_to": "Sport-L",
+    "relative_locator": "table[0]/row[165]/col[5]",
+    "absent_columns": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__crv.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Power Tailgate with Hands-Free Access",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-f43bcac5ded8efe77b071fcb0c097416-2025-honda-cr-v-specifications-and-features",
+    "retrieved_at": "2026-08-02T19:52:23Z",
+    "document_sha256": "e862a13a1863051fc00c463cd83aedb79e1c2972e5d5c9ae55782d1355cef7b6",
+    "locator": "table[0]/row[180]/col[6]",
+    "column_header": "Sport Touring",
+    "section": "FEATURES > EXTERIOR",
+    "relative_to": "Sport-L",
+    "relative_locator": "table[0]/row[180]/col[5]",
+    "absent_columns": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__crv.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Rain Sensing Wipers",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-f43bcac5ded8efe77b071fcb0c097416-2025-honda-cr-v-specifications-and-features",
+    "retrieved_at": "2026-08-02T19:52:23Z",
+    "document_sha256": "e862a13a1863051fc00c463cd83aedb79e1c2972e5d5c9ae55782d1355cef7b6",
+    "locator": "table[0]/row[184]/col[6]",
+    "column_header": "Sport Touring",
+    "section": "FEATURES > EXTERIOR",
+    "relative_to": "Sport-L",
+    "relative_locator": "table[0]/row[184]/col[5]",
+    "absent_columns": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__crv.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   }
+  ]
+ }
+}

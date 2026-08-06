@@ -12,43 +12,43 @@
     "Maybach": [
       {
         "label": "Engine Options",
-        "value": "4.0L V8 Turbo; Automatic 9-spd"
+        "value": "4.0L V8 (SIDI); 6.0L V12"
       }
     ],
     "AMG": [
       {
         "label": "Engine Options",
-        "value": "4.0L V8 Twin Turbo; Automatic 9-spd"
+        "value": "4.0L V8 (SIDI); 6.0L V12"
       }
     ],
     "AMG S63": [
       {
         "label": "Engine Options",
-        "value": "4.0L V8 Twin Turbo; Automatic 9-spd"
+        "value": "4.0L V8 (SIDI); 6.0L V12"
       }
     ],
     "AMG S65": [
       {
         "label": "Engine Options",
-        "value": "4.0L V8 Twin Turbo; Automatic 9-spd"
+        "value": "4.0L V8 (SIDI); 6.0L V12"
       }
     ],
     "S450": [
       {
         "label": "Engine Options",
-        "value": "3.0L V6 Turbo; Automatic 9-spd"
+        "value": "3.0L V6 (SIDI)"
       }
     ],
     "S560": [
       {
         "label": "Engine Options",
-        "value": "4.0L V8 Turbo; Automatic 9-spd"
+        "value": "4.0L V8 (SIDI)"
       }
     ],
     "S650": [
       {
         "label": "Engine Options",
-        "value": "6.0L V12 Turbo; Automatic 7-spd"
+        "value": "6.0L V12"
       }
     ]
   }

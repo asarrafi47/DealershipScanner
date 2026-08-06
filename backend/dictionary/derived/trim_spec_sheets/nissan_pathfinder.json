@@ -12,7 +12,7 @@
     "Platinum": [
       {
         "label": "Engine Options",
-        "value": "Automatic (S9); Four-Wheel Drive"
+        "value": "3.5L V6 (SIDI)"
       },
       {
         "label": "Interior Materials",
@@ -20,10 +20,6 @@
       }
     ],
     "SL": [
-      {
-        "label": "Engine Options",
-        "value": "The appearance package is only available on the SV and SL trim levels."
-      },
       {
         "label": "Interior Materials",
         "value": "Leather-appointed seats"

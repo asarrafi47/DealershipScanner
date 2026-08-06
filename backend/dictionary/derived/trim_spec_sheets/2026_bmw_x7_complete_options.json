@@ -12,25 +12,19 @@
     "M60i xDrive": [
       {
         "label": "Engine Options",
-        "value": "3.0L I6 Turbo; Automatic (S8)"
+        "value": "Hybrid 3.0L V6 (SIDI & PFI; Mild Hybrid); Hybrid 4.4L V8 (SIDI; Mild Hybrid)"
       }
     ],
     "xDrive40i": [
       {
         "label": "Engine Options",
-        "value": "3.0L I6 Turbo; Automatic (S8)"
-      }
-    ],
-    "Sport": [
-      {
-        "label": "Engine Options",
-        "value": "L N63 twin-turbo V8; L S68 twin-turbo V8"
+        "value": "Hybrid 3.0L V6 (SIDI & PFI; Mild Hybrid)"
       }
     ],
     "Alpina XB7": [
       {
         "label": "Engine Options",
-        "value": "4.4L V8 Twin Turbo; Automatic (S8)"
+        "value": "Hybrid 4.4L V8 (SIDI; Mild Hybrid)"
       }
     ]
   }

@@ -1,0 +1,645 @@
+{
+ "catalog_key": "2025|honda|odyssey",
+ "year": 2025,
+ "make": "HONDA",
+ "model": "Odyssey",
+ "source": "html_spec_quoted",
+ "source_document": "backend/dictionary/derived/html_spec_text/2025__honda__odyssey.json",
+ "source_url": "https://hondanews.com/en-US/honda-automobiles/releases/release-410d07897fdd63d8043cb72750011124-2025-honda-odyssey-specifications-features",
+ "layouts": [
+  "html_mark_grid"
+ ],
+ "trims_available": [
+  "EX-L",
+  "Sport-L",
+  "Touring",
+  "Elite"
+ ],
+ "trims_quoted": [
+  "Sport-L",
+  "Touring",
+  "Elite"
+ ],
+ "adds_by_trim": {
+  "Sport-L": [
+   "Charging Ports, 3rd-Row: USB-C 3.0A (x2)",
+   "Red Ambient Light"
+  ],
+  "Touring": [
+   "Parking Sensors (4 front & 4 rear)",
+   "Multi-Zone Audio",
+   "HondaLink Subscription Services",
+   "Wi-Fi Hotspot Capability",
+   "Charging Ports, 3rd-Row: USB-C 3.0A (x3)",
+   "Advanced Rear Entertainment System with 12.8-inch High-Resolution Screen",
+   "HDMI Interface with USB-A 2.5A",
+   "Headphone Jack (3rd row)",
+   "115-Volt / 150-Watt Power Outlet (front)",
+   "Honda Satellite-Linked Navigation System™ with Voice Recognition and Honda HD Digital Traffic",
+   "CabinWatch Rear Seat Monitor",
+   "3rd-Row Integrated Sunshades",
+   "Upper Seatback Pockets (front row)",
+   "Leather-Trimmed Seats with Piping"
+  ],
+  "Elite": [
+   "Rain-Sensing Windshield Wipers",
+   "500-Watt Premium Audio System with 11 Speakers, Including Subwoofer",
+   "Heated Steering Wheel",
+   "Ventilated Front Seats",
+   "Perforated Leather-Trimmed Seats with Piping",
+   "Auto-Dimming Side Mirrors",
+   "Power Folding Side Mirrors",
+   "Acoustic Laminate Front Door Glass",
+   "Acoustic Laminate Rear Door Glass",
+   "Power Tailgate with Hands-Free Access and Programmable Height"
+  ]
+ },
+ "adds_provenance": {
+  "Sport-L": [
+   {
+    "text": "Charging Ports, 3rd-Row: USB-C 3.0A (x2)",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-410d07897fdd63d8043cb72750011124-2025-honda-odyssey-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:35Z",
+    "document_sha256": "4f459c707faa54a3820de5b7eb268a7528d4f6311199908f27dbff767191bf03",
+    "locator": "table[0]/row[145]/col[2]",
+    "column_header": "Sport-L",
+    "section": "FEATURES > AUDIO & CONNECTIVITY",
+    "relative_to": "EX-L",
+    "relative_locator": "table[0]/row[145]/col[1]",
+    "absent_columns": [
+     1
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__odyssey.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Red Ambient Light",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-410d07897fdd63d8043cb72750011124-2025-honda-odyssey-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:35Z",
+    "document_sha256": "4f459c707faa54a3820de5b7eb268a7528d4f6311199908f27dbff767191bf03",
+    "locator": "table[0]/row[183]/col[2]",
+    "column_header": "Sport-L",
+    "section": "FEATURES > COMFORT & CONVENIENCE",
+    "relative_to": "EX-L",
+    "relative_locator": "table[0]/row[183]/col[1]",
+    "absent_columns": [
+     1
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__odyssey.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   }
+  ],
+  "Touring": [
+   {
+    "text": "Parking Sensors (4 front & 4 rear)",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-410d07897fdd63d8043cb72750011124-2025-honda-odyssey-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:35Z",
+    "document_sha256": "4f459c707faa54a3820de5b7eb268a7528d4f6311199908f27dbff767191bf03",
+    "locator": "table[0]/row[92]/col[3]",
+    "column_header": "Touring",
+    "section": "FEATURES > HONDA SENSING",
+    "relative_to": "Sport-L",
+    "relative_locator": "table[0]/row[92]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__odyssey.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Multi-Zone Audio",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-410d07897fdd63d8043cb72750011124-2025-honda-odyssey-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:35Z",
+    "document_sha256": "4f459c707faa54a3820de5b7eb268a7528d4f6311199908f27dbff767191bf03",
+    "locator": "table[0]/row[130]/col[3]",
+    "column_header": "Touring",
+    "section": "FEATURES > AUDIO & CONNECTIVITY",
+    "relative_to": "Sport-L",
+    "relative_locator": "table[0]/row[130]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__odyssey.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "HondaLink Subscription Services",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-410d07897fdd63d8043cb72750011124-2025-honda-odyssey-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:35Z",
+    "document_sha256": "4f459c707faa54a3820de5b7eb268a7528d4f6311199908f27dbff767191bf03",
+    "locator": "table[0]/row[134]/col[3]",
+    "column_header": "Touring",
+    "section": "FEATURES > AUDIO & CONNECTIVITY",
+    "relative_to": "Sport-L",
+    "relative_locator": "table[0]/row[134]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__odyssey.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Wi-Fi Hotspot Capability",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-410d07897fdd63d8043cb72750011124-2025-honda-odyssey-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:35Z",
+    "document_sha256": "4f459c707faa54a3820de5b7eb268a7528d4f6311199908f27dbff767191bf03",
+    "locator": "table[0]/row[139]/col[3]",
+    "column_header": "Touring",
+    "section": "FEATURES > AUDIO & CONNECTIVITY",
+    "relative_to": "Sport-L",
+    "relative_locator": "table[0]/row[139]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__odyssey.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Charging Ports, 3rd-Row: USB-C 3.0A (x3)",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-410d07897fdd63d8043cb72750011124-2025-honda-odyssey-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:35Z",
+    "document_sha256": "4f459c707faa54a3820de5b7eb268a7528d4f6311199908f27dbff767191bf03",
+    "locator": "table[0]/row[146]/col[3]",
+    "column_header": "Touring",
+    "section": "FEATURES > AUDIO & CONNECTIVITY",
+    "relative_to": "Sport-L",
+    "relative_locator": "table[0]/row[146]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__odyssey.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Advanced Rear Entertainment System with 12.8-inch High-Resolution Screen",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-410d07897fdd63d8043cb72750011124-2025-honda-odyssey-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:35Z",
+    "document_sha256": "4f459c707faa54a3820de5b7eb268a7528d4f6311199908f27dbff767191bf03",
+    "locator": "table[0]/row[150]/col[3]",
+    "column_header": "Touring",
+    "section": "FEATURES > AUDIO & CONNECTIVITY",
+    "relative_to": "Sport-L",
+    "relative_locator": "table[0]/row[150]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__odyssey.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "HDMI Interface with USB-A 2.5A",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-410d07897fdd63d8043cb72750011124-2025-honda-odyssey-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:35Z",
+    "document_sha256": "4f459c707faa54a3820de5b7eb268a7528d4f6311199908f27dbff767191bf03",
+    "locator": "table[0]/row[151]/col[3]",
+    "column_header": "Touring",
+    "section": "FEATURES > AUDIO & CONNECTIVITY",
+    "relative_to": "Sport-L",
+    "relative_locator": "table[0]/row[151]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__odyssey.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Headphone Jack (3rd row)",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-410d07897fdd63d8043cb72750011124-2025-honda-odyssey-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:35Z",
+    "document_sha256": "4f459c707faa54a3820de5b7eb268a7528d4f6311199908f27dbff767191bf03",
+    "locator": "table[0]/row[152]/col[3]",
+    "column_header": "Touring",
+    "section": "FEATURES > AUDIO & CONNECTIVITY",
+    "relative_to": "Sport-L",
+    "relative_locator": "table[0]/row[152]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__odyssey.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "115-Volt / 150-Watt Power Outlet (front)",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-410d07897fdd63d8043cb72750011124-2025-honda-odyssey-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:35Z",
+    "document_sha256": "4f459c707faa54a3820de5b7eb268a7528d4f6311199908f27dbff767191bf03",
+    "locator": "table[0]/row[153]/col[3]",
+    "column_header": "Touring",
+    "section": "FEATURES > AUDIO & CONNECTIVITY",
+    "relative_to": "Sport-L",
+    "relative_locator": "table[0]/row[153]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__odyssey.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Honda Satellite-Linked Navigation System™ with Voice Recognition and Honda HD Digital Traffic",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-410d07897fdd63d8043cb72750011124-2025-honda-odyssey-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:35Z",
+    "document_sha256": "4f459c707faa54a3820de5b7eb268a7528d4f6311199908f27dbff767191bf03",
+    "locator": "table[0]/row[154]/col[3]",
+    "column_header": "Touring",
+    "section": "FEATURES > AUDIO & CONNECTIVITY",
+    "relative_to": "Sport-L",
+    "relative_locator": "table[0]/row[154]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__odyssey.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "CabinWatch Rear Seat Monitor",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-410d07897fdd63d8043cb72750011124-2025-honda-odyssey-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:35Z",
+    "document_sha256": "4f459c707faa54a3820de5b7eb268a7528d4f6311199908f27dbff767191bf03",
+    "locator": "table[0]/row[155]/col[3]",
+    "column_header": "Touring",
+    "section": "FEATURES > AUDIO & CONNECTIVITY",
+    "relative_to": "Sport-L",
+    "relative_locator": "table[0]/row[155]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__odyssey.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "3rd-Row Integrated Sunshades",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-410d07897fdd63d8043cb72750011124-2025-honda-odyssey-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:35Z",
+    "document_sha256": "4f459c707faa54a3820de5b7eb268a7528d4f6311199908f27dbff767191bf03",
+    "locator": "table[0]/row[177]/col[3]",
+    "column_header": "Touring",
+    "section": "FEATURES > COMFORT & CONVENIENCE",
+    "relative_to": "Sport-L",
+    "relative_locator": "table[0]/row[177]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__odyssey.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Upper Seatback Pockets (front row)",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-410d07897fdd63d8043cb72750011124-2025-honda-odyssey-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:35Z",
+    "document_sha256": "4f459c707faa54a3820de5b7eb268a7528d4f6311199908f27dbff767191bf03",
+    "locator": "table[0]/row[181]/col[3]",
+    "column_header": "Touring",
+    "section": "FEATURES > COMFORT & CONVENIENCE",
+    "relative_to": "Sport-L",
+    "relative_locator": "table[0]/row[181]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__odyssey.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Leather-Trimmed Seats with Piping",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-410d07897fdd63d8043cb72750011124-2025-honda-odyssey-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:35Z",
+    "document_sha256": "4f459c707faa54a3820de5b7eb268a7528d4f6311199908f27dbff767191bf03",
+    "locator": "table[0]/row[196]/col[3]",
+    "column_header": "Touring",
+    "section": "FEATURES > SEATING",
+    "relative_to": "Sport-L",
+    "relative_locator": "table[0]/row[196]/col[2]",
+    "absent_columns": [
+     1,
+     2
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__odyssey.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   }
+  ],
+  "Elite": [
+   {
+    "text": "Rain-Sensing Windshield Wipers",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-410d07897fdd63d8043cb72750011124-2025-honda-odyssey-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:35Z",
+    "document_sha256": "4f459c707faa54a3820de5b7eb268a7528d4f6311199908f27dbff767191bf03",
+    "locator": "table[0]/row[121]/col[4]",
+    "column_header": "Elite",
+    "section": "FEATURES > DRIVER CONVENIENCE",
+    "relative_to": "Touring",
+    "relative_locator": "table[0]/row[121]/col[3]",
+    "absent_columns": [
+     1,
+     2,
+     3
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__odyssey.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "500-Watt Premium Audio System with 11 Speakers, Including Subwoofer",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-410d07897fdd63d8043cb72750011124-2025-honda-odyssey-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:35Z",
+    "document_sha256": "4f459c707faa54a3820de5b7eb268a7528d4f6311199908f27dbff767191bf03",
+    "locator": "table[0]/row[129]/col[4]",
+    "column_header": "Elite",
+    "section": "FEATURES > AUDIO & CONNECTIVITY",
+    "relative_to": "Touring",
+    "relative_locator": "table[0]/row[129]/col[3]",
+    "absent_columns": [
+     1,
+     2,
+     3
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__odyssey.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Heated Steering Wheel",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-410d07897fdd63d8043cb72750011124-2025-honda-odyssey-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:35Z",
+    "document_sha256": "4f459c707faa54a3820de5b7eb268a7528d4f6311199908f27dbff767191bf03",
+    "locator": "table[0]/row[179]/col[4]",
+    "column_header": "Elite",
+    "section": "FEATURES > COMFORT & CONVENIENCE",
+    "relative_to": "Touring",
+    "relative_locator": "table[0]/row[179]/col[3]",
+    "absent_columns": [
+     1,
+     2,
+     3
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__odyssey.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Ventilated Front Seats",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-410d07897fdd63d8043cb72750011124-2025-honda-odyssey-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:35Z",
+    "document_sha256": "4f459c707faa54a3820de5b7eb268a7528d4f6311199908f27dbff767191bf03",
+    "locator": "table[0]/row[192]/col[4]",
+    "column_header": "Elite",
+    "section": "FEATURES > SEATING",
+    "relative_to": "Touring",
+    "relative_locator": "table[0]/row[192]/col[3]",
+    "absent_columns": [
+     1,
+     2,
+     3
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__odyssey.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Perforated Leather-Trimmed Seats with Piping",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-410d07897fdd63d8043cb72750011124-2025-honda-odyssey-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:35Z",
+    "document_sha256": "4f459c707faa54a3820de5b7eb268a7528d4f6311199908f27dbff767191bf03",
+    "locator": "table[0]/row[197]/col[4]",
+    "column_header": "Elite",
+    "section": "FEATURES > SEATING",
+    "relative_to": "Touring",
+    "relative_locator": "table[0]/row[197]/col[3]",
+    "absent_columns": [
+     1,
+     2,
+     3
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__odyssey.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Auto-Dimming Side Mirrors",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-410d07897fdd63d8043cb72750011124-2025-honda-odyssey-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:35Z",
+    "document_sha256": "4f459c707faa54a3820de5b7eb268a7528d4f6311199908f27dbff767191bf03",
+    "locator": "table[0]/row[207]/col[4]",
+    "column_header": "Elite",
+    "section": "FEATURES > EXTERIOR",
+    "relative_to": "Touring",
+    "relative_locator": "table[0]/row[207]/col[3]",
+    "absent_columns": [
+     1,
+     2,
+     3
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__odyssey.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Power Folding Side Mirrors",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-410d07897fdd63d8043cb72750011124-2025-honda-odyssey-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:35Z",
+    "document_sha256": "4f459c707faa54a3820de5b7eb268a7528d4f6311199908f27dbff767191bf03",
+    "locator": "table[0]/row[208]/col[4]",
+    "column_header": "Elite",
+    "section": "FEATURES > EXTERIOR",
+    "relative_to": "Touring",
+    "relative_locator": "table[0]/row[208]/col[3]",
+    "absent_columns": [
+     1,
+     2,
+     3
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__odyssey.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Acoustic Laminate Front Door Glass",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-410d07897fdd63d8043cb72750011124-2025-honda-odyssey-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:35Z",
+    "document_sha256": "4f459c707faa54a3820de5b7eb268a7528d4f6311199908f27dbff767191bf03",
+    "locator": "table[0]/row[211]/col[4]",
+    "column_header": "Elite",
+    "section": "FEATURES > EXTERIOR",
+    "relative_to": "Touring",
+    "relative_locator": "table[0]/row[211]/col[3]",
+    "absent_columns": [
+     1,
+     2,
+     3
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__odyssey.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Acoustic Laminate Rear Door Glass",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-410d07897fdd63d8043cb72750011124-2025-honda-odyssey-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:35Z",
+    "document_sha256": "4f459c707faa54a3820de5b7eb268a7528d4f6311199908f27dbff767191bf03",
+    "locator": "table[0]/row[212]/col[4]",
+    "column_header": "Elite",
+    "section": "FEATURES > EXTERIOR",
+    "relative_to": "Touring",
+    "relative_locator": "table[0]/row[212]/col[3]",
+    "absent_columns": [
+     1,
+     2,
+     3
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__odyssey.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   },
+   {
+    "text": "Power Tailgate with Hands-Free Access and Programmable Height",
+    "url": "https://hondanews.com/en-US/honda-automobiles/releases/release-410d07897fdd63d8043cb72750011124-2025-honda-odyssey-specifications-features",
+    "retrieved_at": "2026-08-02T19:52:35Z",
+    "document_sha256": "4f459c707faa54a3820de5b7eb268a7528d4f6311199908f27dbff767191bf03",
+    "locator": "table[0]/row[219]/col[4]",
+    "column_header": "Elite",
+    "section": "FEATURES > EXTERIOR",
+    "relative_to": "Touring",
+    "relative_locator": "table[0]/row[219]/col[3]",
+    "absent_columns": [
+     1,
+     2,
+     3
+    ],
+    "source": "backend/dictionary/derived/html_spec_text/2025__honda__odyssey.json",
+    "verified": true,
+    "citation_verification": {
+     "verdict": "verified",
+     "checked_at": "2026-08-02T19:58:37Z",
+     "checker": "backend.enrichment.html_spec_sources.verify_citation"
+    }
+   }
+  ]
+ }
+}

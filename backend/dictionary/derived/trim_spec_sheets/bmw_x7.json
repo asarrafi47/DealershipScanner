@@ -24,13 +24,13 @@
     "M60i xDrive": [
       {
         "label": "Engine Options",
-        "value": "523 hp twin-turbo V8 with mild hybrid; 3.0L I6 Turbo"
+        "value": "523 hp twin-turbo V8 with mild hybrid; 3.0L V6 (SIDI)"
       }
     ],
     "xDrive40i": [
       {
         "label": "Engine Options",
-        "value": "375 hp turbocharged inline-six with xDrive AWD; 3.0L I6 Turbo"
+        "value": "375 hp turbocharged inline-six with xDrive AWD; 3.0L V6 (SIDI)"
       }
     ]
   }

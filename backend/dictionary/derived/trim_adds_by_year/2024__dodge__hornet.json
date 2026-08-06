@@ -3,54 +3,176 @@
   "year": 2024,
   "make": "Dodge",
   "model": "Hornet",
-  "ladder_id": "brochure_llm_2024__dodge__hornet",
-  "source": "brochure_llm",
+  "source": "brochure_text_quoted",
+  "layouts": [
+    "adds_to_block"
+  ],
   "trims_available": [
-    "R/T PLUS",
-    "R/T",
     "GT PLUS",
-    "GT"
+    "R/T"
+  ],
+  "trims_quoted": [
+    "GT PLUS",
+    "R/T"
+  ],
+  "rung_order": [
+    "GT",
+    "GT PLUS",
+    "R/T"
+  ],
+  "order_basis": {
+    "GT": {
+      "basis": "adds_to_edge",
+      "trim": "GT",
+      "direction": "named_as_baseline_by",
+      "edge": {
+        "trim": "GT PLUS",
+        "below": "GT",
+        "source": "derived/brochure_text/2024__dodge__hornet.json",
+        "page": 7,
+        "layout": "adds_to_block",
+        "trim_quote": "GT PLUS ADDS TO GT",
+        "below_quote": "GT PLUS ADDS TO GT"
+      }
+    },
+    "GT PLUS": {
+      "basis": "adds_to_edge",
+      "trim": "GT PLUS",
+      "direction": "states_its_baseline",
+      "edge": {
+        "trim": "GT PLUS",
+        "below": "GT",
+        "source": "derived/brochure_text/2024__dodge__hornet.json",
+        "page": 7,
+        "layout": "adds_to_block",
+        "trim_quote": "GT PLUS ADDS TO GT",
+        "below_quote": "GT PLUS ADDS TO GT"
+      }
+    },
+    "R/T": {
+      "basis": "adds_to_edge",
+      "trim": "R/T",
+      "direction": "states_its_baseline",
+      "edge": {
+        "trim": "R/T",
+        "below": "GT PLUS",
+        "source": "derived/brochure_text/2024__dodge__hornet.json",
+        "page": 8,
+        "layout": "adds_to_block",
+        "trim_quote": "R/T ADDS TO GT PLUS",
+        "below_quote": "R/T ADDS TO GT PLUS"
+      }
+    }
+  },
+  "rung_edges": [
+    {
+      "trim": "GT PLUS",
+      "below": "GT",
+      "source": "derived/brochure_text/2024__dodge__hornet.json",
+      "page": 7,
+      "layout": "adds_to_block",
+      "trim_quote": "GT PLUS ADDS TO GT",
+      "below_quote": "GT PLUS ADDS TO GT"
+    },
+    {
+      "trim": "R/T",
+      "below": "GT PLUS",
+      "source": "derived/brochure_text/2024__dodge__hornet.json",
+      "page": 8,
+      "layout": "adds_to_block",
+      "trim_quote": "R/T ADDS TO GT PLUS",
+      "below_quote": "R/T ADDS TO GT PLUS"
+    }
   ],
   "adds_by_trim": {
-    "R/T PLUS": [
-      "Leather-trimmed seats with perforated Alcantara sport upgrade option",
-      "12-way power front passenger seat in addition to driver seat",
-      "Ventilated driver and front-passenger seats",
-      "Power sunroof",
-      "Harman Kardon premium sound system with 14 speakers and subwoofer",
-      "Hands-free power liftgate",
-      "Wireless charging pad"
+    "GT PLUS": [
+      "Leather-Trimmed Seats",
+      "12-way Power Driver and Front-Passenger Seats",
+      "Heated and Ventilated Driver and Front-Passenger Seats",
+      "Heated Steering Wheel",
+      "Driver Seat with Memory"
     ],
     "R/T": [
-      "1.3L turbocharged I4 engine with 288 HP and 383 lb-ft torque on eAWD",
-      "Class-exclusive PowerShot",
-      "18-inch Graphite Gray wheels",
-      "Brembo front fixed brake calipers",
-      "Column-mounted aluminum paddle shifters",
-      "12-way power driver seat with memory",
-      "Heated driver and front-passenger seats",
-      "Heated steering wheel",
-      "Auto-dimming rearview mirror",
-      "HomeLink universal garage door opener"
-    ],
-    "GT PLUS": [
-      "Leather-trimmed seats with embroidered Dodge logo",
-      "12-way power driver and front-passenger seats",
-      "Heated and ventilated driver and front-passenger seats",
-      "Driver seat with memory",
-      "Heated steering wheel",
-      "Power sunroof",
-      "Harman Kardon premium sound system with 14 speakers and subwoofer",
-      "Hands-free power liftgate",
-      "Wireless charging pad",
-      "Auto-dimming rearview mirror"
-    ],
-    "GT": [
-      "Base features include standard interior seating",
-      "Available heated front seats option",
-      "Available heated steering wheel option",
-      "Standard auto-dimming rearview mirror",
-      "HomeLink universal garage door opener capability"
+      "1.3L I4 DOHC Direct-Injection Turbo Engine with Engine Stop/Start Technology— 288 HP on electric All-Wheel Drive (eAWD) and 383 lb-ft of Torque",
+      "Class-Exclusive PowerShot"
     ]
+  },
+  "adds_provenance": {
+    "GT PLUS": [
+      {
+        "text": "Leather-Trimmed Seats",
+        "source": "derived/brochure_text/2024__dodge__hornet.json",
+        "page": 7,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "12-way Power Driver and Front-Passenger Seats",
+        "source": "derived/brochure_text/2024__dodge__hornet.json",
+        "page": 7,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Heated and Ventilated Driver and Front-Passenger Seats",
+        "source": "derived/brochure_text/2024__dodge__hornet.json",
+        "page": 7,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Heated Steering Wheel",
+        "source": "derived/brochure_text/2024__dodge__hornet.json",
+        "page": 7,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Driver Seat with Memory",
+        "source": "derived/brochure_text/2024__dodge__hornet.json",
+        "page": 7,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      }
+    ],
+    "R/T": [
+      {
+        "text": "1.3L I4 DOHC Direct-Injection Turbo Engine with Engine Stop/Start Technology— 288 HP on electric All-Wheel Drive (eAWD) and 383 lb-ft of Torque",
+        "source": "derived/brochure_text/2024__dodge__hornet.json",
+        "page": 8,
+        "layout": "adds_to_block",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Class-Exclusive PowerShot",
+        "source": "derived/brochure_text/2024__dodge__hornet.json",
+        "page": 8,
+        "layout": "adds_to_block",
+        "verified": false,
+        "verified_why": "text_printed_but_footnote_digit_glued_to_word"
+      }
+    ]
+  },
+  "source_brochure_text": "derived/brochure_text/2024__dodge__hornet.json",
+  "pages_used": [
+    7,
+    8
+  ],
+  "replaced_source": "brochure_text_quoted",
+  "source_pdf_name": "2024_Dodge_Hornet_Brochure.pdf",
+  "source_pdf_sha256": "f35ae49eccb9d911fe10b90ca9a0c4be3d4390c5e75a2cb132fae5e05fbf9b56",
+  "citation_verification": {
+    "verifier": "verify_trim_citations.py",
+    "version": "2026-08-02.1",
+    "checked_at": "2026-08-03T01:48:51+00:00",
+    "source_pdf": "2024_Dodge_Hornet_Brochure.pdf",
+    "verified": 6,
+    "total": 7
   }
 }

@@ -1,0 +1,370 @@
+{
+  "catalog_key": "2026|toyota|grandhighlander",
+  "year": 2026,
+  "make": "Toyota",
+  "model": "Grand Highlander",
+  "source": "brochure_text_quoted",
+  "layouts": [
+    "cell_grid"
+  ],
+  "trims_available": [
+    "XLE",
+    "Limited",
+    "Platinum"
+  ],
+  "trims_quoted": [
+    "XLE",
+    "Limited",
+    "Platinum"
+  ],
+  "rung_order": [
+    "LE",
+    "XLE",
+    "Limited",
+    "Platinum"
+  ],
+  "order_basis": {
+    "LE": {
+      "basis": "printed_sequence",
+      "trim": "LE",
+      "source": "derived/brochure_text/2026__toyota__grandhighlander.json",
+      "column_index": 0,
+      "pages": [
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        18,
+        20,
+        21
+      ],
+      "layout": "cell_grid"
+    },
+    "XLE": {
+      "basis": "printed_sequence",
+      "trim": "XLE",
+      "source": "derived/brochure_text/2026__toyota__grandhighlander.json",
+      "column_index": 1,
+      "pages": [
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        18,
+        20,
+        21
+      ],
+      "layout": "cell_grid"
+    },
+    "Limited": {
+      "basis": "printed_sequence",
+      "trim": "Limited",
+      "source": "derived/brochure_text/2026__toyota__grandhighlander.json",
+      "column_index": 2,
+      "pages": [
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        18,
+        20,
+        21
+      ],
+      "layout": "cell_grid"
+    },
+    "Platinum": {
+      "basis": "printed_sequence",
+      "trim": "Platinum",
+      "source": "derived/brochure_text/2026__toyota__grandhighlander.json",
+      "column_index": 3,
+      "pages": [
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        18,
+        20,
+        21
+      ],
+      "layout": "cell_grid"
+    }
+  },
+  "rung_edges": [],
+  "adds_by_trim": {
+    "XLE": [
+      "18-in. multi-spoke silver wheels",
+      "Silver-painted roof rails",
+      "Qi-compatible wireless smartphone charging with charge indicator light",
+      "Auto-dimming rearview mirror with HomeLink® universal garage door opener",
+      "Manual second-row retractable rear window sunshades"
+    ],
+    "Limited": [
+      "Heated second-row outboard seats",
+      "Height-adjustable foot-activated power liftgate with jam protection",
+      "LED Daytime Running Lights (DRL) with on/off feature",
+      "LED fog lights",
+      "Power folding heated outside mirrors with blind spot warning indicators",
+      "Rear spoiler with long LED center high-mount stop light",
+      "Rain-sensing, washer-linked aerodynamic variable intermittent two-speed windshield wipers, de-icer and variable intermittent rear wipers",
+      "Ambient interior lighting",
+      "Front door sill metal scuff plate",
+      "Driver's-seat memory function",
+      "Front and Rear Parking Assist with Automatic Braking (PA w/AB)"
+    ],
+    "Platinum": [
+      "10-in. color Head-Up Display (HUD) with speedometer and Road Sign Assist (RSA), navigation and Hybrid System Indicator (hybrid models only)",
+      "Power tilt/slide panoramic roof with power sunshade",
+      "Heated and ventilated second-row outboard seats",
+      "Panoramic View Monitor with 360-degree Overhead View in low-speed drive and reverse, and Curb View",
+      "LED rear hatch cargo illumination",
+      "Digital rearview mirror with HomeLink® universal transceiver",
+      "Downhill Assist Control (DAC)",
+      "User Profile Face Identification",
+      "Traffic Jam Assist"
+    ]
+  },
+  "adds_provenance": {
+    "XLE": [
+      {
+        "text": "18-in. multi-spoke silver wheels",
+        "source": "derived/brochure_text/2026__toyota__grandhighlander.json",
+        "page": 10,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Silver-painted roof rails",
+        "source": "derived/brochure_text/2026__toyota__grandhighlander.json",
+        "page": 9,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Qi-compatible wireless smartphone charging with charge indicator light",
+        "source": "derived/brochure_text/2026__toyota__grandhighlander.json",
+        "page": 13,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Auto-dimming rearview mirror with HomeLink® universal garage door opener",
+        "source": "derived/brochure_text/2026__toyota__grandhighlander.json",
+        "page": 14,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Manual second-row retractable rear window sunshades",
+        "source": "derived/brochure_text/2026__toyota__grandhighlander.json",
+        "page": 18,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      }
+    ],
+    "Limited": [
+      {
+        "text": "Heated second-row outboard seats",
+        "source": "derived/brochure_text/2026__toyota__grandhighlander.json",
+        "page": 14,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Height-adjustable foot-activated power liftgate with jam protection",
+        "source": "derived/brochure_text/2026__toyota__grandhighlander.json",
+        "page": 8,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "LED Daytime Running Lights (DRL) with on/off feature",
+        "source": "derived/brochure_text/2026__toyota__grandhighlander.json",
+        "page": 8,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "LED fog lights",
+        "source": "derived/brochure_text/2026__toyota__grandhighlander.json",
+        "page": 9,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Power folding heated outside mirrors with blind spot warning indicators",
+        "source": "derived/brochure_text/2026__toyota__grandhighlander.json",
+        "page": 9,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Rear spoiler with long LED center high-mount stop light",
+        "source": "derived/brochure_text/2026__toyota__grandhighlander.json",
+        "page": 9,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Rain-sensing, washer-linked aerodynamic variable intermittent two-speed windshield wipers, de-icer and variable intermittent rear wipers",
+        "source": "derived/brochure_text/2026__toyota__grandhighlander.json",
+        "page": 10,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Ambient interior lighting",
+        "source": "derived/brochure_text/2026__toyota__grandhighlander.json",
+        "page": 12,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Front door sill metal scuff plate",
+        "source": "derived/brochure_text/2026__toyota__grandhighlander.json",
+        "page": 12,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Driver's-seat memory function",
+        "source": "derived/brochure_text/2026__toyota__grandhighlander.json",
+        "page": 14,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Front and Rear Parking Assist with Automatic Braking (PA w/AB)",
+        "source": "derived/brochure_text/2026__toyota__grandhighlander.json",
+        "page": 20,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      }
+    ],
+    "Platinum": [
+      {
+        "text": "10-in. color Head-Up Display (HUD) with speedometer and Road Sign Assist (RSA), navigation and Hybrid System Indicator (hybrid models only)",
+        "source": "derived/brochure_text/2026__toyota__grandhighlander.json",
+        "page": 11,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Power tilt/slide panoramic roof with power sunshade",
+        "source": "derived/brochure_text/2026__toyota__grandhighlander.json",
+        "page": 9,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Heated and ventilated second-row outboard seats",
+        "source": "derived/brochure_text/2026__toyota__grandhighlander.json",
+        "page": 14,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Panoramic View Monitor with 360-degree Overhead View in low-speed drive and reverse, and Curb View",
+        "source": "derived/brochure_text/2026__toyota__grandhighlander.json",
+        "page": 21,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "LED rear hatch cargo illumination",
+        "source": "derived/brochure_text/2026__toyota__grandhighlander.json",
+        "page": 12,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Digital rearview mirror with HomeLink® universal transceiver",
+        "source": "derived/brochure_text/2026__toyota__grandhighlander.json",
+        "page": 14,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Downhill Assist Control (DAC)",
+        "source": "derived/brochure_text/2026__toyota__grandhighlander.json",
+        "page": 20,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "User Profile Face Identification",
+        "source": "derived/brochure_text/2026__toyota__grandhighlander.json",
+        "page": 20,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Traffic Jam Assist",
+        "source": "derived/brochure_text/2026__toyota__grandhighlander.json",
+        "page": 20,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      }
+    ]
+  },
+  "source_brochure_text": "derived/brochure_text/2026__toyota__grandhighlander.json",
+  "pages_used": [
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    18,
+    20,
+    21
+  ],
+  "replaced_source": "brochure_text_quoted",
+  "source_pdf_name": "2026_Toyota_Grand_Highlander_Brochure.pdf",
+  "source_pdf_sha256": "3b1e8f74d03806aba5772485f1627c1f47127355cd78bf8db0a7fac7b3894705",
+  "citation_verification": {
+    "verifier": "verify_trim_citations.py",
+    "version": "2026-08-02.1",
+    "checked_at": "2026-08-03T01:48:53+00:00",
+    "source_pdf": "2026_Toyota_Grand_Highlander_Brochure.pdf",
+    "verified": 25,
+    "total": 25
+  }
+}

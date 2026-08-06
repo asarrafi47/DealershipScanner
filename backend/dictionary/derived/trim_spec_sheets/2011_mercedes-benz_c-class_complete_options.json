@@ -12,19 +12,19 @@
     "AMG": [
       {
         "label": "Engine Options",
-        "value": "6.2L V8 Twin Turbo; Automatic (S7)"
+        "value": "6.2L V8 Twin Turbo"
       }
     ],
     "C300": [
       {
         "label": "Engine Options",
-        "value": "3.0L V6 Turbo; Automatic 7-spd"
+        "value": "FFV 3.0L V6 (GAS 440); FFV 3.0L V6 (GAS 430)"
       }
     ],
     "C350": [
       {
         "label": "Engine Options",
-        "value": "3.5L V6 Turbo; Automatic 7-spd"
+        "value": "3.5L V6 Turbo"
       }
     ]
   }

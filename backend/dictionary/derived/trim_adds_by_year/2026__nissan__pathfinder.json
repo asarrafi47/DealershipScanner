@@ -1,0 +1,476 @@
+{
+  "catalog_key": "2026|nissan|pathfinder",
+  "year": 2026,
+  "make": "NISSAN",
+  "model": "Pathfinder",
+  "source": "brochure_text_quoted",
+  "layouts": [
+    "column_block"
+  ],
+  "trims_available": [
+    "SL",
+    "Rock Creek",
+    "Platinum"
+  ],
+  "trims_quoted": [
+    "SL",
+    "Rock Creek",
+    "Platinum"
+  ],
+  "rung_order": [
+    "SV",
+    "SL",
+    "Rock Creek",
+    "Platinum"
+  ],
+  "order_basis": {
+    "SV": {
+      "basis": "adds_to_edge",
+      "trim": "SV",
+      "direction": "named_as_baseline_by",
+      "edge": {
+        "trim": "SL",
+        "below": "SV",
+        "source": "derived/brochure_text/2026__nissan__pathfinder.json",
+        "page": 8,
+        "layout": "column_block",
+        "trim_quote": "SL",
+        "below_quote": "INCLUDES SV EQUIPMENT PLUS:"
+      }
+    },
+    "SL": {
+      "basis": "adds_to_edge",
+      "trim": "SL",
+      "direction": "states_its_baseline",
+      "edge": {
+        "trim": "SL",
+        "below": "SV",
+        "source": "derived/brochure_text/2026__nissan__pathfinder.json",
+        "page": 8,
+        "layout": "column_block",
+        "trim_quote": "SL",
+        "below_quote": "INCLUDES SV EQUIPMENT PLUS:"
+      },
+      "tiebreak": "page_sequence",
+      "tied_with": [
+        "Rock Creek"
+      ]
+    },
+    "Rock Creek": {
+      "basis": "adds_to_edge",
+      "trim": "Rock Creek",
+      "direction": "states_its_baseline",
+      "edge": {
+        "trim": "Rock Creek",
+        "below": "SV",
+        "source": "derived/brochure_text/2026__nissan__pathfinder.json",
+        "page": 8,
+        "layout": "column_block",
+        "trim_quote": "ROCK CREEK®",
+        "below_quote": "INCLUDES SV EQUIPMENT PLUS:"
+      },
+      "tiebreak": "page_sequence",
+      "tied_with": [
+        "SL"
+      ]
+    },
+    "Platinum": {
+      "basis": "adds_to_edge",
+      "trim": "Platinum",
+      "direction": "states_its_baseline",
+      "edge": {
+        "trim": "Platinum",
+        "below": "SL",
+        "source": "derived/brochure_text/2026__nissan__pathfinder.json",
+        "page": 8,
+        "layout": "column_block",
+        "trim_quote": "PLATINUM",
+        "below_quote": "INCLUDES SL EQUIPMENT PLUS:"
+      }
+    }
+  },
+  "rung_edges": [
+    {
+      "trim": "SL",
+      "below": "SV",
+      "source": "derived/brochure_text/2026__nissan__pathfinder.json",
+      "page": 8,
+      "layout": "column_block",
+      "trim_quote": "SL",
+      "below_quote": "INCLUDES SV EQUIPMENT PLUS:"
+    },
+    {
+      "trim": "Rock Creek",
+      "below": "SV",
+      "source": "derived/brochure_text/2026__nissan__pathfinder.json",
+      "page": 8,
+      "layout": "column_block",
+      "trim_quote": "ROCK CREEK®",
+      "below_quote": "INCLUDES SV EQUIPMENT PLUS:"
+    },
+    {
+      "trim": "Platinum",
+      "below": "SL",
+      "source": "derived/brochure_text/2026__nissan__pathfinder.json",
+      "page": 8,
+      "layout": "column_block",
+      "trim_quote": "PLATINUM",
+      "below_quote": "INCLUDES SL EQUIPMENT PLUS:"
+    }
+  ],
+  "adds_by_trim": {
+    "SL": [
+      "12.3\" Digital dashboard with fully digital gauges",
+      "Heated steering wheel",
+      "18\" Machine-finished aluminum-alloy wheels",
+      "HD Enhanced Intelligent Around View® Monitor",
+      "Traffic Sign Recognition",
+      "Power outside mirrors with LED turn signal indicators",
+      "Auto-dimming inside rearview mirror",
+      "HomeLink® Universal Transceiver",
+      "TailorFit®-appointed seats",
+      "Five USB-C ports",
+      "Wireless charger",
+      "Two 12-volt DC power outlets"
+    ],
+    "Platinum": [
+      "Tow hitch receiver with 7-pin wiring harness",
+      "Head-Up Display",
+      "Bose Premium Audio System with 13 speakers",
+      "Panoramic moonroof",
+      "10-way power front-passenger’s seat",
+      "Semi-aniline leather-appointed seats with quilted inserts",
+      "Climate-controlled front seats (heated and ventilated)",
+      "20\" Machine-finished aluminum-alloy wheels",
+      "Motion Activated Liftgate",
+      "Power folding outside mirrors",
+      "Outside mirrors with reverse tilt-down feature",
+      "Chrome body side moldings"
+    ],
+    "Rock Creek": [
+      "3.5-liter V6 engine with 295 hp and 270 lb-ft of torque",
+      "Standard Intelligent 4x4",
+      "Tow hitch receiver with 7-pin wiring harness",
+      "Off-road tuned suspension",
+      "18\" Black-painted beadlock-style aluminum-alloy wheels with P265/60R18 all-terrain tires",
+      "HD Enhanced Intelligent Around View® Monitor",
+      "Black tubular roof rack",
+      "Unique Rock Creek front fascia and grille",
+      "Rock Creek black exterior badging",
+      "LED fog lights",
+      "Power outside mirrors with LED turn signal indicators",
+      "Exclusive Rock Creek leatherette-appointed seats with unique centers and Rock Creek badging"
+    ]
+  },
+  "adds_provenance": {
+    "SL": [
+      {
+        "text": "12.3\" Digital dashboard with fully digital gauges",
+        "source": "derived/brochure_text/2026__nissan__pathfinder.json",
+        "page": 8,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "Heated steering wheel",
+        "source": "derived/brochure_text/2026__nissan__pathfinder.json",
+        "page": 8,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "18\" Machine-finished aluminum-alloy wheels",
+        "source": "derived/brochure_text/2026__nissan__pathfinder.json",
+        "page": 8,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "HD Enhanced Intelligent Around View® Monitor",
+        "source": "derived/brochure_text/2026__nissan__pathfinder.json",
+        "page": 8,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "Traffic Sign Recognition",
+        "source": "derived/brochure_text/2026__nissan__pathfinder.json",
+        "page": 8,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "Power outside mirrors with LED turn signal indicators",
+        "source": "derived/brochure_text/2026__nissan__pathfinder.json",
+        "page": 8,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "Auto-dimming inside rearview mirror",
+        "source": "derived/brochure_text/2026__nissan__pathfinder.json",
+        "page": 8,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "HomeLink® Universal Transceiver",
+        "source": "derived/brochure_text/2026__nissan__pathfinder.json",
+        "page": 8,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "TailorFit®-appointed seats",
+        "source": "derived/brochure_text/2026__nissan__pathfinder.json",
+        "page": 8,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "Five USB-C ports",
+        "source": "derived/brochure_text/2026__nissan__pathfinder.json",
+        "page": 8,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "Wireless charger",
+        "source": "derived/brochure_text/2026__nissan__pathfinder.json",
+        "page": 8,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "Two 12-volt DC power outlets",
+        "source": "derived/brochure_text/2026__nissan__pathfinder.json",
+        "page": 8,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      }
+    ],
+    "Platinum": [
+      {
+        "text": "Tow hitch receiver with 7-pin wiring harness",
+        "source": "derived/brochure_text/2026__nissan__pathfinder.json",
+        "page": 8,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "Head-Up Display",
+        "source": "derived/brochure_text/2026__nissan__pathfinder.json",
+        "page": 8,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "Bose Premium Audio System with 13 speakers",
+        "source": "derived/brochure_text/2026__nissan__pathfinder.json",
+        "page": 8,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "Panoramic moonroof",
+        "source": "derived/brochure_text/2026__nissan__pathfinder.json",
+        "page": 8,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "10-way power front-passenger’s seat",
+        "source": "derived/brochure_text/2026__nissan__pathfinder.json",
+        "page": 8,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "Semi-aniline leather-appointed seats with quilted inserts",
+        "source": "derived/brochure_text/2026__nissan__pathfinder.json",
+        "page": 8,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "Climate-controlled front seats (heated and ventilated)",
+        "source": "derived/brochure_text/2026__nissan__pathfinder.json",
+        "page": 8,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "20\" Machine-finished aluminum-alloy wheels",
+        "source": "derived/brochure_text/2026__nissan__pathfinder.json",
+        "page": 8,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "Motion Activated Liftgate",
+        "source": "derived/brochure_text/2026__nissan__pathfinder.json",
+        "page": 8,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "Power folding outside mirrors",
+        "source": "derived/brochure_text/2026__nissan__pathfinder.json",
+        "page": 8,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "Outside mirrors with reverse tilt-down feature",
+        "source": "derived/brochure_text/2026__nissan__pathfinder.json",
+        "page": 8,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "Chrome body side moldings",
+        "source": "derived/brochure_text/2026__nissan__pathfinder.json",
+        "page": 8,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      }
+    ],
+    "Rock Creek": [
+      {
+        "text": "3.5-liter V6 engine with 295 hp and 270 lb-ft of torque",
+        "source": "derived/brochure_text/2026__nissan__pathfinder.json",
+        "page": 8,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "Standard Intelligent 4x4",
+        "source": "derived/brochure_text/2026__nissan__pathfinder.json",
+        "page": 8,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "Tow hitch receiver with 7-pin wiring harness",
+        "source": "derived/brochure_text/2026__nissan__pathfinder.json",
+        "page": 8,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "Off-road tuned suspension",
+        "source": "derived/brochure_text/2026__nissan__pathfinder.json",
+        "page": 8,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "18\" Black-painted beadlock-style aluminum-alloy wheels with P265/60R18 all-terrain tires",
+        "source": "derived/brochure_text/2026__nissan__pathfinder.json",
+        "page": 8,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "HD Enhanced Intelligent Around View® Monitor",
+        "source": "derived/brochure_text/2026__nissan__pathfinder.json",
+        "page": 8,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "Black tubular roof rack",
+        "source": "derived/brochure_text/2026__nissan__pathfinder.json",
+        "page": 8,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "Unique Rock Creek front fascia and grille",
+        "source": "derived/brochure_text/2026__nissan__pathfinder.json",
+        "page": 8,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "Rock Creek black exterior badging",
+        "source": "derived/brochure_text/2026__nissan__pathfinder.json",
+        "page": 8,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "LED fog lights",
+        "source": "derived/brochure_text/2026__nissan__pathfinder.json",
+        "page": 8,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "Power outside mirrors with LED turn signal indicators",
+        "source": "derived/brochure_text/2026__nissan__pathfinder.json",
+        "page": 8,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      },
+      {
+        "text": "Exclusive Rock Creek leatherette-appointed seats with unique centers and Rock Creek badging",
+        "source": "derived/brochure_text/2026__nissan__pathfinder.json",
+        "page": 8,
+        "layout": "column_block",
+        "verified": false,
+        "verified_why": "text_not_printed_on_cited_page"
+      }
+    ]
+  },
+  "source_brochure_text": "derived/brochure_text/2026__nissan__pathfinder.json",
+  "pages_used": [
+    8
+  ],
+  "replaced_source": "brochure_text_quoted",
+  "source_pdf_name": "2026_NISSAN_Pathfinder_Brochure.pdf",
+  "source_pdf_sha256": "c5550ec46a62117c35b53c5d9b562720d6a0c30c77ef29051552b55ff0351069",
+  "citation_verification": {
+    "verifier": "verify_trim_citations.py",
+    "version": "2026-08-02.1",
+    "checked_at": "2026-08-03T01:48:52+00:00",
+    "source_pdf": "2026_NISSAN_Pathfinder_Brochure.pdf",
+    "verified": 0,
+    "total": 36
+  }
+}

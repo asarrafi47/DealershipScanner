@@ -12,13 +12,13 @@
     "xDrive60": [
       {
         "label": "Engine Options",
-        "value": "EV Electricity; Automatic (A1)"
+        "value": "EV Electricity"
       }
     ],
     "eDrive50": [
       {
         "label": "Engine Options",
-        "value": "EV Electricity; Automatic (A1)"
+        "value": "EV Electricity"
       }
     ]
   }

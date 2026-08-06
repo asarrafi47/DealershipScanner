@@ -12,19 +12,19 @@
     "C15": [
       {
         "label": "Engine Options",
-        "value": "Automatic 4-spd; Rear-Wheel Drive"
+        "value": "Hybrid 5.3L V8; FFV 5.3L V8 (440-580)"
       }
     ],
     "C15 Xfe": [
       {
         "label": "Engine Options",
-        "value": "Automatic 4-spd; Rear-Wheel Drive"
+        "value": "Hybrid 5.3L V8; FFV 5.3L V8 (440-580)"
       }
     ],
     "K15": [
       {
         "label": "Engine Options",
-        "value": "Automatic 4-spd; All-Wheel Drive"
+        "value": "FFV 5.3L V8 (440-580)"
       }
     ]
   }

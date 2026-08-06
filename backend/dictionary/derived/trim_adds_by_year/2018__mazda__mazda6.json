@@ -1,0 +1,303 @@
+{
+  "catalog_key": "2018|mazda|mazda6",
+  "year": 2018,
+  "make": "Mazda",
+  "model": "MAZDA6",
+  "source": "brochure_text_quoted",
+  "layouts": [
+    "cell_grid"
+  ],
+  "trims_available": [
+    "Touring",
+    "Signature"
+  ],
+  "trims_quoted": [
+    "Touring",
+    "Signature"
+  ],
+  "rung_order": [
+    "Sport",
+    "Touring",
+    "Signature"
+  ],
+  "order_basis": {
+    "Sport": {
+      "basis": "printed_sequence",
+      "trim": "Sport",
+      "source": "derived/brochure_text/2018__mazda__mazda6.json",
+      "column_index": 0,
+      "pages": [
+        4,
+        5
+      ],
+      "layout": "cell_grid"
+    },
+    "Touring": {
+      "basis": "printed_sequence",
+      "trim": "Touring",
+      "source": "derived/brochure_text/2018__mazda__mazda6.json",
+      "column_index": 1,
+      "pages": [
+        4,
+        5
+      ],
+      "layout": "cell_grid"
+    },
+    "Signature": {
+      "basis": "printed_sequence",
+      "trim": "Signature",
+      "source": "derived/brochure_text/2018__mazda__mazda6.json",
+      "column_index": 2,
+      "pages": [
+        4,
+        5
+      ],
+      "layout": "cell_grid"
+    }
+  },
+  "rung_edges": [],
+  "adds_by_trim": {
+    "Touring": [
+      "Moonroof, power with one-touch open/close and interior sunshade",
+      "6-way power driver's seat w/ manual lumbar support",
+      "Heated front seats (3 levels)",
+      "Transmission, SKYACTIV-Drive 6-Speed automatic (Straight Shifter)",
+      "Manual Mode",
+      "Sport Mode Button",
+      "Air conditioning, rear seat vents in center console",
+      "Key type: FOB-type key (2) with Mazda Advanced Keyless Entry",
+      "Mirrors, dual illuminated vanity mirrors w/covers & extensions (driver & passenger)",
+      "Rear seat center armrest with storage and 2 USB charging ports",
+      "Door trim, leatherette insert",
+      "Seats, leatherette"
+    ],
+    "Signature": [
+      "Mazda navigation system",
+      "BOSE® 11-speaker sound system",
+      "Steering wheel, leather-wrapped w/ unique stitch",
+      "6-way power front passenger seat",
+      "8-way power driver's seat w/ power lumbar support",
+      "Heated rear seats",
+      "Seats, Nappa leather",
+      "Adaptive Front-lighting System (AFS)",
+      "Auto-dimming exterior mirror - Driver side only",
+      "Front grille, gunmetal",
+      "Headlights, LED lighting signature",
+      "Mirrors, heated mirrors"
+    ]
+  },
+  "adds_provenance": {
+    "Touring": [
+      {
+        "text": "Moonroof, power with one-touch open/close and interior sunshade",
+        "source": "derived/brochure_text/2018__mazda__mazda6.json",
+        "page": 4,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "6-way power driver's seat w/ manual lumbar support",
+        "source": "derived/brochure_text/2018__mazda__mazda6.json",
+        "page": 5,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Heated front seats (3 levels)",
+        "source": "derived/brochure_text/2018__mazda__mazda6.json",
+        "page": 5,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Transmission, SKYACTIV-Drive 6-Speed automatic (Straight Shifter)",
+        "source": "derived/brochure_text/2018__mazda__mazda6.json",
+        "page": 4,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Manual Mode",
+        "source": "derived/brochure_text/2018__mazda__mazda6.json",
+        "page": 4,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Sport Mode Button",
+        "source": "derived/brochure_text/2018__mazda__mazda6.json",
+        "page": 4,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Air conditioning, rear seat vents in center console",
+        "source": "derived/brochure_text/2018__mazda__mazda6.json",
+        "page": 4,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Key type: FOB-type key (2) with Mazda Advanced Keyless Entry",
+        "source": "derived/brochure_text/2018__mazda__mazda6.json",
+        "page": 4,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Mirrors, dual illuminated vanity mirrors w/covers & extensions (driver & passenger)",
+        "source": "derived/brochure_text/2018__mazda__mazda6.json",
+        "page": 4,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Rear seat center armrest with storage and 2 USB charging ports",
+        "source": "derived/brochure_text/2018__mazda__mazda6.json",
+        "page": 4,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Door trim, leatherette insert",
+        "source": "derived/brochure_text/2018__mazda__mazda6.json",
+        "page": 5,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Seats, leatherette",
+        "source": "derived/brochure_text/2018__mazda__mazda6.json",
+        "page": 5,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      }
+    ],
+    "Signature": [
+      {
+        "text": "Mazda navigation system",
+        "source": "derived/brochure_text/2018__mazda__mazda6.json",
+        "page": 5,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "BOSE® 11-speaker sound system",
+        "source": "derived/brochure_text/2018__mazda__mazda6.json",
+        "page": 5,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Steering wheel, leather-wrapped w/ unique stitch",
+        "source": "derived/brochure_text/2018__mazda__mazda6.json",
+        "page": 4,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "6-way power front passenger seat",
+        "source": "derived/brochure_text/2018__mazda__mazda6.json",
+        "page": 5,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "8-way power driver's seat w/ power lumbar support",
+        "source": "derived/brochure_text/2018__mazda__mazda6.json",
+        "page": 5,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Heated rear seats",
+        "source": "derived/brochure_text/2018__mazda__mazda6.json",
+        "page": 5,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Seats, Nappa leather",
+        "source": "derived/brochure_text/2018__mazda__mazda6.json",
+        "page": 5,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Adaptive Front-lighting System (AFS)",
+        "source": "derived/brochure_text/2018__mazda__mazda6.json",
+        "page": 4,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Auto-dimming exterior mirror - Driver side only",
+        "source": "derived/brochure_text/2018__mazda__mazda6.json",
+        "page": 4,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Front grille, gunmetal",
+        "source": "derived/brochure_text/2018__mazda__mazda6.json",
+        "page": 4,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Headlights, LED lighting signature",
+        "source": "derived/brochure_text/2018__mazda__mazda6.json",
+        "page": 4,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      },
+      {
+        "text": "Mirrors, heated mirrors",
+        "source": "derived/brochure_text/2018__mazda__mazda6.json",
+        "page": 4,
+        "layout": "cell_grid",
+        "verified": true,
+        "verified_why": "verified"
+      }
+    ]
+  },
+  "source_brochure_text": "derived/brochure_text/2018__mazda__mazda6.json",
+  "pages_used": [
+    4,
+    5
+  ],
+  "replaced_source": "brochure_text_quoted",
+  "source_pdf_name": "2018_Mazda_MAZDA6_Brochure.pdf",
+  "source_pdf_sha256": "08ba0c4ed293b9c4f973f8cf1e19508389ba299215e6dc3dc5c43a25d7606303",
+  "citation_verification": {
+    "verifier": "verify_trim_citations.py",
+    "version": "2026-08-02.1",
+    "checked_at": "2026-08-03T01:48:49+00:00",
+    "source_pdf": "2018_Mazda_MAZDA6_Brochure.pdf",
+    "verified": 24,
+    "total": 24
+  }
+}

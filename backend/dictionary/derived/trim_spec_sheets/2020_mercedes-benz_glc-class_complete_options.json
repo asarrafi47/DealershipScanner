@@ -12,31 +12,31 @@
     "AMG": [
       {
         "label": "Engine Options",
-        "value": "3.0L V6 Turbo; Automatic 9-spd"
+        "value": "3.0L V6 (SIDI); 4.0L V8 (SIDI)"
       }
     ],
     "AMG GLC63": [
       {
         "label": "Engine Options",
-        "value": "3.0L V6 Turbo; Automatic 9-spd"
+        "value": "3.0L V6 (SIDI); 4.0L V8 (SIDI)"
       }
     ],
     "AMG GLC43": [
       {
         "label": "Engine Options",
-        "value": "3.0L V6 Turbo; Automatic 9-spd"
+        "value": "3.0L V6 (SIDI); 4.0L V8 (SIDI)"
       }
     ],
     "GLC300": [
       {
         "label": "Engine Options",
-        "value": "2.0L I4 Turbo; Automatic 9-spd"
+        "value": "2.0L I4 (SIDI)"
       }
     ],
     "GLC350e": [
       {
         "label": "Engine Options",
-        "value": "Automatic 7-spd; Four-Wheel Drive"
+        "value": "Plug-in Hybrid 2.0L I4 (SIDI; PHEV)"
       }
     ]
   }

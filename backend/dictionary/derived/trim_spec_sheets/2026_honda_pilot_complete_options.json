@@ -12,25 +12,25 @@
     "Elite": [
       {
         "label": "Engine Options",
-        "value": "Automatic (S10); All-Wheel Drive"
+        "value": "3.5L V6 (SIDI)"
       }
     ],
     "Touring": [
       {
         "label": "Engine Options",
-        "value": "Automatic (S10); All-Wheel Drive"
+        "value": "3.5L V6 (SIDI)"
       }
     ],
     "TrailSport": [
       {
         "label": "Engine Options",
-        "value": "Automatic (S10); All-Wheel Drive"
+        "value": "3.5L V6 (SIDI)"
       }
     ],
     "Sport": [
       {
         "label": "Engine Options",
-        "value": "Automatic (S10); All-Wheel Drive"
+        "value": "3.5L V6 (SIDI)"
       }
     ]
   }

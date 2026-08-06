@@ -12,31 +12,31 @@
     "AMG": [
       {
         "label": "Engine Options",
-        "value": "5.5L V8 Twin Turbo; Automatic 7-spd"
+        "value": "5.5L V8 (SIDI)"
       }
     ],
     "AMG E63": [
       {
         "label": "Engine Options",
-        "value": "5.5L V8 Twin Turbo; Automatic 7-spd"
+        "value": "5.5L V8 (SIDI)"
       }
     ],
     "E350": [
       {
         "label": "Engine Options",
-        "value": "3.5L V6 Turbo; Automatic 7-spd"
+        "value": "3.5L V6 (SIDI; PZEV (SULEV) emissions); FFV 3.5L V6 (SIDI; FFV)"
       }
     ],
     "E400": [
       {
         "label": "Engine Options",
-        "value": "3.5L V6 Turbo; Automatic 7-spd"
+        "value": "Hybrid 3.5L V6 (SIDI)"
       }
     ],
     "E550": [
       {
         "label": "Engine Options",
-        "value": "4.7L V8 Turbo; Automatic 7-spd"
+        "value": "4.7L V8 (SIDI)"
       }
     ]
   }

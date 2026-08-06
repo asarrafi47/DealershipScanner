@@ -3,42 +3,232 @@
   "year": 2010,
   "make": "Audi",
   "model": "Q5",
-  "ladder_id": "2010_audi_q5",
-  "source": "manual_brochure_review",
+  "source": "brochure_text_quoted",
+  "layouts": [
+    "cell_grid"
+  ],
   "trims_available": [
+    "Premium Plus",
+    "Prestige"
+  ],
+  "trims_quoted": [
+    "Premium Plus",
+    "Prestige"
+  ],
+  "rung_order": [
     "Premium",
     "Premium Plus",
     "Prestige"
   ],
+  "order_basis": {
+    "Premium": {
+      "basis": "printed_sequence",
+      "trim": "Premium",
+      "source": "derived/brochure_text/2010__audi__q5.json",
+      "column_index": 0,
+      "pages": [
+        22
+      ],
+      "layout": "cell_grid"
+    },
+    "Premium Plus": {
+      "basis": "printed_sequence",
+      "trim": "Premium Plus",
+      "source": "derived/brochure_text/2010__audi__q5.json",
+      "column_index": 1,
+      "pages": [
+        22
+      ],
+      "layout": "cell_grid"
+    },
+    "Prestige": {
+      "basis": "printed_sequence",
+      "trim": "Prestige",
+      "source": "derived/brochure_text/2010__audi__q5.json",
+      "column_index": 2,
+      "pages": [
+        22
+      ],
+      "layout": "cell_grid"
+    }
+  },
+  "rung_edges": [],
   "adds_by_trim": {
     "Premium Plus": [
+      "Heated front seats",
       "Panorama sunroof",
-      "Bluetooth and HomeLink",
-      "Power tailgate with adjustable opening height",
-      "Heated twelve-way power front seats with driver memory",
-      "Audi music interface for iPod through MMI",
-      "Auto-dimming compass interior mirror"
+      "Audi music interface with iPod® integration",
+      "Audi xenon plus headlights with LED daytime running lights",
+      "Stainless steel trunk edge trim and doorsills",
+      "Memory for driver seat and exterior mirrors",
+      "Power adjustable, auto-dimming and heated side mirrors with integrated LED turn signals and power-folding feature",
+      "Auto-dimming interior mirror with compass",
+      "HomeLink® remote transmitter",
+      "Bluetooth®‡ preparation for mobile phone",
+      "Power tailgate"
     ],
     "Prestige": [
-      "Audi MMI navigation plus with 40-GB hard drive and real-time traffic",
-      "Audi advanced key",
-      "19-inch five-arm wheels with 235/55 all-season tires",
-      "Bang & Olufsen 505-watt 14-speaker sound system",
-      "Audi side assist blind-spot monitoring",
-      "Audi parking system advanced with front/rear sensors and rearview camera",
-      "Thermo heated/cooled cup holder"
-    ],
-    "Premium": [
-      "Five-link front suspension with upper and lower control arms and stabilizer bar",
-      "Independent trapezoidal-link rear suspension with rigid subframe and stabilizer bar",
-      "Servotronic speed-sensitive power steering varying assistance based on vehicle speed",
-      "quattro permanent all-wheel drive system with torque-sensing center differential",
-      "Trailer hitch preparation with 4400 lbs maximum towing capacity",
-      "Fully galvanized steel unibody with multistep anti-corrosion protection and aluminum hood/tailgate",
-      "Advanced dual-stage airbags and seat-mounted side thorax airbags",
-      "Sideguard head curtain airbags with rollover sensor for both rows",
-      "Electronic Stabilization Program with rollover mitigation and crossbar detection",
-      "Anti-lock Brake System with Electronic Brake-pressure Distribution"
+      "Audi MMI® Navigation plus§: HDD navigation with voice control, Audi parking system advanced with rearview camera, color driver information display, single CD/DVD player",
+      "Bang & Olufsen® Sound System – 505 watt audio system with 14 speakers and ten-channel amplifier",
+      "19\" five-arm wheels with 235/55 all-season tires",
+      "Color trip computer with driver information display",
+      "Audi advanced key – keyless start, stop and entry",
+      "Audi side assist"
     ]
+  },
+  "adds_provenance": {
+    "Premium Plus": [
+      {
+        "text": "Heated front seats",
+        "source": "derived/brochure_text/2010__audi__q5.json",
+        "page": 22,
+        "layout": "cell_grid",
+        "verified": false,
+        "verified_why": "source_pdf_not_held"
+      },
+      {
+        "text": "Panorama sunroof",
+        "source": "derived/brochure_text/2010__audi__q5.json",
+        "page": 22,
+        "layout": "cell_grid",
+        "verified": false,
+        "verified_why": "source_pdf_not_held"
+      },
+      {
+        "text": "Audi music interface with iPod® integration",
+        "source": "derived/brochure_text/2010__audi__q5.json",
+        "page": 22,
+        "layout": "cell_grid",
+        "verified": false,
+        "verified_why": "source_pdf_not_held"
+      },
+      {
+        "text": "Audi xenon plus headlights with LED daytime running lights",
+        "source": "derived/brochure_text/2010__audi__q5.json",
+        "page": 22,
+        "layout": "cell_grid",
+        "verified": false,
+        "verified_why": "source_pdf_not_held"
+      },
+      {
+        "text": "Stainless steel trunk edge trim and doorsills",
+        "source": "derived/brochure_text/2010__audi__q5.json",
+        "page": 22,
+        "layout": "cell_grid",
+        "verified": false,
+        "verified_why": "source_pdf_not_held"
+      },
+      {
+        "text": "Memory for driver seat and exterior mirrors",
+        "source": "derived/brochure_text/2010__audi__q5.json",
+        "page": 22,
+        "layout": "cell_grid",
+        "verified": false,
+        "verified_why": "source_pdf_not_held"
+      },
+      {
+        "text": "Power adjustable, auto-dimming and heated side mirrors with integrated LED turn signals and power-folding feature",
+        "source": "derived/brochure_text/2010__audi__q5.json",
+        "page": 22,
+        "layout": "cell_grid",
+        "verified": false,
+        "verified_why": "source_pdf_not_held"
+      },
+      {
+        "text": "Auto-dimming interior mirror with compass",
+        "source": "derived/brochure_text/2010__audi__q5.json",
+        "page": 22,
+        "layout": "cell_grid",
+        "verified": false,
+        "verified_why": "source_pdf_not_held"
+      },
+      {
+        "text": "HomeLink® remote transmitter",
+        "source": "derived/brochure_text/2010__audi__q5.json",
+        "page": 22,
+        "layout": "cell_grid",
+        "verified": false,
+        "verified_why": "source_pdf_not_held"
+      },
+      {
+        "text": "Bluetooth®‡ preparation for mobile phone",
+        "source": "derived/brochure_text/2010__audi__q5.json",
+        "page": 22,
+        "layout": "cell_grid",
+        "verified": false,
+        "verified_why": "source_pdf_not_held"
+      },
+      {
+        "text": "Power tailgate",
+        "source": "derived/brochure_text/2010__audi__q5.json",
+        "page": 22,
+        "layout": "cell_grid",
+        "verified": false,
+        "verified_why": "source_pdf_not_held"
+      }
+    ],
+    "Prestige": [
+      {
+        "text": "Audi MMI® Navigation plus§: HDD navigation with voice control, Audi parking system advanced with rearview camera, color driver information display, single CD/DVD player",
+        "source": "derived/brochure_text/2010__audi__q5.json",
+        "page": 22,
+        "layout": "cell_grid",
+        "verified": false,
+        "verified_why": "source_pdf_not_held"
+      },
+      {
+        "text": "Bang & Olufsen® Sound System – 505 watt audio system with 14 speakers and ten-channel amplifier",
+        "source": "derived/brochure_text/2010__audi__q5.json",
+        "page": 22,
+        "layout": "cell_grid",
+        "verified": false,
+        "verified_why": "source_pdf_not_held"
+      },
+      {
+        "text": "19\" five-arm wheels with 235/55 all-season tires",
+        "source": "derived/brochure_text/2010__audi__q5.json",
+        "page": 22,
+        "layout": "cell_grid",
+        "verified": false,
+        "verified_why": "source_pdf_not_held"
+      },
+      {
+        "text": "Color trip computer with driver information display",
+        "source": "derived/brochure_text/2010__audi__q5.json",
+        "page": 22,
+        "layout": "cell_grid",
+        "verified": false,
+        "verified_why": "source_pdf_not_held"
+      },
+      {
+        "text": "Audi advanced key – keyless start, stop and entry",
+        "source": "derived/brochure_text/2010__audi__q5.json",
+        "page": 22,
+        "layout": "cell_grid",
+        "verified": false,
+        "verified_why": "source_pdf_not_held"
+      },
+      {
+        "text": "Audi side assist",
+        "source": "derived/brochure_text/2010__audi__q5.json",
+        "page": 22,
+        "layout": "cell_grid",
+        "verified": false,
+        "verified_why": "source_pdf_not_held"
+      }
+    ]
+  },
+  "source_brochure_text": "derived/brochure_text/2010__audi__q5.json",
+  "pages_used": [
+    22
+  ],
+  "replaced_source": "brochure_text_quoted",
+  "citation_verification": {
+    "verifier": "verify_trim_citations.py",
+    "version": "2026-08-02.1",
+    "checked_at": "2026-08-03T01:48:48+00:00",
+    "source_pdf": null,
+    "verified": 0,
+    "total": 17
   }
 }

@@ -12,13 +12,13 @@
     "GLK350": [
       {
         "label": "Engine Options",
-        "value": "3.5L V6 Turbo; Automatic 7-spd"
+        "value": "3.5L V6 (SIDI; PZEV (SULEV) emissions); 3.5L V6 (SIDI)"
       }
     ],
     "GLK250": [
       {
         "label": "Engine Options",
-        "value": "2.1L I4 Turbo; Automatic 7-spd"
+        "value": "Diesel 2.1L I4 Diesel"
       }
     ]
   }

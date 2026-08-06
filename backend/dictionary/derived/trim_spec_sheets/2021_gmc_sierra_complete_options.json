@@ -12,13 +12,13 @@
     "AT4": [
       {
         "label": "Engine Options",
-        "value": "Automatic 10-spd; Four-Wheel Drive"
+        "value": "6.2L V8 (SIDI); 5.3L V8 (SIDI)"
       }
     ],
     "LT": [
       {
         "label": "Engine Options",
-        "value": "Automatic 6-spd; Rear-Wheel Drive"
+        "value": "5.3L V8 (SIDI)"
       }
     ]
   }
