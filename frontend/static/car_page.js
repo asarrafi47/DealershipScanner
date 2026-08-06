@@ -1551,111 +1551,14 @@
         });
     }
 
-    const DEP_CURRENT_CALENDAR_YEAR = 2026;
-    const DEP_DEFAULT_ANNUAL_MILEAGE = 12000;
-    const DEP_ANNUAL_MILEAGE_MIN = 5000;
-    const DEP_ANNUAL_MILEAGE_MAX = 40000;
-    const DEP_ANNUAL_MILEAGE_STEP = 5000;
-    const DEP_RESIDUAL_FLOOR = 0.3;
-    const DEP_RESIDUAL_CEILING = 0.7;
-    const DEP_COMPLEX_TRIM_KEYWORDS = [
-        "summit",
-        "trackhawk",
-        "plaid",
-        "performance",
-        "overland",
-        "denali",
-        "autobiography",
-    ];
-    const DEP_BASE_TRIM_KEYWORDS = ["laredo", "sr5", "lx", "base", "standard"];
 
-    function parseDepreciationMetadata(card) {
-        const priceRaw = parseInt(card.getAttribute("data-car-price"), 10);
-        const yearRaw = parseInt(card.getAttribute("data-car-year"), 10);
-        const mileageRaw = parseInt(card.getAttribute("data-car-mileage"), 10);
-        const genStartRaw = parseInt(card.getAttribute("data-gen-start"), 10);
-        const genEndRaw = parseInt(card.getAttribute("data-gen-end"), 10);
 
-        const year = Number.isFinite(yearRaw) && yearRaw > 1980 ? yearRaw : 2020;
-        const genStart =
-            Number.isFinite(genStartRaw) && genStartRaw > 1980 ? genStartRaw : year;
-        const genEnd =
-            Number.isFinite(genEndRaw) && genEndRaw >= genStart
-                ? genEndRaw
-                : genStart + 7;
 
-        return {
-            price: Number.isFinite(priceRaw) && priceRaw > 0 ? priceRaw : 20000,
-            year: year,
-            mileage: Number.isFinite(mileageRaw) && mileageRaw >= 0 ? mileageRaw : 0,
-            trim: String(card.getAttribute("data-car-trim") || "")
-                .trim()
-                .toLowerCase(),
-            genStart: genStart,
-            genEnd: genEnd,
-        };
-    }
 
-    function trimMatchesKeyword(trim, keywords) {
-        if (!trim) return false;
-        return keywords.some(function (kw) {
-            return trim.indexOf(kw) >= 0;
-        });
-    }
 
-    function computeAnnualMileage(meta) {
-        const currentAge = Math.max(1, DEP_CURRENT_CALENDAR_YEAR - parseInt(meta.year, 10));
-        const derived = parseInt(meta.mileage, 10) / currentAge;
-        if (Number.isFinite(derived) && derived >= 2000 && derived <= 35000) {
-            return Math.round(derived);
-        }
-        return DEP_DEFAULT_ANNUAL_MILEAGE;
-    }
 
-    function buildDepreciationMileageSteps(startMileage, annualMileage) {
-        const steps = [];
-        for (let i = 0; i <= 5; i += 1) {
-            steps.push(Math.round(startMileage + annualMileage * i));
-        }
-        return steps;
-    }
 
-    function formatDepreciationMileage(miles) {
-        if (!Number.isFinite(miles)) return "--";
-        if (miles >= 1000) {
-            const thousands = miles / 1000;
-            const rounded =
-                thousands >= 100
-                    ? Math.round(thousands)
-                    : parseFloat(thousands.toFixed(thousands < 10 ? 1 : 0));
-            return rounded.toLocaleString("en-US") + "k mi";
-        }
-        return miles.toLocaleString("en-US") + " mi";
-    }
 
-    function snapDepreciationAnnualMileage(miles) {
-        const snapped = Math.round(miles / DEP_ANNUAL_MILEAGE_STEP) * DEP_ANNUAL_MILEAGE_STEP;
-        return Math.min(
-            DEP_ANNUAL_MILEAGE_MAX,
-            Math.max(DEP_ANNUAL_MILEAGE_MIN, snapped)
-        );
-    }
-
-    function buildDepreciationAnnualMileageOptions() {
-        const options = [];
-        for (
-            let mi = DEP_ANNUAL_MILEAGE_MIN;
-            mi <= DEP_ANNUAL_MILEAGE_MAX;
-            mi += DEP_ANNUAL_MILEAGE_STEP
-        ) {
-            options.push(mi);
-        }
-        return options;
-    }
-
-    function formatDepreciationAnnualMileageOption(miles) {
-        return (miles / 1000).toLocaleString("en-US") + "k mi/yr";
-    }
 
     function getSelectedDepreciationAnnualMileage(card) {
         const select = document.getElementById("dep-annual-mi-select");
@@ -1663,8 +1566,8 @@
             const parsed = parseInt(select.value, 10);
             if (Number.isFinite(parsed)) return parsed;
         }
-        const meta = parseDepreciationMetadata(card);
-        return snapDepreciationAnnualMileage(computeAnnualMileage(meta));
+        const meta = CP.parseDepreciationMetadata(card);
+        return CP.snapDepreciationAnnualMileage(CP.computeAnnualMileage(meta));
     }
 
     function initDepreciationAnnualMileageSelect(card) {
@@ -1672,13 +1575,13 @@
         if (!select) return;
 
         if (!select.options.length) {
-            const defaultMileage = snapDepreciationAnnualMileage(
-                computeAnnualMileage(parseDepreciationMetadata(card))
+            const defaultMileage = CP.snapDepreciationAnnualMileage(
+                CP.computeAnnualMileage(CP.parseDepreciationMetadata(card))
             );
-            buildDepreciationAnnualMileageOptions().forEach(function (mi) {
+            CP.buildDepreciationAnnualMileageOptions().forEach(function (mi) {
                 const opt = document.createElement("option");
                 opt.value = String(mi);
-                opt.textContent = formatDepreciationAnnualMileageOption(mi);
+                opt.textContent = CP.formatDepreciationAnnualMileageOption(mi);
                 if (mi === defaultMileage) opt.selected = true;
                 select.appendChild(opt);
             });
@@ -1691,66 +1594,9 @@
         });
     }
 
-    function computeDepreciationTargetResidual(meta, annualMileage) {
-        let targetResidual = 0.5;
 
-        const modelYear = parseInt(meta.year, 10);
-        const generationStartYear = parseInt(meta.genStart, 10);
-        const generationAge = Math.max(0, modelYear - generationStartYear);
-        if (generationAge >= 6) {
-            targetResidual -= 0.05;
-        }
 
-        const milesPerYear = Number(annualMileage);
-        if (milesPerYear < 7000) {
-            targetResidual += 0.08;
-        }
-        if (milesPerYear > 18000) {
-            targetResidual -= 0.10;
-        }
-        if (milesPerYear > 30000) {
-            targetResidual -= 0.18;
-        }
 
-        if (trimMatchesKeyword(meta.trim, DEP_COMPLEX_TRIM_KEYWORDS)) {
-            targetResidual -= 0.07;
-        } else if (trimMatchesKeyword(meta.trim, DEP_BASE_TRIM_KEYWORDS)) {
-            targetResidual += 0.03;
-        }
-
-        return Math.min(
-            DEP_RESIDUAL_CEILING,
-            Math.max(DEP_RESIDUAL_FLOOR, targetResidual)
-        );
-    }
-
-    function buildDepreciationTrajectory(price, targetResidual) {
-        const values = [];
-        for (let currentYearStep = 0; currentYearStep <= 5; currentYearStep += 1) {
-            values.push(
-                Math.round(price * Math.pow(targetResidual, currentYearStep / 5))
-            );
-        }
-        return values;
-    }
-
-    function formatDepreciationCurrency(amount) {
-        if (!Number.isFinite(amount)) return "$--";
-        return "$" + Math.round(amount).toLocaleString("en-US");
-    }
-
-    function formatDepreciationCurrencyShort(amount) {
-        if (!Number.isFinite(amount)) return "$--";
-        if (amount >= 1000) {
-            const thousands = amount / 1000;
-            const rounded =
-                thousands >= 100
-                    ? Math.round(thousands)
-                    : parseFloat(thousands.toFixed(thousands < 10 ? 1 : 0));
-            return "$" + rounded.toLocaleString("en-US") + "k";
-        }
-        return formatDepreciationCurrency(amount);
-    }
 
     function setupDepreciationCanvas(canvas) {
         const frame = canvas.closest(".depreciation-chart-frame");
@@ -1789,21 +1635,21 @@
             return;
         }
 
-        const meta = parseDepreciationMetadata(card);
+        const meta = CP.parseDepreciationMetadata(card);
         const annualMileage = getSelectedDepreciationAnnualMileage(card);
-        const mileageSteps = buildDepreciationMileageSteps(meta.mileage, annualMileage);
-        const targetResidual = computeDepreciationTargetResidual(meta, annualMileage);
-        const values = buildDepreciationTrajectory(meta.price, targetResidual);
+        const mileageSteps = CP.buildDepreciationMileageSteps(meta.mileage, annualMileage);
+        const targetResidual = CP.computeDepreciationTargetResidual(meta, annualMileage);
+        const values = CP.buildDepreciationTrajectory(meta.price, targetResidual);
         const price = meta.price;
 
         const y1MiEl = document.getElementById("dep-y1-mi");
         const y5MiEl = document.getElementById("dep-y5-mi");
         const y1El = document.getElementById("dep-y1");
         const y5El = document.getElementById("dep-y5");
-        if (y1MiEl) y1MiEl.textContent = formatDepreciationMileage(mileageSteps[1]);
-        if (y5MiEl) y5MiEl.textContent = formatDepreciationMileage(mileageSteps[5]);
-        if (y1El) y1El.textContent = formatDepreciationCurrency(values[1]);
-        if (y5El) y5El.textContent = formatDepreciationCurrency(values[5]);
+        if (y1MiEl) y1MiEl.textContent = CP.formatDepreciationMileage(mileageSteps[1]);
+        if (y5MiEl) y5MiEl.textContent = CP.formatDepreciationMileage(mileageSteps[5]);
+        if (y1El) y1El.textContent = CP.formatDepreciationCurrency(values[1]);
+        if (y5El) y5El.textContent = CP.formatDepreciationCurrency(values[5]);
 
         const ctx = surface.ctx;
         const cssWidth = surface.cssWidth;
@@ -1846,7 +1692,7 @@
         for (let g = 0; g <= 3; g += 1) {
             const tickVal = minVal + (valSpan * (3 - g)) / 3;
             const gy = pad.top + (chartH * g) / 3;
-            ctx.fillText(formatDepreciationCurrencyShort(tickVal), pad.left - 6, gy);
+            ctx.fillText(CP.formatDepreciationCurrencyShort(tickVal), pad.left - 6, gy);
         }
 
         const yearLabels = ["Now", "Yr 1", "Yr 2", "Yr 3", "Yr 4", "Yr 5"];
@@ -1898,21 +1744,21 @@
             ctx.fillText(yearLabels[i], x, chartBottom + 6);
             ctx.fillStyle = mileageColor;
             ctx.font = "500 10px system-ui, -apple-system, BlinkMacSystemFont, sans-serif";
-            ctx.fillText(formatDepreciationMileage(mileageSteps[i]), x, chartBottom + 20);
+            ctx.fillText(CP.formatDepreciationMileage(mileageSteps[i]), x, chartBottom + 20);
         }
 
         canvas.setAttribute(
             "aria-label",
             "Estimated future value from " +
-                formatDepreciationCurrency(values[0]) +
+                CP.formatDepreciationCurrency(values[0]) +
                 " now at " +
-                formatDepreciationMileage(mileageSteps[0]) +
+                CP.formatDepreciationMileage(mileageSteps[0]) +
                 " to " +
-                formatDepreciationCurrency(values[5]) +
+                CP.formatDepreciationCurrency(values[5]) +
                 " in year five at " +
-                formatDepreciationMileage(mileageSteps[5]) +
+                CP.formatDepreciationMileage(mileageSteps[5]) +
                 ", assuming " +
-                formatDepreciationMileage(annualMileage) +
+                CP.formatDepreciationMileage(annualMileage) +
                 " per year"
         );
     }
@@ -1940,21 +1786,6 @@
         });
     }
 
-    function evBatteryThermalScaleFactor(makeRaw) {
-        const make = String(makeRaw || "").trim().toLowerCase();
-        if (make === "nissan" || make === "fiat") {
-            return 1.4;
-        }
-        if (
-            make === "tesla" ||
-            make === "hyundai" ||
-            make === "kia" ||
-            make === "porsche"
-        ) {
-            return 0.85;
-        }
-        return 1.0;
-    }
 
     function initEvBatteryIntelligence() {
         const block = document.getElementById("ev-battery-intelligence-block");
@@ -2006,7 +1837,7 @@
         }
 
         const basePenalty = agePenalty + mileagePenalty;
-        const thermalScale = evBatteryThermalScaleFactor(carMake);
+        const thermalScale = CP.evBatteryThermalScaleFactor(carMake);
         const scaledPenalty = basePenalty * thermalScale;
 
         let soh = 100 - scaledPenalty;
@@ -2037,38 +1868,16 @@
         });
     }
 
-    function parseDealerRating(raw) {
-        if (raw == null || String(raw).trim() === "") return null;
-        const n = parseFloat(String(raw));
-        if (!Number.isFinite(n) || n < 0 || n > 5) return null;
-        return n;
-    }
 
-    function parseDealerReviewCount(raw) {
-        if (raw == null || String(raw).trim() === "") return null;
-        const n = parseInt(String(raw), 10);
-        if (!Number.isFinite(n) || n < 0) return null;
-        return n;
-    }
 
-    function buildReputationStars(rating) {
-        const rounded = Math.round(Math.max(0, Math.min(5, rating)));
-        return "\u2605".repeat(rounded) + "\u2606".repeat(5 - rounded);
-    }
 
-    function formatReviewCount(count) {
-        if (count == null) return "";
-        const n = count;
-        const formatted = n.toLocaleString("en-US");
-        return "(" + formatted + " Google review" + (n === 1 ? "" : "s") + ")";
-    }
 
     function initDealerReputation() {
         const block = document.getElementById("dealer-reputation-block");
         if (!block) return;
 
-        const rating = parseDealerRating(block.getAttribute("data-dealer-rating"));
-        const reviewCount = parseDealerReviewCount(block.getAttribute("data-dealer-reviews"));
+        const rating = CP.parseDealerRating(block.getAttribute("data-dealer-rating"));
+        const reviewCount = CP.parseDealerReviewCount(block.getAttribute("data-dealer-reviews"));
 
         if (rating == null) {
             block.hidden = true;
@@ -2081,13 +1890,13 @@
         const badgesEl = document.getElementById("dealer-trust-badges");
 
         if (starsEl) {
-            starsEl.textContent = buildReputationStars(rating);
+            starsEl.textContent = CP.buildReputationStars(rating);
             starsEl.setAttribute("aria-label", rating.toFixed(1) + " out of 5 stars");
             starsEl.removeAttribute("aria-hidden");
         }
 
         if (countEl) {
-            countEl.textContent = reviewCount != null ? formatReviewCount(reviewCount) : "";
+            countEl.textContent = reviewCount != null ? CP.formatReviewCount(reviewCount) : "";
         }
 
         if (badgesEl) {
@@ -2120,21 +1929,7 @@
         }
     }
 
-    function hasPremiumHistoryAccess(access) {
-        if (!access) return false;
-        if (access.show_premium_features) return true;
-        if (access.has_paid_access) return true;
-        if (access.logged_in && !access.billing_stripe_enabled) return true;
-        return false;
-    }
 
-    function escHtml(s) {
-        return String(s)
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/"/g, "&quot;");
-    }
 
     function initVehicleHistoryActions() {
         const block = document.getElementById("vehicle-history-action-block");
@@ -2187,9 +1982,9 @@
                         '<li class="vehicle-history-flag ' +
                         sev +
                         '"><span class="vehicle-history-flag__label">' +
-                        escHtml(row.label || "Flag") +
+                        CP.escHtml(row.label || "Flag") +
                         '</span> <span class="vehicle-history-flag__value">' +
-                        escHtml(row.value || "") +
+                        CP.escHtml(row.value || "") +
                         "</span></li>";
                 });
                 html += "</ul>";
@@ -2199,8 +1994,8 @@
                 recalls.forEach(function (r) {
                     const head = [r.campaign, r.component].filter(Boolean).join(" — ");
                     html += "<li>";
-                    if (head) html += "<strong>" + escHtml(head) + "</strong> ";
-                    if (r.summary) html += escHtml(r.summary);
+                    if (head) html += "<strong>" + CP.escHtml(head) + "</strong> ";
+                    if (r.summary) html += CP.escHtml(r.summary);
                     html += "</li>";
                 });
                 html += "</ul></details>";
@@ -2225,7 +2020,7 @@
 
         btn.addEventListener("click", function () {
             hideUpsell();
-            if (!hasPremiumHistoryAccess(access)) {
+            if (!CP.hasPremiumHistoryAccess(access)) {
                 showUpsell();
                 return;
             }
@@ -2406,45 +2201,8 @@
         timelineEl.appendChild(list);
     }
 
-    const SEGMENT_BASELINE_DAYS = {
-        suv: 42,
-        sedan: 58,
-        truck: 35,
-        coupe: 72,
-        convertible: 85,
-    };
 
-    const BRAND_MODIFIER_DAYS = {
-        toyota: -10,
-        honda: -8,
-        tesla: -5,
-        ford: 2,
-        bmw: 12,
-        "land rover": 22,
-    };
 
-    const DEFAULT_SEGMENT_BASELINE = 45;
-    const STAGNATION_THRESHOLD_DAYS = 45;
-    const STAGNATION_PENALTY_DAYS = 15;
-
-    function normalizeSegmentKey(rawType) {
-        const t = String(rawType || "")
-            .trim()
-            .toLowerCase();
-        if (!t) return "sedan";
-        if (t.includes("suv") || t.includes("crossover") || t.includes("wagon")) return "suv";
-        if (t.includes("truck") || t.includes("pickup")) return "truck";
-        if (t.includes("convert")) return "convertible";
-        if (t.includes("coupe")) return "coupe";
-        if (t.includes("sedan") || t.includes("hatch")) return "sedan";
-        return t.split(/\s+/)[0] || "sedan";
-    }
-
-    function normalizeBrandKey(rawBrand) {
-        return String(rawBrand || "")
-            .trim()
-            .toLowerCase();
-    }
 
     function resolveDaysOnMarket(fallbackDays) {
         const daysEl = document.getElementById("days-count");
@@ -2455,19 +2213,6 @@
         return fallbackDays != null && Number.isFinite(fallbackDays) ? fallbackDays : null;
     }
 
-    function computePredictiveTurnaroundDays(segmentKey, brandKey, daysOnMarket) {
-        const baseline =
-            SEGMENT_BASELINE_DAYS[segmentKey] != null
-                ? SEGMENT_BASELINE_DAYS[segmentKey]
-                : DEFAULT_SEGMENT_BASELINE;
-        const brandMod =
-            BRAND_MODIFIER_DAYS[brandKey] != null ? BRAND_MODIFIER_DAYS[brandKey] : 0;
-        let projected = baseline + brandMod;
-        if (daysOnMarket != null && daysOnMarket > STAGNATION_THRESHOLD_DAYS) {
-            projected += STAGNATION_PENALTY_DAYS;
-        }
-        return Math.max(1, Math.round(projected));
-    }
 
     function mapVelocityMarker(projectedDays) {
         const marker = document.getElementById("velocity-marker");
@@ -2500,10 +2245,10 @@
         const card = document.getElementById("market-velocity-card");
         if (!card) return;
 
-        const segmentKey = normalizeSegmentKey(card.getAttribute("data-car-type"));
-        const brandKey = normalizeBrandKey(card.getAttribute("data-car-brand"));
+        const segmentKey = CP.normalizeSegmentKey(card.getAttribute("data-car-type"));
+        const brandKey = CP.normalizeBrandKey(card.getAttribute("data-car-brand"));
         const daysOnMarket = resolveDaysOnMarket(daysOnMarketFromRadar);
-        const projectedDays = computePredictiveTurnaroundDays(
+        const projectedDays = CP.computePredictiveTurnaroundDays(
             segmentKey,
             brandKey,
             daysOnMarket
@@ -2543,6 +2288,16 @@
                     p.removeAttribute("hidden");
                 } else {
                     p.setAttribute("hidden", "");
+                }
+                if (!on) return;
+                // Both of these need the panel to be visible first: Leaflet measures its
+                // container on resize, and comment threads load lazily on reveal so a
+                // shopper who never opens the tab never pays for the request.
+                if (target === "dealership" && window.__DS_resizeDealerMap) {
+                    window.__DS_resizeDealerMap();
+                }
+                if (window.__DS_loadCommentsIn) {
+                    window.__DS_loadCommentsIn(p);
                 }
             });
             if (pushHash && target && target !== "overview") {

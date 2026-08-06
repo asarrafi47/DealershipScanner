@@ -1,0 +1,31 @@
+{# The stylesheet partials that style.css used to pull in with @import.
+
+   @import serialises stylesheet discovery: the browser cannot even learn a partial
+   exists until style.css has been fetched AND parsed, and every one of these is
+   render-blocking. Measured on the car page with a warm HTTP cache at 12 Mbit/s /
+   40ms RTT: style.css occupied 469-511ms, then all 14 partials ran 511-697ms
+   (PerformanceResourceTiming initiatorType "css"), and first contentful paint
+   landed at 712ms. The document itself had arrived in 1ms.
+
+   Emitting them as sibling <link> tags lets the preload scanner start all of them
+   with the document instead of a round trip later.
+
+   ORDER IS THE CASCADE. This matches style.css's @import order exactly, which was
+   itself the order the rules appeared in before the split. Do NOT reorder these.
+   14-vdp-uniform.css stays last on purpose -- it normalises the car detail page's
+   card surfaces and heading scale over the per-section rules above it. #}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/00-base.css') }}?v={{ static_cache_ver }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/01-nav.css') }}?v={{ static_cache_ver }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/02-listings.css') }}?v={{ static_cache_ver }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/03-car-page.css') }}?v={{ static_cache_ver }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/04-dashboard.css') }}?v={{ static_cache_ver }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/05-car-tools.css') }}?v={{ static_cache_ver }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/06-dev.css') }}?v={{ static_cache_ver }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/07-dealer-admin.css') }}?v={{ static_cache_ver }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/08-marketing.css') }}?v={{ static_cache_ver }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/09-components.css') }}?v={{ static_cache_ver }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/10-pages.css') }}?v={{ static_cache_ver }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/11-overrides.css') }}?v={{ static_cache_ver }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/12-viewers.css') }}?v={{ static_cache_ver }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/13-landing-auth.css') }}?v={{ static_cache_ver }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/14-vdp-uniform.css') }}?v={{ static_cache_ver }}">

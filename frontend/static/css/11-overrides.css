@@ -1,0 +1,592 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   Responsive system — mobile / tablet polish across app surfaces
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@media (max-width: 1024px) {
+    .topbar {
+        padding: 16px clamp(16px, 3vw, 32px);
+    }
+
+    .car-detail {
+        padding-left: clamp(16px, 3vw, 32px);
+        padding-right: clamp(16px, 3vw, 32px);
+    }
+
+    .premium-page {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    .premium-compare {
+        display: block;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .premium-compare table {
+        min-width: 520px;
+    }
+}
+
+@media (max-width: 768px) {
+    /* App + marketing nav: logo + account on one row; links scroll horizontally */
+    .topbar--app,
+    .topbar--marketing,
+    .topbar--public {
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 10px 12px;
+        padding: 12px 16px;
+    }
+
+    .topbar--app .logo,
+    .topbar--marketing .logo,
+    .topbar--public .logo {
+        margin-right: auto;
+    }
+
+    .nav-search {
+        order: 2;
+        flex: 1 1 100%;
+        max-width: none;
+    }
+
+    .topbar--app .nav-links--account,
+    .topbar--marketing .nav-links--account,
+    .topbar--public .nav-links--account {
+        flex-shrink: 0;
+        gap: 10px;
+    }
+
+    .topbar--app .nav-app-user__name,
+    .nav-app-user__name {
+        display: none;
+    }
+
+    .topbar--app .nav-links--site,
+    .topbar--marketing .nav-links--site,
+    .topbar--public .nav-links--site {
+        order: 3;
+        flex: 1 1 100%;
+        width: 100%;
+        min-width: 0;
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+        gap: 4px;
+        overflow-x: auto;
+        overflow-y: hidden;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        padding-bottom: 2px;
+        mask-image: linear-gradient(90deg, transparent, #000 6px, #000 calc(100% - 12px), transparent);
+    }
+
+    .topbar--app .nav-links--site::-webkit-scrollbar,
+    .topbar--marketing .nav-links--site::-webkit-scrollbar {
+        display: none;
+    }
+
+    .nav-app-link,
+    .nav-mkt-link {
+        flex-shrink: 0;
+        min-height: 44px;
+        padding: 10px 12px;
+        font-size: 13px;
+    }
+
+    .nav-link-cta {
+        min-height: 44px;
+        padding: 10px 14px;
+    }
+
+    .guest-banner-content {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .listings-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .listings-toolbar__start,
+    .listings-toolbar__end {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .listings-sort-select {
+        min-width: 0;
+        flex: 1;
+    }
+
+    body.listings-page .filter-controls-row.filter-grid,
+    body.listings-page .filter-basics-row.filter-grid {
+        grid-template-columns: 1fr;
+    }
+
+    body.listings-page .filter-controls-row .pill-group.pill-select-group {
+        grid-column: span 1;
+    }
+
+    .listings-pagination {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .db-hero {
+        padding: 24px 16px;
+    }
+
+    .db-layout {
+        padding: 20px 16px 64px;
+        gap: 36px;
+    }
+
+    .hub-topbar {
+        padding: 20px 16px 0;
+    }
+
+    .hub-main {
+        padding: 20px 16px 56px;
+        grid-template-columns: 1fr;
+    }
+
+    .find-dealers-section {
+        padding: 20px 16px 40px;
+    }
+
+    .find-dealers-input,
+    .find-dealers-select {
+        max-width: none;
+    }
+
+    .find-dealers-form {
+        padding: 16px;
+    }
+
+    .auth-section {
+        padding: 32px 16px 48px;
+    }
+
+    .auth-card {
+        width: 100%;
+        max-width: none;
+    }
+
+    .compare-table-wrap {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
+@media (max-width: 600px) {
+    .results-grid,
+    body.listings-page .results-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .saved-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .reco-card {
+        flex: 0 0 min(85vw, 280px);
+    }
+
+    .dash-hub-stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .dash-hub-actions {
+        grid-template-columns: 1fr;
+    }
+
+    .listings-results-head {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .listings-active-chips-wrap {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .listings-chips-clear {
+        align-self: flex-start;
+    }
+
+    .car-detail-price-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .car-vdp-tabs {
+        gap: 4px;
+        padding: 4px;
+    }
+
+    .car-vdp-tab {
+        padding: 8px 12px;
+        font-size: 13px;
+    }
+
+    .car-quick-specs {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .lp-container {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    .lp-hero {
+        padding: 40px 0 32px;
+    }
+
+    .primary-button,
+    .secondary-button {
+        padding: 12px 18px;
+    }
+
+    h1 {
+        font-size: clamp(1.75rem, 8vw, 2.5rem);
+    }
+}
+
+@media (max-width: 480px) {
+    .nav-links a.nav-link-cta {
+        min-height: 44px;
+        padding: 10px 14px;
+        font-size: 13px;
+    }
+
+    .listings-hero-band__head .listings-intro-heading {
+        font-size: 26px;
+    }
+
+    body.listings-page .smart-search-input--hero {
+        min-height: 48px;
+        font-size: 16px;
+    }
+
+    .find-dealers-location-modes {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .find-dealers-map {
+        height: min(50vh, 320px);
+    }
+
+    .find-dealers-list-wrap {
+        max-height: 280px;
+    }
+
+    .car-quick-specs {
+        grid-template-columns: 1fr;
+    }
+
+    .car-gallery-arrow {
+        width: 40px;
+        height: 40px;
+    }
+
+    .db-hero__actions {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .db-hero__actions .primary-button,
+    .db-hero__actions .secondary-button {
+        width: 100%;
+        justify-content: center;
+        text-align: center;
+    }
+}
+
+@media (max-width: 960px) {
+    body.listings-page .listings-layout {
+        padding: 12px 16px calc(24px + env(safe-area-inset-bottom, 0px));
+    }
+
+    body.listings-page .listings-main-column {
+        min-height: 0;
+    }
+}
+
+/* Respect reduced motion for layout transitions */
+@media (prefers-reduced-motion: reduce) {
+    .listings-sidebar,
+    .listings-filter-backdrop {
+        transition: none;
+    }
+}
+
+/* ── VDP back navigation (car detail + compare; isolated from .back-link) ── */
+.vdp-back {
+    display: inline-flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.4rem;
+    margin: 0 0 clamp(1rem, 2.5vw, 1.5rem);
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    box-shadow: none;
+    color: var(--text-muted);
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    text-decoration: none;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    white-space: nowrap;
+    transition: color 0.15s ease;
+}
+
+.vdp-back:hover {
+    color: var(--navy);
+}
+
+.vdp-back:hover .vdp-back__label {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.vdp-back .sc-icon {
+    display: block;
+    flex-shrink: 0;
+    color: var(--navy);
+    opacity: 0.8;
+    transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.vdp-back:hover .sc-icon {
+    opacity: 1;
+    transform: translateX(-2px);
+}
+
+.vdp-back__label {
+    display: inline;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .vdp-back:hover .sc-icon {
+        transform: none;
+    }
+}
+
+.scan-lab-vdp-banner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1.25rem;
+    margin: 0 0 1rem;
+    padding: 0.65rem 1rem;
+    border-radius: 8px;
+    background: #1a2332;
+    color: #e8eef7;
+    font-size: 0.9rem;
+}
+
+.scan-lab-vdp-banner a {
+    color: #9ec5ff;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.scan-lab-vdp-banner a:hover {
+    text-decoration: underline;
+}
+
+.scan-lab-vdp-banner-user {
+    margin-left: auto;
+    opacity: 0.85;
+}
+
+/* Listings sidebar form controls — final vertical alignment (overrides cascade conflicts) */
+body.listings-page .listings-filter-inner input.smart-search-input--carmax {
+    min-height: 48px;
+    height: auto;
+    padding: 14px 16px;
+    line-height: 1.25;
+    font-size: 15px;
+    border-radius: 10px;
+    box-sizing: border-box;
+    box-shadow: none;
+    background: var(--bg-card);
+    border: 1px solid var(--border-medium);
+}
+
+body.listings-page .listings-filter-inner input.smart-search-input--carmax:focus {
+    line-height: 1.25;
+    box-shadow: 0 0 0 3px rgba(28, 53, 82, 0.12);
+}
+
+body.listings-page .listings-filter-inner .pill-zip,
+body.listings-page .listings-filter-inner .pill-select {
+    min-height: 44px;
+    height: 44px;
+    width: 100%;
+    font-size: 14px;
+    line-height: 20px;
+    border-radius: 8px;
+    box-sizing: border-box;
+    padding: 12px 36px 12px 14px;
+    background-position: right 12px center;
+}
+
+body.listings-page .listings-filter-inner .pill-zip {
+    padding: 12px 14px;
+    line-height: 20px;
+}
+
+body.listings-page .listings-filter-inner .listings-dealer-picker-btn {
+    min-height: 44px;
+    height: 44px;
+    padding: 0 14px;
+    border-radius: 8px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    box-shadow: none;
+}
+
+body.listings-page .listings-filter-inner .listings-dealer-picker-btn-label {
+    line-height: 1.25;
+}
+
+body.listings-page .listings-filter-inner .listings-acc-trigger {
+    min-height: 44px;
+    padding: 12px 16px;
+    box-sizing: border-box;
+    align-items: center;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Premium page (premium.html)
+   Moved from the template's inline <style> block. Includes the in-app
+   WebView embed mode (?embed=1 → body.premium-embed): no site nav,
+   tighter single-column layout. Keep the body.premium-embed rules — the
+   embed WebView depends on them.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.premium-page { max-width: 960px; margin: 0 auto; padding: 0 24px 80px; }
+.premium-hero { text-align: center; padding: 72px 0 56px; }
+/* In-app WebView (?embed=1): no site nav, tighter layout */
+body.premium-embed { background: var(--bg-page); }
+body.premium-embed .topbar { display: none !important; }
+body.premium-embed .premium-page { padding: 0 16px 32px; max-width: 100%; }
+body.premium-embed .premium-hero { padding: 8px 0 20px; }
+body.premium-embed .premium-hero h1 { font-size: 24px; margin-bottom: 10px; }
+body.premium-embed .premium-hero p { font-size: 15px; margin-bottom: 20px; }
+body.premium-embed .premium-features { grid-template-columns: 1fr; gap: 10px; margin-top: 0; }
+body.premium-embed .premium-feature-card { padding: 14px 16px; }
+body.premium-embed .premium-feature-card h3 { font-size: 15px; }
+body.premium-embed .premium-feature-card p { font-size: 13px; line-height: 1.45; }
+body.premium-embed .premium-divider,
+body.premium-embed .premium-section-header,
+body.premium-embed .premium-compare,
+body.premium-embed .premium-welcome { display: none !important; }
+body.premium-embed .premium-cta-row .secondary-button { display: none; }
+body.premium-embed .premium-price-note { margin-top: 8px; font-size: 12px; }
+.premium-hero .eyebrow { margin-bottom: 14px; }
+.premium-hero h1 { font-size: clamp(28px, 5vw, 48px); font-weight: 700; letter-spacing: -0.02em; line-height: 1.1; margin: 0 0 16px; color: var(--text-primary); }
+.premium-hero p { font-size: 17px; color: var(--text-secondary); max-width: 540px; margin: 0 auto 36px; line-height: 1.65; }
+.premium-cta-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.premium-price-note { font-size: 13px; color: var(--text-muted); margin-top: 14px; }
+.premium-welcome {
+    background: linear-gradient(135deg, rgba(28, 53, 82, 0.08) 0%, rgba(28, 53, 82, 0.03) 100%);
+    border: 1px solid var(--border-light);
+    border-radius: 16px;
+    padding: 24px 28px;
+    margin: 0 0 40px;
+    text-align: center;
+}
+.premium-welcome h2 { font-size: 22px; font-weight: 700; margin: 0 0 10px; color: var(--text-primary); }
+.premium-welcome p { font-size: 15px; color: var(--text-secondary); margin: 0 auto 18px; max-width: 560px; line-height: 1.6; }
+.premium-welcome-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+.premium-features { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; margin-top: 8px; }
+.premium-feature-card {
+    background: var(--surface-card);
+    border: 1px solid var(--border-light);
+    border-radius: 14px;
+    padding: 28px 24px;
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+.premium-feature-card:hover { border-color: var(--accent); box-shadow: 0 4px 20px rgba(0,0,0,0.07); }
+.premium-feature-icon { display: flex; align-items: center; justify-content: flex-start; width: 40px; height: 40px; margin-bottom: 14px; color: var(--navy); }
+.premium-feature-icon .sc-icon { width: 32px; height: 32px; stroke-width: 1.5; }
+.premium-compare .icon-check-wrap { display: inline-flex; color: #22c55e; }
+.premium-compare .icon-dash { color: var(--text-faint); font-size: 18px; line-height: 1; }
+.premium-feature-card h3 { font-size: 16px; font-weight: 600; margin: 0 0 8px; color: var(--text-primary); }
+.premium-feature-card p { font-size: 14px; color: var(--text-secondary); margin: 0; line-height: 1.6; }
+.premium-feature-badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: var(--accent);
+    color: #fff;
+    border-radius: 4px;
+    padding: 2px 6px;
+    margin-top: 10px;
+}
+.premium-feature-badge--soon { background: var(--text-muted); }
+
+.premium-divider { border: none; border-top: 1px solid var(--border-light); margin: 56px 0; }
+.premium-section-header { text-align: center; margin-bottom: 32px; }
+.premium-section-header h2 { font-size: 24px; font-weight: 700; margin: 0 0 8px; color: var(--text-primary); }
+.premium-section-header p { font-size: 15px; color: var(--text-secondary); margin: 0; }
+
+.premium-compare { width: 100%; border-collapse: collapse; border-radius: 12px; overflow: hidden; border: 1px solid var(--border-light); }
+.premium-compare th, .premium-compare td { padding: 14px 20px; text-align: left; font-size: 14px; border-bottom: 1px solid var(--border-light); }
+.premium-compare th { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); background: var(--surface-raised); }
+.premium-compare tr:last-child td { border-bottom: none; }
+.premium-compare .col-free { text-align: center; }
+.premium-compare .col-premium { text-align: center; color: var(--accent); font-weight: 600; }
+
+.premium-plans { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-top: 8px; }
+.premium-plan-card {
+    background: var(--surface-card);
+    border: 1px solid var(--border-light);
+    border-radius: 16px;
+    padding: 28px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+.premium-plan-card--highlight { border-color: var(--accent); box-shadow: 0 8px 28px rgba(0,0,0,0.08); }
+.premium-plan-card__badge {
+    align-self: flex-start;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: var(--accent);
+    color: #fff;
+    border-radius: 4px;
+    padding: 3px 8px;
+}
+.premium-plan-card h3 { font-size: 20px; font-weight: 700; margin: 0; color: var(--text-primary); }
+.premium-plan-price { font-size: 32px; font-weight: 700; color: var(--text-primary); line-height: 1; }
+.premium-plan-price span { font-size: 14px; font-weight: 500; color: var(--text-muted); }
+.premium-plan-desc { font-size: 14px; color: var(--text-secondary); margin: 0; line-height: 1.55; }
+.premium-plan-features { list-style: none; margin: 0; padding: 0; font-size: 13px; color: var(--text-secondary); }
+.premium-plan-features li { padding: 4px 0 4px 20px; position: relative; }
+.premium-plan-features li::before { content: "✓"; position: absolute; left: 0; color: #22c55e; font-weight: 700; }
+.premium-plan-cta { margin-top: auto; }
+.premium-plan-current { font-size: 13px; color: var(--accent); font-weight: 600; }
+body.premium-embed .premium-plans { grid-template-columns: 1fr; }
+

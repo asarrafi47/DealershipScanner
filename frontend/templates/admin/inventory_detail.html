@@ -8,10 +8,10 @@
         <h1 class="db-section-title">{{ car.title or (car.year ~ ' ' ~ car.make ~ ' ' ~ car.model) }}</h1>
         <p class="admin-lead">
             <a href="{{ url_for('car_detail', car_id=car.id) }}" target="_blank" rel="noopener noreferrer">Public listing</a>
-            {% if car.source_url %}
-            · <a href="{{ car.source_url }}" target="_blank" rel="noopener noreferrer">Dealer VDP</a>
-            {% elif car.dealer_url %}
-            · <a href="{{ car.dealer_url }}" target="_blank" rel="noopener noreferrer">Dealer site</a>
+            {% if car.source_url | http_url %}
+            · <a href="{{ car.source_url | http_url }}" target="_blank" rel="noopener noreferrer">Dealer VDP</a>
+            {% elif car.dealer_url | http_url %}
+            · <a href="{{ car.dealer_url | http_url }}" target="_blank" rel="noopener noreferrer">Dealer site</a>
             {% endif %}
         </p>
     </div>

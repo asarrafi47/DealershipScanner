@@ -5,33 +5,70 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Search inventory — Sarrafi Cars</title>
     <meta name="csrf-token" content="{{ csrf_token }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v={{ static_cache_ver }}">
+    {% include "_head_css.html" %}
     {% include "_head_perf.html" %}
-    <link rel="preload" href="{{ url_for('api_listings_cars') }}" as="fetch" crossorigin="same-origin">
     <link rel="preload" href="{{ url_for('api_listings_geo_coords') }}" as="fetch" crossorigin="same-origin">
     <link rel="preload" href="{{ url_for('static', filename='compare.js') }}?v={{ static_cache_ver }}" as="script">
     <script nonce="{{ csp_nonce }}">
     (function () {
-        if (window.__DS_warmListingsApis) {
-            window.__DS_warmListingsApis();
-            return;
+        // This used to hand the fetch to nav_perf.js's __DS_warmListingsApis when that
+        // happened to be defined, which fired it immediately from <head> -- exactly the
+        // head-of-line blocking the note below exists to prevent. nav_perf.js is
+        // deferred so it never actually won that race, and it no longer speculatively
+        // fetches inventory at all. This page owns the fetch; there is one path now.
+        //
+        // /api/listings/cars is the whole active inventory (~8 MB gzipped, ~65 MB
+        // decoded). Preloading it from <head> made it compete with CSS, JS and the
+        // card images for bandwidth, so first paint waited on a payload the first
+        // screen never needs: the grid renders from BOOTSTRAP_GRID_CARS (48
+        // server-rendered cars) and every render path in main.js already falls back
+        // to it. Defer the full fetch to idle time -- ALL_CARS then upgrades
+        // filtering, facet counts and radius search in the background.
+        //
+        // The promise is published synchronously so main.js chains onto it instead
+        // of firing its own immediate fetch (see the __DS_listingsCarsPrefetchPromise
+        // branch there); dropping it would reintroduce the head-of-line blocking.
+        function fetchAllCars() {
+            // priority "low" so this 9.4 MB body yields to anything the shopper is
+            // actually waiting on. Measured at 12 Mbit/s: clicking a result card while
+            // this was in flight cost 312ms median and up to 727ms, against 221ms on a
+            // quiet connection. It saturates the link for ~6s, and a navigation started
+            // in that window used to queue behind it.
+            return fetch("/api/listings/cars", { credentials: "same-origin", priority: "low" })
+                .then(function (r) {
+                    if (r.headers.get("ETag")) window.__DS_listingsCarsEtag = r.headers.get("ETag");
+                    return r.ok ? r.json() : null;
+                })
+                .then(function (d) {
+                    if (d && d.ok && Array.isArray(d.cars)) window.__DS_prefetchCars = d.cars;
+                    return d;
+                })
+                .catch(function () { return null; });
         }
-        fetch("/api/listings/cars", { credentials: "same-origin" })
-            .then(function (r) {
-                if (r.headers.get("ETag")) window.__DS_listingsCarsEtag = r.headers.get("ETag");
-                return r.ok ? r.json() : null;
-            })
-            .then(function (d) {
-                if (d && d.ok && Array.isArray(d.cars)) window.__DS_prefetchCars = d.cars;
-            })
-            .catch(function () {});
+        window.__DS_listingsCarsPrefetchPromise = new Promise(function (resolve) {
+            function go() { resolve(fetchAllCars()); }
+            // Schedule off DOMContentLoaded, not load: `load` waits on all 24 card
+            // images (remote dealer CDNs), which would leave the grid stuck on the
+            // 48 bootstrap cars for seconds -- filters applied in that window would
+            // silently search only those 48. Idle-with-timeout keeps the fetch off
+            // the first-paint critical path while still starting it promptly.
+            function schedule() {
+                if (window.requestIdleCallback) window.requestIdleCallback(go, { timeout: 1500 });
+                else setTimeout(go, 150);
+            }
+            if (document.readyState !== "loading") schedule();
+            else document.addEventListener("DOMContentLoaded", schedule, { once: true });
+        });
+        // Small payload and needed the moment a ZIP is set -- keep this one early.
         fetch("/api/listings/geo-coords", { credentials: "same-origin" }).catch(function () {});
     })();
     </script>
 </head>
 <body class="listings-page" data-listings-poll-ms="{{ listings_poll_ms | default(0) | int }}"{% if logged_in_user %} data-logged-in="1"{% endif %}>
 
-<script type="application/json" id="ds-listings-car-rows" nonce="{{ csp_nonce }}">{{ options.car_rows | tojson }}</script>
+{# Dictionary-encoded cascade table (see backend/listings/routes.py::pack_car_rows).
+   main.js unpacks it into the same row objects the cascade always consumed. #}
+<script type="application/json" id="ds-listings-car-rows" nonce="{{ csp_nonce }}">{{ car_rows_packed | tojson }}</script>
 <script type="application/json" id="ds-listings-all-cars" nonce="{{ csp_nonce }}">[]</script>
 <script type="application/json" id="ds-listings-country-to-makes" nonce="{{ csp_nonce }}">{{ options.country_to_makes | tojson }}</script>
 <script type="application/json" id="ds-listings-zip-coords" nonce="{{ csp_nonce }}">{{ (listings_zip_coords_boot if listings_zip_coords_boot is defined else {}) | tojson }}</script>
@@ -215,12 +252,16 @@
                 </div>
                 {% endcall %}
 
+                {# Model/Trim are ~7,300 rows; rendering them here cost ~5 MB of
+                   uncompressed HTML and delayed main.js by seconds. Only the
+                   options the URL has checked are server-rendered (so filtering
+                   is correct on the very first frame); main.js fills in the rest
+                   from /api/listings/filter-options — see hydrateLazyFacet(). #}
                 {% call acc("Model", "model") %}
-                <div class="acc-options" id="options-model">
-                    {% for make, model in options.model_rows %}
+                <div class="acc-options" id="options-model" data-lazy-facet="model">
+                    {% for make, model in options.model_rows if active is defined and model in active.get('model', []) %}
                     <label class="filter-option" data-make="{{ make }}">
-                        <input type="checkbox" name="model" value="{{ model }}" data-make="{{ make }}"
-                            {% if active is defined and model in active.get('model', []) %}checked{% endif %}>
+                        <input type="checkbox" name="model" value="{{ model }}" data-make="{{ make }}" checked>
                         <span>{{ model }}</span>
                     </label>
                     {% endfor %}
@@ -228,11 +269,10 @@
                 {% endcall %}
 
                 {% call acc("Trim", "trim") %}
-                <div class="acc-options" id="options-trim">
-                    {% for make, model, trim in options.trim_rows %}
+                <div class="acc-options" id="options-trim" data-lazy-facet="trim">
+                    {% for make, model, trim in options.trim_rows if active is defined and (trim or '') in active.get('trim', []) %}
                     <label class="filter-option" data-make="{{ make }}" data-model="{{ model }}">
-                        <input type="checkbox" name="trim" value="{{ trim or '' }}" data-make="{{ make }}" data-model="{{ model }}"
-                            {% if active is defined and (trim or '') in active.get('trim', []) %}checked{% endif %}>
+                        <input type="checkbox" name="trim" value="{{ trim or '' }}" data-make="{{ make }}" data-model="{{ model }}" checked>
                         <span>{{ trim or '—' }}</span>
                     </label>
                     {% endfor %}
@@ -344,10 +384,10 @@
                 {% if options.all_package_names %}
                 <p class="listings-filter-group-label">Options</p>
                 {% call acc("Packages", "package") %}
-                <div class="acc-options" id="options-package">
-                    {% for name in options.all_package_names %}
+                <div class="acc-options" id="options-package" data-lazy-facet="package">
+                    {% for name in options.all_package_names if active is defined and name in active.get('package', []) %}
                     <label class="filter-option">
-                        <input type="checkbox" name="package" value="{{ name }}">
+                        <input type="checkbox" name="package" value="{{ name }}" checked>
                         <span>{{ name }}</span>
                     </label>
                     {% endfor %}
@@ -444,243 +484,12 @@
             </main>
             </div>
 
-            {# DOCKED MODE: vertical accordion (legacy duplicate; hidden on listings) #}
-            <div class="filter-docked-inner" id="filter-docked-inner">
-
-                <div class="docked-header">
-                    <span class="docked-title">Filters</span>
-                    <span class="docked-count" id="docked-total" style="display:none"></span>
-                </div>
-
-                <div class="docked-body">
-                    {% macro acc(label, param) %}
-                    <div class="acc-section" data-param="{{ param }}">
-                        <button type="button" class="acc-trigger" id="acc-trigger-{{ param }}">
-                            <span class="acc-label" id="acc-label-{{ param }}">{{ label }}</span>
-                            <div class="acc-right">
-                                <span class="acc-count" id="acc-count-{{ param }}" style="display:none"></span>
-                                <svg class="acc-chevron" viewBox="0 0 10 6" width="9">
-                                    <path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-                                </svg>
-                            </div>
-                        </button>
-                        <div class="acc-body" id="acc-body-{{ param }}">
-                            {{ caller() }}
-                        </div>
-                    </div>
-                    {% endmacro %}
-
-                    <div class="acc-plain-group sidebar-location-group">
-                        <div class="acc-plain-label">Zip Code</div>
-                        <input type="text" name="zip_code" placeholder="e.g. 28202" maxlength="5"
-                            value="{{ active.zip_code if active else '' }}" class="sidebar-input">
-                    </div>
-                    <div class="acc-plain-group sidebar-location-group">
-                        <div class="acc-plain-label">Radius</div>
-                        <select name="radius" class="sidebar-select">
-                            {% for r in [10, 25, 50, 100, 200, 500] %}
-                            <option value="{{ r }}" {% if active and active.radius == r|string %}selected{% elif (not active or not active.radius) and r == 25 %}selected{% endif %}>{{ r }} miles</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-
-                    {% call acc("Country", "country") %}
-                    <div class="acc-options" id="acc-options-country">
-                        {% for country in options.countries %}
-                        <label class="filter-option">
-                            <input type="checkbox" name="country" value="{{ country }}"
-                                {% if active is defined and country in active.get('country', []) %}checked{% endif %}>
-                            <span>{{ country }}</span>
-                        </label>
-                        {% endfor %}
-                    </div>
-                    {% endcall %}
-
-                    {% call acc("Make", "make") %}
-                    <div class="acc-options" id="acc-options-make">
-                        {% for make in options.makes %}
-                        <label class="filter-option">
-                            <input type="checkbox" name="make" value="{{ make }}"
-                                {% if active is defined and make in active.get('make', []) %}checked{% endif %}>
-                            <span>{{ make }}</span>
-                        </label>
-                        {% endfor %}
-                    </div>
-                    {% endcall %}
-
-                    {% call acc("Model", "model") %}
-                    <div class="acc-options" id="acc-options-model">
-                        {% for make, model in options.model_rows %}
-                        <label class="filter-option" data-make="{{ make }}">
-                            <input type="checkbox" name="model" value="{{ model }}" data-make="{{ make }}"
-                                {% if active is defined and model in active.get('model', []) %}checked{% endif %}>
-                            <span>{{ model }}</span>
-                        </label>
-                        {% endfor %}
-                    </div>
-                    {% endcall %}
-
-                    {% call acc("Trim", "trim") %}
-                    <div class="acc-options" id="acc-options-trim">
-                        {% for make, model, trim in options.trim_rows %}
-                        <label class="filter-option" data-make="{{ make }}" data-model="{{ model }}">
-                            <input type="checkbox" name="trim" value="{{ trim or '' }}"
-                                data-make="{{ make }}" data-model="{{ model }}"
-                                {% if active is defined and (trim or '') in active.get('trim', []) %}checked{% endif %}>
-                            <span>{{ trim or '—' }}</span>
-                        </label>
-                        {% endfor %}
-                    </div>
-                    {% endcall %}
-
-                    {% call acc("Fuel Type", "fuel_type") %}
-                    <div class="acc-options" id="acc-options-fuel_type">
-                        {% for fuel in options.fuel_types %}
-                        <label class="filter-option">
-                            <input type="checkbox" name="fuel_type" value="{{ fuel }}"
-                                {% if active is defined and fuel in active.get('fuel_type', []) %}checked{% endif %}>
-                            <span>{{ fuel }}</span>
-                        </label>
-                        {% endfor %}
-                    </div>
-                    {% endcall %}
-
-                    {% call acc("Cylinders", "cylinders") %}
-                    <div class="acc-options" id="acc-options-cylinders">
-                        {% for item in options.cylinders %}
-                        <label class="filter-option">
-                            <input type="checkbox" name="cylinders" value="{{ item }}"
-                                {% if active is defined and item|string in active.get('cylinders', []) %}checked{% endif %}>
-                            <span>{{ "Electric" if item == 0 else item ~ "-cyl" }}</span>
-                        </label>
-                        {% endfor %}
-                    </div>
-                    {% endcall %}
-
-                    {% call acc("Transmission", "transmission") %}
-                    <div class="acc-options" id="acc-options-transmission">
-                        {% for t in options.transmissions %}
-                        <label class="filter-option">
-                            <input type="checkbox" name="transmission" value="{{ t }}"
-                                {% if active is defined and t in active.get('transmission', []) %}checked{% endif %}>
-                            <span>{{ t }}</span>
-                        </label>
-                        {% endfor %}
-                    </div>
-                    {% endcall %}
-
-                    {% call acc("Drivetrain", "drivetrain") %}
-                    <div class="acc-options" id="acc-options-drivetrain">
-                        {% for d in options.drivetrains %}
-                        <label class="filter-option">
-                            <input type="checkbox" name="drivetrain" value="{{ d }}"
-                                {% if active is defined and d in active.get('drivetrain', []) %}checked{% endif %}>
-                            <span>{{ d }}</span>
-                        </label>
-                        {% endfor %}
-                    </div>
-                    {% endcall %}
-
-                    {% if options.forced_inductions %}
-                    {% call acc("Engine type", "forced_induction") %}
-                    <div class="acc-options" id="acc-options-forced_induction">
-                        {% for fi in options.forced_inductions %}
-                        <label class="filter-option">
-                            <input type="checkbox" name="forced_induction" value="{{ fi }}"
-                                {% if active is defined and fi in active.get('forced_induction', []) %}checked{% endif %}>
-                            <span>{{ fi }}</span>
-                        </label>
-                        {% endfor %}
-                    </div>
-                    {% endcall %}
-                    {% endif %}
-
-                    {% call acc("Body style", "body_style") %}
-                    <div class="acc-options" id="acc-options-body_style">
-                        {% for b in options.body_styles %}
-                        <label class="filter-option">
-                            <input type="checkbox" name="body_style" value="{{ b }}"
-                                {% if active is defined and b in active.get('body_style', []) %}checked{% endif %}>
-                            <span>{{ b }}</span>
-                        </label>
-                        {% endfor %}
-                    </div>
-                    {% endcall %}
-
-                    {% call acc("Ext. Color", "exterior_color") %}
-                    <div class="acc-options" id="acc-options-exterior_color">
-                        {% for c in options.exterior_colors %}
-                        <label class="filter-option">
-                            <input type="checkbox" name="exterior_color" value="{{ c }}"
-                                {% if active is defined and c in active.get('exterior_color', []) %}checked{% endif %}>
-                            <span>{{ c|replace('_', ' ')|title }}</span>
-                        </label>
-                        {% endfor %}
-                    </div>
-                    {% endcall %}
-
-                    {% call acc("Int. Color", "interior_color") %}
-                    <div class="acc-options" id="acc-options-interior_color">
-                        {% for c in options.interior_colors %}
-                        <label class="filter-option">
-                            <input type="checkbox" name="interior_color" value="{{ c }}"
-                                {% if active is defined and c in active.get('interior_color', []) %}checked{% endif %}>
-                            <span>{{ c|replace('_', ' ')|title }}</span>
-                        </label>
-                        {% endfor %}
-                    </div>
-                    {% endcall %}
-
-                    {% if options.all_package_names %}
-                    {% call acc("Package", "package") %}
-                    <div class="acc-options" id="acc-options-package">
-                        {% for name in options.all_package_names %}
-                        <label class="filter-option">
-                            <input type="checkbox" name="package" value="{{ name }}">
-                            <span>{{ name }}</span>
-                        </label>
-                        {% endfor %}
-                    </div>
-                    {% endcall %}
-                    {% endif %}
-
-                    <div class="acc-plain-group" data-filter-param="max_price">
-                        <div class="acc-plain-label">Max Price</div>
-                        <select name="max_price" class="sidebar-select">
-                            <option value="" {% if not active or not active.max_price %}selected{% endif %}>Any</option>
-                            <option value="25000"  {% if active and active.max_price == '25000'  %}selected{% endif %}>$25,000</option>
-                            <option value="35000"  {% if active and active.max_price == '35000'  %}selected{% endif %}>$35,000</option>
-                            <option value="50000"  {% if active and active.max_price == '50000'  %}selected{% endif %}>$50,000</option>
-                            <option value="75000"  {% if active and active.max_price == '75000'  %}selected{% endif %}>$75,000</option>
-                            <option value="100000" {% if active and active.max_price == '100000' %}selected{% endif %}>$100,000</option>
-                            <option value="150000" {% if active and active.max_price == '150000' %}selected{% endif %}>$150,000</option>
-                        </select>
-                    </div>
-                    <div class="acc-plain-group" data-filter-param="max_mileage">
-                        <div class="acc-plain-label">Max Mileage</div>
-                        <select name="max_mileage" class="sidebar-select">
-                            <option value="" {% if not active or not active.max_mileage %}selected{% endif %}>Any</option>
-                            {% for mi in [5000, 10000, 15000, 20000, 25000, 30000, 40000, 50000, 75000, 100000] %}
-                            <option value="{{ mi }}" {% if active and active.max_mileage == mi|string %}selected{% endif %}>Under {{ "{:,}".format(mi) }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div class="acc-plain-group" data-filter-param="inventory_condition">
-                        <div class="acc-plain-label">Condition</div>
-                        <select name="inventory_condition" class="sidebar-select">
-                            <option value="" {% if not active or not active.inventory_condition %}selected{% endif %}>New &amp; pre-owned</option>
-                            <option value="new" {% if active and active.inventory_condition == 'new' %}selected{% endif %}>New</option>
-                            <option value="pre_owned" {% if active and active.inventory_condition == 'pre_owned' %}selected{% endif %}>Pre-owned</option>
-                            <option value="cpo" {% if active and active.inventory_condition == 'cpo' %}selected{% endif %}>Certified Pre-Owned</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="docked-footer">
-                    <a href="{{ url_for('listings') }}" class="secondary-button docked-clear-btn">Clear</a>
-                </div>
-            </div>
-
+            {# The legacy scroll-dock accordion that used to live here was a byte-for-byte
+               duplicate of the sidebar filters, permanently hidden by
+               `body.listings-page .filter-docked-inner { display: none !important }`.
+               It shipped ~2.7 MB of unreachable <label> markup on every page load and
+               duplicated every acc-* element id, so it is gone. The mobile filter drawer
+               is #listings-sidebar-panel (toggled by #listings-filters-open), not this. #}
         </form>
     </div>
 
@@ -698,6 +507,7 @@
     </div>
 </div>
 
+<script src="{{ url_for('static', filename='sc-helpers.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>
 <script src="{{ url_for('static', filename='main.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>
 <script src="{{ url_for('static', filename='compare.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>
 <script src="{{ url_for('static', filename='listings.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>

@@ -5,7 +5,7 @@
     <meta name="csrf-token" content="{{ csrf_token }}">
     <meta name="application-path-prefix" content="{{ request.script_root or '' }}">
     <title>Developer Dashboard</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v={{ static_cache_ver }}">
+    {% include "_head_css.html" %}
 </head>
 <body>
 
@@ -259,7 +259,7 @@
                         {% for d in dealerships %}
                         <tr data-id="{{ d.id }}">
                             <td>{{ d.name }}</td>
-                            <td><a href="{{ d.website_url }}" target="_blank" rel="noopener" class="dev-table-link">{{ d.website_url }}</a></td>
+                            <td><a href="{{ d.website_url | http_url }}" target="_blank" rel="noopener" class="dev-table-link">{{ d.website_url }}</a></td>
                             <td>{{ d.city }}, {{ d.state }}</td>
                             <td class="dev-mono">{% if d.latitude is not none and d.longitude is not none %}{{ "%.4f"|format(d.latitude) }}, {{ "%.4f"|format(d.longitude) }}{% else %}—{% endif %}</td>
                             <td class="dev-mono">{{ d.created_at }}</td>

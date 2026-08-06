@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ car.title }} — Sarrafi Cars</title>
     <meta name="csrf-token" content="{{ csrf_token }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v={{ static_cache_ver }}">
+    {% include "_head_css.html" %}
     {% include "_head_perf.html" %}
     {% if dealer_map and dealer_map.has_pin %}
     <link rel="stylesheet" href="{{ url_for('static', filename='vendor/leaflet/leaflet.css') }}?v={{ static_cache_ver }}">
@@ -193,7 +193,7 @@
                 </div>
 
                 <div class="car-detail-info car-detail-info--hero">
-                    <p class="eyebrow car-detail-dealer-eyebrow">{% if car.dealer_id %}<a href="/dealership/{{ car.dealer_id }}" class="car-detail-dealer-link">{{ car.dealer_name }}</a>{% else %}{{ car.dealer_name }}{% endif %}</p>
+                    <p class="eyebrow car-detail-dealer-eyebrow">{% if car.dealer_id %}<a href="{{ url_for('dealership_research_page', dealer_key=car.dealer_id) }}" class="car-detail-dealer-link">{{ car.dealer_name }}</a>{% else %}{{ car.dealer_name }}{% endif %}</p>
                     {% set dealer_rep_rating = car.dealer_rating if car.dealer_rating is defined else (dealer_info.google_rating if dealer_info and dealer_info.google_rating is defined else none) %}
                     {% set dealer_rep_reviews = car.dealer_reviews if car.dealer_reviews is defined else (dealer_info.google_review_count if dealer_info and dealer_info.google_review_count is defined else none) %}
                     {% if not dealer_map %}
@@ -207,28 +207,71 @@
                     </div>
                     {% endif %}
                     <h1 class="car-detail-title">{{ car.title }}</h1>
-                    {% if (car.trim and car.trim != '—') or (car.mileage is not none and car.mileage != '') %}
+                    {% if car.trim and car.trim != '—' %}
                     <p class="car-detail-hero-meta">
-                        {% if car.trim and car.trim != '—' %}<span>{{ car.trim | fmt_spec }}</span>{% endif %}
-                        {% if car.mileage is not none and car.mileage != '' %}
-                        {% if car.trim and car.trim != '—' %}<span class="car-detail-hero-meta-sep" aria-hidden="true">·</span>{% endif %}
-                        <span>{{ "{:,}".format(car.mileage) }} mi</span>
-                        {% endif %}
+                        <span>{{ car.trim | fmt_spec }}</span>
                     </p>
                     {% endif %}
-                    <div class="car-detail-price-row">
+                    {# Price, mileage and the market verdict are the three things a shopper
+                       scans first, so they share one headline row at full weight. Trim moved
+                       above as a subtitle and the payment estimate below is deliberately
+                       quieter -- both were competing with the numbers that actually decide
+                       whether the listing is worth opening. #}
+                    <div class="car-detail-headline">
                         <p class="car-detail-price">
+                            {# ``car.msrp`` here is NOT cars.msrp. The serializer replaces it with
+                               ``resolve_display_msrp`` (backend/utils/msrp_trust.py), which returns a
+                               figure only from a window sticker we hold for this VIN or from a new,
+                               non-CPO listing, and only when it is above the asking price. When it
+                               returns nothing the price stands alone -- no "MSRP —" slot, and never
+                               the price echoed back as its own MSRP. The old
+                               ``car.msrp != car.price`` guard here was the only thing standing
+                               between a shopper and 9,621 listings whose feed msrp IS the price. #}
                             {% if car.price and car.price > 0 %}
                                 ${{ "{:,.0f}".format(car.price) }}
-                                {% if car.msrp and car.msrp > 0 and car.msrp != car.price %}
-                                <span class="price-msrp-secondary">MSRP: ${{ "{:,.0f}".format(car.msrp) }}</span>
+                                {% if car.msrp and car.msrp > 0 %}
+                                <span class="price-msrp-secondary">{{ car.msrp_label or 'MSRP' }}: ${{ "{:,.0f}".format(car.msrp) }}{% if car.msrp_from_sticker %}<span class="price-msrp-source">from window sticker</span>{% endif %}</span>
                                 {% endif %}
                             {% elif car.msrp and car.msrp > 0 %}
-                                <span class="price-msrp-hero">MSRP: ${{ "{:,.0f}".format(car.msrp) }}</span>
+                                <span class="price-msrp-hero">{{ car.msrp_label or 'MSRP' }}: ${{ "{:,.0f}".format(car.msrp) }}</span>
                             {% else %}
                                 Call for Price
                             {% endif %}
                         </p>
+                        {% if car.mileage is not none and car.mileage != '' %}
+                        <p class="car-detail-headline-mileage">
+                            <span class="car-detail-headline-mileage__value">{{ "{:,}".format(car.mileage) }}</span>
+                            <span class="car-detail-headline-mileage__unit">mi</span>
+                        </p>
+                        {% endif %}
+                    </div>
+                    <div class="car-detail-price-row">
+                        {# The verdict sits with Save/Compare rather than under the price: this row is
+                           where the decision gets made. It always renders -- when there are too few
+                           comparable listings to judge, say that plainly instead of showing nothing,
+                           which reads as "we forgot" rather than "we don't know". #}
+                        {% if car.deal_score and car.deal_score.label and car.deal_score.label != 'insufficient_data' %}
+                        {% set ds = car.deal_score %}
+                        {% set ds_pct = (ds.pct_from_median | abs) if ds.pct_from_median is not none else none %}
+                        {% set ds_delta = (ds.delta | abs) if ds.delta is not none else none %}
+                        <div class="deal-badge deal-badge--hero deal-badge--{{ ds.label }}" role="note" aria-label="Market price assessment">
+                            {% if ds.label == 'below_market' %}
+                            <span class="deal-badge__label">Good deal</span>
+                            {% if ds_delta %}<span class="deal-badge__detail">&minus;${{ "{:,.0f}".format(ds_delta) }} vs market{% if ds_pct %} ({{ "{:.0f}".format(ds_pct) }}% under){% endif %}</span>{% endif %}
+                            {% elif ds.label == 'above_market' %}
+                            <span class="deal-badge__label">Priced high</span>
+                            {% if ds_delta %}<span class="deal-badge__detail">+${{ "{:,.0f}".format(ds_delta) }} vs market{% if ds_pct %} ({{ "{:.0f}".format(ds_pct) }}% over){% endif %}</span>{% endif %}
+                            {% else %}
+                            <span class="deal-badge__label">Fair price</span>
+                            <span class="deal-badge__detail">at market</span>
+                            {% endif %}
+                        </div>
+                        {% else %}
+                        <div class="deal-badge deal-badge--hero deal-badge--unknown" role="note" aria-label="Market price assessment">
+                            <span class="deal-badge__label">No market read</span>
+                            <span class="deal-badge__detail">too few comparable listings</span>
+                        </div>
+                        {% endif %}
                         {% if logged_in %}
                         <button type="button"
                             id="save-btn"
@@ -259,23 +302,6 @@
                             <span class="compare-toggle-btn__label">Compare</span>
                         </button>
                     </div>
-                    {% if car.deal_score and car.deal_score.label and car.deal_score.label != 'insufficient_data' %}
-                    {% set ds = car.deal_score %}
-                    {% set ds_pct = (ds.pct_from_median | abs) if ds.pct_from_median is not none else none %}
-                    {% set ds_delta = (ds.delta | abs) if ds.delta is not none else none %}
-                    <div class="deal-badge deal-badge--{{ ds.label }}" role="note" aria-label="Market price assessment">
-                        {% if ds.label == 'below_market' %}
-                        <span class="deal-badge__label">Below market</span>
-                        {% if ds_delta %}<span class="deal-badge__detail">&minus;${{ "{:,.0f}".format(ds_delta) }}{% if ds_pct %} ({{ "{:.0f}".format(ds_pct) }}% under){% endif %}</span>{% endif %}
-                        {% elif ds.label == 'above_market' %}
-                        <span class="deal-badge__label">Above market</span>
-                        {% if ds_delta %}<span class="deal-badge__detail">+${{ "{:,.0f}".format(ds_delta) }}{% if ds_pct %} ({{ "{:.0f}".format(ds_pct) }}% over){% endif %}</span>{% endif %}
-                        {% else %}
-                        <span class="deal-badge__label">Fair price</span>
-                        <span class="deal-badge__detail">at market</span>
-                        {% endif %}
-                    </div>
-                    {% endif %}
                     {% if car.price and car.price > 0 %}
                     <div class="car-finance-estimate" id="car-finance-calculator" data-vehicle-price="{{ car.price | int }}">
                         <div class="car-finance-estimate-card">
@@ -353,7 +379,7 @@
                     <div class="car-hero-actions">
                         {% if dealership_view_url %}
                         <a href="{{ dealership_view_url }}" target="_blank" rel="noopener noreferrer" class="car-hero-link car-hero-link--dealer">
-                            <span>{% if listing_link_is_vdp %}View this listing{% else %}View on {{ car.dealer_name or 'dealer site' }}{% endif %}</span>
+                            <span>{% if listing_link_is_vdp %}View this listing on the dealership website{% else %}View on {{ car.dealer_name or 'dealer site' }}{% endif %}</span>
                         </a>
                         {% else %}
                         <p class="car-hero-link-unavailable">Dealer listing link not available</p>
@@ -382,14 +408,19 @@
                     <button type="button" class="car-vdp-tab" role="tab" id="car-tab-options" aria-selected="false" aria-controls="car-panel-options" data-tab="options">Options</button>
                     {% endif %}
                     <button type="button" class="car-vdp-tab" role="tab" id="car-tab-history" aria-selected="false" aria-controls="car-panel-history" data-tab="history">History</button>
+                    {% if dealer_map %}
+                    <button type="button" class="car-vdp-tab" role="tab" id="car-tab-dealership" aria-selected="false" aria-controls="car-panel-dealership" data-tab="dealership">Dealership</button>
+                    {% endif %}
+                    <button type="button" class="car-vdp-tab" role="tab" id="car-tab-comments" aria-selected="false" aria-controls="car-panel-comments" data-tab="comments">Comments</button>
                     {# Ask AI tab removed: the sidebar Assistant covers per-car chat. #}
                 </div>
 
                 <div class="car-vdp-panels">
                     <section class="car-vdp-panel car-vdp-panel--active" id="car-panel-overview" role="tabpanel" aria-labelledby="car-tab-overview" data-panel="overview">
-                        {% if show_premium_features %}
-                        {% include '_ai_description.html' %}
-                        {% endif %}
+                        {# The AI vehicle summary was removed from this panel: it only restated
+                           fields already on the page (price, MSRP, body style) and inherited any
+                           bad MSRP verbatim. /api/car/<id>/narrate is still registered, so the
+                           block can be reinstated once it says something the specs do not. #}
                         <div id="negotiation-radar-widget"
                             class="negotiation-radar-widget"
                             data-created-at="{{ car.created_at or car.first_seen_at or car.scraped_at or '' }}"
@@ -484,38 +515,7 @@
                         {% endif %}
 
                         {% if dealer_map %}
-                        <div class="car-dealer-card car-dealer-card--inline">
-                            <h3 class="dealer-card-heading">Dealership location</h3>
-                            <p class="dealer-card-name">{{ dealer_map.name }}</p>
-                            <div id="dealer-reputation-block" class="dealer-reputation-block dealer-reputation-block--card"
-                                {% if dealer_rep_rating is none %}hidden aria-hidden="true"{% endif %}
-                                {% if dealer_rep_rating is not none %}data-dealer-rating="{{ dealer_rep_rating }}"{% endif %}
-                                {% if dealer_rep_reviews is not none %}data-dealer-reviews="{{ dealer_rep_reviews }}"{% endif %}>
-                                <span class="reputation-stars" aria-hidden="true">★★★★★</span>
-                                <span id="dealer-review-count">(Loading reviews...)</span>
-                                <div id="dealer-trust-badges"></div>
-                            </div>
-                            {% if dealer_map.street_address %}
-                            <p class="dealer-card-address">{{ dealer_map.street_address }}</p>
-                            {% endif %}
-                            {% if dealer_map.city or dealer_map.state or dealer_map.zip_code %}
-                            <p class="dealer-card-location">{{ dealer_map.city }}{% if dealer_map.city and dealer_map.state %}, {% endif %}{{ dealer_map.state }}{% if dealer_map.zip_code %} {{ dealer_map.zip_code }}{% endif %}</p>
-                            {% elif dealer_map.address_line and not dealer_map.street_address %}
-                            <p class="dealer-card-location">{{ dealer_map.address_line }}</p>
-                            {% endif %}
-                            {% if dealer_map.has_pin %}
-                            <div id="car-dealer-map" class="car-dealer-map" role="application" aria-label="Dealership map"></div>
-                            <script type="application/json" id="car-dealer-map-json" nonce="{{ csp_nonce }}">{{ dealer_map | tojson }}</script>
-                            {% endif %}
-                            <p class="car-dealer-map-actions">
-                                <a href="{{ dealer_map.google_maps_url }}" target="_blank" rel="noopener noreferrer" class="dealer-card-link dealer-card-link--maps">Open in Google Maps</a>
-                                {% set dealer_site = (dealer_info.dealer_website_url or dealer_info.website_url) if dealer_info else none %}
-                                {% if dealer_site %}
-                                <span class="car-dealer-map-actions-sep" aria-hidden="true">·</span>
-                                <a href="{{ dealer_site }}" target="_blank" rel="noopener noreferrer" class="dealer-card-link">Visit website</a>
-                                {% endif %}
-                            </p>
-                        </div>
+                        <p class="car-vdp-panel-lead">Selling dealer: {% if car.dealer_id %}<a href="{{ url_for('dealership_research_page', dealer_key=car.dealer_id) }}" class="dealer-name-link"><strong>{{ dealer_map.name }}</strong></a>{% else %}<strong>{{ dealer_map.name }}</strong>{% endif %}. See the <strong>Dealership</strong> tab for their location, rating and what else they have on the lot.</p>
                         {% endif %}
                     </section>
 
@@ -937,8 +937,11 @@
 
                 {% if generated_spec_sheet.has_pricing %}
                 <div class="build-sheet-pricing">
+                    {# Label follows the source: "Original MSRP" on a used car, where the figure is
+                       the sticker total it cost new, not a benchmark for today's price. Absent
+                       entirely when no trustworthy MSRP exists -- see backend/utils/msrp_trust.py. #}
                     {% if generated_spec_sheet.pricing.msrp_display %}
-                    <div class="build-sheet-price-item"><span class="build-sheet-price-label">MSRP</span><span class="build-sheet-price-value">{{ generated_spec_sheet.pricing.msrp_display }}</span></div>
+                    <div class="build-sheet-price-item"><span class="build-sheet-price-label">{{ generated_spec_sheet.pricing.msrp_label or 'MSRP' }}{% if generated_spec_sheet.pricing.msrp_from_sticker %} <span class="build-sheet-src build-sheet-src--sticker">sticker</span>{% endif %}</span><span class="build-sheet-price-value">{{ generated_spec_sheet.pricing.msrp_display }}</span></div>
                     {% endif %}
                     {% if generated_spec_sheet.pricing.price_display %}
                     <div class="build-sheet-price-item"><span class="build-sheet-price-label">Listed price</span><span class="build-sheet-price-value">{{ generated_spec_sheet.pricing.price_display }}</span></div>
@@ -1254,6 +1257,76 @@
                         {% endif %}
                     </section>
 
+                    {% if dealer_map %}
+                    <section class="car-vdp-panel" id="car-panel-dealership" role="tabpanel" aria-labelledby="car-tab-dealership" data-panel="dealership" hidden>
+                        {# Only a dealer we can resolve to a research page gets a link; the rest
+                           stay plain text rather than becoming a 404. #}
+                        <h2 class="car-vdp-panel-title">{% if car.dealer_id %}<a href="{{ url_for('dealership_research_page', dealer_key=car.dealer_id) }}" class="dealer-name-link">{{ dealer_map.name }}</a>{% else %}{{ dealer_map.name }}{% endif %}</h2>
+
+                        <div class="dealer-panel-head">
+                            <div id="dealer-reputation-block" class="dealer-reputation-block dealer-reputation-block--card"
+                                {% if dealer_rep_rating is none %}hidden aria-hidden="true"{% endif %}
+                                {% if dealer_rep_rating is not none %}data-dealer-rating="{{ dealer_rep_rating }}"{% endif %}
+                                {% if dealer_rep_reviews is not none %}data-dealer-reviews="{{ dealer_rep_reviews }}"{% endif %}>
+                                <span class="reputation-stars" aria-hidden="true">★★★★★</span>
+                                <span id="dealer-review-count">(Loading reviews...)</span>
+                                <div id="dealer-trust-badges"></div>
+                            </div>
+                            <address class="dealer-panel-address">
+                                {% if dealer_map.street_address %}
+                                <span class="dealer-card-address">{{ dealer_map.street_address }}</span>
+                                {% endif %}
+                                {% if dealer_map.city or dealer_map.state or dealer_map.zip_code %}
+                                <span class="dealer-card-location">{{ dealer_map.city }}{% if dealer_map.city and dealer_map.state %}, {% endif %}{{ dealer_map.state }}{% if dealer_map.zip_code %} {{ dealer_map.zip_code }}{% endif %}</span>
+                                {% elif dealer_map.address_line and not dealer_map.street_address %}
+                                <span class="dealer-card-location">{{ dealer_map.address_line }}</span>
+                                {% endif %}
+                            </address>
+                        </div>
+
+                        {% if dealer_map.has_pin %}
+                        {# Leaflet lays out against the container's size at init. This panel starts
+                           hidden, so the map would initialise at zero height and render as a grey
+                           box; car_page.js calls invalidateSize() when the tab is first shown. #}
+                        <div id="car-dealer-map" class="car-dealer-map car-dealer-map--panel" role="application" aria-label="Dealership map"></div>
+                        <script type="application/json" id="car-dealer-map-json" nonce="{{ csp_nonce }}">{{ dealer_map | tojson }}</script>
+                        {% endif %}
+
+                        <p class="car-dealer-map-actions">
+                            <a href="{{ dealer_map.google_maps_url }}" target="_blank" rel="noopener noreferrer" class="dealer-card-link dealer-card-link--maps">Open in Google Maps</a>
+                            {% set dealer_site = (dealer_info.dealer_website_url or dealer_info.website_url) if dealer_info else none %}
+                            {% if dealer_site %}
+                            <span class="car-dealer-map-actions-sep" aria-hidden="true">·</span>
+                            <a href="{{ dealer_site }}" target="_blank" rel="noopener noreferrer" class="dealer-card-link">Visit website</a>
+                            {% endif %}
+                            {% if car.dealer_id %}
+                            <span class="car-dealer-map-actions-sep" aria-hidden="true">·</span>
+                            <a href="{{ url_for('dealership_research_page', dealer_key=car.dealer_id) }}" class="dealer-card-link">Browse their inventory</a>
+                            {% endif %}
+                        </p>
+
+                        <div class="dealer-panel-section">
+                            <h3 class="dealer-panel-section-title">What shoppers say about this dealership</h3>
+                            <p class="dealer-panel-section-hint">Notes from other buyers about this rooftop — add-ons, pressure, condition of the lot.</p>
+                            <div class="ds-comments"
+                                data-comments-scope="dealer"
+                                data-comments-target="{{ car.dealership_registry_id or car.dealer_id or '' }}"
+                                data-comments-logged-in="{{ 1 if logged_in else 0 }}"
+                                aria-live="polite"></div>
+                        </div>
+                    </section>
+                    {% endif %}
+
+                    <section class="car-vdp-panel" id="car-panel-comments" role="tabpanel" aria-labelledby="car-tab-comments" data-panel="comments" hidden>
+                        <h2 class="car-vdp-panel-title">Comments on this car</h2>
+                        <p class="car-vdp-panel-lead">Seen this one in person, or know something about this listing? Leave a note for other shoppers.</p>
+                        <div class="ds-comments"
+                            data-comments-scope="car"
+                            data-comments-target="{{ car.id }}"
+                            data-comments-logged-in="{{ 1 if logged_in else 0 }}"
+                            aria-live="polite"></div>
+                    </section>
+
                 </div>
             </div>
 
@@ -1319,6 +1392,8 @@
         "premium_url": url_for('premium_page')
     } | tojson }}</script>
     {% endif %}
+    <script src="{{ url_for('static', filename='car_page_helpers.js') }}" defer nonce="{{ csp_nonce }}"></script>
+    <script src="{{ url_for('static', filename='ds_comments.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>
     <script src="{{ url_for('static', filename='car_page.js') }}" defer nonce="{{ csp_nonce }}"></script>
     {% if show_premium_features %}
     <script src="{{ url_for('static', filename='car_trim_ladder.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>

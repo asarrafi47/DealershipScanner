@@ -6,7 +6,7 @@
     <meta name="csrf-token" content="{{ csrf_token }}">
     <meta name="application-path-prefix" content="{{ request.script_root or '' }}">
     <title>Scan lab results — Dev</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v={{ static_cache_ver }}">
+    {% include "_head_css.html" %}
 </head>
 <body class="listings-page">
 <div class="page">

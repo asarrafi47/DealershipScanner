@@ -49,6 +49,15 @@
         map.invalidateSize();
     });
 
+    // The map now lives in the Dealership tab panel, which starts hidden. Leaflet sizes
+    // itself against the container at init, so it would come up as a grey box; car_page.js
+    // calls this after revealing a panel.
+    window.__DS_resizeDealerMap = function () {
+        requestAnimationFrame(function () {
+            map.invalidateSize();
+        });
+    };
+
     function escapeHtml(s) {
         const d = document.createElement("div");
         d.textContent = String(s);

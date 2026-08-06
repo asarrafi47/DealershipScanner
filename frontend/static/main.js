@@ -13,7 +13,29 @@ document.addEventListener("DOMContentLoaded", () => {
                 return fallback;
             }
         }
-        window.CAR_ROWS = readJsonScript("ds-listings-car-rows", []);
+        // The cascade table ships dictionary-encoded (see pack_car_rows in
+        // backend/listings/routes.py): ~12,700 rows of repeated make/model/trim
+        // strings plus repeated JSON keys were ~1.9 MB of uncompressed HTML.
+        function unpackCarRows(packed) {
+            if (Array.isArray(packed)) return packed; // legacy/plain form
+            if (!packed || !Array.isArray(packed.r) || !Array.isArray(packed.c)) return [];
+            const cols = packed.c;
+            const vocabs = Array.isArray(packed.v) ? packed.v : [];
+            return packed.r.map((row) => {
+                const obj = {};
+                for (let i = 0; i < cols.length; i++) {
+                    const vocab = vocabs[i];
+                    if (!Array.isArray(vocab)) {
+                        obj[cols[i]] = row[i];
+                        continue;
+                    }
+                    const code = row[i];
+                    obj[cols[i]] = code >= 0 && code < vocab.length ? vocab[code] : null;
+                }
+                return obj;
+            });
+        }
+        window.CAR_ROWS = unpackCarRows(readJsonScript("ds-listings-car-rows", []));
         window.ALL_CARS = readJsonScript("ds-listings-all-cars", []);
         window.COUNTRY_TO_MAKES = readJsonScript("ds-listings-country-to-makes", {});
         window.ZIP_COORDS = readJsonScript("ds-listings-zip-coords", {});
@@ -33,57 +55,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const _MILEAGE_BANDS = ["0-25k", "25-50k", "50-75k", "75-100k", "100k+", "unknown"];
 
-    function mileageBand(mileage) {
-        const m = parseInt(mileage, 10);
-        if (!Number.isFinite(m)) return "unknown";
-        if (m < 0) return "unknown";
-        if (m <= 25000) return "0-25k";
-        if (m <= 50000) return "25-50k";
-        if (m <= 75000) return "50-75k";
-        if (m <= 100000) return "75-100k";
-        return "100k+";
-    }
-
-    function marketTrimParts(car) {
-        return [
-            String(car.make || "").trim().toLowerCase(),
-            String(car.model || "").trim().toLowerCase(),
-            String(car.trim || "").trim().toLowerCase(),
-        ];
-    }
-
-    function marketCohortKey(make, model, trim, year, band) {
-        const [mk, md, tr] = marketTrimParts({ make, model, trim });
-        const ys = year != null ? String(year) : "*";
-        return `${mk}|${md}|${tr}|${ys}|${band}`;
-    }
-
-    function weightedCohortStats(entries, minSamples) {
-        let sum = 0;
-        let n = 0;
-        for (const e of entries) {
-            if (!e) continue;
-            const count = Number(e.sample_count);
-            const avg = Number(e.avg_price);
-            if (!Number.isFinite(count) || count <= 0 || !Number.isFinite(avg)) continue;
-            sum += avg * count;
-            n += count;
-        }
-        if (n < minSamples) return null;
-        return { avg_price: sum / n, sample_count: n };
-    }
-
-    function cohortEntries(cohorts, mk, md, tr, years, bands) {
-        const out = [];
-        for (const y of years) {
-            for (const band of bands) {
-                const key = `${mk}|${md}|${tr}|${y}|${band}`;
-                if (cohorts[key]) out.push(cohorts[key]);
-            }
-        }
-        return out;
-    }
-
     function marketIntelForCar(car) {
         const meta = window.__DS_MARKET_STATS;
         if (!meta || !meta.cohorts) return null;
@@ -91,12 +62,12 @@ document.addEventListener("DOMContentLoaded", () => {
         const cohorts = meta.cohorts;
         const minSamples = Number(meta.min_samples) > 0 ? Number(meta.min_samples) : 3;
         const yearWindow = Number(meta.year_window) >= 0 ? Number(meta.year_window) : 1;
-        const [mk, md, tr] = marketTrimParts(car);
+        const [mk, md, tr] = SC.marketTrimParts(car);
         if (!mk || !md) return null;
 
         let year = parseInt(car.year, 10);
         year = Number.isFinite(year) ? year : null;
-        const mb = mileageBand(car.mileage);
+        const mb = SC.mileageBand(car.mileage);
 
         const attempts = [];
         if (year != null && mb !== "unknown") {
@@ -130,9 +101,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
         for (const att of attempts) {
             const stats = att.entries
-                ? weightedCohortStats(att.entries, minSamples)
-                : weightedCohortStats(
-                    cohortEntries(cohorts, mk, md, tr, att.years, att.bands),
+                ? SC.weightedCohortStats(att.entries, minSamples)
+                : SC.weightedCohortStats(
+                    SC.cohortEntries(cohorts, mk, md, tr, att.years, att.bands),
                     minSamples
                 );
             if (!stats) continue;
@@ -539,16 +510,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // ── Helpers ────────────────────────────────────────────────────────
 
-    function normFilterStr(v) {
-        return (v == null || v === "") ? "" : String(v).trim().toLowerCase();
-    }
-
-    function valueInListCI(list, val) {
-        if (!list || !list.length) return true;
-        const v = normFilterStr(val);
-        return list.some(x => normFilterStr(x) === v);
-    }
-
     /** Listings filters use paint-family bucket ids (e.g. red); car rows expose *_color_families arrays. */
     function carMatchesPaintFamilyBuckets(car, param, selected) {
         if (!selected.length) return true;
@@ -626,13 +587,13 @@ document.addEventListener("DOMContentLoaded", () => {
         // to the full national inventory (that produced the "flash of unrelated
         // results" while coords were still loading).
         const rows = (RADIUS_CAR_ROWS !== null ? RADIUS_CAR_ROWS : CAR_ROWS).filter(r => {
-            if (makes.length  && !valueInListCI(makes, r.make))        return false;
-            if (models.length && !valueInListCI(models, r.model))      return false;
-            if (trims.length  && !valueInListCI(trims, r.trim))        return false;
+            if (makes.length  && !SC.valueInListCI(makes, r.make))        return false;
+            if (models.length && !SC.valueInListCI(models, r.model))      return false;
+            if (trims.length  && !SC.valueInListCI(trims, r.trim))        return false;
             if (fuels.length  && !fuels.includes(r.fuel))        return false;
             if (drives.length && !drives.includes(r.drive))      return false;
             if (inductions.length && !inductions.includes(r.induction)) return false;
-            if (bodies.length && !valueInListCI(bodies, r.body_style)) return false;
+            if (bodies.length && !SC.valueInListCI(bodies, r.body_style)) return false;
             if (cyls.length   && !cyls.includes(String(r.cyl))) return false;
             return true;
         });
@@ -731,31 +692,31 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function cascadeRowKey(param, r) {
         if (param === "trim") {
-            return [normFilterStr(r.make), normFilterStr(r.model), normFilterStr(r.trim)].join("\0");
+            return [SC.normFilterStr(r.make), SC.normFilterStr(r.model), SC.normFilterStr(r.trim)].join("\0");
         }
         if (param === "model") {
-            return [normFilterStr(r.make), normFilterStr(r.model)].join("\0");
+            return [SC.normFilterStr(r.make), SC.normFilterStr(r.model)].join("\0");
         }
-        return normFilterStr(r.make ?? r.model ?? r.trim ?? r.fuel ?? r.drive ?? r.induction ?? r.body_style ?? r.cyl ?? "");
+        return SC.normFilterStr(r.make ?? r.model ?? r.trim ?? r.fuel ?? r.drive ?? r.induction ?? r.body_style ?? r.cyl ?? "");
     }
 
     function cascadeOptionKey(param, label, cb) {
         const make = label && label.dataset ? label.dataset.make : "";
         const model = label && label.dataset ? label.dataset.model : "";
         if (param === "trim") {
-            return [normFilterStr(make), normFilterStr(model), normFilterStr(cb.value)].join("\0");
+            return [SC.normFilterStr(make), SC.normFilterStr(model), SC.normFilterStr(cb.value)].join("\0");
         }
         if (param === "model") {
-            return [normFilterStr(make), normFilterStr(cb.value)].join("\0");
+            return [SC.normFilterStr(make), SC.normFilterStr(cb.value)].join("\0");
         }
-        return normFilterStr(cb.value);
+        return SC.normFilterStr(cb.value);
     }
 
     function cascadeParam(param, rowKey, containerIds, alsoExclude = []) {
         const composite = param === "trim" || param === "model";
         const compatible = new Set(
             compatibleRows(param, alsoExclude).map(r =>
-                composite ? cascadeRowKey(param, r) : normFilterStr(rowKey(r))
+                composite ? cascadeRowKey(param, r) : SC.normFilterStr(rowKey(r))
             )
         );
         containerIds.forEach(id => {
@@ -764,7 +725,7 @@ document.addEventListener("DOMContentLoaded", () => {
             container.querySelectorAll(".filter-option").forEach(label => {
                 const cb = label.querySelector("input");
                 if (!cb) return;
-                const key = composite ? cascadeOptionKey(param, label, cb) : normFilterStr(cb.value);
+                const key = composite ? cascadeOptionKey(param, label, cb) : SC.normFilterStr(cb.value);
                 const visible = compatible.has(key);
                 label.style.display = visible ? "" : "none";
                 if (!visible) cb.checked = false;
@@ -881,7 +842,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // ── Wire all checkboxes → sync twin + live render (cascade on panel open) ───────
 
-    document.querySelectorAll(".filter-option input[type=checkbox]").forEach(cb => {
+    function wireFilterOptionCheckbox(cb) {
+        if (cb.__dsWired) return;
+        cb.__dsWired = true;
         cb.addEventListener("change", () => {
             // Mirror state to the twin checkbox (pill ↔ accordion)
             document.querySelectorAll(`input[type=checkbox][name="${cb.name}"]`).forEach(twin => {
@@ -890,7 +853,204 @@ document.addEventListener("DOMContentLoaded", () => {
             invalidateCheckedCache();
             scheduleFilterRender();
         });
-    });
+    }
+
+    document.querySelectorAll(".filter-option input[type=checkbox]").forEach(wireFilterOptionCheckbox);
+
+    // ── Lazy facet options (model / trim / package) ────────────────────
+    // These three lists are ~7,300 entries. Server-rendering them cost ~5 MB of
+    // uncompressed HTML and pushed main.js past the 5-second mark on a throttled
+    // connection. The template now ships only the options the URL has checked —
+    // so `checked()` and the first render are already correct — and the full
+    // lists arrive from /api/listings/filter-options and are grafted in here.
+    //
+    // Hydration is idempotent and preserves checked state, because a section can
+    // be forced open (accordion click) before the background pass has finished.
+
+    const LAZY_FACET_PARAMS = ["model", "trim", "package"];
+    const _lazyFacetHydrated = new Set();
+    let _facetOptionsPromise = null;
+
+    function loadFacetOptions() {
+        // Only a SUCCESSFUL fetch may be memoised. Caching the failure (as a
+        // resolved null) made one 500 permanent: ensureLazyFacet() reused the
+        // cached null forever and Model/Trim stayed empty for the whole session
+        // with nothing shown to the user. Rejecting + clearing the slot means
+        // the next accordion open retries.
+        if (!_facetOptionsPromise) {
+            const attempt = fetch("/api/listings/filter-options", { credentials: "same-origin" })
+                .then((r) => {
+                    if (!r.ok) throw new Error(`filter-options HTTP ${r.status}`);
+                    return r.json();
+                })
+                .then((d) => {
+                    if (!d || !d.ok) throw new Error("filter-options payload not ok");
+                    return d;
+                })
+                .catch((err) => {
+                    if (_facetOptionsPromise === attempt) _facetOptionsPromise = null;
+                    throw err;
+                });
+            _facetOptionsPromise = attempt;
+        }
+        return _facetOptionsPromise;
+    }
+
+    /** Visible, retryable failure state — an empty accordion is indistinguishable from "no options". */
+    function setLazyFacetError(param, show) {
+        const containers = [`options-${param}`, `acc-options-${param}`]
+            .map((id) => document.getElementById(id))
+            .filter(Boolean);
+        for (const container of containers) {
+            const existing = container.querySelector(".filter-facet-error");
+            if (!show) {
+                if (existing) existing.remove();
+                continue;
+            }
+            if (existing) continue;
+            const box = document.createElement("div");
+            box.className = "filter-facet-error";
+            box.setAttribute("role", "alert");
+            // Styled inline: this lives in main.js and the listings CSS bundle is
+            // owned elsewhere. CSSOM writes are CSP-safe (a style="" attribute is not).
+            box.style.padding = "8px 4px";
+            box.style.fontSize = "13px";
+            box.style.lineHeight = "1.4";
+            box.style.opacity = "0.85";
+            const msg = document.createElement("span");
+            msg.textContent = "Couldn’t load these options. ";
+            const retry = document.createElement("button");
+            retry.type = "button";
+            retry.className = "filter-facet-error__retry";
+            retry.textContent = "Retry";
+            retry.style.background = "none";
+            retry.style.border = "0";
+            retry.style.padding = "0";
+            retry.style.font = "inherit";
+            retry.style.cursor = "pointer";
+            retry.style.textDecoration = "underline";
+            retry.addEventListener("click", (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setLazyFacetError(param, false);
+                ensureLazyFacet(param);
+            });
+            box.appendChild(msg);
+            box.appendChild(retry);
+            container.appendChild(box);
+        }
+    }
+
+    /** Container-agnostic identity for a lazy option, used to carry checked state across a rebuild. */
+    function lazyFacetEntryKey(param, entry) {
+        if (param === "trim") {
+            return [SC.normFilterStr(entry[0]), SC.normFilterStr(entry[1]), SC.normFilterStr(entry[2] || "")].join("\0");
+        }
+        if (param === "model") return [SC.normFilterStr(entry[0]), SC.normFilterStr(entry[1])].join("\0");
+        return SC.normFilterStr(entry);
+    }
+
+    function lazyFacetEntries(param, facets) {
+        if (param === "model") return Array.isArray(facets.model_rows) ? facets.model_rows : [];
+        if (param === "trim") return Array.isArray(facets.trim_rows) ? facets.trim_rows : [];
+        return Array.isArray(facets.all_package_names) ? facets.all_package_names : [];
+    }
+
+    function buildLazyFacetLabel(param, entry, isChecked) {
+        const label = document.createElement("label");
+        label.className = "filter-option";
+        const input = document.createElement("input");
+        input.type = "checkbox";
+        input.name = param;
+        const span = document.createElement("span");
+        if (param === "model") {
+            label.dataset.make = entry[0] == null ? "" : String(entry[0]);
+            input.dataset.make = label.dataset.make;
+            input.value = entry[1] == null ? "" : String(entry[1]);
+            span.textContent = input.value;
+        } else if (param === "trim") {
+            label.dataset.make = entry[0] == null ? "" : String(entry[0]);
+            label.dataset.model = entry[1] == null ? "" : String(entry[1]);
+            input.dataset.make = label.dataset.make;
+            input.dataset.model = label.dataset.model;
+            input.value = entry[2] == null ? "" : String(entry[2]);
+            span.textContent = input.value || "—";
+        } else {
+            input.value = entry == null ? "" : String(entry);
+            span.textContent = input.value;
+        }
+        input.checked = !!isChecked;
+        label.appendChild(input);
+        label.appendChild(span);
+        return label;
+    }
+
+    function hydrateLazyFacet(param, facets) {
+        if (_lazyFacetHydrated.has(param)) return false;
+        const containers = [`options-${param}`, `acc-options-${param}`]
+            .map((id) => document.getElementById(id))
+            .filter(Boolean);
+        if (!containers.length || !facets) return false;
+        const entries = lazyFacetEntries(param, facets);
+        if (!entries.length) return false;
+        _lazyFacetHydrated.add(param);
+
+        for (const container of containers) {
+            // The server-rendered subset is exactly the checked options; carry
+            // that state over so a URL like ?model=Sierra survives the rebuild.
+            const preChecked = new Set();
+            container.querySelectorAll(".filter-option input:checked").forEach((cb) => {
+                const label = cb.closest(".filter-option");
+                const ds = label && label.dataset ? label.dataset : {};
+                preChecked.add(
+                    param === "trim"
+                        ? lazyFacetEntryKey(param, [ds.make || "", ds.model || "", cb.value])
+                        : param === "model"
+                            ? lazyFacetEntryKey(param, [ds.make || "", cb.value])
+                            : lazyFacetEntryKey(param, cb.value)
+                );
+            });
+            const frag = document.createDocumentFragment();
+            for (const entry of entries) {
+                const label = buildLazyFacetLabel(param, entry, preChecked.has(lazyFacetEntryKey(param, entry)));
+                wireFilterOptionCheckbox(label.querySelector("input"));
+                frag.appendChild(label);
+            }
+            container.replaceChildren(frag);
+        }
+        invalidateCheckedCache();
+        return true;
+    }
+
+    /** Fill in a section's options right now if the facet payload has landed; otherwise when it does. */
+    function ensureLazyFacet(param) {
+        if (!LAZY_FACET_PARAMS.includes(param) || _lazyFacetHydrated.has(param)) return;
+        setLazyFacetError(param, false);
+        loadFacetOptions().then(
+            (facets) => {
+                if (hydrateLazyFacet(param, facets)) runCascade();
+            },
+            () => setLazyFacetError(param, true)
+        );
+    }
+
+    function hydrateAllLazyFacets() {
+        loadFacetOptions().then(
+            (facets) => {
+                if (!facets) return;
+                let any = false;
+                for (const param of LAZY_FACET_PARAMS) {
+                    if (hydrateLazyFacet(param, facets)) any = true;
+                }
+                if (any) runCascade();
+            },
+            () => {
+                // Speculative prefetch — stay silent. loadFacetOptions() has already
+                // dropped its cached promise, so opening a section retries and, if
+                // that fails too, shows the retryable error in place.
+            }
+        );
+    }
 
     // Wire scalar filters (price, mileage, zip, radius) → live render
     // Scope to #search-form so nav/header ZIP fields do not leak into listings chips.
@@ -921,7 +1081,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function listingsHasValidZip() {
-        return isValidUsZip(scalarVal("zip_code"));
+        return SC.isValidUsZip(scalarVal("zip_code"));
     }
 
     function showListingsZipCallout() {
@@ -972,7 +1132,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         function commitBannerZip() {
             if (!input) return;
-            if (!isValidUsZip(input.value)) {
+            if (!SC.isValidUsZip(input.value)) {
                 input.focus();
                 return;
             }
@@ -1112,7 +1272,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function listingsRadiusFilterKey() {
         const zip = scalarVal("zip_code");
         const radiusMi = parseFloat(scalarVal("radius")) || null;
-        if (!isValidUsZip(zip) || !radiusMi) return "";
+        if (!SC.isValidUsZip(zip) || !radiusMi) return "";
         return `${zip.trim()}|${radiusMi}`;
     }
 
@@ -1183,7 +1343,7 @@ document.addEventListener("DOMContentLoaded", () => {
         clearTimeout(_listingsZipIncompleteTimer);
         _listingsZipIncompleteTimer = null;
         const zipNow = scalarVal("zip_code");
-        if (!isValidUsZip(zipNow)) return;
+        if (!SC.isValidUsZip(zipNow)) return;
 
         resolveListingsZipOrigin(zipNow);
         hideListingsZipCallout();
@@ -1286,22 +1446,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    function buildPageNumberWindow(current, total) {
-        if (total <= 7) {
-            return Array.from({ length: total }, (_, i) => i + 1);
-        }
-        const pages = new Set([1, total, current, current - 1, current + 1]);
-        const sorted = [...pages].filter((p) => p >= 1 && p <= total).sort((a, b) => a - b);
-        const out = [];
-        let prev = 0;
-        for (const p of sorted) {
-            if (p - prev > 1) out.push("…");
-            out.push(p);
-            prev = p;
-        }
-        return out;
-    }
-
     function updatePaginationUI(total, page, perPage) {
         const totalPages = Math.max(1, Math.ceil(total / perPage));
         if (page > totalPages) {
@@ -1328,7 +1472,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (listingsPagePrev) listingsPagePrev.disabled = page <= 1;
         if (listingsPageNext) listingsPageNext.disabled = page >= totalPages;
         if (listingsPaginationPages) {
-            listingsPaginationPages.innerHTML = buildPageNumberWindow(page, totalPages).map((item) => {
+            listingsPaginationPages.innerHTML = SC.buildPageNumberWindow(page, totalPages).map((item) => {
                 if (item === "…") {
                     return `<span class="listings-page-ellipsis" aria-hidden="true">…</span>`;
                 }
@@ -1360,8 +1504,8 @@ document.addEventListener("DOMContentLoaded", () => {
     function renderCardHtml(c, savedSet, compareIds) {
         const gallery = Array.isArray(c.gallery) ? c.gallery : [];
         const imgRaw = (gallery.length && gallery[0]) ? gallery[0] : (c.image_url || "") || "/static/placeholder.svg";
-        const imgSrc = safeImageSrc(imgRaw);
-        const imgSrcAttr = escapeHtml(imgSrc);
+        const imgSrc = SC.safeImageSrc(imgRaw);
+        const imgSrcAttr = SC.escapeHtml(imgSrc);
         const photoCount = Number(c.photo_count) > 0 ? Number(c.photo_count) : gallery.length;
         const photoLabel = photoCount > 1 ? `${photoCount} photos` : "";
         const idNum = Number(c.id);
@@ -1371,22 +1515,22 @@ document.addEventListener("DOMContentLoaded", () => {
             return !s || s === "\u2014" || s === "-" || s === "--";
         };
         const specBits = [];
-        if (!dashLike(c.body_style)) specBits.push(escapeHtml(c.body_style));
+        if (!dashLike(c.body_style)) specBits.push(SC.escapeHtml(c.body_style));
         const specLine = specBits.length
             ? `<p class="result-meta result-meta--specs">${specBits.join(" &middot; ")}</p>`
             : "";
         const incompletePill = c.public_incomplete
             ? `<span class="result-incomplete-pill" title="Missing some public-listing fields">Incomplete</span>`
             : "";
-        const cpoBadge = cpoBadgeHtml(c);
+        const cpoBadge = SC.cpoBadgeHtml(c);
         const mkt = c.market;
         // Premium trim-avg badge takes precedence; otherwise fall back to the
         // free coarse market deal score attached during serialization.
-        const dealBadge = dealBadgeHtml(mkt) || dealScoreBadgeHtml(c.deal_score);
-        const priceDropBadge = priceDropBadgeHtml(c);
+        const dealBadge = SC.dealBadgeHtml(mkt) || SC.dealScoreBadgeHtml(c.deal_score);
+        const priceDropBadge = SC.priceDropBadgeHtml(c);
         let marketLine = "";
         if (mkt && mkt.avg_price_display) {
-            marketLine = `<p class="result-market-sub">Trim avg ${escapeHtml(mkt.avg_price_display)}</p>`;
+            marketLine = `<p class="result-market-sub">Trim avg ${SC.escapeHtml(mkt.avg_price_display)}</p>`;
         }
         const distMi = carDistanceMiles(c);
         const distLine = (distMi != null && Number.isFinite(distMi))
@@ -1407,35 +1551,46 @@ document.addEventListener("DOMContentLoaded", () => {
         const carHref = zipForUrl && /^\d{5}$/.test(String(zipForUrl).trim())
             ? `/car/${idStr}?zip_code=${encodeURIComponent(String(zipForUrl).trim())}`
             : `/car/${idStr}`;
+        // Dealer name -> /dealership/<dealer_id>, the same research page the car page
+        // links to. Same key shape the route validates (_DEALER_KEY_RE), so a card
+        // carrying a junk dealer_id renders plain text instead of a link to a 404.
+        const dealerName = String(c.dealer_name || "").trim();
+        const dealerKey = String(c.dealer_id || "").trim();
+        const dealerNameHtml = SC.escapeHtml(dealerName);
+        const dealerHtml = (dealerName && /^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$/.test(dealerKey))
+            ? `<a href="/dealership/${encodeURIComponent(dealerKey)}" class="result-dealer result-dealer-link">${dealerNameHtml}</a>`
+            : `<span class="result-dealer">${dealerNameHtml}</span>`;
+        // The dealer row sits OUTSIDE .result-card-link: an <a> nested inside an <a> is
+        // invalid HTML, and browsers recover by unnesting it, which breaks the card link.
         return `
             <article class="result-card${c.public_incomplete ? " result-card--incomplete" : ""}">
                 <a href="${carHref}" class="result-card-link">
                     <div class="result-image-wrap">
                         <img class="result-image" src="${imgSrcAttr}" alt="" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='/static/placeholder.svg';">
                         ${dealBadge ? `<div class="result-deal-badge-wrap">${dealBadge}</div>` : ""}
-                        ${photoLabel ? `<span class="result-photo-count">${escapeHtml(photoLabel)}</span>` : ""}
+                        ${photoLabel ? `<span class="result-photo-count">${SC.escapeHtml(photoLabel)}</span>` : ""}
                     </div>
                     <div class="result-content">
                         <div class="result-title-row">
-                            <h2>${escapeHtml(c.title)}</h2>
+                            <h2>${SC.escapeHtml(c.title)}</h2>
                             ${cpoBadge}
                             ${incompletePill}
                         </div>
-                        <p class="result-trim">${escapeHtml(c.trim || "")}</p>
-                        <p class="result-price">${fmtUSD(c.price)}${priceDropBadge}</p>
+                        <p class="result-trim">${SC.escapeHtml(c.trim || "")}</p>
+                        <p class="result-price">${SC.fmtUSD(c.price)}${priceDropBadge}</p>
                         ${marketLine}
                         <p class="result-meta">
-                            ${fmt(c.mileage)} mi
-                            &middot; ${escapeHtml(c.fuel_type || "")}
-                            &middot; ${escapeHtml(c.drivetrain || "")}
+                            ${SC.fmt(c.mileage)} mi
+                            &middot; ${SC.escapeHtml(c.fuel_type || "")}
+                            &middot; ${SC.escapeHtml(c.drivetrain || "")}
                         </p>
                         ${specLine}
-                        <p class="result-dealer-row">
-                            ${distLine}
-                            <span class="result-dealer">${escapeHtml(c.dealer_name || "")}</span>
-                        </p>
                     </div>
                 </a>
+                <p class="result-dealer-row">
+                    ${distLine}
+                    ${dealerHtml}
+                </p>
                 <div class="result-card-actions">
                     ${compareCb}
                     ${saveBtn}
@@ -1576,96 +1731,6 @@ document.addEventListener("DOMContentLoaded", () => {
         return arr;
     }
 
-    function skeletonCardsHtml(count) {
-        return Array.from({ length: count }, () => (
-            `<div class="result-card result-card--skeleton" aria-hidden="true">`
-            + `<div class="result-image-wrap"><div class="result-image result-image--skeleton"></div></div>`
-            + `<div class="result-content">`
-            + `<div class="result-skel-line result-skel-line--title"></div>`
-            + `<div class="result-skel-line result-skel-line--price"></div>`
-            + `<div class="result-skel-line result-skel-line--meta"></div>`
-            + `</div></div>`
-        )).join("");
-    }
-
-    function dealBadgeHtml(mkt) {
-        if (!mkt || mkt.delta_pct == null) return "";
-        const vs = mkt.vs_market || "near_market";
-        const labels = {
-            below_market: "Below market",
-            above_market: "Above market",
-            near_market: "At market",
-        };
-        const sign = Number(mkt.delta_pct) > 0 ? "+" : "";
-        const text = labels[vs] || "At market";
-        return `<span class="result-deal-badge result-deal-badge--${escapeHtml(vs)}">`
-            + `${escapeHtml(text)} <span class="result-deal-badge-pct">${sign}${escapeHtml(String(mkt.delta_pct))}%</span>`
-            + `</span>`;
-    }
-
-    function dealScoreBadgeHtml(ds) {
-        if (!ds || !ds.label || ds.label === "insufficient_data") return "";
-        const cls = ds.label === "at_market" ? "near_market" : ds.label;
-        const labels = {
-            below_market: "Below market",
-            above_market: "Above market",
-            at_market: "Fair price",
-        };
-        const text = labels[ds.label] || "Fair price";
-        let pctStr = "";
-        if (ds.pct_from_median != null && ds.label !== "at_market") {
-            const p = Math.abs(Number(ds.pct_from_median));
-            if (Number.isFinite(p)) {
-                pctStr = ` <span class="result-deal-badge-pct">${ds.label === "below_market" ? "-" : "+"}${Math.round(p)}%</span>`;
-            }
-        }
-        return `<span class="result-deal-badge result-deal-badge--${escapeHtml(cls)}">${escapeHtml(text)}${pctStr}</span>`;
-    }
-
-    function cpoBadgeHtml(c) {
-        if (!c.is_cpo) return "";
-        return `<span class="result-cpo-badge" title="Certified Pre-Owned">Certified Pre-Owned</span>`;
-    }
-
-    function priceDropBadgeHtml(c) {
-        const amt = Number(c.price_drop_amount);
-        if (!amt || !Number.isFinite(amt) || amt <= 0) return "";
-        const days = Number(c.price_drop_days_ago);
-        const when = Number.isFinite(days) ? (days <= 0 ? "today" : days === 1 ? "1 day ago" : `${days} days ago`) : "";
-        return `<span class="result-price-drop-badge">`
-            + `▼ $${Math.round(amt).toLocaleString()}${when ? ` <span class="result-price-drop-badge-when">${escapeHtml(when)}</span>` : ""}`
-            + `</span>`;
-    }
-
-    function fmt(n)  { return Number(n).toLocaleString(); }
-    function fmtUSD(n) {
-        if (n == null || n === "" || Number(n) === 0) return "Call for Price";
-        return "$" + Number(n).toLocaleString("en-US", {maximumFractionDigits: 0});
-    }
-
-    function escapeHtml(s) {
-        return String(s ?? "")
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/"/g, "&quot;");
-    }
-
-    /** Resolve URL and allow only http(s) for listing images (mitigates javascript: / data:). */
-    function safeImageSrc(url) {
-        const raw = String(url || "").trim();
-        if (!raw) return "/static/placeholder.svg";
-        try {
-            const abs = new URL(raw, window.location.origin);
-            if (abs.protocol !== "http:" && abs.protocol !== "https:") {
-                return "/static/placeholder.svg";
-            }
-            return abs.href;
-        } catch (_) {
-            return "/static/placeholder.svg";
-        }
-    }
-
     /** Resolve URL and allow only http(s) for CSS background-image (mitigates javascript: / data: in listings). */
     function cssSingleQuotedUrl(url) {
         const raw = String(url || "").trim();
@@ -1792,7 +1857,7 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
         const z = zip.trim();
-        if (!isValidUsZip(z)) {
+        if (!SC.isValidUsZip(z)) {
             setListingsGeoHint("Enter a valid 5-digit US ZIP code.");
             return;
         }
@@ -1902,7 +1967,7 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         }
         const zipForUrl = scalarVal("zip_code");
-        if (zipForUrl && isValidUsZip(zipForUrl)) {
+        if (zipForUrl && SC.isValidUsZip(zipForUrl)) {
             params.set("zip_code", zipForUrl);
             const radiusForUrl = scalarVal("radius");
             if (radiusForUrl) params.set("radius", radiusForUrl);
@@ -1979,7 +2044,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (countries.length && typeof COUNTRY_TO_MAKES === "object") {
             const fromCountries = countries.flatMap(c => COUNTRY_TO_MAKES[c] || []);
             makesFilter = makesFilter.length
-                ? makesFilter.filter(m => valueInListCI(fromCountries, m))
+                ? makesFilter.filter(m => SC.valueInListCI(fromCountries, m))
                 : fromCountries;
         }
 
@@ -2004,15 +2069,15 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function carMatchesFacetFilters(c, state, dealerFilterSet) {
-        if (state.makesFilter.length && !valueInListCI(state.makesFilter, c.make)) return false;
-        if (state.models.length && !valueInListCI(state.models, c.model)) return false;
-        if (state.trims.length && !valueInListCI(state.trims, c.trim)) return false;
-        if (state.fuels.length && !valueInListCI(state.fuels, c.fuel_type)) return false;
+        if (state.makesFilter.length && !SC.valueInListCI(state.makesFilter, c.make)) return false;
+        if (state.models.length && !SC.valueInListCI(state.models, c.model)) return false;
+        if (state.trims.length && !SC.valueInListCI(state.trims, c.trim)) return false;
+        if (state.fuels.length && !SC.valueInListCI(state.fuels, c.fuel_type)) return false;
         if (state.cyls.length && !state.cyls.includes(String(c.cylinders))) return false;
-        if (state.trans.length && !valueInListCI(state.trans, c.transmission)) return false;
-        if (state.drives.length && !valueInListCI(state.drives, c.drivetrain)) return false;
-        if (state.inductions.length && !valueInListCI(state.inductions, c.forced_induction)) return false;
-        if (state.bodies.length && !valueInListCI(state.bodies, c.body_style)) return false;
+        if (state.trans.length && !SC.valueInListCI(state.trans, c.transmission)) return false;
+        if (state.drives.length && !SC.valueInListCI(state.drives, c.drivetrain)) return false;
+        if (state.inductions.length && !SC.valueInListCI(state.inductions, c.forced_induction)) return false;
+        if (state.bodies.length && !SC.valueInListCI(state.bodies, c.body_style)) return false;
         if (state.extColors.length && !carMatchesPaintFamilyBuckets(c, "exterior_color", state.extColors)) return false;
         if (state.intColors.length && !carMatchesPaintFamilyBuckets(c, "interior_color", state.intColors)) return false;
         if (state.pkgs.length) {
@@ -2145,34 +2210,6 @@ document.addEventListener("DOMContentLoaded", () => {
     window.__DS_runFilterRender = renderResults;
     window.__DS_runFilterRenderInstant = renderResultsNow;
 
-    function carSmartEquipmentHaystack(c) {
-        if (!c || typeof c !== "object") return "";
-        return [
-            ...(c.package_names || []),
-            c.title,
-            c.trim,
-            c.engine_description,
-            c.make,
-            c.model,
-            c.fuel_type,
-            c.drivetrain,
-            c.forced_induction,
-            c.exterior_color,
-            c.interior_color,
-            c.body_style,
-            c.is_cpo ? "certified pre-owned cpo" : null,
-        ]
-            .filter(Boolean)
-            .join(" ")
-            .toLowerCase();
-    }
-
-    function valueInListCISmart(list, val) {
-        if (!list || !list.length || val == null || val === "") return false;
-        const v = String(val).trim().toLowerCase();
-        return list.some((x) => String(x).trim().toLowerCase() === v);
-    }
-
     function carMatchesSmartFilters(c, filters) {
         if (!filters || typeof filters !== "object") return true;
 
@@ -2180,7 +2217,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (Array.isArray(vehicleOr) && vehicleOr.length) {
             const branchHit = vehicleOr.some((vf) => {
                 if (!vf || typeof vf !== "object") return false;
-                if (vf.make && !valueInListCISmart([vf.make], c.make)) return false;
+                if (vf.make && !SC.valueInListCISmart([vf.make], c.make)) return false;
                 if (vf.model) {
                     const md = String(c.model || "").toLowerCase();
                     const want = String(vf.model).toLowerCase();
@@ -2198,7 +2235,7 @@ document.addEventListener("DOMContentLoaded", () => {
         } else {
             const makes = filters.make;
             const makeList = Array.isArray(makes) ? makes : makes ? [makes] : [];
-            if (makeList.length && !valueInListCISmart(makeList, c.make)) return false;
+            if (makeList.length && !SC.valueInListCISmart(makeList, c.make)) return false;
             const models = filters.model;
             const modelList = Array.isArray(models) ? models : models ? [models] : [];
             if (modelList.length) {
@@ -2220,11 +2257,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const drives = filters.drivetrain;
         const driveList = Array.isArray(drives) ? drives : drives ? [drives] : [];
-        if (driveList.length && !valueInListCISmart(driveList, c.drivetrain)) return false;
+        if (driveList.length && !SC.valueInListCISmart(driveList, c.drivetrain)) return false;
 
-        if (filters.fuel_type && !valueInListCISmart([filters.fuel_type], c.fuel_type)) return false;
+        if (filters.fuel_type && !SC.valueInListCISmart([filters.fuel_type], c.fuel_type)) return false;
 
-        if (filters.forced_induction && !valueInListCISmart([filters.forced_induction], c.forced_induction)) return false;
+        if (filters.forced_induction && !SC.valueInListCISmart([filters.forced_induction], c.forced_induction)) return false;
 
         if (filters.cpo_only && !c.is_cpo) return false;
 
@@ -2232,7 +2269,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const bodies = filters.body_style;
         const bodyList = Array.isArray(bodies) ? bodies : bodies ? [bodies] : [];
-        if (bodyList.length && !valueInListCISmart(bodyList, c.body_style)) return false;
+        if (bodyList.length && !SC.valueInListCISmart(bodyList, c.body_style)) return false;
 
         const ext = filters.exterior_color;
         const extList = Array.isArray(ext) ? ext : ext ? [ext] : [];
@@ -2259,7 +2296,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (!Number.isFinite(y) || y > Number(filters.max_year)) return false;
         }
 
-        const hay = carSmartEquipmentHaystack(c);
+        const hay = SC.carSmartEquipmentHaystack(c);
         const pkgAll = filters.packages_json_contains_all;
         if (Array.isArray(pkgAll) && pkgAll.length) {
             if (!pkgAll.every((needle) => hay.includes(String(needle).toLowerCase()))) return false;
@@ -2557,7 +2594,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function showInventoryLoading() {
         if (!resultsGrid) return;
         if (resultsCount) resultsCount.textContent = "Loading inventory…";
-        resultsGrid.innerHTML = skeletonCardsHtml(8);
+        resultsGrid.innerHTML = SC.skeletonCardsHtml(8);
         if (emptyState) emptyState.style.display = "none";
         if (zeroHintEl) zeroHintEl.hidden = true;
     }
@@ -2838,7 +2875,7 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         }
         const zipChip = scalarVal("zip_code");
-        if (zipChip && isValidUsZip(zipChip)) {
+        if (zipChip && SC.isValidUsZip(zipChip)) {
             chips.push({ param: "zip_code", value: zipChip, label: zipChip });
             const radiusChip = scalarVal("radius");
             if (radiusChip) {
@@ -2871,8 +2908,8 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         activeChipsEl.innerHTML = chips.map((c) => (
-            `<button type="button" class="listings-filter-chip" data-chip-param="${escapeHtml(c.param)}" data-chip-value="${escapeHtml(c.value)}">`
-            + `<span class="listings-filter-chip-label">${escapeHtml(c.label)}</span>`
+            `<button type="button" class="listings-filter-chip" data-chip-param="${SC.escapeHtml(c.param)}" data-chip-value="${SC.escapeHtml(c.value)}">`
+            + `<span class="listings-filter-chip-label">${SC.escapeHtml(c.label)}</span>`
             + `<span class="listings-filter-chip-x" aria-hidden="true">×</span>`
             + `</button>`
         )).join("");
@@ -2984,7 +3021,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 })
                     .then((r) => (r.ok ? r.json() : Promise.reject()))
                     .then((data) => {
-                        if (!data || !data.ok) return;
+                        if (!data || !data.ok) {
+                            btn.setAttribute("title", "Could not save — try again");
+                            return;
+                        }
+                        btn.removeAttribute("title");
                         const saved = !!data.saved;
                         const idNum = Number(carId);
                         if (window.SAVED_CAR_IDS instanceof Set) {
@@ -2995,7 +3036,9 @@ document.addEventListener("DOMContentLoaded", () => {
                         btn.setAttribute("aria-label", saved ? "Saved" : "Save this car");
                         btn.querySelector("svg").setAttribute("fill", saved ? "currentColor" : "none");
                     })
-                    .catch(() => {})
+                    .catch(() => {
+                        btn.setAttribute("title", "Could not save — try again");
+                    })
                     .finally(() => { btn.disabled = false; });
             });
         });
@@ -3007,13 +3050,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const LISTINGS_ZIP_STORAGE_KEY = "ds_listings_geo_zip";
 
-    function isValidUsZip(zip) {
-        return /^\d{5}$/.test(String(zip || "").trim());
-    }
-
     function persistListingsZipLocal(zip) {
         const z = String(zip || "").trim();
-        if (!isValidUsZip(z)) return;
+        if (!SC.isValidUsZip(z)) return;
         try {
             localStorage.setItem(LISTINGS_ZIP_STORAGE_KEY, z);
         } catch (_) {}
@@ -3022,7 +3061,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function readListingsZipLocal() {
         try {
             const z = localStorage.getItem(LISTINGS_ZIP_STORAGE_KEY);
-            return isValidUsZip(z) ? String(z).trim() : "";
+            return SC.isValidUsZip(z) ? String(z).trim() : "";
         } catch (_) {
             return "";
         }
@@ -3036,7 +3075,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function patchListingCarLinkZips(zip) {
         const z = String(zip || "").trim();
-        if (!isValidUsZip(z)) return;
+        if (!SC.isValidUsZip(z)) return;
         document.querySelectorAll(".result-card-link").forEach((a) => {
             const href = a.getAttribute("href") || "";
             const m = href.match(/^\/car\/(\d+)/);
@@ -3047,7 +3086,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function setListingsZipCode(zip) {
         const z = String(zip || "").trim();
-        if (!isValidUsZip(z)) return;
+        if (!SC.isValidUsZip(z)) return;
         document.querySelectorAll('[name="zip_code"]').forEach((el) => {
             el.value = z;
         });
@@ -3128,7 +3167,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function resolveListingsGeo() {
-        if (isValidUsZip(scalarVal("zip_code"))) {
+        if (SC.isValidUsZip(scalarVal("zip_code"))) {
             persistListingsZipLocal(scalarVal("zip_code"));
             markListingsGeoReady();
             return;
@@ -3153,7 +3192,7 @@ document.addEventListener("DOMContentLoaded", () => {
             ))
             .then((r) => (r.ok ? r.json() : null))
             .then((data) => {
-                if (data && isValidUsZip(data.zip_code)) {
+                if (data && SC.isValidUsZip(data.zip_code)) {
                     setListingsZipCode(data.zip_code);
                     markListingsGeoReady();
                     return;
@@ -3172,7 +3211,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll('[name="zip_code"]').forEach((el) => {
         el.addEventListener("input", () => {
             const z = (el.value || "").trim();
-            if (!isValidUsZip(z)) return;
+            if (!SC.isValidUsZip(z)) return;
             if (window.__DS_listingsGeoState.ready) return;
             markListingsGeoReady();
         });
@@ -3203,6 +3242,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (!isOpen) {
                 dropdown.classList.add("open");
                 trigger.classList.add("open");
+                ensureLazyFacet(param);
                 runCascade();
             }
         });
@@ -3238,9 +3278,16 @@ document.addEventListener("DOMContentLoaded", () => {
             const isOpen = body.classList.contains("open");
             body.classList.toggle("open", !isOpen);
             trigger.classList.toggle("open", !isOpen);
-            if (!isOpen) runCascade();
+            if (!isOpen) {
+                ensureLazyFacet(param);
+                runCascade();
+            }
         });
     });
+
+    // Background fill so smart search, chips and the make→model cascade see the
+    // full option lists without the user having to open the section first.
+    hydrateAllLazyFacets();
 
     // Poll inventory JSON while a scan writes to inventory.db (LISTINGS_CLIENT_POLL_MS, e.g. 8000).
     const pollAttr = document.body && document.body.getAttribute("data-listings-poll-ms");

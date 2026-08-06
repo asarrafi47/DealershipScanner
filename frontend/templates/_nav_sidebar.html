@@ -101,7 +101,7 @@
     {% endif %}
 
     <div class="app-sidebar__foot">
-        {% if has_paid_access is defined and not has_paid_access %}
+        {% if billing_stripe_enabled and has_paid_access is defined and not has_paid_access %}
         <a href="{{ url_for('premium_page') }}" class="app-sidebar__link app-sidebar__link--premium{% if nav_active == 'premium' %} app-sidebar__link--active{% endif %}">
             {{ icon('premium', 16, 'app-sidebar__icon') }}<span>Premium</span>
         </a>

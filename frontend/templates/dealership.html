@@ -4,9 +4,39 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ name }} — Dealership research — Sarrafi Cars</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v={{ static_cache_ver }}">
+    <meta name="csrf-token" content="{{ csrf_token }}">
+    {% include "_head_css.html" %}
     {% include "_head_perf.html" %}
     <link rel="stylesheet" href="{{ url_for('static', filename='vendor/leaflet/leaflet.css') }}?v={{ static_cache_ver }}">
+    <script nonce="{{ csp_nonce }}">
+    (function () {
+        // main.js hydrates its grid from window.__DS_listingsCarsPrefetchPromise when
+        // one is published before it boots (see startListingsAssetPrefetch). Publishing
+        // the DEALER-scoped endpoint here is what keeps this page off
+        // /api/listings/cars — the whole 71k-row fleet — while still reusing every
+        // filter/sort/save/compare path unchanged.
+        function fetchDealerCars() {
+            return fetch({{ (url_for('api_dealership_cars', dealer_key=dealer_key)) | tojson }}, { credentials: "same-origin" })
+                .then(function (r) { return r.ok ? r.json() : null; })
+                .then(function (d) {
+                    if (d && d.ok && Array.isArray(d.cars)) window.__DS_prefetchCars = d.cars;
+                    return d;
+                })
+                .catch(function () { return null; });
+        }
+        window.__DS_listingsCarsPrefetchPromise = new Promise(function (resolve) {
+            function go() { resolve(fetchDealerCars()); }
+            // Off DOMContentLoaded, not load: `load` waits on every card image, and a
+            // filter applied in that window would search only the bootstrap cards.
+            function schedule() {
+                if (window.requestIdleCallback) window.requestIdleCallback(go, { timeout: 1500 });
+                else setTimeout(go, 150);
+            }
+            if (document.readyState !== "loading") schedule();
+            else document.addEventListener("DOMContentLoaded", schedule, { once: true });
+        });
+    })();
+    </script>
     <style nonce="{{ csp_nonce }}">
         .dealer-research { max-width: 1180px; margin: 0 auto; padding: 1.5rem 1rem 4rem; }
         .dealer-research__hero { display: flex; flex-wrap: wrap; gap: 1rem 2rem; align-items: flex-start;
@@ -145,9 +175,57 @@
         .dr-reviewform__signin { border: 1px dashed rgba(128,128,128,.5); border-radius: 12px;
             padding: 1rem 1.15rem; margin-top: 1.25rem; font-size: .9rem; }
         .dr-reviewform__signin a { font-weight: 600; color: inherit; }
+
+        /* Inventory browser — reuses the /listings sidebar + grid, which is styled
+           under `body.listings-page`, hence that class on <body>. These few rules
+           only undo the full-bleed page chrome that layout assumes, so the filters
+           sit inside the research page's own 1180px column. */
+        .dealer-inventory { margin-top: 2.25rem; }
+        body.dealership-research-page { background-image: none; }
+        /* `margin: 0 auto` on a grid item shrink-wraps it once the listings rules
+           are in play; the research column must still fill its track. */
+        body.dealership-research-page .dealer-research { width: 100%; box-sizing: border-box; }
+        body.dealership-research-page .listings-layout {
+            padding: 0;
+            gap: 1rem 1.75rem;
+            grid-template-columns: minmax(230px, 270px) minmax(0, 1fr);
+        }
+        body.dealership-research-page .listings-sidebar { top: 12px; }
+        /* `.listings-active-chips-wrap { display: flex }` outranks the UA's
+           `[hidden] { display: none }`, so the empty "Clear all" bar shows even when
+           main.js has hidden it. (Same on /listings — that stylesheet is not ours.) */
+        body.dealership-research-page .listings-active-chips-wrap[hidden] { display: none; }
+        body.dealership-research-page .listings-filter-inner { padding-top: 0; }
+        body.dealership-research-page .listings-form { margin: 0; }
+        @media (max-width: 960px) {
+            body.dealership-research-page .listings-layout { grid-template-columns: minmax(0, 1fr); }
+        }
     </style>
 </head>
-<body class="dealership-research-page app-layout-body">
+<body class="dealership-research-page app-layout-body listings-page"
+      data-listings-poll-ms="0"
+      data-facet-options-url="{{ url_for('api_dealership_filter_options', dealer_key=dealer_key) }}"
+      {% if logged_in %}data-logged-in="1"{% endif %}>
+
+{# main.js boot contract (see frontend/templates/listings.html for the original).
+   Every blob here is scoped to this ONE dealer, so the shared filter/sort/save/
+   compare code operates on this rooftop's inventory and nothing else. #}
+<script type="application/json" id="ds-listings-car-rows" nonce="{{ csp_nonce }}">{{ car_rows_packed | tojson }}</script>
+<script type="application/json" id="ds-listings-all-cars" nonce="{{ csp_nonce }}">[]</script>
+<script type="application/json" id="ds-listings-country-to-makes" nonce="{{ csp_nonce }}">{{ (facets.country_to_makes or {}) | tojson }}</script>
+<script type="application/json" id="ds-listings-zip-coords" nonce="{{ csp_nonce }}">{}</script>
+<script type="application/json" id="ds-listings-dealer-coords" nonce="{{ csp_nonce }}">{}</script>
+<script type="application/json" id="ds-listings-initial-grid" nonce="{{ csp_nonce }}">[]</script>
+<script type="application/json" id="ds-listings-bootstrap-grid" nonce="{{ csp_nonce }}">{{ (inventory.cars or []) | tojson }}</script>
+{# main.js reads PACKAGE_ROWS from this blob only (there is no lazy fetch for it),
+   so with a hard-coded [] cascadePackages can never narrow the Packages list to the
+   checked make/model. Dealer-scoped, so it stays small. Note that fleet-wide TODAY
+   this is empty on every page: only 21 active listings carry a `packages` blob with
+   a packages_normalized/possible_packages key and all 21 of those lists are empty,
+   so /api/listings/filter-options also returns 0 package names and 0 package rows.
+   The facet is wired, not populated — the template hides it while it is empty. #}
+<script type="application/json" id="ds-listings-package-rows" nonce="{{ csp_nonce }}">{{ (facets.package_rows or []) | tojson }}</script>
+<script type="application/json" id="ds-listings-saved-ids" nonce="{{ csp_nonce }}">{{ (saved_car_ids or []) | tojson }}</script>
 
 <div class="page page--app-layout">
 
@@ -173,64 +251,302 @@
             </div>
         </header>
 
-        <div class="dealer-research__cols">
-            <div>
-                <!-- INVENTORY -->
-                <section aria-labelledby="dr-inventory-h">
-                    <h2 class="dealer-research__h2" id="dr-inventory-h">Inventory</h2>
-                    <div class="dealer-research__counts">
-                        <span class="dealer-research__count"><b>{{ '{:,}'.format(inventory.total) }}</b><span>Total</span></span>
-                        <span class="dealer-research__count"><b>{{ '{:,}'.format(inventory.new_count) }}</b><span>New</span></span>
-                        <span class="dealer-research__count"><b>{{ '{:,}'.format(inventory.used_count) }}</b><span>Pre-owned</span></span>
+        <!-- INVENTORY -->
+        <section class="dealer-inventory" aria-labelledby="dr-inventory-h">
+            <h2 class="dealer-research__h2" id="dr-inventory-h">Inventory</h2>
+            <div class="dealer-research__counts">
+                <span class="dealer-research__count"><b>{{ '{:,}'.format(inventory.total) }}</b><span>Total</span></span>
+                <span class="dealer-research__count"><b>{{ '{:,}'.format(inventory.new_count) }}</b><span>New</span></span>
+                <span class="dealer-research__count"><b>{{ '{:,}'.format(inventory.used_count) }}</b><span>Pre-owned</span></span>
+            </div>
+
+            {% if inventory.total %}
+            <form method="GET" action="{{ url_for('dealership_research_page', dealer_key=dealer_key) }}" id="search-form" class="listings-form">
+                {# main.js gates every filter render on a valid ZIP (it drives radius
+                   search on /listings). This page has one rooftop and no radius
+                   control, so it supplies the dealer's own ZIP and the geo branch is
+                   never entered. See _dealer_filter_zip in backend/routes/dealership_page.py. #}
+                <input type="hidden" id="listings-zip-input" value="{{ filter_zip }}">
+
+                <div class="listings-layout">
+                <aside class="listings-sidebar" id="listings-sidebar-panel" aria-label="Inventory filters">
+                    <div class="listings-filter-inner">
+                    <div class="filter-basics-row filter-basics-row--carmax" id="filter-basics-row">
+                        <div class="pill-group pill-select-group" data-filter-param="max_price">
+                            <label class="pill-select-label" for="listings-max-price">Price</label>
+                            <select name="max_price" id="listings-max-price" class="pill-select">
+                                <option value="" {% if not active.max_price %}selected{% endif %}>Any</option>
+                                {% for p in [15000, 25000, 35000, 50000, 75000, 100000, 150000] %}
+                                <option value="{{ p }}" {% if active.max_price == p|string %}selected{% endif %}>${{ (p / 1000)|int }}k</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="pill-group pill-select-group" data-filter-param="max_mileage">
+                            <label class="pill-select-label" for="listings-max-mileage">Mileage</label>
+                            <select name="max_mileage" id="listings-max-mileage" class="pill-select">
+                                <option value="" {% if not active.max_mileage %}selected{% endif %}>Any</option>
+                                {% for mi in [5000, 10000, 15000, 20000, 25000, 30000, 40000, 50000, 75000, 100000] %}
+                                <option value="{{ mi }}" {% if active.max_mileage == mi|string %}selected{% endif %}>&lt;{{ "{:,}".format(mi) }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="pill-group pill-select-group" data-filter-param="inventory_condition">
+                            <label class="pill-select-label" for="listings-inventory-condition">Condition</label>
+                            <select name="inventory_condition" id="listings-inventory-condition" class="pill-select">
+                                <option value="" {% if not active.inventory_condition %}selected{% endif %}>New &amp; pre-owned</option>
+                                <option value="new" {% if active.inventory_condition == 'new' %}selected{% endif %}>New</option>
+                                <option value="pre_owned" {% if active.inventory_condition == 'pre_owned' %}selected{% endif %}>Pre-owned</option>
+                                <option value="cpo" {% if active.inventory_condition == 'cpo' %}selected{% endif %}>Certified Pre-Owned</option>
+                            </select>
+                        </div>
                     </div>
-                    {% if inventory.cars %}
-                    {% if inventory.capped %}
-                    <p class="dealer-research__empty">Showing {{ inventory.cars|length }} of {{ '{:,}'.format(inventory.total) }} listings.</p>
-                    {% endif %}
-                    <div class="dealer-research__grid">
-                        {% for c in inventory.cars %}
-                        <article class="result-card">
-                            <a href="/car/{{ c.id }}" class="result-card-link">
-                                <div class="result-image-wrap">
-                                    <img class="result-image" src="{{ c.image_url or '/static/placeholder.svg' }}" alt=""
-                                         loading="lazy" decoding="async"
-                                         onerror="this.onerror=null;this.src='/static/placeholder.svg';">
-                                    {% if c.photo_count %}<span class="result-photo-count">{{ c.photo_count }} photos</span>{% endif %}
-                                </div>
-                                <div class="result-content">
-                                    <div class="result-title-row">
-                                        <h2>{{ c.title }}</h2>
-                                    </div>
-                                    <p class="result-trim">{{ c.trim or '' }}</p>
-                                    <p class="result-price">
-                                        {% if c.price %}${{ '{:,.0f}'.format(c.price|float) }}{% else %}Call for price{% endif %}
-                                    </p>
-                                    {% set ds = c.deal_score %}
-                                    {% if c.is_cpo or c.has_carfax or c.price_drop_amount or (ds and ds.label in ('below_market', 'above_market')) %}
-                                    <div class="dr-chips">
-                                        {% if ds and ds.label == 'below_market' %}<span class="dr-chip dr-chip--deal-good">Below market</span>
-                                        {% elif ds and ds.label == 'above_market' %}<span class="dr-chip dr-chip--deal-high">Above market</span>{% endif %}
-                                        {% if c.price_drop_amount %}<span class="dr-chip dr-chip--drop">&#9660; ${{ '{:,.0f}'.format(c.price_drop_amount|float) }}</span>{% endif %}
-                                        {% if c.is_cpo %}<span class="dr-chip dr-chip--cpo">Certified</span>{% endif %}
-                                        {% if c.has_carfax %}<span class="dr-chip dr-chip--carfax">Carfax</span>{% endif %}
-                                    </div>
-                                    {% endif %}
-                                    <p class="result-meta">
-                                        {% if c.mileage %}{{ '{:,}'.format(c.mileage|int) }} mi{% endif %}
-                                        {% if c.fuel_type %}&middot; {{ c.fuel_type }}{% endif %}
-                                        {% if c.drivetrain %}&middot; {{ c.drivetrain }}{% endif %}
-                                    </p>
-                                    {% if c.condition %}<p class="result-dealer-row"><span class="result-dealer">{{ c.condition }}</span></p>{% endif %}
-                                </div>
-                            </a>
-                        </article>
+
+                    <div class="listings-filter-acc" id="filter-controls-row">
+                    {% macro acc(label, param) %}
+                    <div class="acc-section listings-acc-section" data-param="{{ param }}">
+                        <button type="button" class="acc-trigger listings-acc-trigger" id="acc-trigger-{{ param }}">
+                            <span class="acc-label" id="acc-label-{{ param }}">{{ label }}</span>
+                            <div class="acc-right">
+                                <span class="acc-count" id="acc-count-{{ param }}" style="display:none"></span>
+                                <svg class="acc-chevron" viewBox="0 0 10 6" width="9" aria-hidden="true">
+                                    <path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+                                </svg>
+                            </div>
+                        </button>
+                        <div class="acc-body listings-acc-body" id="acc-body-{{ param }}">
+                            {{ caller() }}
+                        </div>
+                    </div>
+                    {% endmacro %}
+
+                    <p class="listings-filter-group-label">Vehicle</p>
+
+                    {% if facets.countries %}
+                    {% call acc("Country", "country") %}
+                    <div class="acc-options" id="options-country">
+                        {% for country in facets.countries %}
+                        <label class="filter-option">
+                            <input type="checkbox" name="country" value="{{ country }}"
+                                {% if country in active.country %}checked{% endif %}>
+                            <span>{{ country }}</span>
+                        </label>
                         {% endfor %}
                     </div>
-                    {% else %}
-                    <p class="dealer-research__empty">No active listings for this dealer right now.</p>
+                    {% endcall %}
                     {% endif %}
-                </section>
 
+                    {% call acc("Make", "make") %}
+                    <div class="acc-options" id="options-make">
+                        {% for make in facets.makes %}
+                        <label class="filter-option">
+                            <input type="checkbox" name="make" value="{{ make }}"
+                                {% if make in active.make %}checked{% endif %}>
+                            <span>{{ make }}</span>
+                        </label>
+                        {% endfor %}
+                    </div>
+                    {% endcall %}
+
+                    {# Model/Trim/Packages are the long tails even for one rooftop (the
+                       biggest dealer here has 397 models and 1,432 trims — ~300 KB of
+                       markup). Only the checked options ship in the document, so the
+                       first frame filters correctly; main.js grafts in the rest from
+                       the dealer-scoped facet endpoint. Same contract as /listings. #}
+                    {% call acc("Model", "model") %}
+                    <div class="acc-options" id="options-model" data-lazy-facet="model">
+                        {% for make, model in facets.model_rows if model in active.model %}
+                        <label class="filter-option" data-make="{{ make }}">
+                            <input type="checkbox" name="model" value="{{ model }}" data-make="{{ make }}" checked>
+                            <span>{{ model }}</span>
+                        </label>
+                        {% endfor %}
+                    </div>
+                    {% endcall %}
+
+                    {% call acc("Trim", "trim") %}
+                    <div class="acc-options" id="options-trim" data-lazy-facet="trim">
+                        {% for make, model, trim in facets.trim_rows if trim in active.trim %}
+                        <label class="filter-option" data-make="{{ make }}" data-model="{{ model }}">
+                            <input type="checkbox" name="trim" value="{{ trim }}" data-make="{{ make }}" data-model="{{ model }}" checked>
+                            <span>{{ trim }}</span>
+                        </label>
+                        {% endfor %}
+                    </div>
+                    {% endcall %}
+
+                    <p class="listings-filter-group-label">Specs</p>
+
+                    {% call acc("Fuel type", "fuel_type") %}
+                    <div class="acc-options" id="options-fuel_type">
+                        {% for fuel in facets.fuel_types %}
+                        <label class="filter-option">
+                            <input type="checkbox" name="fuel_type" value="{{ fuel }}"
+                                {% if fuel in active.fuel_type %}checked{% endif %}>
+                            <span>{{ fuel }}</span>
+                        </label>
+                        {% endfor %}
+                    </div>
+                    {% endcall %}
+
+                    {% call acc("Cylinders", "cylinders") %}
+                    <div class="acc-options" id="options-cylinders">
+                        {% for item in facets.cylinders %}
+                        <label class="filter-option">
+                            <input type="checkbox" name="cylinders" value="{{ item }}"
+                                {% if item|string in active.cylinders %}checked{% endif %}>
+                            <span>{{ "Electric" if item == 0 else item ~ "-cyl" }}</span>
+                        </label>
+                        {% endfor %}
+                    </div>
+                    {% endcall %}
+
+                    {% call acc("Transmission", "transmission") %}
+                    <div class="acc-options" id="options-transmission">
+                        {% for t in facets.transmissions %}
+                        <label class="filter-option">
+                            <input type="checkbox" name="transmission" value="{{ t }}"
+                                {% if t in active.transmission %}checked{% endif %}>
+                            <span>{{ t }}</span>
+                        </label>
+                        {% endfor %}
+                    </div>
+                    {% endcall %}
+
+                    {% call acc("Drivetrain", "drivetrain") %}
+                    <div class="acc-options" id="options-drivetrain">
+                        {% for d in facets.drivetrains %}
+                        <label class="filter-option">
+                            <input type="checkbox" name="drivetrain" value="{{ d }}"
+                                {% if d in active.drivetrain %}checked{% endif %}>
+                            <span>{{ d }}</span>
+                        </label>
+                        {% endfor %}
+                    </div>
+                    {% endcall %}
+
+                    {% call acc("Body style", "body_style") %}
+                    <div class="acc-options" id="options-body_style">
+                        {% for b in facets.body_styles %}
+                        <label class="filter-option">
+                            <input type="checkbox" name="body_style" value="{{ b }}"
+                                {% if b in active.body_style %}checked{% endif %}>
+                            <span>{{ b }}</span>
+                        </label>
+                        {% endfor %}
+                    </div>
+                    {% endcall %}
+
+                    <p class="listings-filter-group-label">Color</p>
+
+                    {% call acc("Exterior", "exterior_color") %}
+                    <div class="acc-options" id="options-exterior_color">
+                        {% for c in facets.exterior_colors %}
+                        <label class="filter-option">
+                            <input type="checkbox" name="exterior_color" value="{{ c }}"
+                                {% if c in active.exterior_color %}checked{% endif %}>
+                            <span>{{ c|replace('_', ' ')|title }}</span>
+                        </label>
+                        {% endfor %}
+                    </div>
+                    {% endcall %}
+
+                    {% call acc("Interior", "interior_color") %}
+                    <div class="acc-options" id="options-interior_color">
+                        {% for c in facets.interior_colors %}
+                        <label class="filter-option">
+                            <input type="checkbox" name="interior_color" value="{{ c }}"
+                                {% if c in active.interior_color %}checked{% endif %}>
+                            <span>{{ c|replace('_', ' ')|title }}</span>
+                        </label>
+                        {% endfor %}
+                    </div>
+                    {% endcall %}
+
+                    {% if facets.all_package_names %}
+                    <p class="listings-filter-group-label">Options</p>
+                    {% call acc("Packages", "package") %}
+                    <div class="acc-options" id="options-package" data-lazy-facet="package">
+                        {% for nm in facets.all_package_names if nm in active.package %}
+                        <label class="filter-option">
+                            <input type="checkbox" name="package" value="{{ nm }}" checked>
+                            <span>{{ nm }}</span>
+                        </label>
+                        {% endfor %}
+                    </div>
+                    {% endcall %}
+                    {% endif %}
+
+                    <div class="listings-filter-actions">
+                        <a href="{{ url_for('dealership_research_page', dealer_key=dealer_key) }}" class="pill-clear-btn">Clear all</a>
+                        <button type="button" class="listings-filters-sheet-done primary-button">Show results</button>
+                    </div>
+                    </div>
+                    </div>
+                </aside>
+
+                <main class="listings-main-column" id="listings-results">
+                    <div class="dash-content listings-main" id="dash-content">
+                        <div class="listings-toolbar" id="listings-toolbar">
+                            <div class="listings-toolbar__start">
+                                <button type="button" class="listings-filters-mobile-btn" id="listings-filters-open" aria-expanded="false" aria-controls="listings-sidebar-panel">
+                                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
+                                    <span>Filters</span>
+                                    <span class="listings-filters-mobile-count" id="listings-filters-mobile-count" hidden></span>
+                                </button>
+                                <p class="results-count" id="results-count" aria-live="polite"></p>
+                            </div>
+                            <div class="listings-toolbar__end">
+                                <label class="listings-per-page-label" for="listings-per-page">Per page</label>
+                                <select id="listings-per-page" class="listings-per-page-select" aria-label="Results per page">
+                                    <option value="12">12</option>
+                                    <option value="24" selected>24</option>
+                                    <option value="48">48</option>
+                                </select>
+                                <label class="listings-sort-label" for="listings-sort">Sort</label>
+                                <select id="listings-sort" class="listings-sort-select" aria-label="Sort results">
+                                    <option value="relevance">Best match</option>
+                                    <option value="price_asc">Price: low to high</option>
+                                    <option value="price_desc">Price: high to low</option>
+                                    <option value="mileage_asc">Mileage: low to high</option>
+                                    <option value="year_desc">Year: newest</option>
+                                    <option value="deal">Best deal vs market</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="listings-active-chips-wrap" id="listings-active-chips-wrap" hidden>
+                            <div class="listings-active-chips" id="listings-active-chips" aria-label="Active filters"></div>
+                            <button type="button" class="listings-chips-clear" id="listings-chips-clear">Clear all</button>
+                        </div>
+                        <p class="listings-zero-hint" id="listings-zero-hint" hidden role="status">
+                            No matches with these filters.
+                            <button type="button" class="listings-undo-filter" id="listings-undo-filter">Undo last filter</button>
+                        </p>
+                        <div class="results-grid" id="results-grid"></div>
+                        <nav class="listings-pagination" id="listings-pagination" aria-label="Results pages" hidden>
+                            <p class="listings-pagination__summary" id="listings-range" aria-live="polite"></p>
+                            <div class="listings-pagination__controls">
+                                <button type="button" class="listings-page-btn listings-page-btn--prev" id="listings-page-prev" disabled>Previous</button>
+                                <div class="listings-pagination__pages" id="listings-pagination-pages" role="group" aria-label="Page numbers"></div>
+                                <button type="button" class="listings-page-btn listings-page-btn--next" id="listings-page-next" disabled>Next</button>
+                            </div>
+                        </nav>
+                        <div class="empty-state" id="empty-state" style="display:none" role="status">
+                            <div class="listings-empty-card">
+                                <p class="no-results">No vehicles matched your filters.</p>
+                                <p class="no-results-sub">Try removing some filters to broaden your search.</p>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+                </div>
+            </form>
+            {% else %}
+            <p class="dealer-research__empty">No active listings for this dealer right now.</p>
+            {% endif %}
+        </section>
+
+        <div class="dealer-research__cols">
+            <div>
                 <!-- CURRENT DEALS & SPECIALS (placeholder for a later phase) -->
                 <section aria-labelledby="dr-specials-h" id="dealer-specials-section">
                     <h2 class="dealer-research__h2" id="dr-specials-h">Current Deals &amp; Specials</h2>
@@ -409,7 +725,7 @@
                 <section aria-labelledby="dr-contact-h">
                     <h2 class="dealer-research__h2" id="dr-contact-h">Contact</h2>
                     <div class="dealer-research__contact">
-                        {% if website_url %}<div>Website: <a href="{{ website_url }}" target="_blank" rel="noopener noreferrer">{{ website_url }}</a></div>{% endif %}
+                        {% if website_url | http_url %}<div>Website: <a href="{{ website_url | http_url }}" target="_blank" rel="noopener noreferrer">{{ website_url }}</a></div>{% endif %}
                         {% if phone %}<div>Phone: <a href="tel:{{ phone | replace(' ', '') | replace('(', '') | replace(')', '') | replace('-', '') }}">{{ phone }}</a></div>{% endif %}
                         {% if full_address %}<div>Address: {{ full_address }}</div>{% endif %}
                         {% if not website_url and not phone and not full_address %}
@@ -435,6 +751,27 @@
     </main>
 
 </div>
+
+{% if inventory.total %}
+<div class="listings-filter-backdrop" id="listings-filter-backdrop" hidden aria-hidden="true"></div>
+
+<div class="compare-tray" id="compare-tray" hidden role="region" aria-label="Compare vehicles">
+    <div class="compare-tray__inner">
+        <div class="compare-tray__slots" id="compare-tray-slots"></div>
+        <div class="compare-tray__actions">
+            <a href="/compare" class="primary-button compare-tray__go" id="compare-tray-go">Compare</a>
+            <button type="button" class="compare-tray__clear" id="compare-tray-clear">Clear all</button>
+        </div>
+    </div>
+</div>
+
+{# dealership_page.js MUST load before main.js: it redirects main.js's hard-coded
+   facet-options URL to the dealer-scoped one before main.js fires that request. #}
+<script src="{{ url_for('static', filename='sc-helpers.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>
+<script src="{{ url_for('static', filename='dealership_page.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>
+<script src="{{ url_for('static', filename='main.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>
+<script src="{{ url_for('static', filename='compare.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>
+{% endif %}
 
 {% if has_geo %}
 <script nonce="{{ csp_nonce }}">

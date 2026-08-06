@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Sarrafi Cars Premium</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v={{ static_cache_ver }}">
+    {% include "_head_css.html" %}
 </head>
 <body class="lp-body{% if premium_embed %} premium-embed{% endif %}">
 <div class="page">
@@ -38,7 +38,7 @@
             <h1>Go deeper on every car<br>you're considering.</h1>
             <p>Premium unlocks intelligent tools, market price intelligence, and granular dealership control — built on the same live inventory you already browse for free.</p>
             <div class="premium-cta-row">
-                {% if has_paid_access %}
+                {% if has_paid_access or (logged_in_user and not billing_enabled) %}
                 <span class="primary-button" style="cursor: default; opacity: 0.7;">You have Premium access</span>
                 {% elif logged_in_user %}
                 <a href="{{ url_for('billing.premium_checkout') }}" class="primary-button">Upgrade to Premium</a>

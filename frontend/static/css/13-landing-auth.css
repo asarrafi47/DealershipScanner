@@ -1,0 +1,385 @@
+/* ============================================================
+   Register v2 ("centered stage") — bare underlined fields,
+   wood-trim plan toggle, side-by-side OAuth. Namespaced rgs-.
+   ============================================================ */
+
+.rgs-page {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.rgs-stage {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 56px 36px 72px;
+}
+
+.rgs-inner {
+    width: 100%;
+    max-width: 460px;
+    margin: 0 auto;
+}
+
+.rgs-eyebrow {
+    font-size: 11.5px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    font-weight: 600;
+    text-align: center;
+}
+
+.rgs-headline {
+    font-size: clamp(34px, 4.6vw, 48px);
+    font-weight: 600;
+    line-height: 1.08;
+    text-align: center;
+    margin-top: 14px;
+}
+
+.rgs-accent {
+    color: var(--navy);
+    position: relative;
+}
+
+.rgs-accent::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 4px;
+    height: 3px;
+    background: var(--wood-trim);
+    border-radius: 2px;
+    transform: scaleX(0);
+    transform-origin: left;
+    animation: rgs-draw 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.8s forwards;
+}
+
+@keyframes rgs-draw {
+    to { transform: scaleX(1); }
+}
+
+.rgs-sub {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 15px;
+    margin-top: 12px;
+}
+
+.rgs-error {
+    margin-top: 26px;
+}
+
+.rgs-fade {
+    opacity: 0;
+    animation: rgs-fade-up 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.rgs-fade-1 { animation-delay: 0.05s; }
+.rgs-fade-2 { animation-delay: 0.25s; }
+.rgs-fade-3 { animation-delay: 0.4s; }
+.rgs-fade-4 { animation-delay: 0.55s; }
+
+@keyframes rgs-fade-up {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: none; }
+}
+
+/* headline is always visible; only sections below fade */
+.rgs-form {
+    margin-top: 34px;
+}
+
+/* field-group overrides: labels as small caps, inputs as bare lines */
+.rgs-form .field-group {
+    margin-top: 28px;
+    margin-bottom: 0;
+}
+
+.rgs-form .field-group label {
+    font-size: 10.5px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.rgs-line,
+.rgs-form .field-group--password .password-input-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid var(--border-medium);
+    position: relative;
+    background: transparent;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.rgs-line::after,
+.rgs-form .field-group--password .password-input-wrap::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -1px;
+    height: 2px;
+    width: 100%;
+    background: var(--wood-trim);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.rgs-line:focus-within::after,
+.rgs-form .field-group--password .password-input-wrap:focus-within::after {
+    transform: scaleX(1);
+}
+
+.rgs-form .field-group input {
+    flex: 1;
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    outline: none;
+    font: inherit;
+    font-size: 16.5px;
+    color: var(--text);
+    padding: 10px 0 12px;
+    min-width: 0;
+    box-shadow: none;
+}
+
+.rgs-form .field-group input:focus {
+    border: 0;
+    box-shadow: none;
+}
+
+.rgs-form .password-toggle {
+    position: static;
+    transform: none;
+    background: transparent;
+    border: 0;
+    color: var(--text-faint);
+    padding: 4px;
+}
+
+.rgs-form .password-toggle:hover,
+.rgs-form .password-toggle:focus-visible {
+    color: var(--navy);
+    background: transparent;
+}
+
+/* plan: underlined text choices */
+.rgs-plan {
+    margin-top: 34px;
+}
+
+.rgs-plan-label {
+    display: block;
+    font-size: 10.5px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    font-weight: 600;
+}
+
+.rgs-plan-row {
+    display: flex;
+    gap: 40px;
+    margin-top: 10px;
+}
+
+.rgs-plan-opt {
+    cursor: pointer;
+    padding-bottom: 8px;
+    position: relative;
+}
+
+.rgs-plan-opt input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.rgs-plan-name {
+    display: block;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-muted);
+    transition: color 0.25s;
+}
+
+.rgs-plan-desc {
+    display: block;
+    font-size: 12.5px;
+    color: var(--text-faint);
+    margin-top: 3px;
+}
+
+.rgs-plan-opt::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 3px;
+    background: var(--wood-trim);
+    border-radius: 2px;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.rgs-plan-opt:has(input:checked) .rgs-plan-name {
+    color: var(--navy);
+}
+
+.rgs-plan-opt:has(input:checked)::after {
+    transform: scaleX(1);
+}
+
+.rgs-plan-opt:has(input:focus-visible) {
+    outline: 1px solid var(--navy);
+    outline-offset: 4px;
+}
+
+.rgs-submit {
+    margin-top: 40px;
+    width: 100%;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    gap: 9px;
+    font: inherit;
+    font-size: 15.5px;
+    font-weight: 600;
+    padding: 15px 30px;
+    border-radius: var(--main-radius);
+    cursor: pointer;
+    border: 0;
+    background: linear-gradient(180deg, var(--navy) 0%, var(--navy-deep) 100%);
+    color: #fffcf8;
+    box-shadow: 0 1px 0 var(--stitch-light) inset, 0 10px 24px rgba(20, 36, 54, 0.25);
+    transition:
+        transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+        box-shadow 0.25s;
+}
+
+.rgs-submit:hover,
+.rgs-submit:focus-visible {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 30px rgba(20, 36, 54, 0.32);
+    outline: none;
+}
+
+/* — or — divider, then Google | Apple side by side */
+.rgs-or {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-top: 26px;
+    color: var(--text-faint);
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+}
+
+.rgs-or::before,
+.rgs-or::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--border-light);
+}
+
+.rgs-oauth-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-top: 18px;
+}
+
+.rgs-oauth-row .rgs-oauth-btn:only-child {
+    grid-column: 1 / -1;
+}
+
+.rgs-oauth-btn {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    gap: 9px;
+    font-size: 14.5px;
+    font-weight: 600;
+    color: var(--text);
+    text-decoration: none;
+    padding: 13px 18px;
+    border: 1px solid var(--border-medium);
+    border-radius: var(--main-radius);
+    background: var(--bg-card);
+    transition:
+        transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+        box-shadow 0.25s,
+        border-color 0.25s;
+}
+
+.rgs-oauth-btn:hover,
+.rgs-oauth-btn:focus-visible {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(28, 53, 82, 0.12);
+    border-color: var(--navy);
+    outline: none;
+}
+
+.rgs-alt {
+    margin-top: 26px;
+    text-align: center;
+    font-size: 14px;
+    color: var(--text-muted);
+}
+
+.rgs-alt a {
+    color: var(--navy);
+    font-weight: 600;
+    text-decoration: none;
+    border-bottom: 1.5px solid #a68968;
+    padding-bottom: 1px;
+}
+
+@media (max-width: 560px) {
+    .rgs-stage {
+        padding: 40px 22px 56px;
+    }
+
+    .rgs-plan-row {
+        gap: 28px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .rgs-fade {
+        animation: none;
+        opacity: 1;
+    }
+
+    .rgs-accent::after {
+        animation: none;
+        transform: none;
+    }
+}
+
+
+/* Landing only: no search in the topbar — the hero search is the search. */
+.lps-landing .topbar .nav-search {
+    display: none;
+}
+
+/* The shared .lp-footer-copy class carries the light-page slate color; on the
+   navy landing close band it must inherit the band's warm-white instead. */
+.lps-foot-links .lp-footer-copy {
+    color: inherit;
+}

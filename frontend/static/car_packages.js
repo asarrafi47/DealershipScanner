@@ -690,10 +690,55 @@
         stickerLoading.hidden = false;
     }
 
-    function startEnsure() {
+    // The server bounds /packages/ensure with a wall-clock budget so a slow OEM fetch
+    // cannot hold the request open. When the budget expires the fetch keeps running on a
+    // worker and the result lands in storage shortly after -- but this client used to ask
+    // exactly once per page load, so the sticker never reached the shopper unless they
+    // happened to reload. That silently affected every sticker-eligible car whose fetch
+    // outran the budget. Poll a bounded number of times while the server says a fetch is
+    // genuinely in flight, then settle.
+    //
+    // Deliberately conservative about the contract: we only re-ask when the server
+    // positively says something is running. An absent or unrecognised status polls zero
+    // times, which is exactly the old behaviour.
+    const STICKER_POLL_DELAYS_MS = [2000, 3000, 5000, 8000];
+
+    function serverSaysFetchInFlight(data) {
+        if (!data) return false;
+        if (data.window_sticker_fetch_pending === true) return true;
+        return data.window_sticker_status === "fetching";
+    }
+
+    function startEnsure(attempt) {
+        const tries = attempt || 0;
         runEnsure()
             .then(function (wrapped) {
-                finish(wrapped.data, wrapped.ok);
+                const data = wrapped.data || {};
+                if (wrapped.ok && serverSaysFetchInFlight(data)) {
+                    if (tries < STICKER_POLL_DELAYS_MS.length) {
+                        // Keep the loading state up rather than rendering an "unavailable"
+                        // that the next poll would contradict.
+                        setTimeout(function () {
+                            startEnsure(tries + 1);
+                        }, STICKER_POLL_DELAYS_MS[tries]);
+                        return;
+                    }
+                    // Polling exhausted while the server still reports a live fetch. Do NOT
+                    // fall through to finish(): with no sticker in the payload it hides the
+                    // block outright, which tells the shopper "this car has no sticker" when
+                    // the truth is "we ran out of patience". Say the true thing instead and
+                    // leave the panel standing.
+                    if (stickerLoading) {
+                        stickerLoading.textContent =
+                            "Still fetching the window sticker from the manufacturer — "
+                            + "reload in a moment to see it.";
+                        stickerLoading.hidden = false;
+                    }
+                    ensurePanelVisible();
+                    if (loading) loading.hidden = true;
+                    return;
+                }
+                finish(data, wrapped.ok);
             })
             .catch(function () {
                 if (loading) loading.hidden = true;
@@ -707,9 +752,16 @@
             });
     }
 
+    // Wrapped rather than passed by reference: requestIdleCallback hands the callback an
+    // IdleDeadline, which would land in startEnsure's `attempt` parameter and quietly
+    // disable the retry counter.
+    function beginEnsure() {
+        startEnsure(0);
+    }
+
     if (typeof requestIdleCallback === "function") {
-        requestIdleCallback(startEnsure, { timeout: 2500 });
+        requestIdleCallback(beginEnsure, { timeout: 2500 });
     } else {
-        window.setTimeout(startEnsure, 50);
+        window.setTimeout(beginEnsure, 50);
     }
 })();

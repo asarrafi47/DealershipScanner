@@ -1,0 +1,986 @@
+/* ── Dealer portal (/inventory) ── */
+.nav-link-active {
+    color: #ffffff;
+    font-weight: 600;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.35);
+    padding-bottom: 2px;
+}
+
+.dealer-inv-layout {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px 48px 64px;
+}
+
+.dealer-inv-flash-wrap {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.dealer-inv-flash {
+    padding: 12px 16px;
+    border-radius: var(--main-radius);
+    font-size: 0.92rem;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.dealer-inv-flash--success {
+    background: rgba(46, 160, 67, 0.15);
+    border-color: rgba(46, 160, 67, 0.35);
+}
+
+.dealer-inv-flash--error {
+    background: rgba(200, 60, 60, 0.15);
+    border-color: rgba(200, 60, 60, 0.35);
+}
+
+.dealer-inv-flash--info {
+    background: rgba(80, 140, 220, 0.12);
+    border-color: rgba(120, 160, 255, 0.3);
+}
+
+.dealer-inv-section {
+    margin-bottom: 40px;
+}
+
+.dealer-inv-hint {
+    color: var(--text-muted);
+    font-size: 0.92rem;
+    margin-bottom: 16px;
+    max-width: 720px;
+    line-height: 1.5;
+}
+
+.dealer-inv-vin-form {
+    margin-top: 8px;
+}
+
+.dealer-inv-vin-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 12px;
+}
+
+.dealer-inv-label {
+    flex: 1 1 100%;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+}
+
+.dealer-inv-vin-input {
+    flex: 1 1 280px;
+    min-width: 200px;
+    padding: 12px 14px;
+    border-radius: var(--main-radius);
+    border: 1px solid var(--border-medium);
+    background: var(--bg-card);
+    color: var(--text);
+    font-family: inherit;
+    font-size: 1rem;
+}
+
+.dealer-inv-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 24px;
+}
+
+.dealer-inv-card {
+    border: 1px solid var(--border-light);
+    border-radius: 14px;
+    overflow: hidden;
+    background: var(--bg-card);
+}
+
+.dealer-inv-card-img {
+    height: 180px;
+    background-size: cover;
+    background-position: center;
+    border-bottom: 1px solid var(--border-light);
+}
+
+.dealer-inv-card-body {
+    padding: 16px 18px 20px;
+}
+
+.dealer-inv-card-title {
+    font-size: 1.05rem;
+    margin-bottom: 4px;
+}
+
+.dealer-inv-card-vin {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-bottom: 14px;
+}
+
+.dealer-inv-edit-form .dealer-inv-fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px 12px;
+    margin-bottom: 12px;
+}
+
+.dealer-inv-edit-form label {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+}
+
+.dealer-inv-edit-form input,
+.dealer-inv-edit-form textarea {
+    padding: 8px 10px;
+    border-radius: 8px;
+    border: 1px solid var(--border-medium);
+    background: var(--bg-card);
+    color: var(--text);
+    font-family: inherit;
+    font-size: 0.88rem;
+}
+
+.dealer-inv-notes {
+    grid-column: 1 / -1;
+}
+
+.dealer-inv-upload-form {
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid var(--border-light);
+}
+
+.dealer-inv-upload-label {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+}
+
+.dealer-inv-file-input {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 0.85rem;
+}
+
+.dealer-inv-thumb-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.dealer-inv-thumb {
+    width: 56px;
+    height: 56px;
+    border-radius: 8px;
+    background-size: cover;
+    background-position: center;
+    border: 1px solid var(--border-light);
+}
+
+.dealer-inv-delete-form {
+    margin-top: 14px;
+}
+
+.dealer-inv-delete-btn {
+    background: transparent;
+    border: 1px solid rgba(200, 80, 80, 0.45);
+    color: rgba(255, 160, 160, 0.95);
+    padding: 8px 12px;
+    border-radius: var(--main-radius);
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.85rem;
+}
+
+.dealer-inv-delete-btn:hover {
+    background: rgba(200, 60, 60, 0.12);
+}
+
+.dealer-inv-empty {
+    padding: 28px;
+    text-align: center;
+    color: var(--text-muted);
+    border: 1px dashed var(--border-medium);
+    border-radius: var(--main-radius);
+}
+
+/* —— Unified left sidebar (app + admin) —— */
+:root {
+    --app-sidebar-width: 260px;
+}
+
+body:has(.app-sidebar) {
+    /* `clip` (not `hidden`) prevents horizontal overflow WITHOUT making body a
+       scroll container — otherwise it breaks position:sticky (the filter sidebar). */
+    overflow-x: clip;
+}
+
+.page:has(.app-sidebar),
+.page.page--app-layout {
+    display: grid;
+    grid-template-columns: var(--app-sidebar-width) minmax(0, 1fr);
+    grid-template-rows: auto 1fr;
+    min-height: 100vh;
+    width: 100%;
+    max-width: 100vw;
+    align-items: start;
+    box-sizing: border-box;
+}
+
+.page:has(.app-sidebar) > :not(.app-sidebar):not(.app-sidebar-toggle):not(.app-sidebar-backdrop),
+.page.page--app-layout > :not(.app-sidebar):not(.app-sidebar-toggle):not(.app-sidebar-backdrop) {
+    grid-column: 2;
+}
+
+.app-sidebar {
+    grid-column: 1;
+    grid-row: 1 / -1;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: var(--app-sidebar-width);
+    min-height: 100vh;
+    max-height: 100vh;
+    height: 100vh;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 16px 12px 20px;
+    background: linear-gradient(180deg, var(--navy) 0%, var(--navy-deep) 100%);
+    border-right: 1px solid rgba(255, 252, 248, 0.1);
+    box-shadow: 4px 0 24px rgba(20, 36, 54, 0.12);
+    z-index: 40;
+}
+
+/* Fixed bottom bars: sit to the right of the pinned sidebar on desktop */
+@media (min-width: 901px) {
+    body:has(.app-sidebar) .compare-tray,
+    body:has(.app-sidebar) .car-mobile-cta {
+        left: var(--app-sidebar-width);
+    }
+}
+
+.app-sidebar__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 4px 8px 8px;
+}
+
+.app-sidebar__logo {
+    font-family: var(--font-display, Georgia, serif);
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--bg-page);
+    text-decoration: none;
+    letter-spacing: 0.02em;
+}
+
+.app-sidebar__logo:hover {
+    color: #fff;
+}
+
+.app-sidebar__close {
+    display: none;
+    border: none;
+    background: transparent;
+    color: rgba(255, 252, 248, 0.85);
+    font-size: 1.5rem;
+    line-height: 1;
+    cursor: pointer;
+    padding: 4px;
+}
+
+.app-sidebar__search {
+    padding: 10px 8px 12px;
+    margin-top: auto;
+    border-top: 1px solid rgba(255, 252, 248, 0.1);
+}
+
+.sidebar-search {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+}
+
+.sidebar-search--compact {
+    gap: 6px;
+}
+
+.sidebar-search__heading {
+    margin: 0;
+    padding: 0 2px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(255, 252, 248, 0.45);
+}
+
+.sidebar-search__row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 58px 36px;
+    gap: 6px;
+    align-items: stretch;
+}
+
+.sidebar-search__field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+}
+
+.sidebar-search__field--grow {
+    grid-column: auto;
+}
+
+.sidebar-search__field--zip {
+    grid-column: auto;
+}
+
+.sidebar-search__label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: rgba(255, 252, 248, 0.45);
+    padding-left: 2px;
+}
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.sidebar-search__input-wrap {
+    position: relative;
+    display: block;
+    width: 100%;
+}
+
+.sidebar-search__icon {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    pointer-events: none;
+    color: rgba(252, 250, 246, 0.65);
+}
+
+.sidebar-search__input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px 12px 10px 34px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 252, 248, 0.16);
+    background: rgba(0, 0, 0, 0.22);
+    color: #fff;
+    font-family: inherit;
+    font-size: 13px;
+    line-height: 1.25;
+    outline: none;
+}
+
+.sidebar-search__input--zip {
+    padding: 10px 8px;
+    text-align: center;
+}
+
+.sidebar-search__input::placeholder {
+    color: rgba(252, 250, 246, 0.52);
+}
+
+.sidebar-search__input:hover {
+    border-color: rgba(255, 252, 248, 0.28);
+    background: rgba(0, 0, 0, 0.28);
+}
+
+.sidebar-search__input:focus {
+    border-color: rgba(255, 252, 248, 0.45);
+    background: rgba(0, 0, 0, 0.32);
+    box-shadow: 0 0 0 2px rgba(255, 252, 248, 0.12);
+}
+
+.sidebar-search__submit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 40px;
+    padding: 0;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 252, 248, 0.18);
+    background: rgba(255, 252, 248, 0.1);
+    color: rgba(252, 250, 246, 0.95);
+    cursor: pointer;
+}
+
+.sidebar-search__submit .sc-icon {
+    display: block;
+}
+
+.sidebar-search__submit:hover,
+.sidebar-search__submit:focus-visible {
+    background: rgba(255, 252, 248, 0.16);
+    color: #fff;
+    outline: none;
+}
+
+.app-sidebar .nav-search {
+    display: none;
+}
+
+.app-sidebar__nav {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+    padding: 4px 0;
+}
+
+.app-sidebar__group-label {
+    margin: 14px 8px 6px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(255, 252, 248, 0.45);
+}
+
+.app-sidebar__group-label:first-child {
+    margin-top: 4px;
+}
+
+.app-sidebar__link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 10px;
+    border-radius: 8px;
+    color: rgba(255, 252, 248, 0.82);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.25;
+}
+
+.app-sidebar__link:hover {
+    background: rgba(255, 252, 248, 0.08);
+    color: #fff;
+}
+
+.app-sidebar__link--active,
+.app-sidebar__link[aria-current="page"] {
+    background: rgba(255, 252, 248, 0.14);
+    color: #fff;
+    font-weight: 600;
+}
+
+.app-sidebar__link--admin {
+    color: rgba(186, 230, 253, 0.95);
+}
+
+.app-sidebar__link--premium {
+    color: #fde68a;
+}
+
+.app-sidebar__icon {
+    flex-shrink: 0;
+    opacity: 0.9;
+}
+
+.app-sidebar__foot {
+    margin-top: auto;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255, 252, 248, 0.12);
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.app-sidebar__foot .dev-logout-form {
+    margin: 4px 0 0;
+}
+
+.app-sidebar__foot .dev-logout-button {
+    width: 100%;
+    text-align: left;
+    padding: 9px 10px;
+    border-radius: 8px;
+    background: transparent;
+    border: 1px solid rgba(255, 252, 248, 0.2);
+    color: rgba(255, 252, 248, 0.85);
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.app-sidebar__foot .dev-logout-button:hover {
+    background: rgba(255, 252, 248, 0.08);
+}
+
+.app-sidebar-toggle {
+    display: none;
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    z-index: 50;
+    width: 44px;
+    height: 44px;
+    border: none;
+    border-radius: 10px;
+    background: var(--navy);
+    color: #fff;
+    box-shadow: 0 4px 16px rgba(20, 36, 54, 0.25);
+    cursor: pointer;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+.app-sidebar-toggle__bar {
+    display: block;
+    width: 20px;
+    height: 2px;
+    background: currentColor;
+    border-radius: 1px;
+}
+
+.app-sidebar-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.45);
+    z-index: 35;
+}
+
+.app-layout-flash {
+    padding: 12px 20px 0;
+}
+
+.page:has(.app-sidebar) .admin-flash-wrap,
+.page.page--app-layout .admin-flash-wrap,
+.app-layout-flash {
+    max-width: none;
+    margin: 12px 0 0;
+    padding: 0 clamp(16px, 3vw, 32px);
+    width: 100%;
+    min-width: 0;
+    grid-column: 2;
+}
+
+.page:has(.app-sidebar) .admin-main,
+.page.page--app-layout .admin-main,
+.app-layout-main {
+    max-width: none;
+    margin: 0;
+    padding: 20px clamp(16px, 3vw, 32px) 48px;
+    width: 100%;
+    min-width: 0;
+    overflow-x: auto;
+    box-sizing: border-box;
+}
+
+.page:has(.app-sidebar) > .admin-main,
+.page.page--app-layout > .admin-main {
+    grid-column: 2;
+}
+
+@media (max-width: 900px) {
+    .page:has(.app-sidebar),
+    .page.page--app-layout {
+        display: block;
+    }
+
+    .app-sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        transform: translateX(-105%);
+        transition: transform 0.22s ease;
+        z-index: 45;
+    }
+
+    body.app-sidebar-open .app-sidebar {
+        transform: translateX(0);
+    }
+
+    .app-sidebar-toggle {
+        display: inline-flex;
+    }
+
+    body:has(.app-sidebar) .db-shell,
+    body:has(.app-sidebar) .hub-shell,
+    body:has(.app-sidebar) .find-dealers-section,
+    body:has(.app-sidebar) .car-detail,
+    body.admin-shell-body .admin-main {
+        padding-top: 56px;
+    }
+
+    body:has(.app-sidebar) .listings-filter-shell,
+    body.app-layout-body .listings-filter-shell {
+        padding-top: 56px;
+    }
+}
+
+body.listings-page .page:has(.app-sidebar),
+body.listings-page.page--app-layout .page {
+    width: 100%;
+}
+
+body.listings-page:has(.app-sidebar) > .guest-banner,
+body.listings-page .page:has(.app-sidebar) > .guest-banner {
+    grid-column: 2;
+}
+
+body.listings-page:has(.app-sidebar) .listings-filter-shell.filter-bar,
+body.listings-page .page:has(.app-sidebar) .listings-filter-shell.filter-bar {
+    grid-column: 2;
+    width: 100%;
+    min-width: 0;
+}
+
+body.listings-page:has(.app-sidebar) .listings-layout,
+body.listings-page .page:has(.app-sidebar) .listings-layout {
+    padding-left: clamp(12px, 2vw, 24px);
+}
+
+/* —— Store admin (/admin) —— */
+.admin-shell-body {
+    background: var(--bg-page);
+}
+
+/* Legacy horizontal admin topbar — replaced by app-sidebar */
+.topbar--admin {
+    display: none;
+}
+
+.nav-links--admin {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px 12px;
+    font-size: 14px;
+}
+
+.admin-nav-group-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    margin-right: 4px;
+}
+
+.admin-nav-link {
+    color: var(--text-secondary);
+    text-decoration: none;
+    padding: 4px 8px;
+    border-radius: 6px;
+}
+
+.admin-nav-link:hover {
+    color: var(--text-primary);
+    background: var(--surface-raised);
+}
+
+.admin-nav-link--active {
+    color: var(--text-primary);
+    font-weight: 600;
+    background: var(--surface-raised);
+}
+
+.admin-nav-divider {
+    width: 1px;
+    height: 18px;
+    background: var(--border-light);
+    margin: 0 4px;
+}
+
+.nav-app-link--admin {
+    color: var(--accent);
+}
+
+.admin-main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px 48px;
+}
+
+.admin-lead,
+.admin-muted {
+    color: rgba(255, 255, 255, 0.62);
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.admin-shell-body .admin-lead,
+.app-layout-body .admin-lead,
+.admin-shell-body .admin-muted,
+.app-layout-body .admin-muted {
+    color: var(--text-secondary);
+}
+
+.admin-muted {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.48);
+}
+
+.admin-flash-wrap {
+    max-width: 1200px;
+    margin: 12px auto 0;
+    padding: 0 20px;
+}
+
+.admin-flash {
+    padding: 10px 14px;
+    border-radius: var(--main-radius);
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+}
+
+.admin-flash-error {
+    background: rgba(120, 40, 40, 0.35);
+    border: 1px solid rgba(255, 120, 120, 0.25);
+}
+
+.admin-flash-success {
+    background: rgba(40, 100, 60, 0.3);
+    border: 1px solid rgba(120, 220, 160, 0.2);
+}
+
+.admin-kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-top: 16px;
+}
+
+.admin-kpi-card {
+    padding: 16px 18px;
+    border-radius: var(--main-radius);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.admin-kpi-label {
+    margin: 0 0 6px;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.admin-kpi-value {
+    margin: 0;
+    font-size: 1.75rem;
+    font-weight: 700;
+}
+
+.admin-kpi-hint {
+    margin: 8px 0 0;
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.45);
+}
+
+.admin-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 16px;
+    align-items: flex-end;
+    margin: 20px 0;
+    font-size: 0.88rem;
+}
+
+.admin-filters label {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    color: rgba(255, 255, 255, 0.75);
+}
+
+.admin-filters input[type="search"],
+.admin-filters select {
+    min-width: 160px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: #0c0c0c;
+    color: #fff;
+}
+
+.admin-table-wrap {
+    overflow-x: auto;
+    margin-top: 12px;
+    border-radius: var(--main-radius);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.86rem;
+}
+
+.admin-table th,
+.admin-table td {
+    padding: 10px 12px;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    vertical-align: top;
+}
+
+.admin-table th {
+    color: rgba(255, 255, 255, 0.55);
+    font-weight: 600;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.admin-table a {
+    color: rgba(140, 200, 255, 0.95);
+}
+
+.admin-issues {
+    max-width: 220px;
+    color: rgba(255, 220, 160, 0.9);
+    font-size: 0.8rem;
+}
+
+.admin-pagination {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-top: 20px;
+}
+
+.admin-inline-kpis {
+    list-style: none;
+    padding: 0;
+    margin: 12px 0 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 18px;
+    font-size: 0.82rem;
+    color: rgba(255, 255, 255, 0.65);
+}
+
+.admin-back {
+    margin: 0 0 12px;
+}
+
+.admin-back a {
+    color: rgba(160, 200, 255, 0.9);
+}
+
+.admin-detail-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+    margin-top: 16px;
+}
+
+.admin-subh {
+    font-size: 1.05rem;
+    margin: 24px 0 10px;
+}
+
+.admin-issue-list,
+.admin-checklist {
+    margin: 0;
+    padding-left: 1.1rem;
+    color: rgba(255, 255, 255, 0.82);
+    line-height: 1.5;
+}
+
+.admin-mini-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.86rem;
+}
+
+.admin-mini-table th,
+.admin-mini-table td {
+    padding: 6px 8px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    text-align: left;
+    vertical-align: top;
+}
+
+.admin-gallery-strip {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.admin-gallery-thumb img {
+    width: 120px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.admin-textarea {
+    width: 100%;
+    max-width: 720px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--border-medium);
+    background: var(--bg-card);
+    color: var(--text);
+    font-family: inherit;
+    margin-bottom: 10px;
+}
+
+.admin-notes-form,
+.admin-inline-form {
+    margin-top: 8px;
+}
+
+.admin-json {
+    max-height: 420px;
+    overflow: auto;
+    padding: 14px;
+    background: #14222e;
+    border-radius: var(--main-radius);
+    border: 1px solid var(--border-medium);
+    font-size: 0.78rem;
+    line-height: 1.4;
+    color: rgba(220, 240, 255, 0.92);
+}
+
+.admin-table-tall th {
+    width: 180px;
+}
+
+.admin-error-text,
+.admin-error-wrap code {
+    color: rgba(255, 180, 160, 0.95);
+    font-size: 0.78rem;
+    word-break: break-word;
+}
+

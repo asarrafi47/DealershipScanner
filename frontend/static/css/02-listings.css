@@ -1,0 +1,1755 @@
+/* Smart search (listings) — width set by .filter-search-row */
+.smart-search-wrap {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.filter-search-row {
+    width: 100%;
+    flex-shrink: 0;
+}
+
+.filter-controls-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px 10px;
+    width: 100%;
+    flex-shrink: 0;
+    min-height: 44px;
+    padding-top: 12px;
+    margin-top: 10px;
+    border-top: 1px solid var(--border-light);
+}
+
+/* ZIP and radius always appear first in the pill row */
+
+.smart-search-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+.smart-search-input {
+    width: 100%;
+    padding: 10px 14px;
+    min-height: 40px;
+    box-sizing: border-box;
+    border-radius: var(--main-radius);
+    border: 1px solid var(--border-medium);
+    background: var(--bg-card);
+    color: var(--text);
+    font-size: 15px;
+    font-family: inherit;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.smart-search-input:focus {
+    outline: none;
+    border-color: var(--navy);
+    box-shadow: 0 0 0 3px rgba(28, 53, 82, 0.12);
+}
+
+.smart-search-wrap--loading .smart-search-input,
+.smart-search-input.smart-search-input--loading {
+    background-image: linear-gradient(90deg, transparent 0%, rgba(28, 53, 82, 0.06) 50%, transparent 100%);
+    background-size: 200% 100%;
+    animation: smart-search-shimmer 1.1s ease-in-out infinite;
+}
+
+@keyframes smart-search-shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+.smart-search-input::placeholder {
+    color: var(--text-faint);
+}
+
+.smart-parse-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    min-height: 0;
+}
+
+.smart-parse-chip {
+    font-size: 12px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: rgba(28, 53, 82, 0.08);
+    border: 1px solid rgba(28, 53, 82, 0.22);
+    color: var(--navy);
+}
+
+.pill-trigger.smart-parse-active,
+.acc-trigger.smart-parse-active {
+    border-color: rgba(0, 189, 227, 0.65);
+    box-shadow: 0 0 0 1px rgba(0, 189, 227, 0.22);
+    color: #e8f8fc;
+}
+
+.pill-group.pill-select-group.smart-parse-active .pill-select-label,
+.acc-plain-group.smart-parse-active .acc-plain-label {
+    color: #00bde3;
+}
+
+.pill-group.pill-select-group.smart-parse-active .pill-select,
+.acc-plain-group.smart-parse-active .sidebar-select,
+.acc-plain-group.smart-parse-active .sidebar-input {
+    border-color: rgba(0, 189, 227, 0.5);
+}
+
+.smart-parse-chips.smart-parse-active {
+    outline: 1px solid rgba(0, 189, 227, 0.45);
+    border-radius: var(--main-radius);
+    padding: 8px 10px;
+}
+
+/* ══════════════════════════════════════════════════
+   FILTER BAR — starts centered top, docks left on scroll
+══════════════════════════════════════════════════ */
+
+.filter-bar {
+    position: fixed;
+    top: 73px;
+    left: 0;
+    right: 0;
+    z-index: 40;
+    pointer-events: none;
+    height: 0; /* collapse wrapper so it never blocks scroll */
+    overflow: visible;
+}
+
+/* ── TOP MODE: centered horizontal pill row ── */
+
+.filter-top-row {
+    pointer-events: all;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    padding: 14px 32px 16px;
+    background: linear-gradient(180deg, var(--bg-elevated) 0%, var(--bg-page) 100%);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--border-light);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    box-shadow: 0 12px 40px rgba(20, 36, 54, 0.06);
+}
+
+/* hidden when docked */
+.filter-bar.docked .filter-top-row {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-8px);
+}
+
+/* ── Pill buttons ── */
+
+.pill-group {
+    position: relative;
+}
+
+.pill-trigger {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-medium);
+    border-radius: 999px;
+    padding: 7px 14px;
+    color: var(--text-muted);
+    font-size: 13px;
+    font-family: inherit;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.85) inset;
+}
+
+.pill-trigger:hover {
+    background: var(--bg-elevated);
+    color: var(--text);
+    border-color: var(--navy);
+}
+
+.pill-trigger.has-selection {
+    background: rgba(28, 53, 82, 0.08);
+    border-color: rgba(28, 53, 82, 0.35);
+    color: var(--navy);
+}
+
+.pill-trigger.electric-mode {
+    border-color: rgba(100,200,255,0.4);
+    color: #7dd3fc;
+    cursor: default;
+}
+
+.pill-label {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.03em;
+}
+
+.pill-count {
+    background: var(--navy);
+    color: #fdfcfa;
+    font-size: 10px;
+    font-weight: 700;
+    border-radius: 99px;
+    padding: 1px 5px;
+    line-height: 1.6;
+}
+
+.pill-chevron {
+    color: var(--text-muted);
+    transition: transform 0.2s ease;
+}
+
+.pill-trigger.open .pill-chevron {
+    transform: rotate(180deg);
+}
+
+/* ── Pill dropdowns ── */
+
+.pill-dropdown {
+    display: none;
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--bg-card);
+    border: 1px solid var(--border-medium);
+    border-radius: 14px;
+    padding: 6px;
+    min-width: 180px;
+    max-height: 240px;
+    overflow-y: auto;
+    box-shadow: 0 18px 44px rgba(20, 36, 54, 0.14);
+    z-index: 100;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(28, 53, 82, 0.2) transparent;
+}
+
+.pill-dropdown.open {
+    display: block;
+}
+
+.pill-options {
+    display: flex;
+    flex-direction: column;
+}
+
+/* ── Pill inline selects (price, mileage, zip, radius) ── */
+
+.pill-select-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 3px;
+}
+
+.pill-select-label {
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding-left: 2px;
+}
+
+.pill-select {
+    padding: 9px 14px;
+    padding-right: 30px;
+    font-size: 12px;
+    background-color: var(--bg-card);
+    background-image: var(--select-chevron);
+    background-position: right 10px center;
+    transition: border-color 0.15s ease;
+}
+
+.pill-select:focus {
+    border-color: var(--navy);
+}
+
+.pill-zip {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-medium);
+    border-radius: var(--main-radius);
+    padding: 9px 12px;
+    color: var(--text);
+    font-size: 12px;
+    font-family: inherit;
+    width: 88px;
+    outline: none;
+    transition: border-color 0.15s ease;
+}
+
+.pill-zip:focus {
+    border-color: var(--navy);
+}
+
+.pill-actions {
+    display: flex;
+    align-items: center;
+    align-self: center;
+    gap: 10px;
+    margin-left: 4px;
+}
+
+.pill-search-btn {
+    padding: 7px 18px;
+    font-size: 13px;
+    border-radius: 999px;
+}
+
+.pill-clear-btn {
+    font-size: 12px;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.15s ease;
+}
+
+.pill-clear-btn:hover {
+    color: var(--navy);
+}
+
+/* ── DOCKED MODE: vertical sidebar ── */
+
+.filter-docked-inner {
+    pointer-events: none;
+    position: fixed;
+    top: 73px;
+    left: 0;
+    width: 240px;
+    height: calc(100vh - 73px);
+    background: linear-gradient(180deg, var(--bg-elevated) 0%, var(--bg-subtle) 100%);
+    border-right: 1px solid var(--border-light);
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+    transform: translateX(-20px);
+    /* Animated by Motion.dev on listings page when docking */
+}
+
+.filter-bar.docked .filter-docked-inner {
+    pointer-events: all;
+}
+
+.docked-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 18px 18px 14px;
+    border-bottom: 1px solid var(--border-light);
+    flex-shrink: 0;
+}
+
+.docked-title {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
+
+.docked-count {
+    background: var(--navy);
+    color: var(--bg-elevated);
+    font-size: 10px;
+    font-weight: 700;
+    border-radius: 99px;
+    padding: 1px 7px;
+    line-height: 1.6;
+}
+
+.docked-body {
+    flex: 1;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(28, 53, 82, 0.25) transparent;
+}
+
+.docked-body::-webkit-scrollbar { width: 3px; }
+.docked-body::-webkit-scrollbar-thumb {
+    background: rgba(28, 53, 82, 0.2);
+    border-radius: 2px;
+}
+
+.docked-footer {
+    padding: 14px;
+    border-top: 1px solid var(--border-light);
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.docked-search-btn {
+    flex: 1;
+    text-align: center;
+    padding: 11px 14px;
+    font-size: 13px;
+}
+
+.docked-clear-btn {
+    padding: 11px 14px;
+    font-size: 13px;
+    text-align: center;
+}
+
+/* ── Accordion (docked sidebar) ── */
+
+.acc-section {
+    border-bottom: 1px solid var(--border-light);
+}
+
+.acc-trigger {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: none;
+    border: none;
+    padding: 11px 18px;
+    cursor: pointer;
+    color: var(--text);
+    font-family: inherit;
+    transition: background 0.12s ease;
+}
+
+.acc-trigger:hover {
+    background: var(--navy-soft);
+}
+
+.acc-trigger.has-selection .acc-label { color: var(--navy); }
+.acc-trigger.electric-mode { cursor: default; }
+.acc-trigger.electric-mode .acc-label { color: #7dd3fc; }
+
+.acc-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-muted);
+    text-align: left;
+}
+
+.acc-right {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    flex-shrink: 0;
+}
+
+.acc-count {
+    background: var(--navy);
+    color: var(--bg-elevated);
+    font-size: 10px;
+    font-weight: 700;
+    border-radius: 99px;
+    padding: 1px 5px;
+    line-height: 1.6;
+}
+
+.acc-chevron {
+    color: var(--text-faint);
+    transition: transform 0.2s ease;
+    flex-shrink: 0;
+}
+
+.acc-trigger.open .acc-chevron { transform: rotate(180deg); }
+
+.acc-body {
+    display: none;
+    padding-bottom: 4px;
+}
+
+.acc-body.open { display: block; }
+
+.acc-options { display: flex; flex-direction: column; }
+
+.acc-plain-group {
+    padding: 10px 0 4px 0;
+    border-bottom: 1px solid var(--border-light);
+}
+
+/* Location group at top of sidebar — subtle highlight to distinguish */
+.acc-plain-group.sidebar-location-group {
+    background: var(--navy-soft);
+    border-bottom-color: var(--border-medium);
+}
+
+.acc-plain-group.sidebar-location-group .acc-plain-label {
+    color: var(--text-muted);
+}
+
+.acc-plain-label {
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--text-muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0 18px 5px 18px;
+}
+
+/* ── Shared checkbox options ── */
+
+.filter-option {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 7px 18px;
+    cursor: pointer;
+    font-size: 13px;
+    color: var(--text);
+    transition: background 0.1s ease;
+    user-select: none;
+}
+
+.filter-option:hover { background: var(--navy-soft); }
+
+.filter-option input[type="checkbox"] {
+    appearance: none;
+    width: 14px;
+    height: 14px;
+    border: 1.5px solid var(--border-medium);
+    border-radius: 4px;
+    background: var(--bg-card);
+    flex-shrink: 0;
+    cursor: pointer;
+    position: relative;
+    transition: background 0.12s ease, border-color 0.12s ease;
+}
+
+.filter-option input[type="checkbox"]:checked {
+    background: var(--navy);
+    border-color: var(--navy);
+}
+
+.filter-option input[type="checkbox"]:checked::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 5px;
+    height: 8px;
+    border: 2px solid #fff;
+    border-top: none;
+    border-left: none;
+    transform: translate(-50%, -50%) rotate(45deg);
+}
+
+/* ── Shared sidebar selects / input ── */
+
+.sidebar-select,
+.sidebar-input {
+    display: block;
+    width: calc(100% - 36px);
+    margin: 0 18px 10px 18px;
+    border-radius: var(--main-radius);
+    padding: 11px 13px;
+    color: var(--text);
+    font-size: 12px;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+.sidebar-input {
+    background: var(--bg-card);
+    border: 1px solid var(--border-medium);
+}
+
+.sidebar-select {
+    cursor: pointer;
+    background-color: var(--bg-card);
+    background-image: var(--select-chevron);
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 34px;
+    border: 1px solid var(--border-medium);
+}
+
+.sidebar-select:focus,
+.sidebar-input:focus {
+    border-color: var(--navy);
+}
+
+/* ── Main content area ── */
+
+/* Clears fixed nav + filter stack; raise middle term in 5px steps if count clips under bar */
+.dash-content {
+    margin: 0 auto;
+    padding: calc(73px + 105px + 10px) 40px 80px 40px;
+    /* margin-left animated by Motion.dev on listings page when filter docks */
+}
+
+.listings-main.dash-content {
+    max-width: none;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body.listings-page .listings-main.dash-content {
+    padding: 0;
+    transition: none;
+}
+
+.page.docked .dash-content {
+    margin-right: 0;
+    padding: 36px 32px 80px 32px;
+}
+
+.page.docked .listings-main.dash-content {
+    padding-top: 36px;
+}
+
+/* ── Listings page (search) — full-width marketplace layout ── */
+
+body.listings-page {
+    background-color: var(--bg-page);
+    background-image:
+        radial-gradient(ellipse 90% 70% at 50% -25%, rgba(28, 53, 82, 0.07) 0%, transparent 52%),
+        radial-gradient(ellipse 55% 45% at 100% 10%, rgba(92, 67, 56, 0.05) 0%, transparent 48%);
+    overflow-x: clip;
+}
+
+.listings-page-wrap {
+    width: 100%;
+}
+
+body.listings-page .listings-filter-shell.filter-bar {
+    position: static;
+    top: auto;
+    left: auto;
+    right: auto;
+    z-index: 1;
+    height: auto;
+    pointer-events: auto;
+    overflow: visible;
+    width: 100%;
+}
+
+body.listings-page .listings-form {
+    width: 100%;
+}
+
+.listings-hero-band {
+    width: 100%;
+    border-bottom: 1px solid var(--border-light);
+    background:
+        linear-gradient(165deg, rgba(255, 255, 255, 0.9) 0%, transparent 45%),
+        linear-gradient(120deg, rgba(28, 53, 82, 0.06) 0%, transparent 55%),
+        var(--bg-page);
+    padding: clamp(24px, 4vw, 40px) clamp(16px, 3vw, 48px) clamp(20px, 3vw, 32px);
+    box-sizing: border-box;
+}
+
+.listings-hero-band__inner {
+    width: 100%;
+    max-width: 1680px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(300px, 440px);
+    gap: clamp(20px, 3vw, 40px);
+    align-items: start;
+}
+
+.listings-hero-band__head {
+    text-align: left;
+    align-self: start;
+    grid-column: 1;
+    grid-row: 1;
+    min-width: 0;
+}
+
+.listings-hero-band__head .listings-intro-heading {
+    font-size: clamp(28px, 4vw, 44px);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    margin-bottom: 10px;
+}
+
+.listings-search-card--hero {
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: end;
+    align-self: start;
+    width: 100%;
+    max-width: 440px;
+    padding: 18px 22px 20px;
+    box-shadow: 0 16px 48px rgba(20, 36, 54, 0.1);
+}
+
+.listings-search-card--unified .smart-search-hint--in-card {
+    margin: 0 0 14px;
+    padding: 0 0 14px;
+    border: none;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    border-bottom: 1px solid var(--border-light);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 8px 12px;
+}
+
+.listings-search-card--unified .smart-search-hint__label {
+    margin-bottom: 0;
+}
+
+.listings-search-card--unified .smart-search-hint__text {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+    line-height: 1.45;
+}
+
+body.listings-page .smart-search-input--hero {
+    min-height: 54px;
+    font-size: 16px;
+    border-radius: 16px;
+}
+
+body.listings-page .listings-layout {
+    display: grid;
+    grid-template-columns: minmax(280px, 320px) minmax(0, 1fr);
+    grid-template-areas: "sidebar main";
+    gap: clamp(24px, 3vw, 40px) clamp(20px, 2.5vw, 32px);
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: clamp(20px, 3vw, 32px) clamp(16px, 3vw, 48px) clamp(64px, 6vw, 96px);
+    box-sizing: border-box;
+    align-items: start;
+}
+
+.listings-refine-heading {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin: 0 0 14px;
+}
+
+.listings-results-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px 20px;
+    margin-bottom: 20px;
+}
+
+.listings-results-title {
+    font-size: clamp(20px, 2.5vw, 26px);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    margin: 0;
+    color: var(--text);
+}
+
+body.listings-page .listings-sidebar {
+    grid-area: sidebar;
+}
+
+body.listings-page .listings-main-column {
+    grid-area: main;
+}
+
+body.listings-page .listings-sidebar {
+    position: sticky;
+    top: 16px;
+    align-self: start;
+    min-width: 0;
+}
+
+@media (min-width: 961px) {
+    body.listings-page .listings-sidebar {
+        max-height: calc(100dvh - 32px);
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        padding-right: 0;
+        scrollbar-width: thin;
+        scrollbar-color: rgba(28, 53, 82, 0.22) transparent;
+    }
+
+    body.listings-page .listings-sidebar::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    body.listings-page .listings-sidebar::-webkit-scrollbar-thumb {
+        background: rgba(28, 53, 82, 0.2);
+        border-radius: 99px;
+    }
+
+    body.listings-page .listings-sidebar::-webkit-scrollbar-thumb:hover {
+        background: rgba(28, 53, 82, 0.35);
+    }
+}
+
+body.listings-page .listings-filter-inner {
+    max-width: none;
+    margin: 0;
+    background: #fff;
+    border: 1px solid var(--border-light);
+    border-radius: 12px;
+    /* Horizontal + bottom breathing room (children add their own 16px → ~26px inset). */
+    padding: 16px 10px 14px;
+    box-shadow: 0 2px 12px rgba(20, 36, 54, 0.05);
+}
+
+body.listings-page .listings-intro--carmax {
+    display: block;
+    padding: 0 16px 12px;
+    margin-bottom: 0;
+    border-bottom: 1px solid var(--border-light);
+}
+
+body.listings-page .listings-intro--carmax .listings-intro-heading {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin: 0 0 4px;
+}
+
+body.listings-page .listings-intro--carmax .listings-intro-sub {
+    font-size: 13px;
+    margin: 0;
+}
+
+body.listings-page .listings-search-card--carmax {
+    padding: 14px 16px 0;
+}
+
+body.listings-page .smart-search-input--carmax {
+    min-height: 48px;
+    padding: 13px 16px;
+    font-size: 15px;
+    line-height: 1.4;
+    border-radius: 10px;
+    border-color: var(--border-medium);
+    box-sizing: border-box;
+}
+
+body.listings-page .listings-geo-bar--carmax {
+    margin-top: 14px;
+    padding-top: 0;
+    border-top: none;
+}
+
+body.listings-page .listings-geo-bar--carmax .listings-geo-bar-label {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--text);
+    margin-bottom: 8px;
+}
+
+body.listings-page .listings-geo-bar--carmax .listings-geo-bar-controls {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+
+body.listings-page .listings-geo-bar--carmax .pill-select-label {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--text);
+    margin-bottom: 6px;
+    padding-left: 0;
+}
+
+body.listings-page .listings-geo-bar--carmax .listings-dealer-picker {
+    grid-column: 1 / -1;
+}
+
+body.listings-page .filter-basics-row--carmax {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 14px;
+    padding: 14px 16px 0;
+    border-top: 1px solid var(--border-light);
+}
+
+body.listings-page .filter-basics-row--carmax .pill-group[data-filter-param="inventory_condition"] {
+    grid-column: 1 / -1;
+}
+
+body.listings-page .filter-basics-row--carmax .pill-select-label {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--text);
+    margin-bottom: 6px;
+}
+
+body.listings-page .filter-basics-row--carmax .pill-select {
+    min-height: 44px;
+    font-size: 14px;
+    line-height: 1.4;
+    border-radius: 8px;
+    padding: 11px 36px 11px 14px;
+    box-sizing: border-box;
+}
+
+body.listings-page .listings-geo-bar--carmax .pill-zip,
+body.listings-page .listings-geo-bar--carmax .pill-select {
+    min-height: 44px;
+    font-size: 14px;
+    line-height: 1.4;
+    border-radius: 8px;
+    box-sizing: border-box;
+}
+
+body.listings-page .listings-geo-bar--carmax .pill-zip {
+    width: 100%;
+    padding: 11px 14px;
+}
+
+body.listings-page .listings-geo-bar--carmax .pill-select {
+    padding: 11px 36px 11px 14px;
+}
+
+body.listings-page .listings-filter-acc {
+    margin-top: 6px;
+    padding: 0 0 8px;
+    border-top: 1px solid var(--border-light);
+}
+
+body.listings-page .listings-filter-group-label {
+    margin: 14px 16px 4px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
+
+body.listings-page .listings-filter-group-label:first-of-type {
+    margin-top: 10px;
+}
+
+body.listings-page .listings-acc-section {
+    border-bottom: 1px solid var(--border-light);
+}
+
+body.listings-page .listings-acc-section:last-of-type {
+    border-bottom: none;
+}
+
+body.listings-page .listings-acc-trigger {
+    padding: 13px 16px;
+}
+
+body.listings-page .listings-acc-trigger .acc-label {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+}
+
+body.listings-page .listings-acc-trigger.has-selection .acc-label {
+    color: var(--navy);
+    font-weight: 600;
+}
+
+body.listings-page .listings-acc-trigger .acc-count {
+    font-size: 11px;
+    min-width: 20px;
+    text-align: center;
+    padding: 2px 6px;
+}
+
+body.listings-page .listings-acc-body {
+    padding: 0 8px 8px;
+    max-height: 220px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(28, 53, 82, 0.18) transparent;
+}
+
+body.listings-page .listings-acc-body::-webkit-scrollbar {
+    width: 5px;
+}
+
+body.listings-page .listings-acc-body::-webkit-scrollbar-thumb {
+    background: rgba(28, 53, 82, 0.18);
+    border-radius: 99px;
+}
+
+body.listings-page .listings-acc-body .filter-option {
+    padding: 8px 10px;
+    font-size: 14px;
+    border-radius: 6px;
+}
+
+body.listings-page .listings-acc-body .filter-option:hover {
+    background: var(--navy-soft);
+}
+
+body.listings-page .listings-filter-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px 12px;
+    margin-top: 8px;
+    padding: 12px 16px 16px;
+    border-top: 1px solid var(--border-light);
+    background: #fff;
+}
+
+body.listings-page .listings-filter-actions .listings-filters-sheet-done {
+    display: none !important;
+}
+
+body.listings-page .listings-filter-actions .primary-button {
+    flex: 1;
+    min-width: 140px;
+    min-height: 44px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+body.listings-page .listings-filter-actions .pill-clear-btn {
+    font-size: 13px;
+    font-weight: 500;
+    padding: 8px 4px;
+    margin-left: auto;
+}
+
+@media (max-width: 960px) {
+    body.listings-page .listings-filter-actions {
+        position: sticky;
+        bottom: 0;
+        z-index: 2;
+        padding: 14px 16px calc(14px + env(safe-area-inset-bottom, 0px));
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.92) 0%, #fff 100%);
+        box-shadow: 0 -8px 24px rgba(20, 36, 54, 0.06);
+    }
+
+    body.listings-page .listings-filter-actions .listings-filters-sheet-done {
+        display: inline-flex !important;
+        align-items: center;
+        justify-content: center;
+    }
+
+    body.listings-page .listings-filter-actions .pill-clear-btn {
+        margin-left: 0;
+    }
+}
+
+body.listings-page .listings-intro--dense {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 4px 10px;
+    margin-bottom: 10px;
+}
+
+body.listings-page .listings-intro--dense .listings-intro-eyebrow {
+    margin: 0;
+    font-size: 10px;
+}
+
+body.listings-page .listings-intro--dense .listings-intro-heading {
+    font-size: 18px;
+    margin: 0;
+    line-height: 1.25;
+}
+
+body.listings-page .smart-search-hint--sr {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+body.listings-page .listings-search-card--flat {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 0;
+    border-radius: 0;
+}
+
+body.listings-page .filter-search-row {
+    margin-bottom: 0;
+}
+
+body.listings-page .listings-geo-bar {
+    margin-top: 10px;
+    padding-top: 10px;
+}
+
+body.listings-page .listings-geo-bar-label {
+    margin-bottom: 6px;
+}
+
+body.listings-page .filter-basics-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border-light);
+}
+
+body.listings-page .filter-basics-row .pill-group {
+    width: 100%;
+    min-width: 0;
+}
+
+body.listings-page .listings-main-column {
+    min-width: 0;
+    min-height: 100vh; /* prevents layout shift / scroll glitch when results are empty */
+}
+
+body.listings-page .filter-top-row {
+    position: static;
+    display: block;
+    padding: 0;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    backdrop-filter: none;
+}
+
+.listings-filter-inner {
+    width: 100%;
+    max-width: 1180px;
+    margin: 0 auto;
+}
+
+.listings-intro {
+    text-align: center;
+    margin-bottom: 22px;
+    max-width: 40rem;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+body.listings-page .listings-intro {
+    text-align: left;
+    margin-left: 0;
+    margin-right: 0;
+    margin-bottom: 16px;
+    max-width: none;
+}
+
+.listings-intro-eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin: 0 0 8px;
+}
+
+.listings-intro-heading {
+    font-size: clamp(22px, 3.2vw, 30px);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin: 0 0 8px;
+    color: var(--text);
+}
+
+.listings-intro-sub {
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--text-muted);
+    margin: 0;
+}
+
+/* Full-width example (wraps); avoids truncated placeholder in narrow sidebar */
+.smart-search-hint {
+    margin: 0 0 14px;
+    padding: 12px 14px;
+    border-radius: 14px;
+    border: 1px solid var(--border-light);
+    background: rgba(255, 255, 255, 0.72);
+    box-shadow: 0 4px 18px rgba(20, 36, 54, 0.05);
+    font-size: 13px;
+    line-height: 1.55;
+    color: var(--text);
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.smart-search-hint__label {
+    display: block;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+}
+
+.listings-search-card {
+    background: linear-gradient(165deg, #ffffff 0%, var(--bg-elevated) 100%);
+    border: 1px solid var(--border-light);
+    border-radius: 20px;
+    padding: 20px 22px 18px;
+    box-shadow: 0 10px 36px rgba(20, 36, 54, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+body.listings-page .filter-controls-row {
+    justify-content: flex-start;
+    border-top: 1px solid var(--border-light);
+    margin-top: 10px;
+    padding-top: 10px;
+    gap: 6px;
+}
+
+body.listings-page .filter-controls-row.filter-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+body.listings-page .filter-controls-row .pill-group {
+    width: 100%;
+    min-width: 0;
+}
+
+body.listings-page .filter-controls-row .pill-trigger {
+    width: 100%;
+    justify-content: space-between;
+    border-radius: 12px;
+}
+
+body.listings-page .filter-controls-row .pill-group.pill-select-group {
+    grid-column: span 2;
+}
+
+body.listings-page .filter-controls-row .pill-group.pill-select-group .pill-select,
+body.listings-page .filter-controls-row .pill-group.pill-select-group .pill-zip {
+    width: 100%;
+}
+
+body.listings-page .pill-actions {
+    align-self: stretch;
+    margin-left: 0;
+    margin-top: 10px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border-light);
+    width: 100%;
+    justify-content: flex-start;
+}
+
+body.listings-page .listings-sidebar .pill-dropdown {
+    left: 0;
+    transform: none;
+    min-width: 100%;
+    box-sizing: border-box;
+}
+
+body.listings-page .smart-search-input:not(.smart-search-input--carmax) {
+    min-height: 40px;
+    padding: 9px 14px;
+    font-size: 14px;
+    border-radius: 12px;
+    border: 1px solid var(--border-medium);
+    background: var(--bg-card);
+    box-shadow: inset 0 1px 2px rgba(20, 36, 54, 0.04);
+}
+
+/* Sidebar filter card: keep comfortable vertical rhythm (later rules must not crush padding) */
+body.listings-page .listings-filter-inner .smart-search-input--carmax {
+    min-height: 48px;
+    padding: 13px 16px;
+    font-size: 15px;
+    line-height: 1.4;
+    border-radius: 10px;
+    box-sizing: border-box;
+}
+
+body.listings-page .listings-filter-inner input[type="search"].smart-search-input {
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+body.listings-page .listings-filter-inner input[type="search"].smart-search-input::-webkit-search-decoration,
+body.listings-page .listings-filter-inner input[type="search"].smart-search-input::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+body.listings-page .smart-search-input:focus {
+    border-color: var(--navy);
+    box-shadow: 0 0 0 3px rgba(28, 53, 82, 0.12), inset 0 1px 2px rgba(20, 36, 54, 0.04);
+}
+
+body.listings-page .pill-select {
+    border-radius: 12px;
+}
+
+body.listings-page .pill-zip {
+    border-radius: 12px;
+}
+
+/* Legacy scroll-dock sidebar (duplicate accordion) — hidden; filters are in .listings-sidebar */
+body.listings-page .filter-docked-inner {
+    display: none !important;
+}
+
+@media (max-width: 1100px) {
+    body.listings-page .results-grid {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    }
+}
+
+@media (max-width: 960px) {
+    .listings-hero-band__inner {
+        grid-template-columns: 1fr;
+    }
+
+    .listings-hero-band__head,
+    .listings-search-card--hero {
+        grid-column: 1;
+        max-width: none;
+        justify-self: stretch;
+    }
+
+    .listings-hero-band {
+        padding: 20px 16px 18px;
+    }
+}
+
+/* Compact-on-scroll: intro folds away inside the sidebar card */
+.filter-top-row {
+    transition:
+        padding 0.45s cubic-bezier(0.33, 1, 0.68, 1),
+        box-shadow 0.35s ease;
+}
+
+.filter-top-row .listings-intro {
+    transition:
+        max-height 0.48s cubic-bezier(0.33, 1, 0.68, 1),
+        opacity 0.34s ease,
+        margin-bottom 0.38s ease,
+        transform 0.42s cubic-bezier(0.33, 1, 0.68, 1);
+}
+
+.filter-top-row:not(.listings-filters-compact) .listings-intro {
+    max-height: 320px;
+}
+
+.filter-top-row.listings-filters-compact .listings-intro {
+    max-height: 0;
+    opacity: 0;
+    margin-bottom: 0;
+    overflow: hidden;
+    transform: translateY(-8px);
+    pointer-events: none;
+}
+
+.filter-top-row .listings-search-card {
+    transition:
+        padding 0.42s cubic-bezier(0.33, 1, 0.68, 1),
+        border-radius 0.35s ease,
+        box-shadow 0.35s ease;
+}
+
+.filter-top-row.listings-filters-compact {
+    padding: 12px 20px 14px !important;
+    box-shadow: 0 12px 36px rgba(20, 36, 54, 0.12);
+}
+
+/* Sidebar layout: keep compact padding on the card, not the column wrapper */
+body.listings-page .filter-top-row.listings-filters-compact {
+    padding: 0 !important;
+    box-shadow: none;
+}
+
+.filter-top-row.listings-filters-compact .listings-search-card {
+    padding: 12px 16px 10px;
+    border-radius: 16px;
+    box-shadow: 0 8px 28px rgba(20, 36, 54, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.85);
+}
+
+.filter-top-row.listings-filters-compact .filter-controls-row {
+    margin-top: 12px;
+    padding-top: 12px;
+}
+
+.filter-top-row.listings-filters-compact .smart-search-input {
+    min-height: 42px;
+    padding: 10px 16px;
+    font-size: 14px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .filter-top-row,
+    .filter-top-row .listings-intro,
+    .filter-top-row .listings-search-card {
+        transition: none !important;
+    }
+
+    .filter-top-row.listings-filters-compact .listings-intro {
+        transform: none;
+    }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    body.listings-page .listings-intro,
+    body.listings-page .smart-search-hint,
+    body.listings-page .listings-search-card {
+        animation: listings-hero-in 0.28s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+    }
+
+    body.listings-page .smart-search-hint {
+        animation-delay: 0.02s;
+    }
+
+    body.listings-page .listings-search-card {
+        animation-delay: 0.04s;
+    }
+}
+
+@keyframes listings-hero-in {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    body.listings-page .listings-intro,
+    body.listings-page .smart-search-hint,
+    body.listings-page .listings-search-card {
+        animation: none !important;
+    }
+}
+
+/* ── Welcome state ── */
+
+.welcome-state {
+    margin-bottom: 48px;
+    text-align: center;
+}
+
+.welcome-state h1 {
+    font-size: 52px;
+    margin-bottom: 14px;
+}
+
+.welcome-state .hero-text {
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+/* ── Results ── */
+
+.results-count {
+    font-size: 12px;
+    color: var(--text-muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin: 0 0 16px 0;
+    padding: 0;
+}
+
+.listings-main .results-count {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 14px;
+    border-radius: 999px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-light);
+    color: var(--text-muted);
+    letter-spacing: 0.06em;
+}
+
+/* No “ghost pill” when count text is empty (e.g. before JS or when no matches / filters incomplete) */
+.listings-main .results-count:empty {
+    display: none;
+}
+
+.results-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+body.listings-page .results-grid {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: clamp(16px, 2vw, 24px);
+}
+
+.result-card {
+    position: relative;
+    background: linear-gradient(180deg, #ffffff 0%, var(--bg-elevated) 100%);
+    border: 1px solid var(--border-light);
+    border-radius: var(--main-radius);
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.result-card-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+}
+
+.result-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 14px 36px rgba(20, 36, 54, 0.12);
+}
+
+body.listings-page .result-card {
+    border-radius: 18px;
+    background: linear-gradient(180deg, #ffffff 0%, var(--bg-elevated) 100%);
+    border-color: var(--border-light);
+}
+
+body.listings-page .result-card:hover {
+    border-color: var(--border-medium);
+}
+
+body.listings-page .result-image {
+    height: clamp(180px, 22vw, 220px);
+}
+
+.listings-inventory-loading {
+    grid-column: 1 / -1;
+    padding: 48px 16px;
+    text-align: center;
+    font-size: 15px;
+    color: var(--text-muted);
+}
+
+.result-image-wrap {
+    position: relative;
+}
+
+.result-image {
+    height: 200px;
+    width: 100%;
+    object-fit: cover;
+    display: block;
+    background-size: cover;
+    background-position: center;
+    background-color: var(--bg-subtle);
+    border-top-left-radius: var(--main-radius);
+    border-top-right-radius: var(--main-radius);
+}
+
+.result-photo-count {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    background: rgba(26, 39, 58, 0.88);
+    color: var(--bg-elevated);
+    font-size: 11px;
+    padding: 4px 8px;
+    border-radius: 6px;
+}
+
+.result-content { padding: 18px; }
+
+.result-title-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 4px;
+}
+
+.result-title-row h2 {
+    font-size: 15px;
+    font-weight: 600;
+    margin: 0;
+    flex: 1;
+    min-width: 0;
+}
+
+.result-incomplete-pill {
+    flex-shrink: 0;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #e8b86a;
+    border: 1px solid rgba(232, 184, 106, 0.45);
+    border-radius: 6px;
+    padding: 3px 7px;
+    line-height: 1.2;
+}
+
+.result-cpo-badge {
+    flex-shrink: 0;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--navy);
+    background: rgba(28, 53, 82, 0.1);
+    border: 1px solid rgba(28, 53, 82, 0.3);
+    border-radius: 6px;
+    padding: 3px 7px;
+    line-height: 1.2;
+}
+
+.result-card--incomplete {
+    border-color: rgba(232, 184, 106, 0.2);
+}
+
+.result-trim {
+    font-size: 11px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+}
+
+.result-price {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+
+.result-price-drop-badge {
+    display: inline-block;
+    margin-left: 8px;
+    padding: 2px 8px;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    vertical-align: middle;
+    background: var(--deal-below-bg);
+    color: var(--deal-below);
+}
+
+.result-price-drop-badge-when {
+    font-weight: 600;
+    opacity: 0.85;
+}
+
+.result-meta {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+}
+
+.result-meta--specs {
+    font-size: 11px;
+    color: var(--text-faint);
+    margin-top: 2px;
+    margin-bottom: 4px;
+}
+
+.result-dealer {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+/* The dealer name on a card links to that rooftop's research page. It keeps the
+   muted card voice instead of falling through to the UA link colours (blue, then
+   purple once visited) -- a hairline underline is enough of an affordance next to
+   a card that is itself one big link. */
+.result-dealer-link {
+    color: var(--text-muted);
+    text-decoration: none;
+    border-bottom: 1px solid var(--border-medium);
+    transition: color 0.12s ease, border-color 0.12s ease;
+}
+
+.result-dealer-link:visited {
+    color: var(--text-muted);
+}
+
+.result-dealer-link:hover,
+.result-dealer-link:focus-visible {
+    color: var(--navy);
+    border-bottom-color: currentColor;
+}
+
+.empty-state {
+    padding: 60px 0;
+}
+
+.listings-main .empty-state {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: min(52vh, 520px);
+    padding: 32px 16px 72px;
+}
+
+.listings-empty-card {
+    width: 100%;
+    max-width: 440px;
+    padding: 40px 32px;
+    text-align: center;
+    background: linear-gradient(165deg, #ffffff 0%, var(--bg-elevated) 100%);
+    border: 1px solid var(--border-light);
+    border-radius: 24px;
+    box-shadow: 0 20px 48px rgba(20, 36, 54, 0.1);
+}
+
+.listings-empty-icon {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 18px;
+    color: var(--text-faint);
+}
+
+.no-results {
+    color: var(--text-muted);
+    font-size: 16px;
+    margin-bottom: 8px;
+}
+
+.no-results-sub {
+    color: var(--text-muted);
+    font-size: 14px;
+}
+
+.listings-main .no-results {
+    color: var(--text);
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.listings-main .no-results-sub {
+    color: var(--text-muted);
+    font-size: 15px;
+    line-height: 1.6;
+    max-width: 28rem;
+    margin: 0 auto;
+}
+

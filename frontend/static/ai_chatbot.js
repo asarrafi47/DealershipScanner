@@ -221,10 +221,17 @@
                         }
                     } else {
                         var e = (data && data.error) || "unavailable";
+                        // Prefer whatever the server actually said. The old code collapsed
+                        // every unrecognised failure into "unavailable right now", which hid
+                        // the real cause for a whole session -- a dead API key read exactly
+                        // the same as a model that simply is not running locally.
+                        var serverMsg = (data && (data.error_message || data.message)) || "";
                         addMsg(
                             e === "rate_limited" ? "You're sending messages too fast — give it a moment."
                             : e === "message_too_long" ? "That message is too long."
-                            : "Sorry, the assistant is unavailable right now.",
+                            : e === "not_logged_in" ? "Sign in to use the assistant."
+                            : serverMsg ? serverMsg
+                            : "The assistant isn't reachable right now.",
                             "error"
                         );
                     }

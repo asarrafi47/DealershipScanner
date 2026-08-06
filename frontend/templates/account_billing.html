@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Billing — Sarrafi Cars</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v={{ static_cache_ver }}">
+    {% include "_head_css.html" %}
     {% include "_head_perf.html" %}
 </head>
 <body class="hub-page lp-body">
@@ -34,7 +34,7 @@
 
             {% if not billing_enabled %}
             <p class="hub-card__sub">Stripe billing is not enabled on this environment.</p>
-            {% elif not is_premium %}
+            {% elif not (is_premium or has_paid_access) %}
             <p class="hub-card__sub"><a href="{{ url_for('premium_page') }}">View plans and upgrade</a></p>
             {% endif %}
 

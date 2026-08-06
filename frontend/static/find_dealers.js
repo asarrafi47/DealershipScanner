@@ -352,8 +352,9 @@
         const scrapeMeta = scrapeStatus
             ? '<span class="find-dealers-list-scraped">' + escapeHtml(scrapeStatus) + "</span>"
             : "";
-        const web = d.website_url
-            ? '<a class="find-dealers-list-link" href="' + escapeAttr(d.website_url) + '" target="_blank" rel="noopener noreferrer">Website</a>'
+        const webHref = safeHttpHref(d.website_url);
+        const web = webHref
+            ? '<a class="find-dealers-list-link" href="' + escapeAttr(webHref) + '" target="_blank" rel="noopener noreferrer">Website</a>'
             : "";
         const adminBtn = canRequestScrape(d)
             ? '<button type="button" class="find-dealers-admin-btn primary-button find-dealers-admin-btn--inline" data-dealer-key="' +

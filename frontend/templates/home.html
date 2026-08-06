@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Home — Sarrafi Cars</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v={{ static_cache_ver }}">
+    {% include "_head_css.html" %}
     {% include "_head_perf.html" %}
 </head>
 <body class="db-page">
@@ -195,6 +195,19 @@
             </div>
             {% endif %}
         </section>
+
+        {% if billing_stripe_enabled and not has_paid_access %}
+        <section class="db-panel db-reveal" id="premium-upsell-section">
+            <div class="db-panel-header">
+                <div>
+                    <p class="db-eyebrow">Go deeper</p>
+                    <h2 class="db-section-title">Premium</h2>
+                    <p class="db-section-hint">AI car chat, market price intelligence, and dealership picker on every listing.</p>
+                </div>
+                <a href="{{ url_for('premium_page') }}" class="db-panel-link">View plans</a>
+            </div>
+        </section>
+        {% endif %}
 
     </main>
 

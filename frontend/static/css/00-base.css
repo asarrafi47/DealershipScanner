@@ -1,0 +1,143 @@
+:root {
+    --main-radius: 10px;
+    --font-ui: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+
+    /* Luxury interior palette — warm cream, navy, fine wood trim, chrome accents */
+    --bg-page: #f4f2ec;
+    --bg-subtle: #ebe6dd;
+    --bg-elevated: #faf8f5;
+    --bg-card: #ffffff;
+    --navy: #1c3552;
+    --navy-deep: #142a40;
+    --navy-soft: rgba(28, 53, 82, 0.08);
+    --text: #1a2744;
+    --text-muted: #5c6778;
+    --text-faint: #8a929e;
+    --border-light: rgba(28, 53, 82, 0.1);
+    --border-medium: rgba(28, 53, 82, 0.18);
+    --stitch-light: rgba(255, 252, 248, 0.55);
+    --chrome-line: #c8cdd6;
+    --chrome-face: linear-gradient(165deg, #f3f5f8 0%, #dce1e8 45%, #eef1f5 100%);
+    --wood-trim: linear-gradient(
+        90deg,
+        #4a3428 0%,
+        #7a5c47 18%,
+        #a68968 42%,
+        #7a5c47 62%,
+        #5c4336 100%
+    );
+
+    /* Chevron for selects on light backgrounds */
+    --select-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%231a2744' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+
+    /* Aliases for marketing/premium pages */
+    --text-primary: var(--text);
+    --text-secondary: var(--text-muted);
+    --surface-card: var(--bg-card);
+    --surface-raised: var(--bg-elevated);
+    --accent: var(--navy);
+
+    --deal-below: #166534;
+    --deal-below-bg: rgba(22, 101, 52, 0.12);
+    --deal-above: #9a3412;
+    --deal-above-bg: rgba(154, 52, 18, 0.12);
+    --deal-near: var(--text-muted);
+    --deal-near-bg: rgba(28, 53, 82, 0.08);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    color-scheme: light;
+    overflow-x: clip;
+}
+
+img,
+video,
+iframe {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Inter is loaded via @import above — standard UI typography */
+body {
+    font-family: var(--font-ui);
+    background: var(--bg-page);
+    background-image: radial-gradient(ellipse 120% 80% at 50% -30%, rgba(28, 53, 82, 0.06) 0%, transparent 55%);
+    color: var(--text);
+    min-height: 100vh;
+}
+
+h1,
+h2,
+h3 {
+    font-family: var(--font-ui);
+    font-weight: 600;
+}
+
+/* Native dropdowns — light surfaces, navy chevron */
+select {
+    background-color: var(--bg-card);
+    color: var(--text);
+    border: 1px solid var(--border-medium);
+    border-radius: var(--main-radius);
+    appearance: none;
+    -webkit-appearance: none;
+    font-family: inherit;
+    cursor: pointer;
+    background-image: var(--select-chevron);
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 32px;
+    outline: none;
+}
+
+select:focus {
+    border-color: var(--navy);
+    box-shadow: 0 0 0 2px rgba(28, 53, 82, 0.15);
+}
+
+select option {
+    background-color: var(--bg-card);
+    color: var(--text);
+    padding-block: 8px;
+}
+
+.page {
+    min-height: 100vh;
+    width: 100%;
+}
+
+.topbar {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 48px;
+    border-bottom: 1px solid rgba(255, 252, 248, 0.12);
+    background: linear-gradient(180deg, var(--navy) 0%, var(--navy-deep) 100%);
+    position: sticky;
+    top: 0;
+    backdrop-filter: blur(12px);
+    z-index: 10;
+    box-shadow:
+        0 1px 0 var(--stitch-light) inset,
+        0 8px 32px rgba(20, 36, 54, 0.22);
+}
+
+.topbar::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 3px;
+    background: var(--wood-trim);
+    opacity: 0.92;
+    pointer-events: none;
+}
+

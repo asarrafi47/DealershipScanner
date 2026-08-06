@@ -1,0 +1,163 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   Car detail page — one card recipe, one heading scale
+   ═══════════════════════════════════════════════════════════════════════════
+
+   The VDP grew a section at a time and each one invented its own surface. Audited
+   on 2026-07-30, the cards disagreed on every axis at once:
+
+     .car-trim-ladder__card    --vdp-radius-sm  --border-light           --bg-card, pad 12px 14px
+     .market-velocity-card     --vdp-radius-sm  --border-light           linear-gradient + shadow, pad 20px
+     .listing-packages-panel   --main-radius    rgba(255,255,255,0.10)   rgba(255,255,255,0.02), pad 16px
+     headings                  1.05rem ... 1.35rem, mixed weights
+
+   Two of those radii are different tokens, and the rgba(255,255,255,…) border and
+   background are dark-theme values left on a light page — which is why the panels
+   read as "different shades" even where the intent was the same.
+
+   This partial loads last and normalises the shared surfaces to a single recipe
+   rather than editing a dozen rules in place, so the individual sections keep
+   owning their layout and only the skin is centralised. Anything genuinely
+   deliberate (the hero, the deal badge, map tiles) is left alone.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+body.car-detail-page {
+    --vdp-card-bg: var(--bg-card);
+    --vdp-card-border-color: var(--border-light);
+    --vdp-card-radius: var(--vdp-radius-sm, 12px);
+    --vdp-card-pad: 18px;
+}
+
+/* ---- Surfaces ---- */
+
+body.car-detail-page .car-trim-ladder__card,
+body.car-detail-page .market-velocity-card,
+body.car-detail-page .listing-packages-panel,
+body.car-detail-page .car-finance-estimate-card,
+body.car-detail-page .build-sheet-section,
+body.car-detail-page .car-window-sticker-frame {
+    background: var(--vdp-card-bg);
+    border: 1px solid var(--vdp-card-border-color);
+    border-radius: var(--vdp-card-radius);
+    box-shadow: none;
+}
+
+/* The velocity card was the only one with a gradient fill; flatten it so it sits
+   in the same plane as its neighbours. */
+body.car-detail-page .market-velocity-card {
+    background-image: none;
+}
+
+body.car-detail-page .market-velocity-card,
+body.car-detail-page .listing-packages-panel,
+body.car-detail-page .car-finance-estimate-card {
+    padding: var(--vdp-card-pad);
+}
+
+/* Trim rows are a dense list, so they keep tighter padding — the surface still
+   matches, only the rhythm differs. */
+body.car-detail-page .car-trim-ladder__card {
+    padding: 12px 14px;
+}
+
+/* ---- Heading scale ----
+   Four sizes were in play across h2/h3/h4. Collapse to three steps that track
+   nesting depth instead of which section happened to define them. */
+
+body.car-detail-page .car-vdp-panel-title,
+body.car-detail-page .car-hero-glance-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--text);
+}
+
+body.car-detail-page .car-trim-ladder__title,
+body.car-detail-page .build-sheet-title,
+body.car-detail-page .car-window-sticker-title,
+body.car-detail-page .history-panel-title,
+body.car-detail-page .vehicle-history-tools-heading,
+body.car-detail-page .dealer-panel-section-title {
+    font-size: 1.075rem;
+    font-weight: 700;
+    letter-spacing: -0.005em;
+    color: var(--text);
+}
+
+body.car-detail-page .listing-packages-sub-heading,
+body.car-detail-page .car-window-sticker-sub,
+body.car-detail-page .build-sheet-section-title {
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
+
+/* ---- Section rhythm ----
+   Panels previously set their own top margins, so gaps between sections varied
+   with whichever card happened to be adjacent. */
+
+body.car-detail-page .car-vdp-panel > * + * {
+    margin-top: 18px;
+}
+
+body.car-detail-page .car-vdp-panel-title + .car-vdp-panel-lead {
+    margin-top: 4px;
+}
+
+/* ---- Build sheet: give the sections room ----
+   `.build-sheet-section` was listed in the surface rule above (border, radius,
+   background) but NOT in the padding rule beside it, so each section drew a box
+   and then pressed its title and rows flat against that box's edge. The result
+   read as one dense slab rather than four labelled groups. Padding the section
+   is the actual fix; the rest below is rhythm inside it. */
+
+body.car-detail-page .build-sheet-section {
+    padding: 16px 18px 14px;
+}
+
+/* Sections are the unit the eye should land on, so separate them more than the
+   rows inside them. Row gap is deliberately larger than column gap: stacked on
+   a narrow screen the sections must not read as one continuous list. */
+body.car-detail-page .build-sheet-grid {
+    gap: 20px 24px;
+}
+
+/* 3px rows in a bordered box is what made this feel airless. */
+body.car-detail-page .build-sheet-spec-row {
+    padding: 7px 0;
+}
+
+body.car-detail-page .build-sheet-section-title {
+    margin: 0 0 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--vdp-card-border-color);
+}
+
+/* The header, the price strip and the disclaimer are the sheet's own furniture
+   — they sit outside the section cards and were competing with them for space. */
+body.car-detail-page .build-sheet {
+    padding: 20px 20px 18px;
+}
+
+body.car-detail-page .build-sheet-head {
+    margin-bottom: 18px;
+    padding-bottom: 14px;
+}
+
+body.car-detail-page .build-sheet-pricing {
+    gap: 8px 32px;
+    margin-bottom: 20px;
+    padding: 14px 0;
+}
+
+body.car-detail-page .build-sheet-equip {
+    margin-top: 22px;
+    padding-top: 18px;
+}
+
+body.car-detail-page .build-sheet-disclaimer {
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top: 1px solid var(--vdp-card-border-color);
+}
