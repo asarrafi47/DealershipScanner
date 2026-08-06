@@ -8,11 +8,17 @@ import os
 import time
 from typing import Any
 
-from backend.parsers import parse
+from backend.parsers import parse, resolve_rooftop_attribution
 from backend.parsers.vdp_urls import apply_vehicle_source_url
 from backend.scanner.constants import DEBUG_DIR, KNOWN_HAR_PROVIDERS
 from backend.scanner.dealer_site_url import dealer_inventory_base_url
 from backend.scanner.inventory_write import InventoryWriteCoordinator
+# One shared rooftop reconcile policy for the browser path and the delta path.
+from backend.scanner.rooftop_disown import (
+    disown_foreign_rooftop_vins,
+    roster_place as rooftop_roster_place,
+    split_refusals,
+)
 from backend.scanner.phases.upsert import upsert_vehicles_for_dealer
 from backend.scanner.post_scan.coverage_report import compute_dealer_coverage, format_coverage_log
 from backend.scanner.phases.inventory_scrape import scrape_inventory_path
@@ -468,7 +474,19 @@ async def run_dealer(
             except Exception as _rec_e:
                 logger.debug("Recipe promotion skipped [%s]: %s", name, _rec_e)
 
+        # This store's postal address from the registry, looked up ONCE and
+        # handed to every parse() below. A group feed whose rooftops are address
+        # blocks carrying no store name can only be told apart by address; omit
+        # these and the gate refuses every page of such a feed.
+        roster_place = await asyncio.to_thread(rooftop_roster_place, url)
+
         body_parse_cache: dict[int, list[dict[str, Any]]] = {}
+        # Rows this store's own site served that the feed assigns to a DIFFERENT
+        # storefront. Keeping them out of ``all_vehicles`` is what keeps them out
+        # of ``result["vins"]`` and out of the reconcile pass's "still seen" VIN
+        # set — a mis-attributed VIN in that set is what has been holding
+        # pre-existing mis-attributions at listing_active = 1 on this path.
+        rooftop_refused: list[dict[str, Any]] = []
 
         def _vehicles_for_body(body: Any) -> list[dict[str, Any]]:
             bid = id(body)
@@ -476,7 +494,10 @@ async def run_dealer(
             if cached is not None:
                 return cached
             vehicles = list(
-                parse(provider, body, base_url=url, dealer_id=dealer_id, dealer_name=name, dealer_url=url)
+                parse(
+                    provider, body, base_url=url, dealer_id=dealer_id, dealer_name=name,
+                    dealer_url=url, rejected_out=rooftop_refused, **roster_place,
+                )
             )
             for v in vehicles:
                 v.setdefault("dealer_name", name)
@@ -491,22 +512,34 @@ async def run_dealer(
         for _resp_url, body in intercept_records:
             all_vehicles.extend(_vehicles_for_body(body))
 
-        result["inventory_rows"] = len(all_vehicles)
+        # The row-count heuristics below — feed sufficiency and, through it, the
+        # recovery trigger — must be told what the FEED answered with, not what
+        # the rooftop gate kept for this store. A group feed that returns 995
+        # rows of which 135 are ours is a COMPLETE capture; report 135 and the
+        # recovery chain concludes the capture failed and re-fetches the lot
+        # through scraper strategies whose rows carry no rooftop evidence at all,
+        # so every sibling car it finds would be stored. Measured on
+        # audifletcherjones-com: 135 of 1,005 rows are this store's.
+        feed_rows = all_vehicles + rooftop_refused
+        result["inventory_rows"] = len(feed_rows)
 
         from backend.scanner.inventory_recovery import unique_vin_count as _unique_vin_count
 
-        merged_unique = _unique_vin_count(all_vehicles)
+        merged_unique = _unique_vin_count(feed_rows)
         feed_sufficient = (
-            bool(all_vehicles)
+            bool(feed_rows)
             and bool(intercept_records)
             and intercept_feed_is_sufficient(
-                intercept_records, url, len(all_vehicles), unique_vin_count=merged_unique
+                intercept_records, url, len(feed_rows), unique_vin_count=merged_unique
             )
         )
 
         def _parse_inventory_raw(raw: Any) -> list[dict[str, Any]]:
             rows = list(
-                parse(provider, raw, base_url=url, dealer_id=dealer_id, dealer_name=name, dealer_url=url)
+                parse(
+                    provider, raw, base_url=url, dealer_id=dealer_id, dealer_name=name,
+                    dealer_url=url, rejected_out=rooftop_refused, **roster_place,
+                )
             )
             for v in rows:
                 v.setdefault("dealer_name", name)
@@ -515,7 +548,7 @@ async def run_dealer(
 
         from backend.scanner.inventory_recovery import RecoveryContext, recover_inventory
 
-        if not all_vehicles:
+        if not feed_rows:
             logger.info(
                 "Extraction backup: %s — no vehicles from %d JSON intercept(s); running recovery chain",
                 name,
@@ -532,12 +565,26 @@ async def run_dealer(
                 provider=provider,
                 intercept_records=intercept_records,
                 path_htmls=path_htmls,
-                vehicles=all_vehicles,
+                vehicles=feed_rows,
                 parse_fn=_parse_inventory_raw,
                 dealer=dealer,
             )
         )
+        # Rooftop attribution is settled ONCE, here, over the final row set:
+        # recovery may have replaced every intercepted row with output from a
+        # scraper strategy that never went through parse(). Per-page marks are
+        # cleared first because a page holding nothing but one sibling's cars
+        # looks like a single-store payload on its own, and only reads as a
+        # sibling next to this store's own rooftop across the whole capture —
+        # the same union re-run backend.scanner.delta_scan does.
         all_vehicles = recovery.vehicles
+        for _v in all_vehicles:
+            _v.pop("_rooftop_reject", None)
+        all_vehicles, rooftop_refused = resolve_rooftop_attribution(
+            all_vehicles, dealer_id=dealer_id, dealer_name=name, dealer_url=url, **roster_place,
+        )
+        if rooftop_refused:
+            result["rooftop_refused_rows"] = len(rooftop_refused)
         result["inventory_rows"] = len(all_vehicles)
         if recovery.strategies_tried:
             result["inventory_recovery"] = {
@@ -808,13 +855,47 @@ async def run_dealer(
                         name,
                         e,
                     )
-            try:
-                from backend.scanner.inventory_reconcile import (
-                    normalized_vin_set_from_vehicles,
-                    reconcile_dealer_inventory_after_scan,
-                )
+            from backend.scanner.inventory_reconcile import (
+                normalized_vin_set_from_vehicles,
+                reconcile_dealer_inventory_after_scan,
+            )
 
-                scraped_norm = normalized_vin_set_from_vehicles(all_vehicles)
+            scraped_norm = normalized_vin_set_from_vehicles(all_vehicles)
+            # Cars earlier scans stamped onto this store that THIS run's feed
+            # hands to a named sibling rooftop. They are gone from
+            # ``scraped_norm`` now, but reconcile alone cannot retire them: once
+            # the siblings' rows are (correctly) refused this dealer can no
+            # longer reach reconcile's VIN-coverage bar. Only refusals that are
+            # evidence about a CAR are acted on — see
+            # rooftop_disown.EVIDENCE_BACKED_REJECTS; "we could not tell which
+            # rooftop is this store" is a statement about our roster and must
+            # never un-list anything.
+            try:
+                evidenced, unidentified = split_refusals(rooftop_refused)
+                if unidentified:
+                    result["rooftop_unidentified_rows"] = unidentified
+                    logger.warning(
+                        "Rooftop [%s]: could not identify this store among the rooftops its feed "
+                        "names — %d row(s) refused for storage, NOTHING un-listed. Fix by giving "
+                        "this dealer a street_address in the `dealerships` roster.",
+                        name, unidentified,
+                    )
+                foreign_vins = normalized_vin_set_from_vehicles(evidenced) - scraped_norm
+                if foreign_vins:
+                    disowned = await asyncio.to_thread(
+                        disown_foreign_rooftop_vins, dealer_id, foreign_vins
+                    )
+                    result["rooftop_disowned"] = disowned
+                    if disowned:
+                        logger.info(
+                            "Rooftop [%s]: %d car(s) belonged to sibling rooftops in this group "
+                            "feed — unlisted from this store",
+                            name, disowned,
+                        )
+            except Exception as e:
+                logger.warning("Rooftop disown failed for %s (continuing): %s", name, e)
+
+            try:
                 result["reconcile"] = await asyncio.to_thread(
                     reconcile_dealer_inventory_after_scan,
                     dealer_id,

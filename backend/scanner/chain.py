@@ -187,6 +187,86 @@ class ScraperChain:
 # ---------------------------------------------------------------------------
 
 
+class ImpersonatingFetcher(Fetcher):
+    """
+    Plain HTTP with a real browser's TLS fingerprint.
+
+    Most dealer platforms sit behind a Cloudflare edge that rejects on the TLS/JA3
+    handshake rather than on headers: bare curl and curl carrying a complete browser
+    header set receive the same 403 from the same host. ``RequestsFetcher`` therefore
+    fails on those sites no matter what headers it sends, and because it fails the chain
+    falls through to ``PlaywrightFetcher`` -- which is where a browser-free scan quietly
+    turns into 1,656 browser fetches.
+
+    ``curl_cffi`` reproduces a browser's handshake, so the edge answers normally. Of 182
+    rooftops that yielded no inventory, 112 were returning 403 to a stock HTTP client;
+    with impersonation that fell to 1. This fetcher runs ahead of both others so those
+    sites resolve over HTTP and never reach the browser stage.
+
+    Signature rotation is required, not belt-and-braces: over a 30-dealer sample
+    ``chrome`` alone cleared roughly half, while chrome/chrome124/safari17_0 together
+    cleared 29 of 30. Edges run different rule sets. The signature that works for a host
+    is remembered so later fetches spend one request instead of three.
+    """
+
+    name = "impersonate"
+
+    # Ordered by observed hit rate.
+    PROFILES = ("chrome", "chrome124", "safari17_0")
+
+    def __init__(self, timeout_s: float = 25.0):
+        self.timeout_s = timeout_s
+        self._winning: dict[str, str] = {}
+
+    def available(self) -> bool:
+        try:
+            import curl_cffi  # noqa: F401
+
+            return True
+        except ImportError:
+            return False
+
+    @staticmethod
+    def _host(url: str) -> str:
+        from urllib.parse import urlparse
+
+        return urlparse(url).netloc.lower()
+
+    def fetch(self, url: str) -> str:
+        from curl_cffi import requests as cffi_requests
+
+        from backend.scanner.http_fetch import proxy_url
+
+        proxy = proxy_url()
+        proxies = {"http": proxy, "https": proxy} if proxy else None
+
+        host = self._host(url)
+        # Try the signature that already worked for this host first.
+        known = self._winning.get(host)
+        order = ([known] + [p for p in self.PROFILES if p != known]) if known else list(self.PROFILES)
+
+        last_status: int | None = None
+        for profile in order:
+            try:
+                resp = cffi_requests.get(
+                    url,
+                    impersonate=profile,
+                    timeout=self.timeout_s,
+                    proxies=proxies,
+                    allow_redirects=True,
+                )
+            except Exception as exc:  # curl_cffi has its own error hierarchy
+                last_status = None
+                logger.debug("impersonate %s failed for %s: %s", profile, host, exc)
+                continue
+            if resp.status_code == 200 and resp.text and resp.text.strip():
+                self._winning[host] = profile
+                return resp.text
+            last_status = resp.status_code
+
+        raise FetchError(f"impersonation exhausted for {host} (last status {last_status})")
+
+
 class RequestsFetcher(Fetcher):
     name = "requests"
 
@@ -335,7 +415,10 @@ class HeuristicVehicleLinkExtractor(Extractor):
         return vehicles
 
 
+# Impersonation first: it clears the Cloudflare TLS-fingerprint 403 that would
+# otherwise fail RequestsFetcher and escalate the chain to a browser.
 DEFAULT_FETCHERS: list[Fetcher] = [
+    ImpersonatingFetcher(),
     RequestsFetcher(),
     PlaywrightFetcher(),
 ]
@@ -351,7 +434,7 @@ def default_chain(
     universal default extractor list for dealership sites yet.
     """
     return ScraperChain(
-        fetchers=[RequestsFetcher(), PlaywrightFetcher()],
+        fetchers=[ImpersonatingFetcher(), RequestsFetcher(), PlaywrightFetcher()],
         extractors=extractors,
         result_filter=result_filter,
     )

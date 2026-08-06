@@ -128,7 +128,95 @@ def _load_active_inventory_dealers() -> list[dict]:
     return out
 
 
+def _load_scannable_dealers() -> list[dict]:
+    """Every dealer we are *able* to scan: active inventory ∪ stored recipes.
+
+    ``_load_active_inventory_dealers`` rosters only dealers that already have
+    live rows, which makes coverage self-limiting: a dealer whose inventory has
+    all gone inactive is never scanned again, so it can never come back. On
+    2026-08-03 that stranded audiofcostamesa-com (274 rows, every one inactive)
+    and left 437 of the 650 dealers holding a stored recipe untouched by the
+    nightly — the recipe is proof we CAN scan them.
+
+    A dealer with no usable recipe still skips fast in the delta path, so the
+    union costs a cheap no-op per extra dealer rather than a scan.
+
+    URL precedence: the ``dealer_id`` slug, which is the storefront host with
+    dots swapped for dashes and is therefore canonical, and a stored listing URL
+    ONLY when its host agrees with that slug. A group feed stamps the queried
+    host onto every rooftop's rows, so ``cars.source_url`` is not evidence of
+    whose site a car came from: all 274 audiofcostamesa-com rows carry
+    ``www.audifletcherjones.com``, and trusting them would point a scan of Audi
+    of Costa Mesa at Fletcher Jones. Names fall back to the registry, then the id.
+    """
+    from urllib.parse import urlparse
+
+    from backend.db.inventory_db import get_conn
+
+    conn = get_conn()
+    cur = conn.cursor()
+    # Rows are positionally indexed (see _load_dealers_from_db).
+    cur.execute(
+        """
+        WITH scannable AS (
+            SELECT DISTINCT dealer_id FROM cars
+             WHERE COALESCE(listing_active, 1) = 1
+               AND dealer_id IS NOT NULL AND TRIM(dealer_id) != ''
+            UNION
+            SELECT DISTINCT dealer_id FROM dealer_recipes
+             WHERE dealer_id IS NOT NULL AND TRIM(dealer_id) != ''
+               AND COALESCE(recipe_count, 0) > 0
+        )
+        SELECT s.dealer_id,
+               (SELECT MAX(c.dealer_name) FROM cars c WHERE c.dealer_id = s.dealer_id),
+               (SELECT MAX(c.source_url)  FROM cars c
+                 WHERE c.dealer_id = s.dealer_id AND c.source_url LIKE 'http%'),
+               (SELECT MAX(d.name)        FROM dealerships d
+                 WHERE REPLACE(REPLACE(REPLACE(LOWER(COALESCE(d.website_url, '')),
+                       'https://', ''), 'http://', ''), 'www.', '')
+                       LIKE REPLACE(s.dealer_id, '-', '.') || '%'),
+               (SELECT MAX(r.provider_hint) FROM dealer_recipes r WHERE r.dealer_id = s.dealer_id)
+          FROM scannable s
+        """
+    )
+    rows = cur.fetchall()
+    conn.close()
+
+    out: list[dict] = []
+    for r in rows:
+        did = str(r[0] or "").strip()
+        if not did:
+            continue
+        car_name, any_url, reg_name, provider = (str(x or "").strip() for x in r[1:5])
+        # dealer_id is the host with dots swapped for dashes ("davekirk-com").
+        slug_host = re.sub(r"-(com|net|org|us|ca)$", r".\1", did)
+        base = f"https://www.{slug_host}" if "." in slug_host else ""
+        if any_url:
+            u = urlparse(any_url)
+            stored_host = (u.netloc or "").lower()
+            stored_host = stored_host[4:] if stored_host.startswith("www.") else stored_host
+            # Trust the stored URL only where it agrees with the slug — otherwise
+            # it is a group feed's host, i.e. a sibling's site.
+            if u.scheme and stored_host and (not base or stored_host == slug_host):
+                base = f"{u.scheme}://{u.netloc}"
+        entry = {"dealer_id": did, "url": base, "name": car_name or reg_name or did}
+        if provider:
+            entry["provider"] = provider
+        out.append(entry)
+    return out
+
+
 def load_manifest() -> list[dict]:
+    if (os.environ.get("DEALERS_FROM_SCANNABLE") or "").strip().lower() in (
+        "1", "true", "yes",
+    ):
+        dealers = _load_scannable_dealers()
+        logger.info(
+            "Loaded %d dealers from active inventory ∪ stored recipes "
+            "(DEALERS_FROM_SCANNABLE=1)",
+            len(dealers),
+        )
+        return dealers
     if (os.environ.get("DEALERS_FROM_ACTIVE_INVENTORY") or "").strip().lower() in (
         "1", "true", "yes",
     ):

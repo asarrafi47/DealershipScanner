@@ -13,6 +13,7 @@ from backend.utils.analytics_ep import apply_ep_from_scanner_dict
 from backend.utils.car_serialize import infer_engine_l_for_db
 from backend.utils.field_clean import clean_car_row_dict, compute_data_quality_score, is_effectively_empty
 from backend.utils.forced_induction import classify_forced_induction_from_car_row
+from backend.utils.fuel_type_normalize import normalize_fuel_type_for_storage
 from backend.utils.interior_color_buckets import interior_color_buckets_json
 from backend.utils.in_transit import availability_spec_source_patch
 from backend.utils.spec_provenance import merge_spec_source_json
@@ -20,6 +21,13 @@ from backend.utils.spec_provenance import merge_spec_source_json
 logger = logging.getLogger(__name__)
 
 _PRICE_HISTORY_MAX_ENTRIES = 24
+
+# Rows to write per transaction in :func:`upsert_vehicles`. One transaction for a
+# whole dealer batch held row locks on ``cars`` (and an open snapshot) for the
+# entire Python-side normalization of every vehicle -- minutes on a large feed.
+# Upserts are idempotent per VIN, so committing in chunks costs nothing on a
+# retry and bounds how long the scanner can block a concurrent DDL or reader.
+_UPSERT_COMMIT_BATCH = 200
 
 
 def _build_price_history_json(
@@ -54,11 +62,61 @@ def _build_price_history_json(
     return json.dumps(history) if history else None
 
 
+def _scanner_idle_in_txn_timeout_ms() -> int:
+    """
+    Backstop for PostgreSQL scanner connections: how long a session may sit
+    ``idle in transaction`` before the server kills it. ``0`` disables it.
+
+    This is a guard, not the fix -- the fix is that every code path below closes
+    its transaction before doing per-car work (network calls, dictionary
+    lookups). It exists because an idle-in-transaction scanner session is what
+    parks a queued ``CREATE INDEX`` on ``cars``, and in PostgreSQL a waiting
+    strong lock puts every later reader behind it. If the guard ever fires, the
+    scan raises loudly instead of silently freezing every car page.
+    """
+    raw = (os.environ.get("SCANNER_IDLE_IN_TXN_TIMEOUT_MS") or "60000").strip()
+    try:
+        return max(0, int(float(raw)))
+    except (TypeError, ValueError):
+        return 60000
+
+
+_idle_timeout_warned = False
+
+
+def _apply_idle_in_txn_guard(conn) -> None:
+    """Apply :func:`_scanner_idle_in_txn_timeout_ms` to a scanner-owned PG session."""
+    global _idle_timeout_warned
+    ms = _scanner_idle_in_txn_timeout_ms()
+    if ms <= 0:
+        return
+    # Never touch a borrowed shared read connection: the SET would outlive this
+    # call and change the web app's session behaviour.
+    if getattr(conn, "_shared", False):
+        return
+    if getattr(conn, "_backend", None) != "postgres":
+        return
+    raw = getattr(conn, "_raw", conn)
+    try:
+        raw.execute(f"SET SESSION idle_in_transaction_session_timeout = {int(ms)}")
+        raw.commit()
+    except Exception:
+        if not _idle_timeout_warned:
+            _idle_timeout_warned = True
+            logger.warning("could not set idle_in_transaction_session_timeout", exc_info=True)
+        try:
+            raw.rollback()
+        except Exception:
+            pass
+
+
 def get_conn():
     """Use inventory connection settings (WAL + lock wait) so scanner and app agree on ``inventory.db``."""
     from backend.db.inventory_db import get_conn as inventory_get_conn
 
-    return inventory_get_conn()
+    conn = inventory_get_conn()
+    _apply_idle_in_txn_guard(conn)
+    return conn
 
 
 def _ensure_schema(conn):
@@ -66,7 +124,25 @@ def _ensure_schema(conn):
 
     if is_inventory_postgres():
         raw = getattr(conn, "_raw", conn)
-        init_postgres_inventory(raw)
+        try:
+            init_postgres_inventory(raw)
+        except Exception:
+            # init_postgres_inventory re-asserts the schema with a short lock_timeout so a
+            # queued CREATE INDEX cannot park every other reader behind it (see the docstring
+            # there). That makes it *expected* to fail when another session holds a long
+            # transaction on `cars` -- which is precisely the situation a second scanner
+            # starting mid-run hits. The authoritative schema is the migration chain, so an
+            # aborted re-assert must not take the whole scan down with it. The per-process
+            # flag stays unset, so a later connection retries.
+            logger.warning(
+                "inventory schema re-assert skipped (table busy); continuing with the "
+                "schema owned by migrations/",
+                exc_info=True,
+            )
+            try:
+                raw.rollback()
+            except Exception:
+                pass
         return
 
     cursor = conn.cursor()
@@ -168,11 +244,40 @@ def _ensure_schema(conn):
     conn.commit()
 
 
+def drop_unattributable_vehicles(vehicles: list[dict]) -> tuple[list[dict], int]:
+    """Remove rows the rooftop-attribution gate refused.
+
+    Every row written here is stamped with the dealer whose site was queried,
+    and on a dealer-group platform that is not the dealer who sells the car.
+    ``backend.parsers.resolve_rooftop_attribution`` marks such rows with
+    ``_rooftop_reject``; this is the write-side enforcement of that decision, so
+    a caller that forwards the rejects anyway still cannot store a wrong
+    storefront.
+    """
+    kept = [v for v in vehicles if not v.get("_rooftop_reject")]
+    refused = len(vehicles) - len(kept)
+    if refused:
+        reasons: dict[str, int] = {}
+        for v in vehicles:
+            reason = v.get("_rooftop_reject")
+            if reason:
+                reasons[str(reason)] = reasons.get(str(reason), 0) + 1
+        logger.warning(
+            "upsert_vehicles: refused %d row(s) not attributable to the scanned rooftop (%s)",
+            refused,
+            ", ".join(f"{k}={n}" for k, n in sorted(reasons.items())),
+        )
+    return kept, refused
+
+
 def upsert_vehicles(vehicles: list[dict]) -> int:
     """
     Insert or replace vehicles by vin. Strict de-duplication: one row per VIN
     (same car in 'New' and 'Used' counts once). Uses ON CONFLICT(vin) DO UPDATE.
     """
+    if not vehicles:
+        return 0
+    vehicles, _refused = drop_unattributable_vehicles(vehicles)
     if not vehicles:
         return 0
     by_vin = {}
@@ -203,12 +308,24 @@ def upsert_vehicles(vehicles: list[dict]) -> int:
             for row in cursor.fetchall():
                 if row[1] is not None and str(row[1]).strip():
                     existing_spec_src[str(row[0])] = str(row[1])
+        # The prefetch above opened a read transaction; it is fully materialized in
+        # ``existing_spec_src`` now, so end it before the per-vehicle work starts.
+        conn.commit()
         for raw in vehicles:
             merged = apply_ep_from_scanner_dict(dict(raw))
             from backend.parsers.vdp_urls import apply_vehicle_source_url
 
             apply_vehicle_source_url(merged)
             v = clean_car_row_dict(merged)
+            # 48V mild hybrids (Ram 1500 eTorque) arrive labelled "Hybrid" from
+            # the feed. Correct the label BEFORE it is stored: the fuel FILTERS
+            # (search_cars, facet cascade, nearby counts) read cars.fuel_type
+            # directly, so a read-time-only correction leaves the card and the
+            # filter disagreeing, and any one-off backfill is overwritten by the
+            # next scan of the same dealer.
+            _ft_fixed = normalize_fuel_type_for_storage(v)
+            if _ft_fixed:
+                v["fuel_type"] = _ft_fixed
             if not v.get("transmission_type") and v.get("transmission"):
                 from backend.utils.transmission_normalize import normalize_transmission_standard
                 _y = v.get("year")
@@ -402,8 +519,19 @@ def upsert_vehicles(vehicles: list[dict]) -> int:
                         NULLIF(NULLIF(TRIM(excluded.gallery), ''), '[]'),
                         cars.gallery
                     ),
-                    carfax_url=excluded.carfax_url, history_highlights=excluded.history_highlights,
-                    msrp=excluded.msrp,
+                    -- Carfax link, history highlights and MSRP come from the VDP (or a
+                    -- window sticker), never from the SRP card. An SRP-only refresh of
+                    -- the same VIN therefore arrives with carfax_url=NULL,
+                    -- history_highlights='[]' and msrp=NULL. Assigning excluded.* here
+                    -- wiped all three on every such rescan, against this statement's
+                    -- stated contract that an empty incoming value never overwrites a
+                    -- stored one.
+                    carfax_url=COALESCE(NULLIF(TRIM(excluded.carfax_url), ''), cars.carfax_url),
+                    history_highlights=COALESCE(
+                        NULLIF(NULLIF(TRIM(excluded.history_highlights), ''), '[]'),
+                        cars.history_highlights
+                    ),
+                    msrp=COALESCE(excluded.msrp, cars.msrp),
                     dealership_registry_id=COALESCE(excluded.dealership_registry_id, cars.dealership_registry_id),
                     source_url=COALESCE(excluded.source_url, cars.source_url),
                     body_style=COALESCE(excluded.body_style, cars.body_style),
@@ -411,7 +539,21 @@ def upsert_vehicles(vehicles: list[dict]) -> int:
                     engine_l=COALESCE(NULLIF(TRIM(excluded.engine_l), ''), cars.engine_l),
                     condition=COALESCE(NULLIF(TRIM(excluded.condition), ''), cars.condition),
                     description=COALESCE(excluded.description, cars.description),
-                    data_quality_score=excluded.data_quality_score,
+                    -- Scored off the INCOMING payload, but every column this score
+                    -- reads (title/year/make/model/trim/price/mileage/transmission/
+                    -- drivetrain/fuel_type/colors/image/engine/mpg -- see
+                    -- ``compute_data_quality_score``) is keep-if-nonempty above, so the
+                    -- stored row's field set never shrinks through this statement.
+                    -- Assigning excluded.* therefore let an SRP-only rescan drop the
+                    -- score of a row that still holds every field it was scored on
+                    -- (measured 95.37 -> 54.63), and ``hybrid_search`` ranks on this
+                    -- column. Take the better of the two; a path that genuinely CLEARS
+                    -- fields re-derives the score via refresh_car_data_quality_score.
+                    data_quality_score=CASE
+                        WHEN COALESCE(excluded.data_quality_score, 0) > COALESCE(cars.data_quality_score, 0)
+                        THEN excluded.data_quality_score
+                        ELSE cars.data_quality_score
+                    END,
                     mpg_city=COALESCE(excluded.mpg_city, cars.mpg_city),
                     mpg_highway=COALESCE(excluded.mpg_highway, cars.mpg_highway),
                     is_cpo=COALESCE(excluded.is_cpo, cars.is_cpo),
@@ -425,8 +567,19 @@ def upsert_vehicles(vehicles: list[dict]) -> int:
                         ELSE cars.spec_source_json
                     END,
                     first_seen_at=COALESCE(cars.first_seen_at, excluded.scraped_at),
+                    -- Stamp only when the stored price ACTUALLY moves. The price
+                    -- column above keeps its stored value when the incoming price is
+                    -- missing (hidden price / "call for price" / a feed that dropped
+                    -- the field), but the old condition compared
+                    -- COALESCE(excluded.price, 0) and so read a missing price as a
+                    -- change to 0 -- stamping "repriced today" on a row whose price
+                    -- it had just decided not to touch. ``merchandising.py`` anchors
+                    -- price aging on this column, so those rows read as permanently
+                    -- just-repriced.
                     last_price_change_at=CASE
-                        WHEN COALESCE(cars.price, 0) != COALESCE(excluded.price, 0) THEN excluded.scraped_at
+                        WHEN COALESCE(excluded.price, 0) > 0
+                             AND COALESCE(cars.price, 0) != excluded.price
+                        THEN excluded.scraped_at
                         ELSE COALESCE(cars.last_price_change_at, cars.first_seen_at, excluded.scraped_at)
                     END,
                     internal_notes=cars.internal_notes,
@@ -488,6 +641,8 @@ def upsert_vehicles(vehicles: list[dict]) -> int:
                 ),
             )
             count += 1
+            if count % _UPSERT_COMMIT_BATCH == 0:
+                conn.commit()
             trace_vin = (os.environ.get("SCANNER_TRACE_VIN") or "").strip().upper()
             if trace_vin and vin.upper() == trace_vin[:17]:
                 cursor.execute(
@@ -520,14 +675,31 @@ def upsert_vehicles(vehicles: list[dict]) -> int:
                 car_needs_transmission_or_cylinders_backfill,
             )
 
+            # Resolve every VIN -> id up front and RELEASE the connection before the
+            # per-car work below. That work does network I/O (NHTSA vPIC) and opens
+            # its own connections; the previous shape held this one transaction open
+            # for the whole loop, which is the `idle in transaction` session that
+            # parked the web app behind a queued CREATE INDEX on `cars`.
+            car_ids: list[int] = []
             conn2 = get_conn()
-            cur2 = conn2.cursor()
-            for vin_key in by_vin:
-                cur2.execute("SELECT id FROM cars WHERE vin = ?", (vin_key,))
-                row_id = cur2.fetchone()
-                if not row_id:
-                    continue
-                cid = int(row_id[0])
+            try:
+                cur2 = conn2.cursor()
+                vin_keys2 = list(by_vin.keys())
+                for i in range(0, len(vin_keys2), 500):
+                    chunk = vin_keys2[i : i + 500]
+                    placeholders = ",".join("?" * len(chunk))
+                    cur2.execute(
+                        f"SELECT id FROM cars WHERE vin IN ({placeholders})", chunk
+                    )
+                    for row_id in cur2.fetchall():
+                        try:
+                            car_ids.append(int(row_id[0]))
+                        except (TypeError, ValueError):
+                            continue
+                conn2.commit()
+            finally:
+                conn2.close()
+            for cid in car_ids:
                 ild.sync_incomplete_listing_for_car_id(cid)
                 car = get_car_by_id(cid, include_inactive=True)
                 if not car or not car_needs_transmission_or_cylinders_backfill(car):
@@ -535,7 +707,6 @@ def upsert_vehicles(vehicles: list[dict]) -> int:
                 # EPA/trim merge (tier 1) + NHTSA vPIC (tier 2) for transmission/cylinders
                 # (and other vPIC fillable fields still open on the row).
                 apply_structured_spec_backfill_for_car(cid, use_vpic_cache=True)
-            conn2.close()
         except Exception:
             logger.exception("incomplete_listings / spec backfill after upsert failed")
 
@@ -674,20 +845,27 @@ def apply_model_specs_corrections(
     if vins is not None:
         placeholders = ",".join("?" * len(vins))
         cur.execute(
-            f"SELECT vin, make, model, trim, title, cylinders, transmission, drivetrain, body_style, fuel_type "
+            f"SELECT vin, make, model, trim, title, cylinders, transmission, drivetrain, body_style, fuel_type, year, engine_description "
             f"FROM cars WHERE vin IN ({placeholders})",
             vins,
         )
     else:
         cur.execute(
-            "SELECT vin, make, model, trim, title, cylinders, transmission, drivetrain, body_style, fuel_type "
+            "SELECT vin, make, model, trim, title, cylinders, transmission, drivetrain, body_style, fuel_type, year, engine_description "
             "FROM cars"
         )
 
     rows = cur.fetchall()
+    # The SELECT above (``vins=None`` reads the whole fleet) opened a snapshot that
+    # the dictionary-lookup loop below would otherwise hold open to the end. The
+    # rows are materialized here, so close the read transaction now.
+    conn.commit()
     updated = 0
 
-    for vin, raw_make, raw_model, trim, title, cylinders, transmission, drivetrain, body_style, fuel_type in rows:
+    for (
+        vin, raw_make, raw_model, trim, title, cylinders, transmission,
+        drivetrain, body_style, fuel_type, year, engine_description,
+    ) in rows:
         needs_cyl = cylinders is None or (
             isinstance(cylinders, (int, float)) and int(cylinders) == 0
             and not _is_electric_make_model(raw_make, raw_model)
@@ -729,7 +907,24 @@ def apply_model_specs_corrections(
         if needs_body and spec_body:
             patch["body_style"] = str(spec_body).strip()
         if needs_fuel and spec_fuel:
-            patch["fuel_type"] = str(spec_fuel).strip()
+            _fuel = str(spec_fuel).strip()
+            # Same mild-hybrid guard as the upsert: a nameplate-level dictionary
+            # entry must not park a 48V BSG truck on the "Hybrid" fuel facet.
+            _fuel = (
+                normalize_fuel_type_for_storage(
+                    {
+                        "make": raw_make,
+                        "model": raw_model,
+                        "trim": trim,
+                        "title": title,
+                        "year": year,
+                        "fuel_type": _fuel,
+                        "engine_description": engine_description,
+                    }
+                )
+                or _fuel
+            )
+            patch["fuel_type"] = _fuel
 
         if patch:
             updated += 1
@@ -739,6 +934,8 @@ def apply_model_specs_corrections(
                     f"UPDATE cars SET {sets} WHERE vin=?",
                     (*patch.values(), vin),
                 )
+                if updated % _UPSERT_COMMIT_BATCH == 0:
+                    conn.commit()
 
     if not dry_run:
         conn.commit()

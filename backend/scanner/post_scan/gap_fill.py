@@ -134,8 +134,13 @@ def _fetch_listing_html_via_chain(url: str) -> str | None:
         def fetch(self, u: str) -> str:
             return _playwright_fetch_html(u) or ""
 
+    # ImpersonatingFetcher leads: a Cloudflare 403 here used to fail the requests
+    # stage and pull in Playwright, which is how a browser-free run logged 1,656
+    # browser fetches.
+    from backend.scanner.chain import ImpersonatingFetcher
+
     chain = ScraperChain(
-        fetchers=[_RequestsListingFetcher(), _PlaywrightListingFetcher()],
+        fetchers=[ImpersonatingFetcher(), _RequestsListingFetcher(), _PlaywrightListingFetcher()],
         extractors=[],
     )
     try:

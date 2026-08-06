@@ -364,6 +364,18 @@ def filter_sister_store_vehicles(
 
     kept: list[dict[str, Any]] = []
     for v in vehicles:
+        # Rows the feed stamped with a rooftop have already been ruled on by
+        # backend.parsers.resolve_rooftop_attribution, which runs inside
+        # parse() on every path. Two filters over one row is worse than one:
+        # this classifier reads the merged best-effort ``_lot_location`` blob
+        # and matches it fuzzily, so on a row the gate KEPT it can only take
+        # cars away, and it has no evidence the gate did not already weigh.
+        # Rows with no rooftop (VDP DOM snippets, platforms whose feed names no
+        # storefront) are still this classifier's alone — there the gate abstains.
+        if isinstance(v.get("_rooftop"), dict):
+            stats["deferred_to_rooftop_gate"] = stats.get("deferred_to_rooftop_gate", 0) + 1
+            kept.append(v)
+            continue
         loc = extract_location_from_vehicle_row(v)
         verdict = classify_vehicle_location(loc, profile)
         if verdict == "unknown":

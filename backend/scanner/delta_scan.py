@@ -24,6 +24,14 @@ import os
 import time
 from typing import Any
 
+# The rooftop reconcile policy is shared with the full (browser) scan path so the
+# two cannot drift; see backend/scanner/rooftop_disown.py for the rules.
+from backend.scanner.rooftop_disown import (
+    disown_foreign_rooftop_vins as _disown_foreign_rooftop_vins,
+    roster_place as _roster_place,
+    split_refusals,
+)
+
 logger = logging.getLogger("scanner")
 
 # Below these, the replay is treated as a partial/junk feed and the dealer skipped.
@@ -115,6 +123,7 @@ def _active_count(dealer_id: str) -> int:
 async def delta_scan_dealer(dealer: dict[str, Any]) -> dict[str, Any]:
     from backend.parsers import parse
     from backend.scanner.inventory_recovery import _dedupe_vin_list, _price_coverage
+    from backend.scanner.inventory_reconcile import normalized_vin_set_from_vehicles
     from backend.scanner.recipes import try_fetch_via_recipes
 
     dealer_id = str(dealer.get("dealer_id") or "").strip()
@@ -156,16 +165,63 @@ async def delta_scan_dealer(dealer: dict[str, Any]) -> dict[str, Any]:
     records, _vin_yield = fetched
 
     vehicles: list[dict[str, Any]] = []
+    refused: list[dict[str, Any]] = []
+    # The store's postal address, looked up ONCE for both the per-page gate and
+    # the union re-run below. Without it a group feed of unnamed address-block
+    # rooftops refuses every page, leaving nothing for the union pass to keep
+    # and handing every VIN to _disown_foreign_rooftop_vins.
+    roster_place = await asyncio.to_thread(_roster_place, url)
     for _rec_url, body in records:
         vehicles.extend(parse(
             provider, body, base_url=url, dealer_id=dealer_id,
-            dealer_name=name, dealer_url=url,
+            dealer_name=name, dealer_url=url, rejected_out=refused,
+            **roster_place,
         ))
+    # Re-run the gate over the whole replay. It ran per PAGE above, where a page
+    # holding only an unnamed sibling rooftop looks like a single-store payload;
+    # across the union that sibling sits next to this store's own rooftop and is
+    # recognisable as separate.
+    from backend.parsers import resolve_rooftop_attribution
+
+    vehicles, union_refused = resolve_rooftop_attribution(
+        vehicles, dealer_id=dealer_id, dealer_name=name, dealer_url=url, **roster_place,
+    )
+    refused.extend(union_refused)
     for v in vehicles:
         v.setdefault("dealer_name", name)
         v.setdefault("dealer_url", url)
     vehicles = _dedupe_vin_list(vehicles)
     n = len(vehicles)
+    # Rows the feed assigns to a SIBLING rooftop. The store's own site served
+    # them, so past scans stamped them onto this store; the feed itself is the
+    # evidence that it does not sell them, which is enough to hand them back.
+    # Which refusals count as that evidence is decided in one place —
+    # ``rooftop_disown.EVIDENCE_BACKED_REJECTS`` — shared with the browser path.
+    evidenced, unidentified = split_refusals(refused)
+    foreign_vins = normalized_vin_set_from_vehicles(evidenced) - normalized_vin_set_from_vehicles(vehicles)
+    out["rooftop_refused_rows"] = len(refused)
+    if unidentified:
+        out["rooftop_unidentified_rows"] = unidentified
+        logger.warning(
+            "Delta [%s]: could not identify this store among the rooftops its feed names — "
+            "%d row(s) refused for storage, NOTHING un-listed. Fix by giving this dealer a "
+            "street_address in the `dealerships` roster so the gate can tell it from its siblings.",
+            name, unidentified,
+        )
+        _write_hint_note(
+            dealer_id,
+            "rooftop gate could not identify this store in its own group feed; "
+            "needs roster street_address",
+            {"rooftop_unidentified_rows": unidentified},
+        )
+    if foreign_vins:
+        disowned = await asyncio.to_thread(_disown_foreign_rooftop_vins, dealer_id, foreign_vins)
+        out["rooftop_disowned"] = disowned
+        if disowned:
+            logger.info(
+                "Delta [%s]: %d car(s) belonged to sibling rooftops in this group feed — unlisted from this store",
+                name, disowned,
+            )
     known = _active_count(dealer_id)
     vin_cov = (n / known) if known else 1.0
     price_cov = _price_coverage(vehicles)
@@ -259,8 +315,6 @@ async def delta_scan_dealer(dealer: dict[str, Any]) -> dict[str, Any]:
             )
     except Exception as e:
         logger.warning("Delta [%s]: TV image completion failed: %s", name, e)
-
-    from backend.scanner.inventory_reconcile import normalized_vin_set_from_vehicles
 
     scraped_norm = normalized_vin_set_from_vehicles(vehicles)
     # Retirement compares VALID normalized VINs, so its authorization gate must

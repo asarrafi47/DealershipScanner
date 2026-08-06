@@ -132,14 +132,63 @@ _MIN_REAL_HTML_BYTES = 2000
 _RETRYABLE_STATUS = frozenset({429, 500, 502, 503, 504})
 
 
+def _fetch_impersonated(url: str, *, timeout: float = 25.0) -> str | None:
+    """
+    Fetch with a real browser's TLS fingerprint, or None if that is not possible.
+
+    Returns None rather than raising when ``curl_cffi`` is absent, so this stays a pure
+    enhancement: without it the caller falls through to the original urllib path and
+    behaves exactly as before.
+
+    The same quality bar as the urllib path applies -- a challenge interstitial is a
+    couple of hundred KB of markup and would otherwise read as a successful fetch.
+    """
+    try:
+        from curl_cffi import requests as cffi_requests
+    except ImportError:
+        return None
+
+    from backend.scanner.chain import ImpersonatingFetcher
+    from backend.scanner.http_fetch import proxy_url
+
+    proxy = proxy_url()
+    proxies = {"http": proxy, "https": proxy} if proxy else None
+
+    for profile in ImpersonatingFetcher.PROFILES:
+        _pace()
+        try:
+            resp = cffi_requests.get(
+                url, impersonate=profile, timeout=timeout, proxies=proxies, allow_redirects=True
+            )
+        except Exception as exc:
+            logger.debug("recipe_synth impersonate %s failed %s: %s", profile, url[:70], str(exc)[:90])
+            continue
+        if resp.status_code != 200:
+            continue
+        html = resp.text or ""
+        if len(html) < _MIN_REAL_HTML_BYTES:
+            continue
+        if any(m in html.lower() for m in _CHALLENGE_MARKERS):
+            continue
+        return html
+    return None
+
+
 def fetch_dealer_html(url: str, *, timeout: float = 25.0, retries: int = 2) -> str | None:
     """Plain-HTTP GET of *url*, returning decoded HTML or ``None``.
 
     Uses the proxy-aware :func:`open_url` and a browser-like navigation header
     set. Retries briefly on transient rate-limit / gateway statuses (429/5xx).
-    Returns ``None`` (meaning "not synthesizable over HTTP — needs a browser")
-    when the fetch ultimately fails, the response is suspiciously tiny (< ~2KB),
-    or the body carries a Cloudflare/JS-challenge marker.
+    Cheapest path first: plain urllib, then -- only where that fails, returns a thin
+    body, or trips a challenge marker -- a retry with a real browser's TLS fingerprint
+    (:func:`_fetch_impersonated`). The edge in front of most dealer platforms rejects on
+    handshake, not headers, so no amount of header dressing clears it and the failure was
+    being reported as "needs a browser". That is why 130 rooftops held a recipe row with
+    zero recipes: synthesis never saw their HTML. Escalating rather than leading with
+    impersonation keeps the common path unchanged and one request cheaper.
+
+    Returns ``None`` (meaning "not synthesizable over HTTP — needs a browser") only once
+    both have failed.
     """
     import time
     import urllib.error
@@ -147,6 +196,7 @@ def fetch_dealer_html(url: str, *, timeout: float = 25.0, retries: int = 2) -> s
 
     if not url or not url.lower().startswith("http"):
         return None
+
     html: str | None = None
     for attempt in range(retries + 1):
         _pace()
@@ -162,7 +212,7 @@ def fetch_dealer_html(url: str, *, timeout: float = 25.0, retries: int = 2) -> s
                 time.sleep(2.0 * (attempt + 1))
                 continue
             logger.debug("recipe_synth fetch failed %s: HTTP %s", url[:80], e.code)
-            return None
+            return _fetch_impersonated(url, timeout=timeout)
         except Exception as e:  # URLError, socket timeout, decode, ...
             logger.debug("recipe_synth fetch failed %s: %s", url[:80], str(e)[:120])
             return None
@@ -170,11 +220,11 @@ def fetch_dealer_html(url: str, *, timeout: float = 25.0, retries: int = 2) -> s
         return None
     if len(html) < _MIN_REAL_HTML_BYTES:
         logger.debug("recipe_synth fetch %s: thin body (%d bytes) — challenge/shell", url[:80], len(html))
-        return None
+        return _fetch_impersonated(url, timeout=timeout)
     low = html.lower()
     if any(m in low for m in _CHALLENGE_MARKERS):
-        logger.debug("recipe_synth fetch %s: challenge marker present — needs browser", url[:80])
-        return None
+        logger.debug("recipe_synth fetch %s: challenge marker present — retry impersonated", url[:80])
+        return _fetch_impersonated(url, timeout=timeout)
     return html
 
 
@@ -340,10 +390,14 @@ def _synth_carscommerce(dealer_id: str, dealer_url: str, html: str) -> EndpointR
 #   account  — the dealer id, in the homepage HTML (site-provider="dealeron",
 #              data-website-id="do-{account}", "dealerId":"{account}").
 #   pagecfg  — the SRP page config id, NOT on the homepage but embedded in the
-#              used-inventory SRP page as an itemlist page config
-#              ({"dealerId":...,"pageId":{pagecfg},"pageType":"itemlist"...}).
-#              The cosmos endpoint accepts the SRP page's pageId as the pagecfg
-#              (verified live), so no browser capture is needed.
+#              used-inventory SRP page as its own page config
+#              ({"dealerId":...,"pageId":{pagecfg},"pageType":"itemlist"|"custom"...}).
+#              Most DealerOn dealers tag this "itemlist"; some (Toyota Direct,
+#              Weatherford BMW of Berkeley — both fingerprinted via the shared
+#              banrsaa.dealeron.com script host) tag the same used-SRP page
+#              config "custom" instead. Either pageType's pageId replays fine
+#              as the cosmos pagecfg (verified live for both), so no browser
+#              capture is needed — just accept both pageType spellings.
 # The endpoint paginates session-free via ?pg=N&pn=96 (same as heal's
 # _cosmos_pages); validate_recipe walks it that way for cosmos URLs.
 _COSMOS_PATH = "/api/vhcliaa/vehicle-pages/cosmos/srp/vehicles"
@@ -356,9 +410,10 @@ _COSMOS_ACCOUNT_RES = (
     re.compile(r'"dealerId"\s*:\s*"?(\d+)"?'),
     re.compile(r'/static/dealer-(\d+)/'),
 )
-# {"dealerId":"25003","pageId":2483381,"pageType":"itemlist"...}
+# {"dealerId":"25003","pageId":2483381,"pageType":"itemlist"...} — or, on some
+# dealers (Toyota Direct, Weatherford BMW), the same shape tagged "custom".
 _COSMOS_ITEMLIST_RE = re.compile(
-    r'"dealerId"\s*:\s*"?(\d+)"?\s*,\s*"pageId"\s*:\s*(\d+)\s*,\s*"pageType"\s*:\s*"itemlist"'
+    r'"dealerId"\s*:\s*"?(\d+)"?\s*,\s*"pageId"\s*:\s*(\d+)\s*,\s*"pageType"\s*:\s*"(?:itemlist|custom)"'
 )
 
 
@@ -1023,6 +1078,67 @@ def _synth_jazel(dealer_id: str, dealer_url: str, html: str) -> EndpointRecipe |
     )
 
 
+# ── Platform: Dealer Masters (Gatsby SSG, allInventoryJson static-query file) ──
+#
+# Dealer Masters serves the FULL lot (new + used combined) from ONE Gatsby
+# static-query data file at /page-data/sq/d/<queryhash>.json ->
+# data.allInventoryJson.nodes. The hash is derived from the GraphQL query text
+# (stable across rebuilds), but we resolve it dynamically so a query change
+# self-heals on re-synth: read staticQueryHashes from the index/inventory
+# page-data routes, then pick the sq/d file whose allInventoryJson yields the
+# most VINs. Single GET, no pagination — the whole lot is in one file.
+_DEALERMASTERS_INDEX_ROUTES = ("index", "used-inventory", "new-inventory")
+
+
+def _detect_dealermasters(html: str, dealer_url: str) -> bool:
+    return "dealermasters.com" in (html or "").lower()
+
+
+def _dealermasters_static_query_hashes(origin: str) -> list[str]:
+    """Union of Gatsby static-query hashes advertised by the inventory routes."""
+    hashes: list[str] = []
+    seen: set[str] = set()
+    for route in _DEALERMASTERS_INDEX_ROUTES:
+        data = _cosmos_get_json(f"{origin}/page-data/{route}/page-data.json")
+        if not isinstance(data, dict):
+            continue
+        for h in data.get("staticQueryHashes") or []:
+            h = str(h)
+            if h and h not in seen:
+                seen.add(h)
+                hashes.append(h)
+    return hashes
+
+
+def _synth_dealermasters(dealer_id: str, dealer_url: str, html: str) -> EndpointRecipe | None:
+    origin = _origin(dealer_url)
+    from backend.parsers.dealermasters import parse as _dm_parse
+
+    best_url: str | None = None
+    best_vins: set[str] = set()
+    for h in _dealermasters_static_query_hashes(origin):
+        url = f"{origin}/page-data/sq/d/{h}.json"
+        body = _cosmos_get_json(url)
+        if body is None:
+            continue
+        vins = _unique_vins(_dm_parse(body, base_url=origin, dealer_id=dealer_id, dealer_url=origin))
+        if len(vins) > len(best_vins):
+            best_url, best_vins = url, vins
+    if not best_url or not best_vins:
+        return None
+    return EndpointRecipe(
+        dealer_id=dealer_id,
+        url=best_url,
+        method="GET",
+        content_type="application/json",
+        post_template=None,
+        auth_headers={},
+        pagination=PAGINATION_NONE,
+        total_count=len(best_vins),
+        provider_hint="dealermasters",
+    )
+
+
 # ── Platform registry ─────────────────────────────────────────────────────────
 
 
@@ -1054,6 +1170,7 @@ PLATFORM_TEMPLATES: list[PlatformTemplate] = [
     PlatformTemplate("nabthat", _detect_nabthat, _synth_nabthat),
     PlatformTemplate("chapman", _detect_chapman, _synth_chapman),
     PlatformTemplate("jazel", _detect_jazel, _synth_jazel),
+    PlatformTemplate("dealermasters", _detect_dealermasters, _synth_dealermasters),
 ]
 
 _TEMPLATES_BY_NAME = {t.name: t for t in PLATFORM_TEMPLATES}
@@ -1260,7 +1377,18 @@ def validate_recipe(
 
 
 def _cosmos_get_json(url: str) -> Any | None:
-    """Proxy-aware GET returning parsed JSON (or ``None``)."""
+    """Proxy-aware GET returning parsed JSON (or ``None``).
+
+    Falls back to a TLS-impersonated fetch when the plain urllib GET is
+    rejected. The same edge-fingerprint rejection documented on
+    :func:`fetch_dealer_html` (a bare-urllib 403 is not proof the endpoint is
+    gone) also guards Team Velocity JSON feeds on at least one dealer:
+    scottclarkhonda.com/inventory-used.json 403s plain urllib (Akamai Bot
+    Manager, ak_bmsc cookie) but returns 200 under curl_cffi impersonation.
+    Without this fallback, both synthesis and validate_recipe silently see
+    zero VINs for any dealer whose feed sits behind such an edge, and the
+    platform gets misreported as needing a browser when it does not.
+    """
     import urllib.request
 
     _pace()
@@ -1270,7 +1398,14 @@ def _cosmos_get_json(url: str) -> Any | None:
         return json.loads(resp.read().decode("utf-8", "replace"))
     except Exception as e:
         logger.debug("json GET failed %s: %s", url[:80], str(e)[:120])
-        return None
+        text = _fetch_impersonated(url, timeout=25.0)
+        if not text:
+            return None
+        try:
+            return json.loads(text)
+        except (ValueError, TypeError) as e2:
+            logger.debug("json GET impersonated parse failed %s: %s", url[:80], str(e2)[:120])
+            return None
 
 
 def _validate_json_feed(

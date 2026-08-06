@@ -336,6 +336,56 @@ def _url_for_page(recipe: EndpointRecipe, page_index: int) -> str:
     return urlunparse(parts._replace(query=urlencode(query)))
 
 
+# Statuses a WAF returns when it dislikes the TLS handshake rather than the request.
+# Cloudflare and Akamai use 403; DataDome and some Akamai configs use 405/429.
+_TLS_FINGERPRINT_STATUSES = (403, 405, 429)
+
+
+def _replay_impersonated(
+    recipe: EndpointRecipe, req_url: str, headers: dict[str, str], payload: str | None
+) -> tuple[int, Any | None]:
+    """
+    Replay one request with a real browser's TLS fingerprint.
+
+    Returns ``(0, None)`` when curl_cffi is not installed, so this stays a pure
+    enhancement: without it the caller keeps the status the plain client already got.
+
+    Profiles are rotated because edges run different rule sets -- across a 30-dealer
+    sample "chrome" alone cleared about half while chrome/chrome124/safari17_0 together
+    cleared 29 of 30.
+    """
+    try:
+        from curl_cffi import requests as cffi_requests
+    except ImportError:
+        return 0, None
+
+    for profile in ("chrome", "chrome124", "safari17_0"):
+        try:
+            if recipe.method == "GET":
+                resp = cffi_requests.get(
+                    req_url, headers=headers, impersonate=profile, timeout=_REPLAY_TIMEOUT_S
+                )
+            else:
+                resp = cffi_requests.request(
+                    recipe.method, req_url, headers=headers, data=payload,
+                    impersonate=profile, timeout=_REPLAY_TIMEOUT_S,
+                )
+        except Exception as exc:  # curl_cffi raises its own error hierarchy
+            logger.debug("impersonated replay %s failed: %s", profile, str(exc)[:120])
+            continue
+        if resp.status_code != 200:
+            continue
+        logger.info("recipe replay cleared via TLS impersonation (%s): %s", profile, req_url[:70])
+        if recipe.pagination in (PAGINATION_DEP_SRP, PAGINATION_HTML_PAGE, PAGINATION_JAZEL_SRP):
+            return resp.status_code, resp.text or None
+        try:
+            parsed = resp.json()
+        except Exception:
+            return resp.status_code, None
+        return resp.status_code, parsed if isinstance(parsed, (dict, list)) else None
+    return 0, None
+
+
 def _replay_request(
     recipe: EndpointRecipe, body: Any, base_url: str, url: str | None = None
 ) -> tuple[int, Any | None]:
@@ -357,19 +407,36 @@ def _replay_request(
         "Referer": base_url.rstrip("/") + "/",
         **recipe.auth_headers,
     }
+    if recipe.method != "GET":
+        headers["Content-Type"] = "application/json"
+    payload = json.dumps(body) if body is not None else None
+
     try:
         if recipe.method == "GET":
             resp = requests.get(req_url, headers=headers, timeout=_REPLAY_TIMEOUT_S)
         else:
-            headers["Content-Type"] = "application/json"
             resp = requests.request(
                 recipe.method, req_url, headers=headers,
-                data=json.dumps(body) if body is not None else None,
-                timeout=_REPLAY_TIMEOUT_S,
+                data=payload, timeout=_REPLAY_TIMEOUT_S,
             )
     except requests.RequestException as e:
         logger.debug("Recipe replay request failed (%s): %s", recipe.url[:80], str(e)[:150])
-        return 0, None
+        return _replay_impersonated(recipe, req_url, headers, payload)
+
+    if resp.status_code in _TLS_FINGERPRINT_STATUSES:
+        # The edge rejected the handshake, not the request. Retry with a real browser's
+        # TLS signature before treating this as a dead recipe.
+        #
+        # This is the seam that made previously-saved recipes useless: impersonation had
+        # been added to the synthesis and validation helpers, so a recipe would be built,
+        # validated against live inventory and stored -- and then 403 the first time a
+        # real scan replayed it here, which also flips it stale. Recipe capture and recipe
+        # replay have to clear the same edge.
+        status, parsed = _replay_impersonated(recipe, req_url, headers, payload)
+        if status == 200:
+            return status, parsed
+        return resp.status_code, None
+
     if resp.status_code != 200:
         return resp.status_code, None
     # Some platforms serve inventory as server-rendered HTML (no JSON API): Dealer

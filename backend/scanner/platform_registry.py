@@ -292,6 +292,21 @@ SEED_PLATFORMS: list[PlatformEntry] = [
         "it is registered for recognition and scanned by the existing scraper, not a recipe_synth "
         "template.",
     ),
+    PlatformEntry(
+        name="dealermasters",
+        # No distinctive DNS target observed; identified by HTML markers only.
+        cname_patterns=[],
+        html_markers=["dealermasters.com", "media.dealermasters.com"],
+        strategy=STRATEGY_SYNTHESIZE,
+        synthesizable=True,
+        cloudflare=False,
+        notes="Dealer Masters (Gatsby SSG). Full lot (new+used) in ONE Gatsby static-query file "
+        "/page-data/sq/d/<queryhash>.json at data.allInventoryJson.nodes; the hash is query-derived "
+        "(stable across rebuilds). recipe_synth _synth_dealermasters resolves the hash via the "
+        "/page-data/index/ staticQueryHashes and emits a single GET recipe (dealermasters parser). "
+        "Price is nested under Pricing.{Special,List}; the generic JSON walker missed it, leaving "
+        "the lot price-less until this handler. Feed carries no trim/mileage/color — VDP heal gaps.",
+    ),
 ]
 
 
