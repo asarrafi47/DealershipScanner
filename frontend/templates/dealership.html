@@ -6,6 +6,9 @@
     <title>{{ name }} — Dealership research — Sarrafi Cars</title>
     <meta name="csrf-token" content="{{ csrf_token }}">
     {% include "_head_css.html" %}
+    {% set og_title = name ~ " — Dealership research — Sarrafi Cars" %}
+    {% set meta_description = name ~ " inventory, pricing patterns, and dealership research on Sarrafi Cars." %}
+    {% include "_head_meta.html" %}
     {% include "_head_perf.html" %}
     <link rel="stylesheet" href="{{ url_for('static', filename='vendor/leaflet/leaflet.css') }}?v={{ static_cache_ver }}">
     <script nonce="{{ csp_nonce }}">

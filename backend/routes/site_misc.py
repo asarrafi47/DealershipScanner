@@ -28,7 +28,10 @@ def health():
 
 
 def favicon():
-    return send_from_directory(current_app.static_folder, "favicon.svg", mimetype="image/svg+xml")
+    # A real .ico: some crawlers and older Safari ignore SVG served at /favicon.ico.
+    return send_from_directory(
+        current_app.static_folder, "brand/favicon.ico", mimetype="image/x-icon"
+    )
 
 
 def serve_car_image(filename: str):

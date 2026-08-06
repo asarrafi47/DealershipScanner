@@ -1,0 +1,26 @@
+{# Shared head meta: favicon set, webmanifest, description, and OG/Twitter card.
+   Per-page values: set before including —
+     {% set meta_description = "..." %}   page description (also og:description)
+     {% set og_title = "..." %}           defaults to the site name
+     {% set og_image = "https://..." %}   absolute URL; defaults to the brand card
+     {% set og_type = "..." %}            defaults to "website"
+   The og:image URL must be absolute for scrapers; request.url_root covers it. #}
+{% set _desc = (meta_description if meta_description is defined and meta_description else "Dealer inventory across Southern California with verified specs, window-sticker build sheets, and price history. Find your next car with confidence.") %}
+{% set _og_title = (og_title if og_title is defined and og_title else "Sarrafi Cars") %}
+{% set _og_image = (og_image if og_image is defined and og_image else request.url_root.rstrip('/') + url_for('static', filename='brand/og-card.png')) %}
+<meta name="description" content="{{ _desc }}">
+<meta property="og:site_name" content="Sarrafi Cars">
+<meta property="og:type" content="{{ og_type | default('website') }}">
+<meta property="og:title" content="{{ _og_title }}">
+<meta property="og:description" content="{{ _desc }}">
+<meta property="og:image" content="{{ _og_image }}">
+<meta property="og:url" content="{{ request.url }}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ _og_title }}">
+<meta name="twitter:description" content="{{ _desc }}">
+<meta name="twitter:image" content="{{ _og_image }}">
+<link rel="icon" href="{{ url_for('static', filename='favicon.svg') }}" type="image/svg+xml">
+<link rel="icon" href="{{ url_for('static', filename='brand/favicon.ico') }}" sizes="32x32">
+<link rel="apple-touch-icon" href="{{ url_for('static', filename='brand/apple-touch-icon.png') }}">
+<link rel="manifest" href="{{ url_for('static', filename='brand/site.webmanifest') }}">
+<meta name="theme-color" content="#1c3552">

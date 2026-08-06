@@ -6,6 +6,7 @@
     <title>{% block title %}Inventory{% endblock %} — Sarrafi Cars</title>
     <meta name="csrf-token" content="{{ csrf_token }}">
     {% include "_head_css.html" %}
+    {% include "_head_meta.html" %}
     {% include "_head_perf.html" %}
     <style nonce="{{ csp_nonce }}">
     /* Dealer inventory sub-nav (tab bar under the shared sidebar shell). */

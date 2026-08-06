@@ -1,4 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <rect width="32" height="32" rx="6" fill="#1a365d"/>
-  <text x="16" y="22" font-family="system-ui,sans-serif" font-size="14" font-weight="700" fill="#fff" text-anchor="middle">DS</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" rx="14" fill="#1c3552"/>
+  <rect x="4.5" y="4.5" width="55" height="55" rx="10.5" fill="none" stroke="#a68968" stroke-width="1.25" opacity="0.55"/>
+  <text x="32" y="33" text-anchor="middle" dominant-baseline="central"
+        font-family="Didot, 'Bodoni 72', Georgia, 'Times New Roman', serif"
+        font-size="40" fill="#c9ad80">S</text>
 </svg>

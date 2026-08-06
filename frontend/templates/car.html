@@ -9,6 +9,11 @@
     <title>{{ car.title }} — Sarrafi Cars</title>
     <meta name="csrf-token" content="{{ csrf_token }}">
     {% include "_head_css.html" %}
+    {% set og_title = car.title ~ " — Sarrafi Cars" %}
+    {% set og_type = "product" %}
+    {% set meta_description = car.title ~ " — photos, verified specs, window-sticker build sheet, and price history on Sarrafi Cars." %}
+    {% set og_image = gallery_images[0] if gallery_images else None %}
+    {% include "_head_meta.html" %}
     {% include "_head_perf.html" %}
     {% if dealer_map and dealer_map.has_pin %}
     <link rel="stylesheet" href="{{ url_for('static', filename='vendor/leaflet/leaflet.css') }}?v={{ static_cache_ver }}">

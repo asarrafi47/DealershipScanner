@@ -6,6 +6,8 @@
     <title>Compare vehicles — Sarrafi Cars</title>
     <meta name="csrf-token" content="{{ csrf_token }}">
     {% include "_head_css.html" %}
+    {% set meta_description = 'Compare cars side by side — specs, options, fuel costs, and pricing — on Sarrafi Cars.' %}
+    {% include "_head_meta.html" %}
     {% include "_head_perf.html" %}
 </head>
 <body class="compare-page" data-compare-ids="{{ compare_ids | join(',') }}">
