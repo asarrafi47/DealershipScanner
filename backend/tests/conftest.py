@@ -1,6 +1,55 @@
-"""Shared pytest hooks for DealershipScanner backend tests."""
+"""Shared pytest hooks for DealershipScanner backend tests.
+
+Two isolation failures happened here for real, and both are structural rather
+than a mistake in any one test:
+
+1. ``test_dictionary_catalog.test_find_epa_csv_jeep`` redirected
+   ``dictionary_paths`` and then called ``rebuild_catalog()``. ``dictionary_catalog``
+   does ``from .dictionary_paths import INDEX_DIR, MANIFEST_PATH, CATALOG_DB_PATH``
+   at import time, so it holds its OWN references: the rebuild wrote through to
+   the REAL ``backend/dictionary/index`` and rebuilt it from a one-row tmp
+   fixture (manifest ``entry_count`` 14,598 -> 1), gutting the EPA catalog for
+   every process until someone re-ran ``rebuild_catalog()``. Patching that one
+   test does not close the hole: the same trap is set for the next test that
+   calls any dictionary writer.
+
+2. The autouse fixture below clears ``INVENTORY_DATABASE_URL``, so anything that
+   reads the fleet (e.g. ``trim_ladder._inventory_rung_evidence``) sees no
+   inventory, returns ``()``, and the test under it fails for a reason that has
+   nothing to do with what it asserts.
+
+So this file provides, in order:
+
+* ``_forbid_real_dictionary_writes`` (session, autouse) - makes writing anywhere
+  under the real dictionary tree raise ``RealDictionaryWriteBlocked``, no matter
+  which module's namespace holds the path. The patches are in-process, so a test
+  that shells out to a script can still write; that is why the same fixture
+  hashes ``index/manifest.json`` and ``index/dictionary_catalog.db`` before and
+  after the session and fails the run if the bytes moved.
+* ``scratch_dictionary_root`` - an isolated dictionary tree with EVERY imported
+  copy of every dictionary path constant redirected at it, so writers are safe
+  to call.
+* ``sqlite_inventory`` - an isolated SQLite ``cars`` table a test can seed, so
+  fleet-backed code paths have a real database to read.
+* asset-gated skip accounting - the brochure PDFs are gitignored and parts of
+  ``backend/dictionary`` exist only on dev machines, so a class of tests skips
+  silently on CI and a regression in what they cover has no failing test
+  anywhere. Every such skip is now counted and printed in the terminal summary
+  ("ASSET-GATED SKIPS"), and with ``REQUIRE_LOCAL_ASSETS=1`` (dev machines, the
+  asset-bearing CI job) an asset-gated skip becomes a hard failure so the
+  golden-document pins cannot quietly stop running where the documents exist.
+"""
 
 from __future__ import annotations
+
+import builtins
+import hashlib
+import io
+import os
+import sqlite3
+import sys
+from pathlib import Path
+from typing import Any, Callable, Iterator
 
 import pytest
 
@@ -11,3 +60,523 @@ def _inventory_sqlite_tests_mode(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.delenv("INVENTORY_DATABASE_URL", raising=False)
     monkeypatch.delenv("DATABASE_URL", raising=False)
     monkeypatch.setenv("INVENTORY_SQLITE_TESTS", "1")
+
+
+# ---------------------------------------------------------------------------
+# 0. Asset-gated skips are counted, and on asset-bearing machines they fail
+# ---------------------------------------------------------------------------
+#
+# The controlled vocabulary of skip reasons that mean "a local corpus asset is
+# missing" (gitignored brochure PDFs, the backend/dictionary tree, brochure_text
+# corpus files, dev-only epa_master rows). Matched as substrings against the
+# skip reason. Reasons here are ON-DISK asset gates; reasons in the ENV list
+# below are environment gates (a database the machine does not run) — both are
+# counted, only the asset gates are escalated by REQUIRE_LOCAL_ASSETS.
+
+_ASSET_GATE_SKIP_REASONS: tuple[str, ...] = (
+    "not present",              # "brochure PDF not present", "dictionary not present", …
+    "not on disk",              # "2026_Toyota_RAV4_Brochure.pdf not on disk", …
+    "not built",                # "overlay not built", "catalog db not built"
+    "run process_brochure_queue first",
+    "epa_master has no",        # data-content gates in test_knowledge_engine_specs
+)
+
+_ENV_GATE_SKIP_REASONS: tuple[str, ...] = (
+    "DQ_INVARIANTS_LIVE_DB",    # needs a real Postgres, not a file on disk
+)
+
+REQUIRE_LOCAL_ASSETS_ENV = "REQUIRE_LOCAL_ASSETS"
+
+
+def _skip_reason_of(report: Any) -> str:
+    longrepr = getattr(report, "longrepr", None)
+    if isinstance(longrepr, tuple) and len(longrepr) == 3:
+        message = str(longrepr[2])
+    else:
+        message = str(longrepr or "")
+    return message.split("Skipped: ", 1)[-1].strip()
+
+
+def _matches(reason: str, patterns: tuple[str, ...]) -> bool:
+    return any(p in reason for p in patterns)
+
+
+@pytest.hookimpl(hookwrapper=True)
+def pytest_runtest_makereport(item: Any, call: Any):  # noqa: ANN201 - pytest hook
+    outcome = yield
+    report = outcome.get_result()
+    if report.when not in ("setup", "call") or not report.skipped:
+        return
+    reason = _skip_reason_of(report)
+    if not _matches(reason, _ASSET_GATE_SKIP_REASONS):
+        return
+    if (os.environ.get(REQUIRE_LOCAL_ASSETS_ENV) or "").strip() == "1":
+        report.outcome = "failed"
+        report.longrepr = (
+            f"{item.nodeid}: asset-gated skip ({reason!r}) with "
+            f"{REQUIRE_LOCAL_ASSETS_ENV}=1.\nThis machine claims to hold the "
+            "local corpus, so the golden-document test refusing to run IS the "
+            "failure — restore the asset or unset the variable."
+        )
+
+
+def pytest_terminal_summary(terminalreporter: Any, exitstatus: int, config: Any) -> None:
+    gated: list[tuple[str, str]] = []
+    for report in terminalreporter.stats.get("skipped", ()):
+        reason = _skip_reason_of(report)
+        if _matches(reason, _ASSET_GATE_SKIP_REASONS + _ENV_GATE_SKIP_REASONS):
+            gated.append((report.nodeid, reason))
+    if not gated:
+        return
+    terminalreporter.section(f"ASSET-GATED SKIPS: {len(gated)}", sep="=")
+    for nodeid, reason in gated:
+        terminalreporter.line(f"  {nodeid}  [{reason}]")
+    terminalreporter.line(
+        f"  (these run nowhere without the local corpus; set "
+        f"{REQUIRE_LOCAL_ASSETS_ENV}=1 on asset-bearing machines to make an "
+        "asset-gated skip fail instead)"
+    )
+
+
+# ---------------------------------------------------------------------------
+# 1. The real dictionary tree is read-only for the whole test session
+# ---------------------------------------------------------------------------
+
+
+class RealDictionaryWriteBlocked(RuntimeError):
+    """A test tried to write inside the real ``backend/dictionary`` tree.
+
+    Take the ``scratch_dictionary_root`` fixture and call the writer against
+    that instead. Redirecting ``dictionary_paths`` by hand is not enough -- see
+    the module docstring.
+    """
+
+
+def _real_dictionary_root() -> Path | None:
+    """The dictionary root this process would really use, or None if absent.
+
+    Read off ``dictionary_paths`` itself rather than recomputed here, so an env
+    override (``DICTIONARY_ROOT``) or a layout change cannot leave the guard
+    protecting a directory nothing writes to.
+    """
+    try:
+        from backend.enrichment import dictionary_paths
+    except Exception:  # pragma: no cover - dictionary package not importable
+        return None
+    root = Path(dictionary_paths.DICTIONARY_ROOT).resolve()
+    return root if root.is_dir() else None
+
+
+def _guarded_prefixes(root: Path) -> tuple[str, ...]:
+    """Absolute paths whose subtree is write-protected during the session."""
+    out = [str(root)]
+    try:
+        from backend.enrichment import dictionary_paths
+
+        # CATALOG_DB_PATH honours DICTIONARY_CATALOG_DB_PATH and can sit outside
+        # the root; the catalog DB is half of what got destroyed, so cover it.
+        db = Path(dictionary_paths.CATALOG_DB_PATH).resolve()
+        if not str(db).startswith(str(root) + os.sep):
+            out.append(str(db))
+    except Exception:  # pragma: no cover
+        pass
+    return tuple(out)
+
+
+def _is_write_mode(mode: Any) -> bool:
+    m = mode if isinstance(mode, str) else "r"
+    return any(c in m for c in "wxa+")
+
+
+def _install_dictionary_write_guard(mp: pytest.MonkeyPatch, prefixes: tuple[str, ...]) -> None:
+    """Deny every write under *prefixes*, whichever module holds the path.
+
+    Patched at the syscall-adjacent layer (``open``/``os``/``sqlite3``) instead
+    of at ``dictionary_catalog``'s writers, because the hazard is that a path
+    constant has been copied into some other module's namespace -- the guard has
+    to be blind to who is calling.
+    """
+
+    def _blocked(path: Any) -> str | None:
+        try:
+            p = os.path.abspath(os.fspath(path))
+        except TypeError:  # fd, or something that is not a path
+            return None
+        for prefix in prefixes:
+            if p == prefix or p.startswith(prefix + os.sep):
+                return p
+        return None
+
+    def _deny(path: str, op: str) -> None:
+        raise RealDictionaryWriteBlocked(
+            f"{op} would write the real dictionary tree at {path}.\n"
+            "Tests must not mutate backend/dictionary -- rebuilding it from a "
+            "fixture once cost the live EPA catalog 14,598 entries. Use the "
+            "`scratch_dictionary_root` fixture (it redirects every imported copy "
+            "of every dictionary path constant), or read-only APIs."
+        )
+
+    real_io_open = io.open
+    real_builtins_open = builtins.open
+    real_os_open = os.open
+    real_mkdir = os.mkdir
+    real_sqlite_connect = sqlite3.connect
+
+    def guarded_io_open(file: Any, mode: str = "r", *a: Any, **kw: Any):
+        if _is_write_mode(mode):
+            hit = _blocked(file)
+            if hit:
+                _deny(hit, f"open(mode={mode!r})")
+        return real_io_open(file, mode, *a, **kw)
+
+    def guarded_builtins_open(file: Any, mode: str = "r", *a: Any, **kw: Any):
+        if _is_write_mode(mode):
+            hit = _blocked(file)
+            if hit:
+                _deny(hit, f"open(mode={mode!r})")
+        return real_builtins_open(file, mode, *a, **kw)
+
+    def guarded_os_open(path: Any, flags: int, *a: Any, **kw: Any):
+        writeish = flags & (os.O_WRONLY | os.O_RDWR | os.O_CREAT | os.O_TRUNC | os.O_APPEND)
+        if writeish:
+            hit = _blocked(path)
+            if hit:
+                _deny(hit, "os.open")
+        return real_os_open(path, flags, *a, **kw)
+
+    def guarded_mkdir(path: Any, *a: Any, **kw: Any):
+        # ``INDEX_DIR.mkdir(parents=True, exist_ok=True)`` on the existing real
+        # index is a no-op and stays legal; creating a NEW directory in the tree
+        # is a write.
+        hit = _blocked(path)
+        if hit and not os.path.isdir(hit):
+            _deny(hit, "mkdir")
+        return real_mkdir(path, *a, **kw)
+
+    def _guard_unary(real: Callable[..., Any], op: str) -> Callable[..., Any]:
+        def wrapper(path: Any, *a: Any, **kw: Any):
+            hit = _blocked(path)
+            if hit:
+                _deny(hit, op)
+            return real(path, *a, **kw)
+
+        return wrapper
+
+    def _guard_binary(real: Callable[..., Any], op: str) -> Callable[..., Any]:
+        def wrapper(src: Any, dst: Any, *a: Any, **kw: Any):
+            hit = _blocked(dst) or _blocked(src)
+            if hit:
+                _deny(hit, op)
+            return real(src, dst, *a, **kw)
+
+        return wrapper
+
+    def guarded_sqlite_connect(database: Any = ":memory:", *a: Any, **kw: Any):
+        """Reads of the real catalog DB keep working; writes cannot.
+
+        Downgraded to a ``mode=ro`` URI rather than refused outright because
+        ``find_epa_csv`` reads this database on ordinary lookups -- refusing the
+        connection would break every EPA test instead of protecting it. A write
+        on the returned connection raises sqlite3's "attempt to write a readonly
+        database".
+        """
+        target = database
+        if isinstance(database, str) and database.startswith("file:"):
+            # Already a URI: strip it back to a path so a caller-supplied
+            # ``mode=rw`` cannot walk past the guard.
+            target = database[5:].split("?", 1)[0]
+        hit = _blocked(target) if not isinstance(database, int) else None
+        if hit:
+            kw = dict(kw)
+            kw["uri"] = True
+            return real_sqlite_connect(f"file:{hit}?mode=ro", *a, **kw)
+        return real_sqlite_connect(database, *a, **kw)
+
+    mp.setattr(io, "open", guarded_io_open)
+    mp.setattr(builtins, "open", guarded_builtins_open)
+    mp.setattr(os, "open", guarded_os_open)
+    mp.setattr(os, "mkdir", guarded_mkdir)
+    mp.setattr(os, "remove", _guard_unary(os.remove, "os.remove"))
+    mp.setattr(os, "unlink", _guard_unary(os.unlink, "os.unlink"))
+    mp.setattr(os, "rmdir", _guard_unary(os.rmdir, "os.rmdir"))
+    mp.setattr(os, "truncate", _guard_unary(os.truncate, "os.truncate"))
+    mp.setattr(os, "rename", _guard_binary(os.rename, "os.rename"))
+    mp.setattr(os, "replace", _guard_binary(os.replace, "os.replace"))
+    mp.setattr(sqlite3, "connect", guarded_sqlite_connect)
+
+
+def _index_fingerprint(root: Path) -> dict[str, str]:
+    """Content hash of the two files the 2026-07-31 incident destroyed.
+
+    Hashing bytes on disk on purpose: asking the catalog how many entries it
+    thinks it has would be checking the system against its own bookkeeping.
+    """
+    out: dict[str, str] = {}
+    for rel in ("index/manifest.json", "index/dictionary_catalog.db"):
+        p = root / rel
+        if not p.is_file():
+            out[rel] = "absent"
+            continue
+        h = hashlib.sha256()
+        with io.open(p, "rb") as fh:  # bound before the guard patches io.open
+            for chunk in iter(lambda: fh.read(1 << 20), b""):
+                h.update(chunk)
+        out[rel] = f"{p.stat().st_size}:{h.hexdigest()}"
+    return out
+
+
+@pytest.fixture(scope="session", autouse=True)
+def _forbid_real_dictionary_writes() -> Iterator[None]:
+    """Session-wide: the real dictionary tree is readable and not writable."""
+    root = _real_dictionary_root()
+    if root is None:
+        yield
+        return
+    before = _index_fingerprint(root)
+    mp = pytest.MonkeyPatch()
+    _install_dictionary_write_guard(mp, _guarded_prefixes(root))
+    try:
+        yield
+    finally:
+        mp.undo()
+    after = _index_fingerprint(root)
+    if after != before:
+        changed = [k for k in before if before[k] != after.get(k)]
+        pytest.fail(
+            "the real dictionary index changed during this test session: "
+            f"{changed}\nbefore={before}\nafter={after}\n"
+            "Something wrote it from outside this process, or through an API the "
+            "guard does not cover. Rebuild with "
+            "`python -c 'from backend.enrichment.dictionary_catalog import rebuild_catalog; rebuild_catalog()'`.",
+            pytrace=False,
+        )
+
+
+# ---------------------------------------------------------------------------
+# 2. An isolated dictionary tree that writers may actually be pointed at
+# ---------------------------------------------------------------------------
+
+def _dictionary_path_constants() -> tuple[str, ...]:
+    """Every ``Path`` constant ``dictionary_paths`` publishes, read at runtime.
+
+    Discovered rather than listed: a hand-maintained list going stale when a new
+    constant is added is the same drift that let ``dictionary_catalog``'s private
+    copies escape the redirect in the first place.
+    """
+    from backend.enrichment import dictionary_paths
+
+    return tuple(
+        name
+        for name in dir(dictionary_paths)
+        if name.isupper() and isinstance(getattr(dictionary_paths, name, None), Path)
+    )
+
+
+def _dictionary_path_map(root: Path) -> dict[str, Path]:
+    """Old absolute path (str) -> its equivalent under *root*."""
+    from backend.enrichment import dictionary_paths
+
+    real_root = Path(dictionary_paths.DICTIONARY_ROOT).resolve()
+    mapping: dict[str, Path] = {}
+    for name in _dictionary_path_constants():
+        old_abs = Path(getattr(dictionary_paths, name)).resolve()
+        try:
+            rel = old_abs.relative_to(real_root)
+        except ValueError:
+            # e.g. CATALOG_DB_PATH pointed outside the tree by env.
+            mapping[str(old_abs)] = root / "index" / old_abs.name
+            continue
+        mapping[str(old_abs)] = root / rel
+    mapping[str(real_root)] = root
+    return mapping
+
+
+def redirect_dictionary_paths(mp: pytest.MonkeyPatch, root: Path) -> list[str]:
+    """Point every *imported copy* of every dictionary path constant at *root*.
+
+    Walks ``sys.modules`` because the copies are what matter: a module that did
+    ``from ...dictionary_paths import INDEX_DIR`` keeps its own binding, and
+    patching ``dictionary_paths`` alone leaves that module writing production.
+
+    Returns ``"module.ATTR"`` for each redirection, so a caller can assert the
+    module it is about to exercise was actually covered.
+    """
+    mapping = _dictionary_path_map(root)
+    names = _dictionary_path_constants()
+    redirected: list[str] = []
+    for mod_name, module in list(sys.modules.items()):
+        if module is None:
+            continue
+        if not (mod_name.startswith("backend.") or mod_name == "backend"):
+            continue
+        for attr in names:
+            value = getattr(module, attr, None)
+            if not isinstance(value, Path):
+                continue
+            new = mapping.get(str(value.resolve()))
+            if new is None:
+                continue
+            mp.setattr(module, attr, new, raising=False)
+            redirected.append(f"{mod_name}.{attr}")
+    return redirected
+
+
+def _invalidate_dictionary_caches() -> None:
+    """Drop every memo that could carry a path across the redirect boundary."""
+    dc = sys.modules.get("backend.enrichment.dictionary_catalog")
+    if dc is not None:
+        dc.invalidate_catalog_cache()
+
+
+@pytest.fixture
+def scratch_dictionary_root(tmp_path: Path) -> Iterator[Path]:
+    """An empty, isolated dictionary tree that dictionary writers may write to.
+
+    Redirects the env vars AND every already-imported copy of every dictionary
+    path constant, then invalidates the catalog caches on the way in and on the
+    way out (after the redirect is undone, so no scratch path survives the test).
+    """
+    root = tmp_path / "dictionary"
+    for sub in ("index", "epa", "options/raw", "options/stubs", "curated", "derived"):
+        (root / sub).mkdir(parents=True, exist_ok=True)
+
+    # Own MonkeyPatch, not the fixture: teardown ordering has to be
+    # undo-then-invalidate, and the shared monkeypatch fixture undoes after us.
+    mp = pytest.MonkeyPatch()
+    mp.setenv("DICTIONARY_ROOT", str(root))
+    mp.setenv("DICTIONARY_CATALOG_DB_PATH", str(root / "index" / "dictionary_catalog.db"))
+    redirect_dictionary_paths(mp, root)
+    _invalidate_dictionary_caches()
+    try:
+        yield root
+    finally:
+        mp.undo()
+        _invalidate_dictionary_caches()
+
+
+# ---------------------------------------------------------------------------
+# 3. A usable inventory database
+# ---------------------------------------------------------------------------
+
+
+class SqliteInventory:
+    """Isolated ``cars`` table for tests that need the fleet to be non-empty."""
+
+    def __init__(self, path: Path) -> None:
+        self.path = path
+
+    def add_cars(self, rows: list[dict[str, Any]]) -> int:
+        """Insert *rows* (any subset of ``cars`` columns; ``vin`` auto-filled)."""
+        inserted = 0
+        conn = sqlite3.connect(str(self.path))
+        try:
+            existing = {r[1] for r in conn.execute("PRAGMA table_info(cars)")}
+            for i, row in enumerate(rows):
+                data = dict(row)
+                data.setdefault("vin", f"TESTVIN{os.getpid():06d}{id(self) % 10000:04d}{i:05d}")
+                data.setdefault("listing_active", 1)
+                unknown = set(data) - existing
+                if unknown:
+                    raise KeyError(f"cars has no column(s): {sorted(unknown)}")
+                cols = ",".join(data)
+                marks = ",".join("?" for _ in data)
+                conn.execute(f"INSERT INTO cars ({cols}) VALUES ({marks})", tuple(data.values()))
+                inserted += 1
+            conn.commit()
+        finally:
+            conn.close()
+        # Re-checked here, not only at fixture setup: the module under test is
+        # usually imported by the test body, i.e. after the fixture ran.
+        _assert_inventory_cache_list_is_complete()
+        _clear_inventory_derived_caches()
+        return inserted
+
+
+# Cached readers of the inventory DB. A memo taken before the fixture seeds rows
+# says "the fleet is empty" for the rest of the session, which is how a seeded
+# test still reads zero rows. Enumerated rather than swept (a blanket clear would
+# also drop caches whose staleness a test may be asserting on) and checked for
+# completeness below, so a new cached reader cannot go unnoticed.
+_INVENTORY_CACHE_READERS: dict[str, tuple[str, ...]] = {
+    # The cached readers live in the ``evidence`` submodule of the
+    # ``trim_ladder`` package, not in its facade ``__init__``. Key on the module
+    # that defines them: the AST check below reads ``module.__file__``, and the
+    # facade's file contains no function bodies at all.
+    "backend.enrichment.trim_ladder.evidence": (
+        "_active_make_spellings",
+        "_active_trims_by_make_year",
+    ),
+}
+
+
+def _assert_inventory_cache_list_is_complete() -> None:
+    """Fail loudly if a listed module grew a cached inventory reader we do not clear.
+
+    Reads the source, not the module's own bookkeeping: any ``lru_cache``d
+    function whose body mentions ``db_conn``/``inventory_db`` must be listed.
+
+    Scope, stated plainly: this only checks the modules that are keys of
+    ``_INVENTORY_CACHE_READERS``. A cached inventory reader added to some other
+    module is NOT detected here -- add that module as a key when a test starts
+    depending on it.
+    """
+    import ast
+
+    for mod_name, listed in _INVENTORY_CACHE_READERS.items():
+        module = sys.modules.get(mod_name)
+        if module is None or not getattr(module, "__file__", None):
+            continue
+        tree = ast.parse(Path(module.__file__).read_text(encoding="utf-8"))
+        found = {
+            node.name
+            for node in ast.walk(tree)
+            if isinstance(node, ast.FunctionDef)
+            and any("lru_cache" in ast.unparse(d) for d in node.decorator_list)
+            and ("db_conn" in ast.dump(node) or "inventory_db" in ast.dump(node))
+        }
+        missing = found - set(listed)
+        if missing:
+            raise AssertionError(
+                f"{mod_name} has cached inventory readers the `sqlite_inventory` "
+                f"fixture does not clear: {sorted(missing)}. Add them to "
+                "_INVENTORY_CACHE_READERS in backend/tests/conftest.py, or seeded "
+                "rows will be invisible to whatever memoised first."
+            )
+
+
+def _clear_inventory_derived_caches() -> None:
+    for mod_name, attrs in _INVENTORY_CACHE_READERS.items():
+        module = sys.modules.get(mod_name)
+        if module is None:
+            continue
+        for attr in attrs:
+            clear = getattr(getattr(module, attr, None), "cache_clear", None)
+            if clear is not None:
+                clear()
+
+
+@pytest.fixture
+def sqlite_inventory(tmp_path: Path) -> Iterator[SqliteInventory]:
+    """A real, empty, isolated inventory DB wired into ``backend.db.inventory_db``.
+
+    Without this, ``INVENTORY_DATABASE_URL`` is blank under pytest and the root
+    conftest points ``DB_PATH`` at the shared dev ``inventory.db``, so anything
+    fleet-backed (``_inventory_rung_evidence`` -> ``resolve_trim_ladder``) reads
+    zero rows and the test fails for a reason it never meant to test.
+    """
+    from backend.db import inventory_db as inv_db
+
+    path = tmp_path / "inventory.db"
+    mp = pytest.MonkeyPatch()
+    mp.setenv("INVENTORY_SQLITE_TESTS", "1")
+    mp.setenv("INVENTORY_DATABASE_URL", "")
+    mp.setenv("INVENTORY_DB_PATH", str(path))
+    mp.setattr(inv_db, "DB_PATH", str(path), raising=False)
+    inv_db.init_inventory_db()
+    _assert_inventory_cache_list_is_complete()
+    _clear_inventory_derived_caches()
+    try:
+        yield SqliteInventory(path)
+    finally:
+        mp.undo()
+        _clear_inventory_derived_caches()

@@ -173,14 +173,36 @@ def fast_rebuild_incomplete_listings_index() -> int:
     all_cars = [dict(r) for r in cur.fetchall()]
     inv.close()
 
+    from backend.enrichment.knowledge_engine import merge_verified_specs, prime_vpic_cache
+
     now = datetime.now(timezone.utc).replace(microsecond=0).isoformat()
     rows_to_upsert = []
-    for car in all_cars:
-        missing = listing_missing_field_codes(car, for_public_filter=False)
-        if missing:
-            rows_to_upsert.append(
-                (car["id"], str(car.get("vin") or "?").strip(), json.dumps(missing), now)
+    # Reuse ONE Postgres connection for the read-only reference lookups fired per
+    # car (EPA / catalog / vPIC / model-specs). Without this, each car opens ~3
+    # fresh connections, and 70k+ cars spend the bulk of the rebuild in connect
+    # handshakes rather than work.
+    with inventory_pg.borrow_read_connection():
+        # vPIC is keyed by VIN (unique per car), so it can never hit the memo mid-loop;
+        # warm it for every VIN up front with batched IN queries (one round-trip per ~900
+        # cars) instead of one per car.
+        prime_vpic_cache([c.get("vin") for c in all_cars])
+        for car in all_cars:
+            # The index only needs verified_specs; skip the heavy per-car enrichment
+            # (packages / window-sticker / vision / monroney) that prepare_car_detail_context
+            # would run. listing_missing_field_codes reads only ctx["verified_specs"], so a
+            # pre-built detail_ctx is behavior-identical to the full path.
+            # include_extended_specs=False: hp/tq/weight/range feed display only and are
+            # never consulted by the gap detection, so skip that per-car reference query.
+            detail_ctx = {
+                "verified_specs": merge_verified_specs(car, include_extended_specs=False)
+            }
+            missing = listing_missing_field_codes(
+                car, for_public_filter=False, detail_ctx=detail_ctx
             )
+            if missing:
+                rows_to_upsert.append(
+                    (car["id"], str(car.get("vin") or "?").strip(), json.dumps(missing), now)
+                )
 
     conn_inc = get_conn()
     _ensure_schema(conn_inc)

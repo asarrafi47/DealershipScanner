@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import os
 import re
+from functools import lru_cache
 from typing import Any
 
 from backend.db.inventory_db import get_conn
@@ -247,11 +248,28 @@ def _short_drivetrain(s: str) -> str:
     return _SHORT_DRIVE_MAP.get(k, s)
 
 
+@lru_cache(maxsize=8192)
+def _lookup_model_specs_dictionary_cached(make: str | None, model: str | None) -> dict[str, Any] | None:
+    # Static reference table (model_specs + static fallbacks): safe to memoize for the
+    # process lifetime. The public wrapper returns a fresh copy so callers never mutate
+    # the shared cached dict (all values are scalars).
+    return _lookup_model_specs_dictionary_uncached(make, model)
+
+
+def clear_model_specs_dictionary_cache() -> None:
+    _lookup_model_specs_dictionary_cached.cache_clear()
+
+
 def lookup_model_specs_dictionary(make: str | None, model: str | None) -> dict[str, Any] | None:
     """
     Return specs dict with optional keys: cylinders, transmission, drivetrain (short code),
     body_style, fuel_type. None if nothing found.
     """
+    r = _lookup_model_specs_dictionary_cached(make, model)
+    return dict(r) if r is not None else None
+
+
+def _lookup_model_specs_dictionary_uncached(make: str | None, model: str | None) -> dict[str, Any] | None:
     mk = (make or "").strip()
     md = (model or "").strip()
     if not mk or not md:

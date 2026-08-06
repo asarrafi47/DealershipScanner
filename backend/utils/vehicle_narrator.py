@@ -64,14 +64,22 @@ _SYSTEM = (
     "State only what is given, plainly, as if listing the car to a buyer."
 )
 
-# Phrases that signal an unverifiable claim the model must not make.
-_BANNED = re.compile(
+# Ownership/history/value claims — never legitimate in any scraped field.
+_BANNED_CLAIMS = re.compile(
     r"\b(one[- ]owner|single[- ]owner|original owner|well[- ]maintained|well[- ]kept|"
-    r"garage[- ]kept|pristine|immaculate|flawless|mint|excellent condition|great condition|"
-    r"like new|collector|investment|no accident|clean history|reliable|dependable|"
-    r"best|gem|rare find|must[- ]see|priced to sell|great deal|steal)\b",
+    r"garage[- ]kept|collector|investment|no accident|clean history|reliable|dependable|"
+    r"rare find|must[- ]see|priced to sell|great deal|steal)\b",
     re.I,
 )
+# Condition-hype adjectives — banned when the model invents them, but legitimate
+# inside factory color names ("Pristine White", "Mint Green").
+_BANNED_HYPE = re.compile(
+    r"\b(pristine|immaculate|flawless|mint|excellent condition|great condition|"
+    r"like new|best|gem)\b",
+    re.I,
+)
+# Union used to scan model OUTPUT for unverifiable claims.
+_BANNED = re.compile(f"(?:{_BANNED_CLAIMS.pattern}|{_BANNED_HYPE.pattern})", re.I)
 
 
 def _has_unverifiable_claim(text: str, allowed_values: Any = ()) -> bool:
@@ -89,8 +97,48 @@ def _has_unverifiable_claim(text: str, allowed_values: Any = ()) -> bool:
         # (e.g. a scraped color "Pristine" or trim "one-owner"); a real descriptor
         # that merely contains one ("Pristine White") is still stripped safely.
         if len(v) >= 3 and not _BANNED.fullmatch(v):
-            residual = re.sub(re.escape(v), " ", residual, flags=re.I)
+            # Tolerate the model reflowing the value's whitespace or hyphenation
+            # ("Pristine  White", "Pristine-White") — an exact-string strip would
+            # miss it and falsely reject grounded output.
+            pat = r"[\s\-]+".join(re.escape(t) for t in v.split())
+            if pat:
+                residual = re.sub(pat, " ", residual, flags=re.I)
     return bool(_BANNED.search(residual))
+
+
+# Scraped free-text columns that can carry dealer marketing (or poisoned) claims.
+_SCRAPED_TEXT_FIELDS = (
+    "make", "model", "trim", "body_style", "exterior_color", "interior_color",
+    "engine_description", "fuel_type", "transmission", "drivetrain",
+)
+
+
+# Color fields keep condition adjectives — factory paint names use them
+# ("Pristine White", "Mint Green"); only ownership/history claims are scrubbed.
+_COLOR_FIELDS = ("exterior_color", "interior_color")
+
+
+def _clean_scraped_text(value: Any, *, keep_hype: bool = False) -> str:
+    """Strip banned claim phrases out of a scraped field value.
+
+    A trim of "One-Owner Certified" would otherwise (a) put the claim into the
+    prompt as a "fact", (b) enter the allowed-values strip-set and let the exact
+    phrase through the output guard, and (c) ship verbatim via the template
+    fallback, which bypasses the guard entirely. Cleaning at the source closes
+    all three paths.
+    """
+    pattern = _BANNED_CLAIMS if keep_hype else _BANNED
+    cleaned = pattern.sub(" ", str(value))
+    return re.sub(r"\s{2,}", " ", cleaned).strip(" ,-–")
+
+
+def _cleaned_row(row: dict[str, Any]) -> dict[str, Any]:
+    out = {**row}
+    for k in _SCRAPED_TEXT_FIELDS:
+        v = out.get(k)
+        if isinstance(v, str) and v.strip():
+            out[k] = _clean_scraped_text(v, keep_hype=k in _COLOR_FIELDS) or None
+    return out
 
 
 _HTML_TAG = re.compile(r"<[^>]+>")
@@ -98,8 +146,9 @@ _FIELD_LABEL = (r"year|make|model|trim|price|mileage|engine|body ?style|"
                 r"exterior ?colou?r|interior ?colou?r|fuel ?type|transmission|"
                 r"drivetrain|mpg( city| highway)?|cylinders|msrp")
 _LABELED_LINE = re.compile(rf"(?im)^\s*({_FIELD_LABEL})\b\s*[:\-]")
-# Same labels as inline "Label: value" segments (catches single-line semicolon dumps).
-_LABELED_SEG = re.compile(rf"(?i)\b({_FIELD_LABEL})\b\s*:")
+# Same labels as inline "Label: value" / "Label = value" segments (catches
+# single-line semicolon dumps).
+_LABELED_SEG = re.compile(rf"(?i)\b({_FIELD_LABEL})\b\s*[:=]")
 
 
 def _is_degenerate(text: str) -> bool:
@@ -114,7 +163,13 @@ def _is_degenerate(text: str) -> bool:
         return True
     if len(_LABELED_LINE.findall(text)) >= 3:
         return True
-    return len(_LABELED_SEG.findall(text)) >= 4
+    if len(_LABELED_SEG.findall(text)) >= 4:
+        return True
+    # Values-only dumps ("2025; Honda; CR-V; LX; $31,542; 18,852 mi") carry no
+    # 'Label:' markers at all — catch a run of 4+ short separator-delimited
+    # segments, which never occurs in real prose sentences.
+    segs = [s.strip() for s in re.split(r"[;|]", text) if s.strip()]
+    return len(segs) >= 4 and sum(1 for s in segs if len(s) <= 30) >= len(segs) - 1
 
 
 def _sanitize(text: str) -> str:
@@ -184,6 +239,7 @@ def narrate_vehicle(row: dict[str, Any], *, model: str | None = None) -> str:
     then fall back to a deterministic fact-only sentence rather than ship a claim
     we can't stand behind.
     """
+    row = _cleaned_row(row)
     facts = _known_facts(row)
     if len(facts) < 2:
         return _template_fallback(row, facts) or "Vehicle details unavailable."

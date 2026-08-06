@@ -372,13 +372,19 @@ def hybrid_search_with_kwargs(
     sql_kwargs: dict[str, Any],
     *,
     vector_top_k: int = 100,
+    parsed_filters: dict[str, Any] | None = None,
 ) -> tuple[list[dict], dict[str, Any]]:
     """
     When ``query_text`` is a 17-char VIN or a listing id (see module doc), resolve with SQL only.
 
     Otherwise, vector recall first: restrict SQL to semantic candidates, then exact filters.
+    Pass ``parsed_filters`` when the caller already ran ``parse_natural_query`` on
+    ``query_text`` — the parse fans out over every distinct make/model/trim in
+    inventory, so running it twice per request doubles the hot-path cost.
     """
-    q = (query_text or "").strip()
+    # Bound the text before any fuzzy/embedding work — callers that skip the
+    # route-level cap (listings page, nearby dealers) are still protected.
+    q = (query_text or "").strip()[:200]
     meta: dict[str, Any] = {
         "mode": "sql_only",
         "vector_candidate_count": 0,
@@ -410,9 +416,11 @@ def hybrid_search_with_kwargs(
             meta["sql_count"] = len(rows)
             return _sort_sql_rows(rows), meta
 
-    from backend.utils.query_parser import parse_natural_query
+    parsed_q = parsed_filters
+    if parsed_q is None:
+        from backend.utils.query_parser import parse_natural_query
 
-    parsed_q = parse_natural_query(q)
+        parsed_q = parse_natural_query(q)
     if not _has_structured_filters(parsed_q):
         if not sql_kwargs_has_facet_filters(sql_kwargs):
             meta["mode"] = "no_parse_match"
@@ -726,7 +734,9 @@ def hybrid_smart_search(
         }
 
     if _normalize_listings_vin_query(q) or _parse_listings_car_id_query(q):
-        rows, meta = hybrid_search_with_kwargs(q, sql_kwargs, vector_top_k=vector_top_k)
+        rows, meta = hybrid_search_with_kwargs(
+            q, sql_kwargs, vector_top_k=vector_top_k, parsed_filters=filters
+        )
         meta.update(meta_extra)
         return rows, meta
 
@@ -749,7 +759,9 @@ def hybrid_smart_search(
             rows = _sort_sql_rows(rows)
         return rows, meta
 
-    rows, meta = hybrid_search_with_kwargs(q, sql_kwargs, vector_top_k=vector_top_k)
+    rows, meta = hybrid_search_with_kwargs(
+        q, sql_kwargs, vector_top_k=vector_top_k, parsed_filters=filters
+    )
     meta.update(meta_extra)
     return rows, meta
 

@@ -26,6 +26,12 @@ from backend.routes._shared import _client_ip, main_module
 from backend.utils.ip_rate_limit import allow_request
 from backend.utils.query_parser import parse_natural_query
 
+# Hard bound on free-text search input. The parser fans out over every distinct
+# make/model/trim in inventory and the remainder feeds the embedding model, so
+# an unbounded string amplifies both CPU and paid-API cost. Matches the
+# parser's own internal truncation (query_parser.py).
+_SMART_QUERY_MAX_LEN = 200
+
 
 def _listings_client_poll_ms() -> int:
     """Optional client refresh of ``/api/listings/cars`` (0 = off)."""
@@ -249,7 +255,7 @@ def api_search_smart_parse():
     ip = _client_ip()
     if not allow_request(f"smart:{ip}", max_events=main_module()._SMART_SEARCH_RPM, window_seconds=60.0):
         return jsonify({"ok": False, "error": "rate_limited"}), 429
-    q = (request.args.get("query") or request.args.get("q") or "").strip()
+    q = (request.args.get("query") or request.args.get("q") or "").strip()[:_SMART_QUERY_MAX_LEN]
     filters = parse_natural_query(q)
     return jsonify(
         {
@@ -271,7 +277,7 @@ def api_search_smart():
         return jsonify({"ok": False, "error": "payload_too_large"}), 413
 
     data = request.get_json() or {}
-    q = (data.get("query") or data.get("q") or "").strip()
+    q = (data.get("query") or data.get("q") or "").strip()[:_SMART_QUERY_MAX_LEN]
     filters = parse_natural_query(q)
     from backend.utils.hybrid_search import hybrid_smart_search
 

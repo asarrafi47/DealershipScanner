@@ -203,7 +203,14 @@ def test_build_engine_display_etorque_from_stale_sticker_packages() -> None:
     assert build_engine_display(car, {}) == "5.7L V8 Mild Hybrid"
     ser = serialize_car_for_api(car, include_verified=False, verified_specs={})
     assert ser["engine_display"] == "5.7L V8 Mild Hybrid"
-    assert ser["fuel_type"] == "Hybrid"
+    # The 48V hardware belongs in the engine line, not in the fuel chip. This row
+    # is stored as "Gasoline" — correctly: eTorque is a belt-starter-generator and
+    # burns 87/89 pump gas — and every fuel FILTER (search_cars, the facet cascade)
+    # reads that stored column. The old expectation ("Hybrid") was a display-only
+    # promotion, so the card contradicted the filter that returned it: the truck
+    # showed "Hybrid" yet only came back under a "Gasoline" filter. Assertion was
+    # wrong, not the code; the fuel type now stays as stored.
+    assert ser["fuel_type"] == "Gasoline"
 
 
 def test_build_engine_display_turbo_from_stale_sticker_packages() -> None:

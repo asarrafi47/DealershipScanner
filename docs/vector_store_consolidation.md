@@ -1,6 +1,11 @@
 # Vector store consolidation — ChromaDB vs Postgres/pgvector
 
-**Status:** investigation complete, no code changed. Written 2026-07-21.
+**Status:** investigation complete 2026-07-21; cleanup executed 2026-08-06 — the on-disk
+`backend/vector/chroma_master_catalog/` index was deleted (recoverable from git history at
+`ab7e11414^` if ever needed), `build_inventory_chroma_document` → `build_compact_listing_document`,
+`row_chroma_metadata` → `row_catalog_metadata`, and `get_persist_dir()` /
+`master_catalog_persist_dir()` / `vector_data_dir()` were removed (zero callers; `data/vectors/`
+was never written). Section line numbers below reflect the pre-cleanup tree.
 
 **Headline:** the premise of audit finding #1 is wrong. There is **one** live embedding
 store (Postgres/pgvector). ChromaDB is not a dependency, is not imported anywhere, and

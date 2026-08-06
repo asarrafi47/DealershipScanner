@@ -15,12 +15,6 @@ _MODEL_NAME = "all-MiniLM-L6-v2"
 _KNOWN_PACKAGES_PATH = Path(__file__).resolve().parent / "known_packages.json"
 
 
-def master_catalog_persist_dir() -> Path:
-    from backend.vector.pgvector_service import vector_data_dir
-
-    return vector_data_dir()
-
-
 class MasterCatalog:
     """
     Ground-truth spec lookup using the same pgvector table as ``ingest_master_specs``.

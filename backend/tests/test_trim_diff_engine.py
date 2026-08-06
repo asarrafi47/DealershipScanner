@@ -28,7 +28,8 @@ def test_base_rung_uses_absolute_spec_format() -> None:
     ]
 
 
-def test_higher_rung_adds_and_upgrades() -> None:
+def test_higher_rung_quotes_the_value_without_inventing_a_comparison() -> None:
+    """The verb and the "(was …)" baseline were ours, not the OEM's."""
     baseline = feature_map_from_rows(
         [
             {"label": "Engine Options", "value": "3.6L Pentastar V6"},
@@ -43,12 +44,12 @@ def test_higher_rung_adds_and_upgrades() -> None:
         ]
     )
     adds = compute_step_adds(features, cumulative_baseline=baseline, is_base_rung=False)
-    assert "Adds Subwoofer: 1 rear cargo side-wall enclosed subwoofer (8-inch)" in adds
-    assert any(
-        a.startswith("Upgrades Screen Size:") and "(was 7.0-inch Uconnect 4 touchscreen display)" in a
-        for a in adds
-    )
-    assert not any(a.startswith("Upgrades Engine Options:") for a in adds)
+    assert "Subwoofer: 1 rear cargo side-wall enclosed subwoofer (8-inch)" in adds
+    assert "Screen Size: 8.4-inch Uconnect 4C NAV touchscreen display" in adds
+    # Unchanged rows are still omitted — the diff decides WHICH rows appear.
+    assert not any(a.startswith("Engine Options:") for a in adds)
+    assert not any(a.startswith("Adds ") or a.startswith("Upgrades ") for a in adds)
+    assert not any("(was " in a for a in adds)
 
 
 def test_alias_resolves_spec_sheet_trim(tmp_path: Path) -> None:
@@ -84,8 +85,10 @@ def test_compute_ladder_follows_baseline_to_top_order() -> None:
     }
     adds_by_name = compute_ladder_adds_by_step_name(ladder, sheet)
     assert adds_by_name["Laredo"] == ["Screen Size: 7.0-inch display"]
-    assert adds_by_name["Limited"][0].startswith("Upgrades Screen Size:")
-    assert any(a.startswith("Adds Subwoofer:") for a in adds_by_name["Limited"])
+    assert adds_by_name["Limited"] == [
+        "Screen Size: 8.4-inch display",
+        "Subwoofer: 8-inch enclosed",
+    ]
 
 
 def test_jeep_curated_sheet_limited_x_delta() -> None:
@@ -105,7 +108,7 @@ def test_jeep_curated_sheet_limited_x_delta() -> None:
     adds_by_name = compute_ladder_adds_by_step_name(ladder, sheet)
     assert "Laredo" in adds_by_name
     limited_x = adds_by_name.get("Limited X") or []
-    assert any(a.startswith("Adds Exterior Styling:") for a in limited_x)
+    assert any(a.startswith("Exterior Styling:") for a in limited_x)
 
 
 def test_apply_trim_diffs_dry_run(tmp_path: Path) -> None:
@@ -166,4 +169,4 @@ def test_apply_trim_diffs_dry_run(tmp_path: Path) -> None:
     base_step = next(s for s in payload2["ladders"][0]["steps"] if s["name"] == "Base")
     sport_step = next(s for s in payload2["ladders"][0]["steps"] if s["name"] == "Sport")
     assert base_step["adds"][0].startswith("Engine Options:")
-    assert sport_step["adds"][0].startswith("Upgrades Engine Options:")
+    assert sport_step["adds"][0] == "Engine Options: 2.0L Turbo I4"

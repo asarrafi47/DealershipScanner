@@ -11,6 +11,7 @@ options/packages recorded (most rows don't — this catalog is sparsely populate
 """
 from __future__ import annotations
 
+import copy
 from functools import lru_cache
 from typing import Any
 
@@ -49,6 +50,7 @@ def _find_catalog_vehicle_id_cached(key: tuple[int, str, str, str]) -> int | Non
 
 def clear_catalog_lookup_cache() -> None:
     _find_catalog_vehicle_id_cached.cache_clear()
+    _fetch_catalog_options_and_packages.cache_clear()
 
 
 def _find_catalog_vehicle_id_uncached(
@@ -101,7 +103,13 @@ def _find_catalog_vehicle_id_uncached(
             conn.close()
 
 
+@lru_cache(maxsize=8192)
 def _fetch_catalog_options_and_packages(vehicle_id: int) -> dict[str, Any]:
+    # catalog_packages / catalog_options are a static factory reference table (same
+    # provenance as catalog_trims), so a resolved vehicle_id always maps to the same
+    # rows for the process lifetime. Memoize to avoid re-querying it for every listing
+    # that shares a catalog trim. The public wrapper returns a deep copy so callers can
+    # never mutate the shared cached nested lists/dicts.
     conn = None
     try:
         conn = _conn()
@@ -164,4 +172,4 @@ def lookup_catalog_options_and_packages(
     vehicle_id = _find_catalog_vehicle_id_cached(key)
     if not vehicle_id:
         return {}
-    return _fetch_catalog_options_and_packages(vehicle_id)
+    return copy.deepcopy(_fetch_catalog_options_and_packages(vehicle_id))

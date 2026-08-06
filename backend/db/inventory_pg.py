@@ -6,12 +6,58 @@ Scanner + Flask share this connection via :func:`backend.db.inventory_db.get_con
 
 from __future__ import annotations
 
+import contextlib
 import logging
 import os
 import re
-from typing import Any
+import threading
+from typing import Any, Iterator
 
 _log = logging.getLogger(__name__)
+
+# Optional per-thread shared read connection. When a ``borrow_read_connection``
+# block is active, :func:`backend.db.inventory_compat.open_inventory_connection`
+# hands out a thin wrapper around this single raw psycopg connection instead of
+# opening a fresh one per call. This is an opt-in fast path for read-heavy batch
+# jobs (e.g. the incomplete-listings index rebuild, which otherwise opens ~3
+# Postgres connections per car). Serving code never enters a borrow block, so its
+# connect-per-call behavior is unchanged.
+_shared_read = threading.local()
+
+
+def current_shared_read_raw() -> Any | None:
+    """Raw psycopg connection for the active borrow block on this thread, or None."""
+    return getattr(_shared_read, "raw", None)
+
+
+@contextlib.contextmanager
+def borrow_read_connection() -> Iterator[Any]:
+    """
+    Reuse ONE Postgres connection for every ``get_conn()`` on this thread inside
+    the block. Read-oriented: each wrapped ``.close()`` rolls back (resetting any
+    open/aborted transaction) but keeps the raw connection alive; ``.commit()``
+    still commits. Committed writes persist and uncommitted work is discarded —
+    identical to the per-call connection lifecycle, minus the reconnect cost.
+
+    No-op (yields None) unless Postgres is configured. Not re-entrant per thread.
+    """
+    if not is_inventory_postgres():
+        yield None
+        return
+    raw = pg_connect()
+    _shared_read.raw = raw
+    try:
+        yield raw
+    finally:
+        _shared_read.raw = None
+        try:
+            raw.rollback()
+        except Exception:
+            pass
+        try:
+            raw.close()
+        except Exception:
+            pass
 
 _PG_INV_SCHEMA_OK = False
 
@@ -222,7 +268,13 @@ def pg_table_columns(cur, table: str) -> set[str]:
         """,
         (table,),
     )
-    return {str(r[0]) for r in cur.fetchall()}
+    # Robust to either row factory: pg_connect() yields tuple rows, but some
+    # callers pass a dict_row cursor (column-name access) — index access on the
+    # latter raises KeyError: 0.
+    out: set[str] = set()
+    for r in cur.fetchall():
+        out.add(str(r["column_name"] if isinstance(r, dict) else r[0]))
+    return out
 
 
 def pg_add_columns(cur, table: str, additive: list[tuple[str, str]]) -> None:
@@ -233,11 +285,31 @@ def pg_add_columns(cur, table: str, additive: list[tuple[str, str]]) -> None:
 
 
 def init_postgres_inventory(conn: Any) -> None:
-    """Create inventory tables and indexes on PostgreSQL (idempotent)."""
+    """Create inventory tables and indexes on PostgreSQL (idempotent).
+
+    Runs on every fresh process (``_PG_INV_SCHEMA_OK`` is per-process), which makes
+    the lock behaviour here a site-wide availability concern rather than a startup
+    detail. ``CREATE INDEX`` takes a SHARE lock, so while a scanner holds open
+    transactions on ``cars`` the statement queues -- and in PostgreSQL a waiting
+    strong lock parks every later reader and writer behind it. Observed on
+    2026-07-30: a ``scanner.py --delta`` run left 15 idle-in-transaction sessions,
+    a web restart queued on ``idx_cars_dealer_listing``, and 17 further sessions
+    stacked up behind it, stalling car pages for tens of seconds.
+
+    A short ``lock_timeout`` turns that from an outage into a no-op: the real
+    schema is owned by the versioned migrations (``migrations/V001__baseline.sql``),
+    so this pass is belt-and-braces and is safe to abandon when the table is busy.
+    """
     global _PG_INV_SCHEMA_OK
     if _PG_INV_SCHEMA_OK:
         return
     cur = conn.cursor()
+    try:
+        cur.execute("SET lock_timeout = '3s'")
+    except Exception:
+        # Non-PostgreSQL/compat cursors simply do not support it; the DDL below is
+        # still correct, it just keeps the old blocking behaviour.
+        pass
     cur.execute(
         """
         CREATE TABLE IF NOT EXISTS cars (
@@ -540,6 +612,10 @@ def init_postgres_inventory(conn: Any) -> None:
             ("google_rating", "DOUBLE PRECISION"),
             ("google_review_count", "INTEGER"),
             ("google_rating_fetched_at", "TEXT"),
+            # Where street_address/zip_code came from and when it was confirmed.
+            # See migrations/V003__dealership_address_provenance.sql.
+            ("street_address_source", "TEXT"),
+            ("street_address_verified_at", "TEXT"),
         ],
     )
     cur.execute(

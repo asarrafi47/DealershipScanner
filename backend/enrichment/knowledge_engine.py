@@ -559,8 +559,8 @@ def _extended_family_suspicious(cur, year: int, make: str, model: str) -> bool:
     """
     True when EVERY trim of a (year, make, model) family scraped to the same
     horsepower — a scrape bug fingerprint (e.g. 2011 E-Class: E350, E550 and
-    the 518-hp E63 all stored as 375). Such hp/torque must not be displayed;
-    the AI-researched per-trim fallback fills instead.
+    the 518-hp E63 all stored as 375). Such hp/torque must not be displayed, and
+    as of 2026-08-02 nothing fills in behind them — the field goes blank.
     """
     try:
         cur.execute(
@@ -597,13 +597,9 @@ def _lookup_extended_by_master_id_cached(epa_master_id: int) -> frozenset:
             if _extended_family_suspicious(cur, int(ymm[0]), str(ymm[1] or ""), str(ymm[2] or "")):
                 result.pop("horsepower", None)
                 result.pop("torque_lb_ft", None)
-        if ymm and len(result) < len(_EXTENDED_SPECS_COLUMNS):
-            y_, mk_, md_, tr_ = int(ymm[0]), str(ymm[1] or ""), str(ymm[2] or ""), str(ymm[3] or "")
-            result = _merge_ai_model_specs(cur, y_, mk_, md_, result)
-            if result.get("horsepower") is None and tr_:
-                # ai_model_specs keys some models by variant name ("E 350"
-                # rather than "E-Class") — retry matching by normalized name.
-                result = _merge_ai_model_specs_normed(cur, y_, mk_, (md_, tr_, f"{md_} {tr_}"), result)
+        # NO ``ai_model_specs`` FALLBACK HERE. See the block comment above
+        # ``_merge_ai_model_specs``: every row of that table is a number a model
+        # wrote. A still-missing field stays missing.
         return frozenset(result.items())
     except Exception:
         pass
@@ -812,21 +808,19 @@ def _lookup_epa_extended_specs_uncached(
             row = cur.fetchone()
         result = _extended_specs_row_to_dict(row) if row else {}
         # Drop implausible scraped values (e.g. a mis-scraped 40-hp Porsche) so no
-        # garbage reaches a page and the AI fallback can fill them instead. Ceiling
-        # 1600 keeps real hypercars (Bugatti 1500); torque band keeps HD diesels.
+        # garbage reaches a page. Nothing fills in behind them. Ceiling 1600 keeps
+        # real hypercars (Bugatti 1500); torque band keeps HD diesels.
         if result.get("horsepower") is not None and not (60 <= result["horsepower"] <= 1600):
             result.pop("horsepower")
         if result.get("torque_lb_ft") is not None and not (40 <= result["torque_lb_ft"] <= 1500):
             result.pop("torque_lb_ft")
-        # Same-hp-for-every-trim families are scrape garbage — drop, let AI fill.
+        # Same-hp-for-every-trim families are scrape garbage — dropped, not replaced.
         if result.get("horsepower") is not None or result.get("torque_lb_ft") is not None:
             if _extended_family_suspicious(cur, year, make, model):
                 result.pop("horsepower", None)
                 result.pop("torque_lb_ft", None)
-        # AI-researched fallback (ai_model_specs, provenance-tagged) fills ONLY the
-        # fields still missing after real EPA/scraped data — real values always win.
-        if len(result) < len(_EXTENDED_SPECS_COLUMNS):
-            result = _merge_ai_model_specs(cur, year, make, model, result)
+        # NO ``ai_model_specs`` FALLBACK HERE either — same reason as the
+        # by-master-id path above. A field with no scraped value stays absent.
         return result
     except Exception:
         pass
@@ -836,7 +830,36 @@ def _lookup_epa_extended_specs_uncached(
     return {}
 
 
-#: Columns ai_model_specs supplies (subset of _EXTENDED_SPECS_COLUMNS).
+# ---------------------------------------------------------------------------
+# THE AI SPEC TABLES ARE NOT WIRED INTO ANY READ PATH. (2026-08-02)
+#
+# ``ai_model_specs`` (2,147 rows) and ``ai_engine_specs`` (888 rows) each have
+# exactly ONE distinct ``source_host`` — 'ai-research' and 'ai-engine-research'
+# respectively (counted 2026-08-02 against the live inventory database). There
+# is no subset of either table that came from a document. Every value in them is
+# a number a model wrote, so there is no query that can separate a good row from
+# a bad one, and a specification is a measurement.
+#
+# ``_merge_ai_model_specs`` and ``_merge_ai_model_specs_normed`` below used to be
+# called at the end of ``_lookup_epa_extended_specs_uncached`` and
+# ``_lookup_extended_by_master_id_cached``, filling every still-missing key of
+# ``_AI_SPEC_COLUMNS`` — horsepower, torque, curb weight, 0-60 and tow capacity —
+# which then flowed into ``merge_verified_specs`` and onto the car page and into
+# the AI chat prompt. Both call sites are gone.
+#
+# The two functions and ``_AI_SPEC_COLUMNS`` are retained ONLY because
+# ``backend/tests/test_ai_model_specs_merge.py`` exercises them directly and that
+# file is not mine to edit. They have NO production caller — verified by
+# ``test_spec_guardrails.py::test_ai_spec_merge_has_no_production_caller``, which
+# greps the tree and fails if one reappears. Delete both functions and that test
+# module together; do not re-wire them.
+#
+# ``lookup_engine_specs`` (``ai_engine_specs``) is in the same position: its last
+# production caller, the serializer's engine-level hp/torque/tow/0-60 override,
+# was removed the same day.
+# ---------------------------------------------------------------------------
+
+#: Columns ai_model_specs supplied (subset of _EXTENDED_SPECS_COLUMNS). Unwired.
 _AI_SPEC_COLUMNS = (
     "horsepower", "torque_lb_ft", "torque_nm", "curb_weight_lb",
     "curb_weight_kg", "zero_to_60_sec", "fuel_tank_gal", "tow_capacity_lb",
@@ -1482,6 +1505,24 @@ _VPIC_BODY_MAP = {
 }
 
 
+# nhtsa_vpic_cache is a reference cache populated out-of-band (backfill scripts);
+# within a serving process it is read-only, so per-vin memoization is safe. Backed by
+# a plain dict (rather than lru_cache) so a batch job can bulk-prime every vin with a
+# single query — see ``prime_vpic_cache`` — instead of one round-trip per car.
+_VPIC_MEMO: dict[str | None, dict[str, Any]] = {}
+
+
+def _empty_vpic() -> dict[str, Any]:
+    return {
+        "transmission": None, "drivetrain": None, "cylinders": None,
+        "engine_l": None, "fuel_type": None, "body_style": None, "trim": None,
+    }
+
+
+def clear_vpic_lookup_cache() -> None:
+    _VPIC_MEMO.clear()
+
+
 def lookup_vpic_from_cache(vin: str | None) -> dict[str, Any]:
     """
     Read the cached nhtsa_vpic_cache row for *vin* and return a normalized spec dict.
@@ -1489,12 +1530,61 @@ def lookup_vpic_from_cache(vin: str | None) -> dict[str, Any]:
     Keys returned (all may be None):
       transmission, drivetrain, cylinders, engine_l, fuel_type, body_style, trim
     """
-    out: dict[str, Any] = {
-        "transmission": None, "drivetrain": None, "cylinders": None,
-        "engine_l": None, "fuel_type": None, "body_style": None, "trim": None,
-    }
+    if vin in _VPIC_MEMO:
+        return dict(_VPIC_MEMO[vin])
+    out = _lookup_vpic_from_cache_uncached(vin)
+    _VPIC_MEMO[vin] = out
+    return dict(out)
+
+
+def prime_vpic_cache(vins) -> None:
+    """
+    Bulk-load nhtsa_vpic_cache for *vins* into the memo with batched ``IN`` queries,
+    so a subsequent per-vin :func:`lookup_vpic_from_cache` is a pure in-memory hit.
+    Result is byte-for-byte identical to the per-vin path (same normalization); it just
+    collapses N round-trips into ceil(N/batch). vins already memoized are skipped.
+    """
+    import json as _json
+
+    todo: list[str] = []
+    seen: set[str] = set()
+    for v in vins:
+        if not v or v in _VPIC_MEMO or v in seen:
+            continue
+        seen.add(v)
+        todo.append(v)
+    if not todo:
+        return
+    conn = None
+    try:
+        conn = _conn()
+        for start in range(0, len(todo), 900):
+            batch = todo[start:start + 900]
+            placeholders = ",".join(["?"] * len(batch))
+            rows = conn.execute(
+                f"SELECT vin, response_json FROM nhtsa_vpic_cache WHERE vin IN ({placeholders})",
+                tuple(batch),
+            ).fetchall()
+            for row in rows:
+                v = row[0]
+                try:
+                    r = _json.loads(row[1]).get("Results", [{}])[0]
+                    _VPIC_MEMO[v] = _normalize_vpic_response(r)
+                except Exception:
+                    _VPIC_MEMO[v] = _empty_vpic()
+            for v in batch:
+                _VPIC_MEMO.setdefault(v, _empty_vpic())
+    except Exception:
+        # On any failure leave the memo as-is; per-vin lookups still work (they query).
+        pass
+    finally:
+        if conn is not None:
+            conn.close()
+
+
+def _lookup_vpic_from_cache_uncached(vin: str | None) -> dict[str, Any]:
     if not vin:
-        return out
+        return _empty_vpic()
     conn = None
     try:
         import json as _json
@@ -1503,14 +1593,18 @@ def lookup_vpic_from_cache(vin: str | None) -> dict[str, Any]:
             "SELECT response_json FROM nhtsa_vpic_cache WHERE vin=?", (vin,)
         ).fetchone()
         if not row:
-            return out
+            return _empty_vpic()
         r = _json.loads(row[0]).get("Results", [{}])[0]
     except Exception:
-        return out
+        return _empty_vpic()
     finally:
         if conn is not None:
             conn.close()
+    return _normalize_vpic_response(r)
 
+
+def _normalize_vpic_response(r: dict[str, Any]) -> dict[str, Any]:
+    out = _empty_vpic()
     ts = (r.get("TransmissionStyle") or "").strip()
     speeds = (r.get("TransmissionSpeeds") or "").strip()
     if ts and ts.lower() not in ("", "not applicable"):
@@ -1562,7 +1656,56 @@ def lookup_vpic_from_cache(vin: str | None) -> dict[str, Any]:
     return out
 
 
+@lru_cache(maxsize=16384)
+def _lookup_epa_aggregate_cached(
+    year: int | None,
+    make: str | None,
+    model: str | None,
+    title: str | None,
+    trim: str | None,
+    prefer_cylinders: int | None,
+) -> dict[str, Any]:
+    # Static reference table (epa_master, rebuilt by scripts): safe to memoize for
+    # the process lifetime. The public wrapper hands out a fresh shallow copy so no
+    # caller can mutate the shared cached dict (all values are scalars).
+    return _lookup_epa_aggregate_uncached(
+        year, make, model, title=title, trim=trim, prefer_cylinders=prefer_cylinders
+    )
+
+
+def clear_epa_aggregate_lookup_cache() -> None:
+    _lookup_epa_aggregate_cached.cache_clear()
+
+
 def lookup_epa_aggregate(
+    year: int | None,
+    make: str | None,
+    model: str | None,
+    *,
+    title: str | None = None,
+    trim: str | None = None,
+    prefer_cylinders: int | None = None,
+) -> dict[str, Any]:
+    """
+    Mode row from epa_master: cylinders, drive, transmission, MPG, displacement, atv_type.
+
+    *title* / *trim* refine BMW I-series and similar short-model EPA matches (e.g. eDrive40).
+    *prefer_cylinders* (dealer-reported count) picks the matching engine family when a
+    model spans several (e.g. GLE 350 2.0L I4 vs GLE 450 3.0L I6) instead of the mode row.
+    """
+    # ``title`` / ``trim`` are consulted ONLY inside the BMW fuzzy-match branch of the
+    # uncached implementation. For every other make they do not affect the result, so
+    # drop them from the memo key — otherwise the near-unique ``title`` makes the cache
+    # miss on every car and re-query a model that many listings share.
+    if (make or "").strip().upper() != "BMW":
+        title = None
+        trim = None
+    return dict(
+        _lookup_epa_aggregate_cached(year, make, model, title, trim, prefer_cylinders)
+    )
+
+
+def _lookup_epa_aggregate_uncached(
     year: int | None,
     make: str | None,
     model: str | None,
@@ -1758,769 +1901,14 @@ def _is_na_spec(v: Any) -> bool:
     return s in ("N/A", "NA", "UNKNOWN", "NULL")
 
 
-def _sticker_specs_from_packages(car: dict[str, Any]) -> dict[str, Any]:
-    """Read merged Monroney fields from ``cars.packages`` JSON."""
-    import json
-
-    out: dict[str, Any] = {}
-    raw = car.get("packages")
-    if not raw or str(raw).strip() in ("{}", "[]", "null"):
-        return out
-    try:
-        parsed = json.loads(raw) if isinstance(raw, str) else raw
-    except (TypeError, ValueError, json.JSONDecodeError):
-        return out
-    if not isinstance(parsed, dict):
-        return out
-
-    from backend.scanner.window_sticker import sticker_engine_display_is_valid
-
-    disp = parsed.get("sticker_engine_display")
-    if isinstance(disp, str) and sticker_engine_display_is_valid(disp):
-        from backend.scanner.window_sticker import upgrade_engine_display_for_etorque
-
-        out["engine_display"] = upgrade_engine_display_for_etorque(disp.strip(), car)
-    ft = parsed.get("sticker_fuel_type")
-    if isinstance(ft, str) and ft.strip():
-        out["fuel_type"] = ft.strip()
-    trans = parsed.get("sticker_transmission")
-    if isinstance(trans, str) and sticker_engine_display_is_valid(trans):
-        out["transmission"] = trans.strip()
-    for key, pkg_key in (("mpg_city", "sticker_mpg_city"), ("mpg_highway", "sticker_mpg_highway")):
-        val = parsed.get(pkg_key)
-        if val is not None:
-            try:
-                out[key] = int(val)
-            except (TypeError, ValueError):
-                pass
-    return out
-
-
-def merge_verified_specs(car: dict[str, Any]) -> dict[str, Any]:
-    """
-    Combine dealer row with regex decoder + EPA lookup.
-    Prefer: regex (brand trim) > EPA aggregate > dealer fields.
-    When dealer omits or sends N/A, show inferred values as verified.
-    """
-    from backend.utils.field_clean import clean_car_row_dict
-
-    car = clean_car_row_dict(dict(car))
-    make = car.get("make") or ""
-    model = car.get("model") or ""
-    trim = car.get("trim") or ""
-    title = car.get("title") or ""
-    year = car.get("year")
-    try:
-        y = int(year) if year is not None else None
-    except (TypeError, ValueError):
-        y = None
-
-    def _int_or_none(v: Any) -> int | None:
-        if v is None or v == "":
-            return None
-        try:
-            return int(v)
-        except (TypeError, ValueError):
-            return None
-
-    dealer_cyl = car.get("cylinders")
-    dealer_drive = (car.get("drivetrain") or "").strip()
-    dealer_trans = (car.get("transmission") or "").strip()
-
-    title_for_decode = (title or "").strip()
-    dealer_ft = (car.get("fuel_type") or "").strip()
-    if (make or "").strip().upper() == "BMW" and dealer_ft:
-        title_for_decode = f"{title_for_decode} {dealer_ft}".strip()
-    regex = decode_trim_logic(make, model, trim, title_for_decode)
-    # Resolved catalog link first (cars.epa_master_id, written by the one
-    # resolver in backend.catalog): exact row + exact extended-specs FK, no
-    # fuzzy re-matching. Fuzzy per-trim/aggregate lookups remain the fallback
-    # for unlinked cars.
-    linked_id = car.get("epa_master_id")
-    try:
-        from backend.catalog.generations import generation_for
-
-        _generation = generation_for(make, model, y)
-    except Exception:
-        _generation = None
-    epa_trim = lookup_epa_master_by_id(linked_id) if linked_id else {}
-    linked_exact = bool(epa_trim)  # True only when the by-id row actually resolved
-    if not epa_trim:
-        # Per-trim lookup (exact match from build_epa_master.py data), then aggregate fallback
-        epa_trim = lookup_epa_by_trim(y, make, model, trim) if trim else {}
-    epa = lookup_epa_aggregate(
-        y, make, model, title=title_for_decode, trim=trim,
-        prefer_cylinders=_int_or_none(dealer_cyl),
-    )
-    # Merge: per-trim values win over aggregate for any key they provide
-    epa = {**epa, **{k: v for k, v in epa_trim.items() if v is not None}}
-    epa_extended = lookup_epa_extended_specs_by_master_id(linked_id) if linked_id else {}
-    if not epa_extended:
-        epa_extended = lookup_epa_extended_specs(y, make, model, trim)
-
-    from backend.enrichment.model_specs_dictionary import lookup_model_specs_dictionary
-
-    dict_specs = lookup_model_specs_dictionary(make, model)
-    vpic = lookup_vpic_from_cache(car.get("vin"))
-
-    # Resolved catalog row beats the regex trim decoder for cylinders — the
-    # decoder is era-blind ("E 350" decodes to the modern turbo-four) while the
-    # link was scored against this car's own engine data. Only when the by-id
-    # row actually resolved: a fuzzy fallback must not inherit this authority.
-    cyl_ver = _int_or_none(epa_trim.get("cylinders")) if linked_exact else None
-    if cyl_ver is None:
-        cyl_ver = regex.get("cylinders")
-    if cyl_ver is None:
-        cyl_ver = epa.get("cylinders")
-    if cyl_ver is None:
-        di = _int_or_none(dealer_cyl)
-        if di is not None:
-            cyl_ver = di
-    if cyl_ver is None and dict_specs and dict_specs.get("cylinders") is not None:
-        try:
-            cyl_ver = int(dict_specs["cylinders"])
-        except (TypeError, ValueError):
-            cyl_ver = None
-    if cyl_ver is None and vpic.get("cylinders") is not None:
-        cyl_ver = vpic["cylinders"]
-    if cyl_ver is None:
-        # Last resort: the answer is often sitting in the listing's own text —
-        # e.g. an Infiniti Q70L whose trim reads "Sedan V-6 cyl". Read the
-        # layout token from trim/engine text only (skipping BEVs, which have
-        # no cylinders and never carry a V-N badge).
-        #
-        # The TITLE is deliberately excluded: it carries the model designator,
-        # and BMW "i8"/"i4"/"i7" and Hummer "H2"/"H3" collide with the V/I/H/W
-        # layout pattern ("i8" -> 8 cyl, "H2" -> 2 cyl). A genuine cylinder
-        # badge lives in the trim or engine description, not the model name.
-        from backend.utils.engine_consistency import cylinders_from_engine_text, is_bev_fuel
-
-        if not is_bev_fuel(dealer_ft or epa.get("fuel_type")):
-            cyl_ver = cylinders_from_engine_text(
-                " ".join(x for x in (trim, car.get("engine_description")) if x)
-            )
-
-    drive_ver = regex.get("drivetrain") or epa.get("drivetrain")
-    if not drive_ver and dealer_drive and not _is_na_spec(dealer_drive):
-        drive_ver = dealer_drive
-    if not drive_ver and dict_specs and dict_specs.get("drivetrain"):
-        drive_ver = str(dict_specs["drivetrain"]).strip()
-    if not drive_ver and vpic.get("drivetrain"):
-        drive_ver = vpic["drivetrain"]
-
-    gears_ver = regex.get("gears") or epa.get("gears")
-    # Priority: trim-decoder year-aware hint > EPA > vPIC > model_specs > dealer.
-    # transmission_hint encodes year logic (e.g. Transit pre-/post-2020); must beat model_specs.
-    _trans_hint = regex.get("transmission_hint")
-    if _trans_hint and not epa.get("transmission") and not (dealer_trans and not _is_na_spec(dealer_trans)):
-        trans_raw = _trans_hint
-    else:
-        epa_trany = epa.get("transmission")
-        trans_raw = epa_trany or (
-            dealer_trans if dealer_trans and not _is_na_spec(dealer_trans) else None
-        )
-        # EPA aggregate is often generic "Automatic" while the VDP lists "8-Speed Automatic".
-        dealer_ok = dealer_trans and not _is_na_spec(dealer_trans)
-        if (
-            dealer_ok
-            and _transmission_has_gear_detail(dealer_trans)
-            and not _transmission_has_gear_detail(epa_trany or "")
-        ):
-            trans_raw = dealer_trans
-        if not trans_raw and vpic.get("transmission"):
-            trans_raw = vpic["transmission"]
-        if not trans_raw and dict_specs and dict_specs.get("transmission"):
-            trans_raw = str(dict_specs["transmission"]).strip()
-    trans_ver = format_transmission_display(trans_raw) or trans_raw
-
-    # Trim decoder often knows "8-Speed Automatic" while EPA row is generic "Automatic".
-    _dec_hint = regex.get("transmission_hint")
-    if (
-        _dec_hint
-        and _transmission_has_gear_detail(_dec_hint)
-        and not _transmission_has_gear_detail(str(trans_ver or ""))
-    ):
-        trans_ver = format_transmission_display(_dec_hint) or _dec_hint
-    elif gears_ver is not None and str(trans_ver or "").strip().lower() in ("automatic", "auto"):
-        try:
-            _ng = int(gears_ver)
-            if _ng > 0:
-                trans_ver = f"{_ng}-Speed Automatic"
-        except (TypeError, ValueError):
-            pass
-
-    dealer_cyl_i = _int_or_none(dealer_cyl)
-
-    blob_full = f"{title} {trim} {model}".strip()
-    # Dealer-supplied fuel_type "Electric" / "Electricity" (pure BEV, not PHEV/hybrid)
-    _dealer_ft_lower = (car.get("fuel_type") or "").strip().lower()
-    _dealer_is_pure_ev = (
-        "electric" in _dealer_ft_lower
-        and not any(x in _dealer_ft_lower for x in ("gas", "gasoline", "hybrid", "plug"))
-    )
-    # Fuel-cell vehicles (Mirai, NEXO) are electric-drive: no cylinders, MPGe.
-    # EPA dual-fuel strings ("Premium Gasoline / Electricity" = PHEV) must not count.
-    _epa_fuel_lower = (epa.get("fuel_type") or "").lower()
-    is_bev = (
-        regex.get("cylinders") == 0
-        or (regex.get("fuel_type_hint") or "").strip().lower() == "electric"
-        or (epa.get("atv_type") or "").strip().upper() in ("EV", "FCV")
-        or ("electric" in _epa_fuel_lower and "gas" not in _epa_fuel_lower)
-        or "hydrogen" in _dealer_ft_lower
-        or _dealer_is_pure_ev
-    )
-    try:
-        from backend.scanner.window_sticker import dodge_charger_daytona_is_bev
-
-        if dodge_charger_daytona_is_bev(car):
-            is_bev = True
-    except Exception:
-        pass
-
-    sticker_pkg = _sticker_specs_from_packages(car)
-    if sticker_pkg.get("fuel_type") == "Electric":
-        is_bev = True
-    if is_bev:
-        cyl_ver = 0
-        display_cyl = 0
-    elif dealer_cyl_i is not None and dealer_cyl_i > 0:
-        display_cyl = dealer_cyl_i
-    elif cyl_ver is not None:
-        display_cyl = cyl_ver
-    else:
-        display_cyl = dealer_cyl_i
-
-    cylinders_verified = bool(
-        display_cyl is not None
-        and (_is_na_spec(dealer_cyl) or dealer_cyl_i in (None, 0))
-        and (regex.get("cylinders") is not None or epa.get("cylinders") is not None)
-    )
-
-    # Regex/EPA first so xDrive/4MATIC in title wins over dealer placeholders.
-    if drive_ver:
-        display_drive = drive_ver
-    elif not _is_na_spec(dealer_drive):
-        display_drive = dealer_drive
-    else:
-        display_drive = ""
-
-    drivetrain_verified = bool(
-        drive_ver
-        and (display_drive or "").strip().upper() == (drive_ver or "").strip().upper()
-        and _is_na_spec(dealer_drive)
-    )
-
-    blob_full = f"{title} {trim} {model}".strip()
-    display_drive_ui = _drivetrain_ui_label(display_drive, make, blob_full)
-
-    if is_bev and not trans_ver and _is_na_spec(dealer_trans):
-        trans_ver = sticker_pkg.get("transmission") or "Single-speed automatic"
-
-    body_style_display = None
-    from backend.utils.field_clean import is_jeep_wrangler_car, normalize_body_style_for_car
-
-    if is_jeep_wrangler_car(make, model, trim, title):
-        body_style_display = "SUV"
-    elif _is_na_spec(car.get("body_style")) and regex.get("body_style_hint"):
-        body_style_display = regex["body_style_hint"]
-    if not body_style_display and _is_na_spec(car.get("body_style")) and vpic.get("body_style"):
-        body_style_display = vpic["body_style"]
-    if not is_jeep_wrangler_car(make, model, trim, title):
-        corrected_bs = normalize_body_style_for_car(
-            car.get("body_style") if not _is_na_spec(car.get("body_style")) else body_style_display,
-            make=make,
-            model=model,
-            trim=trim,
-            title=title,
-        )
-        if corrected_bs:
-            body_style_display = corrected_bs
-    fuel_economy_display = format_fuel_economy_display(epa, is_bev)
-    if is_bev and sticker_pkg.get("mpg_city") and sticker_pkg.get("mpg_highway"):
-        fuel_economy_display = format_fuel_economy_display(
-            {
-                "city08": sticker_pkg.get("mpg_city"),
-                "highway08": sticker_pkg.get("mpg_highway"),
-            },
-            True,
-        )
-    if not fuel_economy_display and not is_bev:
-        from backend.utils.field_clean import format_mpg_city_highway_display
-
-        fuel_economy_display = format_mpg_city_highway_display(
-            car.get("mpg_city"), car.get("mpg_highway")
-        )
-    master_engine_string = build_master_engine_string(make, model, trim, title, regex, epa)
-
-    sources = []
-    if (
-        regex.get("cylinders") is not None
-        or regex.get("drivetrain")
-        or regex.get("fuel_type_hint")
-        or regex.get("body_style_hint")
-        or regex.get("transmission_hint")
-    ):
-        sources.append("Trim decoder")
-    if epa.get("cylinders") is not None or epa.get("drivetrain") or epa.get("gears") or epa.get("transmission"):
-        sources.append("EPA dataset")
-    if dict_specs:
-        sources.append("Model specs dictionary")
-
-    # Normalize display string only when it's a raw shorthand (no speed count already present).
-    # normalize_transmission_standard is a bucket classifier; applying it to strings that already
-    # contain speed info ("10-Speed Automatic") would strip the count to just "Automatic".
-    if trans_ver and not _is_na_spec(str(trans_ver)) and not re.search(r"\b\d+[-\s]?speed\b", trans_ver, re.I):
-        from backend.utils.transmission_normalize import normalize_transmission_standard
-        vin_raw = car.get("vin")
-        vin_s = str(vin_raw).strip() if vin_raw not in (None, "") else None
-        norm_t, _weak = normalize_transmission_standard(
-            trans_ver,
-            make=make,
-            model=model,
-            trim=trim,
-            title=title_for_decode,
-            year=y,
-            vin=vin_s,
-        )
-        if norm_t:
-            trans_ver = norm_t
-
-    return {
-        "cylinders": cyl_ver,
-        "cylinders_display": display_cyl,
-        "cylinders_verified": cylinders_verified,
-        "drivetrain": drive_ver,
-        "drivetrain_display": display_drive_ui,
-        "drivetrain_verified": drivetrain_verified,
-        "gears": gears_ver,
-        "transmission_display": trans_ver,
-        "fuel_type_hint": regex.get("fuel_type_hint"),
-        "sources": sources,
-        "dealer_cylinders": dealer_cyl,
-        "master_engine_string": master_engine_string,
-        "fuel_economy_display": fuel_economy_display,
-        "epa_displacement": epa.get("displacement") or vpic.get("engine_l"),
-        "body_style_display": body_style_display or epa.get("body_style"),
-        # Per-trim EPA fields (populated from DICTIONARY via build_epa_master.py)
-        "epa_fuel_type": epa.get("fuel_type"),
-        "epa_engine_description": epa_trim.get("engine_description"),
-        "epa_city08": epa.get("city08"),
-        "epa_highway08": epa.get("highway08"),
-        # Extended specs (populated 2026-07-06 from an imported dump; see epa_extended_specs)
-        "horsepower": epa_extended.get("horsepower"),
-        "torque_lb_ft": epa_extended.get("torque_lb_ft"),
-        "curb_weight_lb": epa_extended.get("curb_weight_lb"),
-        "zero_to_60_sec": epa_extended.get("zero_to_60_sec"),
-        "fuel_tank_gal": epa_extended.get("fuel_tank_gal"),
-        "ev_range_miles": epa_extended.get("ev_range_miles"),
-        "battery_kwh": epa_extended.get("battery_kwh"),
-        "tow_capacity_lb": epa_extended.get("tow_capacity_lb"),
-        # Catalog link + generation (backend.catalog; see docs/data_architecture_plan.md)
-        "epa_master_id": linked_id,
-        "generation_code": _generation.get("generation") if _generation else None,
-        "generation_years": (
-            f"{_generation['year_start']}–{_generation['year_end'] or 'present'}" if _generation else None
-        ),
-        "generation_notes": _generation.get("notes") if _generation else None,
-    }
-
-
-def prepare_car_detail_context(car: dict[str, Any]) -> dict[str, Any]:
-    """Attach verified_specs + normalized gallery list for templates."""
-    import json
-
-    if not car:
-        return {}
-    g = car.get("gallery")
-    if isinstance(g, str):
-        try:
-            g = json.loads(g)
-        except (TypeError, ValueError):
-            g = []
-    if not isinstance(g, list):
-        g = []
-    from backend.vision.url_heuristics import (
-        filter_public_gallery_urls,
-        heuristic_listing_gallery_fluff_url,
-        prefer_full_gallery_url,
-    )
-
-    urls = filter_public_gallery_urls([u for u in g if u and isinstance(u, str)])
-    if not urls and car.get("image_url"):
-        iu = car.get("image_url")
-        if isinstance(iu, str) and iu.strip() and not heuristic_listing_gallery_fluff_url(iu):
-            urls = [prefer_full_gallery_url(iu.strip())]
-    verified = merge_verified_specs(car)
-
-    listing_packages_sections: list[dict[str, Any]] = []
-    listing_standalone_features: list[str] = []
-    listing_observed_features: list[str] = []
-    listing_monroney_options: list[str] = []
-    listing_monroney_standard: list[str] = []
-    listing_sticker_options: list[str] = []
-    listing_sticker_option_groups: list[dict[str, Any]] = []
-    listing_sticker_option_sections: dict[str, Any] = {}
-    listing_possible_packages: list[str] = []
-    listing_photo_detected_equipment: list[str] = []
-    sticker_exterior_color: str | None = None
-    sticker_interior_color: str | None = None
-    sticker_interior_material: str | None = None
-    sticker_spec_lines: list[dict[str, str]] = []
-    interior_from_listing_description = False
-    interior_from_llava_vision = False
-    llava_interior_section: dict[str, Any] | None = None
-    hide_photo_analysis = False
-
-    def _normalized_pkg_title(entry: dict[str, Any]) -> str:
-        for key in ("name", "canonical_name", "name_verbatim"):
-            v = entry.get(key)
-            if v is not None and str(v).strip():
-                return str(v).strip()[:200]
-        return ""
-
-    pkg_raw = car.get("packages")
-    pj: dict[str, Any] | None = None
-    if pkg_raw and str(pkg_raw).strip() not in ("{}", "[]", "null"):
-        try:
-            parsed = json.loads(pkg_raw) if isinstance(pkg_raw, str) else pkg_raw
-        except (TypeError, ValueError, json.JSONDecodeError):
-            parsed = None
-        if isinstance(parsed, dict):
-            pj = parsed
-
-    try:
-        from backend.enrichment.window_sticker_service import should_skip_photo_package_analysis
-
-        hide_photo_analysis = should_skip_photo_package_analysis(car, pj)
-    except Exception:
-        hide_photo_analysis = False
-    if not hide_photo_analysis:
-        try:
-            from backend.scanner.window_sticker import oem_hide_photo_analysis
-
-            hide_photo_analysis = oem_hide_photo_analysis(
-                str(car.get("vin") or ""),
-                str(car.get("make") or ""),
-            )
-        except Exception:
-            hide_photo_analysis = False
-
-    if pj is not None:
-        liv = pj.get("llava_interior_cabin")
-        if isinstance(liv, dict) and liv and not hide_photo_analysis:
-            ib = liv.get("interior_buckets") or []
-            bucket_list = [str(x).strip() for x in ib if str(x).strip()][:24]
-            llava_interior_section = {
-                "guess": str(liv.get("interior_guess_text") or "").strip()[:240],
-                "buckets": bucket_list,
-                "evidence": str(liv.get("evidence") or "").strip()[:400],
-                "confidence": liv.get("confidence"),
-            }
-        trim_low = str(car.get("trim") or "").strip().lower()
-        seen_titles: set[str] = set()
-        for entry in pj.get("packages_normalized") or []:
-            if not isinstance(entry, dict):
-                continue
-            title = _normalized_pkg_title(entry)
-            if not title:
-                continue
-            low = title.lower()
-            if low in seen_titles:
-                continue
-            feats = entry.get("features") or []
-            feat_list = [str(x).strip() for x in feats if isinstance(x, str) and str(x).strip()]
-            evidence = entry.get("evidence_spans") or []
-            evidence_list = [
-                str(x).strip() for x in evidence if isinstance(x, str) and str(x).strip()
-            ][:8]
-            # Trim names are not option packages — skip empty accordions that only repeat trim.
-            if trim_low and low == trim_low and not feat_list and not evidence_list:
-                continue
-            seen_titles.add(low)
-            listing_packages_sections.append(
-                {
-                    "name": title,
-                    "features": feat_list[:30],
-                    "evidence": evidence_list,
-                    "source": "listing",
-                    "from_listing_description": True,
-                    "from_vision": False,
-                }
-            )
-
-        mo = pj.get("monroney_options")
-        if isinstance(mo, list):
-            try:
-                from backend.scanner.window_sticker import is_sticker_boilerplate_line
-            except ImportError:
-                is_sticker_boilerplate_line = None
-            for x in mo:
-                s = str(x).strip()[:500]
-                if not s:
-                    continue
-                if is_sticker_boilerplate_line and is_sticker_boilerplate_line(s):
-                    continue
-                try:
-                    from backend.scanner.window_sticker import _is_sticker_factory_code_noise
-                except ImportError:
-                    _is_sticker_factory_code_noise = None
-                if _is_sticker_factory_code_noise and _is_sticker_factory_code_noise(s):
-                    continue
-                listing_monroney_options.append(s)
-        listing_monroney_options = listing_monroney_options[:60]
-
-        mstd = pj.get("monroney_standard_highlights")
-        if isinstance(mstd, list):
-            try:
-                from backend.scanner.window_sticker import is_sticker_boilerplate_line as _is_boilerplate
-            except ImportError:
-                _is_boilerplate = None
-            for x in mstd:
-                s = str(x).strip()[:500]
-                if not s:
-                    continue
-                if _is_boilerplate and _is_boilerplate(s):
-                    continue
-                listing_monroney_standard.append(s)
-        listing_monroney_standard = listing_monroney_standard[:40]
-
-        so = pj.get("sticker_options")
-        listing_sticker_option_groups: list[dict[str, Any]] = []
-        listing_sticker_option_sections: dict[str, Any] = {}
-        try:
-            from backend.scanner.window_sticker import (
-                group_sticker_options_for_display,
-                sticker_option_sections_for_display,
-                sticker_options_for_display,
-            )
-
-            listing_sticker_options = sticker_options_for_display(pj)
-            listing_sticker_option_groups = group_sticker_options_for_display(listing_sticker_options)
-            listing_sticker_option_sections = sticker_option_sections_for_display(pj)
-        except Exception:
-            listing_sticker_options = []
-            listing_sticker_option_groups = []
-            listing_sticker_option_sections = {}
-        if not listing_sticker_options and isinstance(so, list):
-            seen_so: set[str] = set()
-            for x in so:
-                s = str(x).strip()[:200]
-                if not s:
-                    continue
-                k = s.lower()
-                if k in seen_so:
-                    continue
-                seen_so.add(k)
-                listing_sticker_options.append({"name": s, "price": None, "label": s})
-        listing_sticker_options = listing_sticker_options[:80]
-
-        sec = pj.get("sticker_exterior_color")
-        if isinstance(sec, str) and sec.strip():
-            sticker_exterior_color = re.sub(r"^:\s*", "", sec.strip())[:120]
-        sic = pj.get("sticker_interior_color")
-        if isinstance(sic, str) and sic.strip():
-            sticker_interior_color = re.sub(r"^:\s*", "", sic.strip())[:120]
-        sim = pj.get("sticker_interior_material")
-        if isinstance(sim, str) and sim.strip():
-            sticker_interior_material = sim.strip()[:120]
-
-        ss = pj.get("sticker_specs")
-        if isinstance(ss, dict):
-            for label, val in ss.items():
-                if not isinstance(label, str) or not isinstance(val, str):
-                    continue
-                s = re.sub(r"^:\s*", "", val.strip())
-                if not s:
-                    continue
-                sticker_spec_lines.append({"label": label.strip()[:40], "value": s[:160]})
-        if not sticker_spec_lines:
-            for label, key in (
-                ("Engine", "sticker_engine_display"),
-                ("Transmission", "sticker_transmission"),
-                ("Drivetrain", "sticker_drivetrain"),
-                ("Doors", "sticker_doors"),
-                ("Seating", "sticker_seating"),
-                ("Tires", "sticker_tires"),
-                ("Wheels", "sticker_wheels"),
-            ):
-                val = pj.get(key)
-                if isinstance(val, str) and val.strip():
-                    v = re.sub(r"^:\s*", "", val.strip())
-                    if v:
-                        sticker_spec_lines.append({"label": label, "value": v[:160]})
-
-        _mk = str(car.get("make") or "").strip().lower()
-        _hide_possible = hide_photo_analysis and _mk in {"jeep", "chrysler", "dodge", "ram"}
-        if not _hide_possible and not listing_packages_sections:
-            for raw in pj.get("possible_packages") or []:
-                if not isinstance(raw, str):
-                    continue
-                label = raw.strip()[:200]
-                if not label:
-                    continue
-                low = label.lower()
-                if low in seen_titles:
-                    continue
-                seen_titles.add(low)
-                listing_possible_packages.append(label)
-        else:
-            listing_possible_packages = []
-
-        seen_sf: set[str] = set()
-        sf = pj.get("standalone_features_from_description")
-        if isinstance(sf, list):
-            for x in sf:
-                s = str(x).strip()[:200]
-                if not s:
-                    continue
-                k = s.lower()
-                if k in seen_sf:
-                    continue
-                seen_sf.add(k)
-                listing_standalone_features.append(s)
-        listing_standalone_features = listing_standalone_features[:40]
-
-        if listing_sticker_options:
-            try:
-                from backend.scanner.window_sticker import (
-                    build_sticker_option_dedupe_keys,
-                    normalize_option_dedupe_key,
-                    option_name_overlaps_sticker,
-                )
-
-                sticker_keys = build_sticker_option_dedupe_keys(listing_sticker_options)
-                base_sec = (listing_sticker_option_sections or {}).get("base") or {}
-                for feat in base_sec.get("features") or []:
-                    if isinstance(feat, dict):
-                        fn = str(feat.get("name") or "").strip()
-                        if fn:
-                            sticker_keys.add(normalize_option_dedupe_key(fn))
-                if sticker_keys:
-                    filtered_sections: list[dict[str, Any]] = []
-                    for sec in listing_packages_sections:
-                        title = str(sec.get("name") or "").strip()
-                        if title and option_name_overlaps_sticker(title, sticker_keys):
-                            continue
-                        feats = [
-                            f
-                            for f in (sec.get("features") or [])
-                            if isinstance(f, str)
-                            and not option_name_overlaps_sticker(f, sticker_keys)
-                        ]
-                        evidence = [
-                            e
-                            for e in (sec.get("evidence") or [])
-                            if isinstance(e, str) and str(e).strip()
-                        ]
-                        if not feats and not evidence:
-                            continue
-                        sec_copy = dict(sec)
-                        sec_copy["features"] = feats[:30]
-                        sec_copy["evidence"] = evidence[:8]
-                        filtered_sections.append(sec_copy)
-                    listing_packages_sections = filtered_sections
-                    listing_monroney_options = [
-                        x
-                        for x in listing_monroney_options
-                        if not option_name_overlaps_sticker(x, sticker_keys)
-                    ]
-                    listing_standalone_features = [
-                        x
-                        for x in listing_standalone_features
-                        if not option_name_overlaps_sticker(x, sticker_keys)
-                    ]
-                    listing_monroney_standard = [
-                        x
-                        for x in listing_monroney_standard
-                        if not option_name_overlaps_sticker(x, sticker_keys)
-                    ]
-            except Exception:
-                pass
-
-        seen_obs: set[str] = set()
-        obs = pj.get("observed_features")
-        if isinstance(obs, list) and not hide_photo_analysis:
-            for x in obs:
-                s = str(x).strip()[:200]
-                if not s:
-                    continue
-                k = s.lower()
-                if k in seen_obs:
-                    continue
-                seen_obs.add(k)
-                listing_observed_features.append(s)
-        listing_observed_features = listing_observed_features[:40]
-
-        try:
-            from backend.vision.equipment_vision import collect_photo_detected_equipment
-
-            photo_only = [] if hide_photo_analysis else collect_photo_detected_equipment(pj)
-        except Exception:
-            photo_only = [] if hide_photo_analysis else list(dict.fromkeys(
-                listing_observed_features + listing_possible_packages
-            ))[:48]
-        try:
-            from backend.utils.listing_description_extract import collect_equipment_options_from_packages
-
-            listing_photo_detected_equipment = collect_equipment_options_from_packages(
-                pj,
-                photo_equipment=photo_only,
-                include_vision=not hide_photo_analysis,
-            )
-        except Exception:
-            listing_photo_detected_equipment = photo_only
-    spec_raw = car.get("spec_source_json")
-    if spec_raw and str(spec_raw).strip():
-        try:
-            sj = json.loads(spec_raw) if isinstance(spec_raw, str) else spec_raw
-        except (TypeError, ValueError, json.JSONDecodeError):
-            sj = None
-        if isinstance(sj, dict):
-            ic = sj.get("interior_color")
-            if isinstance(ic, dict) and str(ic.get("source") or "").strip().lower() == "listing_description":
-                interior_from_listing_description = True
-            if isinstance(ic, dict) and str(ic.get("source") or "").strip().lower() == "llava_vision":
-                interior_from_llava_vision = True
-            icv = sj.get("interior_cabin_vision")
-            if isinstance(icv, dict) and str(icv.get("source") or "").strip().lower() == "llava_vision":
-                interior_from_llava_vision = True
-
-    packages_panel_has_content = bool(
-        listing_packages_sections
-        or listing_standalone_features
-        or listing_observed_features
-        or listing_photo_detected_equipment
-        or listing_monroney_options
-        or listing_monroney_standard
-        or listing_sticker_options
-        or listing_possible_packages
-        or sticker_exterior_color
-        or sticker_interior_color
-        or sticker_interior_material
-        or sticker_spec_lines
-        or llava_interior_section
-    )
-
-    return {
-        "gallery_images": urls,
-        "verified_specs": verified,
-        "listing_packages_sections": listing_packages_sections,
-        "listing_standalone_features": listing_standalone_features,
-        "listing_observed_features": listing_observed_features,
-        "listing_monroney_options": listing_monroney_options,
-        "listing_monroney_standard": listing_monroney_standard,
-        "listing_sticker_options": listing_sticker_options,
-        "listing_sticker_option_groups": listing_sticker_option_groups,
-        "listing_sticker_option_sections": listing_sticker_option_sections,
-        "listing_possible_packages": listing_possible_packages,
-        "listing_photo_detected_equipment": listing_photo_detected_equipment,
-        "sticker_exterior_color": sticker_exterior_color,
-        "sticker_interior_color": sticker_interior_color,
-        "sticker_interior_material": sticker_interior_material,
-        "sticker_spec_lines": sticker_spec_lines,
-        "interior_from_listing_description": interior_from_listing_description,
-        "interior_from_llava_vision": interior_from_llava_vision,
-        "packages_panel_has_content": packages_panel_has_content,
-        "llava_interior_section": llava_interior_section,
-        "hide_photo_analysis": hide_photo_analysis,
-    }
+# ---------------------------------------------------------------------------
+# merge_verified_specs / prepare_car_detail_context and their private helper
+# _sticker_specs_from_packages were mechanically extracted into
+# backend.enrichment.knowledge_engine_specs. Re-export them here so the
+# historical import surface (from backend.enrichment.knowledge_engine import
+# merge_verified_specs / prepare_car_detail_context / ...) is preserved.
+from backend.enrichment.knowledge_engine_specs import (  # noqa: E402,F401
+    _sticker_specs_from_packages,  # noqa: F401
+    merge_verified_specs,  # noqa: F401
+    prepare_car_detail_context,  # noqa: F401
+)

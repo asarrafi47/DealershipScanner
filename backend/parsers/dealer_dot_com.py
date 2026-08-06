@@ -56,14 +56,26 @@ def _extract_title(obj: dict, year: int, make: str, model: str) -> str | None:
     )
 
 
-def _first_price(*vals) -> float:
+# dealer.com masks some used-car prices with a tiny per-account placeholder
+# instead of the real internetPrice (e.g. every hidden-price row on one
+# account reads 490, on another 225, on another 85 — the SAME number repeated
+# across dozens of unrelated makes/models, which no real per-vehicle price
+# ever does). Confirmed 2026-08-05 across 21 dealer.com accounts: 212 active
+# rows this floor-guards, ranging $20-$490. carscommerce.py hit the identical
+# phenomenon on the sibling CarsCommerce search API and already floors it at
+# 1000; this parser (dealer.com's own getInventory API) never got the same
+# guard, so a masked placeholder sailed through as if it were the price.
+_MASKED_PRICE_FLOOR = 1000
+
+
+def _first_price(*vals, floor: float = 0.0) -> float:
     for v in vals:
         if v is None or v is False:
             continue
         if isinstance(v, str) and "contact" in v.lower():
             continue
         n = norm_float(v)
-        if n > 0:
+        if n > floor:
             return n
     return 0.0
 
@@ -72,6 +84,11 @@ def _extract_price_dealer_com(obj: dict) -> int:
     """
     Priority: trackingPricing.internetPrice → pricing.internetPrice → pricing.finalPrice
     → pricing.salePrice → pricing.msrp → price → trackingAttributes price/msrp.
+
+    Candidates at or below ``_MASKED_PRICE_FLOOR`` are skipped, not accepted —
+    a masked placeholder is indistinguishable from a real price by shape alone,
+    so treating it as absent (and letting the VDP scan / gap-fill path supply
+    the real number later) is the only safe read here.
     """
     tracking = obj.get("trackingPricing") or obj.get("tracking_pricing")
     pricing = obj.get("pricing") if isinstance(obj.get("pricing"), dict) else None
@@ -94,12 +111,13 @@ def _extract_price_dealer_com(obj: dict) -> int:
         obj.get("internetPrice"),
         pricing and pricing.get("retailPrice"),
         pricing and pricing.get("retail_price"),
+        floor=_MASKED_PRICE_FLOOR,
     )
     if raw == 0:
         arr = obj.get("trackingAttributes") or obj.get("tracking_attributes") or obj.get("attributes")
         if isinstance(arr, list):
             v2 = find_tracking_attr(arr, "price", "value") or find_tracking_attr(arr, "msrp", "value")
-            if v2 is not None and str(v2).strip():
+            if v2 is not None and str(v2).strip() and norm_float(v2) > _MASKED_PRICE_FLOOR:
                 raw = norm_float(v2)
     return int(round(raw))
 
@@ -422,7 +440,78 @@ def _extract_body_style(obj: dict) -> str | None:
     )
 
 
-def _map_vehicle(obj: dict, base_url: str, dealer_id: str, dealer_name: str, dealer_url: str) -> dict | None:
+def _accounts_index(data: Any) -> dict[str, dict]:
+    """The payload's ``accounts`` map: DDC rooftop id → that rooftop's identity.
+
+    A ``ws-inv-data`` body pairs every vehicle's ``accountId`` with an entry in a
+    sibling ``accounts`` object, e.g. (crownlexus.com, 2026-08-03)::
+
+        "accounts": {"soniccrownlexus": {
+            "name": "Crown Lexus", "url": "www.crownlexus.com", "phone": "…",
+            "address": {"accountName": "Crown Lexus", "city": "Ontario",
+                        "firstLineAddress": "1125 South Kettering Drive",
+                        "postalCode": "91761", "state": "CA", "country": "US"}}}
+
+    The map is PAGE-scoped — it holds only the rooftops whose cars are on that
+    page — so it is read per body, not once per dealer.
+    """
+    index: dict[str, dict] = {}
+
+    def visit(node: Any, depth: int) -> None:
+        if depth > 6 or not isinstance(node, dict):
+            return
+        accounts = node.get("accounts")
+        if isinstance(accounts, dict):
+            for key, rec in accounts.items():
+                if isinstance(key, str) and key and isinstance(rec, dict) and key not in index:
+                    index[key] = rec
+        for value in node.values():
+            if isinstance(value, dict):
+                visit(value, depth + 1)
+
+    visit(data if isinstance(data, dict) else {}, 0)
+    return index
+
+
+def _rooftop_from_account(obj: dict, accounts: dict[str, dict]) -> dict | None:
+    """This vehicle's storefront, verbatim from the feed — no decision made here.
+
+    ``accountId`` is per-vehicle and names the rooftop that holds the car, which
+    is not always the site being scanned: bmwofmonrovia.net's own feed returned
+    9 distinct ``accountId`` values over 429 VINs on 2026-08-03, only 220 of them
+    ``sonicbmwmonrovia``. Which rooftop is the store being scanned is decided by
+    ``backend.parsers.resolve_rooftop_attribution``, never here.
+    """
+    account_id = norm_str(
+        obj.get("accountId") or obj.get("accountID") or obj.get("account_id") or ""
+    )
+    if not account_id:
+        return None
+    record = accounts.get(account_id)
+    record = record if isinstance(record, dict) else {}
+    address = record.get("address")
+    address = address if isinstance(address, dict) else {}
+    street = " ".join(
+        s for s in (
+            norm_str(address.get("firstLineAddress") or ""),
+            norm_str(address.get("secondLineAddress") or ""),
+        ) if s
+    ).strip()
+    return {
+        "key": account_id,
+        "name": norm_str(record.get("name") or address.get("accountName") or ""),
+        "site": norm_str(record.get("url") or ""),
+        "address": street,
+        "city": norm_str(address.get("city") or ""),
+        "state": norm_str(address.get("state") or ""),
+        "zip": norm_str(address.get("postalCode") or ""),
+    }
+
+
+def _map_vehicle(
+    obj: dict, base_url: str, dealer_id: str, dealer_name: str, dealer_url: str,
+    accounts: dict[str, dict] | None = None,
+) -> dict | None:
     """Map one vehicle from Dealer.com getInventory schema. Missing text → None (not 'N/A')."""
     if not isinstance(obj, dict):
         return None
@@ -529,6 +618,15 @@ def _map_vehicle(obj: dict, base_url: str, dealer_id: str, dealer_name: str, dea
         out["_detail_url_alternates"] = detail_alternates[:12]
     if lot_location:
         out["_lot_location"] = lot_location
+    # Same storefront evidence, in the shape the shared rooftop gate reads.
+    # ``_lot_location`` stays: post-scan code reads it, and it is a merged
+    # best-effort blob (it sweeps every key matching dealer|location|lot|store|
+    # account|selling|physical|located, which on some accounts picks up vehicle
+    # titles — coastlinecdjr-com has 117 distinct values, "2026 RAM 1500 RHO 1"
+    # among them). Attribution uses ``accountId`` + the ``accounts`` map only.
+    rooftop = _rooftop_from_account(obj, accounts or {})
+    if rooftop:
+        out["_rooftop"] = rooftop
     if condition:
         out["condition"] = condition
         if condition == "Certified":
@@ -566,13 +664,14 @@ def _parse_json_list(data, base_url: str, dealer_id: str, dealer_name: str, deal
     items = find_vehicle_list(data)
     if not items:
         return []
+    accounts = _accounts_index(data)
     out = []
     for obj in items:
         if not isinstance(obj, dict):
             continue
         if not _has_vehicle_ident(obj):
             continue
-        mapped = _map_vehicle(obj, base_url, dealer_id, dealer_name, dealer_url)
+        mapped = _map_vehicle(obj, base_url, dealer_id, dealer_name, dealer_url, accounts)
         if mapped:
             out.append(mapped)
     return out

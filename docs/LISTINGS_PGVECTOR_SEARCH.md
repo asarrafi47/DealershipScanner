@@ -16,7 +16,6 @@
 | **Extension** | `CREATE EXTENSION vector;` once per database |
 | **Similarity** | Cosine distance via `<=>` on `vector` columns |
 | **Embeddings** | `sentence-transformers` — default model `all-MiniLM-L6-v2` (`LISTING_EMBEDDING_MODEL`) |
-| **Misc artifacts** | `./data/vectors/` (replaces legacy Chroma persist paths) |
 
 ## Rebuild the index
 

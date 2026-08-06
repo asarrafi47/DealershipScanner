@@ -11,6 +11,11 @@ time (see ``backend.routes._shared``).  ``backend.main`` re-exports
 
 from __future__ import annotations
 
+import logging
+import os
+import threading
+import time
+
 from flask import abort, jsonify, make_response, render_template, request, send_from_directory, session, url_for
 from werkzeug.exceptions import HTTPException
 
@@ -32,8 +37,324 @@ from backend.utils.ip_rate_limit import allow_request
 from backend.utils.listing_completeness import INCOMPLETE_FIELD_LABELS
 
 
+logger = logging.getLogger(__name__)
+
+
 def _car_window_sticker_preview_url(car_id: int) -> str:
     return f"/car/{car_id}/window-sticker-preview.png"
+
+
+# --- window sticker: honest state + a deadline on the on-demand fetch --------
+#
+# ``ensure_listing_packages_for_car`` is the on-demand OEM/listing sticker path
+# and must keep working exactly as it does (see the project rule: no batch
+# harvesting, no new brands).  What it must NOT do is hold an HTTP request open
+# while it re-scrapes a dealer VDP.  Measured on this branch, car 136451 (a 2024
+# Altima with no sticker source at all): the inner call takes 28.0s cold / 12.2s
+# warm and stores nothing, *every single time* — nothing about the row changes,
+# so the next view pays it again.
+#
+# Five separate things were wrong; all five are fixed here.  (1)-(3) came first;
+# (4)-(5) are the user-visible regressions that first round introduced.
+#
+# 1. Only the inner call had a budget, not the request.  After ``join(budget)``
+#    the route still did ``get_car_by_id`` + ``prepare_car_detail_context`` +
+#    the sticker probes *while the worker kept running*, and that worker starves
+#    them: the same tail measured 0.04s idle and 10.5s alongside a live worker
+#    (window_sticker_available alone: 0.00s -> 5.57s).  So a 6s budget produced
+#    13-17s responses.  Fix: build the panel payload BEFORE starting the worker,
+#    and on timeout return that snapshot without touching anything contended.
+# 2. Repeat views re-paid the whole budget forever, because the single flight
+#    only covers a worker that is still alive.  Fix: a per-car cooldown — one
+#    pipeline run per car per ``CAR_PACKAGES_ENSURE_COOLDOWN_SECONDS`` — plus a
+#    short TTL on the read-only panel build.  Later views answer from stored
+#    state and launch nothing; when a worker finishes it drops both, so anything
+#    it stored shows up on the very next view.
+# 3. The status flipped between calls on the same car, because the payload was
+#    read off a row a background worker was concurrently rewriting.  Fix: while
+#    a worker is in flight for a car, replay the panel *content* captured before
+#    it started, field for field.  (The fetch-state fields are deliberately not
+#    replayed — see (5); they are re-derived on every response.)
+#
+# 4. The budget silently *dropped* the sticker for the shopper.  The response
+#    said ``window_sticker_status="fetching"`` and nothing else, and
+#    ``car_packages.js`` calls this endpoint exactly once per page load — so the
+#    server-side guarantee "it shows on the very next view" had no next view.
+#    Measured on this branch before the fix, car 91583 (fresh process, premium
+#    session, GET /car/91583 then the ensure XHR): the XHR answered at 6.01s with
+#    ``fetching`` and the worker stored a real Monroney PDF 18.9s later that the
+#    shopper never saw.  Fix: the response now carries an explicit, machine-
+#    readable retry contract (``window_sticker_fetch_in_flight`` /
+#    ``window_sticker_should_retry`` / ``window_sticker_retry_after_seconds``)
+#    so the client can poll, and stops the moment the server says to.
+# 5. ``window_sticker_status`` lied about work being in flight.  It said
+#    "fetching" whenever a sticker *source* was known and nothing was stored —
+#    including when the pipeline had already run and found nothing (car 125964,
+#    measured: ``window_sticker_ensure_skipped="cooldown"`` together with
+#    ``window_sticker_status="fetching"``, no thread alive).  Fix: "fetching"
+#    now means exactly "a worker thread for this car is alive as this response
+#    is built"; the "a source exists but nothing is stored and nothing is
+#    running" case is its own state, ``pending``.
+_PACKAGES_ENSURE_DEFAULT_BUDGET = 6.0
+_PACKAGES_ENSURE_DEFAULT_COOLDOWN = 900.0
+_PACKAGES_ENSURE_DEFAULT_PANEL_TTL = 60.0
+# How soon a client should re-POST while a fetch is genuinely in flight.
+_PACKAGES_ENSURE_DEFAULT_POLL = 2.0
+# Bound the bookkeeping dicts; a fleet-sized cap with a coarse prune is enough
+# (correctness never depends on a hit — a miss just re-runs the pipeline).
+_PACKAGES_ENSURE_TRACK_MAX = 20_000
+
+_packages_ensure_inflight: dict[int, threading.Thread] = {}
+# Panel payload captured just before the in-flight worker for that car started.
+_packages_ensure_snapshot: dict[int, dict] = {}
+# Short-lived cache of the read-only panel build, per car: ``{car_id: (t, payload)}``.
+# Building it is 0.01-0.05s idle but was measured at 10.7s while the listings
+# prewarm/rebuild saturates the process, and that rebuild fires on a 60s token —
+# so a repeat view must not have to build it again. Invalidated as soon as a
+# worker for that car finishes, so a sticker it stored shows up on the next view.
+_packages_ensure_panel_cache: dict[int, tuple[float, dict]] = {}
+# Monotonic timestamp of the last pipeline run per car (set at launch, refreshed
+# on completion so the cooldown is measured from when the work actually ended).
+_packages_ensure_attempted_at: dict[int, float] = {}
+_packages_ensure_lock = threading.Lock()
+
+# Outcome of an ensure attempt, as seen by the request thread. Reported to the
+# client as ``window_sticker_ensure_outcome`` — diagnostics, not a UI signal.
+ENSURE_COMPLETED = "completed"
+ENSURE_TIMEOUT = "timeout"
+ENSURE_INFLIGHT = "inflight"
+ENSURE_COOLDOWN = "cooldown"
+
+# Panel states the client can render without guessing.
+#   ready       — something is stored, show it.
+#   fetching    — a worker thread for this car is alive right now. This is the
+#                 ONLY state that means work is happening; it is never returned
+#                 unless ``window_sticker_fetch_in_flight`` is true.
+#   pending     — a sticker source exists but nothing is stored and nothing is
+#                 running. Either the pipeline has not run for this car yet, or
+#                 it ran and came back empty. Not a spinner.
+#   unavailable — this vehicle has no sticker source at all.
+#   hidden      — the panel is not shown for this car.
+STICKER_STATUS_READY = "ready"
+STICKER_STATUS_FETCHING = "fetching"
+STICKER_STATUS_PENDING = "pending"
+STICKER_STATUS_UNAVAILABLE = "unavailable"
+STICKER_STATUS_HIDDEN = "hidden"
+
+# Panel *content*: a function of (row, stored sticker files) alone. For an
+# unchanged row every call returns the same values for these, including while a
+# background worker is rewriting the row (that window replays a snapshot).
+PACKAGES_ENSURE_PANEL_FIELDS = (
+    "show_window_sticker_ui",
+    "window_sticker_available",
+    "window_sticker_visual_available",
+    "window_sticker_source_known",
+    "window_sticker_oem_url",
+    "window_sticker_view_url",
+    "window_sticker_preview_url",
+    "packages_panel_has_content",
+    "listing_photo_detected_equipment",
+)
+
+# Fetch *state*: deliberately live, re-derived on every response. These describe
+# what is happening right now, so they may differ between two calls for the same
+# car — that is the point.
+PACKAGES_ENSURE_FETCH_FIELDS = (
+    "window_sticker_status",
+    "window_sticker_fetch_in_flight",
+    "window_sticker_should_retry",
+    "window_sticker_retry_after_seconds",
+    "window_sticker_ensure_outcome",
+    "window_sticker_fetch_pending",
+)
+
+# Every 200 from ``/packages/ensure`` carries all of these. (The rest of the
+# payload is diagnostics from the pipeline run — ``stored``, ``analyzed``,
+# ``listing_description_reason``, … — only present on the view that actually ran
+# it. Don't drive UI off those.)
+PACKAGES_ENSURE_RESPONSE_FIELDS = PACKAGES_ENSURE_PANEL_FIELDS + PACKAGES_ENSURE_FETCH_FIELDS
+
+
+def _packages_ensure_budget_seconds() -> float:
+    """Wall-clock budget for the whole ``/packages/ensure`` request (0 disables the deadline)."""
+    raw = (os.getenv("CAR_PACKAGES_ENSURE_BUDGET_SECONDS") or "").strip()
+    if not raw:
+        return _PACKAGES_ENSURE_DEFAULT_BUDGET
+    try:
+        return max(0.0, float(raw))
+    except ValueError:
+        return _PACKAGES_ENSURE_DEFAULT_BUDGET
+
+
+def _packages_ensure_cooldown_seconds() -> float:
+    """How long after a pipeline run for a car before another view may launch one (0 disables)."""
+    raw = (os.getenv("CAR_PACKAGES_ENSURE_COOLDOWN_SECONDS") or "").strip()
+    if not raw:
+        return _PACKAGES_ENSURE_DEFAULT_COOLDOWN
+    try:
+        return max(0.0, float(raw))
+    except ValueError:
+        return _PACKAGES_ENSURE_DEFAULT_COOLDOWN
+
+
+def _packages_ensure_panel_ttl_seconds() -> float:
+    """How long a read-only panel build may be reused for a car (0 disables the cache)."""
+    raw = (os.getenv("CAR_PACKAGES_ENSURE_PANEL_TTL_SECONDS") or "").strip()
+    if not raw:
+        return _PACKAGES_ENSURE_DEFAULT_PANEL_TTL
+    try:
+        return max(0.0, float(raw))
+    except ValueError:
+        return _PACKAGES_ENSURE_DEFAULT_PANEL_TTL
+
+
+def _packages_ensure_poll_seconds() -> float:
+    """How long the client should wait before re-POSTing while a fetch is in flight."""
+    raw = (os.getenv("CAR_PACKAGES_ENSURE_POLL_SECONDS") or "").strip()
+    if not raw:
+        return _PACKAGES_ENSURE_DEFAULT_POLL
+    try:
+        return max(0.25, float(raw))
+    except ValueError:
+        return _PACKAGES_ENSURE_DEFAULT_POLL
+
+
+def _prune_packages_ensure_tracking() -> None:
+    """Caller holds ``_packages_ensure_lock``."""
+    if len(_packages_ensure_attempted_at) > _PACKAGES_ENSURE_TRACK_MAX:
+        _packages_ensure_attempted_at.clear()
+    if len(_packages_ensure_snapshot) > _PACKAGES_ENSURE_TRACK_MAX:
+        _packages_ensure_snapshot.clear()
+    if len(_packages_ensure_panel_cache) > _PACKAGES_ENSURE_TRACK_MAX:
+        _packages_ensure_panel_cache.clear()
+
+
+def _packages_ensure_inflight_snapshot(car_id: int) -> dict | None:
+    """Payload captured before the still-running worker for *car_id* started, if any."""
+    with _packages_ensure_lock:
+        t = _packages_ensure_inflight.get(int(car_id))
+        if t is None or not t.is_alive():
+            return None
+        snap = _packages_ensure_snapshot.get(int(car_id))
+    return dict(snap) if snap is not None else None
+
+
+def _packages_ensure_worker_alive(car_id: int) -> bool:
+    """True iff a pipeline thread for *car_id* is alive at this instant."""
+    with _packages_ensure_lock:
+        t = _packages_ensure_inflight.get(int(car_id))
+    return bool(t is not None and t.is_alive())
+
+
+def _packages_ensure_cooldown_remaining(car_id: int, cooldown: float) -> float:
+    """Seconds until another pipeline run may be launched for *car_id* (0 = now)."""
+    if cooldown <= 0:
+        return 0.0
+    with _packages_ensure_lock:
+        last = _packages_ensure_attempted_at.get(int(car_id))
+    if last is None:
+        return 0.0
+    return max(0.0, cooldown - (time.monotonic() - last))
+
+
+def _packages_ensure_in_cooldown(car_id: int, cooldown: float) -> bool:
+    return _packages_ensure_cooldown_remaining(car_id, cooldown) > 0.0
+
+
+def _window_sticker_status(
+    *,
+    show_sticker_ui: bool,
+    sticker_ready: bool,
+    sticker_visual: bool,
+    has_source: bool,
+    fetch_in_flight: bool = False,
+) -> str:
+    """
+    Collapse the sticker flags into one state string for the panel.
+
+    ``fetch_in_flight`` is the only thing that can produce
+    :data:`STICKER_STATUS_FETCHING`: a known sticker source with nothing stored
+    and no worker running is :data:`STICKER_STATUS_PENDING`, not "fetching".
+    """
+    if not show_sticker_ui:
+        return STICKER_STATUS_HIDDEN
+    if sticker_ready or sticker_visual:
+        return STICKER_STATUS_READY
+    if fetch_in_flight:
+        return STICKER_STATUS_FETCHING
+    if has_source:
+        return STICKER_STATUS_PENDING
+    return STICKER_STATUS_UNAVAILABLE
+
+
+def _run_packages_ensure_with_budget(
+    car_id: int,
+    *,
+    allow_vision: bool,
+    budget: float | None = None,
+    snapshot: dict | None = None,
+) -> tuple[dict | None, str]:
+    """
+    Run the on-demand packages/sticker pipeline, but wait at most *budget* seconds.
+
+    Returns ``(status, outcome)``; ``status`` is only non-``None`` for
+    :data:`ENSURE_COMPLETED`. On :data:`ENSURE_TIMEOUT` the worker keeps running
+    so a later view finds the result already stored; *snapshot* (the panel
+    payload as it looked before the worker started) is registered for that
+    window so concurrent views get a consistent answer instead of a torn read.
+    """
+    from backend.enrichment.listing_packages_service import ensure_listing_packages_for_car
+
+    car_id = int(car_id)
+    if budget is None:
+        budget = _packages_ensure_budget_seconds()
+    if budget <= 0:
+        # Deadline disabled — run it inline (dev/debug and the unit tests).
+        try:
+            return ensure_listing_packages_for_car(
+                car_id, allow_vision_fallback=allow_vision, refetch_description=True
+            ), ENSURE_COMPLETED
+        finally:
+            with _packages_ensure_lock:
+                _packages_ensure_panel_cache.pop(car_id, None)
+                _packages_ensure_attempted_at[car_id] = time.monotonic()
+                _prune_packages_ensure_tracking()
+
+    box: dict[str, dict] = {}
+
+    def _work() -> None:
+        try:
+            box["status"] = ensure_listing_packages_for_car(
+                car_id, allow_vision_fallback=allow_vision, refetch_description=True
+            )
+        except Exception:
+            logger.exception("packages ensure failed for car %s", car_id)
+        finally:
+            with _packages_ensure_lock:
+                _packages_ensure_inflight.pop(car_id, None)
+                _packages_ensure_snapshot.pop(car_id, None)
+                # Whatever it stored must be visible to the very next view.
+                _packages_ensure_panel_cache.pop(car_id, None)
+                # Measure the cooldown from when the work ended, not started.
+                _packages_ensure_attempted_at[car_id] = time.monotonic()
+
+    with _packages_ensure_lock:
+        existing = _packages_ensure_inflight.get(car_id)
+        if existing is not None and existing.is_alive():
+            # Someone is already fetching this VIN — don't start a second one.
+            return None, ENSURE_INFLIGHT
+        t = threading.Thread(target=_work, name=f"packages-ensure-{car_id}", daemon=True)
+        _packages_ensure_inflight[car_id] = t
+        if snapshot is not None:
+            _packages_ensure_snapshot[car_id] = dict(snapshot)
+        _packages_ensure_attempted_at[car_id] = time.monotonic()
+        _prune_packages_ensure_tracking()
+        t.start()
+
+    t.join(budget)
+    if t.is_alive():
+        return None, ENSURE_TIMEOUT
+    return box.get("status"), ENSURE_COMPLETED
 
 
 def _serve_car_window_sticker_preview(car_id: int):
@@ -307,6 +628,20 @@ def _build_car_detail_view_context(car_id: int, car_raw: dict) -> dict:
         "cdjr_window_sticker_eligible": cdjr_sticker_eligible,
         "window_sticker_preview_api_url": sticker_preview_api,
         "window_sticker_preview_url": sticker_preview_embed_url,
+        # Rendered state for the sticker card so it can settle before (and
+        # independently of) the /packages/ensure XHR. Same vocabulary as the
+        # endpoint: "unavailable" = no sticker source at all, "pending" = a
+        # source exists but nothing is stored and nothing is running yet.
+        # Rendering this page starts no fetch, so "fetching" only appears when a
+        # worker from an earlier ensure call happens to still be alive.
+        "window_sticker_status": _window_sticker_status(
+            show_sticker_ui=show_sticker_ui,
+            sticker_ready=sticker_ready,
+            sticker_visual=sticker_visual,
+            has_source=bool(listing_sticker_urls or cdjr_sticker_eligible),
+            fetch_in_flight=_packages_ensure_worker_alive(car_id),
+        ),
+        "window_sticker_source_known": bool(listing_sticker_urls or cdjr_sticker_eligible),
         "hide_photo_analysis": bool(ctx.get("hide_photo_analysis")),
         "window_sticker_oem_url": window_sticker_oem_url,
         "window_sticker_pdf_url": window_sticker_pdf_url,
@@ -421,8 +756,178 @@ def api_car_vehicle_history_intelligence(car_id: int):
     return jsonify(payload), status
 
 
+def _packages_ensure_payload(car_id: int, base: dict | None = None, car: dict | None = None) -> dict:
+    """
+    The panel payload for *car_id*, read off the row as it stands right now.
+
+    Pure read + derive: it starts no fetch and writes nothing, so it is a
+    function of (row, stored sticker files) alone — call it twice on an
+    unchanged row and you get the same dict.  *base* is the result of an ensure
+    run when one completed inside the request; otherwise just ``ok``/``car_id``.
+    """
+    main = main_module()
+    status: dict = dict(base) if base else {}
+    status.setdefault("ok", True)
+    status.setdefault("car_id", int(car_id))
+    car2 = car or main.get_car_by_id(car_id, include_inactive=False) or {}
+    ctx = main.prepare_car_detail_context(car2)
+    status["window_sticker_available"] = bool(status.get("window_sticker_available"))
+    from backend.enrichment.window_sticker_service import (
+        sticker_panel_payload,
+        window_sticker_available,
+        window_sticker_has_visual,
+    )
+    from backend.scanner.window_sticker import (
+        car_listing_sticker_urls,
+        cdjr_oem_window_sticker_eligible,
+        get_window_sticker_url,
+        show_window_sticker_panel,
+        sticker_embed_preview_url,
+    )
+
+    status.update(sticker_panel_payload(ctx, car2))
+    show_sticker = show_window_sticker_panel(car2, ctx)
+    status["show_window_sticker_ui"] = show_sticker
+    status["window_sticker_available"] = bool(
+        show_sticker and (status.get("window_sticker_available") or window_sticker_available(car2))
+    )
+    status["window_sticker_visual_available"] = bool(
+        show_sticker and window_sticker_has_visual(car2)
+    )
+    cdjr_eligible = cdjr_oem_window_sticker_eligible(car2)
+    listing_urls = car_listing_sticker_urls(car2)
+    vin = str(car2.get("vin") or "")
+    if show_sticker and vin:
+        if cdjr_eligible:
+            status["window_sticker_oem_url"] = get_window_sticker_url(vin)
+        elif listing_urls:
+            status["window_sticker_oem_url"] = listing_urls[0]
+    if show_sticker and cdjr_eligible:
+        status["window_sticker_view_url"] = url_for("api_car_window_sticker", car_id=car_id)
+    elif status.get("window_sticker_visual_available"):
+        status["window_sticker_view_url"] = url_for("api_car_window_sticker", car_id=car_id)
+    if status.get("window_sticker_visual_available") or status.get("window_sticker_view_url"):
+        status["window_sticker_preview_url"] = sticker_embed_preview_url(
+            car2,
+            preview_api_url=_car_window_sticker_preview_url(car_id),
+            has_paid_access=True,
+        ) or _car_window_sticker_preview_url(car_id)
+    status["listing_photo_detected_equipment"] = ctx.get("listing_photo_detected_equipment") or []
+    status["packages_panel_has_content"] = bool(ctx.get("packages_panel_has_content"))
+    # Whether this vehicle has anywhere a sticker could come from. Carried in the
+    # payload because the fetch-state fields are re-derived later (possibly off a
+    # replayed snapshot) and need it without re-reading the row.
+    status["window_sticker_source_known"] = bool(
+        status.get("window_sticker_oem_url")
+        or status.get("window_sticker_view_url")
+        or cdjr_eligible
+        or listing_urls
+    )
+    for field in PACKAGES_ENSURE_PANEL_FIELDS:
+        status.setdefault(field, None)
+    return status
+
+
+def _finalize_ensure_payload(
+    payload: dict,
+    *,
+    car_id: int,
+    outcome: str,
+    in_flight: bool,
+    cooldown: float,
+) -> dict:
+    """
+    Stamp the live fetch-state fields onto a panel payload.
+
+    Panel *content* may come from a snapshot taken before a worker started;
+    everything this adds is derived from the state of the world right now, so
+    ``window_sticker_status`` never reports "fetching" unless a thread for this
+    car is actually alive, and the client is told whether re-POSTing can change
+    the answer and how long to wait first.
+    """
+    out = dict(payload)
+    out.setdefault("ok", True)
+    out["car_id"] = int(car_id)
+    status = _window_sticker_status(
+        show_sticker_ui=bool(out.get("show_window_sticker_ui")),
+        sticker_ready=bool(out.get("window_sticker_available")),
+        sticker_visual=bool(out.get("window_sticker_visual_available")),
+        has_source=bool(out.get("window_sticker_source_known")),
+        fetch_in_flight=bool(in_flight),
+    )
+    out["window_sticker_status"] = status
+    out["window_sticker_fetch_in_flight"] = bool(in_flight)
+    # Legacy alias kept for anything still reading it; same meaning as
+    # ``window_sticker_fetch_in_flight``. New code should use that.
+    out["window_sticker_fetch_pending"] = bool(in_flight)
+    out["window_sticker_ensure_outcome"] = outcome
+    if in_flight:
+        # A worker is running; the answer will change when it lands.
+        should_retry, retry_after = True, round(_packages_ensure_poll_seconds(), 2)
+    elif status == STICKER_STATUS_PENDING:
+        remaining = _packages_ensure_cooldown_remaining(car_id, cooldown)
+        if remaining > 0:
+            # Nothing is running and nothing may be started until the cooldown
+            # expires, so polling now cannot change anything. Report when it
+            # could, and let the client decide it is not worth waiting for.
+            should_retry, retry_after = False, round(remaining, 1)
+        else:
+            should_retry, retry_after = True, round(_packages_ensure_poll_seconds(), 2)
+    else:
+        # ready / unavailable / hidden — settled, stop asking.
+        should_retry, retry_after = False, None
+    out["window_sticker_should_retry"] = should_retry
+    out["window_sticker_retry_after_seconds"] = retry_after
+    return out
+
+
+def _packages_ensure_panel_snapshot(car_id: int, car: dict | None = None) -> dict:
+    """:func:`_packages_ensure_payload` for the stored state, reused for a short TTL."""
+    ttl = _packages_ensure_panel_ttl_seconds()
+    now = time.monotonic()
+    if ttl > 0:
+        with _packages_ensure_lock:
+            cached = _packages_ensure_panel_cache.get(int(car_id))
+        if cached is not None and (now - cached[0]) < ttl:
+            return dict(cached[1])
+    payload = _packages_ensure_payload(car_id, car=car)
+    if ttl > 0:
+        with _packages_ensure_lock:
+            _packages_ensure_panel_cache[int(car_id)] = (now, dict(payload))
+            _prune_packages_ensure_tracking()
+    return payload
+
+
 def api_car_packages_ensure(car_id: int):
-    """Fetch/analyze window sticker and merge packages (premium only)."""
+    """
+    Fetch/analyze window sticker and merge packages (premium only).
+
+    Wall-clock contract: after the read-only panel build, the on-demand pipeline
+    gets at most what is left of ``CAR_PACKAGES_ENSURE_BUDGET_SECONDS``
+    (default 6s); past that it keeps running in the background and the request
+    returns.  The panel build itself is not interruptible — measured 0.01-0.40s
+    once the process is warm (8 real cars, premium session), but it is starved by
+    the listings-grid prewarm/rebuild, so the *first* request a fresh worker
+    process handles can still be tens of seconds regardless of this budget.
+
+    Retry contract (this is what ``car_packages.js`` drives off — see
+    :data:`PACKAGES_ENSURE_RESPONSE_FIELDS`):
+
+    * ``window_sticker_status`` — ``ready`` | ``fetching`` | ``pending`` |
+      ``unavailable`` | ``hidden``. ``fetching`` is returned if and only if
+      ``window_sticker_fetch_in_flight`` is true.
+    * ``window_sticker_fetch_in_flight`` — a pipeline thread for this car was
+      alive when this response was built.
+    * ``window_sticker_should_retry`` — re-POSTing can change the answer.
+    * ``window_sticker_retry_after_seconds`` — wait this long first. Present
+      (with ``should_retry`` false) when the only thing blocking a new attempt is
+      the per-car cooldown, so the client can see it is not worth waiting.
+
+    A client that loops while ``should_retry`` is true, sleeping
+    ``retry_after_seconds`` between calls, terminates: once the worker finishes,
+    the car is in cooldown and ``should_retry`` goes false.
+    """
+    t0 = time.perf_counter()
     main = main_module()
     ok, err = main._require_feature(FEATURE_PACKAGES_ENSURE)
     if not ok:
@@ -435,64 +940,82 @@ def api_car_packages_ensure(car_id: int):
     if not car:
         return jsonify({"ok": False, "error": "not_found"}), 404
 
-    from backend.enrichment.listing_packages_service import ensure_listing_packages_for_car
+    cooldown = _packages_ensure_cooldown_seconds()
+
+    # A worker is already fetching this car: reading the row now would race its
+    # writes (that is how the same car answered "unavailable" then "hidden").
+    # Replay the panel *content* from just before it started — but the fetch
+    # state is re-derived, so this answer says "fetching" and asks for a poll.
+    inflight = _packages_ensure_inflight_snapshot(car_id)
+    if inflight is not None and _packages_ensure_worker_alive(car_id):
+        inflight["window_sticker_ensure_skipped"] = ENSURE_INFLIGHT
+        return jsonify(
+            _finalize_ensure_payload(
+                inflight,
+                car_id=car_id,
+                outcome=ENSURE_INFLIGHT,
+                in_flight=True,
+                cooldown=cooldown,
+            )
+        )
+    # (If the worker died between those two checks, fall through and rebuild:
+    # answering from the pre-worker snapshot *and* reporting "not fetching"
+    # would tell the client to stop right as the result landed.)
 
     allow_vision = request.args.get("vision", "0").strip().lower() in ("1", "true", "yes")
-    status = ensure_listing_packages_for_car(
-        car_id,
-        allow_vision_fallback=allow_vision,
-        refetch_description=True,
-    )
-    car2 = main.get_car_by_id(car_id, include_inactive=False) or car
-    ctx = main.prepare_car_detail_context(car2)
-    status["packages_panel_has_content"] = bool(ctx.get("packages_panel_has_content"))
-    status["window_sticker_available"] = bool(status.get("window_sticker_available"))
-    from backend.enrichment.window_sticker_service import sticker_panel_payload, window_sticker_available, window_sticker_has_visual
-    from backend.scanner.window_sticker import (
-        car_listing_sticker_urls,
-        cdjr_oem_window_sticker_eligible,
-        get_window_sticker_url,
-        is_cdjr_stellantis_car,
-        show_window_sticker_panel,
-        sticker_embed_preview_url,
-    )
+    budget = _packages_ensure_budget_seconds()
+    # Read-only panel state, built BEFORE any worker exists so it runs
+    # uncontended (0.04s warm) instead of alongside a fetch (10.5s measured).
+    payload = _packages_ensure_panel_snapshot(car_id, car=car)
 
-    status.update(sticker_panel_payload(ctx, car2))
-    show_sticker = show_window_sticker_panel(car2, ctx)
-    status["show_window_sticker_ui"] = show_sticker
-    status["window_sticker_available"] = bool(
-        show_sticker
-        and (
-            status.get("window_sticker_available")
-            or window_sticker_available(car2)
+    if _packages_ensure_in_cooldown(car_id, cooldown):
+        # This car ran the pipeline recently. The payload above already reflects
+        # anything that run stored, so answer from it and launch nothing. Note
+        # the in-flight flag is still read live: it is false in the normal case,
+        # which is what stops this answer claiming a fetch is happening.
+        payload["window_sticker_ensure_skipped"] = ENSURE_COOLDOWN
+        return jsonify(
+            _finalize_ensure_payload(
+                payload,
+                car_id=car_id,
+                outcome=ENSURE_COOLDOWN,
+                in_flight=_packages_ensure_worker_alive(car_id),
+                cooldown=cooldown,
+            )
+        )
+
+    if budget > 0:
+        # Whatever the panel build cost comes out of the SAME budget — the
+        # deadline belongs to the request, not to the inner call. Never floor to
+        # 0: that is the "no deadline" sentinel, which would block forever.
+        remaining = max(budget - (time.perf_counter() - t0), 0.01)
+    else:
+        remaining = 0.0
+    status, outcome = _run_packages_ensure_with_budget(
+        car_id,
+        allow_vision=allow_vision,
+        budget=remaining,
+        snapshot=payload,
+    )
+    if outcome == ENSURE_COMPLETED and status is not None:
+        # The worker is done, so a rebuild is both fresh and uncontended.
+        payload = _packages_ensure_payload(car_id, status)
+    elif outcome == ENSURE_INFLIGHT:
+        payload["window_sticker_ensure_skipped"] = ENSURE_INFLIGHT
+    elif outcome == ENSURE_TIMEOUT and not _packages_ensure_worker_alive(car_id):
+        # It landed in the gap between join() giving up and this check. The
+        # worker dropped the panel cache on its way out, so rebuild rather than
+        # answer from the pre-worker snapshot and then tell the client to stop.
+        payload = _packages_ensure_payload(car_id)
+    return jsonify(
+        _finalize_ensure_payload(
+            payload,
+            car_id=car_id,
+            outcome=outcome,
+            in_flight=_packages_ensure_worker_alive(car_id),
+            cooldown=cooldown,
         )
     )
-    status["window_sticker_visual_available"] = bool(
-        show_sticker and window_sticker_has_visual(car2)
-    )
-    vin = str(car2.get("vin") or "")
-    if show_sticker and vin:
-        if cdjr_oem_window_sticker_eligible(car2):
-            status["window_sticker_oem_url"] = get_window_sticker_url(vin)
-        else:
-            listing_urls = car_listing_sticker_urls(car2)
-            if listing_urls:
-                status["window_sticker_oem_url"] = listing_urls[0]
-    if show_sticker and cdjr_oem_window_sticker_eligible(car2):
-        status["window_sticker_view_url"] = url_for("api_car_window_sticker", car_id=car_id)
-    elif status.get("window_sticker_visual_available"):
-        status["window_sticker_view_url"] = url_for(
-            "api_car_window_sticker", car_id=car_id
-        )
-    if status.get("window_sticker_visual_available") or status.get("window_sticker_view_url"):
-        status["window_sticker_preview_url"] = sticker_embed_preview_url(
-            car2,
-            preview_api_url=_car_window_sticker_preview_url(car_id),
-            has_paid_access=True,
-        ) or _car_window_sticker_preview_url(car_id)
-    status["listing_photo_detected_equipment"] = ctx.get("listing_photo_detected_equipment") or []
-    status["packages_panel_has_content"] = bool(ctx.get("packages_panel_has_content"))
-    return jsonify(status)
 
 
 def api_car_chat(car_id: int):

@@ -194,23 +194,34 @@ def backfill_dealership_registry_ids(*, conn=None) -> int:
 
     Idempotent; safe to run after scans or before listings geo load.
     """
-    from backend.listings.dealer_registry_match import registry_id_by_dealer_host
+    from backend.listings.dealer_registry_match import (
+        dealer_url_like_patterns,
+        registry_id_by_dealer_host,
+    )
 
     total = 0
     if conn is not None:
         host_to_reg = registry_id_by_dealer_host(conn)
         cursor = conn.cursor()
         for host, reg_id in host_to_reg.items():
+            patterns = dealer_url_like_patterns(host)
+            if not patterns:
+                continue
+            # Anchored, not a bare ``%host%`` substring: registry id 170 is "Subaru of
+            # America" at subaru.com, and the substring form stamped every *subaru.com
+            # rooftop's cars with it (Irvine Subaru's 41 listings landed on a New Jersey
+            # HQ row, taking the dealer off the picker entirely).
+            where = " OR ".join("LOWER(IFNULL(dealer_url, '')) LIKE ?" for _ in patterns)
             cursor.execute(
-                """
+                f"""
                 UPDATE cars
                 SET dealership_registry_id = ?
                 WHERE (COALESCE(listing_active, 1) = 1)
                   AND (dealership_registry_id IS NULL
                        OR CAST(dealership_registry_id AS INTEGER) <= 0)
-                  AND LOWER(IFNULL(dealer_url, '')) LIKE ?
+                  AND ({where})
                 """,
-                (reg_id, f"%{host.lower()}%"),
+                (reg_id, *patterns),
             )
             total += int(cursor.rowcount or 0)
         conn.commit()

@@ -79,7 +79,7 @@ pytest backend/tests/test_trim_ladder_audit.py -q
 
 ### 6. Semantic search (Postgres + pgvector)
 
-Listing embeddings are stored in **Postgres**, not in git. Local legacy/cache dirs under `data/vectors/` and `backend/data/chroma/` are ignored.
+Listing embeddings are stored in **Postgres**, not in git.
 
 After you have an `inventory.db` (and Postgres with `CREATE EXTENSION vector;`):
 
@@ -136,7 +136,6 @@ PYTHONPATH=. python backend/scripts/migrate_inventory_sqlite_to_postgres.py --dr
 | `.env` | Secrets | Create locally |
 | `*.db` (app DBs) | Private / large | App + scanner |
 | `csv_out*` under root or `backend/dictionary/` | Large listing/options scrapes | `car_data_scraper.py` + cleaning scripts |
-| `data/vectors/`, `backend/data/chroma/` | Embeddings / local vector stores | `scripts/reindex_vectors.py` |
 | `backend/data/oem/`, pipeline JSON scratch | BMW / OEM pipeline outputs | OEM intake scripts |
 | `.fuse*`, `backend/fuse_artifacts/` | macOS/FUSE noise | N/A — delete locally |
 

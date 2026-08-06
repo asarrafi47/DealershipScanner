@@ -173,3 +173,236 @@ def test_listings_grid_serializer_includes_dealership_registry_id():
         {"id": 1, "title": "Test", "price": 1, "dealership_registry_id": 42}
     )
     assert out["dealership_registry_id"] == 42
+
+
+# ---------------------------------------------------------------------------
+# Grid rebuild policy. The cache used to key on a 60s time bucket, so the whole
+# fleet was re-serialized every minute forever whether or not anything changed.
+# ---------------------------------------------------------------------------
+
+
+def _seed_grid_fleet(sqlite_inventory, n: int = 12) -> None:
+    sqlite_inventory.add_cars(
+        [
+            {
+                "title": f"2022 Toyota Camry #{i}",
+                "year": 2022,
+                "make": "Toyota",
+                "model": "Camry",
+                "trim": "LE",
+                "price": 20000 + i,
+                "mileage": 1000 + i,
+                "image_url": f"https://cdn.example.com/{i}.jpg",
+                "gallery": json.dumps([f"https://cdn.example.com/{i}-{k}.jpg" for k in range(3)]),
+                "dealer_name": "Test Motors",
+                "dealer_url": "https://dealer.example.com",
+                "body_style": "Sedan",
+                "fuel_type": "Gasoline",
+                "exterior_color": "White",
+                "interior_color": "Black",
+            }
+            for i in range(n)
+        ]
+    )
+
+
+def test_grid_memo_reproduces_a_fresh_serialization(sqlite_inventory):
+    """A memo hit must be indistinguishable from serializing the row again."""
+    from backend.db.repositories import listings_repo as lr
+
+    _seed_grid_fleet(sqlite_inventory)
+
+    lr._clear_grid_serialize_memo()
+    fresh = lr._build_grid_cars_uncached()          # cold memo: everything serialized
+    memoized = lr._build_grid_cars_uncached()       # warm memo: everything reused
+    lr._clear_grid_serialize_memo()
+    fresh_again = lr._build_grid_cars_uncached()    # cold memo again
+
+    assert len(fresh) == len(memoized) == len(fresh_again) > 0
+    assert memoized == fresh_again
+    # Reuse must be by reference, otherwise the memo is not saving the work.
+    assert all(a is b for a, b in zip(fresh, memoized))
+
+
+def test_grid_memo_key_tracks_every_stored_column():
+    """Changing any stored value must produce a different memo key."""
+    from backend.db.repositories import listings_repo as lr
+
+    row = {"id": 1, "price": 100.0, "make": "Toyota", "gallery": "[]", "trim": None}
+    base = lr._row_memo_digest(row)
+    assert base is not None
+    for col in row:
+        mutated = dict(row)
+        mutated[col] = "CHANGED"
+        assert lr._row_memo_digest(mutated) != base, col
+
+
+def test_grid_is_not_rebuilt_while_nothing_changes(sqlite_inventory):
+    """
+    The treadmill regression test.
+
+    Simulates the Postgres shape: a data fingerprint that never moves (nothing
+    written) alongside a legacy token that rolls over every 60 seconds. An hour
+    of reads must not produce 60 full-fleet rebuilds.
+    """
+    from backend.db.repositories import listings_repo as lr
+
+    _seed_grid_fleet(sqlite_inventory)
+    lr.clear_inventory_listings_cache()
+
+    builds = []
+    real_build = lr._build_grid_cars_uncached
+    real_fingerprint = lr._pg_grid_write_fingerprint
+    real_legacy_token = lr._listings_cache_token
+    real_monotonic = lr.time.monotonic
+    fake = [real_monotonic()]
+
+    def counted():
+        builds.append(1)
+        return real_build()
+
+    lr._build_grid_cars_uncached = counted
+    lr._pg_grid_write_fingerprint = lambda: (("cars", 1234),)
+    # If the grid ever goes back to keying on a clock, this rolls once a minute.
+    lr._listings_cache_token = lambda: (float(int(fake[0]) // 60), 0.0)
+    try:
+        lr.listings_grid_serialized_cars()
+        assert len(builds) == 1, "cold start must build once"
+
+        for _ in range(3600):
+            fake[0] += 1.0
+            lr.time.monotonic = lambda: fake[0]
+            lr.listings_grid_serialized_cars()
+            thread = lr._grid_cars_rebuild_thread
+            if thread is not None:
+                thread.join(timeout=30)
+    finally:
+        lr.time.monotonic = real_monotonic
+        lr._build_grid_cars_uncached = real_build
+        lr._pg_grid_write_fingerprint = real_fingerprint
+        lr._listings_cache_token = real_legacy_token
+        lr.clear_inventory_listings_cache()
+
+    # Only the wall-clock ceiling may fire (price_drop_days_ago / deal-score
+    # bands), never the old once-a-minute rebuild.
+    ceiling_rebuilds = int(3600 // lr._GRID_MAX_CACHE_AGE_S)
+    assert len(builds) - 1 <= ceiling_rebuilds, builds
+    assert len(builds) - 1 < 60, "grid is back on the 60s rebuild treadmill"
+
+
+def test_grid_rebuilds_when_the_data_fingerprint_moves(sqlite_inventory):
+    """Invalidate-on-write: a changed fingerprint must produce exactly one rebuild."""
+    from backend.db.repositories import listings_repo as lr
+
+    _seed_grid_fleet(sqlite_inventory)
+    lr.clear_inventory_listings_cache()
+
+    builds = []
+    real_build = lr._build_grid_cars_uncached
+    real_fingerprint = lr._pg_grid_write_fingerprint
+    real_monotonic = lr.time.monotonic
+    counter = [1]
+
+    def counted():
+        builds.append(1)
+        return real_build()
+
+    lr._build_grid_cars_uncached = counted
+    lr._pg_grid_write_fingerprint = lambda: (("cars", counter[0]),)
+    try:
+        lr.listings_grid_serialized_cars()
+        assert len(builds) == 1
+
+        # A write lands, and enough time has passed for the throttle to allow it.
+        counter[0] = 2
+        lr.time.monotonic = lambda: real_monotonic() + lr._GRID_MIN_REBUILD_INTERVAL_S + 1
+        lr.listings_grid_serialized_cars()
+        thread = lr._grid_cars_rebuild_thread
+        if thread is not None:
+            thread.join(timeout=30)
+        assert len(builds) == 2, "a data change must trigger a rebuild"
+    finally:
+        lr.time.monotonic = real_monotonic
+        lr._build_grid_cars_uncached = real_build
+        lr._pg_grid_write_fingerprint = real_fingerprint
+        lr.clear_inventory_listings_cache()
+
+
+def test_grid_write_fingerprint_falls_back_off_postgres(sqlite_inventory):
+    """Without the Postgres write counters the token must revert to the old one."""
+    from backend.db.repositories import listings_repo as lr
+    from backend.db.repositories.data_quality_repo import _listings_cache_token
+
+    assert lr._pg_grid_write_fingerprint() is None
+    assert lr._grid_cache_token() == _listings_cache_token()
+
+
+def test_upsert_holds_no_connection_during_per_car_backfill(sqlite_inventory):
+    """
+    The scanner leak: ``upsert_vehicles`` used to resolve VIN->id on a connection
+    it then held open for the whole per-car backfill loop (which does NHTSA
+    network calls). That connection sat ``idle in transaction`` for as long as
+    the loop ran, which is what parked the web app behind a queued CREATE INDEX.
+    """
+    import backend.db.incomplete_listings_db as ild
+    import backend.scanner.database as scanner_db
+
+    open_conns = []
+    real_get_conn = scanner_db.get_conn
+
+    class _Tracked:
+        def __init__(self, inner):
+            self._inner = inner
+            open_conns.append(self)
+
+        def close(self):
+            if self in open_conns:
+                open_conns.remove(self)
+            return self._inner.close()
+
+        def cursor(self, *a, **kw):
+            return self._inner.cursor(*a, **kw)
+
+        def __getattr__(self, name):
+            return getattr(self._inner, name)
+
+    def tracked_get_conn():
+        return _Tracked(real_get_conn())
+
+    open_during_backfill = []
+
+    def fake_sync(car_id):
+        open_during_backfill.append(len(open_conns))
+
+    real_sync = ild.sync_incomplete_listing_for_car_id
+    scanner_db.get_conn = tracked_get_conn
+    ild.sync_incomplete_listing_for_car_id = fake_sync
+    try:
+        n = scanner_db.upsert_vehicles(
+            [
+                {
+                    "vin": f"LEAKTESTVIN{i:06d}"[:17],
+                    "title": f"2021 Honda Accord #{i}",
+                    "year": 2021,
+                    "make": "Honda",
+                    "model": "Accord",
+                    "price": 21000 + i,
+                    "mileage": 500 + i,
+                    "dealer_name": "Leak Motors",
+                    "dealer_url": "https://leak.example.com",
+                    "dealer_id": "leak",
+                }
+                for i in range(5)
+            ]
+        )
+    finally:
+        scanner_db.get_conn = real_get_conn
+        ild.sync_incomplete_listing_for_car_id = real_sync
+
+    assert n == 5
+    assert open_during_backfill, "post-upsert per-car loop did not run"
+    assert set(open_during_backfill) == {0}, (
+        f"upsert_vehicles held {max(open_during_backfill)} scanner connection(s) open "
+        "across the per-car backfill loop"
+    )
+    assert open_conns == [], "upsert_vehicles leaked a connection"

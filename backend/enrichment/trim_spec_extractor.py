@@ -10,8 +10,6 @@ from typing import Any
 
 from backend.enrichment.dictionary_catalog import find_complete_options_csv as _catalog_find_co
 from backend.enrichment.dictionary_catalog import find_epa_csv as _catalog_find_epa
-from backend.enrichment.dictionary_catalog import iter_dictionary_csv_paths
-from backend.enrichment.dictionary_paths import DICTIONARY_ROOT as _DICTIONARY_DIR
 
 STANDARD_LABELS: tuple[str, ...] = (
     "Engine Options",
@@ -279,6 +277,196 @@ def is_junk_spec_text(text: str) -> bool:
     return False
 
 
+# --- fail-closed gate: a rung bullet is a QUOTED SPEC or it does not render ---
+#
+# Everything upstream of the trim ladder (Complete_Options CSVs, the derived
+# trim_spec_sheets built from them, trim_ladders_generated.json) is scraped, and
+# a large share of what it holds is encyclopedia narrative rather than spec text
+# — "In the United States, the 4Runner carried over the same engine options from
+# the". A shopper reads a rung bullet as a fact about the car in front of them,
+# so anything that reads as prose, is cut off mid-sentence, or states a
+# comparison whose baseline WE picked (the ``Upgrades X: Y (was Z)`` shape that
+# ``trim_diff_engine`` computes by walking the ladder) must be dropped.
+#
+# These predicates only ever DELETE a bullet: the failure mode is a short rung,
+# never a false claim.
+
+# Curated OEM trim-walk lines really do run long — the WK2 Grand Cherokee
+# Limited X styling bullet is 189 characters of pure equipment list. The cap is
+# therefore set above that and prose is caught by the shape rules below, not by
+# length alone.
+_MAX_TRIM_BULLET_CHARS = 240
+
+# Brochure-quoted engine step-ups carry the OEM's own baseline in a fixed
+# suffix ("… — added over the GT"). Strip it before the prose tests so the one
+# comparison the OEM printed itself is not mistaken for narrative.
+_ADDED_OVER_SUFFIX_RE = re.compile(r"\s*[—–-]\s*added over the\s+\S[^—–]{0,40}$", re.I)
+
+_DERIVED_COMPARISON_RE = re.compile(
+    r"^(?:adds|upgrades)\s+[A-Za-z][A-Za-z0-9 &/]{2,40}:\s",
+    re.I,
+)
+_DERIVED_BASELINE_RE = re.compile(r"\(\s*was\s", re.I)
+
+_STANDARD_LABEL_PREFIX_RE = re.compile(
+    r"^(?:%s)\s*:\s*" % "|".join(re.escape(lbl) for lbl in STANDARD_LABELS),
+    re.I,
+)
+
+# A bullet that opens like a sentence is a sentence, not a spec line.
+_NARRATIVE_LEAD_RE = re.compile(
+    r"^(?:the|a|an|in|since|following|based|according|however|most|also|by|this|that|these|those|"
+    r"it|its|there|while|although|during|after|before|both|when|european|american|additionally|"
+    r"meanwhile|unlike|compared|originally|later|initially|subsequently)\s+",
+    re.I,
+)
+
+_NARRATIVE_PHRASE_RE = re.compile(
+    r"\bcarried over\b|\bin the united states\b|\baccording to\b|\bwent on sale\b|"
+    r"\bcam(?:e|es) standard\b|\bcome standard\b|\bcompetes with\b|\bbecame (?:available|standard)\b|"
+    r"\bwas (?:equipped|offered|introduced|launched|unveiled|added|replaced|discontinued|available|"
+    r"reinstated|standard|hampered|modified|slightly|the|a|an)\b|"
+    r"\bwere (?:equipped|offered|introduced|launched|available|standard|hampered|full-time|the|a|an)\b|"
+    r"\bhas (?:noticed|been)\b|\bhave been\b|\bowner's manual\b|\bsummary of contents\b|"
+    r"\bfor the \d{4} model\b|\bin order to\b|\bturbo tru\b",
+    re.I,
+)
+
+# Legal / footnote text lifted out of brochures. It is quotable, but it is not a
+# spec, and a rung bullet is read as a statement about the vehicle.
+_BOILERPLATE_RE = re.compile(
+    r"\bterms of use\b|\bprivacy (?:policy|notice|statement)\b|\bdata charges\b|"
+    r"\bmaster data consent\b|\bdata collection\b|\bsubscription (?:required|service|term)\b|"
+    r"\bsee (?:your )?(?:dealer|retailer) for (?:details|complete)\b|\bconsult your (?:owner|dealer)\b|"
+    r"\bfor (?:more )?details,? (?:visit|see|go to)\b|\bnot available in all\b|"
+    r"\balways (?:drive|pay attention|obey)\b|\bdriver'?s? responsib|\bcharges may apply\b",
+    re.I,
+)
+
+# Cut-off scrapes: a dangling function word, a bare connector, or an ellipsis.
+_TRUNCATED_TAIL_RE = re.compile(
+    r"(?:…|\.\.\.|[,;:]|[-–—]"
+    r"|\b(?:the|a|an|and|or|of|with|for|from|to|in|on|at|is|are|was|were|by|as|but|that|which|"
+    r"while|when|its|it|their|this|these|than|per|into|over|under|plus)\b)\s*$",
+    re.I,
+)
+
+
+# Short but well-formed spec values ("2.0L I4", "12-speaker").
+_SHORT_SPEC_RE = re.compile(
+    r"^(?:\d+\.?\d*\s?L\b|\d+(?:\.\d+)?[- ]?(?:inch|in\.)\b|\d+[- ]speaker\b|\d+\s?kWh\b)",
+    re.I,
+)
+
+# --- three leaks measured against the live overlays in trim_adds_by_year ---
+#
+# Every rule below was written after finding bullets that ALREADY passed
+# ``is_displayable_trim_bullet`` and would therefore have rendered on a car
+# page: "(cid:2) All-weather floor mats (front)", "is a registered trademark of
+# Harman International Industries, Inc. Quiet Steel", "river and front passenger
+# lumbar control, memory package…" (a mid-word truncation of "driver"), and
+# "3rd row) Vehicles shown may contain optional equipment. Features shown…".
+
+# pdfplumber emits unmapped glyphs as (cid:NNN); a spec line never contains one.
+_CID_ARTIFACT_RE = re.compile(r"\(cid:\d+\)")
+
+# Copyright/trademark footers scraped out of a brochure's small print.
+_LEGAL_FOOTER_RE = re.compile(
+    r"\bregistered trademark\b|\bword mark\b|\ball rights reserved\b|"
+    r"\bvehicles? shown\b|\bfeatures shown\b|\bsimulated screen\b",
+    re.I,
+)
+
+# Two sentences in one bullet means prose was scraped, not a spec quoted. The
+# period must be a real sentence end: "4.2-in. TFT Multi-Information Display"
+# and "5570 lb. Gross Vehicle Weight Rating" are single spec lines whose period
+# closes a unit abbreviation, so only words of three or more letters count.
+_SENTENCE_BREAK_RE = re.compile(r"\b([A-Za-z]{3,})\.\s+[A-Z]")
+_UNIT_ABBREVIATIONS = frozenset(
+    {"approx", "est", "max", "min", "incl", "avg", "std", "opt", "qty", "etc", "mfg", "mpg", "cyl"}
+)
+
+# A spec line starts with a capital or a digit. A leading all-lowercase word is
+# either a mid-word truncation ("river and front passenger…") or the tail of a
+# sentence. OEM names that legitimately start lowercase carry an interior
+# capital — iPod, iDrive, i-MID, xDrive, eTorque, i-Activ, i-FORCE.
+_LOWERCASE_LEAD_RE = re.compile(r"^[a-z][a-z'’]*(?:\s|$)")
+
+
+def _has_sentence_break(text: str) -> bool:
+    for m in _SENTENCE_BREAK_RE.finditer(text):
+        if m.group(1).lower() not in _UNIT_ABBREVIATIONS:
+            return True
+    return False
+
+
+def is_derived_comparison_bullet(text: str) -> bool:
+    """True for ``Adds/Upgrades <Label>: … (was …)`` lines.
+
+    ``trim_diff_engine`` builds these by diffing a rung against the cumulative
+    feature map of the rungs BELOW it. Both the direction and the baseline come
+    from our own ordering of the ladder, not from anything the OEM printed, so
+    the comparison is not quotable and must not reach a shopper.
+    """
+    t = re.sub(r"\s+", " ", (text or "").strip())
+    if not t:
+        return False
+    return bool(_DERIVED_COMPARISON_RE.match(t) or _DERIVED_BASELINE_RE.search(t))
+
+
+def is_narrative_prose(text: str) -> bool:
+    """True when *text* reads as encyclopedia/marketing prose rather than a spec line."""
+    t = re.sub(r"\s+", " ", (text or "").strip())
+    if not t:
+        return False
+    core = _ADDED_OVER_SUFFIX_RE.sub("", t).strip()
+    body = _STANDARD_LABEL_PREFIX_RE.sub("", core).strip()
+    if not body:
+        return True
+    if " the " in body.lower():
+        return True
+    if _NARRATIVE_LEAD_RE.match(body):
+        return True
+    if _NARRATIVE_PHRASE_RE.search(body):
+        return True
+    if _BOILERPLATE_RE.search(body):
+        return True
+    if _TRUNCATED_TAIL_RE.search(body):
+        return True
+    if _CID_ARTIFACT_RE.search(body):
+        return True
+    if _LEGAL_FOOTER_RE.search(body):
+        return True
+    if _LOWERCASE_LEAD_RE.match(body):
+        return True
+    if _has_sentence_break(body):
+        return True
+    return False
+
+
+def is_displayable_trim_bullet(text: str) -> bool:
+    """Gate every trim-rung bullet: quotable spec text, or it does not render."""
+    t = re.sub(r"\s+", " ", (text or "").strip())
+    if not t:
+        return False
+    if len(t) > _MAX_TRIM_BULLET_CHARS:
+        return False
+    if is_derived_comparison_bullet(t):
+        return False
+    if is_narrative_prose(t):
+        return False
+    # Re-run the junk screen on the value alone: a "Engine Options: " prefix
+    # otherwise hides placeholder values such as "Automatic 8-spd".
+    body = _STANDARD_LABEL_PREFIX_RE.sub("", _ADDED_OVER_SUFFIX_RE.sub("", t).strip()).strip()
+    if not body:
+        return False
+    if is_junk_spec_text(body):
+        # ``is_junk_spec_text`` treats anything under 8 characters as junk, which
+        # would also discard well-formed short specs like "2.0L I4".
+        return bool(len(body) < 8 and _SHORT_SPEC_RE.match(body))
+    return True
+
+
 def _clean_text(s: str, *, limit: int = 280) -> str:
     t = re.sub(r"\s+", " ", (s or "").strip())
     if is_junk_spec_text(t):
@@ -303,6 +491,8 @@ def split_spec_value_parts(value: str, *, trim_name: str = "") -> list[str]:
             if not p or (trim_name and _is_cross_trim_prose(p, trim_name)):
                 continue
             compact = p
+        if not is_displayable_trim_bullet(compact):
+            continue
         key = re.sub(r"[^a-z0-9]+", "", compact.lower())
         if len(key) < 8 or key in seen:
             continue
@@ -401,7 +591,19 @@ def _extract_epa_trim_fields(
     make: str,
     model: str,
 ) -> dict[str, list[str]]:
-    """Engine / drivetrain / transmission from EPA dictionary rows (no wiki packages)."""
+    """Engine text from EPA dictionary rows (no wiki packages).
+
+    ``engineOptions`` is the descriptive string that came in with the row;
+    ``engineDisplay`` is a short label OUR importer synthesized from displacement
+    plus cylinder count, and it guesses the bank layout — the 2026 Ram 2500
+    Laramie row pairs ``engineOptions="6.7L Cummins Turbo Diesel I6"`` with
+    ``engineDisplay="6.7L V6 Turbo"``. Quote the source field, never our guess.
+
+    ``transmissionOptions`` / ``drivetrainOptions`` are deliberately NOT emitted:
+    they describe the one EPA configuration this row happens to cover, so
+    printing "Rear-Wheel Drive" as something a rung adds is a claim the row does
+    not support.
+    """
     from backend.enrichment.trim_ladder import _normalize_epa_trim
 
     out: dict[str, list[str]] = {label: [] for label in STANDARD_LABELS}
@@ -416,15 +618,14 @@ def _extract_epa_trim_fields(
         name = _normalize_epa_trim(trim_raw, make, model) or trim_raw
         if _norm_token(name) != trim_key and not _trim_in_text(trim_name, trim_raw):
             continue
-        engine = (row.get("engineDisplay") or row.get("engineOptions") or "").strip()
-        if engine:
-            out["Engine Options"].append(_clean_text(engine))
-        trans = (row.get("transmissionOptions") or "").strip()
-        if trans:
-            out["Engine Options"].append(_clean_text(f"{trans}"))
-        drive = (row.get("drivetrainOptions") or "").strip()
-        if drive:
-            out["Engine Options"].append(_clean_text(drive))
+        for key in ("engineOptions", "engineDisplay"):
+            engine = (row.get(key) or "").strip()
+            if not engine or not _is_plausible_engine_field(engine):
+                continue
+            cleaned = _clean_text(engine)
+            if cleaned and is_displayable_trim_bullet(cleaned):
+                out["Engine Options"].append(cleaned)
+                break
     return out
 
 
@@ -611,6 +812,8 @@ def _merge_values(values: list[str], *, max_items: int = 2) -> str:
         key = v.lower()
         if not v or key in seen:
             continue
+        if not is_displayable_trim_bullet(v):
+            continue
         seen.add(key)
         ordered.append(v)
     return "; ".join(ordered[:max_items])
@@ -619,8 +822,15 @@ def _merge_values(values: list[str], *, max_items: int = 2) -> str:
 def _specs_from_adds(adds: list[str]) -> dict[str, list[str]]:
     out: dict[str, list[str]] = {label: [] for label in STANDARD_LABELS}
     for item in adds or []:
-        text = str(item or "").strip()
+        text = re.sub(r"\s+", " ", str(item or "").strip())
         if not text or len(text) < 8:
+            continue
+        # A ladder add already carrying one of OUR labels is a previous run's
+        # output being re-ingested; re-classifying it re-launders whatever junk
+        # was in it (e.g. "Engine Options: Automatic 8-spd; Rear-Wheel Drive").
+        if _STANDARD_LABEL_PREFIX_RE.match(text) or is_derived_comparison_bullet(text):
+            continue
+        if not is_displayable_trim_bullet(text):
             continue
         label = _classify_text(text)
         if label and label in out:

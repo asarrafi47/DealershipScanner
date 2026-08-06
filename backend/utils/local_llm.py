@@ -2,9 +2,8 @@
 Local LLM client (Ollama-backed) with load-adaptive model selection.
 
 Design premise: the model only *narrates* structured data we already have — it
-never retrieves facts — so a small model is accurate and cheap. To avoid starving
-the scanner (Playwright + a swarm of Chromium procs) on the shared dev box, the
-model tier adapts to system load:
+never retrieves facts. To avoid starving the scanner (Playwright + a swarm of
+Chromium procs) on the shared dev box, the model tier adapts to system load:
 
     scanner running (or RAM tight)  -> LIGHT model  (fast, small footprint)
     machine idle                    -> HEAVY model  (better prose / reasoning)
@@ -12,14 +11,70 @@ model tier adapts to system load:
 Model selection reuses ``scanner_liveness.scanner_pids`` — the same signal the
 DDL guard uses — so "is a scan running" is detected exactly, not guessed.
 
+Why the tiers are 7B/14B and not 3B/7B
+--------------------------------------
+The premise above does *not* make any small model safe: narration still has to be
+faithful. 3B was dropped after it invented a 1,500 lb tow rating for a Nissan
+Sentra, invented seating capacity, and restated supplied warranty tables with the
+wrong corrosion and battery terms (measured 2026-07-30 on three listings).
+
+Re-measured 2026-07-31 on the two shipping tiers, after the prompt was split into
+an instruction half and a data half. Sample: 10 active priced listings drawn at
+random from Postgres (setseed 0.42) — 134318, 115699, 153798, 146547, 528420,
+96855, 119765, 152517, 146442, 92206. Two batteries per tier, every stated fact
+checked against the ``cars`` row and the verified-specs block the prompt is built
+from, and every reply read individually:
+
+    battery A — 14 single-fact questions x 10 cars = 140 answers
+      (price, mileage, VIN, colour, drivetrain, transmission, fuel, cylinders,
+       dealer, stock #, towing, horsepower, 0-60, MPG)
+        qwen2.5:7b-instruct    137/140 correct. The 3 misses are all false
+                               "that isn't in this listing's data" for a figure
+                               that WAS in the prompt (hp 201 on #134318,
+                               fuel Hybrid on #115699, tow 7,700 on #528420).
+                               No fabricated and no contradicted fact.
+        qwen2.5:14b-instruct   140/140 factually correct. Two answers dropped
+                               trailing boilerplate from a value ("Anvil
+                               Clear-Coat" for "Anvil Clear-Coat Exterior
+                               Paint"); nothing stated was wrong.
+
+    battery B — 7 questions per car whose answer is genuinely absent, chosen to
+      bait fabrication (seating, payload, warranty, crash rating, cargo volume,
+      ground clearance, battery kWh) = 70 answers per tier
+        qwen2.5:7b-instruct    70/70. 64 refusals; the 6 warranty answers were
+        qwen2.5:14b-instruct   70/70. correct restatements of a warranty table
+                               that really is in the listing JSON (checked term
+                               by term against block (2)/(3) on all 6 cars).
+
+So: 7B = 207/210, 14B = 210/210 on this sample, with zero fabricated facts on
+either tier.
+
+What the earlier "1 wrong in 140 / 0 wrong on 14B" figure got wrong
+------------------------------------------------------------------
+It was an undercount, and the reason matters more than the number: a uniformly
+random car sample hides a failure mode concentrated in a subpopulation. Asking
+"what fuel does it take?" of 14 random *hybrid/EV* listings, 2 runs each, 22 of
+28 7B answers returned the EPA row's "Regular Gasoline"/"Premium Gasoline"
+instead of the dealer's "Hybrid" — deterministic, same wrong answer on both runs.
+In a random 10-car sample that is 1-2 answers. The cause was a prompt-assembly
+bug, not the model (``_VERIFIED_KEYS_SHADOWED_BY_DEALER`` in
+``backend/intelligence/ai/agent.py`` did not list ``fuel_type``); after the fix
+the same 28 answers are 24/28, and the 4 misses are refusals rather than wrong
+fuels. Ratios quoted here are for these batteries on this sample — they are not a
+general accuracy claim for free-form chat.
+
+Warm latency cost: ~0.4s (3B) -> ~0.5s (7B) -> ~2.5s (14B) per turn.
+
 Config (env):
     LOCAL_LLM_BASE_URL     default http://localhost:11434  (point at a model
                            server in prod; the Railway web container can't host
                            a 7B itself)
-    LOCAL_LLM_LIGHT_MODEL  default qwen2.5:3b-instruct
-    LOCAL_LLM_HEAVY_MODEL  default qwen2.5:7b-instruct
+    LOCAL_LLM_LIGHT_MODEL  default qwen2.5:7b-instruct
+    LOCAL_LLM_HEAVY_MODEL  default qwen2.5:14b-instruct
     LOCAL_LLM_FORCE_MODEL  override — always use this exact model/tag
-    LOCAL_LLM_MIN_FREE_GB  default 6 — below this free RAM, force LIGHT
+    LOCAL_LLM_MIN_FREE_GB  default 12 — below this free RAM, force LIGHT (the
+                           heavy tag is ~9GB on disk and ~12GB resident per
+                           `ollama ps`, so 6GB of headroom was not enough)
     LOCAL_LLM_TIMEOUT_S    default 60
 """
 from __future__ import annotations
@@ -34,8 +89,39 @@ from typing import Any
 logger = logging.getLogger("local_llm")
 
 DEFAULT_BASE_URL = "http://localhost:11434"
-DEFAULT_LIGHT = "qwen2.5:3b-instruct"
-DEFAULT_HEAVY = "qwen2.5:7b-instruct"
+DEFAULT_LIGHT = "qwen2.5:7b-instruct"
+DEFAULT_HEAVY = "qwen2.5:14b-instruct"
+
+
+class LocalLLMUnavailable(RuntimeError):
+    """The local model server could not answer, with a *specific* reason.
+
+    Callers surface this to users, so the reason has to name the missing piece
+    ("ollama isn't running", "that model isn't pulled") — a generic "assistant
+    unavailable" tells a user nothing they can act on.
+    """
+
+    def __init__(self, reason: str, detail: str = "", model: str = ""):
+        self.reason = reason      # server_unreachable | model_missing | timeout | http_error
+        self.detail = detail
+        self.model = model
+        super().__init__(detail or reason)
+
+
+def human_reason(exc: BaseException) -> str:
+    """One user-facing sentence naming what to start / pull / fix."""
+    base = _base_url()
+    if isinstance(exc, LocalLLMUnavailable):
+        if exc.reason == "server_unreachable":
+            return (f"The local AI model server isn't reachable at {base}. "
+                    "Start it with `ollama serve` and try again.")
+        if exc.reason == "model_missing":
+            return (f"The local model `{exc.model}` isn't installed on the model server. "
+                    f"Install it with `ollama pull {exc.model}`.")
+        if exc.reason == "timeout":
+            return (f"The local model `{exc.model}` didn't answer within the timeout. "
+                    "It may still be loading — try again in a moment.")
+    return f"The local AI model at {base} returned an error: {str(exc)[:160]}"
 
 
 def _base_url() -> str:
@@ -52,9 +138,9 @@ def _heavy_model() -> str:
 
 def _min_free_gb() -> float:
     try:
-        return float(os.environ.get("LOCAL_LLM_MIN_FREE_GB") or 6.0)
+        return float(os.environ.get("LOCAL_LLM_MIN_FREE_GB") or 12.0)
     except ValueError:
-        return 6.0
+        return 12.0
 
 
 def _timeout_s() -> float:
@@ -119,10 +205,27 @@ def pick_model() -> ModelChoice:
 
 
 def _post(path: str, payload: dict) -> dict:
+    """POST to Ollama, translating transport failures into LocalLLMUnavailable.
+
+    Every failure mode here is one a human can fix (start the server, pull the
+    model, wait for a cold load), so it must not reach the caller as an opaque
+    requests exception.
+    """
     import requests
 
-    resp = requests.post(f"{_base_url()}{path}", json=payload, timeout=_timeout_s())
-    resp.raise_for_status()
+    model = str(payload.get("model") or "")
+    try:
+        resp = requests.post(f"{_base_url()}{path}", json=payload, timeout=_timeout_s())
+    except requests.Timeout as exc:
+        raise LocalLLMUnavailable("timeout", str(exc), model) from exc
+    except requests.RequestException as exc:
+        raise LocalLLMUnavailable("server_unreachable", str(exc), model) from exc
+    if resp.status_code == 404:
+        # Ollama answers 404 for an unknown model tag — the server is up, the
+        # weights just aren't pulled.
+        raise LocalLLMUnavailable("model_missing", resp.text[:200], model)
+    if resp.status_code >= 400:
+        raise LocalLLMUnavailable("http_error", f"HTTP {resp.status_code}: {resp.text[:200]}", model)
     return resp.json()
 
 
@@ -136,6 +239,48 @@ def available_models() -> list[str]:
         return [m.get("name", "") for m in resp.json().get("models", [])]
     except Exception:
         return []
+
+
+_TAGS_TTL_S = 60.0
+_tags_cache: tuple[float, list[str]] = (0.0, [])
+
+
+def _installed(force: bool = False) -> list[str]:
+    """available_models() with a short TTL — generate() consults it every call."""
+    global _tags_cache
+    import time
+
+    ts, tags = _tags_cache
+    if force or (time.monotonic() - ts) > _TAGS_TTL_S:
+        tags = available_models()
+        _tags_cache = (time.monotonic(), tags)
+    return tags
+
+
+def resolve_model(model: str) -> str:
+    """Nearest installed model to *model*.
+
+    A box that pulled a different tag than the configured tier (or renamed one)
+    shouldn't take the assistant down: fall back to another installed chat model
+    rather than 404. An empty tag list means the server is unreachable — return
+    the request unchanged so _post() raises the accurate "not running" error.
+    """
+    tags = _installed()
+    if not tags or model in tags:
+        return model
+    # Ollama accepts a bare name for a ":latest" tag; match that spelling too.
+    for tag in tags:
+        if tag == model or tag.split(":")[0] == model.split(":")[0]:
+            return tag
+    for candidate in (_light_model(), _heavy_model()):
+        if candidate in tags:
+            logger.warning("local_llm: model %s not installed; using %s", model, candidate)
+            return candidate
+    for tag in tags:
+        if "embed" not in tag:  # embedding models can't do completion
+            logger.warning("local_llm: model %s not installed; using %s", model, tag)
+            return tag
+    return model
 
 
 def generate(
@@ -154,6 +299,7 @@ def generate(
     break search.
     """
     choice = ModelChoice(model, "forced", "explicit") if model else pick_model()
+    choice = ModelChoice(resolve_model(choice.model), choice.tier, choice.reason)
     options: dict[str, Any] = {"temperature": temperature}
     if max_tokens:
         options["num_predict"] = int(max_tokens)

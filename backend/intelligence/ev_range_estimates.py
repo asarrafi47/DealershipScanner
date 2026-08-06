@@ -12,8 +12,6 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
-from backend.enrichment.dictionary_catalog import catalog_key
-from backend.enrichment.dictionary_paths import TRIM_ADDS_BY_YEAR_DIR
 from backend.enrichment.knowledge_engine import lookup_epa_by_trim
 
 logger = logging.getLogger(__name__)
@@ -40,19 +38,66 @@ _EPA_RANGE_CACHE_PATH = (
 )
 _ELECTRIFIED_FUEL_TYPES = frozenset({"electric", "ev", "electricity", "plug-in hybrid", "plug in hybrid", "phev"})
 
-_RANGE_TEXT_PATTERNS: tuple[re.Pattern[str], ...] = (
-    re.compile(r"\b(\d{2,3})\s*(?:mile|mi\.?)\s*(?:EPA[- ]?)?(?:estimated\s+)?range\b", re.I),
-    re.compile(r"\bEPA[- ]?(?:estimated\s+)?range\s*(?:of\s*)?(\d{2,3})\s*(?:mile|mi\.?)?\b", re.I),
-    re.compile(r"\b(\d{2,3})\s*miles?\s*(?:EPA[- ]?)?(?:estimated\s+)?range\b", re.I),
-    re.compile(r"\b(\d{2,3})\s*(?:mile|mi\.?)\s*(?:all[- ]?electric|electric)\s+range\b", re.I),
-    re.compile(r"\b(?:up to|about|approx\.?|at least)\s*(\d{2,3})\s*(?:mile|mi\.?)\s*(?:of\s*)?(?:EPA\s*)?range\b", re.I),
-    re.compile(
-        r"\b(?:manufacturer[- ]?estimated|estimated|advertised)\s*(?:all[- ]?electric\s*)?"
-        r"(?:range\s*(?:of\s*)?)?(\d{2,3})\s*(?:mile|mi\.?)\b",
-        re.I,
-    ),
-    re.compile(r"\b(\d{2,3})\s*(?:mile|mi\.?)\s*(?:manufacturer[- ]?estimated|advertised)\s*range\b", re.I),
-)
+# ---------------------------------------------------------------------------
+# Three removed sources, and why none of them is coming back
+#
+# 1. Overlay bullet text. ``_range_miles_from_trim_adds`` read
+#    ``backend/dictionary/derived/trim_adds_by_year/*.json`` directly and regex'd
+#    a mileage out of ``adds_by_trim``, bypassing ``load_brochure_trim_overlay``
+#    and the provenance gate behind it. Six overlay files yield a range and none
+#    of them has an admissible source (3 ``brochure_llm``, 3
+#    ``brochure_llm_web``). Measured 2026-07-31: 6 active cars were showing a
+#    range that came from a bullet nothing can account for, and where EPA has a
+#    row for the same car the two disagree badly — the 2021 Mustang Mach-E file
+#    says 270 mi against EPA's 211, the 2021 Taycan file says 274 against 199.
+#
+# 2. The listing's own free text (description / title / trim / model / packages).
+#    That is dealer marketing copy, which the project rules exclude as a source
+#    for a rendered claim, and a regex over it cannot tell "330 miles of range"
+#    about THIS car from the same sentence about the trim above it. Measured over
+#    all 72,504 active listings on 2026-07-31: this path resolved a range for
+#    exactly 0 cars, so removing it costs nothing and closes the hole before a
+#    feed starts writing that sentence.
+#
+# 3. ``epa_extended_specs.ev_range_miles`` (removed 2026-07-31). It survived the
+#    first pass because it is a scrape rather than prose, and because it sat
+#    last in the order — behind EPA's own file. Both defences fail on measurement:
+#
+#    * It is the wrong FIELD, not merely the wrong trim. The column is filled
+#      from nameplate review pages, and what those pages print is a TOTAL
+#      driving range. Serializing all 72,504 active listings before and after
+#      the removal, 67 cars lose a figure and no car's figure changes; every one
+#      of the 67 is a plug-in hybrid, a hydrogen Mirai or a single Audi Q4
+#      e-tron, and the numbers they lose are 400 miles of "all-electric range"
+#      for a Jeep Wrangler 4xe, 550 for a BMW 530e, 600 for a Mercedes-AMG C 63
+#      S E Performance and 402 for a 2018 Toyota Mirai — a hydrogen car with no
+#      plug. None of those is a battery range; each is roughly what the car does
+#      on a full tank. (Resolving the row the way this module now would, rather
+#      than the way the old lookup did, the same source answers for 171 of the
+#      4,748 active electrified listings — so 67 is the floor, not the ceiling.)
+#    * The page it quotes is about a different model year. 14,503 of the 14,884
+#      rows carrying a range do have the number in a page extraction, so they
+#      pass a quote test; only 965 of those pages carry the row's own year in
+#      their title. A 2023 EQS 580 quotes ``caranddriver.com/mercedes-benz/eqs``
+#      for 400 miles where EPA says 285.
+#
+#    The disagreement is not rare, either: on 2,681 of the 3,500 active
+#    electrified listings that DO have an EPA row, this column disagrees with
+#    EPA by more than 5 miles. It was only invisible because EPA won.
+#
+# What is left is EPA's own published range (fueleconomy.gov vehicles.csv), and
+# nothing else. Plug-in hybrids are not in that file — the cache holds 1,451
+# rows, all ``atvType=EV`` — so a PHEV now shows no factory range at all, which
+# is the correct answer to "we do not know it" for the number a battery-health
+# readout is measured against.
+# ---------------------------------------------------------------------------
+
+#: Band an EPA all-electric range has to fall in to be believable. Deliberately
+#: wide — a sanity floor/ceiling, not a spec — and out-of-band values are
+#: dropped, never clamped to the edge. These are the same bounds this module has
+#: always applied; they were inline in ``_positive_range_miles``.
+_MIN_PLAUSIBLE_RANGE_MI = 40
+_MAX_PLAUSIBLE_RANGE_MI = 600
 
 
 def _normalize_token(raw: Any) -> str:
@@ -69,7 +114,9 @@ def _positive_int(value: Any) -> int | None:
 
 def _positive_range_miles(value: Any) -> int | None:
     miles = _positive_int(value)
-    return miles if miles is not None and 40 <= miles <= 600 else None
+    if miles is None:
+        return None
+    return miles if _MIN_PLAUSIBLE_RANGE_MI <= miles <= _MAX_PLAUSIBLE_RANGE_MI else None
 
 
 def _parse_year(value: Any) -> int | None:
@@ -88,20 +135,6 @@ def _is_electrified_car(car: dict[str, Any] | None) -> bool:
     return False
 
 
-def parse_epa_range_from_text(text: Any) -> int | None:
-    blob = str(text or "").strip()
-    if not blob:
-        return None
-    for pattern in _RANGE_TEXT_PATTERNS:
-        match = pattern.search(blob)
-        if not match:
-            continue
-        miles = _positive_range_miles(match.group(1))
-        if miles is not None:
-            return miles
-    return None
-
-
 def _listing_range_tokens(*parts: Any) -> set[str]:
     tokens: set[str] = set()
     for part in parts:
@@ -116,16 +149,6 @@ def _listing_range_tokens(*parts: Any) -> set[str]:
                 continue
             tokens.add(tok)
     return tokens
-
-
-def _listing_text_blobs(car: dict[str, Any]) -> list[str]:
-    chunks: list[str] = []
-    for key in ("description", "title", "trim", "model", "packages"):
-        val = car.get(key)
-        if val is None:
-            continue
-        chunks.append(str(val))
-    return chunks
 
 
 def _score_epa_model_match(
@@ -169,76 +192,71 @@ def _score_epa_model_match(
     return score
 
 
-def _score_trim_name_match(listing_trim: str, trim_name: str) -> int:
-    trim_raw = str(listing_trim or "").strip()
-    name_raw = str(trim_name or "").strip()
-    if not trim_raw or not name_raw:
-        return 0
-    trim_n = _normalize_token(trim_raw)
-    name_n = _normalize_token(name_raw)
-    if name_n in trim_n or trim_n in name_n:
-        return 40
-    overlap = _listing_range_tokens(trim_raw) & _listing_range_tokens(name_raw)
-    if not overlap:
-        return 0
-    return min(35, 10 + 8 * len(overlap))
+def _name_tokens(raw: Any) -> frozenset[str]:
+    """Alphanumeric runs of a model name, lowercased (``Mach-E`` -> mach, e)."""
+    return frozenset(t for t in re.split(r"[^a-z0-9]+", str(raw or "").lower()) if t)
 
 
-def _max_range_miles_from_texts(texts: list[str]) -> int | None:
-    found: list[int] = []
-    for text in texts:
-        miles = parse_epa_range_from_text(text)
-        if miles is not None:
-            found.append(miles)
-    return max(found) if found else None
+def _head_token(raw: Any) -> str:
+    """The leading alphanumeric run — the nameplate proper (``Q4``, ``Model``)."""
+    for tok in re.split(r"[^a-z0-9]+", str(raw or "").lower()):
+        if tok:
+            return tok
+    return ""
 
 
-def _range_miles_from_trim_adds(car: dict[str, Any]) -> int | None:
-    year = _parse_year(car.get("year"))
-    make = str(car.get("make") or "").strip()
-    model = str(car.get("model") or "").strip()
-    trim_raw = str(car.get("trim") or "").strip()
-    if year is None or not make or not model:
-        return None
+def _same_nameplate(listing_model: Any, listing_trim: Any, epa_model: Any) -> bool:
+    """
+    True when an EPA row is about the same nameplate as the listing.
 
-    ck = catalog_key(year, make, model)
-    path = TRIM_ADDS_BY_YEAR_DIR / f"{ck.replace('|', '__')}.json"
-    if not path.is_file():
-        return None
-    try:
-        payload = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError):
-        return None
+    ``_score_epa_model_match`` alone is not enough to decide this, and the gap is
+    not theoretical — every one of these was rendering on the car page before
+    this gate existed (measured 2026-07-31, live data):
 
-    adds = payload.get("adds_by_trim")
-    if not isinstance(adds, dict):
-        return None
+    * a 2021 Tesla Model S "Long Range AWD" scored ``Model 3 Long Range AWD``
+      (95) and ``Model Y Long Range AWD`` (95) ABOVE ``Model S Long Range`` (70),
+      because the trim string matches the other cars word for word, and showed
+      the Model 3's 353 mi;
+    * a 2026 Kia EV6 GT-Line took ``EV9 Long Range AWD GT-Line`` (55) over every
+      real EV6 row (30) and showed the EV9's 280 mi, a number no 2026 EV6 prints;
+    * a 2023 Audi Q5 55 TFSI e — a plug-in hybrid with roughly 23 miles of
+      electric range — matched ``e-tron quattro`` and showed 226 mi, the range of
+      a different, battery-electric SUV;
+    * a 2023 Mercedes-Benz EQE matched ``EQS`` rows.
 
-    best_range: int | None = None
-    best_score = 0
-    for trim_name, bullets in adds.items():
-        if not isinstance(bullets, list):
-            continue
-        score = _score_trim_name_match(trim_raw, str(trim_name))
-        if score <= 0 and len(adds) == 1:
-            score = 10
-        if score <= 0:
-            continue
-        miles = _max_range_miles_from_texts([str(b) for b in bullets if b])
-        if miles is None:
-            continue
-        if score > best_score:
-            best_score = score
-            best_range = miles
+    The trim half of the score is doing the damage: "Long Range AWD" and
+    "GT-Line" are shared across a maker's whole EV lineup, so a trim that matches
+    perfectly can outweigh a model that does not match at all. Rather than
+    re-tune the weights — which only moves the line — a candidate must first be
+    the same car, and the score then only chooses between that nameplate's rows.
 
-    if best_range is not None:
-        return best_range
+    Compared as token sets rather than as substrings, because EPA reorders the
+    words: ``Q4 e-tron Sportback`` is filed as ``Q4 Sportback 55 e-tron
+    quattro``. Two conditions, both required:
 
-    all_texts: list[str] = []
-    for bullets in adds.values():
-        if isinstance(bullets, list):
-            all_texts.extend(str(b) for b in bullets if b)
-    return _max_range_miles_from_texts(all_texts)
+    * each side's LEADING token appears in the other side's tokens. The leading
+      token is the nameplate proper (``Q4``, ``EV6``, ``Model``), and checking it
+      in both directions is what separates an Audi ``e-tron`` from a ``Q4
+      e-tron``: neither name contains the other's head;
+    * and one side's tokens are a subset of the other's, since the two sources
+      split model from trim differently — the listing may carry the longer name
+      (``C40 Recharge Pure Electric`` vs EPA's ``C40 Recharge``) or the shorter
+      one (``EQE`` vs EPA's ``EQE 350 4matic``). The listing's trim counts toward
+      its tokens, which is what lets EPA's fuller name be recognised.
+
+    This is a nameplate test, not a trim test. It is happy to admit every trim of
+    the right car and leaves choosing between them to the score.
+    """
+    listing_tokens = _name_tokens(listing_model)
+    epa_tokens = _name_tokens(epa_model)
+    if not listing_tokens or not epa_tokens:
+        return False
+    with_trim = listing_tokens | _name_tokens(listing_trim)
+    if _head_token(listing_model) not in epa_tokens:
+        return False
+    if _head_token(epa_model) not in with_trim:
+        return False
+    return listing_tokens <= epa_tokens or epa_tokens <= with_trim
 
 
 def _fetch_epa_vehicle_rows() -> list[dict[str, Any]]:
@@ -323,6 +341,20 @@ def lookup_epa_range_miles(
     model: Any,
     trim: Any = None,
 ) -> int | None:
+    """
+    EPA's published all-electric range for this car, or ``None``.
+
+    A candidate row must be the same make, the same nameplate
+    (:func:`_same_nameplate`) and the same model year — or one either side of it,
+    which is how the file names a car sold across a model-year boundary. Within
+    that set, :func:`_score_epa_model_match` picks the closest trim and the
+    result is only accepted at a score of 15 or better.
+
+    ``None`` when nothing clears those bars, which the caller must render as
+    nothing. It is emphatically NOT the nearest available number: the make-wide
+    candidate list this used to score over is what handed a Q5 plug-in hybrid an
+    e-tron's range.
+    """
     year_val = _parse_year(year)
     make_raw = str(make or "").strip()
     model_raw = str(model or "").strip()
@@ -334,8 +366,15 @@ def lookup_epa_range_miles(
     rows = _load_epa_ev_range_rows()
 
     for year_try in (year_val, year_val - 1, year_val + 1):
+        # Same make, same year, AND the same nameplate. The nameplate test is a
+        # hard filter rather than another term in the score: see
+        # :func:`_same_nameplate` for the four families this was getting wrong.
         candidates = [
-            row for row in rows if row.get("year") == year_try and row.get("make_n") == make_n
+            row
+            for row in rows
+            if row.get("year") == year_try
+            and row.get("make_n") == make_n
+            and _same_nameplate(model_raw, trim_raw, row.get("model"))
         ]
         if not candidates:
             continue
@@ -362,10 +401,28 @@ def lookup_epa_range_miles(
 
 def resolve_factory_epa_range(car: dict[str, Any] | None) -> int | None:
     """
-    Original manufacturer / EPA all-electric range in miles for EV / PHEV listings.
+    Original EPA all-electric range in miles for EV / PHEV listings, or ``None``.
 
-    Resolution order: explicit row value → listing text → brochure trim adds →
-    fueleconomy.gov cache (all automakers, not Tesla-only).
+    ``None`` means "no sourced range for this car" and the caller must render
+    nothing. This figure anchors the battery-degradation readout a shopper reads
+    as the car's real-world range, so a number nobody can trace is worse than a
+    blank.
+
+    Resolution order — one source, plus whatever the caller already resolved:
+
+    1. the row's own ``factory_range`` / ``epa_range`` / ``epa_range_miles``
+       value, if the caller supplied one;
+    2. EPA's published range from ``fueleconomy.gov`` ``vehicles.csv``, cached in
+       ``backend/dictionary/derived/epa_ev_range_miles.json``.
+
+    There is no third step any more; ``epa_extended_specs.ev_range_miles`` was
+    removed on 2026-07-31 and the block comment above records what it was
+    handing out and to how many cars.
+
+    Gated on the car being electrified in the first place, and on a 40-600 mile
+    plausibility band, because the EPA file is matched on year/make/model with a
+    scored model-name comparison and will otherwise hand a gas Kona the Kona
+    Electric's row.
     """
     if not car or not _is_electrified_car(car):
         return None
@@ -375,18 +432,14 @@ def resolve_factory_epa_range(car: dict[str, Any] | None) -> int | None:
         if explicit is not None:
             return explicit
 
-    for blob in _listing_text_blobs(car):
-        parsed = parse_epa_range_from_text(blob)
-        if parsed is not None:
-            return parsed
-
-    from_trim_adds = _range_miles_from_trim_adds(car)
-    if from_trim_adds is not None:
-        return from_trim_adds
-
-    return lookup_epa_range_miles(
-        car.get("year"),
-        car.get("make"),
-        car.get("model"),
-        car.get("trim"),
+    # Re-banded here as well as inside the lookup: the band is part of THIS
+    # function's contract, and it must hold for whatever source sits behind the
+    # call rather than depending on the current one policing itself.
+    return _positive_range_miles(
+        lookup_epa_range_miles(
+            car.get("year"),
+            car.get("make"),
+            car.get("model"),
+            car.get("trim"),
+        )
     )

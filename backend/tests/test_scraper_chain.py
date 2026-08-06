@@ -271,8 +271,17 @@ class TestScrapedVehicle:
 
 class TestDefaultChain:
     def test_default_chain_orders_cheap_to_heavy(self):
+        # Impersonation leads: it is still plain HTTP, but with a browser's TLS
+        # fingerprint, so it clears the Cloudflare 403 that would otherwise fail the
+        # requests stage and escalate the chain all the way to a real browser.
         chain = default_chain(extractors=[StubExtractor("e")])
-        assert [f.name for f in chain.fetchers] == ["requests", "playwright"]
+        assert [f.name for f in chain.fetchers] == ["impersonate", "requests", "playwright"]
+
+    def test_impersonating_fetcher_precedes_the_browser(self):
+        """The browser must remain the last resort, never reached by a 403 alone."""
+        chain = default_chain(extractors=[StubExtractor("e")])
+        names = [f.name for f in chain.fetchers]
+        assert names.index("impersonate") < names.index("playwright")
 
     def test_default_chain_passes_filter(self):
         flt = lambda vs: vs  # noqa: E731

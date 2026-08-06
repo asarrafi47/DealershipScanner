@@ -182,7 +182,7 @@ def build_semantic_listing_document(
     text = re.sub(r"\s+", " ", text).strip()
     if is_effectively_empty(text):
         # Fallback to compact labeled form
-        from backend.utils.field_clean import build_inventory_chroma_document
+        from backend.utils.field_clean import build_compact_listing_document
 
-        return build_inventory_chroma_document(c)[:8000]
+        return build_compact_listing_document(c)[:8000]
     return text[:8000]

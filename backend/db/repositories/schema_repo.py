@@ -191,6 +191,18 @@ def init_inventory_db():
         conn = pg_connect()
         try:
             init_postgres_inventory(conn)
+        except Exception:
+            # The authoritative schema is the versioned migration chain; this pass
+            # only re-asserts it. It is expected to fail when a scanner holds long
+            # transactions on `cars` (init_postgres_inventory sets a lock_timeout so
+            # it aborts rather than parking every later reader behind a queued
+            # CREATE INDEX). Booting the web app is worth more than the re-assert,
+            # and the per-process flag stays unset so a later boot retries.
+            _log.warning(
+                "inventory schema re-assert skipped (table busy); "
+                "relying on the migration chain",
+                exc_info=True,
+            )
         finally:
             conn.close()
         seed_cars()

@@ -62,9 +62,19 @@ class InventoryCursor:
 
 
 class InventoryConnection:
-    def __init__(self, raw: Any, *, backend: Literal["sqlite", "postgres"]):
+    def __init__(
+        self,
+        raw: Any,
+        *,
+        backend: Literal["sqlite", "postgres"],
+        shared: bool = False,
+    ):
         self._raw = raw
         self._backend = backend
+        # When True this wraps a borrowed shared connection (see
+        # inventory_pg.borrow_read_connection): close() must NOT tear down the
+        # underlying connection, only reset its transaction state.
+        self._shared = shared
         self.row_factory: Any = None
 
     def cursor(self, row_factory: Any = None) -> InventoryCursor:
@@ -93,11 +103,23 @@ class InventoryConnection:
         self._raw.rollback()
 
     def close(self) -> None:
+        if self._shared:
+            # Keep the borrowed connection alive; just reset transaction state so
+            # the next borrower starts clean (matches per-call close semantics:
+            # committed work persists, uncommitted is rolled back).
+            try:
+                self._raw.rollback()
+            except Exception:
+                pass
+            return
         self._raw.close()
 
 
 def open_inventory_connection() -> InventoryConnection:
     if inventory_pg.is_inventory_postgres():
+        shared_raw = inventory_pg.current_shared_read_raw()
+        if shared_raw is not None:
+            return InventoryConnection(shared_raw, backend="postgres", shared=True)
         return InventoryConnection(inventory_pg.pg_connect(), backend="postgres")
     inventory_pg.assert_inventory_backend_configured()
     if inventory_pg.inventory_sqlite_tests_allowed():

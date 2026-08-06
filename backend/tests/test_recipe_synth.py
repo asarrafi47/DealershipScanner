@@ -371,8 +371,13 @@ class _FakeResp:
             return "utf-8"
 
 
+# A thin body or a challenge page no longer ends the attempt -- it escalates to a
+# TLS-impersonating retry, because that is exactly the shape a Cloudflare fingerprint
+# rejection takes. These two pin the urllib verdict itself, with the escalation stubbed
+# out; test_fetch_escalates_* below pin the escalation.
 def test_fetch_rejects_thin_body(monkeypatch):
     monkeypatch.setattr(recipe_synth, "open_url", lambda *a, **k: _FakeResp(b"<html>tiny</html>"))
+    monkeypatch.setattr(recipe_synth, "_fetch_impersonated", lambda *a, **k: None)
     assert recipe_synth.fetch_dealer_html("https://x.com") is None
 
 
@@ -380,7 +385,41 @@ def test_fetch_rejects_challenge_page(monkeypatch):
     body = (b"<html><body>Just a moment... Checking your browser before accessing. "
             + b"cf-challenge " * 200 + b"</body></html>")
     monkeypatch.setattr(recipe_synth, "open_url", lambda *a, **k: _FakeResp(body))
+    monkeypatch.setattr(recipe_synth, "_fetch_impersonated", lambda *a, **k: None)
     assert recipe_synth.fetch_dealer_html("https://x.com") is None
+
+
+def test_fetch_escalates_challenge_to_impersonation(monkeypatch):
+    """The Cloudflare case: urllib sees a challenge, impersonation gets the real page."""
+    body = (b"<html><body>Just a moment... Checking your browser before accessing. "
+            + b"cf-challenge " * 200 + b"</body></html>")
+    monkeypatch.setattr(recipe_synth, "open_url", lambda *a, **k: _FakeResp(body))
+    monkeypatch.setattr(recipe_synth, "_fetch_impersonated", lambda *a, **k: "<html>real inventory</html>")
+    assert recipe_synth.fetch_dealer_html("https://x.com") == "<html>real inventory</html>"
+
+
+def test_fetch_escalates_http_error_to_impersonation(monkeypatch):
+    """A 403 is the fingerprint rejection this whole path exists for."""
+    import urllib.error
+
+    def _raise(*a, **k):
+        raise urllib.error.HTTPError("https://x.com", 403, "Forbidden", {}, None)
+
+    monkeypatch.setattr(recipe_synth, "open_url", _raise)
+    monkeypatch.setattr(recipe_synth, "_fetch_impersonated", lambda *a, **k: "<html>cleared</html>")
+    assert recipe_synth.fetch_dealer_html("https://x.com") == "<html>cleared</html>"
+
+
+def test_fetch_does_not_escalate_when_urllib_succeeds(monkeypatch):
+    """Impersonation costs a request; the common path must not pay it."""
+    body = b"<html><body>" + b"real dealership content " * 200 + b"</body></html>"
+    monkeypatch.setattr(recipe_synth, "open_url", lambda *a, **k: _FakeResp(body))
+
+    def _boom(*a, **k):
+        raise AssertionError("must not escalate when the plain fetch worked")
+
+    monkeypatch.setattr(recipe_synth, "_fetch_impersonated", _boom)
+    assert "real dealership content" in (recipe_synth.fetch_dealer_html("https://x.com") or "")
 
 
 def test_fetch_accepts_real_html(monkeypatch):

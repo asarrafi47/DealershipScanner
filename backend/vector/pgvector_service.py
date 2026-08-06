@@ -15,11 +15,7 @@ import logging
 import os
 import re
 import sqlite3
-from pathlib import Path
 from typing import Any
-
-from pathlib import Path as _Path
-ROOT = _Path(__file__).resolve().parents[2]
 
 from backend.db.inventory_db import get_conn as inventory_get_conn
 from backend.utils.field_clean import is_effectively_empty
@@ -42,18 +38,6 @@ T_MASTER_SPEC = "master_spec_embeddings"
 _st_model: Any | None = None
 
 _KNOWLEDGE_THRESHOLD = 0.40
-
-
-def vector_data_dir() -> Path:
-    """Legacy-friendly path for non-DB vector artifacts (replaces Chroma persist dir)."""
-    d = ROOT / "data" / "vectors"
-    d.mkdir(parents=True, exist_ok=True)
-    return d
-
-
-def get_persist_dir() -> Path:
-    """Deprecated alias: was Chroma persist directory; use ``vector_data_dir()``."""
-    return vector_data_dir()
 
 
 def _model_name() -> str:

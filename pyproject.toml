@@ -51,7 +51,7 @@ ignore = [
 # Duplicate dict-key literals in lookup tables. Both duplicates currently map to
 # the same value, so nothing is broken today -- but the next edit to one copy
 # silently does nothing, which is exactly the bug F601 exists to prevent.
-"backend/enrichment/trim_ladder_knowledge.py" = ["F601"]
+"backend/enrichment/trim_ladder_knowledge/tables.py" = ["F601"]
 "backend/utils/spec_field_normalize.py" = ["F601"]
 
 # Redundant function-local re-import of a name already imported at module top.

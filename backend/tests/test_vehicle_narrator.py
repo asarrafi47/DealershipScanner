@@ -46,6 +46,58 @@ def test_degenerate_catches_single_line_semicolon_dump():
     )
 
 
+def test_degenerate_catches_values_only_and_equals_dumps():
+    # No 'Label:' markers at all — bare values run through separators.
+    assert vn._is_degenerate("2025; Honda; CR-V; LX; $31,542; 18,852 miles")
+    assert vn._is_degenerate("2025 | Honda | CR-V | LX | $31,542")
+    # 'Label = value' variant of the labeled dump.
+    assert vn._is_degenerate("Year = 2025, Make = Honda, Model = CR-V, Trim = LX")
+    # Prose with an incidental semicolon must not be flagged.
+    assert not vn._is_degenerate(
+        "This 2025 Honda CR-V LX is priced at $31,542; it has 18,852 miles on the odometer."
+    )
+
+
+def test_factory_paint_name_survives_end_to_end(monkeypatch):
+    row = {**ROW, "exterior_color": "Pristine White"}
+    monkeypatch.setattr(
+        vn, "generate",
+        lambda *a, **k: "A 2026 BMW 228i Gran Coupe finished in Pristine White with 11 miles.",
+    )
+    out = vn.narrate_vehicle(row)
+    assert "Pristine White" in out  # grounded factory name accepted, not template-forced
+
+
+def test_paint_name_accepted_when_model_reflows_it(monkeypatch):
+    row = {**ROW, "exterior_color": "Pristine White"}
+    monkeypatch.setattr(
+        vn, "generate",
+        lambda *a, **k: "A 2026 BMW 228i Gran Coupe in Pristine-White with 11 miles.",
+    )
+    assert "Pristine-White" in vn.narrate_vehicle(row)
+
+
+def test_poisoned_trim_claim_never_ships(monkeypatch):
+    row = {**ROW, "trim": "One-Owner Certified"}
+    # Model parrots the poisoned "fact"; guard + cleaning must keep it out even
+    # via the template fallback.
+    monkeypatch.setattr(
+        vn, "generate",
+        lambda *a, **k: "This one-owner certified 2026 BMW 228i has 11 miles.",
+    )
+    out = vn.narrate_vehicle(row)
+    assert "one-owner" not in out.lower()
+    # The cleaned trim keeps its legitimate remainder.
+    assert vn._cleaned_row(row)["trim"] == "Certified"
+
+
+def test_poisoned_color_claim_is_scrubbed_but_hype_paint_kept():
+    row = {**ROW, "exterior_color": "One-Owner White", "interior_color": "Mint Green"}
+    cleaned = vn._cleaned_row(row)
+    assert cleaned["exterior_color"] == "White"
+    assert cleaned["interior_color"] == "Mint Green"
+
+
 def test_narrate_regenerates_on_claim(monkeypatch):
     calls = []
 

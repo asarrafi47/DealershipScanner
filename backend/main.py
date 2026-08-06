@@ -235,32 +235,58 @@ from backend.scanner.job_queue import init_job_queue_schema
 init_job_queue_schema()
 
 
+def _prewarm_grid_delay_s() -> float:
+    """Head start (seconds) given to real requests before the grid prewarm starts."""
+    raw = (os.environ.get("LISTINGS_PREWARM_GRID_DELAY_S") or "3").strip()
+    try:
+        return max(0.0, float(raw))
+    except (TypeError, ValueError):
+        return 3.0
+
+
 def _prewarm_listings_inventory_cache() -> None:
-    """Background-build listings JSON cache so first /listings visit is not cold."""
+    """
+    Background-warm the caches a cold process needs, cheapest-and-most-blocking first.
+
+    Order matters. The EPA dictionary index is what a CAR page needs and costs
+    well under a second; the listings grid costs tens of seconds of solid Python.
+    Building the grid first meant the first car page after a boot competed with
+    that CPU burn for the GIL (measured: 0.35s with the builder idle, 13.9s with
+    it running). So: EPA index first, then a short head start for real traffic,
+    then the grid.
+    """
     import threading
 
     def _run() -> None:
+        try:
+            from backend.enrichment.dictionary_catalog import _epa_paths_by_make_norm
+
+            t0 = time.perf_counter()
+            makes = len(_epa_paths_by_make_norm())
+            _logger.info(
+                "EPA dictionary index prewarmed (%d makes, %.1fs)",
+                makes,
+                time.perf_counter() - t0,
+            )
+        except Exception:
+            _logger.exception("EPA dictionary index prewarm failed")
+
+        delay = _prewarm_grid_delay_s()
+        if delay:
+            time.sleep(delay)
+
         try:
             from backend.db.inventory_db import (
                 _incomplete_car_ids_for_listings,
                 listings_grid_serialized_cars,
             )
 
-            t0 = time.perf_counter()
+            t1 = time.perf_counter()
             _incomplete_car_ids_for_listings()
             n = len(listings_grid_serialized_cars())
             _logger.info(
                 "Listings grid cache prewarmed (%d cars, %.1fs)",
                 n,
-                time.perf_counter() - t0,
-            )
-            from backend.enrichment.dictionary_catalog import _epa_paths_by_make_norm
-
-            t1 = time.perf_counter()
-            makes = len(_epa_paths_by_make_norm())
-            _logger.info(
-                "EPA dictionary index prewarmed (%d makes, %.1fs)",
-                makes,
                 time.perf_counter() - t1,
             )
         except Exception:
@@ -293,6 +319,7 @@ register_dev_console(app)
 # keep working — see backend/routes/_shared.py.
 from backend.routes import admin_dealer_api as _admin_dealer_api_routes  # noqa: E402
 from backend.routes import cars_pages as _cars_pages_routes  # noqa: E402
+from backend.routes import community_api as _community_api_routes  # noqa: E402
 from backend.routes import dealers_recalls as _dealers_recalls_routes  # noqa: E402
 from backend.routes import dealer_reviews as _dealer_reviews_routes  # noqa: E402
 from backend.routes import dealership_page as _dealership_page_routes  # noqa: E402
@@ -305,6 +332,7 @@ _site_misc_routes.register(app)
 _home_dashboard_routes.register(app)
 _listings_api_routes.register(app)
 _cars_pages_routes.register(app)
+_community_api_routes.register(app)
 _dealers_recalls_routes.register(app)
 _dealership_page_routes.register(app)
 _dealer_reviews_routes.register(app)
@@ -341,11 +369,20 @@ from backend.routes.listings_api import (  # noqa: E402
 
 @app.after_request
 def _gzip_large_json(resp):
-    """Shrink large listings JSON over the wire (browser must send Accept-Encoding: gzip)."""
+    """Shrink large listings payloads over the wire (browser must send Accept-Encoding: gzip).
+
+    text/html is included because the server-rendered /listings document is the single
+    biggest response the site sends -- it carries the facet checkboxes and the packed
+    cascade table inline, and at ~823 KB uncompressed it was the critical-path bottleneck
+    for time-to-first-cards. It is highly repetitive markup, so gzip takes roughly an
+    order of magnitude off it.
+    """
     if resp.status_code != 200 or resp.direct_passthrough:
         return resp
     ct = (resp.content_type or "").split(";")[0].strip().lower()
-    if ct != "application/json":
+    if ct not in ("application/json", "text/html"):
+        return resp
+    if resp.headers.get("Content-Encoding"):
         return resp
     if "gzip" not in (request.headers.get("Accept-Encoding") or "").lower():
         return resp
@@ -668,6 +705,20 @@ def _csp_headers(response):
 @app.template_filter("fmt_spec")
 def _jinja_fmt_spec(value):
     return format_display_value(value)
+
+
+@app.template_filter("http_url")
+def _jinja_http_url(value):
+    """Scheme-validate a stored URL before it lands in an href.
+
+    Dealer/listing URLs come from scraped feeds; a poisoned row could carry a
+    javascript:/data: scheme. Autoescape stops attribute breakout but not a
+    hostile scheme, so hrefs must go through this (returns "" for anything
+    that is not http(s))."""
+    from backend.utils.field_clean import normalize_optional_url
+
+    u = normalize_optional_url(value)
+    return u if u and u.lower().startswith(("http://", "https://")) else ""
 
 
 @app.errorhandler(404)

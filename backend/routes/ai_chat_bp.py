@@ -122,6 +122,26 @@ def _summarize_filters(filters: dict) -> str:
     return ", ".join(parts)
 
 
+_GENERIC_FAILURE = (
+    "I can't reach a language model right now, so I can't answer that. "
+    "The site's own data (prices, specs, deal ratings) is unaffected."
+)
+
+
+def _degraded(message: str | None, code: str, **extra):
+    """Answer an LLM outage with the *reason*, in the reply the user actually sees.
+
+    The chat widget only renders ``reply`` on ``ok: true``; an ``ok: false`` body
+    collapses to "the assistant is unavailable right now", which hides which
+    piece is down. So a model outage is a successful request carrying an honest
+    explanation, flagged ``degraded`` for callers that care.
+    """
+    return jsonify({
+        "ok": True, "degraded": True, "error_code": code,
+        "reply": (message or _GENERIC_FAILURE), **extra,
+    })
+
+
 @ai_chat_bp.route("/api/ai/chat", methods=["POST"])
 def api_ai_chat():
     ok, err = require_feature(session, FEATURE_AI_CAR_CHAT)
@@ -148,6 +168,17 @@ def api_ai_chat():
         return jsonify({"ok": False, "error": "message_required"}), 400
     if len(message) > _MAX_MESSAGE:
         return jsonify({"ok": False, "error": "message_too_long"}), 400
+
+    # A request whose subject is the assistant's own prompt is answered without a
+    # model on every branch of this route — the car branch, the search branch, and
+    # the general branch below all sit behind this. ``run_car_page_chat`` refuses
+    # the same messages independently (it is also reachable from /api/car/<id>/chat);
+    # this check keeps the sidebar's general answer, which uses _GENERAL_SYSTEM,
+    # from being the way around it.
+    from backend.intelligence.ai.agent import _is_prompt_probe, _PROMPT_REFUSAL
+
+    if _is_prompt_probe(message):
+        return jsonify({"ok": True, "reply": _PROMPT_REFUSAL, "context": "general"})
 
     car_id = body.get("car_id")
     context_car = None
@@ -176,7 +207,8 @@ def api_ai_chat():
             out = run_car_page_chat(context_car, message, allow_web_research=allow_web)
             reply = (out.get("reply") or "").strip()
             if out.get("error") and not reply:
-                return jsonify({"ok": False, "error": out["error"]}), 502
+                return _degraded(out.get("error_message"), out["error"], context="car",
+                                 car_id=context_car.get("id"))
             return jsonify({"ok": True, "reply": reply, "context": "car",
                             "car_id": context_car.get("id")})
         # No car in view — search intent first (proven local parser), else a general answer.
@@ -222,8 +254,21 @@ def api_ai_chat():
                                "filters": rf, "q": rewrite},
                 })
 
-        reply = complete(message, system=_GENERAL_SYSTEM, temperature=0.4, max_tokens=300).strip()
+        # Same plain-text treatment as the car-page answer: chat bubbles are text
+        # nodes, so a model that reaches for **bold** or `backticks` would show
+        # the punctuation. Only the car path stripped it before.
+        from backend.intelligence.ai.agent import _guard_prompt_disclosure, _plain_chat_reply
+
+        reply = _guard_prompt_disclosure(
+            _plain_chat_reply(
+                complete(message, system=_GENERAL_SYSTEM, temperature=0.4, max_tokens=300)
+            ),
+            _GENERAL_SYSTEM,
+            context="ai_chat_general",
+        )
         return jsonify({"ok": True, "reply": reply, "context": "general"})
     except Exception as e:
-        logger.warning("ai chat failed: %s", str(e)[:200])
-        return jsonify({"ok": False, "error": "assistant_unavailable"}), 502
+        logger.warning("ai chat failed: %s", str(e)[:200], exc_info=True)
+        from backend.intelligence.ai.agent import unavailable_message
+
+        return _degraded(unavailable_message(e), "assistant_unavailable", context="general")

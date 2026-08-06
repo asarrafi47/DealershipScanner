@@ -4,6 +4,7 @@ All six listings cache slots live in THIS module together with every function th
 reads or resets them; the incomplete-snapshot cache lives in ``data_quality_repo``
 and is reset via :func:`clear_incomplete_snapshot_cache`.
 """
+import hashlib
 import json
 import re
 import sqlite3
@@ -11,6 +12,7 @@ import threading
 import time
 from typing import Any
 
+from backend.db.inventory_pg import is_inventory_postgres
 from backend.db.repositories.base_repo import db_conn
 from backend.db.repositories.cars_repo import _parse_car_gallery
 from backend.db.repositories.data_quality_repo import (
@@ -37,6 +39,7 @@ from backend.utils.field_clean import (
     sort_body_style_presets,
     sort_fuel_type_presets,
 )
+from backend.utils.fuel_type_normalize import normalize_fuel_type_for_display
 from backend.utils.interior_color_buckets import (
     infer_paint_color_buckets,
     parse_stored_buckets,
@@ -170,9 +173,36 @@ _facet_options_cache_token: tuple[float, float] | None = None
 _facet_options_cache_value: dict[str, Any] | None = None
 _geo_coords_cache_token: tuple[float, float] | None = None
 _geo_coords_cache_value: dict[str, Any] | None = None
-_grid_cars_cache_token: tuple[float, float] | None = None
+_grid_cars_cache_token: Any = None
 _grid_cars_cache_value: list[dict[str, Any]] | None = None
-_LISTINGS_GRID_CACHE_REV = 5
+_grid_cars_cache_built_at: float = 0.0
+_LISTINGS_GRID_CACHE_REV = 6
+
+# Tables whose contents the serialized grid is derived from. ``cars`` is the row
+# source, ``incomplete_listings`` decides which rows are publicly hidden, and
+# ``market_price_stats`` backs the per-card deal score.
+_GRID_SOURCE_TABLES = ("cars", "incomplete_listings", "market_price_stats")
+
+# Never rebuild more often than this even when inventory is being written
+# continuously (a running scan writes ``cars`` without pause). 60s matches the
+# rate the old time-bucket token allowed, so this is a ceiling on cost, not a
+# new one.
+_GRID_MIN_REBUILD_INTERVAL_S = 60.0
+
+# Rebuild at least this often even when no table changed. Two grid fields are
+# wall-clock dependent rather than row dependent: ``price_drop_days_ago``
+# (day granularity) and ``deal_score``, which reads the deal-score band cache
+# (``deal_score_cache._CACHE_TTL_SEC`` = 300s). Keeping the ceiling at that TTL
+# means no field gets staler than it already could under the old 60s treadmill.
+_GRID_MAX_CACHE_AGE_S = 300.0
+
+# The rebuild is tens of seconds of uninterrupted Python on a cold memo. A
+# CPU-bound thread starves the request threads sharing its GIL: a car page
+# measured 0.35s with the builder idle and 13.9s with it running. Sleeping
+# briefly every _GRID_BUILD_YIELD_ROWS rows hands the GIL back often enough for
+# requests to get served, at a few tenths of a second added to the build.
+_GRID_BUILD_YIELD_ROWS = 100
+_GRID_BUILD_YIELD_S = 0.002
 
 
 def _inventory_listings_cache_token() -> tuple[float, float]:
@@ -180,19 +210,59 @@ def _inventory_listings_cache_token() -> tuple[float, float]:
     return _listings_cache_token()
 
 
+def _pg_grid_write_fingerprint() -> tuple | None:
+    """
+    Write counters for :data:`_GRID_SOURCE_TABLES`, or ``None`` when unavailable.
+
+    ``pg_stat_user_tables`` totals move on every committed insert/update/delete,
+    so this changes exactly when the data behind the grid changes -- unlike the
+    60s time bucket, which changed every minute regardless. Returning ``None``
+    (stats disabled, table missing, query failed) makes the caller fall back to
+    the time bucket, so the worst case is the behaviour we already had.
+    """
+    if not is_inventory_postgres():
+        return None
+    names = ", ".join(f"'{t}'" for t in _GRID_SOURCE_TABLES)
+    try:
+        with db_conn() as conn:
+            rows = conn.execute(
+                "SELECT relname, "
+                "COALESCE(n_tup_ins,0) + COALESCE(n_tup_upd,0) + COALESCE(n_tup_del,0) "
+                f"FROM pg_stat_user_tables WHERE relname IN ({names})"
+            ).fetchall()
+    except Exception:
+        return None
+    if not rows:
+        return None
+    try:
+        return tuple(sorted((str(r[0]), int(r[1] or 0)) for r in rows))
+    except (TypeError, ValueError, IndexError):
+        return None
+
+
+def _grid_cache_token() -> Any:
+    """Cache key for the serialized grid: data fingerprint, else the legacy token."""
+    fp = _pg_grid_write_fingerprint()
+    if fp is not None:
+        return fp
+    return _listings_cache_token()
+
+
 def clear_inventory_listings_cache() -> None:
     """Drop facet/grid caches (tests or admin tools after bulk inventory writes)."""
     global _facet_options_cache_token, _facet_options_cache_value
     global _geo_coords_cache_token, _geo_coords_cache_value
-    global _grid_cars_cache_token, _grid_cars_cache_value
+    global _grid_cars_cache_token, _grid_cars_cache_value, _grid_cars_cache_built_at
     _facet_options_cache_token = None
     _facet_options_cache_value = None
     _geo_coords_cache_token = None
     _geo_coords_cache_value = None
     _grid_cars_cache_token = None
     _grid_cars_cache_value = None
+    _grid_cars_cache_built_at = 0.0
     global _featured_cars_cache
     _featured_cars_cache = None
+    _clear_grid_serialize_memo()
     clear_incomplete_snapshot_cache()
 
 
@@ -212,26 +282,73 @@ def listings_grid_serialized_cars() -> list[dict[str, Any]]:
     Per-car JSON for the listings grid (``options.all_cars`` and ``GET /api/listings/cars``).
     Honors :func:`listings_include_incomplete_cars` and :func:`serialize_car_for_listings_grid`.
 
-    Stale-while-revalidate: on Postgres the cache token is a 60s time bucket, so
-    a synchronous rebuild (~10s on a large fleet) would stall one request every
-    minute. When a stale copy exists it is served immediately and the rebuild
-    runs on a daemon thread; only the true cold start builds inline.
-    """
-    global _grid_cars_cache_token, _grid_cars_cache_value
-    token = _listings_cache_token()
-    if _grid_cars_cache_value is not None and _grid_cars_cache_token == token:
-        return _grid_cars_cache_value
-    if _grid_cars_cache_value is not None:
-        _spawn_grid_cars_rebuild(token)
-        return _grid_cars_cache_value
+    Rebuild policy (the cache token is :func:`_grid_cache_token`, a fingerprint of
+    the writes behind the grid -- not a clock):
 
-    out = _build_grid_cars_uncached()
-    _grid_cars_cache_token = token
-    _grid_cars_cache_value = out
-    return out
+    * nothing written and the copy is younger than :data:`_GRID_MAX_CACHE_AGE_S`
+      -> serve it, do not rebuild. This is the steady state, and it is what
+      stops the whole fleet being re-serialized once a minute forever.
+    * something written -> rebuild, but never more often than
+      :data:`_GRID_MIN_REBUILD_INTERVAL_S` (a running scan writes ``cars``
+      continuously and would otherwise rebuild back to back).
+    * copy older than :data:`_GRID_MAX_CACHE_AGE_S` -> rebuild regardless, for
+      the two wall-clock-dependent fields noted on that constant.
+
+    Stale-while-revalidate is unchanged: a rebuild runs on a daemon thread and
+    the existing copy is served meanwhile; only the true cold start builds inline.
+    """
+    global _grid_cars_cache_token, _grid_cars_cache_value, _grid_cars_cache_built_at
+    if _grid_cars_cache_value is None:
+        out = _build_grid_cars_uncached()
+        _grid_cars_cache_token = _grid_cache_token()
+        _grid_cars_cache_value = out
+        _grid_cars_cache_built_at = time.monotonic()
+        return out
+
+    age = time.monotonic() - _grid_cars_cache_built_at
+    if age >= _GRID_MAX_CACHE_AGE_S:
+        _spawn_grid_cars_rebuild(_grid_cache_token())
+        return _grid_cars_cache_value
+    if age < _GRID_MIN_REBUILD_INTERVAL_S:
+        # Too soon to rebuild whatever the data says; skip the fingerprint query.
+        return _grid_cars_cache_value
+    token = _grid_cache_token()
+    if token == _grid_cars_cache_token:
+        return _grid_cars_cache_value
+    _spawn_grid_cars_rebuild(token)
+    return _grid_cars_cache_value
+
+
+# Serialized-row memo: blake2b digest of the raw DB row (plus its public-incomplete
+# flag) -> the serialized dict built from it. A rebuild therefore only pays the
+# ~6s of Python serialization for rows whose stored values actually changed;
+# untouched rows are reused by reference.
+#
+# Reuse by reference means a caller that MUTATES a dict from the returned list
+# would corrupt later rebuilds. That was already true of the cached list itself
+# (``listings_grid_serialized_cars`` hands out the live cache object), so the
+# contract is unchanged: treat grid dicts as read-only.
+_grid_serialize_memo: dict[tuple[bytes, bool], dict[str, Any]] = {}
+_grid_serialize_memo_day: int | None = None
+
+
+def _clear_grid_serialize_memo() -> None:
+    global _grid_serialize_memo, _grid_serialize_memo_day
+    _grid_serialize_memo = {}
+    _grid_serialize_memo_day = None
+
+
+def _row_memo_digest(row: dict[str, Any]) -> bytes | None:
+    """Content digest of a raw ``cars`` row, or ``None`` if it cannot be hashed."""
+    try:
+        blob = repr(tuple(row.values())).encode("utf-8", "surrogatepass")
+    except Exception:
+        return None
+    return hashlib.blake2b(blob, digest_size=16).digest()
 
 
 def _build_grid_cars_uncached() -> list[dict[str, Any]]:
+    global _grid_serialize_memo, _grid_serialize_memo_day
     active = "(COALESCE(listing_active, 1) = 1)"
     inc = listings_include_incomplete_cars()
     cols = ", ".join(LISTINGS_GRID_CAR_COLUMNS)
@@ -241,14 +358,47 @@ def _build_grid_cars_uncached() -> list[dict[str, Any]]:
             f"SELECT {cols} FROM cars WHERE {active} ORDER BY price ASC"
         )
         all_cars_raw = [dict(r) for r in cur.fetchall()]
+    # Digest the rows BEFORE _parse_car_gallery rewrites ``gallery`` in place, so
+    # the key describes exactly what came out of the database.
+    digests = [_row_memo_digest(c) for c in all_cars_raw]
+
+    # The incomplete-index snapshot decides which rows are hidden and is baked
+    # into the serialized output, so a rebuild must not reuse a snapshot cached
+    # under a token this module no longer follows.
+    clear_incomplete_snapshot_cache()
     snapshot = _incomplete_index_snapshot_for_listings()
-    for c in all_cars_raw:
-        _parse_car_gallery(c)
+    per_row = bool(getattr(snapshot, "per_row_fallback", False))
+    if per_row:
+        # Row-by-row completeness inspects the parsed gallery, so it has to be
+        # parsed before the check rather than only on a memo miss.
+        for c in all_cars_raw:
+            _parse_car_gallery(c)
+
+    day = int(time.time() // 86400)
+    prev_memo = _grid_serialize_memo if _grid_serialize_memo_day == day else {}
+    fresh_memo: dict[tuple[bytes, bool], dict[str, Any]] = {}
+
     out: list[dict[str, Any]] = []
-    for c in all_cars_raw:
-        if not inc and _car_is_publicly_incomplete(c, snapshot):
+    for row_i, (c, digest) in enumerate(zip(all_cars_raw, digests)):
+        if row_i % _GRID_BUILD_YIELD_ROWS == 0:
+            time.sleep(_GRID_BUILD_YIELD_S)
+        pub_incomplete = _car_is_publicly_incomplete(c, snapshot)
+        if not inc and pub_incomplete:
             continue
-        out.append(serialize_car_for_listings_grid(c, incomplete_snapshot=snapshot))
+        key = (digest, pub_incomplete) if digest is not None else None
+        ser = prev_memo.get(key) if key is not None else None
+        if ser is None:
+            if not per_row:
+                _parse_car_gallery(c)
+            ser = serialize_car_for_listings_grid(c, incomplete_snapshot=snapshot)
+        if key is not None:
+            fresh_memo[key] = ser
+        out.append(ser)
+
+    # Replace (not update) the memo so rows that left the fleet are dropped.
+    _grid_serialize_memo = fresh_memo
+    _grid_serialize_memo_day = day
+
     from backend.utils.listings_sort import listing_sort_key_by_price
 
     out.sort(key=listing_sort_key_by_price)
@@ -259,7 +409,7 @@ _grid_cars_rebuild_thread: threading.Thread | None = None
 _grid_cars_rebuild_lock = threading.Lock()
 
 
-def _spawn_grid_cars_rebuild(token: tuple[float, float]) -> None:
+def _spawn_grid_cars_rebuild(token: Any) -> None:
     global _grid_cars_rebuild_thread
     # check-then-act must be atomic: gunicorn gthreads all see the stale cache
     # at a token rollover and would each spawn a ~10s full-fleet rebuild.
@@ -273,17 +423,21 @@ def _spawn_grid_cars_rebuild(token: tuple[float, float]) -> None:
         _grid_cars_rebuild_lock.release()
 
 
-def _spawn_grid_cars_rebuild_locked(token: tuple[float, float]) -> None:
+def _spawn_grid_cars_rebuild_locked(token: Any) -> None:
     global _grid_cars_rebuild_thread
 
     def _run() -> None:
-        global _grid_cars_cache_token, _grid_cars_cache_value
+        global _grid_cars_cache_token, _grid_cars_cache_value, _grid_cars_cache_built_at
         try:
             out = _build_grid_cars_uncached()
         except Exception:
+            # Bump the build clock anyway: without it a failing rebuild is retried
+            # on every single request instead of at the throttled interval.
+            _grid_cars_cache_built_at = time.monotonic()
             return
         _grid_cars_cache_token = token
         _grid_cars_cache_value = out
+        _grid_cars_cache_built_at = time.monotonic()
 
     t = threading.Thread(target=_run, name="grid-cars-refresh", daemon=True)
     _grid_cars_rebuild_thread = t
@@ -364,13 +518,16 @@ def listings_grid_cache_etag() -> str:
         token = _grid_cars_cache_token
         n = len(_grid_cars_cache_value)
     else:
-        token = _listings_cache_token()
+        token = _grid_cache_token()
         with db_conn() as conn:
             row = conn.execute(
                 "SELECT COUNT(*) FROM cars WHERE (COALESCE(listing_active, 1) = 1)"
             ).fetchone()
             n = int(row[0] if row else 0)
-    return f'W/"{_LISTINGS_GRID_CACHE_REV}-{token}-{n}"'
+    # The token is a structured value (write-counter fingerprint or mtime pair);
+    # digest it so the header stays a well-formed quoted-string whatever it holds.
+    tag = hashlib.blake2b(repr(token).encode("utf-8", "surrogatepass"), digest_size=8).hexdigest()
+    return f'W/"{_LISTINGS_GRID_CACHE_REV}-{tag}-{n}"'
 
 
 def listings_geo_coords_maps() -> dict[str, Any]:
@@ -414,6 +571,36 @@ def listings_geo_coords_maps() -> dict[str, Any]:
     return out
 
 
+_facet_options_rebuild_thread: threading.Thread | None = None
+_facet_options_rebuild_lock = threading.Lock()
+
+
+def _spawn_facet_options_rebuild(token: tuple[float, float]) -> None:
+    global _facet_options_rebuild_thread
+    # Same check-then-act race as the grid cache: at a token rollover every
+    # in-flight request sees the stale copy and would spawn its own rebuild.
+    if not _facet_options_rebuild_lock.acquire(blocking=False):
+        return
+    try:
+        if _facet_options_rebuild_thread is not None and _facet_options_rebuild_thread.is_alive():
+            return
+
+        def _run() -> None:
+            global _facet_options_cache_token, _facet_options_cache_value
+            try:
+                facets = _build_filter_options_uncached()
+            except Exception:
+                return
+            _facet_options_cache_token = token
+            _facet_options_cache_value = facets
+
+        t = threading.Thread(target=_run, name="facet-options-refresh", daemon=True)
+        _facet_options_rebuild_thread = t
+        t.start()
+    finally:
+        _facet_options_rebuild_lock.release()
+
+
 def get_filter_options(*, include_all_cars: bool = False) -> dict[str, Any]:
     """
     Returns all filter option data with full relationship maps so the
@@ -421,15 +608,28 @@ def get_filter_options(*, include_all_cars: bool = False) -> dict[str, Any]:
 
     ``include_all_cars`` embeds the full grid payload (~12MB); listings HTML loads
     cars via ``GET /api/listings/cars`` instead (``include_all_cars=False``, default).
-    Facet metadata is cached until inventory.db changes.
+
+    Stale-while-revalidate, exactly like :func:`listings_grid_serialized_cars`.
+    Every /listings pageview *and* every lazy-facet fetch lands here, and on
+    Postgres the cache token is a 60s time bucket, so rebuilding inline (~0.9s of
+    DISTINCT scans over 71k active rows, measured 2026-07-29) stalled one request
+    a minute. Only the true cold start builds inline now.
     """
     global _facet_options_cache_token, _facet_options_cache_value
     token = _listings_cache_token()
-    if _facet_options_cache_value is not None and _facet_options_cache_token == token:
-        out = dict(_facet_options_cache_value)
-        out["all_cars"] = listings_grid_serialized_cars() if include_all_cars else []
-        return out
+    if _facet_options_cache_value is None:
+        facets = _build_filter_options_uncached()
+        _facet_options_cache_token = token
+        _facet_options_cache_value = facets
+    elif _facet_options_cache_token != token:
+        _spawn_facet_options_rebuild(token)
 
+    out = dict(_facet_options_cache_value or {})
+    out["all_cars"] = listings_grid_serialized_cars() if include_all_cars else []
+    return out
+
+
+def _build_filter_options_uncached() -> dict[str, Any]:
     active = "(COALESCE(listing_active, 1) = 1)"
 
     with db_conn() as conn:
@@ -521,8 +721,16 @@ def get_filter_options(*, include_all_cars: bool = False) -> dict[str, Any]:
         # Full relationship rows — every unique combo of all filterable dims.
         # The frontend embeds these as data-* on each checkbox so it can filter
         # any dropdown based on any combination of other active filters.
+        # ``year`` / ``engine_description`` / ``engine_l`` are selected but NOT
+        # emitted: the mild-hybrid fuel correction below is a per-row rule that
+        # needs them, and they are the same engine evidence the card serializer
+        # sees (a Ram 1500 whose engine_description is feed junk still matches on
+        # engine_l — one such row today). They roughly double the DISTINCT row
+        # count (12.8k → 26.6k, +0.02s on 71k active rows) and are deduped back
+        # out afterwards, so the payload the frontend embeds is unchanged.
         cursor.execute(f"""
-            SELECT DISTINCT make, model, trim, fuel_type, cylinders, drivetrain, body_style, forced_induction
+            SELECT DISTINCT make, model, trim, fuel_type, cylinders, drivetrain, body_style,
+                   forced_induction, year, engine_description, engine_l
             FROM cars
             WHERE {active}
               AND make IS NOT NULL AND TRIM(make) != ''
@@ -530,6 +738,7 @@ def get_filter_options(*, include_all_cars: bool = False) -> dict[str, Any]:
         """)
         raw_car_rows = cursor.fetchall()
         car_rows: list = []
+        _seen_car_rows: set[tuple] = set()
         for row in raw_car_rows:
             make, model, trim, fuel_type, cyl, drive, body_st, induction = (
                 row[0],
@@ -541,6 +750,7 @@ def get_filter_options(*, include_all_cars: bool = False) -> dict[str, Any]:
                 row[6],
                 row[7],
             )
+            year, engine_description, engine_l = row[8], row[9], row[10]
             if is_effectively_empty(make) or is_effectively_empty(model):
                 continue
             if not _facet_make_valid(make):
@@ -551,6 +761,27 @@ def get_filter_options(*, include_all_cars: bool = False) -> dict[str, Any]:
                 fuel_type = None
             else:
                 fuel_type = coerce_fuel_type_stored(fuel_type)
+                # Same rule the card serializer applies, so the cascade never
+                # advertises a fuel the grid cannot show: a Ram 1500 eTorque is
+                # fed to us as "Hybrid" but renders (and must filter) as gas.
+                # The client card filter matches the SERIALIZED value, so an
+                # unnormalized facet here yields an empty grid when picked.
+                corrected = normalize_fuel_type_for_display(
+                    {
+                        "make": make,
+                        "model": model,
+                        "trim": trim,
+                        "year": year,
+                        "engine_description": engine_description,
+                        "engine_l": engine_l,
+                    },
+                    fuel_type=fuel_type,
+                    # No epa_master_id in this DISTINCT projection, so skip the
+                    # catalog read rather than firing one per facet row.
+                    catalog_fuel_type=None,
+                )
+                if corrected:
+                    fuel_type = corrected
             if is_effectively_empty(drive):
                 drive = None
             if is_effectively_empty(body_st):
@@ -559,7 +790,11 @@ def get_filter_options(*, include_all_cars: bool = False) -> dict[str, Any]:
                 body_st = coerce_body_style_stored(body_st)
             if is_effectively_empty(induction):
                 induction = None
-            car_rows.append((make, model, trim, fuel_type, cyl, drive, body_st, induction))
+            entry = (make, model, trim, fuel_type, cyl, drive, body_st, induction)
+            if entry in _seen_car_rows:
+                continue
+            _seen_car_rows.add(entry)
+            car_rows.append(entry)
 
     # Derive distinct makes/models/trims with normalized keys (one UI option per logical value).
     make_variants: dict[str, list[str]] = {}
@@ -650,8 +885,4 @@ def get_filter_options(*, include_all_cars: bool = False) -> dict[str, Any]:
         "zip_coords":      {},
         "dealer_coords":   {},
     }
-    _facet_options_cache_token = token
-    _facet_options_cache_value = dict(facets)
-    out = dict(facets)
-    out["all_cars"] = listings_grid_serialized_cars() if include_all_cars else []
-    return out
+    return facets

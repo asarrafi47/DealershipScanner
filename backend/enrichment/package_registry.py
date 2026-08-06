@@ -21,8 +21,24 @@ from typing import Any, Iterable
 from backend.enrichment.knowledge_engine import _conn
 
 # Source authority + baseline confidence. Higher authority wins price conflicts.
-_SOURCE_AUTHORITY = {"oem_sticker": 3, "dealer_listing": 2, "estimate": 1}
-_SOURCE_CONFIDENCE = {"oem_sticker": 0.95, "dealer_listing": 0.6, "estimate": 0.3}
+# Authority ranks how much a source may overrule another when they disagree.
+#
+# 'sticker_photo' is an option price read off a PHOTOGRAPH of a Monroney found in a
+# dealer's gallery (see backend/scripts/feed_package_registry_from_vision.py). It sits at
+# 2, level with dealer_listing and deliberately below the parsed PDF, for one specific
+# reason: a sticker shot at an angle shifts the price column against the label column, so
+# an option can inherit its neighbour's price. That is documented three times in this
+# corpus (a $1,450 "First Aid Kit", centre caps priced at a destination charge, and a
+# $1,550 "Decoding additional functions"). A parsed PDF cannot fail that way. Guards catch
+# most of it; "mostly caught" is not "structurally impossible", and this ladder is where
+# that difference belongs. Raise it if the photo-sourced values prove out against the PDFs.
+_SOURCE_AUTHORITY = {"oem_sticker": 3, "dealer_listing": 2, "sticker_photo": 2, "estimate": 1}
+# Keep every source present in BOTH maps. Registering one and not the other raises a
+# bare KeyError deep inside record_package_observations, where a caller reads it as
+# "unknown source" rather than "half-wired source".
+_SOURCE_CONFIDENCE = {
+    "oem_sticker": 0.95, "dealer_listing": 0.6, "sticker_photo": 0.75, "estimate": 0.3,
+}
 
 # Trailing nouns that are noise for matching ("Premium Package" == "Premium").
 _NAME_SUFFIX_RE = re.compile(
@@ -269,15 +285,55 @@ def lookup_package_values(
     }
 
 
+# ---------------------------------------------------------------------------
+# Where the numbers in this registry come from, measured 2026-08-02
+#
+# Every price in it is OBSERVED, not inferred. Of 25,773 ``package_values`` rows,
+# 2,376 carry an ``msrp`` and all 2,376 have ``msrp_source='oem_sticker'`` /
+# ``msrp_authority=3``; no row has ever adopted a dealer-listing or ``estimate``
+# price, because dealer-listing observations carry no price (36,384 of the
+# 47,830 observations are ``oem_sticker``, 11,446 ``dealer_listing``). Nothing
+# here is averaged, interpolated or modelled.
+#
+# WHAT WAS STILL BEING PRESENTED AS OBSERVED WHEN IT WAS NOT. :func:`price_for_package`
+# scored an exact (year, trim) match highest and then took the best remaining row
+# for the make+model — any model year, any trim — and returned it with
+# ``from_sticker=True`` and no indication that it had widened. 331 of the 1,547
+# priced (make, model, name) groups span more than one model year and 272 span
+# more than one trim; 163 hold more than one distinct price for the same name,
+# and the spread inside a group reaches $114,500-$198,300. So the widened answer
+# was frequently a real sticker price for a different car, shown as this car's
+# option price with a "sticker" badge on it.
+#
+# The observation is still returned — it is real and useful — but it now says
+# which (year, trim) it was seen on and whether that is this car's, and the
+# caller decides. See ``generated_spec_sheet._catalog_equipment``, which prices
+# only exact matches and keeps the rest as unpriced named packages.
+#
+# NOT FIXED HERE, and it is a writer-side bug, not a lookup one: 266 priced rows
+# hold a base-vehicle MSRP parsed off a window sticker as though it were an
+# option — ``name_display='Base'`` at $198,300, ``'i8Roadster'`` at $163,300.
+# They are unreachable from the build sheet, whose only input is the package
+# names a listing states, but they are wrong in the store. Fixing that means
+# changing what ``backend.enrichment.window_sticker_service`` feeds
+# :func:`record_package_observations`, which is not this file.
+# ---------------------------------------------------------------------------
+
+
 @lru_cache(maxsize=8192)
 def _price_cached(
     make: str, model: str, year: int | None, trim: str, name_norm: str
 ) -> tuple:
-    """Best observed price for a named package, widening from the exact config.
+    """Best observed price for a named package, and the config it was seen on.
 
-    Prefers a same-year/same-trim sticker price, then any observation of the
-    same name for this make+model. Returns (price, source, from_sticker) or
-    (None, None, False) when we have never seen a price for it.
+    Returns ``(price, source, from_sticker, observed_year, observed_trim, exact)``
+    or ``(None, None, False, None, None, False)`` when we have never seen a price
+    for that name on this make+model.
+
+    ``exact`` is True only when the observation's model year and trim are this
+    car's. The query still widens — a price from another year is worth knowing —
+    but the caller is told, instead of being handed a number that looks like a
+    quote for the car in front of it.
     """
     conn = None
     try:
@@ -285,7 +341,7 @@ def _price_cached(
         cur = conn.cursor()
         cur.execute(
             """
-            SELECT msrp, msrp_source, sticker_count,
+            SELECT msrp, msrp_source, sticker_count, year, trim,
                    (CASE WHEN year IS NOT DISTINCT FROM ? THEN 2 ELSE 0 END
                     + CASE WHEN lower(trim)=lower(?) THEN 1 ELSE 0 END) AS spec
             FROM package_values
@@ -299,11 +355,11 @@ def _price_cached(
         )
         row = cur.fetchone()
         if not row:
-            return (None, None, False)
-        msrp, source, sticker_count, _spec = row
-        return (msrp, source, bool(sticker_count))
+            return (None, None, False, None, None, False)
+        msrp, source, sticker_count, obs_year, obs_trim, spec = row
+        return (msrp, source, bool(sticker_count), obs_year, obs_trim, spec == 3)
     except Exception:
-        return (None, None, False)
+        return (None, None, False, None, None, False)
     finally:
         if conn is not None:
             try:
@@ -317,22 +373,46 @@ def price_for_package(
 ) -> dict[str, Any]:
     """Look up the observed price of a package/option named on a listing.
 
-    Returns ``{"price", "source", "from_sticker"}`` — price is ``None`` when we
-    have no observed price for that name yet.
+    Returns ``{"price", "source", "from_sticker", "observed_year",
+    "observed_trim", "exact_config"}``. ``price`` is ``None`` when we have no
+    observed price for that name on this make+model.
+
+    ``exact_config`` False means the price is real but was observed on a
+    DIFFERENT year or trim of this nameplate. Callers must not print such a
+    price as this car's without saying whose it is — see the block comment above
+    for how far the widening reaches and how far apart the prices inside one
+    group get.
     """
     make_s = _clean(make)
     model_s = _clean(model)
     name_norm = normalize_name(name)
+    miss = {
+        "price": None,
+        "source": None,
+        "from_sticker": False,
+        "observed_year": None,
+        "observed_trim": None,
+        "exact_config": False,
+    }
     if not (make_s and model_s and name_norm):
-        return {"price": None, "source": None, "from_sticker": False}
+        return miss
     try:
         y = int(year) if year not in (None, "") else None
     except (TypeError, ValueError):
         y = None
-    price, source, from_sticker = _price_cached(
+    price, source, from_sticker, obs_year, obs_trim, exact = _price_cached(
         make_s, model_s, y, _clean(trim) or "", name_norm
     )
-    return {"price": price, "source": source, "from_sticker": from_sticker}
+    if price is None:
+        return miss
+    return {
+        "price": price,
+        "source": source,
+        "from_sticker": from_sticker,
+        "observed_year": obs_year,
+        "observed_trim": _clean(obs_trim),
+        "exact_config": exact,
+    }
 
 
 def clear_lookup_cache() -> None:

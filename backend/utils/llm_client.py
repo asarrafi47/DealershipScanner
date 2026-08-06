@@ -8,12 +8,15 @@ structured data. This module routes a single ``complete()`` call to whichever
 provider is active, so callers (narrator, Q&A, chat) don't branch on environment.
 
 Provider selection (``LLM_PROVIDER``):
-    auto   (default) -> "claude" when ANTHROPIC_API_KEY is set, else "local"
-    claude           -> always Claude Messages API
+    auto   (default) -> local Ollama when it is *reachable*, else Claude when a
+                        real ANTHROPIC_API_KEY is configured
+    claude           -> Claude Messages API first (local as a safety net)
     local            -> always local Ollama (load-adaptive tier via local_llm)
 
-So prod (key present) gets Haiku; a dev box (no key) gets the local hybrid, with
-no code change. Force either explicitly with LLM_PROVIDER.
+Local-first is deliberate. A dev box that has a model server running should never
+pay for tokens, and — the bug this ordering fixes — a *dead* remote key must
+never be why a user sees "assistant unavailable": on Railway there is no local
+server, so the chain collapses to Claude and prod behaviour is unchanged.
 
 Config:
     LLM_PROVIDER            auto | claude | local
@@ -25,22 +28,78 @@ from __future__ import annotations
 
 import logging
 import os
+import time
 from typing import Any
 
 logger = logging.getLogger("llm_client")
 
 DEFAULT_CLAUDE_MODEL = "claude-haiku-4-5-20251001"
 
+# Values people leave lying around in a shell profile / .env.example. A literal
+# "your-api-key-here" exported by a dotfile made active_provider() answer
+# "claude" and every assistant call then died on a 401 — an unusable key is the
+# same as no key.
+_PLACEHOLDER_KEY_MARKERS = (
+    "your-api-key", "your_api_key", "yourkey", "placeholder", "changeme",
+    "xxxx", "...", "…", "<", "sk-ant-api03-xxx",
+)
+
+
+def anthropic_key() -> str:
+    """The configured Anthropic key, or "" when it is absent or a placeholder."""
+    raw = (os.environ.get("ANTHROPIC_API_KEY") or "").strip()
+    if not raw or len(raw) < 6:
+        return ""
+    low = raw.lower()
+    if any(marker in low for marker in _PLACEHOLDER_KEY_MARKERS):
+        logger.debug("ignoring placeholder ANTHROPIC_API_KEY")
+        return ""
+    return raw
+
+
+_LOCAL_PROBE_TTL_S = 30.0
+_local_probe: tuple[float, bool] = (0.0, False)
+
+
+def local_available(force: bool = False) -> bool:
+    """Is a local model server up? Cached briefly — this sits on a request path."""
+    global _local_probe
+    ts, ok = _local_probe
+    if not force and (time.monotonic() - ts) < _LOCAL_PROBE_TTL_S:
+        return ok
+    from backend.utils.local_llm import server_reachable
+
+    ok = server_reachable()
+    _local_probe = (time.monotonic(), ok)
+    return ok
+
+
+def provider_chain() -> tuple[str, ...]:
+    """Providers to try, in order. Routing decision — see active_provider()."""
+    choice = (os.environ.get("LLM_PROVIDER") or "auto").strip().lower()
+    if choice in ("local", "ollama"):
+        return ("local",)
+    if choice in ("claude", "anthropic"):
+        # Explicitly pinned to Claude, but still don't fail closed if a local
+        # model is sitting right there.
+        return ("claude", "local") if local_available() else ("claude",)
+    if local_available():
+        return ("local", "claude") if anthropic_key() else ("local",)
+    return ("claude",) if anthropic_key() else ("local",)
+
 
 def active_provider() -> str:
-    """Resolve the effective provider name: 'claude' or 'local'."""
+    """The *configured* provider: 'claude' when a usable key is set, else 'local'.
+
+    Reflects configuration only. Actual routing uses provider_chain(), which also
+    accounts for whether the local server is answering right now.
+    """
     choice = (os.environ.get("LLM_PROVIDER") or "auto").strip().lower()
     if choice in ("claude", "anthropic"):
         return "claude"
     if choice in ("local", "ollama"):
         return "local"
-    # auto
-    return "claude" if (os.environ.get("ANTHROPIC_API_KEY") or "").strip() else "local"
+    return "claude" if anthropic_key() else "local"
 
 
 def _claude_model() -> str:
@@ -59,7 +118,7 @@ def _complete_claude(
 ) -> str:
     import anthropic
 
-    client = anthropic.Anthropic(api_key=os.environ.get("ANTHROPIC_API_KEY", ""))
+    client = anthropic.Anthropic(api_key=anthropic_key())
     kwargs: dict[str, Any] = {
         "model": _claude_model(),
         "max_tokens": max_tokens or _claude_max_tokens(),
@@ -97,30 +156,30 @@ def complete(
     """
     One-shot completion routed to the active provider.
 
-    ``provider`` overrides the env-resolved choice (useful for tests/benchmarks).
+    ``provider`` pins one provider (no fallback) — useful for tests/benchmarks.
+    Otherwise every provider in provider_chain() is tried in order, so one dead
+    provider (expired key, model server down) can't take the feature offline.
     ``json_schema`` constrains output to JSON on the local provider; on Claude it
     is appended to the prompt as an instruction (the caller should still parse).
     """
-    prov = (provider or active_provider()).lower()
-    if prov == "claude":
-        p = prompt
-        if json_schema is not None:
-            p = f"{prompt}\n\nRespond with JSON only, matching this schema:\n{json_schema}"
+    chain = (provider.lower(),) if provider else provider_chain()
+    first_error: Exception | None = None
+    for prov in chain:
         try:
-            return _complete_claude(p, system=system, temperature=temperature, max_tokens=max_tokens)
-        except Exception:
-            # A stale/placeholder ANTHROPIC_API_KEY on a dev box (or a Claude
-            # outage) shouldn't kill AI features when a local model is up.
-            from backend.utils.local_llm import server_reachable
-
-            if provider is None and server_reachable():
-                logger.warning(
-                    "claude completion failed; falling back to local provider",
-                    exc_info=True,
+            if prov == "claude":
+                p = prompt
+                if json_schema is not None:
+                    p = f"{prompt}\n\nRespond with JSON only, matching this schema:\n{json_schema}"
+                return _complete_claude(
+                    p, system=system, temperature=temperature, max_tokens=max_tokens
                 )
-            else:
-                raise
-    return _complete_local(
-        prompt, system=system, temperature=temperature,
-        max_tokens=max_tokens, json_schema=json_schema,
-    )
+            return _complete_local(
+                prompt, system=system, temperature=temperature,
+                max_tokens=max_tokens, json_schema=json_schema,
+            )
+        except Exception as exc:
+            first_error = first_error or exc
+            logger.warning("%s completion failed (%s)", prov, str(exc)[:200], exc_info=True)
+    # Re-raise the *first* failure: it came from the preferred provider, so it is
+    # the one whose fix message the user needs ("start ollama", not "bad key").
+    raise first_error if first_error else RuntimeError("no_llm_provider")

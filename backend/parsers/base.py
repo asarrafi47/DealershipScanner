@@ -102,10 +102,46 @@ def _get_nested(obj: dict, *paths) -> any:
     return None
 
 
+# Several of this helper's callers (dealer_eprocess, dealer.com-family feeds)
+# sit on platforms that mask a hidden used-car price with a tiny per-account
+# placeholder instead of the real one — the SAME small number repeated across
+# dozens of unrelated makes/models within one account (confirmed 2026-08-05:
+# e.g. Metro Honda / Easy Honda / Honda of El Cajon Superstore, all
+# dealer_eprocess, all masking at 80-85 regardless of vehicle). A masked
+# placeholder is indistinguishable from a real price by shape alone, so a
+# candidate at or below this floor is skipped rather than accepted — same
+# fix, same floor, as ``backend/parsers/carscommerce.py``'s
+# ``_MASKED_PRICE_FLOOR`` on the sibling CarsCommerce search API.
+_MASKED_PRICE_FLOOR = 1000
+
+
+def _get_nested_above_floor(obj: dict, floor: float, *paths) -> Any:
+    """Like ``_get_nested`` but skips a candidate whose numeric value is <= *floor*."""
+    for path in paths:
+        cur = obj
+        for key in path:
+            if not isinstance(cur, dict):
+                cur = None
+                break
+            cur = cur.get(key)
+        if cur is None or cur == "":
+            continue
+        if isinstance(cur, str) and "contact" in cur.lower():
+            continue
+        if norm_float(cur) > floor:
+            return cur
+    return None
+
+
 def extract_price(obj: dict) -> float:
-    """Price: prefer nested pricing.internetPrice, then msrp, salePrice, price. Strips $ and commas."""
-    v = _get_nested(
+    """Price: prefer nested pricing.internetPrice, then msrp, salePrice, price. Strips $ and commas.
+
+    Candidates at or below ``_MASKED_PRICE_FLOOR`` are treated as absent (masked
+    placeholder, not a real price) — see the module comment above.
+    """
+    v = _get_nested_above_floor(
         obj,
+        _MASKED_PRICE_FLOOR,
         ("pricing", "internetPrice"),
         ("pricing", "msrp"),
         ("pricing", "salePrice"),
@@ -127,10 +163,10 @@ def extract_price(obj: dict) -> float:
         ("retailPrice",),
     )
     price = norm_float(v)
-    raw = v
-    if price == 0 or (isinstance(raw, str) and "contact" in (raw or "").lower()):
-        fallback = _get_nested(
+    if price == 0:
+        fallback = _get_nested_above_floor(
             obj,
+            _MASKED_PRICE_FLOOR,
             ("pricing", "msrp"),
             ("pricing", "internetPrice"),
             ("pricing", "salePrice"),

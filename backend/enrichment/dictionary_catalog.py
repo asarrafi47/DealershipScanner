@@ -436,8 +436,15 @@ def _legacy_glob_find(
     *,
     kind: str,
     epa_model_search_name_fn,
+    accept=None,
 ) -> Path | None:
-    """Fallback glob search (legacy flat + sharded roots)."""
+    """Fallback glob search (legacy flat + sharded roots).
+
+    ``accept`` is an optional ``(Path) -> bool`` filter applied to every
+    candidate before one is chosen, so a caller that requires the file to be
+    about a particular vehicle gets the best candidate that IS, or nothing —
+    rather than the best-ranked candidate whatever it turns out to be.
+    """
     model_label = epa_model_search_name_fn(make, model) if kind == "epa" else model
     make_t = _filename_token(canonical_make(make))
     model_t = _filename_token(model_label)
@@ -463,6 +470,9 @@ def _legacy_glob_find(
     def year_from_path(p: Path) -> int | None:
         m = re.match(r"^(\d{4})_", p.name)
         return int(m.group(1)) if m else None
+
+    if accept is not None:
+        found = [p for p in found if accept(p)]
 
     if found:
         if target_year is not None:
@@ -493,19 +503,89 @@ def _legacy_glob_find(
         name_dist = 0 if car_model_norm == file_model_norm else 1
         fuzzy.append((year_dist + name_dist, path))
 
+    if accept is not None:
+        fuzzy = [item for item in fuzzy if accept(item[1])]
     if not fuzzy:
         return None
     fuzzy.sort(key=lambda item: (item[0], item[1].name))
     return fuzzy[0][1]
 
 
+# --- an EPA file has to be THIS model's file ---------------------------------
+#
+# Both resolvers above match on model PREFIXES: the catalog query is
+# ``model_norm LIKE 'x%' OR 'x' LIKE model_norm || '%'`` and the legacy glob
+# falls back to a fuzzy scan with the same rule. That is how a listing model
+# resolved to a sibling model's CSV — measured 2026-07-31 over the 5,020 active
+# (year, make, model) groups that resolved to a file, 1,439 groups / 11,121
+# active cars got a file whose ``Model`` column is a different model:
+#
+#   2025 Chevrolet Blazer EV        -> 2025_Chevrolet_Blazer_EPA.csv   (gas Blazer)
+#   2026 Ford F-250SD               -> 1999_Ford_F250_EPA.csv
+#   2023 Land Rover Range Rover Sport -> 2023_Land Rover_Range Rover_EPA.csv
+#
+# Nothing downstream re-checks the model. ``knowledge_engine.
+# _lookup_epa_from_dictionary_csv`` matches rows by TRIM only, so the gas
+# Blazer's mpg and engine would be read for a Blazer EV. The file therefore has
+# to say, in its own ``Model`` column, that it is about this model — the column
+# the EPA importer writes from ``baseModel`` — or the lookup returns nothing.
+#
+# Fail-closed cost, measured the same day by re-running that sweep against this
+# code: groups that resolve to an EPA file fall 5,020 → 3,620 of 5,721 (68,645 →
+# 57,626 active cars), and 0 of the survivors is another model's file. The rows
+# the other 11,019 cars were reading described a different vehicle, so this is
+# not lost data; 39 of the 1,439 bad groups found a correct file further down
+# the candidate list instead of losing the lookup.
+
+
+@lru_cache(maxsize=4096)
+def _epa_csv_model_keys(path_str: str) -> frozenset[str]:
+    """Normalized values of an EPA CSV's ``Model`` column."""
+    keys: set[str] = set()
+    try:
+        with open(path_str, encoding="utf-8", newline="", errors="replace") as fh:
+            for row in csv.DictReader(fh):
+                key = _norm_token(row.get("Model") or "")
+                if key:
+                    keys.add(key)
+    except OSError:
+        return frozenset()
+    return frozenset(keys)
+
+
+def epa_csv_is_for_model(path: Path, make: str, model: str) -> bool:
+    """True when ``path`` carries at least one row for this exact model.
+
+    Exact after normalization only (case/punctuation/spacing), plus the
+    ``epa_model_search_name`` table, which is the one place a listing model is
+    deliberately mapped onto EPA's name for it. A file model that merely shares
+    a prefix ("Blazer" for "Blazer EV") is a different vehicle.
+    """
+    from backend.enrichment.trim_ladder_knowledge import epa_model_search_name
+
+    wanted = {_norm_token(model), _norm_token(epa_model_search_name(make, model))}
+    wanted.discard("")
+    if not wanted:
+        return False
+    return bool(wanted & _epa_csv_model_keys(str(path)))
+
+
 def _find_epa_csv_uncached(make: str, model: str, year: int) -> Path | None:
     from backend.enrichment.trim_ladder_knowledge import epa_model_search_name
 
+    def accept(path: Path) -> bool:
+        return epa_csv_is_for_model(path, make, model)
+
     for path in _catalog_lookup_candidates(make, model, year, kind="epa"):
-        return path
+        if accept(path):
+            return path
     return _legacy_glob_find(
-        make, model, year, kind="epa", epa_model_search_name_fn=epa_model_search_name
+        make,
+        model,
+        year,
+        kind="epa",
+        epa_model_search_name_fn=epa_model_search_name,
+        accept=accept,
     )
 
 
@@ -585,6 +665,7 @@ def invalidate_catalog_cache() -> None:
     load_make_aliases.cache_clear()
     _find_epa_csv_cached.cache_clear()
     _epa_paths_by_make_norm.cache_clear()
+    _epa_csv_model_keys.cache_clear()
     from backend.enrichment.knowledge_engine import clear_epa_trim_lookup_cache
 
     clear_epa_trim_lookup_cache()

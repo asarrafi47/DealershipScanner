@@ -14,12 +14,12 @@ import re
 from pathlib import Path
 from typing import Any
 
-from backend.enrichment.trim_ladder import _LADDERS_GENERATED_JSON, _read_ladders_file
+from backend.enrichment.trim_ladder import _LADDERS_GENERATED_JSON
 from backend.enrichment.trim_spec_extractor import STANDARD_LABELS
 
 logger = logging.getLogger(__name__)
 
-from backend.enrichment.dictionary_paths import DICTIONARY_ROOT, trim_spec_sheets_dir
+from backend.enrichment.dictionary_paths import trim_spec_sheets_dir
 
 _SHEETS_DIR = trim_spec_sheets_dir()
 
@@ -62,14 +62,30 @@ def _parse_trim_rows(raw: Any) -> list[dict[str, str]]:
 
 
 def _sanitize_sheet_rows(rows: list[dict[str, str]]) -> list[dict[str, str]]:
-    """Keep structured sheet label/value pairs (no prose-splitting heuristics)."""
+    """Keep structured sheet label/value pairs whose value is quotable spec text.
+
+    The derived ``trim_spec_sheets/*.json`` are built from scraped CSVs and still
+    contain encyclopedia narrative; a diff of two narrative fragments is a
+    fabricated claim, so a value that reads as prose contributes nothing here.
+    """
+    from backend.enrichment.trim_ladder_knowledge import split_outside_brackets
+    from backend.enrichment.trim_spec_extractor import is_displayable_trim_bullet
+
     out: list[dict[str, str]] = []
     for row in rows:
         label = str(row.get("label") or "").strip()
         value = re.sub(r"\s+", " ", str(row.get("value") or "").strip())
         if not label or not value or len(value) < 2:
             continue
-        out.append({"label": label, "value": value})
+        # Depth-0 split only: "Hybrid 2.5L I4 (SIDI & PFI; Hybrid)" is one value,
+        # not two, and cutting it in half produces two unquotable orphans. The
+        # display-side bullet gate deliberately does NOT run here: a sheet row is
+        # a spec value, and a long enumeration is split for display later.
+        parts = split_outside_brackets(value, separators=";")
+        kept = [p for p in parts if is_displayable_trim_bullet(p)]
+        if not kept:
+            continue
+        out.append({"label": label, "value": "; ".join(kept)})
     return out
 
 
@@ -155,7 +171,18 @@ def compute_step_adds(
     cumulative_baseline: dict[str, tuple[str, str]],
     is_base_rung: bool,
 ) -> list[str]:
-    """Build ``adds`` strings for one rung."""
+    """Build ``adds`` strings for one rung.
+
+    Which rows appear is a diff against the rungs below; what each row SAYS is a
+    quote and nothing else. The engine used to write "Adds <label>: <v>" and
+    "Upgrades <label>: <v> (was <prior>)" — both the verb and the baseline came
+    from our own ordering of the ladder, not from anything an OEM printed, so
+    ``trim_spec_extractor.is_derived_comparison_bullet`` had to reject the whole
+    line at render time. Worse, the "(was …)" tail carried a second scraped
+    value into the same cell, and splitting it shed orphan fragments such as
+    "Four-Wheel Drive)". The label and the value are all that is quotable, so
+    they are all that is written.
+    """
     adds: list[str] = []
     for display_label, value in _ordered_feature_items(features):
         if is_base_rung:
@@ -164,14 +191,9 @@ def compute_step_adds(
 
         key = _norm_label_key(display_label)
         prior = cumulative_baseline.get(key)
-        if prior is None:
-            adds.append(f"Adds {display_label}: {value}")
+        if prior is not None and _norm_value(prior[1]) == _norm_value(value):
             continue
-        prior_label, prior_value = prior
-        if _norm_value(prior_value) == _norm_value(value):
-            continue
-        adds.append(f"Upgrades {display_label}: {value} (was {prior_value})")
-        _ = prior_label
+        adds.append(f"{display_label}: {value}")
     return adds
 
 

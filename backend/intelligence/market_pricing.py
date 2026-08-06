@@ -17,6 +17,19 @@ Public surface
 A config is only persisted / scored when it has a real sample behind it:
 ``>= MIN_LISTINGS`` active priced listings across ``>= MIN_DEALERS`` distinct
 dealers. Thinner configs score as ``insufficient_data``.
+
+Everything this module returns is DERIVED, and says so
+------------------------------------------------------
+A band median is a percentile over live asking prices in ``cars``. It is not a
+manufacturer figure, not a valuation, not what anyone paid — it is what other
+dealers are currently asking for the same config, computed here. Both
+:func:`lookup_band` and :func:`deal_score` therefore carry ``derived=True``,
+a ``basis`` string naming the computation and its inputs, and ``computed_at``,
+so no consumer can present the number as a published price and a stale table
+is visible rather than silent. The sample behind it (``sample_count``,
+``dealer_count``) is the provenance: the rows are ``cars`` rows, and every band
+that ships has at least :data:`MIN_LISTINGS` of them from :data:`MIN_DEALERS`
+dealers.
 """
 
 from __future__ import annotations
@@ -206,9 +219,16 @@ def rebuild_stats_table(
 
 # --- Lookup + scoring -----------------------------------------------------
 
+#: What a band median is, in one line, carried on every band and every score so
+#: it travels with the number instead of living only in this docstring.
+DERIVED_BASIS = (
+    "median of active dealer asking prices in `cars` for this "
+    "year/make/model/trim, condition and 10k-mile band"
+)
+
 _LOOKUP_SQL = f"""
 SELECT median_price, p25_price, p75_price, sample_count, dealer_count,
-       mileage_band_low, mileage_band_high, condition
+       mileage_band_low, mileage_band_high, condition, computed_at
 FROM {STATS_TABLE}
 WHERE make = %(make)s
   AND model = %(model)s
@@ -242,7 +262,7 @@ def lookup_band(conn, car: dict[str, Any]) -> dict[str, Any] | None:
         row = cur.fetchone()
     if not row:
         return None
-    median, p25, p75, n, dealers, band_low, band_high, condition = row
+    median, p25, p75, n, dealers, band_low, band_high, condition, computed_at = row
     return {
         "band_median": float(median),
         "band_p25": float(p25),
@@ -253,6 +273,13 @@ def lookup_band(conn, car: dict[str, Any]) -> dict[str, Any] | None:
         "mileage_band_high": (int(band_high) if band_high is not None else None),
         "mileage_band_label": mileage_band_label(int(band_low)),
         "condition": condition,
+        # This band is a statistic we computed, not a published price. Flagged
+        # in the data so it cannot be rendered as one, with the sample it rests
+        # on and when it was last recomputed.
+        "derived": True,
+        "basis": DERIVED_BASIS,
+        "source": "cars (active priced listings)",
+        "computed_at": computed_at.isoformat() if hasattr(computed_at, "isoformat") else computed_at,
     }
 
 
@@ -306,6 +333,8 @@ def deal_score(
             "pct_from_median": None,
             "sample_count": (band.get("sample_count", 0) if band else 0),
             "dealer_count": (band.get("dealer_count", 0) if band else 0),
+            "derived": True,
+            "basis": DERIVED_BASIS,
         }
 
     median = band["band_median"]
@@ -322,4 +351,11 @@ def deal_score(
         "dealer_count": band.get("dealer_count", 0),
         "mileage_band_label": band.get("mileage_band_label"),
         "condition": band.get("condition"),
+        # Every number above is arithmetic over the derived band; none of it is
+        # a published or transacted price. Carried on the score, not only on the
+        # band, because consumers read the score alone.
+        "derived": True,
+        "basis": DERIVED_BASIS,
+        "source": "cars (active priced listings)",
+        "computed_at": band.get("computed_at"),
     }

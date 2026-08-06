@@ -75,7 +75,13 @@ def test_in_transit_adds_on_lot_missing_field(_mock_prep) -> None:
         "cylinders": 3,
         "_in_transit": True,
     }
-    missing = listing_missing_field_codes(row, for_public_filter=True)
+    # on_lot IS detected for in-transit cars, but it was made non-actionable on
+    # 2026-07-20 (it inflated the queue), so it is stripped from the default
+    # result and only surfaces with include_non_actionable=True.
+    assert "on_lot" not in listing_missing_field_codes(row, for_public_filter=True)
+    missing = listing_missing_field_codes(
+        row, for_public_filter=True, include_non_actionable=True
+    )
     assert "on_lot" in missing
 
 

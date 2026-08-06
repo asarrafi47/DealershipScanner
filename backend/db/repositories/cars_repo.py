@@ -268,10 +268,80 @@ _UPDATABLE_CAR_COLUMNS = frozenset(
 )
 
 
+def _guard_mild_hybrid_fuel_type(car_id: int, fields: dict) -> dict:
+    """
+    Return *fields* with a mild-hybrid ``fuel_type`` corrected to gasoline.
+
+    The post-scan writers (``gap_fill``, the window-sticker enricher) propose a
+    ``fuel_type`` from engine text, so a 48V BSG drivetrain reaches this function
+    labelled "Hybrid" even though the upsert already corrected the fed value. The
+    fuel FILTERS read ``cars.fuel_type`` directly, so the label has to be right in
+    the column, not just on the card.
+
+    The family match needs the nameplate/year, which a partial patch may not
+    carry; the stored row is read only when the incoming value is a correctable
+    non-plug-in hybrid label, which is a small minority of patches.
+    """
+    from backend.utils.fuel_type_normalize import (
+        is_correctable_hybrid_label,
+        normalize_fuel_type_for_storage,
+    )
+
+    if not is_correctable_hybrid_label(fields.get("fuel_type")):
+        return fields
+    try:
+        stored = get_car_by_id(car_id) or {}
+    except Exception:
+        _log.exception("mild-hybrid fuel guard could not read car %s", car_id)
+        return fields
+    fixed = normalize_fuel_type_for_storage({**stored, **fields})
+    if not fixed or fixed == fields.get("fuel_type"):
+        return fields
+    return {**fields, "fuel_type": fixed}
+
+
+# Columns whose stored value is a closed vocabulary (FWD/RWD/AWD/4WD, the fuel
+# presets, the body-style presets). The scanner upsert runs every incoming value
+# through these coercers via ``clean_car_row_dict``; partial writers did not, so
+# EPA/vPIC display strings ("Four-Wheel Drive", "Regular Gasoline", "Sport Utility
+# Vehicle [SUV]/Multipurpose Vehicle [MPV]") landed in the columns verbatim and
+# split the facet buckets they are supposed to fill.
+_STORAGE_VOCABULARY_COERCERS = {
+    "drivetrain": "coerce_drivetrain_stored",
+    "fuel_type": "coerce_fuel_type_stored",
+    "body_style": "coerce_body_style_stored",
+}
+
+
+def _coerce_vocabulary_fields(fields: dict) -> dict:
+    """Canonicalize closed-vocabulary columns to the same values the upsert stores."""
+    import backend.utils.field_clean as _fc
+
+    patched: dict | None = None
+    for col, fn_name in _STORAGE_VOCABULARY_COERCERS.items():
+        if col not in fields:
+            continue
+        raw = fields[col]
+        if raw is None:
+            continue
+        coerced = getattr(_fc, fn_name)(raw)
+        if coerced != raw:
+            if patched is None:
+                patched = dict(fields)
+            patched[col] = coerced
+    return patched if patched is not None else fields
+
+
 def update_car_row_partial(car_id: int, fields: dict) -> None:
     """Persist only provided keys (used by incomplete listing recovery)."""
     if not fields:
         return
+    # Canonicalize BEFORE the mild-hybrid guard: that guard only recognises
+    # canonical hybrid labels, so "Gasoline / Electric" has to become "Hybrid"
+    # first for it to get a look at the value.
+    fields = _coerce_vocabulary_fields(fields)
+    if "fuel_type" in fields:
+        fields = _guard_mild_hybrid_fuel_type(car_id, fields)
     sets: list[str] = []
     vals: list = []
     for k, raw in fields.items():

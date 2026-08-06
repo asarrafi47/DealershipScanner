@@ -37,7 +37,6 @@ import requests
 from backend.vector.catalog_service import (
     MASTER_SPEC_CATALOG_LABEL,
     known_packages_for_row,
-    master_catalog_persist_dir,
 )
 
 logger = logging.getLogger("ingest_master_specs")
@@ -254,7 +253,7 @@ def build_canonical_description(r: dict[str, Any], package_line: str) -> str:
     return " ".join(parts)
 
 
-def row_chroma_metadata(r: dict[str, Any], package_line: str) -> dict[str, Any]:
+def row_catalog_metadata(r: dict[str, Any], package_line: str) -> dict[str, Any]:
     """Row metadata stored as JSONB (str/int/float only; flatten packages)."""
     trim = _trim_hint(r.get("base_model") or "", r.get("model") or "")
     return {
@@ -319,7 +318,6 @@ def ingest(
 
     from backend.vector.pgvector_service import master_spec_truncate, master_spec_upsert_batch
 
-    persist = master_catalog_persist_dir()
     if reindex:
         master_spec_truncate()
 
@@ -347,7 +345,7 @@ def ingest(
     for r in deduped:
         pkg = known_packages_for_row(r["make"], r.get("base_model") or "", r["model"])
         doc = build_canonical_description(r, pkg)
-        meta = row_chroma_metadata(r, pkg)
+        meta = row_catalog_metadata(r, pkg)
         rid = f"epa-{r.get('epa_id')}" if r.get("epa_id") else f"epa-{r['year']}-{hash(doc) & 0xFFFFFFFF:x}"
         batch_ids.append(rid)
         batch_docs.append(doc)
@@ -356,7 +354,7 @@ def ingest(
             flush()
     flush()
 
-    logger.info("Indexed %s documents into Postgres %s (%s)", n_indexed, persist, MASTER_SPEC_CATALOG_LABEL)
+    logger.info("Indexed %s documents into Postgres (%s)", n_indexed, MASTER_SPEC_CATALOG_LABEL)
     return n_indexed
 
 

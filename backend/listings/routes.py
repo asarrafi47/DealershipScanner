@@ -14,6 +14,55 @@ from backend.utils.hybrid_search import (
 )
 from backend.utils.query_parser import parse_natural_query
 
+# Column order for the packed cascade table. Every column except ``cyl`` is
+# dictionary-encoded: the values repeat across ~12,700 rows, so shipping integer
+# codes plus one vocabulary per column is far smaller than a list of dicts.
+_CAR_ROW_COLUMNS = ("make", "model", "trim", "fuel", "cyl", "drive", "body_style", "induction")
+_CAR_ROW_RAW_COLUMNS = frozenset({"cyl"})
+
+
+def pack_car_rows(car_rows: list[dict]) -> dict:
+    """Dictionary-encode the cascade table for the listings HTML payload.
+
+    The uncompressed document is what gates first paint on /listings (it is too
+    large for the response compressor), and the repeated JSON keys plus repeated
+    make/model/trim strings dominated it. ``main.js`` unpacks this back into the
+    same row objects, so the cascade sees exactly what it did before.
+    """
+    vocabs: list[dict | None] = []
+    orders: list[list | None] = []
+    for col in _CAR_ROW_COLUMNS:
+        if col in _CAR_ROW_RAW_COLUMNS:
+            vocabs.append(None)
+            orders.append(None)
+        else:
+            vocabs.append({})
+            orders.append([])
+
+    packed_rows: list[list] = []
+    for row in car_rows or []:
+        out: list = []
+        for idx, col in enumerate(_CAR_ROW_COLUMNS):
+            val = row.get(col)
+            vocab = vocabs[idx]
+            if vocab is None:
+                out.append(val)
+                continue
+            if val is None:
+                out.append(-1)
+                continue
+            code = vocab.get(val)
+            if code is None:
+                order = orders[idx]
+                assert order is not None
+                code = len(order)
+                order.append(val)
+                vocab[val] = code
+            out.append(code)
+        packed_rows.append(out)
+
+    return {"c": list(_CAR_ROW_COLUMNS), "v": orders, "r": packed_rows}
+
 
 def listings_page(*, listings_poll_ms: int = 0):
     persist_listings_geo_from_request(request, session)
@@ -122,6 +171,7 @@ def listings_page(*, listings_poll_ms: int = 0):
     return render_template(
         "listings.html",
         options=options,
+        car_rows_packed=pack_car_rows(options.get("car_rows") or []),
         listings_zip_coords_boot=listings_zip_coords_boot,
         active=active,
         initial_grid_cars=initial_grid_cars,

@@ -234,7 +234,34 @@ def _map_vehicle(
     if vdp.startswith("http"):
         row["source_url"] = vdp
         row["_detail_url"] = vdp
+    rooftop = rooftop_of(v)
+    if rooftop:
+        row["_rooftop"] = rooftop
     return row
+
+
+def rooftop_of(v: dict) -> dict | None:
+    """The rooftop this vehicle names, verbatim.
+
+    A Team Velocity group publishes one feed per DOMAIN but fills it with every
+    rooftop in the group: ``www.mazdaofknoxville.com/inventory-used.json``
+    returned 629 "Airport Honda" vehicles against 280 of its own on 2026-08-03.
+    ``dealerName`` / ``dealerCity`` / ``dealerZip`` vary per rooftop;
+    ``dealerDomain`` is rewritten to the queried host and does not.
+    """
+    name = norm_str(v.get("dealerName"))
+    site = norm_str(v.get("dealerDomain"))
+    if not (name or site):
+        return None
+    return {
+        "key": name,
+        "name": name,
+        "site": site,
+        "address": "",
+        "city": norm_str(v.get("dealerCity")),
+        "state": norm_str(v.get("dealerState")),
+        "zip": norm_str(v.get("dealerZip")),
+    }
 
 
 def parse(

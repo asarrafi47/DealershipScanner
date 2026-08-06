@@ -981,11 +981,17 @@ def sticker_panel_payload(
     if trim:
         title_bits.append(trim)
     ymm = " ".join(x for x in title_bits if x).strip()
-    msrp = car.get("msrp")
-    try:
-        msrp_n = int(msrp) if msrp is not None else None
-    except (TypeError, ValueError):
-        msrp_n = None
+    # The packages panel renders this under the label "Sticker price", so it may
+    # only ever be a number a sticker actually printed. It used to be
+    # ``car["msrp"]`` — the dealer feed's verbatim value, which on used
+    # inventory is a marketing "was" price and is EXACTLY the asking price on
+    # 9,621 of the 18,350 active listings that have one. Putting a window
+    # sticker's name on that is the mislabel this whole change is about. Now it
+    # comes from the sticker document we hold for this VIN, or not at all; the
+    # panel already hides the line when it is null.
+    from backend.utils.msrp_trust import sticker_msrp_for_car
+
+    msrp_n = sticker_msrp_for_car(car)
     return {
         "vehicle_title": ymm,
         "listing_sticker_options": ctx.get("listing_sticker_options") or [],
