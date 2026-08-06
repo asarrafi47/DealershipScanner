@@ -147,15 +147,90 @@ def places_type_place_glob(release_id: str, *, s3_release_prefix: str = OVERTURE
     return f"{base}/{rid}/theme=places/type=place/*.parquet"
 
 
-def sql_us_car_dealers_select(parquet_glob: str) -> str:
+@dataclass(frozen=True)
+class BBox:
+    """Geographic bounding box in WGS84 degrees (west/south/east/north)."""
+
+    west: float
+    south: float
+    east: float
+    north: float
+
+    def validate(self) -> BBox:
+        if not (-180.0 <= self.west < self.east <= 180.0):
+            raise ValueError(f"Invalid longitude range: {self.west}..{self.east}")
+        if not (-90.0 <= self.south < self.north <= 90.0):
+            raise ValueError(f"Invalid latitude range: {self.south}..{self.north}")
+        return self
+
+
+def _bbox_predicate(bbox: BBox) -> str:
+    """
+    Predicate on Overture's ``bbox`` struct column (xmin/xmax/ymin/ymax).
+
+    Filtering on ``bbox.*`` rather than the geometry lets DuckDB prune Parquet row
+    groups from the file statistics, which is what keeps a metro-scale query to a few
+    seconds instead of scanning the national extract. Numbers are formatted with
+    ``repr`` of validated floats, so nothing user-supplied reaches the SQL text.
+    """
+    b = bbox.validate()
+    return (
+        f"    AND bbox.xmin BETWEEN {float(b.west)!r} AND {float(b.east)!r}\n"
+        f"    AND bbox.ymin BETWEEN {float(b.south)!r} AND {float(b.north)!r}\n"
+    )
+
+
+# Row-selection predicates, narrow first.
+#
+# ``car_dealer`` is the legacy ``categories`` value this module has always used.
+# Release 2026-07-22.0 also carries ``basic_category`` / ``taxonomy`` — and franchise
+# rooftops are NOT consistently filed under ``car_dealer`` there. Measured 2026-08-02
+# in the Orange County CA bbox: "Selman Chevrolet" appears twice, once as
+# ``categories.primary='car_dealer'`` and once as ``automotive_repair``; "Anaheim
+# Hyundai" appears ONLY as ``automotive_repair`` with ``taxonomy.primary='automotive_repair'``.
+# The ``vehicle_dealer`` predicate below picks up rooftops filed under the newer
+# ``auto_dealer`` taxonomy branch that the ``car_dealer`` value alone misses.
+_CATEGORY_PREDICATES: dict[str, str] = {
+    "car_dealer": (
+        "categories.primary = 'car_dealer'\n"
+        "    OR (categories.alternate IS NOT NULL AND list_contains(categories.alternate, 'car_dealer'))"
+    ),
+    "vehicle_dealer": (
+        "categories.primary = 'car_dealer'\n"
+        "    OR (categories.alternate IS NOT NULL AND list_contains(categories.alternate, 'car_dealer'))\n"
+        "    OR (categories.alternate IS NOT NULL AND list_contains(categories.alternate, 'automotive_dealer'))\n"
+        "    OR basic_category IN ('auto_dealer', 'automotive_dealer')\n"
+        "    OR (taxonomy.hierarchy IS NOT NULL AND list_contains(taxonomy.hierarchy, 'vehicle_dealer'))"
+    ),
+}
+DEFAULT_CATEGORY_MODE = "car_dealer"
+
+
+def sql_us_car_dealers_select(
+    parquet_glob: str,
+    *,
+    bbox: BBox | None = None,
+    category_mode: str = DEFAULT_CATEGORY_MODE,
+) -> str:
     """
     Baseline query aligned with Overture Places + DuckDB conventions.
 
     ``parquet_glob`` must be a trusted literal (validated release id is interpolated only via
-    :func:`places_type_place_glob`).
+    :func:`places_type_place_glob`). Pass *bbox* to bound the scan to one metro — an
+    unbounded call reads the whole national Places extract.
+
+    ``category_mode`` selects a key of :data:`_CATEGORY_PREDICATES`; it is never
+    interpolated, only looked up.
     """
+    try:
+        category_sql = _CATEGORY_PREDICATES[category_mode]
+    except KeyError:
+        raise ValueError(
+            f"Unknown category_mode {category_mode!r}; known: {sorted(_CATEGORY_PREDICATES)}"
+        ) from None
     # parquet_glob is inserted only after path validation above — keep as single-quoted literal.
     escaped = parquet_glob.replace("'", "''")
+    bbox_sql = _bbox_predicate(bbox) if bbox is not None else ""
     return f"""
 SELECT
     id AS overture_id,
@@ -165,18 +240,39 @@ SELECT
     addresses[1].locality AS city,
     addresses[1].region AS state,
     addresses[1].postcode AS zip_code,
+    categories.primary AS category_primary,
+    confidence AS confidence,
     ST_X(geometry) AS longitude,
     ST_Y(geometry) AS latitude
 FROM read_parquet('{escaped}', hive_partitioning = true)
 WHERE (
-    categories.primary = 'car_dealer'
-    OR (
-      categories.alternate IS NOT NULL
-      AND list_contains(categories.alternate, 'car_dealer')
-    )
+    {category_sql}
   )
-  AND addresses[1].country = 'US'
+{bbox_sql}  AND addresses[1].country = 'US'
 """
+
+
+def fetch_car_dealers_in_bbox(
+    con: duckdb.DuckDBPyConnection,
+    bbox: BBox,
+    *,
+    release_id: str | None = None,
+    catalog_url: str = STAC_CATALOG_URL_DEFAULT,
+    s3_release_prefix: str = OVERTURE_S3_BUCKET_RELEASE_PREFIX_DEFAULT,
+    category_mode: str = DEFAULT_CATEGORY_MODE,
+) -> tuple[str, list[dict[str, Any]]]:
+    """
+    Load dealer rows inside *bbox* only. Returns ``(release_id, rows)``.
+
+    This is the bounded entry point. Measured 2026-08-02 against release 2026-07-22.0:
+    a ~44x44 mile metro box returns in 3-10s, because ``bbox.*`` prunes Parquet row
+    groups. Prefer this over :func:`fetch_us_car_dealers_rows` for anything per-metro.
+    """
+    rid = _validate_release_id(release_id.strip()) if release_id else fetch_latest_release_id(con, catalog_url=catalog_url)
+    glob_path = places_type_place_glob(rid, s3_release_prefix=s3_release_prefix)
+    sql = sql_us_car_dealers_select(glob_path, bbox=bbox, category_mode=category_mode)
+    logger.info("Querying Overture Places release=%s mode=%s bbox=%s", rid, category_mode, bbox)
+    return rid, _execute_to_mapping_rows(con, sql)
 
 
 @dataclass(frozen=True)

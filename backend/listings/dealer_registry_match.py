@@ -21,7 +21,18 @@ def registry_id_by_dealer_host(conn: Any) -> dict[str, int]:
         WHERE is_active = 1 AND duplicate_of_id IS NULL
         """
     )
-    for rid_raw, website_url, dealer_website_url in cur.fetchall():
+    for row in cur.fetchall():
+        # Row factory varies by caller: the picker passes a plain tuple-row connection,
+        # search_cars passes a dict-row one. Unpacking a dict row yields column *names*,
+        # so every row used to fail int() and the map came back empty on Postgres —
+        # which silently disabled the host fallback below (Irvine Subaru's 41 unstamped
+        # cars matched the picker's count but returned 0 search results).
+        if isinstance(row, dict):
+            rid_raw = row.get("id")
+            website_url = row.get("website_url")
+            dealer_website_url = row.get("dealer_website_url")
+        else:
+            rid_raw, website_url, dealer_website_url = row[0], row[1], row[2]
         try:
             rid = int(rid_raw)
         except (TypeError, ValueError):
@@ -90,6 +101,22 @@ def collect_registry_ids_from_cars(
     return out
 
 
+def dealer_url_like_patterns(host: str) -> list[str]:
+    """
+    LIKE patterns that match ``dealer_url`` only when its host really *is* *host*.
+
+    Anchored on ``//`` (and the ``www.`` that :func:`normalize_dealer_host` strips)
+    because a bare ``%host%`` is a substring test, and registry rows carry bare brand
+    domains: id 170 is "Subaru of America" at ``subaru.com``, which ``%subaru.com%``
+    matches for every ``*subaru.com`` rooftop we scan — eleven of them today. The
+    picker compares normalized hosts for equality, so this must too.
+    """
+    h = (host or "").strip().lower()
+    if not h:
+        return []
+    return [f"%//{h}", f"%//{h}/%", f"%//www.{h}", f"%//www.{h}/%"]
+
+
 def dealer_registry_sql_filter(
     registry_ids: list[int],
     host_to_registry: dict[str, int],
@@ -118,8 +145,9 @@ def dealer_registry_sql_filter(
     if hosts:
         host_clauses = []
         for host in hosts:
-            host_clauses.append("LOWER(IFNULL(dealer_url, '')) LIKE ?")
-            params.append(f"%{host.lower()}%")
+            for pattern in dealer_url_like_patterns(host):
+                host_clauses.append("LOWER(IFNULL(dealer_url, '')) LIKE ?")
+                params.append(pattern)
         parts.append(
             "("
             "(dealership_registry_id IS NULL OR CAST(dealership_registry_id AS INTEGER) <= 0)"

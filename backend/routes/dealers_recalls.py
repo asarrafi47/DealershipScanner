@@ -25,9 +25,15 @@ def api_nearby_dealers():
         return jsonify(main._feature_denied_json(FEATURE_NEARBY_DEALERS, err, dealers=[])), 403
     from backend.listings.nearby_dealers import resolve_nearby_dealers_for_listings
 
-    zip_code = (request.args.get("zip_code") or "").strip()
+    zip_code = (request.args.get("zip_code") or request.args.get("zip") or "").strip()
+    # ``radius`` is what the listings picker sends; ``radius_miles`` is the name the
+    # rest of the listings API uses. Accepting only one silently defaulted the other
+    # caller to 50 mi, so the radius selector looked like it did nothing.
+    radius_raw = request.args.get("radius")
+    if radius_raw in (None, ""):
+        radius_raw = request.args.get("radius_miles")
     try:
-        radius = min(float(request.args.get("radius") or 50), 50.0)
+        radius = min(float(radius_raw or 50), 50.0)
     except (ValueError, TypeError):
         radius = 50.0
     if not zip_code:

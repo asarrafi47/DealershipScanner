@@ -144,6 +144,33 @@ def run_discovery(
     combined.extend(gp_list)
     logger.info("Google Places tier: %d dealers in radius", n_gp)
 
+    # OpenStreetMap tier — the KEYLESS geographic source.
+    #
+    # Google Places was the only geographic tier wired into this pipeline, so a
+    # missing or expired GOOGLE_MAPS_API_KEY reduced discovery to whatever the
+    # DMV CSVs held, which for every state but NC is nothing. Measured
+    # 2026-08-05 with the key expired: ZIP 37405 / 15 mi returned 0 candidates,
+    # and the tier summary read "DMV=0, GooglePlaces=0" with no third source to
+    # fall back on. ``backend.discovery.osm`` already existed and was exercised
+    # only by an analysis script and tests.
+    #
+    # It runs UNCONDITIONALLY rather than only when Google fails: the two
+    # sources disagree about which businesses exist, and ``merge_and_dedupe``
+    # below already reconciles them, so running both strictly increases
+    # coverage. Overpass is a free community service — ``fetch_osm_dealerships``
+    # waits for a slot and rotates mirrors on 502/504 — and a failure here must
+    # never sink a run that Google or DMV could still satisfy.
+    n_osm = 0
+    try:
+        from backend.discovery.osm import fetch_osm_dealerships
+
+        osm_list = fetch_osm_dealerships(lat0, lon0, radius_miles, session=sess)
+        n_osm = len(osm_list)
+        combined.extend(osm_list)
+    except Exception as exc:
+        logger.warning("OSM tier failed (continuing): %s", str(exc)[:120])
+    logger.info("OSM tier: %d dealers in radius", n_osm)
+
     merged = merge_and_dedupe(combined)
 
     # Drop Google-Places-mislabeled non-dealers (salvage/u-pull yards, car rental,
@@ -245,10 +272,11 @@ def run_discovery(
     n_with_url = sum(1 for c in final if _candidate_has_url(c))
     n_missing_url = len(final) - n_with_url
     logger.info(
-        "Discovery tiers done (DMV=%s, GooglePlaces=%d): %d candidates in output radius, "
-        "%d with a URL string after DMV+GooglePlaces+%s.",
+        "Discovery tiers done (DMV=%s, GooglePlaces=%d, OSM=%d): %d candidates in output "
+        "radius, %d with a URL string after DMV+GooglePlaces+OSM+%s.",
         n_dmv if dmv_state else 0,
         n_gp,
+        n_osm,
         len(final),
         n_with_url,
         "DDG" if fill_urls_via_ddg else "no DDG",
