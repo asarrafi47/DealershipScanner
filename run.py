@@ -11,6 +11,15 @@ from backend.utils.runtime_env import is_production_env
 if __name__ == "__main__":
     import sys
 
+    if is_production_env():
+        print(
+            "run.py is the Werkzeug dev server and must never serve production.\n"
+            "Use gunicorn instead (scripts/docker-entrypoint-web.sh, ./start.sh, or:\n"
+            "  python3 -m gunicorn -w 1 --threads 4 -b 0.0.0.0:${PORT:-8000} backend.main:app)",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+
     try:
         from backend.scanner.window_sticker import pdf_text_extraction_available
 

@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 # Start the Cloudflare tunnel so https://sarraficars.com serves your local Flask app.
 #
-# Prerequisite: Flask must already be listening on PORT (default 5001).
-# In another terminal:
-#   PUBLIC=1 python3 run.py
+# Prerequisite: the web app must already be listening on PORT (default 5001).
+# The tunnel serves the public site, so the app must run under gunicorn — never
+# the Werkzeug dev server in run.py. In another terminal:
+#   python3 -m gunicorn -w 1 --threads 4 -b 0.0.0.0:5001 backend.main:app
 #
-# Optional: START_WEB=1 ./start.sh  — also launch run.py if nothing is listening yet.
+# Optional: START_WEB=1 ./start.sh  — also launch gunicorn if nothing is listening yet.
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -52,14 +53,16 @@ _start_web_if_requested() {
         return $?
     fi
     if [ "${START_WEB:-0}" != "1" ]; then
-        echo "[start] ERROR: No Flask server on http://127.0.0.1:${PORT}"
+        echo "[start] ERROR: No web server on http://127.0.0.1:${PORT}"
         echo "[start] Start the app in another terminal, then re-run ./start.sh:"
-        echo "        PUBLIC=1 python3 run.py"
+        echo "        python3 -m gunicorn -w 1 --threads 4 -b 0.0.0.0:${PORT} backend.main:app"
         echo "[start] Or start both here: START_WEB=1 ./start.sh"
         exit 1
     fi
-    echo "[start] START_WEB=1 — launching Flask on port $PORT..."
-    PUBLIC=1 PORT="$PORT" python3 run.py &
+    echo "[start] START_WEB=1 — launching gunicorn on port $PORT..."
+    python3 -m gunicorn -w 1 --threads 4 -b "0.0.0.0:${PORT}" \
+        --timeout 120 --graceful-timeout 30 \
+        backend.main:app &
     SERVER_PID=$!
     if ! _wait_for_web 40; then
         echo "[start] ERROR: Flask did not become ready on port $PORT."
