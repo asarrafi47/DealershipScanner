@@ -174,6 +174,18 @@ def normalize_engine_description_storage(raw: Any) -> str | None:
         m2 = re.search(r"\b(\d+\.\d+)\s*(?:Liter|litre)\b", work, re.I)
         if m2:
             lit = float(m2.group(1))
+        else:
+            # "2.0T" / "3.0T" (BMW/MINI/Audi/Mercedes/Cadillac turbo shorthand --
+            # T for turbo, not a unit) is the same displacement-in-liters figure
+            # as "2.0L", just spelled differently. Without this branch the
+            # displacement was silently dropped: "2.0T I4 Turbocharged" compressed
+            # to bare "I4", discarding the only number the source gave us (found
+            # 2026-08-06 healing incomplete_listings -- MINI Cooper S / Mercedes
+            # AMG / Cadillac V-Series / Ford EcoBoost rows all lost their liters
+            # this way).
+            m3 = re.search(r"\b(\d+\.\d+)T\b", work)
+            if m3:
+                lit = float(m3.group(1))
 
     layout: str | None = None
     for rx, prefix in (

@@ -55,6 +55,15 @@ _CANONICAL_DRIVETRAIN: dict[str, str] = {
     "four-wheel drive": "4WD",
     "four wheel drive": "4WD",
     "4x4": "AWD",
+    # EPA `drive` vocabulary (fueleconomy.gov). The enrichment backfill fills a
+    # blank drivetrain straight from these strings, so they have to canonicalize
+    # here or they become their own facet buckets next to "4WD".
+    "4-wheel drive": "4WD",
+    "part-time 4-wheel drive": "4WD",
+    "part time 4-wheel drive": "4WD",
+    "full-time 4-wheel drive": "4WD",
+    "full time 4-wheel drive": "4WD",
+    "4-wheel or all-wheel drive": "4WD",
 }
 
 # Buyer-facing fuel presets (facet order + storage normalization target).
@@ -690,7 +699,7 @@ def display_str(val: Any, *, fallback: str = "unknown") -> str:
     return str(val).strip()
 
 
-def build_inventory_chroma_document(car: dict[str, Any]) -> str:
+def build_compact_listing_document(car: dict[str, Any]) -> str:
     """
     Human-readable summary for embedding; skips null/junk fields.
     """

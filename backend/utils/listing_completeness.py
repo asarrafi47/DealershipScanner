@@ -147,7 +147,15 @@ def listing_missing_field_codes(
     else:
         ctx = prepare_car_detail_context(dict(car_raw))
     vs = ctx.get("verified_specs") or {}
-    car = serialize_car_for_api(dict(car_raw), include_verified=False, verified_specs=vs)
+    # Gap detection reads only core spec-sheet fields; the ai_engine_specs / factory
+    # catalog enrichment (hp/torque/tow, catalog_packages/options) is never consulted
+    # here, so skip those two per-car reference queries.
+    car = serialize_car_for_api(
+        dict(car_raw),
+        include_verified=False,
+        verified_specs=vs,
+        include_extended_display=False,
+    )
     missing: list[str] = []
 
     if _dash(car.get("title")):
