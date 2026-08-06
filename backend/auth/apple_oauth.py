@@ -28,6 +28,10 @@ _log = logging.getLogger(__name__)
 
 APPLE_AUTH_URL = "https://appleid.apple.com/auth/authorize"
 APPLE_TOKEN_URL = "https://appleid.apple.com/auth/token"
+APPLE_JWKS_URL = "https://appleid.apple.com/auth/keys"
+APPLE_ISSUER = "https://appleid.apple.com"
+
+_jwks_client = None
 
 bp = Blueprint("apple_oauth", __name__, url_prefix="/auth/apple")
 
@@ -140,18 +144,28 @@ def _exchange_code(code: str) -> dict | None:
 
 
 def _decode_id_token(id_token: str) -> dict | None:
+    """Verify the id_token signature against Apple's JWKS and check iss/aud/exp.
+
+    Fails closed: any fetch, key, or claim failure rejects the login.
+    """
+    global _jwks_client
     try:
         import jwt  # type: ignore
+        from jwt import PyJWKClient  # type: ignore
 
-        # Apple id_token; signature verified against Apple JWKS in production hardening.
+        if _jwks_client is None:
+            _jwks_client = PyJWKClient(APPLE_JWKS_URL, timeout=10)
+        signing_key = _jwks_client.get_signing_key_from_jwt(id_token)
         payload = jwt.decode(
             id_token,
-            options={"verify_signature": False, "verify_aud": False},
+            signing_key.key,
             algorithms=["RS256"],
+            audience=_client_id(),
+            issuer=APPLE_ISSUER,
         )
         return payload if isinstance(payload, dict) else None
     except Exception as ex:
-        _log.warning("Apple id_token decode failed: %s", ex)
+        _log.warning("Apple id_token verification failed: %s", ex)
         return None
 
 

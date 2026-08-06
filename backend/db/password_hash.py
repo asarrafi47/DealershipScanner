@@ -60,7 +60,12 @@ def password_needs_rehash(stored: str) -> bool:
 
 
 def verify_or_legacy(plain: str, stored: str) -> bool:
-    """True if plain matches bcrypt hash; legacy plaintext only outside production (SEC-082)."""
+    """True if plain matches bcrypt hash (SEC-082).
+
+    Legacy plaintext rows verify only outside production AND with
+    ALLOW_LEGACY_PLAINTEXT_PASSWORDS=1 set explicitly; one successful login
+    rehashes them to bcrypt.
+    """
     if not stored:
         return False
     if is_bcrypt_hash(stored):
@@ -69,4 +74,9 @@ def verify_or_legacy(plain: str, stored: str) -> bool:
 
     if is_production_env():
         return False
-    return plain == stored
+    optin = (os.environ.get("ALLOW_LEGACY_PLAINTEXT_PASSWORDS") or "").strip().lower()
+    if optin not in ("1", "true", "yes", "on"):
+        return False
+    import hmac
+
+    return hmac.compare_digest(plain.encode("utf-8"), stored.encode("utf-8"))
