@@ -171,9 +171,10 @@ def test_run_discovery_overpass_timeout_returns_empty_osm(mock_ddg, mock_post):
     assert isinstance(rows, list)
 
 
+@patch("backend.discovery.osm.fetch_osm_dealerships", return_value=[])
 @patch("backend.discovery.pipeline.fetch_google_places_dealerships")
-def test_run_discovery_google_places_fixture(mock_gp):
-    """Pipeline uses Google Places tier (OSM Overpass removed from orchestration)."""
+def test_run_discovery_google_places_fixture(mock_gp, _mock_osm):
+    """Pipeline merges Google Places + OSM tiers; both mocked so no live Overpass calls."""
     mock_gp.return_value = [
         DealerCandidate(
             name="Fixture Auto Sales",
@@ -245,8 +246,9 @@ def test_resolve_zip_center_prefers_gazetteer(tmp_path):
     assert lat == 12.34 and lon == -56.78
 
 
+@patch("backend.discovery.osm.fetch_osm_dealerships", return_value=[])
 @patch("backend.discovery.pipeline.fetch_google_places_dealerships")
-def test_run_discovery_seed_zip_scope(mock_gp):
+def test_run_discovery_seed_zip_scope(mock_gp, _mock_osm):
     mock_gp.return_value = [
         DealerCandidate(
             name="Inside ZIP",
