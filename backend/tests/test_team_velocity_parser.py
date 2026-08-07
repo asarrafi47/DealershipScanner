@@ -174,13 +174,15 @@ def test_request_pacer_enforces_min_interval():
     assert all(g >= 0.05 for g in gaps), gaps
 
 
-def test_request_pacer_zero_interval_is_noop():
+def test_request_pacer_zero_interval_is_noop(monkeypatch):
+    # Assert the semantic (zero interval never sleeps), not wall time — the old
+    # `elapsed < 0.05` version flaked under full-suite scheduler load.
     pacer = tv._RequestPacer(0.0)
-    import time
-    t0 = time.monotonic()
+    sleeps: list[float] = []
+    monkeypatch.setattr(tv.time, "sleep", lambda s: sleeps.append(s))
     for _ in range(5):
         pacer.wait()
-    assert time.monotonic() - t0 < 0.05
+    assert sleeps == []
 
 
 def test_known_tv_dealer_registry():
