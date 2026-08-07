@@ -628,7 +628,21 @@ def _consistent_cylinders(
     fuel = _clean(vs.get("epa_fuel_type")) or _clean(car.get("fuel_type"))
     try:
         from backend.utils.engine_consistency import cylinders_conflicts_with_engine_text
+        from backend.utils.fuel_label_plausibility import (
+            PLAUSIBLE,
+            assess_electric_claim,
+            is_bare_electric_label,
+        )
 
+        # A battery-electric row with a junk positive count: judged from the
+        # ROW's own text and nameplate, not from *engine_display* — that string
+        # can itself be derived from the junk count ("4-cyl" on a Tesla), so
+        # letting it corroborate the count would be circular. When the electric
+        # claim is implausible (gas GX 550 stored "Electric"), the count is the
+        # evidence and survives to the layout check below.
+        if count > 0 and is_bare_electric_label(fuel):
+            if assess_electric_claim(car).verdict == PLAUSIBLE:
+                return None
         if cylinders_conflicts_with_engine_text(count, engine_text, fuel):
             return None
     except Exception:

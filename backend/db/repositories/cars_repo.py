@@ -280,14 +280,19 @@ def _guard_mild_hybrid_fuel_type(car_id: int, fields: dict) -> dict:
 
     The family match needs the nameplate/year, which a partial patch may not
     carry; the stored row is read only when the incoming value is a correctable
-    non-plug-in hybrid label, which is a small minority of patches.
+    non-plug-in hybrid label OR a bare "Electric" claim (which the same
+    normalizer routes to its evidence-backed label when the row's own engine
+    text / nameplate contradicts it — gas GX 550s fed as "Electric") — a small
+    minority of patches either way.
     """
+    from backend.utils.fuel_label_plausibility import is_bare_electric_label
     from backend.utils.fuel_type_normalize import (
         is_correctable_hybrid_label,
         normalize_fuel_type_for_storage,
     )
 
-    if not is_correctable_hybrid_label(fields.get("fuel_type")):
+    _ft = fields.get("fuel_type")
+    if not (is_correctable_hybrid_label(_ft) or is_bare_electric_label(_ft)):
         return fields
     try:
         stored = get_car_by_id(car_id) or {}
@@ -342,6 +347,12 @@ def update_car_row_partial(car_id: int, fields: dict) -> None:
     fields = _coerce_vocabulary_fields(fields)
     if "fuel_type" in fields:
         fields = _guard_mild_hybrid_fuel_type(car_id, fields)
+    if fields.get("cylinders") is not None:
+        # Feed sentinels (GM sends 99 for EVs) and junk counts must not reach
+        # the column through the enrichment/partial path either.
+        from backend.utils.fuel_label_plausibility import sanitize_cylinder_count
+
+        fields = {**fields, "cylinders": sanitize_cylinder_count(fields["cylinders"])}
     sets: list[str] = []
     vals: list = []
     for k, raw in fields.items():

@@ -670,7 +670,10 @@ def clean_car_row_dict(d: dict[str, Any]) -> dict[str, Any]:
             out[num_key] = None
             continue
         if num_key == "cylinders":
-            out[num_key] = n if n >= 0 else None
+            # 0 is valid (battery-electric). Counts above 16 are feed sentinels
+            # (GM feeds send 99 for EVs); no production engine has more than 16
+            # cylinders, so they must never reach the column or a display.
+            out[num_key] = n if 0 <= n <= 16 else None
         else:
             out[num_key] = n if n > 0 else None
 

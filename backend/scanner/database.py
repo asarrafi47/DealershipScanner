@@ -13,6 +13,10 @@ from backend.utils.analytics_ep import apply_ep_from_scanner_dict
 from backend.utils.car_serialize import infer_engine_l_for_db
 from backend.utils.field_clean import clean_car_row_dict, compute_data_quality_score, is_effectively_empty
 from backend.utils.forced_induction import classify_forced_induction_from_car_row
+from backend.utils.fuel_label_plausibility import (
+    cylinders_override_for_electric_claim,
+    is_known_bev_nameplate,
+)
 from backend.utils.fuel_type_normalize import normalize_fuel_type_for_storage
 from backend.utils.interior_color_buckets import interior_color_buckets_json
 from backend.utils.in_transit import availability_spec_source_patch
@@ -326,6 +330,17 @@ def upsert_vehicles(vehicles: list[dict]) -> int:
             _ft_fixed = normalize_fuel_type_for_storage(v)
             if _ft_fixed:
                 v["fuel_type"] = _ft_fixed
+            # Battery-electric rows arrive with the gas sibling's cylinder count
+            # (Toyota C-HR BEV "4") or a feed sentinel (GM "99", nulled by
+            # clean_car_row_dict above). Zero the count ONLY when the electric
+            # label is plausible; when combustion evidence contradicts it (a gas
+            # GX 550 fed as "Electric"), the cylinders ARE the evidence — they
+            # are kept, and the label correction above / the read-time display
+            # handles the fuel type. Runs AFTER the label normalization so a row
+            # it just relabelled to gas/hybrid is no longer an electric claim.
+            _cyl_fixed = cylinders_override_for_electric_claim(v)
+            if _cyl_fixed is not None:
+                v["cylinders"] = _cyl_fixed
             if not v.get("transmission_type") and v.get("transmission"):
                 from backend.utils.transmission_normalize import normalize_transmission_standard
                 _y = v.get("year")
@@ -868,7 +883,7 @@ def apply_model_specs_corrections(
     ) in rows:
         needs_cyl = cylinders is None or (
             isinstance(cylinders, (int, float)) and int(cylinders) == 0
-            and not _is_electric_make_model(raw_make, raw_model)
+            and not _is_electric_make_model(raw_make, raw_model, year=year)
         )
         needs_trans = not transmission or str(transmission).strip() == ""
         needs_drive = not drivetrain or str(drivetrain).strip() == ""
@@ -950,16 +965,19 @@ def apply_model_specs_corrections(
     return updated
 
 
-def _is_electric_make_model(make: str, model: str) -> bool:
-    """True for known BEV makes/models where 0 cylinders is correct."""
+def _is_electric_make_model(make: str, model: str, year: Any = None) -> bool:
+    """
+    True for known BEV makes/models where 0 cylinders is correct (so the
+    model_specs backfill must not re-fill a gas sibling's count onto them).
+
+    Delegates to the shared nameplate table in ``fuel_label_plausibility`` —
+    the old inline list missed the Bolt/Blazer EV/C-HR BEV families, which let
+    this backfill undo the EV cylinder heal on the next nightly.
+    """
+    if is_known_bev_nameplate({"make": make, "model": model, "year": year}):
+        return True
     make_u = (make or "").strip().upper()
     model_u = (model or "").strip().upper()
-    if make_u == "TESLA":
-        return True
     if make_u == "BMW" and re.search(r"\bI[0-9X]\b", model_u):
         return True
-    if make_u == "HYUNDAI" and "IONIQ" in model_u:
-        return True
-    if make_u in ("RIVIAN", "LUCID", "POLESTAR", "NIO", "FISKER"):
-        return True
-    return False
+    return make_u == "NIO"

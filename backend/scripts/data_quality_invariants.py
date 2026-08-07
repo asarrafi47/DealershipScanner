@@ -372,6 +372,37 @@ SQL_INVARIANTS: tuple[SqlInvariant, ...] = (
         """,
     ),
     SqlInvariant(
+        id="electric_label_with_combustion_engine_text",
+        title="an 'Electric' fuel label on a row whose engine text describes combustion",
+        detects=(
+            "a feed/enrichment fuel label pasted onto a gas or hybrid car — the "
+            "mechanism that stored ~60 gas GX 550s / BMW ###i rows as Electric"
+        ),
+        impossible_because=(
+            "a battery-electric vehicle has no displacement, no V6/V8 layout and no "
+            "cylinder count; engine text naming any of those describes a combustion "
+            "car, so one of the two fields is lying about the same vehicle"
+        ),
+        count_sql="""
+            SELECT COUNT(*) FROM cars
+            WHERE listing_active = 1 AND LOWER(BTRIM(fuel_type)) IN ('electric','ev')
+              AND engine_description ~* '([1-9]\\.[0-9]\\s*-?\\s*l(iter)?\\M|\\m[viw][-\\s]?(4|6|8|10|12)\\M|[2-9]\\s*-?\\s*cyl)'
+              AND engine_description !~* '(electric|battery|kwh|motor|fuel\\s*cell|hybrid)'
+        """,
+        example_sql="""
+            SELECT id, year, make, model, trim, fuel_type, cylinders, engine_description
+            FROM cars
+            WHERE listing_active = 1 AND LOWER(BTRIM(fuel_type)) IN ('electric','ev')
+              AND engine_description ~* '([1-9]\\.[0-9]\\s*-?\\s*l(iter)?\\M|\\m[viw][-\\s]?(4|6|8|10|12)\\M|[2-9]\\s*-?\\s*cyl)'
+              AND engine_description !~* '(electric|battery|kwh|motor|fuel\\s*cell|hybrid)'
+            ORDER BY make, model LIMIT 20
+        """,
+        denominator_sql="""
+            SELECT COUNT(*) FROM cars
+            WHERE listing_active = 1 AND LOWER(BTRIM(fuel_type)) IN ('electric','ev')
+        """,
+    ),
+    SqlInvariant(
         id="cylinders_not_a_real_layout",
         title="a cylinder count no engine has been built with",
         detects="a number parsed out of the wrong part of an engine string",

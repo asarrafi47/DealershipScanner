@@ -121,12 +121,24 @@ def extract_cylinder_count(
     if not blob:
         return None
 
+    # An "electric" hint only forces 0 when the engine text does not contradict
+    # it: feeds have stored "Electric" on gas cars (GX 550 "3.4L V6"), and
+    # unconditionally zeroing here erased the combustion evidence that disproved
+    # the bad label. With combustion text present, fall through and parse the
+    # count the text actually describes.
+    from backend.utils.fuel_label_plausibility import combustion_evidence_from_text
+
     ft = str(fuel_type or "").strip().lower()
-    if ft == "electric":
+    _combustion_text = combustion_evidence_from_text(blob)
+    if ft == "electric" and not _combustion_text:
         return 0
-    if re.search(r"\belectric\b", blob, re.I) and (
-        ft == "electric"
-        or re.search(r"\b(?:battery|kwh|bev|motor)\b", blob, re.I)
+    if (
+        not _combustion_text
+        and re.search(r"\belectric\b", blob, re.I)
+        and (
+            ft == "electric"
+            or re.search(r"\b(?:battery|kwh|bev|motor)\b", blob, re.I)
+        )
     ):
         return 0
 

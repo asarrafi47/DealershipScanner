@@ -796,6 +796,23 @@ def merge_verified_specs(
         "electric" in _dealer_ft_lower
         and not any(x in _dealer_ft_lower for x in ("gas", "gasoline", "hybrid", "plug"))
     )
+    if _dealer_is_pure_ev:
+        # Dealer "Electric" labels have landed on gas/hybrid cars (GX 550 gas
+        # V6 ×25). Forcing cylinders_display=0 off that label made the engine
+        # line read "Electric" too — the bad label erased its own disproof. Only
+        # let the dealer label force BEV treatment when the row's own evidence
+        # does not contradict it; catalog/sticker/decoder BEV signals below are
+        # unaffected.
+        try:
+            from backend.utils.fuel_label_plausibility import (
+                PLAUSIBLE,
+                assess_electric_claim,
+            )
+
+            if assess_electric_claim(car).verdict != PLAUSIBLE:
+                _dealer_is_pure_ev = False
+        except Exception:
+            pass
     # Fuel-cell vehicles (Mirai, NEXO) are electric-drive: no cylinders, MPGe.
     # EPA dual-fuel strings ("Premium Gasoline / Electricity" = PHEV) must not count.
     _epa_fuel_lower = (epa.get("fuel_type") or "").lower()

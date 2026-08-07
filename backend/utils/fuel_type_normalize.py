@@ -46,6 +46,11 @@ import re
 from dataclasses import dataclass
 from typing import Any
 
+from backend.utils.fuel_label_plausibility import (
+    corrected_label_for_electric_claim,
+    is_bare_electric_label,
+)
+
 # Fleet-dominant gasoline label (~48k active rows already display this). The
 # linked catalog row says "Midgrade Gasoline" for the Ram 1500 eTorque, but the
 # octane grade belongs in the fuel-requirement copy, not in the fuel-type chip —
@@ -251,6 +256,35 @@ def normalize_fuel_type_for_display(
     DB read.
     """
     ft = fuel_type if fuel_type is not None else car.get("fuel_type")
+
+    # Bare "Electric" on a row whose own evidence says combustion (gas GX 550,
+    # ES 350h hybrid, 330e plug-in stored as "Electric"): route the claim to the
+    # evidence-backed label. Same call sites as the mild-hybrid rule — card
+    # serializer, facet cascade and the storage normalizer — so the chip and the
+    # fuel filter never disagree about which bucket the car belongs to.
+    if is_bare_electric_label(ft):
+        fixed = corrected_label_for_electric_claim(
+            car, fuel_type=ft, engine_text=_engine_text_for_car(car, engine_text)
+        )
+        if not fixed:
+            return None
+        catalog = (
+            catalog_fuel_type_for_car(car)
+            if catalog_fuel_type is _LOOKUP_CATALOG
+            else catalog_fuel_type
+        )
+        # A linked catalog row that says electric-ONLY outranks the heuristics:
+        # abstain rather than relabel something the cited source calls a BEV.
+        # Dual-fuel catalog strings ("Premium Gasoline / Electricity" = PHEV)
+        # do not protect a bare-electric label.
+        if (
+            catalog
+            and _CATALOG_ELECTRIC_RE.search(catalog)
+            and not _CATALOG_GASOLINE_RE.search(catalog)
+        ):
+            return None
+        return fixed
+
     if not is_correctable_hybrid_label(ft):
         return None
 

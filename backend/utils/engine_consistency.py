@@ -81,7 +81,17 @@ def cylinders_conflicts_with_engine_text(
     except (TypeError, ValueError):
         return False
     if c > 0 and is_bev_fuel(fuel_type):
-        return True
+        # The BEV label only outranks the cylinder count when the engine text
+        # shows nothing combustion-shaped. Feeds have stored bare "Electric" on
+        # gas cars (Lexus GX 550 "3.4L V6" ×25); treating their cylinders as the
+        # error kept erasing the one field that disproved the bad label — the
+        # defect self-sealed. With combustion evidence present, the FUEL LABEL
+        # is the suspect (handled by fuel_label_plausibility at read/write
+        # time), and the count is judged against the text alone below.
+        from backend.utils.fuel_label_plausibility import combustion_evidence_from_text
+
+        if not combustion_evidence_from_text(engine_text):
+            return True
     implied = cylinders_from_engine_text(engine_text)
     if implied is None:
         return False
