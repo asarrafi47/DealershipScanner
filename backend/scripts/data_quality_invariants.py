@@ -295,6 +295,10 @@ SQL_INVARIANTS: tuple[SqlInvariant, ...] = (
             SELECT COUNT(*) FROM cars c JOIN epa_master e ON e.id = c.epa_master_id
             WHERE c.listing_active = 1 AND c.year IS NOT NULL AND e.year IS NOT NULL
               AND c.year <> e.year
+              -- The bounded previous-year fallback (catalog/resolver.py: new model
+              -- years lag the EPA import) is deliberate and tagged; counting it
+              -- made this invariant 100% false alarms during the 2027-listing wave.
+              AND (c.epa_match_method IS NULL OR c.epa_match_method NOT LIKE '%prev_year%')
         """,
         example_sql="""
             SELECT c.id, c.year, c.make, c.model, c.trim, e.year AS epa_year, e.model AS epa_model,
@@ -302,6 +306,7 @@ SQL_INVARIANTS: tuple[SqlInvariant, ...] = (
             FROM cars c JOIN epa_master e ON e.id = c.epa_master_id
             WHERE c.listing_active = 1 AND c.year IS NOT NULL AND e.year IS NOT NULL
               AND c.year <> e.year
+              AND (c.epa_match_method IS NULL OR c.epa_match_method NOT LIKE '%prev_year%')
             LIMIT 20
         """,
         denominator_sql="SELECT COUNT(*) FROM cars WHERE listing_active = 1 AND epa_master_id IS NOT NULL",
