@@ -2,7 +2,7 @@
 
 ``pack_car_rows`` shrinks ``options["car_rows"]`` (~12,700 rows) from ~1.9 MB of
 uncompressed HTML down to a codes-plus-vocabulary blob. The decoder lives in
-``frontend/static/main.js`` (``unpackCarRows``), so the wire format is a contract
+``frontend/static/listings_boot.js`` (``unpackCarRows``), so the wire format is a contract
 between two languages with nothing enforcing it. These tests pin it from the
 Python side and assert the JS decoder still speaks the same dialect.
 """
@@ -13,11 +13,11 @@ from pathlib import Path
 
 from backend.listings.routes import _CAR_ROW_COLUMNS, pack_car_rows
 
-_MAIN_JS = Path(__file__).resolve().parents[2] / "frontend" / "static" / "main.js"
+_MAIN_JS = Path(__file__).resolve().parents[2] / "frontend" / "static" / "listings_boot.js"
 
 
 def unpack_car_rows(packed):
-    """Line-for-line mirror of ``unpackCarRows`` in frontend/static/main.js.
+    """Line-for-line mirror of ``unpackCarRows`` in frontend/static/listings_boot.js.
 
     Kept here (rather than importing an unused Python decoder from the app) so
     the round-trip test exercises the exact decode the browser performs. If you
