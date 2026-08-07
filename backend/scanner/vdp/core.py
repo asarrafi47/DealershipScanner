@@ -39,6 +39,12 @@ Reuses ``SCANNER_VDP_NAV_TIMEOUT_MS``, ``SCANNER_VDP_SETTLE_MS``, ``SCANNER_MAX_
 VDP price hints (JSON-LD ``offers``, ``dataLayer`` keys like ``internetPrice`` / ``salePrice``, light
 DOM) merge into ``price`` only when the listing has no positive price; provenance is stored under
 ``spec_source_json`` key ``vdp_price`` when applied (see ``backend.scanner.database.upsert_vehicles``).
+
+Split (2026-08): env knobs live in ``vdp.config``, queue scoring in ``vdp.queue``, capture
+analysis / EP fragments in ``vdp.extract``, gallery interaction in ``vdp.gallery``, page JS in
+``vdp.browser_js``. Everything is re-imported here so the historical import surface
+(``from backend.scanner.vdp.core import X`` and package-level ``from backend.scanner.vdp import X``)
+is unchanged.
 """
 from __future__ import annotations
 
@@ -73,105 +79,91 @@ from backend.scanner.utils.vdp_price_merge import (
     pick_vdp_price_from_hints,
 )
 
+from backend.scanner.vdp.browser_js import (  # noqa: F401
+    GALLERY_COLLECT_URLS_JS,
+    GALLERY_MODAL_NUDGE_JS,
+    PAGE_EXTRACT_JS,
+)
+
+# Re-exports: these moved into sibling leaf modules in the 2026-08 split but stay
+# importable from core (and, via __init__, from the package) for compatibility.
+# Env-var reads inside them stay lazy (functions read os.environ at call time).
+from backend.scanner.vdp.config import (  # noqa: F401
+    _gallery_idle_rounds,
+    _gallery_max_rounds,
+    _max_vdp_concurrency,
+    _nav_timeout_ms,
+    _settle_ms,
+    _vdp_description_max_per_dealer,
+    _vdp_download_images_enabled,
+    _vdp_drain_pending_timeout_sec,
+    _vdp_gallery_loop_max_sec,
+    _vdp_gallery_min_https,
+    _vdp_gallery_open_lightbox_enabled,
+    _vdp_gallery_priority_enabled,
+    _vdp_gallery_skip_if_feed_ge,
+    _vdp_image_download_dir,
+    _vdp_js_timeout_ms,
+    _vdp_max_per_dealer,
+    _vdp_price_max_per_dealer,
+    _vdp_response_text_timeout_sec,
+    _vdp_spec_gap_max_per_dealer,
+    _vdp_spin_capture_enabled,
+    _vdp_spin_max_sec,
+)
+from backend.scanner.vdp.extract import (  # noqa: F401
+    PRIORITY,
+    VEHICLE_SIGNAL_KEYS,
+    _GENERIC_VHR_VIN_ONLY,
+    _analyze_json_signals,
+    _build_fragments_from_vdp_capture,
+    _combine_ep_fragments,
+    _dom_specs_to_ep,
+    _is_generic_vhr_vin_only_url,
+    _ld_to_ep,
+    _looks_like_vin17,
+    _merge_vdp_sticker_url,
+    _merge_vdp_vehicle_history_url,
+    _pick_best_sticker_url,
+    _pick_best_vehicle_history_url,
+    _pick_vehicle_like_object,
+    _response_maybe_gallery_image_url,
+    _response_origin,
+    _string_quality,
+    _vdp_count_gallery_signals,
+    _vdp_wants_json_network_capture,
+)
+from backend.scanner.vdp.gallery import (  # noqa: F401
+    _VDP_LIGHTBOX_OPEN_TIMEOUT_MS,
+    _download_vdp_gallery_images,
+    _drain_pending_tasks,
+    _vdp_evaluate_gallery_all_frames,
+    _vdp_gallery_interaction_loop,
+    _vdp_gallery_step_advance,
+    _vdp_image_download_key,
+    _vdp_mouse_jitter,
+    _vdp_page_evaluate,
+    _vdp_try_open_photo_lightbox,
+)
+from backend.scanner.vdp.queue import (  # noqa: F401
+    _count_https_gallery_urls,
+    _vdp_field_gap_score,
+    _vdp_gallery_thin_boost,
+    _vdp_public_incomplete_gap_score,
+    _vdp_queue_sort_key,
+    _vdp_rotation_enabled,
+    _vdp_rotation_seed,
+    _vdp_rotation_tie_hash,
+    _vdp_visit_priority_tuple,
+    _vehicle_needs_description_vdp,
+    _vehicle_needs_spec_gap_vdp,
+)
+
 log = logging.getLogger("scanner.vdp")
 
 MAX_JSON_BYTES = 2 * 1024 * 1024
 
-_GENERIC_VHR_VIN_ONLY = re.compile(
-    r"^https?://vhr\.carfax\.com/main\?vin=[0-9a-z]+(&format=\w+)?$",
-    re.I,
-)
-
-
-def _is_generic_vhr_vin_only_url(url: str) -> bool:
-    u = (url or "").strip()
-    return bool(u) and bool(_GENERIC_VHR_VIN_ONLY.match(u))
-
-
-def _pick_best_vehicle_history_url(candidates: list[Any]) -> str | None:
-    """
-    Prefer dealer-provided Carfax / AutoCheck / partner URLs (absolute https) from DOM or JSON.
-    """
-    good: list[str] = []
-    seen: set[str] = set()
-    for raw in candidates:
-        if not isinstance(raw, str):
-            continue
-        s = raw.strip()
-        if not s.lower().startswith("http"):
-            continue
-        if "javascript:" in s.lower():
-            continue
-        low = s.lower()
-        if "carfax" not in low and "autocheck" not in low:
-            continue
-        if s in seen:
-            continue
-        seen.add(s)
-        good.append(s[:900])
-    if not good:
-        return None
-
-    def score(u: str) -> tuple[int, int]:
-        low = u.lower()
-        sc = 0
-        if "partner" in low or "dealer" in low or "token" in low or "pid=" in low or "otp=" in low:
-            sc += 6
-        if "vhr.carfax.com" in low and not _is_generic_vhr_vin_only_url(u):
-            sc += 4
-        if "report" in low or "vehiclehistory" in low or "displayhistory" in low:
-            sc += 2
-        if _is_generic_vhr_vin_only_url(u):
-            sc -= 3
-        return (sc, len(u))
-
-    good.sort(key=lambda u: score(u), reverse=True)
-    return good[0]
-
-
-def _merge_vdp_vehicle_history_url(vehicle: dict[str, Any], dom_urls: list[Any]) -> bool:
-    """Set ``carfax_url`` from *dom_urls* when it improves on the listing JSON link. Returns True if updated."""
-    picked = _pick_best_vehicle_history_url(dom_urls)
-    if not picked:
-        return False
-    cur = str(vehicle.get("carfax_url") or "").strip()
-    if not cur.lower().startswith("http"):
-        vehicle["carfax_url"] = picked
-        return True
-    if _is_generic_vhr_vin_only_url(cur) and not _is_generic_vhr_vin_only_url(picked):
-        vehicle["carfax_url"] = picked
-        return True
-    if len(picked) > len(cur) + 12 and ("partner" in picked.lower() or "token" in picked.lower()):
-        vehicle["carfax_url"] = picked
-        return True
-    return False
-
-
-def _pick_best_sticker_url(dom_urls: list[Any], vin: str | None = None) -> str | None:
-    from backend.scanner.post_scan.window_sticker import pick_best_listing_sticker_url
-
-    urls = [str(u).strip() for u in dom_urls if isinstance(u, str) and str(u).strip().startswith("http")]
-    return pick_best_listing_sticker_url(urls, vin=vin)
-
-
-def _merge_vdp_sticker_url(vehicle: dict[str, Any], dom_urls: list[Any]) -> bool:
-    """Set ``window_sticker_url`` from VDP iPacket / Monroney links when missing or improved."""
-    picked = _pick_best_sticker_url(dom_urls, str(vehicle.get("vin") or ""))
-    if not picked:
-        return False
-    cur = str(vehicle.get("window_sticker_url") or "").strip()
-    if not cur.lower().startswith("http"):
-        vehicle["window_sticker_url"] = picked
-        return True
-    cur_low = cur.lower()
-    picked_low = picked.lower()
-    if "sticker-puller" in picked_low and "sticker-puller" not in cur_low:
-        vehicle["window_sticker_url"] = picked
-        return True
-    if "token=" in picked_low and "token=" not in cur_low:
-        vehicle["window_sticker_url"] = picked
-        return True
-    return False
+MAX_NETWORK_ROWS = 45
 
 
 def _detach_response_handler(page: Any, handler: Any) -> None:
@@ -184,1055 +176,6 @@ def _detach_response_handler(page: Any, handler: Any) -> None:
                 return
             except Exception:
                 continue
-
-
-MAX_NETWORK_ROWS = 45
-
-VEHICLE_SIGNAL_KEYS = frozenset(
-    {
-        "vin",
-        "vinnumber",
-        "transmission",
-        "transmissiontype",
-        "drivetrain",
-        "drive_train",
-        "drivetype",
-        "engine",
-        "engine_description",
-        "interior_color",
-        "exterior_color",
-        "fuel_type",
-        "fueltype",
-        "mpg",
-        "city_fuel_economy",
-        "highway_fuel_economy",
-        "options",
-        "features",
-        "vehicleid",
-        "vehicle_id",
-        "chromestyleid",
-        "stock_id",
-        "stocknumber",
-        "mf_year",
-        "vehicle_make",
-        "vehicle_model",
-        "body_style",
-        "inventory_type",
-        "certified",
-        "trim",
-        "make",
-        "model",
-        "year",
-        "driveline",
-        "enginedescription",
-        "cityfuelefficiency",
-        "highwayfuelefficiency",
-        "exteriorcolor",
-        "vehicletransmission",
-    }
-)
-
-PRIORITY = {
-    "dataLayer": 100,
-    "dataLayer_flat": 99,
-    "inline_ep": 97,
-    "network_ep": 85,
-    "network_vehicle_json": 55,
-    "ld_json": 42,
-    "inline_json": 28,
-    "dom": 18,
-}
-
-
-def _vdp_field_gap_score(vehicle: dict[str, Any]) -> int:
-    """Prefer VDP visits for rows missing many dealer fields (CPO/EV listing gaps)."""
-    keys = (
-        "transmission",
-        "drivetrain",
-        "body_style",
-        "condition",
-        "exterior_color",
-        "interior_color",
-        "engine_description",
-        "description",
-    )
-    n = 0
-    for k in keys:
-        val = vehicle.get(k)
-        if val is None or (isinstance(val, str) and not str(val).strip()):
-            n += 1
-    return n
-
-
-def _vdp_public_incomplete_gap_score(vehicle: dict[str, Any]) -> int:
-    """Boost rows that fail the public listings spec sheet (Phase 3 completeness passes)."""
-    try:
-        from backend.utils.listing_completeness import listing_missing_field_codes
-
-        return len(listing_missing_field_codes(vehicle, for_public_filter=True))
-    except Exception:
-        return 0
-
-
-def _vdp_max_per_dealer(override: int | None = None) -> int:
-    if override is not None:
-        return max(0, int(override))
-    raw = (os.environ.get("SCANNER_VDP_EP_MAX") or "10").strip()
-    try:
-        return max(0, int(raw))
-    except ValueError:
-        return 10
-
-
-def _vdp_price_max_per_dealer(override: int | None = None) -> int:
-    """Extra unique listing URLs for rows still missing price after inventory JSON (aligned with Node ``scanner.js``)."""
-    if override is not None:
-        return max(0, min(5000, int(override)))
-    raw = (os.environ.get("SCANNER_VDP_PRICE_MAX") or "400").strip()
-    try:
-        return max(0, min(5000, int(raw)))
-    except ValueError:
-        return 400
-
-
-def _vdp_spec_gap_max_per_dealer() -> int:
-    """Extra VDP visits for inventory rows missing key specs (engine, transmission, …)."""
-    from backend.scanner.scan_efficiency import effective_vdp_spec_gap_max
-
-    return effective_vdp_spec_gap_max(10_000)
-
-
-def _vehicle_needs_spec_gap_vdp(vehicle: dict[str, Any]) -> bool:
-    """True when listing JSON left obvious spec gaps worth a targeted VDP visit."""
-    for key in (
-        "engine_description",
-        "transmission",
-        "drivetrain",
-        "fuel_type",
-        "body_style",
-    ):
-        val = vehicle.get(key)
-        if val is None or (isinstance(val, str) and not str(val).strip()):
-            return True
-    return False
-
-
-def _vehicle_needs_description_vdp(vehicle: dict[str, Any]) -> bool:
-    """True when dealer notes / description are missing or too short."""
-    desc = str(vehicle.get("description") or "").strip()
-    return len(desc) < 40
-
-
-def _vdp_description_max_per_dealer(override: int | None = None) -> int:
-    if override is not None:
-        return max(0, min(2000, int(override)))
-    raw = (os.environ.get("SCANNER_VDP_DESCRIPTION_MAX") or "120").strip()
-    try:
-        return max(0, min(2000, int(raw)))
-    except ValueError:
-        return 120
-
-
-def _nav_timeout_ms() -> int:
-    raw = (os.environ.get("SCANNER_VDP_NAV_TIMEOUT_MS") or "32000").strip()
-    try:
-        return max(5000, int(raw))
-    except ValueError:
-        return 32000
-
-
-def _settle_ms() -> int:
-    raw = (os.environ.get("SCANNER_VDP_SETTLE_MS") or "2200").strip()
-    try:
-        return max(200, int(raw))
-    except ValueError:
-        return 2200
-
-
-def _vdp_js_timeout_ms() -> int:
-    """Cap Playwright ``evaluate`` calls (gallery harvest can hang on huge DOM)."""
-    raw = (os.environ.get("SCANNER_VDP_JS_TIMEOUT_MS") or "12000").strip()
-    try:
-        return max(2000, min(120000, int(raw)))
-    except ValueError:
-        return 12000
-
-
-def _vdp_response_text_timeout_sec() -> float:
-    raw = (os.environ.get("SCANNER_VDP_RESPONSE_TEXT_TIMEOUT_SEC") or "8").strip()
-    try:
-        return max(1.0, min(60.0, float(raw)))
-    except ValueError:
-        return 8.0
-
-
-def _vdp_drain_pending_timeout_sec() -> float:
-    raw = (os.environ.get("SCANNER_VDP_DRAIN_PENDING_TIMEOUT_SEC") or "12").strip()
-    try:
-        return max(2.0, min(120.0, float(raw)))
-    except ValueError:
-        return 12.0
-
-
-def _vdp_gallery_loop_max_sec(site_profile: Any = None) -> float:
-    """Wall-clock cap per VDP gallery carousel harvest (URL count stays uncapped)."""
-    opt = ""
-    if isinstance(site_profile, dict):
-        opt = str(site_profile.get("optimize_for") or "").strip().lower()
-    if opt == "bmw":
-        raw = (os.environ.get("SCANNER_VDP_GALLERY_MAX_SEC_BMW") or "300").strip()
-    else:
-        raw = (os.environ.get("SCANNER_VDP_GALLERY_MAX_SEC") or "150").strip()
-    try:
-        return max(30.0, min(600.0, float(raw)))
-    except ValueError:
-        return 300.0 if opt == "bmw" else 150.0
-
-
-async def _vdp_page_evaluate(page_or_frame: Any, js: str, *, timeout_ms: int | None = None) -> Any:
-    tmo = (timeout_ms if timeout_ms is not None else _vdp_js_timeout_ms()) / 1000.0
-    return await asyncio.wait_for(page_or_frame.evaluate(js), timeout=tmo)
-
-
-def _max_vdp_concurrency() -> int:
-    from backend.scanner.scan_efficiency import effective_vdp_concurrency
-
-    return effective_vdp_concurrency()
-
-
-def _vdp_gallery_min_https() -> int:
-    try:
-        return max(1, int((os.environ.get("SCANNER_VDP_GALLERY_MIN_HTTPS") or "3").strip()))
-    except ValueError:
-        return 3
-
-
-def _vdp_gallery_skip_if_feed_ge() -> int:
-    """
-    Skip the per-VDP carousel interaction loop when the listing feed already supplied
-    at least this many HTTPS gallery images for the vehicle.
-
-    The carousel harvest loop is the dominant VDP cost (up to the wall-clock cap per
-    vehicle). On platforms whose listing feed already returns full galleries
-    (DealerOn cosmos, Dealer.com, eProcess results API, Algolia), that harvest only
-    *extends* an already-good gallery, so it can be skipped while still doing the cheap
-    nav + EP/spec/price extraction.
-
-    Default ``0`` = disabled (always harvest — current behaviour preserved exactly).
-    Set e.g. ``SCANNER_VDP_GALLERY_SKIP_IF_FEED_GE=8`` to enable.
-    """
-    raw = (os.environ.get("SCANNER_VDP_GALLERY_SKIP_IF_FEED_GE") or "0").strip()
-    try:
-        return max(0, int(raw))
-    except ValueError:
-        return 0
-
-
-def _vdp_gallery_priority_enabled() -> bool:
-    return (os.environ.get("SCANNER_VDP_GALLERY_PRIORITY") or "1").strip().lower() not in (
-        "0",
-        "false",
-        "no",
-        "off",
-    )
-
-
-def _gallery_max_rounds() -> int:
-    try:
-        return max(4, min(120, int((os.environ.get("SCANNER_VDP_GALLERY_MAX_ROUNDS") or "80").strip())))
-    except ValueError:
-        return 80
-
-
-def _gallery_idle_rounds() -> int:
-    try:
-        return max(1, min(20, int((os.environ.get("SCANNER_VDP_GALLERY_IDLE_ROUNDS") or "3").strip())))
-    except ValueError:
-        return 3
-
-
-def _vdp_gallery_open_lightbox_enabled() -> bool:
-    """When truthy, try to open the dealer photo lightbox before scoped DOM gallery harvest (default: on)."""
-    return (os.environ.get("SCANNER_VDP_GALLERY_OPEN_LIGHTBOX") or "1").strip().lower() not in (
-        "0",
-        "false",
-        "no",
-        "off",
-    )
-
-
-_VDP_LIGHTBOX_OPEN_TIMEOUT_MS = 2500
-
-
-async def _vdp_try_open_photo_lightbox(wp: Any) -> None:
-    """
-    Best-effort: click like a user to open the main vehicle photo viewer. Never raises; VDP
-    must succeed even if every step fails. On first successful click, briefly waits for paint.
-    """
-    if not _vdp_gallery_open_lightbox_enabled():
-        return
-    tmo = int(_VDP_LIGHTBOX_OPEN_TIMEOUT_MS)
-
-    # 1) "1 of 42 Photos" (common inventory widget)
-    try:
-        n_of = wp.get_by_text(re.compile(r"\d+\s+of\s+\d+\s+photos?", re.I))
-        if await n_of.count() > 0:
-            await n_of.first.click(timeout=tmo)
-            await asyncio.sleep(0.6)
-            return
-    except Exception:
-        pass
-
-    # 1b) "42 Photos" (Sonic / Dealer.com — not always "1 of 42" format)
-    for rx in (
-        re.compile(r"^\d+\s+photos?\s*$", re.I),
-        re.compile(r"^\d+\s*\+\s*photos?\s*$", re.I),
-    ):
-        try:
-            tloc = wp.get_by_text(rx, exact=True)
-            if await tloc.count() > 0:
-                await tloc.first.click(timeout=tmo)
-                await asyncio.sleep(0.6)
-                return
-        except Exception:
-            try:
-                tloc2 = wp.get_by_text(rx)
-                if await tloc2.count() > 0:
-                    await tloc2.first.click(timeout=tmo)
-                    await asyncio.sleep(0.6)
-                    return
-            except Exception:
-                pass
-
-    # 2) Common CTAs
-    for rx in (
-        re.compile(r"(view|see|show)\s+all\s+photos?", re.I),
-        re.compile(r"^all\s+photos?\s*$", re.I),
-    ):
-        try:
-            tloc = wp.get_by_text(rx)
-            if await tloc.count() > 0:
-                await tloc.first.click(timeout=tmo)
-                await asyncio.sleep(0.6)
-                return
-        except Exception:
-            pass
-
-    # 3) Buttons / links (photo / gallery)
-    for role in ("button", "link"):
-        for rx in (
-            re.compile(r"(photo|image|picture|slide|gallery)\b", re.I),
-            re.compile(r"^more\s+photos", re.I),
-        ):
-            try:
-                rloc = wp.get_by_role(role, name=rx)  # type: ignore[arg-type]
-                c = await rloc.count()
-                if 0 < c < 20:
-                    await rloc.first.click(timeout=tmo)
-                    await asyncio.sleep(0.6)
-                    return
-            except Exception:
-                pass
-
-    # 4) Hero / primary gallery image (including DealerOn vhcliaa widget patterns)
-    for sel in (
-        ".vehicle-image-gallery img",
-        ".vehicle-photos img",
-        "[class*='vdp-photos'] img",
-        "[class*='vehicle-image'] img",
-        "[class*='photo-gallery'] img",
-        ".photo-gallery img",
-        ".gallery img",
-        # DealerOn / vhcliaa
-        "[class*='vdp-media'] img",
-        "[class*='vehicle-gallery'] img",
-        "[class*='media-gallery'] img",
-        ".vdp-gallery img",
-        "[data-gallery] img",
-    ):
-        try:
-            im = wp.locator(sel).first
-            if await im.is_visible():
-                await im.click(timeout=tmo, force=True)
-                await asyncio.sleep(0.6)
-                return
-        except Exception:
-            pass
-
-
-from backend.scanner.vdp.browser_js import (  # noqa: F401
-    GALLERY_COLLECT_URLS_JS,
-    GALLERY_MODAL_NUDGE_JS,
-    PAGE_EXTRACT_JS,
-)
-
-
-def _vdp_download_images_enabled() -> bool:
-    """Default: skip the byte download; set ``SCANNER_VDP_DOWNLOAD_IMAGES=1`` to opt in.
-
-    Nothing reads these files -- the site and the iOS app render the dealer's remote URLs from
-    ``cars.gallery`` -- so storing copies buys no product value.
-    """
-    raw = (os.environ.get("SCANNER_VDP_DOWNLOAD_IMAGES") or "0").strip().lower()
-    return raw not in ("0", "false", "no", "off", "")
-
-
-def _vdp_image_download_dir() -> Path:
-    raw = (os.environ.get("SCANNER_VDP_IMAGE_DOWNLOAD_DIR") or "").strip()
-    if raw:
-        return Path(raw).expanduser()
-    return Path(__file__).resolve().parents[2] / "vdp_images"
-
-
-def _vdp_spin_capture_enabled() -> bool:
-    """Default: capture 360-spin assets (Impel/SpinCar/WebRotate); ``SCANNER_VDP_SPIN_CAPTURE=0`` to skip."""
-    raw = (os.environ.get("SCANNER_VDP_SPIN_CAPTURE") or "1").strip().lower()
-    return raw not in ("0", "false", "no", "off", "")
-
-
-def _vdp_spin_max_sec() -> float:
-    try:
-        return max(2.0, float(os.environ.get("SCANNER_VDP_SPIN_MAX_SEC") or 12.0))
-    except (TypeError, ValueError):
-        return 12.0
-
-
-def _response_maybe_gallery_image_url(url: str, content_type: str) -> bool:
-    """
-    True when a response is likely a vehicle-gallery image. Prefer ``Content-Type`` (many CDNs
-    serve ``?fmt=webp`` and similar with no file extension in the path).
-    """
-    u = (url or "").strip()
-    if not u.lower().startswith("https://"):
-        return False
-    ct = (content_type or "").lower().split(";")[0].strip()
-    if ct in (
-        "image/jpeg",
-        "image/jpg",
-        "image/pjpeg",
-        "image/png",
-        "image/webp",
-        "image/avif",
-        "image/gif",
-    ):
-        return True
-    if ct.startswith("image/") and "svg" not in ct and "x-icon" not in ct and "vnd" not in ct:
-        return True
-    low = u.lower()
-    if re.search(r"\.(jpe?g|png|webp|gif|avif)(\?|#|$)", low):
-        return True
-    for frag in (
-        "/image/",
-        "/images/",
-        "/photos/",
-        "/media/",
-        "/inventory/",
-        "cloudinary",
-        "dealerinspire",
-        "dealer.com",
-        "carsforsale",
-        "inventoryphoto",
-        "vehiclephoto",
-    ):
-        if frag in low:
-            return True
-    return False
-
-
-def _vdp_wants_json_network_capture(content_type: str) -> bool:
-    """True when a response body may be JSON (including GraphQL with ``text/plain``)."""
-    c = (content_type or "").strip().lower()
-    if not c:
-        return False
-    if c.startswith("image/") or c.startswith("video/") or c.startswith("audio/"):
-        return False
-    if c.startswith("text/css"):
-        return False
-    if c.startswith("text/html") and "json" not in c:
-        return False
-    if c.startswith("text/javascript") or "text/javascript" in c:
-        return False
-    if c == "application/javascript" or c.startswith("application/x-javascript"):
-        return False
-    if c.startswith("text/plain"):
-        return True
-    if "json" in c or "+json" in c:
-        return True
-    return False
-
-
-def _response_origin(url: str) -> str:
-    try:
-        p = urlparse(url or "")
-        if p.scheme and p.netloc:
-            return f"{p.scheme}://{p.netloc}/"
-    except (ValueError, TypeError):
-        pass
-    return "https:///"
-
-
-def _count_https_gallery_urls(vehicle: dict[str, Any]) -> int:
-    seen: set[str] = set()
-    n = 0
-    g = vehicle.get("gallery")
-    if isinstance(g, list):
-        for u in g:
-            if isinstance(u, str) and u.strip().lower().startswith("https://") and u not in seen:
-                seen.add(u)
-                n += 1
-    iu = vehicle.get("image_url")
-    if isinstance(iu, str) and iu.strip().lower().startswith("https://") and iu not in seen:
-        n += 1
-    return n
-
-
-def _vdp_gallery_thin_boost(vehicle: dict[str, Any]) -> int:
-    """Higher score → higher priority for limited VDP budget when gallery is thin."""
-    if not _vdp_gallery_priority_enabled():
-        return 0
-    have = _count_https_gallery_urls(vehicle)
-    need = _vdp_gallery_min_https()
-    if have >= need:
-        return 0
-    return (need - have) * 5
-
-
-def _vdp_visit_priority_tuple(vehicle: dict[str, Any]) -> tuple[int, int, int]:
-    """Sort key: public-incomplete boost, gallery-thin boost, then field-gap score."""
-    pub_gap = _vdp_public_incomplete_gap_score(vehicle)
-    field_gap = _vdp_field_gap_score(vehicle)
-    thin = _vdp_gallery_thin_boost(vehicle)
-    # Weight public spec gaps heavily so Phase 3 visits colors/transmission first.
-    return (pub_gap * 10 + thin + field_gap, pub_gap, field_gap)
-
-
-def _vdp_rotation_enabled() -> bool:
-    return (os.environ.get("SCANNER_VDP_ROTATION") or "1").strip().lower() not in (
-        "0",
-        "false",
-        "no",
-        "off",
-    )
-
-
-def _vdp_rotation_seed(dealer_id: str) -> str:
-    explicit = (os.environ.get("SCANNER_VDP_ROTATION_SEED") or "").strip()
-    if explicit:
-        return explicit
-    from datetime import datetime, timezone
-
-    day = datetime.now(timezone.utc).date().isoformat()
-    return f"{day}|{(dealer_id or '').strip()}"
-
-
-def _vdp_rotation_tie_hash(vehicle: dict[str, Any], seed: str) -> int:
-    vin = (vehicle.get("vin") or "").strip().upper()
-    digest = hashlib.blake2b(f"{seed}\0{vin}".encode(), digest_size=6, usedforsecurity=False).digest()
-    return int.from_bytes(digest, "big")
-
-
-def _vdp_queue_sort_key(vehicle: dict[str, Any], seed: str, *, rotation: bool) -> tuple[Any, ...]:
-    """Descending priority: public-incomplete + field gaps first; tie-break by rotation hash or VIN."""
-    t = _vdp_visit_priority_tuple(vehicle)
-    if rotation:
-        return (-t[0], -t[1], -t[2], _vdp_rotation_tie_hash(vehicle, seed))
-    return (-t[0], -t[1], -t[2], (vehicle.get("vin") or "").strip().upper())
-
-
-def _looks_like_vin17(v: str) -> bool:
-    s = (v or "").strip().upper()
-    return bool(re.match(r"^[A-HJ-NPR-Z0-9]{17}$", s))
-
-
-def _vdp_image_download_key(vehicle: dict[str, Any]) -> str:
-    mode = (os.environ.get("SCANNER_VDP_IMAGE_DOWNLOAD_KEY") or "vin").strip().lower()
-    if mode == "stock":
-        s = (vehicle.get("stock_number") or "").strip()
-        if s:
-            return re.sub(r"[^\w.\-]+", "_", s)[:80]
-    vin = (vehicle.get("vin") or "").strip().upper()
-    if _looks_like_vin17(vin):
-        return vin
-    s = (vehicle.get("stock_number") or "").strip()
-    return re.sub(r"[^\w.\-]+", "_", s)[:80] if s else "unknown"
-
-
-def _analyze_json_signals(obj: Any, depth: int = 0) -> tuple[float, list[str], list[dict[str, Any]]]:
-    score = 0.0
-    hits: list[str] = []
-    eps: list[dict[str, Any]] = []
-    if obj is None or depth > 18:
-        return score, hits, eps
-    if isinstance(obj, dict):
-        if isinstance(obj.get("ep"), dict):
-            eps.append(obj["ep"])
-            score += 25
-        for k, val in obj.items():
-            lk = str(k).replace(" ", "_").lower()
-            if lk in VEHICLE_SIGNAL_KEYS:
-                if val not in (None, "", [], {}):
-                    score += 8
-                    hits.append(str(k))
-            if isinstance(val, (dict, list)):
-                s2, h2, e2 = _analyze_json_signals(val, depth + 1)
-                score += s2 * 0.35
-                hits.extend(h2)
-                eps.extend(e2)
-    elif isinstance(obj, list):
-        for x in obj:
-            s2, h2, e2 = _analyze_json_signals(x, depth + 1)
-            score += s2
-            hits.extend(h2)
-            eps.extend(e2)
-    return round(score, 2), hits[:30], eps
-
-
-def _pick_vehicle_like_object(root: Any, depth: int = 0) -> dict[str, Any] | None:
-    if root is None or depth > 14:
-        return None
-    if isinstance(root, list):
-        for x in root:
-            p = _pick_vehicle_like_object(x, depth + 1)
-            if p:
-                return p
-        return None
-    if not isinstance(root, dict):
-        return None
-    v = root.get("vin") or root.get("VIN")
-    if _looks_like_vin17(str(v or "")):
-        return root
-    for key in (
-        "vehicle",
-        "vehicles",
-        "inventory",
-        "inventoryItem",
-        "inventoryItems",
-        "vehicleDetail",
-        "vehicleDetails",
-        "listing",
-        "listings",
-        "data",
-        "result",
-        "results",
-        "pageData",
-        "payload",
-    ):
-        child = root.get(key)
-        if isinstance(child, list) and child:
-            p = _pick_vehicle_like_object(child[0], depth + 1)
-            if p:
-                return p
-        elif isinstance(child, dict):
-            p = _pick_vehicle_like_object(child, depth + 1)
-            if p:
-                return p
-    keys = list(root.keys())
-    lowered = {str(k).replace(" ", "_").lower() for k in keys}
-    if len(lowered & VEHICLE_SIGNAL_KEYS) >= 2 and (root.get("vin") or root.get("VIN")) and len(keys) < 120:
-        return root
-    if len(lowered & VEHICLE_SIGNAL_KEYS) >= 3 and len(keys) < 120:
-        return root
-    for val in root.values():
-        if isinstance(val, (dict, list)):
-            p = _pick_vehicle_like_object(val, depth + 1)
-            if p:
-                return p
-    return None
-
-
-def _string_quality(val: Any) -> float:
-    if val is None:
-        return 0.0
-    if isinstance(val, bool):
-        return 5.0
-    if isinstance(val, (int, float)):
-        return 10.0
-    s = str(val).strip()
-    if not s or s.lower() in ("na", "n/a", "null"):
-        return 0.0
-    q = float(min(40, len(s)))
-    if len(s.split()) > 1:
-        q += 15
-    if re.search(r"metallic|pearl|tri-?coat", s, re.I):
-        q += 20
-    return q
-
-
-def _combine_ep_fragments(
-    fragments: list[tuple[str, dict[str, Any], float]],
-    expected_vin: str,
-) -> dict[str, Any]:
-    """Merge fragment dicts; higher priority wins per field when quality improves."""
-    pv = expected_vin.strip().upper()
-    merged: dict[str, Any] = {}
-    prov: dict[str, str] = {}
-
-    def pri_source(src: str) -> float:
-        return float(PRIORITY.get(src.split(":")[0], 10))
-
-    ordered = sorted(
-        fragments,
-        key=lambda x: (-pri_source(x[0]), -x[2], -_string_quality(next(iter(x[1].values()), ""))),
-    )
-
-    for source, ep, score in ordered:
-        if not ep:
-            continue
-        ev = str(ep.get("vin") or ep.get("VIN") or "").strip().upper()
-        if pv and ev and ev != pv:
-            continue
-        for k, val in ep.items():
-            if val is None or val == "":
-                continue
-            prev = merged.get(k)
-            pq = _string_quality(prev) if prev is not None else 0.0
-            nq = _string_quality(val)
-            if prev is None or nq > pq or (nq == pq and pri_source(source) > pri_source(prov.get(k, source))):
-                merged[k] = val
-                prov[k] = f"{source}({score:.0f})"
-    return merged
-
-
-
-
-
-
-def _dom_specs_to_ep(dom_specs: dict[str, str]) -> dict[str, Any]:
-    flat: dict[str, Any] = {}
-    for label, val in dom_specs.items():
-        lk = label.lower()
-        if re.search(r"vin", lk):
-            flat["vin"] = val
-        elif re.search(r"trans", lk):
-            flat["transmission"] = val
-        elif re.search(r"drive|drivetrain|driveline|wheel\s*drive", lk):
-            flat["drive_train"] = val
-        elif re.search(r"exterior|ext\.?\s*color", lk):
-            flat["exterior_color"] = val
-        elif re.search(r"interior|int\.?\s*color", lk):
-            flat["interior_color"] = val
-        elif re.search(r"engine", lk):
-            flat["engine"] = val
-        elif re.search(r"fuel", lk):
-            flat["fuel_type"] = val
-        elif re.search(r"mpg|fuel economy", lk):
-            m = re.search(r"(\d+)\s*[/|]\s*(\d+)", val)
-            if m:
-                flat["city_fuel_economy"] = m.group(1)
-                flat["highway_fuel_economy"] = m.group(2)
-            else:
-                m1 = re.search(r"(\d{1,2})", val)
-                if m1 and re.search(r"city", lk):
-                    flat["city_fuel_economy"] = m1.group(1)
-                elif m1 and re.search(r"highway|hwy", lk):
-                    flat["highway_fuel_economy"] = m1.group(1)
-    return flat
-
-
-def _ld_to_ep(node: dict[str, Any]) -> dict[str, Any]:
-    flat: dict[str, Any] = {}
-    if node.get("name") or node.get("model"):
-        flat["vehicle_model"] = str(node.get("name") or node.get("model") or "")[:200]
-    if node.get("vehicleIdentificationNumber"):
-        flat["vin"] = str(node["vehicleIdentificationNumber"])
-    elif node.get("vin"):
-        flat["vin"] = str(node["vin"])
-    if node.get("vehicleInteriorColor"):
-        flat["interior_color"] = str(node["vehicleInteriorColor"])
-    if node.get("color"):
-        flat.setdefault("exterior_color", str(node["color"])[:120])
-    if node.get("bodyType"):
-        flat["body_style"] = str(node["bodyType"])
-    vt = node.get("vehicleTransmission") or node.get("transmission")
-    if vt:
-        if isinstance(vt, dict):
-            t = vt.get("name") or vt.get("value")
-            if t:
-                flat["transmission"] = str(t)[:120]
-        else:
-            flat["transmission"] = str(vt)[:120]
-    dw = node.get("driveWheelConfiguration")
-    if dw:
-        if isinstance(dw, dict) and dw.get("name"):
-            flat["drive_train"] = str(dw["name"])[:120]
-        else:
-            flat["drive_train"] = str(dw)[:120]
-    fts = node.get("fuelType")
-    if fts:
-        if isinstance(fts, dict) and fts.get("name"):
-            flat["fuel_type"] = str(fts["name"])[:80]
-        else:
-            flat["fuel_type"] = str(fts)[:80]
-    eng = node.get("vehicleEngine")
-    if isinstance(eng, dict):
-        nm = eng.get("name") or eng.get("description")
-        if nm:
-            flat["engine"] = str(nm)[:500]
-    elif isinstance(eng, str) and eng.strip():
-        flat["engine"] = eng[:500]
-    return flat
-
-
-def _build_fragments_from_vdp_capture(
-    network_rows: list[dict[str, Any]],
-    bundle: dict[str, Any] | None,
-    expected_vin: str,
-) -> tuple[list[tuple[str, dict[str, Any], float]], list[str], str | None]:
-    fragments: list[tuple[str, dict[str, Any], float]] = []
-    extractor_hits: list[str] = []
-    bundle_err = (bundle or {}).get("error") if isinstance(bundle, dict) else None
-
-    for row in network_rows:
-        sc = float(row.get("score") or 0)
-        for ep in row.get("ep_objects") or []:
-            if isinstance(ep, dict):
-                fragments.append(("network_ep", ep, sc))
-        parsed = row.get("parsed")
-        if parsed and sc >= 15:
-            sub = _pick_vehicle_like_object(parsed)
-            if sub:
-                eff_sc = float(sc) if not row.get("ep_objects") else min(float(sc), 72.0)
-                fragments.append(("network_vehicle_json", sub, eff_sc))
-
-    if network_rows:
-        extractor_hits.append("network")
-
-    dle = (bundle or {}).get("dataLayerEps") or []
-    if dle:
-        extractor_hits.append("analytics_ep")
-        log.info("VDP: analytics_ep hit for VIN %s (%d ep fragment(s))", expected_vin[:17], len(dle))
-    for ep in dle:
-        if isinstance(ep, dict):
-            fragments.append(("dataLayer", ep, 95.0))
-
-    for flat in (bundle or {}).get("dataLayerFlatVehicle") or []:
-        if isinstance(flat, dict):
-            fragments.append(("dataLayer_flat", flat, 99.0))
-    if (bundle or {}).get("dataLayerFlatVehicle"):
-        extractor_hits.append("dataLayer_flat")
-
-    for ep_inline in (bundle or {}).get("inlineEpObjects") or []:
-        if isinstance(ep_inline, dict):
-            fragments.append(("inline_ep", ep_inline, 97.0))
-    if (bundle or {}).get("inlineEpObjects"):
-        extractor_hits.append("inline_ep")
-
-    for node in (bundle or {}).get("ldJsonVehicle") or []:
-        if isinstance(node, dict):
-            fe = _ld_to_ep(node)
-            if fe:
-                fragments.append(("ld_json", fe, 40.0))
-    if (bundle or {}).get("ldJsonVehicle"):
-        extractor_hits.append("ld_json")
-
-    for hit in (bundle or {}).get("inlineJsonHits") or []:
-        if isinstance(hit, dict) and not hit.get("_rawSnippet"):
-            fragments.append(("inline_json", hit, 25.0))
-    if (bundle or {}).get("inlineJsonHits"):
-        extractor_hits.append("inline_json")
-
-    ds = (bundle or {}).get("domSpecs") or {}
-    if isinstance(ds, dict) and ds:
-        dom_ep = _dom_specs_to_ep({str(k): str(v) for k, v in ds.items()})
-        if dom_ep:
-            fragments.append(("dom", dom_ep, 18.0))
-            extractor_hits.append("dom")
-
-    return fragments, list(dict.fromkeys(extractor_hits)), bundle_err
-
-
-def _vdp_count_gallery_signals(
-    network_rows: list[dict[str, Any]],
-    bundle: dict[str, Any] | None,
-) -> int:
-    n = 0
-    for row in network_rows:
-        n += len(row.get("image_urls") or [])
-    if isinstance(bundle, dict):
-        n += len(bundle.get("domGalleryUrls") or [])
-        n += len(bundle.get("jsonGalleryUrls") or [])
-    return n
-
-
-async def _drain_pending_tasks(pending: list[asyncio.Task[Any]], *, timeout_sec: float | None = None) -> None:
-    if not pending:
-        return
-    tmo = timeout_sec if timeout_sec is not None else _vdp_drain_pending_timeout_sec()
-    try:
-        await asyncio.wait_for(asyncio.gather(*pending, return_exceptions=True), timeout=tmo)
-    except asyncio.TimeoutError:
-        n_cancel = 0
-        for task in pending:
-            if not task.done():
-                task.cancel()
-                n_cancel += 1
-        if n_cancel:
-            log.warning(
-                "VDP: network capture drain hit %.1fs timeout — cancelled %s straggler task(s)",
-                tmo,
-                n_cancel,
-            )
-    pending.clear()
-
-
-async def _vdp_gallery_step_advance(wp: Any, thumb_rot: list[int]) -> None:
-    for sel in (
-        ".vehicle-image-gallery",
-        ".vehicle-photos",
-        ".photo-gallery",
-        ".gallery",
-        "[class*='photo-gallery']",
-        "[class*='image-gallery']",
-    ):
-        try:
-            loc = wp.locator(sel).first
-            await loc.click(timeout=500)
-            await wp.keyboard.press("ArrowRight")
-            await asyncio.sleep(0.05)
-            return
-        except Exception:
-            continue
-    try:
-        await wp.keyboard.press("ArrowRight")
-        await asyncio.sleep(0.05)
-    except Exception:
-        pass
-    next_selectors = [
-        'button[aria-label*="next" i]',
-        'a[aria-label*="next" i]',
-        '[class*="gallery"] button:has-text("Next")',
-        ".gallery-next",
-        ".swiper-button-next",
-        "[class*='chevron-right'][role='button']",
-    ]
-    for s in next_selectors:
-        try:
-            loc = wp.locator(s).first
-            if await loc.count() > 0:
-                await loc.click(timeout=900)
-                return
-        except Exception:
-            continue
-    try:
-        thumbs = wp.locator(
-            ".thumbnail, .thumbnails button, [data-gallery-thumb], "
-            ".swiper-slide:not(.swiper-slide-duplicate), li.swiper-slide"
-        )
-        n = await thumbs.count()
-        if n > 1:
-            idx = thumb_rot[0] % n
-            thumb_rot[0] += 1
-            await thumbs.nth(idx).click(timeout=1200)
-    except Exception:
-        pass
-
-
-async def _vdp_evaluate_gallery_all_frames(wp: Any) -> list[str]:
-    """
-    Run ``GALLERY_COLLECT_URLS_JS`` in the main document and in each child frame. Same-origin
-    gallery iframes (e.g. some 360 / embed hosts) are included; cross-origin frames raise and are
-    skipped.
-    """
-    merged: list[str] = []
-    frames = list(getattr(wp, "frames", None) or [])
-    for fr in frames:
-        try:
-            raw = await _vdp_page_evaluate(fr, GALLERY_COLLECT_URLS_JS)
-        except Exception:
-            continue
-        if not isinstance(raw, list):
-            continue
-        for x in raw:
-            if isinstance(x, str) and x.strip():
-                merged.append(x)
-    return merged
-
-
-async def _vdp_mouse_jitter(wp: Any) -> None:
-    """Small random pointer moves to nudge lazy galleries and client-side anti-bot heuristics."""
-    try:
-        view = await wp.evaluate(
-            "() => ({ w: Math.max(0, window.innerWidth), h: Math.max(0, window.innerHeight) })"
-        )
-    except Exception:
-        view = {"w": 0, "h": 0}
-    wv = int(view.get("w") or 0)
-    hv = int(view.get("h") or 0)
-    if wv < 2 or hv < 2:
-        wv, hv = 800, 600
-    for _ in range(2):
-        x = random.randint(1, max(1, wv - 1))
-        y = random.randint(1, max(1, hv - 1))
-        try:
-            await wp.mouse.move(x, y, steps=max(1, min(8, 2 + int(random.random() * 5))))
-        except Exception:
-            break
-        await asyncio.sleep(0.03 + random.random() * 0.05)
-
-
-async def _vdp_gallery_interaction_loop(
-    wp: Any,
-    *,
-    settle_ms: int,
-    response_image_urls: list[str],
-    pending: list[asyncio.Task[Any]],
-    site_profile: Any = None,
-    provider: str = "",
-) -> list[str]:
-    # autoWALL serves all gallery images in the initial network response burst — no carousel
-    # lazy-loading to trigger. Skip the interaction loop to avoid burning 60-80 seconds/vehicle.
-    if provider == "autowall":
-        return []
-    ordered: list[str] = []
-    seen: set[str] = set()
-    stall = 0
-    from backend.scanner.scan_efficiency import vdp_gallery_url_max
-
-    cap = vdp_gallery_url_max()
-    thumb_rot = [0]
-    settle_sleep = min(1200, max(240, int(settle_ms // 4)))
-    loop_started = asyncio.get_running_loop().time()
-    loop_deadline = loop_started + _vdp_gallery_loop_max_sec(site_profile)
-    try:
-        await _vdp_try_open_photo_lightbox(wp)
-        try:
-            await _vdp_page_evaluate(wp, GALLERY_MODAL_NUDGE_JS, timeout_ms=4000)
-        except Exception:
-            pass
-    except Exception:
-        pass
-    for round_i in range(_gallery_max_rounds()):
-        if asyncio.get_running_loop().time() >= loop_deadline:
-            log.info(
-                "VDP: gallery harvest wall-clock cap %.0fs reached (%s URL(s) collected)",
-                _vdp_gallery_loop_max_sec(site_profile),
-                len(ordered),
-            )
-            break
-        if round_i > 0 and round_i % 6 == 0:
-            try:
-                await _vdp_page_evaluate(wp, GALLERY_MODAL_NUDGE_JS, timeout_ms=4000)
-            except Exception:
-                pass
-        snap = list(response_image_urls)
-        try:
-            dom_batch = await _vdp_evaluate_gallery_all_frames(wp)
-        except Exception:
-            dom_batch = []
-        if not isinstance(dom_batch, list):
-            dom_batch = []
-        n1 = merge_https_url_batches(ordered, seen, dom_batch, max_total=cap)
-        n2 = merge_https_url_batches(ordered, seen, snap, max_total=cap)
-        if n1 + n2 == 0:
-            stall += 1
-            if stall >= _gallery_idle_rounds():
-                break
-        else:
-            stall = 0
-        await _vdp_gallery_step_advance(wp, thumb_rot)
-        await asyncio.sleep(settle_sleep / 1000.0)
-        await _drain_pending_tasks(pending)
-    return ordered
 
 
 def _apply_vdp_price_hints(
@@ -1259,62 +202,6 @@ def _apply_vdp_price_hints(
             },
         )
     return diag
-
-
-async def _download_vdp_gallery_images(wp: Any, vehicle: dict[str, Any], urls: list[str]) -> dict[str, Any] | None:
-    if not urls or not _vdp_download_images_enabled():
-        return None
-    dest = _vdp_image_download_dir() / _vdp_image_download_key(vehicle)
-    dest.mkdir(parents=True, exist_ok=True)
-    manifest: dict[str, Any] = {"files": [], "errors": []}
-    req = wp.context.request
-    tmo = _nav_timeout_ms()
-    from backend.scanner.scan_efficiency import vdp_gallery_url_max
-
-    cap = vdp_gallery_url_max() or 256
-    for i, url in enumerate(urls[:cap]):
-        if not isinstance(url, str) or not url.lower().startswith("https://"):
-            continue
-        try:
-            resp = await req.get(url, timeout=tmo)
-            if resp.status != 200:
-                manifest["errors"].append({"url": url[:220], "status": int(resp.status)})
-                continue
-            ct = (resp.headers.get("content-type") or "").lower()
-            if "image/" not in ct and not _response_maybe_gallery_image_url(url, ct):
-                manifest["errors"].append({"url": url[:220], "note": "skipped_non_image"})
-                continue
-            body = await resp.body()
-            if not body or len(body) < 80:
-                manifest["errors"].append({"url": url[:220], "note": "empty_body"})
-                continue
-            path = urlparse(url).path or ""
-            suf = Path(path).suffix.lower()
-            if suf not in (".jpg", ".jpeg", ".png", ".webp", ".gif", ".avif"):
-                suf = ".jpg"
-            name = f"{i:03d}_{hashlib.sha256(url.encode()).hexdigest()[:14]}{suf}"
-            fp = dest / name[:160]
-            fp.write_bytes(body)
-            manifest["files"].append({"url": url[:900], "path": str(fp)})
-        except Exception as e:
-            manifest["errors"].append({"url": url[:220], "err": str(e)[:160]})
-    try:
-        man_path = dest / "manifest.json"
-        man_path.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
-    except OSError as e:
-        log.warning("VDP: manifest write failed: %s", e)
-    vehicle["spec_source_json"] = merge_spec_source_json(
-        vehicle.get("spec_source_json"),
-        {
-            "vdp_gallery_local": {
-                "source": "vdp_download",
-                "dir": str(dest.resolve()),
-                "saved": len(manifest.get("files") or []),
-                "errors": len(manifest.get("errors") or []),
-            }
-        },
-    )
-    return manifest
 
 
 async def _vdp_spin_capture(
@@ -1459,6 +346,12 @@ async def _vdp_visit_one(
 ) -> dict[str, Any]:
     """
     Visit one VDP URL on *wp*, merge analytics into *v*. Isolated per page (safe for parallel workers).
+
+    The body is organized into per-phase inner helpers that close over the shared capture
+    state: network capture-drain (``capture_response``/``on_response``), nav+extract
+    (``_nav_and_extract_bundle``), gallery loop (``_gallery_loop_phase``), and the merge
+    phases (``_spin_phase`` / ``_merge_ep_phase`` / ``_assemble_gallery_phase`` /
+    ``_merge_dom_extras_phase`` / ``_claude_extract_phase``).
     """
     out: dict[str, Any] = {
         "visited": 0,
@@ -1480,6 +373,8 @@ async def _vdp_visit_one(
         is_spin_reserved_url as _is_spin_reserved_url,
         spin_url_key as _spin_url_key,
     )
+
+    # ----------------------- capture-drain phase ---------------------------
 
     async def capture_response(response) -> None:
         my_epoch = visit_epoch[0]
@@ -1589,218 +484,136 @@ async def _vdp_visit_one(
         task.add_done_callback(_absorb_playwright_race)
         pending.append(task)
 
-    wp.on("response", on_response)
-    urls_to_try: list[str] = [u]
-    # autoWALL serves color/specs via div.row>div.col on the first (correct) VDP URL.
-    # Alternate URL patterns are Dealer.com-style and return no useful data — skip them.
-    if provider != "autowall":
-        alts = v.get("_detail_url_alternates")
-        if isinstance(alts, list):
-            for a in alts:
-                if isinstance(a, str):
-                    au = a.strip()
-                    if au.startswith("http") and au not in urls_to_try:
-                        urls_to_try.append(au)
-                if len(urls_to_try) >= 6:
-                    break
+    # ------------------------------ nav phase ------------------------------
 
-    try:
-        combined_ep: dict[str, Any] = {}
-        success_u = u
-        last_bundle: dict[str, Any] = {}
-        extra_loop_gallery: list[str] = []
+    def _build_urls_to_try() -> list[str]:
+        urls_to_try: list[str] = [u]
+        # autoWALL serves color/specs via div.row>div.col on the first (correct) VDP URL.
+        # Alternate URL patterns are Dealer.com-style and return no useful data — skip them.
+        if provider != "autowall":
+            alts = v.get("_detail_url_alternates")
+            if isinstance(alts, list):
+                for a in alts:
+                    if isinstance(a, str):
+                        au = a.strip()
+                        if au.startswith("http") and au not in urls_to_try:
+                            urls_to_try.append(au)
+                    if len(urls_to_try) >= 6:
+                        break
+        return urls_to_try
 
-        # Decouple gallery harvest from spec/EP extraction: when the listing feed already
-        # provided a sufficient gallery, skip the expensive per-VDP carousel interaction loop
-        # (opt-in via SCANNER_VDP_GALLERY_SKIP_IF_FEED_GE; default 0 = always harvest). The
-        # feed gallery is preserved — merge only *extends* an existing gallery of >=3 images.
-        from backend.scanner.vdp.html_recovery import count_https_gallery_urls as _count_https
-        _feed_gallery_urls = list(v.get("gallery") or [])
-        _feed_hero = v.get("image_url")
-        if isinstance(_feed_hero, str):
-            _feed_gallery_urls.append(_feed_hero)
-        _feed_gallery_count = _count_https(_feed_gallery_urls)
-        _gallery_skip_ge = _vdp_gallery_skip_if_feed_ge()
-        _skip_gallery_loop = _gallery_skip_ge > 0 and _feed_gallery_count >= _gallery_skip_ge
+    async def _nav_and_extract_bundle(try_url: str) -> Any:
+        """Navigate to *try_url*, settle, drain capture tasks, then run ``PAGE_EXTRACT_JS``."""
+        nav_err = None
+        try:
+            await wp.goto(try_url, wait_until="domcontentloaded", timeout=_nav_timeout_ms())
+        except Exception as e:
+            nav_err = str(e)
+        await asyncio.sleep(_settle_ms() / 1000.0)
+        await _drain_pending_tasks(pending)
 
-        for try_url in urls_to_try:
-            visit_epoch[0] += 1
-            network_rows.clear()
-            response_image_urls.clear()
-            spin_asset_urls.clear()
-            spin_config_urls.clear()
-            out["visited"] = int(out.get("visited") or 0) + 1
+        if nav_err:
+            log.warning("VDP: %s — navigation issue: %s", dealer_name, nav_err[:120])
 
-            log.info("VDP: %s — visiting %s", dealer_name, try_url[:200])
+        try:
+            bundle = await _vdp_page_evaluate(wp, PAGE_EXTRACT_JS)
+        except Exception as e:
+            bundle = {"error": str(e)}
+        return bundle
 
-            nav_err = None
-            try:
-                await wp.goto(try_url, wait_until="domcontentloaded", timeout=_nav_timeout_ms())
-            except Exception as e:
-                nav_err = str(e)
-            await asyncio.sleep(_settle_ms() / 1000.0)
-            await _drain_pending_tasks(pending)
+    # -------------------------- gallery-loop phase -------------------------
 
-            if nav_err:
-                log.warning("VDP: %s — navigation issue: %s", dealer_name, nav_err[:120])
-
-            try:
-                bundle = await _vdp_page_evaluate(wp, PAGE_EXTRACT_JS)
-            except Exception as e:
-                bundle = {"error": str(e)}
-            last_bundle = bundle if isinstance(bundle, dict) else {}
-            if site_profile is not None and isinstance(last_bundle, dict):
-                try:
-                    from backend.scanner.dealer.location import apply_vdp_location_verdict
-
-                    verdict = apply_vdp_location_verdict(v, last_bundle, site_profile)
-                    if verdict == "mismatch":
-                        out["skipped"].append("sister_store_location")
-                        log.info(
-                            "VDP: %s — skipping VIN %s (off-lot location: %s)",
-                            dealer_name,
-                            vin[:17],
-                            (v.get("_lot_location") or "")[:100],
-                        )
-                        return out
-                except Exception as loc_err:
-                    log.debug("VDP location check failed for %s: %s", vin[:17], loc_err)
-            await _drain_pending_tasks(pending)
-            try:
-                await _vdp_mouse_jitter(wp)
-            except Exception:
-                pass
-            if _skip_gallery_loop:
-                extra_loop_gallery = []
-                log.info(
-                    "VDP: %s — skipping carousel harvest for VIN %s (feed gallery=%d >= %d)",
-                    dealer_name, vin[:17], _feed_gallery_count, _gallery_skip_ge,
-                )
-            else:
-                try:
-                    extra_loop_gallery = await _vdp_gallery_interaction_loop(
-                        wp,
-                        settle_ms=_settle_ms(),
-                        response_image_urls=response_image_urls,
-                        pending=pending,
-                        site_profile=site_profile,
-                        provider=provider,
-                    )
-                except Exception as e:
-                    log.warning("VDP: %s — gallery interaction loop: %s", dealer_name, str(e)[:160])
-            await _drain_pending_tasks(pending)
-            # Flush images loaded between the last carousel snapshot and loop-end into
-            # extra_loop_gallery (still carousel context), then clear so post-carousel
-            # lazy-loads (related vehicles, marketing tiles) are not mixed in.
-            _loop_seen: set[str] = set(extra_loop_gallery)
-            for _img_u in response_image_urls:
-                if isinstance(_img_u, str) and _img_u not in _loop_seen:
-                    extra_loop_gallery.append(_img_u)
-                    _loop_seen.add(_img_u)
-            response_image_urls.clear()
-
-            async with preview_lock:
-                if preview_budget[0] > 0 and isinstance(bundle, dict):
-                    preview_budget[0] -= 1
-                    idx = 2 - preview_budget[0]
-                    ed = bundle.get("extractDebug") or {}
-                    log.info(
-                        "VDP: %s — extract raw preview (%d/2) dataLayer_len=%s nested_ep=%s flat_vehicle=%s inline_ep_JSON=%s",
-                        dealer_name,
-                        idx,
-                        ed.get("dataLayerLength"),
-                        ed.get("dataLayerEpCount"),
-                        ed.get("dataLayerFlatCount"),
-                        ed.get("inlineEpParseCount"),
-                    )
-                    log.info(
-                        "VDP: %s — dataLayer event names (sample): %s",
-                        dealer_name,
-                        (ed.get("dataLayerEvents") or [])[:14],
-                    )
-                    log.info(
-                        "VDP: %s — analytics rows (event | keys): %s",
-                        dealer_name,
-                        (ed.get("analyticsEventKeys") or [])[:8],
-                    )
-                    log.info(
-                        "VDP: %s — dataLayer top-level key samples (first rows): %s",
-                        dealer_name,
-                        (ed.get("dataLayerRowTopKeys") or [])[:4],
-                    )
-                    log.info(
-                        "VDP: %s — inline script ep key candidates: %s",
-                        dealer_name,
-                        ed.get("inlineKeySamples"),
-                    )
-
-            frags, hits, _berr = _build_fragments_from_vdp_capture(network_rows, bundle, vin)
-            if hits:
-                log.info("VDP: %s — extractors with data: %s", dealer_name, ", ".join(hits))
-
-            combined_try = normalize_ep_field_aliases(_combine_ep_fragments(frags, vin))
-            gsig = _vdp_count_gallery_signals(network_rows, last_bundle) + len(extra_loop_gallery)
+    async def _gallery_loop_phase() -> None:
+        """Mouse jitter, then the carousel harvest loop (or the feed-gallery skip), then flush."""
+        nonlocal extra_loop_gallery
+        try:
+            await _vdp_mouse_jitter(wp)
+        except Exception:
+            pass
+        if _skip_gallery_loop:
+            extra_loop_gallery = []
             log.info(
-                "VDP: %s — combined EP keys for VIN %s: %s (gallery_signal=%d)",
-                dealer_name,
-                vin[:17],
-                sorted(combined_try.keys()),
-                gsig,
+                "VDP: %s — skipping carousel harvest for VIN %s (feed gallery=%d >= %d)",
+                dealer_name, vin[:17], _feed_gallery_count, _gallery_skip_ge,
             )
-            if combined_try:
-                combined_ep = combined_try
-                success_u = try_url
-                break
-            if gsig >= 4:
-                combined_ep = {}
-                success_u = try_url
+        else:
+            try:
+                extra_loop_gallery = await _vdp_gallery_interaction_loop(
+                    wp,
+                    settle_ms=_settle_ms(),
+                    response_image_urls=response_image_urls,
+                    pending=pending,
+                    site_profile=site_profile,
+                    provider=provider,
+                )
+            except Exception as e:
+                log.warning("VDP: %s — gallery interaction loop: %s", dealer_name, str(e)[:160])
+        await _drain_pending_tasks(pending)
+        # Flush images loaded between the last carousel snapshot and loop-end into
+        # extra_loop_gallery (still carousel context), then clear so post-carousel
+        # lazy-loads (related vehicles, marketing tiles) are not mixed in.
+        _loop_seen: set[str] = set(extra_loop_gallery)
+        for _img_u in response_image_urls:
+            if isinstance(_img_u, str) and _img_u not in _loop_seen:
+                extra_loop_gallery.append(_img_u)
+                _loop_seen.add(_img_u)
+        response_image_urls.clear()
+
+    async def _log_extract_preview(bundle: Any) -> None:
+        async with preview_lock:
+            if preview_budget[0] > 0 and isinstance(bundle, dict):
+                preview_budget[0] -= 1
+                idx = 2 - preview_budget[0]
+                ed = bundle.get("extractDebug") or {}
                 log.info(
-                    "VDP: %s — gallery-rich capture without EP fields on %s (signal=%d)",
+                    "VDP: %s — extract raw preview (%d/2) dataLayer_len=%s nested_ep=%s flat_vehicle=%s inline_ep_JSON=%s",
                     dealer_name,
-                    try_url[:120],
-                    gsig,
+                    idx,
+                    ed.get("dataLayerLength"),
+                    ed.get("dataLayerEpCount"),
+                    ed.get("dataLayerFlatCount"),
+                    ed.get("inlineEpParseCount"),
                 )
-                break
-            log.info(
-                "VDP: %s — no extractable ep/vehicle fields from %s (trying alternate URL if any)",
-                dealer_name,
-                try_url[:120],
-            )
+                log.info(
+                    "VDP: %s — dataLayer event names (sample): %s",
+                    dealer_name,
+                    (ed.get("dataLayerEvents") or [])[:14],
+                )
+                log.info(
+                    "VDP: %s — analytics rows (event | keys): %s",
+                    dealer_name,
+                    (ed.get("analyticsEventKeys") or [])[:8],
+                )
+                log.info(
+                    "VDP: %s — dataLayer top-level key samples (first rows): %s",
+                    dealer_name,
+                    (ed.get("dataLayerRowTopKeys") or [])[:4],
+                )
+                log.info(
+                    "VDP: %s — inline script ep key candidates: %s",
+                    dealer_name,
+                    ed.get("inlineKeySamples"),
+                )
 
-        img_net = len(
-            {u for u in response_image_urls if isinstance(u, str) and u.lower().startswith("https://")}
-        )
-        g_total = (
-            _vdp_count_gallery_signals(network_rows, last_bundle) + len(extra_loop_gallery) + img_net
-        )
-        dom_vhr: list[Any] = []
-        dom_mono: list[Any] = []
-        if isinstance(last_bundle, dict):
-            dom_vhr = last_bundle.get("domVehicleHistoryUrls") or []
-            dom_mono = last_bundle.get("domMonroneyTextSnippets") or []
-        has_dom_history = isinstance(dom_vhr, list) and any(
-            isinstance(x, str) and x.strip().lower().startswith("http") for x in dom_vhr
-        )
-        has_mono_text = isinstance(dom_mono, list) and any(
-            isinstance(x, str) and len(x.strip()) >= 50 for x in dom_mono
-        )
-        price_hints_n = 0
-        if isinstance(last_bundle, dict):
-            price_hints_n = len([h for h in (last_bundle.get("vdpPriceHints") or []) if isinstance(h, dict)])
-        if (
-            not combined_ep
-            and g_total < 2
-            and not has_dom_history
-            and not has_mono_text
-            and price_hints_n == 0
-        ):
-            log.info(
-                "VDP: %s — no extractable ep/vehicle fields and minimal gallery signals after %d URL attempt(s)",
-                dealer_name,
-                len(urls_to_try),
-            )
-            return out
+    def _combine_phase(bundle: Any) -> tuple[dict[str, Any], int]:
+        frags, hits, _berr = _build_fragments_from_vdp_capture(network_rows, bundle, vin)
+        if hits:
+            log.info("VDP: %s — extractors with data: %s", dealer_name, ", ".join(hits))
 
+        combined_try = normalize_ep_field_aliases(_combine_ep_fragments(frags, vin))
+        gsig = _vdp_count_gallery_signals(network_rows, last_bundle) + len(extra_loop_gallery)
+        log.info(
+            "VDP: %s — combined EP keys for VIN %s: %s (gallery_signal=%d)",
+            dealer_name,
+            vin[:17],
+            sorted(combined_try.keys()),
+            gsig,
+        )
+        return combined_try, gsig
+
+    # ----------------------------- merge phase -----------------------------
+
+    async def _spin_phase() -> tuple[dict[str, Any], list[str], Any, set[str]]:
         # 360-spin capture (Impel/SpinCar/WebRotate): resolve exterior frame sequence + interior
         # pano from the viewer's own traffic/manifest. Runs before gallery assembly so the frame
         # URLs can be excluded from the gallery candidates.
@@ -1823,7 +636,9 @@ async def _vdp_visit_one(
         }
         if isinstance(interior_pano_found, str) and interior_pano_found:
             spin_gallery_exclude.add(_spin_url_key(interior_pano_found))
+        return spin_info, spin_frames_found, interior_pano_found, spin_gallery_exclude
 
+    def _merge_ep_phase() -> list[str]:
         filled: list[str] = []
         if combined_ep:
             log_exterior_downgrade_skip(v, combined_ep, log, "vdp_combined")
@@ -1846,7 +661,9 @@ async def _vdp_visit_one(
 
         if not v.get("source_url"):
             v["source_url"] = success_u
+        return filled
 
+    async def _assemble_gallery_phase(filled: list[str], spin_gallery_exclude: set[str]) -> dict[str, Any]:
         cand_gallery: list[str] = []
         gseen: set[str] = set()
         from backend.scanner.scan_efficiency import vdp_gallery_carousel_only, vdp_gallery_url_max
@@ -1952,7 +769,13 @@ async def _vdp_visit_one(
         )
         out["gallery_added"] = int(gmerge.get("added") or 0)
         out["gallery_merge_action"] = gmerge.get("action")
+        return gmerge
 
+    def _attach_spin_phase(
+        spin_info: dict[str, Any],
+        spin_frames_found: list[str],
+        interior_pano_found: Any,
+    ) -> None:
         # Attach 360-spin assets per contract: ordered exterior frames (>=8) and single
         # equirect interior pano. Each scan overwrites with freshly observed URLs — the Impel
         # {stamp} path segment rotates on re-shoots, so stale frames must not be merged.
@@ -1983,6 +806,7 @@ async def _vdp_visit_one(
                 spin_info.get("spin_source"),
             )
 
+    def _merge_dom_extras_phase(filled: list[str]) -> bool:
         dom_carfax_updated = False
         if isinstance(last_bundle, dict):
             vhr_dom = last_bundle.get("domVehicleHistoryUrls") or []
@@ -2059,10 +883,9 @@ async def _vdp_visit_one(
                 v["_in_transit"] = True
                 v["_availability_status"] = "in_transit"
                 v["_availability_source"] = "vdp_dom"
+        return dom_carfax_updated
 
-        pdiag = _apply_vdp_price_hints(v, last_bundle, success_u)
-        out["price_updated"] = bool(pdiag.get("updated"))
-
+    async def _claude_extract_phase(filled: list[str]) -> None:
         # Claude inline VDP extraction — fills missing fields from visible page text
         try:
             from backend.scanner.vdp.claude_extract import (
@@ -2116,6 +939,131 @@ async def _vdp_visit_one(
                     out["filled"] = list(filled)
         except Exception as _ce:
             log.debug("Claude VDP inline extract error for %s: %s", vin[:17], _ce)
+
+    wp.on("response", on_response)
+    urls_to_try = _build_urls_to_try()
+
+    try:
+        combined_ep: dict[str, Any] = {}
+        success_u = u
+        last_bundle: dict[str, Any] = {}
+        extra_loop_gallery: list[str] = []
+
+        # Decouple gallery harvest from spec/EP extraction: when the listing feed already
+        # provided a sufficient gallery, skip the expensive per-VDP carousel interaction loop
+        # (opt-in via SCANNER_VDP_GALLERY_SKIP_IF_FEED_GE; default 0 = always harvest). The
+        # feed gallery is preserved — merge only *extends* an existing gallery of >=3 images.
+        from backend.scanner.vdp.html_recovery import count_https_gallery_urls as _count_https
+        _feed_gallery_urls = list(v.get("gallery") or [])
+        _feed_hero = v.get("image_url")
+        if isinstance(_feed_hero, str):
+            _feed_gallery_urls.append(_feed_hero)
+        _feed_gallery_count = _count_https(_feed_gallery_urls)
+        _gallery_skip_ge = _vdp_gallery_skip_if_feed_ge()
+        _skip_gallery_loop = _gallery_skip_ge > 0 and _feed_gallery_count >= _gallery_skip_ge
+
+        for try_url in urls_to_try:
+            visit_epoch[0] += 1
+            network_rows.clear()
+            response_image_urls.clear()
+            spin_asset_urls.clear()
+            spin_config_urls.clear()
+            out["visited"] = int(out.get("visited") or 0) + 1
+
+            log.info("VDP: %s — visiting %s", dealer_name, try_url[:200])
+
+            bundle = await _nav_and_extract_bundle(try_url)
+            last_bundle = bundle if isinstance(bundle, dict) else {}
+            if site_profile is not None and isinstance(last_bundle, dict):
+                try:
+                    from backend.scanner.dealer.location import apply_vdp_location_verdict
+
+                    verdict = apply_vdp_location_verdict(v, last_bundle, site_profile)
+                    if verdict == "mismatch":
+                        out["skipped"].append("sister_store_location")
+                        log.info(
+                            "VDP: %s — skipping VIN %s (off-lot location: %s)",
+                            dealer_name,
+                            vin[:17],
+                            (v.get("_lot_location") or "")[:100],
+                        )
+                        return out
+                except Exception as loc_err:
+                    log.debug("VDP location check failed for %s: %s", vin[:17], loc_err)
+            await _drain_pending_tasks(pending)
+            await _gallery_loop_phase()
+
+            await _log_extract_preview(bundle)
+
+            combined_try, gsig = _combine_phase(bundle)
+            if combined_try:
+                combined_ep = combined_try
+                success_u = try_url
+                break
+            if gsig >= 4:
+                combined_ep = {}
+                success_u = try_url
+                log.info(
+                    "VDP: %s — gallery-rich capture without EP fields on %s (signal=%d)",
+                    dealer_name,
+                    try_url[:120],
+                    gsig,
+                )
+                break
+            log.info(
+                "VDP: %s — no extractable ep/vehicle fields from %s (trying alternate URL if any)",
+                dealer_name,
+                try_url[:120],
+            )
+
+        img_net = len(
+            {u for u in response_image_urls if isinstance(u, str) and u.lower().startswith("https://")}
+        )
+        g_total = (
+            _vdp_count_gallery_signals(network_rows, last_bundle) + len(extra_loop_gallery) + img_net
+        )
+        dom_vhr: list[Any] = []
+        dom_mono: list[Any] = []
+        if isinstance(last_bundle, dict):
+            dom_vhr = last_bundle.get("domVehicleHistoryUrls") or []
+            dom_mono = last_bundle.get("domMonroneyTextSnippets") or []
+        has_dom_history = isinstance(dom_vhr, list) and any(
+            isinstance(x, str) and x.strip().lower().startswith("http") for x in dom_vhr
+        )
+        has_mono_text = isinstance(dom_mono, list) and any(
+            isinstance(x, str) and len(x.strip()) >= 50 for x in dom_mono
+        )
+        price_hints_n = 0
+        if isinstance(last_bundle, dict):
+            price_hints_n = len([h for h in (last_bundle.get("vdpPriceHints") or []) if isinstance(h, dict)])
+        if (
+            not combined_ep
+            and g_total < 2
+            and not has_dom_history
+            and not has_mono_text
+            and price_hints_n == 0
+        ):
+            log.info(
+                "VDP: %s — no extractable ep/vehicle fields and minimal gallery signals after %d URL attempt(s)",
+                dealer_name,
+                len(urls_to_try),
+            )
+            return out
+
+        spin_info, spin_frames_found, interior_pano_found, spin_gallery_exclude = await _spin_phase()
+
+        filled = _merge_ep_phase()
+
+        gmerge = await _assemble_gallery_phase(filled, spin_gallery_exclude)
+
+        _attach_spin_phase(spin_info, spin_frames_found, interior_pano_found)
+
+        dom_carfax_updated = _merge_dom_extras_phase(filled)
+
+        pdiag = _apply_vdp_price_hints(v, last_bundle, success_u)
+        out["price_updated"] = bool(pdiag.get("updated"))
+
+        await _claude_extract_phase(filled)
 
         if _vdp_download_images_enabled():
             try:
