@@ -47,6 +47,8 @@ _NAME_PATTERNS: tuple[str, ...] = (
     # restaurants (real hit: North Italia)
     r"\brestaurant\b",
     r"\bnorth\s+italia\b",
+    # government / institutional surplus outlets (real hit: TX State Surplus Store)
+    r"\bsurplus\b",
     # direct-to-consumer brands with no franchise dealers
     r"\brivian\b",
     r"\btesla\b",
@@ -79,6 +81,48 @@ _URL_HOST_SUBSTRINGS: tuple[str, ...] = (
     "carvana.com",
     "carmax.com",
     "adesa.com",
+    # subscription / rental platforms (real hit: Buggy)
+    "joinbuggy.com",
+)
+
+# --- OEM corporate apex domains (EXACT host match only) ------------------------
+# An OEM's own site is corporate HQ, not a rooftop (real hit: Subaru of America
+# seeded from subaru.com). Exact match is load-bearing: a substring test on
+# "toyota.com" would clip real dealer hosts like sunnyvaletoyota.com.
+_OEM_APEX_HOSTS: frozenset[str] = frozenset(
+    {
+        "acura.com",
+        "audiusa.com",
+        "bmwusa.com",
+        "buick.com",
+        "cadillac.com",
+        "chevrolet.com",
+        "chrysler.com",
+        "dodge.com",
+        "ford.com",
+        "genesis.com",
+        "gmc.com",
+        "honda.com",
+        "hyundaiusa.com",
+        "infinitiusa.com",
+        "jaguarusa.com",
+        "jeep.com",
+        "kia.com",
+        "landroverusa.com",
+        "lexus.com",
+        "lincoln.com",
+        "mazdausa.com",
+        "mbusa.com",
+        "mini.com",
+        "mitsubishicars.com",
+        "nissanusa.com",
+        "porsche.com",
+        "ramtrucks.com",
+        "subaru.com",
+        "toyota.com",
+        "volvocars.com",
+        "vw.com",
+    }
 )
 
 # --- Google Places primaryType / types values that are never a franchise dealer
@@ -143,6 +187,8 @@ def is_probable_non_dealer(
 
     host = _host_of(url)
     if host and any(sub in host for sub in _URL_HOST_SUBSTRINGS):
+        return True
+    if host in _OEM_APEX_HOSTS:
         return True
 
     return False
