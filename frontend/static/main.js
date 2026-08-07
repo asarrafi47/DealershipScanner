@@ -1,399 +1,23 @@
 document.addEventListener("DOMContentLoaded", () => {
-    /** Listings boot: JSON blobs (CSP-friendly) — see listings.html */
-    (function loadListingsBootFromJson() {
-        if (!document.getElementById("ds-listings-car-rows")) return;
-        function readJsonScript(id, fallback) {
-            const el = document.getElementById(id);
-            if (!el) return fallback;
-            const raw = el.textContent.trim();
-            if (!raw) return fallback;
-            try {
-                return JSON.parse(raw);
-            } catch {
-                return fallback;
-            }
-        }
-        // The cascade table ships dictionary-encoded (see pack_car_rows in
-        // backend/listings/routes.py): ~12,700 rows of repeated make/model/trim
-        // strings plus repeated JSON keys were ~1.9 MB of uncompressed HTML.
-        function unpackCarRows(packed) {
-            if (Array.isArray(packed)) return packed; // legacy/plain form
-            if (!packed || !Array.isArray(packed.r) || !Array.isArray(packed.c)) return [];
-            const cols = packed.c;
-            const vocabs = Array.isArray(packed.v) ? packed.v : [];
-            return packed.r.map((row) => {
-                const obj = {};
-                for (let i = 0; i < cols.length; i++) {
-                    const vocab = vocabs[i];
-                    if (!Array.isArray(vocab)) {
-                        obj[cols[i]] = row[i];
-                        continue;
-                    }
-                    const code = row[i];
-                    obj[cols[i]] = code >= 0 && code < vocab.length ? vocab[code] : null;
-                }
-                return obj;
-            });
-        }
-        window.CAR_ROWS = unpackCarRows(readJsonScript("ds-listings-car-rows", []));
-        window.ALL_CARS = readJsonScript("ds-listings-all-cars", []);
-        window.COUNTRY_TO_MAKES = readJsonScript("ds-listings-country-to-makes", {});
-        window.ZIP_COORDS = readJsonScript("ds-listings-zip-coords", {});
-        window.DEALER_COORDS = readJsonScript("ds-listings-dealer-coords", {});
-        window.INITIAL_GRID_CARS = readJsonScript("ds-listings-initial-grid", []);
-        window.BOOTSTRAP_GRID_CARS = readJsonScript("ds-listings-bootstrap-grid", []);
-        window.PACKAGE_ROWS = readJsonScript("ds-listings-package-rows", []);
-        const savedRaw = readJsonScript("ds-listings-saved-ids", []);
-        window.SAVED_CAR_IDS = new Set(
-            (Array.isArray(savedRaw) ? savedRaw : [])
-                .map((id) => Number(id))
-                .filter((n) => Number.isFinite(n) && n > 0)
-        );
-    })();
-
-    window.__DS_MARKET_STATS = null;
-
-    const _MILEAGE_BANDS = ["0-25k", "25-50k", "50-75k", "75-100k", "100k+", "unknown"];
-
-    function marketIntelForCar(car) {
-        const meta = window.__DS_MARKET_STATS;
-        if (!meta || !meta.cohorts) return null;
-
-        const cohorts = meta.cohorts;
-        const minSamples = Number(meta.min_samples) > 0 ? Number(meta.min_samples) : 3;
-        const yearWindow = Number(meta.year_window) >= 0 ? Number(meta.year_window) : 1;
-        const [mk, md, tr] = SC.marketTrimParts(car);
-        if (!mk || !md) return null;
-
-        let year = parseInt(car.year, 10);
-        year = Number.isFinite(year) ? year : null;
-        const mb = SC.mileageBand(car.mileage);
-
-        const attempts = [];
-        if (year != null && mb !== "unknown") {
-            attempts.push({ years: [year], bands: [mb] });
-            const widen = [year];
-            for (let d = 1; d <= yearWindow; d++) {
-                widen.push(year - d, year + d);
-            }
-            attempts.push({ years: widen, bands: [mb] });
-        }
-        if (year != null) {
-            attempts.push({ years: [year], bands: _MILEAGE_BANDS });
-            const widen = [year];
-            for (let d = 1; d <= yearWindow; d++) {
-                widen.push(year - d, year + d);
-            }
-            attempts.push({ years: widen, bands: _MILEAGE_BANDS });
-        }
-        if (mb !== "unknown") {
-            const years = [];
-            for (let y = 2010; y <= 2030; y++) years.push(y);
-            attempts.push({ years, bands: [mb] });
-        }
-        {
-            const prefix = `${mk}|${md}|${tr}|`;
-            const entries = Object.entries(cohorts)
-                .filter(([k]) => k.startsWith(prefix))
-                .map(([, v]) => v);
-            attempts.push({ entries });
-        }
-
-        for (const att of attempts) {
-            const stats = att.entries
-                ? SC.weightedCohortStats(att.entries, minSamples)
-                : SC.weightedCohortStats(
-                    SC.cohortEntries(cohorts, mk, md, tr, att.years, att.bands),
-                    minSamples
-                );
-            if (!stats) continue;
-
-            const price = Number(car.price);
-            const avg = Number(stats.avg_price);
-            if (!Number.isFinite(price) || price <= 0 || !Number.isFinite(avg) || avg <= 0) {
-                continue;
-            }
-            const deltaPct = Math.round(((price - avg) / avg) * 1000) / 10;
-            return {
-                avg_price_display: "$" + Math.round(avg).toLocaleString(),
-                delta_pct: deltaPct,
-                vs_market: deltaPct <= -3 ? "below_market" : deltaPct >= 3 ? "above_market" : "near_market",
-                sample_count: stats.sample_count,
-            };
-        }
-        return null;
-    }
-
-    function enrichCarWithMarket(car) {
-        if (!window.__DS_MARKET_STATS || !car || typeof car !== "object") return car;
-        if (car.market) return car;
-        const market = marketIntelForCar(car);
-        if (market) car.market = market;
-        return car;
-    }
-
-    function enrichCarsWithMarket(cars) {
-        if (!window.__DS_MARKET_STATS) return cars;
-        return cars.map((c) => enrichCarWithMarket(c));
-    }
-
-    let _marketStatsReloadTimer = null;
-    window.__DS_reloadMarketStats = function reloadMarketStats() {
-        const el = document.getElementById("ds-listings-premium");
-        if (!el) return Promise.resolve();
-        let premium = false;
-        try {
-            premium = JSON.parse(el.textContent || "false");
-        } catch (_) {}
-        if (!premium) return Promise.resolve();
-
-        const qs = new URLSearchParams();
-        const zip = typeof scalarVal === "function" ? scalarVal("zip_code") : "";
-        const radius = typeof scalarVal === "function" ? scalarVal("radius") : "";
-        if (zip) qs.set("zip_code", zip.trim());
-        if (radius) qs.set("radius", radius);
-
-        const url = "/api/listings/market-stats" + (qs.toString() ? "?" + qs.toString() : "");
-        return fetch(url, { credentials: "same-origin" })
-            .then((r) => (r.ok ? r.json() : null))
-            .then((data) => {
-                if (!data || !data.ok || !data.cohorts) return;
-                window.__DS_MARKET_STATS = {
-                    cohorts: data.cohorts,
-                    geo_label: data.geo_label || "",
-                    min_samples: data.min_samples,
-                    year_window: data.year_window,
-                };
-                if (typeof window.__DS_refreshListingsMarketBadges === "function") {
-                    window.__DS_refreshListingsMarketBadges();
-                }
-            })
-            .catch(() => {});
-    };
-
-    function scheduleReloadMarketStats() {
-        clearTimeout(_marketStatsReloadTimer);
-        _marketStatsReloadTimer = setTimeout(() => {
-            const run = () => {
-                if (typeof window.__DS_reloadMarketStats === "function") {
-                    window.__DS_reloadMarketStats();
-                }
-            };
-            if (typeof requestIdleCallback === "function") {
-                requestIdleCallback(run, { timeout: 600 });
-            } else {
-                run();
-            }
-        }, 150);
-    }
-
-    // Haversine formula: calculate distance in miles between two lat/lon points
-    window.haversineJS = function(lat1, lon1, lat2, lon2) {
-        const R = 3958.8; // Earth's radius in miles
-        const toRad = Math.PI / 180;
-        const lat1Rad = lat1 * toRad;
-        const lat2Rad = lat2 * toRad;
-        const dlat = (lat2 - lat1) * toRad;
-        const dlon = (lon2 - lon1) * toRad;
-        const a = Math.sin(dlat / 2) ** 2 + Math.cos(lat1Rad) * Math.cos(lat2Rad) * Math.sin(dlon / 2) ** 2;
-        return R * 2 * Math.asin(Math.sqrt(a));
-    };
-
-    // Look up coordinates for a ZIP code from preloaded data
-    window.zipCoordsJS = function(zipCode) {
-        if (!zipCode || typeof ZIP_COORDS !== "object") return null;
-        const coords = ZIP_COORDS[String(zipCode).trim()];
-        return Array.isArray(coords) && coords.length === 2 ? coords : null;
-    };
-
-    function dealerHostKey(dealerUrl) {
-        try {
-            const host = new URL(String(dealerUrl).trim()).hostname.toLowerCase();
-            return host.startsWith("www.") ? host.slice(4) : host;
-        } catch (_e) {
-            return "";
-        }
-    }
-
-    /** Dealer lat/lon: exact URL, then host: key from geo-coords API. */
-    window.dealerCoordsJS = function(dealerUrl) {
-        if (!dealerUrl || typeof DEALER_COORDS !== "object") return null;
-        const u = String(dealerUrl).trim();
-        let coords = DEALER_COORDS[u] || null;
-        if (!coords) {
-            const host = dealerHostKey(u);
-            if (host) coords = DEALER_COORDS[`host:${host}`] || null;
-        }
-        return Array.isArray(coords) && coords.length === 2 ? coords : null;
-    };
-
-    const _zipOriginFetchPromises = Object.create(null);
-    const _zipOriginAborters = Object.create(null);
-
-    function abortPendingZipOriginFetches() {
-        Object.keys(_zipOriginAborters).forEach((z) => {
-            try {
-                _zipOriginAborters[z].abort();
-            } catch (_) {}
-            delete _zipOriginAborters[z];
-        });
-        Object.keys(_zipOriginFetchPromises).forEach((z) => {
-            delete _zipOriginFetchPromises[z];
-        });
-    }
-
-    function cacheListingsZipOrigin(zipCode, lat, lon) {
-        const z = String(zipCode || "").trim();
-        if (!z || lat == null || lon == null) return null;
-        const origin = [Number(lat), Number(lon)];
-        if (!Number.isFinite(origin[0]) || !Number.isFinite(origin[1])) return null;
-        if (typeof window.ZIP_COORDS !== "object" || window.ZIP_COORDS === null) {
-            window.ZIP_COORDS = {};
-        }
-        window.ZIP_COORDS[z] = origin;
-        return origin;
-    }
-
-    function resolveListingsZipOrigin(zipCode) {
-        const z = String(zipCode || "").trim();
-        if (!z) return Promise.resolve(null);
-        const cached = zipCoordsJS(z);
-        if (cached) return Promise.resolve(cached);
-        if (_zipOriginFetchPromises[z]) return _zipOriginFetchPromises[z];
-        const controller = new AbortController();
-        _zipOriginAborters[z] = controller;
-        _zipOriginFetchPromises[z] = fetch(
-            `/api/zip-coords?zip=${encodeURIComponent(z)}`,
-            { credentials: "same-origin", signal: controller.signal },
-        )
-            .then((r) => (r.ok ? r.json() : null))
-            .then((data) => {
-                if (data && data.lat != null && data.lon != null) {
-                    return cacheListingsZipOrigin(z, data.lat, data.lon);
-                }
-                return null;
-            })
-            .catch((err) => (err && err.name === "AbortError" ? null : null))
-            .finally(() => {
-                delete _zipOriginFetchPromises[z];
-                delete _zipOriginAborters[z];
-            });
-        return _zipOriginFetchPromises[z];
-    }
-
-    /** Lat/lon for radius filter: dealer URL first, then listing ZIP in ZIP_COORDS. */
-    function carGeoCoords(car) {
-        const regId = carDealershipRegistryId(car);
-        if (
-            regId &&
-            typeof window.REGISTRY_COORDS === "object" &&
-            window.REGISTRY_COORDS[String(regId)]
-        ) {
-            return window.REGISTRY_COORDS[String(regId)];
-        }
-        const coords = typeof dealerCoordsJS === "function"
-            ? dealerCoordsJS(car.dealer_url)
-            : null;
-        return Array.isArray(coords) && coords.length === 2 ? coords : null;
-    }
-
-    let _carGeoIndex = null;
-
-    function invalidateCarGeoIndex() {
-        _carGeoIndex = null;
-    }
-
-    function ensureCarGeoIndex(cars) {
-        const source = Array.isArray(cars) ? cars : [];
-        if (_carGeoIndex && _carGeoIndex.source === source) return _carGeoIndex;
-        const lats = new Float64Array(source.length);
-        const lons = new Float64Array(source.length);
-        const hasGeo = new Uint8Array(source.length);
-        for (let i = 0; i < source.length; i += 1) {
-            const coords = carGeoCoords(source[i]);
-            if (!coords) continue;
-            lats[i] = coords[0];
-            lons[i] = coords[1];
-            hasGeo[i] = 1;
-        }
-        _carGeoIndex = { source, lats, lons, hasGeo };
-        return _carGeoIndex;
-    }
-
-    function filterCarsInRadius(cars, origin, radiusMi) {
-        if (!origin || !radiusMi || !Array.isArray(cars) || typeof haversineJS !== "function") {
-            return [];
-        }
-        const idx = ensureCarGeoIndex(cars);
-        const oLat = origin[0];
-        const oLon = origin[1];
-        const latPad = radiusMi / 69.0;
-        const lonPad = radiusMi / Math.max(
-            0.2,
-            69.0 * Math.cos((oLat * Math.PI) / 180),
-        );
-        const latMin = oLat - latPad;
-        const latMax = oLat + latPad;
-        const lonMin = oLon - lonPad;
-        const lonMax = oLon + lonPad;
-        const out = [];
-        for (let i = 0; i < cars.length; i += 1) {
-            if (!idx.hasGeo[i]) continue;
-            const lat = idx.lats[i];
-            const lon = idx.lons[i];
-            if (lat < latMin || lat > latMax || lon < lonMin || lon > lonMax) continue;
-            if (haversineJS(oLat, oLon, lat, lon) <= radiusMi) out.push(cars[i]);
-        }
-        return out;
-    }
-
-    function listingsDealerCoordsReady() {
-        const dc = window.DEALER_COORDS;
-        return !!(dc && typeof dc === "object" && Object.keys(dc).length);
-    }
-
-    function mergeListingsGeoCoordsPayload(data) {
-        if (!data || !data.ok) return;
-        window.ZIP_COORDS = { ...(window.ZIP_COORDS || {}), ...(data.zip_coords || {}) };
-        window.DEALER_COORDS = { ...(window.DEALER_COORDS || {}), ...(data.dealer_coords || {}) };
-        window.REGISTRY_COORDS = {
-            ...(window.REGISTRY_COORDS || {}),
-            ...(data.registry_coords || {}),
-        };
-        if (data.registry_id_by_host && typeof data.registry_id_by_host === "object") {
-            window.REGISTRY_ID_BY_DEALER_HOST = {
-                ...(window.REGISTRY_ID_BY_DEALER_HOST || {}),
-                ...data.registry_id_by_host,
-            };
-        }
-        invalidateCarGeoIndex();
-        clearListingsRadiusCache();
-        window.__DS_listingsGeoCoordsReady = true;
-    }
-
-    /** Registry id from column or dealer_url host (geo-coords host map). */
-    function carDealershipRegistryId(car) {
-        const reg = parseInt(car && car.dealership_registry_id, 10);
-        if (Number.isFinite(reg) && reg > 0) return reg;
-        const host = typeof dealerHostKey === "function" ? dealerHostKey(car && car.dealer_url) : "";
-        if (!host || typeof window.REGISTRY_ID_BY_DEALER_HOST !== "object") return 0;
-        const mapped = parseInt(window.REGISTRY_ID_BY_DEALER_HOST[host], 10);
-        return Number.isFinite(mapped) && mapped > 0 ? mapped : 0;
-    }
-    window.carDealershipRegistryId = carDealershipRegistryId;
+    // The listings boot (JSON blob unpack), market-intel cohort helpers and
+    // geo helpers were extracted to listings_boot.js, market_intel.js and
+    // geo.js — loaded before this file (see listings.html / dealership.html).
+    // They share the window.SC namespace from sc-helpers.js; this closure
+    // publishes SC.scalarVal and SC.clearListingsRadiusCache back to them
+    // (see the bridge block below the listings-page guard).
 
     function startListingsAssetPrefetch() {
         if (!document.getElementById("ds-listings-car-rows")) return;
         if (window.__DS_listingsAssetPrefetchStarted) return;
         window.__DS_listingsAssetPrefetchStarted = true;
 
-        if (!listingsDealerCoordsReady()) {
+        if (!SC.listingsDealerCoordsReady()) {
             if (window.__DS_listingsGeoPrefetchPromise) {
                 window.__DS_listingsGeoPrefetchPromise = window.__DS_listingsGeoPrefetchPromise.then(() => {
-                    if (listingsDealerCoordsReady()) return;
+                    if (SC.listingsDealerCoordsReady()) return;
                     return fetch("/api/listings/geo-coords", { credentials: "same-origin" })
                         .then((r) => (r.ok ? r.json() : null))
-                        .then((data) => mergeListingsGeoCoordsPayload(data));
+                        .then((data) => SC.mergeListingsGeoCoordsPayload(data));
                 }).catch(() => {});
             } else {
                 window.__DS_listingsGeoPrefetchPromise = fetch("/api/listings/geo-coords", {
@@ -401,7 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 })
                     .then((r) => (r.ok ? r.json() : null))
                     .then((data) => {
-                        mergeListingsGeoCoordsPayload(data);
+                        SC.mergeListingsGeoCoordsPayload(data);
                     })
                     .catch(() => {});
             }
@@ -462,7 +86,28 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const _dsListingsPage = !!document.getElementById("ds-listings-car-rows");
 
+    // Hard dependency check: this file cannot run on a listings-style page
+    // without the extracted modules. Fail loudly instead of half-rendering.
+    if (
+        _dsListingsPage &&
+        (typeof SC === "undefined" ||
+            typeof SC.enrichCarWithMarket !== "function" ||
+            typeof SC.filterCarsInRadius !== "function")
+    ) {
+        console.error(
+            "main.js: missing extracted modules — load listings_boot.js, " +
+            "market_intel.js and geo.js before main.js (see listings.html)."
+        );
+        return;
+    }
+
     if (!_dsListingsPage || typeof CAR_ROWS === "undefined") return;
+
+    // Bridge closure functions to the extracted geo.js / market_intel.js files
+    // (their call sites stay typeof-guarded). Function declarations hoist, so
+    // both are initialized even though they are defined further down.
+    SC.scalarVal = scalarVal;
+    SC.clearListingsRadiusCache = clearListingsRadiusCache;
 
     startListingsAssetPrefetch();
 
@@ -1213,7 +858,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 clearTimeout(_listingsZipInputTimer);
                 _listingsZipInputTimer = null;
                 _listingsGeoRenderGen += 1;
-                abortPendingZipOriginFetches();
+                SC.abortPendingZipOriginFetches();
                 clearListingsRadiusCache();
                 _listingsGeoLastSent = null;
                 scheduleDebouncedListingsUrlSync();
@@ -1298,13 +943,13 @@ document.addEventListener("DOMContentLoaded", () => {
             cancelAnimationFrame(_radiusRenderRaf);
             _radiusRenderRaf = null;
         }
-        abortPendingZipOriginFetches();
+        SC.abortPendingZipOriginFetches();
         clearListingsRadiusCache();
     }
 
     function bumpListingsGeoRenderGen() {
         _listingsGeoRenderGen += 1;
-        abortPendingZipOriginFetches();
+        SC.abortPendingZipOriginFetches();
         clearListingsRadiusCache();
         return _listingsGeoRenderGen;
     }
@@ -1345,7 +990,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const zipNow = scalarVal("zip_code");
         if (!SC.isValidUsZip(zipNow)) return;
 
-        resolveListingsZipOrigin(zipNow);
+        SC.resolveListingsZipOrigin(zipNow);
         hideListingsZipCallout();
         if (!window.__DS_listingsGeoState.ready) {
             markListingsGeoReady();
@@ -1619,7 +1264,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const enrichPage = window.__DS_MARKET_STATS && getListingsSortMode() !== "deal";
 
         resultsGrid.innerHTML = pageCars.map((c) => {
-            const row = enrichPage ? enrichCarWithMarket(c) : c;
+            const row = enrichPage ? SC.enrichCarWithMarket(c) : c;
             return renderCardHtml(row, savedSet, compareIds);
         }).join("");
         updatePaginationUI(total, _listingsPage, perPage);
@@ -1643,7 +1288,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const zipCode = scalarVal("zip_code");
         const origin = zipCoordsJS(zipCode);
         if (!origin || typeof haversineJS !== "function") return null;
-        const coords = carGeoCoords(car);
+        const coords = SC.carGeoCoords(car);
         if (!coords) return null;
         return haversineJS(origin[0], origin[1], coords[0], coords[1]);
     }
@@ -1817,7 +1462,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const needsMarketForSort = sortMode === "deal" && window.__DS_MARKET_STATS;
         if (needsMarketForSort) {
-            cars = enrichCarsWithMarket(cars);
+            cars = SC.enrichCarsWithMarket(cars);
         }
 
         cars = sortListingsCars(cars, sortMode, preserveOrder);
@@ -1887,7 +1532,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     if (res.ok && data && data.ok) {
                         _listingsGeoLastSent = payload;
                         setListingsGeoHint("");
-                        scheduleReloadMarketStats();
+                        SC.scheduleReloadMarketStats();
                         return;
                     }
                     if (data && data.error === "invalid_zip_or_radius") {
@@ -1935,7 +1580,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function carRegistryIdCached(car) {
         if (!car || typeof car !== "object") return 0;
         if (car._dsRegId !== undefined) return car._dsRegId;
-        const reg = carDealershipRegistryId(car);
+        const reg = SC.carDealershipRegistryId(car);
         car._dsRegId = reg;
         return reg;
     }
@@ -2001,7 +1646,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let _geoCoordsLoadPromise = null;
     function ensureListingsGeoCoordsLoaded() {
-        if (listingsDealerCoordsReady()) {
+        if (SC.listingsDealerCoordsReady()) {
             return Promise.resolve();
         }
         if (_geoCoordsLoadPromise) return _geoCoordsLoadPromise;
@@ -2012,7 +1657,7 @@ document.addEventListener("DOMContentLoaded", () => {
         _geoCoordsLoadPromise = fetch("/api/listings/geo-coords", { credentials: "same-origin" })
             .then((r) => (r.ok ? r.json() : null))
             .then((data) => {
-                mergeListingsGeoCoordsPayload(data);
+                SC.mergeListingsGeoCoordsPayload(data);
             })
             .catch(() => {});
         return _geoCoordsLoadPromise;
@@ -2165,7 +1810,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 applyRadius(cachedOrigin, renderGen);
                 return;
             }
-            resolveListingsZipOrigin(zipCode).then((origin) => applyRadius(origin, renderGen));
+            SC.resolveListingsZipOrigin(zipCode).then((origin) => applyRadius(origin, renderGen));
             return;
         }
 
@@ -2481,7 +2126,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const source = Array.isArray(window.ALL_CARS) && window.ALL_CARS.length
             ? window.ALL_CARS
             : [];
-        const nearby = filterCarsInRadius(source, origin, radiusMi);
+        const nearby = SC.filterCarsInRadius(source, origin, radiusMi);
         _radiusFilterKey = key;
         _radiusFilteredCars = nearby;
         // Always an array when radius is active (empty when nothing is in range)
@@ -2536,7 +2181,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (listingsZipRenderStale(gen)) return;
                 runCascade();
             });
-            scheduleReloadMarketStats();
+            SC.scheduleReloadMarketStats();
             deferListingsIdleWork(() => {
                 if (typeof window.__DS_scheduleReloadNearbyDealers === "function") {
                     window.__DS_scheduleReloadNearbyDealers();
@@ -2550,7 +2195,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 finish(cached);
                 return;
             }
-            resolveListingsZipOrigin(zipCode).then((origin) => finish(origin));
+            SC.resolveListingsZipOrigin(zipCode).then((origin) => finish(origin));
         };
 
         if (!Array.isArray(window.ALL_CARS) || !window.ALL_CARS.length) {
@@ -2567,7 +2212,7 @@ document.addEventListener("DOMContentLoaded", () => {
         runWithOrigin();
         };
 
-        if (!listingsDealerCoordsReady()) {
+        if (!SC.listingsDealerCoordsReady()) {
             showInventoryLoading();
             ensureListingsGeoCoordsLoaded()
                 .then(() => runRadius())
@@ -2624,7 +2269,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (data.unchanged) return true;
         if (!Array.isArray(data.cars)) return false;
         window.ALL_CARS = data.cars;
-        invalidateCarGeoIndex();
+        SC.invalidateCarGeoIndex();
         for (const car of data.cars) {
             if (car && typeof car === "object") delete car._dsRegId;
         }
