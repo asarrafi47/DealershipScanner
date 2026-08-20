@@ -31,6 +31,8 @@ import os
 import time
 from typing import Any
 
+from backend.utils.local_llm import Completion
+
 logger = logging.getLogger("llm_client")
 
 DEFAULT_CLAUDE_MODEL = "claude-haiku-4-5-20251001"
@@ -115,7 +117,7 @@ def _claude_max_tokens() -> int:
 
 def _complete_claude(
     prompt: str, *, system: str | None, temperature: float, max_tokens: int | None,
-) -> str:
+) -> Completion:
     import anthropic
 
     client = anthropic.Anthropic(api_key=anthropic_key())
@@ -129,13 +131,17 @@ def _complete_claude(
         kwargs["system"] = system
     resp = client.messages.create(**kwargs)
     parts = [b.text for b in resp.content if getattr(b, "type", None) == "text"]
-    return "".join(parts).strip()
+    stop = getattr(resp, "stop_reason", None)
+    return Completion(
+        "".join(parts).strip(),
+        stop_reason=stop, truncated=stop == "max_tokens", provider="claude",
+    )
 
 
 def _complete_local(
     prompt: str, *, system: str | None, temperature: float, max_tokens: int | None,
     json_schema: dict | None,
-) -> str:
+) -> Completion:
     from backend.utils.local_llm import generate
 
     return generate(
@@ -152,9 +158,14 @@ def complete(
     max_tokens: int | None = None,
     json_schema: dict | None = None,
     provider: str | None = None,
-) -> str:
+) -> Completion:
     """
     One-shot completion routed to the active provider.
+
+    Returns a :class:`Completion` — a ``str`` carrying ``stop_reason`` /
+    ``truncated`` / ``provider``. A ``truncated`` result hit the token budget
+    and is incomplete; callers that store model output must not treat it as a
+    finished answer just because it parses.
 
     ``provider`` pins one provider (no fallback) — useful for tests/benchmarks.
     Otherwise every provider in provider_chain() is tried in order, so one dead
@@ -170,13 +181,20 @@ def complete(
                 p = prompt
                 if json_schema is not None:
                     p = f"{prompt}\n\nRespond with JSON only, matching this schema:\n{json_schema}"
-                return _complete_claude(
+                result = _complete_claude(
                     p, system=system, temperature=temperature, max_tokens=max_tokens
                 )
-            return _complete_local(
-                prompt, system=system, temperature=temperature,
-                max_tokens=max_tokens, json_schema=json_schema,
-            )
+            else:
+                result = _complete_local(
+                    prompt, system=system, temperature=temperature,
+                    max_tokens=max_tokens, json_schema=json_schema,
+                )
+            if getattr(result, "truncated", False):
+                logger.warning(
+                    "%s completion truncated at max_tokens=%s (stop_reason=%s)",
+                    prov, max_tokens or _claude_max_tokens(), result.stop_reason,
+                )
+            return result
         except Exception as exc:
             first_error = first_error or exc
             logger.warning("%s completion failed (%s)", prov, str(exc)[:200], exc_info=True)

@@ -206,6 +206,62 @@ def _default_scan_interval_hours() -> int:
         return 24
 
 
+# dealer_scan_status reasons (V008) meaning "the site itself is gone/unreachable":
+# re-scanning on the normal cadence just repeats a failure that has already been
+# diagnosed. These get a long backoff — never a permanent exclusion, domains come back.
+_LONG_BACKOFF_REASONS = frozenset({"dns_fail", "redirect_offsite"})
+
+
+def _unreachable_backoff_days() -> int:
+    try:
+        return max(1, int(os.environ.get("SCANNER_UNREACHABLE_BACKOFF_DAYS", "7")))
+    except (TypeError, ValueError):
+        return 7
+
+
+def _parse_status_timestamp(value: Any) -> datetime | None:
+    """Normalize dealer_scan_status.checked_at (psycopg datetime or ISO text) to aware UTC."""
+    if isinstance(value, datetime):
+        return value if value.tzinfo else value.replace(tzinfo=timezone.utc)
+    if isinstance(value, str) and value.strip():
+        try:
+            dt = datetime.fromisoformat(value.strip().replace("Z", "+00:00"))
+        except ValueError:
+            return None
+        return dt if dt.tzinfo else dt.replace(tzinfo=timezone.utc)
+    return None
+
+
+def get_dealer_scan_reason(dealer_id: str) -> str | None:
+    """Recorded diagnosis class for a dealer from dealer_scan_status (V008), if any."""
+    if not inventory_pg.is_inventory_postgres():
+        return None
+    did = (dealer_id or "").strip()
+    if not did:
+        return None
+    try:
+        conn = pg_connect()
+    except Exception:
+        return None
+    try:
+        cur = conn.cursor()
+        cur.execute(
+            qmarks_to_percent_s(
+                "SELECT reason FROM dealer_scan_status WHERE dealer_key = ? LIMIT 1"
+            ),
+            (did,),
+        )
+        row = cur.fetchone()
+        if not row or not row[0]:
+            return None
+        return str(row[0]).strip().lower() or None
+    except Exception as exc:  # table may predate V008 in some environments
+        _log.debug("dealer_scan_status lookup failed for %s: %s", did, exc)
+        return None
+    finally:
+        conn.close()
+
+
 def record_catalog_after_success(
     *,
     dealer_id: str,
@@ -276,21 +332,56 @@ def schedule_due_refresh_jobs() -> int:
     enqueued = 0
     try:
         cur = conn.cursor()
-        cur.execute(
-            qmarks_to_percent_s(
-                """
-                SELECT dealer_id, scan_interval_hours
-                FROM dealer_catalog
-                WHERE next_scan_at IS NOT NULL AND next_scan_at <= ?
-                """
-            ),
-            (now_iso,),
-        )
-        rows = cur.fetchall() or []
-        for dealer_id, interval_hours in rows:
+        try:
+            cur.execute(
+                qmarks_to_percent_s(
+                    """
+                    SELECT c.dealer_id, c.scan_interval_hours, s.reason, s.checked_at
+                    FROM dealer_catalog c
+                    LEFT JOIN dealer_scan_status s ON s.dealer_key = c.dealer_id
+                    WHERE c.next_scan_at IS NOT NULL AND c.next_scan_at <= ?
+                    """
+                ),
+                (now_iso,),
+            )
+            rows = cur.fetchall() or []
+        except Exception as exc:
+            # dealer_scan_status may not exist (migration V008 not applied here);
+            # fall back to the status-blind cadence rather than stalling the scheduler.
+            _log.debug("dealer_scan_status join unavailable, scheduling blind: %s", exc)
+            conn.rollback()
+            cur = conn.cursor()
+            cur.execute(
+                qmarks_to_percent_s(
+                    """
+                    SELECT dealer_id, scan_interval_hours
+                    FROM dealer_catalog
+                    WHERE next_scan_at IS NOT NULL AND next_scan_at <= ?
+                    """
+                ),
+                (now_iso,),
+            )
+            rows = [(d, h, None, None) for d, h in (cur.fetchall() or [])]
+        backoff = timedelta(days=_unreachable_backoff_days())
+        for dealer_id, interval_hours, scan_reason, checked_at in rows:
             did = str(dealer_id or "").strip()
             if not did:
                 continue
+            reason = str(scan_reason or "").strip().lower()
+            if reason in _LONG_BACKOFF_REASONS:
+                checked = _parse_status_timestamp(checked_at)
+                if checked is not None and (now - checked) < backoff:
+                    # Diagnosed unreachable (dns_fail / redirect_offsite) recently:
+                    # park until the end of the backoff window instead of re-enqueueing
+                    # the same failure on the normal cadence. NOT a permanent exclusion —
+                    # once checked_at ages past the window the dealer schedules again.
+                    cur.execute(
+                        qmarks_to_percent_s(
+                            "UPDATE dealer_catalog SET next_scan_at = ? WHERE dealer_id = ?"
+                        ),
+                        ((checked + backoff).isoformat(), did),
+                    )
+                    continue
             cur.execute(
                 qmarks_to_percent_s(
                     """
@@ -454,16 +545,49 @@ def retry_failed_job(job_id: int) -> tuple[bool, str, dict[str, Any]]:
 def diagnose_job_row(row: dict[str, Any], *, use_llm: bool = True) -> dict[str, Any]:
     from backend.scanner.job_diagnosis import diagnose_failed_job
 
-    result: dict[str, Any] = {}
-    try:
-        result = json.loads(row.get("result_json") or "{}")
-    except json.JSONDecodeError:
-        result = {}
     payload: dict[str, Any] = {}
     try:
         payload = json.loads(row.get("payload_json") or "{}")
     except json.JSONDecodeError:
         payload = {}
+
+    # The audit's recorded per-dealer diagnosis (V008) outranks anything inferable from
+    # this one job's failure text. A needs_browser_probe dealer 403s every bare HTTP
+    # client by TLS fingerprint, so a plain re-queue is guaranteed to fail identically —
+    # retry with the resilient browser profile instead.
+    #
+    # But only when this job did NOT already run resilient: nothing ever clears the
+    # dealer_scan_status flag, so without this check every failure at the dealer —
+    # parser tracebacks included — got the canned TLS verdict and the ops UI
+    # re-enqueued the same doomed job forever while the real error never surfaced.
+    scan_reason = get_dealer_scan_reason(str(row.get("dealer_id") or ""))
+    already_resilient = str(payload.get("profile") or "").strip().lower() == "resilient"
+    if scan_reason == "needs_browser_probe" and not already_resilient:
+        return {
+            "source": "rule",
+            "summary": (
+                "Dealer is classed needs_browser_probe in dealer_scan_status "
+                "(403/TLS-fingerprint rejection) — a bare HTTP retry will fail the same "
+                "way; retrying with the resilient browser profile."
+            ),
+            "category": "dealer_site",
+            "root_cause": (
+                "dealer_scan_status.reason=needs_browser_probe: edge protection rejects "
+                "non-browser TLS fingerprints; verdict unknown until a real browser probes."
+            ),
+            "retry_recommended": True,
+            "retry_strategy": "retry_with_profile",
+            "retry_actions": [{"type": "set_profile", "value": "resilient"}],
+            "code_fix_hint": None,
+            "confidence": 0.9,
+            "dealer_scan_reason": scan_reason,
+        }
+
+    result: dict[str, Any] = {}
+    try:
+        result = json.loads(row.get("result_json") or "{}")
+    except json.JSONDecodeError:
+        result = {}
     cached = result.get("ai_diagnosis")
     if isinstance(cached, dict) and cached.get("summary") and not use_llm:
         return cached

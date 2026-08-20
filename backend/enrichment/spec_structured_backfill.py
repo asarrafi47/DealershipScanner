@@ -32,6 +32,7 @@ from backend.enrichment.nhtsa_vpic import (
 )
 from backend.utils.field_clean import is_effectively_empty
 from backend.utils.inventory_repair import collect_row_storage_repairs
+from backend.utils.spec_field_normalize import split_trim_components, trim_named_in_listing
 from backend.utils.spec_provenance import merge_spec_source_json
 
 log = logging.getLogger(__name__)
@@ -60,6 +61,29 @@ def _vpic_overwrite_dealer_enabled() -> bool:
         "yes",
         "on",
     )
+
+
+def vpic_trim_rejection_reason(car: dict[str, Any], trim: Any) -> str | None:
+    """
+    Why a vPIC-decoded trim must NOT be written for this row (None = corroborated).
+
+    vPIC trims are VIN-pattern guesses, not listing facts: the decoder returns
+    every-possible-trim lists ('Light, Light Long Range, Wind'), cab/body styles
+    ('Crew Cab'), and 'Base'. Audit A.1 #9: 8,610 cars carried a trim their own
+    listing never names, 2,989 provably from nhtsa_vpic. Rules:
+      - a multi-value list (>2 components after split) is refused outright,
+        even if one component matches — it is a decoder enumeration, not a trim;
+      - otherwise the trim is written only when the listing's own text names it
+        (``trim_named_in_listing``, same normalization as the nightly invariant).
+    """
+    parts = split_trim_components(trim)
+    if not parts:
+        return "empty"
+    if len(parts) > 2:
+        return "multi_value_list"
+    if not trim_named_in_listing(car, trim):
+        return "not_named_in_listing"
+    return None
 
 
 def _is_ev_fuel_hint(car: dict[str, Any]) -> bool:
@@ -220,6 +244,7 @@ def apply_structured_spec_backfill_for_car(
     allow_ow = _vpic_overwrite_dealer_enabled()
 
     tier2: dict[str, Any] = {}
+    trim_rejection: dict[str, Any] | None = None
     vpic_err: str | None = None
     vin = (merged.get("vin") or "").strip().upper()
     needs_vpic = looks_like_decode_vin(vin) and any(
@@ -259,10 +284,38 @@ def apply_structured_spec_backfill_for_car(
                     continue
                 if v is None or (isinstance(v, str) and not str(v).strip()):
                     continue
+                if k == "trim":
+                    # Corroboration guard — intentionally NOT bypassed by
+                    # SPEC_STRUCTURED_VPIC_OVERWRITE_DEALER: an uncorroborated
+                    # decoder trim never lands on cars.trim, only in provenance.
+                    reason = vpic_trim_rejection_reason(merged, v)
+                    if reason is not None:
+                        trim_rejection = {
+                            "source": "nhtsa_vpic",
+                            "detail": "DecodeVinValuesExtended",
+                            "value": str(v)[:160],
+                            "reason": reason,
+                        }
+                        continue
                 tier2[k] = v
+
+    existing_spec = raw.get("spec_source_json")
+    if isinstance(existing_spec, dict):
+        existing_str = json.dumps(existing_spec, ensure_ascii=False)
+    elif isinstance(existing_spec, str):
+        existing_str = existing_spec
+    else:
+        existing_str = None
 
     combined = {**tier1, **tier2}
     if not combined:
+        # Nothing writable — but a refused vPIC trim must still be observable
+        # in provenance, or the rejection is invisible to the audit trail.
+        if trim_rejection is not None and not dry_run:
+            update_car_row_partial(
+                car_id,
+                {"spec_source_json": merge_spec_source_json(existing_str, {"trim_rejected": trim_rejection})},
+            )
         return StructuredSpecBackfillResult(
             car_id=car_id,
             applied=False,
@@ -284,14 +337,10 @@ def apply_structured_spec_backfill_for_car(
             "detail": "DecodeVinValuesExtended",
             "url": "https://vpic.nhtsa.dot.gov/api/vehicles/decodevinvaluesextended/",
         }
+    if trim_rejection is not None:
+        # Non-column provenance key: refused value recorded WITHOUT writing cars.trim.
+        prov["trim_rejected"] = trim_rejection
 
-    existing_spec = raw.get("spec_source_json")
-    if isinstance(existing_spec, dict):
-        existing_str = json.dumps(existing_spec, ensure_ascii=False)
-    elif isinstance(existing_spec, str):
-        existing_str = existing_spec
-    else:
-        existing_str = None
     spec_json = merge_spec_source_json(existing_str, prov)
 
     combined["spec_source_json"] = spec_json

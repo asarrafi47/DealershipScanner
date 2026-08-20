@@ -45,6 +45,7 @@ from backend.db.repositories.cars_repo import (
     _parse_car_gallery,
     _parse_car_history_highlights,
     _parse_car_spin_frames,
+    car_attribution_states,
     delete_cars_with_dummy_placeholder_vins,
     get_car_by_id,
     get_car_by_vin,
@@ -108,6 +109,7 @@ from backend.db.repositories.listings_repo import (
     listings_grid_serialized_cars,
     public_listings_count,
     serialize_car_for_listings_grid,
+    serialize_cars_for_listings_grid,
 )
 
 # Process-once flag for the dealership-registry backfill. Kept HERE (not in

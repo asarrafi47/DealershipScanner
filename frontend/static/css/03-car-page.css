@@ -91,6 +91,34 @@ body.car-detail-page .car-detail {
     letter-spacing: 0.14em;
 }
 
+/* Shown only when this listing's photographs place the car at a rooftop other than
+   the one it is filed under (or the rooftop is served a group-wide feed). Reads as a
+   qualifier on the dealer line above it, not as an alert about the car. */
+.location-unconfirmed-tag {
+    display: inline-block;
+    margin-left: 6px;
+    letter-spacing: 0.04em;
+    font-size: 10px;
+    color: var(--text-faint);
+    border: 1px solid var(--border-medium);
+    border-radius: 999px;
+    padding: 1px 7px;
+    cursor: help;
+}
+
+.car-detail-location-note {
+    margin: -4px 0 12px;
+    max-width: 56ch;
+    font-size: 12px;
+    line-height: 1.55;
+    color: var(--text-muted);
+}
+
+.car-detail-location-note--panel {
+    margin: 4px 0 12px;
+    font-size: 13px;
+}
+
 /* The dealer name is wrapped in an <a> that carried no styling at all, so it fell
    through to the UA default -- blue, purple once visited, permanently underlined.
    Inherit the eyebrow treatment and keep the affordance to hover. */

@@ -510,6 +510,30 @@ SQL_INVARIANTS: tuple[SqlInvariant, ...] = (
             WHERE listing_active = 1 AND msrp IS NOT NULL AND price IS NOT NULL AND price > 0
         """,
     ),
+    SqlInvariant(
+        id="rooftop_gate_went_silent",
+        title="the rooftop refusal gate went silent while scans ran",
+        detects=(
+            "the attribution gate (or its ledger) breaking: zero rows in "
+            "rooftop_refusals across three days of scanning, so group-feed rows "
+            "naming other rooftops may be flowing through misattributed and unrecorded"
+        ),
+        impossible_because=(
+            "group feeds serve every rooftop's inventory to each store's scan and the "
+            "gate refuses ~1,106 payloads per sweep; days of scans with zero refusals "
+            "means the gate stopped firing, not that every group feed healed at once. "
+            "This is the regression reading V009 promised (a count of 1 = silent, 0 = alive); "
+            "detail lives in backend/scripts/report_rooftop_refusals.py"
+        ),
+        count_sql="""
+            SELECT CASE WHEN
+                  (SELECT COUNT(*) FROM rooftop_refusals
+                   WHERE scanned_at >= NOW() - INTERVAL '3 days') = 0
+              AND EXISTS (SELECT 1 FROM cars
+                          WHERE scraped_at >= to_char(NOW() - INTERVAL '3 days', 'YYYY-MM-DD'))
+            THEN 1 ELSE 0 END
+        """,
+    ),
 )
 
 
@@ -564,11 +588,14 @@ def _rows(cur, sql: str) -> list[dict[str, Any]]:
     return [dict(zip(cols, r)) for r in cur.fetchall()]
 
 
-_TRIM_SPLIT_RE = re.compile(r"[/,;+&|]| or ", re.IGNORECASE)
-
-
-def _norm_words(s: Any) -> str:
-    return " " + re.sub(r"[^a-z0-9]+", " ", str(s or "").lower()).strip() + " "
+# The write-time guard (spec_field_normalize.trim_named_in_listing) and this
+# nightly alarm must split and normalize trims identically or they disagree
+# about the same row — a trim passed at ingest as "GLC300" ~ "GLC 300" would
+# otherwise stay flagged here forever. Import the one implementation.
+from backend.utils.spec_field_normalize import (  # noqa: E402
+    _TRIM_SPLIT_RE,
+    _trim_norm_words as _norm_words,
+)
 
 
 def _invariant_trim_not_named(cur, spec: SqlInvariant) -> InvariantResult:

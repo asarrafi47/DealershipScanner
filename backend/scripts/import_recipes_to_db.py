@@ -31,7 +31,11 @@ def main() -> None:
     ap.add_argument("--dry-run", action="store_true")
     args = ap.parse_args()
 
-    files = sorted(RECIPES_DIR.glob("*.json")) if RECIPES_DIR.is_dir() else []
+    # Underscore-prefixed files (e.g. _aliases.json) are metadata, not dealer recipes.
+    files = (
+        sorted(p for p in RECIPES_DIR.glob("*.json") if not p.name.startswith("_"))
+        if RECIPES_DIR.is_dir() else []
+    )
     stats = {"files": len(files), "imported": 0, "kept_db": 0, "unparsable": 0}
     for path in files:
         try:

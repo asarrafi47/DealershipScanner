@@ -27,6 +27,9 @@ def users_db(tmp_path, monkeypatch):
     monkeypatch.setenv("ALLOW_UNENCRYPTED_USER_DB", "1")
     monkeypatch.setenv("APP_ADMIN_USERNAMES", "asarrafi")
     monkeypatch.setenv("APP_ADMIN_EMAILS", "asarrafi@sarraficars.com")
+    # Creation of missing env-admin rows is opt-in (ALLOW_DEFAULT_APP_USER);
+    # this suite is about the bootstrap script, which needs the row to exist.
+    monkeypatch.setenv("ALLOW_DEFAULT_APP_USER", "1")
     init_users_db()
     return db_path
 
@@ -52,6 +55,7 @@ def _run_bootstrap(
         "ALLOW_UNENCRYPTED_USER_DB": "1",
         "APP_ADMIN_USERNAMES": "asarrafi",
         "APP_ADMIN_EMAILS": "asarrafi@sarraficars.com",
+        "ALLOW_DEFAULT_APP_USER": "1",
         "ADMIN_PASSWORD": admin_password,
         "FLASK_ENV": "production" if production else "development",
     }

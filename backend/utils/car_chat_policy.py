@@ -42,10 +42,32 @@ def web_research_playwright_allowed(session_user_id: int | None) -> bool:
 
 
 def car_chat_user_daily_limit() -> int:
-    """Max chat messages allowed per authenticated user per 24h (0 = disabled)."""
+    """
+    Max chat messages allowed per user per 24h ACROSS ALL listings (0 = disabled).
+
+    Env: ``CAR_CHAT_MAX_PER_USER_DAILY`` (default 40). Deliberately independent of
+    the per-listing constant — a whole-account budget must not be sized by a
+    per-listing knob (audit D #39).
+    """
     raw = os.environ.get("CAR_CHAT_MAX_PER_USER_DAILY")
     if raw is None or not str(raw).strip():
-        raw = os.environ.get("CAR_CHAT_MAX_PER_LISTING_DAILY", "10")
+        return 40
+    try:
+        return max(0, int(raw))
+    except (TypeError, ValueError):
+        return 40
+
+
+def car_chat_listing_daily_limit() -> int:
+    """
+    Max chat messages allowed per (user, listing) pair per 24h (0 = disabled).
+
+    Env: ``CAR_CHAT_MAX_PER_LISTING_DAILY`` (default 10). Enforced in addition to
+    :func:`car_chat_user_daily_limit` — both tiers must pass.
+    """
+    raw = os.environ.get("CAR_CHAT_MAX_PER_LISTING_DAILY")
+    if raw is None or not str(raw).strip():
+        return 10
     try:
         return max(0, int(raw))
     except (TypeError, ValueError):

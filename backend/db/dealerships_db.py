@@ -83,6 +83,9 @@ def ensure_dealerships_table(cursor: sqlite3.Cursor) -> None:
         ("google_rating",         "REAL"),
         ("google_review_count",   "INTEGER"),
         ("google_rating_fetched_at", "TEXT"),
+        # V003 provenance column; rooftop_disown.roster_place SELECTs it, so the
+        # SQLite fallback schema must carry it too.
+        ("street_address_source", "TEXT"),
         *_DISCOVERY_EXTRA_COLUMNS,
     ]
     for col, coltype in additive:

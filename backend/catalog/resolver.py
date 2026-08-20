@@ -16,6 +16,7 @@ listing row (they are a *link*, not facts).
 """
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass
 from typing import Any
 
@@ -47,7 +48,8 @@ def _drive_bucket(s: Any) -> str:
     t = str(s or "").upper()
     if "ALL" in t or "AWD" in t or "4MATIC" in t or "XDRIVE" in t or "QUATTRO" in t:
         return "AWD"
-    if "4" in t and ("WD" in t or "WHEEL" in t):
+    # EPA spells it out ("Four-Wheel Drive"); dealers abbreviate ("4WD").
+    if ("4" in t or "FOUR" in t) and ("WD" in t or "WHEEL" in t):
         return "4WD"
     if "FRONT" in t or "FWD" in t:
         return "FWD"
@@ -71,8 +73,9 @@ def _fuel_bucket(s: Any) -> str:
 
 # Powertrain suffixes dealers append to model names that EPA folds into trims
 _MODEL_SUFFIXES = (
-    " plug-in hybrid", " i-force max", " hybrid max", " hybrid", " prime",
-    " phev", " ev",
+    " plug-in hybrid electric vehicle", " hybrid electric vehicle",
+    " electric vehicle", " plug-in hybrid", " i-force max", " hybrid max",
+    " hybrid", " prime", " phev", " ev",
 )
 
 
@@ -132,6 +135,12 @@ def _match_models(rows: list[dict[str, Any]], make: str, model: str) -> list[dic
     best_len = 0
     for epa_norm, group in by_norm.items():
         if epa_norm and car_norm.startswith(epa_norm) and len(epa_norm) >= 4:
+            # A heavy-duty or EV nameplate ("Silverado 2500HD", "Silverado EV")
+            # must never inherit the light-duty base model's specs — EPA has no
+            # >8500-GVWR trucks at all, so those stay unlinked.
+            rest = car_norm[len(epa_norm):]
+            if any(t in rest for t in ("2500", "3500", "4500", "5500")) or rest in ("hd", "ev"):
+                continue
             if len(epa_norm) > best_len:
                 hits, best_len = list(group), len(epa_norm)
     return hits
@@ -151,16 +160,35 @@ def _candidates(cur, year: int, make: str, model: str) -> list[dict[str, Any]]:
     return rows
 
 
-def _electrification(text: str) -> str:
-    """'phev' | 'hybrid' | 'ev' | '' from free text."""
+def _electrification(text: str, fuel_text: str | None = None) -> str:
+    """'phev' | 'hybrid' | 'ev' | '' from free text.
+
+    fuel_text: when provided, the gas-AND-electricity PHEV test runs against
+    this field alone — a trim like "Premium AWD" on a pure EV must not read
+    as the "Premium" gasoline grade word.
+    """
     t = text.lower()
+    ft = t if fuel_text is None else fuel_text.lower()
     if "plug-in" in t or "plugin" in t or "phev" in t or "prime" in t:
+        return "phev"
+    # EPA writes PHEV fuel as "<grade> Gasoline / Electricity" — gas AND
+    # electricity together is a plug-in, not an EV.
+    if "electricity" in ft and any(g in ft for g in ("gasoline", "premium", "regular", "midgrade", "e85")):
         return "phev"
     if "hybrid" in t or "i-force max" in t or "powerboost" in t or "etorque hybrid" in t:
         return "hybrid"
     if ("electric" in t and "hybrid" not in t) or " bev" in t or t.strip() == "ev":
         return "ev"
     return ""
+
+
+def _clean_engine_text(s: Any) -> str:
+    """
+    Dealer feeds append option boilerplate after "-inc:" that can name OTHER
+    powertrains ("...available 3.5L PowerBoost full hybrid...") — cut it off
+    before electrification classification.
+    """
+    return re.split(r"-\s*inc\s*:", str(s or ""), maxsplit=1, flags=re.I)[0]
 
 
 def score_candidate(car: dict[str, Any], cand: dict[str, Any]) -> tuple[float, str]:
@@ -177,24 +205,38 @@ def score_candidate(car: dict[str, Any], cand: dict[str, Any]) -> tuple[float, s
 
     car_trim = _norm(car.get("trim"))
     cand_trim = _norm(cand.get("trim"))
+    # EPA folds the model number into the trim ("530i xDrive Sedan") where
+    # dealers split it (model "530i", trim "xDrive") — compare the combination
+    # too, as strong evidence as an exact trim match.
+    model_trim = _norm(f"{car.get('model') or ''}{car.get('trim') or ''}")
     if car_trim and cand_trim:
         if car_trim == cand_trim:
             score += 0.30
             reasons.append("trim_exact")
+        elif len(model_trim) >= 5 and model_trim in cand_trim:
+            score += 0.30
+            reasons.append("trim_model_combo")
         elif car_trim in cand_trim or cand_trim in car_trim:
             score += 0.15
             reasons.append("trim_partial")
 
     # Electrification variant agreement (decisive either way)
     car_blob = " ".join(
-        str(car.get(k) or "") for k in ("model", "trim", "title", "fuel_type", "engine_description")
-    )
+        str(car.get(k) or "") for k in ("model", "trim", "title", "fuel_type")
+    ) + " " + _clean_engine_text(car.get("engine_description"))
     cand_blob = f"{cand.get('trim') or ''} {cand.get('atv_type') or ''} {cand.get('fuel_type') or ''}"
     car_e = _electrification(car_blob)
-    cand_e = _electrification(cand_blob)
+    cand_e = _electrification(cand_blob, fuel_text=str(cand.get("fuel_type") or ""))
     if car_e == cand_e:
         score += 0.15 if car_e else 0.10
         reasons.append(f"variant_{car_e or 'conventional'}")
+    elif {car_e, cand_e} == {"", "hybrid"}:
+        # Mild hybrids blur this line in both directions (EPA tags 48V BMWs /
+        # eTorque Rams atv="Hybrid" while dealers say "Gasoline") — penalize
+        # gently so a true conventional twin still outranks, but a lone
+        # mild-hybrid row remains linkable.
+        score -= 0.10
+        reasons.append("variant_mild_hybrid")
     else:
         score -= 0.35
         reasons.append("variant_conflict")
@@ -234,6 +276,11 @@ def score_candidate(car: dict[str, Any], cand: dict[str, Any]) -> tuple[float, s
         else:
             score -= 0.35
             reasons.append("cylinders_conflict")
+    elif car_e == "ev" and cand_e == "ev":
+        # EVs have no cylinders/displacement to agree on — matching electric
+        # powertrains IS full engine agreement, worth what cylinders earn.
+        score += 0.25
+        reasons.append("ev_powertrain")
 
     db = _drive_bucket(car.get("drivetrain"))
     cb = _drive_bucket(cand.get("drive") or cand.get("trim"))
@@ -281,6 +328,17 @@ def resolve_from_candidates(car: dict[str, Any], cands: list[dict[str, Any]]) ->
     (best_score, method), best = scored[0]
     if best_score < MIN_CONFIDENCE:
         return None
+    # An EV link earned without any trim signal can tie between genuinely
+    # different variants ("RWD" vs "Long Range RWD" — different range/hp).
+    # A tie between DIFFERENT trims is ambiguous: stay unlinked.
+    # Scan EVERY candidate inside the tie window — duplicate EPA rows can put
+    # a same-trim twin at scored[1] while a different variant hides at [2+].
+    if "ev_powertrain" in method:
+        for (other_score, _), other in scored[1:]:
+            if best_score - other_score >= 0.005:
+                break  # sorted descending; the rest are outside the window
+            if _norm(other.get("trim")) != _norm(best.get("trim")):
+                return None
     return CatalogMatch(
         epa_master_id=int(best["id"]),
         confidence=round(best_score, 3),
@@ -306,16 +364,4 @@ def resolve_car(car: dict[str, Any]) -> CatalogMatch | None:
         cands = _candidates(cur, y, make, model)
     finally:
         conn.close()
-    if not cands:
-        return None
-
-    scored = [(score_candidate(car, c), c) for c in cands]
-    scored.sort(key=lambda item: item[0][0], reverse=True)
-    (best_score, method), best = scored[0]
-    if best_score < MIN_CONFIDENCE:
-        return None
-    return CatalogMatch(
-        epa_master_id=int(best["id"]),
-        confidence=round(best_score, 3),
-        method=method,
-    )
+    return resolve_from_candidates(car, cands)

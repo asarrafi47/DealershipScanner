@@ -97,11 +97,18 @@ def _coords_from_zip(zip_code: str) -> tuple[float, float] | None:
 def build_dealer_map_for_car(
     car_raw: dict[str, Any],
     dealer_info: dict[str, Any] | None,
+    *,
+    attribution: dict[str, Any] | None = None,
 ) -> dict[str, Any] | None:
     """
     JSON-friendly map context for a single listing.
 
     Coordinates resolve in order: registry row, dealer URL geopoints, listing ZIP centroid.
+
+    *attribution* is this car's ``cars_repo.car_attribution_states`` entry. When it says
+    the location is unconfirmed the pin still renders — the dealership is real and the
+    shopper may well want to call it — but ``location_confirmed`` is False so the card
+    and the map bubble stop presenting that address as where the car is.
     """
     name = (car_raw.get("dealer_name") or "").strip()
     street = city = state = zip_code = None
@@ -148,7 +155,7 @@ def build_dealer_map_for_car(
     if address_line:
         maps_query = f"{name}, {address_line}" if name else address_line
 
-    return {
+    out = {
         "name": name or "Dealership",
         "street_address": street or "",
         "city": city or "",
@@ -160,3 +167,7 @@ def build_dealer_map_for_car(
         "has_pin": has_pin,
         "google_maps_url": _google_maps_url(lat=lat, lon=lon, query=maps_query),
     }
+    from backend.utils.car_serialize.attribution import attribution_public_fields
+
+    out.update(attribution_public_fields(attribution))
+    return out

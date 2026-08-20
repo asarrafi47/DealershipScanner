@@ -1324,7 +1324,7 @@ def validate_recipe(
     parses each page with the provider parser, and counts distinct VINs. No
     browser, no DB writes, no recipe-file mutation — a pure yield probe.
     """
-    from backend.parsers import parse
+    from backend.parsers import parse_kept
 
     # DealerOn cosmos GETs paginate session-free via ?pg=N&pn=96 (not a POST-body
     # shape), so they need their own walk — same mechanism as heal's _cosmos_pages.
@@ -1362,7 +1362,7 @@ def validate_recipe(
         status, parsed = _replay_request(recipe, body, base_url, _url_for_page(recipe, page_i))
         if status != 200 or parsed is None:
             break
-        page_vehicles = list(parse(
+        page_vehicles = list(parse_kept(
             recipe.provider_hint or "", parsed,
             base_url=base_url, dealer_id=dealer_id,
             dealer_name=dealer_name, dealer_url=base_url,
@@ -1416,7 +1416,7 @@ def _validate_json_feed(
     Team Velocity's ``/inventory-used.json`` feed carries ``totalPages`` /
     ``nextPage``; we page until those run out (or a page adds no new VINs).
     """
-    from backend.parsers import parse
+    from backend.parsers import parse_kept
 
     clean = urlunparse(urlparse(recipe.url)._replace(query="", fragment=""))
     vins: set[str] = set()
@@ -1424,7 +1424,7 @@ def _validate_json_feed(
         body = _cosmos_get_json(f"{clean}?page={pg}")
         if not isinstance(body, dict) or not body.get("vehicles"):
             break
-        page_vehicles = list(parse(
+        page_vehicles = list(parse_kept(
             recipe.provider_hint or "dealer_dot_com", body,
             base_url=base_url, dealer_id=dealer_id,
             dealer_name=dealer_name, dealer_url=base_url,
@@ -1446,7 +1446,7 @@ def _validate_dep(
     recipe: EndpointRecipe, base_url: str, dealer_id: str, dealer_name: str, max_pages: int
 ) -> int:
     """Walk a Dealer eProcess SRP via ``?p=N`` and count unique JSON-LD VINs."""
-    from backend.parsers import parse
+    from backend.parsers import parse_kept
 
     clean = urlunparse(urlparse(recipe.url)._replace(query="", fragment=""))
     vins: set[str] = set()
@@ -1454,7 +1454,7 @@ def _validate_dep(
         html = _dep_fetch_html(f"{clean}?p={pg}")
         if not html:
             break
-        page_vehicles = list(parse(
+        page_vehicles = list(parse_kept(
             recipe.provider_hint or "dealer_eprocess", html,
             base_url=base_url, dealer_id=dealer_id,
             dealer_name=dealer_name, dealer_url=base_url,
@@ -1479,14 +1479,14 @@ def _validate_html_walk(
     ``.../srp-page-N/`` for ``PAGINATION_JAZEL_SRP``). Each page's HTML is handed
     to the provider parser (which accepts the raw HTML string).
     """
-    from backend.parsers import parse
+    from backend.parsers import parse_kept
 
     vins: set[str] = set()
     for page_i in range(max_pages):
         html = _dep_fetch_html(_url_for_page(recipe, page_i))
         if not html:
             break
-        page_vehicles = list(parse(
+        page_vehicles = list(parse_kept(
             recipe.provider_hint or "", html,
             base_url=base_url, dealer_id=dealer_id,
             dealer_name=dealer_name, dealer_url=base_url,
@@ -1504,7 +1504,7 @@ def _validate_cosmos(
     recipe: EndpointRecipe, base_url: str, dealer_id: str, dealer_name: str, max_pages: int
 ) -> int:
     """Walk a cosmos SRP endpoint via ``?pg=N&pn=96`` and count unique VINs."""
-    from backend.parsers import parse
+    from backend.parsers import parse_kept
 
     clean = urlunparse(urlparse(recipe.url)._replace(query="", fragment=""))
     vins: set[str] = set()
@@ -1512,7 +1512,7 @@ def _validate_cosmos(
         body = _cosmos_get_json(f"{clean}?pg={pg}&pn={_COSMOS_PAGE_SIZE}")
         if not isinstance(body, dict) or not body.get("DisplayCards"):
             break
-        page_vehicles = list(parse(
+        page_vehicles = list(parse_kept(
             recipe.provider_hint or "dealer_on_cosmos", body,
             base_url=base_url, dealer_id=dealer_id,
             dealer_name=dealer_name, dealer_url=base_url,

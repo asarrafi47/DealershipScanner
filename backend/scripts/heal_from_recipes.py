@@ -133,10 +133,10 @@ def _vehicles_from_body(
 
         return _extract_vehicles_from_srp_body(body, base_url, dealer_id, dealer_id, base_url)
     try:
-        from backend.parsers import parse
+        from backend.parsers import parse_kept
 
         return list(
-            parse(
+            parse_kept(
                 provider_hint or "unknown",
                 body,
                 base_url=base_url,
@@ -250,7 +250,10 @@ def main() -> None:
     ns = ap.parse_args()
 
     recipes_dir = _REPO_ROOT / "workspace" / "recipes"
-    dealer_ids = ns.dealer_id or sorted(p.stem for p in recipes_dir.glob("*.json"))
+    # Underscore-prefixed files (e.g. _aliases.json) are metadata, not dealer recipes.
+    dealer_ids = ns.dealer_id or sorted(
+        p.stem for p in recipes_dir.glob("*.json") if not p.name.startswith("_")
+    )
 
     grand = {"rows_patched": 0, "fields": {}}
     for did in dealer_ids:

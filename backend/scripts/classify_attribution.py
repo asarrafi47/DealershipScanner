@@ -96,6 +96,15 @@ _MARQUES = {
     "kia", "mazda", "subaru", "volvo", "jaguar", "landrover", "chevrolet", "chevy", "gmc",
     "buick", "cadillac", "ford", "lincoln", "chrysler", "dodge", "jeep", "ram", "fiat",
     "tesla", "rivian", "lucid", "mitsubishi", "alfaromeo", "maserati", "dcjal", "cdjr",
+    # Multi-word marques must ALSO appear as their individual words. _tokens() splits on
+    # whitespace, so "Jaguar Land Rover" becomes {jaguar, land, rover}: with only the
+    # joined form "landrover" listed, `land` and `rover` survived as fake IDENTITY tokens
+    # and a registry row named just "Jaguar Land Rover" looked like a specific store.
+    # It scored a perfect match against "Jaguar Land Rover Charlotte" and car 494553 was
+    # moved from California to a Newport Beach rooftop when its photograph says Charlotte,
+    # North Carolina. Reverted; these entries stop it recurring.
+    "land", "rover", "benz", "alfa", "romeo", "aston", "martin", "rolls", "royce",
+    "range", "genesis", "polestar", "ram",
 }
 
 _PAREN = re.compile(r"\([^)]*\)")

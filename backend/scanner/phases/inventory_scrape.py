@@ -397,6 +397,15 @@ async def scrape_inventory_path(
             cached = body_parse_cache.get(bid)
             if cached is not None:
                 return cached
+            # ROOFTOP-GATE-EXEMPT: counting only.
+            #
+            # These parsed rows never reach the database. This function exists to decide
+            # whether the next page added new VINs; what gets returned from this phase is
+            # `local_records`, the raw intercept bodies. The gate runs ONCE over the final
+            # row set in dealer_run.py (resolve_rooftop_attribution, line ~583), after
+            # recovery has had its chance to replace rows -- gating here as well would
+            # refuse a page that holds only a sibling's cars, which reads as a single-store
+            # payload alone and only reveals itself next to the whole capture.
             vehicles = list(
                 parse(provider, body, base_url=base_url, dealer_id=dealer_id, dealer_name=dealer_name, dealer_url=base_url)
             )

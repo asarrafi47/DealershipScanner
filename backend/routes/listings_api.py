@@ -1,7 +1,7 @@
 """Listings pages + listings/search/geo/saved-cars JSON APIs.
 
 Inventory accessors that tests monkeypatch on ``backend.main``
-(``get_saved_car_ids``, ``get_cars_by_ids``, ``serialize_car_for_listings_grid``,
+(``get_saved_car_ids``, ``get_cars_by_ids``, ``serialize_cars_for_listings_grid``,
 ``get_car_by_id``, ``listings_geo_kwargs_from_session``) and the env-derived
 rate-limit globals are resolved through the module object at request time.
 See ``backend.routes._shared``.
@@ -297,7 +297,7 @@ def api_search_smart():
     results, search_meta = hybrid_smart_search(
         q, filters, vector_top_k=50, listing_geo_kwargs=geo_kw if geo_kw else None
     )
-    safe_results = [main.serialize_car_for_listings_grid(c) for c in results]
+    safe_results = main.serialize_cars_for_listings_grid(results)
     try:
         from backend.db.search_analytics_db import analytics_session_key, record_search_event
 
@@ -337,7 +337,7 @@ def api_saved_cars():
         return jsonify({"ok": False, "error": "not_logged_in"}), 401
     saved_ids = main.get_saved_car_ids(int(uid))
     raw_saved = main.get_cars_by_ids(saved_ids)
-    cars = [main.serialize_car_for_listings_grid(c) for c in raw_saved]
+    cars = main.serialize_cars_for_listings_grid(raw_saved)
     return jsonify({"ok": True, "cars": cars})
 
 

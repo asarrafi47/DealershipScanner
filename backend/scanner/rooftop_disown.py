@@ -61,7 +61,8 @@ def roster_place(dealer_url: str) -> dict[str, str]:
             return {}
         with db_conn() as conn:
             row = conn.execute(
-                "SELECT street_address, city, state, zip_code FROM dealerships WHERE id = ?",
+                "SELECT street_address, city, state, zip_code, street_address_source"
+                " FROM dealerships WHERE id = ?",
                 (reg_id,),
             ).fetchone()
         if not row:
@@ -71,6 +72,11 @@ def roster_place(dealer_url: str) -> dict[str, str]:
             "dealer_city": row[1] or "",
             "dealer_state": row[2] or "",
             "dealer_zip": row[3] or "",
+            # WHERE the street came from (migrations/V003): the attribution gate
+            # demotes a street match to locality weight when the source is a
+            # weak scrape tier, so a bad site_text address can refuse writes but
+            # can never be the sole evidence that un-lists a car.
+            "dealer_address_source": row[4] or "",
         }
     except Exception as exc:  # registry is an optimisation, never a scan blocker
         logger.debug("roster place lookup failed for %s: %s", dealer_url, exc)

@@ -389,6 +389,13 @@ def _dealer_inventory(dealer_id: str) -> dict:
     new_count = sum(
         1 for c in cars if str(c.get("condition") or "").strip().lower() == "new"
     )
+    # Cards the photo-attribution overlay says may not be on THIS lot (the grid
+    # serializer sets location_confirmed=False; see cars_repo.car_attribution_states).
+    # They stay in the list and in every count -- the listing is real and the shopper
+    # can still act on it -- but the page stops implying the whole number is on the
+    # lot here. Two of these rooftops list a whole ownership group's feed, so the
+    # headline count is the single most over-confident number on the page.
+    unconfirmed_count = sum(1 for c in cars if c.get("location_confirmed") is False)
 
     dealer_name_from_car = None
     dealer_url_from_car = None
@@ -404,6 +411,8 @@ def _dealer_inventory(dealer_id: str) -> dict:
         "total": total,
         "new_count": new_count,
         "used_count": max(total - new_count, 0),
+        "unconfirmed_count": unconfirmed_count,
+        "confirmed_total": max(total - unconfirmed_count, 0),
         "cars": cars[:_GRID_BOOTSTRAP],
         "facets": _dealer_facets(cars),
         "dealer_name_from_car": dealer_name_from_car,
@@ -768,7 +777,8 @@ def dealership_research_page(dealer_key: str):
         nav_gmaps_url=gmaps_url,
         nav_apple_url=apple_url,
         nav_waze_url=waze_url,
-        inventory=inventory or {"total": 0, "new_count": 0, "used_count": 0, "cars": []},
+        inventory=inventory
+        or {"total": 0, "new_count": 0, "used_count": 0, "unconfirmed_count": 0, "cars": []},
         specials=specials,
         review_summary=reviews_data["summary"],
         reviews=reviews_data["reviews"],

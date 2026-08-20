@@ -2,7 +2,9 @@
 
 Read-time only. The sheet is composed from the listing row (``cars``) plus
 ``verified_specs`` (which already merges EPA + extended specs at read time) plus
-a best-effort catalog lookup for factory options & packages with prices. Nothing
+a best-effort catalog lookup for factory options & packages with prices, plus
+what a vision agent read off this car's own photographed window sticker
+(``car_image_text`` — see the sticker-photo block below). Nothing
 here is persisted — it is a presentation-layer assembly, consistent with the
 reference-store rule that catalog facts are never written back onto listing rows.
 
@@ -20,6 +22,7 @@ from __future__ import annotations
 
 import json
 import re
+import time
 from functools import lru_cache
 from typing import Any
 
@@ -775,6 +778,250 @@ def _catalog_equipment(car: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+# ---------------------------------------------------------------------------
+# Window-sticker PHOTOS: what a vision agent read off this car's own gallery
+#
+# ``car_image_text`` holds what agents read off photographed Monroneys and
+# Vehicle Highlights slides: ``summary.equipment[]``, ``summary.packages[]``
+# and ``summary.priced_options[]`` (each ``{name, price}``). Those prices were
+# gate-checked at record time — fees, never-priced trials and column-drift skew
+# are filtered in ``backend/scripts/image_batch.py`` ``cmd_record``, and an
+# itemization whose parts exceed the sticker's own printed total is refused
+# whole — so they are taken here as recorded.
+#
+# Authority mirrors the package registry's ladder
+# (``package_registry._SOURCE_AUTHORITY``): a parsed OEM sticker PDF (3)
+# outranks a sticker photo (2), because a photo shot at an angle can shift the
+# price column against the label column. So a photo price only FILLS a line
+# that has no price; it never replaces one, and every photo-sourced line says
+# where it came from (``source_label``) so the template can badge it.
+# ---------------------------------------------------------------------------
+
+#: Rows below this version are the local OCR passes (Apple Vision / qwen,
+#: version 1–99), which mis-pair option prices across columns; only agent-vision
+#: rows are read here. Mirrors ``image_batch.AGENT_VISION_VERSION`` (= 100) —
+#: not imported, so rendering a VDP never imports a batch script.
+_STICKER_PHOTO_MIN_VERSION = 100
+
+#: Wording for photo-sourced lines; the template renders it as a badge.
+_STICKER_PHOTO_LABEL = "seen on window sticker photo"
+
+
+_NON_ALNUM_KEY_RE = re.compile(r"[^a-z0-9]+")
+#: Agents write the same package twice — "Premium Package" in ``packages`` and
+#: "Premium Package (Harman Kardon sound, HUD, …)" in ``priced_options`` — so a
+#: parenthesized span is contents-of, not identity, and is ignored for matching.
+_PARENTHETICAL_RE = re.compile(r"\([^)]*\)")
+
+
+def _photo_dedup_key(name: Any) -> str:
+    """Case/punctuation-insensitive key for "is this line already shown".
+
+    Parenthesized spans are dropped first (see above), then the registry's
+    ``normalize_name`` runs (it also drops package/option nouns, so "Premium
+    Package" == "Premium Pkg") when available; a name made entirely of those
+    nouns falls back to a bare lowercase-alnum key rather than colliding with
+    every other such name on the empty string.
+    """
+    base = _PARENTHETICAL_RE.sub(" ", str(name or ""))
+    fallback = " ".join(_NON_ALNUM_KEY_RE.sub(" ", base.lower()).split())
+    try:
+        from backend.enrichment.package_registry import normalize_name
+
+        return normalize_name(base) or fallback
+    except Exception:
+        return fallback
+
+
+#: How long one memoized photo read is trusted. ``image_batch`` records new
+#: sticker reads from ANOTHER process, so the web worker never sees the write
+#: and nothing ever calls ``clear_sticker_photo_cache`` for it; rotating the
+#: cache key on this coarse clock is what lets fresh rows show up at all.
+_STICKER_PHOTO_TTL_SECONDS = 300
+
+
+@lru_cache(maxsize=8192)
+def _sticker_photo_summary_cached(
+    car_id: int, time_bucket: int
+) -> tuple[tuple[str, ...], tuple[str, ...], tuple[tuple[str, int], ...]]:
+    """The memoized DB read behind :func:`_sticker_photo_summary`.
+
+    One PRIMARY-KEY fetch: ``car_image_text.car_id`` is the table's PK and its
+    only per-car index (the others cover ``version`` and ``has_sticker``), and
+    this sheet renders on every VDP, so the query must never scan. All three
+    lists come back from the single ``summary`` read and are memoized per
+    ``(car, time_bucket)`` — the bucket does nothing but rotate the key every
+    ``_STICKER_PHOTO_TTL_SECONDS``. A DB error propagates: ``lru_cache`` never
+    stores a raise, so one blip can't blank a car for the process lifetime.
+    """
+    conn = None
+    try:
+        from backend.db.inventory_db import get_conn
+
+        conn = get_conn()
+        cur = conn.cursor()
+        cur.execute(
+            "SELECT summary FROM car_image_text "
+            "WHERE car_id=? AND version >= ? AND summary IS NOT NULL",
+            (car_id, _STICKER_PHOTO_MIN_VERSION),
+        )
+        row = cur.fetchone()
+    finally:
+        if conn is not None:
+            try:
+                conn.close()
+            except Exception:
+                pass
+    if not row:
+        return ((), (), ())
+    summary = _load_specs_json(row[0])
+    equipment = tuple(
+        s for s in (_clean(x) for x in summary.get("equipment") or []) if s
+    )
+    packages = tuple(
+        s for s in (_clean(x) for x in summary.get("packages") or []) if s
+    )
+    priced: list[tuple[str, int]] = []
+    for opt in summary.get("priced_options") or []:
+        if not isinstance(opt, dict):
+            continue
+        name = _clean(opt.get("name"))
+        price = _int_or_none(opt.get("price"))
+        if name and price is not None:
+            priced.append((name, price))
+    return (equipment, packages, tuple(priced))
+
+
+def _sticker_photo_summary(
+    car_id: int,
+) -> tuple[tuple[str, ...], tuple[str, ...], tuple[tuple[str, int], ...]]:
+    """``(equipment, packages, priced_options)`` a vision agent read for this car.
+
+    Empty tuples on any miss or error — a missing row renders nothing — but the
+    error path is never cached (see :func:`_sticker_photo_summary_cached`), so
+    the next render retries.
+    """
+    try:
+        return _sticker_photo_summary_cached(
+            car_id, int(time.time()) // _STICKER_PHOTO_TTL_SECONDS
+        )
+    except Exception:
+        return ((), (), ())
+
+
+def clear_sticker_photo_cache() -> None:
+    """Drop the memoized photo reads (tests, and after a new agent wave lands)."""
+    _sticker_photo_summary_cached.cache_clear()
+
+
+def _photo_entry(name: str, price: int | None = None) -> dict[str, Any]:
+    """A catalog entry for a line seen only on the sticker photo."""
+    return {
+        "name": name,
+        "code": None,
+        "price": price,
+        "price_display": _fmt_price(price),
+        "category": None,
+        # Not a parsed-PDF sticker price; the "sticker" badge stays off.
+        "from_sticker": False,
+        "price_basis": "sticker_photo" if price is not None else None,
+        "price_source": "sticker_photo" if price is not None else None,
+        "source_label": _STICKER_PHOTO_LABEL,
+        "observed_price": price,
+        "observed_price_display": _fmt_price(price),
+        "observed_year": None,
+        "observed_trim": None,
+    }
+
+
+def _merge_sticker_photo_findings(catalog: dict[str, Any], car: dict[str, Any]) -> None:
+    """Fold this car's photographed-sticker findings into the catalog section.
+
+    Mutates ``catalog`` in place. Equipment and package names land as unpriced
+    lines, deduped case/punct-insensitively against everything already shown.
+    A priced option whose name is already listed only donates its price when
+    the existing line has none — the listed lines are priced from parsed OEM
+    stickers (authority 3 on the registry ladder), which a photo (2) must not
+    overwrite. A priced option not listed at all is added with its price.
+    """
+    car_id = _int_or_none(car.get("id"))
+    if not car_id or car_id <= 0:
+        return
+    equipment, packages, priced = _sticker_photo_summary(car_id)
+    if not (equipment or packages or priced):
+        return
+
+    pkg_entries: list[dict[str, Any]] = catalog["packages"]
+    opt_entries: list[dict[str, Any]] = catalog["options"]
+    shown: dict[str, dict[str, Any]] = {}
+    for entry in pkg_entries + opt_entries:
+        key = _photo_dedup_key(entry.get("name"))
+        if key:
+            shown.setdefault(key, entry)
+
+    for name, price in priced:
+        key = _photo_dedup_key(name)
+        if not key:
+            continue
+        entry = shown.get(key)
+        if entry is None:
+            # Same routing rule as the registry: package-shaped names under
+            # "Packages" (where the subtotal lives), the rest as options.
+            try:
+                from backend.enrichment.package_registry import classify_kind
+
+                is_pkg = classify_kind(name) == "package"
+            except Exception:
+                is_pkg = False
+            target, cap = (
+                (pkg_entries, _MAX_CATALOG_PACKAGES)
+                if is_pkg
+                else (opt_entries, _MAX_CATALOG_OPTIONS)
+            )
+            if len(target) < cap:
+                new = _photo_entry(name, price)
+                target.append(new)
+                shown[key] = new
+            continue
+        if entry.get("price") is None:
+            # Fill, never overwrite: the line was named but not priced. The
+            # entry's observed_* fields (a real sticker price from ANOTHER
+            # config, when present) are left alone — they describe what the
+            # registry saw, this price describes what this car's photo says.
+            entry["price"] = price
+            entry["price_display"] = _fmt_price(price)
+            entry["price_basis"] = "sticker_photo"
+            entry["price_source"] = "sticker_photo"
+            entry["source_label"] = _STICKER_PHOTO_LABEL
+
+    for name in packages:
+        key = _photo_dedup_key(name)
+        if not key or key in shown or len(pkg_entries) >= _MAX_CATALOG_PACKAGES:
+            continue
+        new = _photo_entry(name)
+        pkg_entries.append(new)
+        shown[key] = new
+
+    for name in equipment:
+        key = _photo_dedup_key(name)
+        if not key or key in shown or len(opt_entries) >= _MAX_CATALOG_OPTIONS:
+            continue
+        new = _photo_entry(name)
+        opt_entries.append(new)
+        shown[key] = new
+
+    # The subtotal sums PACKAGE lines; a photo price filled into one changes
+    # it, and the stated basis must change with the composition.
+    if any(e.get("price_basis") == "sticker_photo" for e in pkg_entries):
+        priced_total = sum(e["price"] for e in pkg_entries if e["price"] and e["price"] > 0)
+        catalog["priced_total"] = priced_total or None
+        catalog["priced_total_display"] = _fmt_price(priced_total) if priced_total else None
+        catalog["priced_total_derived"] = priced_total > 0
+        catalog["priced_total_basis"] = (
+            "sum of observed sticker prices (parsed stickers and sticker photos)"
+        )
+
+
 def build_generated_spec_sheet(
     car: dict[str, Any], verified_specs: dict[str, Any] | None = None
 ) -> dict[str, Any] | None:
@@ -972,9 +1219,17 @@ def build_generated_spec_sheet(
     has_pricing = bool(pricing["msrp_display"] or pricing["price_display"])
 
     catalog = _catalog_equipment(car)
+    # Fold in what a vision agent read off this car's own photographed sticker
+    # (car_image_text). Photo lines carry their own provenance label and never
+    # outrank a parsed price — see _merge_sticker_photo_findings.
+    _merge_sticker_photo_findings(catalog, car)
     has_catalog = bool(catalog["packages"] or catalog["options"])
     catalog_from_sticker = any(
         e.get("from_sticker") for e in catalog["packages"] + catalog["options"]
+    )
+    catalog_from_sticker_photo = any(
+        e.get("source_label") == _STICKER_PHOTO_LABEL
+        for e in catalog["packages"] + catalog["options"]
     )
 
     sections = [
@@ -996,4 +1251,5 @@ def build_generated_spec_sheet(
         "catalog": catalog,
         "has_catalog": has_catalog,
         "catalog_from_sticker": catalog_from_sticker,
+        "catalog_from_sticker_photo": catalog_from_sticker_photo,
     }

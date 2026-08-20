@@ -146,6 +146,120 @@ def test_save_load_dataclass_roundtrip():
     assert loaded.url == r.url and loaded.method == "GET"
 
 
+# ── alias resolution (URL-rekeyed dealers) ────────────────────────────────────
+#
+# These tests pin the FILE-side alias contract, so they run with the DB mirror
+# disabled: the dev sqlite dealer_recipes table leaks rows across pytest
+# sessions (save_recipes write-through), which would otherwise make alias
+# lookups order-dependent.
+
+
+@pytest.fixture()
+def no_recipes_db(monkeypatch):
+    monkeypatch.setenv("RECIPES_DB_DISABLED", "1")
+
+
+def _write_alias_map(mapping):
+    import json
+
+    import backend.scanner.recipes as rec
+
+    rec.RECIPES_DIR.mkdir(parents=True, exist_ok=True)
+    (rec.RECIPES_DIR / rec.ALIASES_FILENAME).write_text(
+        json.dumps(mapping) if isinstance(mapping, dict) else mapping, encoding="utf-8"
+    )
+
+
+def _seed_old_slug_file(old_id="hughwhitehonda-com", url="https://a.example/inv"):
+    r = EndpointRecipe(dealer_id=old_id, url=url, method="GET",
+                       content_type="application/json", post_template=None, saved_at=1.0)
+    save_recipes(old_id, [r])
+    return r
+
+
+def test_alias_resolved_load(no_recipes_db):
+    """Old-slug file + alias entry -> load_recipes(current id) finds the recipes."""
+    import backend.scanner.recipes as rec
+
+    r = _seed_old_slug_file("hughwhitehonda-com")
+    _write_alias_map({"hughwhitehonda-com": "hughwhitehonda-net"})
+    (loaded,) = load_recipes("hughwhitehonda-net")
+    assert loaded.url == r.url
+    # The old file itself was not moved by a read.
+    assert (rec.RECIPES_DIR / "hughwhitehonda-com.json").exists()
+    assert not (rec.RECIPES_DIR / "hughwhitehonda-net.json").exists()
+
+
+def test_alias_never_shadows_current_slug_file(no_recipes_db):
+    """A file under the CURRENT slug wins over an aliased old file."""
+    _seed_old_slug_file("shadowhonda-com", url="https://old.example/inv")
+    _write_alias_map({"shadowhonda-com": "shadowhonda-net"})
+    cur = EndpointRecipe(dealer_id="shadowhonda-net", url="https://new.example/inv",
+                         method="GET", content_type="", post_template=None, saved_at=2.0)
+    save_recipes("shadowhonda-net", [cur])
+    (loaded,) = load_recipes("shadowhonda-net")
+    assert loaded.url == "https://new.example/inv"
+
+
+def test_alias_write_goes_to_current_slug(no_recipes_db):
+    """Saving under the current id migrates content forward: the new-slug file is
+    written (never the old one) and later loads stop following the alias."""
+    import backend.scanner.recipes as rec
+
+    _seed_old_slug_file("fwdhonda-com", url="https://old.example/inv")
+    _write_alias_map({"fwdhonda-com": "fwdhonda-net"})
+    recipes = load_recipes("fwdhonda-net")  # read via alias
+    for r in recipes:
+        r.url = "https://new.example/inv"
+        r.saved_at = 99.0
+    save_recipes("fwdhonda-net", recipes)
+    assert (rec.RECIPES_DIR / "fwdhonda-net.json").exists()
+    (loaded,) = load_recipes("fwdhonda-net")
+    assert loaded.url == "https://new.example/inv"
+    # Old file may linger until the migration script runs, but it no longer wins.
+    old_raw = (rec.RECIPES_DIR / "fwdhonda-com.json").read_text(encoding="utf-8")
+    assert "old.example" in old_raw
+
+
+def test_alias_corrupt_file_tolerated(no_recipes_db):
+    """A corrupt _aliases.json means no aliasing — never an exception."""
+    r = _seed_old_slug_file("corrupthonda-com")
+    _write_alias_map("{not json!!")
+    assert load_recipes("corrupthonda-net") == []
+    # Non-dict JSON is equally ignored.
+    _write_alias_map('["corrupthonda-com"]')
+    assert load_recipes("corrupthonda-net") == []
+    # And direct loads of the old id still work throughout.
+    (loaded,) = load_recipes("corrupthonda-com")
+    assert loaded.url == r.url
+
+
+def test_no_alias_behavior_unchanged(no_recipes_db):
+    """Without an alias file, unknown ids load empty and known ids load normally."""
+    r = _seed_old_slug_file("noaliashonda-com")
+    assert load_recipes("noaliashonda-net") == []
+    (loaded,) = load_recipes("noaliashonda-com")
+    assert loaded.url == r.url
+
+
+def test_alias_file_ignored_when_target_file_missing(no_recipes_db):
+    """An alias entry whose old FILE does not exist resolves to nothing."""
+    _write_alias_map({"gone-com": "gone-net"})
+    assert load_recipes("gone-net") == []
+
+
+def test_resolve_alias_slug(no_recipes_db):
+    from backend.scanner.recipes import resolve_alias_slug
+
+    _write_alias_map({
+        "hughwhitehonda-com": "hughwhitehonda-net",
+        "self-com": "self-com",  # self-referential entries are ignored
+    })
+    assert resolve_alias_slug("hughwhitehonda-net") == "hughwhitehonda-com"
+    assert resolve_alias_slug("self-com") is None
+    assert resolve_alias_slug("unrelated-com") is None
+
+
 # ── replay ────────────────────────────────────────────────────────────────────
 
 import asyncio  # noqa: E402

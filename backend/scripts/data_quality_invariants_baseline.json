@@ -175,6 +175,12 @@
       "tier": "rendered",
       "title": "the card's fuel type differs from the value the search filter matches"
     },
+    "rooftop_gate_went_silent": {
+      "count": 0,
+      "denominator": null,
+      "tier": "stored",
+      "title": "the rooftop refusal gate went silent while scans ran"
+    },
     "rendered_sub_four_zero_to_60": {
       "count": 0,
       "denominator": 18551,
@@ -188,5 +194,5 @@
       "title": "sub-4.0s 0-60 with no performance badge in the trim"
     }
   },
-  "note": "Recorded 2026-08-02 from a full run (stored + rendered tiers, 14,606 active cohorts) on the live inventory. These are a KNOWN BACKLOG, not a clean state: every nonzero count here is an open data defect. Lower them deliberately and re-record; never raise one to make a run green.2026-08-07: selectively re-recorded epa_link_year_mismatch (prev_year fallback now excluded from the invariant) and the three rendered-tier entries the 93e5a5e08 merge gate drove to zero. Deliberately NOT re-recorded: car_trim_not_named_by_listing, electric_car_with_cylinders, cylinders_not_a_real_layout, mileage_out_of_range, rendered_fuel_type_card_vs_filter \u2014 those regressions are real and must keep alarming. 2026-08-07: added electric_label_with_combustion_engine_text (recorded at 10 from the live stored tier) alongside the fuel-label plausibility fix; these 10 are the gas/hybrid/PHEV rows still stored 'Electric' with contradicting engine text — read-time corrects their display, and the count drops as scans re-store them."
+  "note": "Recorded 2026-08-02 from a full run (stored + rendered tiers, 14,606 active cohorts) on the live inventory. These are a KNOWN BACKLOG, not a clean state: every nonzero count here is an open data defect. Lower them deliberately and re-record; never raise one to make a run green.2026-08-07: selectively re-recorded epa_link_year_mismatch (prev_year fallback now excluded from the invariant) and the three rendered-tier entries the 93e5a5e08 merge gate drove to zero. Deliberately NOT re-recorded: car_trim_not_named_by_listing, electric_car_with_cylinders, cylinders_not_a_real_layout, mileage_out_of_range, rendered_fuel_type_card_vs_filter \u2014 those regressions are real and must keep alarming. 2026-08-07: added electric_label_with_combustion_engine_text (recorded at 10 from the live stored tier) alongside the fuel-label plausibility fix; these 10 are the gas/hybrid/PHEV rows still stored 'Electric' with contradicting engine text — read-time corrects their display, and the count drops as scans re-store them. 2026-08-07: added rooftop_gate_went_silent at 0 (binary: 1 = zero refusals in 3 days while scans ran; verified alive today — the ledger's first 40 rows landed 2026-08-07 with 77k cars scraped in the window)."
 }

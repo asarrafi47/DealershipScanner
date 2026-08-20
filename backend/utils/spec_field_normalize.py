@@ -15,6 +15,52 @@ from backend.utils.transmission_normalize import normalize_transmission_standard
 
 _VALID_TRANSMISSION_TYPES = frozenset({"Automatic", "Manual", "CVT"})
 
+# CANONICAL trim splitter/normalizer — backend/scripts/data_quality_invariants.py
+# imports these for its "trim not named in listing" invariant, because the
+# write-time guard here and the nightly alarm there MUST split and normalize
+# identically or they will disagree about the same row.
+_TRIM_SPLIT_RE = re.compile(r"[/,;+&|]| or ", re.IGNORECASE)
+
+_TRIM_LISTING_TEXT_KEYS = ("title", "model_full_raw", "description", "source_url")
+
+
+def _trim_norm_words(s: Any) -> str:
+    # Split at letter<->digit boundaries as well as punctuation so "GLC300"
+    # and "GLC 300" normalize identically — a dealer title spelling the trim
+    # with a space must corroborate the decoder's unspaced spelling and vice
+    # versa. The nightly invariant imports this same function, so guard and
+    # alarm cannot drift apart.
+    low = re.sub(r"[^a-z0-9]+", " ", str(s or "").lower())
+    low = re.sub(r"(?<=[a-z])(?=[0-9])|(?<=[0-9])(?=[a-z])", " ", low)
+    return " " + low.strip() + " "
+
+
+def split_trim_components(trim: Any) -> list[str]:
+    """Components of a possibly multi-valued trim label ('Latitude/North' → 2)."""
+    return [p.strip() for p in _TRIM_SPLIT_RE.split(str(trim or "")) if p.strip()]
+
+
+def trim_named_in_listing(car_row: dict[str, Any], trim: Any) -> bool:
+    """
+    True when any component of *trim* (split on [/,;+&|] and ' or ') appears as
+    a whole token sequence — case- and punctuation-insensitive — in the car's
+    own listing text: title, model_full_raw, description or source_url.
+
+    This is the corroboration predicate for decoder-derived trims (vPIC): a
+    trim the listing itself never names must not be stored on the car.
+    """
+    parts = split_trim_components(trim)
+    if not parts:
+        return False
+    blob = _trim_norm_words(
+        " ".join(str(car_row.get(k) or "") for k in _TRIM_LISTING_TEXT_KEYS)
+    )
+    for part in parts:
+        token = _trim_norm_words(part).strip()
+        if token and f" {token} " in blob:
+            return True
+    return False
+
 _JUNK_ENGINE_PHRASES = [
     r"intercooled\s+turbo",
     r"twin\s+turbo",

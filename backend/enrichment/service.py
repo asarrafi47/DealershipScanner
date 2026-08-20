@@ -48,6 +48,7 @@ from backend.db.inventory_db import get_conn, get_car_by_id
 from backend.utils.field_clean import is_effectively_empty, normalize_optional_str
 from backend.utils.safe_listing_url import normalize_listing_image_url
 from backend.vector.catalog_service import MasterCatalog
+from backend.vision.equipment_vision import VisionRefusal, is_vision_refusal_text
 
 logger = logging.getLogger(__name__)
 
@@ -352,22 +353,23 @@ def _image_to_jpeg_b64(raw: bytes, *, quality: int = VISION_JPEG_QUALITY) -> str
         return None
 
 
-_VISION_REFUSAL_PHRASES: tuple[str, ...] = (
-    "i'm happy to help",
-    "i am happy to help",
-    "however,",
-    "does not contain text",
-    "i cannot",
-    "i'm unable",
-    "i am unable",
-    "i apologize",
-    "unfortunately",
+def _is_vision_refusal(text: str) -> bool:
+    # Phrase list lives beside the VisionRefusal sentinel so the batch lane
+    # (claude_vision) classifies refusals from the same source.
+    return is_vision_refusal_text(text)
+
+
+# stop_reason values from the vision API that mean the output was cut off
+# before the model finished — the payload IS truncated, no guessing needed.
+_TRUNCATION_STOP_REASONS: tuple[str, ...] = (
+    "max_tokens",
+    "length",
+    "model_context_window_exceeded",
 )
 
 
-def _is_vision_refusal(text: str) -> bool:
-    lower = text.lower()
-    return any(phrase in lower for phrase in _VISION_REFUSAL_PHRASES)
+def _stop_reason_is_truncation(stop_reason: Any) -> bool:
+    return str(stop_reason or "").strip().lower() in _TRUNCATION_STOP_REASONS
 
 
 def _extract_json_substring(text: str) -> str | None:
@@ -415,22 +417,34 @@ def repair_truncated_json(raw_str: str) -> dict[str, Any] | None:
         return None
 
 
-def _parse_vision_json_response(content: str) -> dict[str, Any] | None:
+def _parse_vision_json_response(
+    content: str, *, stop_reason: str | None = None
+) -> dict[str, Any] | None:
     """Parse vision model text into a dict.
 
+    Outcomes:
+    - ``VisionRefusal()`` (empty, falsy dict subclass): the model answered but
+      refused / could not assess. Callers must NOT count this as success.
+    - ``dict``: parsed feature payload.
+    - ``None``: no usable answer (empty / non-JSON).
+
     Pipeline:
-    1. Refuse conversational responses outright (return empty feature set).
+    1. Detect conversational refusals and return the typed refusal sentinel.
     2. Strip markdown fences.
     3. Locate first '{' to last '}', parse that slice.
     4. If parse fails (or no closing '}' found), run ``repair_truncated_json``.
+       When *stop_reason* says the API cut the output (max_tokens/length),
+       the payload is KNOWN truncated — repair is deterministic, not a guess.
     """
     raw = (content or "").strip()
     if not raw:
         return None
 
     if _is_vision_refusal(raw):
-        logger.warning("Vision refusal detected, returning {}. Snippet: %.50s", raw)
-        return {}
+        logger.warning("Vision refusal detected, returning VisionRefusal. Snippet: %.50s", raw)
+        return VisionRefusal()
+
+    truncated = _stop_reason_is_truncation(stop_reason)
 
     # Strip markdown code-fences
     raw = re.sub(r"^```(?:json)?\s*", "", raw, flags=re.IGNORECASE).strip()
@@ -451,7 +465,14 @@ def _parse_vision_json_response(content: str) -> dict[str, Any] | None:
     # Truncation repair path (e.g. id=4179 cut mid-list)
     repaired = repair_truncated_json(blob)
     if repaired is not None:
-        logger.warning("Parsed vision JSON after truncation repair. Snippet: %.50s", raw)
+        if truncated:
+            logger.warning(
+                "Vision output truncated by the API (stop_reason=%s); recovered partial JSON. Snippet: %.50s",
+                stop_reason,
+                raw,
+            )
+        else:
+            logger.warning("Parsed vision JSON after truncation repair. Snippet: %.50s", raw)
         return repaired
 
     return None
@@ -769,6 +790,7 @@ def _vision_analyze_car(row: dict[str, Any], prefetch_cache: _PrefetchCache | No
     }
 
     raw_content = ""
+    stop_reason: str | None = None
     _max_retries = 5
     _retry_delay = 10.0
     for _attempt in range(_max_retries):
@@ -791,6 +813,7 @@ def _vision_analyze_car(row: dict[str, Any], prefetch_cache: _PrefetchCache | No
                 continue
             r.raise_for_status()
             data = r.json()
+            stop_reason = data.get("stop_reason")
             raw_content = (data.get("content") or [{}])[0].get("text") or ""
             break
         except Exception as e:
@@ -804,10 +827,27 @@ def _vision_analyze_car(row: dict[str, Any], prefetch_cache: _PrefetchCache | No
         return None
 
     content = raw_content
-    parsed = _parse_vision_json_response(content)
-    if not parsed:
+    if _stop_reason_is_truncation(stop_reason):
+        logger.warning(
+            "Vision API reports truncated output (stop_reason=%s) for id=%s", stop_reason, car_id
+        )
+    parsed = _parse_vision_json_response(content, stop_reason=stop_reason)
+    if isinstance(parsed, VisionRefusal):
+        # The model answered but refused / could not assess. Distinct from
+        # non-JSON: surface it as an unassessed outcome, not a parse error.
         _log_vision_skipped(
-            ValueError("model returned non-JSON"),
+            ValueError("model refused / could not assess"),
+            context=f"id={car_id}",
+            raw_response=content,
+        )
+    elif parsed is None:
+        reason = (
+            f"vision output truncated (stop_reason={stop_reason}) and unrepairable"
+            if _stop_reason_is_truncation(stop_reason)
+            else "model returned non-JSON"
+        )
+        _log_vision_skipped(
+            ValueError(reason),
             context=f"id={car_id}",
             raw_response=content,
         )
@@ -1081,9 +1121,16 @@ class InventoryEnricher:
             heal.append("fuel type")
         return out, heal
 
-    def apply_vision(self, row: dict[str, Any]) -> tuple[dict[str, Any], list[str]]:
+    def apply_vision(self, row: dict[str, Any]) -> tuple[dict[str, Any], list[str], dict[str, Any]]:
+        """Returns (updates, heal_labels, vision_stats).
+
+        vision_stats carries 'refusals' (model answered but refused/could not
+        assess) and 'urls_analyzed' (images actually assessed) so callers can
+        tell "healed nothing because every call refused" from "nothing to do".
+        """
+        vstats: dict[str, Any] = {"refusals": 0, "urls_analyzed": 0}
         if not _row_has_any_image(row):
-            return {}, []
+            return {}, [], vstats
         try:
             from backend.vision.equipment_vision import analyze_car_equipment_from_gallery
 
@@ -1099,8 +1146,10 @@ class InventoryEnricher:
         except Exception as e:
             _log_vision_skipped(e, context="apply_vision equipment")
             merged_json, stats = None, {}
+        vstats["refusals"] += int(stats.get("refusals") or 0)
+        vstats["urls_analyzed"] += int(stats.get("urls_analyzed") or 0)
         if not merged_json:
-            return {}, []
+            return {}, [], vstats
 
         out: dict[str, Any] = {"packages": merged_json[:8000]}
         heal: list[str] = ["vision_observations (packages JSON)"]
@@ -1121,8 +1170,15 @@ class InventoryEnricher:
                 except Exception as e:
                     _log_vision_skipped(e, context="apply_vision color pass")
                     continue
-                if not vis:
+                if vis is None:
+                    # Fetch/parse failure — no answer produced.
                     continue
+                if not vis:
+                    # VisionRefusal / empty answer — the model assessed nothing.
+                    if isinstance(vis, VisionRefusal):
+                        vstats["refusals"] += 1
+                    continue
+                vstats["urls_analyzed"] += 1
                 conf = vis.get("confidence") if isinstance(vis.get("confidence"), dict) else {}
                 ext_conf = str(conf.get("exterior_color", "") or "").strip().lower()
                 if (
@@ -1140,7 +1196,7 @@ class InventoryEnricher:
                 if not _is_missing(out.get("exterior_color")) and not _is_missing(out.get("interior_color")):
                     break
 
-        return out, heal
+        return out, heal, vstats
 
     def enrich_one(self, car_id: int, *, vision_only: bool = False) -> dict[str, Any]:
         wt = _worker_tag()
@@ -1175,11 +1231,15 @@ class InventoryEnricher:
                 all_heals.extend(cat_heal)
             row = get_car_by_id(car_id) or row
 
+        vision_refusals = 0
+        vision_assessed = 0
         if vision_only or _needs_vision(row):
             try:
                 t1 = time.perf_counter()
-                vis_updates, vis_heal = self.apply_vision(row)
+                vis_updates, vis_heal, vstats = self.apply_vision(row)
                 vision_ms = (time.perf_counter() - t1) * 1000.0
+                vision_refusals = int(vstats.get("refusals") or 0)
+                vision_assessed = int(vstats.get("urls_analyzed") or 0)
                 if vis_updates:
                     self.save_enriched_data(car_id, vis_updates)
                     all_heals.extend(vis_heal)
@@ -1188,6 +1248,13 @@ class InventoryEnricher:
 
         logger.info("[%s] id=%s healed=%s", wt, car_id, all_heals or "—")
         out: dict[str, Any] = {"ok": True, "id": car_id, "healed": all_heals}
+        if vision_refusals:
+            out["vision_refusals"] = vision_refusals
+        if vision_refusals and not vision_assessed and not all_heals:
+            # Every vision call refused and nothing else healed — the car was
+            # never actually assessed. Do NOT report it as a success.
+            out["ok"] = False
+            out["refused"] = True
         if catalog_ms is not None:
             out["catalog_ms"] = round(catalog_ms, 2)
         if vision_ms is not None:
@@ -1227,6 +1294,7 @@ class InventoryEnricher:
         stats: dict[str, Any] = {
             "processed": 0,
             "ok": 0,
+            "refused": 0,
             "errors": 0,
             "ids": ids,
             "max_workers": workers,
@@ -1259,7 +1327,11 @@ class InventoryEnricher:
                     stats["processed"] += 1
                     try:
                         r = fut.result()
-                        if r.get("ok"):
+                        if r.get("refused"):
+                            # Vision refused every call and nothing healed —
+                            # the car was not assessed; this is not a success.
+                            stats["refused"] += 1
+                        elif r.get("ok"):
                             stats["ok"] += 1
                         else:
                             stats["errors"] += 1
@@ -1284,10 +1356,11 @@ class InventoryEnricher:
         else:
             stats["vehicles_per_minute"] = 0.0
         logger.info(
-            "Nitro Mode finished in %.1fs | VPM=%.1f | ok=%s errors=%s",
+            "Nitro Mode finished in %.1fs | VPM=%.1f | ok=%s refused=%s errors=%s",
             stats["elapsed_seconds"],
             stats["vehicles_per_minute"],
             stats["ok"],
+            stats["refused"],
             stats["errors"],
         )
         return stats

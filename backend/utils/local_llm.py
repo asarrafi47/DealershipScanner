@@ -283,6 +283,35 @@ def resolve_model(model: str) -> str:
     return model
 
 
+class Completion(str):
+    """Model output with the provider's stop signal attached.
+
+    Behaves as the plain ``str`` every existing caller expects. ``truncated``
+    True means the model hit its token budget and the text is INCOMPLETE — a
+    truncated answer often still parses (a JSON list just ends early), so
+    anything that stores model output must check this instead of trusting that
+    parseable == complete.
+    """
+
+    stop_reason: str | None
+    truncated: bool
+    provider: str
+
+    def __new__(
+        cls,
+        text: str = "",
+        *,
+        stop_reason: str | None = None,
+        truncated: bool = False,
+        provider: str = "",
+    ) -> "Completion":
+        s = super().__new__(cls, text)
+        s.stop_reason = stop_reason
+        s.truncated = truncated
+        s.provider = provider
+        return s
+
+
 def generate(
     prompt: str,
     *,
@@ -291,7 +320,7 @@ def generate(
     json_schema: dict | None = None,
     temperature: float = 0.3,
     max_tokens: int | None = None,
-) -> str:
+) -> Completion:
     """
     One-shot completion. ``model=None`` auto-picks the tier from system load.
     Pass ``json_schema`` to constrain output to valid JSON (Ollama structured
@@ -315,12 +344,30 @@ def generate(
         payload["format"] = json_schema
     logger.debug("local_llm generate: model=%s tier=%s reason=%s", choice.model, choice.tier, choice.reason)
     data = _post("/api/generate", payload)
-    return (data.get("response") or "").strip()
+    done_reason = data.get("done_reason")
+    truncated = done_reason == "length"
+    if truncated:
+        logger.warning(
+            "local_llm generate: output truncated at num_predict=%s (model=%s)",
+            options.get("num_predict"), choice.model,
+        )
+    return Completion(
+        (data.get("response") or "").strip(),
+        stop_reason=done_reason, truncated=truncated, provider="local",
+    )
 
 
 def generate_json(prompt: str, schema: dict, *, system: str | None = None, model: str | None = None) -> Any:
-    """generate() with a JSON schema, parsed. Returns None if the model emits invalid JSON."""
+    """generate() with a JSON schema, parsed.
+
+    Returns None if the model emits invalid JSON — or if the output was
+    truncated at the token budget, because a truncated JSON document that
+    happens to still parse is silently missing its tail.
+    """
     raw = generate(prompt, system=system, model=model, json_schema=schema, temperature=0.0)
+    if raw.truncated:
+        logger.warning("local_llm generate_json: output truncated, discarding: %s", raw[:200])
+        return None
     try:
         return json.loads(raw)
     except (json.JSONDecodeError, ValueError):

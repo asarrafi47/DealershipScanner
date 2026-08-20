@@ -21,6 +21,7 @@ from backend.billing.catalog import FEATURE_AI_CAR_CHAT
 from backend.billing.entitlements import require_feature
 from backend.utils.car_chat_policy import (
     car_chat_rate_limits,
+    car_chat_listing_daily_limit,
     car_chat_user_daily_limit,
     web_research_playwright_allowed,
 )
@@ -197,6 +198,21 @@ def api_ai_chat():
             except Exception as e:
                 logger.warning("ai chat car lookup failed (id=%s): %s", cid, str(e)[:150])
 
+    # Second tier for the car branch: per-(user, listing), same buckets as the
+    # car-page chat route (cars_pages) so this sidebar route is not the way
+    # around the per-listing limit — both tiers must pass.
+    if context_car is not None:
+        listing_limit = car_chat_listing_daily_limit()
+        if listing_limit > 0:
+            uid = session.get("user_id")
+            cid_key = context_car.get("id")
+            listing_key = (
+                f"chat:daily:user:{int(uid)}:car:{cid_key}" if uid
+                else f"chat:daily:ip:{ip}:car:{cid_key}"
+            )
+            if not allow_request(listing_key, max_events=listing_limit, window_seconds=86400.0):
+                return jsonify({"ok": False, "error": "listing_chat_limit_reached"}), 429
+
     try:
         if context_car is not None:
             from backend.intelligence.ai.agent import run_car_page_chat
@@ -235,8 +251,18 @@ def api_ai_chat():
         # otherwise answer conversationally, so questions are never mis-routed.
         from backend.utils.llm_client import complete
 
-        rewrite = complete(_REWRITE_PROMPT.format(msg=message[:500]),
-                           temperature=0.0, max_tokens=48).strip().strip('"').strip()
+        rewritten = complete(_REWRITE_PROMPT.format(msg=message[:500]),
+                             temperature=0.0, max_tokens=48)
+        if getattr(rewritten, "truncated", False):
+            # 48 tokens is a deliberately tight budget, so the rewrite is the
+            # likeliest call in the repo to be cut off mid-phrase — and a cut
+            # phrase can silently change the query's meaning ("under $30" for
+            # "under $30,000"). Search on what the user actually typed instead.
+            logger.info("search rewrite truncated (stop_reason=%s); using raw query",
+                        getattr(rewritten, "stop_reason", None))
+            rewrite = message
+        else:
+            rewrite = rewritten.strip().strip('"').strip()
         if rewrite and not rewrite.upper().startswith("NONE"):
             try:
                 rf = parse_natural_query(rewrite) or {}

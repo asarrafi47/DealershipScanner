@@ -4,7 +4,7 @@ from backend.db.inventory_db import (
     get_filter_options,
     get_saved_car_ids,
     listings_grid_bootstrap_cars,
-    serialize_car_for_listings_grid,
+    serialize_cars_for_listings_grid,
 )
 from backend.listings.geo_session import persist_listings_geo_from_request
 from backend.utils.hybrid_search import (
@@ -117,7 +117,7 @@ def listings_page(*, listings_poll_ms: int = 0):
             search_ran = True
         else:
             results, _ = hybrid_search_with_kwargs(q_text or None, sql_kwargs, vector_top_k=100)
-            initial_grid_cars = [serialize_car_for_listings_grid(c) for c in results]
+            initial_grid_cars = serialize_cars_for_listings_grid(results)
             search_ran = True
 
     if search_ran:

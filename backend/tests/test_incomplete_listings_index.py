@@ -163,6 +163,97 @@ def test_dealership_issue_stats_uses_incomplete_index(
     assert stats[0]["total_cars"] == 2
 
 
+def _insert_search_car(conn, *, car_id: int, vin: str, marked_for_review: int) -> None:
+    conn.execute(
+        """
+        INSERT INTO cars (
+            id, vin, title, year, make, model, trim, price, mileage,
+            image_url, dealer_name, dealer_url, dealer_id, scraped_at,
+            fuel_type, cylinders, transmission, drivetrain,
+            exterior_color, interior_color, stock_number, gallery,
+            listing_active, marked_for_review
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            car_id,
+            vin,
+            "Used 2024 Honda Civic",
+            2024,
+            "Honda",
+            "Civic",
+            "LX",
+            26000,
+            9000,
+            "https://example.com/a.jpg",
+            "Test Motors",
+            "https://dealer.test/",
+            "test-motors",
+            "2026-01-01T00:00:00Z",
+            "Gasoline",
+            4,
+            "CVT",
+            "FWD",
+            "Black",
+            "Gray",
+            f"S{car_id}",
+            "[]",
+            1,
+            marked_for_review,
+        ),
+    )
+
+
+def test_marked_for_review_suppressed_from_public_search(
+    monkeypatch: pytest.MonkeyPatch, tmp_path
+) -> None:
+    """An admin-flagged car must vanish from public search results but stay
+    visible when an admin caller opts in with ``include_flagged=True``."""
+    dbp = tmp_path / "inv_flagged.db"
+    monkeypatch.setattr(inv_db, "DB_PATH", str(dbp))
+    inv_db.init_inventory_db()
+    conn = sqlite3.connect(str(dbp))
+    _insert_search_car(conn, car_id=1, vin="1HGBH41JXMN109186", marked_for_review=0)
+    _insert_search_car(conn, car_id=2, vin="2HGBH41JXMN109187", marked_for_review=1)
+    conn.commit()
+    conn.close()
+
+    # Public path: flagged car suppressed (include_incomplete=True isolates the
+    # flag check from the completeness filter).
+    public = inv_db.search_cars(makes=["Honda"], include_incomplete=True)
+    assert {c["id"] for c in public} == {1}
+
+    # Admin opt-out: flagged car is visible — that is the whole point of the flag.
+    admin = inv_db.search_cars(
+        makes=["Honda"], include_incomplete=True, include_flagged=True
+    )
+    assert {c["id"] for c in admin} == {1, 2}
+
+
+def test_marked_for_review_suppressed_from_make_model_pairs_and_count(
+    monkeypatch: pytest.MonkeyPatch, tmp_path
+) -> None:
+    dbp = tmp_path / "inv_flagged_pairs.db"
+    monkeypatch.setattr(inv_db, "DB_PATH", str(dbp))
+    inv_db.init_inventory_db()
+    conn = sqlite3.connect(str(dbp))
+    _insert_search_car(conn, car_id=1, vin="1HGBH41JXMN109186", marked_for_review=0)
+    _insert_search_car(conn, car_id=2, vin="2HGBH41JXMN109187", marked_for_review=1)
+    conn.commit()
+    conn.close()
+
+    pairs = [("Honda", "Civic")]
+    public = inv_db.search_cars_by_make_model_pairs(pairs, include_incomplete=True)
+    assert {c["id"] for c in public} == {1}
+
+    admin = inv_db.search_cars_by_make_model_pairs(
+        pairs, include_incomplete=True, include_flagged=True
+    )
+    assert {c["id"] for c in admin} == {1, 2}
+
+    # Marketing/stats count only counts publicly visible rows.
+    assert inv_db.public_listings_count() == 1
+
+
 def test_fast_rebuild_is_atomic_on_failure(monkeypatch: pytest.MonkeyPatch, tmp_path) -> None:
     inv_path = tmp_path / "inventory.db"
     inc_path = tmp_path / "incomplete_listings.db"

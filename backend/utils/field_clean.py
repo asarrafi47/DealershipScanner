@@ -484,6 +484,17 @@ _STOCK_CODE_GUARDED_FIELDS: tuple[str, ...] = (
     "transmission",
     "exterior_color",
     "interior_color",
+    "trim",
+)
+
+# The identical-token recovery heuristic stays keyed to the four fields the
+# PixelMotion leak actually stamps; ``trim`` is guarded for per-field rejection
+# only (a code stamped into trim alone is rejected, not moved to stock_number).
+_STOCK_CODE_IDENTICAL_HEAL_FIELDS: tuple[str, ...] = (
+    "drivetrain",
+    "transmission",
+    "exterior_color",
+    "interior_color",
 )
 
 
@@ -518,19 +529,57 @@ def _apply_stock_code_guard(out: dict[str, Any]) -> None:
     2. Any remaining stock-code-shaped value in a guarded field is rejected.
     """
     present = [k for k in _STOCK_CODE_GUARDED_FIELDS if k in out]
-    vals = [out.get(k) for k in _STOCK_CODE_GUARDED_FIELDS]
+    vals = [out.get(k) for k in _STOCK_CODE_IDENTICAL_HEAL_FIELDS]
     tokens = [str(v).strip() for v in vals if isinstance(v, str) and str(v).strip()]
-    if len(tokens) == len(_STOCK_CODE_GUARDED_FIELDS) and len({t.upper() for t in tokens}) == 1:
+    if len(tokens) == len(_STOCK_CODE_IDENTICAL_HEAL_FIELDS) and len({t.upper() for t in tokens}) == 1:
         tok = tokens[0]
         if looks_like_stock_code(tok):
-            for k in _STOCK_CODE_GUARDED_FIELDS:
+            for k in _STOCK_CODE_IDENTICAL_HEAL_FIELDS:
                 out[k] = None
             if is_effectively_empty(out.get("stock_number")):
                 out["stock_number"] = tok
-            return
+            # No return: a stock code stamped into ``trim`` too is still
+            # handled by the per-field rejection below.
     for k in present:
-        if looks_like_stock_code(out.get(k)):
-            out[k] = None
+        v = out.get(k)
+        if not looks_like_stock_code(v):
+            continue
+        if k == "trim":
+            # Real trims can be stock-code-shaped (GT350, P100D, E350). Only
+            # reject a trim the listing's own text does not name — same
+            # corroboration rule as the vPIC trim guard.
+            from backend.utils.spec_field_normalize import (
+                _trim_norm_words,
+                trim_named_in_listing,
+            )
+
+            # A trim equal to the row's own stock number IS the leaked code —
+            # including the token the identical-field heal above just filed
+            # there — and needs no listing-text corroboration to reject.
+            stock = str(out.get("stock_number") or "").strip()
+            if stock and str(v).strip().upper() == stock.upper():
+                out[k] = None
+                continue
+            # Absence of corroboration is only meaningful when the text we
+            # would search is actually loaded. Grid reads clean partial rows
+            # (LISTINGS_GRID_CAR_COLUMNS carries neither description nor
+            # model_full_raw); nulling there makes the card disagree with the
+            # VDP about the same stored trim. A row missing BOTH text-heavy
+            # columns abstains — full-row paths are where rejection happens.
+            if "description" not in out and "model_full_raw" not in out:
+                continue
+            if trim_named_in_listing(out, v):
+                continue
+            # Mercedes-style grades are stock-code-shaped and often not
+            # repeated in listing text ('E350' under an 'E-Class' title): a
+            # trim whose leading alpha token echoes the model's own leading
+            # token (E350/E-Class, GLC300/GLC, C300/C-Class) is the model's
+            # grade, not a stock code.
+            model_tok = (_trim_norm_words(out.get("model")).split() or [""])[0]
+            trim_tok = (_trim_norm_words(v).split() or [""])[0]
+            if model_tok and trim_tok and model_tok == trim_tok:
+                continue
+        out[k] = None
 
 
 def normalize_optional_str(val: Any, *, max_len: int | None = None) -> str | None:

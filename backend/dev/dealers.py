@@ -90,6 +90,13 @@ def upsert_dealer_manifest_row(
     url = normalize_manifest_url(website_url)
     if not url:
         raise ValueError("website_url is required for manifest upsert")
+    # NOTE: dealer identity is a pure function of the current URL, so a hostname
+    # change (e.g. aaronfordofescondido.com -> .org) mints a NEW dealer_id here
+    # and the dedupe below (id/url match only) never connects it to the old row.
+    # There is deliberately no automatic rename detection; the remedy for
+    # URL-driven rekeys is workspace/recipes/_aliases.json ({old_slug: new_id}),
+    # which backend/scanner/recipes.py consults on reads so scan recipes and
+    # scan hints follow the dealer to its new identity.
     did = (dealer_id or "").strip() or slug_from_url(url)
     if not DEALER_ID_RE.match(did):
         raise ValueError(f"dealer_id slug invalid after normalization: {did!r}")

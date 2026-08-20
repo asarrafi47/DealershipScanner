@@ -28,6 +28,7 @@ from backend.billing.catalog import (
 )
 from backend.routes._shared import _client_ip, main_module
 from backend.utils.car_chat_policy import (
+    car_chat_listing_daily_limit,
     car_chat_rate_limits,
     car_chat_user_daily_limit,
     web_research_playwright_allowed,
@@ -522,9 +523,42 @@ def _build_car_detail_view_context(car_id: int, car_raw: dict) -> dict:
                         dealer_info[url_key] = normalize_optional_url(dealer_info.get(url_key))
         except Exception:
             pass
+    # What this listing's own photographs say about where the car actually is. One
+    # batched read keyed by car id (see cars_repo.car_attribution_states); a miss —
+    # the common case — leaves every dealer surface on this page exactly as it was.
+    from backend.db.repositories.cars_repo import car_attribution_states
+    from backend.utils.car_serialize.attribution import attribution_public_fields
+
+    attribution = car_attribution_states([car_id]).get(car_id)
+    attribution_fields = attribution_public_fields(attribution)
+    # Onto the serialized car too, so GET /api/cars/<id> and the compare/save flows
+    # that read it carry the same caveat the rendered page shows.
+    car.update(attribution_fields)
+
+    # When the trusted-MSRP resolver produced nothing (car.msrp is None), two
+    # sidecar stores may still have something honest to say: a Monroney total an
+    # agent read off a sticker photographed in this listing's gallery
+    # (car_image_text), or the range this trim has been observed to sticker at
+    # (trim_msrp_bands). Same batched-read shape as the attribution overlay
+    # above; the wording lives in car_serialize.msrp_overlay so no surface can
+    # present either as the feed's MSRP. car_raw carries the identity because
+    # the band keys match cars.model/cars.trim verbatim, not the BMW
+    # display-normalized pair the serialized dict may hold.
+    from backend.db.repositories.cars_repo import car_sticker_msrp_values
+    from backend.utils.car_serialize.color_overlay import color_overlay_public_fields
+    from backend.utils.car_serialize.msrp_overlay import msrp_overlay_public_fields
+
+    sticker_facts = car_sticker_msrp_values([car_id]).get(car_id)
+    car.update(msrp_overlay_public_fields(car, sticker_facts, identity=car_raw))
+    # Colors the sticker document PRINTS supersede the feed's in the display
+    # (policy 2026-08-18: the window sticker is the single source of truth), with
+    # provenance shown and the cars columns untouched. Same batched read as the
+    # MSRP overlay; photo-observed colors never qualify (see color_overlay).
+    car.update(color_overlay_public_fields(sticker_facts))
+
     from backend.listings.dealer_map import build_dealer_map_for_car
 
-    dealer_map = build_dealer_map_for_car(car_raw, dealer_info)
+    dealer_map = build_dealer_map_for_car(car_raw, dealer_info, attribution=attribution)
     market_intel = None
     trim_ladder = None
     deal_score_detail = None
@@ -611,8 +645,15 @@ def _build_car_detail_view_context(car_id: int, car_raw: dict) -> dict:
         "listing_sticker_option_sections": ctx.get("listing_sticker_option_sections") or {},
         "listing_possible_packages": ctx.get("listing_possible_packages") or [],
         "listing_photo_detected_equipment": ctx.get("listing_photo_detected_equipment") or [],
-        "sticker_exterior_color": ctx.get("sticker_exterior_color"),
-        "sticker_interior_color": ctx.get("sticker_interior_color"),
+        # Sticker-printed colors: the fetched OEM sticker's parse (ctx) and the
+        # photographed-sticker read (car overlay) are the same kind of fact —
+        # printed on the document — so either fills the template slot; the
+        # photographed read wins only because it was verified against THIS car's
+        # own gallery. Both supersede the feed color in the display.
+        "sticker_exterior_color": car.get("sticker_exterior_color")
+        or ctx.get("sticker_exterior_color"),
+        "sticker_interior_color": car.get("sticker_interior_color")
+        or ctx.get("sticker_interior_color"),
         "sticker_interior_material": ctx.get("sticker_interior_material"),
         "sticker_spec_lines": ctx.get("sticker_spec_lines") or [],
         "interior_from_listing_description": bool(ctx.get("interior_from_listing_description")),
@@ -647,6 +688,7 @@ def _build_car_detail_view_context(car_id: int, car_raw: dict) -> dict:
         "window_sticker_pdf_url": window_sticker_pdf_url,
         "dealer_info": dealer_info,
         "dealer_map": dealer_map,
+        "location_attribution": attribution_fields or None,
     }
 
 
@@ -1040,9 +1082,10 @@ def api_car_chat(car_id: int):
     if not allow_request(f"chat:{ip}:{car_id}", max_events=rpm_pair, window_seconds=60.0):
         return jsonify({"ok": False, "error": "rate_limited"}), 429
 
+    uid = session.get("user_id")
+
     daily_limit = car_chat_user_daily_limit()
     if daily_limit > 0:
-        uid = session.get("user_id")
         if uid:
             daily_key = f"chat:daily:user:{int(uid)}"
         else:
@@ -1053,6 +1096,21 @@ def api_car_chat(car_id: int):
             window_seconds=86400.0,
         ):
             return jsonify({"ok": False, "error": "user_chat_limit_reached"}), 429
+
+    # Second tier: per-(user, listing). Keeps one car's thread from draining
+    # the whole-account budget sideways and vice versa — both tiers must pass.
+    listing_limit = car_chat_listing_daily_limit()
+    if listing_limit > 0:
+        if uid:
+            listing_key = f"chat:daily:user:{int(uid)}:car:{car_id}"
+        else:
+            listing_key = f"chat:daily:ip:{ip}:car:{car_id}"
+        if not allow_request(
+            listing_key,
+            max_events=listing_limit,
+            window_seconds=86400.0,
+        ):
+            return jsonify({"ok": False, "error": "listing_chat_limit_reached"}), 429
 
     if request.content_length is not None and request.content_length > main._CHAT_MAX_BODY:
         return jsonify({"ok": False, "error": "payload_too_large"}), 413
@@ -1077,6 +1135,17 @@ def api_car_chat(car_id: int):
                     car_dict["dealer_address"] = ", ".join(addr_parts) or None
                     car_dict["dealer_lat"] = _row["latitude"]
                     car_dict["dealer_lon"] = _row["longitude"]
+    except Exception:
+        pass
+
+    # The address above is fetched by the car row's own registry id — the exact field
+    # group-feed misattribution corrupts. Carry the verdict into the prompt so the
+    # reply caveats the location instead of asserting it.
+    try:
+        from backend.db.repositories.cars_repo import car_attribution_states
+        from backend.utils.car_serialize.attribution import attribution_public_fields
+
+        car_dict.update(attribution_public_fields(car_attribution_states([car_id]).get(car_id)))
     except Exception:
         pass
 
@@ -1123,13 +1192,16 @@ def api_compare_chat():
     if not allow_request(f"chat:compare:ip:{ip}", max_events=rpm_pair, window_seconds=60.0):
         return jsonify({"ok": False, "error": "rate_limited"}), 429
 
+    # Compare chat has its own daily namespace ('cmp:') so comparing cars does
+    # not drain the car-chat budget. Same per-user tier value; no per-listing
+    # tier — a compare has no single car_id.
     daily_limit = car_chat_user_daily_limit()
     if daily_limit > 0:
         uid = session.get("user_id")
         if uid:
-            daily_key = f"chat:daily:user:{int(uid)}"
+            daily_key = f"cmp:daily:user:{int(uid)}"
         else:
-            daily_key = f"chat:daily:ip:{ip}"
+            daily_key = f"cmp:daily:ip:{ip}"
         if not allow_request(
             daily_key,
             max_events=daily_limit,

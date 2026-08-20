@@ -464,7 +464,15 @@ def _claude_reply(system: str, msg: str, *, max_tokens: int) -> str:
         system=[{"type": "text", "text": system, "cache_control": {"type": "ephemeral"}}],
         messages=[{"role": "user", "content": msg}],
     )
-    return "".join(b.text for b in resp.content if getattr(b, "type", None) == "text")
+    text = "".join(b.text for b in resp.content if getattr(b, "type", None) == "text")
+    if resp.stop_reason == "max_tokens":
+        # The answer was cut by the token budget, not finished. Chat bubbles are
+        # plain text (see _plain_chat_reply), so a trailing ellipsis renders
+        # fine and signals the cut; the log line makes truncations observable.
+        _logger.warning("claude chat reply truncated at max_tokens=%d (msg=%r)",
+                        max_tokens, msg[:120])
+        text = text.rstrip() + " …"
+    return text
 
 
 def _generate_reply(system: str, msg: str, *, max_tokens: int = 1024) -> str:
@@ -824,6 +832,20 @@ def _deal_score_context(car: dict[str, Any]) -> tuple[str, str]:
     return "\n".join(lines), _RATED_POLICY
 
 
+def _attribution_evidence_line(c: dict[str, Any]) -> str:
+    """State the location caveat as evidence, so the reply cannot assert the address.
+
+    Without this the prompt hands the model a dealer name, a street address and a
+    map link with no hint that this listing's own photographs place the car at a
+    different rooftop — and a confidently wrong "it's at BMW of Murrieta, here's the
+    map" is exactly the claim the attribution work exists to stop making.
+    """
+    note = str(c.get("location_note") or "").strip()
+    if not note:
+        return ""
+    return f"Dealer location caveat (say this if asked where the car is): {note}"
+
+
 def _dealer_map_line(c: dict[str, Any]) -> str:
     addr = str(c.get("dealer_address") or "").strip()
     lat = c.get("dealer_lat")
@@ -926,6 +948,7 @@ def run_car_page_chat(
         _evidence_line("Dealer name", c.get("dealer_name")),
         _evidence_line("Dealer URL", c.get("dealer_url")),
         _evidence_line("Dealer address", c.get("dealer_address")),
+        _attribution_evidence_line(c),
         _dealer_map_line(c),
     ]
     desc = (c.get("description") or "").strip() if isinstance(c.get("description"), str) else ""

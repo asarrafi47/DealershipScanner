@@ -10,6 +10,37 @@ from typing import Any, Callable
 
 logger = logging.getLogger(__name__)
 
+
+class VisionRefusal(dict):
+    """Typed vision outcome: the model answered but refused / could not assess.
+
+    An empty, falsy ``dict`` subclass, so legacy ``if not vis`` guards still
+    treat it as "nothing to merge", while accounting code can distinguish a
+    refusal from a fetch/parse failure (``None``) via ``isinstance``.
+    """
+
+
+# Conversational openings that mean the model answered but declined to assess.
+# Lives beside the sentinel so every vision lane (per-url and batch) classifies
+# refusals from ONE list instead of drifting copies.
+VISION_REFUSAL_PHRASES: tuple[str, ...] = (
+    "i'm happy to help",
+    "i am happy to help",
+    "however,",
+    "does not contain text",
+    "i cannot",
+    "i'm unable",
+    "i am unable",
+    "i apologize",
+    "unfortunately",
+)
+
+
+def is_vision_refusal_text(text: str) -> bool:
+    lower = str(text or "").lower()
+    return any(phrase in lower for phrase in VISION_REFUSAL_PHRASES)
+
+
 _GENERIC_VISION_FEATURE_PATTERNS = (
     r"\balloy wheels?\b",
     r"\bchrome grille\b",
@@ -325,6 +356,7 @@ def analyze_car_equipment_from_gallery(
         "urls_selected": len(selected),
         "urls_analyzed": 0,
         "features_added": 0,
+        "refusals": 0,
     }
 
     batch_ok = (os.environ.get("EQUIPMENT_VISION_BATCH") or "1").strip().lower() not in (
@@ -343,7 +375,12 @@ def analyze_car_equipment_from_gallery(
                 page_referer=referer if referer and referer.startswith("http") else None,
                 max_images=equipment_vision_max_images(),
             )
-            if vis:
+            if isinstance(vis, VisionRefusal):
+                # The model answered and refused the whole batch — a statement
+                # about the model, not the car. NOT a success; the per-url pass
+                # below still gets its chance on the individual images.
+                stats["refusals"] += 1
+            elif vis:
                 stats["urls_analyzed"] = len(selected)
                 before = merged_json
                 merged_json = merge_observations(merged_json, vis)
@@ -360,9 +397,19 @@ def analyze_car_equipment_from_gallery(
             except Exception as e:
                 logger.debug("Equipment vision failed for url=%s: %s", url[:80], e)
                 continue
+            if vis is None:
+                # Fetch or parse failure — the model never produced an answer.
+                continue
+            if isinstance(vis, VisionRefusal):
+                # The model answered but refused — a statement about the
+                # model, not the car. Count it; this is NOT a success.
+                stats["refusals"] += 1
+                continue
+            # A plain {} is a valid answer: the model assessed the image and
+            # observed nothing. Assessed-empty counts as assessed.
+            stats["urls_analyzed"] += 1
             if not vis:
                 continue
-            stats["urls_analyzed"] += 1
             before = merged_json
             merged_json = merge_observations(merged_json, vis)
             if before != merged_json:

@@ -15,7 +15,7 @@ from typing import Any
 
 import requests
 
-from backend.parsers import parse as parse_inventory
+from backend.parsers import parse_kept as parse_inventory
 from backend.parsers.vdp_urls import (
     dealer_style_vdp_url_candidates,
     looks_like_real_vin,

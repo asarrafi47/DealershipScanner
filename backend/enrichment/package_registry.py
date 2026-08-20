@@ -65,6 +65,134 @@ def classify_kind(name: Any) -> str:
     return "package" if _PACKAGE_HINT_RE.search(str(name or "")) else "option"
 
 
+# ---------------------------------------------------------------------------
+# Registry eligibility gate. Enforced INSIDE record_package_observations so
+# every writer — window_sticker_service, feed_package_registry_from_vision,
+# backfill_package_registry, and any future caller — passes through it. The
+# gates started life per-caller, and the one writer that applied none of them
+# (backfill_package_registry) could replay the documented damage back into
+# package_values in a single re-run.
+# ---------------------------------------------------------------------------
+
+# Sticker lines that state the price of the CAR (or a mandatory fee), not of an
+# option. Matched as case-insensitive substrings of the whitespace-collapsed
+# name, because OCR/parse noise glues neighbouring text onto these labels.
+VEHICLE_PRICE_NAME_PATTERNS = (
+    "total vehicle price",
+    "total price",
+    "total msrp",
+    "base price",
+    "base msrp",
+    "destination charge",
+    "destination & delivery",
+    "destination and delivery",
+    "delivery charge",
+    "gas guzzler",
+)
+
+# Names that are vehicle-price rows only when they are the ENTIRE name.
+VEHICLE_PRICE_NAME_EXACT = ("base", "msrp")
+
+# Mandatory fees that every car carries and nobody can decline; recording them
+# as purchasable equipment pollutes the price book (14 "Destination Charge"
+# observations leaked through before this filter existed). Match the WORD, not
+# the phrase: a reader that hedges its label ("Destination/handling charge
+# (printed on sticker as 'Refrigerant')") walks through a full-phrase list.
+FEE_TERMS = (
+    "destination", "delivery charge", "delivery, processing", "processing and handling",
+    "freight", "doc fee", "documentation fee", "advertising fee", "dealer fee",
+    "acquisition fee", "handling charge",
+)
+
+# Line items that are BUNDLED and never carry a price on a Monroney; a figure
+# beside one is the neighbouring row's, picked up from a shifted column. This
+# class defeats corroboration — a shared sticker template misprices the same
+# line the same way on every car that uses it (eight cars "corroborated" a
+# $900 SiriusXM Trial Subscription that was the Harman Kardon line above).
+# Only a domain fact catches it: a free trial is free.
+NEVER_PRICED_TERMS = (
+    "trial subscription", "trial period", "trial extension", "month trial", "year trial",
+    "-year trial", "included subscription", "complimentary", "no charge", "included at no",
+)
+
+_SQUASH_RE = re.compile(r"[^a-z0-9]+")
+
+
+def _squash_name(value: Any) -> str:
+    """Lowercase and strip everything but letters/digits ('i8 Roadster' -> 'i8roadster')."""
+    return _SQUASH_RE.sub("", str(value or "").lower())
+
+
+def is_never_priced(name: Any) -> bool:
+    low = " ".join(str(name or "").lower().split())
+    return any(term in low for term in NEVER_PRICED_TERMS)
+
+
+def is_mandatory_fee(name: Any) -> bool:
+    low = str(name or "").strip().lower()
+    return any(term in low for term in FEE_TERMS)
+
+
+def is_vehicle_price_row(
+    name: Any,
+    price: float | int | None = None,
+    car: dict[str, Any] | None = None,
+    sticker_msrp: float | int | None = None,
+) -> bool:
+    """True when a parsed "priced option" is really the vehicle's own price line.
+
+    Before this filter existed the sticker's BASE VEHICLE PRICE, TOTAL VEHICLE
+    PRICE and destination-charge lines went into the registry as if they were
+    optional equipment. Live damage observed in ``package_values``: 390 rows
+    over $25,000, including ``name_display='Base'`` at $198,300 on a Mercedes
+    S-Class and ``'i8Roadster'`` at $163,300 (the model+trim string echoed back
+    as an "option").
+
+    Drops entries whose name is 'base'/'msrp'/empty, matches a total-price /
+    base-price / destination / gas-guzzler pattern, or is (nearly) the car's own
+    model identity — and entries whose price equals the sticker's parsed
+    total/base MSRP when that value is known.
+    """
+    low = " ".join(str(name or "").lower().split())
+    if not low:
+        return True
+    if low in VEHICLE_PRICE_NAME_EXACT:
+        return True
+    if any(pat in low for pat in VEHICLE_PRICE_NAME_PATTERNS):
+        return True
+
+    # The car's own identity echoed back as an "option" name ('i8Roadster' on an
+    # i8 Roadster). Compare with case/space/punctuation squashed out. Bare trim
+    # is deliberately NOT in this set: trims are frequently real package names
+    # (BMW "M Sport", Audi "Black Optic") that stickers itemize with their own
+    # price — only model-echo concatenations are identity.
+    if car:
+        squashed = _squash_name(name)
+        make = _squash_name(car.get("make"))
+        model = _squash_name(car.get("model"))
+        trim = _squash_name(car.get("trim"))
+        identity = {
+            model,
+            model + trim,
+            trim + model,
+            make + model,
+            make + model + trim,
+        }
+        identity.discard("")
+        if squashed and squashed in identity:
+            return True
+
+    # A price identical to the sticker's own total/base MSRP is the car's price,
+    # whatever the line happened to be labelled.
+    if sticker_msrp is not None and price is not None:
+        try:
+            if abs(float(price) - float(sticker_msrp)) < 0.5:
+                return True
+        except (TypeError, ValueError):
+            pass
+    return False
+
+
 def _clean(v: Any) -> str | None:
     if v is None:
         return None
@@ -135,6 +263,14 @@ def record_package_observations(
             code = _clean(item.get("code"))
             price = _price_or_none(item.get("price"))
             category = _clean(item.get("category"))
+            # Choke-point gate: the car's own price lines, mandatory fees, and
+            # identity echoes never enter the price book, whichever writer
+            # calls us. Bundled no-charge lines keep the sighting but lose the
+            # price — a figure beside them is the neighbouring row's.
+            if is_vehicle_price_row(raw_name, price, car) or is_mandatory_fee(raw_name):
+                continue
+            if price is not None and is_never_priced(raw_name):
+                price = None
             # Key on the normalized NAME, not the code: dealer listings never
             # carry OEM codes, so name-keying is what lets a coded sticker fold
             # into the codeless listing sightings of the same package. Two

@@ -70,41 +70,12 @@ def _connect():
 _TRUNCATED = "length(t.summary->>'notes') >= 499"
 
 
-def _sample(urls: list[str], limit: int) -> list[str]:
-    """
-    Spread the sample across the whole gallery.
-
-    The first version of this took ``urls[:limit]`` -- the first N photos -- which is the
-    exact defect already diagnosed and fixed in the sweep's own image selection: dealers
-    lead with exterior beauty shots and put the Monroney deep in the set, so head-only
-    sampling finds no stickers and reports the car as having none.
-
-    It cost 158 false withdrawals on the first recheck run. Median gallery in that set was
-    19 photos and the pass saw 10, so "no sticker visible in any of the 10 images" was a
-    property of the sample rather than of the car. Three of the withdrawn cars had been
-    VIN-matched and arithmetically reconciled by an independent auditor hours earlier.
-
-    Taking every k-th image gives the same budget a view of the entire gallery.
-    """
-    if len(urls) <= limit:
-        return urls
-    # Endpoints INCLUSIVE. The first version used int(i * len/limit), whose largest index
-    # is int((limit-1) * len/limit) -- strictly less than len-1 whenever the gallery is
-    # bigger than the sample. So the LAST photo was structurally unreachable, and the last
-    # photo is where dealers put the Monroney. That produced 150 "cannot_assess" verdicts
-    # in which agents wrote paragraphs about zoom levels and focus while a flat, sharp,
-    # table-top shot of the sticker sat one slot past the end of what they were handed;
-    # an auditor pulled the withheld tail for 20 of them and found a legible sticker in 19.
-    #
-    # Both ends now always appear, and the interior is spread evenly between them.
-    last = len(urls) - 1
-    picked, seen = [], set()
-    for i in range(limit):
-        idx = round(i * last / (limit - 1))
-        if idx not in seen:
-            seen.add(idx)
-            picked.append(urls[idx])
-    return picked
+# Selection and download both come from image_batch. They were duplicated here, and every
+# copy drifted: a head-only sample deleted 158 verified prices, an off-by-one that hid the
+# LAST photo wasted a whole run, and per-agent curl let a CDN truncate the evidence to 7
+# images per car. image_batch's versions were correct the entire time, 30 lines from where
+# the broken copies were written.
+from backend.scripts.image_batch import _download, _select_images
 
 
 def cmd_prepare(args: argparse.Namespace) -> int:
@@ -155,7 +126,7 @@ def cmd_prepare(args: argparse.Namespace) -> int:
             # The caveat as stored -- cut off, but its surviving half is still the best
             # hint about what the agent was worried about.
             "truncated_note": notes or "",
-            "images": _sample([u for u in images if isinstance(u, str)], args.images),
+            "images": _select_images([u for u in images if isinstance(u, str)], args.images),
         })
 
     for n, cars in enumerate(shards):
@@ -174,7 +145,7 @@ def cmd_apply(args: argparse.Namespace) -> int:
 
     conn = _connect()
     cur = conn.cursor()
-    confirmed = corrected = withdrawn = skipped = unassessed = 0
+    confirmed = corrected = withdrawn = skipped = unassessed = proposed = 0
 
     for item in items:
         if not isinstance(item, dict):
@@ -239,6 +210,33 @@ def cmd_apply(args: argparse.Namespace) -> int:
             )
             unassessed += 1
 
+        elif verdict == "withdraw" and not args.allow_withdraw:
+            # Agents do not get to delete prices. Three independent passes produced
+            # 179 withdrawals and NOT ONE was correct:
+            #
+            #   attempt 1  158 withdrawn -- head-only image sample; they never saw the sticker
+            #   attempt 2    4 withdrawn -- called a $1,350 destination charge a "First Aid Kit"
+            #   attempt 3   17 withdrawn -- called the true total a "pre-destination subtotal"
+            #
+            # Attempt 3 is the instructive one. Every withdrawal came with correct arithmetic
+            # (base + options summed exactly to the recorded figure) and a confident reading
+            # of a shifted column. It was still wrong: the listed price sits $85-$799 above
+            # the figure, identically for every car at the same dealer, which is a per-dealer
+            # DOC FEE, not a missing ~$1,350 destination charge. Cars 887041/887105/887254
+            # were withdrawn and restored twice.
+            #
+            # The failure is structural, not a prompt problem. A verdict that can only be
+            # checked by reopening the image is not a verdict an image-reading agent can be
+            # trusted to self-certify. So withdraw now PARKS the row for review and leaves
+            # the number alone. Pass --allow-withdraw only after a human has looked.
+            summary["msrp_recheck"] = "withdraw_proposed"
+            summary["msrp_recheck_note"] = note
+            cur.execute(
+                "UPDATE car_image_text SET summary = %s WHERE car_id = %s AND version = %s",
+                (json.dumps(summary), car_id, VERSION),
+            )
+            proposed += 1
+
         elif verdict == "withdraw":
             # Withdrawing keeps the row and the reason; only the number goes. The car
             # stays analysed, so the sweep will not re-claim it.
@@ -257,8 +255,8 @@ def cmd_apply(args: argparse.Namespace) -> int:
 
     conn.close()
     _log.info(
-        "confirmed %d, corrected %d, withdrawn %d, cannot-assess %d, skipped %d",
-        confirmed, corrected, withdrawn, unassessed, skipped,
+        "confirmed %d, corrected %d, withdrawn %d, withdrawal-proposed %d, cannot-assess %d, skipped %d",
+        confirmed, corrected, withdrawn, proposed, unassessed, skipped,
     )
     # A pass that withdraws most of what it touches is reporting on its own input, not on
     # the data. 158 of 161 was the first run; it was a head-only image sample.
@@ -285,6 +283,9 @@ def main() -> int:
 
     a = sub.add_parser("apply")
     a.add_argument("--verdicts", required=True)
+    a.add_argument("--allow-withdraw", action="store_true",
+                   help="actually null the MSRP on a withdraw verdict. Off by default: "
+                        "179 agent withdrawals across three passes, none correct.")
     a.set_defaults(fn=cmd_apply)
 
     args = ap.parse_args()

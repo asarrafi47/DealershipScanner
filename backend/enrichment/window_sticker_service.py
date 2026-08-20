@@ -28,6 +28,14 @@ _DEFAULT_STICKER_PREVIEW_DPI = 200
 
 _VIN_RE = re.compile(r"^[A-HJ-NPR-Z0-9]{17}$", re.I)
 
+# Canonical vehicle-price/fee/identity predicate lives in package_registry
+# (the record_package_observations choke point also enforces it internally);
+# this alias keeps the pre-filter here and the import in
+# feed_package_registry_from_vision working.
+from backend.enrichment.package_registry import (  # noqa: E402
+    is_vehicle_price_row as _is_vehicle_price_row,
+)
+
 
 def _sticker_storage_key(
     *,
@@ -548,9 +556,21 @@ def _analyze_sticker_text_and_merge(
     ):
         return False
 
+    # Parsed once here so both the registry filter below and the cars.msrp
+    # backfill further down see the same value.
+    msrp = _parse_msrp_from_sticker_text(raw_text)
+    if msrp is None and claude and claude.get("msrp") is not None:
+        try:
+            msrp = int(claude["msrp"])
+        except (TypeError, ValueError):
+            msrp = None
+
     # Self-improving loop: fold this sticker's priced options into the package-
     # value registry. Real OEM prices are ground truth and teach the value of
     # each package/option for every future car of the same configuration.
+    # _is_vehicle_price_row keeps the sticker's own price lines (BASE VEHICLE
+    # PRICE, TOTAL VEHICLE PRICE, destination charge) out of the registry — see
+    # its docstring for the live damage the missing filter caused.
     try:
         _priced = pkg_patch.get("sticker_options_priced")
         if _priced:
@@ -567,7 +587,14 @@ def _analyze_sticker_text_and_merge(
                     "price": e.get("price") if isinstance(e.get("price"), (int, float)) else None,
                 }
                 for e in _priced
-                if isinstance(e, dict) and str(e.get("name") or "").strip()
+                if isinstance(e, dict)
+                and str(e.get("name") or "").strip()
+                and not _is_vehicle_price_row(
+                    e.get("name"),
+                    e.get("price") if isinstance(e.get("price"), (int, float)) else None,
+                    car,
+                    msrp,
+                )
             ]
             if _items:
                 record_package_observations(car, "oem_sticker", _items)
@@ -580,12 +607,6 @@ def _analyze_sticker_text_and_merge(
         "window_sticker_url": sticker_url or car.get("window_sticker_url") or "",
     }
     fields.update(_car_fields_from_parsed_sticker(car, parsed))
-    msrp = _parse_msrp_from_sticker_text(raw_text)
-    if msrp is None and claude and claude.get("msrp") is not None:
-        try:
-            msrp = int(claude["msrp"])
-        except (TypeError, ValueError):
-            msrp = None
     if msrp and is_effectively_empty(car.get("msrp")):
         fields["msrp"] = msrp
 

@@ -81,3 +81,45 @@ def test_question_not_treated_as_search(client, monkeypatch):
     r = client.post("/api/ai/chat", json={"message": "how does financing work?"})
     data = r.get_json()
     assert data["ok"] and data["context"] == "general" and "search" not in data
+
+
+def test_truncated_rewrite_falls_back_to_raw_query(client, monkeypatch):
+    """A rewrite cut off at max_tokens is never used — the raw query is searched."""
+    from backend.utils.local_llm import Completion
+
+    _allow_feature(monkeypatch)
+    parsed = []
+
+    def fake_parse(q):
+        parsed.append(q)
+        return {"make": "BMW", "body_style": "convertible"}
+
+    # Question-shaped message: the first parse yields filters but _looks_like_search
+    # rejects it, so the route reaches the LLM rewrite step.
+    monkeypatch.setattr("backend.utils.query_parser.parse_natural_query", fake_parse)
+    cut = Completion("BMW convert", stop_reason="length", truncated=True, provider="local")
+    monkeypatch.setattr("backend.utils.llm_client.complete", lambda *a, **k: cut)
+
+    message = "which sporty bmws do you have in stock"
+    r = client.post("/api/ai/chat", json={"message": message})
+    data = r.get_json()
+    assert data["ok"] and data["context"] == "search"
+    assert data["search"]["q"] == message          # raw query, not the cut rewrite
+    assert "BMW convert" not in data["search"]["url"]
+    assert parsed[-1] == message                   # filters were parsed from the raw query
+
+
+def test_complete_rewrite_still_used_when_not_truncated(client, monkeypatch):
+    """An untruncated Completion keeps the pre-existing rewrite behavior."""
+    from backend.utils.local_llm import Completion
+
+    _allow_feature(monkeypatch)
+    monkeypatch.setattr("backend.utils.query_parser.parse_natural_query",
+                        lambda m: {"make": "BMW", "body_style": "convertible"})
+    full = Completion('"BMW convertible"', stop_reason="stop", truncated=False, provider="local")
+    monkeypatch.setattr("backend.utils.llm_client.complete", lambda *a, **k: full)
+
+    r = client.post("/api/ai/chat", json={"message": "which sporty bmws do you have in stock"})
+    data = r.get_json()
+    assert data["ok"] and data["context"] == "search"
+    assert data["search"]["q"] == "BMW convertible"

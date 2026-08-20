@@ -1205,6 +1205,13 @@ document.addEventListener("DOMContentLoaded", () => {
         const dealerHtml = (dealerName && /^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$/.test(dealerKey))
             ? `<a href="/dealership/${encodeURIComponent(dealerKey)}" class="result-dealer result-dealer-link">${dealerNameHtml}</a>`
             : `<span class="result-dealer">${dealerNameHtml}</span>`;
+        // The backend sets location_confirmed=false only when this listing's own photos
+        // (or a proven group-wide feed) contradict the dealership it is filed under —
+        // see backend/db/repositories/cars_repo.py. The card keeps the dealer name (that
+        // is who published it) and stops implying the car is on that lot.
+        const locUnconfirmed = c.location_confirmed === false
+            ? `<span class="result-dealer-unconfirmed" title="${SC.escapeHtml(c.location_note || "")}">Location unconfirmed</span>`
+            : "";
         // The dealer row sits OUTSIDE .result-card-link: an <a> nested inside an <a> is
         // invalid HTML, and browsers recover by unnesting it, which breaks the card link.
         return `
@@ -1235,6 +1242,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 <p class="result-dealer-row">
                     ${distLine}
                     ${dealerHtml}
+                    ${locUnconfirmed}
                 </p>
                 <div class="result-card-actions">
                     ${compareCb}

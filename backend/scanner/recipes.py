@@ -126,6 +126,66 @@ def _recipe_path(dealer_id: str) -> Path:
     return RECIPES_DIR / f"{_recipe_slug(dealer_id)}.json"
 
 
+# Dealer identity is a pure function of the site URL (dev.dealers.slug_from_url),
+# so a hostname change (aaronfordofescondido.com -> .org) mints a NEW dealer id
+# and strands the recipes saved under the old one. ``_aliases.json`` bridges
+# those rekeys: a flat ``{old_slug: current_dealer_id}`` map kept next to the
+# recipe files. READS consult it (file loads here; DB loads in
+# ``recipe_store``); WRITES never do — they always target the current slug, so
+# a rekeyed dealer's next save migrates its content forward naturally. The
+# underscore prefix keeps the file out of ``*.json`` dealer listings (see
+# ``import_recipes_to_db`` / ``heal_from_recipes``).
+ALIASES_FILENAME = "_aliases.json"
+
+
+def _load_recipe_aliases() -> dict[str, str]:
+    """``{old_slug: current_dealer_id}`` from ``_aliases.json``.
+
+    Failure-tolerant by design: a missing, unreadable, or corrupt alias file —
+    or one that is not a flat string->string object — simply means no aliasing.
+    """
+    try:
+        raw = json.loads((RECIPES_DIR / ALIASES_FILENAME).read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return {}
+    if not isinstance(raw, dict):
+        return {}
+    return {
+        _recipe_slug(k): v.strip()
+        for k, v in raw.items()
+        if isinstance(k, str) and isinstance(v, str) and k.strip() and v.strip()
+    }
+
+
+def resolve_alias_slug(dealer_id: str) -> str | None:
+    """The retired slug that may still hold *dealer_id*'s recipes, or ``None``.
+
+    Reverse lookup over the alias map: returns the old slug whose entry points
+    at *dealer_id*'s current slug. Self-referential entries are ignored.
+    """
+    cur = _recipe_slug(dealer_id)
+    for old_slug, new_id in _load_recipe_aliases().items():
+        if old_slug != cur and _recipe_slug(new_id) == cur:
+            return old_slug
+    return None
+
+
+def _recipe_read_path(dealer_id: str) -> Path:
+    """Path to READ recipes from: the current slug's file when it exists,
+    else an alias-mapped retired slug's file. Writes must keep using
+    ``_recipe_path`` (always the current slug) so rekeyed content migrates
+    forward on the next save instead of resurrecting the old identity."""
+    path = _recipe_path(dealer_id)
+    if path.exists():
+        return path
+    old_slug = resolve_alias_slug(dealer_id)
+    if old_slug:
+        aliased = RECIPES_DIR / f"{old_slug}.json"
+        if aliased.exists():
+            return aliased
+    return path
+
+
 def _rows_to_recipes(raw: Any) -> list[EndpointRecipe]:
     out: list[EndpointRecipe] = []
     for row in raw if isinstance(raw, list) else []:
@@ -145,10 +205,12 @@ def load_recipes(dealer_id: str) -> list[EndpointRecipe]:
     by a scan that predates the DB store) is lazily pushed up. Either side
     being unavailable degrades to the other.
     """
-    path = _recipe_path(dealer_id)
+    # Read may resolve through _aliases.json (URL-rekeyed dealer); any write
+    # below targets the CURRENT slug so the content migrates forward.
+    read_path = _recipe_read_path(dealer_id)
     file_rows: list[dict] = []
     try:
-        raw = json.loads(path.read_text(encoding="utf-8"))
+        raw = json.loads(read_path.read_text(encoding="utf-8"))
         if isinstance(raw, list):
             file_rows = raw
     except (OSError, ValueError):
@@ -171,10 +233,11 @@ def load_recipes(dealer_id: str) -> list[EndpointRecipe]:
 
     file_saved = _max_saved(file_rows) if file_rows else -1.0
     if db_rows and db_saved > file_saved:
-        # Another machine captured fresher recipes — adopt and cache locally.
+        # Another machine captured fresher recipes — adopt and cache locally
+        # (under the current slug, even when the read came from an alias).
         try:
             RECIPES_DIR.mkdir(parents=True, exist_ok=True)
-            path.write_text(json.dumps(db_rows, indent=1), encoding="utf-8")
+            _recipe_path(dealer_id).write_text(json.dumps(db_rows, indent=1), encoding="utf-8")
         except OSError:
             pass
         return _rows_to_recipes(db_rows)
@@ -498,8 +561,32 @@ async def try_fetch_via_recipes(
     Delta scans want the union; the pre-browser scan fast path keeps the
     cheaper first-hit behavior.
     """
+    # This store's postal address, for the rooftop gate.
+    #
+    # Without it, a group feed refuses EVERY row. That is not hypothetical: synthesising a
+    # recipe for terrylabontechevy.com pulled 3,979 VINs -- HendrickCars.com's national
+    # inventory -- and the gate logged "group feed names 48 rooftops (Buford GA, Cary NC,
+    # Duluth GA, Durham NC, Greensboro NC, Merriam KS) and none is this store" on every
+    # page. Terry Labonte Chevrolet IS the Greensboro NC store; the feed identifies its
+    # rooftops by address block, not by name, so with no address to compare the gate could
+    # not recognise the very dealer being scanned and threw the lot away.
+    #
+    # backend.parsers.parse says this explicitly -- "omit them on such a feed and every
+    # page refuses every row" -- and delta_scan already passes them. This path did not, so
+    # every dealer on a Hendrick / Sonic / Fletcher Jones / CarsCommerce group feed yielded
+    # zero cars through recipe replay while looking like a healthy multi-thousand-VIN
+    # recipe. Best-effort: a dealer missing from the registry falls back to the name and
+    # host tiers, exactly as before.
     if not recipe_fetch_enabled():
         return None
+    from backend.scanner.rooftop_disown import roster_place
+
+    # Registry lookup hits the DB — keep it off the event loop, and don't pay
+    # for it at all when recipe fetch is disabled.
+    try:
+        _place = (await asyncio.to_thread(roster_place, base_url)) or {}
+    except Exception:  # noqa: BLE001 - attribution help must never break a scan
+        _place = {}
     # load_recipes may consult Postgres (recipe_store sync) — keep that
     # blocking I/O off the event loop this coroutine runs on.
     loaded = await asyncio.to_thread(load_recipes, dealer_id)
@@ -556,10 +643,27 @@ async def try_fetch_via_recipes(
                 break
             if parsed is None:
                 break
+            # rejected_out is REQUIRED, not optional decoration. parse() ends with:
+            #
+            #     if rejected_out is None:
+            #         return kept + rejected
+            #
+            # so a caller that omits it gets back the very rows the rooftop gate just
+            # refused. This path omitted it, and the effect was invisible because the
+            # refusals still logged: replaying terrylabontechevy.com printed FORTY
+            # "refusing all 100 row(s)" warnings and returned 3,931 VINs -- Hendrick's
+            # national inventory, filed under one Greensboro store. That is precisely the
+            # bug that gave bmwofmurrieta-com 1,921 cars across 37 makes.
+            #
+            # Passing a list makes parse() return only `kept`, which is what every other
+            # caller already does.
+            _refused: list[dict] = []
             page_vehicles = list(parse(
                 recipe.provider_hint or provider, parsed,
                 base_url=base_url, dealer_id=dealer_id,
                 dealer_name=dealer_name, dealer_url=base_url,
+                rejected_out=_refused,
+                **_place,
             ))
             new = _unique_vins(page_vehicles) - vins
             records.append((recipe.url, parsed))

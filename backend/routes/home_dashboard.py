@@ -241,7 +241,7 @@ def _recommendations_for_user_uncached(
         return len(out_cars[:limit]), heading
 
     return (
-        [main.serialize_car_for_listings_grid(c) for c in out_cars[:limit]],
+        main.serialize_cars_for_listings_grid(out_cars[:limit]),
         heading,
     )
 
@@ -255,7 +255,7 @@ def _recently_compared_for_user(user_id: int, limit: int = 12) -> list[dict]:
     raw = main.get_cars_by_ids(compared_ids)
     by_id = {int(c["id"]): c for c in raw if c.get("id") is not None}
     ordered = [by_id[cid] for cid in compared_ids if cid in by_id]
-    return [main.serialize_car_for_listings_grid(c) for c in ordered]
+    return main.serialize_cars_for_listings_grid(ordered)
 
 
 def _recently_viewed_for_user(user_id: int, limit: int = 12) -> list[dict]:
@@ -267,7 +267,7 @@ def _recently_viewed_for_user(user_id: int, limit: int = 12) -> list[dict]:
     raw = main.get_cars_by_ids(viewed_ids)
     by_id = {int(c["id"]): c for c in raw if c.get("id") is not None}
     ordered = [by_id[cid] for cid in viewed_ids if cid in by_id]
-    return [main.serialize_car_for_listings_grid(c) for c in ordered]
+    return main.serialize_cars_for_listings_grid(ordered)
 
 
 def _browse_trends_for_user(user_id: int, limit: int = 6) -> list[tuple[str, int]]:
@@ -307,7 +307,7 @@ def _render_personal_home():
         recommendations_hint = rec_heading.get("hint") or ""
         saved_ids = main.get_saved_car_ids(uid)
         raw_saved = main.get_cars_by_ids(saved_ids)
-        saved_cars_list = [main.serialize_car_for_listings_grid(c) for c in raw_saved]
+        saved_cars_list = main.serialize_cars_for_listings_grid(raw_saved)
         recently_compared = _recently_compared_for_user(uid)
         recently_viewed = _recently_viewed_for_user(uid)
     return render_template(

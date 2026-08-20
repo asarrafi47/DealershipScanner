@@ -1697,6 +1697,19 @@ body.listings-page .result-image {
     border-bottom-color: currentColor;
 }
 
+/* Sits next to the dealer name when this listing's photographs place the car at a
+   different rooftop. Deliberately quiet -- it is a caveat on one fact, not a warning
+   about the listing, and the card must not start looking like a fraud notice. */
+.result-dealer-unconfirmed {
+    font-size: 11px;
+    color: var(--text-faint);
+    border: 1px solid var(--border-medium);
+    border-radius: 999px;
+    padding: 1px 7px;
+    white-space: nowrap;
+    cursor: help;
+}
+
 .empty-state {
     padding: 60px 0;
 }

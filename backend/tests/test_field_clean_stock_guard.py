@@ -123,5 +123,54 @@ class CleanCarRowStockGuardTest(unittest.TestCase):
         self.assertIsNone(out["stock_number"])
 
 
+class TrimStockCodeGuardTest(unittest.TestCase):
+    """'trim' is in _STOCK_CODE_GUARDED_FIELDS: a leaked code cannot land there."""
+
+    def test_stock_code_in_trim_rejected_when_listing_does_not_name_it(self) -> None:
+        out = clean_car_row_dict(
+            {
+                "vin": "3C7WRMCL2RG204890",
+                "trim": "T0386",
+                "title": "2024 Ram 2500 Big Horn",
+                "description": None,
+            }
+        )
+        self.assertIsNone(out["trim"])
+
+    def test_stock_code_shaped_trim_kept_when_named_in_listing(self) -> None:
+        # Real trims are stock-code-shaped (GT350, P100D, E350); the listing's
+        # own text corroborates them and the guard must not null them.
+        out = clean_car_row_dict(
+            {
+                "vin": "1FA6P8JZ5H5524321",
+                "trim": "GT350",
+                "title": "2017 Ford Mustang Shelby GT350",
+            }
+        )
+        self.assertEqual(out["trim"], "GT350")
+
+    def test_legit_word_trim_untouched(self) -> None:
+        out = clean_car_row_dict({"vin": "1", "trim": "Lariat", "title": "2024 Ford F-150"})
+        self.assertEqual(out["trim"], "Lariat")
+
+    def test_identical_token_heal_still_fires_without_trim(self) -> None:
+        # Adding trim to the guard must not weaken the four-field PixelMotion heal.
+        out = clean_car_row_dict(
+            {
+                "vin": "3C7WRMCL2RG204890",
+                "drivetrain": "FR040",
+                "transmission": "FR040",
+                "exterior_color": "FR040",
+                "interior_color": "FR040",
+                "trim": "FR040",
+                "title": "2024 Ram 3500",
+                "stock_number": None,
+            }
+        )
+        self.assertEqual(out["stock_number"], "FR040")
+        self.assertIsNone(out["drivetrain"])
+        self.assertIsNone(out["trim"])
+
+
 if __name__ == "__main__":
     unittest.main()

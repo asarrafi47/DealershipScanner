@@ -184,6 +184,14 @@
            only undo the full-bleed page chrome that layout assumes, so the filters
            sit inside the research page's own 1180px column. */
         .dealer-inventory { margin-top: 2.25rem; }
+        /* Sits directly under the Total/New/Pre-owned figures it qualifies. */
+        .dealer-inventory__unconfirmed {
+            margin: -0.5rem 0 1rem;
+            max-width: 62ch;
+            font-size: .9rem;
+            line-height: 1.5;
+            color: var(--text-muted, #5b6474);
+        }
         body.dealership-research-page { background-image: none; }
         /* `margin: 0 auto` on a grid item shrink-wraps it once the listings rules
            are in play; the research column must still fill its track. */
@@ -262,6 +270,21 @@
                 <span class="dealer-research__count"><b>{{ '{:,}'.format(inventory.new_count) }}</b><span>New</span></span>
                 <span class="dealer-research__count"><b>{{ '{:,}'.format(inventory.used_count) }}</b><span>Pre-owned</span></span>
             </div>
+
+            {# Some rooftops are served their whole ownership group's feed, and the
+               photographs on those listings show the car at another store. Those cars
+               are still shown (they are real listings a shopper can act on), but the
+               count above must not read as "all of these are on this lot". #}
+            {% if inventory.unconfirmed_count %}
+            <p class="dealer-inventory__unconfirmed">
+                <b>{{ '{:,}'.format(inventory.unconfirmed_count) }}</b> of these
+                {{ 'listing is' if inventory.unconfirmed_count == 1 else 'listings are' }}
+                published by this dealership but not confirmed to be on this lot —
+                {{ 'its' if inventory.unconfirmed_count == 1 else 'their' }} photos point to
+                another store, or this rooftop carries a group-wide feed. Confirm with the
+                dealership before you visit.
+            </p>
+            {% endif %}
 
             {% if inventory.total %}
             <form method="GET" action="{{ url_for('dealership_research_page', dealer_key=dealer_key) }}" id="search-form" class="listings-form">
@@ -772,6 +795,10 @@
    facet-options URL to the dealer-scoped one before main.js fires that request. #}
 <script src="{{ url_for('static', filename='sc-helpers.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>
 <script src="{{ url_for('static', filename='dealership_page.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>
+{# listings_boot must follow dealership_page.js (boot handler order) and precede main.js. #}
+<script src="{{ url_for('static', filename='listings_boot.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>
+<script src="{{ url_for('static', filename='market_intel.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>
+<script src="{{ url_for('static', filename='geo.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>
 <script src="{{ url_for('static', filename='main.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>
 <script src="{{ url_for('static', filename='compare.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>
 {% endif %}

@@ -159,7 +159,8 @@ def search_cars(makes=None, models=None, trims=None, fuel_types=None,
                 trim_contains_list=None,
                 vehicle_or=None,
                 vin=None,
-                include_incomplete: bool | None = None):
+                include_incomplete: bool | None = None,
+                include_flagged: bool = False):
     """
     ``candidate_ids``: optional list of SQLite ``cars.id`` values (e.g. pgvector semantic recall).
     When set, results are restricted to ``id IN (candidate_ids)`` in addition to other filters.
@@ -197,6 +198,12 @@ def search_cars(makes=None, models=None, trims=None, fuel_types=None,
 
     ``include_incomplete``: when False, rows that fail :func:`is_car_incomplete` are omitted
     (public listings). When None, use :func:`listings_include_incomplete_cars`.
+
+    ``include_flagged``: default False — rows an admin flagged for review
+    (``cars.marked_for_review = 1``) are suppressed, since every caller of this
+    builder is a public/guest surface. Admin/ops tooling that needs to SEE
+    flagged rows (that is the whole point of the flag) must opt in with
+    ``include_flagged=True``.
     """
     if include_incomplete is None:
         inc = listings_include_incomplete_cars()
@@ -206,6 +213,9 @@ def search_cars(makes=None, models=None, trims=None, fuel_types=None,
     from backend.db.geo import zip_to_coords, haversine
 
     query = "SELECT * FROM cars WHERE (COALESCE(listing_active, 1) = 1)"
+    if not include_flagged:
+        # Admin "marked for review" flag hides the row from public search results.
+        query += " AND COALESCE(marked_for_review, 0) = 0"
     params = []
 
     if candidate_ids:
@@ -470,9 +480,15 @@ def search_cars_by_make_model_pairs(
     zip_code: str | None = None,
     radius_miles: float | None = None,
     include_incomplete: bool | None = None,
+    include_flagged: bool = False,
     sql_limit: int | None = 120,
 ) -> list[dict]:
-    """Fetch active cars matching any (make, model) pair in one SQL round-trip."""
+    """Fetch active cars matching any (make, model) pair in one SQL round-trip.
+
+    ``include_flagged``: default False — admin-flagged (``marked_for_review``)
+    rows are suppressed; admin callers must opt in (same contract as
+    :func:`search_cars`).
+    """
     if not pairs:
         return []
     if include_incomplete is None:
@@ -498,8 +514,10 @@ def search_cars_by_make_model_pairs(
 
     from backend.db.geo import haversine, zip_to_coords
 
+    flagged_sql = "" if include_flagged else " AND COALESCE(marked_for_review, 0) = 0"
     query = (
         "SELECT * FROM cars WHERE (COALESCE(listing_active, 1) = 1)"
+        f"{flagged_sql}"
         f" AND ({' OR '.join(clauses)})"
         " ORDER BY CASE WHEN price IS NULL OR price = 0 THEN 1 ELSE 0 END, price ASC"
     )

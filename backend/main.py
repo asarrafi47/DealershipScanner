@@ -73,6 +73,7 @@ from backend.db.inventory_db import (
     search_cars,
     search_cars_by_make_model_pairs,
     serialize_car_for_listings_grid,
+    serialize_cars_for_listings_grid,
     unsave_car,
 )
 from backend.db.user_history_db import (

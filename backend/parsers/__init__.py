@@ -10,6 +10,7 @@ cannot positively tie to the store being scanned.
 """
 import logging
 import re
+from functools import lru_cache
 from typing import Any
 from urllib.parse import urlparse
 
@@ -110,6 +111,27 @@ _ROOFTOP_NAME_STOPWORDS = frozenset({"of", "the", "and", "at"})
 # which backend/scanner/rooftop_disown.py deliberately leaves OUT of
 # EVIDENCE_BACKED_REJECTS: refuse the write, never un-list the car.
 _LOCALITY_ONLY_TIERS = frozenset({"zip_code", "city_state"})
+
+# The tiers that matched on the roster's street_address. They prove IDENTITY —
+# but only as far as the roster street itself can be trusted, which is what
+# ``dealerships.street_address_source`` records (migrations/V003).
+_STREET_TIERS = frozenset({
+    "street_address", "street_address_partial",
+    "street_address_suffix", "street_address_suffix_partial",
+})
+
+# street_address_source values whose street is a SCRAPE GUESS, not a structured
+# claim: free-text pattern matching over rendered page text (the backfill's
+# weakest tiers). A street from these sources still identifies the store well
+# enough to KEEP its rows — keeping can only add inventory — but it must never
+# be the sole evidence that UN-LISTS a sibling's rows, so a street-tier match
+# under these sources is demoted to the same weight as the city tier (siblings
+# get ``sibling_rooftop_weak_tier``: refuse the write, never un-list). NULL /
+# empty source means "unknown origin" per V003 (rows that predate provenance,
+# e.g. hand-entered) and keeps the historical strong-tier behaviour; the
+# structured tiers (site_jsonld*, osm_website) are machine-readable claims by
+# the dealer's own site and stay strong.
+_WEAK_STREET_SOURCES = frozenset({"site_text", "site_text_browser"})
 
 # ``dealer.location`` is a free-text field: some CarsCommerce accounts fill it
 # with the store name, others with an HTML address block, others with inventory
@@ -596,6 +618,7 @@ def _pick_target(
 def resolve_rooftop_attribution(
     rows: list[dict], *, dealer_id: str = "", dealer_name: str = "", dealer_url: str = "",
     dealer_address: str = "", dealer_city: str = "", dealer_state: str = "", dealer_zip: str = "",
+    dealer_address_source: str = "",
 ) -> tuple[list[dict], list[dict]]:
     """
     Split rows by feed-declared rooftop, and record what was refused.
@@ -615,6 +638,7 @@ def resolve_rooftop_attribution(
         rows, dealer_id=dealer_id, dealer_name=dealer_name, dealer_url=dealer_url,
         dealer_address=dealer_address, dealer_city=dealer_city,
         dealer_state=dealer_state, dealer_zip=dealer_zip,
+        dealer_address_source=dealer_address_source,
     )
     if rejected and dealer_id:
         try:
@@ -652,6 +676,7 @@ def resolve_rooftop_attribution(
 def _resolve_rooftop_attribution_inner(
     rows: list[dict], *, dealer_id: str = "", dealer_name: str = "", dealer_url: str = "",
     dealer_address: str = "", dealer_city: str = "", dealer_state: str = "", dealer_zip: str = "",
+    dealer_address_source: str = "",
 ) -> tuple[list[dict], list[dict]]:
     """Split parsed rows into ``(kept, rejected)`` by feed-declared rooftop.
 
@@ -741,7 +766,23 @@ def _resolve_rooftop_attribution_inner(
     # winner and 1,697 of a 1,941-car dealer were queued to be un-listed. So a
     # weak-tier match refuses to WRITE the siblings but never un-lists them; the
     # union pass, which sees every rooftop at once, is what settles the dealer.
-    sibling_reject = "sibling_rooftop" if tier not in _LOCALITY_ONLY_TIERS else "sibling_rooftop_weak_tier"
+    # A street-tier win is only as strong as the roster street it compared
+    # against. When that street was backfilled by the free-text scrape tiers
+    # (V003 provenance: site_text / site_text_browser), the match is demoted to
+    # locality weight: this store's rows are still KEPT (keeping can only add
+    # inventory, never remove it), but the siblings are refused with the weak
+    # marker so weak-provenance street evidence is never on its own enough to
+    # un-list a car. Empty/NULL source is "unknown origin" per V003, not "weak",
+    # and keeps the historical behaviour.
+    weak_street_provenance = (
+        tier in _STREET_TIERS
+        and str(dealer_address_source or "").strip().lower() in _WEAK_STREET_SOURCES
+    )
+    sibling_reject = (
+        "sibling_rooftop"
+        if tier not in _LOCALITY_ONLY_TIERS and not weak_street_provenance
+        else "sibling_rooftop_weak_tier"
+    )
     for rt in rooftops:
         if rt is target:
             continue
@@ -821,6 +862,7 @@ def parse(
     dealer_city: str = "",
     dealer_state: str = "",
     dealer_zip: str = "",
+    dealer_address_source: str = "",
 ):
     """Parse *raw_data* into vehicle rows, resolving which store each belongs to.
 
@@ -842,7 +884,9 @@ def parse(
     store in a group feed whose rooftops are address blocks carrying no store
     name; omit them on such a feed and every page refuses every row. Callers
     that have a roster should pass them — see
-    ``backend.scanner.delta_scan._roster_place``.
+    ``backend.scanner.delta_scan._roster_place``. ``dealer_address_source`` is
+    that street's provenance (``dealerships.street_address_source``, V003):
+    weak scrape tiers demote a street match so it cannot un-list on its own.
     """
     _kwargs = dict(base_url=base_url, dealer_id=dealer_id, dealer_name=dealer_name, dealer_url=dealer_url)
     rows = _parse_rows(provider, raw_data, _kwargs, dealer_id)
@@ -850,8 +894,49 @@ def parse(
         rows, dealer_id=dealer_id, dealer_name=dealer_name, dealer_url=dealer_url,
         dealer_address=dealer_address, dealer_city=dealer_city,
         dealer_state=dealer_state, dealer_zip=dealer_zip,
+        dealer_address_source=dealer_address_source,
     )
     if rejected_out is None:
         return kept + rejected
     rejected_out.extend(rejected)
     return kept
+
+
+@lru_cache(maxsize=256)
+def _cached_roster_place_items(dealer_url: str) -> tuple[tuple[str, str], ...]:
+    # roster_place already swallows lookup errors and returns {} (the registry
+    # is an optimisation, never a parse blocker); cached because recipe
+    # validation calls parse_kept once per page of the same dealer.
+    from backend.scanner.rooftop_disown import roster_place
+
+    return tuple(sorted((roster_place(dealer_url) or {}).items()))
+
+
+def parse_kept(
+    provider: str,
+    raw_data,
+    *,
+    base_url: str,
+    dealer_id: str,
+    dealer_name: str = "",
+    dealer_url: str = "",
+):
+    """``parse()`` returning ONLY this store's rows, with the store identified.
+
+    Discarding the rooftop gate's refusals is only safe when the gate can tell
+    which rooftop this store IS — on a group feed whose rooftops are address
+    blocks with no store name, ``parse(..., rejected_out=[])`` without the
+    ``dealer_address``/``city``/``state``/``zip`` kwargs refuses every row and
+    silently returns nothing (the terrylabontechevy.com failure). This wrapper
+    looks the roster place up itself, so a kept-rows caller cannot forget it.
+    Best-effort: a dealer missing from the registry falls back to the name and
+    host tiers, exactly as before.
+    """
+    place = dict(_cached_roster_place_items(dealer_url or base_url))
+    return parse(
+        provider, raw_data,
+        base_url=base_url, dealer_id=dealer_id,
+        dealer_name=dealer_name, dealer_url=dealer_url or base_url,
+        rejected_out=[],
+        **place,
+    )

@@ -65,26 +65,9 @@ def _connect():
     return conn
 
 
-def _sample(urls: list[str], limit: int) -> list[str]:
-    """
-    Stride across the whole gallery, endpoints inclusive.
-
-    Same shape as the fix in recheck_msrp: head-only sampling made agents conclude a sticker
-    did not exist because it sat late in the set, and an off-by-one that dropped the LAST
-    image did the same thing again. Dealer signage and plate frames cluster in the exterior
-    shots at the START, and Sold-To boxes appear on paperwork at the END, so both ends matter
-    here for the same reason.
-    """
-    if len(urls) <= limit:
-        return urls
-    last = len(urls) - 1
-    picked, seen = [], set()
-    for i in range(limit):
-        idx = round(i * last / (limit - 1))
-        if idx not in seen:
-            seen.add(idx)
-            picked.append(urls[idx])
-    return picked
+# Shared with the sweep. See the note in recheck_msrp: three separate defects today came
+# from private copies of exactly these two functions.
+from backend.scripts.image_batch import _download, _select_images
 
 
 def cmd_prepare(args: argparse.Namespace) -> int:
@@ -126,7 +109,7 @@ def cmd_prepare(args: argparse.Namespace) -> int:
             "year": year, "make": make, "model": model, "trim": trim,
             "filed_dealer_id": did,
             "filed_dealer_name": dname,
-            "images": _sample([u for u in images if isinstance(u, str)], args.images),
+            "images": _select_images([u for u in images if isinstance(u, str)], args.images),
         })
 
     for n, cars in enumerate(shards):
@@ -147,6 +130,17 @@ def cmd_apply(args: argparse.Namespace) -> int:
     cur = conn.cursor()
     placed = owner = unknown = skipped = 0
 
+    from backend.scripts.apply_attribution_moves import (
+        group_vocabulary,
+        names_a_specific_rooftop,
+    )
+
+    cur.execute("SELECT name FROM dealerships WHERE is_active = 1")
+    _vocab = group_vocabulary(r[0] or "" for r in cur.fetchall())
+
+    def _is_a_rooftop(name: str) -> bool:
+        return names_a_specific_rooftop(name, _vocab)
+
     for item in items:
         if not isinstance(item, dict):
             continue
@@ -164,7 +158,16 @@ def cmd_apply(args: argparse.Namespace) -> int:
             continue
         filed_id, filed_name = row
 
-        if verdict == "rooftop" and rooftop:
+        if verdict == "rooftop" and rooftop and not _is_a_rooftop(rooftop):
+            # The reader answered "rooftop" and then named a group. 21 conflicts were
+            # recorded this way -- "HendrickCars.com", "AutoNation (1Price Pre-Owned
+            # Vehicles)", "Group 1 Automotive" -- each asserting a car was somewhere other
+            # than where it is filed on evidence that says nothing about location. Demote to
+            # the verdict the reader should have given, keeping what was seen.
+            status, rooftop_seen, rooftop = "unverified", rooftop, None
+            evidence = f"photos name a parent group only, no rooftop: {rooftop_seen!r} -- {note}"[:900]
+            owner += 1
+        elif verdict == "rooftop" and rooftop:
             from backend.scripts.classify_attribution import _names_same_store
 
             same = _names_same_store(rooftop, filed_name, filed_id)

@@ -126,6 +126,22 @@ def serialize_car_for_compare(raw: dict[str, Any]) -> dict[str, Any]:
     return car
 
 
+def _dealer_cell(car: dict[str, Any]) -> str:
+    """The Dealer row states a fact in a table of facts, so it has to carry the caveat.
+
+    Side by side with VIN and stock number, a bare dealer name reads as verified. When
+    this listing's photos place the car elsewhere, the name stays (it is where the
+    listing came from) and the cell says so.
+    """
+    name = _norm_cell(car.get("dealer_name"))
+    if car.get("location_confirmed") is not False:
+        return name
+    rooftop = (car.get("observed_rooftop") or "").strip()
+    if rooftop:
+        return f"{name} (listed here; photos show {rooftop})"
+    return f"{name} (location unconfirmed)"
+
+
 def _compare_rows(cars: list[dict[str, Any]]) -> list[dict[str, Any]]:
     """Spec rows aligned with the car detail spec sheet."""
     specs: list[tuple[str, str, Any]] = [
@@ -147,7 +163,7 @@ def _compare_rows(cars: list[dict[str, Any]]) -> list[dict[str, Any]]:
         ("interior_color", "Interior", lambda c: _norm_cell(c.get("interior_color"))),
         ("vin", "VIN", lambda c: _norm_cell(c.get("vin"))),
         ("stock_number", "Stock #", lambda c: _norm_cell(c.get("stock_number"))),
-        ("dealer_name", "Dealer", lambda c: _norm_cell(c.get("dealer_name"))),
+        ("dealer_name", "Dealer", _dealer_cell),
         ("compare_packages_summary", "Packages & options", lambda c: c.get("compare_packages_summary") or "—"),
         ("compare_history_summary", "History highlights", lambda c: c.get("compare_history_summary") or "—"),
     ]
@@ -175,6 +191,19 @@ def _collapse_ws(text: str) -> str:
 def build_compare_context(raw_cars: list[dict[str, Any]]) -> dict[str, Any]:
     """Template context: serialized cars + spec rows with diff flags."""
     cars = [serialize_car_for_compare(c) for c in raw_cars]
+    # One verdict read for the (at most four) columns, before the rows are built —
+    # ``_dealer_cell`` reads these fields off the serialized car.
+    from backend.db.repositories.cars_repo import car_attribution_states
+    from backend.utils.car_serialize.attribution import attribution_public_fields
+
+    states = car_attribution_states(c.get("id") for c in cars)
+    if states:
+        for car in cars:
+            try:
+                cid = int(car.get("id") or 0)
+            except (TypeError, ValueError):
+                continue
+            car.update(attribution_public_fields(states.get(cid)))
     return {
         "cars": cars,
         "compare_rows": _compare_rows(cars),

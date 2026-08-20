@@ -6,6 +6,7 @@ and is reset via :func:`clear_incomplete_snapshot_cache`.
 """
 import hashlib
 import json
+import logging
 import re
 import sqlite3
 import threading
@@ -46,17 +47,20 @@ from backend.utils.interior_color_buckets import (
     sort_paint_family_ids,
 )
 
+_log = logging.getLogger(__name__)
+
 
 def serialize_car_for_listings_grid(
     car: dict,
     *,
     incomplete_ids: set[int] | None = None,
     incomplete_snapshot: _IncompleteIndexSnapshot | None = None,
+    attribution: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """
     Lightweight grid JSON for listings (see ``car_serialize.serialize_car_for_listings_grid``).
     """
-    out = _serialize_car_for_listings_grid(car)
+    out = _serialize_car_for_listings_grid(car, attribution=attribution)
     if listings_include_incomplete_cars():
         if incomplete_snapshot is not None:
             if _car_is_publicly_incomplete(car, incomplete_snapshot):
@@ -69,6 +73,25 @@ def serialize_car_for_listings_grid(
             elif cid <= 0 and is_car_incomplete(car):
                 out["public_incomplete"] = True
     return out
+
+
+def serialize_cars_for_listings_grid(cars: list[dict]) -> list[dict[str, Any]]:
+    """Grid JSON for a batch of cars, with the photo-attribution caveat applied.
+
+    ``serialize_car_for_listings_grid`` only adds the ``location_unconfirmed``
+    overlay when the caller passes the verdict in, and every route that forgot
+    (saved cars, smart search, the home-page rails) stated a dealership we hold
+    photographic evidence against as fact. This is the one batch entry point:
+    ONE ``car_attribution_states`` read per response, never one per car.
+    """
+    from backend.db.repositories.cars_repo import car_attribution_states
+
+    rows = list(cars)
+    attribution = car_attribution_states(_car_id_int(c) for c in rows)
+    return [
+        serialize_car_for_listings_grid(c, attribution=attribution.get(_car_id_int(c)))
+        for c in rows
+    ]
 
 
 def listings_grid_bootstrap_cars(limit: int = 48) -> list[dict[str, Any]]:
@@ -179,9 +202,18 @@ _grid_cars_cache_built_at: float = 0.0
 _LISTINGS_GRID_CACHE_REV = 6
 
 # Tables whose contents the serialized grid is derived from. ``cars`` is the row
-# source, ``incomplete_listings`` decides which rows are publicly hidden, and
-# ``market_price_stats`` backs the per-card deal score.
-_GRID_SOURCE_TABLES = ("cars", "incomplete_listings", "market_price_stats")
+# source, ``incomplete_listings`` decides which rows are publicly hidden,
+# ``market_price_stats`` backs the per-card deal score, and ``car_attribution`` /
+# ``dealer_feed_scope`` decide whether a card may state its dealership as fact — an
+# attribution batch changes the cards without touching ``cars``, so leaving those two
+# out would serve the old, over-confident copy until something else happened to write.
+_GRID_SOURCE_TABLES = (
+    "cars",
+    "incomplete_listings",
+    "market_price_stats",
+    "car_attribution",
+    "dealer_feed_scope",
+)
 
 # Never rebuild more often than this even when inventory is being written
 # continuously (a running scan writes ``cars`` without pause). 60s matches the
@@ -268,7 +300,7 @@ def clear_inventory_listings_cache() -> None:
 
 def public_listings_count() -> int:
     """Approximate count of active inventory rows for marketing/stats (cheap COUNT)."""
-    active = "(COALESCE(listing_active, 1) = 1)"
+    active = "(COALESCE(listing_active, 1) = 1) AND COALESCE(marked_for_review, 0) = 0"
     with db_conn() as conn:
         row = conn.execute(f"SELECT COUNT(*) AS n FROM cars WHERE {active}").fetchone()
     try:
@@ -328,8 +360,14 @@ def listings_grid_serialized_cars() -> list[dict[str, Any]]:
 # would corrupt later rebuilds. That was already true of the cached list itself
 # (``listings_grid_serialized_cars`` hands out the live cache object), so the
 # contract is unchanged: treat grid dicts as read-only.
-_grid_serialize_memo: dict[tuple[bytes, bool], dict[str, Any]] = {}
+_grid_serialize_memo: dict[tuple, dict[str, Any]] = {}
 _grid_serialize_memo_day: int | None = None
+
+# How many attribution verdicts the previous grid build saw. ``car_attribution_states``
+# fails open to ``{}`` so a broken read cannot 500 the listings grid -- but a rebuild
+# that bakes zero caveats where the last one had thousands is the overlay silently
+# vanishing fleet-wide, and it deserves more than a debug line.
+_grid_attribution_prev_count: int | None = None
 
 
 def _clear_grid_serialize_memo() -> None:
@@ -348,8 +386,10 @@ def _row_memo_digest(row: dict[str, Any]) -> bytes | None:
 
 
 def _build_grid_cars_uncached() -> list[dict[str, Any]]:
-    global _grid_serialize_memo, _grid_serialize_memo_day
-    active = "(COALESCE(listing_active, 1) = 1)"
+    global _grid_serialize_memo, _grid_serialize_memo_day, _grid_attribution_prev_count
+    # Guest grid: admin-flagged rows (marked_for_review) never ship to the public
+    # listings payload; admin inventory reads its own query path and still sees them.
+    active = "(COALESCE(listing_active, 1) = 1) AND COALESCE(marked_for_review, 0) = 0"
     inc = listings_include_incomplete_cars()
     cols = ", ".join(LISTINGS_GRID_CAR_COLUMNS)
     with db_conn(row_factory=sqlite3.Row) as conn2:
@@ -361,6 +401,23 @@ def _build_grid_cars_uncached() -> list[dict[str, Any]]:
     # Digest the rows BEFORE _parse_car_gallery rewrites ``gallery`` in place, so
     # the key describes exactly what came out of the database.
     digests = [_row_memo_digest(c) for c in all_cars_raw]
+
+    # One query for the whole fleet's photo-attribution verdicts (~2,700 rows), not
+    # one per card: this loop runs over every active listing, so a per-car lookup
+    # would be tens of thousands of round trips on the hottest read in the app.
+    from backend.db.repositories.cars_repo import car_attribution_states
+
+    attribution = car_attribution_states()
+    if not attribution and _grid_attribution_prev_count:
+        # The overlay fails open to {} rather than 500ing the grid, so this rebuild
+        # will bake a cache generation with NO location caveats. Fine on a database
+        # that never had verdicts; alarming when the previous build had thousands.
+        _log.warning(
+            "attribution overlay returned no verdicts but the previous grid build had %d; "
+            "this generation ships with no location caveats",
+            _grid_attribution_prev_count,
+        )
+    _grid_attribution_prev_count = len(attribution)
 
     # The incomplete-index snapshot decides which rows are hidden and is baked
     # into the serialized output, so a rebuild must not reuse a snapshot cached
@@ -376,7 +433,7 @@ def _build_grid_cars_uncached() -> list[dict[str, Any]]:
 
     day = int(time.time() // 86400)
     prev_memo = _grid_serialize_memo if _grid_serialize_memo_day == day else {}
-    fresh_memo: dict[tuple[bytes, bool], dict[str, Any]] = {}
+    fresh_memo: dict[tuple, dict[str, Any]] = {}
 
     out: list[dict[str, Any]] = []
     for row_i, (c, digest) in enumerate(zip(all_cars_raw, digests)):
@@ -385,12 +442,30 @@ def _build_grid_cars_uncached() -> list[dict[str, Any]]:
         pub_incomplete = _car_is_publicly_incomplete(c, snapshot)
         if not inc and pub_incomplete:
             continue
-        key = (digest, pub_incomplete) if digest is not None else None
+        car_attr = attribution.get(_car_id_int(c))
+        # The verdict is part of the card but lives outside the ``cars`` row the
+        # digest describes, so it has to be in the memo key too — otherwise a card
+        # whose columns never changed keeps its stale, over-confident dealer line.
+        attr_key = (
+            (
+                car_attr.get("status"),
+                car_attr.get("observed_rooftop"),
+                car_attr.get("location_unconfirmed"),
+                # group_feed picks which caveat sentence renders, so a
+                # dealer_feed_scope flip must invalidate the memo too.
+                car_attr.get("group_feed"),
+            )
+            if car_attr
+            else None
+        )
+        key = (digest, pub_incomplete, attr_key) if digest is not None else None
         ser = prev_memo.get(key) if key is not None else None
         if ser is None:
             if not per_row:
                 _parse_car_gallery(c)
-            ser = serialize_car_for_listings_grid(c, incomplete_snapshot=snapshot)
+            ser = serialize_car_for_listings_grid(
+                c, incomplete_snapshot=snapshot, attribution=car_attr
+            )
         if key is not None:
             fresh_memo[key] = ser
         out.append(ser)
@@ -462,7 +537,7 @@ def landing_featured_cars(limit: int = 4) -> list[dict[str, Any]]:
     if _featured_cars_cache is not None and time.time() - _featured_cars_cache[0] < _FEATURED_CARS_TTL_S:
         return _featured_cars_cache[1][:lim]
 
-    active = "(COALESCE(listing_active, 1) = 1)"
+    active = "(COALESCE(listing_active, 1) = 1) AND COALESCE(marked_for_review, 0) = 0"
     cols = ", ".join(LISTINGS_GRID_CAR_COLUMNS)
     with db_conn(row_factory=sqlite3.Row) as conn:
         cur = conn.cursor()
@@ -478,8 +553,13 @@ def landing_featured_cars(limit: int = 4) -> list[dict[str, Any]]:
     # listings grid hides must not headline the landing page.
     inc = listings_include_incomplete_cars()
     snapshot = _incomplete_index_snapshot_for_listings()
+    # 12 rows, one batched verdict read — the landing page names a dealership on
+    # every card, so it has to be as careful about that claim as the grid is.
+    from backend.db.repositories.cars_repo import car_attribution_states
+
+    attribution = car_attribution_states(_car_id_int(c) for c in rows)
     out = [
-        _serialize_car_for_listings_grid(c)
+        _serialize_car_for_listings_grid(c, attribution=attribution.get(_car_id_int(c)))
         for c in rows
         if inc or not _car_is_publicly_incomplete(c, snapshot)
     ]
@@ -522,6 +602,7 @@ def listings_grid_cache_etag() -> str:
         with db_conn() as conn:
             row = conn.execute(
                 "SELECT COUNT(*) FROM cars WHERE (COALESCE(listing_active, 1) = 1)"
+                " AND COALESCE(marked_for_review, 0) = 0"
             ).fetchone()
             n = int(row[0] if row else 0)
     # The token is a structured value (write-counter fingerprint or mtime pair);

@@ -1199,6 +1199,14 @@ button.back-link:not(.car-back-link) {
     color: #fff;
 }
 
+/* Read off a photographed sticker in the car's gallery — real, but below a
+   parsed OEM PDF on the authority ladder, so the badge is the outline form. */
+.build-sheet-src--photo {
+    border: 1px solid var(--navy, #1c2b46);
+    color: var(--navy, #1c2b46);
+    background: transparent;
+}
+
 .build-sheet-opt-total {
     margin-top: 6px;
     padding-top: 6px;

@@ -18,6 +18,20 @@ car_images/
 **/vdp_images/
 **/car_images/
 
+# Window-sticker corpus (~8.4GB) and brochure archives (~2.9GB): data harvested
+# at runtime, read from mounts — never baked into images. These were the bulk of
+# a 30.9GB COPY layer in the 2026-07-09 dev images.
+car_window_stickers/
+**/car_window_stickers/
+backend/data/brochures/
+backend/data/brochure_archive/
+backend/data/brochures_archive_comparison/
+backend/data/brochures_archive_quarantine/
+
+# Root-level DB dumps (migrations/*.sql are unaffected: root patterns
+# only match at the context root)
+dump-*.sql
+
 # Node modules (rebuilt in image)
 node_modules/
 backend/node_modules/

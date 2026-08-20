@@ -1296,18 +1296,24 @@ def _model_epa_fallbacks(make: str | None, model: str | None) -> list[str]:
     mo_u = mo.upper()
     fallbacks: list[str] = []
 
-    # --- Chevrolet: Silverado 1500 / Silverado 2500 HD / Silverado 3500 HD Chassis Cab → Silverado ---
+    # --- Chevrolet: Silverado 1500 → Silverado (1500 ONLY — EPA has no >8500-GVWR
+    # trucks, so 2500 HD/3500 HD must never inherit light-duty Silverado specs) ---
     if mk == "CHEVROLET":
-        m = re.match(r"^(Silverado|Colorado)\s+\S", mo, re.I)
+        if re.match(r"^Silverado\s+1500\b", mo, re.I):
+            fallbacks.append("Silverado")
+        m = re.match(r"^(Colorado)\s+\S", mo, re.I)
         if m:
             fallbacks.append(m.group(1))
         # Corvette Stingray / Corvette Z06 → Corvette
         if re.match(r"^Corvette\s+\S", mo, re.I):
             fallbacks.append("Corvette")
 
-    # --- GMC: Sierra 1500 / Sierra 2500 HD / Sierra 3500 HD → Sierra (skip Sierra EV — different arch) ---
+    # --- GMC: Sierra 1500 → Sierra (1500 ONLY — no EPA data for the HDs, see
+    # Silverado above; skip Sierra EV — different arch) ---
     if mk == "GMC":
-        m = re.match(r"^(Sierra|Canyon|Yukon|Acadia)\s+\S", mo, re.I)
+        if re.match(r"^Sierra\s+1500\b", mo, re.I):
+            fallbacks.append("Sierra")
+        m = re.match(r"^(Canyon|Yukon|Acadia)\s+\S", mo, re.I)
         if m and "EV" not in mo_u:
             fallbacks.append(m.group(1))
         # HUMMER EV SUV → Hummer EV
@@ -1477,9 +1483,17 @@ def _model_epa_fallbacks(make: str | None, model: str | None) -> list[str]:
         for i in range(len(words) - 1, max(0, len(words) - 4), -1):
             generic.append(" ".join(words[:i]))
 
+    # A heavy-duty truck ("Silverado 2500HD") must never shed down to the
+    # light-duty base name (EPA has no >8500-GVWR trucks — that fallback would
+    # serve 1500 specs on an HD listing), and an EV nameplate ("Silverado EV")
+    # must never shed down to its gas sibling.
+    _hd_re = re.compile(r"([2-5]500|\bHD\b|\bEV\b)")
+    is_hd = bool(_hd_re.search(mo_u))
     seen = {mo.lower()} | {f.lower() for f in fallbacks}
     for cand in generic:
         c = cand.strip()
+        if is_hd and not _hd_re.search(c.upper()):
+            continue
         if len(c) >= 2 and c.lower() not in seen:
             seen.add(c.lower())
             fallbacks.append(c)

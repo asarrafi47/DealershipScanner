@@ -95,7 +95,11 @@ def main() -> int:
         cohorts[key]["values"].append(value)
         cohorts[key]["sources"][source] += 1
 
-    # 1) Photographed Monroneys that cleared every provenance gate.
+    # 1) Photographed Monroneys that cleared every provenance gate. Dealer build
+    #    sheets are excluded even though (since 2026-08-18) cmd_record stores
+    #    their totals: a band claims what the FACTORY stickers this trim at, and
+    #    a dealer-generated sheet can price a different vehicle entirely (car
+    #    874954's sheet covered the base chassis of a camper conversion).
     cur.execute(
         """
         SELECT c.year, c.make, c.model, c.trim, t.sticker_msrp
@@ -104,6 +108,7 @@ def main() -> int:
         WHERE t.sticker_msrp IS NOT NULL
           AND t.summary->>'msrp_read_directly' = 'true'
           AND COALESCE(t.summary->>'msrp_provenance','') <> 'unverified_pre_guard'
+          AND COALESCE(t.summary->>'msrp_document','monroney') <> 'dealer_build_sheet'
         """
     )
     photo_rows = cur.fetchall()

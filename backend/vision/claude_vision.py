@@ -16,6 +16,8 @@ from typing import Any
 
 import requests
 
+from backend.vision.equipment_vision import VisionRefusal, is_vision_refusal_text
+
 # Limit concurrent Claude gallery-classification API calls across all VDP worker threads.
 # 12 concurrent VDP workers each firing a batch = burst rate >> 50 req/min tier limit.
 _CLASSIFY_SEM = threading.Semaphore(3)
@@ -413,7 +415,16 @@ def analyze_equipment_from_image_urls(
             text = text.split("```")[1]
             if text.startswith("json"):
                 text = text[4:]
-        parsed = json.loads(text)
+        try:
+            parsed = json.loads(text)
+        except ValueError:
+            if is_vision_refusal_text(text):
+                # The model answered but declined to assess. A statement about
+                # the model, not the cars — callers must not count it as a
+                # successful assessment (or bury it as a transport failure).
+                logger.warning("Claude equipment batch refused: %.60s", text)
+                return VisionRefusal()
+            raise
         return parsed if isinstance(parsed, dict) else {}
     except Exception as e:
         logger.warning("Claude equipment batch failed: %s", e)

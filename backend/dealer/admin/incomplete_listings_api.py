@@ -16,7 +16,6 @@ from flask import jsonify
 
 from backend.db.incomplete_listings_db import get_incomplete_listings_count
 from backend.db.inventory_db import get_conn, get_incomplete_cars
-from backend.utils.car_serialize import serialize_car_for_listings_grid
 from backend.utils.listing_completeness import INCOMPLETE_FIELD_LABELS, summarize_incomplete_missing_fields
 
 _log = logging.getLogger(__name__)
@@ -30,12 +29,16 @@ def incomplete_listings_count() -> int:
 
 
 def build_incomplete_cars_payload() -> dict[str, Any]:
+    # The batch serializer applies the photo-attribution caveat with one
+    # car_attribution_states read; calling the per-car serializer bare here
+    # stated dealerships we hold photographic evidence against as fact.
+    from backend.db.repositories.listings_repo import serialize_cars_for_listings_grid
+
     cars = get_incomplete_cars()
+    rows = [dict(c) for c in cars]
+    missing_lists = [row.pop("incomplete_missing_fields", None) or [] for row in rows]
     safe = []
-    for c in cars:
-        row = dict(c)
-        missing = row.pop("incomplete_missing_fields", None) or []
-        payload = serialize_car_for_listings_grid(row)
+    for payload, missing in zip(serialize_cars_for_listings_grid(rows), missing_lists):
         payload["listing_trim_display"] = payload.get("trim")
         payload["listing_model_display"] = payload.get("model")
         payload["incomplete_missing_fields"] = missing

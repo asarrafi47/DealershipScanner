@@ -162,8 +162,39 @@ def db_save_recipes(dealer_id: str, rows: list[dict[str, Any]]) -> bool:
         return False
 
 
+def _alias_read_slug(dealer_id: str) -> str | None:
+    """Retired slug to fall back to on READS after a dealer-URL rekey.
+
+    Delegates to ``backend.scanner.recipes.resolve_alias_slug`` (the
+    ``workspace/recipes/_aliases.json`` map) — no schema change needed: the
+    old ``dealer_recipes`` row is simply queried under its old key. Writes
+    never follow aliases, so the rekeyed dealer's row heals to the new key on
+    its next save. Best-effort like every other touch in this module.
+    """
+    try:
+        from backend.scanner.recipes import resolve_alias_slug
+
+        return resolve_alias_slug(dealer_id)
+    except Exception:  # noqa: BLE001
+        return None
+
+
 def db_load_recipes(dealer_id: str) -> tuple[list[dict[str, Any]], float] | None:
-    """(recipe rows, max_saved_at) from the DB, or None. Best-effort."""
+    """(recipe rows, max_saved_at) from the DB, or None. Best-effort.
+
+    Falls back to the dealer's pre-rename key (``_aliases.json``) when the
+    current key has no row.
+    """
+    found = _db_load_recipes_exact(dealer_id)
+    if found is not None:
+        return found
+    old_slug = _alias_read_slug(dealer_id)
+    if old_slug:
+        return _db_load_recipes_exact(old_slug)
+    return None
+
+
+def _db_load_recipes_exact(dealer_id: str) -> tuple[list[dict[str, Any]], float] | None:
     if not _enabled() or not dealer_id:
         return None
     try:
@@ -197,9 +228,28 @@ def db_load_recipes(dealer_id: str) -> tuple[list[dict[str, Any]], float] | None
 
 
 def get_scan_hints(dealer_id: str) -> dict[str, Any]:
-    """Per-dealer scan instructions ({} when none / DB unavailable)."""
+    """Per-dealer scan instructions ({} when none / DB unavailable).
+
+    Falls back to the dealer's pre-rename key (``_aliases.json``) when the
+    current key has no hints (read-side only; ``set_scan_hints`` always
+    writes the current key).
+    """
+    hints = _get_scan_hints_exact(dealer_id)
+    if hints is not None:
+        # An explicitly stored {} means CLEARED — it must not fall through to
+        # the alias slug, or a rekeyed dealer's stale old-slug hints resurrect
+        # forever every time the current key's hints are cleared.
+        return hints
+    old_slug = _alias_read_slug(dealer_id)
+    if old_slug:
+        return _get_scan_hints_exact(old_slug) or {}
+    return {}
+
+
+def _get_scan_hints_exact(dealer_id: str) -> dict[str, Any] | None:
+    """The stored hints dict, {} when explicitly cleared, None when no row."""
     if not _enabled() or not dealer_id:
-        return {}
+        return None
     try:
         conn = _conn()
         try:
@@ -211,14 +261,14 @@ def get_scan_hints(dealer_id: str) -> dict[str, Any]:
             conn.close()
     except Exception as exc:  # noqa: BLE001
         logger.debug("scan_hints load skipped for %s: %s", dealer_id, exc)
-        return {}
+        return None
     if not row or not row[0]:
-        return {}
+        return None
     try:
         hints = json.loads(row[0])
-        return hints if isinstance(hints, dict) else {}
+        return hints if isinstance(hints, dict) else None
     except (TypeError, ValueError):
-        return {}
+        return None
 
 
 def set_scan_hints(dealer_id: str, hints: dict[str, Any], *, merge: bool = True) -> bool:

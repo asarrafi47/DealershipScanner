@@ -12,6 +12,7 @@ key they supplied.
 from __future__ import annotations
 
 import json
+import types
 
 import pytest
 
@@ -25,6 +26,7 @@ _ROW_FIELDS = gss._ATTRIBUTABLE_SPEC_FIELDS
 # implementation back rather than re-installing its own stub by accident.
 _REAL_ROW_FOR_CAR = gss._extended_row_for_car
 _REAL_SHARED = gss._fields_shared_across_trims
+_REAL_PHOTO_SUMMARY = gss._sticker_photo_summary
 
 
 def _rows(sheet: dict, key: str) -> dict[str, str]:
@@ -60,10 +62,12 @@ def _no_db(monkeypatch):
     state the sheet has to survive without inventing a row.
     """
     gss.clear_attributable_spec_cache()
+    gss.clear_sticker_photo_cache()
     monkeypatch.setattr(gss, "_extended_row_for_car", lambda car: None)
     monkeypatch.setattr(gss, "_fields_shared_across_trims", lambda y, mk, md: frozenset())
     monkeypatch.setattr(gss, "_sourced_fuel_tank_gallons", lambda car: None)
     monkeypatch.setattr(gss, "_sourced_ev_range_miles", lambda car: None)
+    monkeypatch.setattr(gss, "_sticker_photo_summary", lambda car_id: ((), (), ()))
     # Cleared on the way IN, not out: at teardown the stubs above are still
     # installed and ``clear_attributable_spec_cache`` would be calling
     # ``cache_clear`` on a lambda.
@@ -592,6 +596,226 @@ def test_normalize_and_classify() -> None:
     assert classify_kind("M Sport Package") == "package"
     assert classify_kind("Convenience Group") == "package"
     assert classify_kind("Heated Seats") == "option"
+
+
+# --- sticker-photo findings (car_image_text) ---------------------------------
+
+
+def _stub_photo(monkeypatch, *, equipment=(), packages=(), priced=()):
+    monkeypatch.setattr(
+        gss,
+        "_sticker_photo_summary",
+        lambda car_id: (tuple(equipment), tuple(packages), tuple(priced)),
+    )
+
+
+def test_photo_lines_appear_with_photo_provenance(monkeypatch) -> None:
+    _stub_prices(monkeypatch, {})
+    _stub_photo(
+        monkeypatch,
+        equipment=["Heated Front Seats"],
+        packages=["Cold Weather Group"],
+        priced=[("Trailer Tow Package", 995)],
+    )
+    car = {"id": 42, "make": "Jeep", "model": "Wrangler", "year": 2022, "trim": "Sahara"}
+    sheet = build_generated_spec_sheet(car, verified_specs={})
+    assert sheet["has_catalog"] is True
+    assert sheet["catalog_from_sticker_photo"] is True
+    assert sheet["catalog_from_sticker"] is False
+    pkgs = {e["name"]: e for e in sheet["catalog"]["packages"]}
+    opts = {e["name"]: e for e in sheet["catalog"]["options"]}
+    assert pkgs["Cold Weather Group"]["price"] is None
+    assert pkgs["Cold Weather Group"]["source_label"] == gss._STICKER_PHOTO_LABEL
+    assert opts["Heated Front Seats"]["price"] is None
+    # Package-shaped priced lines route under "Packages", like the registry's
+    # classify_kind; the subtotal follows and its basis says photos are in it.
+    tow = pkgs["Trailer Tow Package"]
+    assert tow["price_display"] == "$995"
+    assert tow["price_basis"] == "sticker_photo"
+    assert tow["price_source"] == "sticker_photo"
+    # A photo price is not a parsed-PDF sticker price; the "sticker" badge stays off.
+    assert tow["from_sticker"] is False
+    assert sheet["catalog"]["priced_total"] == 995
+    assert "sticker photos" in sheet["catalog"]["priced_total_basis"]
+
+
+def test_photo_lines_dedupe_against_listing_named_packages(monkeypatch) -> None:
+    """Case/punctuation/noun-suffix/parenthetical variants of an already-shown
+    line add nothing — a priced variant donates its price to the shown line
+    instead of duplicating it. The parenthetical case is live in the data:
+    agents record "Premium Package" in ``packages`` and "Premium Package
+    (Harman Kardon sound, HUD, …)" in ``priced_options`` for the same car."""
+    _stub_prices(monkeypatch, {})
+    _stub_photo(
+        monkeypatch,
+        equipment=["PREMIUM PKG."],
+        packages=["premium package"],
+        priced=[("Premium Package (Harman Kardon sound, HUD)", 2750)],
+    )
+    car = {
+        "id": 7, "make": "Ford", "model": "Mustang", "trim": "GT", "year": 2019,
+        "packages": json.dumps({"factory_packages": ["Premium Package"]}),
+    }
+    sheet = build_generated_spec_sheet(car, verified_specs={})
+    assert [e["name"] for e in sheet["catalog"]["packages"]] == ["Premium Package"]
+    assert sheet["catalog"]["options"] == []
+    pkg = sheet["catalog"]["packages"][0]
+    assert pkg["price_display"] == "$2,750"
+    assert pkg["price_basis"] == "sticker_photo"
+
+
+def test_photo_price_never_overwrites_a_parsed_sticker_price(monkeypatch) -> None:
+    """The registry ladder: parsed OEM sticker PDF (3) > sticker photo (2)."""
+    _stub_prices(
+        monkeypatch,
+        {
+            "sport": {
+                "price": 1795,
+                "source": "oem_sticker",
+                "from_sticker": True,
+                "observed_year": 2019,
+                "observed_trim": "GT",
+                "exact_config": True,
+            }
+        },
+    )
+    _stub_photo(monkeypatch, priced=[("Sport Package", 1500)])
+    car = {
+        "id": 8, "make": "Ford", "model": "Mustang", "trim": "GT", "year": 2019,
+        "packages": json.dumps({"factory_packages": ["Sport Package"]}),
+    }
+    sheet = build_generated_spec_sheet(car, verified_specs={})
+    pkg = sheet["catalog"]["packages"][0]
+    assert pkg["price"] == 1795
+    assert pkg["from_sticker"] is True
+    assert pkg["price_basis"] == "exact_config"
+    assert sheet["catalog"]["priced_total_display"] == "$1,795"
+
+
+def test_photo_price_fills_an_unpriced_named_package(monkeypatch) -> None:
+    """The listing names it, the registry has no price, the car's own photo does."""
+    _stub_prices(monkeypatch, {})
+    _stub_photo(monkeypatch, priced=[("Technology Package", 2350)])
+    car = {
+        "id": 9, "make": "Ford", "model": "Mustang", "trim": "GT", "year": 2019,
+        "packages": json.dumps({"factory_packages": ["Technology Package"]}),
+    }
+    sheet = build_generated_spec_sheet(car, verified_specs={})
+    pkg = sheet["catalog"]["packages"][0]
+    assert pkg["name"] == "Technology Package"
+    assert pkg["price_display"] == "$2,350"
+    assert pkg["price_basis"] == "sticker_photo"
+    assert pkg["source_label"] == gss._STICKER_PHOTO_LABEL
+    assert pkg["from_sticker"] is False
+    # A package line the photo priced is IN the subtotal, and the basis says so.
+    assert sheet["catalog"]["priced_total"] == 2350
+    assert "sticker photos" in sheet["catalog"]["priced_total_basis"]
+
+
+def test_photo_findings_require_a_car_id() -> None:
+    """No id, no lookup — a sheet built off a bare dict must not guess a row."""
+    car = {"make": "Honda", "model": "Accord", "year": 2021}
+    assert build_generated_spec_sheet(car, verified_specs={})["has_catalog"] is False
+
+
+def test_photo_summary_query_is_a_pk_lookup(monkeypatch) -> None:
+    """One query, keyed on car_id (the table's PK) — the sheet renders per VDP."""
+    seen: list[tuple[str, tuple]] = []
+
+    class _Cur:
+        def execute(self, sql, params=None):
+            seen.append((sql, params))
+
+        def fetchone(self):
+            return None
+
+    class _Conn:
+        def cursor(self):
+            return _Cur()
+
+        def close(self):
+            pass
+
+    monkeypatch.setattr("backend.db.inventory_db.get_conn", lambda: _Conn())
+    monkeypatch.setattr(gss, "_sticker_photo_summary", _REAL_PHOTO_SUMMARY)
+    gss.clear_sticker_photo_cache()
+    assert gss._sticker_photo_summary(123) == ((), (), ())
+    gss.clear_sticker_photo_cache()
+    assert len(seen) == 1
+    sql, params = seen[0]
+    assert "car_image_text" in sql
+    assert "car_id=?" in sql
+    assert params[0] == 123
+    # Only agent-vision rows (>= 100); the local OCR passes are never read.
+    assert params[1] == gss._STICKER_PHOTO_MIN_VERSION == 100
+
+
+def _photo_conn_factory(rows_seen: list, *, summary=None, fail_first=0):
+    """A ``get_conn`` stub: raises for the first ``fail_first`` calls, then
+    serves ``summary`` (or no row) and appends to ``rows_seen`` per query."""
+    calls = {"n": 0}
+
+    class _Cur:
+        def execute(self, sql, params=None):
+            rows_seen.append(params)
+
+        def fetchone(self):
+            return (summary,) if summary is not None else None
+
+    class _Conn:
+        def cursor(self):
+            return _Cur()
+
+        def close(self):
+            pass
+
+    def _get_conn():
+        calls["n"] += 1
+        if calls["n"] <= fail_first:
+            raise RuntimeError("db blip")
+        return _Conn()
+
+    return _get_conn
+
+
+def test_photo_summary_error_is_not_sticky(monkeypatch) -> None:
+    """One DB blip must not blank a car's sticker lines for the process
+    lifetime: the error path is never cached, so the very next call — same
+    car, same time bucket — retries and gets the real row."""
+    seen: list = []
+    summary = json.dumps({"equipment": ["Heated Front Seats"]})
+    monkeypatch.setattr(
+        "backend.db.inventory_db.get_conn",
+        _photo_conn_factory(seen, summary=summary, fail_first=1),
+    )
+    monkeypatch.setattr(gss, "_sticker_photo_summary", _REAL_PHOTO_SUMMARY)
+    monkeypatch.setattr(gss, "time", types.SimpleNamespace(time=lambda: 1_000_000.0))
+    gss.clear_sticker_photo_cache()
+    assert gss._sticker_photo_summary(55) == ((), (), ())
+    assert gss._sticker_photo_summary(55) == (("Heated Front Seats",), (), ())
+    gss.clear_sticker_photo_cache()
+
+
+def test_photo_summary_key_rotates_across_ttl_boundary(monkeypatch) -> None:
+    """Stickers recorded after the first render (``image_batch`` runs in
+    another process, and the web worker never calls the clear) show up once
+    the time bucket rolls over; within a bucket the read stays memoized."""
+    seen: list = []
+    monkeypatch.setattr(
+        "backend.db.inventory_db.get_conn", _photo_conn_factory(seen)
+    )
+    monkeypatch.setattr(gss, "_sticker_photo_summary", _REAL_PHOTO_SUMMARY)
+    clock = {"t": 0.0}
+    monkeypatch.setattr(gss, "time", types.SimpleNamespace(time=lambda: clock["t"]))
+    gss.clear_sticker_photo_cache()
+    gss._sticker_photo_summary(77)
+    clock["t"] = gss._STICKER_PHOTO_TTL_SECONDS - 1  # same bucket: memoized
+    gss._sticker_photo_summary(77)
+    assert len(seen) == 1
+    clock["t"] = gss._STICKER_PHOTO_TTL_SECONDS  # next bucket: re-read
+    gss._sticker_photo_summary(77)
+    assert len(seen) == 2
+    gss.clear_sticker_photo_cache()
 
 
 # --- derived figures are labelled derived ------------------------------------

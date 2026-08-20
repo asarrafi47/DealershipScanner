@@ -10,6 +10,8 @@ from backend.utils.spec_field_normalize import (
     infer_trim_from_name_title,
     normalize_drivetrain_from_fields,
     normalize_engine_description_storage,
+    split_trim_components,
+    trim_named_in_listing,
 )
 
 
@@ -82,6 +84,107 @@ class SpecFieldNormalizeTest(unittest.TestCase):
             }
         )
         self.assertEqual(patch.get("transmission_type"), "Automatic")
+
+
+class TrimNamedInListingTest(unittest.TestCase):
+    """Corroboration predicate for decoder-derived (vPIC) trims."""
+
+    def _row(self, **overrides) -> dict:
+        base = {
+            "title": None,
+            "model_full_raw": None,
+            "description": None,
+            "source_url": None,
+        }
+        base.update(overrides)
+        return base
+
+    def test_match_in_title(self) -> None:
+        self.assertTrue(
+            trim_named_in_listing(self._row(title="2024 Ford F-150 Lariat 4WD"), "Lariat")
+        )
+
+    def test_match_in_model_full_raw(self) -> None:
+        self.assertTrue(
+            trim_named_in_listing(self._row(model_full_raw="F-150 Lariat SuperCrew"), "Lariat")
+        )
+
+    def test_match_in_description(self) -> None:
+        self.assertTrue(
+            trim_named_in_listing(
+                self._row(description="This Lariat comes loaded with leather."), "Lariat"
+            )
+        )
+
+    def test_match_in_source_url(self) -> None:
+        self.assertTrue(
+            trim_named_in_listing(
+                self._row(source_url="https://dealer.example/2024-ford-f150-lariat-id123"),
+                "Lariat",
+            )
+        )
+
+    def test_digit_boundary_insensitive_token_spaced_in_title(self) -> None:
+        # Decoder says "GLC300", dealer title spells it "GLC 300" — must match,
+        # or the stock-code guard would null a legitimate dealer trim.
+        self.assertTrue(
+            trim_named_in_listing(
+                self._row(title="2023 Mercedes-Benz GLC 300 4MATIC"), "GLC300"
+            )
+        )
+
+    def test_digit_boundary_insensitive_token_unspaced_in_title(self) -> None:
+        self.assertTrue(
+            trim_named_in_listing(self._row(title="2023 Mercedes GLC300 Coupe"), "GLC 300")
+        )
+
+    def test_case_and_punctuation_insensitive(self) -> None:
+        self.assertTrue(
+            trim_named_in_listing(self._row(title="2023 BMW 330i SPORT LINE package"), "Sport-Line")
+        )
+        self.assertTrue(
+            trim_named_in_listing(self._row(title="mustang shelby gt350 fastback"), "GT350")
+        )
+
+    def test_whole_token_required(self) -> None:
+        # "LT" must not match inside "XLT"
+        self.assertFalse(trim_named_in_listing(self._row(title="2024 Ford F-150 XLT"), "LT"))
+        self.assertTrue(trim_named_in_listing(self._row(title="2024 Ford F-150 XLT"), "XLT"))
+
+    def test_comma_list_any_component_matches(self) -> None:
+        self.assertTrue(
+            trim_named_in_listing(self._row(title="2023 VW ID.4 Pro S rear motor"), "Pro S, Pro")
+        )
+        self.assertTrue(
+            trim_named_in_listing(self._row(title="2022 Jeep Compass North 4x4"), "Latitude/North")
+        )
+
+    def test_unnamed_trim_is_false(self) -> None:
+        self.assertFalse(
+            trim_named_in_listing(
+                self._row(
+                    title="2023 Ford Bronco",
+                    description="Great condition, one owner.",
+                    source_url="https://dealer.example/inventory/123",
+                ),
+                "Wildtrak",
+            )
+        )
+
+    def test_empty_trim_and_empty_row(self) -> None:
+        self.assertFalse(trim_named_in_listing(self._row(title="2024 Ford F-150"), None))
+        self.assertFalse(trim_named_in_listing(self._row(title="2024 Ford F-150"), "   "))
+        self.assertFalse(trim_named_in_listing(self._row(), "Lariat"))
+
+    def test_split_trim_components(self) -> None:
+        self.assertEqual(
+            split_trim_components("Light, Light Long Range, Wind"),
+            ["Light", "Light Long Range", "Wind"],
+        )
+        self.assertEqual(split_trim_components("Latitude/North"), ["Latitude", "North"])
+        self.assertEqual(split_trim_components("SE or SEL"), ["SE", "SEL"])
+        self.assertEqual(split_trim_components("Lariat"), ["Lariat"])
+        self.assertEqual(split_trim_components(None), [])
 
 
 if __name__ == "__main__":

@@ -22,8 +22,17 @@ def _env_admin_set_clause(cursor: sqlite3.Cursor) -> str:
 
 def _apply_env_admin_privileges(cursor: sqlite3.Cursor) -> None:
     """Promote (or create in dev) ``APP_ADMIN_EMAILS`` / ``APP_ADMIN_USERNAMES`` accounts to admin and disable MFA.
-    Creation only happens when ALLOW_DEFAULT_APP_USER=1 (non-production).
+
+    Promotion of existing rows is unconditional. CREATION of missing rows
+    happens only outside production AND with ALLOW_DEFAULT_APP_USER opted in —
+    the knob .env.example documents; an operator's explicit =0 must mean no
+    accounts appear at boot. The seed password is ADMIN_PASSWORD when set,
+    otherwise a random throwaway — the account exists (so login-time promotion
+    and scripts/bootstrap_site_admin.py have a row to work with) but carries no
+    fixed well-known password.
     """
+    import secrets
+
     from backend.utils.roles import admin_emails, admin_usernames
     from backend.utils.runtime_env import is_production_env
 
@@ -32,11 +41,14 @@ def _apply_env_admin_privileges(cursor: sqlite3.Cursor) -> None:
     if not emails and not usernames_list:
         return
 
-    allow_default = (os.environ.get("ALLOW_DEFAULT_APP_USER") or "").strip().lower() in (
-        "1", "true", "yes", "on"
-    )
+    may_create = (not is_production_env()) and (
+        os.environ.get("ALLOW_DEFAULT_APP_USER") or ""
+    ).strip().lower() in ("1", "true", "yes", "on")
+
     set_sql = _env_admin_set_clause(cursor)
-    default_pw_plain = (os.environ.get("ADMIN_PASSWORD") or "ChangeMe2026!").strip()
+    default_pw_plain = (os.environ.get("ADMIN_PASSWORD") or "").strip()
+    if not default_pw_plain:
+        default_pw_plain = secrets.token_urlsafe(24)
     default_pw = hash_password(default_pw_plain)
 
     for em in emails:
@@ -44,7 +56,7 @@ def _apply_env_admin_privileges(cursor: sqlite3.Cursor) -> None:
             f"UPDATE users SET {set_sql} WHERE lower(email) = lower(?)",
             (ROLE_ADMIN, em),
         )
-        if cursor.rowcount == 0 and allow_default and not is_production_env():
+        if cursor.rowcount == 0 and may_create:
             uname = em.split("@")[0]
             cursor.execute(
                 """
@@ -59,7 +71,7 @@ def _apply_env_admin_privileges(cursor: sqlite3.Cursor) -> None:
             f"UPDATE users SET {set_sql} WHERE lower(username) = lower(?)",
             (ROLE_ADMIN, un),
         )
-        if cursor.rowcount == 0 and allow_default and not is_production_env():
+        if cursor.rowcount == 0 and may_create:
             email_guess = f"{un}@localhost"
             cursor.execute(
                 """
@@ -259,8 +271,9 @@ def init_users_db():
 
     # Promote env-listed admin accounts; in development, creation of missing
     # ones happens inside _apply_env_admin_privileges and only with
-    # ALLOW_DEFAULT_APP_USER=1 (honoring ADMIN_PASSWORD). No ungated seeding of
-    # a fixed default password.
+    # ALLOW_DEFAULT_APP_USER opted in (password from ADMIN_PASSWORD when set,
+    # otherwise a random throwaway). No ungated seeding of a fixed default
+    # password.
     if not is_production_env():
         try:
             _apply_env_admin_privileges(cursor)

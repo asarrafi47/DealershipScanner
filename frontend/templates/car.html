@@ -198,7 +198,13 @@
                 </div>
 
                 <div class="car-detail-info car-detail-info--hero">
-                    <p class="eyebrow car-detail-dealer-eyebrow">{% if car.dealer_id %}<a href="{{ url_for('dealership_research_page', dealer_key=car.dealer_id) }}" class="car-detail-dealer-link">{{ car.dealer_name }}</a>{% else %}{{ car.dealer_name }}{% endif %}</p>
+                    <p class="eyebrow car-detail-dealer-eyebrow">{% if car.dealer_id %}<a href="{{ url_for('dealership_research_page', dealer_key=car.dealer_id) }}" class="car-detail-dealer-link">{{ car.dealer_name }}</a>{% else %}{{ car.dealer_name }}{% endif %}{% if location_attribution %} <span class="location-unconfirmed-tag" title="{{ location_attribution.location_note }}">Location unconfirmed</span>{% endif %}</p>
+                    {# The listing is genuinely published by the dealer above; what we cannot
+                       stand behind is that the car is AT that rooftop. Said once here, next to
+                       the name, rather than only deep in the Dealership tab. #}
+                    {% if location_attribution %}
+                    <p class="car-detail-location-note">{{ location_attribution.location_note }}</p>
+                    {% endif %}
                     {% set dealer_rep_rating = car.dealer_rating if car.dealer_rating is defined else (dealer_info.google_rating if dealer_info and dealer_info.google_rating is defined else none) %}
                     {% set dealer_rep_reviews = car.dealer_reviews if car.dealer_reviews is defined else (dealer_info.google_review_count if dealer_info and dealer_info.google_review_count is defined else none) %}
                     {% if not dealer_map %}
@@ -232,15 +238,30 @@
                                the price echoed back as its own MSRP. The old
                                ``car.msrp != car.price`` guard here was the only thing standing
                                between a shopper and 9,621 listings whose feed msrp IS the price. #}
+                            {# ``car.sticker_msrp`` / ``car.estimated_msrp_band`` only exist when
+                               ``car.msrp`` is None (backend/utils/car_serialize/msrp_overlay.py).
+                               The first is a total read off a sticker photographed in THIS
+                               listing's gallery and says so; the second describes the trim, not
+                               the car, and must never read as this car's sticker price. #}
                             {% if car.price and car.price > 0 %}
                                 ${{ "{:,.0f}".format(car.price) }}
                                 {% if car.msrp and car.msrp > 0 %}
                                 <span class="price-msrp-secondary">{{ car.msrp_label or 'MSRP' }}: ${{ "{:,.0f}".format(car.msrp) }}{% if car.msrp_from_sticker %}<span class="price-msrp-source">from window sticker</span>{% endif %}</span>
+                                {% elif car.sticker_msrp %}
+                                <span class="price-msrp-secondary">{{ car.sticker_msrp_label or 'MSRP' }}: ${{ "{:,.0f}".format(car.sticker_msrp) }}<span class="price-msrp-source">{{ car.sticker_msrp_note or 'from sticker photo in this listing' }}</span></span>
+                                {% elif car.estimated_msrp_band %}
+                                <span class="price-msrp-secondary">Est. MSRP range: ${{ "{:,.0f}".format(car.estimated_msrp_band.low) }}&ndash;${{ "{:,.0f}".format(car.estimated_msrp_band.high) }}<span class="price-msrp-source">observed for this trim, not this car's sticker</span></span>
                                 {% endif %}
                             {% elif car.msrp and car.msrp > 0 %}
                                 <span class="price-msrp-hero">{{ car.msrp_label or 'MSRP' }}: ${{ "{:,.0f}".format(car.msrp) }}</span>
+                            {% elif car.sticker_msrp %}
+                                <span class="price-msrp-hero">{{ car.sticker_msrp_label or 'MSRP' }}: ${{ "{:,.0f}".format(car.sticker_msrp) }}</span>
+                                <span class="price-msrp-secondary"><span class="price-msrp-source">{{ car.sticker_msrp_note or 'from sticker photo in this listing' }}</span></span>
                             {% else %}
                                 Call for Price
+                                {% if car.estimated_msrp_band %}
+                                <span class="price-msrp-secondary">Est. MSRP range: ${{ "{:,.0f}".format(car.estimated_msrp_band.low) }}&ndash;${{ "{:,.0f}".format(car.estimated_msrp_band.high) }}<span class="price-msrp-source">observed for this trim, not this car's sticker</span></span>
+                                {% endif %}
                             {% endif %}
                         </p>
                         {% if car.mileage is not none and car.mileage != '' %}
@@ -520,7 +541,7 @@
                         {% endif %}
 
                         {% if dealer_map %}
-                        <p class="car-vdp-panel-lead">Selling dealer: {% if car.dealer_id %}<a href="{{ url_for('dealership_research_page', dealer_key=car.dealer_id) }}" class="dealer-name-link"><strong>{{ dealer_map.name }}</strong></a>{% else %}<strong>{{ dealer_map.name }}</strong>{% endif %}. See the <strong>Dealership</strong> tab for their location, rating and what else they have on the lot.</p>
+                        <p class="car-vdp-panel-lead">{% if location_attribution %}Listed by{% else %}Selling dealer:{% endif %} {% if car.dealer_id %}<a href="{{ url_for('dealership_research_page', dealer_key=car.dealer_id) }}" class="dealer-name-link"><strong>{{ dealer_map.name }}</strong></a>{% else %}<strong>{{ dealer_map.name }}</strong>{% endif %}. {% if location_attribution %}{{ location_attribution.location_note }}{% else %}See the <strong>Dealership</strong> tab for their location, rating and what else they have on the lot.{% endif %}</p>
                         {% endif %}
                     </section>
 
@@ -659,13 +680,26 @@
                             <span class="spec-value">{{ "{:,}".format(car.curb_weight_lb) }} lbs</span>
                         </div>
                         {% endif %}
-                        {% if car.exterior_color and car.exterior_color != '—' %}
+                        {# Sticker-printed colors supersede the feed's in the display
+                           (window sticker = source of truth); the feed value is only
+                           shown when no sticker printed a color. #}
+                        {% if sticker_exterior_color %}
+                        <div class="spec-row">
+                            <span class="spec-label">Exterior</span>
+                            <span class="spec-value">{{ sticker_exterior_color }} <span class="spec-source-badge" title="Color as printed on this car's window sticker">Per window sticker</span></span>
+                        </div>
+                        {% elif car.exterior_color and car.exterior_color != '—' %}
                         <div class="spec-row">
                             <span class="spec-label">Exterior</span>
                             <span class="spec-value">{{ car.exterior_color | fmt_spec }}</span>
                         </div>
                         {% endif %}
-                        {% if car.interior_color and car.interior_color != '—' %}
+                        {% if sticker_interior_color %}
+                        <div class="spec-row">
+                            <span class="spec-label">Interior</span>
+                            <span class="spec-value">{{ sticker_interior_color }} <span class="spec-source-badge" title="Color as printed on this car's window sticker">Per window sticker</span></span>
+                        </div>
+                        {% elif car.interior_color and car.interior_color != '—' %}
                         <div class="spec-row">
                             <span class="spec-label">Interior</span>
                             <span class="spec-value">{{ car.interior_color | fmt_spec }}{% if interior_from_listing_description %} <span class="spec-source-badge" title="Inferred from dealer listing text">From listing description</span>{% endif %}{% if interior_from_llava_vision %} <span class="spec-source-badge" title="Inferred from vehicle photos (Ollama LLaVA)">Vision assist</span>{% endif %}</span>
@@ -973,13 +1007,13 @@
                 {% if generated_spec_sheet.has_catalog %}
                 <div class="build-sheet-equip">
                     <h4 class="build-sheet-section-title">Packages on this vehicle</h4>
-                    <p class="build-sheet-equip-note">Packages this listing names, priced from our window-sticker data where we have it. Prices marked <span class="build-sheet-src build-sheet-src--sticker">sticker</span> come from a real OEM window sticker for this make/model; blank means we have no priced sighting yet.</p>
+                    <p class="build-sheet-equip-note">Packages this listing names, priced from our window-sticker data where we have it. Prices marked <span class="build-sheet-src build-sheet-src--sticker">sticker</span> come from a real OEM window sticker for this make/model; blank means we have no priced sighting yet.{% if generated_spec_sheet.catalog_from_sticker_photo %} Lines marked <span class="build-sheet-src build-sheet-src--photo">sticker photo</span> were read off a window-sticker photo in this car's own gallery.{% endif %}</p>
                     {% if generated_spec_sheet.catalog.packages %}
                     <h5 class="build-sheet-equip-sub">Packages</h5>
                     <div class="car-window-sticker-opt-list build-sheet-opt-list">
                         {% for pkg in generated_spec_sheet.catalog.packages %}
                         <div class="car-sticker-opt-row">
-                            <span class="car-sticker-opt-name">{{ pkg.name }}{% if pkg.from_sticker %} <span class="build-sheet-src build-sheet-src--sticker">sticker</span>{% endif %}</span>
+                            <span class="car-sticker-opt-name">{{ pkg.name }}{% if pkg.from_sticker %} <span class="build-sheet-src build-sheet-src--sticker">sticker</span>{% elif pkg.source_label %} <span class="build-sheet-src build-sheet-src--photo" title="{{ pkg.source_label }}">sticker photo</span>{% endif %}</span>
                             {% if pkg.price_display %}<span class="car-sticker-opt-price">{{ pkg.price_display }}</span>{% endif %}
                         </div>
                         {% endfor %}
@@ -990,7 +1024,7 @@
                     <div class="car-window-sticker-opt-list build-sheet-opt-list">
                         {% for opt in generated_spec_sheet.catalog.options %}
                         <div class="car-sticker-opt-row">
-                            <span class="car-sticker-opt-name">{{ opt.name }}{% if opt.from_sticker %} <span class="build-sheet-src build-sheet-src--sticker">sticker</span>{% endif %}</span>
+                            <span class="car-sticker-opt-name">{{ opt.name }}{% if opt.from_sticker %} <span class="build-sheet-src build-sheet-src--sticker">sticker</span>{% elif opt.source_label %} <span class="build-sheet-src build-sheet-src--photo" title="{{ opt.source_label }}">sticker photo</span>{% endif %}</span>
                             {% if opt.price_display %}<span class="car-sticker-opt-price">{{ opt.price_display }}</span>{% endif %}
                         </div>
                         {% endfor %}
@@ -1289,6 +1323,13 @@
                             </address>
                         </div>
 
+                        {# The address above comes from the registry row the LISTING points at.
+                           When the photos disagree, the pin is where that dealership is, not
+                           where the car was seen. #}
+                        {% if location_attribution %}
+                        <p class="car-detail-location-note car-detail-location-note--panel">{{ location_attribution.location_note }}</p>
+                        {% endif %}
+
                         {% if dealer_map.has_pin %}
                         {# Leaflet lays out against the container's size at init. This panel starts
                            hidden, so the map would initialise at zero height and render as a grey
@@ -1300,6 +1341,7 @@
                         <p class="car-dealer-map-actions">
                             <a href="{{ dealer_map.google_maps_url }}" target="_blank" rel="noopener noreferrer" class="dealer-card-link dealer-card-link--maps">Open in Google Maps</a>
                             {% set dealer_site = (dealer_info.dealer_website_url or dealer_info.website_url) if dealer_info else none %}
+                            {% set dealer_site = dealer_site if dealer_site is string and dealer_site.startswith('http') else none %}
                             {% if dealer_site %}
                             <span class="car-dealer-map-actions-sep" aria-hidden="true">·</span>
                             <a href="{{ dealer_site }}" target="_blank" rel="noopener noreferrer" class="dealer-card-link">Visit website</a>

@@ -57,6 +57,41 @@ def test_href_blocks_private_and_allowlist(monkeypatch: pytest.MonkeyPatch) -> N
     assert wr.href_is_acceptable_result("https://evil.com/", allowed_hosts=allow) is False
 
 
+def test_user_daily_limit_default_ignores_listing_var(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Audit D #39: the whole-account budget must not be sized by the per-listing knob."""
+    from backend.utils import car_chat_policy as m
+
+    # setenv("") not delenv: delenv + dotenv reload repopulates from .env in this repo.
+    monkeypatch.setenv("CAR_CHAT_MAX_PER_USER_DAILY", "")
+    monkeypatch.setenv("CAR_CHAT_MAX_PER_LISTING_DAILY", "3")
+    assert m.car_chat_user_daily_limit() == 40
+    assert m.car_chat_listing_daily_limit() == 3
+
+
+def test_daily_limit_defaults_and_garbage(monkeypatch: pytest.MonkeyPatch) -> None:
+    from backend.utils import car_chat_policy as m
+
+    monkeypatch.setenv("CAR_CHAT_MAX_PER_USER_DAILY", "")
+    monkeypatch.setenv("CAR_CHAT_MAX_PER_LISTING_DAILY", "")
+    assert m.car_chat_user_daily_limit() == 40
+    assert m.car_chat_listing_daily_limit() == 10
+
+    monkeypatch.setenv("CAR_CHAT_MAX_PER_USER_DAILY", "not-a-number")
+    monkeypatch.setenv("CAR_CHAT_MAX_PER_LISTING_DAILY", "also-bad")
+    assert m.car_chat_user_daily_limit() == 40
+    assert m.car_chat_listing_daily_limit() == 10
+
+    monkeypatch.setenv("CAR_CHAT_MAX_PER_USER_DAILY", "0")
+    monkeypatch.setenv("CAR_CHAT_MAX_PER_LISTING_DAILY", "0")
+    assert m.car_chat_user_daily_limit() == 0
+    assert m.car_chat_listing_daily_limit() == 0
+
+    monkeypatch.setenv("CAR_CHAT_MAX_PER_USER_DAILY", "77")
+    monkeypatch.setenv("CAR_CHAT_MAX_PER_LISTING_DAILY", "5")
+    assert m.car_chat_user_daily_limit() == 77
+    assert m.car_chat_listing_daily_limit() == 5
+
+
 def test_car_chat_global_rate_limit(monkeypatch: pytest.MonkeyPatch, tmp_path) -> None:
     # Set before import: load_project_dotenv() must not re-enable billing from .env.
     monkeypatch.setenv("BILLING_STRIPE_ENABLED", "0")

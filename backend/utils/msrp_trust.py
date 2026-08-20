@@ -243,6 +243,18 @@ def resolve_display_msrp(
         return out
 
     out["msrp"] = value
+
+    # (b2) A figure far outside what this trim has actually been observed to
+    # sticker at is a data error — a decimal slip, a foreign-currency figure,
+    # another car's document — not an unusual options list. Suppress it and
+    # record WHY, so nothing downstream labels it or subtracts it from the
+    # price as a saving.
+    trim_reason = implausible_for_trim(car, value)
+    if trim_reason is not None:
+        out["msrp"] = None
+        out["rejected"] = trim_reason
+        return out
+
     out["from_sticker"] = from_sticker
     out["source"] = source
     # A used car's sticker total is what it cost NEW; say so, so nobody reads it
@@ -338,3 +350,31 @@ def implausible_for_trim(car: dict[str, Any], msrp: float | int | None) -> str |
     if value > hi * 1.35:
         return f"{value:,.0f} is far above the {n} observed stickers for this trim (max {hi:,})"
     return None
+
+
+def observed_trim_msrp_band(car: dict[str, Any]) -> tuple[int, int, int] | None:
+    """``(low, high, observations)`` this trim has actually stickered at, or ``None``.
+
+    The same in-process cache :func:`implausible_for_trim` judges against, offered
+    as a positive fact: with no per-car MSRP at all, "the stickers we have read
+    for this trim ran low–high" is the one thing the distribution can honestly
+    say about the car. It is a range over Monroney TOTALS — base + options +
+    destination — so it must be presented as an estimate for the trim, never as
+    this car's sticker price (see migrations/V010__trim_msrp_bands.sql).
+    """
+    if not car:
+        return None
+    _load_bands()
+    if not _BAND_CACHE:
+        return None
+    try:
+        year = int(car.get("year") or 0)
+    except (TypeError, ValueError):
+        return None
+    key = (
+        year,
+        str(car.get("make") or "").lower(),
+        str(car.get("model") or "").lower(),
+        str(car.get("trim") or "").lower(),
+    )
+    return _BAND_CACHE.get(key)

@@ -894,3 +894,97 @@ def test_street_address_match_still_unlists_real_siblings():
     )
     assert len(kept) == 1
     assert [r for r in rejected if r["_rooftop_reject"] in EVIDENCE_BACKED_REJECTS]
+
+
+def _sonic_row(account: str, name: str, vin: str) -> dict:
+    """One Dealer.com row as Sonic Automotive serves it, keyed by accountId slug."""
+    return {
+        "vin": vin, "make": "BMW", "model": "X5",
+        "_rooftop": {"key": account, "slug": account, "name": name,
+                     "names": [name], "slugs": [account]},
+    }
+
+
+def test_sonic_group_used_feed_keeps_only_this_rooftop():
+    """
+    longbeachbmw.com's own used-inventory widget is a Sonic GROUP feed.
+
+    Discovered while onboarding rooftops found in photographs: the site's third
+    inventory bucket mixes sibling accountIds in by offset 24 and they dominate by
+    offset ~900 of an advertised 980 vehicles. Two of those siblings --
+    sonicbmwmonrovia and sonicbenzcalabasas -- are dealers ALREADY in our
+    misattribution conflict list, so ingesting that bucket unfiltered is precisely
+    how bmwofmurrieta-com came to hold 1,921 cars across 37 makes.
+
+    The gate must keep this rooftop's rows and refuse every sibling. An onboarding
+    agent reported that no such filter existed; it does, here rather than in
+    parsers/base.py or recipes.py, and this test pins it.
+    """
+    rows = [
+        _sonic_row("soniclongbeachbmw", "Long Beach BMW", "AAA"),
+        _sonic_row("soniclongbeachbmw", "Long Beach BMW", "BBB"),
+        _sonic_row("sonicbeverlyhillsbmw", "BMW of Beverly Hills", "CCC"),
+        _sonic_row("sonicbmwmonrovia", "BMW of Monrovia", "DDD"),
+        _sonic_row("sonicbenzcalabasas", "Mercedes-Benz of Calabasas", "EEE"),
+        _sonic_row("soniccarsonhonda", "Carson Honda", "FFF"),
+        _sonic_row("cadillacoflasvegascadillac", "Cadillac of Las Vegas", "GGG"),
+    ]
+    kept, refused = resolve_rooftop_attribution(
+        rows, dealer_id="longbeachbmw-com", dealer_name="Long Beach BMW",
+        dealer_url="https://www.longbeachbmw.com/",
+    )
+    assert {r["vin"] for r in kept} == {"AAA", "BBB"}
+    assert {r["vin"] for r in refused} == {"CCC", "DDD", "EEE", "FFF", "GGG"}
+    assert all(r.get("_rooftop_reject") for r in refused)
+
+
+def test_every_production_parse_caller_passes_rejected_out():
+    """
+    ``parse()`` returns ``kept + rejected`` when ``rejected_out`` is omitted.
+
+    That default is a trap, and it cost this project its worst data-quality bug. The
+    rooftop gate correctly identified HendrickCars.com's national feed on
+    terrylabontechevy.com and logged FORTY separate "refusing all 100 row(s)" warnings --
+    then handed all 3,931 rows back, because backend/scanner/recipes.py called parse()
+    without rejected_out. The logs looked healthy precisely BECAUSE the gate was firing;
+    nothing compared the refusal count against the returned row count. That is how
+    bmwofmurrieta-com came to hold 1,921 cars across 37 makes.
+
+    So this is a lint, not a behaviour test: any production module that calls parse() must
+    pass rejected_out. Adding a new caller without it silently re-opens the hole.
+    """
+    import re
+    from pathlib import Path
+
+    repo = Path(__file__).resolve().parents[2]
+    offenders: list[str] = []
+    for path in sorted((repo / "backend").rglob("*.py")):
+        if "/tests/" in str(path):
+            continue
+        text = path.read_text(encoding="utf-8", errors="ignore")
+        if not re.search(r"from backend\.parsers import .*\bparse\b|parsers\.parse\(", text):
+            continue
+        lines = text.split("\n")
+        for i, line in enumerate(lines):
+            # Every gate-bearing call site passes dealer_url=; use it as the anchor.
+            if "dealer_url=" not in line:
+                continue
+            window = "\n".join(lines[max(0, i - 16):i + 8])
+            if not re.search(r"\bparse(?:_inventory)?\(", window):
+                continue
+            if "rejected_out" in window:
+                continue
+            # Two legitimate ways to be gated without rejected_out:
+            #   * the module applies resolve_rooftop_attribution itself over a final,
+            #     assembled row set (dealer_run does this once, after recovery)
+            #   * the parse is explicitly marked as counting-only, its rows never stored
+            if "resolve_rooftop_attribution" in text:
+                continue
+            if "ROOFTOP-GATE-EXEMPT" in window:
+                continue
+            offenders.append(f"{path.relative_to(repo)}:{i + 1}")
+
+    assert not offenders, (
+        "parse() called without rejected_out — these callers will ingest rows the rooftop "
+        "gate refused:\n  " + "\n  ".join(offenders)
+    )

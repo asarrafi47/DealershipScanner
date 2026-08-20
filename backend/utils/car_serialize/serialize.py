@@ -783,12 +783,19 @@ def _public_gallery_photo_count(raw: Any, *, image_url: Any = None) -> int:
     return n
 
 
-def serialize_car_for_listings_grid(car: dict[str, Any]) -> dict[str, Any]:
+def serialize_car_for_listings_grid(
+    car: dict[str, Any],
+    *,
+    attribution: dict[str, Any] | None = None,
+) -> dict[str, Any]:
     """
     Compact listings grid JSON: filter/cascade fields + card display only.
 
     Skips full ``serialize_car_for_api`` (EPA merge, transmission heuristics, etc.)
     to keep ``GET /api/listings/cars`` fast on SQLite (~2.5k rows).
+
+    *attribution* is this car's entry from ``cars_repo.car_attribution_states`` — the
+    caller batches that read for the whole fleet, so the card never looks it up itself.
     """
     if not car:
         return {}
@@ -880,6 +887,11 @@ def serialize_car_for_listings_grid(car: dict[str, Any]) -> dict[str, Any]:
         out["deal_score"] = public_deal_score(c)
     except Exception:
         out["deal_score"] = None
+    # Softens the dealer line when this listing's own photos (or a proven group feed)
+    # contradict the filed rooftop. Adds nothing to the card otherwise.
+    from backend.utils.car_serialize.attribution import attribution_public_fields
+
+    out.update(attribution_public_fields(attribution))
     return out
 
 
