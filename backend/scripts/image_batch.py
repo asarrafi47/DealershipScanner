@@ -194,19 +194,29 @@ def _connect():
 
 def _select_images(urls: list[str], budget: int) -> list[str]:
     """
-    Evenly spaced across the gallery, both ends included.
+    Gallery head pinned, remainder evenly spaced across the whole gallery.
 
-    Not the head and not the tail: dealers interleave document shots wherever they like.
-    On the gallery that started this work the highlights slides sat at positions 6, 12
-    and 18 of 40, so a head sample found nothing and a head+tail sample found 4 of 336.
+    Two real placement patterns, both non-negotiable:
+    - Dealers that upload a DEDICATED sticker slide put it immediately after the
+      lead beauty shot (positions 2-4): a pure even spread over a 48-image
+      gallery skips indices 1-3 entirely, which is how clean full-frame Monroney
+      scans on Ken Grody Ford cars were reported "no sticker seen".
+    - Others interleave document shots mid-gallery (the highlights slides that
+      started this work sat at positions 6, 12 and 18 of 40), so the head alone
+      is not enough either — the rest of the budget stays evenly spread with
+      both ends included.
     """
     n = len(urls)
     if n <= budget or budget <= 0:
         return urls
     if budget == 1:
         return urls[:1]
-    step = (n - 1) / (budget - 1)
-    return [urls[i] for i in sorted({int(round(i * step)) for i in range(budget)})]
+    pinned = set(range(1, min(4, n, max(1, budget // 2)))) if budget >= 6 else set()
+    spread_budget = budget - len(pinned)
+    step = (n - 1) / (spread_budget - 1) if spread_budget > 1 else 0
+    spread = {int(round(i * step)) for i in range(spread_budget)} if spread_budget else {0}
+    picked = sorted(pinned | spread)[:budget]
+    return [urls[i] for i in picked]
 
 
 def _fetch(url: str) -> bytes | None:

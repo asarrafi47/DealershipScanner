@@ -212,3 +212,40 @@ def test_looks_like_image_rejects_html_and_junk():
     assert not _looks_like_image(b"<html><body>404</body></html>")
     assert not _looks_like_image(b"")
     assert not _looks_like_image(b"\xff\xd8")  # truncated
+
+
+# ---------------------------------------------------------------------------
+# _select_images: gallery sampling
+# ---------------------------------------------------------------------------
+
+from backend.scripts.image_batch import _select_images
+
+
+def _indices(n: int, budget: int) -> list[int]:
+    urls = [f"u{i}" for i in range(n)]
+    return [int(u[1:]) for u in _select_images(urls, budget)]
+
+
+def test_head_slides_always_sampled():
+    # Ken Grody Ford parks a full-frame Monroney scan at gallery position 2-3
+    # of 48; the old pure even spread skipped indices 1-3 entirely and the
+    # sticker was reported "not seen" while sitting clean in the gallery.
+    for budget in (8, 10):
+        picked = _indices(48, budget)
+        assert {1, 2, 3} <= set(picked), picked
+        assert len(picked) == budget
+
+
+def test_spread_still_covers_mid_gallery():
+    # The incident that created this sampler: highlights slides at positions
+    # 6, 12 and 18 of 40. The spread half must keep real mid-gallery coverage
+    # (within a couple of slots of any mid position), not collapse to the head.
+    picked = _indices(40, 10)
+    for target in (6, 13, 20, 26):
+        assert any(abs(p - target) <= 2 for p in picked), (target, picked)
+    assert picked[-1] == 39  # tail still included
+
+
+def test_small_galleries_returned_whole():
+    assert _indices(5, 8) == [0, 1, 2, 3, 4]
+    assert _indices(2, 1) == [0]
