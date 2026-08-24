@@ -634,6 +634,49 @@ from backend.enrichment.package_registry import FEE_TERMS as _FEE_TERMS
 from backend.enrichment.package_registry import NEVER_PRICED_TERMS as _NEVER_PRICED
 
 
+# Equipment lists arrive in three shapes: clean single features, flat comma-
+# packed blobs ("AM/FM Radio, Android Auto, Apple CarPlay, ..." as ONE entry),
+# and structured package lines ("M Sport Package (contents...)" / "Honda
+# Sensing: ACC, CMBS..."). The blobs get split so each feature stands alone
+# (the rarity matcher and build sheet read entries, not paragraphs); the
+# structured lines are kept whole — the parenthetical/colon contents ARE the
+# information. Warranty/CPO program marketing is not equipment and is dropped.
+_EQUIPMENT_NON_EQUIPMENT_TERMS = (
+    "certified pre-owned", "warranty", "roadside assistance", "point inspection",
+    "financing", "apr ", "down payment",
+)
+_EQUIPMENT_MAX_LEN = 400
+
+
+def _clean_equipment_entry(entry: str) -> list[str]:
+    s = " ".join(str(entry or "").split())
+    if not s or len(s) > _EQUIPMENT_MAX_LEN:
+        return []
+    low = s.lower()
+    if any(t in low for t in _EQUIPMENT_NON_EQUIPMENT_TERMS):
+        return []
+    # Structured package/suite lines keep their shape.
+    if "(" in s or ":" in s:
+        return [s]
+    parts = [p.strip(" ;") for p in s.split(",")]
+    parts = [p for p in parts if p]
+    if len(parts) >= 4 and all(len(p) <= 60 for p in parts):
+        return parts
+    return [s]
+
+
+def _clean_equipment_list(items: Any) -> list[str]:
+    out: list[str] = []
+    seen: set[str] = set()
+    for raw in items or []:
+        for cleaned in _clean_equipment_entry(str(raw)):
+            key = cleaned.lower()
+            if key not in seen:
+                seen.add(key)
+                out.append(cleaned)
+    return out
+
+
 # color_source is a controlled vocabulary; readers invented 9 spellings for it
 # ('dealer_photos', 'photo_confirmed', 'feed', 'listing', 'dealer sheet', ...)
 # and every consumer — the page overlay (monroney only) and the color-conflict
@@ -764,7 +807,7 @@ def cmd_record(args: argparse.Namespace) -> int:
             continue
 
         vin = (item.get("vin") or "").strip() or None
-        equipment = [str(x).strip() for x in (item.get("equipment") or []) if str(x).strip()]
+        equipment = _clean_equipment_list(item.get("equipment"))
         packages = [str(x).strip() for x in (item.get("packages") or []) if str(x).strip()]
 
         priced: list[dict[str, Any]] = []

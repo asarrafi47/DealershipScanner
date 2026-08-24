@@ -237,3 +237,46 @@ def test_no_msrp_means_no_reconciliation_and_options_survive(tmp_path, monkeypat
     assert summary["sticker_msrp"] is None
     assert len(summary["priced_options"]) == 2
     assert summary["priced_options_refused"] is None
+
+
+# ---------------------------------------------------------------------------
+# _clean_equipment_list: record-time equipment normalization
+# ---------------------------------------------------------------------------
+
+from backend.scripts.image_batch import _clean_equipment_list
+
+
+def test_flat_comma_blob_splits_into_features():
+    out = _clean_equipment_list(
+        ["AM/FM Radio, Android Auto, Apple CarPlay, Bluetooth Connection, WiFi Hotspot"]
+    )
+    assert "Android Auto" in out and "WiFi Hotspot" in out
+    assert len(out) == 5
+
+
+def test_structured_package_lines_kept_whole():
+    pkg = "M Sport Package Pro (8-Speed Sport Automatic, M Sport Brakes with Red Calipers)"
+    suite = "Honda Sensing: Adaptive Cruise Control, Collision Mitigation Braking"
+    assert _clean_equipment_list([pkg]) == [pkg]
+    assert _clean_equipment_list([suite]) == [suite]
+
+
+def test_warranty_and_cpo_marketing_dropped():
+    out = _clean_equipment_list(
+        [
+            "Mercedes-Benz Certified Pre-Owned program (12-month warranty, $0 deductible)",
+            "Panoramic sunroof",
+        ]
+    )
+    assert out == ["Panoramic sunroof"]
+
+
+def test_short_lists_and_descriptions_not_split():
+    # 3 comma segments = a coherent description, not a packed list
+    desc = "Chevrolet Infotainment 3 Premium with Google built-in, 13.4-in touchscreen, wireless CarPlay"
+    assert _clean_equipment_list([desc]) == [desc]
+
+
+def test_dedupes_case_insensitively():
+    out = _clean_equipment_list(["Heated Front Seat", "heated front seat", "Tow Hitch"])
+    assert out == ["Heated Front Seat", "Tow Hitch"]
