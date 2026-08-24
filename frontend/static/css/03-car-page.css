@@ -1407,6 +1407,15 @@ body.car-detail-page .car-detail {
     color: var(--navy);
 }
 
+/* Provenance line under sticker-diffed adds — quiet, but present: the claim
+   is checkable against photographed documents and says so. */
+.car-trim-ladder__provenance {
+    margin: 8px 0 0;
+    font-size: 11px;
+    font-style: italic;
+    color: var(--text-muted);
+}
+
 .car-trim-ladder__panel-empty {
     margin: 0;
     font-size: 13px;

@@ -361,6 +361,32 @@ def resolve_trim_ladder(
     year: Any = None,
     trim: str | None,
 ) -> dict[str, Any] | None:
+    """Trim ladder context for a listing (or None), with sticker-diff adds.
+
+    After the ladder resolves, rungs whose panel would be empty get
+    ``sticker_adds`` — equipment differences computed from the VIN-confirmed
+    window stickers we photographed for this exact year/model (see
+    ``sticker_diffs``). Presentation only: rung NAMES still pass the
+    provenance gate unchanged.
+    """
+    result = _resolve_trim_ladder_inner(make=make, model=model, year=year, trim=trim)
+    if result and result.get("steps"):
+        try:
+            from backend.enrichment.trim_ladder.sticker_diffs import attach_sticker_adds
+
+            attach_sticker_adds(result["steps"], make=make or "", model=model or "", year=year)
+        except Exception:  # an enrichment must never cost the ladder itself
+            pass
+    return result
+
+
+def _resolve_trim_ladder_inner(
+    *,
+    make: str | None,
+    model: str | None,
+    year: Any = None,
+    trim: str | None,
+) -> dict[str, Any] | None:
     """
     Return trim ladder context for a listing, or None if no ladder applies.
     """

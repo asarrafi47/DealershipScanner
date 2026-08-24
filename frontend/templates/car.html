@@ -930,6 +930,18 @@
                                                 <li>{{ item }}</li>
                                                 {% endfor %}
                                             </ul>
+                                            {% elif step.sticker_adds %}
+                                            {# Diffed from VIN-confirmed window stickers we photographed
+                                               for this exact year/model — document-backed, not brochure. #}
+                                            <p class="car-trim-ladder__panel-label">What this trim adds</p>
+                                            <ul class="car-trim-ladder__adds">
+                                                {% for item in step.sticker_adds %}
+                                                <li>{{ item }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                            {% if step.sticker_adds_note %}
+                                            <p class="car-trim-ladder__provenance">{{ step.sticker_adds_note }}</p>
+                                            {% endif %}
                                             {% elif step.specs %}
                                             <p class="car-trim-ladder__panel-label">What this trim adds</p>
                                             <ul class="car-trim-ladder__adds">
