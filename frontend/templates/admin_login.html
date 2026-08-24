@@ -65,9 +65,17 @@
     const form = document.querySelector(".auth-form--admin");
     const btn = document.getElementById("admin-login-submit");
     if (!form || !btn) return;
+    const idleLabel = btn.textContent;
     form.addEventListener("submit", function () {
         btn.disabled = true;
         btn.textContent = "Signing in…";
+    });
+    // Browser Back after a successful login restores this page from the
+    // back-forward cache frozen mid-submit ("Signing in…", disabled).
+    // pageshow fires on that restore (no-op on normal loads) — reset.
+    window.addEventListener("pageshow", function () {
+        btn.disabled = false;
+        btn.textContent = idleLabel;
     });
 })();
 </script>

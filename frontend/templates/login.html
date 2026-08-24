@@ -57,9 +57,18 @@
         const form = document.querySelector(".auth-form");
         const btn = document.getElementById("login-submit");
         if (!form || !btn) return;
+        const idleLabel = btn.textContent;
         form.addEventListener("submit", function () {
             btn.disabled = true;
             btn.textContent = "Signing in…";
+        });
+        // Browser Back after a successful login restores this page from the
+        // back-forward cache exactly as it was frozen: mid-submit, button
+        // disabled and stuck on "Signing in…". pageshow fires on that restore
+        // (and on normal loads, where this is a no-op) — reset to usable.
+        window.addEventListener("pageshow", function () {
+            btn.disabled = false;
+            btn.textContent = idleLabel;
         });
     })();
     </script>
