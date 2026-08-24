@@ -155,8 +155,20 @@ def _rung_evidence_key(label: str) -> str:
     dealer actually typed, not one we derived from it. The cost is real and
     accepted: a lot that only ever lists "Platinum RWD" is not counted as
     evidence for a "Platinum" rung, and that rung stays off the page.
+
+    HTML entities and mojibake are decoded FIRST, because they are exactly the
+    feed-added spelling noise this key exists to collapse and the squash alone
+    gets them wrong: "Platinum&reg;" squashes to "platinumreg", not "platinum",
+    so the ® the dealer's CMS escaped was silently un-justifying real rungs.
+    Decoding changes no name — it restores the one the dealer typed.
     """
-    return _norm_token(label)
+    import html as _html
+
+    s = _html.unescape(_html.unescape(str(label or "")))  # twice: '&amp;reg;'
+    # UTF-8 read as latin-1 leaves 'Â' before ®/™/degree signs; it is never a
+    # letter a trim name contains.
+    s = s.replace("Â", "")
+    return _norm_token(s)
 
 
 def _exact_inventory_rung_hits(
