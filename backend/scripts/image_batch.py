@@ -634,6 +634,25 @@ from backend.enrichment.package_registry import FEE_TERMS as _FEE_TERMS
 from backend.enrichment.package_registry import NEVER_PRICED_TERMS as _NEVER_PRICED
 
 
+# color_source is a controlled vocabulary; readers invented 9 spellings for it
+# ('dealer_photos', 'photo_confirmed', 'feed', 'listing', 'dealer sheet', ...)
+# and every consumer — the page overlay (monroney only) and the color-conflict
+# audit stream (photo only) — silently ignored the drift. Clamp at the write.
+def _clamp_color_source(value: Any) -> str | None:
+    v = " ".join(str(value or "").lower().replace("_", " ").split())
+    if not v:
+        return None
+    if "monroney" in v or "sticker" in v:
+        return "monroney"
+    if "sheet" in v:  # dealer build sheet: document-printed, but not a Monroney
+        return "build_sheet"
+    if "photo" in v:
+        return "photo"
+    # 'feed'/'listing' echoes are the dealer's own claim, not an observation —
+    # storing them as a source would let the feed corroborate itself.
+    return None
+
+
 def _is_never_priced(name: str) -> bool:
     low = " ".join((name or "").lower().split())
     return any(term in low for term in _NEVER_PRICED)
@@ -867,7 +886,7 @@ def cmd_record(args: argparse.Namespace) -> int:
             # agreement/contradiction without re-opening the images.
             "exterior_color_seen": (str(item.get("exterior_color") or "").strip() or None),
             "interior_color_seen": (str(item.get("interior_color") or "").strip() or None),
-            "color_source": (str(item.get("color_source") or "").strip() or None),
+            "color_source": _clamp_color_source(item.get("color_source")),
             "vin_confirmed": bool(item.get("vin_confirmed")),
             # Persist the provenance, not just gate on it. Gating alone discards the
             # evidence: a later audit cannot tell a total that was READ from one that
