@@ -123,7 +123,10 @@ window.SC = window.SC || {};
             above_market: "Above market",
             at_market: "Fair price",
         };
-        const text = labels[ds.label] || "Fair price";
+        // Unknown labels (e.g. payment_listed — the "price" is an advertised
+        // payment, not comparable) get NO badge, never a defaulted verdict.
+        if (!labels[ds.label]) return "";
+        const text = labels[ds.label];
         let pctStr = "";
         if (ds.pct_from_median != null && ds.label !== "at_market") {
             const p = Math.abs(Number(ds.pct_from_median));

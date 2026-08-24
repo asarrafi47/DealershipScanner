@@ -119,3 +119,19 @@ def test_deal_score_custom_threshold_widens_at_market():
     score = mp.deal_score({"price": 32_400}, band=_band(30_000), at_market_pct=10.0)
     assert score["pct_from_median"] == 8.0
     assert score["label"] == mp.LABEL_AT
+
+
+def test_deal_score_payment_shaped_price_not_below_market():
+    from backend.intelligence.market_pricing import deal_score
+
+    band = {
+        "band_median": 39000.0,
+        "band_p25": 37000.0,
+        "band_p75": 41000.0,
+        "sample_count": 12,
+        "dealer_count": 5,
+    }
+    out = deal_score({"price": 800, "year": 2025}, band=band)
+    assert out["label"] == "payment_listed"
+    assert out["pct_from_median"] is None
+    assert out["delta"] is None

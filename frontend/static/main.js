@@ -1169,9 +1169,13 @@ document.addEventListener("DOMContentLoaded", () => {
             : "";
         const cpoBadge = SC.cpoBadgeHtml(c);
         const mkt = c.market;
+        // A payment-shaped "price" (either intel tier flagged it) renders as
+        // an advertised payment, never as the sale price with a deal badge.
+        const paymentListed = (mkt && mkt.vs_market === "payment_listed")
+            || (c.deal_score && c.deal_score.label === "payment_listed");
         // Premium trim-avg badge takes precedence; otherwise fall back to the
         // free coarse market deal score attached during serialization.
-        const dealBadge = SC.dealBadgeHtml(mkt) || SC.dealScoreBadgeHtml(c.deal_score);
+        const dealBadge = paymentListed ? "" : (SC.dealBadgeHtml(mkt) || SC.dealScoreBadgeHtml(c.deal_score));
         const priceDropBadge = SC.priceDropBadgeHtml(c);
         let marketLine = "";
         if (mkt && mkt.avg_price_display) {
@@ -1229,7 +1233,9 @@ document.addEventListener("DOMContentLoaded", () => {
                             ${incompletePill}
                         </div>
                         <p class="result-trim">${SC.escapeHtml(c.trim || "")}</p>
-                        <p class="result-price">${SC.fmtUSD(c.price)}${priceDropBadge}</p>
+                        ${paymentListed
+                            ? `<p class="result-price result-price--payment">${SC.fmtUSD(c.price)}<span class="result-price-payment-note">advertised payment &mdash; price not listed</span></p>`
+                            : `<p class="result-price">${SC.fmtUSD(c.price)}${priceDropBadge}</p>`}
                         ${marketLine}
                         <p class="result-meta">
                             ${SC.fmt(c.mileage)} mi

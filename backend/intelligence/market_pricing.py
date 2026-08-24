@@ -338,6 +338,24 @@ def deal_score(
         }
 
     median = band["band_median"]
+
+    # A payment-shaped "price" ($800 on a $39k CR-V — an advertised lease
+    # payment scraped into the price field) is not a bargain and must not
+    # score below_market. pct stays None so aggregates skip it.
+    from backend.utils.market_price import is_payment_shaped_price
+
+    if is_payment_shaped_price(price, reference_avg=median, year=car.get("year")):
+        return {
+            "label": "payment_listed",
+            "band_median": median,
+            "delta": None,
+            "pct_from_median": None,
+            "sample_count": band.get("sample_count", 0),
+            "dealer_count": band.get("dealer_count", 0),
+            "derived": True,
+            "basis": DERIVED_BASIS,
+        }
+
     delta = price - median
     pct = (delta / median * 100.0) if median else 0.0
     return {

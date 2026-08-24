@@ -79,6 +79,45 @@ def _parse_year(year: Any) -> int | None:
         return None
 
 
+# A listing "price" this small on a car whose cohort runs 10x higher is an
+# advertised PAYMENT (lease/finance monthly or a down payment) scraped into
+# the price field, not a sale price. Live case: a 16k-mile 2025 CR-V Hybrid
+# "priced" $800 against a $39,249 trim average earned a "Below market -98%"
+# badge. Real dealer inventory is never listed at a ~90% discount.
+_PAYMENT_SHAPED_CEILING = 3000.0
+_PAYMENT_SHAPED_AVG_RATIO = 0.10
+_PAYMENT_SHAPED_NEWISH_YEARS = 3
+
+
+def is_payment_shaped_price(
+    price: Any, *, reference_avg: Any = None, year: Any = None
+) -> bool:
+    """True when a listing "price" is really an advertised payment/deposit.
+
+    With a cohort average: flag a price at or under 10% of it (capped at
+    $3,000 so genuinely cheap old cars in cheap cohorts stay comparable).
+    Without one: flag a sub-$3,000 price on a car 3 model years old or newer.
+    """
+    try:
+        p = float(price or 0)
+    except (TypeError, ValueError):
+        return False
+    if p <= 0 or p > _PAYMENT_SHAPED_CEILING:
+        return False
+    try:
+        avg = float(reference_avg or 0)
+    except (TypeError, ValueError):
+        avg = 0.0
+    if avg > 0:
+        return p <= avg * _PAYMENT_SHAPED_AVG_RATIO
+    yr = _parse_year(year)
+    if yr is None:
+        return False
+    from datetime import date
+
+    return yr >= date.today().year - _PAYMENT_SHAPED_NEWISH_YEARS
+
+
 def cohort_key(
     make: str | None,
     model: str | None,
@@ -293,7 +332,13 @@ def _load_active_listing_rows() -> list[dict[str, Any]]:
               AND TRIM(IFNULL(model, '')) != ''
             """
         )
-        return [dict(r) for r in cur.fetchall()]
+        rows = [dict(r) for r in cur.fetchall()]
+    # Payment-shaped "prices" (see is_payment_shaped_price) must not feed the
+    # cohort averages every other car is judged against.
+    return [
+        r for r in rows
+        if not is_payment_shaped_price(r.get("price"), year=r.get("year"))
+    ]
 
 
 def get_cohort_index(
@@ -400,6 +445,30 @@ def market_price_for_car(
     if avg <= 0:
         return None
 
+    common = {
+        "avg_price": avg,
+        "avg_price_display": f"${avg:,.0f}",
+        "listing_price": price,
+        "listing_price_display": f"${price:,.0f}",
+        "sample_count": int(stats["count"]),
+        "min_price": stats.get("min_price"),
+        "max_price": stats.get("max_price"),
+        "cohort_label": cohort_label,
+        "geo_label": idx.geo_label,
+        "mileage_band": mileage_band(car.get("mileage")),
+    }
+
+    # A payment-shaped "price" is not comparable to the cohort at all: no
+    # delta, no below-market verdict — say what the number actually is.
+    if is_payment_shaped_price(price, reference_avg=avg, year=car.get("year")):
+        return {
+            **common,
+            "delta_dollars": None,
+            "delta_pct": None,
+            "vs_market": "payment_listed",
+            "vs_market_label": "Advertised payment or deposit — not the vehicle's price",
+        }
+
     delta = price - avg
     delta_pct = round((delta / avg) * 100.0, 1)
     vs = _vs_market_from_delta(delta_pct)
@@ -410,20 +479,11 @@ def market_price_for_car(
     }
 
     return {
-        "avg_price": avg,
-        "avg_price_display": f"${avg:,.0f}",
-        "listing_price": price,
-        "listing_price_display": f"${price:,.0f}",
-        "sample_count": int(stats["count"]),
-        "min_price": stats.get("min_price"),
-        "max_price": stats.get("max_price"),
+        **common,
         "delta_dollars": round(delta, 2),
         "delta_pct": delta_pct,
         "vs_market": vs,
         "vs_market_label": labels.get(vs, ""),
-        "cohort_label": cohort_label,
-        "geo_label": idx.geo_label,
-        "mileage_band": mileage_band(car.get("mileage")),
     }
 
 

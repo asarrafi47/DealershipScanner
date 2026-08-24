@@ -73,6 +73,18 @@
             if (!Number.isFinite(price) || price <= 0 || !Number.isFinite(avg) || avg <= 0) {
                 continue;
             }
+            // A "price" at <=10% of the cohort average (and under $3k) is an
+            // advertised payment scraped into the price field ($800 on a $39k
+            // CR-V), not a 90%-off bargain — no delta, no below-market badge.
+            // Mirrors backend/utils/market_price.is_payment_shaped_price.
+            if (price <= 3000 && price <= avg * 0.10) {
+                return {
+                    avg_price_display: "$" + Math.round(avg).toLocaleString(),
+                    delta_pct: null,
+                    vs_market: "payment_listed",
+                    sample_count: stats.sample_count,
+                };
+            }
             const deltaPct = Math.round(((price - avg) / avg) * 1000) / 10;
             return {
                 avg_price_display: "$" + Math.round(avg).toLocaleString(),

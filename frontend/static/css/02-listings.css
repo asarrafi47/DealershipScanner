@@ -1640,6 +1640,23 @@ body.listings-page .result-image {
     margin-bottom: 6px;
 }
 
+/* The "price" is an advertised payment scraped into the price field —
+   de-emphasize the figure and say what it is. */
+.result-price--payment {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-muted, #5c6470);
+}
+
+.result-price-payment-note {
+    display: block;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: var(--text-muted, #5c6470);
+}
+
 .result-price-drop-badge {
     display: inline-block;
     margin-left: 8px;

@@ -190,3 +190,45 @@ def test_geo_filter_excludes_distant_listings(monkeypatch):
     idx = get_cohort_index(zip_code="28202", radius_miles=25)
     assert idx.region_count == 1
     assert len(idx.groups.get(("toyota", "camry", "se", 2022, "0-25k"), [])) == 1
+
+
+def test_payment_shaped_price_detection():
+    from backend.utils.market_price import is_payment_shaped_price
+
+    # The live incident: $800 on a 2025 CR-V Hybrid, trim avg $39,249
+    assert is_payment_shaped_price(800, reference_avg=39249, year=2025)
+    # Down-payment shaped
+    assert is_payment_shaped_price(2999, reference_avg=45000)
+    # Newish car, no cohort average available
+    assert is_payment_shaped_price(800, year=2025)
+    # A genuinely cheap old beater in a cheap cohort stays comparable
+    assert not is_payment_shaped_price(2500, reference_avg=4000, year=2008)
+    assert not is_payment_shaped_price(2500, year=2008)
+    # Real prices are untouched
+    assert not is_payment_shaped_price(27000, reference_avg=29750)
+    assert not is_payment_shaped_price(0, reference_avg=29750)
+    # Above the ceiling is never payment-shaped, however large the avg
+    assert not is_payment_shaped_price(3500, reference_avg=200000)
+
+
+def test_market_price_payment_shaped_never_below_market(monkeypatch):
+    monkeypatch.setattr(
+        "backend.utils.market_price.get_cohort_index",
+        lambda **_: _sample_index(),
+    )
+    out = market_price_for_car(
+        {
+            "make": "Toyota",
+            "model": "Camry",
+            "trim": "SE",
+            "year": 2022,
+            "mileage": 12000,
+            "price": 800,
+        }
+    )
+    assert out is not None
+    assert out["vs_market"] == "payment_listed"
+    assert out["delta_pct"] is None
+    assert out["delta_dollars"] is None
+    assert "payment" in out["vs_market_label"].lower()
+    assert out["avg_price"] == 29750.0  # cohort context still shown
