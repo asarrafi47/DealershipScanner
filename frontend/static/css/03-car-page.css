@@ -715,6 +715,41 @@ body.car-detail-page .car-detail {
     letter-spacing: -0.01em;
 }
 
+/* Inventory rarity — sits with the market verdict in the decision row.
+   Champagne-on-navy family, distinct from the deal verdict colors so a
+   rare car reads as "special", not "cheap/expensive". */
+.rarity-badge {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 8px;
+    order: 3;
+    width: fit-content;
+    margin: 2px 0 0;
+    padding: 8px 14px;
+    border-radius: 999px;
+    font-size: 14px;
+    line-height: 1.2;
+    background: var(--rarity-bg, rgba(94, 74, 22, 0.10));
+    color: var(--rarity-fg, #6d5311);
+    cursor: help;
+}
+
+.rarity-badge__score {
+    font-weight: 800;
+    letter-spacing: -0.01em;
+}
+
+.rarity-badge__den {
+    font-weight: 600;
+    opacity: 0.7;
+    font-size: 12px;
+}
+
+.rarity-badge__label {
+    font-weight: 600;
+    opacity: 0.85;
+}
+
 /* ---- Dealership tab ---- */
 
 .dealer-panel-head {

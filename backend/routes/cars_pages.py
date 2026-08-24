@@ -593,6 +593,19 @@ def _build_car_detail_view_context(car_id: int, car_raw: dict) -> dict:
                 year=car_raw.get("year"),
                 trim=car_raw.get("trim"),
             )
+    # Inventory rarity — scarcity within our own active fleet plus visible-
+    # option evidence from the vision scan. Ungated: it is our own data, and
+    # "one of 2 in our inventory" is a purchase nudge for every viewer.
+    rarity = None
+    try:
+        from backend.utils.rarity_score import rarity_for_car, vision_summary_for_car
+
+        rarity = rarity_for_car(
+            car_raw, vision_summary=vision_summary_for_car(car_raw.get("id"))
+        )
+    except Exception:
+        rarity = None
+
     listings_geo = main.listings_geo_kwargs_from_session(session)
     # Synthesized build sheet from the data we hold (listing row + verified EPA
     # specs + best-effort catalog options) — but ONLY when this car has no real
@@ -628,6 +641,7 @@ def _build_car_detail_view_context(car_id: int, car_raw: dict) -> dict:
         "generated_spec_sheet": generated_spec_sheet,
         "market_intel": market_intel,
         "deal_score_detail": deal_score_detail,
+        "rarity": rarity,
         "trim_ladder": trim_ladder,
         "car_is_saved": car_is_saved,
         "logged_in": bool(uid),

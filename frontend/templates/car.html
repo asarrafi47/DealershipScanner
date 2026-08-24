@@ -276,7 +276,14 @@
                            where the decision gets made. It always renders -- when there are too few
                            comparable listings to judge, say that plainly instead of showing nothing,
                            which reads as "we forgot" rather than "we don't know". #}
-                        {% if car.deal_score and car.deal_score.label and car.deal_score.label != 'insufficient_data' %}
+                        {% if car.deal_score and car.deal_score.label == 'payment_listed' %}
+                        {# The listed "price" is an advertised payment scraped into the price
+                           field — never a market verdict (see is_payment_shaped_price). #}
+                        <div class="deal-badge deal-badge--hero deal-badge--unknown" role="note" aria-label="Market price assessment">
+                            <span class="deal-badge__label">Payment ad</span>
+                            <span class="deal-badge__detail">listed figure is an advertised payment, not the price</span>
+                        </div>
+                        {% elif car.deal_score and car.deal_score.label and car.deal_score.label != 'insufficient_data' %}
                         {% set ds = car.deal_score %}
                         {% set ds_pct = (ds.pct_from_median | abs) if ds.pct_from_median is not none else none %}
                         {% set ds_delta = (ds.delta | abs) if ds.delta is not none else none %}
@@ -296,6 +303,15 @@
                         <div class="deal-badge deal-badge--hero deal-badge--unknown" role="note" aria-label="Market price assessment">
                             <span class="deal-badge__label">No market read</span>
                             <span class="deal-badge__detail">too few comparable listings</span>
+                        </div>
+                        {% endif %}
+                        {% if rarity and rarity.score >= 3.5 %}
+                        {# Scarcity within OUR inventory + photo-verified special equipment —
+                           every reason is checkable (a count, a badge, a sticker line). #}
+                        <div class="rarity-badge" role="note" aria-label="Inventory rarity"
+                             {% if rarity.reasons %}title="{{ rarity.reasons | join(' · ') }}"{% endif %}>
+                            <span class="rarity-badge__score">Rarity {{ rarity.score }}<span class="rarity-badge__den">/10</span></span>
+                            <span class="rarity-badge__label">{{ rarity.label }}</span>
                         </div>
                         {% endif %}
                         {% if logged_in %}
