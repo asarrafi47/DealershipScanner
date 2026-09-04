@@ -186,6 +186,37 @@
     border: 1px solid var(--border-light);
 }
 
+.dealer-inv-thumb-wrap {
+    position: relative;
+    width: 56px;
+    height: 56px;
+}
+
+.dealer-inv-thumb-delete-form {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    margin: 0;
+}
+
+.dealer-inv-thumb-delete-btn {
+    width: 18px;
+    height: 18px;
+    line-height: 16px;
+    padding: 0;
+    border-radius: 50%;
+    border: 1px solid rgba(200, 80, 80, 0.45);
+    background: #1c1c22;
+    color: rgba(255, 160, 160, 0.95);
+    font-size: 12px;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.dealer-inv-thumb-delete-btn:hover {
+    background: rgba(200, 60, 60, 0.25);
+}
+
 .dealer-inv-delete-form {
     margin-top: 14px;
 }

@@ -1030,7 +1030,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const DEFAULT_PER_PAGE = 24;
     if (listingsSortEl) {
         try {
-            const savedSort = localStorage.getItem(SORT_STORAGE_KEY);
+            // A shared URL (syncUrl() below writes sort=) wins over this browser's
+            // own last-used sort, so a link someone sends renders sorted the way
+            // they saw it instead of silently reverting to the recipient's habit.
+            const urlSort = new URLSearchParams(window.location.search).get("sort");
+            const savedSort = urlSort || localStorage.getItem(SORT_STORAGE_KEY);
             if (savedSort && listingsSortEl.querySelector(`option[value="${savedSort}"]`)) {
                 listingsSortEl.value = savedSort;
             }
@@ -1069,6 +1073,199 @@ document.addEventListener("DOMContentLoaded", () => {
             renderListingsPage();
         });
     }
+
+    // FEATURE_SAVED_SEARCHES (backend/billing/catalog.py) — "Save this search"
+    // persists the listings page's current filter state (same query params
+    // syncUrl() writes) so a signed-in user can come back to it later.
+    // No alerting/notification cron reads these rows yet; that's out of scope
+    // here — this is persistence + list/delete only.
+    (function initSavedSearchesWidget() {
+        const wrap = document.getElementById("listings-saved-search");
+        const saveBtn = document.getElementById("listings-save-search-btn");
+        const toggleBtn = document.getElementById("listings-saved-search-toggle");
+        const panel = document.getElementById("listings-saved-search-panel");
+        const itemsEl = document.getElementById("listings-saved-search-items");
+        const emptyEl = document.getElementById("listings-saved-search-empty");
+        const countEl = document.getElementById("listings-saved-search-count");
+        const statusEl = document.getElementById("listings-saved-search-status");
+        if (!wrap || !saveBtn || !toggleBtn || !panel) return;
+
+        function csrfToken() {
+            const m = document.querySelector('meta[name="csrf-token"]');
+            return m && m.content ? m.content : "";
+        }
+
+        function showStatus(msg, isLink) {
+            if (!statusEl) return;
+            if (!msg) {
+                statusEl.hidden = true;
+                statusEl.textContent = "";
+                return;
+            }
+            statusEl.hidden = false;
+            if (isLink && typeof msg === "object") {
+                statusEl.textContent = "";
+                statusEl.appendChild(document.createTextNode(msg.text + " "));
+                const a = document.createElement("a");
+                a.href = msg.href;
+                a.textContent = msg.linkText;
+                statusEl.appendChild(a);
+            } else {
+                statusEl.textContent = msg;
+            }
+        }
+
+        // Current filter state as a plain object (scalar or array-of-scalar values),
+        // built from the same params syncUrl() already keeps in the address bar.
+        function currentFiltersForSave() {
+            if (typeof syncUrl === "function") syncUrl();
+            const params = new URLSearchParams(window.location.search);
+            const out = {};
+            for (const key of params.keys()) {
+                if (Object.prototype.hasOwnProperty.call(out, key)) continue;
+                if (key === "page") continue;
+                const vals = params.getAll(key);
+                out[key] = vals.length > 1 ? vals : vals[0];
+            }
+            return out;
+        }
+
+        function labelForFilters(filters) {
+            const bits = [];
+            const push = (v) => {
+                if (v === undefined || v === null || v === "") return;
+                bits.push(Array.isArray(v) ? v.join("/") : String(v));
+            };
+            push(filters.make);
+            push(filters.model);
+            if (filters.max_price) bits.push("under " + SC.fmtUSD(Number(filters.max_price)));
+            if (filters.zip_code) bits.push("near " + filters.zip_code);
+            if (filters.q) bits.push('"' + filters.q + '"');
+            return bits.length ? bits.join(" · ") : "All listings";
+        }
+
+        function hrefForFilters(filters) {
+            const params = new URLSearchParams();
+            Object.keys(filters).forEach((k) => {
+                const v = filters[k];
+                if (Array.isArray(v)) v.forEach((x) => params.append(k, x));
+                else if (v !== undefined && v !== null && v !== "") params.set(k, v);
+            });
+            const qs = params.toString();
+            return window.location.pathname + (qs ? "?" + qs : "");
+        }
+
+        let _searchesCache = null;
+
+        function renderList(searches) {
+            itemsEl.innerHTML = "";
+            const has = Array.isArray(searches) && searches.length > 0;
+            if (emptyEl) emptyEl.hidden = has;
+            if (countEl) {
+                countEl.hidden = !has;
+                countEl.textContent = has ? String(searches.length) : "";
+            }
+            if (!has) return;
+            searches.forEach((s) => {
+                const li = document.createElement("li");
+                li.className = "listings-saved-search__item";
+                const a = document.createElement("a");
+                a.className = "listings-saved-search__item-link";
+                a.href = hrefForFilters(s.filters || {});
+                a.textContent = labelForFilters(s.filters || {});
+                a.title = a.textContent;
+                const rm = document.createElement("button");
+                rm.type = "button";
+                rm.className = "listings-saved-search__item-remove";
+                rm.textContent = "Remove";
+                rm.addEventListener("click", (e) => {
+                    e.preventDefault();
+                    rm.disabled = true;
+                    fetch(`/api/saved-searches/${encodeURIComponent(s.id)}`, {
+                        method: "DELETE",
+                        headers: { "X-CSRF-Token": csrfToken() },
+                        credentials: "same-origin",
+                    })
+                        .then((r) => (r.ok ? r.json() : Promise.reject()))
+                        .then(() => {
+                            _searchesCache = (_searchesCache || []).filter((x) => x.id !== s.id);
+                            renderList(_searchesCache);
+                        })
+                        .catch(() => { showStatus("Could not remove — try again."); })
+                        .finally(() => { rm.disabled = false; });
+                });
+                li.appendChild(a);
+                li.appendChild(rm);
+                itemsEl.appendChild(li);
+            });
+        }
+
+        function loadSearches() {
+            return fetch("/api/saved-searches", { credentials: "same-origin" })
+                .then((r) => (r.ok ? r.json() : Promise.reject()))
+                .then((data) => {
+                    _searchesCache = (data && data.searches) || [];
+                    renderList(_searchesCache);
+                })
+                .catch(() => { renderList([]); });
+        }
+
+        function setPanelOpen(open) {
+            panel.hidden = !open;
+            toggleBtn.setAttribute("aria-expanded", open ? "true" : "false");
+            if (open && _searchesCache === null) loadSearches();
+        }
+
+        if (!LISTINGS_LOGGED_IN) {
+            // Guests get the same affordance as the save-car heart: clicking
+            // prompts sign-in instead of doing nothing.
+            saveBtn.addEventListener("click", () => { window.location.href = "/login"; });
+            toggleBtn.addEventListener("click", () => { window.location.href = "/login"; });
+            return;
+        }
+
+        toggleBtn.addEventListener("click", () => setPanelOpen(panel.hidden));
+        document.addEventListener("click", (e) => {
+            if (!panel.hidden && !wrap.contains(e.target)) setPanelOpen(false);
+        });
+
+        saveBtn.addEventListener("click", () => {
+            showStatus(null);
+            saveBtn.disabled = true;
+            const filters = currentFiltersForSave();
+            fetch("/api/saved-searches", {
+                method: "POST",
+                headers: { "X-CSRF-Token": csrfToken(), "Content-Type": "application/json" },
+                credentials: "same-origin",
+                body: JSON.stringify({ filters }),
+            })
+                .then((r) => r.json().then((data) => ({ ok: r.ok, data: data })))
+                .then((res) => {
+                    if (!res.ok) {
+                        if (res.data && res.data.error === "premium_required" && res.data.upgrade_url) {
+                            showStatus(
+                                { text: "Saved searches need a paid plan.", href: res.data.upgrade_url, linkText: "Upgrade" },
+                                true
+                            );
+                        } else if (res.data && res.data.error === "not_logged_in") {
+                            window.location.href = "/login";
+                        } else {
+                            showStatus("Could not save this search — try again.");
+                        }
+                        return;
+                    }
+                    showStatus("Search saved.");
+                    if (_searchesCache) {
+                        _searchesCache = [{ id: res.data.id, filters: res.data.filters, created_at: null, last_notified_at: null }, ..._searchesCache];
+                        renderList(_searchesCache);
+                    } else {
+                        loadSearches();
+                    }
+                })
+                .catch(() => { showStatus("Could not save this search — try again."); })
+                .finally(() => { saveBtn.disabled = false; });
+        });
+    })();
 
     function getListingsSortMode() {
         return listingsSortEl ? listingsSortEl.value : "relevance";
@@ -1192,7 +1389,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 + `<svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="1.8" fill="${isSaved ? "currentColor" : "none"}" aria-hidden="true">`
                 + `<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>`
                 + `</svg></button>`
-            : "";
+            // Guests get the same heart affordance; clicking it sends them to the
+            // existing sign-in page (the same prompt ds_comments.js uses for guests)
+            // instead of silently doing nothing.
+            : `<button type="button" class="result-save-btn" data-guest="1" aria-label="Sign in to save this car" title="Sign in to save">`
+                + `<svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="1.8" fill="none" aria-hidden="true">`
+                + `<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>`
+                + `</svg></button>`;
         const compareCb = `<label class="result-compare-label" title="Add to compare (max 4)">`
             + `<input type="checkbox" class="result-compare-cb" data-car-id="${idStr}"${inCompare ? " checked" : ""}>`
             + `<span>Compare</span></label>`;
@@ -1470,6 +1673,25 @@ document.addEventListener("DOMContentLoaded", () => {
                     : "0 vehicles";
             }
             if (zeroHintEl) zeroHintEl.hidden = geoSearchActive || !_lastFilterAction;
+            // Zero results is exactly when a trip to the dealer map (instead of
+            // the inventory search that just came up empty) is most useful —
+            // pre-fill it with the same ZIP/radius so the visitor doesn't
+            // re-type anything.
+            const viewDealersHintEl = document.getElementById("listings-view-dealers-hint");
+            const viewDealersLinkEl = document.getElementById("listings-view-dealers-link");
+            if (viewDealersHintEl && viewDealersLinkEl) {
+                if (zipCode && SC.isValidUsZip(zipCode)) {
+                    const dealerParams = new URLSearchParams({ zip: zipCode });
+                    if (radiusMi && Number.isFinite(radiusMi)) {
+                        dealerParams.set("radius", String(radiusMi));
+                    }
+                    viewDealersLinkEl.href = "/find-dealers?" + dealerParams.toString();
+                    viewDealersLinkEl.textContent = "View dealers on map near " + zipCode;
+                    viewDealersHintEl.hidden = false;
+                } else {
+                    viewDealersHintEl.hidden = true;
+                }
+            }
             scheduleListingsUiSync();
             return;
         }
@@ -1653,6 +1875,8 @@ document.addEventListener("DOMContentLoaded", () => {
         if (_listingsPage > 1) params.set("page", String(_listingsPage));
         const perPage = getListingsPerPage();
         if (perPage !== DEFAULT_PER_PAGE) params.set("per_page", String(perPage));
+        const sortMode = getListingsSortMode();
+        if (sortMode && sortMode !== "relevance") params.set("sort", sortMode);
         const qs = params.toString();
         history.replaceState(null, "", window.location.pathname + (qs ? "?" + qs : ""));
         schedulePersistListingsGeoSession();
@@ -2662,7 +2886,19 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function wireResultSaveButtons() {
-        if (!resultsGrid || !LISTINGS_LOGGED_IN) return;
+        if (!resultsGrid) return;
+        if (!LISTINGS_LOGGED_IN) {
+            resultsGrid.querySelectorAll(".result-save-btn[data-guest='1']").forEach((btn) => {
+                if (btn.dataset.wired === "1") return;
+                btn.dataset.wired = "1";
+                btn.addEventListener("click", (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    window.location.href = "/login";
+                });
+            });
+            return;
+        }
         resultsGrid.querySelectorAll(".result-save-btn").forEach((btn) => {
             if (btn.dataset.wired === "1") return;
             btn.dataset.wired = "1";

@@ -1,9 +1,9 @@
 """
 360-spin asset capture helpers (Impel/SpinCar/WebRotate).
 
-Pure URL-classification and sequence-detection logic for the VDP spin capture step in
-``backend/scanner/vdp/core.py``. Everything here is side-effect free and unit-testable;
-the Playwright-driving part lives in ``core._vdp_spin_capture``.
+Pure URL-classification and sequence-detection logic, plus the Playwright-driving capture step
+(``_vdp_spin_capture``) for the VDP visit in ``backend/scanner/vdp/visit.py``. Re-imported from
+``backend.scanner.vdp.core`` for compatibility with the historical import surface.
 
 Observed Impel URL shapes (live traffic, 2026-07-06):
 
@@ -20,9 +20,14 @@ Observed Impel URL shapes (live traffic, 2026-07-06):
 
 from __future__ import annotations
 
+import asyncio
+import json
 import re
 from typing import Any
 from urllib.parse import urlparse
+
+from backend.scanner.vdp.config import _vdp_spin_capture_enabled, _vdp_spin_max_sec
+from backend.scanner.vdp.gallery import _drain_pending_tasks
 
 # Hosts/paths that identify a 360-spin provider.
 SPIN_PROVIDER_TOKENS: tuple[str, ...] = ("impel", "spincar", "swipetospin", "webrotate")
@@ -277,3 +282,124 @@ def parse_impel_spin_manifest(data: Any) -> dict[str, Any]:
         seg = "ec"
     out["spin_frames"] = [f"{prefix}{seg}/0-{i}.jpg" for i in range(n)]
     return out
+
+
+async def _vdp_spin_capture(
+    wp: Any,
+    *,
+    spin_asset_urls: list[str],
+    spin_config_urls: list[str],
+    pending: list[asyncio.Task[Any]],
+) -> dict[str, Any]:
+    """
+    Resolve the 360-spin assets for the current VDP into
+    ``{"spin_frames": [...>=8 ordered URLs], "interior_pano": str|None, "spin_source": str}``
+    (empty dict when no spin viewer / no confident capture). Strategy, cheapest first:
+
+    1. observed network frames already form a numbered sequence — use them;
+    2. Impel manifest (``api.impel.io/spin/{customer}/{vin}``) — URL observed in the viewer's
+       own traffic or derived from any ``swipetospin-viewers/...`` asset / iframe hash; frames
+       are built from ``cdn_image_prefix`` + ``numImgEC`` and the first/last frame is validated
+       with a cookie-carrying request before trusting;
+    3. light nudge — scroll the viewer iframe into view and drag across it with the page mouse
+       (frames load lazily on rotation for some embeds), then re-read observed URLs.
+    """
+    if not _vdp_spin_capture_enabled():
+        return {}
+    deadline = asyncio.get_running_loop().time() + _vdp_spin_max_sec()
+
+    iframe_urls: list[str] = []
+    for fr in list(getattr(wp, "frames", None) or []):
+        fu = getattr(fr, "url", "") or ""
+        if fu and any(t in fu.lower() for t in SPIN_PROVIDER_TOKENS):
+            iframe_urls.append(fu)
+
+    if not spin_asset_urls and not spin_config_urls and not iframe_urls:
+        return {}
+
+    assets = extract_spin_assets(spin_asset_urls)
+    if len(assets.get("spin_frames") or []) >= 8:
+        assets["spin_source"] = "network_observed"
+        return assets
+
+    # Manifest route (Impel).
+    req = wp.context.request
+    for murl in build_impel_manifest_url_candidates(spin_config_urls, spin_asset_urls, iframe_urls):
+        if asyncio.get_running_loop().time() >= deadline:
+            break
+        try:
+            resp = await req.get(murl, timeout=8000)
+            if resp.status != 200:
+                continue
+            data = json.loads(await resp.text())
+        except Exception:
+            continue
+        parsed = parse_impel_spin_manifest(data)
+        frames = parsed.get("spin_frames") or []
+        if len(frames) < 8:
+            continue
+        ok = True
+        for probe_u in (frames[0], frames[-1]):
+            try:
+                r2 = await req.get(probe_u, timeout=8000)
+                ct2 = (r2.headers.get("content-type") or "").lower()
+                if r2.status != 200 or "image/" not in ct2:
+                    ok = False
+                    break
+            except Exception:
+                ok = False
+                break
+        if ok:
+            out: dict[str, Any] = {
+                "spin_frames": frames,
+                "spin_source": "impel_manifest",
+                "spin_manifest_url": murl[:300],
+            }
+            if assets.get("interior_pano"):
+                out["interior_pano"] = assets["interior_pano"]
+            return out
+
+    # Nudge route: scroll the viewer iframe into view and drag across it.
+    if iframe_urls and asyncio.get_running_loop().time() < deadline:
+        box = None
+        try:
+            loc = wp.locator(
+                'iframe[src*="impel"], iframe[src*="spincar"], '
+                'iframe[src*="swipetospin"], iframe[src*="webrotate"]'
+            ).first
+            if await loc.count() > 0:
+                try:
+                    await loc.scroll_into_view_if_needed(timeout=3000)
+                except Exception:
+                    pass
+                await asyncio.sleep(0.6)
+                box = await loc.bounding_box()
+        except Exception:
+            box = None
+        if box and box.get("width", 0) >= 120 and box.get("height", 0) >= 90:
+            cy = box["y"] + box["height"] / 2
+            for _ in range(2):
+                if asyncio.get_running_loop().time() >= deadline:
+                    break
+                try:
+                    await wp.mouse.move(box["x"] + box["width"] * 0.72, cy, steps=3)
+                    await wp.mouse.down()
+                    await wp.mouse.move(box["x"] + box["width"] * 0.28, cy, steps=14)
+                    await wp.mouse.up()
+                except Exception:
+                    break
+                await asyncio.sleep(1.0)
+                await _drain_pending_tasks(pending, timeout_sec=4.0)
+                assets = extract_spin_assets(spin_asset_urls)
+                if len(assets.get("spin_frames") or []) >= 8:
+                    break
+        else:
+            # iframe present but not interactable — wait for any passive loads to settle
+            await asyncio.sleep(0.5)
+            await _drain_pending_tasks(pending, timeout_sec=4.0)
+            assets = extract_spin_assets(spin_asset_urls)
+
+    if len(assets.get("spin_frames") or []) >= 8 or assets.get("interior_pano"):
+        assets["spin_source"] = "interaction"
+        return assets
+    return {}

@@ -22,8 +22,17 @@ def _make_token(make: str) -> str:
     return re.sub(r"[^a-z0-9]+", "", canonical_make(make or "").strip().lower())
 
 
+# Drivetrain configuration, not a separate vehicle or a separate document.
+# Inventory spells "Tacoma 4WD" and "Tacoma 2WD" as different models; no OEM
+# publishes a drivetrain-specific brochure, so left unstripped this inflates
+# the gap list with vehicles that already have coverage under the plain name
+# and blocks every one of them from matching the document that exists.
+_DRIVETRAIN_SUFFIX = re.compile(r"\s+(4wd|2wd|awd|rwd|4x4|4x2)\s*$", re.I)
+
+
 def _model_token(model: str) -> str:
-    return re.sub(r"[^a-z0-9]+", "", (model or "").strip().lower())
+    cleaned = _DRIVETRAIN_SUFFIX.sub("", (model or "").strip())
+    return re.sub(r"[^a-z0-9]+", "", cleaned.lower())
 
 
 # --------------------------------------------------------------------------

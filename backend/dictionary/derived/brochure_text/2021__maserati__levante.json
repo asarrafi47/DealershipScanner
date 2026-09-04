@@ -1,0 +1,1233 @@
+{
+  "schema_version": 2,
+  "catalog_key": "2021|maserati|levante",
+  "year": 2021,
+  "make": "Maserati",
+  "model": "LEVANTE",
+  "source_pdf": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2021_Maserati_LEVANTE_Brochure.pdf",
+  "source_pdf_name": "2021_Maserati_LEVANTE_Brochure.pdf",
+  "source_pdf_sha256": "2be04cc3cde652bd9cf3c4b8a604489f79ad4893f15420dc3f8e012ba6743fad",
+  "source_pdf_bytes": 4107432,
+  "page_count": 60,
+  "pages_captured": 60,
+  "capture": "lossless",
+  "layout_captured": true,
+  "all_pages": true,
+  "trim_hint_pages": [
+    2,
+    13,
+    35,
+    48,
+    49
+  ],
+  "warnings": [],
+  "pages": [
+    {
+      "page": 1,
+      "trim_hint": false,
+      "has_text_layer": false,
+      "width": 807.9,
+      "height": 637.8,
+      "text": "",
+      "table_lines": [],
+      "lines": []
+    },
+    {
+      "page": 2,
+      "trim_hint": true,
+      "has_text_layer": true,
+      "width": 807.9,
+      "height": 637.8,
+      "text": "An enduring legacy | 6 Endless possibilities | 8 A distinctive invitation | 20 High-powered Luxury | 26\nHistory of character Discover the Levante Experience something truly Maserati Connect and\nCollection unique in a world of Safety ADAS\nstandardized choices\nFuoriserie | 42 Technical specifications | 48 A world of possibilities | 52\nYour Maserati tailor-made Specifications overview of all\nto your unique personality Levante versions\n2",
+      "table_lines": [],
+      "lines": [
+        {"top":442.4,"cells":[[51.0,176.9,"An enduring legacy |"],[181.5,189.0,"6"],[213.6,347.8,"Endless possibilities |"],[352.4,359.7,"8"],[413.0,560.3,"A distinctive invitation |"],[564.9,580.3,"20"],[607.4,747.2,"High-powered Luxury |"],[751.8,767.0,"26"]]},
+        {"top":462.4,"cells":[[51.0,151.5,"History of character"],[213.6,319.4,"Discover the Levante"],[413.0,551.4,"Experience something truly"],[607.4,719.3,"Maserati Connect and"]]},
+        {"top":474.4,"cells":[[213.6,264.8,"Collection"],[413.0,513.9,"unique in a world of"],[607.4,671.6,"Safety ADAS"]]},
+        {"top":486.4,"cells":[[413.0,520.9,"standardized choices"]]},
+        {"top":519.1,"cells":[[51.0,120.0,"Fuoriserie |"],[124.5,139.4,"42"],[213.6,370.5,"Technical specifications |"],[375.1,390.6,"48"],[413.0,563.4,"A world of possibilities |"],[568.0,582.8,"52"]]},
+        {"top":538.7,"cells":[[51.0,182.0,"Your Maserati tailor-made"]]},
+        {"top":539.2,"cells":[[213.6,363.5,"Specifications overview of all"]]},
+        {"top":550.7,"cells":[[51.0,183.5,"to your unique personality"],[213.6,298.1,"Levante versions"]]},
+        {"top":606.0,"cells":[[30.0,35.5,"2"]]}
+      ]
+    },
+    {
+      "page": 3,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 807.9,
+      "height": 637.8,
+      "text": "Accept no Boundaries\n3",
+      "table_lines": [],
+      "lines": [
+        {"top":531.1,"cells":[[520.4,757.4,"Boundaries"]]},
+        {"top":532.2,"cells":[[282.9,508.2,"Accept no"]]},
+        {"top":606.0,"cells":[[772.3,778.0,"3"]]}
+      ]
+    },
+    {
+      "page": 4,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 807.9,
+      "height": 637.8,
+      "text": "4",
+      "table_lines": [],
+      "lines": [
+        {"top":606.0,"cells":[[29.8,35.7,"4"]]}
+      ]
+    },
+    {
+      "page": 5,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 807.9,
+      "height": 637.8,
+      "text": "Force of Nature\nMaserati has a history of naming its cars after the world\u2019s most famous\nwinds. It started in 1963 with the legendary Mistral. Then came the\nGhibli, the Bora and the Khamsin. And in 2016 the Levante joined the\nillustrious Maserati range. The wind that bears its name blows across\nthe Mediterranean and can change from benign calm to gale force in\nan instant. The Maserati SUV has a similar nature, although its powerful\nforces always remain under perfect control. In true Maserati grand\ntouring tradition, nothing can disturb your comfort \u2013 whatever the speed,\nwhatever the distance. a new journey has begun \u2013 with the SUV that\naccepts no boundaries.\n5",
+      "table_lines": [],
+      "lines": [
+        {"top":230.4,"cells":[[283.8,488.2,"Force of Nature"]]},
+        {"top":324.9,"cells":[[283.5,720.0,"Maserati has a history of naming its cars after the world\u2019s most famous"]]},
+        {"top":341.7,"cells":[[283.5,337.9,"winds. It"],[343.9,720.0,"started in 1963 with the legendary Mistral. Then came the"]]},
+        {"top":358.5,"cells":[[283.5,720.0,"Ghibli, the Bora and the Khamsin. And in 2016 the Levante joined the"]]},
+        {"top":375.3,"cells":[[283.5,720.0,"illustrious Maserati range. The wind that bears its name blows across"]]},
+        {"top":392.1,"cells":[[283.5,720.0,"the Mediterranean and can change from benign calm to gale force in"]]},
+        {"top":408.9,"cells":[[283.5,720.0,"an instant. The Maserati SUV has a similar nature, although its powerful"]]},
+        {"top":425.7,"cells":[[283.5,566.8,"forces always remain under perfect control."],[573.9,585.2,"In"],[592.1,720.0,"true Maserati grand"]]},
+        {"top":442.5,"cells":[[283.5,720.0,"touring tradition, nothing can disturb your comfort \u2013 whatever the speed,"]]},
+        {"top":459.3,"cells":[[283.5,720.0,"whatever the distance. a new journey has begun \u2013 with the SUV that"]]},
+        {"top":476.1,"cells":[[283.5,427.7,"accepts no boundaries."]]},
+        {"top":606.0,"cells":[[772.2,778.1,"5"]]}
+      ]
+    },
+    {
+      "page": 6,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 807.9,
+      "height": 637.8,
+      "text": "The Levante SUV embodies the enduring, intrepid and\nendlessly progressive spirit of Maserati \u2013 and it is part of\na story that dates back over 100 years. The Maserati drive\nto innovate and passion for speed made the transition\ninto elite motor sport inevitable. Since then, all Maserati\nproduction models have followed this unique formula,\noffering race-bred performance, captivating Italian design\nand the luxuries and comfort you would expect from a\nprestigious grand tourer. All this is delivered by the latest\nMaserati Levante. And the striking SUV design adds yet\nanother compelling dimension to the experience.\nAn Enduring Legacy\n66",
+      "table_lines": [],
+      "lines": [
+        {"top":43.7,"cells":[[51.4,411.5,"The Levante SUV embodies the enduring, intrepid and"]]},
+        {"top":60.5,"cells":[[51.4,411.7,"endlessly progressive spirit of Maserati \u2013 and it is part of"]]},
+        {"top":77.2,"cells":[[51.4,411.4,"a story that dates back over 100 years. The Maserati drive"]]},
+        {"top":94.0,"cells":[[51.4,232.8,"to innovate and passion for"],[239.7,411.4,"speed made the transition"]]},
+        {"top":110.8,"cells":[[51.4,351.7,"into elite motor sport inevitable. Since then, all"],[357.9,411.5,"Maserati"]]},
+        {"top":127.6,"cells":[[51.4,118.3,"production"],[127.0,272.5,"models have followed"],[281.0,303.1,"this"],[311.8,353.4,"unique"],[361.9,411.5,"formula,"]]},
+        {"top":144.4,"cells":[[51.4,411.4,"offering race-bred performance, captivating Italian design"]]},
+        {"top":161.2,"cells":[[51.4,411.4,"and the luxuries and comfort you would expect from a"]]},
+        {"top":178.0,"cells":[[51.4,411.5,"prestigious grand tourer. All this is delivered by the latest"]]},
+        {"top":194.8,"cells":[[51.4,411.4,"Maserati Levante. And the striking SUV design adds yet"]]},
+        {"top":211.6,"cells":[[51.4,350.3,"another compelling dimension to the experience."]]},
+        {"top":556.8,"cells":[[51.0,496.7,"An Enduring Legacy"]]},
+        {"top":605.3,"cells":[[29.1,36.4,"66"]]}
+      ]
+    },
+    {
+      "page": 7,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 807.9,
+      "height": 637.8,
+      "text": "M i s t r a l | 1 9 6 3\n7",
+      "table_lines": [],
+      "lines": [
+        {"top":43.9,"cells":[[62.5,151.1,"M i s t r a l"],[164.4,169.7,"|"],[178.6,238.2,"1 9 6 3"]]},
+        {"top":606.0,"cells":[[772.7,777.5,"7"]]}
+      ]
+    },
+    {
+      "page": 8,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 807.9,
+      "height": 637.8,
+      "text": "V8 Engine - Levante Trofeo\nThe engines in the different Levante versions offer everything you would\nexpect of a Maserati \u2013 from snarling responsiveness to effortless long-\ndistance refinement. They are also remarkably efficient.\nThe ultimate combination of leading on-road performance and off-\nroadcapabilities offers a choice of V6 and powerful V8 petrol engines,\nincluding the V6 diesel version.\nEndless possibilities\n8",
+      "table_lines": [],
+      "lines": [
+        {"top":43.3,"cells":[[648.2,764.9,"V8 Engine - Levante Trofeo"]]},
+        {"top":413.4,"cells":[[51.4,512.1,"The engines in the different Levante versions offer everything you would"]]},
+        {"top":430.2,"cells":[[51.4,512.1,"expect of a Maserati \u2013 from snarling responsiveness to effortless long-"]]},
+        {"top":447.0,"cells":[[51.4,388.7,"distance refinement. They are also remarkably efficient."]]},
+        {"top":480.6,"cells":[[51.4,74.5,"The"],[84.5,133.9,"ultimate"],[144.0,220.7,"combination"],[230.7,243.1,"of"],[252.8,298.1,"leading"],[308.1,357.4,"on-road"],[367.4,446.5,"performance"],[456.6,479.9,"and"],[489.9,512.1,"off-"]]},
+        {"top":497.4,"cells":[[51.4,512.1,"roadcapabilities offers a choice of V6 and powerful V8 petrol engines,"]]},
+        {"top":514.2,"cells":[[51.4,241.9,"including the V6 diesel version."]]},
+        {"top":556.8,"cells":[[47.3,487.7,"Endless possibilities"]]},
+        {"top":606.0,"cells":[[29.7,35.8,"8"]]}
+      ]
+    },
+    {
+      "page": 9,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 807.9,
+      "height": 637.8,
+      "text": "V6 Engine - Levante Diesel, Levante S\n9",
+      "table_lines": [],
+      "lines": [
+        {"top":43.0,"cells":[[594.0,756.9,"V6 Engine - Levante Diesel, Levante S"]]},
+        {"top":606.0,"cells":[[772.1,778.2,"9"]]}
+      ]
+    },
+    {
+      "page": 10,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 807.9,
+      "height": 637.8,
+      "text": "The Levante Collection\nMax power Max speed Acceleration Engine layout Traction Max torque\nLevante Diesel\n275 230 6.9 V6 AWD 600\nHP km/h sec Nm\nLevante\n350 156 6.0 V6 AWD 369\nHP km/h sec Nm\nLevante S\n430 264 5.2 V6 AWD 580\nHP km/h sec Nm\n10",
+      "table_lines": [],
+      "lines": [
+        {"top":65.2,"cells":[[51.5,408.7,"The Levante Collection"]]},
+        {"top":144.8,"cells":[[201.6,271.4,"Max power"],[296.6,365.2,"Max speed"],[390.7,471.1,"Acceleration"],[496.6,582.8,"Engine layout"],[608.3,659.6,"Traction"],[685.1,756.3,"Max torque"]]},
+        {"top":207.0,"cells":[[50.3,153.5,"Levante Diesel"]]},
+        {"top":246.9,"cells":[[213.3,246.5,"275"],[301.6,337.1,"230"],[410.1,439.3,"6.9"],[521.8,547.6,"V6"],[613.9,661.2,"AWD"],[697.9,735.7,"600"]]},
+        {"top":254.3,"cells":[[246.5,259.6,"HP"],[337.1,360.2,"km/h"],[439.3,455.0,"sec"],[735.7,751.5,"Nm"]]},
+        {"top":326.5,"cells":[[50.3,105.2,"Levante"]]},
+        {"top":366.6,"cells":[[210.9,246.9,"350"],[303.5,335.2,"156"],[414.9,444.3,"6.0"],[521.4,547.2,"V6"],[614.3,661.7,"AWD"],[699.7,735.9,"369"]]},
+        {"top":374.0,"cells":[[246.9,260.0,"HP"],[335.2,358.2,"km/h"],[444.3,460.0,"sec"],[735.9,751.7,"Nm"]]},
+        {"top":455.0,"cells":[[50.4,119.6,"Levante S"]]},
+        {"top":494.9,"cells":[[211.8,248.0,"430"],[301.3,337.3,"264"],[409.0,437.0,"5.2"],[521.8,547.6,"V6"],[610.2,657.5,"AWD"],[699.4,736.2,"580"]]},
+        {"top":502.3,"cells":[[248.0,261.2,"HP"],[337.3,360.4,"km/h"],[437.0,452.7,"sec"],[736.2,751.9,"Nm"]]},
+        {"top":606.0,"cells":[[27.4,38.1,"10"]]}
+      ]
+    },
+    {
+      "page": 11,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 807.9,
+      "height": 637.8,
+      "text": "The Levante will take you to higher grounds. Find yours.\nMax power Max speed Acceleration Engine layout Traction Max torque\nLevante GTS\n530 292 4.2 V8 AWD 730\nHP km/h sec Nm\nLevante Trofeo\n580 304 3.9 V8 AWD 730\nHP km/h sec Nm\n11",
+      "table_lines": [],
+      "lines": [
+        {"top":43.2,"cells":[[42.8,386.5,"The Levante will take you to higher grounds. Find yours."]]},
+        {"top":144.8,"cells":[[193.1,262.8,"Max power"],[288.1,356.7,"Max speed"],[382.2,462.6,"Acceleration"],[488.1,574.3,"Engine layout"],[599.8,651.1,"Traction"],[676.6,747.8,"Max torque"]]},
+        {"top":216.6,"cells":[[42.4,132.1,"Levante GTS"]]},
+        {"top":246.3,"cells":[[202.0,238.0,"530"],[292.8,328.0,"292"],[401.9,430.3,"4.2"],[512.4,538.3,"V8"],[605.4,652.8,"AWD"],[691.8,725.9,"730"]]},
+        {"top":253.7,"cells":[[238.0,251.1,"HP"],[328.0,351.1,"km/h"],[430.3,445.9,"sec"],[725.9,741.7,"Nm"]]},
+        {"top":326.5,"cells":[[41.9,146.3,"Levante Trofeo"]]},
+        {"top":366.6,"cells":[[203.0,239.8,"580"],[292.7,329.0,"304"],[400.4,428.6,"3.9"],[513.8,539.7,"V8"],[601.8,649.1,"AWD"],[693.3,727.3,"730"]]},
+        {"top":374.0,"cells":[[239.8,252.9,"HP"],[329.0,352.0,"km/h"],[428.6,444.3,"sec"],[727.3,743.1,"Nm"]]},
+        {"top":606.0,"cells":[[770.7,779.6,"11"]]}
+      ]
+    },
+    {
+      "page": 12,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 807.9,
+      "height": 637.8,
+      "text": "Levante-Accept no Boundaries\nIn true Maserati grand touring tradition, the Levante offers\neverything you would expect of a Maserati \u2013 from snarling\nresponsiveness to effortless long-distance refinement. At the\nsame time, its dramatic SUV proportions are balanced with\ngraceful lines and muscular forms that convey its dynamic\nLevante - Side air vents purpose. From the chassis with a very low center of gravity as\nyou glide through your top speeds, to the perfectly balanced\nweight distribution, through its sharp aerodynamic body. The\nultimate combination of leading on-road performance and off-\nroad capabilities.\nLevante - Headrest detail\nLevante - Grille\n12",
+      "table_lines": [],
+      "lines": [
+        {"top":44.5,"cells":[[320.5,731.3,"Levante-Accept no Boundaries"]]},
+        {"top":125.4,"cells":[[322.2,333.5,"In"],[340.4,579.5,"true Maserati grand touring tradition,"],[586.4,705.1,"the Levante offers"]]},
+        {"top":142.2,"cells":[[322.2,705.1,"everything you would expect of a Maserati \u2013 from snarling"]]},
+        {"top":159.0,"cells":[[322.2,705.1,"responsiveness to effortless long-distance refinement. At the"]]},
+        {"top":175.8,"cells":[[322.2,412.4,"same time, its"],[418.6,705.1,"dramatic SUV proportions are balanced with"]]},
+        {"top":192.6,"cells":[[322.2,407.3,"graceful lines"],[414.2,645.3,"and muscular forms that convey its"],[652.2,705.1,"dynamic"]]},
+        {"top":209.4,"cells":[[86.4,163.1,"- Side air vents"],[322.2,705.1,"purpose. From the chassis with a very low center of gravity as"]]},
+        {"top":211.3,"cells":[[41.3,83.5,"Levante"]]},
+        {"top":226.2,"cells":[[322.2,705.1,"you glide through your top speeds, to the perfectly balanced"]]},
+        {"top":243.0,"cells":[[322.2,705.1,"weight distribution, through its sharp aerodynamic body. The"]]},
+        {"top":259.9,"cells":[[322.2,705.1,"ultimate combination of leading on-road performance and off-"]]},
+        {"top":276.6,"cells":[[322.2,428.6,"road capabilities."]]},
+        {"top":400.8,"cells":[[41.3,169.9,"Levante - Headrest detail"]]},
+        {"top":589.8,"cells":[[41.3,123.0,"Levante - Grille"]]},
+        {"top":606.0,"cells":[[27.7,37.8,"12"]]}
+      ]
+    },
+    {
+      "page": 13,
+      "trim_hint": true,
+      "has_text_layer": true,
+      "width": 807.9,
+      "height": 637.8,
+      "text": "Levante-Accept no Boundaries\n430 264 5.2 V6 AWD 580\nHP km/h sec Nm\nMax power Max speed Acceleration Engine layout Traction Max torque\nS version technical specifications.\n13",
+      "table_lines": [],
+      "lines": [
+        {"top":44.5,"cells":[[-459.0,-48.2,"Levante-Accept no Boundaries"]]},
+        {"top":558.6,"cells":[[56.2,92.4,"430"],[177.9,213.9,"264"],[315.7,343.7,"5.2"],[460.9,486.7,"V6"],[573.0,620.3,"AWD"],[683.3,720.0,"580"]]},
+        {"top":566.0,"cells":[[92.4,105.6,"HP"],[213.9,236.9,"km/h"],[343.7,359.4,"sec"],[720.0,735.8,"Nm"]]},
+        {"top":580.9,"cells":[[42.7,119.1,"Max power"],[171.0,246.8,"Max speed"],[293.0,382.2,"Acceleration"],[425.6,521.9,"Engine layout"],[569.8,626.5,"Traction"],[671.6,750.3,"Max torque"]]},
+        {"top":602.7,"cells":[[595.0,758.3,"S version technical specifications."]]},
+        {"top":606.0,"cells":[[770.1,780.2,"13"]]}
+      ]
+    },
+    {
+      "page": 14,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 807.9,
+      "height": 637.8,
+      "text": "Levante Trofeo-The Art of Fast\nBorn from a passion for the racetrack, the Levante Trofeo is\ncreated to maximize your emotions, no matter the terrain.\nLike the wind it takes its name from, the Levante Trofeo is\ncapable of transforming from benign calm to raging storm in an\nLevante Trofeo - Side air vents and Trofeo Badge instant. The 580hp twin-turbo V8 engine makes it thunder from\n0-100 km/h in a mere 4.1 seconds with a prodigious top speed\nof 302 km/h. The Trofeo-specific design elements contribute to\nconstantly remind you that performance is a priority: from the\nfront grille styled in Black Piano to the dark V8 exhaust pipes,\nfrom the dash of red on the Saetta logo to the Trofeo badge\nover the air vents, while the Tricolore on the B-Pillar illustrates\nits audacious Italian soul.\nLevante Trofeo - Headrest detail\nLevante Trofeo - Grille\n14",
+      "table_lines": [],
+      "lines": [
+        {"top":44.5,"cells":[[320.5,722.9,"Levante Trofeo-The Art of Fast"]]},
+        {"top":125.4,"cells":[[322.2,705.1,"Born from a passion for the racetrack, the Levante Trofeo is"]]},
+        {"top":142.2,"cells":[[322.2,674.0,"created to maximize your emotions, no matter the terrain."]]},
+        {"top":175.8,"cells":[[322.2,423.8,"Like the wind it"],[430.2,484.3,"takes its"],[490.9,705.1,"name from, the Levante Trofeo is"]]},
+        {"top":192.6,"cells":[[322.2,705.1,"capable of transforming from benign calm to raging storm in an"]]},
+        {"top":209.4,"cells":[[123.0,291.4,"- Side air vents and Trofeo Badge"],[322.2,705.1,"instant. The 580hp twin-turbo V8 engine makes it thunder from"]]},
+        {"top":211.3,"cells":[[41.3,119.9,"Levante Trofeo"]]},
+        {"top":226.2,"cells":[[322.2,705.1,"0-100 km/h in a mere 4.1 seconds with a prodigious top speed"]]},
+        {"top":243.0,"cells":[[322.2,705.1,"of 302 km/h. The Trofeo-specific design elements contribute to"]]},
+        {"top":259.8,"cells":[[322.2,705.1,"constantly remind you that performance is a priority: from the"]]},
+        {"top":276.6,"cells":[[322.2,705.1,"front grille styled in Black Piano to the dark V8 exhaust pipes,"]]},
+        {"top":293.4,"cells":[[322.2,705.1,"from the dash of red on the Saetta logo to the Trofeo badge"]]},
+        {"top":310.2,"cells":[[322.2,705.1,"over the air vents, while the Tricolore on the B-Pillar illustrates"]]},
+        {"top":327.0,"cells":[[322.2,475.9,"its audacious Italian soul."]]},
+        {"top":400.8,"cells":[[41.3,206.0,"Levante Trofeo - Headrest detail"]]},
+        {"top":589.5,"cells":[[41.3,159.6,"Levante Trofeo - Grille"]]},
+        {"top":606.0,"cells":[[27.7,37.7,"14"]]}
+      ]
+    },
+    {
+      "page": 15,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 807.9,
+      "height": 637.8,
+      "text": "580 304 3.9 V8 AWD 730\nHP km/h sec Nm\nMax power Max speed Acceleration Engine layout Traction Max torque\n15",
+      "table_lines": [],
+      "lines": [
+        {"top":558.6,"cells":[[55.9,92.7,"580"],[177.8,214.0,"304"],[315.6,343.8,"3.9"],[460.8,486.7,"V8"],[572.4,619.7,"AWD"],[686.0,720.1,"730"]]},
+        {"top":566.0,"cells":[[92.7,105.8,"HP"],[214.0,237.1,"km/h"],[343.8,359.5,"sec"],[720.1,735.9,"Nm"]]},
+        {"top":580.9,"cells":[[42.7,119.1,"Max power"],[171.0,246.8,"Max speed"],[293.0,382.2,"Acceleration"],[425.6,521.9,"Engine layout"],[569.8,626.5,"Traction"],[671.6,750.3,"Max torque"]]},
+        {"top":606.0,"cells":[[770.0,780.3,"15"]]}
+      ]
+    },
+    {
+      "page": 16,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 807.9,
+      "height": 637.8,
+      "text": "16",
+      "table_lines": [],
+      "lines": [
+        {"top":606.0,"cells":[[27.5,38.0,"16"]]}
+      ]
+    },
+    {
+      "page": 17,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 807.9,
+      "height": 637.8,
+      "text": "17",
+      "table_lines": [],
+      "lines": [
+        {"top":606.0,"cells":[[770.5,779.8,"17"]]}
+      ]
+    },
+    {
+      "page": 18,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 807.9,
+      "height": 637.8,
+      "text": "18",
+      "table_lines": [],
+      "lines": [
+        {"top":606.0,"cells":[[27.5,38.0,"18"]]}
+      ]
+    },
+    {
+      "page": 19,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 807.9,
+      "height": 637.8,
+      "text": "19",
+      "table_lines": [],
+      "lines": [
+        {"top":606.0,"cells":[[769.9,780.4,"19"]]}
+      ]
+    },
+    {
+      "page": 20,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 807.9,
+      "height": 637.8,
+      "text": "The interior of the Levante exudes authentic Maserati\ncharacter. That means elegant Italian style, meticulously\ncrafted finishes and a race-bred energy that inspires\nlong-distance, luxurious travel. There is also a liberating\nfeeling of all-round space on board. This, along with\nthe commanding SUV driving position, may come as a\nsurprise given the coup\u00e9-like exterior.\nA distinctive invitation\n20",
+      "table_lines": [],
+      "lines": [
+        {"top":43.4,"cells":[[51.4,124.5,"The interior"],[131.4,402.9,"of the Levante exudes authentic Maserati"]]},
+        {"top":60.2,"cells":[[51.4,403.2,"character. That means elegant Italian style, meticulously"]]},
+        {"top":77.0,"cells":[[51.4,95.4,"crafted"],[103.1,150.3,"finishes"],[158.2,347.6,"and a race-bred energy that"],[355.5,402.9,"inspires"]]},
+        {"top":93.8,"cells":[[51.4,402.9,"long-distance, luxurious travel. There is also a liberating"]]},
+        {"top":110.6,"cells":[[51.4,92.8,"feeling"],[100.6,113.0,"of"],[120.4,175.3,"all-round"],[183.1,326.5,"space on board. This,"],[334.2,402.9,"along with"]]},
+        {"top":127.4,"cells":[[51.4,402.9,"the commanding SUV driving position, may come as a"]]},
+        {"top":144.2,"cells":[[51.4,281.1,"surprise given the coup\u00e9-like exterior."]]},
+        {"top":556.8,"cells":[[51.0,533.5,"A distinctive invitation"]]},
+        {"top":606.0,"cells":[[26.8,38.7,"20"]]}
+      ]
+    },
+    {
+      "page": 21,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 807.9,
+      "height": 637.8,
+      "text": "21",
+      "table_lines": [],
+      "lines": [
+        {"top":606.0,"cells":[[770.1,780.2,"21"]]}
+      ]
+    },
+    {
+      "page": 22,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 807.9,
+      "height": 637.8,
+      "text": "22",
+      "table_lines": [],
+      "lines": [
+        {"top":606.0,"cells":[[27.2,38.3,"22"]]}
+      ]
+    },
+    {
+      "page": 23,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 807.9,
+      "height": 637.8,
+      "text": "23",
+      "table_lines": [],
+      "lines": [
+        {"top":606.0,"cells":[[769.5,780.7,"23"]]}
+      ]
+    },
+    {
+      "page": 24,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 807.9,
+      "height": 637.8,
+      "text": "24",
+      "table_lines": [],
+      "lines": [
+        {"top":606.0,"cells":[[27.2,38.3,"24"]]}
+      ]
+    },
+    {
+      "page": 25,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 807.9,
+      "height": 637.8,
+      "text": "25",
+      "table_lines": [],
+      "lines": [
+        {"top":606.0,"cells":[[769.4,780.8,"25"]]}
+      ]
+    },
+    {
+      "page": 26,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 807.9,
+      "height": 637.8,
+      "text": "High-Powered Luxury\n26",
+      "table_lines": [],
+      "lines": [
+        {"top":556.0,"cells":[[50.0,351.9,"High-Powered"]]},
+        {"top":557.1,"cells":[[363.6,512.3,"Luxury"]]},
+        {"top":606.0,"cells":[[26.9,38.6,"26"]]}
+      ]
+    },
+    {
+      "page": 27,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 807.9,
+      "height": 637.8,
+      "text": "27",
+      "table_lines": [],
+      "lines": [
+        {"top":606.0,"cells":[[770.0,780.3,"27"]]}
+      ]
+    },
+    {
+      "page": 28,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 807.9,
+      "height": 637.8,
+      "text": "Q4 Intelligence all-wheel Drive System:\nGo the extra mile \u2013 whatever the weather. This system is developed to\ndeliver the hallmark Maserati rear wheel drive experience, even when\ngrip is poor. In normal conditions, the Q4 system sends all torque to\nthe rear wheels, for perfectly balanced Maserati driving dynamics and\noptimal fuel consumption. If traction is lost due to sudden acceleration\nor low grip on the rear axle, Q4 can alter the torque split from 100 per\ncent rear-wheel drive to 50-50 between the front and rear wheels in\nan imperceptible 150 milliseconds. Torque vectoring and a mechanical\nLimited-Slip Differential at the rear axle, unique for this class of vehicle,\nalso provide essential support when it comes to dynamic driving\nstability.\n28",
+      "table_lines": [],
+      "lines": [
+        {"top":408.9,"cells":[[56.7,303.0,"Q4 Intelligence all-wheel Drive System:"]]},
+        {"top":425.6,"cells":[[56.7,488.9,"Go the extra mile \u2013 whatever the weather. This system is developed to"]]},
+        {"top":442.4,"cells":[[56.7,488.9,"deliver the hallmark Maserati rear wheel drive experience, even when"]]},
+        {"top":459.2,"cells":[[56.7,488.9,"grip is poor. In normal conditions, the Q4 system sends all torque to"]]},
+        {"top":476.0,"cells":[[56.7,488.9,"the rear wheels, for perfectly balanced Maserati driving dynamics and"]]},
+        {"top":492.8,"cells":[[56.7,488.9,"optimal fuel consumption. If traction is lost due to sudden acceleration"]]},
+        {"top":509.6,"cells":[[56.7,489.3,"or low grip on the rear axle, Q4 can alter the torque split from 100 per"]]},
+        {"top":526.4,"cells":[[56.7,488.9,"cent rear-wheel drive to 50-50 between the front and rear wheels in"]]},
+        {"top":543.2,"cells":[[56.7,488.9,"an imperceptible 150 milliseconds. Torque vectoring and a mechanical"]]},
+        {"top":560.0,"cells":[[56.7,488.9,"Limited-Slip Differential at the rear axle, unique for this class of vehicle,"]]},
+        {"top":576.8,"cells":[[56.7,197.6,"also provide essential"],[205.1,310.0,"support when it"],[317.6,379.1,"comes to"],[386.6,488.9,"dynamic driving"]]},
+        {"top":593.6,"cells":[[56.7,106.8,"stability."]]},
+        {"top":606.0,"cells":[[26.9,38.5,"28"]]}
+      ]
+    },
+    {
+      "page": 29,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 807.9,
+      "height": 637.8,
+      "text": "Air Quality sensor:\nThe Levante is equipped with an\nintelligent sensor paired with a signal\nanalysis system that calculates the\nexternal pollution levels and prevents\npolluted air and toxic gases from\nentering the cabin, improving the\ncomfort of everyone onboard.\nActive Air Suspension:\nThe advanced active air suspension raises or lowers the vehicle\naccording to need or preference. With six settings to choose\nfrom, the driver can select whatever height is appropriate for\nthe road or terrain, from a high clearance for off-roading to a low\nsetting for fast, efficient and smooth motorway driving.\n29",
+      "table_lines": [],
+      "lines": [
+        {"top":211.5,"cells":[[48.7,162.2,"Air Quality sensor:"]]},
+        {"top":228.2,"cells":[[48.7,71.7,"The"],[83.7,131.7,"Levante"],[143.7,153.6,"is"],[165.6,224.6,"equipped"],[236.6,263.1,"with"],[275.1,290.1,"an"]]},
+        {"top":245.0,"cells":[[48.7,290.1,"intelligent sensor paired with a signal"]]},
+        {"top":261.8,"cells":[[48.7,98.0,"analysis"],[108.5,153.0,"system"],[163.3,187.3,"that"],[197.8,260.0,"calculates"],[270.3,290.1,"the"]]},
+        {"top":278.6,"cells":[[48.7,199.4,"external pollution levels"],[206.5,290.1,"and prevents"]]},
+        {"top":295.4,"cells":[[48.7,99.0,"polluted"],[110.7,125.7,"air"],[137.0,160.3,"and"],[171.8,201.4,"toxic"],[213.1,250.1,"gases"],[261.6,290.1,"from"]]},
+        {"top":312.2,"cells":[[48.7,99.3,"entering"],[112.5,132.3,"the"],[145.7,182.5,"cabin,"],[196.0,257.1,"improving"],[270.3,290.1,"the"]]},
+        {"top":329.0,"cells":[[48.7,231.0,"comfort of everyone onboard."]]},
+        {"top":416.7,"cells":[[349.8,489.8,"Active Air Suspension:"]]},
+        {"top":433.4,"cells":[[349.8,738.4,"The advanced active air suspension raises or lowers the vehicle"]]},
+        {"top":450.2,"cells":[[349.8,738.4,"according to need or preference. With six settings to choose"]]},
+        {"top":467.0,"cells":[[349.8,738.8,"from, the driver can select whatever height is appropriate for"]]},
+        {"top":483.8,"cells":[[349.8,738.4,"the road or terrain, from a high clearance for off-roading to a low"]]},
+        {"top":500.6,"cells":[[349.8,685.7,"setting for fast, efficient and smooth motorway driving."]]},
+        {"top":606.0,"cells":[[769.3,781.0,"29"]]}
+      ]
+    },
+    {
+      "page": 30,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 807.9,
+      "height": 637.8,
+      "text": "Power Sunroof:\nThe Levante can be fitted with an electric sunroof in\ntinted safety glass, with a manual sunshade. The sunroof\nis power controlled, and it can be tilted at the rear or\nopened completely; in the latter case it retracts into\nthe roof of the car and a front flap rises automatically\nto deviate the air flow.\n30",
+      "table_lines": [],
+      "lines": [
+        {"top":409.7,"cells":[[56.7,153.0,"Power Sunroof:"]]},
+        {"top":426.4,"cells":[[56.7,388.3,"The Levante can be fitted with an electric sunroof in"]]},
+        {"top":443.2,"cells":[[56.7,388.7,"tinted safety glass, with a manual sunshade. The sunroof"]]},
+        {"top":460.0,"cells":[[56.7,219.9,"is power controlled, and it"],[224.5,388.8,"can be tilted at the rear or"]]},
+        {"top":476.8,"cells":[[56.7,307.5,"opened completely; in the latter case it"],[313.1,388.4,"retracts into"]]},
+        {"top":493.6,"cells":[[56.7,388.6,"the roof of the car and a front flap rises automatically"]]},
+        {"top":510.4,"cells":[[56.7,191.5,"to deviate the air flow."]]},
+        {"top":606.0,"cells":[[26.7,38.8,"30"]]}
+      ]
+    },
+    {
+      "page": 31,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 807.9,
+      "height": 637.8,
+      "text": "MIA (Maserati Intelligent Assistant): Four-zone climate control:\nPowered by Android Automotive OS, the To enhance the comfort of the rear seat\nnew generation MIA offers an innovative and passengers, four-zone climate control\npersonalized user experience. The frameless is available: an additional automatic\n8\u201d4 HD touch screen with a ratio of 16:10 dual-zone air conditioning system\ncarries a new graphic interface. The display installed in the central console allows\nfeatures an elegant, curved glass edge: a first temperature and air distribution to be\nin automotive design of its kind. adjusted separately through air outlets\non the floor and pillars.\n31",
+      "table_lines": [],
+      "lines": [
+        {"top":132.9,"cells":[[48.2,272.5,"MIA (Maserati Intelligent Assistant):"],[461.8,624.1,"Four-zone climate control:"]]},
+        {"top":149.6,"cells":[[48.2,184.9,"Powered by Android"],[193.7,264.5,"Automotive"],[273.6,324.6,"OS, the"],[461.8,696.6,"To enhance the comfort of the rear seat"]]},
+        {"top":166.4,"cells":[[48.2,324.5,"new generation MIA offers an innovative and"],[461.8,696.6,"passengers, four-zone climate control"]]},
+        {"top":183.2,"cells":[[48.2,324.6,"personalized user experience. The frameless"],[461.8,471.7,"is"],[479.5,536.2,"available:"],[544.0,627.3,"an additional"],[635.1,696.6,"automatic"]]},
+        {"top":200.0,"cells":[[48.2,266.5,"8\u201d4 HD touch screen with a ratio"],[273.3,324.6,"of 16:10"],[461.8,522.6,"dual-zone"],[535.4,550.3,"air"],[562.8,639.4,"conditioning"],[652.2,696.6,"system"]]},
+        {"top":216.8,"cells":[[48.2,324.8,"carries a new graphic interface. The display"],[461.8,696.6,"installed in the central console allows"]]},
+        {"top":233.6,"cells":[[48.2,324.6,"features an elegant, curved glass edge: a first"],[461.8,696.6,"temperature and air distribution to be"]]},
+        {"top":250.4,"cells":[[48.2,242.7,"in automotive design of its kind."],[461.8,696.6,"adjusted separately through air outlets"]]},
+        {"top":267.2,"cells":[[461.8,600.9,"on the floor and pillars."]]},
+        {"top":606.0,"cells":[[770.1,780.2,"31"]]}
+      ]
+    },
+    {
+      "page": 32,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 807.9,
+      "height": 637.8,
+      "text": "ZF eight-speed automatic transmission:\nThe sophisticated ZF eight-speed automatic transmission delivers improved\ncomfort, faster gear shifting, better fuel consumption and increased\nrefinement. Five driving modes are available: Normal, Sport, Off-Road,\nIncreased Control & Efficiency (I.C.E.) and, exclusively for the Levante Trofeo,\nCorsa Mode.\n32",
+      "table_lines": [],
+      "lines": [
+        {"top":416.6,"cells":[[56.7,304.2,"ZF eight-speed automatic transmission:"]]},
+        {"top":433.3,"cells":[[56.7,519.7,"The sophisticated ZF eight-speed automatic transmission delivers improved"]]},
+        {"top":450.1,"cells":[[56.7,108.2,"comfort,"],[117.7,152.8,"faster"],[162.2,189.9,"gear"],[199.3,247.9,"shifting,"],[257.7,294.6,"better"],[303.8,326.5,"fuel"],[336.2,416.9,"consumption"],[426.6,449.9,"and"],[459.7,519.6,"increased"]]},
+        {"top":466.9,"cells":[[56.7,125.4,"refinement."],[133.3,158.8,"Five"],[166.7,208.6,"driving"],[216.5,286.1,"modes are"],[294.0,350.7,"available:"],[358.6,451.7,"Normal, Sport,"],[459.6,519.7,"Off-Road,"]]},
+        {"top":483.7,"cells":[[56.7,519.6,"Increased Control & Efficiency (I.C.E.) and, exclusively for the Levante Trofeo,"]]},
+        {"top":500.5,"cells":[[56.7,135.9,"Corsa Mode."]]},
+        {"top":606.0,"cells":[[27.1,38.3,"32"]]}
+      ]
+    },
+    {
+      "page": 33,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 807.9,
+      "height": 637.8,
+      "text": "Folding rear seats:\nNeed to safely store the ski or snowboard bag? The 60/40\nsplit-folding rear seats provide cargo-carrying versatility.\nWhen the seat on the smaller side is completely folded\ndown, you will have a continuous nearly-flat extension\nof the load floor in order to accommodate large-sized\nequipment and objects.\n33",
+      "table_lines": [],
+      "lines": [
+        {"top":110.7,"cells":[[220.9,335.6,"Folding rear seats:"]]},
+        {"top":127.4,"cells":[[220.9,576.4,"Need to safely store the ski or snowboard bag? The 60/40"]]},
+        {"top":144.2,"cells":[[220.9,576.4,"split-folding rear seats provide cargo-carrying versatility."]]},
+        {"top":161.0,"cells":[[220.9,576.4,"When the seat on the smaller side is completely folded"]]},
+        {"top":177.8,"cells":[[220.9,315.7,"down, you will"],[322.6,510.2,"have a continuous nearly-flat"],[517.2,576.4,"extension"]]},
+        {"top":194.6,"cells":[[220.9,328.3,"of the load floor"],[335.1,345.8,"in"],[352.9,576.4,"order to accommodate large-sized"]]},
+        {"top":211.4,"cells":[[220.9,366.3,"equipment and objects."]]},
+        {"top":606.0,"cells":[[769.5,780.8,"33"]]}
+      ]
+    },
+    {
+      "page": 34,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 807.9,
+      "height": 637.8,
+      "text": "Enter the upper atmosphere:\nTake luxury to a higher level in the spacious cabin that\nexudes Maserati character all around. Signature Italian\nstyle combines with meticulously crafted finishes and the\nfinest materials like natural silk upholstery by Ermenegildo\nZegna: a Maserati exclusive. Interior highlights include\noptional Pieno Fiore Natural leather on the seats, hand-\nstitched leather on the dashboard side panels and other\nsurfaces either in genuine wood or Black Piano trim.\n34",
+      "table_lines": [],
+      "lines": [
+        {"top":410.9,"cells":[[56.7,233.2,"Enter the upper atmosphere:"]]},
+        {"top":427.6,"cells":[[56.7,412.1,"Take luxury to a higher level in the spacious cabin that"]]},
+        {"top":444.4,"cells":[[56.7,248.3,"exudes Maserati character all"],[255.8,412.1,"around. Signature Italian"]]},
+        {"top":461.2,"cells":[[56.7,412.2,"style combines with meticulously crafted finishes and the"]]},
+        {"top":478.0,"cells":[[56.7,412.2,"finest materials like natural silk upholstery by Ermenegildo"]]},
+        {"top":494.8,"cells":[[56.7,241.3,"Zegna: a Maserati exclusive."],[249.1,292.3,"Interior"],[299.8,359.7,"highlights"],[367.6,412.2,"include"]]},
+        {"top":511.6,"cells":[[56.7,412.2,"optional Pieno Fiore Natural leather on the seats, hand-"]]},
+        {"top":528.4,"cells":[[56.7,412.5,"stitched leather on the dashboard side panels and other"]]},
+        {"top":545.2,"cells":[[56.7,374.7,"surfaces either in genuine wood or Black Piano trim."]]},
+        {"top":606.0,"cells":[[27.0,38.5,"34"]]}
+      ]
+    },
+    {
+      "page": 35,
+      "trim_hint": true,
+      "has_text_layer": true,
+      "width": 807.9,
+      "height": 637.8,
+      "text": "The purposeful ambience of the cabin is another aspect that creates a strong\npoint of difference for Maserati. Three lavish interior trims add to the appeal of\nthis sanctuary for the driver, and further increase the options for personalisation.\nThe first one is the Regimental open pore, a open-pore wooden veneer inspired\nby textures found in the fashion industry and revered by the leading couturiers of\nMilan. The second one is the Matt carbon fibre weave, inspired by the Levante\nTrofeo with its host of exterior carbon fibre features, the 3D effect of the weave\npattern adds to the dynamic credentials inside. The last one is the High-gloss\nmetal weave: this stylish new trim is created by using metallic meshes, and is\ninspired by contemporary architecture; the elegant chevron weave pattern adds\nto the sporty feel of the cabin.\n35",
+      "table_lines": [],
+      "lines": [
+        {"top":97.5,"cells":[[100.5,584.5,"The purposeful ambience of the cabin is another aspect that creates a strong"]]},
+        {"top":114.3,"cells":[[100.5,584.9,"point of difference for Maserati. Three lavish interior trims add to the appeal of"]]},
+        {"top":131.1,"cells":[[100.5,584.5,"this sanctuary for the driver, and further increase the options for personalisation."]]},
+        {"top":147.9,"cells":[[100.5,584.5,"The first one is the Regimental open pore, a open-pore wooden veneer inspired"]]},
+        {"top":164.7,"cells":[[100.5,584.9,"by textures found in the fashion industry and revered by the leading couturiers of"]]},
+        {"top":181.5,"cells":[[100.5,584.5,"Milan. The second one is the Matt carbon fibre weave, inspired by the Levante"]]},
+        {"top":198.3,"cells":[[100.5,584.5,"Trofeo with its host of exterior carbon fibre features, the 3D effect of the weave"]]},
+        {"top":215.1,"cells":[[100.5,584.5,"pattern adds to the dynamic credentials inside. The last one is the High-gloss"]]},
+        {"top":231.9,"cells":[[100.5,584.5,"metal weave: this stylish new trim is created by using metallic meshes, and is"]]},
+        {"top":248.7,"cells":[[100.5,584.5,"inspired by contemporary architecture; the elegant chevron weave pattern adds"]]},
+        {"top":265.5,"cells":[[100.5,283.6,"to the sporty feel of the cabin."]]},
+        {"top":606.0,"cells":[[769.4,780.9,"35"]]}
+      ]
+    },
+    {
+      "page": 36,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 807.9,
+      "height": 637.8,
+      "text": "Your Maserati connected to you\nMaster the essence of performance, comfort and safety to transform every journey into\na unique and thrilling experience. Intuitively and intrinsically linked from the app to the\nvehicle, Maserati Connect will seamlessly link your car to your habits and needs, leaving\nyou free to enjoy driving at its best.\nRemote Services:\nThe Maserati Connect App displays fuel level, tire\npressure, odometer, oil-life, and vehicle health report\ncard including checks for Powertrain, Breaks &\nSuspension, Oil & Fluids, Safety systems and Lights.\nEvery information is updated on the last key off.\n36",
+      "table_lines": [],
+      "lines": [
+        {"top":44.0,"cells":[[51.0,454.2,"Your Maserati connected to you"]]},
+        {"top":91.1,"cells":[[51.3,584.7,"Master the essence of performance, comfort and safety to transform every journey into"]]},
+        {"top":107.9,"cells":[[51.3,584.7,"a unique and thrilling experience. Intuitively and intrinsically linked from the app to the"]]},
+        {"top":124.7,"cells":[[51.3,584.6,"vehicle, Maserati Connect will seamlessly link your car to your habits and needs, leaving"]]},
+        {"top":141.5,"cells":[[51.3,266.0,"you free to enjoy driving at its best."]]},
+        {"top":199.1,"cells":[[56.7,165.8,"Remote Services:"]]},
+        {"top":215.8,"cells":[[56.7,372.8,"The Maserati Connect App displays fuel level, tire"]]},
+        {"top":232.6,"cells":[[56.7,372.8,"pressure, odometer, oil-life, and vehicle health report"]]},
+        {"top":249.4,"cells":[[56.7,84.0,"card"],[92.7,148.7,"including"],[157.4,226.5,"checks for"],[234.8,304.5,"Powertrain,"],[313.2,354.8,"Breaks"],[363.5,372.8,"&"]]},
+        {"top":266.2,"cells":[[56.7,372.8,"Suspension, Oil & Fluids, Safety systems and Lights."]]},
+        {"top":283.0,"cells":[[56.7,347.1,"Every information is updated on the last key off."]]},
+        {"top":606.0,"cells":[[26.9,38.6,"36"]]}
+      ]
+    },
+    {
+      "page": 37,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 807.9,
+      "height": 637.8,
+      "text": "Amazon Alexa: Home to Vehicle:\nAlexa can help you play music, get directions, You can use Maserati Connect skill for Alexa,\nplace calls, check the calendar, play audiobooks, as well as the Google Assistant action, to\ncontrol your smart home from the car, and more, interact from home with the vehicle. The\nwith just your voice \u2013 so you can keep your hands service enables to ask about the vehicle\non the wheel and eyes on the road. status, and send a destination to the\nvehicle\u2019s navigation system (Send & Go).\n37",
+      "table_lines": [],
+      "lines": [
+        {"top":417.5,"cells":[[48.2,140.1,"Amazon Alexa:"],[470.3,575.8,"Home to Vehicle:"]]},
+        {"top":434.2,"cells":[[48.2,341.0,"Alexa can help you play music, get directions,"],[470.3,737.0,"You can use Maserati Connect skill for Alexa,"]]},
+        {"top":451.0,"cells":[[48.2,341.0,"place calls, check the calendar, play audiobooks,"],[470.3,737.0,"as well as the Google Assistant action, to"]]},
+        {"top":467.8,"cells":[[48.2,341.0,"control your smart home from the car, and more,"],[470.3,737.0,"interact from home with the vehicle. The"]]},
+        {"top":484.6,"cells":[[48.2,341.0,"with just your voice \u2013 so you can keep your hands"],[470.3,737.0,"service enables to ask about the vehicle"]]},
+        {"top":501.4,"cells":[[48.2,263.4,"on the wheel and eyes on the road."],[470.3,510.8,"status,"],[521.7,545.0,"and"],[555.8,586.2,"send"],[597.1,604.4,"a"],[615.3,683.6,"destination"],[694.2,706.6,"to"],[717.3,737.0,"the"]]},
+        {"top":518.2,"cells":[[470.3,718.5,"vehicle\u2019s navigation system (Send & Go)."]]},
+        {"top":606.0,"cells":[[769.9,780.3,"37"]]}
+      ]
+    },
+    {
+      "page": 38,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 807.9,
+      "height": 637.8,
+      "text": "Advanced Driving Assistance System\nThe Levante is equipped with a comprehensive range of Level 2 Advanced Driving\nAssistance Systems, the highest level of autonomous driving currently permitted. It\nmeans even greater peace of mind in a variety of traffic conditions.\nTraffic Sign Recognition Highway Assist System (HAS)\nWhat if your car could alert you about the speed limit sign Ever imagined you could combine the virtues of Adaptive\nyou just passed? The Traffic Sign Recognition comes in Cruise Control with the Lane Keeping Assist? The\nhandy for monitoring different types of sign: speed limits, Highway Assist System (HAS) is a level 2 autonomous\ntemporary speed limits and overtaking restriction zones. driving system, designed to help you steer, accelerate,\nbrake and keep your vehicle in its lane, especially when\nyou\u2019re driving on highways or limited access freeways.\n38",
+      "table_lines": [],
+      "lines": [
+        {"top":44.0,"cells":[[51.0,525.9,"Advanced Driving Assistance System"]]},
+        {"top":91.7,"cells":[[54.2,558.8,"The Levante is equipped with a comprehensive range of Level 2 Advanced Driving"]]},
+        {"top":108.5,"cells":[[51.0,558.8,"Assistance Systems, the highest level of autonomous driving currently permitted. It"]]},
+        {"top":125.3,"cells":[[51.0,459.1,"means even greater peace of mind in a variety of traffic conditions."]]},
+        {"top":480.1,"cells":[[51.3,200.8,"Traffic Sign Recognition"],[418.2,605.4,"Highway Assist System (HAS)"]]},
+        {"top":496.8,"cells":[[51.3,398.4,"What if your car could alert you about the speed limit sign"],[418.2,765.3,"Ever imagined you could combine the virtues of Adaptive"]]},
+        {"top":513.6,"cells":[[51.3,398.4,"you just passed? The Traffic Sign Recognition comes in"],[418.2,459.2,"Cruise"],[467.8,514.6,"Control"],[523.2,550.7,"with"],[559.0,579.4,"the"],[588.0,733.6,"Lane Keeping Assist?"],[741.8,765.4,"The"]]},
+        {"top":530.4,"cells":[[51.3,398.4,"handy for monitoring different types of sign: speed limits,"],[418.2,765.4,"Highway Assist System (HAS) is a level 2 autonomous"]]},
+        {"top":547.2,"cells":[[51.3,395.3,"temporary speed limits and overtaking restriction zones."],[418.2,765.4,"driving system, designed to help you steer, accelerate,"]]},
+        {"top":564.0,"cells":[[418.2,765.3,"brake and keep your vehicle in its lane, especially when"]]},
+        {"top":580.8,"cells":[[418.2,765.4,"you\u2019re driving on highways or limited access freeways."]]},
+        {"top":606.0,"cells":[[26.9,38.6,"38"]]}
+      ]
+    },
+    {
+      "page": 39,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 807.9,
+      "height": 637.8,
+      "text": "Lane Keeping Assist (LKA) Adaptive Cruise Control with Stop e Go\nWant to make your highway and freeway drive safer? Need more driving comfort with enhanced security when\nThe Lane Keeping Assist (LKA) is a safe driving feature driving on highways and freeways? The Adaptive Cruise\nthat is designed to identify lane markings and initiate a Control (ACC) with Stop & Go adjusts your speed to\nsteering maneuver in order to prevent unintentional lane maintain the preset distance from the vehicle ahead. You\ncrossings. A car safety feature that you definitely have to will feel safer than ever when driving on highways and\nlook out for. freeways in limited or moderate traffic.\nLane Departure Warning System Forward Collision Warning Plus\nThanks to a camera in the rear-view mirror that monitors Want to feel safer when driving in heavy traffic? Whether\nroad markings ahead, the Lane Departure Warning it\u2019s a rush hour, a big event or a traffic jam, the Forward\nsystem helps the driver keep the vehicle in the chosen Collision Warning Plus system reduces the risk of rear-\nlane on motorways and main roads. This reduces lane end collisions to prevent or limit vehicle damage.\ndrift and the possibility of lateral collisions by providing a\nwarning when the vehicle crosses lane markings without Rear Cross Path Function\nsignalling. Activation of the turn indicator overrides the This is a welcome feature that emits a warning when an\nsystem. unseen vehicle is approaching, from the right or left, while\nreversing out of a parking space.\nActive Blind Spot Assist\nNeed some help to look over your shoulder electronically? Front and Rear Parking Sensor and Reversing Camera\nThe Active Blind Spot Assist (ABSA) detects vehicles To assist with manoeuvring in tight spaces, the Levante\nentering your side and rear blind spots when changing comes equipped with parking sensors in the front and\nlanes, overtaking and parking. It\u2019s a driving safety feature rear bumpers. In addition, there is an optional rear-view\nthat will help you face one of the biggest perils of the camera, fitted close to the boot lock, that shows a view\nroad. of what is behind the car on the Maserati display\nSurround View Camera Active Driving Assist\nThis provides a clear 360\u00b0 view around the car, helping Active Driving Assist is an extension of Highway Assist\nwith parking and highlighting otherwise hidden introduced on Maserati range on MY18. This new system\nobstructions. Images are captured by two cameras is supported on every good road condition, no matter if\nbeneath the door mirrors plus front and rear cameras and B-roads urban, extra urban roads or highways.\nshown on the main display screen.\n39",
+      "table_lines": [],
+      "lines": [
+        {"top":43.5,"cells":[[42.5,206.1,"Lane Keeping Assist (LKA)"],[409.5,656.0,"Adaptive Cruise Control with Stop e Go"]]},
+        {"top":60.2,"cells":[[42.5,389.6,"Want to make your highway and freeway drive safer?"],[409.5,756.6,"Need more driving comfort with enhanced security when"]]},
+        {"top":77.0,"cells":[[42.5,389.7,"The Lane Keeping Assist (LKA) is a safe driving feature"],[409.5,756.6,"driving on highways and freeways? The Adaptive Cruise"]]},
+        {"top":93.8,"cells":[[42.5,389.6,"that is designed to identify lane markings and initiate a"],[409.5,756.6,"Control (ACC) with Stop & Go adjusts your speed to"]]},
+        {"top":110.6,"cells":[[42.5,389.6,"steering maneuver in order to prevent unintentional lane"],[409.5,756.6,"maintain the preset distance from the vehicle ahead. You"]]},
+        {"top":127.4,"cells":[[42.5,389.7,"crossings. A car safety feature that you definitely have to"],[409.5,756.6,"will feel safer than ever when driving on highways and"]]},
+        {"top":144.2,"cells":[[42.5,114.0,"look out for."],[409.5,645.4,"freeways in limited or moderate traffic."]]},
+        {"top":177.9,"cells":[[42.5,245.2,"Lane Departure Warning System"],[409.5,605.9,"Forward Collision Warning Plus"]]},
+        {"top":194.6,"cells":[[42.5,389.6,"Thanks to a camera in the rear-view mirror that monitors"],[409.5,756.9,"Want to feel safer when driving in heavy traffic? Whether"]]},
+        {"top":211.4,"cells":[[42.5,389.7,"road markings ahead, the Lane Departure Warning"],[409.5,756.6,"it\u2019s a rush hour, a big event or a traffic jam, the Forward"]]},
+        {"top":228.2,"cells":[[42.5,389.7,"system helps the driver keep the vehicle in the chosen"],[409.5,756.6,"Collision Warning Plus system reduces the risk of rear-"]]},
+        {"top":245.0,"cells":[[42.5,389.6,"lane on motorways and main roads. This reduces lane"],[409.5,707.7,"end collisions to prevent or limit vehicle damage."]]},
+        {"top":261.8,"cells":[[42.5,389.7,"drift and the possibility of lateral collisions by providing a"]]},
+        {"top":278.6,"cells":[[42.5,389.6,"warning when the vehicle crosses lane markings without"],[409.5,567.1,"Rear Cross Path Function"]]},
+        {"top":295.4,"cells":[[42.5,389.6,"signalling. Activation of the turn indicator overrides the"],[409.5,756.6,"This is a welcome feature that emits a warning when an"]]},
+        {"top":312.2,"cells":[[42.5,89.9,"system."],[409.5,756.6,"unseen vehicle is approaching, from the right or left, while"]]},
+        {"top":329.0,"cells":[[409.5,609.4,"reversing out of a parking space."]]},
+        {"top":345.9,"cells":[[42.5,192.3,"Active Blind Spot Assist"]]},
+        {"top":362.6,"cells":[[42.5,389.6,"Need some help to look over your shoulder electronically?"],[409.5,745.5,"Front and Rear Parking Sensor and Reversing Camera"]]},
+        {"top":379.4,"cells":[[42.5,389.7,"The Active Blind Spot Assist (ABSA) detects vehicles"],[409.5,756.6,"To assist with manoeuvring in tight spaces, the Levante"]]},
+        {"top":396.2,"cells":[[42.5,389.7,"entering your side and rear blind spots when changing"],[409.5,756.6,"comes equipped with parking sensors in the front and"]]},
+        {"top":413.0,"cells":[[42.5,389.6,"lanes, overtaking and parking. It\u2019s a driving safety feature"],[409.5,756.6,"rear bumpers. In addition, there is an optional rear-view"]]},
+        {"top":429.8,"cells":[[42.5,389.7,"that will help you face one of the biggest perils of the"],[409.5,756.6,"camera, fitted close to the boot lock, that shows a view"]]},
+        {"top":446.6,"cells":[[42.5,73.2,"road."],[409.5,707.9,"of what is behind the car on the Maserati display"]]},
+        {"top":480.3,"cells":[[42.5,190.8,"Surround View Camera"],[409.5,539.0,"Active Driving Assist"]]},
+        {"top":497.0,"cells":[[42.5,389.6,"This provides a clear 360\u00b0 view around the car, helping"],[409.5,756.6,"Active Driving Assist is an extension of Highway Assist"]]},
+        {"top":513.8,"cells":[[42.5,69.5,"with"],[83.7,130.7,"parking"],[144.8,168.4,"and"],[182.6,256.1,"highlighting"],[270.3,332.3,"otherwise"],[346.5,389.7,"hidden"],[409.5,756.6,"introduced on Maserati range on MY18. This new system"]]},
+        {"top":530.6,"cells":[[42.5,124.2,"obstructions."],[132.9,207.2,"Images are"],[215.8,271.9,"captured"],[280.6,389.6,"by two cameras"],[409.5,757.0,"is supported on every good road condition, no matter if"]]},
+        {"top":547.4,"cells":[[42.5,389.6,"beneath the door mirrors plus front and rear cameras and"],[409.5,692.8,"B-roads urban, extra urban roads or highways."]]},
+        {"top":564.2,"cells":[[42.5,254.5,"shown on the main display screen."]]},
+        {"top":606.0,"cells":[[769.3,781.0,"39"]]}
+      ]
+    },
+    {
+      "page": 40,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 807.9,
+      "height": 637.8,
+      "text": "Build Your Own\nEvery Maserati is like a work of art constructed with the care and attention that only\nthe human hand can provide. Build your own Maserati Levante and customize it to\nfit your needs.\nMASERATI.COM\n40",
+      "table_lines": [],
+      "lines": [
+        {"top":44.0,"cells":[[51.0,256.9,"Build Your Own"]]},
+        {"top":91.7,"cells":[[51.0,559.0,"Every Maserati is like a work of art constructed with the care and attention that only"]]},
+        {"top":108.5,"cells":[[51.0,558.8,"the human hand can provide. Build your own Maserati Levante and customize it to"]]},
+        {"top":125.3,"cells":[[51.0,137.6,"fit your needs."]]},
+        {"top":584.8,"cells":[[51.0,156.0,"MASERATI.COM"]]},
+        {"top":606.0,"cells":[[26.6,38.9,"40"]]}
+      ]
+    },
+    {
+      "page": 41,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 807.9,
+      "height": 637.8,
+      "text": "41",
+      "table_lines": [],
+      "lines": [
+        {"top":606.0,"cells":[[770.0,780.2,"41"]]}
+      ]
+    },
+    {
+      "page": 42,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 807.9,
+      "height": 637.8,
+      "text": "Your Maserati tailor-made to your unique personality.\nFuoriserie is the distinctive Maserati personalization program that allows you to create\none-of-a-kind Maserati cars, styled by you. Unleash your audacity, set your own rules.\n42",
+      "table_lines": [],
+      "lines": [
+        {"top":43.4,"cells":[[52.4,375.2,"Your Maserati tailor-made to your unique personality."]]},
+        {"top":60.2,"cells":[[52.4,579.7,"Fuoriserie is the distinctive Maserati personalization program that allows you to create"]]},
+        {"top":77.0,"cells":[[52.4,577.0,"one-of-a-kind Maserati cars, styled by you. Unleash your audacity, set your own rules."]]},
+        {"top":606.0,"cells":[[27.1,38.4,"42"]]}
+      ]
+    },
+    {
+      "page": 43,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 807.9,
+      "height": 637.8,
+      "text": "43",
+      "table_lines": [],
+      "lines": [
+        {"top":606.0,"cells":[[769.4,780.9,"43"]]}
+      ]
+    },
+    {
+      "page": 44,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 807.9,
+      "height": 637.8,
+      "text": "Made to measure Collections\nThree bold Collections, an infinite range of possibilities. Start from a core value that\ndrives you, either performance, contemporary style or innovation, and explore the\nmyriad combinations to find the Maserati that best represents your true spirit.\nC O R S E\nDedicated to lovers of timeless style, the \u2018Gentleman\nRacer\u2019 era, and faithful connoisseurs of the Maserati\nnarrative. The Corse Collection is inspired by our glorious\nracing heritage.\n44",
+      "table_lines": [],
+      "lines": [
+        {"top":44.0,"cells":[[51.0,428.4,"Made to measure Collections"]]},
+        {"top":91.1,"cells":[[51.3,570.4,"Three bold Collections, an infinite range of possibilities. Start from a core value that"]]},
+        {"top":107.9,"cells":[[51.3,570.5,"drives you, either performance, contemporary style or innovation, and explore the"]]},
+        {"top":124.7,"cells":[[51.3,524.7,"myriad combinations to find the Maserati that best represents your true spirit."]]},
+        {"top":205.6,"cells":[[57.0,114.7,"C O R S E"]]},
+        {"top":232.9,"cells":[[56.7,299.8,"Dedicated to lovers of timeless style,"],[306.7,403.7,"the \u2018Gentleman"]]},
+        {"top":249.7,"cells":[[56.7,125.5,"Racer\u2019 era,"],[133.2,206.0,"and faithful"],[213.7,403.7,"connoisseurs of the Maserati"]]},
+        {"top":266.5,"cells":[[56.7,403.6,"narrative. The Corse Collection is inspired by our glorious"]]},
+        {"top":283.3,"cells":[[56.7,151.8,"racing heritage."]]},
+        {"top":606.0,"cells":[[26.9,38.6,"44"]]}
+      ]
+    },
+    {
+      "page": 45,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 807.9,
+      "height": 637.8,
+      "text": "F U T U R A\nDedicated to futurists, lovers of technology and new\nmaterials, people who embrace and encourage change\nwith enthusiasm and energy. For people who know that\nthe best is yet to come.\nU N I CA\nDedicated to the dynamic individuals\nwho speak the language of \u2018now\u2019.\nThe Unica Collection is born from our\nreinterpretation of the rapidly shifting\ntrends in fashion, art and culture.\n45",
+      "table_lines": [],
+      "lines": [
+        {"top":95.0,"cells":[[348.9,472.3,"F U T U R A"]]},
+        {"top":122.1,"cells":[[348.9,492.2,"Dedicated to futurists,"],[499.6,536.1,"lovers"],[543.4,695.8,"of technology and new"]]},
+        {"top":138.9,"cells":[[348.9,695.8,"materials, people who embrace and encourage change"]]},
+        {"top":155.7,"cells":[[348.9,695.8,"with enthusiasm and energy. For people who know that"]]},
+        {"top":172.5,"cells":[[348.9,492.2,"the best is yet to come."]]},
+        {"top":488.0,"cells":[[49.7,145.7,"U N I CA"]]},
+        {"top":511.2,"cells":[[48.4,290.3,"Dedicated to the dynamic individuals"]]},
+        {"top":528.0,"cells":[[48.4,75.3,"who"],[86.4,123.5,"speak"],[134.1,153.9,"the"],[165.0,222.1,"language"],[233.2,245.5,"of"],[256.2,290.3,"\u2018now\u2019."]]},
+        {"top":544.8,"cells":[[48.4,290.7,"The Unica Collection is born from our"]]},
+        {"top":561.6,"cells":[[48.4,142.2,"reinterpretation"],[149.6,237.5,"of the rapidly"],[244.6,290.3,"shifting"]]},
+        {"top":578.4,"cells":[[48.4,248.0,"trends in fashion, art and culture."]]},
+        {"top":606.0,"cells":[[769.3,781.0,"45"]]}
+      ]
+    },
+    {
+      "page": 46,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 807.9,
+      "height": 637.8,
+      "text": "46",
+      "table_lines": [],
+      "lines": [
+        {"top":606.0,"cells":[[26.7,38.7,"46"]]}
+      ]
+    },
+    {
+      "page": 47,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 807.9,
+      "height": 637.8,
+      "text": "47",
+      "table_lines": [],
+      "lines": [
+        {"top":606.0,"cells":[[769.9,780.4,"47"]]}
+      ]
+    },
+    {
+      "page": 48,
+      "trim_hint": true,
+      "has_text_layer": true,
+      "width": 807.9,
+      "height": 637.8,
+      "text": "Technical specifications\n48",
+      "table_lines": [],
+      "lines": [
+        {"top":557.0,"cells":[[51.3,556.8,"Technical specifications"]]},
+        {"top":606.0,"cells":[[26.8,38.7,"48"]]}
+      ]
+    },
+    {
+      "page": 49,
+      "trim_hint": true,
+      "has_text_layer": true,
+      "width": 807.9,
+      "height": 637.8,
+      "text": "Technical specifications\n49",
+      "table_lines": [],
+      "lines": [
+        {"top":557.0,"cells":[[-728.3,-222.8,"Technical specifications"]]},
+        {"top":606.0,"cells":[[769.1,781.1,"49"]]}
+      ]
+    },
+    {
+      "page": 50,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 807.9,
+      "height": 637.8,
+      "text": "DIMENSIONS AND WEIGHTS LEVANTE DIESEL\nLength 5005 mm\nWidth (with side mirrors) 2158 mm\nWidth (without side mirrors) 1981 mm\nHeight (*) 1693 mm\nWheelbase 3004 mm\nBoot capacity 580 l\nFuel tank capacity 80 l\nKerb Weight 2205 kg\nAverage Weight -\nENGINE\nNumber of cylinders and layout V6 60\u00b0\nDisplacement 2987 cc\nBore 83 mm\nStroke 92 mm\nCompression ratio 16.5:1\nMax. power output 202 kW (275 CV)\nEngine speed at max. power output 4000 rpm\nPeak torque 600 Nm\nEngine speed at peak torque 2000 - 2600 rpm\nTRANSMISSION\nTransmission Automatic 8 gears\nPERFORMANCE\nMaximum speed 230 km/h\nAcceleration (0 - 100 km/h) 6.9 s\nStopping distance (100 - 0km/h) 36 m\nFuel consumption (Combined cycle) 9.1- 10.1 l/100 km\nFuel consumption (Low cycle) 13.0 - 13.9 l/100 km\nFuel consumption (Medium cycle) 9.4 - 10.3 l/100 km\nFuel consumption (High cycle) 7.6 - 8.7 l/100 km\nFuel consumption (extra-High cycle) 8.7 - 9.7 l/100 km\nCO emissions (Combined cycle) 238 - 264 g/km\n2\nCO emissions (Low cycle) 341 - 364 g/km\n2\nCO emissions (Medium cycle) 245 - 269 g/km\n2\nCO emissions (High cycle) 200 - 227 g/km\n2\nCO emissions (extra-High cycle) 228 - 255 g/km\n2\nRegulation Euro 6D Final\n50",
+      "table_lines": [],
+      "lines": [
+        {"top":43.0,"cells":[[434.3,537.7,"DIMENSIONS AND WEIGHTS"],[615.1,675.5,"LEVANTE DIESEL"]]},
+        {"top":56.9,"cells":[[434.3,458.2,"Length"],[615.1,649.7,"5005 mm"]]},
+        {"top":69.2,"cells":[[434.3,518.2,"Width (with side mirrors)"],[615.1,647.7,"2158 mm"]]},
+        {"top":81.3,"cells":[[434.3,529.4,"Width (without side mirrors)"],[615.1,647.0,"1981 mm"]]},
+        {"top":93.4,"cells":[[434.3,466.7,"Height (*)"],[615.1,648.0,"1693 mm"]]},
+        {"top":105.5,"cells":[[434.3,473.4,"Wheelbase"],[615.1,649.6,"3004 mm"]]},
+        {"top":117.7,"cells":[[434.3,482.2,"Boot capacity"],[615.1,633.2,"580 l"]]},
+        {"top":129.8,"cells":[[434.3,497.1,"Fuel tank capacity"],[615.1,628.6,"80 l"]]},
+        {"top":141.9,"cells":[[434.3,477.3,"Kerb Weight"],[615.1,643.8,"2205 kg"]]},
+        {"top":154.0,"cells":[[434.3,489.8,"Average Weight"],[615.1,618.4,"-"]]},
+        {"top":190.1,"cells":[[434.3,462.4,"ENGINE"]]},
+        {"top":203.9,"cells":[[434.3,541.7,"Number of cylinders and layout"],[615.1,639.8,"V6 60\u00b0"]]},
+        {"top":216.3,"cells":[[434.3,482.0,"Displacement"],[615.1,643.1,"2987 cc"]]},
+        {"top":228.4,"cells":[[434.3,450.3,"Bore"],[615.1,639.7,"83 mm"]]},
+        {"top":240.5,"cells":[[434.3,456.5,"Stroke"],[615.1,639.7,"92 mm"]]},
+        {"top":252.5,"cells":[[434.3,497.5,"Compression ratio"],[615.1,634.5,"16.5:1"]]},
+        {"top":264.6,"cells":[[434.3,499.5,"Max. power output"],[615.1,674.1,"202 kW (275 CV)"]]},
+        {"top":276.7,"cells":[[434.3,556.7,"Engine speed at max. power output"],[615.1,650.7,"4000 rpm"]]},
+        {"top":288.8,"cells":[[434.3,475.5,"Peak torque"],[615.1,644.5,"600 Nm"]]},
+        {"top":300.9,"cells":[[434.3,533.0,"Engine speed at peak torque"],[615.1,676.9,"2000 - 2600 rpm"]]},
+        {"top":322.3,"cells":[[434.3,492.6,"TRANSMISSION"]]},
+        {"top":336.1,"cells":[[434.3,479.1,"Transmission"]]},
+        {"top":336.3,"cells":[[615.1,678.6,"Automatic 8 gears"]]},
+        {"top":357.7,"cells":[[434.3,491.8,"PERFORMANCE"]]},
+        {"top":371.5,"cells":[[434.3,492.3,"Maximum speed"],[615.1,649.1,"230 km/h"]]},
+        {"top":383.9,"cells":[[434.3,529.0,"Acceleration (0 - 100 km/h)"],[615.1,632.0,"6.9 s"]]},
+        {"top":396.0,"cells":[[434.3,547.4,"Stopping distance (100 - 0km/h)"],[615.1,633.1,"36 m"]]},
+        {"top":408.1,"cells":[[434.3,558.4,"Fuel consumption (Combined cycle)"],[615.1,676.1,"9.1- 10.1 l/100 km"]]},
+        {"top":420.2,"cells":[[434.3,536.9,"Fuel consumption (Low cycle)"],[615.1,683.8,"13.0 - 13.9 l/100 km"]]},
+        {"top":432.3,"cells":[[434.3,550.9,"Fuel consumption (Medium cycle)"],[615.1,679.9,"9.4 - 10.3 l/100 km"]]},
+        {"top":444.4,"cells":[[434.3,538.3,"Fuel consumption (High cycle)"],[615.1,674.5,"7.6 - 8.7 l/100 km"]]},
+        {"top":456.5,"cells":[[434.3,558.2,"Fuel consumption (extra-High cycle)"],[615.1,675.0,"8.7 - 9.7 l/100 km"]]},
+        {"top":468.6,"cells":[[434.3,546.5,"CO emissions (Combined cycle)"]]},
+        {"top":468.8,"cells":[[615.1,670.2,"238 - 264 g/km"]]},
+        {"top":473.8,"cells":[[445.8,448.6,"2"]]},
+        {"top":480.7,"cells":[[434.3,525.1,"CO emissions (Low cycle)"],[615.1,669.1,"341 - 364 g/km"]]},
+        {"top":485.9,"cells":[[445.8,448.6,"2"]]},
+        {"top":492.8,"cells":[[434.3,541.0,"CO emissions (Medium cycle)"],[615.1,670.2,"245 - 269 g/km"]]},
+        {"top":498.0,"cells":[[445.8,448.6,"2"]]},
+        {"top":504.9,"cells":[[434.3,526.5,"CO emissions (High cycle)"],[615.1,669.7,"200 - 227 g/km"]]},
+        {"top":510.1,"cells":[[445.8,448.6,"2"]]},
+        {"top":517.0,"cells":[[434.3,547.9,"CO emissions (extra-High cycle)"],[615.1,669.9,"228 - 255 g/km"]]},
+        {"top":522.1,"cells":[[445.8,448.6,"2"]]},
+        {"top":529.1,"cells":[[434.3,471.0,"Regulation"],[615.1,660.9,"Euro 6D Final"]]},
+        {"top":606.0,"cells":[[26.6,38.9,"50"]]}
+      ]
+    },
+    {
+      "page": 51,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 807.9,
+      "height": 637.8,
+      "text": "LEVANTE LEVANTE S LEVANTE GTS LEVANTE TROFEO\n5005 mm 5005 mm 5020 mm 5020 mm\n2158 mm 2158 mm 2158 mm 2158 mm\n1981 mm 1981 mm 1981 mm 1981 mm\n1693 mm 1693 mm 1698 mm 1698 mm\n3004 mm 3004 mm 3004 mm 311070040 mmmm\n580 l 580 l 580 l 580 l\n80 l 80 l 80 l 80 l\n2109 kg 2109 kg 2170 kg -\n- - - 2170 kg\n*Ride Heigh Normal *Ride Heigh Normal\nV6 60\u00b0 V6 60\u00b0 V8 90\u00b0 V8 90\u00b0\n2979 cc 2979 cc 3799 cc 3799 cc\n86.5 mm 86.5 mm 86.5 mm 86.5 mm\n84.5 mm 84.5 mm 80.8 mm 80.8 mm\n9.7:1 9.7:1 9.44:1 9.44:1\n257 kW (350 CV) 316 kW (430 CV) 390 kW (530 CV) 580 CV\n5750 rpm 5750 rpm 6250 rpm 6750 rpm\n500 Nm 580 Nm 730 Nm 730 Nm\n1750 - 4750 rpm 2250 - 4750 rpm 2500 - 5000 rpm 2500 - 5000 rpm\nAutomatic 8 gears Automatic 8 gears Automatic 8 gears Automatic 8 gears\n251 km/h 264 km/h 291 km/h 302 km/h\n6.0 s 5.2 s 4.3 s 4.1 s\n36 m 34.5 m 34.5 m 34.5 m\n12.5 - 13.4 l/100 km 12.6 - 13.3 l/100 km 15.8 - 16.0 l/100 km 15.9 - 16.0 l/100 km\n19.0 - 20.5 l/100 km 19.1 - 19.9 l/100 km 24.3 l/100 km 24.3 l/100 km\n12.8 - 13.8 l/100 km 12.7 - 13.7 l/100 km 16.6 l/100 km 16.6 l/100 km\n10.7 - 11.5 l/100 km 10.9 - 11.5 l/100 km 13.7 - 14.0 l/100 km 13.8 - 14.0 l/100 km\n11.5 - 12.3 l/100 km 11.7 - 12.3 l/100 km 13.9 - 14.4 l/100 km 14.4 - 14.4 l/100 km\n283 - 303 g/km 286 - 301 g/km 357 - 363 g/km 359 - 363 g/km\n430 - 464 g/km 431 - 449 g/km 549 g/km 549 g/km\n289 - 312 g/km 288 - 309 g/km 375 - 376 g/km 376 g/km\n242 - 259 g/km 247 - 260 g/km 311 - 317 g/km 313 - 317 g/km\n260 - 277 g/km 264 - 277 g/km 315 - 325 g/km 318 - 325 g/km\nEuro 6D Final Euro 6D Final Euro 6D Final Euro 6D Final\nData corresponds to tests executed in compliance with Regulation (EU) 2017/1151, updated as of February 2021. Check MY21 Maserati Connect availability in your Country.\n51",
+      "table_lines": [],
+      "lines": [
+        {"top":43.3,"cells":[[48.0,81.2,"LEVANTE"],[212.4,252.5,"LEVANTE S"],[377.6,427.7,"LEVANTE GTS"],[541.6,606.5,"LEVANTE TROFEO"]]},
+        {"top":57.1,"cells":[[48.0,82.6,"5005 mm"],[212.4,247.0,"5005 mm"],[377.6,412.0,"5020 mm"],[541.6,576.0,"5020 mm"]]},
+        {"top":69.5,"cells":[[48.0,80.6,"2158 mm"],[212.4,245.0,"2158 mm"],[377.6,410.2,"2158 mm"],[541.6,574.3,"2158 mm"]]},
+        {"top":81.6,"cells":[[48.0,79.9,"1981 mm"],[212.4,244.3,"1981 mm"],[377.6,409.5,"1981 mm"],[541.6,573.5,"1981 mm"]]},
+        {"top":93.7,"cells":[[48.0,80.8,"1693 mm"],[212.4,245.2,"1693 mm"],[377.6,410.8,"1698 mm"],[541.6,574.8,"1698 mm"]]},
+        {"top":105.8,"cells":[[48.0,82.5,"3004 mm"],[212.4,246.9,"3004 mm"],[377.6,412.1,"3004 mm"],[541.6,577.8,"311070040 mmmm"]]},
+        {"top":117.9,"cells":[[48.0,66.0,"580 l"],[212.4,230.4,"580 l"],[377.6,395.7,"580 l"],[541.6,559.7,"580 l"]]},
+        {"top":130.0,"cells":[[48.0,61.4,"80 l"],[212.4,225.8,"80 l"],[377.6,391.1,"80 l"],[541.6,555.1,"80 l"]]},
+        {"top":142.1,"cells":[[48.0,75.9,"2109 kg"],[212.4,240.3,"2109 kg"],[377.6,404.5,"2170 kg"],[541.6,545.0,"-"]]},
+        {"top":154.2,"cells":[[48.0,51.3,"-"],[212.4,215.7,"-"],[377.6,380.9,"-"],[541.6,568.5,"2170 kg"]]},
+        {"top":172.2,"cells":[[377.3,445.8,"*Ride Heigh Normal"],[541.4,609.8,"*Ride Heigh Normal"]]},
+        {"top":204.1,"cells":[[48.0,72.8,"V6 60\u00b0"],[212.4,237.1,"V6 60\u00b0"],[377.6,402.3,"V8 90\u00b0"],[541.6,566.4,"V8 90\u00b0"]]},
+        {"top":216.5,"cells":[[48.0,76.0,"2979 cc"],[212.4,240.4,"2979 cc"],[377.6,405.8,"3799 cc"],[541.6,569.9,"3799 cc"]]},
+        {"top":228.6,"cells":[[48.0,79.0,"86.5 mm"],[212.4,243.4,"86.5 mm"],[377.6,408.6,"86.5 mm"],[541.6,572.7,"86.5 mm"]]},
+        {"top":240.7,"cells":[[48.0,78.8,"84.5 mm"],[212.4,243.2,"84.5 mm"],[377.6,408.9,"80.8 mm"],[541.6,573.0,"80.8 mm"]]},
+        {"top":252.8,"cells":[[48.0,62.9,"9.7:1"],[212.4,227.3,"9.7:1"],[377.6,397.8,"9.44:1"],[541.6,561.9,"9.44:1"]]},
+        {"top":264.9,"cells":[[48.0,107.3,"257 kW (350 CV)"],[212.4,271.4,"316 kW (430 CV)"],[377.6,438.5,"390 kW (530 CV)"],[541.6,568.8,"580 CV"]]},
+        {"top":277.0,"cells":[[48.0,81.8,"5750 rpm"],[212.4,246.2,"5750 rpm"],[377.6,412.3,"6250 rpm"],[541.6,575.6,"6750 rpm"]]},
+        {"top":289.1,"cells":[[48.0,77.1,"500 Nm"],[212.4,241.2,"580 Nm"],[377.6,405.3,"730 Nm"],[541.6,569.3,"730 Nm"]]},
+        {"top":301.2,"cells":[[48.0,105.8,"1750 - 4750 rpm"],[212.4,271.7,"2250 - 4750 rpm"],[377.6,439.4,"2500 - 5000 rpm"],[541.6,603.4,"2500 - 5000 rpm"]]},
+        {"top":336.3,"cells":[[48.0,111.5,"Automatic 8 gears"],[212.4,275.9,"Automatic 8 gears"],[377.6,441.1,"Automatic 8 gears"],[541.6,605.2,"Automatic 8 gears"]]},
+        {"top":371.8,"cells":[[48.0,80.5,"251 km/h"],[212.4,246.3,"264 km/h"],[377.6,410.4,"291 km/h"],[541.6,575.6,"302 km/h"]]},
+        {"top":384.2,"cells":[[48.0,65.1,"6.0 s"],[212.4,228.8,"5.2 s"],[377.6,394.1,"4.3 s"],[541.6,557.2,"4.1 s"]]},
+        {"top":396.2,"cells":[[48.0,65.9,"36 m"],[212.4,236.2,"34.5 m"],[377.6,401.4,"34.5 m"],[541.6,565.4,"34.5 m"]]},
+        {"top":408.3,"cells":[[48.0,115.8,"12.5 - 13.4 l/100 km"],[212.4,280.6,"12.6 - 13.3 l/100 km"],[377.6,446.8,"15.8 - 16.0 l/100 km"],[541.6,610.7,"15.9 - 16.0 l/100 km"]]},
+        {"top":420.4,"cells":[[48.0,117.8,"19.0 - 20.5 l/100 km"],[212.4,279.9,"19.1 - 19.9 l/100 km"],[377.6,425.3,"24.3 l/100 km"],[541.6,589.3,"24.3 l/100 km"]]},
+        {"top":432.5,"cells":[[48.0,116.6,"12.8 - 13.8 l/100 km"],[212.4,278.7,"12.7 - 13.7 l/100 km"],[377.6,425.0,"16.6 l/100 km"],[541.6,589.0,"16.6 l/100 km"]]},
+        {"top":444.6,"cells":[[48.0,114.6,"10.7 - 11.5 l/100 km"],[212.4,280.0,"10.9 - 11.5 l/100 km"],[377.6,445.1,"13.7 - 14.0 l/100 km"],[541.6,610.3,"13.8 - 14.0 l/100 km"]]},
+        {"top":456.7,"cells":[[48.0,115.0,"11.5 - 12.3 l/100 km"],[212.4,278.6,"11.7 - 12.3 l/100 km"],[377.6,445.6,"13.9 - 14.4 l/100 km"],[541.6,609.1,"14.4 - 14.4 l/100 km"]]},
+        {"top":468.8,"cells":[[48.0,103.2,"283 - 303 g/km"],[212.4,267.0,"286 - 301 g/km"],[377.6,431.8,"357 - 363 g/km"],[541.6,596.9,"359 - 363 g/km"]]},
+        {"top":480.9,"cells":[[48.0,103.8,"430 - 464 g/km"],[212.4,266.7,"431 - 449 g/km"],[377.6,412.2,"549 g/km"],[541.6,576.2,"549 g/km"]]},
+        {"top":493.0,"cells":[[48.0,102.0,"289 - 312 g/km"],[212.4,268.3,"288 - 309 g/km"],[377.6,431.0,"375 - 376 g/km"],[541.6,575.1,"376 g/km"]]},
+        {"top":505.1,"cells":[[48.0,102.5,"242 - 259 g/km"],[212.4,266.8,"247 - 260 g/km"],[377.6,428.5,"311 - 317 g/km"],[541.6,593.4,"313 - 317 g/km"]]},
+        {"top":517.2,"cells":[[48.0,101.8,"260 - 277 g/km"],[212.4,265.8,"264 - 277 g/km"],[377.6,431.3,"315 - 325 g/km"],[541.6,595.5,"318 - 325 g/km"]]},
+        {"top":529.3,"cells":[[48.0,93.8,"Euro 6D Final"],[212.4,258.2,"Euro 6D Final"],[377.6,423.4,"Euro 6D Final"],[541.6,587.5,"Euro 6D Final"]]},
+        {"top":588.5,"cells":[[48.0,723.8,"Data corresponds to tests executed in compliance with Regulation (EU) 2017/1151, updated as of February 2021. Check MY21 Maserati Connect availability in your Country."]]},
+        {"top":606.0,"cells":[[770.0,780.3,"51"]]}
+      ]
+    },
+    {
+      "page": 52,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 807.9,
+      "height": 637.8,
+      "text": "A world of possibilities\n52",
+      "table_lines": [],
+      "lines": [
+        {"top":557.0,"cells":[[50.3,553.4,"A world of possibilities"]]},
+        {"top":606.0,"cells":[[27.0,38.4,"52"]]}
+      ]
+    },
+    {
+      "page": 53,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 807.9,
+      "height": 637.8,
+      "text": "A world of possibilities\n53",
+      "table_lines": [],
+      "lines": [
+        {"top":557.0,"cells":[[-729.3,-226.1,"A world of possibilities"]]},
+        {"top":606.0,"cells":[[769.4,780.9,"53"]]}
+      ]
+    },
+    {
+      "page": 54,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 807.9,
+      "height": 637.8,
+      "text": "Master Maserati Driving Courses Health Service Program\nThere cannot be a Maserati driver in the world who hasn\u2019t In the unfortunate event that you fall seriously ill while driving,\nwondered what it must be like to push the rev counter into the simply call your local Maserati Assistance Centre and they will\nred right up through the gears, to take the racing line through a organise transport back to your home address by aeroplane, train\ncorner and to test their car\u2019s braking capabilities to the limit. The or ambulance. If you are driving alone, a family member can also\nMaster Maserati Driving Experience answers all these questions be sent to join you. If you are travelling with family, their transport\nand more through a series of professionally- led courses for home will be arranged.\nthose with a desire to discover the performance potential of\nthe fastest Maserati models in their natural environment: the Full Credit Services*\nracetrack. With the introduction of the sensational MC20 supercar Stay on the road while your car is being repaired \u2013 with our Full\nand the powerful Trofeo versions of Ghibli and Levante, the Master Credit Services, you will be behind the wheel of a courtesy car\nMaserati Driving Experience becomes even more dynamic and with Geo maps, snow chains and child seats included and free of\nthrilling. For full details on our driving experiences, you can visit charge so you can focus on enjoying the drive.\nour website mastermaserati.com or contact us directly at info@\nmastermaserati.it. *For more information, please contact your dealer or Maserati\nCustomer Service at info@maserati.com\nFinancial Services\nPurchasing your car with the aid of a Maserati financial package\nenables you to choose the best conditions on the market and tailor\nthem to your needs. Official Maserati dealers will be delighted to\nact as your financial advisers, providing professional guidance on\nthe various payment options available and creating a package\ntailored to your requirements.\nRoad Assistance Program\nThe Maserati Assistance Program offers an exclusive range of\nservices and benefits free of charge for the period of the warranty\nof the vehicle. The Assistance Centres, available 24 hours a day,\ncan be contacted in emergency situations. At these efficient sites,\ncourteous and highly-skilled professionals will provide the best\npossible solution to any problem flagged up by the customer.\n54",
+      "table_lines": [],
+      "lines": [
+        {"top":103.0,"cells":[[412.4,539.2,"Health Service Program"]]},
+        {"top":103.9,"cells":[[51.0,227.6,"Master Maserati Driving Courses"]]},
+        {"top":116.9,"cells":[[51.0,213.2,"There cannot be a Maserati"],[220.3,250.7,"driver"],[257.5,266.7,"in"],[273.5,290.7,"the"],[297.8,397.8,"world who hasn\u2019t"],[412.4,619.6,"In the unfortunate event that you fall"],[625.2,686.5,"seriously ill"],[692.1,765.4,"while driving,"]]},
+        {"top":130.9,"cells":[[412.4,765.3,"simply call your local Maserati Assistance Centre and they will"]]},
+        {"top":131.8,"cells":[[51.0,147.8,"wondered what it"],[152.3,397.8,"must be like to push the rev counter into the"]]},
+        {"top":144.9,"cells":[[51.0,397.8,"red right up through the gears, to take the racing line through a"],[412.4,765.4,"organise transport back to your home address by aeroplane, train"]]},
+        {"top":158.9,"cells":[[51.0,397.8,"corner and to test their car\u2019s braking capabilities to the limit. The"],[412.4,765.4,"or ambulance. If you are driving alone, a family member can also"]]},
+        {"top":172.9,"cells":[[412.4,765.3,"be sent to join you. If you are travelling with family, their transport"]]},
+        {"top":173.8,"cells":[[51.0,397.8,"Master Maserati Driving Experience answers all these questions"]]},
+        {"top":187.0,"cells":[[51.0,398.1,"and more through a series of professionally- led courses for"],[412.4,535.3,"home will be arranged."]]},
+        {"top":201.9,"cells":[[51.0,398.1,"those with a desire to discover the performance potential of"]]},
+        {"top":215.0,"cells":[[51.0,111.1,"the fastest"],[117.5,226.0,"Maserati models in"],[232.2,256.1,"their"],[262.3,298.7,"natural"],[305.2,397.8,"environment: the"],[412.4,521.6,"Full Credit Services*"]]},
+        {"top":229.0,"cells":[[51.0,398.1,"racetrack. With the introduction of the sensational MC20 supercar"],[412.4,765.4,"Stay on the road while your car is being repaired \u2013 with our Full"]]},
+        {"top":243.0,"cells":[[412.4,765.7,"Credit Services, you will be behind the wheel of a courtesy car"]]},
+        {"top":243.9,"cells":[[51.0,398.1,"and the powerful Trofeo versions of Ghibli and Levante, the Master"]]},
+        {"top":257.0,"cells":[[51.0,397.8,"Maserati Driving Experience becomes even more dynamic and"],[412.4,765.7,"with Geo maps, snow chains and child seats included and free of"]]},
+        {"top":271.0,"cells":[[412.4,662.0,"charge so you can focus on enjoying the drive."]]},
+        {"top":271.9,"cells":[[51.0,397.8,"thrilling. For full details on our driving experiences, you can visit"]]},
+        {"top":285.9,"cells":[[51.0,397.8,"our website mastermaserati.com or contact us directly at info@"]]},
+        {"top":299.0,"cells":[[51.0,146.3,"mastermaserati.it."],[412.4,765.4,"*For more information, please contact your dealer or Maserati"]]},
+        {"top":313.0,"cells":[[412.4,628.6,"Customer Service at info@maserati.com"]]},
+        {"top":328.0,"cells":[[51.0,148.2,"Financial Services"]]},
+        {"top":341.9,"cells":[[51.0,397.8,"Purchasing your car with the aid of a Maserati financial package"]]},
+        {"top":355.9,"cells":[[51.0,398.1,"enables you to choose the best conditions on the market and tailor"]]},
+        {"top":369.9,"cells":[[51.0,397.8,"them to your needs. Official Maserati dealers will be delighted to"]]},
+        {"top":383.9,"cells":[[51.0,397.8,"act as your financial advisers, providing professional guidance on"]]},
+        {"top":397.9,"cells":[[51.0,397.8,"the various payment options available and creating a package"]]},
+        {"top":411.9,"cells":[[51.0,207.9,"tailored to your requirements."]]},
+        {"top":440.0,"cells":[[51.0,188.9,"Road Assistance Program"]]},
+        {"top":453.9,"cells":[[51.0,398.1,"The Maserati Assistance Program offers an exclusive range of"]]},
+        {"top":467.9,"cells":[[51.0,398.0,"services and benefits free of charge for the period of the warranty"]]},
+        {"top":481.9,"cells":[[51.0,397.8,"of the vehicle. The Assistance Centres, available 24 hours a day,"]]},
+        {"top":495.9,"cells":[[51.0,397.8,"can be contacted in emergency situations. At these efficient sites,"]]},
+        {"top":509.9,"cells":[[51.0,397.8,"courteous and highly-skilled professionals will provide the best"]]},
+        {"top":523.9,"cells":[[51.0,380.2,"possible solution to any problem flagged up by the customer."]]},
+        {"top":606.0,"cells":[[26.9,38.6,"54"]]}
+      ]
+    },
+    {
+      "page": 55,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 807.9,
+      "height": 637.8,
+      "text": "55",
+      "table_lines": [],
+      "lines": [
+        {"top":606.0,"cells":[[769.3,781.0,"55"]]}
+      ]
+    },
+    {
+      "page": 56,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 807.9,
+      "height": 637.8,
+      "text": "56",
+      "table_lines": [],
+      "lines": [
+        {"top":606.0,"cells":[[26.8,38.7,"56"]]}
+      ]
+    },
+    {
+      "page": 57,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 807.9,
+      "height": 637.8,
+      "text": "The World of the Trident\nFactory Tour Maserati Genuine Accessories\nDiscover the heart of the all new MC20\u2019s production at the Specially conceived to satisfy our customers\u2019 needs, the Maserati\nhistorical Maserati Plant in Modena. The 1h45min Factory Tour Genuine Accessories are a perfect combination of design,\nbegins with a walkthrough of the Brand\u2019s heritage and model range functionality, comfort and performance. Built to the highest\npresentation. Assembly line, Engine Lab, painting facilities and standards of Maserati craftsmanship, the Levante accessories\nthe official Store follow. Showroom Tour: a 40-minute Showroom range has been developed to guarantee great practicality together\ntour comprehensive of heritage and model range presentation is with the chance to add your personal and unique touch. Get\navailable. For more information: factorytour@maserati.com ready to discover all your customization options in the dedicated\nbrochure, on the official website (www.maserati.com), or through\nFactory Delivery the Official Maserati Network.\nAfter a welcome coffee and drinks in the Showroom, you can\nvisit the historical Maserati Plant, accompanied by a specialist Customer Programs\nguide and a photographer. Now, it\u2019s time for your new Maserati Driving a Maserati is an experience of lifetime, regardless if you\nunveiling! Before we bid you farewell, the final pictures are taken. are handling a weekday commute or embarking on a memorable\nThe commemorative digital photo-album is forwarded to the journey. This is why Maserati has created dedicated Customer\ncustomer. All models can be delivered at Modena Plant. Request Programs to assure you miles after miles the utmost care and\nthe factory delivery to your official Maserati dealer. excellent performance of your Levante. Give yourself extra peace\nof mind with one of our Maintenance or Extended warranty\nMaserati Collection programs.\nThe Maserati Collection of exclusive leisurewear and branded Discover more in the dedicated flyer, on the official website (www.\nmerchandise has been specially created for those with a passion maserati.com), or through the Official Maserati Network.\nfor all things Maserati. Maserati Collection items are available\nfrom all Maserati dealers and the Maserati Store at the Modena Maserati Classiche\nshowroom in Modena. Alternatively, they can be purchased online Created for enthusiasts and owners of vintage Maserati cars,\nat www.maseratistore.com and delivered directly to your home. Maserati Classiche is an organisation dedicated to those who\nwish to engage with the marque\u2019s glorious past. Maserati\nMaserati Club Classiche can provide Maserati Customers a service of Historical\nJoining the exclusive Maserati Club means sharing insights, Documentation pertaining to their vehicles. Specifically there are\nexperiences and all the excitement with other Maserati owners \u2013 various types of certified historical documents available, carefully\nand being invited to take part in special motoring events all over and precisely researched within the Maserati Historical Archive.\nthe world. Drivers of cars from every era can enjoy the pleasure The Maserati Classiche range includes products that celebrate\nof driving their Maserati models in a calendar of events created the company\u2019s history: paintings of glorious events, clothing,\nespecially for Maserati Club members. The Club provides the link scale models and much, much more. The items can be found\nbetween the past, present and future of the company. on www.maserati.com in the Maserati Classic section. For more\nVisit www.maseraticlub.com for more information. information about the Historical Documentation service, email\nmaserati.classiche@maserati.com.\n57",
+      "table_lines": [],
+      "lines": [
+        {"top":43.9,"cells":[[42.3,340.0,"The World of the Trident"]]},
+        {"top":85.9,"cells":[[42.3,108.7,"Factory Tour"],[410.1,573.3,"Maserati Genuine Accessories"]]},
+        {"top":99.8,"cells":[[42.3,205.6,"Discover the heart of the all"],[212.1,365.6,"new MC20\u2019s production at"],[371.9,389.1,"the"],[410.1,756.9,"Specially conceived to satisfy our customers\u2019 needs, the Maserati"]]},
+        {"top":113.8,"cells":[[42.3,389.5,"historical Maserati Plant in Modena. The 1h45min Factory Tour"],[410.1,454.7,"Genuine"],[462.8,528.6,"Accessories"],[537.0,553.6,"are"],[562.0,568.3,"a"],[576.7,615.4,"perfect"],[623.8,690.7,"combination"],[699.1,709.8,"of"],[717.8,756.9,"design,"]]},
+        {"top":127.8,"cells":[[42.3,389.1,"begins with a walkthrough of the Brand\u2019s heritage and model range"],[410.1,478.3,"functionality,"],[486.0,528.3,"comfort"],[536.0,635.3,"and performance."],[642.9,666.6,"Built"],[674.1,684.8,"to"],[692.3,709.5,"the"],[717.2,756.9,"highest"]]},
+        {"top":141.8,"cells":[[42.3,196.4,"presentation. Assembly line,"],[201.6,389.1,"Engine Lab, painting facilities and"],[410.1,756.9,"standards of Maserati craftsmanship, the Levante accessories"]]},
+        {"top":155.8,"cells":[[42.3,389.1,"the official Store follow. Showroom Tour: a 40-minute Showroom"],[410.1,757.2,"range has been developed to guarantee great practicality together"]]},
+        {"top":169.8,"cells":[[42.3,389.1,"tour comprehensive of heritage and model range presentation is"],[410.1,756.9,"with the chance to add your personal and unique touch. Get"]]},
+        {"top":183.8,"cells":[[42.3,356.0,"available. For more information: factorytour@maserati.com"],[410.1,756.9,"ready to discover all your customization options in the dedicated"]]},
+        {"top":197.9,"cells":[[410.1,756.9,"brochure, on the official website (www.maserati.com), or through"]]},
+        {"top":211.9,"cells":[[42.3,129.6,"Factory Delivery"],[410.1,570.6,"the Official Maserati Network."]]},
+        {"top":226.3,"cells":[[42.3,389.1,"After a welcome coffee and drinks in the Showroom, you can"]]},
+        {"top":240.0,"cells":[[42.3,389.1,"visit the historical Maserati Plant, accompanied by a specialist"],[410.1,517.1,"Customer Programs"]]},
+        {"top":253.9,"cells":[[42.3,389.1,"guide and a photographer. Now, it\u2019s time for your new Maserati"],[410.1,756.9,"Driving a Maserati is an experience of lifetime, regardless if you"]]},
+        {"top":267.9,"cells":[[42.3,389.1,"unveiling! Before we bid you farewell, the final pictures are taken."],[410.1,756.8,"are handling a weekday commute or embarking on a memorable"]]},
+        {"top":281.9,"cells":[[42.3,195.6,"The commemorative digital"],[202.1,286.9,"photo-album is"],[293.1,389.1,"forwarded to the"],[410.1,757.2,"journey. This is why Maserati has created dedicated Customer"]]},
+        {"top":295.9,"cells":[[410.1,756.8,"Programs to assure you miles after miles the utmost care and"]]},
+        {"top":296.3,"cells":[[42.3,389.1,"customer. All models can be delivered at Modena Plant. Request"]]},
+        {"top":309.9,"cells":[[42.3,313.5,"the factory delivery to your official Maserati dealer."],[410.1,756.8,"excellent performance of your Levante. Give yourself extra peace"]]},
+        {"top":323.9,"cells":[[410.1,420.8,"of"],[427.2,528.0,"mind with one of"],[534.5,757.0,"our Maintenance or Extended warranty"]]},
+        {"top":337.9,"cells":[[410.1,464.2,"programs."]]},
+        {"top":338.8,"cells":[[42.3,147.4,"Maserati Collection"]]},
+        {"top":351.9,"cells":[[42.3,389.1,"The Maserati Collection of exclusive leisurewear and branded"],[410.1,756.9,"Discover more in the dedicated flyer, on the official website (www."]]},
+        {"top":365.9,"cells":[[410.1,710.3,"maserati.com), or through the Official Maserati Network."]]},
+        {"top":366.7,"cells":[[42.3,389.1,"merchandise has been specially created for those with a passion"]]},
+        {"top":380.7,"cells":[[42.3,73.9,"for all"],[79.2,389.1,"things Maserati. Maserati Collection items are available"]]},
+        {"top":394.0,"cells":[[42.3,389.1,"from all Maserati dealers and the Maserati Store at the Modena"],[410.1,512.7,"Maserati Classiche"]]},
+        {"top":407.9,"cells":[[42.3,389.1,"showroom in Modena. Alternatively, they can be purchased online"],[410.1,756.8,"Created for enthusiasts and owners of vintage Maserati cars,"]]},
+        {"top":421.9,"cells":[[42.3,380.5,"at www.maseratistore.com and delivered directly to your home."],[410.1,528.1,"Maserati Classiche is"],[533.4,756.8,"an organisation dedicated to those who"]]},
+        {"top":435.9,"cells":[[410.1,435.2,"wish"],[443.2,454.0,"to"],[462.2,502.9,"engage"],[511.1,534.2,"with"],[542.2,559.4,"the"],[567.6,616.3,"marque\u2019s"],[624.5,667.6,"glorious"],[675.8,701.9,"past."],[710.1,756.9,"Maserati"]]},
+        {"top":449.9,"cells":[[42.3,117.7,"Maserati Club"],[410.1,756.8,"Classiche can provide Maserati Customers a service of Historical"]]},
+        {"top":463.9,"cells":[[42.3,79.3,"Joining"],[86.6,103.7,"the"],[111.1,160.3,"exclusive"],[167.7,214.5,"Maserati"],[221.9,337.2,"Club means sharing"],[344.6,389.1,"insights,"],[410.1,756.8,"Documentation pertaining to their vehicles. Specifically there are"]]},
+        {"top":477.9,"cells":[[42.3,389.1,"experiences and all the excitement with other Maserati owners \u2013"],[410.1,757.1,"various types of certified historical documents available, carefully"]]},
+        {"top":491.9,"cells":[[42.3,389.5,"and being invited to take part in special motoring events all over"],[410.1,756.8,"and precisely researched within the Maserati Historical Archive."]]},
+        {"top":506.0,"cells":[[410.1,756.8,"The Maserati Classiche range includes products that celebrate"]]},
+        {"top":506.7,"cells":[[42.3,389.1,"the world. Drivers of cars from every era can enjoy the pleasure"]]},
+        {"top":520.0,"cells":[[42.3,389.1,"of driving their Maserati models in a calendar of events created"],[410.1,537.6,"the company\u2019s history:"],[544.0,756.9,"paintings of glorious events, clothing,"]]},
+        {"top":534.0,"cells":[[42.3,389.3,"especially for Maserati Club members. The Club provides the link"],[410.1,756.8,"scale models and much, much more. The items can be found"]]},
+        {"top":548.0,"cells":[[42.3,330.6,"between the past, present and future of the company."],[410.1,756.9,"on www.maserati.com in the Maserati Classic section. For more"]]},
+        {"top":562.0,"cells":[[42.3,309.1,"Visit www.maseraticlub.com for more information."],[410.1,756.9,"information about the Historical Documentation service, email"]]},
+        {"top":576.0,"cells":[[410.1,594.9,"maserati.classiche@maserati.com."]]},
+        {"top":606.0,"cells":[[769.8,780.4,"57"]]}
+      ]
+    },
+    {
+      "page": 58,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 807.9,
+      "height": 637.8,
+      "text": "NORTH AMERICA\nUSA\nCanada\nCENTRAL/ Republic\nSOUTH Equador\nAMERICA Guatemala\nArgentina Mexico\nBrazil Panama\nChile Per\u00f9\nColombia Puerto Rico\nCosta Rica Uruguay\nDominican\nMASERATI CONTACT CENTRE - info@maserati.com\nCUSTOMER SERVICES & ROAD SIDE ASSISTANCE:\n00 800 62737284\nOtherwise, please contact 0039 02 44412899\n58",
+      "table_lines": [],
+      "lines": [
+        {"top":95.1,"cells":[[51.0,163.9,"NORTH AMERICA"]]},
+        {"top":111.8,"cells":[[51.0,78.6,"USA"]]},
+        {"top":128.6,"cells":[[51.0,99.0,"Canada"]]},
+        {"top":339.9,"cells":[[170.9,239.3,"CENTRAL/"],[276.4,330.4,"Republic"]]},
+        {"top":356.7,"cells":[[170.9,217.6,"SOUTH"],[276.4,328.1,"Equador"]]},
+        {"top":373.5,"cells":[[170.9,233.5,"AMERICA"],[276.4,343.1,"Guatemala"]]},
+        {"top":390.3,"cells":[[170.9,230.2,"Argentina"],[276.4,321.6,"Mexico"]]},
+        {"top":407.1,"cells":[[170.9,203.8,"Brazil"],[276.4,326.6,"Panama"]]},
+        {"top":423.9,"cells":[[170.9,202.1,"Chile"],[276.4,304.6,"Per\u00f9"]]},
+        {"top":440.7,"cells":[[170.9,230.4,"Colombia"],[276.4,348.1,"Puerto Rico"]]},
+        {"top":457.5,"cells":[[170.9,237.8,"Costa Rica"],[276.4,328.3,"Uruguay"]]},
+        {"top":474.3,"cells":[[170.9,236.6,"Dominican"]]},
+        {"top":533.4,"cells":[[51.3,373.1,"MASERATI CONTACT CENTRE - info@maserati.com"]]},
+        {"top":550.2,"cells":[[51.3,372.4,"CUSTOMER SERVICES & ROAD SIDE ASSISTANCE:"]]},
+        {"top":567.0,"cells":[[51.3,164.7,"00 800 62737284"]]},
+        {"top":583.8,"cells":[[51.3,338.3,"Otherwise, please contact 0039 02 44412899"]]},
+        {"top":606.0,"cells":[[26.8,38.7,"58"]]}
+      ]
+    },
+    {
+      "page": 59,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 807.9,
+      "height": 637.8,
+      "text": "EUROPE\nAndorra\nAustria\nBelarus\nBelgium\nBulgaria\nCyprus\nCzech Republic\nDenmark\nASIA/OCEANIA Estonia\nAustralia France & Monaco\nChina Germany\nHong Kong Greece\nIndia Hungary\nIndonesia Israel\nJapan Italy\nAFRICA & Kazakhstan Lithuania\nMIDDLE EAST Malaysia Luxembourg\nBahrain New Zealand Netherlands\nEgypt Philippines Norway\nJordan Singapore\nKuwait South Korea\nLebanon Taiwan\nMorocco Thailand\nOman Vietnam\nQatar\nSaudi Arabia\nSouth Africa\nUnited Arab\nEmirates\n59",
+      "table_lines": [],
+      "lines": [
+        {"top":95.1,"cells":[[647.6,700.6,"EUROPE"]]},
+        {"top":111.8,"cells":[[647.6,696.8,"Andorra"]]},
+        {"top":128.6,"cells":[[647.6,690.5,"Austria"]]},
+        {"top":145.4,"cells":[[647.6,693.3,"Belarus"]]},
+        {"top":162.2,"cells":[[647.6,697.8,"Belgium"]]},
+        {"top":179.0,"cells":[[647.6,697.6,"Bulgaria"]]},
+        {"top":195.8,"cells":[[647.6,692.0,"Cyprus"]]},
+        {"top":212.6,"cells":[[647.6,744.0,"Czech Republic"]]},
+        {"top":229.4,"cells":[[647.6,703.2,"Denmark"]]},
+        {"top":246.2,"cells":[[647.6,692.5,"Estonia"]]},
+        {"top":248.4,"cells":[[464.6,564.7,"ASIA/OCEANIA"]]},
+        {"top":263.0,"cells":[[647.6,757.3,"France & Monaco"]]},
+        {"top":265.1,"cells":[[464.6,517.8,"Australia"]]},
+        {"top":279.8,"cells":[[647.6,703.9,"Germany"]]},
+        {"top":281.9,"cells":[[464.6,500.2,"China"]]},
+        {"top":296.6,"cells":[[464.6,533.9,"Hong Kong"],[647.6,692.2,"Greece"]]},
+        {"top":313.4,"cells":[[647.6,699.8,"Hungary"]]},
+        {"top":315.5,"cells":[[464.6,494.6,"India"]]},
+        {"top":330.2,"cells":[[647.6,680.4,"Israel"]]},
+        {"top":332.3,"cells":[[464.6,524.6,"Indonesia"]]},
+        {"top":347.0,"cells":[[647.6,673.5,"Italy"]]},
+        {"top":349.1,"cells":[[464.6,500.0,"Japan"]]},
+        {"top":363.8,"cells":[[112.8,174.9,"AFRICA &"],[464.6,535.1,"Kazakhstan"],[647.6,702.8,"Lithuania"]]},
+        {"top":380.6,"cells":[[647.6,724.3,"Luxembourg"]]},
+        {"top":382.1,"cells":[[112.8,201.6,"MIDDLE EAST"],[464.6,519.1,"Malaysia"]]},
+        {"top":397.4,"cells":[[647.6,722.8,"Netherlands"]]},
+        {"top":398.8,"cells":[[112.8,158.9,"Bahrain"],[464.6,545.9,"New Zealand"]]},
+        {"top":414.2,"cells":[[112.8,148.8,"Egypt"],[647.6,695.9,"Norway"]]},
+        {"top":416.3,"cells":[[464.6,531.8,"Philippines"]]},
+        {"top":432.4,"cells":[[112.8,153.0,"Jordan"],[464.6,527.8,"Singapore"]]},
+        {"top":449.2,"cells":[[112.8,155.1,"Kuwait"],[464.6,540.1,"South Korea"]]},
+        {"top":466.0,"cells":[[112.8,166.1,"Lebanon"]]},
+        {"top":466.7,"cells":[[464.6,507.9,"Taiwan"]]},
+        {"top":482.8,"cells":[[112.8,168.4,"Morocco"],[464.6,516.8,"Thailand"]]},
+        {"top":499.6,"cells":[[112.8,150.2,"Oman"],[464.6,515.6,"Vietnam"]]},
+        {"top":516.4,"cells":[[112.8,147.1,"Qatar"]]},
+        {"top":533.2,"cells":[[112.8,190.8,"Saudi Arabia"]]},
+        {"top":550.0,"cells":[[112.8,188.7,"South Africa"]]},
+        {"top":566.8,"cells":[[112.8,185.9,"United Arab"]]},
+        {"top":583.6,"cells":[[112.8,166.0,"Emirates"]]},
+        {"top":606.0,"cells":[[769.1,781.1,"59"]]}
+      ]
+    },
+    {
+      "page": 60,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 807.9,
+      "height": 637.8,
+      "text": "60",
+      "table_lines": [],
+      "lines": [
+        {"top":606.0,"cells":[[26.5,39.0,"60"]]}
+      ]
+    }
+  ],
+  "combined_trim_pages_text": "--- page 2 ---\nAn enduring legacy | 6 Endless possibilities | 8 A distinctive invitation | 20 High-powered Luxury | 26\nHistory of character Discover the Levante Experience something truly Maserati Connect and\nCollection unique in a world of Safety ADAS\nstandardized choices\nFuoriserie | 42 Technical specifications | 48 A world of possibilities | 52\nYour Maserati tailor-made Specifications overview of all\nto your unique personality Levante versions\n2\n\n--- page 13 ---\nLevante-Accept no Boundaries\n430 264 5.2 V6 AWD 580\nHP km/h sec Nm\nMax power Max speed Acceleration Engine layout Traction Max torque\nS version technical specifications.\n13\n\n--- page 35 ---\nThe purposeful ambience of the cabin is another aspect that creates a strong\npoint of difference for Maserati. Three lavish interior trims add to the appeal of\nthis sanctuary for the driver, and further increase the options for personalisation.\nThe first one is the Regimental open pore, a open-pore wooden veneer inspired\nby textures found in the fashion industry and revered by the leading couturiers of\nMilan. The second one is the Matt carbon fibre weave, inspired by the Levante\nTrofeo with its host of exterior carbon fibre features, the 3D effect of the weave\npattern adds to the dynamic credentials inside. The last one is the High-gloss\nmetal weave: this stylish new trim is created by using metallic meshes, and is\ninspired by contemporary architecture; the elegant chevron weave pattern adds\nto the sporty feel of the cabin.\n35\n\n--- page 48 ---\nTechnical specifications\n48\n\n--- page 49 ---\nTechnical specifications\n49"
+}

@@ -16,7 +16,7 @@ from contextlib import contextmanager
 import pytest
 
 _ATTRIBUTION_DDL = """
-CREATE TABLE car_attribution (
+CREATE TABLE IF NOT EXISTS car_attribution (
     car_id           INTEGER PRIMARY KEY,
     status           TEXT,
     observed_rooftop TEXT,
@@ -24,12 +24,12 @@ CREATE TABLE car_attribution (
     evidence         TEXT,
     decided_at       TEXT
 );
-CREATE TABLE dealer_feed_scope (
+CREATE TABLE IF NOT EXISTS dealer_feed_scope (
     dealer_id  TEXT PRIMARY KEY,
     scope      TEXT,
     decided_at TEXT
 );
-CREATE TABLE car_move_log (
+CREATE TABLE IF NOT EXISTS car_move_log (
     id             INTEGER PRIMARY KEY AUTOINCREMENT,
     car_id         INTEGER,
     from_dealer_id TEXT,
@@ -85,7 +85,7 @@ VERDICTS = [
     (7, "conflicting", "Mall of Georgia Mazda", "bmwofmurrieta-com"),
 ]
 
-SCOPES = [("bmwofmurrieta-com", "group"), ("othertoyota-com", "single")]
+SCOPES = [("bmwofmurrieta-com", "group"), ("othertoyota-com", "rooftop")]
 
 # What apply_attribution_moves logged. Car 6's move stands; car 7's was reverted, so
 # the dealer it sits at now is scan drift, not a resolved destination.
@@ -247,6 +247,43 @@ def test_home_rails_carry_the_caveat(fleet, monkeypatch):
     assert by_id[1]["location_confirmed"] is False
     assert "Rick Hendrick Chevrolet Naples" in by_id[1]["location_note"]
     assert "location_confirmed" not in by_id[2]
+
+
+def test_dealer_attribution_resolution_rolls_up_the_same_fleet(fleet):
+    """
+    The admin resolution view (backend/db/repositories/attribution_repo.py) must
+    agree with the per-car reader on this exact fleet: bmwofmurrieta-com is the
+    one group-fed dealer, car 1 (conflicting) and car 3 (unverified) are its two
+    stuck cars, car 2 (confirmed) is not, and the single-rooftop dealer
+    (othertoyota-com) is excluded entirely -- this is the "which stores are
+    unlocatable" view, not a fleet-wide caveat count.
+    """
+    from backend.db.repositories.attribution_repo import dealer_attribution_resolution
+
+    rows = dealer_attribution_resolution()
+    by_id = {r["dealer_id"]: r for r in rows}
+
+    assert "othertoyota-com" not in by_id  # rooftop-scoped: not this view's question
+    row = by_id["bmwofmurrieta-com"]
+    assert row["confirmed"] == 1
+    assert row["conflicting"] == 1
+    assert row["unverified"] == 1
+    assert row["stuck"] == 2  # the conflicting car + the unverified-at-group-feed car
+    assert "Rick Hendrick Chevrolet Naples" in row["stuck_why"]
+    assert "no gallery evidence" in row["stuck_why"]
+    assert row["active_cars"] == 3
+    assert row["dealer_name"] == "BMW of Murrieta"
+
+    # sorted worst (stuck) first by default
+    assert rows[0]["dealer_id"] == "bmwofmurrieta-com"
+
+
+def test_dealer_attribution_resolution_empty_when_tables_absent(sqlite_inventory):
+    """A fresh DB (car_attribution/dealer_feed_scope never created) must degrade to
+    an empty list, not raise -- the admin page shows 'no data yet', never a 500."""
+    from backend.db.repositories.attribution_repo import dealer_attribution_resolution
+
+    assert dealer_attribution_resolution() == []
 
 
 def test_batch_serializer_is_one_verdict_read_per_response(fleet, monkeypatch):

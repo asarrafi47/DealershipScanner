@@ -306,6 +306,37 @@ body.car-detail-page .car-detail {
     margin: 0;
 }
 
+.car-hero-link--share {
+    padding: 9px 16px;
+    border-radius: 10px;
+    border: 1px solid var(--border-medium);
+    background: var(--bg-card);
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.85) inset;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.car-hero-link--share:hover {
+    border-color: var(--navy);
+    background: var(--bg-elevated);
+    color: var(--navy-deep);
+}
+
+.car-share-toast {
+    display: inline-flex;
+    align-items: center;
+    padding: 9px 14px;
+    border-radius: 10px;
+    background: var(--navy, #1c2b46);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.car-share-toast[hidden] {
+    display: none;
+}
+
 .car-gallery-badge {
     position: absolute;
     right: 14px;
@@ -457,7 +488,7 @@ body.car-detail-page .car-detail {
     display: grid;
     grid-template-columns: minmax(0, 1.05fr) minmax(280px, 0.95fr);
     gap: clamp(16px, 2.5vw, 24px);
-    align-items: stretch;
+    align-items: start;
     width: 100%;
 }
 
@@ -1743,6 +1774,148 @@ button.back-link.car-back-link {
     background: var(--bg-subtle);
 }
 
+.car-gallery-empty-msg {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: 0 24px;
+    text-align: center;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    background: rgba(0, 0, 0, 0.04);
+    pointer-events: none;
+}
+
+.car-gallery-empty-msg[hidden] {
+    display: none;
+}
+
+/* ---- Photo lightbox: full-viewport zoom/pan view, built by car_page.js ---- */
+body.car-lightbox-open {
+    overflow: hidden;
+}
+
+.car-lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 3000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(8, 12, 18, 0.94);
+}
+
+.car-lightbox[hidden] {
+    display: none;
+}
+
+.car-lightbox-stage {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    touch-action: none;
+}
+
+.car-lightbox-img {
+    max-width: 92vw;
+    max-height: 88vh;
+    cursor: grab;
+    touch-action: none;
+    transform-origin: center center;
+    transition: transform 0.08s ease-out;
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+.car-lightbox-img--zoomed {
+    cursor: grab;
+    transition: none;
+}
+
+.car-lightbox-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    background: rgba(20, 36, 54, 0.6);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 1;
+}
+
+.car-lightbox-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    background: rgba(20, 36, 54, 0.6);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 1;
+}
+
+.car-lightbox-nav:hover {
+    background: rgba(20, 36, 54, 0.85);
+}
+
+.car-lightbox-prev {
+    left: 16px;
+}
+
+.car-lightbox-next {
+    right: 16px;
+}
+
+.car-lightbox-counter {
+    position: absolute;
+    bottom: 18px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+}
+
+.car-lightbox-hint {
+    position: absolute;
+    bottom: 18px;
+    right: 18px;
+    margin: 0;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.72rem;
+}
+
+@media (max-width: 640px) {
+    .car-lightbox-nav {
+        width: 40px;
+        height: 40px;
+    }
+    .car-lightbox-hint {
+        display: none;
+    }
+}
+
 .car-gallery-controls {
     display: flex;
     align-items: center;
@@ -1867,6 +2040,40 @@ button.back-link.car-back-link {
     font-size: 1.05rem;
     font-weight: 600;
     color: var(--text-muted);
+}
+
+/* Original-MSRP line under the asking price: the struck-through sticker
+   figure and the savings delta share one calm, properly-spaced row instead
+   of a bold string jammed against the price. */
+.car-detail-price .price-msrp-line {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 8px;
+    margin-top: 8px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--text-muted);
+}
+
+.car-detail-price .price-msrp-line__label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.car-detail-price .price-msrp-line__figure {
+    font-variant-numeric: tabular-nums;
+}
+
+.car-detail-price .price-msrp-line__delta {
+    font-weight: 700;
+    color: var(--deal-below, #1a5f4a);
+}
+
+.car-detail-price .price-msrp-line .price-msrp-source {
+    margin-left: 0; /* flex gap already spaces it */
 }
 
 /* Provenance for a sticker-derived MSRP. The figure is only ever shown when it
@@ -2568,5 +2775,37 @@ button.back-link.car-back-link {
     line-height: 1.45;
     color: var(--text-muted);
     margin: 14px 0 10px;
+}
+
+/* ---- Printable build sheet ----
+   #build-sheet-print-btn (car_page.js initBuildSheetPrint) switches to the
+   Options tab -- so #build-sheet-panel is actually on screen, not
+   [hidden] -- and then calls window.print(). This block hides the rest of
+   the page (nav, hero, other tabs, chrome) so the printout / "save as PDF"
+   is just the build sheet itself. */
+@media print {
+    body * {
+        visibility: hidden;
+    }
+    #build-sheet-panel,
+    #build-sheet-panel * {
+        visibility: visible;
+    }
+    #build-sheet-panel {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        margin: 0;
+        border: none;
+        box-shadow: none;
+    }
+    .build-sheet-print-btn,
+    .car-lightbox,
+    .car-share-toast {
+        display: none !important;
+    }
+    @page {
+        margin: 1.5cm;
+    }
 }
 

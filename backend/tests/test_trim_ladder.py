@@ -905,7 +905,7 @@ def test_trim_ladder_skipped_before_2010() -> None:
     assert resolve_trim_ladder(make="Jeep", model="Renegade", year=2009, trim="Sport") is None
 
 
-def test_trim_ladder_hidden_on_api_without_premium(monkeypatch) -> None:
+def test_trim_ladder_free_tier_strips_adds_on_api_without_premium(monkeypatch) -> None:
     from backend.main import app
 
     car = {
@@ -930,7 +930,17 @@ def test_trim_ladder_hidden_on_api_without_premium(monkeypatch) -> None:
     with app.test_client() as client:
         rv = client.get("/api/cars/99")
     body = rv.get_json()
-    assert body.get("trim_ladder") is None
+    # Basic ladder position (names + neighbors) is free on every listing —
+    # only the per-rung equipment diff is Premium, and must be stripped
+    # server-side (not just hidden in the SSR template) so the JSON API
+    # never leaks it to a non-premium viewer.
+    ladder = body.get("trim_ladder")
+    assert ladder is not None
+    assert ladder.get("steps")
+    for step in ladder["steps"]:
+        assert "adds" not in step
+        assert "sticker_adds" not in step
+        assert "sticker_equipment" not in step
 
 
 def test_trim_ladder_in_api_when_premium_renegade(monkeypatch) -> None:

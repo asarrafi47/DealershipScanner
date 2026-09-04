@@ -212,18 +212,25 @@ def inventory_add_vin():
     if not vin_raw:
         flash("Enter a VIN.", "error")
         return redirect(url_for("dealer_portal.inventory_listings"))
-    row, err = build_vehicle_prefill_from_vin(vin_raw)
+    # Duplicate check BEFORE the network VIN-decode lookup: a VIN already in
+    # this dealer's inventory would be rejected after the decode call anyway
+    # (insert_vehicle's UNIQUE(user_id, vin)), so checking first skips the
+    # wasted network round-trip for a VIN we already know we'll refuse.
     if ddb.count_user_vehicles_with_vin(uid, vin_raw):
         flash("That VIN is already in your inventory.", "error")
         return redirect(url_for("dealer_portal.inventory_listings"))
+    row, err = build_vehicle_prefill_from_vin(vin_raw)
     try:
-        ddb.insert_vehicle(uid, row)
+        new_id = ddb.insert_vehicle(uid, row)
     except sqlite3.IntegrityError:
         flash("That VIN is already in your inventory.", "error")
         return redirect(url_for("dealer_portal.inventory_listings"))
     except ValueError as e:
         flash(str(e), "error")
         return redirect(url_for("dealer_portal.inventory_listings"))
+    from backend.dealer.portal_sync import sync_portal_vehicle_to_public_listings
+
+    sync_portal_vehicle_to_public_listings(uid, ddb.get_vehicle(uid, new_id) or {})
     if err:
         flash(f"Vehicle added with partial decode ({err}). Review and edit fields as needed.", "info")
     else:
@@ -280,7 +287,43 @@ def inventory_upload_photos(vehicle_id: int):
         saved += 1
     if saved:
         ddb.update_vehicle_gallery(uid, vehicle_id, gallery)
+        from backend.dealer.portal_sync import sync_portal_vehicle_to_public_listings
+
+        sync_portal_vehicle_to_public_listings(uid, ddb.get_vehicle(uid, vehicle_id) or {})
         flash(f"Saved {saved} photo(s).", "success")
+    return redirect(url_for("dealer_portal.inventory_listings"))
+
+
+@bp.route("/inventory/<int:vehicle_id>/photo/delete", methods=["POST"])
+def inventory_delete_photo(vehicle_id: int):
+    """Remove one photo from a vehicle's gallery without deleting the vehicle."""
+    uid = _require_login()
+    if uid == -1:
+        abort(403)
+    if not uid:
+        abort(403)
+    car = ddb.get_vehicle(uid, vehicle_id)
+    if not car:
+        abort(404)
+    target = (request.form.get("url") or "").strip()
+    gallery = list(car.get("gallery") or [])
+    if not target or target not in gallery:
+        flash("That photo was not found.", "error")
+        return redirect(url_for("dealer_portal.inventory_listings"))
+    gallery = [u for u in gallery if u != target]
+    if target.startswith(f"/dealer-uploads/{uid}/{vehicle_id}/"):
+        bn = _safe_upload_basename(target.split("/")[-1])
+        if bn:
+            p = UPLOAD_ROOT / str(uid) / str(vehicle_id) / bn
+            try:
+                p.unlink(missing_ok=True)
+            except OSError:
+                pass
+    ddb.update_vehicle_gallery(uid, vehicle_id, gallery)
+    from backend.dealer.portal_sync import sync_portal_vehicle_to_public_listings
+
+    sync_portal_vehicle_to_public_listings(uid, ddb.get_vehicle(uid, vehicle_id) or {})
+    flash("Photo removed.", "success")
     return redirect(url_for("dealer_portal.inventory_listings"))
 
 
@@ -346,6 +389,9 @@ def inventory_update_vehicle(vehicle_id: int):
 
     if fields:
         ddb.update_vehicle_fields(uid, vehicle_id, fields)
+        from backend.dealer.portal_sync import sync_portal_vehicle_to_public_listings
+
+        sync_portal_vehicle_to_public_listings(uid, ddb.get_vehicle(uid, vehicle_id) or {})
         flash("Vehicle updated.", "success")
     return redirect(url_for("dealer_portal.inventory_listings"))
 
@@ -372,6 +418,9 @@ def inventory_delete_vehicle(vehicle_id: int):
             except OSError:
                 pass
     if ddb.delete_vehicle(uid, vehicle_id):
+        from backend.dealer.portal_sync import remove_portal_vehicle_from_public_listings
+
+        remove_portal_vehicle_from_public_listings(car.get("vin") or "", uid)
         flash("Vehicle removed.", "success")
     return redirect(url_for("dealer_portal.inventory_listings"))
 

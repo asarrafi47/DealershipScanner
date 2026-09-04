@@ -1,0 +1,143 @@
+{
+  "schema_version": 2,
+  "catalog_key": "2022|alfaromeo|giulia",
+  "year": 2022,
+  "make": "Alfa Romeo",
+  "model": "GIULIA",
+  "source_pdf": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2022_Alfa Romeo_GIULIA_Brochure.pdf",
+  "source_pdf_name": "2022_Alfa Romeo_GIULIA_Brochure.pdf",
+  "source_pdf_sha256": "dabb0942f1d99be5ecddc09966fabe7f7a0df5b0f3d0e2202a98929711b473ae",
+  "source_pdf_bytes": 10250263,
+  "page_count": 6,
+  "pages_captured": 6,
+  "capture": "lossless",
+  "layout_captured": true,
+  "all_pages": true,
+  "trim_hint_pages": [
+    6
+  ],
+  "warnings": [],
+  "pages": [
+    {
+      "page": 1,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 1152.0,
+      "height": 720.0,
+      "text": "2 0 2 2",
+      "table_lines": [],
+      "lines": [
+        {"top":618.4,"cells":[[140.2,187.0,"2 0 2 2"]]}
+      ]
+    },
+    {
+      "page": 2,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 1152.0,
+      "height": 720.0,
+      "text": "A JOYFUL MARRIAGE OF\nPERFORMANCE AND ART\nIt starts with a strong foundation. The Alfa Romeo Giulia brings a legacy of world\nchampion race titles and a passionate Italian design aesthetic to every relationship.\nGiulia is specially equipped to weather the challenges and conditions of the road\nahead while keeping its rich, storied past conspicuously in the rearview mirror.\nFor all involved, it\u2019s a blissful union that promises to last a lifetime.\nGiulia Quadrifoglio shown in Rosso Etna. HISTORY PAGE 2",
+      "table_lines": [
+        "Giulia Quadrifoglio shown in Rosso Etna. HISTORY | PAGE 2"
+      ],
+      "lines": [
+        {"top":66.0,"cells":[[110.2,435.8,"A JOYFUL MARRIAGE OF"]]},
+        {"top":98.0,"cells":[[110.2,445.0,"PERFORMANCE AND ART"]]},
+        {"top":139.2,"cells":[[110.2,536.4,"It starts with a strong foundation. The Alfa Romeo Giulia brings a legacy of world"]]},
+        {"top":157.2,"cells":[[110.2,551.7,"champion race titles and a passionate Italian design aesthetic to every relationship."]]},
+        {"top":175.2,"cells":[[110.2,534.4,"Giulia is specially equipped to weather the challenges and conditions of the road"]]},
+        {"top":193.2,"cells":[[110.2,524.1,"ahead while keeping its rich, storied past conspicuously in the rearview mirror."]]},
+        {"top":211.2,"cells":[[110.2,463.3,"For all involved, it\u2019s a blissful union that promises to last a lifetime."]]},
+        {"top":662.4,"cells":[[63.0,202.0,"Giulia Quadrifoglio shown in Rosso Etna."],[1043.4,1082.9,"HISTORY"],[1109.1,1140.9,"PAGE 2"]]}
+      ]
+    },
+    {
+      "page": 3,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 1152.0,
+      "height": 720.0,
+      "text": "Always harkening to its roots, the Giulia Quadrifoglio proudly carries on the historic\ngood-luck tradition of the four-leaf clover badge \u2014 distinguishing the very top\nAlfa Romeo performers since 1923.\nFeatures include 19-inch Dark 5-hole aluminum wheels with Pirelli\u00ae performance\ntires, performance front and rear fascias, carbon fiber active aero front splitter,\ndynamic dual-mode quad exhaust and high-performance Brembo\u00ae brakes with\nAnodized brake calipers.\nMemorable performances start with great seats. Enjoy\n10-way power driver and passenger seats, including 4-way\nlumbar support bolsters and manual thigh support.\nQUADRIFOGLIO PAGE 3",
+      "table_lines": [
+        "Always harkening to its roots, the Giulia Quadrifoglio proudly carries on the historic\ngood-luck tradition of the four-leaf clover badge \u2014 distinguishing the very top\nAlfa Romeo performers since 1923.\nFeatures include 19-inch Dark 5-hole aluminum wheels with Pirelli\u00ae performance\ntires, performance front and rear fascias, carbon fiber active aero front splitter,\ndynamic dual-mode quad exhaust and high-performance Brembo\u00ae brakes with\nAnodized brake calipers.",
+        "Memorable performances start with great seats. Enjoy\n10-way power driver and passenger seats, including 4-way\nlumbar support bolsters and manual thigh support.",
+        "QUADRIFOGLIO | PAGE 3"
+      ],
+      "lines": [
+        {"top":23.4,"cells":[[698.2,1109.2,"Always harkening to its roots, the Giulia Quadrifoglio proudly carries on the historic"]]},
+        {"top":41.4,"cells":[[698.2,1094.7,"good-luck tradition of the four-leaf clover badge \u2014 distinguishing the very top"]]},
+        {"top":59.4,"cells":[[698.2,877.6,"Alfa Romeo performers since 1923."]]},
+        {"top":82.5,"cells":[[698.2,1114.3,"Features include 19-inch Dark 5-hole aluminum wheels with Pirelli\u00ae performance"]]},
+        {"top":100.5,"cells":[[698.2,1111.6,"tires, performance front and rear fascias, carbon fiber active aero front splitter,"]]},
+        {"top":118.5,"cells":[[698.2,1103.7,"dynamic dual-mode quad exhaust and high-performance Brembo\u00ae brakes with"]]},
+        {"top":136.5,"cells":[[698.2,825.8,"Anodized brake calipers."]]},
+        {"top":456.5,"cells":[[69.1,362.3,"Memorable performances start with great seats. Enjoy"]]},
+        {"top":474.5,"cells":[[69.1,372.4,"10-way power driver and passenger seats, including 4-way"]]},
+        {"top":492.5,"cells":[[69.1,336.8,"lumbar support bolsters and manual thigh support."]]},
+        {"top":662.4,"cells":[[1015.1,1082.9,"QUADRIFOGLIO"],[1109.1,1140.9,"PAGE 3"]]}
+      ]
+    },
+    {
+      "page": 4,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 1152.0,
+      "height": 720.0,
+      "text": "VELOCE: THE PERFECT\nEXPRESSION OF \u201cFAST\u201d\nAlfa Romeo has long been the master of connecting its storied history with a promising new automotive future. The latest chapter?\nThe new Giulia Veloce. Named for the Brand\u2019s 1962 sport coupe, Veloce is Italian for \u201cfast\u201d and inspires every aspect of its new sedan\nincarnation. This modern Veloce brings a striking level of performance and design to its class. Beyond 280 horsepower, it features a\nbody-color body kit and Sport rear diffuser, mechanical limited-slip differential, 19-inch Sport 5-hole aluminum wheels, Red-painted\nbrake calipers with White Alfa Romeo script and Black window surrounds, all lending to Giulia\u2019s competitive spirit.\nGiulia Veloce shown in Ocra GT Tri-Coat. VELOCE PAGE 4",
+      "table_lines": [
+        "Giulia Veloce shown in Ocra GT Tri-Coat. VELOCE | PAGE 4"
+      ],
+      "lines": [
+        {"top":140.9,"cells":[[188.7,493.7,"VELOCE: THE PERFECT"]]},
+        {"top":172.9,"cells":[[188.7,503.3,"EXPRESSION OF \u201cFAST\u201d"]]},
+        {"top":558.2,"cells":[[63.0,755.0,"Alfa Romeo has long been the master of connecting its storied history with a promising new automotive future. The latest chapter?"]]},
+        {"top":576.2,"cells":[[63.0,767.8,"The new Giulia Veloce. Named for the Brand\u2019s 1962 sport coupe, Veloce is Italian for \u201cfast\u201d and inspires every aspect of its new sedan"]]},
+        {"top":594.2,"cells":[[63.0,760.1,"incarnation. This modern Veloce brings a striking level of performance and design to its class. Beyond 280 horsepower, it features a"]]},
+        {"top":612.2,"cells":[[63.0,762.9,"body-color body kit and Sport rear diffuser, mechanical limited-slip differential, 19-inch Sport 5-hole aluminum wheels, Red-painted"]]},
+        {"top":630.2,"cells":[[63.0,664.2,"brake calipers with White Alfa Romeo script and Black window surrounds, all lending to Giulia\u2019s competitive spirit."]]},
+        {"top":662.4,"cells":[[63.0,199.8,"Giulia Veloce shown in Ocra GT Tri-Coat."],[1048.1,1082.9,"VELOCE"],[1109.1,1140.9,"PAGE 4"]]}
+      ]
+    },
+    {
+      "page": 5,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 1152.0,
+      "height": 720.0,
+      "text": "Alfa Romeo has always taken a unique and innovative approach to design its automobiles; it is the point of convergence between the most cutting-edge\ntechnology and a strong instinct to inspire emotions \u2014 always putting the driver at the center of the design. The cabin embraces a striking combination of\nmaterials, including Aluminum interior accents, Sport pedals and footrest. Leather gloves may be a thing of the past as the heated front and rear seats and\nsteering wheel are wrapped in leather, while the 14-way power driver seat includes 4-way lumbar support with power bolsters and manual thigh support.\nWith standard conveniences like a wireless charging pad and headlamp washers, Veloce effectively marries body and machine.\nGiulia Veloce interior shown with Black leather trim and Aluminum accents. VELOCE PAGE 5",
+      "table_lines": [
+        "Giulia Veloce interior shown with Black leather trim and Aluminum accents. VELOCE | PAGE 5"
+      ],
+      "lines": [
+        {"top":558.2,"cells":[[63.0,826.4,"Alfa Romeo has always taken a unique and innovative approach to design its automobiles; it is the point of convergence between the most cutting-edge"]]},
+        {"top":576.2,"cells":[[63.0,839.2,"technology and a strong instinct to inspire emotions \u2014 always putting the driver at the center of the design. The cabin embraces a striking combination of"]]},
+        {"top":594.2,"cells":[[63.0,841.9,"materials, including Aluminum interior accents, Sport pedals and footrest. Leather gloves may be a thing of the past as the heated front and rear seats and"]]},
+        {"top":612.2,"cells":[[63.0,832.9,"steering wheel are wrapped in leather, while the 14-way power driver seat includes 4-way lumbar support with power bolsters and manual thigh support."]]},
+        {"top":630.2,"cells":[[63.0,701.5,"With standard conveniences like a wireless charging pad and headlamp washers, Veloce effectively marries body and machine."]]},
+        {"top":662.4,"cells":[[63.0,320.3,"Giulia Veloce interior shown with Black leather trim and Aluminum accents."],[1048.1,1082.9,"VELOCE"],[1109.1,1140.9,"PAGE 5"]]}
+      ]
+    },
+    {
+      "page": 6,
+      "trim_hint": true,
+      "has_text_layer": true,
+      "width": 1152.0,
+      "height": 720.0,
+      "text": "\u00a92021 FCA US LLC. All Rights Reserved. Alfa Romeo is a registered trademark of FCA Group Marketing S.p.A., used with permission.\nBrembo is a registered trademark of Freni Brembo SpA. Facebook and logo are registered trademarks of Facebook, Inc. The Twitter logo is a service mark of Twitter, Inc. Instagram and logo are registered trademarks of Instagram, Inc.\nGoogle, YouTube, and other related marks and logos are trademarks of Google LLC. Pirelli is a registered trademark of Pirelli S.p.A.\nThis brochure is a publication of FCA US LLC. All product illustrations and specifications are based upon current information at the time of publication approval. FCA US LLC reserves the right to make changes from time to time, without notice or\nobligation, in prices, specifications, colors and materials, and to change or discontinue models which are considered necessary to the purpose of product improvement or for reasons of design and/or marketing.\n@alfaromeousa\nDISCLOSURES PAGE 6",
+      "table_lines": [
+        "\u00a92021 FCA US LLC. All Rights Reserved. Alfa Romeo is a registered trademark of FCA Group Marketing S.p.A., used with permission.\nBrembo is a registered trademark of Freni Brembo SpA. Facebook and logo are registered trademarks of Facebook, Inc. The Twitter logo is a service mark of Twitter, Inc. Instagram and logo are registered trademarks of Instagram, Inc.\nGoogle, YouTube, and other related marks and logos are trademarks of Google LLC. Pirelli is a registered trademark of Pirelli S.p.A.\nThis brochure is a publication of FCA US LLC. All product illustrations and specifications are based upon current information at the time of publication approval. FCA US LLC reserves the right to make changes from time to time, without notice or\nobligation, in prices, specifications, colors and materials, and to change or discontinue models which are considered necessary to the purpose of product improvement or for reasons of design and/or marketing.\n@alfaromeousa",
+        "DISCLOSURES | PAGE 6"
+      ],
+      "lines": [
+        {"top":360.2,"cells":[[356.2,795.8,"\u00a92021 FCA US LLC. All Rights Reserved. Alfa Romeo is a registered trademark of FCA Group Marketing S.p.A., used with permission."]]},
+        {"top":377.1,"cells":[[192.2,959.8,"Brembo is a registered trademark of Freni Brembo SpA. Facebook and logo are registered trademarks of Facebook, Inc. The Twitter logo is a service mark of Twitter, Inc. Instagram and logo are registered trademarks of Instagram, Inc."]]},
+        {"top":387.1,"cells":[[360.5,791.5,"Google, YouTube, and other related marks and logos are trademarks of Google LLC. Pirelli is a registered trademark of Pirelli S.p.A."]]},
+        {"top":404.0,"cells":[[174.2,977.8,"This brochure is a publication of FCA US LLC. All product illustrations and specifications are based upon current information at the time of publication approval. FCA US LLC reserves the right to make changes from time to time, without notice or"]]},
+        {"top":414.0,"cells":[[232.1,919.9,"obligation, in prices, specifications, colors and materials, and to change or discontinue models which are considered necessary to the purpose of product improvement or for reasons of design and/or marketing."]]},
+        {"top":572.7,"cells":[[592.5,729.5,"@alfaromeousa"]]},
+        {"top":662.4,"cells":[[1020.2,1082.9,"DISCLOSURES"],[1109.1,1140.9,"PAGE 6"]]}
+      ]
+    }
+  ],
+  "combined_trim_pages_text": "--- page 6 ---\n\u00a92021 FCA US LLC. All Rights Reserved. Alfa Romeo is a registered trademark of FCA Group Marketing S.p.A., used with permission.\nBrembo is a registered trademark of Freni Brembo SpA. Facebook and logo are registered trademarks of Facebook, Inc. The Twitter logo is a service mark of Twitter, Inc. Instagram and logo are registered trademarks of Instagram, Inc.\nGoogle, YouTube, and other related marks and logos are trademarks of Google LLC. Pirelli is a registered trademark of Pirelli S.p.A.\nThis brochure is a publication of FCA US LLC. All product illustrations and specifications are based upon current information at the time of publication approval. FCA US LLC reserves the right to make changes from time to time, without notice or\nobligation, in prices, specifications, colors and materials, and to change or discontinue models which are considered necessary to the purpose of product improvement or for reasons of design and/or marketing.\n@alfaromeousa\nDISCLOSURES PAGE 6\n\n\u00a92021 FCA US LLC. All Rights Reserved. Alfa Romeo is a registered trademark of FCA Group Marketing S.p.A., used with permission.\nBrembo is a registered trademark of Freni Brembo SpA. Facebook and logo are registered trademarks of Facebook, Inc. The Twitter logo is a service mark of Twitter, Inc. Instagram and logo are registered trademarks of Instagram, Inc.\nGoogle, YouTube, and other related marks and logos are trademarks of Google LLC. Pirelli is a registered trademark of Pirelli S.p.A.\nThis brochure is a publication of FCA US LLC. All product illustrations and specifications are based upon current information at the time of publication approval. FCA US LLC reserves the right to make changes from time to time, without notice or\nobligation, in prices, specifications, colors and materials, and to change or discontinue models which are considered necessary to the purpose of product improvement or for reasons of design and/or marketing.\n@alfaromeousa\nDISCLOSURES | PAGE 6"
+}

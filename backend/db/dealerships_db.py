@@ -329,7 +329,7 @@ def search_dealerships_by_radius(
     cursor.execute(
         """
         SELECT id, name, website_url, city, state, latitude, longitude, created_at,
-               street_address, zip_code, dealer_website_url,
+               street_address, zip_code, dealer_website_url, phone,
                source_dmv, source_osm, source_web, osm_id,
                duplicate_of_id, duplicate_score, is_active
         FROM dealerships

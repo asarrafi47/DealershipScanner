@@ -742,3 +742,13 @@ def norm_str(v) -> str:
     if v is None:
         return ""
     return str(v).strip()
+
+
+def norm_label_str(v) -> str:
+    """Like norm_str, but unwraps {"label"/"name"/"value"/"text": "..."} shaped
+    fields — some dealer-feed variants send single-value fields (transmission,
+    drivetrain) as an object instead of a plain string, and str(v) on a dict
+    would otherwise persist its Python repr verbatim."""
+    if isinstance(v, dict):
+        v = v.get("label") or v.get("name") or v.get("value") or v.get("text")
+    return norm_str(v)

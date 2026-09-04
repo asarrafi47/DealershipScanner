@@ -17,6 +17,147 @@
         </p>
     </header>
 
+    {% set report = invariants_report %}
+    <section class="db-section dev-section">
+        <div class="db-section-header">
+            <p class="db-eyebrow">Nightly invariants</p>
+            <h2 class="db-section-title">Data-quality invariant suite</h2>
+        </div>
+        <p class="dev-hint">
+            Reads the latest run of
+            <code>backend/scripts/data_quality_invariants.py</code>, scheduled nightly by
+            <code>deploy/nightly_data_quality_invariants.sh</code>. Reports; never repairs.
+        </p>
+
+        {% if not report or not report.found %}
+        <div class="dq-banner dq-banner--missing">
+            <span class="dq-banner__icon">&mdash;</span>
+            <div>
+                <div class="dq-banner__title">No invariants report found</div>
+                <div class="dq-banner__meta">
+                    {% if report and report.read_error %}
+                        Latest report at <code>{{ report.path }}</code> could not be parsed:
+                        {{ report.read_error }}
+                    {% else %}
+                        Expected under <code>workspace/data_quality/invariants_&lt;YYYYMMDD&gt;.json</code>
+                        &mdash; the nightly job has not run yet, or is not installed.
+                        See <code>deploy/NIGHTLY_REFRESH.md</code>.
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% else %}
+
+        {% if report.sample_mode %}
+        <div class="dq-banner dq-banner--partial">
+            <span class="dq-banner__icon">&#9888;</span>
+            <div>
+                <div class="dq-banner__title">PARTIAL COVERAGE (--render-cohorts sample run)</div>
+                <div class="dq-banner__meta">
+                    This run sampled a subset of cohorts; rendered-tier counts are not
+                    comparable to the full-run baseline. Treat rendered statuses below as a
+                    smoke signal only &mdash; do not act on a rendered REGRESSION here without
+                    confirming against a full run.
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="dq-banner {{ 'dq-banner--ok' if report.overall_ok else 'dq-banner--fail' }}">
+            {% if report.overall_ok %}
+            <span class="dq-banner__icon">&#9989;</span>
+            {% else %}
+            <span class="dq-banner__icon">&#10060;</span>
+            {% endif %}
+            <div>
+                <div class="dq-banner__title">
+                    {% if report.overall_ok %}
+                        All {{ report.total_count }} invariants at or below baseline
+                    {% else %}
+                        {{ report.failing_count }} of {{ report.total_count }} invariant(s) failing
+                        {% if report.new_defect_count %}
+                            &mdash; {{ report.new_defect_count }} NEW DEFECT CLASS{{ 'ES' if report.new_defect_count != 1 else '' }}
+                        {% endif %}
+                    {% endif %}
+                </div>
+                <div class="dq-banner__meta">
+                    {{ report.filename }} &middot; generated {{ report.generated_at or 'unknown' }}
+                    &middot; {{ report.elapsed_sec }}s
+                    &middot; {{ 'stored + rendered tiers' if report.rendered_tier_ran else 'stored tier only (rendered tier did not run)' }}
+                    &middot; coverage: {{ report.coverage }}
+                </div>
+            </div>
+        </div>
+
+        {% for tier, rows in (('stored', report.stored), ('rendered', report.rendered)) %}
+        {% if rows %}
+        <p class="dq-tier-label">{{ tier }} tier ({{ rows|length }})</p>
+        <div class="dev-table-wrap">
+            <table class="dev-table">
+                <thead>
+                    <tr>
+                        <th>Status</th>
+                        <th>Check</th>
+                        <th>Count</th>
+                        <th>Baseline</th>
+                        <th>&Delta;</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for v in rows %}
+                    {% set attn = v.status in invariant_fail_statuses %}
+                    <tr class="dq-check-row{{ ' dq-check-row--attn' if attn else '' }}">
+                        <td>
+                            {% if v.status == 'NEW_DEFECT_CLASS' %}
+                            <span class="dq-badge dq-badge--new-defect">New defect class</span>
+                            {% elif v.status == 'REGRESSION' %}
+                            <span class="dq-badge dq-badge--regression">Regression</span>
+                            {% elif v.status == 'NO_BASELINE' %}
+                            <span class="dq-badge dq-badge--no-baseline">No baseline</span>
+                            {% elif v.status == 'ERROR' %}
+                            <span class="dq-badge dq-badge--error">Error</span>
+                            {% elif v.status == 'IMPROVED' %}
+                            <span class="dq-badge dq-badge--improved">Improved</span>
+                            {% else %}
+                            <span class="dq-badge dq-badge--ok">OK</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="dq-check-title">{{ v.title }}</div>
+                            {% if attn %}
+                            <div class="dq-check-detects">{{ v.detects }}</div>
+                            {% if v.error %}
+                            <div class="dq-check-detects">error: {{ v.error }}</div>
+                            {% endif %}
+                            {% if v.examples %}
+                            <ul class="dq-examples">
+                                {% for ex in v.examples[:3] %}
+                                <li>
+                                    {% if ex.id %}
+                                    <a href="{{ url_for('car_detail', car_id=ex.id) }}" target="_blank" class="dev-table-link">
+                                        car {{ ex.id }}
+                                    </a> &mdash;
+                                    {% endif %}
+                                    {{ ex.year }} {{ ex.make }} {{ ex.model }}{% if ex.trim %} {{ ex.trim }}{% endif %}
+                                </li>
+                                {% endfor %}
+                            </ul>
+                            {% endif %}
+                            {% endif %}
+                        </td>
+                        <td class="dev-mono">{{ v.count }}{% if v.denominator %} / {{ v.denominator }}{% endif %}</td>
+                        <td class="dev-mono">{{ v.baseline if v.baseline is not none else '—' }}</td>
+                        <td class="dev-mono">{{ '%+d'|format(v.delta) if v.delta is not none else '' }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
+        {% endfor %}
+        {% endif %}
+    </section>
+
     <section class="db-section dev-section">
         <div class="db-section-header dev-tools-header">
             <div>

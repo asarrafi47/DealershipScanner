@@ -17,6 +17,7 @@
         <div class="nav-links">
             <a href="{{ url_for('app_home') }}">Home</a>
             <a href="{{ url_for('listings') }}">Listings</a>
+            <a href="{{ url_for('store_admin.admin_dealers_hub') }}">Store admin</a>
             {% if admin_username %}
             <span class="nav-links-meta">Admin: {{ admin_username }}</span>
             <form method="post" action="{{ url_for('dev.admin_logout') }}" class="dev-logout-form">

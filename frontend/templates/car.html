@@ -114,6 +114,28 @@
             </div>
             {% endif %}
         {% endmacro %}
+        {# Options tab: one de-duplicated, provenance-badged equipment row.
+           ``item`` comes from build_unified_options_list() (see
+           backend/enrichment/generated_spec_sheet.py) and carries {name, key,
+           tier, badge_label, price_display}. The badge's visual weight follows
+           the same authority ladder as the build sheet above it: a real window
+           sticker or trim catalog reads solid/dashed navy; everything below
+           that (Monroney text, the listing's own description, a photo guess)
+           reads muted, dimmest for the photo-analysis guess. #}
+        {% macro render_unified_option_row(item) %}
+            {% set _badge_class =
+                'build-sheet-src--sticker' if item.badge_label == 'Window sticker'
+                else 'build-sheet-src--catalog' if item.badge_label == 'Trim catalog'
+                else 'build-sheet-src--factory' if item.tier == 'monroney_factory'
+                else 'build-sheet-src--standard' if item.tier == 'monroney_standard'
+                else 'build-sheet-src--listing' if item.tier == 'listing'
+                else 'build-sheet-src--photo-analysis' if item.tier == 'photo'
+                else 'build-sheet-src--photo' %}
+            <div class="car-sticker-opt-row" data-dedup-key="{{ item.key }}">
+                <span class="car-sticker-opt-name">{{ item.name }} <span class="build-sheet-src {{ _badge_class }}" title="{{ item.badge_label }}">{{ item.badge_label }}</span></span>
+                {% if item.price_display %}<span class="car-sticker-opt-price">{{ item.price_display }}</span>{% endif %}
+            </div>
+        {% endmacro %}
         {% if not car_embed %}
         {% include "_nav_public.html" %}
         {% endif %}
@@ -156,9 +178,10 @@
                 <div class="car-detail-gallery" id="car-gallery">
                     <script type="application/json" id="car-gallery-json" nonce="{{ csp_nonce }}">{{ gallery_images | tojson }}</script>
                     <div class="car-gallery-main">
-                        <div class="car-gallery-hero" id="car-gallery-hero" role="region" aria-label="Vehicle photo gallery">
+                        <div class="car-gallery-hero" id="car-gallery-hero" role="region" aria-label="Vehicle photo gallery" data-placeholder-src="{{ url_for('static', filename='placeholder.svg') }}">
                             <div class="car-detail-image">
                                 <img class="car-gallery-main-img" id="car-gallery-main-img" src="{{ (gallery_images[0] if gallery_images else url_for('static', filename='placeholder.svg')) | e }}" alt="{{ car.title }} — photo gallery">
+                                <p class="car-gallery-empty-msg" id="car-gallery-empty-msg" hidden>No photos available yet</p>
                             </div>
                             {% if vdp_spin_frames %}
                             <script type="application/json" id="car-spin-json" nonce="{{ csp_nonce }}">{{ vdp_spin_frames | tojson }}</script>
@@ -245,10 +268,20 @@
                                the car, and must never read as this car's sticker price. #}
                             {% if car.price and car.price > 0 %}
                                 ${{ "{:,.0f}".format(car.price) }}
-                                {% if car.msrp and car.msrp > 0 %}
-                                <span class="price-msrp-secondary">{{ car.msrp_label or 'MSRP' }}: ${{ "{:,.0f}".format(car.msrp) }}{% if car.msrp_from_sticker %}<span class="price-msrp-source">from window sticker</span>{% endif %}</span>
-                                {% elif car.sticker_msrp %}
-                                <span class="price-msrp-secondary">{{ car.sticker_msrp_label or 'MSRP' }}: ${{ "{:,.0f}".format(car.sticker_msrp) }}<span class="price-msrp-source">{{ car.sticker_msrp_note or 'from sticker photo in this listing' }}</span></span>
+                                {% set _msrp_fig = (car.msrp if car.msrp and car.msrp > 0 else car.sticker_msrp) %}
+                                {% if _msrp_fig %}
+                                {% set _msrp_label = (car.msrp_label if car.msrp and car.msrp > 0 else car.sticker_msrp_label) or 'MSRP' %}
+                                {% set _msrp_note = (car.sticker_msrp_note if (car.msrp_from_sticker or not (car.msrp and car.msrp > 0)) else none) or ('window sticker' if (car.msrp_from_sticker or not (car.msrp and car.msrp > 0)) else none) %}
+                                <span class="price-msrp-line">
+                                    <span class="price-msrp-line__label">{{ _msrp_label }}</span>
+                                    {% if _msrp_fig > car.price %}
+                                    <s class="price-msrp-line__figure">${{ "{:,.0f}".format(_msrp_fig) }}</s>
+                                    <span class="price-msrp-line__delta">&minus;${{ "{:,.0f}".format(_msrp_fig - car.price) }} vs sticker</span>
+                                    {% else %}
+                                    <span class="price-msrp-line__figure">${{ "{:,.0f}".format(_msrp_fig) }}</span>
+                                    {% endif %}
+                                    {% if _msrp_note %}<span class="price-msrp-source">{{ _msrp_note }}</span>{% endif %}
+                                </span>
                                 {% elif car.estimated_msrp_band %}
                                 <span class="price-msrp-secondary">Est. MSRP range: ${{ "{:,.0f}".format(car.estimated_msrp_band.low) }}&ndash;${{ "{:,.0f}".format(car.estimated_msrp_band.high) }}<span class="price-msrp-source">observed for this trim, not this car's sticker</span></span>
                                 {% endif %}
@@ -411,7 +444,23 @@
                                         <option value="72">72 Months</option>
                                     </select>
                                 </div>
-                                <p class="car-finance-disclaimer">Estimates include estimated local taxes &amp; fees. Actual terms vary by lender.</p>
+                                <div class="car-finance-tax-section">
+                                    <div class="car-finance-field">
+                                        <label class="car-finance-label" for="calc-zip">ZIP code <span class="car-finance-label-hint">(optional — for a local tax estimate)</span></label>
+                                        <input type="text" id="calc-zip" class="car-finance-input" inputmode="numeric" pattern="[0-9]*" maxlength="5" placeholder="e.g. 28202" value="{{ listings_geo_zip or '' }}">
+                                    </div>
+                                    <div class="car-finance-field-row">
+                                        <div class="car-finance-field">
+                                            <label class="car-finance-label" for="calc-tax-rate">Tax rate % <span class="car-finance-label-hint" id="calc-tax-rate-hint">(estimate — edit for your area)</span></label>
+                                            <input type="number" id="calc-tax-rate" class="car-finance-input" value="7" min="0" max="15" step="0.1" inputmode="decimal">
+                                        </div>
+                                        <div class="car-finance-field">
+                                            <label class="car-finance-label" for="calc-fees">Title/reg fees $ <span class="car-finance-label-hint">(estimate)</span></label>
+                                            <input type="number" id="calc-fees" class="car-finance-input" value="500" min="0" step="25" inputmode="numeric">
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="car-finance-disclaimer">Tax rate and fees are estimates you can edit above — we don't have your exact local rate. Actual terms vary by lender.</p>
                                 </div>
                                 </div>
                         </details>
@@ -426,6 +475,11 @@
                         {% else %}
                         <p class="car-hero-link-unavailable">Dealer listing link not available</p>
                         {% endif %}
+                        <button type="button" class="car-hero-link car-hero-link--share" id="car-share-btn" data-share-title="{{ car.title | e }}" aria-label="Share this listing">
+                            {{ icon('share', 16) }}
+                            <span>Share</span>
+                        </button>
+                        <span class="car-share-toast" id="car-share-toast" role="status" aria-live="polite" hidden>Link copied</span>
                     </div>
                 </div>
             </div>
@@ -562,11 +616,12 @@
                     </section>
 
                     <section class="car-vdp-panel car-vdp-panel--specs" id="car-panel-specs" role="tabpanel" aria-labelledby="car-tab-specs" data-panel="specs" hidden>
-                        {% set car_model_year = (car.year | int) if car.year else 0 %}
-                        {% set trim_ladder_year_ok = (not car_model_year) or car_model_year >= 2010 %}
-                        {% set show_trim_ladder = show_premium_features and trim_ladder and trim_ladder_year_ok %}
-                        {% set show_trim_ladder_upsell = billing_stripe_enabled and not show_premium_features and trim_ladder_year_ok %}
-                        <div class="car-specs-split{% if not show_trim_ladder and not show_trim_ladder_upsell %} car-specs-split--single{% endif %}">
+                        {# The basic trim ladder (this car's position + its immediate
+                           neighbor trims) is free on every model year — only the
+                           per-rung "what this trim adds" equipment diff stays a
+                           Premium feature. See the per-step gating below. #}
+                        {% set show_trim_ladder = trim_ladder %}
+                        <div class="car-specs-split{% if not show_trim_ladder %} car-specs-split--single{% endif %}">
                         <div class="car-specs-split__col car-specs-split__col--specs">
                         <h2 class="car-vdp-panel-title">Full specifications</h2>
                         <div class="car-specs car-spec-sheet">
@@ -890,20 +945,32 @@
                         </div>
                         </div>
 
-                        <aside class="car-specs-split__col car-specs-split__col--ladder" aria-label="Trim lineup"{% if not show_trim_ladder and not show_trim_ladder_upsell %} hidden{% endif %}>
+                        <aside class="car-specs-split__col car-specs-split__col--ladder" aria-label="Trim lineup"{% if not show_trim_ladder %} hidden{% endif %}>
                         {% if show_trim_ladder %}
+                        {# Free/any-year: the rung this car sits on plus its immediate
+                           neighbors, names only. Premium: the full OEM ladder, and each
+                           rung expands to show what it adds over the one below it. #}
+                        {% set ns = namespace(current_idx=0) %}
+                        {% for step in trim_ladder.steps %}
+                            {% if step.is_current %}{% set ns.current_idx = loop.index0 %}{% endif %}
+                        {% endfor %}
                         <div class="car-trim-ladder" id="car-trim-ladder" aria-label="{{ trim_ladder.label }}"
                             data-make="{{ trim_ladder.make | e }}"
                             data-model="{{ trim_ladder.model | e }}"
-                            data-listing-trim="{{ trim_ladder.listing_trim | e }}">
+                            data-listing-trim="{{ trim_ladder.listing_trim | e }}"
+                            data-premium="{% if show_premium_features %}1{% else %}0{% endif %}">
                             <h3 class="car-trim-ladder__title">Trim lineup</h3>
                             {% if trim_ladder.quality == 'high' %}
                             <p class="car-trim-ladder__confidence">Curated OEM trim order</p>
                             {% elif trim_ladder.quality == 'medium' and trim_ladder.matched %}
                             <p class="car-trim-ladder__confidence">Matched from listing data</p>
                             {% endif %}
+                            {% if not show_premium_features and trim_ladder.steps | length > 3 %}
+                            <p class="car-trim-ladder__confidence car-trim-ladder__confidence--low">Showing this trim and its nearest neighbors — <a href="{{ url_for('premium_page') }}">Premium</a> shows the full lineup and what each rung adds.</p>
+                            {% endif %}
                             <ol class="car-trim-ladder__timeline" role="list">
                                 {% for step in trim_ladder.steps %}
+                                {% if show_premium_features or (loop.index0 >= ns.current_idx - 1 and loop.index0 <= ns.current_idx + 1) %}
                                 <li class="car-trim-ladder__step{% if step.is_current %} car-trim-ladder__step--current{% elif step.is_passed %} car-trim-ladder__step--passed{% endif %}"
                                     role="listitem"
                                     data-trim-index="{{ loop.index0 }}"
@@ -923,7 +990,12 @@
                                             <span class="car-trim-ladder__chevron" aria-hidden="true"></span>
                                         </div>
                                         <div class="car-trim-ladder__panel" id="car-trim-ladder-panel-{{ loop.index0 }}">
-                                            {% if step.adds %}
+                                            {% if not show_premium_features %}
+                                            {# The equipment diff itself is the Premium feature — the
+                                               ladder position above is free on every listing. #}
+                                            <p class="car-trim-ladder__panel-label">What this trim adds</p>
+                                            <p class="car-trim-ladder__provenance">See the full equipment diff for every rung with <a href="{{ url_for('premium_page') }}">Premium</a>.</p>
+                                            {% elif step.adds %}
                                             <p class="car-trim-ladder__panel-label">What this trim adds</p>
                                             <ul class="car-trim-ladder__adds">
                                                 {% for item in step.adds %}
@@ -942,6 +1014,19 @@
                                             {% if step.sticker_adds_note %}
                                             <p class="car-trim-ladder__provenance">{{ step.sticker_adds_note }}</p>
                                             {% endif %}
+                                            {% elif step.sticker_equipment %}
+                                            {# No lower rung has sticker evidence to diff against, but this
+                                               trim's own window sticker is VIN-confirmed -- show its equipment
+                                               honestly, not framed as an addition. #}
+                                            <p class="car-trim-ladder__panel-label">Confirmed equipment on this trim</p>
+                                            <ul class="car-trim-ladder__adds">
+                                                {% for item in step.sticker_equipment %}
+                                                <li>{{ item }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                            {% if step.sticker_equipment_note %}
+                                            <p class="car-trim-ladder__provenance">{{ step.sticker_equipment_note }}</p>
+                                            {% endif %}
                                             {% elif step.specs %}
                                             <p class="car-trim-ladder__panel-label">What this trim adds</p>
                                             <ul class="car-trim-ladder__adds">
@@ -957,17 +1042,9 @@
                                         </div>
                                     </div>
                                 </li>
+                                {% endif %}
                                 {% endfor %}
                             </ol>
-                        </div>
-                        {% elif show_trim_ladder_upsell %}
-                        <div class="car-trim-ladder-upsell car-premium-upsell car-premium-upsell--inline" aria-labelledby="car-trim-ladder-upsell-heading">
-                            <h3 id="car-trim-ladder-upsell-heading" class="car-trim-ladder__title">Trim lineup</h3>
-                            <p class="car-packages-hint">See where this vehicle sits on the OEM trim ladder and what each rung adds — included with <a href="{{ url_for('premium_page') }}">Premium</a>.</p>
-                            {% if not logged_in %}
-                            <p class="car-packages-hint"><a href="{{ url_for('login_page') }}">Sign in</a> and upgrade to unlock the trim tree on every listing.</p>
-                            {% endif %}
-                            <p><a href="{{ url_for('premium_page') }}" class="primary-button">View Premium plans</a></p>
                         </div>
                         {% endif %}
                         </aside>
@@ -983,7 +1060,7 @@
                             <p><a href="{{ url_for('premium_page') }}" class="primary-button">View Premium plans</a></p>
                         </div>
                         {% else %}
-                        <div class="car-packages-section car-packages-section--tab" id="car-packages-section" data-car-id="{{ car.id }}" data-show-sticker="{% if show_window_sticker_ui %}1{% else %}0{% endif %}" data-sticker-local="{% if window_sticker_available %}1{% else %}0{% endif %}" data-panel-has-content="{% if packages_panel_has_content %}1{% else %}0{% endif %}" data-build-sheet="{% if generated_spec_sheet %}1{% else %}0{% endif %}" data-oem-sticker-url="{{ window_sticker_oem_url or '' }}">
+                        <div class="car-packages-section car-packages-section--tab" id="car-packages-section" data-car-id="{{ car.id }}" data-show-sticker="{% if show_window_sticker_ui %}1{% else %}0{% endif %}" data-sticker-local="{% if window_sticker_available %}1{% else %}0{% endif %}" data-panel-has-content="{% if packages_panel_has_content or unified_options_list %}1{% else %}0{% endif %}" data-build-sheet="{% if generated_spec_sheet %}1{% else %}0{% endif %}" data-oem-sticker-url="{{ window_sticker_oem_url or '' }}">
                             <h2 class="car-vdp-panel-title">{% if show_window_sticker_ui %}Packages &amp; window sticker{% else %}Packages &amp; equipment{% endif %}</h2>
             {% if hide_photo_analysis %}
             <p class="car-packages-hint">Options and colors from the OEM window sticker (when available), listing data, and equipment visible in listing photos.</p>
@@ -991,15 +1068,21 @@
             <p class="car-packages-hint">Options and colors from the OEM window sticker (when available), listing data, and photo analysis.</p>
             {% endif %}
 
-            <div id="car-packages-loading" class="car-packages-loading" {% if window_sticker_preview_url or packages_panel_has_content or generated_spec_sheet %}hidden{% endif %} aria-live="polite">
+            <div id="car-packages-loading" class="car-packages-loading" {% if window_sticker_preview_url or packages_panel_has_content or unified_options_list or generated_spec_sheet %}hidden{% endif %} aria-live="polite">
                 Loading factory equipment data…
             </div>
 
             {% if generated_spec_sheet %}
-            <section class="build-sheet" aria-label="Vehicle build sheet">
+            <section class="build-sheet" id="build-sheet-panel" aria-label="Vehicle build sheet">
                 <div class="build-sheet-head">
-                    <h3 class="build-sheet-title">Build sheet</h3>
-                    <p class="build-sheet-sub">{{ generated_spec_sheet.title }}{% if generated_spec_sheet.vin %} · VIN {{ generated_spec_sheet.vin }}{% endif %}</p>
+                    <div>
+                        <h3 class="build-sheet-title">Build sheet</h3>
+                        <p class="build-sheet-sub">{{ generated_spec_sheet.title }}{% if generated_spec_sheet.vin %} · VIN {{ generated_spec_sheet.vin }}{% endif %}</p>
+                    </div>
+                    <button type="button" class="build-sheet-print-btn" id="build-sheet-print-btn">
+                        {{ icon('print', 15) }}
+                        <span>Print / Save PDF</span>
+                    </button>
                 </div>
 
                 {% if generated_spec_sheet.has_pricing %}
@@ -1034,14 +1117,14 @@
 
                 {% if generated_spec_sheet.has_catalog %}
                 <div class="build-sheet-equip">
-                    <h4 class="build-sheet-section-title">Packages on this vehicle</h4>
-                    <p class="build-sheet-equip-note">Packages this listing names, priced from our window-sticker data where we have it. Prices marked <span class="build-sheet-src build-sheet-src--sticker">sticker</span> come from a real OEM window sticker for this make/model; blank means we have no priced sighting yet.{% if generated_spec_sheet.catalog_from_sticker_photo %} Lines marked <span class="build-sheet-src build-sheet-src--photo">sticker photo</span> were read off a window-sticker photo in this car's own gallery.{% endif %}</p>
+                    <h4 class="build-sheet-section-title">Packages &amp; options</h4>
+                    <p class="build-sheet-equip-note">Packages this listing names, priced from our window-sticker data where we have it. Prices marked <span class="build-sheet-src build-sheet-src--sticker">sticker</span> come from a real OEM window sticker for this make/model; blank means we have no priced sighting yet.{% if generated_spec_sheet.catalog_from_sticker_photo %} Lines marked <span class="build-sheet-src build-sheet-src--photo">sticker photo</span> were read off a window-sticker photo in this car's own gallery.{% endif %}{% if generated_spec_sheet.catalog_from_registry %} Lines marked <span class="build-sheet-src build-sheet-src--catalog">trim catalog</span> are known for this trim from OTHER vehicles (an OEM sticker, a manufacturer brochure, or a sticker photo) — not confirmed on this specific car.{% endif %}</p>
                     {% if generated_spec_sheet.catalog.packages %}
                     <h5 class="build-sheet-equip-sub">Packages</h5>
                     <div class="car-window-sticker-opt-list build-sheet-opt-list">
                         {% for pkg in generated_spec_sheet.catalog.packages %}
                         <div class="car-sticker-opt-row">
-                            <span class="car-sticker-opt-name">{{ pkg.name }}{% if pkg.from_sticker %} <span class="build-sheet-src build-sheet-src--sticker">sticker</span>{% elif pkg.source_label %} <span class="build-sheet-src build-sheet-src--photo" title="{{ pkg.source_label }}">sticker photo</span>{% endif %}</span>
+                            <span class="car-sticker-opt-name">{{ pkg.name }}{% if pkg.from_sticker %} <span class="build-sheet-src build-sheet-src--sticker">sticker</span>{% elif pkg.from_registry %} <span class="build-sheet-src build-sheet-src--catalog" title="{{ pkg.source_label }}">trim catalog</span>{% elif pkg.source_label %} <span class="build-sheet-src build-sheet-src--photo" title="{{ pkg.source_label }}">sticker photo</span>{% endif %}</span>
                             {% if pkg.price_display %}<span class="car-sticker-opt-price">{{ pkg.price_display }}</span>{% endif %}
                         </div>
                         {% endfor %}
@@ -1052,7 +1135,7 @@
                     <div class="car-window-sticker-opt-list build-sheet-opt-list">
                         {% for opt in generated_spec_sheet.catalog.options %}
                         <div class="car-sticker-opt-row">
-                            <span class="car-sticker-opt-name">{{ opt.name }}{% if opt.from_sticker %} <span class="build-sheet-src build-sheet-src--sticker">sticker</span>{% elif opt.source_label %} <span class="build-sheet-src build-sheet-src--photo" title="{{ opt.source_label }}">sticker photo</span>{% endif %}</span>
+                            <span class="car-sticker-opt-name">{{ opt.name }}{% if opt.from_sticker %} <span class="build-sheet-src build-sheet-src--sticker">sticker</span>{% elif opt.from_registry %} <span class="build-sheet-src build-sheet-src--catalog" title="{{ opt.source_label }}">trim catalog</span>{% elif opt.source_label %} <span class="build-sheet-src build-sheet-src--photo" title="{{ opt.source_label }}">sticker photo</span>{% endif %}</span>
                             {% if opt.price_display %}<span class="car-sticker-opt-price">{{ opt.price_display }}</span>{% endif %}
                         </div>
                         {% endfor %}
@@ -1158,7 +1241,7 @@
             </div>
             {% endif %}
 
-            <div class="listing-packages-panel" id="car-packages-panel" {% if not packages_panel_has_content %}hidden{% endif %}>
+            <div class="listing-packages-panel" id="car-packages-panel" {% if not unified_options_list %}hidden{% endif %}>
                 {% if (sticker_exterior_color or sticker_interior_color) and not show_window_sticker_ui %}
                 <div class="car-sticker-colors">
                     {% if sticker_exterior_color %}
@@ -1170,103 +1253,23 @@
                 </div>
                 {% endif %}
 
-                {% if (listing_sticker_option_sections or listing_sticker_options) and not show_window_sticker_ui %}
-                <h3 class="listing-packages-sub-heading">Window sticker options</h3>
-                <div class="listing-package-inline-list listing-package-inline-list--priced car-window-sticker-opt-list">
-                    {% if listing_sticker_option_sections %}
-                    {{ render_sticker_option_sections(listing_sticker_option_sections) }}
-                    {% elif listing_sticker_option_groups %}
-                    {{ render_sticker_option_groups(listing_sticker_option_groups) }}
-                    {% else %}
-                    {% for opt in listing_sticker_options %}
-                    <div class="car-sticker-opt-row">
-                        <span class="car-sticker-opt-name">{{ opt.name if opt is mapping else opt }}</span>
-                        {{ render_sticker_option_price(opt.price if opt is mapping else none) }}
-                    </div>
+                {# One de-duplicated, provenance-badged equipment list, replacing
+                   what used to be up to seven separate, overlapping lists here
+                   (window sticker options, factory options, standard equipment,
+                   packages from listing, visible-in-photos, possible packages,
+                   observed features, listing description features). Built by
+                   build_unified_options_list() — see
+                   backend/enrichment/generated_spec_sheet.py — which reuses the
+                   same dedup key the build-sheet catalog above already dedupes
+                   packages/options with. #}
+                {% if unified_options_list %}
+                <h3 class="listing-packages-sub-heading">Equipment on this listing</h3>
+                <p class="car-packages-hint">Every option and package we found for this car, from every source, shown once. The badge next to each line names where it came from — darker badges are more certain.</p>
+                <div class="listing-package-inline-list listing-package-inline-list--priced car-window-sticker-opt-list" id="car-options-unified-list">
+                    {% for item in unified_options_list %}
+                    {{ render_unified_option_row(item) }}
                     {% endfor %}
-                    {% endif %}
                 </div>
-                {% endif %}
-
-                {% if listing_monroney_options and not show_window_sticker_ui %}
-                <h3 class="listing-packages-sub-heading">Factory options</h3>
-                <ul class="listing-package-inline-list">
-                    {% for opt in listing_monroney_options %}
-                    <li>{{ opt }}</li>
-                    {% endfor %}
-                </ul>
-                {% endif %}
-
-                {% if listing_monroney_standard and not show_window_sticker_ui %}
-                <h3 class="listing-packages-sub-heading">Standard equipment</h3>
-                <ul class="listing-package-inline-list">
-                    {% for opt in listing_monroney_standard %}
-                    <li>{{ opt }}</li>
-                    {% endfor %}
-                </ul>
-                {% endif %}
-
-                {% set listing_description_packages = listing_packages_sections | rejectattr('from_vision') | list %}
-                {% if listing_description_packages %}
-                <h3 class="listing-packages-sub-heading">Packages from listing</h3>
-                {% for pkg in listing_description_packages %}
-                {% if pkg.features or pkg.evidence %}
-                <details class="listing-package-disclosure">
-                    <summary class="listing-package-summary">{{ pkg.name }}</summary>
-                    {% if pkg.features %}
-                    <ul class="listing-package-inline-list listing-package-features">
-                        {% for f in pkg.features %}
-                        <li>{{ f }}</li>
-                        {% endfor %}
-                    </ul>
-                    {% endif %}
-                    {% if pkg.evidence and not pkg.features %}
-                    <ul class="listing-package-inline-list listing-package-evidence">
-                        {% for f in pkg.evidence %}
-                        <li>{{ f }}</li>
-                        {% endfor %}
-                    </ul>
-                    {% endif %}
-                </details>
-                {% else %}
-                <p class="listing-package-plain">{{ pkg.name }}{% if show_window_sticker_ui and (window_sticker_available or listing_sticker_options) %} <span class="listing-package-plain-note">— see window sticker above for full factory equipment.</span>{% endif %}</p>
-                {% endif %}
-                {% endfor %}
-                {% endif %}
-
-                {% if listing_photo_detected_equipment %}
-                <h3 class="listing-packages-sub-heading">Visible in photos (estimated)</h3>
-                <p class="listing-packages-photo-note">Optional equipment guessed from listing photos. Confirm on the window sticker or with the dealer.</p>
-                <ul class="listing-package-inline-list">
-                    {% for f in listing_photo_detected_equipment %}
-                    <li>{{ f }}</li>
-                    {% endfor %}
-                </ul>
-                {% elif listing_possible_packages and not hide_photo_analysis %}
-                <h3 class="listing-packages-sub-heading">Possible packages (photo analysis)</h3>
-                <ul class="listing-package-inline-list">
-                    {% for f in listing_possible_packages %}
-                    <li>{{ f }}</li>
-                    {% endfor %}
-                </ul>
-                {% endif %}
-
-                {% if listing_observed_features and not hide_photo_analysis and not listing_photo_detected_equipment %}
-                <h3 class="listing-packages-sub-heading">Observed features (photo analysis)</h3>
-                <ul class="listing-package-inline-list">
-                    {% for f in listing_observed_features %}
-                    <li>{{ f }}</li>
-                    {% endfor %}
-                </ul>
-                {% endif %}
-
-                {% if listing_standalone_features and not listing_photo_detected_equipment %}
-                <h3 class="listing-packages-sub-heading">Listing description features</h3>
-                <ul class="listing-package-inline-list">
-                    {% for f in listing_standalone_features %}
-                    <li>{{ f }}</li>
-                    {% endfor %}
-                </ul>
                 {% endif %}
 
                 {% if llava_interior_section and not hide_photo_analysis %}
@@ -1280,7 +1283,7 @@
                 {% endif %}
             </div>
 
-            <p class="listing-packages-empty" id="car-packages-empty" {% if packages_panel_has_content or window_sticker_preview_url or window_sticker_oem_url or listing_sticker_options or generated_spec_sheet %}hidden{% endif %}>
+            <p class="listing-packages-empty" id="car-packages-empty" {% if packages_panel_has_content or unified_options_list or window_sticker_preview_url or window_sticker_oem_url or listing_sticker_options or generated_spec_sheet %}hidden{% endif %}>
                 {% if show_window_sticker_ui %}No package data yet. If an OEM window sticker exists for this VIN, we will fetch and analyze it automatically.{% else %}No package data yet for this listing.{% endif %}
             </p>
                         </div>
@@ -1448,6 +1451,7 @@
         window.__DS_LEAFLET_ICON_BASE = "{{ url_for('static', filename='vendor/leaflet/images/') }}";
     </script>
     <script src="{{ url_for('static', filename='vendor/leaflet/leaflet.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>
+    <script src="{{ url_for('static', filename='map_tiles.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>
     <script src="{{ url_for('static', filename='car_dealer_map.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>
     {% endif %}
     {% if vdp_interior_pano %}

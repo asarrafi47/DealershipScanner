@@ -247,6 +247,14 @@ def filter_manifest_by_dealer_id(dealers: list, dealer_id: str) -> list:
     return [d for d in dealers if (d.get("dealer_id") or "").strip() == want]
 
 
+def filter_manifest_by_dealer_ids(dealers: list, dealer_ids: list[str]) -> list:
+    """Like ``filter_manifest_by_dealer_id`` but for several IDs at once (e.g. a retry list)."""
+    want = {str(d).strip() for d in (dealer_ids or []) if str(d).strip()}
+    if not want:
+        return []
+    return [d for d in dealers if (d.get("dealer_id") or "").strip() in want]
+
+
 def _default_skip_dealer_substrings() -> tuple[str, ...]:
     return ("carmax.com", "carmax-com")
 

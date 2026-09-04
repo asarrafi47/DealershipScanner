@@ -241,6 +241,32 @@
     gap: 10px;
 }
 
+.car-finance-tax-section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-top: 4px;
+    border-top: 1px dashed var(--border-light);
+}
+
+.car-finance-field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+@media (max-width: 420px) {
+    .car-finance-field-row {
+        grid-template-columns: 1fr;
+    }
+}
+
+.car-finance-label-hint {
+    font-weight: 400;
+    color: var(--text-muted);
+    font-size: 11px;
+}
+
 .car-finance-toggle-group {
     display: inline-flex;
     gap: 0;

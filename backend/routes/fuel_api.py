@@ -269,6 +269,69 @@ def api_fuel_lookup():
     return jsonify(payload)
 
 
+#: Approximate average COMBINED state + local sales tax rate per state, as a
+#: decimal (0.0725 = 7.25%). These are rough, published-order-of-magnitude
+#: figures (not pulled from a live feed — the repo has no such data source;
+#: see project notes on the VDP finance calculator), meant only to seed a
+#: sane default for the payment estimator below. The calculator always shows
+#: this as editable and never as an authoritative rate — local county/city
+#: add-ons and vehicle-specific rules (trade-in credits, EV surcharges, etc.)
+#: are NOT modeled. States with no general sales tax are 0.
+_STATE_AVG_SALES_TAX_RATE: dict[str, float] = {
+    "AL": 0.0929, "AK": 0.0176, "AZ": 0.0840, "AR": 0.0946, "CA": 0.0882,
+    "CO": 0.0781, "CT": 0.0635, "DE": 0.0, "FL": 0.0702, "GA": 0.0738,
+    "HI": 0.0444, "ID": 0.0602, "IL": 0.0886, "IN": 0.0700, "IA": 0.0694,
+    "KS": 0.0870, "KY": 0.0600, "LA": 0.0956, "ME": 0.0550, "MD": 0.0600,
+    "MA": 0.0625, "MI": 0.0600, "MN": 0.0749, "MS": 0.0707, "MO": 0.0829,
+    "MT": 0.0, "NE": 0.0694, "NV": 0.0823, "NH": 0.0, "NJ": 0.0660,
+    "NM": 0.0772, "NY": 0.0853, "NC": 0.0698, "ND": 0.0696, "OH": 0.0724,
+    "OK": 0.0898, "OR": 0.0, "PA": 0.0634, "RI": 0.0700, "SC": 0.0746,
+    "SD": 0.0611, "TN": 0.0955, "TX": 0.0820, "UT": 0.0719, "VT": 0.0624,
+    "VA": 0.0575, "WA": 0.0886, "WV": 0.0657, "WI": 0.0543, "WY": 0.0536,
+    "DC": 0.0600,
+}
+_NATIONAL_AVG_SALES_TAX_RATE = 0.0715
+
+
+def api_sales_tax_rate_lookup():
+    """Best-effort default sales-tax rate for the VDP finance calculator.
+
+    Resolves a ZIP (or session location) to a state the same way
+    ``/api/fuel/lookup`` does, then returns that state's approximate average
+    COMBINED state+local rate from ``_STATE_AVG_SALES_TAX_RATE``. This is a
+    starting point only — every field it fills stays user-editable on the
+    page, and the payload says so explicitly rather than implying an
+    authoritative number.
+    """
+    state_code, zip_code = _resolve_fuel_lookup_state(request, session)
+    rate = _STATE_AVG_SALES_TAX_RATE.get(state_code)
+    is_state_match = rate is not None
+    if rate is None:
+        rate = _NATIONAL_AVG_SALES_TAX_RATE
+    payload: dict[str, Any] = {
+        "state": state_code,
+        "rate": rate,
+        "rate_pct": round(rate * 100, 2),
+        "is_state_match": is_state_match,
+        "label": (
+            f"Estimated {state_code} average rate"
+            if is_state_match
+            else "Estimated national average rate"
+        ),
+        "disclaimer": (
+            "Rough average combined state + local rate, not an official quote. "
+            "Local county/city add-ons and vehicle-specific rules are not "
+            "included — edit this field with your actual rate for an accurate estimate."
+        ),
+    }
+    if zip_code:
+        payload["zip_code"] = zip_code
+    return jsonify(payload)
+
+
 def register(app) -> None:
     """Attach routes to ``app`` keeping the original bare endpoint names."""
     app.add_url_rule("/api/fuel/lookup", view_func=api_fuel_lookup, methods=["GET"])
+    app.add_url_rule(
+        "/api/tax-rate/lookup", view_func=api_sales_tax_rate_lookup, methods=["GET"]
+    )

@@ -1,0 +1,1440 @@
+{
+  "schema_version": 2,
+  "catalog_key": "2013|cadillac|xts",
+  "year": 2013,
+  "make": "Cadillac",
+  "model": "XTS",
+  "source_pdf": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2013_Cadillac_XTS_Brochure.pdf",
+  "source_pdf_name": "2013_Cadillac_XTS_Brochure.pdf",
+  "source_pdf_sha256": "1434264571f52e519d9d51a1bab26a4264ffcd4316defbb96bc21b84d204832e",
+  "source_pdf_bytes": 13501850,
+  "page_count": 66,
+  "pages_captured": 66,
+  "capture": "lossless",
+  "layout_captured": true,
+  "all_pages": true,
+  "trim_hint_pages": [
+    65
+  ],
+  "warnings": [],
+  "pages": [
+    {
+      "page": 1,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 634.5,
+      "height": 684.0,
+      "text": "X TS",
+      "table_lines": [
+        "X TS",
+        "X TS"
+      ],
+      "lines": [
+        {"top":410.1,"cells":[[115.4,436.3,"X TS"]]}
+      ]
+    },
+    {
+      "page": 2,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 634.5,
+      "height": 684.0,
+      "text": "2 013\nALL-NEW CADILLAC XTS",
+      "table_lines": [
+        "2 013\nALL-NEW CADILLAC XTS"
+      ],
+      "lines": [
+        {"top":77.9,"cells":[[408.0,469.1,"2 013"]]},
+        {"top":105.2,"cells":[[224.4,469.1,"ALL-NEW CADILLAC XTS"]]}
+      ]
+    },
+    {
+      "page": 3,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 634.5,
+      "height": 684.0,
+      "text": "INDIVIDUALLY,\nI T S I N N O VA T I O N S A R E I N G E N I O U S .\nTOGETHER, THEY\u2019RE UNPRECEDENTED.\nAVAILABLE LED SIGNATURE CUE\nLIGHTING\n1. Full functionality requires compatible Bluetooth\u00ae and smartphone. Some devices require USB connectivity.",
+      "table_lines": [
+        "INDIVIDUALLY,\nI T S I N N O VA T I O N S A R E I N G E N I O U S .\nTOGETHER, THEY\u2019RE UNPRECEDENTED.\nAVAILABLE LED SIGNATURE CUE\nLIGHTING\n1. Full functionality requires compatible Bluetooth\u00ae and smartphone. Some devices require USB connectivity."
+      ],
+      "lines": [
+        {"top":209.4,"cells":[[68.1,198.3,"INDIVIDUALLY,"]]},
+        {"top":233.3,"cells":[[41.5,558.4,"I T S I N N O VA T I O N S A R E I N G E N I O U S ."]]},
+        {"top":264.4,"cells":[[140.1,481.2,"TOGETHER, THEY\u2019RE UNPRECEDENTED."]]},
+        {"top":525.6,"cells":[[65.2,219.5,"AVAILABLE LED SIGNATURE"],[292.1,314.1,"CUE"]]},
+        {"top":536.6,"cells":[[65.2,119.0,"LIGHTING"]]},
+        {"top":664.2,"cells":[[13.9,349.9,"1. Full functionality requires compatible Bluetooth\u00ae and smartphone. Some devices require USB connectivity."]]}
+      ]
+    },
+    {
+      "page": 4,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 634.5,
+      "height": 684.0,
+      "text": "The XTS redefi nes the principles of what\u2019s possible,\nbeginning with the groundbreaking CUE1 driver\ninterface. Employing fi rst-of-its-kind technology, CUE\nbrings the intuitive control of smartphones and tablets\nconveniently to the road. The inspired thinking also\nextends to available XTS safety technologies like its\nperimeter warning that helps alert you to obstacles and\nhazards in your path. Under the artfully sculpted hood,\nthe 3.6L direct-injection V6 delivers a refi ned 304 HP,\nwhile available advanced All-Wheel Drive and the rear\nelectronic Limited-Slip Differential (eLSD) responsively\nput power where you need it, when you need it.",
+      "table_lines": [
+        "The XTS redefi nes the principles of what\u2019s possible,\nbeginning with the groundbreaking CUE1 driver\ninterface. Employing fi rst-of-its-kind technology, CUE\nbrings the intuitive control of smartphones and tablets\nconveniently to the road. The inspired thinking also\nextends to available XTS safety technologies like its\nperimeter warning that helps alert you to obstacles and\nhazards in your path. Under the artfully sculpted hood,\nthe 3.6L direct-injection V6 delivers a refi ned 304 HP,\nwhile available advanced All-Wheel Drive and the rear\nelectronic Limited-Slip Differential (eLSD) responsively\nput power where you need it, when you need it."
+      ],
+      "lines": [
+        {"top":421.7,"cells":[[185.6,441.8,"The XTS redefi nes the principles of what\u2019s possible,"]]},
+        {"top":439.9,"cells":[[185.6,423.9,"beginning with the groundbreaking CUE1 driver"]]},
+        {"top":459.7,"cells":[[185.6,458.8,"interface. Employing fi rst-of-its-kind technology, CUE"]]},
+        {"top":478.7,"cells":[[185.6,456.5,"brings the intuitive control of smartphones and tablets"]]},
+        {"top":497.7,"cells":[[185.6,440.4,"conveniently to the road. The inspired thinking also"]]},
+        {"top":516.7,"cells":[[185.6,445.3,"extends to available XTS safety technologies like its"]]},
+        {"top":535.7,"cells":[[185.6,461.0,"perimeter warning that helps alert you to obstacles and"]]},
+        {"top":554.7,"cells":[[185.6,459.7,"hazards in your path. Under the artfully sculpted hood,"]]},
+        {"top":573.7,"cells":[[185.6,458.5,"the 3.6L direct-injection V6 delivers a refi ned 304 HP,"]]},
+        {"top":592.7,"cells":[[185.6,457.7,"while available advanced All-Wheel Drive and the rear"]]},
+        {"top":611.7,"cells":[[185.6,465.0,"electronic Limited-Slip Differential (eLSD) responsively"]]},
+        {"top":630.7,"cells":[[185.6,417.7,"put power where you need it, when you need it."]]}
+      ]
+    },
+    {
+      "page": 5,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 634.5,
+      "height": 684.0,
+      "text": "GET THE LATEST FROM CADILLAC\nGet news, events, info and updates\u2014\nall in a monthly e-mail.\nThe XTS redefines the principles of what\u2019s possible,\nbeginning with the groundbreaking CUE1 driver\ninterface. Employing first-of-its-kind technology, CUE\nbrings the intuitive control of smartphones and tablets\nconveniently to the road. The inspired thinking also\nextends to available XTS safety technologies like its\nperimeter warning that helps alert you to obstacles and\nhazards in your path. Under the artfully sculpted hood,\nthe 3.6L direct-injection V6 delivers a refined 304 HP,\nwhile available advanced All-Wheel Drive and the rear\nelectronic Limited-Slip Differential (eLSD) responsively\nput power where you need it, when you need it.",
+      "table_lines": [
+        "GET THE LATEST FROM CADILLAC\nGet news, events, info and updates\u2014\nall in a monthly e-mail.\nThe XTS redefines the principles of what\u2019s possible,\nbeginning with the groundbreaking CUE1 driver\ninterface. Employing first-of-its-kind technology, CUE\nbrings the intuitive control of smartphones and tablets\nconveniently to the road. The inspired thinking also\nextends to available XTS safety technologies like its\nperimeter warning that helps alert you to obstacles and\nhazards in your path. Under the artfully sculpted hood,\nthe 3.6L direct-injection V6 delivers a refined 304 HP,\nwhile available advanced All-Wheel Drive and the rear\nelectronic Limited-Slip Differential (eLSD) responsively\nput power where you need it, when you need it."
+      ],
+      "lines": [
+        {"top":48.3,"cells":[[342.7,527.2,"GET THE LATEST FROM CADILLAC"]]},
+        {"top":68.1,"cells":[[342.6,509.4,"Get news, events, info and updates\u2014"]]},
+        {"top":81.1,"cells":[[342.6,442.1,"all in a monthly e-mail."]]},
+        {"top":422.7,"cells":[[185.6,441.8,"The XTS redefines the principles of what\u2019s possible,"]]},
+        {"top":440.5,"cells":[[362.7,391.1,"CUE1"]]},
+        {"top":441.7,"cells":[[185.6,359.7,"beginning with the groundbreaking"],[394.0,423.9,"driver"]]},
+        {"top":460.7,"cells":[[185.6,458.8,"interface. Employing first-of-its-kind technology, CUE"]]},
+        {"top":479.7,"cells":[[185.6,456.5,"brings the intuitive control of smartphones and tablets"]]},
+        {"top":498.7,"cells":[[185.6,440.4,"conveniently to the road. The inspired thinking also"]]},
+        {"top":517.7,"cells":[[185.6,445.3,"extends to available XTS safety technologies like its"]]},
+        {"top":536.7,"cells":[[185.6,461.0,"perimeter warning that helps alert you to obstacles and"]]},
+        {"top":555.7,"cells":[[185.6,459.6,"hazards in your path. Under the artfully sculpted hood,"]]},
+        {"top":574.7,"cells":[[185.6,458.5,"the 3.6L direct-injection V6 delivers a refined 304 HP,"]]},
+        {"top":593.7,"cells":[[185.6,457.7,"while available advanced All-Wheel Drive and the rear"]]},
+        {"top":612.7,"cells":[[185.6,465.0,"electronic Limited-Slip Differential (eLSD) responsively"]]},
+        {"top":631.7,"cells":[[185.6,417.7,"put power where you need it, when you need it."]]}
+      ]
+    },
+    {
+      "page": 6,
+      "trim_hint": false,
+      "has_text_layer": false,
+      "width": 634.5,
+      "height": 684.0,
+      "text": "",
+      "table_lines": [],
+      "lines": []
+    },
+    {
+      "page": 7,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 634.5,
+      "height": 684.0,
+      "text": "XTS PLATINUM COLLECTION / Graphite Metallic",
+      "table_lines": [
+        "XTS PLATINUM COLLECTION / Graphite Metallic"
+      ],
+      "lines": [
+        {"top":642.6,"cells":[[285.3,453.2,"XTS PLATINUM COLLECTION /"],[458.0,549.2,"Graphite Metallic"]]}
+      ]
+    },
+    {
+      "page": 8,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 634.5,
+      "height": 684.0,
+      "text": "Where is it written that head-turning\npresence and formidable performance be\nrestricted only to two-door coupes? The\nchiseled, angular skin of the XTS was\ndesigned not only to turn heads, but to\nslice through the wind, helping improve\nperformance and mitigate noise. Its\ndistinctive, sloping grille is integrated\ninto the overall design so seamlessly, the\nfi nal effect is both subtly detailed and yet\nconvincingly stated. Of course, its assertive\nstance and striking vertical rear taillamps\nmake a bold statement, but when you spot\nthe massive front Brembo\u00ae brakes lurking\nbehind the spoked alloys, it becomes clear\nthis is a Cadillac to be reckoned with.",
+      "table_lines": [
+        "Where is it written that head-turning\npresence and formidable performance be\nrestricted only to two-door coupes? The\nchiseled, angular skin of the XTS was\ndesigned not only to turn heads, but to\nslice through the wind, helping improve\nperformance and mitigate noise. Its\ndistinctive, sloping grille is integrated\ninto the overall design so seamlessly, the\nfi nal effect is both subtly detailed and yet\nconvincingly stated. Of course, its assertive\nstance and striking vertical rear taillamps\nmake a bold statement, but when you spot\nthe massive front Brembo\u00ae brakes lurking\nbehind the spoked alloys, it becomes clear\nthis is a Cadillac to be reckoned with."
+      ],
+      "lines": [
+        {"top":162.3,"cells":[[64.3,249.0,"Where is it written that head-turning"]]},
+        {"top":181.3,"cells":[[64.3,268.2,"presence and formidable performance be"]]},
+        {"top":200.3,"cells":[[64.3,261.8,"restricted only to two-door coupes? The"]]},
+        {"top":219.3,"cells":[[64.3,250.9,"chiseled, angular skin of the XTS was"]]},
+        {"top":238.3,"cells":[[64.3,255.0,"designed not only to turn heads, but to"]]},
+        {"top":257.3,"cells":[[64.3,260.8,"slice through the wind, helping improve"]]},
+        {"top":276.3,"cells":[[64.3,243.7,"performance and mitigate noise. Its"]]},
+        {"top":295.3,"cells":[[64.3,254.1,"distinctive, sloping grille is integrated"]]},
+        {"top":314.3,"cells":[[64.3,265.6,"into the overall design so seamlessly, the"]]},
+        {"top":333.3,"cells":[[64.3,269.9,"fi nal effect is both subtly detailed and yet"]]},
+        {"top":352.3,"cells":[[64.3,279.9,"convincingly stated. Of course, its assertive"]]},
+        {"top":371.3,"cells":[[64.3,274.1,"stance and striking vertical rear taillamps"]]},
+        {"top":390.3,"cells":[[64.3,273.6,"make a bold statement, but when you spot"]]},
+        {"top":408.5,"cells":[[153.0,198.8,"Brembo\u00ae"]]},
+        {"top":409.3,"cells":[[64.3,150.0,"the massive front"],[201.8,273.9,"brakes lurking"]]},
+        {"top":428.3,"cells":[[64.3,273.1,"behind the spoked alloys, it becomes clear"]]},
+        {"top":447.3,"cells":[[64.3,251.1,"this is a Cadillac to be reckoned with."]]}
+      ]
+    },
+    {
+      "page": 9,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 634.5,
+      "height": 684.0,
+      "text": "I N S P I R I N G\nDESCRIBES MORE THAN THE DRIVE.\nXTS PLATINUM COLLECTION / Graphite Metallic",
+      "table_lines": [
+        "I N S P I R I N G\nDESCRIBES MORE THAN THE DRIVE.\nXTS PLATINUM COLLECTION / Graphite Metallic"
+      ],
+      "lines": [
+        {"top":84.2,"cells":[[132.4,284.3,"I N S P I R I N G"]]},
+        {"top":115.3,"cells":[[179.2,491.4,"DESCRIBES MORE THAN THE DRIVE."]]},
+        {"top":642.6,"cells":[[285.3,453.2,"XTS PLATINUM COLLECTION /"],[458.0,549.2,"Graphite Metallic"]]}
+      ]
+    },
+    {
+      "page": 10,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 634.5,
+      "height": 684.0,
+      "text": "W H E N I T C O M E S T O T H E D E TA I L S ,\nWHERE DO YOU STOP?\nYOU DON'T.",
+      "table_lines": [
+        "W H E N I T C O M E S T O T H E D E TA I L S ,\nWHERE DO YOU STOP?\nYOU DON'T."
+      ],
+      "lines": [
+        {"top":76.6,"cells":[[43.2,550.7,"W H E N I T C O M E S T O T H E D E TA I L S ,"]]},
+        {"top":109.7,"cells":[[136.7,324.1,"WHERE DO YOU STOP?"]]},
+        {"top":134.7,"cells":[[255.3,349.5,"YOU DON'T."]]}
+      ]
+    },
+    {
+      "page": 11,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 634.5,
+      "height": 684.0,
+      "text": "DIRECTIONAL HID HEADLAMPS DYNAMIC 20\" WHEELS\nThe brilliant High-Intensity Discharge Featuring a brilliant, polished finish\n(HID) headlamps are available with and chrome inserts, these 20\"\nAdaptive Forward Lighting. This Platinum Collection wheels are the\ntechnology directs the headlamps to ideal complement to the XTS.\ncast light precisely into your path\nof travel.",
+      "table_lines": [
+        "DIRECTIONAL HID HEADLAMPS DYNAMIC 20\" WHEELS\nThe brilliant High-Intensity Discharge Featuring a brilliant, polished finish\n(HID) headlamps are available with and chrome inserts, these 20\"\nAdaptive Forward Lighting. This Platinum Collection wheels are the\ntechnology directs the headlamps to ideal complement to the XTS.\ncast light precisely into your path\nof travel."
+      ],
+      "lines": [
+        {"top":191.8,"cells":[[205.8,376.6,"DIRECTIONAL HID HEADLAMPS"],[408.0,530.4,"DYNAMIC 20\" WHEELS"]]},
+        {"top":209.8,"cells":[[205.7,377.2,"The brilliant High-Intensity Discharge"],[408.0,570.4,"Featuring a brilliant, polished finish"]]},
+        {"top":222.8,"cells":[[205.7,368.9,"(HID) headlamps are available with"],[408.0,546.9,"and chrome inserts, these 20\""]]},
+        {"top":235.8,"cells":[[205.7,353.0,"Adaptive Forward Lighting. This"],[408.0,569.0,"Platinum Collection wheels are the"]]},
+        {"top":248.8,"cells":[[205.7,373.6,"technology directs the headlamps to"],[408.0,545.4,"ideal complement to the XTS."]]},
+        {"top":261.8,"cells":[[205.7,358.6,"cast light precisely into your path"]]},
+        {"top":274.8,"cells":[[205.7,246.1,"of travel."]]}
+      ]
+    },
+    {
+      "page": 12,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 634.5,
+      "height": 684.0,
+      "text": "A P E R F O R M A N C E T H I S I M P R E S S I V E\nDESERVES LIGHTING TO MATCH.",
+      "table_lines": [
+        "A P E R F O R M A N C E T H I S I M P R E S S I V E\nDESERVES LIGHTING TO MATCH."
+      ],
+      "lines": [
+        {"top":73.6,"cells":[[112.0,628.4,"A P E R F O R M A N C E T H I S I M P R E S S I V E"]]},
+        {"top":106.7,"cells":[[220.0,495.7,"DESERVES LIGHTING TO MATCH."]]}
+      ]
+    },
+    {
+      "page": 13,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 634.5,
+      "height": 684.0,
+      "text": "ILLUMINATED DOOR HANDLES\nRefined details are everywhere, right down to\nthe available illuminated door handles. More\nthan an accent, their soft glow makes them\neasier to locate. Once you are in the vehicle,\nthey return to their non-illuminated state.\nPUDDLE LAMPS\nSubtle lamps located under the outside\nmirrors cast a light near the entrance of the\ncar as part of the carefully choreographed\nlighting sequence, so your path is well lit.\nILLUMINATED SILL PLATES\nIn the XTS, every detail was considered.\nFor example, upon opening either front door\nin the Platinum Collection, backlit sill plates\nare an inviting touch.\nWith the XTS setting the perfect stage for an exhilarating performance, it\u2019s\nfi tting the lighting was designed as if it were a contemporary theater. Every\npiece of illumination was choreographed with a specifi c task in mind, whether\nit is to draw your eye to the meticulous details or to add illumination to key\nareas. Taken individually, each light is impressive in its own right, like the\nsignature Cadillac light pipe technology integrated into the headlamps and\ntaillamps. They form a razor-thin blade that is clearly evident at night\u2014\nmaking your vehicle visible and distinctive from any angle. When backing up,\nthere\u2019s a lower-mounted reverse lamp to improve your view. Even the available\nilluminated exterior door handles add a purposeful touch on a dark night.",
+      "table_lines": [
+        "ILLUMINATED DOOR HANDLES\nRefined details are everywhere, right down to\nthe available illuminated door handles. More\nthan an accent, their soft glow makes them\neasier to locate. Once you are in the vehicle,\nthey return to their non-illuminated state.\nPUDDLE LAMPS\nSubtle lamps located under the outside\nmirrors cast a light near the entrance of the\ncar as part of the carefully choreographed\nlighting sequence, so your path is well lit.\nILLUMINATED SILL PLATES\nIn the XTS, every detail was considered.\nFor example, upon opening either front door\nin the Platinum Collection, backlit sill plates\nare an inviting touch.\nWith the XTS setting the perfect stage for an exhilarating performance, it\u2019s\nfi tting the lighting was designed as if it were a contemporary theater. Every\npiece of illumination was choreographed with a specifi c task in mind, whether\nit is to draw your eye to the meticulous details or to add illumination to key\nareas. Taken individually, each light is impressive in its own right, like the\nsignature Cadillac light pipe technology integrated into the headlamps and\ntaillamps. They form a razor-thin blade that is clearly evident at night\u2014\nmaking your vehicle visible and distinctive from any angle. When backing up,\nthere\u2019s a lower-mounted reverse lamp to improve your view. Even the available\nilluminated exterior door handles add a purposeful touch on a dark night."
+      ],
+      "lines": [
+        {"top":18.2,"cells":[[343.3,510.5,"ILLUMINATED DOOR HANDLES"]]},
+        {"top":36.2,"cells":[[343.3,554.0,"Refined details are everywhere, right down to"]]},
+        {"top":49.2,"cells":[[343.3,548.8,"the available illuminated door handles. More"]]},
+        {"top":62.2,"cells":[[343.3,542.8,"than an accent, their soft glow makes them"]]},
+        {"top":75.2,"cells":[[343.3,550.9,"easier to locate. Once you are in the vehicle,"]]},
+        {"top":88.2,"cells":[[343.3,531.9,"they return to their non-illuminated state."]]},
+        {"top":148.6,"cells":[[343.3,429.0,"PUDDLE LAMPS"]]},
+        {"top":166.6,"cells":[[343.3,524.6,"Subtle lamps located under the outside"]]},
+        {"top":179.6,"cells":[[343.3,544.0,"mirrors cast a light near the entrance of the"]]},
+        {"top":192.6,"cells":[[343.3,537.8,"car as part of the carefully choreographed"]]},
+        {"top":205.6,"cells":[[343.3,534.3,"lighting sequence, so your path is well lit."]]},
+        {"top":279.4,"cells":[[343.3,493.2,"ILLUMINATED SILL PLATES"]]},
+        {"top":297.4,"cells":[[343.3,531.2,"In the XTS, every detail was considered."]]},
+        {"top":310.4,"cells":[[343.3,548.0,"For example, upon opening either front door"]]},
+        {"top":323.4,"cells":[[343.3,544.5,"in the Platinum Collection, backlit sill plates"]]},
+        {"top":336.4,"cells":[[343.3,440.4,"are an inviting touch."]]},
+        {"top":440.6,"cells":[[115.1,492.5,"With the XTS setting the perfect stage for an exhilarating performance, it\u2019s"]]},
+        {"top":459.6,"cells":[[115.1,491.1,"fi tting the lighting was designed as if it were a contemporary theater. Every"]]},
+        {"top":478.6,"cells":[[115.1,502.6,"piece of illumination was choreographed with a specifi c task in mind, whether"]]},
+        {"top":497.6,"cells":[[115.1,489.3,"it is to draw your eye to the meticulous details or to add illumination to key"]]},
+        {"top":516.5,"cells":[[115.1,483.3,"areas. Taken individually, each light is impressive in its own right, like the"]]},
+        {"top":535.5,"cells":[[115.1,488.1,"signature Cadillac light pipe technology integrated into the headlamps and"]]},
+        {"top":554.5,"cells":[[115.1,476.4,"taillamps. They form a razor-thin blade that is clearly evident at night\u2014"]]},
+        {"top":573.5,"cells":[[115.1,499.8,"making your vehicle visible and distinctive from any angle. When backing up,"]]},
+        {"top":592.5,"cells":[[115.1,507.9,"there\u2019s a lower-mounted reverse lamp to improve your view. Even the available"]]},
+        {"top":611.5,"cells":[[115.1,481.6,"illuminated exterior door handles add a purposeful touch on a dark night."]]}
+      ]
+    },
+    {
+      "page": 14,
+      "trim_hint": false,
+      "has_text_layer": false,
+      "width": 634.5,
+      "height": 684.0,
+      "text": "",
+      "table_lines": [],
+      "lines": []
+    },
+    {
+      "page": 15,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 634.5,
+      "height": 684.0,
+      "text": "AMBIENT INTERIOR LIGHTING\nExperience how the available ambient interior lighting adds drama and\nillumination to the ingenious cabin details inside the XTS.",
+      "table_lines": [
+        "AMBIENT INTERIOR LIGHTING\nExperience how the available ambient interior lighting adds drama and\nillumination to the ingenious cabin details inside the XTS."
+      ],
+      "lines": [
+        {"top":600.2,"cells":[[185.8,352.7,"AMBIENT INTERIOR LIGHTING"]]},
+        {"top":618.1,"cells":[[185.8,512.6,"Experience how the available ambient interior lighting adds drama and"]]},
+        {"top":631.1,"cells":[[185.8,451.4,"illumination to the ingenious cabin details inside the XTS."]]}
+      ]
+    },
+    {
+      "page": 16,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 634.5,
+      "height": 684.0,
+      "text": "EVEN THE FINE POINTS HAVE\nF I N E R P O I N T S .\nThe fi rst moments behind the wheel are, in many ways, the\nmost inspiring. It is why we designed the XTS to feel more\nlike a perfectly tailored garment. You wear it, feel it, think\nit. There\u2019s the wraparound instrument panel that blends\nseamlessly into the upper doors, creating an uninterrupted\nsense of spaciousness. To that, add fi ne leather seating\nsurfaces, exotic woods and brushed metal that work in\nconcert to further accentuate the cabin. Even the spacious\nbackseat with best-in-class rear legroom is slightly\nelevated so every passenger is afforded a seat with a view.\nIt may feel as if every interior detail was designed to meet\nyour personal specifi cations. Perhaps that\u2019s because it was.",
+      "table_lines": [
+        "EVEN THE FINE POINTS HAVE\nF I N E R P O I N T S .\nThe fi rst moments behind the wheel are, in many ways, the\nmost inspiring. It is why we designed the XTS to feel more\nlike a perfectly tailored garment. You wear it, feel it, think\nit. There\u2019s the wraparound instrument panel that blends\nseamlessly into the upper doors, creating an uninterrupted\nsense of spaciousness. To that, add fi ne leather seating\nsurfaces, exotic woods and brushed metal that work in\nconcert to further accentuate the cabin. Even the spacious\nbackseat with best-in-class rear legroom is slightly\nelevated so every passenger is afforded a seat with a view.\nIt may feel as if every interior detail was designed to meet\nyour personal specifi cations. Perhaps that\u2019s because it was."
+      ],
+      "lines": [
+        {"top":270.6,"cells":[[53.4,309.6,"EVEN THE FINE POINTS HAVE"]]},
+        {"top":298.5,"cells":[[161.3,376.5,"F I N E R P O I N T S ."]]},
+        {"top":405.9,"cells":[[78.7,369.8,"The fi rst moments behind the wheel are, in many ways, the"]]},
+        {"top":424.9,"cells":[[78.7,368.5,"most inspiring. It is why we designed the XTS to feel more"]]},
+        {"top":443.9,"cells":[[78.7,371.5,"like a perfectly tailored garment. You wear it, feel it, think"]]},
+        {"top":462.9,"cells":[[78.7,356.5,"it. There\u2019s the wraparound instrument panel that blends"]]},
+        {"top":481.9,"cells":[[78.7,370.3,"seamlessly into the upper doors, creating an uninterrupted"]]},
+        {"top":500.9,"cells":[[78.7,349.9,"sense of spaciousness. To that, add fi ne leather seating"]]},
+        {"top":519.9,"cells":[[78.7,350.3,"surfaces, exotic woods and brushed metal that work in"]]},
+        {"top":538.9,"cells":[[78.7,368.6,"concert to further accentuate the cabin. Even the spacious"]]},
+        {"top":557.9,"cells":[[78.7,331.5,"backseat with best-in-class rear legroom is slightly"]]},
+        {"top":576.9,"cells":[[78.7,366.6,"elevated so every passenger is afforded a seat with a view."]]},
+        {"top":595.9,"cells":[[78.7,367.9,"It may feel as if every interior detail was designed to meet"]]},
+        {"top":614.9,"cells":[[78.7,374.9,"your personal specifi cations. Perhaps that\u2019s because it was."]]}
+      ]
+    },
+    {
+      "page": 17,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 634.5,
+      "height": 684.0,
+      "text": "XTS PLATINUM COLLECTION / Jet Black with Light Wheat accents",
+      "table_lines": [
+        "XTS PLATINUM COLLECTION / Jet Black with Light Wheat accents"
+      ],
+      "lines": [
+        {"top":642.6,"cells":[[191.6,359.3,"XTS PLATINUM COLLECTION /"],[364.2,549.2,"Jet Black with Light Wheat accents"]]}
+      ]
+    },
+    {
+      "page": 18,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 634.5,
+      "height": 684.0,
+      "text": "OPUS FULL\uf6baLEATHER SEATS\nOpus full-leather seating is exclusive to\nPlatinum Collection models. This unique,\nluxurious leather is renowned for its ultra-\nsoft feel and refined appearance.",
+      "table_lines": [
+        "OPUS FULL\uf6baLEATHER SEATS\nOpus full-leather seating is exclusive to\nPlatinum Collection models. This unique,\nluxurious leather is renowned for its ultra-\nsoft feel and refined appearance."
+      ],
+      "lines": [
+        {"top":562.2,"cells":[[39.0,193.2,"OPUS FULL\uf6baLEATHER SEATS"]]},
+        {"top":580.1,"cells":[[39.0,221.6,"Opus full-leather seating is exclusive to"]]},
+        {"top":593.1,"cells":[[39.0,228.4,"Platinum Collection models. This unique,"]]},
+        {"top":606.1,"cells":[[39.0,231.7,"luxurious leather is renowned for its ultra-"]]},
+        {"top":619.1,"cells":[[39.0,192.6,"soft feel and refined appearance."]]}
+      ]
+    },
+    {
+      "page": 19,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 634.5,
+      "height": 684.0,
+      "text": "THE LINING OF A SUIT.\nTHE MOVEMENT OF A WATCH.\nT R U E L U X U R Y C A N O F T E N B E F O U N D\nO N T H E I N S I D E .\nThe meticulous attention to detail continues into the striking cabin. Intuitive\ncontrols are complemented with impeccably detailed materials like lustrous exotic\nwood that trims the steering wheel and is carefully laid throughout the center\nconsole. Laminated front side glass and triple door seals work in tandem to help\ndeflect noise before it enters the cabin. And to optimize seat comfort, pressure-\nmapping technology was used extensively to design the contoured front seats. Proof\nthat in the XTS, technology defi nitely comes with a sophisticated side.\nTHE ART OF DETAIL INTELLIGENTLY DESIGNED STORAGE\nThe closer you look, the better it gets. From the smartly placed mobile device holder\nLeather surfaces, contrasting stitching, to the center control panel that opens, every\nbeautifully grained woods and brushed millimeter of the XTS reveals yet another\nmetal all come to life in the XTS. brilliantly engineered space.",
+      "table_lines": [
+        "THE LINING OF A SUIT.\nTHE MOVEMENT OF A WATCH.\nT R U E L U X U R Y C A N O F T E N B E F O U N D\nO N T H E I N S I D E .\nThe meticulous attention to detail continues into the striking cabin. Intuitive\ncontrols are complemented with impeccably detailed materials like lustrous exotic\nwood that trims the steering wheel and is carefully laid throughout the center\nconsole. Laminated front side glass and triple door seals work in tandem to help\ndeflect noise before it enters the cabin. And to optimize seat comfort, pressure-\nmapping technology was used extensively to design the contoured front seats. Proof\nthat in the XTS, technology defi nitely comes with a sophisticated side.\nTHE ART OF DETAIL INTELLIGENTLY DESIGNED STORAGE\nThe closer you look, the better it gets. From the smartly placed mobile device holder\nLeather surfaces, contrasting stitching, to the center control panel that opens, every\nbeautifully grained woods and brushed millimeter of the XTS reveals yet another\nmetal all come to life in the XTS. brilliantly engineered space."
+      ],
+      "lines": [
+        {"top":41.7,"cells":[[112.9,309.4,"THE LINING OF A SUIT."]]},
+        {"top":66.7,"cells":[[138.2,390.6,"THE MOVEMENT OF A WATCH."]]},
+        {"top":92.5,"cells":[[8.6,558.7,"T R U E L U X U R Y C A N O F T E N B E F O U N D"]]},
+        {"top":123.5,"cells":[[271.3,506.9,"O N T H E I N S I D E ."]]},
+        {"top":202.2,"cells":[[141.3,522.4,"The meticulous attention to detail continues into the striking cabin. Intuitive"]]},
+        {"top":221.2,"cells":[[141.3,551.6,"controls are complemented with impeccably detailed materials like lustrous exotic"]]},
+        {"top":240.2,"cells":[[141.3,526.7,"wood that trims the steering wheel and is carefully laid throughout the center"]]},
+        {"top":259.2,"cells":[[141.3,540.0,"console. Laminated front side glass and triple door seals work in tandem to help"]]},
+        {"top":278.2,"cells":[[141.3,536.3,"deflect noise before it enters the cabin. And to optimize seat comfort, pressure-"]]},
+        {"top":297.2,"cells":[[141.3,557.4,"mapping technology was used extensively to design the contoured front seats. Proof"]]},
+        {"top":316.2,"cells":[[141.3,491.2,"that in the XTS, technology defi nitely comes with a sophisticated side."]]},
+        {"top":567.9,"cells":[[151.4,258.8,"THE ART OF DETAIL"],[358.2,565.9,"INTELLIGENTLY DESIGNED STORAGE"]]},
+        {"top":585.9,"cells":[[151.3,327.1,"The closer you look, the better it gets."],[358.2,569.8,"From the smartly placed mobile device holder"]]},
+        {"top":598.9,"cells":[[151.3,331.5,"Leather surfaces, contrasting stitching,"],[358.2,563.4,"to the center control panel that opens, every"]]},
+        {"top":611.9,"cells":[[151.3,330.8,"beautifully grained woods and brushed"],[358.2,548.0,"millimeter of the XTS reveals yet another"]]},
+        {"top":624.9,"cells":[[151.3,302.3,"metal all come to life in the XTS."],[358.2,488.6,"brilliantly engineered space."]]}
+      ]
+    },
+    {
+      "page": 20,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 634.5,
+      "height": 684.0,
+      "text": "REAR LEGROOM\nIn the all-new XTS, every seat is one to be preferred.\nCompare its best-in-class rear legroom against our\ncompetitors to see how the XTS sets another new standard.",
+      "table_lines": [
+        "REAR LEGROOM\nIn the all-new XTS, every seat is one to be preferred.\nCompare its best-in-class rear legroom against our\ncompetitors to see how the XTS sets another new standard."
+      ],
+      "lines": [
+        {"top":587.2,"cells":[[108.6,194.8,"REAR LEGROOM"]]},
+        {"top":605.2,"cells":[[108.5,354.7,"In the all-new XTS, every seat is one to be preferred."]]},
+        {"top":618.2,"cells":[[108.5,344.3,"Compare its best-in-class rear legroom against our"]]},
+        {"top":631.2,"cells":[[108.5,386.5,"competitors to see how the XTS sets another new standard."]]}
+      ]
+    },
+    {
+      "page": 21,
+      "trim_hint": false,
+      "has_text_layer": false,
+      "width": 634.5,
+      "height": 684.0,
+      "text": "",
+      "table_lines": [],
+      "lines": []
+    },
+    {
+      "page": 22,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 634.5,
+      "height": 684.0,
+      "text": "THE SOUND DOESN'T SURROUND YOU.\nI T IMMER SES YOU.",
+      "table_lines": [
+        "THE SOUND DOESN'T SURROUND YOU.\nI T IMMER SES YOU."
+      ],
+      "lines": [
+        {"top":81.5,"cells":[[215.2,537.9,"THE SOUND DOESN'T SURROUND YOU."]]},
+        {"top":112.4,"cells":[[340.9,608.9,"I T IMMER SES YOU."]]}
+      ]
+    },
+    {
+      "page": 23,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 634.5,
+      "height": 684.0,
+      "text": "BOSE\u00ae PERSONAL\u00ae SURROUND SPEAKERS\n14\uf6baSPEAKER BOSE STUDIO SURROUND\u00ae SOUND SYSTEM\nYour choice seats to a remarkable musical event are ready.\nDeep, powerful lows. A wide, spacious soundstage. All the\nemotion and dynamics of a live performance now rendered\nin a remarkable surround sound experience. And it\u2019s all\nbrought to you by the 14-speaker Bose Studio Surround\nsound system in the Premium and Platinum Collections.\nCustomized for the unique acoustic environment of the XTS,\nit uses two Personal surround speakers on the top of each\nfront seat to provide an immersive and individual sound\nexperience. Of course, no matter where you are sitting,\nyou\u2019ll enjoy rich, detailed sound that seems to extend well\nbeyond the space. With its proprietary speakers, powerful\namplifi er and AudioPilot\u00ae noise compensation technology,\nthis system puts you in the middle of the music.",
+      "table_lines": [
+        "BOSE\u00ae PERSONAL\u00ae SURROUND SPEAKERS\n14\uf6baSPEAKER BOSE STUDIO SURROUND\u00ae SOUND SYSTEM\nYour choice seats to a remarkable musical event are ready.\nDeep, powerful lows. A wide, spacious soundstage. All the\nemotion and dynamics of a live performance now rendered\nin a remarkable surround sound experience. And it\u2019s all\nbrought to you by the 14-speaker Bose Studio Surround\nsound system in the Premium and Platinum Collections.\nCustomized for the unique acoustic environment of the XTS,\nit uses two Personal surround speakers on the top of each\nfront seat to provide an immersive and individual sound\nexperience. Of course, no matter where you are sitting,\nyou\u2019ll enjoy rich, detailed sound that seems to extend well\nbeyond the space. With its proprietary speakers, powerful\namplifi er and AudioPilot\u00ae noise compensation technology,\nthis system puts you in the middle of the music."
+      ],
+      "lines": [
+        {"top":156.0,"cells":[[255.6,484.5,"BOSE\u00ae PERSONAL\u00ae SURROUND SPEAKERS"]]},
+        {"top":318.7,"cells":[[255.6,560.1,"14\uf6baSPEAKER BOSE STUDIO SURROUND\u00ae SOUND SYSTEM"]]},
+        {"top":376.3,"cells":[[255.5,548.8,"Your choice seats to a remarkable musical event are ready."]]},
+        {"top":395.3,"cells":[[255.5,545.1,"Deep, powerful lows. A wide, spacious soundstage. All the"]]},
+        {"top":414.3,"cells":[[255.5,546.7,"emotion and dynamics of a live performance now rendered"]]},
+        {"top":433.3,"cells":[[255.5,532.3,"in a remarkable surround sound experience. And it\u2019s all"]]},
+        {"top":452.3,"cells":[[255.5,533.2,"brought to you by the 14-speaker Bose Studio Surround"]]},
+        {"top":471.3,"cells":[[255.5,534.2,"sound system in the Premium and Platinum Collections."]]},
+        {"top":490.3,"cells":[[255.5,555.6,"Customized for the unique acoustic environment of the XTS,"]]},
+        {"top":509.3,"cells":[[255.5,541.1,"it uses two Personal surround speakers on the top of each"]]},
+        {"top":528.2,"cells":[[255.5,532.6,"front seat to provide an immersive and individual sound"]]},
+        {"top":547.2,"cells":[[255.5,528.5,"experience. Of course, no matter where you are sitting,"]]},
+        {"top":566.2,"cells":[[255.5,543.0,"you\u2019ll enjoy rich, detailed sound that seems to extend well"]]},
+        {"top":585.2,"cells":[[255.5,543.7,"beyond the space. With its proprietary speakers, powerful"]]},
+        {"top":603.4,"cells":[[325.6,385.7,"AudioPilot\u00ae"]]},
+        {"top":604.2,"cells":[[255.5,322.5,"amplifi er and"],[388.7,546.5,"noise compensation technology,"]]},
+        {"top":623.3,"cells":[[255.5,490.7,"this system puts you in the middle of the music."]]}
+      ]
+    },
+    {
+      "page": 24,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 634.5,
+      "height": 684.0,
+      "text": "I N T EL L IGENCE ,\nIN ITS SIMPLEST FORM.\n1. Full functionality requires compatible Bluetooth and smartphone. Some devices require USB connectivity.\n2. Map coverage available in the United States, U.S. Virgin Islands, Puerto Rico and Canada. 3. Requires\nactive SiriusXM subscription. 4. Data plan rates apply.",
+      "table_lines": [
+        "1.\n2.\nact | I N T EL L IGENCE ,\nIN ITS SIMPLEST FORM.\nFull functionality requires compatible Bluetooth and smartphone. Some devices require USB connectivity.\nMap coverage available in the United States, U.S. Virgin Islands, Puerto Rico and Canada. 3. Requires\nive SiriusXM subscription. 4. Data plan rates apply."
+      ],
+      "lines": [
+        {"top":73.1,"cells":[[130.7,359.8,"I N T EL L IGENCE ,"]]},
+        {"top":106.2,"cells":[[283.0,488.3,"IN ITS SIMPLEST FORM."]]},
+        {"top":644.8,"cells":[[13.9,346.8,"1. Full functionality requires compatible Bluetooth and smartphone. Some devices require USB connectivity."]]},
+        {"top":654.8,"cells":[[13.9,340.2,"2. Map coverage available in the United States, U.S. Virgin Islands, Puerto Rico and Canada. 3. Requires"]]},
+        {"top":664.8,"cells":[[13.9,180.7,"active SiriusXM subscription. 4. Data plan rates apply."]]}
+      ]
+    },
+    {
+      "page": 25,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 634.5,
+      "height": 684.0,
+      "text": "Introducing CUE1, which blends innovative map-integrated Doppler weather3 reports. CUE\ntechnology with highly intelligent design to also streams Pandora Radio4 and lets you preset\ncreate an experience that\u2019s as effortless as it is up to 60 favorites, including points of interest,\nadvanced. It easily accesses every contact and song addresses, phone numbers, and more. With CUE,\non up to ten Bluetooth\u00ae-enabled smartphones. the customization and content possibilities are not\nThe available 3-D GPS navigation system2 has only endless, but right at your fi ngertips.",
+      "table_lines": [
+        "Introducing CUE1, which blends innovative map-integrated Doppler weather3 reports. CUE\ntechnology with highly intelligent design to also streams Pandora Radio4 and lets you preset\ncreate an experience that\u2019s as effortless as it is up to 60 favorites, including points of interest,\nadvanced. It easily accesses every contact and song addresses, phone numbers, and more. With CUE,\non up to ten Bluetooth\u00ae-enabled smartphones. the customization and content possibilities are not\nThe available 3-D GPS navigation system2 has only endless, but right at your fi ngertips."
+      ],
+      "lines": [
+        {"top":551.2,"cells":[[79.2,111.0,"CUE1,"],[417.9,462.8,"weather3"]]},
+        {"top":552.0,"cells":[[17.3,76.2,"Introducing"],[114.0,232.6,"which blends innovative"],[294.5,414.9,"map-integrated Doppler"],[465.8,532.5,"reports. CUE"]]},
+        {"top":570.2,"cells":[[17.3,232.1,"technology with highly intelligent design to"],[294.5,534.1,"also streams Pandora Radio4 and lets you preset"]]},
+        {"top":590.0,"cells":[[17.3,250.5,"create an experience that\u2019s as effortless as it is"],[294.5,527.0,"up to 60 favorites, including points of interest,"]]},
+        {"top":609.0,"cells":[[17.3,273.1,"advanced. It easily accesses every contact and song"],[294.5,539.5,"addresses, phone numbers, and more. With CUE,"]]},
+        {"top":627.2,"cells":[[17.3,247.6,"on up to ten Bluetooth\u00ae-enabled smartphones."],[294.5,545.4,"the customization and content possibilities are not"]]},
+        {"top":646.2,"cells":[[190.2,228.5,"system2"]]},
+        {"top":647.0,"cells":[[17.3,187.2,"The available 3-D GPS navigation"],[231.5,248.4,"has"],[294.5,497.3,"only endless, but right at your fi ngertips."]]}
+      ]
+    },
+    {
+      "page": 26,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 634.5,
+      "height": 684.0,
+      "text": "ONE PART DRIVER INTERFACE, ONE PART\nENTERTAINMENT SYSTEM, CUE REIMAGINES\nTHE CONNECTION BETWEEN CAR AND DRIVER.\n1. Requires active SiriusXM subscription. 2. Data plan rates apply. 3. Go to gm.com/\nbluetooth to find out which phones are compatible with the vehicle. 4. Map coverage\navailable in the United States, U.S. Virgin Islands, Puerto Rico and Canada.",
+      "table_lines": [
+        "ONE PART DRIVER INTERFACE, ONE PART\nENTERTAINMENT SYSTEM, CUE REIMAGINES\nTHE CONNECTION BETWEEN CAR AND DRIVER.\n1. Requires active SiriusXM subscription. 2. Data plan rates apply. 3. Go to gm.com/\nbluetooth to find out which phones are compatible with the vehicle. 4. Map coverage\navailable in the United States, U.S. Virgin Islands, Puerto Rico and Canada."
+      ],
+      "lines": [
+        {"top":165.5,"cells":[[271.1,579.3,"ONE PART DRIVER INTERFACE, ONE PART"]]},
+        {"top":181.5,"cells":[[271.1,605.6,"ENTERTAINMENT SYSTEM, CUE REIMAGINES"]]},
+        {"top":197.5,"cells":[[271.1,619.3,"THE CONNECTION BETWEEN CAR AND DRIVER."]]},
+        {"top":644.8,"cells":[[18.0,278.2,"1. Requires active SiriusXM subscription. 2. Data plan rates apply. 3. Go to gm.com/"]]},
+        {"top":654.8,"cells":[[18.0,277.9,"bluetooth to find out which phones are compatible with the vehicle. 4. Map coverage"]]},
+        {"top":664.8,"cells":[[18.0,252.5,"available in the United States, U.S. Virgin Islands, Puerto Rico and Canada."]]}
+      ]
+    },
+    {
+      "page": 27,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 634.5,
+      "height": 684.0,
+      "text": "CONVENIENCE\nA clean, uncluttered design\npairs with Natural Voice\nRecognition for effortless\ninteraction. CUE is as easy\nand intuitive to use as your\nsmartphone or tablet.\nCONTROL\nSeemingly instinctive, CUE uses\nproximity-sensing technology\nto detect your hand as it nears\nthe LCD touch screen. Once\nthere, press an icon, and the\nscreen pulses to acknowledge\nyour prompt, helping you to stay\nfocused on the road.\nCONNECTIVITY\nDoppler-radar weather,1\nPandora Radio,2 Bluetooth\u00ae\nconnectivity,3 available 3-D\nGPS navigation4, and more.",
+      "table_lines": [
+        "CONVENIENCE\nA clean, uncluttered design\npairs with Natural Voice\nRecognition for effortless\ninteraction. CUE is as easy\nand intuitive to use as your\nsmartphone or tablet.\nCONTROL\nSeemingly instinctive, CUE uses\nproximity-sensing technology\nto detect your hand as it nears\nthe LCD touch screen. Once\nthere, press an icon, and the\nscreen pulses to acknowledge\nyour prompt, helping you to stay\nfocused on the road.\nCONNECTIVITY\nDoppler-radar weather,1\nPandora Radio,2 Bluetooth\u00ae\nconnectivity,3 available 3-D\nGPS navigation4, and more."
+      ],
+      "lines": [
+        {"top":85.8,"cells":[[373.0,453.5,"CONVENIENCE"]]},
+        {"top":103.8,"cells":[[373.0,499.0,"A clean, uncluttered design"]]},
+        {"top":116.8,"cells":[[373.0,482.7,"pairs with Natural Voice"]]},
+        {"top":129.8,"cells":[[373.0,489.1,"Recognition for effortless"]]},
+        {"top":142.8,"cells":[[373.0,499.0,"interaction. CUE is as easy"]]},
+        {"top":155.8,"cells":[[373.0,498.1,"and intuitive to use as your"]]},
+        {"top":168.8,"cells":[[373.0,472.0,"smartphone or tablet."]]},
+        {"top":260.3,"cells":[[373.0,423.1,"CONTROL"]]},
+        {"top":278.2,"cells":[[373.0,523.8,"Seemingly instinctive, CUE uses"]]},
+        {"top":291.2,"cells":[[373.0,508.1,"proximity-sensing technology"]]},
+        {"top":304.2,"cells":[[373.0,514.4,"to detect your hand as it nears"]]},
+        {"top":317.2,"cells":[[373.0,504.9,"the LCD touch screen. Once"]]},
+        {"top":330.2,"cells":[[373.0,506.1,"there, press an icon, and the"]]},
+        {"top":343.2,"cells":[[373.0,513.1,"screen pulses to acknowledge"]]},
+        {"top":356.2,"cells":[[373.0,522.4,"your prompt, helping you to stay"]]},
+        {"top":369.2,"cells":[[373.0,468.5,"focused on the road."]]},
+        {"top":470.6,"cells":[[373.0,455.2,"CONNECTIVITY"]]},
+        {"top":487.7,"cells":[[373.0,483.6,"Doppler-radar weather,1"]]},
+        {"top":500.7,"cells":[[415.4,499.7,"Radio,2 Bluetooth\u00ae"]]},
+        {"top":501.5,"cells":[[373.0,412.1,"Pandora"]]},
+        {"top":513.7,"cells":[[373.0,433.6,"connectivity,3"]]},
+        {"top":514.5,"cells":[[436.7,497.8,"available 3-D"]]},
+        {"top":526.7,"cells":[[373.0,502.0,"GPS navigation4, and more."]]}
+      ]
+    },
+    {
+      "page": 28,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 634.5,
+      "height": 684.0,
+      "text": "V ISION,\nIN EVERY SENSE OF THE WORD.\nThe best safety features are those that help you avoid a\ncollision in the fi rst place. That\u2019s why the XTS offers the\nlatest innovations in driver awareness and assistance to\nhelp inform you of potential hazards you may not even see.\nUsing radar technology and strategically placed cameras,\nthe XTS is ever-vigilant with its available Forward Collision\nAlert, Lane Departure Warning, Side Blind Zone Alert,1\nRear Cross-Traffi c Alert, and Front and Rear Park Assist.\nEven the available Adaptive Cruise Control2,3 uses radar to\nmaintain a preset distance between you and other vehicles.\nAnd the available Front and Rear Automatic Braking3\ndetects large objects you may not see to help prevent certain\nlow-speed collisions by applying the brakes for you.\n1. Before making a lane change, always check the SBZA display, check the side and inside mirrors, look over your shoulder for vehicles\nand hazards, and activate your turn signal. 2. Adaptive Cruise Control is no substitute for the driver\u2019s personal responsibility to operate\nthe vehicle in a safe manner. The driver needs to remain attentive to traffic and road conditions and provide the steering, braking or other\ninputs necessary to retain control of the vehicle. 3. Late availability.",
+      "table_lines": [
+        "V ISION,\nIN EVERY SENSE OF THE WORD.\nThe best safety features are those that help you avoid a\ncollision in the fi rst place. That\u2019s why the XTS offers the\nlatest innovations in driver awareness and assistance to\nhelp inform you of potential hazards you may not even see.\nUsing radar technology and strategically placed cameras,\nthe XTS is ever-vigilant with its available Forward Collision\nAlert, Lane Departure Warning, Side Blind Zone Alert,1\nRear Cross-Traffi c Alert, and Front and Rear Park Assist.\nEven the available Adaptive Cruise Control2,3 uses radar to\nmaintain a preset distance between you and other vehicles.\nAnd the available Front and Rear Automatic Braking3\ndetects large objects you may not see to help prevent certain\nlow-speed collisions by applying the brakes for you.\n1. Before making a lane change, always check the SBZA display, check the side and inside mirrors, look over your shoulder for vehicles\nand hazards, and activate your turn signal. 2. Adaptive Cruise Control is no substitute for the driver\u2019s personal responsibility to operate\nthe vehicle in a safe manner. The driver needs to remain attentive to traffic and road conditions and provide the steering, braking or other\ninputs necessary to retain control of the vehicle. 3. Late availability."
+      ],
+      "lines": [
+        {"top":257.3,"cells":[[93.2,201.9,"V ISION,"]]},
+        {"top":290.4,"cells":[[48.0,322.0,"IN EVERY SENSE OF THE WORD."]]},
+        {"top":334.1,"cells":[[47.9,321.2,"The best safety features are those that help you avoid a"]]},
+        {"top":353.1,"cells":[[47.9,328.0,"collision in the fi rst place. That\u2019s why the XTS offers the"]]},
+        {"top":372.1,"cells":[[47.9,324.9,"latest innovations in driver awareness and assistance to"]]},
+        {"top":391.1,"cells":[[47.9,339.9,"help inform you of potential hazards you may not even see."]]},
+        {"top":410.1,"cells":[[47.9,336.2,"Using radar technology and strategically placed cameras,"]]},
+        {"top":429.1,"cells":[[47.9,346.6,"the XTS is ever-vigilant with its available Forward Collision"]]},
+        {"top":447.3,"cells":[[47.9,325.3,"Alert, Lane Departure Warning, Side Blind Zone Alert,1"]]},
+        {"top":467.1,"cells":[[47.9,334.4,"Rear Cross-Traffi c Alert, and Front and Rear Park Assist."]]},
+        {"top":485.3,"cells":[[47.9,340.5,"Even the available Adaptive Cruise Control2,3 uses radar to"]]},
+        {"top":505.1,"cells":[[47.9,340.8,"maintain a preset distance between you and other vehicles."]]},
+        {"top":523.3,"cells":[[272.6,317.0,"Braking3"]]},
+        {"top":524.1,"cells":[[47.9,269.6,"And the available Front and Rear Automatic"]]},
+        {"top":543.1,"cells":[[47.9,348.5,"detects large objects you may not see to help prevent certain"]]},
+        {"top":562.1,"cells":[[47.9,304.0,"low-speed collisions by applying the brakes for you."]]},
+        {"top":634.8,"cells":[[13.9,433.2,"1. Before making a lane change, always check the SBZA display, check the side and inside mirrors, look over your shoulder for vehicles"]]},
+        {"top":644.8,"cells":[[13.9,428.8,"and hazards, and activate your turn signal. 2. Adaptive Cruise Control is no substitute for the driver\u2019s personal responsibility to operate"]]},
+        {"top":654.8,"cells":[[13.9,436.6,"the vehicle in a safe manner. The driver needs to remain attentive to traffic and road conditions and provide the steering, braking or other"]]},
+        {"top":664.8,"cells":[[13.9,220.8,"inputs necessary to retain control of the vehicle. 3. Late availability."]]}
+      ]
+    },
+    {
+      "page": 29,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 634.5,
+      "height": 684.0,
+      "text": "XTS PLATINUM COLLECTION / Graphite Metallic\nRADAR TECHNOLOGY\nTo calibrate its available safety systems, Cadillac\nengineers pushed the radar sensors to their limits\nwith rigorous test-runs across the vaunted Brooklyn\nBridge. Known for its massive amounts of metal\u2014which\ncan cause interference\u2014Cadillac developed an ultra-\nresponsive safety system calibrated for the real world.",
+      "table_lines": [
+        "XTS PLATINUM COLLECTION / Graphite Metallic\nRADAR TECHNOLOGY\nTo calibrate its available safety systems, Cadillac\nengineers pushed the radar sensors to their limits\nwith rigorous test-runs across the vaunted Brooklyn\nBridge. Known for its massive amounts of metal\u2014which\ncan cause interference\u2014Cadillac developed an ultra-\nresponsive safety system calibrated for the real world."
+      ],
+      "lines": [
+        {"top":20.3,"cells":[[285.3,453.2,"XTS PLATINUM COLLECTION /"],[458.0,549.2,"Graphite Metallic"]]},
+        {"top":548.9,"cells":[[270.8,383.8,"RADAR TECHNOLOGY"]]},
+        {"top":566.9,"cells":[[270.7,498.4,"To calibrate its available safety systems, Cadillac"]]},
+        {"top":579.9,"cells":[[270.7,501.0,"engineers pushed the radar sensors to their limits"]]},
+        {"top":592.9,"cells":[[270.7,509.5,"with rigorous test-runs across the vaunted Brooklyn"]]},
+        {"top":605.9,"cells":[[270.7,529.2,"Bridge. Known for its massive amounts of metal\u2014which"]]},
+        {"top":618.9,"cells":[[270.7,517.3,"can cause interference\u2014Cadillac developed an ultra-"]]},
+        {"top":631.9,"cells":[[270.7,521.6,"responsive safety system calibrated for the real world."]]}
+      ]
+    },
+    {
+      "page": 30,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 634.5,
+      "height": 684.0,
+      "text": "A SAFETY SYSTEM SO ADVANCED,\nW E H A D TO IN V EN T A NEW SE AT\nTO TELL YOU ABOUT IT.\nWith select models featuring eight ultrasonic motion\ndetectors, six Doppler radar sensors and a high-\ndefi nition Smart Camera taking twelve pictures every\nsecond, the XTS doesn\u2019t just watch the road. It analyzes\nit. Cross-references it. Writes a dissertation. And then\nleaves you with the condensed version. All through\nsubtle pulses in your driver\u2019s seat.\nBELLS & WHISTLES\nAs an alternative to warning chimes, the XTS offers the\npatented Safety Alert Seat. It gives you a warning you can\nactually feel to alert you of select dangers on the road.",
+      "table_lines": [
+        "A SAFETY SYSTEM SO ADVANCED,\nW E H A D TO IN V EN T A NEW SE AT\nTO TELL YOU ABOUT IT.\nWith select models featuring eight ultrasonic motion\ndetectors, six Doppler radar sensors and a high-\ndefi nition Smart Camera taking twelve pictures every\nsecond, the XTS doesn\u2019t just watch the road. It analyzes\nit. Cross-references it. Writes a dissertation. And then\nleaves you with the condensed version. All through\nsubtle pulses in your driver\u2019s seat.\nBELLS & WHISTLES\nAs an alternative to warning chimes, the XTS offers the\npatented Safety Alert Seat. It gives you a warning you can\nactually feel to alert you of select dangers on the road."
+      ],
+      "lines": [
+        {"top":59.6,"cells":[[45.6,332.4,"A SAFETY SYSTEM SO ADVANCED,"]]},
+        {"top":86.9,"cells":[[61.9,501.7,"W E H A D TO IN V EN T A NEW SE AT"]]},
+        {"top":118.6,"cells":[[231.4,430.1,"TO TELL YOU ABOUT IT."]]},
+        {"top":202.5,"cells":[[62.8,325.3,"With select models featuring eight ultrasonic motion"]]},
+        {"top":221.5,"cells":[[62.8,301.9,"detectors, six Doppler radar sensors and a high-"]]},
+        {"top":240.5,"cells":[[62.8,330.1,"defi nition Smart Camera taking twelve pictures every"]]},
+        {"top":259.5,"cells":[[62.8,342.2,"second, the XTS doesn\u2019t just watch the road. It analyzes"]]},
+        {"top":278.5,"cells":[[62.8,332.9,"it. Cross-references it. Writes a dissertation. And then"]]},
+        {"top":297.5,"cells":[[62.8,313.9,"leaves you with the condensed version. All through"]]},
+        {"top":316.4,"cells":[[62.8,232.4,"subtle pulses in your driver\u2019s seat."]]},
+        {"top":552.8,"cells":[[72.9,180.6,"BELLS & WHISTLES"]]},
+        {"top":570.8,"cells":[[72.9,329.1,"As an alternative to warning chimes, the XTS offers the"]]},
+        {"top":583.8,"cells":[[72.9,342.3,"patented Safety Alert Seat. It gives you a warning you can"]]},
+        {"top":596.8,"cells":[[72.9,325.9,"actually feel to alert you of select dangers on the road."]]}
+      ]
+    },
+    {
+      "page": 31,
+      "trim_hint": false,
+      "has_text_layer": false,
+      "width": 634.5,
+      "height": 684.0,
+      "text": "",
+      "table_lines": [],
+      "lines": []
+    },
+    {
+      "page": 32,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 634.5,
+      "height": 684.0,
+      "text": "I T \u2019 S A S D E F E N S I V E\nAS IT IS DYNAMIC.\n1. Late availability. 2. Always use safety belts and the correct restraint for your child's age and size. Even in vehicles equipped with the Passenger\nSensing System, children are safer when properly secured in a rear seat in the appropriate infant, child or booster seat. Never place a rear-facing infant\nrestraint in the front seat of any vehicle equipped with a passenger air bag. See the Owner's Manual and child safety seat instructions for more safety\ninformation. 3. Visit onstar.com for details and system limitations. OnStar acts as a link to existing emergency service providers.",
+      "table_lines": [
+        "I T \u2019 S A S D E F E N S I V E\nAS IT IS DYNAMIC.\n1. Late availability. 2. Always use safety belts and the correct restraint for your child's age and size. Even in vehicles equipped with the Passenger\nSensing System, children are safer when properly secured in a rear seat in the appropriate infant, child or booster seat. Never place a rear-facing infant\nrestraint in the front seat of any vehicle equipped with a passenger air bag. See the Owner's Manual and child safety seat instructions for more safety\ninformation. 3. Visit onstar.com for details and system limitations. OnStar acts as a link to existing emergency service providers."
+      ],
+      "lines": [
+        {"top":104.6,"cells":[[205.4,482.4,"I T \u2019 S A S D E F E N S I V E"]]},
+        {"top":135.7,"cells":[[381.6,540.8,"AS IT IS DYNAMIC."]]},
+        {"top":634.8,"cells":[[13.9,464.1,"1. Late availability. 2. Always use safety belts and the correct restraint for your child's age and size. Even in vehicles equipped with the Passenger"]]},
+        {"top":644.8,"cells":[[13.9,482.0,"Sensing System, children are safer when properly secured in a rear seat in the appropriate infant, child or booster seat. Never place a rear-facing infant"]]},
+        {"top":654.8,"cells":[[13.9,475.1,"restraint in the front seat of any vehicle equipped with a passenger air bag. See the Owner's Manual and child safety seat instructions for more safety"]]},
+        {"top":664.8,"cells":[[13.9,407.9,"information. 3. Visit onstar.com for details and system limitations. OnStar acts as a link to existing emergency service providers."]]}
+      ]
+    },
+    {
+      "page": 33,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 634.5,
+      "height": 684.0,
+      "text": "SENSOR FUSION AUTOMATIC FRONT AND REAR BRAKING\nBy seamlessly integrating available sensor and Most avoidable collisions happen at low\npositioning technologies, Sensor Fusion1 is an speeds. That's why radar and ultrasonic\nintegral building block toward the development sensors in the front and rear are always on\nof fully autonomous vehicles. And it's being used the lookout. This available technology may\ntoday in the all-new XTS. even help you prevent a collision by activating\nthe brakes automatically.\nIt starts with a protective safety cage constructed with high-strength steel alloys for\nexceptional rigidity and strategically placed crumple zones. Then we add preventive safety\nfeatures like the StabiliTrak Electronic Stability Control System and a sophisticated\nantilock braking system (ABS) with Electronic Braking Force Distribution that helps\nbalance stopping power between the front and rear brakes. There\u2019s also the confi dence\nthat comes with ten standard airbags2 and a standard one-year subscription to OnStar3\nAutomatic Crash Response. In a crash, built-in sensors in your vehicle can automatically\nsend an alert to an OnStar Advisor, who can contact you in your car.",
+      "table_lines": [
+        "SENSOR FUSION AUTOMATIC FRONT AND REAR BRAKING\nBy seamlessly integrating available sensor and Most avoidable collisions happen at low\npositioning technologies, Sensor Fusion1 is an speeds. That's why radar and ultrasonic\nintegral building block toward the development sensors in the front and rear are always on\nof fully autonomous vehicles. And it's being used the lookout. This available technology may\ntoday in the all-new XTS. even help you prevent a collision by activating\nthe brakes automatically.\nIt starts with a protective safety cage constructed with high-strength steel alloys for\nexceptional rigidity and strategically placed crumple zones. Then we add preventive safety\nfeatures like the StabiliTrak Electronic Stability Control System and a sophisticated\nantilock braking system (ABS) with Electronic Braking Force Distribution that helps\nbalance stopping power between the front and rear brakes. There\u2019s also the confi dence\nthat comes with ten standard airbags2 and a standard one-year subscription to OnStar3\nAutomatic Crash Response. In a crash, built-in sensors in your vehicle can automatically\nsend an alert to an OnStar Advisor, who can contact you in your car."
+      ],
+      "lines": [
+        {"top":163.2,"cells":[[42.9,133.3,"SENSOR FUSION"],[319.6,537.4,"AUTOMATIC FRONT AND REAR BRAKING"]]},
+        {"top":181.2,"cells":[[42.9,261.1,"By seamlessly integrating available sensor and"],[319.6,504.0,"Most avoidable collisions happen at low"]]},
+        {"top":193.4,"cells":[[197.2,232.0,"Fusion1"]]},
+        {"top":194.2,"cells":[[42.9,194.0,"positioning technologies, Sensor"],[235.1,257.2,"is an"],[319.6,504.6,"speeds. That's why radar and ultrasonic"]]},
+        {"top":207.2,"cells":[[42.9,258.9,"integral building block toward the development"],[319.6,518.8,"sensors in the front and rear are always on"]]},
+        {"top":220.2,"cells":[[42.9,268.7,"of fully autonomous vehicles. And it's being used"],[319.6,517.3,"the lookout. This available technology may"]]},
+        {"top":233.2,"cells":[[42.9,159.6,"today in the all-new XTS."],[319.6,533.6,"even help you prevent a collision by activating"]]},
+        {"top":246.2,"cells":[[319.6,435.0,"the brakes automatically."]]},
+        {"top":509.0,"cells":[[81.5,501.0,"It starts with a protective safety cage constructed with high-strength steel alloys for"]]},
+        {"top":528.0,"cells":[[81.5,531.5,"exceptional rigidity and strategically placed crumple zones. Then we add preventive safety"]]},
+        {"top":547.0,"cells":[[81.5,502.7,"features like the StabiliTrak Electronic Stability Control System and a sophisticated"]]},
+        {"top":566.0,"cells":[[81.5,504.9,"antilock braking system (ABS) with Electronic Braking Force Distribution that helps"]]},
+        {"top":585.0,"cells":[[81.5,512.6,"balance stopping power between the front and rear brakes. There\u2019s also the confi dence"]]},
+        {"top":603.2,"cells":[[229.5,271.5,"airbags2"],[475.5,516.1,"OnStar3"]]},
+        {"top":604.0,"cells":[[81.5,226.4,"that comes with ten standard"],[274.4,472.5,"and a standard one-year subscription to"]]},
+        {"top":623.0,"cells":[[81.5,522.7,"Automatic Crash Response. In a crash, built-in sensors in your vehicle can automatically"]]},
+        {"top":642.0,"cells":[[81.5,420.3,"send an alert to an OnStar Advisor, who can contact you in your car."]]}
+      ]
+    },
+    {
+      "page": 34,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 634.5,
+      "height": 684.0,
+      "text": "XTS PLATINUM COLLECTION / Graphite Metallic\nPush the start button, and the V6 comes to life with of the combustion chamber. Along with Variable\na muscular rumble. But it\u2019s what goes on under Valve Timing, this maximizes the air/fuel ratio for\nthe artfully sculpted hood that is truly impressive. optimal power and effi ciency.1 The engine is coupled\nDesigned to complement the exceptional handling with an advanced Gen-II automatic transmission\nof the XTS, the 304 HP 3.6L V6 engine is an that delivers crisp, smooth shifts in step with the\nadvanced study in technology. Spray-guided direct V6 engine\u2019s impressive output. When you call for\nfuel injection delivers fuel precisely to the center power, the XTS answers immediately.\n1. EPA-estimated mpg 17 city / 28 highway, FWD. 17 city / 26 highway, AWD.",
+      "table_lines": [
+        "XTS PLATINUM COLLECTION / Graphite Metallic\nPush the start button, and the V6 comes to life with of the combustion chamber. Along with Variable\na muscular rumble. But it\u2019s what goes on under Valve Timing, this maximizes the air/fuel ratio for\nthe artfully sculpted hood that is truly impressive. optimal power and effi ciency.1 The engine is coupled\nDesigned to complement the exceptional handling with an advanced Gen-II automatic transmission\nof the XTS, the 304 HP 3.6L V6 engine is an that delivers crisp, smooth shifts in step with the\nadvanced study in technology. Spray-guided direct V6 engine\u2019s impressive output. When you call for\nfuel injection delivers fuel precisely to the center power, the XTS answers immediately.\n1. EPA-estimated mpg 17 city / 28 highway, FWD. 17 city / 26 highway, AWD."
+      ],
+      "lines": [
+        {"top":467.2,"cells":[[8.5,176.4,"XTS PLATINUM COLLECTION /"],[181.2,272.4,"Graphite Metallic"]]},
+        {"top":513.6,"cells":[[77.7,334.7,"Push the start button, and the V6 comes to life with"],[362.2,604.4,"of the combustion chamber. Along with Variable"]]},
+        {"top":532.6,"cells":[[77.7,313.5,"a muscular rumble. But it\u2019s what goes on under"],[362.2,622.3,"Valve Timing, this maximizes the air/fuel ratio for"]]},
+        {"top":550.8,"cells":[[475.4,511.2,"ciency.1"]]},
+        {"top":551.6,"cells":[[77.7,326.3,"the artfully sculpted hood that is truly impressive."],[362.2,475.3,"optimal power and effi"],[514.6,620.8,"The engine is coupled"]]},
+        {"top":570.6,"cells":[[77.7,325.1,"Designed to complement the exceptional handling"],[362.2,611.7,"with an advanced Gen-II automatic transmission"]]},
+        {"top":589.6,"cells":[[77.7,302.2,"of the XTS, the 304 HP 3.6L V6 engine is an"],[362.2,611.7,"that delivers crisp, smooth shifts in step with the"]]},
+        {"top":608.6,"cells":[[77.7,328.7,"advanced study in technology. Spray-guided direct"],[362.2,607.3,"V6 engine\u2019s impressive output. When you call for"]]},
+        {"top":627.6,"cells":[[77.7,320.0,"fuel injection delivers fuel precisely to the center"],[362.2,544.9,"power, the XTS answers immediately."]]},
+        {"top":664.8,"cells":[[13.9,252.5,"1. EPA-estimated mpg 17 city / 28 highway, FWD. 17 city / 26 highway, AWD."]]}
+      ]
+    },
+    {
+      "page": 35,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 634.5,
+      "height": 684.0,
+      "text": "IT\u2019S A RARE ENGINE THAT\nAPPEALS TO YOUR LEFT BRAIN\nAND RIGHT FOOT\nIN EQUAL MEASURES.\n3.6L DIRECT\uf6baINJECTION V6 DRIVER SHIFT CONTROL\nENGINE\nThe electronically controlled 6-speed automatic\nKnown for its smooth, seamless power transmission incorporates steering wheel-\ndelivery, this standard 3.6L direct- mounted paddle shifters that enable clutchless\ninjection V6 engine is also remarkably manual shifting. A quick tap is all that\u2019s required\nfuel efficient.1 for a smooth, crisp upshift or downshift.",
+      "table_lines": [
+        "IT\u2019S A RARE ENGINE THAT\nAPPEALS TO YOUR LEFT BRAIN\nAND RIGHT FOOT\nIN EQUAL MEASURES.\n3.6L DIRECT\uf6baINJECTION V6 DRIVER SHIFT CONTROL\nENGINE\nThe electronically controlled 6-speed automatic\nKnown for its smooth, seamless power transmission incorporates steering wheel-\ndelivery, this standard 3.6L direct- mounted paddle shifters that enable clutchless\ninjection V6 engine is also remarkably manual shifting. A quick tap is all that\u2019s required\nfuel efficient.1 for a smooth, crisp upshift or downshift."
+      ],
+      "lines": [
+        {"top":50.4,"cells":[[191.1,401.3,"IT\u2019S A RARE ENGINE THAT"]]},
+        {"top":75.4,"cells":[[155.1,530.1,"APPEALS TO YOUR LEFT BRAIN"]]},
+        {"top":104.4,"cells":[[242.8,456.8,"AND RIGHT FOOT"]]},
+        {"top":129.4,"cells":[[339.1,515.5,"IN EQUAL MEASURES."]]},
+        {"top":577.2,"cells":[[91.6,240.8,"3.6L DIRECT\uf6baINJECTION V6"],[296.7,430.1,"DRIVER SHIFT CONTROL"]]},
+        {"top":588.2,"cells":[[91.6,134.3,"ENGINE"]]},
+        {"top":595.2,"cells":[[296.6,516.2,"The electronically controlled 6-speed automatic"]]},
+        {"top":606.2,"cells":[[91.5,270.7,"Known for its smooth, seamless power"]]},
+        {"top":608.2,"cells":[[296.6,490.3,"transmission incorporates steering wheel-"]]},
+        {"top":619.2,"cells":[[91.5,248.5,"delivery, this standard 3.6L direct-"],[296.6,512.6,"mounted paddle shifters that enable clutchless"]]},
+        {"top":632.2,"cells":[[91.5,267.9,"injection V6 engine is also remarkably"]]},
+        {"top":634.2,"cells":[[296.6,518.1,"manual shifting. A quick tap is all that\u2019s required"]]},
+        {"top":644.3,"cells":[[91.5,153.1,"fuel efficient.1"]]},
+        {"top":647.2,"cells":[[296.6,479.8,"for a smooth, crisp upshift or downshift."]]}
+      ]
+    },
+    {
+      "page": 36,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 634.5,
+      "height": 684.0,
+      "text": "THE ROAD MEANDERS.\nT H E X T S D O E S N O T.\nMAGNE\nRevolut\nRide Co\nto 1,000\nAny luxury sedan can hold its own on a long stretch of interstate.\nseamles\nHowever, when the pavement twists, writhes and dips, the XTS quickly agile ha\nseparates itself from everything else on the road. With its advanced\nsuspension and precisely tuned steering, it delivers a perfectly connected\nand sophisticated ride. Torque-vectoring All-Wheel Drive is available\nand features advanced software that manages torque front-to-rear,\nwhile the rear electronic Limited-Slip Differential (eLSD) controls\ntorque side-to-side along the rear axle, putting power where you need\nit most for a surefooted grip on the pavement. The XTS also features\nrevolutionary dual-mode Magnetic Ride Control that reacts in the\nblink of an eye to changing demands, while its advanced HiPer Strut\ntechnology helps the tires remain keyed to the surface. Combined with\nrear auto load-leveling suspension and speed-sensitive steering, the XTS\nhandling is nothing short of a revelation.\nSEE HOW THE POWER OF MAGNETS GIVES\nXTS A FLAWLESS RIDE.\n\u00bb\nWatch Video",
+      "table_lines": [
+        "THE ROAD MEANDERS.\nT H E X T S D O E S N O T.\nMAGN\nRevol\nRide C\nto 1,0\nAny luxury sedan can hold its own on a long stretch of interstate.\nseaml\nHowever, when the pavement twists, writhes and dips, the XTS quickly agile h\nseparates itself from everything else on the road. With its advanced\nsuspension and precisely tuned steering, it delivers a perfectly connected\nand sophisticated ride. Torque-vectoring All-Wheel Drive is available\nand features advanced software that manages torque front-to-rear,\nwhile the rear electronic Limited-Slip Differential (eLSD) controls\ntorque side-to-side along the rear axle, putting power where you need\nit most for a surefooted grip on the pavement. The XTS also features\nrevolutionary dual-mode Magnetic Ride Control that reacts in the\nblink of an eye to changing demands, while its advanced HiPer Strut\ntechnology helps the tires remain keyed to the surface. Combined with\nrear auto load-leveling suspension and speed-sensitive steering, the XTS\nhandling is nothing short of a revelation.\nSEE HOW THE POWER OF MAGNETS GIVES\nXTS A FLAWLESS RIDE.\n\u00bb\nWatch Video | ut\n0\ne\na"
+      ],
+      "lines": [
+        {"top":61.0,"cells":[[104.0,298.9,"THE ROAD MEANDERS."]]},
+        {"top":85.8,"cells":[[139.9,432.7,"T H E X T S D O E S N O T."]]},
+        {"top":93.7,"cells":[[600.0,639.2,"MAGNE"]]},
+        {"top":111.7,"cells":[[599.9,635.2,"Revolut"]]},
+        {"top":124.7,"cells":[[599.9,637.4,"Ride Co"]]},
+        {"top":137.7,"cells":[[599.9,637.7,"to 1,000"]]},
+        {"top":146.1,"cells":[[113.2,437.5,"Any luxury sedan can hold its own on a long stretch of interstate."]]},
+        {"top":150.7,"cells":[[599.9,638.5,"seamles"]]},
+        {"top":163.7,"cells":[[599.9,636.6,"agile ha"]]},
+        {"top":165.1,"cells":[[113.2,464.4,"However, when the pavement twists, writhes and dips, the XTS quickly"]]},
+        {"top":184.1,"cells":[[113.2,449.1,"separates itself from everything else on the road. With its advanced"]]},
+        {"top":203.1,"cells":[[113.2,474.6,"suspension and precisely tuned steering, it delivers a perfectly connected"]]},
+        {"top":222.1,"cells":[[113.2,457.9,"and sophisticated ride. Torque-vectoring All-Wheel Drive is available"]]},
+        {"top":241.1,"cells":[[113.2,446.6,"and features advanced software that manages torque front-to-rear,"]]},
+        {"top":260.1,"cells":[[113.2,443.9,"while the rear electronic Limited-Slip Differential (eLSD) controls"]]},
+        {"top":279.1,"cells":[[113.2,458.9,"torque side-to-side along the rear axle, putting power where you need"]]},
+        {"top":298.1,"cells":[[113.2,454.3,"it most for a surefooted grip on the pavement. The XTS also features"]]},
+        {"top":317.1,"cells":[[113.2,441.2,"revolutionary dual-mode Magnetic Ride Control that reacts in the"]]},
+        {"top":336.1,"cells":[[113.2,454.3,"blink of an eye to changing demands, while its advanced HiPer Strut"]]},
+        {"top":355.1,"cells":[[113.2,462.5,"technology helps the tires remain keyed to the surface. Combined with"]]},
+        {"top":374.1,"cells":[[113.2,472.8,"rear auto load-leveling suspension and speed-sensitive steering, the XTS"]]},
+        {"top":393.1,"cells":[[113.2,315.8,"handling is nothing short of a revelation."]]},
+        {"top":604.2,"cells":[[121.9,354.2,"SEE HOW THE POWER OF MAGNETS GIVES"]]},
+        {"top":615.2,"cells":[[121.9,250.6,"XTS A FLAWLESS RIDE."]]},
+        {"top":634.7,"cells":[[184.1,193.0,"\u00bb"]]},
+        {"top":638.7,"cells":[[121.9,180.3,"Watch Video"]]}
+      ]
+    },
+    {
+      "page": 37,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 634.5,
+      "height": 684.0,
+      "text": "THE ROAD MEANDERS.\nT H E X T S D O E S N O T.\nMAGNETIC RIDE CONTROL\nRevolutionary dual-mode Magnetic\nRide Control reads the road up\nto 1,000 times per second and\nAny luxury sedan can hold its own on a long stretch of interstate.\nseamlessly adjusts damping for\nHowever, when the pavement twists, writhes and dips, the XTS quickly agile handling and a controlled ride.\nseparates itself from everything else on the road. With its advanced\nsuspension and precisely tuned steering, it delivers a perfectly connected\nand sophisticated ride. Torque-vectoring All-Wheel Drive is available\nand features advanced software that manages torque front-to-rear,\nwhile the rear electronic Limited-Slip Differential (eLSD) controls\ntorque side-to-side along the rear axle, putting power where you need\nit most for a surefooted grip on the pavement. The XTS also features\nrevolutionary dual-mode Magnetic Ride Control that reacts in the\nblink of an eye to changing demands, while its advanced HiPer Strut\ntechnology helps the tires remain keyed to the surface. Combined with\nrear auto load-leveling suspension and speed-sensitive steering, the XTS\nhandling is nothing short of a revelation.\nSEE HOW THE POWER OF MAGNETS GIVES\nXTS A FLAWLESS RIDE.",
+      "table_lines": [
+        "THE ROAD MEANDERS.\nT H E X T S D O E S N O T.\nMAGN\nRevolut\nRide C\nto 1,00\nAny luxury sedan can hold its own on a long stretch of interstate.\nseamle\nHowever, when the pavement twists, writhes and dips, the XTS quickly agile ha\nseparates itself from everything else on the road. With its advanced\nsuspension and precisely tuned steering, it delivers a perfectly connected\nand sophisticated ride. Torque-vectoring All-Wheel Drive is available\nand features advanced software that manages torque front-to-rear,\nwhile the rear electronic Limited-Slip Differential (eLSD) controls\ntorque side-to-side along the rear axle, putting power where you need\nit most for a surefooted grip on the pavement. The XTS also features\nrevolutionary dual-mode Magnetic Ride Control that reacts in the\nblink of an eye to changing demands, while its advanced HiPer Strut\ntechnology helps the tires remain keyed to the surface. Combined with\nrear auto load-leveling suspension and speed-sensitive steering, the XTS\nhandling is nothing short of a revelation.\nSEE HOW THE POWER OF MAGNETS GIVES\nXTS A FLAWLESS RIDE.",
+        "THE ROAD MEANDERS.\nT H E X T S D O E S N O T.\nMAGN\nRevol\nRide C\nto 1,0\nAny luxury sedan can hold its own on a long stretch of interstate.\nseaml\nHowever, when the pavement twists, writhes and dips, the XTS quickly agile h\nseparates itself from everything else on the road. With its advanced\nsuspension and precisely tuned steering, it delivers a perfectly connected\nand sophisticated ride. Torque-vectoring All-Wheel Drive is available\nand features advanced software that manages torque front-to-rear,\nwhile the rear electronic Limited-Slip Differential (eLSD) controls\ntorque side-to-side along the rear axle, putting power where you need\nit most for a surefooted grip on the pavement. The XTS also features\nrevolutionary dual-mode Magnetic Ride Control that reacts in the\nblink of an eye to changing demands, while its advanced HiPer Strut\ntechnology helps the tires remain keyed to the surface. Combined with\nrear auto load-leveling suspension and speed-sensitive steering, the XTS\nhandling is nothing short of a revelation.\nSEE HOW THE POWER OF MAGNETS GIVES\nXTS A FLAWLESS RIDE. | ut\n0\ne\na"
+      ],
+      "lines": [
+        {"top":62.3,"cells":[[104.0,299.0,"THE ROAD MEANDERS."]]},
+        {"top":86.2,"cells":[[139.9,432.7,"T H E X T S D O E S N O T."]]},
+        {"top":97.2,"cells":[[600.0,743.2,"MAGNETIC RIDE CONTROL"]]},
+        {"top":112.9,"cells":[[599.9,761.6,"Revolutionary dual-mode Magnetic"]]},
+        {"top":125.9,"cells":[[599.9,743.3,"Ride Control reads the road up"]]},
+        {"top":138.9,"cells":[[599.9,740.9,"to 1,000 times per second and"]]},
+        {"top":147.2,"cells":[[113.2,437.5,"Any luxury sedan can hold its own on a long stretch of interstate."]]},
+        {"top":151.9,"cells":[[599.9,746.1,"seamlessly adjusts damping for"]]},
+        {"top":164.9,"cells":[[113.2,464.4,"However, when the pavement twists, writhes and dips, the XTS quickly"],[599.9,766.1,"agile handling and a controlled ride."]]},
+        {"top":185.2,"cells":[[113.2,449.1,"separates itself from everything else on the road. With its advanced"]]},
+        {"top":204.2,"cells":[[113.2,474.6,"suspension and precisely tuned steering, it delivers a perfectly connected"]]},
+        {"top":223.2,"cells":[[113.2,457.9,"and sophisticated ride. Torque-vectoring All-Wheel Drive is available"]]},
+        {"top":242.2,"cells":[[113.2,446.6,"and features advanced software that manages torque front-to-rear,"]]},
+        {"top":261.2,"cells":[[113.2,443.9,"while the rear electronic Limited-Slip Differential (eLSD) controls"]]},
+        {"top":280.2,"cells":[[113.2,458.9,"torque side-to-side along the rear axle, putting power where you need"]]},
+        {"top":299.2,"cells":[[113.2,454.3,"it most for a surefooted grip on the pavement. The XTS also features"]]},
+        {"top":318.2,"cells":[[113.2,441.2,"revolutionary dual-mode Magnetic Ride Control that reacts in the"]]},
+        {"top":337.2,"cells":[[113.2,454.3,"blink of an eye to changing demands, while its advanced HiPer Strut"]]},
+        {"top":356.2,"cells":[[113.2,462.5,"technology helps the tires remain keyed to the surface. Combined with"]]},
+        {"top":375.2,"cells":[[113.2,472.8,"rear auto load-leveling suspension and speed-sensitive steering, the XTS"]]},
+        {"top":394.2,"cells":[[113.2,315.8,"handling is nothing short of a revelation."]]},
+        {"top":607.6,"cells":[[121.9,354.3,"SEE HOW THE POWER OF MAGNETS GIVES"]]},
+        {"top":618.6,"cells":[[121.9,250.7,"XTS A FLAWLESS RIDE."]]}
+      ]
+    },
+    {
+      "page": 38,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 634.5,
+      "height": 684.0,
+      "text": "ETIC RIDE CONTROL\ntionary dual-mode Magnetic\nontrol reads the road up\n0 times per second and\nssly adjusts damping for\nandling and a controlled ride.",
+      "table_lines": [
+        "ETIC RIDE CONTROL\nionary dual-mode Magnetic\nontrol reads the road up\n0 times per second and\nssly adjusts damping for\nndling and a controlled ride."
+      ],
+      "lines": [
+        {"top":93.7,"cells":[[-1.8,108.7,"ETIC RIDE CONTROL"]]},
+        {"top":111.7,"cells":[[-2.1,127.1,"tionary dual-mode Magnetic"]]},
+        {"top":124.7,"cells":[[-2.6,108.8,"ontrol reads the road up"]]},
+        {"top":137.7,"cells":[[-2.4,106.4,"0 times per second and"]]},
+        {"top":150.7,"cells":[[-1.0,111.6,"ssly adjusts damping for"]]},
+        {"top":163.7,"cells":[[-3.5,131.6,"andling and a controlled ride."]]}
+      ]
+    },
+    {
+      "page": 39,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 634.5,
+      "height": 684.0,
+      "text": "THE PLATINUM COLLECTION\nXTS PLATINUM COLLECTION / Graphite Metallic",
+      "table_lines": [
+        "THE PLATINUM COLLECTION\nXTS PLATINUM COLLECTION / Graphite Metallic"
+      ],
+      "lines": [
+        {"top":43.5,"cells":[[31.6,273.6,"THE PLATINUM COLLECTION"]]},
+        {"top":642.6,"cells":[[28.8,196.7,"XTS PLATINUM COLLECTION /"],[201.5,292.7,"Graphite Metallic"]]}
+      ]
+    },
+    {
+      "page": 40,
+      "trim_hint": false,
+      "has_text_layer": false,
+      "width": 634.5,
+      "height": 684.0,
+      "text": "",
+      "table_lines": [],
+      "lines": []
+    },
+    {
+      "page": 41,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 634.5,
+      "height": 684.0,
+      "text": "THE PLATINUM COLLECTION\nXTS PLATINUM COLLECTION / Jet Black with Light Wheat accents",
+      "table_lines": [
+        "THE PLATINUM COLLECTION\nXTS PLATINUM COLLECTION / Jet Black with Light Wheat accents"
+      ],
+      "lines": [
+        {"top":43.5,"cells":[[37.4,278.8,"THE PLATINUM COLLECTION"]]},
+        {"top":642.6,"cells":[[28.8,196.5,"XTS PLATINUM COLLECTION /"],[201.4,386.4,"Jet Black with Light Wheat accents"]]}
+      ]
+    },
+    {
+      "page": 42,
+      "trim_hint": false,
+      "has_text_layer": false,
+      "width": 634.5,
+      "height": 684.0,
+      "text": "",
+      "table_lines": [],
+      "lines": []
+    },
+    {
+      "page": 43,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 634.5,
+      "height": 684.0,
+      "text": "THE PLATINUM COLLECTION:\nWE DON\u2019T PLAY GAMES\nW H E N I T C O M E S T O L U X U R Y.\nUNLESS, OF COURSE, IT\u2019S LEAPFROG.\nULTRAVIEW SUNROOF LEATHER\uf6baWRAPPED INTERIOR\nThe power-retractable sunroof spans both Leather wraps virtually every surface\nrows of seats, giving the XTS an even you touch and feel in the XTS,\nmore spacious feel. enhancing the experience before you\neven start the engine.\n1. Jet Black with Light Wheat accents interior only. 2. Adaptive Cruise Control is no substitute for the driver\u2019s personal responsibility to operate the vehicle\nin a safe manner. The driver needs to remain attentive to traffic and road conditions and provide the steering, braking or other inputs necessary to retain\ncontrol of the vehicle. 3. Late availability.",
+      "table_lines": [
+        "THE PLATINUM COLLECTION:\nWE DON\u2019T PLAY GAMES\nW H E N I T C O M E S T O L U X U R Y.\nUNLESS, OF COURSE, IT\u2019S LEAPFROG.\nULTRAVIEW SUNROOF LEATHER\uf6baWRAPPED INTERIOR\nThe power-retractable sunroof spans both Leather wraps virtually every surface\nrows of seats, giving the XTS an even you touch and feel in the XTS,\nmore spacious feel. enhancing the experience before you\neven start the engine.\n1. Jet Black with Light Wheat accents interior only. 2. Adaptive Cruise Control is no substitute for the driver\u2019s personal responsibility to operate the vehicle\nin a safe manner. The driver needs to remain attentive to traffic and road conditions and provide the steering, braking or other inputs necessary to retain\ncontrol of the vehicle. 3. Late availability."
+      ],
+      "lines": [
+        {"top":43.5,"cells":[[37.4,282.2,"THE PLATINUM COLLECTION:"]]},
+        {"top":75.0,"cells":[[134.5,333.0,"WE DON\u2019T PLAY GAMES"]]},
+        {"top":103.9,"cells":[[87.7,516.6,"W H E N I T C O M E S T O L U X U R Y."]]},
+        {"top":137.0,"cells":[[170.5,492.7,"UNLESS, OF COURSE, IT\u2019S LEAPFROG."]]},
+        {"top":535.8,"cells":[[55.0,175.1,"ULTRAVIEW SUNROOF"],[356.7,523.4,"LEATHER\uf6baWRAPPED INTERIOR"]]},
+        {"top":553.8,"cells":[[54.9,249.5,"The power-retractable sunroof spans both"],[356.6,527.7,"Leather wraps virtually every surface"]]},
+        {"top":566.8,"cells":[[54.9,231.1,"rows of seats, giving the XTS an even"],[356.6,497.3,"you touch and feel in the XTS,"]]},
+        {"top":579.8,"cells":[[54.9,145.8,"more spacious feel."],[356.6,529.0,"enhancing the experience before you"]]},
+        {"top":592.8,"cells":[[356.6,457.6,"even start the engine."]]},
+        {"top":644.8,"cells":[[13.9,487.8,"1. Jet Black with Light Wheat accents interior only. 2. Adaptive Cruise Control is no substitute for the driver\u2019s personal responsibility to operate the vehicle"]]},
+        {"top":654.8,"cells":[[13.9,482.9,"in a safe manner. The driver needs to remain attentive to traffic and road conditions and provide the steering, braking or other inputs necessary to retain"]]},
+        {"top":664.8,"cells":[[13.9,139.1,"control of the vehicle. 3. Late availability."]]}
+      ]
+    },
+    {
+      "page": 44,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 634.5,
+      "height": 684.0,
+      "text": "The XTS Platinum Collection takes all the innovation, design and especially the luxury of\nthe XTS to an even higher level. Leather envelops the instrument panel and fl oor console,\nand even fl ows onto the door. Opus full-leather seats are not only exceptionally supple,\nbut so meticulously detailed that even the inside edges of their cooling perforations\nreveal a subtle hint of contrasting1 color. The Lineate wood is exclusive to Platinum,\nand so richly grained, it takes on extra dimension. While overhead, a microfi ber-sueded\nheadliner surrounds an UltraView sunroof that opens to the heavens above.\nADAPTIVE CRUISE CONTROL EXCLUSIVE GRILLE\nProgressive technology in the XTS The strong lines and refined mesh\naffords an assured and comfortable combine to make a statement that is\njourney with available Adaptive found only on the Platinum Collection.\nCruise Control2,3 as well as\nAutomatic Front and Rear Braking.3",
+      "table_lines": [
+        "The XTS Platinum Collection takes all the innovation, design and especially the luxury of\nthe XTS to an even higher level. Leather envelops the instrument panel and fl oor console,\nand even fl ows onto the door. Opus full-leather seats are not only exceptionally supple,\nbut so meticulously detailed that even the inside edges of their cooling perforations\nreveal a subtle hint of contrasting1 color. The Lineate wood is exclusive to Platinum,\nand so richly grained, it takes on extra dimension. While overhead, a microfi ber-sueded\nheadliner surrounds an UltraView sunroof that opens to the heavens above.\nADAPTIVE CRUISE CONTROL EXCLUSIVE GRILLE\nProgressive technology in the XTS The strong lines and refined mesh\naffords an assured and comfortable combine to make a statement that is\njourney with available Adaptive found only on the Platinum Collection.\nCruise Control2,3 as well as\nAutomatic Front and Rear Braking.3"
+      ],
+      "lines": [
+        {"top":32.8,"cells":[[40.8,484.4,"The XTS Platinum Collection takes all the innovation, design and especially the luxury of"]]},
+        {"top":49.8,"cells":[[40.8,484.4,"the XTS to an even higher level. Leather envelops the instrument panel and fl oor console,"]]},
+        {"top":66.8,"cells":[[40.8,470.2,"and even fl ows onto the door. Opus full-leather seats are not only exceptionally supple,"]]},
+        {"top":83.8,"cells":[[40.8,453.9,"but so meticulously detailed that even the inside edges of their cooling perforations"]]},
+        {"top":100.0,"cells":[[40.8,459.9,"reveal a subtle hint of contrasting1 color. The Lineate wood is exclusive to Platinum,"]]},
+        {"top":117.8,"cells":[[40.8,476.8,"and so richly grained, it takes on extra dimension. While overhead, a microfi ber-sueded"]]},
+        {"top":134.8,"cells":[[40.8,414.2,"headliner surrounds an UltraView sunroof that opens to the heavens above."]]},
+        {"top":535.8,"cells":[[8.6,164.4,"ADAPTIVE CRUISE CONTROL"],[197.1,303.8,"EXCLUSIVE GRILLE"]]},
+        {"top":553.8,"cells":[[8.5,169.3,"Progressive technology in the XTS"],[197.0,355.6,"The strong lines and refined mesh"]]},
+        {"top":566.8,"cells":[[8.5,173.2,"affords an assured and comfortable"],[197.0,365.5,"combine to make a statement that is"]]},
+        {"top":579.8,"cells":[[8.5,152.2,"journey with available Adaptive"],[197.0,373.4,"found only on the Platinum Collection."]]},
+        {"top":591.7,"cells":[[8.5,134.4,"Cruise Control2,3 as well as"]]},
+        {"top":604.7,"cells":[[8.5,171.6,"Automatic Front and Rear Braking.3"]]}
+      ]
+    },
+    {
+      "page": 45,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 634.5,
+      "height": 684.0,
+      "text": "THE PREMIUM COLLECTION\nXTS PREMIUM COLLECTION / Sapphire Blue Metallic",
+      "table_lines": [
+        "THE PREMIUM COLLECTION\nXTS PREMIUM COLLECTION / Sapphire Blue Metallic"
+      ],
+      "lines": [
+        {"top":43.5,"cells":[[37.4,274.7,"THE PREMIUM COLLECTION"]]},
+        {"top":642.6,"cells":[[28.8,193.6,"XTS PREMIUM COLLECTION /"],[198.4,319.0,"Sapphire Blue Metallic"]]}
+      ]
+    },
+    {
+      "page": 46,
+      "trim_hint": false,
+      "has_text_layer": false,
+      "width": 634.5,
+      "height": 684.0,
+      "text": "",
+      "table_lines": [],
+      "lines": []
+    },
+    {
+      "page": 47,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 634.5,
+      "height": 684.0,
+      "text": "THE PREMIUM COLLECTION\nXTS PREMIUM COLLECTION / Caramel with Jet Black accents",
+      "table_lines": [
+        "THE PREMIUM COLLECTION\nXTS PREMIUM COLLECTION / Caramel with Jet Black accents"
+      ],
+      "lines": [
+        {"top":43.5,"cells":[[37.4,274.7,"THE PREMIUM COLLECTION"]]},
+        {"top":642.6,"cells":[[28.8,193.6,"XTS PREMIUM COLLECTION /"],[198.4,361.5,"Caramel with Jet Black accents"]]}
+      ]
+    },
+    {
+      "page": 48,
+      "trim_hint": false,
+      "has_text_layer": false,
+      "width": 634.5,
+      "height": 684.0,
+      "text": "",
+      "table_lines": [],
+      "lines": []
+    },
+    {
+      "page": 49,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 634.5,
+      "height": 684.0,
+      "text": "THE PREMIUM COLLECTION:\nPREDICTIONS SEEM FRIVOLOUS WHEN YOU'VE ALREADY\nS E E N T H E F U T U R E .\nHEAD\uf6baUP DISPLAY ADAPTIVE FORWARD LIGHTING\nUsing head-up display technology similar to With Adaptive Forward Lighting, sensors read\nthat found in fighter jets, this feature helps your speed and steering angle, swiveling the\nkeep your eyes on the road by projecting High-Intensity Discharge (HID) headlamps up to\ncustomizable key driving and entertainment 15 degrees to illuminate the direction of travel.\ninformation in full color at eye level.\n1. Map coverage available in the United States, U.S. Virgin Islands, Puerto Rico and Canada.\n2. Requires active SiriusXM subscription.",
+      "table_lines": [
+        "THE PREMIUM COLLECTION:\nPREDICTIONS SEEM FRIVOLOUS WHEN YOU'VE ALREADY\nS E E N T H E F U T U R E .\nHEAD\uf6baUP DISPLAY ADAPTIVE FORWARD LIGHTING\nUsing head-up display technology similar to With Adaptive Forward Lighting, sensors read\nthat found in fighter jets, this feature helps your speed and steering angle, swiveling the\nkeep your eyes on the road by projecting High-Intensity Discharge (HID) headlamps up to\ncustomizable key driving and entertainment 15 degrees to illuminate the direction of travel.\ninformation in full color at eye level.\n1. Map coverage available in the United States, U.S. Virgin Islands, Puerto Rico and Canada.\n2. Requires active SiriusXM subscription."
+      ],
+      "lines": [
+        {"top":43.5,"cells":[[37.4,280.8,"THE PREMIUM COLLECTION:"]]},
+        {"top":75.0,"cells":[[91.7,577.6,"PREDICTIONS SEEM FRIVOLOUS WHEN YOU'VE ALREADY"]]},
+        {"top":105.9,"cells":[[127.6,410.6,"S E E N T H E F U T U R E ."]]},
+        {"top":534.4,"cells":[[53.4,153.6,"HEAD\uf6baUP DISPLAY"],[299.9,470.6,"ADAPTIVE FORWARD LIGHTING"]]},
+        {"top":552.4,"cells":[[53.3,255.8,"Using head-up display technology similar to"],[299.9,511.5,"With Adaptive Forward Lighting, sensors read"]]},
+        {"top":565.4,"cells":[[53.3,249.3,"that found in fighter jets, this feature helps"],[299.9,507.1,"your speed and steering angle, swiveling the"]]},
+        {"top":578.4,"cells":[[53.3,243.0,"keep your eyes on the road by projecting"],[299.9,522.5,"High-Intensity Discharge (HID) headlamps up to"]]},
+        {"top":591.4,"cells":[[53.3,255.1,"customizable key driving and entertainment"],[299.9,515.5,"15 degrees to illuminate the direction of travel."]]},
+        {"top":604.4,"cells":[[53.3,218.2,"information in full color at eye level."]]},
+        {"top":654.8,"cells":[[13.9,302.5,"1. Map coverage available in the United States, U.S. Virgin Islands, Puerto Rico and Canada."]]},
+        {"top":664.8,"cells":[[13.9,141.1,"2. Requires active SiriusXM subscription."]]}
+      ]
+    },
+    {
+      "page": 50,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 634.5,
+      "height": 684.0,
+      "text": "It\u2019s as close as you can get to a personalized fi t. Tri-zone climate control means every\ninch of the car is perfectly heated or cooled. The reconfi gurable gauge cluster allows\nyou to fi nd the layout of information that perfectly suits you. The richly designed\ninterior comes complete with a 14-speaker Bose Studio Surround sound system. Even\na navigation system1 with map-integrated Doppler weather2 reports is just another\nexample of how we\u2019ve pushed refi nement to a whole new level.\nBOSE STUDIO SURROUND SOUND NAVIGATION SYSTEM\nSYSTEM\nConnectivity is within easy reach, thanks to the\nYour XTS doubles as an intimate concert navigation system.1 Featuring easy, intuitive voice\nvenue with the 14-speaker Bose Studio guidance, 3-D GPS color imaging with integrated\nSurround sound system that includes two Doppler weather2 and more, it\u2019s your on-the-road\nPersonal surround speakers on the top of control center.\neach front seat.",
+      "table_lines": [
+        "It\u2019s as close as you can get to a personalized fi t. Tri-zone climate control means every\ninch of the car is perfectly heated or cooled. The reconfi gurable gauge cluster allows\nyou to fi nd the layout of information that perfectly suits you. The richly designed\ninterior comes complete with a 14-speaker Bose Studio Surround sound system. Even\na navigation system1 with map-integrated Doppler weather2 reports is just another\nexample of how we\u2019ve pushed refi nement to a whole new level.\nBOSE STUDIO SURROUND SOUND NAVIGATION SYSTEM\nSYSTEM\nConnectivity is within easy reach, thanks to the\nYour XTS doubles as an intimate concert navigation system.1 Featuring easy, intuitive voice\nvenue with the 14-speaker Bose Studio guidance, 3-D GPS color imaging with integrated\nSurround sound system that includes two Doppler weather2 and more, it\u2019s your on-the-road\nPersonal surround speakers on the top of control center.\neach front seat."
+      ],
+      "lines": [
+        {"top":32.8,"cells":[[70.6,495.6,"It\u2019s as close as you can get to a personalized fi t. Tri-zone climate control means every"]]},
+        {"top":49.8,"cells":[[70.6,491.3,"inch of the car is perfectly heated or cooled. The reconfi gurable gauge cluster allows"]]},
+        {"top":66.8,"cells":[[70.6,471.3,"you to fi nd the layout of information that perfectly suits you. The richly designed"]]},
+        {"top":83.8,"cells":[[70.6,496.9,"interior comes complete with a 14-speaker Bose Studio Surround sound system. Even"]]},
+        {"top":100.0,"cells":[[70.6,482.3,"a navigation system1 with map-integrated Doppler weather2 reports is just another"]]},
+        {"top":117.8,"cells":[[70.6,380.3,"example of how we\u2019ve pushed refi nement to a whole new level."]]},
+        {"top":534.4,"cells":[[83.5,266.8,"BOSE STUDIO SURROUND SOUND"],[327.4,442.3,"NAVIGATION SYSTEM"]]},
+        {"top":545.4,"cells":[[83.5,126.6,"SYSTEM"]]},
+        {"top":552.4,"cells":[[327.3,545.4,"Connectivity is within easy reach, thanks to the"]]},
+        {"top":563.4,"cells":[[83.5,273.1,"Your XTS doubles as an intimate concert"]]},
+        {"top":564.6,"cells":[[327.3,557.1,"navigation system.1 Featuring easy, intuitive voice"]]},
+        {"top":576.4,"cells":[[83.5,264.7,"venue with the 14-speaker Bose Studio"],[327.3,554.1,"guidance, 3-D GPS color imaging with integrated"]]},
+        {"top":589.4,"cells":[[83.5,275.1,"Surround sound system that includes two"],[367.0,407.9,"weather2"]]},
+        {"top":591.4,"cells":[[327.3,363.7,"Doppler"],[409.8,553.3,"and more, it\u2019s your on-the-road"]]},
+        {"top":602.4,"cells":[[83.5,275.3,"Personal surround speakers on the top of"]]},
+        {"top":604.4,"cells":[[327.3,393.4,"control center."]]},
+        {"top":615.4,"cells":[[83.5,155.9,"each front seat."]]}
+      ]
+    },
+    {
+      "page": 51,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 634.5,
+      "height": 684.0,
+      "text": "THE LUXURY COLLECTION\nXTS LUXURY COLLECTION / Silver Coast Metallic",
+      "table_lines": [
+        "THE LUXURY COLLECTION\nXTS LUXURY COLLECTION / Silver Coast Metallic"
+      ],
+      "lines": [
+        {"top":43.5,"cells":[[37.4,256.5,"THE LUXURY COLLECTION"]]},
+        {"top":642.6,"cells":[[28.8,181.3,"XTS LUXURY COLLECTION /"],[186.3,295.6,"Silver Coast Metallic"]]}
+      ]
+    },
+    {
+      "page": 52,
+      "trim_hint": false,
+      "has_text_layer": false,
+      "width": 634.5,
+      "height": 684.0,
+      "text": "",
+      "table_lines": [],
+      "lines": []
+    },
+    {
+      "page": 53,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 634.5,
+      "height": 684.0,
+      "text": "THE LUXURY COLLECTION\nXTS LUXURY COLLECTION / Shale with Cocoa accents",
+      "table_lines": [
+        "THE LUXURY COLLECTION\nXTS LUXURY COLLECTION / Shale with Cocoa accents"
+      ],
+      "lines": [
+        {"top":43.5,"cells":[[37.4,256.5,"THE LUXURY COLLECTION"]]},
+        {"top":642.6,"cells":[[28.8,181.4,"XTS LUXURY COLLECTION /"],[186.2,317.1,"Shale with Cocoa accents"]]}
+      ]
+    },
+    {
+      "page": 54,
+      "trim_hint": false,
+      "has_text_layer": false,
+      "width": 634.5,
+      "height": 684.0,
+      "text": "",
+      "table_lines": [],
+      "lines": []
+    },
+    {
+      "page": 55,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 634.5,
+      "height": 684.0,
+      "text": "THE LUXURY COLLECTION:\nHOW CLOSE DID WE COME TO THE ONE IN\nY O U R I M AG I NA T I O N ?\nPREMIUM WOOD TRIM INTEGRATED EXHAUST\nEye-catching wood sets the tone for The dual-exhaust outlets are\nthe interior of the XTS with its deep, integrated into the rear fascia to\nrich color. The beautiful grain appears ensure the impeccable lines of the\nto change with the lighting, adding an XTS remain unbroken.\nextra touch of allure.",
+      "table_lines": [
+        "THE LUXURY COLLECTION:\nHOW CLOSE DID WE COME TO THE ONE IN\nY O U R I M AG I NA T I O N ?\nPREMIUM WOOD TRIM INTEGRATED EXHAUST\nEye-catching wood sets the tone for The dual-exhaust outlets are\nthe interior of the XTS with its deep, integrated into the rear fascia to\nrich color. The beautiful grain appears ensure the impeccable lines of the\nto change with the lighting, adding an XTS remain unbroken.\nextra touch of allure."
+      ],
+      "lines": [
+        {"top":43.5,"cells":[[37.4,262.6,"THE LUXURY COLLECTION:"]]},
+        {"top":75.0,"cells":[[127.6,483.2,"HOW CLOSE DID WE COME TO THE ONE IN"]]},
+        {"top":103.9,"cells":[[91.6,396.9,"Y O U R I M AG I NA T I O N ?"]]},
+        {"top":534.4,"cells":[[54.8,176.6,"PREMIUM WOOD TRIM"],[368.1,493.2,"INTEGRATED EXHAUST"]]},
+        {"top":552.4,"cells":[[54.8,221.6,"Eye-catching wood sets the tone for"],[368.1,501.0,"The dual-exhaust outlets are"]]},
+        {"top":565.4,"cells":[[54.8,221.7,"the interior of the XTS with its deep,"],[368.1,516.3,"integrated into the rear fascia to"]]},
+        {"top":578.4,"cells":[[54.8,230.6,"rich color. The beautiful grain appears"],[368.1,527.4,"ensure the impeccable lines of the"]]},
+        {"top":591.4,"cells":[[54.8,228.4,"to change with the lighting, adding an"],[368.1,472.5,"XTS remain unbroken."]]},
+        {"top":604.4,"cells":[[54.8,150.2,"extra touch of allure."]]}
+      ]
+    },
+    {
+      "page": 56,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 634.5,
+      "height": 684.0,
+      "text": "Step inside, and you\u2019ll fi nd premium wood accents highlighting the instrument\npanel, door and shifter. With a Memory Package for two drivers that recalls presets\nfor the power driver seat, outside mirrors and the steering column, the XTS stands\nready no matter who holds the key. Heated, ventilated front seats with cushion-\nlength adjusters and heated outboard rear seats mean everybody in the cabin is\ncomfortable, no matter how long the drive or the temperature outside. Of course,\nit\u2019s all complemented by dramatic ambient lighting. Even the dual-exhaust outlets\nare beautifully integrated into the fascia to complete the modern and refi ned look.\nProof that luxury and advanced design can coexist in perfect harmony.\nVENTILATED FRONT SEATS HEATED STEERING WHEEL\nAir-cooled front seats with cushion- The perfect antidote to a cold winter morning.\nlength adjusters are a welcome\nrejuvenation on hot days and during\nextended journeys.",
+      "table_lines": [
+        "Step inside, and you\u2019ll fi nd premium wood accents highlighting the instrument\npanel, door and shifter. With a Memory Package for two drivers that recalls presets\nfor the power driver seat, outside mirrors and the steering column, the XTS stands\nready no matter who holds the key. Heated, ventilated front seats with cushion-\nlength adjusters and heated outboard rear seats mean everybody in the cabin is\ncomfortable, no matter how long the drive or the temperature outside. Of course,\nit\u2019s all complemented by dramatic ambient lighting. Even the dual-exhaust outlets\nare beautifully integrated into the fascia to complete the modern and refi ned look.\nProof that luxury and advanced design can coexist in perfect harmony.\nVENTILATED FRONT SEATS HEATED STEERING WHEEL\nAir-cooled front seats with cushion- The perfect antidote to a cold winter morning.\nlength adjusters are a welcome\nrejuvenation on hot days and during\nextended journeys."
+      ],
+      "lines": [
+        {"top":27.1,"cells":[[36.0,426.5,"Step inside, and you\u2019ll fi nd premium wood accents highlighting the instrument"]]},
+        {"top":44.1,"cells":[[36.0,453.7,"panel, door and shifter. With a Memory Package for two drivers that recalls presets"]]},
+        {"top":61.1,"cells":[[36.0,447.3,"for the power driver seat, outside mirrors and the steering column, the XTS stands"]]},
+        {"top":78.1,"cells":[[36.0,430.8,"ready no matter who holds the key. Heated, ventilated front seats with cushion-"]]},
+        {"top":95.1,"cells":[[36.0,429.9,"length adjusters and heated outboard rear seats mean everybody in the cabin is"]]},
+        {"top":112.1,"cells":[[36.0,439.6,"comfortable, no matter how long the drive or the temperature outside. Of course,"]]},
+        {"top":129.1,"cells":[[36.0,445.3,"it\u2019s all complemented by dramatic ambient lighting. Even the dual-exhaust outlets"]]},
+        {"top":146.1,"cells":[[36.0,445.5,"are beautifully integrated into the fascia to complete the modern and refi ned look."]]},
+        {"top":163.1,"cells":[[36.0,387.3,"Proof that luxury and advanced design can coexist in perfect harmony."]]},
+        {"top":534.4,"cells":[[62.4,209.6,"VENTILATED FRONT SEATS"],[279.7,426.2,"HEATED STEERING WHEEL"]]},
+        {"top":552.4,"cells":[[62.4,226.0,"Air-cooled front seats with cushion-"],[279.6,490.6,"The perfect antidote to a cold winter morning."]]},
+        {"top":565.4,"cells":[[62.4,207.4,"length adjusters are a welcome"]]},
+        {"top":578.4,"cells":[[62.4,229.2,"rejuvenation on hot days and during"]]},
+        {"top":591.4,"cells":[[62.4,150.8,"extended journeys."]]}
+      ]
+    },
+    {
+      "page": 57,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 634.5,
+      "height": 684.0,
+      "text": "X T S E X T E R I O R\nCUSTOMIZE YOUR\nRADIANT SILVER WHITE DIAMOND SILVER COAST\nMETALLIC TRICOAT 1 METALLIC 2\nCRYSTAL RED GRAPHITE BLACK RAVEN\nTINTCOAT 1 METALLIC\nBLACK DIAMOND SAPPHIRE BLUE\nTRICOAT 1 METALLIC\n1. Available at extra cost. 2. Not available with Medium Titanium with Jet Black accents interior.",
+      "table_lines": [
+        "X T S E X T E R I O R\nCUSTOMIZE YOUR\nRADIANT SILVER WHITE DIAMOND SILVER COAST\nMETALLIC TRICOAT 1 METALLIC 2\nCRYSTAL RED GRAPHITE BLACK RAVEN\nTINTCOAT 1 METALLIC\nBLACK DIAMOND SAPPHIRE BLUE\nTRICOAT 1 METALLIC\n1. Available at extra cost. 2. Not available with Medium Titanium with Jet Black accents interior."
+      ],
+      "lines": [
+        {"top":53.9,"cells":[[210.0,455.2,"X T S E X T E R I O R"]]},
+        {"top":57.2,"cells":[[53.7,202.6,"CUSTOMIZE YOUR"]]},
+        {"top":283.7,"cells":[[59.7,131.0,"RADIANT SILVER"],[142.1,215.8,"WHITE DIAMOND"],[231.8,293.4,"SILVER COAST"]]},
+        {"top":293.9,"cells":[[73.9,116.8,"METALLIC"],[159.0,199.0,"TRICOAT 1"],[237.4,287.8,"METALLIC 2"]]},
+        {"top":393.2,"cells":[[65.5,125.2,"CRYSTAL RED"],[156.2,202.0,"GRAPHITE"],[231.1,294.1,"BLACK RAVEN"]]},
+        {"top":403.4,"cells":[[116.0,119.0,"1"]]},
+        {"top":404.0,"cells":[[71.7,113.6,"TINTCOAT"],[156.7,201.5,"METALLIC"]]},
+        {"top":507.4,"cells":[[57.2,133.5,"BLACK DIAMOND"],[142.6,215.6,"SAPPHIRE BLUE"]]},
+        {"top":517.6,"cells":[[74.3,116.4,"TRICOAT 1"],[156.7,201.5,"METALLIC"]]},
+        {"top":664.8,"cells":[[13.9,307.1,"1. Available at extra cost. 2. Not available with Medium Titanium with Jet Black accents interior."]]}
+      ]
+    },
+    {
+      "page": 58,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 634.5,
+      "height": 684.0,
+      "text": "PAINT FINISHES\nTINTCOAT TRICOAT\nA premium 2-layer paint application with A meticulous 3-layer process that results\nthe addition of a tinted clearcoat, lending in a dramatic hue-shifting color.\nthe finish an extra depth and brightness.",
+      "table_lines": [
+        "PAINT FINISHES\nTINTCOAT TRICOAT\nA premium 2-layer paint application with A meticulous 3-layer process that results\nthe addition of a tinted clearcoat, lending in a dramatic hue-shifting color.\nthe finish an extra depth and brightness."
+      ],
+      "lines": [
+        {"top":583.2,"cells":[[164.7,257.8,"PAINT FINISHES"]]},
+        {"top":605.7,"cells":[[164.8,217.8,"TINTCOAT"],[375.8,421.9,"TRICOAT"]]},
+        {"top":620.8,"cells":[[164.7,350.4,"A premium 2-layer paint application with"],[375.7,564.5,"A meticulous 3-layer process that results"]]},
+        {"top":633.8,"cells":[[164.7,353.9,"the addition of a tinted clearcoat, lending"],[375.7,521.5,"in a dramatic hue-shifting color."]]},
+        {"top":648.8,"cells":[[164.7,351.8,"the finish an extra depth and brightness."]]}
+      ]
+    },
+    {
+      "page": 59,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 634.5,
+      "height": 684.0,
+      "text": "X T S I N T E R I O R C H O I C E S\nXTS in Jet Black1 XTS Luxury Collection in Shale\nXTS Premium Collection in Medium Titanium XTS Platinum Collection i\nwith Jet Black accents.4 Light Wheat acc\n1. Jet Black available on XTS, XTS Luxury and XTS Premium Collections.\n2. Shale with Cocoa accents available on XTS, XTS Luxury and XTS Premium Collections.\n3. Caramel with Jet Black accents available on XTS Luxury and XTS Premium Collections.\n4. Medium Titanium with Jet Black accents available on XTS Luxury and XTS Premium Collections.\n5. XTS Platinum Collection only.",
+      "table_lines": [
+        "X T S I N T E R I O R C H O I C E S\nXTS in Jet Black1 XTS Luxury Collection in Shal\nXTS Premium Collection in Medium Titanium XTS Platinum Collection\nwith Jet Black accents.4 Light Wheat a\n1. Jet Black available on XTS, XTS Luxury and XTS Premium Collections.\n2. Shale with Cocoa accents available on XTS, XTS Luxury and XTS Premium Collections.\n3. Caramel with Jet Black accents available on XTS Luxury and XTS Premium Collections.\n4. Medium Titanium with Jet Black accents available on XTS Luxury and XTS Premium Collections.\n5. XTS Platinum Collection only. | e\ni\nc"
+      ],
+      "lines": [
+        {"top":40.2,"cells":[[54.3,456.5,"X T S I N T E R I O R C H O I C E S"]]},
+        {"top":349.8,"cells":[[176.6,196.4,"XTS"],[234.2,268.4,"Black1"],[470.0,489.9,"XTS"]]},
+        {"top":351.4,"cells":[[200.4,229.4,"in Jet"],[493.8,631.5,"Luxury Collection in Shale"]]},
+        {"top":580.2,"cells":[[104.8,125.4,"XTS"],[507.0,526.8,"XTS"]]},
+        {"top":581.9,"cells":[[129.7,340.1,"Premium Collection in Medium Titanium"],[530.7,634.9,"Platinum Collection i"]]},
+        {"top":595.2,"cells":[[159.0,285.9,"with Jet Black accents.4"]]},
+        {"top":596.9,"cells":[[556.9,637.6,"Light Wheat acc"]]},
+        {"top":628.5,"cells":[[13.9,244.6,"1. Jet Black available on XTS, XTS Luxury and XTS Premium Collections."]]},
+        {"top":638.5,"cells":[[13.9,296.7,"2. Shale with Cocoa accents available on XTS, XTS Luxury and XTS Premium Collections."]]},
+        {"top":648.5,"cells":[[13.9,296.0,"3. Caramel with Jet Black accents available on XTS Luxury and XTS Premium Collections."]]},
+        {"top":658.5,"cells":[[13.9,322.8,"4. Medium Titanium with Jet Black accents available on XTS Luxury and XTS Premium Collections."]]},
+        {"top":668.5,"cells":[[13.9,115.3,"5. XTS Platinum Collection only."]]}
+      ]
+    },
+    {
+      "page": 60,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 634.5,
+      "height": 684.0,
+      "text": "with Cocoa accents.2 XTS Premium Collection in Caramel with\nJet Black accents.3\nin Jet Black with XTS Platinum Collection in Light Platinum with\ncents.5 Dark Urban and Cocoa accents.5",
+      "table_lines": [
+        "with Cocoa accents.2 XTS Premium Collection in Caramel with\nJet Black accents.3\nn Jet Black with XTS Platinum Collection in Light Platinum with\ncents.5 Dark Urban and Cocoa accents.5"
+      ],
+      "lines": [
+        {"top":348.6,"cells":[[243.2,263.9,"XTS"]]},
+        {"top":350.2,"cells":[[268.2,456.7,"Premium Collection in Caramel with"]]},
+        {"top":351.7,"cells":[[1.8,109.4,"with Cocoa accents.2"]]},
+        {"top":363.6,"cells":[[353.5,400.4,"accents.3"]]},
+        {"top":364.2,"cells":[[299.6,348.7,"Jet Black"]]},
+        {"top":580.2,"cells":[[242.8,262.7,"XTS"]]},
+        {"top":581.9,"cells":[[-2.2,81.7,"in Jet Black with"],[266.5,479.0,"Platinum Collection in Light Platinum with"]]},
+        {"top":596.2,"cells":[[-1.3,31.7,"cents.5"],[396.5,441.0,"accents.5"]]},
+        {"top":596.9,"cells":[[280.8,392.3,"Dark Urban and Cocoa"]]}
+      ]
+    },
+    {
+      "page": 61,
+      "trim_hint": false,
+      "has_text_layer": false,
+      "width": 634.5,
+      "height": 684.0,
+      "text": "",
+      "table_lines": [],
+      "lines": []
+    },
+    {
+      "page": 62,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 634.5,
+      "height": 684.0,
+      "text": "THE STANDARD OF THE WORLD\nAT YOUR FINGERTIPS\nWe set out to create our own uniquely American breed of\nextraordinary. Each built with tenacity, a refusal to leave\nwell enough alone. From dramatic designs to world-class\nperformance, we\u2019re setting the standard. To stay current,\nwe invite you to sign up for our monthly eNewsletter. You'll\nreceive invitations to exclusive events, the latest product news\nand information and launch updates.",
+      "table_lines": [
+        "THE STANDARD OF THE WORLD\nAT YOUR FINGERTIPS\nWe set out to create our own uniquely American breed of\nextraordinary. Each built with tenacity, a refusal to leave\nwell enough alone. From dramatic designs to world-class\nperformance, we\u2019re setting the standard. To stay current,\nwe invite you to sign up for our monthly eNewsletter. You'll\nreceive invitations to exclusive events, the latest product news\nand information and launch updates."
+      ],
+      "lines": [
+        {"top":353.5,"cells":[[145.4,367.9,"THE STANDARD OF THE WORLD"]]},
+        {"top":372.5,"cells":[[145.4,298.8,"AT YOUR FINGERTIPS"]]},
+        {"top":403.4,"cells":[[145.4,429.2,"We set out to create our own uniquely American breed of"]]},
+        {"top":422.4,"cells":[[145.4,430.2,"extraordinary. Each built with tenacity, a refusal to leave"]]},
+        {"top":441.4,"cells":[[145.4,429.5,"well enough alone. From dramatic designs to world-class"]]},
+        {"top":460.4,"cells":[[145.4,430.8,"performance, we\u2019re setting the standard. To stay current,"]]},
+        {"top":479.4,"cells":[[145.4,439.2,"we invite you to sign up for our monthly eNewsletter. You'll"]]},
+        {"top":498.4,"cells":[[145.4,454.4,"receive invitations to exclusive events, the latest product news"]]},
+        {"top":517.4,"cells":[[145.4,329.3,"and information and launch updates."]]}
+      ]
+    },
+    {
+      "page": 63,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 634.5,
+      "height": 684.0,
+      "text": "X T S W H E E L C H O I C E S\n20\" CAST ALUMINUM\nWITH POLISHED FINISH\nAND CHROME INSERTS\nPlatinum Collection, includes\nP245/40R20 all-season tires",
+      "table_lines": [
+        "X T S W H E E L C H O I C E S\n20\" CAST ALUMINUM\nWITH POLISHED FINISH\nAND CHROME INSERTS\nPlatinum Collection, includes\nP245/40R20 all-season tires"
+      ],
+      "lines": [
+        {"top":54.6,"cells":[[54.3,412.7,"X T S W H E E L C H O I C E S"]]},
+        {"top":239.1,"cells":[[409.8,522.9,"20\" CAST ALUMINUM"]]},
+        {"top":250.1,"cells":[[409.8,539.3,"WITH POLISHED FINISH"]]},
+        {"top":261.1,"cells":[[409.8,530.1,"AND CHROME INSERTS"]]},
+        {"top":279.0,"cells":[[409.8,544.0,"Platinum Collection, includes"]]},
+        {"top":292.0,"cells":[[409.8,541.4,"P245/40R20 all-season tires"]]}
+      ]
+    },
+    {
+      "page": 64,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 634.5,
+      "height": 684.0,
+      "text": "5599..11\"\"\n61.7\" 111.7\" 62.0\"\n72.9\" 202.0\"\n19\" CAST ALUMINUM WITH\nPREMIUM MULTI\uf6baCOAT\nPAINTED FINISH AND\nCHROME INSERTS\nXTS, includes P245/45R19\nall-season tires\n19\" CAST ALUMINUM\nWITH POLISHED FINISH\nXTS Luxury and Premium\nCollections, includes\nP245/45R19 all-season tires\n20\" CAST ALUMINUM WITH\nPREMIUM MULTI\uf6baCOAT\nPAINTED FINISH\nPremium Collection option, includes\nP245/40R20 all-season tires",
+      "table_lines": [
+        "5599..11\"\"\n61.7\" 111.7\" 62.0\"\n72.9\" 202.0\"\n19\" CAST ALUMINUM WITH\nPREMIUM MULTI\uf6baCOAT\nPAINTED FINISH AND\nCHROME INSERTS\nXTS, includes P245/45R19\nall-season tires\n19\" CAST ALUMINUM\nWITH POLISHED FINISH\nXTS Luxury and Premium\nCollections, includes\nP245/45R19 all-season tires\n20\" CAST ALUMINUM WITH\nPREMIUM MULTI\uf6baCOAT\nPAINTED FINISH\nPremium Collection option, includes\nP245/40R20 all-season tires",
+        "5599 | ..11\"\"",
+        "61.7\"\n72.9\"",
+        "111.7\"\n202.0\""
+      ],
+      "lines": [
+        {"top":80.5,"cells":[[371.8,389.1,"5599..11\"\""]]},
+        {"top":142.9,"cells":[[7.5,23.6,"61.7\""],[217.5,236.5,"111.7\""],[442.4,458.5,"62.0\""]]},
+        {"top":160.9,"cells":[[7.5,23.6,"72.9\""],[217.0,237.0,"202.0\""]]},
+        {"top":289.3,"cells":[[378.8,524.3,"19\" CAST ALUMINUM WITH"]]},
+        {"top":300.3,"cells":[[378.8,503.4,"PREMIUM MULTI\uf6baCOAT"]]},
+        {"top":311.3,"cells":[[378.8,497.4,"PAINTED FINISH AND"]]},
+        {"top":322.3,"cells":[[378.8,477.6,"CHROME INSERTS"]]},
+        {"top":340.3,"cells":[[378.7,504.1,"XTS, includes P245/45R19"]]},
+        {"top":353.3,"cells":[[378.7,449.4,"all-season tires"]]},
+        {"top":394.2,"cells":[[79.9,192.1,"19\" CAST ALUMINUM"]]},
+        {"top":405.2,"cells":[[79.9,213.3,"WITH POLISHED FINISH"]]},
+        {"top":423.2,"cells":[[79.8,199.2,"XTS Luxury and Premium"]]},
+        {"top":436.2,"cells":[[79.8,175.6,"Collections, includes"]]},
+        {"top":449.2,"cells":[[79.8,211.4,"P245/45R19 all-season tires"]]},
+        {"top":519.3,"cells":[[378.8,525.2,"20\" CAST ALUMINUM WITH"]]},
+        {"top":530.3,"cells":[[378.8,503.4,"PREMIUM MULTI\uf6baCOAT"]]},
+        {"top":541.3,"cells":[[378.8,470.9,"PAINTED FINISH"]]},
+        {"top":559.3,"cells":[[378.7,545.5,"Premium Collection option, includes"]]},
+        {"top":572.3,"cells":[[378.7,510.3,"P245/40R20 all-season tires"]]}
+      ]
+    },
+    {
+      "page": 65,
+      "trim_hint": true,
+      "has_text_layer": true,
+      "width": 634.5,
+      "height": 684.0,
+      "text": "ABOUT THIS DIGITAL CATALOG TIRE SEALANT AND COMPRESSOR KIT N\nWe have tried to make the information presented Unless you option into a spare tire, there is no W\ncomprehensive and factual. We reserve the jack or spare tire in this vehicle. If you do not 20\nright, however, to make changes at any time, option into the spare tire, your vehicle has a tire ve\nwithout notice, in prices, colors, materials, sealant and compressor kit that uses a liquid de\nequipment, specifications, models and availability. tire sealant to temporarily seal up to a 1/4-inch\nSpecifi cations, dimensions, measurements, puncture in the tread area of the tire. After using CO\nratings and other numbers presented here and in the infl ator kit, it is recommended to take the (W\nprinted materials provided at the dealership or tire to an authorized dealer for inspection and Po\naffi xed to vehicles are approximates, based upon repair as soon as possible but at least within 100 Ro\ndesign and engineering drawings and prototypes miles of driving. The tire sealant cannot seal and Tr\nand laboratory tests. Your vehicle may differ infl ate sidewall damage, punctures larger than 1/4\ndue to variations in manufacture and equipment. inch, or a tire that has unseated from the wheel. CO\nSince some information may have been recently The sealant can only be used on one tire one time (W\nupdated; please check with your Cadillac dealer before its expiration date. B\nfor complete details. Cadillac reserves the right to in\nlengthen or shorten the model year for any product ASSEMBLY Cadillac vehicles and their co\nfor any reason, or to start and end model years components are assembled or produced by m\nat different times. Note: Some photographs show different operating units of General Motors, its\nvehicles with optional equipment. subsidiaries or suppliers to GM worldwide. We R\nsometimes fi nd it necessary to produce Cadillac ar\nONSTAR OnStar services require vehicle electrical vehicles with different or differently sourced th\nsystem (including battery), wireless service and components than originally scheduled. Since some th\nGPS satellite signals to be available and operating options may be unavailable when your vehicle is m\nfor features to function properly. OnStar acts as assembled, we suggest that you verify that your Co\na link to existing emergency service providers. vehicle includes the equipment you ordered or, if st\nSubscription Service Agreement required. Call there are changes, that they are acceptable to you. is\n1-888-4ONSTAR (466-7827) or visit onstar.com A\nfor OnStar\u2019s Terms and Conditions, Privacy Policy UPDATED SERVICE INFORMATION is\nand details and system limitations. Cadillac dealers receive useful service bulletins an\nabout Cadillac products. You may purchase them de\nENGINES Cadillac products are equipped with from Helm Incorporated by calling 1-800-551-\nengines produced by GM Powertrain or suppliers 4123 or by visiting www.helminc.com. F\nto GM worldwide. The engines in Cadillac products de\nmay also be used in other GM makes or models.",
+      "table_lines": [
+        "ABOUT THIS DIGITAL CATALOG TIRE SEALANT AND COMPRESSOR KIT\nWe have tried to make the information presented Unless you option into a spare tire, there is no\ncomprehensive and factual. We reserve the jack or spare tire in this vehicle. If you do not\nright, however, to make changes at any time, option into the spare tire, your vehicle has a tire v\nwithout notice, in prices, colors, materials, sealant and compressor kit that uses a liquid\nequipment, specifications, models and availability. tire sealant to temporarily seal up to a 1/4-inch\nSpecifi cations, dimensions, measurements, puncture in the tread area of the tire. After using\nratings and other numbers presented here and in the infl ator kit, it is recommended to take the (\nprinted materials provided at the dealership or tire to an authorized dealer for inspection and\naffi xed to vehicles are approximates, based upon repair as soon as possible but at least within 100\ndesign and engineering drawings and prototypes miles of driving. The tire sealant cannot seal and\nand laboratory tests. Your vehicle may differ infl ate sidewall damage, punctures larger than 1/4\ndue to variations in manufacture and equipment. inch, or a tire that has unseated from the wheel.\nSince some information may have been recently The sealant can only be used on one tire one time (\nupdated; please check with your Cadillac dealer before its expiration date.\nfor complete details. Cadillac reserves the right to i\nlengthen or shorten the model year for any product ASSEMBLY Cadillac vehicles and their c\nfor any reason, or to start and end model years components are assembled or produced by\nat different times. Note: Some photographs show different operating units of General Motors, its\nvehicles with optional equipment. subsidiaries or suppliers to GM worldwide. We\nsometimes fi nd it necessary to produce Cadillac\nONSTAR OnStar services require vehicle electrical vehicles with different or differently sourced t\nsystem (including battery), wireless service and components than originally scheduled. Since some t\nGPS satellite signals to be available and operating options may be unavailable when your vehicle is\nfor features to function properly. OnStar acts as assembled, we suggest that you verify that your\na link to existing emergency service providers. vehicle includes the equipment you ordered or, if s\nSubscription Service Agreement required. Call there are changes, that they are acceptable to you. i\n1-888-4ONSTAR (466-7827) or visit onstar.com\nfor OnStar\u2019s Terms and Conditions, Privacy Policy UPDATED SERVICE INFORMATION i\nand details and system limitations. Cadillac dealers receive useful service bulletins\nabout Cadillac products. You may purchase them\nENGINES Cadillac products are equipped with from Helm Incorporated by calling 1-800-551-\nengines produced by GM Powertrain or suppliers 4123 or by visiting www.helminc.com.\nto GM worldwide. The engines in Cadillac products\nmay also be used in other GM makes or models. | N\nW\n2\ne\nd\nC\nP\nR\nTr\nC\nB\nn\nm\nR\na\nh\nh\nm\nC\nt\ns\nA\ns\na\nd\nF\nd"
+      ],
+      "lines": [
+        {"top":46.4,"cells":[[38.8,224.7,"ABOUT THIS DIGITAL CATALOG"],[332.2,563.6,"TIRE SEALANT AND COMPRESSOR KIT"],[625.6,634.3,"N"]]},
+        {"top":59.6,"cells":[[38.8,298.2,"We have tried to make the information presented"],[332.2,580.0,"Unless you option into a spare tire, there is no"],[625.6,637.9,"W"]]},
+        {"top":73.6,"cells":[[38.8,265.8,"comprehensive and factual. We reserve the"],[332.2,571.2,"jack or spare tire in this vehicle. If you do not"],[625.6,640.0,"20"]]},
+        {"top":87.6,"cells":[[38.8,275.4,"right, however, to make changes at any time,"],[332.2,584.8,"option into the spare tire, your vehicle has a tire"],[625.6,637.1,"ve"]]},
+        {"top":101.6,"cells":[[38.8,265.2,"without notice, in prices, colors, materials,"],[332.2,566.8,"sealant and compressor kit that uses a liquid"],[625.6,637.9,"de"]]},
+        {"top":115.6,"cells":[[38.8,305.8,"equipment, specifications, models and availability."],[332.2,582.4,"tire sealant to temporarily seal up to a 1/4-inch"]]},
+        {"top":129.6,"cells":[[38.8,266.7,"Specifi cations, dimensions, measurements,"],[332.2,590.8,"puncture in the tread area of the tire. After using"],[625.6,640.9,"CO"]]},
+        {"top":143.6,"cells":[[38.8,294.3,"ratings and other numbers presented here and in"],[332.2,571.5,"the infl ator kit, it is recommended to take the"]]},
+        {"top":144.4,"cells":[[625.6,641.6,"(W"]]},
+        {"top":157.6,"cells":[[38.8,285.3,"printed materials provided at the dealership or"],[332.2,574.5,"tire to an authorized dealer for inspection and"],[625.6,639.6,"Po"]]},
+        {"top":171.6,"cells":[[38.8,295.9,"affi xed to vehicles are approximates, based upon"],[332.2,588.5,"repair as soon as possible but at least within 100"],[625.6,639.9,"Ro"]]},
+        {"top":185.6,"cells":[[38.8,292.9,"design and engineering drawings and prototypes"],[332.2,588.4,"miles of driving. The tire sealant cannot seal and"],[625.6,636.7,"Tr"]]},
+        {"top":199.6,"cells":[[38.8,274.3,"and laboratory tests. Your vehicle may differ"],[332.2,599.8,"infl ate sidewall damage, punctures larger than 1/4"]]},
+        {"top":213.6,"cells":[[38.8,295.7,"due to variations in manufacture and equipment."],[332.2,584.9,"inch, or a tire that has unseated from the wheel."]]},
+        {"top":214.4,"cells":[[625.6,640.9,"CO"]]},
+        {"top":227.6,"cells":[[38.8,291.0,"Since some information may have been recently"],[332.2,589.4,"The sealant can only be used on one tire one time"],[625.6,641.6,"(W"]]},
+        {"top":241.6,"cells":[[38.8,290.6,"updated; please check with your Cadillac dealer"],[332.2,469.1,"before its expiration date."],[625.6,634.3,"B"]]},
+        {"top":255.6,"cells":[[38.8,303.7,"for complete details. Cadillac reserves the right to"],[625.6,635.7,"in"]]},
+        {"top":269.6,"cells":[[38.8,306.7,"lengthen or shorten the model year for any product"],[332.2,542.7,"ASSEMBLY Cadillac vehicles and their"],[625.6,637.7,"co"]]},
+        {"top":283.6,"cells":[[38.8,285.1,"for any reason, or to start and end model years"],[332.2,555.1,"components are assembled or produced by"],[625.6,635.7,"m"]]},
+        {"top":297.6,"cells":[[38.8,298.5,"at different times. Note: Some photographs show"],[332.2,580.5,"different operating units of General Motors, its"]]},
+        {"top":311.6,"cells":[[38.8,215.4,"vehicles with optional equipment."],[332.2,579.2,"subsidiaries or suppliers to GM worldwide. We"],[625.6,633.7,"R"]]},
+        {"top":325.6,"cells":[[332.2,583.5,"sometimes fi nd it necessary to produce Cadillac"],[625.6,637.1,"ar"]]},
+        {"top":339.6,"cells":[[38.8,307.0,"ONSTAR OnStar services require vehicle electrical"],[332.2,565.0,"vehicles with different or differently sourced"],[625.6,636.4,"th"]]},
+        {"top":353.6,"cells":[[38.8,289.2,"system (including battery), wireless service and"],[332.2,597.9,"components than originally scheduled. Since some"],[625.6,636.4,"th"]]},
+        {"top":367.6,"cells":[[38.8,305.9,"GPS satellite signals to be available and operating"],[332.2,584.3,"options may be unavailable when your vehicle is"],[625.6,635.7,"m"]]},
+        {"top":381.6,"cells":[[38.8,291.9,"for features to function properly. OnStar acts as"],[332.2,582.0,"assembled, we suggest that you verify that your"],[625.6,639.8,"Co"]]},
+        {"top":395.6,"cells":[[38.8,282.9,"a link to existing emergency service providers."],[332.2,586.2,"vehicle includes the equipment you ordered or, if"],[625.6,635.0,"st"]]},
+        {"top":409.6,"cells":[[38.8,286.6,"Subscription Service Agreement required. Call"],[332.2,598.1,"there are changes, that they are acceptable to you."],[625.6,634.3,"is"]]},
+        {"top":423.6,"cells":[[38.8,298.7,"1-888-4ONSTAR (466-7827) or visit onstar.com"],[625.6,634.3,"A"]]},
+        {"top":437.6,"cells":[[38.8,304.7,"for OnStar\u2019s Terms and Conditions, Privacy Policy"],[332.2,539.0,"UPDATED SERVICE INFORMATION"],[625.6,634.3,"is"]]},
+        {"top":451.6,"cells":[[38.8,222.6,"and details and system limitations."],[332.2,581.2,"Cadillac dealers receive useful service bulletins"],[625.6,638.6,"an"]]},
+        {"top":465.6,"cells":[[332.2,591.1,"about Cadillac products. You may purchase them"],[625.6,637.9,"de"]]},
+        {"top":479.6,"cells":[[38.8,288.6,"ENGINES Cadillac products are equipped with"],[332.2,582.5,"from Helm Incorporated by calling 1-800-551-"]]},
+        {"top":493.6,"cells":[[38.8,294.4,"engines produced by GM Powertrain or suppliers"],[332.2,533.8,"4123 or by visiting www.helminc.com."]]},
+        {"top":494.4,"cells":[[625.6,632.6,"F"]]},
+        {"top":507.6,"cells":[[38.8,306.3,"to GM worldwide. The engines in Cadillac products"],[625.6,637.9,"de"]]},
+        {"top":521.6,"cells":[[38.8,291.3,"may also be used in other GM makes or models."]]}
+      ]
+    },
+    {
+      "page": 66,
+      "trim_hint": false,
+      "has_text_layer": true,
+      "width": 634.5,
+      "height": 684.0,
+      "text": "EW\uf6baVEHICLE LIMITED WARRANTY AN IMPORTANT NOTE ABOUT\nWorld-class coverage comes standard on every ALTERATIONS AND WARRANTIES\n013 Cadillac. This warranty is for Cadillac Installations or alterations to the original\nehicles registered in the U.S.A. See your Cadillac equipment vehicle (or chassis) as distributed by\nealer for terms and conditions. General Motors are not covered by the General\nMotors New-Vehicle Limited Warranty. The\nOVERED FOR 6 YEARS/70,000 MILES special body company, assembler, equipment\nWHICHEVER COMES FIRST) installer or upfi tter is solely responsible for\nowertrain Limited Warranty with no deductible, warranties on the body or equipment and any\noadside Assistance Program,1 Courtesy alterations (or any effect of the alterations) to any\nransportation Program.1 of the parts, components, systems or assemblies\ninstalled by GM. General Motors is not responsible\nOVERED FOR 4 YEARS/50,000 MILES for the safety or quality of design features,\nWHICHEVER COMES FIRST) material or workmanship of any alterations by\numper-to-Bumper coverage; Tires \u2013 Defects such suppliers.\nn material and workmanship; Repairs made to\norrect any vehicle defect; Corrosion on body sheet 1. Roadside Assistance Program and Courtesy Transportation\nProgram are not a part of the New Vehicle Limited Warranty.\nmetal panels.\nA separate booklet entitled \u201cWarranty and Owner Assistance\nInformation\u201d furnished with each new vehicle provides detailed\nUST THROUGH PROTECTION Cadillac vehicles warranty coverage information.\nre designed and built to resist corrosion and rust-\nGM, the GM emblem, Cadillac, the Cadillac badge, OnStar, the\nhrough corrosion. Any body sheet metal that rusts OnStar emblem and the slogans, emblems, vehicle model names,\nvehicle body designs and other marks appearing in this catalog\nhrough (in the form of an actual hole in the sheet\nare the trademarks and/or service marks of General Motors, its\nmetal) is covered for six years unlimited mileage. subsidiaries, affiliates or licensors. iPod is a registered trademark of\nosmetic or surface corrosion, resulting from Apple, Inc.\ntone chips or scratches in the paint, for example,\n\u00a92012 General Motors. All rights reserved.\nnot included in the Rust Through coverage.\npplication of additional rust-inhibiting materials\nnot required under the Rust Through coverage\nnd none is recommended. See your Cadillac\nealer for terms of this limited warranty.\nLEET ORDERS Some standard content may be\neleted with fl eet orders. See dealer for details.\ncadillac.com/xts",
+      "table_lines": [
+        "EW\uf6baVEHICLE LIMITED WARRANTY AN IMPORTANT NOTE ABOUT\norld-class coverage comes standard on every ALTERATIONS AND WARRANTIES\n013 Cadillac. This warranty is for Cadillac Installations or alterations to the original\nhicles registered in the U.S.A. See your Cadillac equipment vehicle (or chassis) as distributed by\nealer for terms and conditions. General Motors are not covered by the General\nMotors New-Vehicle Limited Warranty. The\nOVERED FOR 6 YEARS/70,000 MILES special body company, assembler, equipment\nWHICHEVER COMES FIRST) installer or upfi tter is solely responsible for\nowertrain Limited Warranty with no deductible, warranties on the body or equipment and any\noadside Assistance Program,1 Courtesy alterations (or any effect of the alterations) to any\nansportation Program.1 of the parts, components, systems or assemblies\ninstalled by GM. General Motors is not responsible\nOVERED FOR 4 YEARS/50,000 MILES for the safety or quality of design features,\nWHICHEVER COMES FIRST) material or workmanship of any alterations by\numper-to-Bumper coverage; Tires \u2013 Defects such suppliers.\nmaterial and workmanship; Repairs made to\nrrect any vehicle defect; Corrosion on body sheet 1. Roadside Assistance Program and Courtesy Transportation\nProgram are not a part of the New Vehicle Limited Warranty.\netal panels.\nA separate booklet entitled \u201cWarranty and Owner Assistance\nInformation\u201d furnished with each new vehicle provides detailed\nUST THROUGH PROTECTION Cadillac vehicles warranty coverage information.\nre designed and built to resist corrosion and rust-\nGM, the GM emblem, Cadillac, the Cadillac badge, OnStar, the\nrough corrosion. Any body sheet metal that rusts OnStar emblem and the slogans, emblems, vehicle model names,\nvehicle body designs and other marks appearing in this catalog\nrough (in the form of an actual hole in the sheet\nare the trademarks and/or service marks of General Motors, its\netal) is covered for six years unlimited mileage. subsidiaries, affiliates or licensors. iPod is a registered trademark of\nosmetic or surface corrosion, resulting from Apple, Inc.\none chips or scratches in the paint, for example,\n\u00a92012 General Motors. All rights reserved.\nnot included in the Rust Through coverage.\npplication of additional rust-inhibiting materials\nnot required under the Rust Through coverage\nnd none is recommended. See your Cadillac\nealer for terms of this limited warranty.\nLEET ORDERS Some standard content may be\neleted with fl eet orders. See dealer for details.\ncadillac.com/xts"
+      ],
+      "lines": [
+        {"top":46.4,"cells":[[0.4,210.0,"EW\uf6baVEHICLE LIMITED WARRANTY"],[284.6,458.1,"AN IMPORTANT NOTE ABOUT"]]},
+        {"top":59.6,"cells":[[-8.9,238.2,"World-class coverage comes standard on every"],[284.6,485.8,"ALTERATIONS AND WARRANTIES"]]},
+        {"top":73.6,"cells":[[-1.7,223.1,"013 Cadillac. This warranty is for Cadillac"],[284.5,504.5,"Installations or alterations to the original"]]},
+        {"top":87.6,"cells":[[-3.1,257.9,"ehicles registered in the U.S.A. See your Cadillac"],[284.5,534.1,"equipment vehicle (or chassis) as distributed by"]]},
+        {"top":101.6,"cells":[[-2.4,160.2,"ealer for terms and conditions."],[284.5,531.8,"General Motors are not covered by the General"]]},
+        {"top":115.6,"cells":[[284.5,517.0,"Motors New-Vehicle Limited Warranty. The"]]},
+        {"top":129.6,"cells":[[-0.9,220.5,"OVERED FOR 6 YEARS/70,000 MILES"],[284.5,519.8,"special body company, assembler, equipment"]]},
+        {"top":143.6,"cells":[[284.5,512.0,"installer or upfi tter is solely responsible for"]]},
+        {"top":144.4,"cells":[[-4.3,164.2,"WHICHEVER COMES FIRST)"]]},
+        {"top":157.6,"cells":[[-1.2,253.6,"owertrain Limited Warranty with no deductible,"],[284.5,522.6,"warranties on the body or equipment and any"]]},
+        {"top":170.7,"cells":[[101.6,154.8,"Program,1"]]},
+        {"top":171.6,"cells":[[-1.0,98.5,"oadside Assistance"],[156.6,203.6,"Courtesy"],[284.5,549.3,"alterations (or any effect of the alterations) to any"]]},
+        {"top":184.7,"cells":[[-2.8,125.8,"ransportation Program.1"],[284.5,537.7,"of the parts, components, systems or assemblies"]]},
+        {"top":199.6,"cells":[[284.5,552.8,"installed by GM. General Motors is not responsible"]]},
+        {"top":213.6,"cells":[[284.5,508.6,"for the safety or quality of design features,"]]},
+        {"top":214.4,"cells":[[-0.9,220.5,"OVERED FOR 4 YEARS/50,000 MILES"]]},
+        {"top":227.6,"cells":[[-4.3,164.2,"WHICHEVER COMES FIRST)"],[284.5,530.4,"material or workmanship of any alterations by"]]},
+        {"top":241.6,"cells":[[-0.2,230.2,"umper-to-Bumper coverage; Tires \u2013 Defects"],[284.5,362.5,"such suppliers."]]},
+        {"top":255.6,"cells":[[-5.3,239.8,"n material and workmanship; Repairs made to"]]},
+        {"top":269.2,"cells":[[-3.1,259.4,"orrect any vehicle defect; Corrosion on body sheet"],[284.5,531.1,"1. Roadside Assistance Program and Courtesy Transportation"]]},
+        {"top":279.2,"cells":[[284.5,524.1,"Program are not a part of the New Vehicle Limited Warranty."]]},
+        {"top":283.6,"cells":[[-8.9,62.0,"metal panels."]]},
+        {"top":289.2,"cells":[[284.5,524.3,"A separate booklet entitled \u201cWarranty and Owner Assistance"]]},
+        {"top":299.2,"cells":[[284.5,532.6,"Information\u201d furnished with each new vehicle provides detailed"]]},
+        {"top":309.2,"cells":[[284.5,408.0,"warranty coverage information."]]},
+        {"top":311.6,"cells":[[-0.4,260.4,"UST THROUGH PROTECTION Cadillac vehicles"]]},
+        {"top":325.6,"cells":[[-2.4,257.1,"re designed and built to resist corrosion and rust-"]]},
+        {"top":329.2,"cells":[[284.5,535.1,"GM, the GM emblem, Cadillac, the Cadillac badge, OnStar, the"]]},
+        {"top":339.2,"cells":[[-4.6,259.3,"hrough corrosion. Any body sheet metal that rusts"],[284.5,547.1,"OnStar emblem and the slogans, emblems, vehicle model names,"]]},
+        {"top":349.2,"cells":[[284.5,535.6,"vehicle body designs and other marks appearing in this catalog"]]},
+        {"top":353.6,"cells":[[-4.6,252.8,"hrough (in the form of an actual hole in the sheet"]]},
+        {"top":359.2,"cells":[[284.5,534.6,"are the trademarks and/or service marks of General Motors, its"]]},
+        {"top":367.6,"cells":[[-8.9,251.2,"metal) is covered for six years unlimited mileage."]]},
+        {"top":369.2,"cells":[[284.5,548.3,"subsidiaries, affiliates or licensors. iPod is a registered trademark of"]]},
+        {"top":379.2,"cells":[[284.5,325.7,"Apple, Inc."]]},
+        {"top":381.6,"cells":[[-1.0,231.6,"osmetic or surface corrosion, resulting from"]]},
+        {"top":395.6,"cells":[[-3.9,253.1,"tone chips or scratches in the paint, for example,"]]},
+        {"top":403.2,"cells":[[284.5,452.0,"\u00a92012 General Motors. All rights reserved."]]},
+        {"top":409.6,"cells":[[2.8,228.5,"not included in the Rust Through coverage."]]},
+        {"top":423.6,"cells":[[-0.2,256.3,"pplication of additional rust-inhibiting materials"]]},
+        {"top":437.6,"cells":[[2.8,245.0,"not required under the Rust Through coverage"]]},
+        {"top":451.6,"cells":[[-2.4,227.4,"nd none is recommended. See your Cadillac"]]},
+        {"top":465.6,"cells":[[-2.4,207.3,"ealer for terms of this limited warranty."]]},
+        {"top":493.6,"cells":[[87.5,251.0,"Some standard content may be"]]},
+        {"top":494.4,"cells":[[-1.3,83.0,"LEET ORDERS"]]},
+        {"top":507.6,"cells":[[-2.4,241.5,"eleted with fl eet orders. See dealer for details."]]},
+        {"top":621.9,"cells":[[405.9,533.0,"cadillac.com/xts"]]}
+      ]
+    }
+  ],
+  "combined_trim_pages_text": "--- page 65 ---\nABOUT THIS DIGITAL CATALOG TIRE SEALANT AND COMPRESSOR KIT N\nWe have tried to make the information presented Unless you option into a spare tire, there is no W\ncomprehensive and factual. We reserve the jack or spare tire in this vehicle. If you do not 20\nright, however, to make changes at any time, option into the spare tire, your vehicle has a tire ve\nwithout notice, in prices, colors, materials, sealant and compressor kit that uses a liquid de\nequipment, specifications, models and availability. tire sealant to temporarily seal up to a 1/4-inch\nSpecifi cations, dimensions, measurements, puncture in the tread area of the tire. After using CO\nratings and other numbers presented here and in the infl ator kit, it is recommended to take the (W\nprinted materials provided at the dealership or tire to an authorized dealer for inspection and Po\naffi xed to vehicles are approximates, based upon repair as soon as possible but at least within 100 Ro\ndesign and engineering drawings and prototypes miles of driving. The tire sealant cannot seal and Tr\nand laboratory tests. Your vehicle may differ infl ate sidewall damage, punctures larger than 1/4\ndue to variations in manufacture and equipment. inch, or a tire that has unseated from the wheel. CO\nSince some information may have been recently The sealant can only be used on one tire one time (W\nupdated; please check with your Cadillac dealer before its expiration date. B\nfor complete details. Cadillac reserves the right to in\nlengthen or shorten the model year for any product ASSEMBLY Cadillac vehicles and their co\nfor any reason, or to start and end model years components are assembled or produced by m\nat different times. Note: Some photographs show different operating units of General Motors, its\nvehicles with optional equipment. subsidiaries or suppliers to GM worldwide. We R\nsometimes fi nd it necessary to produce Cadillac ar\nONSTAR OnStar services require vehicle electrical vehicles with different or differently sourced th\nsystem (including battery), wireless service and components than originally scheduled. Since some th\nGPS satellite signals to be available and operating options may be unavailable when your vehicle is m\nfor features to function properly. OnStar acts as assembled, we suggest that you verify that your Co\na link to existing emergency service providers. vehicle includes the equipment you ordered or, if st\nSubscription Service Agreement required. Call there are changes, that they are acceptable to you. is\n1-888-4ONSTAR (466-7827) or visit onstar.com A\nfor OnStar\u2019s Terms and Conditions, Privacy Policy UPDATED SERVICE INFORMATION is\nand details and system limitations. Cadillac dealers receive useful service bulletins an\nabout Cadillac products. You may purchase them de\nENGINES Cadillac products are equipped with from Helm Incorporated by calling 1-800-551-\nengines produced by GM Powertrain or suppliers 4123 or by visiting www.helminc.com. F\nto GM worldwide. The engines in Cadillac products de\nmay also be used in other GM makes or models.\n\nABOUT THIS DIGITAL CATALOG TIRE SEALANT AND COMPRESSOR KIT\nWe have tried to make the information presented Unless you option into a spare tire, there is no\ncomprehensive and factual. We reserve the jack or spare tire in this vehicle. If you do not\nright, however, to make changes at any time, option into the spare tire, your vehicle has a tire v\nwithout notice, in prices, colors, materials, sealant and compressor kit that uses a liquid\nequipment, specifications, models and availability. tire sealant to temporarily seal up to a 1/4-inch\nSpecifi cations, dimensions, measurements, puncture in the tread area of the tire. After using\nratings and other numbers presented here and in the infl ator kit, it is recommended to take the (\nprinted materials provided at the dealership or tire to an authorized dealer for inspection and\naffi xed to vehicles are approximates, based upon repair as soon as possible but at least within 100\ndesign and engineering drawings and prototypes miles of driving. The tire sealant cannot seal and\nand laboratory tests. Your vehicle may differ infl ate sidewall damage, punctures larger than 1/4\ndue to variations in manufacture and equipment. inch, or a tire that has unseated from the wheel.\nSince some information may have been recently The sealant can only be used on one tire one time (\nupdated; please check with your Cadillac dealer before its expiration date.\nfor complete details. Cadillac reserves the right to i\nlengthen or shorten the model year for any product ASSEMBLY Cadillac vehicles and their c\nfor any reason, or to start and end model years components are assembled or produced by\nat different times. Note: Some photographs show different operating units of General Motors, its\nvehicles with optional equipment. subsidiaries or suppliers to GM worldwide. We\nsometimes fi nd it necessary to produce Cadillac\nONSTAR OnStar services require vehicle electrical vehicles with different or differently sourced t\nsystem (including battery), wireless service and components than originally scheduled. Since some t\nGPS satellite signals to be available and operating options may be unavailable when your vehicle is\nfor features to function properly. OnStar acts as assembled, we suggest that you verify that your\na link to existing emergency service providers. vehicle includes the equipment you ordered or, if s\nSubscription Service Agreement required. Call there are changes, that they are acceptable to you. i\n1-888-4ONSTAR (466-7827) or visit onstar.com\nfor OnStar\u2019s Terms and Conditions, Privacy Policy UPDATED SERVICE INFORMATION i\nand details and system limitations. Cadillac dealers receive useful service bulletins\nabout Cadillac products. You may purchase them\nENGINES Cadillac products are equipped with from Helm Incorporated by calling 1-800-551-\nengines produced by GM Powertrain or suppliers 4123 or by visiting www.helminc.com.\nto GM worldwide. The engines in Cadillac products\nmay also be used in other GM makes or models. | N\nW\n2\ne\nd\nC\nP\nR\nTr\nC\nB\nn\nm\nR\na\nh\nh\nm\nC\nt\ns\nA\ns\na\nd\nF\nd"
+}

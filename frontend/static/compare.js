@@ -248,6 +248,32 @@
         }
     }
 
+    let _evictNoticeTimer = null;
+
+    // Compare tray caps at MAX_COMPARE; adding a 5th used to silently drop the
+    // oldest entry. Named-drop notice so that isn't a surprise when the user
+    // goes looking for a car they just added a few minutes ago.
+    function showCompareEvictNotice(evictedTitle) {
+        let el = document.getElementById("compare-evict-notice");
+        if (!el) {
+            el = document.createElement("div");
+            el.id = "compare-evict-notice";
+            el.setAttribute("role", "status");
+            el.style.cssText =
+                "position:fixed;left:50%;bottom:96px;transform:translateX(-50%);" +
+                "z-index:1200;max-width:min(420px,90vw);padding:10px 16px;border-radius:10px;" +
+                "background:#1c3552;color:#faf8f5;font:600 13px/1.4 inherit;text-align:center;" +
+                "box-shadow:0 8px 24px rgba(20,36,54,0.25);opacity:0;transition:opacity .15s ease;";
+            document.body.appendChild(el);
+        }
+        el.textContent = "Compare is full (max " + MAX_COMPARE + ") — removed " + (evictedTitle || "the oldest vehicle") + ".";
+        el.style.opacity = "1";
+        if (_evictNoticeTimer) clearTimeout(_evictNoticeTimer);
+        _evictNoticeTimer = setTimeout(function () {
+            el.style.opacity = "0";
+        }, 3500);
+    }
+
     function toggleId(carId, on) {
         const id = parseInt(carId, 10);
         if (!Number.isFinite(id) || id <= 0) return readIds();
@@ -261,7 +287,9 @@
             if (!exists) {
                 const meta = carMetaById(id);
                 if (entries.length >= MAX_COMPARE) {
+                    const evicted = entries[0];
                     entries = entries.slice(1);
+                    showCompareEvictNotice(evicted && evicted.title);
                 }
                 entries.push({
                     id: id,

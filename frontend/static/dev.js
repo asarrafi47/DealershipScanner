@@ -401,6 +401,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 a.className = "dev-view-site-btn";
                 a.textContent = "View on site";
                 tdA.appendChild(a);
+            } else if (row.queue_status === "pending" || row.queue_status === "processing") {
+                const btn = document.createElement("button");
+                btn.type = "button";
+                btn.className = "dev-view-site-btn dev-queue-skip-btn";
+                btn.textContent = row.queue_status === "processing" ? "Cancel" : "Skip";
+                btn.addEventListener("click", () => skipQueueItem(row.job_id));
+                tdA.appendChild(btn);
             } else {
                 tdA.textContent = "—";
             }
@@ -408,6 +415,20 @@ document.addEventListener("DOMContentLoaded", () => {
             tr.append(tdU, tdS, tdR, tdA);
             queueTbody.appendChild(tr);
         }
+    }
+
+    async function skipQueueItem(jobId) {
+        if (!currentQueueId || !jobId) return;
+        try {
+            await devFetch(devApi(`import-queue/${currentQueueId}/skip-item`), {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ job_id: jobId }),
+            });
+        } catch (_) {
+            // Best-effort; the next poll reflects whatever state actually stuck.
+        }
+        pollImportQueue();
     }
 
     async function pollImportQueue() {

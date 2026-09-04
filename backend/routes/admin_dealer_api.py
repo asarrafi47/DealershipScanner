@@ -8,14 +8,31 @@ from __future__ import annotations
 
 from flask import jsonify, request, session
 
+from backend.db.users_db import get_user_profile
 from backend.routes._shared import _client_ip
 from backend.utils.ip_rate_limit import allow_request
 from backend.utils.roles import is_admin_role
 
 
+def _current_admin_ok() -> bool:
+    """Re-fetch role/active status from the DB rather than trusting the
+    session-cached ``user_role`` — a demoted/suspended admin's existing
+    cookie must lose access immediately, not after its 14-day expiry."""
+    uid = session.get("user_id")
+    if not uid:
+        return False
+    try:
+        profile = get_user_profile(int(uid))
+    except (TypeError, ValueError):
+        return False
+    if not profile or not profile.get("is_active", True):
+        return False
+    return is_admin_role(profile.get("role"))
+
+
 def api_admin_dealer_onboard():
     """Site admin: queue Smart Import onboard from Find dealers (locator → scrape bridge)."""
-    if not is_admin_role(session.get("user_role")):
+    if not _current_admin_ok():
         return jsonify({"ok": False, "error": "forbidden"}), 403
 
     ip = _client_ip()
@@ -68,7 +85,7 @@ def _serialize_dealer_job_row(row: dict) -> dict:
 
 def api_admin_dealer_jobs():
     """Site admin: poll dealer_jobs for live onboarding progress."""
-    if not is_admin_role(session.get("user_role")):
+    if not _current_admin_ok():
         return jsonify({"ok": False, "error": "forbidden"}), 403
 
     from backend.db.inventory_pg import is_inventory_postgres
@@ -81,8 +98,13 @@ def api_admin_dealer_jobs():
         limit = min(max(int(request.args.get("limit") or 30), 1), 100)
     except (TypeError, ValueError):
         limit = 30
+    status = (request.args.get("status") or "").strip() or None
+    dealer_id = (request.args.get("dealer_id") or "").strip() or None
 
-    jobs = [_serialize_dealer_job_row(j) for j in list_recent_jobs(limit=limit)]
+    jobs = [
+        _serialize_dealer_job_row(j)
+        for j in list_recent_jobs(limit=limit, status=status, dealer_id=dealer_id)
+    ]
     catalog = list_dealer_catalog(limit=50)
     active = sum(1 for j in jobs if (j.get("status") or "") in ("queued", "running"))
     return jsonify(
@@ -97,7 +119,7 @@ def api_admin_dealer_jobs():
 
 def api_admin_dealer_job_detail(job_id: int):
     """Site admin: full job detail for sidebar (payload, result log, error)."""
-    if not is_admin_role(session.get("user_role")):
+    if not _current_admin_ok():
         return jsonify({"ok": False, "error": "forbidden"}), 403
 
     from backend.db.inventory_pg import is_inventory_postgres
@@ -114,7 +136,7 @@ def api_admin_dealer_job_detail(job_id: int):
 
 def api_admin_dealer_job_retry(job_id: int):
     """Site admin: re-queue a failed dealer job."""
-    if not is_admin_role(session.get("user_role")):
+    if not _current_admin_ok():
         return jsonify({"ok": False, "error": "forbidden"}), 403
 
     ip = _client_ip()
@@ -134,7 +156,7 @@ def api_admin_dealer_job_retry(job_id: int):
 
 def api_admin_dealer_job_diagnose(job_id: int):
     """Site admin: AI/rule diagnosis for a failed dealer job."""
-    if not is_admin_role(session.get("user_role")):
+    if not _current_admin_ok():
         return jsonify({"ok": False, "error": "forbidden"}), 403
 
     from backend.db.inventory_pg import is_inventory_postgres
@@ -160,7 +182,7 @@ def api_admin_dealer_job_diagnose(job_id: int):
 
 def api_admin_dealer_job_smart_retry(job_id: int):
     """Site admin: diagnose then re-queue a failed job with guided retry hints."""
-    if not is_admin_role(session.get("user_role")):
+    if not _current_admin_ok():
         return jsonify({"ok": False, "error": "forbidden"}), 403
 
     ip = _client_ip()

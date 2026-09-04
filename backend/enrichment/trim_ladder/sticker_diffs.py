@@ -169,8 +169,24 @@ def attach_sticker_adds(
         if not ev or step.get("adds"):
             continue
         if not below_union[i]:
-            # Base rung, or no sticker evidence below to diff against — a raw
-            # equipment dump is not "what this trim adds".
+            # Base rung, or no sticker evidence on any lower rung to diff
+            # against. We still have this trim's own document-confirmed
+            # equipment -- showing it as "what this trim adds" would imply a
+            # comparison we can't back, so surface it honestly labeled as
+            # confirmed content instead of a diff (never claims to be an
+            # addition, so this doesn't touch the no-laundering doctrine
+            # that guards rung EXISTENCE in evidence.py).
+            items = ev["items"]
+            if items:
+                keys = list(items)[:_MAX_ADDS_SHOWN]
+                step["sticker_equipment"] = [items[k] for k in keys]
+                step["sticker_equipment_note"] = (
+                    f"Confirmed on {ev['sticker_count']} window sticker"
+                    f"{'s' if ev['sticker_count'] != 1 else ''} we photographed for this "
+                    f"trim -- not a comparison against the trim below"
+                )
+                step["sticker_equipment_car_ids"] = ev["car_ids"][:6]
+                annotated += 1
             continue
         add_keys = [k for k in ev["items"] if k not in below_union[i]]
         if not add_keys:

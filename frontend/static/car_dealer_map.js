@@ -26,11 +26,18 @@
     L.Icon.Default.prototype.options.shadowUrl = iconBase + "marker-shadow.png";
 
     const map = L.map(mapEl, { scrollWheelZoom: false }).setView([lat, lon], 14);
-    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        maxZoom: 19,
-        attribution:
-            '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-    }).addTo(map);
+    if (window.DSMapTiles) {
+        DSMapTiles.addSatelliteTiles(map);
+    } else {
+        L.tileLayer(
+            "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+            {
+                maxZoom: 19,
+                attribution:
+                    "Tiles &copy; Esri &mdash; Source: Esri, Maxar, Earthstar Geographics, and the GIS community",
+            }
+        ).addTo(map);
+    }
 
     const pin = L.divIcon({
         className: "find-dealers-marker",

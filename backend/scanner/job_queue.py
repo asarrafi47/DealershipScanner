@@ -686,21 +686,43 @@ def smart_retry_failed_job(job_id: int, *, use_llm: bool = True) -> tuple[bool, 
     }
 
 
-def list_recent_jobs(*, limit: int = 30) -> list[dict[str, Any]]:
+def list_recent_jobs(
+    *, limit: int = 30, status: str | None = None, dealer_id: str | None = None
+) -> list[dict[str, Any]]:
+    """Recent ``dealer_jobs`` rows, newest first.
+
+    ``status`` and ``dealer_id`` are optional equality filters for the admin
+    jobs board (``/api/admin/dealer-jobs``) — previously only ``limit`` could
+    be narrowed, so a busy queue had no way to isolate e.g. just the failed
+    jobs for one dealer.
+    """
     if not inventory_pg.is_inventory_postgres():
         return []
     lim = max(1, min(int(limit), 100))
     conn = pg_connect()
     try:
         cur = conn.cursor()
+        clauses: list[str] = []
+        params: list[Any] = []
+        status = (status or "").strip()
+        if status:
+            clauses.append("status = %s")
+            params.append(status)
+        dealer_id = (dealer_id or "").strip()
+        if dealer_id:
+            clauses.append("dealer_id = %s")
+            params.append(dealer_id)
+        where = f"WHERE {' AND '.join(clauses)}" if clauses else ""
+        params.append(lim)
         cur.execute(
-            """
+            f"""
             SELECT id, dealer_id, job_type, status, worker_id, created_at, started_at, finished_at, error, result_json
             FROM dealer_jobs
+            {where}
             ORDER BY id DESC
             LIMIT %s
             """,
-            (lim,),
+            params,
         )
         cols = [d[0] for d in cur.description]
         return [dict(zip(cols, row)) for row in cur.fetchall()]

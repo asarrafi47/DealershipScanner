@@ -16,6 +16,7 @@ from backend.parsers.base import (
     find_tracking_attr,
     find_vehicle_list,
     norm_int,
+    norm_label_str,
     norm_str,
 )
 from backend.utils.field_clean import clean_car_row_dict, normalize_optional_str
@@ -352,8 +353,8 @@ def _map_vehicle(obj: dict, base_url: str, dealer_id: str, dealer_name: str, dea
         "title": norm_str(obj.get("title") or obj.get("name") or obj.get("vehicleTitle") or ""),
         "zip_code": norm_str(obj.get("zipCode") or obj.get("zip_code") or obj.get("zip")),
         "fuel_type": fuel or "",
-        "transmission": norm_str(obj.get("transmission") or obj.get("transmissionType")),
-        "drivetrain": norm_str(obj.get("drivetrain") or obj.get("driveType")),
+        "transmission": norm_label_str(obj.get("transmission") or obj.get("transmissionType")),
+        "drivetrain": norm_label_str(obj.get("drivetrain") or obj.get("driveType")),
         "exterior_color": ext or "",
         "interior_color": intr or "",
         "body_style": body or "",

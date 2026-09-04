@@ -420,7 +420,7 @@
                         <label class="filter-option">
                             <input type="checkbox" name="cylinders" value="{{ item }}"
                                 {% if item|string in active.cylinders %}checked{% endif %}>
-                            <span>{{ "Electric" if item == 0 else item ~ "-cyl" }}</span>
+                            <span>{{ "Electric" if item == 0 else item ~ "-cylinder" }}</span>
                         </label>
                         {% endfor %}
                     </div>
@@ -809,6 +809,7 @@
     window.__DS_DEALER_GEO = { lat: {{ lat }}, lon: {{ lon }}, name: {{ name | tojson }} };
 </script>
 <script src="{{ url_for('static', filename='vendor/leaflet/leaflet.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>
+<script src="{{ url_for('static', filename='map_tiles.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>
 <script nonce="{{ csp_nonce }}">
     (function () {
         function initMap() {
@@ -819,10 +820,14 @@
                 L.Icon.Default.imagePath = window.__DS_LEAFLET_ICON_BASE;
             }
             var map = L.map("dealer-research-map", { scrollWheelZoom: false }).setView([g.lat, g.lon], 14);
-            L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-                maxZoom: 19,
-                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-            }).addTo(map);
+            if (window.DSMapTiles) {
+                DSMapTiles.addResilientTiles(map);
+            } else {
+                L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+                    maxZoom: 19,
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                }).addTo(map);
+            }
             L.marker([g.lat, g.lon]).addTo(map).bindPopup(g.name || "Dealer");
         }
         if (document.readyState === "loading") {

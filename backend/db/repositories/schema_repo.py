@@ -184,6 +184,77 @@ def ensure_nhtsa_vpic_cache_table(conn: sqlite3.Connection) -> None:
     )
 
 
+def ensure_car_attribution_tables(cursor: sqlite3.Cursor) -> None:
+    """Dev/test-parity SQLite copies of the photo-attribution tables (migrations/V011).
+
+    Production Postgres gets these from ``migrations/V011__car_attribution.sql``
+    (``car_attribution``, ``dealer_feed_scope``) and ``car_move_log`` from
+    ``backend/scripts/apply_attribution_moves.py``. The SQLite dev/test schema never
+    created any of the three, so every call to
+    ``backend.db.repositories.cars_repo.car_attribution_states`` -- which runs on
+    every ``/car/<id>`` and ``/api/cars/<id>`` request -- hit "no such table", retried
+    a second query variant, hit the same error, and only then fell back to "no
+    caveats": two failed queries and two full tracebacks logged on the hottest page
+    in the app, on every request, in every local/dev/test run. Creating the tables
+    here (empty, since dev SQLite has no attribution judgements of its own) lets the
+    primary query succeed on the first try, same as it does once Postgres has run
+    V011.
+    """
+    if is_inventory_postgres():
+        return
+    cursor.execute(
+        """
+        CREATE TABLE IF NOT EXISTS car_attribution (
+            car_id           INTEGER PRIMARY KEY,
+            status           TEXT NOT NULL CHECK (status IN ('confirmed', 'conflicting', 'unverified')),
+            observed_rooftop TEXT,
+            filed_dealer_id  TEXT,
+            evidence         TEXT,
+            decided_at       TEXT NOT NULL DEFAULT (datetime('now'))
+        )
+        """
+    )
+    cursor.execute(
+        "CREATE INDEX IF NOT EXISTS idx_car_attribution_status ON car_attribution (status)"
+    )
+    cursor.execute(
+        "CREATE INDEX IF NOT EXISTS idx_car_attribution_filed "
+        "ON car_attribution (filed_dealer_id, status)"
+    )
+    cursor.execute(
+        """
+        CREATE TABLE IF NOT EXISTS dealer_feed_scope (
+            dealer_id            TEXT PRIMARY KEY,
+            scope                TEXT NOT NULL CHECK (scope IN ('rooftop', 'group')),
+            photos_naming_self   INTEGER NOT NULL DEFAULT 0,
+            photos_naming_other  INTEGER NOT NULL DEFAULT 0,
+            distinct_rooftops    INTEGER NOT NULL DEFAULT 0,
+            decided_at           TEXT NOT NULL DEFAULT (datetime('now'))
+        )
+        """
+    )
+    cursor.execute(
+        """
+        CREATE TABLE IF NOT EXISTS car_move_log (
+            id                  INTEGER PRIMARY KEY AUTOINCREMENT,
+            car_id              INTEGER NOT NULL,
+            from_dealer_id      TEXT,
+            from_dealer_name    TEXT,
+            from_registry_id    INTEGER,
+            to_dealer_id        TEXT,
+            to_dealer_name      TEXT,
+            to_registry_id      INTEGER,
+            evidence            TEXT,
+            moved_at            TEXT NOT NULL DEFAULT (datetime('now')),
+            reverted_at         TEXT
+        )
+        """
+    )
+    cursor.execute(
+        "CREATE INDEX IF NOT EXISTS idx_car_move_log_car ON car_move_log (car_id, moved_at DESC)"
+    )
+
+
 def init_inventory_db():
     if is_inventory_postgres():
         from backend.db.inventory_pg import init_postgres_inventory, pg_connect
@@ -293,6 +364,7 @@ def init_inventory_db():
     ensure_cars_listings_indexes(cursor)
     ensure_nhtsa_vpic_cache_table(conn)
     ensure_scan_runs_table(cursor)
+    ensure_car_attribution_tables(cursor)
     try:
         cursor.execute(
             """
@@ -318,6 +390,19 @@ def init_inventory_db():
             UNIQUE(user_id, car_id)
         )
     """)
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS saved_searches (
+            id               INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id          INTEGER NOT NULL,
+            filters_json     TEXT NOT NULL,
+            created_at       TEXT DEFAULT (datetime('now')),
+            last_notified_at TEXT
+        )
+    """)
+    cursor.execute(
+        "CREATE INDEX IF NOT EXISTS idx_saved_searches_user ON saved_searches(user_id, created_at)"
+    )
+    conn.commit()
     from backend.db.dealerships_db import ensure_dealerships_table
 
     ensure_dealerships_table(cursor)

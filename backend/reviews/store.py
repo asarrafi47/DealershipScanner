@@ -330,6 +330,57 @@ def increment_report(conn: Any, review_id: int, reporter_hash: str | None = None
     return {"report_count": report_count, "status": status}
 
 
+def list_flagged_reviews(conn: Any, limit: int = 200) -> list[dict]:
+    """Reviews auto-flipped to ``status='flagged'`` (``report_count`` hit the
+    threshold), newest-reported first — the moderation queue with no other
+    surface to view or reverse it from.
+    """
+    conn.row_factory = sqlite3.Row
+    cur = conn.cursor()
+    ensure_reviews_table(cur)
+    conn.commit()
+    try:
+        cur.execute(
+            """
+            SELECT id, dealer_id, user_id, display_name, is_anonymous, rating,
+                   body, addon_fee_reported, addon_fee_amount, addon_fee_desc,
+                   status, report_count, created_at, updated_at
+            FROM dealer_reviews
+            WHERE status = 'flagged'
+            ORDER BY report_count DESC, COALESCE(updated_at, '') DESC, id DESC
+            LIMIT ?
+            """,
+            (int(limit),),
+        )
+        return [dict(r) for r in cur.fetchall()]
+    except Exception:
+        return []
+
+
+def set_review_status(conn: Any, review_id: int, status: str) -> bool:
+    """Admin moderation action on a flagged review: ``published`` (unflag,
+    reset ``report_count`` so it does not instantly re-flag off stale reports)
+    or ``removed`` (permanently hidden). Returns whether a row was updated.
+    """
+    if status not in ("published", "removed"):
+        raise ValueError(f"unsupported review status: {status!r}")
+    cur = conn.cursor()
+    ensure_reviews_table(cur)
+    if status == "published":
+        cur.execute(
+            "UPDATE dealer_reviews SET status = ?, report_count = 0, updated_at = ? WHERE id = ?",
+            (status, _now_iso(), int(review_id)),
+        )
+    else:
+        cur.execute(
+            "UPDATE dealer_reviews SET status = ?, updated_at = ? WHERE id = ?",
+            (status, _now_iso(), int(review_id)),
+        )
+    updated = bool(cur.rowcount)
+    conn.commit()
+    return updated
+
+
 def count_recent_reviews_by_user(conn: Any, user_id: int, within_hours: int = 1) -> int:
     """Number of reviews this user submitted within the rolling window (rate limit)."""
     conn.row_factory = sqlite3.Row

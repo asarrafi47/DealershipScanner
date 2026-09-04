@@ -788,6 +788,15 @@ def test_fetcher_exposes_the_robots_agent_for_its_user_agent():
         ("Kia", "Sportage", "sportage"),
         ("Jeep", "Jeep", "jeep"),  # stripping to empty is refused
         ("Kia", "", ""),
+        # Drivetrain configuration, not a separate document -- OEMs cover every
+        # drivetrain in one brochure, so "Tacoma 4WD" must fold onto "tacoma".
+        ("Toyota", "Tacoma 4WD", "tacoma"),
+        ("Toyota", "Tacoma 2WD", "tacoma"),
+        ("Toyota", "Tundra 4WD", "tundra"),
+        ("Subaru", "Outback AWD", "outback"),
+        ("BMW", "330i RWD", "330i"),
+        # Not a trailing drivetrain token -- must survive untouched.
+        ("Mercedes-Benz", "GLE 350 4MATIC", "gle3504matic"),
     ],
 )
 def test_normalized_model_token_strips_the_make_prefix(make, model, expected):

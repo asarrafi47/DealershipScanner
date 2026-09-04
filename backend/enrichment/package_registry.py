@@ -32,12 +32,19 @@ from backend.enrichment.knowledge_engine import _conn
 # $1,550 "Decoding additional functions"). A parsed PDF cannot fail that way. Guards catch
 # most of it; "mostly caught" is not "structurally impossible", and this ladder is where
 # that difference belongs. Raise it if the photo-sourced values prove out against the PDFs.
-_SOURCE_AUTHORITY = {"oem_sticker": 3, "dealer_listing": 2, "sticker_photo": 2, "estimate": 1}
+# 'brochure' is an option/package NAME (and sometimes price) read off the manufacturer's
+# own published brochure PDF (see backend/scripts/feed_package_registry_from_brochure_vision.py) --
+# a vision-model read of the document image, citation-backed by (source_pdf, page,
+# quoted_text) in brochure_vision_facts. It sits at 2, level with dealer_listing and
+# sticker_photo, deliberately BELOW oem_sticker: a brochure describes what a TRIM offers in
+# general, not what one specific VIN was actually built with, so it can never outrank a
+# sticker read for that exact car -- only fill a slot no sticker has priced yet.
+_SOURCE_AUTHORITY = {"oem_sticker": 3, "dealer_listing": 2, "sticker_photo": 2, "brochure": 2, "estimate": 1}
 # Keep every source present in BOTH maps. Registering one and not the other raises a
 # bare KeyError deep inside record_package_observations, where a caller reads it as
 # "unknown source" rather than "half-wired source".
 _SOURCE_CONFIDENCE = {
-    "oem_sticker": 0.95, "dealer_listing": 0.6, "sticker_photo": 0.75, "estimate": 0.3,
+    "oem_sticker": 0.95, "dealer_listing": 0.6, "sticker_photo": 0.75, "brochure": 0.8, "estimate": 0.3,
 }
 
 # Trailing nouns that are noise for matching ("Premium Package" == "Premium").

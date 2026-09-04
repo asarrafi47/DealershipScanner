@@ -507,6 +507,21 @@ def init_postgres_inventory(conn: Any) -> None:
 
     cur.execute(
         """
+        CREATE TABLE IF NOT EXISTS saved_searches (
+            id BIGSERIAL PRIMARY KEY,
+            user_id BIGINT NOT NULL,
+            filters_json TEXT NOT NULL,
+            created_at TEXT DEFAULT (CURRENT_TIMESTAMP::text),
+            last_notified_at TEXT
+        )
+        """
+    )
+    cur.execute(
+        "CREATE INDEX IF NOT EXISTS idx_saved_searches_user ON saved_searches(user_id, created_at)"
+    )
+
+    cur.execute(
+        """
         CREATE TABLE IF NOT EXISTS scan_runs (
             id BIGSERIAL PRIMARY KEY,
             dealer_id TEXT NOT NULL,

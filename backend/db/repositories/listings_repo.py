@@ -189,6 +189,13 @@ def _facet_transmission_sane(val) -> bool:
         return False
     if s in frozenset({"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"}):
         return False
+    # Dict/list reprs leaked from a structured feed field, e.g.
+    # "{'label': '10-Speed Automatic', 'type': 'Automatic'}"
+    if s[0] in "{[" or ("'label'" in s or "'type'" in s or "'value'" in s):
+        return False
+    # Truncated/malformed fragments missing their leading gear count, e.g. "-Speed"
+    if s.startswith("-"):
+        return False
     return True
 
 

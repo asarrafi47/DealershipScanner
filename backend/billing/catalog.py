@@ -55,6 +55,7 @@ RESEARCH_FEATURES: FrozenSet[str] = frozenset(
         FEATURE_MARKET_INTEL,
         FEATURE_VEHICLE_HISTORY,
         FEATURE_NEARBY_DEALERS,
+        FEATURE_SAVED_SEARCHES,
     }
 )
 

@@ -33,6 +33,42 @@ def _first(obj: dict, *keys) -> str | None:
     return None
 
 
+def _candidate_list(raw_data):
+    """Return the list of vehicle-shaped dicts a Chapman payload might hold.
+
+    Unlike :func:`_iter_vehicles`, this does NOT require a ``vin``/``VIN`` key —
+    it is used by :func:`detect`, which must recognize the shape even before
+    checking individual fields.
+    """
+    if isinstance(raw_data, list):
+        return [v for v in raw_data if isinstance(v, dict)]
+    if isinstance(raw_data, dict):
+        for key in ("vehicles", "results", "inventory", "data"):
+            lst = raw_data.get(key)
+            if isinstance(lst, list):
+                return [v for v in lst if isinstance(v, dict)]
+    return []
+
+
+def detect(raw_data) -> bool:
+    """True when ``raw_data`` is a Chapman Auto Group flat inventory array.
+
+    Conservative on purpose: it must be reachable ahead of the declared
+    provider (recipes for these dealers have been mis-tagged as
+    ``dealer_dot_com`` in production) without hijacking other JSON shapes. A
+    Chapman vehicle pairs a ``vin``/``VIN`` with at least one of its
+    distinctive fields (``colorExt``, ``arkona``, ``uniqueArkona``,
+    ``valueArkona``) — a combination no other provider payload in this repo
+    produces. Only the first few items are checked, like the other detectors.
+    """
+    for v in _candidate_list(raw_data)[:3]:
+        if not (v.get("vin") or v.get("VIN")):
+            continue
+        if any(v.get(k) is not None for k in ("colorExt", "arkona", "uniqueArkona", "valueArkona")):
+            return True
+    return False
+
+
 def _iter_vehicles(raw_data):
     """Yield each vehicle dict from a Chapman flat JSON array (or {vehicles:[...]})."""
     if isinstance(raw_data, list):

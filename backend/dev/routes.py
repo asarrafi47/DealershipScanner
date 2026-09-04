@@ -473,7 +473,30 @@ def _run_smart_import_job(job_id: str, url: str, headed: bool = False) -> None:
                 scanner_jobs[job_id]["log"] = "".join(log_parts)
                 scanner_jobs[job_id]["discovery"] = list(discovery)
 
+    def cancel_requested() -> bool:
+        with scanner_lock:
+            job = scanner_jobs.get(job_id)
+            return bool(job and job.get("cancel_requested"))
+
+    def watch_for_cancel(proc: subprocess.Popen) -> None:
+        # Runs on its own thread so a job with no stdout output at all (a
+        # true hang, not just a slow one) still gets torn down promptly —
+        # the stdout-reading loop below has no way to notice a cancel flag
+        # on its own while blocked waiting on the next line.
+        while proc.poll() is None:
+            if cancel_requested():
+                try:
+                    proc.terminate()
+                except OSError:
+                    pass
+                return
+            time.sleep(0.5)
+
     for attempt, profile in enumerate(SCANNER_PROFILES):
+        if cancel_requested():
+            append("\n[dev] Job cancelled before starting the next attempt.\n")
+            last_error = {"reason": "cancelled", "retryable": False}
+            break
         append(f"\n--- Scanner attempt {attempt + 1}/{len(SCANNER_PROFILES)} (profile={profile}) ---\n")
         attempt_result: dict[str, Any] | None = None
         attempt_error: dict[str, Any] | None = None
@@ -498,6 +521,7 @@ def _run_smart_import_job(job_id: str, url: str, headed: bool = False) -> None:
                 text=True,
                 bufsize=1,
             )
+            threading.Thread(target=watch_for_cancel, args=(proc,), daemon=True).start()
             if proc.stdout:
                 for line in proc.stdout:
                     append(line)
@@ -546,6 +570,10 @@ def _run_smart_import_job(job_id: str, url: str, headed: bool = False) -> None:
 
         last_error = attempt_error or last_error
 
+        if cancel_requested():
+            append("\n[dev] Job cancelled; stopping (no further retry attempts).\n")
+            last_error = {"reason": "cancelled", "retryable": False}
+            break
         if attempt_result:
             resolved_result = attempt_result
             break
@@ -924,6 +952,7 @@ def api_smart_import():
             "insert_error": None,
             "smart_error": None,
             "cars_linked": None,
+            "cancel_requested": False,
         }
         _evict_old_entries(scanner_jobs, _MAX_SCANNER_JOBS)
 
@@ -969,9 +998,17 @@ def _run_bulk_import_queue(queue_id: str) -> None:
     headed = bool(q.get("headed"))
     try:
         for it in q["items"]:
+            # An admin may mark a still-pending item "skipped" (see
+            # api_import_queue_skip_item) while an earlier item in the queue
+            # is stuck running — check right before starting so that item
+            # never blocks on a job nobody wants run anymore.
+            if it.get("status") == "skipped":
+                continue
             it["status"] = "processing"
             _run_smart_import_job(it["job_id"], it["url"], headed)
-            it["status"] = "completed"
+            with scanner_lock:
+                job = scanner_jobs.get(it["job_id"]) or {}
+            it["status"] = "skipped" if job.get("cancel_requested") else "completed"
     finally:
         q["done"] = True
 
@@ -1007,6 +1044,7 @@ def api_smart_import_bulk():
                 "smart_error": None,
                 "cars_linked": None,
                 "queue_id": queue_id,
+                "cancel_requested": False,
             }
             _evict_old_entries(scanner_jobs, _MAX_SCANNER_JOBS)
     if not items:
@@ -1052,6 +1090,36 @@ def api_import_queue(queue_id: str):
             }
         )
     return jsonify({"ok": True, "queue_done": q.get("done"), "items": out})
+
+
+@dev_bp.route("/api/import-queue/<queue_id>/skip-item", methods=["POST"])
+def api_import_queue_skip_item(queue_id: str):
+    """Skip one queued item so a stuck job doesn't block everything behind it.
+
+    A ``pending`` item is marked ``skipped`` and ``_run_bulk_import_queue``
+    passes over it without ever starting it. A ``processing`` item (the
+    currently stuck one) instead has its underlying job's
+    ``cancel_requested`` flag set — ``_run_smart_import_job``'s watchdog
+    terminates that job's subprocess so the queue moves on to the next item.
+    """
+    data = _json_body_no_token(request.get_json())
+    job_id = (data.get("job_id") or "").strip()
+    if not job_id:
+        return jsonify({"ok": False, "error": "job_id required"}), 400
+    q = import_queues.get(queue_id)
+    if not q:
+        return jsonify({"ok": False, "error": "queue_expired"}), 404
+    it = next((x for x in q["items"] if x.get("job_id") == job_id), None)
+    if not it:
+        return jsonify({"ok": False, "error": "item_not_found"}), 404
+    status = it.get("status", "pending")
+    if status == "pending":
+        it["status"] = "skipped"
+    elif status == "processing":
+        with scanner_lock:
+            if job_id in scanner_jobs:
+                scanner_jobs[job_id]["cancel_requested"] = True
+    return jsonify({"ok": True, "status": it.get("status")})
 
 
 @dev_bp.route("/api/geocode-missing", methods=["POST"])

@@ -64,6 +64,33 @@ launchctl unload ~/Library/LaunchAgents/com.sarraficars.nightly-http-refresh.pli
 rm ~/Library/LaunchAgents/com.sarraficars.nightly-http-refresh.plist   # optional: remove entirely
 ```
 
+## Related nightly jobs (same install/uninstall procedure)
+
+Two more launchd jobs follow this exact pattern -- same `cp` + `launchctl load` /
+`launchctl unload` steps above, substituting the Label and plist filename. Both are
+scheduled AFTER this refresh finishes, so they grade the inventory it just wrote
+rather than yesterday's:
+
+| Time  | Job | Wrapper | Plist |
+|-------|-----|---------|-------|
+| 03:30 | HTTP inventory refresh (this doc) | `nightly_http_refresh.sh` | `com.sarraficars.nightly-http-refresh.plist` |
+| 06:00 | Data-quality invariant suite | `nightly_data_quality_invariants.sh` | `com.sarraficars.nightly-data-quality.plist` |
+| 06:20 | Rooftop-refusal reporting (census + gaps + regression alarm) | `nightly_rooftop_refusals.sh` | `com.sarraficars.nightly-rooftop-refusals.plist` |
+
+```bash
+# install either one:
+cp /Users/asarrafi/Projects/DealershipScanner/deploy/com.sarraficars.nightly-data-quality.plist \
+   ~/Library/LaunchAgents/com.sarraficars.nightly-data-quality.plist
+launchctl load ~/Library/LaunchAgents/com.sarraficars.nightly-data-quality.plist
+
+cp /Users/asarrafi/Projects/DealershipScanner/deploy/com.sarraficars.nightly-rooftop-refusals.plist \
+   ~/Library/LaunchAgents/com.sarraficars.nightly-rooftop-refusals.plist
+launchctl load ~/Library/LaunchAgents/com.sarraficars.nightly-rooftop-refusals.plist
+```
+
+Each wrapper's own header comment documents its exit codes, logs, and report paths
+(`workspace/scanlogs/*.log` plus a per-job report directory under `workspace/`).
+
 ## Optional: route harvesters through an HTTP proxy (Cloudflare-walled dealers)
 
 Some dealers (e.g. `hondaofelcajon.com`, `pacificvolkswagen.com`) sit behind a

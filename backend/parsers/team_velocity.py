@@ -61,6 +61,7 @@ from backend.parsers.base import (
     dedupe_urls_order_prefer_large,
     norm_float,
     norm_int,
+    norm_label_str,
     norm_str,
 )
 from backend.utils.field_clean import clean_car_row_dict, normalize_optional_str
@@ -151,6 +152,12 @@ def _opt_str(v: Any) -> str | None:
     return normalize_optional_str(norm_str(v))
 
 
+def _opt_label_str(v: Any) -> str | None:
+    if v is None:
+        return None
+    return normalize_optional_str(norm_label_str(v))
+
+
 def _price(v: dict) -> float:
     """sellingPrice is the rendered web price; fall back to msrp."""
     for key in ("sellingPrice", "internetPrice", "price"):
@@ -211,8 +218,8 @@ def _map_vehicle(
         "dealer_url": dealer_url or norm_str(v.get("dealerDomain")) or base_url,
         "zip_code": _opt_str(v.get("dealerZip") or v.get("zipCode")),
         "fuel_type": _opt_str(v.get("fuelType") or v.get("fuel_type")),
-        "transmission": _opt_str(v.get("transmission") or v.get("transmissionType")),
-        "drivetrain": _opt_str(v.get("driveTrain") or v.get("drivetrain")),
+        "transmission": _opt_label_str(v.get("transmission") or v.get("transmissionType")),
+        "drivetrain": _opt_label_str(v.get("driveTrain") or v.get("drivetrain")),
         "exterior_color": _opt_str(v.get("exteriorColor") or v.get("exterior_color")) or "",
         "interior_color": _opt_str(v.get("interiorColor") or v.get("interior_color")) or "",
         "body_style": _opt_str(v.get("bodyStyle") or v.get("body_style")) or "",

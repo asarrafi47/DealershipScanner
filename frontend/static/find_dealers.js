@@ -141,16 +141,24 @@
     });
     showPanel(selectedMode());
 
-    function ensureMap(center) {
+    function ensureMap(center, zoom) {
         if (!map) {
             map = L.map(mapEl, { scrollWheelZoom: true }).setView(
                 [center.lat, center.lon],
-                11
+                zoom || 11
             );
-            L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-                maxZoom: 19,
-                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-            }).addTo(map);
+            if (window.DSMapTiles) {
+                DSMapTiles.addSatelliteTiles(map);
+            } else {
+                L.tileLayer(
+                    "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+                    {
+                        maxZoom: 19,
+                        attribution:
+                            "Tiles &copy; Esri &mdash; Source: Esri, Maxar, Earthstar Geographics, and the GIS community",
+                    }
+                ).addTo(map);
+            }
             markerLayer = L.layerGroup().addTo(map);
             const iconBase = window.__DS_LEAFLET_ICON_BASE || "/static/vendor/leaflet/images/";
             L.Icon.Default.prototype.options.iconUrl = iconBase + "marker-icon.png";
@@ -204,6 +212,14 @@
         if (inventoryHref) {
             lines.push('<a href="' + escapeAttr(inventoryHref) + '">View inventory</a>');
         }
+        const popupTel = telHref(d.phone);
+        if (popupTel) {
+            lines.push('<a href="' + escapeAttr(popupTel) + '">' + escapeHtml(d.phone) + "</a>");
+        }
+        const popupDirections = directionsHref(d);
+        if (popupDirections) {
+            lines.push('<a href="' + escapeAttr(popupDirections) + '" target="_blank" rel="noopener noreferrer">Directions</a>');
+        }
         const adminBtn = adminScrapeButtonHtml(d);
         if (adminBtn) lines.push(adminBtn);
         return lines.join("<br>");
@@ -223,6 +239,31 @@
         const u = String(url || "").trim();
         if (/^https?:\/\//i.test(u)) return u;
         return "";
+    }
+
+    // tel: links accept a fairly loose format; strip everything but digits and
+    // a leading "+" so odd source formatting ("(555) 123-4567 x2") still dials.
+    function telHref(phone) {
+        const raw = String(phone || "").trim();
+        if (!raw) return "";
+        const digits = raw.replace(/[^\d+]/g, "");
+        const digitCount = (digits.match(/\d/g) || []).length;
+        if (digitCount < 7 || digitCount > 15) return "";
+        return "tel:" + digits;
+    }
+
+    // Google Maps directions, centered on the dealer's coordinates when known
+    // (exact pin) and falling back to the postal address otherwise.
+    function directionsHref(d) {
+        const params = new URLSearchParams({ api: "1" });
+        if (d.latitude != null && d.longitude != null) {
+            params.set("destination", d.latitude + "," + d.longitude);
+        } else {
+            const addr = formatAddress(d);
+            if (!addr) return "";
+            params.set("destination", (d.name ? d.name + ", " : "") + addr);
+        }
+        return "https://www.google.com/maps/dir/?" + params.toString();
     }
 
     /**
@@ -356,6 +397,14 @@
         const web = webHref
             ? '<a class="find-dealers-list-link" href="' + escapeAttr(webHref) + '" target="_blank" rel="noopener noreferrer">Website</a>'
             : "";
+        const listTel = telHref(d.phone);
+        const phoneLink = listTel
+            ? '<a class="find-dealers-list-link" href="' + escapeAttr(listTel) + '">' + escapeHtml(d.phone) + "</a>"
+            : "";
+        const listDirections = directionsHref(d);
+        const directionsLink = listDirections
+            ? '<a class="find-dealers-list-link" href="' + escapeAttr(listDirections) + '" target="_blank" rel="noopener noreferrer">Directions</a>'
+            : "";
         const adminBtn = canRequestScrape(d)
             ? '<button type="button" class="find-dealers-admin-btn primary-button find-dealers-admin-btn--inline" data-dealer-key="' +
               escapeAttr(d.key) +
@@ -368,7 +417,7 @@
             badge +
             "</div>" +
             '<p class="find-dealers-list-item__addr">' + escapeHtml(formatAddress(d) || "Address unavailable") + "</p>" +
-            '<p class="find-dealers-list-item__meta">' + escapeHtml(dist) + (stock ? " · " + stock : "") + (scrapeMeta ? " · " + scrapeMeta : "") + (web ? " · " + web : "") + "</p>" +
+            '<p class="find-dealers-list-item__meta">' + escapeHtml(dist) + (stock ? " · " + stock : "") + (scrapeMeta ? " · " + scrapeMeta : "") + (web ? " · " + web : "") + (phoneLink ? " · " + phoneLink : "") + (directionsLink ? " · " + directionsLink : "") + "</p>" +
             (adminBtn ? '<p class="find-dealers-list-item__admin">' + adminBtn + "</p>" : "") +
             "</li>"
         );
@@ -418,14 +467,14 @@
         });
     }
 
-    async function runSearch() {
+    async function runSearch(presetCoords) {
         const mode = selectedMode();
         setStatus("Searching…");
         submitBtn.disabled = true;
         try {
             let params = buildQueryParams(mode);
             if (mode === "geo") {
-                const coords = await getGeolocation();
+                const coords = presetCoords || (await getGeolocation());
                 params = new URLSearchParams({
                     lat: String(coords.lat),
                     lon: String(coords.lon),
@@ -497,4 +546,79 @@
         e.preventDefault();
         runSearch();
     });
+
+    /**
+     * Before any search, the map shell shows a striped "nothing here yet"
+     * placeholder. Replace it with a live basemap on load so the page never
+     * reads as broken — centered on the visitor's location when the browser
+     * already has (or quickly grants) permission, otherwise a wide US view.
+     * This is a plain preview: no markers, no dealer fetch. If permission
+     * is (or becomes) granted, runSearch() takes over and replaces the
+     * preview with real results — see initLocationPreview below.
+     */
+    function showLocationPreview(center, zoom) {
+        if (map) return;
+        ensureMap(center, zoom);
+        if (mapPlaceholderEl) mapPlaceholderEl.hidden = true;
+        window.requestAnimationFrame(() => {
+            if (map) map.invalidateSize();
+        });
+    }
+
+    /**
+     * Listings' empty-results state links here as
+     * "View dealers on map near [ZIP]" (?zip=&radius=) — land already
+     * searched instead of dropping the visitor on a blank form.
+     */
+    function prefillFromUrlAndMaybeSearch() {
+        const params = new URLSearchParams(window.location.search);
+        const zip = (params.get("zip") || params.get("zip_code") || "").trim();
+        if (!zip) return false;
+        const zipRadio = form.querySelector('input[name="loc_mode"][value="zip"]');
+        if (zipRadio) zipRadio.checked = true;
+        showPanel("zip");
+        const zipInput = document.getElementById("find-dealers-zip");
+        if (zipInput) zipInput.value = zip;
+        const radiusSel = document.getElementById("find-dealers-radius");
+        const radiusParam = (params.get("radius") || "").trim();
+        if (radiusSel && /^\d+$/.test(radiusParam)) {
+            const opt = radiusSel.querySelector('option[value="' + radiusParam + '"]');
+            if (opt) radiusSel.value = radiusParam;
+        }
+        runSearch();
+        return true;
+    }
+
+    const _prefilledFromUrl = prefillFromUrlAndMaybeSearch();
+
+    (function initLocationPreview() {
+        if (_prefilledFromUrl) return;
+        const US_CENTER = { lat: 39.8283, lon: -98.5795 };
+        if (!navigator.geolocation) {
+            showLocationPreview(US_CENTER, 4);
+            return;
+        }
+        let fallbackShown = false;
+        const fallbackTimer = setTimeout(() => {
+            fallbackShown = true;
+            showLocationPreview(US_CENTER, 4);
+        }, 2500);
+        navigator.geolocation.getCurrentPosition(
+            (pos) => {
+                // Fires as soon as permission is granted — instantly if
+                // already granted from a prior visit, or whenever the user
+                // answers the prompt (which can arrive well after the
+                // fallback above already put a preview on screen). Either
+                // way, run the real search so dealers show automatically.
+                clearTimeout(fallbackTimer);
+                runSearch({ lat: pos.coords.latitude, lon: pos.coords.longitude });
+            },
+            () => {
+                if (fallbackShown) return;
+                clearTimeout(fallbackTimer);
+                showLocationPreview(US_CENTER, 4);
+            },
+            { enableHighAccuracy: false, timeout: 30000, maximumAge: 300000 }
+        );
+    })();
 })();

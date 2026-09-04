@@ -172,6 +172,7 @@ def test_find_nearby_merges_db_and_google(monkeypatch) -> None:
         longitude = -80.6
         dealer_website_url = "https://google-only.example"
         website_url = "https://google-only.example"
+        phone = ""
 
     monkeypatch.setattr("backend.db.geo.zip_to_coords", lambda _z: (35.15, -80.65))
     monkeypatch.setattr(
@@ -279,6 +280,7 @@ def test_find_nearby_counts_scraped_google_dealer(monkeypatch) -> None:
         longitude = -85.3
         dealer_website_url = "https://www.mtnviewford.com"
         website_url = "https://www.mtnviewford.com"
+        phone = ""
 
     monkeypatch.setattr("backend.db.geo.zip_to_coords", lambda _z: (35.15, -85.3))
     monkeypatch.setattr(

@@ -75,6 +75,60 @@ def log_vehicles(
         })
 
 
+def read_scan_log(
+    path: Path,
+    *,
+    dealer_id: str | None = None,
+    vin: str | None = None,
+    record_type: str | None = None,
+) -> list[dict[str, Any]]:
+    """
+    Read a scan JSONL log back, optionally filtered.
+
+    ``record_type`` filters to one line type ("vehicle", "dealer_summary",
+    "scan_start"); ``dealer_id`` / ``vin`` filter on those fields when present
+    on a record. Malformed lines are skipped. Returns [] if ``path`` doesn't exist.
+    """
+    p = Path(path)
+    if not p.is_file():
+        return []
+    rows: list[dict[str, Any]] = []
+    with p.open("r", encoding="utf-8") as fh:
+        for line in fh:
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                rec = json.loads(line)
+            except (json.JSONDecodeError, ValueError):
+                continue
+            if not isinstance(rec, dict):
+                continue
+            if record_type and rec.get("type") != record_type:
+                continue
+            if dealer_id and str(rec.get("dealer_id") or "") != str(dealer_id):
+                continue
+            if vin and str(rec.get("vin") or "") != str(vin):
+                continue
+            rows.append(rec)
+    return rows
+
+
+def failed_dealer_ids(path: Path) -> list[str]:
+    """
+    dealer_id values whose ``dealer_summary`` line carried an error, in the
+    order they appear in the log. Used to build a retry list for a prior run.
+    """
+    seen: dict[str, None] = {}
+    for rec in read_scan_log(path, record_type="dealer_summary"):
+        if not rec.get("error"):
+            continue
+        did = str(rec.get("dealer_id") or "").strip()
+        if did:
+            seen[did] = None
+    return list(seen.keys())
+
+
 def log_dealer_summary(result: dict[str, Any], provider: str) -> None:
     if _log_file is None:
         return

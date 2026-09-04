@@ -190,6 +190,10 @@ def _map_typesense_document(
         v = doc.get(key)
         if v is None:
             return None
+        if isinstance(v, dict):
+            v = v.get("label") or v.get("name") or v.get("value") or v.get("text")
+            if v is None:
+                return None
         s = str(v).strip()
         return s if s and s.lower() not in ("n/a", "na", "null", "none") else None
 

@@ -17,6 +17,7 @@ from backend.billing.catalog import (
     FEATURE_MARKET_INTEL,
     FEATURE_NEARBY_DEALERS,
     FEATURE_PACKAGES_ENSURE,
+    FEATURE_SAVED_SEARCHES,
     FEATURE_VEHICLE_HISTORY,
     FEATURE_WINDOW_STICKER,
     LEGACY_PREMIUM_PLAN_ID,
@@ -110,6 +111,7 @@ FEATURE_LABELS: dict[str, str] = {
     FEATURE_MARKET_INTEL: "Market intelligence",
     FEATURE_NEARBY_DEALERS: "Nearby dealers",
     FEATURE_PACKAGES_ENSURE: "Package details",
+    FEATURE_SAVED_SEARCHES: "Saved searches",
 }
 
 

@@ -59,7 +59,7 @@
             <div class="find-dealers-form__body">
                 <div class="find-dealers-fields">
                     <div id="find-dealers-panel-geo" class="find-dealers-panel find-dealers-panel--geo">
-                        <p class="find-dealers-hint">We only read your browser location when you search. Deny permission and use ZIP or city instead.</p>
+                        <p class="find-dealers-hint">We use your approximate location to center the map preview. Deny permission (or use ZIP or city instead) and we won't ask again until you search.</p>
                     </div>
                     <div id="find-dealers-panel-zip" class="find-dealers-panel" hidden>
                         <label class="find-dealers-label" for="find-dealers-zip">ZIP code</label>
@@ -135,6 +135,7 @@
     window.__DS_LEAFLET_ICON_BASE = "{{ url_for('static', filename='vendor/leaflet/images/') }}";
 </script>
 <script src="{{ url_for('static', filename='vendor/leaflet/leaflet.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>
+<script src="{{ url_for('static', filename='map_tiles.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>
 <script src="{{ url_for('static', filename='find_dealers.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>
 {% include "_footer_version.html" %}
 </body>

@@ -768,7 +768,16 @@ def merge_verified_specs(
         if not trans_raw and vpic.get("transmission"):
             trans_raw = vpic["transmission"]
         if not trans_raw and dict_specs and dict_specs.get("transmission"):
-            trans_raw = str(dict_specs["transmission"]).strip()
+            _dict_trans = str(dict_specs["transmission"]).strip()
+            # model_specs is one row per make+model with no year column -- it reflects
+            # whichever generation was scraped/seeded, so a specific gear count (e.g.
+            # "10-Speed Automatic") is only safe for that one generation and actively
+            # wrong for the rest of a multi-generation nameplate's history (confirmed:
+            # 2000-2016 F-150s inherited the 2017+ 10-speed spec this way). A generic
+            # value ("Automatic", "CVT") is far less likely to have changed and is safe
+            # to keep; a gear-count-specific one is suppressed rather than guessed.
+            if not _transmission_has_gear_detail(_dict_trans):
+                trans_raw = _dict_trans
     trans_ver = format_transmission_display(trans_raw) or trans_raw
 
     # Trim decoder often knows "8-Speed Automatic" while EPA row is generic "Automatic".

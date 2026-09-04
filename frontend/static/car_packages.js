@@ -408,69 +408,74 @@
         analyzedEl.hidden = false;
     }
 
-    function renderListingPackagesSections(sections) {
-        if (!panel || !sections || !sections.length) {
-            return;
-        }
-        const listingSections = sections.filter(function (pkg) {
-            return pkg && pkg.name && !pkg.from_vision;
+    // Mirrors the fallback branch of _photo_dedup_key() in
+    // backend/enrichment/generated_spec_sheet.py (parenthetical spans dropped,
+    // then lowercased/alnum-collapsed). The server-rendered rows carry the
+    // real key (which prefers the package registry's fuller normalization) in
+    // data-dedup-key; this approximation is only used to decide whether an
+    // item arriving later, from the async packages/ensure poll, is already on
+    // the page — an occasional near-miss just means a rare duplicate slips
+    // through, never a wrongly-hidden real item.
+    function unifiedDedupKey(name) {
+        const base = String(name || "").replace(/\([^)]*\)/g, " ");
+        return base
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, " ")
+            .trim();
+    }
+
+    function ensureUnifiedListContainer() {
+        if (!panel) return null;
+        let list = document.getElementById("car-options-unified-list");
+        if (list) return list;
+        const heading = document.createElement("h3");
+        heading.className = "listing-packages-sub-heading";
+        heading.textContent = "Equipment on this listing";
+        list = document.createElement("div");
+        list.id = "car-options-unified-list";
+        list.className =
+            "listing-package-inline-list listing-package-inline-list--priced car-window-sticker-opt-list";
+        panel.appendChild(heading);
+        panel.appendChild(list);
+        return list;
+    }
+
+    function unifiedListKeys(list) {
+        const keys = new Set();
+        list.querySelectorAll("[data-dedup-key]").forEach(function (row) {
+            keys.add(row.getAttribute("data-dedup-key"));
         });
-        if (!listingSections.length) {
-            return;
-        }
-        let heading = panel.querySelector(".listing-packages-sub-heading--listing");
-        let host = panel.querySelector(".listing-packages-listing-host");
-        if (!host) {
-            heading = document.createElement("h3");
-            heading.className =
-                "listing-packages-sub-heading listing-packages-sub-heading--listing";
-            heading.textContent = "Packages from listing";
-            host = document.createElement("div");
-            host.className = "listing-packages-listing-host";
-            panel.appendChild(heading);
-            panel.appendChild(host);
-        }
-        host.innerHTML = "";
-        listingSections.forEach(function (pkg) {
-            if (!pkg || !pkg.name) {
-                return;
-            }
-            const feats = pkg.features || [];
-            const evidence = pkg.evidence || [];
-            if (feats.length || evidence.length) {
-                const details = document.createElement("details");
-                details.className = "listing-package-disclosure";
-                const summary = document.createElement("summary");
-                summary.className = "listing-package-summary";
-                summary.textContent = pkg.name;
-                details.appendChild(summary);
-                if (feats.length) {
-                    const list = document.createElement("ul");
-                    list.className = "listing-package-inline-list listing-package-features";
-                    feats.forEach(function (f) {
-                        const li = document.createElement("li");
-                        li.textContent = f;
-                        list.appendChild(li);
-                    });
-                    details.appendChild(list);
-                } else if (evidence.length) {
-                    const list = document.createElement("ul");
-                    list.className = "listing-package-inline-list listing-package-evidence";
-                    evidence.forEach(function (f) {
-                        const li = document.createElement("li");
-                        li.textContent = f;
-                        list.appendChild(li);
-                    });
-                    details.appendChild(list);
-                }
-                host.appendChild(details);
-            } else {
-                const p = document.createElement("p");
-                p.className = "listing-package-plain";
-                p.textContent = pkg.name;
-                host.appendChild(p);
-            }
-        });
+        return keys;
+    }
+
+    // Appends one row to the unified Options-tab list, skipping it when a row
+    // with the same (approximate) dedup key is already there — this is what
+    // keeps a live-fetched sticker/listing update from re-introducing the
+    // duplicate lists the unified render exists to remove.
+    function addUnifiedItem(seenKeys, name, price, badgeLabel, badgeClass) {
+        const cleanName = String(name || "").trim();
+        if (!cleanName) return;
+        const key = unifiedDedupKey(cleanName);
+        if (!key || seenKeys.has(key)) return;
+        seenKeys.add(key);
+        const list = ensureUnifiedListContainer();
+        if (!list) return;
+        const priceHtml = formatOptionPrice(price);
+        const row = document.createElement("div");
+        row.className = "car-sticker-opt-row";
+        row.setAttribute("data-dedup-key", key);
+        row.innerHTML =
+            '<span class="car-sticker-opt-name">' +
+            esc(cleanName) +
+            ' <span class="build-sheet-src ' +
+            badgeClass +
+            '" title="' +
+            esc(badgeLabel) +
+            '">' +
+            esc(badgeLabel) +
+            "</span></span>" +
+            (priceHtml ? '<span class="car-sticker-opt-price">' + esc(priceHtml) + "</span>" : "");
+        list.appendChild(row);
     }
 
     function updatePackagesPanel(data) {
@@ -479,79 +484,57 @@
             data.listing_photo_detected_equipment ||
             [].concat(data.listing_observed_features || [], data.listing_possible_packages || []);
         const opts = data.listing_sticker_options || [];
+        const groups = data.listing_sticker_option_groups || [];
         const sections = data.listing_packages_sections || [];
-        if (!data.packages_panel_has_content && !photoItems.length && !opts.length && !sections.length) {
+        if (!data.packages_panel_has_content && !photoItems.length && !opts.length && !groups.length && !sections.length) {
             return;
         }
         panel.hidden = false;
+        const list = ensureUnifiedListContainer();
+        if (!list) return;
+        const seenKeys = unifiedListKeys(list);
 
-        renderListingPackagesSections(sections);
-
-        if (photoItems.length) {
-            let heading = panel.querySelector(".listing-packages-sub-heading--photos");
-            let list = panel.querySelector(".listing-package-inline-list--photos");
-            if (!heading) {
-                heading = document.createElement("h3");
-                heading.className =
-                    "listing-packages-sub-heading listing-packages-sub-heading--photos";
-                heading.textContent = "Visible in photos (estimated)";
-                list = document.createElement("ul");
-                list.className = "listing-package-inline-list listing-package-inline-list--photos";
-                panel.appendChild(heading);
-                panel.appendChild(list);
+        // Same source priority as build_unified_options_list(): a real
+        // parsed window sticker (only when the dedicated sticker embed is
+        // NOT showing it already) outranks the listing's own package text,
+        // which outranks a photo-analysis guess.
+        if (!showStickerUi) {
+            if (groups.length) {
+                groups.forEach(function (entry) {
+                    if (!entry || !entry.name) return;
+                    addUnifiedItem(seenKeys, entry.name, entry.price, "Window sticker", "build-sheet-src--sticker");
+                    (entry.features || []).forEach(function (feat) {
+                        if (feat && feat.name) {
+                            addUnifiedItem(seenKeys, feat.name, null, "Window sticker", "build-sheet-src--sticker");
+                        }
+                    });
+                });
+            } else {
+                opts.forEach(function (opt) {
+                    const name = opt && typeof opt === "object" ? opt.name || opt.label : opt;
+                    const price = opt && typeof opt === "object" ? opt.price : null;
+                    addUnifiedItem(seenKeys, name, price, "Window sticker", "build-sheet-src--sticker");
+                });
             }
-            list.innerHTML = "";
-            photoItems.forEach(function (name) {
-                const li = document.createElement("li");
-                li.textContent = name;
-                list.appendChild(li);
-            });
         }
 
-        if (showStickerUi) {
-            const staleHeading = panel.querySelector(".listing-packages-sub-heading--sticker");
-            const staleList = panel.querySelector(".listing-package-inline-list--sticker");
-            if (staleHeading) staleHeading.remove();
-            if (staleList) staleList.remove();
-            panel.querySelectorAll(".listing-packages-sub-heading").forEach(function (heading) {
-                const label = (heading.textContent || "").trim().toLowerCase();
-                if (label === "factory options" || label === "standard equipment") {
-                    const next = heading.nextElementSibling;
-                    heading.remove();
-                    if (
-                        next &&
-                        (next.classList.contains("listing-package-inline-list") ||
-                            next.tagName === "UL")
-                    ) {
-                        next.remove();
-                    }
-                }
+        sections
+            .filter(function (pkg) {
+                return pkg && pkg.name && !pkg.from_vision;
+            })
+            .forEach(function (pkg) {
+                addUnifiedItem(seenKeys, pkg.name, null, "Listing description", "build-sheet-src--listing");
+                (pkg.features || []).forEach(function (f) {
+                    addUnifiedItem(seenKeys, f, null, "Listing description", "build-sheet-src--listing");
+                });
+                (pkg.evidence || []).forEach(function (f) {
+                    addUnifiedItem(seenKeys, f, null, "Listing description", "build-sheet-src--listing");
+                });
             });
-            return;
-        }
 
-        if (!opts.length && !(data.listing_sticker_option_groups || []).length) return;
-        const groups = data.listing_sticker_option_groups || [];
-        let stickerHeading = panel.querySelector(".listing-packages-sub-heading--sticker");
-        let list = panel.querySelector(".listing-package-inline-list--sticker");
-        if (!list) {
-            stickerHeading = document.createElement("h3");
-            stickerHeading.className = "listing-packages-sub-heading listing-packages-sub-heading--sticker";
-            stickerHeading.textContent = "Window sticker options";
-            list = document.createElement("div");
-            list.className =
-                "listing-package-inline-list listing-package-inline-list--sticker listing-package-inline-list--priced car-window-sticker-opt-list";
-            panel.insertBefore(stickerHeading, panel.firstChild);
-            panel.insertBefore(list, stickerHeading.nextSibling);
-        }
-        list.innerHTML = groups.length
-            ? renderStickerOptionGroupsHtml(groups)
-            : "";
-        if (!groups.length) {
-            opts.forEach(function (opt) {
-                list.insertAdjacentHTML("beforeend", renderOptionRow(opt));
-            });
-        }
+        photoItems.forEach(function (name) {
+            addUnifiedItem(seenKeys, name, null, "Photo analysis", "build-sheet-src--photo-analysis");
+        });
     }
 
     function finish(data, httpOk) {
@@ -688,6 +671,10 @@
 
     if (showStickerUi && stickerLoading) {
         stickerLoading.hidden = false;
+        // The server renders the "not loaded yet" fallback visible by default (it doesn't
+        // know yet whether ensure() will find one), so hide it while we're actively
+        // fetching -- otherwise both messages show stacked at once.
+        if (stickerUnavailable) stickerUnavailable.hidden = true;
     }
 
     // The server bounds /packages/ensure with a wall-clock budget so a slow OEM fetch

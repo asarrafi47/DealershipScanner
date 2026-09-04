@@ -824,6 +824,7 @@ async def run_dealer(
             scan_log.log_vehicles(dealer_id, name, result.get("provider", provider), all_vehicles)
             if all_vehicles:
                 _cov = compute_dealer_coverage(list(all_vehicles), dealer_id=dealer_id)
+                result["coverage"] = _cov
                 logger.info("%s", format_coverage_log(_cov))
                 # Quality loop: when key fields are still thin after every
                 # scan-time layer, go back per-car via the gap-fill methods.

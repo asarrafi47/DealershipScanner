@@ -59,6 +59,11 @@ from backend.db.repositories.saved_cars_repo import (
     save_car,
     unsave_car,
 )
+from backend.db.repositories.saved_searches_repo import (
+    create_saved_search,
+    delete_saved_search,
+    list_saved_searches,
+)
 from backend.db.repositories.search_repo import (
     MAKE_TO_COUNTRY,
     _EQUIPMENT_SEARCH_COLUMNS,
@@ -78,6 +83,9 @@ from backend.db.repositories.dealers_repo import (
     link_cars_to_dealership_registry,
     list_scan_runs,
     record_scan_outcomes,
+)
+from backend.db.repositories.attribution_repo import (
+    dealer_attribution_resolution,
 )
 from backend.db.repositories.data_quality_repo import (
     _IncompleteIndexSnapshot,

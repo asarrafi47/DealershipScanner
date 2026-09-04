@@ -17,16 +17,35 @@
     function stepHasContent(step) {
         const specs = Array.isArray(step.specs) ? step.specs : [];
         const adds = Array.isArray(step.adds) ? step.adds : [];
-        return specs.length > 0 || adds.length > 0;
+        const stickerAdds = Array.isArray(step.sticker_adds) ? step.sticker_adds : [];
+        const stickerEquipment = Array.isArray(step.sticker_equipment) ? step.sticker_equipment : [];
+        return specs.length > 0 || adds.length > 0 || stickerAdds.length > 0 || stickerEquipment.length > 0;
     }
 
+    // Mirrors the SSR fallback chain in car.html: adds -> sticker_adds -> sticker_equipment -> specs.
     function renderPanelHtml(step, index) {
-        const specs = Array.isArray(step.specs) ? step.specs : [];
         const adds = Array.isArray(step.adds) ? step.adds : [];
-        const bullets = [];
+        const stickerAdds = Array.isArray(step.sticker_adds) ? step.sticker_adds : [];
+        const stickerEquipment = Array.isArray(step.sticker_equipment) ? step.sticker_equipment : [];
+        const specs = Array.isArray(step.specs) ? step.specs : [];
+
+        let label = "";
+        let bullets = [];
+        let note = "";
+
         if (adds.length) {
-            bullets.push.apply(bullets, adds);
+            label = "What this trim adds";
+            bullets = adds;
+        } else if (stickerAdds.length) {
+            label = "What this trim adds";
+            bullets = stickerAdds;
+            note = step.sticker_adds_note || "";
+        } else if (stickerEquipment.length) {
+            label = "Confirmed equipment on this trim";
+            bullets = stickerEquipment;
+            note = step.sticker_equipment_note || "";
         } else if (specs.length) {
+            label = "What this trim adds";
             specs.forEach(function (row) {
                 String(row.value || "")
                     .split(";")
@@ -39,6 +58,7 @@
                     });
             });
         }
+
         const body = bullets.length
             ? '<ul class="car-trim-ladder__adds">' +
               bullets
@@ -48,13 +68,17 @@
                   .join("") +
               "</ul>"
             : "";
+        const noteHtml = bullets.length && note
+            ? '<p class="car-trim-ladder__provenance">' + escapeHtml(note) + "</p>"
+            : "";
 
         return (
             '<div class="car-trim-ladder__panel" id="car-trim-ladder-panel-' +
             index +
             '">' +
-            (bullets.length ? '<p class="car-trim-ladder__panel-label">What this trim adds</p>' : "") +
+            (bullets.length ? '<p class="car-trim-ladder__panel-label">' + escapeHtml(label) + "</p>" : "") +
             body +
+            noteHtml +
             "</div>"
         );
     }

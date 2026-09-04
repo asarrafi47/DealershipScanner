@@ -86,7 +86,14 @@
                     {% if v.gallery and v.gallery|length > 0 %}
                     <div class="dealer-inv-thumb-row">
                         {% for u in v.gallery %}
-                        <div class="dealer-inv-thumb" style="background-image:url('{{ u | e }}')"></div>
+                        <div class="dealer-inv-thumb-wrap">
+                            <div class="dealer-inv-thumb" style="background-image:url('{{ u | e }}')"></div>
+                            <form method="POST" action="{{ url_for('dealer_portal.inventory_delete_photo', vehicle_id=v.id) }}" class="dealer-inv-thumb-delete-form" onsubmit="return confirm('Remove this photo?');">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                                <input type="hidden" name="url" value="{{ u }}">
+                                <button type="submit" class="dealer-inv-thumb-delete-btn" aria-label="Delete photo" title="Delete photo">&times;</button>
+                            </form>
+                        </div>
                         {% endfor %}
                     </div>
                     {% endif %}

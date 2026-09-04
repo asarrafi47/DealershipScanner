@@ -1,0 +1,97 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}Attribution{% endblock %}
+{% block content %}
+<div class="dev-page">
+    <header class="dev-hero">
+        <p class="db-eyebrow">Site administration</p>
+        <h1 class="dev-title">Rooftop attribution resolution</h1>
+        <p class="dev-sub">
+            Per group-fed dealer: how many active cars' photographs confirm the filed
+            store, name a different rooftop, or carry no evidence at all — read from
+            <code>car_attribution</code> / <code>dealer_feed_scope</code>, written by
+            <code>backend/scripts/classify_attribution.py</code>. Nothing here is moved
+            or deleted; re-attribution is a separate, reversible step
+            (<code>apply_attribution_moves.py</code>).
+        </p>
+    </header>
+
+    <section class="db-section dev-section">
+        <div class="db-section-header">
+            <p class="db-eyebrow">Group-fed dealers</p>
+            <h2 class="db-section-title">
+                Resolution status
+                <span class="dev-incomplete-count">{{ rows|length }}</span>
+            </h2>
+        </div>
+        <p class="dev-hint">
+            <strong>Stuck</strong> = cars this system currently cannot vouch for the
+            location of (a photograph names a different rooftop, or no photograph exists
+            at all on a feed known to serve a whole group) <em>and</em> that have not
+            already been resolved by a logged re-attribution move. Sort any column by
+            clicking its header; default is worst-first by stuck count.
+        </p>
+
+        {% if not rows %}
+        <div class="dev-incomplete-empty">
+            <p>
+                No group-fed dealer has a judged car yet. Run
+                <code>python -m backend.scripts.classify_attribution</code> to populate
+                <code>car_attribution</code> / <code>dealer_feed_scope</code>.
+            </p>
+        </div>
+        {% else %}
+        <div class="dev-table-wrap">
+            <table class="dev-table">
+                <thead>
+                    <tr>
+                        <th><a href="{{ sort_url('dealer_name') }}" class="dev-table-link">Dealer{% if sort == 'dealer_name' %} {{ '▾' if descending else '▴' }}{% endif %}</a></th>
+                        <th><a href="{{ sort_url('active_cars') }}" class="dev-table-link">Active cars{% if sort == 'active_cars' %} {{ '▾' if descending else '▴' }}{% endif %}</a></th>
+                        <th><a href="{{ sort_url('confirmed') }}" class="dev-table-link">Confirmed{% if sort == 'confirmed' %} {{ '▾' if descending else '▴' }}{% endif %}</a></th>
+                        <th><a href="{{ sort_url('conflicting') }}" class="dev-table-link">Conflicting{% if sort == 'conflicting' %} {{ '▾' if descending else '▴' }}{% endif %}</a></th>
+                        <th><a href="{{ sort_url('unverified') }}" class="dev-table-link">Unverified{% if sort == 'unverified' %} {{ '▾' if descending else '▴' }}{% endif %}</a></th>
+                        <th><a href="{{ sort_url('stuck') }}" class="dev-table-link">Stuck{% if sort == 'stuck' %} {{ '▾' if descending else '▴' }}{% endif %}</a></th>
+                        <th>Why</th>
+                        <th><a href="{{ sort_url('resolved_by_move') }}" class="dev-table-link">Resolved by move{% if sort == 'resolved_by_move' %} {{ '▾' if descending else '▴' }}{% endif %}</a></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for r in rows %}
+                    <tr>
+                        <td>
+                            <a href="{{ url_for('listings', dealer=r.dealer_id) }}" target="_blank" class="dev-table-link">
+                                {{ r.dealer_name }}
+                            </a>
+                            <div class="dq-check-detects">{{ r.dealer_id }}</div>
+                        </td>
+                        <td class="dev-mono">{{ r.active_cars }}</td>
+                        <td class="dev-mono">{{ r.confirmed }}</td>
+                        <td class="dev-mono">{{ r.conflicting }}</td>
+                        <td class="dev-mono">{{ r.unverified }}</td>
+                        <td class="dev-mono">
+                            <span class="dq-badge {{ 'dq-badge--regression' if r.stuck else 'dq-badge--ok' }}">
+                                {{ r.stuck }}
+                            </span>
+                        </td>
+                        <td class="dq-check-detects">{{ r.stuck_why }}</td>
+                        <td class="dev-mono">{{ r.resolved_by_move }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td><strong>Total</strong></td>
+                        <td></td>
+                        <td class="dev-mono">{{ totals.confirmed }}</td>
+                        <td class="dev-mono">{{ totals.conflicting }}</td>
+                        <td class="dev-mono">{{ totals.unverified }}</td>
+                        <td class="dev-mono">{{ totals.stuck }}</td>
+                        <td></td>
+                        <td class="dev-mono">{{ totals.resolved_by_move }}</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        {% endif %}
+    </section>
+</div>
+{% endblock %}

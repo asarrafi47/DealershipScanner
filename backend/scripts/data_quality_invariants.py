@@ -59,7 +59,8 @@ USAGE
     python -m backend.scripts.data_quality_invariants                 # full run
     python -m backend.scripts.data_quality_invariants --sql-only      # CI gate, seconds
     python -m backend.scripts.data_quality_invariants --json out.json
-    python -m backend.scripts.data_quality_invariants --write-baseline
+    python -m backend.scripts.data_quality_invariants --write-baseline \
+        --note "human fixed the 71 bad cylinder rows" --approver "asarrafi"
 
 EXIT CODES
 ----------
@@ -87,6 +88,11 @@ if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 DEFAULT_BASELINE_PATH = Path(__file__).with_name("data_quality_invariants_baseline.json")
+#: Append-only history of every baseline rewrite: one JSON line per --write-baseline
+#: run, carrying who approved it, why, and what changed. The baseline file itself is
+#: overwritten each time (it is the current state); this is the audit trail that
+#: overwrite destroys otherwise.
+DEFAULT_BASELINE_HISTORY_PATH = Path(__file__).with_name("data_quality_invariants_baseline_history.jsonl")
 DICTIONARY_DIR = REPO_ROOT / "backend" / "dictionary"
 
 #: Fields on the serialized car dict that a shopper reads as a specification.
@@ -1122,7 +1128,13 @@ def compare(results: list[InvariantResult], baseline: dict[str, dict[str, Any]],
         elif base is None:
             status = "NO_BASELINE"
         elif r.count > base + slack:
-            status = "REGRESSION"
+            # A regression off a ZERO baseline is not "the existing backlog grew" --
+            # it is a defect class that did not exist yesterday and exists today.
+            # Routine backlog growth (base > 0) and a brand-new defect class (base
+            # == 0) must not render as the same severity: the first is a number to
+            # watch, the second is a new mechanism that just started writing bad
+            # data and needs a human today, not at the next backlog review.
+            status = "NEW_DEFECT_CLASS" if base == 0 else "REGRESSION"
         elif r.count < base:
             status = "IMPROVED"
         else:
@@ -1137,13 +1149,20 @@ def compare(results: list[InvariantResult], baseline: dict[str, dict[str, Any]],
     return verdicts
 
 
-_FAIL_STATUSES = {"REGRESSION", "NO_BASELINE", "ERROR"}
+_FAIL_STATUSES = {"REGRESSION", "NEW_DEFECT_CLASS", "NO_BASELINE", "ERROR"}
 
 
-def print_summary(verdicts: list[dict[str, Any]], *, elapsed: float, rendered: bool) -> None:
+def print_summary(verdicts: list[dict[str, Any]], *, elapsed: float, rendered: bool,
+                   sample_mode: bool = False) -> None:
     width = max((len(v["id"]) for v in verdicts), default=20)
     print("\nDATA-QUALITY INVARIANTS")
     print("=" * (width + 46))
+    if sample_mode:
+        print(
+            "\n*** PARTIAL COVERAGE (--render-cohorts) *** rendered-tier counts are a "
+            "SAMPLE, not comparable to the full-run baseline. Treat REGRESSION/OK below "
+            "on rendered checks as a smoke signal only."
+        )
     for tier in ("stored", "rendered"):
         rows = [v for v in verdicts if v["tier"] == tier]
         if not rows:
@@ -1154,8 +1173,11 @@ def print_summary(verdicts: list[dict[str, Any]], *, elapsed: float, rendered: b
             delta = "" if v["delta"] is None else f" ({v['delta']:+d})"
             denom = f" / {v['denominator']}" if v["denominator"] else ""
             mark = {"OK": "ok  ", "IMPROVED": "down", "REGRESSION": "WORSE",
-                    "NO_BASELINE": "NEW ", "ERROR": "ERR "}[v["status"]]
+                    "NEW_DEFECT_CLASS": "NEW!!", "NO_BASELINE": "NEW ", "ERROR": "ERR "}[v["status"]]
             print(f"  {mark} {v['id']:<{width}}  {v['count']}{denom:<12}  base={base}{delta}")
+            if v["status"] == "NEW_DEFECT_CLASS":
+                print("        NEW DEFECT CLASS: baseline was 0 -- this mechanism did not "
+                      "exist yesterday.")
             if v["status"] in _FAIL_STATUSES:
                 print(f"        detects: {v['detects']}")
                 if v["error"]:
@@ -1163,31 +1185,69 @@ def print_summary(verdicts: list[dict[str, Any]], *, elapsed: float, rendered: b
                 for ex in v["examples"][:3]:
                     print(f"        e.g.     {json.dumps(ex, default=str)[:170]}")
     failing = [v for v in verdicts if v["status"] in _FAIL_STATUSES]
+    new_classes = [v for v in verdicts if v["status"] == "NEW_DEFECT_CLASS"]
     print("\n" + "-" * (width + 46))
-    print(f"{len(verdicts)} invariants, {len(failing)} failing, {elapsed:.1f}s"
+    print(f"{len(verdicts)} invariants, {len(failing)} failing"
+          f"{f' ({len(new_classes)} NEW DEFECT CLASS)' if new_classes else ''}, {elapsed:.1f}s"
           f"{'' if rendered else ' (stored tier only)'}")
     if not rendered:
         print("NOTE: the rendered tier did not run; shopper-visible invariants were NOT checked.")
+    if sample_mode:
+        print("NOTE: this run used --render-cohorts (PARTIAL coverage); see banner above.")
 
 
-def write_baseline(path: Path, results: list[InvariantResult], *, note: str) -> None:
+def write_baseline(path: Path, results: list[InvariantResult], *, note: str,
+                    approver: str = "", history_path: Path | None = None) -> None:
+    """
+    Overwrite the baseline file with current counts, and APPEND (never overwrite) a
+    line to the history log recording who approved the rewrite, why, and exactly
+    what moved.
+
+    ``note`` and ``approver`` are the caller's responsibility to have validated as
+    non-empty (the CLI in ``main`` enforces this); this function accepts blanks so
+    it stays usable directly from tests and other callers that seed a baseline.
+    """
     import datetime
 
+    old = load_baseline(path)
+    generated_at = datetime.datetime.now(datetime.UTC).isoformat(timespec="seconds")
+    new_invariants = {
+        r.id: {
+            "count": r.count,
+            "denominator": r.denominator,
+            "tier": r.tier,
+            "title": r.title,
+        }
+        for r in results
+        if not r.error
+    }
     payload = {
-        "generated_at": datetime.datetime.now(datetime.UTC).isoformat(timespec="seconds"),
+        "generated_at": generated_at,
         "note": note,
-        "invariants": {
-            r.id: {
-                "count": r.count,
-                "denominator": r.denominator,
-                "tier": r.tier,
-                "title": r.title,
-            }
-            for r in results
-            if not r.error
-        },
+        "approver": approver,
+        "invariants": new_invariants,
     }
     path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n")
+
+    changes = []
+    for iid, entry in sorted(new_invariants.items()):
+        old_count = (old.get(iid) or {}).get("count") if isinstance(old.get(iid), dict) else None
+        if old_count != entry["count"]:
+            changes.append({"id": iid, "old_count": old_count, "new_count": entry["count"]})
+    # Default derives from the baseline PATH GIVEN, not the module-level default --
+    # so a caller (test or otherwise) that points --baseline at a tmp file gets a
+    # tmp history file beside it, never the real repo history log.
+    hist_path = history_path or path.with_name(path.stem + "_history.jsonl")
+    history_line = {
+        "generated_at": generated_at,
+        "baseline_path": str(path),
+        "note": note,
+        "approver": approver,
+        "invariants_written": len(new_invariants),
+        "changed": changes,
+    }
+    with open(hist_path, "a") as fh:
+        fh.write(json.dumps(history_line, sort_keys=True, default=str) + "\n")
 
 
 # --------------------------------------------------------------------------
@@ -1205,7 +1265,14 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--slack", type=int, default=0, help="allowed increase over baseline before failing")
     ap.add_argument("--write-baseline", action="store_true",
                     help="record the current counts as the baseline and exit 0")
-    ap.add_argument("--note", default="", help="note stored alongside a written baseline")
+    ap.add_argument("--note", default="",
+                    help="REQUIRED with --write-baseline: why the baseline is being rewritten "
+                         "(e.g. 'human fixed the 71 bad cylinder rows, recording the new count')")
+    ap.add_argument("--approver", default="",
+                    help="REQUIRED with --write-baseline: who approved this baseline rewrite")
+    ap.add_argument("--baseline-history", type=Path, default=None,
+                    help="append-only history log for baseline rewrites "
+                         "(default: <baseline>_history.jsonl beside --baseline)")
     args = ap.parse_args(argv)
 
     t0 = time.time()
@@ -1241,21 +1308,45 @@ def main(argv: list[str] | None = None) -> int:
             print("REFUSED: --write-baseline with --sql-only would drop every rendered-tier "
                   "baseline.", file=sys.stderr)
             return 2
-        write_baseline(args.baseline, results, note=args.note)
+        # A baseline rewrite silently OVERWRITES the record of "is this getting worse" for
+        # every invariant at once. Requiring a reason and a named approver, and logging both
+        # to an append-only history file, is the difference between that being a reviewable
+        # decision and being an unattributed edit nobody can explain six months later.
+        if not args.note.strip():
+            print("REFUSED: --write-baseline requires a non-empty --note explaining why the "
+                  "baseline is being rewritten.", file=sys.stderr)
+            return 2
+        if not args.approver.strip():
+            print("REFUSED: --write-baseline requires --approver (who is approving this "
+                  "rewrite).", file=sys.stderr)
+            return 2
+        write_baseline(
+            args.baseline, results, note=args.note.strip(), approver=args.approver.strip(),
+            history_path=args.baseline_history,
+        )
         print(f"Baseline written to {args.baseline} ({len(results)} invariants, {elapsed:.1f}s)")
+        print(f"approver={args.approver.strip()!r}  note={args.note.strip()!r}")
         return 0
 
     baseline = load_baseline(args.baseline)
     verdicts = compare(results, baseline, slack=args.slack)
-    print_summary(verdicts, elapsed=elapsed, rendered=rendered_ran)
+    sample_mode = bool(args.render_cohorts)
+    print_summary(verdicts, elapsed=elapsed, rendered=rendered_ran, sample_mode=sample_mode)
 
     report = {
         "generated_at": time.strftime("%Y-%m-%dT%H:%M:%S"),
         "elapsed_sec": round(elapsed, 2),
         "rendered_tier_ran": rendered_ran,
         "render_cohort_limit": args.render_cohorts,
+        # Item 6: a sampled run's counts are not comparable to the full-run baseline.
+        # Tagged explicitly so every downstream consumer of this JSON (the admin hub
+        # included) can render a PARTIAL banner instead of quietly reporting OK/REGRESSION
+        # as if it were a complete sweep.
+        "sample_mode": sample_mode,
+        "coverage": "partial" if sample_mode else "full",
         "baseline_path": str(args.baseline),
         "failing": [v["id"] for v in verdicts if v["status"] in _FAIL_STATUSES],
+        "new_defect_classes": [v["id"] for v in verdicts if v["status"] == "NEW_DEFECT_CLASS"],
         "invariants": verdicts,
     }
     if args.json:

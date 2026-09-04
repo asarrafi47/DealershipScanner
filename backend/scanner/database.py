@@ -896,6 +896,7 @@ def apply_model_specs_corrections(
         canonical_make = _resolve_canonical_make(raw_make or "", raw_model or "")
         model = (raw_model or "").strip()
 
+        from backend.enrichment.knowledge_engine import _transmission_has_gear_detail
         from backend.enrichment.model_specs_dictionary import lookup_model_specs_dictionary
         from backend.utils.field_clean import coerce_drivetrain_stored
 
@@ -914,7 +915,14 @@ def apply_model_specs_corrections(
         if needs_cyl and spec_cyl is not None:
             patch["cylinders"] = int(spec_cyl)
         if needs_trans and spec_trans and str(spec_trans).strip():
-            patch["transmission"] = str(spec_trans).strip()
+            # model_specs is one row per make+model with no year column, so a specific
+            # gear count (e.g. "10-Speed Automatic") only reflects whichever generation
+            # was scraped/seeded and is wrong for the rest of a multi-gen nameplate's
+            # run (confirmed: 2000-2016 F-150s got the 2017+ 10-speed spec this way).
+            # Only persist the generic form ("Automatic", "CVT"); never guess a gear count.
+            _spec_trans_s = str(spec_trans).strip()
+            if not _transmission_has_gear_detail(_spec_trans_s):
+                patch["transmission"] = _spec_trans_s
         if needs_drive and spec_drive:
             # Trim/title overrides take precedence over model default
             drive_raw = _infer_drivetrain_from_trim(trim, title) or spec_drive

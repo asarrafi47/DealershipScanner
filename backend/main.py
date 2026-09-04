@@ -60,12 +60,15 @@ from backend.dev.routes import dev_bp
 from backend.db.admin_users_db import init_admin_db
 from backend.db.dealer_portal_db import init_dealer_portal_db
 from backend.db.inventory_db import (
+    create_saved_search,
+    delete_saved_search,
     get_car_by_id,
     get_cars_by_ids,
     get_filter_options,
     get_saved_car_ids,
     init_inventory_db,
     is_car_saved,
+    list_saved_searches,
     listings_geo_coords_maps,
     listings_grid_cache_etag,
     listings_grid_serialized_cars,
@@ -517,6 +520,7 @@ def _csrf_mutating_requests():
         "api_car_chat",
         "api_compare_chat",
         "api_toggle_save",
+        "api_saved_searches_create",
         "api_session_listings_geo",
         "api_car_packages_ensure",
         "api_car_vehicle_history_intelligence",

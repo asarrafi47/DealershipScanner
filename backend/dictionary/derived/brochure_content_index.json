@@ -85,6 +85,19 @@
         "has_text_layer": true
       }
     },
+    "04a9a041f44d48ab58165e6ec4857d731f10cefe1bd552dba532b6cf78375201": {
+      "sha256": "04a9a041f44d48ab58165e6ec4857d731f10cefe1bd552dba532b6cf78375201",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2019_INFINITI_Q70_Brochure.pdf",
+      "bytes": 3452985,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Infiniti/Q70/Infiniti_US Q70_2019.pdf"
+      ],
+      "catalog_keys": [
+        "2019|infiniti|q70"
+      ],
+      "first_seen_at": "2026-08-26T14:53:40.255272+00:00",
+      "tier": "archive"
+    },
     "051fbcad6cc27be77ab0329e149a5093f04167c08a5244c12cad8eb38c51c867": {
       "sha256": "051fbcad6cc27be77ab0329e149a5093f04167c08a5244c12cad8eb38c51c867",
       "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2018_Nissan_Rogue_Sport_Brochure.pdf",
@@ -97,6 +110,32 @@
       ],
       "first_seen_at": "2026-07-31T22:53:30.565379+00:00",
       "tier": ""
+    },
+    "05ab2f89d810ae9be3062a23896358ad60de74f925aed119263d820c4f091bb5": {
+      "sha256": "05ab2f89d810ae9be3062a23896358ad60de74f925aed119263d820c4f091bb5",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2020_Mitsubishi_Eclipse_Cross_Brochure.pdf",
+      "bytes": 35282218,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Mitsubishi/EclipseCross/Mitsubishi_US EclipseCross_2020.pdf"
+      ],
+      "catalog_keys": [
+        "2020|mitsubishi|eclipsecross"
+      ],
+      "first_seen_at": "2026-08-26T14:53:45.409853+00:00",
+      "tier": "archive"
+    },
+    "06c7e8f93981fc852378d95e65efb4d79188561173865b26a519f5a86e9a9bd0": {
+      "sha256": "06c7e8f93981fc852378d95e65efb4d79188561173865b26a519f5a86e9a9bd0",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2020_Nissan_MAXIMA_Brochure.pdf",
+      "bytes": 5025496,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Nissan/Maxima/Nissan_US Maxima_2020.pdf"
+      ],
+      "catalog_keys": [
+        "2020|nissan|maxima"
+      ],
+      "first_seen_at": "2026-08-26T14:51:38.707208+00:00",
+      "tier": "archive"
     },
     "06cd6b33130e5c8d23cbb33f83ab797ac69d9d53e311aeb4eba38bc2948b3a52": {
       "sha256": "06cd6b33130e5c8d23cbb33f83ab797ac69d9d53e311aeb4eba38bc2948b3a52",
@@ -183,6 +222,91 @@
       "first_seen_at": "2026-07-31T22:55:38.436308+00:00",
       "tier": ""
     },
+    "0ac43e8bf29bd27fc2149aaaf86db222a55d71263a507f329b199baade1ef4c9": {
+      "sha256": "0ac43e8bf29bd27fc2149aaaf86db222a55d71263a507f329b199baade1ef4c9",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2006_Porsche_Cayman_Brochure.pdf",
+      "bytes": 8165602,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Porsche/Cayman/Porsche_US Cayman-S_2006.pdf"
+      ],
+      "catalog_keys": [
+        "2006|porsche|cayman"
+      ],
+      "first_seen_at": "2026-08-26T14:53:09.289370+00:00",
+      "tier": "archive"
+    },
+    "0bb4736a96b77a4a4de6bcf4d1b90aefe30e10c08b5783fb7fd80bb5d60bdc59": {
+      "sha256": "0bb4736a96b77a4a4de6bcf4d1b90aefe30e10c08b5783fb7fd80bb5d60bdc59",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2027_Nissan_KICKS_Brochure.pdf",
+      "bytes": 7989378,
+      "source_urls": [
+        "https://www.nissanusa.com/content/dam/Nissan/us/vehicle-brochures/2027/2027-nissan-kicks-brochure-en.pdf"
+      ],
+      "catalog_keys": [
+        "2027|nissan|kicks"
+      ],
+      "first_seen_at": "2026-08-26T14:49:40.100891+00:00",
+      "tier": "oem"
+    },
+    "0cc0ae4b95de65d7379cf60cad0691c6444f793d1b2fef992ff84b32f668e9ff": {
+      "sha256": "0cc0ae4b95de65d7379cf60cad0691c6444f793d1b2fef992ff84b32f668e9ff",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2019_Nissan_ARMADA_Brochure.pdf",
+      "bytes": 4411634,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Nissan/Armada/Nissan_US Armada_2019.pdf"
+      ],
+      "catalog_keys": [
+        "2019|nissan|armada"
+      ],
+      "first_seen_at": "2026-08-26T14:52:38.726124+00:00",
+      "tier": "archive"
+    },
+    "0cccfff07e652c83e520734756ccbc7deb8e1b3305a2aa87924d8d6cc8281840": {
+      "sha256": "0cccfff07e652c83e520734756ccbc7deb8e1b3305a2aa87924d8d6cc8281840",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2006_Pontiac_Solstice_Brochure.pdf",
+      "bytes": 1496404,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Pontiac/Solstice/Pontiac_US Solstice_2006.pdf"
+      ],
+      "catalog_keys": [
+        "2006|pontiac|solstice"
+      ],
+      "first_seen_at": "2026-08-26T14:54:56.435009+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "QuarkXPress(tm) 6.1",
+          "creator": "QuarkXPress(tm) 6.1",
+          "title": "Layout 1",
+          "author": "",
+          "subject": "",
+          "creation_date": "D:20050809113015Z",
+          "mod_date": "D:20050809113317-04'00'",
+          "page_count": 22,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 21,
+        "page_count": 22,
+        "has_text_layer": true
+      }
+    },
+    "0dd4d12bc8775e511cc92d4c3e600fc6c382248f03480f3be14d04deaa39ff7d": {
+      "sha256": "0dd4d12bc8775e511cc92d4c3e600fc6c382248f03480f3be14d04deaa39ff7d",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2021_Nissan_ARMADA_Brochure.pdf",
+      "bytes": 8978978,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Nissan/Armada/Nissan_US Armada_2021.pdf"
+      ],
+      "catalog_keys": [
+        "2021|nissan|armada"
+      ],
+      "first_seen_at": "2026-08-26T14:50:50.912197+00:00",
+      "tier": "archive"
+    },
     "0e57f74add4a6e2d3211ccc64c911b3afd2e7d9a423bd6f2229fd8490032f61d": {
       "sha256": "0e57f74add4a6e2d3211ccc64c911b3afd2e7d9a423bd6f2229fd8490032f61d",
       "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2026_Toyota_C-HR_Brochure.pdf",
@@ -208,6 +332,19 @@
       ],
       "first_seen_at": "2026-07-31T22:51:53.917789+00:00",
       "tier": ""
+    },
+    "0fc91fe27679fb0feeed800142ed1e581008099f4901327471a6b860c1806c3e": {
+      "sha256": "0fc91fe27679fb0feeed800142ed1e581008099f4901327471a6b860c1806c3e",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2017_INFINITI_Q50_Brochure.pdf",
+      "bytes": 8741939,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Infiniti/Q50/Infiniti_US Q50_2017.pdf"
+      ],
+      "catalog_keys": [
+        "2017|infiniti|q50"
+      ],
+      "first_seen_at": "2026-08-26T14:53:28.552711+00:00",
+      "tier": "archive"
     },
     "101174719fcc6e68df45f2947593d738328a16b438ac1dfa03015da73648ec9d": {
       "sha256": "101174719fcc6e68df45f2947593d738328a16b438ac1dfa03015da73648ec9d",
@@ -255,6 +392,19 @@
       "first_seen_at": "2026-07-31T22:52:02.060858+00:00",
       "tier": ""
     },
+    "128d450a50654e267f0f482b706a581702f83cea9f5bf5c4e2fd450bd2d57e1f": {
+      "sha256": "128d450a50654e267f0f482b706a581702f83cea9f5bf5c4e2fd450bd2d57e1f",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2023_Mazda_CX-50_Brochure.pdf",
+      "bytes": 252032,
+      "source_urls": [
+        "https://news.mazdausa.com/download/2023+CX-50+Spec+Deck.pdf"
+      ],
+      "catalog_keys": [
+        "2023|mazda|cx50"
+      ],
+      "first_seen_at": "2026-08-26T14:50:37.394706+00:00",
+      "tier": "oem"
+    },
     "12a9098108301d22ae6ca34dd5bd88df0ba6470ebf372b42aa25f2fe4eac21e3": {
       "sha256": "12a9098108301d22ae6ca34dd5bd88df0ba6470ebf372b42aa25f2fe4eac21e3",
       "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2026_Toyota_GR_Corolla_Brochure.pdf",
@@ -280,6 +430,104 @@
       ],
       "first_seen_at": "2026-07-31T22:54:13.433855+00:00",
       "tier": ""
+    },
+    "1434264571f52e519d9d51a1bab26a4264ffcd4316defbb96bc21b84d204832e": {
+      "sha256": "1434264571f52e519d9d51a1bab26a4264ffcd4316defbb96bc21b84d204832e",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2013_Cadillac_XTS_Brochure.pdf",
+      "bytes": 13501850,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Cadillac/XTS/Cadillac_US XTS_2013-v2.pdf"
+      ],
+      "catalog_keys": [
+        "2013|cadillac|xts"
+      ],
+      "first_seen_at": "2026-08-26T14:50:36.760701+00:00",
+      "tier": "archive"
+    },
+    "1489e46b6d870d54d7256c18ef0e345f84686eacc17e8a75640968db2c64dead": {
+      "sha256": "1489e46b6d870d54d7256c18ef0e345f84686eacc17e8a75640968db2c64dead",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2020_Lincoln_NAVIGATOR_Brochure.pdf",
+      "bytes": 15330732,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Lincoln/Navigator/Lincoln_US Navigator_2020.pdf"
+      ],
+      "catalog_keys": [
+        "2020|lincoln|navigator"
+      ],
+      "first_seen_at": "2026-08-26T14:52:21.839395+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "iText 2.1.7 by 1T3XT",
+          "creator": "",
+          "title": "",
+          "author": "",
+          "subject": "",
+          "creation_date": "",
+          "mod_date": "",
+          "page_count": 13,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 13,
+        "page_count": 13,
+        "has_text_layer": true
+      }
+    },
+    "1570e7114d8ae6d95ca5796ad580fb4e6eaf04705b1c82b4f84179c01602974a": {
+      "sha256": "1570e7114d8ae6d95ca5796ad580fb4e6eaf04705b1c82b4f84179c01602974a",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2022_Subaru_CROSSTREK_Brochure.pdf",
+      "bytes": 9341022,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Subaru/XV Crosstrek/Subaru_US Crosstrek_2022.pdf"
+      ],
+      "catalog_keys": [
+        "2022|subaru|crosstrek"
+      ],
+      "first_seen_at": "2026-08-26T14:50:32.065762+00:00",
+      "tier": "archive"
+    },
+    "15c500878c446474e1aa0f1db9bd810b436cc3d19b8e9eeb4d5dd1865fb99ced": {
+      "sha256": "15c500878c446474e1aa0f1db9bd810b436cc3d19b8e9eeb4d5dd1865fb99ced",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2020_Subaru_WRX_Brochure.pdf",
+      "bytes": 12722786,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Subaru/Impreza WRX/Subaru_US Impreza-WRX_2020.pdf"
+      ],
+      "catalog_keys": [
+        "2020|subaru|wrx"
+      ],
+      "first_seen_at": "2026-08-26T14:51:44.665076+00:00",
+      "tier": "archive"
+    },
+    "167bc425f3e686110873229c2e26e3d24c281cebf92e0b222f782b7c14ad0f03": {
+      "sha256": "167bc425f3e686110873229c2e26e3d24c281cebf92e0b222f782b7c14ad0f03",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2019_Subaru_CROSSTREK_Brochure.pdf",
+      "bytes": 12534192,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Subaru/XV Crosstrek/Subaru_US Crosstrek_2019.pdf"
+      ],
+      "catalog_keys": [
+        "2019|subaru|crosstrek"
+      ],
+      "first_seen_at": "2026-08-26T14:50:21.051298+00:00",
+      "tier": "archive"
+    },
+    "17c9364ffe69f28306d3c779c9211f9b6982e39791d765c2ca45d0f199b59396": {
+      "sha256": "17c9364ffe69f28306d3c779c9211f9b6982e39791d765c2ca45d0f199b59396",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2025_Nissan_Z_Brochure.pdf",
+      "bytes": 6347999,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Nissan/Z/Nissan_US Z_2025.pdf"
+      ],
+      "catalog_keys": [
+        "2025|nissan|z"
+      ],
+      "first_seen_at": "2026-08-26T14:50:14.634670+00:00",
+      "tier": "archive"
     },
     "1a265ea6605290f0694869f385889277a8f50e294729612b98ef346da3b60597": {
       "sha256": "1a265ea6605290f0694869f385889277a8f50e294729612b98ef346da3b60597",
@@ -313,6 +561,19 @@
         "page_count": 22,
         "has_text_layer": true
       }
+    },
+    "1b8284cf437f1698309960b165173b7b0de047d7a17ec43211dd50bc677cd2ef": {
+      "sha256": "1b8284cf437f1698309960b165173b7b0de047d7a17ec43211dd50bc677cd2ef",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2016_INFINITI_Q70_Brochure.pdf",
+      "bytes": 8636871,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Infiniti/Q70/Infiniti_US Q70_2016.pdf"
+      ],
+      "catalog_keys": [
+        "2016|infiniti|q70"
+      ],
+      "first_seen_at": "2026-08-26T14:52:15.234498+00:00",
+      "tier": "archive"
     },
     "206952949abc360cec5a8ae9ed277c1dab6c51c873238aadfb12224a364be1f9": {
       "sha256": "206952949abc360cec5a8ae9ed277c1dab6c51c873238aadfb12224a364be1f9",
@@ -380,6 +641,19 @@
         "has_text_layer": true
       }
     },
+    "21486306e6158bccb0f816b69ec45fde680262b3215b5348c653e0345d0edbc9": {
+      "sha256": "21486306e6158bccb0f816b69ec45fde680262b3215b5348c653e0345d0edbc9",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2024_Subaru_CROSSTREK_Brochure.pdf",
+      "bytes": 8313893,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Subaru/XV Crosstrek/Subaru_US Crosstrek_2024.pdf"
+      ],
+      "catalog_keys": [
+        "2024|subaru|crosstrek"
+      ],
+      "first_seen_at": "2026-08-26T14:49:08.386316+00:00",
+      "tier": "archive"
+    },
     "22363c306f049f686aa5dcc37d57505f8af41aa0a62af5ff44965d419b012860": {
       "sha256": "22363c306f049f686aa5dcc37d57505f8af41aa0a62af5ff44965d419b012860",
       "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2026_Toyota_Corolla_Brochure.pdf",
@@ -393,6 +667,39 @@
       "first_seen_at": "2026-08-01T22:57:51.965325+00:00",
       "tier": "oem"
     },
+    "227d0938577506837ade5ac865cfaeb9d41ff98ce3bfd49e8704226f6c9f8f48": {
+      "sha256": "227d0938577506837ade5ac865cfaeb9d41ff98ce3bfd49e8704226f6c9f8f48",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/1994_Pontiac_Firebird_Brochure.pdf",
+      "bytes": 699579,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Pontiac/Firebird/Pontiac_US Firebird_1994.pdf"
+      ],
+      "catalog_keys": [
+        "1994|pontiac|firebird"
+      ],
+      "first_seen_at": "2026-08-26T14:54:44.253866+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "",
+          "creator": "Adobe",
+          "title": "Auto-Brochures.com",
+          "author": "",
+          "subject": "Pontiac brochure",
+          "creation_date": "D:19860410112947-06'00'",
+          "mod_date": "D:20170218073309-06'00'",
+          "page_count": 3,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 1,
+        "page_count": 3,
+        "has_text_layer": true
+      }
+    },
     "236e0e1d28a2e757b7a1734ca5c06290779d3e01bdad996830b44f0e7de9c6ed": {
       "sha256": "236e0e1d28a2e757b7a1734ca5c06290779d3e01bdad996830b44f0e7de9c6ed",
       "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2026_Toyota_RAV4_Brochure.pdf",
@@ -405,6 +712,19 @@
       ],
       "first_seen_at": "2026-07-31T22:50:53.306222+00:00",
       "tier": ""
+    },
+    "24d50ff9ce42665054389a8a0829cd4f2095ea649e802c2ca6dd6ee17e13927d": {
+      "sha256": "24d50ff9ce42665054389a8a0829cd4f2095ea649e802c2ca6dd6ee17e13927d",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2019_Acura_TLX_Brochure.pdf",
+      "bytes": 8532293,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/acura/tlx/Acura_US TLX_Factsheet_2019.pdf"
+      ],
+      "catalog_keys": [
+        "2019|acura|tlx"
+      ],
+      "first_seen_at": "2026-08-26T14:50:58.885870+00:00",
+      "tier": "archive"
     },
     "24db1e5c00c1e7afc839ff019ed42f72c8d0cd3f6b21807d98277f07d1988193": {
       "sha256": "24db1e5c00c1e7afc839ff019ed42f72c8d0cd3f6b21807d98277f07d1988193",
@@ -438,6 +758,19 @@
         "page_count": 12,
         "has_text_layer": true
       }
+    },
+    "252d2b3a492cb65b82b149f63ac0bd777bc5056e0e03ebc86fad922cbacec619": {
+      "sha256": "252d2b3a492cb65b82b149f63ac0bd777bc5056e0e03ebc86fad922cbacec619",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2023_Hyundai_ELANTRA_Brochure.pdf",
+      "bytes": 11401605,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Hyundai/Elantra/Hyundai_US Elantra_2023.pdf"
+      ],
+      "catalog_keys": [
+        "2023|hyundai|elantra"
+      ],
+      "first_seen_at": "2026-08-26T14:49:35.890801+00:00",
+      "tier": "archive"
     },
     "255a51374c0962f079c9bce4b4a2582ee5aa252624b55b21c2de10aafc4b2de1": {
       "sha256": "255a51374c0962f079c9bce4b4a2582ee5aa252624b55b21c2de10aafc4b2de1",
@@ -520,6 +853,32 @@
       "first_seen_at": "2026-07-31T22:54:43.530598+00:00",
       "tier": ""
     },
+    "27f5b8a424d8bea7fd1eb4c03660277902db196aefde7df262b59146cdf0b1c5": {
+      "sha256": "27f5b8a424d8bea7fd1eb4c03660277902db196aefde7df262b59146cdf0b1c5",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2019_Nissan_SENTRA_Brochure.pdf",
+      "bytes": 4741307,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Nissan/Sentra/Nissan_US Sentra_2019.pdf"
+      ],
+      "catalog_keys": [
+        "2019|nissan|sentra"
+      ],
+      "first_seen_at": "2026-08-26T14:51:26.788285+00:00",
+      "tier": "archive"
+    },
+    "299b081731978381c68299bc53ca02174dce0defb432941dbc21c2fcc7ece6d5": {
+      "sha256": "299b081731978381c68299bc53ca02174dce0defb432941dbc21c2fcc7ece6d5",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2020_Nissan_KICKS_Brochure.pdf",
+      "bytes": 5977777,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Nissan/Kicks/Nissan_US Kicks_2020.pdf"
+      ],
+      "catalog_keys": [
+        "2020|nissan|kicks"
+      ],
+      "first_seen_at": "2026-08-26T14:50:26.548161+00:00",
+      "tier": "archive"
+    },
     "29ee8cd679a1d0f61124468ddf8df792930093b6f1623850ecb4fea494054115": {
       "sha256": "29ee8cd679a1d0f61124468ddf8df792930093b6f1623850ecb4fea494054115",
       "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2022_GMC_Sierra_2500HD_Brochure.pdf",
@@ -532,6 +891,32 @@
       ],
       "first_seen_at": "2026-07-31T22:55:46.477121+00:00",
       "tier": ""
+    },
+    "2bca378360f765eb5f31fefba729b1f995e462cafc3aa4acf124f55b074db90e": {
+      "sha256": "2bca378360f765eb5f31fefba729b1f995e462cafc3aa4acf124f55b074db90e",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2019_INFINITI_QX80_Brochure.pdf",
+      "bytes": 2709524,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Infiniti/QX56-80/Infiniti_US QX80_2019.pdf"
+      ],
+      "catalog_keys": [
+        "2019|infiniti|qx80"
+      ],
+      "first_seen_at": "2026-08-26T14:52:38.701868+00:00",
+      "tier": "archive"
+    },
+    "2be04cc3cde652bd9cf3c4b8a604489f79ad4893f15420dc3f8e012ba6743fad": {
+      "sha256": "2be04cc3cde652bd9cf3c4b8a604489f79ad4893f15420dc3f8e012ba6743fad",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2021_Maserati_LEVANTE_Brochure.pdf",
+      "bytes": 4107432,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/maserati/levante/Maserati_int Levante_2021.pdf"
+      ],
+      "catalog_keys": [
+        "2021|maserati|levante"
+      ],
+      "first_seen_at": "2026-08-26T14:52:43.675432+00:00",
+      "tier": "archive"
     },
     "2c7cc84e31a035524b83d9ee80096b729b5fec1b0a3239ee7c8cedabd50650f2": {
       "sha256": "2c7cc84e31a035524b83d9ee80096b729b5fec1b0a3239ee7c8cedabd50650f2",
@@ -605,6 +990,78 @@
       "first_seen_at": "2026-07-31T22:52:33.982930+00:00",
       "tier": ""
     },
+    "2ddf72b7a79c957b59916652e4bbaf18fc7bd99523b2fa9c4139162ae266cc91": {
+      "sha256": "2ddf72b7a79c957b59916652e4bbaf18fc7bd99523b2fa9c4139162ae266cc91",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2023_Acura_INTEGRA_Brochure.pdf",
+      "bytes": 622840,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/acura/integra/Acura_US Integra_Factsheet_2023.pdf"
+      ],
+      "catalog_keys": [
+        "2023|acura|integra"
+      ],
+      "first_seen_at": "2026-08-26T14:50:34.412733+00:00",
+      "tier": "archive"
+    },
+    "2e621e19ed22b9d934a8b9f2a4b8a633aaf97d8584c708763e029fb037f5d5c1": {
+      "sha256": "2e621e19ed22b9d934a8b9f2a4b8a633aaf97d8584c708763e029fb037f5d5c1",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures_archive_quarantine/2006_Mitsubishi_Lancer_Brochure.pdf",
+      "bytes": 33688612,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Mitsubishi/Lancer/Mitsubishi_US LancerEvolution_2006.pdf"
+      ],
+      "catalog_keys": [
+        "2006|mitsubishi|lancer"
+      ],
+      "first_seen_at": "2026-08-26T14:52:57.270751+00:00",
+      "tier": "archive"
+    },
+    "2e65da38a81b2b0cba690cdd794b6c36e05f0b197e1c95738e4eac709a1dfe2a": {
+      "sha256": "2e65da38a81b2b0cba690cdd794b6c36e05f0b197e1c95738e4eac709a1dfe2a",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2020_Lincoln_AVIATOR_Brochure.pdf",
+      "bytes": 16022100,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Lincoln/Aviator/Lincoln_US Aviator_2020.pdf"
+      ],
+      "catalog_keys": [
+        "2020|lincoln|aviator"
+      ],
+      "first_seen_at": "2026-08-26T14:51:57.926644+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "iText 2.1.7 by 1T3XT",
+          "creator": "",
+          "title": "",
+          "author": "",
+          "subject": "",
+          "creation_date": "",
+          "mod_date": "",
+          "page_count": 13,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 13,
+        "page_count": 13,
+        "has_text_layer": true
+      }
+    },
+    "2f1b69ea17b6f34f09d1a77c1a040ecf913e1b5e4243503ccbc5749f90fb23ae": {
+      "sha256": "2f1b69ea17b6f34f09d1a77c1a040ecf913e1b5e4243503ccbc5749f90fb23ae",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2025_Hyundai_SANTA_CRUZ_Brochure.pdf",
+      "bytes": 11916048,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Hyundai/Santa Cruz/Hyundai_US SantaCruz_2025.pdf"
+      ],
+      "catalog_keys": [
+        "2025|hyundai|santacruz"
+      ],
+      "first_seen_at": "2026-08-26T14:51:47.786446+00:00",
+      "tier": "archive"
+    },
     "303c2159c2168a509e9709254d530815cd5847f9da764d975fae41a87bd4eb9d": {
       "sha256": "303c2159c2168a509e9709254d530815cd5847f9da764d975fae41a87bd4eb9d",
       "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2022_Dodge_Charger_Brochure.pdf",
@@ -635,6 +1092,39 @@
         },
         "pages_with_text": 46,
         "page_count": 47,
+        "has_text_layer": true
+      }
+    },
+    "3215d830eb19ea18da1f2627a3816ff0d7a037939f7625eb9b8f3f7e39de4715": {
+      "sha256": "3215d830eb19ea18da1f2627a3816ff0d7a037939f7625eb9b8f3f7e39de4715",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2017_Lincoln_NAVIGATOR_L_Brochure.pdf",
+      "bytes": 3485541,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Lincoln/Navigator/Lincoln_US Navigator_2017.pdf"
+      ],
+      "catalog_keys": [
+        "2017|lincoln|navigatorl"
+      ],
+      "first_seen_at": "2026-08-26T14:53:45.512905+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "iText 2.1.7 by 1T3XT",
+          "creator": "",
+          "title": "2017 Lincoln Navigator Brochure",
+          "author": "2017 Lincoln Navigator Brochure",
+          "subject": "2017 Lincoln Navigator Brochure",
+          "creation_date": "",
+          "mod_date": "",
+          "page_count": 15,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 15,
+        "page_count": 15,
         "has_text_layer": true
       }
     },
@@ -697,6 +1187,19 @@
       "first_seen_at": "2026-07-31T22:58:52.298965+00:00",
       "tier": ""
     },
+    "36348d6c00267181771aee6b91c8c2c14e9b25f99556a963278834c1fc90022c": {
+      "sha256": "36348d6c00267181771aee6b91c8c2c14e9b25f99556a963278834c1fc90022c",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2019_Subaru_WRX_Brochure.pdf",
+      "bytes": 10709932,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Subaru/Impreza WRX/Subaru_US Impreza-WRX_2019.pdf"
+      ],
+      "catalog_keys": [
+        "2019|subaru|wrx"
+      ],
+      "first_seen_at": "2026-08-26T14:51:20.608011+00:00",
+      "tier": "archive"
+    },
     "383eef11d2fce9fe81b1e3996d4c2ccb05dbfdc5f2cb2dd6c380a29fee764ad0": {
       "sha256": "383eef11d2fce9fe81b1e3996d4c2ccb05dbfdc5f2cb2dd6c380a29fee764ad0",
       "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2026_Dodge_Durango_Brochure.pdf",
@@ -705,6 +1208,32 @@
       "catalog_keys": [],
       "first_seen_at": "",
       "tier": ""
+    },
+    "3928a3da4f14720e0b5b91a8d8872f316d36b3a5f1464e21804457c59b060960": {
+      "sha256": "3928a3da4f14720e0b5b91a8d8872f316d36b3a5f1464e21804457c59b060960",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2009_Mazda_Mazda_CX-9_Brochure.pdf",
+      "bytes": 4488214,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Mazda/CX-9/Mazda_US CX-9_2009.pdf"
+      ],
+      "catalog_keys": [
+        "2009|mazda|mazdacx9"
+      ],
+      "first_seen_at": "2026-08-26T14:54:10.203919+00:00",
+      "tier": "archive"
+    },
+    "3a554ea2ea6d88ad3b77339fb5f687946c002a15cf13ceefcba4409336f6eec0": {
+      "sha256": "3a554ea2ea6d88ad3b77339fb5f687946c002a15cf13ceefcba4409336f6eec0",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2023_Buick_ENCORE_Brochure.pdf",
+      "bytes": 17025310,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Buick/Encore/Buick_US Encore_2023.pdf"
+      ],
+      "catalog_keys": [
+        "2023|buick|encore"
+      ],
+      "first_seen_at": "2026-08-26T14:51:42.937833+00:00",
+      "tier": "archive"
     },
     "3b1e8f74d03806aba5772485f1627c1f47127355cd78bf8db0a7fac7b3894705": {
       "sha256": "3b1e8f74d03806aba5772485f1627c1f47127355cd78bf8db0a7fac7b3894705",
@@ -718,6 +1247,19 @@
       ],
       "first_seen_at": "2026-07-31T22:52:23.404251+00:00",
       "tier": ""
+    },
+    "3b5c560f9829bca44d1c0502e678d9e911df798207fbe76895c67a62a6130771": {
+      "sha256": "3b5c560f9829bca44d1c0502e678d9e911df798207fbe76895c67a62a6130771",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2022_Mazda_Mazda_CX-9_Brochure.pdf",
+      "bytes": 3160389,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Mazda/CX-9/Mazda_US CX-9_2022.pdf"
+      ],
+      "catalog_keys": [
+        "2022|mazda|mazdacx9"
+      ],
+      "first_seen_at": "2026-08-26T14:53:46.304506+00:00",
+      "tier": "archive"
     },
     "3b69cd5392a5eb280a6d736e0464c4113f06ff6b27372c0a8954328945421c4e": {
       "sha256": "3b69cd5392a5eb280a6d736e0464c4113f06ff6b27372c0a8954328945421c4e",
@@ -754,6 +1296,45 @@
       "first_seen_at": "",
       "tier": ""
     },
+    "3e57fe11ec4260675ee073441f94646a9f893b1c640f29b92edc4032222ecdc8": {
+      "sha256": "3e57fe11ec4260675ee073441f94646a9f893b1c640f29b92edc4032222ecdc8",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2023_Hyundai_SANTA_FE_Brochure.pdf",
+      "bytes": 13354104,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Hyundai/Santa Fe/Hyundai_US SantaFe_2023.pdf"
+      ],
+      "catalog_keys": [
+        "2023|hyundai|santafe"
+      ],
+      "first_seen_at": "2026-08-26T14:49:48.464651+00:00",
+      "tier": "archive"
+    },
+    "3e9ddc8d40e68db1390201e8b800afaf8ecadc863e1252f04fabe9e6fa598025": {
+      "sha256": "3e9ddc8d40e68db1390201e8b800afaf8ecadc863e1252f04fabe9e6fa598025",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2020_Nissan_ROGUE_SPORT_Brochure.pdf",
+      "bytes": 5011277,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Nissan/Rogue/Nissan_US RogueSport_2020.pdf"
+      ],
+      "catalog_keys": [
+        "2020|nissan|roguesport"
+      ],
+      "first_seen_at": "2026-08-26T14:52:27.048779+00:00",
+      "tier": "archive"
+    },
+    "3f652bf5fec158bb3b93890864e32f292dc76a50981d818c74a28d99792db552": {
+      "sha256": "3f652bf5fec158bb3b93890864e32f292dc76a50981d818c74a28d99792db552",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2022_Ford_BRONCO_Brochure.pdf",
+      "bytes": 5031093,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Ford/Bronco Sport/Ford_US BroncoSport_2022.pdf"
+      ],
+      "catalog_keys": [
+        "2022|ford|bronco"
+      ],
+      "first_seen_at": "2026-08-26T14:49:07.767697+00:00",
+      "tier": "archive"
+    },
     "3fac435bb55584ca6387b9a3f138ba056e6074e704c11b6810bbccf424f528a6": {
       "sha256": "3fac435bb55584ca6387b9a3f138ba056e6074e704c11b6810bbccf424f528a6",
       "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2025_Toyota_Corolla_Cross_Brochure.pdf",
@@ -766,6 +1347,32 @@
       ],
       "first_seen_at": "2026-07-31T22:55:13.510137+00:00",
       "tier": ""
+    },
+    "40323ec7ac4978e07c3e206525d2692e63e2dc8dea6645e0fc31213df9bbb00f": {
+      "sha256": "40323ec7ac4978e07c3e206525d2692e63e2dc8dea6645e0fc31213df9bbb00f",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2020_Nissan_MURANO_Brochure.pdf",
+      "bytes": 5212359,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Nissan/Murano/Nissan_US Murano_2020.pdf"
+      ],
+      "catalog_keys": [
+        "2020|nissan|murano"
+      ],
+      "first_seen_at": "2026-08-26T14:50:38.672691+00:00",
+      "tier": "archive"
+    },
+    "40d507e4b143c92728fc36b7758334947c1e3d79c4c1f20100051ad59b002b8d": {
+      "sha256": "40d507e4b143c92728fc36b7758334947c1e3d79c4c1f20100051ad59b002b8d",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2022_Acura_RDX_Brochure.pdf",
+      "bytes": 516317,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/acura/rdx/Acura_US RDX_Factsheet_2022.pdf"
+      ],
+      "catalog_keys": [
+        "2022|acura|rdx"
+      ],
+      "first_seen_at": "2026-08-26T14:50:46.522242+00:00",
+      "tier": "archive"
     },
     "43deec6bad7894be564def410b3641c0804051791263ea496ded681313d5f666": {
       "sha256": "43deec6bad7894be564def410b3641c0804051791263ea496ded681313d5f666",
@@ -812,6 +1419,19 @@
       ],
       "first_seen_at": "2026-07-31T22:51:13.287055+00:00",
       "tier": ""
+    },
+    "44d63baf0c55328f67636f9138f5bcf0a2ecb3efb041a7adba46834ea3840300": {
+      "sha256": "44d63baf0c55328f67636f9138f5bcf0a2ecb3efb041a7adba46834ea3840300",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2021_Genesis_G90_Brochure.pdf",
+      "bytes": 12878224,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/genesis/G90/Genesis_US G90_2021.pdf"
+      ],
+      "catalog_keys": [
+        "2021|genesis|g90"
+      ],
+      "first_seen_at": "2026-08-26T14:52:36.350867+00:00",
+      "tier": "archive"
     },
     "45417a258ebdc8b34205d03deefa5cc38a284eabe49092c41917e783e1126556": {
       "sha256": "45417a258ebdc8b34205d03deefa5cc38a284eabe49092c41917e783e1126556",
@@ -864,6 +1484,32 @@
       ],
       "first_seen_at": "2026-07-31T22:54:30.130120+00:00",
       "tier": ""
+    },
+    "46effb89dc3a30da35958d3111a8b9a4df59a7ce02e8f97fb4d622e11bda6893": {
+      "sha256": "46effb89dc3a30da35958d3111a8b9a4df59a7ce02e8f97fb4d622e11bda6893",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2024_Hyundai_TUCSON_Brochure.pdf",
+      "bytes": 16495583,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Hyundai/Tucson/Hyundai_US Tucson_2024.pdf"
+      ],
+      "catalog_keys": [
+        "2024|hyundai|tucson"
+      ],
+      "first_seen_at": "2026-08-26T14:49:12.667645+00:00",
+      "tier": "archive"
+    },
+    "474b1699cc5598558300400d6371cb2cf02d7ae2fd9ce9484ee26c9e481e5fa6": {
+      "sha256": "474b1699cc5598558300400d6371cb2cf02d7ae2fd9ce9484ee26c9e481e5fa6",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2019_McLaren_720S_Brochure.pdf",
+      "bytes": 2142972,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/mclaren/McLaren_int 720S_2019.pdf"
+      ],
+      "catalog_keys": [
+        "2019|mclaren|720s"
+      ],
+      "first_seen_at": "2026-08-26T14:53:45.508856+00:00",
+      "tier": "archive"
     },
     "47a54ad96adb3ff50ba3f87dd2d6ab667231d122394a73729a372b7576aab53b": {
       "sha256": "47a54ad96adb3ff50ba3f87dd2d6ab667231d122394a73729a372b7576aab53b",
@@ -1055,6 +1701,19 @@
         "has_text_layer": true
       }
     },
+    "5104c649ea705113d1ec6214181b2389f1cf91997c11aa52f06b4e6450a7579c": {
+      "sha256": "5104c649ea705113d1ec6214181b2389f1cf91997c11aa52f06b4e6450a7579c",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2020_Mitsubishi_OUTLANDER_SPORT_Brochure.pdf",
+      "bytes": 39249348,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Mitsubishi/OutlanderSport/Mitsubishi_US Outlander_Sport_2020.pdf"
+      ],
+      "catalog_keys": [
+        "2020|mitsubishi|outlandersport"
+      ],
+      "first_seen_at": "2026-08-26T14:53:57.249278+00:00",
+      "tier": "archive"
+    },
     "52aaa988a117a21ae9bf99e0bcf829a7b9ee8883e2bfcbfdd9e97f30dbb66cae": {
       "sha256": "52aaa988a117a21ae9bf99e0bcf829a7b9ee8883e2bfcbfdd9e97f30dbb66cae",
       "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2020_Dodge_Charger_Brochure.pdf",
@@ -1154,6 +1813,52 @@
         "has_text_layer": true
       }
     },
+    "540ad2b6cee29fc1acbc06d3f4175f66c33b75f695e4627db9dd003fe833b778": {
+      "sha256": "540ad2b6cee29fc1acbc06d3f4175f66c33b75f695e4627db9dd003fe833b778",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2024_Mitsubishi_Mirage_Brochure.pdf",
+      "bytes": 21874128,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Mitsubishi/Mirage/Mitsubishi_US Mirage_2024.pdf"
+      ],
+      "catalog_keys": [
+        "2024|mitsubishi|mirage"
+      ],
+      "first_seen_at": "2026-08-26T14:52:34.029849+00:00",
+      "tier": "archive"
+    },
+    "54d9741db8e449b33036e2792c1d9688154d246406b21f55bf75604dbedb7b37": {
+      "sha256": "54d9741db8e449b33036e2792c1d9688154d246406b21f55bf75604dbedb7b37",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2022_Lincoln_NAUTILUS_Brochure.pdf",
+      "bytes": 6843866,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Lincoln/Nautilus/Lincoln_US Nautilus_2022.pdf"
+      ],
+      "catalog_keys": [
+        "2022|lincoln|nautilus"
+      ],
+      "first_seen_at": "2026-08-26T14:52:09.750289+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "Adobe PDF Library 15.0",
+          "creator": "Adobe InDesign 16.3 (Macintosh)",
+          "title": "Lincoln Nautilus\u00ae",
+          "author": "Lincoln Star",
+          "subject": "Lincoln Nautilus\u00ae",
+          "creation_date": "",
+          "mod_date": "",
+          "page_count": 14,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 14,
+        "page_count": 14,
+        "has_text_layer": true
+      }
+    },
     "5514f857a595eba57272e3cf03a65320ef1158e516f0ade8919ce0ad441183e6": {
       "sha256": "5514f857a595eba57272e3cf03a65320ef1158e516f0ade8919ce0ad441183e6",
       "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2026_Ram_1500_Brochure.pdf",
@@ -1162,6 +1867,19 @@
       "catalog_keys": [],
       "first_seen_at": "",
       "tier": ""
+    },
+    "558093f40dbc357bc6059c2086026a82668e670ecb54c08aac3485f62793198e": {
+      "sha256": "558093f40dbc357bc6059c2086026a82668e670ecb54c08aac3485f62793198e",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2020_Mitsubishi_OUTLANDER_Brochure.pdf",
+      "bytes": 54445335,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Mitsubishi/Outlander/Mitsubishi_US Outlander_2020.pdf"
+      ],
+      "catalog_keys": [
+        "2020|mitsubishi|outlander"
+      ],
+      "first_seen_at": "2026-08-26T14:52:46.151181+00:00",
+      "tier": "archive"
     },
     "55a67059f468bb7eea907c6ef18bc72adc51092bec8ef1705fa7d2676922bf62": {
       "sha256": "55a67059f468bb7eea907c6ef18bc72adc51092bec8ef1705fa7d2676922bf62",
@@ -1175,6 +1893,39 @@
       ],
       "first_seen_at": "2026-08-01T22:58:08.262366+00:00",
       "tier": "oem"
+    },
+    "5604c47903a94aa6e58d51dd84cfbcc8888fe88406b8aa1993f17433e357d20d": {
+      "sha256": "5604c47903a94aa6e58d51dd84cfbcc8888fe88406b8aa1993f17433e357d20d",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures_archive_quarantine/2003_Hummer_H2_Brochure.pdf",
+      "bytes": 12725698,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Hummer/H2/Hummer_US H2_2003.pdf"
+      ],
+      "catalog_keys": [
+        "2003|hummer|h2"
+      ],
+      "first_seen_at": "2026-08-26T14:55:41.357622+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "",
+          "creator": "",
+          "title": "",
+          "author": "",
+          "subject": "",
+          "creation_date": "",
+          "mod_date": "",
+          "page_count": 44,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 0,
+        "page_count": 44,
+        "has_text_layer": false
+      }
     },
     "5676e68567c7ca74171f0dcdcc73e4f665b1c06377405271bf021a3ecaf6cdd6": {
       "sha256": "5676e68567c7ca74171f0dcdcc73e4f665b1c06377405271bf021a3ecaf6cdd6",
@@ -1275,6 +2026,32 @@
         "has_text_layer": true
       }
     },
+    "599deb41c1e4593efb3f12dd627a45aff752479a681010144bdc717ee79a9487": {
+      "sha256": "599deb41c1e4593efb3f12dd627a45aff752479a681010144bdc717ee79a9487",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2025_Nissan_KICKS_PLAY_Brochure.pdf",
+      "bytes": 1856072,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Nissan/Kicks/Nissan_US Kicks-Play_2025.pdf"
+      ],
+      "catalog_keys": [
+        "2025|nissan|kicksplay"
+      ],
+      "first_seen_at": "2026-08-26T14:49:26.024748+00:00",
+      "tier": "archive"
+    },
+    "5a17be31771bdf85dfcf867aa58e8f325a5f036787edf01f6b721aae6d6e2f26": {
+      "sha256": "5a17be31771bdf85dfcf867aa58e8f325a5f036787edf01f6b721aae6d6e2f26",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures_archive_quarantine/2019_Porsche_MACAN_Brochure.pdf",
+      "bytes": 11470068,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Porsche/Macan/Porsche_int Macan_2019.pdf"
+      ],
+      "catalog_keys": [
+        "2019|porsche|macan"
+      ],
+      "first_seen_at": "2026-08-26T14:52:57.473729+00:00",
+      "tier": "archive"
+    },
     "5a693b0129cb3bb19e501648d6b4205cb14295cbdc7a43fa30dd5a90c8a9ea1a": {
       "sha256": "5a693b0129cb3bb19e501648d6b4205cb14295cbdc7a43fa30dd5a90c8a9ea1a",
       "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2023_GMC_Sierra_2500HD_Brochure.pdf",
@@ -1287,6 +2064,65 @@
       ],
       "first_seen_at": "2026-07-31T22:52:30.642573+00:00",
       "tier": ""
+    },
+    "5aba14ff5e9a2b5ff3992ac37fef52be07605e71c5d7a3160f56ce2cad2821a4": {
+      "sha256": "5aba14ff5e9a2b5ff3992ac37fef52be07605e71c5d7a3160f56ce2cad2821a4",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2019_Porsche_CAYENNE_Brochure.pdf",
+      "bytes": 62403071,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Porsche/Cayenne/Porsche_US Cayenne_2019.pdf"
+      ],
+      "catalog_keys": [
+        "2019|porsche|cayenne"
+      ],
+      "first_seen_at": "2026-08-26T14:52:12.685489+00:00",
+      "tier": "archive"
+    },
+    "5ad1933feb64fa4e63bdbb0ba5538e4c936827eac8a89d67efef0b325132c2c9": {
+      "sha256": "5ad1933feb64fa4e63bdbb0ba5538e4c936827eac8a89d67efef0b325132c2c9",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2023_Hyundai_VENUE_Brochure.pdf",
+      "bytes": 7718166,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Hyundai/Venue/Hyundai_US Venue_2023.pdf"
+      ],
+      "catalog_keys": [
+        "2023|hyundai|venue"
+      ],
+      "first_seen_at": "2026-08-26T14:52:11.363761+00:00",
+      "tier": "archive"
+    },
+    "5b6693dda656f7c6ea2209a98afea6d3c2ac9fdc44a7f8b465a041c301a06379": {
+      "sha256": "5b6693dda656f7c6ea2209a98afea6d3c2ac9fdc44a7f8b465a041c301a06379",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2022_Lincoln_CORSAIR_Brochure.pdf",
+      "bytes": 4278257,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Lincoln/Corsair/Lincoln_US Corsair_2022.pdf"
+      ],
+      "catalog_keys": [
+        "2022|lincoln|corsair"
+      ],
+      "first_seen_at": "2026-08-26T14:51:45.448970+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "macOS Version 12.0.1 (Build 21A559) Quartz PDFContext",
+          "creator": "Adobe InDesign CC 2015 (Macintosh)",
+          "title": "",
+          "author": "",
+          "subject": "",
+          "creation_date": "D:20211101095903Z00'00'",
+          "mod_date": "D:20211101095903Z00'00'",
+          "page_count": 14,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 14,
+        "page_count": 14,
+        "has_text_layer": true
+      }
     },
     "5c06de6562be3613afcddd3140c19ac479d059cf9811db1cb4a7b15543bb3bbf": {
       "sha256": "5c06de6562be3613afcddd3140c19ac479d059cf9811db1cb4a7b15543bb3bbf",
@@ -1334,6 +2170,19 @@
         "has_text_layer": true
       }
     },
+    "5e031dfd0a65199685a513c2c2f317ba81068d359c79a7d9cfd847a5b2ddfa5c": {
+      "sha256": "5e031dfd0a65199685a513c2c2f317ba81068d359c79a7d9cfd847a5b2ddfa5c",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2013_Mitsubishi_OUTLANDER_Brochure.pdf",
+      "bytes": 11230770,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Mitsubishi/Outlander/Mitsubishi_US Outlander_2013.pdf"
+      ],
+      "catalog_keys": [
+        "2013|mitsubishi|outlander"
+      ],
+      "first_seen_at": "2026-08-26T14:53:08.348607+00:00",
+      "tier": "archive"
+    },
     "5eb9c2f7752880fdea432bfdfb2084770bda3c518520e2d2a092eec1f3dcf0a4": {
       "sha256": "5eb9c2f7752880fdea432bfdfb2084770bda3c518520e2d2a092eec1f3dcf0a4",
       "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2026_Lexus_NX_Brochure.pdf",
@@ -1346,6 +2195,52 @@
       ],
       "first_seen_at": "2026-07-31T22:59:11.685773+00:00",
       "tier": ""
+    },
+    "600df5d633e91b594fad4dff32bbb5111432da60fb66b47aae0f341a81c2cbcc": {
+      "sha256": "600df5d633e91b594fad4dff32bbb5111432da60fb66b47aae0f341a81c2cbcc",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2022_Lincoln_AVIATOR_Brochure.pdf",
+      "bytes": 12092692,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Lincoln/Aviator/Lincoln_US Aviator_2022.pdf"
+      ],
+      "catalog_keys": [
+        "2022|lincoln|aviator"
+      ],
+      "first_seen_at": "2026-08-26T14:52:58.007205+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "Adobe PDF Library 15.0",
+          "creator": "Adobe InDesign CC 2015 (Macintosh)",
+          "title": "Lincoln Aviator",
+          "author": "Lincoln",
+          "subject": "Lincoln Aviator",
+          "creation_date": "",
+          "mod_date": "",
+          "page_count": 14,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 14,
+        "page_count": 14,
+        "has_text_layer": true
+      }
+    },
+    "6020c57331667667efd1b09ba32ac60d18050296707f2438669306038df0e7af": {
+      "sha256": "6020c57331667667efd1b09ba32ac60d18050296707f2438669306038df0e7af",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2020_Nissan_ROGUE_Brochure.pdf",
+      "bytes": 5361285,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Nissan/Rogue/Nissan_US Rogue_2020.pdf"
+      ],
+      "catalog_keys": [
+        "2020|nissan|rogue"
+      ],
+      "first_seen_at": "2026-08-26T14:49:14.873455+00:00",
+      "tier": "archive"
     },
     "606c2f77099ded463f7c2eff844b5d56796ea484e234282d8d3d3958b18102fb": {
       "sha256": "606c2f77099ded463f7c2eff844b5d56796ea484e234282d8d3d3958b18102fb",
@@ -1406,6 +2301,19 @@
       "first_seen_at": "2026-07-31T22:54:23.335884+00:00",
       "tier": ""
     },
+    "6310dc8e365196002c30ad78ceb2f64e56b8d7cbf54d9f2a84ca56fd614614a5": {
+      "sha256": "6310dc8e365196002c30ad78ceb2f64e56b8d7cbf54d9f2a84ca56fd614614a5",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2015_Buick_ENCLAVE_Brochure.pdf",
+      "bytes": 2445016,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Buick/Enclave/Buick_US Enclave_2015.pdf"
+      ],
+      "catalog_keys": [
+        "2015|buick|enclave"
+      ],
+      "first_seen_at": "2026-08-26T14:51:30.040165+00:00",
+      "tier": "archive"
+    },
     "6400834ecfdae82f4d696a03791abbd67ffdff7d0ed5a3fce7b1b73fedc8ed0e": {
       "sha256": "6400834ecfdae82f4d696a03791abbd67ffdff7d0ed5a3fce7b1b73fedc8ed0e",
       "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2026_Lexus_LC_500_Brochure.pdf",
@@ -1458,6 +2366,52 @@
       "first_seen_at": "2026-07-31T22:53:13.385490+00:00",
       "tier": ""
     },
+    "652c8e9c3e3251884eeec340817fb60a576f3ae77899efff870a78caa8d7c439": {
+      "sha256": "652c8e9c3e3251884eeec340817fb60a576f3ae77899efff870a78caa8d7c439",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2020_Lincoln_CORSAIR_Brochure.pdf",
+      "bytes": 2530470,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Lincoln/Corsair/Lincoln_US Corsair_2020.pdf"
+      ],
+      "catalog_keys": [
+        "2020|lincoln|corsair"
+      ],
+      "first_seen_at": "2026-08-26T14:52:45.573295+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "iText 2.1.7 by 1T3XT",
+          "creator": "",
+          "title": "",
+          "author": "",
+          "subject": "",
+          "creation_date": "",
+          "mod_date": "",
+          "page_count": 11,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 11,
+        "page_count": 11,
+        "has_text_layer": true
+      }
+    },
+    "66444ff2785cddd3a9812246e7431a79e24fa4ef1f10691df54228a26bc2e3d5": {
+      "sha256": "66444ff2785cddd3a9812246e7431a79e24fa4ef1f10691df54228a26bc2e3d5",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2020_Volkswagen_ATLAS_CROSS_SPORT_Brochure.pdf",
+      "bytes": 1531153,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Volkswagen/Atlas Cross Sport/VW_US AtlasCS_2020.pdf"
+      ],
+      "catalog_keys": [
+        "2020|volkswagen|atlascrosssport"
+      ],
+      "first_seen_at": "2026-08-26T14:50:15.636187+00:00",
+      "tier": "archive"
+    },
     "6663b778964b9a148bb3796c17432539b7c7bbfc26e7cb057c301b6fd05b50e6": {
       "sha256": "6663b778964b9a148bb3796c17432539b7c7bbfc26e7cb057c301b6fd05b50e6",
       "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2022_Dodge_Durango_Brochure.pdf",
@@ -1490,6 +2444,19 @@
         "page_count": 37,
         "has_text_layer": true
       }
+    },
+    "672c60e4c8f1b0e22df7e43d4fbac66ac885c4f625ffd612410a35ae65b165c0": {
+      "sha256": "672c60e4c8f1b0e22df7e43d4fbac66ac885c4f625ffd612410a35ae65b165c0",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2025_Hyundai_TUCSON_Brochure.pdf",
+      "bytes": 6614049,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Hyundai/Tucson/Hyundai_US Tucson_2025.pdf"
+      ],
+      "catalog_keys": [
+        "2025|hyundai|tucson"
+      ],
+      "first_seen_at": "2026-08-26T14:49:23.409556+00:00",
+      "tier": "archive"
     },
     "673f4f1b636784812bc913d26d476ba2b60d5be6e431892f1e274155fcb1fe09": {
       "sha256": "673f4f1b636784812bc913d26d476ba2b60d5be6e431892f1e274155fcb1fe09",
@@ -1537,6 +2504,39 @@
       "first_seen_at": "2026-07-31T17:37:19.087156+00:00",
       "tier": ""
     },
+    "67874d0b969fe271484d4ce67eb09d0fc564bd8cd772fa74ef480de634b84cb4": {
+      "sha256": "67874d0b969fe271484d4ce67eb09d0fc564bd8cd772fa74ef480de634b84cb4",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures_archive_quarantine/2005_Chrysler_Crossfire_Brochure.pdf",
+      "bytes": 412318,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Chrysler/Crossfire/Chrysler_US Crossfire_2005.pdf"
+      ],
+      "catalog_keys": [
+        "2005|chrysler|crossfire"
+      ],
+      "first_seen_at": "2026-08-26T14:51:06.942422+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "Adobe PDF Library 5.0",
+          "creator": "Adobe InDesign 2.0.2",
+          "title": "Crossfire",
+          "author": "",
+          "subject": "",
+          "creation_date": "D:20041117151918Z",
+          "mod_date": "D:20140201094443-06'00'",
+          "page_count": 6,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 6,
+        "page_count": 6,
+        "has_text_layer": true
+      }
+    },
     "6794e2d6e50231d4750b5c3fab119e213d692b7a8ac3d0012ac3ca717ef62817": {
       "sha256": "6794e2d6e50231d4750b5c3fab119e213d692b7a8ac3d0012ac3ca717ef62817",
       "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2025_Lexus_NX_Brochure.pdf",
@@ -1562,6 +2562,19 @@
       ],
       "first_seen_at": "2026-07-31T22:50:27.827686+00:00",
       "tier": ""
+    },
+    "6b182acc0e595773efe924c7e6953b9e0867f34b440c8c0e6805e6afc505c07d": {
+      "sha256": "6b182acc0e595773efe924c7e6953b9e0867f34b440c8c0e6805e6afc505c07d",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2019_Nissan_ROGUE_SPORT_Brochure.pdf",
+      "bytes": 5017557,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Nissan/Rogue/Nissan_US RogueSport_2019.pdf"
+      ],
+      "catalog_keys": [
+        "2019|nissan|roguesport"
+      ],
+      "first_seen_at": "2026-08-26T14:51:15.034287+00:00",
+      "tier": "archive"
     },
     "6b5412a3a54ad47046c1ca69a59eb6a79ccd6da9079f66421f571e4380e86f17": {
       "sha256": "6b5412a3a54ad47046c1ca69a59eb6a79ccd6da9079f66421f571e4380e86f17",
@@ -1701,6 +2714,19 @@
         "has_text_layer": true
       }
     },
+    "71811783cd4fea129214370b3a526d5073bffb1a00d6c89fff57682ef668619b": {
+      "sha256": "71811783cd4fea129214370b3a526d5073bffb1a00d6c89fff57682ef668619b",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2021_Subaru_WRX_Brochure.pdf",
+      "bytes": 6896897,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Subaru/Impreza WRX/Subaru_US Impreza-WRX_2021.pdf"
+      ],
+      "catalog_keys": [
+        "2021|subaru|wrx"
+      ],
+      "first_seen_at": "2026-08-26T14:52:43.921069+00:00",
+      "tier": "archive"
+    },
     "7244022480ee385bb9d29266121ba3725e655563b76cbc778c48660dc3acb912": {
       "sha256": "7244022480ee385bb9d29266121ba3725e655563b76cbc778c48660dc3acb912",
       "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2022_Dodge_Challenger_Brochure.pdf",
@@ -1826,6 +2852,45 @@
         "has_text_layer": true
       }
     },
+    "74bacac0f0b624927d5a76aa271d1befd10552d7b9b54e25d61d95c2236fa780": {
+      "sha256": "74bacac0f0b624927d5a76aa271d1befd10552d7b9b54e25d61d95c2236fa780",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2022_Subaru_FORESTER_Brochure.pdf",
+      "bytes": 19282393,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Subaru/Forester/Subaru_US Forester_2022.pdf"
+      ],
+      "catalog_keys": [
+        "2022|subaru|forester"
+      ],
+      "first_seen_at": "2026-08-26T14:50:08.858464+00:00",
+      "tier": "archive"
+    },
+    "74ca94170c464dfcb493c891e3b9ce35417d780eac9387ff4f869d9eb7c105d4": {
+      "sha256": "74ca94170c464dfcb493c891e3b9ce35417d780eac9387ff4f869d9eb7c105d4",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2021_Cadillac_ESCALADE_Brochure.pdf",
+      "bytes": 4666098,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Cadillac/Escalade/Cadillac_US Escalade_2021.pdf"
+      ],
+      "catalog_keys": [
+        "2021|cadillac|escalade"
+      ],
+      "first_seen_at": "2026-08-26T14:50:24.766306+00:00",
+      "tier": "archive"
+    },
+    "76bd04aec009fefe3811671a07859ec1a5042b83ff74b0528302f0274372e681": {
+      "sha256": "76bd04aec009fefe3811671a07859ec1a5042b83ff74b0528302f0274372e681",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2018_Nissan_KICKS_Brochure.pdf",
+      "bytes": 9720128,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Nissan/Kicks/Nissan_US Kicks_2018.pdf"
+      ],
+      "catalog_keys": [
+        "2018|nissan|kicks"
+      ],
+      "first_seen_at": "2026-08-26T14:53:14.795994+00:00",
+      "tier": "archive"
+    },
     "77bf072007b2544e1ca36a146095b7f39474fb19fc0e78ce3bc6fc377331ef06": {
       "sha256": "77bf072007b2544e1ca36a146095b7f39474fb19fc0e78ce3bc6fc377331ef06",
       "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2015_BMW_X1_Brochure.pdf",
@@ -1858,6 +2923,19 @@
         "page_count": 66,
         "has_text_layer": true
       }
+    },
+    "78308497e7851081c71ee26cc0812763a0ed73257846d5e927da3543b9ffd4b6": {
+      "sha256": "78308497e7851081c71ee26cc0812763a0ed73257846d5e927da3543b9ffd4b6",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2023_Hyundai_PALISADE_Brochure.pdf",
+      "bytes": 8310433,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Hyundai/Palisade/Hyundai_US Palisade_2023.pdf"
+      ],
+      "catalog_keys": [
+        "2023|hyundai|palisade"
+      ],
+      "first_seen_at": "2026-08-26T14:50:59.779543+00:00",
+      "tier": "archive"
     },
     "79aed1a26f3c218fbc605fa081c657b3c1ce1231964eaf50108edc74e4ce35db": {
       "sha256": "79aed1a26f3c218fbc605fa081c657b3c1ce1231964eaf50108edc74e4ce35db",
@@ -1907,6 +2985,32 @@
       "first_seen_at": "",
       "tier": ""
     },
+    "7b9ac407509440b39c6a3421cad25c0fe8e592ab13e085cb847eabf7911304cf": {
+      "sha256": "7b9ac407509440b39c6a3421cad25c0fe8e592ab13e085cb847eabf7911304cf",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2025_Subaru_CROSSTREK_Brochure.pdf",
+      "bytes": 10793288,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Subaru/XV Crosstrek/Subaru_US Crosstrek_2025.pdf"
+      ],
+      "catalog_keys": [
+        "2025|subaru|crosstrek"
+      ],
+      "first_seen_at": "2026-08-26T14:49:20.139787+00:00",
+      "tier": "archive"
+    },
+    "7bc27ed6ab61a46cd3a3e443228a8f53a9e03f13b8c41706e4df3af74b7d1dec": {
+      "sha256": "7bc27ed6ab61a46cd3a3e443228a8f53a9e03f13b8c41706e4df3af74b7d1dec",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2025_Dodge_HORNET_Brochure.pdf",
+      "bytes": 5441285,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Dodge/Hornet/Dodge_US Hornet_2025-Fleet.pdf"
+      ],
+      "catalog_keys": [
+        "2025|dodge|hornet"
+      ],
+      "first_seen_at": "2026-08-26T14:50:27.864995+00:00",
+      "tier": "archive"
+    },
     "7d3e0054a2f8df06f138e4e345ea5898cdb874b2ab373d2af15e5e176f4a3d9a": {
       "sha256": "7d3e0054a2f8df06f138e4e345ea5898cdb874b2ab373d2af15e5e176f4a3d9a",
       "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2027_Nissan_Nissan_Z_Brochure.pdf",
@@ -1952,6 +3056,19 @@
         "page_count": 8,
         "has_text_layer": true
       }
+    },
+    "7e2b9bdfd23f0948e95ec2939c59aa1ad7aa08fc7c1b829f1d002b1133bf7622": {
+      "sha256": "7e2b9bdfd23f0948e95ec2939c59aa1ad7aa08fc7c1b829f1d002b1133bf7622",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2008_Dodge_Caliber_Brochure.pdf",
+      "bytes": 2003188,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Dodge/Caliber/Dodge_US Caliber_2008.pdf"
+      ],
+      "catalog_keys": [
+        "2008|dodge|caliber"
+      ],
+      "first_seen_at": "2026-08-26T14:51:03.923591+00:00",
+      "tier": "archive"
     },
     "7eeeba4c64d3ee6972800e24b382fc8af7f5888b4df6b8301fe317e923a82585": {
       "sha256": "7eeeba4c64d3ee6972800e24b382fc8af7f5888b4df6b8301fe317e923a82585",
@@ -2012,6 +3129,19 @@
       "first_seen_at": "2026-07-31T22:49:14.449327+00:00",
       "tier": ""
     },
+    "827046588b019f822b4be2acfcfb8709e52a487f9068b62e98eda4cf7cdc74fd": {
+      "sha256": "827046588b019f822b4be2acfcfb8709e52a487f9068b62e98eda4cf7cdc74fd",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures_archive_quarantine/2016_Mitsubishi_OUTLANDER_Brochure.pdf",
+      "bytes": 7105127,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Mitsubishi/Outlander/Mitsubishi_US Outlander_2016.pdf"
+      ],
+      "catalog_keys": [
+        "2016|mitsubishi|outlander"
+      ],
+      "first_seen_at": "2026-08-26T14:53:21.815706+00:00",
+      "tier": "archive"
+    },
     "82a162b38f81932d755a2f7cdab85c365f4ad3ecf5ed9d47cb97fae2bf6e085d": {
       "sha256": "82a162b38f81932d755a2f7cdab85c365f4ad3ecf5ed9d47cb97fae2bf6e085d",
       "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2026_Lexus_RZ_Brochure.pdf",
@@ -2058,6 +3188,52 @@
         "has_text_layer": true
       }
     },
+    "840b19f36a4405bae82ac0cddf909a0ae38fc918ed43899ca690fcea2f37fd7e": {
+      "sha256": "840b19f36a4405bae82ac0cddf909a0ae38fc918ed43899ca690fcea2f37fd7e",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2023_Toyota_PRIUS_PRIME_Brochure.pdf",
+      "bytes": 8851487,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Toyota/Prius/Toyota_US PriusPrime_2023.pdf"
+      ],
+      "catalog_keys": [
+        "2023|toyota|priusprime"
+      ],
+      "first_seen_at": "2026-08-26T14:49:39.334514+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "Adobe PDF Library 17.0",
+          "creator": "Adobe InDesign 18.5 (Macintosh)",
+          "title": "MY23_Prius Prime eBrochure",
+          "author": "",
+          "subject": "",
+          "creation_date": "D:20230922101407-05'00'",
+          "mod_date": "D:20230922102116-05'00'",
+          "page_count": 18,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 18,
+        "page_count": 18,
+        "has_text_layer": true
+      }
+    },
+    "8411ccd9b032d8e9784962a5b12f053ab93cc71207b1342335e3e71097061276": {
+      "sha256": "8411ccd9b032d8e9784962a5b12f053ab93cc71207b1342335e3e71097061276",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2014_Mazda_Mazda_CX-5_Brochure.pdf",
+      "bytes": 193369,
+      "source_urls": [
+        "https://news.mazdausa.com/download/2014-CX-5-Specifications.pdf"
+      ],
+      "catalog_keys": [
+        "2014|mazda|mazdacx5"
+      ],
+      "first_seen_at": "2026-08-26T14:53:09.630872+00:00",
+      "tier": "oem"
+    },
     "8438ee077c4c14f68fdf8e077d76e425c720b90fdad7003f17dd1861f0c5a7e3": {
       "sha256": "8438ee077c4c14f68fdf8e077d76e425c720b90fdad7003f17dd1861f0c5a7e3",
       "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2018_Mercedes-Benz_C-Class_Brochure.pdf",
@@ -2090,6 +3266,45 @@
         "page_count": 31,
         "has_text_layer": true
       }
+    },
+    "850a18bf14de49f6ee4d902ee5b5bb9e99f496253d572cc4a0dfed3254a4a9f4": {
+      "sha256": "850a18bf14de49f6ee4d902ee5b5bb9e99f496253d572cc4a0dfed3254a4a9f4",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2019_Nissan_MURANO_Brochure.pdf",
+      "bytes": 4895217,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Nissan/Murano/Nissan_US Murano_2019.pdf"
+      ],
+      "catalog_keys": [
+        "2019|nissan|murano"
+      ],
+      "first_seen_at": "2026-08-26T14:51:50.602736+00:00",
+      "tier": "archive"
+    },
+    "8530d4e7bf69f912f4d7c365db1a080cae7b9c62510bc42b1a96f80db00ee4da": {
+      "sha256": "8530d4e7bf69f912f4d7c365db1a080cae7b9c62510bc42b1a96f80db00ee4da",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2016_Volkswagen_JETTA_Brochure.pdf",
+      "bytes": 4928546,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Volkswagen/Jetta/VW_US Jetta_2016.pdf"
+      ],
+      "catalog_keys": [
+        "2016|volkswagen|jetta"
+      ],
+      "first_seen_at": "2026-08-26T14:50:28.017729+00:00",
+      "tier": "archive"
+    },
+    "8595311aef4d3afe239981dfdf549330817fc73295c686b6ef668d6ef1c2a1cc": {
+      "sha256": "8595311aef4d3afe239981dfdf549330817fc73295c686b6ef668d6ef1c2a1cc",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2020_Aston Martin_Vantage_Brochure.pdf",
+      "bytes": 710436,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Aston_Martin/vantage/Aston Martin_int Vantage_2020.pdf"
+      ],
+      "catalog_keys": [
+        "2020|astonmartin|vantage"
+      ],
+      "first_seen_at": "2026-08-26T14:54:53.559186+00:00",
+      "tier": "archive"
     },
     "860331fece63e82b983ee0e92698fa6a3abade9e767833f68b1213d9fd1d2ed0": {
       "sha256": "860331fece63e82b983ee0e92698fa6a3abade9e767833f68b1213d9fd1d2ed0",
@@ -2129,6 +3344,52 @@
       ],
       "first_seen_at": "2026-07-31T22:50:12.134233+00:00",
       "tier": ""
+    },
+    "88135ddd8e7cb7697b2bfff0ad3c98c710690854aee637b5309eef522ad18f62": {
+      "sha256": "88135ddd8e7cb7697b2bfff0ad3c98c710690854aee637b5309eef522ad18f62",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2023_Mazda_Mazda_CX-5_Brochure.pdf",
+      "bytes": 238025,
+      "source_urls": [
+        "https://news.mazdausa.com/download/2023+CX-5+Spec+Deck.pdf"
+      ],
+      "catalog_keys": [
+        "2023|mazda|cx5"
+      ],
+      "first_seen_at": "2026-08-26T14:49:37.658500+00:00",
+      "tier": "oem"
+    },
+    "88a14cf53f66665b6b167cb5557338840447fa4082c20ee40d05444e1adb11fa": {
+      "sha256": "88a14cf53f66665b6b167cb5557338840447fa4082c20ee40d05444e1adb11fa",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2021_Lincoln_NAVIGATOR_Brochure.pdf",
+      "bytes": 13770460,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Lincoln/Navigator/Lincoln_US Navigator_2021.pdf"
+      ],
+      "catalog_keys": [
+        "2021|lincoln|navigator"
+      ],
+      "first_seen_at": "2026-08-26T14:53:21.885210+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "Adobe PDF Library 15.0; modified using iText 4.2.0 by 1T3XT",
+          "creator": "Adobe InDesign CC 2015 (Macintosh)",
+          "title": "2021 Navigator",
+          "author": "Lincoln Star",
+          "subject": "2021 Navigator",
+          "creation_date": "",
+          "mod_date": "",
+          "page_count": 11,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 11,
+        "page_count": 11,
+        "has_text_layer": true
+      }
     },
     "89deea1653ea466c5f81459d66518b2a5aa2106969e5971b4202402d7cb5ede8": {
       "sha256": "89deea1653ea466c5f81459d66518b2a5aa2106969e5971b4202402d7cb5ede8",
@@ -2174,6 +3435,65 @@
       "first_seen_at": "",
       "tier": ""
     },
+    "8bd71ba96b68876db46cf0038202adade2049e4b4dd30605391bf612d2763bf4": {
+      "sha256": "8bd71ba96b68876db46cf0038202adade2049e4b4dd30605391bf612d2763bf4",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2017_Subaru_CROSSTREK_Brochure.pdf",
+      "bytes": 21707987,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Subaru/XV Crosstrek/Subaru_US Crosstrek_2017.pdf"
+      ],
+      "catalog_keys": [
+        "2017|subaru|crosstrek"
+      ],
+      "first_seen_at": "2026-08-26T14:50:56.659655+00:00",
+      "tier": "archive"
+    },
+    "8c0cb71a2ba6a9b3c0ebff19ff94e9913ede744124e9c15da97e23a6e807c53a": {
+      "sha256": "8c0cb71a2ba6a9b3c0ebff19ff94e9913ede744124e9c15da97e23a6e807c53a",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2021_Lincoln_AVIATOR_Brochure.pdf",
+      "bytes": 20692463,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Lincoln/Aviator/Lincoln_US Aviator_2021.pdf"
+      ],
+      "catalog_keys": [
+        "2021|lincoln|aviator"
+      ],
+      "first_seen_at": "2026-08-26T14:53:58.356031+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "Adobe PDF Library 15.0; modified using iText 4.2.0 by 1T3XT",
+          "creator": "Adobe InDesign CC 2015 (Macintosh)",
+          "title": "2021 Aviator",
+          "author": "Latcha and Associates",
+          "subject": "2021 Aviator",
+          "creation_date": "",
+          "mod_date": "",
+          "page_count": 11,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 11,
+        "page_count": 11,
+        "has_text_layer": true
+      }
+    },
+    "8cc252c42eefacc6bcaa9f13a6e3f6898fae5f2292e7f42b0b6013f18cf338ad": {
+      "sha256": "8cc252c42eefacc6bcaa9f13a6e3f6898fae5f2292e7f42b0b6013f18cf338ad",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2017_Volkswagen_GOLF_ALLTRACK_Brochure.pdf",
+      "bytes": 8788213,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Volkswagen/Golf/VW_US Golf_Alltrack_2017.pdf"
+      ],
+      "catalog_keys": [
+        "2017|volkswagen|golfalltrack"
+      ],
+      "first_seen_at": "2026-08-26T14:51:16.068084+00:00",
+      "tier": "archive"
+    },
     "8cca3af5457a95e3fd48b7d271eacc6acc4e12c53947437562d70764745105fa": {
       "sha256": "8cca3af5457a95e3fd48b7d271eacc6acc4e12c53947437562d70764745105fa",
       "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2024_MAZDA_CX-30_Brochure.pdf",
@@ -2186,6 +3506,19 @@
       ],
       "first_seen_at": "2026-07-31T17:37:02.212976+00:00",
       "tier": ""
+    },
+    "8d65455c23adb7e02e7630df7f5cac7d52d536f3b37ad7a4b1228b06ce34fbb5": {
+      "sha256": "8d65455c23adb7e02e7630df7f5cac7d52d536f3b37ad7a4b1228b06ce34fbb5",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2006_Buick_Rendezvous_Brochure.pdf",
+      "bytes": 4280974,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Buick/Rendezvous/Buick_US Rendezvous_2006.pdf"
+      ],
+      "catalog_keys": [
+        "2006|buick|rendezvous"
+      ],
+      "first_seen_at": "2026-08-26T14:51:18.374638+00:00",
+      "tier": "archive"
     },
     "8dbfd898068ecc98c3d9416cef10112c649f7b7492626ff8405c72f4ae6baa9d": {
       "sha256": "8dbfd898068ecc98c3d9416cef10112c649f7b7492626ff8405c72f4ae6baa9d",
@@ -2366,6 +3699,19 @@
       "first_seen_at": "2026-07-31T22:46:51.841477+00:00",
       "tier": ""
     },
+    "99670b6ae698ec997ddbabbc183386c022eada8832a3f1523d65ca8352f3d678": {
+      "sha256": "99670b6ae698ec997ddbabbc183386c022eada8832a3f1523d65ca8352f3d678",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2009_Scion_XD_Brochure.pdf",
+      "bytes": 5323300,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Scion/xD/Scion_US xD_2009.pdf"
+      ],
+      "catalog_keys": [
+        "2009|scion|xd"
+      ],
+      "first_seen_at": "2026-08-26T14:54:37.276158+00:00",
+      "tier": "archive"
+    },
     "99e4b9f27fd0b385c730100b3d18be0fcbe9f97ed795ab23f06936ae94d0d3d6": {
       "sha256": "99e4b9f27fd0b385c730100b3d18be0fcbe9f97ed795ab23f06936ae94d0d3d6",
       "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures_archive_quarantine/2015_BMW_4_Series_Brochure.pdf",
@@ -2458,6 +3804,19 @@
       "first_seen_at": "2026-07-31T23:01:32.034275+00:00",
       "tier": ""
     },
+    "9c97073397e4924b912651c5ddfb287271d0a5041a1d36803a03c29a3b845b92": {
+      "sha256": "9c97073397e4924b912651c5ddfb287271d0a5041a1d36803a03c29a3b845b92",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2010_Mazda_MAZDA3_Brochure.pdf",
+      "bytes": 84033,
+      "source_urls": [
+        "https://news.mazdausa.com/download/2010-MAZDA3-specs.pdf"
+      ],
+      "catalog_keys": [
+        "2010|mazda|mazda3"
+      ],
+      "first_seen_at": "2026-08-26T14:54:25.659303+00:00",
+      "tier": "oem"
+    },
     "9ca2d132a01af8b58f74d43139c1fbf4c2564d9e3ffbd1269e889cc039643e2e": {
       "sha256": "9ca2d132a01af8b58f74d43139c1fbf4c2564d9e3ffbd1269e889cc039643e2e",
       "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2026_Jeep_Wrangler_Brochure.pdf",
@@ -2466,6 +3825,32 @@
       "catalog_keys": [],
       "first_seen_at": "",
       "tier": ""
+    },
+    "9e63257e1df03e503709f39117c6b5dcc93dabbec98478a5b1fb9236962313e2": {
+      "sha256": "9e63257e1df03e503709f39117c6b5dcc93dabbec98478a5b1fb9236962313e2",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2020_Nissan_ARMADA_Brochure.pdf",
+      "bytes": 4596122,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Nissan/Armada/Nissan_US Armada_2020.pdf"
+      ],
+      "catalog_keys": [
+        "2020|nissan|armada"
+      ],
+      "first_seen_at": "2026-08-26T14:52:14.670722+00:00",
+      "tier": "archive"
+    },
+    "9ecc050370ccef5b715b476b317fca74fe73294e9d1f13ffdfc510a6de7cd09c": {
+      "sha256": "9ecc050370ccef5b715b476b317fca74fe73294e9d1f13ffdfc510a6de7cd09c",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures_archive_quarantine/2007_Buick_Lacrosse_Brochure.pdf",
+      "bytes": 164587,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Buick/LaCrosse/Buick_US LaCrosse_FactSheet_2007.pdf"
+      ],
+      "catalog_keys": [
+        "2007|buick|lacrosse"
+      ],
+      "first_seen_at": "2026-08-26T14:51:05.994386+00:00",
+      "tier": "archive"
     },
     "9ff3b20b89de4d9161a5cd9c55895c94ce9208cb13cfaa2aaf7a6503b1003134": {
       "sha256": "9ff3b20b89de4d9161a5cd9c55895c94ce9208cb13cfaa2aaf7a6503b1003134",
@@ -2566,6 +3951,45 @@
         "has_text_layer": true
       }
     },
+    "a2dd7747225396f844ad8ca80d8e577d499baad16212a3ba1684588e89ba2ba0": {
+      "sha256": "a2dd7747225396f844ad8ca80d8e577d499baad16212a3ba1684588e89ba2ba0",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2019_Nissan_ROGUE_Brochure.pdf",
+      "bytes": 5302703,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Nissan/Rogue/Nissan_US Rogue_2019.pdf"
+      ],
+      "catalog_keys": [
+        "2019|nissan|rogue"
+      ],
+      "first_seen_at": "2026-08-26T14:49:50.555538+00:00",
+      "tier": "archive"
+    },
+    "a354ba1a3e723d543c64411372ad526d3d70dc52cb2d87b03ed97c312a6d8b70": {
+      "sha256": "a354ba1a3e723d543c64411372ad526d3d70dc52cb2d87b03ed97c312a6d8b70",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2004_Volvo_V70_Brochure.pdf",
+      "bytes": 2094359,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Volvo/V70/Volvo_US V70_2004.pdf"
+      ],
+      "catalog_keys": [
+        "2004|volvo|v70"
+      ],
+      "first_seen_at": "2026-08-26T14:51:25.889092+00:00",
+      "tier": "archive"
+    },
+    "a40d130f22a032b20af396169fd18df0bf76576c171081623f07842e257e3a20": {
+      "sha256": "a40d130f22a032b20af396169fd18df0bf76576c171081623f07842e257e3a20",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2017_Mitsubishi_OUTLANDER_SPORT_Brochure.pdf",
+      "bytes": 834455,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Mitsubishi/OutlanderSport/Mitsubishi_US Outlander_Sport_2017.pdf"
+      ],
+      "catalog_keys": [
+        "2017|mitsubishi|outlandersport"
+      ],
+      "first_seen_at": "2026-08-26T14:53:31.595651+00:00",
+      "tier": "archive"
+    },
     "a501625dcc81f027b1522c1ccd8b2dd85db4768af2e43f5528038877f2bd9f14": {
       "sha256": "a501625dcc81f027b1522c1ccd8b2dd85db4768af2e43f5528038877f2bd9f14",
       "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2014_Mazda_Mazda3_Brochure.pdf",
@@ -2578,6 +4002,45 @@
       ],
       "first_seen_at": "2026-07-31T22:42:01.642235+00:00",
       "tier": ""
+    },
+    "a52fdbf154f137f20a62301ad4c76c56559b93a10fa0cf9e4cb61c932e1a1eaf": {
+      "sha256": "a52fdbf154f137f20a62301ad4c76c56559b93a10fa0cf9e4cb61c932e1a1eaf",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2020_Jeep_Renegade_Brochure.pdf",
+      "bytes": 10047403,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Jeep/Renegade/Jeep_US Renegade_2020.pdf"
+      ],
+      "catalog_keys": [
+        "2020|jeep|renegade"
+      ],
+      "first_seen_at": "2026-08-26T14:49:29.526870+00:00",
+      "tier": "archive"
+    },
+    "a607c9de8f7d066293065458599e4b84c7d1f1425d32755f3b7eaa34abdc6260": {
+      "sha256": "a607c9de8f7d066293065458599e4b84c7d1f1425d32755f3b7eaa34abdc6260",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2024_Lamborghini_Revuelto_Brochure.pdf",
+      "bytes": 5640447,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Lamborghini/revuelto/Lamborghini_int Revuelto_2024.pdf"
+      ],
+      "catalog_keys": [
+        "2024|lamborghini|revuelto"
+      ],
+      "first_seen_at": "2026-08-26T14:53:51.442898+00:00",
+      "tier": "archive"
+    },
+    "a6c910d3201b147211260c197300aa23ce52e8c49de22644fd2534b54d8ed272": {
+      "sha256": "a6c910d3201b147211260c197300aa23ce52e8c49de22644fd2534b54d8ed272",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures_archive_quarantine/2001_Chrysler_PT_Cruiser_Brochure.pdf",
+      "bytes": 22849553,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Chrysler/PT Cruiser/Chrysler_US PTCruiser_2001.pdf"
+      ],
+      "catalog_keys": [
+        "2001|chrysler|ptcruiser"
+      ],
+      "first_seen_at": "2026-08-26T14:51:20.289457+00:00",
+      "tier": "archive"
     },
     "a7be5cced7115a286522c7154ef6762ef7d516f29736118ec0425b75ec9697ff": {
       "sha256": "a7be5cced7115a286522c7154ef6762ef7d516f29736118ec0425b75ec9697ff",
@@ -2639,6 +4102,58 @@
       "first_seen_at": "2026-07-31T17:33:03.927723+00:00",
       "tier": ""
     },
+    "a8b425d7d56c7fd1d7bac6ea80f97e47a2be495da64456a67f0fac6933340e4d": {
+      "sha256": "a8b425d7d56c7fd1d7bac6ea80f97e47a2be495da64456a67f0fac6933340e4d",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2022_Hyundai_KONA_Brochure.pdf",
+      "bytes": 11296543,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Hyundai/Kona/Hyundai_US Kona_2022.pdf"
+      ],
+      "catalog_keys": [
+        "2022|hyundai|kona"
+      ],
+      "first_seen_at": "2026-08-26T14:51:36.074092+00:00",
+      "tier": "archive"
+    },
+    "a967968131d729e5b67a3ef1b44101c2062b330dc5a86cd873c56e3a44c3642f": {
+      "sha256": "a967968131d729e5b67a3ef1b44101c2062b330dc5a86cd873c56e3a44c3642f",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2026_Toyota_GR_SUPRA_Brochure.pdf",
+      "bytes": 14235903,
+      "source_urls": [
+        "https://www.toyota.com/content/dam/toyota/brochures/pdf/2026/2026-grsupra-brochure.pdf"
+      ],
+      "catalog_keys": [
+        "2026|toyota|grsupra"
+      ],
+      "first_seen_at": "2026-08-26T14:49:45.212037+00:00",
+      "tier": "oem"
+    },
+    "aa2711a99ffd7da666c39c5f742e94ad9833eab85fae7c5b777e4fdfa7352086": {
+      "sha256": "aa2711a99ffd7da666c39c5f742e94ad9833eab85fae7c5b777e4fdfa7352086",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2021_Volkswagen_ATLAS_Brochure.pdf",
+      "bytes": 82111019,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Volkswagen/Atlas/VW_US Atlas_2021.pdf"
+      ],
+      "catalog_keys": [
+        "2021|volkswagen|atlas"
+      ],
+      "first_seen_at": "2026-08-26T14:50:08.679806+00:00",
+      "tier": "archive"
+    },
+    "aaa810e252d07cb32f06a2a013f5f65e05a18293180daf6a8e3c81933710fbc2": {
+      "sha256": "aaa810e252d07cb32f06a2a013f5f65e05a18293180daf6a8e3c81933710fbc2",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2013_Jaguar_XF_Brochure.pdf",
+      "bytes": 17290619,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Jaguar/XF/Jaguar_US XF_2013.pdf"
+      ],
+      "catalog_keys": [
+        "2013|jaguar|xf"
+      ],
+      "first_seen_at": "2026-08-26T14:53:37.124688+00:00",
+      "tier": "archive"
+    },
     "acdb6123e1c25f2d34ce02dffc008a11cc8aa010f07a311bf24ee6e6f4d82adf": {
       "sha256": "acdb6123e1c25f2d34ce02dffc008a11cc8aa010f07a311bf24ee6e6f4d82adf",
       "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2026_Toyota_Camry_Brochure.pdf",
@@ -2651,6 +4166,19 @@
       ],
       "first_seen_at": "2026-08-01T22:57:34.982765+00:00",
       "tier": "oem"
+    },
+    "ad97f644a49a32d1083a894b899d306052339b659642734d782a437b267b7d35": {
+      "sha256": "ad97f644a49a32d1083a894b899d306052339b659642734d782a437b267b7d35",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2014_Nissan_Versa_Note_Brochure.pdf",
+      "bytes": 5146855,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Nissan/Versa/Nissan_US Versa_Note_2014.pdf"
+      ],
+      "catalog_keys": [
+        "2014|nissan|versanote"
+      ],
+      "first_seen_at": "2026-08-26T14:53:02.348585+00:00",
+      "tier": "archive"
     },
     "adb57178eaf53eecb1b85a7ce69a774ae994f4a5bb74c5b45154a9a726191350": {
       "sha256": "adb57178eaf53eecb1b85a7ce69a774ae994f4a5bb74c5b45154a9a726191350",
@@ -2678,6 +4206,45 @@
       "first_seen_at": "2026-07-31T22:52:25.646661+00:00",
       "tier": ""
     },
+    "ae90c5b56596261c382b2d1fed0ddf49f206a67823dfb9d0b1a7f6d60f74efc2": {
+      "sha256": "ae90c5b56596261c382b2d1fed0ddf49f206a67823dfb9d0b1a7f6d60f74efc2",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2027_Nissan_MURANO_Brochure.pdf",
+      "bytes": 5486262,
+      "source_urls": [
+        "https://www.nissanusa.com/content/dam/Nissan/us/vehicle-brochures/2027/2027-nissan-murano-brochure-en.pdf"
+      ],
+      "catalog_keys": [
+        "2027|nissan|murano"
+      ],
+      "first_seen_at": "2026-08-26T14:53:40.143599+00:00",
+      "tier": "oem"
+    },
+    "aec83abecec4bc089089abed1dcdc6407194914cb7e72bd2e5d9f51948f8f858": {
+      "sha256": "aec83abecec4bc089089abed1dcdc6407194914cb7e72bd2e5d9f51948f8f858",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2021_Nissan_ALTIMA_Brochure.pdf",
+      "bytes": 10678806,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Nissan/Altima/Nissan_US Altima_2021.pdf"
+      ],
+      "catalog_keys": [
+        "2021|nissan|altima"
+      ],
+      "first_seen_at": "2026-08-26T14:50:02.934608+00:00",
+      "tier": "archive"
+    },
+    "af4695bf698527dd979674b603bc4b847313797c47355ff4805e9b9ff047a1b1": {
+      "sha256": "af4695bf698527dd979674b603bc4b847313797c47355ff4805e9b9ff047a1b1",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2027_Nissan_SENTRA_Brochure.pdf",
+      "bytes": 6155498,
+      "source_urls": [
+        "https://www.nissanusa.com/content/dam/Nissan/us/vehicle-brochures/2027/2027-nissan-sentra-brochure-en.pdf"
+      ],
+      "catalog_keys": [
+        "2027|nissan|sentra"
+      ],
+      "first_seen_at": "2026-08-26T14:49:02.508120+00:00",
+      "tier": "oem"
+    },
     "b07b1accbf6115642d46a7eab6c00f56de6ce2c4c929b41bdb2381e04c628d33": {
       "sha256": "b07b1accbf6115642d46a7eab6c00f56de6ce2c4c929b41bdb2381e04c628d33",
       "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2026_Chrysler_Pacifica_Brochure.pdf",
@@ -2686,6 +4253,130 @@
       "catalog_keys": [],
       "first_seen_at": "",
       "tier": ""
+    },
+    "b0fabed490672ad771139d882dea969a8ba7057ca49da29e38f1464d30de9281": {
+      "sha256": "b0fabed490672ad771139d882dea969a8ba7057ca49da29e38f1464d30de9281",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2017_Volkswagen_Beetle_Brochure.pdf",
+      "bytes": 9564640,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Volkswagen/Beetle/VW_US Beetle_2017.pdf"
+      ],
+      "catalog_keys": [
+        "2017|volkswagen|beetle"
+      ],
+      "first_seen_at": "2026-08-26T14:51:04.163854+00:00",
+      "tier": "archive"
+    },
+    "b1a22769a70f5fc304d67d54eafa8e68a70279474ae8b09ab68747b6cc75ae4b": {
+      "sha256": "b1a22769a70f5fc304d67d54eafa8e68a70279474ae8b09ab68747b6cc75ae4b",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2020_Hyundai_TUCSON_Brochure.pdf",
+      "bytes": 18269278,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Hyundai/Tucson/Hyundai_US Tucson_2020.pdf"
+      ],
+      "catalog_keys": [
+        "2020|hyundai|tucson"
+      ],
+      "first_seen_at": "2026-08-26T14:51:11.867083+00:00",
+      "tier": "archive"
+    },
+    "b1c0bb967b90a478416d49de6d33633b7bf6977a4719fc449260a5f7dd1b875c": {
+      "sha256": "b1c0bb967b90a478416d49de6d33633b7bf6977a4719fc449260a5f7dd1b875c",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2024_Hyundai_KONA_Brochure.pdf",
+      "bytes": 7012437,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Hyundai/Kona/Hyundai_US Kona_2024.pdf"
+      ],
+      "catalog_keys": [
+        "2024|hyundai|kona"
+      ],
+      "first_seen_at": "2026-08-26T14:50:23.392153+00:00",
+      "tier": "archive"
+    },
+    "b1e0d5a88e927869d21005f394cfa0639283ef08f17014d325cec3b3dd85dc64": {
+      "sha256": "b1e0d5a88e927869d21005f394cfa0639283ef08f17014d325cec3b3dd85dc64",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2017_Volkswagen_Tiguan_Brochure.pdf",
+      "bytes": 5416928,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Volkswagen/Tiguan/VW_US Tiguan_2017.pdf"
+      ],
+      "catalog_keys": [
+        "2017|volkswagen|tiguan"
+      ],
+      "first_seen_at": "2026-08-26T14:50:39.910277+00:00",
+      "tier": "archive"
+    },
+    "b26631e541ca6b6b5eaf4e2ebaf865c8d2da4dee68ecd8994eea283f9884daa6": {
+      "sha256": "b26631e541ca6b6b5eaf4e2ebaf865c8d2da4dee68ecd8994eea283f9884daa6",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2022_Lincoln_NAVIGATOR_Brochure.pdf",
+      "bytes": 3868270,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Lincoln/Navigator/Lincoln_US Navigator_2022.pdf"
+      ],
+      "catalog_keys": [
+        "2022|lincoln|navigator"
+      ],
+      "first_seen_at": "2026-08-26T14:53:33.261215+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "Adobe PDF Library 16.0",
+          "creator": "Adobe InDesign 16.4 (Macintosh)",
+          "title": "2022 Lincoln Navigator Brochure",
+          "author": "2022 Lincoln Navigator Brochure",
+          "subject": "2022 Lincoln Navigator Brochure",
+          "creation_date": "D:20211215173333-05'00'",
+          "mod_date": "D:20211222121045+02'00'",
+          "page_count": 14,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 14,
+        "page_count": 14,
+        "has_text_layer": true
+      }
+    },
+    "b35505a5e981c4a324ffa8563d1bf2eb0af4e8a0d4cc0f0ad6a2769ec46360c8": {
+      "sha256": "b35505a5e981c4a324ffa8563d1bf2eb0af4e8a0d4cc0f0ad6a2769ec46360c8",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2023_Hyundai_SONATA_Brochure.pdf",
+      "bytes": 9285903,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Hyundai/Sonata/Hyundai_US Sonata_2023.pdf"
+      ],
+      "catalog_keys": [
+        "2023|hyundai|sonata"
+      ],
+      "first_seen_at": "2026-08-26T14:50:35.750420+00:00",
+      "tier": "archive"
+    },
+    "b4075b8ce9fafa4eaae143a7856e1279d1ad9f1a6c3171e5e0da1ec7b4940247": {
+      "sha256": "b4075b8ce9fafa4eaae143a7856e1279d1ad9f1a6c3171e5e0da1ec7b4940247",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2016_Subaru_WRX_Brochure.pdf",
+      "bytes": 16180611,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Subaru/Impreza WRX/Subaru_US Impreza-WRX_2016.pdf"
+      ],
+      "catalog_keys": [
+        "2016|subaru|wrx"
+      ],
+      "first_seen_at": "2026-08-26T14:52:32.370429+00:00",
+      "tier": "archive"
+    },
+    "b4d178262ee86e0913950f505d5c323cc4f688794f906bd7acb5cfa27155d30a": {
+      "sha256": "b4d178262ee86e0913950f505d5c323cc4f688794f906bd7acb5cfa27155d30a",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2007_Dodge_CHARGER_Brochure.pdf",
+      "bytes": 874655,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Dodge/Charger/Dodge_US Charger_2007.pdf"
+      ],
+      "catalog_keys": [
+        "2007|dodge|charger"
+      ],
+      "first_seen_at": "2026-08-26T14:50:15.959447+00:00",
+      "tier": "archive"
     },
     "b6b3e6452dfbc32f703a9e845df187942fa0e62506a06773e0aa7b31b0ebf411": {
       "sha256": "b6b3e6452dfbc32f703a9e845df187942fa0e62506a06773e0aa7b31b0ebf411",
@@ -2699,6 +4390,19 @@
       ],
       "first_seen_at": "2026-07-31T22:50:16.590024+00:00",
       "tier": ""
+    },
+    "b8502cd868d4a02f7cfcc9f9c1d36854ed14e80c2eec58b8f9f7c6def74ac150": {
+      "sha256": "b8502cd868d4a02f7cfcc9f9c1d36854ed14e80c2eec58b8f9f7c6def74ac150",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2023_Acura_RDX_Brochure.pdf",
+      "bytes": 732913,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/acura/rdx/Acura_US RDX_Factsheet_2023.pdf"
+      ],
+      "catalog_keys": [
+        "2023|acura|rdx"
+      ],
+      "first_seen_at": "2026-08-26T14:50:22.778987+00:00",
+      "tier": "archive"
     },
     "b98deda2493d361a54195104672c3573921f76b0ad3911598969c13af783f4b7": {
       "sha256": "b98deda2493d361a54195104672c3573921f76b0ad3911598969c13af783f4b7",
@@ -2778,6 +4482,71 @@
       ],
       "first_seen_at": "2026-07-31T17:34:04.561341+00:00",
       "tier": ""
+    },
+    "bb79acad59d422b1d8075fa80488e92f3a556c47fc60c02fe54f5196e65b33c2": {
+      "sha256": "bb79acad59d422b1d8075fa80488e92f3a556c47fc60c02fe54f5196e65b33c2",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2008_Dodge_Dakota_Brochure.pdf",
+      "bytes": 1688325,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Dodge/Dakota/Dodge_US Dakota_2008.pdf"
+      ],
+      "catalog_keys": [
+        "2008|dodge|dakota"
+      ],
+      "first_seen_at": "2026-08-26T14:51:15.845309+00:00",
+      "tier": "archive"
+    },
+    "bba9e47a1775ca067837fe38606b040bc2b087d8ea0e7169814ac0c1862d282f": {
+      "sha256": "bba9e47a1775ca067837fe38606b040bc2b087d8ea0e7169814ac0c1862d282f",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2025_Hyundai_SONATA_Brochure.pdf",
+      "bytes": 12644615,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Hyundai/Sonata/Hyundai_US Sonata_2025.pdf"
+      ],
+      "catalog_keys": [
+        "2025|hyundai|sonata"
+      ],
+      "first_seen_at": "2026-08-26T14:50:12.002944+00:00",
+      "tier": "archive"
+    },
+    "bc18071db60387680dc160edfd65445dbe5385ccf8ea377102faf0ea2b294c8b": {
+      "sha256": "bc18071db60387680dc160edfd65445dbe5385ccf8ea377102faf0ea2b294c8b",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2026_Nissan_Z_Brochure.pdf",
+      "bytes": 6122513,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Nissan/Z/Nissan_US Z_2026.pdf"
+      ],
+      "catalog_keys": [
+        "2026|nissan|z"
+      ],
+      "first_seen_at": "2026-08-26T14:49:38.327418+00:00",
+      "tier": "archive"
+    },
+    "bc6f95d2e26e58f45ce2bdd92a232612b7e7f9a6db44fdf7417181d95dbe4e32": {
+      "sha256": "bc6f95d2e26e58f45ce2bdd92a232612b7e7f9a6db44fdf7417181d95dbe4e32",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2021_Porsche_TAYCAN_Brochure.pdf",
+      "bytes": 21838501,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Porsche/Taycan/Porsche_int Taycan_2021.pdf"
+      ],
+      "catalog_keys": [
+        "2021|porsche|taycan"
+      ],
+      "first_seen_at": "2026-08-26T14:52:34.683824+00:00",
+      "tier": "archive"
+    },
+    "bd8f71a9b6bb0dcc7728007475c7d7a5949fb968a6fdbd7514cd725e4f5d43d5": {
+      "sha256": "bd8f71a9b6bb0dcc7728007475c7d7a5949fb968a6fdbd7514cd725e4f5d43d5",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2009_Dodge_CHALLENGER_Brochure.pdf",
+      "bytes": 1540646,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Dodge/Challenger/Dodge_US Challenger_2009.pdf"
+      ],
+      "catalog_keys": [
+        "2009|dodge|challenger"
+      ],
+      "first_seen_at": "2026-08-26T14:51:27.596294+00:00",
+      "tier": "archive"
     },
     "be031523df6237535a7f5c4b1b1c0bcbaca4f3f0206aeb8fa82bab59e580e116": {
       "sha256": "be031523df6237535a7f5c4b1b1c0bcbaca4f3f0206aeb8fa82bab59e580e116",
@@ -2884,6 +4653,19 @@
       "first_seen_at": "2026-07-31T22:53:45.787118+00:00",
       "tier": ""
     },
+    "c3effd7c915fce72f1b644abac75e9de2ac8a383eed45ed0bbaccee5c8317131": {
+      "sha256": "c3effd7c915fce72f1b644abac75e9de2ac8a383eed45ed0bbaccee5c8317131",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2023_Subaru_CROSSTREK_Brochure.pdf",
+      "bytes": 14878641,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Subaru/XV Crosstrek/Subaru_US Crosstrek_2023.pdf"
+      ],
+      "catalog_keys": [
+        "2023|subaru|crosstrek"
+      ],
+      "first_seen_at": "2026-08-26T14:49:32.299713+00:00",
+      "tier": "archive"
+    },
     "c3f457407e87261554205a182c9437f1e6aff40f5f1dde6f53b517d403abb5d8": {
       "sha256": "c3f457407e87261554205a182c9437f1e6aff40f5f1dde6f53b517d403abb5d8",
       "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures_archive_quarantine/2018_BMW_M2_Brochure.pdf",
@@ -2917,6 +4699,45 @@
         "has_text_layer": true
       }
     },
+    "c4b2f12d3318226a07b1658cc8227bdccf56082b716fd099cad61c63f1a8f283": {
+      "sha256": "c4b2f12d3318226a07b1658cc8227bdccf56082b716fd099cad61c63f1a8f283",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2017_Acura_RDX_Brochure.pdf",
+      "bytes": 64827709,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/acura/rdx/Acura_US RDX_2017.pdf"
+      ],
+      "catalog_keys": [
+        "2017|acura|rdx"
+      ],
+      "first_seen_at": "2026-08-26T14:51:14.240071+00:00",
+      "tier": "archive"
+    },
+    "c4c1a3bcd80001a0e4d921ceea9f130b815a2963be21bdb381caee72c368726e": {
+      "sha256": "c4c1a3bcd80001a0e4d921ceea9f130b815a2963be21bdb381caee72c368726e",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2006_Dodge_GRAND_CARAVAN_Brochure.pdf",
+      "bytes": 397788,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Dodge/Grand Caravan/Dodge_US GrandCaravan_2006.pdf"
+      ],
+      "catalog_keys": [
+        "2006|dodge|grandcaravan"
+      ],
+      "first_seen_at": "2026-08-26T14:50:51.402073+00:00",
+      "tier": "archive"
+    },
+    "c51034d11d5198d762e408d2d7466187d26c4d64df73b2672fbea52e3f37df96": {
+      "sha256": "c51034d11d5198d762e408d2d7466187d26c4d64df73b2672fbea52e3f37df96",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2022_Hyundai_TUCSON_Brochure.pdf",
+      "bytes": 47200658,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Hyundai/Tucson/Hyundai_US Tucson_2022.pdf"
+      ],
+      "catalog_keys": [
+        "2022|hyundai|tucson"
+      ],
+      "first_seen_at": "2026-08-26T14:50:49.191861+00:00",
+      "tier": "archive"
+    },
     "c5550ec46a62117c35b53c5d9b562720d6a0c30c77ef29051552b55ff0351069": {
       "sha256": "c5550ec46a62117c35b53c5d9b562720d6a0c30c77ef29051552b55ff0351069",
       "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2026_NISSAN_Pathfinder_Brochure.pdf",
@@ -2930,6 +4751,39 @@
       "first_seen_at": "2026-07-31T22:05:31.479357+00:00",
       "tier": ""
     },
+    "c58417c191c8db1f182f25d36e1aa85fae69ffe03a79d64f638b71be29ee6483": {
+      "sha256": "c58417c191c8db1f182f25d36e1aa85fae69ffe03a79d64f638b71be29ee6483",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2008_Hummer_H2_Brochure.pdf",
+      "bytes": 769527,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Hummer/H2/Hummer_US H2_2008.pdf"
+      ],
+      "catalog_keys": [
+        "2008|hummer|h2"
+      ],
+      "first_seen_at": "2026-08-26T14:55:53.322029+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "Acrobat Distiller 7.0 for Macintosh",
+          "creator": "InDesign: pictwpstops filter 1.0",
+          "title": "",
+          "author": "",
+          "subject": "",
+          "creation_date": "D:20070831122107-04'00'",
+          "mod_date": "D:20190112050923-06'00'",
+          "page_count": 8,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 7,
+        "page_count": 8,
+        "has_text_layer": true
+      }
+    },
     "c598eb725eec6c2616af8522d3790cf1be8f86fcce1f2de5f9169ae1740a8dd3": {
       "sha256": "c598eb725eec6c2616af8522d3790cf1be8f86fcce1f2de5f9169ae1740a8dd3",
       "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2026_Lexus_TX_Brochure.pdf",
@@ -2942,6 +4796,19 @@
       ],
       "first_seen_at": "2026-07-31T22:59:01.533164+00:00",
       "tier": ""
+    },
+    "c60189107ce5167a12cdcdec21dc610c3ffe42b486f9a4d60249cee2c4ca4018": {
+      "sha256": "c60189107ce5167a12cdcdec21dc610c3ffe42b486f9a4d60249cee2c4ca4018",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2023_Hyundai_KONA_Brochure.pdf",
+      "bytes": 11521184,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Hyundai/Kona/Hyundai_US Kona_2023.pdf"
+      ],
+      "catalog_keys": [
+        "2023|hyundai|kona"
+      ],
+      "first_seen_at": "2026-08-26T14:51:24.018378+00:00",
+      "tier": "archive"
     },
     "c622386c4338975f8ed55a58b410e8f4c436d439886ce05d7a657bec86942896": {
       "sha256": "c622386c4338975f8ed55a58b410e8f4c436d439886ce05d7a657bec86942896",
@@ -2984,6 +4851,32 @@
         "page_count": 16,
         "has_text_layer": true
       }
+    },
+    "c6f49a99b2c6e521ce3327d01b36fa549e4bb6427736c845c749fd3d1b867306": {
+      "sha256": "c6f49a99b2c6e521ce3327d01b36fa549e4bb6427736c845c749fd3d1b867306",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2017_INFINITI_QX80_Brochure.pdf",
+      "bytes": 9970602,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Infiniti/QX56-80/Infiniti_US QX80_2017.pdf"
+      ],
+      "catalog_keys": [
+        "2017|infiniti|qx80"
+      ],
+      "first_seen_at": "2026-08-26T14:52:27.277145+00:00",
+      "tier": "archive"
+    },
+    "c76865346d56a1086feb19bc3fcf92fe567a7e3b0166b73827c3ae31469b1231": {
+      "sha256": "c76865346d56a1086feb19bc3fcf92fe567a7e3b0166b73827c3ae31469b1231",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2016_INFINITI_QX60_Brochure.pdf",
+      "bytes": 9789350,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Infiniti/QX60/Infiniti_US QX60_2016.pdf"
+      ],
+      "catalog_keys": [
+        "2016|infiniti|qx60"
+      ],
+      "first_seen_at": "2026-08-26T14:53:16.639268+00:00",
+      "tier": "archive"
     },
     "c789839eb650b008b1af67f2882f3b67460c6225ca6e6b7b1c7c655e4dbe3760": {
       "sha256": "c789839eb650b008b1af67f2882f3b67460c6225ca6e6b7b1c7c655e4dbe3760",
@@ -3031,6 +4924,39 @@
         "has_text_layer": true
       }
     },
+    "c81f7868481cd60576f353304d332b620a9710cc48aa296cb2447d2a54624371": {
+      "sha256": "c81f7868481cd60576f353304d332b620a9710cc48aa296cb2447d2a54624371",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2025_Toyota_Crown_Signia_Brochure.pdf",
+      "bytes": 3819599,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Toyota/Crown/Toyota_US CrownSignia_2025.pdf"
+      ],
+      "catalog_keys": [
+        "2025|toyota|crownsignia"
+      ],
+      "first_seen_at": "2026-08-26T14:49:27.083886+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "Adobe PDF Library 17.0",
+          "creator": "Adobe InDesign 19.3 (Macintosh)",
+          "title": "",
+          "author": "",
+          "subject": "",
+          "creation_date": "D:20240814164252-05'00'",
+          "mod_date": "D:20240814164827-05'00'",
+          "page_count": 19,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 19,
+        "page_count": 19,
+        "has_text_layer": true
+      }
+    },
     "c8fc41aa916ece47c26b476a1c4c5f1f3df601038e5cc4df2d230c2c0af65c91": {
       "sha256": "c8fc41aa916ece47c26b476a1c4c5f1f3df601038e5cc4df2d230c2c0af65c91",
       "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2020_GMC_Sierra_1500_Brochure.pdf",
@@ -3044,6 +4970,52 @@
       "first_seen_at": "2026-07-31T22:55:34.697546+00:00",
       "tier": ""
     },
+    "c96d76062c6d0456c0809609bf4187ee67255d8934a1c7be8b2c40dba5e3a455": {
+      "sha256": "c96d76062c6d0456c0809609bf4187ee67255d8934a1c7be8b2c40dba5e3a455",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2025_INFINITI_QX50_Brochure.pdf",
+      "bytes": 27918900,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Infiniti/QX50/Infiniti_US QX50_2025.pdf"
+      ],
+      "catalog_keys": [
+        "2025|infiniti|qx50"
+      ],
+      "first_seen_at": "2026-08-26T14:52:54.563469+00:00",
+      "tier": "archive"
+    },
+    "ca974ac8f9039469355016bd3fb30a927fe53e36cfc161755ee3bda00b21d164": {
+      "sha256": "ca974ac8f9039469355016bd3fb30a927fe53e36cfc161755ee3bda00b21d164",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2016_Tesla_Models_Brochure.pdf",
+      "bytes": 9664829,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/tesla/Model S/Tesla_US ModelS_2016.pdf"
+      ],
+      "catalog_keys": [
+        "2016|tesla|models"
+      ],
+      "first_seen_at": "2026-08-26T14:50:29.424844+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "Adobe PDF Library 11.0",
+          "creator": "Adobe InDesign CC 2014 (Macintosh)",
+          "title": "",
+          "author": "",
+          "subject": "",
+          "creation_date": "D:20150506102933-07'00'",
+          "mod_date": "D:20150506102957-07'00'",
+          "page_count": 14,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 11,
+        "page_count": 14,
+        "has_text_layer": true
+      }
+    },
     "cb010b3171c60777346a2bab2368191173534e46cdc1339b6d56d10bd88682a7": {
       "sha256": "cb010b3171c60777346a2bab2368191173534e46cdc1339b6d56d10bd88682a7",
       "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2026_Lexus_LS_Brochure.pdf",
@@ -3056,6 +5028,19 @@
       ],
       "first_seen_at": "2026-07-31T23:01:51.734171+00:00",
       "tier": ""
+    },
+    "cbcd8d103be441ba8273f8e98b160a0e69b72d6b4823cc1b5330cace467215d4": {
+      "sha256": "cbcd8d103be441ba8273f8e98b160a0e69b72d6b4823cc1b5330cace467215d4",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures_archive_quarantine/2014_Jeep_WRANGLER_Brochure.pdf",
+      "bytes": 3966356,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Jeep/Wrangler/Jeep_US Wrangler_2014.pdf"
+      ],
+      "catalog_keys": [
+        "2014|jeep|wrangler"
+      ],
+      "first_seen_at": "2026-08-26T14:49:17.234137+00:00",
+      "tier": "archive"
     },
     "cc8d5a5478b44343d6f9d7ddcef233deb7a12c24d9d07d4c3c1de6ae111cba89": {
       "sha256": "cc8d5a5478b44343d6f9d7ddcef233deb7a12c24d9d07d4c3c1de6ae111cba89",
@@ -3082,6 +5067,19 @@
       ],
       "first_seen_at": "2026-07-31T22:51:53.340803+00:00",
       "tier": ""
+    },
+    "ccfb7c13df52ff6c00365079cf5939d269a37d027db225acd7789472a7fedadd": {
+      "sha256": "ccfb7c13df52ff6c00365079cf5939d269a37d027db225acd7789472a7fedadd",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2005_Dodge_Dakota_Brochure.pdf",
+      "bytes": 330354,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Dodge/Dakota/Dodge_US Dakota_2005.pdf"
+      ],
+      "catalog_keys": [
+        "2005|dodge|dakota"
+      ],
+      "first_seen_at": "2026-08-26T14:50:39.403312+00:00",
+      "tier": "archive"
     },
     "cd925bc64b3c9be5bf0964b14ef84cb70eb670fdfabcb94997d37a914190399b": {
       "sha256": "cd925bc64b3c9be5bf0964b14ef84cb70eb670fdfabcb94997d37a914190399b",
@@ -3129,6 +5127,19 @@
         "has_text_layer": true
       }
     },
+    "cfd01c5a9d6ab91a583e0b2e9a8c19a045ab71e43c3c20fcde9c68ce8e51a09c": {
+      "sha256": "cfd01c5a9d6ab91a583e0b2e9a8c19a045ab71e43c3c20fcde9c68ce8e51a09c",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2019_Nissan_PATHFINDER_Brochure.pdf",
+      "bytes": 5581047,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Nissan/Pathfinder/Nissan_US Pathfinder_2019.pdf"
+      ],
+      "catalog_keys": [
+        "2019|nissan|pathfinder"
+      ],
+      "first_seen_at": "2026-08-26T14:52:02.758197+00:00",
+      "tier": "archive"
+    },
     "d05338e287339fe6ddedd64adc0edfab29b9094f8d6d17d4e3c4ca45407ee9bd": {
       "sha256": "d05338e287339fe6ddedd64adc0edfab29b9094f8d6d17d4e3c4ca45407ee9bd",
       "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2016_Buick_Encore_Brochure.pdf",
@@ -3159,6 +5170,39 @@
         },
         "pages_with_text": 20,
         "page_count": 20,
+        "has_text_layer": true
+      }
+    },
+    "d0768d6e824bdfb34fa3a8f74602452c4c501e1c22de917f36f608d21cff4cc4": {
+      "sha256": "d0768d6e824bdfb34fa3a8f74602452c4c501e1c22de917f36f608d21cff4cc4",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2020_Lincoln_NAUTILUS_Brochure.pdf",
+      "bytes": 8083639,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Lincoln/Nautilus/Lincoln_US Nautilus_2020.pdf"
+      ],
+      "catalog_keys": [
+        "2020|lincoln|nautilus"
+      ],
+      "first_seen_at": "2026-08-26T14:53:09.567797+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "iText 2.1.7 by 1T3XT",
+          "creator": "",
+          "title": "",
+          "author": "",
+          "subject": "",
+          "creation_date": "",
+          "mod_date": "",
+          "page_count": 13,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 13,
+        "page_count": 13,
         "has_text_layer": true
       }
     },
@@ -3194,6 +5238,19 @@
         "page_count": 23,
         "has_text_layer": true
       }
+    },
+    "d16551b9b07b9720805afb228618b4139dba067d6f9d7562b77b37c73170ea0e": {
+      "sha256": "d16551b9b07b9720805afb228618b4139dba067d6f9d7562b77b37c73170ea0e",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2026_Toyota_LAND_CRUISER_Brochure.pdf",
+      "bytes": 22230762,
+      "source_urls": [
+        "https://www.toyota.com/content/dam/toyota/brochures/pdf/2027/2027-landcruiser-brochure-20260612-172306.pdf"
+      ],
+      "catalog_keys": [
+        "2026|toyota|landcruiser"
+      ],
+      "first_seen_at": "2026-08-26T14:38:40.438367+00:00",
+      "tier": "oem"
     },
     "d21e9ab5373a478d350448ecefcbf7c9849a44e92fe1cad2c44f1543a518038b": {
       "sha256": "d21e9ab5373a478d350448ecefcbf7c9849a44e92fe1cad2c44f1543a518038b",
@@ -3246,6 +5303,32 @@
       ],
       "first_seen_at": "2026-07-31T22:39:41.420880+00:00",
       "tier": ""
+    },
+    "d44ad2b1c0024e80ae764b2d8d46df395b3a6d193f00adb1d88d620653e352f8": {
+      "sha256": "d44ad2b1c0024e80ae764b2d8d46df395b3a6d193f00adb1d88d620653e352f8",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2021_Subaru_OUTBACK_Brochure.pdf",
+      "bytes": 6225178,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Subaru/Outback/Subaru_int Outback_2021.pdf"
+      ],
+      "catalog_keys": [
+        "2021|subaru|outback"
+      ],
+      "first_seen_at": "2026-08-26T14:49:55.182157+00:00",
+      "tier": "archive"
+    },
+    "d4997f7470201942b79294187c1532c74f00016996c42bed8da5f4658223516b": {
+      "sha256": "d4997f7470201942b79294187c1532c74f00016996c42bed8da5f4658223516b",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2015_Subaru_WRX_Brochure.pdf",
+      "bytes": 8899503,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Subaru/Impreza WRX/Subaru_US Impreza-WRX_2015.pdf"
+      ],
+      "catalog_keys": [
+        "2015|subaru|wrx"
+      ],
+      "first_seen_at": "2026-08-26T14:51:55.981625+00:00",
+      "tier": "archive"
     },
     "d4e30056205d35b980fc512a112ebefe1b9d79b03f09993954e55889c0d65321": {
       "sha256": "d4e30056205d35b980fc512a112ebefe1b9d79b03f09993954e55889c0d65321",
@@ -3381,6 +5464,32 @@
         "has_text_layer": true
       }
     },
+    "d79ad75f7db1cae59b529ec16b3829d4e9d7b7632337ad48a793de182728b969": {
+      "sha256": "d79ad75f7db1cae59b529ec16b3829d4e9d7b7632337ad48a793de182728b969",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2022_Mazda_CX-30_Brochure.pdf",
+      "bytes": 2697041,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Mazda/CX-30/Mazda_US CX-30_2022.pdf"
+      ],
+      "catalog_keys": [
+        "2022|mazda|cx30"
+      ],
+      "first_seen_at": "2026-08-26T14:51:03.786353+00:00",
+      "tier": "archive"
+    },
+    "d83c33b2a9397ab25ad24520a13386915f9dde2f5cecb706da51aad6617e2459": {
+      "sha256": "d83c33b2a9397ab25ad24520a13386915f9dde2f5cecb706da51aad6617e2459",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2020_Volvo_S60_Brochure.pdf",
+      "bytes": 18426670,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Volvo/S60/Volvo_US S60_2020.pdf"
+      ],
+      "catalog_keys": [
+        "2020|volvo|s60"
+      ],
+      "first_seen_at": "2026-08-26T14:51:15.675473+00:00",
+      "tier": "archive"
+    },
     "d975b85e958ef354a0c19ef82266cedbf46420a27fca03aa33cc113a73fa5556": {
       "sha256": "d975b85e958ef354a0c19ef82266cedbf46420a27fca03aa33cc113a73fa5556",
       "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2018_Chevrolet_Tahoe_Brochure.pdf",
@@ -3493,6 +5602,19 @@
         "has_text_layer": true
       }
     },
+    "dabb0942f1d99be5ecddc09966fabe7f7a0df5b0f3d0e2202a98929711b473ae": {
+      "sha256": "dabb0942f1d99be5ecddc09966fabe7f7a0df5b0f3d0e2202a98929711b473ae",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2022_Alfa Romeo_GIULIA_Brochure.pdf",
+      "bytes": 10250263,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/alfa_romeo/giulia/AlfaRomeo_US Giulia_2022.pdf"
+      ],
+      "catalog_keys": [
+        "2022|alfaromeo|giulia"
+      ],
+      "first_seen_at": "2026-08-26T14:53:32.447562+00:00",
+      "tier": "archive"
+    },
     "dbf07ab38f2924c7aedfd4fab86e453b373504bd0d2d4f53ccbe0ba2c47f4016": {
       "sha256": "dbf07ab38f2924c7aedfd4fab86e453b373504bd0d2d4f53ccbe0ba2c47f4016",
       "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2026_INFINITI_QX80_Brochure.pdf",
@@ -3518,6 +5640,32 @@
       ],
       "first_seen_at": "2026-07-31T22:53:43.359625+00:00",
       "tier": ""
+    },
+    "dd432c036c644f5243703fa4ab16609c084fa1f77b4ae77a71b73d7285db6ff5": {
+      "sha256": "dd432c036c644f5243703fa4ab16609c084fa1f77b4ae77a71b73d7285db6ff5",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2025_Hyundai_ELANTRA_Brochure.pdf",
+      "bytes": 11930856,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Hyundai/Elantra/Hyundai_US Elantra_2025.pdf"
+      ],
+      "catalog_keys": [
+        "2025|hyundai|elantra"
+      ],
+      "first_seen_at": "2026-08-26T14:50:00.178156+00:00",
+      "tier": "archive"
+    },
+    "dd73c55def1d415fd05164e876bdba1d3ffaad16bb3386d505ce04d4f639dfdb": {
+      "sha256": "dd73c55def1d415fd05164e876bdba1d3ffaad16bb3386d505ce04d4f639dfdb",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2018_Subaru_WRX_Brochure.pdf",
+      "bytes": 15895299,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Subaru/Impreza WRX/Subaru_US Impreza-WRX_2018.pdf"
+      ],
+      "catalog_keys": [
+        "2018|subaru|wrx"
+      ],
+      "first_seen_at": "2026-08-26T14:52:08.916398+00:00",
+      "tier": "archive"
     },
     "ddd13677a486ba79eef75600d940f9e2b28705b4c2d7ab07c56b39c8162fd616": {
       "sha256": "ddd13677a486ba79eef75600d940f9e2b28705b4c2d7ab07c56b39c8162fd616",
@@ -3565,6 +5713,45 @@
         "has_text_layer": true
       }
     },
+    "e19f404675cdb49b634e0d3ace64aa1783d82e62ccb8981b6745f64ee85080bf": {
+      "sha256": "e19f404675cdb49b634e0d3ace64aa1783d82e62ccb8981b6745f64ee85080bf",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2020_Jeep_WRANGLER_Brochure.pdf",
+      "bytes": 9958805,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Jeep/Wrangler/Jeep_US Wrangler_2020.pdf"
+      ],
+      "catalog_keys": [
+        "2020|jeep|wrangler"
+      ],
+      "first_seen_at": "2026-08-26T14:49:05.923903+00:00",
+      "tier": "archive"
+    },
+    "e1e72bf4e380f1c39ae3b84fbdc8493cc6be391c21734fd256a3bd4780d17c5c": {
+      "sha256": "e1e72bf4e380f1c39ae3b84fbdc8493cc6be391c21734fd256a3bd4780d17c5c",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2017_Porsche_PANAMERA_Brochure.pdf",
+      "bytes": 16731468,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Porsche/Panamera/Porsche_US Panamera_2017-3.pdf"
+      ],
+      "catalog_keys": [
+        "2017|porsche|panamera"
+      ],
+      "first_seen_at": "2026-08-26T14:53:36.041869+00:00",
+      "tier": "archive"
+    },
+    "e1eeaaa49a2eff045484ea517e50fface586c9a25e1e099ad6903109b93483b4": {
+      "sha256": "e1eeaaa49a2eff045484ea517e50fface586c9a25e1e099ad6903109b93483b4",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2014_Porsche_Boxster_Brochure.pdf",
+      "bytes": 9115232,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Porsche/Boxster/Porsche_US Boxster-GTS_2014-2.pdf"
+      ],
+      "catalog_keys": [
+        "2014|porsche|boxster"
+      ],
+      "first_seen_at": "2026-08-26T14:53:21.019558+00:00",
+      "tier": "archive"
+    },
     "e214bd43763cb2be406b16b2380ee8121b88c9e6cba8dbf3f3a7ee62ae9459bb": {
       "sha256": "e214bd43763cb2be406b16b2380ee8121b88c9e6cba8dbf3f3a7ee62ae9459bb",
       "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2018_BMW_3_Series_Brochure.pdf",
@@ -3611,6 +5798,19 @@
       "first_seen_at": "2026-07-31T22:39:01.331102+00:00",
       "tier": ""
     },
+    "e33bada850d485123ff579a9637d716ebc8318669e834f7b0feb25c0c030c1c5": {
+      "sha256": "e33bada850d485123ff579a9637d716ebc8318669e834f7b0feb25c0c030c1c5",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2020_Subaru_CROSSTREK_Brochure.pdf",
+      "bytes": 33289953,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Subaru/XV Crosstrek/Subaru_US Crosstrek_2020.pdf"
+      ],
+      "catalog_keys": [
+        "2020|subaru|crosstrek"
+      ],
+      "first_seen_at": "2026-08-26T14:51:09.271700+00:00",
+      "tier": "archive"
+    },
     "e3b000a4fcae5fa4058c2f5c6936ca750e7ffd7f8c3f8d18b35492d528deb371": {
       "sha256": "e3b000a4fcae5fa4058c2f5c6936ca750e7ffd7f8c3f8d18b35492d528deb371",
       "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2026_Toyota_bZ_Brochure.pdf",
@@ -3623,6 +5823,19 @@
       ],
       "first_seen_at": "2026-07-31T22:51:03.323865+00:00",
       "tier": ""
+    },
+    "e464eb29668388e14646a4e802f4f1ca99e1dc30e1792972b4adf86890801664": {
+      "sha256": "e464eb29668388e14646a4e802f4f1ca99e1dc30e1792972b4adf86890801664",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2017_Mazda_MAZDA3_Brochure.pdf",
+      "bytes": 10119136,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Mazda/3/Mazda_US 3_2017.pdf"
+      ],
+      "catalog_keys": [
+        "2017|mazda|mazda3"
+      ],
+      "first_seen_at": "2026-08-26T14:52:07.615424+00:00",
+      "tier": "archive"
     },
     "e51cdc8999de7883e842d5d5ff9172b7e1ca26de37f05516c5e61b3b313da753": {
       "sha256": "e51cdc8999de7883e842d5d5ff9172b7e1ca26de37f05516c5e61b3b313da753",
@@ -3699,6 +5912,45 @@
         "has_text_layer": true
       }
     },
+    "e855ed901f31ecb3fb068b209a43839a1fd7d6bb29d140c760d5608fd436d108": {
+      "sha256": "e855ed901f31ecb3fb068b209a43839a1fd7d6bb29d140c760d5608fd436d108",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures_archive_quarantine/2024_Nissan_VERSA_S_Brochure.pdf",
+      "bytes": 7716647,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Nissan/Versa/Nissan_US Versa_Sedan_2024.pdf"
+      ],
+      "catalog_keys": [
+        "2024|nissan|versas"
+      ],
+      "first_seen_at": "2026-08-26T14:53:38.711850+00:00",
+      "tier": "archive"
+    },
+    "e95ebbfd5ea1f35870aef73f75d7db96088fca82de92d362e4769372326e595e": {
+      "sha256": "e95ebbfd5ea1f35870aef73f75d7db96088fca82de92d362e4769372326e595e",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2016_INFINITI_Q50_Brochure.pdf",
+      "bytes": 9192600,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Infiniti/Q50/Infiniti_US Q50_2016.pdf"
+      ],
+      "catalog_keys": [
+        "2016|infiniti|q50"
+      ],
+      "first_seen_at": "2026-08-26T14:53:05.188509+00:00",
+      "tier": "archive"
+    },
+    "e9bfb9c0d4932c1f32872418ae53b563b9d2b1a2ae56e2311c2f7136c1c007fb": {
+      "sha256": "e9bfb9c0d4932c1f32872418ae53b563b9d2b1a2ae56e2311c2f7136c1c007fb",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2019_Hyundai_SANTA_FE_Brochure.pdf",
+      "bytes": 16522322,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Hyundai/Santa Fe/Hyundai_US SantaFe_2019.pdf"
+      ],
+      "catalog_keys": [
+        "2019|hyundai|santafe"
+      ],
+      "first_seen_at": "2026-08-26T14:51:59.889879+00:00",
+      "tier": "archive"
+    },
     "eaea852bb5e53ba30649353fad8f8bc24124ab004733268844e29ef205596a57": {
       "sha256": "eaea852bb5e53ba30649353fad8f8bc24124ab004733268844e29ef205596a57",
       "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2027_Toyota_Prius_Brochure.pdf",
@@ -3766,6 +6018,19 @@
       ],
       "first_seen_at": "2026-07-31T22:39:29.408525+00:00",
       "tier": ""
+    },
+    "eee8f3b19ce5002c4bd713190265563ab474b78c8add321c3f9771aa7b52f2d8": {
+      "sha256": "eee8f3b19ce5002c4bd713190265563ab474b78c8add321c3f9771aa7b52f2d8",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2006_Porsche_911_Brochure.pdf",
+      "bytes": 2236605,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Porsche/911/997/Porsche_int 911Turbo_2006.pdf"
+      ],
+      "catalog_keys": [
+        "2006|porsche|911"
+      ],
+      "first_seen_at": "2026-08-26T14:52:44.724029+00:00",
+      "tier": "archive"
     },
     "f0078124ee9f11e7cb09caabb5237e0c44ac62f30bce1d3a092586f793f69d9e": {
       "sha256": "f0078124ee9f11e7cb09caabb5237e0c44ac62f30bce1d3a092586f793f69d9e",
@@ -3911,6 +6176,52 @@
       "first_seen_at": "2026-07-31T22:52:13.370180+00:00",
       "tier": ""
     },
+    "f3d36358b5f0c6847fa842ba5240f4ef522b0062b1fc2a3d155f071302d21501": {
+      "sha256": "f3d36358b5f0c6847fa842ba5240f4ef522b0062b1fc2a3d155f071302d21501",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2011_Mazda_MAZDA3_Brochure.pdf",
+      "bytes": 316387,
+      "source_urls": [
+        "https://news.mazdausa.com/download/2011-MAZDA3-MAZDASPEED3-Specifications.pdf"
+      ],
+      "catalog_keys": [
+        "2011|mazda|mazda3"
+      ],
+      "first_seen_at": "2026-08-26T14:52:57.795983+00:00",
+      "tier": "oem"
+    },
+    "f42e2e71dff5488466378f841a3df5b275fd1b1f12e96b300b51613923a957ac": {
+      "sha256": "f42e2e71dff5488466378f841a3df5b275fd1b1f12e96b300b51613923a957ac",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2021_Lincoln_CORSAIR_Brochure.pdf",
+      "bytes": 12422327,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Lincoln/Corsair/Lincoln_US Corsair_2021.pdf"
+      ],
+      "catalog_keys": [
+        "2021|lincoln|corsair"
+      ],
+      "first_seen_at": "2026-08-26T14:52:34.793975+00:00",
+      "tier": "archive",
+      "authenticity": {
+        "ok": true,
+        "reason": "",
+        "tier": "archive",
+        "pdf_metadata": {
+          "producer": "Adobe PDF Library 15.0; modified using iText 4.2.0 by 1T3XT",
+          "creator": "Adobe InDesign CC 2015 (Macintosh)",
+          "title": "2021 Corsair",
+          "author": "Latcha & Associates",
+          "subject": "2021 Corsair",
+          "creation_date": "",
+          "mod_date": "",
+          "page_count": 11,
+          "encrypted": false,
+          "error": ""
+        },
+        "pages_with_text": 11,
+        "page_count": 11,
+        "has_text_layer": true
+      }
+    },
     "f5007f52e839ad9e4a23b791fe4c433423da08dca4cb66bbe73fef3657bc9725": {
       "sha256": "f5007f52e839ad9e4a23b791fe4c433423da08dca4cb66bbe73fef3657bc9725",
       "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2023_GMC_Yukon_XL_Brochure.pdf",
@@ -3924,6 +6235,19 @@
       "first_seen_at": "2026-07-31T22:55:30.460758+00:00",
       "tier": ""
     },
+    "f532ad2ad9c1b12a2b9d3db0f44d4e9724c195ae020257b98b38920fa2b12647": {
+      "sha256": "f532ad2ad9c1b12a2b9d3db0f44d4e9724c195ae020257b98b38920fa2b12647",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2024_Nissan_Z_Brochure.pdf",
+      "bytes": 4743860,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Nissan/Z/Nissan_US Z_2024.pdf"
+      ],
+      "catalog_keys": [
+        "2024|nissan|z"
+      ],
+      "first_seen_at": "2026-08-26T14:51:02.513458+00:00",
+      "tier": "archive"
+    },
     "f5396bdbcde475ec6215b6601e45c8a6915e03ba65920795bf449c05817dae0e": {
       "sha256": "f5396bdbcde475ec6215b6601e45c8a6915e03ba65920795bf449c05817dae0e",
       "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2026_Toyota_4Runner_Brochure.pdf",
@@ -3936,6 +6260,58 @@
       ],
       "first_seen_at": "2026-07-31T22:51:33.313053+00:00",
       "tier": ""
+    },
+    "f66a71052e6e4f3c63cdbb36abf40d7c8cfe7f880136ab05b892bbe369cb0608": {
+      "sha256": "f66a71052e6e4f3c63cdbb36abf40d7c8cfe7f880136ab05b892bbe369cb0608",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2022_Subaru_WRX_Brochure.pdf",
+      "bytes": 9695715,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Subaru/Impreza WRX/Subaru_US Impreza-WRX_2022.pdf"
+      ],
+      "catalog_keys": [
+        "2022|subaru|wrx"
+      ],
+      "first_seen_at": "2026-08-26T14:50:44.249210+00:00",
+      "tier": "archive"
+    },
+    "f75dfcd96ec23cd47e8ccf767c8d84da73d198e5330962ab115108a469a2934b": {
+      "sha256": "f75dfcd96ec23cd47e8ccf767c8d84da73d198e5330962ab115108a469a2934b",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures_archive_quarantine/2018_Volvo_S90_Brochure.pdf",
+      "bytes": 5581264,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Volvo/S90/Volvo_US S90_2018.pdf"
+      ],
+      "catalog_keys": [
+        "2018|volvo|s90"
+      ],
+      "first_seen_at": "2026-08-26T14:51:02.498875+00:00",
+      "tier": "archive"
+    },
+    "f78bbebc516e08a15bbe71b2c066d6c06b2761a476b88cdb46802201ccee2927": {
+      "sha256": "f78bbebc516e08a15bbe71b2c066d6c06b2761a476b88cdb46802201ccee2927",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2020_Nissan_PATHFINDER_Brochure.pdf",
+      "bytes": 5020474,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Nissan/Pathfinder/Nissan_US Pathfinder_2020.pdf"
+      ],
+      "catalog_keys": [
+        "2020|nissan|pathfinder"
+      ],
+      "first_seen_at": "2026-08-26T14:52:51.194821+00:00",
+      "tier": "archive"
+    },
+    "f80d05e4d0c755ce6af80ca12b51af26c117f4a258f8012741839d184167ffe8": {
+      "sha256": "f80d05e4d0c755ce6af80ca12b51af26c117f4a258f8012741839d184167ffe8",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2021_Subaru_CROSSTREK_Brochure.pdf",
+      "bytes": 9143177,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Subaru/XV Crosstrek/Subaru_US Crosstrek_2021.pdf"
+      ],
+      "catalog_keys": [
+        "2021|subaru|crosstrek"
+      ],
+      "first_seen_at": "2026-08-26T14:49:44.550378+00:00",
+      "tier": "archive"
     },
     "f8fc0e35630a3dd2fd53b42266f3c08d89cdecf6db3d1aeb71cc044d614a333f": {
       "sha256": "f8fc0e35630a3dd2fd53b42266f3c08d89cdecf6db3d1aeb71cc044d614a333f",
@@ -4017,6 +6393,19 @@
       ],
       "first_seen_at": "2026-07-31T22:46:46.728800+00:00",
       "tier": ""
+    },
+    "ffb94d5da263e7044a2bdfad4e1e286ae367149b32f61d708f413aa803b7cf20": {
+      "sha256": "ffb94d5da263e7044a2bdfad4e1e286ae367149b32f61d708f413aa803b7cf20",
+      "path": "/Users/asarrafi/Projects/DealershipScanner/backend/data/brochures/2019_Nissan_VERSA_SEDAN_Brochure.pdf",
+      "bytes": 6013265,
+      "source_urls": [
+        "https://www.auto-brochures.com/makes/Nissan/Versa/Nissan_US Versa_Sedan_2019.pdf"
+      ],
+      "catalog_keys": [
+        "2019|nissan|versasedan"
+      ],
+      "first_seen_at": "2026-08-26T14:53:26.652724+00:00",
+      "tier": "archive"
     }
   }
 }

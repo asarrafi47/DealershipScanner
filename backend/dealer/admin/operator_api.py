@@ -11,11 +11,22 @@ from backend.dealer.admin.incomplete_listings_api import (
     export_incomplete_issue,
     incomplete_cars_response,
 )
+from backend.db.users_db import get_user_profile
 from backend.utils.roles import is_admin_role
 
 
 def _require_site_admin_api() -> tuple[Any, int] | None:
-    if not session.get("user_id") or not is_admin_role(session.get("user_role")):
+    uid = session.get("user_id")
+    if not uid:
+        return jsonify({"ok": False, "error": "forbidden"}), 403
+    try:
+        profile = get_user_profile(int(uid))
+    except (TypeError, ValueError):
+        profile = None
+    # Re-fetch role from the DB on every call rather than trusting the
+    # session-cached value — a demoted/suspended admin's existing cookie
+    # must lose access immediately, not after its 14-day expiry.
+    if not profile or not profile.get("is_active", True) or not is_admin_role(profile.get("role")):
         return jsonify({"ok": False, "error": "forbidden"}), 403
     return None
 

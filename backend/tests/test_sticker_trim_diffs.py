@@ -27,11 +27,13 @@ def test_adds_are_diffs_against_all_lower_rungs(monkeypatch):
     }})
     steps = [{"name": "Sport Touring"}, {"name": "Sport-L"}, {"name": "Sport"}]
     n = sd.attach_sticker_adds(steps, make="Honda", model="CR-V Hybrid", year=2026)
-    assert n == 2
+    assert n == 3
     assert set(steps[0]["sticker_adds"]) == {"Bose Audio", "Navigation"}
     assert steps[1]["sticker_adds"] == ["Sunroof"]
-    # Base rung gets no adds — nothing below to diff against.
+    # Base rung gets no adds (nothing below to diff against), but does get
+    # a confirmed-equipment annotation from its own window sticker.
     assert "sticker_adds" not in steps[2]
+    assert steps[2]["sticker_equipment"]
     assert "window sticker" in steps[0]["sticker_adds_note"]
 
 

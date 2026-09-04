@@ -167,6 +167,26 @@ def test_compare_reports_a_broken_check_as_failing_not_passing() -> None:
     assert verdicts[0]["status"] in dq._FAIL_STATUSES
 
 
+def test_compare_tags_a_zero_baseline_regression_as_a_new_defect_class() -> None:
+    """A brand-new defect class (baseline 0) must be distinguishable from routine
+    backlog growth of an existing nonzero baseline -- same REGRESSION-shaped event,
+    different severity."""
+    verdicts = {
+        v["id"]: v["status"]
+        for v in dq.compare(
+            [_result("fresh_defect", 3), _result("old_backlog", 101)],
+            {"fresh_defect": {"count": 0}, "old_backlog": {"count": 100}},
+        )
+    }
+    assert verdicts == {"fresh_defect": "NEW_DEFECT_CLASS", "old_backlog": "REGRESSION"}
+    assert "NEW_DEFECT_CLASS" in dq._FAIL_STATUSES
+
+
+def test_compare_zero_baseline_staying_zero_is_ok_not_a_new_defect_class() -> None:
+    verdicts = dq.compare([_result("still_clean", 0)], {"still_clean": {"count": 0}})
+    assert verdicts[0]["status"] == "OK"
+
+
 def test_slack_allows_a_declared_amount_of_drift() -> None:
     baseline = {"a": {"count": 10}}
     assert dq.compare([_result("a", 12)], baseline, slack=2)[0]["status"] == "OK"
@@ -175,11 +195,66 @@ def test_slack_allows_a_declared_amount_of_drift() -> None:
 
 def test_write_and_load_baseline_round_trip(tmp_path: Path) -> None:
     path = tmp_path / "baseline.json"
-    dq.write_baseline(path, [_result("a", 7), _result("b", 0, tier="rendered")], note="hi")
+    dq.write_baseline(
+        path, [_result("a", 7), _result("b", 0, tier="rendered")], note="hi", approver="alice",
+    )
     loaded = dq.load_baseline(path)
     assert loaded["a"]["count"] == 7
     assert loaded["b"]["tier"] == "rendered"
-    assert json.loads(path.read_text())["note"] == "hi"
+    written = json.loads(path.read_text())
+    assert written["note"] == "hi"
+    assert written["approver"] == "alice"
+
+
+def test_write_baseline_appends_a_history_line_and_never_overwrites_it(tmp_path: Path) -> None:
+    """The history log records every rewrite, not just the latest one."""
+    path = tmp_path / "baseline.json"
+    dq.write_baseline(path, [_result("a", 7)], note="first cut", approver="alice")
+    dq.write_baseline(path, [_result("a", 9)], note="human fixed 2 rows", approver="bob")
+
+    hist_path = tmp_path / "baseline_history.jsonl"
+    lines = [json.loads(ln) for ln in hist_path.read_text().splitlines() if ln.strip()]
+    assert len(lines) == 2
+    assert lines[0]["approver"] == "alice" and lines[0]["note"] == "first cut"
+    assert lines[1]["approver"] == "bob" and lines[1]["note"] == "human fixed 2 rows"
+    # the second write's diff against the first baseline is recorded
+    assert lines[1]["changed"] == [{"id": "a", "old_count": 7, "new_count": 9}]
+    # and the baseline FILE itself holds only the latest state
+    assert json.loads(path.read_text())["invariants"]["a"]["count"] == 9
+
+
+def test_main_refuses_write_baseline_without_note_or_approver(wired, tmp_path: Path) -> None:
+    base = tmp_path / "b.json"
+    assert dq.main(["--baseline", str(base), "--write-baseline", "--approver", "alice"]) == 2
+    assert not base.exists()
+    assert dq.main(["--baseline", str(base), "--write-baseline", "--note", "why"]) == 2
+    assert not base.exists()
+    assert dq.main(
+        ["--baseline", str(base), "--write-baseline", "--note", "why", "--approver", "alice"]
+    ) == 0
+    assert base.exists()
+
+
+def test_report_json_is_tagged_partial_when_render_cohorts_is_set(
+    wired, tmp_path: Path
+) -> None:
+    """Item 6: a sampled run's JSON must self-identify as partial coverage, not look
+    like a normal full run to any downstream reader (including the admin hub)."""
+    base = tmp_path / "b.json"
+    assert dq.main(
+        ["--baseline", str(base), "--write-baseline", "--note", "seed", "--approver", "alice"]
+    ) == 0
+    rep = tmp_path / "r.json"
+    dq.main(["--baseline", str(base), "--render-cohorts", "5", "--json", str(rep)])
+    payload = json.loads(rep.read_text())
+    assert payload["sample_mode"] is True
+    assert payload["coverage"] == "partial"
+
+    rep2 = tmp_path / "r2.json"
+    dq.main(["--baseline", str(base), "--json", str(rep2)])
+    payload2 = json.loads(rep2.read_text())
+    assert payload2["sample_mode"] is False
+    assert payload2["coverage"] == "full"
 
 
 def test_write_baseline_omits_errored_invariants(tmp_path: Path) -> None:
@@ -257,7 +332,7 @@ def wired(monkeypatch: pytest.MonkeyPatch):
 
 def test_clean_run_against_its_own_baseline_exits_zero(wired, tmp_path: Path) -> None:
     base = tmp_path / "b.json"
-    assert dq.main(["--baseline", str(base), "--write-baseline"]) == 0
+    assert dq.main(["--baseline", str(base), "--write-baseline", "--note", "test baseline", "--approver", "tester"]) == 0
     assert dq.main(["--baseline", str(base)]) == 0
 
 
@@ -267,7 +342,7 @@ def test_seeded_regression_exits_non_zero_and_names_the_invariant(
     """The whole point: one new violation since the baseline must fail the run."""
     base = tmp_path / "b.json"
     report = tmp_path / "r.json"
-    assert dq.main(["--baseline", str(base), "--write-baseline"]) == 0
+    assert dq.main(["--baseline", str(base), "--write-baseline", "--note", "test baseline", "--approver", "tester"]) == 0
 
     wired["curb_equals_tow"] += 1  # <- the seeded regression
 
@@ -281,7 +356,7 @@ def test_seeded_regression_exits_non_zero_and_names_the_invariant(
 def test_regression_in_the_rendered_tier_also_fails(wired, tmp_path: Path) -> None:
     """A backlog that only moves at render time is still a regression."""
     base = tmp_path / "b.json"
-    assert dq.main(["--baseline", str(base), "--write-baseline"]) == 0
+    assert dq.main(["--baseline", str(base), "--write-baseline", "--note", "test baseline", "--approver", "tester"]) == 0
     wired["rendered_curb_equals_tow"] += 1
     assert dq.main(["--baseline", str(base)]) == 1
 
@@ -294,7 +369,7 @@ def test_sql_only_run_cannot_pass_on_a_rendered_tier_regression(
     invariants as OK; they are simply absent from the report.
     """
     base = tmp_path / "b.json"
-    assert dq.main(["--baseline", str(base), "--write-baseline"]) == 0
+    assert dq.main(["--baseline", str(base), "--write-baseline", "--note", "test baseline", "--approver", "tester"]) == 0
     wired["rendered_curb_equals_tow"] += 99
     rep = tmp_path / "r.json"
     assert dq.main(["--baseline", str(base), "--sql-only", "--json", str(rep)]) == 0

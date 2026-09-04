@@ -99,6 +99,11 @@ backend/dictionary/tmp_brochures/
 # Left untracked they were 114 MB of binaries heading into a commit.
 backend/data/brochures_archive_comparison/
 backend/data/brochures_archive_quarantine/
+# Rasterized page-image cache for the local-LLM extraction pipeline (regenerated).
+backend/data/brochure_local_pages/
+backend/data/logs/
+# Downloaded car-photo cache for the local-LLM car-image vision pipeline (regenerated).
+backend/data/car_image_local_cache/
 
 # Dictionary catalog artifacts (regenerated)
 backend/dictionary/index/manifest.json

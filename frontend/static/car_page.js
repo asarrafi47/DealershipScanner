@@ -14,6 +14,72 @@
         });
     }
 
+    function initCarShareButton() {
+        const btn = document.getElementById("car-share-btn");
+        if (!btn) return;
+        const toast = document.getElementById("car-share-toast");
+        let toastTimer = null;
+
+        function showToast(text) {
+            if (!toast) return;
+            toast.textContent = text;
+            toast.hidden = false;
+            if (toastTimer) window.clearTimeout(toastTimer);
+            toastTimer = window.setTimeout(function () {
+                toast.hidden = true;
+            }, 2400);
+        }
+
+        function fallbackCopyLink(url) {
+            function done(ok) {
+                showToast(ok ? "Link copied" : "Couldn't copy link — copy it from the address bar");
+            }
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(url).then(
+                    function () {
+                        done(true);
+                    },
+                    function () {
+                        done(false);
+                    }
+                );
+                return;
+            }
+            // Very old browsers with no Clipboard API: a hidden textarea +
+            // execCommand is the last resort.
+            try {
+                const ta = document.createElement("textarea");
+                ta.value = url;
+                ta.style.position = "fixed";
+                ta.style.opacity = "0";
+                document.body.appendChild(ta);
+                ta.focus();
+                ta.select();
+                const ok = document.execCommand("copy");
+                document.body.removeChild(ta);
+                done(ok);
+            } catch (e) {
+                done(false);
+            }
+        }
+
+        btn.addEventListener("click", function () {
+            const url = window.location.href;
+            const title = btn.getAttribute("data-share-title") || document.title;
+            if (navigator.share) {
+                navigator.share({ title: title, url: url }).catch(function (err) {
+                    // The user dismissing the native share sheet is not a
+                    // failure -- only fall back to copy-link for a real error
+                    // (e.g. share unsupported for this payload).
+                    if (err && err.name === "AbortError") return;
+                    fallbackCopyLink(url);
+                });
+                return;
+            }
+            fallbackCopyLink(url);
+        });
+    }
+
     function initCarGallery() {
         const jsonEl = document.getElementById("car-gallery-json");
         const imgEl = document.getElementById("car-gallery-main-img");
@@ -60,7 +126,24 @@
             const fallback = imgEl.getAttribute("src") || "";
             if (fallback && !isGalleryJunkUrl(fallback)) gallery = [fallback];
         }
-        if (gallery.length === 0) return;
+        if (gallery.length === 0) {
+            // Nothing real to show even after filtering out junk/placeholder
+            // URLs -- swap in a clear empty state instead of leaving the
+            // broken/junk src on screen with no explanation.
+            const emptyMsg = document.getElementById("car-gallery-empty-msg");
+            const placeholderSrc = heroEl ? heroEl.getAttribute("data-placeholder-src") : "";
+            if (placeholderSrc) imgEl.src = placeholderSrc;
+            imgEl.setAttribute("alt", "No photos available yet");
+            if (emptyMsg) emptyMsg.hidden = false;
+            if (counterBadge) counterBadge.remove();
+            if (prevHero) prevHero.remove();
+            if (nextHero) nextHero.remove();
+            const controls = document.querySelector(".car-gallery-controls");
+            if (controls) controls.remove();
+            const thumbsWrap = document.querySelector(".car-gallery-thumbs-wrap");
+            if (thumbsWrap) thumbsWrap.remove();
+            return;
+        }
 
         let activeImageIndex = 0;
         function show() {
@@ -87,6 +170,7 @@
                         inline: "nearest",
                     });
             }
+            syncLightbox();
         }
 
         function goPrev(e) {
@@ -106,15 +190,197 @@
             return !!(window.__DS_MEDIA_MODE && window.__DS_MEDIA_MODE !== "photos");
         }
 
+        // ---- Lightbox: full-viewport photo view with zoom/pan/swipe ----
+        let lightboxEl = null;
+        let lightboxImgEl = null;
+        let lightboxCounterEl = null;
+        let lightboxOpen = false;
+        let lastFocusedEl = null;
+        let lbScale = 1;
+        let lbTx = 0;
+        let lbTy = 0;
+
+        function applyLightboxTransform() {
+            if (lightboxImgEl) {
+                lightboxImgEl.style.transform =
+                    "translate(" + lbTx + "px, " + lbTy + "px) scale(" + lbScale + ")";
+                lightboxImgEl.classList.toggle("car-lightbox-img--zoomed", lbScale > 1);
+            }
+        }
+
+        function setLightboxZoom(scale) {
+            const clamped = Math.max(1, Math.min(5, scale));
+            lbScale = clamped;
+            if (clamped <= 1) {
+                lbTx = 0;
+                lbTy = 0;
+            }
+            applyLightboxTransform();
+        }
+
+        function resetLightboxZoom() {
+            lbScale = 1;
+            lbTx = 0;
+            lbTy = 0;
+            applyLightboxTransform();
+        }
+
+        function syncLightbox() {
+            if (!lightboxOpen || !lightboxImgEl) return;
+            resetLightboxZoom();
+            lightboxImgEl.src = gallery[activeImageIndex];
+            lightboxImgEl.alt = imgEl.getAttribute("alt") || "";
+            if (lightboxCounterEl) {
+                lightboxCounterEl.textContent =
+                    gallery.length > 1 ? activeImageIndex + 1 + " / " + gallery.length : "";
+            }
+        }
+
+        function closeLightbox() {
+            if (!lightboxOpen || !lightboxEl) return;
+            lightboxOpen = false;
+            lightboxEl.hidden = true;
+            document.body.classList.remove("car-lightbox-open");
+            if (lastFocusedEl && typeof lastFocusedEl.focus === "function") {
+                lastFocusedEl.focus();
+            }
+        }
+
+        function openLightbox() {
+            if (altMediaActive()) return;
+            buildLightbox();
+            lastFocusedEl = document.activeElement;
+            lightboxOpen = true;
+            lightboxEl.hidden = false;
+            document.body.classList.add("car-lightbox-open");
+            syncLightbox();
+            const closeBtn = lightboxEl.querySelector(".car-lightbox-close");
+            if (closeBtn) closeBtn.focus();
+        }
+
+        function buildLightbox() {
+            if (lightboxEl) return;
+            lightboxEl = document.createElement("div");
+            lightboxEl.className = "car-lightbox";
+            lightboxEl.id = "car-gallery-lightbox";
+            lightboxEl.hidden = true;
+            lightboxEl.setAttribute("role", "dialog");
+            lightboxEl.setAttribute("aria-modal", "true");
+            lightboxEl.setAttribute("aria-label", "Photo viewer");
+            lightboxEl.innerHTML =
+                '<button type="button" class="car-lightbox-close" aria-label="Close photo viewer">' +
+                '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>' +
+                "</button>" +
+                '<button type="button" class="car-lightbox-nav car-lightbox-prev" aria-label="Previous image">' +
+                '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>' +
+                "</button>" +
+                '<div class="car-lightbox-stage">' +
+                '<img class="car-lightbox-img" alt="">' +
+                "</div>" +
+                '<button type="button" class="car-lightbox-nav car-lightbox-next" aria-label="Next image">' +
+                '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>' +
+                "</button>" +
+                '<span class="car-lightbox-counter"></span>' +
+                '<p class="car-lightbox-hint">Scroll or pinch to zoom · drag to pan</p>';
+            document.body.appendChild(lightboxEl);
+            lightboxImgEl = lightboxEl.querySelector(".car-lightbox-img");
+            lightboxCounterEl = lightboxEl.querySelector(".car-lightbox-counter");
+
+            lightboxEl.querySelector(".car-lightbox-close").addEventListener("click", closeLightbox);
+            lightboxEl.querySelector(".car-lightbox-prev").addEventListener("click", function (e) {
+                e.stopPropagation();
+                goPrev();
+            });
+            lightboxEl.querySelector(".car-lightbox-next").addEventListener("click", function (e) {
+                e.stopPropagation();
+                goNext();
+            });
+            // Click outside the photo itself (the backdrop / stage) closes.
+            lightboxEl.addEventListener("click", function (e) {
+                if (e.target === lightboxEl || e.target.classList.contains("car-lightbox-stage")) {
+                    closeLightbox();
+                }
+            });
+
+            // Scroll-wheel zoom (desktop).
+            lightboxImgEl.addEventListener(
+                "wheel",
+                function (e) {
+                    e.preventDefault();
+                    setLightboxZoom(lbScale + (e.deltaY < 0 ? 0.2 : -0.2));
+                },
+                { passive: false }
+            );
+            // Double-click / double-tap toggles zoomed in vs. reset.
+            lightboxImgEl.addEventListener("dblclick", function () {
+                setLightboxZoom(lbScale > 1 ? 1 : 2.5);
+            });
+
+            // Unified pointer handling: one finger pans when zoomed (or is a
+            // swipe-to-navigate when not), two fingers pinch-zoom, and a mouse
+            // drag pans the same way a touch drag does.
+            const pointers = new Map();
+            let pinchStartDist = null;
+            let pinchStartScale = 1;
+            let panStart = null;
+            let swipeStart = null;
+
+            function pointerDist() {
+                const pts = Array.from(pointers.values());
+                return Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y);
+            }
+
+            lightboxImgEl.addEventListener("pointerdown", function (e) {
+                lightboxImgEl.setPointerCapture(e.pointerId);
+                pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+                if (pointers.size === 2) {
+                    pinchStartDist = pointerDist();
+                    pinchStartScale = lbScale;
+                    panStart = null;
+                    swipeStart = null;
+                } else if (pointers.size === 1) {
+                    panStart = { x: e.clientX, y: e.clientY, tx: lbTx, ty: lbTy };
+                    swipeStart = { x: e.clientX, y: e.clientY };
+                }
+            });
+
+            lightboxImgEl.addEventListener("pointermove", function (e) {
+                if (!pointers.has(e.pointerId)) return;
+                pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+                if (pointers.size === 2 && pinchStartDist) {
+                    setLightboxZoom(pinchStartScale * (pointerDist() / pinchStartDist));
+                } else if (pointers.size === 1 && panStart && lbScale > 1) {
+                    lbTx = panStart.tx + (e.clientX - panStart.x);
+                    lbTy = panStart.ty + (e.clientY - panStart.y);
+                    applyLightboxTransform();
+                }
+            });
+
+            function onPointerUp(e) {
+                if (pointers.size === 1 && swipeStart && lbScale <= 1) {
+                    const dx = e.clientX - swipeStart.x;
+                    const dy = e.clientY - swipeStart.y;
+                    if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+                        if (dx > 0) goPrev();
+                        else goNext();
+                    }
+                }
+                pointers.delete(e.pointerId);
+                if (pointers.size < 2) pinchStartDist = null;
+                if (pointers.size === 0) {
+                    panStart = null;
+                    swipeStart = null;
+                }
+            }
+            lightboxImgEl.addEventListener("pointerup", onPointerUp);
+            lightboxImgEl.addEventListener("pointercancel", onPointerUp);
+        }
+
         if (heroEl) {
             heroEl.addEventListener("click", function (e) {
                 if (altMediaActive()) return;
                 if (e.target.closest("button")) return;
-                const rect = heroEl.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const w = rect.width;
-                if (x < w * 0.33) goPrev(e);
-                else if (x > w * 0.67) goNext(e);
+                openLightbox();
             });
         }
         if (prevBtn) prevBtn.addEventListener("click", goPrev);
@@ -140,8 +406,13 @@
         }
 
         document.addEventListener("keydown", function (e) {
+            if (lightboxOpen && e.key === "Escape") {
+                closeLightbox();
+                e.preventDefault();
+                return;
+            }
             if (altMediaActive()) return;
-            if (e.target.matches("input, textarea")) return;
+            if (!lightboxOpen && e.target.matches("input, textarea")) return;
             if (gallery.length <= 1) return;
             if (e.key === "ArrowLeft") {
                 goPrev(e);
@@ -309,8 +580,13 @@
         const tradeConditionEl = document.getElementById("trade-vehicle-condition");
         const tradeValueEl = document.getElementById("calc-trade-value");
         const tradeHighDemandEl = document.getElementById("trade-high-demand-bonus");
+        const zipEl = document.getElementById("calc-zip");
+        const taxRateEl = document.getElementById("calc-tax-rate");
+        const taxRateHintEl = document.getElementById("calc-tax-rate-hint");
+        const feesEl = document.getElementById("calc-fees");
         if (!displayEl || !downPaymentEl || !creditTierEl || !termEl) return;
         if (!tradeToggleNo || !tradeToggleYes || !tradePanelEl || !tradeConditionEl || !tradeValueEl || !tradeHighDemandEl) return;
+        if (!zipEl || !taxRateEl || !feesEl) return;
 
         const ANNUAL_RATES = {
             excellent: 0.065,
@@ -319,12 +595,23 @@
             subprime: 0.15,
         };
 
+        // 7% tax / $500 fees are placeholder US-average estimates, not this
+        // car's real jurisdiction -- both fields stay user-editable, and
+        // entering a ZIP tries to replace the tax rate with a real (if still
+        // approximate) per-state figure from /api/tax-rate/lookup.
+        const DEFAULT_TAX_RATE_PCT = 7;
+        const DEFAULT_FEES = 500;
+
         const STORAGE_KEYS = {
             downPayment: "pref_down_payment",
             creditTier: "pref_credit_tier",
             term: "pref_term",
             hasTradeIn: "pref_has_trade_in",
             tradeValue: "pref_trade_value",
+            zip: "pref_finance_zip",
+            taxRate: "pref_finance_tax_rate",
+            taxRateManual: "pref_finance_tax_rate_manual",
+            fees: "pref_finance_fees",
         };
 
         const CONDITION_MULTIPLIERS = {
@@ -376,6 +663,22 @@
             const n = parseFloat(trimmed);
             if (!Number.isFinite(n) || n < 0) return 0;
             return Math.min(n, maxTradeValue);
+        }
+
+        function parseTaxRatePct(raw) {
+            const trimmed = String(raw == null ? "" : raw).trim();
+            if (trimmed === "") return DEFAULT_TAX_RATE_PCT;
+            const n = parseFloat(trimmed);
+            if (!Number.isFinite(n) || n < 0) return DEFAULT_TAX_RATE_PCT;
+            return Math.min(n, 25);
+        }
+
+        function parseFees(raw) {
+            const trimmed = String(raw == null ? "" : raw).trim();
+            if (trimmed === "") return DEFAULT_FEES;
+            const n = parseFloat(trimmed);
+            if (!Number.isFinite(n) || n < 0) return DEFAULT_FEES;
+            return Math.min(n, 10000);
         }
 
         function getConditionMultiplier() {
@@ -436,11 +739,72 @@
             if (savedTradeValue != null && String(savedTradeValue).trim() !== "") {
                 tradeValueEl.value = String(parseTradeValue(savedTradeValue));
             }
+
+            const savedZip = readStorage(STORAGE_KEYS.zip);
+            if (savedZip && /^\d{5}$/.test(savedZip)) {
+                zipEl.value = savedZip;
+            }
+            const savedTaxRate = readStorage(STORAGE_KEYS.taxRate);
+            if (savedTaxRate != null && String(savedTaxRate).trim() !== "") {
+                taxRateEl.value = String(parseTaxRatePct(savedTaxRate));
+            }
+            // Only treat the rate as "manually set" if it was actually edited
+            // by hand last visit (a separate flag) — not merely because a
+            // value happened to get persisted alongside unrelated fields
+            // (persistPreferences() writes every field on any calculator
+            // change, so a stored tax rate doesn't by itself mean the user
+            // touched it).
+            taxRateManuallySet = readStorage(STORAGE_KEYS.taxRateManual) === "1";
+            const savedFees = readStorage(STORAGE_KEYS.fees);
+            if (savedFees != null && String(savedFees).trim() !== "") {
+                feesEl.value = String(parseFees(savedFees));
+            }
+            if (zipEl.value && /^\d{5}$/.test(zipEl.value)) {
+                lookupTaxRateForZip(zipEl.value);
+            }
         }
 
         function formatPayment(amount) {
             if (!Number.isFinite(amount)) return "--";
             return Math.round(amount).toLocaleString("en-US");
+        }
+
+        // True once the tax-rate field holds a value the user typed (or one
+        // restored from a previous visit) rather than the plain 7% default —
+        // a completed ZIP lookup only overwrites the field while this is
+        // false, so it never clobbers a rate someone already dialed in.
+        let taxRateManuallySet = false;
+        let zipLookupToken = 0;
+
+        function lookupTaxRateForZip(zip) {
+            const token = ++zipLookupToken;
+            if (taxRateHintEl) taxRateHintEl.textContent = "(looking up your area…)";
+            fetch("/api/tax-rate/lookup?zip=" + encodeURIComponent(zip))
+                .then(function (r) {
+                    return r.ok ? r.json() : null;
+                })
+                .then(function (data) {
+                    if (!data || token !== zipLookupToken) return;
+                    if (taxRateManuallySet) {
+                        // User typed a rate while the lookup was in flight --
+                        // respect it, just update the hint text.
+                        if (taxRateHintEl) taxRateHintEl.textContent = "(estimate — edit for your area)";
+                        return;
+                    }
+                    if (Number.isFinite(data.rate_pct)) {
+                        taxRateEl.value = String(data.rate_pct);
+                        computeMonthlyPayment();
+                        persistPreferences();
+                    }
+                    if (taxRateHintEl && data.label) {
+                        taxRateHintEl.textContent = "(" + data.label.toLowerCase() + " — edit if different)";
+                    }
+                })
+                .catch(function () {
+                    if (token === zipLookupToken && taxRateHintEl) {
+                        taxRateHintEl.textContent = "(estimate — edit for your area)";
+                    }
+                });
         }
 
         function computeMonthlyPayment() {
@@ -455,7 +819,9 @@
             }
 
             const tradeInValue = computeTradeInEquity();
-            const principal = vehiclePrice * 1.07 + 500 - downPayment - tradeInValue;
+            const taxRate = parseTaxRatePct(taxRateEl.value) / 100;
+            const fees = parseFees(feesEl.value);
+            const principal = vehiclePrice * (1 + taxRate) + fees - downPayment - tradeInValue;
 
             if (principal <= 0) {
                 displayEl.textContent = "0";
@@ -480,6 +846,9 @@
             writeStorage(STORAGE_KEYS.term, termEl.value);
             writeStorage(STORAGE_KEYS.hasTradeIn, hasTradeIn ? "1" : "0");
             writeStorage(STORAGE_KEYS.tradeValue, tradeValueEl.value);
+            writeStorage(STORAGE_KEYS.zip, zipEl.value);
+            writeStorage(STORAGE_KEYS.taxRate, taxRateEl.value);
+            writeStorage(STORAGE_KEYS.fees, feesEl.value);
         }
 
         function onCalculatorChange() {
@@ -495,6 +864,25 @@
             }
             computeMonthlyPayment();
             persistPreferences();
+        }
+
+        function onTaxRateChange() {
+            taxRateManuallySet = true;
+            writeStorage(STORAGE_KEYS.taxRateManual, "1");
+            if (taxRateHintEl) taxRateHintEl.textContent = "(estimate — edit for your area)";
+            onCalculatorChange();
+        }
+
+        function onZipChange() {
+            const zip = String(zipEl.value || "").replace(/\D/g, "").slice(0, 5);
+            if (zip !== zipEl.value) zipEl.value = zip;
+            // A new ZIP means the shopper wants a fresh location-based
+            // estimate — let the lookup populate the field again rather than
+            // staying stuck on whatever was there for the old ZIP.
+            taxRateManuallySet = false;
+            writeStorage(STORAGE_KEYS.taxRateManual, "0");
+            persistPreferences();
+            if (/^\d{5}$/.test(zip)) lookupTaxRateForZip(zip);
         }
 
         function onTradeToggle(yes) {
@@ -516,7 +904,11 @@
             tradeConditionEl.addEventListener(evt, onCalculatorChange);
             tradeValueEl.addEventListener(evt, onCalculatorChange);
             tradeHighDemandEl.addEventListener(evt, onCalculatorChange);
+            taxRateEl.addEventListener(evt, onTaxRateChange);
+            feesEl.addEventListener(evt, onCalculatorChange);
         });
+        zipEl.addEventListener("change", onZipChange);
+        zipEl.addEventListener("blur", onZipChange);
 
         seedFromStorage();
         computeMonthlyPayment();
@@ -2260,6 +2652,27 @@
         mapVelocityMarker(projectedDays);
     }
 
+    function initBuildSheetPrint() {
+        const btn = document.getElementById("build-sheet-print-btn");
+        const panel = document.getElementById("build-sheet-panel");
+        if (!btn || !panel) return;
+        btn.addEventListener("click", function () {
+            // The build sheet lives inside the Options tab panel, which is
+            // [hidden] (and so print-invisible too, regardless of the
+            // print-media CSS on the sheet itself) whenever another tab is
+            // active. Switch to it first so window.print() has something to
+            // render -- the print stylesheet then hides everything else on
+            // the page except this one panel.
+            const optionsTab = document.querySelector('.car-vdp-tab[data-tab="options"]');
+            if (optionsTab && !optionsTab.classList.contains("car-vdp-tab--active")) {
+                optionsTab.click();
+            }
+            window.requestAnimationFrame(function () {
+                window.print();
+            });
+        });
+    }
+
     function initCarVdpTabs() {
         const tablist = document.querySelector(".car-vdp-tabs");
         if (!tablist) return;
@@ -2354,6 +2767,7 @@
 
     function initCarPageCritical() {
         initCarBackLink();
+        initCarShareButton();
         initCarGallery();
         initCarVdpTabs();
         initCompareTrayResync();
@@ -2361,6 +2775,7 @@
     }
 
     function initCarPageDeferred() {
+        initBuildSheetPrint();
         initCarHistoryHighlights();
         initDealerReputation();
         initEvBatteryIntelligence();

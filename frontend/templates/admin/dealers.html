@@ -173,7 +173,7 @@
 {% block content %}
 <div class="dealers-hub">
     <h1 class="db-section-title">Dealer onboarding</h1>
-    <p class="admin-lead">Queue Smart Import scans for new dealers. Use <a href="{{ find_dealers_url }}">Find dealers</a> to discover URLs, then enqueue jobs here or from the map.</p>
+    <p class="admin-lead">Queue Smart Import scans for new dealers. Use <a href="{{ find_dealers_url }}">Find dealers</a> to discover URLs, then enqueue jobs here or from the map. Bulk URL import and its own job log live on the <a href="{{ url_for('dev.dev_dashboard') }}">/dev dashboard</a> (separate session).</p>
 
     {% if not postgres_ok %}
     <p class="error-box">Postgres job queue not configured. Run <code>./deploy/up.sh --full</code> with <code>INVENTORY_DATABASE_URL</code>.</p>

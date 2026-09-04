@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  launchd job: nightly rooftop-refusal reporting (census + gaps + regression alarm).
+
+  Kept in the repo as a template; NOT installed automatically. Install/uninstall
+  exactly as described in deploy/NIGHTLY_REFRESH.md, substituting this Label and
+  plist filename for the http-refresh one used in that doc's examples.
+
+  Runs at 06:20, deliberately AFTER com.sarraficars.nightly-data-quality (06:00,
+  ~11 min measured), which itself runs after nightly-http-refresh (03:30) --
+  same "grade what already happened, not yesterday's" ordering rule. Both
+  backend/scripts/report_rooftop_refusals.py and rooftop_refusals_census.py are
+  read-only and run in well under a minute against the current corpus size, so
+  20 minutes of headroom after the data-quality job is generous, not tight.
+-->
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.sarraficars.nightly-rooftop-refusals</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/bash</string>
+        <string>/Users/asarrafi/Projects/DealershipScanner/deploy/nightly_rooftop_refusals.sh</string>
+    </array>
+
+    <key>WorkingDirectory</key>
+    <string>/Users/asarrafi/Projects/DealershipScanner</string>
+
+    <key>StartCalendarInterval</key>
+    <dict>
+        <key>Hour</key>
+        <integer>6</integer>
+        <key>Minute</key>
+        <integer>20</integer>
+    </dict>
+
+    <!-- The wrapper also writes a dated, timestamped log at
+         workspace/scanlogs/rooftop_refusals_<YYYYMMDD>.log, a machine-readable
+         census at workspace/rooftop_refusals/census_<YYYYMMDD>.json, and the
+         human-readable report (worst-first census, unregistered-rooftop gaps,
+         regression alarm) at workspace/rooftop_refusals/report_<YYYYMMDD>.txt -->
+    <key>StandardOutPath</key>
+    <string>/Users/asarrafi/Projects/DealershipScanner/workspace/scanlogs/launchd.nightly-rooftop-refusals.out.log</string>
+    <key>StandardErrorPath</key>
+    <string>/Users/asarrafi/Projects/DealershipScanner/workspace/scanlogs/launchd.nightly-rooftop-refusals.err.log</string>
+
+    <key>RunAtLoad</key>
+    <false/>
+    <key>KeepAlive</key>
+    <false/>
+
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PATH</key>
+        <string>/opt/homebrew/bin:/opt/homebrew/opt/python@3.14/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+    </dict>
+
+    <key>ProcessType</key>
+    <string>Background</string>
+    <key>LowPriorityIO</key>
+    <true/>
+    <key>Nice</key>
+    <integer>5</integer>
+</dict>
+</plist>

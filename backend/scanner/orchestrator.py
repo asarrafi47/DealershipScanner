@@ -22,6 +22,8 @@ from backend.scanner import scan_log
 from backend.scanner.manifest import filter_oem_manufacturers, load_manifest
 from backend.scanner.inventory_write import InventoryWriteCoordinator, default_max_dealer_concurrency
 from backend.scanner.phases.dealer_run import run_dealer
+from backend.scanner.post_scan.coverage_report import aggregate_coverage_reports
+from backend.scanner.scan_lock import acquire_scan_lock, current_lock_holder, release_scan_lock
 from backend.scanner.post_pipeline import (
     aggregate_vins_from_dealer_results,
     post_dealer_google_ratings_env_enabled,
@@ -81,6 +83,27 @@ def _dealer_timeout_sec() -> float:
         return 10800.0
 
 
+async def _record_single_outcome(outcome: dict[str, Any]) -> None:
+    """
+    Persist one dealer's ``scan_runs`` row immediately (rather than batching every
+    dealer's row until the whole scan finishes) so an admin scan-history
+    dashboard reflects an in-flight scan.
+    """
+    try:
+        from datetime import datetime, timezone
+
+        from backend.db.inventory_db import record_scan_outcomes
+
+        await asyncio.to_thread(
+            record_scan_outcomes, [outcome], finished_at=datetime.now(timezone.utc).isoformat()
+        )
+    except Exception:
+        logger.exception(
+            "record_scan_outcomes failed for dealer %s (inventory.db scan_runs)",
+            outcome.get("dealer_id"),
+        )
+
+
 async def _run_post_scan_tail(
     outcomes: list[Any],
     *,
@@ -96,15 +119,9 @@ async def _run_post_scan_tail(
     post_gallery_vision: bool,
     enrichment_max_workers: int | None,
 ) -> None:
+    # Note: scan_runs rows are now written per-dealer as each run_dealer() call
+    # finishes (see _record_single_outcome in one_dealer()), not batched here.
     scanned_vins = aggregate_vins_from_dealer_results(outcomes)
-    try:
-        from datetime import datetime, timezone
-
-        from backend.db.inventory_db import record_scan_outcomes
-
-        record_scan_outcomes(outcomes, finished_at=datetime.now(timezone.utc).isoformat())
-    except Exception:
-        logger.exception("record_scan_outcomes failed (inventory.db scan_runs)")
 
     if (
         post_repair
@@ -187,7 +204,29 @@ async def _run_post_scan_tail(
         logger.exception("Dealer Google rating batch step failed (inventory already saved)")
 
 
-async def main(
+async def main(*args: Any, **kwargs: Any) -> None:
+    """
+    Entry point used by cli.py / dev console. Wraps ``_main_impl`` with a
+    file-PID lock so two full scanner runs never overlap on one host.
+    """
+    if not acquire_scan_lock():
+        from backend.scanner.scan_lock import LOCK_PATH
+
+        holder = current_lock_holder()
+        logger.error(
+            "Scanner already running (lock held by pid %s; lock file %s) — refusing to start "
+            "a second concurrent run. If that process is gone, delete the lock file.",
+            holder,
+            LOCK_PATH,
+        )
+        return
+    try:
+        await _main_impl(*args, **kwargs)
+    finally:
+        release_scan_lock()
+
+
+async def _main_impl(
     dealers: list | None = None,
     *,
     scan_only: bool = False,
@@ -247,6 +286,9 @@ async def main(
     sem = asyncio.Semaphore(dealer_conc)
     outcomes: list[Any] = []
     dealer_timeout = _dealer_timeout_sec()
+    completed_count = 0
+    total_dealers = len(bmw_enhanced_dealers)
+    shutdown_skipped_dealer_ids: list[str] = []
 
     async def run_dealers_with_browser(p) -> list[Any]:
         browser = await p.chromium.launch(
@@ -269,14 +311,15 @@ async def main(
                 if dealer_timeout > 0:
                     # A dealer hung mid-phase (e.g. a stuck warmup goto) would otherwise
                     # hold its semaphore slot forever and block the final gather.
-                    return await asyncio.wait_for(coro, timeout=dealer_timeout)
-                return await coro
+                    result = await asyncio.wait_for(coro, timeout=dealer_timeout)
+                else:
+                    result = await coro
             except asyncio.TimeoutError:
                 logger.error(
                     "Dealer %s timed out after %.0fs (SCANNER_DEALER_TIMEOUT_SEC) — skipping.",
                     did, dealer_timeout,
                 )
-                return {
+                result = {
                     "dealer_id": did,
                     "dealer_name": dealer.get("name", ""),
                     "upserted": 0,
@@ -296,24 +339,39 @@ async def main(
                         await pg.close()
                 except Exception:
                     pass
-                return {
+                result = {
                     "dealer_id": did,
                     "dealer_name": dealer.get("name", ""),
                     "upserted": 0,
                     "error": str(e),
                 }
+            # Write this dealer's scan_runs row now (not batched at scan end) so an
+            # admin scan-history dashboard reflects an in-flight scan.
+            await _record_single_outcome(result)
+            return result
 
         async def bounded(dealer: dict) -> dict[str, Any]:
+            nonlocal completed_count
             if _scanner_shutdown_requested:
-                return {
+                result = {
                     "dealer_id": dealer.get("dealer_id", ""),
                     "dealer_name": dealer.get("name", ""),
                     "upserted": 0,
                     "error": "shutdown_requested",
                 }
-            async with sem:
-                await asyncio.sleep(random.uniform(0.5, 2.5))
-                return await one_dealer(dealer)
+                shutdown_skipped_dealer_ids.append(result["dealer_id"])
+            else:
+                async with sem:
+                    await asyncio.sleep(random.uniform(0.5, 2.5))
+                    result = await one_dealer(dealer)
+            completed_count += 1
+            logger.info(
+                "Progress: %d of %d dealers done (last: %s)",
+                completed_count,
+                total_dealers,
+                result.get("dealer_id") or "?",
+            )
+            return result
 
         try:
             loop = asyncio.get_running_loop()
@@ -341,12 +399,16 @@ async def main(
         async with async_playwright() as p:
             outcomes = await run_dealers_with_browser(p)
 
+    dealer_coverage_reports: list[dict[str, Any]] = []
     for o in outcomes:
         if isinstance(o, BaseException):
             logger.error("Dealer task ended with exception: %s", o)
             continue
         if isinstance(o, dict):
             total_upserted += int(o.get("upserted") or 0)
+            cov = o.get("coverage")
+            if isinstance(cov, dict) and cov.get("coverage"):
+                dealer_coverage_reports.append(cov)
 
     elapsed = time.perf_counter() - scan_t0
     logger.info(
@@ -357,15 +419,29 @@ async def main(
         total_upserted,
     )
 
+    if dealer_coverage_reports:
+        rollup = aggregate_coverage_reports(dealer_coverage_reports)
+        cov = rollup.get("coverage", {})
+        gaps = ", ".join(
+            f"{field}={stat['pct']}%" for field, stat in cov.items() if stat["pct"] < 100.0
+        ) or "all fields 100%"
+        logger.info(
+            "Scan-wide field coverage — %d dealer(s), %d vehicle(s): %s",
+            rollup.get("dealers", 0),
+            rollup.get("count", 0),
+            gaps,
+        )
+
+    if shutdown_skipped_dealer_ids:
+        logger.warning(
+            "Shutdown requested mid-scan — %d dealer(s) never started: %s",
+            len(shutdown_skipped_dealer_ids),
+            ", ".join(shutdown_skipped_dealer_ids),
+        )
+
     if scan_only:
-        try:
-            from datetime import datetime, timezone
-
-            from backend.db.inventory_db import record_scan_outcomes
-
-            record_scan_outcomes(outcomes, finished_at=datetime.now(timezone.utc).isoformat())
-        except Exception:
-            logger.exception("record_scan_outcomes failed (inventory.db scan_runs)")
+        # scan_runs rows are written per-dealer as each run_dealer() call
+        # finishes (see _record_single_outcome); nothing further to persist here.
         return
 
     await _run_post_scan_tail(

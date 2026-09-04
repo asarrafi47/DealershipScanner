@@ -16,6 +16,7 @@ from urllib.parse import urlparse
 
 from backend.parsers.carscommerce import detect as detect_carscommerce
 from backend.parsers.carscommerce import parse as parse_carscommerce
+from backend.parsers.chapman import detect as detect_chapman
 from backend.parsers.chapman import parse as parse_chapman
 from backend.parsers.dealer_dot_com import parse as parse_dealer_dot_com
 from backend.parsers.dealer_eprocess import parse as parse_dealer_eprocess
@@ -825,6 +826,18 @@ def _parse_rows(provider: str, raw_data, _kwargs: dict, dealer_id: str) -> list[
         tv_rows = list(parse_team_velocity(raw_data, **_kwargs))
         if tv_rows:
             return tv_rows
+
+    # Chapman Auto Group dealers (chapmanbmwchandler-com, chapmanfordaz-com) have
+    # been captured with the recipe mis-tagged "dealer_dot_com" in production —
+    # the generic parser guesses via loose key matching and returns rows, so
+    # nothing flags it as broken, but it doesn't know colorExt/drive/fuel/body
+    # and silently drops color/drivetrain/fuel/body_style for every row. Route
+    # by shape BEFORE the declared provider so a mis-tagged recipe can never
+    # again silently degrade this dealer's data.
+    if provider != "chapman" and detect_chapman(raw_data):
+        chapman_rows = list(parse_chapman(raw_data, **_kwargs))
+        if chapman_rows:
+            return chapman_rows
 
     fn = PARSERS.get(provider)
     if fn:

@@ -75,6 +75,7 @@ def _registry_row_to_dealer(row: dict[str, Any], listing_count: int) -> dict[str
         "state": (row.get("state") or "").strip(),
         "street_address": (row.get("street_address") or "").strip(),
         "zip_code": (row.get("zip_code") or "").strip(),
+        "phone": (row.get("phone") or "").strip(),
         "latitude": float(row["latitude"]),
         "longitude": float(row["longitude"]),
         "distance_miles": row.get("distance_miles"),
@@ -121,6 +122,7 @@ def _google_candidate_to_row(candidate: Any, center_lat: float, center_lon: floa
         "state": (candidate.state or "").strip(),
         "street_address": (candidate.street_address or "").strip(),
         "zip_code": (candidate.zip_code or "").strip(),
+        "phone": (candidate.phone or "").strip(),
         "latitude": lat,
         "longitude": lon,
         "distance_miles": round(haversine(center_lat, center_lon, lat, lon), 2),
@@ -203,6 +205,8 @@ def find_nearby_dealers(
                             d["street_address"] = g_row["street_address"]
                         if not d.get("zip_code") and g_row.get("zip_code"):
                             d["zip_code"] = g_row["zip_code"]
+                        if not d.get("phone") and g_row.get("phone"):
+                            d["phone"] = g_row["phone"]
                         break
                 continue
 
@@ -215,6 +219,7 @@ def find_nearby_dealers(
                     "state": g_row["state"],
                     "street_address": g_row["street_address"],
                     "zip_code": g_row["zip_code"],
+                    "phone": g_row["phone"],
                     "latitude": g_row["latitude"],
                     "longitude": g_row["longitude"],
                     "distance_miles": g_row["distance_miles"],

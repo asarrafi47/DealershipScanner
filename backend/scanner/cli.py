@@ -37,16 +37,20 @@ except ImportError:
     pass
 
 from backend.db import inventory_pg
+from backend.scanner import scan_log
 from backend.scanner.constants import DEBUG_DIR, MANIFEST_PATH
+from backend.scanner.inventory_write import default_max_dealer_concurrency
 from backend.scanner.manifest import (
     filter_manifest_by_dealer_id,
+    filter_manifest_by_dealer_ids,
     filter_manifest_by_shard,
     filter_manifest_skip_flag,
     filter_skip_dealers,
     load_manifest,
     resolve_shard_cli_and_env,
 )
-from backend.scanner.orchestrator import main, on_scanner_shutdown_signal
+from backend.scanner.orchestrator import _dealer_timeout_sec, main, on_scanner_shutdown_signal
+from backend.scanner.scan_efficiency import effective_vdp_concurrency
 from backend.scanner.phases.dealer_run import (
     apply_monroney_vision_to_vehicles as _apply_monroney_vision_to_vehicles,
     run_dealer,
@@ -85,6 +89,60 @@ _scanner_shutdown_requested = False
 _on_scanner_shutdown_signal = on_scanner_shutdown_signal
 
 
+def _read_dealer_ids_file(path: str) -> list[str]:
+    p = Path(path).expanduser()
+    if not p.is_absolute():
+        p = (ROOT / p).resolve()
+    if not p.is_file():
+        logger.error("--dealer-ids-file not found: %s", p)
+        sys.exit(1)
+    ids: list[str] = []
+    for line in p.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if not line or line.startswith("#"):
+            continue
+        ids.append(line)
+    return ids
+
+
+def _resolve_dealer_ids(args: argparse.Namespace) -> list[str]:
+    """
+    Merge every --dealer-id / --dealer-ids-file / --retry-failed-from source into
+    one ordered, deduped dealer_id list (empty list means "no filter requested").
+    """
+    ids: list[str] = []
+    seen: set[str] = set()
+
+    def _add(value: str) -> None:
+        v = value.strip()
+        if v and v not in seen:
+            seen.add(v)
+            ids.append(v)
+
+    for raw in args.dealer_id or []:
+        for piece in str(raw).split(","):
+            _add(piece)
+
+    if args.dealer_ids_file:
+        for did in _read_dealer_ids_file(args.dealer_ids_file):
+            _add(did)
+
+    if args.retry_failed_from:
+        log_path = Path(args.retry_failed_from).expanduser()
+        if not log_path.is_absolute():
+            log_path = (ROOT / log_path).resolve()
+        failed = scan_log.failed_dealer_ids(log_path)
+        if not failed:
+            logger.warning(
+                "--retry-failed-from %s: no failed dealer_summary rows found (or file missing).",
+                log_path,
+            )
+        for did in failed:
+            _add(did)
+
+    return ids
+
+
 def run_cli_entry() -> None:
     ap = argparse.ArgumentParser(
         description="Manifest-driven dealership inventory scanner (Playwright + stealth)."
@@ -101,8 +159,49 @@ def run_cli_entry() -> None:
     ap.add_argument(
         "--dealer-id",
         metavar="ID",
+        action="append",
         default=None,
-        help="Scan only this dealer_id from the manifest (e.g. from the /dev console).",
+        help=(
+            "Scan only this dealer_id from the manifest (e.g. from the /dev console). "
+            "Repeatable (--dealer-id a --dealer-id b) and/or comma-separated (--dealer-id a,b) "
+            "to re-run a specific set, such as a prior run's failures."
+        ),
+    )
+    ap.add_argument(
+        "--dealer-ids-file",
+        metavar="PATH",
+        default=None,
+        help="File with one dealer_id per line (blank lines and #-comments ignored); merged with --dealer-id.",
+    )
+    ap.add_argument(
+        "--retry-failed-from",
+        metavar="SCAN_LOG.jsonl",
+        default=None,
+        help=(
+            "Extract dealer_ids whose dealer_summary logged an error in a prior run's "
+            "workspace/scanlogs/*.jsonl file, and scan only those; merged with --dealer-id."
+        ),
+    )
+    ap.add_argument(
+        "--dealer-concurrency",
+        type=int,
+        default=None,
+        metavar="N",
+        help="Override SCANNER_MAX_DEALER_CONCURRENCY for this run.",
+    )
+    ap.add_argument(
+        "--vdp-concurrency",
+        type=int,
+        default=None,
+        metavar="N",
+        help="Override SCANNER_MAX_VDP_CONCURRENCY for this run.",
+    )
+    ap.add_argument(
+        "--dealer-timeout",
+        type=float,
+        default=None,
+        metavar="SECONDS",
+        help="Override SCANNER_DEALER_TIMEOUT_SEC for this run (0 disables the per-dealer timeout).",
     )
     ap.add_argument(
         "--limit",
@@ -263,25 +362,41 @@ def run_cli_entry() -> None:
     apply_fast_mode_env_defaults()
     apply_scan_only_env_defaults()
 
+    if args.dealer_concurrency is not None:
+        os.environ["SCANNER_MAX_DEALER_CONCURRENCY"] = str(args.dealer_concurrency)
+    if args.vdp_concurrency is not None:
+        os.environ["SCANNER_MAX_VDP_CONCURRENCY"] = str(args.vdp_concurrency)
+    if args.dealer_timeout is not None:
+        os.environ["SCANNER_DEALER_TIMEOUT_SEC"] = str(args.dealer_timeout)
+    logger.info(
+        "Effective concurrency/timeout: dealer_concurrency=%d, vdp_concurrency=%d, dealer_timeout_sec=%s",
+        default_max_dealer_concurrency(),
+        effective_vdp_concurrency(),
+        _dealer_timeout_sec() or "disabled",
+    )
+
+    dealer_ids = _resolve_dealer_ids(args)
+
     to_run = filter_manifest_skip_flag(filter_skip_dealers(load_manifest()))
     if args.delta:
         from backend.scanner.delta_scan import run_delta_scan
 
-        if args.dealer_id:
-            to_run = filter_manifest_by_dealer_id(to_run, args.dealer_id)
+        if dealer_ids:
+            to_run = filter_manifest_by_dealer_ids(to_run, dealer_ids)
         if args.limit:
             to_run = to_run[: args.limit]
         summary = asyncio.run(run_delta_scan(to_run))
         sys.exit(0 if summary["refreshed"] or not summary["dealers"] else 1)
-    if args.dealer_id:
-        to_run = filter_manifest_by_dealer_id(to_run, args.dealer_id)
+    if dealer_ids:
+        to_run = filter_manifest_by_dealer_ids(to_run, dealer_ids)
         if not to_run:
             logger.error(
-                "No dealer with dealer_id %r in %s — save the dealer in /dev first.",
-                args.dealer_id.strip(),
+                "No dealer(s) matching %s in %s — save the dealer(s) in /dev first.",
+                dealer_ids,
                 MANIFEST_PATH,
             )
             sys.exit(1)
+        logger.info("Dealer-id filter: %d of manifest matched %d requested id(s).", len(to_run), len(dealer_ids))
 
     if args.provider is not None:
         prov = args.provider.strip()
@@ -381,6 +496,7 @@ __all__ = [
     "DEBUG_DIR",
     "MANIFEST_PATH",
     "filter_manifest_by_dealer_id",
+    "filter_manifest_by_dealer_ids",
     "filter_manifest_by_shard",
     "load_manifest",
     "main",

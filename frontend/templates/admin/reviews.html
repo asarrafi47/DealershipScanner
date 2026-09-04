@@ -1,0 +1,62 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}Flagged reviews{% endblock %}
+{% block extra_head %}
+<style>
+    .reviews-actions { display: flex; gap: 8px; }
+    .reviews-actions .admin-inline-form { margin-top: 0; }
+</style>
+{% endblock %}
+{% block content %}
+<section class="db-section">
+    <div class="db-section-header">
+        <p class="db-eyebrow">Moderation</p>
+        <h1 class="db-section-title">Flagged reviews</h1>
+        <p class="admin-lead">A review auto-hides once 3 distinct visitors report it. Unflag to restore it (resets its report count) or remove it permanently.</p>
+    </div>
+
+    {% if reviews %}
+    <div class="admin-table-wrap">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Dealer</th>
+                    <th>Rating</th>
+                    <th>Review</th>
+                    <th>Reports</th>
+                    <th>Posted</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for r in reviews %}
+                <tr>
+                    <td><a href="{{ url_for('dealership_research_page', dealer_key=r.dealer_id) }}" target="_blank" rel="noopener">{{ r.dealer_id }}</a></td>
+                    <td>{{ r.rating }}/5</td>
+                    <td class="admin-error-wrap">
+                        <p>{{ r.body }}</p>
+                        <p class="admin-muted">{% if r.is_anonymous %}Anonymous{% else %}{{ r.display_name or ('user #' ~ r.user_id) }}{% endif %}</p>
+                    </td>
+                    <td>{{ r.report_count }}</td>
+                    <td>{{ r.created_at }}</td>
+                    <td>
+                        <div class="reviews-actions">
+                            <form method="post" action="{{ url_for('store_admin.admin_review_unflag', review_id=r.id) }}" class="admin-inline-form">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                                <button type="submit" class="secondary-button">Unflag</button>
+                            </form>
+                            <form method="post" action="{{ url_for('store_admin.admin_review_remove', review_id=r.id) }}" class="admin-inline-form" onsubmit="return confirm('Permanently remove this review?');">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                                <button type="submit" class="secondary-button">Remove</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p class="admin-muted">No flagged reviews right now.</p>
+    {% endif %}
+</section>
+{% endblock %}

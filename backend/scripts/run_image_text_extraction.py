@@ -140,7 +140,61 @@ def _select_cars(
     return cur.fetchall()
 
 
+def _merge_summary(prior: dict[str, Any] | None, new: dict[str, Any]) -> dict[str, Any]:
+    """
+    Union *new* findings into *prior*'s, rather than replacing prior's outright.
+
+    A second pass (different engine, or the same engine re-sampling a large gallery)
+    has different strengths and can legitimately see less than a prior pass did --
+    overwriting the summary wholesale would silently drop a fact the prior pass found
+    (a sticker MSRP, a package) even though the DENORMALIZED columns (has_sticker,
+    equipment_count) were already merge-safe ("never regress"). That asymmetry is
+    exactly how a car ended up with equipment_count=2 while its own summary showed
+    zero equipment: the column remembered the old high-water mark, the JSON did not.
+    Merging here means the column and the JSON that is supposed to back it can no
+    longer disagree -- both are derived from the same unioned facts.
+    """
+    if not prior:
+        return dict(new)
+
+    def _dedupe_list(a: list, b: list) -> list:
+        out: list = []
+        seen_keys: set = set()
+        for item in list(a or []) + list(b or []):
+            key = json.dumps(item, sort_keys=True) if isinstance(item, dict) else item
+            if key not in seen_keys:
+                seen_keys.add(key)
+                out.append(item)
+        return out
+
+    def _merge_priced_options(new_opts: list, old_opts: list) -> list:
+        # New pass's price for a name wins (it saw the actual pixels this time);
+        # old entries whose name isn't in the new pass are kept, not dropped.
+        merged = {opt.get("name"): opt for opt in (old_opts or []) if isinstance(opt, dict)}
+        for opt in new_opts or []:
+            if isinstance(opt, dict):
+                merged[opt.get("name")] = opt
+        return list(merged.values())
+
+    merged = dict(new)
+    merged["equipment"] = _dedupe_list(new.get("equipment"), prior.get("equipment"))
+    merged["packages"] = _dedupe_list(new.get("packages"), prior.get("packages"))
+    merged["sticker_image_urls"] = _dedupe_list(new.get("sticker_image_urls"), prior.get("sticker_image_urls"))
+    merged["dealer_domains"] = _dedupe_list(new.get("dealer_domains"), prior.get("dealer_domains"))
+    merged["priced_options"] = _merge_priced_options(new.get("priced_options"), prior.get("priced_options"))
+    merged["sticker_msrp"] = new.get("sticker_msrp") if new.get("sticker_msrp") is not None else prior.get("sticker_msrp")
+    # images_read / images_seen / images_rejected are NOT merged: they describe what
+    # THIS pass observed, not a cumulative fact -- carrying prior's forward would make
+    # a fresh run look like it inherited stale rejects it never actually saw.
+    return merged
+
+
 def _record(cur, car_id: int, vin: str, seen: int, summary: dict[str, Any]) -> None:
+    cur.execute("SELECT summary FROM car_image_text WHERE car_id = %s", (car_id,))
+    row = cur.fetchone()
+    prior_summary = row[0] if row and row[0] else None
+    merged = _merge_summary(prior_summary, summary)
+
     cur.execute(
         """
         INSERT INTO car_image_text (
@@ -156,27 +210,24 @@ def _record(cur, car_id: int, vin: str, seen: int, summary: dict[str, Any]) -> N
             images_seen = EXCLUDED.images_seen,
             images_read = EXCLUDED.images_read,
             images_rejected_json = EXCLUDED.images_rejected_json,
-            -- Merge, do not clobber. A second pass with a different engine has different
-            -- strengths: Apple Vision reports per-line geometry and so can pair a label
-            -- with its price across a two-column Monroney, which is how the stored
-            -- sticker MSRPs were obtained; the VLM reports no geometry and would return
-            -- NULL for exactly those. Overwriting would delete a fact because the newer,
-            -- otherwise better reader happens not to see it.
-            has_sticker = EXCLUDED.has_sticker OR car_image_text.has_sticker,
-            sticker_msrp = COALESCE(EXCLUDED.sticker_msrp, car_image_text.sticker_msrp),
-            equipment_count = GREATEST(EXCLUDED.equipment_count, car_image_text.equipment_count)
+            -- summary is now pre-merged in Python (see _merge_summary), so these three
+            -- are plain overwrites derived from that SAME merged summary -- the column
+            -- and the JSON backing it can no longer disagree.
+            has_sticker = EXCLUDED.has_sticker,
+            sticker_msrp = EXCLUDED.sticker_msrp,
+            equipment_count = EXCLUDED.equipment_count
         """,
         (
             car_id,
             vin or None,
             IMAGE_TEXT_VERSION,
-            json.dumps(summary),
+            json.dumps(merged),
             seen,
             int(summary.get("images_read") or 0),
             json.dumps(summary.get("images_rejected") or []),
-            bool(summary.get("sticker_image_urls")),
-            summary.get("sticker_msrp"),
-            len(summary.get("equipment") or []),
+            bool(merged.get("sticker_image_urls")),
+            merged.get("sticker_msrp"),
+            len(merged.get("equipment") or []),
         ),
     )
 

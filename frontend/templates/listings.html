@@ -300,7 +300,7 @@
                     <label class="filter-option">
                         <input type="checkbox" name="cylinders" value="{{ item }}"
                             {% if active is defined and item|string in active.get('cylinders', []) %}checked{% endif %}>
-                        <span>{{ "Electric" if item == 0 else item ~ "-cyl" }}</span>
+                        <span>{{ "Electric" if item == 0 else item ~ "-cylinder" }}</span>
                     </label>
                     {% endfor %}
                 </div>
@@ -434,6 +434,17 @@
                                 <span class="listings-filters-mobile-count" id="listings-filters-mobile-count" hidden></span>
                             </button>
                             <p class="results-count" id="results-count" aria-live="polite"></p>
+                            <div class="listings-saved-search" id="listings-saved-search">
+                                <button type="button" class="listings-saved-search__save-btn" id="listings-save-search-btn">Save this search</button>
+                                <button type="button" class="listings-saved-search__list-btn" id="listings-saved-search-toggle" aria-expanded="false" aria-controls="listings-saved-search-panel">
+                                    Saved searches<span class="listings-saved-search__count" id="listings-saved-search-count" hidden></span>
+                                </button>
+                                <div class="listings-saved-search__panel" id="listings-saved-search-panel" hidden>
+                                    <p class="listings-saved-search__empty" id="listings-saved-search-empty">No saved searches yet.</p>
+                                    <ul class="listings-saved-search__items" id="listings-saved-search-items"></ul>
+                                </div>
+                                <p class="listings-saved-search__status" id="listings-saved-search-status" role="status" hidden></p>
+                            </div>
                         </div>
                         <div class="listings-toolbar__end">
                             <label class="listings-per-page-label" for="listings-per-page">Per page</label>
@@ -460,6 +471,9 @@
                     <p class="listings-zero-hint" id="listings-zero-hint" hidden role="status">
                         No matches with these filters.
                         <button type="button" class="listings-undo-filter" id="listings-undo-filter">Undo last filter</button>
+                    </p>
+                    <p class="listings-view-dealers-hint" id="listings-view-dealers-hint" hidden>
+                        <a href="{{ url_for('find_dealers_page') }}" id="listings-view-dealers-link">View dealers on map</a>
                     </p>
                     <div class="results-grid" id="results-grid"></div>
                     <nav class="listings-pagination" id="listings-pagination" aria-label="Results pages" hidden>
@@ -688,21 +702,20 @@
             return;
         }
 
+        // Free/logged-out users with a valid ZIP + radius still see the picker
+        // button (so the feature is discoverable) — opening it shows the
+        // premium hint instead of a live dealer list. This used to force
+        // premiumHint.hidden = true and return here, which made the "show the
+        // hint" branch below unreachable dead code.
         if (!loggedIn || !hasPaid) {
-            if (picker) picker.style.display = "none";
-            closeDealerPanel();
-            if (premiumHint) premiumHint.hidden = true;
+            if (picker) picker.style.display = "";
             listEl.innerHTML = "";
+            if (premiumHint) premiumHint.hidden = false;
             updateDealerPillUi();
             return;
         }
 
         if (picker) picker.style.display = "";
-        if (!hasPaid) {
-            listEl.innerHTML = "";
-            if (premiumHint) premiumHint.hidden = false;
-            return;
-        }
         if (premiumHint) premiumHint.hidden = true;
         listEl.innerHTML = '<p class="dealer-filter-loading">Loading dealerships…</p>';
 

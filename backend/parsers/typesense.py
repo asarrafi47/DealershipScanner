@@ -22,6 +22,7 @@ from backend.parsers.base import (
     extract_mileage,
     extract_price,
     norm_int,
+    norm_label_str,
     norm_str,
 )
 from backend.utils.field_clean import clean_car_row_dict, normalize_optional_str
@@ -32,7 +33,7 @@ logger = logging.getLogger(__name__)
 def _opt_str(v) -> str | None:
     if v is None:
         return None
-    return normalize_optional_str(norm_str(v))
+    return normalize_optional_str(norm_label_str(v))
 
 
 def _first(obj: dict, *keys) -> str | None:
@@ -263,7 +264,7 @@ def _map_document(doc: dict, base_url: str, dealer_id: str, dealer_name: str, de
         "exterior_color": _first(doc, "exteriorColor", "genericColor") or "",
         "interior_color": _first(doc, "interiorColor", "genericInteriorColor") or "",
         "body_style": _pick_body(doc) or "",
-        "drivetrain": norm_str(doc.get("drivetrain")),
+        "drivetrain": norm_label_str(doc.get("drivetrain")),
         "fuel_type": _first(doc, "fuel", "fuelType") or "",
         "engine_description": engine or "",
         "transmission": _first(doc, "transmission", "transmissionType") or "",

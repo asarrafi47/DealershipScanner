@@ -579,20 +579,29 @@ def _build_car_detail_view_context(car_id: int, car_raw: dict) -> dict:
             deal_score_detail = detailed_deal_score(car_raw)
         except Exception:
             deal_score_detail = None
-    if main._viewer_sees_premium_features():
-        try:
-            ladder_year = int(car_raw.get("year") or 0)
-        except (TypeError, ValueError):
-            ladder_year = 0
-        if not ladder_year or ladder_year >= 2010:
-            from backend.enrichment.trim_ladder import resolve_trim_ladder
+    # Basic ladder position (name + neighbors) is free on every listing, any
+    # year — only the per-rung equipment diff ("what this trim adds") is a
+    # Premium feature. Strip that content server-side for non-premium
+    # viewers (not just hide it in the template) so the JSON API
+    # (api_car_detail shares this same context) never leaks it either.
+    from backend.enrichment.trim_ladder import resolve_trim_ladder
 
-            trim_ladder = resolve_trim_ladder(
-                make=car_raw.get("make"),
-                model=car_raw.get("model"),
-                year=car_raw.get("year"),
-                trim=car_raw.get("trim"),
-            )
+    trim_ladder = resolve_trim_ladder(
+        make=car_raw.get("make"),
+        model=car_raw.get("model"),
+        year=car_raw.get("year"),
+        trim=car_raw.get("trim"),
+    )
+    if trim_ladder and not main._viewer_sees_premium_features():
+        _ADDS_FIELDS = (
+            "adds", "sticker_adds", "sticker_adds_note",
+            "sticker_equipment", "sticker_equipment_note", "sticker_equipment_car_ids",
+        )
+        trim_ladder = dict(trim_ladder)
+        trim_ladder["steps"] = [
+            {k: v for k, v in step.items() if k not in _ADDS_FIELDS}
+            for step in trim_ladder.get("steps") or []
+        ]
     # Inventory rarity — scarcity within our own active fleet plus visible-
     # option evidence from the vision scan. Ungated: it is our own data, and
     # "one of 2 in our inventory" is a purchase nudge for every viewer.
@@ -636,9 +645,42 @@ def _build_car_detail_view_context(car_id: int, car_raw: dict) -> dict:
             )
         except Exception:
             generated_spec_sheet = None
+    # One de-duplicated, provenance-badged equipment list for the Options tab —
+    # replaces up to seven separately-rendered, overlapping lists (window
+    # sticker options, the build-sheet catalog, Monroney data, listing-
+    # description packages, and photo-analysis guesses) with a single merge.
+    # See backend/enrichment/generated_spec_sheet.py build_unified_options_list.
+    try:
+        from backend.enrichment.generated_spec_sheet import build_unified_options_list
+
+        # The parsed-sticker sources are already shown in full in the "Window
+        # sticker" embed above this panel when show_sticker_ui is on — folding
+        # them in again here would recreate the exact duplication this list
+        # exists to remove, so they only feed the unified list when that embed
+        # is NOT rendered (the raw-data fallback path the embed itself used).
+        unified_options_list = build_unified_options_list(
+            catalog=(generated_spec_sheet or {}).get("catalog"),
+            sticker_option_sections=(
+                None if show_sticker_ui else ctx.get("listing_sticker_option_sections")
+            ),
+            sticker_option_groups=(
+                None if show_sticker_ui else ctx.get("listing_sticker_option_groups")
+            ),
+            sticker_options=None if show_sticker_ui else ctx.get("listing_sticker_options"),
+            monroney_options=ctx.get("listing_monroney_options"),
+            monroney_standard=ctx.get("listing_monroney_standard"),
+            packages_sections=ctx.get("listing_packages_sections"),
+            photo_detected_equipment=ctx.get("listing_photo_detected_equipment"),
+            possible_packages=ctx.get("listing_possible_packages"),
+            observed_features=ctx.get("listing_observed_features"),
+            standalone_features=ctx.get("listing_standalone_features"),
+        )
+    except Exception:
+        unified_options_list = []
     return {
         "car": car,
         "generated_spec_sheet": generated_spec_sheet,
+        "unified_options_list": unified_options_list,
         "market_intel": market_intel,
         "deal_score_detail": deal_score_detail,
         "rarity": rarity,

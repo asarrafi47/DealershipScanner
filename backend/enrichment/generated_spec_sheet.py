@@ -1022,6 +1022,105 @@ def _merge_sticker_photo_findings(catalog: dict[str, Any], car: dict[str, Any]) 
         )
 
 
+_REGISTRY_SOURCE_LABELS = {
+    "oem_sticker": "seen on this trim's window sticker",
+    "sticker_photo": "seen on this trim's window sticker photo",
+    "brochure": "listed in the manufacturer brochure for this trim",
+    "estimate": "estimated for this trim",
+}
+
+
+def _registry_entry(e: dict[str, Any]) -> dict[str, Any]:
+    price = _int_or_none(e.get("msrp"))
+    source = e.get("msrp_source")
+    return {
+        "name": e.get("name"),
+        "code": e.get("code"),
+        "price": price,
+        "price_display": _fmt_price(price),
+        "category": e.get("category"),
+        "from_sticker": False,
+        "from_registry": True,
+        "price_basis": source,
+        "price_source": source,
+        "source_label": _REGISTRY_SOURCE_LABELS.get(source, source),
+        "observed_price": price,
+        "observed_price_display": _fmt_price(price),
+        "observed_year": None,
+        "observed_trim": None,
+    }
+
+
+def _merge_registry_offerings(catalog: dict[str, Any], car: dict[str, Any]) -> None:
+    """Add priced trim-level packages/options this car's OWN listing never named.
+
+    ``_catalog_equipment`` only prices packages the listing text already
+    states; ``_merge_sticker_photo_findings`` only adds what THIS car's own
+    photographed sticker shows. Neither surfaces a ``package_values`` row for
+    this exact (year, make, model, trim) that came from a DIFFERENT car of
+    the same trim — an OEM sticker, a brochure read, or a sticker photo —
+    unless this car's own listing happens to name it too. That left every
+    trim-level fact fed into the registry (including the whole brochure
+    pipeline) unreachable from the frontend. This fills the gap, clearly
+    labeled as trim-level catalog knowledge and never mistaken for a fact
+    about this specific VIN (``from_registry`` stays False on every other
+    entry). Only priced rows are added — an unpriced name with nothing else
+    backing it is too noisy to show without evidence.
+    """
+    year = _int_or_none(car.get("year"))
+    make = _clean(car.get("make"))
+    model = _clean(car.get("model"))
+    trim = _clean(car.get("trim"))
+    if not (make and model and trim):
+        return
+    try:
+        from backend.enrichment.package_registry import lookup_package_values
+    except Exception:
+        return
+    try:
+        found = lookup_package_values(year, make, model, trim)
+    except Exception:
+        return
+    if not (found.get("packages") or found.get("options")):
+        return
+
+    pkg_entries: list[dict[str, Any]] = catalog["packages"]
+    opt_entries: list[dict[str, Any]] = catalog["options"]
+    shown: set[str] = set()
+    for entry in pkg_entries + opt_entries:
+        key = _photo_dedup_key(entry.get("name"))
+        if key:
+            shown.add(key)
+
+    for e in found.get("packages") or []:
+        if _int_or_none(e.get("msrp")) is None:
+            continue
+        key = _photo_dedup_key(e.get("name"))
+        if not key or key in shown or len(pkg_entries) >= _MAX_CATALOG_PACKAGES:
+            continue
+        pkg_entries.append(_registry_entry(e))
+        shown.add(key)
+
+    for e in found.get("options") or []:
+        if _int_or_none(e.get("msrp")) is None:
+            continue
+        key = _photo_dedup_key(e.get("name"))
+        if not key or key in shown or len(opt_entries) >= _MAX_CATALOG_OPTIONS:
+            continue
+        opt_entries.append(_registry_entry(e))
+        shown.add(key)
+
+    priced_total = sum(e["price"] for e in pkg_entries if e.get("price") and e["price"] > 0)
+    if priced_total:
+        catalog["priced_total"] = priced_total
+        catalog["priced_total_display"] = _fmt_price(priced_total)
+        catalog["priced_total_derived"] = True
+        catalog["priced_total_basis"] = (
+            "sum of observed sticker prices (parsed stickers, sticker photos, "
+            "and this trim's catalog)"
+        )
+
+
 def build_generated_spec_sheet(
     car: dict[str, Any], verified_specs: dict[str, Any] | None = None
 ) -> dict[str, Any] | None:
@@ -1223,6 +1322,9 @@ def build_generated_spec_sheet(
     # (car_image_text). Photo lines carry their own provenance label and never
     # outrank a parsed price — see _merge_sticker_photo_findings.
     _merge_sticker_photo_findings(catalog, car)
+    # Trim-level catalog knowledge (brochure/oem-sticker/sticker-photo reads
+    # from OTHER cars of this same trim) — never a fact about this VIN.
+    _merge_registry_offerings(catalog, car)
     has_catalog = bool(catalog["packages"] or catalog["options"])
     catalog_from_sticker = any(
         e.get("from_sticker") for e in catalog["packages"] + catalog["options"]
@@ -1230,6 +1332,9 @@ def build_generated_spec_sheet(
     catalog_from_sticker_photo = any(
         e.get("source_label") == _STICKER_PHOTO_LABEL
         for e in catalog["packages"] + catalog["options"]
+    )
+    catalog_from_registry = any(
+        e.get("from_registry") for e in catalog["packages"] + catalog["options"]
     )
 
     sections = [
@@ -1252,4 +1357,170 @@ def build_generated_spec_sheet(
         "has_catalog": has_catalog,
         "catalog_from_sticker": catalog_from_sticker,
         "catalog_from_sticker_photo": catalog_from_sticker_photo,
+        "catalog_from_registry": catalog_from_registry,
     }
+
+
+# ---------------------------------------------------------------------------
+# Options tab unification
+#
+# The VDP used to render up to seven separate equipment lists for one car —
+# window-sticker options, this module's own catalog, Monroney factory
+# options, Monroney standard equipment, packages named in the listing
+# description, photo-analysis guesses, and "observed features" — with no
+# dedup between them. Because ``_catalog_equipment`` above is itself built
+# from ``_described_package_names`` (the listing's own package text), the
+# catalog and "packages from listing" almost always name the same things
+# twice; a Monroney "Sunroof" and a photo-analysis "Sunroof" would show a
+# third and fourth time. ``build_unified_options_list`` folds every source
+# into ONE list, keyed by :func:`_photo_dedup_key` (the same key the catalog
+# already dedupes packages/options with), so each real piece of equipment is
+# printed once, tagged with the best source that named it.
+# ---------------------------------------------------------------------------
+
+#: Priority order = confidence order. A name already added under an earlier
+#: tier is skipped, never repeated, under a later one.
+_UNIFIED_TIER_ORDER = (
+    "sticker",
+    "catalog",
+    "monroney_factory",
+    "monroney_standard",
+    "listing",
+    "photo",
+)
+
+
+def _unified_add(
+    seen: dict[str, dict[str, Any]],
+    order: list[str],
+    name: Any,
+    *,
+    tier: str,
+    badge_label: str,
+    price: Any = None,
+) -> None:
+    cleaned = _clean(name)
+    if not cleaned:
+        return
+    key = _photo_dedup_key(cleaned)
+    if not key or key in seen:
+        return
+    price_num = _num_or_none(price)
+    seen[key] = {
+        "name": cleaned,
+        "key": key,
+        "tier": tier,
+        "badge_label": badge_label,
+        "price": price_num,
+        "price_display": _fmt_price(price_num) if price_num is not None else None,
+    }
+    order.append(key)
+
+
+def _unified_add_sticker_entry(
+    seen: dict[str, dict[str, Any]], order: list[str], entry: Any
+) -> None:
+    if isinstance(entry, dict):
+        name = entry.get("name") or entry.get("label")
+        price = entry.get("price")
+        _unified_add(seen, order, name, tier="sticker", badge_label="Window sticker", price=price)
+        for feat in entry.get("features") or []:
+            fname = feat.get("name") if isinstance(feat, dict) else feat
+            _unified_add(seen, order, fname, tier="sticker", badge_label="Window sticker")
+    else:
+        _unified_add(seen, order, entry, tier="sticker", badge_label="Window sticker")
+
+
+def build_unified_options_list(
+    *,
+    catalog: dict[str, Any] | None = None,
+    sticker_option_sections: dict[str, Any] | None = None,
+    sticker_option_groups: list[dict[str, Any]] | None = None,
+    sticker_options: list[Any] | None = None,
+    monroney_options: list[str] | None = None,
+    monroney_standard: list[str] | None = None,
+    packages_sections: list[dict[str, Any]] | None = None,
+    photo_detected_equipment: list[str] | None = None,
+    possible_packages: list[str] | None = None,
+    observed_features: list[str] | None = None,
+    standalone_features: list[str] | None = None,
+) -> list[dict[str, Any]]:
+    """One de-duplicated, provenance-badged equipment list for the Options tab.
+
+    Every argument is one of the VDP's existing equipment sources — pass
+    whatever the car has; missing ones are simply skipped. Returns a flat list
+    of ``{name, tier, badge_label, price, price_display}`` in priority order
+    (highest-confidence source first), each name appearing exactly once.
+    """
+    seen: dict[str, dict[str, Any]] = {}
+    order: list[str] = []
+
+    # 1. A real, parsed OEM window sticker — the single most authoritative
+    # source, when this car has one. ``build_generated_spec_sheet`` (and so
+    # ``catalog``) is only ever computed when this car has NO real sticker
+    # (see backend/routes/cars_pages.py), so this tier and "catalog" below
+    # are mutually exclusive in practice, never actually competing.
+    if sticker_option_sections and isinstance(sticker_option_sections, dict):
+        for entry in sticker_option_sections.get("packages") or []:
+            _unified_add_sticker_entry(seen, order, entry)
+        for entry in sticker_option_sections.get("options") or []:
+            _unified_add_sticker_entry(seen, order, entry)
+        base = sticker_option_sections.get("base")
+        if isinstance(base, dict):
+            for feat in base.get("features") or []:
+                fname = feat.get("name") if isinstance(feat, dict) else feat
+                _unified_add(seen, order, fname, tier="sticker", badge_label="Window sticker")
+    elif sticker_option_groups:
+        for entry in sticker_option_groups:
+            _unified_add_sticker_entry(seen, order, entry)
+    elif sticker_options:
+        for entry in sticker_options:
+            _unified_add_sticker_entry(seen, order, entry)
+
+    # 2. This module's own synthesized catalog — already deduped internally
+    # and each entry already carries its own provenance (OEM sticker / trim
+    # catalog / sticker photo).
+    if catalog:
+        for entry in (catalog.get("packages") or []) + (catalog.get("options") or []):
+            if entry.get("from_sticker"):
+                label = "Window sticker"
+            elif entry.get("from_registry"):
+                label = "Trim catalog"
+            else:
+                label = entry.get("source_label") or "Build sheet"
+            _unified_add(
+                seen,
+                order,
+                entry.get("name"),
+                tier="catalog",
+                badge_label=label,
+                price=entry.get("price"),
+            )
+
+    # 3. Monroney factory data quoted in the listing (not a parsed sticker
+    # PDF — the dealer's own printed factory-option and standard-equipment
+    # text).
+    for name in monroney_options or []:
+        _unified_add(seen, order, name, tier="monroney_factory", badge_label="Factory option")
+    for name in monroney_standard or []:
+        _unified_add(
+            seen, order, name, tier="monroney_standard", badge_label="Standard equipment"
+        )
+
+    # 4. Packages named in the listing's own description text.
+    for pkg in packages_sections or []:
+        name = pkg.get("name") if isinstance(pkg, dict) else pkg
+        _unified_add(seen, order, name, tier="listing", badge_label="Listing description")
+        if isinstance(pkg, dict):
+            for feat in pkg.get("features") or []:
+                _unified_add(seen, order, feat, tier="listing", badge_label="Listing description")
+
+    # 5. Lowest confidence: equipment guessed from listing photos.
+    for name in (photo_detected_equipment or possible_packages or []):
+        _unified_add(seen, order, name, tier="photo", badge_label="Photo analysis")
+    for name in observed_features or []:
+        _unified_add(seen, order, name, tier="photo", badge_label="Photo analysis")
+    for name in standalone_features or []:
+        _unified_add(seen, order, name, tier="listing", badge_label="Listing description")
+
+    return [seen[k] for k in order]

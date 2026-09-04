@@ -21,6 +21,7 @@ from backend.parsers.base import (
     inventory_gallery_max,
     norm_float,
     norm_int,
+    norm_label_str,
     norm_str,
     normalize_image_url_https,
 )
@@ -38,6 +39,13 @@ def _opt_str(v) -> str | None:
         return None
     s = norm_str(v)
     return normalize_optional_str(s)
+
+
+def _opt_label_str(v) -> str | None:
+    """Missing / placeholder → None; unwraps dict-shaped label fields via norm_label_str."""
+    if v is None:
+        return None
+    return normalize_optional_str(norm_label_str(v))
 
 
 def _extract_title(obj: dict, year: int, make: str, model: str) -> str | None:
@@ -594,8 +602,8 @@ def _map_vehicle(
         "dealer_url": dealer_url,
         "zip_code": _opt_str(obj.get("zipCode") or obj.get("zip_code")),
         "fuel_type": fuel_type,
-        "transmission": _opt_str(obj.get("transmission") or obj.get("transmissionType")),
-        "drivetrain": _opt_str(obj.get("drivetrain") or obj.get("driveType")),
+        "transmission": _opt_label_str(obj.get("transmission") or obj.get("transmissionType")),
+        "drivetrain": _opt_label_str(obj.get("drivetrain") or obj.get("driveType")),
         "exterior_color": exterior_color,
         "interior_color": _extract_interior_color(obj),
         "body_style": _extract_body_style(obj),

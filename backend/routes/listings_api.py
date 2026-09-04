@@ -10,10 +10,11 @@ See ``backend.routes._shared``.
 from __future__ import annotations
 
 import os
+from typing import Any
 
 from flask import jsonify, make_response, redirect, render_template, request, session, url_for
 
-from backend.billing.catalog import FEATURE_MARKET_INTEL
+from backend.billing.catalog import FEATURE_MARKET_INTEL, FEATURE_SAVED_SEARCHES
 from backend.db.inventory_db import (
     get_filter_options,
     listings_geo_coords_maps,
@@ -133,8 +134,23 @@ def api_listings_geo_coords():
     return resp
 
 
+_cars_json_cache: dict[str, Any] = {"etag": None, "body": None}
+
+
 def api_listings_cars():
-    """Read-only JSON for the listings grid; supports client refresh while a scan is running."""
+    """Read-only JSON for the listings grid; supports client refresh while a scan is running.
+
+    The full inventory (100k+ rows) is intentionally sent in one payload — the
+    client does its own facet/radius filtering over the whole set for instant,
+    no-round-trip interaction (see frontend/static/main.js). What's expensive
+    isn't the DB read (already cached in-process by listings_grid_serialized_cars)
+    but re-running Flask's jsonify() over that many rows on every single
+    request, which is CPU-bound and holds the GIL — under concurrent load,
+    requests serialize behind each other's JSON encoding instead of running in
+    parallel. Cache the encoded JSON bytes themselves, keyed by the same
+    cache-invalidation token already used for the ETag, so repeat requests
+    (the common case — nothing changes between scans) skip re-encoding.
+    """
     etag = listings_grid_cache_etag()
     inm = (request.headers.get("If-None-Match") or "").strip()
     if inm and inm == etag:
@@ -142,9 +158,13 @@ def api_listings_cars():
         resp.headers["ETag"] = etag
         resp.headers["Cache-Control"] = "private, no-cache"
         return resp
-    cars = listings_grid_serialized_cars()
-    etag = listings_grid_cache_etag()
-    resp = make_response(jsonify({"ok": True, "cars": cars}))
+    if _cars_json_cache["etag"] != etag:
+        cars = listings_grid_serialized_cars()
+        etag = listings_grid_cache_etag()
+        _cars_json_cache["body"] = jsonify({"ok": True, "cars": cars}).get_data()
+        _cars_json_cache["etag"] = etag
+    resp = make_response(_cars_json_cache["body"])
+    resp.headers["Content-Type"] = "application/json"
     resp.headers["ETag"] = etag
     resp.headers["Cache-Control"] = "private, no-cache"
     return resp
@@ -360,6 +380,74 @@ def api_toggle_save(car_id):
     return jsonify({"ok": True, "saved": not currently_saved})
 
 
+_SAVED_SEARCH_MAX_FILTERS = 40  # generous bound on number of filter keys stored per search
+
+
+def _clean_saved_search_filters(raw) -> dict | None:
+    """Keep only scalar/list-of-scalar filter values (mirrors listings query params)."""
+    if not isinstance(raw, dict) or not raw:
+        return None
+    out: dict = {}
+    for k, v in raw.items():
+        if len(out) >= _SAVED_SEARCH_MAX_FILTERS:
+            break
+        key = str(k).strip()
+        if not key or len(key) > 80:
+            continue
+        if isinstance(v, (str, int, float, bool)):
+            out[key] = v
+        elif isinstance(v, list) and all(isinstance(x, (str, int, float, bool)) for x in v):
+            out[key] = v[:50]
+    return out or None
+
+
+def api_saved_searches_list():
+    """This user's saved searches (listings toolbar "Saved searches" panel)."""
+    main = main_module()
+    ok, err = main._require_feature(FEATURE_SAVED_SEARCHES)
+    if not ok:
+        return jsonify(main._feature_denied_json(FEATURE_SAVED_SEARCHES, err, searches=[])), 403
+    uid = session.get("user_id")
+    if not uid:
+        return jsonify({"ok": False, "error": "not_logged_in", "searches": []}), 401
+    searches = main.list_saved_searches(int(uid))
+    return jsonify({"ok": True, "searches": searches})
+
+
+def api_saved_searches_create():
+    """Persist the listings page's current filter state ("Save this search")."""
+    main = main_module()
+    ok, err = main._require_feature(FEATURE_SAVED_SEARCHES)
+    if not ok:
+        return jsonify(main._feature_denied_json(FEATURE_SAVED_SEARCHES, err)), 403
+    uid = session.get("user_id")
+    if not uid:
+        return jsonify({"ok": False, "error": "not_logged_in"}), 401
+    body = request.get_json(silent=True)
+    filters = _clean_saved_search_filters((body or {}).get("filters"))
+    if filters is None:
+        return jsonify({"ok": False, "error": "filters_required"}), 400
+    try:
+        search_id = main.create_saved_search(int(uid), filters)
+    except ValueError:
+        return jsonify({"ok": False, "error": "filters_too_large"}), 400
+    return jsonify({"ok": True, "id": search_id, "filters": filters})
+
+
+def api_saved_searches_delete(search_id):
+    main = main_module()
+    ok, err = main._require_feature(FEATURE_SAVED_SEARCHES)
+    if not ok:
+        return jsonify(main._feature_denied_json(FEATURE_SAVED_SEARCHES, err)), 403
+    uid = session.get("user_id")
+    if not uid:
+        return jsonify({"ok": False, "error": "not_logged_in"}), 401
+    removed = main.delete_saved_search(int(uid), int(search_id))
+    if not removed:
+        return jsonify({"ok": False, "error": "not_found"}), 404
+    return jsonify({"ok": True})
+
+
 def register(app) -> None:
     """Attach routes to ``app`` keeping the original bare endpoint names."""
     app.add_url_rule("/search", view_func=search)
@@ -378,3 +466,14 @@ def register(app) -> None:
     app.add_url_rule("/api/search/smart", view_func=api_search_smart, methods=["POST"])
     app.add_url_rule("/api/saved-cars", view_func=api_saved_cars, methods=["GET"])
     app.add_url_rule("/api/cars/<int:car_id>/save", view_func=api_toggle_save, methods=["POST"])
+    app.add_url_rule(
+        "/api/saved-searches", view_func=api_saved_searches_list, methods=["GET"]
+    )
+    app.add_url_rule(
+        "/api/saved-searches", view_func=api_saved_searches_create, methods=["POST"]
+    )
+    app.add_url_rule(
+        "/api/saved-searches/<int:search_id>",
+        view_func=api_saved_searches_delete,
+        methods=["DELETE"],
+    )

@@ -428,34 +428,43 @@ def cmd_claim(args: argparse.Namespace) -> int:
         FROM cars c
         WHERE c.listing_removed_at IS NULL
           AND c.gallery IS NOT NULL AND c.gallery NOT IN ('', '[]')
-          -- ANY existing row disqualifies a car, not just an agent row or a reservation.
-          --
-          -- `car_image_text.car_id` is the PRIMARY KEY, so a car that already has a
-          -- LOCAL-OCR row (version 1-99) can never be inserted: the statement below hits
-          -- ON CONFLICT DO NOTHING and silently returns nothing for it. The candidate
-          -- filter used to allow those cars, and the priority ORDER BY then sorted them
-          -- straight to the front, because "dealers that photograph stickers" is derived
-          -- from exactly the local-OCR pass. The result was a pool holding **85 dead rows
-          -- in every 100**: asking for 12 cars returned 2, measured with a single agent and no
-          -- contention at all. Waves delivered 34-40 cars instead of 144, and it read as
-          -- pool contention for weeks -- the retry loop re-drew from the same
-          -- deterministic pool head every time, so it could never recover.
-          --
-          -- The 14,036 locally-analysed cars are therefore skipped rather than upgraded.
-          -- Upgrading them would mean reserving their row in place, and the stale sweep
-          -- DELETEs reservations, so an agent dying mid-batch would destroy the local OCR
-          -- it was meant to improve on. Re-analysing them needs a reservation that
-          -- remembers the prior version; that is a separate change.
+          -- Only a DONE agent-vision row (100) or a live reservation disqualifies a car.
+          -- A LOCAL-OCR row (version 1-99) is a legitimate candidate: it is upgraded in
+          -- place rather than skipped (see the ON CONFLICT DO UPDATE below), which is
+          -- exactly the free pre-filter this exists for -- claim preferentially reserves
+          -- cars the cheap pass already found a sticker/equipment on (ORDER BY below),
+          -- and falls back to never-screened cars otherwise. A car the local pass
+          -- screened and found NOTHING on is still eligible (OCR can miss a real sticker
+          -- -- angle, glare, low contrast -- so this is a soft demotion, never a hard
+          -- exclude), just sorted to the back.
           AND NOT EXISTS (
-                SELECT 1 FROM car_image_text t WHERE t.car_id = c.id
+                SELECT 1 FROM car_image_text t
+                WHERE t.car_id = c.id AND t.version IN (100, %s)
           )
+          AND (%s::text IS NULL OR LOWER(c.make) = LOWER(%s::text))
+          AND (%s::text IS NULL OR LOWER(c.model) = LOWER(%s::text))
         ORDER BY
-            -- Whether the dealer photographs stickers AT ALL dominates everything else.
-            -- Ordering by "no MSRP, dearest first" sounded right and was actively wrong:
-            -- it selected Lamborghinis, McLarens and Porsches, and exotic dealers shoot
-            -- studio photography rather than paperwork, so the first 18 cars analysed
-            -- produced zero stickers. Volume franchise dealers photograph the Monroney.
-            -- The local OCR pass already told us which 46 dealers those are.
+            -- Car-level evidence from the free local-OCR pass dominates everything else:
+            -- it already looked at THIS car's own images, not just its dealer's habits.
+            CASE
+                WHEN EXISTS (
+                    SELECT 1 FROM car_image_text t3
+                    WHERE t3.car_id = c.id AND t3.version BETWEEN 1 AND 99
+                      AND (t3.has_sticker OR t3.equipment_count > 0)
+                ) THEN 0
+                WHEN NOT EXISTS (
+                    SELECT 1 FROM car_image_text t3
+                    WHERE t3.car_id = c.id AND t3.version BETWEEN 1 AND 99
+                ) THEN 1
+                ELSE 2
+            END ASC,
+            -- Whether the dealer photographs stickers AT ALL, for cars the local pass
+            -- hasn't screened yet (tier 1 above). Ordering by "no MSRP, dearest first"
+            -- sounded right and was actively wrong: it selected Lamborghinis, McLarens
+            -- and Porsches, and exotic dealers shoot studio photography rather than
+            -- paperwork, so the first 18 cars analysed produced zero stickers. Volume
+            -- franchise dealers photograph the Monroney. The local OCR pass already told
+            -- us which 46 dealers those are.
             (c.dealer_id IN (
                 SELECT c2.dealer_id FROM car_image_text t2
                 JOIN cars c2 ON c2.id = t2.car_id
@@ -467,7 +476,10 @@ def cmd_claim(args: argparse.Namespace) -> int:
         ) cand
         ORDER BY random()
         LIMIT %s
-        ON CONFLICT (car_id) DO NOTHING
+        ON CONFLICT (car_id) DO UPDATE SET
+            version = EXCLUDED.version,
+            extracted_at = EXCLUDED.extracted_at
+        WHERE car_image_text.version NOT IN (100, %s)
         RETURNING car_id
         """
 
@@ -481,7 +493,14 @@ def cmd_claim(args: argparse.Namespace) -> int:
         pool = max(n * args.pool_factor, 400)
         cur.execute(
             claim_sql,
-            (_RESERVED, pool, n),
+            (
+                _RESERVED,  # INSERT ... version
+                _RESERVED,  # candidate NOT EXISTS version IN (100, %s)
+                args.make, args.make,
+                args.model, args.model,
+                pool, n,
+                _RESERVED,  # ON CONFLICT DO UPDATE ... WHERE version NOT IN (100, %s)
+            ),
         )
         return [r[0] for r in cur.fetchall()]
 
@@ -1220,6 +1239,29 @@ def cmd_requeue_unassessed(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_pool(_args: argparse.Namespace) -> int:
+    """
+    Local-OCR hits (has_sticker or equipment_count>0) not yet escalated to agent
+    vision. This is the backlog a listener process drains -- it is exactly the
+    tier-0 candidate set claim's ORDER BY already prioritizes, so draining it with
+    plain `claim` calls (no --make/--model) never has to touch an unscreened car
+    as long as the round size stays under this count.
+    """
+    conn = _connect()
+    cur = conn.cursor()
+    cur.execute(
+        "SELECT count(*) FROM car_image_text t JOIN cars c ON c.id = t.car_id "
+        "WHERE t.version BETWEEN 1 AND 99 AND (t.has_sticker OR t.equipment_count > 0) "
+        "AND c.listing_removed_at IS NULL "
+        "AND NOT EXISTS ("
+        "  SELECT 1 FROM car_image_text t2 WHERE t2.car_id = t.car_id AND t2.version IN (100, %s)"
+        ")",
+        (_RESERVED,),
+    )
+    print(json.dumps({"pool": cur.fetchone()[0]}))
+    return 0
+
+
 def cmd_status(_args: argparse.Namespace) -> int:
     conn = _connect()
     cur = conn.cursor()
@@ -1259,6 +1301,10 @@ def main() -> int:
     c.add_argument("--pool-factor", type=int, default=80,
                    help="candidate pool = count * this. Must comfortably exceed "
                         "the demand of ALL concurrent agents, or they collide.")
+    c.add_argument("--make", default=None,
+                   help="restrict candidates to this make (case-insensitive exact match)")
+    c.add_argument("--model", default=None,
+                   help="restrict candidates to this model (case-insensitive exact match)")
     c.set_defaults(func=cmd_claim)
 
     r = sub.add_parser("record", help="merge an agent's findings")
@@ -1281,6 +1327,9 @@ def main() -> int:
 
     s = sub.add_parser("status", help="how far the backfill has got")
     s.set_defaults(func=cmd_status)
+
+    p = sub.add_parser("pool", help="count local-OCR hits not yet escalated to agent vision")
+    p.set_defaults(func=cmd_pool)
 
     q = sub.add_parser("requeue-unassessed",
                        help="release cars whose reads all failed back into the pool")

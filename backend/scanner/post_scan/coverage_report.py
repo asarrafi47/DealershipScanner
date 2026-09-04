@@ -54,6 +54,34 @@ def compute_dealer_coverage(
     return {"dealer_id": dealer_id, "count": n, "coverage": coverage}
 
 
+def aggregate_coverage_reports(reports: list[dict[str, Any]]) -> dict[str, Any]:
+    """
+    Roll up several ``compute_dealer_coverage`` results (one per dealer) into a
+    single scan-wide coverage report, weighted by each dealer's vehicle count.
+    """
+    totals: dict[str, int] = {}
+    n_total = 0
+    for report in reports:
+        if not isinstance(report, dict):
+            continue
+        cov = report.get("coverage") or {}
+        n = int(report.get("count") or 0)
+        if n <= 0:
+            continue
+        n_total += n
+        for field, stat in cov.items():
+            totals[field] = totals.get(field, 0) + int((stat or {}).get("count") or 0)
+
+    if not n_total:
+        return {"count": 0, "dealers": 0, "coverage": {}}
+
+    coverage = {
+        field: {"count": count, "pct": round(count / n_total * 100, 1)}
+        for field, count in totals.items()
+    }
+    return {"count": n_total, "dealers": len(reports), "coverage": coverage}
+
+
 def format_coverage_log(report: dict[str, Any]) -> str:
     """One-line summary suitable for a logger.info call."""
     cov = report.get("coverage", {})
