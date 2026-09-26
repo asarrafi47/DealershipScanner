@@ -52,8 +52,8 @@ def test_dealer_com_page_size_learned_from_server():
     assert _learn_dealer_com_page_size(template, None, "x") == 0
 
 
-def test_dealer_com_replay_drops_the_section_config(monkeypatch):
-    """Camelback Toyota: listing.config.id=auto-certified-used pinned 99 of 906 cars (2026-09-26)."""
+def test_dealer_com_replay_keeps_the_section_config(monkeypatch):
+    """Stripping listing.config.id made dealer.com omit VINs (Lexus of Austin 48 -> 0 rows, 2026-09-26)."""
     import json
 
     from backend.scanner import recipes as rc
@@ -62,6 +62,4 @@ def test_dealer_com_replay_drops_the_section_config(monkeypatch):
                           post_template=json.dumps({"pageAlias": "INVENTORY_LISTING_DEFAULT_AUTO_CERTIFIED_USED", "preferences": {"pageSize": "48", "listing.config.id": "auto-certified-used,auto-used-mpp"}, "inventoryParameters": {"start": ["0"]}}),
                           auth_headers={}, pagination=rc.PAGINATION_DEALER_COM, vehicle_rows=48, total_count=None, provider_hint="dealer_dot_com", saved_at=0.0)
     body = rc._mutate_for_page(r, json.loads(r.post_template), 1)
-    assert "listing.config.id" not in body["preferences"] and body["preferences"]["pageSize"] == "48"
-    assert body["inventoryParameters"]["start"] == ["48"]
-    assert "listing.config.id" in json.loads(r.post_template)["preferences"]  # template untouched
+    assert body["preferences"]["listing.config.id"] == "auto-certified-used,auto-used-mpp" and body["inventoryParameters"]["start"] == ["48"]

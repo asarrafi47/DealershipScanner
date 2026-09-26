@@ -504,14 +504,11 @@ def _mutate_for_page(recipe: EndpointRecipe, template: Any, page_index: int) -> 
                 s["page"] = page_index + 1
     elif recipe.pagination == PAGINATION_DEALER_COM and isinstance(body, dict):
         prefs = body.get("preferences") or {}
-        if isinstance(prefs, dict) and prefs.get("listing.config.id"):
-            # The captured SRP's section: "auto-certified-used,auto-used-mpp" pinned
-            # Camelback Toyota to 99 certified cars; without it the same body returns
-            # the whole lot (906). Stores that already serve the lot under the alias
-            # (Toyota of Cleveland 303 either way) are unaffected. 2026-09-26.
-            prefs = dict(prefs)
-            prefs.pop("listing.config.id", None)
-            body["preferences"] = prefs
+        # Do NOT strip preferences["listing.config.id"]: without it dealer.com
+        # returns the lot but omits the VIN from every item (Lexus of Austin: 48
+        # parsed as-is, 0 stripped; three no_rows verdicts on the 2026-09-26 mini
+        # check). Camelback Toyota's certified-only config stays open (its widget
+        # carries no VIN either way; workspace/pipeline/needs_work.txt).
         try:
             page_size = int(str(prefs.get("pageSize") or 20))
         except (TypeError, ValueError):
