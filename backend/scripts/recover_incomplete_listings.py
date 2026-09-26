@@ -117,7 +117,7 @@ def main() -> int:
     p.add_argument("--limit", type=int, default=30, help="Max vehicles (sorted by recoverability score desc).")
     p.add_argument("--vin", type=str, default="", help="Only this VIN (must be incomplete).")
     p.add_argument("--min-score", type=float, default=0.0, help="Minimum recoverability_score.")
-    p.add_argument("--skip-vdp", action="store_true", help="Inventory + Mazda rules only (no Playwright).")
+    p.add_argument("--skip-vdp", action="store_true", help="Inventory + Mazda rules only (no detail-page fetch).")
     p.add_argument("--dry-run", action="store_true", help="Do not write SQLite.")
     p.add_argument("--trace", action="store_true", help="Print JSON detail per vehicle.")
     args = p.parse_args()
@@ -146,7 +146,6 @@ def main() -> int:
             "field_hits": Counter(),
         }
 
-        from playwright.async_api import async_playwright
 
         async def process_loop(page: Optional[Any]) -> None:
             for c in candidates:
@@ -251,23 +250,8 @@ def main() -> int:
                     update_car_row_partial(cid, {k: v for k, v in raw_updates.items() if k != "id"})
                     refresh_car_data_quality_score(cid)
 
-        if args.skip_vdp:
-            await process_loop(None)
-        else:
-            async with async_playwright() as p:
-                browser = await p.chromium.launch(headless=True)
-                try:
-                    context = await browser.new_context(
-                        viewport={"width": 1365, "height": 900},
-                        user_agent=(
-                            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
-                            "(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
-                        ),
-                    )
-                    page = await context.new_page()
-                    await process_loop(page)
-                finally:
-                    await browser.close()
+        # Detail pages are read over HTTP (recover_vehicle_vdp_async); no browser.
+        await process_loop(None if args.skip_vdp else object())
         return stats
 
     stats = asyncio.run(_run())

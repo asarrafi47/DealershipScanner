@@ -1,38 +1,21 @@
+# Scanner — HTTP-only (docs/HTTP_ONLY_SCANS_PLAN.md).
+#
+# No Chromium, no Node: scans replay HTTP recipes and read detail pages with
+# curl_cffi. The only browser the project still uses lives in
+# Dockerfile.discovery (discovery_probe --browser-capture).
 FROM python:3.12-slim
 
-# Install Node.js 20 LTS
-RUN apt-get update && apt-get install -y --no-install-recommends curl ca-certificates gnupg && \
-    curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
-    apt-get install -y --no-install-recommends nodejs && \
-    rm -rf /var/lib/apt/lists/*
-
-# System deps for Puppeteer and Playwright (Chromium)
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    wget git \
-    # Shared Chromium libs
-    libnss3 libatk1.0-0 libatk-bridge2.0-0 libcups2 libdrm2 libxkbcommon0 \
-    libxcomposite1 libxdamage1 libxfixes3 libxrandr2 libgbm1 libasound2 \
-    libpango-1.0-0 libpangocairo-1.0-0 libgtk-3-0 libx11-xcb1 libxcb-dri3-0 \
-    gcc g++ libffi-dev \
+    ca-certificates git gcc g++ libffi-dev \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
-# Install Python deps
+ENV PYTHONUNBUFFERED=1 PYTHONDONTWRITEBYTECODE=1
+
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Playwright + Patchright (Crawl4AI) Chromium
-RUN playwright install chromium && playwright install-deps chromium && \
-    patchright install chromium && patchright install-deps chromium
-
-# Install Node deps for scanner.js (Puppeteer downloads its own Chromium)
-COPY backend/scanner/package.json backend/scanner/package-lock.json ./backend/scanner/
-RUN cd backend/scanner && npm ci --omit=dev && \
-    # Confirm Puppeteer's Chromium installed
-    node -e "require('puppeteer-extra')"
-
-# Copy application code
 COPY . .
 
 RUN chmod +x /app/scripts/docker-entrypoint-scanner-worker.sh \

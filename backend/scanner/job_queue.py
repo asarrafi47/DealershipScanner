@@ -113,25 +113,40 @@ def enqueue_job(
         conn.close()
 
 
+def _worker_job_types() -> list[str]:
+    """SCANNER_WORKER_JOB_TYPES="onboard" limits a worker to those job types: the
+    discovery image (Dockerfile.discovery, the only one with a browser) takes
+    onboard jobs, the HTTP-only scanner workers take the rest."""
+    raw = (os.environ.get("SCANNER_WORKER_JOB_TYPES") or "").strip().lower()
+    return [t.strip() for t in raw.split(",") if t.strip()]
+
+
 def claim_next_job() -> dict[str, Any] | None:
     if not inventory_pg.is_inventory_postgres():
         return None
     wid = _worker_id()
     now = datetime.now(timezone.utc).isoformat()
+    types = _worker_job_types()
     conn = pg_connect()
     try:
         cur = conn.cursor()
+        type_clause = ""
+        params: tuple = ()
+        if types:
+            type_clause = " AND job_type IN (" + ",".join("?" * len(types)) + ")"
+            params = tuple(types)
         cur.execute(
             qmarks_to_percent_s(
-                """
+                f"""
                 SELECT id, dealer_id, job_type, payload_json
                 FROM dealer_jobs
-                WHERE status = 'queued'
+                WHERE status = 'queued'{type_clause}
                 ORDER BY created_at ASC
                 LIMIT 1
                 FOR UPDATE SKIP LOCKED
                 """
-            )
+            ),
+            params,
         )
         row = cur.fetchone()
         if not row:

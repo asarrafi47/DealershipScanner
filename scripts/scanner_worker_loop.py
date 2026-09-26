@@ -26,10 +26,9 @@ def _playwright_chromium_path() -> str | None:
 
 def _subprocess_env(payload: dict[str, Any]) -> dict[str, str]:
     env = {k: str(v) for k, v in os.environ.items()}
-    if not env.get("PUPPETEER_EXECUTABLE_PATH"):
-        pw = _playwright_chromium_path()
-        if pw:
-            env["PUPPETEER_EXECUTABLE_PATH"] = pw
+    # Scans are HTTP-only (docs/HTTP_ONLY_SCANS_PLAN.md); the discovery capture
+    # sets SCANNER_ALLOW_BROWSER for itself, so it never leaks into a scan job.
+    env.pop("SCANNER_ALLOW_BROWSER", None)
     for key, val in (payload.get("retry_env") or {}).items():
         if key:
             env[str(key)] = str(val)
@@ -39,21 +38,13 @@ def _subprocess_env(payload: dict[str, Any]) -> dict[str, str]:
 def _run_dealer_scan(dealer_id: str, job_type: str, payload: dict) -> tuple[bool, str, dict]:
     root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     pl = payload or {}
-    if pl.get("use_python_scanner") or (job_type != "onboard"):
-        cmd = [sys.executable, os.path.join(root, "scanner.py"), "--dealer-id", dealer_id, "--scan-only"]
-    elif job_type == "onboard" and pl.get("url"):
-        cmd = [
-            "node",
-            os.path.join(root, "backend", "scanner", "scanner.js"),
-            "--url",
-            str(pl["url"]),
-            "--smart-import",
-        ]
-        profile = (pl.get("profile") or "").strip()
-        if profile:
-            cmd.extend(["--profile", profile])
-        if dealer_id:
-            cmd.extend(["--dealer-id", str(dealer_id)])
+    if job_type == "onboard" and dealer_id:
+        # Onboarding = discovery: HTTP probe + template synthesis, and the one
+        # sanctioned browser capture when no template describes the site. It
+        # writes recipes and discovery logs, never car rows; the follow-up scan
+        # job replays the recipe over HTTP. (Replaced the Puppeteer scanner.js
+        # --smart-import path on 2026-09-26.)
+        cmd = [sys.executable, "-m", "backend.scripts.discovery_probe", "--no-paths", "--browser-capture", "--dealers", str(dealer_id)]
     else:
         cmd = [sys.executable, os.path.join(root, "scanner.py"), "--dealer-id", dealer_id, "--scan-only"]
     _log.info("Running: %s", " ".join(cmd))

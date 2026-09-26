@@ -21,38 +21,21 @@ from backend.scanner.rooftop_disown import (
 )
 from backend.scanner.phases.upsert import upsert_vehicles_for_dealer
 from backend.scanner.post_scan.coverage_report import compute_dealer_coverage, format_coverage_log
-from backend.scanner.phases.inventory_scrape import scrape_inventory_path
 from backend.scanner.phases.nav import (
-    capture_scanner_failure_har,
     get_rotating_ua,
-    goto_with_retries,
     is_playwright_shutdown_error,
-    playwright_inventory_json_predicate,
     safe_close_context,
-    warmup_delays,
-    warmup_settle_after_base_goto,
-    inventory_wait_ms,
-    pagination_response_wait_ms,
 )
 from backend.scanner.post_pipeline import (
     apply_gallery_vision_filter_to_vehicles,
     gallery_vision_filter_env_enabled,
 )
 from backend.scanner.scan_efficiency import (
-    effective_vdp_ep_max,
-    effective_vdp_price_max,
     gallery_vision_inline_enabled,
     intercept_feed_is_sufficient,
 )
 from backend.scanner.scrapers.inventory_vin_merge import merge_inventory_rows_same_vin
-from backend.scanner.vdp import enrich_vehicles_vdp
 from backend.utils.gallery_merge import gallery_https_bin_histogram
-from backend.scanner.phases.site_profile import (
-    SiteProfile,
-    choose_inventory_paths,
-    profile_dealer_site,
-)
-from backend.scanner.phases.url_discovery import discover_dealer_url
 from backend.scanner import scan_log
 
 logger = logging.getLogger("scanner")
@@ -265,199 +248,12 @@ async def run_dealer(
             # ``page is None`` / ``_http_only()``; the recipe replay + HTTP-first
             # detail pass are the whole scan.
             page = None
-        warm_pred = playwright_inventory_json_predicate(url)
-        _dead_domain_errors = (
-            "ERR_NAME_NOT_RESOLVED", "ERR_TOO_MANY_REDIRECTS",
-            "net::ERR_NAME_NOT_RESOLVED", "net::ERR_TOO_MANY_REDIRECTS",
-            "ERR_CONNECTION_REFUSED", "net::ERR_CONNECTION_REFUSED",
-            "ERR_CONNECTION_TIMED_OUT", "net::ERR_CONNECTION_TIMED_OUT",
-            "ERR_INTERNET_DISCONNECTED",
-        )
-        _warmup_403_bypass = False
-
-        async def _warmup_phase() -> None:
-            nonlocal page, url, warm_pred, _warmup_403_bypass
-            try:
-                await goto_with_retries(page, url, log_label=f"Warmup:{name}", timeout_ms=30000)
-            except Exception as _warmup_exc:
-                _exc_str = str(_warmup_exc)
-                if any(e in _exc_str for e in _dead_domain_errors):
-                    logger.warning("Warmup: %s — dead domain (%s), attempting URL discovery", name, _exc_str.split("\n")[0])
-                    _discovered = await discover_dealer_url(
-                        name, url, browser,
-                        city=str(dealer.get("city") or "").strip(),
-                        state=str(dealer.get("state") or "").strip(),
-                    )
-                    if _discovered:
-                        logger.info("Warmup: %s — discovered URL: %s (was: %s)", name, _discovered, url)
-                        url = _discovered
-                        warm_pred = playwright_inventory_json_predicate(url)
-                        await goto_with_retries(page, url, log_label=f"Warmup:{name}", timeout_ms=30000)
-                    else:
-                        logger.error("Warmup: %s — URL discovery failed, skipping dealer", name)
-                        raise
-                elif "403" in _exc_str and provider == "dealer_inspire":
-                    logger.warning(
-                        "Warmup: %s — HTTP 403 (Cloudflare block) but provider=dealer_inspire; "
-                        "bypassing warmup and attempting Algolia recovery directly",
-                        name,
-                    )
-                    _warmup_403_bypass = True
-                    try:
-                        await page.close()
-                    except Exception:
-                        pass
-                    page = await context.new_page()
-                else:
-                    raise
-            if not _warmup_403_bypass:
-                w_post, w_scroll = warmup_delays()
-                await warmup_settle_after_base_goto(
-                    page,
-                    warm_pred,
-                    dealer_name=name,
-                    max_idle_sec=w_post,
-                    scroll_sec=w_scroll,
-                )
-                from backend.scanner.scrapers.pixel_motion import _dismiss_cookie_banner
-                await asyncio.sleep(1.0)
-                # Bounded: on some DealerOn sites the stealth scroll trips anti-bot JS
-                # that pins the renderer, and the cookie-banner locator query then hangs.
-                # Cap it so a wedge here fails the phase fast instead of at the phase cap.
-                try:
-                    await asyncio.wait_for(_dismiss_cookie_banner(page), timeout=20.0)
-                except asyncio.TimeoutError:
-                    logger.warning("Warmup: %s — cookie-banner probe wedged (renderer pinned); skipping", name)
-                logger.info("Warmup: %s — done (signal race cap=%.1fs + scroll %.1fs)", name, w_post, w_scroll)
-
-        # Hard cap on the whole warmup phase. Some sites (DealerOn: ggkia, tustinkia,
-        # robinsford, …) serve pages whose JS pins the renderer at 100% CPU forever;
-        # a wedged renderer can stall even Playwright's own navigation timeout, so a
-        # per-call timeout is not enough — the phase gets one as a whole.
-        _warmup_cap = _warmup_phase_timeout_sec()
-        if _http_only():
-            result["http_only"] = True
-            logger.info("HTTP-only [%s]: browser warmup skipped", name)
-        try:
-            if not _http_only():
-                await asyncio.wait_for(_warmup_phase(), timeout=_warmup_cap)
-        except asyncio.TimeoutError:
-            raise RuntimeError(
-                f"warmup_phase_timeout_{int(_warmup_cap)}s: page wedged "
-                "(renderer JS loop — known on DealerOn sites)"
-            ) from None
-
-        # Detect permanent maintenance pages that resolve DNS but serve no inventory
-        # (e.g. S3/Ceph bucket static 503 — goto succeeds but page is a placeholder).
-        # Use specific downtime phrases only — bare "maintenance" fires on every dealer
-        # service-menu nav item ("Oil Change & Maintenance", "Maintenance Schedule", etc.).
-        if not _warmup_403_bypass and not _http_only():
-            try:
-                _warmup_html = (await asyncio.wait_for(page.content(), timeout=15.0)).lower()
-                _maintenance_markers = (
-                    "under maintenance", "down for maintenance", "performing maintenance",
-                    "site is currently",
-                    "temporarily unavailable", "under construction", "site offline",
-                )
-                _warmup_title_m = __import__('re').search(r'<title[^>]*>(.*?)</title>', _warmup_html, __import__('re').S)
-                _warmup_title = (_warmup_title_m.group(1) if _warmup_title_m else "").strip()
-                logger.debug("Warmup: %s — page title after load: %r", name, _warmup_title)
-                _title_flags = ("coming soon", "maintenance", "offline", "unavailable", "under construction")
-                _title_hit = any(f in _warmup_title for f in _title_flags)
-                _body_hit = next((m for m in _maintenance_markers if m in _warmup_html), None)
-                _is_maintenance = _title_hit or bool(_body_hit)
-                if _body_hit:
-                    logger.debug("Warmup: %s — body marker matched: %r", name, _body_hit)
-                if provider != "autowall" and _is_maintenance:
-                    _match_reason = (f"title={_warmup_title!r}" if _title_hit
-                                     else f"body={_body_hit!r}" if _body_hit else "unknown")
-                    logger.warning(
-                        "Warmup: %s — maintenance page detected after load (matched: %s), attempting URL discovery",
-                        name, _match_reason,
-                    )
-                    _discovered_maint = await discover_dealer_url(
-                        name, url, browser,
-                        city=str(dealer.get("city") or "").strip(),
-                        state=str(dealer.get("state") or "").strip(),
-                    )
-                    if _discovered_maint:
-                        logger.info("Warmup: %s — discovered URL for maintenance site: %s", name, _discovered_maint)
-                        url = _discovered_maint
-                        warm_pred = playwright_inventory_json_predicate(url)
-                        await goto_with_retries(page, url, log_label=f"Warmup:{name}", timeout_ms=30000)
-                    else:
-                        logger.error("Warmup: %s — maintenance page, URL discovery failed; skipping dealer", name)
-                        result["error"] = "maintenance_page_no_discovery"
-                        result["seconds"] = time.perf_counter() - t0
-                        return result
-            except Exception as _maint_exc:
-                logger.debug("Warmup: %s — maintenance check error (ignored): %s", name, _maint_exc)
-
-        inv_wait_ms = inventory_wait_ms()
-        pag_wait_ms = pagination_response_wait_ms()
-
-        # Scrape all three inventory paths in parallel — each on its own page within the
-        # same browser context so session cookies from warmup are shared automatically.
-        # ── Site profiler phase ───────────────────────────────────────────
-        _site_profile: SiteProfile | None = None
-        _profiler_enabled = (os.environ.get("SCANNER_SITE_PROFILER") or "1").strip().lower() not in (
-            "0", "false", "no", "off"
-        )
-        if _warmup_403_bypass:
-            # Warmup was blocked (HTTP 403) and skipped for this DealerInspire site.
-            # Inject a minimal fallback profile so the recovery chain knows to try Algolia.
-            _site_profile = SiteProfile(dealer_url=url)
-            _site_profile.detected_provider = "dealer_inspire"
-            _site_profile.scrape_risk = "algolia_auth"
-            _site_profile.notes.append("warmup_403_bypass:algolia_fallback")
-            result["provider"] = "dealer_inspire"
-            result["site_profile"] = {
-                "provider": "dealer_inspire",
-                "pagination": "unknown",
-                "confidence": 0.0,
-                "scrape_risk": "algolia_auth",
-                "paths_found": [],
-                "api_eps": 0,
-                "notes": ["warmup_403_bypass:algolia_fallback"],
-            }
-            logger.info(
-                "Site profile [%s]: warmup_403_bypass — injected fallback profile "
-                "(provider=dealer_inspire, scrape_risk=algolia_auth)",
-                name,
-            )
-        elif _profiler_enabled and not _http_only():
-            t_prof0 = time.perf_counter()
-            try:
-                _site_profile = await profile_dealer_site(context, url, [])
-                logger.info(
-                    "Site profile [%s]: provider=%s pagination=%s confidence=%.2f "
-                    "paths=%s api_eps=%d scrape_risk=%s notes=%s",
-                    name,
-                    _site_profile.detected_provider,
-                    _site_profile.pagination_type,
-                    _site_profile.confidence_score,
-                    _site_profile.inventory_paths_found[:3],
-                    len(_site_profile.api_endpoint_candidates),
-                    _site_profile.scrape_risk,
-                    _site_profile.notes[:3],
-                )
-            except Exception as _prof_e:
-                logger.warning("Site profiler failed for %s (continuing without profile): %s", name, _prof_e)
-            result["phase_secs"]["site_profile"] = round(time.perf_counter() - t_prof0, 2)
-            if _site_profile is not None:
-                result["site_profile"] = {
-                    "provider": _site_profile.detected_provider,
-                    "pagination": _site_profile.pagination_type,
-                    "confidence": _site_profile.confidence_score,
-                    "scrape_risk": _site_profile.scrape_risk,
-                    "paths_found": _site_profile.inventory_paths_found[:5],
-                    "api_eps": len(_site_profile.api_endpoint_candidates),
-                    "notes": _site_profile.notes[:5],
-                }
-                if _site_profile.detected_provider and _site_profile.detected_provider != "unknown":
-                    result["provider"] = _site_profile.detected_provider
-
-        inv_paths = choose_inventory_paths(_site_profile, dealer)
+        result["http_only"] = True
+        # Warmup, dead-domain URL discovery, the maintenance-page probe and the
+        # site profiler were browser phases; they live in discovery now
+        # (backend/scanner/discovery_capture.py, docs/HTTP_ONLY_SCANS_PLAN.md).
+        _site_profile: Any = None
+        inv_paths: list[str] = []
 
         # Recipe pre-flight: replay endpoints captured on a previous scan over plain
         # HTTP. The browser scrape is skipped only when the yield is near the dealer's
@@ -518,69 +314,15 @@ async def run_dealer(
         except Exception as _rec_e:
             logger.debug("Recipe fetch skipped [%s]: %s", name, str(_rec_e)[:200])
 
-        if _http_only() and inv_paths:
+        if _http_only():
             result["recipe_fetch"] = f"{result.get('recipe_fetch') or 'none'}+http_only"
-            logger.info(
-                "HTTP-only [%s]: browser inventory skipped (%s)",
-                name, "recipe rows kept" if recipe_records else "NO RECIPE HIT: zero rows this run",
-            )
-            inv_paths = []
-        logger.info("Inventory paths: %s — launching %d parallel scrapers", name, len(inv_paths))
-        t_inv0 = time.perf_counter()
-        dealer_city = str(dealer.get("city") or "").strip()
-        dealer_state = str(dealer.get("state") or "").strip()
-        try:
-            from backend.scanner.dealer_location import build_dealer_site_profile
-
-            _loc_prof = build_dealer_site_profile(dealer)
-            dealer_city = dealer_city or _loc_prof.city
-            dealer_state = dealer_state or _loc_prof.state
-        except Exception:
-            pass
-        path_results = await asyncio.gather(
-            *[
-                scrape_inventory_path(
-                    context,
-                    path,
-                    url,
-                    provider,
-                    dealer_id,
-                    name,
-                    inv_wait_ms,
-                    pag_wait_ms,
-                    site_profile=_site_profile,
-                    dealer_city=dealer_city,
-                    dealer_state=dealer_state,
-                )
-                for path in inv_paths
-            ],
-            return_exceptions=False,
-        )
-        result["phase_secs"]["inventory"] = round(time.perf_counter() - t_inv0, 2)
-
-        # Merge results from all paths
+            if not recipe_records:
+                logger.info("HTTP-only [%s]: NO RECIPE HIT: zero rows this run", name)
+        # No browser SRP scrape: the recipe replay above is the inventory feed.
         path_htmls: list[str | None] = []
         merged_card_locations: dict[str, str] = {}
-        captured_endpoints: list[Any] = []
         if recipe_records:
             intercept_records.extend(recipe_records)
-        for path_records, path_html, path_denied, path_card_locs, path_endpoints in path_results:
-            intercept_records.extend(path_records)
-            gate_stats["url_denied"] += path_denied
-            path_htmls.append(path_html)
-            if isinstance(path_card_locs, dict):
-                merged_card_locations.update(path_card_locs)
-            if path_endpoints:
-                captured_endpoints.extend(path_endpoints)
-
-        if captured_endpoints:
-            try:
-                from backend.scanner.recipes import promote_from_ledger
-
-                promote_from_ledger(dealer_id, provider, captured_endpoints)
-            except Exception as _rec_e:
-                logger.debug("Recipe promotion skipped [%s]: %s", name, _rec_e)
-
         # This store's postal address from the registry, looked up ONCE and
         # handed to every parse() below. A group feed whose rooftops are address
         # blocks carrying no store name can only be told apart by address; omit
@@ -796,78 +538,12 @@ async def run_dealer(
             except Exception as _pf_e:
                 logger.warning("VDP prefetch failed [%s] (continuing): %s", name, _pf_e)
 
-            # Per-dealer VDP caps, passed to enrich_vehicles_vdp as arguments. These
-            # MUST NOT be written back to os.environ: dealers are scanned concurrently
-            # in one process (asyncio.gather), so a process-global write races — one
-            # dealer's lot-size cap would clobber another's. An operator's global env
-            # override, when set, is honored read-only downstream (arg left None).
-            _ep_raw = (os.environ.get("SCANNER_VDP_EP_MAX") or "").strip()
-            _completeness_pass = (
-                os.environ.get("SCANNER_VDP_COMPLETENESS_PASS") or ""
-            ).strip().lower() in ("1", "true", "yes", "on")
-            if not _ep_raw or (_completeness_pass and _ep_raw == "0"):
-                _ep_max_arg: int | None = effective_vdp_ep_max(len(all_vehicles))
-                logger.info(
-                    "VDP cap: %s — EP max=%s (completeness_pass=%s)",
-                    name,
-                    _ep_max_arg,
-                    _completeness_pass,
-                )
-            else:
-                _ep_max_arg = None  # honor operator's global SCANNER_VDP_EP_MAX
-            if not (os.environ.get("SCANNER_VDP_PRICE_MAX") or "").strip():
-                # When EP VDP is explicitly disabled, also disable price/description VDP by default.
-                _price_max_arg: int | None = (
-                    0 if _ep_raw == "0" else effective_vdp_price_max(len(all_vehicles))
-                )
-            else:
-                _price_max_arg = None  # honor operator's global SCANNER_VDP_PRICE_MAX
-            if _ep_raw == "0" and not (os.environ.get("SCANNER_VDP_DESCRIPTION_MAX") or "").strip():
-                _desc_max_arg: int | None = 0
-            else:
-                _desc_max_arg = None  # honor operator's global SCANNER_VDP_DESCRIPTION_MAX
-
+            # The browser VDP pool is gone: the HTTP-first pass above (curl_cffi
+            # detail pages + VDP recipes) is the per-car layer.
             vdp_stats: dict[str, Any] = {}
-            t_vdp0 = time.perf_counter()
-            _vdp_cap = _vdp_phase_timeout_sec(len(all_vehicles))
-            if page is None:
-                # HTTP-only: the browser VDP pool does not exist; prefetch_before_vdp
-                # (curl_cffi detail pages + VDP recipes) above is the per-car layer.
-                logger.info("HTTP-only [%s]: browser VDP pool skipped (%d car(s) went through the HTTP-first pass)", name, len(all_vehicles))
-                _vdp_cap = 0
-            try:
-                if page is None:
-                    raise asyncio.TimeoutError  # falls into the same keep-what-we-have branch, without a timeout flag
-                # Phase-level timeout: a wedged renderer (DealerOn anti-bot tarpit) hangs
-                # rather than raises, so per-page timeouts don't fire and VDP would block
-                # the dealer's inventory upsert forever. On timeout we keep the listing
-                # data already captured and proceed to upsert.
-                vdp_stats = await asyncio.wait_for(
-                    enrich_vehicles_vdp(
-                        page, all_vehicles, name, dealer_id=dealer_id, site_profile=site_profile,
-                        provider=provider,
-                        ep_max=_ep_max_arg, price_max=_price_max_arg, description_max=_desc_max_arg,
-                        stats_out=vdp_stats,
-                    ),
-                    timeout=_vdp_cap,
-                )
-            except asyncio.TimeoutError:
-                # vdp_stats was updated in place by the pool, so the pages visited
-                # before the cap stay counted; their fields are already merged.
-                result["vdp_phase_timed_out"] = page is not None
-                logger.warning(
-                    "VDP phase cap %.0fs reached for %s — keeping %d visited page(s), "
-                    "upserting %d rows with what was merged so far",
-                    _vdp_cap, name, int(vdp_stats.get("vdps_visited") or 0), len(all_vehicles),
-                )
-            except Exception as e:
-                logger.warning("VDP enrichment failed for %s (continuing with listing data only): %s", name, e)
-            result["phase_secs"]["vdp"] = round(time.perf_counter() - t_vdp0, 2)
-            result["vdps_visited"] = int(vdp_stats.get("vdps_visited") or 0)
-            result["vehicles_vdp_enriched"] = int(vdp_stats.get("vehicles_enriched") or 0)
-            result["gallery_vdp_urls_added"] = int(vdp_stats.get("gallery_vdp_urls_added") or 0)
-            if vdp_stats.get("description_probe"):
-                result["description_probe"] = vdp_stats.get("description_probe")
+            result["vdps_visited"] = 0
+            result["vehicles_vdp_enriched"] = int((result.get("vdp_prefetch") or {}).get("http_first", {}).get("fields_filled", 0) or 0)
+            result["gallery_vdp_urls_added"] = int((result.get("vdp_prefetch") or {}).get("http_first", {}).get("galleries_extended", 0) or 0)
             log_gallery_bins(name, "after_vdp", all_vehicles)
             result["gallery_bins"] = gallery_https_bin_histogram(all_vehicles)
             if vdp_stats.get("gallery_phase_bins"):
@@ -1103,13 +779,6 @@ async def run_dealer(
             return result
         # No path returned vehicles
         logger.warning("Parsing: %s — no vehicles from any inventory path", name)
-        if page is not None:
-            if provider in KNOWN_HAR_PROVIDERS:
-                await capture_scanner_failure_har(browser, url, dealer_id, name)
-            DEBUG_DIR.mkdir(parents=True, exist_ok=True)
-            screenshot_path = DEBUG_DIR / f"fail_{dealer_id}.png"
-            await page.screenshot(path=str(screenshot_path))
-            logger.info("Debug: saved screenshot to %s", screenshot_path)
         result["seconds"] = time.perf_counter() - t0
         logger.info(
             "Dealer complete: %s (%d inventory rows, %d deduped, %d VDP visited, %d VDP-enriched, %d upserted, %.1fs)",

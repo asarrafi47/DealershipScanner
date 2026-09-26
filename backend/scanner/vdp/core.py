@@ -50,37 +50,19 @@ and package-level ``from backend.scanner.vdp import X``) is unchanged.
 """
 from __future__ import annotations
 
-from backend.scanner.vdp.browser_js import (  # noqa: F401
-    GALLERY_COLLECT_URLS_JS,
-    GALLERY_MODAL_NUDGE_JS,
-    PAGE_EXTRACT_JS,
-)
+import logging
+
 
 # Re-exports: these moved into sibling leaf modules in the 2026-08/2026-09 splits but stay
 # importable from core (and, via __init__, from the package) for compatibility.
 # Env-var reads inside them stay lazy (functions read os.environ at call time).
 from backend.scanner.vdp.config import (  # noqa: F401
-    _gallery_idle_rounds,
-    _gallery_max_rounds,
     _max_vdp_concurrency,
     _nav_timeout_ms,
-    _settle_ms,
-    _vdp_description_max_per_dealer,
-    _vdp_download_images_enabled,
-    _vdp_drain_pending_timeout_sec,
     _vdp_gallery_loop_max_sec,
     _vdp_gallery_min_https,
-    _vdp_gallery_open_lightbox_enabled,
     _vdp_gallery_priority_enabled,
-    _vdp_gallery_skip_if_feed_ge,
-    _vdp_image_download_dir,
-    _vdp_js_timeout_ms,
-    _vdp_max_per_dealer,
-    _vdp_price_max_per_dealer,
     _vdp_response_text_timeout_sec,
-    _vdp_spec_gap_max_per_dealer,
-    _vdp_spin_capture_enabled,
-    _vdp_spin_max_sec,
 )
 from backend.scanner.vdp.extract import (  # noqa: F401
     PRIORITY,
@@ -104,18 +86,6 @@ from backend.scanner.vdp.extract import (  # noqa: F401
     _vdp_count_gallery_signals,
     _vdp_wants_json_network_capture,
 )
-from backend.scanner.vdp.gallery import (  # noqa: F401
-    _VDP_LIGHTBOX_OPEN_TIMEOUT_MS,
-    _download_vdp_gallery_images,
-    _drain_pending_tasks,
-    _vdp_evaluate_gallery_all_frames,
-    _vdp_gallery_interaction_loop,
-    _vdp_gallery_step_advance,
-    _vdp_image_download_key,
-    _vdp_mouse_jitter,
-    _vdp_page_evaluate,
-    _vdp_try_open_photo_lightbox,
-)
 from backend.scanner.vdp.queue import (  # noqa: F401
     _count_https_gallery_urls,
     _vdp_field_gap_score,
@@ -133,12 +103,7 @@ from backend.scanner.vdp.price_hints import (  # noqa: F401
     _apply_vdp_price_hints,
     _ripple_vdp_price_same_detail_url,
 )
-from backend.scanner.vdp.spin_capture import _vdp_spin_capture  # noqa: F401
-from backend.scanner.vdp.visit import (  # noqa: F401
-    MAX_JSON_BYTES,
-    MAX_NETWORK_ROWS,
-    _detach_response_handler,
-    _vdp_visit_one,
-    log,
-)
-from backend.scanner.vdp.dispatch import enrich_vehicles_vdp  # noqa: F401
+# The browser VDP stack (visit / gallery / spin_capture / dispatch / browser_js)
+# was deleted on 2026-09-26: scans are HTTP-only, the per-car layer is
+# vdp/prefetch.py + vdp/vdp_recipes.py (docs/HTTP_ONLY_SCANS_PLAN.md).
+log = logging.getLogger("scanner")

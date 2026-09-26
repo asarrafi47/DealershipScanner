@@ -400,17 +400,28 @@ def prepare_vdp_urls(vehicle: dict[str, Any]) -> tuple[str | None, list[str]]:
 
 
 async def recover_vehicle_vdp_async(page: Any, vehicle: dict[str, Any], dealer_name: str) -> dict[str, Any]:
-    """Run scanner VDP extraction for one row (mutates *vehicle*)."""
-    from backend.scanner.vdp import _vdp_visit_one
+    """Read the row's detail page over HTTP and fill its gaps (mutates *vehicle*).
 
-    vin = (vehicle.get("vin") or "").strip().upper()
+    ``page`` is ignored (kept for the call signature): scans and recovery are
+    HTTP-only since 2026-09-26 — the same curl_cffi fetch + structured-data
+    parse as the scan's HTTP-first pass (backend/scanner/vdp/prefetch.py)."""
+    from backend.scanner.vdp.prefetch import _apply_page_fields, _fetch_html
+
     primary, alts = prepare_vdp_urls(vehicle)
     if not primary or not primary.startswith("http"):
         return {"enriched": False, "reason": "no_vdp_url", "visited": 0}
-    vehicle["_detail_url_alternates"] = alts
-    preview_lock = asyncio.Lock()
-    preview_budget = [2]
-    return await _vdp_visit_one(page, dealer_name, vehicle, primary, vin, preview_lock, preview_budget)
+    before = {k: vehicle.get(k) for k in ("price", "trim", "exterior_color", "interior_color", "mileage", "description", "msrp", "stock_number", "drivetrain", "transmission", "engine_description")}
+    visited = 0
+    for url in [primary, *alts[:3]]:
+        html = await asyncio.to_thread(_fetch_html, url)
+        visited += 1
+        if not html:
+            continue
+        _apply_page_fields(vehicle, html, url)
+        filled = [k for k, v in before.items() if not v and vehicle.get(k)]
+        if filled:
+            return {"enriched": True, "filled": filled, "visited": visited, "url": url}
+    return {"enriched": False, "filled": [], "visited": visited}
 
 
 def finalize_recovery_status(

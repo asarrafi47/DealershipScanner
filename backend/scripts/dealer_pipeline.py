@@ -218,6 +218,40 @@ def _lock_holder_alive() -> int | None:
     return pid
 
 
+def run_discovery_capture(dealer_id: str, timeout_sec: int = 900) -> dict[str, Any]:
+    """Run ``discovery_probe --browser-capture`` for one dealer in a separate process
+    (so SCANNER_ALLOW_BROWSER never enters this one). Bounded to one capture per
+    dealer per UTC day via a marker file; returns a small summary for the triage."""
+    marker_dir = ROOT / "workspace" / "dealer_logs" / dealer_id
+    marker_dir.mkdir(parents=True, exist_ok=True)
+    today = datetime.now(timezone.utc).strftime("%Y%m%d")
+    marker = marker_dir / f".capture_{today}"
+    if marker.exists():
+        return {"skipped": "already captured today", "recipes_after": 0}
+    marker.write_text(datetime.now(timezone.utc).isoformat())
+    py = str(ROOT / ".venv" / "bin" / "python") if (ROOT / ".venv" / "bin" / "python").exists() else sys.executable
+    env = dict(os.environ)
+    env.pop("SCANNER_ALLOW_BROWSER", None)  # the probe sets it for itself
+    t0 = time.time()
+    try:
+        proc = subprocess.run([py, "-m", "backend.scripts.discovery_probe", "--no-paths", "--browser-capture", "--dealers", dealer_id],
+                              cwd=str(ROOT), env=env, capture_output=True, text=True, timeout=timeout_sec)
+        tail = (proc.stdout or "").strip().splitlines()[-2:]
+    except subprocess.TimeoutExpired:
+        return {"error": f"capture timed out after {timeout_sec}s", "recipes_after": 0, "seconds": round(time.time() - t0)}
+    out: dict[str, Any] = {"seconds": round(time.time() - t0), "rc": proc.returncode, "stdout_tail": tail, "recipes_after": 0}
+    caps = sorted(marker_dir.glob("capture_*.json"))
+    if caps:
+        try:
+            cap = json.loads(caps[-1].read_text())
+            out.update({k: cap.get(k) for k in ("records", "recipes_before", "recipes_after", "profile", "errors") if k in cap})
+            out["endpoints"] = len(cap.get("endpoints") or [])
+        except Exception as exc:  # noqa: BLE001
+            out["error"] = f"capture report unreadable: {str(exc)[:80]}"
+    print(f"discover {dealer_id:36s} {json.dumps(out)[:220]}", flush=True)
+    return out
+
+
 def wait_for_scanner_lock(max_wait_sec: int, poll_sec: int = 20) -> bool:
     """The scanner refuses to start while another run holds workspace/scanner.lock
     (one process per machine). Wait for it instead of failing the batch."""
@@ -539,6 +573,8 @@ def main() -> int:
     ap.add_argument("--force-synth", action="store_true", help="re-synthesize recipes even when one exists")
     ap.add_argument("--no-vpic", action="store_true")
     ap.add_argument("--no-reconcile", action="store_true", help="report but do not retire rows the run did not return")
+    ap.add_argument("--no-discover", action="store_true",
+                    help="do not run the discovery browser capture for dealers whose recipe synthesis failed (default: run it once per dealer per day, in its own process)")
     args = ap.parse_args()
 
     manifest = load_manifest_dealers(args.manifest)
@@ -566,6 +602,7 @@ def main() -> int:
 
     recipe_info: dict[str, dict[str, Any]] = {}
     db_dealers = dealers_from_db([did for did in ids if not dealer_from_manifest(did, manifest)])
+    discovered: dict[str, dict[str, Any]] = {}
     for did in ids:
         # 72 of the 222 stale active dealers (2026-09-26) are not in dealers.json
         # at all; their url and name live on their own rows. The manifest is a
@@ -576,6 +613,16 @@ def main() -> int:
             continue
         try:
             recipe_info[did] = ensure_recipe(d, force=args.force_synth)
+            if (not args.no_discover and not recipe_info[did].get("had_recipes")
+                    and not str(recipe_info[did].get("synth", "")).startswith("saved")):
+                # Phase 1 of docs/HTTP_ONLY_SCANS_PLAN.md: the ONE sanctioned browser
+                # use, in its own process, only for a dealer no HTTP template could
+                # describe. It writes recipes + discovery.md, never car rows.
+                discovered[did] = run_discovery_capture(did)
+                if discovered[did].get("recipes_after", 0) > 0:
+                    recipe_info[did]["synth"] = f"browser_capture_{discovered[did]['recipes_after']}"
+                    recipe_info[did]["had_recipes"] = discovered[did]["recipes_after"]
+                recipe_info[did]["discovery"] = discovered[did]
         except Exception as exc:  # noqa: BLE001
             import traceback as _tb
 
