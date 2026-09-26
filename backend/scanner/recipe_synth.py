@@ -458,6 +458,7 @@ def _cc_location_facets(html: str) -> list[tuple[str, str]]:
     ranked = sorted(seen.items(), key=lambda kv: (kv[1] != "Location", "meta" in kv[1].lower(), kv[0]))
     return [(name, facet) for facet, name in ranked]
 _CC_PLACE_ONLY_RE = re.compile(r"[A-Za-z .'\-]{2,40},\s*[A-Za-z]{2}(?:\s+\d{5})?")  # "Buford, GA" is a place, not a store name
+_CC_SINGLE_STORE_MAX_UNSTAMPED = 1500  # every feed stampless: Knight Claremont CDJR, 1,045 cars on one site (2026-09-26)
 _CC_SINGLE_STORE_MAX = 1000  # an account larger than this is a group even when its stamps say nothing
 _CC_FACET_CHUNK = 7  # the API 400s on unknown facet names; small chunks keep one bad name from blanking the census
 
@@ -693,11 +694,13 @@ def _carscommerce_store_filter(recipe: EndpointRecipe, dealer_id: str, dealer_ur
             acceptable.add(("street", own_street))
         others_consistent = True
         others_seen = 0
+        other_verdicts: list[dict[str, Any]] = []
         if not acceptable:
             tried.append("no street or store name known for this store; sibling feed ids not merged")
         for n, key in sorted(((n, k) for k, n in values.get("source_id") or [] if k not in keys and n > 0 and not (total and n >= total)), reverse=True):
             v = _cc_verify_store_filter(recipe, body, origin, "source_id", key, label, site_name=site_name)
             others_seen += 1
+            other_verdicts.append(v)
             # a feed stamped with a STREET is only "this store" when it is our street
             # (Stevenson Hendrick Honda's siblings sit at other Wilmington streets)
             others_consistent = others_consistent and bool(v.get("no_contradiction")) and all(
@@ -708,13 +711,20 @@ def _carscommerce_store_filter(recipe: EndpointRecipe, dealer_id: str, dealer_ur
                 keys.append(key)
                 verdicts.append(v)
         bare_place_only = bool(own_sigs) and all(sg[0] == "place" for sg in own_sigs)  # "Naples, FL": a same-town sibling would look identical
-        if others_seen and others_consistent and total <= _CC_SINGLE_STORE_MAX and not mapped_values_present and not bare_place_only:
+        # A group account stamps something somewhere (Hendrick's street blocks);
+        # an account where no feed stamps any rooftop at all is one store even a
+        # little above the cap: Knight Claremont CDJR's 27302 (78 new) + MP15994
+        # (967, no stamps) = 1,045 cars, all on the site's own SRP (671 new + 374
+        # used), and the OEM-code filter kept 78 (2026-09-26).
+        all_unstamped = not own_sigs and all(not [r for r in (v.get("rooftops") or []) if r] for v in other_verdicts)  # unstamped rows report one "" key
+        cap = _CC_SINGLE_STORE_MAX_UNSTAMPED if all_unstamped else _CC_SINGLE_STORE_MAX
+        if others_seen and others_consistent and total <= cap and not mapped_values_present and not bare_place_only:
             # Napleton Honda of Morton Grove: OEM feed 207385 (49) + marketplace
             # feed MP21386 (344, no stamps at all), Location facets empty, 393
             # cars in the account. No feed contradicts the store and the account
             # is store-sized: it IS the store. Scoping would keep 49 of 393.
-            logger.info("carscommerce [%s]: single-store account by feed consistency (%d cars, %d other feed(s) with no contradicting stamp); no store filter",
-                        dealer_id, total, others_seen)
+            logger.info("carscommerce [%s]: single-store account by feed consistency (%d cars <= %d, %d other feed(s) with no contradicting stamp%s); no store filter",
+                        dealer_id, total, cap, others_seen, ", none stamped" if all_unstamped else "")
             return []
     if not keys and place.get("dealer_address"):
         # No feed id carries the store's identity (Greenway CDJR of Rome: page

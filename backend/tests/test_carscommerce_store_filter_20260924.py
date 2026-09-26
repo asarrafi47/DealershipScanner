@@ -363,3 +363,32 @@ def test_store_name_location_facet_becomes_an_extra_recipe(monkeypatch, cary_rec
     assert json.loads(cary_recipe.post_template)["facetFilters"] == {"source_id": ["42409"]}
     assert len(extras) == 1 and json.loads(extras[0].post_template)["facetFilters"] == {"custom_text_13": ["Group 1 Toyota North Austin"]}
 
+
+
+def test_fully_unstamped_account_over_the_cap_is_one_store(monkeypatch, cary_recipe):
+    """Knight Claremont CDJR: OEM feed 27302 (78 new) + marketplace MP15994 (967, no
+    stamps), 1,045 cars on one site; the 1,000 cap kept 78 (2026-09-26)."""
+    feed = _FakeFeed()
+    plain = {"vin": "", "source_id": "", "make": "Jeep", "model": "Wrangler", "year": 2026, "type": "New", "dealer": {"location": None, "name": None}, "extra_fields": {}}
+    feed.rows = [dict(plain, vin=f"NW{i:015d}", source_id="27302") for i in range(78)] + \
+                [dict(plain, vin=f"MP{i:015d}", source_id="MP15994", type="Used") for i in range(967)]
+
+    def call(recipe, body, origin, url=None):
+        st, d = _FakeFeed.__call__(feed, recipe, body, origin, url)
+        for f in d["data"]["facets"]:
+            if f["name"] == "source_id":
+                f["values"] = [{"key": k, "doc_count": sum(1 for r in feed.rows if r["source_id"] == k)} for k in ("27302", "MP15994")]
+        return st, d
+
+    monkeypatch.setattr(rs, "_replay_request", call)
+    monkeypatch.setattr("backend.scanner.dealer_place.learn_place", lambda *a, **k: {"dealer_city": "Claremont", "dealer_state": "CA"})
+    monkeypatch.setattr(rooftop_aliases, "record_rooftop_alias", lambda *a, **k: True)
+    html = '"dealername":"Knight Claremont Chrysler Dodge Jeep RAM","oem_code":"27302"'
+    rs._carscommerce_store_filter(cary_recipe, "claremontcdjr-com", "https://www.claremontcdjr.com", html)
+    assert "facetFilters" not in json.loads(cary_recipe.post_template)
+    # the same shape at 1,600 cars stays a group account
+    feed.rows += [dict(plain, vin=f"XX{i:015d}", source_id="MP15994", type="Used") for i in range(600)]
+    cary2 = rs.EndpointRecipe(dealer_id="c2", content_type="application/json", url=cary_recipe.url, method="POST",
+                              post_template=json.dumps({"page": 1, "perPage": 100}), pagination="carscommerce_page", provider_hint="dealer_dot_com")
+    rs._carscommerce_store_filter(cary2, "claremontcdjr-com", "https://www.claremontcdjr.com", html)
+    assert json.loads(cary2.post_template).get("facetFilters") == {"source_id": ["27302"]}
