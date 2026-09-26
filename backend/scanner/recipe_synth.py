@@ -1368,6 +1368,32 @@ def _dep_nav_srp_paths(html: str) -> list[str]:
     return keep
 
 
+def _dep_condition_bucket(url: str) -> str:
+    q = dict(parse_qsl(urlparse(url).query, keep_blank_values=True))
+    tp = (q.get("tp") or "").lower()
+    path = urlparse(url).path.lower()
+    if tp == "certified" or "certified" in path:
+        return "certified"
+    if tp in ("used", "pre_owned", "preowned") or "used" in path or "pre-owned" in path:
+        return "used"
+    return "new"
+
+
+def _dep_pick_per_condition(built: list[tuple[EndpointRecipe, set[str]]]) -> list[tuple[EndpointRecipe, set[str]]]:
+    """Largest recipe (by total, then page-1 VINs) per condition bucket; certified
+    only when no used/pre-owned feed exists (it is a subset of pre-owned)."""
+    best: dict[str, tuple[EndpointRecipe, set[str]]] = {}
+    for r, v in built:
+        b = _dep_condition_bucket(r.url)
+        cur = best.get(b)
+        if cur is None or ((r.total_count or 0), len(v)) > ((cur[0].total_count or 0), len(cur[1])):
+            best[b] = (r, v)
+    out = [best[b] for b in ("new", "used") if b in best]
+    if "certified" in best and "used" not in best:
+        out.append(best["certified"])
+    return out
+
+
 def _synth_dealer_eprocess(dealer_id: str, dealer_url: str, html: str) -> list[EndpointRecipe]:
     """Emit DEP SRP recipes — used + new, deduped when both show the whole lot."""
     origin = _origin(dealer_url)
@@ -1376,13 +1402,11 @@ def _synth_dealer_eprocess(dealer_id: str, dealer_url: str, html: str) -> list[E
         r for p in paths if (r := _dep_srp_recipe(dealer_id, origin, p)) is not None
     ]
     if len(built) > 2:
-        # the two largest distinct sets cover the lot; drop nav duplicates
-        built.sort(key=lambda rv: -len(rv[1]))
-        kept: list[tuple[EndpointRecipe, set[str]]] = []
-        for r, v in built:
-            if not any(len(v & kv) / (min(len(v), len(kv)) or 1) >= 0.5 for _kr, kv in kept):
-                kept.append((r, v))
-        built = kept[:2]
+        # One recipe per condition bucket (tp=new / tp=used|pre_owned /
+        # certified), the largest total in each. Ranking by page-1 VIN count
+        # alone kept new + a model-page nav recipe (RX 350, 53 cars) and dropped
+        # the 100-car pre-owned feed on lexusofchattanooga-com (2026-09-26).
+        built = _dep_pick_per_condition(built)
     if not built:
         return []
     if len(built) == 2:

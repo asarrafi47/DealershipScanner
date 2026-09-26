@@ -36,3 +36,21 @@ def test_dep_recipe_walks_the_store_scoped_url(monkeypatch):
     recipe, vins = out
     assert "lc=15578" in recipe.url and recipe.total_count == 212 and len(vins) == 12
     assert all(v.startswith("2T2GGCEZ0TC20") for v in vins)
+
+
+def test_dep_keeps_one_recipe_per_condition_bucket():
+    from backend.scanner.recipes import EndpointRecipe
+
+    def rec(url, total):
+        return EndpointRecipe(dealer_id="d", url=url, method="GET", content_type="text/html", post_template=None, auth_headers={},
+                              pagination=rs.PAGINATION_DEP_SRP, total_count=total, provider_hint="dealer_eprocess")
+    built = [
+        (rec("https://x.com/search/new-lexus/?mk=33&tp=new&lc=1&ct=48", 230), {f"N{i}" for i in range(48)}),
+        (rec("https://x.com/search/new-lexus-rx-350/?md=195&tp=new&lc=1&ct=48", 53), {f"R{i}" for i in range(48)}),
+        (rec("https://x.com/search/pre-owned/?tp=pre_owned&lc=1&ct=48", 100), {f"U{i}" for i in range(48)}),
+        (rec("https://x.com/search/certified-pre-owned-lexus/?mk=33&tp=certified&tp=pre_owned", 25), {f"C{i}" for i in range(25)}),
+    ]
+    out = rs._dep_pick_per_condition(built)
+    assert [r.total_count for r, _ in out] == [230, 100]
+    assert rs._dep_condition_bucket("https://x.com/search/used-toyota/?tp=used") == "used"
+    assert rs._dep_condition_bucket("https://x.com/search/certified-pre-owned-lexus/?mk=33&tp=certified&tp=pre_owned") == "certified"
