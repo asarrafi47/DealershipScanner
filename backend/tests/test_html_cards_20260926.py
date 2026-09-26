@@ -2,9 +2,21 @@
 Sales, 2026-09-26: 9 DOM cards + 199 escaped JSON objects in self.__next_f)."""
 from __future__ import annotations
 
+import pytest
+
 from backend.parsers import parse
 from backend.parsers.html_cards import detect
 from backend.scanner import recipe_synth as rs
+
+
+@pytest.fixture(autouse=True)
+def _no_recipe_db(monkeypatch):
+    """Recipe files only: load_recipes/save_recipes also sync Postgres recipe_store,
+    which leaked test rows across runs (m-com came back with 3 recipes)."""
+    from backend.scanner import recipe_store
+
+    monkeypatch.setattr(recipe_store, "db_load_recipes", lambda *a, **k: [])
+    monkeypatch.setattr(recipe_store, "db_save_recipes", lambda *a, **k: None)
 
 _CARD = '<div class="inventory-image-wrapper" data-vin="{vin}"><a href="/inventory/used-cars-ACURA-TLX-2021-{tail}-X"><img src="https://cdn.x/{vin}.jpg"></a><button data-sales-price="31123.25" data-vin="{vin}">Explore</button></div>'
 _RSC = ('self.__next_f.push([1,"{\\"vehicles\\":[{\\"vin\\":\\"%s\\",\\"year\\":2019,\\"make\\":\\"VOLKSWAGEN\\",\\"model\\":\\"GOLF\\",\\"trim\\":\\"TSI S WAGON 4D\\",'

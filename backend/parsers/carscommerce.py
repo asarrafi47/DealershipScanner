@@ -347,7 +347,20 @@ def rooftop_of(listing: dict) -> dict | None:
         "state": state,
         "zip": zipc,
         "alt_name": alt_name,
+        "source": _feed_source(listing),
     }
+
+
+def _feed_source(listing: dict) -> str:
+    """The feed account this listing is filed under (``source_id`` / ``dealer.api_id``).
+
+    Not a rooftop key (see ``rooftop_of``), but evidence that two stamps are one
+    store: Honda of Huntersville's feed names the store on some pages and prints
+    its street block on others, and leaves used cars unstamped, all under
+    ``MP23253`` (2026-09-26). The gate merges an unnamed stamp into the store it
+    matched when every source behind it is one of the store's own."""
+    dealer = listing.get("dealer") if isinstance(listing.get("dealer"), dict) else {}
+    return _s(listing.get("source_id")) or _s(dealer.get("api_id")) or ""
 
 
 def parse(raw_data, base_url: str, dealer_id: str, dealer_name: str = "", dealer_url: str = ""):
@@ -362,5 +375,8 @@ def parse(raw_data, base_url: str, dealer_id: str, dealer_name: str = "", dealer
         rooftop = rooftop_of(listing)
         if rooftop:
             mapped["_rooftop"] = rooftop
+        src = _feed_source(listing)
+        if src:
+            mapped["_feed_source"] = src
         out.append(mapped)
     return out

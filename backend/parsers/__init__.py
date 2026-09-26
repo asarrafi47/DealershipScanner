@@ -430,9 +430,13 @@ class _Rooftop:
         self.street_keys: set[str] = set()
         self.locales: set[str] = set()
         self.zips: set[str] = set()
+        self.sources: set[str] = set()  # feed accounts (carscommerce source_id / api_id) behind this stamp
         self.rows: list[dict] = []
 
     def add(self, rooftop: dict, row: dict) -> None:
+        src = str(rooftop.get("source") or row.get("_feed_source") or "").strip()
+        if src:
+            self.sources.add(src)
         name = _rooftop_name(rooftop)
         if name:
             self.names.add(name)
@@ -834,17 +838,40 @@ def _resolve_rooftop_attribution_inner(
         if tier not in _LOCALITY_ONLY_TIERS and not weak_street_provenance
         else "sibling_rooftop_weak_tier"
     )
+    # A stamp that names no store (a street block, or nothing) filed under the
+    # matched store's own feed account is the same store, written differently:
+    # Honda of Huntersville's feed names the store on some pages, prints
+    # "12815 Statesville Rd<br/>Huntersville, NC 28078<br/>(704) 875-3232" on
+    # others and leaves its 200 used cars unstamped, all under source MP23253;
+    # the name tier kept 141 of 389 (2026-09-26). Siblings in a real group feed
+    # file under their own ids (Hendrick), so a foreign id still refuses.
+    same_source = 0
     for rt in rooftops:
         if rt is target:
+            continue
+        if not rt.names and rt.sources and target.sources and rt.sources <= target.sources:
+            kept.extend(rt.rows)
+            same_source += len(rt.rows)
             continue
         for row in rt.rows:
             row["_rooftop_reject"] = sibling_reject
             rejected.append(row)
     # Rows the parser could not stamp at all are unattributable inside a group
-    # payload: nothing says they belong to this store.
+    # payload: nothing says they belong to this store — unless the feed account
+    # they are filed under is the matched store's own.
     for row in unmarked:
+        src = str(row.get("_feed_source") or "").strip()
+        if src and target.sources and src in target.sources:
+            kept.append(row)
+            same_source += 1
+            continue
         row["_rooftop_reject"] = "unstamped_row_in_group_feed"
         rejected.append(row)
+    if same_source:
+        _log.info(
+            "rooftop attribution [%s]: kept %d unnamed/unstamped row(s) filed under this store's feed source(s) %s",
+            label, same_source, sorted(target.sources)[:3],
+        )
 
     if rejected:
         _log.info(

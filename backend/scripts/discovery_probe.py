@@ -309,7 +309,16 @@ def browser_capture(dealer_id: str, url: str, rep: dict[str, Any] | None = None)
 
     stamp = datetime.now(timezone.utc).replace(microsecond=0).isoformat()
     provider = ((rep or {}).get("fingerprint") or {}).get("platform") or "dealer_dot_com"
-    cap = capture_endpoints_sync(dealer_id, url, _manifest_name(dealer_id) or dealer_id, provider)
+    paths = None
+    if provider in ("carscommerce", "dealer_inspire"):
+        # The profiler labels CarsCommerce-fed sites dealer_dot_com and the capture
+        # then walks /new-inventory/index.htm, /used-inventory/index.htm: Dealer
+        # Inspire 404s those, so the used SRP (Algolia "lightning") was never
+        # opened (claremontcdjr-com, group1fordofsouthaustin-com 2026-09-26).
+        from backend.scanner.phases.site_profile import INVENTORY_PATHS_DEALER_INSPIRE
+
+        paths = list(INVENTORY_PATHS_DEALER_INSPIRE)
+    cap = capture_endpoints_sync(dealer_id, url, _manifest_name(dealer_id) or dealer_id, provider, paths=paths)
     verify: dict[str, Any] = {}
     try:
         from backend.scanner.recipe_synth import validate_recipe
