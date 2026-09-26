@@ -459,26 +459,25 @@ def _run_manifest_scan_job(job_id: str, manifest_path: Path) -> None:
     append(f"[scan-lab] Manifest: {manifest_path}\n")
 
     resolved_manifest = manifest_path.resolve()
-    from backend.scanner.mac_mini_lite import MAC_MINI_LITE_ENV
-
+    # HTTP-only scan with a small footprint (the old Mac-mini-lite preset ran a
+    # browser; scans never do now — docs/HTTP_ONLY_SCANS_PLAN.md)
     env = os.environ.copy()
     env["DEALERS_MANIFEST_PATH"] = str(resolved_manifest)
     env["INVENTORY_DB_PATH"] = str(scan_lab_inventory_db_path())
-    env.update(MAC_MINI_LITE_ENV)
+    env.update({"SCANNER_SCAN_ONLY": "1", "SCANNER_MAX_DEALER_CONCURRENCY": "1", "SCANNER_VDP_DOWNLOAD_IMAGES": "0"})
+    env.pop("SCANNER_ALLOW_BROWSER", None)
     env.pop("ANTHROPIC_API_KEY", None)
 
     cmd = [
         sys.executable,
-        str(PROJECT_ROOT / "scanner_mac_mini.py"),
+        str(PROJECT_ROOT / "scanner.py"),
         "--manifest",
         str(resolved_manifest),
         "--scan-only",
+        "--dealer-concurrency", "1",
     ]
     append(f"[scan-lab] Command: {' '.join(cmd)}\n")
-    append(
-        "[scan-lab] Mac Mini lite profile "
-        "(dealer_concurrency=1, vdp_concurrency=2, Claude/vision off)\n\n"
-    )
+    append("[scan-lab] HTTP-only lite profile (dealer_concurrency=1, no browser, Claude/vision off)\n\n")
 
     code = 1
     try:

@@ -251,16 +251,6 @@ def run_cli_entry() -> None:
         help="Discovery only: permit Chromium (SCANNER_ALLOW_BROWSER=1). Never for fleet scans — docs/HTTP_ONLY_SCANS_PLAN.md.",
     )
     ap.add_argument(
-        "--capture-only",
-        action="store_true",
-        help=(
-            "Fast first-contact mode: capture the inventory endpoint (recipe) + inventory "
-            "rows, but visit ZERO per-car VDP pages. Skips the biggest browser time sink so "
-            "a fresh dealer's architecture is learned in ~seconds; full per-car data comes "
-            "from later HTTP recipe replay. Implies --scan-only."
-        ),
-    )
-    ap.add_argument(
         "--no-post-repair",
         action="store_true",
         help="Skip SQLite repair for VINs touched in this run (see SCANNER_POST_REPAIR).",
@@ -363,19 +353,8 @@ def run_cli_entry() -> None:
     from backend.scanner.browser_gate import describe as _browser_describe
 
     logger.info("Scanner: %s", _browser_describe())
-    if args.scan_only or args.capture_only:
+    if args.scan_only:
         os.environ["SCANNER_SCAN_ONLY"] = "1"
-    if args.capture_only:
-        # Recipe/endpoint capture only — the NetworkObserver still records the
-        # inventory API during the SRP load; we just skip every per-car VDP visit
-        # (the dominant browser time sink). Full per-car data comes from HTTP
-        # recipe replay later. Explicit env so downstream caps read 0.
-        os.environ.setdefault("SCANNER_FAST_MODE", "1")
-        os.environ["SCANNER_VDP_EP_MAX"] = "0"
-        os.environ["SCANNER_VDP_PRICE_MAX"] = "0"
-        os.environ["SCANNER_VDP_SPEC_GAP_MAX"] = "0"
-        os.environ["SCANNER_VDP_COMPLETENESS_PASS"] = "0"
-        logger.info("capture-only mode: VDP visits disabled (endpoint/recipe capture + inventory rows only)")
     apply_fast_mode_env_defaults()
     apply_scan_only_env_defaults()
 

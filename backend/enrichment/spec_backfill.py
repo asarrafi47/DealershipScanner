@@ -238,7 +238,7 @@ def tier_b_vdp(car: dict[str, Any]) -> tuple[dict[str, Any], dict[str, dict[str,
         return {}, {}
     prov: dict[str, dict[str, Any]] = {}
     for k in list(raw.keys()):
-        prov[k] = {"source": "vdp_playwright", "url": url[:500]}
+        prov[k] = {"source": "vdp_http", "url": url[:500]}
     return raw, prov
 
 
