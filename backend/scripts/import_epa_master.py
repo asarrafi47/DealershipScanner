@@ -60,9 +60,41 @@ def norm_int(s: str) -> int | None:
         return None
 
 
-def import_csv(path: str, conn: Any) -> int:
+_INSERT_SQL = (
+    "INSERT INTO epa_master (epa_vehicle_id, year, make, model, cylinders, displacement, trany, drive, "
+    "fuel_type, city08, highway08, city_e, highway_e, atv_type) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+)
+
+
+def _insert_batch(conn: Any, batch: list[tuple]) -> None:
+    """Row-by-row on the Postgres adapter (no executemany), batch on SQLite."""
+    if hasattr(conn, "executemany"):
+        conn.executemany(_INSERT_SQL, batch)
+        return
+    for row in batch:
+        conn.execute(_INSERT_SQL, row)
+
+
+def import_csv(path: str, conn: Any, *, years: set[int] | None = None, append: bool = False) -> int:
+    """Import vehicles.csv. ``append=True`` keeps every existing row and inserts
+    only rows (restricted to *years* when given) whose epa_vehicle_id is not in
+    the table yet: the way to pull a new model year (2027: 84 rows in July, 541
+    in the September file) without touching the curated columns other scripts
+    added (trim, body_style, engine_description)."""
     ensure_table(conn)
-    conn.execute("DELETE FROM epa_master")
+    existing_ids: set[int] = set()
+    if append:
+        cur = conn.cursor()
+        if years:
+            cur.execute(
+                "SELECT epa_vehicle_id FROM epa_master WHERE year IN (" + ",".join("?" * len(years)) + ")",
+                tuple(sorted(years)),
+            )
+        else:
+            cur.execute("SELECT epa_vehicle_id FROM epa_master")
+        existing_ids = {int(r[0]) for r in cur.fetchall() if r[0] is not None}
+    else:
+        conn.execute("DELETE FROM epa_master")
     rows = 0
     with open(path, "r", encoding="utf-8", errors="replace", newline="") as f:
         reader = csv.DictReader(f)
@@ -126,7 +158,11 @@ def import_csv(path: str, conn: Any) -> int:
             md = get(c_model)
             if y is None or not mk or not md:
                 continue
+            if years and y not in years:
+                continue
             vid = norm_int(get(c_id)) if c_id else None
+            if append and (vid is None or vid in existing_ids):
+                continue
             cyl = norm_int(get(c_cyl)) if c_cyl else None
             displ = norm_float(get(c_displ)) if c_displ else None
             trany = get(c_trany) or None
@@ -157,28 +193,10 @@ def import_csv(path: str, conn: Any) -> int:
             )
             rows += 1
             if len(batch) >= 2000:
-                conn.executemany(
-                    """
-                    INSERT INTO epa_master (
-                        epa_vehicle_id, year, make, model, cylinders, displacement, trany, drive, fuel_type,
-                        city08, highway08, city_e, highway_e, atv_type
-                    )
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                    """,
-                    batch,
-                )
+                _insert_batch(conn, batch)
                 batch = []
         if batch:
-            conn.executemany(
-                """
-                INSERT INTO epa_master (
-                    epa_vehicle_id, year, make, model, cylinders, displacement, trany, drive, fuel_type,
-                    city08, highway08, city_e, highway_e, atv_type
-                )
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                """,
-                batch,
-            )
+            _insert_batch(conn, batch)
     conn.commit()
     return rows
 
@@ -188,6 +206,8 @@ def main() -> int:
     import tempfile
 
     ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument("--append-years", default="", help="comma-separated model years to ADD (no delete), e.g. 2027")
+    ap.add_argument("--csv", default="", help="use this local vehicles.csv instead of downloading")
     ap.add_argument(
         "--yes",
         action="store_true",
@@ -199,6 +219,23 @@ def main() -> int:
 
     from backend.db.inventory_db import get_conn
     from backend.db.inventory_pg import is_inventory_postgres
+
+    years = {int(y) for y in args.append_years.split(",") if y.strip().isdigit()}
+    if years:
+        path = args.csv
+        if not path:
+            tmp = tempfile.NamedTemporaryFile(mode="w+b", suffix=".csv", delete=False)
+            tmp.close()
+            path = tmp.name
+            print(f"Downloading {EPA_URL} ...")
+            urllib.request.urlretrieve(EPA_URL, path)
+        conn = get_conn()
+        try:
+            n = import_csv(path, conn, years=years, append=True)
+        finally:
+            conn.close()
+        print(f"Appended {n} EPA row(s) for {sorted(years)} into epa_master (existing rows untouched).")
+        return 0
 
     if not args.yes:
         conn = get_conn()

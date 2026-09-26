@@ -37,13 +37,18 @@ def promo_code_valid_format(code: str) -> bool:
 
 
 def _env_promo_coupon_map() -> dict[str, str]:
-    """``BILLING_PROMO_LAUNCH20=stripe_coupon_id`` style mappings."""
+    """``BILLING_PROMO_LAUNCH20=stripe_coupon_id`` style mappings.
+
+    Keyed by a fully separator-stripped form (letters/digits only) so that
+    admin-configured codes resolve regardless of whether the code is typed
+    or configured with dashes, underscores, or neither.
+    """
     out: dict[str, str] = {}
     prefix = "BILLING_PROMO_"
     for key, val in os.environ.items():
         if not key.startswith(prefix):
             continue
-        code = key[len(prefix) :].strip().upper().replace("_", "-")
+        code = key[len(prefix) :].strip().upper().replace("_", "").replace("-", "")
         coupon = (val or "").strip()
         if code and coupon:
             out[code] = coupon
@@ -64,9 +69,6 @@ def resolve_discount(promo_code: str | None) -> DiscountApplication:
         return DiscountApplication(allow_user_promo_entry=True, label="invalid_format")
 
     mapped = _env_promo_coupon_map().get(code.replace("-", "").replace("_", ""))
-    # Also try exact key with underscores (BILLING_PROMO_LAUNCH20 → LAUNCH20)
-    if not mapped:
-        mapped = _env_promo_coupon_map().get(code)
 
     if mapped:
         return DiscountApplication(

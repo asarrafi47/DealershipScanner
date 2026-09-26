@@ -1,6 +1,7 @@
 """Infer or fall back to a rung's "adds" bullets when no document supplies them."""
 from __future__ import annotations
 
+import re
 
 from .bullets import (
     sanitize_trim_adds,
@@ -36,7 +37,16 @@ def _trim_name_hint(trim_name: str) -> str | None:
             t = tok.strip().lower()
             if not t:
                 continue
-            if t == raw.lower() or t in raw.lower() or (tok.startswith(" ") and tok in low):
+            if t == raw.lower():
+                return line
+            if len(t) <= 2:
+                # Short tokens (e.g. "s", "se", "ex") must match as a
+                # standalone word, not as a substring of any longer name
+                # that merely happens to contain those letters (e.g.
+                # "Sahara" should not match the bare "S" token).
+                if re.search(rf"\b{re.escape(t)}\b", raw.lower()):
+                    return line
+            elif t in raw.lower() or (tok.startswith(" ") and tok in low):
                 return line
     return None
 

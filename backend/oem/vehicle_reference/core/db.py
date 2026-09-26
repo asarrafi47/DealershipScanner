@@ -3,7 +3,7 @@ from __future__ import annotations
 import sqlite3
 from pathlib import Path
 
-from oem.vehicle_reference.core.paths import REF_SCHEMA_PATH
+from backend.oem.vehicle_reference.core.paths import REF_SCHEMA_PATH
 
 
 def connect(db_path: Path) -> sqlite3.Connection:

@@ -7,9 +7,12 @@ that returns ``(ok, error_message)``, a lightweight per-user rate limit, and an
 from __future__ import annotations
 
 import hashlib
+import hmac
 import os
 import re
 from typing import Any
+
+from backend.utils.runtime_env import is_production_env
 
 BODY_MIN = 10
 BODY_MAX = 4000
@@ -35,12 +38,20 @@ _PROFANITY = {
 _WORD_RE = re.compile(r"[a-z]+")
 
 
+def _ip_hash_salt() -> str:
+    salt = (os.environ.get("REVIEWS_IP_HASH_SALT") or "").strip()
+    if not salt and is_production_env():
+        raise RuntimeError("REVIEWS_IP_HASH_SALT must be set in production.")
+    return salt or "dealer-reviews-salt-v1"
+
+
 def hash_ip(ip: str | None) -> str | None:
-    """SHA-1 of ``ip + salt`` for storing an opaque ``ip_hash`` (never the raw IP)."""
+    """HMAC-SHA256 of ``ip`` keyed by salt, for storing an opaque ``ip_hash``
+    (never the raw IP)."""
     if not ip:
         return None
-    salt = os.environ.get("REVIEWS_IP_HASH_SALT") or "dealer-reviews-salt-v1"
-    return hashlib.sha1((str(ip) + salt).encode("utf-8")).hexdigest()
+    salt = _ip_hash_salt()
+    return hmac.new(salt.encode("utf-8"), str(ip).encode("utf-8"), hashlib.sha256).hexdigest()
 
 
 def _contains_url(text: str) -> bool:

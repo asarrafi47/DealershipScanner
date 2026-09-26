@@ -5,7 +5,7 @@ from backend.utils.project_env import ensure_backend_on_sys_path
 
 ensure_backend_on_sys_path()
 
-from backend.main import app, socketio
+from backend.main import app
 from backend.utils.runtime_env import is_production_env
 
 if __name__ == "__main__":
@@ -57,13 +57,10 @@ if __name__ == "__main__":
     werkzeug_log.handlers.clear()
     werkzeug_log.propagate = False
     print(f"Open in browser: http://localhost:{port}")
-    socketio.run(
-        app,
+    # run.py is local / Cloudflare-tunnel dev only (see start.sh); not gunicorn prod.
+    app.run(
         debug=not is_production_env(),
         host=host,
         port=port,
         use_reloader=False,
-        log_output=False,
-        # run.py is local / Cloudflare-tunnel dev only (see start.sh); not gunicorn prod.
-        allow_unsafe_werkzeug=True,
     )

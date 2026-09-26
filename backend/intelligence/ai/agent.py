@@ -12,6 +12,7 @@ from __future__ import annotations
 import json
 import logging
 import re
+import urllib.parse
 from typing import Any
 
 _logger = logging.getLogger(__name__)
@@ -855,7 +856,7 @@ def _dealer_map_line(c: dict[str, Any]) -> str:
         amaps = f"https://maps.apple.com/?ll={lat},{lon}"
         return f"Dealer map: Google Maps {gmaps} | Apple Maps {amaps}"
     if addr:
-        q = addr.replace(" ", "+")
+        q = urllib.parse.quote_plus(addr)
         return f"Dealer map: https://maps.google.com/?q={q}"
     return ""
 
@@ -1338,7 +1339,7 @@ def run_compare_chat(
     research_text = ""
     research_url = ""
     research_used = False
-    kw_hit = _needs_web_research(msg)
+    kw_hit = _needs_web_research(msg) and not _is_price_question(msg)
     if kw_hit and allow_web_research and cars:
         try:
             from backend.utils.web_researcher import WebResearcher

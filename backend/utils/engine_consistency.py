@@ -43,6 +43,57 @@ def is_bev_fuel(fuel_type: str | None) -> bool:
     return t in ("electric", "ev", "electricity") or bool(_BEV_FUEL_RE.search(t))
 
 
+# "2.7L", "2.7-Liter", "2.7 L", "3.5-L" — a displacement in dealer engine copy.
+_LITERS_RE = re.compile(r"\b(\d{1,2}(?:\.\d)?)\s*-?\s*l(?:iter|itre)?s?\b", re.I)
+
+
+def liters_from_engine_text(text: str | None) -> float | None:
+    """Displacement in liters implied by an engine description, or None."""
+    if not text:
+        return None
+    m = _LITERS_RE.search(text)
+    if not m:
+        return None
+    try:
+        v = float(m.group(1))
+    except ValueError:
+        return None
+    return v if 0.5 <= v <= 9.0 else None
+
+
+def catalog_row_conflicts_with_engine_text(
+    engine_text: str | None,
+    row_displacement: float | int | str | None,
+    row_cylinders: int | str | None,
+    *,
+    liters_tolerance: float = 0.15,
+) -> str | None:
+    """Why a catalog row (epa_master) cannot describe the car whose dealer
+    engine text this is — or None when nothing contradicts.
+
+    Dealer engine copy is observed on the car; the catalog row was picked by a
+    resolver. When the resolver had no parsed ``engine_l`` it scored on
+    cylinders + drivetrain alone and linked 2.7L I4 Silverados to the 5.3L V8
+    row and 3.0L X5 40i to the 4.4L M50i row (2,811 active cars, 2026-09-21).
+    Reading hp / MPG / cylinders off such a row is worse than showing nothing.
+    """
+    text_l = liters_from_engine_text(engine_text)
+    try:
+        row_l = float(row_displacement) if row_displacement not in (None, "") else None
+    except (TypeError, ValueError):
+        row_l = None
+    if text_l is not None and row_l is not None and abs(text_l - row_l) > liters_tolerance:
+        return f"displacement {text_l:.1f}L vs catalog {row_l:.1f}L"
+    text_c = cylinders_from_engine_text(engine_text)
+    try:
+        row_c = int(row_cylinders) if row_cylinders not in (None, "") else None
+    except (TypeError, ValueError):
+        row_c = None
+    if text_c is not None and row_c is not None and text_c != row_c:
+        return f"cylinders {text_c} vs catalog {row_c}"
+    return None
+
+
 def cylinders_from_engine_text(text: str | None) -> int | None:
     """Cylinder count implied by an engine description, or None if unclear."""
     if not text:

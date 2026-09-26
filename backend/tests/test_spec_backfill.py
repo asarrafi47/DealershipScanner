@@ -114,3 +114,19 @@ def test_conservative_updates(car: dict, found: dict, expected_keys: set) -> Non
     upd, pout = sb._conservative_updates(car, found, prov)
     assert set(upd.keys()) == expected_keys
     assert set(pout.keys()) == set(upd.keys())
+
+
+def test_conservative_updates_rejects_cylinders_that_contradict_engine_text() -> None:
+    from backend.enrichment.spec_backfill import _conservative_updates
+
+    car = {"cylinders": None, "engine_description": "3.5L V6", "fuel_type": "Gasoline"}
+    updates, _prov = _conservative_updates(car, {"cylinders": 4}, {"cylinders": {"source": "master_catalog"}})
+    assert "cylinders" not in updates
+
+
+def test_conservative_updates_accepts_cylinders_that_agree_with_engine_text() -> None:
+    from backend.enrichment.spec_backfill import _conservative_updates
+
+    car = {"cylinders": None, "engine_description": "3.5L V6", "fuel_type": "Gasoline"}
+    updates, _prov = _conservative_updates(car, {"cylinders": 6}, {"cylinders": {"source": "master_catalog"}})
+    assert updates["cylinders"] == 6

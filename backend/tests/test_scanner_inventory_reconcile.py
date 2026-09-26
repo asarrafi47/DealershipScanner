@@ -293,3 +293,48 @@ def test_reconcile_does_not_touch_other_dealer() -> None:
     cur.execute("SELECT listing_active FROM cars WHERE vin = ?", ("BBBBBBBBBBBBBBBBB",))
     assert int(cur.fetchone()[0]) == 1
     conn.close()
+
+
+def _seed(conn: sqlite3.Connection, dealer: str, n: int) -> list[str]:
+    vins = [f"1HGBH41JXMN1{i:05d}" for i in range(n)]
+    cur = conn.cursor()
+    for v in vins:
+        cur.execute(
+            "INSERT INTO cars (vin, dealer_id, dealer_url, listing_active) VALUES (?, ?, ?, 1)",
+            (v, dealer, f"https://{dealer}"),
+        )
+    conn.commit()
+    return vins
+
+
+def test_reconcile_refuses_partial_capture(monkeypatch: pytest.MonkeyPatch) -> None:
+    """A scrape that re-sees under half the active lot must not unlist the rest."""
+    monkeypatch.delenv("SCANNER_RECONCILE_MIN_COVERAGE", raising=False)
+    conn = _memory_cars_conn()
+    vins = _seed(conn, "gardenahonda-com", 100)
+    seen = set(vins[:30])  # 30 of 100 re-seen, like the 443-of-1246 capture
+    stats: dict = {"deduped_rows": 30}
+    out = reconcile_dealer_inventory_after_scan(
+        "gardenahonda-com", "https://gardenahonda-com", seen, stats, _conn=conn
+    )
+    assert out["ran"] is False
+    assert out["skipped_reason"].startswith("low_coverage(matched=30,active=100")
+    n_active = conn.execute("SELECT COUNT(*) FROM cars WHERE listing_active = 1").fetchone()[0]
+    assert n_active == 100
+
+
+def test_reconcile_runs_when_coverage_clears(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.delenv("SCANNER_RECONCILE_MIN_COVERAGE", raising=False)
+    conn = _memory_cars_conn()
+    vins = _seed(conn, "d-ok", 100)
+    seen = set(vins[:80])
+    out = reconcile_dealer_inventory_after_scan("d-ok", "https://d-ok", seen, {"deduped_rows": 80}, _conn=conn)
+    assert out["ran"] is True and out["marked_inactive"] == 20
+
+
+def test_reconcile_coverage_gate_can_be_disabled(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("SCANNER_RECONCILE_MIN_COVERAGE", "0")
+    conn = _memory_cars_conn()
+    vins = _seed(conn, "d-off", 100)
+    out = reconcile_dealer_inventory_after_scan("d-off", "https://d-off", set(vins[:10]), {"deduped_rows": 10}, _conn=conn)
+    assert out["ran"] is True and out["marked_inactive"] == 90

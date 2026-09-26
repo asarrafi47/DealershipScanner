@@ -1,3 +1,13 @@
+# Upload exclusions for `railway up`. Railway builds from the uploaded context,
+# so anything excluded here is simply absent at build time.
+#
+# NOT a line-for-line mirror of .dockerignore and cannot be: this file uses
+# gitignore semantics (a bare name matches at ANY depth), while .dockerignore
+# patterns are root-anchored. The invariant that matters is one-directional:
+# nothing excluded here may be something a Dockerfile COPYs and needs. Keep the
+# body below in sync with .dockerignore's entries; the extra depth-matching
+# only ever excludes MORE, never less.
+
 .git
 .github
 .claude
@@ -5,20 +15,89 @@
 .cursor
 .env
 *.env
-.venv
-node_modules
-__pycache__
-*.pyc
-.pytest_cache
+
+# Runtime DBs (mounted from PVC in k8s; not baked into image)
 *.db
 *.db-wal
 *.db-shm
-vdp_images
-car_images
-backend/data/chroma
-data/chroma
-data/vectors
-workspace
-docs
-debug
-DICTIONARY
+
+# Local image cache (mounted from PVC)
+# dockerignore patterns only match at the context root, so nested copies
+# must be listed explicitly (backend/vdp_images alone is ~27GB)
+vdp_images/
+car_images/
+**/vdp_images/
+**/car_images/
+
+# Window-sticker corpus (~8.4GB) and brochure archives (~2.9GB): data harvested
+# at runtime, read from mounts — never baked into images. These were the bulk of
+# a 30.9GB COPY layer in the 2026-07-09 dev images.
+car_window_stickers/
+**/car_window_stickers/
+backend/data/brochures/
+backend/data/brochure_archive/
+backend/data/brochures_archive_comparison/
+backend/data/brochures_archive_quarantine/
+# Rasterized page-image cache + car-photo cache for the local-LLM extraction
+# pipelines (regenerated) and local logs — not needed inside the image.
+backend/data/brochure_local_pages/
+backend/data/car_image_local_cache/
+backend/data/logs/
+
+# Root-level DB dumps (migrations/*.sql are unaffected: root patterns
+# only match at the context root)
+dump-*.sql
+
+# Node modules (rebuilt in image)
+node_modules/
+backend/node_modules/
+
+# Local venv (not used inside image)
+.venv/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+
+# Chroma / vector stores (too large; regenerated from DB)
+backend/data/chroma/
+data/chroma/
+data/vectors/
+
+# Generated CSV outputs
+csv_out/
+csv_out_*/
+backend/dictionary/csv_out/
+backend/dictionary/csv_out_*/
+
+# Scrape artifacts
+backend/data/oem/
+backend/data/dealer_group_results.json
+backend/data/hybrid_run_latest.json
+backend/data/review_queue.jsonl
+
+# Docs / debug artefacts
+docs/
+debug/
+backend/debug/
+workspace/
+backend/fuse_artifacts/
+
+# macOS
+.DS_Store
+.fuse_hidden*
+
+# Logs
+*.log
+logs/mfa*.jsonl
+
+# DICTIONARY CSVs (large; read from mounted /data or baked in separately)
+# Comment out next line if you want EPA data in the image
+DICTIONARY/
+
+# railway up-only: graphify output + template previews (never needed remotely)
+graphify-out/
+preview3/
+preview4/

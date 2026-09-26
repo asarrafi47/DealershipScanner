@@ -4,10 +4,10 @@ from __future__ import annotations
 import logging
 from urllib.parse import urlparse
 
-from scraping.models import SiteResult
-from scraping.org_validation import finalize_status
-from intelligence.agents.adjudicator_agent import adjudicate_evidence
-from intelligence.llm.client import LLMClient, LLMResponseError
+from backend.scraping.models import SiteResult
+from backend.scraping.org_validation import finalize_status
+from backend.intelligence.agents.adjudicator_agent import adjudicate_evidence
+from backend.intelligence.llm.client import LLMClient, LLMResponseError
 from backend.schemas.adjudication_result import AdjudicationResult
 from backend.schemas.evidence_package import EvidencePackage
 

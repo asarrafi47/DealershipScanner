@@ -158,6 +158,10 @@ def init_users_db():
             "ALTER TABLE users ADD COLUMN email_verify_token_hash TEXT",
         ),
         (
+            "email_verify_expires_at",
+            "ALTER TABLE users ADD COLUMN email_verify_expires_at INTEGER",
+        ),
+        (
             "password_reset_token_hash",
             "ALTER TABLE users ADD COLUMN password_reset_token_hash TEXT",
         ),

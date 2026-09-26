@@ -126,35 +126,6 @@ _MIN_PASSWORD_LEN = Config.MIN_PASSWORD_LENGTH
 _logger = logging.getLogger(__name__)
 
 
-def _socketio_cors_allowed_origins() -> str | list[str]:
-    """Socket.IO browser origins. Production defaults avoid wildcard CORS (SEC-063)."""
-    raw = Config.socketio_cors_origins_raw()
-    if raw == "*":
-        if is_production_env():
-            _logger.warning(
-                "SOCKETIO_CORS_ORIGINS=* in production allows any browser origin for Socket.IO; "
-                "prefer a comma-separated allowlist."
-            )
-        return "*"
-    if raw:
-        return [x.strip() for x in raw.split(",") if x.strip()]
-    if not is_production_env():
-        return "*"
-    origins: list[str] = []
-    for raw_base in (Config.public_base_url(), Config.mfa_qr_base_url()):
-        base = raw_base.rstrip("/")
-        if base and base not in origins:
-            origins.append(base)
-    if origins:
-        return origins
-    _logger.warning(
-        "Production Socket.IO: SOCKETIO_CORS_ORIGINS unset and no PUBLIC_BASE_URL/MFA_QR_BASE_URL; "
-        "using an empty CORS allowlist (tightest same-site behavior). If phone QR or Socket.IO fail, "
-        "set SOCKETIO_CORS_ORIGINS to your public app origin(s), comma-separated."
-    )
-    return []
-
-
 _CHAT_MAX_MESSAGE = Config.CHAT_MAX_MESSAGE_CHARS
 _CHAT_MAX_BODY = Config.CHAT_MAX_BODY_BYTES
 # Cap JSON POST bodies (smart search, chat) and allow dealer multipart uploads (8 MiB+).
@@ -299,7 +270,12 @@ def _prewarm_listings_inventory_cache() -> None:
     threading.Thread(target=_run, name="listings-prewarm", daemon=True).start()
 
 
-_prewarm_listings_inventory_cache()
+# Under gunicorn this runs in the ARBITER (--preload imports the app there), which
+# would build a full grid that serves nothing -- see gunicorn.conf.py, whose
+# post_fork hook starts the prewarm in each worker instead. Everything else
+# (run.py dev server, tests, one-off scripts) keeps the import-time behaviour.
+if not os.environ.get("DS_GUNICORN_ARBITER"):
+    _prewarm_listings_inventory_cache()
 app.register_blueprint(dev_bp, url_prefix="/dev")
 app.register_blueprint(store_admin_bp)
 
@@ -519,6 +495,7 @@ def _csrf_mutating_requests():
         "api_search_smart",
         "api_car_chat",
         "api_compare_chat",
+        "ai_chat_bp.api_ai_chat",
         "api_toggle_save",
         "api_saved_searches_create",
         "api_session_listings_geo",
@@ -1316,17 +1293,3 @@ def _nhtsa_recalls_lookup_payload(
     if api_err:
         return payload, 502
     return payload, 200
-
-
-from flask_socketio import SocketIO  # noqa: E402
-
-_socketio_cors = _socketio_cors_allowed_origins()
-socketio = SocketIO(
-    app,
-    async_mode="threading",
-    cors_allowed_origins=_socketio_cors,
-    manage_session=True,
-)
-if getattr(app, "extensions", None) is None:
-    app.extensions = {}
-app.extensions["socketio"] = socketio

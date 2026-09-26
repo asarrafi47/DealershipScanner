@@ -51,6 +51,7 @@ from __future__ import annotations
 import argparse
 import datetime as _dt
 import json
+import os
 import re
 import sys
 from collections import Counter, defaultdict
@@ -86,10 +87,8 @@ CONVERSION_COLUMNS = ("torque_lb_ft", "torque_nm", "curb_weight_lb", "curb_weigh
 #: Full whitelist of value columns any UPDATE may set.
 UPDATABLE_COLUMNS = tuple(dict.fromkeys(CONVERSION_COLUMNS + PROPAGATION_COLUMNS))
 
-DEFAULT_BACKUP_DIR = (
-    "/private/tmp/claude-501/-Users-asarrafi-Projects/"
-    "0fd58203-ffeb-4591-b16d-3f7f838acd51/scratchpad/db-backups"
-)
+# Repo-local, gitignored (workspace/). Override with --backup-dir.
+DEFAULT_BACKUP_DIR = os.environ.get("DB_BACKUP_DIR") or str(Path(__file__).resolve().parents[2] / "workspace" / "db-backups")
 
 
 # ---------------------------------------------------------------------------

@@ -27,7 +27,7 @@ def normalize_role(role: str | None) -> str:
     r = (role or "").strip().lower()
     if r in ALL_ROLES:
         return r
-    return ROLE_DEALERSHIP_MEMBER
+    return ROLE_GENERAL
 
 
 def admin_emails() -> set[str]:

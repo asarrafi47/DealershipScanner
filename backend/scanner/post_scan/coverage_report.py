@@ -11,13 +11,18 @@ _COVERAGE_FIELDS = (
 )
 
 
+# Fields where 0 is a legitimate reading (e.g. a brand-new car's odometer)
+# and must not be treated as "missing".
+_ZERO_IS_VALID_FIELDS = frozenset({"mileage"})
+
+
 def _has_value(v: dict[str, Any], key: str) -> bool:
     val = v.get(key)
     if val is None:
         return False
     if isinstance(val, str) and not val.strip():
         return False
-    if isinstance(val, (int, float)) and val == 0:
+    if isinstance(val, (int, float)) and val == 0 and key not in _ZERO_IS_VALID_FIELDS:
         return False
     return True
 

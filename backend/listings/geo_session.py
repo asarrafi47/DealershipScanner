@@ -2,8 +2,16 @@
 
 from __future__ import annotations
 
+import math
+
 LISTINGS_GEO_ZIP_SESSION_KEY = "listings_geo_zip"
 LISTINGS_GEO_RADIUS_SESSION_KEY = "listings_geo_radius_mi"
+LISTINGS_GEO_MAX_RADIUS_MI = 500.0
+
+
+def _valid_radius(rm: float) -> bool:
+    """True for a finite, sane, positive radius (rejects NaN/inf and absurd values)."""
+    return math.isfinite(rm) and 0 < rm <= LISTINGS_GEO_MAX_RADIUS_MI
 
 
 def _scalar(request, key: str) -> str:
@@ -18,7 +26,7 @@ def apply_listings_geo_to_session(session_obj: object, zip_code: str, radius_mi:
         rm = float(radius_mi)
     except (TypeError, ValueError):
         return False
-    if not z or rm <= 0:
+    if not z or not _valid_radius(rm):
         return False
     from backend.db.geo import zip_to_coords
 
@@ -53,7 +61,7 @@ def listings_geo_kwargs_from_session(session_obj: object) -> dict:
         radius_mi = float(raw_radius)
     except (TypeError, ValueError):
         return {}
-    if radius_mi <= 0:
+    if not _valid_radius(radius_mi):
         return {}
     z = str(zip_code).strip()
     if not z:

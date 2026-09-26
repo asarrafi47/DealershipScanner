@@ -68,7 +68,9 @@ def main(argv=None) -> int:
 
     ids = [p[0] for p in plans]
     cur.execute("CREATE TABLE IF NOT EXISTS cars_backup_vinrepair_20260713 AS SELECT id, make, model, vin FROM cars WHERE id = ANY(%s)", (ids,))
-    bkp = "/private/tmp/claude-501/-Users-asarrafi-Projects/0fd58203-ffeb-4591-b16d-3f7f838acd51/scratchpad/db-backups"
+    bkp = os.environ.get("DB_BACKUP_DIR") or os.path.join(
+        os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "workspace", "db-backups"
+    )
     os.makedirs(bkp, exist_ok=True)
     json.dump([{"id": p[0], "old_make": p[1], "old_model": p[2], "new": p[3]} for p in plans],
               open(f"{bkp}/vinrepair_20260713.json", "w"), indent=0)

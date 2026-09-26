@@ -84,6 +84,8 @@ from urllib.parse import urlparse
 
 sys.path.insert(0, ".")
 
+from backend.utils.outbound_url import destination_host_blocked_after_dns
+
 logging.basicConfig(level=logging.INFO, format="%(message)s")
 log = logging.getLogger("backfill_addresses")
 
@@ -189,6 +191,19 @@ def _addresses_from_microdata(html: str) -> list[dict[str, str]]:
 _USE_BROWSER = False
 
 
+def _assert_destination_allowed(url: str) -> None:
+    """Refuse loopback/private/link-local/etc. destinations (SSRF guard).
+
+    ``dealer_website_url`` / ``website_url`` come from untrusted discovery
+    tiers (OSM tags, Google Places, DDG search), so a malicious value could
+    otherwise make this operator-run tool — including its real headless
+    Chromium browser mode — issue a request to an internal host.
+    """
+    host = (urlparse(url).hostname or "").strip()
+    if not host or destination_host_blocked_after_dns(host):
+        raise RuntimeError(f"refusing blocked destination host: {host!r}")
+
+
 def _fetch_via_browser(url: str) -> str:
     """Fetch through headless Chromium, for hosts that refuse bare HTTP.
 
@@ -204,11 +219,14 @@ def _fetch_via_browser(url: str) -> str:
     """
     from playwright.sync_api import sync_playwright
 
+    _assert_destination_allowed(url)
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
         try:
             page = browser.new_page(user_agent=_UA)
             page.goto(url, timeout=_TIMEOUT_S * 1000, wait_until="domcontentloaded")
+            # goto() may have followed redirects to a different host — recheck.
+            _assert_destination_allowed(page.url)
             # Some sites inject the LocalBusiness JSON-LD after first paint.
             page.wait_for_timeout(1500)
             return page.content() or ""
@@ -217,6 +235,7 @@ def _fetch_via_browser(url: str) -> str:
 
 
 def _fetch(url: str) -> str:
+    _assert_destination_allowed(url)
     if _USE_BROWSER:
         return _fetch_via_browser(url)
 
@@ -226,6 +245,10 @@ def _fetch(url: str) -> str:
         url, timeout=_TIMEOUT_S, headers={"User-Agent": _UA, "Accept": "text/html"},
         allow_redirects=True,
     )
+    if resp.history:
+        # allow_redirects=True already followed the chain — recheck the final
+        # host so a redirect to an internal address doesn't get its body used.
+        _assert_destination_allowed(resp.url)
     if resp.status_code != 200:
         raise RuntimeError(f"HTTP {resp.status_code}")
     return resp.text or ""

@@ -241,6 +241,16 @@ def run_cli_entry() -> None:
         ),
     )
     ap.add_argument(
+        "--http-only",
+        action="store_true",
+        help="(default) No headless browser: recipe replay + HTTP detail pages only. Equivalent to leaving SCANNER_ALLOW_BROWSER unset.",
+    )
+    ap.add_argument(
+        "--allow-browser",
+        action="store_true",
+        help="Discovery only: permit Chromium (SCANNER_ALLOW_BROWSER=1). Never for fleet scans — docs/HTTP_ONLY_SCANS_PLAN.md.",
+    )
+    ap.add_argument(
         "--capture-only",
         action="store_true",
         help=(
@@ -346,6 +356,13 @@ def run_cli_entry() -> None:
         logger.error("Manifest not found: %s", MANIFEST_PATH.resolve())
         sys.exit(1)
 
+    if args.allow_browser:
+        os.environ["SCANNER_ALLOW_BROWSER"] = "1"
+    if args.http_only:
+        os.environ.pop("SCANNER_ALLOW_BROWSER", None)
+    from backend.scanner.browser_gate import describe as _browser_describe
+
+    logger.info("Scanner: %s", _browser_describe())
     if args.scan_only or args.capture_only:
         os.environ["SCANNER_SCAN_ONLY"] = "1"
     if args.capture_only:

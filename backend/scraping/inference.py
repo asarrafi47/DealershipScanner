@@ -4,27 +4,27 @@ from __future__ import annotations
 import re
 from urllib.parse import urlparse
 
-from scraping.constants import (
+from backend.scraping.constants import (
     COPYRIGHT_RE,
     OWNERSHIP_ANCHOR_PATTERNS,
     PAGE_WEIGHT,
     STANDALONE_ORG_PATTERNS,
     THRESH_ASSIGNED,
 )
-from scraping.entity_specificity import (
+from backend.scraping.entity_specificity import (
     entity_specificity_score,
     is_department_or_unit_like,
     ownership_signal_strong,
     rank_candidate_entries,
 )
-from scraping.models import Evidence
-from scraping.canonical_groups import canonical_group_display, merge_canonical_key
-from scraping.org_validation import (
+from backend.scraping.models import Evidence
+from backend.scraping.canonical_groups import canonical_group_display, merge_canonical_key
+from backend.scraping.org_validation import (
     has_negative_substring,
     is_plausible_org_name,
     normalize_group_name,
 )
-from scraping.text_utils import collapse_ws, is_vendor_text
+from backend.scraping.text_utils import collapse_ws, is_vendor_text
 
 WINDOW_CHARS = 200
 

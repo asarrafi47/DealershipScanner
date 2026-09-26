@@ -15,6 +15,24 @@ def get_total_count(obj) -> int | None:
     """Extract totalCount / pageInfo.totalCount / totalPages from API response. Returns None if not found."""
     if not isinstance(obj, dict):
         return None
+    # carscommerce search: {"meta": {"pagination": {"total": N}}}
+    meta = obj.get("meta")
+    if isinstance(meta, dict):
+        mv = get_total_count(meta)
+        if mv:
+            return mv
+    # DealerOn cosmos SRP: {"Paging": {"PaginationDataModel": {"TotalCount": N}}}
+    paging = obj.get("Paging")
+    if isinstance(paging, dict):
+        pdm = paging.get("PaginationDataModel")
+        if isinstance(pdm, dict) and isinstance(pdm.get("TotalCount"), (int, float)):
+            return int(pdm["TotalCount"])
+    # OneAudi omnigraph: {"data": {"stockCarSearch": {"resultNumber": N}}}
+    data = obj.get("data")
+    if isinstance(data, dict) and isinstance(data.get("stockCarSearch"), dict):
+        rn = data["stockCarSearch"].get("resultNumber")
+        if isinstance(rn, (int, float)):
+            return int(rn)
     v = obj.get("totalCount") or obj.get("total_count") or obj.get("totalRecords")
     if v is not None and isinstance(v, (int, float)):
         return int(v)
@@ -697,7 +715,7 @@ def clean_image_url(url: str, base_url: str) -> str:
         base = base_url.rstrip("/")
         if "://" in base:
             return base + url
-        return "https:" + base + url
+        return "https://" + base + url
     return url
 
 

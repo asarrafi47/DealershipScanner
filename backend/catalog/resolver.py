@@ -21,7 +21,7 @@ from dataclasses import dataclass
 from typing import Any
 
 from backend.db.inventory_db import get_conn
-from backend.utils.engine_consistency import cylinders_from_engine_text
+from backend.utils.engine_consistency import cylinders_from_engine_text, liters_from_engine_text
 
 # Link only when we're at least this confident (0-1 scale).
 MIN_CONFIDENCE = 0.45
@@ -46,6 +46,8 @@ def _norm(s: Any) -> str:
 
 def _drive_bucket(s: Any) -> str:
     t = str(s or "").upper()
+    if "4X2" in t or t.startswith("2WD") or "2-WHEEL" in t or "TWO-WHEEL" in t:
+        return ""  # two-wheel drive of unknown end (vPIC "4x2/2-Wheel Drive"): no signal
     if "ALL" in t or "AWD" in t or "4MATIC" in t or "XDRIVE" in t or "QUATTRO" in t:
         return "AWD"
     # EPA spells it out ("Four-Wheel Drive"); dealers abbreviate ("4WD").
@@ -81,6 +83,14 @@ _MODEL_SUFFIXES = (
 
 def _model_variants(make: str, model: str) -> list[str]:
     out = [model.strip()]
+    try:
+        from backend.utils.model_aliases import alias_spellings
+
+        for alt in alias_spellings(make, model):
+            if alt and alt not in out:
+                out.append(alt)
+    except ImportError:
+        pass
     low = model.lower()
     for suf in _MODEL_SUFFIXES:
         if low.endswith(suf):
@@ -246,6 +256,11 @@ def score_candidate(car: dict[str, Any], cand: dict[str, Any]) -> tuple[float, s
         car_el = float(str(car.get("engine_l") or "").split("L")[0])
     except (TypeError, ValueError):
         car_el = None
+    if car_el is None:
+        # 48% of rows have no parsed engine_l but most carry "2.7L I4 L3B Turbo"
+        # in engine_description. Without this the displacement dimension never
+        # scored and cylinders+drive alone linked 2.7L trucks to 5.3L rows.
+        car_el = liters_from_engine_text(car.get("engine_description"))
     try:
         cand_el = float(cand.get("displacement"))
     except (TypeError, ValueError):
@@ -258,13 +273,18 @@ def score_candidate(car: dict[str, Any], cand: dict[str, Any]) -> tuple[float, s
             score -= 0.30
             reasons.append("engine_l_conflict")
 
-    car_cyl = None
+    # Dealer engine TEXT outranks the stored cylinders column: the column has
+    # been enrichment-written (a prior bad link put 8 on "2.7L I4" Silverados),
+    # the text was observed on the listing.
+    text_cyl = cylinders_from_engine_text(car.get("engine_description"))
+    row_cyl = None
     try:
-        car_cyl = int(car.get("cylinders")) if car.get("cylinders") else None
+        row_cyl = int(car.get("cylinders")) if car.get("cylinders") else None
     except (TypeError, ValueError):
         pass
-    if car_cyl is None:
-        car_cyl = cylinders_from_engine_text(car.get("engine_description"))
+    if text_cyl is not None and row_cyl is not None and text_cyl != row_cyl:
+        reasons.append("row_cyl_overridden")
+    car_cyl = text_cyl if text_cyl is not None else row_cyl
     try:
         cand_cyl = int(cand.get("cylinders")) if cand.get("cylinders") else None
     except (TypeError, ValueError):
@@ -319,10 +339,43 @@ def candidates_for(cur, year: int, make: str, model: str) -> list[dict[str, Any]
     return _candidates(cur, year, make, model)
 
 
+_VIN_FUEL_LABEL = {"ev": "Electric", "phev": "Plug-In Hybrid", "hybrid": "Hybrid"}
+
+
+def apply_vin_facts(car: dict[str, Any]) -> dict[str, Any]:
+    """Copy of *car* with drivetrain and electrification taken from the VIN decode
+    when vPIC states them. The dealer feed is the thing being checked, not the
+    reference: 2026-09-23 lab, 44 of 1,611 rows had a feed drivetrain the VIN
+    contradicted (Ridgeline "FWD") and ~20 hybrid-only cars were labelled
+    "Gasoline", and each wrong label pulled the catalog link to the wrong row.
+    Only positive vPIC statements override; a blank decode changes nothing."""
+    vin = str(car.get("vin") or "").strip().upper()
+    if len(vin) != 17:
+        return car
+    try:
+        from backend.enrichment.knowledge_engine import lookup_vpic_from_cache
+
+        vp = lookup_vpic_from_cache(vin)
+    except Exception:  # noqa: BLE001 - the decode is an enhancement, never a blocker
+        return car
+    if not vp:
+        return car
+    out = dict(car)
+    if vp.get("drivetrain"):
+        out["drivetrain"] = vp["drivetrain"]
+        out["_drivetrain_source"] = "vpic"
+    el = vp.get("electrification")
+    if el in _VIN_FUEL_LABEL:
+        out["fuel_type"] = _VIN_FUEL_LABEL[el]
+        out["_fuel_type_source"] = "vpic"
+    return out
+
+
 def resolve_from_candidates(car: dict[str, Any], cands: list[dict[str, Any]]) -> CatalogMatch | None:
     """Score pre-fetched candidates; None below the confidence floor."""
     if not cands:
         return None
+    car = apply_vin_facts(car)
     scored = [(score_candidate(car, c), c) for c in cands]
     scored.sort(key=lambda item: item[0][0], reverse=True)
     (best_score, method), best = scored[0]

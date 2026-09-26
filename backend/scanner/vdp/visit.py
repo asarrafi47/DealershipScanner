@@ -56,6 +56,7 @@ from backend.scanner.vdp.gallery import (
 )
 from backend.scanner.vdp.price_hints import _apply_vdp_price_hints
 from backend.scanner.vdp.spin_capture import _vdp_spin_capture
+from backend.scanner.vdp.vdp_recipes import record_candidate as record_vdp_recipe_candidate
 
 log = logging.getLogger("scanner.vdp")
 
@@ -202,6 +203,28 @@ async def _vdp_visit_one(
             )
             if len(network_rows) > MAX_NETWORK_ROWS:
                 network_rows.pop(0)
+            # Remember the endpoint itself: templated by VIN/stock it is replayable
+            # over HTTP for every other car on the lot (vdp_recipes).
+            try:
+                req = response.request
+                try:
+                    req_headers = await req.all_headers()
+                except Exception:
+                    req_headers = dict(getattr(req, "headers", None) or {})
+                record_vdp_recipe_candidate(
+                    dealer_name,
+                    url=response.url or "",
+                    method=str(getattr(req, "method", "GET") or "GET"),
+                    post_data=getattr(req, "post_data", None),
+                    headers=req_headers,
+                    vin=vin,
+                    stock=str(v.get("stock_number") or ""),
+                    score=float(score or 0),
+                    ep_count=len(ep_objs or []),
+                    image_count=len(urls_from_images or []),
+                )
+            except Exception:
+                pass
         except Exception:
             return
 

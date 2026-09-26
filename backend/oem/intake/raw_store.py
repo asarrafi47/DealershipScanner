@@ -4,7 +4,7 @@ import json
 from datetime import datetime, timezone
 from pathlib import Path
 
-from oem.intake.paths import BMW_RAW_DIR, ensure_bmw_dirs
+from backend.oem.intake.paths import BMW_RAW_DIR, ensure_bmw_dirs
 
 
 def append_bmw_batch_jsonl(payload: dict) -> Path:

@@ -288,6 +288,16 @@ def normalize_fuel_type_for_display(
     if not is_correctable_hybrid_label(ft):
         return None
 
+    # A hybrid label the VIN decode confirms is not a mild-hybrid misnomer.
+    try:
+        from backend.enrichment.knowledge_engine import lookup_vpic_from_cache
+
+        _vin = str(car.get("vin") or "").strip().upper()
+        if len(_vin) == 17 and lookup_vpic_from_cache(_vin).get("electrification") in ("hybrid", "phev", "ev"):
+            return None
+    except Exception:
+        pass
+
     fam = match_mild_hybrid_family(car, engine_text=engine_text)
     if fam is None:
         return None

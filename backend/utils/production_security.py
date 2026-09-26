@@ -5,7 +5,6 @@ from __future__ import annotations
 import logging
 import os
 
-from backend.config import Config
 
 from backend.utils.credential_db_encryption import assert_credential_db_encryption_config
 from backend.utils.runtime_env import is_production_env
@@ -69,10 +68,6 @@ def assert_production_security_config() -> None:
         _log.warning(
             "RATE_LIMIT_SQLITE_PATH unset in production; per-IP rate limits are per worker process."
         )
-
-    cors = Config.socketio_cors_origins_raw()
-    if cors == "*":
-        _log.warning("SOCKETIO_CORS_ORIGINS=* in production allows any Socket.IO browser origin.")
 
     if not (os.environ.get("DEV_IP_ALLOWLIST") or "").strip():
         _log.warning(

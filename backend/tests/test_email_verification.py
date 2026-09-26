@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+import time
 
 import pytest
 
@@ -48,11 +49,20 @@ def test_issue_and_verify_round_trip(email_verify_env, monkeypatch) -> None:
     assert user_needs_email_verification(uid) is True
 
     token = "known-test-token"
-    set_user_email_verify_token(uid, hash_verify_token(token))
+    set_user_email_verify_token(uid, hash_verify_token(token), int(time.time()) + 3600)
     ok, msg = verify_email_token(token)
     assert ok is True
     assert "verified" in msg.lower()
     assert user_needs_email_verification(uid) is False
+
+
+def test_verify_rejects_expired_token(email_verify_env) -> None:
+    uid = save_user("expireduser", "expired@example.com", "password123", role="general_user")
+    token = "expired-test-token"
+    set_user_email_verify_token(uid, hash_verify_token(token), int(time.time()) - 3600)
+    ok, msg = verify_email_token(token)
+    assert ok is False
+    assert user_needs_email_verification(uid) is True
 
 
 def test_verify_rejects_bad_token(email_verify_env) -> None:

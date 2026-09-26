@@ -213,4 +213,4 @@ def test_hash_ip_is_stable_and_opaque():
     assert hash_ip(None) is None
     h1 = hash_ip("1.2.3.4")
     h2 = hash_ip("1.2.3.4")
-    assert h1 == h2 and h1 != "1.2.3.4" and len(h1) == 40
+    assert h1 == h2 and h1 != "1.2.3.4" and len(h1) == 64

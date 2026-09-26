@@ -5,9 +5,9 @@ import re
 from typing import Any
 from urllib.parse import urlparse
 
-from scraping.text_utils import collapse_ws, normalize_root
+from backend.scraping.text_utils import collapse_ws, normalize_root
 
-from oem.intake.models import NormalizedDealer
+from backend.oem.intake.models import NormalizedDealer
 
 NON_DEALER_DOMAINS = {
     "google.com",

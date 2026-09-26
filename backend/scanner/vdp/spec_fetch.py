@@ -23,10 +23,15 @@ def extract_specs_from_vdp_url(url: str, *, timeout_ms: int = 45000) -> dict[str
     except ImportError:
         log.warning("playwright not installed; VDP spec extract skipped")
         return {}
+    from backend.scanner.http_fetch import playwright_proxy_kwargs
+
     u = str(url).strip()
     try:
+        from backend.scanner.browser_gate import require_browser
+
+        require_browser("vdp.spec_fetch")
         with sync_playwright() as p:
-            browser = p.chromium.launch(headless=True)
+            browser = p.chromium.launch(headless=True, **playwright_proxy_kwargs())
             try:
                 page = browser.new_page()
                 page.goto(u, wait_until="domcontentloaded", timeout=timeout_ms)

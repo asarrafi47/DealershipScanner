@@ -6,7 +6,7 @@ from __future__ import annotations
 
 import re
 
-from scraping.org_validation import matches_known_family
+from backend.scraping.org_validation import matches_known_family
 
 # Substrings that indicate a department / service line, not a parent org, when standing alone
 _DEPARTMENT_UNIT_EXACT = frozenset(

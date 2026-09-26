@@ -98,9 +98,59 @@ def test_http_prefetch_skips_complete_vehicles(monkeypatch):
     v = {"vin": "1HGBH41JXMN109186", "_detail_url": "https://d.example/car",
          "price": 21000, "exterior_color": "Blue", "interior_color": "Black",
          "engine_description": "2.0L I4", "transmission": "CVT", "drivetrain": "FWD",
-         "fuel_type": "Gasoline", "body_style": "Sedan"}
+         "fuel_type": "Gasoline", "body_style": "Sedan",
+         "description": "Dealer notes long enough to count as a real description paragraph.",
+         "gallery": [f"https://img.example/{i}.jpg" for i in range(12)],
+         "stock_number": "U1", "carfax_url": "https://www.carfax.com/vehiclehistory/x", "condition": "Used"}
     stats = asyncio.run(pf.http_prefetch_missing_fields([v]))
     assert stats["candidates"] == 0
+
+
+def _complete_but_thin(**over):
+    v = {"vin": "1HGBH41JXMN109186", "_detail_url": "https://d.example/car",
+         "price": 21000, "exterior_color": "Blue", "interior_color": "Black",
+         "engine_description": "2.0L I4", "transmission": "CVT", "drivetrain": "FWD",
+         "fuel_type": "Gasoline", "body_style": "Sedan", "description": "", "gallery": [],
+         "stock_number": "U1", "carfax_url": "https://www.carfax.com/vehiclehistory/x", "condition": "Used"}
+    v.update(over)
+    return v
+
+
+def test_http_prefetch_fills_description_and_gallery_from_html(monkeypatch):
+    """The two fields that drove 92% of browser VDP visits in the 2026-09-22 lab."""
+    imgs = "".join(f'<img src="https://cdn.example/photos/{i}.jpg">' for i in range(8))
+    html = (
+        "<html><body><h2>Description</h2><p>This one-owner sedan comes with heated seats, "
+        "a clean history report and a full set of service records from our shop.</p>"
+        f"<div class='gallery'>{imgs}</div></body></html>"
+    )
+    monkeypatch.setattr(pf, "_fetch_html", lambda url: html)
+    v = _complete_but_thin()
+    stats = asyncio.run(pf.http_prefetch_missing_fields([v]))
+    assert stats["candidates"] == 1 and stats["fetched"] == 1
+    assert stats["descriptions_filled"] == 1
+    assert "heated seats" in v["description"]
+    assert stats["galleries_extended"] == 1
+    assert len(v["gallery"]) == 8 and all(u.startswith("https://") for u in v["gallery"])
+
+
+def test_http_prefetch_gallery_only_grows(monkeypatch):
+    html = ('<img src="https://cdn.example/a.jpg"><img src="https://cdn.example/b.jpg">'
+            + "<!-- " + "pad " * 120 + "-->")  # the harvester ignores pages under 400 bytes
+    monkeypatch.setattr(pf, "_fetch_html", lambda url: html)
+    v = _complete_but_thin(description="x" * 60, gallery=["https://cdn.example/a.jpg", "https://cdn.example/z.jpg"])
+    asyncio.run(pf.http_prefetch_missing_fields([v]))
+    assert v["gallery"][:2] == ["https://cdn.example/a.jpg", "https://cdn.example/z.jpg"]
+    assert "https://cdn.example/b.jpg" in v["gallery"]
+
+
+def test_http_prefetch_short_description_is_not_taken(monkeypatch):
+    html = "<h2>Description</h2><p>Nice car.</p>"
+    monkeypatch.setattr(pf, "_fetch_html", lambda url: html)
+    v = _complete_but_thin(gallery=[f"https://img.example/{i}.jpg" for i in range(12)])
+    stats = asyncio.run(pf.http_prefetch_missing_fields([v]))
+    assert stats["descriptions_filled"] == 0
+    assert v["description"] == ""
 
 
 def test_env_gates_disable_layers(monkeypatch, seeded_db):
@@ -111,3 +161,53 @@ def test_env_gates_disable_layers(monkeypatch, seeded_db):
     out = asyncio.run(pf.prefetch_before_vdp([v], "test-dealer-com", "Test Dealer"))
     assert out is None
     assert v["exterior_color"] == ""
+
+
+def test_db_merge_never_carries_cylinders_that_contradict_new_engine_text(seeded_db):
+    # Prior row says 4 cylinders; the fresh scrape's own text says V6. The stored
+    # count is enrichment-written on thousands of rows, so the text wins and the
+    # value is left for the read path (VIN decode / text) to settle.
+    v = {"vin": "1HGBH41JXMN109186", "engine_description": "3.5L V6", "cylinders": None}
+    pf.merge_known_fields_from_db([v], "test-dealer-com")
+    assert v.get("cylinders") is None
+
+
+def test_db_merge_still_carries_cylinders_that_agree(seeded_db):
+    v = {"vin": "1HGBH41JXMN109186", "engine_description": "2.0L I4", "cylinders": None}
+    pf.merge_known_fields_from_db([v], "test-dealer-com")
+    assert v["cylinders"] == 4
+
+
+def test_http_prefetch_stops_after_three_silent_attempts_on_a_host(monkeypatch):
+    """A host that returns no status and no body (tarpit) must not consume the wall
+    clock: Bill Luke 0/800 pages in 300 s on 2026-09-24."""
+    calls: list[str] = []
+
+    def _silent(url):
+        calls.append(url)
+        return None
+
+    monkeypatch.setattr(pf, "_fetch_html", _silent)
+    monkeypatch.setattr(pf, "_HTTP_CONCURRENCY", 1)
+    vs = [{"vin": f"1HGBH41JXMN10{i:04d}", "_detail_url": f"https://tarpit.example/car{i}", "price": None} for i in range(12)]
+    stats = asyncio.run(pf.http_prefetch_missing_fields(vs))
+    assert stats["fetched"] == 0
+    assert stats.get("dead_host") == "tarpit.example"
+    assert stats.get("dead_host_skipped", 0) >= 6
+    assert len(calls) < 12
+
+
+def test_http_prefetch_does_not_kill_a_host_that_answers(monkeypatch):
+    seen = {"n": 0}
+
+    def _flaky(url):
+        seen["n"] += 1
+        return None if seen["n"] % 2 else "<html>" + "x" * 500 + "</html>"
+
+    monkeypatch.setattr(pf, "_fetch_html", _flaky)
+    monkeypatch.setattr(pf, "_HTTP_CONCURRENCY", 1)
+    vs = [{"vin": f"1HGBH41JXMN10{i:04d}", "_detail_url": f"https://ok.example/car{i}", "price": None} for i in range(10)]
+    stats = asyncio.run(pf.http_prefetch_missing_fields(vs))
+    assert "dead_host" not in stats
+    assert stats["fetched"] >= 4
+

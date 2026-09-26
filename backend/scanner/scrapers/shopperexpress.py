@@ -278,7 +278,7 @@ async def fetch_shopperexpress_inventory(
     """
     list_url = base_url.rstrip("/") + "/wp-json/v1/vehicles"
     headers = {"User-Agent": _UA, "Accept": "application/json"}
-    connector = aiohttp.TCPConnector(ssl=False, limit=_VDP_CONCURRENCY + 4)
+    connector = aiohttp.TCPConnector(limit=_VDP_CONCURRENCY + 4)
 
     async with aiohttp.ClientSession(headers=headers, connector=connector) as session:
         try:

@@ -150,12 +150,24 @@ def upsert_discovery_row(row: dict[str, Any]) -> int:
     Provenance booleans (source_dmv / source_osm / source_web) are ORed so a row
     that was first found by OSM and later confirmed by DDG accumulates both flags.
     """
+    from backend.db.inventory_pg import is_inventory_postgres
+
     conn = get_conn()
     cursor = conn.cursor()
     ensure_dealerships_table(cursor)
 
     now = datetime.now(timezone.utc).isoformat()
     osm_id = (row.get("osm_id") or "").strip() or None
+
+    if is_inventory_postgres():
+        # Serialize concurrent upserts that could target the same dealer so two
+        # overlapping discovery-pipeline calls can't both miss the existing-row
+        # check below and both INSERT, producing duplicate registry rows.
+        # Transaction-scoped: released automatically on commit/rollback below.
+        # Keyed on osm_id when we have an exact identifier; otherwise on state,
+        # matching the scope of the fuzzy name+city+state scan further down.
+        lock_key = osm_id or (row.get("state") or "").strip().upper() or "unknown"
+        cursor.execute("SELECT pg_advisory_xact_lock(hashtext(?))", (lock_key,))
 
     existing_id: int | None = None
     if osm_id:
@@ -277,7 +289,6 @@ def upsert_discovery_row(row: dict[str, Any]) -> int:
         (row.get("platform") or "").strip() or None,
         (row.get("strategy") or "").strip() or None,
     )
-    from backend.db.inventory_pg import is_inventory_postgres
 
     if is_inventory_postgres():
         cursor.execute(
@@ -505,26 +516,44 @@ def bump_dealer_ipacket_fail_count(dealer_id: int) -> int:
 
 
 def insert_dealership(row: dict[str, Any]) -> int:
+    from backend.db.inventory_pg import is_inventory_postgres
+
     conn = get_conn()
     cursor = conn.cursor()
     now = datetime.now(timezone.utc).isoformat()
-    cursor.execute(
-        """
-        INSERT INTO dealerships (name, website_url, city, state, created_at, is_active)
-        VALUES (?, ?, ?, ?, ?, 1)
-        """,
-        (
-            row["name"],
-            row["website_url"],
-            row["city"],
-            row["state"],
-            now,
-        ),
+    insert_params = (
+        row["name"],
+        row["website_url"],
+        row["city"],
+        row["state"],
+        now,
     )
-    new_id = cursor.lastrowid
+    if is_inventory_postgres():
+        # psycopg has no lastrowid; use RETURNING id like upsert_discovery_row does.
+        cursor.execute(
+            """
+            INSERT INTO dealerships (name, website_url, city, state, created_at, is_active)
+            VALUES (?, ?, ?, ?, ?, 1)
+            RETURNING id
+            """,
+            insert_params,
+        )
+        inserted = cursor.fetchone()
+        if not inserted:
+            raise RuntimeError("INSERT INTO dealerships did not return id")
+        new_id = int(inserted[0])
+    else:
+        cursor.execute(
+            """
+            INSERT INTO dealerships (name, website_url, city, state, created_at, is_active)
+            VALUES (?, ?, ?, ?, ?, 1)
+            """,
+            insert_params,
+        )
+        new_id = int(cursor.lastrowid)
     conn.commit()
     conn.close()
-    return int(new_id)
+    return new_id
 
 
 def list_recent_dealerships(limit: int = 10) -> list[dict[str, Any]]:

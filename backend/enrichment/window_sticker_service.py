@@ -419,7 +419,7 @@ def _car_fields_from_parsed_sticker(
         _set("engine_l", "Electric", force=authoritative)
     elif str(parsed.get("fuel_type") or "").strip().lower() == "hybrid":
         _set("fuel_type", "Hybrid", force=authoritative)
-    elif parsed.get("engine_l") is not None:
+    if not is_ev and parsed.get("engine_l") is not None:
         _set(
             "engine_l",
             _format_sticker_engine_l(float(parsed["engine_l"])),

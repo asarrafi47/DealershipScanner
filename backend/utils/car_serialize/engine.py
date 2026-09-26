@@ -171,7 +171,20 @@ def _is_displacement_only_engine_text(s: str) -> bool:
 
 
 def _effective_cylinder_count(car: dict[str, Any], vs: dict[str, Any]) -> int | None:
-    """Prefer dealer cylinders when valid; else merged ``cylinders_display`` / ``cylinders`` from verified specs."""
+    """Cylinder count for the engine line's layout token (V6 / I4 / V8).
+
+    A VERIFIED merged count (VIN decode, or a catalog/decoder value that the
+    dealer row never contradicted) outranks the raw ``cylinders`` column; the
+    column is enrichment-written on thousands of rows and produced "4.4L V6"
+    on an X5 M whose card said 8 cylinders. Otherwise the dealer value wins.
+    """
+    if vs and vs.get("cylinders_verified"):
+        try:
+            vi = int(vs.get("cylinders_display"))
+            if vi >= 0:
+                return vi
+        except (TypeError, ValueError):
+            pass
     raw = car.get("cylinders")
     try:
         di = int(raw) if raw is not None and str(raw).strip() != "" else None
@@ -339,6 +352,16 @@ def _cylinder_layout_token(
         )
 
     from_text = _layout_token_from_engine_text(blob)
+    # A layout token read from catalog/aggregate text ("3.0L V6 (SIDI)" from
+    # the X5 family) must not outvote a verified count for THIS car (8 from the
+    # VIN decode). Keep the text token only when it agrees with the count.
+    if from_text and cyl_i:
+        try:
+            _tok_n = int(re.sub(r"\D", "", from_text) or 0)
+            if _tok_n and int(cyl_i) > 0 and _tok_n != int(cyl_i):
+                from_text = ""
+        except (TypeError, ValueError):
+            pass
     if identity:
         # Dealer listings often mislabel Porsche flat-6 as V6 — trust vehicle identity.
         if not from_text or (
@@ -559,7 +582,34 @@ def build_engine_display(car: dict[str, Any], verified_specs: dict[str, Any] | N
         except Exception:
             return display
 
+    # Displacement authority for THIS car, in order: VIN decode, Monroney
+    # sticker, the dealer's own engine text / engine_l column. The EPA catalog
+    # path describes the model family and must not overrule it: it put
+    # "3.0L V6" on 3.6L Pentastar Rams and "4.6L V8" on 6.7L F-250s (1.7% of a
+    # 1,500-car sample, 2026-09-21).
     sticker_disp = _sticker_engine_display_from_packages(c)
+    auth_l: float | None = None
+    try:
+        v = vs.get("vpic_engine_l")
+        auth_l = float(v) if v not in (None, "") and float(v) > 0 else None
+    except (TypeError, ValueError):
+        auth_l = None
+    if auth_l is None and sticker_disp:
+        auth_l = _extract_liters_from_engine_text(sticker_disp)
+    # Without a per-VIN authority the dealer text is NOT used to veto the EPA
+    # path: dealers do mistype displacement (a 2017 A6 listed as "3.0L" with a
+    # four-cylinder title resolves correctly to 2.0L I4 via EPA). The EPA row
+    # picker is what must honour the dealer's liters when such a row exists.
+
+    def _agrees(display: str) -> bool:
+        if auth_l is None:
+            return True
+        dl = _extract_liters_from_engine_text(display)
+        return dl is None or abs(dl - auth_l) <= 0.15
+
+    # Per-VIN sticker and the badge-keyed known-trim table (Wrangler 392 = 6.4L
+    # HEMI, even when the dealer's engine_l says 3.6) are car-specific evidence
+    # and stay ungated; only the model-level EPA path below must agree.
     if sticker_disp:
         return _finish(sticker_disp)
 
@@ -571,7 +621,7 @@ def build_engine_display(car: dict[str, Any], verified_specs: dict[str, Any] | N
         from backend.dictionary.epa_engine import resolve_engine_display_from_epa
 
         epa_disp = resolve_engine_display_from_epa(c, vs)
-        if epa_disp:
+        if epa_disp and _agrees(epa_disp):
             return _finish(epa_disp)
     except Exception:
         pass
@@ -591,7 +641,8 @@ def build_engine_display(car: dict[str, Any], verified_specs: dict[str, Any] | N
     if cyl_i == 0:
         return "Electric"
 
-    lit_f = parse_engine_displacement_liters(c)
+    # Fallback line is built from the same authority order as the gate above.
+    lit_f = auth_l if auth_l is not None else parse_engine_displacement_liters(c)
     if lit_f is None:
         mes = vs.get("master_engine_string")
         if isinstance(mes, str) and mes.strip():

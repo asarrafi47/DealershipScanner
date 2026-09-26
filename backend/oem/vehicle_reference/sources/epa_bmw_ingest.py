@@ -5,9 +5,9 @@ import time
 from datetime import datetime
 from typing import Callable
 
-from oem.vehicle_reference.ingestion.bundle import ingest_vehicle_bundle
-from oem.vehicle_reference.utils.mpg import format_epa_mpg_ratings
-from oem.vehicle_reference.sources import epa_client
+from backend.oem.vehicle_reference.ingestion.bundle import ingest_vehicle_bundle
+from backend.oem.vehicle_reference.utils.mpg import format_epa_mpg_ratings
+from backend.oem.vehicle_reference.sources import epa_client
 
 EPA_EXTERNAL_SOURCE = "epa_fueleconomy"
 EPA_SOURCE_SPEC = {

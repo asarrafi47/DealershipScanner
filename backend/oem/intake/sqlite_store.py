@@ -5,8 +5,8 @@ import sqlite3
 from pathlib import Path
 from typing import Any
 
-from oem.intake.models import NormalizedDealer
-from oem.intake.paths import BMW_DB_PATH, ensure_bmw_dirs
+from backend.oem.intake.models import NormalizedDealer
+from backend.oem.intake.paths import BMW_DB_PATH, ensure_bmw_dirs
 
 
 def connect(db_path: Path | None = None) -> sqlite3.Connection:

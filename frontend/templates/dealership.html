@@ -828,7 +828,9 @@
                     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
                 }).addTo(map);
             }
-            L.marker([g.lat, g.lon]).addTo(map).bindPopup(g.name || "Dealer");
+            var popupText = document.createElement("div");
+            popupText.textContent = g.name || "Dealer";
+            L.marker([g.lat, g.lon]).addTo(map).bindPopup(popupText);
         }
         if (document.readyState === "loading") {
             document.addEventListener("DOMContentLoaded", initMap);

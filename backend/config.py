@@ -85,10 +85,6 @@ class Config:
         return (os.getenv("CSP_REPORT_ONLY") or "").strip().lower() in _TRUTHY
 
     @staticmethod
-    def socketio_cors_origins_raw() -> str:
-        return (os.getenv("SOCKETIO_CORS_ORIGINS") or "").strip()
-
-    @staticmethod
     def public_base_url() -> str:
         return (os.getenv("PUBLIC_BASE_URL") or "").strip()
 

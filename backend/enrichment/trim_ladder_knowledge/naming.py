@@ -720,17 +720,21 @@ def normalize_ladder_steps(
                 "name": name,
                 "aliases": list(dict.fromkeys(aliases)),
                 "adds": [],
-                "year_min": step_ymin,
-                "year_max": step_ymax,
+                "year_min": 0,
+                "year_max": None,
                 "inventory_price_note": price_note,
             }
         entry = by_key[key]
         if price_note and not entry.get("inventory_price_note"):
             entry["inventory_price_note"] = price_note
         if step_ymin:
-            entry["year_min"] = max(int(entry.get("year_min") or 0), step_ymin)
-        if step_ymax < 9999:
-            entry["year_max"] = min(int(entry.get("year_max") or 9999), step_ymax)
+            entry["year_min"] = step_ymin if not entry["year_min"] else min(entry["year_min"], step_ymin)
+        if step_ymax >= 9999:
+            entry["year_max"] = 9999
+        elif entry["year_max"] is None:
+            entry["year_max"] = step_ymax
+        elif entry["year_max"] < 9999:
+            entry["year_max"] = max(entry["year_max"], step_ymax)
         for alias in aliases:
             if alias not in entry["aliases"]:
                 entry["aliases"].append(alias)

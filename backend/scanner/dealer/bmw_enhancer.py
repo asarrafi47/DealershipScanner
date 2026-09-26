@@ -9,8 +9,15 @@ import traceback
 from typing import Dict, List, Optional, Any
 from urllib.parse import urljoin, urlparse
 
-from playwright.async_api import async_playwright, Page, Locator
-from playwright.async_api import TimeoutError as PlaywrightTimeoutError
+try:  # the Page-based helpers below have no callers; the scanner must import without Playwright
+    from playwright.async_api import async_playwright, Page, Locator
+    from playwright.async_api import TimeoutError as PlaywrightTimeoutError
+except ImportError:  # pragma: no cover - HTTP-only image
+    async_playwright = None  # type: ignore[assignment]
+    Page = Locator = Any  # type: ignore[misc,assignment]
+
+    class PlaywrightTimeoutError(Exception):  # type: ignore[no-redef]
+        pass
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')

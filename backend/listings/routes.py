@@ -6,7 +6,10 @@ from backend.db.inventory_db import (
     listings_grid_bootstrap_cars,
     serialize_cars_for_listings_grid,
 )
-from backend.listings.geo_session import persist_listings_geo_from_request
+from backend.listings.geo_session import (
+    listings_geo_kwargs_from_session,
+    persist_listings_geo_from_request,
+)
 from backend.utils.hybrid_search import (
     flask_request_to_search_cars_kwargs,
     hybrid_search_with_kwargs,
@@ -148,10 +151,15 @@ def listings_page(*, listings_poll_ms: int = 0):
         except (TypeError, ValueError):
             saved_car_ids = []
 
+    geo_kwargs = listings_geo_kwargs_from_session(session)
     bootstrap_grid_cars: list[dict] = []
     if not q_text and not has_package_filter:
         try:
-            bootstrap_grid_cars = listings_grid_bootstrap_cars(48)
+            bootstrap_grid_cars = listings_grid_bootstrap_cars(
+                48,
+                zip_code=geo_kwargs.get("zip_code"),
+                radius_mi=geo_kwargs.get("radius_miles"),
+            )
         except Exception:
             bootstrap_grid_cars = []
 

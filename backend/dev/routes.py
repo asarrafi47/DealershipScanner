@@ -74,15 +74,28 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
 dev_bp = Blueprint("dev", __name__)
 
+# Process-local fallback store for scanner jobs / bulk-import queues, used when
+# DEV_JOB_STORE_SQLITE_PATH (below) is not set. NOTE: with GUNICORN_WORKERS>1
+# (see scripts/docker-entrypoint-web.sh) these dicts are NOT shared across worker
+# processes, so a status poll that lands on a different worker than the one that
+# started the job sees no record of it and gets back job_expired/queue_expired
+# even though the job is still running fine on its own worker. Set
+# DEV_JOB_STORE_SQLITE_PATH to a path all workers can read/write (WAL-mode
+# SQLite) to make job/queue state visible to every worker, the same way
+# RATE_LIMIT_SQLITE_PATH shares rate-limit state (backend/utils/ip_rate_limit.py).
 scanner_jobs: dict[str, dict[str, Any]] = {}
 scanner_lock = threading.Lock()
 
 import_queues: dict[str, dict[str, Any]] = {}
 
-# Cap the in-memory job/queue stores so full scan logs don't grow worker RSS
-# without bound. Oldest entries are evicted first (dicts preserve insert order).
+# Cap the job/queue stores so full scan logs don't grow worker RSS (or the
+# shared SQLite file) without bound. Oldest entries are evicted first (dicts
+# preserve insert order; the SQLite path orders by last-write time).
 _MAX_SCANNER_JOBS = max(1, int(os.environ.get("DEV_MAX_SCANNER_JOBS", "500")))
 _MAX_IMPORT_QUEUES = max(1, int(os.environ.get("DEV_MAX_IMPORT_QUEUES", "100")))
+
+_DEV_JOB_STORE_SQLITE_PATH = (os.environ.get("DEV_JOB_STORE_SQLITE_PATH") or "").strip() or None
+_dev_job_store_sqlite_lock = threading.Lock()
 
 
 def _evict_old_entries(store: dict[str, Any], max_entries: int) -> None:
@@ -92,6 +105,189 @@ def _evict_old_entries(store: dict[str, Any], max_entries: int) -> None:
     """
     while len(store) > max_entries:
         del store[next(iter(store))]
+
+
+def _dev_job_store_enabled() -> bool:
+    return _DEV_JOB_STORE_SQLITE_PATH is not None
+
+
+def _dev_job_store_conn() -> sqlite3.Connection:
+    path = _DEV_JOB_STORE_SQLITE_PATH
+    assert path
+    d = os.path.dirname(path)
+    if d:
+        try:
+            os.makedirs(d, exist_ok=True)
+        except OSError:
+            pass
+    conn = sqlite3.connect(path, check_same_thread=False, timeout=5.0)
+    try:
+        conn.execute("PRAGMA journal_mode=WAL")
+    except sqlite3.OperationalError:
+        pass
+    try:
+        conn.execute("PRAGMA busy_timeout=5000")
+    except sqlite3.OperationalError:
+        pass
+    conn.execute(
+        "CREATE TABLE IF NOT EXISTS dev_job_store ("
+        "store TEXT NOT NULL, id TEXT NOT NULL, data TEXT NOT NULL, updated_at REAL NOT NULL, "
+        "PRIMARY KEY (store, id))"
+    )
+    return conn
+
+
+def _dev_local_store(store: str) -> dict[str, dict[str, Any]]:
+    return scanner_jobs if store == "jobs" else import_queues
+
+
+def _dev_store_get(store: str, item_id: str) -> dict[str, Any] | None:
+    """Read one job/queue record: from the shared SQLite store when configured,
+    otherwise from the process-local dict named by ``store`` ("jobs" or "queues")."""
+    if not _dev_job_store_enabled():
+        with scanner_lock:
+            item = _dev_local_store(store).get(item_id)
+            return dict(item) if item is not None else None
+    with _dev_job_store_sqlite_lock:
+        try:
+            conn = _dev_job_store_conn()
+        except sqlite3.Error:
+            return None
+        try:
+            row = conn.execute(
+                "SELECT data FROM dev_job_store WHERE store = ? AND id = ?", (store, item_id)
+            ).fetchone()
+        finally:
+            conn.close()
+    if not row:
+        return None
+    try:
+        return json.loads(row[0])
+    except (json.JSONDecodeError, TypeError):
+        return None
+
+
+def _dev_store_put(store: str, item_id: str, data: dict[str, Any]) -> None:
+    """Create/replace one job/queue record, then evict the oldest past the cap."""
+    max_entries = _MAX_SCANNER_JOBS if store == "jobs" else _MAX_IMPORT_QUEUES
+    if not _dev_job_store_enabled():
+        with scanner_lock:
+            local = _dev_local_store(store)
+            local[item_id] = data
+            _evict_old_entries(local, max_entries)
+        return
+    now = time.time()
+    payload = json.dumps(data, default=str)
+    with _dev_job_store_sqlite_lock:
+        try:
+            conn = _dev_job_store_conn()
+        except sqlite3.Error:
+            return
+        try:
+            conn.execute(
+                "INSERT INTO dev_job_store (store, id, data, updated_at) VALUES (?, ?, ?, ?) "
+                "ON CONFLICT(store, id) DO UPDATE SET data = excluded.data, updated_at = excluded.updated_at",
+                (store, item_id, payload, now),
+            )
+            conn.execute(
+                "DELETE FROM dev_job_store WHERE store = ? AND id NOT IN ("
+                "SELECT id FROM dev_job_store WHERE store = ? ORDER BY updated_at DESC LIMIT ?)",
+                (store, store, max_entries),
+            )
+            conn.commit()
+        except sqlite3.Error:
+            try:
+                conn.rollback()
+            except sqlite3.Error:
+                pass
+        finally:
+            conn.close()
+
+
+def _dev_store_patch(store: str, item_id: str, fields: dict[str, Any]) -> bool:
+    """Merge ``fields`` into an existing job/queue record. Returns False if it's gone."""
+    if not _dev_job_store_enabled():
+        with scanner_lock:
+            local = _dev_local_store(store)
+            if item_id not in local:
+                return False
+            local[item_id].update(fields)
+            return True
+    with _dev_job_store_sqlite_lock:
+        try:
+            conn = _dev_job_store_conn()
+        except sqlite3.Error:
+            return False
+        try:
+            row = conn.execute(
+                "SELECT data FROM dev_job_store WHERE store = ? AND id = ?", (store, item_id)
+            ).fetchone()
+            if not row:
+                return False
+            try:
+                data = json.loads(row[0])
+            except (json.JSONDecodeError, TypeError):
+                data = {}
+            data.update(fields)
+            conn.execute(
+                "UPDATE dev_job_store SET data = ?, updated_at = ? WHERE store = ? AND id = ?",
+                (json.dumps(data, default=str), time.time(), store, item_id),
+            )
+            conn.commit()
+            return True
+        except sqlite3.Error:
+            try:
+                conn.rollback()
+            except sqlite3.Error:
+                pass
+            return False
+        finally:
+            conn.close()
+
+
+def _dev_queue_patch_item(queue_id: str, job_id: str, **fields: Any) -> None:
+    """Merge ``fields`` into one item of a queue's ``items`` list (matched by job_id)."""
+    if not _dev_job_store_enabled():
+        with scanner_lock:
+            q = import_queues.get(queue_id)
+            if not q:
+                return
+            for it in q.get("items", []):
+                if it.get("job_id") == job_id:
+                    it.update(fields)
+                    break
+        return
+    with _dev_job_store_sqlite_lock:
+        try:
+            conn = _dev_job_store_conn()
+        except sqlite3.Error:
+            return
+        try:
+            row = conn.execute(
+                "SELECT data FROM dev_job_store WHERE store = 'queues' AND id = ?", (queue_id,)
+            ).fetchone()
+            if not row:
+                return
+            try:
+                data = json.loads(row[0])
+            except (json.JSONDecodeError, TypeError):
+                return
+            for it in data.get("items", []):
+                if it.get("job_id") == job_id:
+                    it.update(fields)
+                    break
+            conn.execute(
+                "UPDATE dev_job_store SET data = ?, updated_at = ? WHERE store = 'queues' AND id = ?",
+                (json.dumps(data, default=str), time.time(), queue_id),
+            )
+            conn.commit()
+        except sqlite3.Error:
+            try:
+                conn.rollback()
+            except sqlite3.Error:
+                pass
+        finally:
+            conn.close()
 
 
 SCANNER_PROFILES = ("default", "resilient", "bare")
@@ -409,9 +605,7 @@ def _run_scanner_job(job_id: str, url: str, headed: bool = False) -> None:
 
     def append(text: str) -> None:
         log_parts.append(text)
-        with scanner_lock:
-            if job_id in scanner_jobs:
-                scanner_jobs[job_id]["log"] = "".join(log_parts)
+        _dev_store_patch("jobs", job_id, {"log": "".join(log_parts)})
 
     code: int | None = None
     try:
@@ -438,10 +632,7 @@ def _run_scanner_job(job_id: str, url: str, headed: bool = False) -> None:
         append(f"\n[dev] Scanner error: {e}\n")
         code = -1
 
-    with scanner_lock:
-        if job_id in scanner_jobs:
-            scanner_jobs[job_id]["done"] = True
-            scanner_jobs[job_id]["exit_code"] = code
+    _dev_store_patch("jobs", job_id, {"done": True, "exit_code": code})
 
     if code == 0:
         _spawn_vector_reindex_background()
@@ -468,15 +659,11 @@ def _run_smart_import_job(job_id: str, url: str, headed: bool = False) -> None:
 
     def append(text: str) -> None:
         log_parts.append(text)
-        with scanner_lock:
-            if job_id in scanner_jobs:
-                scanner_jobs[job_id]["log"] = "".join(log_parts)
-                scanner_jobs[job_id]["discovery"] = list(discovery)
+        _dev_store_patch("jobs", job_id, {"log": "".join(log_parts), "discovery": list(discovery)})
 
     def cancel_requested() -> bool:
-        with scanner_lock:
-            job = scanner_jobs.get(job_id)
-            return bool(job and job.get("cancel_requested"))
+        job = _dev_store_get("jobs", job_id)
+        return bool(job and job.get("cancel_requested"))
 
     def watch_for_cancel(proc: subprocess.Popen) -> None:
         # Runs on its own thread so a job with no stdout output at all (a
@@ -529,9 +716,7 @@ def _run_smart_import_job(job_id: str, url: str, headed: bool = False) -> None:
                         payload = _parse_prefixed_json(line, "DISCOVERY:")
                         if isinstance(payload, dict):
                             discovery.append(payload)
-                            with scanner_lock:
-                                if job_id in scanner_jobs:
-                                    scanner_jobs[job_id]["discovery"] = list(discovery)
+                            _dev_store_patch("jobs", job_id, {"discovery": list(discovery)})
                     if "SMART_IMPORT_RESULT:" in line:
                         idx = line.index("SMART_IMPORT_RESULT:")
                         raw = line[idx + len("SMART_IMPORT_RESULT:") :].strip()
@@ -564,9 +749,7 @@ def _run_smart_import_job(job_id: str, url: str, headed: bool = False) -> None:
             last_error = {"reason": "os_error", "detail": str(e), "retryable": False}
             break
 
-        with scanner_lock:
-            if job_id in scanner_jobs:
-                scanner_jobs[job_id]["exit_code"] = final_code
+        _dev_store_patch("jobs", job_id, {"exit_code": final_code})
 
         last_error = attempt_error or last_error
 
@@ -645,16 +828,21 @@ def _run_smart_import_job(job_id: str, url: str, headed: bool = False) -> None:
             "(expected SCAN_VEHICLE_COUNT > 0 or Upserted N > 0).\n"
         )
 
-    with scanner_lock:
-        if job_id not in scanner_jobs:
-            return
-        scanner_jobs[job_id]["done"] = True
-        scanner_jobs[job_id]["exit_code"] = final_code
-        scanner_jobs[job_id]["discovery"] = list(discovery)
-        scanner_jobs[job_id]["insert_id"] = insert_id
-        scanner_jobs[job_id]["insert_error"] = insert_error
-        scanner_jobs[job_id]["smart_error"] = last_error if not resolved_result else None
-        scanner_jobs[job_id]["cars_linked"] = cars_linked
+    updated = _dev_store_patch(
+        "jobs",
+        job_id,
+        {
+            "done": True,
+            "exit_code": final_code,
+            "discovery": list(discovery),
+            "insert_id": insert_id,
+            "insert_error": insert_error,
+            "smart_error": last_error if not resolved_result else None,
+            "cars_linked": cars_linked,
+        },
+    )
+    if not updated:
+        return
 
     if final_code == 0:
         _spawn_vector_reindex_background()
@@ -911,8 +1099,10 @@ def api_test_scanner():
     assert url
 
     job_id = uuid.uuid4().hex
-    with scanner_lock:
-        scanner_jobs[job_id] = {
+    _dev_store_put(
+        "jobs",
+        job_id,
+        {
             "log": "",
             "discovery": [],
             "done": False,
@@ -920,8 +1110,8 @@ def api_test_scanner():
             "insert_id": None,
             "insert_error": None,
             "smart_error": None,
-        }
-        _evict_old_entries(scanner_jobs, _MAX_SCANNER_JOBS)
+        },
+    )
 
     thread = threading.Thread(
         target=_run_scanner_job,
@@ -942,8 +1132,10 @@ def api_smart_import():
     assert url
 
     job_id = uuid.uuid4().hex
-    with scanner_lock:
-        scanner_jobs[job_id] = {
+    _dev_store_put(
+        "jobs",
+        job_id,
+        {
             "log": "",
             "discovery": [],
             "done": False,
@@ -953,8 +1145,8 @@ def api_smart_import():
             "smart_error": None,
             "cars_linked": None,
             "cancel_requested": False,
-        }
-        _evict_old_entries(scanner_jobs, _MAX_SCANNER_JOBS)
+        },
+    )
 
     threading.Thread(
         target=_run_smart_import_job,
@@ -966,8 +1158,7 @@ def api_smart_import():
 
 @dev_bp.route("/api/scanner-job/<job_id>")
 def api_scanner_job(job_id: str):
-    with scanner_lock:
-        job = scanner_jobs.get(job_id)
+    job = _dev_store_get("jobs", job_id)
     if not job:
         return jsonify(
             {
@@ -992,25 +1183,32 @@ def api_scanner_job(job_id: str):
 
 
 def _run_bulk_import_queue(queue_id: str) -> None:
-    q = import_queues.get(queue_id)
+    q = _dev_store_get("queues", queue_id)
     if not q:
         return
     headed = bool(q.get("headed"))
     try:
         for it in q["items"]:
+            job_id = it["job_id"]
             # An admin may mark a still-pending item "skipped" (see
             # api_import_queue_skip_item) while an earlier item in the queue
-            # is stuck running — check right before starting so that item
-            # never blocks on a job nobody wants run anymore.
-            if it.get("status") == "skipped":
+            # is stuck running — re-read the item's current status right
+            # before starting so that item never blocks on a job nobody
+            # wants run anymore (a worker other than the one running this
+            # background thread may have recorded the skip).
+            current = _dev_store_get("queues", queue_id) or q
+            current_it = next(
+                (x for x in current.get("items", []) if x.get("job_id") == job_id), it
+            )
+            if current_it.get("status") == "skipped":
                 continue
-            it["status"] = "processing"
-            _run_smart_import_job(it["job_id"], it["url"], headed)
-            with scanner_lock:
-                job = scanner_jobs.get(it["job_id"]) or {}
-            it["status"] = "skipped" if job.get("cancel_requested") else "completed"
+            _dev_queue_patch_item(queue_id, job_id, status="processing")
+            _run_smart_import_job(job_id, it["url"], headed)
+            job = _dev_store_get("jobs", job_id) or {}
+            final_status = "skipped" if job.get("cancel_requested") else "completed"
+            _dev_queue_patch_item(queue_id, job_id, status=final_status)
     finally:
-        q["done"] = True
+        _dev_store_patch("queues", queue_id, {"done": True})
 
 
 @dev_bp.route("/api/smart-import-bulk", methods=["POST"])
@@ -1033,8 +1231,10 @@ def api_smart_import_bulk():
         u = normalized
         jid = uuid.uuid4().hex
         items.append({"job_id": jid, "url": u, "status": "pending"})
-        with scanner_lock:
-            scanner_jobs[jid] = {
+        _dev_store_put(
+            "jobs",
+            jid,
+            {
                 "log": "",
                 "discovery": [],
                 "done": False,
@@ -1045,22 +1245,20 @@ def api_smart_import_bulk():
                 "cars_linked": None,
                 "queue_id": queue_id,
                 "cancel_requested": False,
-            }
-            _evict_old_entries(scanner_jobs, _MAX_SCANNER_JOBS)
+            },
+        )
     if not items:
         return jsonify({"ok": False, "error": "no valid urls"}), 400
 
     headed = bool(data.get("headed"))
-    with scanner_lock:
-        import_queues[queue_id] = {"items": items, "done": False, "headed": headed}
-        _evict_old_entries(import_queues, _MAX_IMPORT_QUEUES)
+    _dev_store_put("queues", queue_id, {"items": items, "done": False, "headed": headed})
     threading.Thread(target=_run_bulk_import_queue, args=(queue_id,), daemon=True).start()
     return jsonify({"ok": True, "queue_id": queue_id, "items": items})
 
 
 @dev_bp.route("/api/import-queue/<queue_id>")
 def api_import_queue(queue_id: str):
-    q = import_queues.get(queue_id)
+    q = _dev_store_get("queues", queue_id)
     if not q:
         return jsonify(
             {
@@ -1074,8 +1272,7 @@ def api_import_queue(queue_id: str):
     out: list[dict[str, Any]] = []
     for it in q["items"]:
         jid = it["job_id"]
-        with scanner_lock:
-            job = scanner_jobs.get(jid, {})
+        job = _dev_store_get("jobs", jid) or {}
         st = it.get("status", "pending")
         out.append(
             {
@@ -1106,20 +1303,19 @@ def api_import_queue_skip_item(queue_id: str):
     job_id = (data.get("job_id") or "").strip()
     if not job_id:
         return jsonify({"ok": False, "error": "job_id required"}), 400
-    q = import_queues.get(queue_id)
+    q = _dev_store_get("queues", queue_id)
     if not q:
         return jsonify({"ok": False, "error": "queue_expired"}), 404
-    it = next((x for x in q["items"] if x.get("job_id") == job_id), None)
+    it = next((x for x in q.get("items", []) if x.get("job_id") == job_id), None)
     if not it:
         return jsonify({"ok": False, "error": "item_not_found"}), 404
     status = it.get("status", "pending")
     if status == "pending":
-        it["status"] = "skipped"
+        _dev_queue_patch_item(queue_id, job_id, status="skipped")
+        status = "skipped"
     elif status == "processing":
-        with scanner_lock:
-            if job_id in scanner_jobs:
-                scanner_jobs[job_id]["cancel_requested"] = True
-    return jsonify({"ok": True, "status": it.get("status")})
+        _dev_store_patch("jobs", job_id, {"cancel_requested": True})
+    return jsonify({"ok": True, "status": status})
 
 
 @dev_bp.route("/api/geocode-missing", methods=["POST"])

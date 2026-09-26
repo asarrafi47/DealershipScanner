@@ -6,6 +6,7 @@ import hashlib
 import logging
 import os
 import secrets
+import time
 from urllib.parse import urlencode
 
 from backend.db.users_db import (
@@ -90,7 +91,8 @@ def issue_and_send_verification_email(*, user_id: int, to_email: str) -> bool:
         return False
     token = secrets.token_urlsafe(32)
     token_hash = hash_verify_token(token)
-    if not set_user_email_verify_token(int(user_id), token_hash):
+    expires_at = int(time.time()) + (_VERIFY_TTL_HOURS * 3600)
+    if not set_user_email_verify_token(int(user_id), token_hash, expires_at):
         return False
     link = build_verify_email_url(token)
     subject = "Verify your Sarrafi Collection email"

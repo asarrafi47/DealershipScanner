@@ -5,7 +5,7 @@ import re
 import socket
 from urllib.parse import urlparse
 
-from scraping.constants import BOILERPLATE_HINTS, VENDOR_SUBSTRINGS
+from backend.scraping.constants import BOILERPLATE_HINTS, VENDOR_SUBSTRINGS
 
 
 def normalize_root(url: str) -> str:

@@ -209,6 +209,28 @@ _RESIZE_QUERY_PARAMS = frozenset([
     'impolicy', 'downsize', 'size', 'scale',
 ])
 
+# VIN must be a real 17-char VIN (no I/O/Q) — mirrors VIN_RE in backend/scanner/scrapers/*.py.
+# Anything else (path separators, "..", stray punctuation from a corrupted/malicious scrape)
+# gets scrubbed before it is ever used as a filesystem path segment.
+_VIN_RE = re.compile(r"^[A-HJ-NPR-Z0-9]{17}$", re.I)
+
+
+def sanitize_vin(vin: str) -> str:
+    """Return a VIN safe to use as a single filesystem path segment.
+
+    A conforming 17-char VIN (letters/digits only, no I/O/Q) passes through
+    unchanged (upper-cased). Anything else — including path traversal
+    payloads such as '..' or a value containing '/' — fails the character
+    check and is reduced to a filesystem-safe token instead, the same way
+    dealer_id is sanitized below.
+    """
+    vin = (vin or "").strip().upper()
+    if _VIN_RE.match(vin):
+        return vin
+    scrubbed = re.sub(r"[^A-Z0-9]+", "_", vin)[:60]
+    return scrubbed or "UNKNOWN_VIN"
+
+
 # Path-based resize patterns: /resize/640x480/, /resize/640/, /800x600/
 _PATH_RESIZE_RE = re.compile(
     r'/resize/\d+[xX]\d+/'    # /resize/640x480/
@@ -591,6 +613,7 @@ async def process_car(
     overwrite: bool,
 ) -> dict[str, Any]:
     vin = (car.get("vin") or "").strip().upper()
+    vin_safe = sanitize_vin(vin)  # filesystem-safe path segment; DB lookups still use `vin`
     dealer_id = re.sub(r"[^\w.\-]+", "_", (car.get("dealer_id") or "unknown").strip())[:60]
     source_url = (car.get("source_url") or "").strip()
 
@@ -606,7 +629,15 @@ async def process_car(
         result["error"] = "no source_url"
         return result
 
-    car_dir = output_root / dealer_id / vin
+    car_dir = output_root / dealer_id / vin_safe
+    # Defense in depth: confirm the resolved path actually stays under output_root
+    # before we ever create a directory or write a file under it.
+    try:
+        car_dir.resolve().relative_to(output_root)
+    except ValueError:
+        result["error"] = "unsafe_path_rejected"
+        log.error("VIN %s — resolved car_dir escapes output_root, refusing to proceed", vin)
+        return result
     manifest_path = car_dir / "manifest.json"
 
     # Skip if already downloaded (unless --overwrite)

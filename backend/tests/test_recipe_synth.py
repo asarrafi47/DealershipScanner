@@ -771,3 +771,269 @@ def test_pace_is_noop_by_default():
     t0 = _t.monotonic()
     recipe_synth._pace()
     assert _t.monotonic() - t0 < 0.5
+
+
+def test_synthesize_cosmos_yields_one_recipe_per_srp_section(monkeypatch):
+    """Cherokee County Toyota 2026-09-23: used pageId 769890 (106 cars) and new
+    pageId 769883 (282 cars); a used-only recipe replayed a third of the lot."""
+    used_html = _COSMOS_SRP_HTML
+    new_html = _COSMOS_SRP_HTML.replace("2483381", "2483399")
+
+    def fake_fetch(url, **k):
+        return new_html if "new" in url else used_html
+
+    monkeypatch.setattr(recipe_synth, "fetch_dealer_html", fake_fetch)
+    recipes = recipe_synth.synthesize_recipes(
+        "bellroadtoyota-com", "https://www.bellroadtoyota.com", _COSMOS_HOME_HTML, "dealer_on_cosmos"
+    )
+    urls = sorted(r.url.rsplit("/", 1)[-1] for r in recipes)
+    assert urls == ["2483381", "2483399"]
+    assert all(r.pagination == "cosmos_pt" for r in recipes)
+
+
+# ── Cloudflare passive beacon vs real challenge (Honda of El Cajon, 2026-09-23) ─
+#
+# Cloudflare injects ``/cdn-cgi/challenge-platform/scripts/...`` into pages it
+# served NORMALLY as a passive bot-management beacon. Counting it as a challenge
+# made a 459KB genuine Dealer eProcess homepage read as unreachable.
+
+_BEACON = "<script>s.src='/cdn-cgi/challenge-platform/scripts/precursor/main.js'</script>"
+
+
+def test_beacon_alone_in_a_real_page_is_not_a_challenge():
+    real = "<html><head><title>Honda Dealer El Cajon</title>" + _BEACON + "</head><body>" \
+        + "dealereprocess real inventory " * 2000 + "</body></html>"
+    assert recipe_synth.looks_like_challenge(real) is False
+
+
+def test_beacon_in_thin_shell_is_a_challenge():
+    shell = "<html><head>" + _BEACON + "</head><body>x</body></html>"
+    assert recipe_synth.looks_like_challenge(shell) is True
+
+
+def test_strong_marker_is_a_challenge_regardless_of_size():
+    big = "<html><body>Just a moment..." + "padding " * 5000 + "</body></html>"
+    assert recipe_synth.looks_like_challenge(big) is True
+
+
+def test_fetch_accepts_real_page_carrying_beacon(monkeypatch):
+    body = ("<html><head>" + _BEACON + "</head><body>"
+            + "dealereprocess real inventory " * 2000 + "</body></html>").encode()
+    monkeypatch.setattr(recipe_synth, "open_url", lambda *a, **k: _FakeResp(body))
+
+    def _boom(*a, **k):
+        raise AssertionError("beacon on a real page must not escalate")
+
+    monkeypatch.setattr(recipe_synth, "_fetch_impersonated", _boom)
+    html = recipe_synth.fetch_dealer_html("https://www.hondaofelcajon.com")
+    assert html and "real inventory" in html
+
+
+# ── DEP SRP fetch: same-site Referer + TLS-impersonation escalation ───────────
+
+
+class _FakeRedirResp(_FakeResp):
+    def __init__(self, body: bytes, final_url: str):
+        super().__init__(body)
+        self._final = final_url
+
+    def geturl(self) -> str:
+        return self._final
+
+
+def test_dep_fetch_sends_same_site_referer(monkeypatch):
+    seen = {}
+
+    def fake_open(req, timeout=0):
+        seen["headers"] = dict(req.header_items())
+        return _FakeRedirResp(b"<html>ok</html>", req.full_url)
+
+    monkeypatch.setattr(recipe_synth, "open_url", fake_open)
+    html, final = recipe_synth._dep_fetch_page("https://www.hondaofelcajon.com/used-inventory/")
+    assert html == "<html>ok</html>"
+    assert final == "https://www.hondaofelcajon.com/used-inventory/"
+    hdrs = {k.lower(): v for k, v in seen["headers"].items()}
+    assert hdrs["referer"] == "https://www.hondaofelcajon.com/"
+    assert hdrs["sec-fetch-site"] == "same-origin"
+
+
+def test_dep_fetch_returns_redirect_target(monkeypatch):
+    """/used-inventory/ 302s to /search/used/?tp=used; the walk must use THAT URL."""
+    monkeypatch.setattr(
+        recipe_synth, "open_url",
+        lambda req, timeout=0: _FakeRedirResp(b"<html>srp</html>", "https://www.hondaofelcajon.com/search/used/?tp=used"),
+    )
+    html, final = recipe_synth._dep_fetch_page("https://www.hondaofelcajon.com/used-inventory/")
+    assert html == "<html>srp</html>"
+    assert final == "https://www.hondaofelcajon.com/search/used/?tp=used"
+
+
+def test_dep_fetch_escalates_403_to_impersonation_with_referer(monkeypatch):
+    import urllib.error
+
+    def _raise(*a, **k):
+        raise urllib.error.HTTPError("https://x.com", 403, "Forbidden", {}, None)
+
+    captured = {}
+
+    def fake_imp(url, *, timeout=25.0, headers=None, min_bytes=2000):
+        captured["url"] = url
+        captured["headers"] = headers or {}
+        captured["min_bytes"] = min_bytes
+        return "<html>cleared</html>"
+
+    monkeypatch.setattr(recipe_synth, "open_url", _raise)
+    monkeypatch.setattr(recipe_synth, "_fetch_impersonated", fake_imp)
+    html, _ = recipe_synth._dep_fetch_page("https://www.hondaofelcajon.com/search/used/?tp=used")
+    assert html == "<html>cleared</html>"
+    assert captured["headers"]["Referer"] == "https://www.hondaofelcajon.com/"
+    assert captured["min_bytes"] == 0  # a short past-the-last-result page is valid
+
+
+def test_dep_fetch_does_not_escalate_404(monkeypatch):
+    import urllib.error
+
+    def _raise(*a, **k):
+        raise urllib.error.HTTPError("https://x.com", 404, "Not Found", {}, None)
+
+    def _boom(*a, **k):
+        raise AssertionError("404 is not a fingerprint rejection")
+
+    monkeypatch.setattr(recipe_synth, "open_url", _raise)
+    monkeypatch.setattr(recipe_synth, "_fetch_impersonated", _boom)
+    assert recipe_synth._dep_fetch_html("https://x.com/new-inventory/") is None
+
+
+def test_dep_fetch_escalates_challenge_shell(monkeypatch):
+    shell = b"<html><body>Just a moment... __cf_chl</body></html>"
+    monkeypatch.setattr(recipe_synth, "open_url", lambda req, timeout=0: _FakeRedirResp(shell, req.full_url))
+    monkeypatch.setattr(recipe_synth, "_fetch_impersonated", lambda url, **k: "<html>real</html>")
+    assert recipe_synth._dep_fetch_html("https://x.com/search/used/?tp=used") == "<html>real</html>"
+
+
+# ── synthesize: Dealer eProcess (redirected SRP + ct= page size) ──────────────
+
+
+def _dep_srp(vins: list[str], total: int, page_sizes=(12, 24, 36, 48)) -> str:
+    cards = "".join(
+        '<script type="application/ld+json">{"@type":"Vehicle",'
+        f'"vehicleIdentificationNumber":"{v}","vehicleModelDate":"2024",'
+        '"brand":{"name":"Honda"},"model":"Civic","offers":{"price":25000,"sku":"S' + v[-3:] + '"}}</script>'
+        for v in vins
+    )
+    # Live markup (Honda of El Cajon): the class also appears in inline CSS
+    # before the control, and option values are SRP URLs carrying ct=N.
+    css = "<style>.results_per_page_controls__select{width:3.25em}</style>"
+    select = (
+        '<select name="results_per_page_controls__select" class="results_per_page_controls__select thm">'
+        + "".join(f'<option value="/search/used/?ct={n}&tp=used">{n}</option>' for n in page_sizes)
+        + '<option value="/search/used/?ct=all&tp=used">All</option></select>'
+    )
+    return (f'<html><body>dealereprocess{css}<div data-vehicle_count="{total}"></div>'
+            f'{select}{cards}</body></html>')
+
+
+def _vins(prefix: str, n: int) -> list[str]:
+    return [f"{prefix}{i:03d}" for i in range(n)]
+
+
+def test_dep_page_size_reads_largest_numeric_option():
+    assert recipe_synth._dep_page_size(_dep_srp([], 0)) == 48
+    assert recipe_synth._dep_page_size(_dep_srp([], 0, page_sizes=(12, 24))) == 24
+    assert recipe_synth._dep_page_size("<html>no control</html>") is None
+    # Bare numeric option values are accepted too; ct=all never counts.
+    bare = '<select class="results_per_page_controls__select"><option value="12">12</option>' \
+           '<option value="24">24</option><option value="all">All</option></select>'
+    assert recipe_synth._dep_page_size(bare) == 24
+    css_only = "<style>.results_per_page_controls__select{}</style><select><option value='9'>9</option></select>"
+    assert recipe_synth._dep_page_size(css_only) is None
+
+
+def test_synthesize_dep_uses_redirect_target_and_honoured_page_size(monkeypatch):
+    from backend.scanner.recipes import PAGINATION_DEP_SRP
+
+    origin = "https://www.hondaofelcajon.com"
+    calls: list[str] = []
+
+    def fake(url):
+        calls.append(url)
+        if url.endswith("/used-inventory/"):
+            return _dep_srp(_vins("2HGFC2F5XNH", 12), 56), origin + "/search/used/?tp=used"
+        if url == origin + "/search/used/?tp=used&ct=48":
+            return _dep_srp(_vins("2HGFC2F5XNH", 48), 56), url
+        if url.endswith("/new-inventory/"):
+            return _dep_srp(_vins("1HGCY1F3XRA", 12), 343), origin + "/search/new-honda/?tp=new"
+        if url == origin + "/search/new-honda/?tp=new&ct=48":
+            return _dep_srp(_vins("1HGCY1F3XRA", 48), 343), url
+        raise AssertionError(f"unexpected fetch {url}")
+
+    monkeypatch.setattr(recipe_synth, "_dep_fetch_page", fake)
+    recipes = recipe_synth.synthesize_recipes("hondaofelcajon-com", origin, "<html>dealereprocess</html>", "dealer_eprocess")
+    assert [r.url for r in recipes] == [
+        origin + "/search/used/?tp=used&ct=48",
+        origin + "/search/new-honda/?tp=new&ct=48",
+    ]
+    assert all(r.pagination == PAGINATION_DEP_SRP for r in recipes)
+    assert [r.total_count for r in recipes] == [56, 343]
+    assert len(calls) == 4
+
+
+def test_synthesize_dep_falls_back_when_page_size_not_honoured(monkeypatch):
+    origin = "https://www.example-dep.com"
+
+    def fake(url):
+        # Server ignores ct=: still 12 VINs.
+        if url.endswith("/used-inventory/"):
+            return _dep_srp(_vins("2HGFC2F5XNH", 12), 56), origin + "/used-inventory/"
+        if "ct=48" in url:
+            return _dep_srp(_vins("2HGFC2F5XNH", 12), 56), url
+        return None, url
+
+    monkeypatch.setattr(recipe_synth, "_dep_fetch_page", fake)
+    recipes = recipe_synth.synthesize_recipes("x-com", origin, "<html>dealereprocess</html>", "dealer_eprocess")
+    assert [r.url for r in recipes] == [origin + "/used-inventory/"]
+
+
+def test_synthesize_dep_skips_page_size_probe_when_page1_is_whole_lot(monkeypatch):
+    origin = "https://www.example-dep.com"
+    calls: list[str] = []
+
+    def fake(url):
+        calls.append(url)
+        if url.endswith("/used-inventory/"):
+            return _dep_srp(_vins("2HGFC2F5XNH", 5), 5), url
+        return None, url
+
+    monkeypatch.setattr(recipe_synth, "_dep_fetch_page", fake)
+    recipes = recipe_synth.synthesize_recipes("x-com", origin, "<html>dealereprocess</html>", "dealer_eprocess")
+    assert [r.url for r in recipes] == [origin + "/used-inventory/"]
+    assert not any("ct=" in c for c in calls)
+
+
+def test_validate_dep_keeps_recipe_query_and_sets_p(monkeypatch):
+    from backend.scanner.recipes import PAGINATION_DEP_SRP
+
+    origin = "https://www.hondaofelcajon.com"
+    pages = {
+        1: _dep_srp(_vins("2HGFC2F5XNH", 48), 56),
+        2: _dep_srp(_vins("2HGFC2F5XNH", 8), 56),  # disjoint from p=1 by construction below
+    }
+    pages[2] = _dep_srp([f"2HGFC2F5XNH9{i:02d}" for i in range(8)], 56)
+    calls: list[str] = []
+
+    def fake(url):
+        calls.append(url)
+        assert "tp=used" in url and "ct=48" in url, url
+        m = __import__("re").search(r"[?&]p=(\d+)", url)
+        return pages.get(int(m.group(1)), "<html>dealereprocess</html>")
+
+    monkeypatch.setattr(recipe_synth, "_dep_fetch_html", fake)
+    recipe = EndpointRecipe(
+        dealer_id="hondaofelcajon-com", url=origin + "/search/used/?tp=used&ct=48",
+        method="GET", content_type="text/html", post_template=None, auth_headers={},
+        pagination=PAGINATION_DEP_SRP, total_count=56, provider_hint="dealer_eprocess",
+    )
+    n = recipe_synth._validate_dep(recipe, origin, "hondaofelcajon-com", "Honda of El Cajon", max_pages=10)
+    assert n == 56
+    assert calls[0].endswith("?tp=used&ct=48&p=1")
+    assert len(calls) == 2  # stops once total_count is reached

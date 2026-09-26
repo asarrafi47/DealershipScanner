@@ -1165,6 +1165,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 countEl.hidden = !has;
                 countEl.textContent = has ? String(searches.length) : "";
             }
+            toggleBtn.classList.toggle("listings-saved-search__list-btn--has-saved", has);
             if (!has) return;
             searches.forEach((s) => {
                 const li = document.createElement("li");
@@ -2885,6 +2886,13 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    // Per-car_id generation counter for the result-card save toggle. Keyed by
+    // car_id (not by DOM element) so an overlapping click on a duplicate
+    // element for the same car, or a stale response arriving after a newer
+    // toggle has already started, can be detected and ignored instead of
+    // clobbering whatever the most recent request already applied.
+    const _resultSaveGen = new Map();
+
     function wireResultSaveButtons() {
         if (!resultsGrid) return;
         if (!LISTINGS_LOGGED_IN) {
@@ -2906,9 +2914,45 @@ document.addEventListener("DOMContentLoaded", () => {
                 e.preventDefault();
                 e.stopPropagation();
                 const carId = btn.dataset.carId;
+                if (!carId) return;
                 const m = document.querySelector('meta[name="csrf-token"]');
                 const csrf = m && m.content ? m.content : "";
-                btn.disabled = true;
+                const idNum = Number(carId);
+                const wasSaved = btn.classList.contains("result-save-btn--saved");
+                const optimisticSaved = !wasSaved;
+
+                // Every element for this car_id (there can be more than one
+                // result-save-btn for the same car, e.g. duplicate cards)
+                // moves together, and every in-flight request for this
+                // car_id gets a generation stamp so a response that is no
+                // longer the latest one can be told to stand down instead of
+                // clobbering whatever a newer click already applied.
+                const applyResultSavedState = (saved) => {
+                    resultsGrid.querySelectorAll(`.result-save-btn[data-car-id="${carId}"]`).forEach((el) => {
+                        el.classList.toggle("result-save-btn--saved", saved);
+                        el.setAttribute("aria-label", saved ? "Saved" : "Save this car");
+                        const svg = el.querySelector("svg");
+                        if (svg) svg.setAttribute("fill", saved ? "currentColor" : "none");
+                    });
+                };
+                const setResultButtonsDisabled = (disabled) => {
+                    resultsGrid.querySelectorAll(`.result-save-btn[data-car-id="${carId}"]`).forEach((el) => {
+                        el.disabled = disabled;
+                    });
+                };
+
+                const gen = (_resultSaveGen.get(carId) || 0) + 1;
+                _resultSaveGen.set(carId, gen);
+                const isStale = () => _resultSaveGen.get(carId) !== gen;
+
+                // Optimistic UI: flip the heart immediately so the click feels
+                // instant, then revert if the request actually fails.
+                applyResultSavedState(optimisticSaved);
+                if (window.SAVED_CAR_IDS instanceof Set) {
+                    if (optimisticSaved) window.SAVED_CAR_IDS.add(idNum);
+                    else window.SAVED_CAR_IDS.delete(idNum);
+                }
+                setResultButtonsDisabled(true);
                 fetch(`/api/cars/${carId}/save`, {
                     method: "POST",
                     headers: { "X-CSRF-Token": csrf, "Content-Type": "application/json" },
@@ -2916,25 +2960,32 @@ document.addEventListener("DOMContentLoaded", () => {
                 })
                     .then((r) => (r.ok ? r.json() : Promise.reject()))
                     .then((data) => {
-                        if (!data || !data.ok) {
-                            btn.setAttribute("title", "Could not save — try again");
-                            return;
-                        }
+                        if (!data || !data.ok) return Promise.reject();
+                        if (isStale()) return;
                         btn.removeAttribute("title");
                         const saved = !!data.saved;
-                        const idNum = Number(carId);
+                        if (saved === optimisticSaved) return;
+                        // Server disagreed with our guess (e.g. a stale toggle
+                        // from another tab) — reconcile to the real state.
                         if (window.SAVED_CAR_IDS instanceof Set) {
                             if (saved) window.SAVED_CAR_IDS.add(idNum);
                             else window.SAVED_CAR_IDS.delete(idNum);
                         }
-                        btn.classList.toggle("result-save-btn--saved", saved);
-                        btn.setAttribute("aria-label", saved ? "Saved" : "Save this car");
-                        btn.querySelector("svg").setAttribute("fill", saved ? "currentColor" : "none");
+                        applyResultSavedState(saved);
                     })
                     .catch(() => {
+                        if (isStale()) return;
+                        // Revert the optimistic flip.
+                        if (window.SAVED_CAR_IDS instanceof Set) {
+                            if (wasSaved) window.SAVED_CAR_IDS.add(idNum);
+                            else window.SAVED_CAR_IDS.delete(idNum);
+                        }
+                        applyResultSavedState(wasSaved);
                         btn.setAttribute("title", "Could not save — try again");
                     })
-                    .finally(() => { btn.disabled = false; });
+                    .finally(() => {
+                        if (!isStale()) setResultButtonsDisabled(false);
+                    });
             });
         });
     }

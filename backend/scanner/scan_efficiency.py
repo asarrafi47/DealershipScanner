@@ -72,6 +72,12 @@ def apply_fast_mode_env_defaults() -> None:
         os.environ.setdefault(key, val)
 
 
+def post_vpic_env_enabled() -> bool:
+    """SCANNER_POST_VPIC (default on): decode the run's new VINs with NHTSA vPIC and
+    store the decode's drivetrain / electrification on their rows."""
+    return (os.environ.get("SCANNER_POST_VPIC") or "1").strip().lower() not in ("0", "false", "no", "off")
+
+
 def apply_scan_only_env_defaults() -> None:
     """Disable post-scan stages when SCANNER_SCAN_ONLY=1 (only unset vars)."""
     if not scanner_scan_only_enabled():
@@ -90,6 +96,7 @@ def apply_scan_only_env_defaults() -> None:
         "SCANNER_GALLERY_VISION_POST",
         "SCANNER_GALLERY_VISION_INLINE",
         "SCANNER_VDP_DOWNLOAD_IMAGES",
+        "SCANNER_POST_VPIC",
     ):
         os.environ.setdefault(key, "0")
 
@@ -187,9 +194,10 @@ def effective_vdp_ep_max(deduped_rows: int) -> int:
             return max(0, min(5000, int(raw)))
         except ValueError:
             pass
-    if scanner_fast_mode_enabled():
-        return min(10, max(0, deduped_rows))
-    return min(10, max(0, deduped_rows))
+    # Default 0 since 2026-09-23: browser visits are need-driven (price / spec gap /
+    # description probe / thin gallery). The blind 10-car rotation predates the HTTP
+    # passes and the VIN decode that now cover what it used to spot-check.
+    return 0
 
 
 def effective_vdp_price_max(deduped_rows: int) -> int:

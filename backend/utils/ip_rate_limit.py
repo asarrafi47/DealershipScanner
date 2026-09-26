@@ -122,7 +122,7 @@ def _allow_request_sqlite(key: str, *, max_events: int, window_seconds: float) -
         try:
             _sqlite_init_conn(conn)
             cur = conn.cursor()
-            cur.execute("DELETE FROM _rate_hits WHERE t < ?", (cutoff,))
+            cur.execute("DELETE FROM _rate_hits WHERE k = ? AND t < ?", (key, cutoff))
             cur.execute("SELECT COUNT(1) FROM _rate_hits WHERE k = ?", (key,))
             n = int(cur.fetchone()[0] or 0)
             if n >= max_events:

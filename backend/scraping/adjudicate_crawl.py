@@ -9,7 +9,7 @@ from __future__ import annotations
 from collections.abc import Callable
 from typing import Any
 
-from scraping.models import SiteResult
+from backend.scraping.models import SiteResult
 
 
 def build_adjudicate_crawl_one(

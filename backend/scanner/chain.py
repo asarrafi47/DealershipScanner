@@ -329,8 +329,13 @@ class PlaywrightFetcher(Fetcher):
                 page.goto(url, wait_until=self.wait_until, timeout=self.timeout_ms)
                 return page.content()
 
+        from backend.scanner.http_fetch import playwright_proxy_kwargs
+
         with self._playwright_context() as p:
-            browser = p.chromium.launch(headless=True)
+            from backend.scanner.browser_gate import require_browser
+
+            require_browser("chain.PlaywrightFetcher")
+            browser = p.chromium.launch(headless=True, **playwright_proxy_kwargs())
             try:
                 page = browser.new_page(user_agent=self.user_agent)
                 page.goto(url, wait_until=self.wait_until, timeout=self.timeout_ms)
@@ -424,6 +429,16 @@ DEFAULT_FETCHERS: list[Fetcher] = [
 ]
 
 
+def default_fetchers() -> list[Fetcher]:
+    """Cheap→heavy fetchers; the browser stage only when the policy allows it."""
+    from backend.scanner.browser_gate import browser_allowed
+
+    out: list[Fetcher] = [ImpersonatingFetcher(), RequestsFetcher()]
+    if browser_allowed():
+        out.append(PlaywrightFetcher())
+    return out
+
+
 def default_chain(
     extractors: list[Extractor],
     result_filter: Callable[[list[ScrapedVehicle]], list[ScrapedVehicle]] | None = None,
@@ -434,7 +449,7 @@ def default_chain(
     universal default extractor list for dealership sites yet.
     """
     return ScraperChain(
-        fetchers=[ImpersonatingFetcher(), RequestsFetcher(), PlaywrightFetcher()],
+        fetchers=default_fetchers(),
         extractors=extractors,
         result_filter=result_filter,
     )

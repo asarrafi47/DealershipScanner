@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import requests
 
-from scraping.constants import USER_AGENT
+from backend.scraping.constants import USER_AGENT
 
 
 def oem_requests_session(*, timeout: int = 60, verify_ssl: bool = True) -> requests.Session:

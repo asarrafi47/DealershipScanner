@@ -146,7 +146,12 @@ def main() -> int:
     load_kmac_vault_secrets()
     from backend.db.inventory_db import init_inventory_db
     from backend.db.inventory_pg import is_inventory_postgres
-    from backend.scanner.job_queue import claim_next_job, finish_job, init_job_queue_schema
+    from backend.scanner.job_queue import (
+        claim_next_job,
+        finish_job,
+        init_job_queue_schema,
+        reap_stale_running_jobs,
+    )
 
     if not is_inventory_postgres():
         _log.error("INVENTORY_DATABASE_URL must point at Postgres for scanner-worker.")
@@ -159,6 +164,14 @@ def main() -> int:
     if pw:
         _log.info("Using Playwright Chromium at %s", pw)
     _log.info("Scanner worker %s started (poll=%ss)", wid, POLL_SEC)
+    # A previous incarnation of this replica may have died mid-job (redeploy,
+    # OOM); its row is still `running` and would otherwise never be retried.
+    try:
+        reaped = reap_stale_running_jobs()
+        if reaped:
+            _log.warning("Reaped %d stale running job(s) left by a lost worker", reaped)
+    except Exception:
+        _log.exception("Stale-job reap failed; continuing")
 
     while True:
         job = claim_next_job()

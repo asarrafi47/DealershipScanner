@@ -374,3 +374,190 @@ def test_url_for_page_page_query():
     cc = EndpointRecipe(dealer_id="d", url="https://x.carscommerce.inc/s", method="POST",
                         content_type="", post_template=None, pagination=PAGINATION_CARSCOMMERCE)
     assert _url_for_page(cc, 5) == "https://x.carscommerce.inc/s"
+
+
+# ── field coverage: a VIN list is not an inventory feed ───────────────────────
+
+
+def test_recipe_field_coverage_counts_only_positive_prices_and_nonblank_strings():
+    from backend.scanner.recipes import recipe_field_coverage
+
+    vs = [
+        {"vin": "A", "price": 30000, "trim": "EX", "exterior_color": "Blue"},
+        {"vin": "B", "price": 0, "trim": "", "exterior_color": None},
+        {"vin": "C", "price": "Call", "trim": " ", "exterior_color": "Red"},
+        {"vin": "D"},
+    ]
+    cov = recipe_field_coverage(vs)
+    assert cov["n"] == 4
+    assert cov["price"] == 0.25
+    assert cov["trim"] == 0.25
+    assert cov["exterior_color"] == 0.5
+    assert recipe_field_coverage([]) == {"n": 0.0, "price": 0.0, "trim": 0.0, "exterior_color": 0.0}
+
+
+def test_replay_reports_coverage_of_parsed_rows(monkeypatch):
+    import backend.scanner.recipes as rec
+
+    _cc_recipe("d20", rows=20, total=20)
+    rows = [_vehicle(i) for i in range(20)]           # all priced, no trim/colour
+    for v in rows[:10]:
+        v["trim"] = "Sport"
+    monkeypatch.setattr(rec, "_replay_request", lambda *a: (200, {"inventory": rows}))
+    cov: dict = {}
+    hit = asyncio.run(rec.try_fetch_via_recipes("d20", "dealer_dot_com",
+                                               "https://dealer.example", "Dealer",
+                                               coverage_out=cov))
+    assert hit is not None and hit[1] == 20
+    assert cov["n"] == 20 and cov["price"] == 1.0 and cov["trim"] == 0.5 and cov["exterior_color"] == 0.0
+
+
+def test_replay_without_coverage_out_is_unchanged(monkeypatch):
+    import backend.scanner.recipes as rec
+
+    _cc_recipe("d21", rows=20, total=20)
+    monkeypatch.setattr(rec, "_replay_request",
+                        lambda *a: (200, {"inventory": [_vehicle(i) for i in range(20)]}))
+    hit = asyncio.run(rec.try_fetch_via_recipes("d21", "dealer_dot_com",
+                                               "https://dealer.example", "Dealer"))
+    assert hit is not None and len(hit) == 2
+
+
+@pytest.mark.parametrize(
+    "vins,known,cov,ok,needle",
+    [
+        (100, 100, {"price": 0.9, "trim": 0.8, "exterior_color": 0.0}, True, "ok"),
+        (100, 100, {"price": 0.9, "trim": 0.0, "exterior_color": 0.7}, True, "ok"),
+        (60, 100, {"price": 1.0, "trim": 1.0, "exterior_color": 1.0}, False, "70%"),
+        # The 2026-08-04 failure shape: every VIN, no price, no trim, no colour.
+        (176, 176, {"price": 0.16, "trim": 0.0, "exterior_color": 0.2}, False, "price coverage"),
+        (100, 100, {"price": 0.9, "trim": 0.1, "exterior_color": 0.2}, False, "trim/colour"),
+        (100, 100, None, False, "price coverage"),
+        (100, 0, {"price": 1.0, "trim": 1.0, "exterior_color": 1.0}, False, "no_known_lot"),
+    ],
+)
+def test_recipe_yield_replaces_browser(monkeypatch, vins, known, cov, ok, needle):
+    from backend.scanner.recipes import recipe_yield_replaces_browser
+
+    monkeypatch.delenv("SCANNER_RECIPE_MIN_PRICE_COVERAGE", raising=False)
+    monkeypatch.delenv("SCANNER_RECIPE_MIN_FIELD_COVERAGE", raising=False)
+    got_ok, why = recipe_yield_replaces_browser(vins, known, cov)
+    assert got_ok is ok
+    assert needle in why
+
+
+def test_recipe_coverage_thresholds_from_env(monkeypatch):
+    from backend.scanner.recipes import recipe_yield_replaces_browser
+
+    monkeypatch.setenv("SCANNER_RECIPE_MIN_PRICE_COVERAGE", "0.1")
+    monkeypatch.setenv("SCANNER_RECIPE_MIN_FIELD_COVERAGE", "0.1")
+    ok, _ = recipe_yield_replaces_browser(176, 176, {"price": 0.16, "trim": 0.0, "exterior_color": 0.2})
+    assert ok is True
+
+
+# ── coverage carried from ledger, rich feeds rank first, replay refreshes it ──
+
+
+def test_promote_carries_field_coverage_and_ranks_rich_first(monkeypatch):
+    monkeypatch.delenv("SCANNER_RECIPE_MIN_PRICE_COVERAGE", raising=False)
+    monkeypatch.delenv("SCANNER_RECIPE_MIN_FIELD_COVERAGE", raising=False)
+    thin = _ep("https://www.jordanford.net/api/KeyFeatures/GetKeyFeaturesByVins", method="GET",
+               rows=50, total=None, post=None)
+    thin.field_coverage = {"price": 0.0, "trim": 0.0, "exterior_color": 0.0}
+    rich = _ep("https://www.jordanford.net/api/inventory/search", method="GET",
+               rows=20, total=None, post=None)
+    rich.field_coverage = {"price": 0.95, "trim": 0.8, "exterior_color": 0.9}
+    assert promote_from_ledger("d30", "team_velocity", [thin, rich]) == 2
+    first, second = load_recipes("d30")
+    assert "inventory/search" in first.url          # rich wins despite fewer rows
+    assert first.field_coverage["price"] == 0.95
+    assert second.field_coverage == {"price": 0.0, "trim": 0.0, "exterior_color": 0.0}
+
+
+def test_replay_persists_measured_coverage_on_recipe(monkeypatch):
+    import backend.scanner.recipes as rec
+
+    _cc_recipe("d31", rows=20, total=20)
+    rows = [_vehicle(i) for i in range(20)]
+    for v in rows:
+        v["exterior_color"] = "Red"
+    monkeypatch.setattr(rec, "_replay_request", lambda *a: (200, {"inventory": rows}))
+    asyncio.run(rec.try_fetch_via_recipes("d31", "dealer_dot_com", "https://dealer.example", "Dealer"))
+    (r,) = load_recipes("d31")
+    assert r.field_coverage == {"price": 1.0, "trim": 0.0, "exterior_color": 1.0}
+
+
+def test_recipe_rows_without_coverage_field_still_load(tmp_path):
+    from backend.scanner.recipes import _rows_to_recipes
+
+    (r,) = _rows_to_recipes([{"dealer_id": "d", "url": "https://x/y", "method": "GET",
+                              "content_type": "json", "post_template": None}])
+    assert r.field_coverage == {}
+
+
+def test_last_known_vin_count_counts_listed_rows_only(monkeypatch):
+    """Retired rows must not inflate the browser-skip denominator (Hiley VW
+    2026-09-22: 338 feed VINs vs '624 known', 286 of them unlisted that morning)."""
+    from backend.scanner import recipes as r
+
+    seen: dict[str, str] = {}
+
+    class _Cur:
+        def execute(self, sql, params):
+            seen["sql"] = sql
+            seen["dealer"] = params[0]
+
+        def fetchone(self):
+            return (42,)
+
+    class _Conn:
+        def cursor(self):
+            return _Cur()
+
+        def close(self):
+            pass
+
+    monkeypatch.setattr("backend.db.inventory_pg.is_inventory_postgres", lambda: True)
+    monkeypatch.setattr("backend.db.inventory_pg.pg_connect", lambda: _Conn())
+    assert r.last_known_vin_count("dealer-x") == 42
+    assert seen["dealer"] == "dealer-x"
+    assert "listing_removed_at IS NULL" in seen["sql"]
+    assert "listing_active" in seen["sql"]
+
+
+def test_carscommerce_page_body_drops_featured_flag_and_pages_by_100():
+    """Culver City Toyota 2026-09-23: captured body carried facetFilters
+    {"custom_text_1": ["true"]} (a featured carousel) and replayed 30 of 529."""
+    from backend.scanner import recipes as r
+
+    rec = r.EndpointRecipe(dealer_id="d", url="https://websites-search.api.carscommerce.inc/api/v1/listings/1/search",
+                           method="POST", content_type="json", post_template="{}", pagination=r.PAGINATION_CARSCOMMERCE)
+    tpl = {"page": 1, "perPage": 20, "filters": {"type_slug": ["used"]},
+           "facetFilters": {"custom_text_1": ["true"], "make": ["Toyota"]}}
+    body = r._mutate_for_page(rec, tpl, 1)
+    assert body["page"] == 2 and body["perPage"] == 100
+    # 2026-09-25: make / type_slug pin one SRP section (Germain Toyota's capture
+    # replayed 65 new Toyotas of a 401-car lot); they are dropped from both maps
+    assert "facetFilters" not in body
+    assert body["filters"] == {}
+    body0 = r._mutate_for_page(rec, {"page": 1, "perPage": 20, "facetFilters": {"custom_text_1": ["true"]}}, 0)
+    assert "facetFilters" not in body0
+
+
+def test_cosmos_recipe_pages_with_pt_and_upgrades_old_files():
+    from backend.scanner import recipes as r
+
+    url = "https://www.cherokeecountytoyota.com/api/vhcliaa/vehicle-pages/cosmos/srp/vehicles/13028/769890"
+    assert r.infer_pagination(url, None) == r.PAGINATION_COSMOS_PT
+    recs = r._rows_to_recipes([{"dealer_id": "d", "url": url, "method": "GET", "content_type": "json",
+                                "post_template": None, "pagination": "none"}])
+    assert recs[0].pagination == r.PAGINATION_COSMOS_PT
+    assert r._url_for_page(recs[0], 0).endswith("?pt=1&pn=96")
+    assert r._url_for_page(recs[0], 1).endswith("?pt=2&pn=96")
+
+
+def test_get_total_count_reads_carscommerce_meta_and_cosmos_paging():
+    from backend.parsers.base import get_total_count
+
+    assert get_total_count({"data": {}, "meta": {"pagination": {"total": 529, "count": 100}}}) == 529
+    assert get_total_count({"Paging": {"PaginationDataModel": {"TotalCount": 106, "TotalPages": 2}}}) == 106

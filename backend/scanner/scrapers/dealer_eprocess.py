@@ -881,6 +881,10 @@ async def scrape_dealer_eprocess_from_page(
       4.   v4 /resrc/inventory/ REST API via _fetch_resrc_inventory()
       5.   JSON-LD in SRP HTML via _fetch_jsonld_from_srp()
     """
+    if page is None:
+        # HTTP-only scan: the universal results API is the only strategy; the
+        # site's own SRP recipes (recipe_synth dealer_eprocess) cover the rest.
+        return await _fetch_results_api(base_url, dealer_id, dealer_name, dealer_url)
     try:
         html = await page.content()
     except Exception as e:

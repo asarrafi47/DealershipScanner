@@ -1,6 +1,7 @@
 .git
 .github
 .claude
+.agents
 .cursor
 .env
 *.env
@@ -27,6 +28,11 @@ backend/data/brochures/
 backend/data/brochure_archive/
 backend/data/brochures_archive_comparison/
 backend/data/brochures_archive_quarantine/
+# Rasterized page-image cache + car-photo cache for the local-LLM extraction
+# pipelines (regenerated) and local logs — not needed inside the image.
+backend/data/brochure_local_pages/
+backend/data/car_image_local_cache/
+backend/data/logs/
 
 # Root-level DB dumps (migrations/*.sql are unaffected: root patterns
 # only match at the context root)
@@ -80,3 +86,8 @@ logs/mfa*.jsonl
 # DICTIONARY CSVs (large; read from mounted /data or baked in separately)
 # Comment out next line if you want EPA data in the image
 DICTIONARY/
+
+# Agent/graph tooling output and template previews (never needed in an image)
+graphify-out/
+preview3/
+preview4/

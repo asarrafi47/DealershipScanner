@@ -950,7 +950,7 @@
                         {# Free/any-year: the rung this car sits on plus its immediate
                            neighbors, names only. Premium: the full OEM ladder, and each
                            rung expands to show what it adds over the one below it. #}
-                        {% set ns = namespace(current_idx=0) %}
+                        {% set ns = namespace(current_idx=-1) %}
                         {% for step in trim_ladder.steps %}
                             {% if step.is_current %}{% set ns.current_idx = loop.index0 %}{% endif %}
                         {% endfor %}
@@ -966,11 +966,15 @@
                             <p class="car-trim-ladder__confidence">Matched from listing data</p>
                             {% endif %}
                             {% if not show_premium_features and trim_ladder.steps | length > 3 %}
+                                {% if trim_ladder.matched %}
                             <p class="car-trim-ladder__confidence car-trim-ladder__confidence--low">Showing this trim and its nearest neighbors — <a href="{{ url_for('premium_page') }}">Premium</a> shows the full lineup and what each rung adds.</p>
+                                {% else %}
+                            <p class="car-trim-ladder__confidence car-trim-ladder__confidence--low">Couldn't match this listing to an exact trim rung, so we're showing the full lineup — <a href="{{ url_for('premium_page') }}">Premium</a> shows what each rung adds.</p>
+                                {% endif %}
                             {% endif %}
                             <ol class="car-trim-ladder__timeline" role="list">
                                 {% for step in trim_ladder.steps %}
-                                {% if show_premium_features or (loop.index0 >= ns.current_idx - 1 and loop.index0 <= ns.current_idx + 1) %}
+                                {% if show_premium_features or ns.current_idx == -1 or (loop.index0 >= ns.current_idx - 1 and loop.index0 <= ns.current_idx + 1) %}
                                 <li class="car-trim-ladder__step{% if step.is_current %} car-trim-ladder__step--current{% elif step.is_passed %} car-trim-ladder__step--passed{% endif %}"
                                     role="listitem"
                                     data-trim-index="{{ loop.index0 }}"
@@ -1483,35 +1487,62 @@
     <script nonce="{{ csp_nonce }}">
     (function () {
         const csrf = (document.querySelector('meta[name="csrf-token"]') || {}).content || "";
+        // Per-car in-flight guard: every button sharing a car-id (in-content
+        // + sticky-footer) shares one token counter, so a stale response from
+        // an earlier overlapping click can never clobber a newer one's result.
+        const saveInFlight = new Map();
+
+        function buttonsFor(carId) {
+            return document.querySelectorAll("[data-car-id=\"" + carId + "\"].save-btn");
+        }
+
+        function applySavedState(carId, saved) {
+            buttonsFor(carId).forEach(function (el) {
+                el.classList.toggle("save-btn--saved", saved);
+                el.setAttribute("aria-label", saved ? "Saved" : "Save");
+                el.setAttribute("title", saved ? "Remove from saved" : "Save this car");
+                const lbl = el.querySelector(".save-btn-label");
+                if (lbl) lbl.textContent = saved ? "Saved" : "Save";
+            });
+        }
+
+        function setDisabled(carId, disabled) {
+            buttonsFor(carId).forEach(function (el) { el.disabled = disabled; });
+        }
 
         function wireSave(btn) {
             if (!btn) return;
             btn.addEventListener("click", function () {
-            btn.disabled = true;
-            fetch(`/api/cars/${btn.dataset.carId}/save`, {
+            const carId = btn.dataset.carId;
+            const wasSaved = btn.classList.contains("save-btn--saved");
+            const optimisticSaved = !wasSaved;
+            const token = (saveInFlight.get(carId) || 0) + 1;
+            saveInFlight.set(carId, token);
+            // Optimistic UI: flip immediately so the click feels instant,
+            // then reconcile or revert once the request actually completes.
+            applySavedState(carId, optimisticSaved);
+            setDisabled(carId, true);
+            fetch(`/api/cars/${carId}/save`, {
                 method: "POST",
                 headers: { "X-CSRF-Token": csrf, "Content-Type": "application/json" },
                 credentials: "same-origin",
             })
             .then(r => r.ok ? r.json() : Promise.reject())
             .then(data => {
-                if (!data.ok) {
-                    btn.setAttribute("title", "Could not save — try again");
-                    return;
-                }
-                const saved = data.saved;
-                document.querySelectorAll("[data-car-id=\"" + btn.dataset.carId + "\"].save-btn").forEach(function (el) {
-                    el.classList.toggle("save-btn--saved", saved);
-                    el.setAttribute("aria-label", saved ? "Saved" : "Save");
-                    el.setAttribute("title", saved ? "Remove from saved" : "Save this car");
-                    const lbl = el.querySelector(".save-btn-label");
-                    if (lbl) lbl.textContent = saved ? "Saved" : "Save";
-                });
+                if (!data.ok) return Promise.reject();
+                if (saveInFlight.get(carId) !== token) return; // superseded by a later click
+                if (data.saved !== optimisticSaved) applySavedState(carId, data.saved);
             })
             .catch(function () {
-                btn.setAttribute("title", "Could not save — try again");
+                if (saveInFlight.get(carId) !== token) return; // superseded by a later click
+                applySavedState(carId, wasSaved);
+                buttonsFor(carId).forEach(function (el) {
+                    el.setAttribute("title", "Could not save — try again");
+                });
             })
-            .finally(() => { btn.disabled = false; });
+            .finally(function () {
+                if (saveInFlight.get(carId) === token) setDisabled(carId, false);
+            });
             });
         }
 

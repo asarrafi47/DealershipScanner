@@ -1,0 +1,22 @@
+# Scanner worker — claims dealer_jobs and runs the per-dealer scrape.
+#
+# Attach in Railway → scanner-worker → Settings → Config file path.
+# Without this, `railway up` falls back to the repo-root railway.toml, which
+# builds Dockerfile.web and applies a "/health" healthcheck the worker has no
+# server to answer — the 2026-09-15 failure mode ("1/1 replicas never became
+# healthy"). RAILWAY_DOCKERFILE_PATH does NOT override root config-as-code.
+#
+# No healthcheckPath on purpose: this is a queue consumer, not an HTTP service.
+
+[build]
+builder = "DOCKERFILE"
+dockerfilePath = "Dockerfile.scanner-worker"
+
+[deploy]
+# No startCommand: the image ENTRYPOINT owns process launch (one mechanism, not two).
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 10
+# Pilot scale. The worker loop is strictly serial (one job per replica), so
+# throughput is replicas x ~2.4 jobs/hr. Raise only after the 25-dealer pilot
+# gives real per-dealer timings.
+numReplicas = 1

@@ -80,7 +80,9 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--limit", type=int, default=0, help="max VINs to decode this run")
     ap.add_argument("--batch", type=int, default=50)
+    ap.add_argument("--dealers", default="", help="comma-separated dealer_ids; default = whole fleet")
     args = ap.parse_args()
+    dealers = [d.strip() for d in args.dealers.split(",") if d.strip()]
 
     import psycopg
 
@@ -96,6 +98,8 @@ def main() -> int:
             LEFT JOIN nhtsa_vpic_cache v ON v.vin = c.vin
            WHERE c.listing_active = 1 AND v.vin IS NULL
              AND c.vin IS NOT NULL AND LENGTH(TRIM(c.vin)) = 17"""
+        + (" AND c.dealer_id = ANY(%s)" if dealers else ""),
+        (dealers,) if dealers else None,
     )
     todo = [r[0].strip().upper() for r in cur.fetchall()]
     todo = [v for v in todo if _VIN_RE.match(v)]

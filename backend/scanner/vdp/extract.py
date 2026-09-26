@@ -25,10 +25,17 @@ def _is_generic_vhr_vin_only_url(url: str) -> bool:
     return bool(u) and bool(_GENERIC_VHR_VIN_ONLY.match(u))
 
 
-def _pick_best_vehicle_history_url(candidates: list[Any]) -> str | None:
+def _pick_best_vehicle_history_url(candidates: list[Any], vin: str | None = None) -> str | None:
     """
     Prefer dealer-provided Carfax / AutoCheck / partner URLs (absolute https) from DOM or JSON.
+
+    Rejects any candidate whose URL-embedded VIN does not match ``vin`` (e.g. a
+    "similar vehicles" widget's Carfax link), mirroring the guard used in
+    ``extract_listing_sticker_urls_from_html``.
     """
+    from backend.scanner.post_scan.window_sticker import _vin_token_in_url
+
+    vnorm = re.sub(r"\s+", "", (vin or "").strip().upper())
     good: list[str] = []
     seen: set[str] = set()
     for raw in candidates:
@@ -42,6 +49,10 @@ def _pick_best_vehicle_history_url(candidates: list[Any]) -> str | None:
         low = s.lower()
         if "carfax" not in low and "autocheck" not in low:
             continue
+        if vnorm:
+            url_vin = _vin_token_in_url(s)
+            if url_vin and url_vin != vnorm:
+                continue
         if s in seen:
             continue
         seen.add(s)
@@ -68,7 +79,7 @@ def _pick_best_vehicle_history_url(candidates: list[Any]) -> str | None:
 
 def _merge_vdp_vehicle_history_url(vehicle: dict[str, Any], dom_urls: list[Any]) -> bool:
     """Set ``carfax_url`` from *dom_urls* when it improves on the listing JSON link. Returns True if updated."""
-    picked = _pick_best_vehicle_history_url(dom_urls)
+    picked = _pick_best_vehicle_history_url(dom_urls, str(vehicle.get("vin") or ""))
     if not picked:
         return False
     cur = str(vehicle.get("carfax_url") or "").strip()
@@ -85,9 +96,23 @@ def _merge_vdp_vehicle_history_url(vehicle: dict[str, Any], dom_urls: list[Any])
 
 
 def _pick_best_sticker_url(dom_urls: list[Any], vin: str | None = None) -> str | None:
-    from backend.scanner.post_scan.window_sticker import pick_best_listing_sticker_url
+    from backend.scanner.post_scan.window_sticker import _vin_token_in_url, pick_best_listing_sticker_url
 
-    urls = [str(u).strip() for u in dom_urls if isinstance(u, str) and str(u).strip().startswith("http")]
+    vnorm = re.sub(r"\s+", "", (vin or "").strip().upper())
+    urls: list[str] = []
+    for u in dom_urls:
+        if not isinstance(u, str):
+            continue
+        s = u.strip()
+        if not s.startswith("http"):
+            continue
+        if vnorm:
+            url_vin = _vin_token_in_url(s)
+            if url_vin and url_vin != vnorm:
+                # URL is stamped with a different vehicle's VIN (e.g. a "similar
+                # vehicles" widget) -- never attach it to this vehicle.
+                continue
+        urls.append(s)
     return pick_best_listing_sticker_url(urls, vin=vin)
 
 

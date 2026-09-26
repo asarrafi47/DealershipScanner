@@ -95,6 +95,21 @@ def _reconcile_min_rows() -> int:
         return 8
 
 
+def _reconcile_min_coverage() -> float:
+    """Share of the dealer's ACTIVE rows the scrape must re-see before unlisting.
+
+    A partial capture (thin recipe replay, --scan-only on a JS-paginated SRP,
+    a feed that answered one section) must not delist the rest of the lot:
+    on 2026-09-09 a 443-row Garden Grove Honda capture marked 803 cars inactive.
+    ``SCANNER_RECONCILE_MIN_COVERAGE`` (default 0.5); 0 disables the gate.
+    """
+    raw = (os.environ.get("SCANNER_RECONCILE_MIN_COVERAGE") or "0.5").strip()
+    try:
+        return min(1.0, max(0.0, float(raw)))
+    except ValueError:
+        return 0.5
+
+
 def reconcile_dealer_inventory_after_scan(
     dealer_id: str,
     dealer_url: str,
@@ -172,12 +187,30 @@ def reconcile_dealer_inventory_after_scan(
         )
         rows = cur.fetchall()
         stale_ids: list[int] = []
+        active_known = 0
+        matched = 0
         for row in rows:
             rid = int(row[0])
             vnorm = normalize_scanner_vin(row[1])
-            if not vnorm or vnorm in scraped_vins:
+            if not vnorm:
+                continue
+            active_known += 1
+            if vnorm in scraped_vins:
+                matched += 1
                 continue
             stale_ids.append(rid)
+
+        min_cov = _reconcile_min_coverage()
+        if min_cov > 0 and active_known >= min_rows and matched < min_cov * active_known:
+            out["skipped_reason"] = (
+                f"low_coverage(matched={matched},active={active_known},min={min_cov:.0%})"
+            )
+            logger.warning(
+                "Inventory reconcile %s: scrape re-saw only %d of %d active VIN(s); "
+                "refusing to unlist %d row(s) on a partial capture",
+                (dealer_id or "").strip() or "?", matched, active_known, len(stale_ids),
+            )
+            return _finish()
 
         marked = 0
         batch_size = 400

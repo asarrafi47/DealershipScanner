@@ -1,12 +1,15 @@
 """BeautifulSoup helpers: footer text, evidence-only internal links, page blobs."""
 from __future__ import annotations
 
+import ipaddress
 import re
+import socket
+from functools import lru_cache
 from urllib.parse import urljoin, urlparse
 
 from bs4 import BeautifulSoup
 
-from scraping.text_utils import collapse_ws
+from backend.scraping.text_utils import collapse_ws
 
 # Path or anchor must suggest corporate / policy / ownership evidence
 _EVIDENCE_PATH_MARKERS = (
@@ -101,6 +104,47 @@ _EXTERNAL_LINK_BLOCKLIST = (
 )
 
 
+def _ip_is_unsafe(ip_obj: ipaddress.IPv4Address | ipaddress.IPv6Address) -> bool:
+    return (
+        ip_obj.is_private
+        or ip_obj.is_loopback
+        or ip_obj.is_link_local
+        or ip_obj.is_reserved
+        or ip_obj.is_multicast
+        or ip_obj.is_unspecified
+    )
+
+
+@lru_cache(maxsize=512)
+def _host_resolves_to_public_ip(hostname: str) -> bool:
+    """Reject hosts whose literal or DNS-resolved address is private/loopback/
+    link-local/reserved/multicast (e.g. cloud metadata 169.254.169.254, RFC1918,
+    localhost) so a crawled page cannot redirect fetches at internal targets."""
+    if not hostname:
+        return False
+    host = hostname.strip("[]")
+    try:
+        ip_obj = ipaddress.ip_address(host)
+    except ValueError:
+        try:
+            infos = socket.getaddrinfo(host, None)
+        except (socket.gaierror, UnicodeError, OSError):
+            return False
+        ips = {info[4][0] for info in infos}
+        if not ips:
+            return False
+        for ip_s in ips:
+            try:
+                resolved = ipaddress.ip_address(ip_s.split("%", 1)[0])
+            except ValueError:
+                return False
+            if _ip_is_unsafe(resolved):
+                return False
+        return True
+    else:
+        return not _ip_is_unsafe(ip_obj)
+
+
 def collect_cross_domain_evidence_links(
     base_url: str,
     soup: BeautifulSoup,
@@ -130,6 +174,9 @@ def collect_cross_domain_evidence_links(
             continue
         if any(b in host_l or b in href_l for b in _EXTERNAL_LINK_BLOCKLIST):
             skipped.append({"url": abs_u, "reason": "blocklisted_host"})
+            continue
+        if not _host_resolves_to_public_ip(p.hostname or ""):
+            skipped.append({"url": abs_u, "reason": "unsafe_host_ip"})
             continue
         path_lower = (p.path or "").lower()
         blob = f"{path_lower} {href_l} {label_l}"
@@ -176,6 +223,8 @@ def collect_internal_links(
         if not _path_suggests_evidence(path_lower, href_l, label_l):
             continue
         if any(x in path_lower for x in _EXCLUDE_PATH_MARKERS):
+            continue
+        if not _host_resolves_to_public_ip(p.hostname or ""):
             continue
         if abs_u not in seen:
             seen.add(abs_u)

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from scraping.paths import ROOT
+from backend.scraping.paths import ROOT
 
 OEM_DATA = ROOT / "data" / "oem"
 BMW_DIR = OEM_DATA / "bmw"

@@ -5,7 +5,7 @@ import json
 import sqlite3
 from pathlib import Path
 
-from scraping.text_utils import normalize_root
+from backend.scraping.text_utils import normalize_root
 
 
 def load_roots_from_db(db_path: Path) -> list[str]:

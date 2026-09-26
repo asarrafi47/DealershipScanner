@@ -2,6 +2,7 @@
 Parser for dealer.on / CDK-style sites. Uses recursive search for vehicle list and
 key-variant mapping. Accepts raw JSON or HTML with __PRELOADED_STATE__ etc.
 """
+import hashlib
 import json
 import logging
 import re
@@ -318,7 +319,15 @@ def _pick_detail_url_dealer_on(obj: dict, base_url: str) -> str | None:
 def _map_vehicle(obj: dict, base_url: str, dealer_id: str, dealer_name: str, dealer_url: str) -> dict | None:
     vin = norm_str(obj.get("vin") or obj.get("VIN") or obj.get("item_id") or obj.get("stockNumber") or obj.get("stock_number") or "")
     if not vin:
-        vin = f"unknown-{hash(str(obj)) % 10**8}"
+        # Stable across process restarts (unlike Python's salted str hash()):
+        # sha1 over the vehicle's own JSON so the identical source record
+        # always yields the same placeholder vin, letting upsert_vehicles
+        # match it to its previous row on the next scan.
+        try:
+            digest_src = json.dumps(obj, sort_keys=True, default=str)
+        except (TypeError, ValueError):
+            digest_src = str(obj)
+        vin = f"unknown-{hashlib.sha1(digest_src.encode('utf-8')).hexdigest()[:8]}"
     hero = extract_image_url(obj, base_url)
     gallery = extract_gallery_urls(obj, base_url)
     if not gallery and hero.startswith("http"):

@@ -14,20 +14,21 @@ from __future__ import annotations
 
 import json
 import logging
+import os
 import re
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 import requests
 
-from scrapers.oem.discovery import (
+from .discovery import (
     collect_script_src,
     extract_embedded_json_blobs,
     mine_urls_from_js_bundle,
 )
-from scrapers.oem.bmw_debug import extract_html_title, write_debug_artifact
-from scrapers.oem.bmw_parse_trace import explain_parse_outcome, top_level_keys
-from scrapers.oem.http import oem_requests_session
+from .bmw_debug import extract_html_title, write_debug_artifact
+from .bmw_parse_trace import explain_parse_outcome, top_level_keys
+from .http import oem_requests_session
 
 logger = logging.getLogger("scrapers.oem.bmw")
 
@@ -473,6 +474,7 @@ def _json_body_dealer_heuristic(data: Any, url: str) -> bool:
 
 def ingest_bmw_usa_playwright(
     *,
+    project_root: Path | None = None,
     timeout_ms: int = 180_000,
     verify_ssl: bool = True,
     debug: bool = False,
@@ -546,6 +548,7 @@ def ingest_bmw_usa_playwright(
             verify_ssl=verify_ssl,
             user_agent=USER_AGENT,
             parse_json_to_records_fn=parse_json_to_records,
+            project_root=project_root,
             zip_codes=zip_seeds,
             selector_overrides=selector_overrides,
             ai_selector_adjudicator=ai_adjudicator,
@@ -723,6 +726,7 @@ def ingest_bmw_usa(
     tw = max(180_000, timeout * 1000)
     if prefer_playwright:
         return ingest_bmw_usa_playwright(
+            project_root=project_root,
             timeout_ms=tw,
             verify_ssl=verify_ssl,
             debug=debug,
@@ -743,6 +747,7 @@ def ingest_bmw_usa(
     if not b.records:
         logger.info("Requests ingest returned 0 rows; retrying with Playwright capture")
         b2 = ingest_bmw_usa_playwright(
+            project_root=project_root,
             timeout_ms=tw,
             verify_ssl=verify_ssl,
             debug=debug,

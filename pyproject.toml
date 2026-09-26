@@ -35,18 +35,9 @@ ignore = [
 ]
 
 [tool.ruff.lint.per-file-ignores]
-# F821 (undefined name) is the highest-value rule in this set, so it stays enabled
-# for the other ~730 files. The three below are real latent NameErrors, not false
-# positives -- fix the imports and delete the line, do not extend this list:
-#   nav.py      json / sys / argparse / MANIFEST_PATH are used but never imported
-#               after the phases/ split; load_manifest() and the CLI shard helpers
-#               raise NameError the moment they are reached.
-#   bmw.py:508  os.environ in the ai_selector_assist branch; `os` is not imported.
-#   core.py     logger.debug() inside the VDP network-capture done-callback; the
-#               module never defines or imports `logger`.
-"backend/oem/scraper/oem/bmw.py" = ["F821"]
-"backend/scanner/phases/nav.py" = ["F821"]
-"backend/scanner/vdp/core.py" = ["F821"]
+# F821 (undefined name) stays enabled everywhere. The three latent NameErrors
+# that once lived here (phases/nav.py, oem/bmw.py, vdp/core.py) are fixed;
+# do not re-add a file to silence a new one -- fix the import.
 
 # Duplicate dict-key literals in lookup tables. Both duplicates currently map to
 # the same value, so nothing is broken today -- but the next edit to one copy

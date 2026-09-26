@@ -8,6 +8,21 @@ from ._common import (
     get_conn,
 )
 
+_DUMMY_HASH_CACHE: str | None = None
+
+
+def _timing_safe_dummy_hash() -> str:
+    """Precomputed bcrypt hash used to burn comparable time on login misses.
+
+    Login lookups that fall through to ``verify_or_legacy`` take one bcrypt
+    comparison (tens to hundreds of ms); a "no such account" miss must spend
+    similar time so response latency doesn't reveal whether the account exists.
+    """
+    global _DUMMY_HASH_CACHE
+    if _DUMMY_HASH_CACHE is None:
+        _DUMMY_HASH_CACHE = hash_password("timing-attack-mitigation-dummy-password")
+    return _DUMMY_HASH_CACHE
+
 
 def get_user_totp(user_id: int) -> dict | None:
     try:
@@ -228,6 +243,7 @@ def authenticate_app_user(login_input: str, password: str) -> dict | None:
     row = cursor.fetchone()
     conn.close()
     if not row:
+        verify_or_legacy(password, _timing_safe_dummy_hash())
         return None
     stored = row[-1]
     if not verify_or_legacy(password, stored):
@@ -309,12 +325,13 @@ def get_user_email_verification_state(user_id: int) -> dict | None:
     return out
 
 
-def set_user_email_verify_token(user_id: int, token_hash: str) -> bool:
+def set_user_email_verify_token(user_id: int, token_hash: str, expires_at: int) -> bool:
     try:
         uid = int(user_id)
+        exp = int(expires_at)
     except (TypeError, ValueError):
         return False
-    if uid <= 0:
+    if uid <= 0 or exp <= 0:
         return False
     th = (token_hash or "").strip()
     if not th:
@@ -323,12 +340,13 @@ def set_user_email_verify_token(user_id: int, token_hash: str) -> bool:
     cursor = conn.cursor()
     cursor.execute("PRAGMA table_info(users)")
     cols = {r[1] for r in cursor.fetchall()}
-    if "email_verify_token_hash" not in cols:
+    if "email_verify_token_hash" not in cols or "email_verify_expires_at" not in cols:
         conn.close()
         return False
     cursor.execute(
-        "UPDATE users SET email_verify_token_hash = ?, email_verified_at = NULL WHERE id = ?",
-        (th, uid),
+        "UPDATE users SET email_verify_token_hash = ?, email_verify_expires_at = ?, "
+        "email_verified_at = NULL WHERE id = ?",
+        (th, exp, uid),
     )
     ok = cursor.rowcount > 0
     conn.commit()
@@ -351,7 +369,7 @@ def clear_user_email_verify_token(user_id: int) -> bool:
         conn.close()
         return False
     cursor.execute(
-        "UPDATE users SET email_verify_token_hash = NULL WHERE id = ?",
+        "UPDATE users SET email_verify_token_hash = NULL, email_verify_expires_at = NULL WHERE id = ?",
         (uid,),
     )
     ok = cursor.rowcount > 0
@@ -385,6 +403,8 @@ def mark_user_email_verified(user_id: int) -> bool:
 
 
 def get_user_id_by_email_verify_token_hash(token_hash: str) -> int | None:
+    import time
+
     th = (token_hash or "").strip()
     if not th:
         return None
@@ -392,11 +412,11 @@ def get_user_id_by_email_verify_token_hash(token_hash: str) -> int | None:
     cursor = conn.cursor()
     cursor.execute("PRAGMA table_info(users)")
     cols = {r[1] for r in cursor.fetchall()}
-    if "email_verify_token_hash" not in cols:
+    if "email_verify_token_hash" not in cols or "email_verify_expires_at" not in cols:
         conn.close()
         return None
     cursor.execute(
-        "SELECT id FROM users WHERE email_verify_token_hash = ? LIMIT 1",
+        "SELECT id, email_verify_expires_at FROM users WHERE email_verify_token_hash = ? LIMIT 1",
         (th,),
     )
     row = cursor.fetchone()
@@ -404,9 +424,13 @@ def get_user_id_by_email_verify_token_hash(token_hash: str) -> int | None:
     if not row:
         return None
     try:
-        return int(row[0])
+        uid = int(row[0])
+        exp = int(row[1] or 0)
     except (TypeError, ValueError):
         return None
+    if exp <= int(time.time()):
+        return None
+    return uid
 
 
 def set_user_password_reset_token(user_id: int, token_hash: str, expires_at: int) -> bool:
@@ -534,6 +558,7 @@ def check_user(login_input, password):
     row = cursor.fetchone()
     conn.close()
     if not row:
+        verify_or_legacy(password, _timing_safe_dummy_hash())
         return False
     uid, _u, _e, stored = row[0], row[1], row[2], row[3]
     if has_is_active and not bool(row[4]):

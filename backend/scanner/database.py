@@ -817,7 +817,7 @@ def _infer_drivetrain_from_trim(trim: str | None, title: str | None) -> str | No
     """
     blob = f"{trim or ''} {title or ''}".upper()
     # AWD signals
-    if re.search(r"\b(XDRIVE|4MATIC|QUATTRO|SH-AWD|AWD|4X4|4WD|ALL[\s-]WHEEL)\b", blob):
+    if re.search(r"\b(XDRIVE|4MATIC|QUATTRO|SH-AWD|AWD|ALL[\s-]WHEEL)\b", blob):
         return "AWD"
     # 4WD truck signals
     if re.search(r"\b(4X4|4WD)\b", blob):

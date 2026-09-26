@@ -62,7 +62,7 @@ _NAME_PATTERNS: tuple[str, ...] = (
 )
 
 # --- URL host substrings (matched against the lowercased hostname) -------------
-# Substring match is safe here because these are specific brand domains.
+# Substring match is safe here because these fragments aren't apex domains.
 _URL_HOST_SUBSTRINGS: tuple[str, ...] = (
     "picknpull",
     "pullapart",
@@ -74,6 +74,14 @@ _URL_HOST_SUBSTRINGS: tuple[str, ...] = (
     "uwrench",
     "rvworld",
     "campingworld",
+)
+
+# --- URL host apex domains (EXACT / subdomain match only) ----------------------
+# These are specific brand apex domains. A substring test here would risk
+# clipping a real dealer host that merely contains one of these strings, e.g.
+# a hypothetical "eastrivian.com" or "xyztesla.com" (same class of bug the
+# _OEM_APEX_HOSTS comment above calls out for "toyota.com").
+_URL_HOST_APEX_DOMAINS: tuple[str, ...] = (
     "rivian.com",
     "tesla.com",
     "manheim.com",
@@ -187,6 +195,10 @@ def is_probable_non_dealer(
 
     host = _host_of(url)
     if host and any(sub in host for sub in _URL_HOST_SUBSTRINGS):
+        return True
+    if host and any(
+        host == apex or host.endswith("." + apex) for apex in _URL_HOST_APEX_DOMAINS
+    ):
         return True
     if host in _OEM_APEX_HOSTS:
         return True

@@ -199,6 +199,70 @@ def finish_job(
         conn.close()
 
 
+def _stale_running_max_age_sec() -> int:
+    """How long a ``running`` row may sit before it is presumed orphaned.
+
+    Defaults to the worker's own subprocess timeout (``SCANNER_JOB_TIMEOUT_SEC``,
+    3600s) plus a 15-minute grace for post-scan bookkeeping. Override with
+    ``SCANNER_STALE_JOB_SEC`` when a deployment runs longer per-dealer jobs.
+    """
+    raw = (os.environ.get("SCANNER_STALE_JOB_SEC") or "").strip()
+    if raw:
+        try:
+            return max(60, int(raw))
+        except ValueError:
+            pass
+    try:
+        timeout = int(os.environ.get("SCANNER_JOB_TIMEOUT_SEC", "3600"))
+    except ValueError:
+        timeout = 3600
+    return max(60, timeout) + 900
+
+
+def reap_stale_running_jobs(*, max_age_sec: int | None = None) -> int:
+    """Fail ``running`` jobs whose worker died without calling :func:`finish_job`.
+
+    A worker killed mid-job (OOM, redeploy, SIGKILL) leaves its row ``running``
+    forever. ``schedule_due_refresh_jobs`` treats ``running`` as active and never
+    enqueues that dealer again, so one lost worker silently removes a dealer from
+    the refresh cadence for good. Marking the row ``failed`` with a recognisable
+    error lets the scheduler re-enqueue on the next due tick and keeps the
+    failure visible in the ops hub. Returns the number of rows reaped.
+    """
+    if not inventory_pg.is_inventory_postgres():
+        return 0
+    age = int(max_age_sec) if max_age_sec is not None else _stale_running_max_age_sec()
+    now = datetime.now(timezone.utc)
+    cutoff = (now - timedelta(seconds=age)).isoformat()
+    conn = pg_connect()
+    try:
+        cur = conn.cursor()
+        cur.execute(
+            qmarks_to_percent_s(
+                """
+                UPDATE dealer_jobs
+                SET status = 'failed', finished_at = ?,
+                    error = ?
+                WHERE status = 'running'
+                  AND started_at IS NOT NULL
+                  AND started_at < ?
+                RETURNING id, dealer_id, worker_id, started_at
+                """
+            ),
+            (now.isoformat(), f"stale_running: no finish_job within {age}s (worker lost)", cutoff),
+        )
+        rows = cur.fetchall() or []
+        conn.commit()
+    finally:
+        conn.close()
+    for job_id, dealer_id, worker_id, started_at in rows:
+        _log.warning(
+            "Reaped stale running job id=%s dealer=%s worker=%s started=%s",
+            job_id, dealer_id, worker_id, started_at,
+        )
+    return len(rows)
+
+
 def _default_scan_interval_hours() -> int:
     try:
         return max(1, int(os.environ.get("SCANNER_DEFAULT_INTERVAL_HOURS", "24")))

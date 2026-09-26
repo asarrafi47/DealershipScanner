@@ -106,6 +106,9 @@ async def scrape_inventory_path(
         except Exception:
             pass
 
+    from backend.scanner.browser_gate import require_browser
+
+    require_browser("inventory_scrape.scrape_inventory_path")
     page = await context.new_page()
     post_template: dict[str, Any] | None = None
     api_post_url: str | None = None

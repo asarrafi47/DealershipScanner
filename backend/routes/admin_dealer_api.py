@@ -6,12 +6,16 @@ before_request hook in ``backend.main`` matches them by name.
 
 from __future__ import annotations
 
+import logging
+
 from flask import jsonify, request, session
 
 from backend.db.users_db import get_user_profile
 from backend.routes._shared import _client_ip
 from backend.utils.ip_rate_limit import allow_request
 from backend.utils.roles import is_admin_role
+
+logger = logging.getLogger(__name__)
 
 
 def _current_admin_ok() -> bool:
@@ -23,7 +27,11 @@ def _current_admin_ok() -> bool:
         return False
     try:
         profile = get_user_profile(int(uid))
-    except (TypeError, ValueError):
+    except Exception:
+        # Fail closed (no admin access) on any lookup failure, including a
+        # transient DB outage, rather than letting it surface as an
+        # unhandled 500 from the auth check.
+        logger.exception("admin auth check: get_user_profile(%r) failed", uid)
         return False
     if not profile or not profile.get("is_active", True):
         return False

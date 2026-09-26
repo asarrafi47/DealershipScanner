@@ -246,6 +246,9 @@ def _map_vehicle_card(
         row["packages"] = packages
     if description:
         row["description"] = description
+    msrp = _parse_price(vc.get("VehicleMsrp"), None)
+    if msrp:
+        row["msrp"] = msrp  # every new-car card carries it (Cherokee County 96/96); feed price falls back to it
     return row
 
 

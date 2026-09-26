@@ -5,13 +5,13 @@ Run: python -m SCRAPING.fixture_tests
 """
 from __future__ import annotations
 
-from scraping.inference import extract_candidates_from_text
-from scraping.canonical_groups import canonical_group_display, merge_canonical_key
-from scraping.org_validation import (
+from backend.scraping.inference import extract_candidates_from_text
+from backend.scraping.canonical_groups import canonical_group_display, merge_canonical_key
+from backend.scraping.org_validation import (
     is_plausible_org_name,
     normalize_group_name,
 )
-from scraping.redirects import describe_redirect, domains_plausibly_related
+from backend.scraping.redirects import describe_redirect, domains_plausibly_related
 
 
 def _assert(cond: bool, msg: str) -> None:

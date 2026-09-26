@@ -82,8 +82,20 @@ _DEFAULT_MANIFEST = "workspace/manifest_phoenix_sample.json"
 
 
 def _healthy_recipe_exists(dealer_id: str) -> bool:
-    """True if the dealer already has a proven-working (non-stale, replayed) recipe."""
-    return any((not r.stale) and r.last_ok_at > 0 for r in load_recipes(dealer_id))
+    """A non-stale recipe that has replayed AND carries real inventory fields.
+
+    A recipe whose measured coverage says "VINs only" (Team Velocity key-features
+    side calls, Gatsby page-data blobs) is not healthy: it can never replace the
+    browser scrape, so a synthesized platform feed should be allowed to displace it.
+    """
+    from backend.scanner.recipes import recipe_coverage_is_rich
+
+    return any(
+        (not r.stale)
+        and r.last_ok_at > 0
+        and (not r.field_coverage or recipe_coverage_is_rich(r.field_coverage))
+        for r in load_recipes(dealer_id)
+    )
 
 
 def _upsert_recipe(dealer_id: str, recipe: EndpointRecipe) -> None:
@@ -289,6 +301,15 @@ def main(argv: list[str] | None = None) -> int:
             "name": args.name or args.dealer_id or args.url,
             "url": args.url,
         }]
+    elif args.dealer_id:
+        # --dealer-id alone used to fall through to the default Phoenix manifest and
+        # silently process six unrelated dealers. Resolve the URL from the fleet
+        # manifest instead.
+        wanted = {d.strip() for d in args.dealer_id.split(",") if d.strip()}
+        dealers = [d for d in _load_manifest("dealers.json") if d.get("dealer_id") in wanted]
+        missing = wanted - {d.get("dealer_id") for d in dealers}
+        if missing:
+            ap.error(f"dealer id(s) not in dealers.json: {sorted(missing)} (pass --url for a one-off)")
     else:
         dealers = _load_manifest(args.manifest)
 

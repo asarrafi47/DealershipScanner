@@ -3,6 +3,7 @@ Parser for dealer.com getInventory API. Maps exact schema:
   title (array -> join), trackingPricing.internetPrice, trackingAttributes (odometer, exteriorColor),
   images[].uri -> gallery, vin, stockNumber, fuelType.
 """
+import hashlib
 import json
 import logging
 import re
@@ -528,7 +529,15 @@ def _map_vehicle(
     if not vin:
         vin = norm_str(obj.get("stockNumber") or "")
     if not vin:
-        vin = f"unknown-{hash(str(obj)) % 10**8}"
+        # Stable across process restarts (unlike Python's salted str hash()):
+        # sha1 over the vehicle's own JSON so the identical source record
+        # always yields the same placeholder vin, letting upsert_vehicles
+        # match it to its previous row on the next scan.
+        try:
+            digest_src = json.dumps(obj, sort_keys=True, default=str)
+        except (TypeError, ValueError):
+            digest_src = str(obj)
+        vin = f"unknown-{hashlib.sha1(digest_src.encode('utf-8')).hexdigest()[:8]}"
 
     stock_raw = _opt_str(obj.get("stockNumber"))
     stock_number = stock_raw or ""

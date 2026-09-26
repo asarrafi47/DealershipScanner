@@ -386,6 +386,9 @@ async def _run_profiler(
         except Exception:
             pass
 
+    from backend.scanner.browser_gate import require_browser
+
+    require_browser("site_profile.profile_dealer_site")
     page = await context.new_page()
     try:
         page.on("response", _on_response)

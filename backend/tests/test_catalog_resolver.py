@@ -228,3 +228,76 @@ def test_lexus_phev_long_form_model_suffix() -> None:
     # prefix tier (norm 'nx' < 4 chars), needs explicit suffix stripping.
     assert "NX" in _model_variants("Lexus", "NX PLUG-IN HYBRID ELECTRIC VEHICLE")
     assert "ES" in _model_variants("Lexus", "ES HYBRID")
+
+
+# --- engine size / cylinders read from the dealer's engine text ---------------
+
+def test_liters_from_engine_text_breaks_cylinders_only_tie() -> None:
+    # 2026-09-21: 2.7L I4 Silverados linked to the 5.3L V8 row on cylinders+drive
+    # alone because engine_l was NULL and the stored cylinders column said 8.
+    car = {
+        "year": 2026, "make": "Chevrolet", "model": "SILVERADO 1500", "trim": "RST",
+        "cylinders": 8, "engine_l": None, "engine_description": "2.7L I4 L3B Turbo",
+        "drivetrain": "4WD", "fuel_type": "Gasoline", "title": "2026 Chevrolet Silverado 1500 RST",
+    }
+    v8 = _epa(1, "4WD  (Flex Fuel)", 8, 5.3, "Four-Wheel Drive", "Regular Gasoline", None, model="Silverado 1500")
+    i4 = _epa(2, "4WD", 4, 2.7, "Four-Wheel Drive", "Regular Gasoline", None, model="Silverado 1500")
+    s8, m8 = score_candidate(car, v8)
+    s4, m4 = score_candidate(car, i4)
+    assert s4 > s8
+    assert "engine_l" in m4 and "cylinders" in m4 and "row_cyl_overridden" in m4
+    assert "engine_l_conflict" in m8 and "cylinders_conflict" in m8
+    match = resolve_from_candidates(car, [v8, i4])
+    assert match is not None and match.epa_master_id == 2
+
+
+def test_engine_l_column_still_wins_when_present() -> None:
+    car = {
+        "year": 2023, "make": "BMW", "model": "X5", "trim": "xDrive40i",
+        "cylinders": None, "engine_l": "3.0", "engine_description": "3.0L",
+        "drivetrain": "AWD", "fuel_type": "Gasoline", "title": "2023 BMW X5 xDrive40i",
+    }
+    m50 = _epa(1, "M50i", 8, 4.4, "All-Wheel Drive", "Premium Gasoline", None, model="X5")
+    i6 = _epa(2, "xDrive40i", 6, 3.0, "All-Wheel Drive", "Premium Gasoline", None, model="X5")
+    assert score_candidate(car, i6)[0] > score_candidate(car, m50)[0]
+
+
+def test_vin_decode_outranks_dealer_drivetrain_and_fuel(monkeypatch) -> None:
+    """2026-09-23 lab: Ridgeline listed 'FWD' (VIN says AWD) and Accord Hybrid
+    listed 'Gasoline' (VIN says strong hybrid) each pulled the wrong catalog row."""
+    import backend.catalog.resolver as r
+
+    monkeypatch.setattr(
+        "backend.enrichment.knowledge_engine.lookup_vpic_from_cache",
+        lambda vin: {"drivetrain": "AWD", "electrification": "hybrid", "fuel_type": "Gasoline"},
+    )
+    car = {"vin": "1HGCY2F63TA066331", "year": 2026, "make": "Honda", "model": "Accord",
+           "trim": "EX-L Hybrid", "drivetrain": "FWD", "fuel_type": "Gasoline",
+           "engine_description": "2.0L I4", "cylinders": 4}
+    gas = _epa(1, "EX-L", 4, 1.5, "Front-Wheel Drive", "Regular Gasoline", None, model="Accord")
+    hyb = _epa(2, "Hybrid AWD", 4, 2.0, "All-Wheel Drive", "Regular Gasoline", "Hybrid", model="Accord")
+    m = resolve_from_candidates(car, [gas, hyb])
+    assert m is not None and m.epa_master_id == 2
+    fixed = r.apply_vin_facts(car)
+    assert fixed["drivetrain"] == "AWD" and fixed["fuel_type"] == "Hybrid"
+    assert car["drivetrain"] == "FWD", "input must not be mutated"
+
+
+def test_blank_vin_decode_changes_nothing(monkeypatch) -> None:
+    import backend.catalog.resolver as r
+
+    monkeypatch.setattr(
+        "backend.enrichment.knowledge_engine.lookup_vpic_from_cache",
+        lambda vin: {"drivetrain": None, "electrification": None, "fuel_type": None},
+    )
+    car = {"vin": "1HGCY2F63TA066331", "drivetrain": "FWD", "fuel_type": "Gasoline"}
+    assert r.apply_vin_facts(car) == car
+
+
+def test_drive_bucket_treats_two_wheel_drive_as_no_signal() -> None:
+    from backend.catalog.resolver import _drive_bucket
+
+    assert _drive_bucket("4x2/2-Wheel Drive") == ""
+    assert _drive_bucket("2WD") == ""
+    assert _drive_bucket("4WD/4-Wheel Drive/4x4") == "4WD"
+    assert _drive_bucket("Front-Wheel Drive") == "FWD"

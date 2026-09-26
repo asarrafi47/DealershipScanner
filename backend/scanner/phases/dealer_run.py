@@ -58,6 +58,61 @@ from backend.scanner import scan_log
 logger = logging.getLogger("scanner")
 
 
+def _http_only() -> bool:
+    """No browser at all (the default): inventory comes from recipe replay, per-car
+    data from VDP recipes + HTTP-first. Only ``SCANNER_ALLOW_BROWSER=1`` (discovery
+    captures) turns this off — see backend/scanner/browser_gate.py."""
+    from backend.scanner.browser_gate import http_only
+
+    return http_only()
+
+
+_CAPTURE_FIELDS = (
+    "price", "msrp", "mileage", "trim", "exterior_color", "interior_color", "engine_description",
+    "transmission", "drivetrain", "fuel_type", "body_style", "description", "stock_number",
+    "carfax_url", "image_url",
+)
+
+
+def _capture_coverage(vehicles: list[dict[str, Any]]) -> dict[str, Any]:
+    """Share of captured rows carrying each field, BEFORE the upsert's COALESCE can
+    hide gaps behind values the DB already had. This is the honest measure of what
+    the capture path produced."""
+    n = len(vehicles)
+    out: dict[str, Any] = {"n": n}
+    if not n:
+        return out
+    examples: dict[str, list[str]] = {}
+
+    def _has(v: dict[str, Any], k: str) -> bool:
+        val = v.get(k)
+        if val is None:
+            return False
+        if isinstance(val, str):
+            return bool(val.strip())
+        return True
+
+    for k in _CAPTURE_FIELDS:
+        hit = 0
+        for v in vehicles:
+            if _has(v, k):
+                hit += 1
+            elif len(examples.setdefault(k, [])) < 3:
+                examples[k].append(str(v.get("vin") or "")[:17])
+        out[k] = round(hit / n, 3)
+    g8 = 0
+    for v in vehicles:
+        g = v.get("gallery")
+        cnt = sum(1 for u in g if isinstance(u, str) and u.lower().startswith("https://")) if isinstance(g, list) else 0
+        if cnt >= 8:
+            g8 += 1
+        elif len(examples.setdefault("gallery_8plus", [])) < 3:
+            examples["gallery_8plus"].append(str(v.get("vin") or "")[:17])
+    out["gallery_8plus"] = round(g8 / n, 3)
+    out["missing_examples"] = {k: v for k, v in examples.items() if v}
+    return out
+
+
 def _warmup_phase_timeout_sec() -> float:
     """Hard cap on the whole warmup phase (goto → settle → cookie banner); 0 disables."""
     raw = (os.environ.get("SCANNER_WARMUP_PHASE_TIMEOUT_SEC") or "240").strip()
@@ -177,6 +232,7 @@ async def run_dealer(
         "reconcile": None,
         "gallery_vision": None,
         "monroney_vision": None,
+        "vdp_phase_timed_out": False,
         "phase_secs": {},
     }
     t0 = time.perf_counter()
@@ -192,13 +248,23 @@ async def run_dealer(
     intercept_records: list[tuple[str, Any]] = []
     gate_stats = {"url_denied": 0}
 
+    page: Any = None
     try:
         ctx_opts: dict[str, Any] = {"viewport": {"width": 1920, "height": 1080}}
         _ua = (os.environ.get("SCANNER_USER_AGENT") or "").strip() or get_rotating_ua()
         ctx_opts["user_agent"] = _ua
-        logger.info("Warmup UA [%s]: %s", name, _ua[:130])
-        context = await browser.new_context(**ctx_opts)
-        page = await context.new_page()
+        if browser is not None and not _http_only():
+            from backend.scanner.browser_gate import require_browser
+
+            require_browser("dealer_run.new_context")
+            logger.info("Warmup UA [%s]: %s", name, _ua[:130])
+            context = await browser.new_context(**ctx_opts)
+            page = await context.new_page()
+        else:
+            # HTTP-only: no context, no page. Every browser phase below is gated on
+            # ``page is None`` / ``_http_only()``; the recipe replay + HTTP-first
+            # detail pass are the whole scan.
+            page = None
         warm_pred = playwright_inventory_json_predicate(url)
         _dead_domain_errors = (
             "ERR_NAME_NOT_RESOLVED", "ERR_TOO_MANY_REDIRECTS",
@@ -269,8 +335,12 @@ async def run_dealer(
         # a wedged renderer can stall even Playwright's own navigation timeout, so a
         # per-call timeout is not enough — the phase gets one as a whole.
         _warmup_cap = _warmup_phase_timeout_sec()
+        if _http_only():
+            result["http_only"] = True
+            logger.info("HTTP-only [%s]: browser warmup skipped", name)
         try:
-            await asyncio.wait_for(_warmup_phase(), timeout=_warmup_cap)
+            if not _http_only():
+                await asyncio.wait_for(_warmup_phase(), timeout=_warmup_cap)
         except asyncio.TimeoutError:
             raise RuntimeError(
                 f"warmup_phase_timeout_{int(_warmup_cap)}s: page wedged "
@@ -281,7 +351,7 @@ async def run_dealer(
         # (e.g. S3/Ceph bucket static 503 — goto succeeds but page is a placeholder).
         # Use specific downtime phrases only — bare "maintenance" fires on every dealer
         # service-menu nav item ("Oil Change & Maintenance", "Maintenance Schedule", etc.).
-        if not _warmup_403_bypass:
+        if not _warmup_403_bypass and not _http_only():
             try:
                 _warmup_html = (await asyncio.wait_for(page.content(), timeout=15.0)).lower()
                 _maintenance_markers = (
@@ -355,7 +425,7 @@ async def run_dealer(
                 "(provider=dealer_inspire, scrape_risk=algolia_auth)",
                 name,
             )
-        elif _profiler_enabled:
+        elif _profiler_enabled and not _http_only():
             t_prof0 = time.perf_counter()
             try:
                 _site_profile = await profile_dealer_site(context, url, [])
@@ -396,28 +466,65 @@ async def run_dealer(
         # merged (VIN dedup downstream) but the browser scrape runs too.
         recipe_records: list[tuple[str, Any]] | None = None
         try:
-            from backend.scanner.recipes import last_known_vin_count, try_fetch_via_recipes
+            from backend.scanner.recipes import (
+                last_known_vin_count,
+                recipe_yield_replaces_browser,
+                try_fetch_via_recipes,
+            )
 
-            _recipe_hit = await try_fetch_via_recipes(dealer_id, provider, url, name)
+            _recipe_cov: dict[str, float] = {}
+            # union=True: a dealer's recipes are per section (new / used / CPO).
+            # First-hit replay returned Jordan Ford's used feed alone (160 VINs),
+            # cleared 70% of a stale 176-row lot and skipped the browser without
+            # ever pulling the 623-row new feed (pilot, 2026-09-22).
+            _recipe_hit = await try_fetch_via_recipes(
+                dealer_id, provider, url, name, union=True, coverage_out=_recipe_cov
+            )
             if _recipe_hit:
                 recipe_records, _recipe_vins = _recipe_hit
+                if _http_only():
+                    # No site profile ran; the recipe's own provider hint is the truth.
+                    try:
+                        from backend.scanner.recipes import load_recipes as _lr
+
+                        _hints = [r.provider_hint for r in _lr(dealer_id) if not r.stale and r.provider_hint]
+                        if _hints:
+                            result["provider"] = _hints[0]
+                    except Exception:
+                        pass
                 _known = await asyncio.to_thread(last_known_vin_count, dealer_id)
-                if _known > 0 and _recipe_vins >= int(0.7 * _known):
+                result["recipe_coverage"] = {
+                    k: round(float(v), 3) for k, v in _recipe_cov.items() if k != "n"
+                }
+                _ok, _why = recipe_yield_replaces_browser(_recipe_vins, _known, _recipe_cov)
+                if _ok:
                     result["recipe_fetch"] = "full"
                     inv_paths = []
                     logger.info(
-                        "Recipe fetch [%s]: %d/%d known VIN(s) — skipping browser inventory",
+                        "Recipe fetch [%s]: %d/%d known VIN(s), price %.0f%% trim %.0f%% colour %.0f%% "
+                        "— skipping browser inventory",
                         name, _recipe_vins, _known,
+                        100 * _recipe_cov.get("price", 0.0), 100 * _recipe_cov.get("trim", 0.0),
+                        100 * _recipe_cov.get("exterior_color", 0.0),
                     )
                 else:
+                    # A thin replay (VINs but no price/trim/colour) must never stand
+                    # in for the SRP scrape; merge what it found and scrape anyway.
                     result["recipe_fetch"] = "partial"
                     logger.info(
-                        "Recipe fetch [%s]: %d VIN(s) vs %d known — merging and still scraping",
-                        name, _recipe_vins, _known,
+                        "Recipe fetch [%s]: %d VIN(s) vs %d known — %s; merging and still scraping",
+                        name, _recipe_vins, _known, _why,
                     )
         except Exception as _rec_e:
             logger.debug("Recipe fetch skipped [%s]: %s", name, str(_rec_e)[:200])
 
+        if _http_only() and inv_paths:
+            result["recipe_fetch"] = f"{result.get('recipe_fetch') or 'none'}+http_only"
+            logger.info(
+                "HTTP-only [%s]: browser inventory skipped (%s)",
+                name, "recipe rows kept" if recipe_records else "NO RECIPE HIT: zero rows this run",
+            )
+            inv_paths = []
         logger.info("Inventory paths: %s — launching %d parallel scrapers", name, len(inv_paths))
         t_inv0 = time.perf_counter()
         dealer_city = str(dealer.get("city") or "").strip()
@@ -580,9 +687,21 @@ async def run_dealer(
         all_vehicles = recovery.vehicles
         for _v in all_vehicles:
             _v.pop("_rooftop_reject", None)
-        all_vehicles, rooftop_refused = resolve_rooftop_attribution(
-            all_vehicles, dealer_id=dealer_id, dealer_name=name, dealer_url=url, **roster_place,
-        )
+        # Rows a store-scoped recipe returned (CarsCommerce facetFilters.source_id,
+        # verified at synthesis) are this store's by construction; re-gating them
+        # here kept 5 of Tutton CDJR's 346 cars on 2026-09-26 (the gate can only
+        # pick ONE of the two stamps its feeds use). Gate only the rest.
+        _scoped = [v for v in all_vehicles if v.get("_feed_scoped")]
+        _open = [v for v in all_vehicles if not v.get("_feed_scoped")]
+        if _open:
+            _open, rooftop_refused = resolve_rooftop_attribution(
+                _open, dealer_id=dealer_id, dealer_name=name, dealer_url=url, **roster_place,
+            )
+        else:
+            rooftop_refused = []
+        if _scoped:
+            logger.info("rooftop attribution [%s]: %d row(s) from store-scoped recipe(s) kept without the union gate", dealer_id, len(_scoped))
+        all_vehicles = _scoped + _open
         if rooftop_refused:
             result["rooftop_refused_rows"] = len(rooftop_refused)
         result["inventory_rows"] = len(all_vehicles)
@@ -711,7 +830,14 @@ async def run_dealer(
             vdp_stats: dict[str, Any] = {}
             t_vdp0 = time.perf_counter()
             _vdp_cap = _vdp_phase_timeout_sec(len(all_vehicles))
+            if page is None:
+                # HTTP-only: the browser VDP pool does not exist; prefetch_before_vdp
+                # (curl_cffi detail pages + VDP recipes) above is the per-car layer.
+                logger.info("HTTP-only [%s]: browser VDP pool skipped (%d car(s) went through the HTTP-first pass)", name, len(all_vehicles))
+                _vdp_cap = 0
             try:
+                if page is None:
+                    raise asyncio.TimeoutError  # falls into the same keep-what-we-have branch, without a timeout flag
                 # Phase-level timeout: a wedged renderer (DealerOn anti-bot tarpit) hangs
                 # rather than raises, so per-page timeouts don't fire and VDP would block
                 # the dealer's inventory upsert forever. On timeout we keep the listing
@@ -721,14 +847,18 @@ async def run_dealer(
                         page, all_vehicles, name, dealer_id=dealer_id, site_profile=site_profile,
                         provider=provider,
                         ep_max=_ep_max_arg, price_max=_price_max_arg, description_max=_desc_max_arg,
+                        stats_out=vdp_stats,
                     ),
                     timeout=_vdp_cap,
                 )
             except asyncio.TimeoutError:
+                # vdp_stats was updated in place by the pool, so the pages visited
+                # before the cap stay counted; their fields are already merged.
+                result["vdp_phase_timed_out"] = page is not None
                 logger.warning(
-                    "VDP enrichment timed out for %s after %.0fs (renderer wedge?) — "
-                    "upserting %d listing-only rows",
-                    name, _vdp_cap, len(all_vehicles),
+                    "VDP phase cap %.0fs reached for %s — keeping %d visited page(s), "
+                    "upserting %d rows with what was merged so far",
+                    _vdp_cap, name, int(vdp_stats.get("vdps_visited") or 0), len(all_vehicles),
                 )
             except Exception as e:
                 logger.warning("VDP enrichment failed for %s (continuing with listing data only): %s", name, e)
@@ -736,25 +866,47 @@ async def run_dealer(
             result["vdps_visited"] = int(vdp_stats.get("vdps_visited") or 0)
             result["vehicles_vdp_enriched"] = int(vdp_stats.get("vehicles_enriched") or 0)
             result["gallery_vdp_urls_added"] = int(vdp_stats.get("gallery_vdp_urls_added") or 0)
+            if vdp_stats.get("description_probe"):
+                result["description_probe"] = vdp_stats.get("description_probe")
             log_gallery_bins(name, "after_vdp", all_vehicles)
             result["gallery_bins"] = gallery_https_bin_histogram(all_vehicles)
             if vdp_stats.get("gallery_phase_bins"):
                 logger.info("Gallery phase bins [%s]: %s", name, vdp_stats.get("gallery_phase_bins"))
 
             pre_vdp_n = len(all_vehicles)
-            all_vehicles = [v for v in all_vehicles if not v.get("_sister_store_exclude")]
-            vdp_excluded = pre_vdp_n - len(all_vehicles)
+            _vdp_kept = [v for v in all_vehicles if not v.get("_sister_store_exclude")]
+            vdp_excluded = pre_vdp_n - len(_vdp_kept)
             if vdp_excluded:
-                result["sister_store_vdp_excluded"] = vdp_excluded
-                result["deduped_rows"] = len(all_vehicles)
-                result["vins"] = sorted(
-                    {(v.get("vin") or "").strip() for v in all_vehicles if (v.get("vin") or "").strip()}
-                )
-                logger.info(
-                    "Sister-store filter [%s] VDP: excluded %d vehicle(s) after detail-page location check",
-                    name,
-                    vdp_excluded,
-                )
+                # Safety: mirror filter_sister_store_vehicles' guard — a misread shared
+                # location snippet across VDPs must not silently empty (or near-empty)
+                # the whole lot, which would delist real inventory via reconcile.
+                _min_keep = 8
+                try:
+                    _min_keep = max(1, int((os.environ.get("SCANNER_SISTER_STORE_MIN_KEEP") or "8").strip()))
+                except ValueError:
+                    pass
+                _safe_raw = (os.environ.get("SCANNER_SISTER_STORE_SAFE") or "1").strip().lower()
+                _safe_enabled = _safe_raw not in ("0", "false", "no", "off")
+                if _safe_enabled and pre_vdp_n >= _min_keep and len(_vdp_kept) == 0:
+                    logger.warning(
+                        "Sister-store filter [%s] VDP: would exclude entire lot (%d rows) — "
+                        "keeping all (set SCANNER_SISTER_STORE_SAFE=0 to allow empty result)",
+                        name,
+                        pre_vdp_n,
+                    )
+                    result["sister_store_vdp_aborted_empty"] = True
+                else:
+                    all_vehicles = _vdp_kept
+                    result["sister_store_vdp_excluded"] = vdp_excluded
+                    result["deduped_rows"] = len(all_vehicles)
+                    result["vins"] = sorted(
+                        {(v.get("vin") or "").strip() for v in all_vehicles if (v.get("vin") or "").strip()}
+                    )
+                    logger.info(
+                        "Sister-store filter [%s] VDP: excluded %d vehicle(s) after detail-page location check",
+                        name,
+                        vdp_excluded,
+                    )
 
             # Ensure gallery is always a list for DB (stored as json.dumps(gallery) in database.py)
             for v in all_vehicles:
@@ -817,6 +969,19 @@ async def run_dealer(
 
             for v in all_vehicles:
                 apply_vehicle_source_url(v)
+            try:
+                from backend.enrichment.vpic_facts import override_vehicles
+
+                _vf = override_vehicles(all_vehicles)
+                result["vin_facts"] = _vf
+                if _vf.get("drivetrain") or _vf.get("fuel_type"):
+                    logger.info(
+                        "VIN facts [%s]: %d cached decode(s); drivetrain overridden on %d, fuel on %d",
+                        name, _vf["cached"], _vf["drivetrain"], _vf["fuel_type"],
+                    )
+            except Exception as _vf_e:
+                logger.warning("VIN facts failed [%s] (continuing): %s", name, _vf_e)
+            result["capture_coverage"] = _capture_coverage(all_vehicles)
             t_up0 = time.perf_counter()
             count = await upsert_vehicles_for_dealer(write_coordinator, all_vehicles)
             result["phase_secs"]["upsert"] = round(time.perf_counter() - t_up0, 2)
@@ -938,12 +1103,13 @@ async def run_dealer(
             return result
         # No path returned vehicles
         logger.warning("Parsing: %s — no vehicles from any inventory path", name)
-        if provider in KNOWN_HAR_PROVIDERS:
-            await capture_scanner_failure_har(browser, url, dealer_id, name)
-        DEBUG_DIR.mkdir(parents=True, exist_ok=True)
-        screenshot_path = DEBUG_DIR / f"fail_{dealer_id}.png"
-        await page.screenshot(path=str(screenshot_path))
-        logger.info("Debug: saved screenshot to %s", screenshot_path)
+        if page is not None:
+            if provider in KNOWN_HAR_PROVIDERS:
+                await capture_scanner_failure_har(browser, url, dealer_id, name)
+            DEBUG_DIR.mkdir(parents=True, exist_ok=True)
+            screenshot_path = DEBUG_DIR / f"fail_{dealer_id}.png"
+            await page.screenshot(path=str(screenshot_path))
+            logger.info("Debug: saved screenshot to %s", screenshot_path)
         result["seconds"] = time.perf_counter() - t0
         logger.info(
             "Dealer complete: %s (%d inventory rows, %d deduped, %d VDP visited, %d VDP-enriched, %d upserted, %.1fs)",

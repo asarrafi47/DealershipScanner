@@ -546,7 +546,10 @@
 
 .listings-saved-search__save-btn,
 .listings-saved-search__list-btn {
-    padding: 7px 12px;
+    display: inline-flex;
+    align-items: center;
+    height: 34px;
+    padding: 0 12px;
     border-radius: 10px;
     border: 1px solid var(--border-medium);
     background: var(--bg-card);
@@ -555,6 +558,7 @@
     font-size: 13px;
     font-weight: 600;
     cursor: pointer;
+    box-sizing: border-box;
 }
 
 .listings-saved-search__save-btn:hover,
@@ -562,19 +566,36 @@
     border-color: var(--navy);
 }
 
+.listings-saved-search__heart {
+    flex-shrink: 0;
+    margin-right: 6px;
+    color: var(--navy);
+    transition: color 0.15s;
+}
+
+.listings-saved-search__list-btn--has-saved .listings-saved-search__heart {
+    color: #e11d48;
+    fill: currentColor;
+}
+
 .listings-saved-search__count {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 18px;
-    height: 18px;
+    min-width: 16px;
+    height: 16px;
     margin-left: 6px;
-    padding: 0 5px;
+    padding: 0 4px;
     border-radius: 999px;
-    background: var(--navy);
-    color: #faf8f5;
-    font-size: 11px;
+    background: #e11d48;
+    color: #fff;
+    font-size: 10px;
     font-weight: 700;
+    line-height: 1;
+}
+
+.listings-saved-search__count[hidden] {
+    display: none;
 }
 
 .listings-saved-search__panel {

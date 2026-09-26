@@ -12,13 +12,13 @@ import re
 from typing import Any
 from urllib.parse import urlparse
 
-from scrapers.oem.bmw_keyword_sets import (
+from .bmw_keyword_sets import (
     BODY_KEYWORDS,
     classify_response_bucket,
     extract_dom_card_guess,
     keyword_hits_in_text,
 )
-from scrapers.oem.bmw_parse_trace import explain_parse_outcome, top_level_keys
+from .bmw_parse_trace import explain_parse_outcome, top_level_keys
 
 LOCATOR_POSITIVE_TERMS = (
     "dealer",
@@ -1649,6 +1649,7 @@ def run_deep_locator_discovery(
     verify_ssl: bool,
     user_agent: str,
     parse_json_to_records_fn: Any,
+    project_root: Path | None = None,
     zip_codes: tuple[str, ...] = ("92606", "90807"),
     selector_overrides: dict[str, str] | None = None,
     ai_selector_adjudicator: Any | None = None,
@@ -1736,11 +1737,12 @@ def run_deep_locator_discovery(
             html_inspection = {"error": str(e)[:300]}
 
         state["phase"] = "after_zip_search"
+        root = project_root if project_root is not None else Path.cwd()
         screenshot_dir = (
-            Path.cwd() / "data" / "oem" / "bmw" / "debug" / "screenshots"
+            root / "data" / "oem" / "bmw" / "debug" / "screenshots"
         )
         html_snapshot_dir = (
-            Path.cwd() / "data" / "oem" / "bmw" / "debug" / "html_snapshots"
+            root / "data" / "oem" / "bmw" / "debug" / "html_snapshots"
         )
         interaction_data = run_interaction_locator(
             page,

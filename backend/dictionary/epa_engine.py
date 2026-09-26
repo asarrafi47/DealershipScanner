@@ -379,6 +379,30 @@ def pick_epa_engine_row(
     if len(distinct) <= 1:
         return None
 
+    # When the dealer's own displacement (and cylinder count, if known) names an
+    # engine this family actually offers, only those rows are candidates: trim
+    # and drivetrain words must not steer a "3.6L V6" Ram onto the 3.0L row or
+    # a "2.7L V6" Bronco onto the Raptor's 3.0L. A pair the family does not
+    # offer (a "3.0L" four-cylinder A6) falls through to the full scoring, which
+    # is where dealer typos get corrected.
+    if car_lit is not None and car_lit > 0:
+        def _row_lit(r: dict[str, Any]) -> float | None:
+            try:
+                v = float(r.get("displ") or r.get("displacement") or 0)
+                return v if v > 0 else None
+            except (TypeError, ValueError):
+                return None
+
+        exact = [
+            r for r in distinct
+            if (_row_lit(r) is not None and abs(_row_lit(r) - car_lit) <= 0.15)
+            and (car_cyl is None or _parse_int(r.get("cylinders")) in (None, car_cyl))
+        ]
+        if exact:
+            distinct = exact
+            if len(distinct) == 1:
+                return distinct[0]
+
     combo = _listing_blob(car)
     scored = [
         (_score_epa_engine_row(row, car, combo=combo, car_lit=car_lit, car_cyl=car_cyl), row)

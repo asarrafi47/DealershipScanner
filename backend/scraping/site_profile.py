@@ -15,7 +15,7 @@ from urllib.parse import urlparse
 
 from bs4 import BeautifulSoup
 
-from scraping.constants import COPYRIGHT_RE
+from backend.scraping.constants import COPYRIGHT_RE
 
 logger = logging.getLogger("SCRAPING.site_profile")
 

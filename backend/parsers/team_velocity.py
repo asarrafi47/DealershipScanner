@@ -191,7 +191,7 @@ def _map_vehicle(
     v: dict, base_url: str, dealer_id: str, dealer_name: str, dealer_url: str
 ) -> dict | None:
     vin = norm_str(v.get("vin") or v.get("VIN") or "")
-    if not vin:
+    if not vin or len(vin) < 11:
         return None
 
     year = norm_int(v.get("year") or v.get("modelYear"))

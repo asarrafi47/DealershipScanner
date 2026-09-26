@@ -309,6 +309,20 @@ def _conservative_updates(
         except (TypeError, ValueError):
             fc = None
         if fc is not None:
+            # A catalog / VDP / search value must never contradict the layout the
+            # dealer's own engine text already states ("3.5L V6" stays 6 even if
+            # the model-level lookup answered 4).
+            try:
+                from backend.utils.engine_consistency import cylinders_conflicts_with_engine_text
+
+                _conflict = cylinders_conflicts_with_engine_text(
+                    fc, car.get("engine_description"), car.get("fuel_type")
+                )
+            except Exception:
+                _conflict = False
+            if _conflict:
+                fc = None
+        if fc is not None:
             if _is_ev_row(car):
                 if fc == 0:
                     updates["cylinders"] = 0

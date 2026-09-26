@@ -357,3 +357,61 @@ def test_search_cars_engine_displacement_range(
     assert "EEEEEEEEEEEEEEEEE" in vins
     assert "FFFFFFFFFFFFFFFFF" not in vins
     assert "GGGGGGGGGGGGGGGGG" in vins
+
+
+def test_engine_layout_follows_verified_cylinders_over_stored_column() -> None:
+    # X5 M Competition: column said 6, VIN decode said 8 — the line must not read V6.
+    car = {"cylinders": 6, "engine_description": "4.4L", "make": "BMW", "model": "X5 M", "year": 2026}
+    vs = {"cylinders_display": 8, "cylinders_verified": True}
+    assert build_engine_display(car, vs).startswith("4.4L V8")
+
+
+def test_engine_layout_keeps_dealer_cylinders_when_merge_is_unverified() -> None:
+    car = {"cylinders": 6, "engine_description": "3.5L", "make": "Toyota", "model": "Camry", "year": 2020}
+    vs = {"cylinders_display": 4, "cylinders_verified": False}
+    assert build_engine_display(car, vs).startswith("3.5L V6")
+
+
+def test_epa_catalog_engine_cannot_overrule_dealer_displacement(monkeypatch) -> None:
+    # 2026 Ram 1500, dealer text "3.6L V6" (Pentastar); the known-trim table
+    # answered "3.0L V6" (Hurricane family) and the page showed the wrong engine.
+    import backend.dictionary.epa_engine as epa_engine
+
+    # 2026 Ram 1500, VIN decodes to 3.6L (Pentastar); the model-level EPA path
+    # answered "3.0L V6" (another engine in the family) and the page showed it.
+    monkeypatch.setattr(epa_engine, "resolve_engine_display_from_epa", lambda c, vs: "3.0L V6")
+    car = {"make": "Ram", "model": "1500", "year": 2026, "trim": "Big Horn",
+           "engine_description": "3.6L V6", "engine_l": "3.6", "cylinders": 6}
+    vs = {"vpic_engine_l": 3.6, "cylinders_display": 6, "cylinders_verified": True}
+    assert build_engine_display(car, vs).startswith("3.6L V6")
+
+
+def test_dealer_text_alone_does_not_veto_epa_correction(monkeypatch) -> None:
+    # No VIN decode, no sticker: a dealer displacement typo may still be corrected
+    # by the EPA path (see test_epa_engine_resolve's Audi A6 case).
+    import backend.dictionary.epa_engine as epa_engine
+
+    monkeypatch.setattr(epa_engine, "resolve_engine_display_from_epa", lambda c, vs: "2.0L I4 Turbo")
+    car = {"make": "Audi", "model": "A6", "year": 2017, "engine_description": "3.0L", "engine_l": "3.0", "cylinders": 4}
+    assert build_engine_display(car, {}) == "2.0L I4 Turbo"
+
+
+def test_epa_catalog_engine_still_used_when_it_agrees(monkeypatch) -> None:
+    from backend.utils.car_serialize import engine as E
+
+    import backend.dictionary.epa_engine as epa_engine
+
+    monkeypatch.setattr(epa_engine, "resolve_engine_display_from_epa", lambda c, vs: "3.6L V6 Pentastar")
+    car = {"make": "Ram", "model": "1500", "year": 2026, "engine_description": "3.6L V6", "engine_l": "3.6", "cylinders": 6}
+    assert build_engine_display(car, {}).startswith("3.6L V6 Pentastar")
+
+
+def test_vin_decoded_displacement_outranks_dealer_text(monkeypatch) -> None:
+    from backend.utils.car_serialize import engine as E
+
+    monkeypatch.setattr(E, "_known_trim_engine_display", lambda c: "")
+    # Dealer typo "5.7L" on a VIN that decodes to 6.7L: the decode wins and the
+    # text-derived 5.7 is rejected as a display source.
+    car = {"make": "Ford", "model": "F-250", "year": 2024, "engine_description": "5.7L V8", "engine_l": None, "cylinders": 8}
+    out = build_engine_display(car, {"vpic_engine_l": 6.7, "cylinders_display": 8, "cylinders_verified": True})
+    assert not out.startswith("5.7L")

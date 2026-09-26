@@ -1,4 +1,4 @@
-from intelligence.agents.adjudicator_agent import AdjudicatorAgent, adjudicate_evidence
+from backend.intelligence.agents.adjudicator_agent import AdjudicatorAgent, adjudicate_evidence
 
 __all__ = [
     "AdjudicatorAgent",

@@ -5,7 +5,7 @@ import sqlite3
 from datetime import datetime
 from pathlib import Path
 
-from oem.vehicle_reference.sources.epa_bmw_ingest import TARGET_BASE_MODELS
+from backend.oem.vehicle_reference.sources.epa_bmw_ingest import TARGET_BASE_MODELS
 
 TARGET_SERIES = sorted(TARGET_BASE_MODELS)
 

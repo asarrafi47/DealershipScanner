@@ -83,8 +83,6 @@ def _derive_mileage_per_year(offer: dict) -> int | None:
         term = _intval(offer.get("term_months"))
         if total and term and term >= 12:
             return int(round(total / (term / 12.0)))
-        if total:
-            return total
     return None
 
 

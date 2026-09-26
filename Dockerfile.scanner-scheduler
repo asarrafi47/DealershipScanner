@@ -1,0 +1,26 @@
+# Scanner scheduler — enqueues refresh jobs from dealer_catalog.
+#
+# Deliberately NOT the worker image: this process only runs one SQL sweep per
+# SCANNER_SCHEDULER_INTERVAL_SEC (scripts/scanner_scheduler_loop.py). It never
+# opens a browser and never shells out to Node, so the NodeSource install and
+# the Playwright/Patchright Chromium downloads are pure build-time and storage
+# cost here. Keep browser deps in Dockerfile.scanner-worker only.
+FROM python:3.12-slim
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ca-certificates gcc g++ libffi-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# Unbuffered stdout so Railway log lines arrive as they happen; no .pyc churn on the image layer.
+ENV PYTHONUNBUFFERED=1 PYTHONDONTWRITEBYTECODE=1
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . .
+
+RUN chmod +x /app/scripts/docker-entrypoint-scanner-scheduler.sh
+
+ENTRYPOINT ["/app/scripts/docker-entrypoint-scanner-scheduler.sh"]

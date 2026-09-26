@@ -43,6 +43,8 @@ PAGINATION_DEP_SRP = "dep_srp_page"              # GET URL ?p=N (Dealer eProcess
 PAGINATION_ALGOLIA = "algolia_page"              # POST body {"page": N (0-based), "hitsPerPage": M} (Motive/ridemotive Algolia)
 PAGINATION_HTML_PAGE = "html_page_query"         # GET URL ?page=N returning HTML (Overfuel __NEXT_DATA__, nabthat JSON-LD SRP)
 PAGINATION_JAZEL_SRP = "jazel_srp_page"          # GET path-walk .../srp-page-N/ returning HTML (Jazel SSR SRP)
+PAGINATION_COSMOS_PT = "cosmos_pt"               # GET URL ?pt=N&pn=96 (DealerOn cosmos SRP JSON; Paging.PaginationDataModel)
+PAGINATION_GRAPHQL_OFFSET = "graphql_offset"    # POST GraphQL body variables.sp.paging.{offset,limit} (OneAudi omnigraph stockCarSearch)
 PAGINATION_NONE = "none"                         # single-shot GET/POST
 
 
@@ -97,6 +99,9 @@ class EndpointRecipe:
     last_ok_at: float = 0.0
     stale: bool = False
     stale_reason: str = ""
+    # price / trim / exterior_color fractions: from the network ledger at capture,
+    # refreshed from parsed rows on every successful replay.
+    field_coverage: dict[str, float] = field(default_factory=dict)
 
     def key(self) -> tuple[str, str]:
         p = urlparse(self.url)
@@ -115,6 +120,8 @@ def infer_pagination(url: str, post_template: str | None) -> str:
         return PAGINATION_TYPESENSE
     if "ws-inv-data" in url and "inventoryParameters" in body:
         return PAGINATION_DEALER_COM
+    if "/cosmos/srp/vehicles/" in url:
+        return PAGINATION_COSMOS_PT
     return PAGINATION_NONE
 
 
@@ -190,10 +197,15 @@ def _rows_to_recipes(raw: Any) -> list[EndpointRecipe]:
     out: list[EndpointRecipe] = []
     for row in raw if isinstance(raw, list) else []:
         try:
-            out.append(EndpointRecipe(**{k: v for k, v in row.items()
-                                         if k in EndpointRecipe.__dataclass_fields__}))
+            rec = EndpointRecipe(**{k: v for k, v in row.items()
+                                    if k in EndpointRecipe.__dataclass_fields__})
         except TypeError:
             continue
+        if rec.pagination == PAGINATION_NONE:
+            # Files written before a pagination shape was known stay single-shot
+            # forever otherwise (cosmos recipes replayed page 1 of 2+ for months).
+            rec.pagination = infer_pagination(rec.url, rec.post_template)
+        out.append(rec)
     return out
 
 
@@ -310,6 +322,9 @@ def promote_from_ledger(
                 total_count=int(total) if total else None,
                 provider_hint=provider or "",
                 saved_at=now,
+                field_coverage={
+                    k: float(v) for k, v in (getattr(ep, "field_coverage", None) or {}).items()
+                },
             )
         )
     if not candidates:
@@ -321,13 +336,26 @@ def promote_from_ledger(
         # A fresh capture always wins: newer auth headers, un-stales the entry.
         if cur is None or not cur.last_ok_at or cur.stale or c.vehicle_rows >= cur.vehicle_rows:
             c.last_ok_at = cur.last_ok_at if cur else 0.0
+            if cur is not None and not c.field_coverage and cur.field_coverage:
+                c.field_coverage = dict(cur.field_coverage)
             merged[c.key()] = c
-    ranked = sorted(merged.values(), key=lambda r: (r.stale, -(r.total_count or 0), -r.vehicle_rows))
+    # Rich feeds (price + trim/colour) replay first; VIN-only endpoints stay on
+    # file for delta VIN-set work but can never outrank a real inventory feed.
+    ranked = sorted(
+        merged.values(),
+        key=lambda r: (
+            r.stale,
+            0 if recipe_coverage_is_rich(r.field_coverage) else 1,
+            -(r.total_count or 0),
+            -r.vehicle_rows,
+        ),
+    )
     keep = ranked[:max_recipes]
     save_recipes(dealer_id, keep)
+    thin = sum(1 for r in keep if r.field_coverage and not recipe_coverage_is_rich(r.field_coverage))
     logger.info(
-        "Recipes [%s]: %d endpoint(s) promoted (%d candidate(s) this scan)",
-        dealer_id, len(keep), len(candidates),
+        "Recipes [%s]: %d endpoint(s) promoted (%d candidate(s) this scan, %d thin: VINs without price/trim/colour)",
+        dealer_id, len(keep), len(candidates), thin,
     )
     return len(keep)
 
@@ -351,11 +379,112 @@ _MAX_REPLAY_PAGES = 40
 _REPLAY_TIMEOUT_S = 20.0
 
 
+# facetFilters keys that select an SRP section (condition / make / model / body),
+# never a rooftop; a whole-lot replay must not carry them
+_CC_SECTION_FACETS = frozenset({"type_slug", "type", "make", "model_slug", "model", "body_type", "trim_slug", "year",
+                                "fuel_type", "transmission", "exterior_color_generic", "features", "certified",
+                                "special_use_category", "condition", "in_transit", "is_special", "drivetrain", "price_range"})
+
+
+def _learn_dealer_com_page_size(template: Any, parsed: Any, dealer_name: str = "") -> int:
+    """Copy the page size the dealer.com server actually used into the walk's
+    template. The captured preferences say pageSize 500; the server answers 48
+    and ignores the preference, so page 2 started at 500 — past the end — and 14
+    dealers of the 2026-09-24 fleet run stopped at exactly 48 rows (Village VW:
+    157 cars, Mtn View Ford: 436). Returns the size learned, or 0."""
+    if not isinstance(template, dict) or not isinstance(parsed, dict):
+        return 0
+    info = parsed.get("pageInfo")
+    try:
+        real = int((info or {}).get("pageSize") or 0) if isinstance(info, dict) else 0
+    except (TypeError, ValueError):
+        real = 0
+    if real <= 0:
+        return 0
+    prefs = template.setdefault("preferences", {})
+    if isinstance(prefs, dict) and str(prefs.get("pageSize") or "") != str(real):
+        logger.info("Recipe [%s] dealer.com pageSize %s -> %d (the server's)", dealer_name, prefs.get("pageSize"), real)
+        prefs["pageSize"] = str(real)
+    return real
+
+
+def recipe_is_section_scoped(recipe: EndpointRecipe) -> bool:
+    """True for a captured CarsCommerce recipe whose facetFilters pin one SRP
+    section (used-only / new-only / one make): it can never yield the lot."""
+    if recipe.pagination != PAGINATION_CARSCOMMERCE or not recipe.post_template:
+        return False
+    try:
+        body = json.loads(recipe.post_template)
+    except ValueError:
+        return False
+    ff = body.get("facetFilters") if isinstance(body, dict) else None
+    return isinstance(ff, dict) and any(k in _CC_SECTION_FACETS for k in ff)
+
+
+def recipe_is_store_scoped(recipe: EndpointRecipe, dealer_name: str = "") -> bool:
+    """True when the request itself selects this store, so every row it returns
+    is this store's by construction: CarsCommerce ``facetFilters.source_id``
+    (the store's own feed ids), or a single facet value that IS the store's name
+    (the site's Location facet, "Group 1 Toyota North Austin"). Both are set and
+    replay-verified by ``recipe_synth._carscommerce_store_filter``; the API
+    rejects unknown body keys, so the scope cannot be marked any other way."""
+    if recipe.pagination != PAGINATION_CARSCOMMERCE or not recipe.post_template:
+        return False
+    try:
+        body = json.loads(recipe.post_template)
+    except ValueError:
+        return False
+    ff = body.get("facetFilters") if isinstance(body, dict) else None
+    if not isinstance(ff, dict):
+        return False
+    ids = ff.get("source_id")
+    if isinstance(ids, list) and ids:
+        return True
+    nrm = lambda s: re.sub(r"[^a-z0-9]", "", str(s or "").lower())  # noqa: E731
+    own = {nrm(dealer_name), nrm(re.sub(r"-(com|net|org)$", "", recipe.dealer_id or ""))} - {""}
+    for facet, vals in ff.items():
+        if facet.startswith("custom_text_") and isinstance(vals, list) and len(vals) == 1 and nrm(vals[0]) in own:
+            return True
+    return False
+
+
 def _mutate_for_page(recipe: EndpointRecipe, template: Any, page_index: int) -> Any:
     """Return the request body for 0-based *page_index* per the recipe's pagination shape."""
     body = copy.deepcopy(template)
     if recipe.pagination == PAGINATION_CARSCOMMERCE and isinstance(body, dict):
         body["page"] = page_index + 1
+        # The browser often captures a widget's query, not the lot: Culver City
+        # Toyota's recipe carried facetFilters {"custom_text_1": ["true"]} (a
+        # "featured" flag) and replayed 30 of 529 cars. Boolean facet flags narrow
+        # to a carousel; drop them. Section filters (type_slug etc.) live under
+        # "filters" and are kept. perPage 100 is accepted and cuts the walk 5x.
+        ff = body.get("facetFilters")
+        if isinstance(ff, dict):
+            # A browser capture is one SRP SECTION's query: 16 of the 44 no_rows
+            # verdicts of the 2026-09-24 fleet run were carscommerce recipes with
+            # facetFilters type_slug=["Certified Used"] / ["New"] + make + model_slug
+            # (Lindsay Honda 109 used of 577, Germain Toyota 65 new of 401). Those
+            # keys describe inventory sections, never the store; drop them. Store
+            # identity keys (source_id, custom_text_N) are kept.
+            kept = {
+                k: v for k, v in ff.items()
+                if k not in _CC_SECTION_FACETS
+                and not (isinstance(v, list) and v and all(str(x).lower() in ("true", "false", "1", "0") for x in v))
+            }
+            if kept:
+                body["facetFilters"] = kept
+            else:
+                body.pop("facetFilters", None)
+        flt = body.get("filters")
+        if isinstance(flt, dict) and any(k in _CC_SECTION_FACETS for k in flt):
+            # same section keys under "filters" (a used-SRP capture writes
+            # filters.type_slug=["used"]); "status" stays
+            body["filters"] = {k: v for k, v in flt.items() if k not in _CC_SECTION_FACETS}
+        try:
+            if int(body.get("perPage") or 0) < 100:
+                body["perPage"] = 100
+        except (TypeError, ValueError):
+            body["perPage"] = 100
     elif recipe.pagination == PAGINATION_TYPESENSE and isinstance(body, dict):
         for s in body.get("searches") or []:
             if isinstance(s, dict):
@@ -372,6 +501,18 @@ def _mutate_for_page(recipe: EndpointRecipe, template: Any, page_index: int) -> 
     elif recipe.pagination == PAGINATION_ALGOLIA and isinstance(body, dict):
         # Algolia pages are 0-based (page 0 is the first page of results).
         body["page"] = page_index
+    elif recipe.pagination == PAGINATION_GRAPHQL_OFFSET and isinstance(body, dict):
+        # OneAudi: {"query": ..., "variables": {"sp": {"paging": {"limit": 48, "offset": N}}}}
+        sp = (body.get("variables") or {}).get("sp")
+        if isinstance(sp, dict):
+            paging = sp.setdefault("paging", {})
+            if isinstance(paging, dict):
+                try:
+                    limit = int(paging.get("limit") or 48)
+                except (TypeError, ValueError):
+                    limit = 48
+                paging["limit"] = limit
+                paging["offset"] = page_index * limit
     return body
 
 
@@ -390,12 +531,17 @@ def _url_for_page(recipe: EndpointRecipe, page_index: int) -> str:
             return recipe.url
         base = recipe.url.rstrip("/")
         return f"{base}/srp-page-{page_index + 1}/"
-    if recipe.pagination not in (PAGINATION_PAGE_QUERY, PAGINATION_DEP_SRP, PAGINATION_HTML_PAGE):
+    if recipe.pagination not in (PAGINATION_PAGE_QUERY, PAGINATION_DEP_SRP, PAGINATION_HTML_PAGE, PAGINATION_COSMOS_PT):
         return recipe.url
-    page_param = "p" if recipe.pagination == PAGINATION_DEP_SRP else "page"
+    page_param = {PAGINATION_DEP_SRP: "p", PAGINATION_COSMOS_PT: "pt"}.get(recipe.pagination, "page")
     parts = urlparse(recipe.url)
-    query = [(k, v) for k, v in parse_qsl(parts.query, keep_blank_values=True) if k != page_param]
+    drop = {page_param, "pn"} if recipe.pagination == PAGINATION_COSMOS_PT else {page_param}
+    query = [(k, v) for k, v in parse_qsl(parts.query, keep_blank_values=True) if k not in drop]
     query.append((page_param, str(page_index + 1)))
+    if recipe.pagination == PAGINATION_COSMOS_PT:
+        # pn = page size, 96 is the server maximum (verified 2026-09-23 on Cherokee
+        # County Toyota: 282 cars = 3 pages of 96 instead of 24 of 12).
+        query.append(("pn", "96"))
     return urlunparse(parts._replace(query=urlencode(query)))
 
 
@@ -519,8 +665,94 @@ def _unique_vins(vehicles: list[dict]) -> set[str]:
     return {v.get("vin", "").strip().upper() for v in vehicles if (v.get("vin") or "").strip()}
 
 
+# Fields a recipe replay must actually carry before it is allowed to REPLACE the
+# browser scrape. VIN count alone is the wrong yardstick: on 2026-08-04 a fleet
+# capture-only run accepted endpoints like Team Velocity's GetKeyFeaturesByVins
+# and Gatsby page-data blobs because they listed VINs, then the 70%-of-known-VINs
+# rule suppressed the SRP scrape, and 67k rows landed with no trim, price or
+# colour. Every one of those fields lives on the VDP for those platforms.
+_COVERAGE_FIELDS = ("price", "trim", "exterior_color")
+
+
+def _field_present(v: dict, field: str) -> bool:
+    val = v.get(field)
+    if val is None:
+        return False
+    if field == "price":
+        try:
+            return float(val) > 0
+        except (TypeError, ValueError):
+            return False
+    return bool(str(val).strip())
+
+
+def recipe_field_coverage(vehicles: list[dict]) -> dict[str, float]:
+    """Fraction of parsed vehicles carrying each of ``_COVERAGE_FIELDS``.
+
+    ``{"n": <vehicle count>, "price": 0.0-1.0, "trim": ..., "exterior_color": ...}``.
+    An empty list yields ``n=0`` and zero coverage everywhere.
+    """
+    n = len(vehicles)
+    out: dict[str, float] = {"n": float(n)}
+    for f in _COVERAGE_FIELDS:
+        out[f] = (sum(1 for v in vehicles if _field_present(v, f)) / n) if n else 0.0
+    return out
+
+
+def recipe_min_price_coverage() -> float:
+    try:
+        return min(1.0, max(0.0, float(os.environ.get("SCANNER_RECIPE_MIN_PRICE_COVERAGE") or 0.5)))
+    except ValueError:
+        return 0.5
+
+
+def recipe_min_field_coverage() -> float:
+    try:
+        return min(1.0, max(0.0, float(os.environ.get("SCANNER_RECIPE_MIN_FIELD_COVERAGE") or 0.5)))
+    except ValueError:
+        return 0.5
+
+
+def recipe_coverage_is_rich(coverage: dict[str, float] | None) -> bool:
+    """True when a recipe's rows look like an inventory feed, not a VIN list."""
+    cov = coverage or {}
+    price = float(cov.get("price", 0.0))
+    listing = max(float(cov.get("trim", 0.0)), float(cov.get("exterior_color", 0.0)))
+    return price >= recipe_min_price_coverage() and listing >= recipe_min_field_coverage()
+
+
+def recipe_yield_replaces_browser(
+    recipe_vins: int, known_vins: int, coverage: dict[str, float] | None
+) -> tuple[bool, str]:
+    """Decide whether a recipe replay may stand in for the browser SRP scrape.
+
+    Both bars must clear: VIN yield >= 70% of the last known lot (the historical
+    rule), AND the parsed rows carry a price on at least
+    ``SCANNER_RECIPE_MIN_PRICE_COVERAGE`` of vehicles and a trim OR exterior colour
+    on at least ``SCANNER_RECIPE_MIN_FIELD_COVERAGE``. Returns ``(ok, reason)``;
+    the reason is logged so a "partial" verdict says which bar failed.
+    """
+    if known_vins <= 0:
+        return False, "no_known_lot"
+    if recipe_vins < int(0.7 * known_vins):
+        return False, f"vins {recipe_vins}/{known_vins} < 70%"
+    cov = coverage or {}
+    price = float(cov.get("price", 0.0))
+    listing = max(float(cov.get("trim", 0.0)), float(cov.get("exterior_color", 0.0)))
+    if price < recipe_min_price_coverage():
+        return False, f"price coverage {price:.0%} < {recipe_min_price_coverage():.0%}"
+    if listing < recipe_min_field_coverage():
+        return False, f"trim/colour coverage {listing:.0%} < {recipe_min_field_coverage():.0%}"
+    return True, "ok"
+
+
 def last_known_vin_count(dealer_id: str) -> int:
-    """Distinct VINs currently in the DB for *dealer_id* (0 on any failure)."""
+    """Distinct VINs currently LISTED for *dealer_id* (0 on any failure).
+
+    Active rows only: counting retired rows too made the 70% browser-skip gate
+    unreachable right after a reconcile (Hiley VW 2026-09-22: 338 feed VINs vs
+    "624 known" of which 286 had just been unlisted), so a rich feed re-ran the
+    browser and every store's gate drifted with its sales history."""
     try:
         from backend.db.inventory_pg import is_inventory_postgres, pg_connect
 
@@ -529,7 +761,11 @@ def last_known_vin_count(dealer_id: str) -> int:
         conn = pg_connect()
         try:
             cur = conn.cursor()
-            cur.execute("SELECT count(DISTINCT vin) FROM cars WHERE dealer_id = %s", (dealer_id,))
+            cur.execute(
+                "SELECT count(DISTINCT vin) FROM cars WHERE dealer_id = %s "
+                "AND listing_removed_at IS NULL AND COALESCE(listing_active, 1) = 1",
+                (dealer_id,),
+            )
             return int(cur.fetchone()[0])
         finally:
             conn.close()
@@ -544,9 +780,15 @@ async def try_fetch_via_recipes(
     dealer_name: str,
     *,
     union: bool = False,
+    coverage_out: dict[str, float] | None = None,
 ) -> tuple[list[tuple[str, Any]], int] | None:
     """
     Replay this dealer's stored recipes over plain HTTP (pre-Playwright).
+
+    When ``coverage_out`` is a dict it is filled (in place) with
+    :func:`recipe_field_coverage` over the parsed vehicles behind the returned
+    records, so the caller can judge whether the replay is complete enough to
+    REPLACE the browser scrape, not merely whether it listed enough VINs.
 
     Returns ``(records, unique_vin_count)`` — intercept-shaped ``[(url, body), ...]``
     plus the VIN yield — when a recipe returns at least ``recipe_min_vehicles()``
@@ -585,6 +827,10 @@ async def try_fetch_via_recipes(
     # for it at all when recipe fetch is disabled.
     try:
         _place = (await asyncio.to_thread(roster_place, base_url)) or {}
+        if not _place.get("dealer_city"):
+            from backend.scanner.dealer_place import place_from_hints, place_kwargs
+
+            _place = place_kwargs(await asyncio.to_thread(place_from_hints, dealer_id))
     except Exception:  # noqa: BLE001 - attribution help must never break a scan
         _place = {}
     # load_recipes may consult Postgres (recipe_store sync) — keep that
@@ -598,6 +844,7 @@ async def try_fetch_via_recipes(
     min_vehicles = recipe_min_vehicles()
     union_records: list[tuple[str, Any]] = []
     union_vins: set[str] = set()
+    union_vehicles: list[dict] = []
     for recipe in recipes:
         template: Any = None
         if recipe.post_template:
@@ -618,6 +865,7 @@ async def try_fetch_via_recipes(
             continue
         records: list[tuple[str, Any]] = []
         vins: set[str] = set()
+        vehicles: list[dict] = []
         pages = 1 if recipe.pagination == PAGINATION_NONE else _MAX_REPLAY_PAGES
         auth_dead = False
         for page_i in range(pages):
@@ -643,6 +891,12 @@ async def try_fetch_via_recipes(
                 break
             if parsed is None:
                 break
+            if isinstance(parsed, dict) and recipe_is_store_scoped(recipe, dealer_name):
+                # dealer_run re-parses these payloads later (recovery / final
+                # row set) without knowing the recipe; the marker travels with
+                # the payload so no later parse() re-gates the store's own feed
+                # (Tutton CDJR: 346 -> 5 rows through that second gate, 2026-09-26)
+                parsed["_feed_scoped"] = True
             # rejected_out is REQUIRED, not optional decoration. parse() ends with:
             #
             #     if rejected_out is None:
@@ -663,10 +917,25 @@ async def try_fetch_via_recipes(
                 base_url=base_url, dealer_id=dealer_id,
                 dealer_name=dealer_name, dealer_url=base_url,
                 rejected_out=_refused,
+                trust_feed_scope=recipe_is_store_scoped(recipe, dealer_name),
                 **_place,
             ))
             new = _unique_vins(page_vehicles) - vins
             records.append((recipe.url, parsed))
+            if page_i == 0 and recipe.pagination == PAGINATION_DEALER_COM:
+                _learn_dealer_com_page_size(template, parsed, dealer_name)
+            if page_i == 0:
+                # The payload's own total wins over the file's: a stale total_count
+                # (95 saved in August, lot now 106) stopped the walk after page 1.
+                try:
+                    from backend.parsers.base import get_total_count as _gtc
+
+                    _t = _gtc(parsed)
+                    if _t and _t > 0:
+                        recipe.total_count = int(_t)
+                except Exception:  # noqa: BLE001
+                    pass
+            vehicles.extend(v for v in page_vehicles if (v.get("vin") or "").strip().upper() in new)
             if not new:
                 break
             vins |= new
@@ -676,20 +945,29 @@ async def try_fetch_via_recipes(
             continue
         if len(vins) >= min_vehicles:
             recipe.last_ok_at = time.time()
+            recipe.field_coverage = {
+                k: v for k, v in recipe_field_coverage(vehicles).items() if k != "n"
+            }
             all_r = load_recipes(dealer_id)
             for r in all_r:
                 if r.key() == recipe.key():
                     r.last_ok_at = recipe.last_ok_at
+                    r.field_coverage = dict(recipe.field_coverage)
             save_recipes(dealer_id, all_r)
             logger.info(
                 "Recipe fetch [%s]: %d unique VIN(s) from %d page(s) via %s",
                 dealer_name, len(vins), len(records), recipe.url[:80],
             )
             if not union:
+                if coverage_out is not None:
+                    coverage_out.update(recipe_field_coverage(vehicles))
                 return records, len(vins)
             union_records.extend(records)
+            union_vehicles.extend(v for v in vehicles if (v.get("vin") or "").strip().upper() not in union_vins)
             union_vins |= vins
     if union and len(union_vins) >= min_vehicles:
+        if coverage_out is not None:
+            coverage_out.update(recipe_field_coverage(union_vehicles))
         logger.info(
             "Recipe fetch [%s]: %d unique VIN(s) combined across %d recipe replay(s)",
             dealer_name, len(union_vins), len(union_records),

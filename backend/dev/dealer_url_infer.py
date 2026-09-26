@@ -16,7 +16,7 @@ import requests
 from bs4 import BeautifulSoup
 
 from backend.dev.dealers import DEALER_ID_RE
-from scraping.text_utils import collapse_ws
+from backend.scraping.text_utils import collapse_ws
 
 logger = logging.getLogger(__name__)
 

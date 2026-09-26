@@ -419,12 +419,26 @@ _BROWSER_UA = (
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
     "(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
 )
+# Strong interstitial markers. "/cdn-cgi/challenge-platform" is deliberately NOT
+# here: Cloudflare injects that beacon into real pages too (see
+# recipe_synth.looks_like_challenge, which owns the thin-body rule).
 _CHALLENGE_MARKERS = (
     "just a moment", "checking your browser", "cf-challenge", "__cf_chl",
     "attention required", "enable javascript and cookies", "cf-browser-verification",
-    "px-captcha", "/cdn-cgi/challenge-platform",
+    "px-captcha",
 )
 _HOST_RE = re.compile(r"https?://([a-z0-9.-]+)", re.I)
+
+
+def _looks_like_challenge(body: str) -> bool:
+    """Strong markers decide alone; a passive Cloudflare beacon only with a thin body."""
+    try:
+        from backend.scanner.recipe_synth import looks_like_challenge
+
+        return looks_like_challenge(body)
+    except Exception:
+        low = body.lower()
+        return any(m in low for m in _CHALLENGE_MARKERS)
 
 
 def _pace_http() -> None:
@@ -495,8 +509,7 @@ def _http_probe(url: str, *, timeout: float = 20.0) -> HttpProbe:
         probe.error = str(e)[:160]
         return probe
 
-    low = body.lower()
-    probe.challenge = any(m in low for m in _CHALLENGE_MARKERS)
+    probe.challenge = _looks_like_challenge(body)
     # Distinctive third-party hosts referenced by the page — the most useful
     # human hint for an unknown platform (an "*api*"/"*inventory*" host usually
     # names the vendor).

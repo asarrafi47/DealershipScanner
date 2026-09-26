@@ -39,9 +39,22 @@ _LINK_COLUMNS = (
 
 
 def ensure_link_columns() -> None:
+    """Add the link columns once. Probe first: ``ALTER TABLE ... IF NOT EXISTS`` still
+    takes an ACCESS EXCLUSIVE lock even when the column exists, and on 2026-09-23 it
+    queued behind a 4-hour idle-in-transaction session from the nightly invariants
+    job and parked every web query behind it."""
     conn = get_conn()
     cur = conn.cursor()
     for col, ctype in _LINK_COLUMNS:
+        try:
+            cur.execute(f"SELECT {col} FROM cars LIMIT 1")
+            cur.fetchall()
+            continue  # present: no DDL, no lock
+        except Exception:
+            try:
+                conn.rollback()
+            except Exception:
+                pass
         try:
             cur.execute(f"ALTER TABLE cars ADD COLUMN IF NOT EXISTS {col} {ctype}")
         except Exception:
@@ -55,19 +68,30 @@ def ensure_link_columns() -> None:
     conn.close()
 
 
-def link_fleet(*, dry_run: bool, only_missing: bool) -> dict:
+def link_fleet(*, dry_run: bool, only_missing: bool, dealers: tuple[str, ...] = (), years: tuple[int, ...] = ()) -> dict:
     conn = get_conn()
     cur = conn.cursor()
     where = "COALESCE(listing_active,1)=1"
     if only_missing:
         where += " AND epa_master_id IS NULL"
+    if dealers:
+        where += " AND dealer_id IN (" + ",".join("?" * len(dealers)) + ")"
+    if years:
+        where += " AND year IN (" + ",".join("?" * len(years)) + ")"
     cur.execute(
         "SELECT id, year, make, model, trim, cylinders, engine_l, engine_description, "
-        f"drivetrain, fuel_type, title FROM cars WHERE {where}"
+        f"drivetrain, fuel_type, title, vin FROM cars WHERE {where}",
+        tuple(dealers) + tuple(years),
     )
     cols = ("id", "year", "make", "model", "trim", "cylinders", "engine_l",
-            "engine_description", "drivetrain", "fuel_type", "title")
+            "engine_description", "drivetrain", "fuel_type", "title", "vin")
     rows = [dict(zip(cols, r)) for r in cur.fetchall()]
+    try:
+        from backend.enrichment.knowledge_engine import prime_vpic_cache
+
+        prime_vpic_cache([r.get("vin") for r in rows])
+    except Exception:  # noqa: BLE001
+        pass
 
     cand_cache: dict[tuple, list] = {}
     stats = Counter()
@@ -114,6 +138,8 @@ def main() -> None:
     ap = argparse.ArgumentParser(description="Link cars to the epa_master catalog")
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--only-missing", action="store_true", help="Skip cars already linked")
+    ap.add_argument("--dealers", default="", help="comma-separated dealer_ids to relink (default: whole fleet)")
+    ap.add_argument("--years", default="", help="comma-separated model years to relink (default: all)")
     args = ap.parse_args()
 
     if not args.dry_run:
@@ -121,7 +147,11 @@ def main() -> None:
         n = seed_model_generations()
         print(f"model_generations seeded (+{n} rows)", flush=True)
 
-    out = link_fleet(dry_run=args.dry_run, only_missing=args.only_missing)
+    out = link_fleet(
+        dry_run=args.dry_run, only_missing=args.only_missing,
+        dealers=tuple(d.strip() for d in args.dealers.split(",") if d.strip()),
+        years=tuple(int(y) for y in args.years.split(",") if y.strip().isdigit()),
+    )
     print(f"link stats: {out['stats']}", flush=True)
     print(f"confidence histogram: {out['confidence_hist']}", flush=True)
 

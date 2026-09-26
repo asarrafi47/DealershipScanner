@@ -92,3 +92,20 @@ def test_open_url_uses_bogus_proxy_and_fails_fast(monkeypatch):
     req = urllib.request.Request("http://example.com/", headers={"Accept": "*/*"})
     with pytest.raises(urllib.error.URLError):
         http_fetch.open_url(req, timeout=3)
+
+
+# --- Playwright launch kwargs ----------------------------------------------
+
+def test_playwright_proxy_kwargs_empty_when_unset():
+    # Must be splat-safe: chromium.launch(**{}) is the unchanged direct launch.
+    assert http_fetch.playwright_proxy_kwargs() == {}
+
+
+def test_playwright_proxy_kwargs_routes_browser_through_scanner_proxy(monkeypatch):
+    monkeypatch.setenv("SCANNER_HTTP_PROXY", "http://127.0.0.1:9")
+    assert http_fetch.playwright_proxy_kwargs() == {"proxy": {"server": "http://127.0.0.1:9"}}
+
+
+def test_playwright_proxy_kwargs_falls_back_to_standard_vars(monkeypatch):
+    monkeypatch.setenv("HTTPS_PROXY", "http://proxy.example:3128")
+    assert http_fetch.playwright_proxy_kwargs() == {"proxy": {"server": "http://proxy.example:3128"}}

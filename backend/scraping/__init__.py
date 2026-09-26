@@ -23,8 +23,8 @@ Package layout:
 """
 from __future__ import annotations
 
-from scraping.models import Evidence, SiteResult
-from scraping.paths import (
+from backend.scraping.models import Evidence, SiteResult
+from backend.scraping.paths import (
     DEFAULT_DB,
     MANIFEST_DEFAULT,
     ROOT,

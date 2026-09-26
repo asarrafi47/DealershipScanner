@@ -94,14 +94,178 @@ def serialize_cars_for_listings_grid(cars: list[dict]) -> list[dict[str, Any]]:
     ]
 
 
-def listings_grid_bootstrap_cars(limit: int = 48) -> list[dict[str, Any]]:
-    """First page of cached grid cars for SSR (instant paint while full fleet loads)."""
+def listings_grid_bootstrap_cars(
+    limit: int = 48,
+    *,
+    zip_code: str | None = None,
+    radius_mi: float | None = None,
+) -> list[dict[str, Any]]:
+    """First page of cached grid cars for SSR (instant paint while full fleet loads).
+
+    When a ZIP + radius are already known (session or query params), the SSR
+    paint should already reflect that — never an arbitrary global slice a
+    visitor's own location has nothing to do with, only to be swapped out a
+    moment later once the client-side radius filter lands. No other facet
+    (make, model, etc.) narrows this by default; only an explicit filter
+    should do that.
+    """
     try:
         lim = max(1, min(int(limit), 200))
     except (TypeError, ValueError):
         lim = 48
     cars = listings_grid_serialized_cars()
-    return cars[:lim] if cars else []
+    if not cars:
+        return []
+    if zip_code and radius_mi:
+        from backend.db.geo import zip_to_coords
+
+        origin = zip_to_coords(zip_code)
+        if origin is not None:
+            nearby = _nearby_cars_by_zip_radius(cars, origin, float(radius_mi))
+            if nearby:
+                return _round_robin_by_dealer_distance(nearby, lim)
+    return cars[:lim]
+
+
+# dealer_url/host -> (lat, lon), refreshed at most every _DEALER_GEO_INDEX_TTL_S.
+# dealer_geopoints/dealerships change on the order of scans, not requests, so
+# rebuilding this from 3 fresh SQL queries on every /listings pageview that
+# carries a session ZIP+radius (essentially every repeat visitor) is wasted
+# DB round-trips; a short TTL keeps it fresh enough without that cost.
+_dealer_geo_index_cache: dict[str, tuple[float, float]] | None = None
+_dealer_geo_index_cache_at: float = 0.0
+_DEALER_GEO_INDEX_TTL_S = 300.0
+
+
+def _cached_dealer_geo_index() -> dict[str, tuple[float, float]]:
+    global _dealer_geo_index_cache, _dealer_geo_index_cache_at
+    now = time.monotonic()
+    if (
+        _dealer_geo_index_cache is not None
+        and (now - _dealer_geo_index_cache_at) < _DEALER_GEO_INDEX_TTL_S
+    ):
+        return _dealer_geo_index_cache
+    from backend.db.dealer_geo import load_dealer_geo_index
+
+    with db_conn() as conn:
+        idx = load_dealer_geo_index(conn)
+    _dealer_geo_index_cache = idx
+    _dealer_geo_index_cache_at = now
+    return idx
+
+
+# (origin, radius) -> nearby-cars result, scoped to one grid generation (keyed by
+# the identity of the grid list, which is replaced wholesale -- never mutated --
+# on every rebuild) so a stale entry can never outlive the data it was computed
+# from. Bounded and short-TTL: this exists to absorb repeat requests from the
+# same or concurrent visitors within a generation, not to serve forever.
+_nearby_cache_gen: Any = None
+_nearby_cache: dict[tuple[float, float, float], tuple[float, list[dict[str, Any]]]] = {}
+_nearby_cache_lock = threading.Lock()
+_NEARBY_CACHE_TTL_S = 60.0
+_NEARBY_CACHE_MAX_ENTRIES = 128
+
+
+def _nearby_cars_by_zip_radius(
+    cars: list[dict[str, Any]],
+    origin: tuple[float, float],
+    radius_mi: float,
+) -> list[dict[str, Any]]:
+    """Cars within ``radius_mi`` of ``origin``, each with ``distance_miles`` attached.
+
+    Grouped by dealer first, not by car: there are orders of magnitude fewer
+    distinct dealers than cars in the grid, so haversine (and the dealer-geo
+    lookup, including its urlparse fallback) runs once per distinct dealer
+    instead of once per car. The previous per-car loop measured ~185ms of
+    pure, GIL-held CPU per call over a 113k-row grid -- on essentially every
+    /listings pageview for a visitor who has ever searched a ZIP, since
+    ``radius_mi`` is carried in the session.
+    """
+    global _nearby_cache_gen, _nearby_cache
+    gen = id(cars)
+    key = (round(origin[0], 3), round(origin[1], 3), round(radius_mi, 1))
+    now = time.monotonic()
+    with _nearby_cache_lock:
+        if _nearby_cache_gen != gen:
+            _nearby_cache = {}
+            _nearby_cache_gen = gen
+        hit = _nearby_cache.get(key)
+        if hit is not None and (now - hit[0]) < _NEARBY_CACHE_TTL_S:
+            return hit[1]
+
+    from backend.db.geo import haversine
+    from backend.db.dealer_geo import lookup_dealer_coords
+
+    dealer_geo = _cached_dealer_geo_index()
+
+    by_dealer: dict[str, list[dict[str, Any]]] = {}
+    for car in cars:
+        by_dealer.setdefault(str(car.get("dealer_url") or ""), []).append(car)
+
+    nearby: list[dict[str, Any]] = []
+    for dealer_url, dealer_cars in by_dealer.items():
+        dest = lookup_dealer_coords(dealer_url, dealer_geo)
+        if not dest:
+            continue
+        dist = haversine(origin[0], origin[1], dest[0], dest[1])
+        if dist > radius_mi:
+            continue
+        rounded = round(dist, 1)
+        for car in dealer_cars:
+            c = dict(car)
+            c["distance_miles"] = rounded
+            nearby.append(c)
+
+    with _nearby_cache_lock:
+        if _nearby_cache_gen == gen:
+            if len(_nearby_cache) >= _NEARBY_CACHE_MAX_ENTRIES:
+                _nearby_cache.clear()
+            _nearby_cache[key] = (now, nearby)
+    return nearby
+
+
+def _round_robin_by_dealer_distance(cars: list[dict[str, Any]], lim: int) -> list[dict[str, Any]]:
+    """Interleave cars across dealers, closest dealers first.
+
+    Every car from one dealer shares that dealer's distance, so sorting the
+    flat list by distance alone lets one inventory-heavy nearby dealer (its
+    whole lineup, all tied at the same distance) fill the entire page before
+    a second dealer's cars ever show up. Round-robin one car per dealer, in
+    distance order, so a ZIP+radius default actually surfaces multiple
+    nearby dealers instead of just whichever one has the most stock.
+    """
+    by_dealer: dict[str, list[dict[str, Any]]] = {}
+    dealer_order: list[str] = []
+    for c in cars:
+        # No id(c) fallback: within one call every object is simultaneously
+        # alive so ids can't collide, but id() is a meaningless "dealer" if
+        # this helper is ever reused where that invariant doesn't hold. Cars
+        # with no dealer identifier at all share one explicit bucket instead
+        # of one synthetic bucket per car.
+        key = str(c.get("dealer_url") or c.get("dealer_name") or "__unknown_dealer__")
+        if key not in by_dealer:
+            by_dealer[key] = []
+            dealer_order.append(key)
+        by_dealer[key].append(c)
+    dealer_order.sort(key=lambda k: by_dealer[k][0]["distance_miles"])
+    for bucket in by_dealer.values():
+        bucket.sort(key=lambda c: c.get("id") or 0)
+
+    out: list[dict[str, Any]] = []
+    round_idx = 0
+    while len(out) < lim:
+        added = False
+        for key in dealer_order:
+            bucket = by_dealer[key]
+            if round_idx < len(bucket):
+                out.append(bucket[round_idx])
+                added = True
+                if len(out) >= lim:
+                    break
+        if not added:
+            break
+        round_idx += 1
+    return out
 
 
 def _normalize_make_capitalization(make: str) -> str:

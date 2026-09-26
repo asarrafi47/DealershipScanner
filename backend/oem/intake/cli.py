@@ -7,9 +7,9 @@ import logging
 import sys
 from pathlib import Path
 
-from scraping.paths import ROOT
+from backend.scraping.paths import ROOT
 
-from oem.intake.bmw_pipeline import (
+from backend.oem.intake.bmw_pipeline import (
     build_report,
     export_normalized_csv,
     export_partial_rows_review,

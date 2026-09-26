@@ -280,37 +280,73 @@ CREATE TABLE IF NOT EXISTS dealer_ratings (
 """
 
 
+# Per-process "already ensured" flags, the same guard
+# ``inventory_pg.init_postgres_inventory`` uses for ``_PG_INV_SCHEMA_OK``.
+# Without them, every comment post/delete/flag/attach and every dealer-rating
+# write re-issues `CREATE TABLE IF NOT EXISTS` + `CREATE INDEX IF NOT EXISTS`
+# against the shared Postgres inventory connection -- and `CREATE INDEX IF NOT
+# EXISTS` still takes a lock even when the index already exists, so a long
+# transaction elsewhere on these tables queues every later comment write
+# behind it. Gated on Postgres specifically: SQLite is pytest-only, a fresh
+# empty file per test, so that path must keep creating its tables every call.
+_COMMENT_TABLES_OK = False
+_COMMENT_FLAGS_TABLE_OK = False
+_COMMENT_ATTACHMENTS_TABLE_OK = False
+_DEALER_RATINGS_TABLE_OK = False
+
+
 def ensure_comment_tables(cur: Any) -> None:
     """Create both comment tables + indexes if absent (idempotent, no commit)."""
+    global _COMMENT_TABLES_OK
     postgres = inventory_pg.is_inventory_postgres()
+    if postgres and _COMMENT_TABLES_OK:
+        return
     for table, subject_col in _SCOPES.values():
         cur.execute(_ddl_comments(table, subject_col, postgres=postgres))
         for name, columns, where in _comment_indexes(table, subject_col):
             cur.execute(_create_index_sql(name, table, columns, where))
+    if postgres:
+        _COMMENT_TABLES_OK = True
 
 
 def ensure_comment_flags_table(cur: Any) -> None:
     """Create the ``comment_flags`` dedup table if absent (idempotent, no commit)."""
+    global _COMMENT_FLAGS_TABLE_OK
     postgres = inventory_pg.is_inventory_postgres()
+    if postgres and _COMMENT_FLAGS_TABLE_OK:
+        return
     cur.execute(_DDL_COMMENT_FLAGS_PG if postgres else _DDL_COMMENT_FLAGS_SQLITE)
     cur.execute(
         "CREATE INDEX IF NOT EXISTS idx_comment_flags_comment ON comment_flags (scope, comment_id)"
     )
+    if postgres:
+        _COMMENT_FLAGS_TABLE_OK = True
 
 
 def ensure_comment_attachments_table(cur: Any) -> None:
     """Create ``comment_attachments`` if absent (idempotent, no commit)."""
+    global _COMMENT_ATTACHMENTS_TABLE_OK
     postgres = inventory_pg.is_inventory_postgres()
+    if postgres and _COMMENT_ATTACHMENTS_TABLE_OK:
+        return
     cur.execute(_DDL_COMMENT_ATTACHMENTS_PG if postgres else _DDL_COMMENT_ATTACHMENTS_SQLITE)
     for name, columns, where in _ATTACHMENT_INDEXES:
         cur.execute(_create_index_sql(name, "comment_attachments", columns, where))
+    if postgres:
+        _COMMENT_ATTACHMENTS_TABLE_OK = True
 
 
 def ensure_dealer_ratings_table(cur: Any) -> None:
     """Create ``dealer_ratings`` if absent (idempotent, no commit)."""
-    cur.execute(_DDL_RATINGS_PG if inventory_pg.is_inventory_postgres() else _DDL_RATINGS_SQLITE)
+    global _DEALER_RATINGS_TABLE_OK
+    postgres = inventory_pg.is_inventory_postgres()
+    if postgres and _DEALER_RATINGS_TABLE_OK:
+        return
+    cur.execute(_DDL_RATINGS_PG if postgres else _DDL_RATINGS_SQLITE)
     for name, columns, where in _RATING_INDEXES:
         cur.execute(_create_index_sql(name, "dealer_ratings", columns, where))
+    if postgres:
+        _DEALER_RATINGS_TABLE_OK = True
 
 
 def _now_iso() -> str:

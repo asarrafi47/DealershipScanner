@@ -116,6 +116,9 @@ async def _ddg_search_candidates(
     context = None
     html = ""
     try:
+        from backend.scanner.browser_gate import require_browser
+
+        require_browser("url_discovery.ddg_search")
         context = await browser.new_context(
             viewport={"width": 1280, "height": 900},
             user_agent=(
@@ -221,37 +224,41 @@ async def discover_dealer_url(
     )
 
     # Verify candidates with a quick HTTP check via a new Playwright page
+    verify_ctx = None
     try:
         verify_ctx = await browser.new_context(
             viewport={"width": 1280, "height": 900},
         )
         verify_page = await verify_ctx.new_page()
-        try:
-            for candidate in candidates[:5]:
-                try:
-                    resp = await verify_page.goto(
-                        candidate + "/",
-                        wait_until="domcontentloaded",
-                        timeout=10000,
-                    )
-                    if resp and resp.status < 400:
-                        final = verify_page.url
-                        root = _root_url(final)
-                        if not _is_aggregator(root):
-                            logger.info(
-                                "URL discovery [%s]: confirmed → %s (HTTP %d)",
-                                dealer_name, root, resp.status,
-                            )
-                            return root
-                except Exception as exc:
-                    logger.debug(
-                        "URL discovery [%s]: %s probe failed (%s): %s",
-                        dealer_name, candidate, type(exc).__name__, str(exc)[:120],
-                    )
-        finally:
-            await verify_ctx.close()
+        for candidate in candidates[:5]:
+            try:
+                resp = await verify_page.goto(
+                    candidate + "/",
+                    wait_until="domcontentloaded",
+                    timeout=10000,
+                )
+                if resp and resp.status < 400:
+                    final = verify_page.url
+                    root = _root_url(final)
+                    if not _is_aggregator(root):
+                        logger.info(
+                            "URL discovery [%s]: confirmed → %s (HTTP %d)",
+                            dealer_name, root, resp.status,
+                        )
+                        return root
+            except Exception as exc:
+                logger.debug(
+                    "URL discovery [%s]: %s probe failed (%s): %s",
+                    dealer_name, candidate, type(exc).__name__, str(exc)[:120],
+                )
     except Exception as exc:
         logger.warning("URL discovery [%s]: verification step failed: %s", dealer_name, exc)
+    finally:
+        if verify_ctx is not None:
+            try:
+                await verify_ctx.close()
+            except Exception:
+                pass
 
     logger.warning(
         "URL discovery [%s]: all %d candidate(s) failed HTTP check", dealer_name, len(candidates)

@@ -2217,7 +2217,7 @@
             return;
         }
 
-        const currentYear = 2026;
+        const currentYear = new Date().getFullYear();
         const modelYear = safeYear;
         const agePenalty = Math.max(0, currentYear - modelYear) * 1.0;
 
@@ -2469,7 +2469,7 @@
         const timelineEl = document.getElementById("history-timeline-list");
         if (!widget) return;
 
-        const REFERENCE_DATE = new Date(2026, 5, 2);
+        const REFERENCE_DATE = new Date();
 
         function parseDate(raw) {
             if (raw == null || String(raw).trim() === "") return null;

@@ -650,6 +650,16 @@ def merge_verified_specs(
             return None
 
     dealer_cyl = car.get("cylinders")
+    # The stored count can be enrichment-written; the engine text was observed.
+    # "2.7L I4 L3B Turbo" with cylinders=8 renders as an 8-cylinder without this.
+    try:
+        from backend.utils.engine_consistency import cylinders_from_engine_text as _cyl_from_text
+
+        _text_cyl = _cyl_from_text(car.get("engine_description"))
+        if _text_cyl is not None and _int_or_none(dealer_cyl) not in (None, 0, _text_cyl):
+            dealer_cyl = _text_cyl
+    except Exception:
+        pass
     dealer_drive = (car.get("drivetrain") or "").strip()
     dealer_trans = (car.get("transmission") or "").strip()
 
@@ -670,16 +680,68 @@ def merge_verified_specs(
     except Exception:
         _generation = None
     epa_trim = lookup_epa_master_by_id(linked_id) if linked_id else {}
+    catalog_link_rejected: str | None = None
+    if epa_trim:
+        # A linked row that contradicts the dealer's own engine text must not
+        # feed cylinders / hp / MPG for this car; fall back to the fuzzy path,
+        # which is anchored on the text-derived cylinder count.
+        try:
+            from backend.utils.engine_consistency import catalog_row_conflicts_with_engine_text
+
+            catalog_link_rejected = catalog_row_conflicts_with_engine_text(
+                car.get("engine_description"), epa_trim.get("displacement"), epa_trim.get("cylinders")
+            )
+        except Exception:
+            catalog_link_rejected = None
+        if catalog_link_rejected:
+            epa_trim = {}
     linked_exact = bool(epa_trim)  # True only when the by-id row actually resolved
     if not epa_trim:
         # Per-trim lookup (exact match from build_epa_master.py data), then aggregate fallback
         epa_trim = lookup_epa_by_trim(y, make, model, trim) if trim else {}
+    vpic = lookup_vpic_from_cache(car.get("vin"))
+    # VIN decode (vPIC) is the top authority for the cylinder count: it agrees
+    # with the dealer's engine text on 99.9% of active cars while the stored
+    # cylinders column disagrees with it on 3,589 (2026-09-21). Only when the
+    # decode does not contradict the engine text on the listing — vPIC itself
+    # warns that a decoded model year can be off.
+    _vpic_cyl = _int_or_none(vpic.get("cylinders"))
+    _vpic_cyl_ok = False
+    if _vpic_cyl is not None and _vpic_cyl >= 0:
+        try:
+            from backend.utils.engine_consistency import cylinders_conflicts_with_engine_text as _cyl_conflict
+
+            _vpic_cyl_ok = not _cyl_conflict(
+                _vpic_cyl, car.get("engine_description"), car.get("fuel_type")
+            )
+        except Exception:
+            _vpic_cyl_ok = False
     epa = lookup_epa_aggregate(
         y, make, model, title=title_for_decode, trim=trim,
-        prefer_cylinders=_int_or_none(dealer_cyl),
+        # The VIN-decoded count steers the aggregate toward the right engine
+        # family (an X5 M is the 8-cylinder rows, not the X5's 3.0L V6).
+        prefer_cylinders=_vpic_cyl if _vpic_cyl_ok and _vpic_cyl else _int_or_none(dealer_cyl),
     )
     # Merge: per-trim values win over aggregate for any key they provide
     epa = {**epa, **{k: v for k, v in epa_trim.items() if v is not None}}
+    # The fuzzy path can land on the wrong engine family too (X5 M -> X5 3.0L
+    # V6). Engine-level catalog values that contradict the listing's own engine
+    # text are dropped; MPG from a different engine is not this car's MPG.
+    epa_fuzzy_rejected: str | None = None
+    if epa and not linked_exact:
+        try:
+            from backend.utils.engine_consistency import catalog_row_conflicts_with_engine_text as _row_conf
+
+            epa_fuzzy_rejected = _row_conf(
+                car.get("engine_description"), epa.get("displacement"), epa.get("cylinders")
+            )
+        except Exception:
+            epa_fuzzy_rejected = None
+        if epa_fuzzy_rejected:
+            epa = {k: v for k, v in epa.items() if k not in (
+                "displacement", "cylinders", "engine_description", "city08", "highway08",
+                "city_e", "highway_e", "fuel_type", "atv_type", "trany",
+            )}
     if include_extended_specs:
         # Only the figures a named page for THIS car's model year actually
         # printed — see the "WHICH EXTENDED SPECS MAY REACH A SHOPPER" block
@@ -699,13 +761,14 @@ def merge_verified_specs(
     from backend.enrichment.model_specs_dictionary import lookup_model_specs_dictionary
 
     dict_specs = lookup_model_specs_dictionary(make, model)
-    vpic = lookup_vpic_from_cache(car.get("vin"))
 
     # Resolved catalog row beats the regex trim decoder for cylinders — the
     # decoder is era-blind ("E 350" decodes to the modern turbo-four) while the
     # link was scored against this car's own engine data. Only when the by-id
     # row actually resolved: a fuzzy fallback must not inherit this authority.
-    cyl_ver = _int_or_none(epa_trim.get("cylinders")) if linked_exact else None
+    cyl_ver = _vpic_cyl if _vpic_cyl_ok else None
+    if cyl_ver is None:
+        cyl_ver = _int_or_none(epa_trim.get("cylinders")) if linked_exact else None
     if cyl_ver is None:
         cyl_ver = regex.get("cylinders")
     if cyl_ver is None:
@@ -739,6 +802,19 @@ def merge_verified_specs(
             )
 
     drive_ver = regex.get("drivetrain") or epa.get("drivetrain")
+    # NHTSA vPIC outranks the feed for drivetrain (policy 2026-09-23). AWD and 4WD
+    # are the same wheels driven, so only a real disagreement (RWD vs 4WD, FWD vs
+    # AWD) is overridden; a blank decode leaves the cascade alone.
+    _vpic_drive = vpic.get("drivetrain")
+    if _vpic_drive:
+        try:
+            from backend.catalog.resolver import _drive_bucket as _db_
+
+            _a, _b = _db_(dealer_drive), _db_(_vpic_drive)
+            if _a and _b and _a != _b and not ({_a, _b} <= {"AWD", "4WD"}):
+                drive_ver = _vpic_drive
+        except Exception:
+            pass
     if not drive_ver and dealer_drive and not _is_na_spec(dealer_drive):
         drive_ver = dealer_drive
     if not drive_ver and dict_specs and dict_specs.get("drivetrain"):
@@ -847,6 +923,9 @@ def merge_verified_specs(
     if is_bev:
         cyl_ver = 0
         display_cyl = 0
+    elif _vpic_cyl_ok and _vpic_cyl:
+        # VIN decode outranks the stored column (see the cyl_ver block above).
+        display_cyl = _vpic_cyl
     elif dealer_cyl_i is not None and dealer_cyl_i > 0:
         display_cyl = dealer_cyl_i
     elif cyl_ver is not None:
@@ -856,8 +935,13 @@ def merge_verified_specs(
 
     cylinders_verified = bool(
         display_cyl is not None
-        and (_is_na_spec(dealer_cyl) or dealer_cyl_i in (None, 0))
-        and (regex.get("cylinders") is not None or epa.get("cylinders") is not None)
+        and (
+            (_vpic_cyl_ok and _vpic_cyl and display_cyl == _vpic_cyl)
+            or (
+                (_is_na_spec(dealer_cyl) or dealer_cyl_i in (None, 0))
+                and (regex.get("cylinders") is not None or epa.get("cylinders") is not None)
+            )
+        )
     )
 
     # Regex/EPA first so xDrive/4MATIC in title wins over dealer placeholders.
@@ -953,7 +1037,10 @@ def merge_verified_specs(
         "cylinders": cyl_ver,
         "cylinders_display": display_cyl,
         "cylinders_verified": cylinders_verified,
+        "catalog_link_rejected": catalog_link_rejected,
+        "epa_fuzzy_rejected": epa_fuzzy_rejected,
         "drivetrain": drive_ver,
+        "vpic_electrification": vpic.get("electrification"),
         "drivetrain_display": display_drive_ui,
         "drivetrain_verified": drivetrain_verified,
         "gears": gears_ver,
@@ -964,6 +1051,9 @@ def merge_verified_specs(
         "master_engine_string": master_engine_string,
         "fuel_economy_display": fuel_economy_display,
         "epa_displacement": epa.get("displacement") or vpic.get("engine_l"),
+        # VIN-decoded displacement, kept separate so the engine line can rank it
+        # above catalog / known-trim text (see car_serialize.engine).
+        "vpic_engine_l": vpic.get("engine_l"),
         "body_style_display": body_style_display or epa.get("body_style"),
         # Per-trim EPA fields (populated from DICTIONARY via build_epa_master.py)
         "epa_fuel_type": epa.get("fuel_type"),

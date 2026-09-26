@@ -6,7 +6,7 @@ import sqlite3
 from pathlib import Path
 from typing import Iterable
 
-from oem.vehicle_reference.utils.mpg import normalize_mpg_cell
+from backend.oem.vehicle_reference.utils.mpg import normalize_mpg_cell
 
 # Exact header order for downstream compatibility.
 CSV_COLUMNS = [

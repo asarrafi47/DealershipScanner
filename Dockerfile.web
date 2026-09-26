@@ -17,9 +17,21 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir gunicorn[gthread] -r requirements.txt
 
-# Browser binaries: Playwright (Python) + Patchright (Crawl4AI 0.8)
-RUN playwright install chromium && playwright install-deps chromium && \
-    patchright install chromium && patchright install-deps chromium
+# Browser binary: Playwright Chromium only.
+#
+# Car-chat web research launches it in-process (backend/utils/web_researcher.py:363,
+# gated by CAR_CHAT_WEB_RESEARCH), so the web image genuinely needs this one.
+#
+# Patchright's Chromium is NOT installed here: its only consumer is
+# backend/oem/scraper/crawl4ai_discovery.py, and no web route reaches it. Its
+# only caller anywhere is backend/scanner/scanner.js:2363/:2443 -- and that
+# spawn is currently broken (it runs `python3 -m scrapers.crawl4ai_discovery`
+# with cwd=backend/scanner, where no such module exists; the real module lives
+# under backend/oem/scraper/). So crawl4ai discovery runs nowhere today. It is
+# left in Dockerfile.scanner-worker pending the Node-scanner retirement decision
+# (docs/CLOUD_RESTRUCTURE_PLAN.md 0.1). Dropping the second full browser
+# download here saves ~400MB of image and its build time.
+RUN playwright install chromium && playwright install-deps chromium
 
 # Copy application code
 COPY . .

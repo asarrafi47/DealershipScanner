@@ -4,7 +4,7 @@ from __future__ import annotations
 from typing import Any
 from urllib.parse import urlparse
 
-from scraping.models import SiteResult
+from backend.scraping.models import SiteResult
 from backend.schemas.evidence_package import EvidencePackage, FetchedPage, HeuristicScores
 
 

@@ -56,9 +56,9 @@ if str(_REPO_ROOT) not in sys.path:
 
 _log = logging.getLogger("quarantine_package_value_msrps")
 
-_DEFAULT_SUSPECTS = (
-    "/private/tmp/claude-501/-Users-asarrafi-Projects-DealershipScanner/"
-    "84a34d61-fe01-4250-a60f-bba4d9c18d9d/scratchpad/suspect_rows.json"
+# Output of the suspect-row census; repo-local and gitignored (workspace/).
+_DEFAULT_SUSPECTS = str(
+    Path(__file__).resolve().parents[2] / "workspace" / "data_quality" / "suspect_rows.json"
 )
 
 # Labels that mean "this price is the CAR's price (or a mandatory fee), not an

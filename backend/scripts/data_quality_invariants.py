@@ -318,6 +318,41 @@ SQL_INVARIANTS: tuple[SqlInvariant, ...] = (
         denominator_sql="SELECT COUNT(*) FROM cars WHERE listing_active = 1 AND epa_master_id IS NOT NULL",
     ),
     SqlInvariant(
+        id="epa_link_contradicts_engine_text",
+        title="cars.epa_master_id points at a row whose engine size contradicts the dealer's engine text",
+        detects=(
+            "a catalog link scored without displacement — the resolver saw no parsed "
+            "engine_l and matched on cylinders + drivetrain alone, binding 2.7L I4 "
+            "Silverados to the 5.3L V8 row (2,811 active cars on 2026-09-21)"
+        ),
+        impossible_because=(
+            "the dealer wrote the displacement on the listing; a catalog row with a "
+            "different displacement is a different engine, and every hp / MPG / "
+            "cylinder figure joined from it is wrong"
+        ),
+        count_sql="""
+            SELECT COUNT(*) FROM cars c JOIN epa_master e ON e.id = c.epa_master_id
+            WHERE c.listing_active = 1 AND e.displacement IS NOT NULL
+              AND c.engine_description ~ '[0-9]\\.[0-9]\\s?-?L'
+              AND ABS(e.displacement - (substring(c.engine_description from '([0-9]\\.[0-9])\\s?-?L'))::numeric) > 0.15
+        """,
+        example_sql="""
+            SELECT c.id, c.year, c.make, c.model, c.trim, c.engine_description,
+                   e.trim AS epa_trim, e.displacement AS epa_displacement, e.cylinders AS epa_cylinders,
+                   c.epa_match_method, c.epa_match_confidence
+            FROM cars c JOIN epa_master e ON e.id = c.epa_master_id
+            WHERE c.listing_active = 1 AND e.displacement IS NOT NULL
+              AND c.engine_description ~ '[0-9]\\.[0-9]\\s?-?L'
+              AND ABS(e.displacement - (substring(c.engine_description from '([0-9]\\.[0-9])\\s?-?L'))::numeric) > 0.15
+            ORDER BY c.epa_match_confidence LIMIT 20
+        """,
+        denominator_sql=(
+            "SELECT COUNT(*) FROM cars c JOIN epa_master e ON e.id = c.epa_master_id "
+            "WHERE c.listing_active = 1 AND e.displacement IS NOT NULL "
+            "AND c.engine_description ~ '[0-9]\\.[0-9]\\s?-?L'"
+        ),
+    ),
+    SqlInvariant(
         id="epa_link_make_mismatch",
         title="cars.epa_master_id points at a different make",
         detects="a catalog resolver link that crossed manufacturers entirely",

@@ -21,6 +21,8 @@ from backend.parsers.chapman import parse as parse_chapman
 from backend.parsers.dealer_dot_com import parse as parse_dealer_dot_com
 from backend.parsers.dealer_eprocess import parse as parse_dealer_eprocess
 from backend.parsers.dealermasters import parse as parse_dealermasters
+from backend.parsers.oneaudi import parse as parse_oneaudi
+from backend.parsers.wp_vehicles_index import parse as parse_wp_vehicles_index
 from backend.parsers.dealer_on import parse as parse_dealer_on
 from backend.parsers.jazel import parse as parse_jazel
 from backend.parsers.motive_ridemotive import parse as parse_motive_ridemotive
@@ -33,7 +35,14 @@ from backend.parsers.typesense import parse as parse_typesense
 
 
 def _parse_autowall(raw_data, *, base_url="", dealer_id="", dealer_name="", dealer_url=""):
-    """Pass-through parser: autoWALL vehicles are already parsed dicts; return them as-is."""
+    """autoWALL vehicles come either pre-parsed (browser path: ``{"inventory": [...]}``)
+    or as one raw SRP page of HTML (HTTP recipe replay of ``/gs-vehicle/list?page=N``,
+    Long of Athens 2026-09-24: 309 cars, 25 per page, ``data-vin`` on every card)."""
+    if isinstance(raw_data, str):
+        from backend.scanner.scrapers.autowall import parse_autowall_inventory_html
+
+        return parse_autowall_inventory_html(raw_data, base_url=base_url or dealer_url, dealer_id=dealer_id,
+                                             dealer_name=dealer_name or dealer_id, dealer_url=dealer_url or base_url)
     if isinstance(raw_data, dict) and isinstance(raw_data.get("inventory"), list):
         return [v for v in raw_data["inventory"] if isinstance(v, dict) and v.get("vin")]
     return []
@@ -69,6 +78,8 @@ PARSERS = {
     "chapman": parse_chapman,
     "jazel": parse_jazel,
     "dealermasters": parse_dealermasters,
+    "wp_vehicles_index": parse_wp_vehicles_index,
+    "oneaudi": parse_oneaudi,
 }
 
 _log = logging.getLogger(__name__)
@@ -410,6 +421,7 @@ class _Rooftop:
     def __init__(self, identity: str):
         self.identity = identity
         self.names: set[str] = set()
+        self.alt_names: set[str] = set()  # feed free-text store labels: match-only, never refuse on them
         self.slugs: set[str] = set()
         self.hosts: set[str] = set()
         self.streets: set[str] = set()
@@ -422,6 +434,9 @@ class _Rooftop:
         name = _rooftop_name(rooftop)
         if name:
             self.names.add(name)
+        alt = str(rooftop.get("alt_name") or "").strip()
+        if alt and _looks_like_store_name(alt):
+            self.alt_names.add(alt)
         slug = _rooftop_slug(rooftop)
         if slug:
             self.slugs.add(slug)
@@ -495,6 +510,17 @@ def _pick_target(
                 ])
                 if hit is not None:
                     return hit, "name_brand_alias"
+                # Feed spells the franchise cluster short AND adds the town:
+                # "Shottenkirk CDJR Canton" for the roster's "Shottenkirk
+                # Chrysler Dodge Jeep Ram" (2026-09-26, refused 297 rows as
+                # "payload holds only … not this store"). Every canonical roster
+                # token must appear, unique winner as always.
+                hit = _unique([
+                    rt for rt in rooftops
+                    if any(target_brand < _brand_canonical_tokens(n) for n in rt.names)
+                ])
+                if hit is not None:
+                    return hit, "name_brand_alias_subset"
 
         hit = _unique([
             rt for rt in rooftops
@@ -515,6 +541,28 @@ def _pick_target(
         hit = _unique([rt for rt in rooftops if any(_nrm(n) == alias_nrm for n in rt.names)])
         if hit is not None:
             return hit, "roster_name_alias"
+
+    # A free-text store label the feed attaches per row (CarsCommerce
+    # ``extra_fields.custom_location``): "Hendrick Buick GMC Cadillac Cary" for
+    # the roster's "Hendrick Buick GMC Cary". Matched with the same name rules
+    # and the same unique-winner demand, but ONLY ever used to find this store —
+    # a junk or sibling label ("WRECKED CAR", "Voyles CDJR of Birmingham")
+    # simply matches nothing and the address tiers below decide.
+    if target_nrm and any(rt.alt_names for rt in rooftops):
+        for probe_fn, tier_name in (
+            (lambda n: _nrm(n) == target_nrm, "store_label_exact"),
+            (lambda n: bool(target_tokens) and _tokens(n) == target_tokens, "store_label_tokens"),
+            (lambda n: bool(target_tokens) and target_tokens < _tokens(n), "store_label_token_subset"),
+        ):
+            hit = _unique([rt for rt in rooftops if any(probe_fn(n) for n in rt.alt_names)])
+            if hit is not None:
+                return hit, tier_name
+        for alias in roster_name_aliases(dealer_id):
+            alias_nrm = _nrm(alias)
+            if alias_nrm:
+                hit = _unique([rt for rt in rooftops if any(_nrm(n) == alias_nrm for n in rt.alt_names)])
+                if hit is not None:
+                    return hit, "store_label_alias"
 
     # dealer_id is the storefront host with dots swapped for dashes
     # ("davekirk-com"); some rosters carry a longer trading name in dealer_name
@@ -876,8 +924,17 @@ def parse(
     dealer_state: str = "",
     dealer_zip: str = "",
     dealer_address_source: str = "",
+    trust_feed_scope: bool = False,
 ):
     """Parse *raw_data* into vehicle rows, resolving which store each belongs to.
+
+    ``trust_feed_scope=True`` skips the rooftop gate: the caller replayed a
+    recipe whose request is already filtered to this store's own feed ids
+    (CarsCommerce ``facetFilters.source_id``, verified at synthesis by replaying
+    the filter and seeing one rooftop in the store's city). Mall of Georgia
+    Mazda files under two feed ids that stamp the same store two ways — a bare
+    "Buford, GA" and a "3546 Highway 20" address block — and the gate, which can
+    only ever pick ONE rooftop, refused 309 of 424 verified rows (2026-09-25).
 
     Pass ``rejected_out`` and you get back ONLY this store's rows, with the
     sibling rooftops' rows in that list — what the delta scanner wants, since it
@@ -903,6 +960,18 @@ def parse(
     """
     _kwargs = dict(base_url=base_url, dealer_id=dealer_id, dealer_name=dealer_name, dealer_url=dealer_url)
     rows = _parse_rows(provider, raw_data, _kwargs, dealer_id)
+    if not trust_feed_scope and isinstance(raw_data, dict) and raw_data.get("_feed_scoped") is True:
+        trust_feed_scope = True  # marker set by the recipe replay (recipes.py) on a store-scoped payload
+    if trust_feed_scope:
+        for r in rows:
+            r["_feed_scoped"] = True  # the union pass in dealer_run must not re-gate these
+        stamps = {str((r.get("_rooftop") or {}).get("key") or "")[:60] for r in rows if isinstance(r.get("_rooftop"), dict)}
+        if len(stamps) > 1:
+            _log.info("rooftop attribution [%s]: gate skipped, recipe is scoped to this store's own feed ids; %d row(s) across %d stamp(s) %s",
+                      dealer_id or dealer_name, len(rows), len(stamps), sorted(stamps)[:4])
+        if rejected_out is None:
+            return rows
+        return rows
     kept, rejected = resolve_rooftop_attribution(
         rows, dealer_id=dealer_id, dealer_name=dealer_name, dealer_url=dealer_url,
         dealer_address=dealer_address, dealer_city=dealer_city,
@@ -933,8 +1002,13 @@ def parse_kept(
     dealer_id: str,
     dealer_name: str = "",
     dealer_url: str = "",
+    **place_override,
 ):
     """``parse()`` returning ONLY this store's rows, with the store identified.
+
+    ``dealer_city`` / ``dealer_state`` / ``dealer_zip`` / ``dealer_address`` passed
+    explicitly win over the registry lookup (a place learned from the site's own
+    <title> when the store is not in the registry — dealer_place.learn_place).
 
     Discarding the rooftop gate's refusals is only safe when the gate can tell
     which rooftop this store IS — on a group feed whose rooftops are address
@@ -946,6 +1020,9 @@ def parse_kept(
     host tiers, exactly as before.
     """
     place = dict(_cached_roster_place_items(dealer_url or base_url))
+    place.update({k: v for k, v in place_override.items() if k in ("dealer_address", "dealer_city", "dealer_state", "dealer_zip") and v})
+    if place_override.get("trust_feed_scope"):
+        place["trust_feed_scope"] = True
     return parse(
         provider, raw_data,
         base_url=base_url, dealer_id=dealer_id,

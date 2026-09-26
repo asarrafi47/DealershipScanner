@@ -146,8 +146,8 @@ def vault_get(vault_key: str, *, token: str | None = None, timeout: float | None
     encoded = urllib.parse.quote(vault_key, safe=":/")
     headers = {"Authorization": f"Bearer {tok}"}
     key_variants = [vault_key, vault_key.replace("/", ":"), vault_key.replace(":", "/")]
-    seen: set[str] = set()
     for addr in _vault_addrs():
+        seen: set[str] = set()
         for key in key_variants:
             if key in seen:
                 continue

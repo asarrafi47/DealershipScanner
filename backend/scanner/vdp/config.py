@@ -15,11 +15,11 @@ from typing import Any
 def _vdp_max_per_dealer(override: int | None = None) -> int:
     if override is not None:
         return max(0, int(override))
-    raw = (os.environ.get("SCANNER_VDP_EP_MAX") or "10").strip()
+    raw = (os.environ.get("SCANNER_VDP_EP_MAX") or "0").strip()
     try:
         return max(0, int(raw))
     except ValueError:
-        return 10
+        return 0
 
 
 def _vdp_price_max_per_dealer(override: int | None = None) -> int:
@@ -38,6 +38,43 @@ def _vdp_spec_gap_max_per_dealer() -> int:
     from backend.scanner.scan_efficiency import effective_vdp_spec_gap_max
 
     return effective_vdp_spec_gap_max(10_000)
+
+
+def _vdp_gallery_thin_max_per_dealer() -> int:
+    """Browser visits per dealer reserved for cars whose gallery is still thin after
+    the HTTP passes (default 40). This is the need-driven replacement for the old
+    blind EP rotation; 0 disables."""
+    try:
+        return max(0, min(2000, int((os.environ.get("SCANNER_VDP_GALLERY_THIN_MAX") or "40").strip())))
+    except ValueError:
+        return 40
+
+
+def _vdp_gallery_thin_min() -> int:
+    """A car with fewer HTTPS gallery URLs than this is 'thin' for the queue (default 8)."""
+    try:
+        return max(1, int((os.environ.get("SCANNER_VDP_GALLERY_THIN_MIN") or "8").strip()))
+    except ValueError:
+        return 8
+
+
+def _vdp_description_probe() -> int:
+    """Description visits tried first; the rest of the description cap only runs
+    when these actually filled something. In the 2026-09-22 lab 120 description
+    visits per dealer yielded 0 descriptions at Freeway Honda and 4 at Hiley VW."""
+    try:
+        return max(1, min(200, int((os.environ.get("SCANNER_VDP_DESCRIPTION_PROBE") or "10").strip())))
+    except ValueError:
+        return 10
+
+
+def _vdp_description_min_yield() -> float:
+    """Fraction of probe visits that must fill a description before the remaining
+    description visits are queued (default 0.3)."""
+    try:
+        return max(0.0, min(1.0, float((os.environ.get("SCANNER_VDP_DESCRIPTION_MIN_YIELD") or "0.3").strip())))
+    except ValueError:
+        return 0.3
 
 
 def _vdp_description_max_per_dealer(override: int | None = None) -> int:
@@ -99,11 +136,11 @@ def _vdp_gallery_loop_max_sec(site_profile: Any = None) -> float:
     if opt == "bmw":
         raw = (os.environ.get("SCANNER_VDP_GALLERY_MAX_SEC_BMW") or "300").strip()
     else:
-        raw = (os.environ.get("SCANNER_VDP_GALLERY_MAX_SEC") or "150").strip()
+        raw = (os.environ.get("SCANNER_VDP_GALLERY_MAX_SEC") or "45").strip()
     try:
         return max(30.0, min(600.0, float(raw)))
     except ValueError:
-        return 300.0 if opt == "bmw" else 150.0
+        return 300.0 if opt == "bmw" else 45.0
 
 
 def _max_vdp_concurrency() -> int:
@@ -130,10 +167,11 @@ def _vdp_gallery_skip_if_feed_ge() -> int:
     *extends* an already-good gallery, so it can be skipped while still doing the cheap
     nav + EP/spec/price extraction.
 
-    Default ``0`` = disabled (always harvest — current behaviour preserved exactly).
-    Set e.g. ``SCANNER_VDP_GALLERY_SKIP_IF_FEED_GE=8`` to enable.
+    Default ``20`` (2026-09-22): a feed that already gave 20 photos is full enough;
+    the loop cost ~50 s per visit and was the reason the VDP phase cap fired on
+    every dealer in the 4-store lab. ``0`` = always harvest.
     """
-    raw = (os.environ.get("SCANNER_VDP_GALLERY_SKIP_IF_FEED_GE") or "0").strip()
+    raw = (os.environ.get("SCANNER_VDP_GALLERY_SKIP_IF_FEED_GE") or "20").strip()
     try:
         return max(0, int(raw))
     except ValueError:
@@ -151,9 +189,9 @@ def _vdp_gallery_priority_enabled() -> bool:
 
 def _gallery_max_rounds() -> int:
     try:
-        return max(4, min(120, int((os.environ.get("SCANNER_VDP_GALLERY_MAX_ROUNDS") or "80").strip())))
+        return max(4, min(120, int((os.environ.get("SCANNER_VDP_GALLERY_MAX_ROUNDS") or "40").strip())))
     except ValueError:
-        return 80
+        return 40
 
 
 def _gallery_idle_rounds() -> int:

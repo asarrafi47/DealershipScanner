@@ -165,6 +165,16 @@ async def run_post_scan_job(
             logger.info("Post-scan summary: %s", json.dumps(post_summary, default=str)[:1800])
         except Exception:
             logger.exception("Post-scan pipeline failed")
+    from backend.scanner.scan_efficiency import post_vpic_env_enabled
+
+    if post_vpic_env_enabled():
+        try:
+            from backend.enrichment.vpic_facts import post_scan_vpic
+
+            summary["vpic"] = await asyncio.to_thread(post_scan_vpic, scanned_vins)
+            logger.info("Post-scan vPIC: %s", json.dumps(summary["vpic"], default=str)[:800])
+        except Exception:
+            logger.exception("Post-scan vPIC step failed")
 
     if post_listing_gap_fill and scanned_vins:
         try:

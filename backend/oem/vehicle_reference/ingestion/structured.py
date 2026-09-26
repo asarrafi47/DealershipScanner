@@ -7,8 +7,8 @@ import sqlite3
 from pathlib import Path
 from typing import Any
 
-from oem.vehicle_reference.ingestion.bundle import ingest_vehicle_bundle
-from oem.vehicle_reference.ingestion.manifest import ManifestError, SourceManifest, require_vehicle_source
+from backend.oem.vehicle_reference.ingestion.bundle import ingest_vehicle_bundle
+from backend.oem.vehicle_reference.ingestion.manifest import ManifestError, SourceManifest, require_vehicle_source
 
 
 def load_manifest(path: Path) -> SourceManifest:

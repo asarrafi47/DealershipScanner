@@ -8,30 +8,30 @@ from urllib.parse import urlparse
 
 from bs4 import BeautifulSoup
 
-from scraping.constants import USER_AGENT
-from scraping.fetch_requests import (
+from backend.scraping.constants import USER_AGENT
+from backend.scraping.fetch_requests import (
     HomepageFetchResult,
     fetch_homepage_full,
     fetch_homepage_requests,
 )
-from scraping.html_extract import (
+from backend.scraping.html_extract import (
     collect_cross_domain_evidence_links,
     collect_internal_links,
     html_to_blobs,
 )
-from scraping.entity_specificity import evidence_source_tier
-from scraping.inference import run_inference_on_blobs
-from scraping.interrupt import stop_requested
-from scraping.models import Evidence, SiteResult
-from scraping.org_validation import apply_status_for_fetch
-from scraping.redirects import describe_redirect
-from scraping.site_profile import (
+from backend.scraping.entity_specificity import evidence_source_tier
+from backend.scraping.inference import run_inference_on_blobs
+from backend.scraping.interrupt import stop_requested
+from backend.scraping.models import Evidence, SiteResult
+from backend.scraping.org_validation import apply_status_for_fetch
+from backend.scraping.redirects import describe_redirect
+from backend.scraping.site_profile import (
     apply_profile_to_site_result,
     apply_site_profile_from_html,
     build_site_profile,
     build_site_profile_for_failed_peek,
 )
-from scraping.text_utils import (
+from backend.scraping.text_utils import (
     classify_cross_domain_page_kind,
     classify_page_kind,
     collapse_ws,

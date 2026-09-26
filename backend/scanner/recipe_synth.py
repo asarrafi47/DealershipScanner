@@ -25,6 +25,8 @@ Adding a platform later is one entry in :data:`PLATFORM_TEMPLATES`.
 """
 from __future__ import annotations
 
+from datetime import datetime, timezone
+
 import json
 import logging
 import os
@@ -34,17 +36,20 @@ import time
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Callable
-from urllib.parse import urlparse, urlunparse
+from urllib.parse import parse_qsl, urlencode, urlparse, urlunparse
 
 from backend.scanner.http_fetch import open_url
 from backend.scanner.recipes import (
+    recipe_is_store_scoped,
     PAGINATION_ALGOLIA,
     PAGINATION_CARSCOMMERCE,
     PAGINATION_DEALER_COM,
     PAGINATION_DEP_SRP,
+    PAGINATION_GRAPHQL_OFFSET,
     PAGINATION_HTML_PAGE,
     PAGINATION_JAZEL_SRP,
     PAGINATION_NONE,
+    PAGINATION_COSMOS_PT,
     PAGINATION_PAGE_QUERY,
     PAGINATION_TYPESENSE,
     EndpointRecipe,
@@ -119,9 +124,31 @@ _CHALLENGE_MARKERS = (
     "enable javascript and cookies",
     "cf-browser-verification",
     "px-captcha",
-    "/cdn-cgi/challenge-platform",
 )
+# Markers that Cloudflare also injects into REAL pages as a passive bot-management
+# beacon (``s.src='/cdn-cgi/challenge-platform/scripts/...'``). On their own they
+# prove nothing: Honda of El Cajon serves a 459KB genuine Dealer eProcess homepage
+# carrying that beacon, and treating it as a challenge made the whole dealer read as
+# ``homepage_unreachable_200``. A beacon only counts as a challenge when the body is
+# thin (a real interstitial is a few KB) or a strong marker is present as well.
+_CHALLENGE_BEACON_MARKERS = ("/cdn-cgi/challenge-platform",)
 _MIN_REAL_HTML_BYTES = 2000
+_MAX_CHALLENGE_SHELL_BYTES = 20_000
+
+
+def looks_like_challenge(html: str) -> bool:
+    """True when *html* is an anti-bot interstitial rather than a real page.
+
+    Strong markers ("just a moment", ``__cf_chl``, ...) decide on their own. A
+    passive beacon (``/cdn-cgi/challenge-platform``) decides only for a thin body,
+    because Cloudflare injects the same script tag into pages it served normally.
+    """
+    low = html.lower()
+    if any(m in low for m in _CHALLENGE_MARKERS):
+        return True
+    if len(html) < _MAX_CHALLENGE_SHELL_BYTES and any(m in low for m in _CHALLENGE_BEACON_MARKERS):
+        return True
+    return False
 
 
 # ── HTTP fetch ────────────────────────────────────────────────────────────────
@@ -132,9 +159,19 @@ _MIN_REAL_HTML_BYTES = 2000
 _RETRYABLE_STATUS = frozenset({429, 500, 502, 503, 504})
 
 
-def _fetch_impersonated(url: str, *, timeout: float = 25.0) -> str | None:
+def _fetch_impersonated(
+    url: str,
+    *,
+    timeout: float = 25.0,
+    headers: dict[str, str] | None = None,
+    min_bytes: int = _MIN_REAL_HTML_BYTES,
+) -> str | None:
     """
     Fetch with a real browser's TLS fingerprint, or None if that is not possible.
+
+    *headers* are sent on top of the impersonated profile's own (a same-site
+    ``Referer`` is what some Cloudflare rules key on, see :func:`_dep_fetch_page`);
+    *min_bytes* lets an HTML page-walk accept a short past-the-last-result page.
 
     Returns None rather than raising when ``curl_cffi`` is absent, so this stays a pure
     enhancement: without it the caller falls through to the original urllib path and
@@ -158,7 +195,8 @@ def _fetch_impersonated(url: str, *, timeout: float = 25.0) -> str | None:
         _pace()
         try:
             resp = cffi_requests.get(
-                url, impersonate=profile, timeout=timeout, proxies=proxies, allow_redirects=True
+                url, impersonate=profile, timeout=timeout, proxies=proxies,
+                allow_redirects=True, headers=headers or None,
             )
         except Exception as exc:
             logger.debug("recipe_synth impersonate %s failed %s: %s", profile, url[:70], str(exc)[:90])
@@ -166,9 +204,9 @@ def _fetch_impersonated(url: str, *, timeout: float = 25.0) -> str | None:
         if resp.status_code != 200:
             continue
         html = resp.text or ""
-        if len(html) < _MIN_REAL_HTML_BYTES:
+        if len(html) < min_bytes:
             continue
-        if any(m in html.lower() for m in _CHALLENGE_MARKERS):
+        if looks_like_challenge(html):
             continue
         return html
     return None
@@ -221,8 +259,7 @@ def fetch_dealer_html(url: str, *, timeout: float = 25.0, retries: int = 2) -> s
     if len(html) < _MIN_REAL_HTML_BYTES:
         logger.debug("recipe_synth fetch %s: thin body (%d bytes) — challenge/shell", url[:80], len(html))
         return _fetch_impersonated(url, timeout=timeout)
-    low = html.lower()
-    if any(m in low for m in _CHALLENGE_MARKERS):
+    if looks_like_challenge(html):
         logger.debug("recipe_synth fetch %s: challenge marker present — retry impersonated", url[:80])
         return _fetch_impersonated(url, timeout=timeout)
     return html
@@ -370,7 +407,7 @@ def _synth_carscommerce(dealer_id: str, dealer_url: str, html: str) -> EndpointR
     else:
         post_template = ref.post_template
     url = f"https://{_CARSCOMMERCE_HOST}/api/v1/listings/{ccid}/search"
-    return EndpointRecipe(
+    recipe = EndpointRecipe(
         dealer_id=dealer_id,
         url=url,
         method="POST",
@@ -380,6 +417,397 @@ def _synth_carscommerce(dealer_id: str, dealer_url: str, html: str) -> EndpointR
         pagination=PAGINATION_CARSCOMMERCE,
         provider_hint="dealer_dot_com",  # CarsCommerce payloads route through the generic dealer_dot_com mapper
     )
+    try:
+        extras = _carscommerce_store_filter(recipe, dealer_id, dealer_url, html)
+    except Exception as exc:  # noqa: BLE001 - the unfiltered recipe still works for single-store accounts
+        logger.debug("carscommerce store filter probe failed [%s]: %s", dealer_id, exc)
+        extras = []
+    return [recipe, *extras] if extras else recipe
+
+
+# Group accounts (Hendrick: one ccid, 10,569 cars, 15 rooftops) tag each store's own
+# cars in a custom_text facet — custom_text_11 = "Buford, GA" on Mall of Georgia
+# Mazda (309 of 10,569); custom_text_4 / custom_text_2 hold every rooftop's city.
+# The browser SRP sends that as facetFilters; over HTTP we learn it from the facet
+# values on page 1 and the store's own place, then filter server-side instead of
+# walking 106 pages and refusing 97% of the rows.
+# custom_text_N semantics differ per ACCOUNT: on 2172862 (Mall of Georgia Mazda)
+# custom_text_11 is the single store tag "Buford, GA"; on 5363312 (Hendrick's
+# 11,651-car group) custom_text_2 is "City, ST" per rooftop, custom_text_3 the city,
+# custom_text_11 an unrelated 1/2/3 code and custom_text_4 the certification
+# program. So no facet name can be trusted by itself: every candidate value that
+# spells this store's place is REPLAYED, and it is chosen only when every returned
+# listing's own rooftop stamp (``dealer.location``, the field the attribution gate
+# reads) is this store. Measured 2026-09-24: an unverified custom_text_2="Cary"
+# kept 2 of Hendrick Buick GMC Cary's 390 cars.
+_CC_CUSTOM_FACETS = tuple(f"custom_text_{i}" for i in range(1, 21))
+# The Dealer Inspire page embeds the account's field map, e.g.
+#   "Location":"custom_text_4","buford_location":"custom_text_11"   (Mall of Georgia Mazda)
+#   "Location":"custom_text_2"                                      (Rick Hendrick Chevy Naples)
+#   "Location":"custom_text_25","meta_location":"custom_text_11"    (Hendrick Buick GMC Cary)
+# so the store facet is read from the site itself, not guessed; custom_text_25 is
+# outside any blind 1..20 census.
+_CC_LOCATION_MAP_RE = re.compile(r'"([A-Za-z_.]*[Ll]ocation[A-Za-z_]*)"\s*:\s*"(custom_text_\d+)"')
+
+
+def _cc_location_facets(html: str) -> list[tuple[str, str]]:
+    """[(field_name, facet)] the site maps to a location, exact "Location" first."""
+    seen: dict[str, str] = {}
+    for m in _CC_LOCATION_MAP_RE.finditer(html or ""):
+        seen.setdefault(m.group(2), m.group(1))
+    ranked = sorted(seen.items(), key=lambda kv: (kv[1] != "Location", "meta" in kv[1].lower(), kv[0]))
+    return [(name, facet) for facet, name in ranked]
+_CC_PLACE_ONLY_RE = re.compile(r"[A-Za-z .'\-]{2,40},\s*[A-Za-z]{2}(?:\s+\d{5})?")  # "Buford, GA" is a place, not a store name
+_CC_SINGLE_STORE_MAX = 1000  # an account larger than this is a group even when its stamps say nothing
+_CC_FACET_CHUNK = 7  # the API 400s on unknown facet names; small chunks keep one bad name from blanking the census
+
+
+def _cc_facet_census(recipe: EndpointRecipe, body: dict, origin: str, facets: tuple[str, ...] = _CC_CUSTOM_FACETS) -> tuple[int, dict[str, list[tuple[str, int]]]]:
+    total = 0
+    values: dict[str, list[tuple[str, int]]] = {}
+    for i in range(0, len(facets), _CC_FACET_CHUNK):
+        probe = dict(body)
+        probe.pop("facetFilters", None)
+        probe.update({"page": 1, "perPage": 1, "facets": list(facets[i:i + _CC_FACET_CHUNK])})
+        status, parsed = _replay_request(recipe, probe, origin)
+        if status != 200 or not isinstance(parsed, dict):
+            logger.info("carscommerce facet census chunk %d: status %s", i // _CC_FACET_CHUNK, status)
+            continue
+        data = parsed.get("data") or {}
+        total = total or int(data.get("total_vehicle_count") or 0)
+        for f in data.get("facets") if isinstance(data.get("facets"), list) else []:
+            if not isinstance(f, dict):
+                continue
+            name = f.get("name") or f.get("field") or f.get("key")
+            vals = f.get("values") if isinstance(f.get("values"), list) else None
+            if name and vals:
+                values[str(name)] = [(str(v.get("key")), int(v.get("doc_count") or 0)) for v in vals if isinstance(v, dict) and v.get("key") is not None]
+    return total, values
+
+
+def _cc_rooftop_sig(rt: dict) -> tuple[str, str]:
+    """What identifies this rooftop stamp: ("street", <street key + city>) when
+    it carries a street, ("name", <store name>) when it names a store, else
+    ("place", <city state>). The phone line is left out on purpose: Stevenson
+    Hendrick Honda's two feeds spell the same store's phone "396-1116" and
+    "395-1116" (2026-09-24)."""
+    from backend.parsers import _nrm, _street_key
+
+    if rt.get("address") and re.match(r"\d", str(rt["address"]).strip()):
+        return ("street", _street_key(rt["address"]) + "|" + _nrm(rt.get("city")) + _nrm(rt.get("state")))
+    if rt.get("address"):
+        # rooftop_of files a name-only label ("loaner", "none") under address too
+        return ("tag", _nrm(rt["address"]))
+    name = str(rt.get("alt_name") or rt.get("name") or "").strip()
+    if name and not _CC_PLACE_ONLY_RE.fullmatch(name) and "<" not in name:
+        return ("name", _nrm(name))
+    return ("place", _nrm(rt.get("city")) + _nrm(rt.get("state")))
+
+
+def _cc_rooftop_place_of(rt: dict) -> str:
+    if rt.get("city") and rt.get("state"):
+        return f"{rt['city']}, {rt['state']}".lower()
+    return str(rt.get("name") or "").lower()
+
+
+def _cc_rooftop_place(listing: dict) -> str:
+    """"city, st" from the listing's own rooftop stamp (what the gate matches on)."""
+    from backend.parsers.carscommerce import rooftop_of
+
+    rt = rooftop_of(listing) or {}
+    if rt.get("city") and rt.get("state"):
+        return f"{rt['city']}, {rt['state']}".lower()
+    return str(rt.get("name") or "").lower()
+
+
+def _cc_verify_store_filter(recipe: EndpointRecipe, body: dict, origin: str, facet: str, key: str, label: str,
+                            *, identity: bool = False, site_name: str = "") -> dict[str, Any]:
+    """Replay page 1 under the candidate filter and describe what came back.
+
+    ``ok`` means: rows came back, every one is stamped in this store's city and
+    they all carry ONE rooftop identity. Same city is not enough: Mall of Georgia
+    Mazda's account tags Mazda, MINI and a Hendrick store all "Buford, GA" under
+    its Location facet (738 cars) while ``buford_location`` tags the Mazda store
+    alone (309); Hendrick's "Cary, NC" Location value covers three Cary stores
+    (713) while ``source_id`` 178465 — the page's own ``oem_code`` — is the Buick
+    GMC store's feed (439). 2026-09-24."""
+    from backend.parsers.carscommerce import rooftop_of
+
+    probe = dict(body)
+    probe.pop("facets", None)
+    probe.update({"page": 1, "perPage": 60, "facetFilters": {facet: [key]}})
+    status, parsed = _replay_request(recipe, probe, origin)
+    if status != 200 or not isinstance(parsed, dict):
+        return {"ok": False, "rows": 0, "places": [f"status {status}"], "rooftops": [], "names": []}
+    listings = [x for x in ((parsed.get("data") or {}).get("listings") or []) if isinstance(x, dict)]
+    stamps = [rooftop_of(x) or {} for x in listings]
+    places = sorted({_cc_rooftop_place(x) for x in listings})
+    rooftops = sorted({str(rt.get("key") or "") for rt in stamps})
+    sigs = sorted({_cc_rooftop_sig(rt) for rt in stamps if rt})
+    names = sorted({str(rt.get("alt_name") or rt.get("name") or "") for rt in stamps
+                    if (rt.get("alt_name") or rt.get("name")) and rt.get("city")
+                    and not _CC_PLACE_ONLY_RE.fullmatch(str(rt.get("alt_name") or rt.get("name")).strip())
+                    and "<" not in str(rt.get("alt_name") or rt.get("name"))})
+    # An identity feed (the page's own OEM code / store name) whose single
+    # rooftop carries NO locale is still this store: Tutton CDJR's feed 27250
+    # stamps only the store name, Group 1 Toyota North Austin's 42409 only a
+    # name with no city (2026-09-26). A Location-facet candidate never gets
+    # that benefit — a bare tag could be any store.
+    placeless = bool(listings) and all(not (rt.get("city") and rt.get("state")) for rt in stamps)
+    # rows the feed does not stamp at all (Group 1 Toyota North Austin 42409, Lenoir
+    # City CDJR 45544): nothing contradicts the identity, and nothing to group by
+    stampless = bool(listings) and not any(stamps)
+    # For an identity-backed filter the stamps only VETO when one of them says
+    # another place or another store: lot tags ("ALL", "SPC", "TOW/JORGE R/…")
+    # and the store's own name are not contradictions.
+    from backend.parsers import _looks_like_address as _addr_like
+    from backend.parsers import _looks_like_store_name as _store_like
+    from backend.parsers import _nrm as _pnrm
+
+    def _contradicts(rt: dict) -> bool:
+        if rt.get("city") and rt.get("state") and _cc_rooftop_place_of(rt) != label.lower():
+            return True
+        nm = str(rt.get("alt_name") or rt.get("name") or "").strip()
+        # rooftop_of files a name-only label under "address" too; a label that
+        # reads as a store name (and not as a street) is a store name
+        junk = "/" in nm or sum(ch.isdigit() for ch in nm) > len(nm) * 0.3  # "TOW/JORGE R/367676": a lot note, not a store
+        if nm and not junk and _store_like(nm) and not _CC_PLACE_ONLY_RE.fullmatch(nm) and "<" not in nm and not _addr_like(nm):
+            own = _pnrm(site_name)
+            return not (own and (_pnrm(nm) == own or own.startswith(_pnrm(nm)) or _pnrm(nm).startswith(own)))
+        return False
+
+    no_contradiction = bool(listings) and not any(_contradicts(rt) for rt in stamps if rt)
+    consistent = identity and no_contradiction
+    ok = bool(listings) and ((len(sigs) == 1 and (places == [label.lower()] or (identity and placeless))) or (identity and stampless) or consistent)
+    return {"ok": ok, "rows": len(listings), "places": places, "rooftops": rooftops, "sigs": sigs, "names": names, "no_contradiction": no_contradiction,
+            "total": int((parsed.get("data") or {}).get("total_vehicle_count") or 0)}
+
+
+def _carscommerce_store_filter(recipe: EndpointRecipe, dealer_id: str, dealer_url: str, html: str) -> list[EndpointRecipe]:
+    """Scope *recipe* to this store in place; returns EXTRA recipes to replay
+    alongside it (a verified store-name Location facet that covers cars the
+    identity feeds do not: Group 1 Toyota North Austin's 42409 holds 259 new
+    cars, its used cars sit in group pools reachable only through
+    custom_text_13="Group 1 Toyota North Austin", 2026-09-26)."""
+    from backend.parsers.rooftop_aliases import record_rooftop_alias, roster_name_aliases
+    from backend.scanner.dealer_place import learn_place, name_from_html, oem_code_from_html, place_label
+
+    body = json.loads(recipe.post_template or "{}")
+    origin = _origin(dealer_url)
+    mapped = _cc_location_facets(html)
+    facets = tuple(dict.fromkeys(["source_id"] + [f for _n, f in mapped] + list(_CC_CUSTOM_FACETS)))
+    total, values = _cc_facet_census(recipe, body, origin, facets)
+    if not values:
+        return []
+    oem_code = oem_code_from_html(html)
+    site_name = name_from_html(html)
+    if mapped or oem_code:
+        logger.info("carscommerce [%s]: site says dealername=%r oem_code=%r; location facets %s", dealer_id, site_name, oem_code,
+                    ", ".join(f"{n}={f}" for n, f in mapped) or "none")
+    loc_values = [values.get(f) or [] for _n, f in mapped if (values.get(f) or [])]
+    mapped_values_present = bool(loc_values)
+    if mapped and loc_values and all(len(v) == 1 for v in loc_values):
+        # Napleton Honda of Morton Grove (393 cars, feeds 207385 + MP21386): the
+        # site's Location facets each hold ONE value, so the whole account is this
+        # store; scoping to the OEM-code feed alone kept 49 of 393 (2026-09-26).
+        logger.info("carscommerce [%s]: single-store account (%d cars): location facets %s hold one value each; no store filter",
+                    dealer_id, total, ", ".join(f"{f}={v[0][0]!r}" for (_n, f), v in zip([m for m in mapped if values.get(m[1])], loc_values)))
+        return []
+    if mapped:
+        logger.info("carscommerce [%s]: location facet values: %s", dealer_id,
+                    "; ".join(f"{f}: " + ", ".join(f"{k}={n}" for k, n in (values.get(f) or [])[:6]) for _n, f in mapped))
+    place = learn_place(dealer_id, dealer_url, html)
+    label = place_label(place)
+    if not label:
+        logger.info("carscommerce [%s]: group account (%d cars) but no place evidence for this store; no store filter", dealer_id, total)
+        return []
+    city = label.split(",")[0].strip().lower()
+    # Identity-backed feed ids: a source_id that IS the page's OEM dealer code
+    # (178465 = Hendrick Buick GMC Cary's GM BAC) or spells the store's own name
+    # ("MallofGeorgiaMazda" = "Mall of Georgia Mazda"). A store files under
+    # several (dealer code + marketplace feeds: Mall of Georgia Mazda = 23978 with
+    # 115 cars + MallofGeorgiaMazda with 194), so EVERY verified one is taken.
+    def _nrm(s: str) -> str:
+        return re.sub(r"[^a-z0-9]", "", str(s or "").lower())
+
+    id_stem = _nrm(re.sub(r"-(com|net|org)$", "", dealer_id))
+    identity = {x for x in (oem_code.lower() if oem_code else "", _nrm(site_name), id_stem) if x}
+
+    def _is_identity(k: str) -> bool:
+        nk = _nrm(k)
+        if re.search(r"staging|test|sandbox|demo", k, re.I):
+            return False  # "60503-staging" on Lexus of Greenwood Village: a staging feed, 62 of 484 cars
+        if k in identity or nk in identity:
+            return True
+        # a named feed id is the store name without its town: "TuttonChryslerDodgeJeepRam"
+        # (341 cars) for "Tutton Chrysler Dodge Jeep RAM of Jasper" (2026-09-26)
+        site = _nrm(site_name)
+        return len(nk) >= 10 and not nk.isdigit() and (site.startswith(nk) or (len(id_stem) >= 8 and nk.startswith(id_stem)))
+
+    id_feeds: list[tuple[int, str]] = []
+    name_facets: list[tuple[int, str, str]] = []
+    mapped_rank = {f: i for i, (_n, f) in enumerate(mapped)}
+    candidates: list[tuple[int, int, str, str]] = []
+    for facet, vals in values.items():
+        for key, n in vals:
+            k = key.strip().lower()
+            if n <= 0 or (total and n >= total):
+                continue
+            if facet == "source_id":
+                if _is_identity(key):
+                    id_feeds.append((n, key))
+            elif k == label.lower() or k == city:
+                candidates.append((1 + mapped_rank.get(facet, len(mapped_rank)), -n, facet, key))
+            elif facet in mapped_rank and site_name and (_nrm(k) == _nrm(site_name) or (len(id_stem) >= 8 and _nrm(k) == id_stem)):
+                # the site's own Location facet spelled as the store name
+                # ("Group 1 Toyota North Austin" under custom_text_13, 2026-09-26)
+                name_facets.append((n, facet, key))
+    candidates.sort()
+    tried: list[str] = []
+    keys: list[str] = []
+    verdicts: list[dict[str, Any]] = []
+    for n, key in sorted(id_feeds, reverse=True):
+        v = _cc_verify_store_filter(recipe, body, origin, "source_id", key, label, identity=True)
+        tried.append(f"source_id={key!r} ({n} cars, identity): " + ("one rooftop, store-only" if v["ok"] else f"{len(v['rooftops'])} rooftops, places {v['places'][:4]}, stamps {[r[:50] for r in v['rooftops'][:3]]}"))
+        if v["ok"]:
+            keys.append(key)
+            verdicts.append(v)
+    if keys:
+        # The OEM-code feed is often the SMALL one: Stevenson Hendrick Honda's
+        # 208763 holds 45 cars while 9048741 — same "6720 Market St" rooftop —
+        # holds 402 (2026-09-24). Every other feed id that returns exactly the
+        # identity feeds' rooftop is that store's too. Only a rooftop that names
+        # a store or a street qualifies; a bare "City, ST" stamp would merge a
+        # same-town sibling.
+        # An identity feed that stamps only "City, ST" (Stevenson Hendrick Mazda's
+        # 24009) cannot vouch for a sibling feed by itself; the store's own street
+        # (registry, or the page's JSON-LD streetAddress) can: the other feed's
+        # single rooftop must sit at that street.
+        from backend.parsers import _nrm as _pnrm
+        from backend.parsers import _street_key
+
+        own_sigs = {sg for v in verdicts for sg in v.get("sigs") or []}
+        own_street = (_street_key(place.get("dealer_address")) + "|" + _pnrm(place.get("dealer_city")) + _pnrm(place.get("dealer_state"))) if place.get("dealer_address") else ""
+        acceptable = {sg for sg in own_sigs if sg[0] != "place"}
+        if own_street:
+            acceptable.add(("street", own_street))
+        others_consistent = True
+        others_seen = 0
+        if not acceptable:
+            tried.append("no street or store name known for this store; sibling feed ids not merged")
+        for n, key in sorted(((n, k) for k, n in values.get("source_id") or [] if k not in keys and n > 0 and not (total and n >= total)), reverse=True):
+            v = _cc_verify_store_filter(recipe, body, origin, "source_id", key, label, site_name=site_name)
+            others_seen += 1
+            # a feed stamped with a STREET is only "this store" when it is our street
+            # (Stevenson Hendrick Honda's siblings sit at other Wilmington streets)
+            others_consistent = others_consistent and bool(v.get("no_contradiction")) and all(
+                sg[0] != "street" or sg in acceptable for sg in (v.get("sigs") or []))
+            same = bool(acceptable) and v["ok"] and bool(v.get("sigs")) and set(v["sigs"]) <= acceptable
+            tried.append(f"source_id={key!r} ({n} cars): " + ("same rooftop, merged" if same else f"{len(v['rooftops'])} rooftops, places {v['places'][:3]}, not this store"))
+            if same:
+                keys.append(key)
+                verdicts.append(v)
+        bare_place_only = bool(own_sigs) and all(sg[0] == "place" for sg in own_sigs)  # "Naples, FL": a same-town sibling would look identical
+        if others_seen and others_consistent and total <= _CC_SINGLE_STORE_MAX and not mapped_values_present and not bare_place_only:
+            # Napleton Honda of Morton Grove: OEM feed 207385 (49) + marketplace
+            # feed MP21386 (344, no stamps at all), Location facets empty, 393
+            # cars in the account. No feed contradicts the store and the account
+            # is store-sized: it IS the store. Scoping would keep 49 of 393.
+            logger.info("carscommerce [%s]: single-store account by feed consistency (%d cars, %d other feed(s) with no contradicting stamp); no store filter",
+                        dealer_id, total, others_seen)
+            return []
+    if not keys and place.get("dealer_address"):
+        # No feed id carries the store's identity (Greenway CDJR of Rome: page
+        # oem_code 45584, feeds 50377 / 45549 / a sibling's slug). A feed whose
+        # rows all sit at the store's own STREET is the store's: the street is
+        # the strongest locale evidence the gate itself accepts, and a same-town
+        # sibling cannot share it. City alone is never enough here.
+        from backend.parsers import _nrm as _pnrm
+        from backend.parsers import _street_key
+
+        own_street = _street_key(place.get("dealer_address")) + "|" + _pnrm(place.get("dealer_city")) + _pnrm(place.get("dealer_state"))
+        for n, key in sorted(((n, k) for k, n in values.get("source_id") or [] if n > 0 and not (total and n >= total)), reverse=True)[:8]:
+            v = _cc_verify_store_filter(recipe, body, origin, "source_id", key, label)
+            at_street = v["ok"] and v.get("sigs") == [("street", own_street)]
+            tried.append(f"source_id={key!r} ({n} cars, street check): " + ("at this store's street" if at_street else f"stamps {[r[:40] for r in v['rooftops'][:2]]}"))
+            if at_street:
+                keys.append(key)
+                verdicts.append(v)
+    # the facet the site itself calls "Location" outranks size: meta_location on
+    # Group 1 Toyota North Austin tags 1,000 of the group's 1,787 cars with the
+    # store's name while custom_text_13 (Location) is the store's own set
+    name_facets.sort(key=lambda c: (mapped_rank.get(c[1], len(mapped_rank)), -c[0]))
+    if not keys:
+        # By elimination (Benson's Ingram Park Nissan, 2026-09-26): no feed carries
+        # the page's OEM code, but every feed except ONE is stamped with another
+        # store's name ("Ingram Park Chrysler Jeep Dodge", "Ingram Park Mazda",
+        # "IPAC Pre-Owned Outlet") and that one carries no stamp at all. On a
+        # store-sized account the unstamped feed is this store's.
+        feeds = [(n, k) for k, n in values.get("source_id") or [] if n > 0 and not (total and n >= total)]
+        if 2 <= len(feeds) <= 8 and total <= _CC_SINGLE_STORE_MAX * 2:
+            clean: list[tuple[int, str, dict[str, Any]]] = []
+            named_other = 0
+            for n, key in feeds:
+                v = _cc_verify_store_filter(recipe, body, origin, "source_id", key, label, identity=True, site_name=site_name)
+                if v.get("no_contradiction") and v["rows"]:
+                    clean.append((n, key, v))
+                else:
+                    named_other += 1
+            if len(clean) == 1 and named_other == len(feeds) - 1:
+                n, key, v = clean[0]
+                keys.append(key)
+                verdicts.append(v)
+                tried.append(f"source_id={key!r} ({n} cars): the only feed not stamped with another store — this store's by elimination")
+    chosen: tuple[str, list[str]] | None = ("source_id", keys) if keys else None
+    if not chosen:
+        for n, facet, key in name_facets:
+            v = _cc_verify_store_filter(recipe, body, origin, facet, key, label, identity=True, site_name=site_name)
+            tried.append(f"{facet}={key!r} ({n} cars, store-name facet): " + ("accepted" if v["ok"] else f"{len(v['rooftops'])} rooftops, places {v['places'][:4]}, stamps {[r[:40] for r in v['rooftops'][:3]]}"))
+            if v["ok"]:
+                chosen, verdicts = (facet, [key]), [v]
+                break
+    if not chosen:
+        for _rank, negn, facet, key in candidates[:8]:
+            v = _cc_verify_store_filter(recipe, body, origin, facet, key, label)
+            tried.append(f"{facet}={key!r} ({-negn} cars): " + ("one rooftop, store-only" if v["ok"] else f"{len(v['rooftops'])} rooftops, places {v['places'][:4]}"))
+            if v["ok"]:
+                chosen, verdicts = (facet, [key]), [v]
+                break
+    if not chosen:
+        census = ", ".join(f"{k}={n}" for k, n in sorted(values.get("source_id") or [], key=lambda kv: -kv[1])[:12])
+        logger.info("carscommerce [%s]: group account (%d cars); no verified store filter for %r (tried: %s); source_id census: %s; gate filters per row",
+                    dealer_id, total, label, "; ".join(tried) or "no facet value spells this place", census or "none")
+        return []
+    if chosen[0] == "source_id":
+        # the feed's own spelling of this store, for the attribution gate
+        for v in verdicts:
+            for nm in v.get("names") or []:
+                if nm and nm not in roster_name_aliases(dealer_id):
+                    record_rooftop_alias(dealer_id, nm, evidence=f"source_id {chosen[1]} is this store's own feed id (page oem_code {oem_code!r} / name {site_name!r}); {v['rows']} rows one rooftop in {label}",
+                                         observed=datetime.now(timezone.utc).date().isoformat())
+                    logger.info("carscommerce [%s]: feed names this store %r (recorded as roster alias)", dealer_id, nm)
+    extras: list[EndpointRecipe] = []
+    if chosen[0] == "source_id" and name_facets:
+        # the facet may cover a DIFFERENT subset than the feed ids (the used pool
+        # vs the new feed), so its size says nothing; VIN dedupe absorbs overlap
+        for n, facet, key in name_facets:
+            v = _cc_verify_store_filter(recipe, body, origin, facet, key, label, identity=True, site_name=site_name)
+            tried.append(f"{facet}={key!r} ({n} cars, store-name facet, extra): " + ("accepted" if v["ok"] else f"stamps {[r[:40] for r in v['rooftops'][:3]]}"))
+            if v["ok"]:
+                extra_body = dict(body)
+                extra_body["facetFilters"] = {facet: [key]}
+                extras.append(EndpointRecipe(
+                    dealer_id=recipe.dealer_id, url=recipe.url, method=recipe.method, content_type=recipe.content_type,
+                    post_template=json.dumps(extra_body), auth_headers=dict(recipe.auth_headers), pagination=recipe.pagination,
+                    provider_hint=recipe.provider_hint, vehicle_rows=v["rows"], total_count=int(v.get("total") or 0),
+                ))
+                break
+    body["facetFilters"] = {chosen[0]: chosen[1]}
+    recipe.post_template = json.dumps(body)
+    logger.info("carscommerce [%s]: group account (%d cars); store filter %s=%r verified on %d rows, %s cars%s (tried: %s)",
+                dealer_id, total, chosen[0], chosen[1], sum(v["rows"] for v in verdicts), sum(int(v.get("total") or 0) for v in verdicts),
+                f"; extra recipe {json.loads(extras[0].post_template)['facetFilters']} ({extras[0].total_count} cars)" if extras else "", "; ".join(tried))
+    return extras
 
 
 # ── Platform: DealerOn cosmos (ws/vhcliaa SRP) ────────────────────────────────
@@ -398,12 +826,17 @@ def _synth_carscommerce(dealer_id: str, dealer_url: str, html: str) -> EndpointR
 #              config "custom" instead. Either pageType's pageId replays fine
 #              as the cosmos pagecfg (verified live for both), so no browser
 #              capture is needed — just accept both pageType spellings.
-# The endpoint paginates session-free via ?pg=N&pn=96 (same as heal's
-# _cosmos_pages); validate_recipe walks it that way for cosmos URLs.
+# The endpoint paginates session-free via ?pt=N&pn=96 (pt = page number, pn =
+# page size, 96 is the server max). NOT ?pg=: that parameter is ignored and
+# returns page 1 again, which is why the August heal walked page 1 of every
+# cosmos store 24 times (verified live 2026-09-23 on Cherokee County Toyota).
 _COSMOS_PATH = "/api/vhcliaa/vehicle-pages/cosmos/srp/vehicles"
 _COSMOS_PAGE_SIZE = 96
-# SRP pages that carry a Used-scoped itemlist page config.
+# SRP pages that carry a Used-scoped itemlist page config, and the New-scoped ones.
+# Each SRP has its own pageId (Cherokee County Toyota: used 769890 = 106 cars,
+# new 769883 = 282 cars); one recipe per section covers the lot.
 _COSMOS_SRP_PATHS = ("/used-inventory/", "/searchused.aspx", "/used-vehicles/", "/inventory/used")
+_COSMOS_SRP_PATHS_NEW = ("/new-inventory/", "/searchnew.aspx", "/new-vehicles/", "/inventory/new")
 
 _COSMOS_ACCOUNT_RES = (
     re.compile(r'data-website-id="do-(\d+)"'),
@@ -441,38 +874,47 @@ def _extract_cosmos_pagecfg(html: str) -> tuple[str, str] | None:
     return None
 
 
-def _synth_dealer_on_cosmos(dealer_id: str, dealer_url: str, html: str) -> EndpointRecipe | None:
+def _cosmos_pagecfg_from_paths(origin: str, paths: tuple[str, ...]) -> tuple[str, str] | None:
+    for path in paths:
+        srp = fetch_dealer_html(origin + path)
+        if not srp:
+            continue
+        pair = _extract_cosmos_pagecfg(srp)
+        if pair:
+            return pair
+    return None
+
+
+def _synth_dealer_on_cosmos(dealer_id: str, dealer_url: str, html: str) -> list[EndpointRecipe]:
+    """One recipe per SRP section (used, new): each has its own pageId."""
     account = _extract_cosmos_account(html)
-    # The pagecfg lives on the Used SRP page, not the homepage — fetch one.
     origin = _origin(dealer_url)
-    pair: tuple[str, str] | None = _extract_cosmos_pagecfg(html)
-    if pair is None:
-        for path in _COSMOS_SRP_PATHS:
-            srp = fetch_dealer_html(origin + path)
-            if not srp:
-                continue
-            pair = _extract_cosmos_pagecfg(srp)
-            if pair:
-                break
-    if pair is None:
-        return None
-    srp_account, pagecfg = pair
-    account = account or srp_account
-    if not account or not pagecfg:
-        return None
-    url = f"{origin}{_COSMOS_PATH}/{account}/{pagecfg}"
-    return EndpointRecipe(
-        dealer_id=dealer_id,
-        url=url,
-        method="GET",
-        content_type="application/json",
-        post_template=None,
-        auth_headers={},
-        # Stored single-shot (like browser-captured cosmos recipes); the cosmos
-        # ?pg=N&pn=96 walk is handled by validate_recipe and heal's _cosmos_pages.
-        pagination=PAGINATION_NONE,
-        provider_hint="dealer_on_cosmos",
-    )
+    pairs: list[tuple[str, str]] = []
+    home_pair = _extract_cosmos_pagecfg(html)
+    if home_pair:
+        pairs.append(home_pair)
+    for paths in (_COSMOS_SRP_PATHS, _COSMOS_SRP_PATHS_NEW):
+        pair = _cosmos_pagecfg_from_paths(origin, paths)
+        if pair and pair not in pairs:
+            pairs.append(pair)
+    out: list[EndpointRecipe] = []
+    seen: set[str] = set()
+    for srp_account, pagecfg in pairs:
+        acct = account or srp_account
+        if not acct or not pagecfg or pagecfg == "0" or pagecfg in seen:
+            continue
+        seen.add(pagecfg)
+        out.append(EndpointRecipe(
+            dealer_id=dealer_id,
+            url=f"{origin}{_COSMOS_PATH}/{acct}/{pagecfg}",
+            method="GET",
+            content_type="application/json",
+            post_template=None,
+            auth_headers={},
+            pagination=PAGINATION_COSMOS_PT,
+            provider_hint="dealer_on_cosmos",
+        ))
+    return out
 
 
 # ── Platform: Typesense (multi_search) ────────────────────────────────────────
@@ -719,28 +1161,98 @@ def _synth_team_velocity(dealer_id: str, dealer_url: str, html: str) -> list[End
 # that (near-identical page-1 VINs) and emit a single recipe to avoid double work.
 _DEP_SRP_PATHS = ("/used-inventory/", "/new-inventory/")
 _DEP_COUNT_RE = re.compile(r'data-vehicle_count="(\d+)"')
+# The SRP's "results per page" <select>: its numeric option values are the page
+# sizes the server honours via ?ct=N (``ct=all`` is NOT honoured — it falls back
+# to 12). Walking at the largest size cuts a 343-car new feed from 29 pages to 8.
+# Anchor on the <select> TAG: the class name also appears in the page's inline
+# CSS, thousands of bytes before the control. Option values are SRP URLs
+# (``/search/used/?ct=48&tp=used``), so the size is read from their ``ct=``.
+_DEP_PAGE_SIZE_SELECT_RE = re.compile(
+    r'<select[^>]*results_per_page_controls__select[^>]*>(.*?)</select>', re.I | re.S
+)
+_DEP_OPTION_VALUE_RE = re.compile(r'<option[^>]*value="([^"]*)"', re.I)
+_DEP_CT_RE = re.compile(r'(?:^|[?&;]|&amp;)ct=(\d+)')
+_DEP_PAGE_SIZE_PARAM = "ct"
+_DEP_PAGE_SIZE_CAP = 48
 
 
 def _detect_dealer_eprocess(html: str, dealer_url: str) -> bool:
     return "dealereprocess" in html.lower()
 
 
-def _dep_fetch_html(url: str) -> str | None:
-    """Proxy-aware GET returning the raw SRP HTML text (or ``None`` on failure).
+def _dep_fetch_page(url: str) -> tuple[str | None, str]:
+    """Proxy-aware GET of an SRP page: ``(html or None, final_url_after_redirects)``.
 
     Unlike :func:`fetch_dealer_html` this does NOT reject "thin" bodies — an SRP
     page past the last result is a valid (short) page, and the caller stops when
     the parser extracts no more VINs.
+
+    Always sends a same-site ``Referer`` (the page's own origin). Some Cloudflare
+    rule sets in front of Dealer eProcess sites (Honda of El Cajon, 2026-09-23)
+    serve a managed challenge to any SRP request WITHOUT a same-site Referer and
+    the real page WITH one -- cookies and warm-up do not matter. When the plain
+    client is rejected on the handshake (403/405/429) the fetch escalates to TLS
+    impersonation with the same headers, mirroring :func:`fetch_dealer_html` and
+    ``recipes._replay_request`` so capture, validation and replay clear one edge.
     """
+    import urllib.error
     import urllib.request
 
+    parts = urlparse(url)
+    referer = f"{parts.scheme}://{parts.netloc}/"
+    headers = {**_browser_headers(), "Referer": referer, "Sec-Fetch-Site": "same-origin"}
     _pace()
     try:
-        resp = open_url(urllib.request.Request(url, headers=_browser_headers()), timeout=25.0)
-        return resp.read().decode(resp.headers.get_content_charset() or "utf-8", "replace")
+        resp = open_url(urllib.request.Request(url, headers=headers), timeout=25.0)
+        html = resp.read().decode(resp.headers.get_content_charset() or "utf-8", "replace")
+        final = resp.geturl() or url
+    except urllib.error.HTTPError as e:
+        if e.code not in _DEP_ESCALATE_STATUSES:
+            logger.debug("dep fetch failed %s: HTTP %s", url[:80], e.code)
+            return None, url
+        logger.debug("dep fetch %s: HTTP %s — retry impersonated", url[:80], e.code)
+        return _fetch_impersonated(url, headers=headers, min_bytes=0), url
     except Exception as e:
         logger.debug("dep fetch failed %s: %s", url[:80], str(e)[:120])
+        return None, url
+    if html and looks_like_challenge(html):
+        logger.debug("dep fetch %s: challenge shell — retry impersonated", url[:80])
+        return _fetch_impersonated(url, headers=headers, min_bytes=0), url
+    return html, final
+
+
+# Statuses a WAF returns when it dislikes the TLS handshake rather than the request
+# (same set as recipes._TLS_FINGERPRINT_STATUSES).
+_DEP_ESCALATE_STATUSES = frozenset({403, 405, 429})
+
+
+def _dep_fetch_html(url: str) -> str | None:
+    """:func:`_dep_fetch_page` without the final URL (HTML page-walk helper)."""
+    return _dep_fetch_page(url)[0]
+
+
+def _dep_page_size(html: str) -> int | None:
+    """Largest numeric page size the SRP's results-per-page control offers, or None."""
+    m = _DEP_PAGE_SIZE_SELECT_RE.search(html)
+    if not m:
         return None
+    sizes: list[int] = []
+    for value in _DEP_OPTION_VALUE_RE.findall(m.group(1)):
+        value = value.strip()
+        ct = _DEP_CT_RE.search(value)
+        if value.isdigit():
+            sizes.append(int(value))
+        elif ct:
+            sizes.append(int(ct.group(1)))
+    sizes = [n for n in sizes if 0 < n <= _DEP_PAGE_SIZE_CAP]
+    return max(sizes) if sizes else None
+
+
+def _with_query_param(url: str, key: str, value: str) -> str:
+    parts = urlparse(url)
+    query = [(k, v) for k, v in parse_qsl(parts.query, keep_blank_values=True) if k != key]
+    query.append((key, value))
+    return urlunparse(parts._replace(query=urlencode(query), fragment=""))
 
 
 def _dep_page_vins(html: str, dealer_id: str, dealer_url: str) -> set[str]:
@@ -756,8 +1268,7 @@ def _dep_srp_recipe(
 
     Returns ``(recipe, page1_vins)`` or ``None`` when page 1 yields no vehicles.
     """
-    url = origin + path
-    html = _dep_fetch_html(url)
+    html, final_url = _dep_fetch_page(origin + path)
     if not html or "dealereprocess" not in html.lower():
         return None
     vins = _dep_page_vins(html, dealer_id, origin)
@@ -765,6 +1276,19 @@ def _dep_srp_recipe(
         return None
     m = _DEP_COUNT_RE.search(html)
     total = int(m.group(1)) if m else None
+    # The friendly path often 302s to the real SRP (``/search/used/?tp=used``);
+    # record THAT so the ``?p=N`` walk lands on the filtered feed rather than on a
+    # redirect that may drop the page query. Keep the final URL's own params.
+    url = final_url if _origin(final_url) == origin else origin + path
+    url = urlunparse(urlparse(url)._replace(fragment=""))
+    size = _dep_page_size(html)
+    if size and (total is None or total > len(vins)):
+        bigger = _with_query_param(url, _DEP_PAGE_SIZE_PARAM, str(size))
+        big_html, _ = _dep_fetch_page(bigger)
+        big_vins = _dep_page_vins(big_html, dealer_id, origin) if big_html else set()
+        # Only keep the larger page size when the server honoured it.
+        if len(big_vins) > len(vins):
+            url, vins = bigger, big_vins
     recipe = EndpointRecipe(
         dealer_id=dealer_id,
         url=url,
@@ -779,12 +1303,45 @@ def _dep_srp_recipe(
     return recipe, vins
 
 
+_DEP_NAV_SRP_RE = re.compile(r'href=["\'](?:https?://[^/"\']+)?(/search/(?:new|used|pre-owned|certified)[^"\'#?]*/?(?:\?[^"\'#]*)?)["\']', re.I)
+
+
+def _dep_nav_srp_paths(html: str) -> list[str]:
+    """SRP paths the site's own nav links to: one DEP variant serves
+    /search/new-toyota/?mk=63&tp=new and /search/used-toyota/?tp=used instead
+    of /new-inventory/ + /used-inventory/ (Capital Toyota, Groove Toyota,
+    Lindsay Lexus of Alexandria: captured new-only recipes, 2026-09-26)."""
+    out: list[str] = []
+    for m in _DEP_NAV_SRP_RE.finditer(html or ""):
+        p = m.group(1)
+        base = p.split("?")[0].rstrip("/") + "/"
+        if base not in {o.split("?")[0].rstrip("/") + "/" for o in out}:
+            out.append(p if "?" in p else base)
+    # keep one new-ish and one used-ish path at most, first seen wins
+    keep: list[str] = []
+    for want in ("new", "used", "pre-owned", "certified"):
+        for p in out:
+            if f"/search/{want}" in p.lower() and p not in keep:
+                keep.append(p)
+                break
+    return keep
+
+
 def _synth_dealer_eprocess(dealer_id: str, dealer_url: str, html: str) -> list[EndpointRecipe]:
     """Emit DEP SRP recipes — used + new, deduped when both show the whole lot."""
     origin = _origin(dealer_url)
+    paths = list(_DEP_SRP_PATHS) + [p for p in _dep_nav_srp_paths(html) if p not in _DEP_SRP_PATHS]
     built: list[tuple[EndpointRecipe, set[str]]] = [
-        r for p in _DEP_SRP_PATHS if (r := _dep_srp_recipe(dealer_id, origin, p)) is not None
+        r for p in paths if (r := _dep_srp_recipe(dealer_id, origin, p)) is not None
     ]
+    if len(built) > 2:
+        # the two largest distinct sets cover the lot; drop nav duplicates
+        built.sort(key=lambda rv: -len(rv[1]))
+        kept: list[tuple[EndpointRecipe, set[str]]] = []
+        for r, v in built:
+            if not any(len(v & kv) / (min(len(v), len(kv)) or 1) >= 0.5 for _kr, kv in kept):
+                kept.append((r, v))
+        built = kept[:2]
     if not built:
         return []
     if len(built) == 2:
@@ -1090,6 +1647,215 @@ def _synth_jazel(dealer_id: str, dealer_url: str, html: str) -> EndpointRecipe |
 _DEALERMASTERS_INDEX_ROUTES = ("index", "used-inventory", "new-inventory")
 
 
+# ── Platform: WordPress dealer sites with /wp-json/v1/vehicles ─────────────────
+# Burns Honda, Honda of Cleveland, Honda of Pasadena, Kia of Chattanooga (2026-09-24):
+# WordPress (WP Rocket, wpforms, an ADF lead plugin) exposing a REST index of every
+# car as {title, link, search}. The index is the whole lot in one GET; identity
+# comes from the title, everything else from the detail page's JSON-LD.
+_WP_VEHICLES_PATH = "/wp-json/v1/vehicles"
+
+
+def _detect_wp_vehicles_index(html: str, dealer_url: str) -> bool:
+    low = html.lower()
+    if "/wp-json/" not in low:
+        return False
+    return any(m in low for m in ("adf_lead_nonce", "asc_datalayer", "favorites_data", "wpforms_settings"))
+
+
+def _fetch_wp_vehicles(origin: str) -> list[dict] | None:
+    try:
+        from curl_cffi import requests as cr
+
+        r = cr.get(origin + _WP_VEHICLES_PATH, impersonate="chrome", timeout=30,
+                   headers={"Accept": "application/json", "Referer": origin + "/"})
+        if r.status_code != 200:
+            return None
+        js = r.json()
+    except Exception:  # noqa: BLE001
+        return None
+    v = js.get("vehicles") if isinstance(js, dict) else None
+    return v if isinstance(v, list) else None
+
+
+def _synth_wp_vehicles_index(dealer_id: str, dealer_url: str, html: str) -> EndpointRecipe | None:
+    origin = _origin(dealer_url)
+    items = _fetch_wp_vehicles(origin)
+    if not items or len(items) < 5:
+        return None
+    return EndpointRecipe(
+        dealer_id=dealer_id,
+        url=origin + _WP_VEHICLES_PATH,
+        method="GET",
+        content_type="application/json",
+        post_template=None,
+        auth_headers={},
+        pagination=PAGINATION_NONE,
+        provider_hint="wp_vehicles_index",
+        vehicle_rows=len(items),
+        total_count=len(items),
+    )
+
+
+# ── Platform: autoWALL (gratis solutions; server-rendered /gs-vehicle/list) ─────
+
+# autoWALL sites (Long Chevrolet Buick GMC of Athens, 2026-09-24) answer plain
+# HTTP: GET /gs-vehicle/list?filter=All&page=N returns an HTML SRP with one
+# ``.vehicle-inventory-container[data-vin]`` card per car, 25 per page, and a
+# "<N> Vehicles for Sale" title (309). The homepage does not carry the card
+# markup (every discovery path 404s with the "Powered By autoWALL" title), so
+# detection reads the nav links / badge and the SRP is fetched to confirm.
+_AUTOWALL_LIST_PATH = "/gs-vehicle/list?filter=All"
+_AUTOWALL_TOTAL_RE = re.compile(r"<title>\s*(\d{1,5})\s+Vehicles for Sale", re.I)
+
+
+def _detect_autowall(html: str, dealer_url: str) -> bool:
+    low = (html or "").lower()
+    return "/gs-vehicle/list" in low or "powered_by_autowall" in low or "powered by autowall" in low
+
+
+def _synth_autowall(dealer_id: str, dealer_url: str, html: str) -> EndpointRecipe | None:
+    from backend.scanner.scrapers.autowall import _is_autowall_html, parse_autowall_inventory_html
+
+    origin = _origin(dealer_url)
+    url = origin + _AUTOWALL_LIST_PATH
+    page = _dep_fetch_html(url)
+    if not page or not _is_autowall_html(page):
+        logger.info("autowall [%s]: %s did not return the card markup", dealer_id, url)
+        return None
+    rows = parse_autowall_inventory_html(page, base_url=origin, dealer_id=dealer_id, dealer_name=dealer_id, dealer_url=origin)
+    if not rows:
+        return None
+    m = _AUTOWALL_TOTAL_RE.search(page)
+    total = int(m.group(1)) if m else None
+    logger.info("autowall [%s]: %d cards on page 1, title total %s", dealer_id, len(rows), total)
+    return EndpointRecipe(
+        dealer_id=dealer_id,
+        url=url,
+        method="GET",
+        content_type="text/html",
+        post_template=None,
+        auth_headers={},
+        pagination=PAGINATION_HTML_PAGE,
+        provider_hint="autowall",
+        vehicle_rows=len(rows),
+        total_count=total,
+    )
+
+
+# ── Platform: OneAudi (omnigraph.audi.com GraphQL) ─────────────────────────────
+
+# Audi's "falcon" renderer (audihuntsville.com, 2026-09-24). The SRP is SSR with the
+# first 48 cars only and NO url pagination; the page embeds the Apollo cache of
+# the query the app made, which carries every input we need: the dealer code
+# ({"id":"dealer","items":["07B04"]}), the stat-import criterion, the market
+# identifier (brand A / country us / language en) and the paging shape. The
+# router at omnigraph.audi.com requires apollographql-client-name/-version
+# headers (any values), disables introspection and validates enums against JSON
+# variables — StockCarsType NEW / USED as variable values, never literals. Field
+# names were read from the cached StockCar objects.
+_ONEAUDI_GRAPHQL = "https://omnigraph.audi.com/graphql"
+_ONEAUDI_SRP_PATHS = ("/all-inventory/", "/used-inventory/", "/new-inventory/", "/en/inventory/")
+_ONEAUDI_DEALER_RE = re.compile(r'"id":"dealer","items":\["([A-Za-z0-9]{3,12})"\]')
+_ONEAUDI_STATIMPORT_RE = re.compile(r'"id":"stat-import","items":\["([A-Za-z0-9_]{3,30})"\]')
+_ONEAUDI_MARKET_RE = re.compile(r'"marketIdentifier":\{"brand":"([A-Za-z]{1,3})","country":"([a-z]{2})","language":"([a-z]{2})"\}')
+_ONEAUDI_PAGE_SIZE = 48
+_ONEAUDI_QUERY = (
+    "query StockCarsScan($sp: StockCarSearchParameterInput!, $si: StockIdentifierInput!) { "
+    "stockCarSearch(searchParameter: $sp, stockIdentifier: $si) { resultNumber results { cars { stockCar { "
+    "vin titleText subtitleText cartypeText weblink commissionNumber gearText driveText "
+    "modelInfo { genericModel { text code } modelyear } preUse { code text } "
+    "carPrices { type price { value } } mileage { unitText value { number } } "
+    "colorInfo { exteriorColor { colorInfo { text } baseColorInfo { text } } interiorColor { colorInfo { text } baseColorInfo { text } } } "
+    "engineInfo { fuel { text } } images { url } dealer { id name city } dynamicAttributes { id value } "
+    "} } } } }"
+)
+
+
+def _detect_oneaudi(html: str, dealer_url: str) -> bool:
+    low = (html or "").lower()
+    return "oneaudi-falcon" in low or "one.audi/" in low or "omnigraph.audi.com" in low
+
+
+def _oneaudi_decoded(html: str) -> str:
+    from urllib.parse import unquote
+
+    # the cache is JSON inside JSON inside a url-encoded blob: quotes arrive as
+    # %5C%22 / \\" / \\\\" — fold every backslash run before a quote
+    return re.sub(r'\\+"', '"', unquote(html or ""))
+
+
+def _oneaudi_inputs(html: str) -> dict[str, str] | None:
+    dec = _oneaudi_decoded(html)
+    m = _ONEAUDI_DEALER_RE.search(dec)
+    if not m:
+        return None
+    out = {"dealer": m.group(1), "stat_import": "", "brand": "A", "country": "us", "language": "en"}
+    si = _ONEAUDI_STATIMPORT_RE.search(dec)
+    if si:
+        out["stat_import"] = si.group(1)
+    mk = _ONEAUDI_MARKET_RE.search(dec)
+    if mk:
+        out["brand"], out["country"], out["language"] = mk.group(1), mk.group(2), mk.group(3)
+    return out
+
+
+def _oneaudi_body(inputs: dict[str, str], stock_type: str) -> dict[str, Any]:
+    criteria = [{"id": "dealer", "items": [inputs["dealer"]]}, {"id": "sold-order", "items": ["no"]}]
+    if inputs.get("stat_import"):
+        criteria.append({"id": "stat-import", "items": [inputs["stat_import"]]})
+    return {
+        "query": _ONEAUDI_QUERY,
+        "variables": {
+            "sp": {"criteria": criteria, "paging": {"limit": _ONEAUDI_PAGE_SIZE, "offset": 0},
+                   "sort": {"direction": "ASC", "id": "DATE_PREDATEEND"}},
+            "si": {"marketIdentifier": {"brand": inputs["brand"], "country": inputs["country"], "language": inputs["language"]},
+                   "stockCarsType": stock_type},
+        },
+    }
+
+
+def _synth_oneaudi(dealer_id: str, dealer_url: str, html: str) -> list[EndpointRecipe]:
+    from backend.parsers.oneaudi import parse as _parse_oneaudi
+    from backend.parsers.oneaudi import total_count as _oneaudi_total
+
+    origin = _origin(dealer_url)
+    inputs = _oneaudi_inputs(html)
+    if not inputs:
+        for path in _ONEAUDI_SRP_PATHS:
+            page = _fetch_impersonated(origin + path, timeout=40.0) or _dep_fetch_html(origin + path)
+            inputs = _oneaudi_inputs(page or "")
+            if inputs:
+                break
+    if not inputs:
+        logger.info("oneaudi [%s]: no stockCarSearch cache (dealer code) on the SRP pages", dealer_id)
+        return []
+    logger.info("oneaudi [%s]: dealer code %s, market %s/%s/%s, stat-import %r", dealer_id, inputs["dealer"], inputs["brand"], inputs["country"], inputs["language"], inputs.get("stat_import"))
+    out: list[EndpointRecipe] = []
+    for stock_type in ("NEW", "USED"):
+        recipe = EndpointRecipe(
+            dealer_id=dealer_id,
+            url=_ONEAUDI_GRAPHQL,
+            method="POST",
+            content_type="application/json",
+            post_template=json.dumps(_oneaudi_body(inputs, stock_type)),
+            auth_headers={"apollographql-client-name": "dealershipscanner-stockcars", "apollographql-client-version": "1.0.0",
+                          "Accept": "application/json"},
+            pagination=PAGINATION_GRAPHQL_OFFSET,
+            provider_hint="oneaudi",
+        )
+        status, parsed = _replay_request(recipe, json.loads(recipe.post_template), origin)
+        rows = _parse_oneaudi(parsed, base_url=origin, dealer_id=dealer_id, dealer_name=dealer_id, dealer_url=origin) if parsed else []
+        total = _oneaudi_total(parsed) if parsed else None
+        errors = (parsed or {}).get("errors") if isinstance(parsed, dict) else None
+        logger.info("oneaudi [%s]: %s page 1 status %s rows %d total %s%s", dealer_id, stock_type, status, len(rows), total,
+                    f" errors {json.dumps(errors)[:300]}" if errors else "")
+        if status == 200 and rows:
+            recipe.vehicle_rows = len(rows)
+            recipe.total_count = total
+            out.append(recipe)
+    return out
+
+
 def _detect_dealermasters(html: str, dealer_url: str) -> bool:
     return "dealermasters.com" in (html or "").lower()
 
@@ -1171,6 +1937,9 @@ PLATFORM_TEMPLATES: list[PlatformTemplate] = [
     PlatformTemplate("chapman", _detect_chapman, _synth_chapman),
     PlatformTemplate("jazel", _detect_jazel, _synth_jazel),
     PlatformTemplate("dealermasters", _detect_dealermasters, _synth_dealermasters),
+    PlatformTemplate("wp_vehicles_index", _detect_wp_vehicles_index, _synth_wp_vehicles_index),
+    PlatformTemplate("autowall", _detect_autowall, _synth_autowall),
+    PlatformTemplate("oneaudi", _detect_oneaudi, _synth_oneaudi),
 ]
 
 _TEMPLATES_BY_NAME = {t.name: t for t in PLATFORM_TEMPLATES}
@@ -1317,8 +2086,13 @@ def validate_recipe(
     dealer_name: str,
     *,
     max_pages: int = _VALIDATE_MAX_PAGES,
+    place: dict[str, str] | None = None,
 ) -> int:
     """Replay *recipe* over plain HTTP and return the unique VIN count.
+
+    *place* (dealer_city / dealer_state / dealer_zip / dealer_address) is passed to
+    the rooftop attribution gate: without it a group feed that names its rooftops
+    by city refuses every row and the recipe validates to zero.
 
     Walks the recipe's pagination shape (single-shot for ``PAGINATION_NONE``),
     parses each page with the provider parser, and counts distinct VINs. No
@@ -1326,25 +2100,25 @@ def validate_recipe(
     """
     from backend.parsers import parse_kept
 
-    # DealerOn cosmos GETs paginate session-free via ?pg=N&pn=96 (not a POST-body
+    # DealerOn cosmos GETs paginate session-free via ?pt=N&pn=96 (not a POST-body
     # shape), so they need their own walk — same mechanism as heal's _cosmos_pages.
     if _COSMOS_PATH.split("/api")[-1] in recipe.url or "cosmos/srp/vehicles" in recipe.url:
-        return _validate_cosmos(recipe, base_url, dealer_id, dealer_name, max_pages)
+        return _validate_cosmos(recipe, base_url, dealer_id, dealer_name, max_pages, place)
     # Team Velocity same-origin JSON feed paginates via ?page=N (nextPage/totalPages).
     if (
         recipe.pagination == PAGINATION_PAGE_QUERY
         or _TEAM_VELOCITY_FEED in recipe.url
         or recipe.url.endswith(("-used.json", "-cpo.json", "-new.json"))
     ):
-        return _validate_json_feed(recipe, base_url, dealer_id, dealer_name, max_pages)
+        return _validate_json_feed(recipe, base_url, dealer_id, dealer_name, max_pages, place)
     # Dealer eProcess SRP: HTML page-walk (?p=N) with JSON-LD vehicles.
     if recipe.pagination == PAGINATION_DEP_SRP:
-        return _validate_dep(recipe, base_url, dealer_id, dealer_name, max_pages)
+        return _validate_dep(recipe, base_url, dealer_id, dealer_name, max_pages, place)
     # Server-rendered HTML page-walks reached with browser-navigation headers:
     #   PAGINATION_HTML_PAGE  — GET ?page=N (Overfuel __NEXT_DATA__, nabthat JSON-LD)
     #   PAGINATION_JAZEL_SRP  — GET path .../srp-page-N/ (Jazel inline JS objects)
     if recipe.pagination in (PAGINATION_HTML_PAGE, PAGINATION_JAZEL_SRP):
-        return _validate_html_walk(recipe, base_url, dealer_id, dealer_name, max_pages)
+        return _validate_html_walk(recipe, base_url, dealer_id, dealer_name, max_pages, place)
 
     template: Any = None
     if recipe.post_template:
@@ -1366,6 +2140,8 @@ def validate_recipe(
             recipe.provider_hint or "", parsed,
             base_url=base_url, dealer_id=dealer_id,
             dealer_name=dealer_name, dealer_url=base_url,
+            trust_feed_scope=recipe_is_store_scoped(recipe, dealer_name),
+            **(place or {}),
         ))
         new = _unique_vins(page_vehicles) - vins
         if not new:
@@ -1408,9 +2184,7 @@ def _cosmos_get_json(url: str) -> Any | None:
             return None
 
 
-def _validate_json_feed(
-    recipe: EndpointRecipe, base_url: str, dealer_id: str, dealer_name: str, max_pages: int
-) -> int:
+def _validate_json_feed(recipe: EndpointRecipe, base_url: str, dealer_id: str, dealer_name: str, max_pages: int, place: dict[str, str] | None = None) -> int:
     """Walk a same-origin ``?page=N`` JSON inventory feed and count unique VINs.
 
     Team Velocity's ``/inventory-used.json`` feed carries ``totalPages`` /
@@ -1428,6 +2202,8 @@ def _validate_json_feed(
             recipe.provider_hint or "dealer_dot_com", body,
             base_url=base_url, dealer_id=dealer_id,
             dealer_name=dealer_name, dealer_url=base_url,
+            trust_feed_scope=recipe_is_store_scoped(recipe, dealer_name),
+            **(place or {}),
         ))
         new = _unique_vins(page_vehicles) - vins
         if not new:
@@ -1442,22 +2218,24 @@ def _validate_json_feed(
     return len(vins)
 
 
-def _validate_dep(
-    recipe: EndpointRecipe, base_url: str, dealer_id: str, dealer_name: str, max_pages: int
-) -> int:
+def _validate_dep(recipe: EndpointRecipe, base_url: str, dealer_id: str, dealer_name: str, max_pages: int, place: dict[str, str] | None = None) -> int:
     """Walk a Dealer eProcess SRP via ``?p=N`` and count unique JSON-LD VINs."""
     from backend.parsers import parse_kept
 
-    clean = urlunparse(urlparse(recipe.url)._replace(query="", fragment=""))
     vins: set[str] = set()
-    for pg in range(1, max_pages + 1):
-        html = _dep_fetch_html(f"{clean}?p={pg}")
+    for pg in range(max_pages):
+        # _url_for_page keeps the recipe's own query (``tp=used``, ``ct=48``) and
+        # sets ``p=N``; stripping the query used to drop the condition filter and
+        # the page size the synthesizer had just chosen.
+        html = _dep_fetch_html(_url_for_page(recipe, pg))
         if not html:
             break
         page_vehicles = list(parse_kept(
             recipe.provider_hint or "dealer_eprocess", html,
             base_url=base_url, dealer_id=dealer_id,
             dealer_name=dealer_name, dealer_url=base_url,
+            trust_feed_scope=recipe_is_store_scoped(recipe, dealer_name),
+            **(place or {}),
         ))
         new = _unique_vins(page_vehicles) - vins
         if not new:
@@ -1468,9 +2246,7 @@ def _validate_dep(
     return len(vins)
 
 
-def _validate_html_walk(
-    recipe: EndpointRecipe, base_url: str, dealer_id: str, dealer_name: str, max_pages: int
-) -> int:
+def _validate_html_walk(recipe: EndpointRecipe, base_url: str, dealer_id: str, dealer_name: str, max_pages: int, place: dict[str, str] | None = None) -> int:
     """Walk a server-rendered HTML page-walk recipe and count unique VINs.
 
     Uses the proxy-aware, browser-navigation-header fetch (:func:`_dep_fetch_html`)
@@ -1490,6 +2266,8 @@ def _validate_html_walk(
             recipe.provider_hint or "", html,
             base_url=base_url, dealer_id=dealer_id,
             dealer_name=dealer_name, dealer_url=base_url,
+            trust_feed_scope=recipe_is_store_scoped(recipe, dealer_name),
+            **(place or {}),
         ))
         new = _unique_vins(page_vehicles) - vins
         if not new:
@@ -1500,22 +2278,22 @@ def _validate_html_walk(
     return len(vins)
 
 
-def _validate_cosmos(
-    recipe: EndpointRecipe, base_url: str, dealer_id: str, dealer_name: str, max_pages: int
-) -> int:
-    """Walk a cosmos SRP endpoint via ``?pg=N&pn=96`` and count unique VINs."""
+def _validate_cosmos(recipe: EndpointRecipe, base_url: str, dealer_id: str, dealer_name: str, max_pages: int, place: dict[str, str] | None = None) -> int:
+    """Walk a cosmos SRP endpoint via ``?pt=N&pn=96`` and count unique VINs."""
     from backend.parsers import parse_kept
 
     clean = urlunparse(urlparse(recipe.url)._replace(query="", fragment=""))
     vins: set[str] = set()
     for pg in range(1, max_pages + 1):
-        body = _cosmos_get_json(f"{clean}?pg={pg}&pn={_COSMOS_PAGE_SIZE}")
+        body = _cosmos_get_json(f"{clean}?pt={pg}&pn={_COSMOS_PAGE_SIZE}")
         if not isinstance(body, dict) or not body.get("DisplayCards"):
             break
         page_vehicles = list(parse_kept(
             recipe.provider_hint or "dealer_on_cosmos", body,
             base_url=base_url, dealer_id=dealer_id,
             dealer_name=dealer_name, dealer_url=base_url,
+            trust_feed_scope=recipe_is_store_scoped(recipe, dealer_name),
+            **(place or {}),
         ))
         new = _unique_vins(page_vehicles) - vins
         if not new:

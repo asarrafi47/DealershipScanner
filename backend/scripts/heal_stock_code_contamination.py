@@ -51,6 +51,7 @@ import urllib.error
 import urllib.parse
 import urllib.request
 from collections import Counter
+from pathlib import Path
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from typing import Any, Callable
@@ -83,10 +84,8 @@ CONFIDENT_DRIVETRAINS = frozenset({"AWD", "4WD", "FWD", "RWD"})
 VPIC_BATCH_URL = "https://vpic.nhtsa.dot.gov/api/vehicles/DecodeVINValuesBatch/"
 VPIC_BATCH_MAX = 50  # documented vPIC batch limit
 
-BACKUP_DIR = (
-    "/private/tmp/claude-501/-Users-asarrafi-Projects/"
-    "0fd58203-ffeb-4591-b16d-3f7f838acd51/scratchpad/db-backups"
-)
+# Repo-local, gitignored (workspace/). Override with DB_BACKUP_DIR.
+BACKUP_DIR = os.environ.get("DB_BACKUP_DIR") or str(Path(__file__).resolve().parents[2] / "workspace" / "db-backups")
 
 
 @dataclass

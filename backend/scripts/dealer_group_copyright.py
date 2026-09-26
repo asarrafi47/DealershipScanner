@@ -18,7 +18,7 @@ _REPO = Path(__file__).resolve().parent.parent
 if str(_REPO) not in sys.path:
     sys.path.insert(0, str(_REPO))
 
-from scraping.cli import main
+from backend.scraping.cli import main
 
 if __name__ == "__main__":
     try:

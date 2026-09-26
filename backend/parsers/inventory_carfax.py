@@ -2,8 +2,10 @@
 from __future__ import annotations
 
 from typing import Any
+from urllib.parse import quote
 
 from backend.parsers.base import norm_str
+from backend.parsers.vdp_urls import looks_like_real_vin
 
 
 def first_carfax_http_url(val: Any) -> str | None:
@@ -78,8 +80,8 @@ def extract_carfax_url(obj: dict, vin: str) -> str | None:
     vhr_url = obj.get("vhr_url") or obj.get("carfax_token")
     if vhr_url and isinstance(vhr_url, str) and vhr_url.strip().startswith("http"):
         return norm_str(vhr_url)
-    if vhr_url and vin and not vin.startswith("unknown"):
-        return f"https://vhr.carfax.com/main?vin={vin}"
-    if inventory_signals_carfax(obj) and vin and not vin.startswith("unknown"):
-        return f"https://vhr.carfax.com/main?vin={vin}"
+    if vhr_url and vin and looks_like_real_vin(vin):
+        return f"https://vhr.carfax.com/main?vin={quote(vin.strip().upper(), safe='')}"
+    if inventory_signals_carfax(obj) and vin and looks_like_real_vin(vin):
+        return f"https://vhr.carfax.com/main?vin={quote(vin.strip().upper(), safe='')}"
     return explicit if explicit.startswith("http") else None

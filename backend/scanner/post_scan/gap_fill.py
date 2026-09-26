@@ -64,6 +64,13 @@ def _requests_fetch_html(url: str, timeout_s: float = 22.0) -> str | None:
 
 
 def _playwright_fetch_html(url: str, timeout_ms: int = 65000) -> str | None:
+    from backend.scanner.browser_gate import browser_allowed
+
+    if not browser_allowed():
+        # Auto-heal / gap fill launched a sync Chromium per VIN batch inside
+        # "HTTP-only" fleet runs (1,656 launches in one nightly, deploy/NIGHTLY_REFRESH.md).
+        logger.info("gap_fill: browser fetch skipped for %s (HTTP-only policy)", url[:80])
+        return None
     try:
         from playwright.sync_api import sync_playwright
     except ImportError:
@@ -73,9 +80,11 @@ def _playwright_fetch_html(url: str, timeout_ms: int = 65000) -> str | None:
         "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
         "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
     )
+    from backend.scanner.http_fetch import playwright_proxy_kwargs
+
     try:
         with sync_playwright() as p:
-            browser = p.chromium.launch(headless=True)
+            browser = p.chromium.launch(headless=True, **playwright_proxy_kwargs())
             try:
                 page = browser.new_page(user_agent=ua)
                 page.goto(url, timeout=timeout_ms, wait_until="domcontentloaded")
@@ -139,10 +148,12 @@ def _fetch_listing_html_via_chain(url: str) -> str | None:
     # browser fetches.
     from backend.scanner.chain import ImpersonatingFetcher
 
-    chain = ScraperChain(
-        fetchers=[ImpersonatingFetcher(), _RequestsListingFetcher(), _PlaywrightListingFetcher()],
-        extractors=[],
-    )
+    from backend.scanner.browser_gate import browser_allowed
+
+    fetchers = [ImpersonatingFetcher(), _RequestsListingFetcher()]
+    if browser_allowed():
+        fetchers.append(_PlaywrightListingFetcher())
+    chain = ScraperChain(fetchers=fetchers, extractors=[])
     try:
         html, _strategy = chain.fetch(url)
         return html

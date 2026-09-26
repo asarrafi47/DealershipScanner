@@ -43,6 +43,16 @@ def record_scan_outcomes(outcomes: list[Any], *, finished_at: str) -> int:
                 "phase_secs": o.get("phase_secs"),
                 "vins_count": len(o.get("vins") or []) if isinstance(o.get("vins"), list) else None,
                 "recovery_winning_strategy": inv_recovery.get("winning_strategy"),
+                "recipe_coverage": o.get("recipe_coverage"),
+                "vdp_phase_timed_out": bool(o.get("vdp_phase_timed_out")),
+                "description_probe": o.get("description_probe"),
+                "vdp_prefetch": o.get("vdp_prefetch"),
+                "capture_coverage": o.get("capture_coverage"),
+                "vin_facts": o.get("vin_facts"),
+                "filtered_count": o.get("filtered_count"),
+                "intercept_count": o.get("intercept_count"),
+                "recipe_fetch": o.get("recipe_fetch"),
+                "http_only": bool(o.get("http_only")),
             }
             err = o.get("error")
             err_s = str(err)[:2000] if err else None

@@ -346,3 +346,88 @@ def test_lookup_epa_audi_q5_premium_plus_trim(seeded_epa_master) -> None:
     assert epa.get("city08"), "seeded Q5 Premium Plus row must match by exact trim"
     assert epa.get("city08") > 0
     assert epa.get("highway08") > 0
+
+
+# --- VIN decode outranks the stored cylinders column -------------------------
+
+
+def _silverado(cyl_column: int) -> dict:
+    return {
+        "vin": "1GCPKWEK3TZ441126",
+        "make": "Chevrolet",
+        "model": "Silverado 1500",
+        "year": 2026,
+        "trim": "RST",
+        "title": "2026 Chevrolet Silverado 1500 RST",
+        "cylinders": cyl_column,
+        "engine_l": None,
+        "engine_description": "2.7L I4 L3B Turbo",
+        "drivetrain": "4WD",
+        "transmission": "Automatic",
+        "fuel_type": "Gasoline",
+        "body_style": "Truck",
+    }
+
+
+def test_vpic_cylinders_outrank_stored_column(monkeypatch) -> None:
+    import backend.enrichment.knowledge_engine as ke
+
+    monkeypatch.setattr(ke, "lookup_vpic_from_cache", lambda vin: {"cylinders": 4, "engine_l": 2.7})
+    vs = merge_verified_specs(_silverado(cyl_column=8))
+    assert vs["cylinders_display"] == 4
+    assert vs["cylinders_verified"] is True
+
+
+def test_dealer_engine_text_outranks_stored_column_without_vpic(monkeypatch) -> None:
+    import backend.enrichment.knowledge_engine as ke
+
+    monkeypatch.setattr(ke, "lookup_vpic_from_cache", lambda vin: {})
+    vs = merge_verified_specs(_silverado(cyl_column=8))
+    # "2.7L I4" on the listing beats an enrichment-written 8 in the column.
+    assert vs["cylinders_display"] == 4
+
+
+def test_vpic_that_contradicts_engine_text_is_ignored(monkeypatch) -> None:
+    import backend.enrichment.knowledge_engine as ke
+
+    # vPIC warns its decoded model year can be wrong; a decode that names a
+    # layout the listing's own text rules out must not win.
+    monkeypatch.setattr(ke, "lookup_vpic_from_cache", lambda vin: {"cylinders": 8})
+    vs = merge_verified_specs(_silverado(cyl_column=4))
+    assert vs["cylinders_display"] == 4
+
+
+def test_linked_catalog_row_that_contradicts_engine_text_is_rejected(monkeypatch) -> None:
+    import backend.enrichment.knowledge_engine as ke
+
+    monkeypatch.setattr(ke, "lookup_vpic_from_cache", lambda vin: {})
+    monkeypatch.setattr(
+        ke, "lookup_epa_master_by_id",
+        lambda mid: {"cylinders": 8, "displacement": 5.3, "fuel_type": "Regular Gasoline"} if mid == 77 else {},
+    )
+    car = _silverado(cyl_column=None)
+    car["epa_master_id"] = 77
+    vs = merge_verified_specs(car)
+    assert vs["catalog_link_rejected"].startswith("displacement 2.7L vs catalog 5.3L")
+    assert vs["cylinders_display"] == 4
+
+
+def test_vpic_normalization_reports_electrification():
+    from backend.enrichment.knowledge_engine import _normalize_vpic_response
+
+    assert _normalize_vpic_response({"FuelTypePrimary": "Gasoline", "ElectrificationLevel": "Strong HEV (Hybrid Electric Vehicle)"})["electrification"] == "hybrid"
+    assert _normalize_vpic_response({"FuelTypePrimary": "Gasoline", "ElectrificationLevel": "PHEV (Plug-in Hybrid Electric Vehicle)"})["electrification"] == "phev"
+    assert _normalize_vpic_response({"FuelTypePrimary": "Electric", "ElectrificationLevel": "BEV (Battery Electric Vehicle)"})["electrification"] == "ev"
+    assert _normalize_vpic_response({"FuelTypePrimary": "Gasoline", "ElectrificationLevel": "Mild HEV (Hybrid Electric Vehicle) - Level 2"})["electrification"] is None
+    assert _normalize_vpic_response({"FuelTypePrimary": "Gasoline", "ElectrificationLevel": ""})["electrification"] is None
+
+
+def test_vpic_4x2_is_not_rear_wheel_drive():
+    """vPIC 'DriveType: 4x2' means two-wheel drive of either end; on FWD Camrys it
+    read as RWD and the resolver then linked 316 of 1,611 lab rows to AWD rows."""
+    from backend.enrichment.knowledge_engine import _normalize_vpic_response
+
+    assert _normalize_vpic_response({"DriveType": "4x2"})["drivetrain"] is None
+    assert _normalize_vpic_response({"DriveType": "4x2/2-Wheel Drive"})["drivetrain"] is None
+    assert _normalize_vpic_response({"DriveType": "RWD/Rear-Wheel Drive"})["drivetrain"] == "RWD"
+    assert _normalize_vpic_response({"DriveType": "4WD/4-Wheel Drive/4x4"})["drivetrain"] == "4WD"

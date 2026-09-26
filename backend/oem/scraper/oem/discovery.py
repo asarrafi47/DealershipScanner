@@ -4,7 +4,7 @@ from __future__ import annotations
 import json
 import re
 from typing import Any
-from urllib.parse import urljoin
+from urllib.parse import urljoin, urlparse
 
 _JSON_IN_SCRIPT = re.compile(
     r'<script[^>]+(?:type="application/json"|id="__NEXT_DATA__")[^>]*>([\s\S]*?)</script>',
@@ -40,12 +40,20 @@ def collect_script_src(html: str, base_url: str) -> list[str]:
     return urls
 
 
+def _host_matches(host: str, allowed: tuple[str, ...]) -> bool:
+    return any(host == h or host.endswith("." + h) for h in allowed)
+
+
 def find_urls_in_text(text: str, *, host_substrings: tuple[str, ...]) -> list[str]:
     found: list[str] = []
+    allowed = tuple(h.lower() for h in host_substrings)
     for m in _URL_LIKE.finditer(text):
         u = m.group(0).rstrip("\\\"')")
         low = u.lower()
-        if not any(h in low for h in host_substrings):
+        host = urlparse(low).hostname or ""
+        if host.startswith("www."):
+            host = host[4:]
+        if not _host_matches(host, allowed):
             continue
         if any(
             x in low

@@ -19,7 +19,7 @@ log = logging.getLogger(__name__)
 
 _CAR_COLS = (
     "id", "year", "make", "model", "trim", "cylinders", "engine_l",
-    "engine_description", "drivetrain", "fuel_type", "title", "epa_master_id",
+    "engine_description", "drivetrain", "fuel_type", "title", "epa_master_id", "vin",
 )
 
 
@@ -38,6 +38,12 @@ def link_cars_by_vins(vins: list[str]) -> int:
             clean,
         )
         rows = [dict(zip(_CAR_COLS, r)) for r in cur.fetchall()]
+        try:
+            from backend.enrichment.knowledge_engine import prime_vpic_cache
+
+            prime_vpic_cache([r.get("vin") for r in rows])
+        except Exception:  # noqa: BLE001
+            pass
         cand_cache: dict[tuple, list] = {}
         for car in rows:
             try:

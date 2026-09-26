@@ -30,6 +30,7 @@ from backend.db.users_db import (
     check_user,
     create_org,
     get_user_by_login,
+    get_user_profile,
     save_user,
     sync_env_admin_user_row,
     user_exists_by_email,
@@ -152,9 +153,17 @@ def _require_login() -> int:
     if uid is None:
         return 0
     try:
-        return int(uid)
+        uid = int(uid)
     except (TypeError, ValueError):
         return 0
+    # Re-fetch the account from the DB on every call rather than trusting the
+    # session-cached id alone — a suspended/deleted dealer-portal user's
+    # existing cookie must lose inventory access immediately, not after its
+    # 14-day expiry (mirrors operator_api._require_site_admin_api).
+    profile = get_user_profile(uid)
+    if not profile or not profile.get("is_active", True):
+        return 0
+    return uid
 
 
 def _vehicle_upload_dir(user_id: int, vehicle_id: int) -> Path:

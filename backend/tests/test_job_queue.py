@@ -292,3 +292,65 @@ def test_smart_retry_without_status_row_stays_plain(monkeypatch) -> None:
     assert ok is True
     assert err == ""
     assert "profile" not in captured["payload"]
+
+
+# --- stale `running` reaper --------------------------------------------------
+
+
+class _ReapCursor(_FakeCursor):
+    def __init__(self, conn) -> None:
+        super().__init__(conn)
+
+    def fetchall(self):
+        if "UPDATE dealer_jobs" in self._last_sql and "RETURNING" in self._last_sql:
+            return list(self._conn.reaped_rows)
+        return super().fetchall()
+
+
+class _ReapConn(_FakeConn):
+    def __init__(self, reaped_rows: list[tuple]) -> None:
+        super().__init__([])
+        self.reaped_rows = reaped_rows
+
+    def cursor(self) -> _ReapCursor:
+        return _ReapCursor(self)
+
+
+def _run_reaper(monkeypatch, reaped_rows: list[tuple], **kwargs) -> tuple[int, _ReapConn]:
+    monkeypatch.setattr("backend.db.inventory_pg.is_inventory_postgres", lambda: True)
+    conn = _ReapConn(reaped_rows)
+    monkeypatch.setattr(jq, "pg_connect", lambda: conn)
+    return jq.reap_stale_running_jobs(**kwargs), conn
+
+
+def test_reap_skips_without_postgres(monkeypatch) -> None:
+    monkeypatch.setattr("backend.db.inventory_pg.is_inventory_postgres", lambda: False)
+    monkeypatch.setattr(jq, "pg_connect", lambda: (_ for _ in ()).throw(AssertionError("must not connect")))
+    assert jq.reap_stale_running_jobs() == 0
+
+
+def test_reap_marks_only_running_rows_older_than_cutoff(monkeypatch) -> None:
+    old = (datetime.now(timezone.utc) - timedelta(hours=3)).isoformat()
+    n, conn = _run_reaper(monkeypatch, [(7, "dealer-a", "worker-1", old)], max_age_sec=3600)
+    assert n == 1
+    sql, params = conn.executed[-1]
+    assert "SET status = 'failed'" in sql
+    assert "WHERE status = 'running'" in sql
+    assert "started_at < " in sql
+    # params: (finished_at, error, cutoff)
+    assert params[1].startswith("stale_running:")
+    cutoff = datetime.fromisoformat(params[2])
+    assert timedelta(seconds=3500) < datetime.now(timezone.utc) - cutoff < timedelta(seconds=3700)
+
+
+def test_reap_returns_zero_when_nothing_stale(monkeypatch) -> None:
+    n, _conn = _run_reaper(monkeypatch, [], max_age_sec=3600)
+    assert n == 0
+
+
+def test_reap_default_age_tracks_job_timeout_plus_grace(monkeypatch) -> None:
+    monkeypatch.delenv("SCANNER_STALE_JOB_SEC", raising=False)
+    monkeypatch.setenv("SCANNER_JOB_TIMEOUT_SEC", "1200")
+    assert jq._stale_running_max_age_sec() == 1200 + 900
+    monkeypatch.setenv("SCANNER_STALE_JOB_SEC", "300")
+    assert jq._stale_running_max_age_sec() == 300

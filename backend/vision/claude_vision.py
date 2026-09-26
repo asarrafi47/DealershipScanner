@@ -7,12 +7,15 @@ Set SCANNER_GALLERY_VISION_BATCH to control images per Claude call (default: 8).
 from __future__ import annotations
 
 import base64
+import ipaddress
 import json
 import logging
 import os
+import socket
 import threading
 from io import BytesIO
 from typing import Any
+from urllib.parse import urljoin, urlparse
 
 import requests
 
@@ -99,12 +102,83 @@ def _hamming(a: int, b: int) -> int:
     return bin(a ^ b).count("1")
 
 
+_MAX_IMAGE_FETCH_REDIRECTS = 5
+
+
+def _is_public_ip(ip: str) -> bool:
+    try:
+        addr = ipaddress.ip_address(ip)
+    except ValueError:
+        return False
+    return not (
+        addr.is_private
+        or addr.is_loopback
+        or addr.is_link_local
+        or addr.is_multicast
+        or addr.is_reserved
+        or addr.is_unspecified
+    )
+
+
+def _unsafe_fetch_url_reason(url: str) -> str | None:
+    """SSRF guard: returns a reason string if `url` must not be fetched, else None.
+
+    Rejects non-http(s) schemes and any hostname that resolves (wholly or
+    partly) to a loopback/link-local/private/reserved IP — this covers
+    internal services and cloud metadata endpoints (e.g. 169.254.169.254).
+    """
+    try:
+        parsed = urlparse(url)
+    except Exception:
+        return "unparseable URL"
+    if parsed.scheme not in ("http", "https"):
+        return f"disallowed scheme {parsed.scheme!r}"
+    hostname = parsed.hostname
+    if not hostname:
+        return "missing host"
+    try:
+        infos = socket.getaddrinfo(hostname, None)
+    except Exception as e:
+        return f"DNS resolution failed: {e}"
+    ips = {info[4][0] for info in infos}
+    if not ips:
+        return "no resolved IPs"
+    for ip in ips:
+        if not _is_public_ip(ip):
+            return f"blocked non-public IP {ip}"
+    return None
+
+
 def _fetch_image_b64(url: str, referer: str | None = None) -> str | None:
     headers = {"User-Agent": _FETCH_UA, "Accept": "image/*"}
     if referer:
         headers["Referer"] = referer
     try:
-        r = requests.get(url, headers=headers, timeout=_FETCH_TIMEOUT, stream=True)
+        current_url = url
+        r = None
+        for _ in range(_MAX_IMAGE_FETCH_REDIRECTS + 1):
+            reason = _unsafe_fetch_url_reason(current_url)
+            if reason:
+                logger.debug("Blocked unsafe image URL %s: %s", current_url[:80], reason)
+                return None
+            r = requests.get(
+                current_url,
+                headers=headers,
+                timeout=_FETCH_TIMEOUT,
+                stream=True,
+                allow_redirects=False,
+            )
+            if r.is_redirect or r.is_permanent_redirect:
+                location = r.headers.get("Location")
+                r.close()
+                if not location:
+                    return None
+                current_url = urljoin(current_url, location)
+                continue
+            break
+        else:
+            logger.debug("Too many redirects fetching image: %s", url[:80])
+            return None
         r.raise_for_status()
         raw = r.content
         if len(raw) < 800:

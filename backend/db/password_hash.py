@@ -2,9 +2,12 @@
 
 from __future__ import annotations
 
+import hashlib
 import os
 
 import bcrypt
+
+_BCRYPT_MAX_BYTES = 72
 
 
 def bcrypt_rounds() -> int:
@@ -17,9 +20,24 @@ def bcrypt_rounds() -> int:
     return max(12, min(n, 15))
 
 
+def _bcrypt_input(plain: str) -> bytes:
+    """Encode `plain` for bcrypt, pre-hashing if it exceeds bcrypt's 72-byte limit.
+
+    bcrypt>=4.1 raises ValueError instead of truncating, so passwords whose
+    UTF-8 encoding is longer than 72 bytes are first collapsed with SHA-256
+    (hex digest, 64 bytes) before being handed to bcrypt. This mirrors
+    Django's BCryptSHA256PasswordHasher and must be applied identically when
+    hashing and when verifying.
+    """
+    encoded = plain.encode("utf-8")
+    if len(encoded) <= _BCRYPT_MAX_BYTES:
+        return encoded
+    return hashlib.sha256(encoded).hexdigest().encode("utf-8")
+
+
 def hash_password(plain: str) -> str:
     return bcrypt.hashpw(
-        plain.encode("utf-8"),
+        _bcrypt_input(plain),
         bcrypt.gensalt(rounds=bcrypt_rounds()),
     ).decode("utf-8")
 
@@ -30,7 +48,7 @@ def verify_password(plain: str, stored: str) -> bool:
     s = stored.encode("utf-8")
     if stored.startswith("$2"):
         try:
-            return bcrypt.checkpw(plain.encode("utf-8"), s)
+            return bcrypt.checkpw(_bcrypt_input(plain), s)
         except ValueError:
             return False
     return False

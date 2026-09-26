@@ -1503,7 +1503,10 @@ def _model_epa_fallbacks(make: str | None, model: str | None) -> list[str]:
 
 _VPIC_DRIVE_MAP = {
     "fwd": "FWD", "front-wheel drive": "FWD", "front wheel drive": "FWD",
-    "rwd": "RWD", "rear-wheel drive": "RWD", "rear wheel drive": "RWD", "4x2": "RWD",
+    "rwd": "RWD", "rear-wheel drive": "RWD", "rear wheel drive": "RWD",
+    # "4x2" / "2WD" is two-wheel drive of UNKNOWN end: vPIC stamps it on FWD Camrys,
+    # HR-Vs and Pilots as much as on RWD trucks. Mapping it to RWD (pre-2026-09-23)
+    # made the resolver reject every FWD catalog row for those cars.
     "awd": "AWD", "all-wheel drive": "AWD", "all wheel drive": "AWD",
     "4wd": "4WD", "4x4": "4WD", "four-wheel drive": "4WD", "four wheel drive": "4WD",
 }
@@ -1530,6 +1533,8 @@ def _empty_vpic() -> dict[str, Any]:
     return {
         "transmission": None, "drivetrain": None, "cylinders": None,
         "engine_l": None, "fuel_type": None, "body_style": None, "trim": None,
+        # 'ev' | 'phev' | 'hybrid' | None (None = vPIC did not say; NOT "not a hybrid")
+        "electrification": None,
     }
 
 
@@ -1632,7 +1637,7 @@ def _normalize_vpic_response(r: dict[str, Any]) -> dict[str, Any]:
         "AWD" if "all" in dt.lower() or "awd" in dt.lower()
         else "4WD" if "4wd" in dt.lower() or "4x4" in dt.lower()
         else "FWD" if "fwd" in dt.lower() or "front" in dt.lower()
-        else "RWD" if ("rwd" in dt.lower() or "rear" in dt.lower() or "4x2" in dt.lower())
+        else "RWD" if ("rwd" in dt.lower() or "rear" in dt.lower())
         else None
     )
 
@@ -1660,6 +1665,15 @@ def _normalize_vpic_response(r: dict[str, Any]) -> dict[str, Any]:
         else:
             out["fuel_type"] = ft
 
+    el = (r.get("ElectrificationLevel") or "").strip().lower()
+    if "bev" in el or (out["fuel_type"] == "Electric" and not el):
+        out["electrification"] = "ev"
+    elif "phev" in el or "plug-in" in el:
+        out["electrification"] = "phev"
+    elif "mild" in el:
+        out["electrification"] = None  # 48V assist: EPA and dealers disagree on the label; no override
+    elif "hev" in el:
+        out["electrification"] = "hybrid"
     bc = (r.get("BodyClass") or "").strip()
     out["body_style"] = _VPIC_BODY_MAP.get(bc.lower())
 

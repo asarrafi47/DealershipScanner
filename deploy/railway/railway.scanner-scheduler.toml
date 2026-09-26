@@ -1,0 +1,17 @@
+# Scanner scheduler — enqueues refresh jobs whose dealer_catalog.next_scan_at is due.
+#
+# Attach in Railway → scanner-scheduler → Settings → Config file path.
+# See railway.scanner-worker.toml for why the repo-root railway.toml must not
+# be inherited here.
+#
+# Single replica by design: two schedulers would double-enqueue.
+
+[build]
+builder = "DOCKERFILE"
+dockerfilePath = "Dockerfile.scanner-scheduler"
+
+[deploy]
+# No startCommand: the image ENTRYPOINT owns process launch (one mechanism, not two).
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 10
+numReplicas = 1

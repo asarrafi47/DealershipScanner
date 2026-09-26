@@ -268,3 +268,40 @@ def test_cname_chain_handles_missing_tools(monkeypatch):
 
     monkeypatch.setattr(pr.subprocess, "run", boom)
     assert pr.cname_chain("www.x.com") == []  # never raises
+
+
+# ── HTTP probe: Cloudflare passive beacon is not a challenge ──────────────────
+
+
+class _ProbeResp:
+    def __init__(self, body: bytes):
+        self._body = body
+        self.status = 200
+
+    def read(self) -> bytes:
+        return self._body
+
+    def getcode(self) -> int:
+        return 200
+
+    class headers:  # noqa: N801
+        @staticmethod
+        def get_content_charset():
+            return "utf-8"
+
+
+def test_http_probe_beacon_on_real_page_is_not_challenge(monkeypatch):
+    body = ("<html><head><script>s.src='/cdn-cgi/challenge-platform/scripts/precursor/main.js'"
+            "</script></head><body>" + "dealereprocess real page " * 2000 + "</body></html>").encode()
+    monkeypatch.setattr(pr, "open_url", lambda req, timeout=0: _ProbeResp(body))
+    probe = pr._http_probe("https://www.hondaofelcajon.com")
+    assert probe.challenge is False
+    assert probe.html and "real page" in probe.html
+
+
+def test_http_probe_thin_beacon_shell_is_challenge(monkeypatch):
+    body = b"<html><head><script src='/cdn-cgi/challenge-platform/h/b/orchestrate/jsch/v1'></script></head></html>"
+    monkeypatch.setattr(pr, "open_url", lambda req, timeout=0: _ProbeResp(body))
+    probe = pr._http_probe("https://x.com")
+    assert probe.challenge is True
+    assert probe.html is None

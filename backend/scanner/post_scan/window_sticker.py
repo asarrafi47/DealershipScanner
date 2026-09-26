@@ -19,6 +19,7 @@ import logging
 import os
 import re
 from typing import Any
+from urllib.parse import quote, urlsplit
 
 logger = logging.getLogger(__name__)
 
@@ -72,9 +73,12 @@ _TIER_RELIABLE = "reliable_pdf"
 _TIER_EXPERIMENTAL = "experimental"
 
 
+_VIN17_RE = re.compile(r"^[A-HJ-NPR-Z0-9]{17}$")
+
+
 def _vin_norm(vin: str | None) -> str | None:
     s = (vin or "").strip().upper()
-    return s if len(s) == 17 else None
+    return s if _VIN17_RE.match(s) else None
 
 
 def _gm_experimental_enabled() -> bool:
@@ -87,7 +91,7 @@ def _gm_experimental_enabled() -> bool:
 
 
 def _stellantis_pdf_url(vin: str, brand_host: str) -> str:
-    return f"https://www.{brand_host}.com{_STELLANTIS_PDF_PATH.format(vin=vin)}"
+    return f"https://www.{brand_host}.com{_STELLANTIS_PDF_PATH.format(vin=quote(vin, safe=''))}"
 
 
 def get_window_sticker_candidate_urls(vin: str) -> list[tuple[str, str]]:
@@ -100,6 +104,7 @@ def get_window_sticker_candidate_urls(vin: str) -> list[tuple[str, str]]:
         return []
 
     wmi3 = vnorm[:3]
+    vin_q = quote(vnorm, safe="")
     out: list[tuple[str, str]] = []
 
     brand_host = _STELLANTIS_WMI.get(wmi3)
@@ -107,15 +112,15 @@ def get_window_sticker_candidate_urls(vin: str) -> list[tuple[str, str]]:
         out.append((_stellantis_pdf_url(vnorm, brand_host), _TIER_RELIABLE))
 
     if wmi3 in _FORD_WMI:
-        out.append((_FORD_PDF_URL.format(vin=vnorm), _TIER_RELIABLE))
+        out.append((_FORD_PDF_URL.format(vin=vin_q), _TIER_RELIABLE))
 
     if wmi3 in _LINCOLN_WMI:
-        out.append((_FORD_PDF_URL.format(vin=vnorm), _TIER_RELIABLE))
-        out.append((_LINCOLN_PDF_URL.format(vin=vnorm), _TIER_RELIABLE))
+        out.append((_FORD_PDF_URL.format(vin=vin_q), _TIER_RELIABLE))
+        out.append((_LINCOLN_PDF_URL.format(vin=vin_q), _TIER_RELIABLE))
 
     if wmi3 in _GM_WMI and _gm_experimental_enabled():
-        out.append((_GM_EXPERIMENTAL_URL.format(vin=vnorm), _TIER_EXPERIMENTAL))
-        out.append((_GM_LEGACY_URL.format(vin=vnorm), _TIER_EXPERIMENTAL))
+        out.append((_GM_EXPERIMENTAL_URL.format(vin=vin_q), _TIER_EXPERIMENTAL))
+        out.append((_GM_LEGACY_URL.format(vin=vin_q), _TIER_EXPERIMENTAL))
 
     return out
 
@@ -1828,25 +1833,62 @@ def _vin_token_in_url(url: str) -> str | None:
     return m2.group(1) if m2 else None
 
 
+_TRUSTED_IPACKET_HOSTS = frozenset({
+    "djapi.autoipacket.com",
+    "document-viewer.autoipacket.com",
+    "webicon.autoipacket.com",
+})
+
+
+def _is_trusted_ipacket_host(host: str) -> bool:
+    h = (host or "").lower()
+    if not h:
+        return False
+    if h in _TRUSTED_IPACKET_HOSTS:
+        return True
+    return (
+        h == "autoipacket.com"
+        or h.endswith(".autoipacket.com")
+        or h == "ipacket.us"
+        or h.endswith(".ipacket.us")
+    )
+
+
+def _has_dealer_cdn_host_hint(host: str) -> bool:
+    h = (host or "").lower()
+    return any(h2 in h for h2 in ("dealer", "dealerinspire", "homenet", "inventory", "cdn.", "pictures."))
+
+
 def is_listing_sticker_url(url: str) -> bool:
     """True when a dealer-supplied URL likely points at a Monroney / MSRP options document."""
     ul = (url or "").strip().lower()
     if not ul.startswith(("http://", "https://")):
         return False
+    try:
+        host = urlsplit(url).hostname or ""
+    except ValueError:
+        return False
+    if not host:
+        return False
+    # Known iPacket API/document hosts are trusted outright.
+    if _is_trusted_ipacket_host(host):
+        return True
     if _IPACKET_STICKER_URL_RE.search(url or ""):
         return True
-    if "autoipacket.com" in ul or "ipacket.us" in ul:
-        return True
+    # For everything else, a path/query token alone is not sufficient — the host must
+    # also look like a dealer site or inventory/photo CDN, so an attacker-controlled
+    # URL on an arbitrary host cannot be smuggled through as a "sticker" fetch target.
+    dealer_hint = _has_dealer_cdn_host_hint(host)
+    if not dealer_hint:
+        return False
     if any(token in ul for token in _LISTING_STICKER_PATH_TOKENS):
         return True
     if re.search(r"\.(jpe?g|png|webp)(\?|#|$)", ul) and any(
         token in ul for token in ("monroney", "window-sticker", "window_sticker", "/sticker/", "msrp")
     ):
-        if any(h in ul for h in ("dealer", "dealerinspire", "homenet", "inventory", "cdn.", "pictures.")):
-            return True
+        return True
     if ul.endswith(".pdf") and any(token in ul for token in ("sticker", "monroney", "msrp", "label")):
-        if any(h in ul for h in ("dealer", "dealerinspire", "homenet", "inventory", "cdn.", "pictures.")):
-            return True
+        return True
     return False
 
 
@@ -2114,10 +2156,12 @@ def fetch_listing_sticker(
     vin: str,
     *,
     timeout: float = 20.0,
+    _depth: int = 0,
 ) -> dict[str, Any] | None:
     """
     Fetch a dealer listing sticker (iPacket MSRP doc, Monroney PDF/image, etc.).
     URL must pass ``is_listing_sticker_url``; embedded VIN must match when present.
+    ``_depth`` bounds the internal nested-URL follow (never recurses past one hop).
     """
     u = resolve_listing_sticker_fetch_url((url or "").strip(), vin)
     if not u or not is_listing_sticker_url(u):
@@ -2163,9 +2207,9 @@ def fetch_listing_sticker(
 
     nested_urls = extract_listing_sticker_urls_from_html(raw_text, vin=vnorm)
     nested_urls = [x for x in nested_urls if x != u]
-    if nested_urls and not _parse_options_from_sticker_text(raw_text):
+    if nested_urls and _depth < 1 and not _parse_options_from_sticker_text(raw_text):
         try:
-            deeper = fetch_listing_sticker(nested_urls[0], vnorm, timeout=timeout)
+            deeper = fetch_listing_sticker(nested_urls[0], vnorm, timeout=timeout, _depth=_depth + 1)
             if deeper and _is_valid_listing_sticker_payload(deeper):
                 return deeper
         except Exception as e:

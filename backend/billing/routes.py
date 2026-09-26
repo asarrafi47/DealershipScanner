@@ -125,6 +125,19 @@ def stripe_webhook():
     etype = (event.get("type") or "").strip()
     obj = ((event.get("data") or {}).get("object") or {}) if isinstance(event.get("data"), dict) else {}
 
+    # Only these event types carry a Subscription (or Checkout Session pointing to one) that
+    # this handler knows how to translate into an org's subscription_id/status. Anything else
+    # (e.g. invoice.*, which inherits the subscription's metadata) is acknowledged and ignored
+    # rather than blindly written into the org row.
+    _ALLOWED_ORG_WEBHOOK_EVENTS = (
+        "checkout.session.completed",
+        "customer.subscription.created",
+        "customer.subscription.updated",
+        "customer.subscription.deleted",
+    )
+    if etype not in _ALLOWED_ORG_WEBHOOK_EVENTS:
+        return jsonify({"ok": True})
+
     def _org_id_from_metadata(o: dict[str, Any]) -> int:
         md = o.get("metadata") or {}
         if not isinstance(md, dict):
@@ -193,6 +206,7 @@ def premium_success():
             checkout_error = "missing_session"
         elif verify_premium_checkout_session(session_id=stripe_sid, user_id=uid):
             grant_user_premium(uid, session_id=stripe_sid)
+            invalidate_billing_cache(uid)
             session["user_is_premium"] = True
             activated = True
         else:
@@ -329,6 +343,7 @@ def plan_checkout_success():
             checkout_error = "missing_session"
         elif verify_plan_checkout_session(session_id=stripe_sid, user_id=uid, plan_id=plan_id):
             grant_user_premium(uid, session_id=stripe_sid, plan_id=plan_id)
+            invalidate_billing_cache(uid)
             session["user_is_premium"] = True
             session["subscription_plan_id"] = plan_id
             activated = True

@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from scraping.paths import ROOT
+from backend.scraping.paths import ROOT
 
 _PKG_ROOT = Path(__file__).resolve().parent.parent
 

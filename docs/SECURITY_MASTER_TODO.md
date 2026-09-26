@@ -44,7 +44,6 @@
 | `/dealer-uploads/<user_id>/<vehicle_id>/<file>` | **Yes** — path `user_id` must match session | JPEG/PNG/WebP only at upload; filenames are server-generated; `send_from_directory` under upload root |
 | `/logout` | N/A | `POST` only; CSRF form; clears Flask session; `GET /logout` → **405** (avoids logout CSRF) (see **SEC-060**). |
 | `/mfa/*` (legacy URLs) | N/A — **2FA removed** | `GET`/`POST` on `/mfa/choose`, `/mfa/setup`, `/mfa/verify`, `/mfa/qr`, `/mfa/qr-wait`, `/mfa/qr-confirm/<token>`, `POST /mfa/qr/complete` → **302** to `/login` (logged out) or `/listings` (logged in). `/dev/mfa/*` → `/dev/` or `/dev/login` (see dev routes). |
-| `/socket.io/*` (Flask-SocketIO) | Same-origin to app | Production defaults: explicit origins from `SOCKETIO_CORS_ORIGINS`, else `PUBLIC_BASE_URL` / `MFA_QR_BASE_URL`, else empty allowlist; dev unset → `*`. QR MFA Socket.IO handlers are **not** registered. |
 | `/login`, `/register` | N/A | CSRF on POST; bcrypt passwords; per-IP rate limits on POST; **general** accounts (no org) use these; **dealership** sign-up with org uses `/dealer/register` + `/dealer/login` |
 | `/auth/google`, `/auth/google/callback` | N/A | Optional Google OAuth when `GOOGLE_OAUTH_CLIENT_ID` + `GOOGLE_OAUTH_CLIENT_SECRET` set; OAuth `state` validation; per-IP rate limit on callback; auto-link by verified email (see **SEC-075**) |
 | `/dev/login`, `/dev/register` | N/A | CSRF on POST; bcrypt; per-IP rate limits; `/dev/register` gated in production; optional `DEV_IP_ALLOWLIST` (comma IPs / CIDRs) restricts all `/dev/*` when set |
@@ -106,7 +105,6 @@
 | `MFA_QR_INMEMORY` | Optional | When `1`/`true`, use in-process attempt store in **production** (intended for tests; not for multi-server) |
 | `MFA_QR_ATTEMPT_TTL_SECONDS` / `MFA_QR_APPROVED_TTL_SECONDS` | Optional | Defaults 120; Redis key TTLs for scan + desktop finalize window |
 | `PUBLIC_BASE_URL` or `MFA_QR_BASE_URL` | **Recommended** behind reverse proxy | Base URL used **inside the QR** for `https://…/mfa/qr-confirm/…` so phones hit the public hostname |
-| `SOCKETIO_CORS_ORIGINS` | Optional | Comma-separated origins or `*`. **Dev:** unset → `*`. **Production:** unset → `PUBLIC_BASE_URL` + `MFA_QR_BASE_URL` (deduped), else `[]` (tight; set explicitly if QR Socket.IO breaks). `*` in prod logs a warning. |
 | `DEV_IP_ALLOWLIST` | Optional hardening | Comma-separated client IPs or CIDRs (`10.0.0.0/8`). When set, `/dev/*` allows only those addresses (uses `client_ip`; enable `TRUST_PROXY_HEADERS` behind a trusted proxy). Complements VPN/firewall controls. |
 | `DEALER_PORTAL_DB_PATH` | Optional | Default `dealer_portal.db` (dealer-managed inventory) |
 | `DEALER_UPLOAD_ROOT` | Optional | Absolute or cwd-relative root for dealer photo files (default `uploads/dealer`) |
@@ -988,6 +986,7 @@
 | 2026-06-02 | **SEC-041:** Removed premium negotiation script generator (`negotiation_script` branch, Ollama `run_negotiation_script`, VDP UI). Car chat endpoint unchanged for normal `message` requests. Validation: `python -m pytest backend/tests/test_app_security_basics.py backend/tests/test_car_chat_policy.py backend/tests/test_compare_specs.py -q`. |
 | 2026-06-02 | **SEC-082 / SEC-089:** Login rehash updates only when stored hash unchanged (`password = ?` guard); public listings fail closed when incomplete index errors; sidecar index mtime in listings cache token; atomic incomplete rebuild + dev stats join. Validation: `python -m pytest backend/tests/test_incomplete_listings_index.py backend/tests/test_password_hash.py -q`. |
 | 2026-06-25 | **Site admin operator merge:** `/admin/data-quality` (incomplete listings grid + dealer issue stats) and `/admin/scanner-ops` (smart import, registry maintenance) for app `role=admin`; JSON at `/api/admin/operator/*` with CSRF header on mutations. Legacy `/dev` unchanged. Validation: `python -m pytest backend/tests/test_admin_operator_api.py -q`. |
+| 2026-09-21 | **SEC-063 retired:** Flask-SocketIO removed (`backend/main.py`, `run.py`, `requirements.txt`, `Config.socketio_cors_origins_raw`). It had zero handlers, zero emits and no frontend consumer; `/socket.io/*` no longer exists, `SOCKETIO_CORS_ORIGINS` is ignored. |
 
 **Done items** stay in their phase table with **Status: Done** and **Last verified** — do not duplicate into a second list.
 

@@ -1,0 +1,109 @@
+# HTTP-only scans, browser for discovery only — plan
+
+Decision (2026-09-26, user): from here on every scan is HTTP-only. Headless browsing stays
+only as a **discovery** tool: learning how a new/unknown site presents its inventory
+(endpoint, auth, pagination) so a recipe can be written. Nothing in the scan path may open
+Chromium.
+
+Companion: `docs/NETWORK_SCAN_PROCESS.md` (the per-dealer loop), `workspace/dealer_logs/_learning/platform_playbook.md`.
+
+## Where we are (measured 2026-09-26)
+
+- 459 active dealers; 454 have live HTTP recipes; fleet scans have run with `SCANNER_HTTP_ONLY=1` since 09-23.
+- 3 dealers have no HTTP path yet (mcpeeks-com, quantumautosales-com, honestcardeal-com) — exactly the case discovery-with-a-browser is for.
+- **But "HTTP-only" is not browser-free today.** Audit of `backend/scanner/**` (2026-09-26) found seven places a browser still runs or can run under `SCANNER_HTTP_ONLY=1`:
+
+| # | where | what happens today |
+|---|---|---|
+| 1 | `backend/scanner/orchestrator.py:305` | Chromium is launched for every run, unconditionally; the scan holds a headless Chromium process for its whole life |
+| 2 | `backend/scanner/phases/dealer_run.py:256-257` | `browser.new_context()` + `new_page()` per dealer (an about:blank page) |
+| 3 | `dealer_run.py:655-669` → `inventory_recovery.py` | `recover_inventory(page=…)` runs with no HTTP-only guard; six of eight strategies read/navigate the page (`dealer_on_cosmos`, `dealer_inspire_algolia`, `dealer_venom_typesense`, `pixel_motion_html`, `dealer_eprocess_json`, `html_next_data`) |
+| 4 | `dealer_run.py:828-836` → `vdp/dispatch.py` | `enrich_vehicles_vdp(page, …)` is always called; only the five `SCANNER_VDP_*_MAX=0` caps the pipeline sets keep the worker pages from opening |
+| 5 | `dealer_run.py:979-988` → `post_scan/auto_heal.py` → `post_scan/gap_fill.py:80` | `SCANNER_AUTO_HEAL` (default on) launches **sync Playwright** per healed VIN batch; `SCANNER_LISTING_FETCH_CHAIN=0` still falls through to the same launcher (`_fetch_listing_html_legacy`) |
+| 6 | `dealer_run.py:1090-1093` | failure HAR (off by default) and a `page.screenshot` on the zero-vehicle path |
+| 7 | `orchestrator.py:346` | new page + goto + screenshot in the per-dealer exception handler |
+
+Plus hard import coupling: `orchestrator.py:19` imports `dealer/bmw_enhancer.py`, whose module top imports `playwright.async_api`; five of its Page functions have no callers.
+
+`network_observer.py` is a `page.on("response")` consumer only: an HTTP-only scan can replay recipes but never learn one. Recipe acquisition = `recipe_synth` (HTTP templates) or a browser capture. That is the discovery job.
+
+## Target architecture
+
+```
+discovery (browser allowed)            scan (HTTP only, always)
+──────────────────────────             ──────────────────────────
+discovery_probe --browser-capture      dealer_pipeline / scanner.py
+  ├ NetworkObserver on SRP load          ├ recipes.try_fetch_via_recipes (union)
+  ├ site profiler                        ├ store scoping (carscommerce), section stripping
+  ├ auth/key capture (Typesense, Algolia)├ HTTP recovery: shopperexpress API, DEP results API,
+  └ promote_from_ledger → recipe         │   JSON-LD / __NEXT_DATA__ parse of fetched HTML
+                                         ├ vdp/prefetch (curl_cffi) + vdp_recipes for detail pages
+                                         ├ post-scan: vPIC decode+heal, reconcile, verify, logs
+                                         └ assert: zero Chromium processes during the run
+```
+
+Rule of thumb: a browser may run only inside `discovery_probe`, only for a dealer the pipeline flagged (`no_recipe`, `validated_zero`, `no_rows`, stale-401/403), and its only output is a recipe (+ discovery.md). It never writes cars.
+
+## Phase 0 — make HTTP-only actually browser-free (no deletions)
+
+Small, reversible, test-backed. Goal: `pgrep -f 'ms-playwright|headless_shell'` = 0 for the whole scan.
+
+1. **Default flip.** `scanner.py`/`backend/scanner/cli.py`: `SCANNER_HTTP_ONLY` defaults to `1`. New `SCANNER_ALLOW_BROWSER=1` is the only way to launch Chromium, and only `discovery_probe --browser-capture` sets it. Add `--http-only/--allow-browser` CLI flags mirroring the env.
+2. **No launch.** `orchestrator.py`: when the browser is not allowed, run `run_dealers_with_browser(None)` — no `chromium.launch`, no `Stealth`, no failure-screenshot page (`:346`). Make the `bmw_enhancer` import lazy (only the dict-munging function is used).
+3. **No context.** `dealer_run.run_dealer(browser=None)`: skip `new_context`/`new_page` (`:256-257`); `page=None` everywhere downstream; skip the zero-vehicle screenshot (`:1093`) and HAR (`:1090`).
+4. **Recovery in HTTP mode.** `inventory_recovery.recover_inventory`: when `ctx.page is None`, run only the HTTP-capable strategies (`shopperexpress_api`, `dealer_eprocess_json` strategy 0 = `_fetch_results_api`, `jsonld_listing_html`, `html_next_data` on HTML fetched with curl_cffi instead of `page.evaluate`) and skip the rest with one log line naming them. `should_run_platform_recovery` unchanged.
+5. **VDP.** `dealer_run:828`: do not call `enrich_vehicles_vdp` when `page is None` (the HTTP-first `prefetch_before_vdp` + `apply_vdp_recipes` already run at `:781`). Remove the pipeline's reliance on the five zero caps.
+6. **Auto-heal / gap fill.** `gap_fill.fetch_listing_html`: when the browser is not allowed, use the HTTP fetchers only (curl_cffi/requests chain) and never the `PlaywrightFetcher` or `_playwright_fetch_html` legacy fallback. `DEFAULT_FETCHERS` / `default_chain` end in Playwright today — build the chain from an allow-list. Same for `delta_scan._complete_prices_from_vdp` and `run_listing_gap_fill_for_vins`.
+7. **Guard.** A single helper `backend/scanner/browser_gate.py::browser_allowed()`; every remaining `chromium.launch` / `sync_playwright()` / `new_context` call site asserts it (raise `BrowserForbidden` with the caller's name). Log one line per run: `browser: forbidden` / `browser: allowed (discovery)`.
+8. **Pipeline.** `dealer_pipeline.run_http_only_scan` drops `HTTP_ONLY_ENV`'s cap juggling; sets only `SCANNER_HTTP_ONLY=1` (now the default) and `DEALERS_FROM_SCANNABLE=1`. Records a `chromium_processes_seen` counter in the run summary (snapshot `pgrep` before/after each batch, as `deploy/nightly_http_refresh.sh` already does) and fails the batch if it rose.
+9. **Tests.** `test_scan_only_mode.py` gains: orchestrator with browser forbidden never imports playwright launch; `run_dealer(browser=None)` completes a recipe replay; recovery skips page strategies; gap_fill chain has no Playwright fetcher; `BrowserForbidden` raised on every call site under the gate. Existing browser-path tests keep passing (they stub pages).
+
+Exit criterion: one full fleet cycle (both machines) with `chromium_processes_seen = 0` on every batch and row counts within 5% of the 09-26 baseline per dealer.
+
+## Phase 1 — discovery owns the browser
+
+1. `discovery_probe --browser-capture <dealer>`: opens the SRP(s) under `SCANNER_ALLOW_BROWSER=1`, attaches `NetworkObserver`, scrolls/paginates once, and writes the captured endpoints to the ledger → `promote_from_ledger` → recipe candidates → `validate_recipe` → save. Also runs the site profiler and records the platform fingerprint. Output: `discovery.md` (what the site does), `scan_instructions.md`, recipe rows. **No car rows are written.**
+2. `dealer_pipeline` calls it automatically for verdicts `no_recipe` / `validated_zero` / `no_rows` and for recipes marked stale by 401/403 (auth rotated), then re-validates over HTTP and rescans. Bounded: one capture per dealer per day, logged in `_learning/errors_index.md`.
+3. `dealer-discovery` workflow (`.claude/workflows/dealer-discovery.js`) investigator step gets the same switch; the builder still writes recipes/templates only.
+4. IP hygiene: a discovery capture may hit Cloudflare on a hot IP; run it from the other machine when the probe reports 403 (already in the playbook).
+5. Remaining browser-only scrapers become **templates or discovery inputs**, not scan strategies: `dealer_on_cosmos` (HTTP template exists), `pixel_motion` (needs an HTTP template: capture once, replay), `dealer_com_bulk_fetch` (dealer.com has the getInventory recipe), `dealer_inspire_algolia` / `dealer_venom_typesense` (config discovery moves to `recipe_synth` HTML extraction, which already reads Algolia/Typesense keys from HTML; browser capture only when HTML lacks them).
+
+## Phase 2 — delete the scan-time browser code (after Phase 0 exit criterion)
+
+Rule from memory: grep every consumer (code, scripts, frontend, tests) before each deletion; rebuild better, never lose capability. Candidate list with the audit's consumer notes:
+
+| delete | consumers to move/rewrite first |
+|---|---|
+| `vdp/dispatch.py` worker pages, `vdp/visit.py`, `vdp/gallery.py`, `vdp/spin_capture.py`, `vdp/browser_js.py` | `dealer_run:828`; tests `test_vdp_dispatch_probe`, `test_vdp_gallery_hang_fix`, `test_scanner_vdp_gallery_js`, `test_vdp_spin_capture`, `test_vdp_helpers`; keep `vdp/prefetch.py`, `vdp/vdp_recipes.py`, `vdp/html_recovery.py`, `vdp/queue.py` |
+| `phases/inventory_scrape.py` browser SRP scrape, `phases/nav.py`, `inventory_card_location.py` | move the SRP-load + NetworkObserver part into `discovery_probe --browser-capture`; `test_network_observer` follows it |
+| `phases/site_profile.py` (browser DOM probes) | discovery only |
+| `phases/url_discovery.py` (DuckDuckGo via browser) | replace with an HTTP search or the registry; called from two `not _http_only()` branches |
+| `scrapers/dealer_on.py`, `scrapers/pixel_motion.py` (browser fetch), `scrapers/dealer_com_bulk_fetch.py` | recovery strategy map `inventory_recovery.py:704-713`; `test_dealer_on_parser`, `test_pixel_motion*`, `test_dealer_com_bulk_fetch`; keep their pure parsers |
+| browser halves of `scrapers/autowall.py`, `shopperexpress.py`, `dealer_eprocess.py`, `dealer_inspire.py`, `dealer_venom.py` | keep HTTP halves; `inventory_scrape.py:337-381` fallbacks go with the file |
+| `post_scan/gap_fill._playwright_fetch_html`, `chain.PlaywrightFetcher`, `vdp/spec_fetch.py`, `vdp_spec_extract.py` | `test_scraper_chain.py` fetcher-order tests; `deploy/nightly_http_refresh.sh` workaround (`SCANNER_LISTING_FETCH_CHAIN=0`) becomes unnecessary |
+| `dealer/bmw_enhancer.py` Page functions (5, no callers) | keep `enhance_scraping_for_bmw_dealerships` |
+| `--capture-only` mode, `mac_mini_lite.py` preset, `SCANNER_FAILURE_HAR`, warmup phase, DealerOn renderer-wedge handling | `cli.py:243-252`, `scan_efficiency.py`; memory notes on the wedge |
+| `Dockerfile.scanner` / `Dockerfile.scanner-worker`: `playwright install chromium`, `patchright`, Node + Puppeteer Chromium | build the scanner image from the `Dockerfile.scanner-scheduler` shape (python-slim, no browser); a separate `Dockerfile.discovery` keeps Chromium for `discovery_probe --browser-capture`; `job_diagnosis.py` Chromium checks move with it; `Dockerfile.web:34` browser install reviewed separately |
+| `requirements.txt` `playwright`, `playwright-stealth` | scanner image no; discovery image yes |
+
+Also retire the `SCANNER_VDP_*` cap knobs that only shaped browser visits (`vdp/config.py`, ~43 vars) and the `requires_browser` recipe hint's skip in `delta_scan.py:156` (a dealer without an HTTP recipe goes to discovery, not to a browser).
+
+## Phase 3 — keep it honest
+
+- Metrics per fleet run (already in the triage tables, add two): `chromium_processes_seen` (must be 0), `recipe_coverage` (dealers with live recipe / active dealers), rows vs 30-day baseline, one-condition dealers, reconcile audit ratio.
+- Recipe lifecycle: 401/403 → stale → discovery capture → re-validate → rescan. Section-scoped or single-condition recipes → force-synth first, discovery second.
+- New-platform playbook: probe → synth template if the site is HTTP-describable (14 templates today) → else browser capture → recipe → template later if a second dealer appears.
+
+## Decisions needed
+
+- **D1** Keep `Dockerfile.web`'s Chromium? (only needed if the web app runs any browser feature; audit separately.)
+- **D2** Discovery browser on which machine? Proposal: the mini (clean IP, always on); MBP only when the mini is off.
+- **D3** Delete `mac_mini_lite.py` / capture-only mode outright, or keep capture-only as the discovery capture's internal mode? Proposal: delete; discovery gets its own entry point.
+- **D4** Phase 2 timing: after one clean fleet cycle under Phase 0 (≈1 day) or after a week?
+
+## Order of work
+
+1. Phase 0 items 1-7 in one branch (`feature/http-only-scans`), item 8-9 tests, run the 51-dealer rerun set + 20 random dealers on both machines, compare rows to baseline, confirm zero Chromium.
+2. Phase 1 item 1-2 (discovery capture), prove it on mcpeeks-com / quantumautosales-com (the two dealers no HTTP template covers today).
+3. Phase 2 deletions, one table row per commit, consumer audit noted in each commit message.
+4. Dockerfile split last; test locally (docker build + run against local Postgres) before any Railway deploy (memory rule).

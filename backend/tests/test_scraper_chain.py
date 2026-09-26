@@ -270,15 +270,22 @@ class TestScrapedVehicle:
 
 
 class TestDefaultChain:
-    def test_default_chain_orders_cheap_to_heavy(self):
+    def test_default_chain_orders_cheap_to_heavy(self, monkeypatch):
         # Impersonation leads: it is still plain HTTP, but with a browser's TLS
         # fingerprint, so it clears the Cloudflare 403 that would otherwise fail the
         # requests stage and escalate the chain all the way to a real browser.
+        # Since 2026-09-26 the browser stage exists only for discovery
+        # (SCANNER_ALLOW_BROWSER=1); scans get the two HTTP stages.
+        monkeypatch.delenv("SCANNER_ALLOW_BROWSER", raising=False)
+        chain = default_chain(extractors=[StubExtractor("e")])
+        assert [f.name for f in chain.fetchers] == ["impersonate", "requests"]
+        monkeypatch.setenv("SCANNER_ALLOW_BROWSER", "1")
         chain = default_chain(extractors=[StubExtractor("e")])
         assert [f.name for f in chain.fetchers] == ["impersonate", "requests", "playwright"]
 
-    def test_impersonating_fetcher_precedes_the_browser(self):
+    def test_impersonating_fetcher_precedes_the_browser(self, monkeypatch):
         """The browser must remain the last resort, never reached by a 403 alone."""
+        monkeypatch.setenv("SCANNER_ALLOW_BROWSER", "1")
         chain = default_chain(extractors=[StubExtractor("e")])
         names = [f.name for f in chain.fetchers]
         assert names.index("impersonate") < names.index("playwright")
@@ -354,11 +361,22 @@ class TestFetchListingHtmlIntegration:
     def test_thin_requests_result_falls_through_to_playwright(self, monkeypatch):
         from backend.scanner.post_scan import gap_fill
 
+        monkeypatch.setenv("SCANNER_ALLOW_BROWSER", "1")  # discovery mode; scans never reach the browser stage
         monkeypatch.setattr(gap_fill, "_requests_fetch_html", lambda u, **kw: THIN_HTML)
         monkeypatch.setattr(
             gap_fill, "_playwright_fetch_html", lambda u, **kw: "<html>rendered</html>"
         )
         assert gap_fill.fetch_listing_html("https://d.example/vdp") == "<html>rendered</html>"
+
+    def test_thin_requests_result_stays_http_in_scans(self, monkeypatch):
+        from backend.scanner.post_scan import gap_fill
+
+        monkeypatch.delenv("SCANNER_ALLOW_BROWSER", raising=False)
+        monkeypatch.setattr(gap_fill, "_requests_fetch_html", lambda u, **kw: THIN_HTML)
+        launched: list[str] = []
+        monkeypatch.setattr(gap_fill, "_playwright_fetch_html", lambda u, **kw: launched.append(u) or "<html>rendered</html>")
+        assert gap_fill.fetch_listing_html("https://d.example/vdp") in (None, THIN_HTML)
+        assert not launched
 
     def test_total_failure_returns_none(self, monkeypatch):
         from backend.scanner.post_scan import gap_fill

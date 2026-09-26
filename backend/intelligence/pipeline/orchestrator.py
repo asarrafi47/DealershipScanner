@@ -8,17 +8,17 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Callable
 
-from scraping.canonical_groups import apply_sibling_canonical_reinforcement, canonical_group_display
-from intelligence.llm.client import LLMClient
-from intelligence.pipeline.adjudication import (
+from backend.scraping.canonical_groups import apply_sibling_canonical_reinforcement, canonical_group_display
+from backend.intelligence.llm.client import LLMClient
+from backend.intelligence.pipeline.adjudication import (
     compute_adjudication_skip_reason,
     compute_manual_review_reason,
     merge_rule_and_ai,
     run_llm_adjudication,
     should_invoke_adjudicator,
 )
-from intelligence.pipeline.evidence_builder import site_result_to_evidence_package
-from intelligence.pipeline.review_queue import ReviewQueue, ReviewQueueEntry
+from backend.intelligence.pipeline.evidence_builder import site_result_to_evidence_package
+from backend.intelligence.pipeline.review_queue import ReviewQueue, ReviewQueueEntry
 from backend.schemas.adjudication_result import AdjudicationResult
 from backend.schemas.evidence_package import EvidencePackage
 from backend.schemas.run_summary import RunSummary

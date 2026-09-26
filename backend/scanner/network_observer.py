@@ -128,6 +128,20 @@ _VEHICLE_FIELD_KEYS = frozenset(
 
 _KEY_NORM_RE = re.compile(r"[^a-z0-9]")
 
+# Field families that decide whether a captured endpoint is an INVENTORY feed or
+# merely a VIN list (key-features side calls, page-data blobs, VIN-set searches).
+# Measured per item so the recipe layer can rank rich feeds first and never let a
+# VIN-only endpoint stand in for the browser scrape.
+_PRICE_KEYS = frozenset({
+    "price", "internetprice", "saleprice", "sellingprice", "listprice", "msrp",
+    "ourprice", "retailprice", "finalprice", "askingprice", "dealerprice",
+})
+_TRIM_KEYS = frozenset({"trim", "trimlevel", "trimname", "series"})
+_COLOR_KEYS = frozenset({
+    "exteriorcolor", "extcolor", "exteriorcolour", "exteriorcolorname", "extcolorname",
+    "color", "colour", "exteriorcolorgeneric",
+})
+
 
 def _norm_key(k: object) -> str:
     return _KEY_NORM_RE.sub("", str(k).strip().lower())
@@ -144,11 +158,47 @@ def _item_vehicle_key_hits(item: dict) -> int:
     return hits
 
 
+def _value_present(val: Any, *, numeric: bool) -> bool:
+    if val is None or isinstance(val, (dict, list)):
+        return False
+    if numeric:
+        try:
+            return float(str(val).replace(",", "").replace("$", "").strip()) > 0
+        except (TypeError, ValueError):
+            return False
+    return bool(str(val).strip())
+
+
+def _item_has_field(item: dict, keys: frozenset[str], *, numeric: bool = False) -> bool:
+    """Key from *keys* with a real value at the top level or one dict level down."""
+    for k, v in item.items():
+        if _norm_key(k) in keys and _value_present(v, numeric=numeric):
+            return True
+        if isinstance(v, dict):
+            for kk, vv in v.items():
+                if _norm_key(kk) in keys and _value_present(vv, numeric=numeric):
+                    return True
+    return False
+
+
 @dataclass
 class VehicleListScore:
     score: float = 0.0
     vin_items: int = 0
     n_items: int = 0
+    price_items: int = 0
+    trim_items: int = 0
+    color_items: int = 0
+
+    @property
+    def field_coverage(self) -> dict[str, float]:
+        """Fraction of items carrying a price / trim / exterior colour value."""
+        n = self.n_items or 1
+        return {
+            "price": round(self.price_items / n, 3),
+            "trim": round(self.trim_items / n, 3),
+            "exterior_color": round(self.color_items / n, 3),
+        }
 
     @property
     def qualifies(self) -> bool:
@@ -179,7 +229,14 @@ def score_vehicle_list(lst: list) -> VehicleListScore:
             inter = inter & ks
         consistency = (len(inter) / len(union)) if union else 0.0
     score = 0.5 * vin_frac + 0.3 * key_frac + 0.2 * consistency
-    return VehicleListScore(score=round(score, 3), vin_items=vin_items, n_items=len(items))
+    return VehicleListScore(
+        score=round(score, 3),
+        vin_items=vin_items,
+        n_items=len(items),
+        price_items=sum(1 for i in items if _item_has_field(i, _PRICE_KEYS, numeric=True)),
+        trim_items=sum(1 for i in items if _item_has_field(i, _TRIM_KEYS)),
+        color_items=sum(1 for i in items if _item_has_field(i, _COLOR_KEYS)),
+    )
 
 
 def best_vehicle_list_score(body: Any, max_depth: int = 8) -> VehicleListScore:
@@ -303,6 +360,8 @@ class CapturedEndpoint:
     total_count: int | None
     auth_headers: dict[str, str] = field(default_factory=dict)
     occurrences: int = 1
+    # price / trim / exterior_color fractions from the scored vehicle list.
+    field_coverage: dict[str, float] = field(default_factory=dict)
 
     def key(self) -> tuple[str, str, str]:
         host, path = _host_path(self.url)
@@ -378,6 +437,9 @@ class ObserverLedger:
                 cur.post_data_sample = ep.post_data_sample
             if ep.auth_headers and not cur.auth_headers:
                 cur.auth_headers = ep.auth_headers
+            for k, v in (ep.field_coverage or {}).items():
+                if float(v) > float(cur.field_coverage.get(k, 0.0)):
+                    cur.field_coverage[k] = float(v)
 
     def add_fingerprint(self, fp: PayloadFingerprint) -> None:
         cur = self.fingerprints.get(fp.key())
@@ -687,6 +749,7 @@ class NetworkObserver:
                 vehicle_rows=cls.score.vin_items,
                 total_count=int(total) if total else None,
                 auth_headers=await self._request_auth_headers(response),
+                field_coverage=cls.score.field_coverage,
             )
         )
 

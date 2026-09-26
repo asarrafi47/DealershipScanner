@@ -477,3 +477,44 @@ def test_captured_endpoint_records_auth_headers():
     (ep,) = obs.ledger.endpoints.values()
     assert ep.occurrences == 2
     assert ep.auth_headers == {"x-typesense-api-key": "ts_key_123"}
+
+
+# ── field coverage: VIN list vs inventory feed ───────────────────────────────
+
+
+def test_score_measures_price_trim_colour_coverage():
+    lst = [
+        {"vin": _vin(0), "price": 31000, "trim": "EX-L", "exteriorColor": "Blue"},
+        {"vin": _vin(1), "pricing": {"internetPrice": "29,995"}, "trim": "", "extColor": None},
+        {"vin": _vin(2), "price": 0, "series": "Sport"},
+        {"vin": _vin(3)},
+    ]
+    s = score_vehicle_list(lst)
+    assert s.n_items == 4 and s.vin_items == 4
+    assert s.price_items == 2 and s.trim_items == 2 and s.color_items == 1
+    assert s.field_coverage == {"price": 0.5, "trim": 0.5, "exterior_color": 0.25}
+
+
+def test_key_features_vin_list_scores_zero_coverage():
+    # The 2026-08-04 shape: Team Velocity GetKeyFeaturesByVins — VINs and blurbs only.
+    lst = [{"vin": _vin(i), "keyFeatures": ["Sunroof", "Heated Seats"], "stockNumber": f"S{i}"}
+           for i in range(8)]
+    s = score_vehicle_list(lst)
+    assert s.vin_items == 8
+    assert s.field_coverage == {"price": 0.0, "trim": 0.0, "exterior_color": 0.0}
+
+
+def test_ledger_merges_field_coverage_by_max():
+    from backend.scanner.network_observer import CapturedEndpoint, ObserverLedger
+
+    led = ObserverLedger()
+    a = CapturedEndpoint(url="https://x.example/api/inv", method="GET", content_type="json",
+                         post_data_sample=None, reason="r", sniffed=False, vehicle_rows=5,
+                         total_count=None, field_coverage={"price": 0.2, "trim": 0.9})
+    b = CapturedEndpoint(url="https://x.example/api/inv", method="GET", content_type="json",
+                         post_data_sample=None, reason="r", sniffed=False, vehicle_rows=5,
+                         total_count=None, field_coverage={"price": 0.8, "exterior_color": 0.5})
+    led.add_endpoint(a)
+    led.add_endpoint(b)
+    (ep,) = led.endpoints.values()
+    assert ep.field_coverage == {"price": 0.8, "trim": 0.9, "exterior_color": 0.5}

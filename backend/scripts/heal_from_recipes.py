@@ -107,9 +107,11 @@ def _http_get_json(url: str) -> dict | None:
 
 
 def _cosmos_pages(recipe_url: str) -> list[dict]:
-    """Walk a DealerOn cosmos SRP endpoint session-free via ?pg=N&pn=96."""
+    """Walk a DealerOn cosmos SRP endpoint session-free via ?pt=N&pn=96.
+    (pt, not pg: pg is ignored by the server and returned page 1 for every page,
+    so the August heal re-read page 1 up to 24 times per store.)"""
     clean = urlunparse(urlparse(recipe_url)._replace(query="", fragment=""))
-    first = _http_get_json(f"{clean}?pg=1&pn={_COSMOS_PAGE_SIZE}")
+    first = _http_get_json(f"{clean}?pt=1&pn={_COSMOS_PAGE_SIZE}")
     if not isinstance(first, dict) or "DisplayCards" not in first:
         return []
     bodies = [first]
@@ -117,9 +119,11 @@ def _cosmos_pages(recipe_url: str) -> list[dict]:
     total = int(paging.get("TotalCount") or 0)
     pages = min(_COSMOS_MAX_PAGES, max(1, math.ceil(total / _COSMOS_PAGE_SIZE)))
     for pg in range(2, pages + 1):
-        body = _http_get_json(f"{clean}?pg={pg}&pn={_COSMOS_PAGE_SIZE}")
+        body = _http_get_json(f"{clean}?pt={pg}&pn={_COSMOS_PAGE_SIZE}")
         if not isinstance(body, dict) or not body.get("DisplayCards"):
             break
+        if int(((body.get("Paging") or {}).get("PaginationDataModel") or {}).get("PageNumber") or pg) != pg:
+            break  # server did not advance: stop rather than duplicate page 1
         bodies.append(body)
     return bodies
 

@@ -170,3 +170,17 @@ def test_recovery_strategy_names_cached_winner_first():
         cached_strategy="dealer_inspire_algolia",
     )
     assert chain[0] == "dealer_inspire_algolia"
+
+
+def test_should_run_when_scrape_is_far_below_last_listed_count(monkeypatch):
+    """Culver City Toyota 2026-09-22: 107 priced VINs captured vs 383 listed the day
+    before; the priced-share check called it sufficient and skipped recovery."""
+    import backend.scanner.inventory_recovery as ir
+
+    rows = [{"vin": f"{i:017d}", "price": 21000} for i in range(107)]
+    intercepts = [("https://www.example-dealer.com/api/inv", {"vehicles": rows})]
+    monkeypatch.setattr(ir, "_last_known_active_vins", lambda dealer_id: 383)
+    assert should_run_platform_recovery(_ctx(vehicles=rows, intercepts=intercepts)) is True
+    monkeypatch.setattr(ir, "_last_known_active_vins", lambda dealer_id: 120)
+    assert should_run_platform_recovery(_ctx(vehicles=rows, intercepts=intercepts)) is False
+

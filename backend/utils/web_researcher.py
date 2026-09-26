@@ -32,7 +32,9 @@ from html import unescape
 from typing import NamedTuple
 from urllib.parse import parse_qs, quote_plus, unquote, urlparse
 
-from backend.utils.outbound_url import destination_host_blocked as _destination_host_blocked
+from backend.utils.outbound_url import (
+    destination_host_blocked_after_dns as _destination_host_blocked,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -240,12 +242,32 @@ def duckduckgo_html_result_links(
     return found
 
 
+# Safety cap on raw HTTP fetch size (before any text cleanup/truncation).
+_MAX_FETCH_BYTES = 5 * 1024 * 1024  # 5 MB
+
+
+class _SafeRedirectHandler(urllib.request.HTTPRedirectHandler):
+    """Re-validate the destination host on every redirect hop (blocks SSRF via 30x)."""
+
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        host = (urlparse(newurl).hostname or "").strip()
+        if not host or _destination_host_blocked(host):
+            raise urllib.error.URLError(f"blocked redirect host: {host!r}")
+        return super().redirect_request(req, fp, code, msg, headers, newurl)
+
+
+_SAFE_OPENER = urllib.request.build_opener(_SafeRedirectHandler)
+
+
 def fetch_page_text_http(url: str, *, timeout_sec: int = 20) -> tuple[str, str]:
     """
     Fetch *url* with urllib and return ``(title, plain_text)``.
 
     Strips scripts/styles/tags; not suitable for heavy JS SPAs but fast for guides.
     """
+    host = (urlparse(url).hostname or "").strip()
+    if not host or _destination_host_blocked(host):
+        raise urllib.error.URLError(f"blocked host: {host!r}")
     req = urllib.request.Request(
         url,
         headers={
@@ -254,8 +276,11 @@ def fetch_page_text_http(url: str, *, timeout_sec: int = 20) -> tuple[str, str]:
             "Accept-Language": "en-US,en;q=0.9",
         },
     )
-    with urllib.request.urlopen(req, timeout=timeout_sec) as resp:
-        html = resp.read().decode("utf-8", errors="replace")
+    with _SAFE_OPENER.open(req, timeout=timeout_sec) as resp:
+        raw = resp.read(_MAX_FETCH_BYTES + 1)
+    if len(raw) > _MAX_FETCH_BYTES:
+        raw = raw[:_MAX_FETCH_BYTES]
+    html = raw.decode("utf-8", errors="replace")
     title_m = re.search(r"<title[^>]*>(.*?)</title>", html, flags=re.I | re.S)
     title = unescape(re.sub(r"\s+", " ", title_m.group(1))).strip() if title_m else ""
     html = re.sub(r"<script[^>]*>.*?</script>", " ", html, flags=re.I | re.S)
@@ -558,6 +583,14 @@ class WebResearcher:
                     wait_until="domcontentloaded",
                     timeout=self.timeout_ms,
                 )
+                final_host = (urlparse(page.url).hostname or "").strip()
+                if not final_host or _destination_host_blocked(final_host):
+                    logger.warning(
+                        "[WebResearcher] blocked post-redirect host=%s (from %s)",
+                        final_host,
+                        result_url,
+                    )
+                    return "", ""
                 time.sleep(random.uniform(0.6, 1.2))
                 title = page.title() or ""
                 raw_text = self._extract_content(page)

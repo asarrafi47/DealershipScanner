@@ -256,11 +256,21 @@ def _map(listing: dict, base_url: str, dealer_id: str, dealer_name: str, dealer_
         "window_sticker_url": _s(listing.get("window_sticker_url")),
         "zip_code": _s((listing.get("dealer") or {}).get("zipcode")) if isinstance(listing.get("dealer"), dict) else None,
     }
+    pricing = listing.get("pricing") if isinstance(listing.get("pricing"), dict) else {}
+    msrp = _int(pricing.get("msrp"))
+    if msrp is not None and msrp >= _MASKED_PRICE_FLOOR:
+        row["msrp"] = msrp  # was only a price fallback; Culver City Toyota MSRP 0% -> feed carries it
     du = _detail_url(listing)
     if du:
         row["_detail_url"] = du
         row["source_url"] = du
     return clean_car_row_dict(row)
+
+
+# "Buford, GA 30519", "Naples, FL" (Hendrick tags rooftops with no zip and no
+# trailing space: 2026-09-24, the old `\s+` after the state missed every such tag
+# and the gate refused all 468 Naples rows as "not this store").
+_CITY_STATE_ZIP = re.compile(r"([A-Za-z .'\-]{2,40}),\s*([A-Za-z]{2})\b(?:\s+(\d{5}))?")
 
 
 def rooftop_of(listing: dict) -> dict | None:
@@ -295,14 +305,48 @@ def rooftop_of(listing: dict) -> dict | None:
         href = _LOCATION_HREF.search(label)
         if href:
             site = href.group(1)
+    address = _s(dealer.get("address")) or ""
+    city = _s(dealer.get("city")) or ""
+    state = _s(dealer.get("state")) or ""
+    zipc = _s(dealer.get("zipcode")) or ""
+    if not (city and state):
+        # Group feeds (Hendrick, 2026-09-24) null every named field and put the
+        # storefront in ``location`` as "street<br/>City, ST 12345<br/>phone".
+        # Without splitting it the rooftop has no locale and the attribution
+        # gate cannot match the store's own city, so it refuses the whole feed.
+        # "<br/>", "<br>", and "</br>" (Lexus of Greenwood Village writes the
+        # closing-slash form, 2026-09-26) all separate the lines
+        parts = [re.sub(r"<[^>]+>", " ", x).strip() for x in re.split(r"<br\s*/?>|</br>", label, flags=re.I)]
+        for part in parts:
+            m = _CITY_STATE_ZIP.search(part)
+            if m:
+                city, state = m.group(1).strip(), m.group(2).upper()
+                zipc = zipc or (m.group(3) or "")
+                break
+        if not address and parts:
+            first = parts[0]
+            if first and not _CITY_STATE_ZIP.search(first) and not first.isdigit():
+                address = first
+    # ``extra_fields.custom_location`` names the selling store on Hendrick's
+    # accounts ("Hendrick Buick GMC Cadillac Cary", "Chevy Naples") but is free
+    # text elsewhere: "TOW/JORGE R/367676" and "WRECKED CAR" on Group 1 Toyota
+    # North Austin, a SIBLING's name on Tutton CDJR ("Voyles CDJR of Birmingham"),
+    # other group stores on drivelenoircity.net. Using it as the rooftop
+    # identity zeroed four working dealers (2026-09-25). It is passed as an
+    # ALTERNATE name only: the gate may match this store by it, but never
+    # refuses a payload because of it and never groups rows by it.
+    extra = listing.get("extra_fields") if isinstance(listing.get("extra_fields"), dict) else {}
+    alt = _s(extra.get("custom_location")) or ""
+    alt_name = alt if (alt and " " in alt and "<" not in alt and not _CITY_STATE_ZIP.fullmatch(alt.strip())) else ""
     return {
         "key": label,
         "name": label,
         "site": site,
-        "address": _s(dealer.get("address")) or "",
-        "city": _s(dealer.get("city")) or "",
-        "state": _s(dealer.get("state")) or "",
-        "zip": _s(dealer.get("zipcode")) or "",
+        "address": address,
+        "city": city,
+        "state": state,
+        "zip": zipc,
+        "alt_name": alt_name,
     }
 
 

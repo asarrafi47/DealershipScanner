@@ -117,14 +117,14 @@
         }
         tbody.innerHTML = data.runs
             .map(function (r) {
-                const err = r.error ? String(r.error).slice(0, 80) : "";
+                const err = r.error ? esc(String(r.error).slice(0, 80)) : "";
                 return (
                     "<tr>" +
                     "<td>" +
-                    (r.finished_at || "") +
+                    esc(r.finished_at || "") +
                     "</td>" +
                     "<td>" +
-                    (r.dealer_name || r.dealer_id || "") +
+                    esc(r.dealer_name || r.dealer_id || "") +
                     "</td>" +
                     "<td>" +
                     (r.upserted != null ? r.upserted : "—") +

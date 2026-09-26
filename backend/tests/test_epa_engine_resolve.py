@@ -96,3 +96,24 @@ def test_resolve_engine_display_skips_when_stored_values_are_consistent() -> Non
         "cylinders": 6,
     }
     assert resolve_engine_display_from_epa(car, {}) is None
+
+
+def test_resolve_ram_1500_keeps_dealer_3_6_over_family_3_0() -> None:
+    # 2026 Ram 1500 offers 3.0L I6, 3.6L V6, 5.7L and 6.2L V8. Dealer text "3.6L V6"
+    # names a real option; trim/drivetrain words must not move it to the 3.0L row
+    # (25 of a 1,500-car sample rendered the wrong displacement, 2026-09-21).
+    car = {
+        "year": 2026, "make": "Ram", "model": "1500", "trim": "Express",
+        "title": "2026 Ram 1500 Express Pickup", "drivetrain": "2WD",
+        "engine_l": 3.6, "cylinders": 6, "engine_description": "3.6L V6", "fuel_type": "Gasoline",
+    }
+    assert build_engine_display(car, {}).startswith("3.6L V6")
+
+
+def test_resolve_bronco_keeps_dealer_2_7_over_raptor_3_0() -> None:
+    car = {
+        "year": 2026, "make": "Ford", "model": "Bronco", "trim": "Badlands",
+        "title": "2026 Ford Bronco Badlands", "drivetrain": "4WD",
+        "engine_l": 2.7, "cylinders": 6, "engine_description": "2.7L V6 EcoBoost", "fuel_type": "Gasoline",
+    }
+    assert build_engine_display(car, {}).startswith("2.7L V6")

@@ -12,12 +12,12 @@ import urllib3
 from dataclasses import asdict
 from pathlib import Path
 
-from scraping.adjudicate_crawl import build_adjudicate_crawl_one
-from scraping.crawler import process_site_hybrid
-from scraping.fetch_requests import fetch_requests_session
-from scraping.interrupt import install_sigint_handler, stop_requested
-from scraping.models import SiteResult
-from scraping.paths import (
+from backend.scraping.adjudicate_crawl import build_adjudicate_crawl_one
+from backend.scraping.crawler import process_site_hybrid
+from backend.scraping.fetch_requests import fetch_requests_session
+from backend.scraping.interrupt import install_sigint_handler, stop_requested
+from backend.scraping.models import SiteResult
+from backend.scraping.paths import (
     DEFAULT_DB,
     MANIFEST_DEFAULT,
     dated_hybrid_run_path,
@@ -25,7 +25,7 @@ from scraping.paths import (
     default_json_results_path,
     default_known_group_aliases_path,
 )
-from scraping.sources import (
+from backend.scraping.sources import (
     load_manifest_records,
     load_roots_from_db,
     load_roots_from_manifest,

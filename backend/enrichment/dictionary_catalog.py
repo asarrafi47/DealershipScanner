@@ -570,6 +570,36 @@ def epa_csv_is_for_model(path: Path, make: str, model: str) -> bool:
     return bool(wanted & _epa_csv_model_keys(str(path)))
 
 
+@lru_cache(maxsize=4096)
+def _options_csv_model_keys(path_str: str) -> frozenset[str]:
+    """Normalized values of a Complete_Options CSV's ``Model`` column."""
+    keys: set[str] = set()
+    try:
+        with open(path_str, encoding="utf-8", newline="", errors="replace") as fh:
+            for row in csv.DictReader(fh):
+                key = _norm_token(row.get("Model") or "")
+                if key:
+                    keys.add(key)
+    except OSError:
+        return frozenset()
+    return frozenset(keys)
+
+
+def options_csv_is_for_model(path: Path, make: str, model: str) -> bool:
+    """True when ``path`` carries at least one row for this exact model.
+
+    Mirrors ``epa_csv_is_for_model``: both catalog and legacy resolvers match
+    on model PREFIXES, so a Complete_Options file can otherwise resolve to a
+    sibling model's file (e.g. "Blazer" for "Blazer EV"). Exact match after
+    normalization only; a file model that merely shares a prefix is a
+    different vehicle.
+    """
+    wanted = _norm_token(model)
+    if not wanted:
+        return False
+    return wanted in _options_csv_model_keys(str(path))
+
+
 def _find_epa_csv_uncached(make: str, model: str, year: int) -> Path | None:
     from backend.enrichment.trim_ladder_knowledge import epa_model_search_name
 
@@ -609,10 +639,19 @@ def find_epa_csv(make: str, model: str, year: Any) -> Path | None:
 def find_complete_options_csv(make: str, model: str, year: Any) -> Path | None:
     from backend.enrichment.trim_ladder_knowledge import epa_model_search_name
 
+    def accept(path: Path) -> bool:
+        return options_csv_is_for_model(path, make, model)
+
     for path in _catalog_lookup_candidates(make, model, year, kind="options"):
-        return path
+        if accept(path):
+            return path
     path = _legacy_glob_find(
-        make, model, year, kind="options", epa_model_search_name_fn=epa_model_search_name
+        make,
+        model,
+        year,
+        kind="options",
+        epa_model_search_name_fn=epa_model_search_name,
+        accept=accept,
     )
     if path and options_status(path) == "stub":
         return None
@@ -666,6 +705,7 @@ def invalidate_catalog_cache() -> None:
     _find_epa_csv_cached.cache_clear()
     _epa_paths_by_make_norm.cache_clear()
     _epa_csv_model_keys.cache_clear()
+    _options_csv_model_keys.cache_clear()
     from backend.enrichment.knowledge_engine import clear_epa_trim_lookup_cache
 
     clear_epa_trim_lookup_cache()

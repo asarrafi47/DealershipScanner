@@ -7,7 +7,7 @@ from typing import Any
 
 from pydantic import ValidationError
 
-from intelligence.llm.client import LLMClient, LLMResponseError
+from backend.intelligence.llm.client import LLMClient, LLMResponseError
 from backend.schemas.adjudication_result import AdjudicationResult
 from backend.schemas.evidence_package import EvidencePackage
 

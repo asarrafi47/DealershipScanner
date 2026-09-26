@@ -55,16 +55,29 @@ def _iter_vehicle_ld(raw_data):
     elif isinstance(raw_data, dict):
         blocks = [raw_data]
 
+    # Schema.org spells a car as Vehicle, Car, or a Product that carries a VIN
+    # (McPeek's CDJR: Car blocks; Quantum Auto Sales: an ItemList of Car items,
+    # 2026-09-26). Blocks may wrap items in @graph or ItemList.itemListElement.
+    def _walk(node, depth=0):
+        if depth > 4:
+            return
+        if isinstance(node, list):
+            for x in node:
+                yield from _walk(x, depth + 1)
+            return
+        if not isinstance(node, dict):
+            return
+        t = node.get("@type")
+        types = {str(x) for x in (t if isinstance(t, list) else [t]) if x}
+        if types & {"Vehicle", "Car", "Product"} and (node.get("vehicleIdentificationNumber") or node.get("mpn")):
+            yield node
+            return
+        for key in ("@graph", "itemListElement", "item", "mainEntity"):
+            if key in node:
+                yield from _walk(node[key], depth + 1)
+
     for obj in blocks:
-        if not isinstance(obj, dict):
-            continue
-        # A JSON-LD block may wrap items in @graph.
-        if isinstance(obj.get("@graph"), list):
-            for g in obj["@graph"]:
-                if isinstance(g, dict) and g.get("@type") == "Vehicle":
-                    yield g
-        elif obj.get("@type") == "Vehicle":
-            yield obj
+        yield from _walk(obj)
 
 
 def _offer(obj: dict) -> dict:
@@ -188,6 +201,86 @@ def _map(obj: dict, base_url: str, dealer_id: str, dealer_name: str, dealer_url:
     return row
 
 
+_INLINE_DATA_RE = re.compile(r"filter_vehicle_data\s*[:=]\s*\{")
+
+
+def _brace_object(s: str, open_idx: int, max_len: int = 4_000_000) -> str | None:
+    depth = 0
+    in_str = False
+    esc = False
+    for i in range(open_idx, min(len(s), open_idx + max_len)):
+        c = s[i]
+        if in_str:
+            if esc:
+                esc = False
+            elif c == "\\":
+                esc = True
+            elif c == '"':
+                in_str = False
+            continue
+        if c == '"':
+            in_str = True
+        elif c == "{":
+            depth += 1
+        elif c == "}":
+            depth -= 1
+            if depth == 0:
+                return s[open_idx:i + 1]
+    return None
+
+
+def inline_vehicle_data(raw_html: str) -> dict[str, dict]:
+    """VIN -> the SRP's inline ``filter_vehicle_data`` record. DEP renders the facet
+    data for every card into the page as a JSON map that carries what the JSON-LD
+    lacks: ``body`` (body style), ``drivetrain``, ``flag_certified``, ``highest_price``
+    (Honda of El Cajon 2026-09-23: body_style 0% and drivetrain 15% from JSON-LD alone).
+    Keys may be VINs or stock ids; records are matched by their own vin field when
+    present. Returns {} when the blob is absent or unparsable."""
+    if not isinstance(raw_html, str):
+        return {}
+    m = _INLINE_DATA_RE.search(raw_html)
+    if not m:
+        return {}
+    blob = _brace_object(raw_html, m.end() - 1)
+    if not blob:
+        return {}
+    try:
+        data = json.loads(blob)
+    except ValueError:
+        return {}
+    out: dict[str, dict] = {}
+    items = data.values() if isinstance(data, dict) else (data if isinstance(data, list) else [])
+    for key, rec in (data.items() if isinstance(data, dict) else enumerate(items)):
+        if not isinstance(rec, dict):
+            continue
+        vin = norm_str(rec.get("vin") or rec.get("VIN") or (key if isinstance(key, str) and len(key) == 17 else "")).upper()
+        if len(vin) == 17:
+            out[vin] = rec
+    return out
+
+
+def _apply_inline(row: dict, rec: dict) -> None:
+    body = norm_str(rec.get("body") or rec.get("body_style") or rec.get("bodystyle"))
+    if body and not row.get("body_style"):
+        row["body_style"] = body
+    drive = norm_str(rec.get("drivetrain") or rec.get("drive") or rec.get("drive_train"))
+    if drive and not row.get("drivetrain"):
+        row["drivetrain"] = drive
+    cert = rec.get("flag_certified") if "flag_certified" in rec else rec.get("certified")
+    if cert in (True, 1, "1", "true", "True", "Y", "yes") and str(row.get("condition") or "").lower() != "certified":
+        row["condition"] = "Certified"
+        row["is_cpo"] = 1
+    for k in ("msrp", "highest_price"):
+        v = rec.get(k)
+        try:
+            f = float(str(v).replace(",", "").replace("$", "")) if v not in (None, "") else 0.0
+        except ValueError:
+            f = 0.0
+        if f >= 500 and not row.get("msrp") and (not row.get("price") or f >= float(row["price"] or 0)):
+            row["msrp"] = f
+            break
+
+
 def parse(raw_data, *, base_url: str = "", dealer_id: str = "", dealer_name: str = "", dealer_url: str = "") -> list[dict]:
     """Map a Dealer eProcess SRP (HTML string carrying JSON-LD) to vehicle rows.
 
@@ -196,9 +289,13 @@ def parse(raw_data, *, base_url: str = "", dealer_id: str = "", dealer_name: str
     """
     out: list[dict] = []
     seen: set[str] = set()
+    inline = inline_vehicle_data(raw_data)
     for obj in _iter_vehicle_ld(raw_data):
         mapped = _map(obj, base_url, dealer_id, dealer_name, dealer_url)
         if mapped and mapped["vin"].upper() not in seen:
             seen.add(mapped["vin"].upper())
+            rec = inline.get(mapped["vin"].upper())
+            if rec:
+                _apply_inline(mapped, rec)
             out.append(clean_car_row_dict(mapped))
     return out

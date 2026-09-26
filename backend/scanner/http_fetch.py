@@ -54,6 +54,21 @@ def proxy_url() -> str | None:
     return None
 
 
+def playwright_proxy_kwargs() -> dict[str, Any]:
+    """Keyword arguments for ``chromium.launch(**...)`` that route the browser
+    through the configured proxy.
+
+    ``SCANNER_HTTP_PROXY`` used to apply only to the HTTP-side fetchers, so a
+    proxy configured to clear a Cloudflare block still let every Playwright
+    request egress from the host IP. Returns ``{}`` when no proxy is set, so
+    call sites can always splat it.
+    """
+    url = proxy_url()
+    if not url:
+        return {}
+    return {"proxy": {"server": url}}
+
+
 def proxied_opener() -> urllib.request.OpenerDirector:
     """A ``urllib`` opener that routes through the configured proxy.
 

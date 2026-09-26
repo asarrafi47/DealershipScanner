@@ -15,6 +15,7 @@ import asyncio
 import json
 import logging
 import re
+import urllib.parse
 from typing import Any
 
 import requests
@@ -27,8 +28,30 @@ from backend.scanner.scrapers.algolia_scope import (
 
 logger = logging.getLogger(__name__)
 
-_ALGOLIA_SEARCH_URL = "https://{app_id}-dsn.algolia.net/1/indexes/*/queries"
+_ALGOLIA_SEARCH_PATH = "/1/indexes/*/queries"
+_ALGOLIA_APP_ID_RE = re.compile(r"^[A-Za-z0-9]{6,15}$")
 _ALGOLIA_BATCH_SIZE = 1000
+
+
+def _build_algolia_url(app_id: str) -> str | None:
+    """
+    Build the Algolia search URL for ``app_id``, validating it first.
+
+    ``app_id`` is extracted from untrusted scraped page HTML/JS. Without validation,
+    a crafted value (e.g. containing ``#`` or ``/``) could redirect the outbound
+    request — which carries the Algolia API key header — to an arbitrary host.
+    Returns ``None`` if ``app_id`` fails the allow-list check or the resulting URL
+    does not actually target algolia.net.
+    """
+    if not app_id or not _ALGOLIA_APP_ID_RE.match(app_id):
+        return None
+    host = f"{app_id}-dsn.algolia.net"
+    url = urllib.parse.urlunsplit(("https", host, _ALGOLIA_SEARCH_PATH, "", ""))
+    parsed = urllib.parse.urlsplit(url)
+    if not parsed.hostname or not parsed.hostname.endswith("algolia.net"):
+        return None
+    return url
+
 
 _UA = (
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
@@ -120,7 +143,10 @@ def _query_algolia_inventory(
     Query Algolia for all vehicles in the index (paginated).
     Returns list of raw Algolia hit dicts.
     """
-    url = _ALGOLIA_SEARCH_URL.format(app_id=app_id)
+    url = _build_algolia_url(app_id)
+    if url is None:
+        logger.warning("DealerInspire Algolia: rejecting invalid app_id %r", app_id)
+        return []
     headers = {
         "X-Algolia-Application-Id": app_id,
         "X-Algolia-API-Key": api_key,
@@ -207,7 +233,10 @@ async def _query_algolia_inventory_via_browser(
     Use this when a site requires additional query-time parameters that are not expressible
     via the ``filters`` argument (e.g. Land Rover sites that need ``type=New``).
     """
-    url = _ALGOLIA_SEARCH_URL.format(app_id=app_id)
+    url = _build_algolia_url(app_id)
+    if url is None:
+        logger.warning("DealerInspire Algolia (browser): rejecting invalid app_id %r", app_id)
+        return []
     all_hits: list[dict[str, Any]] = []
     page_num = 0
     filt_param = encode_algolia_filter_param(filters)

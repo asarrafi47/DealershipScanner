@@ -60,7 +60,13 @@ def _session_profile() -> dict[str, Any] | None:
         uid_i = int(uid)
     except (TypeError, ValueError):
         return None
-    return get_user_profile(uid_i)
+    # Re-fetch from the DB on every call rather than trusting the
+    # session-cached value — a demoted/suspended/deleted account's existing
+    # cookie must lose access immediately, not after its 14-day expiry.
+    p = get_user_profile(uid_i)
+    if not p or not p.get("is_active", True):
+        return None
+    return p
 
 
 def _require_store_profile():

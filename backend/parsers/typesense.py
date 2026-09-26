@@ -284,6 +284,9 @@ def _map_document(doc: dict, base_url: str, dealer_id: str, dealer_name: str, de
     carfax = _carfax_url(doc)
     if carfax:
         row["carfax_url"] = carfax
+    msrp = norm_int(re.sub(r"[^\d]", "", str(doc.get("msrp") or ""))) if doc.get("msrp") else 0
+    if msrp and msrp > 500:
+        row["msrp"] = float(msrp)  # "$35,988" (label MSRP/TSRP); was dropped, Freeway Honda MSRP 0%
     packages = _packages_blob(doc)
     if packages:
         row["packages"] = packages

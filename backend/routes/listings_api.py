@@ -9,10 +9,13 @@ See ``backend.routes._shared``.
 
 from __future__ import annotations
 
+import gzip
+import io
 import os
-from typing import Any
+import threading
+from typing import Any, NamedTuple
 
-from flask import jsonify, make_response, redirect, render_template, request, session, url_for
+from flask import Response, jsonify, make_response, redirect, render_template, request, session, url_for
 
 from backend.billing.catalog import FEATURE_MARKET_INTEL, FEATURE_SAVED_SEARCHES
 from backend.db.inventory_db import (
@@ -134,7 +137,27 @@ def api_listings_geo_coords():
     return resp
 
 
-_cars_json_cache: dict[str, Any] = {"etag": None, "body": None}
+class _CarsJsonCacheEntry(NamedTuple):
+    etag: str | None
+    gz_body: bytes | None
+
+
+# Published/read as a single immutable object so a reader never observes a
+# partially-updated (etag, gz_body) pair: CPython name rebinding is
+# atomic, whereas mutating two keys of a shared dict in place is not.
+#
+# Only the gzipped body is retained (~13MB in prod). This used to cache the
+# uncompressed bytes alongside it -- well over 100MB, held for the lifetime of
+# every worker process -- to serve a case that effectively never occurs, since
+# every real client sends ``Accept-Encoding: gzip``. A non-gzip client is now
+# served by streaming decompression in 64KB chunks, so it costs one chunk of
+# transient memory, not a second permanent copy. See the memory accounting in
+# scripts/docker-entrypoint-web.sh.
+_cars_json_cache: _CarsJsonCacheEntry = _CarsJsonCacheEntry(etag=None, gz_body=None)
+# Guards the rebuild below so concurrent requests racing to rebuild after an
+# invalidation don't all redo the (expensive) serialize+gzip work, and so a
+# slower thread's stale rebuild can't overwrite a faster thread's newer one.
+_cars_json_cache_lock = threading.Lock()
 
 
 def api_listings_cars():
@@ -150,23 +173,96 @@ def api_listings_cars():
     parallel. Cache the encoded JSON bytes themselves, keyed by the same
     cache-invalidation token already used for the ETag, so repeat requests
     (the common case — nothing changes between scans) skip re-encoding.
+
+    Only the GZIPPED bytes are cached. Keeping the uncompressed copy too cost
+    ~109 MB resident per worker forever, to serve clients that do not advertise
+    gzip — a case that effectively does not occur. Those now pay one
+    ``gzip.decompress`` per request instead.
+
+    Also pre-gzip the cached body ONCE here rather than relying on the
+    ``_gzip_large_json`` after_request hook: at ~109 MB raw JSON (113k cars),
+    ``gzip.compress()`` alone is real CPU work, and the hook re-ran it on
+    every single request — including cache hits — because it only sees the
+    final response object, not whether the body it's compressing is identical
+    to last time. Setting Content-Encoding here makes the hook's own
+    early-exit (`if resp.headers.get("Content-Encoding"): return resp`) skip
+    that redundant compression.
+
+    Cache-Control is ``public``: this route has no auth check and its output
+    has no per-user content (no session/user_id in the serialization path),
+    so it's identical for every visitor. ``s-maxage`` lets Cloudflare's edge
+    serve repeat requests straight from cache — off the origin entirely —
+    for up to the same 60s window the underlying cache token already uses
+    (``_listings_cache_token``), which is what actually bounds staleness.
     """
+    global _cars_json_cache
     etag = listings_grid_cache_etag()
     inm = (request.headers.get("If-None-Match") or "").strip()
     if inm and inm == etag:
         resp = make_response("", 304)
         resp.headers["ETag"] = etag
-        resp.headers["Cache-Control"] = "private, no-cache"
+        resp.headers["Cache-Control"] = "public, max-age=0, s-maxage=60, stale-while-revalidate=30"
+        resp.headers["Vary"] = "Accept-Encoding"
         return resp
-    if _cars_json_cache["etag"] != etag:
-        cars = listings_grid_serialized_cars()
-        etag = listings_grid_cache_etag()
-        _cars_json_cache["body"] = jsonify({"ok": True, "cars": cars}).get_data()
-        _cars_json_cache["etag"] = etag
-    resp = make_response(_cars_json_cache["body"])
+    cache = _cars_json_cache
+    if cache.etag != etag:
+        with _cars_json_cache_lock:
+            # Re-read the validator INSIDE the lock, then re-check. A waiter that
+            # compared against its pre-lock `etag` would see a NEWER entry
+            # published by the thread ahead of it as "different" and redo the
+            # whole serialize+gzip -- serially, lock held, all four gthreads --
+            # which is the thundering herd this lock exists to prevent.
+            cache = _cars_json_cache
+            etag = listings_grid_cache_etag()
+            if cache.etag != etag:
+                # Validator BEFORE body, never after. listings_grid_serialized_cars()
+                # is stale-while-revalidate: it can hand back the OLD list while a
+                # daemon thread publishes the new one moments later. Reading the
+                # ETag second would then tag that old body with the NEW tag, and
+                # every subsequent request (and 304) would confirm stale data as
+                # current. Tagging a fresh body with an older tag merely costs one
+                # extra rebuild at the next request.
+                cars = listings_grid_serialized_cars()
+                body = jsonify({"ok": True, "cars": cars}).get_data()
+                gz_body = gzip.compress(body, compresslevel=5)
+                # Drop the uncompressed bytes here: `body` is a local and goes out
+                # of scope, so only the gzip survives in the cache.
+                del body
+                cache = _CarsJsonCacheEntry(etag=etag, gz_body=gz_body)
+                _cars_json_cache = cache
+    if cache.gz_body is None:
+        # Invariant: after the rebuild block a body exists. If it does not, say so
+        # rather than serving `200 OK` with an empty JSON body the client would
+        # happily render as "no inventory".
+        return jsonify({"ok": False, "error": "cars_cache_unavailable"}), 503
+    accepts_gzip = "gzip" in (request.headers.get("Accept-Encoding") or "").lower()
+    if accepts_gzip:
+        resp = make_response(cache.gz_body)
+        resp.headers["Content-Encoding"] = "gzip"
+    else:
+        # Rare path (client did not advertise gzip): STREAM the decompression in
+        # chunks instead of materializing the whole ~100MB+ body per request.
+        # `gzip.decompress()` here would allocate the full payload for every
+        # non-gzip caller concurrently (bare curl, urllib, uptime probes) and hold
+        # it for the entire client write -- a per-request spike larger than the
+        # permanent copy this cache used to keep.
+        gz_bytes = cache.gz_body
+
+        def _stream():
+            with gzip.GzipFile(fileobj=io.BytesIO(gz_bytes), mode="rb") as fh:
+                while True:
+                    chunk = fh.read(64 * 1024)
+                    if not chunk:
+                        break
+                    yield chunk
+
+        resp = Response(_stream(), direct_passthrough=True)
     resp.headers["Content-Type"] = "application/json"
-    resp.headers["ETag"] = etag
-    resp.headers["Cache-Control"] = "private, no-cache"
+    # Use the cache entry's own etag (matching the body/gz_body we just
+    # served), not a possibly newer value from a concurrent rebuild.
+    resp.headers["ETag"] = cache.etag
+    resp.headers["Cache-Control"] = "public, max-age=0, s-maxage=60, stale-while-revalidate=30"
+    resp.headers["Vary"] = "Accept-Encoding"
     return resp
 
 

@@ -11,7 +11,7 @@ import json
 import logging
 import re
 from typing import Any
-from urllib.parse import urljoin
+from urllib.parse import urljoin, urlparse
 
 import requests
 
@@ -22,6 +22,26 @@ _UA = (
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
     "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
 )
+
+# Typesense Cloud always serves API nodes from this domain. Restricting to it
+# prevents attacker-controlled page content from redirecting our outbound
+# request (and its API key header) to an arbitrary host.
+_ALLOWED_TYPESENSE_HOST_SUFFIX = ".typesense.net"
+
+
+def _is_trusted_typesense_host(host: str) -> bool:
+    """Return True only if `host` resolves to a legitimate Typesense host.
+
+    `host` originates from untrusted scraped page HTML/JS, so it is parsed
+    as a URL and the resulting hostname (not a raw substring match) must end
+    with the known Typesense-hosting suffix.
+    """
+    if not host:
+        return False
+    hostname = urlparse(f"https://{host}").hostname
+    if not hostname:
+        return False
+    return hostname == "typesense.net" or hostname.endswith(_ALLOWED_TYPESENSE_HOST_SUFFIX)
 
 
 def _is_dealer_venom_html(html: str) -> bool:
@@ -54,7 +74,14 @@ def _extract_typesense_config_from_html(html: str) -> dict[str, str] | None:
         re.IGNORECASE,
     )
     if m:
-        host = m.group(1).strip()
+        candidate = m.group(1).strip()
+        if _is_trusted_typesense_host(candidate):
+            host = candidate
+        else:
+            logger.warning(
+                "DealerVenom: rejecting untrusted Typesense host from page HTML: %r",
+                candidate,
+            )
 
     index_name = None
     for pat in (
@@ -82,6 +109,8 @@ def _query_typesense_inventory(
     page_size: int = _TYPESENSE_PAGE_SIZE,
 ) -> list[dict[str, Any]]:
     """Paginate Typesense search and return raw document dicts."""
+    if not _is_trusted_typesense_host(host):
+        raise ValueError(f"Refusing to query untrusted Typesense host: {host!r}")
     all_docs: list[dict[str, Any]] = []
     page = 1
     base = f"https://{host.rstrip('/')}"

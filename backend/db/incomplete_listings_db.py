@@ -54,8 +54,36 @@ def get_conn():
     return conn
 
 
-def _ensure_schema(conn: sqlite3.Connection) -> None:
+_PG_INC_SCHEMA_OK = False
+
+
+def reset_incomplete_listings_schema_cache() -> None:
+    """Tests / tooling: next ``_ensure_schema`` call runs full DDL again on Postgres."""
+    global _PG_INC_SCHEMA_OK
+    _PG_INC_SCHEMA_OK = False
+
+
+def _ensure_schema(conn) -> None:
+    """Idempotent DDL, mirroring ``inventory_pg.init_postgres_inventory``'s guard.
+
+    On Postgres this used to re-run CREATE TABLE/INDEX on every call -- including
+    the car-detail read path and every scanner write -- with no per-process skip
+    flag and no ``lock_timeout``. ``CREATE INDEX`` takes a SHARE lock, so a running
+    scan holding open transactions on this table could park every later reader and
+    writer behind it (the same failure mode fixed for ``inventory_pg`` after the
+    2026-07-30 incident). Skip after the first successful run per process, and set
+    a short ``lock_timeout`` so a blocked call fails fast instead of queuing.
+    """
+    global _PG_INC_SCHEMA_OK
+    is_pg = inventory_pg.is_inventory_postgres()
+    if is_pg and _PG_INC_SCHEMA_OK:
+        return
     cur = conn.cursor()
+    if is_pg:
+        try:
+            cur.execute("SET lock_timeout = '3s'")
+        except Exception:
+            pass
     cur.execute(
         """
         CREATE TABLE IF NOT EXISTS incomplete_listings (
@@ -78,6 +106,8 @@ def _ensure_schema(conn: sqlite3.Connection) -> None:
         "CREATE INDEX IF NOT EXISTS idx_incomplete_listings_updated ON incomplete_listings(updated_at DESC)"
     )
     conn.commit()
+    if is_pg:
+        _PG_INC_SCHEMA_OK = True
 
 
 def _clear_listings_caches_after_index_write() -> None:

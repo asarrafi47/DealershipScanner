@@ -55,6 +55,7 @@ def _vehicle_needs_spec_gap_vdp(vehicle: dict[str, Any]) -> bool:
         "drivetrain",
         "fuel_type",
         "body_style",
+        "trim",  # 23 dealers were "thin" on trim alone (41-83%) while the detail page carries it (2026-09-26)
     ):
         val = vehicle.get(key)
         if val is None or (isinstance(val, str) and not str(val).strip()):

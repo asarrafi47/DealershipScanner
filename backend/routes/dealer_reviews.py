@@ -131,6 +131,12 @@ def report_review(dealer_key: str, review_id: int):
         ["application/json", "text/html"]
     ) == "application/json"
 
+    _dealership, dealer_id = _resolve_dealer(dealer_key)
+    if not dealer_id:
+        if wants_json:
+            return jsonify({"ok": False, "error": "not_found"}), 404
+        return _back_to_reviews(dealer_key)
+
     reporter = _client_ip_hash()
     if reporter and not allow_request(
         f"review_report:{reporter}", max_events=20, window_seconds=60.0
@@ -141,7 +147,15 @@ def report_review(dealer_key: str, review_id: int):
 
     conn = get_conn()
     try:
-        result = increment_report(conn, int(review_id), reporter_hash=reporter)
+        cur = conn.cursor()
+        cur.execute(
+            "SELECT dealer_id FROM dealer_reviews WHERE id = ?", (int(review_id),)
+        )
+        row = cur.fetchone()
+        if not row or row[0] != dealer_id:
+            result = None
+        else:
+            result = increment_report(conn, int(review_id), reporter_hash=reporter)
     except Exception:
         result = None
     finally:

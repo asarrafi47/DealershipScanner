@@ -40,8 +40,12 @@ _CANONICAL_DRIVETRAIN: dict[str, str] = {
     "rear-wheel drive": "RWD",
     "rear wheel drive": "RWD",
     "r": "RWD",
-    "4x2": "FWD",
-    "2wd": "RWD",
+    # 4x2 / 2WD say two driven wheels, NOT which end: a Tacoma "4x2" is RWD, a
+    # Camry "2WD" is FWD. Mapping them to FWD/RWD wrote FWD on Tacomas and Grand
+    # Cherokees fleet-wide (catalog_drive on 80 dealers, 2026-09-26). Keep 2WD;
+    # the vPIC heal settles the end with the catalog when the decode is 4x2.
+    "4x2": "2WD",
+    "2wd": "2WD",
     "awd": "AWD",
     "all-wheel drive": "AWD",
     "all wheel drive": "AWD",

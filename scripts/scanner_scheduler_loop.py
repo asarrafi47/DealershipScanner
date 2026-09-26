@@ -18,7 +18,11 @@ def main() -> int:
     load_kmac_vault_secrets()
     from backend.db.inventory_db import init_inventory_db
     from backend.db.inventory_pg import is_inventory_postgres
-    from backend.scanner.job_queue import init_job_queue_schema, schedule_due_refresh_jobs
+    from backend.scanner.job_queue import (
+        init_job_queue_schema,
+        reap_stale_running_jobs,
+        schedule_due_refresh_jobs,
+    )
 
     if not is_inventory_postgres():
         _log.error("INVENTORY_DATABASE_URL must point at Postgres for scanner-scheduler.")
@@ -30,6 +34,11 @@ def main() -> int:
 
     while True:
         try:
+            # Orphaned `running` rows block their dealer from ever re-enqueueing;
+            # clear them before deciding what is due.
+            reaped = reap_stale_running_jobs()
+            if reaped:
+                _log.warning("Reaped %d stale running job(s)", reaped)
             n = schedule_due_refresh_jobs()
             if n:
                 _log.info("Enqueued %d refresh job(s)", n)

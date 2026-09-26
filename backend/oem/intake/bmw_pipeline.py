@@ -8,13 +8,13 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from scraping.paths import ROOT
-from scraping.text_utils import normalize_root
+from backend.scraping.paths import ROOT
+from backend.scraping.text_utils import normalize_root
 
-from oem.intake.normalize import intake_dict_to_normalized
-from oem.intake.paths import ensure_bmw_dirs
-from oem.intake.raw_store import append_bmw_batch_jsonl
-from oem.intake.sqlite_store import (
+from backend.oem.intake.normalize import intake_dict_to_normalized
+from backend.oem.intake.paths import ensure_bmw_dirs
+from backend.oem.intake.raw_store import append_bmw_batch_jsonl
+from backend.oem.intake.sqlite_store import (
     clear_partial_staging,
     connect,
     count_stats,
@@ -28,8 +28,8 @@ from oem.intake.sqlite_store import (
     update_enrichment_fields,
     upsert_normalized,
 )
-from scrapers.oem.bmw import BMWIntakeBundle, ingest_bmw_usa, load_fixture_records
-from scrapers.oem.bmw_debug import write_debug_artifact
+from backend.oem.scraper.oem.bmw import BMWIntakeBundle, ingest_bmw_usa, load_fixture_records
+from backend.oem.scraper.oem.bmw_debug import write_debug_artifact
 
 logger = logging.getLogger("oem_intake.bmw_pipeline")
 

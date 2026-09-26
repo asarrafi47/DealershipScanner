@@ -30,9 +30,59 @@ ROSTER_NAME_ALIASES: dict[str, tuple[str, ...]] = {
 }
 
 
+# Aliases LEARNED by recipe synthesis live in the dealer's scan hints (key
+# ``rooftop_name_aliases``: [{"name", "observed", "evidence"}]) — still data, still
+# per dealer, still exact strings. Recorded only when the store's own feed id
+# (``source_id`` == the page's ``oem_code``) returned one rooftop whose name is
+# not the roster's: that feed IS this store, so its spelling is this store's.
+# Hendrick Buick GMC Cary → "Hendrick Buick GMC Cadillac Cary"; Rick Hendrick
+# Chevrolet Naples → "Chevy Naples" (2026-09-24).
+_HINT_KEY = "rooftop_name_aliases"
+_hint_cache: dict[str, tuple[str, ...]] = {}
+
+
+def _hinted_aliases(dealer_id: str) -> tuple[str, ...]:
+    if dealer_id in _hint_cache:
+        return _hint_cache[dealer_id]
+    out: tuple[str, ...] = ()
+    try:
+        from backend.scanner.recipe_store import get_scan_hints
+
+        raw = (get_scan_hints(dealer_id) or {}).get(_HINT_KEY) or []
+        out = tuple(str(x.get("name") if isinstance(x, dict) else x).strip() for x in raw if x)
+        out = tuple(a for a in out if a)
+    except Exception:  # noqa: BLE001 - a hint-store outage must not change attribution
+        out = ()
+    _hint_cache[dealer_id] = out
+    return out
+
+
 def roster_name_aliases(dealer_id: str) -> tuple[str, ...]:
     """Extra roster names to try for *dealer_id*, or ``()``."""
-    return ROSTER_NAME_ALIASES.get(str(dealer_id or "").strip().lower(), ())
+    key = str(dealer_id or "").strip().lower()
+    static = ROSTER_NAME_ALIASES.get(key, ())
+    learned = _hinted_aliases(key) if key else ()
+    return static + tuple(a for a in learned if a not in static)
 
 
-__all__ = ["ROSTER_NAME_ALIASES", "roster_name_aliases"]
+def record_rooftop_alias(dealer_id: str, name: str, *, evidence: str, observed: str) -> bool:
+    """Persist a feed-observed spelling for *dealer_id* (idempotent)."""
+    key = str(dealer_id or "").strip().lower()
+    name = str(name or "").strip()
+    if not key or not name:
+        return False
+    try:
+        from backend.scanner.recipe_store import get_scan_hints, set_scan_hints
+
+        cur = list((get_scan_hints(key) or {}).get(_HINT_KEY) or [])
+        if any((x.get("name") if isinstance(x, dict) else x) == name for x in cur):
+            return True
+        cur.append({"name": name, "observed": observed, "evidence": evidence[:300]})
+        ok = set_scan_hints(key, {_HINT_KEY: cur}, merge=True)
+    except Exception:  # noqa: BLE001
+        return False
+    _hint_cache.pop(key, None)
+    return bool(ok)
+
+
+__all__ = ["ROSTER_NAME_ALIASES", "roster_name_aliases", "record_rooftop_alias"]

@@ -14,9 +14,6 @@ from typing import Any
 from urllib.parse import urljoin
 
 import requests as _requests
-import urllib3
-
-urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 logger = logging.getLogger("scanner")
 
@@ -273,7 +270,7 @@ def _enrich_vehicles_from_vdp(
 
     def _one(v: dict[str, Any]) -> bool:
         try:
-            r = session.get(v["_detail_url"], timeout=8, verify=False)
+            r = session.get(v["_detail_url"], timeout=8)
             if r.status_code != 200 or len(r.text) < 500:
                 return False
             data = _parse_vdp_snapshot(r.text)
@@ -325,7 +322,7 @@ async def fetch_autowall_inventory_http(
         session.headers.update(_HTTP_HEADERS)
         # Establish session cookie via homepage
         try:
-            session.get(inv_base + "/", timeout=15, verify=False)
+            session.get(inv_base + "/", timeout=15)
         except Exception as exc:
             logger.debug("autoWALL HTTP: homepage warmup failed for %s: %s", dealer_name, exc)
 
@@ -333,7 +330,7 @@ async def fetch_autowall_inventory_http(
         for page_num in range(1, 50):
             url = f"{inv_base}/gs-vehicle/list?filter=All&page={page_num}"
             try:
-                r = session.get(url, timeout=20, verify=False)
+                r = session.get(url, timeout=20)
                 if r.status_code != 200:
                     logger.debug("autoWALL HTTP: %s page %d → HTTP %d", dealer_name, page_num, r.status_code)
                     break
@@ -376,7 +373,7 @@ async def fetch_autowall_inventory_http(
         session2 = _requests.Session()
         session2.headers.update(_HTTP_HEADERS)
         try:
-            session2.get(inv_base + "/", timeout=10, verify=False)
+            session2.get(inv_base + "/", timeout=10)
         except Exception:
             pass
         return _enrich_vehicles_from_vdp(list(by_vin.values()), session2, dealer_name)
@@ -415,6 +412,9 @@ async def scrape_autowall_via_playwright(
     try:
         _browser = getattr(getattr(page, "context", None), "browser", None)
         if _browser is not None:
+            from backend.scanner.browser_gate import require_browser
+
+            require_browser("autowall.playwright")
             _fresh_ctx = await _browser.new_context(
                 viewport={"width": 1920, "height": 1080},
                 user_agent=_AUTOWALL_DESKTOP_UA,

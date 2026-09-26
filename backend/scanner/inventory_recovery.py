@@ -91,6 +91,8 @@ RECOVERY_STRATEGY_ORDER: tuple[str, ...] = (
     "html_next_data",
     "jsonld_listing_html",
 )
+# Strategies that never need a browser page (docs/HTTP_ONLY_SCANS_PLAN.md).
+HTTP_SAFE_STRATEGIES = frozenset({"shopperexpress_api", "dealer_eprocess_json", "html_next_data", "jsonld_listing_html"})
 
 _STRATEGY_PLATFORM_HINTS: dict[str, frozenset[str]] = {
     "shopperexpress_api": frozenset({"shopperexpress"}),
@@ -276,6 +278,31 @@ def _price_coverage(vehicles: list[dict[str, Any]]) -> float:
     return priced / len(vehicles)
 
 
+def _known_lot_ratio() -> float:
+    """Scrape below this share of the last listed count triggers recovery (default 0.5,
+    the same floor ``inventory_reconcile`` uses to refuse unlisting)."""
+    try:
+        return max(0.0, min(1.0, float((os.environ.get("SCANNER_RECOVERY_KNOWN_LOT_RATIO") or "0.5").strip())))
+    except ValueError:
+        return 0.5
+
+
+def _known_lot_min() -> int:
+    try:
+        return max(1, int((os.environ.get("SCANNER_RECOVERY_KNOWN_LOT_MIN") or "20").strip()))
+    except ValueError:
+        return 20
+
+
+def _last_known_active_vins(dealer_id: str) -> int:
+    try:
+        from backend.scanner.recipes import last_known_vin_count
+
+        return int(last_known_vin_count(dealer_id) or 0)
+    except Exception:  # noqa: BLE001 - a DB hiccup must not change the gate
+        return 0
+
+
 def should_run_platform_recovery(ctx: RecoveryContext) -> bool:
     """True when intercept-only data is missing or likely incomplete."""
     if not _recovery_enabled():
@@ -290,6 +317,17 @@ def should_run_platform_recovery(ctx: RecoveryContext) -> bool:
 
     n = unique_vin_count(ctx.vehicles)
     if n == 0:
+        return True
+    # A scrape far below what this store listed last time is a truncated capture,
+    # not a small lot (Culver City Toyota 2026-09-22: 107 VINs, 100% priced, vs 383
+    # listed; the priced-share check called it sufficient). Reconcile already
+    # refuses to unlist on that ratio; recovery must try to fill it.
+    known = _last_known_active_vins(ctx.dealer_id)
+    if known >= _known_lot_min() and n < known * _known_lot_ratio():
+        logger.info(
+            "Inventory recovery: %s — scrape %d VIN(s) < %.0f%% of %d listed last time; running recovery",
+            ctx.dealer_name, n, _known_lot_ratio() * 100, known,
+        )
         return True
     # Row count alone can lie: some platforms render cards the generic path
     # scrapes into plausible-looking rows with no price at all (e.g. dealer-group
@@ -445,6 +483,8 @@ async def _html_and_next_data(ctx: RecoveryContext) -> list[dict[str, Any]]:
             batch = list(ctx.parse_fn(nd))
             if batch:
                 return batch
+    if ctx.page is None:
+        return []
     nd = await fetch_next_data_json_from_page(ctx.page)
     if nd is not None:
         return list(ctx.parse_fn(nd))
@@ -684,6 +724,14 @@ async def recover_inventory(ctx: RecoveryContext) -> RecoveryResult:
         cached_strategy=cached,
         provider=ctx.provider,
     )
+    if ctx.page is None:
+        # HTTP-only scan: only strategies that never touch a page. The others
+        # (Algolia/Typesense config discovery, cosmos SRP navigation, PixelMotion
+        # clicks) belong to discovery now — docs/HTTP_ONLY_SCANS_PLAN.md.
+        skipped = [n for n in chain if n not in HTTP_SAFE_STRATEGIES]
+        chain = [n for n in chain if n in HTTP_SAFE_STRATEGIES]
+        if skipped:
+            logger.info("Inventory recovery: %s — HTTP-only, page strategies skipped (%s)", ctx.dealer_name, ", ".join(skipped))
     if manifest_chain:
         logger.info(
             "Inventory recovery: %s — manifest strategies %s",
