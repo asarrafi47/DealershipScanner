@@ -846,10 +846,19 @@ def _resolve_rooftop_attribution_inner(
     # the name tier kept 141 of 389 (2026-09-26). Siblings in a real group feed
     # file under their own ids (Hendrick), so a foreign id still refuses.
     same_source = 0
+    own_street_key = place[1] if place else ""
     for rt in rooftops:
         if rt is target:
             continue
         if not rt.names and rt.sources and target.sources and rt.sources <= target.sources:
+            kept.extend(rt.rows)
+            same_source += len(rt.rows)
+            continue
+        if not rt.names and own_street_key and rt.street_keys and rt.street_keys <= {own_street_key}:
+            # A street block at the store's OWN street (registry or the page's
+            # JSON-LD / title, 12815 Statesville Rd for Honda of Huntersville's
+            # 105 new cars under feed 209014, 2026-09-26) is the store; keeping can
+            # only add inventory, never un-list.
             kept.extend(rt.rows)
             same_source += len(rt.rows)
             continue
@@ -869,8 +878,8 @@ def _resolve_rooftop_attribution_inner(
         rejected.append(row)
     if same_source:
         _log.info(
-            "rooftop attribution [%s]: kept %d unnamed/unstamped row(s) filed under this store's feed source(s) %s",
-            label, same_source, sorted(target.sources)[:3],
+            "rooftop attribution [%s]: kept %d unnamed/unstamped row(s) filed under this store's feed source(s) %s or at its street %r",
+            label, same_source, sorted(target.sources)[:3], own_street_key,
         )
 
     if rejected:

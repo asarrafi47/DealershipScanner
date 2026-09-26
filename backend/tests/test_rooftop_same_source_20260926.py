@@ -44,3 +44,19 @@ def test_unnamed_stamp_under_a_foreign_source_still_refuses():
     )
     kept, rej = _run(payload)
     assert [r["vin"][-1] for r in kept] == ["1"] and len(rej) == 2
+
+
+def test_street_block_at_the_stores_own_street_is_kept_even_under_another_source():
+    """Honda of Huntersville: 105 new cars under feed 209014 stamped with the store's
+    street block; the page's JSON-LD gives the street (2026-09-26)."""
+    payload = _payload(
+        _listing("1HGCV1F30PA000001", "New", "Honda of Huntersville", "MP23253"),
+        _listing("1HGCV1F30PA000002", "New", "12815 Statesville Rd<br/>Huntersville, NC 28078<br/>(704) 875-3232", "209014"),
+        _listing("1HGCV1F30PA000003", "New", "99 Other Ave<br/>Huntersville, NC 28078<br/>(704) 111-1111", "209015"),
+    )
+    rej: list[dict] = []
+    kept = parse("carscommerce", payload, base_url="https://www.hondahuntersville.com", dealer_id="hondahuntersville-com",
+                 dealer_name="Honda Of Huntersville", dealer_url="https://www.hondahuntersville.com", rejected_out=rej,
+                 dealer_city="Huntersville", dealer_state="NC", dealer_address="12815 Statesville Rd")
+    assert sorted(r["vin"][-1] for r in kept) == ["1", "2"]
+    assert [r["vin"][-1] for r in rej] == ["3"]
