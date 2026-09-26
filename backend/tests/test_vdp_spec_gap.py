@@ -14,5 +14,8 @@ def test_vehicle_needs_spec_gap_when_engine_missing():
             "drivetrain": "AWD",
             "fuel_type": "Gas",
             "body_style": "Truck",
+            "trim": "Big Horn",
         }
     )
+    # trim is a spec-gap trigger since 2026-09-26 (23 dealers thin on trim alone)
+    assert _vehicle_needs_spec_gap_vdp({"engine_description": "5.7L V8", "transmission": "Auto", "drivetrain": "AWD", "fuel_type": "Gas", "body_style": "Truck"})

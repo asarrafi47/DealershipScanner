@@ -46,6 +46,9 @@ from backend.scanner.scrapers.scanner_intercept_filter import (
     response_content_type_looks_json,
 )
 
+_VIN17_RE = re.compile(r"\b[A-HJ-NPR-Z0-9]{17}\b")
+_HTML_FRAGMENT_MIN_VINS = 5
+
 logger = logging.getLogger("scanner")
 
 # ── Env knobs ────────────────────────────────────────────────────────────────
@@ -611,6 +614,9 @@ class NetworkObserver:
         if body is None:
             return
 
+        if isinstance(body, dict) and "__html_fragment__" in body:
+            await self._record_html_fragment(response, rurl, ct, body["__html_fragment__"])
+            return
         cls = classify_payload(rurl, body, self.base_url)
         # Preserve legacy denied-URL accounting (JSON content-type + gate failure).
         if is_json_ct and not cls.url_allowed:
@@ -676,7 +682,16 @@ class NetworkObserver:
                     return None
         if not text or len(text) > cap:
             return None
-        return parse_sniffed_json(text)
+        parsed = parse_sniffed_json(text)
+        if parsed is not None:
+            return parsed
+        # Not JSON. An XHR/fetch answer that carries a page of car cards (HTML
+        # fragment pagers: PixelMotion's .vlpm3Pages__next, 2026-09-26) is still
+        # an inventory endpoint — hand the text back tagged so the classifier can
+        # ledger it for the html_cards parser.
+        if len(set(_VIN17_RE.findall(text))) >= _HTML_FRAGMENT_MIN_VINS:
+            return {"__html_fragment__": text}
+        return None
 
     def _sniffable(self, response: Any, ct: str) -> bool:
         if not sniff_nonjson_enabled():
@@ -724,6 +739,21 @@ class NetworkObserver:
             except Exception:
                 return {}
         return extract_auth_headers(headers)
+
+    async def _record_html_fragment(self, response: Any, rurl: str, ct: str, text: str) -> None:
+        vins = set(_VIN17_RE.findall(text))
+        method, post_sample = self._request_info(response)
+        self.records.append((rurl, text))
+        self.found_data["value"] = True
+        self.capture_event.set()
+        self.ledger.add_endpoint(
+            CapturedEndpoint(
+                url=rurl[:8000], method=method, content_type=(ct or "text/html")[:100], post_data_sample=post_sample,
+                reason="html_fragment_cards", sniffed=True, vehicle_rows=len(vins), total_count=None,
+                auth_headers=await self._request_auth_headers(response), field_coverage={},
+            )
+        )
+        logger.info("Intercepting: %s%s — HTML fragment with %d VIN(s) (%s)", self.dealer_name, self.path, len(vins), _truncate(rurl, 80))
 
     async def _record_endpoint(
         self, response: Any, rurl: str, ct: str, body: Any, cls: Classification, sniffed: bool,

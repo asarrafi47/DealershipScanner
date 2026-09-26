@@ -1,0 +1,62 @@
+"""html_cards: data-vin card pages and RSC hydration payloads (Quantum Auto
+Sales, 2026-09-26: 9 DOM cards + 199 escaped JSON objects in self.__next_f)."""
+from __future__ import annotations
+
+from backend.parsers import parse
+from backend.parsers.html_cards import detect
+from backend.scanner import recipe_synth as rs
+
+_CARD = '<div class="inventory-image-wrapper" data-vin="{vin}"><a href="/inventory/used-cars-ACURA-TLX-2021-{tail}-X"><img src="https://cdn.x/{vin}.jpg"></a><button data-sales-price="31123.25" data-vin="{vin}">Explore</button></div>'
+_RSC = ('self.__next_f.push([1,"{\\"vehicles\\":[{\\"vin\\":\\"%s\\",\\"year\\":2019,\\"make\\":\\"VOLKSWAGEN\\",\\"model\\":\\"GOLF\\",\\"trim\\":\\"TSI S WAGON 4D\\",'
+        '\\"mileage\\":85933,\\"stockNo\\":\\"31247\\",\\"priceInet\\":\\"14995.00\\",\\"colorExterior\\":\\"WHITE\\",\\"cylinders\\":4,\\"imagesPath\\":\\"https://cdn.gma.to\\",'
+        '\\"image1raw\\":\\"/data/a/b.jpg\\",\\"images\\":[{\\"large\\":\\"https://cdn.gma.to/fit-in/720x540/a/b.jpg\\"}],\\"vdpUrl\\":\\"https://www.q.com/inventory/used-cars-VOLKSWAGEN-GOLF-2019-510761-R\\"}]}"])')
+
+
+def _page(n_cards: int, n_rsc: int) -> str:
+    cards = "".join(_CARD.format(vin=f"19UUB6F49MA0{i:05d}", tail=f"{i:06d}") for i in range(n_cards))
+    rsc = "".join(_RSC % f"3VWY57AU5KM5{i:05d}" for i in range(n_rsc))
+    return "<html><body>" + cards + "<script>" + rsc + "</script></body></html>" + "x" * 2000
+
+
+def test_detect_counts_cards_and_hydration_objects():
+    assert not detect(_page(3, 0))
+    assert detect(_page(12, 0))
+    assert detect(_page(0, 12))
+
+
+def test_parse_merges_cards_and_hydration_objects():
+    rows = parse("html_cards", _page(2, 3), base_url="https://www.q.com", dealer_id="q-com", dealer_name="Q", dealer_url="https://www.q.com", rejected_out=[])
+    assert len(rows) == 5
+    card = next(r for r in rows if r["vin"].startswith("19UUB"))
+    assert card["price"] == 31123.25 and card["make"] == "Acura" and card["model"] == "TLX" and card["year"] == 2021
+    assert card["_detail_url"].startswith("https://www.q.com/inventory/used-cars-ACURA")
+    rsc = next(r for r in rows if r["vin"].startswith("3VWY"))
+    assert (rsc["year"], rsc["make"], rsc["model"], rsc["trim"]) == (2019, "VOLKSWAGEN", "GOLF", "TSI S WAGON 4D")
+    assert rsc["price"] == 14995.0 and rsc["mileage"] == 85933 and rsc["stock_number"] == "31247" and rsc["cylinders"] == 4
+    assert rsc["image_url"].startswith("https://cdn.gma.to/") and rsc["_detail_url"].endswith("510761-R")
+    assert rsc["condition"] == "Used"
+
+
+def test_synth_builds_html_page_recipe(monkeypatch):
+    page = _page(0, 15)
+    monkeypatch.setattr(rs, "_fetch_impersonated", lambda url, **k: page if url.endswith("/inventory/") else None)
+    monkeypatch.setattr(rs, "_dep_fetch_html", lambda url: None)
+    recipes = rs._synth_html_cards("q-com", "https://www.q.com", "<html>data-vin= /inventory</html>")
+    assert len(recipes) == 1 and recipes[0].provider_hint == "html_cards" and recipes[0].url == "https://www.q.com/inventory/"
+    assert recipes[0].vehicle_rows == 15
+    assert rs._detect_html_cards(page, "https://www.q.com")
+
+
+def test_ledger_html_fragment_promotes_as_html_cards_recipe(tmp_path, monkeypatch):
+    from types import SimpleNamespace
+
+    from backend.scanner import recipes as rc
+
+    monkeypatch.setattr(rc, "RECIPES_DIR", tmp_path)
+    ep = SimpleNamespace(url="https://www.m.com/inventory/ajax?cond=used", method="GET", content_type="text/html; charset=utf-8",
+                         post_data_sample=None, vehicle_rows=24, total_count=None, auth_headers={}, field_coverage={},
+                         reason="html_fragment_cards")
+    assert rc.promote_from_ledger("m-com", "pixel_motion", [ep]) == 1
+    r = rc.load_recipes("m-com")[0]
+    assert r.provider_hint == "html_cards" and r.pagination == rc.PAGINATION_HTML_PAGE
+    assert rc._url_for_page(r, 1).endswith("cond=used&page=2")

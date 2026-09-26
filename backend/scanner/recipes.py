@@ -309,18 +309,28 @@ def promote_from_ledger(
         if not url.startswith("http"):
             continue
         post = getattr(ep, "post_data_sample", None)
+        ctype = str(getattr(ep, "content_type", "") or "")
+        hint = provider or ""
+        pagination = infer_pagination(url, post)
+        if str(getattr(ep, "reason", "") or "") == "html_fragment_cards":
+            # NetworkObserver ledgered an HTML fragment (PixelMotion / server-rendered
+            # card pagers) rather than JSON: replay hands the text to the html_cards
+            # parser and walks ?page=N until a page adds no VIN (mcpeeks-com, 2026-09-26).
+            hint = "html_cards"
+            if pagination == PAGINATION_NONE and not post:
+                pagination = PAGINATION_HTML_PAGE
         candidates.append(
             EndpointRecipe(
                 dealer_id=dealer_id,
                 url=url,
                 method=str(getattr(ep, "method", "GET") or "GET").upper(),
-                content_type=str(getattr(ep, "content_type", "") or ""),
+                content_type=ctype,
                 post_template=post,
                 auth_headers=dict(getattr(ep, "auth_headers", None) or {}),
-                pagination=infer_pagination(url, post),
+                pagination=pagination,
                 vehicle_rows=rows,
                 total_count=int(total) if total else None,
-                provider_hint=provider or "",
+                provider_hint=hint,
                 saved_at=now,
                 field_coverage={
                     k: float(v) for k, v in (getattr(ep, "field_coverage", None) or {}).items()
@@ -585,7 +595,7 @@ def _replay_impersonated(
         if resp.status_code != 200:
             continue
         logger.info("recipe replay cleared via TLS impersonation (%s): %s", profile, req_url[:70])
-        if recipe.pagination in (PAGINATION_DEP_SRP, PAGINATION_HTML_PAGE, PAGINATION_JAZEL_SRP):
+        if recipe.pagination in (PAGINATION_DEP_SRP, PAGINATION_HTML_PAGE, PAGINATION_JAZEL_SRP) or recipe.provider_hint == "html_cards":
             return resp.status_code, resp.text or None
         try:
             parsed = resp.json()
@@ -652,7 +662,7 @@ def _replay_request(
     # eProcess / nabthat embed per-vehicle JSON-LD, Overfuel embeds __NEXT_DATA__,
     # and Jazel embeds per-card jzlSetVehicleInfoContext() calls. Hand the raw HTML
     # text to the provider parser instead of attempting resp.json().
-    if recipe.pagination in (PAGINATION_DEP_SRP, PAGINATION_HTML_PAGE, PAGINATION_JAZEL_SRP):
+    if recipe.pagination in (PAGINATION_DEP_SRP, PAGINATION_HTML_PAGE, PAGINATION_JAZEL_SRP) or recipe.provider_hint == "html_cards":
         return resp.status_code, resp.text or None
     try:
         parsed = resp.json()

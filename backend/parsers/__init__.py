@@ -21,6 +21,7 @@ from backend.parsers.chapman import parse as parse_chapman
 from backend.parsers.dealer_dot_com import parse as parse_dealer_dot_com
 from backend.parsers.dealer_eprocess import parse as parse_dealer_eprocess
 from backend.parsers.dealermasters import parse as parse_dealermasters
+from backend.parsers.html_cards import parse as parse_html_cards
 from backend.parsers.oneaudi import parse as parse_oneaudi
 from backend.parsers.wp_vehicles_index import parse as parse_wp_vehicles_index
 from backend.parsers.dealer_on import parse as parse_dealer_on
@@ -80,6 +81,7 @@ PARSERS = {
     "dealermasters": parse_dealermasters,
     "wp_vehicles_index": parse_wp_vehicles_index,
     "oneaudi": parse_oneaudi,
+    "html_cards": parse_html_cards,
 }
 
 _log = logging.getLogger(__name__)

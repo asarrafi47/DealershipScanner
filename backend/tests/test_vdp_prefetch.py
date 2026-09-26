@@ -98,7 +98,7 @@ def test_http_prefetch_skips_complete_vehicles(monkeypatch):
     v = {"vin": "1HGBH41JXMN109186", "_detail_url": "https://d.example/car",
          "price": 21000, "exterior_color": "Blue", "interior_color": "Black",
          "engine_description": "2.0L I4", "transmission": "CVT", "drivetrain": "FWD",
-         "fuel_type": "Gasoline", "body_style": "Sedan",
+         "fuel_type": "Gasoline", "body_style": "Sedan", "trim": "EX",
          "description": "Dealer notes long enough to count as a real description paragraph.",
          "gallery": [f"https://img.example/{i}.jpg" for i in range(12)],
          "stock_number": "U1", "carfax_url": "https://www.carfax.com/vehiclehistory/x", "condition": "Used"}
@@ -110,7 +110,7 @@ def _complete_but_thin(**over):
     v = {"vin": "1HGBH41JXMN109186", "_detail_url": "https://d.example/car",
          "price": 21000, "exterior_color": "Blue", "interior_color": "Black",
          "engine_description": "2.0L I4", "transmission": "CVT", "drivetrain": "FWD",
-         "fuel_type": "Gasoline", "body_style": "Sedan", "description": "", "gallery": [],
+         "fuel_type": "Gasoline", "body_style": "Sedan", "trim": "EX", "description": "", "gallery": [],
          "stock_number": "U1", "carfax_url": "https://www.carfax.com/vehiclehistory/x", "condition": "Used"}
     v.update(over)
     return v

@@ -361,6 +361,16 @@ def _pct(n: Any, d: Any) -> str:
         return "-"
 
 
+def _one_condition_ok() -> set[str]:
+    """Dealer ids whose lot legitimately carries a single condition (used-only
+    independents, new-only fleet/RV sellers). One id per line, `#` comments."""
+    try:
+        text = (ROOT / "workspace" / "pipeline" / "one_condition_ok.txt").read_text()
+    except OSError:
+        return set()
+    return {ln.split("#", 1)[0].strip() for ln in text.splitlines() if ln.split("#", 1)[0].strip()}
+
+
 def reconcile_dealer(conn, dealer_id: str, since_iso: str, baseline: int, rows_this_run: int, verdict: str,
                      *, dry_run: bool = False) -> dict[str, Any]:
     """Retire the dealer's active rows this run did not return.
@@ -523,7 +533,13 @@ def assess(conn, dealer_id: str, since_iso: str, known_before: int, recipe_info:
         if acc["hard_rows"] / acc["rows"] > DISCREPANCY_FLOOR:
             problems.append(f"discrepancies {acc['hard_rows']}/{acc['rows']}: {', '.join(list(acc['hard'])[:4])}")
     if out["rows_new"] == 0 or out["rows_used"] == 0:
-        problems.append(f"only one condition captured (new {out['rows_new']}, used {out['rows_used']})")
+        if dealer_id in _one_condition_ok():
+            # independent used-only (or new-only) lots: one condition IS the lot
+            # (quantumautosales-com 209/0 used, 2026-09-26); listed in
+            # workspace/pipeline/one_condition_ok.txt after a human check of the site
+            weak2 = list(weak2) + [f"one condition by design (new {out['rows_new']}, used {out['rows_used']})"]
+        else:
+            problems.append(f"only one condition captured (new {out['rows_new']}, used {out['rows_used']})")
     if problems:
         out["verdict"], out["reason"] = "inaccurate", "; ".join(problems)
     else:
@@ -712,9 +728,11 @@ def main() -> int:
     finally:
         conn.close()
 
+    live_recipes = sum(1 for r in results if (r.get("recipe") or {}).get("had_recipes") or str((r.get("recipe") or {}).get("synth", "")).startswith(("saved", "browser_capture")))
     triage = {
         "started": started.isoformat(), "dealers": results,
         "chromium_leaks": locals().get("chromium_leaks", []),
+        "recipe_coverage": {"dealers": len(results), "with_recipe": live_recipes},
         "counts": {v: sum(1 for r in results if r.get("verdict") == v) for v in ("ok", "thin", "inaccurate", "no_rows", "error", "no_recipe")},
         "needs_discovery": [r["dealer_id"] for r in results if r.get("verdict") in ("no_rows", "error", "no_recipe")],
         "thin": [r["dealer_id"] for r in results if r.get("verdict") == "thin"],
