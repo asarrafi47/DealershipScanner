@@ -21,6 +21,7 @@ from backend.parsers.chapman import parse as parse_chapman
 from backend.parsers.dealer_dot_com import parse as parse_dealer_dot_com
 from backend.parsers.dealer_eprocess import parse as parse_dealer_eprocess
 from backend.parsers.dealermasters import parse as parse_dealermasters
+from backend.parsers.generic_json import parse as parse_generic_json
 from backend.parsers.html_cards import parse as parse_html_cards
 from backend.parsers.oneaudi import parse as parse_oneaudi
 from backend.parsers.wp_vehicles_index import parse as parse_wp_vehicles_index
@@ -82,6 +83,7 @@ PARSERS = {
     "wp_vehicles_index": parse_wp_vehicles_index,
     "oneaudi": parse_oneaudi,
     "html_cards": parse_html_cards,
+    "generic_json": parse_generic_json,
 }
 
 _log = logging.getLogger(__name__)
@@ -846,11 +848,21 @@ def _resolve_rooftop_attribution_inner(
     # the name tier kept 141 of 389 (2026-09-26). Siblings in a real group feed
     # file under their own ids (Hendrick), so a foreign id still refuses.
     same_source = 0
+    # Only a feed account that no OTHER stamped rooftop uses can vouch for a
+    # row: Hendrick's group-wide used feed "RHendrickUsed" sits behind nine
+    # rooftops, and a city_state (locality) match must never pull unstamped
+    # group rows in (hendrickhonda-com kept 73 foreign rows, 2026-09-26).
     own_street_key = place[1] if place else ""
+    shared_sources = {
+        src for rt in rooftops
+        if rt is not target and (rt.names or (rt.street_keys and not (own_street_key and rt.street_keys <= {own_street_key})))
+        for src in rt.sources
+    }
+    own_sources = (target.sources - shared_sources) if tier not in _LOCALITY_ONLY_TIERS else set()
     for rt in rooftops:
         if rt is target:
             continue
-        if not rt.names and rt.sources and target.sources and rt.sources <= target.sources:
+        if not rt.names and rt.sources and own_sources and rt.sources <= own_sources:
             kept.extend(rt.rows)
             same_source += len(rt.rows)
             continue
@@ -870,7 +882,7 @@ def _resolve_rooftop_attribution_inner(
     # they are filed under is the matched store's own.
     for row in unmarked:
         src = str(row.get("_feed_source") or "").strip()
-        if src and target.sources and src in target.sources:
+        if src and src in own_sources:
             kept.append(row)
             same_source += 1
             continue
@@ -879,7 +891,7 @@ def _resolve_rooftop_attribution_inner(
     if same_source:
         _log.info(
             "rooftop attribution [%s]: kept %d unnamed/unstamped row(s) filed under this store's feed source(s) %s or at its street %r",
-            label, same_source, sorted(target.sources)[:3], own_street_key,
+            label, same_source, sorted(own_sources)[:3], own_street_key,
         )
 
     if rejected:
@@ -935,9 +947,17 @@ def _parse_rows(provider: str, raw_data, _kwargs: dict, dealer_id: str) -> list[
         _warned_unknown_providers.add(provider)
         _log.debug("Unknown provider %r for dealer_id=%s — trying auto-detect", provider, dealer_id)
 
+    # Flat snake_case vehicle lists (one-off sites: honestcardeal-com's Supabase
+    # feed, 2026-09-26) go to the generic parser BEFORE the platform parsers: the
+    # dealer.com fallback claims them and maps price 0 / placeholder image.
+    if provider != "generic_json":
+        generic = list(parse_generic_json(raw_data, **_kwargs))
+        if generic:
+            _log.debug("Auto-detected provider 'generic_json' for dealer_id=%s (declared: %r)", dealer_id, provider)
+            return generic
     # Try remaining parsers
     for p_name, p_fn in PARSERS.items():
-        if p_name == provider:
+        if p_name in (provider, "generic_json"):
             continue  # already tried
         try:
             result = list(p_fn(raw_data, **_kwargs))

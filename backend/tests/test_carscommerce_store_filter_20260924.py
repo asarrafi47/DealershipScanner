@@ -392,3 +392,32 @@ def test_fully_unstamped_account_over_the_cap_is_one_store(monkeypatch, cary_rec
                               post_template=json.dumps({"page": 1, "perPage": 100}), pagination="carscommerce_page", provider_hint="dealer_dot_com")
     rs._carscommerce_store_filter(cary2, "claremontcdjr-com", "https://www.claremontcdjr.com", html)
     assert json.loads(cary2.post_template).get("facetFilters") == {"source_id": ["27302"]}
+
+
+def test_location_facet_naming_the_store_on_every_car_is_single_store(monkeypatch, cary_recipe):
+    """Group 1 Ford of South Austin: meta_location = store name on 748/748 cars, sort
+    facet 1/2 and a partial Location (252) blocked the single-store rule (2026-09-26)."""
+    feed = _FakeFeed()
+    plain = {"vin": "", "source_id": "", "make": "Ford", "model": "F-150", "year": 2026, "type": "New", "dealer": {"location": None, "name": None}, "extra_fields": {}}
+    feed.rows = [dict(plain, vin=f"OE{i:015d}", source_id="02923") for i in range(74)] + [dict(plain, vin=f"GP{i:015d}", source_id="GROUPGPI39", type="Used") for i in range(674)]
+
+    def call(recipe, body, origin, url=None):
+        st, d = _FakeFeed.__call__(feed, recipe, body, origin, url)
+        for f in d["data"]["facets"]:
+            if f["name"] == "source_id":
+                f["values"] = [{"key": "02923", "doc_count": 74}, {"key": "GROUPGPI39", "doc_count": 674}]
+            elif f["name"] == "custom_text_3":
+                f["values"] = [{"key": "Group 1 Ford of South Austin", "doc_count": 252}]
+            elif f["name"] == "custom_text_4":
+                f["values"] = [{"key": "1", "doc_count": 674}, {"key": "2", "doc_count": 74}]
+            elif f["name"] == "custom_text_7":
+                f["values"] = [{"key": "Group 1 Ford of South Austin", "doc_count": 748}]
+        return st, d
+
+    monkeypatch.setattr(rs, "_replay_request", call)
+    monkeypatch.setattr("backend.scanner.dealer_place.learn_place", lambda *a, **k: {"dealer_city": "Austin", "dealer_state": "TX"})
+    monkeypatch.setattr(rooftop_aliases, "record_rooftop_alias", lambda *a, **k: True)
+    html = ('"dealername":"Group 1 Ford of South Austin","oem_code":"02923"'
+            '<script>var facets = {"Location":"custom_text_3","location_sort":"custom_text_4","meta_location":"custom_text_7"}</script>')
+    extra = rs._carscommerce_store_filter(cary_recipe, "group1fordofsouthaustin-com", "https://www.group1fordofsouthaustin.com", html)
+    assert "facetFilters" not in json.loads(cary_recipe.post_template) and extra == []

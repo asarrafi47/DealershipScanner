@@ -872,10 +872,16 @@ async def try_fetch_via_recipes(
     # for it at all when recipe fetch is disabled.
     try:
         _place = (await asyncio.to_thread(roster_place, base_url)) or {}
-        if not _place.get("dealer_city"):
-            from backend.scanner.dealer_place import place_from_hints, place_kwargs
+        from backend.scanner.dealer_place import place_from_hints, place_kwargs
 
+        if not _place.get("dealer_city"):
             _place = place_kwargs(await asyncio.to_thread(place_from_hints, dealer_id))
+        elif not _place.get("dealer_address"):
+            # roster has the town but no street: the page's JSON-LD street saved
+            # by learn_place lets the gate keep street-block stamps at our address
+            hinted = place_kwargs(await asyncio.to_thread(place_from_hints, dealer_id))
+            if hinted.get("dealer_address"):
+                _place = dict(_place, dealer_address=hinted["dealer_address"], dealer_address_source=hinted.get("dealer_address_source") or "site_jsonld")
     except Exception:  # noqa: BLE001 - attribution help must never break a scan
         _place = {}
     # load_recipes may consult Postgres (recipe_store sync) — keep that

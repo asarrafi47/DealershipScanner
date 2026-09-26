@@ -84,6 +84,18 @@ def learn_place(dealer_id: str, dealer_url: str, html: str | None = None, *, sav
             st = _LD_STREET_RE.search(html)
             if st and re.match(r"\d", st.group(1).strip()):
                 reg["dealer_address"] = st.group(1).strip()
+                if save:
+                    # The replay gate reads the roster (no street for 150/178
+                    # dealers) and never sees this page: Honda of Huntersville's
+                    # 105 street-block cars stayed refused with own street ""
+                    # (2026-09-26). Keep the page street in scan hints so
+                    # try_fetch_via_recipes can merge it.
+                    try:
+                        from backend.scanner.recipe_store import set_scan_hints
+
+                        set_scan_hints(dealer_id, {"dealer_address": reg["dealer_address"], "dealer_address_source": "site_jsonld"}, merge=True)
+                    except Exception as exc:  # noqa: BLE001
+                        logger.debug("street hint save failed [%s]: %s", dealer_id, exc)
         return reg
     hinted = place_from_hints(dealer_id)
     if hinted.get("dealer_city"):

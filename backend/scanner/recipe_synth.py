@@ -584,6 +584,10 @@ def _cc_verify_store_filter(recipe: EndpointRecipe, body: dict, origin: str, fac
             "total": int((parsed.get("data") or {}).get("total_vehicle_count") or 0)}
 
 
+def _nrm_facet(s: str) -> str:
+    return re.sub(r"[^a-z0-9]", "", str(s or "").lower())
+
+
 def _carscommerce_store_filter(recipe: EndpointRecipe, dealer_id: str, dealer_url: str, html: str) -> list[EndpointRecipe]:
     """Scope *recipe* to this store in place; returns EXTRA recipes to replay
     alongside it (a verified store-name Location facet that covers cars the
@@ -607,6 +611,16 @@ def _carscommerce_store_filter(recipe: EndpointRecipe, dealer_id: str, dealer_ur
                     ", ".join(f"{n}={f}" for n, f in mapped) or "none")
     loc_values = [values.get(f) or [] for _n, f in mapped if (values.get(f) or [])]
     mapped_values_present = bool(loc_values)
+    # A Location facet whose single value names THIS store on (nearly) every car
+    # settles the account: Group 1 Ford of South Austin's meta_location facet
+    # reads "Group 1 Ford of South Austin" on 748 of 748 cars while the sort
+    # facet (custom_text_4: 1 / 2) and a partial Location (252) kept the
+    # all-single-valued rule from firing; the OEM feed then kept 74 (2026-09-26).
+    for v in loc_values:
+        if len(v) == 1 and total and v[0][1] >= 0.95 * total and site_name and _nrm_facet(v[0][0]) == _nrm_facet(site_name):
+            logger.info("carscommerce [%s]: single-store account (%d cars): location facet %r names this store on %d cars; no store filter",
+                        dealer_id, total, v[0][0], v[0][1])
+            return []
     if mapped and loc_values and all(len(v) == 1 for v in loc_values):
         # Napleton Honda of Morton Grove (393 cars, feeds 207385 + MP21386): the
         # site's Location facets each hold ONE value, so the whole account is this

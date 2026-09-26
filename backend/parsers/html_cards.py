@@ -16,6 +16,7 @@ parser behind the discovery capture's HTML-fragment pagers (PixelMotion).
 from __future__ import annotations
 
 import html as _html
+import json
 import re
 from typing import Any
 
@@ -201,6 +202,118 @@ def _jsonld_identity(html: str) -> dict[str, dict[str, Any]]:
     return out
 
 
+def _decode_json_strings(x: Any, depth: int = 0) -> Any:
+    """PixelMotion nests JSON inside JSON strings ({"store": "{\"vehicles\": \"{...}\"}"})."""
+    if isinstance(x, str) and depth < 4 and x[:1] in "{[":
+        try:
+            return _decode_json_strings(json.loads(x), depth + 1)
+        except (ValueError, TypeError):
+            return x
+    return x
+
+
+def json_vehicle_objects(body: Any) -> dict[str, dict[str, Any]]:
+    """Every dict carrying a VIN inside *body* (dicts keyed by VIN count too), with
+    nested JSON strings decoded. PixelMotion's VlpAjaxEndpoint.php answers
+    {"store": <json string: {"vehicles": {VIN: {...trim, color, pricing...}}}>,
+    "html": "<cards>"} (mcpeeks-com 2026-09-26): the cards carry no trim or colour,
+    the objects carry everything."""
+    out: dict[str, dict[str, Any]] = {}
+    stack: list[Any] = [_decode_json_strings(body)]
+    seen = 0
+    while stack and seen < 20000:
+        cur = stack.pop()
+        seen += 1
+        if isinstance(cur, dict):
+            vin = str(cur.get("vin") or cur.get("VIN") or "").strip().upper()
+            if _VIN17_RE.fullmatch(vin) and vin not in out:
+                out[vin] = cur
+                continue
+            for k, v in cur.items():
+                v = _decode_json_strings(v)
+                if isinstance(v, dict) and _VIN17_RE.fullmatch(str(k).strip().upper()) and str(k).strip().upper() not in out:
+                    v.setdefault("vin", str(k).strip().upper())
+                    out[str(k).strip().upper()] = v
+                elif isinstance(v, (dict, list)):
+                    stack.append(v)
+        elif isinstance(cur, list):
+            stack.extend(_decode_json_strings(x) for x in cur)
+    return out
+
+
+def _deep(o: Any, *path: str) -> Any:
+    for k in path:
+        if not isinstance(o, dict):
+            return None
+        o = o.get(k)
+    return o if o not in ("", [], {}) else None
+
+
+def _obj_row(vin: str, o: dict[str, Any], base_url: str) -> dict[str, Any]:
+    """Nested-object shape (PixelMotion): color.exterior.name, engine.nameFull,
+    transmission.description/driveTypeAbbr, pricing.data.{internet,final,msrp},
+    media.image.standard, bodyStyle[0], vdp_href, dealerComments."""
+    row = _rsc_row(vin, o, base_url)
+    for k in ("exterior_color", "interior_color", "trim", "transmission", "drivetrain", "engine_description", "body_style"):
+        if row.get(k) is not None and not isinstance(row.get(k), str):
+            row[k] = ""  # the flat reader saw a nested object (PixelMotion color: {...})
+    price = None
+    for path in (("pricing", "data", "final"), ("pricing", "data", "internet"), ("pricing", "data", "sale"), ("pricing", "data", "price")):
+        price = _money(_deep(o, *path))
+        if price:
+            break
+    if price and not row.get("price"):
+        row["price"] = price
+    msrp = _money(_deep(o, "pricing", "data", "msrp"))
+    if msrp and not row.get("msrp"):
+        row["msrp"] = msrp
+    ext, intr = _deep(o, "color", "exterior", "name"), _deep(o, "color", "interior", "name")
+    if isinstance(ext, str) and not row.get("exterior_color"):
+        row["exterior_color"] = ext.strip()
+    if isinstance(intr, str) and not row.get("interior_color"):
+        row["interior_color"] = intr.strip()
+    eng = _deep(o, "engine", "nameFull") or _deep(o, "engine", "name") or _deep(o, "engine", "description")
+    if isinstance(eng, str) and not row.get("engine_description"):
+        row["engine_description"] = eng.strip()
+    fuel = _deep(o, "engine", "fuel")
+    if isinstance(fuel, str) and not row.get("fuel_type"):
+        row["fuel_type"] = fuel.strip()
+    cyl = _deep(o, "engine", "cylinders")
+    if cyl is not None and row.get("cylinders") is None and str(cyl).strip().isdigit():
+        row["cylinders"] = int(str(cyl).strip())
+    trans = _deep(o, "transmission", "description") or _deep(o, "transmission", "type")
+    if isinstance(trans, str) and not row.get("transmission"):
+        row["transmission"] = trans.strip()
+    drive = _deep(o, "transmission", "driveTypeAbbr") or _deep(o, "transmission", "driveTypeDesc") or o.get("driveType")
+    if isinstance(drive, str) and not row.get("drivetrain"):
+        row["drivetrain"] = drive.strip()
+    body = o.get("bodyStyle")
+    body = body[0] if isinstance(body, list) and body else body
+    if isinstance(body, str) and not row.get("body_style"):
+        row["body_style"] = body.strip()
+    hero = _deep(o, "media", "image", "standard") or _deep(o, "media", "image", "src") or _deep(o, "media", "image", "thumb", "src")
+    if isinstance(hero, str) and hero.startswith("http") and not row.get("image_url"):
+        row["image_url"] = hero
+        if hero not in row.get("gallery", []):
+            row.setdefault("gallery", []).append(hero)
+    stock = o.get("stockNum") or o.get("stockNumber") or o.get("stock")
+    if stock and not row.get("stock_number"):
+        row["stock_number"] = str(stock).strip()
+    mil = o.get("mileage")
+    if isinstance(mil, (int, float)) and not row.get("mileage"):
+        row["mileage"] = int(mil)
+    notes = o.get("dealerComments") or o.get("description")
+    if isinstance(notes, str) and notes.strip() and not row.get("description"):
+        row["description"] = notes.strip()
+    href = o.get("vdp_href") or o.get("vdpUrl") or o.get("url")
+    if isinstance(href, str) and href and not row.get("_detail_url"):
+        row["_detail_url"] = href if href.startswith("http") else base_url.rstrip("/") + "/" + href.lstrip("/")
+    cond = str(o.get("condition") or o.get("conditionDisplay") or "").lower()
+    if cond:
+        row["condition"] = "New" if cond.startswith("new") else ("Certified" if o.get("certified") else "Used")
+    return row
+
+
 def markup_in_json(body: Any, min_vins: int = 5) -> str | None:
     """Largest string inside a JSON envelope that is markup carrying >= *min_vins*
     VINs (PixelMotion VlpAjaxEndpoint.php: {"store":…, "html": "<div data-vin=…>"})."""
@@ -220,9 +333,17 @@ def markup_in_json(body: Any, min_vins: int = 5) -> str | None:
 
 
 def parse(raw_data: Any, base_url: str = "", dealer_id: str = "", dealer_name: str = "", dealer_url: str = "", **_kw: Any) -> list[dict]:
+    objects: dict[str, dict[str, Any]] = {}
+    if isinstance(raw_data, str) and raw_data[:1] in "{[":
+        # replay hands html_cards recipes the raw text; JSON envelopes come through here
+        try:
+            raw_data = json.loads(raw_data)
+        except (ValueError, TypeError):
+            pass
     if isinstance(raw_data, (dict, list)):
-        raw_data = markup_in_json(raw_data)
-    if not isinstance(raw_data, str) or not raw_data:
+        objects = json_vehicle_objects(raw_data)
+        raw_data = markup_in_json(raw_data) or ""
+    if not isinstance(raw_data, str) or not (raw_data or objects):
         return []
     html = raw_data
     ld = _jsonld_identity(html)
@@ -294,8 +415,11 @@ def parse(raw_data: Any, base_url: str = "", dealer_id: str = "", dealer_name: s
         if row.get("image_url") and row["image_url"] not in row["gallery"]:
             row["gallery"].append(row["image_url"])
     # hydration objects: richer than the cards, and they carry every car the page holds
-    for vin, obj in _rsc_vehicle_objects(html).items():
-        rich = _rsc_row(vin, obj, base_url)
+    enriched = dict(_rsc_vehicle_objects(html)) if html else {}
+    for vin, obj in objects.items():
+        enriched.setdefault(vin, obj)
+    for vin, obj in enriched.items():
+        rich = _obj_row(vin, obj, base_url)
         row = rows.setdefault(vin, {"vin": vin, "dealer_id": dealer_id, "dealer_name": dealer_name or dealer_id, "dealer_url": dealer_url or base_url, "gallery": [], "trim": "", "image_url": "", "price": None})
         for k, v in rich.items():
             if v not in (None, "", []) and not row.get(k):

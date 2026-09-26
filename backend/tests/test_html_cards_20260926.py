@@ -102,3 +102,32 @@ def test_html_page_walk_uses_the_captured_page_param_and_keeps_sections(tmp_path
     u3 = rc._url_for_page(r, 2)
     assert "inv_page=3" in u3 and "page=3" not in u3.replace("inv_page=3", "") and "inv_page%3D3" in u3
     assert rc._html_page_param("cond=used&page=4") == "page" and rc._html_page_param("a=1") == "page"
+
+
+def test_pixelmotion_envelope_objects_fill_trim_colour_engine_and_images():
+    """VlpAjaxEndpoint.php: {"store": "<json string with vehicles keyed by VIN>", "html": cards};
+    the mcpeeks-com scan came back trim 0% / colour 0% from the cards alone (2026-09-26)."""
+    import json as _json
+
+    from backend.parsers.html_cards import json_vehicle_objects
+
+    vin = "3C4NJDBN0TT214531"
+    obj = {"vin": vin, "year": 2026, "make": "Jeep", "model": "Compass", "trim": "Compass Latitude Altitude 4x4", "condition": "new", "stockNum": "T0147",
+           "mileage": 7, "bodyStyle": ["Sport Utility"], "color": {"exterior": {"name": "Fathom Blue Pearl Coat"}, "interior": {"name": "Black"}},
+           "engine": {"nameFull": "2.0L I4 DOHC DI TURBO", "fuel": "Gasoline", "cylinders": "4"},
+           "transmission": {"description": "8-Speed Automatic", "driveTypeAbbr": "4x4"},
+           "pricing": {"data": {"msrp": 33805, "internet": 31496, "final": 28996}},
+           "media": {"image": {"standard": "https://images.x/800x600/a.jpg", "thumb": {"src": "https://images.x/364x273/a.jpg"}}},
+           "vdp_href": "/inventory/new-2026-jeep-compass/", "dealerComments": "One owner."}
+    store = _json.dumps({"tokens": ["t"], "vehicles": _json.dumps({vin: obj})})
+    envelope = _json.dumps({"store": store, "html": _CARD.format(vin=vin, tail="000001"), "filters_html": ""})
+    assert list(json_vehicle_objects(_json.loads(envelope))) == [vin]
+    rows = parse("html_cards", envelope, base_url="https://www.m.com", dealer_id="m-com", dealer_name="M", dealer_url="https://www.m.com", rejected_out=[])
+    assert len(rows) == 1
+    r = rows[0]
+    assert (r["trim"], r["exterior_color"], r["interior_color"], r["engine_description"], r["transmission"]) == \
+        ("Compass Latitude Altitude 4x4", "Fathom Blue Pearl Coat", "Black", "2.0L I4 DOHC DI TURBO", "8-Speed Automatic")
+    assert r["drivetrain"] in ("4x4", "4WD", "AWD")
+    # the one-card html is below the fragment threshold, so the object alone feeds the row
+    assert r["price"] == 28996.0 and r["msrp"] == 33805.0 and r["condition"] == "New" and r["stock_number"] == "T0147" and r["cylinders"] == 4
+    assert r["image_url"] == "https://images.x/800x600/a.jpg" and r["body_style"] == "SUV" and r["description"] == "One owner."

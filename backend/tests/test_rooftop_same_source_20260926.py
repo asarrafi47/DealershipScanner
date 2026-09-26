@@ -16,10 +16,10 @@ def _payload(*rows):
     return {"data": {"listings": list(rows)}, "meta": {"pagination": {"total": len(rows)}}}
 
 
-def _run(payload):
+def _run(payload, **place):
     rej: list[dict] = []
     kept = parse("carscommerce", payload, base_url="https://www.hondahuntersville.com", dealer_id="hondahuntersville-com",
-                 dealer_name="Honda Of Huntersville", dealer_url="https://www.hondahuntersville.com", rejected_out=rej)
+                 dealer_name="Honda Of Huntersville", dealer_url="https://www.hondahuntersville.com", rejected_out=rej, **place)
     return kept, rej
 
 
@@ -31,7 +31,8 @@ def test_street_block_and_unstamped_rows_under_the_store_source_are_kept():
         _listing("1HGCV1F30PA000004", "New", "Hoover Toyota", "MP99999"),   # a real sibling, its own account
         _listing("1HGCV1F30PA000005", "Used", None, "MP99999"),             # unstamped under the sibling's account
     )
-    kept, rej = _run(payload)
+    # the street block is recognised as ours only when the store's street is known (registry / page JSON-LD)
+    kept, rej = _run(payload, dealer_city="Huntersville", dealer_state="NC", dealer_address="12815 Statesville Rd")
     assert sorted(r["vin"][-1] for r in kept) == ["1", "2", "3"]
     assert {r["vin"][-1]: r["_rooftop_reject"] for r in rej} == {"4": "sibling_rooftop", "5": "unstamped_row_in_group_feed"}
 
@@ -60,3 +61,27 @@ def test_street_block_at_the_stores_own_street_is_kept_even_under_another_source
                  dealer_city="Huntersville", dealer_state="NC", dealer_address="12815 Statesville Rd")
     assert sorted(r["vin"][-1] for r in kept) == ["1", "2"]
     assert [r["vin"][-1] for r in rej] == ["3"]
+
+
+def test_group_wide_source_behind_other_rooftops_never_vouches():
+    """Hendrick: "RHendrickUsed" backs nine rooftops; unstamped rows under it stay refused
+    even when this store is matched (hendrickhonda-com kept 73 foreign rows, 2026-09-26)."""
+    payload = _payload(
+        _listing("1HGCV1F30PA000001", "New", "Honda of Huntersville", "MP23253"),
+        _listing("1HGCV1F30PA000002", "Used", "Hendrick Kia of Cary", "RHendrickUsed"),
+        _listing("1HGCV1F30PA000003", "Used", "Honda of Huntersville", "RHendrickUsed"),
+        _listing("1HGCV1F30PA000004", "Used", None, "RHendrickUsed"),
+    )
+    kept, rej = _run(payload)
+    assert sorted(r["vin"][-1] for r in kept) == ["1", "3"]
+    assert {r["vin"][-1]: r["_rooftop_reject"] for r in rej} == {"2": "sibling_rooftop", "4": "unstamped_row_in_group_feed"}
+
+
+def test_without_the_stores_street_an_unknown_street_block_makes_the_source_shared():
+    payload = _payload(
+        _listing("1HGCV1F30PA000001", "New", "Honda of Huntersville", "MP23253"),
+        _listing("1HGCV1F30PA000002", "New", "12815 Statesville Rd<br/>Huntersville, NC 28078<br/>(704) 875-3232", "MP23253"),
+        _listing("1HGCV1F30PA000003", "Used", None, "MP23253"),
+    )
+    kept, rej = _run(payload)
+    assert [r["vin"][-1] for r in kept] == ["1"] and len(rej) == 2
