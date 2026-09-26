@@ -327,7 +327,10 @@ async def run_dealer(
         # handed to every parse() below. A group feed whose rooftops are address
         # blocks carrying no store name can only be told apart by address; omit
         # these and the gate refuses every page of such a feed.
-        roster_place = await asyncio.to_thread(rooftop_roster_place, url)
+        from backend.scanner.dealer_place import roster_place_with_hints
+
+        # registry town + the page-learned street from scan hints (street-block stamps)
+        roster_place = await asyncio.to_thread(roster_place_with_hints, url, dealer_id)
 
         body_parse_cache: dict[int, list[dict[str, Any]]] = {}
         # Rows this store's own site served that the feed assigns to a DIFFERENT

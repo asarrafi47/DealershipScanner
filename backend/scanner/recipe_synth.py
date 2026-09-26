@@ -616,10 +616,16 @@ def _carscommerce_store_filter(recipe: EndpointRecipe, dealer_id: str, dealer_ur
     # reads "Group 1 Ford of South Austin" on 748 of 748 cars while the sort
     # facet (custom_text_4: 1 / 2) and a partial Location (252) kept the
     # all-single-valued rule from firing; the OEM feed then kept 74 (2026-09-26).
-    for v in loc_values:
+    for (_n, facet), v in zip([m for m in mapped if values.get(m[1])], loc_values):
         if len(v) == 1 and total and v[0][1] >= 0.95 * total and site_name and _nrm_facet(v[0][0]) == _nrm_facet(site_name):
-            logger.info("carscommerce [%s]: single-store account (%d cars): location facet %r names this store on %d cars; no store filter",
-                        dealer_id, total, v[0][0], v[0][1])
+            # Filter on that facet anyway: it returns the whole account and marks
+            # the recipe store-scoped (recipe_is_store_scoped), so the gate trusts
+            # the rows instead of refusing the lot-code stamps ("MAIN", "SPC")
+            # the feed writes into dealer.location (Group 1 Ford: 69 of 748 kept).
+            body["facetFilters"] = {facet: [v[0][0]]}
+            recipe.post_template = json.dumps(body)
+            logger.info("carscommerce [%s]: single-store account (%d cars): location facet %s=%r names this store on %d cars; scoped on it",
+                        dealer_id, total, facet, v[0][0], v[0][1])
             return []
     if mapped and loc_values and all(len(v) == 1 for v in loc_values):
         # Napleton Honda of Morton Grove (393 cars, feeds 207385 + MP21386): the

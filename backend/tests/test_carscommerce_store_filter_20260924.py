@@ -420,4 +420,6 @@ def test_location_facet_naming_the_store_on_every_car_is_single_store(monkeypatc
     html = ('"dealername":"Group 1 Ford of South Austin","oem_code":"02923"'
             '<script>var facets = {"Location":"custom_text_3","location_sort":"custom_text_4","meta_location":"custom_text_7"}</script>')
     extra = rs._carscommerce_store_filter(cary_recipe, "group1fordofsouthaustin-com", "https://www.group1fordofsouthaustin.com", html)
-    assert "facetFilters" not in json.loads(cary_recipe.post_template) and extra == []
+    assert json.loads(cary_recipe.post_template)["facetFilters"] == {"custom_text_7": ["Group 1 Ford of South Austin"]} and extra == []
+    from backend.scanner.recipes import recipe_is_store_scoped
+    assert recipe_is_store_scoped(cary_recipe, "Group 1 Ford of South Austin")
