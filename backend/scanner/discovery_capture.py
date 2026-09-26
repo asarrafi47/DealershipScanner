@@ -130,7 +130,13 @@ async def capture_endpoints(
     seen: set[tuple[str, str]] = set()
     uniq: list[Any] = []
     for ep in endpoints:
-        key = (str(getattr(ep, "method", "") or ""), str(getattr(ep, "url", "") or "").split("?")[0])
+        url = str(getattr(ep, "url", "") or "")
+        key = (str(getattr(ep, "method", "") or ""), url.split("?")[0])
+        if str(getattr(ep, "reason", "") or "") == "html_fragment_cards":
+            # one PixelMotion XHR path serves new / used / cpo by query: keep each section
+            from backend.scanner.recipes import html_page_section_key
+
+            key = (key[0], key[1] + "?" + html_page_section_key(url))
         if key in seen:
             continue
         seen.add(key)

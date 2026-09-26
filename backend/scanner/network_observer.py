@@ -65,6 +65,24 @@ def score_intercept_enabled() -> bool:
     return _env_flag("SCANNER_SCORE_INTERCEPT", True)
 
 
+def _html_fragment_in_json(body: Any, min_vins: int = _HTML_FRAGMENT_MIN_VINS) -> str | None:
+    """Largest string value inside a JSON body that carries >= *min_vins* VINs and
+    looks like markup; None when the payload is real data (VINs as fields)."""
+    best = ""
+    stack: list[Any] = [body]
+    seen = 0
+    while stack and seen < 2000:
+        cur = stack.pop()
+        seen += 1
+        if isinstance(cur, dict):
+            stack.extend(cur.values())
+        elif isinstance(cur, list):
+            stack.extend(cur)
+        elif isinstance(cur, str) and len(cur) > len(best) and "<" in cur and len(set(_VIN17_RE.findall(cur))) >= min_vins:
+            best = cur
+    return best or None
+
+
 def sniff_nonjson_enabled() -> bool:
     return _env_flag("SCANNER_SNIFF_NONJSON", True)
 
@@ -618,6 +636,15 @@ class NetworkObserver:
             await self._record_html_fragment(response, rurl, ct, body["__html_fragment__"])
             return
         cls = classify_payload(rurl, body, self.base_url)
+        if cls.tier != TIER_CAPTURE:
+            # JSON envelope around an HTML page of cards ({"html": "<div data-vin=…>"}:
+            # PixelMotion VlpAjaxEndpoint.php, 400 KB, 24 cars, scored near_miss with
+            # vin_items=0 on mcpeeks-com 2026-09-26). The VINs live inside a string
+            # value, so the classifier never sees them; the html_cards parser does.
+            frag = _html_fragment_in_json(body)
+            if frag:
+                await self._record_html_fragment(response, rurl, ct, frag)
+                return
         # Preserve legacy denied-URL accounting (JSON content-type + gate failure).
         if is_json_ct and not cls.url_allowed:
             self.url_denied += 1

@@ -38,6 +38,7 @@ def _money(v: Any) -> float | None:
     return f if 500 <= f <= 2_000_000 else None
 
 
+_VIN17_RE = re.compile(r"\b[A-HJ-NPR-Z0-9]{17}\b")
 _RSC_VIN_RE = re.compile(r'"vin"\s*:\s*"([A-HJ-NPR-Z0-9]{17})"')
 _RSC_PRICE_KEYS = ("salePrice", "internetPrice", "priceInet", "price", "sellingPrice", "askingPrice", "retailPrice", "listPrice", "msrp")
 
@@ -200,7 +201,27 @@ def _jsonld_identity(html: str) -> dict[str, dict[str, Any]]:
     return out
 
 
+def markup_in_json(body: Any, min_vins: int = 5) -> str | None:
+    """Largest string inside a JSON envelope that is markup carrying >= *min_vins*
+    VINs (PixelMotion VlpAjaxEndpoint.php: {"store":…, "html": "<div data-vin=…>"})."""
+    best = ""
+    stack: list[Any] = [body]
+    seen = 0
+    while stack and seen < 2000:
+        cur = stack.pop()
+        seen += 1
+        if isinstance(cur, dict):
+            stack.extend(cur.values())
+        elif isinstance(cur, list):
+            stack.extend(cur)
+        elif isinstance(cur, str) and len(cur) > len(best) and "<" in cur and len(set(_VIN17_RE.findall(cur))) >= min_vins:
+            best = cur
+    return best or None
+
+
 def parse(raw_data: Any, base_url: str = "", dealer_id: str = "", dealer_name: str = "", dealer_url: str = "", **_kw: Any) -> list[dict]:
+    if isinstance(raw_data, (dict, list)):
+        raw_data = markup_in_json(raw_data)
     if not isinstance(raw_data, str) or not raw_data:
         return []
     html = raw_data

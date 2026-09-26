@@ -60,3 +60,33 @@ def test_ledger_html_fragment_promotes_as_html_cards_recipe(tmp_path, monkeypatc
     r = rc.load_recipes("m-com")[0]
     assert r.provider_hint == "html_cards" and r.pagination == rc.PAGINATION_HTML_PAGE
     assert rc._url_for_page(r, 1).endswith("cond=used&page=2")
+
+
+def test_json_envelope_with_html_cards_is_a_fragment():
+    """PixelMotion VlpAjaxEndpoint.php: {"store": …, "html": "<cards>"} scored near_miss
+    (vin_items=0) on mcpeeks-com 2026-09-26; the VINs live inside the string."""
+    from backend.parsers.html_cards import markup_in_json
+    from backend.scanner import network_observer as no
+
+    body = {"store": "x", "html": _page(12, 0), "filters_html": "<ul></ul>", "time_elapsed_secs": 0.2}
+    assert markup_in_json(body) == body["html"]
+    assert no._html_fragment_in_json(body) == body["html"]
+    assert no._html_fragment_in_json({"vehicles": [{"vin": f"19UUB6F49MA0{i:05d}"} for i in range(12)]}) is None
+    rows = parse("html_cards", body, base_url="https://www.m.com", dealer_id="m-com", dealer_name="M", dealer_url="https://www.m.com", rejected_out=[])
+    assert len(rows) == 12 and rows[0]["price"] == 31123.25
+
+
+def test_html_page_walk_uses_the_captured_page_param_and_keeps_sections(tmp_path, monkeypatch):
+    from types import SimpleNamespace
+
+    from backend.scanner import recipes as rc
+
+    monkeypatch.setattr(rc, "RECIPES_DIR", tmp_path)
+    base = "https://www.m.com/wp-content/plugins/pm/VlpAjaxEndpoint.php?condition%5B%5D={c}&pp=24&inv_page=2&newUrl=%2Finventory%2F{c}%2F%3Finv_page%3D2&isAjax=true"
+    eps = [SimpleNamespace(url=base.format(c=c), method="GET", content_type="application/json", post_data_sample=None, vehicle_rows=24,
+                           total_count=None, auth_headers={}, field_coverage={}, reason="html_fragment_cards") for c in ("new", "used")]
+    assert rc.promote_from_ledger("pm-sections-com", "pixel_motion", eps) == 2  # sections survive the (method, path) key
+    r = next(x for x in rc.load_recipes("pm-sections-com") if "condition%5B%5D=new" in x.url)
+    u3 = rc._url_for_page(r, 2)
+    assert "inv_page=3" in u3 and "page=3" not in u3.replace("inv_page=3", "") and "inv_page%3D3" in u3
+    assert rc._html_page_param("cond=used&page=4") == "page" and rc._html_page_param("a=1") == "page"

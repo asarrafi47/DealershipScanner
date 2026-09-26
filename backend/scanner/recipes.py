@@ -106,6 +106,9 @@ class EndpointRecipe:
     def key(self) -> tuple[str, str]:
         p = urlparse(self.url)
         base = f"{(p.hostname or '').lower()}{p.path}"
+        if self.provider_hint == "html_cards" and self.pagination == PAGINATION_HTML_PAGE and p.query:
+            # one XHR path serves every condition, section in the query (PixelMotion)
+            return (self.method, f"{base}?{html_page_section_key(self.url)}")
         # Dealer.com serves new/used/certified from ONE URL via different bodies;
         # discriminate them so all sections persist as distinct recipes.
         return (self.method, f"{base}{_recipe_section_discriminator(self.post_template)}")
@@ -501,6 +504,14 @@ def _mutate_for_page(recipe: EndpointRecipe, template: Any, page_index: int) -> 
                 s["page"] = page_index + 1
     elif recipe.pagination == PAGINATION_DEALER_COM and isinstance(body, dict):
         prefs = body.get("preferences") or {}
+        if isinstance(prefs, dict) and prefs.get("listing.config.id"):
+            # The captured SRP's section: "auto-certified-used,auto-used-mpp" pinned
+            # Camelback Toyota to 99 certified cars; without it the same body returns
+            # the whole lot (906). Stores that already serve the lot under the alias
+            # (Toyota of Cleveland 303 either way) are unaffected. 2026-09-26.
+            prefs = dict(prefs)
+            prefs.pop("listing.config.id", None)
+            body["preferences"] = prefs
         try:
             page_size = int(str(prefs.get("pageSize") or 20))
         except (TypeError, ValueError):
@@ -526,6 +537,26 @@ def _mutate_for_page(recipe: EndpointRecipe, template: Any, page_index: int) -> 
     return body
 
 
+_HTML_PAGE_PARAMS = ("page", "inv_page", "paged", "pg", "p")
+
+
+def _html_page_param(query: str) -> str:
+    """Name of the page parameter an HTML pager URL already carries, else ``page``."""
+    keys = [k for k, _ in parse_qsl(query or "", keep_blank_values=True)]
+    for cand in _HTML_PAGE_PARAMS:
+        if cand in keys:
+            return cand
+    return "page"
+
+
+def html_page_section_key(url: str) -> str:
+    """Query string of an HTML-page recipe minus its page parameter: the section
+    (PixelMotion ``condition[]=new`` vs ``used``) that one endpoint path serves."""
+    parts = urlparse(url)
+    page_param = _html_page_param(parts.query)
+    return urlencode(sorted((k, v) for k, v in parse_qsl(parts.query, keep_blank_values=True) if k != page_param and k != "newUrl"))
+
+
 def _url_for_page(recipe: EndpointRecipe, page_index: int) -> str:
     """Per-page request URL for 0-based *page_index*.
 
@@ -545,8 +576,15 @@ def _url_for_page(recipe: EndpointRecipe, page_index: int) -> str:
         return recipe.url
     page_param = {PAGINATION_DEP_SRP: "p", PAGINATION_COSMOS_PT: "pt"}.get(recipe.pagination, "page")
     parts = urlparse(recipe.url)
+    if recipe.pagination == PAGINATION_HTML_PAGE:
+        # The captured URL names its own page parameter when the pager is an
+        # XHR (PixelMotion: inv_page=2, newUrl=/inventory/new/?inv_page=2);
+        # appending ?page=N to that URL returns page 1 forever (mcpeeks-com).
+        page_param = _html_page_param(parts.query)
     drop = {page_param, "pn"} if recipe.pagination == PAGINATION_COSMOS_PT else {page_param}
     query = [(k, v) for k, v in parse_qsl(parts.query, keep_blank_values=True) if k not in drop]
+    if recipe.pagination == PAGINATION_HTML_PAGE:
+        query = [(k, re.sub(r"(?<=[?&]){}=\d+".format(re.escape(page_param)), f"{page_param}={page_index + 1}", v)) for k, v in query]
     query.append((page_param, str(page_index + 1)))
     if recipe.pagination == PAGINATION_COSMOS_PT:
         # pn = page size, 96 is the server maximum (verified 2026-09-23 on Cherokee

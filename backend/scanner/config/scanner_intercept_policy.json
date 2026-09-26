@@ -11,7 +11,8 @@
     "dealerinspire",
     "carscommerce",
     "typesense",
-    "cdk"
+    "cdk",
+    "supabase"
   ],
-  "notes": "Used by backend/scanner/scrapers/scanner_intercept_filter.py and scanner_intercept.js. SCANNER_INTERCEPT_URL_ALLOW / SCANNER_INTERCEPT_URL_DENY still merge at runtime."
+  "notes": "Used by backend/scanner/scrapers/scanner_intercept_filter.py and scanner_intercept.js. SCANNER_INTERCEPT_URL_ALLOW / SCANNER_INTERCEPT_URL_DENY still merge at runtime. 'supabase' added 2026-09-26: one-off SPA dealers (honestcardeal-com, Vite + Supabase edge functions) serve inventory from <project>.supabase.co; the discovery capture denied all 587 of its XHRs."
 }

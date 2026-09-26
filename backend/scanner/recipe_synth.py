@@ -1261,6 +1261,37 @@ def _dep_page_vins(html: str, dealer_id: str, dealer_url: str) -> set[str]:
     return _unique_vins(_dep_parse(html, base_url=dealer_url, dealer_id=dealer_id, dealer_url=dealer_url))
 
 
+_DEP_LC_LINK_RE = re.compile(r'href=["\'](?:https?://[^/"\']+)?(/search/[^"\'#]*?[?&;](?:amp;)?lc=(\d+)[^"\'#]*)["\']', re.I)
+
+
+def _dep_store_lc(html: str, dealer_id: str) -> str | None:
+    """The site's own store id for DEP's ``lc=`` facet, or None.
+
+    Group sites share one DEP inventory: lexusofknoxville.com's
+    ``/search/pre-owned/?tp=pre_owned`` walked 1,641 cars (Chevrolet, GMC, Ford,
+    "available in Franklin, TN") and filed them under Lexus of Knoxville
+    (2026-09-26). The SRP's own model-facet links carry ``lc=<store id>`` in a
+    slug that names the store (``/search/new-lexus-nx-450h+-lexus-of-knoxville/
+    ?cy=37922&lc=15578&md=12629``); with it the same feed returns the store's
+    lot only. Single-store sites either carry no ``lc`` (Fremont, Groove) or one
+    value that is their own (Capital Toyota 8243), so a lone value is trusted.
+    """
+    found: dict[str, int] = {}
+    slug_hits: dict[str, int] = {}
+    name_slug = re.sub(r"[^a-z0-9]+", "-", (dealer_id or "").lower().replace("-com", "").replace("-net", "")).strip("-")
+    for m in _DEP_LC_LINK_RE.finditer(html or ""):
+        path, lc = m.group(1), m.group(2)
+        found[lc] = found.get(lc, 0) + 1
+        slug = path.split("?")[0].lower()
+        if name_slug and name_slug.replace("-", "") in slug.replace("-", ""):
+            slug_hits[lc] = slug_hits.get(lc, 0) + 1
+    if slug_hits:
+        return max(slug_hits, key=slug_hits.get)
+    if len(found) == 1:
+        return next(iter(found))
+    return None
+
+
 def _dep_srp_recipe(
     dealer_id: str, origin: str, path: str
 ) -> tuple[EndpointRecipe, set[str]] | None:
@@ -1281,6 +1312,16 @@ def _dep_srp_recipe(
     # redirect that may drop the page query. Keep the final URL's own params.
     url = final_url if _origin(final_url) == origin else origin + path
     url = urlunparse(urlparse(url)._replace(fragment=""))
+    lc = _dep_store_lc(html, dealer_id)
+    if lc and f"lc={lc}" not in url:
+        scoped = _with_query_param(url, "lc", lc)
+        scoped_html, _ = _dep_fetch_page(scoped)
+        scoped_vins = _dep_page_vins(scoped_html, dealer_id, origin) if scoped_html else set()
+        if scoped_vins:
+            m2 = _DEP_COUNT_RE.search(scoped_html or "")
+            scoped_total = int(m2.group(1)) if m2 else None
+            logger.info("DEP store scope [%s]: lc=%s narrows %s from %s to %s car(s)", dealer_id, lc, path, total, scoped_total)
+            url, html, vins, total = scoped, scoped_html, scoped_vins, scoped_total
     size = _dep_page_size(html)
     if size and (total is None or total > len(vins)):
         bigger = _with_query_param(url, _DEP_PAGE_SIZE_PARAM, str(size))
