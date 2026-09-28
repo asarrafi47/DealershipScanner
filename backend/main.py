@@ -469,8 +469,25 @@ def _per_request_csp_nonce() -> None:
     g.csp_nonce = secrets.token_urlsafe(16)
 
 
+# State-changing JSON routes served on DELETE. The browser clients already send
+# X-CSRF-Token on these; SameSite=Lax and the absence of CORS kept them safe,
+# this makes the token mandatory too (security review 2026-09-28).
+_CSRF_HEADER_DELETE_ENDPOINTS = frozenset({
+    "api_saved_searches_delete",
+    "api_hidden_dealers_remove",
+    "api_search_history_delete",
+    "api_search_history_clear",
+})
+
+
 @app.before_request
 def _csrf_mutating_requests():
+    if request.method == "DELETE":
+        # Only a logged-in session can be forged cross-site; anonymous callers
+        # get the view's own 401 rather than a 403 about a token they lack.
+        if (request.endpoint or "") in _CSRF_HEADER_DELETE_ENDPOINTS and session.get("user_id"):
+            validate_csrf_header()
+        return
     if request.method != "POST":
         return
     ep = request.endpoint or ""
