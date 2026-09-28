@@ -227,7 +227,11 @@ def ensure_recipe(dealer: dict[str, Any], *, force: bool = False) -> dict[str, A
 # 2. scan
 # --------------------------------------------------------------------------
 
-LOCK_FILE = ROOT / "workspace" / "scanner.lock"
+from backend.scanner.scan_lock import default_lock_path as _default_lock_path
+
+# Per-shard lock (SCANNER_LOCK_PATH); the scanner subprocesses inherit the env,
+# so this pipeline and the scanners it spawns agree on the file.
+LOCK_FILE = _default_lock_path()
 
 
 def _lock_holder_alive() -> int | None:

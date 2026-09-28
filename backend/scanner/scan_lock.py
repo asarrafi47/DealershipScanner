@@ -14,7 +14,22 @@ from backend.scanner.constants import ROOT
 
 logger = logging.getLogger("scanner")
 
-LOCK_PATH = ROOT / "workspace" / "scanner.lock"
+def default_lock_path() -> Path:
+    """One lock per *shard*: ``SCANNER_LOCK_PATH`` names this process's lock file.
+
+    Unset, it is ``workspace/scanner.lock`` — one scanner per machine, the
+    historical rule. Since 2026-09-28 the fleet runs several pipeline shards on
+    one host (the scanner is CPU-bound in one interpreter, batch size past ~8
+    buys nothing); each shard scans a disjoint roster under its own lock file.
+    """
+    raw = (os.environ.get("SCANNER_LOCK_PATH") or "").strip()
+    if raw:
+        p = Path(raw)
+        return p if p.is_absolute() else ROOT / p
+    return ROOT / "workspace" / "scanner.lock"
+
+
+LOCK_PATH = default_lock_path()
 
 
 def _pid_alive(pid: int) -> bool:

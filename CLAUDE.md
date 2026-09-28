@@ -11,4 +11,7 @@
 - NHTSA vPIC values outrank the dealer feed for drivetrain and electrification. The
   catalog (EPA) never outranks the dealer's own engine text or the VIN decode.
 - Never commit `.env` or secrets. Do not run heavy local workloads on battery without
-  asking. One scanner process per machine (`workspace/scanner.lock`).
+  asking. One scanner process per lock file: `workspace/scanner.lock` by default, or the
+  file named by `SCANNER_LOCK_PATH` when the fleet runs as several disjoint shards on one
+  host (2026-09-28: the scanner is CPU-bound in one interpreter, so parallel shards are
+  the throughput lever, not larger batches). Shards must never share dealers.
