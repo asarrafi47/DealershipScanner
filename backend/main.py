@@ -203,6 +203,75 @@ app.config["SESSION_COOKIE_SECURE"] = session_cookie_secure_default()
 app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(days=14)
 app.config["SESSION_REFRESH_EACH_REQUEST"] = True
 
+# ---- Static assets: cache policy + cache-buster ------------------------------------
+#
+# Every static URL the templates emit carries ?v={{ static_cache_ver }}, so the files
+# can be cached for a year and marked immutable; a changed asset gets a new query
+# string and therefore a new cache entry. The version used to be the mtime of the
+# dead style.css (nothing loads it, last touched 2026-08-03), which never moved when
+# a real partial or script changed -- harmless under Flask's default
+# ``Cache-Control: no-cache``, a stale-asset bug the moment a long max-age is set.
+# It is now the newest mtime under frontend/static (precompressed siblings excluded,
+# they are rebuilt from the sources and would only echo the same change).
+_STATIC_MAX_AGE = 31536000
+_STATIC_UNSTAMPED_MAX_AGE = 3600
+_STATIC_COMPRESSED_SUFFIXES = (".gz", ".br")
+app.config["SEND_FILE_MAX_AGE_DEFAULT"] = _STATIC_MAX_AGE
+
+
+def compute_static_cache_ver(static_root) -> str:
+    """Newest mtime (whole seconds) of any source file under ``static_root``.
+
+    Pure so it can be unit-tested against a temp tree. ``.gz``/``.br`` siblings
+    are skipped: they are derived from the sources by
+    scripts/build_static_compressed.py and never change on their own."""
+    newest = 0
+    for dirpath, _dirs, files in os.walk(str(static_root)):
+        for name in files:
+            if name.endswith(_STATIC_COMPRESSED_SUFFIXES):
+                continue
+            try:
+                mt = os.stat(os.path.join(dirpath, name)).st_mtime
+            except OSError:
+                continue
+            if mt > newest:
+                newest = mt
+    return str(int(newest)) if newest else "1"
+
+
+_static_cache_ver_memo: str | None = None
+
+
+def static_cache_ver() -> str:
+    """The ?v= stamp for this process.
+
+    Computed once per process (gunicorn preloads the app, so the walk runs once);
+    the Werkzeug dev server runs with debug=True and no reloader, where a static
+    edit must show up on the next request, so debug recomputes every call (a
+    few dozen stats)."""
+    global _static_cache_ver_memo
+    if app.debug or _static_cache_ver_memo is None:
+        _static_cache_ver_memo = compute_static_cache_ver(Path(app.static_folder).resolve())
+    return _static_cache_ver_memo
+
+
+@app.after_request
+def _static_cache_headers(resp):
+    """``immutable`` for stamped static URLs; a short max-age for unstamped ones.
+
+    An unstamped /static URL (favicon, placeholder.svg, brand art, Leaflet's
+    marker PNGs referenced from its own CSS) has no way to bust the cache, so a
+    year there would pin the old bytes until the browser evicts them."""
+    if request.endpoint != "static" or resp.status_code not in (200, 304):
+        return resp
+    if request.args.get("v"):
+        resp.cache_control.immutable = True
+    elif resp.cache_control.max_age == _STATIC_MAX_AGE:
+        resp.cache_control.max_age = _STATIC_UNSTAMPED_MAX_AGE
+        resp.expires = None
+    return resp
+
+
 from backend.utils.production_security import assert_production_security_config
 
 assert_production_security_config()
@@ -393,11 +462,7 @@ def inject_csrf_and_flags():
     from backend.routes.site_misc import _app_version
     from backend.utils.roles import is_dealer_portal_role
 
-    static_ver = "1"
-    try:
-        static_ver = str(int(Path(app.static_folder).resolve().joinpath("style.css").stat().st_mtime))
-    except OSError:
-        pass
+    static_ver = static_cache_ver()
     _is_admin = is_admin_role(role)
     store_ops_nav = False
     uid = session.get("user_id")

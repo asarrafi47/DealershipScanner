@@ -1475,14 +1475,14 @@
         "premium_url": url_for('premium_page')
     } | tojson }}</script>
     {% endif %}
-    <script src="{{ url_for('static', filename='car_page_helpers.js') }}" defer nonce="{{ csp_nonce }}"></script>
+    <script src="{{ url_for('static', filename='car_page_helpers.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>
     <script src="{{ url_for('static', filename='ds_comments.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>
-    <script src="{{ url_for('static', filename='car_page.js') }}" defer nonce="{{ csp_nonce }}"></script>
+    <script src="{{ url_for('static', filename='car_page.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>
     {% if show_premium_features %}
     <script src="{{ url_for('static', filename='car_trim_ladder.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>
     {% endif %}
     {% if has_paid_access or (logged_in and not billing_stripe_enabled) %}
-    <script src="{{ url_for('static', filename='car_packages.js') }}" defer nonce="{{ csp_nonce }}"></script>
+    <script src="{{ url_for('static', filename='car_packages.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>
     {% endif %}
     <script nonce="{{ csp_nonce }}">
     (function () {
