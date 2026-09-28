@@ -790,11 +790,11 @@ def _csp_header_value_enforced(nonce: str) -> str:
         "object-src 'none'; "
         "frame-src 'self'; "
         "img-src 'self' data: https: http: blob:; "
-        "font-src 'self' https://fonts.gstatic.com data:; "
-        "style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; "
-        "style-src-elem 'self' https://fonts.googleapis.com; "
+        "font-src 'self' data:; "
+        "style-src 'self' 'unsafe-inline'; "
+        "style-src-elem 'self'; "
         f"script-src 'self' 'nonce-{nonce}' https://esm.sh; "
-        "connect-src 'self' https://esm.sh https://fonts.googleapis.com https://tile.openstreetmap.org; "
+        "connect-src 'self' https://esm.sh https://tile.openstreetmap.org; "
         "worker-src 'self'; "
     )
 
@@ -807,11 +807,11 @@ _CSP_REPORT_ONLY = (
     "frame-ancestors 'none'; "
     "object-src 'none'; "
     "img-src 'self' data: https: http: blob:; "
-    "font-src 'self' https://fonts.gstatic.com data:; "
-    "style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; "
-    "style-src-elem 'self' https://fonts.googleapis.com; "
+    "font-src 'self' data:; "
+    "style-src 'self' 'unsafe-inline'; "
+    "style-src-elem 'self'; "
     "script-src 'self' https://esm.sh; "
-    "connect-src 'self' https://esm.sh https://fonts.googleapis.com https://tile.openstreetmap.org; "
+    "connect-src 'self' https://esm.sh https://tile.openstreetmap.org; "
     "worker-src 'self'; "
 )
 
