@@ -982,12 +982,73 @@ def _dealers_with_inventory_near(
     return out
 
 
+def _registry_ids_for_dealer_ids(dealer_ids) -> set[int]:
+    """
+    Registry ids of the rooftops whose active listings carry any of *dealer_ids*
+    (``cars.dealer_id`` keys, case-insensitive).
+
+    Resolved the way the picker places cars: the stamped ``dealership_registry_id``
+    first, else the ``dealer_url`` host. Lets a signed-in user's hidden dealerships be
+    dropped from the aggregated dealer list, which is keyed by registry id while the
+    hidden list is keyed by ``cars.dealer_id``.
+    """
+    keys = sorted({str(d or "").strip().lower() for d in (dealer_ids or ())} - {""})
+    if not keys:
+        return set()
+
+    from backend.db.dealer_geo import normalize_dealer_host
+    from backend.db.inventory_db import get_conn
+    from backend.listings.dealer_registry_match import registry_id_by_dealer_host
+
+    placeholders = ",".join("?" * len(keys))
+    conn = get_conn()
+    try:
+        host_to_registry = registry_id_by_dealer_host(conn)
+        cur = conn.cursor()
+        cur.execute(
+            f"""
+            SELECT DISTINCT dealer_url, dealership_registry_id
+            FROM cars
+            WHERE COALESCE(listing_active, 1) = 1
+              AND dealer_id IS NOT NULL
+              AND lower(trim(dealer_id)) IN ({placeholders})
+            """,
+            keys,
+        )
+        rows = cur.fetchall()
+    finally:
+        conn.close()
+
+    out: set[int] = set()
+    for row in rows:
+        if isinstance(row, dict):
+            dealer_url, registry_raw = row.get("dealer_url"), row.get("dealership_registry_id")
+        else:
+            dealer_url, registry_raw = row[0], row[1]
+        try:
+            stamped = int(registry_raw or 0)
+        except (TypeError, ValueError):
+            stamped = 0
+        if stamped > 0:
+            out.add(stamped)
+            continue
+        host = normalize_dealer_host(str(dealer_url or ""))
+        rid = int(host_to_registry.get(host) or 0) if host else 0
+        if rid > 0:
+            out.add(rid)
+    return out
+
+
 def _cars_matching_search_in_radius(
     zip_code: str,
     radius_miles: float,
     search_query: str,
+    exclude_dealer_ids=None,
 ) -> list[dict[str, Any]]:
-    """Inventory rows for *search_query* within ZIP/radius (aligned with listings geo)."""
+    """Inventory rows for *search_query* within ZIP/radius (aligned with listings geo).
+
+    ``exclude_dealer_ids``: the signed-in user's hidden dealerships, forwarded to every
+    ``search_cars`` path so a hidden store never matches the search."""
     from backend.db.inventory_db import search_cars
     from backend.utils.hybrid_search import (
         _has_structured_filters,
@@ -1001,6 +1062,10 @@ def _cars_matching_search_in_radius(
         "radius_miles": float(radius_miles),
         "include_incomplete": False,
     }
+    if exclude_dealer_ids:
+        sql_kwargs["exclude_dealer_ids"] = sorted(
+            {str(d or "").strip().lower() for d in exclude_dealer_ids} - {""}
+        )
     parsed = parse_natural_query(search_query)
     if _has_structured_filters(parsed):
         merged = {**sql_kwargs, **filters_dict_to_search_cars_kwargs(parsed)}
@@ -1020,6 +1085,7 @@ def resolve_nearby_dealers_for_listings(
     radius_miles: float,
     search_query: str | None = None,
     cap: int | None = None,
+    exclude_dealer_ids=None,
 ) -> dict[str, Any]:
     """
     Dealers within radius that have ≥1 active listing.
@@ -1027,6 +1093,10 @@ def resolve_nearby_dealers_for_listings(
     - **Broad** (no search query): sort by listing count desc, distance asc; cap at ``cap`` (default 10).
     - **Search** (non-empty ``search_query``): all dealers in radius that have matching
       inventory for the hybrid search (same ZIP/radius + query), uncapped.
+
+    ``exclude_dealer_ids``: the signed-in user's hidden dealerships (``cars.dealer_id``
+    keys). Their rooftops are dropped from the dealer list and their cars from the
+    search, so ``total_with_inventory`` counts only stores the user can see.
     """
     from backend.db.dealerships_db import search_dealerships_by_radius
     from backend.db.geo import zip_to_coords
@@ -1051,6 +1121,13 @@ def resolve_nearby_dealers_for_listings(
     lat, lon = coords
     radius_f = float(radius_miles)
     with_stock = _dealers_with_inventory_near(lat, lon, radius_f)
+    hidden_keys = sorted(
+        {str(d or "").strip().lower() for d in (exclude_dealer_ids or ())} - {""}
+    )
+    if hidden_keys and with_stock:
+        hidden_registry_ids = _registry_ids_for_dealer_ids(hidden_keys)
+        if hidden_registry_ids:
+            with_stock = [d for d in with_stock if int(d["id"]) not in hidden_registry_ids]
     total_with_inventory = len(with_stock)
     # Registry radius search alone under-counts: a rooftop is placed by its own
     # dealer_geopoints coordinates here, and those can disagree with the registry
@@ -1080,7 +1157,9 @@ def resolve_nearby_dealers_for_listings(
             registry_id_by_dealer_host,
         )
 
-        cars = _cars_matching_search_in_radius(zip_code, radius_f, q)
+        cars = _cars_matching_search_in_radius(
+            zip_code, radius_f, q, exclude_dealer_ids=hidden_keys or None
+        )
         conn = inv_get_conn()
         try:
             host_to_registry = registry_id_by_dealer_host(conn)
