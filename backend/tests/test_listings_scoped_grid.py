@@ -383,3 +383,108 @@ def test_offline_builder_fills_then_reuses_then_prunes(scoped):
     conn.close()
     pruned = gc.build_all_cards(batch=2)
     assert pruned["active"] == 5 and pruned["pruned"] == 1
+
+
+# ── card freshness: inputs outside the cars row ─────────────────────────
+
+
+def test_card_revision_covers_deal_score_and_public_incomplete_sources(monkeypatch):
+    from pathlib import Path
+
+    from backend.db.repositories import grid_cards_repo as gc
+
+    root = Path(gc.__file__).resolve().parents[3]
+    for spec in (
+        "backend/intelligence/deal_score_cache.py",
+        "backend/utils/market_price.py",
+        "backend/utils/price_plausibility.py",
+        "backend/db/repositories/listings_repo.py::serialize_car_for_listings_grid",
+    ):
+        assert spec in gc._REV_SOURCES
+    for spec in gc._REV_SOURCES:
+        rel, _, func = spec.partition("::")
+        assert (root / rel).exists(), spec
+        if func:
+            assert gc._function_source((root / rel).read_bytes(), func), spec
+
+    base = gc._compute_rev()
+    real = Path.read_bytes
+
+    def edited(self):
+        data = real(self)
+        return data + b"\n# edited\n" if self.name == "deal_score_cache.py" else data
+
+    monkeypatch.setattr(Path, "read_bytes", edited)
+    assert gc._compute_rev() != base
+
+
+def _market_stats(path, computed_at):
+    conn = sqlite3.connect(str(path))
+    conn.execute(
+        "CREATE TABLE IF NOT EXISTS market_price_stats (id INTEGER PRIMARY KEY, computed_at TEXT)"
+    )
+    conn.execute("INSERT INTO market_price_stats (computed_at) VALUES (?)", (computed_at,))
+    conn.commit()
+    conn.close()
+
+
+def test_market_band_recompute_invalidates_stored_cards(scoped, monkeypatch):
+    import backend.intelligence.deal_score_cache as dsc
+    from backend.db.geo import zip_to_coords
+    from backend.db.repositories import grid_cards_repo as gc
+
+    reloads = []
+    monkeypatch.setattr(dsc, "refresh_cache", lambda: reloads.append(1))
+    _market_stats(scoped.path, "2026-09-27T03:00:00")
+    lat, lon = zip_to_coords("92694")
+    first = gc.cards_near(lat, lon, 50)
+    assert first.stats["changed"] > 0
+    assert gc.cards_near(lat, lon, 50).stats["changed"] == 0
+    token_before = gc.grid_scope_token()
+
+    # Nightly step 6 recomputes the bands; nothing in ``cars`` moved.
+    _market_stats(scoped.path, "2026-09-28T03:00:00")
+    gc._market_gen_cache = None  # past the 60 s resample
+    after = gc.cards_near(lat, lon, 50)
+    assert after.stats["changed"] == len(first.entries)
+    assert reloads, "deal-score band cache must reload before cards are rebuilt"
+    assert gc.grid_scope_token() != token_before
+
+
+def test_market_generation_read_failure_keeps_the_last_generation(scoped, monkeypatch):
+    from backend.db.repositories import grid_cards_repo as gc
+
+    _market_stats(scoped.path, "2026-09-27T03:00:00")
+    good = gc.market_bands_generation()
+    assert good != "-"
+    gc._market_gen_cache = None
+
+    class Boom:
+        def __enter__(self):
+            raise RuntimeError("connection reset")
+
+        def __exit__(self, *a):
+            return False
+
+    monkeypatch.setattr(gc, "db_conn", lambda *a, **k: Boom())
+    assert gc.market_bands_generation() == good
+    assert gc._market_gen_cache is None  # a failure is never cached
+
+
+def test_include_incomplete_toggle_is_part_of_the_aux_key(scoped, monkeypatch):
+    from backend.db.geo import zip_to_coords
+    from backend.db.repositories import grid_cards_repo as gc
+
+    monkeypatch.setenv("LISTINGS_INCLUDE_INCOMPLETE_CARS", "1")
+    lat, lon = zip_to_coords("92694")
+    gc.cards_near(lat, lon, 50)
+    assert gc.cards_near(lat, lon, 50).stats["changed"] == 0
+    token_on = gc.grid_scope_token()
+
+    ctx_on = gc._Ctx()
+    monkeypatch.setenv("LISTINGS_INCLUDE_INCOMPLETE_CARS", "0")
+    ctx_off = gc._Ctx()
+    assert ctx_on.include_incomplete and not ctx_off.include_incomplete
+    for pub_inc in (False, True):
+        assert gc._aux_key(ctx_on, pub_inc, None) != gc._aux_key(ctx_off, pub_inc, None)
+    assert gc.grid_scope_token() != token_on

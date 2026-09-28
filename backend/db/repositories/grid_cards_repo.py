@@ -53,6 +53,7 @@ GRID_CARD_REV = 1
 # Serializer sources whose text is folded into the card revision, so editing the
 # card serializer invalidates every stored card without anyone remembering to bump
 # GRID_CARD_REV. Anything else the card depends on needs a manual bump.
+# ``path::name`` folds in only that top-level function of a large module.
 _REV_SOURCES = (
     "backend/utils/car_serialize",
     "backend/utils/fuel_type_normalize.py",
@@ -60,6 +61,14 @@ _REV_SOURCES = (
     "backend/utils/interior_color_buckets.py",
     "backend/utils/mileage_display.py",
     "backend/utils/listings_sort.py",
+    # deal_score: public_deal_score -> band lookup + scoring + plausibility gates.
+    "backend/intelligence/deal_score_cache.py",
+    "backend/intelligence/market_pricing.py",
+    "backend/utils/market_price.py",
+    "backend/utils/price_plausibility.py",
+    # public_incomplete: the listings_repo wrapper around the card serializer.
+    "backend/db/repositories/listings_repo.py::serialize_car_for_listings_grid",
+    "backend/db/repositories/data_quality_repo.py::_car_is_publicly_incomplete",
 )
 
 CARD_MAX_AGE_DAYS = 1
@@ -76,17 +85,35 @@ _ACTIVE = "(COALESCE(c.listing_active, 1) = 1) AND COALESCE(c.marked_for_review,
 _FAR_PRICE = 1e18  # listing_price_value() returns inf; stored as a large finite number
 
 
+def _function_source(text: bytes, name: str) -> bytes:
+    """The text of top-level ``def name`` in *text* (to the next top-level statement)."""
+    lines = text.split(b"\n")
+    start = None
+    for i, ln in enumerate(lines):
+        if start is None:
+            if ln.startswith(f"def {name}(".encode()):
+                start = i
+        elif ln and not ln[:1].isspace() and not ln.startswith(b")"):
+            return b"\n".join(lines[start:i])
+    return b"\n".join(lines[start:]) if start is not None else b""
+
+
 def _compute_rev() -> str:
     root = Path(__file__).resolve().parents[3]
     h = hashlib.blake2b(f"rev{GRID_CARD_REV}".encode(), digest_size=8)
-    for rel in _REV_SOURCES:
+    for spec in _REV_SOURCES:
+        rel, _, func = spec.partition("::")
         p = root / rel
         files = sorted(p.glob("*.py")) if p.is_dir() else [p]
         for f in files:
             try:
-                h.update(f.read_bytes())
+                data = f.read_bytes()
             except OSError:
-                h.update(rel.encode())
+                h.update(spec.encode())
+                continue
+            if func:
+                data = _function_source(data, func) or spec.encode()
+            h.update(data)
     return h.hexdigest()
 
 
@@ -137,10 +164,13 @@ def ensure_grid_cards_table() -> bool:
 def reset_grid_cards_state() -> None:
     """Tests: forget the per-process table flag and in-memory helpers."""
     global _table_ready, _fallback_urls_cache, _attr_cache, _token_cache
+    global _market_gen_cache, _market_gen_last
     _table_ready = False
     _fallback_urls_cache = None
     _attr_cache = None
     _token_cache = None
+    _market_gen_cache = None
+    _market_gen_last = None
 
 
 # ---------------------------------------------------------------------------
@@ -162,9 +192,19 @@ def grid_scope_token() -> Any:
         return hit[1]
     from backend.db.repositories import listings_repo as lr
 
+    from backend.db.repositories.data_quality_repo import listings_include_incomplete_cars
+
     fp = lr._pg_grid_write_fingerprint()
     base = fp if fp is not None else lr._listings_cache_token()
-    token = (base, _today())
+    # Everything a card depends on beyond the ``cars`` row (see ``_aux_key``), so a
+    # body or ETag keyed by this token moves when any of it does.
+    token = (
+        base,
+        _today(),
+        CARD_REV,
+        market_bands_generation(),
+        listings_include_incomplete_cars(),
+    )
     if fp is not None:
         # Off Postgres the legacy token is an mtime pair that tests move by writing;
         # only the Postgres fingerprint is expensive enough to throttle.
@@ -213,8 +253,58 @@ def _attr_key(state: dict[str, Any] | None) -> str:
     )
 
 
-def _aux_key(pub_incomplete: bool, state: dict[str, Any] | None) -> str:
-    raw = f"{CARD_REV}|{1 if pub_incomplete else 0}|{_attr_key(state)}"
+# Market-band generation: ``deal_score`` on every card reads ``market_price_stats``
+# (nightly step 6 recomputes it). Folded into every card's aux_key, so a recompute
+# invalidates the cards before step 7 rebuilds them.
+_market_gen_cache: tuple[float, str] | None = None
+_market_gen_last: str | None = None
+_MARKET_GEN_TTL_S = 60.0
+
+
+def market_bands_generation() -> str:
+    """``max(computed_at)|count`` of ``market_price_stats`` ("-" when there is none).
+
+    A failed read keeps the last known generation (and is not cached), so a DB hiccup
+    never looks like a recompute and invalidates the whole store. When the generation
+    moves, the in-process deal-score band cache is reloaded first, so a card rebuilt
+    for the new generation is scored against the new bands."""
+    global _market_gen_cache, _market_gen_last
+    now = time.monotonic()
+    hit = _market_gen_cache
+    if hit is not None and (now - hit[0]) < _MARKET_GEN_TTL_S:
+        return hit[1]
+    try:
+        with db_conn() as conn:
+            row = conn.execute(
+                "SELECT MAX(computed_at), COUNT(*) FROM market_price_stats"
+            ).fetchone()
+        gen = f"{row[0]}|{row[1]}" if row is not None else "-"
+    except Exception as exc:
+        msg = str(exc)
+        if "market_price_stats" in msg and ("no such table" in msg or "does not exist" in msg):
+            gen = "-"
+        else:
+            _log.warning(
+                "market_price_stats generation read failed; keeping %r", _market_gen_last, exc_info=True
+            )
+            return _market_gen_last if _market_gen_last is not None else "-"
+    if _market_gen_last is not None and gen != _market_gen_last:
+        try:
+            from backend.intelligence.deal_score_cache import refresh_cache
+
+            refresh_cache()
+        except Exception:
+            _log.warning("deal-score band cache reload failed", exc_info=True)
+    _market_gen_last = gen
+    _market_gen_cache = (now, gen)
+    return gen
+
+
+def _aux_key(ctx: "_Ctx", pub_incomplete: bool, state: dict[str, Any] | None) -> str:
+    raw = (
+        f"{CARD_REV}|{1 if pub_incomplete else 0}|{_attr_key(state)}"
+        f"|inc{1 if ctx.include_incomplete else 0}|mkt{ctx.market_gen}"
+    )
     return hashlib.blake2b(raw.encode("utf-8", "surrogatepass"), digest_size=8).hexdigest()
 
 
@@ -237,6 +327,7 @@ class _Ctx:
         self.include_incomplete = listings_include_incomplete_cars()
         self.snapshot = _incomplete_index_snapshot_for_listings()
         self.attribution = _attribution_all()
+        self.market_gen = market_bands_generation()
         self.today = _today()
 
     def pub_incomplete(self, car_id: int, row: dict[str, Any] | None = None) -> bool:
@@ -314,7 +405,7 @@ def _serialize_rows(
             (
                 cid,
                 ckey,
-                _aux_key(pub_inc, state),
+                _aux_key(ctx, pub_inc, state),
                 1 if card.get("price_drop_days_ago") is not None else 0,
                 bucket,
                 float(price),
@@ -505,7 +596,7 @@ def _resolve(
         pub_inc = ctx.pub_incomplete(cid)
         if pub_inc and not ctx.include_incomplete:
             continue
-        aux = _aux_key(pub_inc, ctx.attribution.get(cid))
+        aux = _aux_key(ctx, pub_inc, ctx.attribution.get(cid))
         cand["_aux"] = aux
         ver = str(cand.get("ver") or "")
         if (
@@ -531,7 +622,7 @@ def _resolve(
                 pub_inc = ctx.pub_incomplete(cid, row)
                 if pub_inc and not ctx.include_incomplete:
                     continue
-                cand["_aux"] = _aux_key(pub_inc, ctx.attribution.get(cid))
+                cand["_aux"] = _aux_key(ctx, pub_inc, ctx.attribution.get(cid))
             if (
                 cand.get("card_json")
                 and cand.get("content_key") == _content_key(row)
