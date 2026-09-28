@@ -26,14 +26,27 @@
             {% elif vin_raw %}
             <p class="nhtsa-recalls-lead nhtsa-recalls-lead--error">“{{ vin_raw }}” is not a valid 17-character VIN.</p>
             {% else %}
-            <p class="nhtsa-recalls-lead">Open this page from a vehicle listing to run an automatic recall check.</p>
+            <p class="nhtsa-recalls-lead">Enter a 17-character VIN to list its recall campaigns, or open this page from a vehicle listing to run the check automatically.</p>
             {% endif %}
         </header>
 
+        {% if not vin %}
+        {# ES-4 / SA-10 (visual review 2026-09-28): no VIN is an input state, not an
+           outage -- NHTSA was never contacted. #}
+        <form class="nhtsa-recalls-form" method="get" action="" role="search" aria-label="Recall lookup by VIN">
+            <label for="nhtsa-recalls-vin-input" class="nhtsa-recalls-form__label">VIN</label>
+            <input id="nhtsa-recalls-vin-input" class="nhtsa-recalls-form__input" type="text" name="vin"
+                   value="{{ vin_raw or '' }}" minlength="17" maxlength="17" pattern="[A-HJ-NPR-Za-hj-npr-z0-9]{17}"
+                   autocomplete="off" autocapitalize="characters" spellcheck="false" required
+                   placeholder="17 characters, no I, O or Q">
+            <button type="submit" class="nhtsa-recalls-form__submit">Check recalls</button>
+        </form>
+        {% endif %}
+
         {% if rate_limited %}
-        <p class="nhtsa-recalls-status nhtsa-recalls-status--error">Too many requests. Please wait a minute and try again.</p>
-        {% elif lookup_error and lookup_error != 'invalid_vin' %}
-        <p class="nhtsa-recalls-status nhtsa-recalls-status--error">Could not reach NHTSA right now ({{ lookup_error }}). Try again shortly.</p>
+        <p class="nhtsa-recalls-status nhtsa-recalls-status--error" role="alert"><strong>Error:</strong> too many requests. Please wait a minute and try again.</p>
+        {% elif lookup_error and lookup_error not in ('invalid_vin', 'missing_vin') %}
+        <p class="nhtsa-recalls-status nhtsa-recalls-status--error" role="alert"><strong>Error:</strong> could not reach NHTSA right now. Try again shortly.</p>
         {% elif vin %}
             {% if recalls %}
             <ul class="vehicle-history-recalls-list nhtsa-recalls-list">

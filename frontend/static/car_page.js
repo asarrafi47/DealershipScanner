@@ -2264,52 +2264,6 @@
 
 
 
-    function initDealerReputation() {
-        const block = document.getElementById("dealer-reputation-block");
-        if (!block) return;
-
-        const rating = CP.parseDealerRating(block.getAttribute("data-dealer-rating"));
-        const reviewCount = CP.parseDealerReviewCount(block.getAttribute("data-dealer-reviews"));
-
-        if (rating == null) {
-            block.hidden = true;
-            block.setAttribute("aria-hidden", "true");
-            return;
-        }
-
-        const starsEl = block.querySelector(".reputation-stars");
-        const countEl = document.getElementById("dealer-review-count");
-        const badgesEl = document.getElementById("dealer-trust-badges");
-
-        if (starsEl) {
-            starsEl.textContent = CP.buildReputationStars(rating);
-            starsEl.setAttribute("aria-label", rating.toFixed(1) + " out of 5 stars");
-            starsEl.removeAttribute("aria-hidden");
-        }
-
-        if (countEl) {
-            countEl.textContent = reviewCount != null ? CP.formatReviewCount(reviewCount) : "";
-        }
-
-        if (badgesEl) {
-            badgesEl.innerHTML = "";
-            if (rating >= 4.5 && reviewCount != null && reviewCount > 200) {
-                badgesEl.insertAdjacentHTML(
-                    "beforeend",
-                    '<span class="badge badge-success">\uD83C\uDFC6 Top Rated Dealer</span>'
-                );
-            }
-            if (rating <= 3.7) {
-                badgesEl.insertAdjacentHTML(
-                    "beforeend",
-                    '<span class="badge badge-warning">\u26A0\uFE0F Review Dealer Policies</span>'
-                );
-            }
-        }
-
-        block.removeAttribute("hidden");
-        block.removeAttribute("aria-hidden");
-    }
 
     function readCarPageAccess() {
         const el = document.getElementById("car-page-access-json");
@@ -2752,7 +2706,6 @@
     function initCarPageDeferred() {
         initBuildSheetPrint();
         initCarHistoryHighlights();
-        initDealerReputation();
         initEvBatteryIntelligence();
         initTcoIntelligence();
         initTcoCostChart();

@@ -665,6 +665,12 @@ body:has(.app-sidebar) {
     body:has(.app-sidebar) .hub-shell,
     body:has(.app-sidebar) .find-dealers-section,
     body:has(.app-sidebar) .car-detail,
+    /* M1 (visual review 2026-09-28): the fixed 44px toggle covered the first
+       line of these sidebar pages ("HTSA recall lookup", "ack to inventory"). */
+    body:has(.app-sidebar) .compare-page-section,
+    body:has(.app-sidebar) .nhtsa-recalls-section,
+    body:has(.app-sidebar) .auth-section,
+    body:has(.app-sidebar) .dealer-research,
     body.admin-shell-body .admin-main {
         padding-top: 56px;
     }

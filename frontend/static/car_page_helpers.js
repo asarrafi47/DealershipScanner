@@ -194,32 +194,6 @@ window.CP = window.CP || {};
         return 1.0;
     }
 
-    function parseDealerRating(raw) {
-        if (raw == null || String(raw).trim() === "") return null;
-        const n = parseFloat(String(raw));
-        if (!Number.isFinite(n) || n < 0 || n > 5) return null;
-        return n;
-    }
-
-    function parseDealerReviewCount(raw) {
-        if (raw == null || String(raw).trim() === "") return null;
-        const n = parseInt(String(raw), 10);
-        if (!Number.isFinite(n) || n < 0) return null;
-        return n;
-    }
-
-    function buildReputationStars(rating) {
-        const rounded = Math.round(Math.max(0, Math.min(5, rating)));
-        return "\u2605".repeat(rounded) + "\u2606".repeat(5 - rounded);
-    }
-
-    function formatReviewCount(count) {
-        if (count == null) return "";
-        const n = count;
-        const formatted = n.toLocaleString("en-US");
-        return "(" + formatted + " Google review" + (n === 1 ? "" : "s") + ")";
-    }
-
     function hasPremiumHistoryAccess(access) {
         if (!access) return false;
         if (access.show_premium_features) return true;
@@ -249,10 +223,6 @@ window.CP = window.CP || {};
     CP.formatDepreciationCurrency = formatDepreciationCurrency;
     CP.formatDepreciationCurrencyShort = formatDepreciationCurrencyShort;
     CP.evBatteryThermalScaleFactor = evBatteryThermalScaleFactor;
-    CP.parseDealerRating = parseDealerRating;
-    CP.parseDealerReviewCount = parseDealerReviewCount;
-    CP.buildReputationStars = buildReputationStars;
-    CP.formatReviewCount = formatReviewCount;
     CP.hasPremiumHistoryAccess = hasPremiumHistoryAccess;
     CP.escHtml = escHtml;
 })(window.CP);

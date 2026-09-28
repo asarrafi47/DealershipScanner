@@ -753,6 +753,40 @@
     }
 }
 
+/* M8 (visual review 2026-09-28): at 390px the search controls were 20-31px
+   tall and the 13.5px mini controls triggered iOS focus zoom. 44px targets,
+   16px text, same hairline look. */
+@media (max-width: 640px) {
+    .lps-search-input {
+        min-height: 44px;
+        font-size: 17px;
+    }
+
+    .lps-search-go {
+        min-height: 44px;
+        padding: 10px 4px;
+    }
+
+    .lps-mini {
+        align-items: center;
+    }
+
+    .lps-mini input,
+    .lps-mini select {
+        min-height: 44px;
+        padding: 10px 0;
+        font-size: 16px;
+    }
+
+    .lps-mini input {
+        width: 88px;
+    }
+
+    .lps-mini select {
+        padding-right: 18px;
+    }
+}
+
 @media (prefers-reduced-motion: reduce) {
     .lps-fade {
         animation: none;

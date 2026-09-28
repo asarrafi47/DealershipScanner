@@ -1044,8 +1044,9 @@ body.listings-page .listings-filter-actions .pill-clear-btn {
         position: sticky;
         bottom: 0;
         z-index: 2;
-        padding: 14px 16px calc(14px + env(safe-area-inset-bottom, 0px));
-        background: linear-gradient(180deg, rgba(255, 255, 255, 0.92) 0%, #fff 100%);
+        margin: 8px -20px 0;
+        padding: 14px 20px calc(14px + env(safe-area-inset-bottom, 0px));
+        background: #fff;
         box-shadow: 0 -8px 24px rgba(20, 36, 54, 0.06);
     }
 

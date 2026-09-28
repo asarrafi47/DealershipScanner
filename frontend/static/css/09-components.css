@@ -982,16 +982,21 @@ body.listings-page .listings-toolbar .results-count {
         grid-template-columns: 1fr;
     }
 
+    /* M7 (visual review 2026-09-28): the desktop sticky ``top:16px`` leaked in
+       and pinned the sheet to the top, 108px short of the bottom. Anchor it to
+       the bottom only; the actions bar carries the safe-area padding so the
+       sticky "Show results" row sits on the sheet's real bottom edge. */
     body.listings-page .listings-sidebar {
         display: none;
         position: fixed;
+        top: auto;
         left: 0;
         right: 0;
         bottom: 0;
         z-index: 90;
         max-height: min(88vh, 720px);
         margin: 0;
-        padding: 20px 20px calc(20px + env(safe-area-inset-bottom, 0px));
+        padding: 20px 20px 0;
         border-radius: 20px 20px 0 0;
         background: var(--bg-elevated);
         box-shadow: 0 -12px 48px rgba(20, 36, 54, 0.22);

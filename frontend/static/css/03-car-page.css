@@ -177,12 +177,32 @@ body.car-detail-page .car-detail {
 }
 
 .reputation-stars {
-    color: #f59e0b;
+    position: relative;
+    display: inline-block;
     font-size: 1rem;
     letter-spacing: 0.06em;
     line-height: 1.2;
+    white-space: nowrap;
 }
 
+.reputation-stars__track {
+    color: var(--border-medium);
+}
+
+.reputation-stars__fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    color: var(--navy);
+}
+
+.dealer-review-rating {
+    color: var(--text);
+    font-variant-numeric: tabular-nums;
+}
+
+.dealer-review-count,
 #dealer-review-count {
     font-size: 0.875rem;
     color: var(--text-muted);
@@ -1619,10 +1639,8 @@ body.car-detail-page .car-vdp-panel .car-detail-history {
         font-size: 1.45rem;
     }
 
-    .car-detail-image {
-        height: min(56vw, 340px);
-        max-height: none;
-    }
+    /* Gallery height at this width lives after the base .car-detail-image
+       rule below (M2): here it lost to the later unconditional 500px. */
 
     .car-gallery-hero {
         max-height: none;
@@ -1785,6 +1803,17 @@ button.back-link.car-back-link {
     background-size: cover;
     background-position: center;
     overflow: hidden;
+}
+
+/* M2 (visual review 2026-09-28): at phone widths the 500px box letterboxed a
+   4:3 photo into ~268px with ~115px grey bands and pushed the price below the
+   first screen. Must follow the base rule above (same specificity). */
+@media (max-width: 700px) {
+    .car-detail-image {
+        aspect-ratio: 4 / 3;
+        height: auto;
+        max-height: none;
+    }
 }
 
 .car-detail-image .car-gallery-main-img {
@@ -2430,6 +2459,50 @@ body.car-lightbox-open {
     background: #fef2f2;
     border: 1px solid #fecaca;
     color: #991b1b;
+}
+
+.nhtsa-recalls-form {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 12px;
+    margin: 0 0 20px;
+}
+
+.nhtsa-recalls-form__label {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.nhtsa-recalls-form__input {
+    flex: 1 1 16rem;
+    min-height: 44px;
+    padding: 8px 12px;
+    border: 1px solid var(--border-medium);
+    border-radius: 6px;
+    background: var(--bg-card);
+    color: var(--text);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 16px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.nhtsa-recalls-form__submit {
+    min-height: 44px;
+    padding: 8px 18px;
+    border: 1px solid var(--navy-deep, var(--navy));
+    border-radius: 6px;
+    background: var(--navy);
+    color: #fff;
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.nhtsa-recalls-form__submit:hover {
+    background: var(--navy-deep, var(--navy));
 }
 
 .nhtsa-recalls-list {

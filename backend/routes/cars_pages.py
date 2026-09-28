@@ -617,6 +617,7 @@ def _build_car_detail_view_context(car_id: int, car_raw: dict) -> dict:
 
     listings_geo = main.listings_geo_kwargs_from_session(session)
     from backend.listings.dealer_map import hero_location_for_car
+    from backend.utils.dealer_rating_display import dealer_rating_display
 
     try:
         hero_location = hero_location_for_car(dealer_map, listings_geo.get("zip_code"))
@@ -695,6 +696,7 @@ def _build_car_detail_view_context(car_id: int, car_raw: dict) -> dict:
         "logged_in": bool(uid),
         "listings_geo_zip": listings_geo.get("zip_code") or "",
         "hero_location": hero_location,
+        "dealer_rating": dealer_rating_display(dealer_info),
         "listing_incomplete_fields": listing_incomplete_fields,
         "gallery_images": ctx.get("gallery_images") or [],
         "verified_specs": ctx.get("verified_specs") or {},

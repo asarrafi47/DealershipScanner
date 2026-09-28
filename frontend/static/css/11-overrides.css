@@ -224,14 +224,21 @@
         gap: 12px;
     }
 
+    /* M4 (visual review 2026-09-28): the strip overflowed (424 vs 364px) with
+       its scrollbar hidden, clipping "Comments". Wrap instead of scrolling. */
     .car-vdp-tabs {
         gap: 4px;
         padding: 4px;
+        flex-wrap: wrap;
+        overflow-x: visible;
     }
 
     .car-vdp-tab {
+        flex: 1 1 auto;
+        min-height: 44px;
         padding: 8px 12px;
         font-size: 13px;
+        text-align: center;
     }
 
     .car-quick-specs {

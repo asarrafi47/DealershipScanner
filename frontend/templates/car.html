@@ -27,6 +27,15 @@
     {% endif %}
 </head>
 <body class="car-detail-page{% if car_embed %} car-embed{% endif %}{% if scan_lab_mode %} scan-lab-vdp{% endif %}" data-car-id="{{ car.id }}"{% if logged_in_user or scan_lab_mode %} data-logged-in="1"{% endif %}>
+{# DC-8 (visual review 2026-09-28): the number, the source and the fetch date,
+   with the stars filled to the fraction; no emoji badge. #}
+{% macro dealer_reputation(r, extra_cls='') -%}
+<div class="dealer-reputation-block {{ extra_cls }}">
+    <span class="reputation-stars" aria-hidden="true"><span class="reputation-stars__track">&#9733;&#9733;&#9733;&#9733;&#9733;</span><span class="reputation-stars__fill" style="width: {{ r.fill_pct }}%">&#9733;&#9733;&#9733;&#9733;&#9733;</span></span>
+    <span class="dealer-review-count"><strong class="dealer-review-rating">{{ r.rating }}</strong> &middot; {{ r.reviews }}{% if r.as_of %} &middot; as of {{ r.as_of }}{% endif %}</span>
+</div>
+{%- endmacro %}
+
 
     <div class="page">
 
@@ -232,17 +241,8 @@
                     {% if location_attribution %}
                     <p class="car-detail-location-note">{{ location_attribution.location_note }}</p>
                     {% endif %}
-                    {% set dealer_rep_rating = car.dealer_rating if car.dealer_rating is defined else (dealer_info.google_rating if dealer_info and dealer_info.google_rating is defined else none) %}
-                    {% set dealer_rep_reviews = car.dealer_reviews if car.dealer_reviews is defined else (dealer_info.google_review_count if dealer_info and dealer_info.google_review_count is defined else none) %}
-                    {% if not dealer_map %}
-                    <div id="dealer-reputation-block" class="dealer-reputation-block"
-                        {% if dealer_rep_rating is none %}hidden aria-hidden="true"{% endif %}
-                        {% if dealer_rep_rating is not none %}data-dealer-rating="{{ dealer_rep_rating }}"{% endif %}
-                        {% if dealer_rep_reviews is not none %}data-dealer-reviews="{{ dealer_rep_reviews }}"{% endif %}>
-                        <span class="reputation-stars" aria-hidden="true">★★★★★</span>
-                        <span id="dealer-review-count">(Loading reviews...)</span>
-                        <div id="dealer-trust-badges"></div>
-                    </div>
+                    {% if not dealer_map and dealer_rating %}
+                    {{ dealer_reputation(dealer_rating) }}
                     {% endif %}
                     <h1 class="car-detail-title">{{ car.title }}</h1>
                     {% if car.trim and car.trim != '—' %}
@@ -1314,12 +1314,18 @@
                             <h3 class="history-panel-title">Highlights</h3>
                             <script type="application/json" id="car-history-json" nonce="{{ csp_nonce }}">{{ car.history_highlights | tojson }}</script>
                             <ul class="history-highlights-list" id="history-highlights-list" hidden></ul>
-                            <p class="history-no-highlights" id="history-no-highlights">Detailed history report available. Open the full report below.</p>
+                            {# DC-5 / ES-5 (visual review 2026-09-28): the copy promised a report for every
+                               car and the primary button was carfax.com's paid lookup. Only a report the
+                               listing actually links is presented as one. #}
                             {% if car.carfax_url %}
+                            <p class="history-no-highlights" id="history-no-highlights">The dealer links a history report for this VIN. Open it below.</p>
                             <a href="{{ car.carfax_url }}" target="_blank" rel="noopener noreferrer" class="carfax-report-btn">View full CARFAX report</a>
                             {% elif car.vin and not car.vin.startswith('unknown-') %}
-                            <a href="https://www.carfax.com/VehicleHistory/p/Report.cfx?vin={{ car.vin | e }}" target="_blank" rel="noopener noreferrer" class="carfax-report-btn">View full CARFAX report</a>
+                            <p class="history-no-highlights" id="history-no-highlights">No history report on file for this VIN{% if (car.condition or '') | string | lower == 'new' and car.mileage == 0 %} (new vehicle, 0 mi as listed){% endif %}.</p>
+                            <a href="/nhtsa-recalls?vin={{ car.vin | urlencode }}" class="carfax-report-btn carfax-report-btn-secondary">Check open recalls with NHTSA (free)</a>
+                            <a href="https://www.carfax.com/VehicleHistory/p/Report.cfx?vin={{ car.vin | e }}" target="_blank" rel="noopener noreferrer" class="carfax-report-btn carfax-report-btn-secondary">Look up this VIN on CARFAX (may require purchase)</a>
                             {% elif dealership_view_url %}
+                            <p class="history-no-highlights" id="history-no-highlights">No history report on file for this listing.</p>
                             <a href="{{ dealership_view_url }}" target="_blank" rel="noopener noreferrer" class="carfax-report-btn carfax-report-btn-secondary">Contact dealer for history</a>
                             {% endif %}
                         </div>
@@ -1348,14 +1354,7 @@
                         <h2 class="car-vdp-panel-title">{% if car.dealer_id %}<a href="{{ url_for('dealership_research_page', dealer_key=car.dealer_id) }}" class="dealer-name-link">{{ dealer_map.name }}</a>{% else %}{{ dealer_map.name }}{% endif %}</h2>
 
                         <div class="dealer-panel-head">
-                            <div id="dealer-reputation-block" class="dealer-reputation-block dealer-reputation-block--card"
-                                {% if dealer_rep_rating is none %}hidden aria-hidden="true"{% endif %}
-                                {% if dealer_rep_rating is not none %}data-dealer-rating="{{ dealer_rep_rating }}"{% endif %}
-                                {% if dealer_rep_reviews is not none %}data-dealer-reviews="{{ dealer_rep_reviews }}"{% endif %}>
-                                <span class="reputation-stars" aria-hidden="true">★★★★★</span>
-                                <span id="dealer-review-count">(Loading reviews...)</span>
-                                <div id="dealer-trust-badges"></div>
-                            </div>
+                            {% if dealer_rating %}{{ dealer_reputation(dealer_rating, 'dealer-reputation-block--card') }}{% endif %}
                             <address class="dealer-panel-address">
                                 {% if dealer_map.street_address %}
                                 <span class="dealer-card-address">{{ dealer_map.street_address }}</span>
