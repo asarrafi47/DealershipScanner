@@ -60,8 +60,14 @@
             if (document.readyState !== "loading") schedule();
             else document.addEventListener("DOMContentLoaded", schedule, { once: true });
         });
-        // Small payload and needed the moment a ZIP is set -- keep this one early.
-        fetch("/api/listings/geo-coords", { credentials: "same-origin" }).catch(function () {});
+        // Small payload and needed the moment a ZIP is set -- keep this one early. The
+        // <link rel="preload" as="fetch" crossorigin> above starts the request with the
+        // document; this fetch consumes that preload and publishes the parsed payload
+        // so main.js merges it (startListingsAssetPrefetch / ensureListingsGeoCoordsLoaded)
+        // instead of issuing its own request. Three code paths used to request it.
+        window.__DS_listingsGeoPrefetchPromise = fetch("/api/listings/geo-coords", { credentials: "same-origin" })
+            .then(function (r) { return r.ok ? r.json() : null; })
+            .catch(function () { return null; });
     })();
     </script>
 </head>

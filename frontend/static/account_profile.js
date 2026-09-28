@@ -7,7 +7,7 @@
  *                       Clear   -> DELETE /api/profile/search-history
  *                       Save    -> POST   /api/saved-searches {filters}
  *   Saved searches      Remove  -> DELETE /api/saved-searches/<id>
- * and refreshes the hidden-dealer list from GET /api/profile/hidden-dealers.
+ * Nothing is re-fetched on load; each list is updated in place from the response.
  */
 (function () {
     "use strict";
@@ -73,38 +73,9 @@
         var showError = errorSetter(document.getElementById("hidden-dealers-error"));
         if (!list) return;
 
-        function rowFor(d) {
-            var li = document.createElement("li");
-            li.className = "account-profile__hidden-row";
-            li.setAttribute("data-dealer-id", d.dealer_id);
-            var a = document.createElement("a");
-            a.className = "account-profile__hidden-name";
-            a.href = "/dealership/" + encodeURIComponent(d.dealer_id);
-            a.textContent = d.dealer_name || d.dealer_id;
-            var btn = document.createElement("button");
-            btn.type = "button";
-            btn.className = "secondary-button account-profile__hidden-remove";
-            btn.setAttribute("data-dealer-id", d.dealer_id);
-            btn.textContent = "Remove";
-            li.appendChild(a);
-            li.appendChild(btn);
-            return li;
-        }
-
-        function render(dealers) {
-            list.textContent = "";
-            (dealers || []).forEach(function (d) {
-                if (d && d.dealer_id) list.appendChild(rowFor(d));
-            });
-            syncEmpty(list, empty);
-        }
-
-        fetch("/api/profile/hidden-dealers", { credentials: "same-origin" })
-            .then(function (r) { return r.ok ? r.json() : null; })
-            .then(function (j) {
-                if (j && j.ok && Array.isArray(j.dealers)) render(j.dealers);
-            })
-            .catch(function () { /* keep the server-rendered list */ });
+        // The list is server-rendered (_account_profile_context); this used to
+        // re-fetch GET /api/profile/hidden-dealers on load and re-render the same
+        // rows. Removal below updates the DOM from the DELETE response instead.
 
         list.addEventListener("click", function (ev) {
             var btn = ev.target && ev.target.closest

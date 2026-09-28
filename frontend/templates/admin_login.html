@@ -59,7 +59,7 @@
 
 </div>
 
-<script src="{{ url_for('static', filename='password_toggle.js') }}?v={{ static_cache_ver }}" nonce="{{ csp_nonce }}"></script>
+<script src="{{ url_for('static', filename='password_toggle.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>
 <script nonce="{{ csp_nonce }}">
 (function () {
     const form = document.querySelector(".auth-form--admin");

@@ -1,0 +1,180 @@
+/* Dealership research page (frontend/templates/dealership.html).
+   Loaded only on that page, after the shared partials, so the cascade is the
+   same as when these rules lived in an inline <style> block in its <head>. */
+
+.dealer-research { max-width: 1180px; margin: 0 auto; padding: 1.5rem 1rem 4rem; }
+.dealer-research__hero { display: flex; flex-wrap: wrap; gap: 1rem 2rem; align-items: flex-start;
+    justify-content: space-between; padding-bottom: 1.25rem; border-bottom: 1px solid rgba(128,128,128,.25); }
+.dealer-research__eyebrow { text-transform: uppercase; letter-spacing: .08em; font-size: .72rem;
+    opacity: .6; margin: 0 0 .35rem; }
+.dealer-research__hero-actions { display: flex; flex-direction: column; align-items: flex-end; gap: .4rem; }
+.dealer-research__hide-btn { padding: 10px 18px; font-size: 13px; }
+.dealer-research__hide-btn[aria-pressed="true"] { color: var(--text-muted); }
+.dealer-research__hide-status { margin: 0; font-size: 12px; color: var(--text-muted); }
+.dealer-research__hide-status:empty { display: none; }
+@media (max-width: 720px) { .dealer-research__hero-actions { align-items: flex-start; } }
+.dealer-research__title { font-size: 1.9rem; line-height: 1.15; margin: 0 0 .5rem; }
+.dealer-research__brand { display: inline-block; font-size: .8rem; padding: .15rem .55rem; border-radius: 999px;
+    background: rgba(80,120,255,.14); color: inherit; margin-right: .5rem; }
+.dealer-research__rating { font-size: .95rem; opacity: .85; }
+.dealer-research__stars { color: #f5a623; letter-spacing: .05em; }
+.dealer-research section { margin-top: 2.25rem; }
+.dealer-research__h2 { font-size: 1.15rem; margin: 0 0 .35rem; }
+.dealer-research__counts { display: flex; gap: 1.5rem; margin: .25rem 0 1rem; flex-wrap: wrap; }
+.dealer-research__count b { font-size: 1.35rem; display: block; line-height: 1; }
+.dealer-research__count span { font-size: .78rem; opacity: .65; text-transform: uppercase; letter-spacing: .05em; }
+.dealer-research__grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 1rem; }
+.dr-chips { display: flex; flex-wrap: wrap; gap: .3rem; margin: .1rem 0 .15rem; }
+.dr-chip { font-size: .64rem; font-weight: 700; text-transform: uppercase; letter-spacing: .03em;
+    padding: .1rem .42rem; border-radius: 999px; border: 1px solid rgba(128,128,128,.3); line-height: 1.6; }
+.dr-chip--cpo { background: rgba(80,120,255,.14); border-color: rgba(80,120,255,.32); }
+.dr-chip--carfax { background: rgba(128,128,128,.12); }
+.dr-chip--drop { background: rgba(52,199,120,.16); border-color: rgba(52,199,120,.35); color: #2e9e5b; }
+.dr-chip--deal-good { background: rgba(52,199,120,.16); border-color: rgba(52,199,120,.35); color: #2e9e5b; }
+.dr-chip--deal-high { background: rgba(230,90,90,.12); border-color: rgba(230,90,90,.32); color: #b3453f; }
+.dealer-research-map { height: 360px; width: 100%; border-radius: 12px; overflow: hidden; }
+.dealer-research__contact { display: grid; gap: .5rem; font-size: .95rem; }
+.dealer-research__contact a { color: inherit; }
+.dealer-research__nav { display: flex; flex-wrap: wrap; gap: .6rem; }
+.dealer-research__nav a { display: inline-flex; align-items: center; gap: .4rem; padding: .55rem 1rem;
+    border-radius: 10px; border: 1px solid rgba(128,128,128,.35); text-decoration: none; color: inherit;
+    font-weight: 600; font-size: .9rem; }
+.dealer-research__nav a:hover { background: rgba(128,128,128,.12); }
+.dealer-research__placeholder { border: 1px dashed rgba(128,128,128,.5); border-radius: 12px;
+    padding: 1.75rem; text-align: center; opacity: .7; }
+.dealer-research__empty { opacity: .7; font-style: italic; }
+.dealer-research__cols { display: grid; grid-template-columns: 1.4fr 1fr; gap: 2rem; align-items: start; }
+@media (max-width: 820px) { .dealer-research__cols { grid-template-columns: 1fr; } }
+/* Deals & specials */
+.dr-specials__updated { font-size: .72rem; opacity: .55; margin: 0 0 1rem; }
+.dr-specials__group { margin-top: 1.25rem; }
+.dr-specials__group-h { font-size: .78rem; text-transform: uppercase; letter-spacing: .06em;
+    opacity: .7; margin: 0 0 .6rem; }
+.dr-specials__cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: .85rem; }
+.dr-offer { border: 1px solid rgba(128,128,128,.28); border-radius: 12px; padding: .95rem 1rem;
+    display: flex; flex-direction: column; gap: .35rem; }
+.dr-offer__badge { align-self: flex-start; font-size: .66rem; text-transform: uppercase; letter-spacing: .05em;
+    font-weight: 700; padding: .12rem .5rem; border-radius: 999px; background: rgba(80,120,255,.16); }
+.dr-offer__badge--lease { background: rgba(52,199,120,.18); }
+.dr-offer__badge--finance { background: rgba(80,120,255,.16); }
+.dr-offer__badge--manager { background: rgba(245,166,35,.2); }
+.dr-offer__badge--cash { background: rgba(230,90,90,.16); }
+.dr-offer__title { font-weight: 650; font-size: .98rem; line-height: 1.25; }
+.dr-offer__vehicle { font-size: .8rem; opacity: .7; }
+.dr-offer__pay { font-size: 1.05rem; font-weight: 700; }
+.dr-offer__pay small { font-size: .72rem; font-weight: 500; opacity: .7; }
+.dr-offer__terms { display: flex; flex-wrap: wrap; gap: .25rem .9rem; font-size: .78rem; opacity: .8; }
+.dr-offer__expires { font-size: .72rem; opacity: .6; }
+.dr-offer__fine { margin-top: .2rem; }
+.dr-offer__fine summary { font-size: .72rem; opacity: .6; cursor: pointer; }
+.dr-offer__fine p { font-size: .72rem; opacity: .7; line-height: 1.4; margin: .4rem 0 0;
+    max-height: 220px; overflow-y: auto; }
+.dr-offer__src { font-size: .72rem; }
+.dr-offer__src a { color: inherit; opacity: .65; }
+/* Lease-match: qualifying in-stock inventory under a lease offer */
+.dr-qual { margin-top: .55rem; border-top: 1px dashed rgba(128,128,128,.28); padding-top: .55rem; }
+.dr-qual__summary { font-size: .78rem; font-weight: 600; line-height: 1.35; margin: 0 0 .5rem;
+    display: flex; align-items: flex-start; gap: .35rem; }
+.dr-qual__ai { flex: none; font-size: .6rem; text-transform: uppercase; letter-spacing: .05em;
+    font-weight: 700; padding: .1rem .35rem; border-radius: 5px; background: rgba(120,90,255,.16);
+    opacity: .85; margin-top: .1rem; }
+.dr-qual__list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: .4rem; }
+.dr-qual__car { display: block; text-decoration: none; color: inherit; border: 1px solid rgba(128,128,128,.22);
+    border-radius: 9px; padding: .45rem .6rem; }
+.dr-qual__car:hover { border-color: rgba(120,90,255,.5); background: rgba(120,90,255,.05); }
+.dr-qual__car-head { display: flex; justify-content: space-between; gap: .5rem; font-size: .82rem; font-weight: 600; }
+.dr-qual__price { flex: none; }
+.dr-qual__conf { font-size: .66rem; text-transform: uppercase; letter-spacing: .04em; font-weight: 700; }
+.dr-qual__conf--high { color: #2e9e5b; }
+.dr-qual__conf--medium { color: #c98a1a; }
+.dr-qual__conf--low { color: #a15; opacity: .8; }
+.dr-qual__note { font-size: .7rem; opacity: .65; line-height: 1.35; margin: .2rem 0 0; }
+.dr-qual__none { font-size: .72rem; opacity: .55; margin: 0; }
+
+/* Reviews */
+.dr-reviews { margin-top: 2.25rem; }
+.dr-reviews__agg { display: flex; align-items: baseline; gap: .6rem; flex-wrap: wrap; margin: .1rem 0 .35rem; }
+.dr-reviews__score { font-size: 1.5rem; font-weight: 700; line-height: 1; }
+.dr-reviews__stars { color: #f5a623; letter-spacing: .05em; font-size: 1.15rem; }
+.dr-reviews__count { font-size: .85rem; opacity: .7; }
+.dr-reviews__none { opacity: .7; font-style: italic; font-size: .9rem; margin: .25rem 0 0; }
+.dr-feewarn { border: 1px solid rgba(245,166,35,.55); background: rgba(245,166,35,.12);
+    border-radius: 12px; padding: .85rem 1rem; margin: .75rem 0 1.25rem; }
+.dr-feewarn__head { font-weight: 700; font-size: .95rem; color: #b7791f; display: flex; align-items: center; gap: .4rem; }
+.dr-feewarn__list { list-style: none; margin: .5rem 0 0; padding: 0; display: flex; flex-direction: column; gap: .3rem; }
+.dr-feewarn__list li { font-size: .82rem; opacity: .9; }
+.dr-feewarn__amt { font-weight: 700; }
+.dr-review { border: 1px solid rgba(128,128,128,.28); border-radius: 12px; padding: .85rem 1rem;
+    margin-bottom: .85rem; display: flex; flex-direction: column; gap: .35rem; }
+.dr-review__head { display: flex; justify-content: space-between; align-items: baseline; gap: .5rem; flex-wrap: wrap; }
+.dr-review__who { font-weight: 650; font-size: .92rem; }
+.dr-review__stars { color: #f5a623; letter-spacing: .05em; font-size: .9rem; }
+.dr-review__date { font-size: .72rem; opacity: .55; }
+.dr-review__body { font-size: .9rem; line-height: 1.5; margin: 0; white-space: pre-wrap; }
+.dr-review__fee { font-size: .78rem; color: #b7791f; background: rgba(245,166,35,.14);
+    border-radius: 7px; padding: .3rem .5rem; align-self: flex-start; }
+.dr-review__report { align-self: flex-start; }
+.dr-review__report button { background: none; border: none; color: inherit; opacity: .5;
+    font-size: .72rem; cursor: pointer; text-decoration: underline; padding: 0; }
+.dr-review__report button:hover { opacity: .85; }
+.dr-reviewform { border: 1px solid rgba(128,128,128,.28); border-radius: 12px; padding: 1rem 1.15rem; margin-top: 1.25rem; }
+.dr-reviewform__h3 { font-size: .95rem; margin: 0 0 .75rem; }
+.dr-reviewform label { display: block; font-size: .8rem; font-weight: 600; margin: 0 0 .3rem; }
+.dr-reviewform textarea, .dr-reviewform input[type=number] { width: 100%; box-sizing: border-box;
+    border: 1px solid rgba(128,128,128,.4); border-radius: 8px; padding: .5rem .6rem; font: inherit;
+    background: transparent; color: inherit; }
+.dr-reviewform textarea { min-height: 5.5rem; resize: vertical; }
+.dr-reviewform__row { margin-bottom: .85rem; }
+.dr-reviewform__check { display: flex; align-items: flex-start; gap: .5rem; font-size: .82rem; font-weight: 500; }
+.dr-reviewform__check input { margin-top: .15rem; }
+.dr-reviewform__togglewrap { display: flex; flex-wrap: wrap; align-items: flex-start; gap: .5rem; }
+.dr-reviewform__togglewrap label { font-weight: 500; font-size: .82rem; margin: 0; flex: 1 1 auto; }
+.dr-reviewform__toggle { margin-top: .15rem; }
+.dr-reviewform__fee { flex-basis: 100%; margin: .6rem 0 .25rem; padding-left: 1.6rem; display: none; gap: .6rem; }
+.dr-reviewform__toggle:checked ~ .dr-reviewform__fee { display: grid; }
+.dr-reviewform__stars { display: inline-flex; flex-direction: row-reverse; gap: .1rem; font-size: 1.6rem; }
+.dr-reviewform__stars input { position: absolute; opacity: 0; width: 0; height: 0; }
+.dr-reviewform__stars label { color: rgba(128,128,128,.45); cursor: pointer; margin: 0; font-weight: 400; font-size: 1.6rem; }
+.dr-reviewform__stars input:checked ~ label,
+.dr-reviewform__stars label:hover, .dr-reviewform__stars label:hover ~ label { color: #f5a623; }
+.dr-reviewform__submit { background: #111; color: #fff; border: none; border-radius: 8px;
+    padding: .55rem 1.2rem; font: inherit; font-weight: 600; cursor: pointer; }
+.dr-reviewform__submit:hover { opacity: .9; }
+.dr-reviewform__error { color: #c0392b; font-size: .82rem; background: rgba(192,57,43,.1);
+    border-radius: 8px; padding: .5rem .7rem; margin: 0 0 .85rem; }
+.dr-reviewform__signin { border: 1px dashed rgba(128,128,128,.5); border-radius: 12px;
+    padding: 1rem 1.15rem; margin-top: 1.25rem; font-size: .9rem; }
+.dr-reviewform__signin a { font-weight: 600; color: inherit; }
+
+/* Inventory browser — reuses the /listings sidebar + grid, which is styled
+   under `body.listings-page`, hence that class on <body>. These few rules
+   only undo the full-bleed page chrome that layout assumes, so the filters
+   sit inside the research page's own 1180px column. */
+.dealer-inventory { margin-top: 2.25rem; }
+/* Sits directly under the Total/New/Pre-owned figures it qualifies. */
+.dealer-inventory__unconfirmed {
+    margin: -0.5rem 0 1rem;
+    max-width: 62ch;
+    font-size: .9rem;
+    line-height: 1.5;
+    color: var(--text-muted, #5b6474);
+}
+body.dealership-research-page { background-image: none; }
+/* `margin: 0 auto` on a grid item shrink-wraps it once the listings rules
+   are in play; the research column must still fill its track. */
+body.dealership-research-page .dealer-research { width: 100%; box-sizing: border-box; }
+body.dealership-research-page .listings-layout {
+    padding: 0;
+    gap: 1rem 1.75rem;
+    grid-template-columns: minmax(230px, 270px) minmax(0, 1fr);
+}
+body.dealership-research-page .listings-sidebar { top: 12px; }
+/* `.listings-active-chips-wrap { display: flex }` outranks the UA's
+   `[hidden] { display: none }`, so the empty "Clear all" bar shows even when
+   main.js has hidden it. (Same on /listings — that stylesheet is not ours.) */
+body.dealership-research-page .listings-active-chips-wrap[hidden] { display: none; }
+body.dealership-research-page .listings-filter-inner { padding-top: 0; }
+body.dealership-research-page .listings-form { margin: 0; }
+@media (max-width: 960px) {
+    body.dealership-research-page .listings-layout { grid-template-columns: minmax(0, 1fr); }
+}

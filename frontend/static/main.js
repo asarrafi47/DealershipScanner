@@ -13,11 +13,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (!SC.listingsDealerCoordsReady()) {
             if (window.__DS_listingsGeoPrefetchPromise) {
-                window.__DS_listingsGeoPrefetchPromise = window.__DS_listingsGeoPrefetchPromise.then(() => {
+                // listings.html publishes the promise from its head fetch and resolves
+                // it with the parsed payload; merge that rather than fetching again.
+                // A null payload means that fetch failed, so fall back to our own.
+                window.__DS_listingsGeoPrefetchPromise = window.__DS_listingsGeoPrefetchPromise.then((data) => {
                     if (SC.listingsDealerCoordsReady()) return;
+                    if (data && data.ok) {
+                        SC.mergeListingsGeoCoordsPayload(data);
+                        return;
+                    }
                     return fetch("/api/listings/geo-coords", { credentials: "same-origin" })
                         .then((r) => (r.ok ? r.json() : null))
-                        .then((data) => SC.mergeListingsGeoCoordsPayload(data));
+                        .then((payload) => SC.mergeListingsGeoCoordsPayload(payload));
                 }).catch(() => {});
             } else {
                 window.__DS_listingsGeoPrefetchPromise = fetch("/api/listings/geo-coords", {
@@ -1890,7 +1897,14 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         if (_geoCoordsLoadPromise) return _geoCoordsLoadPromise;
         if (window.__DS_listingsGeoPrefetchPromise) {
-            _geoCoordsLoadPromise = window.__DS_listingsGeoPrefetchPromise.catch(() => {});
+            _geoCoordsLoadPromise = window.__DS_listingsGeoPrefetchPromise
+                .then((data) => {
+                    // The head fetch resolves with the payload; merging twice is harmless.
+                    if (!SC.listingsDealerCoordsReady() && data && data.ok) {
+                        SC.mergeListingsGeoCoordsPayload(data);
+                    }
+                })
+                .catch(() => {});
             return _geoCoordsLoadPromise;
         }
         _geoCoordsLoadPromise = fetch("/api/listings/geo-coords", { credentials: "same-origin" })
