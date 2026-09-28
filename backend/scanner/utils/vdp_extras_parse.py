@@ -10,6 +10,10 @@ Verified shapes (2026-09-23):
   dealer.com       ``<body data-vehicle='{"vin":..,"msrp":25988,"displayedPrice":24110,
                    "stockNumber":"U58691","interiorColor":"Black",..}'>`` plus an
                    ``<a class="carfax-btn" href="https://www.carfax.com/vehiclehistory/...">``.
+                   The 2026-09 template has no ``data-vehicle`` (0/10 fetched VDPs);
+                   the record sits in ``DDC.WS.state['ws-vehicle-ctas'][id] =
+                   {"vehicle":{"vin":..,"msrp":41063,"engine":..,"normalDriveLine":..}}``
+                   and the identity in ``DDC.dataLayer.vehicles[0].<key> = ... || "<v>"``.
   DealerOn cosmos  Carfax anchor only (the rest lives in the SRP card JSON).
   Team Velocity    nothing usable in the static HTML (JSON-LD offers only).
 
@@ -29,6 +33,7 @@ _DI_VEHICLEINFO_RE = re.compile(r'"vehicleInfo"\s*:\s*\{')
 _DI_EXTCOLOR_RE = re.compile(r'"ext_color"\s*:')
 _DDC_DATA_VEHICLE_RE = re.compile(r"data-vehicle=(['\"])(.*?)\1", re.S)
 _VIN_RE = re.compile(r"^[A-HJ-NPR-Z0-9]{17}$")
+_MSRP_CEILING = 400_000.0  # above this a page "msrp" is an id fragment, not a sticker
 
 
 def _brace_object(s: str, open_idx: int, max_len: int = 20000) -> str | None:
@@ -119,24 +124,70 @@ def _dealer_inspire(html: str, page_vin: str | None) -> dict[str, Any]:
     return {k: v for k, v in out.items() if v}
 
 
-def _dealer_com(html: str, page_vin: str | None) -> dict[str, Any]:
-    m = _DDC_DATA_VEHICLE_RE.search(html)
-    if not m:
-        return {}
-    blob = _load(m.group(2))
-    if not blob or not _vin_ok(blob, page_vin):
-        return {}
+_DDC_WS_STATE_RE = re.compile(r"DDC\.WS\.state\['(ws-vehicle-ctas)'\]\['[^']+'\]\s*=\s*\{")
+# DDC.dataLayer.vehicles[0].msrp = DDC.dataLayer.vehicles[0].msrp || "41063";
+_DDC_DATALAYER_KV_RE = re.compile(
+    r"DDC\.dataLayer\.vehicles\[0\]\.(\w+)\s*=\s*DDC\.dataLayer\.vehicles\[0\]\.\w+\s*\|\|\s*"
+    r"(\"(?:[^\"\\]|\\.)*\"|'(?:[^'\\]|\\.)*'|-?\d+(?:\.\d+)?)\s*;"
+)
+
+
+def _ddc_vehicle_fields(blob: dict[str, Any]) -> dict[str, Any]:
+    """Field map shared by data-vehicle and the ws-vehicle-ctas ``vehicle`` record."""
+    msrp = _money(blob.get("msrp"))
     out = {
-        "msrp": _money(blob.get("msrp")),
+        "msrp": msrp if msrp and msrp <= _MSRP_CEILING else None,
         "stock_number": _clean(blob.get("stockNumber"), 40),
         "exterior_color": _clean(blob.get("exteriorColor")),
         "interior_color": _clean(blob.get("interiorColor")),
-        "drivetrain": _clean(blob.get("drivetrain"), 40),
+        "drivetrain": _clean(blob.get("drivetrain") or blob.get("driveLine") or blob.get("normalDriveLine"), 40),
         "trim": _clean(blob.get("trim"), 80),
-        "fuel_type": _clean(blob.get("fuelType"), 40),
+        "fuel_type": _clean(blob.get("fuelType") or blob.get("normalFuelType"), 40),
         "engine_description": _clean(blob.get("engine"), 200),
         "transmission": _clean(blob.get("transmission"), 120),
     }
+    return {k: v for k, v in out.items() if v}
+
+
+def _ddc_datalayer_vehicle(html: str) -> dict[str, Any]:
+    """``DDC.dataLayer.vehicles[0]`` as a dict, from its ``key = key || value`` lines."""
+    out: dict[str, Any] = {}
+    for m in _DDC_DATALAYER_KV_RE.finditer(html):
+        key, raw = m.group(1), m.group(2)
+        if raw[:1] in "\"'":
+            try:
+                val = json.loads(raw) if raw[0] == '"' else raw[1:-1]
+            except ValueError:
+                val = raw[1:-1]
+            val = val.replace("\\/", "/")
+        else:
+            val = raw
+        out.setdefault(key, val)
+    return out
+
+
+def _dealer_com(html: str, page_vin: str | None) -> dict[str, Any]:
+    out: dict[str, Any] = {}
+    m = _DDC_DATA_VEHICLE_RE.search(html)
+    if m:
+        blob = _load(m.group(2))
+        if blob and _vin_ok(blob, page_vin):
+            out.update(_ddc_vehicle_fields(blob))
+    if not out or not out.get("msrp"):
+        for ws in _DDC_WS_STATE_RE.finditer(html):
+            blob = _load(_brace_object(html, ws.end() - 1))
+            veh = blob.get("vehicle") if isinstance(blob, dict) else None
+            if not isinstance(veh, dict) or not _vin_ok(veh, page_vin):
+                continue
+            for k, v in _ddc_vehicle_fields(veh).items():
+                out.setdefault(k, v)
+            if out.get("msrp"):
+                break
+    if not out.get("msrp"):
+        dl = _ddc_datalayer_vehicle(html)
+        if dl and _vin_ok(dl, page_vin):
+            for k, v in _ddc_vehicle_fields(dl).items():
+                out.setdefault(k, v)
     return {k: v for k, v in out.items() if v}
 
 

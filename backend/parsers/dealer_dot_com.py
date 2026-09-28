@@ -77,14 +77,19 @@ def _extract_title(obj: dict, year: int, make: str, model: str) -> str | None:
 _MASKED_PRICE_FLOOR = 1000
 
 
-def _first_price(*vals, floor: float = 0.0) -> float:
+# No retail vehicle this parser sees lists above this; a larger "msrp" is a
+# stock-number / uuid fragment or a summed figure and must not become MSRP.
+_MSRP_CEILING = 400_000
+
+
+def _first_price(*vals, floor: float = 0.0, ceiling: float = float("inf")) -> float:
     for v in vals:
         if v is None or v is False:
             continue
         if isinstance(v, str) and "contact" in v.lower():
             continue
         n = norm_float(v)
-        if n > floor:
+        if n > floor and n <= ceiling:
             return n
     return 0.0
 
@@ -131,21 +136,74 @@ def _extract_price_dealer_com(obj: dict) -> int:
     return int(round(raw))
 
 
+def _is_new_or_certified(obj: dict) -> bool:
+    if obj.get("certified") is True:
+        return True
+    for key in ("condition", "type", "status"):
+        v = str(obj.get(key) or "").strip().lower()
+        if v in ("new", "certified", "cpo", "certified pre-owned"):
+            return True
+    return False
+
+
+def _typed_price_entries(pricing: dict | None, type_class: str) -> list:
+    """Values of ``pricing.dprice[]`` then ``pricing.eprice[]`` entries whose
+    ``typeClass`` is ``type_class`` (label is free text: "Total SRP", "MSRP",
+    "Retail Price"...). askingPrice / internetPrice / isFinalPrice rows are
+    never MSRP and are simply not matched."""
+    out = []
+    if not isinstance(pricing, dict):
+        return out
+    for key in ("dprice", "eprice"):
+        arr = pricing.get(key)
+        if not isinstance(arr, list):
+            continue
+        for entry in arr:
+            if not isinstance(entry, dict):
+                continue
+            if str(entry.get("typeClass") or "").strip().lower() == type_class:
+                out.append(entry.get("value"))
+    return out
+
+
 def _extract_msrp_dealer_com(obj: dict) -> int:
-    """MSRP for display when sale price is hidden (Unlock Price)."""
+    """MSRP from a getInventory item.
+
+    Live ws-inv-data feeds (2026-09-28, 96/96 items at four stores) carry it in
+    ``trackingPricing.msrp`` ("$64,783"), ``pricing.dprice[].typeClass ==
+    "msrp"`` and ``pricing.retailPrice``, never in ``pricing.msrp``; reading
+    only the latter left 100% of New rows at 140 stores msrp-null. Order:
+    pricing.msrp / MSRP / retailMsrp, trackingPricing.msrp, typed dprice /
+    eprice entries, pricing.retailPrice (New / Certified only: on used rows it
+    is the asking price), obj.msrp, then the trackingAttributes msrp. Masked
+    placeholders (<= ``_MASKED_PRICE_FLOOR``) and values above
+    ``_MSRP_CEILING`` are skipped.
+    """
     pricing = obj.get("pricing") if isinstance(obj.get("pricing"), dict) else None
-    raw = _first_price(
+    tracking = obj.get("trackingPricing") or obj.get("tracking_pricing")
+    tracking = tracking if isinstance(tracking, dict) else None
+    candidates = [
         pricing and pricing.get("msrp"),
         pricing and pricing.get("MSRP"),
         pricing and pricing.get("retailMsrp"),
-        obj.get("msrp"),
-    )
+        tracking and tracking.get("msrp"),
+        tracking and tracking.get("MSRP"),
+        *_typed_price_entries(pricing, "msrp"),
+    ]
+    if _is_new_or_certified(obj):
+        candidates.append(pricing and pricing.get("retailPrice"))
+        candidates.append(pricing and pricing.get("retail_price"))
+    candidates.append(obj.get("msrp"))
+    raw = _first_price(*candidates, floor=_MASKED_PRICE_FLOOR, ceiling=_MSRP_CEILING)
     if raw == 0:
-        arr = obj.get("trackingAttributes") or obj.get("tracking_attributes") or obj.get("attributes")
-        if isinstance(arr, list):
+        for arr in (obj.get("trackingAttributes"), obj.get("tracking_attributes"), obj.get("attributes")):
+            if not isinstance(arr, list):
+                continue
             v2 = find_tracking_attr(arr, "msrp", "value")
             if v2 is not None and str(v2).strip():
-                raw = norm_float(v2)
+                raw = _first_price(v2, floor=_MASKED_PRICE_FLOOR, ceiling=_MSRP_CEILING)
+                if raw:
+                    break
     return int(round(raw))
 
 
