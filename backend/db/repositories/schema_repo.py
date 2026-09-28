@@ -122,6 +122,10 @@ def ensure_cars_listings_indexes(cursor) -> None:
         f"CREATE INDEX IF NOT EXISTS idx_cars_active_registry "
         f"ON cars(dealership_registry_id) WHERE {active} "
         f"AND dealership_registry_id IS NOT NULL",
+        # Dropped by accident in 7f972e0bd (spin-capture change); the zip/radius
+        # listings filters read it and test_listings_indexes expects it.
+        f"CREATE INDEX IF NOT EXISTS idx_cars_active_zip "
+        f"ON cars(zip_code) WHERE {active} AND zip_code IS NOT NULL",
         f"CREATE INDEX IF NOT EXISTS idx_cars_active_packages "
         f"ON cars(make, model) WHERE {active} AND packages IS NOT NULL "
         f"AND packages NOT IN ('{{}}', '[]', 'null', '')",
