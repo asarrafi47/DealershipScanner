@@ -642,3 +642,75 @@ def test_offline_builder_is_not_capped(scoped, monkeypatch):
 
     monkeypatch.setattr(gc, "_INLINE_REBUILD_MAX", 1)
     assert gc.build_all_cards(batch=10)["rebuilt"] == 6
+
+
+# ── background refresh failures never leave a partial body looking current ──
+
+
+def test_failed_background_refresh_bumps_the_generation(scoped, monkeypatch, caplog):
+    import logging
+    import queue as _queue
+    import time as _time
+
+    from backend.db.repositories import grid_cards_repo as gc
+
+    def boom(ids, **_k):
+        raise RuntimeError("db went away")
+
+    monkeypatch.setattr(gc, "refresh_cards", boom)
+    monkeypatch.setattr(gc, "_bg_queue", _queue.Queue(maxsize=4))
+    monkeypatch.setattr(gc, "_bg_thread", None)
+    caplog.set_level(logging.WARNING, logger=gc.__name__)
+    gen = gc.store_generation()
+    gc._enqueue_refresh([101, 102])
+    deadline = _time.monotonic() + 5
+    while gc.store_generation() == gen and _time.monotonic() < deadline:
+        _time.sleep(0.01)
+    assert gc.store_generation() > gen
+    with gc._bg_pending_lock:
+        assert not ({101, 102} & gc._bg_pending)
+    assert any("background grid-card refresh failed" in r.getMessage() for r in caplog.records)
+
+
+def test_queue_full_drop_bumps_the_generation(scoped, monkeypatch, caplog):
+    import logging
+    import queue as _queue
+
+    from backend.db.repositories import grid_cards_repo as gc
+
+    class Alive:
+        def is_alive(self):
+            return True
+
+    full = _queue.Queue(maxsize=1)
+    full.put_nowait([1])
+    monkeypatch.setattr(gc, "_bg_queue", full)
+    monkeypatch.setattr(gc, "_bg_thread", Alive())
+    caplog.set_level(logging.WARNING, logger=gc.__name__)
+    gen = gc.store_generation()
+    gc._enqueue_refresh([201, 202, 203])
+    assert gc.store_generation() == gen + 1
+    with gc._bg_pending_lock:
+        assert not ({201, 202, 203} & gc._bg_pending)  # re-queueable next request
+    assert any("queue full; dropped 3 cars" in r.getMessage() for r in caplog.records)
+
+
+def test_partial_body_is_rebuilt_after_a_lost_refresh(scoped, client, monkeypatch):
+    import queue as _queue
+
+    from backend.db.repositories import grid_cards_repo as gc
+    from backend.routes import listings_api
+
+    class Alive:
+        def is_alive(self):
+            return True
+
+    full = _queue.Queue(maxsize=1)
+    full.put_nowait([1])
+    monkeypatch.setattr(gc, "_bg_queue", full)
+    monkeypatch.setattr(gc, "_bg_thread", Alive())
+    monkeypatch.setattr(gc, "_INLINE_REBUILD_MAX", 1)
+    assert _cars(client.get("/api/listings/cars?zip=92694&radius=250"))["partial"] is True
+    (entry,) = listings_api._cars_scope_cache.values()
+    token = gc.grid_scope_token()
+    assert not listings_api._cars_scope_entry_valid(entry, token)

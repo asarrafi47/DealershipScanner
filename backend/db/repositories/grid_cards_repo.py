@@ -525,25 +525,41 @@ _bg_pending_lock = threading.Lock()
 _bg_thread: threading.Thread | None = None
 _bg_thread_lock = threading.Lock()
 _store_generation = 0
+_store_generation_lock = threading.Lock()
 
 
 def store_generation() -> int:
-    """Bumped whenever the background refresher commits cards (process-local)."""
+    """Process-local generation of the background refresher's work.
+
+    A scoped body that contains stale or missing cards is cached against this value
+    (``partial``). It moves when a refresh commits cards -- and ALSO when a refresh
+    fails or ids could not be queued, so a partial body never looks current once the
+    work it was waiting on is lost: the next request re-resolves and re-queues."""
     return _store_generation
 
 
-def _bg_worker() -> None:
+def _bump_store_generation() -> None:
     global _store_generation
+    with _store_generation_lock:
+        _store_generation += 1
+
+
+def _bg_worker() -> None:
     while True:
         ids = _bg_queue.get()
         try:
             refresh_cards(ids, yield_gil=True)
-            _store_generation += 1
         except Exception:
-            _log.warning("background grid-card refresh failed", exc_info=True)
+            _log.warning(
+                "background grid-card refresh failed for %d cars; partial scope bodies "
+                "are invalidated so the next request retries",
+                len(ids),
+                exc_info=True,
+            )
         finally:
             with _bg_pending_lock:
                 _bg_pending.difference_update(ids)
+            _bump_store_generation()
 
 
 def _enqueue_refresh(ids: Iterable[int]) -> None:
@@ -564,6 +580,12 @@ def _enqueue_refresh(ids: Iterable[int]) -> None:
         except queue.Full:
             with _bg_pending_lock:
                 _bg_pending.difference_update(todo[start:])
+            _log.warning(
+                "grid-card refresh queue full; dropped %d cars, partial scope bodies "
+                "are invalidated so the next request re-queues them",
+                len(todo) - start,
+            )
+            _bump_store_generation()
             return
 
 
