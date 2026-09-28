@@ -378,5 +378,11 @@ def parse(raw_data, base_url: str, dealer_id: str, dealer_name: str = "", dealer
         src = _feed_source(listing)
         if src:
             mapped["_feed_source"] = src
+        extra = listing.get("extra_fields") if isinstance(listing.get("extra_fields"), dict) else {}
+        facets = {k: v for k, v in extra.items() if str(k).startswith("custom_text_") and isinstance(v, str) and v.strip()}
+        if facets:
+            # the site's Location-mapped facets (custom_text_N) — evidence for the
+            # rooftop scorer's location_facet_value signal, never a rooftop by itself
+            mapped["_custom_facets"] = facets
         out.append(mapped)
     return out

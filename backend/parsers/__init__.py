@@ -755,6 +755,18 @@ def _resolve_rooftop_attribution_inner(
     if not rows:
         return [], []
 
+    # 2026-09-28: the same decision procedure as a scored matcher
+    # (backend/scanner/rooftop_match.py), behind SCANNER_ROOFTOP_SCORER (default
+    # on). The legacy ladder below stays for one release; SCANNER_ROOFTOP_SCORER=0
+    # selects it. The regression corpus (backend/tests/test_rooftop_corpus.py)
+    # holds the proof that both paths decide every known case the same way.
+    if _scorer_enabled():
+        return _resolve_via_scorer(
+            rows, dealer_id=dealer_id, dealer_name=dealer_name, dealer_url=dealer_url,
+            dealer_address=dealer_address, dealer_city=dealer_city, dealer_state=dealer_state,
+            dealer_zip=dealer_zip, dealer_address_source=dealer_address_source,
+        )
+
     order: list[str] = []
     groups: dict[str, _Rooftop] = {}
     unmarked: list[dict] = []
@@ -900,6 +912,72 @@ def _resolve_rooftop_attribution_inner(
             "kept %d row(s), refused %d sibling row(s)",
             label, len(rooftops), tier, len(kept), len(rejected),
         )
+    return kept, rejected
+
+
+def _scorer_enabled() -> bool:
+    try:
+        from backend.scanner.rooftop_match import scorer_enabled
+
+        return scorer_enabled()
+    except Exception:  # noqa: BLE001 - never let the flag reader cost a scan
+        return False
+
+
+def _resolve_via_scorer(
+    rows: list[dict], *, dealer_id: str = "", dealer_name: str = "", dealer_url: str = "",
+    dealer_address: str = "", dealer_city: str = "", dealer_state: str = "", dealer_zip: str = "",
+    dealer_address_source: str = "",
+) -> tuple[list[dict], list[dict]]:
+    """The gate's decision through ``rooftop_match.score_rows`` (same verdicts, same log
+    lines, plus ``_rooftop_tier`` / ``_rooftop_score`` on every row for triage)."""
+    from backend.scanner.rooftop_match import score_rows
+
+    roster = {
+        "dealer_id": dealer_id, "name": dealer_name, "url": dealer_url, "street": dealer_address,
+        "city": dealer_city, "state": dealer_state, "zip": dealer_zip, "street_source": dealer_address_source,
+    }
+    results = score_rows(rows, roster)
+    kept: list[dict] = []
+    rejected: list[dict] = []
+    tiers: dict[str, int] = {}
+    corroborated = 0
+    for row, res in zip(rows, results):
+        row["_rooftop_tier"] = res["tier"]
+        row["_rooftop_score"] = res["score"]
+        tiers[res["tier"]] = tiers.get(res["tier"], 0) + 1
+        if res["decision"] == "keep":
+            row.pop("_rooftop_reject", None)
+            kept.append(row)
+            if res["tier"] in ("same_source_feed", "own_street_block", "unstamped_under_own_source"):
+                corroborated += 1
+        else:
+            row["_rooftop_reject"] = res["tier"]
+            rejected.append(row)
+
+    label = dealer_id or dealer_name or "?"
+    if not rejected:
+        if corroborated:
+            _log.info("rooftop attribution [%s]: kept %d unnamed/unstamped row(s) filed under this store's feed source(s) or at its street",
+                      label, corroborated)
+        return kept, rejected
+    reasons = {t for t in tiers if t in {"target_rooftop_unidentified", "single_rooftop_is_not_this_store"}}
+    if not kept and "single_rooftop_is_not_this_store" in reasons:
+        names = sorted({n for r in rows for n in [(_rooftop_of(r) or {}).get("name") or ""] if n})
+        _log.warning("rooftop attribution [%s]: payload holds only %s, which is not this store — refusing all %d row(s)",
+                     label, names[0] if names else "an unnamed rooftop", len(rows))
+    elif not kept:
+        stamps = sorted({_rooftop_name(_rooftop_of(r) or {}) for r in rows if _rooftop_of(r)} - {""})
+        _log.warning("rooftop attribution [%s]: group feed names rooftops (%s) and none is this store — refusing all %d row(s) rather than mis-attributing them",
+                     label, ", ".join(stamps[:6]) or "unnamed", len(rows))
+    else:
+        winning = next((t for t in tiers if t not in {"same_source_feed", "own_street_block", "unstamped_under_own_source",
+                                                       "sibling_rooftop", "sibling_rooftop_weak_tier", "unstamped_row_in_group_feed"}), "?")
+        if corroborated:
+            _log.info("rooftop attribution [%s]: kept %d unnamed/unstamped row(s) filed under this store's feed source(s) or at its street",
+                      label, corroborated)
+        _log.info("rooftop attribution [%s]: group feed; matched this store by %s, kept %d row(s), refused %d sibling row(s)",
+                  label, winning, len(kept), len(rejected))
     return kept, rejected
 
 

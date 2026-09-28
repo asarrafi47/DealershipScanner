@@ -66,9 +66,9 @@ def _load_corpus() -> list[dict]:
 CORPUS = _load_corpus()
 SCENARIOS = [(fx, sc) for fx in CORPUS for sc in fx["scenarios"]]
 IDS = [f"{fx['dealer_id']}::{sc['name']}" for fx, sc in SCENARIOS]
-# Paths through the gate. "scorer" is added when backend/scanner/rooftop_match.py lands
-# (SCANNER_ROOFTOP_SCORER); both paths must decide every case alike.
-MODES = ("legacy",)
+# The gate runs through backend/scanner/rooftop_match.py when SCANNER_ROOFTOP_SCORER is on
+# (the default) and through the legacy ladder when it is 0. Both must decide every case alike.
+MODES = ("legacy", "scorer")
 
 
 def _ideal_params():
