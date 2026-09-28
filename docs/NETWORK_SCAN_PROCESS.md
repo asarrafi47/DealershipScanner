@@ -126,6 +126,20 @@ workspace/dealer_logs/
   `ok | reject | uncertain` (one condition, section-scoped, short page, dead auth, no rows).
   A reject is logged to `discovery.md` + `_learning/errors_index.md` and never saved;
   `scan_hints.recipe_status` carries the code.
+- `backend/scripts/platform_candidates.py` + `backend/scanner/platform_fingerprint.py` — platform
+  clustering by code, so nobody has to notice that two dealers share an unknown platform. Each
+  dealer's latest `discovery_<stamp>.json` becomes a weighted fingerprint (third-party script hosts
+  minus the dealer's own host and CDNs, API path patterns from the synthesized candidates and the
+  browser capture, inventory-path probe outcomes, challenge markers, generator / inline-JSON hints,
+  every template's detect result); the signature is the strongest 3-5 features, and near-duplicates
+  merge by Jaccard similarity (0.6). Dealers with no live recipe or a stale / rejected one are
+  clustered into `workspace/dealer_logs/_learning/platform_candidates.md`: per cluster the shared
+  features, the members with their last verdict, the nearest known template, and the next step
+  (extend template X / browser-capture one member / HTTP probe path Y). The pipeline runs it at the
+  end of every run and prints `discovery: N dealers share unknown platform <signature> (a, b, c) → …`
+  for each cluster holding two or more of the run's `needs_discovery` dealers (also in
+  `triage.json` as `platform_clusters`). Run it by hand: `python -m backend.scripts.platform_candidates`
+  (`--all` to include dealers whose recipe works, `--root` for another log root).
 - `backend/scripts/scan_lab_report.py` — per-row incomplete fields and dictionary
   discrepancies with examples (the verification numbers).
 - `.claude/workflows/dealer-discovery.js` — investigator / builder / verifier agents for

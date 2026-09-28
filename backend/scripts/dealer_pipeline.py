@@ -27,6 +27,10 @@ Per dealer:
               gain `lifecycle` (none | resynth_ok | capture_ok | failed:<reason>)
               and `retried: <old> → <new>`; <out>/needs_discovery.txt lists the
               dealers still failing.
+  6. platform clustering over the run's needs_discovery dealers
+              (backend/scripts/platform_candidates.py): every cluster of 2+ prints
+              `discovery: N dealers share unknown platform <signature> (a, b, c) →
+              workspace/dealer_logs/_learning/platform_candidates.md`.
 
 Usage:
   python -m backend.scripts.dealer_pipeline --dealers a,b,c --out workspace/pipeline/run1
@@ -970,6 +974,23 @@ def triage_table(results: list[dict[str, Any]]) -> list[str]:
     return lines
 
 
+def platform_cluster_lines(needs_discovery: list[str]) -> list[str]:
+    """End-of-run platform clustering (backend/scripts/platform_candidates.py):
+    fingerprints every dealer under LOG_ROOT without a live recipe, rewrites
+    ``_learning/platform_candidates.md`` and returns one line per cluster that
+    holds two or more of this run's ``needs_discovery`` dealers —
+    ``discovery: N dealers share unknown platform <signature> (a, b, c) → …``.
+    Never raises; an empty list when nothing clusters."""
+    if not needs_discovery:
+        return []
+    try:
+        from backend.scripts.platform_candidates import report_for_run
+
+        return list(report_for_run(list(needs_discovery), root=LOG_ROOT))
+    except Exception as exc:  # noqa: BLE001 - the triage must still be written
+        return [f"discovery: platform clustering skipped: {str(exc)[:160]}"]
+
+
 def write_needs_discovery(results: list[dict[str, Any]], out_dir: Path) -> list[str]:
     """``<out>/needs_discovery.txt``: one line per dealer still failing at the end
     of the run (``dealer_id  <verdict>  <lifecycle>  <last reason>``), the input
@@ -1181,10 +1202,15 @@ def main() -> int:
         "lifecycle": {**lifecycle_summary, "by_dealer": {r["dealer_id"]: r.get("lifecycle", "none") for r in results},
                       "needs_discovery_file": str(out_dir / "needs_discovery.txt") if needs else None},
     }
+    # 6. platform clustering: which of this run's failing dealers share a platform
+    #    nobody has a template for (item 3 of the plan; the code notices, not a human)
+    triage["platform_clusters"] = platform_cluster_lines(triage["needs_discovery"])
     (out_dir / "triage.json").write_text(json.dumps(triage, indent=1, default=str), encoding="utf-8")
     lines = triage_table(results)
-    (out_dir / "triage.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
+    (out_dir / "triage.md").write_text("\n".join(lines + [""] + triage["platform_clusters"]) + "\n", encoding="utf-8")
     print("\n".join(lines))
+    for line in triage["platform_clusters"]:
+        print(line, flush=True)
     print(json.dumps(triage["counts"]))
     return 0
 
