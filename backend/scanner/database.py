@@ -376,12 +376,14 @@ def upsert_vehicles(vehicles: list[dict]) -> int:
                 price = None
             if price is not None and price <= 0:
                 price = None
-            # Mileage: ensure integer
+            # Mileage: ensure integer; NULL when the feed had no odometer (a
+            # stored 0 on a used row hides the gap from the completeness tally
+            # and the VDP gap fill, F12 2026-09-28).
             try:
                 mileage = v.get("mileage")
-                mileage = int(mileage) if mileage is not None and str(mileage).strip() != "" else 0
+                mileage = int(float(str(mileage).replace(",", ""))) if mileage is not None and str(mileage).strip() != "" else None
             except (TypeError, ValueError):
-                mileage = 0
+                mileage = None
             try:
                 msrp_val = v.get("msrp")
                 msrp = int(round(float(msrp_val))) if msrp_val is not None and str(msrp_val).strip() != "" else None
@@ -510,7 +512,12 @@ def upsert_vehicles(vehicles: list[dict]) -> int:
                     model=COALESCE(NULLIF(TRIM(excluded.model),''), cars.model),
                     trim=COALESCE(excluded.trim, cars.trim),
                     price=CASE WHEN COALESCE(excluded.price, 0) > 0 THEN excluded.price ELSE cars.price END,
-                    mileage=CASE WHEN IFNULL(excluded.mileage,0) > 0 THEN excluded.mileage ELSE COALESCE(NULLIF(cars.mileage,0), 0) END,
+                    -- feed odometer > 0 wins; an explicit 0 keeps a prior real reading
+                    -- (else 0: new cars are 0 mi); NULL (no odometer) keeps a prior
+                    -- real reading but replaces a stale default 0 with NULL (F12)
+                    mileage=CASE WHEN IFNULL(excluded.mileage,0) > 0 THEN excluded.mileage
+                                 WHEN excluded.mileage IS NOT NULL THEN COALESCE(NULLIF(cars.mileage,0), 0)
+                                 ELSE NULLIF(cars.mileage,0) END,
                     image_url=CASE
                         WHEN excluded.image_url LIKE 'http%' THEN excluded.image_url
                         WHEN cars.image_url LIKE 'http%' THEN cars.image_url

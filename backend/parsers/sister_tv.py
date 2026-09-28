@@ -185,7 +185,7 @@ def _map_source(src: dict, base_url: str, dealer_id: str, dealer_name: str, deal
         "model": norm_str(src.get("model")),
         "trim": norm_str(src.get("trim")),
         "price": _pick_price(src),
-        "mileage": extract_mileage(src) or norm_int(src.get("miles")),
+        "mileage": extract_mileage(src),
         "condition": _condition(src),
         "exterior_color": _first(src, "ext_color", "exterior_color") or "",
         "interior_color": _first(src, "int_color", "interior_color") or "",

@@ -716,8 +716,11 @@ def extract_image_url(obj: dict, base_url: str) -> str:
     return clean_image_url(v if isinstance(v, str) else "", base_url)
 
 
-def extract_mileage(obj: dict) -> int:
-    """Mileage: odometer first, then mileage, then attributes.mileage. Parsed as integer."""
+def extract_mileage(obj: dict) -> int | None:
+    """Mileage: odometer first, then mileage, then attributes.mileage. Parsed as
+    integer; None when the feed carries no odometer at all. A default 0 used to
+    be stored on used / CPO rows with no odometer (1,307 rows, F12 2026-09-28)
+    and read as a valid "0 mi"."""
     v = _get_nested(
         obj,
         ("odometer",),
@@ -728,6 +731,8 @@ def extract_mileage(obj: dict) -> int:
         ("miles",),
         ("kms",),
     )
+    if v is None or (isinstance(v, str) and not v.strip()):
+        return None
     return norm_int(v)
 
 

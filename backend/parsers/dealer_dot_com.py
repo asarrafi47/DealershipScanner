@@ -214,15 +214,22 @@ def _extract_msrp_dealer_com(obj: dict) -> int:
     return int(round(raw))
 
 
-def _extract_mileage_dealer_com(obj: dict) -> int:
-    """Find object in trackingAttributes where name == 'odometer' and map its value to mileage. Default 0."""
+def _extract_mileage_dealer_com(obj: dict) -> int | None:
+    """trackingAttributes odometer, then obj.odometer / mileage, then the
+    trackingAttributes mileage. None when the item carries no odometer: a
+    default 0 on used rows read as a valid "0 mi" (crownlexus 334 rows where
+    the VDP shows 10,914; F12 2026-09-28)."""
     arr = obj.get("trackingAttributes") or obj.get("tracking_attributes")
     v = find_tracking_attr(arr, "odometer", "value")
-    if v is not None and v != "":
+    if v is not None and str(v).strip() != "":
         return norm_int(v)
-    v = obj.get("odometer") or obj.get("mileage")
-    if v is None and isinstance(arr, list):
+    v = obj.get("odometer")
+    if v is None or str(v).strip() == "":
+        v = obj.get("mileage")
+    if (v is None or str(v).strip() == "") and isinstance(arr, list):
         v = find_tracking_attr(arr, "mileage", "value")
+    if v is None or str(v).strip() == "":
+        return None
     return norm_int(v)
 
 

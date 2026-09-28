@@ -146,7 +146,7 @@ def _map(doc: dict, base_url: str, dealer_id: str, dealer_name: str, dealer_url:
         "model": norm_str(doc.get("model")),
         "trim": norm_str(doc.get("car_trim") or doc.get("trim")),
         "price": _pick_price(doc),
-        "mileage": extract_mileage(doc) or norm_int(doc.get("odometer")),
+        "mileage": extract_mileage(doc),
         "condition": _condition(doc),
         "exterior_color": _first(doc, "exterior_color", "generic_exterior_color") or "",
         "interior_color": _first(doc, "interior_color", "generic_interior_color") or "",

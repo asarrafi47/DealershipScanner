@@ -86,8 +86,9 @@ def test_public_incomplete_when_mileage_missing() -> None:
 
 
 def test_public_complete_when_mileage_zero() -> None:
-    """New inventory may show 0 mi — same as car.html (not treated as missing)."""
-    row = _minimal_row(mileage=0)
+    """New inventory may show 0 mi — same as car.html (not treated as missing).
+    On used / CPO rows 0 is a parser default, see test_mileage_zero_f12."""
+    row = _minimal_row(mileage=0, condition="New")
     assert "mileage" not in listing_missing_field_codes(row, for_public_filter=True)
     assert is_car_incomplete_for_public_listings(row) is False
 
