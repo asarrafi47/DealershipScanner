@@ -10,6 +10,63 @@ therefore server time only; they carry no network cost.
 Car page used: `/car/1470314` (newest live listing with a price). Dealership page used:
 `/dealership/hendrickhonda-com` (that car's dealer).
 
+## Decision 2026-09-28 (owner) — radius-scoped listings, no cars before a search
+
+Owner: "whatever the user's zip code/radius is. dont present cars until they actually begin
+a search. but if we do this, the results must appear quickly." This supersedes item 1's
+"ship the whole fleet" design (F1).
+
+What changed (branch `feature/http-only-scans`):
+
+- `GET /api/listings/cars?zip=&radius=` is radius-scoped. No ZIP is a 400
+  `{"ok":false,"error":"zip_required"}`; radius is clamped to 5..250 mi (default 50).
+  Registry coordinates (bounding box in SQL, haversine per dealer location), plus the
+  existing `dealer_url` coordinate fallback; cars with no coordinates at all are counted in
+  `missing_coords`. Hidden dealerships are excluded in SQL. Gzipped body cached per
+  (ZIP, radius, hidden set) in an LRU bounded to 64 entries / 96 MB; the ETag is a digest of
+  the body.
+- Cards are served from a persisted store, `listings_grid_cards`
+  (`backend/db/repositories/grid_cards_repo.py`, `migrations/V023`): the grid serializer
+  costs ~0.5-0.9 ms per car, so 47k cars would be 25-40 s per request. Freshness per car is
+  Postgres `xmin` + attribution/incomplete/serializer revision, falling back to a content
+  digest; few changes are rebuilt inline, many are served stale and refreshed in a
+  background thread. `python -m backend.scripts.build_listings_grid_cards` fills the store
+  offline (91 s for 214,678 cars locally) — run it after deploys that change the card
+  serializer and after full scans.
+- Nothing on a request path builds the whole-fleet grid: the `/listings` bootstrap grid,
+  the dealership page (now a dealer-scoped query), `get_filter_options(include_all_cars=)`
+  and the grid prewarm are gone. Filter facets were already SQL `DISTINCT`s; their cache is
+  now keyed by the write fingerprint.
+- `/listings` renders the search bar, ZIP + radius (prefilled from the session, radius 50)
+  and filters, and no cars. A search begins on a typed query, a ZIP/radius change or any
+  filter; deep links with filters/ZIP count as begun. Then one fetch of the shopper's area,
+  skeleton cards meanwhile, and all facet filtering client-side on that subset. No ZIP ->
+  a ZIP prompt with "Use my location" (geolocation is no longer requested on page load).
+  Smart search (`POST /api/search/smart`) is scoped to ZIP + radius too (400
+  `zip_required` without one).
+
+Measured on a local instance (Postgres, 214,678 active cars, loopback, card store built):
+
+| Request | Cold (LRU empty) | Warm (LRU hit) | Cars | Gzipped body |
+|---|---|---|---|---|
+| `/api/listings/cars?zip=92694&radius=50` | 0.99 s (first request of the process; 0.72 s once process-warm) | 4 ms | 47,551 | 6.50 MB |
+| `/api/listings/cars?zip=37405&radius=50` | 111 ms | 2.5 ms | — | 764 KB |
+| `/api/listings/cars?zip=60601&radius=25` | 62 ms | 2.8 ms | — | 300 KB |
+| 304 revalidation (92694/50) | — | 2.7 ms | — | 0 |
+
+- `/listings` document: 1,460,089 B / 165,900 B gz before -> 1,403,871 B / 159,487 B gz
+  after (bootstrap grid and the head inventory fetch removed; the 920 KB cascade blob,
+  item 3(a), remains). Warm render 25 ms.
+- Process RSS after 13 different ZIP scopes plus `/listings`, a dealership page and
+  filter-options: ~0.65 GB (the web process peaked at ~9.5 GB holding the fleet).
+- Before: every `/listings` visit transferred 32 MB gz (214,678 cars). After: nothing until a
+  search, then 0.3-1.5 MB gz for most metros and 6.5 MB for the densest (92694/50).
+
+Follow-ups: the card payload is still the full grid card (~1.25 KB raw per car; `gallery`,
+`image_url` and `deal_score` dominate) — trimming it would cut the 92694/50 body well below
+6.5 MB; the scanner/nightly should run the card builder after scans (backend/scanner was
+out of scope); the first `/listings` of a process still pays the cold facet build (~1-2 s).
+
 ## 1. Per-page measurements
 
 ### 1.1 Document and asset counts
