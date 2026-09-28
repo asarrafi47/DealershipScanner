@@ -48,6 +48,7 @@ The cache is read-only here. Populating it is ``backfill_vpic_cache.py``'s job.
 from __future__ import annotations
 
 import json
+import re
 import logging
 from functools import lru_cache
 from typing import Any
@@ -126,6 +127,11 @@ def specs_from_decode(response_json: Any) -> dict[str, Any]:
         ("engine_configuration", "EngineConfiguration"),
         ("vpic_trim", "Trim"),
         ("vpic_model", "Model"),
+        # ``EngineHP`` on an electrified car is the combustion engine alone
+        # (vPIC files no system output), so the reader needs these two to
+        # label the figure honestly.
+        ("electrification_level", "ElectrificationLevel"),
+        ("fuel_type_secondary", "FuelTypeSecondary"),
     ):
         val = _clean(row.get(field))
         if val:
@@ -167,6 +173,26 @@ def vpic_specs_for_vin(vin: str | None) -> dict[str, Any]:
 def vpic_horsepower(vin: str | None) -> int | None:
     """Manufacturer-filed horsepower for this exact VIN, or None."""
     return vpic_specs_for_vin(vin).get("horsepower")
+
+
+_HYBRID_RE = re.compile(r"\b(?:P|M)?HEV\b|hybrid", re.IGNORECASE)
+
+
+def hybrid_text(value: Any) -> bool:
+    """True when a vPIC electrification level (or any fuel/engine text) names a hybrid."""
+    return bool(value) and bool(_HYBRID_RE.search(str(value)))
+
+
+def vpic_is_hybrid(specs: dict[str, Any]) -> bool:
+    """True when the decode says this VIN is an HEV/PHEV/MHEV or carries a secondary electric fuel.
+
+    ``EngineHP`` on such a car is the gasoline engine alone: a 2027 CR-V Hybrid
+    decodes to 145 hp where the system makes 204 (visual review 2026-09-28,
+    DC-1: 36,711 of 39,761 HEV/PHEV decodes on active listings carry one).
+    """
+    if hybrid_text(specs.get("electrification_level")):
+        return True
+    return str(specs.get("fuel_type_secondary") or "").strip().lower() == "electric"
 
 
 def reset_cache() -> None:

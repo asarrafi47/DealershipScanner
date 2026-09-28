@@ -321,10 +321,31 @@ def serialize_car_for_api(
     # model-level contamination by construction, and 23,089 active listings
     # already have one cached locally. Only ever used when the gated value is
     # absent — a real per-trim figure that survived the gate still wins.
+    #
+    # Every hp figure carries its source (``horsepower_source``): a gated value
+    # came from a page naming this model year ("trim page"), the fill-behind
+    # from the VIN decode ("NHTSA vPIC"). On a hybrid the vPIC ``EngineHP`` is
+    # the combustion engine alone, so the number stays (it is true to the
+    # filing) with ``horsepower_note`` saying what it is not: 145 hp on a CR-V
+    # Hybrid whose system makes 204 must never read as the car's output.
+    out["horsepower_source"] = "trim page" if out["horsepower"] is not None else None
+    out["horsepower_note"] = None
     if out["horsepower"] is None:
-        from backend.utils.vpic_specs import vpic_horsepower
+        from backend.utils.vpic_specs import hybrid_text, vpic_is_hybrid, vpic_specs_for_vin
 
-        out["horsepower"] = vpic_horsepower(c.get("vin"))
+        _vp = vpic_specs_for_vin(c.get("vin"))
+        _vp_hp = _vp.get("horsepower")
+        if _vp_hp is not None:
+            out["horsepower"] = _vp_hp
+            out["horsepower_source"] = "NHTSA vPIC"
+            _is_hybrid = (
+                vpic_is_hybrid(_vp)
+                or hybrid_text(vs.get("vpic_electrification"))
+                or hybrid_text(out.get("fuel_type"))
+                or hybrid_text(engine_disp)
+            )
+            if _is_hybrid:
+                out["horsepower_note"] = "engine only; hybrid system output not filed"
     # NOT filled from vPIC: 0-60 (vPIC does not carry it, and estimating it from
     # power-to-weight would need the very curb-weight figures suppressed below)
     # and curb weight (present on 0.2% of decodes).

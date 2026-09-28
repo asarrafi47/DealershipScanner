@@ -686,7 +686,7 @@
                         {% if car.horsepower %}
                         <div class="spec-row">
                             <span class="spec-label">Horsepower</span>
-                            <span class="spec-value">{{ car.horsepower }} hp</span>
+                            <span class="spec-value">{{ car.horsepower }} hp{% if car.horsepower_note %} &middot; {{ car.horsepower_note }}{% endif %}{% if car.horsepower_source %} <span class="spec-source-badge" title="{% if car.horsepower_source == 'NHTSA vPIC' %}Manufacturer filing for this VIN (NHTSA vPIC EngineHP){% else %}Quoted from a spec page naming this model year{% endif %}">per {{ car.horsepower_source }}</span>{% endif %}</span>
                         </div>
                         {% endif %}
                         {% if car.torque_lb_ft %}
