@@ -2,6 +2,15 @@
 
 ## [Unreleased]
 
+### Changed
+- **Listings no longer ship the whole fleet.** The page defaults to the shopper's ZIP + radius and shows no cars until a search starts; `/api/listings/cars` returns the cars within that area (radius snapped to 10/25/50/100/250 mi) from stored cards (`listings_grid_cards`, V023, refreshed by `build_listings_grid_cards` and nightly step 7). Largest metro: 0.99 s cold, 4 ms warm; web memory ~0.5 GB instead of a 9.5 GB peak. Filtering within the area stays client-side and instant. Mobile contract: session-area fallback, versioned `zip_required` response.
+- **Nightly refresh:** consistent 7-step numbering; step 7 rebuilds grid cards.
+
+### Fixed
+- Upsert writes in sorted VIN order and retries Postgres deadlocks (Chapman Ford, two shards).
+- Timing fingerprint no longer widens the window for dealers whose host throttled the pass (110 of 160 recommendations).
+- Card store: freshness covers deal scores and market bands, bounded inline rebuilds, striped build locks, no mass rebuild on an attribution read failure, dealer-URL fallback includes cars with an empty dealer_id, per-dealer card cache with token ETags.
+
 ## [1.4.0] - 2026-09-28
 
 ### Added
