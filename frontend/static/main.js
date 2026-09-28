@@ -1376,14 +1376,15 @@ document.addEventListener("DOMContentLoaded", () => {
         const mkt = c.market;
         // A payment-shaped "price" (either intel tier flagged it) renders as
         // an advertised payment, never as the sale price with a deal badge.
-        const paymentListed = (mkt && mkt.vs_market === "payment_listed")
+        const paymentListed = c.payment_listed === true
+            || (mkt && mkt.vs_market === "payment_listed")
             || (c.deal_score && c.deal_score.label === "payment_listed");
         // Premium trim-avg badge takes precedence; otherwise fall back to the
         // free coarse market deal score attached during serialization.
         const dealBadge = paymentListed ? "" : (SC.dealBadgeHtml(mkt) || SC.dealScoreBadgeHtml(c.deal_score));
-        const priceDropBadge = SC.priceDropBadgeHtml(c);
+        const priceDropBadge = paymentListed ? "" : SC.priceDropBadgeHtml(c);
         let marketLine = "";
-        if (mkt && mkt.avg_price_display) {
+        if (!paymentListed && mkt && mkt.avg_price_display) {
             marketLine = `<p class="result-market-sub">Trim avg ${SC.escapeHtml(mkt.avg_price_display)}</p>`;
         }
         const distMi = carDistanceMiles(c);
@@ -1445,7 +1446,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         </div>
                         <p class="result-trim">${SC.escapeHtml(c.trim || "")}</p>
                         ${paymentListed
-                            ? `<p class="result-price result-price--payment">${SC.fmtUSD(c.price)}<span class="result-price-payment-note">advertised payment &mdash; price not listed</span></p>`
+                            ? `<p class="result-price result-price--payment">${SC.fmtUSD(c.price)}/mo advertised<span class="result-price-payment-note">&mdash; see dealer for the price</span></p>`
                             : `<p class="result-price">${SC.fmtUSD(c.price)}${priceDropBadge}</p>`}
                         ${marketLine}
                         <p class="result-meta">
@@ -1519,6 +1520,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function listingCallForPrice(c) {
+        // A payment-shaped "price" ($122/mo scraped into the price field) is
+        // no sale price: it sinks with call-for-price in every sort mode.
+        if (c && c.payment_listed === true) return true;
         const p = Number(c.price);
         return !Number.isFinite(p) || p <= 0;
     }
@@ -1563,6 +1567,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         const arr = cars.slice();
         const priceKey = (c) => {
+            if (c.payment_listed === true) return Infinity;
             const p = Number(c.price);
             return Number.isFinite(p) && p > 0 ? p : Infinity;
         };
@@ -2186,6 +2191,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (filters.max_price != null) {
             const cap = Number(filters.max_price);
+            // A payment-shaped figure is not the price, so it can never satisfy a
+            // price cap; such cards are dropped from any "under $X" result.
+            if (c.payment_listed === true) return false;
             if (Number.isFinite(cap) && Number(c.price) > cap) return false;
         }
         if (filters.max_mileage != null) {

@@ -270,7 +270,13 @@
                                The first is a total read off a sticker photographed in THIS
                                listing's gallery and says so; the second describes the trim, not
                                the car, and must never read as this car's sticker price. #}
-                            {% if car.price and car.price > 0 %}
+                            {% if car.payment_listed and car.price and car.price > 0 %}
+                                {# The feed put an advertised monthly payment in the price field
+                                   (backend/utils/market_price.is_payment_shaped_price). Print it as
+                                   what it is; the sale price is not listed. #}
+                                <span class="car-detail-price--payment">${{ "{:,.0f}".format(car.price) }}/mo advertised</span>
+                                <span class="price-msrp-secondary"><span class="price-msrp-source">see dealer for the price</span></span>
+                            {% elif car.price and car.price > 0 %}
                                 ${{ "{:,.0f}".format(car.price) }}
                                 {% set _msrp_fig = (car.msrp if car.msrp and car.msrp > 0 else car.sticker_msrp) %}
                                 {% if _msrp_fig %}
@@ -313,7 +319,7 @@
                            where the decision gets made. It always renders -- when there are too few
                            comparable listings to judge, say that plainly instead of showing nothing,
                            which reads as "we forgot" rather than "we don't know". #}
-                        {% if car.deal_score and car.deal_score.label == 'payment_listed' %}
+                        {% if car.payment_listed or (car.deal_score and car.deal_score.label == 'payment_listed') %}
                         {# The listed "price" is an advertised payment scraped into the price
                            field — never a market verdict (see is_payment_shaped_price). #}
                         <div class="deal-badge deal-badge--hero deal-badge--unknown" role="note" aria-label="Market price assessment">
@@ -381,7 +387,7 @@
                             <span class="compare-toggle-btn__label">Compare</span>
                         </button>
                     </div>
-                    {% if car.price and car.price > 0 %}
+                    {% if car.price and car.price > 0 and not car.payment_listed %}
                     <div class="car-finance-estimate" id="car-finance-calculator" data-vehicle-price="{{ car.price | int }}">
                         <div class="car-finance-estimate-card">
                             <div class="car-finance-estimate-hero">

@@ -5,14 +5,32 @@ from __future__ import annotations
 from typing import Any
 
 
+def listing_is_payment_listed(car: dict[str, Any]) -> bool:
+    """True when the price field holds an advertised monthly payment, not a price.
+
+    Honors a serialized ``payment_listed`` flag when present and otherwise
+    applies :func:`backend.utils.market_price.is_payment_shaped_price` to the
+    raw row, so raw and serialized rows sort the same way.
+    """
+    flag = car.get("payment_listed")
+    if flag is not None:
+        return bool(flag)
+    from backend.utils.market_price import is_payment_shaped_price
+
+    return is_payment_shaped_price(car.get("price"), year=car.get("year"))
+
+
 def listing_is_call_for_price(car: dict[str, Any]) -> bool:
+    """No usable sale price: missing, non-positive, or a payment-shaped figure."""
     p = car.get("price")
     if p is None:
         return True
     try:
-        return float(p) <= 0
+        if float(p) <= 0:
+            return True
     except (TypeError, ValueError):
         return True
+    return listing_is_payment_listed(car)
 
 
 def listing_photo_count(car: dict[str, Any]) -> int:
@@ -77,9 +95,11 @@ def listing_price_value(car: dict[str, Any]) -> float:
         return float("inf")
     try:
         v = float(p)
-        return v if v > 0 else float("inf")
     except (TypeError, ValueError):
         return float("inf")
+    if v <= 0 or listing_is_payment_listed(car):
+        return float("inf")
+    return v
 
 
 def listing_sort_key_by_price(car: dict[str, Any]) -> tuple:

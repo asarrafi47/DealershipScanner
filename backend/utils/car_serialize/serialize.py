@@ -534,6 +534,14 @@ def serialize_car_for_api(
     out["msrp_source"] = _msrp["source"]
     out["msrp_from_sticker"] = _msrp["from_sticker"]
     out["below_msrp"] = _msrp["savings"]
+    # See serialize_car_for_listings_grid: the hero prints the figure as an
+    # advertised payment and shows no MSRP delta or finance estimate against it.
+    from backend.utils.market_price import is_payment_shaped_price  # lazy: market_price imports the DB layer
+
+    out["payment_listed"] = is_payment_shaped_price(out.get("price"), year=c.get("year"))
+    if out["payment_listed"]:
+        out["msrp"] = None
+        out["below_msrp"] = None
 
     # Coarse market deal score (free consumer hook). Scored offline against the
     # in-process market_price_stats cache — no per-car DB round-trip. The detailed
@@ -903,9 +911,17 @@ def serialize_car_for_listings_grid(
     price_drop_amount, price_drop_days_ago = _latest_price_drop_for_grid(c)
     out["price_drop_amount"] = price_drop_amount
     out["price_drop_days_ago"] = price_drop_days_ago
+    # An advertised monthly payment scraped into the price field ($85, $122)
+    # is not a sale price: the card says so, the sorter sinks it with
+    # call-for-price, and the price cap filter ignores the figure
+    # (visual review 2026-09-28, IH-01 / ES-2). The figure is kept so the
+    # card can print "$122/mo advertised" instead of pretending it is unknown.
+    from backend.utils.market_price import is_payment_shaped_price  # lazy: market_price imports the DB layer
+
+    out["payment_listed"] = is_payment_shaped_price(out.get("price"), year=c.get("year"))
     # Same cohort-relative guard as serialize_car_for_api (see
     # backend/utils/price_plausibility.py) — in-memory cache, no per-card DB hit.
-    if out.get("price") is not None:
+    if out.get("price") is not None and not out["payment_listed"]:
         try:
             from backend.utils.price_plausibility import implausible_price
 

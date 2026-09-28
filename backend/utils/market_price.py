@@ -87,6 +87,12 @@ def _parse_year(year: Any) -> int | None:
 _PAYMENT_SHAPED_CEILING = 3000.0
 _PAYMENT_SHAPED_AVG_RATIO = 0.10
 _PAYMENT_SHAPED_NEWISH_YEARS = 3
+# Floors that need no cohort: no dealer lists a 2015+ car under $1,000, and no
+# dealer lists any car under $500 (visual review 2026-09-28, IH-01: 357 active
+# rows priced $1-999, the $85 Transit and 23 consecutive $122 Jettas/Taoses).
+_PAYMENT_SHAPED_FLOOR_ANY = 500.0
+_PAYMENT_SHAPED_FLOOR_MODERN = 1000.0
+_PAYMENT_SHAPED_MODERN_YEAR = 2015
 
 
 def is_payment_shaped_price(
@@ -94,6 +100,8 @@ def is_payment_shaped_price(
 ) -> bool:
     """True when a listing "price" is really an advertised payment/deposit.
 
+    Always: a price under $500 on any car, or under $1,000 on a 2015-or-newer
+    car, is a payment (or deposit), whatever the cohort says.
     With a cohort average: flag a price at or under 10% of it (capped at
     $3,000 so genuinely cheap old cars in cheap cohorts stay comparable).
     Without one: flag a sub-$3,000 price on a car 3 model years old or newer.
@@ -104,13 +112,17 @@ def is_payment_shaped_price(
         return False
     if p <= 0 or p > _PAYMENT_SHAPED_CEILING:
         return False
+    yr = _parse_year(year)
+    if p < _PAYMENT_SHAPED_FLOOR_ANY:
+        return True
+    if p < _PAYMENT_SHAPED_FLOOR_MODERN and yr is not None and yr >= _PAYMENT_SHAPED_MODERN_YEAR:
+        return True
     try:
         avg = float(reference_avg or 0)
     except (TypeError, ValueError):
         avg = 0.0
     if avg > 0:
         return p <= avg * _PAYMENT_SHAPED_AVG_RATIO
-    yr = _parse_year(year)
     if yr is None:
         return False
     from datetime import date

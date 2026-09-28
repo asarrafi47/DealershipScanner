@@ -51,7 +51,10 @@ def test_call_for_price_and_single_photo_sort_last():
 def test_listing_is_call_for_price():
     assert listing_is_call_for_price({"price": None})
     assert listing_is_call_for_price({"price": 0})
-    assert not listing_is_call_for_price({"price": 1})
+    # $1 is payment-shaped (under the $500 floor for any car), so it sinks too;
+    # a real four-figure price on a car with no year does not.
+    assert listing_is_call_for_price({"price": 1})
+    assert not listing_is_call_for_price({"price": 1500})
 
 
 def test_listing_has_single_photo():
