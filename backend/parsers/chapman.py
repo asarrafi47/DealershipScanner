@@ -140,6 +140,38 @@ def _engine_liters(engine: str | None) -> float | None:
         return None
 
 
+# Below this an "msrp" is a call-for-price placeholder, not a sticker (the same
+# floor carscommerce / dealer.com apply to masked prices).
+_MSRP_FLOOR = 1000
+
+
+def _msrp(doc: dict) -> int | None:
+    """Sticker MSRP from ``pricing.msrp`` / top-level ``msrp`` (both carried by
+    the apiv2 feed; the parser used it only to compute price and never emitted
+    it, 1,514 msrp-null rows, F15 2026-09-28). 0 = in transit / call for price."""
+    pricing = doc.get("pricing") if isinstance(doc.get("pricing"), dict) else {}
+    for raw in (pricing.get("msrp"), doc.get("msrp")):
+        n = norm_int(raw)
+        if n >= _MSRP_FLOOR:
+            return n
+    return None
+
+
+def _detail_url(doc: dict, base_url: str) -> str | None:
+    """The feed's own VDP link when it carries one (apiv2 items sampled on
+    2026-09-28 carry none; the real Chapman VDP path is open question 5 of the
+    findings doc, so nothing is guessed here)."""
+    for key in ("vdpUrl", "vdp_url", "detailUrl", "detail_url", "url", "link", "href"):
+        u = _opt_str(doc.get(key))
+        if not u:
+            continue
+        if u.startswith("http"):
+            return u
+        if u.startswith("/") and base_url:
+            return base_url.rstrip("/") + u
+    return None
+
+
 def _map(doc: dict, base_url: str, dealer_id: str, dealer_name: str, dealer_url: str) -> dict | None:
     vin = norm_str(doc.get("vin") or doc.get("VIN") or "")
     if not vin or len(vin) < 11:
@@ -173,6 +205,13 @@ def _map(doc: dict, base_url: str, dealer_id: str, dealer_name: str, dealer_url:
         "mpg_highway": norm_int(doc.get("mpgHwy")) or None,
         "engine_l": _engine_liters(engine),
     }
+    msrp = _msrp(doc)
+    if msrp is not None:
+        row["msrp"] = msrp
+    du = _detail_url(doc, base_url or dealer_url)
+    if du:
+        row["_detail_url"] = du
+        row["source_url"] = du
     return row
 
 
