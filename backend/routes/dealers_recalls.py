@@ -39,10 +39,18 @@ def api_nearby_dealers():
     if not zip_code:
         return jsonify({"ok": False, "dealers": []})
     q = (request.args.get("q") or request.args.get("search") or "").strip()
+    # Signed-in users' hidden dealerships (profile -> Hidden dealerships) stay out of
+    # the picker and its search, as they do on every other listings/geo endpoint.
+    hidden_dealer_ids: set[str] = set()
+    try:
+        hidden_dealer_ids = main.hidden_dealer_ids_for_user(session.get("user_id"))
+    except Exception:
+        hidden_dealer_ids = set()
     payload = resolve_nearby_dealers_for_listings(
         zip_code=zip_code,
         radius_miles=radius,
         search_query=q or None,
+        exclude_dealer_ids=hidden_dealer_ids or None,
     )
     return jsonify(payload)
 

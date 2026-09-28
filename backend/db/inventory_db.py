@@ -59,10 +59,23 @@ from backend.db.repositories.saved_cars_repo import (
     save_car,
     unsave_car,
 )
+from backend.db.repositories.hidden_dealers_repo import (
+    hidden_dealer_ids_for_user,
+    hide_dealer,
+    is_dealer_hidden,
+    list_hidden_dealers,
+    unhide_dealer,
+)
 from backend.db.repositories.saved_searches_repo import (
     create_saved_search,
     delete_saved_search,
     list_saved_searches,
+)
+from backend.db.repositories.search_history_repo import (
+    clear_search_history,
+    delete_search_history_entry,
+    list_search_history,
+    record_search_history,
 )
 from backend.db.repositories.search_repo import (
     MAKE_TO_COUNTRY,

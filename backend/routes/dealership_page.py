@@ -741,6 +741,7 @@ def dealership_research_page(dealer_key: str):
         gmaps_url = apple_url = waze_url = None
 
     saved_car_ids: list[int] = []
+    is_hidden = False
     uid = session.get("user_id")
     if uid is not None:
         try:
@@ -749,6 +750,13 @@ def dealership_research_page(dealer_key: str):
             saved_car_ids = get_saved_car_ids(int(uid))
         except (TypeError, ValueError):
             saved_car_ids = []
+        if dealer_id:
+            try:
+                from backend.db.inventory_db import is_dealer_hidden
+
+                is_hidden = bool(is_dealer_hidden(int(uid), dealer_id))
+            except Exception:
+                is_hidden = False
 
     from backend.listings.routes import pack_car_rows
 
@@ -762,6 +770,7 @@ def dealership_research_page(dealer_key: str):
         car_rows_packed=pack_car_rows(facets.get("car_rows") or []),
         active=_active_facet_selection(),
         saved_car_ids=saved_car_ids,
+        is_hidden=is_hidden,
         filter_zip=_dealer_filter_zip(dealership, lat, lon),
         dealership=dealership,
         name=name,

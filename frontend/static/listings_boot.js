@@ -59,5 +59,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 .map((id) => Number(id))
                 .filter((n) => Number.isFinite(n) && n > 0)
         );
+        // Signed-in user's hidden dealerships (profile -> Hidden dealerships).
+        // Absent on pages that don't ship the blob (dealership page): empty set.
+        const hiddenRaw = readJsonScript("ds-listings-hidden-dealers", []);
+        window.HIDDEN_DEALER_IDS = new Set(
+            (Array.isArray(hiddenRaw) ? hiddenRaw : [])
+                .map((id) => String(id || "").trim().toLowerCase())
+                .filter((id) => id.length > 0)
+        );
     })();
 });

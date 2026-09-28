@@ -1952,7 +1952,14 @@ document.addEventListener("DOMContentLoaded", () => {
         };
     }
 
+    function carIsFromHiddenDealer(c) {
+        const hidden = window.HIDDEN_DEALER_IDS;
+        if (!(hidden instanceof Set) || !hidden.size) return false;
+        return hidden.has(String(c.dealer_id || "").trim().toLowerCase());
+    }
+
     function carMatchesFacetFilters(c, state, dealerFilterSet) {
+        if (carIsFromHiddenDealer(c)) return false;
         if (state.makesFilter.length && !SC.valueInListCI(state.makesFilter, c.make)) return false;
         if (state.models.length && !SC.valueInListCI(state.models, c.model)) return false;
         if (state.trims.length && !SC.valueInListCI(state.trims, c.trim)) return false;
@@ -2199,6 +2206,16 @@ document.addEventListener("DOMContentLoaded", () => {
         return true;
     }
 
+    // Every client-side render path (token preview, parse preview) draws from this
+    // source, so the signed-in user's hidden dealerships are removed here as well as
+    // in the facet filter: a hidden store must never flash into the grid while the
+    // server response (already filtered) is in flight.
+    function withoutHiddenDealers(cars) {
+        const hidden = window.HIDDEN_DEALER_IDS;
+        if (!(hidden instanceof Set) || !hidden.size) return cars;
+        return cars.filter((c) => !carIsFromHiddenDealer(c));
+    }
+
     window.__DS_getListingsInventorySource = function getListingsInventorySource() {
         const radiusCacheKey = listingsRadiusFilterKey();
         if (
@@ -2206,14 +2223,16 @@ document.addEventListener("DOMContentLoaded", () => {
             && _radiusFilterKey === radiusCacheKey
             && Array.isArray(_radiusFilteredCars)
         ) {
-            return _radiusFilteredCars;
+            return withoutHiddenDealers(_radiusFilteredCars);
         }
-        if (Array.isArray(window.ALL_CARS) && window.ALL_CARS.length) return window.ALL_CARS;
+        if (Array.isArray(window.ALL_CARS) && window.ALL_CARS.length) {
+            return withoutHiddenDealers(window.ALL_CARS);
+        }
         if (Array.isArray(window.INITIAL_GRID_CARS) && window.INITIAL_GRID_CARS.length) {
-            return window.INITIAL_GRID_CARS;
+            return withoutHiddenDealers(window.INITIAL_GRID_CARS);
         }
         if (Array.isArray(window.BOOTSTRAP_GRID_CARS) && window.BOOTSTRAP_GRID_CARS.length) {
-            return window.BOOTSTRAP_GRID_CARS;
+            return withoutHiddenDealers(window.BOOTSTRAP_GRID_CARS);
         }
         return [];
     };
@@ -2222,7 +2241,9 @@ document.addEventListener("DOMContentLoaded", () => {
         const source = window.__DS_getListingsInventorySource();
         const dealerFilterSet = buildDealerFilterIdSet();
         const filtered = source.filter(
-            (c) => carMatchesSmartFilters(c, filters) && passesDealerFilter(c, dealerFilterSet)
+            (c) => carMatchesSmartFilters(c, filters)
+                && passesDealerFilter(c, dealerFilterSet)
+                && !carIsFromHiddenDealer(c)
         );
         renderCarGrid(filtered, {
             preserveOrder: false,

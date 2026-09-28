@@ -520,6 +520,42 @@ def init_postgres_inventory(conn: Any) -> None:
         "CREATE INDEX IF NOT EXISTS idx_saved_searches_user ON saved_searches(user_id, created_at)"
     )
 
+    # Mirrors migrations/V021__user_hidden_dealers.sql (per-user hidden dealerships).
+    cur.execute(
+        """
+        CREATE TABLE IF NOT EXISTS user_hidden_dealers (
+            id BIGSERIAL PRIMARY KEY,
+            user_id BIGINT NOT NULL,
+            dealer_id TEXT NOT NULL,
+            dealer_name TEXT,
+            created_at TEXT DEFAULT (CURRENT_TIMESTAMP::text),
+            UNIQUE(user_id, dealer_id)
+        )
+        """
+    )
+    cur.execute(
+        "CREATE INDEX IF NOT EXISTS idx_user_hidden_dealers_user "
+        "ON user_hidden_dealers(user_id, created_at)"
+    )
+
+    # Mirrors migrations/V022__user_search_history.sql (per-user recent searches).
+    cur.execute(
+        """
+        CREATE TABLE IF NOT EXISTS user_search_history (
+            id BIGSERIAL PRIMARY KEY,
+            user_id BIGINT NOT NULL,
+            filters_json TEXT NOT NULL,
+            query_text TEXT,
+            result_count INTEGER,
+            created_at TEXT DEFAULT (CURRENT_TIMESTAMP::text)
+        )
+        """
+    )
+    cur.execute(
+        "CREATE INDEX IF NOT EXISTS idx_user_search_history_user "
+        "ON user_search_history(user_id, created_at DESC, id DESC)"
+    )
+
     cur.execute(
         """
         CREATE TABLE IF NOT EXISTS scan_runs (

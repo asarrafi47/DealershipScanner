@@ -856,7 +856,7 @@ def test_nearby_dealers_api_accepts_radius_miles_alias(monkeypatch) -> None:
 
     seen: dict[str, float] = {}
 
-    def fake_resolve(*, zip_code, radius_miles, search_query=None, cap=None):
+    def fake_resolve(*, zip_code, radius_miles, search_query=None, cap=None, exclude_dealer_ids=None):
         seen["radius"] = radius_miles
         return {"ok": True, "dealers": []}
 

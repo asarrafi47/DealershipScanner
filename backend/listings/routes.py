@@ -1,9 +1,13 @@
+import logging
+
 from flask import render_template, request, session
 
 from backend.db.inventory_db import (
     get_filter_options,
     get_saved_car_ids,
+    hidden_dealer_ids_for_user,
     listings_grid_bootstrap_cars,
+    record_search_history,
     serialize_cars_for_listings_grid,
 )
 from backend.listings.geo_session import (
@@ -16,6 +20,8 @@ from backend.utils.hybrid_search import (
     query_is_actionable,
 )
 from backend.utils.query_parser import parse_natural_query
+
+_logger = logging.getLogger(__name__)
 
 # Column order for the packed cascade table. Every column except ``cyl`` is
 # dictionary-encoded: the values repeat across ~12,700 rows, so shipping integer
@@ -67,6 +73,54 @@ def pack_car_rows(car_rows: list[dict]) -> dict:
     return {"c": list(_CAR_ROW_COLUMNS), "v": orders, "r": packed_rows}
 
 
+def drop_hidden_dealer_cars(cars: list[dict], hidden_dealer_ids) -> list[dict]:
+    """Serialized grid rows minus the ones from ``hidden_dealer_ids`` (case-insensitive)."""
+    hidden = {str(d or "").strip().lower() for d in (hidden_dealer_ids or [])} - {""}
+    if not hidden:
+        return list(cars)
+    return [c for c in cars if str(c.get("dealer_id") or "").strip().lower() not in hidden]
+
+
+def history_filters_from_active(active: dict) -> dict:
+    """The ``active`` filter dict as the cleaned listings query-param object saved
+    searches store: empties dropped, ``dealer_registry_ids`` renamed to the
+    ``dealer_registry_id`` param the page reads, values scalar or list-of-scalar."""
+    from backend.routes.listings_api import _clean_saved_search_filters
+
+    raw: dict = {}
+    for key, value in (active or {}).items():
+        name = "dealer_registry_id" if key == "dealer_registry_ids" else str(key)
+        if isinstance(value, (list, tuple)):
+            vals = [str(x).strip() for x in value if str(x or "").strip()]
+            if vals:
+                raw[name] = vals
+        elif value is not None and str(value).strip() != "":
+            raw[name] = str(value).strip()
+    return _clean_saved_search_filters(raw) or {}
+
+
+def record_listings_search_history(active: dict, q_text: str, result_count) -> None:
+    """Remember this search for the signed-in user (profile -> Recent searches).
+
+    Anonymous visitors are never recorded, an empty filter set is not a search, and
+    a failing write is logged and swallowed: it must never fail the page."""
+    uid_raw = session.get("user_id")
+    if not uid_raw:
+        return
+    try:
+        filters = history_filters_from_active(active)
+        if not filters:
+            return
+        record_search_history(
+            int(uid_raw),
+            filters,
+            query_text=q_text or None,
+            result_count=result_count,
+        )
+    except Exception:
+        _logger.warning("search history write failed for user %s", uid_raw, exc_info=True)
+
+
 def listings_page(*, listings_poll_ms: int = 0):
     persist_listings_geo_from_request(request, session)
     g = request.args.getlist
@@ -107,6 +161,15 @@ def listings_page(*, listings_poll_ms: int = 0):
     }
 
     sql_kwargs = flask_request_to_search_cars_kwargs(request)
+    # Signed-in users' hidden dealerships (profile -> Hidden dealerships). Anonymous
+    # visitors get an empty list and every path below stays unchanged for them.
+    hidden_dealer_ids: list[str] = []
+    try:
+        hidden_dealer_ids = sorted(hidden_dealer_ids_for_user(session.get("user_id")))
+    except Exception:
+        hidden_dealer_ids = []
+    if hidden_dealer_ids:
+        sql_kwargs["exclude_dealer_ids"] = list(hidden_dealer_ids)
     has_package_filter = bool(
         sql_kwargs.get("packages_json_contains")
         or sql_kwargs.get("packages_json_contains_list")
@@ -141,6 +204,12 @@ def listings_page(*, listings_poll_ms: int = 0):
         except Exception:
             pass
 
+    # Per-user history: server-side searches carry their count; filter-only visits
+    # (the grid filters client-side) are stored without one.
+    record_listings_search_history(
+        active, q_text, len(initial_grid_cars) if search_ran else None
+    )
+
     options = get_filter_options()
 
     saved_car_ids: list[int] = []
@@ -162,6 +231,8 @@ def listings_page(*, listings_poll_ms: int = 0):
             )
         except Exception:
             bootstrap_grid_cars = []
+        if hidden_dealer_ids and bootstrap_grid_cars:
+            bootstrap_grid_cars = drop_hidden_dealer_cars(bootstrap_grid_cars, hidden_dealer_ids)
 
     listings_zip_coords_boot: dict[str, list[float]] = {}
     geo_zip = (zip_code or "").strip()
@@ -186,4 +257,5 @@ def listings_page(*, listings_poll_ms: int = 0):
         bootstrap_grid_cars=bootstrap_grid_cars,
         listings_poll_ms=int(listings_poll_ms),
         saved_car_ids=saved_car_ids,
+        hidden_dealer_ids=hidden_dealer_ids,
     )

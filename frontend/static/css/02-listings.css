@@ -1497,6 +1497,18 @@ body.listings-page .filter-top-row.listings-filters-compact {
     display: none;
 }
 
+.results-hidden-note {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin: 0 0 16px 0;
+    padding: 0;
+}
+
+.results-hidden-note a {
+    color: var(--navy);
+    font-weight: 500;
+}
+
 .results-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
