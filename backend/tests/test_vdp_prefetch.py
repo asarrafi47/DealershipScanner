@@ -211,3 +211,58 @@ def test_http_prefetch_does_not_kill_a_host_that_answers(monkeypatch):
     assert "dead_host" not in stats
     assert stats["fetched"] >= 4
 
+
+
+# ---------------------------------------------------------------- shared (stock-art) gallery URLs
+
+CAI = "https://assets.cai-media-management.com/resize/1024x1024/common-vehicle-media/"
+
+
+def _cai(tag: str) -> str:
+    return CAI + f"{tag:0>8}-864e-4a57-9f7a-b6a691ec3267.jpg"
+
+
+def test_shared_gallery_urls_are_dropped_across_the_batch_and_hero_follows():
+    """autoWALL library art: one cai-media UUID on many cars of the same store.
+    The URL looks exactly like a Team Velocity photo, so only the batch can tell."""
+    stock = _cai("aaaaaaaa")
+    twice = _cai("bbbbbbbb")  # on 3 cars = 2 others: kept
+    vehicles = [
+        {"vin": f"VIN{i}", "image_url": stock, "gallery": ["/static/placeholder.svg", stock, _cai(f"{i}")]}
+        for i in range(5)
+    ]
+    for v in vehicles[:3]:
+        v["gallery"].append(twice)
+    hero_only = {"vin": "VIN9", "image_url": stock, "gallery": [stock]}
+    vehicles.append(hero_only)
+    stats = pf.drop_shared_gallery_urls(vehicles)
+    assert stats == {"urls_dropped": 1, "vehicles_touched": 6, "removals": 6}
+    for i, v in enumerate(vehicles[:5]):
+        assert stock not in v["gallery"]
+        assert v["gallery"][:2] == ["/static/placeholder.svg", _cai(f"{i}")]  # placeholder untouched, order kept
+        assert v["image_url"] == _cai(f"{i}")
+    assert all(twice in v["gallery"] for v in vehicles[:3])
+    assert hero_only["gallery"] == [] and hero_only["image_url"] == stock  # nothing real left: hero unchanged
+
+
+def test_unique_team_velocity_photos_survive_the_shared_check():
+    vehicles = [
+        {"vin": f"VIN{i}", "image_url": _cai(f"{i}00"), "gallery": [_cai(f"{i}{j:02d}") for j in range(12)]}
+        for i in range(6)
+    ]
+    before = [list(v["gallery"]) for v in vehicles]
+    assert pf.drop_shared_gallery_urls(vehicles) == {"urls_dropped": 0, "vehicles_touched": 0, "removals": 0}
+    assert [v["gallery"] for v in vehicles] == before
+    # a batch too small to prove sharing is left alone
+    tiny = [{"gallery": [_cai("ffffffff")]} for _ in range(3)]
+    assert pf.drop_shared_gallery_urls(tiny)["removals"] == 0
+
+
+def test_prefetch_before_vdp_runs_the_shared_check_even_with_both_layers_off(monkeypatch):
+    monkeypatch.setenv("SCANNER_VDP_DB_MERGE", "0")
+    monkeypatch.setenv("SCANNER_VDP_HTTP_FIRST", "0")
+    stock = _cai("aaaaaaaa")
+    vehicles = [{"vin": f"VIN{i}", "image_url": stock, "gallery": [stock, _cai(f"{i}")]} for i in range(4)]
+    out = asyncio.run(pf.prefetch_before_vdp(vehicles, "autowall-store-com", "autoWALL store"))
+    assert out == {"gallery_shared": {"urls_dropped": 1, "vehicles_touched": 4, "removals": 4}}
+    assert all(v["gallery"] == [_cai(f"{i}")] and v["image_url"] == _cai(f"{i}") for i, v in enumerate(vehicles))

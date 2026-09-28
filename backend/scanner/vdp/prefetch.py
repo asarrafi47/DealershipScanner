@@ -486,6 +486,54 @@ def _apply_description_and_gallery(v: dict[str, Any], html: str, url: str) -> in
     return filled
 
 
+_SHARED_GALLERY_MIN_OTHERS = 3
+
+
+def drop_shared_gallery_urls(vehicles: list[dict[str, Any]], *, min_others: int = _SHARED_GALLERY_MIN_OTHERS) -> dict[str, int]:
+    """Drop gallery URLs that also appear on ``min_others``+ other vehicles of
+    the same dealer batch: library / stock art, never a photo of this car.
+
+    autoWALL stores serve stock art from the CDN path Team Velocity uses for
+    real photos (assets.cai-media-management.com/resize/WxH/common-vehicle-media/
+    <uuid>.jpg, both platforms, same resize sizes), so no URL rule tells them
+    apart; the only difference is that a real photo belongs to one car while
+    library art carries the same UUID across many. "common-vehicle-media" was
+    a fluff signal for exactly that reason and dropped every Team Velocity
+    photo (F03, 2026-09-28); this batch-level check replaces it. Only https
+    entries count (placeholders are shared by design and handled elsewhere).
+    A hero that was dropped follows the first photo that remains.
+    """
+    stats = {"urls_dropped": 0, "vehicles_touched": 0, "removals": 0}
+    if len(vehicles) <= min_others:
+        return stats
+    seen_on: dict[str, int] = {}
+    per_vehicle: list[set[str]] = []
+    for v in vehicles:
+        gal = v.get("gallery") if isinstance(v.get("gallery"), list) else []
+        urls = {u for u in gal if isinstance(u, str) and u.lower().startswith("https://")}
+        per_vehicle.append(urls)
+        for u in urls:
+            seen_on[u] = seen_on.get(u, 0) + 1
+    shared = {u for u, n in seen_on.items() if n > min_others}
+    if not shared:
+        return stats
+    stats["urls_dropped"] = len(shared)
+    for v, urls in zip(vehicles, per_vehicle):
+        hit = urls & shared
+        if not hit:
+            continue
+        gal = [u for u in v["gallery"] if not (isinstance(u, str) and u in shared)]
+        stats["removals"] += len(v["gallery"]) - len(gal)
+        stats["vehicles_touched"] += 1
+        v["gallery"] = gal
+        hero = str(v.get("image_url") or "")
+        if hero in shared:
+            nxt = next((u for u in gal if isinstance(u, str) and u.lower().startswith("https://")), None)
+            if nxt:
+                v["image_url"] = nxt
+    return stats
+
+
 async def http_prefetch_missing_fields(vehicles: list[dict[str, Any]], dealer_id: str = "") -> dict[str, int]:
     """Concurrent HTTP prefetch for vehicles still missing queue-driving fields.
 
@@ -671,6 +719,13 @@ async def prefetch_before_vdp(
             logger.warning("VDP recipes [%s]: replay failed: %s", dealer_name, str(exc)[:160])
         http_stats = await http_prefetch_missing_fields(vehicles, dealer_id)
         out["http_first"] = http_stats
+    shared = drop_shared_gallery_urls(vehicles)
+    if shared["removals"]:
+        out["gallery_shared"] = shared
+        logger.info(
+            "VDP prefetch [%s]: dropped %d gallery URL(s) shared by 4+ cars (%d removal(s) on %d car(s))",
+            dealer_name, shared["urls_dropped"], shared["removals"], shared["vehicles_touched"],
+        )
     if not out:
         return None
     logger.info(

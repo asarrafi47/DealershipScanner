@@ -259,7 +259,9 @@ _FLUFF_URL_SIGNALS = (
     # Velocity stores it is the per-car photo path (assets.cai-media-management
     # .com/resize/WxH/common-vehicle-media/<uuid>.jpg, 11-44 photos per VDP, no
     # UUID overlap between cars) and the signal dropped every one of them
-    # (2026-09-28, F03). Not a fluff signal.
+    # (2026-09-28, F03). autoWALL library art shares the same URL shape, so
+    # it is caught per batch instead: prefetch.drop_shared_gallery_urls drops
+    # a URL that also sits on 3+ other cars of the same dealer. Not a fluff signal.
     "widget.buyercall.com",     # OfferLogix payment widget chrome (CD-full-dark-transp.png)
     "/offerlogix/",
     "partnerstatic.carfax.com", # Carfax badge SVG/PNG, not the car
