@@ -348,6 +348,8 @@ def _highlight_params_from_filters(filters: dict) -> list[str]:
             keys.append("max_price")
         elif k == "max_mileage":
             keys.append("max_mileage")
+        elif k == "inventory_condition":
+            keys.append("inventory_condition")
         elif k in ("min_year", "max_year"):
             if "year" not in keys:
                 keys.append("year")

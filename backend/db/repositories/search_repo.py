@@ -184,6 +184,7 @@ def search_cars(makes=None, models=None, trims=None, fuel_types=None,
                 min_year=None, max_year=None,
                 max_price=None, max_mileage=None,
                 cpo_only=None,
+                inventory_condition=None,
                 zip_code=None, radius_miles=None,
                 dealership_registry_id=None,
                 dealer_registry_ids=None,
@@ -427,6 +428,18 @@ def search_cars(makes=None, models=None, trims=None, fuel_types=None,
             where += " AND (mileage IS NULL OR mileage <= ? OR mileage = 0)"
             params.append(mm)
     if cpo_only:
+        where += " AND is_cpo = 1"
+    # ``inventory_condition``: the listings UI vocabulary (new / pre_owned / cpo), also
+    # emitted by parse_natural_query for "new" / "used" / "certified" in free text.
+    # Blank condition matches neither new nor pre_owned, same as the client filter.
+    _cond = str(inventory_condition or "").strip().lower()
+    if _cond == "new":
+        where += " AND LOWER(TRIM(COALESCE(condition, ''))) = 'new' AND COALESCE(is_cpo, 0) <> 1"
+    elif _cond == "pre_owned":
+        where += (
+            " AND (is_cpo = 1 OR LOWER(TRIM(COALESCE(condition, ''))) NOT IN ('', 'new'))"
+        )
+    elif _cond == "cpo":
         where += " AND is_cpo = 1"
     excl_clause, excl_params = _exclude_dealer_ids_clause(exclude_dealer_ids)
     where += excl_clause

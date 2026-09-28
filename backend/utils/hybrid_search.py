@@ -262,6 +262,11 @@ def filters_dict_to_search_cars_kwargs(filters: dict[str, Any]) -> dict[str, Any
             out["cylinders"] = [int(cyl)]
         except (TypeError, ValueError):
             pass
+    cond = str(filters.get("inventory_condition") or "").strip().lower()
+    if cond in ("new", "pre_owned", "cpo"):
+        out["inventory_condition"] = cond
+        if cond == "cpo":
+            out["cpo_only"] = True
     tc = filters.get("trim_contains")
     if isinstance(tc, list):
         needles = [str(t).strip() for t in tc if str(t).strip()]
@@ -480,6 +485,7 @@ _STRUCTURED_FILTER_KEYS = frozenset(
         "max_price",
         "max_mileage",
         "cpo_only",
+        "inventory_condition",
         "drivetrain",
         "body_style",
         "fuel_type",
@@ -529,6 +535,7 @@ _FACET_SQL_KWARG_KEYS = frozenset(
         "max_price",
         "max_mileage",
         "cpo_only",
+        "inventory_condition",
         "dealership_registry_id",
         "dealer_registry_ids",
         "engine_displacement_l_min",

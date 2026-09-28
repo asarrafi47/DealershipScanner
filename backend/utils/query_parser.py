@@ -586,6 +586,33 @@ def _model_appears_in_text(model: str, raw_query: str) -> bool:
     return any(re.search(rf"(?i)\b{re.escape(p)}\b", rq) for p in distinctive)
 
 
+# Condition words set the condition filter; they are never trim or model text.
+# "used toyota under 30k" parsed "used" as ``trim_contains`` (a trim column
+# somewhere reads "USED"), which matched nothing useful (smart-search parse bug,
+# 2026-09-28). Values are the listings UI's ``inventory_condition`` vocabulary.
+# Order matters: "certified pre-owned" is CPO, not pre-owned.
+_CONDITION_CUES: tuple[tuple[re.Pattern[str], str], ...] = (
+    (re.compile(r"\bcertified(?:[\s-]+pre[\s-]?owned)?\b|\bcpo\b", re.I), "cpo"),
+    (re.compile(r"\bpre[\s-]?owned\b|\bused\b|\bsecond[\s-]?hand\b", re.I), "pre_owned"),
+    # "New Beetle" is a model, not a condition.
+    (re.compile(r"\b(?:brand[\s-]+)?new\b(?![\s-]+beetle\b)", re.I), "new"),
+)
+
+
+def _extract_condition(text: str) -> str | None:
+    """``"new"`` / ``"pre_owned"`` / ``"cpo"`` when the query names a condition."""
+    for rx, value in _CONDITION_CUES:
+        if rx.search(text or ""):
+            return value
+    return None
+
+
+def _strip_condition_words(text: str) -> str:
+    for rx, _ in _CONDITION_CUES:
+        text = rx.sub(" ", text)
+    return text
+
+
 _CYLINDER_RE = re.compile(
     r"\b(?:"
     r"v\s*(\d{1,2})"                       # v6, v8, v12
@@ -903,6 +930,7 @@ def _strip_vehicle_identity_noise(text: str) -> str:
     """Remove price/year/color/drivetrain tokens before make/model matching."""
     working = _apply_make_synonyms(text)
     working = _strip_price_and_year_segments(working)
+    working = _strip_condition_words(working)
     working = re.sub(
         r"\b(?:awd|4wd|4x4|fwd|rwd|xdrive|quattro|4matic)\b",
         " ",
@@ -1210,6 +1238,10 @@ def parse_natural_query(query_text: str) -> dict[str, Any]:
 
     if _FULLY_LOADED_RE.search(raw):
         out["fully_loaded"] = True
+
+    cond = _extract_condition(raw)
+    if cond:
+        out["inventory_condition"] = cond
 
     segments = _split_vehicle_segments(raw, makes, all_models)
     vehicle_hits = [
