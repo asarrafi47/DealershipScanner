@@ -6,7 +6,6 @@
    on 2026-07-30, the cards disagreed on every axis at once:
 
      .car-trim-ladder__card    --vdp-radius-sm  --border-light           --bg-card, pad 12px 14px
-     .market-velocity-card     --vdp-radius-sm  --border-light           linear-gradient + shadow, pad 20px
      .listing-packages-panel   --main-radius    rgba(255,255,255,0.10)   rgba(255,255,255,0.02), pad 16px
      headings                  1.05rem ... 1.35rem, mixed weights
 
@@ -30,7 +29,6 @@ body.car-detail-page {
 /* ---- Surfaces ---- */
 
 body.car-detail-page .car-trim-ladder__card,
-body.car-detail-page .market-velocity-card,
 body.car-detail-page .listing-packages-panel,
 body.car-detail-page .car-finance-estimate-card,
 body.car-detail-page .build-sheet-section,
@@ -41,13 +39,6 @@ body.car-detail-page .car-window-sticker-frame {
     box-shadow: none;
 }
 
-/* The velocity card was the only one with a gradient fill; flatten it so it sits
-   in the same plane as its neighbours. */
-body.car-detail-page .market-velocity-card {
-    background-image: none;
-}
-
-body.car-detail-page .market-velocity-card,
 body.car-detail-page .listing-packages-panel,
 body.car-detail-page .car-finance-estimate-card {
     padding: var(--vdp-card-pad);

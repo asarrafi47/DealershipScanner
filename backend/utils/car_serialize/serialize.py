@@ -151,6 +151,10 @@ def serialize_car_for_api(
     )
     out["interior_pano"] = normalize_optional_url(c.get("interior_pano"))
 
+    from backend.utils.first_seen import first_seen_fields
+
+    out.update(first_seen_fields(c))
+
     from backend.parsers.vdp_urls import resolve_vehicle_source_url
 
     src_was_placeholder = is_effectively_empty(c.get("source_url"))

@@ -2464,12 +2464,8 @@
 
     function initNegotiationRadar() {
         const widget = document.getElementById("negotiation-radar-widget");
-        const daysEl = document.getElementById("days-count");
-        const badgeContainer = document.getElementById("negotiation-badge-container");
         const timelineEl = document.getElementById("history-timeline-list");
         if (!widget) return;
-
-        const REFERENCE_DATE = new Date();
 
         function parseDate(raw) {
             if (raw == null || String(raw).trim() === "") return null;
@@ -2477,11 +2473,6 @@
             if (s.endsWith("Z")) s = s.slice(0, -1) + "+00:00";
             const d = new Date(s);
             return Number.isNaN(d.getTime()) ? null : d;
-        }
-
-        function daysBetween(a, b) {
-            const ms = Math.abs(b.getTime() - a.getTime());
-            return Math.floor(ms / 86400000);
         }
 
         function formatMoney(amount) {
@@ -2494,27 +2485,9 @@
             return d.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
         }
 
-        const created = parseDate(widget.getAttribute("data-created-at"));
-        let daysOnMarket = null;
-        if (created) {
-            daysOnMarket = daysBetween(created, REFERENCE_DATE);
-            if (daysEl) daysEl.textContent = String(daysOnMarket);
-        }
-
-        if (badgeContainer && daysOnMarket !== null) {
-            if (daysOnMarket > 60) {
-                badgeContainer.innerHTML =
-                    '<span class="radar-badge high-leverage">High Leverage: Aged Inventory</span>';
-            } else if (daysOnMarket >= 31) {
-                badgeContainer.innerHTML =
-                    '<span class="radar-badge mid-leverage">Moderate Leverage: Standard Cycle</span>';
-            } else {
-                badgeContainer.innerHTML =
-                    '<span class="radar-badge low-leverage">Fresh Inventory: Firm Pricing</span>';
-            }
-        }
-
-        initMarketVelocityHeatmap(daysOnMarket);
+        // Days since first seen and the leverage badge are rendered server-side
+        // from first_seen_at (visual review 2026-09-28, IH-09 / DC-3 / ES-3); the
+        // "Predictive Local Turnaround" constant and its gradient gauge are gone.
 
         let history = [];
         try {
@@ -2595,62 +2568,6 @@
 
 
 
-
-    function resolveDaysOnMarket(fallbackDays) {
-        const daysEl = document.getElementById("days-count");
-        if (daysEl) {
-            const parsed = parseInt(String(daysEl.textContent || "").trim(), 10);
-            if (Number.isFinite(parsed) && parsed >= 0) return parsed;
-        }
-        return fallbackDays != null && Number.isFinite(fallbackDays) ? fallbackDays : null;
-    }
-
-
-    function mapVelocityMarker(projectedDays) {
-        const marker = document.getElementById("velocity-marker");
-        if (!marker) return;
-
-        let leftPct;
-        let color;
-
-        if (projectedDays < 30) {
-            const span = 29;
-            const dayOffset = Math.max(1, Math.min(projectedDays, 29));
-            leftPct = 85 + ((30 - dayOffset) / span) * 15;
-            color = "#059669";
-        } else if (projectedDays > 75) {
-            const excess = projectedDays - 75;
-            const range = 45;
-            leftPct = Math.max(0, 25 - (excess / range) * 25);
-            color = "#334155";
-        } else {
-            leftPct = 25 + ((74 - projectedDays) / 43) * 60;
-            color = "#d97706";
-        }
-
-        marker.style.left = Math.max(0, Math.min(100, leftPct)) + "%";
-        marker.style.backgroundColor = color;
-        marker.style.borderColor = color;
-    }
-
-    function initMarketVelocityHeatmap(daysOnMarketFromRadar) {
-        const card = document.getElementById("market-velocity-card");
-        if (!card) return;
-
-        const segmentKey = CP.normalizeSegmentKey(card.getAttribute("data-car-type"));
-        const brandKey = CP.normalizeBrandKey(card.getAttribute("data-car-brand"));
-        const daysOnMarket = resolveDaysOnMarket(daysOnMarketFromRadar);
-        const projectedDays = CP.computePredictiveTurnaroundDays(
-            segmentKey,
-            brandKey,
-            daysOnMarket
-        );
-
-        const projectionEl = document.getElementById("velocity-days-projection");
-        if (projectionEl) projectionEl.textContent = String(projectedDays);
-
-        mapVelocityMarker(projectedDays);
-    }
 
     function initBuildSheetPrint() {
         const btn = document.getElementById("build-sheet-print-btn");

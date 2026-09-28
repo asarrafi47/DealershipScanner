@@ -29,27 +29,6 @@ window.CP = window.CP || {};
     ];
     const DEP_BASE_TRIM_KEYWORDS = ["laredo", "sr5", "lx", "base", "standard"];
 
-    const SEGMENT_BASELINE_DAYS = {
-        suv: 42,
-        sedan: 58,
-        truck: 35,
-        coupe: 72,
-        convertible: 85,
-    };
-
-    const BRAND_MODIFIER_DAYS = {
-        toyota: -10,
-        honda: -8,
-        tesla: -5,
-        ford: 2,
-        bmw: 12,
-        "land rover": 22,
-    };
-
-    const DEFAULT_SEGMENT_BASELINE = 45;
-    const STAGNATION_THRESHOLD_DAYS = 45;
-    const STAGNATION_PENALTY_DAYS = 15;
-
     function parseDepreciationMetadata(card) {
         const priceRaw = parseInt(card.getAttribute("data-car-price"), 10);
         const yearRaw = parseInt(card.getAttribute("data-car-year"), 10);
@@ -257,39 +236,6 @@ window.CP = window.CP || {};
             .replace(/"/g, "&quot;");
     }
 
-    function normalizeSegmentKey(rawType) {
-        const t = String(rawType || "")
-            .trim()
-            .toLowerCase();
-        if (!t) return "sedan";
-        if (t.includes("suv") || t.includes("crossover") || t.includes("wagon")) return "suv";
-        if (t.includes("truck") || t.includes("pickup")) return "truck";
-        if (t.includes("convert")) return "convertible";
-        if (t.includes("coupe")) return "coupe";
-        if (t.includes("sedan") || t.includes("hatch")) return "sedan";
-        return t.split(/\s+/)[0] || "sedan";
-    }
-
-    function normalizeBrandKey(rawBrand) {
-        return String(rawBrand || "")
-            .trim()
-            .toLowerCase();
-    }
-
-    function computePredictiveTurnaroundDays(segmentKey, brandKey, daysOnMarket) {
-        const baseline =
-            SEGMENT_BASELINE_DAYS[segmentKey] != null
-                ? SEGMENT_BASELINE_DAYS[segmentKey]
-                : DEFAULT_SEGMENT_BASELINE;
-        const brandMod =
-            BRAND_MODIFIER_DAYS[brandKey] != null ? BRAND_MODIFIER_DAYS[brandKey] : 0;
-        let projected = baseline + brandMod;
-        if (daysOnMarket != null && daysOnMarket > STAGNATION_THRESHOLD_DAYS) {
-            projected += STAGNATION_PENALTY_DAYS;
-        }
-        return Math.max(1, Math.round(projected));
-    }
-
     CP.parseDepreciationMetadata = parseDepreciationMetadata;
     CP.trimMatchesKeyword = trimMatchesKeyword;
     CP.computeAnnualMileage = computeAnnualMileage;
@@ -309,7 +255,4 @@ window.CP = window.CP || {};
     CP.formatReviewCount = formatReviewCount;
     CP.hasPremiumHistoryAccess = hasPremiumHistoryAccess;
     CP.escHtml = escHtml;
-    CP.normalizeSegmentKey = normalizeSegmentKey;
-    CP.normalizeBrandKey = normalizeBrandKey;
-    CP.computePredictiveTurnaroundDays = computePredictiveTurnaroundDays;
 })(window.CP);

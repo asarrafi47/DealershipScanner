@@ -2242,8 +2242,7 @@ body.car-lightbox-open {
     padding: 20px;
     border-radius: var(--vdp-radius-sm);
     border: 1px solid var(--border-light);
-    background: linear-gradient(165deg, var(--bg-card) 0%, var(--bg-elevated) 100%);
-    box-shadow: var(--vdp-shadow-soft);
+    background: var(--bg-card);
 }
 
 #negotiation-radar-widget h4,
@@ -2262,8 +2261,8 @@ body.car-lightbox-open {
     color: var(--text-muted);
 }
 
-#negotiation-radar-widget #days-count,
-.negotiation-radar-widget #days-count {
+#negotiation-radar-widget .days-on-lot-count,
+.negotiation-radar-widget .days-on-lot-count {
     font-weight: 700;
     font-variant-numeric: tabular-nums;
     color: var(--navy);
@@ -2281,11 +2280,9 @@ body.car-lightbox-open {
     align-items: center;
     gap: 6px;
     padding: 5px 12px;
-    border-radius: 999px;
+    border-radius: 4px;
     font-size: 0.78rem;
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
+    font-weight: 600;
     line-height: 1.3;
     border: 1px solid transparent;
 }
@@ -2302,10 +2299,15 @@ body.car-lightbox-open {
     border-color: rgba(180, 83, 9, 0.22);
 }
 
-.radar-badge.low-leverage {
-    color: var(--deal-below);
-    background: var(--deal-below-bg);
-    border-color: color-mix(in srgb, var(--deal-below) 28%, transparent);
+.radar-badge.recent-listing {
+    color: var(--text-muted);
+    background: transparent;
+    border-color: var(--border-light);
+}
+
+.days-on-lot-source {
+    font-size: 0.8rem;
+    color: var(--text-muted);
 }
 
 .price-history-timeline {
@@ -2347,96 +2349,6 @@ body.car-lightbox-open {
     font-size: 0.9rem;
     font-weight: 600;
     color: var(--text);
-}
-
-/* Market turnaround velocity heatmap (User Story #13) */
-#market-velocity-card,
-.market-velocity-card {
-    margin: 0 0 20px;
-    padding: 20px;
-    border-radius: var(--vdp-radius-sm);
-    border: 1px solid var(--border-light);
-    background: linear-gradient(165deg, var(--bg-card) 0%, var(--bg-elevated) 100%);
-    box-shadow: var(--vdp-shadow-soft);
-}
-
-#market-velocity-card h4,
-.market-velocity-card h4 {
-    margin: 0 0 10px;
-    font-size: 1.05rem;
-    font-weight: 700;
-    letter-spacing: -0.01em;
-    color: var(--navy);
-}
-
-.market-velocity-summary {
-    margin: 0 0 14px;
-    font-size: 0.95rem;
-    color: var(--text-muted);
-}
-
-#velocity-days-projection {
-    font-weight: 700;
-    font-variant-numeric: tabular-nums;
-    color: var(--navy);
-}
-
-.velocity-heatmap-track {
-    position: relative;
-    width: 100%;
-    height: 12px;
-    margin: 0 0 10px;
-    border-radius: 999px;
-    background: linear-gradient(
-        90deg,
-        #94a3b8 0%,
-        #cbd5e1 18%,
-        #f59e0b 50%,
-        #34d399 82%,
-        #059669 100%
-    );
-    box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.12);
-}
-
-#velocity-marker {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 10px;
-    height: 18px;
-    margin-top: -9px;
-    margin-left: -5px;
-    border-radius: 4px 4px 10px 10px;
-    background-color: #d97706;
-    border: 2px solid #d97706;
-    box-shadow: 0 1px 4px rgba(15, 23, 42, 0.28);
-    transform: translateX(-50%);
-    transition: left 0.8s ease-out, background-color 0.8s ease-out, border-color 0.8s ease-out;
-    pointer-events: none;
-}
-
-.velocity-labels {
-    display: flex;
-    justify-content: space-between;
-    gap: 8px;
-    font-size: 0.72rem;
-    font-weight: 600;
-    letter-spacing: 0.02em;
-    text-transform: uppercase;
-    color: var(--text-muted);
-}
-
-.velocity-labels span {
-    flex: 1;
-    line-height: 1.3;
-}
-
-.velocity-labels span:nth-child(2) {
-    text-align: center;
-}
-
-.velocity-labels span:nth-child(3) {
-    text-align: right;
 }
 
 .price-history-step::before {

@@ -529,33 +529,21 @@
                            block can be reinstated once it says something the specs do not. #}
                         <div id="negotiation-radar-widget"
                             class="negotiation-radar-widget"
-                            data-created-at="{{ car.created_at or car.first_seen_at or car.scraped_at or '' }}"
                             data-price-history='{{ (car.price_history or []) | tojson }}'
                             role="region"
-                            aria-label="Negotiation leverage tracker">
-                            <h4>Negotiation Leverage Tracker</h4>
-                            <p class="days-on-lot-text">Days on Market: <span id="days-count">--</span> Days</p>
-                            <div id="negotiation-badge-container"></div>
+                            aria-label="Listing timeline">
+                            <h4>Listing timeline</h4>
+                            {% if car.first_seen_date %}
+                            <p class="days-on-lot-text">First seen by Sarrafi Cars on <time datetime="{{ car.first_seen_iso }}">{{ car.first_seen_date }}</time> (<span class="days-on-lot-count">{{ car.first_seen_days }}</span> {{ 'day' if car.first_seen_days == 1 else 'days' }})
+                                <span class="days-on-lot-source">&middot; when our scans first found this listing, not the dealer&rsquo;s stock date</span></p>
+                            {% else %}
+                            <p class="days-on-lot-text">First-seen date not on file.</p>
+                            {% endif %}
+                            {% if car.first_seen_badge %}
+                            <div id="negotiation-badge-container"><span class="radar-badge {{ car.first_seen_badge.cls }}">{{ car.first_seen_badge.label }}</span></div>
+                            {% endif %}
                             <div class="price-history-timeline" id="history-timeline-list">
                                 <h5>Price Adjustment History</h5>
-                            </div>
-                        </div>
-
-                        <div id="market-velocity-card"
-                            class="market-velocity-card"
-                            data-car-type="{{ car.body_style | lower if car.body_style else 'sedan' }}"
-                            data-car-brand="{{ car.make | lower }}"
-                            role="region"
-                            aria-label="Market turnaround velocity">
-                            <h4>Market Turnaround Velocity</h4>
-                            <p class="market-velocity-summary">Predictive Local Turnaround: <span id="velocity-days-projection">--</span> Days</p>
-                            <div class="velocity-heatmap-track" aria-hidden="true">
-                                <div id="velocity-marker"></div>
-                            </div>
-                            <div class="velocity-labels">
-                                <span>Slow Move (Anchor)</span>
-                                <span>Average Turn</span>
-                                <span>High Velocity (Hot)</span>
                             </div>
                         </div>
 
