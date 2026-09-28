@@ -2,16 +2,32 @@
 
 ## [Unreleased]
 
+## [1.4.0] - 2026-09-28
+
 ### Added
-- **Config:** central `Config` class in `backend/config.py` as the single place for environment-driven settings (remaining `os.getenv` call sites to migrate — see [master-todo.md](master-todo.md) A1).
-- **Health endpoints:** `/api/health` (liveness) and `/api/ready` (readiness) on the web app, alongside the existing `/health` used by `deploy/up.sh`.
-- **Scanner framework:** `ScraperChain` in `backend/scanner/chain.py` — composable scraper-strategy chain for the Python scanner stack.
-- **CI:** GitHub Actions workflow running `pytest backend/tests -m "not integration"` on pushes and PRs. `integration`/`regression` marker scaffolding is in place (pytest.ini + conftest auto-tagging hooks), but no tests are tagged yet, so the filter currently deselects nothing and PR runs execute the full suite.
-- **Docs kit:** this `CHANGELOG.md`, [master-todo.md](master-todo.md) (phased task board), and [RESUME_HERE.md](RESUME_HERE.md) (session pickup doc).
+- **Profile:** hidden dealerships (excluded from search, the grid and recommendations; toggle on the dealership page) and recent searches with run-again, save-as-saved-search, remove and clear. Migrations V021, V022.
+- **Scanner, browser-free:** every scan replays HTTP recipes; a headless browser runs only inside `discovery_probe --browser-capture` (`backend/scanner/browser_gate.py`). Separate `Dockerfile.discovery` carries Chromium; the scanner images do not.
+- **Recipe lifecycle:** validation against the site's own count at save time (`backend/scanner/recipe_validation.py`); stale/rejected recipes route to re-synth, then browser capture, then a retry batch, once per dealer per day; platform clustering flags dealers that share an unknown platform (`_learning/platform_candidates.md`).
+- **Rooftop attribution:** a scored matcher (`backend/scanner/rooftop_match.py`, `SCANNER_ROOFTOP_SCORER`) with a 15-case regression corpus; subset-name tiers never un-list; "… Service / Parts" rooftops fold into their store; the scanner reconcile never retires a condition the run returned nothing for.
+- **Per-dealer timing fingerprint:** scan duration, pages fetched vs needed and a recommended detail-page window stored in the dealer's scan hints and read back by the next scan.
+- **Fleet sharding:** `SCANNER_LOCK_PATH` lets several pipeline shards run on one host (458 dealers in ~1.5 h on one laptop).
+- **Version discipline:** `scripts/bump_version.sh` and a tracked pre-push hook that refuses a push without a VERSION change.
+- **Docs:** data-completeness findings, competitor feature gaps, efficiency (backend, front end) and visual reviews for 2026-09-28.
 
 ### Changed
-- **Web app structure:** `backend/main.py` split into Flask blueprints; all route URLs, endpoint names, and import paths preserved (existing tests are the contract).
-- **Data layer:** `backend/db/repositories` split into per-domain repository modules behind a facade that keeps the original import surface intact.
+- **Data completeness:** CarsCommerce feed descriptions, dealer.com MSRP and engine from the feed and the VDP state, Team Velocity galleries (comma-joined URLs, widget logos, placeholders), engine/body derived from the vPIC cache, Hybrid→Plug-In Hybrid when vPIC says PHEV, placeholder drivetrain/fuel/condition vocabularies canonicalised, mileage 0 stored as unknown on used rows, Chapman MSRP; the incomplete tally counts only fixable gaps.
+- **Static assets:** cached a year with immutable `?v=` stamps, precompressed `.gz`/`.br` siblings (`scripts/build_static_compressed.py`), self-hosted Inter, hero image preload, Leaflet loaded only when the Dealership tab opens.
+- **Nightly refresh:** recomputes market price bands (step 6).
+
+### Fixed
+- **Wrong retirements:** assess/reconcile rated group-feed stores on the raw feed count and retired real cars; weak rooftop identification and "… Service" rooftops disowned real inventory; one-condition replays retired the other half of the lot. All restored.
+- **vPIC write-path override** raised `KeyError 'cylinders'` since 09-25 and silently skipped, letting feed values overwrite healed drivetrain/fuel/cylinders.
+- **Free-text listings search** embedded the whole fleet in the HTML (36.8 s, 237 MB) when pgvector is unconfigured; results are bounded now.
+- **Car page:** price history was double JSON-encoded (always empty); market bands were stale since July; days-on-market misreported days since our first scan.
+- **Tests** ran against the `.env` Postgres when no fixture set a DB; `idx_cars_active_zip` restored; pipeline waits for the database instead of burning the roster when a tunnel drops.
+
+### Security
+- CSRF header token now required on the account DELETE routes (saved searches, hidden dealers, search history).
 
 ## [0.2.0] — 2026-07-08
 
