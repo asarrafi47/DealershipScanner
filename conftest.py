@@ -119,6 +119,14 @@ def _isolate_listings_env(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.delenv("FLASK_ENV", raising=False)
     monkeypatch.delenv("LISTINGS_INCLUDE_INCOMPLETE_CARS", raising=False)
     monkeypatch.delenv("INVENTORY_DB_PATH", raising=False)
+    # Tests are SQLite-only. The session fixture above assumed this fixture
+    # blanked the Postgres URL; it never did, so every test that called
+    # get_conn() without its own DB fixture ran against the .env database
+    # (2026-09-28: chunk-m tests were reading production nhtsa_vpic_cache; on
+    # 2026-07-04 a test wrote to prod the same way). setenv(""), not delenv:
+    # the dotenv loader refills a missing key from .env, an empty one it keeps.
+    monkeypatch.setenv("INVENTORY_DATABASE_URL", "")
+    monkeypatch.setenv("INVENTORY_SQLITE_TESTS", "1")
     try:
         from backend.db import inventory_db as inv_db
         from backend.db.inventory_db import _default_inventory_db_path
