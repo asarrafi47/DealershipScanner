@@ -65,24 +65,38 @@ _WALL_CLOCK_MAX_SEC = 1800.0
 _HTTP_FIRST_PAGES_MAX = 5000
 
 
-def _dealer_timing_hint(dealer_id: str, key: str) -> float | None:
-    """``scan_hints["timing"][key]`` for the dealer, written by the pipeline's
-    assess step (backend/scanner/scan_timing.py). Best-effort: no dealer, no
-    DB, no hint -> None and the env default applies. Imported lazily so the
-    module keeps working in DB-less tests."""
+def _dealer_timing(dealer_id: str) -> dict[str, Any]:
+    """``scan_hints["timing"]`` for the dealer, written by the pipeline's
+    assess step (backend/scanner/scan_timing.py): one synchronous Postgres
+    read. Best-effort: no dealer, no DB, no block -> {} and the env defaults
+    apply. Imported lazily so the module keeps working in DB-less tests.
+    ``http_prefetch_missing_fields`` reads it once per pass off the event
+    loop (``asyncio.to_thread``) and hands the block to the window helpers."""
     if not dealer_id:
-        return None
+        return {}
     try:
         from backend.scanner.recipe_store import get_scan_hints
 
         timing = (get_scan_hints(dealer_id) or {}).get("timing") or {}
-        v = timing.get(key) if isinstance(timing, dict) else None
-        return float(v) if v is not None else None
+        return timing if isinstance(timing, dict) else {}
     except Exception:  # noqa: BLE001 - a hint lookup must never block the scan
+        return {}
+
+
+def _dealer_timing_hint(dealer_id: str, key: str, timing: dict[str, Any] | None = None) -> float | None:
+    """``timing[key]`` as a float, or None. ``timing`` is the block already
+    read for this pass; when it is None the block is read now (sync callers,
+    tests)."""
+    if timing is None:
+        timing = _dealer_timing(dealer_id)
+    v = timing.get(key) if isinstance(timing, dict) else None
+    try:
+        return float(v) if v is not None else None
+    except (TypeError, ValueError):
         return None
 
 
-def _http_first_wall_clock_sec(dealer_id: str = "") -> float:
+def _http_first_wall_clock_sec(dealer_id: str = "", timing: dict[str, Any] | None = None) -> float:
     """Hard cap on the whole HTTP-first pass per dealer (default 300 s). Whatever was
     filled by then is kept and the dealer proceeds to its upsert; a throttled host
     can no longer hold a dealer past the pipeline's batch timeout (mblaguna-com
@@ -95,7 +109,7 @@ def _http_first_wall_clock_sec(dealer_id: str = "") -> float:
         default = max(_WALL_CLOCK_MIN_SEC, float((os.environ.get("SCANNER_VDP_HTTP_FIRST_MAX_SEC") or "300").strip()))
     except ValueError:
         default = 300.0
-    hinted = _dealer_timing_hint(dealer_id, "vdp_http_first_max_sec")
+    hinted = _dealer_timing_hint(dealer_id, "vdp_http_first_max_sec", timing)
     if hinted is None or hinted <= 0:
         return default
     window = min(_WALL_CLOCK_MAX_SEC, max(_WALL_CLOCK_MIN_SEC, hinted))
@@ -131,7 +145,7 @@ def vdp_http_first_enabled() -> bool:
     return _flag("SCANNER_VDP_HTTP_FIRST")
 
 
-def _http_first_max(dealer_id: str = "") -> int:
+def _http_first_max(dealer_id: str = "", timing: dict[str, Any] | None = None) -> int:
     """Detail pages fetched per dealer per run (default 800, hard max 5000).
 
     A dealer whose fingerprint carries ``timing.pages_needed`` (the most pages
@@ -142,7 +156,7 @@ def _http_first_max(dealer_id: str = "") -> int:
         default = max(0, min(_HTTP_FIRST_PAGES_MAX, int((os.environ.get("SCANNER_VDP_HTTP_FIRST_MAX") or "800").strip())))
     except ValueError:
         default = 800
-    hinted = _dealer_timing_hint(dealer_id, "pages_needed")
+    hinted = _dealer_timing_hint(dealer_id, "pages_needed", timing)
     if hinted is None or hinted <= default:
         return default
     cap = int(min(_HTTP_FIRST_PAGES_MAX, hinted))
@@ -534,17 +548,22 @@ def drop_shared_gallery_urls(vehicles: list[dict[str, Any]], *, min_others: int 
     return stats
 
 
-async def http_prefetch_missing_fields(vehicles: list[dict[str, Any]], dealer_id: str = "") -> dict[str, int]:
+async def http_prefetch_missing_fields(
+    vehicles: list[dict[str, Any]], dealer_id: str = "", timing: dict[str, Any] | None = None,
+) -> dict[str, int]:
     """Concurrent HTTP prefetch for vehicles still missing queue-driving fields.
 
     ``dealer_id`` lets the page cap and wall clock come from the dealer's
-    fingerprint (``scan_hints.timing``) when it has one."""
+    fingerprint (``scan_hints.timing``) when it has one; the block is read
+    once here, in a worker thread, unless ``timing`` was already read."""
+    if timing is None:
+        timing = await asyncio.to_thread(_dealer_timing, dealer_id) if dealer_id else {}
     candidates: list[dict[str, Any]] = []
     for v in vehicles:
         url = str(v.get("_detail_url") or v.get("source_url") or "").strip()
         if url.startswith("http") and _vehicle_wants_http_prefetch(v):
             candidates.append(v)
-    cap = _http_first_max(dealer_id)
+    cap = _http_first_max(dealer_id, timing)
     skipped_cap = max(0, len(candidates) - cap)
     candidates = candidates[:cap]
     stats = {
@@ -650,7 +669,7 @@ async def http_prefetch_missing_fields(vehicles: list[dict[str, Any]], dealer_id
         if v.pop("_gallery_http_prefetch_added", 0):
             stats["galleries_extended"] += 1
 
-    wall_clock = _http_first_wall_clock_sec(dealer_id)
+    wall_clock = _http_first_wall_clock_sec(dealer_id, timing)
     stats["wall_clock_sec"] = int(wall_clock)
     try:
         await asyncio.wait_for(asyncio.gather(*(_one(v) for v in candidates)), timeout=wall_clock)

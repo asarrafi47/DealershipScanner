@@ -211,6 +211,37 @@ def test_page_cap_widens_from_dealer_hint_never_narrows(hinted):
     assert pf._http_first_max() == 800
 
 
+def test_http_prefetch_reads_the_timing_block_once_per_pass(monkeypatch):
+    """Two window helpers used to each open a synchronous get_scan_hints() read
+    inside the async pass; now one to_thread read feeds both."""
+    import asyncio
+
+    calls: list[str] = []
+
+    def _get(dealer_id):
+        calls.append(dealer_id)
+        return {"timing": {"vdp_http_first_max_sec": 600, "pages_needed": 900}}
+
+    monkeypatch.setattr("backend.scanner.recipe_store.get_scan_hints", _get)
+    monkeypatch.delenv("SCANNER_VDP_HTTP_FIRST_MAX_SEC", raising=False)
+    monkeypatch.delenv("SCANNER_VDP_HTTP_FIRST_MAX", raising=False)
+    monkeypatch.setattr(pf, "_fetch_html", lambda url: "")
+    v = {"vin": "1HGBH41JXMN109186", "_detail_url": "https://d.example/car", "price": None}
+    stats = asyncio.run(pf.http_prefetch_missing_fields([v], "avondaletoyota-com"))
+    assert calls == ["avondaletoyota-com"]
+    assert stats["wall_clock_sec"] == 600 and stats["candidates"] == 1
+    # a pre-read block (or {}) means no read at all; no dealer means no read either
+    calls.clear()
+    stats = asyncio.run(pf.http_prefetch_missing_fields([dict(v)], "avondaletoyota-com", timing={"vdp_http_first_max_sec": 90}))
+    assert calls == [] and stats["wall_clock_sec"] == 90
+    assert asyncio.run(pf.http_prefetch_missing_fields([dict(v)]))["wall_clock_sec"] == 300 and calls == []
+    # the sync helpers still read on their own when handed no block, and honour one when they are
+    assert pf._http_first_max("avondaletoyota-com") == 900 and calls == ["avondaletoyota-com"]
+    assert pf._http_first_max("avondaletoyota-com", {"pages_needed": 1200}) == 1200 and len(calls) == 1
+    assert pf._http_first_wall_clock_sec("x-com", {}) == 300.0 and len(calls) == 1
+    assert pf._dealer_timing_hint("x-com", "pages_needed", {"pages_needed": "abc"}) is None
+
+
 def test_hint_lookup_failure_falls_back_to_env(monkeypatch):
     def _boom(dealer_id):
         raise RuntimeError("no database")
