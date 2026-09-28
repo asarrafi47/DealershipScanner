@@ -463,14 +463,24 @@ def clear_inventory_listings_cache() -> None:
     _grid_cars_cache_token = None
     _grid_cars_cache_value = None
     _grid_cars_cache_built_at = 0.0
-    global _featured_cars_cache
+    global _featured_cars_cache, _public_count_cache
     _featured_cars_cache = None
+    _public_count_cache = None
     _clear_grid_serialize_memo()
     clear_incomplete_snapshot_cache()
 
 
-def public_listings_count() -> int:
-    """Approximate count of active inventory rows for marketing/stats (cheap COUNT)."""
+# ``public_listings_count`` cache: (token, built_at, value). The landing page
+# calls it on every anonymous request and the COUNT(*) was 153 ms of a 150 ms page
+# (efficiency review 2026-09-28, recommendation 3).
+_public_count_cache: tuple[Any, float, int] | None = None
+_PUBLIC_COUNT_TTL_S = 300.0
+# While a scan writes ``cars`` the write fingerprint moves on every request; the
+# display rounds to hundreds, so keep the last count at least this long anyway.
+_PUBLIC_COUNT_MIN_RECOUNT_S = 60.0
+
+
+def _count_public_listings_uncached() -> int:
     active = "(COALESCE(listing_active, 1) = 1) AND COALESCE(marked_for_review, 0) = 0"
     with db_conn() as conn:
         row = conn.execute(f"SELECT COUNT(*) AS n FROM cars WHERE {active}").fetchone()
@@ -478,6 +488,30 @@ def public_listings_count() -> int:
         return max(0, int(row[0] if row else 0))
     except (TypeError, ValueError, IndexError):
         return 0
+
+
+def public_listings_count() -> int:
+    """Approximate count of active inventory rows for marketing/stats.
+
+    Cached for :data:`_PUBLIC_COUNT_TTL_S`, keyed by the grid's write fingerprint
+    (:func:`_pg_grid_write_fingerprint`, a cheap ``pg_stat_user_tables`` read) so a
+    finished scan shows up without waiting out the TTL; off Postgres the key is the
+    legacy mtime token. :func:`clear_inventory_listings_cache` drops it.
+    """
+    global _public_count_cache
+    now = time.time()
+    fp = _pg_grid_write_fingerprint()
+    token: Any = fp if fp is not None else _listings_cache_token()
+    hit = _public_count_cache
+    if hit is not None:
+        age = now - hit[1]
+        if hit[0] == token and age < _PUBLIC_COUNT_TTL_S:
+            return hit[2]
+        if fp is not None and age < _PUBLIC_COUNT_MIN_RECOUNT_S:
+            return hit[2]
+    value = _count_public_listings_uncached()
+    _public_count_cache = (token, now, value)
+    return value
 
 
 def listings_grid_serialized_cars() -> list[dict[str, Any]]:
