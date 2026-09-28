@@ -326,6 +326,96 @@ def evaluate_car(car: dict[str, Any], vpic: dict[str, Any] | None, quarantined: 
 # tallies
 # --------------------------------------------------------------------------
 
+# Feeds whose replayed payload has no msrp key at all (findings doc section 2,
+# P5: jazel, overfuel, wp_vehicles_index, autowall, dealermasters; chapman only
+# on in-transit units). msrp on these is platform-genuine, not a gap.
+NO_MSRP_PROVIDERS = frozenset({"jazel", "overfuel", "wp_vehicles_index", "autowall", "dealermasters"})
+# Feeds with one image and no description, and no VDP recipe yet (P4).
+NO_DESCRIPTION_GALLERY_PROVIDERS = frozenset({"chapman", "autowall", "wp_vehicles_index"})
+_VIN_SHAPE_RE = re.compile(r"^[A-HJ-NPR-Z0-9]{17}$")
+_ALLOCATION_WMI = ("2T", "4T", "5T", "JT")
+_VPIC_DERIVED_CODES = frozenset({"engine", "cylinders", "transmission", "drivetrain", "fuel_type", "body_style"})
+
+
+def is_allocation_vin(vin: Any) -> bool:
+    """Placeholder / allocation VIN: fails the VIN shape, or a Toyota / Lexus
+    WMI with a letter in serial positions 13-17 (JTEABFAJ9V136AJ97,
+    4T1DAACK1VU42O521). They decode with ErrorCode 1,400 and carry no stock
+    number, msrp or photos until the unit lands (section 2, V4 / A3)."""
+    v = str(vin or "").strip().upper()
+    if not v:
+        return False
+    if not _VIN_SHAPE_RE.match(v):
+        return True
+    return v[:2] in _ALLOCATION_WMI and any(ch.isalpha() for ch in v[12:17])
+
+
+def _is_ev(car: dict[str, Any], vpic: dict[str, Any] | None) -> bool:
+    if _fuel_bucket(car.get("fuel_type")) == "ev":
+        return True
+    if vpic:
+        el = str(vpic.get("ElectrificationLevel") or "").lower()
+        ft = str(vpic.get("FuelTypePrimary") or "").lower()
+        if "bev" in el or (ft == "electric" and "hybrid" not in el and "phev" not in el):
+            return True
+    return False
+
+
+def _is_new(car: dict[str, Any]) -> bool:
+    cond = str(car.get("condition") or "").strip().lower()
+    return cond.startswith("new") or cond in ("ctp", "demo")
+
+
+def fixable_missing(car: dict[str, Any], vpic: dict[str, Any] | None, missing: list[str],
+                    provider_hint: str | None = None) -> tuple[list[str], dict[str, str]]:
+    """Split ``missing`` (codes from listing_missing_field_codes) into the codes a
+    parser / heal fix could fill and the ones section 2 of the findings doc
+    calls legitimately null. Returns (fixable, {code: reason}). Pure.
+
+    Exemptions: engine + cylinders on EVs; every vPIC-derived field and the
+    stock number on allocation VINs; mileage on New rows; trim when the decode
+    has a Trim / Series or the catalog says the model is trim-less
+    (listing_missing_field_codes already applies the catalog rule).
+    """
+    exempt: dict[str, str] = {}
+    ev = _is_ev(car, vpic)
+    alloc = is_allocation_vin(car.get("vin"))
+    new = _is_new(car)
+    vpic_trim = ""
+    if vpic:
+        vpic_trim = str(vpic.get("Trim") or vpic.get("Series") or "").strip()
+    for code in missing:
+        if ev and code in ("engine", "cylinders"):
+            exempt[code] = "ev"
+        elif alloc and (code in _VPIC_DERIVED_CODES or code in ("stock_number", "msrp", "images", "vin")):
+            exempt[code] = "allocation_vin"
+        elif code == "mileage" and new:
+            exempt[code] = "new_row"
+        elif code == "trim" and vpic_trim:
+            exempt[code] = f"vpic_trim:{vpic_trim[:40]}"
+    fixable = [c for c in missing if c not in exempt]
+    return fixable, exempt
+
+
+def msrp_expected(car: dict[str, Any], provider_hint: str | None = None) -> bool:
+    """msrp counts as a gap only on New rows, never on allocation VINs and never
+    on providers whose feed carries no msrp key (section 2 / section 7)."""
+    if not _is_new(car):
+        return False
+    if is_allocation_vin(car.get("vin")):
+        return False
+    return (provider_hint or "") not in NO_MSRP_PROVIDERS
+
+
+def _provider_hint(conn, dealer_id: str) -> str | None:
+    try:
+        rows = _rows(conn, "SELECT provider_hint FROM dealer_recipes WHERE dealer_id = ? AND COALESCE(stale, 0) = 0 "
+                           "ORDER BY id DESC LIMIT 1", (dealer_id,))
+    except Exception:  # noqa: BLE001 - table absent (tests) or column missing
+        return None
+    return str(rows[0].get("provider_hint") or "") or None if rows else None
+
+
 def tally_dealer(conn, dealer_id: str, since: str | None) -> dict[str, Any]:
     where = "dealer_id = ? AND COALESCE(listing_active, 1) = 1"
     params: list[Any] = [dealer_id]
@@ -338,19 +428,34 @@ def tally_dealer(conn, dealer_id: str, since: str | None) -> dict[str, Any]:
     prime_vpic_cache(vins)
     raw = _vpic_raw([v for v in vins if v])
     catalog = _catalog_rows([c.get("epa_master_id") for c in cars])
+    provider_hint = _provider_hint(conn, dealer_id)
     miss = Counter()
+    miss_raw = Counter()
+    exempt_counts = Counter()
     disc = Counter()
     ex_m: dict[str, list] = defaultdict(list)
     ex_d: dict[str, list] = defaultdict(list)
     incomplete_rows = 0
+    incomplete_rows_raw = 0
+    msrp_expected_rows = 0
+    msrp_missing_rows = 0
     car_issues: list[dict[str, Any]] = []
     with inventory_pg.borrow_read_connection():
         for c in cars:
-            m, d = evaluate_car(
+            m_raw, d = evaluate_car(
                 c, raw.get(c.get("vin") or ""), int(c["id"]) in quarantined,
                 catalog.get(int(c["epa_master_id"])) if c.get("epa_master_id") else None,
             )
+            # Section 2 / 7 of docs/DATA_COMPLETENESS_FINDINGS_2026_09_28.md: count
+            # only the gaps a fix could fill; the raw codes stay under *_raw.
+            m, exempt = fixable_missing(c, raw.get(c.get("vin") or ""), m_raw, provider_hint)
+            if msrp_expected(c, provider_hint):
+                msrp_expected_rows += 1
+                if not c.get("msrp"):
+                    msrp_missing_rows += 1
             label = f"{c.get('year')} {c.get('make')} {c.get('model')} {c.get('trim') or ''}".strip()
+            if m_raw:
+                incomplete_rows_raw += 1
             if m:
                 incomplete_rows += 1
             if m or d:
@@ -359,8 +464,12 @@ def tally_dealer(conn, dealer_id: str, since: str | None) -> dict[str, Any]:
                     "year": c.get("year"), "make": c.get("make"), "model": c.get("model"), "trim": c.get("trim"),
                     "price": c.get("price"), "fuel": c.get("fuel_type"), "drive": c.get("drivetrain"),
                     "engine": c.get("engine_description"), "url": c.get("source_url"),
-                    "missing": m, "disc": d,
+                    "missing": m, "missing_exempt": exempt, "disc": d,
                 })
+            for code in m_raw:
+                miss_raw[code] += 1
+            for code, why in exempt.items():
+                exempt_counts[f"{code}:{why.split(':', 1)[0]}"] += 1
             for code in m:
                 miss[code] += 1
                 if len(ex_m[code]) < 5:
@@ -381,6 +490,13 @@ def tally_dealer(conn, dealer_id: str, since: str | None) -> dict[str, Any]:
         "incomplete_rows": incomplete_rows,
         "missing": dict(miss.most_common()),
         "missing_examples": ex_m,
+        # raw counts before the section-2 exemptions, and what was exempted
+        "incomplete_rows_raw": incomplete_rows_raw,
+        "missing_raw": dict(miss_raw.most_common()),
+        "missing_exempt": dict(exempt_counts.most_common()),
+        "provider_hint": provider_hint,
+        "msrp_expected_rows": msrp_expected_rows,
+        "msrp_missing_rows": msrp_missing_rows,
         "discrepancies": dict(disc.most_common()),
         "discrepancy_examples": ex_d,
         "quarantined_trims": len(quarantined),
