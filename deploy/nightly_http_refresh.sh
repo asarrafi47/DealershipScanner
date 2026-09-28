@@ -179,15 +179,22 @@ run_step "4/5 harvest-html-jsonld" \
   "$PYTHON" backend/scripts/harvest_html_jsonld.py || FAILS=$((FAILS+1))
 
 # --- Step 5: rebuild incomplete-listings index -----------------------------
-run_step "5/6 rebuild-listings-index" \
+run_step "5/7 rebuild-listings-index" \
   "$PYTHON" backend/scripts/rebuild_listings_index.py || FAILS=$((FAILS+1))
 
 # --- Step 6: market price bands ----------------------------------------------
 # market_price_stats sat at 584 rows from 2026-07-18 until 2026-09-28 because
 # nothing scheduled this; the car page then said "No market read" for a CR-V
 # with 407 comparable listings. One second over the whole fleet.
-run_step "6/6 compute-market-stats" \
+run_step "6/7 compute-market-stats" \
   "$PYTHON" -m backend.scripts.compute_market_stats || FAILS=$((FAILS+1))
+
+# --- Step 7: listings grid cards --------------------------------------------
+# /api/listings/cars serves stored cards (listings_grid_cards, V023) for the
+# shopper's ZIP + radius; refresh the ones the scan changed so the first shopper
+# in each metro never pays an inline rebuild (~2 s when current, ~90 s full).
+run_step "7/7 build-listings-grid-cards" \
+  "$PYTHON" -m backend.scripts.build_listings_grid_cards || FAILS=$((FAILS+1))
 
 # ---------------------------------------------------------------------------
 # Summary
