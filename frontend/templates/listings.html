@@ -79,6 +79,7 @@
 <script type="application/json" id="ds-listings-package-rows" nonce="{{ csp_nonce }}">{{ (options.package_rows or []) | tojson }}</script>
 <script type="application/json" id="ds-listings-premium" nonce="{{ csp_nonce }}">{{ has_paid_access | tojson }}</script>
 <script type="application/json" id="ds-listings-saved-ids" nonce="{{ csp_nonce }}">{{ (saved_car_ids or []) | tojson }}</script>
+<script type="application/json" id="ds-listings-hidden-dealers" nonce="{{ csp_nonce }}">{{ (hidden_dealer_ids or []) | tojson }}</script>
 
 <div class="page listings-page-wrap">
 
@@ -434,6 +435,9 @@
                                 <span class="listings-filters-mobile-count" id="listings-filters-mobile-count" hidden></span>
                             </button>
                             <p class="results-count" id="results-count" aria-live="polite"></p>
+                            {% if hidden_dealer_ids %}
+                            <p class="results-hidden-note" id="results-hidden-note">{{ hidden_dealer_ids | length }} dealership{{ '' if hidden_dealer_ids | length == 1 else 's' }} hidden · <a href="{{ url_for('account_profile_page') }}#hidden-dealers">Manage</a></p>
+                            {% endif %}
                             <div class="listings-saved-search" id="listings-saved-search">
                                 <button type="button" class="listings-saved-search__save-btn" id="listings-save-search-btn">Save this search</button>
                                 <button type="button" class="listings-saved-search__list-btn" id="listings-saved-search-toggle" aria-expanded="false" aria-controls="listings-saved-search-panel">

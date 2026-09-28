@@ -136,6 +136,19 @@ def _equipment_needle_params(needle: str) -> list[str]:
     return [needle] * len(_EQUIPMENT_SEARCH_COLUMNS)
 
 
+def _exclude_dealer_ids_clause(exclude_dealer_ids) -> tuple[str, list[str]]:
+    """``AND LOWER(dealer_id) NOT IN (?, ...)`` for a user's hidden dealerships ('' when none)."""
+    if not exclude_dealer_ids:
+        return "", []
+    keys = sorted({str(d or "").strip().lower() for d in exclude_dealer_ids} - {""})
+    if not keys:
+        return "", []
+    return (
+        f" AND (dealer_id IS NULL OR LOWER(dealer_id) NOT IN ({_placeholders(keys)}))",
+        keys,
+    )
+
+
 def search_cars(makes=None, models=None, trims=None, fuel_types=None,
                 cylinders=None, transmissions=None, drivetrains=None,
                 forced_inductions=None,
@@ -160,8 +173,13 @@ def search_cars(makes=None, models=None, trims=None, fuel_types=None,
                 vehicle_or=None,
                 vin=None,
                 include_incomplete: bool | None = None,
-                include_flagged: bool = False):
+                include_flagged: bool = False,
+                exclude_dealer_ids=None):
     """
+    ``exclude_dealer_ids``: optional iterable of ``cars.dealer_id`` keys (case-insensitive) whose
+    rows are dropped -- the signed-in user's hidden dealerships (hidden_dealers_repo). One clause
+    for both engines: inventory_compat rewrites the ``?`` placeholders for Postgres.
+
     ``candidate_ids``: optional list of SQLite ``cars.id`` values (e.g. pgvector semantic recall).
     When set, results are restricted to ``id IN (candidate_ids)`` in addition to other filters.
 
@@ -381,6 +399,9 @@ def search_cars(makes=None, models=None, trims=None, fuel_types=None,
             params.append(mm)
     if cpo_only:
         query += " AND is_cpo = 1"
+    excl_clause, excl_params = _exclude_dealer_ids_clause(exclude_dealer_ids)
+    query += excl_clause
+    params.extend(excl_params)
 
     with db_conn(row_factory=sqlite3.Row) as conn:
         if dealer_registry_filter_ids:
@@ -482,8 +503,11 @@ def search_cars_by_make_model_pairs(
     include_incomplete: bool | None = None,
     include_flagged: bool = False,
     sql_limit: int | None = 120,
+    exclude_dealer_ids=None,
 ) -> list[dict]:
     """Fetch active cars matching any (make, model) pair in one SQL round-trip.
+
+    ``exclude_dealer_ids``: the user's hidden dealerships (see :func:`search_cars`).
 
     ``include_flagged``: default False — admin-flagged (``marked_for_review``)
     rows are suppressed; admin callers must opt in (same contract as
@@ -519,8 +543,11 @@ def search_cars_by_make_model_pairs(
         "SELECT * FROM cars WHERE (COALESCE(listing_active, 1) = 1)"
         f"{flagged_sql}"
         f" AND ({' OR '.join(clauses)})"
-        " ORDER BY CASE WHEN price IS NULL OR price = 0 THEN 1 ELSE 0 END, price ASC"
     )
+    excl_clause, excl_params = _exclude_dealer_ids_clause(exclude_dealer_ids)
+    query += excl_clause
+    params.extend(excl_params)
+    query += " ORDER BY CASE WHEN price IS NULL OR price = 0 THEN 1 ELSE 0 END, price ASC"
     if sql_limit is not None and int(sql_limit) > 0:
         query += " LIMIT ?"
         params.append(int(sql_limit))

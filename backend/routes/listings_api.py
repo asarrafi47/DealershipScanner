@@ -410,8 +410,17 @@ def api_search_smart():
 
     from backend.utils.hybrid_search import NO_PARSE_MATCH_MESSAGE, public_search_meta
 
+    hidden_dealers: set[str] = set()
+    try:
+        hidden_dealers = main.hidden_dealer_ids_for_user(session.get("user_id"))
+    except Exception:
+        hidden_dealers = set()
     results, search_meta = hybrid_smart_search(
-        q, filters, vector_top_k=50, listing_geo_kwargs=geo_kw if geo_kw else None
+        q,
+        filters,
+        vector_top_k=50,
+        listing_geo_kwargs=geo_kw if geo_kw else None,
+        exclude_dealer_ids=hidden_dealers or None,
     )
     safe_results = main.serialize_cars_for_listings_grid(results)
     try:
@@ -544,6 +553,107 @@ def api_saved_searches_delete(search_id):
     return jsonify({"ok": True})
 
 
+# ---------------------------------------------------------------------------
+# Hidden dealerships (account profile). Free for every signed-in user -- no
+# _require_feature gate, only the login check the saved-search routes make.
+# ---------------------------------------------------------------------------
+
+_DEALER_ID_MAX_LEN = 128
+
+
+def _clean_dealer_id_param(raw) -> str | None:
+    """Lower-cased ``cars.dealer_id`` key or None when the value cannot be one."""
+    import re
+
+    key = str(raw or "").strip().lower()
+    if not key or len(key) > _DEALER_ID_MAX_LEN:
+        return None
+    if not re.match(r"^[a-z0-9][a-z0-9._-]*$", key):
+        return None
+    return key
+
+
+def _known_dealer_name(dealer_id: str) -> tuple[bool, str | None]:
+    """(exists, display_name) for a ``cars.dealer_id`` key.
+
+    A dealer is known when it has (or had) inventory rows under that key, or when
+    a dealerships registry row's website host maps to it (the same resolution the
+    dealership research page uses), so a rooftop with no scan yet can still be hidden.
+    """
+    from backend.db.repositories.base_repo import db_conn
+
+    with db_conn() as conn:
+        row = conn.execute(
+            "SELECT dealer_name FROM cars WHERE LOWER(dealer_id) = ? "
+            "ORDER BY CASE WHEN dealer_name IS NULL OR dealer_name = '' THEN 1 ELSE 0 END LIMIT 1",
+            (dealer_id,),
+        ).fetchone()
+    if row is not None:
+        name = row["dealer_name"] if isinstance(row, dict) else row[0]
+        return True, (str(name).strip() or None) if name else None
+    try:
+        from backend.routes.dealership_page import _find_dealership_by_dealer_id
+
+        reg = _find_dealership_by_dealer_id(dealer_id)
+    except Exception:
+        reg = None
+    if reg:
+        return True, (str(reg.get("name") or "").strip() or None)
+    return False, None
+
+
+def api_hidden_dealers_list():
+    """GET /api/profile/hidden-dealers -- this user's hidden dealerships."""
+    main = main_module()
+    uid = session.get("user_id")
+    if not uid:
+        return jsonify({"ok": False, "error": "not_logged_in", "dealers": []}), 401
+    dealers = main.list_hidden_dealers(int(uid))
+    return jsonify({"ok": True, "dealers": dealers})
+
+
+def api_hidden_dealers_add():
+    """POST /api/profile/hidden-dealers {dealer_id} -- hide a dealership for this user."""
+    main = main_module()
+    uid = session.get("user_id")
+    if not uid:
+        return jsonify({"ok": False, "error": "not_logged_in"}), 401
+    body = request.get_json(silent=True) or {}
+    dealer_id = _clean_dealer_id_param(body.get("dealer_id"))
+    if not dealer_id:
+        return jsonify({"ok": False, "error": "dealer_id_required"}), 400
+    known, name = _known_dealer_name(dealer_id)
+    if not known:
+        return jsonify({"ok": False, "error": "not_found"}), 404
+    try:
+        added = main.hide_dealer(int(uid), dealer_id, name)
+    except ValueError:
+        return jsonify({"ok": False, "error": "list_full"}), 400
+    return jsonify(
+        {
+            "ok": True,
+            "hidden": True,
+            "added": bool(added),
+            "dealer": {"dealer_id": dealer_id, "dealer_name": name},
+        }
+    )
+
+
+def api_hidden_dealers_remove(dealer_id):
+    """DELETE /api/profile/hidden-dealers/<dealer_id> -- unhide."""
+    main = main_module()
+    uid = session.get("user_id")
+    if not uid:
+        return jsonify({"ok": False, "error": "not_logged_in"}), 401
+    key = _clean_dealer_id_param(dealer_id)
+    if not key:
+        return jsonify({"ok": False, "error": "not_found"}), 404
+    removed = main.unhide_dealer(int(uid), key)
+    if not removed:
+        return jsonify({"ok": False, "error": "not_found"}), 404
+    return jsonify({"ok": True, "hidden": False, "dealer_id": key})
+
+
 def register(app) -> None:
     """Attach routes to ``app`` keeping the original bare endpoint names."""
     app.add_url_rule("/search", view_func=search)
@@ -571,5 +681,16 @@ def register(app) -> None:
     app.add_url_rule(
         "/api/saved-searches/<int:search_id>",
         view_func=api_saved_searches_delete,
+        methods=["DELETE"],
+    )
+    app.add_url_rule(
+        "/api/profile/hidden-dealers", view_func=api_hidden_dealers_list, methods=["GET"]
+    )
+    app.add_url_rule(
+        "/api/profile/hidden-dealers", view_func=api_hidden_dealers_add, methods=["POST"]
+    )
+    app.add_url_rule(
+        "/api/profile/hidden-dealers/<dealer_id>",
+        view_func=api_hidden_dealers_remove,
         methods=["DELETE"],
     )

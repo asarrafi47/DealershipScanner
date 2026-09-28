@@ -1952,7 +1952,14 @@ document.addEventListener("DOMContentLoaded", () => {
         };
     }
 
+    function carIsFromHiddenDealer(c) {
+        const hidden = window.HIDDEN_DEALER_IDS;
+        if (!(hidden instanceof Set) || !hidden.size) return false;
+        return hidden.has(String(c.dealer_id || "").trim().toLowerCase());
+    }
+
     function carMatchesFacetFilters(c, state, dealerFilterSet) {
+        if (carIsFromHiddenDealer(c)) return false;
         if (state.makesFilter.length && !SC.valueInListCI(state.makesFilter, c.make)) return false;
         if (state.models.length && !SC.valueInListCI(state.models, c.model)) return false;
         if (state.trims.length && !SC.valueInListCI(state.trims, c.trim)) return false;

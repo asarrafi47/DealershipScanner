@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token }}">
     <title>Profile — Sarrafi Cars</title>
     {% include "_head_css.html" %}
     {% include "_head_meta.html" %}
@@ -93,11 +94,29 @@
             </form>
         </section>
 
+        <section class="hub-card db-reveal" id="hidden-dealers" aria-labelledby="profile-hidden-dealers-heading">
+            <h2 id="profile-hidden-dealers-heading" class="hub-card__title">Hidden dealerships</h2>
+            <p class="hub-card__sub">Dealerships you hide are left out of your inventory searches and recommendations. Hide one from its dealership page.</p>
+
+            <div class="error-box account-profile__hidden-error" id="hidden-dealers-error" hidden></div>
+
+            <p class="hub-note account-profile__hidden-empty" id="hidden-dealers-empty"{% if hidden_dealers %} hidden{% endif %}>You have not hidden any dealerships.</p>
+            <ul class="account-profile__hidden-list" id="hidden-dealers-list" aria-live="polite">
+                {% for d in hidden_dealers or [] %}
+                <li class="account-profile__hidden-row" data-dealer-id="{{ d.dealer_id }}">
+                    <a class="account-profile__hidden-name" href="{{ url_for('dealership_research_page', dealer_key=d.dealer_id) }}">{{ d.dealer_name or d.dealer_id }}</a>
+                    <button type="button" class="secondary-button account-profile__hidden-remove" data-dealer-id="{{ d.dealer_id }}">Remove</button>
+                </li>
+                {% endfor %}
+            </ul>
+        </section>
+
     </main>
 
 </div>
 
 <script src="{{ url_for('static', filename='password_toggle.js') }}?v={{ static_cache_ver }}" nonce="{{ csp_nonce }}"></script>
+<script src="{{ url_for('static', filename='account_profile.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>
 {% include "_footer_version.html" %}
 </body>
 </html>

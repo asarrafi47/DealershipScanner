@@ -3,6 +3,7 @@ from flask import render_template, request, session
 from backend.db.inventory_db import (
     get_filter_options,
     get_saved_car_ids,
+    hidden_dealer_ids_for_user,
     listings_grid_bootstrap_cars,
     serialize_cars_for_listings_grid,
 )
@@ -67,6 +68,14 @@ def pack_car_rows(car_rows: list[dict]) -> dict:
     return {"c": list(_CAR_ROW_COLUMNS), "v": orders, "r": packed_rows}
 
 
+def drop_hidden_dealer_cars(cars: list[dict], hidden_dealer_ids) -> list[dict]:
+    """Serialized grid rows minus the ones from ``hidden_dealer_ids`` (case-insensitive)."""
+    hidden = {str(d or "").strip().lower() for d in (hidden_dealer_ids or [])} - {""}
+    if not hidden:
+        return list(cars)
+    return [c for c in cars if str(c.get("dealer_id") or "").strip().lower() not in hidden]
+
+
 def listings_page(*, listings_poll_ms: int = 0):
     persist_listings_geo_from_request(request, session)
     g = request.args.getlist
@@ -107,6 +116,15 @@ def listings_page(*, listings_poll_ms: int = 0):
     }
 
     sql_kwargs = flask_request_to_search_cars_kwargs(request)
+    # Signed-in users' hidden dealerships (profile -> Hidden dealerships). Anonymous
+    # visitors get an empty list and every path below stays unchanged for them.
+    hidden_dealer_ids: list[str] = []
+    try:
+        hidden_dealer_ids = sorted(hidden_dealer_ids_for_user(session.get("user_id")))
+    except Exception:
+        hidden_dealer_ids = []
+    if hidden_dealer_ids:
+        sql_kwargs["exclude_dealer_ids"] = list(hidden_dealer_ids)
     has_package_filter = bool(
         sql_kwargs.get("packages_json_contains")
         or sql_kwargs.get("packages_json_contains_list")
@@ -162,6 +180,8 @@ def listings_page(*, listings_poll_ms: int = 0):
             )
         except Exception:
             bootstrap_grid_cars = []
+        if hidden_dealer_ids and bootstrap_grid_cars:
+            bootstrap_grid_cars = drop_hidden_dealer_cars(bootstrap_grid_cars, hidden_dealer_ids)
 
     listings_zip_coords_boot: dict[str, list[float]] = {}
     geo_zip = (zip_code or "").strip()
@@ -186,4 +206,5 @@ def listings_page(*, listings_poll_ms: int = 0):
         bootstrap_grid_cars=bootstrap_grid_cars,
         listings_poll_ms=int(listings_poll_ms),
         saved_car_ids=saved_car_ids,
+        hidden_dealer_ids=hidden_dealer_ids,
     )

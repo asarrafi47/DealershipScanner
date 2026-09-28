@@ -114,6 +114,14 @@ def _recommendations_for_user(
 ) -> tuple[list[dict] | int, dict[str, str]]:
     """Cached wrapper: serialized rows (or their count) + heading copy."""
     main = main_module()
+    # The user's hidden dealerships ride along in the kwargs so they reach
+    # search_cars_by_make_model_pairs AND take part in the cache key.
+    try:
+        hidden = main.hidden_dealer_ids_for_user(user_id)
+    except Exception:
+        hidden = set()
+    if hidden:
+        geo_kw = {**geo_kw, "exclude_dealer_ids": tuple(sorted(hidden))}
     key = (int(user_id), int(limit), tuple(sorted((k, str(v)) for k, v in geo_kw.items())))
     now = time.monotonic()
     hit = main._reco_cache.get(key)
@@ -175,6 +183,12 @@ def _recommendations_for_user_uncached(
     raw_recs: list[dict] = []
     geo_kw_dict = dict(geo_kw)
     geo_active = bool(geo_kw_dict.get("zip_code") and geo_kw_dict.get("radius_miles"))
+    # Hidden dealerships apply even when the radius fallback drops the geo kwargs.
+    excl_kw = (
+        {"exclude_dealer_ids": geo_kw_dict["exclude_dealer_ids"]}
+        if geo_kw_dict.get("exclude_dealer_ids")
+        else {}
+    )
 
     if seen_mm:
         if geo_active:
@@ -182,7 +196,7 @@ def _recommendations_for_user_uncached(
             if not raw_recs:
                 heading["eyebrow"] = "Outside your search radius"
                 heading["title"] = "Recommended & recently viewed"
-                raw_recs = _similar_recommendation_rows(seen_mm, signal_id_set, limit, {})
+                raw_recs = _similar_recommendation_rows(seen_mm, signal_id_set, limit, excl_kw)
                 if raw_recs:
                     heading["hint"] = (
                         "No similar listings near your saved ZIP and radius. "
@@ -193,7 +207,7 @@ def _recommendations_for_user_uncached(
                         "No close matches in inventory right now. Here are cars from your recent history."
                     )
         else:
-            raw_recs = _similar_recommendation_rows(seen_mm, signal_id_set, limit, {})
+            raw_recs = _similar_recommendation_rows(seen_mm, signal_id_set, limit, excl_kw)
     else:
         heading["eyebrow"] = "Your history"
         heading["title"] = "Recently viewed"

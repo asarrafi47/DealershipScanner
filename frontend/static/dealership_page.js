@@ -69,9 +69,77 @@
         new MutationObserver(dropGeoChips).observe(chips, { childList: true });
     }
 
+    // ── 3. "Hide this dealership from my searches" toggle ──────────────
+    // Signed-in only (the template omits the button otherwise). Talks to the
+    // same per-user list the profile page manages (/api/profile/hidden-dealers).
+    function csrfToken() {
+        var m = document.querySelector('meta[name="csrf-token"]');
+        return m && m.content ? m.content : "";
+    }
+
+    function wireHideToggle() {
+        var btn = document.getElementById("dealer-hide-toggle");
+        if (!btn || typeof window.fetch !== "function") return;
+        var status = document.getElementById("dealer-hide-status");
+        var dealerId = btn.getAttribute("data-dealer-id") || "";
+        if (!dealerId) return;
+
+        function paint(hidden) {
+            btn.setAttribute("data-hidden", hidden ? "1" : "0");
+            btn.setAttribute("aria-pressed", hidden ? "true" : "false");
+            btn.textContent = hidden ? "Unhide this dealership" : "Hide this dealership from my searches";
+            if (!status) return;
+            status.textContent = "";
+            if (hidden) {
+                status.appendChild(document.createTextNode("Hidden from your searches. "));
+                var a = document.createElement("a");
+                a.href = "/account/profile#hidden-dealers";
+                a.textContent = "Manage";
+                status.appendChild(a);
+            }
+        }
+
+        btn.addEventListener("click", function () {
+            var hidden = btn.getAttribute("data-hidden") === "1";
+            btn.disabled = true;
+            var req = hidden
+                ? fetch("/api/profile/hidden-dealers/" + encodeURIComponent(dealerId), {
+                    method: "DELETE",
+                    credentials: "same-origin",
+                    headers: { "X-CSRF-Token": csrfToken() },
+                })
+                : fetch("/api/profile/hidden-dealers", {
+                    method: "POST",
+                    credentials: "same-origin",
+                    headers: { "Content-Type": "application/json", "X-CSRF-Token": csrfToken() },
+                    body: JSON.stringify({ dealer_id: dealerId }),
+                });
+            req.then(function (r) { return r.json().then(function (j) { return { status: r.status, body: j }; }); })
+                .then(function (res) {
+                    if (res.status === 401) {
+                        window.location.href = "/login";
+                        return;
+                    }
+                    if (!res.body || !res.body.ok) {
+                        if (status) status.textContent = "Could not update. Try again.";
+                        return;
+                    }
+                    paint(!!res.body.hidden);
+                })
+                .catch(function () {
+                    if (status) status.textContent = "Could not update. Try again.";
+                })
+                .then(function () { btn.disabled = false; });
+        });
+    }
+
     if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", watchChips);
+        document.addEventListener("DOMContentLoaded", function () {
+            watchChips();
+            wireHideToggle();
+        });
     } else {
         watchChips();
+        wireHideToggle();
     }
 })();

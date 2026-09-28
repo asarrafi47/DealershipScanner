@@ -66,8 +66,12 @@ from backend.db.inventory_db import (
     get_cars_by_ids,
     get_filter_options,
     get_saved_car_ids,
+    hidden_dealer_ids_for_user,
+    hide_dealer,
     init_inventory_db,
     is_car_saved,
+    is_dealer_hidden,
+    list_hidden_dealers,
     list_saved_searches,
     listings_geo_coords_maps,
     listings_grid_cache_etag,
@@ -77,6 +81,7 @@ from backend.db.inventory_db import (
     search_cars_by_make_model_pairs,
     serialize_car_for_listings_grid,
     serialize_cars_for_listings_grid,
+    unhide_dealer,
     unsave_car,
 )
 from backend.db.user_history_db import (
@@ -498,6 +503,7 @@ def _csrf_mutating_requests():
         "ai_chat_bp.api_ai_chat",
         "api_toggle_save",
         "api_saved_searches_create",
+        "api_hidden_dealers_add",
         "api_session_listings_geo",
         "api_car_packages_ensure",
         "api_car_vehicle_history_intelligence",
@@ -889,9 +895,19 @@ def _account_profile_context(uid: int, **extra):
         "role_label": role_labels.get(role, role.replace("_", " ").title()),
         "is_premium": bool(u.get("is_premium")),
         "min_password_len": _MIN_PASSWORD_LEN,
+        "hidden_dealers": _hidden_dealers_for_profile(uid),
     }
     ctx.update(extra)
     return ctx
+
+
+def _hidden_dealers_for_profile(uid: int) -> list[dict]:
+    """Server-rendered rows for the profile's Hidden dealerships section ([] on any error)."""
+    try:
+        return list_hidden_dealers(int(uid))
+    except Exception:
+        _logger.debug("hidden dealers lookup failed for user %s", uid, exc_info=True)
+        return []
 
 
 @app.route("/account/password", methods=["GET", "POST"])

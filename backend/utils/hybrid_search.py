@@ -706,8 +706,12 @@ def hybrid_smart_search(
     *,
     vector_top_k: int = 100,
     listing_geo_kwargs: dict[str, Any] | None = None,
+    exclude_dealer_ids=None,
 ) -> tuple[list[dict], dict[str, Any]]:
     """API smart search: natural-language *filters* from ``parse_natural_query`` + vector recall.
+
+    ``exclude_dealer_ids``: the signed-in user's hidden dealerships, forwarded to every
+    ``search_cars`` call on this path (see search_repo.search_cars).
 
     When structured filters are present (make, model, price, etc.), **SQL runs first** so results
     are not limited to an arbitrary semantic candidate pool. Free-text vector recall only re-ranks
@@ -720,6 +724,8 @@ def hybrid_smart_search(
     sql_kwargs = filters_dict_to_search_cars_kwargs(filters or {})
     if listing_geo_kwargs:
         sql_kwargs = {**sql_kwargs, **listing_geo_kwargs}
+    if exclude_dealer_ids:
+        sql_kwargs = {**sql_kwargs, "exclude_dealer_ids": sorted(exclude_dealer_ids)}
     meta_extra: dict[str, Any] = {"parsed_filters": dict(filters) if filters else {}}
     package_needles = _collect_package_needles(filters)
 

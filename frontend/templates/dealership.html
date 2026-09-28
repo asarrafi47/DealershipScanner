@@ -46,6 +46,12 @@
             justify-content: space-between; padding-bottom: 1.25rem; border-bottom: 1px solid rgba(128,128,128,.25); }
         .dealer-research__eyebrow { text-transform: uppercase; letter-spacing: .08em; font-size: .72rem;
             opacity: .6; margin: 0 0 .35rem; }
+        .dealer-research__hero-actions { display: flex; flex-direction: column; align-items: flex-end; gap: .4rem; }
+        .dealer-research__hide-btn { padding: 10px 18px; font-size: 13px; }
+        .dealer-research__hide-btn[aria-pressed="true"] { color: var(--text-muted); }
+        .dealer-research__hide-status { margin: 0; font-size: 12px; color: var(--text-muted); }
+        .dealer-research__hide-status:empty { display: none; }
+        @media (max-width: 720px) { .dealer-research__hero-actions { align-items: flex-start; } }
         .dealer-research__title { font-size: 1.9rem; line-height: 1.15; margin: 0 0 .5rem; }
         .dealer-research__brand { display: inline-block; font-size: .8rem; padding: .15rem .55rem; border-radius: 999px;
             background: rgba(80,120,255,.14); color: inherit; margin-right: .5rem; }
@@ -260,6 +266,17 @@
                     {% endif %}
                 </div>
             </div>
+            {% if logged_in and dealer_id %}
+            <div class="dealer-research__hero-actions">
+                <button type="button"
+                        class="secondary-button dealer-research__hide-btn"
+                        id="dealer-hide-toggle"
+                        data-dealer-id="{{ dealer_id }}"
+                        data-hidden="{{ '1' if is_hidden else '0' }}"
+                        aria-pressed="{{ 'true' if is_hidden else 'false' }}">{{ 'Unhide this dealership' if is_hidden else 'Hide this dealership from my searches' }}</button>
+                <p class="dealer-research__hide-status" id="dealer-hide-status" role="status">{% if is_hidden %}Hidden from your searches. <a href="{{ url_for('account_profile_page') }}#hidden-dealers">Manage</a>{% endif %}</p>
+            </div>
+            {% endif %}
         </header>
 
         <!-- INVENTORY -->
