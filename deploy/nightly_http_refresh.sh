@@ -2,7 +2,7 @@
 #
 # nightly_http_refresh.sh — browser-free nightly inventory freshness pass.
 #
-# Runs five steps in order. All five are HTTP-only ONLY BECAUSE this script now
+# Runs seven steps in order. The scan steps are HTTP-only ONLY BECAUSE this script now
 # exports SCANNER_LISTING_FETCH_CHAIN=0 (see below). The header used to claim
 # "NO Chrome/Playwright is ever launched" unconditionally; that was false. On
 # 2026-08-02 a run of this script logged 1,656 "fetched via playwright" lines
@@ -21,6 +21,8 @@
 #   5. rebuild_listings_index — recompute the incomplete-listings index.
 #   6. compute_market_stats   — recompute the per-model market price bands the
 #      car page's market read and deal badges depend on.
+#   7. build_listings_grid_cards — refresh the stored listings cards the
+#      radius-scoped /api/listings/cars serves.
 #
 # Design:
 #   * Idempotent and safe to run repeatedly.
@@ -148,7 +150,7 @@ log "browser processes before delta step: ${BROWSERS_BEFORE}"
 # again, so it could never come back — audiofcostamesa-com sat at 274 rows, every
 # one inactive. A dealer with no usable recipe still skips fast, so the wider
 # roster costs a no-op per extra dealer rather than a scan.
-run_step "1/4 http-delta-refresh" \
+run_step "1/7 http-delta-refresh" \
   env DEALERS_FROM_SCANNABLE=1 SCANNER_DELTA_DEALER_TIMEOUT=900 SCANNER_DELTA_CONCURRENCY=8 \
   "$PYTHON" scanner.py --delta || FAILS=$((FAILS+1))
 
@@ -164,18 +166,18 @@ else
 fi
 
 # --- Step 2: CarsCommerce bulk field fill ----------------------------------
-run_step "2/4 harvest-carscommerce" \
+run_step "2/7 harvest-carscommerce" \
   "$PYTHON" backend/scripts/harvest_carscommerce.py || FAILS=$((FAILS+1))
 
 # --- Step 3: heal from other captured recipes ------------------------------
-run_step "3/5 heal-from-recipes" \
+run_step "3/7 heal-from-recipes" \
   "$PYTHON" backend/scripts/heal_from_recipes.py || FAILS=$((FAILS+1))
 
 # --- Step 4: HTML/JSON-LD platform (server-rendered; no API) ----------------
 # Fetches each incomplete car's VDP over plain HTTP and fills from JSON-LD.
 # Cloudflare-walled dealers only get through when SCANNER_HTTP_PROXY is set;
 # without it, blocked fetches are logged and skipped (best-effort, no crash).
-run_step "4/5 harvest-html-jsonld" \
+run_step "4/7 harvest-html-jsonld" \
   "$PYTHON" backend/scripts/harvest_html_jsonld.py || FAILS=$((FAILS+1))
 
 # --- Step 5: rebuild incomplete-listings index -----------------------------
