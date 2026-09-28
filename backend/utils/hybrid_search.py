@@ -453,7 +453,19 @@ def hybrid_search_with_kwargs(
             )
         return ordered, meta
 
-    rows = search_cars(**sql_kwargs)
+    # No semantic index (pgvector unconfigured or empty): run the *parsed* filters
+    # as SQL, the way ``hybrid_smart_search`` does for the API. ``sql_kwargs`` alone
+    # is the request's facet params, which a free-text search usually leaves empty;
+    # that made this branch a whole-fleet SELECT embedded in the listings page.
+    merged = {
+        **filters_dict_to_search_cars_kwargs(parsed_q),
+        **{k: v for k, v in sql_kwargs.items() if v not in (None, "", [])},
+    }
+    if not sql_kwargs_has_facet_filters(merged):
+        meta["mode"] = "sql_fallback_unfiltered_refused"
+        meta["sql_count"] = 0
+        return [], meta
+    rows = search_cars(**merged)
     meta["mode"] = "sql_fallback_no_semantic_index"
     meta["sql_count"] = len(rows)
     return _sort_sql_rows(rows), meta
@@ -525,6 +537,13 @@ _FACET_SQL_KWARG_KEYS = frozenset(
         "packages_json_contains_list",
         "packages_json_contains_all",
         "vehicle_or",
+        # Emitted by ``filters_dict_to_search_cars_kwargs`` (parsed text), never by
+        # the GET facet builder; listed so a parsed year/trim counts as a constraint
+        # when the semantic fallback decides whether the SQL is filtered at all.
+        "min_year",
+        "max_year",
+        "trim_contains",
+        "trim_contains_list",
     }
 )
 

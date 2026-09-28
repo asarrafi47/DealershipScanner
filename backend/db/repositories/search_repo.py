@@ -19,6 +19,23 @@ from backend.utils.interior_color_buckets import (
     row_matches_interior_bucket_filter,
 )
 
+# ``search_cars`` returns at most this many rows unless the caller passes ``limit``
+# (``limit=None`` is the explicit opt-out for admin/ops tooling). Before the cap an
+# unfiltered call hydrated the whole fleet (214k rows, ~500 MB of dicts) into Python.
+SEARCH_CARS_DEFAULT_LIMIT = 500
+# Rows hydrated per round trip while collecting ``limit`` post-filtered results.
+_SEARCH_HYDRATE_CHUNK = 500
+# Ids the non-geo ranking query may hand back: the Python-side filters (paint
+# family, interior bucket, displacement, incomplete index) run after the SQL, so
+# the id scan over-fetches to still fill ``limit`` when they are selective.
+_SEARCH_SCAN_ID_CAP = 20_000
+# Same order ``_sort_cars_by_price`` applies at the end: priced rows cheapest
+# first, "call for price" rows last; ``id`` makes the LIMIT deterministic.
+_SEARCH_PRICE_ORDER_SQL = (
+    "ORDER BY CASE WHEN price IS NULL OR price = 0 THEN 1 ELSE 0 END, price ASC, id ASC"
+)
+
+
 # Major automakers by country of origin (for country filter)
 MAKE_TO_COUNTRY = {
     "BMW": "Germany", "Mercedes-Benz": "Germany", "Audi": "Germany",
@@ -180,7 +197,8 @@ def search_cars(makes=None, models=None, trims=None, fuel_types=None,
                 vin=None,
                 include_incomplete: bool | None = None,
                 include_flagged: bool = False,
-                exclude_dealer_ids=None):
+                exclude_dealer_ids=None,
+                limit: int | None = SEARCH_CARS_DEFAULT_LIMIT):
     """
     ``exclude_dealer_ids``: optional iterable of ``cars.dealer_id`` keys (case-insensitive) whose
     rows are dropped -- the signed-in user's hidden dealerships (hidden_dealers_repo). One clause
@@ -228,6 +246,11 @@ def search_cars(makes=None, models=None, trims=None, fuel_types=None,
     builder is a public/guest surface. Admin/ops tooling that needs to SEE
     flagged rows (that is the whole point of the flag) must opt in with
     ``include_flagged=True``.
+
+    ``limit``: at most this many rows come back (default
+    :data:`SEARCH_CARS_DEFAULT_LIMIT`); ``None`` opts out. The database ranks the
+    matching ids (cheapest first, or nearest first inside a ZIP radius) and rows are
+    hydrated in chunks until the cap is met, so no call pulls the fleet into Python.
     """
     if include_incomplete is None:
         inc = listings_include_incomplete_cars()
@@ -236,10 +259,10 @@ def search_cars(makes=None, models=None, trims=None, fuel_types=None,
 
     from backend.db.geo import zip_to_coords, haversine
 
-    query = "SELECT * FROM cars WHERE (COALESCE(listing_active, 1) = 1)"
+    where = "(COALESCE(listing_active, 1) = 1)"
     if not include_flagged:
         # Admin "marked for review" flag hides the row from public search results.
-        query += " AND COALESCE(marked_for_review, 0) = 0"
+        where += " AND COALESCE(marked_for_review, 0) = 0"
     params = []
 
     if candidate_ids:
@@ -252,7 +275,7 @@ def search_cars(makes=None, models=None, trims=None, fuel_types=None,
             except (TypeError, ValueError):
                 continue
         if ids:
-            query += f" AND id IN ({_placeholders(ids)})"
+            where += f" AND id IN ({_placeholders(ids)})"
             params.extend(ids)
 
     dealer_registry_filter_ids: list[int] = []
@@ -276,21 +299,21 @@ def search_cars(makes=None, models=None, trims=None, fuel_types=None,
     if vin and str(vin).strip():
         vnorm = re.sub(r"\s+", "", str(vin).strip().upper())[:20]
         if len(vnorm) == 17:
-            query += " AND REPLACE(UPPER(TRIM(IFNULL(vin, ''))), ' ', '') = ?"
+            where += " AND REPLACE(UPPER(TRIM(IFNULL(vin, ''))), ' ', '') = ?"
             params.append(vnorm)
 
     def add_multi(col, values):
-        nonlocal query
+        nonlocal where
         if values:
-            query += f" AND {col} IN ({_placeholders(values)})"
+            where += f" AND {col} IN ({_placeholders(values)})"
             params.extend(values)
 
     def add_multi_ci(col, values):
         """Case-insensitive match for scraped text fields (e.g. DODGE vs Dodge)."""
-        nonlocal query
+        nonlocal where
         if values:
             lowered = [str(v).lower().strip() for v in values]
-            query += (
+            where += (
                 f" AND LOWER(TRIM(IFNULL({col}, ''))) IN ({_placeholders(lowered)})"
             )
             params.extend(lowered)
@@ -336,7 +359,7 @@ def search_cars(makes=None, models=None, trims=None, fuel_types=None,
             if sub_parts:
                 vehicle_or_clauses.append("(" + " AND ".join(sub_parts) + ")")
         if vehicle_or_clauses:
-            query += " AND (" + " OR ".join(vehicle_or_clauses) + ")"
+            where += " AND (" + " OR ".join(vehicle_or_clauses) + ")"
     else:
         add_multi_ci("make", makes)
         add_multi_ci("model", models)
@@ -355,21 +378,21 @@ def search_cars(makes=None, models=None, trims=None, fuel_types=None,
     )
     clause = _equipment_needle_sql_clause()
     if pkg_single:
-        query += f" AND {clause}"
+        where += f" AND {clause}"
         params.extend(_equipment_needle_params(pkg_single))
     if pkg_or:
-        query += " AND (" + " OR ".join([clause] * len(pkg_or)) + ")"
+        where += " AND (" + " OR ".join([clause] * len(pkg_or)) + ")"
         for needle in pkg_or:
             params.extend(_equipment_needle_params(needle))
     if pkg_and:
         for needle in pkg_and:
-            query += f" AND {clause}"
+            where += f" AND {clause}"
             params.extend(_equipment_needle_params(needle))
 
     if trim_contains_list:
         needles = [str(t).strip().lower()[:100] for t in trim_contains_list if str(t).strip()]
         if needles:
-            query += " AND (" + " OR ".join(
+            where += " AND (" + " OR ".join(
                 ["INSTR(LOWER(IFNULL(trim, '')), ?) > 0"] * len(needles)
             ) + ")"
             params.extend(needles)
@@ -377,14 +400,14 @@ def search_cars(makes=None, models=None, trims=None, fuel_types=None,
         needle = str(trim_contains).strip().lower()
         if len(needle) > 100:
             needle = needle[:100]
-        query += " AND INSTR(LOWER(IFNULL(trim, '')), ?) > 0"
+        where += " AND INSTR(LOWER(IFNULL(trim, '')), ?) > 0"
         params.append(needle)
 
     if min_year is not None:
-        query += " AND year >= ?"
+        where += " AND year >= ?"
         params.append(int(min_year))
     if max_year is not None:
-        query += " AND year <= ?"
+        where += " AND year <= ?"
         params.append(int(max_year))
 
     if max_price is not None:
@@ -393,7 +416,7 @@ def search_cars(makes=None, models=None, trims=None, fuel_types=None,
         except (TypeError, ValueError):
             pass
         else:
-            query += " AND (price IS NULL OR price <= ? OR price = 0)"
+            where += " AND (price IS NULL OR price <= ? OR price = 0)"
             params.append(mp)
     if max_mileage is not None:
         try:
@@ -401,32 +424,13 @@ def search_cars(makes=None, models=None, trims=None, fuel_types=None,
         except (TypeError, ValueError):
             pass
         else:
-            query += " AND (mileage IS NULL OR mileage <= ? OR mileage = 0)"
+            where += " AND (mileage IS NULL OR mileage <= ? OR mileage = 0)"
             params.append(mm)
     if cpo_only:
-        query += " AND is_cpo = 1"
+        where += " AND is_cpo = 1"
     excl_clause, excl_params = _exclude_dealer_ids_clause(exclude_dealer_ids)
-    query += excl_clause
+    where += excl_clause
     params.extend(excl_params)
-
-    with db_conn(row_factory=sqlite3.Row) as conn:
-        if dealer_registry_filter_ids:
-            from backend.listings.dealer_registry_match import (
-                dealer_registry_sql_filter,
-                registry_id_by_dealer_host,
-            )
-
-            host_map = registry_id_by_dealer_host(conn)
-            clause, extra = dealer_registry_sql_filter(
-                dealer_registry_filter_ids,
-                host_map,
-                placeholders_fn=_placeholders,
-            )
-            query += clause
-            params.extend(extra)
-        cursor = conn.cursor()
-        cursor.execute(query, params)
-        results = [dict(row) for row in cursor.fetchall()]
 
     bucket_sel = _normalized_interior_bucket_filters(interior_color_bucket_filters)
     ext_family_sel = _normalized_interior_bucket_filters(exterior_colors)
@@ -465,40 +469,122 @@ def search_cars(makes=None, models=None, trims=None, fuel_types=None,
             out = [c for c in out if car_matches_engine_displacement_l_range(c, eng_lo, eng_hi)]
         return out
 
+    lim = _normalize_search_limit(limit)
+    origin = None
     if zip_code and radius_miles:
         origin = zip_to_coords(zip_code)
         if origin is None:
             return []
-        from backend.db.dealer_geo import load_dealer_geo_index, lookup_dealer_coords
 
-        with db_conn() as _gc:
-            dealer_geo = load_dealer_geo_index(_gc)
-        filtered = []
-        for car in results:
-            dest = lookup_dealer_coords(str(car.get("dealer_url") or ""), dealer_geo)
-            if dest:
-                dist = haversine(origin[0], origin[1], dest[0], dest[1])
-                if dist <= radius_miles:
-                    car["distance_miles"] = round(dist, 1)
-                    filtered.append(car)
-        for c in filtered:
-            _parse_car_gallery(c)
-            _parse_car_history_highlights(c)
-        base = _filter_public_listings_cars(filtered, include_incomplete=inc)
-        complete = _post_sql_filters(base)
+    with db_conn(row_factory=sqlite3.Row) as conn:
+        if dealer_registry_filter_ids:
+            from backend.listings.dealer_registry_match import (
+                dealer_registry_sql_filter,
+                registry_id_by_dealer_host,
+            )
+
+            host_map = registry_id_by_dealer_host(conn)
+            clause, extra = dealer_registry_sql_filter(
+                dealer_registry_filter_ids,
+                host_map,
+                placeholders_fn=_placeholders,
+            )
+            where += clause
+            params.extend(extra)
+
+        distance_by_id: dict[int, float] = {}
+        if origin is not None:
+            # Phase 1 (radius): the distance test needs every candidate's dealer,
+            # not its row -- scan three narrow columns, rank nearest first.
+            from backend.db.dealer_geo import load_dealer_geo_index, lookup_dealer_coords
+
+            # Plain connection: the index reader unpacks rows positionally, which
+            # the name-keyed rows of this ``row_factory`` connection do not allow.
+            with db_conn() as _gc:
+                dealer_geo = load_dealer_geo_index(_gc)
+            narrow = conn.execute(
+                f"SELECT id, price, dealer_url FROM cars WHERE {where}", params
+            ).fetchall()
+            dist_by_url: dict[str, float] = {}
+            ranked: list[tuple[float, int, float, int]] = []
+            for r in narrow:
+                r = dict(r)  # Postgres compat rows are name-keyed, sqlite3.Row takes both
+                du = str(r["dealer_url"] or "")
+                dist = dist_by_url.get(du)
+                if dist is None:
+                    dest = lookup_dealer_coords(du, dealer_geo)
+                    dist = (
+                        haversine(origin[0], origin[1], dest[0], dest[1]) if dest else -1.0
+                    )
+                    dist_by_url[du] = dist
+                if dist < 0 or dist > float(radius_miles):
+                    continue
+                try:
+                    price = float(r["price"] or 0)
+                except (TypeError, ValueError):
+                    price = 0.0
+                cid = int(r["id"])
+                ranked.append((round(dist, 1), 1 if price <= 0 else 0, price, cid))
+            ranked.sort()
+            ordered_ids = [t[3] for t in ranked]
+            distance_by_id = {t[3]: t[0] for t in ranked}
+        else:
+            # Phase 1: let the database rank the matching ids; only ints cross the wire.
+            scan_sql = f"SELECT id FROM cars WHERE {where} {_SEARCH_PRICE_ORDER_SQL}"
+            scan_params = list(params)
+            if lim is not None:
+                scan_sql += " LIMIT ?"
+                scan_params.append(max(lim, _SEARCH_SCAN_ID_CAP))
+            ordered_ids = [
+                int(dict(r)["id"]) for r in conn.execute(scan_sql, scan_params).fetchall()
+            ]
+
+        # Phase 2: hydrate in chunks, in rank order, until ``limit`` rows survive
+        # the Python-side filters.
+        collected: list[dict] = []
+        cursor = conn.cursor()
+        for start in range(0, len(ordered_ids), _SEARCH_HYDRATE_CHUNK):
+            chunk = ordered_ids[start : start + _SEARCH_HYDRATE_CHUNK]
+            cursor.execute(
+                f"SELECT * FROM cars WHERE id IN ({_placeholders(chunk)})", chunk
+            )
+            by_id: dict[int, dict] = {}
+            for row in cursor.fetchall():
+                d = dict(row)
+                by_id[int(d["id"])] = d
+            rows = [by_id[i] for i in chunk if i in by_id]
+            for c in rows:
+                _parse_car_gallery(c)
+                _parse_car_history_highlights(c)
+            rows = _post_sql_filters(_filter_public_listings_cars(rows, include_incomplete=inc))
+            if origin is not None:
+                for c in rows:
+                    c["distance_miles"] = distance_by_id.get(int(c["id"]), 0.0)
+            collected.extend(rows)
+            if lim is not None and len(collected) >= lim:
+                break
+
+    if lim is not None:
+        collected = collected[:lim]
+    if origin is not None:
         from backend.utils.listings_sort import listing_sort_depriority
 
         return sorted(
-            complete,
+            collected,
             key=lambda c: (*listing_sort_depriority(c), c["distance_miles"]),
         )
+    return _sort_cars_by_price(collected)
 
-    for c in results:
-        _parse_car_gallery(c)
-        _parse_car_history_highlights(c)
-    base = _filter_public_listings_cars(results, include_incomplete=inc)
-    complete = _post_sql_filters(base)
-    return _sort_cars_by_price(complete)
+
+def _normalize_search_limit(limit) -> int | None:
+    """``None`` means unbounded; anything that is not a positive int means the default."""
+    if limit is None:
+        return None
+    try:
+        n = int(limit)
+    except (TypeError, ValueError):
+        return SEARCH_CARS_DEFAULT_LIMIT
+    return n if n > 0 else SEARCH_CARS_DEFAULT_LIMIT
 
 
 def search_cars_by_make_model_pairs(

@@ -26,6 +26,12 @@ _logger = logging.getLogger(__name__)
 # Column order for the packed cascade table. Every column except ``cyl`` is
 # dictionary-encoded: the values repeat across ~12,700 rows, so shipping integer
 # codes plus one vocabulary per column is far smaller than a list of dicts.
+# Most cars a free-text search (``?q=``) embeds in the page. Matches the ceiling
+# ``listings_grid_bootstrap_cars`` enforces for the non-search first paint (48 by
+# default, 200 at most); before the cap a search with pgvector unconfigured embedded
+# the whole fleet (214k cars, 237 MB, 37 s -- efficiency review 2026-09-28, D1).
+LISTINGS_SEARCH_GRID_MAX = 200
+
 _CAR_ROW_COLUMNS = ("make", "model", "trim", "fuel", "cyl", "drive", "body_style", "induction")
 _CAR_ROW_RAW_COLUMNS = frozenset({"cyl"})
 
@@ -182,8 +188,15 @@ def listings_page(*, listings_poll_ms: int = 0):
             initial_grid_cars = []
             search_ran = True
         else:
-            results, _ = hybrid_search_with_kwargs(q_text or None, sql_kwargs, vector_top_k=100)
-            initial_grid_cars = serialize_cars_for_listings_grid(results)
+            results, _ = hybrid_search_with_kwargs(
+                q_text or None,
+                {**sql_kwargs, "limit": LISTINGS_SEARCH_GRID_MAX},
+                vector_top_k=100,
+                parsed_filters=parsed_q if q_text else None,
+            )
+            initial_grid_cars = serialize_cars_for_listings_grid(
+                results[:LISTINGS_SEARCH_GRID_MAX]
+            )
             search_ran = True
 
     if search_ran:
