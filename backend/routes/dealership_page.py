@@ -14,9 +14,13 @@ turned to dashes) matches ``cars.dealer_id``.
 
 from __future__ import annotations
 
+import hashlib
 import json
 import re
 import sqlite3
+import threading
+import time
+from collections import OrderedDict
 from urllib.parse import urlparse
 
 from flask import abort, jsonify, make_response, render_template, request, session
@@ -121,6 +125,34 @@ def _find_dealership_by_dealer_id(dealer_id: str) -> dict | None:
         conn.close()
 
 
+# One page view reads the dealer's cards three times (the page itself, then
+# ``/cars`` and ``/filter-options`` from the browser). Keep the resolved cards per
+# (dealer_id, data token) for a short TTL so a view costs one ``cards_for_dealer``.
+_DEALER_CARDS_TTL_S = 30.0
+_DEALER_CARDS_MAX_ENTRIES = 128
+_dealer_cards_cache: "OrderedDict[str, tuple[float, str, list[str]]]" = OrderedDict()
+_dealer_cards_lock = threading.Lock()
+
+
+def clear_dealer_cards_cache() -> None:
+    with _dealer_cards_lock:
+        _dealer_cards_cache.clear()
+
+
+def _dealer_cards_token(dealer_id: str) -> str:
+    """Validator for one dealer's cards WITHOUT building them.
+
+    ``grid_scope_token`` moves with every input a card depends on (the ``cars`` write
+    fingerprint, the day, the serializer revision, market bands, attribution
+    verdicts, the include-incomplete switch) and ``store_generation`` with the
+    background refresher, so an unchanged token means the same cards -- to the
+    token's own 60 s resample on Postgres, the same bound /api/listings/cars has."""
+    from backend.db.repositories.grid_cards_repo import grid_scope_token, store_generation
+
+    raw = repr(((dealer_id or "").strip(), grid_scope_token(), store_generation()))
+    return hashlib.blake2b(raw.encode("utf-8", "surrogatepass"), digest_size=10).hexdigest()
+
+
 def _dealer_grid_cards_json(dealer_id: str) -> list[str]:
     """Stored listing-card JSON strings for one dealer, in grid order.
 
@@ -128,13 +160,27 @@ def _dealer_grid_cards_json(dealer_id: str) -> list[str]:
     ``grid_cards_repo``), so a facet value derived here selects the same cars there
     -- main.js filters the SERIALIZED card fields. A dealer-scoped query: this page
     never touches the rest of the fleet (it used to slice the whole-fleet grid).
+    Cached per (dealer, :func:`_dealer_cards_token`) for ``_DEALER_CARDS_TTL_S``.
     """
     from backend.db.repositories.grid_cards_repo import cards_for_dealer
 
     key = (dealer_id or "").strip()
     if not key:
         return []
-    return cards_for_dealer(key).cards_json()
+    token = _dealer_cards_token(key)
+    now = time.monotonic()
+    with _dealer_cards_lock:
+        hit = _dealer_cards_cache.get(key)
+        if hit is not None and hit[1] == token and (now - hit[0]) < _DEALER_CARDS_TTL_S:
+            _dealer_cards_cache.move_to_end(key)
+            return hit[2]
+    cards = cards_for_dealer(key).cards_json()
+    with _dealer_cards_lock:
+        _dealer_cards_cache[key] = (now, token, cards)
+        _dealer_cards_cache.move_to_end(key)
+        while len(_dealer_cards_cache) > _DEALER_CARDS_MAX_ENTRIES:
+            _dealer_cards_cache.popitem(last=False)
+    return cards
 
 
 def _dealer_grid_cars(dealer_id: str) -> list[dict]:
@@ -646,18 +692,16 @@ def api_dealership_cars(dealer_key: str):
     if not dealer_id:
         return jsonify({"ok": False, "error": "not_found"}), 404
 
-    import hashlib
-
-    cards = _dealer_grid_cards_json(dealer_id)
-    body = '{"ok":true,"cars":[' + ",".join(cards) + "]}"
-    # A digest of the body itself: it moves exactly when the served cards do, so a
-    # 304 can never confirm stale data. The dealer part is reduced to etag-safe
-    # characters -- for a numeric key it derives from a registry website_url.
-    digest = hashlib.blake2b(body.encode("utf-8"), digest_size=10).hexdigest()
-    etag = f'W/"{_etag_token(dealer_id)}-{digest}"'
+    # The validator is the data token (see _dealer_cards_token), computed WITHOUT
+    # building the cards, so a matching If-None-Match is a 304 with no card work. The
+    # dealer part is reduced to etag-safe characters -- for a numeric key it derives
+    # from a registry website_url.
+    etag = f'W/"{_etag_token(dealer_id)}-{_dealer_cards_token(dealer_id)}"'
     if (request.headers.get("If-None-Match") or "").strip() == etag:
         resp = make_response("", 304)
     else:
+        cards = _dealer_grid_cards_json(dealer_id)
+        body = '{"ok":true,"cars":[' + ",".join(cards) + "]}"
         resp = make_response(body)
         resp.headers["Content-Type"] = "application/json"
     resp.headers["ETag"] = etag

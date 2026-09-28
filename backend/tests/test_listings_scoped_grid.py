@@ -773,3 +773,79 @@ def test_fallback_includes_cars_without_dealer_id_and_survives_batching(
     assert "2021 Honda Civic #5" not in titles
     # nowhere-motors (#6) and the URL-less car: counted, never silently dropped.
     assert data["missing_coords"] == 2
+
+
+# ── dealership page: one card build per view, 304 without a build ───────
+
+
+@pytest.fixture
+def dealer_builds(scoped, monkeypatch):
+    from backend.db.repositories import grid_cards_repo as gc
+    from backend.routes import dealership_page as dp
+
+    # Steady state: the store is warm. (On SQLite the data token is the DB file's
+    # mtime, so a cold store's own first write moves it -- one extra build, dev only;
+    # on Postgres the write fingerprint does not include the card store.)
+    gc.build_all_cards()
+    dp.clear_dealer_cards_cache()
+    calls = []
+    real = gc.cards_for_dealer
+
+    def counting(dealer_id, **kw):
+        calls.append(dealer_id)
+        return real(dealer_id, **kw)
+
+    monkeypatch.setattr(gc, "cards_for_dealer", counting)
+    yield calls
+    dp.clear_dealer_cards_cache()
+
+
+def test_dealership_page_view_builds_the_dealer_cards_once(dealer_builds, client):
+    from backend.routes import dealership_page as dp
+
+    # Warm-up view: on SQLite the first render's own writes move the DB-mtime token.
+    client.get("/dealership/near-motors-test")
+    dp.clear_dealer_cards_cache()
+    dealer_builds.clear()
+
+    assert client.get("/dealership/near-motors-test").status_code == 200
+    assert client.get("/api/dealership/near-motors-test/cars").status_code == 200
+    assert client.get("/api/dealership/near-motors-test/filter-options").status_code == 200
+    assert dealer_builds == ["near-motors-test"]
+
+
+def test_dealership_cars_304_skips_the_card_build(dealer_builds, client):
+    from backend.routes import dealership_page as dp
+
+    r1 = client.get("/api/dealership/near-motors-test/cars")
+    etag = r1.headers["ETag"]
+    assert len(r1.get_json()["cars"]) == 2
+    dp.clear_dealer_cards_cache()
+    dealer_builds.clear()
+    r2 = client.get("/api/dealership/near-motors-test/cars", headers={"If-None-Match": etag})
+    assert r2.status_code == 304
+    assert dealer_builds == [], "a matching validator must not build the cards"
+
+
+def test_dealership_cars_etag_and_cache_move_when_a_car_changes(dealer_builds, client, scoped):
+    r1 = client.get("/api/dealership/near-motors-test/cars")
+    conn = sqlite3.connect(str(scoped.path))
+    conn.execute("UPDATE cars SET price = 11111 WHERE title = '2022 Toyota Camry #1'")
+    conn.commit()
+    conn.close()
+    r2 = client.get("/api/dealership/near-motors-test/cars", headers={"If-None-Match": r1.headers["ETag"]})
+    assert r2.status_code == 200
+    assert r2.headers["ETag"] != r1.headers["ETag"]
+    assert 11111 in {c["price"] for c in r2.get_json()["cars"]}
+    assert len(dealer_builds) == 2
+
+
+def test_dealership_cards_cache_expires_after_its_ttl(dealer_builds, monkeypatch):
+    from backend.routes import dealership_page as dp
+
+    dp._dealer_grid_cards_json("near-motors-test")
+    dp._dealer_grid_cards_json("near-motors-test")
+    assert len(dealer_builds) == 1
+    monkeypatch.setattr(dp, "_DEALER_CARDS_TTL_S", 0.0)
+    dp._dealer_grid_cards_json("near-motors-test")
+    assert len(dealer_builds) == 2
