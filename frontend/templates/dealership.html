@@ -14,10 +14,9 @@
     <script nonce="{{ csp_nonce }}">
     (function () {
         // main.js hydrates its grid from window.__DS_listingsCarsPrefetchPromise when
-        // one is published before it boots (see startListingsAssetPrefetch). Publishing
-        // the DEALER-scoped endpoint here is what keeps this page off
-        // /api/listings/cars — the whole 71k-row fleet — while still reusing every
-        // filter/sort/save/compare path unchanged.
+        // one is published before it boots (loadAllCarsFromApi, dealer scope). The
+        // DEALER-scoped endpoint keeps this page to one rooftop's cars while reusing
+        // every filter/sort/save/compare path unchanged.
         function fetchDealerCars() {
             return fetch({{ (url_for('api_dealership_cars', dealer_key=dealer_key)) | tojson }}, { credentials: "same-origin" })
                 .then(function (r) { return r.ok ? r.json() : null; })
@@ -27,23 +26,17 @@
                 })
                 .catch(function () { return null; });
         }
-        window.__DS_listingsCarsPrefetchPromise = new Promise(function (resolve) {
-            function go() { resolve(fetchDealerCars()); }
-            // Off DOMContentLoaded, not load: `load` waits on every card image, and a
-            // filter applied in that window would search only the bootstrap cards.
-            function schedule() {
-                if (window.requestIdleCallback) window.requestIdleCallback(go, { timeout: 1500 });
-                else setTimeout(go, 150);
-            }
-            if (document.readyState !== "loading") schedule();
-            else document.addEventListener("DOMContentLoaded", schedule, { once: true });
-        });
+        // One rooftop is small (the persisted card store answers in milliseconds), so
+        // start it with the document; the server-rendered bootstrap cards paint first.
+        window.__DS_listingsCarsPrefetchPromise = fetchDealerCars();
     })();
     </script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/15-dealership.css') }}?v={{ static_cache_ver }}">
 </head>
 <body class="dealership-research-page app-layout-body listings-page"
       data-listings-poll-ms="0"
+      data-listings-scope="dealer"
+      data-listings-cars-url="{{ url_for('api_dealership_cars', dealer_key=dealer_key) }}"
       data-facet-options-url="{{ url_for('api_dealership_filter_options', dealer_key=dealer_key) }}"
       {% if logged_in %}data-logged-in="1"{% endif %}>
 
@@ -51,11 +44,11 @@
    Every blob here is scoped to this ONE dealer, so the shared filter/sort/save/
    compare code operates on this rooftop's inventory and nothing else. #}
 <script type="application/json" id="ds-listings-car-rows" nonce="{{ csp_nonce }}">{{ car_rows_packed | tojson }}</script>
-<script type="application/json" id="ds-listings-all-cars" nonce="{{ csp_nonce }}">[]</script>
 <script type="application/json" id="ds-listings-country-to-makes" nonce="{{ csp_nonce }}">{{ (facets.country_to_makes or {}) | tojson }}</script>
 <script type="application/json" id="ds-listings-zip-coords" nonce="{{ csp_nonce }}">{}</script>
 <script type="application/json" id="ds-listings-dealer-coords" nonce="{{ csp_nonce }}">{}</script>
 <script type="application/json" id="ds-listings-initial-grid" nonce="{{ csp_nonce }}">[]</script>
+{# First paint for this one rooftop while its full (dealer-scoped) card list loads. #}
 <script type="application/json" id="ds-listings-bootstrap-grid" nonce="{{ csp_nonce }}">{{ (inventory.cars or []) | tojson }}</script>
 {# main.js reads PACKAGE_ROWS from this blob only (there is no lazy fetch for it),
    so with a hard-coded [] cascadePackages can never narrow the Packages list to the

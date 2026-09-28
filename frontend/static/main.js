@@ -6,89 +6,17 @@ document.addEventListener("DOMContentLoaded", () => {
     // publishes SC.scalarVal and SC.clearListingsRadiusCache back to them
     // (see the bridge block below the listings-page guard).
 
-    function startListingsAssetPrefetch() {
-        if (!document.getElementById("ds-listings-car-rows")) return;
-        if (window.__DS_listingsAssetPrefetchStarted) return;
-        window.__DS_listingsAssetPrefetchStarted = true;
-
-        if (!SC.listingsDealerCoordsReady()) {
-            if (window.__DS_listingsGeoPrefetchPromise) {
-                // listings.html publishes the promise from its head fetch and resolves
-                // it with the parsed payload; merge that rather than fetching again.
-                // A null payload means that fetch failed, so fall back to our own.
-                window.__DS_listingsGeoPrefetchPromise = window.__DS_listingsGeoPrefetchPromise.then((data) => {
-                    if (SC.listingsDealerCoordsReady()) return;
-                    if (data && data.ok) {
-                        SC.mergeListingsGeoCoordsPayload(data);
-                        return;
-                    }
-                    return fetch("/api/listings/geo-coords", { credentials: "same-origin" })
-                        .then((r) => (r.ok ? r.json() : null))
-                        .then((payload) => SC.mergeListingsGeoCoordsPayload(payload));
-                }).catch(() => {});
-            } else {
-                window.__DS_listingsGeoPrefetchPromise = fetch("/api/listings/geo-coords", {
-                    credentials: "same-origin",
-                })
-                    .then((r) => (r.ok ? r.json() : null))
-                    .then((data) => {
-                        SC.mergeListingsGeoCoordsPayload(data);
-                    })
-                    .catch(() => {});
-            }
-        } else {
-            window.__DS_listingsGeoCoordsReady = true;
-        }
-
-        if (!Array.isArray(window.ALL_CARS) || !window.ALL_CARS.length) {
-            if (Array.isArray(window.__DS_prefetchCars) && window.__DS_prefetchCars.length) {
-                applyListingsCarsPayload({ ok: true, cars: window.__DS_prefetchCars });
-            } else if (window.__DS_listingsCarsPrefetchPromise) {
-                window.__DS_listingsCarsPrefetchPromise = window.__DS_listingsCarsPrefetchPromise
-                    .then(() => {
-                        if (
-                            Array.isArray(window.__DS_prefetchCars)
-                            && window.__DS_prefetchCars.length
-                            && (!Array.isArray(window.ALL_CARS) || !window.ALL_CARS.length)
-                        ) {
-                            applyListingsCarsPayload({ ok: true, cars: window.__DS_prefetchCars });
-                        }
-                    })
-                    .catch(() => {});
-            } else {
-            const headers = {};
-            if (window.__DS_listingsCarsEtag) {
-                headers["If-None-Match"] = window.__DS_listingsCarsEtag;
-            }
-            window.__DS_listingsCarsPrefetchPromise = fetch("/api/listings/cars", {
-                credentials: "same-origin",
-                headers,
-            })
-                .then((r) => {
-                    if (r.status === 304) {
-                        if (Array.isArray(window.ALL_CARS) && window.ALL_CARS.length) {
-                            return { ok: true, cars: window.ALL_CARS, unchanged: true };
-                        }
-                        return fetch("/api/listings/cars", { credentials: "same-origin" }).then((r2) => {
-                            if (!r2.ok) throw new Error("cars prefetch failed");
-                            const etag = r2.headers.get("ETag");
-                            if (etag) window.__DS_listingsCarsEtag = etag;
-                            return r2.json();
-                        });
-                    }
-                    if (!r.ok) throw new Error("cars prefetch failed");
-                    const etag = r.headers.get("ETag");
-                    if (etag) window.__DS_listingsCarsEtag = etag;
-                    return r.json();
-                })
-                .then((data) => {
-                    if (!applyListingsCarsPayload(data)) {
-                        throw new Error("cars prefetch invalid");
-                    }
-                })
-                .catch(() => {});
-            }
-        }
+    // Owner decision 2026-09-28: /listings downloads NO cars until the shopper starts
+    // a search, and then only their ZIP + radius (GET /api/listings/cars?zip=&radius=,
+    // see loadAllCarsFromApi). The dealership page is the one exception: it is scoped
+    // to one rooftop from the start (body[data-listings-scope="dealer"]).
+    const LISTINGS_DEALER_SCOPE = !!(
+        document.body && document.body.getAttribute("data-listings-scope") === "dealer"
+    );
+    if (window.__DS_listingsSearchStarted == null) {
+        window.__DS_listingsSearchStarted = LISTINGS_DEALER_SCOPE || !!(
+            document.body && document.body.getAttribute("data-search-started") === "1"
+        );
     }
 
     const _dsListingsPage = !!document.getElementById("ds-listings-car-rows");
@@ -116,7 +44,6 @@ document.addEventListener("DOMContentLoaded", () => {
     SC.scalarVal = scalarVal;
     SC.clearListingsRadiusCache = clearListingsRadiusCache;
 
-    startListingsAssetPrefetch();
 
     const dashContent = document.getElementById("dash-content");
     const filterTopRow = document.getElementById("filter-top-row");
@@ -758,6 +685,168 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    // ── Search gate (owner decision 2026-09-28) ─────────────────────────
+    // No car is fetched or shown until the shopper begins a search: submits a query,
+    // confirms/changes ZIP or radius, or picks any filter. A deep link that already
+    // carries a search (body[data-search-started="1"]) counts as begun.
+
+    function listingsSearchStarted() {
+        return !!window.__DS_listingsSearchStarted;
+    }
+
+    function markListingsSearchStarted() {
+        if (window.__DS_listingsSearchStarted) return;
+        window.__DS_listingsSearchStarted = true;
+        const prompt = document.getElementById("listings-start-prompt");
+        if (prompt) prompt.hidden = true;
+    }
+    window.__DS_markListingsSearchStarted = markListingsSearchStarted;
+    window.__DS_showListingsZipRequired = function () { showListingsZipRequired(); };
+    window.__DS_listingsSearchStartedFn = listingsSearchStarted;
+
+    function clampListingsRadius(raw) {
+        const n = parseFloat(raw);
+        if (!Number.isFinite(n)) return 50;
+        return Math.max(5, Math.min(250, n));
+    }
+
+    /** "zip|radius" the loaded ALL_CARS must match ("dealer" on the dealership page). */
+    function listingsCarsScopeKey() {
+        if (LISTINGS_DEALER_SCOPE) return "dealer";
+        const zip = scalarVal("zip_code");
+        if (!SC.isValidUsZip(zip)) return "";
+        return `${zip.trim()}|${clampListingsRadius(scalarVal("radius"))}`;
+    }
+
+    function listingsCarsReady() {
+        const key = listingsCarsScopeKey();
+        return !!key && window.__DS_listingsCarsScope === key && Array.isArray(window.ALL_CARS);
+    }
+    window.__DS_listingsCarsReady = listingsCarsReady;
+
+    function showListingsStartPrompt() {
+        const grid = document.getElementById("results-grid");
+        const count = document.getElementById("results-count");
+        const empty = document.getElementById("empty-state");
+        const pag = document.getElementById("listings-pagination");
+        const zeroHint = document.getElementById("listings-zero-hint");
+        if (grid) grid.innerHTML = "";
+        if (count) count.textContent = "";
+        if (empty) empty.style.display = "none";
+        if (pag) pag.hidden = true;
+        if (zeroHint) zeroHint.hidden = true;
+        const prompt = document.getElementById("listings-start-prompt");
+        if (!prompt) return;
+        const zip = scalarVal("zip_code");
+        const hasZip = SC.isValidUsZip(zip);
+        const radius = clampListingsRadius(scalarVal("radius"));
+        const text = document.getElementById("listings-start-prompt-text");
+        const go = document.getElementById("listings-start-prompt-go");
+        const zipForm = document.getElementById("listings-start-prompt-zip");
+        if (text) {
+            text.textContent = hasZip
+                ? `Search above or pick a filter to see cars within ${radius} mi of ${zip.trim()}.`
+                : "Enter your ZIP code to search inventory near you.";
+        }
+        if (go) {
+            go.hidden = !hasZip;
+            go.textContent = hasZip ? `Show all cars within ${radius} mi` : "";
+        }
+        if (zipForm) zipForm.hidden = hasZip;
+        prompt.hidden = false;
+    }
+
+    function showListingsZipRequired() {
+        markListingsSearchStarted();
+        showListingsStartPrompt();
+        maybeShowListingsZipPromptBanner();
+    }
+
+    function showListingsLoadError(err) {
+        const grid = document.getElementById("results-grid");
+        const count = document.getElementById("results-count");
+        const empty = document.getElementById("empty-state");
+        if (grid) grid.innerHTML = "";
+        if (count) count.textContent = "";
+        if (!empty) return;
+        empty.style.display = "";
+        const msg = empty.querySelector(".no-results");
+        const sub = empty.querySelector(".no-results-sub");
+        const code = err && err.code;
+        if (code === "zip_not_found") {
+            if (msg) msg.textContent = "ZIP code not found — no results shown.";
+            if (sub) sub.textContent = "Check the ZIP and try again.";
+        } else {
+            if (msg) msg.textContent = "Could not load inventory.";
+            if (sub) sub.textContent = "Refresh the page or try again in a moment.";
+        }
+    }
+
+    (function initListingsStartPrompt() {
+        const go = document.getElementById("listings-start-prompt-go");
+        if (go) {
+            go.addEventListener("click", () => {
+                markListingsSearchStarted();
+                refreshRadiusAndRenderNow();
+            });
+        }
+        const zipIn = document.getElementById("listings-start-prompt-zip-input");
+        const zipBtn = document.getElementById("listings-start-prompt-zip-submit");
+        const geoBtn = document.getElementById("listings-start-prompt-geo");
+        function commitPromptZip() {
+            if (!zipIn || !SC.isValidUsZip(zipIn.value)) {
+                if (zipIn) zipIn.focus();
+                return;
+            }
+            markListingsSearchStarted();
+            const mainZip = document.getElementById("listings-zip-input");
+            if (mainZip) {
+                mainZip.value = zipIn.value.trim();
+                mainZip.dispatchEvent(new Event("input", { bubbles: true }));
+            }
+        }
+        if (zipBtn) zipBtn.addEventListener("click", commitPromptZip);
+        if (zipIn) {
+            zipIn.addEventListener("keydown", (e) => {
+                if (e.key === "Enter") {
+                    e.preventDefault();
+                    commitPromptZip();
+                }
+            });
+        }
+        if (geoBtn) {
+            if (!navigator.geolocation) {
+                geoBtn.hidden = true;
+            } else {
+                geoBtn.addEventListener("click", () => {
+                    geoBtn.disabled = true;
+                    useListingsGeolocation()
+                        .then((ok) => {
+                            if (!ok && zipIn) zipIn.focus();
+                        })
+                        .finally(() => { geoBtn.disabled = false; });
+                });
+            }
+        }
+    })();
+
+    const _dsSearchFormEl = document.getElementById("search-form");
+    if (_dsSearchFormEl && !LISTINGS_DEALER_SCOPE) {
+        // Capture phase: runs before the per-control handlers that render, so the
+        // render they trigger already sees the search as started. Synthetic events
+        // (restoring state on load) are not the shopper beginning a search.
+        _dsSearchFormEl.addEventListener("change", (e) => {
+            if (!e.isTrusted) return;
+            const t = e.target;
+            // Only named filter controls: not sort/per-page, and not the start
+            // prompt's own ZIP box (its blur would hide the prompt mid-click).
+            if (!t || !t.name) return;
+            if (t.id === "listings-sort" || t.id === "listings-per-page") return;
+            if (t.closest && t.closest("#listings-start-prompt")) return;
+            markListingsSearchStarted();
+        }, true);
+    }
+
     function listingsHasValidZip() {
         return SC.isValidUsZip(scalarVal("zip_code"));
     }
@@ -820,6 +909,7 @@ document.addEventListener("DOMContentLoaded", () => {
             // #search-form, so dispatching on it alone would hide the banner
             // without ever applying the ZIP.
             const z = input.value.trim();
+            markListingsSearchStarted();
             const mainZip = document.getElementById("listings-zip-input");
             if (mainZip) {
                 mainZip.value = z;
@@ -874,12 +964,15 @@ document.addEventListener("DOMContentLoaded", () => {
     document.addEventListener("change", maybeBlockFilterWithoutZip, true);
 
     document.querySelectorAll('#search-form [name="zip_code"]').forEach((el) => {
-        el.addEventListener("input", () => {
+        el.addEventListener("input", (e) => {
             if (_syncingZipInputs) return;
             _syncingZipInputs = true;
             syncSearchFormZipInputs(el.value);
             _syncingZipInputs = false;
             if (listingsHasValidZip()) {
+                // A ZIP the shopper typed (or confirmed via the banner) starts the
+                // search; one restored from this device on load does not.
+                if (e && e.isTrusted) markListingsSearchStarted();
                 const zipNow = scalarVal("zip_code");
                 persistListingsZipLocal(zipNow);
                 hideListingsZipPromptBanner();
@@ -1033,7 +1126,7 @@ document.addEventListener("DOMContentLoaded", () => {
             _listingsZipInputTimer = null;
             if (!listingsHasValidZip()) return;
             const gen = bumpListingsGeoRenderGen();
-            if (!Array.isArray(window.ALL_CARS) || !window.ALL_CARS.length) {
+            if (listingsSearchStarted() && !listingsCarsReady()) {
                 showInventoryLoading();
             }
             refreshRadiusAndRenderNow(gen);
@@ -1926,32 +2019,6 @@ document.addEventListener("DOMContentLoaded", () => {
         schedulePersistListingsGeoSession();
     }
 
-    let _geoCoordsLoadPromise = null;
-    function ensureListingsGeoCoordsLoaded() {
-        if (SC.listingsDealerCoordsReady()) {
-            return Promise.resolve();
-        }
-        if (_geoCoordsLoadPromise) return _geoCoordsLoadPromise;
-        if (window.__DS_listingsGeoPrefetchPromise) {
-            _geoCoordsLoadPromise = window.__DS_listingsGeoPrefetchPromise
-                .then((data) => {
-                    // The head fetch resolves with the payload; merging twice is harmless.
-                    if (!SC.listingsDealerCoordsReady() && data && data.ok) {
-                        SC.mergeListingsGeoCoordsPayload(data);
-                    }
-                })
-                .catch(() => {});
-            return _geoCoordsLoadPromise;
-        }
-        _geoCoordsLoadPromise = fetch("/api/listings/geo-coords", { credentials: "same-origin" })
-            .then((r) => (r.ok ? r.json() : null))
-            .then((data) => {
-                SC.mergeListingsGeoCoordsPayload(data);
-            })
-            .catch(() => {});
-        return _geoCoordsLoadPromise;
-    }
-    window.__DS_ensureListingsGeoCoordsLoaded = ensureListingsGeoCoordsLoaded;
 
     function collectFacetFilterState() {
         const makes = checked("make");
@@ -2036,80 +2103,47 @@ document.addEventListener("DOMContentLoaded", () => {
     function renderResultsNowCore(opts) {
         if (!resultsGrid) return;
 
+        if (!listingsSearchStarted()) {
+            showListingsStartPrompt();
+            return;
+        }
+        if (!listingsCarsScopeKey()) {
+            showListingsZipRequired();
+            return;
+        }
+
         const renderGen = opts && opts.renderGen != null ? opts.renderGen : _listingsGeoRenderGen;
-        if (renderGen != null && listingsZipRenderStale(renderGen)) return;
+        if (renderGen !== _listingsGeoRenderGen) return;
+
+        if (!listingsCarsReady()) {
+            // The shopper's area is not loaded yet (first search, or ZIP/radius just
+            // changed): one fetch of /api/listings/cars?zip=&radius=, skeleton cards
+            // meanwhile, then every facet filters that subset client-side.
+            showInventoryLoading();
+            const gen = _listingsGeoRenderGen;
+            loadAllCarsFromApi()
+                .then(() => {
+                    if (gen !== _listingsGeoRenderGen || !listingsCarsReady()) return;
+                    applyListingsRadiusFilter();
+                    runCascade();
+                    renderResultsNow();
+                })
+                .catch((err) => {
+                    if (gen !== _listingsGeoRenderGen) return;
+                    showListingsLoadError(err);
+                });
+            return;
+        }
+
+        const prompt = document.getElementById("listings-start-prompt");
+        if (prompt) prompt.hidden = true;
 
         resetListingsPage();
         invalidateCheckedCache();
 
         const facetState = collectFacetFilterState();
         const dealerFilterSet = buildDealerFilterIdSet();
-        const zipCode = scalarVal("zip_code");
-        const radiusMi = parseFloat(scalarVal("radius")) || null;
-
-        let inventorySource = (Array.isArray(window.ALL_CARS) && window.ALL_CARS.length)
-            ? window.ALL_CARS
-            : ((typeof BOOTSTRAP_GRID_CARS !== "undefined" && Array.isArray(BOOTSTRAP_GRID_CARS))
-                ? BOOTSTRAP_GRID_CARS
-                : []);
-
-        const radiusCacheKey = listingsRadiusFilterKey();
-        const hasRadiusCache = !!(
-            radiusCacheKey
-            && _radiusFilterKey === radiusCacheKey
-            && Array.isArray(_radiusFilteredCars)
-        );
-        if (hasRadiusCache) {
-            inventorySource = _radiusFilteredCars;
-        }
-
-        let cars = inventorySource.filter(c => carMatchesFacetFilters(c, facetState, dealerFilterSet));
-
-        if (hasRadiusCache && listingsHasValidZip() && radiusMi) {
-            renderCarGrid(cars, { resetPage: true });
-            return;
-        }
-
-        if (zipCode && radiusMi && listingsHasValidZip() && typeof haversineJS === "function") {
-            const applyRadius = (origin, gen) => {
-                if (gen != null && listingsZipRenderStale(gen)) return;
-                if (!origin) {
-                    resultsGrid.innerHTML = "";
-                    if (emptyState) {
-                        emptyState.style.display = "";
-                        emptyState.querySelector(".no-results").textContent = "ZIP code not found — no results shown.";
-                        emptyState.querySelector(".no-results-sub").textContent = "Check the ZIP and try again.";
-                    }
-                    if (resultsCount) resultsCount.textContent = "";
-                    return;
-                }
-                const radiusCars = applyListingsRadiusFilter(origin, radiusMi, zipCode);
-                const filtered = radiusCars.filter(c => carMatchesFacetFilters(c, facetState, dealerFilterSet));
-                renderCarGrid(filtered);
-            };
-
-            if (!Array.isArray(window.ALL_CARS) || !window.ALL_CARS.length) {
-                showInventoryLoading();
-                const gen = _listingsGeoRenderGen;
-                loadAllCarsFromApi()
-                    .then(() => {
-                        if (listingsZipRenderStale(gen)) return;
-                        renderResultsNow();
-                    })
-                    .catch(() => applyRadius(null, gen));
-                return;
-            }
-
-            ensureListingsGeoCoordsLoaded();
-            const cachedOrigin = zipCoordsJS(zipCode);
-            if (cachedOrigin) {
-                applyRadius(cachedOrigin, renderGen);
-                return;
-            }
-            SC.resolveListingsZipOrigin(zipCode).then((origin) => applyRadius(origin, renderGen));
-            return;
-        }
-
+        const cars = window.ALL_CARS.filter(c => carMatchesFacetFilters(c, facetState, dealerFilterSet));
         renderCarGrid(cars, { resetPage: true });
     }
 
@@ -2270,22 +2304,11 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     window.__DS_getListingsInventorySource = function getListingsInventorySource() {
-        const radiusCacheKey = listingsRadiusFilterKey();
-        if (
-            radiusCacheKey
-            && _radiusFilterKey === radiusCacheKey
-            && Array.isArray(_radiusFilteredCars)
-        ) {
-            return withoutHiddenDealers(_radiusFilteredCars);
-        }
-        if (Array.isArray(window.ALL_CARS) && window.ALL_CARS.length) {
+        if (listingsCarsReady()) {
             return withoutHiddenDealers(window.ALL_CARS);
         }
         if (Array.isArray(window.INITIAL_GRID_CARS) && window.INITIAL_GRID_CARS.length) {
             return withoutHiddenDealers(window.INITIAL_GRID_CARS);
-        }
-        if (Array.isArray(window.BOOTSTRAP_GRID_CARS) && window.BOOTSTRAP_GRID_CARS.length) {
-            return withoutHiddenDealers(window.BOOTSTRAP_GRID_CARS);
         }
         return [];
     };
@@ -2431,111 +2454,61 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     window.__DS_buildCarRowsFromCars = _buildCarRowsFromCars;
 
-    function applyListingsRadiusFilter(origin, radiusMi, zipCode) {
-        const key = `${String(zipCode || "").trim()}|${radiusMi}`;
-        if (_radiusFilterKey === key && Array.isArray(_radiusFilteredCars)) {
-            return _radiusFilteredCars;
-        }
-        const source = Array.isArray(window.ALL_CARS) && window.ALL_CARS.length
-            ? window.ALL_CARS
-            : [];
-        const nearby = SC.filterCarsInRadius(source, origin, radiusMi);
-        _radiusFilterKey = key;
+    /** ALL_CARS is already the server's radius scope; derive the cascade rows from it. */
+    function applyListingsRadiusFilter() {
+        const nearby = listingsCarsReady() ? window.ALL_CARS : [];
+        _radiusFilterKey = listingsRadiusFilterKey();
         _radiusFilteredCars = nearby;
-        // Always an array when radius is active (empty when nothing is in range)
-        // so the cascade shows 0 instead of falling back to all national cars.
-        // null is reserved for "radius inactive" (see clearListingsRadiusCache).
+        // Always an array once a scope is loaded (empty when nothing is in range) so
+        // the cascade shows 0 instead of falling back to the fleet-wide option table.
         RADIUS_CAR_ROWS = _buildCarRowsFromCars(nearby);
         return nearby;
     }
 
-    let _radiusRenderRaf = null;
     function refreshRadiusAndRenderNow(renderGen) {
-        const zipCode  = scalarVal("zip_code");
-        const radiusMi = parseFloat(scalarVal("radius")) || null;
         const gen = renderGen != null ? renderGen : _listingsGeoRenderGen;
-
-        if (!listingsHasValidZip() || !radiusMi) {
-            clearListingsRadiusCache();
-            if (Array.isArray(window.ALL_CARS) && window.ALL_CARS.length) {
-                runCascade();
-                renderResultsNow();
-            } else if (
-                typeof BOOTSTRAP_GRID_CARS !== "undefined"
-                && Array.isArray(BOOTSTRAP_GRID_CARS)
-                && BOOTSTRAP_GRID_CARS.length
-            ) {
-                runCascade();
-                renderCarGrid(BOOTSTRAP_GRID_CARS, { resetPage: true });
-            }
-            return;
+        if (!LISTINGS_DEALER_SCOPE && listingsHasValidZip()) {
+            schedulePersistListingsGeoSession();
         }
+        clearListingsRadiusCache();
 
-        schedulePersistListingsGeoSession();
-
-        const runRadius = () => {
-            if (listingsZipRenderStale(gen)) return;
-
-        const finish = (origin) => {
-            if (listingsZipRenderStale(gen)) return;
-            if (!origin) {
-                resultsGrid.innerHTML = "";
-                if (emptyState) {
-                    emptyState.style.display = "";
-                    emptyState.querySelector(".no-results").textContent = "ZIP code not found — no results shown.";
-                    emptyState.querySelector(".no-results-sub").textContent = "Check the ZIP and try again.";
-                }
-                if (resultsCount) resultsCount.textContent = "";
-                return;
-            }
-            applyListingsRadiusFilter(origin, radiusMi, zipCode);
+        const finish = () => {
+            if (gen !== _listingsGeoRenderGen || !listingsCarsReady()) return;
+            applyListingsRadiusFilter();
             renderResultsNow({ radiusPrefiltered: true, renderGen: gen });
             deferListingsIdleWork(() => {
-                if (listingsZipRenderStale(gen)) return;
+                if (gen !== _listingsGeoRenderGen) return;
                 runCascade();
             });
-            SC.scheduleReloadMarketStats();
-            deferListingsIdleWork(() => {
-                if (typeof window.__DS_scheduleReloadNearbyDealers === "function") {
-                    window.__DS_scheduleReloadNearbyDealers();
-                }
-            }, 250);
-        };
-
-        const runWithOrigin = () => {
-            const cached = zipCoordsJS(zipCode);
-            if (cached) {
-                finish(cached);
-                return;
+            if (!LISTINGS_DEALER_SCOPE) {
+                SC.scheduleReloadMarketStats();
+                deferListingsIdleWork(() => {
+                    if (typeof window.__DS_scheduleReloadNearbyDealers === "function") {
+                        window.__DS_scheduleReloadNearbyDealers();
+                    }
+                }, 250);
             }
-            SC.resolveListingsZipOrigin(zipCode).then((origin) => finish(origin));
         };
 
-        if (!Array.isArray(window.ALL_CARS) || !window.ALL_CARS.length) {
+        if (!listingsSearchStarted() || !listingsCarsScopeKey()) {
+            runCascade();
+            renderResultsNow({ renderGen: gen });
+            return;
+        }
+        if (!listingsCarsReady()) {
             showInventoryLoading();
             loadAllCarsFromApi()
-                .then(() => {
-                    if (listingsZipRenderStale(gen)) return;
-                    runWithOrigin();
-                })
-                .catch(() => finish(null));
+                .then(finish)
+                .catch((err) => {
+                    if (gen !== _listingsGeoRenderGen) return;
+                    showListingsLoadError(err);
+                });
             return;
         }
-
-        runWithOrigin();
-        };
-
-        if (!SC.listingsDealerCoordsReady()) {
-            showInventoryLoading();
-            ensureListingsGeoCoordsLoaded()
-                .then(() => runRadius())
-                .catch(() => runRadius());
-            return;
-        }
-
-        runRadius();
+        finish();
     }
 
+    let _radiusRenderRaf = null;
     function refreshRadiusAndRender() {
         const cacheKey = listingsRadiusFilterKey();
         if (cacheKey && _radiusFilterKey === cacheKey && Array.isArray(_radiusFilteredCars)) {
@@ -2551,37 +2524,91 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function showInventoryLoading() {
         if (!resultsGrid) return;
-        if (resultsCount) resultsCount.textContent = "Loading inventory…";
+        const prompt = document.getElementById("listings-start-prompt");
+        if (prompt) prompt.hidden = true;
+        if (
+            LISTINGS_DEALER_SCOPE
+            && Array.isArray(window.BOOTSTRAP_GRID_CARS)
+            && window.BOOTSTRAP_GRID_CARS.length
+        ) {
+            // Dealership page: paint the server-rendered first cards for this rooftop.
+            renderCarGrid(window.BOOTSTRAP_GRID_CARS, { resetPage: true });
+            return;
+        }
+        if (resultsCount) resultsCount.textContent = "Loading cars near you…";
         resultsGrid.innerHTML = SC.skeletonCardsHtml(8);
         if (emptyState) emptyState.style.display = "none";
         if (zeroHintEl) zeroHintEl.hidden = true;
+        if (listingsPagination) listingsPagination.hidden = true;
     }
 
-    function fetchListingsCarsJson(skipEtag) {
+    function listingsCarsUrl(scope) {
+        if (scope === "dealer") {
+            return (document.body && document.body.getAttribute("data-listings-cars-url")) || "";
+        }
+        const parts = String(scope || "").split("|");
+        return `/api/listings/cars?zip=${encodeURIComponent(parts[0] || "")}`
+            + `&radius=${encodeURIComponent(parts[1] || "")}`;
+    }
+
+    function listingsCarsError(code) {
+        const err = new Error(code || "cars fetch failed");
+        err.code = code || "fetch_failed";
+        return err;
+    }
+
+    function fetchListingsCarsJson(skipEtag, scopeArg) {
+        const scope = scopeArg || listingsCarsScopeKey();
+        if (!scope) return Promise.reject(listingsCarsError("zip_required"));
+        const url = listingsCarsUrl(scope);
+        if (!url) return Promise.reject(listingsCarsError("no_cars_url"));
         const headers = {};
-        if (!skipEtag && window.__DS_listingsCarsEtag) {
+        if (
+            !skipEtag
+            && window.__DS_listingsCarsEtag
+            && window.__DS_listingsCarsEtagScope === scope
+        ) {
             headers["If-None-Match"] = window.__DS_listingsCarsEtag;
         }
-        return fetch("/api/listings/cars", { credentials: "same-origin", headers })
+        return fetch(url, { credentials: "same-origin", headers })
             .then((r) => {
                 if (r.status === 304) {
-                    if (Array.isArray(window.ALL_CARS) && window.ALL_CARS.length) {
-                        return { ok: true, cars: window.ALL_CARS, unchanged: true };
+                    if (window.__DS_listingsCarsScope === scope && Array.isArray(window.ALL_CARS)) {
+                        return { ok: true, cars: window.ALL_CARS, unchanged: true, scope };
                     }
-                    return fetchListingsCarsJson(true);
+                    return fetchListingsCarsJson(true, scope);
                 }
-                if (!r.ok) return Promise.reject(new Error("cars fetch failed"));
+                if (!r.ok) {
+                    return r.json()
+                        .catch(() => null)
+                        .then((d) => { throw listingsCarsError(d && d.error); });
+                }
                 const etag = r.headers.get("ETag");
-                if (etag) window.__DS_listingsCarsEtag = etag;
-                return r.json();
+                if (etag) {
+                    window.__DS_listingsCarsEtag = etag;
+                    window.__DS_listingsCarsEtagScope = scope;
+                }
+                return r.json().then((d) => {
+                    if (d && typeof d === "object") d.scope = scope;
+                    return d;
+                });
             });
     }
 
-    function applyListingsCarsPayload(data) {
+    function applyListingsCarsPayload(data, scopeArg) {
         if (!data || !data.ok) return false;
-        if (data.unchanged) return true;
+        const scope = scopeArg || data.scope || listingsCarsScopeKey();
+        if (data.unchanged) {
+            window.__DS_listingsCarsScope = scope;
+            return true;
+        }
         if (!Array.isArray(data.cars)) return false;
         window.ALL_CARS = data.cars;
+        window.__DS_listingsCarsScope = scope;
+        window.__DS_listingsCarsMeta = {
+            count: data.cars.length,
+            missing_coords: Number(data.missing_coords) || 0,
+        };
         SC.invalidateCarGeoIndex();
         for (const car of data.cars) {
             if (car && typeof car === "object") delete car._dsRegId;
@@ -2592,65 +2619,53 @@ document.addEventListener("DOMContentLoaded", () => {
         return true;
     }
 
-    function afterListingsCarsLoaded() {
-        if (listingsHasValidZip()) {
-            const gen = bumpListingsGeoRenderGen();
-            refreshRadiusAndRenderNow(gen);
-        } else if (typeof window.__DS_runFilterRender === "function") {
-            window.__DS_runFilterRender();
-        } else if (Array.isArray(window.ALL_CARS) && window.ALL_CARS.length) {
-            renderCarGrid(window.ALL_CARS, { resetPage: true });
-        }
-    }
-
+    // One in-flight load per scope. A load for a scope the shopper has since left
+    // resolves without applying anything; the render for the new scope starts its own.
     let _listingsCarsLoadPromise = null;
-    function loadAllCarsFromApi(afterPrefetchAttempt) {
-        if (_listingsCarsLoadPromise) return _listingsCarsLoadPromise;
-        if (
-            !afterPrefetchAttempt
-            && (!Array.isArray(window.ALL_CARS) || !window.ALL_CARS.length)
-            && window.__DS_listingsCarsPrefetchPromise
-        ) {
-            _listingsCarsLoadPromise = window.__DS_listingsCarsPrefetchPromise
-                .then(() => {
-                    if (Array.isArray(window.ALL_CARS) && window.ALL_CARS.length) {
-                        afterListingsCarsLoaded();
-                        return;
-                    }
-                    _listingsCarsLoadPromise = null;
-                    return loadAllCarsFromApi(true);
-                })
-                .catch((err) => {
-                    _listingsCarsLoadPromise = null;
-                    throw err;
-                });
+    let _listingsCarsLoadScope = "";
+    function loadAllCarsFromApi() {
+        const scope = listingsCarsScopeKey();
+        if (!scope) return Promise.reject(listingsCarsError("zip_required"));
+        if (listingsCarsReady()) return Promise.resolve(window.ALL_CARS);
+        if (_listingsCarsLoadPromise && _listingsCarsLoadScope === scope) {
             return _listingsCarsLoadPromise;
         }
-        _listingsCarsLoadPromise = fetchListingsCarsJson(false)
-            .then((data) => {
-                if (!applyListingsCarsPayload(data)) {
-                    throw new Error("invalid cars payload");
+        let p;
+        if (scope === "dealer" && window.__DS_listingsCarsPrefetchPromise && !window.__DS_dealerPrefetchUsed) {
+            // dealership.html started the dealer-scoped fetch from <head>; reuse it.
+            window.__DS_dealerPrefetchUsed = true;
+            p = Promise.resolve(window.__DS_listingsCarsPrefetchPromise).then(() => {
+                if (Array.isArray(window.__DS_prefetchCars)) {
+                    applyListingsCarsPayload({ ok: true, cars: window.__DS_prefetchCars }, scope);
+                    return;
                 }
-            })
-            .then(() => {
-                afterListingsCarsLoaded();
-            })
-            .catch((err) => {
-                _listingsCarsLoadPromise = null;
-                throw err;
+                return fetchListingsCarsJson(false, scope).then((data) => {
+                    if (!applyListingsCarsPayload(data, scope)) throw listingsCarsError("invalid_payload");
+                });
             });
-        return _listingsCarsLoadPromise;
-    }
-
-    function scheduleBackgroundInventoryLoad(run) {
-        run();
+        } else {
+            p = fetchListingsCarsJson(false, scope).then((data) => {
+                if (listingsCarsScopeKey() !== scope) return;
+                if (!applyListingsCarsPayload(data, scope)) throw listingsCarsError("invalid_payload");
+            });
+        }
+        _listingsCarsLoadScope = scope;
+        const tracked = p.then(
+            () => {
+                if (_listingsCarsLoadPromise === tracked) _listingsCarsLoadPromise = null;
+                return window.ALL_CARS || [];
+            },
+            (err) => {
+                if (_listingsCarsLoadPromise === tracked) _listingsCarsLoadPromise = null;
+                throw err;
+            }
+        );
+        _listingsCarsLoadPromise = tracked;
+        return tracked;
     }
 
     window.__DS_ensureListingsCarsLoaded = function ensureListingsCarsLoaded() {
-        if (Array.isArray(window.ALL_CARS) && window.ALL_CARS.length) {
-            return Promise.resolve(window.ALL_CARS);
-        }
-        return loadAllCarsFromApi().then(() => window.ALL_CARS || []);
+        return loadAllCarsFromApi();
     };
 
     function bootApplyListingsFilters() {
@@ -2664,60 +2679,18 @@ document.addEventListener("DOMContentLoaded", () => {
             const smartIn = document.getElementById("smart-search-input");
             const hasQ = smartIn && (smartIn.value || "").trim();
             renderCarGrid(INITIAL_GRID_CARS, { preserveOrder: !!hasQ, resetPage: !hasQ });
-            return;
-        }
-        if (typeof ALL_CARS !== "undefined" && Array.isArray(ALL_CARS) && ALL_CARS.length) {
-            runCascade();
-            bootApplyListingsFilters();
-            return;
-        }
-        if (Array.isArray(window.__DS_prefetchCars) && window.__DS_prefetchCars.length) {
-            window.ALL_CARS = window.__DS_prefetchCars;
-            if (typeof window.__DS_buildCarRowsFromCars === "function") {
-                window.CAR_ROWS = window.__DS_buildCarRowsFromCars(window.ALL_CARS);
+            if (listingsCarsScopeKey()) {
+                // Load the same area in the background so facet filters work on it.
+                loadAllCarsFromApi().then(() => runCascade()).catch(() => {});
             }
-            runCascade();
-            bootApplyListingsFilters();
             return;
         }
-        if (typeof BOOTSTRAP_GRID_CARS !== "undefined" && Array.isArray(BOOTSTRAP_GRID_CARS) && BOOTSTRAP_GRID_CARS.length) {
+        if (!listingsSearchStarted()) {
             runCascade();
-            if (listingsHasValidZip()) {
-                bootApplyListingsFilters();
-            } else {
-                renderCarGrid(BOOTSTRAP_GRID_CARS, { resetPage: true });
-            }
-            scheduleBackgroundInventoryLoad(() => {
-                loadAllCarsFromApi()
-                    .then(() => {
-                        runCascade();
-                        bootApplyListingsFilters();
-                    })
-                    .catch(() => {});
-            });
+            showListingsStartPrompt();
             return;
         }
-        showInventoryLoading();
-        scheduleBackgroundInventoryLoad(() => {
-            loadAllCarsFromApi()
-                .then(() => {
-                    runCascade();
-                    bootApplyListingsFilters();
-                })
-                .catch(() => {
-                if (resultsCount) resultsCount.textContent = "";
-                if (resultsGrid) {
-                    resultsGrid.innerHTML = "";
-                }
-                if (emptyState) {
-                    emptyState.style.display = "";
-                    const msg = emptyState.querySelector(".no-results");
-                    const sub = emptyState.querySelector(".no-results-sub");
-                    if (msg) msg.textContent = "Could not load inventory.";
-                    if (sub) sub.textContent = "Refresh the page or try again in a moment.";
-                }
-            });
-        });
+        bootApplyListingsFilters();
     }
 
     function recordFilterAction(target) {
@@ -3174,9 +3147,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const smartIn = document.getElementById("smart-search-input");
         const hasQ = smartIn && (smartIn.value || "").trim();
         if (hasQ) {
-            if (typeof ALL_CARS !== "undefined" && Array.isArray(ALL_CARS) && ALL_CARS.length) {
-                runCascade();
-            } else if (typeof BOOTSTRAP_GRID_CARS !== "undefined" && Array.isArray(BOOTSTRAP_GRID_CARS) && BOOTSTRAP_GRID_CARS.length) {
+            if (listingsCarsScopeKey()) {
                 loadAllCarsFromApi()
                     .then(() => runCascade())
                     .catch(() => {});
@@ -3203,29 +3174,30 @@ document.addEventListener("DOMContentLoaded", () => {
             markListingsGeoReady();
             return;
         }
+        // No ZIP known: ask for one (banner + the start prompt's ZIP field and
+        // "Use my location" button). Geolocation is only requested on that click,
+        // never on page load -- nothing is fetched before a search begins.
         maybeShowListingsZipPromptBanner();
-        showListingsGeoPrompt("loading");
-        requestListingsGeolocation()
+        showListingsGeoPrompt("denied");
+    }
+
+    /** Browser location -> nearest ZIP -> start the search there. Resolves true on success. */
+    function useListingsGeolocation() {
+        return requestListingsGeolocation()
             .then(({ lat, lon }) => fetch(
                 `/api/coords-to-zip?lat=${encodeURIComponent(lat)}&lon=${encodeURIComponent(lon)}`,
                 { credentials: "same-origin" }
             ))
             .then((r) => (r.ok ? r.json() : null))
             .then((data) => {
-                if (data && SC.isValidUsZip(data.zip_code)) {
-                    setListingsZipCode(data.zip_code);
-                    markListingsGeoReady();
-                    return;
-                }
-                window.__DS_listingsGeoState.blocked = true;
-                showListingsGeoPrompt("denied");
-                if (!window.__DS_listingsGeoState.ready) markListingsGeoReady();
+                if (!data || !SC.isValidUsZip(data.zip_code)) return false;
+                markListingsSearchStarted();
+                setListingsZipCode(data.zip_code);
+                const mainZip = document.getElementById("listings-zip-input");
+                if (mainZip) mainZip.dispatchEvent(new Event("input", { bubbles: true }));
+                return true;
             })
-            .catch(() => {
-                window.__DS_listingsGeoState.blocked = true;
-                showListingsGeoPrompt("denied");
-                if (!window.__DS_listingsGeoState.ready) markListingsGeoReady();
-            });
+            .catch(() => false);
     }
 
     document.querySelectorAll('[name="zip_code"]').forEach((el) => {
@@ -3241,8 +3213,6 @@ document.addEventListener("DOMContentLoaded", () => {
     resolveListingsGeo();
     syncActiveFilterChips();
 
-    ensureListingsGeoCoordsLoaded();
-    loadAllCarsFromApi().catch(() => {});
 
     // ── Pill dropdown open/close ───────────────────────────────────────
 
@@ -3314,6 +3284,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const pollMs = pollAttr != null ? parseInt(pollAttr, 10) : 0;
     if (Number.isFinite(pollMs) && pollMs > 0) {
         setInterval(() => {
+            // Only refresh an area already loaded; polling never starts a search.
+            if (!listingsCarsReady()) return;
             fetchListingsCarsJson(false)
                 .then((data) => {
                     if (!applyListingsCarsPayload(data) || data.unchanged) return;

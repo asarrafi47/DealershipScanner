@@ -8,80 +8,20 @@
     {% include "_head_css.html" %}
     {% include "_head_meta.html" %}
     {% include "_head_perf.html" %}
-    <link rel="preload" href="{{ url_for('api_listings_geo_coords') }}" as="fetch" crossorigin="same-origin">
     <link rel="preload" href="{{ url_for('static', filename='compare.js') }}?v={{ static_cache_ver }}" as="script">
-    <script nonce="{{ csp_nonce }}">
-    (function () {
-        // This used to hand the fetch to nav_perf.js's __DS_warmListingsApis when that
-        // happened to be defined, which fired it immediately from <head> -- exactly the
-        // head-of-line blocking the note below exists to prevent. nav_perf.js is
-        // deferred so it never actually won that race, and it no longer speculatively
-        // fetches inventory at all. This page owns the fetch; there is one path now.
-        //
-        // /api/listings/cars is the whole active inventory (~8 MB gzipped, ~65 MB
-        // decoded). Preloading it from <head> made it compete with CSS, JS and the
-        // card images for bandwidth, so first paint waited on a payload the first
-        // screen never needs: the grid renders from BOOTSTRAP_GRID_CARS (48
-        // server-rendered cars) and every render path in main.js already falls back
-        // to it. Defer the full fetch to idle time -- ALL_CARS then upgrades
-        // filtering, facet counts and radius search in the background.
-        //
-        // The promise is published synchronously so main.js chains onto it instead
-        // of firing its own immediate fetch (see the __DS_listingsCarsPrefetchPromise
-        // branch there); dropping it would reintroduce the head-of-line blocking.
-        function fetchAllCars() {
-            // priority "low" so this 9.4 MB body yields to anything the shopper is
-            // actually waiting on. Measured at 12 Mbit/s: clicking a result card while
-            // this was in flight cost 312ms median and up to 727ms, against 221ms on a
-            // quiet connection. It saturates the link for ~6s, and a navigation started
-            // in that window used to queue behind it.
-            return fetch("/api/listings/cars", { credentials: "same-origin", priority: "low" })
-                .then(function (r) {
-                    if (r.headers.get("ETag")) window.__DS_listingsCarsEtag = r.headers.get("ETag");
-                    return r.ok ? r.json() : null;
-                })
-                .then(function (d) {
-                    if (d && d.ok && Array.isArray(d.cars)) window.__DS_prefetchCars = d.cars;
-                    return d;
-                })
-                .catch(function () { return null; });
-        }
-        window.__DS_listingsCarsPrefetchPromise = new Promise(function (resolve) {
-            function go() { resolve(fetchAllCars()); }
-            // Schedule off DOMContentLoaded, not load: `load` waits on all 24 card
-            // images (remote dealer CDNs), which would leave the grid stuck on the
-            // 48 bootstrap cars for seconds -- filters applied in that window would
-            // silently search only those 48. Idle-with-timeout keeps the fetch off
-            // the first-paint critical path while still starting it promptly.
-            function schedule() {
-                if (window.requestIdleCallback) window.requestIdleCallback(go, { timeout: 1500 });
-                else setTimeout(go, 150);
-            }
-            if (document.readyState !== "loading") schedule();
-            else document.addEventListener("DOMContentLoaded", schedule, { once: true });
-        });
-        // Small payload and needed the moment a ZIP is set -- keep this one early. The
-        // <link rel="preload" as="fetch" crossorigin> above starts the request with the
-        // document; this fetch consumes that preload and publishes the parsed payload
-        // so main.js merges it (startListingsAssetPrefetch / ensureListingsGeoCoordsLoaded)
-        // instead of issuing its own request. Three code paths used to request it.
-        window.__DS_listingsGeoPrefetchPromise = fetch("/api/listings/geo-coords", { credentials: "same-origin" })
-            .then(function (r) { return r.ok ? r.json() : null; })
-            .catch(function () { return null; });
-    })();
-    </script>
+    {# No inventory is fetched from <head> any more (owner decision 2026-09-28): the page
+       shows no cars until the shopper begins a search, then main.js asks for their
+       ZIP + radius once (GET /api/listings/cars?zip=&radius=). #}
 </head>
-<body class="listings-page" data-listings-poll-ms="{{ listings_poll_ms | default(0) | int }}"{% if logged_in_user %} data-logged-in="1"{% endif %}>
+<body class="listings-page" data-listings-poll-ms="{{ listings_poll_ms | default(0) | int }}" data-search-started="{{ '1' if search_started else '0' }}"{% if logged_in_user %} data-logged-in="1"{% endif %}>
 
 {# Dictionary-encoded cascade table (see backend/listings/routes.py::pack_car_rows).
    main.js unpacks it into the same row objects the cascade always consumed. #}
 <script type="application/json" id="ds-listings-car-rows" nonce="{{ csp_nonce }}">{{ car_rows_packed | tojson }}</script>
-<script type="application/json" id="ds-listings-all-cars" nonce="{{ csp_nonce }}">[]</script>
 <script type="application/json" id="ds-listings-country-to-makes" nonce="{{ csp_nonce }}">{{ options.country_to_makes | tojson }}</script>
 <script type="application/json" id="ds-listings-zip-coords" nonce="{{ csp_nonce }}">{{ (listings_zip_coords_boot if listings_zip_coords_boot is defined else {}) | tojson }}</script>
 <script type="application/json" id="ds-listings-dealer-coords" nonce="{{ csp_nonce }}">{{ (options.dealer_coords if options.dealer_coords is defined else {}) | tojson }}</script>
 <script type="application/json" id="ds-listings-initial-grid" nonce="{{ csp_nonce }}">{{ (initial_grid_cars or []) | tojson }}</script>
-<script type="application/json" id="ds-listings-bootstrap-grid" nonce="{{ csp_nonce }}">{{ (bootstrap_grid_cars or []) | tojson }}</script>
 <script type="application/json" id="ds-listings-package-rows" nonce="{{ csp_nonce }}">{{ (options.package_rows or []) | tojson }}</script>
 <script type="application/json" id="ds-listings-premium" nonce="{{ csp_nonce }}">{{ has_paid_access | tojson }}</script>
 <script type="application/json" id="ds-listings-saved-ids" nonce="{{ csp_nonce }}">{{ (saved_car_ids or []) | tojson }}</script>
@@ -144,13 +84,17 @@
                         <div class="pill-group pill-select-group listings-geo-field">
                             <label class="pill-select-label" for="listings-zip-input">ZIP</label>
                             <input type="text" name="zip_code" id="listings-zip-input" placeholder="00000" maxlength="5"
-                                value="{{ active.zip_code if active else '' }}" class="pill-zip">
+                                inputmode="numeric" autocomplete="postal-code"
+                                value="{{ listings_geo_default.zip if listings_geo_default else (active.zip_code if active else '') }}" class="pill-zip">
                         </div>
                         <div class="pill-group pill-select-group listings-geo-field">
                             <label class="pill-select-label" for="listings-radius-select">Radius</label>
                             <select name="radius" id="listings-radius-select" class="pill-select">
-                                {% for r in [10, 25, 50, 100, 200, 500] %}
-                                <option value="{{ r }}" {% if active and active.radius == r|string %}selected{% elif (not active or not active.radius) and r == 25 %}selected{% endif %}>{{ r }} mi</option>
+                                {% set geo_radius = (listings_geo_default.radius if listings_geo_default else 50) %}
+                                {% set radius_options = [10, 25, 50, 100, 250] %}
+                                {% if geo_radius not in radius_options %}{% set radius_options = (radius_options + [geo_radius]) | sort %}{% endif %}
+                                {% for r in radius_options %}
+                                <option value="{{ r }}" {% if r == geo_radius %}selected{% endif %}>{{ r }} mi</option>
                                 {% endfor %}
                             </select>
                         </div>
@@ -488,6 +432,25 @@
                     <p class="listings-view-dealers-hint" id="listings-view-dealers-hint" hidden>
                         <a href="{{ url_for('find_dealers_page') }}" id="listings-view-dealers-link">View dealers on map</a>
                     </p>
+                    <div class="listings-start-prompt" id="listings-start-prompt" role="status" aria-live="polite"{% if search_started %} hidden{% endif %}>
+                        <div class="listings-empty-card">
+                            <div class="listings-empty-icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+                                </svg>
+                            </div>
+                            <p class="no-results">Start a search to see cars</p>
+                            <p class="no-results-sub" id="listings-start-prompt-text">{% if listings_geo_default and listings_geo_default.zip %}Search above or pick a filter to see cars within {{ listings_geo_default.radius }} mi of {{ listings_geo_default.zip }}.{% else %}Enter your ZIP code to search inventory near you.{% endif %}</p>
+                            <div class="listings-start-prompt__zip" id="listings-start-prompt-zip"{% if listings_geo_default and listings_geo_default.zip %} hidden{% endif %}>
+                                <input type="text" id="listings-start-prompt-zip-input" class="listings-zip-banner__input"
+                                    placeholder="ZIP code" maxlength="5" inputmode="numeric" autocomplete="postal-code"
+                                    aria-label="ZIP code">
+                                <button type="button" class="primary-button" id="listings-start-prompt-zip-submit">Search near this ZIP</button>
+                                <button type="button" class="listings-start-prompt__geo" id="listings-start-prompt-geo">Use my location</button>
+                            </div>
+                            <button type="button" class="primary-button listings-start-prompt__go" id="listings-start-prompt-go"{% if not (listings_geo_default and listings_geo_default.zip) %} hidden{% endif %}>Show all cars within {{ listings_geo_default.radius if listings_geo_default else 50 }} mi</button>
+                        </div>
+                    </div>
                     <div class="results-grid" id="results-grid"></div>
                     <nav class="listings-pagination" id="listings-pagination" aria-label="Results pages" hidden>
                         <p class="listings-pagination__summary" id="listings-range" aria-live="polite"></p>
@@ -808,7 +771,7 @@
             || document.querySelector('[name="radius"]');
         return {
             zip: zipEl ? zipEl.value.trim() : "",
-            radius: radEl ? radEl.value : "25",
+            radius: radEl ? radEl.value : "50",
         };
     }
 

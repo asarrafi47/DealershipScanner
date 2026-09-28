@@ -1796,3 +1796,53 @@ body.listings-page .result-image {
     margin: 0 auto;
 }
 
+
+/* ── Search gate (owner decision 2026-09-28): no cars until a search begins ── */
+.listings-start-prompt {
+    display: flex;
+    justify-content: center;
+    padding: 32px 0 48px;
+}
+
+.listings-start-prompt[hidden] {
+    display: none;
+}
+
+.listings-start-prompt .listings-empty-card {
+    background: var(--bg-card, #fff);
+    box-shadow: none;
+}
+
+.listings-start-prompt__zip {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-top: 18px;
+}
+
+.listings-start-prompt__zip[hidden] {
+    display: none;
+}
+
+.listings-start-prompt__go {
+    margin-top: 18px;
+    min-height: 40px;
+    padding: 8px 16px;
+    font-size: 14px;
+}
+
+.listings-start-prompt__geo {
+    background: none;
+    border: none;
+    padding: 8px 4px;
+    font-size: 14px;
+    color: var(--accent, var(--text));
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.listings-start-prompt__geo[hidden] {
+    display: none;
+}

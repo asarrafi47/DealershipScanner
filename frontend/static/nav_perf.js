@@ -23,14 +23,13 @@
  *    listings page idle-warming 8 cards spent ~0.8s of server time on responses
  *    that were discarded. The car document is what the navigation needs.
  *
- *  - Never speculatively pull /api/listings/cars. It is the entire active
- *    inventory: 9.36 MB on the wire, ~6s of a 12 Mbit/s link. This file used to
- *    request it on idle from /home, /dashboard and /, and again whenever a
- *    /listings link was hovered, so merely visiting the home page saturated the
- *    connection and every navigation made during that window queued behind it.
- *    The listings page fetches it itself, off the first-paint path, and every
- *    render path there falls back to the server-rendered bootstrap grid until it
- *    lands. Hovering a /listings link prefetches the DOCUMENT (~91 KB), nothing more.
+ *  - Never speculatively pull /api/listings/cars. It used to be the entire
+ *    active inventory (9.36 MB on the wire) and this file requested it on idle
+ *    from /home, /dashboard and /, saturating the connection. Since 2026-09-28 it
+ *    is radius-scoped (?zip=&radius=, 400 without a ZIP) and the listings page
+ *    requests it only once the shopper begins a search -- a speculative fetch
+ *    would both guess the scope and break that rule. Hovering a /listings link
+ *    prefetches the DOCUMENT, nothing more.
  *
  *  - Bounded and cancellable, and off entirely under Save-Data or a 2g-class
  *    connection.

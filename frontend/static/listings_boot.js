@@ -1,6 +1,6 @@
 /* Listings boot: unpack the CSP-friendly JSON blobs rendered by
  * listings.html / dealership.html into the window globals every listings
- * script reads (CAR_ROWS, ALL_CARS, ZIP_COORDS, ...).
+ * script reads (CAR_ROWS, ZIP_COORDS, ...).
  *
  * Extracted verbatim from the top of main.js's DOMContentLoaded closure.
  * Must be loaded BEFORE main.js (see the <script defer> order in
@@ -46,11 +46,14 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         }
         window.CAR_ROWS = unpackCarRows(readJsonScript("ds-listings-car-rows", []));
-        window.ALL_CARS = readJsonScript("ds-listings-all-cars", []);
+        // Cars are never embedded (owner decision 2026-09-28): main.js loads the
+        // shopper's ZIP + radius from /api/listings/cars once a search begins.
+        window.ALL_CARS = [];
         window.COUNTRY_TO_MAKES = readJsonScript("ds-listings-country-to-makes", {});
         window.ZIP_COORDS = readJsonScript("ds-listings-zip-coords", {});
         window.DEALER_COORDS = readJsonScript("ds-listings-dealer-coords", {});
         window.INITIAL_GRID_CARS = readJsonScript("ds-listings-initial-grid", []);
+        // Dealership page only: first-paint cards for its one rooftop.
         window.BOOTSTRAP_GRID_CARS = readJsonScript("ds-listings-bootstrap-grid", []);
         window.PACKAGE_ROWS = readJsonScript("ds-listings-package-rows", []);
         const savedRaw = readJsonScript("ds-listings-saved-ids", []);

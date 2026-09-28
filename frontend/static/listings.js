@@ -40,9 +40,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const searchWrap = input && input.closest(".smart-search-wrap");
     if (!input || typeof window.__DS_renderCarGrid !== "function") return;
 
-    if (typeof window.__DS_ensureListingsCarsLoaded === "function") {
-        window.__DS_ensureListingsCarsLoaded().catch(() => {});
-    }
+    // Nothing is fetched on load (owner decision 2026-09-28): the shopper's area is
+    // loaded once they start searching (onSmartInput below), not before.
 
     let fullSearchTimer = null;
     let parseController = null;
@@ -282,6 +281,13 @@ document.addEventListener("DOMContentLoaded", () => {
             body: JSON.stringify(payload),
         })
             .then((r) => {
+                if (r.status === 400) {
+                    return r.json().catch(() => null).then((d) => {
+                        const err = new Error((d && d.error) || "search failed");
+                        err.code = d && d.error;
+                        throw err;
+                    });
+                }
                 if (!r.ok) throw new Error("search failed");
                 return r.json();
             })
@@ -315,12 +321,30 @@ document.addEventListener("DOMContentLoaded", () => {
                 searchController = null;
                 pendingFullSearch = false;
                 setSearchLoading(false);
+                if (err.code === "zip_required" && typeof window.__DS_showListingsZipRequired === "function") {
+                    window.__DS_showListingsZipRequired();
+                }
             });
     }
 
-    function onSmartInput() {
+    function onSmartInput(e) {
         const q = (input.value || "").trim();
         const seq = ++inputSeq;
+
+        if (q) {
+            // Typing a query begins a search: scope it to the shopper's ZIP + radius
+            // and load that area once so the sidebar facets filter it instantly.
+            if (e && e.isTrusted && typeof window.__DS_markListingsSearchStarted === "function") {
+                window.__DS_markListingsSearchStarted();
+            }
+            if (
+                (typeof window.__DS_listingsSearchStartedFn !== "function"
+                    || window.__DS_listingsSearchStartedFn())
+                && typeof window.__DS_ensureListingsCarsLoaded === "function"
+            ) {
+                window.__DS_ensureListingsCarsLoaded().catch(() => {});
+            }
+        }
 
         clearTimeout(fullSearchTimer);
         if (parseController) parseController.abort();
