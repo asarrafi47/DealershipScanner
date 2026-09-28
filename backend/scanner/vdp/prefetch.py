@@ -60,15 +60,47 @@ _DEAD_HOST_SILENT_MAX = 3  # attempts that return neither a status nor a body be
 _SLOW_HOST_MAX_FAILS = 3  # serialized 403s in one run (not consecutive: a hot host answers at random) -> stop for this run
 
 
-def _http_first_wall_clock_sec() -> float:
+_WALL_CLOCK_MIN_SEC = 30.0
+_WALL_CLOCK_MAX_SEC = 1800.0
+_HTTP_FIRST_PAGES_MAX = 5000
+
+
+def _dealer_timing_hint(dealer_id: str, key: str) -> float | None:
+    """``scan_hints["timing"][key]`` for the dealer, written by the pipeline's
+    assess step (backend/scanner/scan_timing.py). Best-effort: no dealer, no
+    DB, no hint -> None and the env default applies. Imported lazily so the
+    module keeps working in DB-less tests."""
+    if not dealer_id:
+        return None
+    try:
+        from backend.scanner.recipe_store import get_scan_hints
+
+        timing = (get_scan_hints(dealer_id) or {}).get("timing") or {}
+        v = timing.get(key) if isinstance(timing, dict) else None
+        return float(v) if v is not None else None
+    except Exception:  # noqa: BLE001 - a hint lookup must never block the scan
+        return None
+
+
+def _http_first_wall_clock_sec(dealer_id: str = "") -> float:
     """Hard cap on the whole HTTP-first pass per dealer (default 300 s). Whatever was
     filled by then is kept and the dealer proceeds to its upsert; a throttled host
     can no longer hold a dealer past the pipeline's batch timeout (mblaguna-com
-    2026-09-24: 1,026 feed rows lost when the batch was killed at 30 min)."""
+    2026-09-24: 1,026 feed rows lost when the batch was killed at 30 min).
+
+    A dealer whose fingerprint carries ``timing.vdp_http_first_max_sec`` (the
+    window its last capped run said it needs, 2026-09-28) gets that instead,
+    clamped to 30..1800 s."""
     try:
-        return max(30.0, float((os.environ.get("SCANNER_VDP_HTTP_FIRST_MAX_SEC") or "300").strip()))
+        default = max(_WALL_CLOCK_MIN_SEC, float((os.environ.get("SCANNER_VDP_HTTP_FIRST_MAX_SEC") or "300").strip()))
     except ValueError:
-        return 300.0
+        default = 300.0
+    hinted = _dealer_timing_hint(dealer_id, "vdp_http_first_max_sec")
+    if hinted is None or hinted <= 0:
+        return default
+    window = min(_WALL_CLOCK_MAX_SEC, max(_WALL_CLOCK_MIN_SEC, hinted))
+    logger.info("http_first [%s]: per-dealer wall clock %.0fs from scan_hints.timing (default %.0fs)", dealer_id, window, default)
+    return window
 
 
 def _slow_host_budget() -> int:
@@ -99,11 +131,23 @@ def vdp_http_first_enabled() -> bool:
     return _flag("SCANNER_VDP_HTTP_FIRST")
 
 
-def _http_first_max() -> int:
+def _http_first_max(dealer_id: str = "") -> int:
+    """Detail pages fetched per dealer per run (default 800, hard max 5000).
+
+    A dealer whose fingerprint carries ``timing.pages_needed`` (the most pages
+    its recent runs wanted, candidates + skipped_cap) gets that cap when it is
+    HIGHER than the env default — the hint only ever widens the pass, since
+    lowering it would skip pages the next lot could need."""
     try:
-        return max(0, min(5000, int((os.environ.get("SCANNER_VDP_HTTP_FIRST_MAX") or "800").strip())))
+        default = max(0, min(_HTTP_FIRST_PAGES_MAX, int((os.environ.get("SCANNER_VDP_HTTP_FIRST_MAX") or "800").strip())))
     except ValueError:
-        return 800
+        default = 800
+    hinted = _dealer_timing_hint(dealer_id, "pages_needed")
+    if hinted is None or hinted <= default:
+        return default
+    cap = int(min(_HTTP_FIRST_PAGES_MAX, hinted))
+    logger.info("http_first [%s]: per-dealer page cap %d from scan_hints.timing (default %d)", dealer_id, cap, default)
+    return cap
 
 
 def _http_first_gallery_min() -> int:
@@ -427,14 +471,17 @@ def _apply_description_and_gallery(v: dict[str, Any], html: str, url: str) -> in
     return filled
 
 
-async def http_prefetch_missing_fields(vehicles: list[dict[str, Any]]) -> dict[str, int]:
-    """Concurrent HTTP prefetch for vehicles still missing queue-driving fields."""
+async def http_prefetch_missing_fields(vehicles: list[dict[str, Any]], dealer_id: str = "") -> dict[str, int]:
+    """Concurrent HTTP prefetch for vehicles still missing queue-driving fields.
+
+    ``dealer_id`` lets the page cap and wall clock come from the dealer's
+    fingerprint (``scan_hints.timing``) when it has one."""
     candidates: list[dict[str, Any]] = []
     for v in vehicles:
         url = str(v.get("_detail_url") or v.get("source_url") or "").strip()
         if url.startswith("http") and _vehicle_wants_http_prefetch(v):
             candidates.append(v)
-    cap = _http_first_max()
+    cap = _http_first_max(dealer_id)
     skipped_cap = max(0, len(candidates) - cap)
     candidates = candidates[:cap]
     stats = {
@@ -540,13 +587,15 @@ async def http_prefetch_missing_fields(vehicles: list[dict[str, Any]]) -> dict[s
         if v.pop("_gallery_http_prefetch_added", 0):
             stats["galleries_extended"] += 1
 
+    wall_clock = _http_first_wall_clock_sec(dealer_id)
+    stats["wall_clock_sec"] = int(wall_clock)
     try:
-        await asyncio.wait_for(asyncio.gather(*(_one(v) for v in candidates)), timeout=_http_first_wall_clock_sec())
+        await asyncio.wait_for(asyncio.gather(*(_one(v) for v in candidates)), timeout=wall_clock)
     except asyncio.TimeoutError:
         stats["wall_clock_hit"] = True
         logger.warning(
             "http_first: wall clock %.0fs reached after %d/%d page(s); keeping what was filled",
-            _http_first_wall_clock_sec(), stats["fetched"], stats["candidates"],
+            wall_clock, stats["fetched"], stats["candidates"],
         )
     return stats
 
@@ -605,7 +654,7 @@ async def prefetch_before_vdp(
                 )
         except Exception as exc:  # noqa: BLE001 - replay must never block the scan
             logger.warning("VDP recipes [%s]: replay failed: %s", dealer_name, str(exc)[:160])
-        http_stats = await http_prefetch_missing_fields(vehicles)
+        http_stats = await http_prefetch_missing_fields(vehicles, dealer_id)
         out["http_first"] = http_stats
     if not out:
         return None
