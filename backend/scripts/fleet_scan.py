@@ -32,6 +32,7 @@ Env:
   SCAN_PIPELINE_ARGS=...  extra dealer_pipeline flags (e.g. "--no-lifecycle")
   SCAN_OUT_ROOT           run directory parent (default workspace/pipeline)
   SCAN_KEEP_DAYS=14       prune run dirs / scan logs older than this
+  SCAN_IDLE_HOLD_SECONDS  when idle, stay up this long so the /data volume can be read
 
 Usage:
   SCAN_DEALERS=a,b SCAN_SHARDS=2 python -m backend.scripts.fleet_scan
@@ -268,6 +269,13 @@ def main() -> int:
     roster = load_roster()
     if not roster:
         print("fleet   idle: set SCAN_FLEET=1 (whole roster) or SCAN_DEALERS=a,b,c to scan", flush=True)
+        hold = _env_int("SCAN_IDLE_HOLD_SECONDS", 0)
+        if hold > 0:
+            # Keep the container (and its /data volume) up so `railway ssh` /
+            # `railway volume files download` can read the logs; a stopped
+            # Railway service exposes no volume.
+            print(f"fleet   holding {hold}s for log retrieval (SCAN_IDLE_HOLD_SECONDS)", flush=True)
+            time.sleep(hold)
         return 0
 
     out_root = Path(os.environ.get("SCAN_OUT_ROOT") or (ROOT / "workspace" / "pipeline"))
