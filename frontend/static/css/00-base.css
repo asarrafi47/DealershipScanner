@@ -1,3 +1,16 @@
+/* Inter, self-hosted (was a render-blocking Google Fonts stylesheet plus a second
+   origin for the files). One variable-weight latin woff2 covers the 400/500/600/700
+   the site uses -- it is the same file Google served for each of those weights.
+   The file name carries the upstream version (v20); bump it if the file changes. */
+@font-face {
+    font-family: "Inter";
+    font-style: normal;
+    font-weight: 100 900;
+    font-display: swap;
+    src: url("../fonts/inter-latin-v20.woff2") format("woff2");
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
 :root {
     --main-radius: 10px;
     --font-ui: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
@@ -63,7 +76,7 @@ iframe {
     height: auto;
 }
 
-/* Inter is loaded via @import above — standard UI typography */
+/* Inter: see the @font-face at the top of this file — standard UI typography */
 body {
     font-family: var(--font-ui);
     background: var(--bg-page);

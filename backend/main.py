@@ -321,7 +321,10 @@ def _static_cache_headers(resp):
     year there would pin the old bytes until the browser evicts them."""
     if request.endpoint != "static" or resp.status_code not in (200, 304):
         return resp
-    if request.args.get("v"):
+    filename = (request.view_args or {}).get("filename") or ""
+    if request.args.get("v") or filename.startswith("fonts/"):
+        # Font files are named with their upstream version (inter-latin-v20), so
+        # the name is the stamp; the @font-face url cannot carry ?v=.
         resp.cache_control.immutable = True
     elif resp.cache_control.max_age == _STATIC_MAX_AGE:
         resp.cache_control.max_age = _STATIC_UNSTAMPED_MAX_AGE

@@ -206,3 +206,14 @@ def test_build_script_is_idempotent_and_prunes_orphans(tmp_path: Path):
     # Editing a source makes exactly its siblings stale.
     _touch(tmp_path / "a.js", (tmp_path / "a.js").stat().st_mtime + 60)
     assert mod.build(tmp_path, check=True, quiet=True) == (2 if mod.brotli else 1)
+
+
+def test_font_files_are_immutable_without_a_stamp(static_client):
+    # @font-face urls cannot carry ?v=; the file name carries the upstream version.
+    client, root = static_client
+    (root / "fonts").mkdir()
+    (root / "fonts" / "inter-latin-v20.woff2").write_bytes(b"wOF2")
+    resp = client.get("/static/fonts/inter-latin-v20.woff2")
+    assert resp.status_code == 200
+    assert "immutable" in resp.headers["Cache-Control"]
+    assert "max-age=31536000" in resp.headers["Cache-Control"]

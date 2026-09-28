@@ -1,7 +1,8 @@
 {# Shared head hints for faster first paint and navigation. #}
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+{# Inter is self-hosted: @font-face in css/00-base.css, file under static/fonts/.
+   Fonts are always fetched CORS-anonymous, so the preload needs `crossorigin` to
+   match the request the stylesheet makes; without it the browser fetches twice. #}
+<link rel="preload" href="{{ url_for('static', filename='fonts/inter-latin-v20.woff2') }}" as="font" type="font/woff2" crossorigin>
 {# style.css is no longer requested: its @import chain was replaced by the sibling
    <link> tags in _head_css.html, which the preload scanner picks up directly. A
    preload here would fetch a file nothing loads. #}
