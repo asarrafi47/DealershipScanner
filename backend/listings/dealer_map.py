@@ -171,3 +171,36 @@ def build_dealer_map_for_car(
 
     out.update(attribution_public_fields(attribution))
     return out
+
+
+def hero_location_for_car(
+    dealer_map: dict[str, Any] | None,
+    viewer_zip: str | None,
+) -> dict[str, Any] | None:
+    """Place + distance for the car hero eyebrow (IH-08, visual review 2026-09-28).
+
+    ``{"place": "Charlotte, NC 28273", "distance_mi": 12, "from_zip": "28202"}``.
+    ``place`` is the dealership's city/state/ZIP as filed; ``distance_mi`` is the
+    straight-line distance from the dealer pin to the viewer's session ZIP centroid,
+    and is None when either end is unknown. Nothing is returned when the listing's
+    location is unconfirmed: the eyebrow already says so, and a place line would
+    present that rooftop as where the car is.
+    """
+    if not dealer_map or dealer_map.get("location_confirmed") is False:
+        return None
+    city = (dealer_map.get("city") or "").strip()
+    state = (dealer_map.get("state") or "").strip()
+    zip_code = (dealer_map.get("zip_code") or "").strip()
+    if not (city and state):
+        return None
+    place = f"{city}, {state}" + (f" {zip_code}" if zip_code else "")
+    distance_mi = None
+    z = "".join(ch for ch in str(viewer_zip or "") if ch.isdigit())[:5]
+    lat, lon = dealer_map.get("lat"), dealer_map.get("lon")
+    if len(z) == 5 and lat is not None and lon is not None:
+        origin = _coords_from_zip(z)
+        if origin:
+            from backend.db.geo import haversine
+
+            distance_mi = int(round(haversine(origin[0], origin[1], float(lat), float(lon))))
+    return {"place": place, "distance_mi": distance_mi, "from_zip": z if distance_mi is not None else None}

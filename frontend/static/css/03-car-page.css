@@ -726,6 +726,19 @@ body.car-detail-page .car-detail {
     color: var(--text-muted);
 }
 
+/* DC-6 / IH-03: "Mileage not listed" reads as a statement, not a figure. */
+.car-detail-headline-mileage--unlisted .car-detail-headline-mileage__unit {
+    font-size: 0.45em;
+    font-weight: 600;
+    letter-spacing: 0;
+}
+
+/* IH-08: dealership place and distance beside the dealer name. */
+.car-detail-eyebrow-place {
+    font-weight: 500;
+    color: var(--text-muted);
+}
+
 /* Lives in the Save/Compare row. It keeps its own line at narrow widths so the
    detail text is never squeezed off the end. */
 .deal-badge--hero {

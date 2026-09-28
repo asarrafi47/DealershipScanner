@@ -520,6 +520,12 @@ def serialize_car_for_api(
 
     fill_derived_condition_for_display(c, out)
 
+    from backend.utils.mileage_display import mileage_not_listed
+
+    out["mileage_not_listed"] = mileage_not_listed(
+        c.get("mileage"), condition=out.get("condition"), is_cpo=c.get("is_cpo"), year=c.get("year")
+    )
+
     from backend.utils.interior_color_buckets import infer_paint_color_buckets, parse_stored_buckets
 
     out["exterior_color_families"] = infer_paint_color_buckets(c.get("exterior_color"), c.get("make"))
@@ -959,6 +965,11 @@ def serialize_car_for_listings_grid(
     # NOT derived from out["condition"], which can read "Certified" (no "Pre-Owned") for some
     # rows even when is_cpo=1, which would disagree with the SQL-side filter.
     out["is_cpo"] = c.get("is_cpo") in (1, True, "1")
+    from backend.utils.mileage_display import mileage_not_listed
+
+    out["mileage_not_listed"] = mileage_not_listed(
+        c.get("mileage"), condition=out.get("condition"), is_cpo=out["is_cpo"], year=c.get("year")
+    )
     # Whether this listing has a vehicle-history (Carfax/AutoCheck) report linked.
     # We only know a report EXISTS (the URL) — not its contents (owners/accidents),
     # which aren't parsed — so a card chip should say "Carfax", not "1-owner".

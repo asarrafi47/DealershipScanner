@@ -616,6 +616,12 @@ def _build_car_detail_view_context(car_id: int, car_raw: dict) -> dict:
         rarity = None
 
     listings_geo = main.listings_geo_kwargs_from_session(session)
+    from backend.listings.dealer_map import hero_location_for_car
+
+    try:
+        hero_location = hero_location_for_car(dealer_map, listings_geo.get("zip_code"))
+    except Exception:  # a location line must never break the page
+        hero_location = None
     # Synthesized build sheet from the data we hold (listing row + verified EPA
     # specs + best-effort catalog options) — but ONLY when this car has no real
     # window sticker. When a genuine OEM/listing sticker exists (or is being
@@ -688,6 +694,7 @@ def _build_car_detail_view_context(car_id: int, car_raw: dict) -> dict:
         "car_is_saved": car_is_saved,
         "logged_in": bool(uid),
         "listings_geo_zip": listings_geo.get("zip_code") or "",
+        "hero_location": hero_location,
         "listing_incomplete_fields": listing_incomplete_fields,
         "gallery_images": ctx.get("gallery_images") or [],
         "verified_specs": ctx.get("verified_specs") or {},

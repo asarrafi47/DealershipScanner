@@ -175,10 +175,36 @@ document.addEventListener("DOMContentLoaded", () => {
         if (raw && raw !== "—" && raw !== "-") return raw.toLowerCase();
         const mi = car && car.mileage != null && car.mileage !== "" ? Number(car.mileage) : null;
         if (Number.isFinite(mi) && mi > 0) return "used";
-        if (Number.isFinite(mi) && mi === 0) return "new";
+        // 0 mi is NOT evidence of "new": it is the feed's "not listed" sentinel on
+        // 752 active Used rows (visual review 2026-09-28, DC-6 / IH-03).
         const yr = car && car.year != null ? Number(car.year) : null;
         if (Number.isFinite(yr) && yr < 2024) return "pre-owned";
         return "";
+    }
+
+    /** Card condition token: New / Pre-owned / CPO (IH-02). Reads the row, never infers from mileage. */
+    function cardConditionToken(car) {
+        if (!car) return "Condition not listed";
+        if (car.is_cpo === true || car.is_cpo === 1 || car.is_cpo === "1") return "CPO";
+        const raw = car.condition != null ? String(car.condition).trim().toLowerCase() : "";
+        if (!raw || raw === "\u2014" || raw === "-") return "Condition not listed";
+        if (raw.includes("certified") || /\bcpo\b/.test(raw)) return "CPO";
+        if (raw === "new") return "New";
+        return "Pre-owned";
+    }
+
+    /** Mirrors backend/utils/mileage_display.mileage_not_listed (DC-6 / IH-03). */
+    function cardMileageNotListed(car) {
+        if (!car) return true;
+        if (typeof car.mileage_not_listed === "boolean") return car.mileage_not_listed;
+        const raw = car.mileage;
+        if (raw == null || String(raw).trim() === "") return true;
+        const mi = Number(String(raw).replace(/,/g, ""));
+        if (!Number.isFinite(mi)) return true;
+        if (mi > 0) return false;
+        if (cardConditionToken(car) !== "New") return true;
+        const yr = parseInt(car.year, 10);
+        return Number.isFinite(yr) && yr < new Date().getFullYear() - 1;
     }
 
     function passesInventoryConditionFilter(car, inventoryCondition) {
@@ -1364,6 +1390,14 @@ document.addEventListener("DOMContentLoaded", () => {
             const s = String(v || "").trim();
             return !s || s === "\u2014" || s === "-" || s === "--";
         };
+        // Condition leads the meta line (IH-02); a 0/blank odometer on a used or
+        // older car is "Mileage not listed", never "0 mi" (DC-6 / IH-03).
+        const metaBits = [
+            `<span class="result-condition">${SC.escapeHtml(cardConditionToken(c))}</span>`,
+            cardMileageNotListed(c) ? "Mileage not listed" : `${SC.fmt(c.mileage)} mi`,
+        ];
+        if (!dashLike(c.fuel_type)) metaBits.push(SC.escapeHtml(c.fuel_type));
+        if (!dashLike(c.drivetrain)) metaBits.push(SC.escapeHtml(c.drivetrain));
         const specBits = [];
         if (!dashLike(c.body_style)) specBits.push(SC.escapeHtml(c.body_style));
         const specLine = specBits.length
@@ -1449,11 +1483,7 @@ document.addEventListener("DOMContentLoaded", () => {
                             ? `<p class="result-price result-price--payment">${SC.fmtUSD(c.price)}/mo advertised<span class="result-price-payment-note">&mdash; see dealer for the price</span></p>`
                             : `<p class="result-price">${SC.fmtUSD(c.price)}${priceDropBadge}</p>`}
                         ${marketLine}
-                        <p class="result-meta">
-                            ${SC.fmt(c.mileage)} mi
-                            &middot; ${SC.escapeHtml(c.fuel_type || "")}
-                            &middot; ${SC.escapeHtml(c.drivetrain || "")}
-                        </p>
+                        <p class="result-meta">${metaBits.join(" &middot; ")}</p>
                         ${specLine}
                     </div>
                 </a>
@@ -1572,6 +1602,7 @@ document.addEventListener("DOMContentLoaded", () => {
             return Number.isFinite(p) && p > 0 ? p : Infinity;
         };
         const mileageKey = (c) => {
+            if (cardMileageNotListed(c)) return Infinity;
             const m = Number(c.mileage);
             return Number.isFinite(m) && m >= 0 ? m : Infinity;
         };

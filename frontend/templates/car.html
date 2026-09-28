@@ -225,7 +225,7 @@
                 </div>
 
                 <div class="car-detail-info car-detail-info--hero">
-                    <p class="eyebrow car-detail-dealer-eyebrow">{% if car.dealer_id %}<a href="{{ url_for('dealership_research_page', dealer_key=car.dealer_id) }}" class="car-detail-dealer-link">{{ car.dealer_name }}</a>{% else %}{{ car.dealer_name }}{% endif %}{% if location_attribution %} <span class="location-unconfirmed-tag" title="{{ location_attribution.location_note }}">Location unconfirmed</span>{% endif %}</p>
+                    <p class="eyebrow car-detail-dealer-eyebrow">{% if car.dealer_id %}<a href="{{ url_for('dealership_research_page', dealer_key=car.dealer_id) }}" class="car-detail-dealer-link">{{ car.dealer_name }}</a>{% else %}{{ car.dealer_name }}{% endif %}{% if location_attribution %} <span class="location-unconfirmed-tag" title="{{ location_attribution.location_note }}">Location unconfirmed</span>{% elif hero_location %}<span class="car-detail-eyebrow-place"> &middot; {{ hero_location.place }}{% if hero_location.distance_mi is not none %} &middot; {{ "{:,}".format(hero_location.distance_mi) }} mi from {{ hero_location.from_zip }}{% endif %}</span>{% endif %}</p>
                     {# The listing is genuinely published by the dealer above; what we cannot
                        stand behind is that the car is AT that rooftop. Said once here, next to
                        the name, rather than only deep in the Dealership tab. #}
@@ -312,7 +312,12 @@
                                 {% endif %}
                             {% endif %}
                         </p>
-                        {% if car.mileage is not none and car.mileage != '' %}
+                        {% if car.mileage_not_listed %}
+                        {# 0/NULL on a used or older car is the feed's "not listed" sentinel (DC-6 / IH-03). #}
+                        <p class="car-detail-headline-mileage car-detail-headline-mileage--unlisted">
+                            <span class="car-detail-headline-mileage__unit">Mileage not listed</span>
+                        </p>
+                        {% elif car.mileage is not none and car.mileage != '' %}
                         <p class="car-detail-headline-mileage">
                             <span class="car-detail-headline-mileage__value">{{ "{:,}".format(car.mileage) }}</span>
                             <span class="car-detail-headline-mileage__unit">mi</span>
@@ -502,8 +507,10 @@
             <div class="car-hero-glance" aria-label="Key specifications">
                 <h2 class="car-hero-glance-title">At a glance</h2>
                 <dl class="car-quick-specs car-quick-specs--hero">
-                    <div class="car-quick-spec-item"><dt>Year</dt><dd>{{ car.year | fmt_spec }}</dd></div>
-                    <div class="car-quick-spec-item"><dt>Mileage</dt><dd>{% if car.mileage is not none and car.mileage != '' %}{{ "{:,}".format(car.mileage) }} mi{% else %}—{% endif %}</dd></div>
+                    {# Condition replaces Year (the title already carries the year; IH-08). #}
+                    {% set _cond_raw = (car.condition or '') | string | trim | lower %}
+                    <div class="car-quick-spec-item"><dt>Condition</dt><dd>{% if car.is_cpo in (1, true, '1') or 'certified' in _cond_raw or _cond_raw == 'cpo' %}Certified pre-owned{% elif _cond_raw == 'new' %}New{% elif _cond_raw and _cond_raw not in ('—', '-') %}Pre-owned{% else %}Not listed{% endif %}</dd></div>
+                    <div class="car-quick-spec-item"><dt>Mileage</dt><dd>{% if car.mileage_not_listed or car.mileage is none or car.mileage == '' %}Not listed{% else %}{{ "{:,}".format(car.mileage) }} mi{% endif %}</dd></div>
                     <div class="car-quick-spec-item"><dt>Engine</dt><dd>{{ car.engine_display }}</dd></div>
                     <div class="car-quick-spec-item"><dt>Drivetrain</dt><dd>{{ car.drivetrain_display }}</dd></div>
                     <div class="car-quick-spec-item"><dt>Fuel</dt><dd>{{ car.fuel_type | fmt_spec }}</dd></div>
@@ -655,7 +662,7 @@
                         {% if car.mileage is not none and car.mileage != '' %}
                         <div class="spec-row">
                             <span class="spec-label">Mileage</span>
-                            <span class="spec-value">{{ "{:,}".format(car.mileage) }} mi</span>
+                            <span class="spec-value">{% if car.mileage_not_listed %}Not listed{% else %}{{ "{:,}".format(car.mileage) }} mi{% endif %}</span>
                         </div>
                         {% endif %}
                         {% if car.engine_display and car.engine_display != '—' %}

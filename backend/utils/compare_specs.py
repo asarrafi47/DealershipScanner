@@ -57,15 +57,21 @@ def _fmt_price(car: dict[str, Any]) -> str:
 
 
 def _fmt_mileage(car: dict[str, Any]) -> str:
+    """Odometer, or "Mileage not listed" where 0/NULL is the feed's sentinel (DC-6)."""
+    from backend.utils.mileage_display import mileage_not_listed
+
     m = car.get("mileage")
-    if m is None:
-        return "—"
-    if isinstance(m, str) and not m.strip():
-        return "—"
+    not_listed = car.get("mileage_not_listed")
+    if not isinstance(not_listed, bool):
+        not_listed = mileage_not_listed(
+            m, condition=car.get("condition"), is_cpo=car.get("is_cpo"), year=car.get("year")
+        )
+    if not_listed:
+        return "Mileage not listed"
     try:
         return f"{int(float(m)):,} mi"
     except (TypeError, ValueError):
-        return "—"
+        return "Mileage not listed"
 
 
 def _load_packages_blob(car: dict[str, Any]) -> dict[str, Any] | None:
