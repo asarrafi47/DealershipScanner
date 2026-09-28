@@ -79,8 +79,6 @@ from backend.db.inventory_db import (
     list_saved_searches,
     list_search_history,
     listings_geo_coords_maps,
-    listings_grid_cache_etag,
-    listings_grid_serialized_cars,
     record_search_history,
     save_car,
     search_cars,
@@ -349,25 +347,15 @@ from backend.scanner.job_queue import init_job_queue_schema
 init_job_queue_schema()
 
 
-def _prewarm_grid_delay_s() -> float:
-    """Head start (seconds) given to real requests before the grid prewarm starts."""
-    raw = (os.environ.get("LISTINGS_PREWARM_GRID_DELAY_S") or "3").strip()
-    try:
-        return max(0.0, float(raw))
-    except (TypeError, ValueError):
-        return 3.0
-
-
 def _prewarm_listings_inventory_cache() -> None:
     """
-    Background-warm the caches a cold process needs, cheapest-and-most-blocking first.
+    Background-warm the EPA dictionary index a CAR page needs (well under a second).
 
-    Order matters. The EPA dictionary index is what a CAR page needs and costs
-    well under a second; the listings grid costs tens of seconds of solid Python.
-    Building the grid first meant the first car page after a boot competed with
-    that CPU burn for the GIL (measured: 0.35s with the builder idle, 13.9s with
-    it running). So: EPA index first, then a short head start for real traffic,
-    then the grid.
+    It used to go on to build the whole-fleet listings grid (214k cars, tens of
+    seconds of Python, several GB resident). Owner decision 2026-09-28: the listings
+    page asks for the shopper's radius only, served from the persisted card store
+    (``grid_cards_repo``), so no process holds the fleet and there is nothing to
+    prewarm. Deliberately left OFF -- do not add a grid prewarm back.
     """
     import threading
 
@@ -385,32 +373,11 @@ def _prewarm_listings_inventory_cache() -> None:
         except Exception:
             _logger.exception("EPA dictionary index prewarm failed")
 
-        delay = _prewarm_grid_delay_s()
-        if delay:
-            time.sleep(delay)
-
-        try:
-            from backend.db.inventory_db import (
-                _incomplete_car_ids_for_listings,
-                listings_grid_serialized_cars,
-            )
-
-            t1 = time.perf_counter()
-            _incomplete_car_ids_for_listings()
-            n = len(listings_grid_serialized_cars())
-            _logger.info(
-                "Listings grid cache prewarmed (%d cars, %.1fs)",
-                n,
-                time.perf_counter() - t1,
-            )
-        except Exception:
-            _logger.exception("Listings grid prewarm failed")
-
     threading.Thread(target=_run, name="listings-prewarm", daemon=True).start()
 
 
 # Under gunicorn this runs in the ARBITER (--preload imports the app there), which
-# would build a full grid that serves nothing -- see gunicorn.conf.py, whose
+# would warm an index that serves nothing -- see gunicorn.conf.py, whose
 # post_fork hook starts the prewarm in each worker instead. Everything else
 # (run.py dev server, tests, one-off scripts) keeps the import-time behaviour.
 if not os.environ.get("DS_GUNICORN_ARBITER"):

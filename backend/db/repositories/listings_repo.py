@@ -94,180 +94,6 @@ def serialize_cars_for_listings_grid(cars: list[dict]) -> list[dict[str, Any]]:
     ]
 
 
-def listings_grid_bootstrap_cars(
-    limit: int = 48,
-    *,
-    zip_code: str | None = None,
-    radius_mi: float | None = None,
-) -> list[dict[str, Any]]:
-    """First page of cached grid cars for SSR (instant paint while full fleet loads).
-
-    When a ZIP + radius are already known (session or query params), the SSR
-    paint should already reflect that — never an arbitrary global slice a
-    visitor's own location has nothing to do with, only to be swapped out a
-    moment later once the client-side radius filter lands. No other facet
-    (make, model, etc.) narrows this by default; only an explicit filter
-    should do that.
-    """
-    try:
-        lim = max(1, min(int(limit), 200))
-    except (TypeError, ValueError):
-        lim = 48
-    cars = listings_grid_serialized_cars()
-    if not cars:
-        return []
-    if zip_code and radius_mi:
-        from backend.db.geo import zip_to_coords
-
-        origin = zip_to_coords(zip_code)
-        if origin is not None:
-            nearby = _nearby_cars_by_zip_radius(cars, origin, float(radius_mi))
-            if nearby:
-                return _round_robin_by_dealer_distance(nearby, lim)
-    return cars[:lim]
-
-
-# dealer_url/host -> (lat, lon), refreshed at most every _DEALER_GEO_INDEX_TTL_S.
-# dealer_geopoints/dealerships change on the order of scans, not requests, so
-# rebuilding this from 3 fresh SQL queries on every /listings pageview that
-# carries a session ZIP+radius (essentially every repeat visitor) is wasted
-# DB round-trips; a short TTL keeps it fresh enough without that cost.
-_dealer_geo_index_cache: dict[str, tuple[float, float]] | None = None
-_dealer_geo_index_cache_at: float = 0.0
-_DEALER_GEO_INDEX_TTL_S = 300.0
-
-
-def _cached_dealer_geo_index() -> dict[str, tuple[float, float]]:
-    global _dealer_geo_index_cache, _dealer_geo_index_cache_at
-    now = time.monotonic()
-    if (
-        _dealer_geo_index_cache is not None
-        and (now - _dealer_geo_index_cache_at) < _DEALER_GEO_INDEX_TTL_S
-    ):
-        return _dealer_geo_index_cache
-    from backend.db.dealer_geo import load_dealer_geo_index
-
-    with db_conn() as conn:
-        idx = load_dealer_geo_index(conn)
-    _dealer_geo_index_cache = idx
-    _dealer_geo_index_cache_at = now
-    return idx
-
-
-# (origin, radius) -> nearby-cars result, scoped to one grid generation (keyed by
-# the identity of the grid list, which is replaced wholesale -- never mutated --
-# on every rebuild) so a stale entry can never outlive the data it was computed
-# from. Bounded and short-TTL: this exists to absorb repeat requests from the
-# same or concurrent visitors within a generation, not to serve forever.
-_nearby_cache_gen: Any = None
-_nearby_cache: dict[tuple[float, float, float], tuple[float, list[dict[str, Any]]]] = {}
-_nearby_cache_lock = threading.Lock()
-_NEARBY_CACHE_TTL_S = 60.0
-_NEARBY_CACHE_MAX_ENTRIES = 128
-
-
-def _nearby_cars_by_zip_radius(
-    cars: list[dict[str, Any]],
-    origin: tuple[float, float],
-    radius_mi: float,
-) -> list[dict[str, Any]]:
-    """Cars within ``radius_mi`` of ``origin``, each with ``distance_miles`` attached.
-
-    Grouped by dealer first, not by car: there are orders of magnitude fewer
-    distinct dealers than cars in the grid, so haversine (and the dealer-geo
-    lookup, including its urlparse fallback) runs once per distinct dealer
-    instead of once per car. The previous per-car loop measured ~185ms of
-    pure, GIL-held CPU per call over a 113k-row grid -- on essentially every
-    /listings pageview for a visitor who has ever searched a ZIP, since
-    ``radius_mi`` is carried in the session.
-    """
-    global _nearby_cache_gen, _nearby_cache
-    gen = id(cars)
-    key = (round(origin[0], 3), round(origin[1], 3), round(radius_mi, 1))
-    now = time.monotonic()
-    with _nearby_cache_lock:
-        if _nearby_cache_gen != gen:
-            _nearby_cache = {}
-            _nearby_cache_gen = gen
-        hit = _nearby_cache.get(key)
-        if hit is not None and (now - hit[0]) < _NEARBY_CACHE_TTL_S:
-            return hit[1]
-
-    from backend.db.geo import haversine
-    from backend.db.dealer_geo import lookup_dealer_coords
-
-    dealer_geo = _cached_dealer_geo_index()
-
-    by_dealer: dict[str, list[dict[str, Any]]] = {}
-    for car in cars:
-        by_dealer.setdefault(str(car.get("dealer_url") or ""), []).append(car)
-
-    nearby: list[dict[str, Any]] = []
-    for dealer_url, dealer_cars in by_dealer.items():
-        dest = lookup_dealer_coords(dealer_url, dealer_geo)
-        if not dest:
-            continue
-        dist = haversine(origin[0], origin[1], dest[0], dest[1])
-        if dist > radius_mi:
-            continue
-        rounded = round(dist, 1)
-        for car in dealer_cars:
-            c = dict(car)
-            c["distance_miles"] = rounded
-            nearby.append(c)
-
-    with _nearby_cache_lock:
-        if _nearby_cache_gen == gen:
-            if len(_nearby_cache) >= _NEARBY_CACHE_MAX_ENTRIES:
-                _nearby_cache.clear()
-            _nearby_cache[key] = (now, nearby)
-    return nearby
-
-
-def _round_robin_by_dealer_distance(cars: list[dict[str, Any]], lim: int) -> list[dict[str, Any]]:
-    """Interleave cars across dealers, closest dealers first.
-
-    Every car from one dealer shares that dealer's distance, so sorting the
-    flat list by distance alone lets one inventory-heavy nearby dealer (its
-    whole lineup, all tied at the same distance) fill the entire page before
-    a second dealer's cars ever show up. Round-robin one car per dealer, in
-    distance order, so a ZIP+radius default actually surfaces multiple
-    nearby dealers instead of just whichever one has the most stock.
-    """
-    by_dealer: dict[str, list[dict[str, Any]]] = {}
-    dealer_order: list[str] = []
-    for c in cars:
-        # No id(c) fallback: within one call every object is simultaneously
-        # alive so ids can't collide, but id() is a meaningless "dealer" if
-        # this helper is ever reused where that invariant doesn't hold. Cars
-        # with no dealer identifier at all share one explicit bucket instead
-        # of one synthetic bucket per car.
-        key = str(c.get("dealer_url") or c.get("dealer_name") or "__unknown_dealer__")
-        if key not in by_dealer:
-            by_dealer[key] = []
-            dealer_order.append(key)
-        by_dealer[key].append(c)
-    dealer_order.sort(key=lambda k: by_dealer[k][0]["distance_miles"])
-    for bucket in by_dealer.values():
-        bucket.sort(key=lambda c: c.get("id") or 0)
-
-    out: list[dict[str, Any]] = []
-    round_idx = 0
-    while len(out) < lim:
-        added = False
-        for key in dealer_order:
-            bucket = by_dealer[key]
-            if round_idx < len(bucket):
-                out.append(bucket[round_idx])
-                added = True
-                if len(out) >= lim:
-                    break
-        if not added:
-            break
-        round_idx += 1
-    return out
-
-
 def _normalize_make_capitalization(make: str) -> str:
     """Normalize make name capitalization: title case for most, handle special cases."""
     if not make:
@@ -363,7 +189,7 @@ def _facet_transmission_sane(val) -> bool:
     return True
 
 
-_facet_options_cache_token: tuple[float, float] | None = None
+_facet_options_cache_token: Any = None
 _facet_options_cache_value: dict[str, Any] | None = None
 _geo_coords_cache_token: tuple[float, float] | None = None
 _geo_coords_cache_value: dict[str, Any] | None = None
@@ -468,6 +294,14 @@ def clear_inventory_listings_cache() -> None:
     _public_count_cache = None
     _clear_grid_serialize_memo()
     clear_incomplete_snapshot_cache()
+    from backend.db.repositories.grid_cards_repo import reset_grid_cards_state
+
+    reset_grid_cards_state()
+    try:
+        from backend.routes.listings_api import clear_cars_scope_cache
+    except Exception:  # routes not importable (scripts without Flask app)
+        return
+    clear_cars_scope_cache()
 
 
 # ``public_listings_count`` cache: (token, built_at, value). The landing page
@@ -516,7 +350,13 @@ def public_listings_count() -> int:
 
 def listings_grid_serialized_cars() -> list[dict[str, Any]]:
     """
-    Per-car JSON for the listings grid (``options.all_cars`` and ``GET /api/listings/cars``).
+    Per-car JSON for the WHOLE active fleet -- offline tools and tests only.
+
+    No request path may call this (owner decision 2026-09-28): it holds every active
+    listing serialized in the process (the web worker peaked at ~9.5 GB on it).
+    ``GET /api/listings/cars`` is radius-scoped and the dealership page dealer-scoped,
+    both served from the persisted card store in ``grid_cards_repo``; tests
+    monkeypatch this to raise on those routes.
     Honors :func:`listings_include_incomplete_cars` and :func:`serialize_car_for_listings_grid`.
 
     Rebuild policy (the cache token is :func:`_grid_cache_token`, a fingerprint of
@@ -790,32 +630,6 @@ def _css_url_safe(url: Any) -> bool:
     return not any(ch in url for ch in ("'", '"', "(", ")", "\\", " ", "\t", "\n", "\r"))
 
 
-def listings_grid_cache_etag() -> str:
-    """
-    Cheap cache validator for ``GET /api/listings/cars`` (If-None-Match / 304).
-
-    Must describe the data the endpoint will actually SERVE: under
-    stale-while-revalidate that is the cached copy (tagged with the token it
-    was built for), not the current time bucket — otherwise a stale body ships
-    under the fresh ETag and clients 304 on it after the rebuild lands.
-    """
-    if _grid_cars_cache_value is not None:
-        token = _grid_cars_cache_token
-        n = len(_grid_cars_cache_value)
-    else:
-        token = _grid_cache_token()
-        with db_conn() as conn:
-            row = conn.execute(
-                "SELECT COUNT(*) FROM cars WHERE (COALESCE(listing_active, 1) = 1)"
-                " AND COALESCE(marked_for_review, 0) = 0"
-            ).fetchone()
-            n = int(row[0] if row else 0)
-    # The token is a structured value (write-counter fingerprint or mtime pair);
-    # digest it so the header stays a well-formed quoted-string whatever it holds.
-    tag = hashlib.blake2b(repr(token).encode("utf-8", "surrogatepass"), digest_size=8).hexdigest()
-    return f'W/"{_LISTINGS_GRID_CACHE_REV}-{tag}-{n}"'
-
-
 def listings_geo_coords_maps() -> dict[str, Any]:
     """
     ZIP + dealer coordinate maps for client-side radius filtering.
@@ -861,7 +675,7 @@ _facet_options_rebuild_thread: threading.Thread | None = None
 _facet_options_rebuild_lock = threading.Lock()
 
 
-def _spawn_facet_options_rebuild(token: tuple[float, float]) -> None:
+def _spawn_facet_options_rebuild(token: Any) -> None:
     global _facet_options_rebuild_thread
     # Same check-then-act race as the grid cache: at a token rollover every
     # in-flight request sees the stale copy and would spawn its own rebuild.
@@ -887,22 +701,26 @@ def _spawn_facet_options_rebuild(token: tuple[float, float]) -> None:
         _facet_options_rebuild_lock.release()
 
 
-def get_filter_options(*, include_all_cars: bool = False) -> dict[str, Any]:
+def get_filter_options() -> dict[str, Any]:
     """
     Returns all filter option data with full relationship maps so the
     frontend can do bidirectional cascading across every dimension.
 
-    ``include_all_cars`` embeds the full grid payload (~12MB); listings HTML loads
-    cars via ``GET /api/listings/cars`` instead (``include_all_cars=False``, default).
+    Facets only -- never cars. Every value is computed by SQL (``DISTINCT`` /
+    ``GROUP BY`` in :func:`_build_filter_options_uncached`), not by scanning a
+    serialized fleet, and cached by the grid's write fingerprint
+    (:func:`_grid_cache_token`) so a finished scan shows up and an idle database
+    never rebuilds. The listings page loads its cars from the radius-scoped
+    ``GET /api/listings/cars?zip=&radius=`` (owner decision 2026-09-28).
 
-    Stale-while-revalidate, exactly like :func:`listings_grid_serialized_cars`.
-    Every /listings pageview *and* every lazy-facet fetch lands here, and on
-    Postgres the cache token is a 60s time bucket, so rebuilding inline (~0.9s of
-    DISTINCT scans over 71k active rows, measured 2026-07-29) stalled one request
-    a minute. Only the true cold start builds inline now.
+    Stale-while-revalidate: every /listings pageview *and* every lazy-facet fetch
+    lands here, so only the true cold start builds inline (~0.9s of DISTINCT scans,
+    measured 2026-07-29).
     """
     global _facet_options_cache_token, _facet_options_cache_value
-    token = _listings_cache_token()
+    from backend.db.repositories.grid_cards_repo import grid_scope_token
+
+    token = grid_scope_token()
     if _facet_options_cache_value is None:
         facets = _build_filter_options_uncached()
         _facet_options_cache_token = token
@@ -910,9 +728,7 @@ def get_filter_options(*, include_all_cars: bool = False) -> dict[str, Any]:
     elif _facet_options_cache_token != token:
         _spawn_facet_options_rebuild(token)
 
-    out = dict(_facet_options_cache_value or {})
-    out["all_cars"] = listings_grid_serialized_cars() if include_all_cars else []
-    return out
+    return dict(_facet_options_cache_value or {})
 
 
 def _build_filter_options_uncached() -> dict[str, Any]:

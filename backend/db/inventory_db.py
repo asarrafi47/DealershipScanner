@@ -125,8 +125,6 @@ from backend.db.repositories.listings_repo import (
     clear_inventory_listings_cache,
     get_filter_options,
     listings_geo_coords_maps,
-    listings_grid_bootstrap_cars,
-    listings_grid_cache_etag,
     listings_grid_serialized_cars,
     public_listings_count,
     serialize_car_for_listings_grid,

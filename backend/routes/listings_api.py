@@ -10,20 +10,18 @@ See ``backend.routes._shared``.
 from __future__ import annotations
 
 import gzip
-import io
 import logging
 import os
 import threading
+from collections import OrderedDict
 from typing import Any, NamedTuple
 
-from flask import Response, jsonify, make_response, redirect, render_template, request, session, url_for
+from flask import jsonify, make_response, redirect, render_template, request, session, url_for
 
 from backend.billing.catalog import FEATURE_MARKET_INTEL, FEATURE_SAVED_SEARCHES
 from backend.db.inventory_db import (
     get_filter_options,
     listings_geo_coords_maps,
-    listings_grid_cache_etag,
-    listings_grid_serialized_cars,
 )
 from backend.listings.geo_session import apply_listings_geo_to_session
 from backend.listings.routes import listings_page
@@ -97,7 +95,7 @@ def api_session_listings_geo():
 
 def api_listings_filter_options():
     """Facet metadata for listings filters (same source as the listings page sidebar)."""
-    opts = get_filter_options(include_all_cars=False)
+    opts = get_filter_options()
     return jsonify(
         {
             "ok": True,
@@ -140,133 +138,196 @@ def api_listings_geo_coords():
     return resp
 
 
-class _CarsJsonCacheEntry(NamedTuple):
-    etag: str | None
-    gz_body: bytes | None
+LISTINGS_RADIUS_MIN_MI = 5.0
+LISTINGS_RADIUS_MAX_MI = 250.0
+LISTINGS_RADIUS_DEFAULT_MI = 50.0
 
 
-# Published/read as a single immutable object so a reader never observes a
-# partially-updated (etag, gz_body) pair: CPython name rebinding is
-# atomic, whereas mutating two keys of a shared dict in place is not.
-#
-# Only the gzipped body is retained (~13MB in prod). This used to cache the
-# uncompressed bytes alongside it -- well over 100MB, held for the lifetime of
-# every worker process -- to serve a case that effectively never occurs, since
-# every real client sends ``Accept-Encoding: gzip``. A non-gzip client is now
-# served by streaming decompression in 64KB chunks, so it costs one chunk of
-# transient memory, not a second permanent copy. See the memory accounting in
-# scripts/docker-entrypoint-web.sh.
-_cars_json_cache: _CarsJsonCacheEntry = _CarsJsonCacheEntry(etag=None, gz_body=None)
-# Guards the rebuild below so concurrent requests racing to rebuild after an
-# invalidation don't all redo the (expensive) serialize+gzip work, and so a
-# slower thread's stale rebuild can't overwrite a faster thread's newer one.
-_cars_json_cache_lock = threading.Lock()
+def clamp_listings_radius(raw) -> float:
+    """Radius for the scoped grid: 5..250 mi, 50 when absent or unparseable."""
+    try:
+        r = float(raw)
+    except (TypeError, ValueError):
+        return LISTINGS_RADIUS_DEFAULT_MI
+    if r != r or r in (float("inf"), float("-inf")):
+        return LISTINGS_RADIUS_DEFAULT_MI
+    return max(LISTINGS_RADIUS_MIN_MI, min(LISTINGS_RADIUS_MAX_MI, r))
+
+
+def _normalize_zip(raw: str) -> str:
+    digits = "".join(ch for ch in (raw or "") if ch.isdigit())
+    return digits[:5] if len(digits) >= 5 else ""
+
+
+class _CarsScopeEntry(NamedTuple):
+    token: Any
+    store_gen: int | None  # set while the body contains stale cards awaiting refresh
+    etag: str
+    gz_body: bytes
+    count: int
+
+
+# Gzipped scoped bodies, keyed by (zip, radius, hidden-dealer set). Bounded by entry
+# count AND total bytes: the largest metro is ~3-4 MB gzipped, so 64 entries of that
+# would be ~250 MB; the byte cap keeps the worst case well under that.
+_CARS_SCOPE_MAX_ENTRIES = 64
+_CARS_SCOPE_MAX_BYTES = 96 * 1024 * 1024
+_cars_scope_cache: "OrderedDict[tuple, _CarsScopeEntry]" = OrderedDict()
+_cars_scope_bytes = 0
+_cars_scope_lock = threading.Lock()
+# One build per scope key at a time: concurrent shoppers in the same metro wait for
+# the first build instead of all running it.
+_cars_scope_build_locks: dict[tuple, threading.Lock] = {}
+
+
+def _cars_scope_get(key: tuple) -> _CarsScopeEntry | None:
+    with _cars_scope_lock:
+        entry = _cars_scope_cache.get(key)
+        if entry is not None:
+            _cars_scope_cache.move_to_end(key)
+        return entry
+
+
+def _cars_scope_put(key: tuple, entry: _CarsScopeEntry) -> None:
+    global _cars_scope_bytes
+    with _cars_scope_lock:
+        old = _cars_scope_cache.pop(key, None)
+        if old is not None:
+            _cars_scope_bytes -= len(old.gz_body)
+        _cars_scope_cache[key] = entry
+        _cars_scope_bytes += len(entry.gz_body)
+        while _cars_scope_cache and (
+            len(_cars_scope_cache) > _CARS_SCOPE_MAX_ENTRIES
+            or _cars_scope_bytes > _CARS_SCOPE_MAX_BYTES
+        ):
+            _, dropped = _cars_scope_cache.popitem(last=False)
+            _cars_scope_bytes -= len(dropped.gz_body)
+
+
+def clear_cars_scope_cache() -> None:
+    global _cars_scope_bytes
+    with _cars_scope_lock:
+        _cars_scope_cache.clear()
+        _cars_scope_bytes = 0
+
+
+def _cars_scope_entry_valid(entry: _CarsScopeEntry | None, token: Any) -> bool:
+    if entry is None or entry.token != token:
+        return False
+    if entry.store_gen is not None:
+        from backend.db.repositories.grid_cards_repo import store_generation
+
+        return entry.store_gen == store_generation()
+    return True
+
+
+def _build_cars_scope_entry(
+    zip_code: str, origin: tuple[float, float], radius: float, hidden: tuple, token: Any
+) -> _CarsScopeEntry:
+    import hashlib
+    import json as _json
+
+    from backend.db.repositories.grid_cards_repo import cards_near, store_generation
+
+    gen_before = store_generation()
+    res = cards_near(origin[0], origin[1], radius, exclude_dealer_ids=hidden)
+    head = _json.dumps(
+        {
+            "ok": True,
+            "zip": zip_code,
+            "radius": radius,
+            "count": len(res.entries),
+            "missing_coords": res.missing_coords,
+        },
+        separators=(",", ":"),
+    )
+    body = (head[:-1] + ',"cars":[' + ",".join(res.cards_json()) + "]}").encode("utf-8")
+    gz_body = gzip.compress(body, compresslevel=6)
+    digest = hashlib.blake2b(gz_body, digest_size=10).hexdigest()
+    etag = f'W/"lc-{zip_code}-{int(radius)}-{digest}"'
+    return _CarsScopeEntry(
+        token=token,
+        store_gen=gen_before if res.partial else None,
+        etag=etag,
+        gz_body=gz_body,
+        count=len(res.entries),
+    )
+
+
+def _cars_json_response(entry: _CarsScopeEntry, *, private: bool):
+    cache_control = (
+        "private, no-cache" if private
+        else "public, max-age=0, s-maxage=60, stale-while-revalidate=30"
+    )
+    inm = (request.headers.get("If-None-Match") or "").strip()
+    if inm and inm == entry.etag:
+        resp = make_response("", 304)
+    elif "gzip" in (request.headers.get("Accept-Encoding") or "").lower():
+        resp = make_response(entry.gz_body)
+        resp.headers["Content-Encoding"] = "gzip"
+        resp.headers["Content-Type"] = "application/json"
+    else:
+        resp = make_response(gzip.decompress(entry.gz_body))
+        resp.headers["Content-Type"] = "application/json"
+    resp.headers["ETag"] = entry.etag
+    resp.headers["Cache-Control"] = cache_control
+    resp.headers["Vary"] = "Accept-Encoding, Cookie" if private else "Accept-Encoding"
+    return resp
 
 
 def api_listings_cars():
-    """Read-only JSON for the listings grid; supports client refresh while a scan is running.
+    """Grid cards for the cars within ``radius`` miles of ``zip`` (listings page).
 
-    The full inventory (100k+ rows) is intentionally sent in one payload — the
-    client does its own facet/radius filtering over the whole set for instant,
-    no-round-trip interaction (see frontend/static/main.js). What's expensive
-    isn't the DB read (already cached in-process by listings_grid_serialized_cars)
-    but re-running Flask's jsonify() over that many rows on every single
-    request, which is CPU-bound and holds the GIL — under concurrent load,
-    requests serialize behind each other's JSON encoding instead of running in
-    parallel. Cache the encoded JSON bytes themselves, keyed by the same
-    cache-invalidation token already used for the ETag, so repeat requests
-    (the common case — nothing changes between scans) skip re-encoding.
+    Owner decision 2026-09-28: the listings page no longer downloads the whole
+    fleet (214k rows, 32 MB gzipped, ~9.5 GB peak in the web process). It asks for
+    the shopper's area once a search starts and filters that subset client-side.
 
-    Only the GZIPPED bytes are cached. Keeping the uncompressed copy too cost
-    ~109 MB resident per worker forever, to serve clients that do not advertise
-    gzip — a case that effectively does not occur. Those now pay one
-    ``gzip.decompress`` per request instead.
-
-    Also pre-gzip the cached body ONCE here rather than relying on the
-    ``_gzip_large_json`` after_request hook: at ~109 MB raw JSON (113k cars),
-    ``gzip.compress()`` alone is real CPU work, and the hook re-ran it on
-    every single request — including cache hits — because it only sees the
-    final response object, not whether the body it's compressing is identical
-    to last time. Setting Content-Encoding here makes the hook's own
-    early-exit (`if resp.headers.get("Content-Encoding"): return resp`) skip
-    that redundant compression.
-
-    Cache-Control is ``public``: this route has no auth check and its output
-    has no per-user content (no session/user_id in the serialization path),
-    so it's identical for every visitor. ``s-maxage`` lets Cloudflare's edge
-    serve repeat requests straight from cache — off the origin entirely —
-    for up to the same 60s window the underlying cache token already uses
-    (``_listings_cache_token``), which is what actually bounds staleness.
+    * ``zip`` (or ``zip_code``) is required: without it this is a 400
+      ``zip_required``, never the fleet.
+    * ``radius`` is clamped to 5..250 mi, default 50.
+    * Signed-in users' hidden dealerships are excluded in SQL.
+    * Cards come from the persisted card store (``grid_cards_repo``), so a response
+      is SQL plus string concatenation, not a serializer pass.
+    * The gzipped body is cached per (zip, radius, hidden set) in a small LRU
+      bounded by entries and bytes; the ETag is a digest of that body, so it moves
+      exactly when the served data does (and a 304 is always honest).
     """
-    global _cars_json_cache
-    etag = listings_grid_cache_etag()
-    inm = (request.headers.get("If-None-Match") or "").strip()
-    if inm and inm == etag:
-        resp = make_response("", 304)
-        resp.headers["ETag"] = etag
-        resp.headers["Cache-Control"] = "public, max-age=0, s-maxage=60, stale-while-revalidate=30"
-        resp.headers["Vary"] = "Accept-Encoding"
-        return resp
-    cache = _cars_json_cache
-    if cache.etag != etag:
-        with _cars_json_cache_lock:
-            # Re-read the validator INSIDE the lock, then re-check. A waiter that
-            # compared against its pre-lock `etag` would see a NEWER entry
-            # published by the thread ahead of it as "different" and redo the
-            # whole serialize+gzip -- serially, lock held, all four gthreads --
-            # which is the thundering herd this lock exists to prevent.
-            cache = _cars_json_cache
-            etag = listings_grid_cache_etag()
-            if cache.etag != etag:
-                # Validator BEFORE body, never after. listings_grid_serialized_cars()
-                # is stale-while-revalidate: it can hand back the OLD list while a
-                # daemon thread publishes the new one moments later. Reading the
-                # ETag second would then tag that old body with the NEW tag, and
-                # every subsequent request (and 304) would confirm stale data as
-                # current. Tagging a fresh body with an older tag merely costs one
-                # extra rebuild at the next request.
-                cars = listings_grid_serialized_cars()
-                body = jsonify({"ok": True, "cars": cars}).get_data()
-                gz_body = gzip.compress(body, compresslevel=5)
-                # Drop the uncompressed bytes here: `body` is a local and goes out
-                # of scope, so only the gzip survives in the cache.
-                del body
-                cache = _CarsJsonCacheEntry(etag=etag, gz_body=gz_body)
-                _cars_json_cache = cache
-    if cache.gz_body is None:
-        # Invariant: after the rebuild block a body exists. If it does not, say so
-        # rather than serving `200 OK` with an empty JSON body the client would
-        # happily render as "no inventory".
-        return jsonify({"ok": False, "error": "cars_cache_unavailable"}), 503
-    accepts_gzip = "gzip" in (request.headers.get("Accept-Encoding") or "").lower()
-    if accepts_gzip:
-        resp = make_response(cache.gz_body)
-        resp.headers["Content-Encoding"] = "gzip"
-    else:
-        # Rare path (client did not advertise gzip): STREAM the decompression in
-        # chunks instead of materializing the whole ~100MB+ body per request.
-        # `gzip.decompress()` here would allocate the full payload for every
-        # non-gzip caller concurrently (bare curl, urllib, uptime probes) and hold
-        # it for the entire client write -- a per-request spike larger than the
-        # permanent copy this cache used to keep.
-        gz_bytes = cache.gz_body
+    zip_code = _normalize_zip(request.args.get("zip") or request.args.get("zip_code") or "")
+    if not zip_code:
+        return jsonify({"ok": False, "error": "zip_required"}), 400
+    radius = clamp_listings_radius(request.args.get("radius"))
+    from backend.db.geo import zip_to_coords
 
-        def _stream():
-            with gzip.GzipFile(fileobj=io.BytesIO(gz_bytes), mode="rb") as fh:
-                while True:
-                    chunk = fh.read(64 * 1024)
-                    if not chunk:
-                        break
-                    yield chunk
+    origin = zip_to_coords(zip_code)
+    if origin is None:
+        return jsonify({"ok": False, "error": "zip_not_found"}), 400
 
-        resp = Response(_stream(), direct_passthrough=True)
-    resp.headers["Content-Type"] = "application/json"
-    # Use the cache entry's own etag (matching the body/gz_body we just
-    # served), not a possibly newer value from a concurrent rebuild.
-    resp.headers["ETag"] = cache.etag
-    resp.headers["Cache-Control"] = "public, max-age=0, s-maxage=60, stale-while-revalidate=30"
-    resp.headers["Vary"] = "Accept-Encoding"
-    return resp
+    main = main_module()
+    hidden: tuple = ()
+    try:
+        hidden = tuple(sorted(main.hidden_dealer_ids_for_user(session.get("user_id")) or ()))
+    except Exception:
+        hidden = ()
+
+    from backend.db.repositories.grid_cards_repo import grid_scope_token
+
+    token = grid_scope_token()
+    key = (zip_code, radius, hidden)
+    entry = _cars_scope_get(key)
+    if not _cars_scope_entry_valid(entry, token):
+        with _cars_scope_lock:
+            build_lock = _cars_scope_build_locks.setdefault(key, threading.Lock())
+            if len(_cars_scope_build_locks) > 4 * _CARS_SCOPE_MAX_ENTRIES:
+                _cars_scope_build_locks.clear()
+                _cars_scope_build_locks[key] = build_lock
+        with build_lock:
+            entry = _cars_scope_get(key)
+            if not _cars_scope_entry_valid(entry, token):
+                entry = _build_cars_scope_entry(
+                    zip_code, (float(origin[0]), float(origin[1])), radius, hidden, token
+                )
+                _cars_scope_put(key, entry)
+    return _cars_json_response(entry, private=bool(hidden))
 
 
 def api_listings_market_stats():
@@ -402,16 +463,21 @@ def api_search_smart():
     filters = parse_natural_query(q)
     from backend.utils.hybrid_search import hybrid_smart_search
 
-    geo_kw = {}
-    zc = str(data.get("zip_code") or data.get("zip") or "").strip()
+    # Owner decision 2026-09-28: every search is scoped to the shopper's ZIP +
+    # radius, like the grid it replaces. The request's ZIP wins, then the remembered
+    # (session) area; with neither there is no area to search.
+    zc = _normalize_zip(str(data.get("zip_code") or data.get("zip") or ""))
     rad_raw = data.get("radius")
-    if zc and rad_raw is not None and str(rad_raw).strip() != "":
-        try:
-            rm = float(rad_raw)
-            if rm > 0:
-                geo_kw = {"zip_code": zc, "radius_miles": rm}
-        except (TypeError, ValueError):
-            pass
+    if not zc:
+        from backend.listings.geo_session import listings_geo_kwargs_from_session
+
+        remembered = listings_geo_kwargs_from_session(session)
+        zc = _normalize_zip(str(remembered.get("zip_code") or ""))
+        if rad_raw is None or str(rad_raw).strip() == "":
+            rad_raw = remembered.get("radius_miles")
+    if not zc:
+        return jsonify({"ok": False, "error": "zip_required"}), 400
+    geo_kw = {"zip_code": zc, "radius_miles": clamp_listings_radius(rad_raw)}
 
     from backend.utils.hybrid_search import NO_PARSE_MATCH_MESSAGE, public_search_meta
 

@@ -14,6 +14,7 @@ turned to dashes) matches ``cars.dealer_id``.
 
 from __future__ import annotations
 
+import json
 import re
 import sqlite3
 from urllib.parse import urlparse
@@ -120,26 +121,25 @@ def _find_dealership_by_dealer_id(dealer_id: str) -> dict | None:
         conn.close()
 
 
-def _dealer_grid_cars(dealer_id: str) -> list[dict]:
-    """Serialized listing cards for one dealer, sliced out of the shared /listings cache.
+def _dealer_grid_cards_json(dealer_id: str) -> list[str]:
+    """Stored listing-card JSON strings for one dealer, in grid order.
 
-    Deliberately NOT a second dealer-scoped query + serializer pass: main.js filters
-    the SERIALIZED card fields, so anything this page shows has to be byte-identical
-    to what /listings would show for the same rows — otherwise a facet value derived
-    here selects zero cars there. ``listings_grid_serialized_cars`` is the same
-    stale-while-revalidate cache /api/listings/cars serves, so on a warm process this
-    is a list scan, and it inherits the publicly-incomplete filtering for free.
+    Same cards /listings serves (the persisted ``listings_grid_cards`` store, see
+    ``grid_cards_repo``), so a facet value derived here selects the same cars there
+    -- main.js filters the SERIALIZED card fields. A dealer-scoped query: this page
+    never touches the rest of the fleet (it used to slice the whole-fleet grid).
     """
-    from backend.db.inventory_db import listings_grid_serialized_cars
+    from backend.db.repositories.grid_cards_repo import cards_for_dealer
 
-    key = (dealer_id or "").strip().lower()
+    key = (dealer_id or "").strip()
     if not key:
         return []
-    return [
-        c
-        for c in listings_grid_serialized_cars()
-        if str(c.get("dealer_id") or "").strip().lower() == key
-    ]
+    return cards_for_dealer(key).cards_json()
+
+
+def _dealer_grid_cars(dealer_id: str) -> list[dict]:
+    """Parsed listing cards for one dealer (see :func:`_dealer_grid_cards_json`)."""
+    return [json.loads(c) for c in _dealer_grid_cards_json(dealer_id)]
 
 
 _epa_makes_cache: frozenset[str] | None = None
@@ -646,19 +646,20 @@ def api_dealership_cars(dealer_key: str):
     if not dealer_id:
         return jsonify({"ok": False, "error": "not_found"}), 404
 
-    from backend.db.inventory_db import listings_grid_cache_etag
+    import hashlib
 
-    # The shared grid cache's own token, reduced to etag-safe characters (it already
-    # arrives quoted, and a nested quote would make the header invalid). The dealer
-    # part gets the same treatment: ``_clean_dealer_key`` already rejects anything
-    # unsafe on the request path, but for a numeric key this string is derived from
-    # a ``dealerships.website_url`` the registry wrote, and no DB value should be
-    # able to decide what bytes land in a response header.
-    etag = f'W/"{_etag_token(dealer_id)}-{_etag_token(listings_grid_cache_etag())}"'
+    cards = _dealer_grid_cards_json(dealer_id)
+    body = '{"ok":true,"cars":[' + ",".join(cards) + "]}"
+    # A digest of the body itself: it moves exactly when the served cards do, so a
+    # 304 can never confirm stale data. The dealer part is reduced to etag-safe
+    # characters -- for a numeric key it derives from a registry website_url.
+    digest = hashlib.blake2b(body.encode("utf-8"), digest_size=10).hexdigest()
+    etag = f'W/"{_etag_token(dealer_id)}-{digest}"'
     if (request.headers.get("If-None-Match") or "").strip() == etag:
         resp = make_response("", 304)
     else:
-        resp = make_response(jsonify({"ok": True, "cars": _dealer_grid_cars(dealer_id)}))
+        resp = make_response(body)
+        resp.headers["Content-Type"] = "application/json"
     resp.headers["ETag"] = etag
     resp.headers["Cache-Control"] = "private, no-cache"
     return resp
