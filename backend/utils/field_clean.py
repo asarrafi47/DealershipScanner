@@ -694,6 +694,59 @@ def split_bz_woodland_model_trim(out: dict[str, Any]) -> None:
     out["trim"] = f"Woodland {t}".strip() if t else "Woodland"
 
 
+# Raw ``condition`` spellings seen in cars (2026-09-28, F14): New, Used, Certified,
+# Pre-Owned, Pre-owned, Certified Pre-Owned, CTP, CarBravo, Demo. Stored as-is,
+# CPO filters and the certified / used split were unreliable (is_cpo NULL on
+# 2,210 certified rows). Program labels are kept under ``_condition_program``.
+_CONDITION_PROGRAMS: dict[str, tuple[str, str]] = {
+    # raw (lower)          -> (canonical, program tag)
+    "ctp": ("New", "CTP"),                    # GM Courtesy Transportation loaner, titled new
+    "courtesy transportation": ("New", "CTP"),
+    "demo": ("New", "Demo"),
+    "demonstrator": ("New", "Demo"),
+    "loaner": ("New", "Loaner"),
+    "carbravo": ("Used", "CarBravo"),         # GM used-car program; certified only when the row says so
+}
+
+
+def canonicalize_condition(row: dict[str, Any]) -> None:
+    """Canonicalise ``row['condition']`` to New / Used / Certified in place and
+    set ``is_cpo`` from it (1 for Certified, 0 for New / Used when unset). A
+    program spelling (CTP, Demo, CarBravo) is kept in ``_condition_program``."""
+    raw = row.get("condition")
+    if raw is None:
+        return
+    s = str(raw).strip()
+    if not s:
+        row["condition"] = None
+        return
+    low = s.lower()
+    is_cpo_flag = row.get("is_cpo") in (1, True, "1")
+    canonical: str | None = None
+    program: str | None = None
+    if low in _CONDITION_PROGRAMS:
+        canonical, program = _CONDITION_PROGRAMS[low]
+        if canonical == "Used" and is_cpo_flag:
+            canonical = "Certified"
+    elif "certif" in low or low == "cpo":
+        canonical = "Certified"
+    elif low == "new" or low.startswith("new "):
+        canonical = "New"
+    elif low in ("used", "pre-owned", "preowned", "pre owned") or low.startswith(("used ", "pre-owned ")):
+        canonical = "Used"
+    if canonical is None:
+        return  # unknown spelling: leave it for the display-side normaliser
+    if canonical == "Used" and is_cpo_flag:
+        canonical = "Certified"
+    row["condition"] = canonical
+    if program:
+        row["_condition_program"] = program
+    if canonical == "Certified":
+        row["is_cpo"] = 1
+    elif row.get("is_cpo") is None:
+        row["is_cpo"] = 0
+
+
 def clean_car_row_dict(d: dict[str, Any]) -> dict[str, Any]:
     """
     Apply normalization to typical cars.* string columns in-place copy.
@@ -759,6 +812,7 @@ def clean_car_row_dict(d: dict[str, Any]) -> dict[str, Any]:
     _cv = out.get("condition")
     if _cv is not None and str(_cv).strip().lower() in ("0", "false", "no", "off"):
         out["condition"] = None
+    canonicalize_condition(out)
 
     for num_key in ("mpg_city", "mpg_highway", "cylinders"):
         if num_key not in out:
