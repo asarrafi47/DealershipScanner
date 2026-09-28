@@ -216,6 +216,20 @@ def ensure_recipe(dealer: dict[str, Any], *, force: bool = False) -> dict[str, A
     if not kept:
         info["synth"] = info.get("synth") or "validated_zero"
         return info
+    # The SET is judged against the site's own count before the save
+    # (recipe_validation, Phase 3): one condition while the site sells both,
+    # section-scoped bodies, a short page under half the lot, dead auth. A
+    # reject is logged to discovery.md and nothing is saved; uncertain saves
+    # with scan_hints.recipe_status = "uncertain:<reason>".
+    from backend.scanner.recipe_validation import gate_recipes
+
+    kept, report = gate_recipes(did, kept, base_url=dealer["url"].rstrip("/"), dealer_name=dealer.get("name") or did,
+                                place=place or None, context="synth")
+    info["recipe_status"] = report.status
+    info["validation"] = report.summary()
+    if not kept:
+        info["synth"] = report.status
+        return info
     save_recipes(did, kept)
     info["synth"] = f"saved_{len(kept)}"
     info["providers"] = sorted({r.provider_hint for r in kept if r.provider_hint})

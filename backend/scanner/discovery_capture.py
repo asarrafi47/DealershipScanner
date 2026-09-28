@@ -143,10 +143,23 @@ async def capture_endpoints(
         uniq.append(ep)
     out["endpoints"] = [_endpoint_summary(ep) for ep in sorted(uniq, key=lambda e: -int(getattr(e, "vehicle_rows", 0) or 0))][:12]
     if promote and uniq:
+        # The set is judged against the site's own count before the save
+        # (recipe_validation): a one-condition / section-scoped / short-page /
+        # dead-auth capture is refused here, not by a fleet verdict a scan later.
+        from backend.scanner.dealer_place import place_kwargs
+
+        validation: dict[str, Any] = {}
         try:
-            out["recipes_written"] = int(promote_from_ledger(dealer_id, provider, uniq) or 0)
+            out["recipes_written"] = int(promote_from_ledger(
+                dealer_id, provider, uniq, validate=True, base_url=origin, dealer_name=dealer.get("name") or dealer_id,
+                place=place_kwargs(dealer) or None, validation_out=validation,
+            ) or 0)
         except Exception as exc:  # noqa: BLE001
             out["errors"].append(f"promote: {str(exc)[:160]}")
+        if validation:
+            out["validation"] = validation
+            if validation.get("verdict") == "reject":
+                out["errors"].append("validation: " + "; ".join(validation.get("reasons") or [])[:200])
     out["recipes_after"] = len([r for r in load_recipes(dealer_id) if not r.stale])
     out["seconds"] = round(time.perf_counter() - t0, 1)
     return out

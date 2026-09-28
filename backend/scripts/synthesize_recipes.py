@@ -240,6 +240,18 @@ def _process_dealer(
         row["note"] = f"synthesized but failed validation ({total_vins} < {min_vins} VINs)"
         return row
 
+    # The set is judged against the site's own count (recipe_validation): a
+    # one-condition / section-scoped / short-page set is refused here.
+    from backend.scanner.recipe_validation import gate_recipes
+
+    kept, report = gate_recipes(dealer_id, kept, base_url=dealer_url.rstrip("/"), dealer_name=dealer_name or dealer_id,
+                                context="synthesize_recipes")
+    row["validation"] = report.status
+    if not kept:
+        row["strategy"] = ""
+        row["note"] = f"rejected by validation: {'; '.join(report.reasons)[:160]}"
+        return row
+
     if not force and _healthy_recipe_exists(dealer_id):
         row["note"] = "healthy recipe already exists — not overwritten"
         return row

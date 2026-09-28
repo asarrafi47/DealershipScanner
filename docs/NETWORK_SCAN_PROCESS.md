@@ -112,6 +112,11 @@ workspace/dealer_logs/
   candidate's page-1 replay (status, keys, rows, VINs, error). Appends to
   `discovery.md`, writes `discovery_<stamp>.json`, indexes the failure class in
   `_learning/errors_index.md`.
+- `backend/scanner/recipe_validation.py` — the gate every recipe save path runs: page 1 + 2
+  of each recipe against the site's own count, VINs per condition, verdict
+  `ok | reject | uncertain` (one condition, section-scoped, short page, dead auth, no rows).
+  A reject is logged to `discovery.md` + `_learning/errors_index.md` and never saved;
+  `scan_hints.recipe_status` carries the code.
 - `backend/scripts/scan_lab_report.py` — per-row incomplete fields and dictionary
   discrepancies with examples (the verification numbers).
 - `.claude/workflows/dealer-discovery.js` — investigator / builder / verifier agents for

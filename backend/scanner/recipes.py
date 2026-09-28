@@ -295,11 +295,26 @@ def promote_from_ledger(
     *,
     min_vehicle_rows: int = 3,
     max_recipes: int = 8,
+    validate: bool = False,
+    base_url: str = "",
+    dealer_name: str = "",
+    place: dict[str, str] | None = None,
+    fetch: Any = None,
+    log_root: Path | None = None,
+    validation_out: dict[str, Any] | None = None,
 ) -> int:
     """
     Merge qualifying ``CapturedEndpoint``s into the dealer's recipe file.
     Fresh captures replace stale/older entries for the same (method, host+path).
     Returns the number of recipes written.
+
+    ``validate=True`` (the discovery capture) runs the merged live set through
+    :func:`backend.scanner.recipe_validation.gate_recipes` before the save: a
+    ``reject`` (one condition, section-scoped, dead auth, no rows, short page
+    under half the lot) leaves the recipe file untouched, logs the report to
+    the dealer's discovery.md and returns 0; ``uncertain`` / ``ok`` save with
+    ``scan_hints.recipe_status`` recorded. *fetch* / *log_root* are the test
+    seams; *validation_out* receives the report's summary and status.
     """
     now = time.time()
     candidates: list[EndpointRecipe] = []
@@ -364,6 +379,28 @@ def promote_from_ledger(
         ),
     )
     keep = ranked[:max_recipes]
+    if validate:
+        from backend.scanner.recipe_validation import gate_recipes
+
+        live = [r for r in keep if not r.stale]
+        kept_live, report = gate_recipes(
+            dealer_id, live, base_url=base_url, dealer_name=dealer_name or dealer_id,
+            place=place, fetch=fetch, context="discovery capture", log_root=log_root,
+        )
+        if validation_out is not None:
+            validation_out.update(report.summary())
+            validation_out["status"] = report.status
+            validation_out["recipes"] = [asdict(c) for c in report.recipes]
+        if not kept_live:
+            logger.warning("Recipes [%s]: capture refused by validation (%s); recipe file left as it was",
+                           dealer_id, "; ".join(report.reasons)[:200])
+            return 0
+        for r, chk in zip(live, report.recipes):
+            if chk.vins:
+                r.vehicle_rows = max(int(r.vehicle_rows or 0), int(chk.vins))
+                r.last_ok_at = now
+                if chk.site_total and not r.total_count:
+                    r.total_count = int(chk.site_total)
     save_recipes(dealer_id, keep)
     thin = sum(1 for r in keep if r.field_coverage and not recipe_coverage_is_rich(r.field_coverage))
     logger.info(
