@@ -15,6 +15,7 @@ import gzip
 import inspect
 import json
 import logging
+import mimetypes
 import os
 import re
 import secrets
@@ -253,6 +254,62 @@ def static_cache_ver() -> str:
     if app.debug or _static_cache_ver_memo is None:
         _static_cache_ver_memo = compute_static_cache_ver(Path(app.static_folder).resolve())
     return _static_cache_ver_memo
+
+
+def _precompressed_static_sibling(filename: str):
+    """(encoding, sibling filename) for a ``.br``/``.gz`` sibling the client
+    accepts, or None. A sibling older than its source is ignored, so an edited
+    source is never shadowed by a stale build (scripts/build_static_compressed.py
+    stamps each sibling with its source's mtime)."""
+    from werkzeug.security import safe_join
+
+    source = safe_join(app.static_folder, filename)
+    if not source:
+        return None
+    try:
+        src_mtime = os.stat(source).st_mtime
+    except OSError:
+        return None
+    accepted = request.accept_encodings
+    for encoding, suffix in (("br", ".br"), ("gzip", ".gz")):
+        if accepted.quality(encoding) <= 0:
+            continue
+        try:
+            st = os.stat(source + suffix)
+        except OSError:
+            continue
+        if st.st_size > 0 and st.st_mtime >= src_mtime:
+            return encoding, filename + suffix
+    return None
+
+
+def _static_view(filename: str):
+    """Flask's static view, plus precompressed siblings.
+
+    Nothing between the app and the browser compresses static files (gunicorn
+    does not, Railway's edge does not), so a cold visit downloaded ~550 KB of
+    CSS+JS that gzips to ~110 KB. The siblings are built by
+    scripts/build_static_compressed.py (Dockerfile.web runs it)."""
+    pick = _precompressed_static_sibling(filename)
+    if pick is None:
+        resp = app.send_static_file(filename)
+    else:
+        encoding, sibling = pick
+        mimetype = mimetypes.guess_type(filename)[0] or "application/octet-stream"
+        resp = send_from_directory(
+            app.static_folder,
+            sibling,
+            mimetype=mimetype,
+            max_age=app.get_send_file_max_age(filename),
+            conditional=True,
+        )
+        resp.headers["Content-Encoding"] = encoding
+    if filename.endswith((".js", ".css")):
+        resp.vary.add("Accept-Encoding")
+    return resp
+
+
+app.view_functions["static"] = _static_view
 
 
 @app.after_request

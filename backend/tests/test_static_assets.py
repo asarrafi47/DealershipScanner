@@ -106,3 +106,103 @@ def test_unstamped_static_url_is_not_immutable(static_client):
     assert "immutable" not in cc
     assert "max-age=31536000" not in cc
     assert "max-age=3600" in cc
+
+
+# ---- precompressed siblings (scripts/build_static_compressed.py + _static_view) ----
+
+
+def test_gzip_sibling_is_served_when_accepted(static_client):
+    import gzip
+
+    client, root = static_client
+    src = root / "main.js"
+    src.write_text("console.log('hello world');" * 20)
+    gz = root / "main.js.gz"
+    gz.write_bytes(gzip.compress(src.read_bytes(), mtime=0))
+    st = src.stat()
+    _touch(gz, st.st_mtime)
+
+    resp = client.get("/static/main.js?v=1", headers={"Accept-Encoding": "gzip, deflate"})
+    assert resp.status_code == 200
+    assert resp.headers["Content-Encoding"] == "gzip"
+    assert resp.headers["Content-Length"] == str(gz.stat().st_size)
+    assert "Accept-Encoding" in resp.headers.get("Vary", "")
+    assert resp.content_type.startswith(("text/javascript", "application/javascript"))
+    assert "immutable" in resp.headers["Cache-Control"]
+    assert gzip.decompress(resp.data) == src.read_bytes()
+
+    plain = client.get("/static/main.js?v=1", headers={"Accept-Encoding": "identity"})
+    assert plain.status_code == 200
+    assert "Content-Encoding" not in plain.headers
+    assert plain.data == src.read_bytes()
+    # Distinct representations carry distinct validators.
+    assert plain.headers["ETag"] != resp.headers["ETag"]
+
+
+def test_stale_gzip_sibling_is_ignored(static_client):
+    import gzip
+
+    client, root = static_client
+    src = root / "app.css"
+    gz = root / "app.css.gz"
+    gz.write_bytes(gzip.compress(b"old bytes", mtime=0))
+    _touch(gz, 1_700_000_000)
+    src.write_text("body { color: red }")
+    _touch(src, 1_700_000_100)
+
+    resp = client.get("/static/app.css?v=1", headers={"Accept-Encoding": "gzip"})
+    assert resp.status_code == 200
+    assert "Content-Encoding" not in resp.headers
+    assert resp.data == src.read_bytes()
+
+
+def test_brotli_preferred_over_gzip_when_both_exist(static_client):
+    import gzip
+
+    client, root = static_client
+    src = root / "x.js"
+    src.write_text("var x = 1;")
+    st = src.stat()
+    (root / "x.js.gz").write_bytes(gzip.compress(src.read_bytes(), mtime=0))
+    (root / "x.js.br").write_bytes(b"not-really-brotli")
+    _touch(root / "x.js.gz", st.st_mtime)
+    _touch(root / "x.js.br", st.st_mtime)
+
+    resp = client.get("/static/x.js", headers={"Accept-Encoding": "gzip, br"})
+    assert resp.headers["Content-Encoding"] == "br"
+    assert resp.data == b"not-really-brotli"
+
+    resp = client.get("/static/x.js", headers={"Accept-Encoding": "gzip"})
+    assert resp.headers["Content-Encoding"] == "gzip"
+
+
+def test_build_script_is_idempotent_and_prunes_orphans(tmp_path: Path):
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location(
+        "build_static_compressed",
+        Path(__file__).resolve().parents[2] / "scripts" / "build_static_compressed.py",
+    )
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+
+    (tmp_path / "a.js").write_text("console.log(1);")
+    (tmp_path / "css").mkdir()
+    (tmp_path / "css" / "b.css").write_text("body{}")
+    (tmp_path / "gone.js.gz").write_bytes(b"orphan")
+    (tmp_path / "logo.png").write_bytes(b"\x89PNG")
+
+    first = mod.build(tmp_path, quiet=True)
+    assert first >= 3  # two .gz (+ two .br when brotli is present) + one orphan removed
+    assert (tmp_path / "a.js.gz").exists()
+    assert (tmp_path / "css" / "b.css.gz").exists()
+    assert not (tmp_path / "gone.js.gz").exists()
+    assert not (tmp_path / "logo.png.gz").exists()
+    assert (tmp_path / "a.js.gz").stat().st_mtime == (tmp_path / "a.js").stat().st_mtime
+
+    assert mod.build(tmp_path, quiet=True) == 0
+    assert mod.build(tmp_path, check=True, quiet=True) == 0
+
+    # Editing a source makes exactly its siblings stale.
+    _touch(tmp_path / "a.js", (tmp_path / "a.js").stat().st_mtime + 60)
+    assert mod.build(tmp_path, check=True, quiet=True) == (2 if mod.brotli else 1)

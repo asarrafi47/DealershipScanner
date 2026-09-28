@@ -181,3 +181,7 @@ tools/ocr/bin/
 # rows, and the directory grows without bound. Anchored to the repo root, so it
 # lands here regardless of where the app was started from.
 comment_uploads/
+
+# Precompressed static siblings (scripts/build_static_compressed.py); rebuilt at image build.
+frontend/static/**/*.gz
+frontend/static/**/*.br
