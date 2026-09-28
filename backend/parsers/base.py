@@ -268,16 +268,22 @@ _FLUFF_URL_SIGNALS = (
 )
 
 
+# A comma that starts the next URL of a joined list (", http" included); a
+# comma inside a URL (Cloudinary "/c_fill,w_800,h_600/") never matches.
+_JOINED_URL_SEP_RE = re.compile(r",\s*(?=https?://)", re.IGNORECASE)
+
+
 def split_joined_image_urls(raw: str) -> list[str]:
     """A comma-joined URL list ("https://a.jpg,https://b.jpg") as separate
     URLs; a plain URL comes back as a one-item list. Team Velocity ``:photoUrls``
-    is such a list and 2,957 rows stored it as one gallery element."""
+    is such a list and 2,957 rows stored it as one gallery element. Commas
+    inside a URL's path or query are kept."""
     t = (raw or "").strip()
     if not t:
         return []
-    if ",http" not in t:
+    if not _JOINED_URL_SEP_RE.search(t):
         return [t]
-    return [u.strip() for u in re.split(r",(?=https?://)", t) if u.strip()]
+    return [u.strip() for u in _JOINED_URL_SEP_RE.split(t) if u.strip()]
 
 # Patterns that indicate a URL is an HTML inventory page, not an image.
 _VDP_PAGE_PATH_RE = re.compile(

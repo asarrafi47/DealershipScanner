@@ -26,11 +26,14 @@ from backend.scanner.utils.vdp_spec_parse import parse_html_for_vehicle_specs
 
 logger = logging.getLogger(__name__)
 
-# ',' is excluded from both groups: Team Velocity ``:photoUrls`` is a
-# comma-joined list, and a query string ("?fmt=png-alpha%2Crgb") used to
-# swallow the whole rest of the list into one URL (F03, 2026-09-28).
+# Commas are URL characters (Cloudinary transforms: /c_fill,w_800,h_600/),
+# so they stay allowed; a comma-joined list (Team Velocity ``:photoUrls``,
+# where a query string "?fmt=png-alpha%2Crgb" used to swallow the rest of the
+# list into one URL, F03 2026-09-28) is cut only at a comma that starts the
+# next URL: ",http(s)://" or ", http(s)://".
+_URL_CHAR = r"(?:(?!,\s*https?://)[^\s\"'<>])"
 _IMG_URL_RE = re.compile(
-    r"https?://[^\s\"'<>,]+?\.(?:jpe?g|png|webp|gif|avif)(?:\?[^\s\"'<>,]*)?",
+    r"https?://" + _URL_CHAR + r"+?\.(?:jpe?g|png|webp|gif|avif)(?:\?" + _URL_CHAR + r"*)?",
     re.I,
 )
 

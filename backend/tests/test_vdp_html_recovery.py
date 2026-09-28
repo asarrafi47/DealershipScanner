@@ -91,3 +91,33 @@ def test_should_extract_thin_gallery(monkeypatch) -> None:
         "gallery": ["https://x.com/1.jpg"],
     }
     assert cve.should_extract_from_page(v) is True
+
+
+PAD = "<!-- " + "x" * 600 + " -->"
+CLOUDINARY = "https://res.cloudinary.com/dealer/image/upload/c_fill,w_800,h_600,q_auto/v1/inventory/1HGBH41JXMN109186/01.jpg"
+
+
+def test_img_url_regex_keeps_commas_inside_a_cloudinary_transform() -> None:
+    """Excluding ',' from the URL class made every Cloudinary URL unmatchable
+    (the match stopped at "c_fill" and never reached the extension)."""
+    from backend.scanner.vdp import html_recovery as hr
+
+    html = f'<div data-src="{CLOUDINARY}"></div>' + PAD
+    assert [m.group(0) for m in hr._IMG_URL_RE.finditer(html)] == [CLOUDINARY]
+    got = rec.harvest_gallery_urls_from_html(html, "https://dealer.example/vdp/1")
+    assert got == [CLOUDINARY]
+
+
+def test_img_url_regex_splits_comma_joined_urls_at_the_next_scheme() -> None:
+    from backend.scanner.vdp import html_recovery as hr
+    from backend.parsers.base import split_joined_image_urls
+
+    a = "https://delivery.example.com/adobe/assets/urn:aaid:aem:1/as/image.png?fmt=png-alpha%2Crgb%2Cnone"
+    b = "https://delivery.example.com/adobe/assets/urn:aaid:aem:2/as/image.png?fmt=png-alpha%2Crgb%2Cnone"
+    c = CLOUDINARY
+    html = f"<x :photoUrls=\"'{a},{b}, {c}'\"></x>" + PAD
+    assert [m.group(0) for m in hr._IMG_URL_RE.finditer(html)] == [a, b, c]
+    got = rec.harvest_gallery_urls_from_html(html, "https://dealer.example/vdp/1")
+    assert got == [a, b, c]
+    assert split_joined_image_urls(f"{a},{b}, {c}") == [a, b, c]
+    assert split_joined_image_urls(c) == [c]
