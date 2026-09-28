@@ -1012,7 +1012,9 @@ def run_lifecycle_pass(results: list[dict[str, Any]], dealers: dict[str, dict[st
             info["had_recipes"] = info.get("had_recipes") or 1
             r2 = assess(conn, did, retry_since.isoformat(), known.get(did, 0), info)
             try:
-                r2["reconcile"] = reconcile_dealer(conn, did, retry_since.isoformat(), known.get(did, 0), int(r2.get("rows") or 0),
+                # stamped rows, never the raw feed count (same rule as the main pass)
+                rows_kept2 = int(r2.get("rows_stamped") if r2.get("rows_stamped") is not None else (r2.get("rows") or 0))
+                r2["reconcile"] = reconcile_dealer(conn, did, retry_since.isoformat(), known.get(did, 0), rows_kept2,
                                                    str(r2.get("verdict")), dry_run=no_reconcile)
             except Exception as exc:  # noqa: BLE001
                 r2["reconcile"] = {"error": str(exc)[:120]}

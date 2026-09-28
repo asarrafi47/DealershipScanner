@@ -863,7 +863,8 @@ def _resolve_rooftop_attribution_inner(
     target, tier = _pick_target(rooftops, dealer_name, dealer_id, dealer_url, place)
     label = dealer_id or dealer_name or "?"
 
-    if len(groups) == 1:
+    # after the department fold: "Acme Chevrolet" + "Acme Chevrolet Service" is one rooftop
+    if len(rooftops) == 1:
         # One rooftop in this payload. A paginated group feed hands out pages
         # that hold nothing but one sibling's cars, so "only one store here" is
         # not the same as "this store". Keep the rows unless the single rooftop

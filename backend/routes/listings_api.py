@@ -613,7 +613,7 @@ def _known_dealer_name(dealer_id: str) -> tuple[bool, str | None]:
 
     with db_conn() as conn:
         row = conn.execute(
-            "SELECT dealer_name FROM cars WHERE LOWER(dealer_id) = ? "
+            "SELECT dealer_name FROM cars WHERE dealer_id = ? "
             "ORDER BY CASE WHEN dealer_name IS NULL OR dealer_name = '' THEN 1 ELSE 0 END LIMIT 1",
             (dealer_id,),
         ).fetchone()

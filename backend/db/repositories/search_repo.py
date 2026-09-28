@@ -137,14 +137,20 @@ def _equipment_needle_params(needle: str) -> list[str]:
 
 
 def _exclude_dealer_ids_clause(exclude_dealer_ids) -> tuple[str, list[str]]:
-    """``AND LOWER(dealer_id) NOT IN (?, ...)`` for a user's hidden dealerships ('' when none)."""
+    """``AND dealer_id NOT IN (?, ...)`` for a user's hidden dealerships ('' when none).
+
+    ``cars.dealer_id`` is the lower-case host slug (0 mixed-case ids across 466
+    dealers, 2026-09-28) and the keys are lower-cased here, so the comparison is
+    exact and ``idx_cars_dealer_listing`` stays usable; ``LOWER(dealer_id)``
+    forced a sequential scan on every search for a user with hidden dealers.
+    """
     if not exclude_dealer_ids:
         return "", []
     keys = sorted({str(d or "").strip().lower() for d in exclude_dealer_ids} - {""})
     if not keys:
         return "", []
     return (
-        f" AND (dealer_id IS NULL OR LOWER(dealer_id) NOT IN ({_placeholders(keys)}))",
+        f" AND (dealer_id IS NULL OR dealer_id NOT IN ({_placeholders(keys)}))",
         keys,
     )
 
