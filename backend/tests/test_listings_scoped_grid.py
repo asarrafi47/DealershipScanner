@@ -127,7 +127,13 @@ def _forbid_whole_fleet(monkeypatch):
 def test_endpoint_without_zip_is_400_not_the_fleet(scoped, client):
     r = client.get("/api/listings/cars")
     assert r.status_code == 400
-    assert r.get_json() == {"ok": False, "error": "zip_required"}
+    assert r.get_json() == {
+        "ok": False,
+        "error": "zip_required",
+        "area_required": True,
+        "api_version": 2,
+        "cars": [],
+    }
     assert client.get("/api/listings/cars?radius=50").status_code == 400
     assert client.get("/api/listings/cars?zip=12").status_code == 400
 

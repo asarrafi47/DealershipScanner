@@ -47,7 +47,12 @@ MOBILE_API_ROUTES: tuple[MobileRoute, ...] = (
         auth="session_csrf",
         notes="SEC-077",
     ),
-    MobileRoute("GET", "/api/listings/cars", "api_listings_cars"),
+    MobileRoute(
+        "GET",
+        "/api/listings/cars",
+        "api_listings_cars",
+        notes="area-scoped since v2 (2026-09-28); see LISTINGS_AREA_CONTRACT",
+    ),
     MobileRoute("GET", "/api/listings/filter-options", "api_listings_filter_options"),
     MobileRoute("GET", "/api/listings/geo-coords", "api_listings_geo_coords"),
     MobileRoute(
@@ -61,7 +66,7 @@ MOBILE_API_ROUTES: tuple[MobileRoute, ...] = (
         "/api/search/smart",
         "api_search_smart",
         auth="session_csrf",
-        notes="SEC-040 rate limit",
+        notes="SEC-040 rate limit; area-scoped since v2, see LISTINGS_AREA_CONTRACT",
     ),
     MobileRoute("GET", "/api/zip-coords", "api_zip_coords"),
     MobileRoute("GET", "/api/dealer-locator", "api_dealer_locator"),
@@ -74,3 +79,31 @@ MOBILE_API_ROUTES: tuple[MobileRoute, ...] = (
         auth="session_csrf",
     ),
 )
+
+
+# Area-scoped listings (contract v2, owner decision 2026-09-28): neither route ever
+# returns the whole fleet. v1 ``GET /api/listings/cars`` took no parameters and
+# returned every active car; v2 answers one area.
+#
+# Area resolution, in order: the request's ZIP (+ radius), then the session's
+# remembered area (``POST /api/session/listings-geo``, which the iOS app calls before
+# fetching). With neither, the response is the ``no_area`` shape below (HTTP 400).
+LISTINGS_AREA_CONTRACT: dict = {
+    "version": 2,
+    "routes": {
+        "GET /api/listings/cars": {
+            "zip_params": ("zip", "zip_code"),
+            "radius_params": ("radius", "radius_miles"),
+            "radius": "clamped 5..250 mi (default 50), snapped up to 10/25/50/100/250",
+            "ok_keys": ("ok", "api_version", "zip", "radius", "count", "missing_coords", "partial", "cars"),
+            "no_area": {"status": 400, "keys": ("ok", "error", "area_required", "api_version", "cars")},
+        },
+        "POST /api/search/smart": {
+            "zip_params": ("zip_code", "zip"),
+            "radius_params": ("radius",),
+            "radius": "clamped 5..250 mi (default 50)",
+            "ok_keys": ("ok", "api_version", "filters", "results", "highlight", "search_meta", "empty_message"),
+            "no_area": {"status": 400, "keys": ("ok", "error", "area_required", "api_version", "results")},
+        },
+    },
+}

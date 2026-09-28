@@ -40,3 +40,12 @@ python -m pytest backend/tests/test_mobile_api_contract.py \
 ## Website overlap
 
 Several routes are shared with the listings website (`/api/listings/cars`, `filter-options`, `geo-coords`). Change behavior only when both clients need it, or version the API if shapes diverge.
+
+### Area-scoped listings (contract v2, 2026-09-28)
+
+`GET /api/listings/cars` and `POST /api/search/smart` are scoped to one area and never return the whole fleet (owner decision). v1 `GET /api/listings/cars` took no parameters and returned every active car.
+
+- Area: request ZIP (`zip`/`zip_code`) + radius (`radius`/`radius_miles`), else the session area stored by `POST /api/session/listings-geo` (the iOS app posts it right before fetching).
+- No area at all: HTTP 400 `{"ok": false, "error": "zip_required", "area_required": true, "api_version": 2, "cars": []}` (`results: []` for smart search).
+- Success bodies carry `api_version: 2`. The grid body also has `zip`, `radius` (snapped up to 10/25/50/100/250 — filter to the exact radius by `distance_miles`), `count`, `missing_coords`, `partial` (stored cards still being rebuilt: refetch shortly).
+- Machine-readable: `LISTINGS_AREA_CONTRACT` in [`contract.py`](contract.py); behaviour asserted in `backend/tests/test_mobile_api_contract.py`.

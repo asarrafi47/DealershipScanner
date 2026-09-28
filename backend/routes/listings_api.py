@@ -171,6 +171,30 @@ def snap_listings_radius(raw) -> float:
     return LISTINGS_RADIUS_OPTIONS_MI[-1]
 
 
+# Versioned shape of the area-scoped listings responses (see backend/mobile/contract.py
+# LISTINGS_AREA_CONTRACT). v1 was the whole fleet with no parameters; v2 (2026-09-28)
+# is scoped to a ZIP + radius and never ships the fleet.
+LISTINGS_API_VERSION = 2
+
+
+def _area_required_response(results_key: str):
+    """The documented no-area answer (contract v2): a 400 whose body still carries an
+    empty result list, so a native decoder reads an explicit "no area" rather than a
+    malformed payload. Never the whole fleet."""
+    return (
+        jsonify(
+            {
+                "ok": False,
+                "error": "zip_required",
+                "area_required": True,
+                "api_version": LISTINGS_API_VERSION,
+                results_key: [],
+            }
+        ),
+        400,
+    )
+
+
 def _normalize_zip(raw: str) -> str:
     digits = "".join(ch for ch in (raw or "") if ch.isdigit())
     return digits[:5] if len(digits) >= 5 else ""
@@ -261,10 +285,14 @@ def _build_cars_scope_entry(
     head = _json.dumps(
         {
             "ok": True,
+            "api_version": LISTINGS_API_VERSION,
             "zip": zip_code,
             "radius": radius,
             "count": len(res.entries),
             "missing_coords": res.missing_coords,
+            # True while some cards in this scope are stale or not yet built and a
+            # background refresh is running: the client should refetch shortly.
+            "partial": bool(res.partial),
         },
         separators=(",", ":"),
     )
@@ -309,8 +337,10 @@ def api_listings_cars():
     fleet (214k rows, 32 MB gzipped, ~9.5 GB peak in the web process). It asks for
     the shopper's area once a search starts and filters that subset client-side.
 
-    * ``zip`` (or ``zip_code``) is required: without it this is a 400
-      ``zip_required``, never the fleet.
+    * The area is ``zip`` (or ``zip_code``) + ``radius`` (or ``radius_miles``);
+      without a ZIP the session's remembered area (``POST /api/session/listings-geo``)
+      is used. With neither it is the documented contract-v2 400 ``zip_required``
+      (``area_required: true``, ``cars: []``), never the fleet.
     * ``radius`` is clamped to 5..250 mi (default 50) and snapped up to one of
       10/25/50/100/250, so the cache key space stays bounded; the client narrows
       the superset to its exact radius (every card carries ``distance_miles``).
@@ -322,9 +352,22 @@ def api_listings_cars():
       exactly when the served data does (and a 304 is always honest).
     """
     zip_code = _normalize_zip(request.args.get("zip") or request.args.get("zip_code") or "")
+    radius_raw = request.args.get("radius") or request.args.get("radius_miles")
+    from_session = False
     if not zip_code:
-        return jsonify({"ok": False, "error": "zip_required"}), 400
-    radius = snap_listings_radius(request.args.get("radius"))
+        # Contract v2: a client that stored its area with POST /api/session/listings-geo
+        # (the iOS app does, right before GET /api/listings/cars) is answered for it.
+        from backend.listings.geo_session import listings_geo_kwargs_from_session
+
+        remembered = listings_geo_kwargs_from_session(session)
+        zip_code = _normalize_zip(str(remembered.get("zip_code") or ""))
+        if zip_code:
+            from_session = True
+            if radius_raw is None or str(radius_raw).strip() == "":
+                radius_raw = remembered.get("radius_miles")
+    if not zip_code:
+        return _area_required_response("cars")
+    radius = snap_listings_radius(radius_raw)
     from backend.db.geo import zip_to_coords
 
     origin = zip_to_coords(zip_code)
@@ -351,7 +394,8 @@ def api_listings_cars():
                     zip_code, (float(origin[0]), float(origin[1])), radius, hidden, token
                 )
                 _cars_scope_put(key, entry)
-    return _cars_json_response(entry, private=bool(hidden))
+    # A session-derived area makes the body depend on the cookie: never shared-cache it.
+    return _cars_json_response(entry, private=bool(hidden) or from_session)
 
 
 def api_listings_market_stats():
@@ -500,7 +544,7 @@ def api_search_smart():
         if rad_raw is None or str(rad_raw).strip() == "":
             rad_raw = remembered.get("radius_miles")
     if not zc:
-        return jsonify({"ok": False, "error": "zip_required"}), 400
+        return _area_required_response("results")
     geo_kw = {"zip_code": zc, "radius_miles": clamp_listings_radius(rad_raw)}
 
     from backend.utils.hybrid_search import NO_PARSE_MATCH_MESSAGE, public_search_meta
@@ -541,6 +585,7 @@ def api_search_smart():
     return jsonify(
         {
             "ok": True,
+            "api_version": LISTINGS_API_VERSION,
             "filters": filters,
             "results": safe_results,
             "highlight": _highlight_params_from_filters(filters),
