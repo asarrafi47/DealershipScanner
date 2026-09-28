@@ -19,15 +19,28 @@ from backend.parsers.base import (
     harvest_image_urls_from_json,
     inventory_gallery_max,
     normalize_image_url_https,
+    split_joined_image_urls,
 )
 from backend.scanner.post_scan.gap_fill import fetch_listing_html
 from backend.scanner.utils.vdp_spec_parse import parse_html_for_vehicle_specs
 
 logger = logging.getLogger(__name__)
 
+# ',' is excluded from both groups: Team Velocity ``:photoUrls`` is a
+# comma-joined list, and a query string ("?fmt=png-alpha%2Crgb") used to
+# swallow the whole rest of the list into one URL (F03, 2026-09-28).
 _IMG_URL_RE = re.compile(
-    r"https?://[^\s\"'<>]+?\.(?:jpe?g|png|webp|gif|avif)(?:\?[^\s\"'<>]*)?",
+    r"https?://[^\s\"'<>,]+?\.(?:jpe?g|png|webp|gif|avif)(?:\?[^\s\"'<>,]*)?",
     re.I,
+)
+
+# Site chrome that passes the extension check but is never the car.
+_GALLERY_HOST_DENYLIST = (
+    "widget.buyercall.com",
+    "/offerlogix/",
+    "partnerstatic.carfax.com",
+    "smartpixl",
+    "iprecheck",
 )
 
 
@@ -130,13 +143,27 @@ def harvest_gallery_urls_from_html(html: str, page_url: str, *, max_urls: int | 
     urls: list[str] = []
 
     def _add(raw: str) -> None:
-        nu = normalize_image_url_https((raw or "").strip())
-        if not nu.startswith("https://") or nu in seen:
-            return
-        if any(x in nu.lower() for x in ("logo", "icon", "badge", "carfax", "kbb", "placeholder")):
-            return
-        seen.add(nu)
-        urls.append(nu)
+        for part in split_joined_image_urls(raw):
+            nu = normalize_image_url_https(part.strip())
+            if not nu.startswith("https://") or nu in seen:
+                continue
+            low = nu.lower()
+            if any(x in low for x in ("logo", "icon", "badge", "carfax", "kbb", "placeholder")):
+                continue
+            if any(x in low for x in _GALLERY_HOST_DENYLIST):
+                continue
+            seen.add(nu)
+            urls.append(nu)
+
+    # Team Velocity keeps the whole gallery in one ``:photoUrls`` attribute; read
+    # it first so the ordered photo list wins over whatever else the page embeds.
+    try:
+        from backend.parsers.team_velocity import extract_gallery as _tv_gallery
+
+        for u in _tv_gallery(html):
+            _add(u)
+    except Exception:  # noqa: BLE001 - template helper must never break the generic path
+        pass
 
     for obj in _json_ld_objects(html):
         for u in harvest_image_urls_from_json(obj, origin, max_urls=mx):

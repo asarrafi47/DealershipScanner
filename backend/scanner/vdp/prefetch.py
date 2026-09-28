@@ -421,8 +421,23 @@ def _apply_description_and_gallery(v: dict[str, Any], html: str, url: str) -> in
                     seen.add(u)
                     merged.append(u)
             if len(merged) > len(cur):
+                # The feed seeds ["/static/placeholder.svg"]; once a real photo
+                # exists the placeholder and any non-https entry go, and the hero
+                # follows the first real photo (F03, 2026-09-28: 22,340 rows kept
+                # image_url = placeholder next to a full gallery).
+                from backend.parsers.base import _is_placeholder_url
+
+                real = [
+                    u for u in merged
+                    if isinstance(u, str) and u.lower().startswith("https://") and not _is_placeholder_url(u)
+                ]
+                if real:
+                    merged = real
                 v["gallery"] = merged if cap is None else merged[:cap]
                 v["_gallery_http_prefetch_added"] = len(merged) - len(cur)
+                hero = str(v.get("image_url") or "")
+                if real and not hero.lower().startswith("http"):
+                    v["image_url"] = real[0]
                 filled += 1
     return filled
 
