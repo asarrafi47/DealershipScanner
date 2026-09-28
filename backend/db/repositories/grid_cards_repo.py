@@ -832,7 +832,9 @@ def _fallback_dealer_urls() -> list[tuple[str, str, int, tuple[float, float] | N
         ).fetchall()
         geo = load_dealer_geo_index(conn)
     for url, did, n in rows:
-        coords = lookup_dealer_coords(str(url or ""), geo)
+        u = str(url or "").strip()
+        # No dealer_url, nothing to locate the car by: it is counted in missing_coords.
+        coords = lookup_dealer_coords(u, geo) if u else None
         out.append((str(url or ""), str(did or ""), int(n or 0), coords))
     _fallback_urls_cache = (now, out)
     return out
@@ -913,25 +915,23 @@ def cards_near(
             if coords is not None and _dist(coords[0], coords[1]) <= radius_mi
         ]
         if fb:
+            # Coordinates here belong to the dealer_url, so the match is by URL alone,
+            # in batches: every car in a located URL group is in range whatever its
+            # dealer_id -- NULL / '' included (the old ``dealer_id IN (...)`` filter
+            # dropped those, and was silently skipped past _ID_BATCH ids).
             url_dist = {url: _dist(coords[0], coords[1]) for url, _, coords in fb}
-            ids = sorted({did for _, did, _ in fb if did})
             urls = sorted(url_dist)
             for start in range(0, len(urls), _ID_BATCH):
                 ub = urls[start:start + _ID_BATCH]
                 umarks = ",".join("?" for _ in ub)
-                id_sql = ""
-                id_params: tuple = ()
-                if ids and len(ids) <= _ID_BATCH:
-                    id_sql = f" AND c.dealer_id IN ({','.join('?' for _ in ids)})"
-                    id_params = tuple(ids)
                 cur = conn.cursor()
                 cur.execute(
                     f"SELECT {cols}, c.dealer_url AS dealer_url FROM cars c "
                     "LEFT JOIN dealerships d ON d.id = c.dealership_registry_id "
                     f"{store_join} "
                     f"WHERE {_ACTIVE} AND {_no_registry_coords_clause()} "
-                    f"AND c.dealer_url IN ({umarks}){id_sql}{hid_sql}",
-                    (*ub, *id_params, *hid_params),
+                    f"AND c.dealer_url IN ({umarks}){hid_sql}",
+                    (*ub, *hid_params),
                 )
                 for r in cur.fetchall():
                     candidates.append((dict(r), url_dist.get(str(r["dealer_url"] or ""))))

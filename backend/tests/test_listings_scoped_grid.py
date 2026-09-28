@@ -714,3 +714,62 @@ def test_partial_body_is_rebuilt_after_a_lost_refresh(scoped, client, monkeypatc
     (entry,) = listings_api._cars_scope_cache.values()
     token = gc.grid_scope_token()
     assert not listings_api._cars_scope_entry_valid(entry, token)
+
+
+# ── dealer_url coordinate fallback ──────────────────────────────────────
+
+
+@pytest.mark.parametrize("id_batch", [800, 1])
+def test_fallback_includes_cars_without_dealer_id_and_survives_batching(
+    sqlite_inventory, client, monkeypatch, id_batch
+):
+    from backend.db.repositories import grid_cards_repo as gc
+    from backend.db.repositories import listings_repo as lr
+    from backend.routes import listings_api
+
+    lr.clear_inventory_listings_cache()
+    gc.reset_grid_cards_state()
+    listings_api.clear_cars_scope_cache()
+
+    def geo_car(i, dealer, dealer_id):
+        return {
+            "title": f"2021 Honda Civic #{i}",
+            "year": 2021,
+            "make": "Honda",
+            "model": "Civic",
+            "price": 15000 + i,
+            "gallery": json.dumps([]),
+            "dealer_name": dealer,
+            "dealer_url": f"https://{dealer}.test",
+            "dealer_id": dealer_id,
+        }
+
+    _seed(
+        sqlite_inventory,
+        extra_cars=(
+            geo_car(1, "geo-only", None),        # NULL dealer_id
+            geo_car(2, "geo-only", ""),          # empty dealer_id
+            geo_car(3, "geo-two", "geo-two-a"),  # second located URL, two dealer_ids
+            geo_car(4, "geo-two", "geo-two-b"),
+            geo_car(5, "no-url", "no-url-test") | {"dealer_url": None},
+        ),
+    )
+    conn = sqlite3.connect(str(sqlite_inventory.path))
+    conn.execute(
+        "INSERT INTO dealer_geopoints (dealer_url, lat, lon) VALUES (?, ?, ?)",
+        ("https://geo-two.test", NEAR[0] - 0.02, NEAR[1]),
+    )
+    conn.commit()
+    conn.close()
+    # 800: one batch (the old dealer_id IN (...) filter applied and dropped NULL/'').
+    # 1: two URL batches, past the size where the old filter was silently skipped.
+    monkeypatch.setattr(gc, "_ID_BATCH", id_batch)
+
+    data = _cars(client.get("/api/listings/cars?zip=92694&radius=10"))
+    titles = {c["title"] for c in data["cars"]}
+    for i in (1, 2, 3, 4):
+        assert f"2021 Honda Civic #{i}" in titles
+    assert "2022 Toyota Camry #5" in titles
+    assert "2021 Honda Civic #5" not in titles
+    # nowhere-motors (#6) and the URL-less car: counted, never silently dropped.
+    assert data["missing_coords"] == 2
