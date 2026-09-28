@@ -1,0 +1,24 @@
+# Scanner image only (Dockerfile.scanner): the HTTP-only fleet scan
+# (backend.scripts.dealer_pipeline -> scanner.py), NHTSA vPIC heal, assess,
+# reconcile, compute_market_stats and build_listings_grid_cards.
+#
+# Derived 2026-09-28 from an import trace of a real 2-dealer pipeline run
+# (PYTHONPROFILEIMPORTTIME=1) plus an import sweep of backend.scanner/db/
+# enrichment/utils inside the image (scripts/scanner_import_sweep.py).
+# No torch / sentence-transformers / playwright / crawl4ai / flask: scans are
+# HTTP-only (backend/scanner/browser_gate.py) and the browser discovery capture
+# lives in Dockerfile.discovery. Keep security floors in sync with requirements.txt.
+python-dotenv>=1.0
+requests>=2.34.2
+curl_cffi>=0.7            # TLS-fingerprint impersonation (Cloudflare / Dealer Inspire)
+psycopg[binary]>=3.2
+pydantic>=2
+beautifulsoup4>=4.15.0
+lxml>=5.3
+aiohttp>=3.9
+pgeocode>=0.5.0           # pulls pandas/numpy (dealerships_db geocode helpers)
+thefuzz>=0.22.1
+fake-useragent>=1.5
+# Transitive security floors (SEC-076)
+urllib3>=2.7.0
+idna>=3.15

@@ -287,7 +287,15 @@ def _lock_holder_alive() -> int | None:
 def run_discovery_capture(dealer_id: str, timeout_sec: int = 900) -> dict[str, Any]:
     """Run ``discovery_probe --browser-capture`` for one dealer in a separate process
     (so SCANNER_ALLOW_BROWSER never enters this one). Bounded to one capture per
-    dealer per UTC day via a marker file; returns a small summary for the triage."""
+    dealer per UTC day via a marker file; returns a small summary for the triage.
+
+    The scanner image (Dockerfile.scanner, Railway) carries no browser: there the
+    capture is skipped without spending the day's marker, so a machine that has
+    Playwright can still run it for this dealer today."""
+    import importlib.util
+
+    if importlib.util.find_spec("playwright") is None:
+        return {"skipped": "no browser in this image (Dockerfile.discovery runs captures)", "recipes_after": 0}
     marker_dir = LOG_ROOT / dealer_id
     marker_dir.mkdir(parents=True, exist_ok=True)
     today = datetime.now(timezone.utc).strftime("%Y%m%d")

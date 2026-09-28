@@ -1,25 +1,31 @@
-# Scanner — HTTP-only (docs/HTTP_ONLY_SCANS_PLAN.md).
+# Scanner — HTTP-only fleet scan (docs/HTTP_ONLY_SCANS_PLAN.md, docs/RAILWAY_SCANNING.md).
 #
-# No Chromium, no Node: scans replay HTTP recipes and read detail pages with
-# curl_cffi. The only browser the project still uses lives in
-# Dockerfile.discovery (discovery_probe --browser-capture).
+# No Chromium, no Node, no ML stack: scans replay HTTP recipes and read detail
+# pages with curl_cffi. requirements-scanner.txt holds only what the pipeline,
+# scanner, NHTSA heal, market stats and the grid-card builder import (verify
+# with `python scripts/scanner_import_sweep.py` inside the image). The only
+# browser the project still uses lives in Dockerfile.discovery
+# (discovery_probe --browser-capture).
+#
+# Default command: scripts/railway_scan_fleet.sh (sharded dealer_pipeline, then
+# compute_market_stats and build_listings_grid_cards). Idle unless SCAN_FLEET=1
+# or SCAN_DEALERS is set, so a deploy never starts a fleet scan by itself.
 FROM python:3.12-slim
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    ca-certificates git gcc g++ libffi-dev \
+RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates procps \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
-ENV PYTHONUNBUFFERED=1 PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=/app
 
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+COPY requirements-scanner.txt .
+RUN pip install --no-cache-dir -r requirements-scanner.txt
 
 COPY . .
 
-RUN chmod +x /app/scripts/docker-entrypoint-scanner-worker.sh \
+RUN chmod +x /app/scripts/railway_scan_fleet.sh \
+    /app/scripts/docker-entrypoint-scanner-worker.sh \
     /app/scripts/docker-entrypoint-scanner-scheduler.sh
 
-# Default: run the Python scanner (override entrypoint in compose)
-CMD ["python", "scanner.py"]
+CMD ["/app/scripts/railway_scan_fleet.sh"]
