@@ -314,10 +314,13 @@ def test_dealership_page_does_not_count_them_as_confidently_its_own(fleet, monke
     from backend.routes import dealership_page as dp
 
     listings_repo.clear_inventory_listings_cache()
-    cards = listings_repo._build_grid_cars_uncached()
-    monkeypatch.setattr(
-        "backend.db.inventory_db.listings_grid_serialized_cars", lambda: cards
-    )
+    # The page reads the dealer's cards from the persisted card store (a dealer-
+    # scoped query) -- never the whole-fleet grid, which must not be built here.
+    def whole_fleet(*_a, **_k):
+        raise AssertionError("dealership page built the whole-fleet grid")
+
+    monkeypatch.setattr("backend.db.inventory_db.listings_grid_serialized_cars", whole_fleet)
+    monkeypatch.setattr(listings_repo, "listings_grid_serialized_cars", whole_fleet)
 
     inv = dp._dealer_inventory("bmwofmurrieta-com")
 

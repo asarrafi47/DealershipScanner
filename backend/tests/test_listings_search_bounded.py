@@ -80,6 +80,19 @@ def _initial_grid(html: str) -> list[dict]:
 def env(monkeypatch, tmp_path):
     app = _fresh_app(monkeypatch, tmp_path)
     _seed_cars(30)
+    # /listings?q= is ZIP + radius scoped since 2026-09-28 (no ZIP -> no search; see
+    # test_listings_scoped_grid). These fixture cars have no dealer location, so the
+    # requests below carry a ZIP and the real search runs with the geo kwargs dropped:
+    # what is under test here is the bound, not the radius.
+    import backend.listings.routes as routes
+
+    real = routes.hybrid_search_with_kwargs
+
+    def unscoped(q, kwargs, **kw):
+        kwargs = {k: v for k, v in kwargs.items() if k not in ("zip_code", "radius_miles")}
+        return real(q, kwargs, **kw)
+
+    monkeypatch.setattr(routes, "hybrid_search_with_kwargs", unscoped)
     return app
 
 
@@ -98,7 +111,7 @@ def test_listings_q_without_pgvector_is_bounded_and_filtered(env, monkeypatch):
 
     monkeypatch.setattr(hs, "search_cars", spy)
 
-    rv = env.test_client().get("/listings?q=used+toyota+under+30k")
+    rv = env.test_client().get("/listings?q=used+toyota+under+30k&zip_code=28202&radius=50")
     assert rv.status_code == 200
     grid = _initial_grid(rv.get_data(as_text=True))
     assert 0 < len(grid) < 500
@@ -117,7 +130,7 @@ def test_listings_q_grid_is_capped_at_the_constant(env, monkeypatch):
 
     monkeypatch.setattr(hs, "_semantic_car_ids", lambda q, n: [])
     monkeypatch.setattr(routes, "LISTINGS_SEARCH_GRID_MAX", 4)
-    rv = env.test_client().get("/listings?q=honda")
+    rv = env.test_client().get("/listings?q=honda&zip_code=28202&radius=50")
     assert rv.status_code == 200
     grid = _initial_grid(rv.get_data(as_text=True))
     assert len(grid) == 4

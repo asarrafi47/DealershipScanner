@@ -258,19 +258,30 @@ def test_search_cars_by_make_model_pairs_excludes_hidden_dealers(env):
     assert env["car_id"] not in ids
 
 
-def test_smart_search_hides_dealer_for_that_user_only(env):
+def test_smart_search_hides_dealer_for_that_user_only(env, monkeypatch):
     """POST /api/search/smart: the hidden dealer's car vanishes for the user, stays for guests."""
+    import backend.utils.hybrid_search as hs
     from backend.db.repositories import hidden_dealers_repo as repo
 
     app = env["app"]
     repo.hide_dealer(env["uid"], DEALER_ID, DEALER_NAME)
+    # Smart search is ZIP + radius scoped since 2026-09-28 (test_listings_scoped_grid
+    # covers that). These fixture cars have no dealer location, so drop the geo
+    # kwargs and keep the real search -- this test is about the hidden-dealer part.
+    real_search = hs.hybrid_smart_search
+
+    def unscoped(q, filters, **kw):
+        kw["listing_geo_kwargs"] = None
+        return real_search(q, filters, **kw)
+
+    monkeypatch.setattr(hs, "hybrid_smart_search", unscoped)
 
     def smart(client):
         with client.session_transaction() as sess:
             sess["_csrf_token"] = CSRF
         rv = client.post(
             "/api/search/smart",
-            data=json.dumps({"query": "Honda"}),
+            data=json.dumps({"query": "Honda", "zip_code": "92694", "radius": 50}),
             content_type="application/json",
             headers={"X-CSRF-Token": CSRF},
         )

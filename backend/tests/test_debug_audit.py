@@ -58,7 +58,8 @@ def test_smart_search_api_returns_trimmed_meta(monkeypatch: pytest.MonkeyPatch, 
         sess[_SESSION_KEY] = tok
     rv = client.post(
         "/api/search/smart",
-        json={"query": "nonexistentmakezzz"},
+        # Smart search is ZIP + radius scoped since 2026-09-28 (400 zip_required without).
+        json={"query": "nonexistentmakezzz", "zip_code": "92694", "radius": 50},
         headers={"X-CSRF-Token": tok},
     )
     assert rv.status_code == 200

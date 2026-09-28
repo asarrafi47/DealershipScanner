@@ -66,12 +66,28 @@ FLEET = [
 ]
 
 
+def _whole_fleet_forbidden():
+    raise AssertionError("the dealership page must never build the whole-fleet grid")
+
+
 @pytest.fixture
 def fleet(monkeypatch):
     import backend.db.inventory_db as inv
+    import backend.db.repositories.listings_repo as lr
 
-    monkeypatch.setattr(inv, "listings_grid_serialized_cars", lambda: list(FLEET))
-    monkeypatch.setattr(inv, "listings_grid_cache_etag", lambda: 'W/"test"')
+    # The page reads ONE dealer's cards from the persisted card store (a dealer-
+    # scoped query, grid_cards_repo.cards_for_dealer). Stand in for that query with
+    # FLEET filtered the same way, and make the old whole-fleet grid fail loudly.
+    def dealer_cards(dealer_id):
+        key = (dealer_id or "").strip().lower()
+        return [
+            json.dumps(c) for c in FLEET
+            if str(c.get("dealer_id") or "").strip().lower() == key
+        ]
+
+    monkeypatch.setattr(dp, "_dealer_grid_cards_json", dealer_cards)
+    monkeypatch.setattr(inv, "listings_grid_serialized_cars", _whole_fleet_forbidden)
+    monkeypatch.setattr(lr, "listings_grid_serialized_cars", _whole_fleet_forbidden)
     # The marque list comes from the epa_master catalogue at runtime; pin it so the
     # tests do not depend on a database.
     monkeypatch.setattr(dp, "_known_catalog_makes", lambda: frozenset({"rivian", "lucid", "mclaren"}))

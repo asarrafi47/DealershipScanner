@@ -7,15 +7,8 @@ do not replay full-grid radius filters.
 
 import json
 
-from backend.db.inventory_db import listings_grid_cache_etag, search_cars_by_make_model_pairs
+from backend.db.inventory_db import search_cars_by_make_model_pairs
 from backend.main import app
-
-
-def test_listings_grid_cache_etag_stable_when_cached():
-    etag1 = listings_grid_cache_etag()
-    etag2 = listings_grid_cache_etag()
-    assert etag1 == etag2
-    assert etag1.startswith('W/"')
 
 
 def test_api_listings_geo_coords():
@@ -38,14 +31,16 @@ def test_filter_options_omit_inline_geo_maps():
 
 
 def test_api_listings_cars_304_when_etag_matches():
+    # Radius-scoped since 2026-09-28: a bare /api/listings/cars is a 400, never the
+    # fleet (see test_listings_scoped_grid.py for the seeded contract tests).
     with app.test_client() as client:
-        r1 = client.get("/api/listings/cars")
+        r1 = client.get("/api/listings/cars?zip=92694&radius=50")
         assert r1.status_code == 200
         etag = r1.headers.get("ETag")
         assert etag
         assert r1.get_json()["ok"] is True
         assert isinstance(r1.get_json()["cars"], list)
-        r2 = client.get("/api/listings/cars", headers={"If-None-Match": etag})
+        r2 = client.get("/api/listings/cars?zip=92694&radius=50", headers={"If-None-Match": etag})
         assert r2.status_code == 304
         assert r2.get_data(as_text=True) == ""
 

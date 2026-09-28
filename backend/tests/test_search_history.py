@@ -334,7 +334,7 @@ def test_api_list_delete_clear_roundtrip(env):
 # Recording on the search endpoints
 # ---------------------------------------------------------------------------
 
-def test_listings_page_records_for_logged_in_user_only(env):
+def test_listings_page_records_for_logged_in_user_only(env, monkeypatch):
     from backend.db.repositories import search_history_repo as repo
 
     app = env["app"]
@@ -361,16 +361,28 @@ def test_listings_page_records_for_logged_in_user_only(env):
     assert rows[0]["result_count"] is None
     assert rows[0]["query_text"] is None
 
-    # Query search: recorded with the server-side count and the text.
-    assert client.get("/listings?q=Honda+Civic").status_code == 200
+    # Query search: recorded with the server-side count and the text. Searches are
+    # ZIP + radius scoped since 2026-09-28; the fixture car has no dealer location,
+    # so the real search runs with the geo kwargs dropped (radius is tested in
+    # test_listings_scoped_grid).
+    import backend.listings.routes as listings_routes
+
+    real_hybrid = listings_routes.hybrid_search_with_kwargs
+
+    def unscoped_hybrid(q, kwargs, **kw):
+        kwargs = {k: v for k, v in kwargs.items() if k not in ("zip_code", "radius_miles")}
+        return real_hybrid(q, kwargs, **kw)
+
+    monkeypatch.setattr(listings_routes, "hybrid_search_with_kwargs", unscoped_hybrid)
+    assert client.get("/listings?q=Honda+Civic&zip_code=28202&radius=50").status_code == 200
     rows = repo.list_search_history(uid)
     assert len(rows) == 2
-    assert rows[0]["filters"] == {"q": "Honda Civic"}
+    assert rows[0]["filters"] == {"q": "Honda Civic", "zip_code": "28202", "radius": "50"}
     assert rows[0]["query_text"] == "Honda Civic"
     assert rows[0]["result_count"] == 1
 
     # Reloading the same URL inside the dedupe window adds nothing.
-    assert client.get("/listings?q=Honda+Civic").status_code == 200
+    assert client.get("/listings?q=Honda+Civic&zip_code=28202&radius=50").status_code == 200
     assert _count_rows(uid) == 2
 
 
@@ -389,7 +401,8 @@ def test_smart_search_records_for_logged_in_user_only(env):
         assert rv.status_code == 200, rv.get_data(as_text=True)
         return rv.get_json()
 
-    smart(app.test_client(), {"query": "Honda"})
+    # Smart search is ZIP + radius scoped since 2026-09-28: every call carries one.
+    smart(app.test_client(), {"query": "Honda", "zip_code": "28202", "radius": 50})
     assert _count_rows(env["uid"]) == 0
 
     client = app.test_client()
@@ -402,7 +415,7 @@ def test_smart_search_records_for_logged_in_user_only(env):
     assert rows[0]["result_count"] == len(body["results"])
 
     # Empty query: nothing to remember.
-    smart(client, {"query": ""})
+    smart(client, {"query": "", "zip_code": "28202", "radius": 50})
     assert _count_rows(env["uid"]) == 1
 
 
@@ -419,12 +432,31 @@ def test_failing_history_write_does_not_break_search(env, monkeypatch):
     client = env["app"].test_client()
     _login(client, env["uid"])
 
-    rv = client.get("/listings?q=Honda")
+    # Searches are ZIP + radius scoped since 2026-09-28. The fixture car has no
+    # dealer location, so keep the real search but drop the geo kwargs: this test is
+    # about the history write failing, not about the radius.
+    import backend.utils.hybrid_search as hs
+
+    real_hybrid = hs.hybrid_search_with_kwargs
+    real_smart = hs.hybrid_smart_search
+
+    def unscoped_hybrid(q, kwargs, **kw):
+        kwargs = {k: v for k, v in kwargs.items() if k not in ("zip_code", "radius_miles")}
+        return real_hybrid(q, kwargs, **kw)
+
+    def unscoped_smart(q, filters, **kw):
+        kw["listing_geo_kwargs"] = None
+        return real_smart(q, filters, **kw)
+
+    monkeypatch.setattr(listings_routes, "hybrid_search_with_kwargs", unscoped_hybrid)
+    monkeypatch.setattr(hs, "hybrid_smart_search", unscoped_smart)
+
+    rv = client.get("/listings?q=Honda&zip_code=28202&radius=50")
     assert rv.status_code == 200
     assert "Honda" in rv.get_data(as_text=True)
 
     rv = client.post(
-        "/api/search/smart", data=json.dumps({"query": "Honda"}),
+        "/api/search/smart", data=json.dumps({"query": "Honda", "zip_code": "28202", "radius": 50}),
         content_type="application/json", headers={"X-CSRF-Token": CSRF},
     )
     assert rv.status_code == 200
