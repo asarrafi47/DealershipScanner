@@ -338,6 +338,20 @@ def score_rows(rows: list[dict], roster_store: dict[str, Any], evidence: dict[st
         return [r for r in results if r is not None]
 
     rooftops = [groups[k] for k in order]
+    # "<store> Service" / "<store> Parts" rooftops are the store's own department
+    # label (terrylabontechevy-com 2026-09-28: the lot sat under "… Service");
+    # fold them into the store before any tier looks, exactly as the legacy gate
+    # does, and re-point the folded rows at the host rooftop.
+    merge = getattr(p, "_merge_department_rooftops", None)
+    if merge is not None:
+        row_index = {id(row): i for i, row in enumerate(rows)}
+        rooftops = merge(rooftops)
+        groups = {rt.identity: rt for rt in rooftops}
+        for rt in rooftops:
+            for row in rt.rows:
+                i = row_index.get(id(row))
+                if i is not None:
+                    row_group[i] = rt.identity
     place = _place_tuple(roster)
     table = tier_table(rooftops, roster, place, aliases)
     target, tier = pick_target(table)
@@ -375,7 +389,15 @@ def score_rows(rows: list[dict], roster_store: dict[str, Any], evidence: dict[st
     weak_street_provenance = (
         tier in p._STREET_TIERS and str(roster.get("street_source") or "").strip().lower() in p._WEAK_STREET_SOURCES
     )
-    sibling_reject = REJECT_SIBLING if (tier not in p._LOCALITY_ONLY_TIERS and not weak_street_provenance) else REJECT_SIBLING_WEAK
+    # Subset-name tiers identify the store loosely (tedrussellford-net 2026-09-28:
+    # 600 real cars un-listed on a name_token_subset pick); same weak marker as
+    # the locality tiers — refuse the write, never un-list.
+    weak_name_tier = tier in getattr(p, "_WEAK_NAME_TIERS", ())
+    sibling_reject = (
+        REJECT_SIBLING
+        if (tier not in p._LOCALITY_ONLY_TIERS and not weak_street_provenance and not weak_name_tier)
+        else REJECT_SIBLING_WEAK
+    )
     own_street_key = place[1]
     shared_sources = {
         src for rt in rooftops
@@ -412,6 +434,8 @@ def _strong_tier(tier: str, roster: dict[str, Any]) -> bool:
     if tier in p._LOCALITY_ONLY_TIERS:
         return False
     if tier in p._STREET_TIERS and str(roster.get("street_source") or "").strip().lower() in p._WEAK_STREET_SOURCES:
+        return False
+    if tier in getattr(p, "_WEAK_NAME_TIERS", ()):
         return False
     return SIGNAL_WEIGHTS.get(tier, (0.0, False))[1]
 
