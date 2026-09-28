@@ -23,6 +23,24 @@ from urllib.parse import urlparse
 logger = logging.getLogger("scanner")
 
 
+def capture_place(dealer: dict[str, Any], origin: str) -> dict[str, str] | None:
+    """The store's place for the capture's validation gate: the same one the scan
+    replay uses (``roster_place_with_hints``: registry row plus the page-learned
+    street kept in scan hints), so a captured recipe is judged on the rows the
+    scan will keep. The dealer dict the probe passes carries only id / url / name /
+    provider; judging with that alone refused every street-block row of a store
+    whose street lives in scan hints (Honda of Huntersville shape) and the good
+    capture was turned away as ``zero_rows``."""
+    from backend.scanner.dealer_place import place_kwargs, roster_place_with_hints
+
+    place = place_kwargs(dealer)
+    try:
+        place.update(place_kwargs(roster_place_with_hints(origin, str(dealer.get("dealer_id") or ""))))
+    except Exception as exc:  # noqa: BLE001 - registry / hint store down: judge with what the caller gave
+        logger.debug("capture place lookup failed [%s]: %s", dealer.get("dealer_id"), exc)
+    return place or None
+
+
 def _endpoint_summary(ep: Any) -> dict[str, Any]:
     return {
         "method": str(getattr(ep, "method", "") or ""),
@@ -146,13 +164,11 @@ async def capture_endpoints(
         # The set is judged against the site's own count before the save
         # (recipe_validation): a one-condition / section-scoped / short-page /
         # dead-auth capture is refused here, not by a fleet verdict a scan later.
-        from backend.scanner.dealer_place import place_kwargs
-
         validation: dict[str, Any] = {}
         try:
             out["recipes_written"] = int(promote_from_ledger(
                 dealer_id, provider, uniq, validate=True, base_url=origin, dealer_name=dealer.get("name") or dealer_id,
-                place=place_kwargs(dealer) or None, validation_out=validation,
+                place=capture_place(dealer, origin), validation_out=validation,
             ) or 0)
         except Exception as exc:  # noqa: BLE001
             out["errors"].append(f"promote: {str(exc)[:160]}")
@@ -169,4 +185,4 @@ def capture_endpoints_sync(*args: Any, **kwargs: Any) -> dict[str, Any]:
     return asyncio.run(capture_endpoints(*args, **kwargs))
 
 
-__all__ = ["capture_endpoints", "capture_endpoints_sync"]
+__all__ = ["capture_endpoints", "capture_endpoints_sync", "capture_place"]

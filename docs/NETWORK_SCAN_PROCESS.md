@@ -108,9 +108,11 @@ workspace/dealer_logs/
   logs. Runs the probe below on every synthesis failure.
 - The recipe lifecycle inside the pipeline (after all batches, `--no-lifecycle` to skip): a
   dealer that came back `no_recipe` / `no_rows` / `validated_zero` / an auth error, or whose
-  `scan_hints.recipe_status` says `stale:` (a replay answered 401/403) or `rejected:`, is
+  `scan_hints.recipe_status` says `stale:` (a replay answered 401/403) — or `rejected:` while
+  the scan itself failed; a rejected re-synth beside a recipe that replays stays out — is
   re-synthesized (force) and validated; if that fails, the discovery capture runs in its own
-  process and the captured recipes are validated; a dealer whose recipe now validates is
+  process (never for a dealer whose scan came back `ok` / `thin` / `inaccurate`) and the
+  captured recipes are validated; a dealer whose recipe now validates is
   rescanned in one final HTTP-only retry batch and assessed again (`retried: <old> → <new>`
   in the triage). One attempt per dealer per day. Each step is a dated block in
   `discovery.md`, each failure a line in `_learning/errors_index.md`, and the dealers still
@@ -123,7 +125,9 @@ workspace/dealer_logs/
   `_learning/errors_index.md`.
 - `backend/scanner/recipe_validation.py` — the gate every recipe save path runs: page 1 + 2
   of each recipe against the site's own count, VINs per condition, verdict
-  `ok | reject | uncertain` (one condition, section-scoped, short page, dead auth, no rows).
+  `ok | reject | uncertain` (one condition — a reject only when the site's census or the other
+  side's own URL proves the other side exists, else `uncertain:one_condition_unverified` and the
+  post-scan assess decides — section-scoped, short page, dead auth, no rows).
   A reject is logged to `discovery.md` + `_learning/errors_index.md` and never saved;
   `scan_hints.recipe_status` carries the code.
 - `backend/scripts/platform_candidates.py` + `backend/scanner/platform_fingerprint.py` — platform

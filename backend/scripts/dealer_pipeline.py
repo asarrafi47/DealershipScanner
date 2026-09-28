@@ -20,11 +20,14 @@ Per dealer:
                 error     scanner error for the dealer
                 no_recipe nothing to replay and synthesis failed (needs discovery)
   5. lifecycle after ALL batches (--no-lifecycle to skip): no_recipe / no_rows /
-              validated_zero / auth errors / recipe_status stale:|rejected: ->
-              force re-synth + validation -> discovery capture (own process) +
+              validated_zero / auth errors / recipe_status stale: (and rejected:
+              beside a failing verdict; a rejected re-synth beside a recipe that
+              replays stays out) -> force re-synth + validation -> discovery
+              capture (own process; never for an ok / thin / inaccurate scan) +
               validation -> one retry batch (HTTP-only) -> assess again. Once per
               dealer per UTC day (scan_hints.lifecycle_last_attempt). Triage rows
-              gain `lifecycle` (none | resynth_ok | capture_ok | failed:<reason>)
+              gain `lifecycle` (none | resynth_ok | capture_ok | failed:<reason> |
+              resynth_failed:<reason>, the last for a dealer whose scan passed)
               and `retried: <old> → <new>`; <out>/needs_discovery.txt lists the
               dealers still failing.
   6. platform clustering over the run's needs_discovery dealers
@@ -649,7 +652,11 @@ def verify_accuracy(conn, dealer_id: str, since_iso: str) -> dict[str, Any]:
 # --------------------------------------------------------------------------
 
 LIFECYCLE_VERDICTS = ("no_recipe", "no_rows")
-LIFECYCLE_STATUS_PREFIXES = ("stale:", "rejected:")
+# Verdicts under which a scan produced rows the assess could judge: the recipe on
+# file replays. A ``rejected:`` status beside one of these describes a re-synth
+# that lost to the working recipe, not a dealer without one.
+SCANNED_VERDICTS = ("ok", "thin", "inaccurate")
+FAILING_VERDICTS = ("no_recipe", "no_rows", "error")
 LIFECYCLE_OK = ("resynth_ok", "capture_ok")
 _AUTH_ERROR_MARKERS = ("401", "403", "auth", "forbidden", "unauthori")
 _NO_URL_SYNTHS = ("not_in_manifest_or_db",)
@@ -688,11 +695,13 @@ def route_verdict(dealer: dict[str, Any], result: dict[str, Any], recipe_status:
 
     ``{"action": "lifecycle" | "none", "trigger": <why>}``. Enters on the verdicts
     ``no_recipe`` / ``no_rows``, a ``validated_zero`` synthesis, an ``error``
-    whose reason smells of auth (401/403/forbidden), and any dealer whose
+    whose reason smells of auth (401/403/forbidden), any dealer whose
     ``scan_hints.recipe_status`` starts with ``stale:`` (a replay answered
-    401/403) or ``rejected:`` (the validator refused the last synthesis).
-    ``thin`` / ``inaccurate`` / ``ok`` stay out: their recipe replays; those are
-    parser and attribution problems, not recipe problems.
+    401/403), and a ``rejected:`` status (the validator refused the last
+    synthesis) only when the scan itself failed (``no_recipe`` / ``no_rows`` /
+    ``error``). ``thin`` / ``inaccurate`` / ``ok`` stay out, ``rejected:`` or
+    not: their recipe replays; those are parser and attribution problems, not
+    recipe problems, and a daily browser capture would learn nothing new.
     """
     did = str(dealer.get("dealer_id") or result.get("dealer_id") or "")
     verdict = str(result.get("verdict") or "")
@@ -704,8 +713,14 @@ def route_verdict(dealer: dict[str, Any], result: dict[str, Any], recipe_status:
     if recipe_status is None:
         recipe_status = str(_scan_hints(did).get("recipe_status") or "")
     recipe_status = str(recipe_status or "")
-    if recipe_status.startswith(LIFECYCLE_STATUS_PREFIXES):
+    if recipe_status.startswith("stale:"):
         return {"action": "lifecycle", "trigger": f"recipe_status {recipe_status}", "verdict": verdict}
+    if recipe_status.startswith("rejected:"):
+        if verdict in FAILING_VERDICTS:
+            return {"action": "lifecycle", "trigger": f"recipe_status {recipe_status}", "verdict": verdict}
+        if verdict in SCANNED_VERDICTS:
+            return {"action": "none", "trigger": f"{verdict} (recipe_status {recipe_status} ignored: the recipe on file replays)",
+                    "verdict": verdict}
     if verdict in LIFECYCLE_VERDICTS:
         return {"action": "lifecycle", "trigger": verdict, "verdict": verdict}
     if synth.startswith("validated_zero"):
@@ -807,6 +822,16 @@ def run_lifecycle(dealer: dict[str, Any], result: dict[str, Any], *, trigger: st
                                                           "recipe validated; queued for this run's retry batch (HTTP-only scan)"))
         return out
     fail1 = synth or "no_template"
+    verdict = str(result.get("verdict") or "")
+    if verdict in SCANNED_VERDICTS:
+        # The scan produced rows from the recipe on file (a stale: status the
+        # replay could not clear, or a rejected: re-synth beside a working
+        # recipe): a browser capture would only re-learn the endpoint that
+        # already replays. Not a needs_discovery outcome.
+        out["lifecycle"] = f"resynth_failed:{fail1[:60]}"
+        _log_append(did, "discovery.md", _lifecycle_block(stamp, "step 1 — force re-synth", trigger, lines,
+                                                          f"failed ({fail1}); scan verdict {verdict}: the recipe on file replays, no discovery capture"))
+        return out
     _log_append(did, "discovery.md", _lifecycle_block(stamp, "step 1 — force re-synth", trigger, lines,
                                                       f"failed ({fail1}); next: discovery capture" if not no_discover else f"failed ({fail1}); discovery capture disabled (--no-discover)"))
     _learning_append("errors_index.md", f"- {stamp} lifecycle_resynth_failed:{fail1[:60]} -> {did} (trigger {trigger}; workspace/dealer_logs/{did}/discovery.md)")
@@ -892,7 +917,7 @@ def run_lifecycle_pass(results: list[dict[str, Any]], dealers: dict[str, dict[st
     ``lifecycle_detail`` and, when rescanned, ``retried``). Returns the summary."""
     now = now or datetime.now(timezone.utc)
     retry: list[str] = []
-    summary: dict[str, Any] = {"routed": 0, "resynth_ok": 0, "capture_ok": 0, "failed": 0, "retried": {}, "chromium_leaks": []}
+    summary: dict[str, Any] = {"routed": 0, "resynth_ok": 0, "capture_ok": 0, "failed": 0, "resynth_failed": 0, "retried": {}, "chromium_leaks": []}
     for r in results:
         did = r["dealer_id"]
         r.setdefault("lifecycle", "none")
@@ -910,6 +935,8 @@ def run_lifecycle_pass(results: list[dict[str, Any]], dealers: dict[str, dict[st
         if lc["lifecycle"] in LIFECYCLE_OK:
             summary[lc["lifecycle"]] += 1
             retry.append(did)
+        elif lc["lifecycle"].startswith("resynth_failed:"):
+            summary["resynth_failed"] += 1  # the scan passed; the recipe on file stays, no capture
         else:
             summary["failed"] += 1
     if not retry:

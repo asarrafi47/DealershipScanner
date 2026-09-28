@@ -136,15 +136,22 @@ def test_stale_recipe_is_tried_once_and_unstaled_on_success(monkeypatch, hints):
 
 
 def test_success_clears_only_a_stale_status(monkeypatch, hints):
-    """A validator verdict (rejected:/uncertain:) is not the replay's to overwrite."""
+    """``uncertain:`` describes the recipes now replaying and is not the replay's
+    to overwrite; ``rejected:`` described a re-synthesis that lost to the recipe
+    on file, so a replay that answers clears it (otherwise the dealer is routed
+    into the lifecycle — and a browser capture a day — while its scans pass)."""
     import backend.scanner.recipes as rec
 
     _recipe()
-    hints[D] = {"recipe_status": "uncertain:site_total_unknown"}
     pages = {1: [_vehicle(i) for i in range(20)], 2: [_vehicle(20 + i) for i in range(20)], 3: [_vehicle(40 + i) for i in range(5)]}
     monkeypatch.setattr(rec, "_replay_request", lambda recipe, body, base_url, url=None: (200, {"inventory": pages.get(body["page"], [])}))
+    hints[D] = {"recipe_status": "uncertain:site_total_unknown"}
     assert _replay() is not None
     assert hints[D]["recipe_status"] == "uncertain:site_total_unknown"
+    hints[D] = {"recipe_status": "rejected:one_condition", "recipe_validation": {"verdict": "reject"}}
+    assert _replay() is not None
+    assert hints[D]["recipe_status"] == "ok"
+    assert hints[D]["recipe_validation"] == {"verdict": "reject"}  # the report itself stays for the record
 
 
 def test_hint_store_failure_never_reaches_the_scan(monkeypatch, hints):
@@ -179,11 +186,19 @@ def _res(verdict, reason="", synth="saved_1", had=1):
     (_res("error", "no scan_runs row"), "", "none"),
     (_res("ok", "complete and verified"), "stale:403:2026-09-28T10:00:00+00:00", "lifecycle"),
     (_res("no_recipe", "rejected:one_condition", synth="rejected:one_condition", had=0), "rejected:one_condition", "lifecycle"),
+    (_res("no_rows", "recipe replay yielded 0 rows"), "rejected:section_scoped", "lifecycle"),
+    (_res("error", "recipe replay HTTP 403 (auth rotated?)"), "rejected:one_condition", "lifecycle"),
+    # a rejected re-synth beside a recipe that replays: parser / attribution work, not a recipe problem
+    (_res("ok", "complete and verified"), "rejected:one_condition", "none"),
+    (_res("thin", "key fields below 90%: price=40%"), "rejected:section_scoped", "none"),
+    (_res("inaccurate", "only one condition captured"), "rejected:one_condition", "none"),
     (_res("ok"), "uncertain:site_total_unknown", "none"),
 ])
 def test_route_verdict_decisions(result, status, expect):
     route = dp.route_verdict(DEALER, result, recipe_status=status)
     assert route["action"] == expect, route
+    if status.startswith("rejected:") and expect == "none":
+        assert "ignored: the recipe on file replays" in route["trigger"]
 
 
 def test_route_verdict_needs_a_url():
@@ -290,6 +305,24 @@ def test_run_lifecycle_capture_rejected_or_skipped_fails(monkeypatch, hints, log
     idx = (log_root / "_learning" / "errors_index.md").read_text(encoding="utf-8")
     assert "lifecycle_capture_failed:capture_skipped_today" in idx
     assert "lifecycle_capture_failed:capture_validation_rejected:one_condition" in idx
+
+
+def test_run_lifecycle_never_captures_for_a_dealer_whose_scan_passed(monkeypatch, hints, log_root):
+    """A stale: status the replay could not clear (or a rejected: re-synth) beside
+    an ok / thin / inaccurate verdict: step 1 may re-synth, step 2 never launches
+    the browser, and the outcome is not a needs_discovery one."""
+    monkeypatch.setattr(dp, "ensure_recipe", lambda dealer, force=False: {"had_recipes": 1, "synth": "rejected:one_condition", "platform": "team_velocity", "recipe_status": "rejected:one_condition"})
+    monkeypatch.setattr(dp, "run_discovery_capture", lambda *a, **k: pytest.fail("no browser capture for a dealer whose recipe replays"))
+    for verdict in ("ok", "thin", "inaccurate"):
+        hints.clear()
+        out = dp.run_lifecycle(DEALER, _res(verdict, "complete and verified"), trigger="recipe_status stale:403:2026-09-28T01:00:00+00:00", stamp="2026-09-28 12:00 UTC")
+        assert out["lifecycle"] == "resynth_failed:rejected:one_condition", verdict
+        assert [s["step"] for s in out["steps"]] == ["resynth"]
+        assert not out["lifecycle"].startswith("failed:")
+        assert dp.write_needs_discovery([{"dealer_id": D, "verdict": verdict, "lifecycle": out["lifecycle"], "reason": ""}], log_root) == []
+    text = (log_root / D / "discovery.md").read_text(encoding="utf-8")
+    assert "scan verdict ok: the recipe on file replays, no discovery capture" in text
+    assert not (log_root / "_learning" / "errors_index.md").exists()
 
 
 def test_run_lifecycle_no_discover_stops_after_step1(monkeypatch, hints, log_root):

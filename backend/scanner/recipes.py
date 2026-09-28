@@ -317,13 +317,17 @@ def record_stale_status(dealer_id: str, status: int) -> str | None:
 
 
 def clear_stale_status(dealer_id: str) -> bool:
-    """A successful replay clears a ``stale:`` recipe_status (to ``ok``); a
-    validation verdict (``rejected:`` / ``uncertain:``) is left alone. Best-effort."""
+    """A successful replay clears a ``stale:`` recipe_status (to ``ok``), and a
+    ``rejected:`` one too: that verdict was on a re-synthesis that lost to the
+    recipe on file, which has just answered with rows, so the dealer is not
+    recipe-less and must not be routed into the lifecycle every run.
+    ``uncertain:`` is left alone: it describes the recipes now replaying.
+    Best-effort."""
     try:
         from backend.scanner.recipe_store import get_scan_hints, set_scan_hints
 
         cur = str((get_scan_hints(dealer_id) or {}).get("recipe_status") or "")
-        if not cur.startswith(RECIPE_STATUS_STALE_PREFIX):
+        if not cur.startswith((RECIPE_STATUS_STALE_PREFIX, "rejected:")):
             return False
         return bool(set_scan_hints(dealer_id, {"recipe_status": "ok"}))
     except Exception as exc:  # noqa: BLE001

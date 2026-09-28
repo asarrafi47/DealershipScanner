@@ -20,6 +20,15 @@ back with what the site itself says:
 * flags — ``one_condition``, ``section_scoped``, ``short_page``, ``auth_needed``,
   ``zero_rows``; and a verdict ``ok`` | ``reject`` | ``uncertain`` with reasons.
 
+``one_condition`` rejects only when the other side is known to exist: the site's
+own census (carscommerce facets) or, for a set pinned to one side by URL, the
+other side's own URL answering :data:`OTHER_SIDE_MIN_VINS` VINs. A pinned set
+whose other side answers nothing (or cannot be derived, or whose sibling recipe
+replayed with zero rows) is a used-only / new-only lot as far as the site says:
+it saves as ``uncertain:one_condition_unverified`` and the post-scan assess
+decides. Rejecting those looped forever: no recipe -> lifecycle re-synth
+(rejected again) -> a browser capture a day -> rejected again (2026-09-28 review).
+
 Pure with respect to storage: no recipe file, no car row, no DB write. The
 side effects (discovery.md entry, ``scan_hints.recipe_status``) live in
 :func:`gate_recipes`, which the save paths call.
@@ -31,11 +40,11 @@ import json
 import os
 import logging
 import re
-from dataclasses import asdict, dataclass, field
+from dataclasses import asdict, dataclass, field, replace
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Callable
-from urllib.parse import parse_qsl, urlparse
+from urllib.parse import parse_qsl, urlencode, urlparse
 
 from backend.scanner.recipes import (
     PAGINATION_ALGOLIA,
@@ -81,6 +90,14 @@ SHORT_PAGE_TOLERANCE = 0.95
 # Having seen at least this share of the site's count, a single condition is a
 # statement about the lot, not about the two pages we happened to read.
 WHOLE_LOT_SEEN = 0.90
+# A pinned-condition set (Team Velocity /inventory-used.json, DEP tp=used, an
+# HTML /used-inventory/ walk) is one-condition only when the OTHER side is known
+# to exist. The validator asks the other side's own URL: this many VINs there
+# means the site sells both and the set misses a side. Below it the synth would
+# have dropped that recipe anyway (dealer_pipeline.ensure_recipe keeps >= 5), so
+# the lot is used-only (or new-only) as far as the site says, and the set saves
+# as ``uncertain:one_condition_unverified`` for the post-scan assess to judge.
+OTHER_SIDE_MIN_VINS = 5
 
 _AUTOWALL_TOTAL_RE = re.compile(r"<title>\s*(\d{1,5})\s+Vehicles for Sale", re.I)
 _DEP_COUNT_RE = re.compile(r'data-vehicle_count="(\d+)"')
@@ -333,6 +350,54 @@ def recipe_condition_filter(recipe: EndpointRecipe) -> set[str]:
     return out
 
 
+_CONDITION_QUERY_KEYS = ("tp", "condition", "condition[]", "type", "inventory_type", "vehicletype")
+_PATH_SEGMENT_RE = re.compile(r"/(new|used|pre-owned|preowned|certified)(?=[-/]|$)")
+
+
+def _spell_like(sample: str, word: str) -> str:
+    """``Used`` for a site that writes ``New``, ``used`` for one that writes ``new``."""
+    return word.capitalize() if sample[:1].isupper() else word
+
+
+def other_side_recipe(recipe: EndpointRecipe, only: str) -> EndpointRecipe | None:
+    """The same recipe aimed at the other condition, derived from the URL alone.
+
+    ``only`` is the side the set covers (``new`` / ``used``). Team Velocity feed
+    stems (``/inventory-used.json`` -> ``/inventory-new.json``), condition query
+    parameters (DEP ``tp=used``, PixelMotion ``condition[]=new``) and the path
+    segments of the HTML walks (``/used-inventory/``, ``/inventory/new``) are
+    swapped; certified / cpo count as the used side. ``None`` when the recipe
+    is pinned in its body (typesense ``filter_by``, carscommerce facets) or the
+    URL carries no condition: the caller then has nothing to probe.
+    """
+    other = "new" if only == "used" else "used"
+    parts = urlparse(recipe.url or "")
+    path, query, changed = parts.path, parts.query, False
+    stem = re.search(r"-(new|used|cpo|certified)\.json$", path, re.I)
+    if stem and _side(normalize_condition(stem.group(1))) == only:
+        path = path[:stem.start(1)] + other + path[stem.end(1):]
+        changed = True
+    pairs = parse_qsl(query, keep_blank_values=True)
+    out_pairs: list[tuple[str, str]] = []
+    for k, v in pairs:
+        if k.lower() in _CONDITION_QUERY_KEYS and _side(normalize_condition(v)) == only and normalize_condition(v) != "unknown":
+            out_pairs.append((k, _spell_like(v, other)))
+            changed = True
+        else:
+            out_pairs.append((k, v))
+    if changed:
+        query = urlencode(out_pairs, safe="[]/,:")
+    if not changed and recipe.pagination in (PAGINATION_DEP_SRP, PAGINATION_HTML_PAGE, PAGINATION_JAZEL_SRP):
+        seg = _PATH_SEGMENT_RE.search(path.lower())
+        if seg and _side(normalize_condition(seg.group(1))) == only:
+            path = path[:seg.start(1)] + other + path[seg.end(1):]
+            changed = True
+    if not changed:
+        return None
+    url = parts._replace(path=path, query=query).geturl()
+    return replace(recipe, url=url, vehicle_rows=0, total_count=None)
+
+
 def one_condition_ok_ids(path: Path | None = None) -> set[str]:
     """Dealers whose lot legitimately carries a single condition (the pipeline's
     workspace/pipeline/one_condition_ok.txt: one id per line, ``#`` comments)."""
@@ -427,6 +492,9 @@ class RecipeValidationReport:
     recipes: list[RecipeCheck] = field(default_factory=list)
     pages_replayed: int = PAGES_REPLAYED
     stamp: str = ""
+    # The other side's own URL, asked when the pages read show one condition and
+    # no census exists: {url, status, vins, other_vins, error}.
+    other_side_probe: dict[str, Any] | None = None
 
     @property
     def reason(self) -> str:
@@ -466,6 +534,8 @@ class RecipeValidationReport:
                  f"{self.site_total if self.site_total is not None else 'not exposed'}; coverage: {cov}")
         L.append(f"- per condition: {json.dumps(self.per_condition)}"
                  + (f"; site census: {json.dumps(self.site_conditions)}" if self.site_conditions else ""))
+        if self.other_side_probe:
+            L.append(f"- other side probed: {json.dumps(self.other_side_probe)}")
         on = [k for k, v in self.flags.items() if v]
         L.append(f"- flags: {', '.join(on) if on else 'none'}")
         for r in self.recipes:
@@ -679,15 +749,49 @@ def validate_recipe_set(
         else:
             pinned = {s for c in rep.recipes for s in c.pinned_conditions}
             pinned_sides = {_side(p) for p in pinned}
-            if pinned and len(pinned_sides) == 1:
-                # a condition filter is proof the site has sections; nothing covers the other one
-                site_has_both = True
-                how = f"recipes pinned to {sorted(pinned)} with no recipe for the other side"
-            elif pinned and len(pinned_sides) == 2:
-                # a recipe for the other side exists and returned nothing
-                site_has_both = True
-                other = ({"new", "used"} - {only}).pop()
-                how = f"the {other} recipe returned no rows"
+            other = "new" if only == "used" else "used"
+            if pinned and len(pinned_sides) == 2:
+                # The set already carries the other side's own recipe and it
+                # answered with no rows: the site's own feed saying 0 is
+                # evidence of a one-sided lot, not of a missing side (a
+                # used-only Team Velocity store has an empty /inventory-new.json).
+                other_chk = next((c for c in rep.recipes if any(_side(p) == other for p in c.pinned_conditions)), None)
+                st = other_chk.pages[0].get("status") if other_chk and other_chk.pages else None
+                notes.append(f"one_condition_unverified: the {other} recipe ({(other_chk.url if other_chk else '?')[:60]}) "
+                             f"answered {st} with no rows; every row is {only} — assess decides after the scan")
+            elif pinned and len(pinned_sides) == 1:
+                # A condition filter is proof the site has sections, not that
+                # the other one holds cars: per-condition synths (Team Velocity,
+                # DEP tp=, HTML /used-inventory/) emit one recipe per side and
+                # ensure_recipe drops an empty side before the gate. Ask the
+                # other side itself before calling the set one-condition.
+                probe_src = next((r for r, c, _t in checked if c.pinned_conditions and c.vins), None)
+                probe = other_side_recipe(probe_src, only) if probe_src is not None else None
+                if probe is None:
+                    notes.append(f"one_condition_unverified: recipes pinned to {sorted(pinned)}; no URL for the {other} side "
+                                 f"can be derived, so its existence is unknown — assess decides after the scan")
+                else:
+                    p_chk, p_vins, p_conds, _t, _p1 = _check_recipe(
+                        probe, fetch=fetch, base_url=base_url, dealer_id=dealer_id, dealer_name=dealer_name, place=place, pages=1)
+                    rep.other_side_probe = {"url": probe.url, "status": p_chk.pages[0].get("status") if p_chk.pages else None,
+                                            "vins": len(p_vins - all_vins), "error": p_chk.error or None}
+                    # Rows that carry a condition count only on the other side: a
+                    # ?tp=new that redirects to the used SRP must not read as
+                    # "new cars exist". Only condition-less rows fall back to
+                    # VINs the pages read did not show.
+                    known = {c: s for c, s in p_conds.items() if c != "unknown"}
+                    other_vins = {v for c, s in known.items() if _side(c) == other for v in s} if known else (p_vins - all_vins)
+                    n_other = len(other_vins)
+                    rep.other_side_probe["other_vins"] = n_other
+                    if n_other >= OTHER_SIDE_MIN_VINS:
+                        site_has_both = True
+                        how = (f"recipes pinned to {sorted(pinned)} with no recipe for the other side; "
+                               f"the {other} side answers {n_other} VIN(s) at {probe.url[:80]}")
+                    else:
+                        st = rep.other_side_probe["status"]
+                        notes.append(f"one_condition_unverified: recipes pinned to {sorted(pinned)}; the {other} side at "
+                                     f"{probe.url[:60]} answered {st} with {n_other} VIN(s) (under the {OTHER_SIDE_MIN_VINS} the synth keeps), "
+                                     f"so the lot reads {only}-only — assess decides after the scan")
         if site_has_both:
             if dealer_id in ok_ids:
                 notes.append(f"one condition by design ({only} only; listed in one_condition_ok.txt); {how}")
@@ -829,6 +933,7 @@ __all__ = [
     "gate_recipes",
     "normalize_condition",
     "one_condition_ok_ids",
+    "other_side_recipe",
     "platform_of",
     "recipe_condition_filter",
     "record_recipe_status",

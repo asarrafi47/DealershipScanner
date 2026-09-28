@@ -237,21 +237,126 @@ def test_empty_recipe_set_rejects():
     assert rep.verdict == "reject" and rep.reasons == ["zero_rows: no recipe to validate"]
 
 
-def test_pinned_condition_recipes_add_up_and_a_missing_side_rejects():
-    """Team Velocity-style per-condition feeds: pinned conditions are proof the
-    site has sections; with only the used feed the set is one-condition."""
-    used = EndpointRecipe(dealer_id=DEALER, url=f"{ORIGIN}/inventory-used.json", method="GET", content_type="application/json",
+def _tv_recipe(stem: str) -> EndpointRecipe:
+    return EndpointRecipe(dealer_id=DEALER, url=f"{ORIGIN}/inventory-{stem}.json", method="GET", content_type="application/json",
                           post_template=None, pagination=PAGINATION_NONE, provider_hint="generic_json")
 
-    def fetch(recipe, body, base_url, url=None):
-        return 200, [{"vin": f"1C4U{i:013d}", "condition": "Used", "year": 2022, "make": "Jeep", "model": "Wrangler"} for i in range(30)]
 
-    rep = _run([used], fetch)
+def _tv_rows(prefix: str, cond: str, n: int) -> list[dict]:
+    return [{"vin": f"{prefix}{i:013d}", "condition": cond, "year": 2022, "make": "Jeep", "model": "Wrangler"} for i in range(n)]
+
+
+class _TVSite:
+    """Team Velocity: one feed file per condition; ``new`` is what /inventory-new.json answers."""
+
+    def __init__(self, used: int = 30, new: list[dict] | None = None, new_status: int = 200):
+        self.used, self.new, self.new_status = _tv_rows("1C4U", "Used", used), new, new_status
+        self.urls: list[str] = []
+
+    def __call__(self, recipe, body, base_url, url=None):
+        self.urls.append(url or recipe.url)
+        if (url or recipe.url).endswith("/inventory-new.json"):
+            return self.new_status, ([] if self.new is None else self.new) if self.new_status == 200 else None
+        return 200, self.used
+
+
+def test_pinned_set_asks_the_other_side_and_a_live_other_side_rejects():
+    """A used-only Team Velocity set is one-condition only when /inventory-new.json
+    itself answers cars: then the synth dropped or never built the new recipe."""
+    site = _TVSite(new=_tv_rows("1C4N", "New", 40))
+    rep = _run([_tv_recipe("used")], site)
     assert rep.recipes[0].pinned_conditions == ["used"]
     assert rep.per_condition == {"used": 30}
     assert rep.site_total == 30  # single-shot list: its length is the site's count
-    assert rep.verdict == "reject"
+    assert site.urls[-1] == f"{ORIGIN}/inventory-new.json"
+    assert rep.other_side_probe == {"url": f"{ORIGIN}/inventory-new.json", "status": 200, "vins": 40, "error": None, "other_vins": 40}
+    assert rep.verdict == "reject" and rep.status == "rejected:one_condition"
     assert rep.reasons[0].startswith("one_condition: only used rows while the site sells both (recipes pinned to ['used']")
+    assert "the new side answers 40 VIN(s)" in rep.reasons[0]
+
+
+@pytest.mark.parametrize("new_status,new_rows,expect_status", [
+    (200, [], 200),                       # the new feed exists and is empty: a used-only lot
+    (404, None, 404),                     # no new feed at all
+    (200, _tv_rows("1C4N", "New", 3), 200),  # 3 new cars: under the floor the synth keeps
+])
+def test_pinned_set_whose_other_side_answers_nothing_is_uncertain_and_saves(tmp_path, monkeypatch, new_status, new_rows, expect_status):
+    """The site's own new feed saying 0 (or 404, or a handful) is evidence of a
+    used-only lot, not of a missing side: the set saves as uncertain and the
+    post-scan assess decides. Rejecting it looped: no recipe -> re-synth rejected
+    -> a browser capture a day -> rejected again."""
+    site = _TVSite(new=new_rows, new_status=new_status)
+    rep = _run([_tv_recipe("used")], site)
+    assert rep.verdict == "uncertain" and rep.status == "uncertain:one_condition_unverified"
+    assert rep.flags["one_condition"] is False and rep.reasons == ["one_condition_unverified"]
+    assert rep.other_side_probe["status"] == expect_status and rep.other_side_probe["other_vins"] == len(new_rows or [])
+    assert any(n.startswith("one_condition_unverified: recipes pinned to ['used']; the new side at") for n in rep.notes)
+    # and the gate keeps it, with the status on the hint
+    monkeypatch.setattr(rv, "LOG_ROOT", tmp_path)
+    monkeypatch.setattr(rv, "one_condition_ok_ids", lambda path=None: set())
+    kept, report = rv.gate_recipes(DEALER, [_tv_recipe("used")], base_url=ORIGIN, dealer_name=NAME, place=PLACE, fetch=_TVSite(new=new_rows, new_status=new_status), log_root=tmp_path)
+    assert len(kept) == 1 and report.status == "uncertain:one_condition_unverified"
+    log = (tmp_path / DEALER / "discovery.md").read_text(encoding="utf-8")
+    assert "UNCERTAIN" in log and "other side probed" in log
+
+
+def test_sibling_recipe_that_answered_zero_rows_is_uncertain_not_reject():
+    """Case (b): the set carries the new recipe and it replayed 200 with no rows.
+    No probe is needed — the site's own feed already answered."""
+    site = _TVSite(new=[])
+    rep = _run([_tv_recipe("used"), _tv_recipe("new")], site)
+    assert rep.per_condition == {"used": 30}
+    assert rep.verdict == "uncertain" and rep.status == "uncertain:one_condition_unverified"
+    assert rep.other_side_probe is None
+    assert any(n.startswith("one_condition_unverified: the new recipe (") and "answered 200 with no rows" in n for n in rep.notes)
+    # each feed asked once (page 1 + page 2 of a single-shot list is one request), nothing extra
+    assert site.urls.count(f"{ORIGIN}/inventory-new.json") == 1
+
+
+def test_body_pinned_set_without_a_derivable_other_side_is_uncertain():
+    """Typesense ``filter_by: condition:=Used``: the pin lives in the body, no URL for
+    the new side exists to ask, so the set is uncertain rather than rejected."""
+    body = {"searches": [{"collection": "vehicles", "q": "*", "per_page": 50, "page": 1, "filter_by": "condition:=Used"}]}
+    ts = EndpointRecipe(dealer_id=DEALER, url="https://search.example.com/multi_search", method="POST", content_type="application/json",
+                        post_template=json.dumps(body), pagination=PAGINATION_TYPESENSE, provider_hint="typesense")
+    calls = []
+
+    def fetch(recipe, body, base_url, url=None):
+        calls.append(body)
+        page = int(body["searches"][0].get("page") or 1)
+        hits = [{"document": {"vin": f"1C4U{i:013d}", "condition": "Used", "yr": 2022, "make": "Jeep", "model": "Wrangler",
+                              "dealer": {"name": NAME, "city": "Austin", "state": "TX", "url": ORIGIN}}} for i in range(30)] if page == 1 else []
+        return 200, {"results": [{"found": 30, "hits": hits}]}
+
+    rep = _run([ts], fetch)
+    assert rep.recipes[0].pinned_conditions == ["used"]
+    assert rep.verdict == "uncertain" and rep.status == "uncertain:one_condition_unverified"
+    assert rep.other_side_probe is None
+    assert any("no URL for the new side can be derived" in n for n in rep.notes)
+
+
+@pytest.mark.parametrize("url,pagination,only,expect", [
+    (f"{ORIGIN}/inventory-used.json", PAGINATION_NONE, "used", f"{ORIGIN}/inventory-new.json"),
+    (f"{ORIGIN}/inventory-cpo.json", PAGINATION_NONE, "used", f"{ORIGIN}/inventory-new.json"),
+    (f"{ORIGIN}/inventory-new.json", PAGINATION_NONE, "new", f"{ORIGIN}/inventory-used.json"),
+    (f"{ORIGIN}/search/used/?ct=48&tp=used", PAGINATION_DEP_SRP, "used", f"{ORIGIN}/search/used/?ct=48&tp=new"),
+    (f"{ORIGIN}/search/new-toyota/?mk=63&tp=new", PAGINATION_DEP_SRP, "new", f"{ORIGIN}/search/new-toyota/?mk=63&tp=used"),
+    (f"{ORIGIN}/inventory/?condition[]=New", PAGINATION_HTML_PAGE, "new", f"{ORIGIN}/inventory/?condition[]=Used"),
+    (f"{ORIGIN}/used-inventory/", PAGINATION_DEP_SRP, "used", f"{ORIGIN}/new-inventory/"),
+    (f"{ORIGIN}/inventory/new", PAGINATION_HTML_PAGE, "new", f"{ORIGIN}/inventory/used"),
+    (f"{ORIGIN}/pre-owned-vehicles/", PAGINATION_HTML_PAGE, "used", f"{ORIGIN}/new-vehicles/"),
+    (f"{ORIGIN}/inventory/", PAGINATION_HTML_PAGE, "used", None),  # nothing pinned in the URL
+    (f"{ORIGIN}/used-inventory/", PAGINATION_NONE, "used", None),  # a path segment counts only on the HTML walks
+])
+def test_other_side_recipe_derivation(url, pagination, only, expect):
+    r = EndpointRecipe(dealer_id=DEALER, url=url, method="GET", content_type="text/html", post_template=None,
+                       pagination=pagination, provider_hint="dealer_eprocess", vehicle_rows=30, total_count=30)
+    other = rv.other_side_recipe(r, only)
+    if expect is None:
+        assert other is None
+    else:
+        assert other.url == expect and other.pagination == pagination and other.vehicle_rows == 0 and other.total_count is None
+        assert r.url == url  # the original is untouched
 
 
 # ── site-total extractor table ─────────────────────────────────────────────────
@@ -388,3 +493,86 @@ def test_ensure_recipe_refuses_a_rejected_synth(tmp_path, monkeypatch):
     info = dp.ensure_recipe(dealer)
     assert info["synth"] == "saved_1" and info["recipe_status"] == "ok"
     assert len(rec.load_recipes(DEALER)) == 1
+
+
+# ── the discovery capture judges rows with the scan's own place ────────────────
+
+HH = "hondahuntersville-com"
+HH_ORIGIN = "https://www.hondahuntersville.com"
+HH_STREET = "12815 Statesville Rd"
+
+
+def _hh_listing(vin: str, location: str, source_id: str) -> dict:
+    return {"vin": vin, "type": "New", "year": 2025, "make": "Honda", "model": "Civic", "trim": "LX", "stock": vin[-6:], "mileage": 5,
+            "source_id": source_id, "pricing": {"price": 30000},
+            "dealer": {"id": "1", "ccid": 6067306, "name": None, "website": None, "api_id": "MP23253",
+                       "location": location, "city": None, "state": None, "address": None, "zipcode": None},
+            "media": {"images": []}, "extra_fields": {}}
+
+
+def _hh_feed():
+    """A group feed: six of this store's cars stamped with a bare street line
+    (the page's JSON-LD street, which the registry never had) and one sibling."""
+    rows = [_hh_listing(f"00HHS{i:012d}", HH_STREET, "209014") for i in range(6)] + [_hh_listing("00HOO000000000001", "Hoover Toyota", "MP99999")]
+
+    def fetch(recipe, body, base_url, url=None):
+        return 200, {"data": {"listings": rows if int(body.get("page") or 1) == 1 else [], "total_vehicle_count": 7}}
+
+    return fetch
+
+
+@pytest.fixture()
+def _no_ledger(monkeypatch):
+    monkeypatch.setattr("backend.scanner.rooftop_ledger.note_refusal", lambda *a, **k: None, raising=False)
+    monkeypatch.setattr("backend.scanner.rooftop_ledger.flush", lambda *a, **k: None, raising=False)
+
+
+def test_capture_place_is_the_scan_replays_place(monkeypatch):
+    """capture_endpoints hands the validator ``capture_place``: registry row plus the
+    page-learned street from scan hints (roster_place_with_hints, as try_fetch_via_recipes),
+    not the id / url / name / provider dict the probe builds (which yields no place)."""
+    from backend.scanner import recipe_store, rooftop_disown
+    from backend.scanner.discovery_capture import capture_place
+
+    dealer = {"dealer_id": HH, "url": HH_ORIGIN, "name": "Honda Of Huntersville", "provider": "carscommerce"}
+    # the roster has the town but no street; the street lives in scan hints (learn_place wrote it)
+    monkeypatch.setattr(rooftop_disown, "roster_place", lambda url: {"dealer_city": "Huntersville", "dealer_state": "NC", "dealer_zip": "28078", "dealer_address": ""})
+    monkeypatch.setattr(recipe_store, "get_scan_hints", lambda did: {"dealer_address": HH_STREET, "dealer_address_source": "site_jsonld"})
+    assert capture_place(dealer, HH_ORIGIN) == {"dealer_city": "Huntersville", "dealer_state": "NC", "dealer_zip": "28078", "dealer_address": HH_STREET}
+    # a group-feed dealer missing from the registry: the hinted place alone
+    monkeypatch.setattr(rooftop_disown, "roster_place", lambda url: {})
+    monkeypatch.setattr(recipe_store, "get_scan_hints", lambda did: {"dealer_address": HH_STREET, "dealer_city": "Huntersville", "dealer_state": "NC"})
+    assert capture_place(dealer, HH_ORIGIN) == {"dealer_address": HH_STREET, "dealer_city": "Huntersville", "dealer_state": "NC"}
+    # registry and hint store down: what the caller gave, or nothing (never an exception)
+    monkeypatch.setattr(rooftop_disown, "roster_place", lambda url: (_ for _ in ()).throw(RuntimeError("db down")))
+    monkeypatch.setattr(recipe_store, "get_scan_hints", lambda did: {})
+    assert capture_place(dealer, HH_ORIGIN) is None
+    assert capture_place({**dealer, "dealer_city": "Huntersville", "dealer_state": "NC"}, HH_ORIGIN) == {"dealer_city": "Huntersville", "dealer_state": "NC"}
+
+
+def test_hinted_street_is_what_keeps_the_captured_rows(monkeypatch, _no_ledger):
+    """Roster town without a street: every bare-street row is refused (target
+    rooftop unidentified) and the good capture is judged zero_rows; with the
+    hinted street the same feed validates. This is the shape that made
+    promote_from_ledger(validate=True) refuse Honda of Huntersville's capture."""
+    from backend.scanner import recipe_store, rooftop_disown
+    from backend.scanner.discovery_capture import capture_place
+
+    cc = EndpointRecipe(dealer_id=HH, url=CC_URL, method="POST", content_type="application/json",
+                        post_template=json.dumps({"page": 1, "perPage": 100, "filters": {"status": ["publish"]}}),
+                        pagination=PAGINATION_CARSCOMMERCE, provider_hint="carscommerce", auth_headers={"x-api-key": "k"})
+    town_only = {"dealer_city": "Huntersville", "dealer_state": "NC", "dealer_zip": "28078"}
+    rep = rv.validate_recipe_set(HH, [cc], _hh_feed(), base_url=HH_ORIGIN, dealer_name="Honda Of Huntersville", place=town_only, one_condition_ok=set())
+    assert rep.verdict == "reject" and rep.status == "rejected:zero_rows"
+    assert rep.recipes[0].gate_rejected == 7 and rep.vins_total == 0
+    # what the probe used to pass: the dealer dict alone -> no place at all -> the same refusal
+    rep = rv.validate_recipe_set(HH, [cc], _hh_feed(), base_url=HH_ORIGIN, dealer_name="Honda Of Huntersville", place=None, one_condition_ok=set())
+    assert rep.verdict == "reject" and rep.recipes[0].gate_rejected == 7
+
+    monkeypatch.setattr(rooftop_disown, "roster_place", lambda url: dict(town_only, dealer_address=""))
+    monkeypatch.setattr(recipe_store, "get_scan_hints", lambda did: {"dealer_address": HH_STREET, "dealer_address_source": "site_jsonld"})
+    place = capture_place({"dealer_id": HH, "url": HH_ORIGIN, "name": "Honda Of Huntersville", "provider": "carscommerce"}, HH_ORIGIN)
+    assert place["dealer_address"] == HH_STREET
+    rep = rv.validate_recipe_set(HH, [cc], _hh_feed(), base_url=HH_ORIGIN, dealer_name="Honda Of Huntersville", place=place, one_condition_ok=set())
+    assert rep.vins_total == 6 and rep.recipes[0].gate_rejected == 1  # the Hoover sibling, and only it
+    assert rep.verdict in ("ok", "uncertain") and not rep.flags["zero_rows"]
