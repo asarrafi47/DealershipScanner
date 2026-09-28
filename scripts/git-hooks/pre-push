@@ -1,0 +1,40 @@
+#!/bin/sh
+# pre-push: refuse a push whose VERSION did not change (owner rule, 2026-09-28).
+#
+# For every ref being pushed, compare VERSION at the local commit with VERSION at
+# the remote's current commit for that ref (or the remote's main for a brand-new
+# branch). Identical VERSION with any other change in the tree aborts the push.
+#
+# Install once per clone:  git config core.hooksPath scripts/git-hooks
+# Bump:                     scripts/bump_version.sh patch|minor|major
+remote="$1"
+zero=0000000000000000000000000000000000000000
+
+while read -r local_ref local_sha remote_ref remote_sha; do
+  [ "$local_sha" = "$zero" ] && continue            # deleting a remote ref
+  case "$local_ref" in refs/tags/*) continue ;; esac  # tags carry no VERSION diff
+
+  base="$remote_sha"
+  if [ "$remote_sha" = "$zero" ]; then
+    base=$(git rev-parse --verify -q "refs/remotes/$remote/main" 2>/dev/null) || continue
+  fi
+  [ "$local_sha" = "$base" ] && continue
+
+  # Nothing but VERSION/CHANGELOG changed: a bump-only push is fine.
+  if git diff --quiet "$base" "$local_sha" -- . ':!VERSION' ':!CHANGELOG.md' 2>/dev/null; then
+    continue
+  fi
+
+  local_v=$(git show "$local_sha:VERSION" 2>/dev/null | tr -d '[:space:]')
+  base_v=$(git show "$base:VERSION" 2>/dev/null | tr -d '[:space:]')
+  if [ -z "$local_v" ]; then
+    echo "pre-push: VERSION file missing at $local_sha" >&2
+    exit 1
+  fi
+  if [ "$local_v" = "$base_v" ]; then
+    echo "pre-push: VERSION is still $local_v, same as $(git rev-parse --short "$base") on $remote." >&2
+    echo "          Bump it first:  scripts/bump_version.sh patch   (or minor / major)" >&2
+    exit 1
+  fi
+done
+exit 0
