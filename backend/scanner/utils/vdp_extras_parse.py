@@ -125,6 +125,8 @@ def _dealer_inspire(html: str, page_vin: str | None) -> dict[str, Any]:
 
 
 _DDC_WS_STATE_RE = re.compile(r"DDC\.WS\.state\['(ws-vehicle-ctas)'\]\['[^']+'\]\s*=\s*\{")
+# DDC.WS.state['ws-quick-specs']['quick-specs1'] = {"quickSpecs":{"engine":..,"driveLine":..,"vin":..},..}
+_DDC_QUICK_SPECS_RE = re.compile(r"DDC\.WS\.state\['ws-quick-specs'\]\['[^']+'\]\s*=\s*\{")
 # DDC.dataLayer.vehicles[0].msrp = DDC.dataLayer.vehicles[0].msrp || "41063";
 _DDC_DATALAYER_KV_RE = re.compile(
     r"DDC\.dataLayer\.vehicles\[0\]\.(\w+)\s*=\s*DDC\.dataLayer\.vehicles\[0\]\.\w+\s*\|\|\s*"
@@ -166,6 +168,32 @@ def _ddc_datalayer_vehicle(html: str) -> dict[str, Any]:
     return out
 
 
+def _dealer_com_quick_specs(html: str, page_vin: str | None) -> dict[str, Any]:
+    """``ws-quick-specs`` widget state: engine, driveline, transmission, colours,
+    stock; VIN-gated on ``quickSpecs.vin`` (F05, 2026-09-28: 9/10 VDPs carry
+    the engine only here and in JSON-LD)."""
+    out: dict[str, Any] = {}
+    for m in _DDC_QUICK_SPECS_RE.finditer(html):
+        blob = _load(_brace_object(html, m.end() - 1))
+        qs = blob.get("quickSpecs") if isinstance(blob, dict) else None
+        if not isinstance(qs, dict) or not _vin_ok(qs, page_vin):
+            continue
+        cand = {
+            "engine_description": _clean(qs.get("engine"), 200),
+            "drivetrain": _clean(qs.get("driveLine"), 40),
+            "transmission": _clean(qs.get("transmission"), 120),
+            "exterior_color": _clean(qs.get("exteriorColor")),
+            "interior_color": _clean(qs.get("interiorColor")),
+            "stock_number": _clean(qs.get("stockNumber"), 40),
+        }
+        for k, v in cand.items():
+            if v:
+                out.setdefault(k, v)
+        if out.get("engine_description"):
+            break
+    return out
+
+
 def _dealer_com(html: str, page_vin: str | None) -> dict[str, Any]:
     out: dict[str, Any] = {}
     m = _DDC_DATA_VEHICLE_RE.search(html)
@@ -188,6 +216,9 @@ def _dealer_com(html: str, page_vin: str | None) -> dict[str, Any]:
         if dl and _vin_ok(dl, page_vin):
             for k, v in _ddc_vehicle_fields(dl).items():
                 out.setdefault(k, v)
+    if not out.get("engine_description") or not out.get("drivetrain"):
+        for k, v in _dealer_com_quick_specs(html, page_vin).items():
+            out.setdefault(k, v)
     return {k: v for k, v in out.items() if v}
 
 
@@ -203,6 +234,22 @@ def _history_link(html: str, page_vin: str | None) -> str | None:
 
 
 _LD_BLOCK_RE = re.compile(r'<script[^>]+type=["\']application/ld\+json["\'][^>]*>(.*?)</script>', re.S | re.I)
+
+
+def _jsonld_engine_text(v: Any) -> str | None:
+    """schema.org ``vehicleEngine``: an EngineSpecification object on most
+    templates, a plain string ("4-Cyl. Hybrid Engine") on dealer.com."""
+    if isinstance(v, str):
+        return v
+    if isinstance(v, list):
+        for item in v:
+            t = _jsonld_engine_text(item)
+            if t:
+                return t
+        return None
+    if isinstance(v, dict):
+        return v.get("name") or v.get("engineType") or v.get("description")
+    return None
 
 
 def _jsonld_vehicle(html: str, page_vin: str | None) -> dict[str, Any]:
@@ -247,7 +294,7 @@ def _jsonld_vehicle(html: str, page_vin: str | None) -> dict[str, Any]:
                 "price": _money((offers or {}).get("price")) if isinstance(offers, dict) else None,
                 "exterior_color": _clean(node.get("color")), "interior_color": _clean(node.get("vehicleInteriorColor")),
                 "stock_number": _clean((offers or {}).get("sku") if isinstance(offers, dict) else None, 40) or _clean(node.get("sku"), 40),
-                "engine_description": _clean((node.get("vehicleEngine") or {}).get("name") if isinstance(node.get("vehicleEngine"), dict) else None, 200),
+                "engine_description": _clean(_jsonld_engine_text(node.get("vehicleEngine")), 200),
                 "transmission": _clean(node.get("vehicleTransmission"), 120),
                 "fuel_type": _clean(node.get("fuelType"), 40),
                 "drivetrain": _clean(node.get("driveWheelConfiguration"), 40),

@@ -491,6 +491,63 @@ def _extract_interior_color(obj: dict) -> str | None:
     return None
 
 
+_ENGINE_SIZE_RE = re.compile(r"(\d{1,2}(?:\.\d)?)\s*L\b", re.I)
+
+
+def _attr_text(obj: dict, *names: str) -> str | None:
+    """First non-placeholder value of ``names`` across ``attributes`` then
+    ``trackingAttributes`` ("" and "null" are absent)."""
+    for arr_key in ("attributes", "trackingAttributes", "tracking_attributes"):
+        arr = obj.get(arr_key)
+        if not isinstance(arr, list):
+            continue
+        for name in names:
+            v = find_tracking_attr(arr, name, "value")
+            if v is None:
+                continue
+            t = str(v).strip()
+            if t and t.lower() not in ("null", "none", "n/a"):
+                return t
+    return None
+
+
+def _extract_engine_dealer_com(obj: dict) -> tuple[str | None, float | None]:
+    """(engine_description, engine_l) from a getInventory item.
+
+    The engine text lives in ``attributes`` / ``trackingAttributes`` as
+    ``engine`` ("2.5L 4-Cyl. Hybrid Engine") with a sibling ``engineSize``
+    ("2.5 L"); 96/96 items at four stores on 2026-09-28, never read before
+    (F05). When the text does not name the displacement the size is prefixed;
+    ``engineSize`` alone yields "2.4L" so the column is not empty.
+    """
+    eng = _opt_str(obj.get("engine") or obj.get("engineDescription") or obj.get("engine_description"))
+    if not eng:
+        eng = _attr_text(obj, "engine", "engineDescription", "engine_description")
+    size = _opt_str(obj.get("engineSize") or obj.get("engine_size")) or _attr_text(obj, "engineSize", "engine_size")
+    engine_l: float | None = None
+    size_label: str | None = None
+    if size:
+        m = _ENGINE_SIZE_RE.search(size)
+        if m:
+            try:
+                engine_l = float(m.group(1))
+                size_label = f"{m.group(1)}L"
+            except ValueError:
+                engine_l = None
+    if eng and engine_l is None:
+        m = _ENGINE_SIZE_RE.search(eng)
+        if m:
+            try:
+                engine_l = float(m.group(1))
+            except ValueError:
+                engine_l = None
+    if eng and size_label and not _ENGINE_SIZE_RE.search(eng):
+        eng = f"{size_label} {eng}"
+    if not eng and size_label:
+        eng = size_label
+    return (eng[:200] if eng else None), engine_l
+
+
 def _extract_body_style(obj: dict) -> str | None:
     """bodyStyle / bodyType on object or in trackingAttributes."""
     direct = _opt_str(
@@ -619,6 +676,8 @@ def _map_vehicle(
     description = _extract_inventory_description(obj)
     carfax_url = extract_carfax_url(obj, vin)
 
+    engine_description, engine_l = _extract_engine_dealer_com(obj)
+
     cyl = norm_int(obj.get("cylinders") or 0)
     if not cyl:
         arr = obj.get("trackingAttributes") or obj.get("tracking_attributes")
@@ -679,6 +738,10 @@ def _map_vehicle(
         "description": description,
         "cylinders": cyl or None,
     }
+    if engine_description:
+        out["engine_description"] = engine_description
+    if engine_l:
+        out["engine_l"] = engine_l
     try:
         from backend.parsers.inventory_mpg import apply_inventory_mpg
 
