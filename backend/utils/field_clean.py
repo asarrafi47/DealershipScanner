@@ -97,9 +97,28 @@ _CANONICAL_FUEL_TYPE: dict[str, str] = {
     "regular gasoline / e85": "Gasoline",
     "flex fuel": "Gasoline",
     "flex fuel capability": "Gasoline",
+    "flexible": "Gasoline",
+    "flexfuel": "Gasoline",
+    "flex-fuel": "Gasoline",
+    "ffv": "Gasoline",
     "e85": "Gasoline",
-    "other": "Gasoline",
+    # feed abbreviations (7 dealers send 'G', 1,054 rows; 'UNL' 94; F13 2026-09-28)
+    "g": "Gasoline",
+    "unl": "Gasoline",
+    "unleaded gas": "Gasoline",
+    "unleaded gasoline": "Gasoline",
+    "regular": "Gasoline",
+    "premium": "Gasoline",
     "hybrid": "Hybrid",
+    "h": "Hybrid",
+    "hyb": "Hybrid",
+    "hybr": "Hybrid",
+    "hev": "Hybrid",
+    "d": "Diesel",
+    "e": "Electric",
+    "ele": "Electric",
+    "elec": "Electric",
+    "electricity": "Electric",
     "hybrid fuel": "Hybrid",
     "gas / mild hybrid": "Hybrid",
     "gasoline/mild electric hybrid": "Hybrid",
@@ -259,16 +278,27 @@ def _fuel_type_key(s: str) -> str:
     return re.sub(r"\s+", " ", s.strip().lower())
 
 
+# Injection / delivery descriptors and "Others" name no fuel at all: store None
+# and let the vPIC FuelTypePrimary + ElectrificationLevel heal fill it (F13).
+_FUEL_TYPE_NOT_A_FUEL: frozenset[str] = frozenset(
+    {"direct injection", "port/direct injection", "port injection", "sequential mpi", "mpi", "gdi",
+     "other", "others", "n/a", "na", "unknown", "unspecified", "not specified", "none", "-", ""}
+)
+
+
 def coerce_fuel_type_stored(val: Any) -> str | None:
     """
     Map any fuel type text to one of the canonical values:
     Gasoline / Hybrid / Plug-In Hybrid / Diesel / Electric / Hydrogen.
-    Returns None for empty/unknown inputs; unknown non-empty strings are returned as-is.
+    Returns None for empty / placeholder / not-a-fuel inputs ("Direct
+    Injection", "Others"); unknown non-empty strings are returned as-is.
     """
     if is_effectively_empty(val):
         return None
     s = str(val).strip()
     k = _fuel_type_key(s)
+    if k in _FUEL_TYPE_NOT_A_FUEL:
+        return None
     if k in _CANONICAL_FUEL_TYPE:
         return _CANONICAL_FUEL_TYPE[k]
     if s in FUEL_TYPE_PRESETS:
