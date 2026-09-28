@@ -43,10 +43,17 @@ def _opt_str(v) -> str | None:
 
 
 def _opt_label_str(v) -> str | None:
-    """Missing / placeholder → None; unwraps dict-shaped label fields via norm_label_str."""
+    """Missing / placeholder → None; unwraps dict-shaped label fields via norm_label_str.
+    "Other" (dealer.com's no-value drivetrain / transmission) is a placeholder,
+    not a label: stored verbatim it overwrote vPIC-healed drivetrains (F10)."""
     if v is None:
         return None
-    return normalize_optional_str(norm_label_str(v))
+    from backend.utils.field_clean import is_spec_placeholder
+
+    label = norm_label_str(v)
+    if is_spec_placeholder(label):
+        return None
+    return normalize_optional_str(label)
 
 
 def _extract_title(obj: dict, year: int, make: str, model: str) -> str | None:

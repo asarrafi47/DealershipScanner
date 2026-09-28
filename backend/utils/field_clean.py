@@ -215,13 +215,31 @@ def is_spec_overlay_junk(val: Any) -> bool:
     return bool(_MANUFACTURER_SPEC_JUNK_RE.search(s))
 
 
+# Feed values that name no drivetrain / transmission / fuel at all. dealer.com
+# and Dealer eProcess send "Other" for these; stored verbatim it survived the
+# upsert's COALESCE and overwrote vPIC-healed drivetrains on every rescan
+# (1,464 rows, F10 2026-09-28).
+_SPEC_PLACEHOLDER_LOWER: frozenset[str] = frozenset(
+    {"other", "others", "unspecified", "not specified", "not available", "tbd", "see dealer", "call",
+     "n/a", "na", "unknown", "none", "null", "-", "--", "---", "\u2014", ""}
+)
+
+
+def is_spec_placeholder(val: Any) -> bool:
+    """True when a drivetrain / transmission / fuel value is a feed placeholder
+    ("Other", "Unspecified", "N/A"...) rather than a specification."""
+    if is_effectively_empty(val):
+        return True
+    return str(val).strip().lower() in _SPEC_PLACEHOLDER_LOWER
+
+
 def coerce_drivetrain_stored(val: Any) -> str | None:
     """
     Map any drivetrain text (schema.org URLs, abbreviations, long-form) to one
     of the four canonical values: FWD / RWD / AWD / 4WD.
     Returns None for empty/unknown inputs.
     """
-    if is_effectively_empty(val):
+    if is_spec_placeholder(val):
         return None
     s = str(val).strip()
     if re.fullmatch(r"[ARF]", s, re.I):
@@ -686,6 +704,8 @@ def clean_car_row_dict(d: dict[str, Any]) -> dict[str, Any]:
             out[k] = normalize_optional_str(coerce_drivetrain_stored(out.get(k)))
         elif k == "fuel_type":
             out[k] = normalize_optional_str(coerce_fuel_type_stored(out.get(k)))
+        elif k == "transmission":
+            out[k] = None if is_spec_placeholder(out.get(k)) else normalize_optional_str(out.get(k))
         elif k == "body_style":
             out[k] = normalize_optional_str(
                 normalize_body_style_for_car(
