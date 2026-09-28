@@ -42,7 +42,7 @@ def test_override_vehicles_uses_cache(monkeypatch):
             {"vin": "1HGCY2F63TA066331", "drivetrain": "FWD", "fuel_type": "Gasoline"},
             {"vin": "bad", "drivetrain": "FWD"}]
     stats = vf.override_vehicles(cars)
-    assert stats == {"vehicles": 3, "cached": 1, "drivetrain": 1, "fuel_type": 0}
+    assert stats == {"vehicles": 3, "cached": 1, "drivetrain": 1, "fuel_type": 0, "cylinders": 0}
     assert cars[0]["drivetrain"] == "4WD" and cars[1]["drivetrain"] == "FWD"
     assert seen["primed"] == ["3TYLB5JNXRT022195", "1HGCY2F63TA066331"]
 

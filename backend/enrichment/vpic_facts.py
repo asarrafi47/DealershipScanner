@@ -113,7 +113,12 @@ def apply_vin_facts_to_row(row: dict[str, Any], vpic: dict[str, Any] | None) -> 
 
 def override_vehicles(vehicles: list[dict[str, Any]]) -> dict[str, int]:
     """Scan write path: apply the decode to every vehicle whose VIN is cached."""
-    stats = {"vehicles": len(vehicles), "cached": 0, "drivetrain": 0, "fuel_type": 0}
+    # Every key vin_overrides() can return must exist here: when the cylinder
+    # override landed (2026-09-25) this dict lacked "cylinders", the first such
+    # row raised KeyError, dealer_run logged "VIN facts failed … 'cylinders'" and
+    # skipped the whole pass, so rescans wrote the feed's drivetrain/fuel/cylinders
+    # back over healed rows (449 log lines by 2026-09-28).
+    stats = {"vehicles": len(vehicles), "cached": 0, "drivetrain": 0, "fuel_type": 0, "cylinders": 0}
     if not vin_facts_enabled() or not vehicles:
         return stats
     from backend.enrichment.knowledge_engine import lookup_vpic_from_cache, prime_vpic_cache
@@ -128,7 +133,7 @@ def override_vehicles(vehicles: list[dict[str, Any]]) -> dict[str, int]:
             continue
         stats["cached"] += 1
         for field in apply_vin_facts_to_row(v, vp):
-            stats[field] += 1
+            stats[field] = stats.get(field, 0) + 1
     return stats
 
 
