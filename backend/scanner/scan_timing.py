@@ -184,7 +184,15 @@ def recommend_windows(entries: list[dict[str, Any]]) -> dict[str, Any]:
     wanted_all = [_pages_wanted(e) for e in entries]
     if any(wanted_all):
         out["pages_needed"] = max(wanted_all)
-    if "cap_hit" not in (latest.get("flags") or []):
+    flags = latest.get("flags") or []
+    if "cap_hit" not in flags:
+        return out
+    # A pass that stopped because the dealer's host throttled us (serialized,
+    # still refusing) was not short of TIME: a wider window only lengthens the
+    # scan. On the 2026-09-28 backfill 110 of 160 recommendations came from this
+    # and would have added up to 30 min per dealer to the nightly cycle.
+    if "host_exhausted" in flags:
+        out["throttled"] = True
         return out
     p = latest.get("prefetch") or {}
     wanted = _pages_wanted(latest)

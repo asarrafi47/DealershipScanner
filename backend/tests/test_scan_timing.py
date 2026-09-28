@@ -24,6 +24,11 @@ AVONDALE_SUMMARY = {
 }
 AVONDALE_RUN = {"id": 9101, "finished_at": "2026-09-28T08:15:00+00:00", "duration_seconds": 919,
                 "error": None, "summary_json": json.dumps(AVONDALE_SUMMARY)}
+# The same pass with the host never exhausted: time was the only constraint.
+UNTHROTTLED_HF = {k: v for k, v in AVONDALE_SUMMARY["vdp_prefetch"]["http_first"].items()
+                  if k not in ("host_exhausted", "slowed_host")}
+UNTHROTTLED_RUN = dict(AVONDALE_RUN, summary_json=json.dumps(
+    dict(AVONDALE_SUMMARY, vdp_prefetch={"http_first": UNTHROTTLED_HF})))
 
 
 def _run(rid, finished, secs=100, error=None, summary=None):
@@ -81,7 +86,7 @@ def test_clean_fast_run_has_no_flags_and_empty_prefetch():
 # ---------------------------------------------------------------- recommend_windows
 
 def test_avondale_recommendation_is_scaled_to_the_minute():
-    e = st.timing_entry(AVONDALE_RUN)
+    e = st.timing_entry(UNTHROTTLED_RUN)
     rec = st.recommend_windows([e])
     expected = 60 * math.ceil(300 * (800 + 867) / 448 / 60)  # 1116.3 s -> 19 min
     assert expected == 1140
@@ -96,9 +101,9 @@ def test_recommendation_scales_off_the_window_the_run_actually_used():
     """A hinted dealer's capped pass ran 1140 s; scaling that off the 300 s default
     recommended 1140 s again at best and less when the pass fetched more, so the
     hint oscillated. The recorded wall_clock_sec is the base now."""
-    hf = dict(AVONDALE_SUMMARY["vdp_prefetch"]["http_first"])
+    hf = dict(UNTHROTTLED_HF)
     # no wall_clock_sec recorded (older rows): the default is assumed -> 1140
-    assert st.recommend_windows([st.timing_entry(AVONDALE_RUN)])["vdp_http_first_max_sec"] == 1140
+    assert st.recommend_windows([st.timing_entry(UNTHROTTLED_RUN)])["vdp_http_first_max_sec"] == 1140
     e = _capped(9102, "2026-09-29T08:15:00+00:00", dict(hf, wall_clock_sec=1140))
     assert e["prefetch"]["wall_clock_sec"] == 1140 and st.run_window_sec(e) == 1140
     # 1140 s fetched 448 of 1667 wanted -> 4242 s, clamped to the ceiling
@@ -162,7 +167,7 @@ def test_merge_keeps_five_newest_and_dedupes_by_run_id():
 
 def test_merge_from_empty_hints_carries_avondale_recommendation():
     t = st.merge_timing({}, st.timing_entry(AVONDALE_RUN))
-    assert t["vdp_http_first_max_sec"] == 1140 and t["pages_needed"] == 1667
+    assert t["vdp_http_first_max_sec"] is None and t["pages_needed"] == 1667  # throttled: no wider window
     assert t["flags"] == ["cap_hit", "host_exhausted", "slowed_host", "slow", "upsert_slow"]
     assert st.needs_attention(t["flags"]) and not st.needs_attention(["slow", "slowed_host"])
     assert st.minutes(t["runs"][0]) == 15.3
@@ -275,7 +280,7 @@ def test_build_timing_groups_dealers_and_keeps_last_five(scan_runs_conn):
     assert blocks["quick-com"]["flags"] == [] and blocks["quick-com"]["vdp_http_first_max_sec"] is None
     assert blocks["broken-com"]["flags"] == ["error"]
     av = blocks["avondaletoyota-com"]
-    assert av["vdp_http_first_max_sec"] == 1140 and av["pages_needed"] == 1667 and av["updated_at"] == AVONDALE_RUN["finished_at"]
+    assert av["vdp_http_first_max_sec"] is None and av["pages_needed"] == 1667 and av["updated_at"] == AVONDALE_RUN["finished_at"]
 
 
 def test_build_timing_honours_dealer_filter_and_existing_hints(scan_runs_conn):
@@ -309,7 +314,7 @@ def test_dry_run_prints_table_and_writes_nothing(scan_runs_conn, monkeypatch, ca
     out = capsys.readouterr().out
     assert rc == 0 and writes == []
     assert "3 dealer(s) (dry run)" in out
-    assert "avondaletoyota-com" in out and "1140s" in out and "1667" in out
+    assert "avondaletoyota-com" in out and "1667" in out and "1140s" not in out
     assert "cap_hit host_exhausted slowed_host slow upsert_slow" in out
     assert "broken-com" in out and "error" in out
 
@@ -321,7 +326,7 @@ def test_write_mode_calls_set_scan_hints_per_dealer(scan_runs_conn, monkeypatch,
     monkeypatch.setattr("backend.scanner.recipe_store.set_scan_hints", lambda d, h, merge=True: writes.setdefault(d, h) or True)
     rc = ft.main(["--since", "2026-09-20T00:00:00+00:00", "--dealers", "avondaletoyota-com,broken-com"])
     assert rc == 0 and set(writes) == {"avondaletoyota-com", "broken-com"}
-    assert writes["avondaletoyota-com"]["timing"]["vdp_http_first_max_sec"] == 1140
+    assert writes["avondaletoyota-com"]["timing"]["vdp_http_first_max_sec"] is None
     assert "wrote timing for 2/2" in capsys.readouterr().out
 
 
@@ -340,7 +345,7 @@ def test_pipeline_record_timing_writes_fingerprint_and_never_raises(monkeypatch)
     monkeypatch.setattr("backend.scanner.recipe_store.set_scan_hints", _set)
     view = dp.record_timing("avondaletoyota-com", AVONDALE_RUN)
     assert view["minutes"] == 15.3 and view["flags"] == ["cap_hit", "host_exhausted", "slowed_host", "slow", "upsert_slow"]
-    assert view["vdp_http_first_max_sec"] == 1140 and view["pages_needed"] == 1667 and view["stored"] is True
+    assert view["vdp_http_first_max_sec"] is None and view["pages_needed"] == 1667 and view["stored"] is True
     assert store["avondaletoyota-com"]["needs_http_proxy"] is True  # merge kept the other keys
     assert store["avondaletoyota-com"]["timing"]["runs"][0]["run_id"] == 9101
     assert dp._timing_text({"timing": view}) == "15.3 min cap_hit host_exhausted slowed_host slow upsert_slow"
@@ -383,3 +388,11 @@ def test_pipeline_slow_dealers_file_and_errors_index(monkeypatch, tmp_path):
     dp.write_slow_dealers(results, out_dir, started)
     text = (tmp_path / "dealer_logs" / "_learning" / "errors_index.md").read_text()
     assert text.count("# errors_index") == 1 and text.count("scan_timing_error -> broken-com") == 2
+
+
+def test_host_exhausted_pass_gets_no_wider_window():
+    """A pass stopped by the dealer's host (serialized, still refusing) was not short
+    of time; 110 of 160 backfill recommendations on 2026-09-28 came from this."""
+    rec = st.recommend_windows([st.timing_entry(AVONDALE_RUN)])
+    assert rec["vdp_http_first_max_sec"] is None and rec.get("throttled") is True
+    assert rec["pages_needed"] == 1667
