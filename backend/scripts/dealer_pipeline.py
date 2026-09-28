@@ -73,6 +73,37 @@ def chromium_process_count() -> int:
         return -1
 
 
+def wait_for_db(max_wait: int, poll: int = 30) -> bool:
+    """Block until the inventory database answers, up to *max_wait* seconds.
+
+    The mini reaches the MBP's Postgres through an SSH reverse tunnel; when it
+    dropped mid-fleet on 2026-09-27 the pipeline burned through 55 batches in
+    seconds (each scanner exited 1 on connect) and both shards reported DONE.
+    Waiting keeps the roster intact for when the tunnel comes back."""
+    deadline = time.time() + max(0, max_wait)
+    warned = False
+    while True:
+        try:
+            conn = get_conn()
+            try:
+                conn.execute("SELECT 1").fetchone()
+            finally:
+                try:
+                    conn.close()
+                except Exception:  # noqa: BLE001
+                    pass
+            if warned:
+                print("scan    database reachable again", flush=True)
+            return True
+        except Exception as exc:  # noqa: BLE001
+            if time.time() >= deadline:
+                return False
+            if not warned:
+                print(f"scan    database unreachable ({str(exc).splitlines()[0][:120]}); waiting", flush=True)
+                warned = True
+            time.sleep(poll)
+
+
 def _rows(conn, sql: str, params: tuple = ()) -> list[dict[str, Any]]:
     cur = conn.execute(sql, params)
     cols = [d[0] for d in cur.description]
@@ -667,6 +698,9 @@ def main() -> int:
         for i in range(0, len(scannable), args.batch):
             batch = scannable[i:i + args.batch]
             t0 = time.time()
+            if not wait_for_db(args.lock_wait):
+                print(f"scan    database unreachable for {args.lock_wait}s; stopping before batch {i // args.batch + 1}", flush=True)
+                break
             # Another pipeline's shard frees the lock between ITS batches and grabs
             # it again a second later; on 2026-09-24 the mini's Stevenson batch lost
             # that race ("Scanner already running (lock held by pid …)"), the scanner
