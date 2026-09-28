@@ -289,7 +289,10 @@ def upsert_vehicles(vehicles: list[dict]) -> int:
         vin = (v.get("vin") or "").strip()
         if vin:
             by_vin[vin] = v
-    vehicles = list(by_vin.values())
+    # Sorted by VIN so every concurrent writer (fleet shards) takes row and index
+    # locks in the same order; Chapman Ford's upsert died with DeadlockDetected on
+    # 2026-09-28 when two shards inserted overlapping rows in feed order.
+    vehicles = [by_vin[k] for k in sorted(by_vin)]
     conn = get_conn()
     count = 0
     try:

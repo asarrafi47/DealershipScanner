@@ -60,9 +60,38 @@ class InventoryWriteCoordinator:
     async def upsert_vehicles(self, vehicles: list[dict]) -> int:
         if not vehicles:
             return 0
-        from backend.scanner.database import upsert_vehicles as _upsert
-
         if self._lock is None:
-            return await asyncio.to_thread(_upsert, vehicles)
+            return await _upsert_with_retry(vehicles)
         async with self._lock:
+            return await _upsert_with_retry(vehicles)
+
+
+_UPSERT_RETRIES = 3
+
+
+def _is_retryable_db_error(exc: BaseException) -> bool:
+    """Postgres deadlock / serialization failure (SQLSTATE 40P01 / 40001)."""
+    code = getattr(exc, "sqlstate", None) or getattr(getattr(exc, "diag", None), "sqlstate", None)
+    if code in ("40P01", "40001"):
+        return True
+    name = type(exc).__name__
+    return name in ("DeadlockDetected", "SerializationFailure")
+
+
+async def _upsert_with_retry(vehicles: list[dict]) -> int:
+    """The upsert is VIN-keyed ON CONFLICT and therefore idempotent: a deadlock
+    victim is rolled back by Postgres and can simply run again."""
+    from backend.scanner.database import upsert_vehicles as _upsert
+
+    for attempt in range(1, _UPSERT_RETRIES + 1):
+        try:
             return await asyncio.to_thread(_upsert, vehicles)
+        except Exception as exc:  # noqa: BLE001
+            if attempt >= _UPSERT_RETRIES or not _is_retryable_db_error(exc):
+                raise
+            logger.warning(
+                "Inventory upsert hit %s (attempt %d/%d); retrying",
+                type(exc).__name__, attempt, _UPSERT_RETRIES,
+            )
+            await asyncio.sleep(0.5 * attempt)
+    return 0
