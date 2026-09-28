@@ -62,9 +62,14 @@ def _drive_bucket(s: Any) -> str:
 
 def _fuel_bucket(s: Any) -> str:
     t = str(s or "").lower()
-    if "electric" in t and "gas" not in t and "hybrid" not in t:
+    if "electric" in t and "gas" not in t and "hybrid" not in t and "plug" not in t:
         return "ev"
-    if "hybrid" in t or "phev" in t:
+    # Plug-in hybrids are their own bucket: folding them into "hybrid" meant a
+    # dealer "Hybrid" was never upgraded when vPIC said PHEV (1,267 rows,
+    # 1,041 of whose own titles say plug-in: 550e, RX 450h+, 4xe; F09 2026-09-28).
+    if "plug" in t or "phev" in t:
+        return "phev"
+    if "hybrid" in t:
         return "hybrid"
     if "diesel" in t:
         return "diesel"
