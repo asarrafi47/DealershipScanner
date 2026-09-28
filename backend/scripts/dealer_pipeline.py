@@ -548,6 +548,15 @@ def assess(conn, dealer_id: str, since_iso: str, known_before: int, recipe_info:
         out["verdict"], out["reason"] = "no_rows", "recipe replay yielded 0 rows"
         return out
     floor = known_before * ROW_FLOOR if known_before else MIN_ROWS_UNKNOWN
+    # ``n`` counts the feed BEFORE the rooftop gate. A group feed answers with
+    # the whole group (MB Beverly Hills 2026-09-28: 1,521 Fletcher Jones rows,
+    # 2 kept), so the rows actually stamped to this store are the run's yield.
+    stamped = int(out.get("rows_new") or 0) + int(out.get("rows_used") or 0)
+    out["rows_stamped"] = stamped
+    if stamped < floor and stamped < n * 0.5:
+        out["verdict"] = "no_rows"
+        out["reason"] = f"{stamped} rows stamped to this store of {n} in the feed (rooftop gate refused the rest; floor {floor:.0f})"
+        return out
     if n < floor:
         out["verdict"], out["reason"] = "no_rows", f"{n} rows vs {known_before} listed before (floor {floor:.0f})"
         return out
@@ -753,7 +762,11 @@ def main() -> int:
         for did in ids:
             r = assess(conn, did, since_iso, known[did], recipe_info[did])
             try:
-                r["reconcile"] = reconcile_dealer(conn, did, since_iso, known[did], int(r.get("rows") or 0), str(r.get("verdict")),
+                # Retire against the rows stamped to THIS store, never the raw feed
+                # count: a group feed's 1,521 rows with 2 kept retired 158 real
+                # cars on 2026-09-28 (mbbeverlyhills-com, fjmercedes-com).
+                rows_kept = int(r.get("rows_stamped") if r.get("rows_stamped") is not None else (r.get("rows") or 0))
+                r["reconcile"] = reconcile_dealer(conn, did, since_iso, known[did], rows_kept, str(r.get("verdict")),
                                                   dry_run=args.no_reconcile)
             except Exception as exc:  # noqa: BLE001
                 r["reconcile"] = {"error": str(exc)[:120]}
