@@ -378,10 +378,24 @@ def fetch_http(url: str, timeout: float) -> tuple[int, str, str]:
 
     try:
         resp = requests.get(url, headers=HTTP_HEADERS, timeout=timeout, allow_redirects=True)
-        return resp.status_code, resp.text or "", resp.url or url
+        status, text, final = resp.status_code, resp.text or "", resp.url or url
     except Exception as exc:  # a dealer site being down is not a script failure
         log.debug("http fetch failed %s: %s", url, exc)
-        return 0, "", url
+        status, text, final = 0, "", url
+    if status in (403, 405, 429, 503) or (status == 0):
+        # Dealer Inspire / Cloudflare answer 403 to the requests TLS fingerprint,
+        # not to the IP (memory: "Dealer Inspire curl 403 != IP ban"): 215 of 392
+        # streetless dealers on the 2026-09-27 dry run. Retry with a browser
+        # fingerprint (curl_cffi) the scanner already uses for recipe replay.
+        try:
+            from backend.scanner.recipe_synth import _fetch_impersonated
+
+            html = _fetch_impersonated(url)
+            if html:
+                return 200, html, url
+        except Exception as exc:  # noqa: BLE001
+            log.debug("impersonated fetch failed %s: %s", url, exc)
+    return status, text, final
 
 
 def site_candidates_http(dealer: Dealer, timeout: float) -> tuple[list[Candidate], str]:
