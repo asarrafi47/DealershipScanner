@@ -257,6 +257,25 @@ def test_float_radii_share_one_scope_cache_entry(scoped, client):
     assert [k[1] for k in listings_api._cars_scope_cache] == [50.0]
 
 
+def test_scope_build_locks_are_a_fixed_stripe_array(scoped, client):
+    """The per-scope build lock never comes from a structure that evicts: the same
+    key always maps to the same lock object, however many scopes are requested."""
+    from backend.routes import listings_api
+
+    key = ("92694", 50.0, ())
+    lock = listings_api._cars_scope_build_lock(key)
+    before = listings_api._cars_scope_build_locks
+    for i in range(10, 10 + 4 * listings_api._CARS_SCOPE_MAX_ENTRIES + 5):
+        listings_api._cars_scope_build_lock((f"{i:05d}", 50.0, ()))
+    assert listings_api._cars_scope_build_locks is before
+    assert len(before) == listings_api._CARS_SCOPE_BUILD_STRIPES
+    assert listings_api._cars_scope_build_lock(key) is lock
+    # A held lock is still the one the next request for that scope waits on.
+    with lock:
+        assert listings_api._cars_scope_build_lock(key).locked()
+    assert client.get("/api/listings/cars?zip=92694&radius=50").status_code == 200
+
+
 # ── card store ──────────────────────────────────────────────────────────
 
 

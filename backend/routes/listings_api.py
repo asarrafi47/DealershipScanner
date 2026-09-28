@@ -193,8 +193,18 @@ _cars_scope_cache: "OrderedDict[tuple, _CarsScopeEntry]" = OrderedDict()
 _cars_scope_bytes = 0
 _cars_scope_lock = threading.Lock()
 # One build per scope key at a time: concurrent shoppers in the same metro wait for
-# the first build instead of all running it.
-_cars_scope_build_locks: dict[tuple, threading.Lock] = {}
+# the first build instead of all running it. A fixed array of striped locks, never a
+# growing dict that is pruned: pruning could drop a lock another thread holds or
+# waits on, and two builds of the same scope would then run at once. Two scopes that
+# hash to the same stripe merely serialize.
+_CARS_SCOPE_BUILD_STRIPES = 64
+_cars_scope_build_locks: tuple[threading.Lock, ...] = tuple(
+    threading.Lock() for _ in range(_CARS_SCOPE_BUILD_STRIPES)
+)
+
+
+def _cars_scope_build_lock(key: tuple) -> threading.Lock:
+    return _cars_scope_build_locks[hash(key) % _CARS_SCOPE_BUILD_STRIPES]
 
 
 def _cars_scope_get(key: tuple) -> _CarsScopeEntry | None:
@@ -334,12 +344,7 @@ def api_listings_cars():
     key = (zip_code, radius, hidden)
     entry = _cars_scope_get(key)
     if not _cars_scope_entry_valid(entry, token):
-        with _cars_scope_lock:
-            build_lock = _cars_scope_build_locks.setdefault(key, threading.Lock())
-            if len(_cars_scope_build_locks) > 4 * _CARS_SCOPE_MAX_ENTRIES:
-                _cars_scope_build_locks.clear()
-                _cars_scope_build_locks[key] = build_lock
-        with build_lock:
+        with _cars_scope_build_lock(key):
             entry = _cars_scope_get(key)
             if not _cars_scope_entry_valid(entry, token):
                 entry = _build_cars_scope_entry(
