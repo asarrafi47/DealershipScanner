@@ -524,7 +524,7 @@
                         <div id="negotiation-radar-widget"
                             class="negotiation-radar-widget"
                             data-created-at="{{ car.created_at or car.first_seen_at or car.scraped_at or '' }}"
-                            data-price-history='{{ car.price_history_json | default("[]", true) | tojson }}'
+                            data-price-history='{{ (car.price_history or []) | tojson }}'
                             role="region"
                             aria-label="Negotiation leverage tracker">
                             <h4>Negotiation Leverage Tracker</h4>

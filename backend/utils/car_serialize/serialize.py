@@ -493,7 +493,7 @@ def serialize_car_for_api(
     out["package_names"] = _pkg_names
 
     out["created_at"] = c.get("first_seen_at") or c.get("scraped_at")
-    out["price_history_json"] = _price_history_json_for_vdp(c)
+    out["price_history"] = _price_history_for_vdp(c)
     out["state"] = resolve_car_state_code(c)
     out["fuel_requirement"] = resolve_car_fuel_requirement(
         c, engine_display=engine_disp, verified_specs=vs if vs else None
@@ -548,12 +548,20 @@ def serialize_car_for_api(
     return out
 
 
-def _price_history_json_for_vdp(car: dict[str, Any]) -> str:
+def _price_history_for_vdp(car: dict[str, Any]) -> list[dict[str, Any]]:
     """
-    JSON array string for VDP negotiation radar: [{date, price}, ...].
+    Price history for the VDP: ``[{date, price}, ...]`` oldest first.
 
     Reads operator ``price_provenance_json`` when it stores sweep history; never
     exposes the raw provenance blob on the public car payload.
+
+    Returns a Python list (the template applies ``| tojson`` exactly once).
+    The scanner appends a point every time a scan sees a different price than
+    the stored row, so two sources that disagree (a VDP price vs an SRP
+    payment-shaped price, say) leave an alternating trail with several points
+    on one day.  Those are collapsed here: one point per UTC day (the last
+    observation wins), then consecutive equal prices are dropped, so what is
+    left is only the days on which the listed price actually changed.
     """
     events: list[dict[str, Any]] = []
     raw = car.get("price_provenance_json")
@@ -580,7 +588,32 @@ def _price_history_json_for_vdp(car: dict[str, Any]) -> str:
                     events.append({"date": str(when), "price": float(amt)})
                 except (TypeError, ValueError):
                     continue
-    return json.dumps(events)
+    return _dedupe_price_history(events)
+
+
+def _dedupe_price_history(events: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Keep the last point per UTC day, then drop consecutive equal prices."""
+    if not events:
+        return []
+    by_day: dict[str, dict[str, Any]] = {}
+    order: list[str] = []
+    for evt in events:  # scanner appends chronologically; the last write per day wins
+        day = str(evt["date"])[:10]
+        if day not in by_day:
+            order.append(day)
+        by_day[day] = evt
+    out: list[dict[str, Any]] = []
+    for day in order:
+        evt = by_day[day]
+        if out and out[-1]["price"] == evt["price"]:
+            continue
+        out.append(evt)
+    return out
+
+
+def _price_history_json_for_vdp(car: dict[str, Any]) -> str:
+    """JSON string form of :func:`_price_history_for_vdp` (kept for older callers)."""
+    return json.dumps(_price_history_for_vdp(car))
 
 
 _PRICE_DROP_RECENT_DAYS = max(1, int(os.environ.get("PRICE_DROP_RECENT_DAYS", "14")))
