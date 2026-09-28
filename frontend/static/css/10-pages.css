@@ -217,8 +217,31 @@
     background: rgba(42, 77, 115, 0.08);
 }
 
-.compare-table__row--diff th[scope="row"] {
+/* SA-03: differs is carried by a text tag and a navy rule, not the tint alone.
+   Selector matches the specificity of `.compare-table tbody th[scope="row"]`
+   and comes after it, so the navy label wins. */
+.compare-table tbody .compare-table__row--diff th[scope="row"] {
     color: var(--navy);
+    border-left: 3px solid var(--navy);
+}
+
+.compare-table tbody .compare-table__row--diff td {
+    font-weight: 600;
+}
+
+.compare-diff-tag {
+    display: inline-block;
+    margin-left: 6px;
+    padding: 0 5px;
+    border: 1px solid var(--navy);
+    border-radius: 3px;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 16px;
+    letter-spacing: 0.02em;
+    color: var(--navy);
+    background: transparent;
+    vertical-align: 1px;
 }
 
 .compare-table__remove {

@@ -198,3 +198,57 @@ def vpic_is_hybrid(specs: dict[str, Any]) -> bool:
 def reset_cache() -> None:
     """Tests / tooling: drop the in-process memo."""
     _cached_specs_for_vin.cache_clear()
+
+
+def vpic_transmission_label(specs: dict[str, Any]) -> str | None:
+    """Shopper label for the decode's ``TransmissionStyle`` (plus speeds), or None.
+
+    DC-7 (visual review 2026-09-28): a 2027 CR-V Hybrid's feed code ``DDU``
+    bucketed to "Automatic" while vPIC files "Electronic Continuously Variable
+    (e-CVT)"; side by side with a CVT CR-V the compare page flagged a false
+    difference. The decode is the per-VIN filing, so it names the gearbox.
+    """
+    style = str(specs.get("transmission_style") or "").strip()
+    if not style:
+        return None
+    s = style.lower()
+    speeds = specs.get("transmission_speeds")
+    prefix = f"{int(speeds)}-Speed " if isinstance(speeds, int) and speeds > 1 else ""
+    if "e-cvt" in s or "electronic continuously variable" in s:
+        return "e-CVT"
+    if "continuously variable" in s or re.search(r"\bcvt\b", s):
+        return "CVT"
+    if "dual-clutch" in s or "dual clutch" in s or re.search(r"\bdct\b", s):
+        return f"{prefix}Dual-Clutch Automatic"
+    if "automated manual" in s:
+        return f"{prefix}Automated Manual"
+    if "direct drive" in s:
+        return "Single-Speed (Direct Drive)"
+    if "manual" in s or "standard" in s:
+        return f"{prefix}Manual"
+    if "automatic" in s:
+        return f"{prefix}Automatic"
+    return None
+
+
+def transmission_family(text: Any) -> str | None:
+    """Coarse gearbox family of a display string: cvt / automatic / manual / direct.
+
+    e-CVT and CVT are one family (a power-split hybrid and a belt CVT are both
+    continuously variable to the shopper); dual-clutch and automated manual count
+    as automatic. ``None`` when the text names no gearbox (feed codes like "DDU").
+    """
+    s = str(text or "").strip().lower()
+    if not s or s in ("—", "-"):
+        return None
+    if re.search(r"\b(?:e-?)?cvt\b|continuously variable", s):
+        return "cvt"
+    if "direct drive" in s or re.search(r"\b(?:single|1)[-\s]speed\b", s):
+        return "direct"
+    if "automated manual" in s:
+        return "automatic"
+    if re.search(r"\bmanual\b|\bstandard\b", s):
+        return "manual"
+    if re.search(r"\bauto(?:matic)?\b|dual[-\s]clutch|\bdct\b|\d+[-\s]?speed", s):
+        return "automatic"
+    return None

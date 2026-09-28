@@ -25,7 +25,7 @@
         </a>
         <header class="compare-page-header">
             <h1>Compare vehicles</h1>
-            <p class="compare-page-lead">Side-by-side specs for up to four listings. Rows highlighted in blue differ across the vehicles you selected.</p>
+            <p class="compare-page-lead">Side-by-side specs for up to four listings. Rows marked &ldquo;differs&rdquo; have different values across the vehicles you selected.</p>
         </header>
 
         {% if cars %}
@@ -49,7 +49,7 @@
                 <tbody>
                     {% for row in compare_rows %}
                     <tr class="compare-table__row{% if row.differs %} compare-table__row--diff{% endif %}">
-                        <th scope="row">{{ row.label }}</th>
+                        <th scope="row">{{ row.label }}{% if row.differs %} <span class="compare-diff-tag">differs</span>{% endif %}</th>
                         {% for val in row.cells %}
                         <td>{{ val }}</td>
                         {% endfor %}

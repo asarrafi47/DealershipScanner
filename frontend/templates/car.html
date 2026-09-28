@@ -674,7 +674,7 @@
                         {% if car.transmission_display and car.transmission_display != '—' %}
                         <div class="spec-row">
                             <span class="spec-label">Transmission</span>
-                            <span class="spec-value">{{ car.transmission_display }}</span>
+                            <span class="spec-value">{{ car.transmission_display }}{% if car.transmission_source %} <span class="spec-source-badge" title="Manufacturer filing for this VIN (NHTSA vPIC TransmissionStyle)">per {{ car.transmission_source }}</span>{% endif %}{% if car.transmission_feed %} <span class="spec-source-badge" title="What the dealer feed listed">feed: {{ car.transmission_feed }}</span>{% endif %}</span>
                         </div>
                         {% endif %}
                         {% if car.drivetrain_display and car.drivetrain_display != '—' %}

@@ -68,35 +68,100 @@ def _fmt_mileage(car: dict[str, Any]) -> str:
         return "—"
 
 
-def _package_summary(car: dict[str, Any]) -> str:
+def _load_packages_blob(car: dict[str, Any]) -> dict[str, Any] | None:
     raw = car.get("packages")
     if raw is None or raw == "":
-        return "—"
+        return None
     try:
         pkg = json.loads(raw) if isinstance(raw, str) else raw
     except (TypeError, ValueError, json.JSONDecodeError):
-        return "—"
-    if not isinstance(pkg, dict):
+        return None
+    return pkg if isinstance(pkg, dict) else None
+
+
+def _package_summary(car: dict[str, Any]) -> str:
+    """Packages first, then the feed's ``features`` list.
+
+    DC-7 (visual review 2026-09-28): 102,910 of 104,252 active packages blobs
+    are ``{"features": [...], "warranty": [...]}`` and only 22 carry the
+    ``packages_normalized`` / ``possible_packages`` keys, so reading those alone
+    printed a dash for two cars that each list twenty features.
+    """
+    pkg = _load_packages_blob(car)
+    if pkg is None:
         return "—"
     names: list[str] = []
     seen: set[str] = set()
-    for entry in pkg.get("packages_normalized") or []:
-        if not isinstance(entry, dict):
-            continue
-        n = (entry.get("canonical_name") or entry.get("name") or "").strip()
+
+    def _add(n: Any) -> None:
+        if not isinstance(n, str):
+            return
+        n = n.strip()
         key = n.lower()
         if n and key not in seen:
             seen.add(key)
             names.append(n)
+
+    for entry in pkg.get("packages_normalized") or []:
+        if isinstance(entry, dict):
+            _add(entry.get("canonical_name") or entry.get("name") or "")
     for n in pkg.get("possible_packages") or []:
-        if isinstance(n, str) and n.strip():
-            key = n.strip().lower()
-            if key not in seen:
-                seen.add(key)
-                names.append(n.strip())
+        _add(n)
+    if not names:
+        for n in pkg.get("features") or []:
+            _add(n)
     if not names:
         return "—"
     return ", ".join(names[:8]) + ("…" if len(names) > 8 else "")
+
+
+_WARRANTY_SUFFIX_RE = re.compile(r"\s+(years?|miles(?:/km)?|km)\s*$", re.I)
+
+
+def _warranty_summary(car: dict[str, Any]) -> str:
+    """"Basic 3 yr / 36,000 mi; Drivetrain 5 yr / 60,000 mi; ..." from ``packages.warranty``.
+
+    The feed files each coverage as two rows ("Basic Years" = 3, "Basic
+    Miles/km" = 36,000); they are paired back by name, in feed order, and
+    printed as filed.
+    """
+    pkg = _load_packages_blob(car)
+    if pkg is None:
+        return "—"
+    raw = pkg.get("warranty")
+    items: list[tuple[str, Any]] = []
+    if isinstance(raw, list):
+        for e in raw:
+            if isinstance(e, dict):
+                items.append((str(e.get("name") or ""), e.get("value")))
+    elif isinstance(raw, dict):
+        items = [(str(k), v) for k, v in raw.items()]
+    order: list[str] = []
+    cov: dict[str, dict[str, str]] = {}
+    for name, value in items:
+        val = str(value if value is not None else "").strip()
+        m = _WARRANTY_SUFFIX_RE.search(name)
+        if not m or not val:
+            continue
+        base = name[: m.start()].strip()
+        unit = "yr" if m.group(1).lower().startswith("year") else "mi"
+        if not base:
+            continue
+        if base not in cov:
+            cov[base] = {}
+            order.append(base)
+        cov[base][unit] = val
+    parts: list[str] = []
+    for base in order:
+        c = cov[base]
+        bits = []
+        if c.get("yr"):
+            bits.append(f"{c['yr']} yr")
+        if c.get("mi"):
+            bits.append("unlimited mi" if c["mi"].lower() == "unlimited" else f"{c['mi']} mi")
+        if bits:
+            parts.append(f"{base} {' / '.join(bits)}")
+    return "; ".join(parts) if parts else "—"
 
 
 def _history_summary(car: dict[str, Any]) -> str:
@@ -122,6 +187,7 @@ def serialize_car_for_compare(raw: dict[str, Any]) -> dict[str, Any]:
         image_url = gallery[0]
     car["compare_image_url"] = image_url
     car["compare_packages_summary"] = _package_summary(raw)
+    car["compare_warranty_summary"] = _warranty_summary(raw)
     car["compare_history_summary"] = _history_summary(raw)
     return car
 
@@ -164,14 +230,16 @@ def _compare_rows(cars: list[dict[str, Any]]) -> list[dict[str, Any]]:
         ("vin", "VIN", lambda c: _norm_cell(c.get("vin"))),
         ("stock_number", "Stock #", lambda c: _norm_cell(c.get("stock_number"))),
         ("dealer_name", "Dealer", _dealer_cell),
-        ("compare_packages_summary", "Packages & options", lambda c: c.get("compare_packages_summary") or "—"),
+        ("compare_packages_summary", "Features & options", lambda c: c.get("compare_packages_summary") or "—"),
+        ("compare_warranty_summary", "Warranty", lambda c: c.get("compare_warranty_summary") or "—"),
         ("compare_history_summary", "History highlights", lambda c: c.get("compare_history_summary") or "—"),
     ]
 
     rows: list[dict[str, Any]] = []
     for key, label, fn in specs:
         values = [fn(c) for c in cars]
-        normalized = {_collapse_ws(v) for v in values}
+        key_fn = _DIFF_KEYS.get(key, _collapse_ws)
+        normalized = {key_fn(v) for v in values}
         differs = len(normalized) > 1 and not (len(normalized) == 1 and "—" in normalized)
         rows.append(
             {
@@ -186,6 +254,18 @@ def _compare_rows(cars: list[dict[str, Any]]) -> list[dict[str, Any]]:
 
 def _collapse_ws(text: str) -> str:
     return re.sub(r"\s+", " ", (text or "").strip()).lower()
+
+
+def _transmission_diff_key(text: str) -> str:
+    """e-CVT and CVT are one family; everything else compares as written (DC-7)."""
+    from backend.utils.vpic_specs import transmission_family
+
+    if transmission_family(text) == "cvt":
+        return "cvt"
+    return _collapse_ws(text)
+
+
+_DIFF_KEYS = {"transmission_display": _transmission_diff_key}
 
 
 def build_compare_context(raw_cars: list[dict[str, Any]]) -> dict[str, Any]:

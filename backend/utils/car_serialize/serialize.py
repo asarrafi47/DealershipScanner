@@ -286,6 +286,34 @@ def serialize_car_for_api(
     else:
         dd = format_display_value(inferred_dd or dealer_d)
 
+    # vPIC TransmissionStyle outranks the feed (DC-7, visual review 2026-09-28):
+    # it is the per-VIN filing, while feed codes like "DDU" bucket an e-CVT
+    # hybrid as "Automatic". Kept the feed's line only when both name the same
+    # family and the feed carries a gear count the decode lacks. When the two
+    # disagree on family, the feed's own words ride along as
+    # ``transmission_feed`` so the page can show them muted.
+    from backend.utils.vpic_specs import (
+        transmission_family,
+        vpic_specs_for_vin as _vpic_specs_tx,
+        vpic_transmission_label,
+    )
+
+    out["transmission_source"] = None
+    out["transmission_feed"] = None
+    _vp_tx = vpic_transmission_label(_vpic_specs_tx(c.get("vin")))
+    if _vp_tx:
+        _fam_feed = transmission_family(td)
+        _fam_vpic = transmission_family(_vp_tx)
+        _feed_has_gears = isinstance(td, str) and _transmission_line_has_gear_count(td)
+        _vpic_has_gears = _transmission_line_has_gear_count(_vp_tx)
+        if not (_fam_feed == _fam_vpic and _feed_has_gears and not _vpic_has_gears):
+            if _fam_feed != _fam_vpic:
+                _feed_raw = str(dealer_t or "").strip() or (td if isinstance(td, str) else "")
+                if _feed_raw and _feed_raw not in ("—", "-"):
+                    out["transmission_feed"] = _feed_raw
+            td = _vp_tx
+            out["transmission_source"] = "NHTSA vPIC"
+
     out["transmission_display"] = td
     out["drivetrain_display"] = dd
 
