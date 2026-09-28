@@ -1,0 +1,17 @@
+{
+  "$schema": "https://railway.com/railway.schema.json",
+  "build": {
+    "builder": "DOCKERFILE",
+    "dockerfilePath": "Dockerfile.scanner"
+  },
+  "deploy": {
+    "restartPolicyType": "NEVER",
+    "numReplicas": 1,
+    "limitOverride": {
+      "containers": {
+        "cpu": 16,
+        "memoryBytes": 17179869184
+      }
+    }
+  }
+}
