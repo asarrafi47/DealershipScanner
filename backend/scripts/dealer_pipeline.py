@@ -466,7 +466,9 @@ def log_scan_run(r: dict[str, Any], stamp: str) -> None:
          f"- NHTSA: decode cached for {acc.get('vpic_cached', '-')}/{acc.get('rows', '-')} rows; heal this batch: {json.dumps(r.get('vpic_heal'))[:200]}",
          f"- incomplete after fill: {acc.get('incomplete_rows', '-')}/{acc.get('rows', '-')} ({_pct(acc.get('incomplete_rows'), acc.get('rows'))}); fields: {json.dumps(acc.get('missing'))}",
          f"- hard discrepancies: {acc.get('hard_rows', '-')} rows ({_pct(acc.get('hard_rows'), acc.get('rows'))}); by code: {json.dumps(acc.get('hard'))}",
-         f"- reconcile: {json.dumps(r.get('reconcile'))}"]
+         f"- reconcile: {json.dumps(r.get('reconcile'))}",
+         f"- timing: {_timing_text(r)}; window for next run: vdp_http_first_max_sec={(r.get('timing') or {}).get('vdp_http_first_max_sec')} "
+         f"pages_needed={(r.get('timing') or {}).get('pages_needed')} (fingerprint scan_hints.timing)"]
     for code, exs in (acc.get("examples") or {}).items():
         L.append(f"  - `{code}`: " + "; ".join(f"{e.get('car')} `{e.get('vin')}` {e.get('why', '')}"[:160] for e in exs[:3]))
     if r.get("error"):
@@ -500,6 +502,37 @@ def write_instructions_if_first_success(r: dict[str, Any], stamp: str) -> None:
 # --------------------------------------------------------------------------
 # 4. assess
 # --------------------------------------------------------------------------
+
+def record_timing(dealer_id: str, run: dict[str, Any]) -> dict[str, Any]:
+    """Fold this run's timing into the dealer's fingerprint (``scan_hints.timing``,
+    backend/scanner/scan_timing.py) and return the triage view of it:
+    {minutes, flags, vdp_http_first_max_sec, pages_needed}. Never raises — the
+    assessment must not fail because the recipe store was unreachable."""
+    from backend.scanner.scan_timing import minutes as _minutes, timing_entry
+
+    view: dict[str, Any] = {"minutes": round(float(run.get("duration_seconds") or 0) / 60, 1), "flags": []}
+    try:
+        entry = timing_entry(run)
+        view["minutes"], view["flags"] = _minutes(entry), list(entry["flags"])
+        from backend.scanner.recipe_store import get_scan_hints, set_scan_hints
+        from backend.scanner.scan_timing import merge_timing
+
+        merged = merge_timing(get_scan_hints(dealer_id), entry)
+        view["vdp_http_first_max_sec"] = merged.get("vdp_http_first_max_sec")
+        view["pages_needed"] = merged.get("pages_needed")
+        view["stored"] = bool(set_scan_hints(dealer_id, {"timing": merged}, merge=True))
+    except Exception as exc:  # noqa: BLE001
+        view["error"] = str(exc)[:120]
+    return view
+
+
+def _timing_text(r: dict[str, Any]) -> str:
+    """``12.3 min cap_hit slow`` — the triage table's time column."""
+    t = r.get("timing") or {}
+    mins = t.get("minutes", r.get("minutes"))
+    flags = " ".join(t.get("flags") or [])
+    return f"{mins if mins is not None else '-'} min" + (f" {flags}" if flags else "")
+
 
 def assess(conn, dealer_id: str, since_iso: str, known_before: int, recipe_info: dict[str, Any]) -> dict[str, Any]:
     runs = _rows(
@@ -541,6 +574,7 @@ def assess(conn, dealer_id: str, since_iso: str, known_before: int, recipe_info:
         "coverage": {k: cc.get(k) for k in KEY_FIELDS + SECONDARY_FIELDS if k in cc},
         "filtered_count": s.get("filtered_count"), "vin_facts": s.get("vin_facts"),
     })
+    out["timing"] = record_timing(dealer_id, r)
     if r.get("error"):
         out["verdict"], out["reason"] = "error", str(r["error"])[:200]
         return out
@@ -790,16 +824,45 @@ def main() -> int:
         "inaccurate": [r["dealer_id"] for r in results if r.get("verdict") == "inaccurate"],
     }
     (out_dir / "triage.json").write_text(json.dumps(triage, indent=1, default=str), encoding="utf-8")
-    lines = ["| dealer | verdict | rows new/used | before | platform | incomplete | discrepant | reason |", "|---|---|---:|---:|---|---:|---:|---|"]
+    lines = ["| dealer | verdict | rows new/used | before | platform | incomplete | discrepant | time | reason |", "|---|---|---:|---:|---|---:|---:|---|---|"]
     for r in results:
         acc = r.get("accuracy") or {}
         lines.append(f"| {r['dealer_id']} | {r.get('verdict')} | {r.get('rows', '-')} ({r.get('rows_new', '-')}/{r.get('rows_used', '-')}) | {r.get('known_before')} | "
                      f"{r.get('provider') or ','.join((r.get('recipe') or {}).get('providers') or []) or '-'} | {_pct(acc.get('incomplete_rows'), acc.get('rows'))} | "
-                     f"{_pct(acc.get('hard_rows'), acc.get('rows'))} | {str(r.get('reason') or '')[:90]} |")
+                     f"{_pct(acc.get('hard_rows'), acc.get('rows'))} | {_timing_text(r)} | {str(r.get('reason') or '')[:90]} |")
     (out_dir / "triage.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
+    try:
+        write_slow_dealers(results, out_dir, started)
+    except Exception as exc:  # noqa: BLE001
+        print(f"log     slow_dealers: {str(exc)[:100]}", flush=True)
     print("\n".join(lines))
     print(json.dumps(triage["counts"]))
     return 0
+
+
+def write_slow_dealers(results: list[dict[str, Any]], out_dir: Path, started: datetime) -> list[str]:
+    """``<out>/slow_dealers.txt`` (one ``dealer_id  flags  minutes`` line per dealer
+    that errored, timed out, hit a cap, exhausted its host or ran very long) and
+    the same dealers as lines in ``_learning/errors_index.md``. Returns the ids."""
+    from backend.scanner.scan_timing import needs_attention
+
+    flagged = [r for r in results if needs_attention((r.get("timing") or {}).get("flags"))]
+    lines = [f"{r['dealer_id']}  {'+'.join((r.get('timing') or {}).get('flags') or [])}  {(r.get('timing') or {}).get('minutes', r.get('minutes', '-'))}"
+             for r in flagged]
+    (out_dir / "slow_dealers.txt").write_text(("\n".join(lines) + "\n") if lines else "", encoding="utf-8")
+    if flagged:
+        idx = LOG_ROOT / "_learning" / "errors_index.md"
+        idx.parent.mkdir(parents=True, exist_ok=True)
+        stamp = started.isoformat()
+        with idx.open("a", encoding="utf-8") as fh:
+            if idx.stat().st_size == 0:
+                fh.write("# errors_index\n\n(one entry per lesson; say which dealer log shows the evidence)\n")
+            for r in flagged:
+                t = r.get("timing") or {}
+                fh.write(f"- {stamp} scan_timing_{'+'.join(t.get('flags') or [])} -> {r['dealer_id']} "
+                         f"({t.get('minutes', r.get('minutes', '-'))} min; window {t.get('vdp_http_first_max_sec')}s/{t.get('pages_needed')} pages; "
+                         f"workspace/dealer_logs/{r['dealer_id']}/scan_runs.md)\n")
+    return [r["dealer_id"] for r in flagged]
 
 
 if __name__ == "__main__":
