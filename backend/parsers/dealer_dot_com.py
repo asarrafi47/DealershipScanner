@@ -43,10 +43,17 @@ def _opt_str(v) -> str | None:
 
 
 def _opt_label_str(v) -> str | None:
-    """Missing / placeholder → None; unwraps dict-shaped label fields via norm_label_str."""
+    """Missing / placeholder → None; unwraps dict-shaped label fields via norm_label_str.
+    "Other" (dealer.com's no-value drivetrain / transmission) is a placeholder,
+    not a label: stored verbatim it overwrote vPIC-healed drivetrains (F10)."""
     if v is None:
         return None
-    return normalize_optional_str(norm_label_str(v))
+    from backend.utils.field_clean import is_spec_placeholder
+
+    label = norm_label_str(v)
+    if is_spec_placeholder(label):
+        return None
+    return normalize_optional_str(label)
 
 
 def _extract_title(obj: dict, year: int, make: str, model: str) -> str | None:
@@ -77,14 +84,19 @@ def _extract_title(obj: dict, year: int, make: str, model: str) -> str | None:
 _MASKED_PRICE_FLOOR = 1000
 
 
-def _first_price(*vals, floor: float = 0.0) -> float:
+# No retail vehicle this parser sees lists above this; a larger "msrp" is a
+# stock-number / uuid fragment or a summed figure and must not become MSRP.
+_MSRP_CEILING = 400_000
+
+
+def _first_price(*vals, floor: float = 0.0, ceiling: float = float("inf")) -> float:
     for v in vals:
         if v is None or v is False:
             continue
         if isinstance(v, str) and "contact" in v.lower():
             continue
         n = norm_float(v)
-        if n > floor:
+        if n > floor and n <= ceiling:
             return n
     return 0.0
 
@@ -131,33 +143,93 @@ def _extract_price_dealer_com(obj: dict) -> int:
     return int(round(raw))
 
 
+def _is_new_or_certified(obj: dict) -> bool:
+    if obj.get("certified") is True:
+        return True
+    for key in ("condition", "type", "status"):
+        v = str(obj.get(key) or "").strip().lower()
+        if v in ("new", "certified", "cpo", "certified pre-owned"):
+            return True
+    return False
+
+
+def _typed_price_entries(pricing: dict | None, type_class: str) -> list:
+    """Values of ``pricing.dprice[]`` then ``pricing.eprice[]`` entries whose
+    ``typeClass`` is ``type_class`` (label is free text: "Total SRP", "MSRP",
+    "Retail Price"...). askingPrice / internetPrice / isFinalPrice rows are
+    never MSRP and are simply not matched."""
+    out = []
+    if not isinstance(pricing, dict):
+        return out
+    for key in ("dprice", "eprice"):
+        arr = pricing.get(key)
+        if not isinstance(arr, list):
+            continue
+        for entry in arr:
+            if not isinstance(entry, dict):
+                continue
+            if str(entry.get("typeClass") or "").strip().lower() == type_class:
+                out.append(entry.get("value"))
+    return out
+
+
 def _extract_msrp_dealer_com(obj: dict) -> int:
-    """MSRP for display when sale price is hidden (Unlock Price)."""
+    """MSRP from a getInventory item.
+
+    Live ws-inv-data feeds (2026-09-28, 96/96 items at four stores) carry it in
+    ``trackingPricing.msrp`` ("$64,783"), ``pricing.dprice[].typeClass ==
+    "msrp"`` and ``pricing.retailPrice``, never in ``pricing.msrp``; reading
+    only the latter left 100% of New rows at 140 stores msrp-null. Order:
+    pricing.msrp / MSRP / retailMsrp, trackingPricing.msrp, typed dprice /
+    eprice entries, pricing.retailPrice (New / Certified only: on used rows it
+    is the asking price), obj.msrp, then the trackingAttributes msrp. Masked
+    placeholders (<= ``_MASKED_PRICE_FLOOR``) and values above
+    ``_MSRP_CEILING`` are skipped.
+    """
     pricing = obj.get("pricing") if isinstance(obj.get("pricing"), dict) else None
-    raw = _first_price(
+    tracking = obj.get("trackingPricing") or obj.get("tracking_pricing")
+    tracking = tracking if isinstance(tracking, dict) else None
+    candidates = [
         pricing and pricing.get("msrp"),
         pricing and pricing.get("MSRP"),
         pricing and pricing.get("retailMsrp"),
-        obj.get("msrp"),
-    )
+        tracking and tracking.get("msrp"),
+        tracking and tracking.get("MSRP"),
+        *_typed_price_entries(pricing, "msrp"),
+    ]
+    if _is_new_or_certified(obj):
+        candidates.append(pricing and pricing.get("retailPrice"))
+        candidates.append(pricing and pricing.get("retail_price"))
+    candidates.append(obj.get("msrp"))
+    raw = _first_price(*candidates, floor=_MASKED_PRICE_FLOOR, ceiling=_MSRP_CEILING)
     if raw == 0:
-        arr = obj.get("trackingAttributes") or obj.get("tracking_attributes") or obj.get("attributes")
-        if isinstance(arr, list):
+        for arr in (obj.get("trackingAttributes"), obj.get("tracking_attributes"), obj.get("attributes")):
+            if not isinstance(arr, list):
+                continue
             v2 = find_tracking_attr(arr, "msrp", "value")
             if v2 is not None and str(v2).strip():
-                raw = norm_float(v2)
+                raw = _first_price(v2, floor=_MASKED_PRICE_FLOOR, ceiling=_MSRP_CEILING)
+                if raw:
+                    break
     return int(round(raw))
 
 
-def _extract_mileage_dealer_com(obj: dict) -> int:
-    """Find object in trackingAttributes where name == 'odometer' and map its value to mileage. Default 0."""
+def _extract_mileage_dealer_com(obj: dict) -> int | None:
+    """trackingAttributes odometer, then obj.odometer / mileage, then the
+    trackingAttributes mileage. None when the item carries no odometer: a
+    default 0 on used rows read as a valid "0 mi" (crownlexus 334 rows where
+    the VDP shows 10,914; F12 2026-09-28)."""
     arr = obj.get("trackingAttributes") or obj.get("tracking_attributes")
     v = find_tracking_attr(arr, "odometer", "value")
-    if v is not None and v != "":
+    if v is not None and str(v).strip() != "":
         return norm_int(v)
-    v = obj.get("odometer") or obj.get("mileage")
-    if v is None and isinstance(arr, list):
+    v = obj.get("odometer")
+    if v is None or str(v).strip() == "":
+        v = obj.get("mileage")
+    if (v is None or str(v).strip() == "") and isinstance(arr, list):
         v = find_tracking_attr(arr, "mileage", "value")
+    if v is None or str(v).strip() == "":
+        return None
     return norm_int(v)
 
 
@@ -433,6 +505,63 @@ def _extract_interior_color(obj: dict) -> str | None:
     return None
 
 
+_ENGINE_SIZE_RE = re.compile(r"(\d{1,2}(?:\.\d)?)\s*L\b", re.I)
+
+
+def _attr_text(obj: dict, *names: str) -> str | None:
+    """First non-placeholder value of ``names`` across ``attributes`` then
+    ``trackingAttributes`` ("" and "null" are absent)."""
+    for arr_key in ("attributes", "trackingAttributes", "tracking_attributes"):
+        arr = obj.get(arr_key)
+        if not isinstance(arr, list):
+            continue
+        for name in names:
+            v = find_tracking_attr(arr, name, "value")
+            if v is None:
+                continue
+            t = str(v).strip()
+            if t and t.lower() not in ("null", "none", "n/a"):
+                return t
+    return None
+
+
+def _extract_engine_dealer_com(obj: dict) -> tuple[str | None, float | None]:
+    """(engine_description, engine_l) from a getInventory item.
+
+    The engine text lives in ``attributes`` / ``trackingAttributes`` as
+    ``engine`` ("2.5L 4-Cyl. Hybrid Engine") with a sibling ``engineSize``
+    ("2.5 L"); 96/96 items at four stores on 2026-09-28, never read before
+    (F05). When the text does not name the displacement the size is prefixed;
+    ``engineSize`` alone yields "2.4L" so the column is not empty.
+    """
+    eng = _opt_str(obj.get("engine") or obj.get("engineDescription") or obj.get("engine_description"))
+    if not eng:
+        eng = _attr_text(obj, "engine", "engineDescription", "engine_description")
+    size = _opt_str(obj.get("engineSize") or obj.get("engine_size")) or _attr_text(obj, "engineSize", "engine_size")
+    engine_l: float | None = None
+    size_label: str | None = None
+    if size:
+        m = _ENGINE_SIZE_RE.search(size)
+        if m:
+            try:
+                engine_l = float(m.group(1))
+                size_label = f"{m.group(1)}L"
+            except ValueError:
+                engine_l = None
+    if eng and engine_l is None:
+        m = _ENGINE_SIZE_RE.search(eng)
+        if m:
+            try:
+                engine_l = float(m.group(1))
+            except ValueError:
+                engine_l = None
+    if eng and size_label and not _ENGINE_SIZE_RE.search(eng):
+        eng = f"{size_label} {eng}"
+    if not eng and size_label:
+        eng = size_label
+    return (eng[:200] if eng else None), engine_l
+
+
 def _extract_body_style(obj: dict) -> str | None:
     """bodyStyle / bodyType on object or in trackingAttributes."""
     direct = _opt_str(
@@ -561,6 +690,8 @@ def _map_vehicle(
     description = _extract_inventory_description(obj)
     carfax_url = extract_carfax_url(obj, vin)
 
+    engine_description, engine_l = _extract_engine_dealer_com(obj)
+
     cyl = norm_int(obj.get("cylinders") or 0)
     if not cyl:
         arr = obj.get("trackingAttributes") or obj.get("tracking_attributes")
@@ -621,6 +752,10 @@ def _map_vehicle(
         "description": description,
         "cylinders": cyl or None,
     }
+    if engine_description:
+        out["engine_description"] = engine_description
+    if engine_l:
+        out["engine_l"] = engine_l
     try:
         from backend.parsers.inventory_mpg import apply_inventory_mpg
 

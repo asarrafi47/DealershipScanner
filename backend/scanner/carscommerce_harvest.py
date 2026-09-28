@@ -48,7 +48,16 @@ HARVEST_FIELDS = (
     "fuel_type",
     "body_style",
     "image_url",
+    "description",
 )
+
+# ``extra_fields.description_text`` / ``description_text_vdp`` carry the dealer's
+# own listing copy (HTML-escaped, ``<br>``-separated). The VDP fallback is dead
+# on these hosts (Cloudflare challenge / DI TLS fingerprint answers 403), so
+# the feed is the only description source; 2026-09-28: present on 100/100
+# billluke listings and 14/15 sampled VINs, never emitted.
+_DESCRIPTION_MIN_LEN = 40
+_DESCRIPTION_MAX_LEN = 4000
 
 
 def is_carscommerce_recipe(url: str) -> bool:
@@ -67,6 +76,34 @@ def _s(val: Any) -> str | None:
         return None
     t = str(val).strip()
     return t or None
+
+
+def _description(listing: dict) -> str | None:
+    """Longest non-empty of extra_fields.description_text_vdp / description_text,
+    tags stripped and entities unescaped; None under 40 characters (mirrors
+    ``dealer_dot_com._extract_inventory_description``)."""
+    from html import unescape
+
+    from backend.utils.listing_description_extract import (
+        strip_dealer_description_intro,
+        strip_html_to_text,
+    )
+
+    extra = listing.get("extra_fields") if isinstance(listing.get("extra_fields"), dict) else {}
+    candidates = []
+    for key in ("description_text_vdp", "description_text"):
+        raw = extra.get(key)
+        if isinstance(raw, str) and raw.strip():
+            candidates.append(raw)
+    if not candidates:
+        return None
+    raw = max(candidates, key=len)
+    text = strip_html_to_text(unescape(raw.replace("<br>", "\n").replace("<br/>", "\n").replace("<br />", "\n")))
+    text = "\n".join(" ".join(line.split()) for line in text.splitlines()).strip()
+    text = strip_dealer_description_intro(text) or text
+    if len(text) < _DESCRIPTION_MIN_LEN:
+        return None
+    return text[:_DESCRIPTION_MAX_LEN]
 
 
 def _map_listing(listing: dict) -> dict[str, Any] | None:
@@ -98,6 +135,7 @@ def _map_listing(listing: dict) -> dict[str, Any] | None:
         "fuel_type": _s(mech.get("fuel_type")),
         "body_style": _s(body.get("type") or body.get("generic_type")),
         "image_url": _s(images[0]) if images else None,
+        "description": _description(listing),
         "_features": listing.get("features") if isinstance(listing.get("features"), list) else None,
     }
 

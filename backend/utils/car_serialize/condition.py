@@ -189,35 +189,27 @@ def _fill_condition_from_signals(c: dict[str, Any], out: dict[str, Any]) -> None
 
 def normalize_condition_for_storage(car: dict[str, Any]) -> str | None:
     """
-    Normalize non-blank but incorrect stored condition values.
+    Normalize non-blank but non-canonical stored condition values to the three
+    stored spellings New / Used / Certified (F14, 2026-09-28: nine raw
+    spellings in cars, is_cpo NULL on 2,210 certified rows).
 
-    - "Certified" → "Certified Pre-Owned" when CPO signals present in title/URL
-    - "Pre-Owned"  → "Used"
+    - "Certified Pre-Owned" / "CPO" → "Certified" (this used to run the other
+      way and re-introduced the long spelling on every repair pass)
+    - "Pre-Owned" / "Pre-owned"     → "Used"
+    - CTP / Demo / CarBravo         → New / New / Used (program spellings)
 
     Returns the corrected value, or None if no change needed.
     """
     cond = (car.get("condition") or "").strip()
     if not cond:
         return None
+    from backend.utils.field_clean import canonicalize_condition
 
-    low_t = (car.get("title") or "").lower()
-    low_u = (car.get("source_url") or "").lower()
-    is_cpo_flag = car.get("is_cpo") in (1, True, "1")
-
-    if cond == "Certified":
-        if (
-            "certified pre-owned" in low_t
-            or "certified preowned" in low_t
-            or "/certified" in low_u
-            or "-cpo-" in low_u
-            or "cpo-inventory" in low_u
-            or is_cpo_flag
-        ):
-            return "Certified Pre-Owned"
-
-    if cond == "Pre-Owned":
-        return "Used"
-
+    probe = {"condition": cond, "is_cpo": car.get("is_cpo")}
+    canonicalize_condition(probe)
+    new = probe.get("condition")
+    if new and new != cond:
+        return new
     return None
 
 

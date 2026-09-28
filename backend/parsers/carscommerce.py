@@ -243,6 +243,9 @@ def _map(listing: dict, base_url: str, dealer_id: str, dealer_name: str, dealer_
         "drivetrain": base.get("drivetrain") or "",
         "transmission": _s(mech.get("transmission")),
         "engine_description": base.get("engine_description") or "",
+        # Feed copy (extra_fields.description_text*); VDP prefetch on these
+        # hosts 403s, so without this the column stays null (F01, 2026-09-28).
+        "description": base.get("description"),
         "engine_l": _float(mech.get("displacement") or mech.get("engine_size")),
         "cylinders": _int(mech.get("engine_cylinders")),
         "mpg_city": _int(mech.get("city_mpg")),

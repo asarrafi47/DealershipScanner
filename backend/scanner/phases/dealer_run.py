@@ -73,6 +73,11 @@ def _capture_coverage(vehicles: list[dict[str, Any]]) -> dict[str, Any]:
             return False
         if isinstance(val, str):
             return bool(val.strip())
+        # Parsers default price / msrp / mileage to 0 when the feed has no
+        # value; the gate reported msrp 100% on stores where every row was 0
+        # (2026-09-28, F02). Zero is "missing" for these numeric fields.
+        if k in ("price", "msrp", "mileage") and isinstance(val, (int, float)) and not isinstance(val, bool):
+            return val > 0
         return True
 
     for k in _CAPTURE_FIELDS:

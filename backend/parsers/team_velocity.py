@@ -363,7 +363,14 @@ def _gallery_fillable(cur_val: Any) -> bool:
         return True
     if not isinstance(items, list) or not items:
         return True
-    return not any(isinstance(u, str) and u.strip().startswith("http") for u in items)
+    from backend.parsers.base import _is_placeholder_url
+
+    # The OfferLogix widget logo is an http URL and is not a photo; a gallery of
+    # placeholder + logo (3,782 rows, 2026-09-28) must still be fillable.
+    return not any(
+        isinstance(u, str) and u.strip().startswith("http") and not _is_placeholder_url(u.strip())
+        for u in items
+    )
 
 
 def _carfax_fillable(cur_val: Any) -> bool:
@@ -381,7 +388,7 @@ def _rows_needing_completion(dealer_id: str, limit: int | None):
         "SELECT id, vin, source_url, image_url, gallery, carfax_url FROM cars "
         "WHERE dealer_id = ? "
         "AND ((image_url IS NULL OR image_url NOT LIKE 'http%') "
-        "     OR (gallery IS NULL OR gallery NOT LIKE '%http%') "
+        "     OR (gallery IS NULL OR gallery NOT LIKE '%http%' OR gallery LIKE '%widget.buyercall.com%') "
         "     OR (carfax_url IS NULL OR carfax_url NOT LIKE 'http%')) "
         "AND COALESCE(listing_active, 1) = 1 "
         "AND source_url IS NOT NULL AND source_url LIKE 'http%' "

@@ -97,9 +97,28 @@ _CANONICAL_FUEL_TYPE: dict[str, str] = {
     "regular gasoline / e85": "Gasoline",
     "flex fuel": "Gasoline",
     "flex fuel capability": "Gasoline",
+    "flexible": "Gasoline",
+    "flexfuel": "Gasoline",
+    "flex-fuel": "Gasoline",
+    "ffv": "Gasoline",
     "e85": "Gasoline",
-    "other": "Gasoline",
+    # feed abbreviations (7 dealers send 'G', 1,054 rows; 'UNL' 94; F13 2026-09-28)
+    "g": "Gasoline",
+    "unl": "Gasoline",
+    "unleaded gas": "Gasoline",
+    "unleaded gasoline": "Gasoline",
+    "regular": "Gasoline",
+    "premium": "Gasoline",
     "hybrid": "Hybrid",
+    "h": "Hybrid",
+    "hyb": "Hybrid",
+    "hybr": "Hybrid",
+    "hev": "Hybrid",
+    "d": "Diesel",
+    "e": "Electric",
+    "ele": "Electric",
+    "elec": "Electric",
+    "electricity": "Electric",
     "hybrid fuel": "Hybrid",
     "gas / mild hybrid": "Hybrid",
     "gasoline/mild electric hybrid": "Hybrid",
@@ -215,13 +234,31 @@ def is_spec_overlay_junk(val: Any) -> bool:
     return bool(_MANUFACTURER_SPEC_JUNK_RE.search(s))
 
 
+# Feed values that name no drivetrain / transmission / fuel at all. dealer.com
+# and Dealer eProcess send "Other" for these; stored verbatim it survived the
+# upsert's COALESCE and overwrote vPIC-healed drivetrains on every rescan
+# (1,464 rows, F10 2026-09-28).
+_SPEC_PLACEHOLDER_LOWER: frozenset[str] = frozenset(
+    {"other", "others", "unspecified", "not specified", "not available", "tbd", "see dealer", "call",
+     "n/a", "na", "unknown", "none", "null", "-", "--", "---", "\u2014", ""}
+)
+
+
+def is_spec_placeholder(val: Any) -> bool:
+    """True when a drivetrain / transmission / fuel value is a feed placeholder
+    ("Other", "Unspecified", "N/A"...) rather than a specification."""
+    if is_effectively_empty(val):
+        return True
+    return str(val).strip().lower() in _SPEC_PLACEHOLDER_LOWER
+
+
 def coerce_drivetrain_stored(val: Any) -> str | None:
     """
     Map any drivetrain text (schema.org URLs, abbreviations, long-form) to one
     of the four canonical values: FWD / RWD / AWD / 4WD.
     Returns None for empty/unknown inputs.
     """
-    if is_effectively_empty(val):
+    if is_spec_placeholder(val):
         return None
     s = str(val).strip()
     if re.fullmatch(r"[ARF]", s, re.I):
@@ -241,16 +278,27 @@ def _fuel_type_key(s: str) -> str:
     return re.sub(r"\s+", " ", s.strip().lower())
 
 
+# Injection / delivery descriptors and "Others" name no fuel at all: store None
+# and let the vPIC FuelTypePrimary + ElectrificationLevel heal fill it (F13).
+_FUEL_TYPE_NOT_A_FUEL: frozenset[str] = frozenset(
+    {"direct injection", "port/direct injection", "port injection", "sequential mpi", "mpi", "gdi",
+     "other", "others", "n/a", "na", "unknown", "unspecified", "not specified", "none", "-", ""}
+)
+
+
 def coerce_fuel_type_stored(val: Any) -> str | None:
     """
     Map any fuel type text to one of the canonical values:
     Gasoline / Hybrid / Plug-In Hybrid / Diesel / Electric / Hydrogen.
-    Returns None for empty/unknown inputs; unknown non-empty strings are returned as-is.
+    Returns None for empty / placeholder / not-a-fuel inputs ("Direct
+    Injection", "Others"); unknown non-empty strings are returned as-is.
     """
     if is_effectively_empty(val):
         return None
     s = str(val).strip()
     k = _fuel_type_key(s)
+    if k in _FUEL_TYPE_NOT_A_FUEL:
+        return None
     if k in _CANONICAL_FUEL_TYPE:
         return _CANONICAL_FUEL_TYPE[k]
     if s in FUEL_TYPE_PRESETS:
@@ -646,6 +694,59 @@ def split_bz_woodland_model_trim(out: dict[str, Any]) -> None:
     out["trim"] = f"Woodland {t}".strip() if t else "Woodland"
 
 
+# Raw ``condition`` spellings seen in cars (2026-09-28, F14): New, Used, Certified,
+# Pre-Owned, Pre-owned, Certified Pre-Owned, CTP, CarBravo, Demo. Stored as-is,
+# CPO filters and the certified / used split were unreliable (is_cpo NULL on
+# 2,210 certified rows). Program labels are kept under ``_condition_program``.
+_CONDITION_PROGRAMS: dict[str, tuple[str, str]] = {
+    # raw (lower)          -> (canonical, program tag)
+    "ctp": ("New", "CTP"),                    # GM Courtesy Transportation loaner, titled new
+    "courtesy transportation": ("New", "CTP"),
+    "demo": ("New", "Demo"),
+    "demonstrator": ("New", "Demo"),
+    "loaner": ("New", "Loaner"),
+    "carbravo": ("Used", "CarBravo"),         # GM used-car program; certified only when the row says so
+}
+
+
+def canonicalize_condition(row: dict[str, Any]) -> None:
+    """Canonicalise ``row['condition']`` to New / Used / Certified in place and
+    set ``is_cpo`` from it (1 for Certified, 0 for New / Used when unset). A
+    program spelling (CTP, Demo, CarBravo) is kept in ``_condition_program``."""
+    raw = row.get("condition")
+    if raw is None:
+        return
+    s = str(raw).strip()
+    if not s:
+        row["condition"] = None
+        return
+    low = s.lower()
+    is_cpo_flag = row.get("is_cpo") in (1, True, "1")
+    canonical: str | None = None
+    program: str | None = None
+    if low in _CONDITION_PROGRAMS:
+        canonical, program = _CONDITION_PROGRAMS[low]
+        if canonical == "Used" and is_cpo_flag:
+            canonical = "Certified"
+    elif "certif" in low or low == "cpo":
+        canonical = "Certified"
+    elif low == "new" or low.startswith("new "):
+        canonical = "New"
+    elif low in ("used", "pre-owned", "preowned", "pre owned") or low.startswith(("used ", "pre-owned ")):
+        canonical = "Used"
+    if canonical is None:
+        return  # unknown spelling: leave it for the display-side normaliser
+    if canonical == "Used" and is_cpo_flag:
+        canonical = "Certified"
+    row["condition"] = canonical
+    if program:
+        row["_condition_program"] = program
+    if canonical == "Certified":
+        row["is_cpo"] = 1
+    elif row.get("is_cpo") is None:
+        row["is_cpo"] = 0
+
+
 def clean_car_row_dict(d: dict[str, Any]) -> dict[str, Any]:
     """
     Apply normalization to typical cars.* string columns in-place copy.
@@ -686,6 +787,8 @@ def clean_car_row_dict(d: dict[str, Any]) -> dict[str, Any]:
             out[k] = normalize_optional_str(coerce_drivetrain_stored(out.get(k)))
         elif k == "fuel_type":
             out[k] = normalize_optional_str(coerce_fuel_type_stored(out.get(k)))
+        elif k == "transmission":
+            out[k] = None if is_spec_placeholder(out.get(k)) else normalize_optional_str(out.get(k))
         elif k == "body_style":
             out[k] = normalize_optional_str(
                 normalize_body_style_for_car(
@@ -709,6 +812,7 @@ def clean_car_row_dict(d: dict[str, Any]) -> dict[str, Any]:
     _cv = out.get("condition")
     if _cv is not None and str(_cv).strip().lower() in ("0", "false", "no", "off"):
         out["condition"] = None
+    canonicalize_condition(out)
 
     for num_key in ("mpg_city", "mpg_highway", "cylinders"):
         if num_key not in out:

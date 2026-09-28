@@ -198,9 +198,88 @@ def decode_missing_vins(conn, vins: Iterable[str]) -> dict[str, int]:
     return stats
 
 
+def _vpic_flat_rows(conn, vins: list[str]) -> dict[str, dict[str, str]]:
+    """``{vin: Results[0]}`` straight from ``nhtsa_vpic_cache`` for the VINs given
+    (the normalised lookup drops the engine / EV fields the derivation needs)."""
+    out: dict[str, dict[str, str]] = {}
+    if not vins:
+        return out
+    cur = conn.cursor()
+    for i in range(0, len(vins), 900):
+        chunk = vins[i:i + 900]
+        cur.execute(
+            "SELECT vin, response_json FROM nhtsa_vpic_cache WHERE vin IN (" + ",".join("?" * len(chunk)) + ")",
+            tuple(chunk),
+        )
+        for vin, raw in cur.fetchall():
+            try:
+                payload = json.loads(raw) if isinstance(raw, str) else (raw or {})
+                row0 = (payload.get("Results") or [{}])[0]
+            except (ValueError, AttributeError, IndexError, TypeError):
+                continue
+            if isinstance(row0, dict):
+                out[str(vin).upper()] = {str(k): ("" if v is None else str(v)) for k, v in row0.items()}
+    return out
+
+
+def _ev_engine_description(flat: dict[str, str]) -> str | None:
+    """"Electric motor, Dual Motor, 300 hp / 224 kW" from the EV fields vPIC
+    carries (EVDriveUnit / EngineHP / EngineKW); None when it carries none."""
+    unit = (flat.get("EVDriveUnit") or "").strip()
+    hp = (flat.get("EngineHP") or "").strip()
+    kw = (flat.get("EngineKW") or "").strip()
+    parts = ["Electric motor"]
+    if unit and unit.lower() not in ("not applicable", "n/a"):
+        parts.append(unit)
+    power = []
+    for val, suffix in ((hp, "hp"), (kw, "kW")):
+        try:
+            f = float(val)
+        except ValueError:
+            continue
+        if f > 0:
+            power.append(f"{int(round(f))} {suffix}")
+    if power:
+        parts.append(" / ".join(power))
+    if len(parts) == 1:
+        return None
+    return ", ".join(parts)[:240]
+
+
+def derived_fills(row: dict[str, Any], vp: dict[str, Any] | None, flat: dict[str, str] | None) -> dict[str, tuple[Any, str]]:
+    """Fill-only derivations from the decode for a row whose engine_description /
+    body_style is empty: never overwrites the dealer's own engine text (the
+    catalog and the decode's synthesis never outrank it), never touches a
+    non-empty body_style. EVs get a synthesised motor line when vPIC has the
+    EV fields (F06, 2026-09-28: 6,338 engine-null non-EV rows with
+    DisplacementL + EngineCylinders cached; 1,219 body-null rows with BodyClass)."""
+    out: dict[str, tuple[Any, str]] = {}
+    vp = vp or {}
+    flat = flat or {}
+    cur_engine = str(row.get("engine_description") or "").strip()
+    if not cur_engine and flat:
+        from backend.enrichment.nhtsa_vpic import _build_engine_description
+
+        is_ev = vp.get("electrification") == "ev" or _fuel_bucket(row.get("fuel_type")) == "ev"
+        text = _ev_engine_description(flat) if is_ev else _build_engine_description(flat)
+        if text:
+            out["engine_description"] = (row.get("engine_description"), text)
+    cur_body = str(row.get("body_style") or "").strip()
+    if not cur_body:
+        body = vp.get("body_style")
+        if not body:
+            bc = (flat.get("BodyClass") or "").strip()
+            if bc and bc.lower() not in ("", "not applicable"):
+                body = bc[:120]
+        if body:
+            out["body_style"] = (row.get("body_style"), body)
+    return out
+
+
 def heal_rows(conn, *, vins: Iterable[str] | None = None, dealers: Iterable[str] | None = None,
               dry_run: bool = False) -> dict[str, Any]:
-    """Store the decode's drivetrain / fuel on active rows where it differs."""
+    """Store the decode's drivetrain / fuel / cylinders on active rows where it
+    differs, and fill empty engine_description / body_style from the decode."""
     from backend.enrichment.knowledge_engine import clear_vpic_lookup_cache, lookup_vpic_from_cache, prime_vpic_cache
     from backend.utils.spec_provenance import merge_spec_source_json
 
@@ -215,18 +294,27 @@ def heal_rows(conn, *, vins: Iterable[str] | None = None, dealers: Iterable[str]
     if dealer_list:
         where += " AND dealer_id IN (" + ",".join("?" * len(dealer_list)) + ")"
         params += dealer_list
-    cur.execute(f"SELECT c.id, c.vin, c.drivetrain, c.fuel_type, c.cylinders, c.spec_source_json, e.drive FROM cars c "
+    cur.execute(f"SELECT c.id, c.vin, c.drivetrain, c.fuel_type, c.cylinders, c.spec_source_json, e.drive, "
+                f"c.engine_description, c.body_style FROM cars c "
                 f"LEFT JOIN epa_master e ON e.id = c.epa_master_id WHERE {where.replace('listing_active', 'c.listing_active').replace(' vin', ' c.vin').replace('dealer_id', 'c.dealer_id')}", tuple(params))
-    rows = [dict(zip(("id", "vin", "drivetrain", "fuel_type", "cylinders", "spec_source_json", "catalog_drive"), r)) for r in cur.fetchall()]
-    stats: dict[str, Any] = {"rows": len(rows), "decoded": 0, "drivetrain": 0, "fuel_type": 0, "cylinders": 0, "examples": []}
+    rows = [dict(zip(("id", "vin", "drivetrain", "fuel_type", "cylinders", "spec_source_json", "catalog_drive",
+                      "engine_description", "body_style"), r)) for r in cur.fetchall()]
+    stats: dict[str, Any] = {"rows": len(rows), "decoded": 0, "drivetrain": 0, "fuel_type": 0, "cylinders": 0,
+                             "engine_description": 0, "body_style": 0, "examples": []}
     clear_vpic_lookup_cache()
     prime_vpic_cache([r["vin"] for r in rows])
+    # Raw decode rows only for the rows that have something to derive.
+    need_flat = [r["vin"] for r in rows
+                 if not str(r.get("engine_description") or "").strip() or not str(r.get("body_style") or "").strip()]
+    flats = _vpic_flat_rows(conn, sorted(set(need_flat)))
     for r in rows:
-        vp = lookup_vpic_from_cache(r["vin"])
-        if not vp or not any(vp.get(k) for k in ("drivetrain", "electrification", "fuel_type")):
+        vp = lookup_vpic_from_cache(r["vin"]) or {}
+        flat = flats.get(r["vin"])
+        if not any(vp.get(k) for k in ("drivetrain", "electrification", "fuel_type")) and not flat:
             continue
         stats["decoded"] += 1
         ch = vin_overrides(r, vp)
+        ch.update(derived_fills(r, vp, flat))
         # A "4x2" decode says two driven wheels and nothing about the end; the
         # feed's "4x2"/"2WD" used to be written as FWD (468 Tacomas / Grand
         # Cherokees on RWD catalog rows, 2026-09-26). When the decode is silent on

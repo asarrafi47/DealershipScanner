@@ -41,7 +41,7 @@ def test_wp_vehicles_index_parse():
     assert [r["vin"] for r in rows] == ["1C6SRFFTXMN566184", "2HGFE2F51TH635109", "7FARS6H50SE045355"]
     assert rows[0]["condition"] == "Used" and rows[0]["year"] == 2021 and rows[0]["make"] == "Ram" and rows[0]["stock_number"] == "MN566184T"
     assert rows[1]["condition"] == "New" and rows[1]["make"] == "Honda" and rows[1]["_detail_url"].startswith("https://")
-    assert rows[2]["condition"] == "Certified Pre-Owned" and not rows[2].get("stock_number")
+    assert rows[2]["condition"] == "Certified" and rows[2]["is_cpo"] == 1 and not rows[2].get("stock_number")  # canonical (F14)
     assert not wp_detect({"data": {"listings": []}})
 
 

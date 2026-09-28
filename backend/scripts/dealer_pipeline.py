@@ -641,7 +641,13 @@ def verify_accuracy(conn, dealer_id: str, since_iso: str) -> dict[str, Any]:
             hard_rows += 1
     return {
         "rows": t.get("rows", 0), "vpic_cached": t.get("vpic_cached", 0),
+        # fixable gaps only (section 2 exemptions applied in scan_lab_report.fixable_missing);
+        # the unexempted counts stay under *_raw so nothing is hidden
         "incomplete_rows": t.get("incomplete_rows", 0), "missing": t.get("missing") or {},
+        "incomplete_rows_raw": t.get("incomplete_rows_raw", t.get("incomplete_rows", 0)),
+        "missing_raw": t.get("missing_raw") or (t.get("missing") or {}),
+        "missing_exempt": t.get("missing_exempt") or {},
+        "msrp_expected_rows": t.get("msrp_expected_rows", 0), "msrp_missing_rows": t.get("msrp_missing_rows", 0),
         "hard": hard, "hard_rows": hard_rows,
         "examples": {c: (t.get("discrepancy_examples") or {}).get(c, [])[:3] for c in list(hard)[:5]},
     }

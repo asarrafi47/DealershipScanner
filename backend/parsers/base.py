@@ -255,8 +255,29 @@ _FLUFF_URL_SIGNALS = (
     "getlibraryimage",          # secureoffersites.com generic library images (not vehicle photos)
     "iperceptions.com",         # iPerceptions survey/analytics pixel
     "secureoffersites.com",     # generic dealer offer overlay images / library
-    "common-vehicle-media",     # cai-media-management generic stock photos (same UUIDs across many cars)
+    # "common-vehicle-media" was listed here as generic stock art; on Team
+    # Velocity stores it is the per-car photo path (assets.cai-media-management
+    # .com/resize/WxH/common-vehicle-media/<uuid>.jpg, 11-44 photos per VDP, no
+    # UUID overlap between cars) and the signal dropped every one of them
+    # (2026-09-28, F03). Not a fluff signal.
+    "widget.buyercall.com",     # OfferLogix payment widget chrome (CD-full-dark-transp.png)
+    "/offerlogix/",
+    "partnerstatic.carfax.com", # Carfax badge SVG/PNG, not the car
+    "smartpixl",                # tracking pixel
+    "iprecheck",                # pre-approval widget art
 )
+
+
+def split_joined_image_urls(raw: str) -> list[str]:
+    """A comma-joined URL list ("https://a.jpg,https://b.jpg") as separate
+    URLs; a plain URL comes back as a one-item list. Team Velocity ``:photoUrls``
+    is such a list and 2,957 rows stored it as one gallery element."""
+    t = (raw or "").strip()
+    if not t:
+        return []
+    if ",http" not in t:
+        return [t]
+    return [u.strip() for u in re.split(r",(?=https?://)", t) if u.strip()]
 
 # Patterns that indicate a URL is an HTML inventory page, not an image.
 _VDP_PAGE_PATH_RE = re.compile(
@@ -561,8 +582,9 @@ def harvest_image_urls_from_json(
         if len(out) >= max_urls or nodes >= max_nodes:
             return
         if isinstance(val, str):
-            if _looks_like_media_url(val):
-                push_url(val)
+            for part in split_joined_image_urls(val):
+                if _looks_like_media_url(part):
+                    push_url(part)
             return
         if isinstance(val, list):
             for it in val:
@@ -572,8 +594,10 @@ def harvest_image_urls_from_json(
                     u = _image_url_from_media_item(it, base_url)
                     if u.startswith("http"):
                         push_url(u)
-                elif isinstance(it, str) and _looks_like_media_url(it):
-                    push_url(it)
+                elif isinstance(it, str):
+                    for part in split_joined_image_urls(it):
+                        if _looks_like_media_url(part):
+                            push_url(part)
             return
         if isinstance(val, dict):
             walk(val)
@@ -598,8 +622,10 @@ def harvest_image_urls_from_json(
         elif isinstance(x, list):
             for it in x:
                 walk(it)
-        elif isinstance(x, str) and _looks_like_media_url(x):
-            push_url(x)
+        elif isinstance(x, str):
+            for part in split_joined_image_urls(x):
+                if _looks_like_media_url(part):
+                    push_url(part)
 
     walk(obj)
     return dedupe_urls_order_prefer_large(out, max_len=max_urls)
@@ -690,8 +716,11 @@ def extract_image_url(obj: dict, base_url: str) -> str:
     return clean_image_url(v if isinstance(v, str) else "", base_url)
 
 
-def extract_mileage(obj: dict) -> int:
-    """Mileage: odometer first, then mileage, then attributes.mileage. Parsed as integer."""
+def extract_mileage(obj: dict) -> int | None:
+    """Mileage: odometer first, then mileage, then attributes.mileage. Parsed as
+    integer; None when the feed carries no odometer at all. A default 0 used to
+    be stored on used / CPO rows with no odometer (1,307 rows, F12 2026-09-28)
+    and read as a valid "0 mi"."""
     v = _get_nested(
         obj,
         ("odometer",),
@@ -702,6 +731,8 @@ def extract_mileage(obj: dict) -> int:
         ("miles",),
         ("kms",),
     )
+    if v is None or (isinstance(v, str) and not v.strip()):
+        return None
     return norm_int(v)
 
 

@@ -116,12 +116,27 @@ def _cylinders_display_missing(car: dict[str, Any], verified_specs: dict[str, An
     return True
 
 
+def _is_used_or_certified(car_raw: dict[str, Any]) -> bool:
+    cond = str(car_raw.get("condition") or "").strip().lower()
+    if car_raw.get("is_cpo") in (1, True, "1"):
+        return True
+    return any(tok in cond for tok in ("used", "certif", "pre-owned", "preowned", "pre owned", "cpo", "carbravo"))
+
+
 def _mileage_blank(car_raw: dict[str, Any]) -> bool:
-    """Match ``car.html`` mileage row: missing only when NULL or empty string (0 mi is valid)."""
+    """Missing when NULL / empty, and on used / certified rows also when 0: the
+    parsers used to default an absent odometer to 0 and 1,307 used rows read as
+    "0 mi" (F12 2026-09-28). 0 stays valid on New rows (car.html shows 0 mi)."""
     m = car_raw.get("mileage")
     if m is None:
         return True
     if isinstance(m, str) and not str(m).strip():
+        return True
+    try:
+        n = int(float(str(m).replace(",", "")))
+    except (TypeError, ValueError):
+        return True
+    if n == 0 and _is_used_or_certified(car_raw):
         return True
     return False
 
