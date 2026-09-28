@@ -538,6 +538,24 @@ def init_postgres_inventory(conn: Any) -> None:
         "ON user_hidden_dealers(user_id, created_at)"
     )
 
+    # Mirrors migrations/V022__user_search_history.sql (per-user recent searches).
+    cur.execute(
+        """
+        CREATE TABLE IF NOT EXISTS user_search_history (
+            id BIGSERIAL PRIMARY KEY,
+            user_id BIGINT NOT NULL,
+            filters_json TEXT NOT NULL,
+            query_text TEXT,
+            result_count INTEGER,
+            created_at TEXT DEFAULT (CURRENT_TIMESTAMP::text)
+        )
+        """
+    )
+    cur.execute(
+        "CREATE INDEX IF NOT EXISTS idx_user_search_history_user "
+        "ON user_search_history(user_id, created_at DESC, id DESC)"
+    )
+
     cur.execute(
         """
         CREATE TABLE IF NOT EXISTS scan_runs (

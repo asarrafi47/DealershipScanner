@@ -39,6 +39,7 @@ from backend.billing.catalog import (
     FEATURE_MARKET_INTEL,
     FEATURE_NEARBY_DEALERS,
     FEATURE_PACKAGES_ENSURE,
+    FEATURE_SAVED_SEARCHES,
     FEATURE_VEHICLE_HISTORY,
     FEATURE_WINDOW_STICKER,
     get_plan,
@@ -60,8 +61,10 @@ from backend.dev.routes import dev_bp
 from backend.db.admin_users_db import init_admin_db
 from backend.db.dealer_portal_db import init_dealer_portal_db
 from backend.db.inventory_db import (
+    clear_search_history,
     create_saved_search,
     delete_saved_search,
+    delete_search_history_entry,
     get_car_by_id,
     get_cars_by_ids,
     get_filter_options,
@@ -73,9 +76,11 @@ from backend.db.inventory_db import (
     is_dealer_hidden,
     list_hidden_dealers,
     list_saved_searches,
+    list_search_history,
     listings_geo_coords_maps,
     listings_grid_cache_etag,
     listings_grid_serialized_cars,
+    record_search_history,
     save_car,
     search_cars,
     search_cars_by_make_model_pairs,
@@ -896,6 +901,10 @@ def _account_profile_context(uid: int, **extra):
         "is_premium": bool(u.get("is_premium")),
         "min_password_len": _MIN_PASSWORD_LEN,
         "hidden_dealers": _hidden_dealers_for_profile(uid),
+        "recent_searches": _recent_searches_for_profile(uid),
+        "saved_searches": _saved_searches_for_profile(uid),
+        "saved_searches_enabled": _require_feature(FEATURE_SAVED_SEARCHES)[0],
+        "recent_searches_limit": _PROFILE_RECENT_SEARCHES,
     }
     ctx.update(extra)
     return ctx
@@ -907,6 +916,34 @@ def _hidden_dealers_for_profile(uid: int) -> list[dict]:
         return list_hidden_dealers(int(uid))
     except Exception:
         _logger.debug("hidden dealers lookup failed for user %s", uid, exc_info=True)
+        return []
+
+
+_PROFILE_RECENT_SEARCHES = 20
+
+
+def _recent_searches_for_profile(uid: int) -> list[dict]:
+    """Server-rendered rows for the profile's Recent searches section ([] on any error).
+
+    Each row carries ``label`` / ``url`` / ``when`` from search_history_format on top
+    of the repo fields, so the template and account_profile.js render the same text."""
+    try:
+        from backend.utils.search_history_format import decorate_search_rows
+
+        return decorate_search_rows(list_search_history(int(uid), _PROFILE_RECENT_SEARCHES))
+    except Exception:
+        _logger.debug("search history lookup failed for user %s", uid, exc_info=True)
+        return []
+
+
+def _saved_searches_for_profile(uid: int) -> list[dict]:
+    """Server-rendered rows for the profile's Saved searches section ([] on any error)."""
+    try:
+        from backend.utils.search_history_format import decorate_search_rows
+
+        return decorate_search_rows(list_saved_searches(int(uid)))
+    except Exception:
+        _logger.debug("saved searches lookup failed for user %s", uid, exc_info=True)
         return []
 
 

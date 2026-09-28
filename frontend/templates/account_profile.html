@@ -21,7 +21,7 @@
         <div class="hub-topbar__copy">
             <p class="hub-kicker">Account</p>
             <h1 class="hub-title">Your profile</h1>
-            <p class="hub-lead">Update how you sign in and manage your password.</p>
+            <p class="hub-lead">Update how you sign in, manage your password, and keep your search preferences.</p>
         </div>
         <a href="{{ url_for('dashboard') }}" class="secondary-button hub-topbar__back">{{ icon('arrow-left', 16) }} Dashboard</a>
     </div>
@@ -106,6 +106,56 @@
                 <li class="account-profile__hidden-row" data-dealer-id="{{ d.dealer_id }}">
                     <a class="account-profile__hidden-name" href="{{ url_for('dealership_research_page', dealer_key=d.dealer_id) }}">{{ d.dealer_name or d.dealer_id }}</a>
                     <button type="button" class="secondary-button account-profile__hidden-remove" data-dealer-id="{{ d.dealer_id }}">Remove</button>
+                </li>
+                {% endfor %}
+            </ul>
+        </section>
+
+        <section class="hub-card db-reveal" id="recent-searches" aria-labelledby="profile-recent-searches-heading">
+            <div class="account-profile__section-head">
+                <h2 id="profile-recent-searches-heading" class="hub-card__title">Recent searches</h2>
+                <button type="button" class="secondary-button account-profile__history-btn" id="recent-searches-clear"{% if not recent_searches %} hidden{% endif %}>Clear all</button>
+            </div>
+            <p class="hub-card__sub">Searches you run while signed in are kept here so you can pick them up again. Only your last {{ recent_searches_limit or 20 }} are shown; nothing here is shared.</p>
+
+            <div class="error-box account-profile__history-error" id="recent-searches-error" hidden></div>
+
+            <p class="hub-note account-profile__history-empty" id="recent-searches-empty"{% if recent_searches %} hidden{% endif %}>No searches yet. <a href="{{ url_for('listings') }}">Search inventory</a> and they will appear here.</p>
+            <ul class="account-profile__history-list" id="recent-searches-list" aria-live="polite">
+                {% for s in recent_searches or [] %}
+                <li class="account-profile__history-row" data-search-id="{{ s.id }}" data-filters="{{ s.filters | tojson | forceescape }}">
+                    <div class="account-profile__history-main">
+                        <a class="account-profile__history-label" href="{{ s.url }}">{{ s.label }}</a>
+                        <p class="account-profile__history-meta"><time datetime="{{ s.created_at }}">{{ s.when }}</time>{% if s.result_count is not none %} · {{ s.result_count }} result{{ '' if s.result_count == 1 else 's' }}{% endif %}</p>
+                    </div>
+                    <div class="account-profile__history-actions">
+                        <a class="secondary-button account-profile__history-btn" href="{{ s.url }}">Run again</a>
+                        <button type="button" class="secondary-button account-profile__history-btn account-profile__history-save" data-search-id="{{ s.id }}">Save</button>
+                        <button type="button" class="secondary-button account-profile__history-btn account-profile__history-remove" data-search-id="{{ s.id }}">Remove</button>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+        </section>
+
+        <section class="hub-card db-reveal" id="saved-searches" aria-labelledby="profile-saved-searches-heading">
+            <h2 id="profile-saved-searches-heading" class="hub-card__title">Saved searches</h2>
+            <p class="hub-card__sub">Searches you keep on purpose, from the listings toolbar or a recent search above.{% if not saved_searches_enabled %} Saving searches is part of Premium · <a href="{{ url_for('premium_page') }}">See plans</a>.{% endif %}</p>
+
+            <div class="error-box account-profile__history-error" id="saved-searches-error" hidden></div>
+
+            <p class="hub-note account-profile__history-empty" id="saved-searches-empty"{% if saved_searches %} hidden{% endif %}>You have not saved any searches.</p>
+            <ul class="account-profile__history-list" id="saved-searches-list" aria-live="polite">
+                {% for s in saved_searches or [] %}
+                <li class="account-profile__history-row" data-saved-id="{{ s.id }}">
+                    <div class="account-profile__history-main">
+                        <a class="account-profile__history-label" href="{{ s.url }}">{{ s.label }}</a>
+                        <p class="account-profile__history-meta">Saved <time datetime="{{ s.created_at }}">{{ s.when }}</time></p>
+                    </div>
+                    <div class="account-profile__history-actions">
+                        <a class="secondary-button account-profile__history-btn" href="{{ s.url }}">Run</a>
+                        <button type="button" class="secondary-button account-profile__history-btn account-profile__saved-remove" data-saved-id="{{ s.id }}">Remove</button>
+                    </div>
                 </li>
                 {% endfor %}
             </ul>

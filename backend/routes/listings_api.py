@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import gzip
 import io
+import logging
 import os
 import threading
 from typing import Any, NamedTuple
@@ -35,6 +36,8 @@ from backend.utils.query_parser import parse_natural_query
 # an unbounded string amplifies both CPU and paid-API cost. Matches the
 # parser's own internal truncation (query_parser.py).
 _SMART_QUERY_MAX_LEN = 200
+
+_logger = logging.getLogger(__name__)
 
 
 def _listings_client_poll_ms() -> int:
@@ -439,6 +442,7 @@ def api_search_smart():
         )
     except Exception:
         pass
+    _record_smart_search_history(main, q, geo_kw, len(safe_results))
     empty_message = None
     if not safe_results and search_meta.get("mode") == "no_parse_match":
         empty_message = NO_PARSE_MATCH_MESSAGE
@@ -452,6 +456,31 @@ def api_search_smart():
             "empty_message": empty_message,
         }
     )
+
+
+def _record_smart_search_history(main, q: str, geo_kw: dict, result_count: int) -> None:
+    """Profile -> Recent searches row for a signed-in smart search.
+
+    Stored as the listings-URL shape (``q`` + zip/radius) so "Run again" is a plain
+    ``/listings?q=...`` link that re-runs the same hybrid search. Never raises."""
+    uid_raw = session.get("user_id")
+    if not uid_raw or not q:
+        return
+    try:
+        raw = {"q": q}
+        if geo_kw:
+            raw["zip_code"] = str(geo_kw.get("zip_code") or "")
+            rm = geo_kw.get("radius_miles")
+            if rm:
+                raw["radius"] = str(int(rm)) if float(rm).is_integer() else str(rm)
+        filters = _clean_saved_search_filters(raw)
+        if not filters:
+            return
+        main.record_search_history(
+            int(uid_raw), filters, query_text=q, result_count=result_count
+        )
+    except Exception:
+        _logger.warning("search history write failed for user %s", uid_raw, exc_info=True)
 
 
 def api_saved_cars():
@@ -654,6 +683,53 @@ def api_hidden_dealers_remove(dealer_id):
     return jsonify({"ok": True, "hidden": False, "dealer_id": key})
 
 
+# ---------------------------------------------------------------------------
+# Recent searches (account profile). Free for every signed-in user, like hidden
+# dealerships: login check only, no plan gate. Rows are written by the search
+# endpoints above; these routes only read and delete.
+# ---------------------------------------------------------------------------
+
+_SEARCH_HISTORY_DEFAULT_LIMIT = 20
+
+
+def api_search_history_list():
+    """GET /api/profile/search-history?limit=20 -- this user's recent searches, newest first."""
+    main = main_module()
+    uid = session.get("user_id")
+    if not uid:
+        return jsonify({"ok": False, "error": "not_logged_in", "searches": []}), 401
+    from backend.utils.search_history_format import decorate_search_rows
+
+    try:
+        limit = int(request.args.get("limit", _SEARCH_HISTORY_DEFAULT_LIMIT))
+    except (TypeError, ValueError):
+        limit = _SEARCH_HISTORY_DEFAULT_LIMIT
+    rows = main.list_search_history(int(uid), limit)
+    return jsonify({"ok": True, "searches": decorate_search_rows(rows)})
+
+
+def api_search_history_delete(entry_id):
+    """DELETE /api/profile/search-history/<id> -- forget one search."""
+    main = main_module()
+    uid = session.get("user_id")
+    if not uid:
+        return jsonify({"ok": False, "error": "not_logged_in"}), 401
+    removed = main.delete_search_history_entry(int(uid), int(entry_id))
+    if not removed:
+        return jsonify({"ok": False, "error": "not_found"}), 404
+    return jsonify({"ok": True, "id": int(entry_id)})
+
+
+def api_search_history_clear():
+    """DELETE /api/profile/search-history -- forget every search."""
+    main = main_module()
+    uid = session.get("user_id")
+    if not uid:
+        return jsonify({"ok": False, "error": "not_logged_in"}), 401
+    removed = main.clear_search_history(int(uid))
+    return jsonify({"ok": True, "removed": int(removed or 0)})
+
+
 def register(app) -> None:
     """Attach routes to ``app`` keeping the original bare endpoint names."""
     app.add_url_rule("/search", view_func=search)
@@ -692,5 +768,16 @@ def register(app) -> None:
     app.add_url_rule(
         "/api/profile/hidden-dealers/<dealer_id>",
         view_func=api_hidden_dealers_remove,
+        methods=["DELETE"],
+    )
+    app.add_url_rule(
+        "/api/profile/search-history", view_func=api_search_history_list, methods=["GET"]
+    )
+    app.add_url_rule(
+        "/api/profile/search-history", view_func=api_search_history_clear, methods=["DELETE"]
+    )
+    app.add_url_rule(
+        "/api/profile/search-history/<int:entry_id>",
+        view_func=api_search_history_delete,
         methods=["DELETE"],
     )

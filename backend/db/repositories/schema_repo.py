@@ -416,6 +416,20 @@ def init_inventory_db():
         "CREATE INDEX IF NOT EXISTS idx_user_hidden_dealers_user "
         "ON user_hidden_dealers(user_id, created_at)"
     )
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS user_search_history (
+            id           INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id      INTEGER NOT NULL,
+            filters_json TEXT NOT NULL,
+            query_text   TEXT,
+            result_count INTEGER,
+            created_at   TEXT DEFAULT (datetime('now'))
+        )
+    """)
+    cursor.execute(
+        "CREATE INDEX IF NOT EXISTS idx_user_search_history_user "
+        "ON user_search_history(user_id, created_at DESC, id DESC)"
+    )
     conn.commit()
     from backend.db.dealerships_db import ensure_dealerships_table
 

@@ -71,6 +71,12 @@ from backend.db.repositories.saved_searches_repo import (
     delete_saved_search,
     list_saved_searches,
 )
+from backend.db.repositories.search_history_repo import (
+    clear_search_history,
+    delete_search_history_entry,
+    list_search_history,
+    record_search_history,
+)
 from backend.db.repositories.search_repo import (
     MAKE_TO_COUNTRY,
     _EQUIPMENT_SEARCH_COLUMNS,
