@@ -106,3 +106,29 @@ def test_derived_fills_is_pure_and_ev_without_fields_stays_empty():
                             {"BodyClass": "Not Applicable"}) == {}
     assert vf.derived_fills({"engine_description": "3.5L V6", "body_style": None}, {"body_style": "Sedan"}, {}) == \
         {"body_style": (None, "Sedan")}
+
+
+def test_raw_decodes_are_fetched_per_chunk_not_all_at_once(conn, monkeypatch):
+    """heal_rows materialised Results[0] for every selected row before the loop;
+    the raw rows are now read per chunk and dropped with it."""
+    calls: list[list[str]] = []
+    real = vf._vpic_flat_rows
+
+    def _spy(c, vins):
+        calls.append(list(vins))
+        return real(c, vins)
+
+    monkeypatch.setattr(vf, "_vpic_flat_rows", _spy)
+    monkeypatch.setattr(vf, "_HEAL_FLAT_CHUNK", 2)
+    vins = [TACOMA["VIN"], LYRIQ["VIN"], BLANK["VIN"], "1FTFW1E50MFA00001", "5YJ3E1EA0MF000002"]
+    for i, vin in enumerate(vins, start=1):
+        conn.execute("INSERT INTO cars VALUES (?,?, 'd1', 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL)", (i, vin))
+    # one row with both fields present needs no raw decode at all
+    conn.execute("INSERT INTO cars VALUES (6, '3TYLB5JNXRT022196', 'd1', 1, NULL, NULL, NULL, '2.4L I4', 'Truck', NULL, NULL)")
+    stats = vf.heal_rows(conn)
+    assert stats["rows"] == 6
+    assert len(calls) == 3 and all(len(c) <= 2 for c in calls)
+    assert sorted(v for c in calls for v in c) == sorted(vins)  # the complete row was not fetched
+    assert _row(conn, TACOMA["VIN"])["engine_description"] == "2.4L I4 T24A-FTS Turbo"
+    assert _row(conn, LYRIQ["VIN"])["engine_description"] == "Electric motor, Dual Motor, 500 hp / 373 kW"
+    assert stats["engine_description"] == 2 and stats["body_style"] == 2

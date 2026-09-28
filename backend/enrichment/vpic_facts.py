@@ -276,6 +276,9 @@ def derived_fills(row: dict[str, Any], vp: dict[str, Any] | None, flat: dict[str
     return out
 
 
+_HEAL_FLAT_CHUNK = 500  # rows whose raw vPIC decodes are held at once in heal_rows
+
+
 def heal_rows(conn, *, vins: Iterable[str] | None = None, dealers: Iterable[str] | None = None,
               dry_run: bool = False) -> dict[str, Any]:
     """Store the decode's drivetrain / fuel / cylinders on active rows where it
@@ -303,10 +306,23 @@ def heal_rows(conn, *, vins: Iterable[str] | None = None, dealers: Iterable[str]
                              "engine_description": 0, "body_style": 0, "examples": []}
     clear_vpic_lookup_cache()
     prime_vpic_cache([r["vin"] for r in rows])
-    # Raw decode rows only for the rows that have something to derive.
-    need_flat = [r["vin"] for r in rows
-                 if not str(r.get("engine_description") or "").strip() or not str(r.get("body_style") or "").strip()]
-    flats = _vpic_flat_rows(conn, sorted(set(need_flat)))
+    for start in range(0, len(rows), _HEAL_FLAT_CHUNK):
+        chunk = rows[start:start + _HEAL_FLAT_CHUNK]
+        # Raw decode rows (Results[0], ~140 keys each) only for the chunk's rows
+        # that have something to derive, fetched per chunk so a whole-fleet heal
+        # never holds every decode at once.
+        need_flat = sorted({r["vin"] for r in chunk
+                            if not str(r.get("engine_description") or "").strip() or not str(r.get("body_style") or "").strip()})
+        flats = _vpic_flat_rows(conn, need_flat)
+        _heal_chunk(cur, chunk, flats, stats, dry_run, lookup_vpic_from_cache, merge_spec_source_json)
+    if not dry_run:
+        conn.commit()
+    return stats
+
+
+def _heal_chunk(cur, rows: list[dict[str, Any]], flats: dict[str, dict[str, str]], stats: dict[str, Any],
+                dry_run: bool, lookup_vpic_from_cache, merge_spec_source_json) -> None:
+    """heal_rows' per-row work for one chunk; ``flats`` holds only this chunk's raw decodes."""
     for r in rows:
         vp = lookup_vpic_from_cache(r["vin"]) or {}
         flat = flats.get(r["vin"])
@@ -339,9 +355,6 @@ def heal_rows(conn, *, vins: Iterable[str] | None = None, dealers: Iterable[str]
         new_src = merge_spec_source_json(r["spec_source_json"] if isinstance(r["spec_source_json"], str) else None, prov)
         sets = ", ".join(f"{k} = ?" for k in ch) + ", spec_source_json = ?"
         cur.execute(f"UPDATE cars SET {sets} WHERE id = ?", tuple(n for (_o, n) in ch.values()) + (new_src, r["id"]))
-    if not dry_run:
-        conn.commit()
-    return stats
 
 
 def post_scan_vpic(vins: list[str]) -> dict[str, Any]:
