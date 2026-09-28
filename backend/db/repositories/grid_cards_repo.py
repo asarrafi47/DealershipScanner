@@ -164,8 +164,10 @@ def ensure_grid_cards_table() -> bool:
 def reset_grid_cards_state() -> None:
     """Tests: forget the per-process table flag and in-memory helpers."""
     global _table_ready, _fallback_urls_cache, _attr_cache, _token_cache
-    global _market_gen_cache, _market_gen_last
+    global _market_gen_cache, _market_gen_last, _attr_prev_count, _attr_last_good
     _table_ready = False
+    _attr_prev_count = None
+    _attr_last_good = None
     _fallback_urls_cache = None
     _attr_cache = None
     _token_cache = None
@@ -203,6 +205,7 @@ def grid_scope_token() -> Any:
         _today(),
         CARD_REV,
         market_bands_generation(),
+        attribution_generation(),
         listings_include_incomplete_cars(),
     )
     if fp is not None:
@@ -220,24 +223,72 @@ def _today() -> int:
 # Per-car inputs that live outside the ``cars`` row
 # ---------------------------------------------------------------------------
 
-_attr_cache: tuple[float, dict[int, dict[str, Any]]] | None = None
+_attr_cache: tuple[float, dict[int, dict[str, Any]], str] | None = None
 _ATTR_TTL_S = 60.0
+# Last successful read (served while a read fails) and its size (drop detection).
+_attr_last_good: tuple[dict[int, dict[str, Any]], str] | None = None
+_attr_prev_count: int | None = None
 
 
-def _attribution_all() -> dict[int, dict[str, Any]]:
-    global _attr_cache
+def _attr_generation(states: dict[int, dict[str, Any]]) -> str:
+    blob = repr(sorted((k, _attr_key(v)) for k, v in states.items())).encode("utf-8", "surrogatepass")
+    return hashlib.blake2b(blob, digest_size=8).hexdigest()
+
+
+def _attribution_read() -> tuple[dict[int, dict[str, Any]], str, bool]:
+    """(verdicts, generation, ok). ``ok`` is False when the read failed: the last good
+    verdicts are returned (``{}`` if there were none), the failure is NOT cached, and
+    callers must not treat stored cards as changed on attribution grounds."""
+    global _attr_cache, _attr_last_good, _attr_prev_count
     now = time.monotonic()
     hit = _attr_cache
     if hit is not None and (now - hit[0]) < _ATTR_TTL_S:
-        return hit[1]
+        return hit[1], hit[2], True
     from backend.db.repositories.cars_repo import car_attribution_states
 
+    err: BaseException | None = None
     try:
-        states = car_attribution_states()
-    except Exception:
-        states = {}
-    _attr_cache = (now, states)
-    return states
+        states = car_attribution_states(fail_open=False)
+    except Exception as exc:
+        err = exc
+        msg = str(exc)
+        if "car_attribution" in msg and ("no such table" in msg or "does not exist" in msg):
+            states = {}  # a database that never had verdicts (fresh dev / test db)
+        else:
+            states = None
+    if states is None:
+        last = _attr_last_good
+        _log.warning(
+            "car_attribution read failed; keeping stored grid cards for this pass "
+            "(last good read had %s verdicts)",
+            len(last[0]) if last else "no",
+            exc_info=err,
+        )
+        if last is not None:
+            return last[0], last[1], False
+        return {}, "unread", False
+    if not states and _attr_prev_count:
+        # A real (successful) read with zero verdicts where the last one had
+        # thousands: every card rebuilt from here on ships with no location caveat.
+        _log.warning(
+            "attribution overlay returned no verdicts but the previous read had %d; "
+            "grid cards rebuilt now carry no location caveats",
+            _attr_prev_count,
+        )
+    _attr_prev_count = len(states)
+    gen = _attr_generation(states)
+    _attr_last_good = (states, gen)
+    _attr_cache = (now, states, gen)
+    return states, gen, True
+
+
+def _attribution_all() -> dict[int, dict[str, Any]]:
+    return _attribution_read()[0]
+
+
+def attribution_generation() -> str:
+    """Digest of the current attribution verdicts (the last good one while reads fail)."""
+    return _attribution_read()[1]
 
 
 def _attr_key(state: dict[str, Any] | None) -> str:
@@ -326,7 +377,7 @@ class _Ctx:
 
         self.include_incomplete = listings_include_incomplete_cars()
         self.snapshot = _incomplete_index_snapshot_for_listings()
-        self.attribution = _attribution_all()
+        self.attribution, _gen, self.attribution_ok = _attribution_read()
         self.market_gen = market_bands_generation()
         self.today = _today()
 
@@ -603,7 +654,7 @@ def _resolve(
             cand.get("card_json")
             and ver
             and cand.get("row_ver") == ver
-            and cand.get("aux_key") == aux
+            and (cand.get("aux_key") == aux or not ctx.attribution_ok)
         ):
             fresh.append((cand, dist))
         else:
@@ -626,7 +677,9 @@ def _resolve(
             if (
                 cand.get("card_json")
                 and cand.get("content_key") == _content_key(row)
-                and cand.get("aux_key") == cand["_aux"]
+                # Attribution unreadable this pass: an aux mismatch may be nothing
+                # but the missing verdicts, so the stored card (with its caveat) wins.
+                and (cand.get("aux_key") == cand["_aux"] or not ctx.attribution_ok)
             ):
                 fresh.append((cand, dist))
                 if row.get("_ver"):

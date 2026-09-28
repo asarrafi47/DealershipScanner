@@ -488,3 +488,101 @@ def test_include_incomplete_toggle_is_part_of_the_aux_key(scoped, monkeypatch):
     for pub_inc in (False, True):
         assert gc._aux_key(ctx_on, pub_inc, None) != gc._aux_key(ctx_off, pub_inc, None)
     assert gc.grid_scope_token() != token_on
+
+
+# ── attribution read failures ───────────────────────────────────────────
+
+_VERDICT = {
+    "status": "mismatch",
+    "observed_rooftop": "Some Other Rooftop",
+    "location_unconfirmed": True,
+    "group_feed": False,
+}
+
+
+def _car_id(path, title):
+    conn = sqlite3.connect(str(path))
+    try:
+        return conn.execute("SELECT id FROM cars WHERE title = ?", (title,)).fetchone()[0]
+    finally:
+        conn.close()
+
+
+def test_attribution_read_failure_keeps_stored_cards(scoped, monkeypatch, caplog):
+    import logging
+
+    from backend.db.geo import zip_to_coords
+    from backend.db.repositories import cars_repo
+    from backend.db.repositories import grid_cards_repo as gc
+
+    cid = _car_id(scoped.path, "2022 Toyota Camry #1")
+    monkeypatch.setattr(cars_repo, "car_attribution_states", lambda *a, **k: {cid: dict(_VERDICT)})
+    lat, lon = zip_to_coords("92694")
+    first = gc.cards_near(lat, lon, 50)
+    card1 = next(json.loads(c) for c in first.cards_json() if json.loads(c)["id"] == cid)
+    assert card1.get("location_confirmed") is False
+
+    def broken(*_a, fail_open=True, **_k):
+        assert fail_open is False, "the card store must see read failures"
+        raise RuntimeError("connection reset by peer")
+
+    monkeypatch.setattr(cars_repo, "car_attribution_states", broken)
+    gc._attr_cache = None  # past the 60 s TTL
+    caplog.set_level(logging.WARNING, logger=gc.__name__)
+    second = gc.cards_near(lat, lon, 50)
+    assert second.stats["changed"] == 0, "no mass rebuild on a failed attribution read"
+    assert second.cards_json() == first.cards_json()  # caveats kept
+    assert gc._attr_cache is None, "a failed read is never cached"
+    assert any("car_attribution read failed" in r.getMessage() for r in caplog.records)
+
+
+def test_attribution_failure_with_no_prior_read_still_keeps_stored_cards(scoped, monkeypatch):
+    from backend.db.geo import zip_to_coords
+    from backend.db.repositories import cars_repo
+    from backend.db.repositories import grid_cards_repo as gc
+
+    cid = _car_id(scoped.path, "2022 Toyota Camry #1")
+    monkeypatch.setattr(cars_repo, "car_attribution_states", lambda *a, **k: {cid: dict(_VERDICT)})
+    lat, lon = zip_to_coords("92694")
+    first = gc.cards_near(lat, lon, 50)
+    gc.reset_grid_cards_state()  # e.g. a freshly started worker
+
+    def broken(*_a, **_k):
+        raise RuntimeError("timeout")
+
+    monkeypatch.setattr(cars_repo, "car_attribution_states", broken)
+    second = gc.cards_near(lat, lon, 50)
+    assert second.stats["changed"] == 0
+    assert second.cards_json() == first.cards_json()
+
+
+def test_attribution_drop_to_zero_is_logged(scoped, monkeypatch, caplog):
+    import logging
+
+    from backend.db.repositories import cars_repo
+    from backend.db.repositories import grid_cards_repo as gc
+
+    monkeypatch.setattr(cars_repo, "car_attribution_states", lambda *a, **k: {1: dict(_VERDICT), 2: dict(_VERDICT)})
+    gc._attribution_read()
+    monkeypatch.setattr(cars_repo, "car_attribution_states", lambda *a, **k: {})
+    gc._attr_cache = None
+    caplog.set_level(logging.WARNING, logger=gc.__name__)
+    states, _gen, ok = gc._attribution_read()
+    assert ok and states == {}
+    assert any("returned no verdicts but the previous read had 2" in r.getMessage() for r in caplog.records)
+
+
+def test_car_attribution_states_fail_open_is_opt_out(monkeypatch):
+    from backend.db.repositories import cars_repo
+
+    class Boom:
+        def __enter__(self):
+            raise RuntimeError("down")
+
+        def __exit__(self, *a):
+            return False
+
+    monkeypatch.setattr(cars_repo, "db_conn", lambda *a, **k: Boom())
+    assert cars_repo.car_attribution_states() == {}
+    with pytest.raises(RuntimeError):
+        cars_repo.car_attribution_states(fail_open=False)

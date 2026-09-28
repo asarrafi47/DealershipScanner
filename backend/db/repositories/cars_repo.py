@@ -324,8 +324,14 @@ def _attribution_location_unconfirmed(status: str, *, group_fed: bool, refiled: 
     return False
 
 
-def car_attribution_states(car_ids: Iterable[int] | None = None) -> dict[int, dict[str, Any]]:
+def car_attribution_states(
+    car_ids: Iterable[int] | None = None, *, fail_open: bool = True
+) -> dict[int, dict[str, Any]]:
     """Photo-attribution state per car id, in ONE query (never one per car).
+
+    ``fail_open=False`` re-raises a failed read instead of answering ``{}``: the
+    persisted grid-card store must tell "no verdicts" from "could not read them",
+    or one failed read rebuilds and persists every card without its caveat.
 
     Pass ``None`` for every judged car (the table is ~2,700 rows; the listings grid
     builder wants the lot). ``/api/listings/cars`` already ships megabytes over the
@@ -377,6 +383,8 @@ def car_attribution_states(car_ids: Iterable[int] | None = None) -> dict[int, di
             # which keeps caveats rather than clearing them -- the safe direction.
             rows = _fetch(sql_no_move_log)
         except Exception:
+            if not fail_open:
+                raise
             # The overlay is a caveat on top of what the page already shows. A missing
             # table (fresh SQLite dev/test db) or a failed read must degrade to "no
             # verdict", not 500 the listings grid -- but silently shipping the whole
