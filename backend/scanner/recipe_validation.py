@@ -28,6 +28,7 @@ from __future__ import annotations
 
 import copy
 import json
+import os
 import logging
 import re
 from dataclasses import asdict, dataclass, field
@@ -62,7 +63,7 @@ from backend.scanner.recipes import (
 logger = logging.getLogger("scanner")
 
 ROOT = Path(__file__).resolve().parents[2]
-LOG_ROOT = ROOT / "workspace" / "dealer_logs"
+LOG_ROOT = Path(os.environ.get("DEALER_LOGS_ROOT") or (ROOT / "workspace" / "dealer_logs"))
 ONE_CONDITION_OK_PATH = ROOT / "workspace" / "pipeline" / "one_condition_ok.txt"
 
 # fetch(recipe, body, base_url, url) -> (status, parsed_json_or_html_or_None):

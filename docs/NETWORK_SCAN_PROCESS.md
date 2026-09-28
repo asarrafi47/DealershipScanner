@@ -106,6 +106,15 @@ workspace/dealer_logs/
 - `backend/scripts/dealer_pipeline.py` — recipe → HTTP-only scan → NHTSA heal → assess
   (verification: new/used, location facts, incomplete fields, discrepancies) → per-dealer
   logs. Runs the probe below on every synthesis failure.
+- The recipe lifecycle inside the pipeline (after all batches, `--no-lifecycle` to skip): a
+  dealer that came back `no_recipe` / `no_rows` / `validated_zero` / an auth error, or whose
+  `scan_hints.recipe_status` says `stale:` (a replay answered 401/403) or `rejected:`, is
+  re-synthesized (force) and validated; if that fails, the discovery capture runs in its own
+  process and the captured recipes are validated; a dealer whose recipe now validates is
+  rescanned in one final HTTP-only retry batch and assessed again (`retried: <old> → <new>`
+  in the triage). One attempt per dealer per day. Each step is a dated block in
+  `discovery.md`, each failure a line in `_learning/errors_index.md`, and the dealers still
+  failing are listed in `<out>/needs_discovery.txt` for the dealer-discovery workflow.
 - `backend/scripts/discovery_probe.py` — the verbose discovery record for one dealership:
   redirect chain, status, size, title, challenge markers, every template's detect result,
   script hosts and API hints in the page, inventory-path probes, each synthesized

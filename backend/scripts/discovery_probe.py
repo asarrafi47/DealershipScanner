@@ -22,6 +22,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import logging
 import re
 import sys
@@ -38,7 +39,7 @@ from backend.utils.project_env import load_project_dotenv
 load_project_dotenv()
 
 ROOT = Path(__file__).resolve().parents[2]
-LOG_ROOT = ROOT / "workspace" / "dealer_logs"
+LOG_ROOT = Path(os.environ.get("DEALER_LOGS_ROOT") or (ROOT / "workspace" / "dealer_logs"))
 _UA = ("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
        "(KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36")
 _VIN_RE = re.compile(r"\b[A-HJ-NPR-Z0-9]{17}\b")
