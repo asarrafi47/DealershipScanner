@@ -154,6 +154,23 @@ def clamp_listings_radius(raw) -> float:
     return max(LISTINGS_RADIUS_MIN_MI, min(LISTINGS_RADIUS_MAX_MI, r))
 
 
+# The radii the listings page offers. The scoped grid snaps a requested radius UP to
+# the nearest of these (a superset the client narrows by the exact radius), so the
+# scope cache / build-lock key space is five values per ZIP, not every float a
+# client can send (radius=49.99, 50.01, ... would each build and cache a body).
+LISTINGS_RADIUS_OPTIONS_MI = (10.0, 25.0, 50.0, 100.0, 250.0)
+
+
+def snap_listings_radius(raw) -> float:
+    """Clamp *raw* (see :func:`clamp_listings_radius`), then snap it up to the
+    nearest :data:`LISTINGS_RADIUS_OPTIONS_MI` value (max 250)."""
+    r = clamp_listings_radius(raw)
+    for opt in LISTINGS_RADIUS_OPTIONS_MI:
+        if r <= opt:
+            return opt
+    return LISTINGS_RADIUS_OPTIONS_MI[-1]
+
+
 def _normalize_zip(raw: str) -> str:
     digits = "".join(ch for ch in (raw or "") if ch.isdigit())
     return digits[:5] if len(digits) >= 5 else ""
@@ -284,7 +301,9 @@ def api_listings_cars():
 
     * ``zip`` (or ``zip_code``) is required: without it this is a 400
       ``zip_required``, never the fleet.
-    * ``radius`` is clamped to 5..250 mi, default 50.
+    * ``radius`` is clamped to 5..250 mi (default 50) and snapped up to one of
+      10/25/50/100/250, so the cache key space stays bounded; the client narrows
+      the superset to its exact radius (every card carries ``distance_miles``).
     * Signed-in users' hidden dealerships are excluded in SQL.
     * Cards come from the persisted card store (``grid_cards_repo``), so a response
       is SQL plus string concatenation, not a serializer pass.
@@ -295,7 +314,7 @@ def api_listings_cars():
     zip_code = _normalize_zip(request.args.get("zip") or request.args.get("zip_code") or "")
     if not zip_code:
         return jsonify({"ok": False, "error": "zip_required"}), 400
-    radius = clamp_listings_radius(request.args.get("radius"))
+    radius = snap_listings_radius(request.args.get("radius"))
     from backend.db.geo import zip_to_coords
 
     origin = zip_to_coords(zip_code)

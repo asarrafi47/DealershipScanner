@@ -154,11 +154,12 @@ def test_radius_is_clamped_to_5_250_and_defaults_to_50():
 def test_only_cars_within_the_radius_are_served(scoped, client, monkeypatch):
     _forbid_whole_fleet(monkeypatch)
     data = _cars(client.get("/api/listings/cars?zip=92694&radius=5", headers={"Accept-Encoding": "gzip"}))
-    assert data["ok"] is True and data["radius"] == 5
+    # 5 mi snaps up to the 10 mi option; the client narrows by distance_miles.
+    assert data["ok"] is True and data["radius"] == 10
     titles = sorted(c["title"] for c in data["cars"])
     # near-motors (2 cars) + the dealer located only via dealer_geopoints.
     assert titles == ["2022 Toyota Camry #1", "2022 Toyota Camry #2", "2022 Toyota Camry #5"]
-    assert all(c["distance_miles"] <= 5 for c in data["cars"])
+    assert all(c["distance_miles"] <= 10 for c in data["cars"])
     # Grid order is the same price order the whole-fleet grid used.
     assert [c["price"] for c in data["cars"]] == sorted(c["price"] for c in data["cars"])
     # The car with no coordinates anywhere is counted, never silently dropped.
@@ -223,16 +224,37 @@ def test_scope_cache_is_bounded(scoped, client, monkeypatch):
     from backend.routes import listings_api
 
     monkeypatch.setattr(listings_api, "_CARS_SCOPE_MAX_ENTRIES", 3)
-    for radius in (10, 20, 30, 40, 50, 60):
+    for radius in (10, 25, 50, 100, 250):
         assert client.get(f"/api/listings/cars?zip=92694&radius={radius}").status_code == 200
     assert len(listings_api._cars_scope_cache) == 3
-    assert list(k[1] for k in listings_api._cars_scope_cache) == [40, 50, 60]
+    assert list(k[1] for k in listings_api._cars_scope_cache) == [50, 100, 250]
 
     listings_api.clear_cars_scope_cache()
     monkeypatch.setattr(listings_api, "_CARS_SCOPE_MAX_BYTES", 1)
     client.get("/api/listings/cars?zip=92694&radius=10")
     client.get("/api/listings/cars?zip=92694&radius=20")
     assert len(listings_api._cars_scope_cache) <= 1
+
+
+def test_radius_snaps_up_to_the_offered_options():
+    from backend.routes.listings_api import snap_listings_radius
+
+    assert snap_listings_radius(None) == 50
+    assert snap_listings_radius("1") == 10
+    assert snap_listings_radius("10") == 10
+    assert snap_listings_radius("10.01") == 25
+    assert snap_listings_radius("49.99") == 50
+    assert snap_listings_radius("50.01") == 100
+    assert snap_listings_radius("101") == 250
+    assert snap_listings_radius("9000") == 250
+
+
+def test_float_radii_share_one_scope_cache_entry(scoped, client):
+    from backend.routes import listings_api
+
+    for radius in ("26", "30.5", "49.99", "50"):
+        assert client.get(f"/api/listings/cars?zip=92694&radius={radius}").status_code == 200
+    assert [k[1] for k in listings_api._cars_scope_cache] == [50.0]
 
 
 # ── card store ──────────────────────────────────────────────────────────
