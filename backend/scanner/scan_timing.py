@@ -103,6 +103,9 @@ def timing_entry(run: dict[str, Any]) -> dict[str, Any]:
         "retried": _int(hf.get("retried")),
         "statuses": {str(k): _int(v) for k, v in statuses.items()},
         "wall_clock_hit": bool(hf.get("wall_clock_hit")),
+        # The window the pass actually ran under (prefetch records it since
+        # 2026-09-28); None on older rows, where the default is assumed.
+        "wall_clock_sec": _int(hf.get("wall_clock_sec")) or None,
         "host_exhausted": hf.get("host_exhausted") or None,
         "slowed_host": hf.get("slowed_host") or None,
     }
@@ -149,15 +152,27 @@ def _pages_wanted(e: dict[str, Any]) -> int:
     return _int(p.get("candidates")) + _int(p.get("skipped_cap"))
 
 
+def run_window_sec(entry: dict[str, Any]) -> int:
+    """The HTTP-first window a run actually used: its recorded
+    ``prefetch.wall_clock_sec``, else the default (rows written before the
+    stat existed)."""
+    p = entry.get("prefetch") or {}
+    used = _int(p.get("wall_clock_sec"))
+    return used if used > 0 else HTTP_FIRST_DEFAULT_SEC
+
+
 def recommend_windows(entries: list[dict[str, Any]]) -> dict[str, Any]:
     """HTTP-first window the dealer needs, from its recent timing entries.
 
     ``vdp_http_first_max_sec``: None when the latest run was not capped; else
-    the default window scaled by pages wanted / pages fetched, rounded up to
-    the minute, floored at the default and capped at ``HTTP_FIRST_MAX_SEC``.
-    The scale assumes the capped pass ran for the default window (the stats
-    do not record the pass's own elapsed time), which is exact for
-    ``wall_clock_hit`` and conservative when the page cap ended it earlier.
+    the window that run actually used (``run_window_sec``) scaled by pages
+    wanted / pages fetched, rounded up to the minute, floored at both the
+    default and the window that just hit the cap, and capped at
+    ``HTTP_FIRST_MAX_SEC``. Scaling off the run's own window (not the
+    default) keeps a hinted dealer from oscillating: a capped 1140 s pass
+    used to be re-scaled from 300 s and recommend less than it just used.
+    The scale is exact for ``wall_clock_hit`` and conservative when the page
+    cap ended the pass earlier.
 
     ``pages_needed``: the most pages any of the runs wanted
     (candidates + skipped_cap); None when no run carried prefetch stats.
@@ -174,10 +189,11 @@ def recommend_windows(entries: list[dict[str, Any]]) -> dict[str, Any]:
     p = latest.get("prefetch") or {}
     wanted = _pages_wanted(latest)
     fetched = max(_int(p.get("fetched")), 1)
-    scaled = HTTP_FIRST_DEFAULT_SEC * wanted / fetched
+    used = run_window_sec(latest)
+    scaled = used * wanted / fetched
     minutes = math.ceil(scaled / 60.0)
     sec = 60 * minutes
-    out["vdp_http_first_max_sec"] = int(min(HTTP_FIRST_MAX_SEC, max(HTTP_FIRST_DEFAULT_SEC, sec)))
+    out["vdp_http_first_max_sec"] = int(min(HTTP_FIRST_MAX_SEC, max(HTTP_FIRST_DEFAULT_SEC, used, sec)))
     return out
 
 

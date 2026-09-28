@@ -39,7 +39,8 @@ def test_avondale_entry_flags_and_prefetch_facts():
     assert e["duration_s"] == 919 and e["upsert_s"] == 402.1
     assert e["prefetch"] == {
         "candidates": 800, "fetched": 448, "skipped_cap": 867, "retried": 7, "statuses": {"200": 448, "403": 1},
-        "wall_clock_hit": True, "host_exhausted": "www.avondaletoyota.com", "slowed_host": "www.avondaletoyota.com",
+        "wall_clock_hit": True, "wall_clock_sec": None,
+        "host_exhausted": "www.avondaletoyota.com", "slowed_host": "www.avondaletoyota.com",
     }
     assert set(e["flags"]) == {"cap_hit", "host_exhausted", "slowed_host", "slow", "upsert_slow"}
     # deterministic order (FLAG_ORDER), not set order
@@ -85,6 +86,37 @@ def test_avondale_recommendation_is_scaled_to_the_minute():
     expected = 60 * math.ceil(300 * (800 + 867) / 448 / 60)  # 1116.3 s -> 19 min
     assert expected == 1140
     assert rec == {"vdp_http_first_max_sec": 1140, "pages_needed": 1667}
+
+
+def _capped(rid, finished, hf):
+    return st.timing_entry(_run(rid, finished, 400, summary={"vdp_prefetch": {"http_first": dict(hf, wall_clock_hit=True)}}))
+
+
+def test_recommendation_scales_off_the_window_the_run_actually_used():
+    """A hinted dealer's capped pass ran 1140 s; scaling that off the 300 s default
+    recommended 1140 s again at best and less when the pass fetched more, so the
+    hint oscillated. The recorded wall_clock_sec is the base now."""
+    hf = dict(AVONDALE_SUMMARY["vdp_prefetch"]["http_first"])
+    # no wall_clock_sec recorded (older rows): the default is assumed -> 1140
+    assert st.recommend_windows([st.timing_entry(AVONDALE_RUN)])["vdp_http_first_max_sec"] == 1140
+    e = _capped(9102, "2026-09-29T08:15:00+00:00", dict(hf, wall_clock_sec=1140))
+    assert e["prefetch"]["wall_clock_sec"] == 1140 and st.run_window_sec(e) == 1140
+    # 1140 s fetched 448 of 1667 wanted -> 4242 s, clamped to the ceiling
+    assert st.recommend_windows([e])["vdp_http_first_max_sec"] == 1800
+    # the 1140 s pass fetched 1400 of 1667: 1140 * 1667 / 1400 = 1357 -> 1380, not 300 * ... = 360
+    e2 = _capped(9103, "2026-09-30T08:15:00+00:00", {"candidates": 1400, "fetched": 1400, "skipped_cap": 267, "wall_clock_sec": 1140})
+    assert st.recommend_windows([e2])["vdp_http_first_max_sec"] == 1380
+    # never below the window that just hit the cap, even when every page landed
+    e3 = _capped(9104, "2026-10-01T08:15:00+00:00", {"candidates": 100, "fetched": 100, "wall_clock_sec": 600})
+    assert st.recommend_windows([e3])["vdp_http_first_max_sec"] == 600
+    # an odd env window (420 s) is kept as the floor and the scale rounds to the minute above it
+    e4 = _capped(9105, "2026-10-02T08:15:00+00:00", {"candidates": 100, "fetched": 99, "wall_clock_sec": 420})
+    assert st.recommend_windows([e4])["vdp_http_first_max_sec"] == 480
+    # a zero / missing stat falls back to the default base
+    e5 = _capped(9106, "2026-10-03T08:15:00+00:00", {"candidates": 100, "fetched": 99, "wall_clock_sec": 0})
+    assert e5["prefetch"]["wall_clock_sec"] is None and st.recommend_windows([e5])["vdp_http_first_max_sec"] == 360
+    # merge_timing carries the same number
+    assert st.merge_timing({}, e2)["vdp_http_first_max_sec"] == 1380
 
 
 def test_recommendation_is_none_when_latest_run_was_not_capped_and_clamped_otherwise():
