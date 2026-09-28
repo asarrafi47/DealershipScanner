@@ -1,0 +1,267 @@
+{
+  "dealer_id": "hendrickbuickgmccary-com",
+  "platform": "carscommerce",
+  "evidence_files": [
+    "workspace/dealer_logs/hendrickbuickgmccary-com/summary.md",
+    "workspace/dealer_logs/hendrickbuickgmccary-com/discovery.md",
+    "backend/tests/test_carscommerce_store_filter_20260924.py"
+  ],
+  "notes": "validated_zero 2026-09-24: the group feed's bare 'Cary, NC' tag spans three Cary stores and the gate refused every page ('none is this store'). Fixed at synthesis: identity feed source_id == page oem_code 178465 -> facetFilters {source_id:['178465']} (439 cars), alias 'Hendrick Buick GMC Cadillac Cary' recorded.",
+  "roster": {
+    "name": "Hendrick Buick GMC Cary",
+    "street": null,
+    "city": "Cary",
+    "state": "NC",
+    "zip": null,
+    "street_source": null,
+    "aliases": [
+      "Hendrick Buick GMC Cadillac Cary"
+    ],
+    "note": "not in the registry on 2026-09-24; place learned from the page title (dealer_place.learn_place)"
+  },
+  "page": {
+    "dealername": "Hendrick Buick GMC Cary",
+    "oem_code": "178465",
+    "jsonld_street": null,
+    "jsonld_phone": null
+  },
+  "feed": {
+    "account": "listings/6034613",
+    "identity_sources": [
+      "178465"
+    ],
+    "sibling_sources": {
+      "RHendrickUsed": "group-wide used feed, 5 rooftops",
+      "113974": "Hendrick Chevrolet Cary",
+      "292164": "Rick Hendrick Chevrolet Naples"
+    },
+    "location_facets": {
+      "Location": "custom_text_25",
+      "location_based_sort": "custom_text_23",
+      "location_sort": "custom_text_4",
+      "meta_location": "custom_text_11"
+    },
+    "location_facet_value": "Cary, NC",
+    "location_facet_value_note": "713 cars: Buick GMC Cadillac Cary + Kia of Cary + Chevrolet Cary — rejected by replay verification",
+    "store_scoped_filter": {
+      "source_id": [
+        "178465"
+      ]
+    }
+  },
+  "scenarios": [
+    {
+      "name": "open_group_page_with_alias",
+      "why": "one page of the unfiltered group feed, place Cary NC from the page title, alias recorded",
+      "gate": "open",
+      "rows": [
+        {
+          "vin": "00HBC000000000001",
+          "type": "New",
+          "stamp": {
+            "location": "Cary, NC",
+            "source_id": "178465",
+            "custom_location": "Hendrick Buick GMC Cadillac Cary",
+            "facets": {
+              "custom_text_25": "Cary, NC"
+            }
+          },
+          "expected_today": "keep",
+          "tier_today": "store_label_token_subset"
+        },
+        {
+          "vin": "00HBC000000000002",
+          "type": "New",
+          "stamp": {
+            "location": "Cary, NC",
+            "source_id": "178465",
+            "custom_location": "Hendrick Buick GMC Cadillac Cary",
+            "facets": {
+              "custom_text_25": "Cary, NC"
+            }
+          },
+          "expected_today": "keep",
+          "tier_today": "store_label_token_subset"
+        },
+        {
+          "vin": "00HBC000000000003",
+          "type": "Used",
+          "stamp": {
+            "location": "Cary, NC",
+            "source_id": "178465",
+            "custom_location": "Hendrick Buick GMC Cadillac Cary"
+          },
+          "expected_today": "keep",
+          "tier_today": "store_label_token_subset"
+        },
+        {
+          "vin": "00HCC000000000001",
+          "type": "New",
+          "stamp": {
+            "location": "Cary, NC",
+            "source_id": "113974",
+            "custom_location": "Hendrick Chevrolet Cary"
+          },
+          "expected_today": "keep",
+          "tier_today": "store_label_token_subset",
+          "expected_ideal": "refuse",
+          "ideal_note": "same bare 'Cary, NC' identity as ours, so it rides on our rooftop; the feed id 113974 and the label say Hendrick Chevrolet Cary",
+          "note": "the reason a bare City, ST tag can never attribute: three Cary stores share it"
+        },
+        {
+          "vin": "00KIA000000000001",
+          "type": "Used",
+          "stamp": {
+            "location": "90 MacKenan Dr<br/>Cary, NC 27511<br/>(919) 362-0575",
+            "source_id": "RHendrickUsed",
+            "custom_location": "Hendrick Kia of Cary"
+          },
+          "expected_today": "refuse",
+          "tier_today": "sibling_rooftop",
+          "reject_today": "sibling_rooftop"
+        },
+        {
+          "vin": "00KIA000000000002",
+          "type": "Used",
+          "stamp": {
+            "location": "90 MacKenan Dr<br/>Cary, NC 27511<br/>(919) 362-0575",
+            "source_id": "RHendrickUsed",
+            "custom_location": "Hendrick Kia of Cary"
+          },
+          "expected_today": "refuse",
+          "tier_today": "sibling_rooftop",
+          "reject_today": "sibling_rooftop"
+        },
+        {
+          "vin": "00NAP000000000001",
+          "type": "New",
+          "stamp": {
+            "location": "Naples, FL",
+            "source_id": "292164",
+            "custom_location": "Chevy Naples"
+          },
+          "expected_today": "refuse",
+          "tier_today": "sibling_rooftop",
+          "reject_today": "sibling_rooftop"
+        },
+        {
+          "vin": "00UNS000000000001",
+          "type": "Used",
+          "stamp": {
+            "location": null,
+            "source_id": "RHendrickUsed"
+          },
+          "expected_today": "refuse",
+          "tier_today": "unstamped_row_in_group_feed",
+          "reject_today": "unstamped_row_in_group_feed"
+        }
+      ]
+    },
+    {
+      "name": "open_group_page_before_alias",
+      "why": "the 2026-09-24 failure: no alias, no street; 'Cary, NC' reads as a store name that is not ours",
+      "gate": "open",
+      "aliases": [],
+      "rows": [
+        {
+          "vin": "00HBC000000000001",
+          "type": "New",
+          "stamp": {
+            "location": "Cary, NC",
+            "source_id": "178465",
+            "custom_location": "Hendrick Buick GMC Cadillac Cary"
+          },
+          "expected_today": "keep",
+          "tier_today": "store_label_token_subset",
+          "note": "custom_location still finds the store (store_label tier); the 09-24 code had no alt_name and refused"
+        },
+        {
+          "vin": "00KIA000000000001",
+          "type": "Used",
+          "stamp": {
+            "location": "90 MacKenan Dr<br/>Cary, NC 27511<br/>(919) 362-0575",
+            "source_id": "RHendrickUsed",
+            "custom_location": "Hendrick Kia of Cary"
+          },
+          "expected_today": "refuse",
+          "tier_today": "sibling_rooftop",
+          "reject_today": "sibling_rooftop"
+        },
+        {
+          "vin": "00NAP000000000001",
+          "type": "New",
+          "stamp": {
+            "location": "Naples, FL",
+            "source_id": "292164",
+            "custom_location": "Chevy Naples"
+          },
+          "expected_today": "refuse",
+          "tier_today": "sibling_rooftop",
+          "reject_today": "sibling_rooftop"
+        },
+        {
+          "vin": "00UNS000000000001",
+          "type": "Used",
+          "stamp": {
+            "location": null,
+            "source_id": "RHendrickUsed"
+          },
+          "expected_today": "refuse",
+          "tier_today": "unstamped_row_in_group_feed",
+          "reject_today": "unstamped_row_in_group_feed"
+        }
+      ]
+    },
+    {
+      "name": "store_scoped_recipe",
+      "why": "the live recipe: facetFilters source_id=['178465'] — rows are ours by construction, gate skipped",
+      "gate": "feed_scoped",
+      "rows": [
+        {
+          "vin": "00HBC000000000001",
+          "type": "New",
+          "stamp": {
+            "location": "Cary, NC",
+            "source_id": "178465",
+            "custom_location": "Hendrick Buick GMC Cadillac Cary"
+          },
+          "expected_today": "keep",
+          "tier_today": "feed_scoped"
+        },
+        {
+          "vin": "00HBC000000000002",
+          "type": "New",
+          "stamp": {
+            "location": "Cary, NC",
+            "source_id": "178465",
+            "custom_location": "Hendrick Buick GMC Cadillac Cary"
+          },
+          "expected_today": "keep",
+          "tier_today": "feed_scoped"
+        },
+        {
+          "vin": "00HBC000000000003",
+          "type": "Used",
+          "stamp": {
+            "location": "Cary, NC",
+            "source_id": "178465",
+            "custom_location": "Hendrick Buick GMC Cadillac Cary"
+          },
+          "expected_today": "keep",
+          "tier_today": "feed_scoped"
+        },
+        {
+          "vin": "00HBC000000000004",
+          "type": "Used",
+          "stamp": {
+            "location": null,
+            "source_id": "178465"
+          },
+          "expected_today": "keep",
+          "tier_today": "feed_scoped",
+          "synthetic": true
+        }
+      ]
+    }
+  ]
+}

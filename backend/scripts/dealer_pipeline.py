@@ -19,6 +19,21 @@ Per dealer:
                 no_rows   recipe replay produced nothing (needs discovery)
                 error     scanner error for the dealer
                 no_recipe nothing to replay and synthesis failed (needs discovery)
+  5. lifecycle after ALL batches (--no-lifecycle to skip): no_recipe / no_rows /
+              validated_zero / auth errors / recipe_status stale: (and rejected:
+              beside a failing verdict; a rejected re-synth beside a recipe that
+              replays stays out) -> force re-synth + validation -> discovery
+              capture (own process; never for an ok / thin / inaccurate scan) +
+              validation -> one retry batch (HTTP-only) -> assess again. Once per
+              dealer per UTC day (scan_hints.lifecycle_last_attempt). Triage rows
+              gain `lifecycle` (none | resynth_ok | capture_ok | failed:<reason> |
+              resynth_failed:<reason>, the last for a dealer whose scan passed)
+              and `retried: <old> → <new>`; <out>/needs_discovery.txt lists the
+              dealers still failing.
+  6. platform clustering over the run's needs_discovery dealers
+              (backend/scripts/platform_candidates.py): every cluster of 2+ prints
+              `discovery: N dealers share unknown platform <signature> (a, b, c) →
+              workspace/dealer_logs/_learning/platform_candidates.md`.
 
 Usage:
   python -m backend.scripts.dealer_pipeline --dealers a,b,c --out workspace/pipeline/run1
@@ -44,7 +59,9 @@ load_project_dotenv()
 from backend.db.inventory_db import get_conn  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[2]
-LOG_ROOT = ROOT / "workspace" / "dealer_logs"
+# DEALER_LOGS_ROOT redirects every per-dealer log (tests; a scratch run). The
+# discovery probe and the recipe validator honour the same variable.
+LOG_ROOT = Path(os.environ.get("DEALER_LOGS_ROOT") or (ROOT / "workspace" / "dealer_logs"))
 PROCESS_DOC = "docs/NETWORK_SCAN_PROCESS.md"
 INCOMPLETE_FLOOR = 0.05   # share of rows with a missing spec-sheet field after the NHTSA fill
 DISCREPANCY_FLOOR = 0.05  # share of rows with a hard dictionary-vs-dealer discrepancy
@@ -216,6 +233,20 @@ def ensure_recipe(dealer: dict[str, Any], *, force: bool = False) -> dict[str, A
     if not kept:
         info["synth"] = info.get("synth") or "validated_zero"
         return info
+    # The SET is judged against the site's own count before the save
+    # (recipe_validation, Phase 3): one condition while the site sells both,
+    # section-scoped bodies, a short page under half the lot, dead auth. A
+    # reject is logged to discovery.md and nothing is saved; uncertain saves
+    # with scan_hints.recipe_status = "uncertain:<reason>".
+    from backend.scanner.recipe_validation import gate_recipes
+
+    kept, report = gate_recipes(did, kept, base_url=dealer["url"].rstrip("/"), dealer_name=dealer.get("name") or did,
+                                place=place or None, context="synth")
+    info["recipe_status"] = report.status
+    info["validation"] = report.summary()
+    if not kept:
+        info["synth"] = report.status
+        return info
     save_recipes(did, kept)
     info["synth"] = f"saved_{len(kept)}"
     info["providers"] = sorted({r.provider_hint for r in kept if r.provider_hint})
@@ -257,7 +288,7 @@ def run_discovery_capture(dealer_id: str, timeout_sec: int = 900) -> dict[str, A
     """Run ``discovery_probe --browser-capture`` for one dealer in a separate process
     (so SCANNER_ALLOW_BROWSER never enters this one). Bounded to one capture per
     dealer per UTC day via a marker file; returns a small summary for the triage."""
-    marker_dir = ROOT / "workspace" / "dealer_logs" / dealer_id
+    marker_dir = LOG_ROOT / dealer_id
     marker_dir.mkdir(parents=True, exist_ok=True)
     today = datetime.now(timezone.utc).strftime("%Y%m%d")
     marker = marker_dir / f".capture_{today}"
@@ -267,6 +298,7 @@ def run_discovery_capture(dealer_id: str, timeout_sec: int = 900) -> dict[str, A
     py = str(ROOT / ".venv" / "bin" / "python") if (ROOT / ".venv" / "bin" / "python").exists() else sys.executable
     env = dict(os.environ)
     env.pop("SCANNER_ALLOW_BROWSER", None)  # the probe sets it for itself
+    env["DEALER_LOGS_ROOT"] = str(LOG_ROOT)  # the probe's discovery.md is this run's discovery.md
     t0 = time.time()
     try:
         proc = subprocess.run([py, "-m", "backend.scripts.discovery_probe", "--no-paths", "--browser-capture", "--dealers", dealer_id],
@@ -279,7 +311,7 @@ def run_discovery_capture(dealer_id: str, timeout_sec: int = 900) -> dict[str, A
     if caps:
         try:
             cap = json.loads(caps[-1].read_text())
-            out.update({k: cap.get(k) for k in ("records", "recipes_before", "recipes_after", "profile", "errors") if k in cap})
+            out.update({k: cap.get(k) for k in ("records", "recipes_before", "recipes_after", "profile", "errors", "validation") if k in cap})
             out["endpoints"] = len(cap.get("endpoints") or [])
         except Exception as exc:  # noqa: BLE001
             out["error"] = f"capture report unreadable: {str(exc)[:80]}"
@@ -654,6 +686,404 @@ def verify_accuracy(conn, dealer_id: str, since_iso: str) -> dict[str, Any]:
 
 
 # --------------------------------------------------------------------------
+# 5. recipe lifecycle (docs/HTTP_ONLY_SCANS_PLAN.md Phase 3)
+#
+#   verdict / recipe_status  ->  route_verdict  ->  step 1 force re-synth + validation
+#                                               ->  step 2 discovery capture (own process,
+#                                                   the one sanctioned browser) + validation
+#                                               ->  step 3 retry batch (HTTP-only) + assess
+#
+# Runs AFTER the main batches so it never delays the fleet; one attempt per
+# dealer per UTC day (scan_hints.lifecycle_last_attempt); --no-lifecycle turns
+# it off. Every step writes its block to discovery.md and its failure class to
+# _learning/errors_index.md; a dealer still failing at the end of the run goes
+# to <out>/needs_discovery.txt for the dealer-discovery workflow.
+# --------------------------------------------------------------------------
+
+LIFECYCLE_VERDICTS = ("no_recipe", "no_rows")
+# Verdicts under which a scan produced rows the assess could judge: the recipe on
+# file replays. A ``rejected:`` status beside one of these describes a re-synth
+# that lost to the working recipe, not a dealer without one.
+SCANNED_VERDICTS = ("ok", "thin", "inaccurate")
+FAILING_VERDICTS = ("no_recipe", "no_rows", "error")
+LIFECYCLE_OK = ("resynth_ok", "capture_ok")
+_AUTH_ERROR_MARKERS = ("401", "403", "auth", "forbidden", "unauthori")
+_NO_URL_SYNTHS = ("not_in_manifest_or_db",)
+
+
+def _scan_hints(dealer_id: str) -> dict[str, Any]:
+    try:
+        from backend.scanner.recipe_store import get_scan_hints
+
+        return dict(get_scan_hints(dealer_id) or {})
+    except Exception:  # noqa: BLE001 - the hint store is advisory
+        return {}
+
+
+def _set_scan_hints(dealer_id: str, hints: dict[str, Any]) -> bool:
+    try:
+        from backend.scanner.recipe_store import set_scan_hints
+
+        return bool(set_scan_hints(dealer_id, hints))
+    except Exception:  # noqa: BLE001
+        return False
+
+
+def _learning_append(name: str, line: str) -> None:
+    try:
+        d = LOG_ROOT / "_learning"
+        d.mkdir(parents=True, exist_ok=True)
+        with (d / name).open("a", encoding="utf-8") as fh:
+            fh.write(line.rstrip() + "\n")
+    except OSError as exc:
+        print(f"log     _learning/{name}: {str(exc)[:80]}", flush=True)
+
+
+def route_verdict(dealer: dict[str, Any], result: dict[str, Any], recipe_status: str | None = None) -> dict[str, Any]:
+    """Decide whether an assessed dealer enters the recipe lifecycle.
+
+    ``{"action": "lifecycle" | "none", "trigger": <why>}``. Enters on the verdicts
+    ``no_recipe`` / ``no_rows``, a ``validated_zero`` synthesis, an ``error``
+    whose reason smells of auth (401/403/forbidden), any dealer whose
+    ``scan_hints.recipe_status`` starts with ``stale:`` (a replay answered
+    401/403), and a ``rejected:`` status (the validator refused the last
+    synthesis) only when the scan itself failed (``no_recipe`` / ``no_rows`` /
+    ``error``). ``thin`` / ``inaccurate`` / ``ok`` stay out, ``rejected:`` or
+    not: their recipe replays; those are parser and attribution problems, not
+    recipe problems, and a daily browser capture would learn nothing new.
+    """
+    did = str(dealer.get("dealer_id") or result.get("dealer_id") or "")
+    verdict = str(result.get("verdict") or "")
+    reason = str(result.get("reason") or "")
+    info = result.get("recipe") or {}
+    synth = str(info.get("synth") or "")
+    if not dealer.get("url") or synth in _NO_URL_SYNTHS:
+        return {"action": "none", "trigger": "no_url", "verdict": verdict}
+    if recipe_status is None:
+        recipe_status = str(_scan_hints(did).get("recipe_status") or "")
+    recipe_status = str(recipe_status or "")
+    if recipe_status.startswith("stale:"):
+        return {"action": "lifecycle", "trigger": f"recipe_status {recipe_status}", "verdict": verdict}
+    if recipe_status.startswith("rejected:"):
+        if verdict in FAILING_VERDICTS:
+            return {"action": "lifecycle", "trigger": f"recipe_status {recipe_status}", "verdict": verdict}
+        if verdict in SCANNED_VERDICTS:
+            return {"action": "none", "trigger": f"{verdict} (recipe_status {recipe_status} ignored: the recipe on file replays)",
+                    "verdict": verdict}
+    if verdict in LIFECYCLE_VERDICTS:
+        return {"action": "lifecycle", "trigger": verdict, "verdict": verdict}
+    if synth.startswith("validated_zero"):
+        return {"action": "lifecycle", "trigger": "validated_zero", "verdict": verdict}
+    if verdict == "error" and any(m in reason.lower() for m in _AUTH_ERROR_MARKERS):
+        return {"action": "lifecycle", "trigger": "error_auth", "verdict": verdict}
+    return {"action": "none", "trigger": verdict or "unassessed", "verdict": verdict}
+
+
+def lifecycle_attempted_today(dealer_id: str, hints: dict[str, Any] | None = None, now: datetime | None = None) -> bool:
+    """The once-per-day guard: ``scan_hints.lifecycle_last_attempt`` on today's UTC date."""
+    hints = hints if hints is not None else _scan_hints(dealer_id)
+    last = str(hints.get("lifecycle_last_attempt") or "")
+    if not last:
+        return False
+    try:
+        ts = datetime.fromisoformat(last.replace("Z", "+00:00"))
+    except ValueError:
+        return False
+    if ts.tzinfo is None:
+        ts = ts.replace(tzinfo=timezone.utc)
+    now = now or datetime.now(timezone.utc)
+    return ts.astimezone(timezone.utc).date() == now.astimezone(timezone.utc).date()
+
+
+def validate_live_recipes(dealer: dict[str, Any], context: str = "lifecycle capture"):
+    """Re-validate the recipes now on file for *dealer* over HTTP (page 1 + 2
+    against the site's own count); the report lands in discovery.md and
+    scan_hints.recipe_status. ``None`` when nothing live is on file."""
+    from urllib.parse import urlparse
+
+    from backend.scanner.recipe_validation import record_recipe_status, validate_recipe_set, write_discovery_log
+    from backend.scanner.recipes import load_recipes
+
+    did = dealer["dealer_id"]
+    live = [r for r in load_recipes(did) if not r.stale]
+    if not live:
+        return None
+    u = urlparse(str(dealer.get("url") or ""))
+    origin = f"{u.scheme}://{u.netloc}" if u.netloc else ""
+    place = None
+    try:
+        from backend.scanner.dealer_place import roster_place_with_hints
+
+        place = roster_place_with_hints(dealer.get("url") or "", did) or None
+    except Exception:  # noqa: BLE001
+        place = None
+    rep = validate_recipe_set(did, live, base_url=origin, dealer_name=dealer.get("name") or did, place=place)
+    write_discovery_log(did, rep, context, LOG_ROOT)
+    record_recipe_status(did, rep, context)
+    return rep
+
+
+def _lifecycle_block(stamp: str, step: str, trigger: str, lines: list[str], verdict: str) -> str:
+    return "\n".join([f"## {stamp} lifecycle {step} (trigger: {trigger})"] + [f"- {ln}" for ln in lines] + [f"- verdict: {verdict}"])
+
+
+def run_lifecycle(dealer: dict[str, Any], result: dict[str, Any], *, trigger: str = "", no_discover: bool = False,
+                  stamp: str = "", now: datetime | None = None) -> dict[str, Any]:
+    """Steps 1 and 2 for one dealer. Returns ``{"lifecycle": resynth_ok | capture_ok |
+    failed:<reason>, "steps": [...], "recipe": <ensure_recipe info when saved>}``.
+    Step 3 (the retry batch) is :func:`run_lifecycle_pass`'s job, since it batches."""
+    did = dealer["dealer_id"]
+    now = now or datetime.now(timezone.utc)
+    stamp = stamp or now.strftime("%Y-%m-%d %H:%M UTC")
+    trigger = trigger or str(result.get("verdict") or "")
+    out: dict[str, Any] = {"lifecycle": "none", "trigger": trigger, "steps": []}
+    hints = _scan_hints(did)
+    if lifecycle_attempted_today(did, hints, now):
+        out["lifecycle"] = "failed:attempted_today"
+        out["last_attempt"] = hints.get("lifecycle_last_attempt")
+        _log_append(did, "discovery.md", _lifecycle_block(
+            stamp, "skipped", trigger,
+            [f"last attempt: {hints.get('lifecycle_last_attempt')} (one lifecycle attempt per dealer per UTC day)",
+             f"last verdict: {result.get('verdict')} ({str(result.get('reason') or '')[:120]})"],
+            "not retried today; still needs discovery"))
+        return out
+    _set_scan_hints(did, {"lifecycle_last_attempt": now.replace(microsecond=0).isoformat()})
+
+    # step 1 — force re-synth through the platform templates + the validator gate
+    try:
+        info = ensure_recipe(dealer, force=True)
+    except Exception as exc:  # noqa: BLE001
+        info = {"had_recipes": 0, "synth": f"error:{str(exc)[:100]}"}
+    synth = str(info.get("synth") or "")
+    step1_ok = synth.startswith("saved")
+    out["steps"].append({"step": "resynth", "ok": step1_ok, "synth": synth, "platform": info.get("platform"),
+                         "recipe_status": info.get("recipe_status"), "validation": info.get("validation")})
+    lines = [f"url: {dealer.get('url')}", f"last verdict: {result.get('verdict')} ({str(result.get('reason') or '')[:120]})",
+             f"fingerprint: {info.get('platform') or 'unknown'}", f"synthesis: {synth}"
+             + (f", {info.get('synth_vins')} VINs validated" if info.get("synth_vins") else "")]
+    if info.get("validation"):
+        lines.append(f"validation: {json.dumps(info['validation'], default=str)[:400]}")
+    if info.get("traceback"):
+        lines.append("traceback:\n```\n" + info["traceback"] + "\n```")
+    if step1_ok:
+        out["lifecycle"], out["recipe"] = "resynth_ok", info
+        _log_append(did, "discovery.md", _lifecycle_block(stamp, "step 1 — force re-synth", trigger, lines,
+                                                          "recipe validated; queued for this run's retry batch (HTTP-only scan)"))
+        return out
+    fail1 = synth or "no_template"
+    verdict = str(result.get("verdict") or "")
+    if verdict in SCANNED_VERDICTS:
+        # The scan produced rows from the recipe on file (a stale: status the
+        # replay could not clear, or a rejected: re-synth beside a working
+        # recipe): a browser capture would only re-learn the endpoint that
+        # already replays. Not a needs_discovery outcome.
+        out["lifecycle"] = f"resynth_failed:{fail1[:60]}"
+        _log_append(did, "discovery.md", _lifecycle_block(stamp, "step 1 — force re-synth", trigger, lines,
+                                                          f"failed ({fail1}); scan verdict {verdict}: the recipe on file replays, no discovery capture"))
+        return out
+    _log_append(did, "discovery.md", _lifecycle_block(stamp, "step 1 — force re-synth", trigger, lines,
+                                                      f"failed ({fail1}); next: discovery capture" if not no_discover else f"failed ({fail1}); discovery capture disabled (--no-discover)"))
+    _learning_append("errors_index.md", f"- {stamp} lifecycle_resynth_failed:{fail1[:60]} -> {did} (trigger {trigger}; workspace/dealer_logs/{did}/discovery.md)")
+    if no_discover:
+        out["lifecycle"] = f"failed:{fail1[:60]}"
+        return out
+
+    # step 2 — discovery capture in its own process (SCANNER_ALLOW_BROWSER lives there only)
+    try:
+        cap = run_discovery_capture(did)
+    except Exception as exc:  # noqa: BLE001
+        cap = {"error": f"capture failed: {str(exc)[:100]}", "recipes_after": 0}
+    n_after = int(cap.get("recipes_after") or 0)
+    step2: dict[str, Any] = {"step": "capture", "ok": False, "recipes_after": n_after,
+                             **{k: cap.get(k) for k in ("skipped", "error", "records", "endpoints", "profile", "errors", "validation", "seconds") if cap.get(k) is not None}}
+    lines = [f"capture: {json.dumps({k: v for k, v in cap.items() if k != 'stdout_tail'}, default=str)[:500]}"]
+    if cap.get("skipped"):
+        fail2 = "capture_skipped_today"
+    elif cap.get("error"):
+        fail2 = "capture_error"
+    elif n_after <= 0:
+        fail2 = "capture_no_recipes"
+    else:
+        try:
+            rep = validate_live_recipes(dealer)
+        except Exception as exc:  # noqa: BLE001
+            rep = None
+            lines.append(f"validation error: {str(exc)[:120]}")
+        if rep is None:
+            fail2 = "capture_no_live_recipes"
+        else:
+            step2["validation"] = {**rep.summary(), "status": rep.status}
+            lines.append(f"validation: {rep.verdict} {'; '.join(rep.reasons)[:200]} (VINs {rep.vins_total}, site total {rep.site_total})")
+            fail2 = "" if rep.verdict != "reject" else f"capture_validation_{rep.status}"
+    step2["ok"] = not fail2
+    out["steps"].append(step2)
+    if not fail2:
+        out["lifecycle"] = "capture_ok"
+        _log_append(did, "discovery.md", _lifecycle_block(stamp, "step 2 — discovery capture", trigger, lines,
+                                                          "captured recipe validated; queued for this run's retry batch (HTTP-only scan)"))
+        return out
+    out["lifecycle"] = f"failed:{fail2[:60]}"
+    _log_append(did, "discovery.md", _lifecycle_block(stamp, "step 2 — discovery capture", trigger, lines,
+                                                      f"failed ({fail2}); needs discovery (see <out>/needs_discovery.txt)"))
+    _learning_append("errors_index.md", f"- {stamp} lifecycle_capture_failed:{fail2[:60]} -> {did} (trigger {trigger}; workspace/dealer_logs/{did}/discovery.md)")
+    return out
+
+
+def scan_retry_batch(dealer_ids: list[str], *, out_dir: Path, batch: int, scan_timeout: int, lock_wait: int) -> dict[str, Any]:
+    """Step 3's scan: the retried dealers in one final HTTP-only pass (chunked by
+    --batch like the main run). Returns {"rc": [...], "chromium_leaks": [...]}."""
+    rcs: list[int] = []
+    leaks: list[dict[str, Any]] = []
+    for i in range(0, len(dealer_ids), max(1, batch)):
+        chunk = dealer_ids[i:i + max(1, batch)]
+        if not wait_for_db(lock_wait):
+            print("retry   database unreachable; retry batch abandoned", flush=True)
+            rcs.append(-1)
+            break
+        if not wait_for_scanner_lock(lock_wait):
+            print("retry   scanner lock still held; retry batch abandoned", flush=True)
+            rcs.append(-1)
+            break
+        before = chromium_process_count()
+        t0 = time.time()
+        rc = run_http_only_scan(chunk, concurrency=len(chunk), log_path=out_dir / "scanner.log", timeout_sec=scan_timeout)
+        after = chromium_process_count()
+        if after > max(before, 0):
+            print(f"retry   BROWSER LEAK: chromium processes {before} -> {after} during retry {', '.join(chunk)[:80]}", flush=True)
+            leaks.append({"batch": chunk, "before": before, "after": after, "retry": True})
+        print(f"retry   batch: {', '.join(chunk)[:120]} rc={rc} in {time.time() - t0:.0f}s", flush=True)
+        rcs.append(rc)
+    return {"rc": rcs, "chromium_leaks": leaks}
+
+
+def run_lifecycle_pass(results: list[dict[str, Any]], dealers: dict[str, dict[str, Any]], known: dict[str, int], *,
+                       out_dir: Path, stamp: str, no_discover: bool = False, batch: int = 4, scan_timeout: int = 3600,
+                       lock_wait: int = 5400, no_vpic: bool = False, no_reconcile: bool = False,
+                       now: datetime | None = None) -> dict[str, Any]:
+    """Route every assessed dealer, run the lifecycle for the ones that need it,
+    rescan the dealers whose recipe now validates in one final retry batch and
+    assess them again. Mutates *results* in place (each row gains ``lifecycle``,
+    ``lifecycle_detail`` and, when rescanned, ``retried``). Returns the summary."""
+    now = now or datetime.now(timezone.utc)
+    retry: list[str] = []
+    summary: dict[str, Any] = {"routed": 0, "resynth_ok": 0, "capture_ok": 0, "failed": 0, "resynth_failed": 0, "retried": {}, "chromium_leaks": []}
+    for r in results:
+        did = r["dealer_id"]
+        r.setdefault("lifecycle", "none")
+        d = dealers.get(did) or {"dealer_id": did, "url": ""}
+        route = route_verdict(d, r)
+        r["lifecycle_route"] = route
+        if route["action"] != "lifecycle":
+            continue
+        summary["routed"] += 1
+        lc = run_lifecycle(d, r, trigger=route["trigger"], no_discover=no_discover, stamp=stamp, now=now)
+        r["lifecycle"], r["lifecycle_detail"] = lc["lifecycle"], lc
+        if lc.get("recipe"):
+            r["recipe"] = {**(r.get("recipe") or {}), **lc["recipe"], "lifecycle": lc["lifecycle"]}
+        print(f"lifecyc {did:36s} {route['trigger'][:40]:40s} -> {lc['lifecycle']}", flush=True)
+        if lc["lifecycle"] in LIFECYCLE_OK:
+            summary[lc["lifecycle"]] += 1
+            retry.append(did)
+        elif lc["lifecycle"].startswith("resynth_failed:"):
+            summary["resynth_failed"] += 1  # the scan passed; the recipe on file stays, no capture
+        else:
+            summary["failed"] += 1
+    if not retry:
+        return summary
+    # The retry's scan_runs rows are the ones finished from here on.
+    retry_since = datetime.now(timezone.utc).replace(microsecond=0)
+    print(f"retry   {len(retry)} dealer(s) with a validated recipe: {', '.join(retry)[:200]}", flush=True)
+    scanned = scan_retry_batch(retry, out_dir=out_dir, batch=batch, scan_timeout=scan_timeout, lock_wait=lock_wait)
+    summary["chromium_leaks"] = scanned["chromium_leaks"]
+    if not no_vpic:
+        try:
+            vp = vpic_for_dealers(retry)
+            print(f"vpic    retry {json.dumps(vp)[:200]}", flush=True)
+        except Exception as exc:  # noqa: BLE001
+            print(f"vpic    retry failed: {str(exc)[:120]}", flush=True)
+    conn = get_conn()
+    try:
+        for idx, r in enumerate(results):
+            did = r["dealer_id"]
+            if did not in retry:
+                continue
+            old = str(r.get("verdict"))
+            info = dict(r.get("recipe") or {})
+            info["had_recipes"] = info.get("had_recipes") or 1
+            r2 = assess(conn, did, retry_since.isoformat(), known.get(did, 0), info)
+            try:
+                r2["reconcile"] = reconcile_dealer(conn, did, retry_since.isoformat(), known.get(did, 0), int(r2.get("rows") or 0),
+                                                   str(r2.get("verdict")), dry_run=no_reconcile)
+            except Exception as exc:  # noqa: BLE001
+                r2["reconcile"] = {"error": str(exc)[:120]}
+            for k in ("lifecycle", "lifecycle_detail", "lifecycle_route"):
+                if k in r:
+                    r2[k] = r[k]
+            r2["retried"] = f"retried: {old} → {r2.get('verdict')}"
+            r2["previous_verdict"] = old
+            summary["retried"][did] = r2["retried"]
+            results[idx] = r2
+            try:
+                log_scan_run(r2, stamp + " (lifecycle retry)")
+                write_instructions_if_first_success(r2, stamp)
+                _log_append(did, "discovery.md", _lifecycle_block(stamp, "step 3 — retry scan", str(r.get("lifecycle_route", {}).get("trigger") or old),
+                                                                  [f"rows: {r2.get('rows', '-')} (new {r2.get('rows_new', '-')}, used {r2.get('rows_used', '-')}); before: {r2.get('known_before')}",
+                                                                   f"reason: {str(r2.get('reason') or '')[:160]}"],
+                                                                  r2["retried"]))
+            except Exception as exc:  # noqa: BLE001
+                print(f"log     retry {did}: {str(exc)[:80]}", flush=True)
+            print(f"retry   {did:36s} {r2['retried']}", flush=True)
+    finally:
+        conn.close()
+    return summary
+
+
+def triage_table(results: list[dict[str, Any]]) -> list[str]:
+    lines = ["| dealer | verdict | rows new/used | before | platform | incomplete | discrepant | time | lifecycle | reason |",
+             "|---|---|---:|---:|---|---:|---:|---|---|---|"]
+    for r in results:
+        acc = r.get("accuracy") or {}
+        lc = str(r.get("lifecycle") or "none") + (f" ({r['retried']})" if r.get("retried") else "")
+        lines.append(f"| {r['dealer_id']} | {r.get('verdict')} | {r.get('rows', '-')} ({r.get('rows_new', '-')}/{r.get('rows_used', '-')}) | {r.get('known_before')} | "
+                     f"{r.get('provider') or ','.join((r.get('recipe') or {}).get('providers') or []) or '-'} | {_pct(acc.get('incomplete_rows'), acc.get('rows'))} | "
+                     f"{_pct(acc.get('hard_rows'), acc.get('rows'))} | {_timing_text(r)} | {lc} | {str(r.get('reason') or '')[:90]} |")
+    return lines
+
+
+def platform_cluster_lines(needs_discovery: list[str]) -> list[str]:
+    """End-of-run platform clustering (backend/scripts/platform_candidates.py):
+    fingerprints every dealer under LOG_ROOT without a live recipe, rewrites
+    ``_learning/platform_candidates.md`` and returns one line per cluster that
+    holds two or more of this run's ``needs_discovery`` dealers —
+    ``discovery: N dealers share unknown platform <signature> (a, b, c) → …``.
+    Never raises; an empty list when nothing clusters."""
+    if not needs_discovery:
+        return []
+    try:
+        from backend.scripts.platform_candidates import report_for_run
+
+        return list(report_for_run(list(needs_discovery), root=LOG_ROOT))
+    except Exception as exc:  # noqa: BLE001 - the triage must still be written
+        return [f"discovery: platform clustering skipped: {str(exc)[:160]}"]
+
+
+def write_needs_discovery(results: list[dict[str, Any]], out_dir: Path) -> list[str]:
+    """``<out>/needs_discovery.txt``: one line per dealer still failing at the end
+    of the run (``dealer_id  <verdict>  <lifecycle>  <last reason>``), the input
+    of the dealer-discovery workflow and of ``discovery_probe --from-file``."""
+    lines = []
+    for r in results:
+        verdict = str(r.get("verdict") or "")
+        lc = str(r.get("lifecycle") or "none")
+        if verdict in ("no_rows", "error", "no_recipe") or lc.startswith("failed:"):
+            lines.append(f"{r['dealer_id']}  {verdict}  {lc}  {str(r.get('reason') or '')[:160]}")
+    if lines:
+        with (out_dir / "needs_discovery.txt").open("a", encoding="utf-8") as fh:
+            fh.write("\n".join(lines) + "\n")
+    return lines
+
+
+# --------------------------------------------------------------------------
 # main
 # --------------------------------------------------------------------------
 
@@ -675,6 +1105,8 @@ def main() -> int:
     ap.add_argument("--no-reconcile", action="store_true", help="report but do not retire rows the run did not return")
     ap.add_argument("--no-discover", action="store_true",
                     help="do not run the discovery browser capture for dealers whose recipe synthesis failed (default: run it once per dealer per day, in its own process)")
+    ap.add_argument("--no-lifecycle", action="store_true",
+                    help="skip the recipe lifecycle after the main batches (force re-synth -> discovery capture -> retry batch for no_recipe / no_rows / stale / rejected dealers; once per dealer per day)")
     args = ap.parse_args()
 
     manifest = load_manifest_dealers(args.manifest)
@@ -703,11 +1135,13 @@ def main() -> int:
     recipe_info: dict[str, dict[str, Any]] = {}
     db_dealers = dealers_from_db([did for did in ids if not dealer_from_manifest(did, manifest)])
     discovered: dict[str, dict[str, Any]] = {}
+    dealers_by_id: dict[str, dict[str, Any]] = {}
     for did in ids:
         # 72 of the 222 stale active dealers (2026-09-26) are not in dealers.json
         # at all; their url and name live on their own rows. The manifest is a
         # convenience, never the source of truth for a dealer we already sell.
         d = dealer_from_manifest(did, manifest) or db_dealers.get(did) or {"dealer_id": did, "url": ""}
+        dealers_by_id[did] = d
         if not d.get("url"):
             recipe_info[did] = {"had_recipes": 0, "synth": "not_in_manifest_or_db"}
             continue
@@ -819,29 +1253,48 @@ def main() -> int:
     finally:
         conn.close()
 
+    # 5. lifecycle — after the main batches, never before (it must not delay the fleet)
+    lifecycle_summary: dict[str, Any] = {"enabled": False}
+    for r in results:
+        r.setdefault("lifecycle", "none")
+    if not args.no_lifecycle and not args.skip_scan:
+        try:
+            lifecycle_summary = run_lifecycle_pass(results, dealers_by_id, known, out_dir=out_dir, stamp=stamp, no_discover=args.no_discover,
+                                                   batch=args.batch, scan_timeout=args.scan_timeout, lock_wait=args.lock_wait,
+                                                   no_vpic=args.no_vpic, no_reconcile=args.no_reconcile)
+            lifecycle_summary["enabled"] = True
+        except Exception as exc:  # noqa: BLE001 - the triage must still be written
+            import traceback as _tb
+
+            lifecycle_summary = {"enabled": True, "error": str(exc)[:200], "traceback": _tb.format_exc()[-1200:]}
+            print(f"lifecyc pass failed: {str(exc)[:160]}", flush=True)
+    needs = write_needs_discovery(results, out_dir)
+
     live_recipes = sum(1 for r in results if (r.get("recipe") or {}).get("had_recipes") or str((r.get("recipe") or {}).get("synth", "")).startswith(("saved", "browser_capture")))
     triage = {
         "started": started.isoformat(), "dealers": results,
-        "chromium_leaks": locals().get("chromium_leaks", []),
+        "chromium_leaks": list(locals().get("chromium_leaks", [])) + list(lifecycle_summary.get("chromium_leaks") or []),
         "recipe_coverage": {"dealers": len(results), "with_recipe": live_recipes},
         "counts": {v: sum(1 for r in results if r.get("verdict") == v) for v in ("ok", "thin", "inaccurate", "no_rows", "error", "no_recipe")},
         "needs_discovery": [r["dealer_id"] for r in results if r.get("verdict") in ("no_rows", "error", "no_recipe")],
         "thin": [r["dealer_id"] for r in results if r.get("verdict") == "thin"],
         "inaccurate": [r["dealer_id"] for r in results if r.get("verdict") == "inaccurate"],
+        "lifecycle": {**lifecycle_summary, "by_dealer": {r["dealer_id"]: r.get("lifecycle", "none") for r in results},
+                      "needs_discovery_file": str(out_dir / "needs_discovery.txt") if needs else None},
     }
+    # 6. platform clustering: which of this run's failing dealers share a platform
+    #    nobody has a template for (item 3 of the plan; the code notices, not a human)
+    triage["platform_clusters"] = platform_cluster_lines(triage["needs_discovery"])
     (out_dir / "triage.json").write_text(json.dumps(triage, indent=1, default=str), encoding="utf-8")
-    lines = ["| dealer | verdict | rows new/used | before | platform | incomplete | discrepant | time | reason |", "|---|---|---:|---:|---|---:|---:|---|---|"]
-    for r in results:
-        acc = r.get("accuracy") or {}
-        lines.append(f"| {r['dealer_id']} | {r.get('verdict')} | {r.get('rows', '-')} ({r.get('rows_new', '-')}/{r.get('rows_used', '-')}) | {r.get('known_before')} | "
-                     f"{r.get('provider') or ','.join((r.get('recipe') or {}).get('providers') or []) or '-'} | {_pct(acc.get('incomplete_rows'), acc.get('rows'))} | "
-                     f"{_pct(acc.get('hard_rows'), acc.get('rows'))} | {_timing_text(r)} | {str(r.get('reason') or '')[:90]} |")
-    (out_dir / "triage.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
+    lines = triage_table(results)
+    (out_dir / "triage.md").write_text("\n".join(lines + [""] + triage["platform_clusters"]) + "\n", encoding="utf-8")
     try:
         write_slow_dealers(results, out_dir, started)
     except Exception as exc:  # noqa: BLE001
         print(f"log     slow_dealers: {str(exc)[:100]}", flush=True)
     print("\n".join(lines))
+    for line in triage["platform_clusters"]:
+        print(line, flush=True)
     print(json.dumps(triage["counts"]))
     return 0
 

@@ -25,6 +25,7 @@ import logging
 import os
 import re
 import time
+from datetime import datetime, timezone
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any
@@ -288,6 +289,52 @@ def mark_stale(dealer_id: str, recipe: EndpointRecipe, reason: str) -> None:
     save_recipes(dealer_id, recipes)
 
 
+RECIPE_STATUS_STALE_PREFIX = "stale:"
+
+
+def _parses_json(text: str | None) -> bool:
+    if not text:
+        return False
+    try:
+        json.loads(text)
+        return True
+    except ValueError:
+        return False
+
+
+def record_stale_status(dealer_id: str, status: int) -> str | None:
+    """``scan_hints.recipe_status = "stale:<status>:<iso>"`` after a replay
+    whose auth is dead (401/403 before any VIN). Best-effort: the scan must
+    never fail because the hint store did. Returns the value written."""
+    value = f"{RECIPE_STATUS_STALE_PREFIX}{int(status)}:{datetime.now(timezone.utc).replace(microsecond=0).isoformat()}"
+    try:
+        from backend.scanner.recipe_store import set_scan_hints
+
+        set_scan_hints(dealer_id, {"recipe_status": value})
+    except Exception as exc:  # noqa: BLE001
+        logger.debug("recipe_status stale hint skipped [%s]: %s", dealer_id, exc)
+    return value
+
+
+def clear_stale_status(dealer_id: str) -> bool:
+    """A successful replay clears a ``stale:`` recipe_status (to ``ok``), and a
+    ``rejected:`` one too: that verdict was on a re-synthesis that lost to the
+    recipe on file, which has just answered with rows, so the dealer is not
+    recipe-less and must not be routed into the lifecycle every run.
+    ``uncertain:`` is left alone: it describes the recipes now replaying.
+    Best-effort."""
+    try:
+        from backend.scanner.recipe_store import get_scan_hints, set_scan_hints
+
+        cur = str((get_scan_hints(dealer_id) or {}).get("recipe_status") or "")
+        if not cur.startswith((RECIPE_STATUS_STALE_PREFIX, "rejected:")):
+            return False
+        return bool(set_scan_hints(dealer_id, {"recipe_status": "ok"}))
+    except Exception as exc:  # noqa: BLE001
+        logger.debug("recipe_status clear skipped [%s]: %s", dealer_id, exc)
+        return False
+
+
 def promote_from_ledger(
     dealer_id: str,
     provider: str,
@@ -295,11 +342,26 @@ def promote_from_ledger(
     *,
     min_vehicle_rows: int = 3,
     max_recipes: int = 8,
+    validate: bool = False,
+    base_url: str = "",
+    dealer_name: str = "",
+    place: dict[str, str] | None = None,
+    fetch: Any = None,
+    log_root: Path | None = None,
+    validation_out: dict[str, Any] | None = None,
 ) -> int:
     """
     Merge qualifying ``CapturedEndpoint``s into the dealer's recipe file.
     Fresh captures replace stale/older entries for the same (method, host+path).
     Returns the number of recipes written.
+
+    ``validate=True`` (the discovery capture) runs the merged live set through
+    :func:`backend.scanner.recipe_validation.gate_recipes` before the save: a
+    ``reject`` (one condition, section-scoped, dead auth, no rows, short page
+    under half the lot) leaves the recipe file untouched, logs the report to
+    the dealer's discovery.md and returns 0; ``uncertain`` / ``ok`` save with
+    ``scan_hints.recipe_status`` recorded. *fetch* / *log_root* are the test
+    seams; *validation_out* receives the report's summary and status.
     """
     now = time.time()
     candidates: list[EndpointRecipe] = []
@@ -364,6 +426,28 @@ def promote_from_ledger(
         ),
     )
     keep = ranked[:max_recipes]
+    if validate:
+        from backend.scanner.recipe_validation import gate_recipes
+
+        live = [r for r in keep if not r.stale]
+        kept_live, report = gate_recipes(
+            dealer_id, live, base_url=base_url, dealer_name=dealer_name or dealer_id,
+            place=place, fetch=fetch, context="discovery capture", log_root=log_root,
+        )
+        if validation_out is not None:
+            validation_out.update(report.summary())
+            validation_out["status"] = report.status
+            validation_out["recipes"] = [asdict(c) for c in report.recipes]
+        if not kept_live:
+            logger.warning("Recipes [%s]: capture refused by validation (%s); recipe file left as it was",
+                           dealer_id, "; ".join(report.reasons)[:200])
+            return 0
+        for r, chk in zip(live, report.recipes):
+            if chk.vins:
+                r.vehicle_rows = max(int(r.vehicle_rows or 0), int(chk.vins))
+                r.last_ok_at = now
+                if chk.site_total and not r.total_count:
+                    r.total_count = int(chk.site_total)
     save_recipes(dealer_id, keep)
     thin = sum(1 for r in keep if r.field_coverage and not recipe_coverage_is_rich(r.field_coverage))
     logger.info(
@@ -879,8 +963,13 @@ async def try_fetch_via_recipes(
     # load_recipes may consult Postgres (recipe_store sync) — keep that
     # blocking I/O off the event loop this coroutine runs on.
     loaded = await asyncio.to_thread(load_recipes, dealer_id)
-    recipes = [r for r in loaded if not r.stale]
-    if not recipes:
+    live = [r for r in loaded if not r.stale]
+    # Recipe lifecycle (HTTP_ONLY_SCANS_PLAN Phase 3): a recipe marked stale by
+    # an earlier 401/403 is still tried once, AFTER the live ones — keys rotate
+    # back, and a replay that answers again un-stales it. One page-1 request per
+    # stale recipe per scan when the auth is still dead; nothing else.
+    stale_retry = [r for r in loaded if r.stale and (r.method == "GET" or _parses_json(r.post_template))]
+    if not live and not stale_retry:
         return None
     from backend.parsers import parse
 
@@ -888,7 +977,20 @@ async def try_fetch_via_recipes(
     union_records: list[tuple[str, Any]] = []
     union_vins: set[str] = set()
     union_vehicles: list[dict] = []
-    for recipe in recipes:
+    auth_dead_status: int | None = None
+    succeeded_any = False
+
+    def _finish_status() -> None:
+        # One hint write per replay: a dealer with any working recipe is not
+        # stale even when a sibling recipe's key died; a dealer whose every
+        # tried recipe answered 401/403 is.
+        if succeeded_any:
+            clear_stale_status(dealer_id)
+        elif auth_dead_status is not None:
+            record_stale_status(dealer_id, auth_dead_status)
+
+    for recipe in live + stale_retry:
+        retrying_stale = recipe.stale
         template: Any = None
         if recipe.post_template:
             try:
@@ -919,9 +1021,11 @@ async def try_fetch_via_recipes(
                 if not vins:
                     # Failed before collecting anything — the recipe's auth is dead.
                     await asyncio.to_thread(mark_stale, dealer_id, recipe, f"http_{status}")
+                    auth_dead_status = int(status)
                     logger.info(
-                        "Recipe stale [%s] %s — HTTP %d (auth rotated?); browser scan will re-capture",
+                        "Recipe stale [%s] %s — HTTP %d (%s); discovery capture will re-learn it",
                         dealer_name, recipe.url[:80], status,
+                        "still dead on retry" if retrying_stale else "auth rotated?",
                     )
                     auth_dead = True
                 else:
@@ -987,6 +1091,7 @@ async def try_fetch_via_recipes(
         if auth_dead:
             continue
         if len(vins) >= min_vehicles:
+            succeeded_any = True
             recipe.last_ok_at = time.time()
             recipe.field_coverage = {
                 k: v for k, v in recipe_field_coverage(vehicles).items() if k != "n"
@@ -996,18 +1101,25 @@ async def try_fetch_via_recipes(
                 if r.key() == recipe.key():
                     r.last_ok_at = recipe.last_ok_at
                     r.field_coverage = dict(recipe.field_coverage)
+                    if retrying_stale:
+                        # The key rotated back (or the WAF let us through): live again.
+                        r.stale = False
+                        r.stale_reason = ""
             save_recipes(dealer_id, all_r)
             logger.info(
-                "Recipe fetch [%s]: %d unique VIN(s) from %d page(s) via %s",
+                "Recipe fetch [%s]: %d unique VIN(s) from %d page(s) via %s%s",
                 dealer_name, len(vins), len(records), recipe.url[:80],
+                " (stale recipe answered again; un-staled)" if retrying_stale else "",
             )
             if not union:
                 if coverage_out is not None:
                     coverage_out.update(recipe_field_coverage(vehicles))
+                await asyncio.to_thread(_finish_status)
                 return records, len(vins)
             union_records.extend(records)
             union_vehicles.extend(v for v in vehicles if (v.get("vin") or "").strip().upper() not in union_vins)
             union_vins |= vins
+    await asyncio.to_thread(_finish_status)
     if union and len(union_vins) >= min_vehicles:
         if coverage_out is not None:
             coverage_out.update(recipe_field_coverage(union_vehicles))

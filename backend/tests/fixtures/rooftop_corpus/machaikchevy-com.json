@@ -1,0 +1,158 @@
+{
+  "dealer_id": "machaikchevy-com",
+  "platform": "carscommerce",
+  "evidence_files": [
+    "workspace/dealer_logs/machaikchevy-com/discovery.md",
+    "workspace/dealer_logs/machaikchevy-com/discovery_20260926T001031+0000.json",
+    "workspace/recipes/machaikchevy-com.json (facetFilters source_id=['114909'])"
+  ],
+  "notes": "2026-09-26 probe: homepage_http_403 on every path, title 'Dealer Website', markers checking your browser / __cf_chl / cf-browser-verification — the MBP IP was hot, not a site policy. 2026-09-28: fingerprinted carscommerce, cc_section_scoped, validated 1,408 VINs with place Houston, TX (registry); 1,409 rows kept without the union gate (store-scoped). Stamps on this account are not in the log: synthetic.",
+  "roster": {
+    "name": "Mac Haik Chevrolet",
+    "street": null,
+    "city": "Houston",
+    "state": "TX",
+    "zip": null,
+    "street_source": null,
+    "aliases": [],
+    "manifest_name": "Hector at Mac Haik Chevy",
+    "manifest_name_note": "dealers.json carries a Maps label; the scan uses the registry name"
+  },
+  "page": {
+    "dealername": "Mac Haik Chevrolet",
+    "oem_code": "114909",
+    "oem_code_synthetic": true,
+    "jsonld_street": null,
+    "challenge": {
+      "classification": "homepage_http_403",
+      "title": "Dealer Website",
+      "markers": [
+        "checking your browser",
+        "__cf_chl",
+        "enable javascript and cookies",
+        "cf-browser-verification"
+      ],
+      "beacon": "/cdn-cgi/challenge-platform"
+    }
+  },
+  "feed": {
+    "account": "listings/22238",
+    "identity_sources": [
+      "114909"
+    ],
+    "sibling_sources": {
+      "MHF": "Mac Haik Ford of Houston (synthetic id)"
+    },
+    "store_scoped_filter": {
+      "source_id": [
+        "114909"
+      ]
+    }
+  },
+  "scenarios": [
+    {
+      "name": "store_scoped_recipe",
+      "why": "the live recipe: source_id=['114909']",
+      "gate": "feed_scoped",
+      "rows": [
+        {
+          "vin": "00MHC000000000001",
+          "type": "New",
+          "stamp": {
+            "location": "Mac Haik Chevrolet",
+            "source_id": "114909"
+          },
+          "expected_today": "keep",
+          "tier_today": "feed_scoped",
+          "synthetic": true
+        },
+        {
+          "vin": "00MHC000000000002",
+          "type": "New",
+          "stamp": {
+            "location": "Mac Haik Chevrolet",
+            "source_id": "114909"
+          },
+          "expected_today": "keep",
+          "tier_today": "feed_scoped",
+          "synthetic": true
+        },
+        {
+          "vin": "00MHC000000000003",
+          "type": "Used",
+          "stamp": {
+            "location": "Mac Haik Chevrolet",
+            "source_id": "114909"
+          },
+          "expected_today": "keep",
+          "tier_today": "feed_scoped",
+          "synthetic": true
+        },
+        {
+          "vin": "00MHC000000000004",
+          "type": "Used",
+          "stamp": {
+            "location": "Mac Haik Chevrolet",
+            "source_id": "114909"
+          },
+          "expected_today": "keep",
+          "tier_today": "feed_scoped",
+          "synthetic": true
+        }
+      ]
+    },
+    {
+      "name": "open_group_page_named",
+      "why": "if the account served the Mac Haik group unfiltered: name_exact picks the store, the Ford store is a sibling",
+      "gate": "open",
+      "rows": [
+        {
+          "vin": "00MHC000000000001",
+          "type": "New",
+          "stamp": {
+            "location": "Mac Haik Chevrolet",
+            "source_id": "114909"
+          },
+          "expected_today": "keep",
+          "tier_today": "name_exact",
+          "synthetic": true
+        },
+        {
+          "vin": "00MHC000000000002",
+          "type": "Used",
+          "stamp": {
+            "location": "Mac Haik Chevrolet",
+            "source_id": "114909"
+          },
+          "expected_today": "keep",
+          "tier_today": "name_exact",
+          "synthetic": true
+        },
+        {
+          "vin": "00MHF000000000001",
+          "type": "New",
+          "stamp": {
+            "location": "Mac Haik Ford of Houston",
+            "source_id": "MHF"
+          },
+          "expected_today": "refuse",
+          "tier_today": "sibling_rooftop",
+          "reject_today": "sibling_rooftop",
+          "synthetic": true
+        },
+        {
+          "vin": "00UNS000000000001",
+          "type": "Used",
+          "stamp": {
+            "location": null,
+            "source_id": "MHF"
+          },
+          "expected_today": "refuse",
+          "tier_today": "unstamped_row_in_group_feed",
+          "reject_today": "unstamped_row_in_group_feed",
+          "synthetic": true
+        }
+      ]
+    }
+  ]
+}

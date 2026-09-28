@@ -106,12 +106,44 @@ workspace/dealer_logs/
 - `backend/scripts/dealer_pipeline.py` — recipe → HTTP-only scan → NHTSA heal → assess
   (verification: new/used, location facts, incomplete fields, discrepancies) → per-dealer
   logs. Runs the probe below on every synthesis failure.
+- The recipe lifecycle inside the pipeline (after all batches, `--no-lifecycle` to skip): a
+  dealer that came back `no_recipe` / `no_rows` / `validated_zero` / an auth error, or whose
+  `scan_hints.recipe_status` says `stale:` (a replay answered 401/403) — or `rejected:` while
+  the scan itself failed; a rejected re-synth beside a recipe that replays stays out — is
+  re-synthesized (force) and validated; if that fails, the discovery capture runs in its own
+  process (never for a dealer whose scan came back `ok` / `thin` / `inaccurate`) and the
+  captured recipes are validated; a dealer whose recipe now validates is
+  rescanned in one final HTTP-only retry batch and assessed again (`retried: <old> → <new>`
+  in the triage). One attempt per dealer per day. Each step is a dated block in
+  `discovery.md`, each failure a line in `_learning/errors_index.md`, and the dealers still
+  failing are listed in `<out>/needs_discovery.txt` for the dealer-discovery workflow.
 - `backend/scripts/discovery_probe.py` — the verbose discovery record for one dealership:
   redirect chain, status, size, title, challenge markers, every template's detect result,
   script hosts and API hints in the page, inventory-path probes, each synthesized
   candidate's page-1 replay (status, keys, rows, VINs, error). Appends to
   `discovery.md`, writes `discovery_<stamp>.json`, indexes the failure class in
   `_learning/errors_index.md`.
+- `backend/scanner/recipe_validation.py` — the gate every recipe save path runs: page 1 + 2
+  of each recipe against the site's own count, VINs per condition, verdict
+  `ok | reject | uncertain` (one condition — a reject only when the site's census or the other
+  side's own URL proves the other side exists, else `uncertain:one_condition_unverified` and the
+  post-scan assess decides — section-scoped, short page, dead auth, no rows).
+  A reject is logged to `discovery.md` + `_learning/errors_index.md` and never saved;
+  `scan_hints.recipe_status` carries the code.
+- `backend/scripts/platform_candidates.py` + `backend/scanner/platform_fingerprint.py` — platform
+  clustering by code, so nobody has to notice that two dealers share an unknown platform. Each
+  dealer's latest `discovery_<stamp>.json` becomes a weighted fingerprint (third-party script hosts
+  minus the dealer's own host and CDNs, API path patterns from the synthesized candidates and the
+  browser capture, inventory-path probe outcomes, challenge markers, generator / inline-JSON hints,
+  every template's detect result); the signature is the strongest 3-5 features, and near-duplicates
+  merge by Jaccard similarity (0.6). Dealers with no live recipe or a stale / rejected one are
+  clustered into `workspace/dealer_logs/_learning/platform_candidates.md`: per cluster the shared
+  features, the members with their last verdict, the nearest known template, and the next step
+  (extend template X / browser-capture one member / HTTP probe path Y). The pipeline runs it at the
+  end of every run and prints `discovery: N dealers share unknown platform <signature> (a, b, c) → …`
+  for each cluster holding two or more of the run's `needs_discovery` dealers (also in
+  `triage.json` as `platform_clusters`). Run it by hand: `python -m backend.scripts.platform_candidates`
+  (`--all` to include dealers whose recipe works, `--root` for another log root).
 - `backend/scripts/scan_lab_report.py` — per-row incomplete fields and dictionary
   discrepancies with examples (the verification numbers).
 - `.claude/workflows/dealer-discovery.js` — investigator / builder / verifier agents for

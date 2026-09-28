@@ -1,0 +1,224 @@
+{
+  "dealer_id": "stevensonhendrickhonda-com",
+  "platform": "carscommerce",
+  "evidence_files": [
+    "workspace/dealer_logs/stevensonhendrickhonda-com/summary.md",
+    "backend/tests/test_carscommerce_store_filter_20260924.py::test_store_filter_merges_same_rooftop_feed_but_not_same_city_sibling"
+  ],
+  "notes": "OEM-code feed 208763 holds 45 cars; DMS feed 9048741 (402) is the same store: both stamp '6720 Market St' with a phone typo (396- vs 395-1116). _cc_rooftop_sig excludes the phone line -> source_id=['208763','9048741'] = 447 cars. The gate groups by street+locale (phone excluded) so both feeds are ONE rooftop. Also: verdict 'error' from the scanner-lock race, Cloudflare 403 from the hot MBP IP.",
+  "roster": {
+    "name": "Stevenson Hendrick Honda Wilmington",
+    "street": "6720 Market St",
+    "city": "Wilmington",
+    "state": "NC",
+    "zip": "28405",
+    "street_source": "site_jsonld",
+    "aliases": [],
+    "street_note": "page JSON-LD street (learn_place)"
+  },
+  "page": {
+    "dealername": "Stevenson Hendrick Honda Wilmington",
+    "oem_code": "208763",
+    "jsonld_street": "6720 Market St",
+    "jsonld_phone": "(910) 395-1116",
+    "jsonld_phone_synthetic": true
+  },
+  "feed": {
+    "account": "listings/5381793",
+    "identity_sources": [
+      "208763",
+      "9048741"
+    ],
+    "sibling_sources": {
+      "9077258": "another Wilmington store at 219 S. College Road",
+      "RHendrickUsed": "group-wide used feed"
+    },
+    "store_scoped_filter": {
+      "source_id": [
+        "208763",
+        "9048741"
+      ]
+    }
+  },
+  "scenarios": [
+    {
+      "name": "open_group_page_with_street",
+      "why": "street known (JSON-LD): the two phone spellings collapse into one rooftop at our street",
+      "gate": "open",
+      "rows": [
+        {
+          "vin": "00SHA000000000001",
+          "type": "New",
+          "stamp": {
+            "location": "6720 Market St<br/>Wilmington, NC 28405<br/>(910) 396-1116",
+            "source_id": "208763"
+          },
+          "expected_today": "keep",
+          "tier_today": "street_address"
+        },
+        {
+          "vin": "00SHB000000000001",
+          "type": "Used",
+          "stamp": {
+            "location": "6720 Market St<br/>Wilmington, NC 28405<br/>(910) 395-1116",
+            "source_id": "9048741"
+          },
+          "expected_today": "keep",
+          "tier_today": "street_address"
+        },
+        {
+          "vin": "00SHB000000000002",
+          "type": "Used",
+          "stamp": {
+            "location": "6720 Market St<br/>Wilmington, NC 28405<br/>(910) 395-1116",
+            "source_id": "9048741"
+          },
+          "expected_today": "keep",
+          "tier_today": "street_address"
+        },
+        {
+          "vin": "00SHC000000000001",
+          "type": "Used",
+          "stamp": {
+            "location": "219 S. College Road<br/>Wilmington, NC 28403<br/>(910) 799-1815",
+            "source_id": "9077258"
+          },
+          "expected_today": "refuse",
+          "tier_today": "sibling_rooftop",
+          "reject_today": "sibling_rooftop"
+        },
+        {
+          "vin": "00SHD000000000001",
+          "type": "Used",
+          "stamp": {
+            "location": "6720 Market St<br/>Wilmington, NC 28405<br/>(910) 395-1116",
+            "source_id": "RHendrickUsed"
+          },
+          "expected_today": "keep",
+          "tier_today": "street_address",
+          "note": "group used feed row stamped at our street: same rooftop identity"
+        },
+        {
+          "vin": "00SHD000000000002",
+          "type": "Used",
+          "stamp": {
+            "location": "219 S. College Road<br/>Wilmington, NC 28403<br/>(910) 799-1815",
+            "source_id": "RHendrickUsed"
+          },
+          "expected_today": "refuse",
+          "tier_today": "sibling_rooftop",
+          "reject_today": "sibling_rooftop"
+        },
+        {
+          "vin": "00UNS000000000001",
+          "type": "Used",
+          "stamp": {
+            "location": null,
+            "source_id": "RHendrickUsed"
+          },
+          "expected_today": "refuse",
+          "tier_today": "unstamped_row_in_group_feed",
+          "reject_today": "unstamped_row_in_group_feed"
+        }
+      ]
+    },
+    {
+      "name": "open_group_page_no_street",
+      "why": "before learn_place: two Wilmington rooftops, city alone cannot pick one",
+      "gate": "open",
+      "place": {
+        "street": null,
+        "city": "Wilmington",
+        "state": "NC",
+        "zip": null,
+        "street_source": null
+      },
+      "rows": [
+        {
+          "vin": "00SHA000000000001",
+          "type": "New",
+          "stamp": {
+            "location": "6720 Market St<br/>Wilmington, NC 28405<br/>(910) 396-1116",
+            "source_id": "208763"
+          },
+          "expected_today": "refuse",
+          "tier_today": "target_rooftop_unidentified",
+          "reject_today": "target_rooftop_unidentified",
+          "expected_ideal": "keep",
+          "ideal_note": "identity feed 208763 == page oem_code"
+        },
+        {
+          "vin": "00SHB000000000001",
+          "type": "Used",
+          "stamp": {
+            "location": "6720 Market St<br/>Wilmington, NC 28405<br/>(910) 395-1116",
+            "source_id": "9048741"
+          },
+          "expected_today": "refuse",
+          "tier_today": "target_rooftop_unidentified",
+          "reject_today": "target_rooftop_unidentified",
+          "expected_ideal": "keep",
+          "ideal_note": "merged identity feed (same street signature)"
+        },
+        {
+          "vin": "00SHC000000000001",
+          "type": "Used",
+          "stamp": {
+            "location": "219 S. College Road<br/>Wilmington, NC 28403<br/>(910) 799-1815",
+            "source_id": "9077258"
+          },
+          "expected_today": "refuse",
+          "tier_today": "target_rooftop_unidentified",
+          "reject_today": "target_rooftop_unidentified"
+        }
+      ]
+    },
+    {
+      "name": "store_scoped_recipe",
+      "why": "facetFilters source_id=['208763','9048741']",
+      "gate": "feed_scoped",
+      "rows": [
+        {
+          "vin": "00SHA000000000001",
+          "type": "New",
+          "stamp": {
+            "location": "6720 Market St<br/>Wilmington, NC 28405<br/>(910) 396-1116",
+            "source_id": "208763"
+          },
+          "expected_today": "keep",
+          "tier_today": "feed_scoped"
+        },
+        {
+          "vin": "00SHB000000000001",
+          "type": "Used",
+          "stamp": {
+            "location": "6720 Market St<br/>Wilmington, NC 28405<br/>(910) 395-1116",
+            "source_id": "9048741"
+          },
+          "expected_today": "keep",
+          "tier_today": "feed_scoped"
+        },
+        {
+          "vin": "00SHB000000000002",
+          "type": "Used",
+          "stamp": {
+            "location": "6720 Market St<br/>Wilmington, NC 28405<br/>(910) 395-1116",
+            "source_id": "9048741"
+          },
+          "expected_today": "keep",
+          "tier_today": "feed_scoped"
+        },
+        {
+          "vin": "00SHB000000000003",
+          "type": "Used",
+          "stamp": {
+            "location": "6720 Market St<br/>Wilmington, NC 28405<br/>(910) 395-1116",
+            "source_id": "9048741"
+          },
+          "expected_today": "keep",
+          "tier_today": "feed_scoped"
+        }
+      ]
+    }
+  ]
+}

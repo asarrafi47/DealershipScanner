@@ -1,0 +1,144 @@
+{
+  "dealer_id": "lexusofknoxville-com",
+  "platform": "dealer_eprocess",
+  "evidence_files": [
+    "workspace/dealer_logs/lexusofknoxville-com/summary.md",
+    "workspace/dealer_logs/_learning/platform_playbook.md (one-condition verdicts 16:20Z)",
+    "backend/tests/test_dep_store_scope_20260926.py"
+  ],
+  "notes": "/search/pre-owned/?tp=pre_owned&ct=48 without lc= is the whole group: 1,540 used VINs (Chevrolet/GMC/Ford 'available in Franklin, TN') filed under Lexus of Knoxville. The JSON-LD cards carry no seller, so the rooftop gate has nothing to refuse on. Fixed upstream: _dep_store_lc reads lc=15578 from the SRP's model-facet links, _dep_srp_recipe re-probes with it (338 rows). 1,417 foreign rows retired by hand 2026-09-27.",
+  "roster": {
+    "name": "Lexus of Knoxville",
+    "street": null,
+    "city": "Knoxville",
+    "state": "TN",
+    "zip": "37922",
+    "street_source": null,
+    "aliases": []
+  },
+  "page": {
+    "dealername": "Lexus of Knoxville",
+    "oem_code": null,
+    "jsonld_street": null,
+    "dep_store_id": "15578",
+    "dep_store_id_link": "/search/new-lexus-nx-450h+-lexus-of-knoxville/?cy=37922&lc=15578&md=12629"
+  },
+  "feed": {
+    "account": "dealereprocess group SRP",
+    "identity_sources": [],
+    "sibling_sources": {},
+    "store_scoped_filter": {
+      "lc": "15578"
+    }
+  },
+  "scenarios": [
+    {
+      "name": "unscoped_group_srp",
+      "why": "no seller on any card: the gate keeps everything, including the group's Franklin TN cars (the bug lives upstream in recipe scoping)",
+      "gate": "open",
+      "rows": [
+        {
+          "vin": "00LXK000000000001",
+          "type": "Used",
+          "stamp": {
+            "seller_text": null,
+            "make": "Lexus"
+          },
+          "expected_today": "keep",
+          "tier_today": "no_rooftop_evidence"
+        },
+        {
+          "vin": "00LXK000000000002",
+          "type": "New",
+          "stamp": {
+            "seller_text": null,
+            "make": "Lexus"
+          },
+          "expected_today": "keep",
+          "tier_today": "no_rooftop_evidence"
+        },
+        {
+          "vin": "00CHV000000000001",
+          "type": "Used",
+          "stamp": {
+            "seller_text": "available in Franklin, TN",
+            "make": "Chevrolet"
+          },
+          "expected_today": "keep",
+          "tier_today": "no_rooftop_evidence",
+          "expected_ideal": "refuse",
+          "ideal_note": "a Chevrolet 'available in Franklin, TN' is the group's car; only the lc= scoped recipe fixes this"
+        },
+        {
+          "vin": "00GMC000000000001",
+          "type": "Used",
+          "stamp": {
+            "seller_text": "available in Franklin, TN",
+            "make": "GMC"
+          },
+          "expected_today": "keep",
+          "tier_today": "no_rooftop_evidence",
+          "expected_ideal": "refuse",
+          "ideal_note": "group car"
+        }
+      ]
+    },
+    {
+      "name": "lc_scoped_srp",
+      "why": "the fixed recipe (lc=15578): 215 new / 122 used, all Lexus plus the store's own trade-ins",
+      "gate": "open",
+      "rows": [
+        {
+          "vin": "00LXK000000000001",
+          "type": "New",
+          "stamp": {
+            "seller_text": null,
+            "make": "Lexus"
+          },
+          "expected_today": "keep",
+          "tier_today": "no_rooftop_evidence"
+        },
+        {
+          "vin": "00LXK000000000002",
+          "type": "New",
+          "stamp": {
+            "seller_text": null,
+            "make": "Lexus"
+          },
+          "expected_today": "keep",
+          "tier_today": "no_rooftop_evidence"
+        },
+        {
+          "vin": "00LXK000000000003",
+          "type": "New",
+          "stamp": {
+            "seller_text": null,
+            "make": "Lexus"
+          },
+          "expected_today": "keep",
+          "tier_today": "no_rooftop_evidence"
+        },
+        {
+          "vin": "00LXK000000000004",
+          "type": "Used",
+          "stamp": {
+            "seller_text": null,
+            "make": "Lexus"
+          },
+          "expected_today": "keep",
+          "tier_today": "no_rooftop_evidence"
+        },
+        {
+          "vin": "00LXK000000000005",
+          "type": "Used",
+          "stamp": {
+            "seller_text": null,
+            "make": "Lexus"
+          },
+          "expected_today": "keep",
+          "tier_today": "no_rooftop_evidence"
+        }
+      ]
+    }
+  ]
+}

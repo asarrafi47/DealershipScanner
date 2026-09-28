@@ -22,6 +22,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import logging
 import re
 import sys
@@ -38,7 +39,7 @@ from backend.utils.project_env import load_project_dotenv
 load_project_dotenv()
 
 ROOT = Path(__file__).resolve().parents[2]
-LOG_ROOT = ROOT / "workspace" / "dealer_logs"
+LOG_ROOT = Path(os.environ.get("DEALER_LOGS_ROOT") or (ROOT / "workspace" / "dealer_logs"))
 _UA = ("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
        "(KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36")
 _VIN_RE = re.compile(r"\b[A-HJ-NPR-Z0-9]{17}\b")
@@ -320,23 +321,36 @@ def browser_capture(dealer_id: str, url: str, rep: dict[str, Any] | None = None)
         paths = list(INVENTORY_PATHS_DEALER_INSPIRE)
     cap = capture_endpoints_sync(dealer_id, url, _manifest_name(dealer_id) or dealer_id, provider, paths=paths)
     verify: dict[str, Any] = {}
-    try:
-        from backend.scanner.recipe_synth import validate_recipe
-        from backend.scanner.recipes import load_recipes
+    validation = cap.get("validation") or {}
+    if validation:
+        # promote_from_ledger already judged the captured set against the site's
+        # own count (recipe_validation.gate_recipes) and logged the full report
+        # to discovery.md; keep the per-recipe lines for the capture JSON.
+        for c in validation.get("recipes") or []:
+            verify[str(c.get("url") or "")[:100]] = {
+                "ok": bool(c.get("vins")), "info": {"vins": c.get("vins"), "site_total": c.get("site_total"),
+                                                     "conditions": c.get("per_condition"), "error": c.get("error") or None},
+            }
+    else:
+        # Nothing was captured: re-check whatever recipes the dealer already has.
+        try:
+            from backend.scanner.recipe_validation import validate_recipe_set
+            from backend.scanner.recipes import load_recipes
 
-        from urllib.parse import urlparse as _up
+            from urllib.parse import urlparse as _up
 
-        _o = f"{_up(url).scheme}://{_up(url).netloc}"
-        for r in [x for x in load_recipes(dealer_id) if not x.stale][:6]:
-            try:
-                n = int(validate_recipe(r, _o, dealer_id, _manifest_name(dealer_id) or dealer_id) or 0)
-                ok, info = n > 0, {"vins": n}
-            except Exception as exc:  # noqa: BLE001
-                ok, info = False, {"error": str(exc)[:120]}
-            verify[r.url[:100]] = {"ok": bool(ok), "info": info}
-    except Exception as exc:  # noqa: BLE001
-        verify["_error"] = str(exc)[:160]
+            _o = f"{_up(url).scheme}://{_up(url).netloc}"
+            live = [x for x in load_recipes(dealer_id) if not x.stale][:6]
+            if live:
+                rep = validate_recipe_set(dealer_id, live, base_url=_o, dealer_name=_manifest_name(dealer_id) or dealer_id)
+                validation = {**rep.summary(), "status": rep.status}
+                for c in rep.recipes:
+                    verify[c.url[:100]] = {"ok": bool(c.vins), "info": {"vins": c.vins, "site_total": c.site_total,
+                                                                          "conditions": c.per_condition, "error": c.error or None}}
+        except Exception as exc:  # noqa: BLE001
+            verify["_error"] = str(exc)[:160]
     cap["verify"] = verify
+    cap["validation"] = validation
     d = LOG_ROOT / dealer_id
     d.mkdir(parents=True, exist_ok=True)
     (d / f"capture_{stamp.replace(':', '').replace('-', '')}.json").write_text(json.dumps(cap, indent=1, default=str), encoding="utf-8")
@@ -345,6 +359,10 @@ def browser_capture(dealer_id: str, url: str, rep: dict[str, Any] | None = None)
          f"- intercept records: {cap.get('records')}; endpoints captured: {len(cap.get('endpoints') or [])}; recipes {cap.get('recipes_before')} -> {cap.get('recipes_after')} ({cap.get('seconds')}s)"]
     for ep in cap.get("endpoints") or []:
         L.append(f"  - {ep['method']} {ep['url']} rows={ep['vehicle_rows']} total={ep['total_count']} type={ep['content_type']} hint={ep['provider_hint']}")
+    if validation:
+        L.append(f"- recipe validation: {str(validation.get('verdict') or '').upper()} {'; '.join(validation.get('reasons') or [])[:200]}"
+                 f" (VINs {validation.get('vins_total')}, site total {validation.get('site_total')}, coverage {validation.get('coverage')},"
+                 f" per condition {json.dumps(validation.get('per_condition'))})")
     for u_, v in verify.items():
         L.append(f"  - validate {u_}: {'ok' if v.get('ok') else 'FAIL'} {json.dumps(v.get('info'))[:220]}")
     for e in cap.get("errors") or []:

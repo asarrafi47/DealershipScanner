@@ -1,0 +1,300 @@
+{
+  "dealer_id": "hendrickhonda-com",
+  "platform": "carscommerce",
+  "evidence_files": [
+    "workspace/dealer_logs/hendrickhonda-com/summary.md",
+    "workspace/pipeline/fleet2_mbp/scanner.log (group feed names 10 rooftops (unnamed) and none is this store — refusing all 99 row(s); matched this store by city_state, kept 25 row(s), refused 75 sibling row(s))",
+    "workspace/dealer_logs/_learning/platform_playbook.md (Afternoon corrections 17:50Z; Registry streets backfilled 09-27)"
+  ],
+  "notes": "Every page shows 9-13 rooftops, all unnamed street blocks; the store matches only by city_state (locality tier), so the union pass refuses everything: 0 rows written, 422 active rows from the 09-24 browser run remain. The first same-source rule briefly kept 73 foreign rows under the group-wide 'RHendrickUsed' feed (reverted). Needs the store's street (registry backfill 09-27). Street blocks other than Northlake / Charleston / Austin (seen in the Naples page-1 refusal list) are synthetic; phones synthetic.",
+  "roster": {
+    "name": "Hendrick Honda",
+    "street": null,
+    "city": "Charlotte",
+    "state": "NC",
+    "zip": null,
+    "street_source": null,
+    "aliases": [],
+    "street_note": "registry had no street on 2026-09-26; the store's street is 8901 South Blvd (synthetic here, not read from a log)"
+  },
+  "page": {
+    "dealername": "Hendrick Honda",
+    "oem_code": null,
+    "jsonld_street": "8901 South Blvd",
+    "jsonld_street_synthetic": true
+  },
+  "feed": {
+    "account": "listings/113552",
+    "identity_sources": [
+      "HendrickHondaCharlotte"
+    ],
+    "identity_sources_note": "recipe re-detected 2026-09-28 carries source_id=['HendrickHondaCharlotte']; not replay-verified in any log",
+    "sibling_sources": {
+      "RHendrickUsed": "group-wide used feed behind nine rooftops"
+    },
+    "store_scoped_filter": {
+      "source_id": [
+        "HendrickHondaCharlotte"
+      ]
+    }
+  },
+  "scenarios": [
+    {
+      "name": "union_pass_no_street",
+      "why": "the open case: several Charlotte rooftops, no street -> no unique winner, everything refused",
+      "gate": "open",
+      "rows": [
+        {
+          "vin": "00HHC000000000001",
+          "type": "New",
+          "stamp": {
+            "location": "8901 South Blvd<br/>Charlotte, NC 28273<br/>(704) 552-6041",
+            "source_id": "HendrickHondaCharlotte"
+          },
+          "expected_today": "refuse",
+          "tier_today": "target_rooftop_unidentified",
+          "reject_today": "target_rooftop_unidentified",
+          "expected_ideal": "keep",
+          "ideal_note": "the store's own street block; the registry street (backfilled 09-27) or the identity feed would pick it",
+          "synthetic": true
+        },
+        {
+          "vin": "00HHC000000000002",
+          "type": "Used",
+          "stamp": {
+            "location": "8901 South Blvd<br/>Charlotte, NC 28273<br/>(704) 552-6041",
+            "source_id": "RHendrickUsed"
+          },
+          "expected_today": "refuse",
+          "tier_today": "target_rooftop_unidentified",
+          "reject_today": "target_rooftop_unidentified",
+          "expected_ideal": "keep",
+          "ideal_note": "own street block",
+          "synthetic": true
+        },
+        {
+          "vin": "00BMW000000000001",
+          "type": "Used",
+          "stamp": {
+            "location": "10831 Northlake Auto Plaza<br/>Charlotte, NC 28269<br/>(704) 379-6500",
+            "source_id": "RHendrickUsed"
+          },
+          "expected_today": "refuse",
+          "tier_today": "target_rooftop_unidentified",
+          "reject_today": "target_rooftop_unidentified"
+        },
+        {
+          "vin": "00LEX000000000001",
+          "type": "Used",
+          "stamp": {
+            "location": "6025 E Independence Blvd<br/>Charlotte, NC 28212<br/>(704) 568-0000",
+            "source_id": "RHendrickUsed"
+          },
+          "expected_today": "refuse",
+          "tier_today": "target_rooftop_unidentified",
+          "reject_today": "target_rooftop_unidentified",
+          "synthetic": true
+        },
+        {
+          "vin": "00CHS000000000001",
+          "type": "Used",
+          "stamp": {
+            "location": "1518 Savannah Highway<br/>Charleston, SC 29407<br/>(877) 241-0000",
+            "source_id": "RHendrickUsed"
+          },
+          "expected_today": "refuse",
+          "tier_today": "target_rooftop_unidentified",
+          "reject_today": "target_rooftop_unidentified"
+        },
+        {
+          "vin": "00UNS000000000001",
+          "type": "Used",
+          "stamp": {
+            "location": null,
+            "source_id": "RHendrickUsed"
+          },
+          "expected_today": "refuse",
+          "tier_today": "target_rooftop_unidentified",
+          "reject_today": "target_rooftop_unidentified"
+        }
+      ]
+    },
+    {
+      "name": "page_with_one_charlotte_rooftop",
+      "why": "a page where ours is the only Charlotte block: city_state hands a unique winner; siblings refused weakly, the shared source never vouches",
+      "gate": "open",
+      "rows": [
+        {
+          "vin": "00HHC000000000001",
+          "type": "New",
+          "stamp": {
+            "location": "8901 South Blvd<br/>Charlotte, NC 28273<br/>(704) 552-6041",
+            "source_id": "HendrickHondaCharlotte"
+          },
+          "expected_today": "keep",
+          "tier_today": "city_state",
+          "synthetic": true
+        },
+        {
+          "vin": "00HHC000000000002",
+          "type": "Used",
+          "stamp": {
+            "location": "8901 South Blvd<br/>Charlotte, NC 28273<br/>(704) 552-6041",
+            "source_id": "RHendrickUsed"
+          },
+          "expected_today": "keep",
+          "tier_today": "city_state",
+          "synthetic": true
+        },
+        {
+          "vin": "00CHS000000000001",
+          "type": "Used",
+          "stamp": {
+            "location": "1518 Savannah Highway<br/>Charleston, SC 29407<br/>(877) 241-0000",
+            "source_id": "RHendrickUsed"
+          },
+          "expected_today": "refuse",
+          "tier_today": "sibling_rooftop_weak_tier",
+          "reject_today": "sibling_rooftop_weak_tier"
+        },
+        {
+          "vin": "00AUS000000000001",
+          "type": "Used",
+          "stamp": {
+            "location": "4738 S IH 35 Frontage Rd<br/>Austin, TX 78745<br/>(512) 660-0000",
+            "source_id": "RHendrickUsed"
+          },
+          "expected_today": "refuse",
+          "tier_today": "sibling_rooftop_weak_tier",
+          "reject_today": "sibling_rooftop_weak_tier"
+        },
+        {
+          "vin": "00UNS000000000001",
+          "type": "Used",
+          "stamp": {
+            "location": null,
+            "source_id": "RHendrickUsed"
+          },
+          "expected_today": "refuse",
+          "tier_today": "unstamped_row_in_group_feed",
+          "reject_today": "unstamped_row_in_group_feed",
+          "note": "the 73 foreign rows of 2026-09-26: a locality match must never pull unstamped group rows in"
+        }
+      ]
+    },
+    {
+      "name": "page_where_the_only_charlotte_rooftop_is_a_sibling",
+      "why": "city_state alone is never sufficient: a page holding only Hendrick Lexus Charlotte's block would be kept as ours today",
+      "gate": "open",
+      "rows": [
+        {
+          "vin": "00LEX000000000001",
+          "type": "Used",
+          "stamp": {
+            "location": "6025 E Independence Blvd<br/>Charlotte, NC 28212<br/>(704) 568-0000",
+            "source_id": "RHendrickUsed"
+          },
+          "expected_today": "keep",
+          "tier_today": "city_state",
+          "expected_ideal": "refuse",
+          "ideal_note": "the per-page locality artefact bmwofmurrieta showed on 2026-08; the union pass is what settles it",
+          "synthetic": true
+        },
+        {
+          "vin": "00LEX000000000002",
+          "type": "Used",
+          "stamp": {
+            "location": "6025 E Independence Blvd<br/>Charlotte, NC 28212<br/>(704) 568-0000",
+            "source_id": "RHendrickUsed"
+          },
+          "expected_today": "keep",
+          "tier_today": "city_state",
+          "expected_ideal": "refuse",
+          "ideal_note": "locality artefact",
+          "synthetic": true
+        },
+        {
+          "vin": "00CHS000000000001",
+          "type": "Used",
+          "stamp": {
+            "location": "1518 Savannah Highway<br/>Charleston, SC 29407<br/>(877) 241-0000",
+            "source_id": "RHendrickUsed"
+          },
+          "expected_today": "refuse",
+          "tier_today": "sibling_rooftop_weak_tier",
+          "reject_today": "sibling_rooftop_weak_tier"
+        }
+      ]
+    },
+    {
+      "name": "union_pass_with_street",
+      "why": "with the store's street (registry backfill / page JSON-LD) the street tier picks the rooftop",
+      "gate": "open",
+      "place": {
+        "street": "8901 South Blvd",
+        "city": "Charlotte",
+        "state": "NC",
+        "zip": "28273",
+        "street_source": "site_jsonld"
+      },
+      "rows": [
+        {
+          "vin": "00HHC000000000001",
+          "type": "New",
+          "stamp": {
+            "location": "8901 South Blvd<br/>Charlotte, NC 28273<br/>(704) 552-6041",
+            "source_id": "HendrickHondaCharlotte"
+          },
+          "expected_today": "keep",
+          "tier_today": "street_address",
+          "synthetic": true
+        },
+        {
+          "vin": "00HHC000000000002",
+          "type": "Used",
+          "stamp": {
+            "location": "8901 South Blvd<br/>Charlotte, NC 28273<br/>(704) 552-6041",
+            "source_id": "RHendrickUsed"
+          },
+          "expected_today": "keep",
+          "tier_today": "street_address",
+          "synthetic": true
+        },
+        {
+          "vin": "00BMW000000000001",
+          "type": "Used",
+          "stamp": {
+            "location": "10831 Northlake Auto Plaza<br/>Charlotte, NC 28269<br/>(704) 379-6500",
+            "source_id": "RHendrickUsed"
+          },
+          "expected_today": "refuse",
+          "tier_today": "sibling_rooftop",
+          "reject_today": "sibling_rooftop"
+        },
+        {
+          "vin": "00LEX000000000001",
+          "type": "Used",
+          "stamp": {
+            "location": "6025 E Independence Blvd<br/>Charlotte, NC 28212<br/>(704) 568-0000",
+            "source_id": "RHendrickUsed"
+          },
+          "expected_today": "refuse",
+          "tier_today": "sibling_rooftop",
+          "reject_today": "sibling_rooftop",
+          "synthetic": true
+        },
+        {
+          "vin": "00UNS000000000001",
+          "type": "Used",
+          "stamp": {
+            "location": null,
+            "source_id": "RHendrickUsed"
+          },
+          "expected_today": "refuse",
+          "tier_today": "unstamped_row_in_group_feed",
+          "reject_today": "unstamped_row_in_group_feed"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,243 @@
+{
+  "dealer_id": "hondahuntersville-com",
+  "platform": "carscommerce",
+  "evidence_files": [
+    "workspace/dealer_logs/hondahuntersville-com/summary.md",
+    "workspace/pipeline/round4_mbp/scanner.log (kept 248 unnamed/unstamped row(s) filed under this store's feed source(s) [MP23253] or at its street 12815statesvilleroad)",
+    "backend/tests/test_rooftop_same_source_20260926.py"
+  ],
+  "notes": "141 of 389: the feed stamps the store three ways — dealer.location 'Honda of Huntersville' (138 new), the street block under feed id 209014 (105 new), nothing on 146 used/certified — all under api_id MP23253. Fixed in the gate: same-source rule (unnamed stamps / unstamped rows under a feed account only this store uses) + street block at the store's own JSON-LD street.",
+  "roster": {
+    "name": "Honda Of Huntersville",
+    "street": "12815 Statesville Rd",
+    "city": "Huntersville",
+    "state": "NC",
+    "zip": "28078",
+    "street_source": "site_jsonld",
+    "aliases": [],
+    "street_note": "registry had none; page JSON-LD via learn_place -> scan hints"
+  },
+  "page": {
+    "dealername": "Honda of Huntersville",
+    "oem_code": "209014",
+    "oem_code_synthetic": true,
+    "jsonld_street": "12815 Statesville Rd",
+    "jsonld_phone": "(704) 875-3232"
+  },
+  "feed": {
+    "account": "listings/6067306",
+    "identity_sources": [
+      "MP23253",
+      "209014"
+    ],
+    "sibling_sources": {},
+    "store_scoped_filter": null
+  },
+  "scenarios": [
+    {
+      "name": "three_stamps_with_street",
+      "why": "the fixed behaviour: name tier picks the store, own-source and own-street rules keep the rest",
+      "gate": "open",
+      "rows": [
+        {
+          "vin": "00HHN000000000001",
+          "type": "New",
+          "stamp": {
+            "location": "Honda of Huntersville",
+            "source_id": "MP23253",
+            "api_id": "MP23253"
+          },
+          "expected_today": "keep",
+          "tier_today": "name_exact"
+        },
+        {
+          "vin": "00HHN000000000002",
+          "type": "New",
+          "stamp": {
+            "location": "Honda of Huntersville",
+            "source_id": "MP23253",
+            "api_id": "MP23253"
+          },
+          "expected_today": "keep",
+          "tier_today": "name_exact"
+        },
+        {
+          "vin": "00HHS000000000001",
+          "type": "New",
+          "stamp": {
+            "location": "12815 Statesville Rd<br/>Huntersville, NC 28078<br/>(704) 875-3232",
+            "source_id": "209014",
+            "api_id": "MP23253"
+          },
+          "expected_today": "keep",
+          "tier_today": "own_street_block"
+        },
+        {
+          "vin": "00HHS000000000002",
+          "type": "New",
+          "stamp": {
+            "location": "12815 Statesville Rd<br/>Huntersville, NC 28078<br/>(704) 875-3232",
+            "source_id": "MP23253",
+            "api_id": "MP23253"
+          },
+          "expected_today": "keep",
+          "tier_today": "own_street_block"
+        },
+        {
+          "vin": "00HHU000000000001",
+          "type": "Used",
+          "stamp": {
+            "location": null,
+            "source_id": "MP23253",
+            "api_id": "MP23253"
+          },
+          "expected_today": "keep",
+          "tier_today": "unstamped_under_own_source"
+        },
+        {
+          "vin": "00HHU000000000002",
+          "type": "Certified",
+          "stamp": {
+            "location": null,
+            "source_id": "MP23253",
+            "api_id": "MP23253"
+          },
+          "expected_today": "keep",
+          "tier_today": "unstamped_under_own_source"
+        },
+        {
+          "vin": "00HOO000000000001",
+          "type": "New",
+          "stamp": {
+            "location": "Hoover Toyota",
+            "source_id": "MP99999",
+            "api_id": "MP99999"
+          },
+          "expected_today": "refuse",
+          "tier_today": "sibling_rooftop",
+          "reject_today": "sibling_rooftop",
+          "synthetic": true
+        },
+        {
+          "vin": "00HOO000000000002",
+          "type": "Used",
+          "stamp": {
+            "location": null,
+            "source_id": "MP99999",
+            "api_id": "MP99999"
+          },
+          "expected_today": "refuse",
+          "tier_today": "unstamped_row_in_group_feed",
+          "reject_today": "unstamped_row_in_group_feed",
+          "synthetic": true
+        }
+      ]
+    },
+    {
+      "name": "three_stamps_no_street",
+      "why": "before learn_place saved the JSON-LD street: the street block is an unknown rooftop that makes MP23253 a shared source",
+      "gate": "open",
+      "place": {
+        "street": null,
+        "city": "Huntersville",
+        "state": "NC",
+        "zip": null,
+        "street_source": null
+      },
+      "rows": [
+        {
+          "vin": "00HHN000000000001",
+          "type": "New",
+          "stamp": {
+            "location": "Honda of Huntersville",
+            "source_id": "MP23253",
+            "api_id": "MP23253"
+          },
+          "expected_today": "keep",
+          "tier_today": "name_exact"
+        },
+        {
+          "vin": "00HHS000000000001",
+          "type": "New",
+          "stamp": {
+            "location": "12815 Statesville Rd<br/>Huntersville, NC 28078<br/>(704) 875-3232",
+            "source_id": "MP23253",
+            "api_id": "MP23253"
+          },
+          "expected_today": "refuse",
+          "tier_today": "sibling_rooftop",
+          "reject_today": "sibling_rooftop",
+          "expected_ideal": "keep",
+          "ideal_note": "the block is the store's own street (page JSON-LD)"
+        },
+        {
+          "vin": "00HHU000000000001",
+          "type": "Used",
+          "stamp": {
+            "location": null,
+            "source_id": "MP23253",
+            "api_id": "MP23253"
+          },
+          "expected_today": "refuse",
+          "tier_today": "unstamped_row_in_group_feed",
+          "reject_today": "unstamped_row_in_group_feed",
+          "expected_ideal": "keep",
+          "ideal_note": "only this store files under MP23253"
+        }
+      ]
+    },
+    {
+      "name": "group_wide_source_never_vouches",
+      "why": "Hendrick's RHendrickUsed backs nine rooftops: an unstamped row under it stays refused even when this store is matched",
+      "gate": "open",
+      "rows": [
+        {
+          "vin": "00HHN000000000001",
+          "type": "New",
+          "stamp": {
+            "location": "Honda of Huntersville",
+            "source_id": "MP23253",
+            "api_id": "MP23253"
+          },
+          "expected_today": "keep",
+          "tier_today": "name_exact"
+        },
+        {
+          "vin": "00HKC000000000001",
+          "type": "Used",
+          "stamp": {
+            "location": "Hendrick Kia of Cary",
+            "source_id": "RHendrickUsed",
+            "api_id": "RHendrickUsed"
+          },
+          "expected_today": "refuse",
+          "tier_today": "sibling_rooftop",
+          "reject_today": "sibling_rooftop"
+        },
+        {
+          "vin": "00HHN000000000003",
+          "type": "Used",
+          "stamp": {
+            "location": "Honda of Huntersville",
+            "source_id": "RHendrickUsed",
+            "api_id": "RHendrickUsed"
+          },
+          "expected_today": "keep",
+          "tier_today": "name_exact"
+        },
+        {
+          "vin": "00UNS000000000001",
+          "type": "Used",
+          "stamp": {
+            "location": null,
+            "source_id": "RHendrickUsed",
+            "api_id": "RHendrickUsed"
+          },
+          "expected_today": "refuse",
+          "tier_today": "unstamped_row_in_group_feed",
+          "reject_today": "unstamped_row_in_group_feed"
+        }
+      ]
+    }
+  ]
+}

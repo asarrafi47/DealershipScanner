@@ -1,0 +1,294 @@
+{
+  "dealer_id": "mallofgamazda-com",
+  "platform": "carscommerce",
+  "evidence_files": [
+    "workspace/dealer_logs/mallofgamazda-com/summary.md",
+    "workspace/dealer_logs/mallofgamazda-com/discovery.md",
+    "backend/tests/test_store_scoped_recipe_gate_20260925.py"
+  ],
+  "notes": "Two identity feeds stamp the same store two ways: MallofGeorgiaMazda = '3546 Highway 20<br/>Buford, GA 30519<br/>(678) 714-9000', 23978 (= oem_code) = bare 'Buford, GA'. The gate can pick ONE rooftop; page-1 gate 2026-09-24 refused 100 rows target_rooftop_unidentified (three Buford address blocks, no street); on 2026-09-25 a bogus alias 'Buford, GA' made it pick the bare-tag rooftop (91 of 424). Fixed: filter source_id=['MallofGeorgiaMazda','23978'] + recipe_is_store_scoped -> trust_feed_scope.",
+  "roster": {
+    "name": "Mall of Georgia Mazda",
+    "street": null,
+    "city": "Buford",
+    "state": "GA",
+    "zip": null,
+    "street_source": null,
+    "aliases": []
+  },
+  "page": {
+    "dealername": "Mall of Georgia Mazda",
+    "oem_code": "23978",
+    "jsonld_street": "3546 Highway 20",
+    "jsonld_street_synthetic": true
+  },
+  "feed": {
+    "account": "listings/2172862",
+    "identity_sources": [
+      "MallofGeorgiaMazda",
+      "23978"
+    ],
+    "sibling_sources": {
+      "RHendrickUsed": "group-wide used feed (7 rooftops)"
+    },
+    "location_facets": {
+      "Location": "custom_text_4",
+      "buford_location": "custom_text_11",
+      "meta_location": "custom_text_5"
+    },
+    "location_facet_value": "Buford, GA",
+    "location_facet_value_note": "738 cars: Mazda + Mall of Georgia MINI + a Hendrick store",
+    "store_scoped_filter": {
+      "source_id": [
+        "MallofGeorgiaMazda",
+        "23978"
+      ]
+    }
+  },
+  "scenarios": [
+    {
+      "name": "open_group_page_no_street",
+      "why": "2026-09-24 page 1: three Buford blocks + the bare tag, registry has no street -> no unique winner",
+      "gate": "open",
+      "rows": [
+        {
+          "vin": "00MZA000000000001",
+          "type": "New",
+          "stamp": {
+            "location": "3546 Highway 20<br/>Buford, GA 30519<br/>(678) 714-9000",
+            "source_id": "MallofGeorgiaMazda",
+            "custom_location": "Buford, GA",
+            "facets": {
+              "custom_text_4": "Buford, GA",
+              "custom_text_11": "Buford, GA"
+            }
+          },
+          "expected_today": "refuse",
+          "tier_today": "target_rooftop_unidentified",
+          "reject_today": "target_rooftop_unidentified",
+          "expected_ideal": "keep",
+          "ideal_note": "identity feed MallofGeorgiaMazda (verified at synthesis) is this store"
+        },
+        {
+          "vin": "00MZA000000000002",
+          "type": "New",
+          "stamp": {
+            "location": "3546 Highway 20<br/>Buford, GA 30519<br/>(678) 714-9000",
+            "source_id": "MallofGeorgiaMazda"
+          },
+          "expected_today": "refuse",
+          "tier_today": "target_rooftop_unidentified",
+          "reject_today": "target_rooftop_unidentified",
+          "expected_ideal": "keep",
+          "ideal_note": "identity feed"
+        },
+        {
+          "vin": "00MZB000000000001",
+          "type": "Used",
+          "stamp": {
+            "location": "Buford, GA",
+            "source_id": "23978",
+            "custom_location": "Buford, GA"
+          },
+          "expected_today": "refuse",
+          "tier_today": "target_rooftop_unidentified",
+          "reject_today": "target_rooftop_unidentified",
+          "expected_ideal": "keep",
+          "ideal_note": "identity feed 23978 == page oem_code"
+        },
+        {
+          "vin": "00MIN000000000001",
+          "type": "Used",
+          "stamp": {
+            "location": "3751 Buford Drive<br/>Buford, GA 30519<br/>(855) 204-0816",
+            "source_id": "RHendrickUsed"
+          },
+          "expected_today": "refuse",
+          "tier_today": "target_rooftop_unidentified",
+          "reject_today": "target_rooftop_unidentified"
+        },
+        {
+          "vin": "00LEE000000000001",
+          "type": "Used",
+          "stamp": {
+            "location": "4490 S Lee St<br/>Buford, GA 30518<br/>(678) 745-2500",
+            "source_id": "RHendrickUsed"
+          },
+          "expected_today": "refuse",
+          "tier_today": "target_rooftop_unidentified",
+          "reject_today": "target_rooftop_unidentified"
+        }
+      ]
+    },
+    {
+      "name": "open_group_page_with_jsonld_street",
+      "why": "page JSON-LD street known: the street tier picks the address-block rooftop, but the bare-tag identity feed 23978 is then a 'sibling'",
+      "gate": "open",
+      "place": {
+        "street": "3546 Highway 20",
+        "city": "Buford",
+        "state": "GA",
+        "zip": "30519",
+        "street_source": "site_jsonld"
+      },
+      "rows": [
+        {
+          "vin": "00MZA000000000001",
+          "type": "New",
+          "stamp": {
+            "location": "3546 Highway 20<br/>Buford, GA 30519<br/>(678) 714-9000",
+            "source_id": "MallofGeorgiaMazda"
+          },
+          "expected_today": "keep",
+          "tier_today": "street_address"
+        },
+        {
+          "vin": "00MZA000000000002",
+          "type": "New",
+          "stamp": {
+            "location": "3546 Highway 20<br/>Buford, GA 30519<br/>(678) 714-9000",
+            "source_id": "MallofGeorgiaMazda"
+          },
+          "expected_today": "keep",
+          "tier_today": "street_address"
+        },
+        {
+          "vin": "00MZB000000000001",
+          "type": "Used",
+          "stamp": {
+            "location": "Buford, GA",
+            "source_id": "23978"
+          },
+          "expected_today": "refuse",
+          "tier_today": "sibling_rooftop",
+          "reject_today": "sibling_rooftop",
+          "expected_ideal": "keep",
+          "ideal_note": "the gate can pick only one rooftop; 23978 == page oem_code is the same store (2026-09-25, 309 vs 115)"
+        },
+        {
+          "vin": "00MIN000000000001",
+          "type": "Used",
+          "stamp": {
+            "location": "3751 Buford Drive<br/>Buford, GA 30519<br/>(855) 204-0816",
+            "source_id": "RHendrickUsed"
+          },
+          "expected_today": "refuse",
+          "tier_today": "sibling_rooftop",
+          "reject_today": "sibling_rooftop"
+        },
+        {
+          "vin": "00UNS000000000001",
+          "type": "Used",
+          "stamp": {
+            "location": null,
+            "source_id": "RHendrickUsed"
+          },
+          "expected_today": "refuse",
+          "tier_today": "unstamped_row_in_group_feed",
+          "reject_today": "unstamped_row_in_group_feed"
+        }
+      ]
+    },
+    {
+      "name": "bogus_alias_picks_the_bare_tag",
+      "why": "2026-09-25 first scan: alias 'Buford, GA' in the hint store matched the bare-tag rooftop by name -> 91 of 424",
+      "gate": "open",
+      "aliases": [
+        "Buford, GA"
+      ],
+      "rows": [
+        {
+          "vin": "00MZB000000000001",
+          "type": "Used",
+          "stamp": {
+            "location": "Buford, GA",
+            "source_id": "23978"
+          },
+          "expected_today": "keep",
+          "tier_today": "roster_name_alias"
+        },
+        {
+          "vin": "00MZA000000000001",
+          "type": "New",
+          "stamp": {
+            "location": "3546 Highway 20<br/>Buford, GA 30519<br/>(678) 714-9000",
+            "source_id": "MallofGeorgiaMazda"
+          },
+          "expected_today": "refuse",
+          "tier_today": "sibling_rooftop",
+          "reject_today": "sibling_rooftop",
+          "expected_ideal": "keep",
+          "ideal_note": "alias deleted from the live hint store; store-scoped recipe now bypasses the gate"
+        },
+        {
+          "vin": "00MIN000000000001",
+          "type": "Used",
+          "stamp": {
+            "location": "3751 Buford Drive<br/>Buford, GA 30519<br/>(855) 204-0816",
+            "source_id": "RHendrickUsed"
+          },
+          "expected_today": "refuse",
+          "tier_today": "sibling_rooftop",
+          "reject_today": "sibling_rooftop"
+        }
+      ]
+    },
+    {
+      "name": "store_scoped_recipe",
+      "why": "facetFilters source_id=['MallofGeorgiaMazda','23978'] (309 + 115 = 424): both stamps kept",
+      "gate": "feed_scoped",
+      "rows": [
+        {
+          "vin": "00MZA000000000001",
+          "type": "New",
+          "stamp": {
+            "location": "3546 Highway 20<br/>Buford, GA 30519<br/>(678) 714-9000",
+            "source_id": "MallofGeorgiaMazda"
+          },
+          "expected_today": "keep",
+          "tier_today": "feed_scoped"
+        },
+        {
+          "vin": "00MZA000000000002",
+          "type": "New",
+          "stamp": {
+            "location": "3546 Highway 20<br/>Buford, GA 30519<br/>(678) 714-9000",
+            "source_id": "MallofGeorgiaMazda"
+          },
+          "expected_today": "keep",
+          "tier_today": "feed_scoped"
+        },
+        {
+          "vin": "00MZA000000000003",
+          "type": "New",
+          "stamp": {
+            "location": "3546 Highway 20<br/>Buford, GA 30519<br/>(678) 714-9000",
+            "source_id": "MallofGeorgiaMazda"
+          },
+          "expected_today": "keep",
+          "tier_today": "feed_scoped"
+        },
+        {
+          "vin": "00MZB000000000001",
+          "type": "Used",
+          "stamp": {
+            "location": "Buford, GA",
+            "source_id": "23978"
+          },
+          "expected_today": "keep",
+          "tier_today": "feed_scoped"
+        },
+        {
+          "vin": "00MZB000000000002",
+          "type": "Used",
+          "stamp": {
+            "location": "Buford, GA",
+            "source_id": "23978"
+          },
+          "expected_today": "keep",
+          "tier_today": "feed_scoped"
+        }
+      ]
+    }
+  ]
+}
