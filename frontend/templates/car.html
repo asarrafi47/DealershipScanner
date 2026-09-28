@@ -15,9 +15,13 @@
     {% set og_image = gallery_images[0] if gallery_images else None %}
     {% include "_head_meta.html" %}
     {% include "_head_perf.html" %}
-    {% if dealer_map and dealer_map.has_pin %}
-    <link rel="stylesheet" href="{{ url_for('static', filename='vendor/leaflet/leaflet.css') }}?v={{ static_cache_ver }}">
+    {% if gallery_images %}
+    {# The hero photo is the LCP element; preloading it from the head lets the fetch
+       start with the document instead of after the parser reaches the <img>. #}
+    <link rel="preload" as="image" href="{{ gallery_images[0] | e }}" fetchpriority="high">
     {% endif %}
+    {# Leaflet's stylesheet and scripts load when the Dealership tab first opens
+       (car_page.js ensureDealerMapAssets); see the car-dealer-map-assets block below. #}
     {% if vdp_interior_pano %}
     <link rel="stylesheet" href="{{ url_for('static', filename='vendor/pannellum/pannellum.css') }}?v={{ static_cache_ver }}">
     {% endif %}
@@ -180,7 +184,7 @@
                     <div class="car-gallery-main">
                         <div class="car-gallery-hero" id="car-gallery-hero" role="region" aria-label="Vehicle photo gallery" data-placeholder-src="{{ url_for('static', filename='placeholder.svg') }}">
                             <div class="car-detail-image">
-                                <img class="car-gallery-main-img" id="car-gallery-main-img" src="{{ (gallery_images[0] if gallery_images else url_for('static', filename='placeholder.svg')) | e }}" alt="{{ car.title }} — photo gallery">
+                                <img class="car-gallery-main-img" id="car-gallery-main-img" src="{{ (gallery_images[0] if gallery_images else url_for('static', filename='placeholder.svg')) | e }}" alt="{{ car.title }} — photo gallery" fetchpriority="high" width="1024" height="768">
                                 <p class="car-gallery-empty-msg" id="car-gallery-empty-msg" hidden>No photos available yet</p>
                             </div>
                             {% if vdp_spin_frames %}
@@ -1451,12 +1455,20 @@
 
     <script src="{{ url_for('static', filename='compare.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>
     {% if dealer_map and dealer_map.has_pin %}
-    <script nonce="{{ csp_nonce }}">
-        window.__DS_LEAFLET_ICON_BASE = "{{ url_for('static', filename='vendor/leaflet/images/') }}";
-    </script>
-    <script src="{{ url_for('static', filename='vendor/leaflet/leaflet.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>
-    <script src="{{ url_for('static', filename='map_tiles.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>
-    <script src="{{ url_for('static', filename='car_dealer_map.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>
+    {# Leaflet (147 KB JS + 15 KB CSS + tile requests) used to load with the page for
+       a map that lives in the hidden Dealership tab. car_page.js reads this block and
+       loads the stylesheet, then these scripts in order, the first time that tab is
+       shown (ensureDealerMapAssets). car_dealer_map.js initialises the map as it runs,
+       so it must come last. #}
+    <script type="application/json" id="car-dealer-map-assets" nonce="{{ csp_nonce }}">{{ {
+        "icon_base": url_for('static', filename='vendor/leaflet/images/'),
+        "css": url_for('static', filename='vendor/leaflet/leaflet.css') ~ "?v=" ~ static_cache_ver,
+        "scripts": [
+            url_for('static', filename='vendor/leaflet/leaflet.js') ~ "?v=" ~ static_cache_ver,
+            url_for('static', filename='map_tiles.js') ~ "?v=" ~ static_cache_ver,
+            url_for('static', filename='car_dealer_map.js') ~ "?v=" ~ static_cache_ver
+        ]
+    } | tojson }}</script>
     {% endif %}
     {% if vdp_interior_pano %}
     <script src="{{ url_for('static', filename='vendor/pannellum/pannellum.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>

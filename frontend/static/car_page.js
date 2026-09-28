@@ -2673,6 +2673,58 @@
         });
     }
 
+    // Leaflet (147 KB JS + 15 KB CSS + tile requests) used to load with every car
+    // page for a map that lives in the hidden Dealership tab. The template now emits
+    // the asset URLs as JSON (#car-dealer-map-assets) and this loads them -- stylesheet
+    // first, then the scripts in order -- the first time the tab is shown.
+    // car_dealer_map.js builds the map as it executes, so by then the panel is visible
+    // and Leaflet measures a real container. Same-origin URLs, so CSP 'self' covers
+    // the injected tags without a nonce.
+    let _dealerMapAssetsPromise = null;
+    function ensureDealerMapAssets() {
+        if (_dealerMapAssetsPromise) return _dealerMapAssetsPromise;
+        const cfgEl = document.getElementById("car-dealer-map-assets");
+        if (!cfgEl) return Promise.resolve();
+        let cfg = null;
+        try {
+            cfg = JSON.parse(cfgEl.textContent || "null");
+        } catch (_) {
+            cfg = null;
+        }
+        if (!cfg || !Array.isArray(cfg.scripts)) return Promise.resolve();
+        if (cfg.icon_base) window.__DS_LEAFLET_ICON_BASE = cfg.icon_base;
+
+        function loadStylesheet(href) {
+            return new Promise(function (resolve) {
+                const link = document.createElement("link");
+                link.rel = "stylesheet";
+                link.href = href;
+                link.onload = resolve;
+                link.onerror = resolve;
+                document.head.appendChild(link);
+            });
+        }
+        function loadScript(src) {
+            return new Promise(function (resolve, reject) {
+                const el = document.createElement("script");
+                el.src = src;
+                el.async = false;
+                el.onload = resolve;
+                el.onerror = reject;
+                document.head.appendChild(el);
+            });
+        }
+
+        _dealerMapAssetsPromise = (cfg.css ? loadStylesheet(cfg.css) : Promise.resolve())
+            .then(function () {
+                return cfg.scripts.reduce(function (chain, src) {
+                    return chain.then(function () { return loadScript(src); });
+                }, Promise.resolve());
+            })
+            .catch(function () { /* map stays a blank panel; the address links still work */ });
+        return _dealerMapAssetsPromise;
+    }
+
     function initCarVdpTabs() {
         const tablist = document.querySelector(".car-vdp-tabs");
         if (!tablist) return;
@@ -2706,8 +2758,14 @@
                 // Both of these need the panel to be visible first: Leaflet measures its
                 // container on resize, and comment threads load lazily on reveal so a
                 // shopper who never opens the tab never pays for the request.
-                if (target === "dealership" && window.__DS_resizeDealerMap) {
-                    window.__DS_resizeDealerMap();
+                if (target === "dealership") {
+                    if (window.__DS_resizeDealerMap) {
+                        window.__DS_resizeDealerMap();
+                    } else {
+                        ensureDealerMapAssets().then(function () {
+                            if (window.__DS_resizeDealerMap) window.__DS_resizeDealerMap();
+                        });
+                    }
                 }
                 if (window.__DS_loadCommentsIn) {
                     window.__DS_loadCommentsIn(p);
