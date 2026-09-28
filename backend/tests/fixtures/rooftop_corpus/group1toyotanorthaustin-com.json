@@ -1,0 +1,298 @@
+{
+  "dealer_id": "group1toyotanorthaustin-com",
+  "platform": "carscommerce",
+  "evidence_files": [
+    "workspace/dealer_logs/group1toyotanorthaustin-com/summary.md",
+    "workspace/dealer_logs/_learning/platform_playbook.md (custom_location free text; rounds three/four)",
+    "backend/tests/test_carscommerce_store_filter_20260924.py::test_gate_matches_store_label_but_never_refuses_on_it",
+    "backend/tests/test_carscommerce_store_filter_20260924.py::test_named_feed_id_without_town_and_stampless_rows_are_identity"
+  ],
+  "notes": "dealer.location on this account is a lot tag ('ALL', 'SPC', 'TOW/JORGE R/367676', 'WRECKED CAR'), not a store; the OEM-code feed 42409 (259 cars) stamps nothing. Two-word tags read as store NAMES, so an open page has named rooftops none of which is ours and the gate refused everything (zero-row replay). Fixed at synthesis: stampless identity feed accepted (source_id=['42409']); extra recipe custom_text_13='Group 1 Toyota North Austin' (the site's Location facet spelled as the store name) covers the used pool.",
+  "roster": {
+    "name": "Group 1 Toyota North Austin",
+    "street": null,
+    "city": "Austin",
+    "state": "TX",
+    "zip": null,
+    "street_source": null,
+    "aliases": [],
+    "manifest_name": "Toyota of North Austin Service Center",
+    "manifest_name_note": "dealers.json carries a Maps label; the scan uses the registry name"
+  },
+  "page": {
+    "dealername": "Group 1 Toyota North Austin",
+    "oem_code": "42409",
+    "jsonld_street": null
+  },
+  "feed": {
+    "account": "listings/6058131",
+    "identity_sources": [
+      "42409"
+    ],
+    "sibling_sources": {
+      "GROUPGPI43": "group pool",
+      "GROUPGPI39": "group pool"
+    },
+    "location_facets": {
+      "Location": "custom_text_13",
+      "meta_location": "custom_text_9"
+    },
+    "location_facet_value": "Group 1 Toyota North Austin",
+    "store_scoped_filter": {
+      "source_id": [
+        "42409"
+      ]
+    },
+    "extra_recipe_filter": {
+      "custom_text_13": [
+        "Group 1 Toyota North Austin"
+      ]
+    }
+  },
+  "scenarios": [
+    {
+      "name": "open_page_lot_tags",
+      "why": "the zero-row replay: lot tags with two words become named rooftops, none is this store",
+      "gate": "open",
+      "rows": [
+        {
+          "vin": "00GTN000000000001",
+          "type": "New",
+          "stamp": {
+            "location": null,
+            "source_id": "42409"
+          },
+          "expected_today": "refuse",
+          "tier_today": "target_rooftop_unidentified",
+          "reject_today": "target_rooftop_unidentified",
+          "expected_ideal": "keep",
+          "ideal_note": "stampless row under the identity feed 42409 == page oem_code"
+        },
+        {
+          "vin": "00GTN000000000002",
+          "type": "New",
+          "stamp": {
+            "location": null,
+            "source_id": "42409"
+          },
+          "expected_today": "refuse",
+          "tier_today": "target_rooftop_unidentified",
+          "reject_today": "target_rooftop_unidentified",
+          "expected_ideal": "keep",
+          "ideal_note": "identity feed"
+        },
+        {
+          "vin": "00GTU000000000001",
+          "type": "Used",
+          "stamp": {
+            "location": "TOW/JORGE R/367676",
+            "source_id": "GROUPGPI43",
+            "custom_location": "TOW/JORGE R/367676",
+            "facets": {
+              "custom_text_13": "Group 1 Toyota North Austin"
+            }
+          },
+          "expected_today": "refuse",
+          "tier_today": "target_rooftop_unidentified",
+          "reject_today": "target_rooftop_unidentified",
+          "expected_ideal": "keep",
+          "ideal_note": "the site's Location facet names this store on the row; the tag is a lot note"
+        },
+        {
+          "vin": "00GTU000000000002",
+          "type": "Used",
+          "stamp": {
+            "location": "WRECKED CAR",
+            "source_id": "GROUPGPI43",
+            "custom_location": "WRECKED CAR",
+            "facets": {
+              "custom_text_13": "Group 1 Toyota North Austin"
+            }
+          },
+          "expected_today": "refuse",
+          "tier_today": "target_rooftop_unidentified",
+          "reject_today": "target_rooftop_unidentified",
+          "expected_ideal": "keep",
+          "ideal_note": "Location facet names this store"
+        },
+        {
+          "vin": "00GTU000000000003",
+          "type": "Used",
+          "stamp": {
+            "location": "ALL",
+            "source_id": "GROUPGPI39"
+          },
+          "expected_today": "refuse",
+          "tier_today": "target_rooftop_unidentified",
+          "reject_today": "target_rooftop_unidentified",
+          "note": "single-word tag: unmarked row inside a group payload"
+        },
+        {
+          "vin": "00GTU000000000004",
+          "type": "Used",
+          "stamp": {
+            "location": "SPC",
+            "source_id": "GROUPGPI39",
+            "facets": {
+              "custom_text_13": "Group 1 Kia of Austin"
+            }
+          },
+          "expected_today": "refuse",
+          "tier_today": "target_rooftop_unidentified",
+          "reject_today": "target_rooftop_unidentified",
+          "synthetic": true,
+          "note": "a sibling's Location facet value"
+        }
+      ]
+    },
+    {
+      "name": "tags_only_page_is_one_locality",
+      "why": "from test_gate_matches_store_label_but_never_refuses_on_it: junk labels with a place-shaped stamp collapse into one rooftop and are kept",
+      "gate": "open",
+      "rows": [
+        {
+          "vin": "00GTJ000000000001",
+          "type": "Used",
+          "stamp": {
+            "location": "Austin, TX",
+            "source_id": "99",
+            "custom_location": "TOW/JORGE R/367676"
+          },
+          "expected_today": "keep",
+          "tier_today": "city_state",
+          "note": "junk labels are alt_names that match nothing; the place-shaped stamp is one locality rooftop"
+        },
+        {
+          "vin": "00GTJ000000000002",
+          "type": "Used",
+          "stamp": {
+            "location": "Austin, TX",
+            "source_id": "99",
+            "custom_location": "WRECKED CAR"
+          },
+          "expected_today": "keep",
+          "tier_today": "city_state"
+        },
+        {
+          "vin": "00GTJ000000000003",
+          "type": "Used",
+          "stamp": {
+            "location": "Austin, TX",
+            "source_id": "99"
+          },
+          "expected_today": "keep",
+          "tier_today": "city_state"
+        }
+      ]
+    },
+    {
+      "name": "store_scoped_identity_feed",
+      "why": "facetFilters source_id=['42409']: 259 new cars, no stamps",
+      "gate": "feed_scoped",
+      "rows": [
+        {
+          "vin": "00GTN000000000001",
+          "type": "New",
+          "stamp": {
+            "location": null,
+            "source_id": "42409"
+          },
+          "expected_today": "keep",
+          "tier_today": "feed_scoped"
+        },
+        {
+          "vin": "00GTN000000000002",
+          "type": "New",
+          "stamp": {
+            "location": null,
+            "source_id": "42409"
+          },
+          "expected_today": "keep",
+          "tier_today": "feed_scoped"
+        },
+        {
+          "vin": "00GTN000000000003",
+          "type": "New",
+          "stamp": {
+            "location": null,
+            "source_id": "42409"
+          },
+          "expected_today": "keep",
+          "tier_today": "feed_scoped"
+        },
+        {
+          "vin": "00GTN000000000004",
+          "type": "New",
+          "stamp": {
+            "location": null,
+            "source_id": "42409"
+          },
+          "expected_today": "keep",
+          "tier_today": "feed_scoped"
+        }
+      ]
+    },
+    {
+      "name": "store_scoped_location_facet",
+      "why": "extra recipe custom_text_13='Group 1 Toyota North Austin': lot tags on the rows must not veto",
+      "gate": "feed_scoped",
+      "rows": [
+        {
+          "vin": "00GTU000000000001",
+          "type": "Used",
+          "stamp": {
+            "location": "TOW/JORGE R/367676",
+            "source_id": "GROUPGPI43",
+            "custom_location": "TOW/JORGE R/367676",
+            "facets": {
+              "custom_text_13": "Group 1 Toyota North Austin"
+            }
+          },
+          "expected_today": "keep",
+          "tier_today": "feed_scoped"
+        },
+        {
+          "vin": "00GTU000000000002",
+          "type": "Used",
+          "stamp": {
+            "location": "WRECKED CAR",
+            "source_id": "GROUPGPI43",
+            "custom_location": "WRECKED CAR",
+            "facets": {
+              "custom_text_13": "Group 1 Toyota North Austin"
+            }
+          },
+          "expected_today": "keep",
+          "tier_today": "feed_scoped"
+        },
+        {
+          "vin": "00GTU000000000003",
+          "type": "Used",
+          "stamp": {
+            "location": "ALL",
+            "source_id": "GROUPGPI39",
+            "facets": {
+              "custom_text_13": "Group 1 Toyota North Austin"
+            }
+          },
+          "expected_today": "keep",
+          "tier_today": "feed_scoped"
+        },
+        {
+          "vin": "00GTU000000000005",
+          "type": "Used",
+          "stamp": {
+            "location": "SPC",
+            "source_id": "GROUPGPI39",
+            "custom_location": "Group 1 Toyota North Austin",
+            "facets": {
+              "custom_text_13": "Group 1 Toyota North Austin"
+            }
+          },
+          "expected_today": "keep",
+          "tier_today": "feed_scoped"
+        }
+      ]
+    }
+  ]
+}

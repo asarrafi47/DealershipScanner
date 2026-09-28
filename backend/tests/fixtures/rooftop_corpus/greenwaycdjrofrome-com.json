@@ -1,0 +1,212 @@
+{
+  "dealer_id": "greenwaycdjrofrome-com",
+  "platform": "carscommerce",
+  "evidence_files": [
+    "workspace/dealer_logs/_learning/platform_playbook.md (Store filter, round three 06:50Z)",
+    "workspace/pipeline/fleet_2026_09_28_s3/scanner.log (group feed with 3 rooftops; matched this store by street_address, kept 121 row(s), refused 61 sibling row(s))"
+  ],
+  "notes": "No feed id carries the store's identity: page oem_code 45584, feeds 50377 / 45549 / a sibling's slug. Street check at synthesis: a feed whose rows all sit at the store's own JSON-LD street is the store's -> source_id 50377 = 123 cars. City alone is never enough here. The live scan (2026-09-28) matches by street_address with the registry street. Street blocks are synthetic (the log names no street).",
+  "roster": {
+    "name": "Greenway Chrysler Dodge Jeep Ram of Rome",
+    "street": "1505 Turner McCall Blvd",
+    "city": "Rome",
+    "state": "GA",
+    "zip": "30161",
+    "street_source": "site_jsonld",
+    "street_synthetic": true,
+    "aliases": [],
+    "manifest_name": "Jeep",
+    "manifest_name_note": "dealers.json carries a Maps label 'Jeep'; the scan uses the registry name"
+  },
+  "page": {
+    "dealername": "Greenway Chrysler Dodge Jeep Ram of Rome",
+    "oem_code": "45584",
+    "jsonld_street": "1505 Turner McCall Blvd",
+    "jsonld_street_synthetic": true
+  },
+  "feed": {
+    "account": "listings/2525037",
+    "identity_sources": [
+      "50377"
+    ],
+    "identity_sources_note": "by street check, not by id",
+    "sibling_sources": {
+      "45549": "another Rome-area feed",
+      "greenwaykiaofrome": "a sibling's slug (synthetic)"
+    },
+    "store_scoped_filter": {
+      "source_id": [
+        "50377"
+      ]
+    }
+  },
+  "scenarios": [
+    {
+      "name": "open_page_with_street",
+      "why": "the live 2026-09-28 gate: 3 rooftops, street_address picks ours",
+      "gate": "open",
+      "rows": [
+        {
+          "vin": "00GWR000000000001",
+          "type": "New",
+          "stamp": {
+            "location": "1505 Turner McCall Blvd<br/>Rome, GA 30161<br/>(706) 291-0000",
+            "source_id": "50377"
+          },
+          "expected_today": "keep",
+          "tier_today": "street_address",
+          "synthetic": true
+        },
+        {
+          "vin": "00GWR000000000002",
+          "type": "Used",
+          "stamp": {
+            "location": "1505 Turner McCall Blvd<br/>Rome, GA 30161<br/>(706) 291-0000",
+            "source_id": "50377"
+          },
+          "expected_today": "keep",
+          "tier_today": "street_address",
+          "synthetic": true
+        },
+        {
+          "vin": "00GWR000000000003",
+          "type": "Used",
+          "stamp": {
+            "location": "1505 Turner McCall Blvd<br/>Rome, GA 30161<br/>(706) 291-0000",
+            "source_id": "50377"
+          },
+          "expected_today": "keep",
+          "tier_today": "street_address",
+          "synthetic": true
+        },
+        {
+          "vin": "00GWS000000000001",
+          "type": "New",
+          "stamp": {
+            "location": "2400 Shorter Ave<br/>Rome, GA 30165<br/>(706) 235-0000",
+            "source_id": "45549"
+          },
+          "expected_today": "refuse",
+          "tier_today": "sibling_rooftop",
+          "reject_today": "sibling_rooftop",
+          "synthetic": true
+        },
+        {
+          "vin": "00GWK000000000001",
+          "type": "Used",
+          "stamp": {
+            "location": "1000 Cobb Pkwy<br/>Kennesaw, GA 30144<br/>(770) 555-0000",
+            "source_id": "greenwaykiaofrome"
+          },
+          "expected_today": "refuse",
+          "tier_today": "sibling_rooftop",
+          "reject_today": "sibling_rooftop",
+          "synthetic": true
+        }
+      ]
+    },
+    {
+      "name": "open_page_no_street",
+      "why": "city alone: two Rome rooftops, no unique winner",
+      "gate": "open",
+      "place": {
+        "street": null,
+        "city": "Rome",
+        "state": "GA",
+        "zip": null,
+        "street_source": null
+      },
+      "rows": [
+        {
+          "vin": "00GWR000000000001",
+          "type": "New",
+          "stamp": {
+            "location": "1505 Turner McCall Blvd<br/>Rome, GA 30161<br/>(706) 291-0000",
+            "source_id": "50377"
+          },
+          "expected_today": "refuse",
+          "tier_today": "target_rooftop_unidentified",
+          "reject_today": "target_rooftop_unidentified",
+          "expected_ideal": "keep",
+          "ideal_note": "feed 50377 was replay-verified at the store's JSON-LD street",
+          "synthetic": true
+        },
+        {
+          "vin": "00GWS000000000001",
+          "type": "New",
+          "stamp": {
+            "location": "2400 Shorter Ave<br/>Rome, GA 30165<br/>(706) 235-0000",
+            "source_id": "45549"
+          },
+          "expected_today": "refuse",
+          "tier_today": "target_rooftop_unidentified",
+          "reject_today": "target_rooftop_unidentified",
+          "synthetic": true
+        },
+        {
+          "vin": "00GWK000000000001",
+          "type": "Used",
+          "stamp": {
+            "location": "1000 Cobb Pkwy<br/>Kennesaw, GA 30144<br/>(770) 555-0000",
+            "source_id": "greenwaykiaofrome"
+          },
+          "expected_today": "refuse",
+          "tier_today": "target_rooftop_unidentified",
+          "reject_today": "target_rooftop_unidentified",
+          "synthetic": true
+        }
+      ]
+    },
+    {
+      "name": "store_scoped_recipe",
+      "why": "facetFilters source_id=['50377'] (123 cars)",
+      "gate": "feed_scoped",
+      "rows": [
+        {
+          "vin": "00GWR000000000001",
+          "type": "New",
+          "stamp": {
+            "location": "1505 Turner McCall Blvd<br/>Rome, GA 30161<br/>(706) 291-0000",
+            "source_id": "50377"
+          },
+          "expected_today": "keep",
+          "tier_today": "feed_scoped",
+          "synthetic": true
+        },
+        {
+          "vin": "00GWR000000000002",
+          "type": "New",
+          "stamp": {
+            "location": "1505 Turner McCall Blvd<br/>Rome, GA 30161<br/>(706) 291-0000",
+            "source_id": "50377"
+          },
+          "expected_today": "keep",
+          "tier_today": "feed_scoped",
+          "synthetic": true
+        },
+        {
+          "vin": "00GWR000000000003",
+          "type": "Used",
+          "stamp": {
+            "location": "1505 Turner McCall Blvd<br/>Rome, GA 30161<br/>(706) 291-0000",
+            "source_id": "50377"
+          },
+          "expected_today": "keep",
+          "tier_today": "feed_scoped",
+          "synthetic": true
+        },
+        {
+          "vin": "00GWR000000000004",
+          "type": "Used",
+          "stamp": {
+            "location": "1505 Turner McCall Blvd<br/>Rome, GA 30161<br/>(706) 291-0000",
+            "source_id": "50377"
+          },
+          "expected_today": "keep",
+          "tier_today": "feed_scoped",
+          "synthetic": true
+        }
+      ]
+    }
+  ]
+}

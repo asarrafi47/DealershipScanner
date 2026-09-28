@@ -1,0 +1,195 @@
+{
+  "dealer_id": "shottenkirkchrysler-com",
+  "platform": "typesense",
+  "evidence_files": [
+    "workspace/pipeline/fleet2_mbp/scanner.log:7638 (payload holds only Shottenkirk CDJR Canton, which is not this store — refusing all 250 row(s), 2026-09-25)",
+    "workspace/dealer_logs/_learning/platform_playbook.md (rooftop stamps with no locale 04:40Z)",
+    "backend/tests/test_carscommerce_store_filter_20260924.py::test_gate_matches_short_brand_cluster_plus_town"
+  ],
+  "notes": "Roster 'Shottenkirk Chrysler Dodge Jeep Ram' vs feed rooftop 'Shottenkirk CDJR Canton': no name tier matched (short franchise cluster + added town), so the single-rooftop payload was refused as single_rooftop_is_not_this_store (297 rows). Fixed: tier name_brand_alias_subset (canonical brand-cluster tokens of the roster name strictly inside the feed name's, unique winner).",
+  "roster": {
+    "name": "Shottenkirk Chrysler Dodge Jeep Ram",
+    "street": null,
+    "city": "Canton",
+    "state": "GA",
+    "zip": null,
+    "street_source": null,
+    "aliases": []
+  },
+  "page": {
+    "dealername": "Shottenkirk Chrysler Dodge Jeep Ram",
+    "oem_code": null,
+    "jsonld_street": null
+  },
+  "feed": {
+    "account": "typesense collection (Shottenkirk group)",
+    "identity_sources": [],
+    "sibling_sources": {},
+    "store_scoped_filter": null
+  },
+  "scenarios": [
+    {
+      "name": "single_rooftop_short_cluster_plus_town",
+      "why": "the 2026-09-25 refusal, now matched by name_brand_alias_subset",
+      "gate": "open",
+      "rows": [
+        {
+          "vin": "00SCC000000000001",
+          "type": "New",
+          "stamp": {
+            "dealerName": "Shottenkirk CDJR Canton",
+            "address": "",
+            "city": "",
+            "state": "",
+            "zip": ""
+          },
+          "expected_today": "keep",
+          "tier_today": "name_brand_alias_subset"
+        },
+        {
+          "vin": "00SCC000000000002",
+          "type": "New",
+          "stamp": {
+            "dealerName": "Shottenkirk CDJR Canton",
+            "address": "",
+            "city": "",
+            "state": "",
+            "zip": ""
+          },
+          "expected_today": "keep",
+          "tier_today": "name_brand_alias_subset"
+        },
+        {
+          "vin": "00SCC000000000003",
+          "type": "Used",
+          "stamp": {
+            "dealerName": "Shottenkirk CDJR Canton",
+            "address": "",
+            "city": "",
+            "state": "",
+            "zip": ""
+          },
+          "expected_today": "keep",
+          "tier_today": "name_brand_alias_subset"
+        },
+        {
+          "vin": "00SCC000000000004",
+          "type": "Used",
+          "stamp": {
+            "dealerName": "Shottenkirk CDJR Canton",
+            "address": "",
+            "city": "",
+            "state": "",
+            "zip": ""
+          },
+          "expected_today": "keep",
+          "tier_today": "name_brand_alias_subset"
+        }
+      ]
+    },
+    {
+      "name": "two_towns_same_cluster",
+      "why": "a sibling with the same cluster and another town on the same page: two candidates, no unique winner",
+      "gate": "open",
+      "rows": [
+        {
+          "vin": "00SCC000000000001",
+          "type": "New",
+          "stamp": {
+            "dealerName": "Shottenkirk CDJR Canton",
+            "address": "",
+            "city": "",
+            "state": "",
+            "zip": ""
+          },
+          "expected_today": "refuse",
+          "tier_today": "target_rooftop_unidentified",
+          "reject_today": "target_rooftop_unidentified",
+          "expected_ideal": "keep",
+          "ideal_note": "the roster city (Canton) is in the feed name; a locality corroboration could break the tie"
+        },
+        {
+          "vin": "00SCC000000000002",
+          "type": "Used",
+          "stamp": {
+            "dealerName": "Shottenkirk CDJR Canton",
+            "address": "",
+            "city": "",
+            "state": "",
+            "zip": ""
+          },
+          "expected_today": "refuse",
+          "tier_today": "target_rooftop_unidentified",
+          "reject_today": "target_rooftop_unidentified",
+          "expected_ideal": "keep",
+          "ideal_note": "roster city in the feed name"
+        },
+        {
+          "vin": "00SCA000000000001",
+          "type": "New",
+          "stamp": {
+            "dealerName": "Shottenkirk CDJR Alpharetta",
+            "address": "",
+            "city": "",
+            "state": "",
+            "zip": ""
+          },
+          "expected_today": "refuse",
+          "tier_today": "target_rooftop_unidentified",
+          "reject_today": "target_rooftop_unidentified",
+          "synthetic": true
+        }
+      ]
+    },
+    {
+      "name": "sibling_with_locale",
+      "why": "when the feed fills dealer.city the sibling is told apart by the roster city",
+      "gate": "open",
+      "rows": [
+        {
+          "vin": "00SCC000000000001",
+          "type": "New",
+          "stamp": {
+            "dealerName": "Shottenkirk CDJR Canton",
+            "address": "",
+            "city": "Canton",
+            "state": "GA",
+            "zip": ""
+          },
+          "expected_today": "keep",
+          "tier_today": "city_state",
+          "synthetic": true
+        },
+        {
+          "vin": "00SCC000000000002",
+          "type": "Used",
+          "stamp": {
+            "dealerName": "Shottenkirk CDJR Canton",
+            "address": "",
+            "city": "Canton",
+            "state": "GA",
+            "zip": ""
+          },
+          "expected_today": "keep",
+          "tier_today": "city_state",
+          "synthetic": true
+        },
+        {
+          "vin": "00SCA000000000001",
+          "type": "New",
+          "stamp": {
+            "dealerName": "Shottenkirk CDJR Alpharetta",
+            "address": "",
+            "city": "Alpharetta",
+            "state": "GA",
+            "zip": ""
+          },
+          "expected_today": "refuse",
+          "tier_today": "sibling_rooftop_weak_tier",
+          "reject_today": "sibling_rooftop_weak_tier",
+          "synthetic": true
+        }
+      ]
+    }
+  ]
+}

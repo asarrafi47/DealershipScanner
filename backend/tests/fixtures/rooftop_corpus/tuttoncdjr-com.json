@@ -1,0 +1,234 @@
+{
+  "dealer_id": "tuttoncdjr-com",
+  "platform": "carscommerce",
+  "evidence_files": [
+    "workspace/dealer_logs/tuttoncdjr-com/summary.md",
+    "workspace/dealer_logs/_learning/platform_playbook.md (rooftop stamps with no locale; rounds three & four)",
+    "backend/tests/test_carscommerce_store_filter_20260924.py::test_identity_feed_with_placeless_name_stamp_is_accepted"
+  ],
+  "notes": "validated_zero twice: own feed id is a named slug without the town 'TuttonChryslerDodgeJeepRam' (341, rows stamped with the street line alone '1050 Highway 515 South') plus a 5-car OEM-code feed 27250 whose rows carry only the store name; group pool MP22431 (148) stamped 'Voyles CDJR of Birmingham'. Fixed: named feed id prefixing the site name is identity; placeless stamps accepted; gate tier name_brand_alias; _feed_scoped marker inside the payload so dealer_run's union pass cannot re-gate (346 -> 5 before).",
+  "roster": {
+    "name": "Tutton CDJR of Jasper",
+    "street": null,
+    "city": "Jasper",
+    "state": "GA",
+    "zip": null,
+    "street_source": null,
+    "aliases": [],
+    "manifest_name": "Tutton Chrysler Dodge Jeep Ram of Jasper",
+    "roster_name_note": "registry spelling per backend/parsers/__init__.py brand-alias comment"
+  },
+  "page": {
+    "dealername": "Tutton Chrysler Dodge Jeep RAM of Jasper",
+    "oem_code": "27250",
+    "jsonld_street": "1050 Highway 515 South",
+    "jsonld_street_synthetic": true
+  },
+  "feed": {
+    "account": "listings/6033780",
+    "identity_sources": [
+      "TuttonChryslerDodgeJeepRam",
+      "27250"
+    ],
+    "sibling_sources": {
+      "MP22431": "group pool (148), stamped Voyles CDJR of Birmingham"
+    },
+    "store_scoped_filter": {
+      "source_id": [
+        "TuttonChryslerDodgeJeepRam",
+        "27250"
+      ]
+    }
+  },
+  "scenarios": [
+    {
+      "name": "open_page_no_street",
+      "why": "before learn_place: the street-line rooftop cannot be tied to the store, only the brand-alias name matches",
+      "gate": "open",
+      "rows": [
+        {
+          "vin": "00TCA000000000001",
+          "type": "New",
+          "stamp": {
+            "location": "Tutton Chrysler Jeep Dodge RAM of Jasper",
+            "source_id": "27250"
+          },
+          "expected_today": "keep",
+          "tier_today": "name_brand_alias"
+        },
+        {
+          "vin": "00TCA000000000002",
+          "type": "New",
+          "stamp": {
+            "location": "Tutton Chrysler Jeep Dodge RAM of Jasper",
+            "source_id": "27250"
+          },
+          "expected_today": "keep",
+          "tier_today": "name_brand_alias"
+        },
+        {
+          "vin": "00TCB000000000001",
+          "type": "New",
+          "stamp": {
+            "location": "1050 Highway 515 South",
+            "source_id": "TuttonChryslerDodgeJeepRam"
+          },
+          "expected_today": "refuse",
+          "tier_today": "sibling_rooftop",
+          "reject_today": "sibling_rooftop",
+          "expected_ideal": "keep",
+          "ideal_note": "identity feed (named slug prefixes the site name); the street line is the store's own"
+        },
+        {
+          "vin": "00TCB000000000002",
+          "type": "Used",
+          "stamp": {
+            "location": "1050 Highway 515 South",
+            "source_id": "TuttonChryslerDodgeJeepRam"
+          },
+          "expected_today": "refuse",
+          "tier_today": "sibling_rooftop",
+          "reject_today": "sibling_rooftop",
+          "expected_ideal": "keep",
+          "ideal_note": "identity feed"
+        },
+        {
+          "vin": "00VOY000000000001",
+          "type": "Used",
+          "stamp": {
+            "location": "Voyles CDJR of Birmingham",
+            "source_id": "MP22431",
+            "custom_location": "Voyles CDJR of Birmingham"
+          },
+          "expected_today": "refuse",
+          "tier_today": "sibling_rooftop",
+          "reject_today": "sibling_rooftop"
+        },
+        {
+          "vin": "00UNS000000000001",
+          "type": "Used",
+          "stamp": {
+            "location": null,
+            "source_id": "MP22431"
+          },
+          "expected_today": "refuse",
+          "tier_today": "unstamped_row_in_group_feed",
+          "reject_today": "unstamped_row_in_group_feed"
+        }
+      ]
+    },
+    {
+      "name": "open_page_with_jsonld_street",
+      "why": "the page's JSON-LD street reaches the gate: the street-line rooftop is kept as our own street block",
+      "gate": "open",
+      "place": {
+        "street": "1050 Highway 515 South",
+        "city": "Jasper",
+        "state": "GA",
+        "zip": null,
+        "street_source": "site_jsonld"
+      },
+      "rows": [
+        {
+          "vin": "00TCA000000000001",
+          "type": "New",
+          "stamp": {
+            "location": "Tutton Chrysler Jeep Dodge RAM of Jasper",
+            "source_id": "27250"
+          },
+          "expected_today": "keep",
+          "tier_today": "name_brand_alias"
+        },
+        {
+          "vin": "00TCB000000000001",
+          "type": "New",
+          "stamp": {
+            "location": "1050 Highway 515 South",
+            "source_id": "TuttonChryslerDodgeJeepRam"
+          },
+          "expected_today": "keep",
+          "tier_today": "own_street_block"
+        },
+        {
+          "vin": "00TCB000000000002",
+          "type": "Used",
+          "stamp": {
+            "location": "1050 Highway 515 South",
+            "source_id": "TuttonChryslerDodgeJeepRam"
+          },
+          "expected_today": "keep",
+          "tier_today": "own_street_block"
+        },
+        {
+          "vin": "00VOY000000000001",
+          "type": "Used",
+          "stamp": {
+            "location": "Voyles CDJR of Birmingham",
+            "source_id": "MP22431",
+            "custom_location": "Voyles CDJR of Birmingham"
+          },
+          "expected_today": "refuse",
+          "tier_today": "sibling_rooftop",
+          "reject_today": "sibling_rooftop"
+        }
+      ]
+    },
+    {
+      "name": "store_scoped_recipe",
+      "why": "facetFilters source_id=['TuttonChryslerDodgeJeepRam','27250'] -> 346/346 (marker inside the payload)",
+      "gate": "feed_scoped",
+      "rows": [
+        {
+          "vin": "00TCA000000000001",
+          "type": "New",
+          "stamp": {
+            "location": "Tutton Chrysler Jeep Dodge RAM of Jasper",
+            "source_id": "27250"
+          },
+          "expected_today": "keep",
+          "tier_today": "feed_scoped"
+        },
+        {
+          "vin": "00TCB000000000001",
+          "type": "New",
+          "stamp": {
+            "location": "1050 Highway 515 South",
+            "source_id": "TuttonChryslerDodgeJeepRam"
+          },
+          "expected_today": "keep",
+          "tier_today": "feed_scoped"
+        },
+        {
+          "vin": "00TCB000000000002",
+          "type": "New",
+          "stamp": {
+            "location": "1050 Highway 515 South",
+            "source_id": "TuttonChryslerDodgeJeepRam"
+          },
+          "expected_today": "keep",
+          "tier_today": "feed_scoped"
+        },
+        {
+          "vin": "00TCB000000000003",
+          "type": "Used",
+          "stamp": {
+            "location": "1050 Highway 515 South",
+            "source_id": "TuttonChryslerDodgeJeepRam"
+          },
+          "expected_today": "keep",
+          "tier_today": "feed_scoped"
+        },
+        {
+          "vin": "00TCB000000000004",
+          "type": "Used",
+          "stamp": {
+            "location": "1050 Highway 515 South",
+            "source_id": "TuttonChryslerDodgeJeepRam"
+          },
+          "expected_today": "keep",
+          "tier_today": "feed_scoped"
+        }
+      ]
+    }
+  ]
+}

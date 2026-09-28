@@ -1,0 +1,204 @@
+{
+  "dealer_id": "group1fordofsouthaustin-com",
+  "platform": "carscommerce",
+  "evidence_files": [
+    "workspace/dealer_logs/group1fordofsouthaustin-com/summary.md",
+    "workspace/dealer_logs/group1fordofsouthaustin-com/capture_20260926T142356+0000.json"
+  ],
+  "notes": "74 of 496: identity feed 02923 = 74 new; the rest sits in GROUPGPI39 (674). Without a filter the gate kept 69 of 748: dealer.location carries lot codes 'MAIN'/'SPC'. Fixed (d74be6366): meta_location custom_text_7 = 'Group 1 Ford of South Austin' on 748/748 becomes facetFilters and recipe_is_store_scoped trusts the rows -> 735. The exact per-row stamps behind '69 kept' are not in the log: rows marked synthetic.",
+  "roster": {
+    "name": "Group 1 Ford of South Austin",
+    "street": null,
+    "city": "Austin",
+    "state": "TX",
+    "zip": null,
+    "street_source": null,
+    "aliases": []
+  },
+  "page": {
+    "dealername": "Group 1 Ford of South Austin",
+    "oem_code": "02923",
+    "jsonld_street": null
+  },
+  "feed": {
+    "account": "listings/22717",
+    "identity_sources": [
+      "02923"
+    ],
+    "sibling_sources": {
+      "GROUPGPI39": "group pool (674)"
+    },
+    "location_facets": {
+      "meta_location": "custom_text_7",
+      "location_sort": "custom_text_4"
+    },
+    "location_facet_value": "Group 1 Ford of South Austin",
+    "location_facet_value_note": "748/748 cars",
+    "store_scoped_filter": {
+      "custom_text_7": [
+        "Group 1 Ford of South Austin"
+      ]
+    }
+  },
+  "scenarios": [
+    {
+      "name": "open_page_lot_codes",
+      "why": "single-word lot codes are unmarked rows; a page that also names this store keeps only rows under the identity feed",
+      "gate": "open",
+      "rows": [
+        {
+          "vin": "00GFS000000000001",
+          "type": "New",
+          "stamp": {
+            "location": "Group 1 Ford of South Austin",
+            "source_id": "02923",
+            "facets": {
+              "custom_text_7": "Group 1 Ford of South Austin"
+            }
+          },
+          "expected_today": "keep",
+          "tier_today": "name_exact",
+          "synthetic": true
+        },
+        {
+          "vin": "00GFS000000000002",
+          "type": "New",
+          "stamp": {
+            "location": "Group 1 Ford of South Austin",
+            "source_id": "02923",
+            "facets": {
+              "custom_text_7": "Group 1 Ford of South Austin"
+            }
+          },
+          "expected_today": "keep",
+          "tier_today": "name_exact",
+          "synthetic": true
+        },
+        {
+          "vin": "00GFS000000000003",
+          "type": "New",
+          "stamp": {
+            "location": "SPC",
+            "source_id": "02923",
+            "facets": {
+              "custom_text_7": "Group 1 Ford of South Austin"
+            }
+          },
+          "expected_today": "keep",
+          "tier_today": "unstamped_under_own_source",
+          "synthetic": true
+        },
+        {
+          "vin": "00GFU000000000001",
+          "type": "Used",
+          "stamp": {
+            "location": "MAIN",
+            "source_id": "GROUPGPI39",
+            "facets": {
+              "custom_text_7": "Group 1 Ford of South Austin"
+            }
+          },
+          "expected_today": "refuse",
+          "tier_today": "unstamped_row_in_group_feed",
+          "reject_today": "unstamped_row_in_group_feed",
+          "expected_ideal": "keep",
+          "ideal_note": "the site's Location facet names this store on the row",
+          "synthetic": true
+        },
+        {
+          "vin": "00GFU000000000002",
+          "type": "Used",
+          "stamp": {
+            "location": "SPC",
+            "source_id": "GROUPGPI39",
+            "facets": {
+              "custom_text_7": "Group 1 Ford of South Austin"
+            }
+          },
+          "expected_today": "refuse",
+          "tier_today": "unstamped_row_in_group_feed",
+          "reject_today": "unstamped_row_in_group_feed",
+          "expected_ideal": "keep",
+          "ideal_note": "Location facet names this store",
+          "synthetic": true
+        },
+        {
+          "vin": "00GKA000000000001",
+          "type": "Used",
+          "stamp": {
+            "location": "Group 1 Kia of Austin",
+            "source_id": "GROUPGPI39",
+            "facets": {
+              "custom_text_7": "Group 1 Kia of Austin"
+            }
+          },
+          "expected_today": "refuse",
+          "tier_today": "sibling_rooftop",
+          "reject_today": "sibling_rooftop",
+          "synthetic": true
+        }
+      ]
+    },
+    {
+      "name": "store_scoped_location_facet",
+      "why": "facetFilters custom_text_7=['Group 1 Ford of South Austin'] (748/748)",
+      "gate": "feed_scoped",
+      "rows": [
+        {
+          "vin": "00GFS000000000001",
+          "type": "New",
+          "stamp": {
+            "location": "Group 1 Ford of South Austin",
+            "source_id": "02923",
+            "facets": {
+              "custom_text_7": "Group 1 Ford of South Austin"
+            }
+          },
+          "expected_today": "keep",
+          "tier_today": "feed_scoped",
+          "synthetic": true
+        },
+        {
+          "vin": "00GFU000000000001",
+          "type": "Used",
+          "stamp": {
+            "location": "MAIN",
+            "source_id": "GROUPGPI39",
+            "facets": {
+              "custom_text_7": "Group 1 Ford of South Austin"
+            }
+          },
+          "expected_today": "keep",
+          "tier_today": "feed_scoped"
+        },
+        {
+          "vin": "00GFU000000000002",
+          "type": "Used",
+          "stamp": {
+            "location": "SPC",
+            "source_id": "GROUPGPI39",
+            "facets": {
+              "custom_text_7": "Group 1 Ford of South Austin"
+            }
+          },
+          "expected_today": "keep",
+          "tier_today": "feed_scoped"
+        },
+        {
+          "vin": "00GFU000000000003",
+          "type": "Used",
+          "stamp": {
+            "location": null,
+            "source_id": "GROUPGPI39",
+            "facets": {
+              "custom_text_7": "Group 1 Ford of South Austin"
+            }
+          },
+          "expected_today": "keep",
+          "tier_today": "feed_scoped",
+          "synthetic": true
+        }
+      ]
+    }
+  ]
+}

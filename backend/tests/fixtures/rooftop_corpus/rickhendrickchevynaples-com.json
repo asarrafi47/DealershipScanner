@@ -1,0 +1,235 @@
+{
+  "dealer_id": "rickhendrickchevynaples-com",
+  "platform": "carscommerce",
+  "evidence_files": [
+    "workspace/dealer_logs/rickhendrickchevynaples-com/summary.md",
+    "workspace/dealer_logs/rickhendrickchevynaples-com/discovery.md",
+    "backend/tests/test_carscommerce_store_filter_20260924.py::test_store_filter_never_merges_on_a_bare_city_stamp"
+  ],
+  "notes": "validated_zero 2026-09-24: 'Naples, FL' never parsed (regex wanted a trailing space) and a page holding only 'Naples, FL' rows was refused as single_rooftop_is_not_this_store (100 rows). Fixed at synthesis: identity feed 292164 == oem_code -> 462 cars; alias 'Chevy Naples' recorded.",
+  "roster": {
+    "name": "Rick Hendrick Chevrolet Naples",
+    "street": null,
+    "city": "Naples",
+    "state": "FL",
+    "zip": null,
+    "street_source": null,
+    "aliases": [
+      "Chevy Naples"
+    ]
+  },
+  "page": {
+    "dealername": "Rick Hendrick Chevrolet Naples",
+    "oem_code": "292164",
+    "jsonld_street": null
+  },
+  "feed": {
+    "account": "listings/6034613",
+    "identity_sources": [
+      "292164"
+    ],
+    "sibling_sources": {
+      "113968": "Durham NC (396)",
+      "113995": "Charleston SC (392)",
+      "113974": "Cary NC (365)",
+      "RHendrickUsed": "group-wide used feed"
+    },
+    "location_facets": {
+      "Location": "custom_text_2",
+      "meta_location": "custom_text_5"
+    },
+    "location_facet_value": "Naples, FL",
+    "store_scoped_filter": {
+      "source_id": [
+        "292164"
+      ]
+    }
+  },
+  "scenarios": [
+    {
+      "name": "single_rooftop_page_without_alias",
+      "why": "the 2026-09-24 page-1 gate refused 100 rows stamped 'Naples, FL' as single_rooftop_is_not_this_store (the tag read as a store name); today the parsed city makes it a locality match",
+      "gate": "open",
+      "aliases": [],
+      "rows": [
+        {
+          "vin": "00NAP000000000001",
+          "type": "New",
+          "stamp": {
+            "location": "Naples, FL",
+            "source_id": "292164",
+            "custom_location": "Chevy Naples",
+            "facets": {
+              "custom_text_2": "Naples, FL"
+            }
+          },
+          "expected_today": "keep",
+          "tier_today": "city_state",
+          "note": "rooftop_of now splits 'Naples, FL' into city/state, so the lone rooftop is matched by locality (weak) instead of being read as a foreign store name; 'Chevy Naples' matches nothing without the alias"
+        },
+        {
+          "vin": "00NAP000000000002",
+          "type": "New",
+          "stamp": {
+            "location": "Naples, FL",
+            "source_id": "292164",
+            "custom_location": "Chevy Naples",
+            "facets": {
+              "custom_text_2": "Naples, FL"
+            }
+          },
+          "expected_today": "keep",
+          "tier_today": "city_state",
+          "note": "rooftop_of now splits 'Naples, FL' into city/state, so the lone rooftop is matched by locality (weak) instead of being read as a foreign store name; 'Chevy Naples' matches nothing without the alias"
+        },
+        {
+          "vin": "00NAP000000000003",
+          "type": "New",
+          "stamp": {
+            "location": "Naples, FL",
+            "source_id": "292164",
+            "custom_location": "Chevy Naples",
+            "facets": {
+              "custom_text_2": "Naples, FL"
+            }
+          },
+          "expected_today": "keep",
+          "tier_today": "city_state",
+          "note": "rooftop_of now splits 'Naples, FL' into city/state, so the lone rooftop is matched by locality (weak) instead of being read as a foreign store name; 'Chevy Naples' matches nothing without the alias"
+        }
+      ]
+    },
+    {
+      "name": "open_group_page_with_alias",
+      "why": "alias 'Chevy Naples' recorded by synthesis; siblings from other towns on the same page",
+      "gate": "open",
+      "rows": [
+        {
+          "vin": "00NAP000000000001",
+          "type": "New",
+          "stamp": {
+            "location": "Naples, FL",
+            "source_id": "292164",
+            "custom_location": "Chevy Naples",
+            "facets": {
+              "custom_text_2": "Naples, FL"
+            }
+          },
+          "expected_today": "keep",
+          "tier_today": "store_label_alias"
+        },
+        {
+          "vin": "00NAP000000000002",
+          "type": "Used",
+          "stamp": {
+            "location": "Naples, FL",
+            "source_id": "292164",
+            "custom_location": "Chevy Naples"
+          },
+          "expected_today": "keep",
+          "tier_today": "store_label_alias"
+        },
+        {
+          "vin": "00DUR000000000001",
+          "type": "New",
+          "stamp": {
+            "location": "Durham, NC",
+            "source_id": "113968",
+            "custom_location": "Hendrick Chevrolet Durham"
+          },
+          "expected_today": "refuse",
+          "tier_today": "sibling_rooftop",
+          "reject_today": "sibling_rooftop",
+          "synthetic": true
+        },
+        {
+          "vin": "00CHS000000000001",
+          "type": "New",
+          "stamp": {
+            "location": "Charleston, SC",
+            "source_id": "113995",
+            "custom_location": "Hendrick Chevrolet Charleston"
+          },
+          "expected_today": "refuse",
+          "tier_today": "sibling_rooftop",
+          "reject_today": "sibling_rooftop",
+          "synthetic": true
+        },
+        {
+          "vin": "00CAR000000000001",
+          "type": "New",
+          "stamp": {
+            "location": "Cary, NC",
+            "source_id": "113974",
+            "custom_location": "Hendrick Chevrolet Cary"
+          },
+          "expected_today": "refuse",
+          "tier_today": "sibling_rooftop",
+          "reject_today": "sibling_rooftop"
+        },
+        {
+          "vin": "00UNS000000000001",
+          "type": "Used",
+          "stamp": {
+            "location": null,
+            "source_id": "RHendrickUsed"
+          },
+          "expected_today": "refuse",
+          "tier_today": "unstamped_row_in_group_feed",
+          "reject_today": "unstamped_row_in_group_feed"
+        }
+      ]
+    },
+    {
+      "name": "store_scoped_recipe",
+      "why": "facetFilters source_id=['292164']",
+      "gate": "feed_scoped",
+      "rows": [
+        {
+          "vin": "00NAP000000000001",
+          "type": "New",
+          "stamp": {
+            "location": "Naples, FL",
+            "source_id": "292164",
+            "custom_location": "Chevy Naples"
+          },
+          "expected_today": "keep",
+          "tier_today": "feed_scoped"
+        },
+        {
+          "vin": "00NAP000000000002",
+          "type": "New",
+          "stamp": {
+            "location": "Naples, FL",
+            "source_id": "292164",
+            "custom_location": "Chevy Naples"
+          },
+          "expected_today": "keep",
+          "tier_today": "feed_scoped"
+        },
+        {
+          "vin": "00NAP000000000003",
+          "type": "Used",
+          "stamp": {
+            "location": "Naples, FL",
+            "source_id": "292164",
+            "custom_location": "Chevy Naples"
+          },
+          "expected_today": "keep",
+          "tier_today": "feed_scoped"
+        },
+        {
+          "vin": "00NAP000000000004",
+          "type": "Used",
+          "stamp": {
+            "location": "Naples, FL",
+            "source_id": "292164",
+            "custom_location": "Chevy Naples"
+          },
+          "expected_today": "keep",
+          "tier_today": "feed_scoped"
+        }
+      ]
+    }
+  ]
+}

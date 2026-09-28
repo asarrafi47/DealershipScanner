@@ -1,0 +1,203 @@
+{
+  "dealer_id": "grandhyundaicanton-com",
+  "platform": "carscommerce",
+  "evidence_files": [
+    "workspace/dealer_logs/_learning/platform_playbook.md (Store filter, round three 06:50Z)",
+    "workspace/pipeline/fleet_2026_09_28_s3/scanner.log (group feed names 4 rooftops (Autoplex Atlanta, Grand INFINITI of Macon, Grand Motorcars Kennesaw, Grand Motorcars Marietta) and none is this store — refusing all 100 row(s))"
+  ],
+  "notes": "No identity feed; the store is identified only by the site's Location facet spelled as the store name (custom_text_9 -> 288 cars). recipe_is_store_scoped accepts a single custom_text value equal to the roster/site name so the gate trusts the rows. On the open feed the sibling names are real (scanner.log 2026-09-28); how the store's own rows are stamped is not logged: rows marked synthetic.",
+  "roster": {
+    "name": "Grand Hyundai of Canton",
+    "street": null,
+    "city": "Canton",
+    "state": "GA",
+    "zip": null,
+    "street_source": null,
+    "aliases": []
+  },
+  "page": {
+    "dealername": "Grand Hyundai of Canton",
+    "oem_code": null,
+    "jsonld_street": null
+  },
+  "feed": {
+    "account": "listings/6076410",
+    "identity_sources": [],
+    "sibling_sources": {},
+    "location_facets": {
+      "Location": "custom_text_9"
+    },
+    "location_facet_value": "Grand Hyundai of Canton",
+    "store_scoped_filter": {
+      "custom_text_9": [
+        "Grand Hyundai of Canton"
+      ]
+    }
+  },
+  "scenarios": [
+    {
+      "name": "open_group_page",
+      "why": "four named sibling rooftops and our rows stamped only through the Location facet: nothing the gate reads names this store",
+      "gate": "open",
+      "rows": [
+        {
+          "vin": "00GHC000000000001",
+          "type": "New",
+          "stamp": {
+            "location": null,
+            "source_id": "GH1",
+            "facets": {
+              "custom_text_9": "Grand Hyundai of Canton"
+            }
+          },
+          "expected_today": "refuse",
+          "tier_today": "target_rooftop_unidentified",
+          "reject_today": "target_rooftop_unidentified",
+          "expected_ideal": "keep",
+          "ideal_note": "the site's Location facet names this store on the row",
+          "synthetic": true
+        },
+        {
+          "vin": "00GHC000000000002",
+          "type": "Used",
+          "stamp": {
+            "location": null,
+            "source_id": "GH1",
+            "facets": {
+              "custom_text_9": "Grand Hyundai of Canton"
+            }
+          },
+          "expected_today": "refuse",
+          "tier_today": "target_rooftop_unidentified",
+          "reject_today": "target_rooftop_unidentified",
+          "expected_ideal": "keep",
+          "ideal_note": "Location facet",
+          "synthetic": true
+        },
+        {
+          "vin": "00APX000000000001",
+          "type": "Used",
+          "stamp": {
+            "location": "Autoplex Atlanta",
+            "source_id": "GH2",
+            "facets": {
+              "custom_text_9": "Autoplex Atlanta"
+            }
+          },
+          "expected_today": "refuse",
+          "tier_today": "target_rooftop_unidentified",
+          "reject_today": "target_rooftop_unidentified",
+          "synthetic": true
+        },
+        {
+          "vin": "00GIM000000000001",
+          "type": "New",
+          "stamp": {
+            "location": "Grand INFINITI of Macon",
+            "source_id": "GH3",
+            "facets": {
+              "custom_text_9": "Grand INFINITI of Macon"
+            }
+          },
+          "expected_today": "refuse",
+          "tier_today": "target_rooftop_unidentified",
+          "reject_today": "target_rooftop_unidentified",
+          "synthetic": true
+        },
+        {
+          "vin": "00GMK000000000001",
+          "type": "Used",
+          "stamp": {
+            "location": "Grand Motorcars Kennesaw",
+            "source_id": "GH4",
+            "facets": {
+              "custom_text_9": "Grand Motorcars Kennesaw"
+            }
+          },
+          "expected_today": "refuse",
+          "tier_today": "target_rooftop_unidentified",
+          "reject_today": "target_rooftop_unidentified",
+          "synthetic": true
+        },
+        {
+          "vin": "00GMM000000000001",
+          "type": "Used",
+          "stamp": {
+            "location": "Grand Motorcars Marietta",
+            "source_id": "GH5",
+            "facets": {
+              "custom_text_9": "Grand Motorcars Marietta"
+            }
+          },
+          "expected_today": "refuse",
+          "tier_today": "target_rooftop_unidentified",
+          "reject_today": "target_rooftop_unidentified",
+          "synthetic": true
+        }
+      ]
+    },
+    {
+      "name": "store_scoped_location_facet",
+      "why": "facetFilters custom_text_9=['Grand Hyundai of Canton'] (288 cars)",
+      "gate": "feed_scoped",
+      "rows": [
+        {
+          "vin": "00GHC000000000001",
+          "type": "New",
+          "stamp": {
+            "location": null,
+            "source_id": "GH1",
+            "facets": {
+              "custom_text_9": "Grand Hyundai of Canton"
+            }
+          },
+          "expected_today": "keep",
+          "tier_today": "feed_scoped",
+          "synthetic": true
+        },
+        {
+          "vin": "00GHC000000000002",
+          "type": "New",
+          "stamp": {
+            "location": null,
+            "source_id": "GH1",
+            "facets": {
+              "custom_text_9": "Grand Hyundai of Canton"
+            }
+          },
+          "expected_today": "keep",
+          "tier_today": "feed_scoped",
+          "synthetic": true
+        },
+        {
+          "vin": "00GHC000000000003",
+          "type": "Used",
+          "stamp": {
+            "location": null,
+            "source_id": "GH1",
+            "facets": {
+              "custom_text_9": "Grand Hyundai of Canton"
+            }
+          },
+          "expected_today": "keep",
+          "tier_today": "feed_scoped",
+          "synthetic": true
+        },
+        {
+          "vin": "00GHC000000000004",
+          "type": "Used",
+          "stamp": {
+            "location": null,
+            "source_id": "GH1",
+            "facets": {
+              "custom_text_9": "Grand Hyundai of Canton"
+            }
+          },
+          "expected_today": "keep",
+          "tier_today": "feed_scoped",
+          "synthetic": true
+        }
+      ]
+    }
+  ]
+}

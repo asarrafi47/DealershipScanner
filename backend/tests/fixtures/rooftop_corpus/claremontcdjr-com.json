@@ -1,0 +1,93 @@
+{
+  "dealer_id": "claremontcdjr-com",
+  "platform": "carscommerce",
+  "evidence_files": [
+    "workspace/dealer_logs/claremontcdjr-com/discovery.md",
+    "workspace/dealer_logs/claremontcdjr-com/capture_20260926T141925+0000.json",
+    "backend/tests/test_carscommerce_store_filter_20260924.py::test_fully_unstamped_account_over_the_cap_is_one_store"
+  ],
+  "notes": "78 of 671: identity feed 27302 (== oem_code) = new cars only; the used feed MP15994 (967) carries no stamp at all, so the identity filter scoped the recipe to 78 (one-condition verdict). Fixed at synthesis: all_unstamped accounts up to 1,500 cars are one store, no filter. The gate itself sees no rooftop evidence and keeps everything.",
+  "roster": {
+    "name": "Knight Claremont Chrysler Dodge Jeep RAM",
+    "street": null,
+    "city": "Claremont",
+    "state": "CA",
+    "zip": null,
+    "street_source": null,
+    "aliases": []
+  },
+  "page": {
+    "dealername": "Knight Claremont Chrysler Dodge Jeep RAM",
+    "oem_code": "27302",
+    "jsonld_street": null
+  },
+  "feed": {
+    "account": "listings/6059599",
+    "identity_sources": [
+      "27302"
+    ],
+    "sibling_sources": {
+      "MP15994": "marketplace feed, same store, unstamped (967)"
+    },
+    "store_scoped_filter": null
+  },
+  "scenarios": [
+    {
+      "name": "unstamped_account",
+      "why": "no row names a rooftop: no evidence, no decision, keep whole",
+      "gate": "open",
+      "rows": [
+        {
+          "vin": "00KCN000000000001",
+          "type": "New",
+          "stamp": {
+            "location": null,
+            "source_id": "27302"
+          },
+          "expected_today": "keep",
+          "tier_today": "no_rooftop_evidence"
+        },
+        {
+          "vin": "00KCN000000000002",
+          "type": "New",
+          "stamp": {
+            "location": null,
+            "source_id": "27302"
+          },
+          "expected_today": "keep",
+          "tier_today": "no_rooftop_evidence"
+        },
+        {
+          "vin": "00KCU000000000001",
+          "type": "Used",
+          "stamp": {
+            "location": null,
+            "source_id": "MP15994"
+          },
+          "expected_today": "keep",
+          "tier_today": "no_rooftop_evidence"
+        },
+        {
+          "vin": "00KCU000000000002",
+          "type": "Used",
+          "stamp": {
+            "location": null,
+            "source_id": "MP15994"
+          },
+          "expected_today": "keep",
+          "tier_today": "no_rooftop_evidence"
+        },
+        {
+          "vin": "00KCU000000000003",
+          "type": "Used",
+          "stamp": {
+            "location": null,
+            "source_id": "MP15994"
+          },
+          "expected_today": "keep",
+          "tier_today": "no_rooftop_evidence"
+        }
+      ]
+    }
+  ]
+}
