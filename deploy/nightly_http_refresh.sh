@@ -19,6 +19,8 @@
 #      (Honda of El Cajon, Pacific VW, ...). Honors SCANNER_HTTP_PROXY when set,
 #      which is how the Cloudflare-walled dealers get through.
 #   5. rebuild_listings_index — recompute the incomplete-listings index.
+#   6. compute_market_stats   — recompute the per-model market price bands the
+#      car page's market read and deal badges depend on.
 #
 # Design:
 #   * Idempotent and safe to run repeatedly.
@@ -177,8 +179,15 @@ run_step "4/5 harvest-html-jsonld" \
   "$PYTHON" backend/scripts/harvest_html_jsonld.py || FAILS=$((FAILS+1))
 
 # --- Step 5: rebuild incomplete-listings index -----------------------------
-run_step "5/5 rebuild-listings-index" \
+run_step "5/6 rebuild-listings-index" \
   "$PYTHON" backend/scripts/rebuild_listings_index.py || FAILS=$((FAILS+1))
+
+# --- Step 6: market price bands ----------------------------------------------
+# market_price_stats sat at 584 rows from 2026-07-18 until 2026-09-28 because
+# nothing scheduled this; the car page then said "No market read" for a CR-V
+# with 407 comparable listings. One second over the whole fleet.
+run_step "6/6 compute-market-stats" \
+  "$PYTHON" -m backend.scripts.compute_market_stats || FAILS=$((FAILS+1))
 
 # ---------------------------------------------------------------------------
 # Summary
