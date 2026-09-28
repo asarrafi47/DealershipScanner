@@ -485,18 +485,27 @@ def _apply_description_and_gallery(v: dict[str, Any], html: str, url: str) -> in
                 # image_url = placeholder next to a full gallery).
                 from backend.parsers.base import _is_placeholder_url
 
-                real = [
-                    u for u in merged
-                    if isinstance(u, str) and u.lower().startswith("https://") and not _is_placeholder_url(u)
-                ]
+                def _real(urls: list[Any]) -> list[str]:
+                    return [
+                        u for u in urls
+                        if isinstance(u, str) and u.lower().startswith("https://") and not _is_placeholder_url(u)
+                    ]
+
+                real_before = len(_real(cur))
+                real = _real(merged)
                 if real:
                     merged = real
                 v["gallery"] = merged if cap is None else merged[:cap]
-                v["_gallery_http_prefetch_added"] = len(merged) - len(cur)
+                # Count real photos gained, not list length: dropping the seeded
+                # placeholder / widget logo made len(merged) - len(cur) 0 or
+                # negative (and a negative still counted as "extended").
+                added = max(0, len(_real(v["gallery"])) - real_before)
+                if added:
+                    v["_gallery_http_prefetch_added"] = added
+                    filled += 1
                 hero = str(v.get("image_url") or "")
                 if real and not hero.lower().startswith("http"):
                     v["image_url"] = real[0]
-                filled += 1
     return filled
 
 

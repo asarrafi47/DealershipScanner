@@ -266,3 +266,48 @@ def test_prefetch_before_vdp_runs_the_shared_check_even_with_both_layers_off(mon
     out = asyncio.run(pf.prefetch_before_vdp(vehicles, "autowall-store-com", "autoWALL store"))
     assert out == {"gallery_shared": {"urls_dropped": 1, "vehicles_touched": 4, "removals": 4}}
     assert all(v["gallery"] == [_cai(f"{i}")] and v["image_url"] == _cai(f"{i}") for i, v in enumerate(vehicles))
+
+
+# ---------------------------------------------------------------- galleries_extended counts real photos gained
+
+LOGO = "https://widget.buyercall.com/offerlogix/img/CD-full-dark-transp.png"
+
+
+def _photo_page(*urls: str) -> str:
+    return "".join(f'<img src="{u}">' for u in urls) + "<!-- " + "pad " * 120 + "-->"
+
+
+def test_gallery_added_counts_real_photos_not_list_length(monkeypatch):
+    """[placeholder, logo] + one photo used to give len(merged) - len(cur) = -1,
+    a truthy per-row stat; [placeholder, real1] + real2 gave 0 and was not counted."""
+    monkeypatch.setenv("SCANNER_VDP_HTTP_FIRST_GALLERY_MIN", "8")
+    photo, photo2 = "https://cdn.example/photos/1.jpg", "https://cdn.example/photos/2.jpg"
+    v = {"vin": "1HGBH41JXMN109186", "gallery": ["/static/placeholder.svg", LOGO],
+         "image_url": "/static/placeholder.svg", "description": "x" * 400}
+    assert pf._apply_description_and_gallery(v, _photo_page(photo), "https://d.example/car") == 1
+    assert v["gallery"] == [photo] and v["image_url"] == photo
+    assert v["_gallery_http_prefetch_added"] == 1
+
+    v2 = {"vin": "1HGBH41JXMN109186", "gallery": ["/static/placeholder.svg", photo],
+          "image_url": photo, "description": "x" * 400}
+    assert pf._apply_description_and_gallery(v2, _photo_page(photo2), "https://d.example/car") == 1
+    assert v2["gallery"] == [photo, photo2] and v2["_gallery_http_prefetch_added"] == 1
+
+    # the same page twice: nothing new -> no stat, gallery untouched
+    v3 = {"vin": "1HGBH41JXMN109186", "gallery": [photo], "image_url": photo, "description": "x" * 400}
+    assert pf._apply_description_and_gallery(v3, _photo_page(photo), "https://d.example/car") == 0
+    assert "_gallery_http_prefetch_added" not in v3 and v3["gallery"] == [photo]
+
+
+def test_galleries_extended_stat_from_placeholder_and_logo_rows(monkeypatch):
+    monkeypatch.setenv("SCANNER_VDP_HTTP_FIRST_GALLERY_MIN", "8")
+    photo = "https://cdn.example/photos/1.jpg"
+    monkeypatch.setattr(pf, "_fetch_html", lambda url: _photo_page(photo))
+    a = _complete_but_thin(description="x" * 60, gallery=["/static/placeholder.svg", LOGO], image_url="/static/placeholder.svg")
+    b = _complete_but_thin(description="x" * 60, gallery=["/static/placeholder.svg", photo], image_url=photo)
+    stats = asyncio.run(pf.http_prefetch_missing_fields([a, b]))
+    assert stats["fetched"] == 2
+    assert stats["galleries_extended"] == 1  # a gained a photo; b already had it
+    assert a["gallery"] == [photo] and a["image_url"] == photo
+    assert b["gallery"] == ["/static/placeholder.svg", photo]  # nothing new landed: the merge path did not run
+    assert "_gallery_http_prefetch_added" not in a and "_gallery_http_prefetch_added" not in b
