@@ -287,6 +287,11 @@
                                     {% if _msrp_fig > car.price %}
                                     <s class="price-msrp-line__figure">${{ "{:,.0f}".format(_msrp_fig) }}</s>
                                     <span class="price-msrp-line__delta">&minus;${{ "{:,.0f}".format(_msrp_fig - car.price) }} vs sticker</span>
+                                    {% elif car.over_msrp and car.msrp and car.msrp > 0 and _msrp_fig == car.msrp %}
+                                    {# New, non-CPO only -- msrp_trust never sets over_msrp on used/CPO (IH-06 / DC-4). #}
+                                    <span class="price-msrp-line__figure">${{ "{:,.0f}".format(car.msrp) }}</span>
+                                    <span class="price-msrp-line__delta price-msrp-line__delta--over">+${{ "{:,.0f}".format(car.over_msrp) }} over MSRP</span>
+                                    {% if not car.msrp_from_sticker %}<span class="price-msrp-source">dealer feed</span>{% endif %}
                                     {% else %}
                                     <span class="price-msrp-line__figure">${{ "{:,.0f}".format(_msrp_fig) }}</span>
                                     {% endif %}

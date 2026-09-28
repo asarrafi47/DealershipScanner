@@ -587,6 +587,8 @@ def serialize_car_for_api(
     out["msrp_source"] = _msrp["source"]
     out["msrp_from_sticker"] = _msrp["from_sticker"]
     out["below_msrp"] = _msrp["savings"]
+    # New, non-CPO only (msrp_trust rule b): the dealer's ask over the MSRP.
+    out["over_msrp"] = _msrp.get("over_msrp")
     # See serialize_car_for_listings_grid: the hero prints the figure as an
     # advertised payment and shows no MSRP delta or finance estimate against it.
     from backend.utils.market_price import is_payment_shaped_price  # lazy: market_price imports the DB layer
@@ -595,6 +597,7 @@ def serialize_car_for_api(
     if out["payment_listed"]:
         out["msrp"] = None
         out["below_msrp"] = None
+        out["over_msrp"] = None
 
     # Coarse market deal score (free consumer hook). Scored offline against the
     # in-process market_price_stats cache — no per-car DB round-trip. The detailed

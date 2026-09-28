@@ -2082,6 +2082,11 @@ body.car-lightbox-open {
     color: var(--deal-below, #1a5f4a);
 }
 
+/* A markup over MSRP (new, non-CPO only; IH-06 / DC-4). */
+.car-detail-price .price-msrp-line__delta--over {
+    color: var(--deal-above, #9a3412);
+}
+
 .car-detail-price .price-msrp-line .price-msrp-source {
     margin-left: 0; /* flex gap already spaces it */
 }

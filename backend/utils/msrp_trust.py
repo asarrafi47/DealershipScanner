@@ -42,9 +42,10 @@ holds:
           feed's msrp is the sticker total and the asking price is measured
           against it. On anything pre-owned the feed value is rejected outright:
           it is a "was" price wearing an MSRP's name.
-  (b) The figure is greater than the listed price. An MSRP equal to the price
-      conveys nothing and reads as a fabricated anchor; an MSRP below the price
-      is not an MSRP. Both are dropped rather than shown, for every source.
+  (b) The figure is not equal to the listed price (that conveys nothing and
+      reads as a fabricated anchor). Below the price it is kept only on NEW,
+      non-CPO inventory, within a 10% markup, and returned as ``over_msrp``
+      (printed "+$x over MSRP"); on anything pre-owned it is dropped.
   (c) There is something to show it next to — either a price, or (with no price
       at all) the MSRP stands alone as the only figure the page has.
 
@@ -73,6 +74,11 @@ from typing import Any
 #: sticker parser and this gate cannot disagree about what is a price at all.
 _MSRP_MIN = 5_000
 _MSRP_MAX = 500_000
+
+#: Largest markup over MSRP (as a fraction of the MSRP) printed as "+$x over
+#: MSRP" on new inventory. Measured 2026-09-28 over active New listings with
+#: 0 < msrp < price: p50 +$225, p90 +$2,349.
+_MAX_MARKUP_FRACTION = 0.10
 
 #: Set to "0" to skip reading window stickers off disk at read time (the PDF
 #: text extraction shells out to ``pdftotext``). With it off, only the feed
@@ -203,6 +209,7 @@ def resolve_display_msrp(
          "from_sticker": bool,
          "savings": int|None,       # "Below MSRP" — new, non-CPO inventory only
          "savings_basis": str|None,
+         "over_msrp": int|None,     # price - MSRP, new non-CPO inventory only
          "rejected": str|None}      # why nothing is shown, for debugging
 
     Pass ``allow_sticker=False`` on bulk paths that serialize thousands of rows
@@ -215,6 +222,7 @@ def resolve_display_msrp(
         "from_sticker": False,
         "savings": None,
         "savings_basis": None,
+        "over_msrp": None,
         "rejected": None,
     }
     if not car:
@@ -237,10 +245,25 @@ def resolve_display_msrp(
         out["rejected"] = "no_trustworthy_source" if feed is None else "feed_msrp_on_pre_owned"
         return out
 
-    # (b) an MSRP at or below the asking price is not an MSRP.
+    # (b) split by condition (IH-06 / DC-4, visual review 2026-09-28).
+    #   * Equal to the price: conveys nothing, on any car. Dropped.
+    #   * Below the price on NEW, non-CPO inventory: a dealer markup over the
+    #     sticker, which is a fact the shopper needs (a new CR-V listed $722 over
+    #     a feed MSRP that 18 listings across 11 dealers corroborate showed the
+    #     price alone, because this rule only ever let discounts through).
+    #     Returned with ``over_msrp``, only while the markup is within
+    #     ``_MAX_MARKUP_FRACTION`` of the MSRP: a bigger gap on a new car is more
+    #     likely a base price without options than a markup, and corroboration
+    #     against other listings is the follow-up.
+    #   * Below the price on anything pre-owned: a "was" price or what the car
+    #     cost new; never an "over MSRP" claim. Dropped.
+    over: int | None = None
     if price is not None and value <= price:
-        out["rejected"] = "not_above_price"
-        return out
+        if value < price and is_new and (price - value) <= value * _MAX_MARKUP_FRACTION:
+            over = int(round(price - value))
+        else:
+            out["rejected"] = "not_above_price"
+            return out
 
     out["msrp"] = value
 
@@ -260,6 +283,10 @@ def resolve_display_msrp(
     # A used car's sticker total is what it cost NEW; say so, so nobody reads it
     # as today's asking benchmark.
     out["label"] = "MSRP" if is_new else "Original MSRP"
+    if over is not None:
+        out["over_msrp"] = over
+        out["label"] = "MSRP" if from_sticker else "Dealer-listed MSRP"
+        return out
 
     # The saving is a claim about a discount available now, so new inventory
     # only. ``value > price`` is already guaranteed by (b), which is what keeps

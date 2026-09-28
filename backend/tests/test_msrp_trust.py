@@ -84,17 +84,43 @@ def test_x3_m40i_feed_msrp_equal_to_price_never_renders() -> None:
 # --- rule 2: an MSRP below the price is not an MSRP, and savings never invert -
 
 
-def test_msrp_below_price_is_suppressed() -> None:
-    out = resolve_display_msrp(_new(price=34_000, msrp=31_500))
+def test_msrp_below_price_on_used_is_suppressed() -> None:
+    out = resolve_display_msrp(_used(price=34_000, msrp=31_500))
     assert out["msrp"] is None
     assert out["savings"] is None
+    assert out["over_msrp"] is None
+
+
+def test_msrp_below_price_on_new_is_a_markup() -> None:
+    """IH-06 / DC-4: a new car listed over its feed MSRP shows the markup."""
+    out = resolve_display_msrp(_new(price=41_297, msrp=40_575))
+    assert out["msrp"] == 40_575
+    assert out["over_msrp"] == 722
+    assert out["savings"] is None
+    assert out["label"] == "Dealer-listed MSRP"
+
+
+def test_markup_beyond_ten_percent_is_not_trusted() -> None:
+    out = resolve_display_msrp(_new(price=34_000, msrp=30_000))
+    assert out["msrp"] is None
     assert out["rejected"] == "not_above_price"
 
 
-def test_sticker_msrp_below_price_is_suppressed_too(monkeypatch) -> None:
-    """The document source gets no exemption from the arithmetic rule."""
+def test_cpo_never_prints_over_msrp() -> None:
+    out = resolve_display_msrp(_new(price=34_000, msrp=33_000, is_cpo=1))
+    assert out["msrp"] is None and out["over_msrp"] is None
+
+
+def test_sticker_msrp_below_price_on_new_is_a_markup(monkeypatch) -> None:
+    """The sticker is a document; a new car above it is a markup over it."""
+    _with_sticker(monkeypatch, 33_000)
+    out = resolve_display_msrp(_new(price=34_000))
+    assert out["msrp"] == 33_000 and out["over_msrp"] == 1_000 and out["label"] == "MSRP"
+
+
+def test_sticker_msrp_below_price_on_used_is_suppressed(monkeypatch) -> None:
     _with_sticker(monkeypatch, 30_000)
-    assert resolve_display_msrp(_new(price=34_000))["msrp"] is None
+    assert resolve_display_msrp(_used(price=34_000))["msrp"] is None
 
 
 def test_savings_is_never_zero_or_negative(monkeypatch) -> None:
@@ -613,3 +639,25 @@ def test_sticker_msrp_read_degrades_to_nothing_without_the_table(sqlite_inventor
 
     assert car_sticker_msrp_values([1]) == {}
     assert car_sticker_msrp_values() == {}
+
+
+# --- IH-06 / DC-4: serializer and template carry the markup -----------------
+
+
+def test_serializer_carries_over_msrp_for_new_only() -> None:
+    from backend.utils.car_serialize import serialize_car_for_api
+
+    new = serialize_car_for_api(_new(price=41_297, msrp=40_575, year=2027, vin=None), verified_specs={},
+                                include_extended_display=False)
+    assert new["msrp"] == 40_575 and new["over_msrp"] == 722 and new["below_msrp"] is None
+    used = serialize_car_for_api(_used(price=41_297, msrp=40_575, vin=None), verified_specs={},
+                                 include_extended_display=False)
+    assert used["msrp"] is None and used["over_msrp"] is None
+
+
+def test_car_template_has_over_msrp_branch() -> None:
+    from pathlib import Path
+
+    src = (Path(__file__).resolve().parents[2] / "frontend" / "templates" / "car.html").read_text()
+    assert "over MSRP</span>" in src
+    assert "car.over_msrp" in src
