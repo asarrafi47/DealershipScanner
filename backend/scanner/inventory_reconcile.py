@@ -110,12 +110,28 @@ def _reconcile_min_coverage() -> float:
         return 0.5
 
 
+def condition_bucket(value: Any) -> str:
+    """``new`` / ``used`` (certified counts as used) / ``""`` when unknown."""
+    c = str(value or "").strip().lower()
+    if not c:
+        return ""
+    if c.startswith("new"):
+        return "new"
+    return "used"
+
+
+def condition_buckets_from_vehicles(vehicles: list[dict[str, Any]]) -> set[str]:
+    """The condition buckets this run actually returned rows for."""
+    return {b for b in (condition_bucket(v.get("condition")) for v in vehicles) if b}
+
+
 def reconcile_dealer_inventory_after_scan(
     dealer_id: str,
     dealer_url: str,
     scraped_vins: set[str],
     stats: dict[str, Any],
     *,
+    scraped_conditions: set[str] | None = None,
     _conn: Any | None = None,
 ) -> dict[str, Any]:
     """
@@ -177,7 +193,7 @@ def reconcile_dealer_inventory_after_scan(
 
         cur.execute(
             f"""
-            SELECT id, vin FROM cars
+            SELECT id, vin, condition FROM cars
             WHERE ({scope_sql})
               AND (COALESCE(listing_active, 1) = 1)
               AND LENGTH(TRIM(vin)) = 17
@@ -189,6 +205,12 @@ def reconcile_dealer_inventory_after_scan(
         stale_ids: list[int] = []
         active_known = 0
         matched = 0
+        # A one-condition replay (a "new" recipe section, a used-only capture)
+        # re-sees half the lot and, at 50% coverage, passes the gate below and
+        # retires the other half: parksidekia-com 2026-09-28 returned 306 new /
+        # 0 used and un-listed 206 used cars; covertbuickgmc-com 811 of 2,160.
+        # Never retire a condition this run returned nothing for.
+        kept_condition = 0
         for row in rows:
             rid = int(row[0])
             vnorm = normalize_scanner_vin(row[1])
@@ -198,7 +220,20 @@ def reconcile_dealer_inventory_after_scan(
             if vnorm in scraped_vins:
                 matched += 1
                 continue
+            if scraped_conditions:
+                bucket = condition_bucket(row[2] if len(row) > 2 else "")
+                if bucket and bucket not in scraped_conditions:
+                    kept_condition += 1
+                    continue
             stale_ids.append(rid)
+        if kept_condition:
+            out["kept_missing_condition"] = kept_condition
+            logger.warning(
+                "Inventory reconcile %s: run returned no %s rows; keeping %d active row(s) of that condition",
+                (dealer_id or "").strip() or "?",
+                "/".join(sorted({"new", "used"} - set(scraped_conditions or ()))) or "?",
+                kept_condition,
+            )
 
         min_cov = _reconcile_min_coverage()
         if min_cov > 0 and active_known >= min_rows and matched < min_cov * active_known:

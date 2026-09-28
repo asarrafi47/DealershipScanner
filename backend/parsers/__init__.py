@@ -128,6 +128,26 @@ _ROOFTOP_NAME_STOPWORDS = frozenset({"of", "the", "and", "at"})
 # EVIDENCE_BACKED_REJECTS: refuse the write, never un-list the car.
 _LOCALITY_ONLY_TIERS = frozenset({"zip_code", "city_state"})
 
+# Name tiers that match on a SUBSET of the roster's words identify the store
+# only loosely: "Ted Russell Ford" ⊂ both "Ted Russell Ford" and "Ted Russell
+# Ford - Parkside", so a roster row named after the wrong lot picks the wrong
+# rooftop (tedrussellford-net 2026-09-28: 600 real cars un-listed). Keeping on
+# these tiers can only add inventory; un-listing on them needs the exact name,
+# the host, a slug or a trusted street, so their siblings get the weak marker.
+_WEAK_NAME_TIERS = frozenset({"name_token_subset", "name_brand_alias_subset"})
+
+# A rooftop named "<store> Service" / "<store> Service Center" / "<store> Parts"
+# is the same storefront's department label, not a sibling lot: dealer.com
+# accounts file the whole lot under it (terrylabontechevy-com 2026-09-28:
+# 400 cars under "Terry Labonte Chevrolet Service", 11 under "Terry Labonte
+# Chevrolet"; the exact-name tier picked the 11 and un-listed 373). Such a
+# rooftop is folded into the store it names before the target is picked.
+_DEPARTMENT_SUFFIXES = (
+    "service center", "service department", "service dept", "service",
+    "parts center", "parts department", "parts dept", "parts",
+    "collision center", "collision", "body shop", "quick lane",
+)
+
 # The tiers that matched on the roster's street_address. They prove IDENTITY —
 # but only as far as the roster street itself can be trusted, which is what
 # ``dealerships.street_address_source`` records (migrations/V003).
@@ -730,6 +750,55 @@ def resolve_rooftop_attribution(
     return kept, rejected
 
 
+def _department_base(name: str) -> str:
+    """``"terry labonte chevrolet"`` for ``"Terry Labonte Chevrolet Service"``; ``""`` otherwise."""
+    words = [w for w in re.split(r"[^a-z0-9]+", str(name or "").lower()) if w]
+    for suffix in _DEPARTMENT_SUFFIXES:
+        sw = suffix.split()
+        if len(words) > len(sw) and words[-len(sw):] == sw:
+            return "".join(words[: -len(sw)])
+    return ""
+
+
+def _merge_department_rooftops(rooftops: list) -> list:
+    """Fold "<store> Service"-style rooftops into the rooftop named ``<store>``.
+
+    Only when the base name is present as another rooftop's own name; a lone
+    "X Service" rooftop with no "X" beside it is left alone (it may be the
+    only name the feed gives the store, and the name tiers handle that).
+    """
+    by_name: dict[str, Any] = {}
+    for rt in rooftops:
+        for nm in rt.names:
+            by_name.setdefault(_nrm(nm), rt)
+    merged: list = []
+    for rt in rooftops:
+        bases = {_department_base(nm) for nm in rt.names} - {""}
+        host = None
+        for b in bases:
+            cand = by_name.get(b)
+            if cand is not None and cand is not rt:
+                host = cand
+                break
+        if host is None:
+            merged.append(rt)
+            continue
+        host.rows.extend(rt.rows)
+        host.sources |= rt.sources
+        host.alt_names |= rt.names | rt.alt_names
+        host.slugs |= rt.slugs
+        host.hosts |= rt.hosts
+        host.streets |= rt.streets
+        host.street_keys |= rt.street_keys
+        host.locales |= rt.locales
+        host.zips |= rt.zips
+        _log.info(
+            "rooftop attribution: folded department rooftop %s (%d row(s)) into %s",
+            sorted(rt.names)[0], len(rt.rows), sorted(host.names)[0],
+        )
+    return merged
+
+
 def _resolve_rooftop_attribution_inner(
     rows: list[dict], *, dealer_id: str = "", dealer_name: str = "", dealer_url: str = "",
     dealer_address: str = "", dealer_city: str = "", dealer_state: str = "", dealer_zip: str = "",
@@ -772,7 +841,7 @@ def _resolve_rooftop_attribution_inner(
     if not groups:
         return rows, []
 
-    rooftops = [groups[i] for i in order]
+    rooftops = _merge_department_rooftops([groups[i] for i in order])
     place = (
         _nrm(dealer_address),
         _street_key(dealer_address),
@@ -837,7 +906,7 @@ def _resolve_rooftop_attribution_inner(
     )
     sibling_reject = (
         "sibling_rooftop"
-        if tier not in _LOCALITY_ONLY_TIERS and not weak_street_provenance
+        if tier not in _LOCALITY_ONLY_TIERS and tier not in _WEAK_NAME_TIERS and not weak_street_provenance
         else "sibling_rooftop_weak_tier"
     )
     # A stamp that names no store (a street block, or nothing) filed under the

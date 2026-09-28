@@ -701,11 +701,13 @@ async def run_dealer(
                         e,
                     )
             from backend.scanner.inventory_reconcile import (
+                condition_buckets_from_vehicles,
                 normalized_vin_set_from_vehicles,
                 reconcile_dealer_inventory_after_scan,
             )
 
             scraped_norm = normalized_vin_set_from_vehicles(all_vehicles)
+            scraped_conditions = condition_buckets_from_vehicles(all_vehicles)
             # Cars earlier scans stamped onto this store that THIS run's feed
             # hands to a named sibling rooftop. They are gone from
             # ``scraped_norm`` now, but reconcile alone cannot retire them: once
@@ -747,6 +749,7 @@ async def run_dealer(
                     url,
                     scraped_norm,
                     result,
+                    scraped_conditions=scraped_conditions,
                 )
             except Exception as e:
                 logger.warning(
