@@ -408,10 +408,18 @@ def msrp_expected(car: dict[str, Any], provider_hint: str | None = None) -> bool
 
 
 def _provider_hint(conn, dealer_id: str) -> str | None:
+    # dealer_recipes is one row per dealer (dealer_id is the key; there is no id or
+    # stale column). The 2026-09-28 version filtered on both, which failed on
+    # Postgres and left the caller's transaction aborted: every later query in the
+    # pipeline's assess loop then raised InFailedSqlTransaction (Railway run
+    # 2026-09-28: 7 of 8 shards exited 1 after scanning fine).
     try:
-        rows = _rows(conn, "SELECT provider_hint FROM dealer_recipes WHERE dealer_id = ? AND COALESCE(stale, 0) = 0 "
-                           "ORDER BY id DESC LIMIT 1", (dealer_id,))
-    except Exception:  # noqa: BLE001 - table absent (tests) or column missing
+        rows = _rows(conn, "SELECT provider_hint FROM dealer_recipes WHERE dealer_id = ?", (dealer_id,))
+    except Exception:  # noqa: BLE001 - table absent (tests)
+        try:
+            conn.rollback()  # a failed statement poisons the caller's transaction on Postgres
+        except Exception:  # noqa: BLE001
+            pass
         return None
     return str(rows[0].get("provider_hint") or "") or None if rows else None
 
