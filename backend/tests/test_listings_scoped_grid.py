@@ -586,3 +586,59 @@ def test_car_attribution_states_fail_open_is_opt_out(monkeypatch):
     assert cars_repo.car_attribution_states() == {}
     with pytest.raises(RuntimeError):
         cars_repo.car_attribution_states(fail_open=False)
+
+
+# ── bounded inline work ─────────────────────────────────────────────────
+
+
+def test_thin_store_request_serializes_at_most_the_cap(scoped, client, monkeypatch):
+    """Fresh deploy (empty store): a request builds at most _INLINE_REBUILD_MAX cards,
+    nearest first, serves them, queues the rest and says the body is partial."""
+    from backend.db.repositories import grid_cards_repo as gc
+
+    monkeypatch.setattr(gc, "_INLINE_REBUILD_MAX", 2)
+    queued = []
+    monkeypatch.setattr(gc, "_enqueue_refresh", lambda ids: queued.extend(ids))
+    serialized = []
+    real = gc._serialize_rows
+
+    def counting(rows, ctx, **kw):
+        serialized.append(len(rows))
+        return real(rows, ctx, **kw)
+
+    monkeypatch.setattr(gc, "_serialize_rows", counting)
+    r = client.get("/api/listings/cars?zip=92694&radius=250")
+    data = _cars(r)
+    assert sum(serialized) == 2, "inline work is bounded by the cap"
+    assert data["partial"] is True and data["count"] == 2
+    assert r.headers["X-Listings-Partial"] == "1"
+    assert "s-maxage" not in r.headers["Cache-Control"]
+    # Nearest first: near-motors (~1 mi) before anything farther.
+    assert {c["dealer_id"] for c in data["cars"]} == {"near-motors-test"}
+    assert len(queued) == 5 - 2  # every other car in range is queued, none dropped
+
+
+def test_many_changes_with_a_servable_store_serve_stale_and_build_nothing(scoped, monkeypatch):
+    from backend.db.geo import zip_to_coords
+    from backend.db.repositories import grid_cards_repo as gc
+
+    lat, lon = zip_to_coords("92694")
+    gc.cards_near(lat, lon, 250)  # fill the store
+    conn = sqlite3.connect(str(scoped.path))
+    conn.execute("UPDATE cars SET price = price + 1")
+    conn.commit()
+    conn.close()
+    monkeypatch.setattr(gc, "_INLINE_REBUILD_MAX", 2)
+    queued = []
+    monkeypatch.setattr(gc, "_enqueue_refresh", lambda ids: queued.extend(ids))
+    res = gc.cards_near(lat, lon, 250)
+    # 5 cars have coordinates (#6 is counted in missing_coords).
+    assert res.stats["inline"] == 0 and res.stats["deferred"] == 5
+    assert res.partial and len(res.entries) == 5 and len(set(queued)) == 5
+
+
+def test_offline_builder_is_not_capped(scoped, monkeypatch):
+    from backend.db.repositories import grid_cards_repo as gc
+
+    monkeypatch.setattr(gc, "_INLINE_REBUILD_MAX", 1)
+    assert gc.build_all_cards(batch=10)["rebuilt"] == 6

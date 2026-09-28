@@ -2595,14 +2595,48 @@ document.addEventListener("DOMContentLoaded", () => {
             });
     }
 
+    // A scoped response marked ``partial`` holds only the cards the server had ready;
+    // the rest are being rebuilt in the background. Refetch a few times with backoff
+    // (the ETag moves once the rebuild lands) and re-render if anything changed.
+    let _partialRefetchTimer = null;
+    let _partialRefetchTries = 0;
+    function scheduleListingsPartialRefetch(scope) {
+        if (_partialRefetchTimer || _partialRefetchTries >= 6 || !scope || scope === "dealer") return;
+        const delay = Math.min(30000, 3000 * Math.pow(2, _partialRefetchTries));
+        _partialRefetchTries += 1;
+        _partialRefetchTimer = setTimeout(() => {
+            _partialRefetchTimer = null;
+            if (listingsCarsScopeKey() !== scope || window.__DS_listingsCarsScope !== scope) return;
+            fetchListingsCarsJson(false, scope)
+                .then((data) => {
+                    if (listingsCarsScopeKey() !== scope) return;
+                    if (!applyListingsCarsPayload(data, scope) || data.unchanged) return;
+                    const smartIn = document.getElementById("smart-search-input");
+                    if (smartIn && (smartIn.value || "").trim()) return;
+                    if (typeof runCascade === "function") runCascade();
+                    if (typeof window.__DS_runFilterRender === "function") {
+                        window.__DS_runFilterRender();
+                    }
+                })
+                .catch(() => {});
+        }, delay);
+    }
+
     function applyListingsCarsPayload(data, scopeArg) {
         if (!data || !data.ok) return false;
         const scope = scopeArg || data.scope || listingsCarsScopeKey();
         if (data.unchanged) {
             window.__DS_listingsCarsScope = scope;
+            if (window.__DS_listingsCarsPartial) scheduleListingsPartialRefetch(scope);
             return true;
         }
         if (!Array.isArray(data.cars)) return false;
+        window.__DS_listingsCarsPartial = data.partial === true;
+        if (data.partial === true) {
+            scheduleListingsPartialRefetch(scope);
+        } else {
+            _partialRefetchTries = 0;
+        }
         window.ALL_CARS = data.cars;
         window.__DS_listingsCarsScope = scope;
         window.__DS_listingsCarsMeta = {

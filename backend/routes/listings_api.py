@@ -310,10 +310,14 @@ def _build_cars_scope_entry(
 
 
 def _cars_json_response(entry: _CarsScopeEntry, *, private: bool):
-    cache_control = (
-        "private, no-cache" if private
-        else "public, max-age=0, s-maxage=60, stale-while-revalidate=30"
-    )
+    partial = entry.store_gen is not None
+    if private:
+        cache_control = "private, no-cache"
+    elif partial:
+        # Cards still being rebuilt: a shared cache must not pin this body for 60 s.
+        cache_control = "public, no-cache"
+    else:
+        cache_control = "public, max-age=0, s-maxage=60, stale-while-revalidate=30"
     inm = (request.headers.get("If-None-Match") or "").strip()
     if inm and inm == entry.etag:
         resp = make_response("", 304)
@@ -326,6 +330,8 @@ def _cars_json_response(entry: _CarsScopeEntry, *, private: bool):
         resp.headers["Content-Type"] = "application/json"
     resp.headers["ETag"] = entry.etag
     resp.headers["Cache-Control"] = cache_control
+    if partial:
+        resp.headers["X-Listings-Partial"] = "1"
     resp.headers["Vary"] = "Accept-Encoding, Cookie" if private else "Accept-Encoding"
     return resp
 

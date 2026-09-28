@@ -72,11 +72,14 @@ _REV_SOURCES = (
 )
 
 CARD_MAX_AGE_DAYS = 1
-# Inline-serialize at most this many changed/missing cards per request; beyond it the
-# stored copies are served and the rest is refreshed in the background.
+# Hard cap on cards serialized inline by one request (~0.9 ms each, so ~1.4 s). A
+# request never runs a full scope build: past the cap it serves what is stored,
+# queues the rest for the background refresher and marks the response partial.
 _INLINE_REBUILD_MAX = 1500
-# ... unless the store cannot serve at least this share of the scope, in which case
-# there is nothing sensible to serve and the build runs inline (first-ever request).
+# When the store can serve at least this share of the scope (fresh + stale cards) and
+# more than the cap changed, nothing is serialized inline: stale cards are served.
+# Below it (fresh deploy, empty store) the cap is spent on cards with NO stored copy,
+# nearest first, so the first screen fills in.
 _MIN_SERVABLE_SHARE = 0.5
 _ID_BATCH = 800
 _BG_YIELD_ROWS = 100
@@ -546,7 +549,7 @@ def _bg_worker() -> None:
 def _enqueue_refresh(ids: Iterable[int]) -> None:
     global _bg_thread
     with _bg_pending_lock:
-        todo = [i for i in ids if i not in _bg_pending]
+        todo = [i for i in dict.fromkeys(ids) if i not in _bg_pending]
         _bg_pending.update(todo)
     if not todo:
         return
@@ -698,47 +701,61 @@ def _resolve(
 
     total = len(fresh) + len(changed)
     servable_stale = [x for x in changed if x[0].get("card_json")]
-    inline = (
-        not allow_background
-        or len(changed) <= _INLINE_REBUILD_MAX
-        or (len(fresh) + len(servable_stale)) < _MIN_SERVABLE_SHARE * max(total, 1)
-    )
-    res.stats = {"fresh": len(fresh), "changed": len(changed), "inline": int(inline)}
+    if not allow_background or len(changed) <= _INLINE_REBUILD_MAX:
+        build_now, deferred = changed, []
+    elif (len(fresh) + len(servable_stale)) >= _MIN_SERVABLE_SHARE * max(total, 1):
+        build_now, deferred = [], changed
+    else:
+        # Store too thin to serve this scope: spend the cap on cards with no stored
+        # copy (nearest first) and defer everything else.
+        missing = sorted(
+            (x for x in changed if not x[0].get("card_json")),
+            key=lambda x: (x[1] if x[1] is not None else float("inf"), int(x[0]["id"])),
+        )
+        build_now = missing[:_INLINE_REBUILD_MAX]
+        now_ids = {int(x[0]["id"]) for x in build_now}
+        deferred = [x for x in changed if int(x[0]["id"]) not in now_ids]
+    res.stats = {
+        "fresh": len(fresh),
+        "changed": len(changed),
+        "inline": len(build_now),
+        "deferred": len(deferred),
+        "omitted": sum(1 for x in deferred if not x[0].get("card_json")),
+    }
 
     served: list[tuple[dict[str, Any], float | None]] = list(fresh)
     background: list[int] = []
-    if changed:
-        if inline:
-            need = [int(c["id"]) for c, _, r in changed if r is None]
-            extra = _fetch_full_rows(need) if need else {}
-            rows = []
-            versions: dict[int, str] = {}
-            for c, _, r in changed:
-                row = r if r is not None else extra.get(int(c["id"]))
-                if row is None:
-                    continue
-                versions[int(row["id"])] = str(row.get("_ver") or "")
-                rows.append(row)
-            entries = _serialize_rows(rows, ctx)
-            _store(entries, versions, ctx.today)
-            dist_by_id = {int(c["id"]): d for c, d, _ in changed}
-            for e in entries:
-                served.append(
-                    (
-                        {
-                            "id": e[0],
-                            "sort_bucket": e[4],
-                            "sort_price": e[5],
-                            "card_json": e[6],
-                            "built_day": ctx.today,
-                            "day_dep": 0,
-                        },
-                        dist_by_id.get(e[0]),
-                    )
+    if deferred:
+        served.extend((c, d) for c, d, _ in deferred if c.get("card_json"))
+        background.extend(int(c["id"]) for c, _, _ in deferred)
+    if build_now:
+        need = [int(c["id"]) for c, _, r in build_now if r is None]
+        extra = _fetch_full_rows(need) if need else {}
+        rows = []
+        versions: dict[int, str] = {}
+        for c, _, r in build_now:
+            row = r if r is not None else extra.get(int(c["id"]))
+            if row is None:
+                continue
+            versions[int(row["id"])] = str(row.get("_ver") or "")
+            rows.append(row)
+        entries = _serialize_rows(rows, ctx)
+        _store(entries, versions, ctx.today)
+        dist_by_id = {int(c["id"]): d for c, d, _ in build_now}
+        for e in entries:
+            served.append(
+                (
+                    {
+                        "id": e[0],
+                        "sort_bucket": e[4],
+                        "sort_price": e[5],
+                        "card_json": e[6],
+                        "built_day": ctx.today,
+                        "day_dep": 0,
+                    },
+                    dist_by_id.get(e[0]),
                 )
-        else:
-            served.extend((c, d) for c, d, _ in servable_stale)
-            background.extend(int(c["id"]) for c, _, _ in changed)
+            )
     if touch:
         _touch_versions(touch)
 
