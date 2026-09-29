@@ -291,8 +291,12 @@ async def delta_scan_dealer(dealer: dict[str, Any]) -> dict[str, Any]:
     from backend.scanner.inventory_write import InventoryWriteCoordinator
 
     coordinator = InventoryWriteCoordinator()
-    count = await coordinator.upsert_vehicles(vehicles)
+    _upsert_stats: dict = {}
+    count = await coordinator.upsert_vehicles(vehicles, _upsert_stats)
     out["upserted"] = count
+    if _upsert_stats.get("vin_owner_conflicts"):
+        out["vin_owner_conflicts"] = _upsert_stats["vin_owner_conflicts"]
+        out["vin_owner_conflict_owners"] = _upsert_stats.get("vin_owner_conflict_owners") or {}
 
     # Team Velocity feeds carry imageUrls:null — photos (and the per-car Carfax
     # link) live only on the VDP. Run the platform's own completion step for this

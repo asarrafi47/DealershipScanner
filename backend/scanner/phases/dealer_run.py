@@ -160,6 +160,8 @@ def emit_dealer_run_summary(result: dict[str, Any]) -> None:
         "seconds": round(float(result.get("seconds") or 0.0), 2),
         "upserted": result.get("upserted"),
     }
+    if result.get("vin_owner_conflicts"):
+        payload["vin_owner_conflicts"] = result.get("vin_owner_conflicts")
     err = result.get("error")
     if err:
         payload["error"] = str(err)[:400]
@@ -667,10 +669,26 @@ async def run_dealer(
                 logger.warning("VIN facts failed [%s] (continuing): %s", name, _vf_e)
             result["capture_coverage"] = _capture_coverage(all_vehicles)
             t_up0 = time.perf_counter()
-            count = await upsert_vehicles_for_dealer(write_coordinator, all_vehicles)
+            _upsert_stats: dict[str, Any] = {}
+            count = await upsert_vehicles_for_dealer(write_coordinator, all_vehicles, _upsert_stats)
             result["phase_secs"]["upsert"] = round(time.perf_counter() - t_up0, 2)
             result["upserted"] = count
             scan_log.log_vehicles(dealer_id, name, result.get("provider", provider), all_vehicles)
+            _conflicted = set(_upsert_stats.get("vin_owner_conflict_vins") or ())
+            result["vin_owner_conflicts"] = len(_conflicted)
+            if _conflicted:
+                # VIN ownership guard (2026-09-29): another store owns these VINs
+                # (active, scraped within SCANNER_VIN_OWNER_GUARD_HOURS). They were
+                # not written; drop them so coverage, auto-heal and reconcile below
+                # neither touch nor count the owner's rows.
+                result["vin_owner_conflict_owners"] = _upsert_stats.get("vin_owner_conflict_owners") or {}
+                all_vehicles = [
+                    v for v in all_vehicles if (v.get("vin") or "").strip() not in _conflicted
+                ]
+                logger.warning(
+                    "VIN owner guard [%s]: %d VIN(s) owned by other dealers were NOT written: %s",
+                    name, len(_conflicted), result["vin_owner_conflict_owners"],
+                )
             if all_vehicles:
                 _cov = compute_dealer_coverage(list(all_vehicles), dealer_id=dealer_id)
                 result["coverage"] = _cov

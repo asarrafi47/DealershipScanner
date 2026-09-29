@@ -5,7 +5,7 @@ import json
 import logging
 import os
 import re
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 from typing import Any
 
 from backend.db.inventory_db import ensure_cars_table_columns
@@ -32,6 +32,119 @@ _PRICE_HISTORY_MAX_ENTRIES = 24
 # Upserts are idempotent per VIN, so committing in chunks costs nothing on a
 # retry and bounds how long the scanner can block a concurrent DDL or reader.
 _UPSERT_COMMIT_BATCH = 200
+
+# ---------------------------------------------------------------------------
+# VIN ownership guard (2026-09-29 Railway fleet incident)
+# ---------------------------------------------------------------------------
+# ``cars`` is one row per VIN and the upsert is ON CONFLICT(vin), so the last
+# store to write a VIN owns it. The first full Railway fleet run reassigned
+# 6,961 VINs (3.6%) to the wrong dealer that way (mbontario-com ->
+# mbbeverlyhills-com 1,229, mtnviewnissan-com (CA) -> cleveland-nissan-com (TN)
+# 876, ...). A write may therefore NOT move a VIN whose stored row is active and
+# was scraped within the guard window under a different dealer_id: that
+# vehicle's write is skipped (the stored row is not touched), counted, and
+# recorded in ``vin_owner_conflicts``. A genuine transfer (sold between stores)
+# still lands once the owner's next scan retires the row or the window lapses.
+# No same-store exception: two entity ids for one store (hughwhitehonda-com /
+# -net) are not detectable here; the conflict table shows those pairs.
+_VIN_OWNER_GUARD_DEFAULT_HOURS = 48.0
+_vin_owner_table_ready = False
+
+
+def vin_owner_guard_hours() -> float:
+    """SCANNER_VIN_OWNER_GUARD_HOURS (default 48); 0 (or negative) disables."""
+    raw = (os.environ.get("SCANNER_VIN_OWNER_GUARD_HOURS") or "").strip()
+    if not raw:
+        return _VIN_OWNER_GUARD_DEFAULT_HOURS
+    try:
+        return max(0.0, float(raw))
+    except ValueError:
+        return _VIN_OWNER_GUARD_DEFAULT_HOURS
+
+
+def _parse_scraped_at(value: Any) -> datetime | None:
+    if value is None:
+        return None
+    if isinstance(value, datetime):
+        return value if value.tzinfo else value.replace(tzinfo=timezone.utc)
+    text = str(value).strip()
+    if not text:
+        return None
+    try:
+        dt = datetime.fromisoformat(text.replace("Z", "+00:00").replace(" ", "T", 1))
+    except ValueError:
+        return None
+    return dt if dt.tzinfo else dt.replace(tzinfo=timezone.utc)
+
+
+def _vin_owned_elsewhere(
+    owner_dealer_id: Any,
+    listing_active: Any,
+    scraped_at: Any,
+    claimant_dealer_id: str,
+    cutoff: datetime,
+) -> bool:
+    """True when the stored row is active, fresh (scraped at/after ``cutoff``) and
+    owned by a different, non-empty dealer_id than the claimant."""
+    owner = str(owner_dealer_id or "").strip()
+    if not owner or owner == (claimant_dealer_id or "").strip():
+        return False
+    try:
+        if listing_active is not None and int(listing_active) != 1:
+            return False
+    except (TypeError, ValueError):
+        pass
+    ts = _parse_scraped_at(scraped_at)
+    return ts is not None and ts >= cutoff
+
+
+_VIN_OWNER_CONFLICTS_DDL = """
+    CREATE TABLE IF NOT EXISTS vin_owner_conflicts (
+        vin                 TEXT NOT NULL,
+        owner_dealer_id     TEXT NOT NULL,
+        claimant_dealer_id  TEXT NOT NULL,
+        seen_at             TEXT NOT NULL,
+        PRIMARY KEY (vin, owner_dealer_id, claimant_dealer_id)
+    )
+"""
+
+
+def record_vin_owner_conflicts(conflicts: list[tuple[str, str, str]], seen_at: str) -> None:
+    """Upsert (vin, owner, claimant) rows; ``seen_at`` is the latest sighting.
+
+    One row per pair keeps the table bounded across nightly runs. Runs on its own
+    connection AFTER the car writes committed, so a failure here (e.g. a missing
+    table on a read-only replica) can never abort or roll back the inventory write.
+    """
+    global _vin_owner_table_ready
+    if not conflicts:
+        return
+    conn = get_conn()
+    try:
+        cur = conn.cursor()
+        if not _vin_owner_table_ready:
+            cur.execute(_VIN_OWNER_CONFLICTS_DDL)
+            conn.commit()
+            _vin_owner_table_ready = True
+        for vin, owner, claimant in conflicts:
+            cur.execute(
+                """
+                INSERT INTO vin_owner_conflicts (vin, owner_dealer_id, claimant_dealer_id, seen_at)
+                VALUES (?, ?, ?, ?)
+                ON CONFLICT (vin, owner_dealer_id, claimant_dealer_id)
+                DO UPDATE SET seen_at = excluded.seen_at
+                """,
+                (vin, owner, claimant, seen_at),
+            )
+        conn.commit()
+    except Exception:
+        logger.warning("vin_owner_conflicts: could not record %d conflict(s)", len(conflicts), exc_info=True)
+        try:
+            conn.rollback()
+        except Exception:
+            pass
+    finally:
+        conn.close()
 
 
 def _build_price_history_json(
@@ -274,11 +387,22 @@ def drop_unattributable_vehicles(vehicles: list[dict]) -> tuple[list[dict], int]
     return kept, refused
 
 
-def upsert_vehicles(vehicles: list[dict]) -> int:
+def upsert_vehicles(vehicles: list[dict], stats: dict | None = None) -> int:
     """
     Insert or replace vehicles by vin. Strict de-duplication: one row per VIN
     (same car in 'New' and 'Used' counts once). Uses ON CONFLICT(vin) DO UPDATE.
+
+    VIN ownership guard (see ``vin_owner_guard_hours``): a VIN whose stored row
+    is active, scraped within the window, under a different dealer_id is skipped.
+    ``stats`` (optional, filled in place and reset on every call so a retried
+    write does not double count) receives ``vin_owner_conflicts`` (int),
+    ``vin_owner_conflict_vins`` (sorted list) and ``vin_owner_conflict_owners``
+    ({owner_dealer_id: n}).
     """
+    if stats is not None:
+        stats["vin_owner_conflicts"] = 0
+        stats["vin_owner_conflict_vins"] = []
+        stats["vin_owner_conflict_owners"] = {}
     if not vehicles:
         return 0
     vehicles, _refused = drop_unattributable_vehicles(vehicles)
@@ -304,17 +428,32 @@ def upsert_vehicles(vehicles: list[dict]) -> int:
         # orphaning the provenance of every surviving enriched value. Merge the
         # incoming provenance into the stored one instead.
         existing_spec_src: dict[str, str] = {}
+        guard_hours = vin_owner_guard_hours()
+        guard_on = guard_hours > 0
+        guard_cutoff = datetime.now(timezone.utc) - timedelta(hours=guard_hours if guard_on else 0)
+        # Same text shape as ``scraped_at`` (isoformat + "Z") so the SQL backstop
+        # below compares like with like on both SQLite and Postgres (TEXT column).
+        guard_cutoff_iso = guard_cutoff.replace(tzinfo=None).isoformat() + "Z"
+        conflicts: dict[str, tuple[str, str]] = {}  # vin -> (owner, claimant)
         vin_keys = list(by_vin.keys())
         for i in range(0, len(vin_keys), 500):
             chunk = vin_keys[i : i + 500]
             placeholders = ",".join("?" * len(chunk))
             cursor.execute(
-                f"SELECT vin, spec_source_json FROM cars WHERE vin IN ({placeholders})",
+                "SELECT vin, spec_source_json, dealer_id, listing_active, scraped_at "
+                f"FROM cars WHERE vin IN ({placeholders})",
                 chunk,
             )
             for row in cursor.fetchall():
                 if row[1] is not None and str(row[1]).strip():
                     existing_spec_src[str(row[0])] = str(row[1])
+                if guard_on and len(row) >= 5:
+                    _vin = str(row[0])
+                    _claimant = str((by_vin.get(_vin) or {}).get("dealer_id") or "").strip()
+                    if _vin_owned_elsewhere(row[2], row[3], row[4], _claimant, guard_cutoff):
+                        conflicts[_vin] = (str(row[2]).strip(), _claimant)
+        if conflicts:
+            vehicles = [v for v in vehicles if (v.get("vin") or "").strip() not in conflicts]
         # The prefetch above opened a read transaction; it is fully materialized in
         # ``existing_spec_src`` now, so end it before the per-vehicle work starts.
         conn.commit()
@@ -613,6 +752,15 @@ def upsert_vehicles(vehicles: list[dict]) -> int:
                     price_provenance_json=COALESCE(excluded.price_provenance_json, cars.price_provenance_json),
                     spin_frames=COALESCE(NULLIF(NULLIF(TRIM(excluded.spin_frames), ''), '[]'), cars.spin_frames),
                     interior_pano=COALESCE(NULLIF(TRIM(excluded.interior_pano), ''), cars.interior_pano)
+                -- VIN ownership guard, atomic backstop for the prefetch check above
+                -- (a concurrent shard may have claimed the VIN since): never move an
+                -- active, fresh row to a different dealer_id.
+                WHERE ? = 0
+                   OR COALESCE(cars.dealer_id, '') = ''
+                   OR cars.dealer_id = excluded.dealer_id
+                   OR COALESCE(cars.listing_active, 1) != 1
+                   OR cars.scraped_at IS NULL
+                   OR cars.scraped_at < ?
                 """,
                 (
                     vin,
@@ -663,8 +811,21 @@ def upsert_vehicles(vehicles: list[dict]) -> int:
                     price_history_json,
                     spin_frames_json,
                     interior_pano,
+                    1 if guard_on else 0,
+                    guard_cutoff_iso,
                 ),
             )
+            if guard_on and getattr(cursor, "rowcount", 1) == 0:
+                # Backstop fired: another writer owns this VIN (fresh, active).
+                _owner = ""
+                try:
+                    cursor.execute("SELECT dealer_id FROM cars WHERE vin = ?", (vin,))
+                    _r = cursor.fetchone()
+                    _owner = str(_r[0] or "").strip() if _r else ""
+                except Exception:
+                    pass
+                conflicts[vin] = (_owner, str(v.get("dealer_id") or "").strip())
+                continue
             count += 1
             if count % _UPSERT_COMMIT_BATCH == 0:
                 conn.commit()
@@ -691,6 +852,35 @@ def upsert_vehicles(vehicles: list[dict]) -> int:
     finally:
         conn.close()
     logger.info("Upserted %d vehicles", count)
+    if conflicts:
+        for _vin in conflicts:
+            by_vin.pop(_vin, None)  # post-write steps below must not touch the owner's row
+        by_owner: dict[str, int] = {}
+        by_claimant: dict[str, int] = {}
+        for owner, claimant in conflicts.values():
+            by_owner[owner] = by_owner.get(owner, 0) + 1
+            by_claimant[claimant] = by_claimant.get(claimant, 0) + 1
+        logger.warning(
+            "vin_owner_guard %s",
+            json.dumps(
+                {
+                    "skipped": len(conflicts),
+                    "claimants": by_claimant,
+                    "owners": by_owner,
+                    "window_hours": guard_hours,
+                },
+                separators=(",", ":"),
+                ensure_ascii=False,
+            ),
+        )
+        record_vin_owner_conflicts(
+            [(vin, owner, claimant) for vin, (owner, claimant) in sorted(conflicts.items())],
+            datetime.utcnow().isoformat() + "Z",
+        )
+        if stats is not None:
+            stats["vin_owner_conflicts"] = len(conflicts)
+            stats["vin_owner_conflict_vins"] = sorted(conflicts)
+            stats["vin_owner_conflict_owners"] = by_owner
     if count > 0:
         try:
             from backend.db import incomplete_listings_db as ild

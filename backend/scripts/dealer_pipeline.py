@@ -599,7 +599,24 @@ def _timing_text(r: dict[str, Any]) -> str:
     return f"{mins if mins is not None else '-'} min" + (f" {flags}" if flags else "")
 
 
+# VIN ownership guard (2026-09-29): a scan that tried to take more than this many
+# VINs another dealer owns (active, fresh) is named in the triage reason — it is
+# either replaying a group feed or a second entity id for the owner's store.
+VIN_OWNER_CONFLICT_REASON_MIN = 10
+
+
 def assess(conn, dealer_id: str, since_iso: str, known_before: int, recipe_info: dict[str, Any]) -> dict[str, Any]:
+    out = _assess(conn, dealer_id, since_iso, known_before, recipe_info)
+    n = int(out.get("vin_owner_conflicts") or 0)
+    if n > VIN_OWNER_CONFLICT_REASON_MIN:
+        owners = out.get("vin_owner_conflict_owners") or {}
+        top = ", ".join(f"{o} {c}" for o, c in sorted(owners.items(), key=lambda kv: -kv[1])[:3])
+        note = f"VIN owner guard: {n} VINs owned by other dealers not written" + (f" ({top})" if top else "")
+        out["reason"] = f"{out['reason']}; {note}" if out.get("reason") else note
+    return out
+
+
+def _assess(conn, dealer_id: str, since_iso: str, known_before: int, recipe_info: dict[str, Any]) -> dict[str, Any]:
     runs = _rows(
         conn,
         "SELECT id, provider, finished_at, duration_seconds, inventory_rows, upserted, error, summary_json "
@@ -638,6 +655,8 @@ def assess(conn, dealer_id: str, since_iso: str, known_before: int, recipe_info:
         "error": (r.get("error") or None),
         "coverage": {k: cc.get(k) for k in KEY_FIELDS + SECONDARY_FIELDS if k in cc},
         "filtered_count": s.get("filtered_count"), "vin_facts": s.get("vin_facts"),
+        "vin_owner_conflicts": int(s.get("vin_owner_conflicts") or 0),
+        "vin_owner_conflict_owners": s.get("vin_owner_conflict_owners") or {},
     })
     out["timing"] = record_timing(dealer_id, r)
     if r.get("error"):

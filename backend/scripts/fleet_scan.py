@@ -381,6 +381,7 @@ def main() -> int:
         "batch": batch,
         "verdicts": dict(verdicts),
         "rows": sum(int(r.get("rows") or 0) for r in results),
+        "vin_owner_conflicts": sum(int(r.get("vin_owner_conflicts") or 0) for r in results),
         "http_403_429": tally_http(logs),
         "http_first_statuses": http_first_statuses(results),
         "scan_seconds": scan_secs,

@@ -53,6 +53,10 @@ def record_scan_outcomes(outcomes: list[Any], *, finished_at: str) -> int:
                 "intercept_count": o.get("intercept_count"),
                 "recipe_fetch": o.get("recipe_fetch"),
                 "http_only": bool(o.get("http_only")),
+                # VIN ownership guard (2026-09-29): VINs this scan found but did not
+                # write because another dealer owns them (active, fresh).
+                "vin_owner_conflicts": int(o.get("vin_owner_conflicts") or 0),
+                "vin_owner_conflict_owners": o.get("vin_owner_conflict_owners") or {},
             }
             err = o.get("error")
             err_s = str(err)[:2000] if err else None

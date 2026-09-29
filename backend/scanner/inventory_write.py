@@ -57,13 +57,15 @@ class InventoryWriteCoordinator:
     def parallel(self) -> bool:
         return self._parallel
 
-    async def upsert_vehicles(self, vehicles: list[dict]) -> int:
+    async def upsert_vehicles(self, vehicles: list[dict], stats: dict | None = None) -> int:
+        """``stats``: optional dict ``upsert_vehicles`` fills with the VIN
+        ownership-guard counts (``vin_owner_conflicts`` etc.)."""
         if not vehicles:
             return 0
         if self._lock is None:
-            return await _upsert_with_retry(vehicles)
+            return await _upsert_with_retry(vehicles, stats)
         async with self._lock:
-            return await _upsert_with_retry(vehicles)
+            return await _upsert_with_retry(vehicles, stats)
 
 
 _UPSERT_RETRIES = 3
@@ -89,14 +91,16 @@ def _is_retryable_db_error(exc: BaseException) -> bool:
     return name in ("DeadlockDetected", "SerializationFailure", "LockNotAvailable")
 
 
-async def _upsert_with_retry(vehicles: list[dict]) -> int:
+async def _upsert_with_retry(vehicles: list[dict], stats: dict | None = None) -> int:
     """The upsert is VIN-keyed ON CONFLICT and therefore idempotent: a deadlock
     victim is rolled back by Postgres and can simply run again."""
     from backend.scanner.database import upsert_vehicles as _upsert
 
     for attempt in range(1, _UPSERT_RETRIES + 1):
         try:
-            return await asyncio.to_thread(_upsert, vehicles)
+            if stats is None:
+                return await asyncio.to_thread(_upsert, vehicles)
+            return await asyncio.to_thread(_upsert, vehicles, stats)
         except Exception as exc:  # noqa: BLE001
             if attempt >= _UPSERT_RETRIES or not _is_retryable_db_error(exc):
                 raise

@@ -26,7 +26,7 @@ def _patch_pipeline(monkeypatch, *, replay_rows, known_active, upserts):
     monkeypatch.setenv("SCANNER_VDP_DB_MERGE", "0")
 
     class _FakeCoordinator:
-        async def upsert_vehicles(self, vehicles):
+        async def upsert_vehicles(self, vehicles, stats=None):
             upserts.append(list(vehicles))
             return len(vehicles)
 
