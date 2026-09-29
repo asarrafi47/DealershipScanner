@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+## [1.4.3] - 2026-09-29
+
+### Fixed
+- A datacenter scan host (`SCANNER_EGRESS_TAG`, `railway` on scanner-nightly) no longer marks shared recipes stale or rejected for a 401/403; it records `blocked:<tag>:...` and home scanners keep the recipe. `backend/scripts/unstale_host_blocked_recipes.py` re-opens the recipes the 2026-09-29 Railway runs staled.
+
 ## [1.4.2] - 2026-09-29
 
 ### Added

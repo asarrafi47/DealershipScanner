@@ -398,8 +398,24 @@ First full run with the active-inventory roster and the VIN ownership guard.
 - Cost of this run at Railway list prices: about $0.50 CPU + $0.25 memory, so about
   $0.75 per night, roughly $22 per month.
 - Grid cards rebuilt in the post step (171 s, 268,868 active cars).
-- Nightly cron still off until the conflict breakdown and a per-dealer comparison
-  with the laptop run are done.
+- Per-dealer comparison with the laptop run (367 dealers in both): 174 stayed ok,
+  19 inaccurate became ok, 13 no_rows became ok; 33 ok became inaccurate, mostly
+  `vpic_fuel` discrepancies (dealer fuel label vs NHTSA electrification), still to
+  be read in the DB.
+- **Bug found: Railway 403s staled shared recipes.** 25 dealers that scanned fine
+  from the laptop were `no_recipe` on Railway (groovetoyota 1,054 rows,
+  fivestarforddallas 922, harperacura 781, ...). Cloudflare challenges Railway's IP;
+  the replay then marked the recipes stale in the shared `dealer_recipes` store,
+  and the pipeline skips dealers with no live recipe on every scanner, home
+  included. Fixed in 1707e1349: `SCANNER_EGRESS_TAG=railway` (set by
+  `scripts/railway_scan_fleet.sh`) records `recipe_status = blocked:railway:...`
+  and leaves the recipe live. Repair for recipes already staled, from a home IP:
+  `python -m backend.scripts.unstale_host_blocked_recipes` (lists) then
+  `--apply` against prod (replays, un-stales what answers).
+- Those ~25 dealers still cannot be scanned from Railway. They need a home-IP
+  scanner (the mac mini) or they go stale in prod.
+- Nightly cron still off until: the repair runs on prod, the conflict breakdown is
+  read, and the fix is deployed to scanner-nightly.
 
 ## Recommendation
 
