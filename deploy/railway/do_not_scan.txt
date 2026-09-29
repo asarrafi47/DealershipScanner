@@ -1,0 +1,9 @@
+# Dealers a whole-roster scan (fleet_scan SCAN_FLEET=1, DEALERS_FROM_SCANNABLE)
+# must never scan. Tracked twin of workspace/pipeline/do_not_scan.txt, because
+# workspace/ is not in the Railway image; both files are read and unioned.
+# One dealer_id per line; '#' starts a comment. An explicit dealer list
+# (SCAN_DEALERS, --dealers, --dealer-id) is never filtered by this file.
+hendrickatlanta-com  # junk entity (Murrieta rows)
+hendrickporsche-com  # junk entity (Murrieta rows)
+mercedesofcalabasas-com  # junk entity (Monrovia rows)
+normreeves-com  # group site, stores scanned individually

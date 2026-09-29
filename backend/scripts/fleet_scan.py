@@ -4,9 +4,12 @@
 This is the Railway scanner job (docs/RAILWAY_SCANNING.md), and it runs the same
 way on any machine:
 
-  1. roster   SCAN_DEALERS (comma list) or, with SCAN_FLEET=1, every scannable
-              dealer (active inventory ∪ stored recipes — the scanner's own
-              DEALERS_FROM_SCANNABLE roster)
+  1. roster   SCAN_DEALERS (comma list, never filtered) or, with SCAN_FLEET=1,
+              dealers with ACTIVE inventory minus do_not_scan
+              (workspace/pipeline/do_not_scan.txt + deploy/railway/do_not_scan.txt),
+              plus recipe-only dealers listed in deploy/railway/revived_dealers.txt.
+              Recipe-only dealers are otherwise excluded (2026-09-29 incident:
+              they replayed group feeds and stole 6,961 siblings' VINs).
   2. shards   SCAN_SHARDS (default 8) `backend.scripts.dealer_pipeline` processes
               in parallel, disjoint rosters balanced by active row count, each
               with its own SCANNER_LOCK_PATH and `--batch SCAN_BATCH` (default 6).
@@ -24,7 +27,7 @@ With neither SCAN_DEALERS nor SCAN_FLEET=1 it prints `idle` and exits 0, so a
 deploy of the scanner service never starts a fleet scan by itself.
 
 Env:
-  SCAN_FLEET=1            scan the whole scannable roster
+  SCAN_FLEET=1            scan the fleet roster (active inventory, see step 1)
   SCAN_DEALERS=a,b,c      scan only these (wins over SCAN_FLEET)
   SCAN_SHARDS=8           parallel pipeline processes
   SCAN_BATCH=6            dealers per scanner process inside a shard
@@ -78,16 +81,42 @@ def _env_int(name: str, default: int) -> int:
 # roster + sharding
 # --------------------------------------------------------------------------
 
+ROSTER_REPORT: dict[str, Any] = {}
+
+
 def load_roster() -> list[str]:
+    """SCAN_DEALERS (explicit, never filtered) or, with SCAN_FLEET=1, dealers with
+    active inventory minus do-not-scan, plus revived recipe-only dealers.
+
+    The 2026-09-29 Railway run rostered active inventory ∪ stored recipes and
+    reassigned 6,961 VINs to the wrong dealer: 136 recipe-only dealers (most
+    emptied on purpose because their recipe replays a whole group feed) claimed
+    siblings' cars. See manifest.apply_scannable_roster_rule. The rule is always
+    on here; SCANNABLE_ROSTER_RULE=0 does not bypass it — name dealers in
+    SCAN_DEALERS instead.
+    """
+    ROSTER_REPORT.clear()
     raw = (os.environ.get("SCAN_DEALERS") or "").strip()
     if raw:
         return [d.strip() for d in raw.split(",") if d.strip()]
     if (os.environ.get("SCAN_FLEET") or "").strip().lower() in ("1", "true", "yes"):
-        from backend.scanner.manifest import _load_scannable_dealers
+        from backend.scanner.manifest import _load_scannable_dealers, apply_scannable_roster_rule
 
         skip = ("carmax.com", "carmax-com")
-        return sorted({d["dealer_id"] for d in _load_scannable_dealers()
-                       if d.get("dealer_id") and not any(s in d["dealer_id"] for s in skip)})
+        dealers = [d for d in _load_scannable_dealers()
+                   if d.get("dealer_id") and not any(s in d["dealer_id"] for s in skip)]
+        kept, report = apply_scannable_roster_rule(dealers)
+        ROSTER_REPORT.update(report)
+        print(f"fleet   roster: {report['kept']} dealers kept; excluded "
+              f"{len(report['excluded_do_not_scan'])} do-not-scan, "
+              f"{len(report['excluded_recipe_only'])} recipe-only (no active cars, not in "
+              f"deploy/railway/revived_dealers.txt); {len(report['revived_recipe_only'])} revived",
+              flush=True)
+        if report["excluded_do_not_scan"]:
+            print("fleet   do-not-scan: " + ", ".join(report["excluded_do_not_scan"]), flush=True)
+        if report["revived_recipe_only"]:
+            print("fleet   revived: " + ", ".join(report["revived_recipe_only"]), flush=True)
+        return sorted({d["dealer_id"] for d in kept})
     return []
 
 
@@ -283,6 +312,8 @@ def main() -> int:
     prune(out_root, keep_days)
     run_dir = out_root / f"fleet_{started.strftime('%Y%m%dT%H%M%SZ')}"
     run_dir.mkdir(parents=True, exist_ok=True)
+    if ROSTER_REPORT:
+        (run_dir / "roster_rule.json").write_text(json.dumps(ROSTER_REPORT, indent=1))
 
     n_shards = _env_int("SCAN_SHARDS", 8)
     batch = _env_int("SCAN_BATCH", 6)
@@ -344,6 +375,7 @@ def main() -> int:
         "started": started.isoformat(),
         "run_dir": str(run_dir),
         "dealers": len(roster),
+        "roster_rule": {k: (len(v) if isinstance(v, list) else v) for k, v in ROSTER_REPORT.items()},
         "assessed": len(results),
         "shards": len(shards),
         "batch": batch,

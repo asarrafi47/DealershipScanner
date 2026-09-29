@@ -1,0 +1,16 @@
+# Recipe-only dealers allowed back into a whole-roster scan.
+#
+# Rule (2026-09-29 incident, docs/RAILWAY_SCANNING.md): a whole-roster scan
+# (fleet_scan SCAN_FLEET=1, or scanner.py with DEALERS_FROM_SCANNABLE=1 and no
+# explicit dealer list) takes ONLY dealers that hold active cars
+# (COALESCE(listing_active,1)=1), minus do_not_scan.txt. A dealer with a stored
+# recipe but no active cars was usually emptied ON PURPOSE because its recipe
+# replays a whole group feed; on 2026-09-29, 136 such dealers reassigned 6,961
+# siblings' VINs in production.
+#
+# Add a dealer here only after checking, for that dealer, that its recipe is
+# scoped to its own rooftop (a single-store scan through dealer_pipeline, with
+# the rows' addresses / VINs checked against the store — see
+# docs/NETWORK_SCAN_PROCESS.md) and recording that check in
+# workspace/dealer_logs/<dealer_id>/summary.md. One dealer_id per line; '#'
+# starts a comment; note the date and the evidence after the id.

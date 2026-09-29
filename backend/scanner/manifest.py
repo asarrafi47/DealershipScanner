@@ -175,7 +175,11 @@ def _load_scannable_dealers() -> list[dict]:
                  WHERE REPLACE(REPLACE(REPLACE(LOWER(COALESCE(d.website_url, '')),
                        'https://', ''), 'http://', ''), 'www.', '')
                        LIKE REPLACE(s.dealer_id, '-', '.') || '%'),
-               (SELECT MAX(r.provider_hint) FROM dealer_recipes r WHERE r.dealer_id = s.dealer_id)
+               (SELECT MAX(r.provider_hint) FROM dealer_recipes r WHERE r.dealer_id = s.dealer_id),
+               CASE WHEN EXISTS (SELECT 1 FROM cars c
+                                  WHERE c.dealer_id = s.dealer_id
+                                    AND COALESCE(c.listing_active, 1) = 1)
+                    THEN 1 ELSE 0 END
           FROM scannable s
         """
     )
@@ -202,11 +206,129 @@ def _load_scannable_dealers() -> list[dict]:
         entry = {"dealer_id": did, "url": base, "name": car_name or reg_name or did}
         if provider:
             entry["provider"] = provider
+        # Whether this dealer holds active rows (vs recipe-only). Read by
+        # apply_scannable_roster_rule; defaults to True when the column is absent.
+        entry["_has_active_inventory"] = bool(r[5]) if len(r) > 5 else True
         out.append(entry)
     return out
 
 
-def load_manifest() -> list[dict]:
+# --------------------------------------------------------------------------
+# Roster rule (2026-09-29 incident)
+# --------------------------------------------------------------------------
+# The first full Railway fleet run rostered active inventory ∪ stored recipes and
+# reassigned 6,961 VINs to the wrong dealer: 136 dealers held a recipe but NO
+# active cars — most emptied on purpose because their recipe replays a whole
+# group feed — and their scans claimed siblings' cars (cars are one row per VIN,
+# last writer owns it). A whole-roster scan therefore takes dealers WITH active
+# inventory, minus the do-not-scan lists; a recipe-only dealer joins only when a
+# person has checked its recipe scopes to its own rooftop and listed it in
+# deploy/railway/revived_dealers.txt. An explicit dealer list is never filtered.
+
+_REPO_ROOT = Path(__file__).resolve().parents[2]
+# workspace/ is not in the Railway image, so the list has a tracked twin; both are read.
+DO_NOT_SCAN_PATHS = (
+    _REPO_ROOT / "workspace" / "pipeline" / "do_not_scan.txt",
+    _REPO_ROOT / "deploy" / "railway" / "do_not_scan.txt",
+)
+REVIVED_DEALERS_PATH = _REPO_ROOT / "deploy" / "railway" / "revived_dealers.txt"
+
+
+def _read_id_list(path: Path) -> set[str]:
+    """dealer ids, one per line; ``#`` starts a comment; missing file = empty."""
+    try:
+        text = path.read_text(encoding="utf-8")
+    except OSError:
+        return set()
+    out: set[str] = set()
+    for line in text.splitlines():
+        did = line.split("#", 1)[0].strip()
+        if did:
+            out.add(did)
+    return out
+
+
+def load_do_not_scan_ids(paths: tuple[Path, ...] | None = None) -> set[str]:
+    out: set[str] = set()
+    for p in paths if paths is not None else DO_NOT_SCAN_PATHS:
+        out |= _read_id_list(p)
+    return out
+
+
+def load_revived_dealer_ids(path: Path | None = None) -> set[str]:
+    return _read_id_list(path or REVIVED_DEALERS_PATH)
+
+
+def scannable_roster_rule_enabled() -> bool:
+    """SCANNABLE_ROSTER_RULE=0 restores the raw active ∪ recipes union."""
+    return (os.environ.get("SCANNABLE_ROSTER_RULE") or "1").strip().lower() not in (
+        "0", "false", "no", "off",
+    )
+
+
+def apply_scannable_roster_rule(
+    dealers: list[dict],
+    *,
+    do_not_scan: set[str] | None = None,
+    revived: set[str] | None = None,
+) -> tuple[list[dict], dict[str, Any]]:
+    """Keep dealers with active inventory (plus revived recipe-only ones), minus
+    do-not-scan. Returns (kept, report) where report counts and lists what was
+    excluded and why."""
+    dns = load_do_not_scan_ids() if do_not_scan is None else set(do_not_scan)
+    rev = load_revived_dealer_ids() if revived is None else set(revived)
+    kept: list[dict] = []
+    excl_dns: list[str] = []
+    excl_recipe_only: list[str] = []
+    revived_in: list[str] = []
+    for d in dealers:
+        did = (d.get("dealer_id") or "").strip()
+        if not did:
+            continue
+        if did in dns:
+            excl_dns.append(did)
+            continue
+        if not d.get("_has_active_inventory", True):
+            if did in rev:
+                revived_in.append(did)
+            else:
+                excl_recipe_only.append(did)
+                continue
+        kept.append(d)
+    report = {
+        "kept": len(kept),
+        "excluded_do_not_scan": sorted(excl_dns),
+        "excluded_recipe_only": sorted(excl_recipe_only),
+        "revived_recipe_only": sorted(revived_in),
+    }
+    return kept, report
+
+
+def log_roster_rule_report(report: dict[str, Any], *, source: str) -> None:
+    logger.info(
+        "Roster rule [%s]: kept %d; excluded %d do-not-scan, %d recipe-only (no active "
+        "cars, not in deploy/railway/revived_dealers.txt); %d recipe-only revived",
+        source,
+        report["kept"],
+        len(report["excluded_do_not_scan"]),
+        len(report["excluded_recipe_only"]),
+        len(report["revived_recipe_only"]),
+    )
+    if report["excluded_do_not_scan"]:
+        logger.info("Roster rule [%s]: do-not-scan: %s", source, ", ".join(report["excluded_do_not_scan"]))
+    if report["revived_recipe_only"]:
+        logger.info("Roster rule [%s]: revived: %s", source, ", ".join(report["revived_recipe_only"]))
+
+
+def load_manifest(*, explicit_dealer_ids: bool = False) -> list[dict]:
+    """Resolve the dealer roster.
+
+    ``explicit_dealer_ids``: the caller will narrow the result to a dealer list a
+    person (or fleet_scan, which already applied the rule) named. The
+    DEALERS_FROM_SCANNABLE roster rule is then skipped — an explicit list is never
+    filtered, so a freshly synthesized recipe-only dealer can still be scanned
+    by name.
+    """
     if (os.environ.get("DEALERS_FROM_SCANNABLE") or "").strip().lower() in (
         "1", "true", "yes",
     ):
@@ -216,6 +338,9 @@ def load_manifest() -> list[dict]:
             "(DEALERS_FROM_SCANNABLE=1)",
             len(dealers),
         )
+        if not explicit_dealer_ids and scannable_roster_rule_enabled():
+            dealers, report = apply_scannable_roster_rule(dealers)
+            log_roster_rule_report(report, source="DEALERS_FROM_SCANNABLE")
         return dealers
     if (os.environ.get("DEALERS_FROM_ACTIVE_INVENTORY") or "").strip().lower() in (
         "1", "true", "yes",

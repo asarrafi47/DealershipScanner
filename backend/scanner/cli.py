@@ -373,7 +373,7 @@ def run_cli_entry() -> None:
 
     dealer_ids = _resolve_dealer_ids(args)
 
-    to_run = filter_manifest_skip_flag(filter_skip_dealers(load_manifest()))
+    to_run = filter_manifest_skip_flag(filter_skip_dealers(load_manifest(explicit_dealer_ids=bool(dealer_ids))))
     if args.delta:
         from backend.scanner.delta_scan import run_delta_scan
 
