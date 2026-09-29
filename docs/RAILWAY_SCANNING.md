@@ -17,7 +17,9 @@ Railway project dealership-scanner / environment production
     CMD scripts/railway_scan_fleet.sh
       /app/workspace -> /data/workspace          (volume scanner-nightly-volume at /data)
       python -m backend.scripts.fleet_scan
-        roster   SCAN_DEALERS, or SCAN_FLEET=1 -> active inventory ∪ dealer_recipes (594 on 09-28)
+        roster   SCAN_DEALERS (never filtered), or SCAN_FLEET=1 -> dealers WITH active inventory
+                   minus do_not_scan, plus deploy/railway/revived_dealers.txt (458 locally on 09-29;
+                   was active ∪ dealer_recipes = 594 until the 09-29 incident, see below)
         shards   SCAN_SHARDS x  python -m backend.scripts.dealer_pipeline --dealers <slice> --batch SCAN_BATCH
                    each with its own SCANNER_LOCK_PATH; rosters balanced by active row count
                    (inside: recipe -> scanner.py HTTP-only -> vPIC heal -> assess -> reconcile
@@ -88,11 +90,12 @@ railway api 'mutation { serviceInstanceUpdate(serviceId: "<svc>", environmentId:
 | `SCAN_IDLE_HOLD_SECONDS` | `1500` | an idle start stays up 25 min so the volume can be read (see logs) |
 | `PYTHONPATH` | `/app` | |
 | `RAILWAY_DOCKERFILE_PATH` | `Dockerfile.scanner` | |
-| `SCAN_FLEET` | *unset* | `1` = whole scannable roster. Set together with the cron. |
+| `SCAN_FLEET` | *unset* | `1` = fleet roster (active-inventory dealers, see "Roster rule"). Set together with the cron. |
 | `SCAN_DEALERS` | *unset* | comma list; wins over `SCAN_FLEET` (used for the test) |
 | `SCAN_POST_STEPS` | *unset* (=1) | `0` skips market stats + grid cards |
 | `SCAN_PIPELINE_ARGS` | *unset* | extra `dealer_pipeline` flags, e.g. `--no-lifecycle` |
 | `SCAN_KEEP_DAYS` | *unset* (=14) | run dirs and scan logs older than this are pruned at start |
+| `SCANNER_VIN_OWNER_GUARD_HOURS` | *unset* (=48) | VIN ownership guard window; `0` disables (see "VIN ownership guard") |
 
 No secrets are needed beyond the database reference: the scan uses no API keys.
 
@@ -286,6 +289,91 @@ the concurrent requests (429 risk) and production Postgres, which also serves th
 takes ~6 cores of upsert load at the peak. The old idle `scanner-worker` / `scanner-scheduler`
 services cost ~30 MB each (~$0.60/month together); they were not touched.
 
+## Incident 2026-09-29: first full fleet run reassigned 6,961 VINs
+
+The first `SCAN_FLEET=1` run on Railway reassigned **6,961 VINs (3.6%)** to the wrong dealer in
+production. `cars` holds one row per VIN and the scanner upsert is `ON CONFLICT(vin) DO UPDATE`
+(`backend/scanner/database.py` `upsert_vehicles`), so the last store to write a VIN owned it.
+
+| from (owner) | to (claimant) | VINs |
+|---|---|---|
+| mbontario-com | mbbeverlyhills-com | 1,229 |
+| mblaguna-com | mbfoothill-com | 1,011 |
+| mtnviewnissan-com (CA) | cleveland-nissan-com (TN) | 876 |
+| crownlexus-com | bmwofmonrovia-net | 541 |
+| bentleygmc-com | bentleycadillac-com | 471 |
+| chapmandodge-com | chapmanfordaz-com | 436 |
+| hughwhitehonda-com | hughwhitehonda-net (same store, two entity ids) | 393 |
+| lagunahyundai-com | lagunaniguelhyundai-com | 220 |
+
+**Cause.** The fleet roster (`load_roster` -> `manifest._load_scannable_dealers`) was active
+inventory ∪ stored recipes. That added 136 dealers holding a recipe but **no active cars** —
+most had been emptied on purpose because their recipe replays a whole group feed — and the
+rooftop gate let their scans claim siblings' cars. The laptop run that had been verified used
+only dealers with active inventory. Separately, southcoasttoyota-com lost 609 rows to
+`canceling statement due to lock timeout` during an upsert while 8 shards wrote at once.
+
+**Fixes** (branch `feature/http-only-scans`):
+
+1. **Roster rule** (below): fleet = active-inventory dealers only.
+2. **VIN ownership guard** (below): an upsert no longer moves a fresh, active VIN to another dealer.
+3. **Lock-timeout retry**: `inventory_write._is_retryable_db_error` retries SQLSTATE `55P03`
+   (lock_not_available) and `57014` only when the message says lock timeout, like a deadlock.
+
+**Repair the 6,961 rows before the next fleet run.** The guard protects whoever owns a VIN
+*now*, so while the wrong owner's rows are fresh (scraped within 48 h) the right owner's
+scan is refused too. Restore `dealer_id` (and `dealer_name` / `dealer_url`) on those VINs
+from the pre-run state first — or, if restoring is not possible, let the real owners rescan
+with `SCANNER_VIN_OWNER_GUARD_HOURS=0` **only for an explicit `SCAN_DEALERS` list of the
+owners** and only after the claimants' recipes are fixed, since an active claimant
+(mbbeverlyhills-com, cleveland-nissan-com, ...) would otherwise take the VINs back.
+
+### Roster rule
+
+A whole-roster scan — `fleet_scan` with `SCAN_FLEET=1`, or `scanner.py` with
+`DEALERS_FROM_SCANNABLE=1` and no `--dealer-id` — takes:
+
+- dealers with active inventory (`COALESCE(listing_active,1)=1` rows),
+- minus `workspace/pipeline/do_not_scan.txt` ∪ `deploy/railway/do_not_scan.txt` (tracked twin:
+  `workspace/` is not in the Railway image; both are read),
+- plus recipe-only dealers listed in `deploy/railway/revived_dealers.txt` (tracked, starts
+  empty). List a dealer there only after a single-store scan showed its recipe is scoped to
+  its own rooftop, and note the evidence in `workspace/dealer_logs/<id>/summary.md`.
+
+An explicit list is **never** filtered: `SCAN_DEALERS`, `dealer_pipeline --dealers` (which
+passes `--dealer-id` to scanner.py), `scanner.py --dealer-id`. `fleet_scan` prints
+`fleet   roster: N dealers kept; excluded X do-not-scan, Y recipe-only ...`, writes
+`<run>/roster_rule.json` (the excluded ids) and a `roster_rule` block in `fleet_summary.json`.
+`SCANNABLE_ROSTER_RULE=0` turns the rule off for `load_manifest` (DEALERS_FROM_SCANNABLE) only;
+the fleet roster always applies it. Local read-only check on 09-29: 594 scannable -> 458 kept,
+132 recipe-only excluded (mbfoothill-com, hughwhitehonda-net and lagunaniguelhyundai-com among
+them), 4 do-not-scan.
+
+### VIN ownership guard
+
+`upsert_vehicles` skips a vehicle whose stored row is **active**, was **scraped within
+`SCANNER_VIN_OWNER_GUARD_HOURS`** (default 48, `0` disables) and belongs to a **different
+dealer_id**. The stored row is not touched (no price, no scraped_at, no post-write
+enrichment), and the claimant's scan drops the VIN from coverage, auto-heal and reconcile.
+The check runs on the prefetch the upsert already does, with an `ON CONFLICT ... DO UPDATE
+... WHERE` backstop so a concurrent shard's claim between prefetch and write is refused
+atomically too. A real transfer between stores still lands once the old owner's row goes
+inactive or stale.
+
+There is no same-store exception: two entity ids for one store (hughwhitehonda-com / -net)
+are not detectable at write time. Every refusal is recorded instead:
+
+- table `vin_owner_conflicts(vin, owner_dealer_id, claimant_dealer_id, seen_at)`, one row per
+  triple, `seen_at` = latest sighting (created lazily and by `migrations/V024__vin_owner_conflicts.sql`).
+  A table rather than only a log line because Railway logs are ephemeral and the recurring
+  pairs across nights are the diagnostic:
+  `SELECT owner_dealer_id, claimant_dealer_id, COUNT(*), MAX(seen_at) FROM vin_owner_conflicts GROUP BY 1,2 ORDER BY 3 DESC;`
+- one `vin_owner_guard {"skipped":..,"claimants":{..},"owners":{..}}` WARNING line per write;
+- `scan_runs.summary_json.vin_owner_conflicts` / `vin_owner_conflict_owners` per dealer run,
+  `vin_owner_conflicts` in the `dealer_run_summary` line and in `fleet_summary.json` (total);
+- the pipeline triage `reason` names it when a dealer's count is > 10
+  (`VIN owner guard: 876 VINs owned by other dealers not written (mtnviewnissan-com 876)`).
+
 ## Recommendation
 
 **Enable the nightly, at 09:00 UTC (`0 9 * * *`: 02:00 PT / 05:00 ET, the traffic trough
@@ -316,5 +404,8 @@ host (`Dockerfile.discovery`): the Railway image skips captures by design.
 - `Dockerfile.scanner`, `requirements-scanner.txt`, `scripts/scanner_import_sweep.py`
 - `scripts/railway_scan_fleet.sh` (entrypoint), `backend/scripts/fleet_scan.py` (shards, post steps, summary)
 - `deploy/railway/deploy_scanner_nightly.sh`, `deploy/railway/railway.scanner-nightly.json`
+- `deploy/railway/do_not_scan.txt`, `deploy/railway/revived_dealers.txt` (roster rule),
+  `backend/scanner/manifest.py` `apply_scannable_roster_rule`
+- `backend/scanner/database.py` VIN ownership guard, `migrations/V024__vin_owner_conflicts.sql`
 - Test runs: volume `/data/workspace/pipeline/fleet_20260928T230514Z`, `fleet_20260928T232028Z`;
   per-dealer blocks appended to `workspace/dealer_logs/<dealer_id>/{discovery,scan_runs}.md`.
