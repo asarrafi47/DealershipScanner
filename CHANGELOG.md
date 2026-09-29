@@ -2,6 +2,18 @@
 
 ## [Unreleased]
 
+## [1.4.2] - 2026-09-29
+
+### Added
+- **Railway scanning:** `scanner-nightly` service runs the sharded fleet from a slim image (11.8 GB to 1.09 GB, `requirements-scanner.txt`, `Dockerfile.scanner`, `backend/scripts/fleet_scan.py`, `deploy/railway/deploy_scanner_nightly.sh`). See `docs/RAILWAY_SCANNING.md`.
+- **VIN ownership guard:** an upsert never moves a VIN that is fresh and active at another dealer (`SCANNER_VIN_OWNER_GUARD_HOURS`, default 48); refused moves land in `vin_owner_conflicts` (V024).
+
+### Fixed
+- Fleet roster keeps only dealers with active inventory; recipe-only dealers need `deploy/railway/revived_dealers.txt`. A recipe-only roster reassigned 6,961 VINs in prod on 2026-09-29 (restored).
+- Upsert retries lock timeouts (55P03, and 57014 only when it is a lock timeout).
+- Pipeline assess and retry loops use an autocommit connection and reconnect if it drops (prod `idle_in_transaction_session_timeout` killed three shards).
+- Assess provider-hint query matches the `dealer_recipes` columns.
+
 ## [1.4.1] - 2026-09-28
 
 ### Changed
