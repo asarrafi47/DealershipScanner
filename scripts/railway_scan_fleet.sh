@@ -20,5 +20,9 @@ fi
 if [ -z "${INVENTORY_DATABASE_URL:-}" ] && [ -n "${DATABASE_URL:-}" ]; then
   export INVENTORY_DATABASE_URL="$DATABASE_URL"
 fi
+# Railway is a datacenter IP that some dealer edges (Cloudflare) refuse while a home
+# IP gets through. The tag keeps its 401/403s out of the shared recipe store:
+# recipes stay live, scan_hints.recipe_status = blocked:railway:... (recipes.egress_tag).
+export SCANNER_EGRESS_TAG="${SCANNER_EGRESS_TAG:-railway}"
 cd /app
 exec python3 -m backend.scripts.fleet_scan

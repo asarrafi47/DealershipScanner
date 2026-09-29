@@ -814,6 +814,13 @@ def route_verdict(dealer: dict[str, Any], result: dict[str, Any], recipe_status:
     if recipe_status is None:
         recipe_status = str(_scan_hints(did).get("recipe_status") or "")
     recipe_status = str(recipe_status or "")
+    from backend.scanner.recipes import blocked_on_this_host
+
+    if blocked_on_this_host(recipe_status):
+        # This host's IP is refused (SCANNER_EGRESS_TAG); re-synthesis from here
+        # would only 403 again and a browser capture is not available. A home
+        # scanner still owns the dealer.
+        return {"action": "none", "trigger": f"blocked_on_this_host ({recipe_status})", "verdict": verdict}
     if recipe_status.startswith("stale:"):
         return {"action": "lifecycle", "trigger": f"recipe_status {recipe_status}", "verdict": verdict}
     if recipe_status.startswith("rejected:"):

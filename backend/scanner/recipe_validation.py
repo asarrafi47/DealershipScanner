@@ -889,8 +889,17 @@ def record_recipe_status(dealer_id: str, report: RecipeValidationReport, context
     try:
         from backend.scanner.recipe_store import set_scan_hints
 
+        from backend.scanner.recipes import blocked_status_value, egress_tag
+
+        status = report.status
+        flags = report.flags or {}
+        if egress_tag() and report.verdict == "reject" and flags.get("auth_needed") and flags.get("zero_rows"):
+            # Every recipe answered 401/403 from a tagged (datacenter) host: that
+            # is this host's IP, not a dead recipe. Home scanners read the same
+            # hints, so record the block instead of a reject.
+            status = blocked_status_value("auth_needed")
         return bool(set_scan_hints(dealer_id, {
-            "recipe_status": report.status,
+            "recipe_status": status,
             "recipe_validation": {**report.summary(), "stamp": report.stamp, "context": context},
         }))
     except Exception as exc:  # noqa: BLE001

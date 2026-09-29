@@ -290,6 +290,33 @@ def mark_stale(dealer_id: str, recipe: EndpointRecipe, reason: str) -> None:
 
 
 RECIPE_STATUS_STALE_PREFIX = "stale:"
+RECIPE_STATUS_BLOCKED_PREFIX = "blocked:"
+
+
+def egress_tag() -> str:
+    """``SCANNER_EGRESS_TAG`` names a scan host whose IP some dealer edges refuse
+    (a datacenter such as Railway; Cloudflare challenges it while a home IP gets
+    through). Empty on a home scanner.
+
+    On a tagged host a 401/403 says "this host is blocked", not "the recipe is
+    dead": the recipe store and ``scan_hints`` are shared by every scanner, so a
+    tagged host never marks a recipe stale or rejects it for auth. It writes
+    ``recipe_status = blocked:<tag>:<status>:<iso>`` instead (2026-09-29: the
+    first Railway runs staled 25+ dealers' recipes that replay fine from home,
+    and every scanner then skipped them as recipe-less)."""
+    return re.sub(r"[^a-z0-9_-]", "", (os.environ.get("SCANNER_EGRESS_TAG") or "").strip().lower())[:32]
+
+
+def blocked_status_value(status: int | str) -> str:
+    return (f"{RECIPE_STATUS_BLOCKED_PREFIX}{egress_tag()}:{status}:"
+            f"{datetime.now(timezone.utc).replace(microsecond=0).isoformat()}")
+
+
+def blocked_on_this_host(recipe_status: str | None) -> bool:
+    """True when *recipe_status* is a ``blocked:`` written by a host with this
+    host's egress tag. Other hosts ignore it."""
+    tag = egress_tag()
+    return bool(tag) and str(recipe_status or "").startswith(f"{RECIPE_STATUS_BLOCKED_PREFIX}{tag}:")
 
 
 def _parses_json(text: str | None) -> bool:
@@ -306,7 +333,10 @@ def record_stale_status(dealer_id: str, status: int) -> str | None:
     """``scan_hints.recipe_status = "stale:<status>:<iso>"`` after a replay
     whose auth is dead (401/403 before any VIN). Best-effort: the scan must
     never fail because the hint store did. Returns the value written."""
-    value = f"{RECIPE_STATUS_STALE_PREFIX}{int(status)}:{datetime.now(timezone.utc).replace(microsecond=0).isoformat()}"
+    if egress_tag():
+        value = blocked_status_value(int(status))
+    else:
+        value = f"{RECIPE_STATUS_STALE_PREFIX}{int(status)}:{datetime.now(timezone.utc).replace(microsecond=0).isoformat()}"
     try:
         from backend.scanner.recipe_store import set_scan_hints
 
@@ -327,7 +357,7 @@ def clear_stale_status(dealer_id: str) -> bool:
         from backend.scanner.recipe_store import get_scan_hints, set_scan_hints
 
         cur = str((get_scan_hints(dealer_id) or {}).get("recipe_status") or "")
-        if not cur.startswith((RECIPE_STATUS_STALE_PREFIX, "rejected:")):
+        if not cur.startswith((RECIPE_STATUS_STALE_PREFIX, "rejected:", RECIPE_STATUS_BLOCKED_PREFIX)):
             return False
         return bool(set_scan_hints(dealer_id, {"recipe_status": "ok"}))
     except Exception as exc:  # noqa: BLE001
@@ -1020,7 +1050,10 @@ async def try_fetch_via_recipes(
             if status in (401, 403):
                 if not vins:
                     # Failed before collecting anything — the recipe's auth is dead.
-                    await asyncio.to_thread(mark_stale, dealer_id, recipe, f"http_{status}")
+                    if not egress_tag():
+                        # A tagged (datacenter) host records blocked:<tag> in
+                        # _finish_status instead; the shared recipe stays live.
+                        await asyncio.to_thread(mark_stale, dealer_id, recipe, f"http_{status}")
                     auth_dead_status = int(status)
                     logger.info(
                         "Recipe stale [%s] %s — HTTP %d (%s); discovery capture will re-learn it",

@@ -109,6 +109,20 @@ def test_403_marks_stale_and_records_recipe_status(monkeypatch, hints):
     datetime.fromisoformat(status.split(":", 2)[2])  # the third field is an ISO timestamp
 
 
+def test_403_on_a_tagged_host_keeps_the_shared_recipe_live(monkeypatch, hints):
+    """SCANNER_EGRESS_TAG (Railway): the 403 is this host's IP, so the shared
+    recipe stays live for home scanners and the status says blocked:<tag>."""
+    import backend.scanner.recipes as rec
+
+    monkeypatch.setenv("SCANNER_EGRESS_TAG", "railway")
+    _recipe()
+    monkeypatch.setattr(rec, "_replay_request", lambda *a: (403, None))
+    assert _replay() is None
+    (r,) = load_recipes(D)
+    assert not r.stale
+    assert hints[D]["recipe_status"].startswith("blocked:railway:403:")
+
+
 def test_stale_recipe_is_tried_once_and_unstaled_on_success(monkeypatch, hints):
     import backend.scanner.recipes as rec
 
