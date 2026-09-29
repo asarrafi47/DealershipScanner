@@ -374,6 +374,33 @@ are not detectable at write time. Every refusal is recorded instead:
 - the pipeline triage `reason` names it when a dealer's count is > 10
   (`VIN owner guard: 876 VINs owned by other dealers not written (mtnviewnissan-com 876)`).
 
+## Guarded full run, 2026-09-29 (deployment 90a3d2a0, commit 89c13ad52)
+
+First full run with the active-inventory roster and the VIN ownership guard.
+
+| | Railway 09-29 | Laptop 09-28 |
+|---|---|---|
+| Dealers | 561 (29 no recipe) | 367 assessed |
+| ok / inaccurate / thin / no_rows | 315 / 146 / 54 / 17 | 228 / 71 / 39 / 28 |
+| Rows written | 262,499 | 168,109 |
+| Wall clock | 159 min, 8 shards all rc=0 | ~90 min |
+| Peak memory | 12.7 GB (cap 16) | n/a |
+| CPU | 18.1 core-hours, avg 7 cores | n/a |
+| 403 / 429 | 357 / 4 | n/a |
+
+- 403s are concentrated: autocollectionofmurfreesboro.com 267, praterford.com 20,
+  terrylabontechevy.com 11; everything else is 1-2 per host. Not a Railway-IP ban.
+- The guard refused 12,903 cross-dealer moves (`vin_owner_conflicts`). Early rows were
+  chapmanbmwchandler-com claiming other BMW stores' cars (a known claimant recipe).
+  The per-claimant breakdown is still to be read: the laptop's network on 09-29
+  blocked the Postgres and SSH protocols (TCP opens, no reply), so the DB and the
+  /data triage could not be read that day.
+- Cost of this run at Railway list prices: about $0.50 CPU + $0.25 memory, so about
+  $0.75 per night, roughly $22 per month.
+- Grid cards rebuilt in the post step (171 s, 268,868 active cars).
+- Nightly cron still off until the conflict breakdown and a per-dealer comparison
+  with the laptop run are done.
+
 ## Recommendation
 
 **Enable the nightly, at 09:00 UTC (`0 9 * * *`: 02:00 PT / 05:00 ET, the traffic trough
