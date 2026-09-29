@@ -121,6 +121,31 @@ def wait_for_db(max_wait: int, poll: int = 30) -> bool:
             time.sleep(poll)
 
 
+
+def _assess_conn():
+    """Connection for the assess/reconcile loops, in autocommit.
+
+    Those loops only read, plus single-statement UPDATEs in reconcile_dealer, but
+    between queries they do slow non-DB work (catalog load in verify_accuracy,
+    log writes). With autocommit off every SELECT opened a transaction that sat
+    idle through that work; production's idle_in_transaction_session_timeout
+    (5 min) killed three shards' connections on the 2026-09-28 Railway fleet run
+    ("the connection is closed", 223 dealers never assessed)."""
+    conn = get_conn()
+    raw = getattr(conn, "_raw", None)
+    if raw is not None and hasattr(raw, "autocommit"):
+        try:
+            raw.autocommit = True
+        except Exception:  # noqa: BLE001 - sqlite / already in a transaction
+            pass
+    return conn
+
+
+def _conn_alive(conn) -> bool:
+    raw = getattr(conn, "_raw", conn)
+    closed = getattr(raw, "closed", False)
+    return not closed
+
 def _rows(conn, sql: str, params: tuple = ()) -> list[dict[str, Any]]:
     cur = conn.execute(sql, params)
     cols = [d[0] for d in cur.description]
@@ -1009,12 +1034,14 @@ def run_lifecycle_pass(results: list[dict[str, Any]], dealers: dict[str, dict[st
             print(f"vpic    retry {json.dumps(vp)[:200]}", flush=True)
         except Exception as exc:  # noqa: BLE001
             print(f"vpic    retry failed: {str(exc)[:120]}", flush=True)
-    conn = get_conn()
+    conn = _assess_conn()
     try:
         for idx, r in enumerate(results):
             did = r["dealer_id"]
             if did not in retry:
                 continue
+            if not _conn_alive(conn):
+                conn = _assess_conn()
             old = str(r.get("verdict"))
             info = dict(r.get("recipe") or {})
             info["had_recipes"] = info.get("had_recipes") or 1
@@ -1240,10 +1267,13 @@ def main() -> int:
                 print(f"vpic    failed: {str(exc)[:120]}", flush=True)
 
     stamp = started.strftime("%Y-%m-%d %H:%M UTC")
-    conn = get_conn()
+    conn = _assess_conn()
     results = []
     try:
         for did in ids:
+            if not _conn_alive(conn):
+                print("assess  database connection dropped; reconnecting", flush=True)
+                conn = _assess_conn()
             r = assess(conn, did, since_iso, known[did], recipe_info[did])
             try:
                 # Retire against the rows stamped to THIS store, never the raw feed
