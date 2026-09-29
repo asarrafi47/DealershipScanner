@@ -70,12 +70,23 @@ _UPSERT_RETRIES = 3
 
 
 def _is_retryable_db_error(exc: BaseException) -> bool:
-    """Postgres deadlock / serialization failure (SQLSTATE 40P01 / 40001)."""
+    """Transient Postgres write failures that a VIN-keyed, idempotent upsert can rerun.
+
+    - 40P01 deadlock / 40001 serialization failure.
+    - 55P03 lock_not_available: ``SET lock_timeout`` expired ("canceling statement
+      due to lock timeout"). southcoasttoyota-com lost 609 rows to this on
+      2026-09-29 while 8 fleet shards wrote concurrently.
+    - 57014 query_canceled ONLY when the message says lock timeout (some drivers /
+      poolers surface the lock-timeout cancel under 57014). A 57014 from
+      ``statement_timeout`` or a user cancel is not retried.
+    """
     code = getattr(exc, "sqlstate", None) or getattr(getattr(exc, "diag", None), "sqlstate", None)
-    if code in ("40P01", "40001"):
+    if code in ("40P01", "40001", "55P03"):
         return True
+    if code == "57014":
+        return "lock timeout" in str(exc).lower()
     name = type(exc).__name__
-    return name in ("DeadlockDetected", "SerializationFailure")
+    return name in ("DeadlockDetected", "SerializationFailure", "LockNotAvailable")
 
 
 async def _upsert_with_retry(vehicles: list[dict]) -> int:
