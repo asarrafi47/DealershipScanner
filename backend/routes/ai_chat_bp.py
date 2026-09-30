@@ -27,6 +27,7 @@ from backend.utils.car_chat_policy import (
 )
 from backend.utils.client_ip import client_ip
 from backend.utils.ip_rate_limit import allow_request
+from backend.utils.runtime_env import is_production_env
 
 logger = logging.getLogger("ai_chat")
 
@@ -145,6 +146,10 @@ def _degraded(message: str | None, code: str, **extra):
 
 @ai_chat_bp.route("/api/ai/chat", methods=["POST"])
 def api_ai_chat():
+    # require_feature() passes everyone while billing is off; this is a paid model
+    # call, so an account is required either way (same rule as the car-page chat).
+    if not session.get("user_id") and is_production_env():
+        return jsonify({"ok": False, "error": "login_required"}), 401
     ok, err = require_feature(session, FEATURE_AI_CAR_CHAT)
     if not ok:
         return jsonify({"ok": False, "error": err or "feature_unavailable"}), 403

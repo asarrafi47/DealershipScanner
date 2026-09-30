@@ -61,7 +61,7 @@ def listings():
 
 
 def premium_page():
-    from backend.billing.catalog import plan_display_list
+    from backend.billing.catalog import plan_display_list, pricing_rows
     from backend.billing.entitlements import FEATURE_LABELS
     from backend.billing.stripe_billing import billing_enabled as stripe_billing_enabled
 
@@ -75,6 +75,7 @@ def premium_page():
         billing_enabled=stripe_billing_enabled(),
         current_plan_id=(session.get("subscription_plan_id") or "").strip().lower() or None,
         feature_labels=FEATURE_LABELS,
+        pricing_rows=pricing_rows(),
     )
 
 

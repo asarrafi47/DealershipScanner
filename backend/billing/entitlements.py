@@ -104,13 +104,13 @@ def invalidate_org_billing_cache(org_id: int | None = None) -> None:
 
 
 FEATURE_LABELS: dict[str, str] = {
-    FEATURE_AI_CAR_CHAT: "AI car assistant",
-    FEATURE_AI_COMPARE_CHAT: "Compare assistant",
+    FEATURE_AI_CAR_CHAT: "AI car chat",
+    FEATURE_AI_COMPARE_CHAT: "AI compare chat",
     FEATURE_WINDOW_STICKER: "Window stickers",
-    FEATURE_VEHICLE_HISTORY: "Vehicle history",
-    FEATURE_MARKET_INTEL: "Market intelligence",
-    FEATURE_NEARBY_DEALERS: "Nearby dealers",
-    FEATURE_PACKAGES_ENSURE: "Package details",
+    FEATURE_VEHICLE_HISTORY: "Recall and title check",
+    FEATURE_MARKET_INTEL: "Market price by trim",
+    FEATURE_NEARBY_DEALERS: "Dealership picker",
+    FEATURE_PACKAGES_ENSURE: "Factory packages",
     FEATURE_SAVED_SEARCHES: "Saved searches",
 }
 

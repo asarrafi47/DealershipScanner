@@ -3,231 +3,110 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Sarrafi Cars Premium</title>
+    <title>Plans · Sarrafi Cars</title>
     {% include "_head_css.html" %}
-    {% set meta_description = 'Sarrafi Cars Premium: deeper price history, market context, and research tools for serious car shoppers.' %}
+    {% set meta_description = 'Sarrafi Cars paid plans: market prices by trim, a dealership picker, AI car chat and window stickers, on top of free nationwide search.' %}
     {% include "_head_meta.html" %}
 </head>
 <body class="lp-body{% if premium_embed %} premium-embed{% endif %}">
 <div class="page">
 
     {% set nav_active = "premium" %}
-    {% from '_icons.html' import icon %}
-    {% if not premium_embed %}
+        {% if not premium_embed %}
     {% include "_nav_public.html" %}
     {% endif %}
 
-    <div class="premium-page">
+    <main class="pp">
 
-        {% if auth_welcome_source and not has_paid_access %}
-        <div class="premium-welcome">
-            {% if auth_welcome_source == 'google_new' %}
-            <h2>Welcome — you're signed in with Google</h2>
-            <p>Your account is ready. Upgrade to Premium for intelligent car chat, dealership picker, and market price intel — or keep browsing inventory for free.</p>
-            {% else %}
-            <h2>Welcome back</h2>
-            <p>You're signed in with Google. Upgrade to Premium anytime, or continue with free browsing.</p>
+        <header class="pp-head">
+            {% if auth_welcome_source and not has_paid_access %}
+            <p class="pp-kicker">{% if auth_welcome_source == 'google_new' %}You're signed in with Google, and your account is ready.{% else %}Welcome back. You're signed in with Google.{% endif %}</p>
             {% endif %}
-            <div class="premium-welcome-actions">
-                <a href="{{ url_for('billing.premium_checkout') }}" class="primary-button">Upgrade to Premium</a>
-                <a href="{{ url_for('app_home') }}" class="secondary-button">Continue with free</a>
-            </div>
-        </div>
-        {% endif %}
-
-        <div class="premium-hero">
-            <p class="eyebrow">Sarrafi Cars Premium</p>
-            <h1>Go deeper on every car<br>you're considering.</h1>
-            <p>Premium unlocks intelligent tools, market price intelligence, and granular dealership control — built on the same live inventory you already browse for free.</p>
-            <div class="premium-cta-row">
-                {% if has_paid_access or (logged_in_user and not billing_enabled) %}
-                <span class="primary-button" style="cursor: default; opacity: 0.7;">You have Premium access</span>
+            <h1>What a paid plan adds</h1>
+            <p class="pp-lede">Searching every listing stays free. The paid plans add pricing context, dealership control and AI help on top of the same inventory.</p>
+            <p class="pp-status">
+                {% if has_paid_access %}
+                Your account already has full access.
+                {% elif not billing_enabled %}
+                Paid plans aren't on sale yet. The free features work today{% if not logged_in_user %} with a <a href="{{ url_for('register_page') }}">free account</a>{% endif %}.
                 {% elif logged_in_user %}
-                <a href="{{ url_for('billing.premium_checkout') }}" class="primary-button">Upgrade to Premium</a>
-                <a href="{{ url_for('listings') }}" class="secondary-button">Browse listings</a>
+                Pick a plan below. You can cancel any time from your account.
                 {% else %}
-                <a href="/register" class="primary-button">Create account to upgrade</a>
-                <a href="{{ url_for('listings') }}" class="secondary-button">Browse listings</a>
+                <a href="{{ url_for('register_page') }}">Create an account</a>, then pick a plan.
                 {% endif %}
-            </div>
-            <p class="premium-price-note">Plans from $4.99/month — cancel anytime in Stripe.</p>
-        </div>
+            </p>
+        </header>
 
-        {% if subscription_plans and not premium_embed %}
-        <div class="premium-section-header">
-            <h2>Choose your plan</h2>
-            <p>Research tools, AI assistants, or the full package — pick what fits your search.</p>
-        </div>
-        <div class="premium-plans">
-            {% for plan in subscription_plans %}
-            <div class="premium-plan-card{% if plan.highlight %} premium-plan-card--highlight{% endif %}">
-                {% if plan.highlight %}<span class="premium-plan-card__badge">Most popular</span>{% endif %}
-                <h3>{{ plan.name }}</h3>
-                <div class="premium-plan-price">{{ plan.monthly_display }}<span>/mo</span></div>
-                <p class="premium-plan-desc">{{ plan.description }}</p>
-                {% if plan.trial_days %}
-                <p class="premium-plan-desc" style="margin-top:-6px;">{{ plan.trial_days }}-day free trial</p>
-                {% endif %}
-                <ul class="premium-plan-features">
-                    {% for fid in plan.features %}
-                    <li>{{ feature_labels.get(fid, fid.replace('_', ' ').title()) }}</li>
-                    {% endfor %}
-                </ul>
-                <div class="premium-plan-cta">
-                    {% if current_plan_id == plan.id %}
-                    <span class="premium-plan-current">Your current plan</span>
-                    {% elif has_paid_access and current_plan_id %}
-                    <a href="{{ url_for('billing.plan_checkout', plan=plan.id) }}" class="secondary-button" style="width:100%;text-align:center;">Switch plan</a>
-                    {% elif logged_in_user and billing_enabled and plan.stripe_configured %}
-                    <a href="{{ url_for('billing.plan_checkout', plan=plan.id) }}" class="primary-button" style="width:100%;text-align:center;">Choose {{ plan.name }}</a>
-                    {% elif logged_in_user and billing_enabled %}
-                    <span class="secondary-button" style="width:100%;text-align:center;opacity:0.7;cursor:default;display:block;">Stripe price not configured</span>
-                    {% elif logged_in_user %}
-                    <span class="secondary-button" style="width:100%;text-align:center;opacity:0.7;cursor:default;display:block;">Billing coming soon</span>
-                    {% else %}
-                    <a href="{{ url_for('register_page') }}?plan={{ plan.id }}" class="primary-button" style="width:100%;text-align:center;">Sign up for {{ plan.name }}</a>
-                    {% endif %}
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-        <hr class="premium-divider">
+        {% if subscription_plans %}
+        <p class="pp-prices-inline">
+            {% for plan in subscription_plans %}{{ plan.name }} {{ plan.monthly_display }}{% if not loop.last %}, {% endif %}{% endfor %}, each a month. Every plan includes the one before it.
+        </p>
         {% endif %}
-
-        <div class="premium-features">
-
-            <div class="premium-feature-card">
-                <div class="premium-feature-icon">{{ icon('chat', 32) }}</div>
-                <h3>Intelligent Car Chat</h3>
-                <p>Ask any question about a specific listing — engine specs, safety ratings, ownership costs, how it compares to alternatives. Grounded in that car's actual data, not generic answers.</p>
-                <span class="premium-feature-badge">Premium</span>
-            </div>
-
-            <div class="premium-feature-card">
-                <div class="premium-feature-icon">{{ icon('building', 32) }}</div>
-                <h3>Dealership Picker</h3>
-                <p>Stop filtering by radius alone. Hand-pick the dealerships you trust and see only their inventory. Mix and match dealers across any area, regardless of distance.</p>
-                <span class="premium-feature-badge">Premium</span>
-            </div>
-
-            <div class="premium-feature-card">
-                <div class="premium-feature-icon">{{ icon('chart', 32) }}</div>
-                <h3>Market Price Intelligence</h3>
-                <p>See the aggregated average market price for every make/model/year/trim combination — sourced from real listings across our dealer network. Know instantly if a price is fair.</p>
-                <span class="premium-feature-badge">Premium</span>
-            </div>
-
-            <div class="premium-feature-card">
-                <div class="premium-feature-icon">{{ icon('star', 32) }}</div>
-                <h3>OEM Trim Lineup Tree</h3>
-                <p>On every vehicle detail page, see where the listing sits on the factory trim ladder — what rungs sit above and below, and what each trim level adds.</p>
-                <span class="premium-feature-badge">Premium</span>
-            </div>
-
-            <div class="premium-feature-card">
-                <div class="premium-feature-icon">{{ icon('chart', 32) }}</div>
-                <h3>EV Battery Health &amp; Range</h3>
-                <p>On electric and plug-in hybrid listings, see estimated battery state of health and a real-world max range projection based on age and mileage — so you know what you're buying before you visit the lot.</p>
-                <span class="premium-feature-badge">Premium</span>
-            </div>
-
-            {% if not premium_embed %}
-            <div class="premium-feature-card">
-                <div class="premium-feature-icon">{{ icon('star', 32) }}</div>
-                <h3>Everything Free Includes</h3>
-                <p>Full nationwide inventory search with radius filtering, smart natural-language search, spec sheets enriched with EPA and NHTSA data, and unlimited browsing — always free.</p>
-            </div>
-            {% endif %}
-
-        </div>
-
-        <hr class="premium-divider">
-
-        <div class="premium-section-header">
-            <h2>Free vs Premium</h2>
-            <p>No hidden limits on free. Premium adds depth.</p>
-        </div>
-
-        <table class="premium-compare">
-            <thead>
-                <tr>
-                    <th style="width: 60%">Feature</th>
-                    <th class="col-free">Free</th>
-                    <th class="col-premium">Premium</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Full inventory search (nationwide)</td>
-                    <td class="col-free"><span class="icon-check-wrap">{{ icon('check', 18) }}</span></td>
-                    <td class="col-premium"><span class="icon-check-wrap">{{ icon('check', 18) }}</span></td>
-                </tr>
-                <tr>
-                    <td>Radius &amp; make/model filters</td>
-                    <td class="col-free"><span class="icon-check-wrap">{{ icon('check', 18) }}</span></td>
-                    <td class="col-premium"><span class="icon-check-wrap">{{ icon('check', 18) }}</span></td>
-                </tr>
-                <tr>
-                    <td>EPA specs, NHTSA safety data</td>
-                    <td class="col-free"><span class="icon-check-wrap">{{ icon('check', 18) }}</span></td>
-                    <td class="col-premium"><span class="icon-check-wrap">{{ icon('check', 18) }}</span></td>
-                </tr>
-                <tr>
-                    <td>Save cars to your list</td>
-                    <td class="col-free"><span class="icon-check-wrap">{{ icon('check', 18) }}</span></td>
-                    <td class="col-premium"><span class="icon-check-wrap">{{ icon('check', 18) }}</span></td>
-                </tr>
-                <tr>
-                    <td>Intelligent car chat (questions about a listing)</td>
-                    <td class="col-free"><span class="icon-dash" aria-hidden="true">—</span></td>
-                    <td class="col-premium"><span class="icon-check-wrap">{{ icon('check', 18) }}</span></td>
-                </tr>
-                <tr>
-                    <td>Hand-pick individual dealerships</td>
-                    <td class="col-free"><span class="icon-dash" aria-hidden="true">—</span></td>
-                    <td class="col-premium"><span class="icon-check-wrap">{{ icon('check', 18) }}</span></td>
-                </tr>
-                <tr>
-                    <td>Market price average per trim</td>
-                    <td class="col-free"><span class="icon-dash" aria-hidden="true">—</span></td>
-                    <td class="col-premium"><span class="icon-check-wrap">{{ icon('check', 18) }}</span></td>
-                </tr>
-                <tr>
-                    <td>OEM trim lineup tree on vehicle specs</td>
-                    <td class="col-free"><span class="icon-dash" aria-hidden="true">—</span></td>
-                    <td class="col-premium"><span class="icon-check-wrap">{{ icon('check', 18) }}</span></td>
-                </tr>
-                <tr>
-                    <td>EV battery health &amp; real-world range (EV / PHEV)</td>
-                    <td class="col-free"><span class="icon-dash" aria-hidden="true">—</span></td>
-                    <td class="col-premium"><span class="icon-check-wrap">{{ icon('check', 18) }}</span></td>
-                </tr>
-                <tr>
-                    <td>Factory options &amp; window sticker analysis</td>
-                    <td class="col-free"><span class="icon-dash" aria-hidden="true">—</span></td>
-                    <td class="col-premium"><span class="icon-check-wrap">{{ icon('check', 18) }}</span></td>
-                </tr>
-            </tbody>
-        </table>
 
         {% if not premium_embed %}
-        <hr class="premium-divider">
-
-        {% if not has_paid_access and not subscription_plans %}
-        <div style="text-align: center;">
-            <p class="eyebrow">Pricing</p>
-            <h2 style="font-size: 24px; font-weight: 700; margin: 0 0 12px; color: var(--text-primary);">Plans from $4.99/month</h2>
-            <p style="font-size: 15px; color: var(--text-secondary); margin: 0 0 28px;">Cancel anytime in Stripe. Browsing inventory stays free.</p>
-            {% if logged_in_user %}
-            <a href="{{ url_for('billing.premium_checkout') }}" class="primary-button lp-cta-primary">Upgrade to Premium</a>
-            {% else %}
-            <a href="/register" class="primary-button lp-cta-primary">Create account to upgrade</a>
-            {% endif %}
-        </div>
+        <section class="pp-plans" id="plans" aria-label="Plans">
+            <table class="pp-table">
+                <thead>
+                    <tr>
+                        <th scope="col" class="pp-table__feature"><span class="visually-hidden">Feature</span></th>
+                        <th scope="col">Free<span class="pp-price">$0</span></th>
+                        {% for plan in subscription_plans %}
+                        <th scope="col"{% if current_plan_id == plan.id %} class="pp-table__current"{% endif %}>{{ plan.name }}<span class="pp-price">{{ plan.monthly_display }}<small> a month</small></span></th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in pricing_rows %}
+                    <tr>
+                        <th scope="row">{{ row.label }}</th>
+                        <td>{% if row.in_plan.free %}<span class="pp-yes" aria-label="Included"></span>{% else %}<span class="visually-hidden">Not included</span>{% endif %}</td>
+                        {% for plan in subscription_plans %}
+                        <td>{% if row.in_plan[plan.id] %}<span class="pp-yes" aria-label="Included"></span>{% else %}<span class="visually-hidden">Not included</span>{% endif %}</td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                {% if billing_enabled %}
+                <tfoot>
+                    <tr>
+                        <th scope="row"><span class="visually-hidden">Choose</span></th>
+                        <td></td>
+                        {% for plan in subscription_plans %}
+                        <td>
+                            {% if current_plan_id == plan.id %}
+                            <span class="pp-current">Your plan</span>
+                            {% elif not plan.stripe_configured %}
+                            <span class="pp-muted">Not available</span>
+                            {% elif has_paid_access and current_plan_id %}
+                            <a href="{{ url_for('billing.plan_checkout', plan=plan.id) }}" class="pp-link">Switch</a>
+                            {% elif logged_in_user %}
+                            <a href="{{ url_for('billing.plan_checkout', plan=plan.id) }}" class="pp-link">Choose {{ plan.name }}</a>
+                            {% else %}
+                            <a href="{{ url_for('register_page') }}?plan={{ plan.id }}" class="pp-link">Sign up</a>
+                            {% endif %}
+                            {% if plan.trial_days and current_plan_id != plan.id and plan.stripe_configured %}<span class="pp-muted">{{ plan.trial_days }}-day trial</span>{% endif %}
+                        </td>
+                        {% endfor %}
+                    </tr>
+                </tfoot>
+                {% endif %}
+            </table>
+        </section>
         {% endif %}
-        {% endif %}
 
-    </div>
+        <section class="pp-notes" aria-labelledby="pp-notes-title">
+            <h2 id="pp-notes-title">What each one does</h2>
+            <dl>
+                {% for row in pricing_rows %}
+                <div class="pp-note">
+                    <dt>{{ row.label }}<span class="pp-from">{% if row.from_plan == 'free' %}Free{% elif row.from_plan == 'complete' %}Complete only{% else %}{{ row.from_plan|capitalize }} and up{% endif %}</span></dt>
+                    <dd>{{ row.detail }}</dd>
+                </div>
+                {% endfor %}
+            </dl>
+        </section>
+
+    </main>
 </div>
 {% include "_footer_version.html" %}
 </body>

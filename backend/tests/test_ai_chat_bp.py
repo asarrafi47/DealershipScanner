@@ -123,3 +123,13 @@ def test_complete_rewrite_still_used_when_not_truncated(client, monkeypatch):
     data = r.get_json()
     assert data["ok"] and data["context"] == "search"
     assert data["search"]["q"] == "BMW convertible"
+
+
+def test_anonymous_blocked_in_production_even_with_billing_off(client, monkeypatch):
+    """2026-09-30: with billing off require_feature() passes everyone, so anonymous
+    visitors could spend paid model calls. Production now needs an account."""
+    _allow_feature(monkeypatch, ok=True)
+    monkeypatch.setattr(bp, "is_production_env", lambda: True)
+    r = client.post("/api/ai/chat", json={"message": "hi"})
+    assert r.status_code == 401
+    assert r.get_json()["error"] == "login_required"

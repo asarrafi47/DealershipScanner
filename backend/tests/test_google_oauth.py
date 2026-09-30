@@ -108,8 +108,9 @@ def test_google_callback_creates_user_and_logs_in(
 
     r2 = client.get("/premium")
     assert b"signed in with Google" in r2.data
-    assert b"Upgrade to Premium" in r2.data
-    assert b"Continue with free" in r2.data
+    # 2026-09-30 /premium rebuild: the welcome is one line above the plan table; no
+    # separate Upgrade / Continue buttons (Upgrade was dead while billing is off).
+    assert b"What each one does" in r2.data
 
 
 def test_google_callback_returning_user_skips_premium_offer_by_default(

@@ -167,7 +167,11 @@ def test_billing_off_hides_every_upsell_and_dead_upgrade_button(
     assert prem.status_code == 200
     prem_body = prem.get_data(as_text=True)
     assert "Upgrade to Premium" not in prem_body
-    assert "You have Premium access" in prem_body
+    # 2026-09-30: billing off no longer claims "You have Premium access" (the user
+    # does not get the has_paid_access features); it says plans aren't on sale.
+    assert "You have Premium access" not in prem_body
+    assert "aren't on sale yet" in prem_body
+    assert "Most popular" not in prem_body and "Billing coming soon" not in prem_body
 
 
 def test_car_page_keeps_logout_control_for_signed_in_user(

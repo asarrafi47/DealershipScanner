@@ -85,7 +85,7 @@ SUBSCRIPTION_PLANS: dict[str, SubscriptionPlan] = {
     "research": SubscriptionPlan(
         id="research",
         name="Research",
-        description="Market stats, vehicle history, and dealer picker.",
+        description="Market prices, dealership picker, saved searches, recall and title check.",
         monthly_cents=499,
         features=RESEARCH_FEATURES,
         stripe_price_env="STRIPE_PRICE_RESEARCH",
@@ -94,7 +94,7 @@ SUBSCRIPTION_PLANS: dict[str, SubscriptionPlan] = {
     "assistant": SubscriptionPlan(
         id="assistant",
         name="Assistant",
-        description="Research plus AI car and compare chat.",
+        description="Everything in Research, plus AI chat about any car or comparison.",
         monthly_cents=999,
         features=ASSISTANT_FEATURES,
         stripe_price_env="STRIPE_PRICE_ASSISTANT",
@@ -104,7 +104,7 @@ SUBSCRIPTION_PLANS: dict[str, SubscriptionPlan] = {
     "complete": SubscriptionPlan(
         id="complete",
         name="Complete",
-        description="All features including window stickers and packages.",
+        description="Everything in Assistant, plus window stickers and factory packages.",
         monthly_cents=1499,
         features=COMPLETE_FEATURES,
         stripe_price_env="STRIPE_PRICE_COMPLETE",
@@ -182,4 +182,46 @@ def plan_display_list() -> list[dict]:
                 "stripe_configured": bool(stripe_price_id_for_plan(plan.id)),
             }
         )
+    return out
+
+
+# Rows for the /premium comparison, in reading order. ``from_plan`` is the cheapest
+# plan that unlocks the row; rows gated by "any paid plan" (not a feature id) start at
+# research. Descriptions say only what the feature does today (2026-09-30 audit).
+PRICING_FEATURE_ROWS: tuple[dict[str, str], ...] = (
+    {"label": "Nationwide inventory search", "from_plan": "free",
+     "detail": "Every listing we scan, with radius, make, model and price filters and plain-English search."},
+    {"label": "Specs, EPA and NHTSA data", "from_plan": "free",
+     "detail": "Engine, drivetrain and fuel economy checked against NHTSA's VIN decoder, plus safety ratings and recalls."},
+    {"label": "Saved cars and trim neighbors", "from_plan": "free",
+     "detail": "Keep a shortlist, and see the trims just above and below the one you're looking at."},
+    {"label": "Dealership picker", "from_plan": "research",
+     "detail": "Choose the exact dealerships you want to see, near or far, instead of a radius."},
+    {"label": "Market price by trim", "from_plan": "research",
+     "detail": "The average asking price for the same year, model and trim across our dealer network, next to this car's price."},
+    {"label": "Saved searches", "from_plan": "research",
+     "detail": "Keep a search and come back to it."},
+    {"label": "Recall and title check", "from_plan": "research",
+     "detail": "Open recalls, a VIN check and title warnings found in the listing. Not a Carfax or NMVTIS report."},
+    {"label": "Full trim lineup", "from_plan": "research",
+     "detail": "Every trim of the model, with what each step up adds."},
+    {"label": "EV battery estimate", "from_plan": "research",
+     "detail": "An estimate of battery health and range from the car's age and mileage. A guide, not a battery test."},
+    {"label": "AI car chat", "from_plan": "assistant",
+     "detail": "Ask questions about one listing; answers come from that car's own data."},
+    {"label": "AI compare chat", "from_plan": "assistant",
+     "detail": "Ask how the cars you're comparing differ."},
+    {"label": "Window stickers and factory packages", "from_plan": "complete",
+     "detail": "The original window sticker where we can get it, and what each installed package contains and cost."},
+)
+
+_PLAN_ORDER = ("free", "research", "assistant", "complete")
+
+
+def pricing_rows() -> list[dict]:
+    """PRICING_FEATURE_ROWS with an ``in_plan`` map {plan_id: bool} for the table."""
+    out = []
+    for row in PRICING_FEATURE_ROWS:
+        start = _PLAN_ORDER.index(row["from_plan"])
+        out.append({**row, "in_plan": {pid: i >= start for i, pid in enumerate(_PLAN_ORDER)}})
     return out
