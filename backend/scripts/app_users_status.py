@@ -32,8 +32,9 @@ def main() -> int:
 
     from backend.utils.roles import admin_emails, admin_usernames
 
-    raw_path = os.environ.get("USERS_DB_PATH", "users.db")
-    db_path = Path(raw_path).expanduser().resolve()
+    from backend.db.users_sqlite import users_db_path
+
+    db_path = Path(users_db_path()).expanduser().resolve()
     print(f"USERS_DB_PATH → {db_path} (exists={db_path.is_file()})")
     print(f"APP_ADMIN_EMAILS (parsed): {sorted(admin_emails()) or '(none)'}")
     print(f"APP_ADMIN_USERNAMES (parsed): {sorted(admin_usernames()) or '(none)'}")

@@ -3,11 +3,15 @@
 from __future__ import annotations
 
 import ipaddress
+import logging
 import os
 
 from flask import Request
 
 _UNKNOWN = "unknown"
+
+_log = logging.getLogger(__name__)
+_HOPS_LOGGED = False
 
 
 def trust_proxy_headers() -> bool:
@@ -65,6 +69,15 @@ def client_ip(request: Request) -> str:
     if trust_proxy_headers():
         forwarded = request.headers.get("X-Forwarded-For") or ""
         parts = [p for p in (piece.strip() for piece in forwarded.split(",")) if p]
+        global _HOPS_LOGGED
+        if not _HOPS_LOGGED and forwarded:
+            # Entry count only (no addresses): lets an operator check TRUSTED_PROXY_HOPS
+            # against the real proxy chain, e.g. Cloudflare -> Railway edge = 2.
+            _HOPS_LOGGED = True
+            _log.warning(
+                "client_ip: X-Forwarded-For has %d entr%s; TRUSTED_PROXY_HOPS=%d",
+                len(parts), "y" if len(parts) == 1 else "ies", trusted_proxy_hops(),
+            )
         index = len(parts) - trusted_proxy_hops()
         if 0 <= index < len(parts):
             candidate = _normalize_ip(parts[index])

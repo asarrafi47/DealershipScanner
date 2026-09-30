@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+## [1.4.4] - 2026-09-30
+
+### Fixed
+- **Login stays on for 14 days.** The web session is now permanent (`PERMANENT_SESSION_LIFETIME`); it used to end when the browser closed.
+- **Behind Cloudflare and Railway's edge** (`TRUST_PROXY_HEADERS=1`) the app is wrapped in `ProxyFix` for `X-Forwarded-Proto`, so redirects and absolute URLs keep `https://`. `client_ip` logs the `X-Forwarded-For` entry count once per process to check `TRUSTED_PROXY_HOPS`.
+- `/register` strips the password like `/login`, `/account` and the API; accounts registered with outer spaces before this still log in.
+- A relative `USERS_DB_PATH` / `DEV_USERS_DB_PATH` resolves against the repo root, not the working directory (a script run elsewhere silently opened a stray `users.db`). `app_users_status.py` and `reset_app_user_password.py` use the same path.
+
 ## [1.4.3] - 2026-09-29
 
 ### Fixed

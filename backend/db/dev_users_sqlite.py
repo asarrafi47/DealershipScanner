@@ -22,13 +22,21 @@ logger = logging.getLogger(__name__)
 
 _REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir, os.pardir))
 
-DB_PATH = os.environ.get("DEV_USERS_DB_PATH", os.path.join(_REPO_ROOT, "dev_users.db"))
+
+def _resolve_db_path(raw: str) -> str:
+    """A relative DEV_USERS_DB_PATH means the repo root, not the process cwd (2026-09-30: a
+    script run from another directory silently opened a stray dev_users.db)."""
+    return raw if os.path.isabs(raw) else os.path.join(_REPO_ROOT, raw)
+
+
+DB_PATH = _resolve_db_path(os.environ.get("DEV_USERS_DB_PATH") or "dev_users.db")
 
 _PLAIN_SQLITE_FALLBACK_WARNED = False
 
 
 def dev_users_db_path() -> str:
-    return os.environ.get("DEV_USERS_DB_PATH", DB_PATH)
+    raw = os.environ.get("DEV_USERS_DB_PATH")
+    return _resolve_db_path(raw) if raw else DB_PATH
 
 
 def _connect_sqlcipher(key: str) -> Any:

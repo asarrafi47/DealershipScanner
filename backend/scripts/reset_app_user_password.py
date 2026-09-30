@@ -62,8 +62,9 @@ def main() -> int:
     )
     args = ap.parse_args()
 
-    raw_path = os.environ.get("USERS_DB_PATH", "users.db")
-    db_path = Path(raw_path).expanduser().resolve()
+    from backend.db.users_sqlite import users_db_path
+
+    db_path = Path(users_db_path()).expanduser().resolve()
     if not db_path.is_file():
         print(f"No database at {db_path}", file=sys.stderr)
         return 1

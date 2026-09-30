@@ -116,6 +116,7 @@ from backend.utils.car_serialize import format_display_value, serialize_car_for_
 from backend.utils.listing_completeness import INCOMPLETE_FIELD_LABELS
 from backend.utils.car_chat_policy import car_chat_rate_limits, car_chat_user_daily_limit, web_research_playwright_allowed
 from backend.utils.client_ip import client_ip as _client_ip_from_request
+from backend.utils.client_ip import trust_proxy_headers
 from backend.utils.csrf import ensure_csrf_token, validate_csrf_form, validate_csrf_header
 
 if not (validate_csrf_header.__code__.co_flags & inspect.CO_VARARGS):
@@ -195,6 +196,14 @@ else:
     app.secret_key = _raw_secret or _secrets_mod.token_hex(32)
 
 app.config["MAX_CONTENT_LENGTH"] = _MAX_REQUEST_BODY
+
+if trust_proxy_headers():
+    # Railway's edge terminates TLS and sets X-Forwarded-Proto; without this the app
+    # thinks it is served over http and builds http:// redirects and absolute URLs.
+    # x_for stays 0: client_ip() reads X-Forwarded-For itself (TRUSTED_PROXY_HOPS).
+    from werkzeug.middleware.proxy_fix import ProxyFix
+
+    app.wsgi_app = ProxyFix(app.wsgi_app, x_for=0, x_proto=1, x_host=0)
 
 app.config["SESSION_COOKIE_HTTPONLY"] = True
 app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
@@ -847,10 +856,14 @@ def login_page():
         if not allow_request(f"login:{ip}", max_events=_LOGIN_RPM, window_seconds=60.0):
             return render_template("login.html", error="Too many login attempts. Try again in a minute."), 429
         login_input = (request.form.get("login") or "").strip()
-        password = (request.form.get("password") or "").strip()
+        raw_password = request.form.get("password") or ""
+        password = raw_password.strip()
         if not login_input or not password:
             return render_template("login.html", error="Enter username/email and password.")
         u = authenticate_app_user(login_input, password)
+        if not u and raw_password != password:
+            # /register kept outer spaces before 2026-09-30; those hashes need the raw text.
+            u = authenticate_app_user(login_input, raw_password)
         if u:
             sync_env_admin_user_row(int(u["id"]))
             session.clear()
@@ -873,7 +886,7 @@ def register_page():
         uid, err_code, err_msg, wants_premium = register_general_app_user(
             request.form.get("username", ""),
             request.form.get("email", ""),
-            request.form.get("password", ""),
+            (request.form.get("password") or "").strip(),
             plan=plan,
             min_password_len=_MIN_PASSWORD_LEN,
         )
@@ -1345,6 +1358,7 @@ def _finalize_app_session(user_id: int) -> bool:
 
     if not _user_row_is_active(u):
         return False
+    session.permanent = True
     session["user_id"] = int(u["id"])
     session["username"] = u["username"]
     session["user_email"] = (u.get("email") or "").strip()
