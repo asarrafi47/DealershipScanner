@@ -70,6 +70,7 @@ struct CarDetailView: View {
                 .frame(maxWidth: .infinity)
         }
         .buttonStyle(.borderedProminent)
+        .buttonBorderShape(.roundedRectangle(radius: 4))
         .tint(isSaved ? .pink : .accentColor)
         .disabled(isSaving)
         .padding(.horizontal)
@@ -115,9 +116,9 @@ struct CarDetailView: View {
             }
             Spacer()
         }
-        .padding()
-        .background(Color(.secondarySystemGroupedBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .padding(.vertical, 12)
+        .overlay(alignment: .top) { Divider() }
+        .overlay(alignment: .bottom) { Divider() }
         .padding(.horizontal)
     }
 
@@ -136,9 +137,8 @@ struct CarDetailView: View {
                             .font(.subheadline)
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(10)
-                    .background(Color(.secondarySystemGroupedBackground))
-                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                    .padding(.vertical, 6)
+                    .overlay(alignment: .top) { Divider() }
                 }
             }
             .padding(.horizontal)

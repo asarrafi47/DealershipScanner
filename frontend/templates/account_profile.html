@@ -28,9 +28,9 @@
 
     <main class="hub-main hub-main--compact account-profile">
 
-        <section class="hub-card db-reveal" aria-labelledby="profile-info-heading">
-            <h2 id="profile-info-heading" class="hub-card__title">Profile information</h2>
-            <p class="hub-card__sub">Username and email are used when you sign in.</p>
+        <section class="hub-section db-reveal" aria-labelledby="profile-info-heading">
+            <h2 id="profile-info-heading" class="hub-section__title">Profile information</h2>
+            <p class="hub-section__sub">Username and email are used when you sign in.</p>
 
             {% if profile_success %}
             <div class="account-profile__ok">Profile updated.</div>
@@ -72,9 +72,9 @@
             </form>
         </section>
 
-        <section class="hub-card db-reveal" id="password" aria-labelledby="profile-password-heading">
-            <h2 id="profile-password-heading" class="hub-card__title">Password</h2>
-            <p class="hub-card__sub">Choose a strong password you have not used elsewhere.</p>
+        <section class="hub-section db-reveal" id="password" aria-labelledby="profile-password-heading">
+            <h2 id="profile-password-heading" class="hub-section__title">Password</h2>
+            <p class="hub-section__sub">Choose a strong password you have not used elsewhere.</p>
 
             {% if password_success %}
             <div class="account-profile__ok">Password updated. Use it the next time you sign in.</div>
@@ -94,9 +94,9 @@
             </form>
         </section>
 
-        <section class="hub-card db-reveal" id="hidden-dealers" aria-labelledby="profile-hidden-dealers-heading">
-            <h2 id="profile-hidden-dealers-heading" class="hub-card__title">Hidden dealerships</h2>
-            <p class="hub-card__sub">Dealerships you hide are left out of your inventory searches and recommendations. Hide one from its dealership page.</p>
+        <section class="hub-section db-reveal" id="hidden-dealers" aria-labelledby="profile-hidden-dealers-heading">
+            <h2 id="profile-hidden-dealers-heading" class="hub-section__title">Hidden dealerships</h2>
+            <p class="hub-section__sub">Dealerships you hide are left out of your inventory searches and recommendations. Hide one from its dealership page.</p>
 
             <div class="error-box account-profile__hidden-error" id="hidden-dealers-error" hidden></div>
 
@@ -111,12 +111,12 @@
             </ul>
         </section>
 
-        <section class="hub-card db-reveal" id="recent-searches" aria-labelledby="profile-recent-searches-heading">
+        <section class="hub-section db-reveal" id="recent-searches" aria-labelledby="profile-recent-searches-heading">
             <div class="account-profile__section-head">
-                <h2 id="profile-recent-searches-heading" class="hub-card__title">Recent searches</h2>
+                <h2 id="profile-recent-searches-heading" class="hub-section__title">Recent searches</h2>
                 <button type="button" class="secondary-button account-profile__history-btn" id="recent-searches-clear"{% if not recent_searches %} hidden{% endif %}>Clear all</button>
             </div>
-            <p class="hub-card__sub">Searches you run while signed in are kept here so you can pick them up again. Only your last {{ recent_searches_limit or 20 }} are shown; nothing here is shared.</p>
+            <p class="hub-section__sub">Searches you run while signed in are kept here so you can pick them up again. Only your last {{ recent_searches_limit or 20 }} are shown; nothing here is shared.</p>
 
             <div class="error-box account-profile__history-error" id="recent-searches-error" hidden></div>
 
@@ -138,9 +138,9 @@
             </ul>
         </section>
 
-        <section class="hub-card db-reveal" id="saved-searches" aria-labelledby="profile-saved-searches-heading">
-            <h2 id="profile-saved-searches-heading" class="hub-card__title">Saved searches</h2>
-            <p class="hub-card__sub">Searches you keep on purpose, from the listings toolbar or a recent search above.{% if not saved_searches_enabled %} Saving searches is part of Premium · <a href="{{ url_for('premium_page') }}">See plans</a>.{% endif %}</p>
+        <section class="hub-section db-reveal" id="saved-searches" aria-labelledby="profile-saved-searches-heading">
+            <h2 id="profile-saved-searches-heading" class="hub-section__title">Saved searches</h2>
+            <p class="hub-section__sub">Searches you keep on purpose, from the listings toolbar or a recent search above.{% if not saved_searches_enabled %} Saving searches is part of Premium · <a href="{{ url_for('premium_page') }}">See plans</a>.{% endif %}</p>
 
             <div class="error-box account-profile__history-error" id="saved-searches-error" hidden></div>
 

@@ -399,17 +399,17 @@ struct FilterMenuLabel: View {
 
         .padding(.vertical, 7)
 
-        .background(Color(.systemGray6))
+        // No fill or rounded frame: a single hairline underlines the control.
 
-        .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+        .overlay(alignment: .bottom) {
 
-        .overlay(
+            Rectangle()
 
-            RoundedRectangle(cornerRadius: 8, style: .continuous)
+                .fill(AppTheme.navy.opacity(0.18))
 
-                .stroke(AppTheme.navy.opacity(0.12), lineWidth: 1)
+                .frame(height: 1)
 
-        )
+        }
 
     }
 

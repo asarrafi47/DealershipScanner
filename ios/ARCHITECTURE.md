@@ -26,7 +26,7 @@ ios/
         ├── App/                # Entry, tabs, global config & state
         ├── Core/
         │   ├── Theme/          # Colors, shells, shared chrome
-        │   └── Components/     # Reusable UI (cards, grid, images)
+        │   └── Components/     # Reusable UI (listing entries, grid, images)
         ├── Networking/         # APIClient + DTOs
         ├── Features/
         │   ├── Auth/
@@ -46,6 +46,7 @@ ios/
 3. **API types and HTTP** → `Networking/` only (`APIClient.swift`, `Models.swift`).
 4. **No website templates or JS** in the iOS tree.
 5. **Backend changes** for mobile: only when the app needs a new/changed JSON endpoint; update `ios/docs/API_CONTRACT.md` in the same PR.
+6. **No boxes** (same rule as the website). No rounded, filled, stroked or shadowed containers used as cards or panels; no Capsule chips or badges with a fill; no icon+title+blurb card grids. Separate content with spacing and 1pt hairlines (`Divider()`), show status as colored text, show photos unframed (corner radius 0-4). Buttons may keep a shape, max 4pt radius. `FloatingCard` and `ListingCardView` keep their names but render flat. Map pins are markers, not content, and may keep their shadow.
 
 ## Build
 

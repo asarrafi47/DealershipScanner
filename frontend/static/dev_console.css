@@ -1,4 +1,5 @@
-/* Developer console — dark UI aligned with style.css */
+/* Developer console (manifest / login / disabled): light editorial layout.
+   Type, whitespace and 1px hairlines; no panels, tinted banners or pills. */
 
 .dev-main {
     max-width: 1100px;
@@ -21,46 +22,41 @@
     max-width: 720px;
     line-height: 1.55;
     font-size: 14px;
+    color: var(--text-secondary);
 }
 
-.dev-intro code {
-    font-size: 13px;
-    padding: 2px 6px;
-    border-radius: 6px;
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+.dev-intro code,
+.dev-ref-list code,
+.dev-login-lead code,
+.dev-banner code {
+    font-size: 12px;
+    color: var(--text);
 }
 
 .dev-muted {
-    color: #a8a8a8;
+    color: var(--text-muted);
     font-size: 14px;
 }
 
 .dev-banner {
     margin-top: 20px;
-    padding: 14px 16px;
-    border-radius: var(--main-radius, 10px);
+    padding: 12px 0;
+    border-top: 1px solid var(--border-light);
+    border-bottom: 1px solid var(--border-light);
     font-size: 13px;
     line-height: 1.5;
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: var(--text);
 }
 
 .dev-banner--warn {
-    background: rgba(234, 179, 8, 0.12);
-    border-color: rgba(234, 179, 8, 0.35);
-    color: #fde68a;
+    border-top-color: #d97706;
+    color: var(--text);
 }
 
 .dev-panel {
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
-    padding: 22px 22px 20px;
-    background: rgba(255, 255, 255, 0.02);
+    border-top: 1px solid var(--border-light);
+    padding: 20px 0 8px;
     margin-bottom: 24px;
-}
-
-.dev-panel--ref {
-    background: rgba(255, 255, 255, 0.03);
 }
 
 .dev-panel-head {
@@ -87,32 +83,30 @@
     min-height: 1.25em;
     font-size: 13px;
     margin-bottom: 14px;
-    color: #c4c4c4;
+    color: var(--text-muted);
 }
 
 .dev-status.dev-status--ok {
-    color: #86efac;
+    color: #047857;
 }
 
 .dev-status.dev-status--err {
-    color: #fca5a5;
+    color: #b91c1c;
 }
 
 .dev-infer {
     margin-bottom: 22px;
-    padding: 16px 18px;
-    border-radius: 10px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    background: rgba(0, 0, 0, 0.25);
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--border-light);
 }
 
 .dev-infer-label {
     display: block;
-    font-size: 12px;
-    font-weight: 500;
-    color: #b0b0b0;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-muted);
     margin-bottom: 8px;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
 }
 
@@ -123,21 +117,30 @@
     align-items: center;
 }
 
-.dev-infer-input {
-    flex: 1 1 220px;
+.dev-infer-input,
+.dev-infer-textarea,
+.dev-table input,
+.dev-table select {
     min-width: 0;
-    padding: 10px 12px;
-    border-radius: 8px;
-    border: 1px solid #333;
-    background: #000;
-    color: #fff;
+    padding: 8px 10px;
+    border-radius: 4px;
+    border: 1px solid var(--border-medium);
+    background: var(--bg-card);
+    color: var(--text);
     font-family: inherit;
     font-size: 14px;
 }
 
-.dev-infer-input:focus {
+.dev-infer-input {
+    flex: 1 1 220px;
+}
+
+.dev-infer-input:focus,
+.dev-infer-textarea:focus,
+.dev-table input:focus,
+.dev-table select:focus {
     outline: none;
-    border-color: rgba(255, 255, 255, 0.35);
+    border-color: var(--navy);
 }
 
 .dev-infer-label--secondary {
@@ -147,22 +150,12 @@
 .dev-infer-textarea {
     width: 100%;
     margin-top: 8px;
-    padding: 10px 12px;
-    border-radius: 8px;
-    border: 1px solid #333;
-    background: #080808;
-    color: #e8e8e8;
     font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
     font-size: 12px;
     line-height: 1.45;
     resize: vertical;
     min-height: 88px;
     box-sizing: border-box;
-}
-
-.dev-infer-textarea:focus {
-    outline: none;
-    border-color: rgba(255, 255, 255, 0.35);
 }
 
 .dev-infer-hint {
@@ -173,8 +166,7 @@
 
 .dev-table-wrap {
     overflow-x: auto;
-    border-radius: 10px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-top: 1px solid var(--border-medium);
 }
 
 .dev-table {
@@ -185,41 +177,32 @@
 
 .dev-table th,
 .dev-table td {
-    padding: 10px 12px;
+    padding: 8px 12px 8px 0;
     text-align: left;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    border-bottom: 1px solid var(--border-light);
     vertical-align: middle;
 }
 
 .dev-table th {
-    color: #b0b0b0;
-    font-weight: 500;
+    color: var(--text-muted);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
     white-space: nowrap;
-    background: rgba(0, 0, 0, 0.35);
 }
 
 .dev-th-hint {
     font-weight: 400;
-    color: #888;
+    color: var(--text-faint);
+    text-transform: none;
+    letter-spacing: 0;
 }
 
 .dev-table input,
 .dev-table select {
     width: 100%;
-    min-width: 0;
-    padding: 8px 10px;
-    border-radius: 8px;
-    border: 1px solid #333;
-    background: #000;
-    color: #fff;
-    font-family: inherit;
     font-size: 13px;
-}
-
-.dev-table input:focus,
-.dev-table select:focus {
-    outline: none;
-    border-color: rgba(255, 255, 255, 0.35);
 }
 
 .dev-col-actions {
@@ -241,9 +224,9 @@
 
 .dev-row-remove {
     background: transparent;
-    border: 1px solid rgba(248, 113, 113, 0.45);
-    color: #fecaca;
-    border-radius: 8px;
+    border: 1px solid #fecaca;
+    color: #b91c1c;
+    border-radius: 4px;
     padding: 6px 10px;
     font-size: 12px;
     cursor: pointer;
@@ -251,7 +234,7 @@
 }
 
 .dev-row-remove:hover {
-    background: rgba(248, 113, 113, 0.12);
+    border-color: #b91c1c;
 }
 
 .dev-footnote {
@@ -263,17 +246,9 @@
 .dev-ref-list {
     margin: 0;
     padding-left: 1.2em;
-    color: #c8c8c8;
+    color: var(--text-secondary);
     font-size: 14px;
     line-height: 1.65;
-}
-
-.dev-ref-list code {
-    font-size: 12px;
-    padding: 2px 6px;
-    border-radius: 6px;
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .dev-inline-form {
@@ -284,21 +259,35 @@
 .dev-link-button {
     background: none;
     border: none;
-    color: #d0d0d0;
+    color: inherit;
     font-size: 14px;
     font-family: inherit;
     cursor: pointer;
     padding: 0;
     text-decoration: none;
-    transition: color 0.2s ease;
 }
 
 .dev-link-button:hover {
-    color: #ffffff;
+    text-decoration: underline;
+    text-underline-offset: 3px;
 }
 
-.dev-login-card {
+.dev-login-card,
+.auth-card.dev-login-card {
     max-width: 420px;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    background: transparent;
+}
+
+.dev-login-card .error-box {
+    padding: 0 0 8px;
+    border: none;
+    border-radius: 0;
+    background: transparent;
+    color: #b91c1c;
+    font-weight: 600;
 }
 
 .dev-login-lead {
@@ -306,32 +295,24 @@
     line-height: 1.5;
 }
 
-.dev-login-lead code {
-    font-size: 12px;
-    padding: 2px 6px;
-    border-radius: 6px;
-    background: rgba(255, 255, 255, 0.06);
-}
-
 .secondary-button {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 10px 18px;
-    border-radius: var(--main-radius, 10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 9px 16px;
+    border-radius: 4px;
+    border: 1px solid var(--border-medium);
     background: transparent;
-    color: #e5e5e5;
+    color: var(--text);
     font-family: inherit;
     font-size: 14px;
     font-weight: 500;
     cursor: pointer;
-    transition: border-color 0.2s ease, background 0.2s ease;
 }
 
 .secondary-button:hover {
-    border-color: rgba(255, 255, 255, 0.4);
-    background: rgba(255, 255, 255, 0.04);
+    border-color: var(--navy);
+    color: var(--navy);
 }
 
 @media (max-width: 720px) {
@@ -341,6 +322,6 @@
 
     .dev-table th,
     .dev-table td {
-        padding: 8px 10px;
+        padding: 8px 10px 8px 0;
     }
 }

@@ -5,7 +5,7 @@
     position: absolute;
     inset: 0;
     z-index: 4;
-    border-radius: 20px;
+    border-radius: 0;
     overflow: hidden;
     background: var(--bg-subtle);
 }
@@ -48,15 +48,15 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 6px 14px;
-    border-radius: 999px;
+    padding: 0;
+    border-radius: 0;
     font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 0.02em;
+    font-weight: 700;
+    letter-spacing: 0.04em;
     color: #fff;
-    background: rgba(20, 36, 54, 0.72);
-    backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: none;
+    border: 0;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.85), 0 0 10px rgba(0, 0, 0, 0.5);
     pointer-events: none;
     transition: opacity 0.5s ease;
     white-space: nowrap;
@@ -108,26 +108,29 @@
     flex-wrap: wrap;
 }
 
+/* Photos / 360 / interior: text tabs with an underline, not pills. */
 .car-media-switch-btn {
-    padding: 7px 16px;
-    border-radius: 999px;
-    border: 1px solid var(--border-medium);
-    background: var(--chrome-face);
-    color: var(--navy);
+    padding: 6px 2px 5px;
+    margin: 0 8px;
+    border-radius: 0;
+    border: 0;
+    border-bottom: 2px solid transparent;
+    background: none;
+    color: var(--text-muted);
     font-size: 13px;
     font-weight: 600;
     cursor: pointer;
-    transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+    transition: border-color 0.2s ease, color 0.2s ease;
 }
 
 .car-media-switch-btn:hover {
-    border-color: var(--navy);
+    color: var(--navy);
 }
 
 .car-media-switch-btn.active {
-    background: var(--navy);
-    border-color: var(--navy);
-    color: #fff;
+    background: none;
+    border-bottom-color: var(--navy);
+    color: var(--navy);
 }
 
 /* Pannellum chrome tweaks inside the pano viewer */
@@ -551,19 +554,17 @@
 .lps-car {
     text-decoration: none;
     color: inherit;
-    background: var(--bg-card);
-    border-radius: var(--main-radius);
+    background: transparent;
+    border-radius: 0;
     overflow: hidden;
-    border: 1px solid var(--border-light);
-    box-shadow: 0 2px 8px rgba(28, 53, 82, 0.06);
-    transition:
-        transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-        box-shadow 0.35s;
+    border: none;
 }
 
-.lps-car:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 18px 36px rgba(28, 53, 82, 0.16);
+/* Photo + type, no card (owner rule 2026-09-30: no boxes). */
+.lps-car:hover .lps-car-title {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
 }
 
 .lps-car-img {
@@ -574,7 +575,7 @@
 }
 
 .lps-car-body {
-    padding: 14px 16px 16px;
+    padding: 12px 0 0;
 }
 
 .lps-car-title {
@@ -659,21 +660,16 @@
     text-decoration: none;
     cursor: pointer;
     border: 1px solid transparent;
-    transition:
-        transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
-        box-shadow 0.25s;
+    transition: background-color 0.2s, color 0.2s;
 }
 
 .lps-btn-light {
     background: #fffcf8;
     color: var(--navy);
-    box-shadow: 0 10px 26px rgba(0, 0, 0, 0.25);
 }
 
 .lps-btn-light:hover,
 .lps-btn-light:focus-visible {
-    transform: translateY(-2px);
-    box-shadow: 0 16px 34px rgba(0, 0, 0, 0.32);
     outline: none;
 }
 
@@ -685,7 +681,6 @@
 .lps-btn-ghost:hover,
 .lps-btn-ghost:focus-visible {
     border-color: #a68968;
-    transform: translateY(-2px);
     outline: none;
 }
 

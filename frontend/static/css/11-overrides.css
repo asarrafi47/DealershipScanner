@@ -76,13 +76,13 @@
     .nav-mkt-link {
         flex-shrink: 0;
         min-height: 44px;
-        padding: 10px 12px;
+        padding: 10px 6px;
         font-size: 13px;
     }
 
     .nav-link-cta {
         min-height: 44px;
-        padding: 10px 14px;
+        padding: 10px 0;
     }
 
     .guest-banner-content {
@@ -149,7 +149,7 @@
     }
 
     .find-dealers-form {
-        padding: 16px;
+        padding: 16px 0;
     }
 
     .auth-section {
@@ -183,10 +183,6 @@
     }
 
     .dash-hub-stats {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .dash-hub-actions {
         grid-template-columns: 1fr;
     }
 
@@ -213,16 +209,16 @@
     /* M4 (visual review 2026-09-28): the strip overflowed (424 vs 364px) with
        its scrollbar hidden, clipping "Comments". Wrap instead of scrolling. */
     .car-vdp-tabs {
-        gap: 4px;
-        padding: 4px;
+        gap: 0 4px;
+        padding: 0;
         flex-wrap: wrap;
         overflow-x: visible;
     }
 
     .car-vdp-tab {
-        flex: 1 1 auto;
+        flex: 0 1 auto;
         min-height: 44px;
-        padding: 8px 12px;
+        padding: 8px 10px;
         font-size: 13px;
         text-align: center;
     }
@@ -253,7 +249,7 @@
 @media (max-width: 480px) {
     .nav-links a.nav-link-cta {
         min-height: 44px;
-        padding: 10px 14px;
+        padding: 10px 0;
         font-size: 13px;
     }
 
@@ -281,7 +277,8 @@
     }
 
     .car-quick-specs {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr 1fr;
+        column-gap: 20px;
     }
 
     .car-gallery-arrow {
@@ -384,15 +381,16 @@
     align-items: center;
     gap: 0.75rem 1.25rem;
     margin: 0 0 1rem;
-    padding: 0.65rem 1rem;
-    border-radius: 8px;
-    background: #1a2332;
-    color: #e8eef7;
+    padding: 0.5rem 0;
+    border-radius: 0;
+    background: transparent;
+    border-bottom: 1px solid var(--border-light);
+    color: var(--text-muted);
     font-size: 0.9rem;
 }
 
 .scan-lab-vdp-banner a {
-    color: #9ec5ff;
+    color: var(--navy);
     text-decoration: none;
     font-weight: 600;
 }
@@ -460,7 +458,7 @@ body.listings-page .listings-filter-inner .listings-dealer-picker-btn-label {
 
 body.listings-page .listings-filter-inner .listings-acc-trigger {
     min-height: 44px;
-    padding: 12px 16px;
+    padding: 12px 0;
     box-sizing: border-box;
     align-items: center;
 }

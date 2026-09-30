@@ -24,19 +24,19 @@
     </div>
 
     <main class="hub-main hub-main--compact account-profile">
-        <section class="hub-card db-reveal">
-            <h2 class="hub-card__title">Current plan</h2>
+        <section class="hub-section db-reveal">
+            <h2 class="hub-section__title">Current plan</h2>
             {% if plan %}
             <p><strong>{{ plan.name }}</strong>{% if plan.monthly_cents > 0 %} — ${{ '%.2f'|format(plan.monthly_cents / 100) }}/mo{% else %} — Free{% endif %}</p>
-            {% if plan.trial_days %}<p class="hub-card__sub">{{ plan.trial_days }}-day trial available on checkout.</p>{% endif %}
+            {% if plan.trial_days %}<p class="hub-section__sub">{{ plan.trial_days }}-day trial available on checkout.</p>{% endif %}
             {% else %}
             <p>{{ plan_id|title }}</p>
             {% endif %}
 
             {% if not billing_enabled %}
-            <p class="hub-card__sub">Stripe billing is not enabled on this environment.</p>
+            <p class="hub-section__sub">Stripe billing is not enabled on this environment.</p>
             {% elif not (is_premium or has_paid_access) %}
-            <p class="hub-card__sub"><a href="{{ url_for('premium_page') }}">View plans and upgrade</a></p>
+            <p class="hub-section__sub"><a href="{{ url_for('premium_page') }}">View plans and upgrade</a></p>
             {% endif %}
 
             {% if has_portal %}
@@ -44,20 +44,20 @@
                 <a href="{{ url_for('account_billing_portal') }}" class="primary-button">Manage subscription in Stripe</a>
             </p>
             {% elif billing_enabled and is_premium %}
-            <p class="hub-card__sub">Portal link appears after your first Stripe checkout stores a customer id.</p>
+            <p class="hub-section__sub">Portal link appears after your first Stripe checkout stores a customer id.</p>
             {% endif %}
         </section>
 
-        <section class="hub-card db-reveal">
-            <h2 class="hub-card__title">Included features</h2>
+        <section class="hub-section db-reveal">
+            <h2 class="hub-section__title">Included features</h2>
             {% if feature_labels %}
-            <ul>
+            <ul class="account-billing__features">
                 {% for label in feature_labels %}
                 <li>{{ label }}</li>
                 {% endfor %}
             </ul>
             {% else %}
-            <p class="hub-card__sub">Browse and save cars (free tier).</p>
+            <p class="hub-section__sub">Browse and save cars (free tier).</p>
             {% endif %}
         </section>
     </main>

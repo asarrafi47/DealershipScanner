@@ -10,12 +10,12 @@ struct ListingsGridView: View {
     @State private var saveError: String?
 
     private let columns = [
-        GridItem(.flexible(), spacing: 12),
-        GridItem(.flexible(), spacing: 12),
+        GridItem(.flexible(), spacing: 16),
+        GridItem(.flexible(), spacing: 16),
     ]
 
     var body: some View {
-        LazyVGrid(columns: columns, spacing: 12) {
+        LazyVGrid(columns: columns, spacing: 20) {
             ForEach(Array(cars.prefix(visibleCount).enumerated()), id: \.element.id) { index, car in
                 NavigationLink(value: car.id) {
                     ListingCardView(

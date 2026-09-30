@@ -15,8 +15,8 @@
 
    This partial loads last and normalises the shared surfaces to a single recipe
    rather than editing a dozen rules in place, so the individual sections keep
-   owning their layout and only the skin is centralised. Anything genuinely
-   deliberate (the hero, the deal badge, map tiles) is left alone.
+   owning their layout and only the skin is centralised. Map tiles and the photo
+   gallery are left alone.
    ══════════════════════════════════════════════════════════════════════════ */
 
 body.car-detail-page {
@@ -26,11 +26,12 @@ body.car-detail-page {
     --vdp-card-pad: 18px;
 }
 
-/* ---- Surfaces ---- */
+/* ---- Surfaces ----
+   2026-09-30: the page has no cards. Sections are separated by whitespace and a
+   1px hairline in --border-light; figures sit on hairlines, statuses are coloured
+   text. The only framed surfaces left are the two that reproduce a physical
+   document: the Monroney build sheet sections and the window-sticker embed. */
 
-body.car-detail-page .car-trim-ladder__card,
-body.car-detail-page .listing-packages-panel,
-body.car-detail-page .car-finance-estimate-card,
 body.car-detail-page .build-sheet-section,
 body.car-detail-page .car-window-sticker-frame {
     background: var(--vdp-card-bg);
@@ -39,15 +40,22 @@ body.car-detail-page .car-window-sticker-frame {
     box-shadow: none;
 }
 
-body.car-detail-page .listing-packages-panel,
-body.car-detail-page .car-finance-estimate-card {
-    padding: var(--vdp-card-pad);
+body.car-detail-page .listing-packages-panel {
+    padding: 18px 0 0;
+    background: none;
+    border: 0;
+    border-top: 1px solid var(--vdp-card-border-color);
+    border-radius: 0;
+    box-shadow: none;
 }
 
-/* Trim rows are a dense list, so they keep tighter padding — the surface still
-   matches, only the rhythm differs. */
+/* Trim rows are a dense list on hairlines (03-car-page.css owns the rhythm). */
 body.car-detail-page .car-trim-ladder__card {
-    padding: 12px 14px;
+    background: none;
+    border: 0;
+    border-bottom: 1px solid var(--vdp-card-border-color);
+    border-radius: 0;
+    padding: 10px 0 12px;
 }
 
 /* ---- Heading scale ----
@@ -151,4 +159,31 @@ body.car-detail-page .build-sheet-disclaimer {
     margin-top: 18px;
     padding-top: 14px;
     border-top: 1px solid var(--vdp-card-border-color);
+}
+
+/* ---- No chips ----
+   Provenance tags are small uppercase text, not filled pills. .spec-source-badge's
+   base rule lives in 06-dev.css; the packages list borrows the build sheet's
+   .build-sheet-src tags, which stay framed only inside the Monroney replica. */
+
+body.car-detail-page .spec-source-badge {
+    display: inline;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    color: var(--text-faint);
+    font-size: 0.66rem;
+    letter-spacing: 0.06em;
+}
+
+body.car-detail-page .listing-packages-panel .build-sheet-src {
+    padding: 0;
+    margin-left: 6px;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    box-shadow: none;
+    font-style: normal;
+    color: var(--text-faint);
 }

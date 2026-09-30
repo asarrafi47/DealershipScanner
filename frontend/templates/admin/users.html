@@ -21,16 +21,15 @@
     .users-hub__stats {
         display: flex;
         flex-wrap: wrap;
-        gap: 10px;
+        gap: 8px 36px;
         margin-bottom: 20px;
+        padding: 12px 0;
+        border-top: 1px solid var(--border-light);
+        border-bottom: 1px solid var(--border-light);
     }
     .users-hub__stat {
-        padding: 10px 14px;
-        border-radius: 10px;
-        border: 1px solid var(--border-light);
-        background: var(--bg-card);
-        font-size: 13px;
-        color: var(--text-secondary);
+        font-size: 12px;
+        color: var(--text-muted);
     }
     .users-hub__stat strong {
         display: block;
@@ -44,14 +43,12 @@
         flex: 1;
         padding: 10px 12px;
         border: 1px solid var(--border-medium);
-        border-radius: 8px;
+        border-radius: 4px;
         font-size: 14px;
     }
     .users-table-wrap {
         overflow-x: auto;
-        border: 1px solid var(--border-light);
-        border-radius: 12px;
-        background: var(--bg-card);
+        border-top: 1px solid var(--border-medium);
     }
     .users-hub table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 1040px; }
     .users-hub th, .users-hub td {
@@ -65,7 +62,6 @@
         text-transform: uppercase;
         letter-spacing: 0.05em;
         color: var(--text-muted);
-        background: var(--bg-elevated);
         white-space: nowrap;
     }
     .users-hub tr:last-child td { border-bottom: none; }
@@ -73,22 +69,20 @@
     .users-hub__username { font-weight: 600; color: var(--text); }
     .users-hub__id { font-size: 11px; color: var(--text-muted); }
     .users-hub__email { word-break: break-word; max-width: 220px; }
+    /* Status reads as colored text, not a pill. */
     .status-pill {
-        display: inline-block;
-        padding: 2px 8px;
-        border-radius: 999px;
-        font-size: 10px;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.03em;
+        display: inline;
+        font-size: 12px;
+        font-weight: 600;
         white-space: nowrap;
     }
-    .status-pill--active { background: #d1fae5; color: #065f46; }
-    .status-pill--suspended { background: #fee2e2; color: #991b1b; }
-    .status-pill--verified { background: #dbeafe; color: #1e40af; }
-    .status-pill--unverified { background: #f3f4f6; color: #6b7280; }
-    .status-pill--stripe { background: #ede9fe; color: #5b21b6; }
-    .status-pill--plan { background: var(--navy-soft); color: var(--navy); }
+    .status-pill + .status-pill { margin-left: 8px; }
+    .status-pill--active { color: #047857; }
+    .status-pill--suspended { color: #b91c1c; }
+    .status-pill--verified { color: #1e40af; }
+    .status-pill--unverified { color: var(--text-muted); font-weight: 500; }
+    .status-pill--stripe { color: #5b21b6; }
+    .status-pill--plan { color: var(--navy); }
     .users-actions {
         display: flex;
         flex-wrap: wrap;
@@ -103,7 +97,7 @@
         padding: 7px;
         min-width: 34px;
         min-height: 34px;
-        border-radius: 8px;
+        border-radius: 4px;
         border: 1px solid var(--border-medium);
         background: var(--bg-card);
         color: var(--text);

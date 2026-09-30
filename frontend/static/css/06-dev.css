@@ -26,19 +26,19 @@
     margin-bottom: 28px;
 }
 
+/* Status readouts: label over value between hairlines, no cards. */
 .dev-status-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 16px;
+    gap: 16px 32px;
     margin-bottom: 16px;
+    padding: 14px 0;
+    border-top: 1px solid var(--border-light);
+    border-bottom: 1px solid var(--border-light);
 }
 
 .dev-status-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border-light);
-    border-radius: var(--main-radius);
-    padding: 18px 20px;
-    box-shadow: 0 4px 18px rgba(20, 36, 54, 0.06);
+    padding: 0;
 }
 
 .dev-status-label {
@@ -54,12 +54,20 @@
     font-weight: 600;
 }
 
+.dev-ok {
+    color: #047857;
+}
+
+.dev-bad {
+    color: #b91c1c;
+}
+
 .dev-status-value.dev-ok {
-    color: #7dffb2;
+    color: #047857;
 }
 
 .dev-status-value.dev-bad {
-    color: #ff8a8a;
+    color: #b91c1c;
 }
 
 .dev-status-meta {
@@ -128,9 +136,7 @@
 
 .dev-hint code {
     font-size: 12px;
-    background: var(--navy-soft);
-    padding: 2px 6px;
-    border-radius: 6px;
+    color: var(--text);
 }
 
 .dev-hint--compact {
@@ -156,9 +162,7 @@
 
 .dev-todo-list code {
     font-size: 12px;
-    background: var(--navy-soft);
-    padding: 2px 6px;
-    border-radius: 6px;
+    color: var(--text);
 }
 
 .dev-playground-row {
@@ -176,16 +180,15 @@
 
 .dev-log-pre {
     margin: 0;
-    padding: 16px 18px;
+    padding: 10px 0;
     min-height: 200px;
     max-height: 420px;
     overflow: auto;
-    background: #14222e;
-    border: 1px solid var(--border-medium);
-    border-radius: var(--main-radius);
+    border-top: 1px solid var(--border-medium);
+    border-bottom: 1px solid var(--border-light);
     font-size: 12px;
     line-height: 1.5;
-    color: #c8e6c9;
+    color: var(--text);
     font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
     white-space: pre-wrap;
     word-break: break-word;
@@ -212,9 +215,7 @@
 
 .dev-table-wrap {
     overflow-x: auto;
-    border: 1px solid var(--border-light);
-    border-radius: var(--main-radius);
-    background: var(--bg-card);
+    border-top: 1px solid var(--border-medium);
 }
 
 .dev-table {
@@ -225,7 +226,7 @@
 
 .dev-table th,
 .dev-table td {
-    padding: 12px 14px;
+    padding: 9px 14px 9px 0;
     text-align: left;
     border-bottom: 1px solid var(--border-light);
 }
@@ -235,7 +236,6 @@
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--text-muted);
-    background: var(--bg-elevated);
 }
 
 .dev-table tbody tr:hover {
@@ -260,9 +260,9 @@
 
 .dev-delete-btn {
     background: transparent;
-    border: 1px solid rgba(255, 120, 120, 0.45);
-    color: #ff9b9b;
-    border-radius: 8px;
+    border: 1px solid #fecaca;
+    color: #b91c1c;
+    border-radius: 4px;
     padding: 6px 12px;
     font-size: 12px;
     cursor: pointer;
@@ -281,10 +281,8 @@
 
 .dev-discovery-panel {
     margin: 20px 0 16px;
-    padding: 16px 18px;
-    background: var(--bg-card);
-    border: 1px solid var(--border-light);
-    border-radius: var(--main-radius);
+    padding: 12px 0 0;
+    border-top: 1px solid var(--border-light);
 }
 
 .dev-discovery-title {
@@ -331,11 +329,11 @@
 .dev-url-textarea {
     width: 100%;
     min-height: 120px;
-    padding: 14px 16px;
+    padding: 10px 12px;
     background: var(--bg-card);
     color: var(--text);
     border: 1px solid var(--border-medium);
-    border-radius: var(--main-radius);
+    border-radius: 4px;
     font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
     font-size: 13px;
     line-height: 1.45;
@@ -378,23 +376,20 @@
     font-size: 12px;
     color: var(--navy);
     text-decoration: none;
-    padding: 4px 10px;
-    border: 1px solid var(--border-medium);
-    border-radius: 8px;
+    font-weight: 600;
 }
 
 .dev-view-site-btn:hover {
-    background: var(--navy-soft);
+    text-decoration: underline;
+    text-underline-offset: 3px;
 }
 
 /* ── Dev: Missing / Incomplete cars section ── */
 
 .dev-incomplete-issues {
     margin-bottom: 20px;
-    padding: 14px 16px;
-    border: 1px solid var(--border-light);
-    border-radius: var(--main-radius);
-    background: var(--bg-card);
+    padding: 12px 0 0;
+    border-top: 1px solid var(--border-light);
 }
 
 .dev-incomplete-issues-title {
@@ -433,25 +428,21 @@
     font-weight: 400;
 }
 
+/* Count after a heading: red numerals, not a pill. */
 .dev-incomplete-count {
-    display: inline-block;
-    background: #ef4444;
-    color: #fff;
-    font-size: 13px;
+    display: inline;
+    color: #b91c1c;
+    font-size: 0.85em;
     font-weight: 700;
-    border-radius: 99px;
-    padding: 2px 10px;
     margin-left: 8px;
-    vertical-align: middle;
-    line-height: 1.6;
+    font-variant-numeric: tabular-nums;
 }
 
 .dev-incomplete-toolbar-panel {
     margin: 18px 0 16px;
-    padding: 22px 24px;
-    background: var(--bg-card);
-    border: 1px solid var(--border-light);
-    border-radius: var(--main-radius);
+    padding: 14px 0 16px;
+    border-top: 1px solid var(--border-light);
+    border-bottom: 1px solid var(--border-light);
 }
 
 .dev-incomplete-toolbar-eyebrow {
@@ -488,7 +479,7 @@
     padding: 12px 16px;
     font-size: 1rem;
     font-weight: 500;
-    border-radius: var(--main-radius);
+    border-radius: 4px;
 }
 
 .dev-incomplete-log-btn.secondary-button {
@@ -501,13 +492,13 @@
 .dev-incomplete-filter-hint {
     margin: 14px 0 0;
     font-size: 0.9rem;
-    color: rgba(251, 191, 36, 0.95);
+    color: #b45309;
 }
 
 .dev-incomplete-action-msg {
     margin: 10px 0 0;
     font-size: 0.88rem;
-    color: rgba(158, 203, 255, 0.92);
+    color: var(--navy);
     font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
     line-height: 1.45;
     min-height: 1.35em;
@@ -530,45 +521,64 @@
     .dev-incomplete-grid { grid-template-columns: 1fr; }
 }
 
-.dev-incomplete-card {
+/* Incomplete cars: plain entries under a hairline (the shared .result-card frame is stripped here). */
+.dev-incomplete-card,
+.dev-incomplete-card.result-card {
     display: flex;
     flex-direction: column;
-    border-color: rgba(239, 68, 68, 0.25);
+    min-width: 0;
+    border: none;
+    border-top: 1px solid var(--border-light);
+    border-radius: 0;
+    box-shadow: none;
+    background: transparent;
+    padding-top: 10px;
 }
 
-.dev-incomplete-card:hover {
-    border-color: rgba(239, 68, 68, 0.45);
+.dev-incomplete-card:hover,
+.dev-incomplete-card.result-card:hover {
+    box-shadow: none;
+    transform: none;
 }
 
+.dev-incomplete-card .result-content h2 {
+    font-size: 1rem;
+    line-height: 1.3;
+}
+
+.dev-incomplete-card .result-image,
+.dev-incomplete-card .result-image-wrap {
+    border-radius: 0;
+}
+
+/* "Incomplete" label: red caps text under the photo, not a stamped chip. */
 .dev-incomplete-badge {
-    position: absolute;
-    top: 8px;
-    left: 8px;
-    background: rgba(239, 68, 68, 0.85);
-    color: #fff;
+    display: block;
+    margin-top: 6px;
+    color: #b91c1c;
     font-size: 10px;
-    font-weight: 600;
-    padding: 3px 8px;
-    border-radius: 6px;
-    letter-spacing: 0.04em;
+    font-weight: 700;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
 }
 
 .dev-incomplete-missing {
     display: flex;
     flex-wrap: wrap;
-    gap: 5px;
-    margin-top: 10px;
+    gap: 2px 0;
+    margin-top: 8px;
 }
 
+/* Missing fields: red text separated by middots, not chips. */
 .dev-missing-tag {
-    font-size: 10px;
-    padding: 3px 8px;
-    border-radius: 999px;
-    background: rgba(239, 68, 68, 0.12);
-    border: 1px solid rgba(239, 68, 68, 0.3);
-    color: #fca5a5;
-    letter-spacing: 0.03em;
+    font-size: 12px;
+    color: #b91c1c;
+}
+
+.dev-missing-tag + .dev-missing-tag::before {
+    content: "\00b7";
+    margin: 0 6px;
+    color: var(--text-faint);
 }
 
 .dev-incomplete-actions {
@@ -579,13 +589,11 @@
 }
 
 .dev-incomplete-empty {
-    padding: 32px;
-    text-align: center;
+    padding: 16px 0;
     color: var(--text-muted);
     font-size: 14px;
-    background: var(--bg-card);
-    border: 1px solid var(--border-light);
-    border-radius: var(--main-radius);
+    border-top: 1px solid var(--border-light);
+    border-bottom: 1px solid var(--border-light);
     margin-top: 16px;
 }
 
@@ -596,20 +604,20 @@
 }
 
 .dev-log-turbo {
-    color: #7dd3fc;
+    color: #0369a1;
 }
 
 .dev-log-slow {
-    color: #fde047;
+    color: #a16207;
 }
 
 .dev-log-discovery {
-    color: #86efac;
+    color: #047857;
 }
 
 .dev-log-err {
-    background: rgba(127, 29, 29, 0.45);
-    color: #fecaca;
+    color: #b91c1c;
+    font-weight: 600;
 }
 
 /* Car detail — Claude chat */
@@ -641,42 +649,51 @@
     min-height: 120px;
     max-height: 320px;
     overflow-y: auto;
-    padding: 12px;
-    background: var(--bg-elevated);
-    border: 1px solid var(--border-light);
-    border-radius: var(--main-radius);
+    padding: 12px 0;
+    background: none;
+    border: 0;
+    border-top: 1px solid var(--border-light);
+    border-bottom: 1px solid var(--border-light);
+    border-radius: 0;
     margin-bottom: 12px;
 }
 
+/* A transcript, not bubbles: the assistant's lines are plain text, the
+   reader's own lines sit behind a muted left rule. */
 .car-chat-bubble {
-    max-width: 92%;
-    padding: 10px 14px;
-    margin-bottom: 10px;
-    border-radius: 10px;
-    line-height: 1.45;
+    max-width: 68ch;
+    padding: 0;
+    margin: 0 0 14px;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    line-height: 1.55;
     font-size: 14px;
     white-space: pre-wrap;
     word-break: break-word;
 }
 
 .car-chat-bubble--user {
-    margin-left: auto;
-    background: #1c3d5c;
-    color: #e8f4ff;
+    margin-left: 0;
+    padding-left: 12px;
+    border-left: 2px solid var(--border-medium);
+    background: none;
+    color: var(--text-muted);
+    font-weight: 600;
 }
 
 .car-chat-bubble--assistant {
     margin-right: auto;
-    background: var(--bg-card);
-    border: 1px solid var(--border-light);
+    background: none;
+    border: 0;
     color: var(--text);
 }
 
 .car-chat-bubble--error {
     margin-right: auto;
-    background: rgba(127, 29, 29, 0.35);
-    border: 1px solid #7f1d1d;
-    color: #fecaca;
+    background: none;
+    border: 0;
+    color: #991b1b;
 }
 
 .car-chat-input-row {
@@ -1351,10 +1368,11 @@ button.back-link:not(.car-back-link) {
 
 body.car-detail-page .listing-packages-panel {
     margin-top: 8px;
-    padding: 20px;
-    border: 1px solid var(--border-light);
-    border-radius: var(--main-radius);
-    background: var(--bg-elevated);
+    padding: 14px 0 0;
+    border: none;
+    border-top: 1px solid var(--border-light);
+    border-radius: 0;
+    background: transparent;
 }
 
 body.car-detail-page .listing-packages-sub-heading {
@@ -1372,10 +1390,8 @@ body.car-detail-page .listing-packages-empty {
 /* ── Car detail: listing-derived packages (native disclosure) ── */
 .listing-packages-panel {
     margin-top: 20px;
-    padding: 16px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: var(--main-radius);
-    background: rgba(255, 255, 255, 0.02);
+    padding: 14px 0 0;
+    border-top: 1px solid var(--border-light);
 }
 
 .listing-packages-heading {
@@ -1489,49 +1505,44 @@ details[open] > .listing-package-summary::before {
     margin-bottom: 0;
 }
 
+/* Spec provenance note on the car page: small muted text, not a pill. */
 .spec-source-badge {
-    display: inline-block;
-    font-size: 0.68rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    padding: 3px 8px;
-    border-radius: 999px;
-    border: 1px solid var(--border-medium);
+    display: inline;
+    margin-left: 4px;
+    font-size: 0.78rem;
+    font-weight: 400;
     color: var(--text-muted);
-    background: var(--navy-soft);
-    vertical-align: middle;
 }
 
 /* ── Nightly invariants report (data-quality hub) ── */
+/* Verdict line: colored title between hairlines, no tinted banner. */
 .dq-banner {
     display: flex;
-    align-items: center;
-    gap: 14px;
-    padding: 18px 22px;
-    border-radius: var(--main-radius);
-    border: 1px solid var(--border-light);
+    align-items: baseline;
+    gap: 10px;
+    padding: 12px 0;
+    border-top: 1px solid var(--border-light);
+    border-bottom: 1px solid var(--border-light);
     margin-bottom: 20px;
     font-size: 15px;
 }
 
-.dq-banner--ok {
-    background: rgba(74, 222, 128, 0.10);
-    border-color: rgba(74, 222, 128, 0.35);
+.dq-banner--ok .dq-banner__title,
+.dq-banner--ok .dq-banner__icon {
+    color: #047857;
 }
 
-.dq-banner--fail {
-    background: rgba(248, 113, 113, 0.10);
-    border-color: rgba(248, 113, 113, 0.4);
+.dq-banner--fail .dq-banner__title,
+.dq-banner--fail .dq-banner__icon {
+    color: #b91c1c;
 }
 
 .dq-banner--missing {
-    background: var(--bg-card);
     color: var(--text-muted);
 }
 
 .dq-banner__icon {
-    font-size: 22px;
+    font-size: 16px;
     line-height: 1;
 }
 
@@ -1545,63 +1556,52 @@ details[open] > .listing-package-summary::before {
     color: var(--text-muted);
 }
 
+.dq-banner--partial .dq-banner__title,
+.dq-banner--partial .dq-banner__icon {
+    color: #b45309;
+}
+
 .dq-banner--partial {
-    background: rgba(250, 204, 21, 0.12);
-    border-color: rgba(250, 204, 21, 0.45);
     margin-bottom: 12px;
 }
 
+/* Check status: colored text, not pills. */
 .dq-badge {
-    display: inline-block;
-    font-size: 0.66rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    padding: 3px 9px;
-    border-radius: 999px;
-    border: 1px solid transparent;
+    display: inline;
+    font-size: 12px;
+    font-weight: 600;
     white-space: nowrap;
 }
 
 .dq-badge--ok {
-    color: #22c55e;
-    background: rgba(34, 197, 94, 0.12);
-    border-color: rgba(34, 197, 94, 0.3);
+    color: #047857;
 }
 
 .dq-badge--improved {
-    color: #38bdf8;
-    background: rgba(56, 189, 248, 0.12);
-    border-color: rgba(56, 189, 248, 0.3);
+    color: #0369a1;
 }
 
 .dq-badge--regression {
-    color: #f87171;
-    background: rgba(248, 113, 113, 0.14);
-    border-color: rgba(248, 113, 113, 0.35);
+    color: #b91c1c;
 }
 
 .dq-badge--new-defect {
-    color: #fff;
-    background: #dc2626;
-    border-color: #dc2626;
-    box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.25);
+    color: #b91c1c;
+    font-weight: 800;
+    text-decoration: underline;
+    text-underline-offset: 3px;
 }
 
 .dq-badge--no-baseline {
-    color: #fbbf24;
-    background: rgba(251, 191, 36, 0.14);
-    border-color: rgba(251, 191, 36, 0.35);
+    color: #b45309;
 }
 
 .dq-badge--error {
-    color: #fbbf24;
-    background: rgba(148, 163, 184, 0.16);
-    border-color: rgba(148, 163, 184, 0.35);
+    color: #b45309;
 }
 
-.dq-check-row.dq-check-row--attn {
-    background: rgba(248, 113, 113, 0.05);
+.dq-check-row.dq-check-row--attn .dq-check-title {
+    color: #b91c1c;
 }
 
 .dq-check-title {

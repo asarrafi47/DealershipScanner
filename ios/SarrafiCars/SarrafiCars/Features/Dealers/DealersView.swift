@@ -204,7 +204,7 @@ struct DealersView: View {
 
                         .frame(height: 220)
 
-                        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+                        .clipped()
 
                         .padding(.horizontal, 16)
 
@@ -416,7 +416,9 @@ struct DealersView: View {
 
         .padding(.vertical, 10)
 
-        .background(selectedDealerId == dealer.id ? AppTheme.navy.opacity(0.08) : AppTheme.cardBackground)
+        // No row fill; selection reads from the navy "Selected" label. Keep the full row tappable.
+
+        .contentShape(Rectangle())
 
     }
 
@@ -486,7 +488,7 @@ struct DealersView: View {
 
                     .background(AppTheme.navy)
 
-                    .clipShape(Capsule())
+                    .clipShape(RoundedRectangle(cornerRadius: 4, style: .continuous))
 
                 }
 

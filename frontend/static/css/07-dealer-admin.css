@@ -20,25 +20,23 @@
 }
 
 .dealer-inv-flash {
-    padding: 12px 16px;
-    border-radius: var(--main-radius);
+    padding: 0 0 8px;
+    border-bottom: 1px solid var(--border-light);
     font-size: 0.92rem;
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    font-weight: 600;
+    color: var(--text);
 }
 
 .dealer-inv-flash--success {
-    background: rgba(46, 160, 67, 0.15);
-    border-color: rgba(46, 160, 67, 0.35);
+    color: #047857;
 }
 
 .dealer-inv-flash--error {
-    background: rgba(200, 60, 60, 0.15);
-    border-color: rgba(200, 60, 60, 0.35);
+    color: #b91c1c;
 }
 
 .dealer-inv-flash--info {
-    background: rgba(80, 140, 220, 0.12);
-    border-color: rgba(120, 160, 255, 0.3);
+    color: var(--navy);
 }
 
 .dealer-inv-section {
@@ -75,8 +73,8 @@
 .dealer-inv-vin-input {
     flex: 1 1 280px;
     min-width: 200px;
-    padding: 12px 14px;
-    border-radius: var(--main-radius);
+    padding: 10px 12px;
+    border-radius: 4px;
     border: 1px solid var(--border-medium);
     background: var(--bg-card);
     color: var(--text);
@@ -84,28 +82,27 @@
     font-size: 1rem;
 }
 
+/* Vehicles: an index of entries separated by hairlines, not bordered cards. */
 .dealer-inv-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-    gap: 24px;
+    gap: 0 40px;
 }
 
 .dealer-inv-card {
-    border: 1px solid var(--border-light);
-    border-radius: 14px;
-    overflow: hidden;
-    background: var(--bg-card);
+    border-top: 1px solid var(--border-light);
+    padding: 20px 0 28px;
 }
 
 .dealer-inv-card-img {
     height: 180px;
     background-size: cover;
     background-position: center;
-    border-bottom: 1px solid var(--border-light);
+    margin-bottom: 14px;
 }
 
 .dealer-inv-card-body {
-    padding: 16px 18px 20px;
+    padding: 0;
 }
 
 .dealer-inv-card-title {
@@ -139,7 +136,7 @@
 .dealer-inv-edit-form input,
 .dealer-inv-edit-form textarea {
     padding: 8px 10px;
-    border-radius: 8px;
+    border-radius: 4px;
     border: 1px solid var(--border-medium);
     background: var(--bg-card);
     color: var(--text);
@@ -180,10 +177,8 @@
 .dealer-inv-thumb {
     width: 56px;
     height: 56px;
-    border-radius: 8px;
     background-size: cover;
     background-position: center;
-    border: 1px solid var(--border-light);
 }
 
 .dealer-inv-thumb-wrap {
@@ -205,9 +200,9 @@
     line-height: 16px;
     padding: 0;
     border-radius: 50%;
-    border: 1px solid rgba(200, 80, 80, 0.45);
-    background: #1c1c22;
-    color: rgba(255, 160, 160, 0.95);
+    border: 1px solid #fecaca;
+    background: var(--bg-card);
+    color: #b91c1c;
     font-size: 12px;
     cursor: pointer;
     font-family: inherit;
@@ -223,10 +218,10 @@
 
 .dealer-inv-delete-btn {
     background: transparent;
-    border: 1px solid rgba(200, 80, 80, 0.45);
-    color: rgba(255, 160, 160, 0.95);
+    border: 1px solid #fecaca;
+    color: #b91c1c;
     padding: 8px 12px;
-    border-radius: var(--main-radius);
+    border-radius: 4px;
     cursor: pointer;
     font-family: inherit;
     font-size: 0.85rem;
@@ -237,11 +232,10 @@
 }
 
 .dealer-inv-empty {
-    padding: 28px;
-    text-align: center;
+    padding: 18px 0;
     color: var(--text-muted);
-    border: 1px dashed var(--border-medium);
-    border-radius: var(--main-radius);
+    border-top: 1px solid var(--border-light);
+    border-bottom: 1px solid var(--border-light);
 }
 
 /* —— Unified left sidebar (app + admin) —— */
@@ -288,9 +282,9 @@ body:has(.app-sidebar) {
     flex-direction: column;
     gap: 8px;
     padding: 16px 12px 20px;
-    background: linear-gradient(180deg, var(--navy) 0%, var(--navy-deep) 100%);
+    background: var(--navy);
     border-right: 1px solid rgba(255, 252, 248, 0.1);
-    box-shadow: 4px 0 24px rgba(20, 36, 54, 0.12);
+    box-shadow: none;
     z-index: 40;
 }
 
@@ -363,7 +357,7 @@ body:has(.app-sidebar) {
 
 .sidebar-search__row {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 58px 36px;
+    grid-template-columns: minmax(0, 1fr) 48px 28px;
     gap: 6px;
     align-items: stretch;
 }
@@ -412,7 +406,7 @@ body:has(.app-sidebar) {
 
 .sidebar-search__icon {
     position: absolute;
-    left: 10px;
+    left: 2px;
     top: 50%;
     transform: translateY(-50%);
     display: flex;
@@ -423,10 +417,11 @@ body:has(.app-sidebar) {
 .sidebar-search__input {
     width: 100%;
     box-sizing: border-box;
-    padding: 10px 12px 10px 34px;
-    border-radius: 8px;
-    border: 1px solid rgba(255, 252, 248, 0.16);
-    background: rgba(0, 0, 0, 0.22);
+    padding: 8px 4px 8px 24px;
+    border-radius: 0;
+    border: none;
+    border-bottom: 1px solid rgba(255, 252, 248, 0.22);
+    background: transparent;
     color: #fff;
     font-family: inherit;
     font-size: 13px;
@@ -435,7 +430,7 @@ body:has(.app-sidebar) {
 }
 
 .sidebar-search__input--zip {
-    padding: 10px 8px;
+    padding: 8px 4px;
     text-align: center;
 }
 
@@ -444,14 +439,11 @@ body:has(.app-sidebar) {
 }
 
 .sidebar-search__input:hover {
-    border-color: rgba(255, 252, 248, 0.28);
-    background: rgba(0, 0, 0, 0.28);
+    border-bottom-color: rgba(255, 252, 248, 0.4);
 }
 
 .sidebar-search__input:focus {
-    border-color: rgba(255, 252, 248, 0.45);
-    background: rgba(0, 0, 0, 0.32);
-    box-shadow: 0 0 0 2px rgba(255, 252, 248, 0.12);
+    border-bottom-color: rgba(255, 252, 248, 0.85);
 }
 
 .sidebar-search__submit {
@@ -459,11 +451,12 @@ body:has(.app-sidebar) {
     align-items: center;
     justify-content: center;
     width: 100%;
-    min-height: 40px;
+    min-height: 36px;
     padding: 0;
-    border-radius: 8px;
-    border: 1px solid rgba(255, 252, 248, 0.18);
-    background: rgba(255, 252, 248, 0.1);
+    border-radius: 0;
+    border: none;
+    border-bottom: 1px solid rgba(255, 252, 248, 0.22);
+    background: transparent;
     color: rgba(252, 250, 246, 0.95);
     cursor: pointer;
 }
@@ -474,7 +467,7 @@ body:has(.app-sidebar) {
 
 .sidebar-search__submit:hover,
 .sidebar-search__submit:focus-visible {
-    background: rgba(255, 252, 248, 0.16);
+    border-bottom-color: rgba(255, 252, 248, 0.85);
     color: #fff;
     outline: none;
 }
@@ -508,8 +501,9 @@ body:has(.app-sidebar) {
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 9px 10px;
-    border-radius: 8px;
+    padding: 9px 10px 9px 8px;
+    border-radius: 0;
+    border-left: 2px solid transparent;
     color: rgba(255, 252, 248, 0.82);
     text-decoration: none;
     font-size: 14px;
@@ -518,13 +512,12 @@ body:has(.app-sidebar) {
 }
 
 .app-sidebar__link:hover {
-    background: rgba(255, 252, 248, 0.08);
     color: #fff;
 }
 
 .app-sidebar__link--active,
 .app-sidebar__link[aria-current="page"] {
-    background: rgba(255, 252, 248, 0.14);
+    border-left-color: #d9c39a;
     color: #fff;
     font-weight: 600;
 }
@@ -559,16 +552,19 @@ body:has(.app-sidebar) {
     width: 100%;
     text-align: left;
     padding: 9px 10px;
-    border-radius: 8px;
+    border-radius: 0;
     background: transparent;
-    border: 1px solid rgba(255, 252, 248, 0.2);
-    color: rgba(255, 252, 248, 0.85);
+    border: none;
+    color: rgba(255, 252, 248, 0.7);
     font-size: 14px;
     cursor: pointer;
 }
 
 .app-sidebar__foot .dev-logout-button:hover {
-    background: rgba(255, 252, 248, 0.08);
+    background: transparent;
+    color: #fff;
+    text-decoration: underline;
+    text-underline-offset: 3px;
 }
 
 .app-sidebar-toggle {
@@ -580,10 +576,10 @@ body:has(.app-sidebar) {
     width: 44px;
     height: 44px;
     border: none;
-    border-radius: 10px;
+    border-radius: 2px;
     background: var(--navy);
     color: #fff;
-    box-shadow: 0 4px 16px rgba(20, 36, 54, 0.25);
+    box-shadow: none;
     cursor: pointer;
     flex-direction: column;
     align-items: center;
@@ -661,6 +657,16 @@ body:has(.app-sidebar) {
         display: inline-flex;
     }
 
+    /* Open menu: the sidebar's own close control replaces the floating toggle,
+       which otherwise sat on top of the logo. */
+    body.app-sidebar-open .app-sidebar-toggle {
+        display: none;
+    }
+
+    .app-sidebar__close:not([hidden]) {
+        display: inline-flex;
+    }
+
     body:has(.app-sidebar) .db-shell,
     body:has(.app-sidebar) .hub-shell,
     body:has(.app-sidebar) .find-dealers-section,
@@ -703,7 +709,9 @@ body.listings-page .page:has(.app-sidebar) .listings-layout {
     padding-left: clamp(12px, 2vw, 24px);
 }
 
-/* —— Store admin (/admin) —— */
+/* —— Store admin (/admin) ——
+   Editorial layout on the light page: type, whitespace and 1px hairlines.
+   No cards, KPI tiles, pills or tinted panels (owner rule, 2026-09-30). */
 .admin-shell-body {
     background: var(--bg-page);
 }
@@ -733,19 +741,18 @@ body.listings-page .page:has(.app-sidebar) .listings-layout {
 .admin-nav-link {
     color: var(--text-secondary);
     text-decoration: none;
-    padding: 4px 8px;
-    border-radius: 6px;
+    padding: 4px 0;
 }
 
 .admin-nav-link:hover {
     color: var(--text-primary);
-    background: var(--surface-raised);
+    text-decoration: underline;
+    text-underline-offset: 3px;
 }
 
 .admin-nav-link--active {
     color: var(--text-primary);
     font-weight: 600;
-    background: var(--surface-raised);
 }
 
 .admin-nav-divider {
@@ -767,21 +774,19 @@ body.listings-page .page:has(.app-sidebar) .listings-layout {
 
 .admin-lead,
 .admin-muted {
-    color: rgba(255, 255, 255, 0.62);
+    color: var(--text-secondary);
     font-size: 0.95rem;
     line-height: 1.5;
 }
 
-.admin-shell-body .admin-lead,
-.app-layout-body .admin-lead,
-.admin-shell-body .admin-muted,
-.app-layout-body .admin-muted {
-    color: var(--text-secondary);
-}
-
 .admin-muted {
     font-size: 0.85rem;
-    color: rgba(255, 255, 255, 0.48);
+    color: var(--text-muted);
+}
+
+.admin-lead a,
+.admin-muted a {
+    color: var(--navy);
 }
 
 .admin-flash-wrap {
@@ -790,55 +795,61 @@ body.listings-page .page:has(.app-sidebar) .listings-layout {
     padding: 0 20px;
 }
 
+/* Flash messages: colored text above a hairline, no tinted box. */
 .admin-flash {
-    padding: 10px 14px;
-    border-radius: var(--main-radius);
-    margin-bottom: 8px;
+    margin: 0 0 8px;
+    padding: 0 0 8px;
+    border-bottom: 1px solid var(--border-light);
     font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text);
 }
 
 .admin-flash-error {
-    background: rgba(120, 40, 40, 0.35);
-    border: 1px solid rgba(255, 120, 120, 0.25);
+    color: #b91c1c;
 }
 
 .admin-flash-success {
-    background: rgba(40, 100, 60, 0.3);
-    border: 1px solid rgba(120, 220, 160, 0.2);
+    color: #047857;
 }
 
+/* Figures row: numbers over labels between hairlines, no tiles. */
 .admin-kpi-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 16px;
+    gap: 16px 32px;
     margin-top: 16px;
+    padding: 14px 0;
+    border-top: 1px solid var(--border-light);
+    border-bottom: 1px solid var(--border-light);
 }
 
 .admin-kpi-card {
-    padding: 16px 18px;
-    border-radius: var(--main-radius);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    background: rgba(255, 255, 255, 0.03);
+    padding: 0;
 }
 
 .admin-kpi-label {
-    margin: 0 0 6px;
-    font-size: 0.78rem;
+    margin: 0 0 4px;
+    font-size: 11px;
+    font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: rgba(255, 255, 255, 0.5);
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
 }
 
 .admin-kpi-value {
     margin: 0;
     font-size: 1.75rem;
     font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    font-variant-numeric: tabular-nums;
 }
 
 .admin-kpi-hint {
-    margin: 8px 0 0;
+    margin: 6px 0 0;
     font-size: 0.75rem;
-    color: rgba(255, 255, 255, 0.45);
+    color: var(--text-muted);
 }
 
 .admin-filters {
@@ -854,55 +865,76 @@ body.listings-page .page:has(.app-sidebar) .listings-layout {
     display: flex;
     flex-direction: column;
     gap: 4px;
-    color: rgba(255, 255, 255, 0.75);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+}
+
+.admin-filters label:has(input[type="checkbox"]) {
+    flex-direction: row;
+    align-items: center;
+    gap: 6px;
+    padding-bottom: 8px;
+    text-transform: none;
+    letter-spacing: 0;
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: var(--text);
 }
 
 .admin-filters input[type="search"],
 .admin-filters select {
     min-width: 160px;
     padding: 8px 10px;
-    border-radius: 8px;
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    background: #0c0c0c;
-    color: #fff;
+    border-radius: 4px;
+    border: 1px solid var(--border-medium);
+    background: var(--bg-card);
+    color: var(--text);
+    font-family: inherit;
+    font-size: 0.88rem;
+    text-transform: none;
+    letter-spacing: 0;
 }
 
 .admin-table-wrap {
     overflow-x: auto;
     margin-top: 12px;
-    border-radius: var(--main-radius);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-top: 1px solid var(--border-medium);
 }
 
 .admin-table {
     width: 100%;
     border-collapse: collapse;
     font-size: 0.86rem;
+    color: var(--text);
 }
 
 .admin-table th,
 .admin-table td {
-    padding: 10px 12px;
+    padding: 9px 12px 9px 0;
     text-align: left;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    border-bottom: 1px solid var(--border-light);
     vertical-align: top;
 }
 
 .admin-table th {
-    color: rgba(255, 255, 255, 0.55);
+    color: var(--text-muted);
     font-weight: 600;
-    font-size: 0.78rem;
+    font-size: 0.72rem;
     text-transform: uppercase;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
 }
 
 .admin-table a {
-    color: rgba(140, 200, 255, 0.95);
+    color: var(--navy);
 }
 
 .admin-issues {
     max-width: 220px;
-    color: rgba(255, 220, 160, 0.9);
+    color: #b45309;
     font-size: 0.8rem;
 }
 
@@ -911,6 +943,7 @@ body.listings-page .page:has(.app-sidebar) .listings-layout {
     align-items: center;
     gap: 16px;
     margin-top: 20px;
+    color: var(--text-secondary);
 }
 
 .admin-inline-kpis {
@@ -919,9 +952,9 @@ body.listings-page .page:has(.app-sidebar) .listings-layout {
     margin: 12px 0 0;
     display: flex;
     flex-wrap: wrap;
-    gap: 10px 18px;
+    gap: 10px 24px;
     font-size: 0.82rem;
-    color: rgba(255, 255, 255, 0.65);
+    color: var(--text-secondary);
 }
 
 .admin-back {
@@ -929,26 +962,29 @@ body.listings-page .page:has(.app-sidebar) .listings-layout {
 }
 
 .admin-back a {
-    color: rgba(160, 200, 255, 0.9);
+    color: var(--navy);
 }
 
 .admin-detail-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 24px;
+    gap: 24px 40px;
     margin-top: 16px;
 }
 
 .admin-subh {
     font-size: 1.05rem;
-    margin: 24px 0 10px;
+    margin: 28px 0 10px;
+    padding-top: 14px;
+    border-top: 1px solid var(--border-light);
+    color: var(--text);
 }
 
 .admin-issue-list,
 .admin-checklist {
     margin: 0;
     padding-left: 1.1rem;
-    color: rgba(255, 255, 255, 0.82);
+    color: var(--text);
     line-height: 1.5;
 }
 
@@ -956,14 +992,20 @@ body.listings-page .page:has(.app-sidebar) .listings-layout {
     width: 100%;
     border-collapse: collapse;
     font-size: 0.86rem;
+    color: var(--text);
 }
 
 .admin-mini-table th,
 .admin-mini-table td {
-    padding: 6px 8px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    padding: 6px 8px 6px 0;
+    border-bottom: 1px solid var(--border-light);
     text-align: left;
     vertical-align: top;
+}
+
+.admin-mini-table th {
+    color: var(--text-muted);
+    font-weight: 600;
 }
 
 .admin-gallery-strip {
@@ -977,15 +1019,14 @@ body.listings-page .page:has(.app-sidebar) .listings-layout {
     width: 120px;
     height: 80px;
     object-fit: cover;
-    border-radius: 8px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    display: block;
 }
 
 .admin-textarea {
     width: 100%;
     max-width: 720px;
     padding: 10px 12px;
-    border-radius: 8px;
+    border-radius: 4px;
     border: 1px solid var(--border-medium);
     background: var(--bg-card);
     color: var(--text);
@@ -998,16 +1039,17 @@ body.listings-page .page:has(.app-sidebar) .listings-layout {
     margin-top: 8px;
 }
 
+/* Raw JSON: monospace between hairlines, no dark slab. */
 .admin-json {
     max-height: 420px;
     overflow: auto;
-    padding: 14px;
-    background: #14222e;
-    border-radius: var(--main-radius);
-    border: 1px solid var(--border-medium);
+    margin: 0;
+    padding: 10px 0;
+    border-top: 1px solid var(--border-light);
+    border-bottom: 1px solid var(--border-light);
     font-size: 0.78rem;
     line-height: 1.4;
-    color: rgba(220, 240, 255, 0.92);
+    color: var(--text);
 }
 
 .admin-table-tall th {
@@ -1016,8 +1058,95 @@ body.listings-page .page:has(.app-sidebar) .listings-layout {
 
 .admin-error-text,
 .admin-error-wrap code {
-    color: rgba(255, 180, 160, 0.95);
+    color: #b91c1c;
     font-size: 0.78rem;
     word-break: break-word;
+    background: none;
 }
 
+/* Dealer portal overview: a figure and a hairline index of actions. */
+.dealer-inv-figure {
+    margin: 0 0 6px;
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+}
+
+.dealer-inv-figure strong {
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    margin-right: 6px;
+    font-variant-numeric: tabular-nums;
+}
+
+.dealer-inv-actions {
+    list-style: none;
+    margin: 12px 0 0;
+    padding: 0;
+    border-top: 1px solid var(--border-light);
+}
+
+.dealer-inv-actions li {
+    display: grid;
+    grid-template-columns: minmax(180px, 240px) 1fr;
+    gap: 4px 24px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border-light);
+    font-size: 0.9rem;
+}
+
+.dealer-inv-actions a {
+    font-weight: 600;
+    color: var(--navy);
+}
+
+.dealer-inv-actions span {
+    color: var(--text-muted);
+}
+
+@media (max-width: 640px) {
+    .dealer-inv-actions li {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Recently updated: plain entries, no card frame (scoped to the dealer portal). */
+.dealer-inv-layout .saved-grid.dealer-inv-recent {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 24px 32px;
+}
+
+.dealer-inv-layout .saved-card {
+    border: none;
+    border-top: 1px solid var(--border-light);
+    border-radius: 0;
+    box-shadow: none;
+    background: transparent;
+    padding-top: 12px;
+}
+
+.dealer-inv-layout .saved-card:hover {
+    box-shadow: none;
+    transform: none;
+}
+
+.dealer-inv-layout .saved-image {
+    border-radius: 0;
+}
+
+.dealer-inv-layout .saved-empty {
+    border: none;
+    border-top: 1px solid var(--border-light);
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    padding: 18px 0;
+    text-align: left;
+}
+
+/* Admin pages stack plain db-sections without the member dashboard's flex gap. */
+.admin-main > .db-section + .db-section {
+    margin-top: 44px;
+}

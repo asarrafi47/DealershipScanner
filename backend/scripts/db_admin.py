@@ -77,25 +77,26 @@ HTML = """
     <title>Model Specs Dictionary (local)</title>
     <style>
         * { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-        body { padding: 20px; background: #f5f5f5; }
+        body { padding: 20px; background: #ffffff; color: #1f2933; }
         .container { max-width: 1200px; margin: 0 auto; }
-        h1 { color: #333; }
-        table { width: 100%; border-collapse: collapse; background: white; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
-        th { background: #2c3e50; color: white; font-weight: 600; }
-        tr:hover { background: #f9f9f9; }
-        input { padding: 6px; border: 1px solid #ddd; border-radius: 4px; }
-        button { padding: 8px 16px; background: #3498db; color: white; border: none; border-radius: 4px; cursor: pointer; }
-        button:hover { background: #2980b9; }
-        button.delete { background: #e74c3c; }
-        button.delete:hover { background: #c0392b; }
-        .form { background: white; padding: 20px; margin-bottom: 20px; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        h1 { color: #1c3552; }
+        h2 { color: #1c3552; font-size: 18px; margin: 0 0 12px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #e3e3e3; }
+        th { color: #1c3552; font-weight: 600; border-bottom: 1px solid #1c3552; }
+        tr:hover td { background: #fafafa; }
+        input { padding: 6px; border: 1px solid #cfcfcf; border-radius: 4px; }
+        button { padding: 8px 16px; background: #1c3552; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        button:hover { background: #142840; }
+        button.delete { background: #9b2c2c; }
+        button.delete:hover { background: #7a2222; }
+        /* No panels: sections are separated by whitespace and a 1px hairline. */
+        .auth, .stats, .form { padding: 16px 0; margin-bottom: 16px; border-bottom: 1px solid #e3e3e3; }
+        .auth label { color: #8a5a00; }
         .form-row { margin-bottom: 12px; display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10px; }
         label { display: block; font-size: 12px; color: #666; margin-bottom: 4px; }
         input[type="number"] { width: 100%; }
-        .stats { background: white; padding: 15px; border-radius: 4px; margin-bottom: 20px; }
         .stats p { margin: 5px 0; color: #666; }
-        .auth { background: #fff3cd; padding: 12px; border-radius: 4px; margin-bottom: 16px; }
     </style>
 </head>
 <body>

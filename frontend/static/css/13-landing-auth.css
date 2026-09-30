@@ -174,9 +174,13 @@
     background: transparent;
 }
 
-/* plan: underlined text choices */
+/* plan: radio rows between hairlines — a native radio, the plan name,
+   and its one-line description; no tiles. */
 .rgs-plan {
     margin-top: 34px;
+    border: 0;
+    padding: 0;
+    min-width: 0;
 }
 
 .rgs-plan-label {
@@ -190,62 +194,49 @@
 
 .rgs-plan-row {
     display: flex;
-    gap: 40px;
-    margin-top: 10px;
+    flex-direction: column;
+    margin-top: 8px;
+    border-top: 1px solid var(--border-light);
 }
 
 .rgs-plan-opt {
+    display: grid;
+    grid-template-columns: auto auto 1fr;
+    align-items: baseline;
+    column-gap: 14px;
+    padding: 13px 0;
+    border-bottom: 1px solid var(--border-light);
     cursor: pointer;
-    padding-bottom: 8px;
-    position: relative;
 }
 
 .rgs-plan-opt input {
-    position: absolute;
-    opacity: 0;
-    pointer-events: none;
+    accent-color: var(--navy);
+    width: 16px;
+    height: 16px;
+    margin: 0;
+    align-self: center;
+    cursor: pointer;
 }
 
 .rgs-plan-name {
-    display: block;
-    font-size: 16px;
+    font-size: 15.5px;
     font-weight: 600;
     color: var(--text-muted);
-    transition: color 0.25s;
+    transition: color 0.2s;
 }
 
 .rgs-plan-desc {
-    display: block;
-    font-size: 12.5px;
+    font-size: 13px;
     color: var(--text-faint);
-    margin-top: 3px;
-}
-
-.rgs-plan-opt::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    height: 3px;
-    background: var(--wood-trim);
-    border-radius: 2px;
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+    text-align: right;
 }
 
 .rgs-plan-opt:has(input:checked) .rgs-plan-name {
     color: var(--navy);
 }
 
-.rgs-plan-opt:has(input:checked)::after {
-    transform: scaleX(1);
-}
-
-.rgs-plan-opt:has(input:focus-visible) {
-    outline: 1px solid var(--navy);
-    outline-offset: 4px;
+.rgs-plan-opt:has(input:checked) .rgs-plan-desc {
+    color: var(--text-muted);
 }
 
 .rgs-submit {
@@ -262,19 +253,20 @@
     border-radius: var(--main-radius);
     cursor: pointer;
     border: 0;
-    background: linear-gradient(180deg, var(--navy) 0%, var(--navy-deep) 100%);
+    background: var(--navy);
     color: #fffcf8;
-    box-shadow: 0 1px 0 var(--stitch-light) inset, 0 10px 24px rgba(20, 36, 54, 0.25);
-    transition:
-        transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
-        box-shadow 0.25s;
+    box-shadow: none;
+    transition: background-color 0.2s;
 }
 
-.rgs-submit:hover,
+.rgs-submit:hover {
+    background: var(--navy-deep);
+}
+
 .rgs-submit:focus-visible {
-    transform: translateY(-2px);
-    box-shadow: 0 14px 30px rgba(20, 36, 54, 0.32);
-    outline: none;
+    background: var(--navy-deep);
+    outline: 2px solid var(--navy);
+    outline-offset: 3px;
 }
 
 /* — or — divider, then Google | Apple side by side */
@@ -320,19 +312,18 @@
     padding: 13px 18px;
     border: 1px solid var(--border-medium);
     border-radius: var(--main-radius);
-    background: var(--bg-card);
-    transition:
-        transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
-        box-shadow 0.25s,
-        border-color 0.25s;
+    background: transparent;
+    transition: border-color 0.2s;
 }
 
-.rgs-oauth-btn:hover,
-.rgs-oauth-btn:focus-visible {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(28, 53, 82, 0.12);
+.rgs-oauth-btn:hover {
     border-color: var(--navy);
-    outline: none;
+}
+
+.rgs-oauth-btn:focus-visible {
+    border-color: var(--navy);
+    outline: 2px solid var(--navy);
+    outline-offset: 3px;
 }
 
 .rgs-alt {
@@ -354,10 +345,6 @@
     .rgs-stage {
         padding: 40px 22px 56px;
     }
-
-    .rgs-plan-row {
-        gap: 28px;
-    }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -372,6 +359,21 @@
     }
 }
 
+
+/* Success notices on the auth pages (verify email, reset password, forgot
+   password, admin sign-in): plain green text under a hairline, not a box. */
+.success-box {
+    color: #166534;
+    font-size: 14px;
+    line-height: 1.5;
+    padding: 10px 0 0;
+    margin-bottom: 20px;
+    border-top: 1px solid var(--border-light);
+}
+
+.success-box--admin {
+    margin-bottom: 16px;
+}
 
 /* Landing only: no search in the topbar — the hero search is the search. */
 .lps-landing .topbar .nav-search {

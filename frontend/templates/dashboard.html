@@ -27,40 +27,40 @@
 
     <main class="hub-main hub-main--compact">
 
-        <section class="hub-card hub-card--stats db-reveal" aria-labelledby="hub-stats-heading">
-            <h2 id="hub-stats-heading" class="hub-card__title">Activity</h2>
-            <div class="dash-hub-stats">
+        <section class="hub-section hub-section--stats db-reveal" aria-labelledby="hub-stats-heading">
+            <h2 id="hub-stats-heading" class="hub-section__title">Activity</h2>
+            <dl class="dash-hub-stats">
                 <div class="dash-hub-stat">
-                    <p class="dash-hub-stat__value">{{ viewed_count }}</p>
-                    <p class="dash-hub-stat__label">Cars viewed</p>
+                    <dt class="dash-hub-stat__label">Cars viewed</dt>
+                    <dd class="dash-hub-stat__value">{{ viewed_count }}</dd>
                 </div>
                 <div class="dash-hub-stat">
-                    <p class="dash-hub-stat__value">{{ saved_count }}</p>
-                    <p class="dash-hub-stat__label">Saved</p>
+                    <dt class="dash-hub-stat__label">Saved</dt>
+                    <dd class="dash-hub-stat__value">{{ saved_count }}</dd>
                 </div>
                 <div class="dash-hub-stat">
-                    <p class="dash-hub-stat__value">{{ reco_count }}</p>
-                    <p class="dash-hub-stat__label">Active picks</p>
+                    <dt class="dash-hub-stat__label">Active picks</dt>
+                    <dd class="dash-hub-stat__value">{{ reco_count }}</dd>
                 </div>
                 <div class="dash-hub-stat dash-hub-stat--geo">
                     {% if geo_zip %}
-                    <p class="dash-hub-stat__value">{{ geo_zip }}</p>
-                    <p class="dash-hub-stat__label">{{ geo_radius|round(0)|int }} mi radius</p>
+                    <dt class="dash-hub-stat__label">ZIP, {{ geo_radius|round(0)|int }} mi radius</dt>
+                    <dd class="dash-hub-stat__value">{{ geo_zip }}</dd>
                     {% else %}
-                    <p class="dash-hub-stat__value dash-hub-stat__value--muted">—</p>
-                    <p class="dash-hub-stat__label">ZIP not set</p>
+                    <dt class="dash-hub-stat__label">ZIP</dt>
+                    <dd class="dash-hub-stat__value dash-hub-stat__value--muted">not set</dd>
                     {% endif %}
                 </div>
-            </div>
+            </dl>
             {% if not geo_zip %}
             <p class="hub-note">Set ZIP + radius on <a href="{{ url_for('listings') }}">Browse</a> to tune For you recommendations.</p>
             {% endif %}
         </section>
 
         {% if browse_trends %}
-        <section class="hub-card db-reveal" aria-labelledby="hub-trends-heading">
-            <h2 id="hub-trends-heading" class="hub-card__title">Browsing trends</h2>
-            <p class="hub-card__sub">Makes you opened most recently.</p>
+        <section class="hub-section db-reveal" aria-labelledby="hub-trends-heading">
+            <h2 id="hub-trends-heading" class="hub-section__title">Browsing trends</h2>
+            <p class="hub-section__sub">Makes you opened most recently.</p>
             <ul class="dash-hub-trends">
                 {% for label, count in browse_trends %}
                 <li class="dash-hub-trend">
@@ -71,15 +71,15 @@
             </ul>
         </section>
         {% else %}
-        <section class="hub-card hub-card--empty db-reveal">
-            <h2 class="hub-card__title">Browsing trends</h2>
-            <p class="hub-card__sub">Open a few listings to see which makes you browse most.</p>
+        <section class="hub-section hub-section--empty db-reveal">
+            <h2 class="hub-section__title">Browsing trends</h2>
+            <p class="hub-section__sub">Open a few listings to see which makes you browse most.</p>
             <a href="{{ url_for('listings') }}" class="primary-button" data-nav-listings>Browse inventory</a>
         </section>
         {% endif %}
 
-        <section class="hub-card db-reveal" aria-labelledby="hub-actions-heading">
-            <h2 id="hub-actions-heading" class="hub-card__title">Quick actions</h2>
+        <section class="hub-section db-reveal" aria-labelledby="hub-actions-heading">
+            <h2 id="hub-actions-heading" class="hub-section__title">Quick actions</h2>
             <div class="dash-hub-actions">
                 <a href="{{ personal_home_url }}#saved-section" class="dash-hub-action">
                     <span class="dash-hub-action__title">Saved cars</span>

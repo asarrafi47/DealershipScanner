@@ -61,12 +61,13 @@ body.db-page {
     gap: clamp(24px, 3vw, 36px);
 }
 
-.find-cars-card--slim {
-    padding: 14px 18px;
+.find-cars-card.find-cars-card--slim {
+    padding: 14px 0;
 }
 
 .find-cars-card--slim .find-cars-card__main {
     align-items: center;
+    margin-bottom: 0;
 }
 
 .find-cars-card--slim .find-cars-sub,
@@ -306,12 +307,34 @@ body.hub-page {
     font-weight: 600;
 }
 
-.hub-topbar__back {
+/* Back link in the hub topbar: plain navy text with an arrow, not a
+   bordered button. Doubled class outranks .secondary-button. */
+.hub-topbar__back,
+.secondary-button.hub-topbar__back {
     flex-shrink: 0;
     align-self: center;
     display: inline-flex;
     align-items: center;
     gap: 8px;
+    padding: 6px 0;
+    min-height: 0;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    box-shadow: none;
+    color: var(--navy);
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.secondary-button.hub-topbar__back:hover,
+.secondary-button.hub-topbar__back:focus-visible {
+    background: none;
+    border: 0;
+    box-shadow: none;
+    transform: none;
+    text-decoration: underline;
+    text-underline-offset: 3px;
 }
 
 .dealer-card-link--icon {
@@ -341,36 +364,63 @@ body.hub-page {
     box-sizing: border-box;
 }
 
-.hub-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border-light);
-    border-radius: 14px;
-    padding: 22px 24px;
-    box-shadow: 0 4px 16px rgba(20, 36, 54, 0.06);
+/* Hub sections (dashboard, account profile, account billing): editorial,
+   not boxed. A section is a heading over a hairline rule — no fill, border
+   frame, radius or shadow. */
+.hub-section {
+    background: none;
+    border: 0;
+    border-top: 1px solid var(--border-light);
+    border-radius: 0;
+    box-shadow: none;
+    padding: 18px 0 8px;
 }
 
-.hub-card--stats {
+/* The topbar already closes on a navy rule; the first section needs no
+   second line under it. */
+.hub-main > .hub-section:first-child {
+    border-top: 0;
+    padding-top: 4px;
+}
+
+.hub-section--stats {
     grid-column: 1 / -1;
 }
 
-.hub-card--empty {
+.hub-section--empty {
     display: flex;
     flex-direction: column;
     gap: 12px;
     align-items: flex-start;
 }
 
-.hub-card__title {
-    font-size: 17px;
-    font-weight: 700;
-    margin: 0 0 6px;
-    color: var(--text);
+.hub-section__title {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin: 0 0 10px;
+    color: var(--navy);
 }
 
-.hub-card__sub {
+.hub-section__sub {
     font-size: 13px;
     color: var(--text-muted);
     margin: 0 0 14px;
+}
+
+/* Account profile: section head carries a title + "Clear all" on one line. */
+.account-profile__section-head .hub-section__title {
+    margin-bottom: 0;
+}
+
+.account-profile__section-head + .hub-section__sub {
+    margin-top: 6px;
+}
+
+.account-profile__meta dd a {
+    color: var(--navy);
+    font-weight: 500;
 }
 
 .hub-note {
@@ -384,41 +434,64 @@ body.hub-page {
     font-weight: 500;
 }
 
+/* Account billing: included features as plain hairline rows. */
+.account-billing__features {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.account-billing__features li {
+    padding: 9px 0;
+    border-bottom: 1px solid var(--border-light);
+    font-size: 15px;
+}
+
 @media (max-width: 800px) {
     .hub-main {
         grid-template-columns: 1fr;
     }
 }
 
+/* Activity: a definition list of figures, label left / figure right,
+   hairline between rows. */
 .dash-hub-stats {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    gap: clamp(14px, 2vw, 20px);
-    margin-top: 8px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: clamp(24px, 4vw, 56px);
+    margin: 0;
 }
 
 .dash-hub-stat {
-    background: linear-gradient(180deg, #ffffff 0%, var(--bg-elevated) 100%);
-    border: 1px solid var(--border-light);
-    border-radius: 16px;
-    padding: 20px 22px;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border-light);
 }
 
 .dash-hub-stat__value {
-    font-size: clamp(28px, 4vw, 36px);
+    order: 2;
+    margin: 0;
+    font-size: 22px;
     font-weight: 700;
-    letter-spacing: -0.03em;
-    line-height: 1;
-    margin-bottom: 8px;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    font-variant-numeric: tabular-nums;
+    color: var(--navy-deep);
 }
 
 .dash-hub-stat__value--muted {
-    color: var(--text-muted);
-    font-size: 28px;
+    color: var(--text-faint);
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: 0;
 }
 
 .dash-hub-stat__label {
-    font-size: 13px;
+    order: 1;
+    font-size: 14px;
     color: var(--text-muted);
     margin: 0;
 }
@@ -434,22 +507,17 @@ body.hub-page {
 
 .dash-hub-trends {
     list-style: none;
-    margin: 12px 0 0;
+    margin: 0;
     padding: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
 }
 
 .dash-hub-trend {
     display: flex;
-    align-items: center;
+    align-items: baseline;
     justify-content: space-between;
     gap: 16px;
-    padding: 14px 18px;
-    background: var(--bg-card);
-    border: 1px solid var(--border-light);
-    border-radius: 14px;
+    padding: 11px 0;
+    border-bottom: 1px solid var(--border-light);
 }
 
 .dash-hub-trend__label {
@@ -460,37 +528,37 @@ body.hub-page {
 .dash-hub-trend__count {
     font-size: 13px;
     color: var(--text-muted);
+    font-variant-numeric: tabular-nums;
 }
 
+/* Quick actions: a plain list of links, one per row, hairline-separated. */
 .dash-hub-actions {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: clamp(14px, 2vw, 18px);
-    margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
 }
 
 .dash-hub-action {
     display: flex;
-    flex-direction: column;
-    gap: 4px;
-    padding: 18px 20px;
-    background: linear-gradient(180deg, #ffffff 0%, var(--bg-elevated) 100%);
-    border: 1px solid var(--border-light);
-    border-radius: 16px;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 4px 16px;
+    flex-wrap: wrap;
+    padding: 11px 0;
+    border-bottom: 1px solid var(--border-light);
     text-decoration: none;
     color: inherit;
-    transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.dash-hub-action:hover {
-    border-color: var(--border-medium);
-    transform: translateY(-2px);
-    box-shadow: 0 12px 28px rgba(20, 36, 54, 0.1);
+.dash-hub-action:hover .dash-hub-action__title,
+.dash-hub-action:focus-visible .dash-hub-action__title {
+    color: var(--navy);
+    text-decoration: underline;
+    text-underline-offset: 3px;
 }
 
-.dash-hub-action--accent {
-    border-color: rgba(92, 67, 56, 0.35);
-    background: linear-gradient(165deg, rgba(92, 67, 56, 0.08) 0%, #ffffff 55%);
+.dash-hub-action--accent .dash-hub-action__title {
+    color: #7a5c47;
 }
 
 .dash-hub-action__title {
@@ -501,12 +569,6 @@ body.hub-page {
 .dash-hub-action__sub {
     font-size: 13px;
     color: var(--text-muted);
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .dash-hub-action:hover {
-        transform: none;
-    }
 }
 
 .db-section-header {
@@ -535,44 +597,24 @@ body.hub-page {
     max-width: 42rem;
 }
 
-/* Find Cars banner */
+/* Find Cars banner — an editorial link row, not a card: eyebrow, headline,
+   arrow, between two hairlines. No fill, frame, radius or shadow. The doubled
+   class outranks the narrow-width banner rules in 05-car-tools.css. */
 
 .find-cars-card {
     display: block;
     text-decoration: none;
     color: inherit;
-    transition:
-        border-color 0.28s ease,
-        transform 0.28s cubic-bezier(0.34, 1.15, 0.64, 1),
-        box-shadow 0.28s ease;
 }
 
-.find-cars-card--banner {
-    /* The dark zone must always cover the white copy: at narrow widths 42%
-       shrinks below the text, so floor the stop — the card degrades to fully
-       dark instead of white-on-white. */
-    background: linear-gradient(135deg, var(--navy-deep) 0%, var(--navy) max(42%, 30rem), #ffffff max(42%, 30rem));
-    /* Keep the gradient out of the translucent 1px border ring — painted
-       under it (border-box default) it shows as navy hairlines on the card
-       edges. */
-    background-clip: padding-box;
-    border: 1px solid var(--border-light);
-    border-radius: 22px;
-    padding: clamp(22px, 3vw, 32px) clamp(24px, 3vw, 36px);
-    box-shadow: 0 16px 48px rgba(20, 36, 54, 0.12);
-    overflow: hidden;
-}
-
-.find-cars-card--banner:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 22px 56px rgba(20, 36, 54, 0.16);
-    border-color: var(--border-medium);
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .find-cars-card--banner:hover {
-        transform: none;
-    }
+.find-cars-card.find-cars-card--banner {
+    background: none;
+    border: 0;
+    border-top: 1px solid var(--border-light);
+    border-bottom: 1px solid var(--border-light);
+    border-radius: 0;
+    padding: clamp(16px, 2vw, 22px) 0;
+    box-shadow: none;
 }
 
 .find-cars-card__main {
@@ -580,7 +622,12 @@ body.hub-page {
     align-items: center;
     justify-content: space-between;
     gap: 24px;
-    margin-bottom: 18px;
+    margin-bottom: 12px;
+}
+
+.find-cars-card.find-cars-card--banner .find-cars-card__main {
+    flex-direction: row;
+    align-items: center;
 }
 
 .find-cars-card__copy {
@@ -588,29 +635,28 @@ body.hub-page {
 }
 
 .find-cars-card__eyebrow {
-    color: rgba(247, 245, 240, 0.75);
-    margin-bottom: 8px;
+    color: var(--text-muted);
+    margin-bottom: 6px;
 }
 
 .find-cars-card--banner .find-cars-label {
     font-size: clamp(22px, 3vw, 28px);
     font-weight: 700;
     letter-spacing: -0.02em;
-    margin-bottom: 8px;
-    color: #f7f5f0;
+    margin-bottom: 6px;
+    color: var(--navy-deep);
+}
+
+.find-cars-card--banner:hover .find-cars-label,
+.find-cars-card--banner:focus-visible .find-cars-label {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 5px;
 }
 
 .find-cars-card--banner .find-cars-sub {
-    color: rgba(247, 245, 240, 0.82);
+    color: var(--text-muted);
     max-width: 32rem;
-}
-
-.find-cars-card--banner .find-cars-arrow {
-    /* Solid chip: legible whether it lands on the navy or the white half. */
-    background: #ffffff;
-    border-color: var(--border-medium);
-    color: var(--navy);
-    box-shadow: 0 4px 14px rgba(20, 36, 54, 0.18);
 }
 
 .find-cars-card-inner {
@@ -634,23 +680,26 @@ body.hub-page {
     max-width: 520px;
 }
 
-.find-cars-arrow {
+/* Plain arrow glyph in navy — no chip behind it. */
+.find-cars-arrow,
+.find-cars-card.find-cars-card--banner .find-cars-arrow {
     flex-shrink: 0;
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    background: var(--chrome-face);
+    align-self: center;
+    width: auto;
+    height: auto;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    box-shadow: none;
     color: var(--navy);
-    border: 1px solid var(--chrome-line);
     display: flex;
     align-items: center;
     justify-content: center;
     transition: transform 0.28s cubic-bezier(0.34, 1.25, 0.64, 1);
-    box-shadow: 0 4px 14px rgba(20, 36, 54, 0.12);
 }
 
 .find-cars-card:hover .find-cars-arrow {
-    transform: translateX(6px) scale(1.04);
+    transform: translateX(6px);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -659,32 +708,29 @@ body.hub-page {
     }
 }
 
+/* Tags read as a plain run of words separated by middots. */
 .find-cars-tags {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
-}
-
-.find-cars-card--banner .find-cars-tags .tag {
-    background: rgba(255, 255, 255, 0.92);
-    border-color: var(--border-light);
+    gap: 0;
+    font-size: 12px;
     color: var(--text-muted);
 }
 
 .tag {
-    font-size: 11px;
-    letter-spacing: 0.06em;
-    background: var(--navy-soft);
-    border: 1px solid var(--border-light);
-    border-radius: 999px;
-    padding: 6px 13px;
+    font-size: 12px;
+    letter-spacing: 0.02em;
+    background: none;
+    border: 0;
+    border-radius: 0;
+    padding: 0;
     color: var(--text-muted);
-    transition: border-color 0.2s ease, color 0.2s ease;
 }
 
-.find-cars-card:hover .tag {
-    border-color: var(--border-medium);
-    color: var(--text);
+.find-cars-tags .tag + .tag::before {
+    content: "\00b7";
+    margin: 0 0.6em;
+    color: var(--text-faint);
 }
 
 .find-cars-card.is-nav-loading,
@@ -740,29 +786,19 @@ a.is-car-nav-pending,
 }
 
 .saved-card {
-    background: linear-gradient(180deg, #ffffff 0%, var(--bg-elevated) 100%);
-    border: 1px solid var(--border-light);
-    border-radius: 18px;
-    overflow: hidden;
+    background: none;
+    border: 0;
+    border-radius: 0;
+    overflow: visible;
     text-decoration: none;
     color: inherit;
-    transition:
-        transform 0.22s ease,
-        box-shadow 0.22s ease,
-        border-color 0.2s ease;
     display: block;
 }
 
-.saved-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 16px 40px rgba(20, 36, 54, 0.12);
-    border-color: var(--border-medium);
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .saved-card:hover {
-        transform: none;
-    }
+.saved-card:hover .saved-title,
+.saved-card:focus-visible .saved-title {
+    text-decoration: underline;
+    text-underline-offset: 3px;
 }
 
 .saved-image-wrap {
@@ -777,7 +813,8 @@ a.is-car-nav-pending,
 }
 
 .saved-info {
-    padding: 16px 18px 18px;
+    padding: 12px 0 14px;
+    border-bottom: 1px solid var(--border-light);
 }
 
 .saved-title {
@@ -805,12 +842,14 @@ a.is-car-nav-pending,
 }
 
 .saved-empty {
-    background: linear-gradient(180deg, #ffffff 0%, var(--bg-elevated) 100%);
-    border: 1px solid var(--border-light);
-    border-radius: 22px;
-    padding: 52px 40px;
-    text-align: center;
-    box-shadow: 0 12px 36px rgba(20, 36, 54, 0.08);
+    background: none;
+    border: 0;
+    border-top: 1px solid var(--border-light);
+    border-bottom: 1px solid var(--border-light);
+    border-radius: 0;
+    padding: 28px 0;
+    text-align: left;
+    box-shadow: none;
 }
 
 .saved-empty-cta {

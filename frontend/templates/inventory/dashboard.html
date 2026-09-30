@@ -21,30 +21,24 @@
             <h2 class="db-section-title">Inventory overview</h2>
         </div>
 
-        <div class="dashboard-grid" style="padding: 0; grid-template-columns: repeat(3, 1fr);">
-            <div class="info-card">
-                <h2>Total vehicles</h2>
-                <p style="font-size: 34px; margin-top: 10px; color: #fff; font-weight: 700;">{{ vehicles|length }}</p>
-                <p style="margin-top: 10px;">Manage your dealer-added vehicles separately from the public scan inventory.</p>
-            </div>
-            <div class="info-card">
-                <h2>Add by VIN</h2>
-                <p>Decode a VIN (NHTSA vPIC) and create a vehicle record you can edit and photo-merchandise.</p>
-                <a href="{{ url_for('dealer_portal.inventory_listings') }}#add-by-vin" class="primary-button" style="margin-top: 16px;">Add a VIN</a>
-            </div>
-            <div class="info-card">
-                <h2>Go to listings</h2>
-                <p>Edit titles, pricing, mileage, notes, and upload photos for each vehicle.</p>
-                <a href="{{ url_for('dealer_portal.inventory_listings') }}" class="secondary-button" style="margin-top: 16px; display: inline-block;">Open listings</a>
-            </div>
+        <p class="dealer-inv-figure"><strong>{{ vehicles|length }}</strong> total vehicles</p>
+        <p class="dealer-inv-hint">Manage your dealer-added vehicles separately from the public scan inventory.</p>
+        <ul class="dealer-inv-actions">
+            <li>
+                <a href="{{ url_for('dealer_portal.inventory_listings') }}#add-by-vin">Add by VIN</a>
+                <span>Decode a VIN (NHTSA vPIC) and create a vehicle record you can edit and photo-merchandise.</span>
+            </li>
+            <li>
+                <a href="{{ url_for('dealer_portal.inventory_listings') }}">Go to listings</a>
+                <span>Edit titles, pricing, mileage, notes, and upload photos for each vehicle.</span>
+            </li>
             {% if is_admin or show_store_ops_nav %}
-            <div class="info-card">
-                <h2>Store admin console</h2>
-                <p>Scraped inventory health, scan history, and store operations for your assigned dealer(s).</p>
-                <a href="{{ url_for('store_admin.admin_home') }}" class="secondary-button" style="margin-top: 16px; display: inline-block;">Open store admin</a>
-            </div>
+            <li>
+                <a href="{{ url_for('store_admin.admin_home') }}">Store admin console</a>
+                <span>Scraped inventory health, scan history, and store operations for your assigned dealer(s).</span>
+            </li>
             {% endif %}
-        </div>
+        </ul>
     </section>
 
     <section class="db-section dealer-inv-section">
@@ -54,7 +48,7 @@
         </div>
 
         {% if vehicles %}
-        <div class="saved-grid" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="saved-grid dealer-inv-recent">
             {% for v in vehicles[:6] %}
             <a href="{{ url_for('dealer_portal.inventory_listings') }}#vehicle-{{ v.id }}" class="saved-card">
                 {% set hero = v.gallery[0] if v.gallery and v.gallery|length > 0 else '' %}

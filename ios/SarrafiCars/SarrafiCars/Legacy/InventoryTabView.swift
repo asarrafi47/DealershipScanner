@@ -66,11 +66,7 @@ struct InventoryTabView: View {
                             if session.filters.activeCount > 0 {
                                 Text("\(session.filters.activeCount)")
                                     .font(.caption2.bold())
-                                    .padding(.horizontal, 6)
-                                    .padding(.vertical, 2)
-                                    .background(Color.accentColor)
-                                    .foregroundStyle(.white)
-                                    .clipShape(Capsule())
+                                    .foregroundStyle(Color.accentColor)
                             }
                         }
                     }
@@ -131,9 +127,8 @@ struct InventoryTabView: View {
                 }
             }
         }
-        .padding()
-        .background(Color(.secondarySystemGroupedBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .padding(.vertical, 12)
+        .overlay(alignment: .bottom) { Divider() }
     }
 
     private var searchSection: some View {
@@ -154,10 +149,10 @@ struct InventoryTabView: View {
                     .frame(maxWidth: .infinity)
             }
             .buttonStyle(.borderedProminent)
+            .buttonBorderShape(.roundedRectangle(radius: 4))
             .disabled(!session.isZipValid || session.isLoading)
         }
-        .padding()
-        .background(Color(.secondarySystemGroupedBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .padding(.vertical, 12)
+        .overlay(alignment: .bottom) { Divider() }
     }
 }

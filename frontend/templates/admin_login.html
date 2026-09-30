@@ -33,7 +33,7 @@
             <div class="error-box error-box--admin">Your session expired — refresh this page and sign in again.</div>
             {% endif %}
             {% if registered_ok %}
-            <div class="error-box error-box--admin" style="border-color: var(--ok-border, #2d6a4f); background: var(--ok-bg, #d8f3dc); color: var(--ok-fg, #1b4332);">Account created. Sign in below.</div>
+            <div class="success-box success-box--admin" role="status">Account created. Sign in below.</div>
             {% endif %}
 
             <form method="POST" action="{{ url_for('dev.admin_login') }}" class="auth-form auth-form--admin">

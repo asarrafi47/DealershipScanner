@@ -414,10 +414,10 @@
                     {% for group in specials.groups %}
                     <div class="dr-specials__group">
                         <h3 class="dr-specials__group-h">{{ group.label }}</h3>
-                        <div class="dr-specials__cards">
+                        <div class="dr-specials__list">
                             {% for o in group.offers %}
                             <article class="dr-offer">
-                                <span class="dr-offer__badge dr-offer__badge--{{ o.type }}">{{ o.type }}</span>
+                                <span class="dr-offer__kind dr-offer__kind--{{ o.type }}">{{ o.type }}</span>
                                 {% if o.title %}<div class="dr-offer__title">{{ o.title }}</div>{% endif %}
                                 {% set veh = [o.vehicle_year, o.vehicle_make, o.vehicle_model, o.vehicle_trim] | select | join(' ') %}
                                 {% if veh %}<div class="dr-offer__vehicle">{{ veh }}</div>{% endif %}

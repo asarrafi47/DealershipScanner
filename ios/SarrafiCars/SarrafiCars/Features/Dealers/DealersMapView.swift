@@ -65,7 +65,7 @@ struct DealersMapView: View {
                         .padding(.vertical, 10)
                         .background(AppTheme.navy)
                         .foregroundStyle(.white)
-                        .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+                        .clipShape(RoundedRectangle(cornerRadius: 4, style: .continuous))
                 }
                 .padding(10)
             }

@@ -1497,7 +1497,7 @@ document.addEventListener("DOMContentLoaded", () => {
             ? `<p class="result-meta result-meta--specs">${specBits.join(" &middot; ")}</p>`
             : "";
         const incompletePill = c.public_incomplete
-            ? `<span class="result-incomplete-pill" title="Missing some public-listing fields">Incomplete</span>`
+            ? `<span class="result-incomplete-note" title="Missing some public-listing fields">Incomplete</span>`
             : "";
         const cpoBadge = SC.cpoBadgeHtml(c);
         const mkt = c.market;
@@ -1562,8 +1562,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 <a href="${carHref}" class="result-card-link">
                     <div class="result-image-wrap">
                         <img class="result-image" src="${imgSrcAttr}" alt="" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='/static/placeholder.svg';">
-                        ${dealBadge ? `<div class="result-deal-badge-wrap">${dealBadge}</div>` : ""}
-                        ${photoLabel ? `<span class="result-photo-count">${SC.escapeHtml(photoLabel)}</span>` : ""}
                     </div>
                     <div class="result-content">
                         <div class="result-title-row">
@@ -1575,6 +1573,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         ${paymentListed
                             ? `<p class="result-price result-price--payment">${SC.fmtUSD(c.price)}/mo advertised<span class="result-price-payment-note">&mdash; see dealer for the price</span></p>`
                             : `<p class="result-price">${SC.fmtUSD(c.price)}${priceDropBadge}</p>`}
+                        ${dealBadge ? `<p class="result-deal-line">${dealBadge}</p>` : ""}
                         ${marketLine}
                         <p class="result-meta">${metaBits.join(" &middot; ")}</p>
                         ${specLine}
@@ -1587,6 +1586,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 </p>
                 <div class="result-card-actions">
                     ${compareCb}
+                    ${photoLabel ? `<span class="result-photo-count">${SC.escapeHtml(photoLabel)}</span>` : ""}
                     ${saveBtn}
                 </div>
             </article>`;

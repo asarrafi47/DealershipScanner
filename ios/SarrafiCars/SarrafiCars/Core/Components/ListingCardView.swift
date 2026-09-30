@@ -1,5 +1,7 @@
 import SwiftUI
 
+/// Editorial listing: square-cornered photo, text beneath, a hairline under each entry.
+/// No card fill, stroke, radius, or shadow (house rule: no boxes).
 struct ListingCardView: View {
     let car: ListingCar
     var isSaved: Bool = false
@@ -19,7 +21,7 @@ struct ListingCardView: View {
                             .font(.body.weight(.semibold))
                             .foregroundStyle(isSaved ? AppTheme.navy : .white)
                             .padding(8)
-                            .background(.black.opacity(0.35), in: Circle())
+                            .background(.black.opacity(0.35), in: RoundedRectangle(cornerRadius: 4, style: .continuous))
                     }
                     .buttonStyle(.plain)
                     .padding(6)
@@ -50,14 +52,11 @@ struct ListingCardView: View {
                     }
                 }
             }
-            .padding(10)
+            .padding(.top, 8)
+            .padding(.bottom, 10)
+
+            Divider()
         }
-        .background(AppTheme.cardBackground)
-        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-        .overlay(
-            RoundedRectangle(cornerRadius: 12, style: .continuous)
-                .stroke(AppTheme.navy.opacity(0.08), lineWidth: 1)
-        )
     }
 }
 

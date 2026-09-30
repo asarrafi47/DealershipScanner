@@ -5,16 +5,15 @@
     width: 100%;
 }
 
+/* Payment estimate: a hairline-ruled section in the hero column, not a card. */
 .car-finance-estimate-card {
-    padding: 16px 18px 18px;
-    border-radius: var(--main-radius);
-    border: 1px solid #c5ccd6;
-    background: linear-gradient(
-        165deg,
-        color-mix(in srgb, var(--navy) 4%, var(--bg-card)) 0%,
-        var(--bg-elevated) 100%
-    );
-    box-shadow: var(--vdp-shadow-soft);
+    padding: 14px 0 12px;
+    border-radius: 0;
+    border: 0;
+    border-top: 1px solid var(--border-light);
+    border-bottom: 1px solid var(--border-light);
+    background: none;
+    box-shadow: none;
 }
 
 .car-finance-estimate-hero {
@@ -61,11 +60,11 @@
     align-items: center;
     gap: 12px;
     width: 100%;
-    padding: 12px 14px;
+    padding: 6px 0;
     margin-bottom: 0;
-    border-radius: var(--main-radius);
-    border: 1.5px solid color-mix(in srgb, var(--navy) 22%, var(--border-medium));
-    background: var(--bg-card);
+    border-radius: 0;
+    border: 0;
+    background: none;
     cursor: pointer;
     list-style: none;
     user-select: none;
@@ -81,15 +80,18 @@
 }
 
 .car-finance-customize-trigger:hover {
-    border-color: var(--navy);
-    background: color-mix(in srgb, var(--navy) 3%, var(--bg-card));
-    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
+    background: none;
+    box-shadow: none;
+}
+
+.car-finance-customize-trigger:hover .car-finance-customize-trigger__title {
+    text-decoration: underline;
+    text-underline-offset: 3px;
 }
 
 .car-finance-estimate-details.is-open > .car-finance-customize-trigger {
-    border-color: var(--navy);
-    background: color-mix(in srgb, var(--navy) 6%, var(--bg-card));
-    box-shadow: 0 0 0 3px var(--navy-soft);
+    background: none;
+    box-shadow: none;
     margin-bottom: 12px;
 }
 
@@ -98,10 +100,10 @@
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    width: 40px;
-    height: 40px;
-    border-radius: 10px;
-    background: color-mix(in srgb, var(--navy) 10%, var(--bg-elevated));
+    width: 24px;
+    height: 24px;
+    border-radius: 0;
+    background: none;
     color: var(--navy);
 }
 
@@ -160,10 +162,10 @@
     gap: 14px;
     min-height: 0;
     overflow: hidden;
-    padding: 16px;
-    border-radius: var(--main-radius);
-    border: 1px solid var(--border-light);
-    background: var(--bg-card);
+    padding: 4px 0 8px;
+    border-radius: 0;
+    border: 0;
+    background: none;
     transform: translateY(-6px);
     transition: transform 0.42s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -313,18 +315,17 @@
     flex-direction: column;
     gap: 12px;
     margin-top: 4px;
-    padding: 14px 14px 14px 16px;
-    border-radius: var(--main-radius);
-    border: 1px solid var(--border-light);
-    border-left: 3px solid var(--deal-below);
-    background: color-mix(in srgb, var(--deal-below) 6%, var(--bg-card));
+    padding: 12px 0;
+    border-radius: 0;
+    border: 0 solid var(--border-light);
+    background: none;
     overflow: hidden;
     max-height: 0;
     opacity: 0;
     margin-top: 0;
     padding-top: 0;
     padding-bottom: 0;
-    border-width: 0 0 0 3px;
+    border-width: 0;
     transition:
         max-height 0.35s ease,
         opacity 0.28s ease,
@@ -337,8 +338,8 @@
     max-height: 420px;
     opacity: 1;
     margin-top: 6px;
-    padding: 14px 14px 14px 16px;
-    border-width: 1px 1px 1px 3px;
+    padding: 12px 0;
+    border-width: 1px 0;
 }
 
 .car-finance-field--checkbox {
@@ -368,17 +369,13 @@
 /* ── VDP EV battery intelligence (client-side degradation model) ── */
 
 #ev-battery-intelligence-block {
-    margin: 20px 0 0;
-    padding: 16px 18px;
-    border-radius: var(--main-radius);
-    border: 1px solid rgba(28, 53, 82, 0.14);
-    border-left: 3px solid #3b6ea5;
-    background: linear-gradient(
-        135deg,
-        color-mix(in srgb, #5b7fa8 8%, var(--bg-card)) 0%,
-        color-mix(in srgb, #1c3552 5%, var(--bg-elevated)) 100%
-    );
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.55);
+    margin: 28px 0 0;
+    padding: 18px 0 0;
+    border-radius: 0;
+    border: 0;
+    border-top: 1px solid var(--border-light);
+    background: none;
+    box-shadow: none;
 }
 
 #ev-battery-intelligence-block .ev-battery-metric {
@@ -421,46 +418,43 @@
 
 .battery-gauge-bar {
     width: 100%;
-    height: 10px;
-    border-radius: 999px;
-    background: #e2e6ec;
-    box-shadow: inset 0 1px 3px rgba(28, 53, 82, 0.12);
+    height: 6px;
+    border-radius: 0;
+    background: var(--border-light);
+    box-shadow: none;
     overflow: hidden;
 }
 
 #battery-gauge-fill {
     width: 0%;
     height: 100%;
-    border-radius: 999px;
+    border-radius: 0;
     transition: width 0.6s ease-in-out;
     background: var(--deal-below);
 }
 
 #battery-gauge-fill.battery-gauge-fill--green {
-    background: linear-gradient(90deg, #15803d 0%, #22c55e 100%);
+    background: #15803d;
 }
 
 #battery-gauge-fill.battery-gauge-fill--orange {
-    background: linear-gradient(90deg, #c2410c 0%, #f97316 100%);
+    background: #c2410c;
 }
 
 #battery-gauge-fill.battery-gauge-fill--red {
-    background: linear-gradient(90deg, #b91c1c 0%, #ef4444 100%);
+    background: #b91c1c;
 }
 
 /* ── VDP 5-year TCO intelligence card ── */
 
 #tco-intelligence-card {
-    margin: 20px 0 8px;
-    padding: clamp(16px, 2.2vw, 20px) clamp(16px, 2.5vw, 22px);
-    border: 1px solid #c5ccd6;
-    border-radius: var(--main-radius);
-    background: linear-gradient(
-        165deg,
-        color-mix(in srgb, #64748b 6%, var(--bg-card)) 0%,
-        var(--bg-elevated) 100%
-    );
-    box-shadow: var(--vdp-shadow-soft);
+    margin: 32px 0 8px;
+    padding: 18px 0 0;
+    border: 0;
+    border-top: 1px solid var(--border-light);
+    border-radius: 0;
+    background: none;
+    box-shadow: none;
 }
 
 #tco-intelligence-card h4 {
@@ -476,23 +470,25 @@
     /* Panel width ≠ viewport width: auto-fill wraps tiles instead of crushing
        labels/values when the VDP column narrows. */
     grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: clamp(10px, 2vw, 16px);
+    gap: 0 28px;
     margin-bottom: 16px;
 }
 
+/* Figures on a hairline, not tiles. */
 .tco-metric {
     display: flex;
     flex-direction: column;
-    gap: 6px;
-    padding: 12px 14px;
-    border-radius: var(--vdp-radius-sm);
-    background: color-mix(in srgb, var(--bg-card) 88%, #94a3b8 12%);
-    border: 1px solid rgba(100, 116, 139, 0.22);
+    gap: 4px;
+    padding: 10px 0 12px;
+    border-radius: 0;
+    background: none;
+    border: 0;
+    border-top: 1px solid var(--border-light);
 }
 
 .tco-metric--total {
-    border-color: rgba(28, 53, 82, 0.28);
-    background: color-mix(in srgb, var(--navy) 6%, var(--bg-card));
+    border-top-color: var(--navy);
+    background: none;
 }
 
 .tco-metric__label {
@@ -529,11 +525,11 @@
 .tco-bar-chart__track {
     display: flex;
     width: 100%;
-    height: 14px;
+    height: 8px;
     overflow: hidden;
-    border-radius: 999px;
-    background: #e2e8f0;
-    box-shadow: inset 0 1px 2px rgba(28, 53, 82, 0.1);
+    border-radius: 0;
+    background: var(--border-light);
+    box-shadow: none;
 }
 
 .tco-bar-chart__segment {
@@ -543,11 +539,11 @@
 }
 
 .tco-bar-chart__segment--fuel {
-    background: linear-gradient(90deg, #4a7ba7 0%, #5b8fb8 55%, #6b9dc4 100%);
+    background: #4a7ba7;
 }
 
 .tco-bar-chart__segment--maintenance {
-    background: linear-gradient(90deg, #8b7355 0%, #a08b6e 50%, #b5a089 100%);
+    background: #a08b6e;
 }
 
 .tco-bar-chart__legend {
@@ -649,10 +645,10 @@
 
 .tco-fillup-estimate {
     margin: 14px 0 0;
-    padding: 10px 12px;
-    border-radius: var(--vdp-radius-sm);
-    background: color-mix(in srgb, var(--bg-card) 92%, #4a7ba7 8%);
-    border: 1px solid rgba(74, 123, 167, 0.22);
+    padding: 0;
+    border-radius: 0;
+    background: none;
+    border: 0;
     font-size: 13px;
     line-height: 1.45;
     color: var(--navy-deep);
@@ -689,11 +685,11 @@
 
 .tco-cost-chart-frame {
     max-width: 440px;
-    margin: 0 auto;
-    padding: 14px 16px 12px;
-    background: #f8fafc;
-    border-radius: 8px;
-    border: 1px solid #e2e8f0;
+    margin: 0;
+    padding: 4px 0 0;
+    background: none;
+    border-radius: 0;
+    border: 0;
 }
 
 #tcoCostCanvas {
@@ -737,16 +733,13 @@
 /* ── VDP 5-year depreciation forecast card ── */
 
 #depreciation-forecast-card {
-    margin: 16px 0 8px;
-    padding: clamp(16px, 2.2vw, 20px) clamp(16px, 2.5vw, 22px);
-    border: 1px solid #c5ccd6;
-    border-radius: var(--main-radius);
-    background: linear-gradient(
-        165deg,
-        color-mix(in srgb, #3b82f6 5%, var(--bg-card)) 0%,
-        var(--bg-elevated) 100%
-    );
-    box-shadow: var(--vdp-shadow-soft);
+    margin: 32px 0 8px;
+    padding: 18px 0 0;
+    border: 0;
+    border-top: 1px solid var(--border-light);
+    border-radius: 0;
+    background: none;
+    box-shadow: none;
 }
 
 #depreciation-forecast-card h4 {
@@ -766,11 +759,11 @@
 
 .depreciation-chart-frame {
     max-width: 440px;
-    margin: 0 auto;
-    padding: 14px 16px 12px;
-    background: #f8fafc;
-    border-radius: 8px;
-    border: 1px solid #e2e8f0;
+    margin: 0;
+    padding: 4px 0 0;
+    background: none;
+    border-radius: 0;
+    border: 0;
 }
 
 #depreciationCanvas {
@@ -852,10 +845,10 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    padding: 11px 22px;
-    border-radius: 999px;
-    border: 1.5px solid var(--border-medium);
-    background: var(--chrome-face);
+    padding: 10px 18px;
+    border-radius: 4px;
+    border: 1px solid var(--border-medium);
+    background: transparent;
     color: var(--navy);
     font-size: 14px;
     font-weight: 600;
@@ -866,10 +859,9 @@
 }
 
 .save-btn:hover {
-    background: #fff;
+    background: transparent;
     border-color: var(--navy);
     color: var(--navy-deep);
-    transform: scale(1.03);
 }
 
 .save-btn .save-icon {
@@ -881,7 +873,7 @@
     background: #e11d48;
     border-color: #e11d48;
     color: #fff;
-    box-shadow: 0 0 18px rgba(225, 29, 72, 0.45);
+    box-shadow: none;
 }
 
 .save-btn--saved .save-icon {
@@ -891,8 +883,7 @@
 .save-btn--saved:hover {
     background: #be123c;
     border-color: #be123c;
-    box-shadow: 0 0 24px rgba(225, 29, 72, 0.6);
-    transform: scale(1.03);
+    box-shadow: none;
 }
 
 .save-btn:disabled {
@@ -918,10 +909,9 @@
 
 .reco-track-outer {
     overflow: hidden;
-    border-radius: 18px;
-    border: 1px solid var(--border-light);
-    background: var(--bg-card);
-    box-shadow: 0 10px 32px rgba(20, 36, 54, 0.08);
+    border-radius: 0;
+    border: none;
+    background: transparent;
 }
 
 .reco-track {
@@ -931,32 +921,25 @@
     will-change: transform;
 }
 
+/* Photo with type under it -- no frame, fill, radius or shadow (owner rule
+   2026-09-30: no boxes). Width + track gap stay 240/16: home.html's carousel
+   script steps by CARD_W = 240 + 16. */
 .reco-card {
     flex: 0 0 240px;
-    background: linear-gradient(180deg, #ffffff 0%, var(--bg-elevated) 100%);
-    border: 1px solid var(--border-light);
-    border-radius: 18px;
+    background: transparent;
+    border: none;
+    border-radius: 0;
     overflow: hidden;
     text-decoration: none;
     color: inherit;
-    transition:
-        border-color 0.24s ease,
-        transform 0.22s ease,
-        box-shadow 0.22s ease;
     display: flex;
     flex-direction: column;
 }
 
-.reco-card:hover {
-    border-color: var(--border-medium);
-    transform: translateY(-4px);
-    box-shadow: 0 14px 28px rgba(20, 36, 54, 0.12);
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .reco-card:hover {
-        transform: none;
-    }
+.reco-card:hover .reco-card-title {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
 }
 
 .reco-card-image {
@@ -969,7 +952,7 @@
 }
 
 .reco-card-body {
-    padding: 16px 18px 18px;
+    padding: 12px 0 0;
     display: flex;
     flex-direction: column;
     gap: 4px;
@@ -1134,13 +1117,13 @@
 
 .carfax-hint {
     margin: 0 0 20px 0;
-    padding: 12px 16px;
-    border-radius: 12px;
+    padding: 0;
+    border-radius: 0;
     font-size: 13px;
     line-height: 1.45;
-    color: var(--text);
-    background: var(--bg-card);
-    border: 1px solid var(--border-light);
+    color: var(--text-muted);
+    background: none;
+    border: 0;
     max-width: 720px;
 }
 

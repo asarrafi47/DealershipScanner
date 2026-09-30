@@ -1,10 +1,12 @@
 /* Landing hero search */
 .lp-hero-search {
-    background: linear-gradient(165deg, #ffffff 0%, var(--bg-elevated) 100%);
-    border: 1px solid var(--border-light);
-    border-radius: 20px;
-    padding: 22px 24px 20px;
-    box-shadow: 0 20px 56px rgba(20, 36, 54, 0.12);
+    background: none;
+    border: 0;
+    border-top: 1px solid var(--border-light);
+    border-bottom: 1px solid var(--border-light);
+    border-radius: 0;
+    padding: 20px 0;
+    box-shadow: none;
     display: flex;
     flex-direction: column;
     gap: 14px;
@@ -30,9 +32,6 @@
     font-size: 12px;
     font-weight: 700;
     color: var(--navy);
-    padding: 5px 10px;
-    border-radius: 999px;
-    background: var(--navy-soft);
 }
 
 .lp-hero-search-field {
@@ -143,10 +142,7 @@
 
 .compare-table-wrap {
     overflow-x: auto;
-    border: 1px solid var(--border-light);
-    border-radius: 16px;
-    background: var(--bg-card);
-    box-shadow: 0 12px 36px rgba(20, 36, 54, 0.08);
+    border-top: 1px solid var(--border-medium);
 }
 
 .compare-table {
@@ -166,13 +162,11 @@
 
 .compare-table__label-col {
     width: 120px;
-    background: var(--bg-elevated);
     font-weight: 600;
     color: var(--text-muted);
 }
 
 .compare-table tbody th[scope="row"] {
-    background: var(--bg-elevated);
     font-weight: 600;
     color: var(--text-muted);
     white-space: nowrap;
@@ -187,7 +181,7 @@
     display: block;
     width: 100%;
     height: 120px;
-    border-radius: 12px;
+    border-radius: 0;
     background-size: cover;
     background-position: center;
     background-color: var(--bg-subtle);
@@ -232,10 +226,11 @@
 .compare-diff-tag {
     display: inline-block;
     margin-left: 6px;
-    padding: 0 5px;
-    border: 1px solid var(--navy);
-    border-radius: 3px;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
     font-size: 11px;
+    text-transform: uppercase;
     font-weight: 600;
     line-height: 16px;
     letter-spacing: 0.02em;
@@ -251,8 +246,8 @@
     width: 28px;
     height: 28px;
     border: 0;
-    border-radius: 999px;
-    background: rgba(20, 36, 54, 0.08);
+    border-radius: 0;
+    background: none;
     color: var(--text-muted);
     font-size: 18px;
     line-height: 1;
@@ -260,7 +255,7 @@
 }
 
 .compare-table__remove:hover {
-    background: rgba(20, 36, 54, 0.14);
+    background: none;
     color: var(--navy);
 }
 
@@ -268,17 +263,18 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    padding: 6px 10px 6px 6px;
-    border-radius: 999px;
-    background: rgba(255, 252, 248, 0.12);
-    border: 1px solid rgba(255, 252, 248, 0.16);
+    padding: 4px 12px;
+    border-radius: 0;
+    background: none;
+    border: 0;
+    border-left: 1px solid rgba(255, 252, 248, 0.2);
     max-width: min(220px, 42vw);
 }
 
 .compare-tray__slot-thumb {
     width: 32px;
     height: 32px;
-    border-radius: 8px;
+    border-radius: 0;
     background: rgba(0, 0, 0, 0.25) center/cover no-repeat;
     flex-shrink: 0;
 }
@@ -307,9 +303,9 @@
     align-items: center;
     gap: 6px;
     padding: 8px 12px;
-    border-radius: 10px;
+    border-radius: 4px;
     border: 1px solid var(--border-medium);
-    background: var(--bg-card);
+    background: transparent;
     color: var(--navy);
     font-family: inherit;
     font-size: 14px;
@@ -335,11 +331,12 @@
 .compare-chat-section,
 .compare-chat-upsell {
     margin-top: 36px;
-    padding: 24px;
-    border-radius: 16px;
-    border: 1px solid var(--border-light);
-    background: var(--bg-card);
-    box-shadow: 0 4px 18px rgba(20, 36, 54, 0.06);
+    padding: 22px 0 0;
+    border: 0;
+    border-top: 1px solid var(--border-light);
+    border-radius: 0;
+    background: none;
+    box-shadow: none;
 }
 
 .compare-chat-title {
@@ -361,11 +358,13 @@
 }
 
 .compare-empty {
-    text-align: center;
-    padding: 48px 24px;
-    border-radius: 16px;
-    border: 1px solid var(--border-light);
-    background: var(--bg-card);
+    text-align: left;
+    padding: 28px 0;
+    border: 0;
+    border-top: 1px solid var(--border-light);
+    border-bottom: 1px solid var(--border-light);
+    border-radius: 0;
+    background: none;
 }
 
 .compare-empty-title {
@@ -447,20 +446,20 @@ body.find-dealers-page {
 .find-dealers-hero__legend {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: 6px 20px;
 }
 
 .find-dealers-legend-chip {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    padding: 6px 12px;
+    padding: 0;
     font-size: 12px;
     font-weight: 600;
     color: var(--text-secondary);
-    background: var(--bg-card, #fff);
-    border: 1px solid var(--border-light);
-    border-radius: 999px;
+    background: none;
+    border: 0;
+    border-radius: 0;
 }
 
 .find-dealers-legend-chip--db .find-dealers-dot {
@@ -478,23 +477,25 @@ body.find-dealers-page {
 }
 
 .find-dealers-form {
-    background: var(--bg-card, #fff);
-    border: 1px solid var(--border-light);
-    border-radius: 18px;
-    padding: 18px;
+    background: none;
+    border: 0;
+    border-top: 1px solid var(--border-light);
+    border-bottom: 1px solid var(--border-light);
+    border-radius: 0;
+    padding: 16px 0 18px;
     margin-bottom: 20px;
-    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+    box-shadow: none;
 }
 
 .find-dealers-mode-tabs {
     display: inline-flex;
     flex-wrap: wrap;
-    gap: 4px;
-    padding: 4px;
+    gap: 4px 22px;
+    padding: 0;
     margin: 0 0 16px;
-    border: 1px solid var(--border-light);
-    border-radius: 12px;
-    background: var(--bg-subtle, #f0f2f5);
+    border: 0;
+    border-radius: 0;
+    background: none;
 }
 
 .find-dealers-location-modes {
@@ -519,18 +520,18 @@ body.find-dealers-page {
 
 .find-dealers-mode-tab span {
     display: inline-block;
-    padding: 8px 14px;
+    padding: 6px 0;
     font-size: 13px;
     font-weight: 600;
-    color: var(--text-secondary);
-    border-radius: 9px;
-    transition: background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+    color: var(--text-muted);
+    border-bottom: 2px solid transparent;
+    border-radius: 0;
+    transition: color 0.15s ease, border-color 0.15s ease;
 }
 
 .find-dealers-mode-tab input:checked + span {
     color: var(--navy);
-    background: var(--bg-card, #fff);
-    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+    border-bottom-color: var(--navy);
 }
 
 .find-dealers-mode-tab input:focus-visible + span {
@@ -570,12 +571,12 @@ body.find-dealers-page {
 
 .find-dealers-hint {
     margin: 0;
-    padding: 12px 14px;
+    padding: 0;
     font-size: 13px;
     line-height: 1.5;
     color: var(--text-muted);
-    background: var(--bg-subtle, #f0f2f5);
-    border-radius: 12px;
+    background: none;
+    border-radius: 0;
 }
 
 .find-dealers-label {
@@ -637,21 +638,16 @@ body.find-dealers-page {
 
 .find-dealers-status {
     margin: 14px 0 0;
-    padding: 10px 12px;
+    padding: 0;
     font-size: 14px;
     line-height: 1.45;
     color: var(--text-muted);
-    border-radius: 10px;
-    background: transparent;
-}
-
-.find-dealers-status:not(:empty) {
-    background: var(--bg-subtle, #f0f2f5);
+    border-radius: 0;
+    background: none;
 }
 
 .find-dealers-status--error {
     color: #b42318;
-    background: #fef3f2;
 }
 
 .find-dealers-legend--results {
@@ -719,19 +715,20 @@ body.find-dealers-page {
     flex-direction: column;
     justify-content: center;
     flex: 1;
-    padding: 28px 24px;
-    background: var(--bg-card, #fff);
-    border: 1px solid var(--border-light);
-    border-radius: 18px;
-    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+    padding: 20px 0;
+    background: none;
+    border: 0;
+    border-top: 1px solid var(--border-light);
+    border-radius: 0;
+    box-shadow: none;
 }
 
 .find-dealers-map-placeholder {
     position: absolute;
     inset: 0;
     z-index: 2;
-    border-radius: 18px;
-    border: 1px dashed var(--border-light);
+    border-radius: 0;
+    border: 0;
     background:
         linear-gradient(135deg, rgba(15, 23, 42, 0.03) 25%, transparent 25%) -20px 0 / 40px 40px,
         linear-gradient(225deg, rgba(15, 23, 42, 0.03) 25%, transparent 25%) -20px 0 / 40px 40px,
@@ -800,10 +797,10 @@ body.find-dealers-page {
     position: relative;
     min-height: 520px;
     height: 520px;
-    border-radius: 18px;
+    border-radius: 0;
     overflow: hidden;
-    border: 1px solid var(--border-light);
-    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+    border: 0;
+    box-shadow: none;
 }
 
 .find-dealers-map {
@@ -818,18 +815,19 @@ body.find-dealers-page {
     display: flex;
     flex-direction: column;
     flex: 1;
-    background: var(--bg-card, #fff);
-    border: 1px solid var(--border-light);
-    border-radius: 18px;
+    background: none;
+    border: 0;
+    border-top: 1px solid var(--border-medium);
+    border-radius: 0;
     max-height: 520px;
     overflow: hidden;
-    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+    box-shadow: none;
 }
 
 .find-dealers-list-head {
-    padding: 16px 16px 12px;
+    padding: 12px 0 10px;
     border-bottom: 1px solid var(--border-light);
-    background: var(--bg-card, #fff);
+    background: var(--bg-page);
     position: sticky;
     top: 0;
     z-index: 1;
@@ -850,28 +848,29 @@ body.find-dealers-page {
 .find-dealers-list {
     list-style: none;
     margin: 0;
-    padding: 8px;
+    padding: 0;
     overflow-y: auto;
     flex: 1;
 }
 
 .find-dealers-list-item {
-    padding: 12px;
-    margin-bottom: 6px;
-    border: 1px solid transparent;
-    border-radius: 12px;
+    padding: 12px 0 12px 12px;
+    margin: 0;
+    border: 0;
+    border-bottom: 1px solid var(--border-light);
+    border-left: 2px solid transparent;
+    border-radius: 0;
     cursor: pointer;
-    transition: background 0.15s ease, border-color 0.15s ease;
+    transition: border-color 0.15s ease;
 }
 
-.find-dealers-list-item:last-child {
-    margin-bottom: 0;
+.find-dealers-list-item:hover .find-dealers-list-item__name {
+    text-decoration: underline;
+    text-underline-offset: 3px;
 }
 
-.find-dealers-list-item:hover,
 .find-dealers-list-item--active {
-    background: var(--bg-subtle, #f0f2f5);
-    border-color: var(--border-light);
+    border-left-color: var(--navy);
 }
 
 .find-dealers-list-item__head {
@@ -890,18 +889,19 @@ body.find-dealers-page {
 .find-dealers-list-badge {
     font-size: 11px;
     font-weight: 600;
-    padding: 3px 8px;
-    border-radius: 999px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 0;
+    border-radius: 0;
+    background: none;
 }
 
 .find-dealers-list-badge--db {
-    background: #d1fae5;
     color: #065f46;
 }
 
 .find-dealers-list-badge--google {
-    background: #e5e7eb;
-    color: #374151;
+    color: #4b5563;
 }
 
 .find-dealers-list-item__addr,

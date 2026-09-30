@@ -64,7 +64,7 @@ struct PrimaryNavyButton: ButtonStyle {
             .frame(maxWidth: .infinity)
             .padding(.vertical, 14)
             .background(AppTheme.navy.opacity(configuration.isPressed ? 0.85 : 1))
-            .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+            .clipShape(RoundedRectangle(cornerRadius: 4, style: .continuous))
     }
 }
 
@@ -74,9 +74,12 @@ struct FloatingCard<Content: View>: View {
     var body: some View {
         content
             .padding(14)
-            .background(AppTheme.cardBackground)
-            .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-            .shadow(color: Color.black.opacity(0.08), radius: 16, y: 8)
+            // Flat section: no fill, radius, or shadow; a hairline closes it off.
+            .overlay(alignment: .bottom) {
+                Rectangle()
+                    .fill(AppTheme.navy.opacity(0.12))
+                    .frame(height: 1)
+            }
     }
 }
 
@@ -139,13 +142,9 @@ struct CollapsibleRefineSection<Content: View>: View {
                     .font(.subheadline.weight(.semibold))
                     .foregroundStyle(AppTheme.textPrimary)
                 if activeFilterCount > 0 {
-                    Text("\(activeFilterCount)")
-                        .font(.caption2.weight(.bold))
-                        .foregroundStyle(.white)
-                        .padding(.horizontal, 7)
-                        .padding(.vertical, 3)
-                        .background(AppTheme.navy)
-                        .clipShape(Capsule())
+                    Text("\(activeFilterCount) active")
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(AppTheme.navy)
                 }
                 Spacer(minLength: 0)
             }

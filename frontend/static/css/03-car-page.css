@@ -2,10 +2,11 @@
 
 .car-detail-incomplete-banner {
     margin: 0 0 20px;
-    padding: 14px 16px;
-    border-radius: 8px;
-    border: 1px solid rgba(232, 184, 106, 0.45);
-    background: rgba(232, 184, 106, 0.08);
+    padding: 12px 0;
+    border: 0;
+    border-top: 1px solid rgba(201, 152, 72, 0.55);
+    border-bottom: 1px solid rgba(201, 152, 72, 0.55);
+    background: none;
 }
 
 .car-detail-incomplete-title {
@@ -100,9 +101,8 @@ body.car-detail-page .car-detail {
     letter-spacing: 0.04em;
     font-size: 10px;
     color: var(--text-faint);
-    border: 1px solid var(--border-medium);
-    border-radius: 999px;
-    padding: 1px 7px;
+    border-bottom: 1px dotted var(--border-medium);
+    padding: 0;
     cursor: help;
 }
 
@@ -221,8 +221,7 @@ body.car-detail-page .car-detail {
 .badge {
     display: inline-flex;
     align-items: center;
-    padding: 4px 10px;
-    border-radius: 999px;
+    padding: 0;
     font-size: 0.75rem;
     font-weight: 700;
     line-height: 1.25;
@@ -231,12 +230,10 @@ body.car-detail-page .car-detail {
 }
 
 .badge-success {
-    background: #dcfce7;
     color: #166534;
 }
 
 .badge-warning {
-    background: #fef3c7;
     color: #b45309;
 }
 
@@ -252,7 +249,6 @@ body.car-detail-page .car-detail {
 
     .badge {
         font-size: 0.7rem;
-        padding: 3px 8px;
     }
 }
 
@@ -308,10 +304,9 @@ body.car-detail-page .car-detail {
 
 .car-hero-link--dealer {
     padding: 9px 16px;
-    border-radius: 10px;
+    border-radius: 4px;
     border: 1px solid var(--border-medium);
-    background: var(--bg-card);
-    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.85) inset;
+    background: transparent;
 }
 
 .car-hero-link--dealer:hover {
@@ -328,10 +323,9 @@ body.car-detail-page .car-detail {
 
 .car-hero-link--share {
     padding: 9px 16px;
-    border-radius: 10px;
+    border-radius: 4px;
     border: 1px solid var(--border-medium);
-    background: var(--bg-card);
-    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.85) inset;
+    background: transparent;
     cursor: pointer;
     font-family: inherit;
 }
@@ -346,7 +340,7 @@ body.car-detail-page .car-detail {
     display: inline-flex;
     align-items: center;
     padding: 9px 14px;
-    border-radius: 10px;
+    border-radius: 4px;
     background: var(--navy, #1c2b46);
     color: #fff;
     font-size: 13px;
@@ -362,26 +356,27 @@ body.car-detail-page .car-detail {
     right: 14px;
     bottom: 14px;
     z-index: 3;
-    padding: 6px 12px;
-    border-radius: 999px;
+    padding: 0;
     font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 0.02em;
+    font-weight: 700;
+    letter-spacing: 0.06em;
     color: #fff;
-    background: rgba(20, 36, 54, 0.72);
-    backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: none;
+    border: 0;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.85), 0 0 10px rgba(0, 0, 0, 0.5);
+    font-variant-numeric: tabular-nums;
     pointer-events: none;
 }
 
+/* The photo is the frame: no rounded, bordered, shadowed box around it. */
 .car-detail-image {
-    border-radius: var(--vdp-radius);
-    box-shadow: var(--vdp-shadow);
-    border: 1px solid var(--border-light);
+    border-radius: 0;
+    box-shadow: none;
+    border: 0;
 }
 
 .car-gallery-hero {
-    border-radius: var(--vdp-radius);
+    border-radius: 0;
     overflow: hidden;
 }
 
@@ -404,19 +399,20 @@ body.car-detail-page .car-detail {
         position: sticky;
         top: 0;
         z-index: 12;
-        box-shadow:
-            0 -18px 0 8px var(--bg-page),
-            0 10px 18px -12px rgba(20, 36, 54, 0.25);
+        background: var(--bg-page);
+        box-shadow: 0 -18px 0 8px var(--bg-page);
     }
 }
 
+/* Editorial section: a hairline above, no card. */
 .car-hero-glance {
-    margin: clamp(20px, 3vw, 28px) 0 clamp(16px, 2vw, 24px);
-    padding: clamp(18px, 2.5vw, 24px);
-    background: var(--bg-card);
-    border: 1px solid var(--border-light);
-    border-radius: var(--vdp-radius);
-    box-shadow: var(--vdp-shadow-soft);
+    margin: clamp(28px, 4vw, 40px) 0 clamp(20px, 2.5vw, 28px);
+    padding: clamp(18px, 2.5vw, 24px) 0 0;
+    background: none;
+    border: 0;
+    border-top: 1px solid var(--border-light);
+    border-radius: 0;
+    box-shadow: none;
 }
 
 .car-hero-glance-title {
@@ -440,13 +436,14 @@ body.car-detail-page .car-detail {
 
 .car-vdp-tabs {
     display: flex;
-    gap: 6px;
+    gap: 4px;
     overflow-x: auto;
-    padding: 4px;
-    margin-bottom: 20px;
-    border-radius: 14px;
-    background: var(--bg-elevated);
-    border: 1px solid var(--border-light);
+    padding: 0;
+    margin-bottom: 24px;
+    border-radius: 0;
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid var(--border-light);
     scrollbar-width: none;
     -webkit-overflow-scrolling: touch;
 }
@@ -457,9 +454,11 @@ body.car-detail-page .car-detail {
 
 .car-vdp-tab {
     flex: 0 0 auto;
-    padding: 10px 18px;
+    padding: 12px 14px 11px;
     border: none;
-    border-radius: 10px;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    border-radius: 0;
     background: transparent;
     color: var(--text-muted);
     font-family: inherit;
@@ -467,18 +466,19 @@ body.car-detail-page .car-detail {
     font-weight: 600;
     cursor: pointer;
     white-space: nowrap;
-    transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+    transition: color 0.2s ease, border-color 0.2s ease;
 }
 
 .car-vdp-tab:hover {
     color: var(--navy);
-    background: rgba(255, 255, 255, 0.65);
+    background: transparent;
 }
 
 .car-vdp-tab--active {
-    color: #fdfcfa;
-    background: linear-gradient(180deg, #2a4d73 0%, var(--navy) 100%);
-    box-shadow: 0 4px 14px rgba(20, 42, 64, 0.22);
+    color: var(--navy);
+    background: transparent;
+    border-bottom-color: var(--navy);
+    box-shadow: none;
 }
 
 .car-vdp-tab:focus-visible {
@@ -488,11 +488,11 @@ body.car-detail-page .car-detail {
 
 .car-vdp-panels {
     min-height: 200px;
-    padding: clamp(20px, 3vw, 32px);
-    background: var(--bg-card);
-    border: 1px solid var(--border-light);
-    border-radius: var(--vdp-radius);
-    box-shadow: var(--vdp-shadow-soft);
+    padding: 0;
+    background: none;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
 }
 
 /* Specs tab: two cards (spec sheet + trim ladder) span same width as At a glance */
@@ -522,11 +522,11 @@ body.car-detail-page .car-detail {
 
 .car-specs-split__col {
     min-width: 0;
-    padding: clamp(18px, 2.5vw, 24px);
-    background: var(--bg-card);
-    border: 1px solid var(--border-light);
-    border-radius: var(--vdp-radius);
-    box-shadow: var(--vdp-shadow-soft);
+    padding: 0;
+    background: none;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
 }
 
 .car-specs-split__col .car-vdp-panel-title {
@@ -576,11 +576,12 @@ body.car-detail-page .car-detail {
 
 .car-pricing-insights {
     margin-bottom: 28px;
-    padding: 20px;
-    border-radius: var(--vdp-radius-sm);
-    border: 1px solid var(--border-light);
-    background: linear-gradient(165deg, var(--bg-card) 0%, var(--bg-elevated) 100%);
-    box-shadow: var(--vdp-shadow-soft);
+    padding: 22px 0 0;
+    border-radius: 0;
+    border: 0;
+    border-top: 1px solid var(--border-light);
+    background: none;
+    box-shadow: none;
 }
 
 .car-pricing-insights .car-vdp-panel-title {
@@ -606,10 +607,10 @@ body.car-detail-page .car-detail {
 }
 
 .car-pricing-block {
-    padding: 14px 16px;
-    border-radius: var(--vdp-radius-sm);
-    background: var(--bg-card);
-    border: 1px solid var(--border-light);
+    padding: 0;
+    border-radius: 0;
+    background: none;
+    border: 0;
 }
 
 .car-pricing-block-label {
@@ -654,8 +655,9 @@ body.car-detail-page .car-detail {
     align-items: baseline;
     gap: 8px;
     margin: 10px 0 0;
-    padding: 6px 12px;
-    border-radius: 999px;
+    padding: 0;
+    border-radius: 0;
+    background: none;
     font-size: 13px;
     line-height: 1.2;
     font-weight: 700;
@@ -667,17 +669,14 @@ body.car-detail-page .car-detail {
 }
 
 .deal-badge--below_market {
-    background: var(--deal-below-bg);
     color: var(--deal-below);
 }
 
 .deal-badge--above_market {
-    background: var(--deal-above-bg);
     color: var(--deal-above);
 }
 
 .deal-badge--at_market {
-    background: var(--deal-near-bg);
     color: var(--deal-near);
 }
 
@@ -766,7 +765,7 @@ body.car-detail-page .car-detail {
     flex-basis: 100%;
     width: fit-content;
     margin: 2px 0 0;
-    padding: 8px 14px;
+    padding: 0;
     font-size: 14px;
 }
 
@@ -777,10 +776,10 @@ body.car-detail-page .car-detail {
     }
 }
 
-/* Absence of a verdict is itself information, so it gets a real (quiet) chip
+/* Absence of a verdict is itself information, so it gets a quiet line of text
    rather than an empty gap. */
 .deal-badge--unknown {
-    background: var(--surface-muted, rgba(0, 0, 0, 0.04));
+    background: none;
     color: var(--text-muted);
 }
 
@@ -799,11 +798,11 @@ body.car-detail-page .car-detail {
     order: 3;
     width: fit-content;
     margin: 2px 0 0;
-    padding: 8px 14px;
-    border-radius: 999px;
+    padding: 0;
+    border-radius: 0;
     font-size: 14px;
     line-height: 1.2;
-    background: var(--rarity-bg, rgba(94, 74, 22, 0.10));
+    background: none;
     color: var(--rarity-fg, #6d5311);
     cursor: help;
 }
@@ -882,7 +881,7 @@ body.car-detail-page .car-detail {
     width: 100%;
     padding: 10px 12px;
     border: 1px solid var(--border);
-    border-radius: 10px;
+    border-radius: 4px;
     font: inherit;
     font-size: 15px;
     line-height: 1.45;
@@ -907,7 +906,7 @@ body.car-detail-page .car-detail {
 .ds-comments__submit {
     padding: 8px 16px;
     border: 0;
-    border-radius: 999px;
+    border-radius: 4px;
     background: var(--accent, #24466d);
     color: #fff;
     font: inherit;
@@ -950,10 +949,11 @@ body.car-detail-page .car-detail {
 }
 
 .ds-comments__item {
-    padding: 12px 14px;
-    border: 1px solid var(--border-light);
-    border-radius: 10px;
-    background: var(--surface-muted, rgba(0, 0, 0, 0.015));
+    padding: 14px 0 0;
+    border: 0;
+    border-top: 1px solid var(--border-light);
+    border-radius: 0;
+    background: none;
 }
 
 .ds-comments__item-head {
@@ -1021,7 +1021,7 @@ body.car-detail-page .car-detail {
 .ds-comments__attach {
     padding: 7px 14px;
     border: 1px solid var(--border);
-    border-radius: 999px;
+    border-radius: 4px;
     font-size: 13px;
     font-weight: 600;
     color: var(--text-muted);
@@ -1118,7 +1118,7 @@ body.car-detail-page .car-detail {
     right: 20px;
     padding: 8px 16px;
     border: 0;
-    border-radius: 999px;
+    border-radius: 4px;
     background: rgba(255, 255, 255, 0.15);
     color: #fff;
     font: inherit;
@@ -1129,23 +1129,19 @@ body.car-detail-page .car-detail {
 
 .car-quick-specs {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-    gap: 12px;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 0 24px;
     margin: 0 0 28px;
 }
 
+/* A definition list on hairlines, not a row of tiles. */
 .car-quick-spec-item {
-    padding: 14px 16px;
-    border-radius: var(--vdp-radius-sm);
-    background: var(--bg-card);
-    border: 1px solid var(--border-light);
-    box-shadow: var(--vdp-shadow-soft);
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-.car-quick-spec-item:hover {
-    border-color: var(--border-medium);
-    box-shadow: 0 8px 24px rgba(20, 36, 54, 0.08);
+    padding: 10px 0 12px;
+    border-radius: 0;
+    background: none;
+    border: 0;
+    border-top: 1px solid var(--border-light);
+    box-shadow: none;
 }
 
 .car-quick-spec-item dt {
@@ -1168,8 +1164,11 @@ body.car-detail-page .car-detail {
 
 .car-dealer-card--inline {
     margin: 0;
-    padding: 20px 22px;
-    border-radius: var(--vdp-radius-sm);
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    box-shadow: none;
 }
 
 .car-dealer-map {
@@ -1197,8 +1196,8 @@ body.car-detail-page .car-detail {
 
 .car-vdp-panel .car-specs.car-spec-sheet {
     margin-top: 0;
-    border-radius: var(--vdp-radius-sm);
-    box-shadow: var(--vdp-shadow-soft);
+    border-radius: 0;
+    box-shadow: none;
     overflow: hidden;
 }
 
@@ -1214,7 +1213,7 @@ body.car-detail-page .car-detail {
     }
 
     .car-vdp-panel .car-specs .spec-row {
-        padding: 14px 20px;
+        padding: 12px 0;
         border-bottom: 1px solid var(--border-light);
     }
 
@@ -1284,12 +1283,12 @@ body.car-detail-page .car-detail {
 .car-trim-ladder__timeline::before {
     content: "";
     position: absolute;
-    left: 11px;
+    left: 12px;
     top: 8px;
     bottom: 8px;
-    width: 3px;
-    background: linear-gradient(180deg, var(--navy) 0%, var(--chrome-line) 100%);
-    border-radius: 2px;
+    width: 1px;
+    background: var(--border-medium);
+    border-radius: 0;
 }
 
 .car-trim-ladder__step {
@@ -1330,9 +1329,9 @@ body.car-detail-page .car-detail {
     width: 18px;
     height: 18px;
     border-radius: 50%;
-    border: 3px solid var(--navy);
-    background: var(--navy-soft);
-    box-shadow: 0 0 0 3px var(--bg-elevated);
+    border: 2px solid var(--navy);
+    background: var(--bg-page);
+    box-shadow: none;
     transition:
         border-color 0.28s ease,
         background 0.28s ease,
@@ -1346,18 +1345,19 @@ body.car-detail-page .car-detail {
     width: 22px;
     height: 22px;
     border-color: var(--navy);
-    background: linear-gradient(145deg, #2a4d73 0%, var(--navy) 100%);
-    box-shadow: 0 0 0 4px rgba(28, 53, 82, 0.15);
-    transform: scale(1.05);
+    background: var(--navy);
+    box-shadow: none;
+    transform: none;
 }
 
 .car-trim-ladder__card {
     grid-column: 2;
     grid-row: 1;
-    padding: 12px 14px;
-    border-radius: var(--vdp-radius-sm);
-    border: 1px solid var(--border-light);
-    background: var(--bg-card);
+    padding: 10px 0 12px;
+    border-radius: 0;
+    border: 0;
+    border-bottom: 1px solid var(--border-light);
+    background: none;
     min-width: 0;
     cursor: pointer;
     text-align: left;
@@ -1376,9 +1376,9 @@ body.car-detail-page .car-detail {
 
 .car-trim-ladder__step--active .car-trim-ladder__card {
     border-color: var(--navy);
-    background: var(--navy-soft);
-    box-shadow: var(--vdp-shadow-soft);
-    padding: 14px 16px;
+    background: none;
+    box-shadow: none;
+    padding: 10px 0 12px;
 }
 
 .car-trim-ladder__card-head {
@@ -1406,10 +1406,10 @@ body.car-detail-page .car-detail {
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--bg-card);
-    background: var(--navy);
-    padding: 3px 8px;
-    border-radius: 999px;
+    color: var(--navy);
+    background: none;
+    padding: 0;
+    border-radius: 0;
 }
 
 .car-trim-ladder__panel {
@@ -1574,8 +1574,11 @@ body.car-detail-page .car-packages-section--tab {
 body.car-detail-page .car-chat-section--tab .car-chat-messages {
     min-height: 160px;
     max-height: min(50vh, 380px);
-    border-radius: var(--vdp-radius-sm);
-    background: var(--bg-card);
+    border: 0;
+    border-top: 1px solid var(--border-light);
+    border-bottom: 1px solid var(--border-light);
+    border-radius: 0;
+    background: none;
 }
 
 body.car-detail-page .car-chat-disclaimer-details {
@@ -1591,18 +1594,21 @@ body.car-detail-page .car-chat-disclaimer-details summary {
 }
 
 body.car-detail-page .car-premium-upsell--inline {
-    padding: 24px;
-    border-radius: var(--vdp-radius-sm);
-    border: 1px dashed var(--border-medium);
-    background: var(--bg-elevated);
+    padding: 20px 0;
+    border-radius: 0;
+    border: 0;
+    border-top: 1px solid var(--border-light);
+    border-bottom: 1px solid var(--border-light);
+    background: none;
 }
 
 body.car-detail-page .car-vdp-panel .car-detail-history {
     margin-top: 0;
-    padding: 20px 22px;
-    border-radius: var(--vdp-radius-sm);
-    background: var(--bg-elevated);
-    border: 1px solid var(--border-light);
+    padding: 18px 0 0;
+    border-radius: 0;
+    background: none;
+    border: 0;
+    border-top: 1px solid var(--border-light);
     box-shadow: none;
 }
 
@@ -1611,10 +1617,10 @@ body.car-detail-page .car-vdp-panel .car-detail-history {
     color: var(--text-muted);
     line-height: 1.5;
     margin: 0 0 16px;
-    padding: 12px 14px;
-    border-radius: var(--vdp-radius-sm);
-    background: var(--navy-soft);
-    border-left: 3px solid var(--navy);
+    padding: 0;
+    border-radius: 0;
+    background: none;
+    border: 0;
 }
 
 @media (max-width: 960px) {
@@ -1759,7 +1765,7 @@ button.back-link.car-back-link {
     transform: translateY(-50%);
     width: 48px;
     height: 48px;
-    border-radius: 50%;
+    border-radius: 4px;
     border: 1px solid rgba(255, 255, 255, 0.35);
     background: rgba(20, 36, 54, 0.55);
     color: #fff;
@@ -1797,7 +1803,8 @@ button.back-link.car-back-link {
     width: 100%;
     height: 500px;
     max-height: 500px;
-    border-radius: 20px;
+    border-radius: 0;
+    /* Square, borderless photo mat: letterboxing a photo, not framing a card. */
     background-color: var(--bg-subtle);
     background-repeat: no-repeat;
     background-size: cover;
@@ -1898,7 +1905,7 @@ body.car-lightbox-open {
     right: 16px;
     width: 40px;
     height: 40px;
-    border-radius: 50%;
+    border-radius: 4px;
     border: 1px solid rgba(255, 255, 255, 0.35);
     background: rgba(20, 36, 54, 0.6);
     color: #fff;
@@ -1986,7 +1993,7 @@ body.car-lightbox-open {
 .car-gallery-btn {
     width: 40px;
     height: 40px;
-    border-radius: 50%;
+    border-radius: 4px;
     border: 1px solid var(--border-medium);
     background: var(--chrome-face);
     color: var(--navy);
@@ -2039,7 +2046,7 @@ body.car-lightbox-open {
 .car-gallery-thumb {
     flex: 0 0 96px;
     width: 96px;
-    height: 64px;
+    height: 610px;
     border-radius: 10px;
     border: 2px solid transparent;
     background-size: cover;
@@ -2150,10 +2157,11 @@ body.car-lightbox-open {
 .car-specs.car-spec-sheet {
     margin-top: 28px;
     margin-bottom: 32px;
-    padding: 8px 16px;
-    border-radius: var(--main-radius);
-    border: 1px solid var(--border-light);
-    background: var(--bg-card);
+    padding: 0;
+    border-radius: 0;
+    border: 0;
+    border-top: 1px solid var(--border-light);
+    background: none;
 }
 
 .car-specs .spec-row {
@@ -2200,12 +2208,13 @@ body.car-lightbox-open {
 
 /* Column 3: Vehicle History Highlights panel */
 .car-detail-history {
-    background: var(--bg-card);
-    border: 1px solid var(--border-light);
-    border-radius: 12px;
-    padding: 24px;
+    background: none;
+    border: 0;
+    border-top: 1px solid var(--border-light);
+    border-radius: 0;
+    padding: 20px 0 0;
     min-width: 0;
-    box-shadow: 0 6px 24px rgba(20, 36, 54, 0.06);
+    box-shadow: none;
 }
 
 .history-panel-title {
@@ -2224,22 +2233,16 @@ body.car-lightbox-open {
 
 .history-highlight-item {
     position: relative;
-    padding-left: 28px;
-    margin-bottom: 12px;
+    padding: 9px 0;
+    margin: 0;
+    border-bottom: 1px solid var(--border-light);
     font-size: 14px;
     line-height: 1.45;
     color: var(--text);
 }
 
 .history-highlight-item::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 4px;
-    width: 18px;
-    height: 18px;
-    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231c3552' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6L9 17l-5-5'/%3E%3C/svg%3E") no-repeat center;
-    background-size: contain;
+    content: none;
 }
 
 .history-no-highlights {
@@ -2250,25 +2253,24 @@ body.car-lightbox-open {
 }
 
 .carfax-report-btn {
-    display: block;
-    width: 100%;
-    padding: 16px 24px;
+    display: inline-block;
+    width: auto;
+    padding: 12px 22px;
     font-size: 15px;
     font-weight: 600;
     color: #fff;
     background: var(--navy);
     border: none;
-    border-radius: 10px;
+    border-radius: 8px;
     text-align: center;
     text-decoration: none;
-    transition: background 0.2s ease, transform 0.15s ease;
+    transition: background 0.2s ease;
     box-sizing: border-box;
 }
 
 .carfax-report-btn:hover {
     background: var(--navy-deep);
     color: #fff;
-    transform: translateY(-1px);
 }
 
 .carfax-report-btn-secondary {
@@ -2286,10 +2288,11 @@ body.car-lightbox-open {
 #negotiation-radar-widget,
 .negotiation-radar-widget {
     margin: 0 0 20px;
-    padding: 20px;
-    border-radius: var(--vdp-radius-sm);
-    border: 1px solid var(--border-light);
-    background: var(--bg-card);
+    padding: 18px 0 0;
+    border-radius: 0;
+    border: 0;
+    border-top: 1px solid var(--border-light);
+    background: none;
 }
 
 #negotiation-radar-widget h4,
@@ -2326,30 +2329,26 @@ body.car-lightbox-open {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    padding: 5px 12px;
-    border-radius: 4px;
-    font-size: 0.78rem;
-    font-weight: 600;
+    padding: 0;
+    border-radius: 0;
+    font-size: 0.85rem;
+    font-weight: 700;
     line-height: 1.3;
-    border: 1px solid transparent;
+    border: 0;
+    background: none;
 }
 
+/* Leverage reads as coloured text, not a filled chip. */
 .radar-badge.high-leverage {
     color: var(--deal-above);
-    background: var(--deal-above-bg);
-    border-color: color-mix(in srgb, var(--deal-above) 28%, transparent);
 }
 
 .radar-badge.mid-leverage {
     color: #b45309;
-    background: rgba(180, 83, 9, 0.1);
-    border-color: rgba(180, 83, 9, 0.22);
 }
 
 .radar-badge.recent-listing {
     color: var(--text-muted);
-    background: transparent;
-    border-color: var(--border-light);
 }
 
 .days-on-lot-source {
@@ -2384,31 +2383,36 @@ body.car-lightbox-open {
     list-style: none;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 0;
 }
 
 .price-history-step {
     position: relative;
-    padding: 10px 12px 10px 28px;
-    border-radius: 8px;
-    background: var(--bg-card);
-    border: 1px solid var(--border-light);
+    padding: 9px 0 9px 18px;
+    border-radius: 0;
+    background: none;
+    border: 0;
+    border-bottom: 1px solid var(--border-light);
     font-size: 0.9rem;
     font-weight: 600;
     color: var(--text);
 }
 
+.price-history-step:last-child {
+    border-bottom: 0;
+}
+
 .price-history-step::before {
     content: "";
     position: absolute;
-    left: 12px;
+    left: 0;
     top: 50%;
-    width: 8px;
-    height: 8px;
-    margin-top: -4px;
+    width: 6px;
+    height: 6px;
+    margin-top: -3px;
     border-radius: 50%;
     background: var(--navy);
-    box-shadow: 0 0 0 2px var(--navy-soft);
+    box-shadow: none;
 }
 
 /* Standalone NHTSA VIN recall lookup (/nhtsa-recalls) */
@@ -2443,21 +2447,19 @@ body.car-lightbox-open {
 
 .nhtsa-recalls-status {
     margin: 0 0 16px;
-    padding: 14px 16px;
-    border-radius: var(--vdp-radius-sm);
+    padding: 12px 0;
+    border-radius: 0;
+    border-top: 1px solid var(--border-light);
+    border-bottom: 1px solid var(--border-light);
     font-size: 15px;
     line-height: 1.45;
 }
 
 .nhtsa-recalls-status--clear {
-    background: #ecfdf5;
-    border: 1px solid #a7f3d0;
     color: #065f46;
 }
 
 .nhtsa-recalls-status--error {
-    background: #fef2f2;
-    border: 1px solid #fecaca;
     color: #991b1b;
 }
 
@@ -2528,12 +2530,13 @@ body.car-lightbox-open {
 
 /* Vehicle history tools (History tab) */
 .car-vdp-panel .vehicle-history-tools {
-    margin-top: 20px;
-    padding: 18px 20px;
-    border-radius: 12px;
-    border: 1px solid var(--border-light);
-    background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
-    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+    margin-top: 24px;
+    padding: 18px 0 0;
+    border-radius: 0;
+    border: 0;
+    border-top: 1px solid var(--border-light);
+    background: none;
+    box-shadow: none;
 }
 
 .vehicle-history-tools-heading {
@@ -2562,9 +2565,8 @@ body.car-lightbox-open {
     color: var(--text);
     text-align: center;
     border: 1px solid var(--border-medium);
-    border-radius: 10px;
-    background: var(--bg-card);
-    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.85) inset;
+    border-radius: 8px;
+    background: transparent;
     transition: border-color 0.18s ease, background 0.18s ease;
     box-sizing: border-box;
     cursor: pointer;
@@ -2606,7 +2608,7 @@ body.car-lightbox-open {
     text-decoration: none;
     text-align: center;
     border: none;
-    border-radius: 10px;
+    border-radius: 4px;
     background: var(--navy);
     transition: background 0.2s ease, transform 0.15s ease;
     box-sizing: border-box;
@@ -2642,7 +2644,7 @@ body.car-lightbox-open {
     text-decoration: none;
     text-align: center;
     border: none;
-    border-radius: 10px;
+    border-radius: 4px;
     background: var(--navy);
     transition: background 0.2s ease, transform 0.15s ease;
     box-sizing: border-box;
@@ -2666,7 +2668,7 @@ body.car-lightbox-open {
     color: var(--text);
     text-align: center;
     border: 1px solid var(--border-medium);
-    border-radius: 10px;
+    border-radius: 4px;
     background: var(--bg-card);
     transition: border-color 0.18s ease, background 0.18s ease;
     box-sizing: border-box;
@@ -2684,10 +2686,12 @@ body.car-lightbox-open {
 }
 
 .premium-history-upsell {
-    padding: 16px 18px;
-    border-radius: var(--vdp-radius-sm);
-    border: 1px dashed var(--border-medium);
-    background: var(--bg-elevated);
+    padding: 14px 0;
+    border-radius: 0;
+    border: 0;
+    border-top: 1px solid var(--border-light);
+    border-bottom: 1px solid var(--border-light);
+    background: none;
 }
 
 .premium-history-upsell__title {
@@ -2713,10 +2717,11 @@ body.car-lightbox-open {
 }
 
 .vehicle-history-intelligence-panel {
-    padding: 14px 16px;
-    border-radius: var(--vdp-radius-sm);
-    border: 1px solid var(--border-light);
-    background: var(--bg-card);
+    padding: 14px 0 0;
+    border-radius: 0;
+    border: 0;
+    border-top: 1px solid var(--border-light);
+    background: none;
 }
 
 .vehicle-history-intelligence-title {

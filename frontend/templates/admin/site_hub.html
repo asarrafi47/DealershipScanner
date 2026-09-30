@@ -1,17 +1,17 @@
 {% extends "admin/base_admin.html" %}
-{% from '_icons.html' import icon %}
 {% block title %}Site admin{% endblock %}
 {% block extra_head %}
 <style>
+    /* Editorial layout: sections separated by hairlines, no cards, tiles or pills. */
     .platform-dash {
         max-width: 1180px;
         display: flex;
         flex-direction: column;
-        gap: 20px;
+        gap: 0;
     }
 
     .platform-hero {
-        padding: 4px 0 8px;
+        padding: 4px 0 24px;
     }
 
     .platform-hero__title {
@@ -31,40 +31,29 @@
     }
 
     .platform-panel {
-        background: var(--bg-card);
-        border: 1px solid var(--border-light);
-        border-radius: 16px;
-        padding: 20px 22px 22px;
-        box-shadow: 0 1px 2px rgba(28, 53, 82, 0.04), 0 8px 24px rgba(28, 53, 82, 0.04);
+        border-top: 1px solid var(--border-light);
+        padding: 22px 0 30px;
     }
 
     .platform-panel__head {
         display: flex;
         flex-wrap: wrap;
-        align-items: center;
+        align-items: flex-end;
         justify-content: space-between;
         gap: 12px 16px;
-        margin-bottom: 18px;
+        margin-bottom: 16px;
     }
 
     .platform-panel__title {
-        display: flex;
-        align-items: center;
-        gap: 10px;
         margin: 0;
-        font-size: 15px;
+        font-size: 18px;
         font-weight: 700;
         color: var(--text);
         letter-spacing: -0.01em;
     }
 
-    .platform-panel__title .sc-icon {
-        color: var(--navy);
-        opacity: 0.85;
-    }
-
     .platform-panel__sub {
-        margin: 0;
+        margin: 2px 0 0;
         font-size: 13px;
         color: var(--text-muted);
     }
@@ -72,30 +61,15 @@
     .platform-health {
         display: flex;
         flex-wrap: wrap;
-        gap: 10px 18px;
-        align-items: center;
+        gap: 6px 22px;
+        align-items: baseline;
+        font-size: 14px;
     }
 
-    .platform-health__item {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        font-size: 13px;
-        font-weight: 600;
-        color: var(--text);
-    }
-
-    .platform-health__dot {
-        width: 9px;
-        height: 9px;
-        border-radius: 50%;
-        flex-shrink: 0;
-        box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.8);
-    }
-
-    .platform-health__dot--ok { background: #10b981; box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.18); }
-    .platform-health__dot--warn { background: #f59e0b; box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.18); }
-    .platform-health__dot--bad { background: #ef4444; box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.16); }
+    .platform-health__item { font-weight: 600; color: var(--text); }
+    .platform-health__item--ok { color: #047857; }
+    .platform-health__item--warn { color: #b45309; }
+    .platform-health__item--bad { color: #b91c1c; }
 
     .platform-health__meta {
         width: 100%;
@@ -104,31 +78,23 @@
         color: var(--text-muted);
     }
 
+    /* Figures: a plain definition list, numbers over labels, no tiles. */
     .platform-metrics {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(148px, 1fr));
-        gap: 12px;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 16px 28px;
+        margin: 0;
     }
 
     .platform-metric {
-        padding: 14px 16px;
-        border-radius: 12px;
-        background: var(--bg-elevated);
-        border: 1px solid var(--border-light);
-        min-height: 78px;
         display: flex;
-        flex-direction: column;
-        justify-content: center;
-        gap: 4px;
-        transition: border-color 0.15s ease, transform 0.15s ease;
-    }
-
-    .platform-metric:hover {
-        border-color: var(--border-medium);
-        transform: translateY(-1px);
+        flex-direction: column-reverse;
+        gap: 2px;
+        margin: 0;
     }
 
     .platform-metric__value {
+        margin: 0;
         font-size: 26px;
         font-weight: 700;
         line-height: 1.1;
@@ -143,20 +109,15 @@
         color: var(--text-muted);
     }
 
-    .platform-metric--highlight {
-        background: linear-gradient(145deg, rgba(28, 53, 82, 0.06) 0%, rgba(28, 53, 82, 0.02) 100%);
-        border-color: rgba(28, 53, 82, 0.14);
-    }
-
     .platform-metric--highlight .platform-metric__value {
         color: var(--navy);
     }
 
     .platform-subgroup {
-        margin-top: 18px;
+        margin-top: 22px;
     }
 
-    .platform-subgroup:first-child {
+    .platform-subgroup:first-of-type {
         margin-top: 0;
     }
 
@@ -188,8 +149,8 @@
 
     .platform-toolbar select {
         min-width: 132px;
-        padding: 9px 32px 9px 11px;
-        border-radius: 10px;
+        padding: 8px 32px 8px 10px;
+        border-radius: 4px;
         border: 1px solid var(--border-medium);
         background: var(--bg-card) var(--select-chevron) no-repeat right 12px center;
         font-family: inherit;
@@ -200,57 +161,51 @@
     }
 
     .platform-toolbar button {
-        padding: 9px 16px;
-        border-radius: 10px;
+        padding: 8px 16px;
+        border-radius: 4px;
         font-size: 13px;
         font-weight: 600;
     }
 
     .platform-insights {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-        gap: 14px;
-        margin-top: 18px;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 8px 32px;
+        margin-top: 28px;
     }
 
     .platform-insight {
-        padding: 14px 16px;
-        border-radius: 12px;
-        border: 1px solid var(--border-light);
-        background: var(--bg-elevated);
-        min-height: 160px;
+        border-top: 1px solid var(--border-light);
+        padding-top: 12px;
     }
 
     .platform-insight__title {
-        margin: 0 0 12px;
-        font-size: 12px;
+        margin: 0 0 8px;
+        font-size: 11px;
         font-weight: 700;
-        letter-spacing: 0.04em;
+        letter-spacing: 0.08em;
         text-transform: uppercase;
-        color: var(--text-muted);
+        color: var(--text-faint);
     }
 
     .platform-insight__empty {
         margin: 0;
         font-size: 13px;
         color: var(--text-faint);
-        font-style: italic;
     }
 
     .platform-rank {
         margin: 0;
         padding: 0;
         list-style: none;
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
     }
 
     .platform-rank li {
         display: grid;
         grid-template-columns: 1fr auto;
-        gap: 10px;
-        align-items: center;
+        gap: 2px 10px;
+        align-items: baseline;
+        padding: 5px 0;
         font-size: 13px;
     }
 
@@ -263,106 +218,73 @@
 
     .platform-rank__bar-wrap {
         grid-column: 1 / -1;
-        height: 4px;
-        border-radius: 999px;
-        background: rgba(28, 53, 82, 0.08);
+        margin-top: 3px;
+        height: 2px;
+        background: var(--border-light);
         overflow: hidden;
     }
 
     .platform-rank__bar {
         display: block;
         height: 100%;
-        border-radius: inherit;
-        background: linear-gradient(90deg, var(--navy) 0%, #3d5f82 100%);
+        background: var(--navy);
     }
 
     .platform-rank__count {
-        font-size: 12px;
-        font-weight: 700;
-        color: var(--navy);
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text);
         font-variant-numeric: tabular-nums;
     }
 
+    /* Operator actions: a hairline index of links, not an icon grid. */
     .platform-actions {
+        margin: 0;
+        padding: 0;
+        list-style: none;
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-        gap: 12px;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        column-gap: 32px;
     }
 
     .platform-action {
-        display: flex;
-        align-items: flex-start;
-        gap: 12px;
-        padding: 16px 16px 16px 14px;
-        border-radius: 14px;
-        border: 1px solid var(--border-light);
-        background: var(--bg-elevated);
+        display: block;
+        padding: 10px 0;
+        border-bottom: 1px solid var(--border-light);
         text-decoration: none;
         color: inherit;
-        transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease, background 0.18s ease;
-    }
-
-    .platform-action:hover {
-        border-color: rgba(28, 53, 82, 0.22);
-        background: var(--bg-card);
-        box-shadow: 0 10px 28px rgba(28, 53, 82, 0.08);
-        transform: translateY(-2px);
-    }
-
-    .platform-action__icon {
-        flex-shrink: 0;
-        width: 40px;
-        height: 40px;
-        border-radius: 11px;
-        display: grid;
-        place-items: center;
-        background: var(--navy-soft);
-        color: var(--navy);
-    }
-
-    .platform-action__body {
-        flex: 1;
-        min-width: 0;
     }
 
     .platform-action__title {
-        margin: 0 0 4px;
+        margin: 0;
         font-size: 14px;
-        font-weight: 700;
-        color: var(--text);
+        font-weight: 600;
+        color: var(--navy);
+    }
+
+    .platform-action:hover .platform-action__title {
+        text-decoration: underline;
+        text-underline-offset: 3px;
     }
 
     .platform-action__sub {
-        margin: 0;
-        font-size: 12px;
+        margin: 2px 0 0;
+        font-size: 13px;
         line-height: 1.45;
         color: var(--text-muted);
     }
 
-    .platform-action__arrow {
-        flex-shrink: 0;
-        margin-top: 2px;
-        color: var(--text-faint);
-        transition: transform 0.18s ease, color 0.18s ease;
-    }
-
-    .platform-action:hover .platform-action__arrow {
-        color: var(--navy);
-        transform: translateX(2px);
-    }
-
     @media (max-width: 640px) {
-        .platform-panel {
-            padding: 16px;
-            border-radius: 14px;
-        }
-
         .platform-metrics {
             grid-template-columns: repeat(2, minmax(0, 1fr));
         }
 
         .platform-metric__value {
             font-size: 22px;
+        }
+
+        .platform-actions {
+            grid-template-columns: 1fr;
         }
     }
 </style>
@@ -385,40 +307,22 @@
 
     <section class="platform-panel" aria-labelledby="health-heading">
         <div class="platform-panel__head">
-            <h2 class="platform-panel__title" id="health-heading">{{ icon('shield', 18) }} Site health</h2>
+            <h2 class="platform-panel__title" id="health-heading">Site health</h2>
         </div>
         <div class="platform-health">
-            <span class="platform-health__item">
-                <span class="platform-health__dot platform-health__dot--ok" aria-hidden="true"></span>
-                Web OK
-            </span>
+            <span class="platform-health__item platform-health__item--ok">Web OK</span>
             {% if h.postgres == 'ok' %}
-            <span class="platform-health__item">
-                <span class="platform-health__dot platform-health__dot--ok" aria-hidden="true"></span>
-                Postgres OK
-            </span>
+            <span class="platform-health__item platform-health__item--ok">Postgres OK</span>
             {% elif h.postgres == 'misconfigured' %}
-            <span class="platform-health__item">
-                <span class="platform-health__dot platform-health__dot--bad" aria-hidden="true"></span>
-                Postgres required
-            </span>
+            <span class="platform-health__item platform-health__item--bad">Postgres required</span>
             {% else %}
-            <span class="platform-health__item">
-                <span class="platform-health__dot platform-health__dot--bad" aria-hidden="true"></span>
-                Postgres {{ h.postgres }}
-            </span>
+            <span class="platform-health__item platform-health__item--bad">Postgres {{ h.postgres }}</span>
             {% endif %}
             {% if h.active_jobs %}
-            <span class="platform-health__item">
-                <span class="platform-health__dot platform-health__dot--warn" aria-hidden="true"></span>
-                {{ h.active_jobs }} active job{{ 's' if h.active_jobs != 1 else '' }}
-            </span>
+            <span class="platform-health__item platform-health__item--warn">{{ h.active_jobs }} active job{{ 's' if h.active_jobs != 1 else '' }}</span>
             {% endif %}
             {% if h.failed_jobs_24h %}
-            <span class="platform-health__item">
-                <span class="platform-health__dot platform-health__dot--bad" aria-hidden="true"></span>
-                {{ h.failed_jobs_24h }} failed (24h)
-            </span>
+            <span class="platform-health__item platform-health__item--bad">{{ h.failed_jobs_24h }} failed (24h)</span>
             {% endif %}
             {% if h.last_scrape_at %}
             <p class="platform-health__meta">Latest dealer scrape: {{ h.last_scrape_at[:19] | replace('T', ' · ') }} UTC</p>
@@ -428,64 +332,64 @@
 
     <section class="platform-panel" aria-labelledby="scale-heading">
         <div class="platform-panel__head">
-            <h2 class="platform-panel__title" id="scale-heading">{{ icon('inventory', 18) }} Inventory &amp; scale</h2>
+            <h2 class="platform-panel__title" id="scale-heading">Inventory &amp; scale</h2>
         </div>
         <div class="platform-subgroup">
             <p class="platform-subgroup__label">Inventory</p>
-            <div class="platform-metrics">
+            <dl class="platform-metrics">
                 <div class="platform-metric platform-metric--highlight">
-                    <span class="platform-metric__value">{{ inv.active_cars | default(0) }}</span>
-                    <span class="platform-metric__label">Active cars</span>
+                    <dt class="platform-metric__label">Active cars</dt>
+                    <dd class="platform-metric__value">{{ inv.active_cars | default(0) }}</dd>
                 </div>
                 <div class="platform-metric">
-                    <span class="platform-metric__value">{{ inv.inactive_cars | default(0) }}</span>
-                    <span class="platform-metric__label">Inactive cars</span>
+                    <dt class="platform-metric__label">Inactive cars</dt>
+                    <dd class="platform-metric__value">{{ inv.inactive_cars | default(0) }}</dd>
                 </div>
                 <div class="platform-metric">
-                    <span class="platform-metric__value">{{ inv.dealers_in_inventory | default(0) }}</span>
-                    <span class="platform-metric__label">Dealers in inventory</span>
+                    <dt class="platform-metric__label">Dealers in inventory</dt>
+                    <dd class="platform-metric__value">{{ inv.dealers_in_inventory | default(0) }}</dd>
                 </div>
                 <div class="platform-metric">
-                    <span class="platform-metric__value">{{ dashboard.registry_dealerships | default(0) }}</span>
-                    <span class="platform-metric__label">Registry dealerships</span>
+                    <dt class="platform-metric__label">Registry dealerships</dt>
+                    <dd class="platform-metric__value">{{ dashboard.registry_dealerships | default(0) }}</dd>
                 </div>
                 <div class="platform-metric">
-                    <span class="platform-metric__value">{{ dashboard.incomplete_listings | default(0) }}</span>
-                    <span class="platform-metric__label">Incomplete listings</span>
+                    <dt class="platform-metric__label">Incomplete listings</dt>
+                    <dd class="platform-metric__value">{{ dashboard.incomplete_listings | default(0) }}</dd>
                 </div>
                 <div class="platform-metric">
-                    <span class="platform-metric__value">{{ dashboard.catalog_dealerships | default(0) }}</span>
-                    <span class="platform-metric__label">Job catalog</span>
+                    <dt class="platform-metric__label">Job catalog</dt>
+                    <dd class="platform-metric__value">{{ dashboard.catalog_dealerships | default(0) }}</dd>
                 </div>
-            </div>
+            </dl>
         </div>
         <div class="platform-subgroup">
             <p class="platform-subgroup__label">Accounts</p>
-            <div class="platform-metrics">
+            <dl class="platform-metrics">
                 <div class="platform-metric">
-                    <span class="platform-metric__value">{{ u.total | default(0) }}</span>
-                    <span class="platform-metric__label">Users</span>
+                    <dt class="platform-metric__label">Users</dt>
+                    <dd class="platform-metric__value">{{ u.total | default(0) }}</dd>
                 </div>
                 <div class="platform-metric">
-                    <span class="platform-metric__value">{{ u.active | default(0) }}</span>
-                    <span class="platform-metric__label">Active users</span>
+                    <dt class="platform-metric__label">Active users</dt>
+                    <dd class="platform-metric__value">{{ u.active | default(0) }}</dd>
                 </div>
                 <div class="platform-metric">
-                    <span class="platform-metric__value">{{ u.new_7d | default(0) }}</span>
-                    <span class="platform-metric__label">New users (7d)</span>
+                    <dt class="platform-metric__label">New users (7d)</dt>
+                    <dd class="platform-metric__value">{{ u.new_7d | default(0) }}</dd>
                 </div>
                 <div class="platform-metric">
-                    <span class="platform-metric__value">{{ u.premium | default(0) }}</span>
-                    <span class="platform-metric__label">Premium</span>
+                    <dt class="platform-metric__label">Premium</dt>
+                    <dd class="platform-metric__value">{{ u.premium | default(0) }}</dd>
                 </div>
-            </div>
+            </dl>
         </div>
     </section>
 
     <section class="platform-panel" aria-labelledby="usage-heading">
         <div class="platform-panel__head">
             <div>
-                <h2 class="platform-panel__title" id="usage-heading">{{ icon('chart', 18) }} Search &amp; usage</h2>
+                <h2 class="platform-panel__title" id="usage-heading">Search &amp; usage</h2>
                 <p class="platform-panel__sub">Last {{ usage_days }} days{% if usage_audience != 'all' %} · {{ usage_audience }}{% endif %}</p>
             </div>
             <form method="get" class="platform-toolbar">
@@ -508,38 +412,38 @@
                 <button type="submit" class="secondary-button">Apply</button>
             </form>
         </div>
-        <div class="platform-metrics">
+        <dl class="platform-metrics">
             <div class="platform-metric">
-                <span class="platform-metric__value">{{ usage.total_searches | default(0) }}</span>
-                <span class="platform-metric__label">Searches</span>
-            </div>
+                    <dt class="platform-metric__label">Searches</dt>
+                    <dd class="platform-metric__value">{{ usage.total_searches | default(0) }}</dd>
+                </div>
             <div class="platform-metric">
-                <span class="platform-metric__value">{{ usage.zero_result_searches | default(0) }}</span>
-                <span class="platform-metric__label">Zero results</span>
-            </div>
+                    <dt class="platform-metric__label">Zero results</dt>
+                    <dd class="platform-metric__value">{{ usage.zero_result_searches | default(0) }}</dd>
+                </div>
             {% if usage_audience == 'all' %}
             <div class="platform-metric">
-                <span class="platform-metric__value">{{ usage.logged_in_searches | default(0) }}</span>
-                <span class="platform-metric__label">Logged-in searches</span>
-            </div>
+                    <dt class="platform-metric__label">Logged-in searches</dt>
+                    <dd class="platform-metric__value">{{ usage.logged_in_searches | default(0) }}</dd>
+                </div>
             <div class="platform-metric">
-                <span class="platform-metric__value">{{ usage.anonymous_searches | default(0) }}</span>
-                <span class="platform-metric__label">Anonymous searches</span>
-            </div>
+                    <dt class="platform-metric__label">Anonymous searches</dt>
+                    <dd class="platform-metric__value">{{ usage.anonymous_searches | default(0) }}</dd>
+                </div>
             {% endif %}
             <div class="platform-metric platform-metric--highlight">
-                <span class="platform-metric__value">{{ eng.vdp_views | default(0) }}</span>
-                <span class="platform-metric__label">VDP views</span>
-            </div>
+                    <dt class="platform-metric__label">VDP views</dt>
+                    <dd class="platform-metric__value">{{ eng.vdp_views | default(0) }}</dd>
+                </div>
             <div class="platform-metric">
-                <span class="platform-metric__value">{{ eng.compare_events | default(0) }}</span>
-                <span class="platform-metric__label">Compares</span>
-            </div>
+                    <dt class="platform-metric__label">Compares</dt>
+                    <dd class="platform-metric__value">{{ eng.compare_events | default(0) }}</dd>
+                </div>
             <div class="platform-metric">
-                <span class="platform-metric__value">{{ eng.saved_cars | default(0) }}</span>
-                <span class="platform-metric__label">Saved cars (total)</span>
-            </div>
-        </div>
+                    <dt class="platform-metric__label">Saved cars (total)</dt>
+                    <dd class="platform-metric__value">{{ eng.saved_cars | default(0) }}</dd>
+                </div>
+        </dl>
         <div class="platform-insights">
             <div class="platform-insight">
                 <h3 class="platform-insight__title">Top queries</h3>
@@ -622,64 +526,36 @@
 
     <section class="platform-panel" aria-labelledby="actions-heading">
         <div class="platform-panel__head">
-            <h2 class="platform-panel__title" id="actions-heading">{{ icon('tools', 18) }} Operator actions</h2>
+            <h2 class="platform-panel__title" id="actions-heading">Operator actions</h2>
         </div>
         <div class="platform-actions">
             <a href="{{ url_for('store_admin.admin_dealers_hub') }}" class="platform-action">
-                <span class="platform-action__icon">{{ icon('dealers', 18) }}</span>
-                <span class="platform-action__body">
-                    <p class="platform-action__title">Dealer jobs</p>
-                    <p class="platform-action__sub">Onboarding queue, scrape status, catalog.</p>
-                </span>
-                <span class="platform-action__arrow">{{ icon('arrow-right', 16) }}</span>
+                <p class="platform-action__title">Dealer jobs</p>
+                <p class="platform-action__sub">Onboarding queue, scrape status, catalog.</p>
             </a>
             <a href="{{ url_for('store_admin.admin_users_hub') }}" class="platform-action">
-                <span class="platform-action__icon">{{ icon('user', 18) }}</span>
-                <span class="platform-action__body">
-                    <p class="platform-action__title">App users</p>
-                    <p class="platform-action__sub">Accounts, roles, passwords, suspend.</p>
-                </span>
-                <span class="platform-action__arrow">{{ icon('arrow-right', 16) }}</span>
+                <p class="platform-action__title">App users</p>
+                <p class="platform-action__sub">Accounts, roles, passwords, suspend.</p>
             </a>
             <a href="{{ url_for('find_dealers_page') }}" class="platform-action">
-                <span class="platform-action__icon">{{ icon('building', 18) }}</span>
-                <span class="platform-action__body">
-                    <p class="platform-action__title">Find dealers</p>
-                    <p class="platform-action__sub">Map search — request scrape from grey markers.</p>
-                </span>
-                <span class="platform-action__arrow">{{ icon('arrow-right', 16) }}</span>
+                <p class="platform-action__title">Find dealers</p>
+                <p class="platform-action__sub">Map search — request scrape from grey markers.</p>
             </a>
             <a href="{{ url_for('store_admin.admin_home', store=1) }}" class="platform-action">
-                <span class="platform-action__icon">{{ icon('dashboard', 18) }}</span>
-                <span class="platform-action__body">
-                    <p class="platform-action__title">Store ops</p>
-                    <p class="platform-action__sub">Merchandising KPIs and scan history for all dealers.</p>
-                </span>
-                <span class="platform-action__arrow">{{ icon('arrow-right', 16) }}</span>
+                <p class="platform-action__title">Store ops</p>
+                <p class="platform-action__sub">Merchandising KPIs and scan history for all dealers.</p>
             </a>
             <a href="{{ url_for('store_admin.admin_data_quality_hub') }}" class="platform-action">
-                <span class="platform-action__icon">{{ icon('chart', 18) }}</span>
-                <span class="platform-action__body">
-                    <p class="platform-action__title">Data quality</p>
-                    <p class="platform-action__sub">Incomplete listings, gap filters, dealer issue stats.</p>
-                </span>
-                <span class="platform-action__arrow">{{ icon('arrow-right', 16) }}</span>
+                <p class="platform-action__title">Data quality</p>
+                <p class="platform-action__sub">Incomplete listings, gap filters, dealer issue stats.</p>
             </a>
             <a href="{{ url_for('store_admin.admin_scanner_ops_hub') }}" class="platform-action">
-                <span class="platform-action__icon">{{ icon('tools', 18) }}</span>
-                <span class="platform-action__body">
-                    <p class="platform-action__title">Scanner ops</p>
-                    <p class="platform-action__sub">Smart import, geocode, dedupe, registry table.</p>
-                </span>
-                <span class="platform-action__arrow">{{ icon('arrow-right', 16) }}</span>
+                <p class="platform-action__title">Scanner ops</p>
+                <p class="platform-action__sub">Smart import, geocode, dedupe, registry table.</p>
             </a>
             <a href="{{ url_for('dev.scan_lab_home') }}" class="platform-action">
-                <span class="platform-action__icon">{{ icon('tools', 18) }}</span>
-                <span class="platform-action__body">
-                    <p class="platform-action__title">Scan lab</p>
-                    <p class="platform-action__sub">92694 manifest test scans (legacy /dev/scan-lab).</p>
-                </span>
-                <span class="platform-action__arrow">{{ icon('arrow-right', 16) }}</span>
+                <p class="platform-action__title">Scan lab</p>
+                <p class="platform-action__sub">92694 manifest test scans (legacy /dev/scan-lab).</p>
             </a>
         </div>
     </section>

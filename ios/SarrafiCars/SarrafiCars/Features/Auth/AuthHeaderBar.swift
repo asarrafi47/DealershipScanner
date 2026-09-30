@@ -48,7 +48,7 @@ struct AccountHeaderButtons: View {
                         .padding(.horizontal, variant == .navyBar ? 14 : 12)
                         .padding(.vertical, 7)
                         .overlay(
-                            Capsule()
+                            RoundedRectangle(cornerRadius: 4, style: .continuous)
                                 .stroke(
                                     variant == .navyBar ? AppTheme.cream.opacity(0.45) : AppTheme.navy,
                                     lineWidth: 1

@@ -85,11 +85,9 @@
 
 .smart-parse-chip {
     font-size: 12px;
-    padding: 6px 10px;
-    border-radius: 999px;
-    background: rgba(28, 53, 82, 0.08);
-    border: 1px solid rgba(28, 53, 82, 0.22);
+    padding: 0;
     color: var(--navy);
+    font-weight: 600;
 }
 
 .pill-trigger.smart-parse-active,
@@ -111,9 +109,8 @@
 }
 
 .smart-parse-chips.smart-parse-active {
-    outline: 1px solid rgba(0, 189, 227, 0.45);
-    border-radius: var(--main-radius);
-    padding: 8px 10px;
+    border-left: 2px solid var(--navy);
+    padding: 2px 0 2px 10px;
 }
 
 /* ══════════════════════════════════════════════════
@@ -168,28 +165,26 @@
     display: flex;
     align-items: center;
     gap: 6px;
-    background: var(--bg-card);
-    border: 1px solid var(--border-medium);
-    border-radius: 999px;
-    padding: 7px 14px;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--border-medium);
+    border-radius: 0;
+    padding: 7px 2px;
     color: var(--text-muted);
     font-size: 13px;
     font-family: inherit;
     cursor: pointer;
     white-space: nowrap;
-    transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
-    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.85) inset;
+    transition: border-color 0.15s ease, color 0.15s ease;
 }
 
 .pill-trigger:hover {
-    background: var(--bg-elevated);
     color: var(--text);
     border-color: var(--navy);
 }
 
 .pill-trigger.has-selection {
-    background: rgba(28, 53, 82, 0.08);
-    border-color: rgba(28, 53, 82, 0.35);
+    border-color: var(--navy);
     color: var(--navy);
 }
 
@@ -206,12 +201,10 @@
 }
 
 .pill-count {
-    background: var(--navy);
-    color: #fdfcfa;
-    font-size: 10px;
+    color: var(--navy);
+    font-size: 12px;
     font-weight: 700;
-    border-radius: 99px;
-    padding: 1px 5px;
+    font-variant-numeric: tabular-nums;
     line-height: 1.6;
 }
 
@@ -313,7 +306,6 @@
 .pill-search-btn {
     padding: 7px 18px;
     font-size: 13px;
-    border-radius: 999px;
 }
 
 .pill-clear-btn {
@@ -367,12 +359,10 @@
 }
 
 .docked-count {
-    background: var(--navy);
-    color: var(--bg-elevated);
-    font-size: 10px;
+    color: var(--navy);
+    font-size: 12px;
     font-weight: 700;
-    border-radius: 99px;
-    padding: 1px 7px;
+    font-variant-numeric: tabular-nums;
     line-height: 1.6;
 }
 
@@ -453,12 +443,10 @@
 }
 
 .acc-count {
-    background: var(--navy);
-    color: var(--bg-elevated);
-    font-size: 10px;
+    color: var(--navy);
+    font-size: 12px;
     font-weight: 700;
-    border-radius: 99px;
-    padding: 1px 5px;
+    font-variant-numeric: tabular-nums;
     line-height: 1.6;
 }
 
@@ -689,8 +677,7 @@ body.listings-page .listings-form {
     align-self: start;
     width: 100%;
     max-width: 440px;
-    padding: 18px 22px 20px;
-    box-shadow: 0 16px 48px rgba(20, 36, 54, 0.1);
+    padding: 18px 0 20px;
 }
 
 .listings-search-card--unified .smart-search-hint--in-card {
@@ -802,20 +789,22 @@ body.listings-page .listings-sidebar {
     }
 }
 
+/* No panel around the filters (owner rule 2026-09-30: no boxes): the column sits
+   on the page background, set off from the results by whitespace and a top rule. */
 body.listings-page .listings-filter-inner {
     max-width: none;
     margin: 0;
-    background: #fff;
-    border: 1px solid var(--border-light);
-    border-radius: 12px;
-    /* Horizontal + bottom breathing room (children add their own 16px → ~26px inset). */
-    padding: 16px 10px 14px;
-    box-shadow: 0 2px 12px rgba(20, 36, 54, 0.05);
+    background: transparent;
+    border: none;
+    border-top: 1px solid var(--border-light);
+    border-radius: 0;
+    padding: 16px 0 14px;
+    box-shadow: none;
 }
 
 body.listings-page .listings-intro--carmax {
     display: block;
-    padding: 0 16px 12px;
+    padding: 0 0 12px;
     margin-bottom: 0;
     border-bottom: 1px solid var(--border-light);
 }
@@ -833,7 +822,7 @@ body.listings-page .listings-intro--carmax .listings-intro-sub {
 }
 
 body.listings-page .listings-search-card--carmax {
-    padding: 14px 16px 0;
+    padding: 14px 0 0;
 }
 
 body.listings-page .smart-search-input--carmax {
@@ -886,7 +875,7 @@ body.listings-page .filter-basics-row--carmax {
     grid-template-columns: 1fr 1fr;
     gap: 10px;
     margin-top: 14px;
-    padding: 14px 16px 0;
+    padding: 14px 0 0;
     border-top: 1px solid var(--border-light);
 }
 
@@ -937,7 +926,7 @@ body.listings-page .listings-filter-acc {
 }
 
 body.listings-page .listings-filter-group-label {
-    margin: 14px 16px 4px;
+    margin: 14px 0 4px;
     font-size: 11px;
     font-weight: 700;
     letter-spacing: 0.08em;
@@ -958,7 +947,7 @@ body.listings-page .listings-acc-section:last-of-type {
 }
 
 body.listings-page .listings-acc-trigger {
-    padding: 13px 16px;
+    padding: 13px 0;
 }
 
 body.listings-page .listings-acc-trigger .acc-label {
@@ -980,7 +969,7 @@ body.listings-page .listings-acc-trigger .acc-count {
 }
 
 body.listings-page .listings-acc-body {
-    padding: 0 8px 8px;
+    padding: 0 0 8px;
     max-height: 220px;
     overflow-y: auto;
     overscroll-behavior: contain;
@@ -1014,9 +1003,9 @@ body.listings-page .listings-filter-actions {
     justify-content: space-between;
     gap: 10px 12px;
     margin-top: 8px;
-    padding: 12px 16px 16px;
+    padding: 12px 0 16px;
     border-top: 1px solid var(--border-light);
-    background: #fff;
+    background: transparent;
 }
 
 body.listings-page .listings-filter-actions .listings-filters-sheet-done {
@@ -1046,8 +1035,8 @@ body.listings-page .listings-filter-actions .pill-clear-btn {
         z-index: 2;
         margin: 8px -20px 0;
         padding: 14px 20px calc(14px + env(safe-area-inset-bottom, 0px));
-        background: #fff;
-        box-shadow: 0 -8px 24px rgba(20, 36, 54, 0.06);
+        background: var(--bg-elevated);
+        box-shadow: none;
     }
 
     body.listings-page .listings-filter-actions .listings-filters-sheet-done {
@@ -1191,11 +1180,10 @@ body.listings-page .listings-intro {
 /* Full-width example (wraps); avoids truncated placeholder in narrow sidebar */
 .smart-search-hint {
     margin: 0 0 14px;
-    padding: 12px 14px;
-    border-radius: 14px;
-    border: 1px solid var(--border-light);
-    background: rgba(255, 255, 255, 0.72);
-    box-shadow: 0 4px 18px rgba(20, 36, 54, 0.05);
+    padding: 0 0 12px;
+    border: none;
+    border-bottom: 1px solid var(--border-light);
+    background: transparent;
     font-size: 13px;
     line-height: 1.55;
     color: var(--text);
@@ -1214,11 +1202,10 @@ body.listings-page .listings-intro {
 }
 
 .listings-search-card {
-    background: linear-gradient(165deg, #ffffff 0%, var(--bg-elevated) 100%);
-    border: 1px solid var(--border-light);
-    border-radius: 20px;
-    padding: 20px 22px 18px;
-    box-shadow: 0 10px 36px rgba(20, 36, 54, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    padding: 20px 0 18px;
 }
 
 body.listings-page .filter-controls-row {
@@ -1380,7 +1367,7 @@ body.listings-page .filter-docked-inner {
 
 .filter-top-row.listings-filters-compact {
     padding: 12px 20px 14px !important;
-    box-shadow: 0 12px 36px rgba(20, 36, 54, 0.12);
+    box-shadow: none;
 }
 
 /* Sidebar layout: keep compact padding on the card, not the column wrapper */
@@ -1390,9 +1377,7 @@ body.listings-page .filter-top-row.listings-filters-compact {
 }
 
 .filter-top-row.listings-filters-compact .listings-search-card {
-    padding: 12px 16px 10px;
-    border-radius: 16px;
-    box-shadow: 0 8px 28px rgba(20, 36, 54, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.85);
+    padding: 12px 0 10px;
 }
 
 .filter-top-row.listings-filters-compact .filter-controls-row {
@@ -1485,10 +1470,7 @@ body.listings-page .filter-top-row.listings-filters-compact {
 .listings-main .results-count {
     display: inline-flex;
     align-items: center;
-    padding: 6px 14px;
-    border-radius: 999px;
-    background: var(--bg-card);
-    border: 1px solid var(--border-light);
+    padding: 0;
     color: var(--text-muted);
     letter-spacing: 0.06em;
 }
@@ -1521,13 +1503,15 @@ body.listings-page .results-grid {
     gap: clamp(16px, 2vw, 24px);
 }
 
+/* A result is a photograph with type under it -- no frame, fill, radius or
+   shadow (owner rule 2026-09-30: no boxes). Whitespace separates results. */
 .result-card {
     position: relative;
-    background: linear-gradient(180deg, #ffffff 0%, var(--bg-elevated) 100%);
-    border: 1px solid var(--border-light);
-    border-radius: var(--main-radius);
-    overflow: hidden;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    background: transparent;
+    border: none;
+    border-radius: 0;
 }
 
 .result-card-link {
@@ -1536,19 +1520,15 @@ body.listings-page .results-grid {
     color: inherit;
 }
 
-.result-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 14px 36px rgba(20, 36, 54, 0.12);
+.result-card-link:hover .result-title-row h2,
+.result-card-link:focus-visible .result-title-row h2 {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
 }
 
-body.listings-page .result-card {
-    border-radius: 18px;
-    background: linear-gradient(180deg, #ffffff 0%, var(--bg-elevated) 100%);
-    border-color: var(--border-light);
-}
-
-body.listings-page .result-card:hover {
-    border-color: var(--border-medium);
+.result-card-link:hover .result-image {
+    opacity: 0.92;
 }
 
 body.listings-page .result-image {
@@ -1575,22 +1555,22 @@ body.listings-page .result-image {
     background-size: cover;
     background-position: center;
     background-color: var(--bg-subtle);
-    border-top-left-radius: var(--main-radius);
-    border-top-right-radius: var(--main-radius);
+    border-radius: 0;
+    transition: opacity 0.15s ease;
 }
 
+/* Photo count sits in the action row under the text (main.js), as quiet
+   type -- not a dark tag over the photograph. */
 .result-photo-count {
-    position: absolute;
-    bottom: 8px;
-    right: 8px;
-    background: rgba(26, 39, 58, 0.88);
-    color: var(--bg-elevated);
+    margin-left: auto;
+    color: var(--text-faint);
     font-size: 11px;
-    padding: 4px 8px;
-    border-radius: 6px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    font-variant-numeric: tabular-nums;
 }
 
-.result-content { padding: 18px; }
+.result-content { padding: 14px 0 0; }
 
 .result-title-row {
     display: flex;
@@ -1608,35 +1588,24 @@ body.listings-page .result-image {
     min-width: 0;
 }
 
-.result-incomplete-pill {
+.result-incomplete-note {
     flex-shrink: 0;
     font-size: 10px;
-    font-weight: 600;
+    font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.04em;
-    color: #e8b86a;
-    border: 1px solid rgba(232, 184, 106, 0.45);
-    border-radius: 6px;
-    padding: 3px 7px;
-    line-height: 1.2;
+    letter-spacing: 0.06em;
+    color: #9a6a1c;
+    line-height: 1.5;
 }
 
 .result-cpo-badge {
     flex-shrink: 0;
     font-size: 10px;
-    font-weight: 600;
+    font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.06em;
     color: var(--navy);
-    background: rgba(28, 53, 82, 0.1);
-    border: 1px solid rgba(28, 53, 82, 0.3);
-    border-radius: 6px;
-    padding: 3px 7px;
-    line-height: 1.2;
-}
-
-.result-card--incomplete {
-    border-color: rgba(232, 184, 106, 0.2);
+    line-height: 1.5;
 }
 
 .result-trim {
@@ -1673,13 +1642,10 @@ body.listings-page .result-image {
 .result-price-drop-badge {
     display: inline-block;
     margin-left: 8px;
-    padding: 2px 8px;
-    border-radius: 8px;
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 700;
     letter-spacing: 0.02em;
     vertical-align: middle;
-    background: var(--deal-below-bg);
     color: var(--deal-below);
 }
 
@@ -1732,10 +1698,8 @@ body.listings-page .result-image {
    about the listing, and the card must not start looking like a fraud notice. */
 .result-dealer-unconfirmed {
     font-size: 11px;
+    font-style: italic;
     color: var(--text-faint);
-    border: 1px solid var(--border-medium);
-    border-radius: 999px;
-    padding: 1px 7px;
     white-space: nowrap;
     cursor: help;
 }
@@ -1752,15 +1716,17 @@ body.listings-page .result-image {
     padding: 32px 16px 72px;
 }
 
+/* Empty / start states: centred type between hairlines, no card. */
 .listings-empty-card {
     width: 100%;
     max-width: 440px;
-    padding: 40px 32px;
+    padding: 36px 0;
     text-align: center;
-    background: linear-gradient(165deg, #ffffff 0%, var(--bg-elevated) 100%);
-    border: 1px solid var(--border-light);
-    border-radius: 24px;
-    box-shadow: 0 20px 48px rgba(20, 36, 54, 0.1);
+    background: transparent;
+    border: none;
+    border-top: 1px solid var(--border-light);
+    border-bottom: 1px solid var(--border-light);
+    border-radius: 0;
 }
 
 .listings-empty-icon {
@@ -1809,8 +1775,7 @@ body.listings-page .result-image {
 }
 
 .listings-start-prompt .listings-empty-card {
-    background: var(--bg-card, #fff);
-    box-shadow: none;
+    background: transparent;
 }
 
 .listings-start-prompt__zip {
@@ -1823,6 +1788,10 @@ body.listings-page .result-image {
 }
 
 .listings-start-prompt__zip[hidden] {
+    display: none;
+}
+
+.listings-start-prompt__go[hidden] {
     display: none;
 }
 

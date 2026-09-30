@@ -45,7 +45,7 @@ struct SavedCarsView: View {
                             ScrollView(showsIndicators: AppTheme.showsScrollIndicators) {
                                 LazyVGrid(
                                     columns: [GridItem(.flexible()), GridItem(.flexible())],
-                                    spacing: 12
+                                    spacing: 20
                                 ) {
                                     ForEach(Array(cars.prefix(visibleCount))) { car in
                                         ZStack(alignment: .topTrailing) {
