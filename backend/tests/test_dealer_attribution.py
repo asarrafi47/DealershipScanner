@@ -831,10 +831,17 @@ def test_browser_path_hands_parse_a_rejected_out_and_the_roster_address():
     import inspect
 
     import backend.scanner.phases.dealer_run as dealer_run
+    from backend.scanner.phases.dealer_run_steps import attribution as steps_attribution
 
     import re as _re
 
-    src = inspect.getsource(dealer_run.run_dealer)
+    # run_dealer hands ONE parser to both the feed parse and the recovery chain
+    # (the two copy-paste closures it used to hold became that one function).
+    run_src = inspect.getsource(dealer_run.run_dealer)
+    assert "parse_raw = _attribution.inventory_parser(run)" in run_src
+    assert "_attribution.parse_intercepts(run, parse_raw)" in run_src
+    assert "_recovery.recover(run, feed_rows, parse_raw)" in run_src
+    src = inspect.getsource(steps_attribution)
     calls = []
     for m in _re.finditer(r"(?<![\w.])parse\(", src):
         depth, i = 0, m.end() - 1
@@ -849,7 +856,7 @@ def test_browser_path_hands_parse_a_rejected_out_and_the_roster_address():
         call = src[m.end() : i]
         if "dealer_id=dealer_id" in call:  # skip bare "parse()" mentions in comments
             calls.append(call)
-    assert len(calls) == 2, f"expected the two inventory parse() call sites, found {len(calls)}"
+    assert len(calls) == 1, f"expected the one inventory parse() call site, found {len(calls)}"
     for call in calls:
         assert "rejected_out=" in call
         assert "**roster_place" in call

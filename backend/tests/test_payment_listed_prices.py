@@ -116,7 +116,12 @@ def test_sort_sinks_payment_rows_with_call_for_price():
 
 
 def test_card_and_hero_branch_on_payment_listed():
-    js = (_ROOT / "frontend" / "static" / "main.js").read_text(encoding="utf-8")
+    # The card renderer moved from main.js to static/listings/card.js.
+    static = _ROOT / "frontend" / "static"
+    js = "\n".join(
+        p.read_text(encoding="utf-8")
+        for p in [static / "main.js", *sorted((static / "listings").glob("*.js"))]
+    )
     assert "c.payment_listed === true" in js
     assert "/mo advertised" in js
     html = (_ROOT / "frontend" / "templates" / "car.html").read_text(encoding="utf-8")

@@ -1495,6 +1495,14 @@
     {% endif %}
     <script src="{{ url_for('static', filename='ds_core.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>
     <script src="{{ url_for('static', filename='car_page_helpers.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>
+    {# static/car/*: the car page's feature modules (canvas frame, TCO math + card, finance,
+       gallery). They register on window.CP / window.CarPage and must load after
+       ds_core.js + car_page_helpers.js and before car_page.js, which boots them. #}
+    <script src="{{ url_for('static', filename='car/cp_canvas.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>
+    <script src="{{ url_for('static', filename='car/car_tco_math.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>
+    <script src="{{ url_for('static', filename='car/car_tco.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>
+    <script src="{{ url_for('static', filename='car/car_finance.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>
+    <script src="{{ url_for('static', filename='car/car_gallery.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>
     <script src="{{ url_for('static', filename='ds_comments.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>
     <script src="{{ url_for('static', filename='car_page.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>
     {% if show_premium_features %}

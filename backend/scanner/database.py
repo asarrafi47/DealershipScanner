@@ -1,30 +1,33 @@
 """
 Database layer for scanner: connection to inventory.db and vehicle upsert.
 """
-import json
 import logging
 import os
 import re
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timezone
 from typing import Any
 
 from backend.db.inventory_db import ensure_cars_table_columns
-from backend.utils.analytics_ep import apply_ep_from_scanner_dict
-from backend.utils.car_serialize import infer_engine_l_for_db
-from backend.utils.field_clean import clean_car_row_dict, compute_data_quality_score, is_effectively_empty
-from backend.utils.forced_induction import classify_forced_induction_from_car_row
-from backend.utils.fuel_label_plausibility import (
-    cylinders_override_for_electric_claim,
-    is_known_bev_nameplate,
-)
+from backend.utils.fuel_label_plausibility import is_known_bev_nameplate
 from backend.utils.fuel_type_normalize import normalize_fuel_type_for_storage
-from backend.utils.interior_color_buckets import interior_color_buckets_json
-from backend.utils.in_transit import availability_spec_source_patch
-from backend.utils.spec_provenance import merge_spec_source_json
+
+# ``upsert_vehicles`` is an orchestrator over the named steps in
+# ``backend.scanner.upsert``; the price-history helper is re-exported here
+# under its historical names.
+from backend.scanner.upsert import (
+    dedupe_sorted_by_vin,
+    guard_window,
+    prefetch_existing,
+    report_conflicts,
+    reset_stats,
+    run_post_write_enrichment,
+    write_rows,
+)
+from backend.scanner.upsert.serialize import PRICE_HISTORY_MAX_ENTRIES as _PRICE_HISTORY_MAX_ENTRIES  # noqa: F401
+from backend.scanner.upsert.serialize import price_history_json as _build_price_history_json  # noqa: F401
 
 logger = logging.getLogger(__name__)
 
-_PRICE_HISTORY_MAX_ENTRIES = 24
 
 # Rows to write per transaction in :func:`upsert_vehicles`. One transaction for a
 # whole dealer batch held row locks on ``cars`` (and an open snapshot) for the
@@ -145,38 +148,6 @@ def record_vin_owner_conflicts(conflicts: list[tuple[str, str, str]], seen_at: s
             pass
     finally:
         conn.close()
-
-
-def _build_price_history_json(
-    existing_raw: Any, prev_price: Any, new_price: Any, scraped_at: str
-) -> str | None:
-    """Append a ``{date, price}`` snapshot when price changes (or seed on first sight).
-
-    Read-modify-write against the row's own previous JSON; safe for the common case of
-    one scan process per VIN. A rare concurrent-write race could drop a snapshot, which
-    is acceptable since this is a nice-to-have history, not authoritative price data.
-    """
-    try:
-        history = json.loads(existing_raw) if existing_raw else []
-        if not isinstance(history, list):
-            history = []
-    except (TypeError, ValueError):
-        history = []
-    try:
-        np = float(new_price) if new_price is not None else None
-    except (TypeError, ValueError):
-        np = None
-    if np is None:
-        return json.dumps(history) if history else None
-    try:
-        pp = float(prev_price) if prev_price is not None else None
-    except (TypeError, ValueError):
-        pp = None
-    if not history or (pp is not None and np != pp):
-        history.append({"date": scraped_at, "price": np})
-    if len(history) > _PRICE_HISTORY_MAX_ENTRIES:
-        history = history[-_PRICE_HISTORY_MAX_ENTRIES:]
-    return json.dumps(history) if history else None
 
 
 def _scanner_idle_in_txn_timeout_ms() -> int:
@@ -399,547 +370,49 @@ def upsert_vehicles(vehicles: list[dict], stats: dict | None = None) -> int:
     ``vin_owner_conflict_vins`` (sorted list) and ``vin_owner_conflict_owners``
     ({owner_dealer_id: n}).
     """
-    if stats is not None:
-        stats["vin_owner_conflicts"] = 0
-        stats["vin_owner_conflict_vins"] = []
-        stats["vin_owner_conflict_owners"] = {}
+    reset_stats(stats)
     if not vehicles:
         return 0
     vehicles, _refused = drop_unattributable_vehicles(vehicles)
     if not vehicles:
         return 0
-    by_vin = {}
-    for v in vehicles:
-        vin = (v.get("vin") or "").strip()
-        if vin:
-            by_vin[vin] = v
-    # Sorted by VIN so every concurrent writer (fleet shards) takes row and index
-    # locks in the same order; Chapman Ford's upsert died with DeadlockDetected on
-    # 2026-09-28 when two shards inserted overlapping rows in feed order.
-    vehicles = [by_vin[k] for k in sorted(by_vin)]
+    # Sorted by VIN so concurrent writers (fleet shards) lock rows in one order.
+    by_vin, vehicles = dedupe_sorted_by_vin(vehicles)
     conn = get_conn()
     count = 0
     try:
         _ensure_schema(conn)
         cursor = conn.cursor()
         now = datetime.utcnow().isoformat() + "Z"
-        # Existing enrichment provenance per VIN: the ON CONFLICT clause keeps
-        # column values via COALESCE but would replace spec_source_json wholesale,
-        # orphaning the provenance of every surviving enriched value. Merge the
-        # incoming provenance into the stored one instead.
-        existing_spec_src: dict[str, str] = {}
-        guard_hours = vin_owner_guard_hours()
-        guard_on = guard_hours > 0
-        guard_cutoff = datetime.now(timezone.utc) - timedelta(hours=guard_hours if guard_on else 0)
-        # Same text shape as ``scraped_at`` (isoformat + "Z") so the SQL backstop
-        # below compares like with like on both SQLite and Postgres (TEXT column).
-        guard_cutoff_iso = guard_cutoff.replace(tzinfo=None).isoformat() + "Z"
-        conflicts: dict[str, tuple[str, str]] = {}  # vin -> (owner, claimant)
-        vin_keys = list(by_vin.keys())
-        for i in range(0, len(vin_keys), 500):
-            chunk = vin_keys[i : i + 500]
-            placeholders = ",".join("?" * len(chunk))
-            cursor.execute(
-                "SELECT vin, spec_source_json, dealer_id, listing_active, scraped_at "
-                f"FROM cars WHERE vin IN ({placeholders})",
-                chunk,
-            )
-            for row in cursor.fetchall():
-                if row[1] is not None and str(row[1]).strip():
-                    existing_spec_src[str(row[0])] = str(row[1])
-                if guard_on and len(row) >= 5:
-                    _vin = str(row[0])
-                    _claimant = str((by_vin.get(_vin) or {}).get("dealer_id") or "").strip()
-                    if _vin_owned_elsewhere(row[2], row[3], row[4], _claimant, guard_cutoff):
-                        conflicts[_vin] = (str(row[2]).strip(), _claimant)
+        window = guard_window(vin_owner_guard_hours())
+        existing_spec_src, conflicts = prefetch_existing(cursor, by_vin, window, _vin_owned_elsewhere)
         if conflicts:
             vehicles = [v for v in vehicles if (v.get("vin") or "").strip() not in conflicts]
-        # The prefetch above opened a read transaction; it is fully materialized in
+        # The prefetch opened a read transaction; it is fully materialized in
         # ``existing_spec_src`` now, so end it before the per-vehicle work starts.
         conn.commit()
-        for raw in vehicles:
-            merged = apply_ep_from_scanner_dict(dict(raw))
-            from backend.parsers.vdp_urls import apply_vehicle_source_url
-
-            apply_vehicle_source_url(merged)
-            v = clean_car_row_dict(merged)
-            # 48V mild hybrids (Ram 1500 eTorque) arrive labelled "Hybrid" from
-            # the feed. Correct the label BEFORE it is stored: the fuel FILTERS
-            # (search_cars, facet cascade, nearby counts) read cars.fuel_type
-            # directly, so a read-time-only correction leaves the card and the
-            # filter disagreeing, and any one-off backfill is overwritten by the
-            # next scan of the same dealer.
-            _ft_fixed = normalize_fuel_type_for_storage(v)
-            if _ft_fixed:
-                v["fuel_type"] = _ft_fixed
-            # Battery-electric rows arrive with the gas sibling's cylinder count
-            # (Toyota C-HR BEV "4") or a feed sentinel (GM "99", nulled by
-            # clean_car_row_dict above). Zero the count ONLY when the electric
-            # label is plausible; when combustion evidence contradicts it (a gas
-            # GX 550 fed as "Electric"), the cylinders ARE the evidence — they
-            # are kept, and the label correction above / the read-time display
-            # handles the fuel type. Runs AFTER the label normalization so a row
-            # it just relabelled to gas/hybrid is no longer an electric claim.
-            _cyl_fixed = cylinders_override_for_electric_claim(v)
-            if _cyl_fixed is not None:
-                v["cylinders"] = _cyl_fixed
-            if not v.get("transmission_type") and v.get("transmission"):
-                from backend.utils.transmission_normalize import normalize_transmission_standard
-                _y = v.get("year")
-                _tt, _ = normalize_transmission_standard(
-                    v["transmission"],
-                    make=v.get("make"),
-                    model=v.get("model"),
-                    trim=v.get("trim"),
-                    title=v.get("title"),
-                    year=_y if isinstance(_y, int) else None,
-                    vin=v.get("vin"),
-                    log_weak=False,
-                )
-                if _tt:
-                    v["transmission_type"] = _tt
-            if is_effectively_empty(v.get("engine_l")):
-                _eng = infer_engine_l_for_db(v)
-                if _eng is not None:
-                    v["engine_l"] = _eng
-            vin = (v.get("vin") or "").strip()
-            if not vin:
-                continue
-            title = (
-                v.get("title")
-                or f"{v.get('year') or ''} {v.get('make') or ''} {v.get('model') or ''} {v.get('trim') or ''}".strip()
-                or "Unknown vehicle"
-            )
-            # Price: ensure number (strip $ and , already done in parser); store as int/float
-            try:
-                price = v.get("price")
-                price = int(round(float(price))) if price is not None and str(price).strip() != "" else None
-            except (TypeError, ValueError):
-                price = None
-            if price is not None and price <= 0:
-                price = None
-            # Mileage: ensure integer; NULL when the feed had no odometer (a
-            # stored 0 on a used row hides the gap from the completeness tally
-            # and the VDP gap fill, F12 2026-09-28).
-            try:
-                mileage = v.get("mileage")
-                mileage = int(float(str(mileage).replace(",", ""))) if mileage is not None and str(mileage).strip() != "" else None
-            except (TypeError, ValueError):
-                mileage = None
-            try:
-                msrp_val = v.get("msrp")
-                msrp = int(round(float(msrp_val))) if msrp_val is not None and str(msrp_val).strip() != "" else None
-                if msrp is not None and msrp <= 0:
-                    msrp = None
-            except (TypeError, ValueError):
-                msrp = None
-            # Gallery: stored as JSON string; always use json.dumps(list)
-            gallery = v.get("gallery")
-            if isinstance(gallery, list):
-                gallery_json = json.dumps(gallery)
-            elif gallery is not None and isinstance(gallery, str):
-                try:
-                    json.loads(gallery)
-                    gallery_json = gallery
-                except (TypeError, ValueError):
-                    gallery_json = "[]"
-            else:
-                gallery_json = "[]"
-            # 360 spin frames: stored as JSON string like gallery (None when absent
-            # so the ON CONFLICT keep-if-nonempty clause preserves prior captures).
-            spin = v.get("spin_frames")
-            if isinstance(spin, list):
-                _spin_urls = [str(u).strip() for u in spin if u and str(u).strip().startswith("http")]
-                spin_frames_json = json.dumps(_spin_urls) if _spin_urls else None
-            elif isinstance(spin, str) and spin.strip():
-                try:
-                    _parsed_spin = json.loads(spin)
-                    spin_frames_json = spin if isinstance(_parsed_spin, list) and _parsed_spin else None
-                except (TypeError, ValueError):
-                    spin_frames_json = None
-            else:
-                spin_frames_json = None
-            # Interior panorama: single URL string or None.
-            interior_pano = v.get("interior_pano")
-            interior_pano = interior_pano.strip() if isinstance(interior_pano, str) else None
-            if not interior_pano or not interior_pano.startswith("http"):
-                interior_pano = None
-            highlights = v.get("history_highlights")
-            highlights_json = json.dumps(highlights) if isinstance(highlights, list) else (highlights if isinstance(highlights, str) else "[]")
-            img = v.get("image_url")
-            if not img or not str(img).strip().startswith("http"):
-                img = "/static/placeholder.svg"
-            preview = {
-                **v,
-                "vin": vin,
-                "title": title,
-                "price": price,
-                "mileage": mileage,
-                "image_url": img,
-            }
-            dq = compute_data_quality_score(preview)
-            interior_buckets_json = interior_color_buckets_json(v.get("interior_color"), v.get("make"))
-            spec_src = v.get("spec_source_json")
-            avail_patch = availability_spec_source_patch(v)
-            if avail_patch:
-                spec_src = merge_spec_source_json(
-                    spec_src if isinstance(spec_src, str) else (json.dumps(spec_src) if isinstance(spec_src, dict) else None),
-                    avail_patch,
-                )
-            lot_loc = str(v.get("_lot_location") or v.get("_inventory_location") or "").strip()
-            if lot_loc:
-                spec_src = merge_spec_source_json(
-                    spec_src if isinstance(spec_src, str) else (json.dumps(spec_src) if isinstance(spec_src, dict) else None),
-                    {
-                        "inventory_lot_location": {
-                            "source": str(v.get("_lot_location_source") or "inventory")[:40],
-                            "value": lot_loc[:200],
-                        },
-                    },
-                )
-            elif isinstance(spec_src, dict):
-                spec_src = json.dumps(spec_src, ensure_ascii=False)
-            elif spec_src is not None and not isinstance(spec_src, str):
-                spec_src = str(spec_src)
-            prior_spec_src = existing_spec_src.get(vin)
-            if prior_spec_src and spec_src and str(spec_src).strip():
-                try:
-                    _new_prov = json.loads(spec_src)
-                except (json.JSONDecodeError, TypeError):
-                    _new_prov = None
-                if isinstance(_new_prov, dict):
-                    spec_src = merge_spec_source_json(prior_spec_src, _new_prov)
-            pkg_raw = v.get("packages")
-            if isinstance(pkg_raw, dict):
-                packages_json = json.dumps(pkg_raw, ensure_ascii=False)
-            elif isinstance(pkg_raw, str) and pkg_raw.strip() not in ("", "{}", "[]", "null"):
-                packages_json = pkg_raw.strip()
-            else:
-                packages_json = None
-            fi = v.get("forced_induction") or classify_forced_induction_from_car_row(v)
-            try:
-                cursor.execute("SELECT price, price_provenance_json FROM cars WHERE vin = ?", (vin,))
-                _prev_row = cursor.fetchone()
-            except Exception:
-                _prev_row = None
-            price_history_json = _build_price_history_json(
-                _prev_row[1] if _prev_row else None,
-                _prev_row[0] if _prev_row else None,
-                price,
-                now,
-            )
-            cursor.execute(
-                """
-                INSERT INTO cars (
-                    vin, title, year, make, model, trim, price, mileage,
-                    image_url, dealer_name, dealer_url, dealer_id, scraped_at,
-                    fuel_type, cylinders, transmission, transmission_type, drivetrain,
-                    exterior_color, interior_color, interior_color_buckets, stock_number, gallery, carfax_url, history_highlights, msrp,
-                    dealership_registry_id,
-                    source_url, body_style, engine_description, engine_l, condition, description, data_quality_score,
-                    mpg_city, mpg_highway, is_cpo, model_full_raw,
-                    packages,
-                    listing_active, listing_removed_at, spec_source_json,
-                    first_seen_at, last_price_change_at, forced_induction, price_provenance_json,
-                    spin_frames, interior_pano
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                ON CONFLICT(vin) DO UPDATE SET
-                    title=CASE
-                        WHEN NULLIF(TRIM(excluded.title),'') IS NOT NULL AND excluded.title != 'Unknown vehicle'
-                        THEN excluded.title
-                        ELSE COALESCE(NULLIF(TRIM(cars.title),''), excluded.title)
-                    END,
-                    year=CASE WHEN IFNULL(excluded.year,0)!=0 THEN excluded.year ELSE COALESCE(cars.year,excluded.year) END,
-                    make=COALESCE(NULLIF(TRIM(excluded.make),''), cars.make),
-                    model=COALESCE(NULLIF(TRIM(excluded.model),''), cars.model),
-                    trim=COALESCE(excluded.trim, cars.trim),
-                    price=CASE WHEN COALESCE(excluded.price, 0) > 0 THEN excluded.price ELSE cars.price END,
-                    -- feed odometer > 0 wins; an explicit 0 keeps a prior real reading
-                    -- (else 0: new cars are 0 mi); NULL (no odometer) keeps a prior
-                    -- real reading but replaces a stale default 0 with NULL (F12)
-                    mileage=CASE WHEN IFNULL(excluded.mileage,0) > 0 THEN excluded.mileage
-                                 WHEN excluded.mileage IS NOT NULL THEN COALESCE(NULLIF(cars.mileage,0), 0)
-                                 ELSE NULLIF(cars.mileage,0) END,
-                    image_url=CASE
-                        WHEN excluded.image_url LIKE 'http%' THEN excluded.image_url
-                        WHEN cars.image_url LIKE 'http%' THEN cars.image_url
-                        ELSE excluded.image_url
-                    END,
-                    dealer_name=excluded.dealer_name, dealer_url=excluded.dealer_url,
-                    dealer_id=excluded.dealer_id, scraped_at=excluded.scraped_at,
-                    fuel_type=COALESCE(excluded.fuel_type, cars.fuel_type),
-                    cylinders=COALESCE(excluded.cylinders, cars.cylinders),
-                    transmission=COALESCE(excluded.transmission, cars.transmission),
-                    transmission_type=COALESCE(excluded.transmission_type, cars.transmission_type),
-                    drivetrain=COALESCE(excluded.drivetrain, cars.drivetrain),
-                    exterior_color=COALESCE(NULLIF(TRIM(excluded.exterior_color), ''), cars.exterior_color),
-                    interior_color=COALESCE(NULLIF(TRIM(excluded.interior_color), ''), cars.interior_color),
-                    interior_color_buckets=CASE
-                        WHEN NULLIF(TRIM(excluded.interior_color), '') IS NOT NULL THEN excluded.interior_color_buckets
-                        ELSE cars.interior_color_buckets
-                    END,
-                    stock_number=COALESCE(NULLIF(excluded.stock_number, ''), cars.stock_number),
-                    gallery=COALESCE(
-                        NULLIF(NULLIF(TRIM(excluded.gallery), ''), '[]'),
-                        cars.gallery
-                    ),
-                    -- Carfax link, history highlights and MSRP come from the VDP (or a
-                    -- window sticker), never from the SRP card. An SRP-only refresh of
-                    -- the same VIN therefore arrives with carfax_url=NULL,
-                    -- history_highlights='[]' and msrp=NULL. Assigning excluded.* here
-                    -- wiped all three on every such rescan, against this statement's
-                    -- stated contract that an empty incoming value never overwrites a
-                    -- stored one.
-                    carfax_url=COALESCE(NULLIF(TRIM(excluded.carfax_url), ''), cars.carfax_url),
-                    history_highlights=COALESCE(
-                        NULLIF(NULLIF(TRIM(excluded.history_highlights), ''), '[]'),
-                        cars.history_highlights
-                    ),
-                    msrp=COALESCE(excluded.msrp, cars.msrp),
-                    dealership_registry_id=COALESCE(excluded.dealership_registry_id, cars.dealership_registry_id),
-                    source_url=COALESCE(excluded.source_url, cars.source_url),
-                    body_style=COALESCE(excluded.body_style, cars.body_style),
-                    engine_description=COALESCE(excluded.engine_description, cars.engine_description),
-                    engine_l=COALESCE(NULLIF(TRIM(excluded.engine_l), ''), cars.engine_l),
-                    condition=COALESCE(NULLIF(TRIM(excluded.condition), ''), cars.condition),
-                    description=COALESCE(excluded.description, cars.description),
-                    -- Scored off the INCOMING payload, but every column this score
-                    -- reads (title/year/make/model/trim/price/mileage/transmission/
-                    -- drivetrain/fuel_type/colors/image/engine/mpg -- see
-                    -- ``compute_data_quality_score``) is keep-if-nonempty above, so the
-                    -- stored row's field set never shrinks through this statement.
-                    -- Assigning excluded.* therefore let an SRP-only rescan drop the
-                    -- score of a row that still holds every field it was scored on
-                    -- (measured 95.37 -> 54.63), and ``hybrid_search`` ranks on this
-                    -- column. Take the better of the two; a path that genuinely CLEARS
-                    -- fields re-derives the score via refresh_car_data_quality_score.
-                    data_quality_score=CASE
-                        WHEN COALESCE(excluded.data_quality_score, 0) > COALESCE(cars.data_quality_score, 0)
-                        THEN excluded.data_quality_score
-                        ELSE cars.data_quality_score
-                    END,
-                    mpg_city=COALESCE(excluded.mpg_city, cars.mpg_city),
-                    mpg_highway=COALESCE(excluded.mpg_highway, cars.mpg_highway),
-                    is_cpo=COALESCE(excluded.is_cpo, cars.is_cpo),
-                    model_full_raw=COALESCE(excluded.model_full_raw, cars.model_full_raw),
-                    packages=COALESCE(NULLIF(TRIM(excluded.packages), ''), cars.packages),
-                    listing_active=1,
-                    listing_removed_at=NULL,
-                    spec_source_json=CASE
-                        WHEN excluded.spec_source_json IS NOT NULL AND length(trim(excluded.spec_source_json)) > 0
-                        THEN excluded.spec_source_json
-                        ELSE cars.spec_source_json
-                    END,
-                    first_seen_at=COALESCE(cars.first_seen_at, excluded.scraped_at),
-                    -- Stamp only when the stored price ACTUALLY moves. The price
-                    -- column above keeps its stored value when the incoming price is
-                    -- missing (hidden price / "call for price" / a feed that dropped
-                    -- the field), but the old condition compared
-                    -- COALESCE(excluded.price, 0) and so read a missing price as a
-                    -- change to 0 -- stamping "repriced today" on a row whose price
-                    -- it had just decided not to touch. ``merchandising.py`` anchors
-                    -- price aging on this column, so those rows read as permanently
-                    -- just-repriced.
-                    last_price_change_at=CASE
-                        WHEN COALESCE(excluded.price, 0) > 0
-                             AND COALESCE(cars.price, 0) != excluded.price
-                        THEN excluded.scraped_at
-                        ELSE COALESCE(cars.last_price_change_at, cars.first_seen_at, excluded.scraped_at)
-                    END,
-                    internal_notes=cars.internal_notes,
-                    marked_for_review=cars.marked_for_review,
-                    forced_induction=COALESCE(excluded.forced_induction, cars.forced_induction),
-                    price_provenance_json=COALESCE(excluded.price_provenance_json, cars.price_provenance_json),
-                    spin_frames=COALESCE(NULLIF(NULLIF(TRIM(excluded.spin_frames), ''), '[]'), cars.spin_frames),
-                    interior_pano=COALESCE(NULLIF(TRIM(excluded.interior_pano), ''), cars.interior_pano)
-                -- VIN ownership guard, atomic backstop for the prefetch check above
-                -- (a concurrent shard may have claimed the VIN since): never move an
-                -- active, fresh row to a different dealer_id.
-                WHERE ? = 0
-                   OR COALESCE(cars.dealer_id, '') = ''
-                   OR cars.dealer_id = excluded.dealer_id
-                   OR COALESCE(cars.listing_active, 1) != 1
-                   OR cars.scraped_at IS NULL
-                   OR cars.scraped_at < ?
-                """,
-                (
-                    vin,
-                    title,
-                    v.get("year"),
-                    v.get("make") or "",
-                    v.get("model") or "",
-                    v.get("trim"),
-                    price,
-                    mileage,
-                    img,
-                    v.get("dealer_name") or "",
-                    v.get("dealer_url"),
-                    v.get("dealer_id") or "",
-                    now,
-                    v.get("fuel_type"),
-                    v.get("cylinders"),
-                    v.get("transmission"),
-                    v.get("transmission_type"),
-                    v.get("drivetrain"),
-                    v.get("exterior_color"),
-                    v.get("interior_color"),
-                    interior_buckets_json,
-                    v.get("stock_number") or "",
-                    gallery_json,
-                    v.get("carfax_url"),
-                    highlights_json,
-                    msrp,
-                    v.get("dealership_registry_id"),
-                    v.get("source_url"),
-                    v.get("body_style"),
-                    v.get("engine_description"),
-                    v.get("engine_l"),
-                    v.get("condition"),
-                    v.get("description"),
-                    dq,
-                    v.get("mpg_city"),
-                    v.get("mpg_highway"),
-                    v.get("is_cpo"),
-                    v.get("model_full_raw"),
-                    packages_json,
-                    1,
-                    None,
-                    spec_src,
-                    now,
-                    now,
-                    fi,
-                    price_history_json,
-                    spin_frames_json,
-                    interior_pano,
-                    1 if guard_on else 0,
-                    guard_cutoff_iso,
-                ),
-            )
-            if guard_on and getattr(cursor, "rowcount", 1) == 0:
-                # Backstop fired: another writer owns this VIN (fresh, active).
-                _owner = ""
-                try:
-                    cursor.execute("SELECT dealer_id FROM cars WHERE vin = ?", (vin,))
-                    _r = cursor.fetchone()
-                    _owner = str(_r[0] or "").strip() if _r else ""
-                except Exception:
-                    pass
-                conflicts[vin] = (_owner, str(v.get("dealer_id") or "").strip())
-                continue
-            count += 1
-            if count % _UPSERT_COMMIT_BATCH == 0:
-                conn.commit()
-            trace_vin = (os.environ.get("SCANNER_TRACE_VIN") or "").strip().upper()
-            if trace_vin and vin.upper() == trace_vin[:17]:
-                cursor.execute(
-                    "SELECT transmission, drivetrain, interior_color, exterior_color, fuel_type, "
-                    "body_style, engine_description, cylinders, mpg_city, mpg_highway, trim "
-                    "FROM cars WHERE vin = ?",
-                    (vin,),
-                )
-                rb = cursor.fetchone()
-                logger.info(
-                    "UPSERT VERIFY VIN %s mem: tr=%r drv=%r int=%r ext=%r fuel=%r | DB: %s",
-                    vin[:17],
-                    v.get("transmission"),
-                    v.get("drivetrain"),
-                    v.get("interior_color"),
-                    v.get("exterior_color"),
-                    v.get("fuel_type"),
-                    rb,
-                )
+        count = write_rows(
+            conn,
+            cursor,
+            vehicles,
+            now=now,
+            existing_spec_src=existing_spec_src,
+            window=window,
+            conflicts=conflicts,
+            commit_every=_UPSERT_COMMIT_BATCH,
+        )
         conn.commit()
     finally:
         conn.close()
     logger.info("Upserted %d vehicles", count)
     if conflicts:
-        for _vin in conflicts:
-            by_vin.pop(_vin, None)  # post-write steps below must not touch the owner's row
-        by_owner: dict[str, int] = {}
-        by_claimant: dict[str, int] = {}
-        for owner, claimant in conflicts.values():
-            by_owner[owner] = by_owner.get(owner, 0) + 1
-            by_claimant[claimant] = by_claimant.get(claimant, 0) + 1
-        logger.warning(
-            "vin_owner_guard %s",
-            json.dumps(
-                {
-                    "skipped": len(conflicts),
-                    "claimants": by_claimant,
-                    "owners": by_owner,
-                    "window_hours": guard_hours,
-                },
-                separators=(",", ":"),
-                ensure_ascii=False,
-            ),
-        )
-        record_vin_owner_conflicts(
-            [(vin, owner, claimant) for vin, (owner, claimant) in sorted(conflicts.items())],
-            datetime.utcnow().isoformat() + "Z",
-        )
-        if stats is not None:
-            stats["vin_owner_conflicts"] = len(conflicts)
-            stats["vin_owner_conflict_vins"] = sorted(conflicts)
-            stats["vin_owner_conflict_owners"] = by_owner
+        report_conflicts(conflicts, by_vin, window.hours, stats, record_vin_owner_conflicts)
     if count > 0:
-        try:
-            from backend.db import incomplete_listings_db as ild
-            from backend.db.inventory_db import get_car_by_id
-            from backend.enrichment.spec_structured_backfill import (
-                apply_structured_spec_backfill_for_car,
-                car_needs_transmission_or_cylinders_backfill,
-            )
-
-            # Resolve every VIN -> id up front and RELEASE the connection before the
-            # per-car work below. That work does network I/O (NHTSA vPIC) and opens
-            # its own connections; the previous shape held this one transaction open
-            # for the whole loop, which is the `idle in transaction` session that
-            # parked the web app behind a queued CREATE INDEX on `cars`.
-            car_ids: list[int] = []
-            conn2 = get_conn()
-            try:
-                cur2 = conn2.cursor()
-                vin_keys2 = list(by_vin.keys())
-                for i in range(0, len(vin_keys2), 500):
-                    chunk = vin_keys2[i : i + 500]
-                    placeholders = ",".join("?" * len(chunk))
-                    cur2.execute(
-                        f"SELECT id FROM cars WHERE vin IN ({placeholders})", chunk
-                    )
-                    for row_id in cur2.fetchall():
-                        try:
-                            car_ids.append(int(row_id[0]))
-                        except (TypeError, ValueError):
-                            continue
-                conn2.commit()
-            finally:
-                conn2.close()
-            for cid in car_ids:
-                ild.sync_incomplete_listing_for_car_id(cid)
-                car = get_car_by_id(cid, include_inactive=True)
-                if not car or not car_needs_transmission_or_cylinders_backfill(car):
-                    continue
-                # EPA/trim merge (tier 1) + NHTSA vPIC (tier 2) for transmission/cylinders
-                # (and other vPIC fillable fields still open on the row).
-                apply_structured_spec_backfill_for_car(cid, use_vpic_cache=True)
-        except Exception:
-            logger.exception("incomplete_listings / spec backfill after upsert failed")
-
-        # --- model_specs dictionary correction (cylinders + transmission) ---
-        try:
-            apply_model_specs_corrections(vins=list(by_vin.keys()))
-        except Exception:
-            logger.exception("model_specs correction after upsert failed")
-
-        # --- catalog link (cars.epa_master_id) so new scans join the catalog
-        #     immediately instead of waiting for the batch linker ---
-        try:
-            from backend.catalog.linker import link_cars_by_vins
-
-            link_cars_by_vins(list(by_vin.keys()))
-        except Exception:
-            logger.exception("catalog linking after upsert failed")
-
+        run_post_write_enrichment(
+            list(by_vin.keys()),
+            get_conn=get_conn,
+            apply_model_specs_corrections=apply_model_specs_corrections,
+        )
     return count
 
 

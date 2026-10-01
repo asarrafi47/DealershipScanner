@@ -62,7 +62,11 @@ def test_hero_location_line(monkeypatch):
 
 
 def test_card_js_condition_token_and_mileage():
-    js = (_ROOT / "frontend/static/main.js").read_text()
+    # The card renderer and sort comparators moved from main.js to static/listings/*.js.
+    static = _ROOT / "frontend/static"
+    js = "\n".join(
+        p.read_text() for p in [static / "main.js", *sorted((static / "listings").glob("*.js"))]
+    )
     assert "function cardConditionToken(car)" in js
     assert "cardMileageNotListed(c) ? \"Mileage not listed\"" in js
     assert 'mi === 0) return "new"' not in js

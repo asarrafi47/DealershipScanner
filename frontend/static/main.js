@@ -27,16 +27,29 @@ document.addEventListener("DOMContentLoaded", () => {
         _dsListingsPage &&
         (typeof SC === "undefined" ||
             typeof SC.enrichCarWithMarket !== "function" ||
-            typeof SC.filterCarsInRadius !== "function")
+            typeof SC.filterCarsInRadius !== "function" ||
+            typeof window.DSL !== "object" ||
+            typeof window.DSL.renderCardHtml !== "function")
     ) {
         console.error(
             "main.js: missing extracted modules — load listings_boot.js, " +
-            "market_intel.js and geo.js before main.js (see listings.html)."
+            "market_intel.js, geo.js and listings/*.js before main.js (see listings.html)."
         );
         return;
     }
 
     if (!_dsListingsPage || typeof CAR_ROWS === "undefined") return;
+
+    // Pure helpers (filter predicates, sort, facet math, ZIP/scope parsing, the
+    // card renderer, chip/pager markup) live in static/listings/*.js on
+    // window.DSL, loaded before this file. This closure keeps the page state and
+    // DOM wiring and passes that state in; the aliases keep call sites unchanged.
+    const DSL = window.DSL;
+    const {
+        carMatchesSmartFilters, carMatchesDealerFilter, cascadeRowKey, cascadeOptionKey,
+        lazyFacetEntryKey, lazyFacetEntries, clampListingsRadius, listingsCarsError, scalarChipLabel,
+    } = DSL;
+    const _buildCarRowsFromCars = DSL.buildCarRowsFromCars;
 
     // Bridge closure functions to the extracted geo.js / market_intel.js files
     // (their call sites stay typeof-guarded). Function declarations hoist, so
@@ -89,62 +102,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // ── Helpers ────────────────────────────────────────────────────────
 
-    /** Listings filters use paint-family bucket ids (e.g. red); car rows expose *_color_families arrays. */
-    function carMatchesPaintFamilyBuckets(car, param, selected) {
-        if (!selected.length) return true;
-        const key = param === "exterior_color" ? "exterior_color_families" : "interior_color_families";
-        const fams = Array.isArray(car[key]) ? car[key] : [];
-        return selected.some((s) => fams.includes(s));
-    }
-
-    function carListingCondition(car) {
-        const raw = car && car.condition != null ? String(car.condition).trim() : "";
-        if (raw && raw !== "—" && raw !== "-") return raw.toLowerCase();
-        const mi = car && car.mileage != null && car.mileage !== "" ? Number(car.mileage) : null;
-        if (Number.isFinite(mi) && mi > 0) return "used";
-        // 0 mi is NOT evidence of "new": it is the feed's "not listed" sentinel on
-        // 752 active Used rows (visual review 2026-09-28, DC-6 / IH-03).
-        const yr = car && car.year != null ? Number(car.year) : null;
-        if (Number.isFinite(yr) && yr < 2024) return "pre-owned";
-        return "";
-    }
-
-    /** Card condition token: New / Pre-owned / CPO (IH-02). Reads the row, never infers from mileage. */
-    function cardConditionToken(car) {
-        if (!car) return "Condition not listed";
-        if (car.is_cpo === true || car.is_cpo === 1 || car.is_cpo === "1") return "CPO";
-        const raw = car.condition != null ? String(car.condition).trim().toLowerCase() : "";
-        if (!raw || raw === "\u2014" || raw === "-") return "Condition not listed";
-        if (raw.includes("certified") || /\bcpo\b/.test(raw)) return "CPO";
-        if (raw === "new") return "New";
-        return "Pre-owned";
-    }
-
-    /** Mirrors backend/utils/mileage_display.mileage_not_listed (DC-6 / IH-03). */
-    function cardMileageNotListed(car) {
-        if (!car) return true;
-        if (typeof car.mileage_not_listed === "boolean") return car.mileage_not_listed;
-        const raw = car.mileage;
-        if (raw == null || String(raw).trim() === "") return true;
-        const mi = Number(String(raw).replace(/,/g, ""));
-        if (!Number.isFinite(mi)) return true;
-        if (mi > 0) return false;
-        if (cardConditionToken(car) !== "New") return true;
-        const yr = parseInt(car.year, 10);
-        return Number.isFinite(yr) && yr < new Date().getFullYear() - 1;
-    }
-
-    function passesInventoryConditionFilter(car, inventoryCondition) {
-        if (!inventoryCondition) return true;
-        const cond = carListingCondition(car);
-        if (inventoryCondition === "new") return cond === "new";
-        if (inventoryCondition === "pre_owned") {
-            if (!cond) return false;
-            return cond !== "new";
-        }
-        if (inventoryCondition === "cpo") return !!car.is_cpo;
-        return true;
-    }
+    // Condition / paint-family predicates: listings/filters.js; card condition
+    // and mileage tokens: listings/card.js.
 
     // Collect unique checked values (pill + accordion share names, deduplicate)
     let _checkedCache = null;
@@ -191,17 +150,10 @@ document.addEventListener("DOMContentLoaded", () => {
         // active but nothing is in range — must show 0, NOT silently fall back
         // to the full national inventory (that produced the "flash of unrelated
         // results" while coords were still loading).
-        const rows = (RADIUS_CAR_ROWS !== null ? RADIUS_CAR_ROWS : CAR_ROWS).filter(r => {
-            if (makes.length  && !SC.valueInListCI(makes, r.make))        return false;
-            if (models.length && !SC.valueInListCI(models, r.model))      return false;
-            if (trims.length  && !SC.valueInListCI(trims, r.trim))        return false;
-            if (fuels.length  && !fuels.includes(r.fuel))        return false;
-            if (drives.length && !drives.includes(r.drive))      return false;
-            if (inductions.length && !inductions.includes(r.induction)) return false;
-            if (bodies.length && !SC.valueInListCI(bodies, r.body_style)) return false;
-            if (cyls.length   && !cyls.includes(String(r.cyl))) return false;
-            return true;
-        });
+        const rows = DSL.filterCompatibleRows(
+            RADIUS_CAR_ROWS !== null ? RADIUS_CAR_ROWS : CAR_ROWS,
+            { makes, models, trims, fuels, drives, inductions, bodies, cyls }
+        );
         if (_compatRowCache) _compatRowCache.set(cacheKey, rows);
         return rows;
     }
@@ -268,20 +220,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function cascadePackages() {
         const activeMakes  = checked("make").map(s => s.toLowerCase());
         const activeModels = checked("model").map(s => s.toLowerCase());
-        // Packages to show: those belonging to any selected make AND model (or all if none selected)
-        let visibleNames;
-        if (activeMakes.length || activeModels.length) {
-            visibleNames = new Set(
-                PACKAGE_ROWS
-                    .filter(r =>
-                        (!activeMakes.length  || activeMakes.includes(r.make.toLowerCase())) &&
-                        (!activeModels.length || activeModels.includes(r.model.toLowerCase()))
-                    )
-                    .map(r => r.name.toLowerCase())
-            );
-        } else {
-            visibleNames = new Set(PACKAGE_ROWS.map(r => r.name.toLowerCase()));
-        }
+        const visibleNames = DSL.visiblePackageNames(PACKAGE_ROWS, activeMakes, activeModels);
         for (const cid of ["options-package", "acc-options-package"]) {
             const container = document.getElementById(cid);
             if (!container) continue;
@@ -293,28 +232,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (hidden && input.checked) { input.checked = false; }
             }
         }
-    }
-
-    function cascadeRowKey(param, r) {
-        if (param === "trim") {
-            return [SC.normFilterStr(r.make), SC.normFilterStr(r.model), SC.normFilterStr(r.trim)].join("\0");
-        }
-        if (param === "model") {
-            return [SC.normFilterStr(r.make), SC.normFilterStr(r.model)].join("\0");
-        }
-        return SC.normFilterStr(r.make ?? r.model ?? r.trim ?? r.fuel ?? r.drive ?? r.induction ?? r.body_style ?? r.cyl ?? "");
-    }
-
-    function cascadeOptionKey(param, label, cb) {
-        const make = label && label.dataset ? label.dataset.make : "";
-        const model = label && label.dataset ? label.dataset.model : "";
-        if (param === "trim") {
-            return [SC.normFilterStr(make), SC.normFilterStr(model), SC.normFilterStr(cb.value)].join("\0");
-        }
-        if (param === "model") {
-            return [SC.normFilterStr(make), SC.normFilterStr(cb.value)].join("\0");
-        }
-        return SC.normFilterStr(cb.value);
     }
 
     function cascadeParam(param, rowKey, containerIds, alsoExclude = []) {
@@ -534,21 +451,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    /** Container-agnostic identity for a lazy option, used to carry checked state across a rebuild. */
-    function lazyFacetEntryKey(param, entry) {
-        if (param === "trim") {
-            return [SC.normFilterStr(entry[0]), SC.normFilterStr(entry[1]), SC.normFilterStr(entry[2] || "")].join("\0");
-        }
-        if (param === "model") return [SC.normFilterStr(entry[0]), SC.normFilterStr(entry[1])].join("\0");
-        return SC.normFilterStr(entry);
-    }
-
-    function lazyFacetEntries(param, facets) {
-        if (param === "model") return Array.isArray(facets.model_rows) ? facets.model_rows : [];
-        if (param === "trim") return Array.isArray(facets.trim_rows) ? facets.trim_rows : [];
-        return Array.isArray(facets.all_package_names) ? facets.all_package_names : [];
-    }
-
     function buildLazyFacetLabel(param, entry, isChecked) {
         const label = document.createElement("label");
         label.className = "filter-option";
@@ -667,7 +569,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function syncSearchFormZipInputs(value) {
         const form = document.getElementById("search-form");
         if (!form) return;
-        const z = String(value || "").replace(/\D/g, "").slice(0, 5);
+        const z = DSL.zipDigits(value);
         form.querySelectorAll('[name="zip_code"]').forEach((el) => {
             el.value = z;
         });
@@ -692,18 +594,10 @@ document.addEventListener("DOMContentLoaded", () => {
     window.__DS_showListingsZipRequired = function () { showListingsZipRequired(); };
     window.__DS_listingsSearchStartedFn = listingsSearchStarted;
 
-    function clampListingsRadius(raw) {
-        const n = parseFloat(raw);
-        if (!Number.isFinite(n)) return 50;
-        return Math.max(5, Math.min(250, n));
-    }
-
     /** "zip|radius" the loaded ALL_CARS must match ("dealer" on the dealership page). */
     function listingsCarsScopeKey() {
         if (LISTINGS_DEALER_SCOPE) return "dealer";
-        const zip = scalarVal("zip_code");
-        if (!SC.isValidUsZip(zip)) return "";
-        return `${zip.trim()}|${clampListingsRadius(scalarVal("radius"))}`;
+        return DSL.listingsCarsScopeKey(scalarVal("zip_code"), scalarVal("radius"));
     }
 
     function listingsCarsReady() {
@@ -1029,10 +923,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function listingsRadiusFilterKey() {
-        const zip = scalarVal("zip_code");
-        const radiusMi = parseFloat(scalarVal("radius")) || null;
-        if (!SC.isValidUsZip(zip) || !radiusMi) return "";
-        return `${zip.trim()}|${radiusMi}`;
+        return DSL.listingsRadiusFilterKey(scalarVal("zip_code"), scalarVal("radius"));
     }
 
     function clearListingsRadiusCache() {
@@ -1168,14 +1059,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function getListingsPerPage() {
         const raw = listingsPerPageEl ? parseInt(listingsPerPageEl.value, 10) : DEFAULT_PER_PAGE;
-        return [12, 24, 48].includes(raw) ? raw : DEFAULT_PER_PAGE;
+        return DSL.normalizePerPage(raw, DEFAULT_PER_PAGE);
     }
 
     if (listingsPerPageEl) {
         try {
             const urlPp = parseInt(new URLSearchParams(window.location.search).get("per_page"), 10);
             const saved = parseInt(localStorage.getItem(PER_PAGE_STORAGE_KEY), 10);
-            const pick = [12, 24, 48].includes(urlPp) ? urlPp : ([12, 24, 48].includes(saved) ? saved : DEFAULT_PER_PAGE);
+            const pick = DSL.pickPerPage(urlPp, saved, DEFAULT_PER_PAGE);
             listingsPerPageEl.value = String(pick);
         } catch (_) {}
         listingsPerPageEl.addEventListener("change", () => {
@@ -1391,8 +1282,7 @@ document.addEventListener("DOMContentLoaded", () => {
     window.__DS_resetListingsPage = resetListingsPage;
 
     function readListingsPageFromUrl() {
-        const p = parseInt(new URLSearchParams(window.location.search).get("page"), 10);
-        return Number.isFinite(p) && p > 0 ? p : 1;
+        return DSL.pageFromSearch(window.location.search);
     }
 
     function scrollListingsResultsIntoView() {
@@ -1411,30 +1301,17 @@ document.addEventListener("DOMContentLoaded", () => {
         if (listingsPagination) {
             listingsPagination.hidden = totalPages <= 1 && total <= perPage;
         }
-        const start = total === 0 ? 0 : (page - 1) * perPage + 1;
-        const end = Math.min(page * perPage, total);
+        const labels = DSL.paginationLabels(total, page, perPage);
         if (resultsCount) {
-            resultsCount.textContent = total === 0
-                ? "0 vehicles"
-                : (totalPages > 1
-                    ? `${start.toLocaleString()}–${end.toLocaleString()} of ${total.toLocaleString()}`
-                    : `${total.toLocaleString()} vehicle${total !== 1 ? "s" : ""}`);
+            resultsCount.textContent = labels.count;
         }
         if (listingsRange) {
-            listingsRange.textContent = totalPages > 1
-                ? `Page ${page} of ${totalPages} · ${perPage} per page`
-                : "";
+            listingsRange.textContent = labels.range;
         }
         if (listingsPagePrev) listingsPagePrev.disabled = page <= 1;
         if (listingsPageNext) listingsPageNext.disabled = page >= totalPages;
         if (listingsPaginationPages) {
-            listingsPaginationPages.innerHTML = SC.buildPageNumberWindow(page, totalPages).map((item) => {
-                if (item === "…") {
-                    return `<span class="listings-page-ellipsis" aria-hidden="true">…</span>`;
-                }
-                const active = item === page ? " listings-page-num--active" : "";
-                return `<button type="button" class="listings-page-num${active}" data-page="${item}" aria-label="Page ${item}"${item === page ? ' aria-current="page"' : ""}>${item}</button>`;
-            }).join("");
+            listingsPaginationPages.innerHTML = DSL.pageNumbersHtml(page, totalPages);
             listingsPaginationPages.querySelectorAll(".listings-page-num").forEach((btn) => {
                 btn.addEventListener("click", () => {
                     const n = parseInt(btn.dataset.page, 10);
@@ -1457,126 +1334,13 @@ document.addEventListener("DOMContentLoaded", () => {
     if (listingsPagePrev) listingsPagePrev.addEventListener("click", () => goListingsPage(-1));
     if (listingsPageNext) listingsPageNext.addEventListener("click", () => goListingsPage(1));
 
+    /** Card markup (listings/card.js) with this page's sign-in state, ZIP and distance. */
     function renderCardHtml(c, savedSet, compareIds) {
-        const gallery = Array.isArray(c.gallery) ? c.gallery : [];
-        const imgRaw = (gallery.length && gallery[0]) ? gallery[0] : (c.image_url || "") || "/static/placeholder.svg";
-        const imgSrc = SC.safeImageSrc(imgRaw);
-        const imgSrcAttr = SC.escapeHtml(imgSrc);
-        const photoCount = Number(c.photo_count) > 0 ? Number(c.photo_count) : gallery.length;
-        const photoLabel = photoCount > 1 ? `${photoCount} photos` : "";
-        const idNum = Number(c.id);
-        const idStr = Number.isFinite(idNum) && idNum > 0 ? String(Math.floor(idNum)) : "0";
-        const dashLike = (v) => {
-            const s = String(v || "").trim();
-            return !s || s === "\u2014" || s === "-" || s === "--";
-        };
-        // Condition leads the meta line (IH-02); a 0/blank odometer on a used or
-        // older car is "Mileage not listed", never "0 mi" (DC-6 / IH-03).
-        const metaBits = [
-            `<span class="result-condition">${SC.escapeHtml(cardConditionToken(c))}</span>`,
-            cardMileageNotListed(c) ? "Mileage not listed" : `${SC.fmt(c.mileage)} mi`,
-        ];
-        if (!dashLike(c.fuel_type)) metaBits.push(SC.escapeHtml(c.fuel_type));
-        if (!dashLike(c.drivetrain)) metaBits.push(SC.escapeHtml(c.drivetrain));
-        const specBits = [];
-        if (!dashLike(c.body_style)) specBits.push(SC.escapeHtml(c.body_style));
-        const specLine = specBits.length
-            ? `<p class="result-meta result-meta--specs">${specBits.join(" &middot; ")}</p>`
-            : "";
-        const incompletePill = c.public_incomplete
-            ? `<span class="result-incomplete-note" title="Missing some public-listing fields">Incomplete</span>`
-            : "";
-        const cpoBadge = SC.cpoBadgeHtml(c);
-        const mkt = c.market;
-        // A payment-shaped "price" (either intel tier flagged it) renders as
-        // an advertised payment, never as the sale price with a deal badge.
-        const paymentListed = c.payment_listed === true
-            || (mkt && mkt.vs_market === "payment_listed")
-            || (c.deal_score && c.deal_score.label === "payment_listed");
-        // Premium trim-avg badge takes precedence; otherwise fall back to the
-        // free coarse market deal score attached during serialization.
-        const dealBadge = paymentListed ? "" : (SC.dealBadgeHtml(mkt) || SC.dealScoreBadgeHtml(c.deal_score));
-        const priceDropBadge = paymentListed ? "" : SC.priceDropBadgeHtml(c);
-        let marketLine = "";
-        if (!paymentListed && mkt && mkt.avg_price_display) {
-            marketLine = `<p class="result-market-sub">Trim avg ${SC.escapeHtml(mkt.avg_price_display)}</p>`;
-        }
-        const distMi = carDistanceMiles(c);
-        const distLine = (distMi != null && Number.isFinite(distMi))
-            ? `<span class="result-distance">${distMi < 10 ? distMi.toFixed(1) : Math.round(distMi)} mi away</span>`
-            : "";
-        const isSaved = savedSet.has(idNum);
-        const inCompare = compareIds.includes(idNum);
-        const saveBtn = LISTINGS_LOGGED_IN
-            ? `<button type="button" class="result-save-btn${isSaved ? " result-save-btn--saved" : ""}" data-car-id="${idStr}" aria-label="${isSaved ? "Saved" : "Save this car"}" title="${isSaved ? "Remove from saved" : "Save"}">`
-                + `<svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="1.8" fill="${isSaved ? "currentColor" : "none"}" aria-hidden="true">`
-                + `<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>`
-                + `</svg></button>`
-            // Guests get the same heart affordance; clicking it sends them to the
-            // existing sign-in page (the same prompt ds_comments.js uses for guests)
-            // instead of silently doing nothing.
-            : `<button type="button" class="result-save-btn" data-guest="1" aria-label="Sign in to save this car" title="Sign in to save">`
-                + `<svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="1.8" fill="none" aria-hidden="true">`
-                + `<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>`
-                + `</svg></button>`;
-        const compareCb = `<label class="result-compare-label" title="Add to compare (max 4)">`
-            + `<input type="checkbox" class="result-compare-cb" data-car-id="${idStr}"${inCompare ? " checked" : ""}>`
-            + `<span>Compare</span></label>`;
-        const zipForUrl = typeof scalarVal === "function" ? scalarVal("zip_code") : "";
-        const carHref = zipForUrl && /^\d{5}$/.test(String(zipForUrl).trim())
-            ? `/car/${idStr}?zip_code=${encodeURIComponent(String(zipForUrl).trim())}`
-            : `/car/${idStr}`;
-        // Dealer name -> /dealership/<dealer_id>, the same research page the car page
-        // links to. Same key shape the route validates (_DEALER_KEY_RE), so a card
-        // carrying a junk dealer_id renders plain text instead of a link to a 404.
-        const dealerName = String(c.dealer_name || "").trim();
-        const dealerKey = String(c.dealer_id || "").trim();
-        const dealerNameHtml = SC.escapeHtml(dealerName);
-        const dealerHtml = (dealerName && /^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$/.test(dealerKey))
-            ? `<a href="/dealership/${encodeURIComponent(dealerKey)}" class="result-dealer result-dealer-link">${dealerNameHtml}</a>`
-            : `<span class="result-dealer">${dealerNameHtml}</span>`;
-        // The backend sets location_confirmed=false only when this listing's own photos
-        // (or a proven group-wide feed) contradict the dealership it is filed under —
-        // see backend/db/repositories/cars_repo.py. The card keeps the dealer name (that
-        // is who published it) and stops implying the car is on that lot.
-        const locUnconfirmed = c.location_confirmed === false
-            ? `<span class="result-dealer-unconfirmed" title="${SC.escapeHtml(c.location_note || "")}">Location unconfirmed</span>`
-            : "";
-        // The dealer row sits OUTSIDE .result-card-link: an <a> nested inside an <a> is
-        // invalid HTML, and browsers recover by unnesting it, which breaks the card link.
-        return `
-            <article class="result-card${c.public_incomplete ? " result-card--incomplete" : ""}">
-                <a href="${carHref}" class="result-card-link">
-                    <div class="result-image-wrap">
-                        <img class="result-image" src="${imgSrcAttr}" alt="" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='/static/placeholder.svg';">
-                    </div>
-                    <div class="result-content">
-                        <div class="result-title-row">
-                            <h2>${SC.escapeHtml(c.title)}</h2>
-                            ${cpoBadge}
-                            ${incompletePill}
-                        </div>
-                        <p class="result-trim">${SC.escapeHtml(c.trim || "")}</p>
-                        ${paymentListed
-                            ? `<p class="result-price result-price--payment">${SC.fmtUSD(c.price)}/mo advertised<span class="result-price-payment-note">&mdash; see dealer for the price</span></p>`
-                            : `<p class="result-price">${SC.fmtUSD(c.price)}${priceDropBadge}</p>`}
-                        ${dealBadge ? `<p class="result-deal-line">${dealBadge}</p>` : ""}
-                        ${marketLine}
-                        <p class="result-meta">${metaBits.join(" &middot; ")}</p>
-                        ${specLine}
-                    </div>
-                </a>
-                <p class="result-dealer-row">
-                    ${distLine}
-                    ${dealerHtml}
-                    ${locUnconfirmed}
-                </p>
-                <div class="result-card-actions">
-                    ${compareCb}
-                    ${photoLabel ? `<span class="result-photo-count">${SC.escapeHtml(photoLabel)}</span>` : ""}
-                    ${saveBtn}
-                </div>
-            </article>`;
+        return DSL.renderCardHtml(c, savedSet, compareIds, {
+            loggedIn: LISTINGS_LOGGED_IN,
+            zipForUrl: scalarVal("zip_code"),
+            distanceMiles: carDistanceMiles(c),
+        });
     }
 
     function renderListingsPage(opts) {
@@ -1629,107 +1393,9 @@ document.addEventListener("DOMContentLoaded", () => {
         return haversineJS(origin[0], origin[1], coords[0], coords[1]);
     }
 
-    function listingCallForPrice(c) {
-        // A payment-shaped "price" ($122/mo scraped into the price field) is
-        // no sale price: it sinks with call-for-price in every sort mode.
-        if (c && c.payment_listed === true) return true;
-        const p = Number(c.price);
-        return !Number.isFinite(p) || p <= 0;
-    }
-
-    function listingPhotoCount(c) {
-        const pc = Number(c.photo_count);
-        if (Number.isFinite(pc) && pc >= 0) return pc;
-        const gallery = Array.isArray(c.gallery) ? c.gallery : [];
-        if (gallery.length) return gallery.length;
-        return c.image_url ? 1 : 0;
-    }
-
-    // True when the car has a genuine dealer photo (not the placeholder). A
-    // truthy image_url can be "/static/placeholder.svg", so string-truthiness
-    // isn't enough — require an http image on image_url or in the gallery.
-    function listingHasRealImage(c) {
-        // Real photo = remote http(s) OR a locally-cached /car-images/ path
-        // (served by Flask), not the /static/placeholder.svg fallback.
-        const isReal = (u) => typeof u === "string" && (u.indexOf("http") === 0 || u.indexOf("/car-images/") === 0);
-        if (isReal(c.image_url)) return true;
-        const gallery = Array.isArray(c.gallery) ? c.gallery : [];
-        return gallery.some(isReal);
-    }
-
-    function listingDepriorityCompare(a, b) {
-        // Strongest tier: placeholder-image cars (no real dealer photo — mostly
-        // unphotographed new inventory) sink below everything, in every sort.
-        const aNoImg = listingHasRealImage(a) ? 0 : 1;
-        const bNoImg = listingHasRealImage(b) ? 0 : 1;
-        if (aNoImg !== bNoImg) return aNoImg - bNoImg;
-        const aCall = listingCallForPrice(a) ? 1 : 0;
-        const bCall = listingCallForPrice(b) ? 1 : 0;
-        if (aCall !== bCall) return aCall - bCall;
-        const aSingle = listingPhotoCount(a) <= 1 ? 1 : 0;
-        const bSingle = listingPhotoCount(b) <= 1 ? 1 : 0;
-        return aSingle - bSingle;
-    }
-
+    /** Sort order (listings/sort.js); distance is measured from this page's ZIP. */
     function sortListingsCars(cars, mode, preserveOrder) {
-        if (preserveOrder && mode === "relevance") {
-            return cars.slice().sort((a, b) => listingDepriorityCompare(a, b));
-        }
-        const arr = cars.slice();
-        const priceKey = (c) => {
-            if (c.payment_listed === true) return Infinity;
-            const p = Number(c.price);
-            return Number.isFinite(p) && p > 0 ? p : Infinity;
-        };
-        const mileageKey = (c) => {
-            if (cardMileageNotListed(c)) return Infinity;
-            const m = Number(c.mileage);
-            return Number.isFinite(m) && m >= 0 ? m : Infinity;
-        };
-        const yearKey = (c) => {
-            const y = parseInt(c.year, 10);
-            return Number.isFinite(y) ? y : 0;
-        };
-        const dealKey = (c) => {
-            const m = c.market;
-            if (!m || m.delta_pct == null) return 999;
-            return Number(m.delta_pct);
-        };
-        const distKey = (c) => {
-            const d = carDistanceMiles(c);
-            return d == null ? Infinity : d;
-        };
-        const withDepriority = (cmp) => (a, b) => listingDepriorityCompare(a, b) || cmp(a, b);
-
-        if (mode === "price_asc") {
-            arr.sort(withDepriority((a, b) => priceKey(a) - priceKey(b) || distKey(a) - distKey(b)));
-        } else if (mode === "price_desc") {
-            arr.sort(withDepriority((a, b) => priceKey(b) - priceKey(a) || distKey(a) - distKey(b)));
-        } else if (mode === "mileage_asc") {
-            arr.sort(withDepriority((a, b) => mileageKey(a) - mileageKey(b) || priceKey(a) - priceKey(b)));
-        } else if (mode === "year_desc") {
-            arr.sort(withDepriority((a, b) => yearKey(b) - yearKey(a) || priceKey(a) - priceKey(b)));
-        } else if (mode === "deal") {
-            arr.sort(withDepriority((a, b) => dealKey(a) - dealKey(b) || priceKey(a) - priceKey(b)));
-        } else if (!preserveOrder) {
-            arr.sort(withDepriority((a, b) => priceKey(a) - priceKey(b)));
-        }
-        return arr;
-    }
-
-    /** Resolve URL and allow only http(s) for CSS background-image (mitigates javascript: / data: in listings). */
-    function cssSingleQuotedUrl(url) {
-        const raw = String(url || "").trim();
-        if (!raw) return "/static/placeholder.svg";
-        try {
-            const abs = new URL(raw, window.location.origin);
-            if (abs.protocol !== "http:" && abs.protocol !== "https:") {
-                return "/static/placeholder.svg";
-            }
-            return abs.href.replace(/\\/g, "\\\\").replace(/'/g, "\\'");
-        } catch (_) {
-            return "/static/placeholder.svg";
-        }
+        return DSL.sortListingsCars(cars, mode, preserveOrder, carDistanceMiles);
     }
 
     function renderCarGrid(cars, opts) {
@@ -1763,20 +1429,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const noResultsSubEl = emptyState && emptyState.querySelector(".no-results-sub");
             const activeMakes = typeof checked === "function" ? checked("make") : [];
             if (geoSearchActive && !customEmpty) {
-                let geoMsg =
-                    "No listings within " + radiusMi + " mi of " + zipCode + " yet.";
-                if (activeMakes.length) {
-                    geoMsg =
-                        "No " +
-                        activeMakes.slice(0, 4).join(", ") +
-                        (activeMakes.length > 4 ? "…" : "") +
-                        " within " +
-                        radiusMi +
-                        " mi of " +
-                        zipCode +
-                        ". Try a larger radius or different makes.";
-                }
-                setListingsGeoHint(geoMsg);
+                setListingsGeoHint(DSL.zeroResultsGeoMessage(radiusMi, zipCode, activeMakes));
                 if (emptyState) emptyState.style.display = "none";
             } else if (customEmpty) {
                 setListingsGeoHint("");
@@ -1936,20 +1589,6 @@ document.addEventListener("DOMContentLoaded", () => {
         return set ? [...set] : [];
     }
 
-    function carRegistryIdCached(car) {
-        if (!car || typeof car !== "object") return 0;
-        if (car._dsRegId !== undefined) return car._dsRegId;
-        const reg = SC.carDealershipRegistryId(car);
-        car._dsRegId = reg;
-        return reg;
-    }
-
-    function carMatchesDealerFilter(c, dealerFilterSet) {
-        if (!dealerFilterSet) return true;
-        const reg = carRegistryIdCached(c);
-        return reg > 0 && dealerFilterSet.has(reg);
-    }
-
     function passesDealerFilter(c, dealerFilterSet) {
         const set = dealerFilterSet !== undefined ? dealerFilterSet : buildDealerFilterIdSet();
         return carMatchesDealerFilter(c, set);
@@ -2027,13 +1666,9 @@ document.addEventListener("DOMContentLoaded", () => {
         const cpoOnly = checked("cpo_only").length > 0;
         const pkgs = checked("package");
 
-        let makesFilter = makes.slice();
-        if (countries.length && typeof COUNTRY_TO_MAKES === "object") {
-            const fromCountries = countries.flatMap(c => COUNTRY_TO_MAKES[c] || []);
-            makesFilter = makesFilter.length
-                ? makesFilter.filter(m => SC.valueInListCI(fromCountries, m))
-                : fromCountries;
-        }
+        const makesFilter = DSL.facetMakesFilter(
+            makes, countries, typeof COUNTRY_TO_MAKES === "object" ? COUNTRY_TO_MAKES : undefined
+        );
 
         return {
             makesFilter,
@@ -2056,34 +1691,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function carIsFromHiddenDealer(c) {
-        const hidden = window.HIDDEN_DEALER_IDS;
-        if (!(hidden instanceof Set) || !hidden.size) return false;
-        return hidden.has(String(c.dealer_id || "").trim().toLowerCase());
+        return DSL.carIsFromHiddenDealer(c, window.HIDDEN_DEALER_IDS);
     }
 
+    /** Facet matcher (listings/filters.js) with this viewer's hidden dealerships. */
     function carMatchesFacetFilters(c, state, dealerFilterSet) {
-        if (carIsFromHiddenDealer(c)) return false;
-        if (state.makesFilter.length && !SC.valueInListCI(state.makesFilter, c.make)) return false;
-        if (state.models.length && !SC.valueInListCI(state.models, c.model)) return false;
-        if (state.trims.length && !SC.valueInListCI(state.trims, c.trim)) return false;
-        if (state.fuels.length && !SC.valueInListCI(state.fuels, c.fuel_type)) return false;
-        if (state.cyls.length && !state.cyls.includes(String(c.cylinders))) return false;
-        if (state.trans.length && !SC.valueInListCI(state.trans, c.transmission)) return false;
-        if (state.drives.length && !SC.valueInListCI(state.drives, c.drivetrain)) return false;
-        if (state.inductions.length && !SC.valueInListCI(state.inductions, c.forced_induction)) return false;
-        if (state.bodies.length && !SC.valueInListCI(state.bodies, c.body_style)) return false;
-        if (state.extColors.length && !carMatchesPaintFamilyBuckets(c, "exterior_color", state.extColors)) return false;
-        if (state.intColors.length && !carMatchesPaintFamilyBuckets(c, "interior_color", state.intColors)) return false;
-        if (state.pkgs.length) {
-            const carPkgs = (c.package_names || []).map(n => n.toLowerCase());
-            if (!state.pkgs.some(p => carPkgs.includes(p.toLowerCase()))) return false;
-        }
-        if (state.maxPrice != null && Number.isFinite(state.maxPrice) && c.price > state.maxPrice) return false;
-        if (state.maxMileage != null && Number.isFinite(state.maxMileage) && c.mileage > state.maxMileage) return false;
-        if (!passesInventoryConditionFilter(c, state.inventoryCondition)) return false;
-        if (state.cpoOnly && !c.is_cpo) return false;
-        if (!carMatchesDealerFilter(c, dealerFilterSet)) return false;
-        return true;
+        return DSL.carMatchesFacetFilters(c, state, dealerFilterSet, window.HIDDEN_DEALER_IDS);
     }
 
     function renderResultsNowCore(opts) {
@@ -2171,122 +1784,11 @@ document.addEventListener("DOMContentLoaded", () => {
     window.__DS_runFilterRender = renderResults;
     window.__DS_runFilterRenderInstant = renderResultsNow;
 
-    function carMatchesSmartFilters(c, filters) {
-        if (!filters || typeof filters !== "object") return true;
-
-        const vehicleOr = filters.vehicle_or;
-        if (Array.isArray(vehicleOr) && vehicleOr.length) {
-            const branchHit = vehicleOr.some((vf) => {
-                if (!vf || typeof vf !== "object") return false;
-                if (vf.make && !SC.valueInListCISmart([vf.make], c.make)) return false;
-                if (vf.model) {
-                    const md = String(c.model || "").toLowerCase();
-                    const want = String(vf.model).toLowerCase();
-                    if (md !== want && !md.startsWith(want + " ") && !md.startsWith(want + "-")) {
-                        return false;
-                    }
-                }
-                if (vf.trim_contains) {
-                    const blob = `${c.trim || ""} ${c.title || ""}`.toLowerCase();
-                    if (!blob.includes(String(vf.trim_contains).toLowerCase())) return false;
-                }
-                return true;
-            });
-            if (!branchHit) return false;
-        } else {
-            const makes = filters.make;
-            const makeList = Array.isArray(makes) ? makes : makes ? [makes] : [];
-            if (makeList.length && !SC.valueInListCISmart(makeList, c.make)) return false;
-            const models = filters.model;
-            const modelList = Array.isArray(models) ? models : models ? [models] : [];
-            if (modelList.length) {
-                const md = String(c.model || "").toLowerCase();
-                const ok = modelList.some((m) => {
-                    const want = String(m).toLowerCase();
-                    return md === want || md.startsWith(want + " ") || md.startsWith(want + "-");
-                });
-                if (!ok) return false;
-            }
-        }
-
-        const trimNeedles = filters.trim_contains;
-        const trimList = Array.isArray(trimNeedles) ? trimNeedles : trimNeedles ? [trimNeedles] : [];
-        if (trimList.length) {
-            const blob = `${c.trim || ""} ${c.title || ""}`.toLowerCase();
-            if (!trimList.some((t) => blob.includes(String(t).toLowerCase()))) return false;
-        }
-
-        const drives = filters.drivetrain;
-        const driveList = Array.isArray(drives) ? drives : drives ? [drives] : [];
-        if (driveList.length && !SC.valueInListCISmart(driveList, c.drivetrain)) return false;
-
-        if (filters.fuel_type && !SC.valueInListCISmart([filters.fuel_type], c.fuel_type)) return false;
-
-        if (filters.forced_induction && !SC.valueInListCISmart([filters.forced_induction], c.forced_induction)) return false;
-
-        if (filters.cpo_only && !c.is_cpo) return false;
-
-        if (filters.cylinders != null && String(c.cylinders) !== String(filters.cylinders)) return false;
-
-        const bodies = filters.body_style;
-        const bodyList = Array.isArray(bodies) ? bodies : bodies ? [bodies] : [];
-        if (bodyList.length && !SC.valueInListCISmart(bodyList, c.body_style)) return false;
-
-        const ext = filters.exterior_color;
-        const extList = Array.isArray(ext) ? ext : ext ? [ext] : [];
-        if (extList.length && !carMatchesPaintFamilyBuckets(c, "exterior_color", extList)) return false;
-
-        const intc = filters.interior_color;
-        const intList = Array.isArray(intc) ? intc : intc ? [intc] : [];
-        if (intList.length && !carMatchesPaintFamilyBuckets(c, "interior_color", intList)) return false;
-
-        if (filters.max_price != null) {
-            const cap = Number(filters.max_price);
-            // A payment-shaped figure is not the price, so it can never satisfy a
-            // price cap; such cards are dropped from any "under $X" result.
-            if (c.payment_listed === true) return false;
-            if (Number.isFinite(cap) && Number(c.price) > cap) return false;
-        }
-        if (filters.max_mileage != null) {
-            const cap = Number(filters.max_mileage);
-            if (Number.isFinite(cap) && Number(c.mileage) > cap) return false;
-        }
-        if (filters.min_year != null) {
-            const y = Number(c.year);
-            if (!Number.isFinite(y) || y < Number(filters.min_year)) return false;
-        }
-        if (filters.max_year != null) {
-            const y = Number(c.year);
-            if (!Number.isFinite(y) || y > Number(filters.max_year)) return false;
-        }
-
-        const hay = SC.carSmartEquipmentHaystack(c);
-        const pkgAll = filters.packages_json_contains_all;
-        if (Array.isArray(pkgAll) && pkgAll.length) {
-            if (!pkgAll.every((needle) => hay.includes(String(needle).toLowerCase()))) return false;
-        } else {
-            const pkgOne = filters.packages_json_contains;
-            const pkgList = filters.packages_json_contains_list;
-            const needles = [];
-            if (pkgOne) needles.push(String(pkgOne));
-            if (Array.isArray(pkgList)) needles.push(...pkgList.map(String));
-            if (needles.length) {
-                const lows = needles.map((n) => n.toLowerCase());
-                if (!lows.some((needle) => hay.includes(needle))) return false;
-            }
-        }
-
-        return true;
-    }
-
     // Every client-side render path (token preview, parse preview) draws from this
     // source, so the signed-in user's hidden dealerships are removed here as well as
-    // in the facet filter: a hidden store must never flash into the grid while the
-    // server response (already filtered) is in flight.
+    // in the facet filter (listings/filters.js withoutHiddenDealers).
     function withoutHiddenDealers(cars) {
-        const hidden = window.HIDDEN_DEALER_IDS;
-        if (!(hidden instanceof Set) || !hidden.size) return cars;
-        return cars.filter((c) => !carIsFromHiddenDealer(c));
+        return DSL.withoutHiddenDealers(cars, window.HIDDEN_DEALER_IDS);
     }
 
     window.__DS_getListingsInventorySource = function getListingsInventorySource() {
@@ -2325,13 +1827,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (value == null || value === "") return;
             const normVal = String(value).trim().toLowerCase();
             document.querySelectorAll(`input[type=checkbox][name="${name}"]`).forEach(cb => {
-                const cbVal = String(cb.value).trim().toLowerCase();
-                if (
-                    cbVal === normVal
-                    || cbVal.startsWith(normVal + " ")
-                    || cbVal.startsWith(normVal + "-")
-                    || (name === "model" && normVal.length >= 2 && cbVal.startsWith(normVal))
-                ) {
+                if (DSL.smartFilterOptionMatches(name, normVal, cb.value)) {
                     cb.checked = true;
                 }
             });
@@ -2371,23 +1867,9 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         function setScalarSelect(name, value) {
             if (value == null || value === "") return;
-            const v = String(value);
-            const num = Number(value);
             document.querySelectorAll(`#search-form [name="${name}"]`).forEach(el => {
-                const opts = Array.from(el.options || []);
-                if (opts.some(o => o.value === v) || !Number.isFinite(num)) {
-                    el.value = v;  // exact option, or a non-numeric select (condition)
-                    return;
-                }
-                // Numeric bracket select (price/mileage): the exact value isn't an
-                // option, so snap to the smallest bracket that still covers it (so an
-                // "under $X" constraint isn't silently dropped). Above the top bracket
-                // -> Any (no upper bound).
-                const geq = opts
-                    .map(o => ({ v: o.value, n: Number(o.value) }))
-                    .filter(o => Number.isFinite(o.n) && o.n >= num)
-                    .sort((a, b) => a.n - b.n);
-                el.value = geq.length ? geq[0].v : "";
+                // Exact option, non-numeric value, or the smallest covering bracket.
+                el.value = DSL.scalarSelectValue(Array.from(el.options || []).map(o => o.value), value);
             });
         }
         if (filters.max_price != null) setScalarSelect("max_price", filters.max_price);
@@ -2417,27 +1899,6 @@ document.addEventListener("DOMContentLoaded", () => {
     // active ZIP+radius so that filter dropdowns only show options that
     // actually have inventory nearby.
 
-    function _buildCarRowsFromCars(cars) {
-        const seen = new Set();
-        const rows = [];
-        for (const c of cars) {
-            const key = [c.make, c.model, c.trim, c.fuel_type,
-                         c.cylinders, c.drivetrain, c.body_style, c.forced_induction].join("\x00");
-            if (seen.has(key)) continue;
-            seen.add(key);
-            rows.push({
-                make:       c.make        || "",
-                model:      c.model       || "",
-                trim:       c.trim        || null,
-                fuel:       c.fuel_type   || null,
-                cyl:        c.cylinders != null ? Number(c.cylinders) : null,
-                drive:      c.drivetrain  || null,
-                body_style: c.body_style  || null,
-                induction:  c.forced_induction || null,
-            });
-        }
-        return rows;
-    }
     window.__DS_buildCarRowsFromCars = _buildCarRowsFromCars;
 
     /** ALL_CARS is already the server's radius scope; derive the cascade rows from it. */
@@ -2532,15 +1993,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (scope === "dealer") {
             return (document.body && document.body.getAttribute("data-listings-cars-url")) || "";
         }
-        const parts = String(scope || "").split("|");
-        return `/api/listings/cars?zip=${encodeURIComponent(parts[0] || "")}`
-            + `&radius=${encodeURIComponent(parts[1] || "")}`;
-    }
-
-    function listingsCarsError(code) {
-        const err = new Error(code || "cars fetch failed");
-        err.code = code || "fetch_failed";
-        return err;
+        return DSL.listingsCarsUrl(scope);
     }
 
     function fetchListingsCarsJson(skipEtag, scopeArg) {
@@ -2588,7 +2041,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let _partialRefetchTries = 0;
     function scheduleListingsPartialRefetch(scope) {
         if (_partialRefetchTimer || _partialRefetchTries >= 6 || !scope || scope === "dealer") return;
-        const delay = Math.min(30000, 3000 * Math.pow(2, _partialRefetchTries));
+        const delay = DSL.partialRefetchDelayMs(_partialRefetchTries);
         _partialRefetchTries += 1;
         _partialRefetchTimer = setTimeout(() => {
             _partialRefetchTimer = null;
@@ -2777,25 +2230,6 @@ document.addEventListener("DOMContentLoaded", () => {
         zip_code: "ZIP", radius: "Radius", q: "Search",
     };
 
-    function scalarChipLabel(name, val) {
-        if (name === "max_price" && val) {
-            const n = Number(val);
-            return Number.isFinite(n) ? `Under $${n >= 1000 ? Math.round(n / 1000) + "k" : n}` : val;
-        }
-        if (name === "max_mileage" && val) {
-            const n = Number(val);
-            return Number.isFinite(n) ? `Under ${n.toLocaleString()} mi` : val;
-        }
-        if (name === "inventory_condition" && val) {
-            if (val === "new") return "New";
-            if (val === "pre_owned") return "Pre-owned";
-            if (val === "cpo") return "Certified Pre-Owned";
-        }
-        if (name === "radius" && val) return `${val} mi radius`;
-        if (name === "zip_code" && val) return val;
-        return val;
-    }
-
     function filterOptionVisible(cb) {
         const opt = cb.closest(".filter-option");
         if (!opt) return true;
@@ -2839,7 +2273,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         const smartIn = document.getElementById("smart-search-input");
         const q = smartIn ? (smartIn.value || "").trim() : "";
-        if (q) chips.push({ param: "q", value: q, label: q.length > 28 ? q.slice(0, 28) + "…" : q });
+        if (q) chips.push({ param: "q", value: q, label: DSL.searchChipLabel(q) });
 
         const narrowedDealerIds = selectedDealerRegistryIds();
         if (narrowedDealerIds.length) {
@@ -2857,12 +2291,7 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         }
 
-        activeChipsEl.innerHTML = chips.map((c) => (
-            `<button type="button" class="listings-filter-chip" data-chip-param="${SC.escapeHtml(c.param)}" data-chip-value="${SC.escapeHtml(c.value)}">`
-            + `<span class="listings-filter-chip-label">${SC.escapeHtml(c.label)}</span>`
-            + `<span class="listings-filter-chip-x" aria-hidden="true">×</span>`
-            + `</button>`
-        )).join("");
+        activeChipsEl.innerHTML = DSL.chipsHtml(chips);
 
         if (activeChipsWrap) activeChipsWrap.hidden = chips.length === 0;
         if (filtersMobileCount) {
@@ -3088,10 +2517,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const z = String(zip || "").trim();
         if (!SC.isValidUsZip(z)) return;
         document.querySelectorAll(".result-card-link").forEach((a) => {
-            const href = a.getAttribute("href") || "";
-            const m = href.match(/^\/car\/(\d+)/);
-            if (!m) return;
-            a.setAttribute("href", `/car/${m[1]}?zip_code=${encodeURIComponent(z)}`);
+            const next = DSL.carHrefWithZip(a.getAttribute("href") || "", z);
+            if (next) a.setAttribute("href", next);
         });
     }
 

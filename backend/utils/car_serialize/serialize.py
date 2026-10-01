@@ -12,7 +12,6 @@ from __future__ import annotations
 
 import json
 import os
-import re
 from typing import Any
 
 from backend.parsers.base import filter_spyne_gallery_variants
@@ -24,19 +23,44 @@ from backend.utils.field_clean import (
 )
 from backend.utils.safe_listing_url import normalize_listing_image_url
 
-from ._common import (
-    DISPLAY_DASH,
-    SENSITIVE_CAR_ROW_KEYS,
-    _dealer_spec_wins,
-    _format_mpg_city_highway,
-    _transmission_line_has_gear_count,
-    _transmission_phrase_prefer_detail,
-    format_display_value,
+from ._common import format_display_value
+from .api_dealer import apply_listing_vdp_url, apply_location_and_running_costs
+from .api_extended import (
+    apply_catalog_options,
+    apply_color_families,
+    apply_extended_plausibility,
+    apply_package_names,
+)
+from .api_identity import (
+    apply_display_names,
+    apply_first_seen,
+    apply_mileage_not_listed,
+    copy_row_fields,
+    resolve_verified_specs,
+)
+from .api_media import apply_spin_assets, apply_url_fields
+from .api_price import apply_deal_score, apply_msrp_and_payment, withhold_implausible_price
+from .api_specs import (
+    apply_body_style,
+    apply_forced_induction,
+    apply_fuel_economy,
+    apply_fuel_type_override,
+    apply_generation,
+    fill_cylinders_from_verified,
+    apply_vpic_transmission,
+    resolve_drivetrain_display,
+    resolve_transmission_display,
+)
+from .api_withheld import (
+    apply_extended_figures,
+    apply_tank_and_range,
+    gate_ev_only_fields,
+    resolve_tank_and_range,
+    withhold_contaminated_figures,
 )
 from .bmw import apply_bmw_model_trim_display
 from .condition import fill_derived_condition_for_display
 from .engine import _effective_fuel_type_for_display, build_engine_display
-from .location_tco import resolve_car_fuel_requirement, resolve_car_state_code
 
 
 def serialize_car_for_api(
@@ -58,563 +82,63 @@ def serialize_car_for_api(
     ``catalog_*`` → ``catalog_packages`` / ``catalog_options``). Those fields are set to
     ``None``/left as-is instead. Use it when the caller reads only the core spec-sheet
     fields (e.g. listing-completeness detection), to avoid two per-car reference queries.
+
+    The steps live in ``api_identity`` / ``api_media`` / ``api_dealer`` / ``api_price``
+    / ``api_specs`` / ``api_withheld`` / ``api_extended``; their ORDER here is part of
+    the contract (key order of the payload, and later steps read earlier ones' keys).
     """
     if not car:
         return {}
     c = clean_car_row_dict(dict(car))
-
-    vs: dict[str, Any] = {}
-    if verified_specs is not None:
-        vs = verified_specs
-    elif include_verified:
-        try:
-            from backend.enrichment.knowledge_engine import merge_verified_specs
-
-            vs = merge_verified_specs(c)
-        except Exception:
-            vs = {}
-
+    vs = resolve_verified_specs(c, include_verified=include_verified, verified_specs=verified_specs)
     model_d, trim_d = apply_bmw_model_trim_display(c)
     engine_disp = build_engine_display(c, vs if vs else None)
 
-    out: dict[str, Any] = {}
-    for k, v in c.items():
-        if k in SENSITIVE_CAR_ROW_KEYS:
-            continue
-        if k == "gallery":
-            if isinstance(v, list):
-                out[k] = filter_spyne_gallery_variants(v)
-            elif isinstance(v, str):
-                try:
-                    import json as _json
-                    parsed = _json.loads(v)
-                    out[k] = filter_spyne_gallery_variants(parsed) if isinstance(parsed, list) else v
-                except Exception:
-                    out[k] = v
-            else:
-                out[k] = v
-            continue
-        if k in ("spin_frames", "interior_pano"):
-            # Handled explicitly after the loop (contract defaults: [] / null);
-            # must not fall through to format_display_value (None -> em-dash).
-            continue
-        if k == "history_highlights":
-            out[k] = v
-            continue
-        if k == "packages":
-            if is_effectively_empty(v) or str(v).strip() in ("{}", "[]"):
-                out[k] = None
-            else:
-                out[k] = v
-            continue
-        if k in (
-            "price",
-            "mileage",
-            "year",
-            "msrp",
-            "cylinders",
-            "mpg_city",
-            "mpg_highway",
-            "id",
-            "distance_miles",
-            "dealership_registry_id",
-        ):
-            out[k] = v
-            continue
-        if k == "engine_l":
-            out[k] = v
-            continue
-        if k == "data_quality_score" and isinstance(v, (int, float)):
-            out[k] = v
-            continue
-        if isinstance(v, (dict, list)) and k not in ("gallery", "history_highlights"):
-            out[k] = v
-            continue
-        if isinstance(v, (int, float)):
-            out[k] = v
-            continue
-        out[k] = format_display_value(v)
+    # identity, media, dealer link
+    out = copy_row_fields(c)
+    apply_url_fields(out, c)
+    apply_spin_assets(out, c)
+    apply_first_seen(out, c)
+    apply_listing_vdp_url(out, c)
+    apply_display_names(out, model_d, trim_d, engine_disp)
+    withhold_implausible_price(out, c)
 
-    for url_key in ("image_url", "source_url", "carfax_url", "dealer_url"):
-        if url_key in c:
-            out[url_key] = normalize_optional_url(c.get(url_key))
-
-    # 360 spin assets: always emitted with contract defaults ([] / null).
-    _spin = c.get("spin_frames")
-    if isinstance(_spin, str):
-        try:
-            _spin = json.loads(_spin)
-        except (TypeError, ValueError):
-            _spin = None
-    out["spin_frames"] = (
-        [u for u in _spin if isinstance(u, str) and u.strip()] if isinstance(_spin, list) else []
-    )
-    out["interior_pano"] = normalize_optional_url(c.get("interior_pano"))
-
-    from backend.utils.first_seen import first_seen_fields
-
-    out.update(first_seen_fields(c))
-
-    from backend.parsers.vdp_urls import resolve_vehicle_source_url
-
-    src_was_placeholder = is_effectively_empty(c.get("source_url"))
-    detail_was_placeholder = is_effectively_empty(c.get("_detail_url")) and is_effectively_empty(
-        c.get("detail_url")
-    )
-    listing_vdp = resolve_vehicle_source_url(c)
-    if listing_vdp:
-        out["listing_vdp_url"] = listing_vdp
-        if not src_was_placeholder:
-            out["source_url"] = listing_vdp
-    else:
-        out["listing_vdp_url"] = out.get("source_url") or out.get("dealer_url")
-
-    out["model"] = model_d
-    out["trim"] = trim_d
-    out["engine_display"] = engine_disp
-
-    # price is NOT trusted verbatim from the column. Measured 2026-08-05: of
-    # 122,663 active listings, 33 exceed $300k and 212 sit under $500. Most of
-    # the >$300k group is genuinely priced (a McLaren 765LT at $699,900 is a
-    # real ask) but a few are parser/feed artifacts wearing a plausible-looking
-    # number (a 2026 Ford Bronco Base at $449,150 is exactly 9.8x its own
-    # 43-car active cohort median of $46,039). Same policy as the
-    # ``battery_kwh`` / ``curb_weight_lb`` suppressions below: an implausible
-    # figure is withheld, never replaced with an invented one. See
-    # ``backend/utils/price_plausibility.py`` for the cohort math and its
-    # documented gap (thin-cohort exotics/rare trims are left unjudged).
-    if out.get("price") is not None:
-        try:
-            from backend.utils.price_plausibility import implausible_price
-
-            _price_val = float(out["price"])
-            if implausible_price(c, _price_val):
-                out["price"] = None
-        except (TypeError, ValueError):
-            pass
-
-    # Forced induction: use stored value or compute on the fly.
-    _fi = c.get("forced_induction") or ""
-    if not _fi.strip():
-        try:
-            from backend.utils.forced_induction import classify_forced_induction_from_car_row
-            _fi = classify_forced_induction_from_car_row(c) or ""
-        except Exception:
-            _fi = ""
-    out["forced_induction"] = _fi or None
-
-    ft_override = _effective_fuel_type_for_display(c, engine_disp)
-    if ft_override:
-        out["fuel_type"] = format_display_value(ft_override)
-
-    vcyl = vs.get("cylinders")
-    if vcyl is not None and (c.get("cylinders") is None or str(c.get("cylinders")).strip() == ""):
-        try:
-            out["cylinders"] = int(vcyl)
-        except (TypeError, ValueError):
-            out["cylinders"] = vcyl
-
-    # Prefer persisted transmission_type bucket when present; else dealer text / EPA / normalize.
-    # Feeds sometimes label geared automatics (incl. many PHEVs) as "CVT"; trust detailed transmission
-    # when it clearly normalizes to a non-CVT bucket.
-    from backend.utils.transmission_normalize import normalize_transmission_standard
-
-    stored_tt = c.get("transmission_type")
-    dealer_t = c.get("transmission")
-    y_int = c.get("year") if isinstance(c.get("year"), int) else None
-    ignore_stored_cvt_bucket = False
-    if (
-        isinstance(stored_tt, str)
-        and stored_tt.strip() == "CVT"
-        and _dealer_spec_wins(dealer_t)
-    ):
-        d_norm, _d_weak = normalize_transmission_standard(
-            dealer_t,
-            make=c.get("make"),
-            model=c.get("model"),
-            trim=c.get("trim"),
-            title=c.get("title"),
-            year=y_int,
-            vin=c.get("vin"),
-            log_weak=False,
-        )
-        if d_norm and d_norm != "CVT":
-            ignore_stored_cvt_bucket = True
-
-    if (
-        isinstance(stored_tt, str)
-        and stored_tt.strip() in ("Automatic", "Manual", "CVT")
-        and not ignore_stored_cvt_bucket
-    ):
-        bucket = stored_tt.strip()
-        inferred_td = vs.get("transmission_display")
-        if bucket == "Automatic" and isinstance(inferred_td, str) and _transmission_line_has_gear_count(
-            inferred_td
-        ):
-            td = format_display_value(inferred_td.strip())
-        elif bucket in ("Automatic", "Manual") and _dealer_spec_wins(dealer_t):
-            raw_d = str(dealer_t).strip()
-            if raw_d and re.search(r"\b\d+[-\s]?speed\b", raw_d, re.I):
-                td = format_display_value(raw_d)
-            else:
-                td = format_display_value(bucket)
-        else:
-            td = format_display_value(bucket)
-    else:
-        inferred_t = vs.get("transmission_display")
-        if _dealer_spec_wins(dealer_t):
-            td_src = dealer_t
-        else:
-            td_src = inferred_t or dealer_t
-
-        td_norm, _td_weak = normalize_transmission_standard(
-            td_src,
-            make=c.get("make"),
-            model=c.get("model"),
-            trim=c.get("trim"),
-            title=c.get("title"),
-            year=y_int,
-            vin=c.get("vin"),
-            log_weak=False,
-        )
-        pick = _transmission_phrase_prefer_detail(td_src, td_norm)
-        td = format_display_value(pick if pick is not None else td_src)
-
-    dealer_d = coerce_drivetrain_stored(c.get("drivetrain"))
-    bs_raw = str(c.get("body_style") or "").lower()
-    if dealer_d == "FWD" and "pickup" in bs_raw:
-        dealer_d = None
-    inferred_dd = vs.get("drivetrain_display")
-    if _dealer_spec_wins(dealer_d):
-        dd = format_display_value(dealer_d)
-    else:
-        dd = format_display_value(inferred_dd or dealer_d)
-
-    # vPIC TransmissionStyle outranks the feed (DC-7, visual review 2026-09-28):
-    # it is the per-VIN filing, while feed codes like "DDU" bucket an e-CVT
-    # hybrid as "Automatic". Kept the feed's line only when both name the same
-    # family and the feed carries a gear count the decode lacks. When the two
-    # disagree on family, the feed's own words ride along as
-    # ``transmission_feed`` so the page can show them muted.
-    from backend.utils.vpic_specs import (
-        transmission_family,
-        vpic_specs_for_vin as _vpic_specs_tx,
-        vpic_transmission_label,
-    )
-
-    out["transmission_source"] = None
-    out["transmission_feed"] = None
-    _vp_tx = vpic_transmission_label(_vpic_specs_tx(c.get("vin")))
-    if _vp_tx:
-        _fam_feed = transmission_family(td)
-        _fam_vpic = transmission_family(_vp_tx)
-        _feed_has_gears = isinstance(td, str) and _transmission_line_has_gear_count(td)
-        _vpic_has_gears = _transmission_line_has_gear_count(_vp_tx)
-        if not (_fam_feed == _fam_vpic and _feed_has_gears and not _vpic_has_gears):
-            if _fam_feed != _fam_vpic:
-                _feed_raw = str(dealer_t or "").strip() or (td if isinstance(td, str) else "")
-                if _feed_raw and _feed_raw not in ("—", "-"):
-                    out["transmission_feed"] = _feed_raw
-            td = _vp_tx
-            out["transmission_source"] = "NHTSA vPIC"
-
+    # spec sheet (vPIC outranks the feed on transmission)
+    apply_forced_induction(out, c)
+    apply_fuel_type_override(out, c, engine_disp)
+    fill_cylinders_from_verified(out, c, vs)
+    td = resolve_transmission_display(c, vs)
+    dd = resolve_drivetrain_display(c, vs)
+    td = apply_vpic_transmission(out, c, td)
     out["transmission_display"] = td
     out["drivetrain_display"] = dd
+    apply_fuel_economy(out, c, vs)
 
-    fe = vs.get("fuel_economy_display")
-    if not fe or (isinstance(fe, str) and fe.strip() in ("", "—", "-")):
-        fe = _format_mpg_city_highway(c.get("mpg_city"), c.get("mpg_highway"))
-    out["fuel_economy_display"] = format_display_value(fe) if fe else DISPLAY_DASH
-
-    # Resolved once, read by both the spec list and the TCO block below.
-    from backend.intelligence.ev_range_estimates import resolve_factory_epa_range
-    from backend.intelligence.tco_fuel_estimates import resolve_fuel_tank_gallons
-
-    _tank_gal_raw = resolve_fuel_tank_gallons(c)
-    _tank_gal = round(_tank_gal_raw, 1) if _tank_gal_raw is not None else None
-    _factory_range = resolve_factory_epa_range(c)
-
-    # Extended specs. ``merge_verified_specs`` now admits horsepower / torque /
-    # 0-60 only when a page whose title names THIS car's model year printed that
-    # exact number (``knowledge_engine_specs.sourced_extended_specs``), so these
-    # three are a pass-through of an already-gated value. Note the gate is at the
-    # merge, not here, because the AI chat agent reads the merge output directly
-    # and never calls this serializer.
-    out["horsepower"] = vs.get("horsepower")
-    out["torque_lb_ft"] = vs.get("torque_lb_ft")
-    out["zero_to_60_sec"] = vs.get("zero_to_60_sec")
-    # Fill horsepower behind the suppression, from THIS VIN's own vPIC decode.
-    #
-    # The gate above blanks hp whenever a (year, make, model) family scraped to
-    # one value, and `_extended_family_suspicious` says outright that nothing
-    # fills in behind it. That is why cars render with no horsepower: the wrong
-    # number is correctly withheld and no right one exists behind it. vPIC is the
-    # manufacturer's filing for the individual VIN, so it cannot carry
-    # model-level contamination by construction, and 23,089 active listings
-    # already have one cached locally. Only ever used when the gated value is
-    # absent — a real per-trim figure that survived the gate still wins.
-    #
-    # Every hp figure carries its source (``horsepower_source``): a gated value
-    # came from a page naming this model year ("trim page"), the fill-behind
-    # from the VIN decode ("NHTSA vPIC"). On a hybrid the vPIC ``EngineHP`` is
-    # the combustion engine alone, so the number stays (it is true to the
-    # filing) with ``horsepower_note`` saying what it is not: 145 hp on a CR-V
-    # Hybrid whose system makes 204 must never read as the car's output.
-    out["horsepower_source"] = "trim page" if out["horsepower"] is not None else None
-    out["horsepower_note"] = None
-    if out["horsepower"] is None:
-        from backend.utils.vpic_specs import hybrid_text, vpic_is_hybrid, vpic_specs_for_vin
-
-        _vp = vpic_specs_for_vin(c.get("vin"))
-        _vp_hp = _vp.get("horsepower")
-        if _vp_hp is not None:
-            out["horsepower"] = _vp_hp
-            out["horsepower_source"] = "NHTSA vPIC"
-            _is_hybrid = (
-                vpic_is_hybrid(_vp)
-                or hybrid_text(vs.get("vpic_electrification"))
-                or hybrid_text(out.get("fuel_type"))
-                or hybrid_text(engine_disp)
-            )
-            if _is_hybrid:
-                out["horsepower_note"] = "engine only; hybrid system output not filed"
-    # NOT filled from vPIC: 0-60 (vPIC does not carry it, and estimating it from
-    # power-to-weight would need the very curb-weight figures suppressed below)
-    # and curb weight (present on 0.2% of decodes).
-    # curb_weight_lb is suppressed here as well as at the merge, so a caller that
-    # hands in its own ``verified_specs`` dict cannot reintroduce it. Measured
-    # 2026-08-02 over the 49,912 epa_extended_specs rows: 23,803 carry a curb
-    # weight, 2,134 of them under 2,500 lb and 2,042 under 2,100 — lighter than
-    # the lightest car sold in the US (2,095 lb Mirage). Every Mazda CX-50 row
-    # from 2023 to 2026 stores 2,000 lb for BOTH curb weight and tow capacity;
-    # 2,000 is the tow rating and the car weighs about 3,700. The page extraction
-    # repeats the same swapped figure, so quoting it proves nothing.
-    out["curb_weight_lb"] = None
-    # battery_kwh is suppressed, not passed through. epa_extended_specs carries it on 427
-    # rows across 12 nameplates, and ALL TWELVE stamp a single value on every trim and
-    # model year -- the same model-level contamination as curb weight and 0-60. BMW
-    # 7 Series is 14.4 kWh on all 211 rows (the 750e plug-in pack, shown on gas cars);
-    # Tesla Model S is 100.0 on all 59, so a 2016 75D reads as a 100 kWh car; Lucid Air
-    # 88.0 on 41; i4 70.2 on 33. Pack size is precisely what varies BETWEEN trims, so a
-    # nameplate-wide value is never right except by accident, and a shopper reads it as a
-    # range/charging-cost proxy. Restore this only from a per-trim source.
-    out["battery_kwh"] = None
-    # tow_capacity_lb is suppressed for a stronger reason than any of the above:
-    # there is no gate that could admit it. 9,864 epa_extended_specs rows carry a
-    # towing figure, spread across 2,037 distinct (year, make, model) groups, and
-    # the number of those groups holding more than one distinct value is ZERO
-    # (counted 2026-08-02). One tow rating per nameplate-year, stamped on every
-    # trim — it cannot tell a Tradesman from a Limited, so it describes neither.
-    out["tow_capacity_lb"] = None
-
-    # Tank and EV range do NOT come from ``vs``. They are the two extended-spec
-    # numbers a shopper reads as a running cost — the tank is multiplied by a
-    # live fuel price for the cost of a fill-up, the range anchors the battery
-    # health readout — so both go through the resolvers that admit only a
-    # figure traceable to a document, and return None otherwise.
-    #
-    # ``vs`` cannot be used for either. ``merge_verified_specs`` builds it with
-    # ``lookup_epa_extended_specs``, which ends in ``_merge_ai_model_specs``, so
-    # its ``fuel_tank_gal`` may have come out of the AI ``ai_model_specs`` table;
-    # and even when it comes from ``epa_extended_specs`` the column is 99.9%
-    # body-class and per-model defaults rather than anything the scrape read.
-    # Its ``ev_range_miles`` is a total driving range mislabelled as an
-    # all-electric one. Both are documented in ``backend/intelligence``.
-    #
-    # These two keys used to be assigned here and are the second, older shopper
-    # path — ``car.fuel_tank_gal`` / ``car.ev_range_miles`` in the car.html spec
-    # list, separate from the ``fuel_tank_gallons`` / ``factory_range`` keys the
-    # TCO block reads. Same fact, so they are now the same number.
-    out["fuel_tank_gal"] = _tank_gal
-    out["ev_range_miles"] = _factory_range
-
-    # Model generation (backend.catalog model_generations — read-time join)
-    out["generation_code"] = vs.get("generation_code")
-    out["generation_years"] = vs.get("generation_years")
-
-    # EV range / battery are ONLY real for battery-electric and plug-in hybrids. The
-    # model-level spec match can pull an EV trim's row onto a gas car of the same
-    # nameplate (e.g. gas Kona matching Kona Electric), so gate on the car's own fuel
-    # type and drop these fields for anything that can't be plugged in.
-    _ft = str(out.get("fuel_type") or c.get("fuel_type") or "").strip().lower()
-    _ev_capable = ("plug-in" in _ft) or ("plug in" in _ft) or _ft in ("electric", "ev") or (
-        "electric" in _ft and "gas" not in _ft and "hybrid" not in _ft
-    )
-    if not _ev_capable:
-        out["ev_range_miles"] = None
-        out["battery_kwh"] = None
-
-    # THE ``ai_engine_specs`` OVERRIDE IS GONE (2026-08-02). It used to run here
-    # and let the engine-matched row win OUTRIGHT on horsepower, torque, tow
-    # capacity and 0-60, and fill curb weight when the model-level value was
-    # missing. Every one of that table's 888 rows carries
-    # ``source_host='ai-engine-research'`` — one distinct value, counted against
-    # the live database — so the override could only ever replace a scraped
-    # number with a generated one. ``fuel_tank_gal`` had already been removed
-    # from it on 2026-07-31 for the same reason; the other five fields had not,
-    # which is why fixing that one field did not close the class.
-    #
-    # ``lookup_engine_specs`` now has no production caller.
+    # extended figures and the ones always withheld
+    tank_gal, factory_range = resolve_tank_and_range(c)
+    apply_extended_figures(out, c, vs, engine_disp)
+    withhold_contaminated_figures(out)
+    apply_tank_and_range(out, tank_gal, factory_range)
+    apply_generation(out, vs)
+    gate_ev_only_fields(out, c)
     if include_extended_display:
-        # Plausibility guard on the assembled numbers, and the curated cohort
-        # 0-60, which wins over any stored one — it is only set where the stored
-        # value provably belongs to a different trim.
-        try:
-            from backend.enrichment.knowledge_engine_specs import (
-                curated_zero_to_60_sec,
-                implausible_extended_spec_fields,
-            )
+        apply_extended_plausibility(out, c)
+    apply_catalog_options(out, c, include_extended_display=include_extended_display)
+    apply_body_style(out, c, vs)
 
-            for _f in implausible_extended_spec_fields(c, out):
-                out[_f] = None
-            _curated_060 = curated_zero_to_60_sec(c)
-            if _curated_060 is not None:
-                out["zero_to_60_sec"] = _curated_060
-        except Exception:
-            pass
-
-    # Factory catalog packages / standalone options (catalog_trims/_options/_packages),
-    # matched on this row's own year/make/model/trim — independent of dealer window
-    # sticker data above. Most trims have no catalog rows; None when no match.
-    _catalog: dict[str, Any] = {}
-    if include_extended_display:
-        try:
-            from backend.enrichment.catalog_lookup import lookup_catalog_options_and_packages
-
-            _catalog = lookup_catalog_options_and_packages(
-                c.get("year"), c.get("make"), c.get("model"), c.get("trim")
-            )
-        except Exception:
-            _catalog = {}
-    out["catalog_packages"] = _catalog.get("packages") or None
-    out["catalog_options"] = _catalog.get("options") or None
-
-    bsd = vs.get("body_style_display")
-    if bsd and (is_effectively_empty(c.get("body_style")) or out.get("body_style") == DISPLAY_DASH):
-        out["body_style"] = format_display_value(bsd)
-
-    if out.get("body_style") == DISPLAY_DASH or is_effectively_empty(out.get("body_style")):
-        try:
-            from backend.enrichment.knowledge_engine import decode_trim_logic
-
-            _hints = decode_trim_logic(c.get("make"), c.get("model"), c.get("trim"), c.get("title"))
-            _bh = _hints.get("body_style_hint")
-            if _bh:
-                out["body_style"] = format_display_value(_bh)
-        except Exception:
-            pass
-
-    from backend.utils.field_clean import normalize_body_style_for_car
-
-    _bs_raw = out.get("body_style")
-    if _bs_raw and _bs_raw != DISPLAY_DASH:
-        _bs_corrected = normalize_body_style_for_car(
-            str(_bs_raw),
-            make=c.get("make"),
-            model=c.get("model"),
-            trim=c.get("trim"),
-            title=c.get("title"),
-        )
-        if _bs_corrected:
-            out["body_style"] = format_display_value(_bs_corrected)
-
+    # condition, flags, colors, packages
     fill_derived_condition_for_display(c, out)
-
-    from backend.utils.mileage_display import mileage_not_listed
-
-    out["mileage_not_listed"] = mileage_not_listed(
-        c.get("mileage"), condition=out.get("condition"), is_cpo=c.get("is_cpo"), year=c.get("year")
-    )
-
-    from backend.utils.interior_color_buckets import infer_paint_color_buckets, parse_stored_buckets
-
-    out["exterior_color_families"] = infer_paint_color_buckets(c.get("exterior_color"), c.get("make"))
-    _ib = parse_stored_buckets(car.get("interior_color_buckets"))
-    out["interior_color_families"] = (
-        _ib if _ib else infer_paint_color_buckets(c.get("interior_color"), c.get("make"))
-    )
-
-    _pkg_names: list[str] = []
-    _pkg_raw = out.get("packages")
-    if _pkg_raw:
-        try:
-            _p = json.loads(_pkg_raw) if isinstance(_pkg_raw, str) else _pkg_raw
-            for _entry in (_p.get("packages_normalized") or []):
-                if isinstance(_entry, dict):
-                    _n = (_entry.get("canonical_name") or _entry.get("name") or "").strip()
-                    if _n:
-                        _pkg_names.append(_n)
-            for _n in (_p.get("possible_packages") or []):
-                if isinstance(_n, str) and _n.strip():
-                    _pkg_names.append(_n.strip())
-        except Exception:
-            pass
-    out["package_names"] = _pkg_names
+    apply_mileage_not_listed(out, c)
+    apply_color_families(out, c, car)
+    apply_package_names(out)
 
     out["created_at"] = c.get("first_seen_at") or c.get("scraped_at")
     out["price_history"] = _price_history_for_vdp(c)
-    out["state"] = resolve_car_state_code(c)
-    out["fuel_requirement"] = resolve_car_fuel_requirement(
-        c, engine_display=engine_disp, verified_specs=vs if vs else None
+    apply_location_and_running_costs(
+        out, c, engine_disp=engine_disp, vs=vs, tank_gal=tank_gal, factory_range=factory_range
     )
-    from backend.intelligence.tco_fuel_estimates import (
-        resolve_tco_avg_mpg,
-        resolve_tco_ev_efficiency,
-    )
-
-    out["tco_avg_mpg"] = resolve_tco_avg_mpg(c)
-    out["tco_ev_efficiency"] = resolve_tco_ev_efficiency(c)
-    # Both resolved above, already None when no traceable figure exists (the
-    # rounding is done there, so ``round(None, 1)`` cannot be reached). The spec
-    # list and this block must never show different numbers for the same tank.
-    out["factory_range"] = _factory_range
-    out["fuel_tank_gallons"] = _tank_gal
-
-    # msrp is NOT passed through from the column. ``cars.msrp`` is written
-    # verbatim from the dealer feed, and on used inventory the feeds put a
-    # marketing "was" price in it: of the 18,350 active listings carrying one,
-    # 9,621 are EXACTLY the asking price and 2,439 are below it. Shown as an
-    # MSRP those become a fabricated anchor, and the page then subtracts them
-    # from the price and calls the remainder a saving. Same shape as the
-    # ``battery_kwh`` suppression above — the write path keeps what the feed
-    # says, the display layer decides what is credible. ``resolve_display_msrp``
-    # admits a figure only from a window sticker we hold for this VIN or from a
-    # new, non-CPO listing, and only above the asking price; see
-    # ``backend/utils/msrp_trust.py`` for the counts and the rule.
-    #
-    # ``allow_sticker`` follows ``include_extended_display`` so the bulk callers
-    # that never render a price block (listing-completeness gap detection) don't
-    # pay for a per-VIN filesystem read and a pdftotext.
-    from backend.utils.msrp_trust import resolve_display_msrp
-
-    _msrp = resolve_display_msrp(c, allow_sticker=include_extended_display)
-    out["msrp"] = _msrp["msrp"]
-    out["msrp_label"] = _msrp["label"]
-    out["msrp_source"] = _msrp["source"]
-    out["msrp_from_sticker"] = _msrp["from_sticker"]
-    out["below_msrp"] = _msrp["savings"]
-    # New, non-CPO only (msrp_trust rule b): the dealer's ask over the MSRP.
-    out["over_msrp"] = _msrp.get("over_msrp")
-    # See serialize_car_for_listings_grid: the hero prints the figure as an
-    # advertised payment and shows no MSRP delta or finance estimate against it.
-    from backend.utils.market_price import is_payment_shaped_price  # lazy: market_price imports the DB layer
-
-    out["payment_listed"] = is_payment_shaped_price(out.get("price"), year=c.get("year"))
-    if out["payment_listed"]:
-        out["msrp"] = None
-        out["below_msrp"] = None
-        out["over_msrp"] = None
-
-    # Coarse market deal score (free consumer hook). Scored offline against the
-    # in-process market_price_stats cache — no per-car DB round-trip. The detailed
-    # band breakdown is gated behind FEATURE_MARKET_INTEL in the route/template.
-    try:
-        from backend.intelligence.deal_score_cache import public_deal_score
-
-        out["deal_score"] = public_deal_score(c)
-    except Exception:
-        out["deal_score"] = None
-
+    apply_msrp_and_payment(out, c, include_extended_display=include_extended_display)
+    apply_deal_score(out, c)
     return out
 
 
