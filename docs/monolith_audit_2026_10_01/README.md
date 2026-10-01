@@ -100,3 +100,21 @@ Findings marked *unverified* came from reading code and need a data or runtime c
 
 Every CSS move needs a screenshot diff at 390 and 1440 px: load order is the cascade
 (`_head_css.html`).
+
+## 7. Progress (2026-10-01)
+
+| Phase | Commit | Result |
+|---|---|---|
+| 1 Live bugs B1-B12 | dc86266ec, e2bf56c8e | fixed (B10 via phase 4); tests had written 167 rows to the real users.db (removed) |
+| 2 Dead code | d17abb0d8 | ~20,000 lines deleted (oem, 55 scripts, dead modules, ~190 CSS classes, iOS Legacy) |
+| 3 Test safety | b1578241d | hermetic DBs, one app_factory, JS unit tests (node:test via pytest), trim_ladder split |
+| 4 Single sources of truth | 75671a38f | backend/db/connect.py, billing/access.py, attribution/, vehicle_facts/, llm/client.py, schema from migrations (V025) |
+| 5 God functions | 14dc85936 | run_dealer, upsert_vehicles, merge_verified_specs, serialize_car_for_api, car detail context, search_cars, main.js, car_page.js split behind goldens |
+
+Still open from this audit: `backend/main.py` (move state out, then split routes); `recipe_synth.py`
+platform plugins into a package; `dealer_pipeline.py` and `fetch_oem_brochures.py` splits;
+`brochure_extract.py`; `comments_db.py`; the six scanner HTTP fetchers; the four spec-column
+writers; 139 scanner env knobs; inline template scripts and CSS files whose contents belong to
+other pages; a base layout for public templates. Operational: run
+`python -m backend.scripts.migrate --baseline 19 --apply` on local and prod (V019 fails on every
+boot; V020+ never apply) — needs owner approval.
