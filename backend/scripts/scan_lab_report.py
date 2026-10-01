@@ -50,6 +50,7 @@ from backend.utils.engine_consistency import (  # noqa: E402
     liters_from_engine_text,
 )
 from backend.utils.model_aliases import makes_equivalent, models_equivalent  # noqa: E402
+from backend.vehicle_facts import BEV, FCEV, electrification, same_drive_wheels  # noqa: E402
 from backend.utils.listing_completeness import (  # noqa: E402
     INCOMPLETE_FIELD_LABELS,
     listing_missing_field_codes,
@@ -213,11 +214,9 @@ def _catalog_fuel_bucket(row: dict[str, Any]) -> str:
 
 
 def _drive_same(a: str, b: str) -> bool:
-    if not a or not b:
-        return True
-    if {a, b} <= {"AWD", "4WD"}:
-        return True  # EPA/vPIC split hairs dealers do not
-    return a == b
+    """Blank never contradicts; AWD and 4WD are the same wheels driven (EPA/vPIC
+    split hairs dealers do not). ``vehicle_facts.same_drive_wheels``."""
+    return same_drive_wheels(a, b)
 
 
 def _quarantined_ids(conn, dealer_id: str) -> set[int]:
@@ -351,14 +350,10 @@ def is_allocation_vin(vin: Any) -> bool:
 
 
 def _is_ev(car: dict[str, Any], vpic: dict[str, Any] | None) -> bool:
-    if _fuel_bucket(car.get("fuel_type")) == "ev":
-        return True
-    if vpic:
-        el = str(vpic.get("ElectrificationLevel") or "").lower()
-        ft = str(vpic.get("FuelTypePrimary") or "").lower()
-        if "bev" in el or (ft == "electric" and "hybrid" not in el and "phev" not in el):
-            return True
-    return False
+    """No combustion engine (BEV or fuel cell): engine/cylinders legitimately null.
+    ``vehicle_facts.electrification`` -- the vPIC decode outranks the dealer
+    label, so a dealer "Electric" on a car vPIC decodes as gasoline is not exempt."""
+    return electrification({"fuel_type": car.get("fuel_type")}, vpic or None) in (BEV, FCEV)
 
 
 def _is_new(car: dict[str, Any]) -> bool:

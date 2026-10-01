@@ -12,6 +12,7 @@ import os
 from flask import jsonify, render_template, request, session
 
 from backend.billing.catalog import FEATURE_NEARBY_DEALERS
+from backend.billing import access as paid_access
 from backend.routes._shared import _client_ip, main_module
 from backend.utils.ip_rate_limit import allow_request
 from backend.utils.runtime_env import is_production_env
@@ -20,9 +21,9 @@ from backend.utils.runtime_env import is_production_env
 def api_nearby_dealers():
     """Return dealerships within radius of a ZIP code (max 50 mi). Premium when billing enabled."""
     main = main_module()
-    ok, err = main._require_feature(FEATURE_NEARBY_DEALERS)
+    ok, err = paid_access.check_feature(FEATURE_NEARBY_DEALERS)
     if not ok:
-        return jsonify(main._feature_denied_json(FEATURE_NEARBY_DEALERS, err, dealers=[])), 403
+        return jsonify(paid_access.denied_json(FEATURE_NEARBY_DEALERS, err, dealers=[])), 403
     from backend.listings.nearby_dealers import resolve_nearby_dealers_for_listings
 
     zip_code = (request.args.get("zip_code") or request.args.get("zip") or "").strip()
@@ -57,11 +58,10 @@ def api_nearby_dealers():
 
 def find_dealers_page():
     from backend.db.inventory_pg import is_inventory_postgres
-    from backend.utils.roles import is_admin_role
 
     return render_template(
         "find_dealers.html",
-        site_admin_onboard=is_admin_role(session.get("user_role")),
+        site_admin_onboard=paid_access.is_site_admin(),
         dealer_onboard_enabled=is_inventory_postgres(),
     )
 

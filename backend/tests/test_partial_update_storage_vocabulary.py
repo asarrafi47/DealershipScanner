@@ -128,8 +128,8 @@ def test_partial_update_leaves_already_canonical_values_alone(tmp_path, monkeypa
 
 def test_vocabulary_coercers_pass_through_unknown_text():
     """Unknown values still round-trip; the coercers must not blank real data."""
-    assert coerce_drivetrain_stored("Advanced 4x4 with Automatic On Demand Engagement") == (
-        "Advanced 4x4 with Automatic On Demand Engagement"
-    )
+    assert coerce_drivetrain_stored("Other drive systems") == "Other drive systems"
+    # A recognisable drivetrain inside marketing copy canonicalizes (vehicle_facts).
+    assert coerce_drivetrain_stored("Advanced 4x4 with Automatic On Demand Engagement") == "4WD"
     assert coerce_fuel_type_stored("Regular Gasoline") == "Gasoline"
     assert coerce_body_style_stored("Sport Utility Vehicle [SUV]/Multipurpose Vehicle [MPV]") == "SUV"

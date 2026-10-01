@@ -93,7 +93,6 @@ from __future__ import annotations
 import argparse
 import json
 import logging
-import re
 import sys
 import time
 from datetime import datetime, timezone
@@ -103,6 +102,8 @@ from typing import Any
 _REPO = Path(__file__).resolve().parents[2]
 if str(_REPO) not in sys.path:
     sys.path.insert(0, str(_REPO))
+
+from backend.db.connect import connection as db_connection  # noqa: E402
 
 from backend.enrichment.brochure_extract import (  # noqa: E402
     extract_brochure_text_pdf,
@@ -208,27 +209,8 @@ ARTIFACT_DIR = _REPO / "workspace" / "brochure_acquisition"
 # --------------------------------------------------------------------------
 
 
-def _inventory_dsn() -> str:
-    """Read INVENTORY_DATABASE_URL without importing dotenv."""
-    import os
-
-    dsn = os.environ.get("INVENTORY_DATABASE_URL")
-    if dsn:
-        return dsn.strip().strip("'\"")
-    env_path = _REPO / ".env"
-    if env_path.is_file():
-        match = re.search(
-            r"^INVENTORY_DATABASE_URL=(.+)$", env_path.read_text(encoding="utf-8"), re.M
-        )
-        if match:
-            return match.group(1).strip().strip("'\"")
-    raise SystemExit("INVENTORY_DATABASE_URL not set and not found in .env")
-
-
 def _fetch_inventory_rows() -> list[tuple[int, str, str, int]]:
-    import psycopg
-
-    with psycopg.connect(_inventory_dsn()) as conn:
+    with db_connection(timeout=None) as conn:
         with conn.cursor() as cur:
             cur.execute(
                 """

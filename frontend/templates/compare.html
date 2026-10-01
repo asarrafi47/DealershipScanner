@@ -75,7 +75,7 @@
                 <button type="button" id="compare-chat-send" class="compare-chat-send primary-button car-chat-send">Ask</button>
             </div>
         </section>
-        {% elif billing_stripe_enabled and not has_paid_access %}
+        {% elif billing_stripe_enabled and not viewer_can('ai_compare_chat') %}
         <section class="compare-chat-upsell" aria-label="Premium compare assistant">
             <h2 class="compare-chat-title">Intelligent comparison</h2>
             <p class="compare-chat-hint">Unlock side-by-side intelligent analysis — trade-offs, value, and feature differences across these listings.</p>

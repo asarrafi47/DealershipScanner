@@ -1014,21 +1014,15 @@ def _infer_drivetrain_from_trim(trim: str | None, title: str | None) -> str | No
     """
     Return AWD/RWD/FWD/4WD based on known drivetrain keywords in trim or title.
     Returns None when nothing conclusive is found (fall back to model_specs default).
+
+    ``vehicle_facts.normalize_drivetrain(..., "text")``. Differences from the old
+    inline copy: fused BMW badges read ("xDrive40i" AWD, "sDrive28i" RWD),
+    "Four Wheel Drive" reads as 4WD, "4x2"/"2WD" with no end stays None, and
+    "Dual Rear Wheel" / a bare "Rear Wheel" is not RWD.
     """
-    blob = f"{trim or ''} {title or ''}".upper()
-    # AWD signals
-    if re.search(r"\b(XDRIVE|4MATIC|QUATTRO|SH-AWD|AWD|ALL[\s-]WHEEL)\b", blob):
-        return "AWD"
-    # 4WD truck signals
-    if re.search(r"\b(4X4|4WD)\b", blob):
-        return "4WD"
-    # RWD signals
-    if re.search(r"\b(SDRIVE|RWD|REAR[\s-]WHEEL)\b", blob):
-        return "RWD"
-    # FWD signals
-    if re.search(r"\b(FWD|FRONT[\s-]WHEEL)\b", blob):
-        return "FWD"
-    return None
+    from backend.vehicle_facts import normalize_drivetrain
+
+    return normalize_drivetrain(f"{trim or ''} {title or ''}", "text")
 
 
 def apply_model_specs_corrections(

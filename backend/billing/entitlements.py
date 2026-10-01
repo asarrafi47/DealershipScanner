@@ -173,16 +173,18 @@ def entitlements_from_session(session) -> FrozenSet[str]:
 
 
 def session_has_feature(session, feature_id: str) -> bool:
-    fid = (feature_id or "").strip().lower()
-    if not fid:
-        return False
-    if not billing_enabled():
-        # Billing off: caller still enforces login in production (SEC-073)
-        return True
-    return fid in entitlements_from_session(session)
+    """Deprecated: use ``backend.billing.access.can_use`` (kept for import compat).
+
+    Delegates to the single access policy, which reads the request's DB user row
+    rather than the ``session`` argument.
+    """
+    from backend.billing.access import can_use
+
+    return can_use(feature_id)
 
 
 def require_feature(session, feature_id: str) -> tuple[bool, str]:
-    if session_has_feature(session, feature_id):
-        return True, ""
-    return False, "feature_required"
+    """Deprecated: use ``backend.billing.access.check_feature`` (kept for import compat)."""
+    from backend.billing.access import check_feature
+
+    return check_feature(feature_id)

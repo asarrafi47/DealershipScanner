@@ -11,6 +11,7 @@ from typing import Any
 
 from backend.utils.car_serialize import _dealer_spec_wins
 from backend.utils.field_clean import clean_car_row_dict, coerce_drivetrain_stored, is_effectively_empty
+from backend.vehicle_facts.drivetrain import normalize_drivetrain
 from backend.utils.transmission_normalize import normalize_transmission_standard
 
 _VALID_TRANSMISSION_TYPES = frozenset({"Automatic", "Manual", "CVT"})
@@ -119,7 +120,12 @@ def normalize_drivetrain_from_fields(
     title: str | None = None,
     trim: str | None = None,
 ) -> str | None:
-    """Return FWD/RWD/AWD/4WD using column text first, then title/trim context."""
+    """Return FWD/RWD/AWD/4WD using column text first, then title/trim context.
+
+    The column goes through the storage canonicalizer (so a 4x2 / 2WD column
+    stays "2WD": two driven wheels, end unknown, never FWD/RWD); a blank or
+    placeholder column falls to the title/trim, where 4x2 is no answer.
+    """
     direct = coerce_drivetrain_stored(drivetrain)
     if direct:
         return direct
@@ -130,25 +136,8 @@ def normalize_drivetrain_from_fields(
 
 
 def drivetrain_from_blob(blob: str) -> str | None:
-    """Ordered keyword rules (aligned with inventory repair / nationwide feeds)."""
-    u = blob.upper()
-    if re.search(r"\bFOUR[\s-]WHEEL[\s-]DRIVE\b", u):
-        return "4WD"
-    if re.search(r"\b4WD\b", u):
-        return "4WD"
-    if re.search(r"\b4X4\b", u):
-        return "AWD"
-    if re.search(r"\bALL[\s-]WHEEL[\s-]DRIVE\b", u) or re.search(r"\bAWD\b", u):
-        return "AWD"
-    if re.search(r"\b(?:XDRIVE|4MATIC|QUATTRO|SH-AWD)\b", u):
-        return "AWD"
-    if re.search(r"\bFRONT[\s-]WHEEL[\s-]DRIVE\b", u) or re.search(r"\bFWD\b", u):
-        return "FWD"
-    if re.search(r"\b4X2\b", u):
-        return "FWD"
-    if re.search(r"\bREAR[\s-]WHEEL[\s-]DRIVE\b", u) or re.search(r"\bRWD\b", u):
-        return "RWD"
-    return None
+    """Drivetrain named in free text (title / trim): ``normalize_drivetrain(blob, "text")``."""
+    return normalize_drivetrain(blob, "text")
 
 
 def extract_cylinder_count(

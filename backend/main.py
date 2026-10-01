@@ -46,7 +46,8 @@ from backend.billing.catalog import (
     get_plan,
     minimum_plan_for_feature,
 )
-from backend.billing.entitlements import entitlements_from_session, require_feature as billing_require_feature
+from backend.billing import access as paid_access
+from backend.billing.entitlements import entitlements_from_session
 from backend.dealer.admin import store_admin_bp
 
 # Site-admin hub pages (must load before first url_for in templates).
@@ -169,7 +170,7 @@ def _post_login_redirect():
     post_intent = session.pop("post_auth_intent", None)
     if (
         _billing_enabled()
-        and (not is_admin_role(session.get("user_role")))
+        and (not paid_access.is_site_admin())
         and _session_belongs_to_paid_org()
         and (not _require_paid_org_session())
     ):
@@ -495,26 +496,21 @@ def _gzip_large_json(resp):
 
 @app.context_processor
 def inject_csrf_and_flags():
-    role = (session.get("user_role") or "").strip().lower()
     from backend.routes.site_misc import _app_version
     from backend.utils.roles import is_dealer_portal_role
 
     static_ver = static_cache_ver()
-    _is_admin = is_admin_role(role)
+    # One DB read per request (cached on g) serves the admin flag, the store-ops
+    # nav and every paid-access flag; the cookie's role is never trusted here.
+    access_ctx = paid_access.current_access()
+    _is_admin = access_ctx.is_admin
     store_ops_nav = False
-    uid = session.get("user_id")
-    if uid and not _is_admin:
-        try:
-            from backend.db.users_db import get_user_profile
-
-            prof = get_user_profile(int(uid))
-            if prof:
-                store_ops_nav = bool(
-                    (prof.get("dealer_id") or "").strip()
-                    or prof.get("dealership_registry_id")
-                )
-        except (TypeError, ValueError):
-            store_ops_nav = False
+    prof = access_ctx.profile
+    if prof and not _is_admin:
+        store_ops_nav = bool(
+            (prof.get("dealer_id") or "").strip()
+            or prof.get("dealership_registry_id")
+        )
     return {
         "csrf_token": ensure_csrf_token(),
         "csp_nonce": getattr(g, "csp_nonce", "") or "",
@@ -522,7 +518,7 @@ def inject_csrf_and_flags():
         "logged_in_user": session.get("username") or session.get("admin_username"),
         "is_admin": _is_admin,
         "is_store_admin": _is_admin,
-        "has_paid_access": _session_has_paid_access(),
+        **paid_access.template_context(),
         "billing_stripe_enabled": _billing_enabled(),
         "show_dealer_inventory_nav": bool(session.get("user_id"))
         and is_dealer_portal_role(session.get("user_role")),
@@ -560,7 +556,7 @@ def _require_paid_org_session() -> bool:
         return True
     if not session.get("user_id"):
         return True
-    if is_admin_role(session.get("user_role")):
+    if paid_access.is_site_admin():
         return True
     st = session.get("org_subscription_status")
     return bool(_org_subscription_active(st))
@@ -643,82 +639,12 @@ def _csrf_mutating_requests():
     return None
 
 
-def _dev_operator_grants_premium() -> bool:
-    """Authenticated ``/dev`` operator (scan lab, dashboard) — local tooling, not public users."""
-    try:
-        from backend.dev.routes import _admin_session_ok
-
-        return _admin_session_ok()
-    except Exception:
-        return False
-
-
-def _session_has_paid_access() -> bool:
-    """Premium, active org subscription, or app admin (matches context_processor ``has_paid_access``)."""
-    if is_admin_role(session.get("user_role")):
-        return True
-    if _dev_operator_grants_premium():
-        return True
-    if bool(session.get("user_is_premium")):
-        return True
-    return bool(_org_subscription_active(session.get("org_subscription_status")))
-
-
-def _viewer_sees_premium_features() -> bool:
-    """Premium UI (trim ladder, window sticker, packages) for paid users or logged-in when billing is off."""
-    if _session_has_paid_access():
-        return True
-    if session.get("user_id") and not _billing_enabled():
-        return True
-    return False
-
-
 def _require_feature(feature_id: str) -> tuple[bool, str]:
-    """Per-plan feature gate (C1). Returns (ok, error_code)."""
-    if _dev_operator_grants_premium():
-        return True, ""
-    uid = session.get("user_id")
-    if not uid:
-        if _billing_enabled() or is_production_env():
-            return False, "login_required"
-    if not _billing_enabled():
-        return True, ""
-    ok, err = billing_require_feature(session, feature_id)
-    if not ok and err == "feature_required":
-        return False, "premium_required"
-    return ok, err
+    """Per-plan feature gate. Returns (ok, error_code). See ``backend.billing.access``."""
+    return paid_access.check_feature(feature_id)
 
 
-def _feature_denied_json(feature_id: str, err: str, **extra: Any) -> dict[str, Any]:
-    """403 JSON with upgrade hint when billing blocks a feature (C4)."""
-    body: dict[str, Any] = {"ok": False, "error": err, **extra}
-    if err == "premium_required":
-        plan_id = minimum_plan_for_feature(feature_id)
-        if plan_id:
-            plan = get_plan(plan_id)
-            body["required_feature"] = feature_id
-            body["upgrade_plan_id"] = plan_id
-            body["upgrade_plan_name"] = plan.name if plan else plan_id
-            body["upgrade_url"] = url_for("premium_page") + f"?plan={plan_id}"
-    return body
-
-
-def _require_premium_feature() -> tuple[bool, str]:
-    """
-    Paid surfaces require login in production; when Stripe billing is enabled, also require
-    premium/subscription/admin. Returns (ok, error_code).
-    """
-    if _dev_operator_grants_premium():
-        return True, ""
-    uid = session.get("user_id")
-    if not uid:
-        if _billing_enabled() or is_production_env():
-            return False, "login_required"
-    if not _billing_enabled():
-        return True, ""
-    if _session_has_paid_access():
-        return True, ""
-    return False, "premium_required"
+_feature_denied_json = paid_access.denied_json
 
 
 @app.before_request
@@ -738,7 +664,7 @@ def _billing_gate_paid_routes():
         return None
     if not session.get("user_id"):
         return None
-    if is_admin_role(session.get("user_role")):
+    if paid_access.is_site_admin():
         return None
     if not _session_belongs_to_paid_org():
         return None
@@ -1152,7 +1078,7 @@ def account_billing_page():
         return redirect(url_for("login_page", next="/account/billing"))
     uid = int(uid)
     from backend.billing.catalog import get_plan
-    from backend.billing.entitlements import FEATURE_LABELS, entitlements_from_session
+    from backend.billing.entitlements import FEATURE_LABELS
     from backend.billing.stripe_billing import billing_enabled
     from backend.db.users_db import get_user_billing_snapshot
 
@@ -1161,7 +1087,7 @@ def account_billing_page():
     if not plan_id:
         plan_id = "complete" if billing.get("is_premium") else "free"
     plan = get_plan(plan_id)
-    feats = sorted(entitlements_from_session(session))
+    feats = sorted(paid_access.current_access().entitlements())
     feat_labels = [FEATURE_LABELS.get(f, f.replace("_", " ").title()) for f in feats]
     has_portal = bool(
         billing_enabled()
@@ -1210,7 +1136,7 @@ def _auth_user_payload(u: dict) -> dict:
         "email": u.get("email"),
         "role": normalize_role(u.get("role")),
         "is_premium": bool(u.get("is_premium")),
-        "has_paid_access": _session_has_paid_access(),
+        "has_paid_access": paid_access.sees_paid_ui(),
     }
 
 
@@ -1367,6 +1293,14 @@ def _finalize_app_session(user_id: int) -> bool:
     session["user_is_premium"] = bool(u.get("is_premium"))
     session["subscription_plan_id"] = (u.get("subscription_plan_id") or "").strip() or None
     session["entitlements"] = sorted(entitlements_from_session(session))
+    # entitlements_from_session self-heals user_is_premium to the raw DB column;
+    # store the AccessContext rule instead so the flag does not flip on the next
+    # request (access.build_access_context heals with the same rule).
+    from backend.billing.access import session_premium_flag
+
+    session["user_is_premium"] = session_premium_flag(
+        u.get("is_premium"), session.get("subscription_plan_id")
+    )
     for _stale in (
         "mfa_pending_user_id",
         "mfa_pending_login",

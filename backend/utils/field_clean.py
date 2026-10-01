@@ -10,6 +10,8 @@ import json
 import re
 from typing import Any
 
+from backend.vehicle_facts.drivetrain import drivetrain_storage_value
+
 # Lowercased set of junk tokens → NULL in DB / omit from embeddings
 # Dealer DMS / VDP boilerplate (same idea as ``car_serialize._MANUFACTURER_SPEC_RE``).
 _MANUFACTURER_SPEC_JUNK_RE = re.compile(
@@ -17,58 +19,8 @@ _MANUFACTURER_SPEC_JUNK_RE = re.compile(
     re.IGNORECASE,
 )
 
-# VDP/JSON-LD may leak machine-readable @type into drivetrain (e.g. schema.org/AllWheelDriveConfiguration)
-_SCHEMA_ORG_DRIVETRAIN_RE = re.compile(
-    r"(?:https?://)?schema\.org/([A-Za-z0-9-]+)\b",
-    re.IGNORECASE,
-)
-# schema.org/DriveWheelConfiguration value variants → canonical abbreviations (storage + UI)
-_SCHEMA_ORG_DRIVETRAIN_TO_ABBR: dict[str, str] = {
-    "allwheeldriveconfiguration": "AWD",
-    "fourwheeldriveconfiguration": "4WD",
-    "frontwheeldriveconfiguration": "FWD",
-    "rearwheeldriveconfiguration": "RWD",
-}
-
-# Any free-text drivetrain value → canonical abbreviations
-_CANONICAL_DRIVETRAIN: dict[str, str] = {
-    "fwd": "FWD",
-    "front-wheel drive": "FWD",
-    "front wheel drive": "FWD",
-    "f": "FWD",
-    "rwd": "RWD",
-    "rear-wheel drive": "RWD",
-    "rear wheel drive": "RWD",
-    "r": "RWD",
-    # 4x2 / 2WD say two driven wheels, NOT which end: a Tacoma "4x2" is RWD, a
-    # Camry "2WD" is FWD. Mapping them to FWD/RWD wrote FWD on Tacomas and Grand
-    # Cherokees fleet-wide (catalog_drive on 80 dealers, 2026-09-26). Keep 2WD;
-    # the vPIC heal settles the end with the catalog when the decode is 4x2.
-    "4x2": "2WD",
-    "2wd": "2WD",
-    "awd": "AWD",
-    "all-wheel drive": "AWD",
-    "all wheel drive": "AWD",
-    "a": "AWD",
-    "awd (xdrive)": "AWD",
-    "awd 4matic": "AWD",
-    "4matic": "AWD",
-    "xdrive": "AWD",
-    "quattro": "AWD",
-    "4wd": "4WD",
-    "four-wheel drive": "4WD",
-    "four wheel drive": "4WD",
-    "4x4": "AWD",
-    # EPA `drive` vocabulary (fueleconomy.gov). The enrichment backfill fills a
-    # blank drivetrain straight from these strings, so they have to canonicalize
-    # here or they become their own facet buckets next to "4WD".
-    "4-wheel drive": "4WD",
-    "part-time 4-wheel drive": "4WD",
-    "part time 4-wheel drive": "4WD",
-    "full-time 4-wheel drive": "4WD",
-    "full time 4-wheel drive": "4WD",
-    "4-wheel or all-wheel drive": "4WD",
-}
+# Drivetrain vocabulary (schema.org URLs, abbreviations, EPA/vPIC long forms,
+# 4x2/2WD) lives in ``backend.vehicle_facts.drivetrain`` -- the one normalizer.
 
 # Buyer-facing fuel presets (facet order + storage normalization target).
 FUEL_TYPE_PRESETS: tuple[str, ...] = (
@@ -254,24 +206,14 @@ def is_spec_placeholder(val: Any) -> bool:
 
 def coerce_drivetrain_stored(val: Any) -> str | None:
     """
-    Map any drivetrain text (schema.org URLs, abbreviations, long-form) to one
-    of the four canonical values: FWD / RWD / AWD / 4WD.
-    Returns None for empty/unknown inputs.
+    The ``cars.drivetrain`` storage value for any drivetrain text: FWD / RWD /
+    AWD / 4WD (``vehicle_facts.normalize_drivetrain``), the literal "2WD" for a
+    two-wheel-drive-of-unknown-end claim (4x2 / 2WD: never FWD or RWD), None for
+    empty / placeholder input, and the stripped text when nothing is recognised.
     """
     if is_spec_placeholder(val):
         return None
-    s = str(val).strip()
-    if re.fullmatch(r"[ARF]", s, re.I):
-        return {"A": "AWD", "R": "RWD", "F": "FWD"}[s.upper()]
-    # Handle schema.org URLs first
-    if "schema.org" in s.lower():
-        m = _SCHEMA_ORG_DRIVETRAIN_RE.search(s)
-        if not m:
-            return None
-        key = re.sub(r"[^a-z0-9]", "", m.group(1).lower())
-        return _SCHEMA_ORG_DRIVETRAIN_TO_ABBR.get(key)
-    # Canonical lookup (case-insensitive)
-    return _CANONICAL_DRIVETRAIN.get(s.lower(), s)
+    return drivetrain_storage_value(val)
 
 
 def _fuel_type_key(s: str) -> str:

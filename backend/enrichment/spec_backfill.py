@@ -48,13 +48,14 @@ def _int_year(car: dict[str, Any]) -> int | None:
 
 
 def _is_ev_row(car: dict[str, Any]) -> bool:
+    """No-cylinder row: legacy ``engine_l`` markers, or ``vehicle_facts.
+    electrification`` says BEV / FCEV (a "Hybrid Electric" label is not one)."""
     eng = str(car.get("engine_l") or "").strip().lower()
-    ft = str(car.get("fuel_type") or "").strip().lower()
     if eng in ("electric", "phev"):
         return True
-    if "electric" in ft and "plug" not in ft:
-        return True
-    return False
+    from backend.vehicle_facts.electrification import NO_ENGINE, electrification
+
+    return electrification(car) in NO_ENGINE
 
 
 def car_needs_spec_backfill(car: dict[str, Any]) -> bool:

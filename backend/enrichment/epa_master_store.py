@@ -7,106 +7,30 @@ from functools import lru_cache
 from typing import Any
 
 from backend.enrichment.dictionary_catalog import canonical_make, catalog_key
-from backend.enrichment.trim_ladder_knowledge import epa_model_search_name
-
-_BMW_SERIES_MAP: dict[str, str] = {
-    "2": "2 Series",
-    "3": "3 Series",
-    "4": "4 Series",
-    "5": "5 Series",
-    "6": "6 Series",
-    "7": "7 Series",
-    "8": "8 Series",
-    "M2": "M",
-    "M3": "M",
-    "M4": "M",
-    "M5": "M",
-    "M6": "M",
-    "M8": "M",
-}
-
-_MINI_MODEL_MAP: dict[str, str] = {
-    "2 door": "Cooper",
-    "4 door": "Cooper",
-    "hardtop 2 door": "Cooper",
-    "hardtop 4 door": "Cooper",
-    "hardtop": "Cooper",
-    "cooper hardtop": "Cooper",
-    "convertible": "Cooper",
-    "cooper roadster": "Roadster",
-}
-
+from backend.enrichment.trim_ladder_knowledge import epa_model_search_name  # noqa: F401
 
 def _norm_token(s: str) -> str:
     return re.sub(r"[^a-z0-9]+", "", (s or "").strip().lower())
 
 
-def _bmw_epa_model(model: str) -> str | None:
-    m = model.strip()
-    if m in _BMW_SERIES_MAP:
-        return _BMW_SERIES_MAP[m]
-    m_perf = re.match(r"^(M\d)(\d{2}[a-z]?)$", m, re.IGNORECASE)
-    if m_perf:
-        return _BMW_SERIES_MAP.get(m_perf.group(1)[1])
-    digit_match = re.match(r"^([2-9])(\d{2}[a-z]?)", m, re.IGNORECASE)
-    if digit_match:
-        return _BMW_SERIES_MAP.get(digit_match.group(1))
-    return None
-
-
-def _mini_epa_model(model: str) -> str | None:
-    return _MINI_MODEL_MAP.get(model.strip().lower())
+# BMW / MINI series maps and the separator list moved to
+# ``backend.vehicle_facts.epa_model`` (merged with the other EPA alias maps).
+from backend.vehicle_facts.epa_model import (  # noqa: E402,F401  (re-exports)
+    _BMW_SERIES_MAP,
+    _MINI_MODEL_MAP,
+    _bmw_epa_model,
+    _mini_epa_model,
+    epa_model_candidates,
+)
 
 
 def _model_search_variants(make: str, model: str) -> list[str]:
-    mk = canonical_make(make)
-    md = (model or "").strip()
-    if not md:
+    """EPA model names to try, in order: ``vehicle_facts.epa_model_candidates``
+    (strategy "fetch_rows": listing model, ladder search name, BMW/MINI series,
+    separator strips; an HD truck never sheds to its light-duty name)."""
+    if not (model or "").strip():
         return []
-    out: list[str] = []
-    seen: set[str] = set()
-
-    def add(m: str) -> None:
-        key = m.strip().lower()
-        if m and key not in seen:
-            seen.add(key)
-            out.append(m.strip())
-
-    add(md)
-    add(epa_model_search_name(mk, md))
-    if mk.upper() == "BMW":
-        series = _bmw_epa_model(md)
-        if series:
-            add(series)
-    if mk.upper() == "MINI":
-        mini = _mini_epa_model(md)
-        if mini:
-            add(mini)
-    base = md
-    for variant_sep in [
-        " 3500 HD Chassis Cab",
-        " 3500 HD",
-        " 2500 HD",
-        " 1500",
-        " i-FORCE MAX",
-        " PHEV",
-        " Plug-In Hybrid",
-        " Hybrid",
-        " Energi",
-        " GT",
-        " GTS",
-        " N Line",
-        " L",
-        " XL",
-        " LS",
-        " LT",
-        " Limited",
-        " Pro",
-        " Sport",
-    ]:
-        if variant_sep.lower() in base.lower():
-            add(base[: base.lower().index(variant_sep.lower())].strip())
-    return out
+    return epa_model_candidates(canonical_make(make), model, strategy="fetch_rows")
 
 
 def _row_to_csv_dict(row: Any) -> dict[str, Any]:

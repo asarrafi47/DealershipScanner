@@ -18,7 +18,7 @@ import logging
 from flask import Blueprint, jsonify, request, session
 
 from backend.billing.catalog import FEATURE_AI_CAR_CHAT
-from backend.billing.entitlements import require_feature
+from backend.billing import access as paid_access
 from backend.utils.car_chat_policy import (
     car_chat_rate_limits,
     car_chat_listing_daily_limit,
@@ -27,7 +27,6 @@ from backend.utils.car_chat_policy import (
 )
 from backend.utils.client_ip import client_ip
 from backend.utils.ip_rate_limit import allow_request
-from backend.utils.runtime_env import is_production_env
 
 logger = logging.getLogger("ai_chat")
 
@@ -146,13 +145,13 @@ def _degraded(message: str | None, code: str, **extra):
 
 @ai_chat_bp.route("/api/ai/chat", methods=["POST"])
 def api_ai_chat():
-    # require_feature() passes everyone while billing is off; this is a paid model
-    # call, so an account is required either way (same rule as the car-page chat).
-    if not session.get("user_id") and is_production_env():
-        return jsonify({"ok": False, "error": "login_required"}), 401
-    ok, err = require_feature(session, FEATURE_AI_CAR_CHAT)
+    # Same gate as the car-page chat (backend.billing.access): dev operator passes,
+    # anonymous callers need an account in production or with billing on, and with
+    # billing on the plan must include ai_car_chat.
+    ok, err = paid_access.check_feature(FEATURE_AI_CAR_CHAT)
     if not ok:
-        return jsonify({"ok": False, "error": err or "feature_unavailable"}), 403
+        status = 401 if err == paid_access.LOGIN_REQUIRED else 403
+        return jsonify(paid_access.denied_json(FEATURE_AI_CAR_CHAT, err)), status
 
     # Rate limits mirror the car-page chat: global, per-IP, and per-user/day.
     ip = _client_ip()

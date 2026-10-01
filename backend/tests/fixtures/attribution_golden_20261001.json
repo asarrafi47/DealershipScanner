@@ -1,0 +1,5210 @@
+{
+ "corpus": {
+  "legacy|claremontcdjr-com|unstamped_account": {
+   "kept": [
+    "00KCN000000000001",
+    "00KCN000000000002",
+    "00KCU000000000001",
+    "00KCU000000000002",
+    "00KCU000000000003"
+   ],
+   "refused": {},
+   "tiers": {
+    "00KCN000000000001": null,
+    "00KCN000000000002": null,
+    "00KCU000000000001": null,
+    "00KCU000000000002": null,
+    "00KCU000000000003": null
+   }
+  },
+  "legacy|grandhyundaicanton-com|open_group_page": {
+   "kept": [],
+   "refused": {
+    "00APX000000000001": "target_rooftop_unidentified",
+    "00GHC000000000001": "target_rooftop_unidentified",
+    "00GHC000000000002": "target_rooftop_unidentified",
+    "00GIM000000000001": "target_rooftop_unidentified",
+    "00GMK000000000001": "target_rooftop_unidentified",
+    "00GMM000000000001": "target_rooftop_unidentified"
+   },
+   "tiers": {
+    "00APX000000000001": null,
+    "00GHC000000000001": null,
+    "00GHC000000000002": null,
+    "00GIM000000000001": null,
+    "00GMK000000000001": null,
+    "00GMM000000000001": null
+   }
+  },
+  "legacy|grandhyundaicanton-com|store_scoped_location_facet": {
+   "kept": [
+    "00GHC000000000001",
+    "00GHC000000000002",
+    "00GHC000000000003",
+    "00GHC000000000004"
+   ],
+   "refused": {},
+   "tiers": {
+    "00GHC000000000001": null,
+    "00GHC000000000002": null,
+    "00GHC000000000003": null,
+    "00GHC000000000004": null
+   }
+  },
+  "legacy|greenwaycdjrofrome-com|open_page_no_street": {
+   "kept": [],
+   "refused": {
+    "00GWK000000000001": "target_rooftop_unidentified",
+    "00GWR000000000001": "target_rooftop_unidentified",
+    "00GWS000000000001": "target_rooftop_unidentified"
+   },
+   "tiers": {
+    "00GWK000000000001": null,
+    "00GWR000000000001": null,
+    "00GWS000000000001": null
+   }
+  },
+  "legacy|greenwaycdjrofrome-com|open_page_with_street": {
+   "kept": [
+    "00GWR000000000001",
+    "00GWR000000000002",
+    "00GWR000000000003"
+   ],
+   "refused": {
+    "00GWK000000000001": "sibling_rooftop",
+    "00GWS000000000001": "sibling_rooftop"
+   },
+   "tiers": {
+    "00GWK000000000001": null,
+    "00GWR000000000001": null,
+    "00GWR000000000002": null,
+    "00GWR000000000003": null,
+    "00GWS000000000001": null
+   }
+  },
+  "legacy|greenwaycdjrofrome-com|store_scoped_recipe": {
+   "kept": [
+    "00GWR000000000001",
+    "00GWR000000000002",
+    "00GWR000000000003",
+    "00GWR000000000004"
+   ],
+   "refused": {},
+   "tiers": {
+    "00GWR000000000001": null,
+    "00GWR000000000002": null,
+    "00GWR000000000003": null,
+    "00GWR000000000004": null
+   }
+  },
+  "legacy|group1fordofsouthaustin-com|open_page_lot_codes": {
+   "kept": [
+    "00GFS000000000001",
+    "00GFS000000000002",
+    "00GFS000000000003"
+   ],
+   "refused": {
+    "00GFU000000000001": "unstamped_row_in_group_feed",
+    "00GFU000000000002": "unstamped_row_in_group_feed",
+    "00GKA000000000001": "sibling_rooftop"
+   },
+   "tiers": {
+    "00GFS000000000001": null,
+    "00GFS000000000002": null,
+    "00GFS000000000003": null,
+    "00GFU000000000001": null,
+    "00GFU000000000002": null,
+    "00GKA000000000001": null
+   }
+  },
+  "legacy|group1fordofsouthaustin-com|store_scoped_location_facet": {
+   "kept": [
+    "00GFS000000000001",
+    "00GFU000000000001",
+    "00GFU000000000002",
+    "00GFU000000000003"
+   ],
+   "refused": {},
+   "tiers": {
+    "00GFS000000000001": null,
+    "00GFU000000000001": null,
+    "00GFU000000000002": null,
+    "00GFU000000000003": null
+   }
+  },
+  "legacy|group1toyotanorthaustin-com|open_page_lot_tags": {
+   "kept": [],
+   "refused": {
+    "00GTN000000000001": "target_rooftop_unidentified",
+    "00GTN000000000002": "target_rooftop_unidentified",
+    "00GTU000000000001": "target_rooftop_unidentified",
+    "00GTU000000000002": "target_rooftop_unidentified",
+    "00GTU000000000003": "target_rooftop_unidentified",
+    "00GTU000000000004": "target_rooftop_unidentified"
+   },
+   "tiers": {
+    "00GTN000000000001": null,
+    "00GTN000000000002": null,
+    "00GTU000000000001": null,
+    "00GTU000000000002": null,
+    "00GTU000000000003": null,
+    "00GTU000000000004": null
+   }
+  },
+  "legacy|group1toyotanorthaustin-com|store_scoped_identity_feed": {
+   "kept": [
+    "00GTN000000000001",
+    "00GTN000000000002",
+    "00GTN000000000003",
+    "00GTN000000000004"
+   ],
+   "refused": {},
+   "tiers": {
+    "00GTN000000000001": null,
+    "00GTN000000000002": null,
+    "00GTN000000000003": null,
+    "00GTN000000000004": null
+   }
+  },
+  "legacy|group1toyotanorthaustin-com|store_scoped_location_facet": {
+   "kept": [
+    "00GTU000000000001",
+    "00GTU000000000002",
+    "00GTU000000000003",
+    "00GTU000000000005"
+   ],
+   "refused": {},
+   "tiers": {
+    "00GTU000000000001": null,
+    "00GTU000000000002": null,
+    "00GTU000000000003": null,
+    "00GTU000000000005": null
+   }
+  },
+  "legacy|group1toyotanorthaustin-com|tags_only_page_is_one_locality": {
+   "kept": [
+    "00GTJ000000000001",
+    "00GTJ000000000002",
+    "00GTJ000000000003"
+   ],
+   "refused": {},
+   "tiers": {
+    "00GTJ000000000001": null,
+    "00GTJ000000000002": null,
+    "00GTJ000000000003": null
+   }
+  },
+  "legacy|hendrickbuickgmccary-com|open_group_page_before_alias": {
+   "kept": [
+    "00HBC000000000001"
+   ],
+   "refused": {
+    "00KIA000000000001": "sibling_rooftop",
+    "00NAP000000000001": "sibling_rooftop",
+    "00UNS000000000001": "unstamped_row_in_group_feed"
+   },
+   "tiers": {
+    "00HBC000000000001": null,
+    "00KIA000000000001": null,
+    "00NAP000000000001": null,
+    "00UNS000000000001": null
+   }
+  },
+  "legacy|hendrickbuickgmccary-com|open_group_page_with_alias": {
+   "kept": [
+    "00HBC000000000001",
+    "00HBC000000000002",
+    "00HBC000000000003",
+    "00HCC000000000001"
+   ],
+   "refused": {
+    "00KIA000000000001": "sibling_rooftop",
+    "00KIA000000000002": "sibling_rooftop",
+    "00NAP000000000001": "sibling_rooftop",
+    "00UNS000000000001": "unstamped_row_in_group_feed"
+   },
+   "tiers": {
+    "00HBC000000000001": null,
+    "00HBC000000000002": null,
+    "00HBC000000000003": null,
+    "00HCC000000000001": null,
+    "00KIA000000000001": null,
+    "00KIA000000000002": null,
+    "00NAP000000000001": null,
+    "00UNS000000000001": null
+   }
+  },
+  "legacy|hendrickbuickgmccary-com|store_scoped_recipe": {
+   "kept": [
+    "00HBC000000000001",
+    "00HBC000000000002",
+    "00HBC000000000003",
+    "00HBC000000000004"
+   ],
+   "refused": {},
+   "tiers": {
+    "00HBC000000000001": null,
+    "00HBC000000000002": null,
+    "00HBC000000000003": null,
+    "00HBC000000000004": null
+   }
+  },
+  "legacy|hendrickhonda-com|page_where_the_only_charlotte_rooftop_is_a_sibling": {
+   "kept": [
+    "00LEX000000000001",
+    "00LEX000000000002"
+   ],
+   "refused": {
+    "00CHS000000000001": "sibling_rooftop_weak_tier"
+   },
+   "tiers": {
+    "00CHS000000000001": null,
+    "00LEX000000000001": null,
+    "00LEX000000000002": null
+   }
+  },
+  "legacy|hendrickhonda-com|page_with_one_charlotte_rooftop": {
+   "kept": [
+    "00HHC000000000001",
+    "00HHC000000000002"
+   ],
+   "refused": {
+    "00AUS000000000001": "sibling_rooftop_weak_tier",
+    "00CHS000000000001": "sibling_rooftop_weak_tier",
+    "00UNS000000000001": "unstamped_row_in_group_feed"
+   },
+   "tiers": {
+    "00AUS000000000001": null,
+    "00CHS000000000001": null,
+    "00HHC000000000001": null,
+    "00HHC000000000002": null,
+    "00UNS000000000001": null
+   }
+  },
+  "legacy|hendrickhonda-com|union_pass_no_street": {
+   "kept": [],
+   "refused": {
+    "00BMW000000000001": "target_rooftop_unidentified",
+    "00CHS000000000001": "target_rooftop_unidentified",
+    "00HHC000000000001": "target_rooftop_unidentified",
+    "00HHC000000000002": "target_rooftop_unidentified",
+    "00LEX000000000001": "target_rooftop_unidentified",
+    "00UNS000000000001": "target_rooftop_unidentified"
+   },
+   "tiers": {
+    "00BMW000000000001": null,
+    "00CHS000000000001": null,
+    "00HHC000000000001": null,
+    "00HHC000000000002": null,
+    "00LEX000000000001": null,
+    "00UNS000000000001": null
+   }
+  },
+  "legacy|hendrickhonda-com|union_pass_with_street": {
+   "kept": [
+    "00HHC000000000001",
+    "00HHC000000000002"
+   ],
+   "refused": {
+    "00BMW000000000001": "sibling_rooftop",
+    "00LEX000000000001": "sibling_rooftop",
+    "00UNS000000000001": "unstamped_row_in_group_feed"
+   },
+   "tiers": {
+    "00BMW000000000001": null,
+    "00HHC000000000001": null,
+    "00HHC000000000002": null,
+    "00LEX000000000001": null,
+    "00UNS000000000001": null
+   }
+  },
+  "legacy|hondahuntersville-com|group_wide_source_never_vouches": {
+   "kept": [
+    "00HHN000000000001",
+    "00HHN000000000003"
+   ],
+   "refused": {
+    "00HKC000000000001": "sibling_rooftop",
+    "00UNS000000000001": "unstamped_row_in_group_feed"
+   },
+   "tiers": {
+    "00HHN000000000001": null,
+    "00HHN000000000003": null,
+    "00HKC000000000001": null,
+    "00UNS000000000001": null
+   }
+  },
+  "legacy|hondahuntersville-com|three_stamps_no_street": {
+   "kept": [
+    "00HHN000000000001"
+   ],
+   "refused": {
+    "00HHS000000000001": "sibling_rooftop",
+    "00HHU000000000001": "unstamped_row_in_group_feed"
+   },
+   "tiers": {
+    "00HHN000000000001": null,
+    "00HHS000000000001": null,
+    "00HHU000000000001": null
+   }
+  },
+  "legacy|hondahuntersville-com|three_stamps_with_street": {
+   "kept": [
+    "00HHN000000000001",
+    "00HHN000000000002",
+    "00HHS000000000001",
+    "00HHS000000000002",
+    "00HHU000000000001",
+    "00HHU000000000002"
+   ],
+   "refused": {
+    "00HOO000000000001": "sibling_rooftop",
+    "00HOO000000000002": "unstamped_row_in_group_feed"
+   },
+   "tiers": {
+    "00HHN000000000001": null,
+    "00HHN000000000002": null,
+    "00HHS000000000001": null,
+    "00HHS000000000002": null,
+    "00HHU000000000001": null,
+    "00HHU000000000002": null,
+    "00HOO000000000001": null,
+    "00HOO000000000002": null
+   }
+  },
+  "legacy|lexusofknoxville-com|lc_scoped_srp": {
+   "kept": [
+    "00LXK000000000001",
+    "00LXK000000000002",
+    "00LXK000000000003",
+    "00LXK000000000004",
+    "00LXK000000000005"
+   ],
+   "refused": {},
+   "tiers": {
+    "00LXK000000000001": null,
+    "00LXK000000000002": null,
+    "00LXK000000000003": null,
+    "00LXK000000000004": null,
+    "00LXK000000000005": null
+   }
+  },
+  "legacy|lexusofknoxville-com|unscoped_group_srp": {
+   "kept": [
+    "00CHV000000000001",
+    "00GMC000000000001",
+    "00LXK000000000001",
+    "00LXK000000000002"
+   ],
+   "refused": {},
+   "tiers": {
+    "00CHV000000000001": null,
+    "00GMC000000000001": null,
+    "00LXK000000000001": null,
+    "00LXK000000000002": null
+   }
+  },
+  "legacy|machaikchevy-com|open_group_page_named": {
+   "kept": [
+    "00MHC000000000001",
+    "00MHC000000000002"
+   ],
+   "refused": {
+    "00MHF000000000001": "sibling_rooftop",
+    "00UNS000000000001": "unstamped_row_in_group_feed"
+   },
+   "tiers": {
+    "00MHC000000000001": null,
+    "00MHC000000000002": null,
+    "00MHF000000000001": null,
+    "00UNS000000000001": null
+   }
+  },
+  "legacy|machaikchevy-com|store_scoped_recipe": {
+   "kept": [
+    "00MHC000000000001",
+    "00MHC000000000002",
+    "00MHC000000000003",
+    "00MHC000000000004"
+   ],
+   "refused": {},
+   "tiers": {
+    "00MHC000000000001": null,
+    "00MHC000000000002": null,
+    "00MHC000000000003": null,
+    "00MHC000000000004": null
+   }
+  },
+  "legacy|mallofgamazda-com|bogus_alias_picks_the_bare_tag": {
+   "kept": [
+    "00MZB000000000001"
+   ],
+   "refused": {
+    "00MIN000000000001": "sibling_rooftop",
+    "00MZA000000000001": "sibling_rooftop"
+   },
+   "tiers": {
+    "00MIN000000000001": null,
+    "00MZA000000000001": null,
+    "00MZB000000000001": null
+   }
+  },
+  "legacy|mallofgamazda-com|open_group_page_no_street": {
+   "kept": [],
+   "refused": {
+    "00LEE000000000001": "target_rooftop_unidentified",
+    "00MIN000000000001": "target_rooftop_unidentified",
+    "00MZA000000000001": "target_rooftop_unidentified",
+    "00MZA000000000002": "target_rooftop_unidentified",
+    "00MZB000000000001": "target_rooftop_unidentified"
+   },
+   "tiers": {
+    "00LEE000000000001": null,
+    "00MIN000000000001": null,
+    "00MZA000000000001": null,
+    "00MZA000000000002": null,
+    "00MZB000000000001": null
+   }
+  },
+  "legacy|mallofgamazda-com|open_group_page_with_jsonld_street": {
+   "kept": [
+    "00MZA000000000001",
+    "00MZA000000000002"
+   ],
+   "refused": {
+    "00MIN000000000001": "sibling_rooftop",
+    "00MZB000000000001": "sibling_rooftop",
+    "00UNS000000000001": "unstamped_row_in_group_feed"
+   },
+   "tiers": {
+    "00MIN000000000001": null,
+    "00MZA000000000001": null,
+    "00MZA000000000002": null,
+    "00MZB000000000001": null,
+    "00UNS000000000001": null
+   }
+  },
+  "legacy|mallofgamazda-com|store_scoped_recipe": {
+   "kept": [
+    "00MZA000000000001",
+    "00MZA000000000002",
+    "00MZA000000000003",
+    "00MZB000000000001",
+    "00MZB000000000002"
+   ],
+   "refused": {},
+   "tiers": {
+    "00MZA000000000001": null,
+    "00MZA000000000002": null,
+    "00MZA000000000003": null,
+    "00MZB000000000001": null,
+    "00MZB000000000002": null
+   }
+  },
+  "legacy|rickhendrickchevynaples-com|open_group_page_with_alias": {
+   "kept": [
+    "00NAP000000000001",
+    "00NAP000000000002"
+   ],
+   "refused": {
+    "00CAR000000000001": "sibling_rooftop",
+    "00CHS000000000001": "sibling_rooftop",
+    "00DUR000000000001": "sibling_rooftop",
+    "00UNS000000000001": "unstamped_row_in_group_feed"
+   },
+   "tiers": {
+    "00CAR000000000001": null,
+    "00CHS000000000001": null,
+    "00DUR000000000001": null,
+    "00NAP000000000001": null,
+    "00NAP000000000002": null,
+    "00UNS000000000001": null
+   }
+  },
+  "legacy|rickhendrickchevynaples-com|single_rooftop_page_without_alias": {
+   "kept": [
+    "00NAP000000000001",
+    "00NAP000000000002",
+    "00NAP000000000003"
+   ],
+   "refused": {},
+   "tiers": {
+    "00NAP000000000001": null,
+    "00NAP000000000002": null,
+    "00NAP000000000003": null
+   }
+  },
+  "legacy|rickhendrickchevynaples-com|store_scoped_recipe": {
+   "kept": [
+    "00NAP000000000001",
+    "00NAP000000000002",
+    "00NAP000000000003",
+    "00NAP000000000004"
+   ],
+   "refused": {},
+   "tiers": {
+    "00NAP000000000001": null,
+    "00NAP000000000002": null,
+    "00NAP000000000003": null,
+    "00NAP000000000004": null
+   }
+  },
+  "legacy|shottenkirkchrysler-com|sibling_with_locale": {
+   "kept": [
+    "00SCC000000000001",
+    "00SCC000000000002"
+   ],
+   "refused": {
+    "00SCA000000000001": "sibling_rooftop_weak_tier"
+   },
+   "tiers": {
+    "00SCA000000000001": null,
+    "00SCC000000000001": null,
+    "00SCC000000000002": null
+   }
+  },
+  "legacy|shottenkirkchrysler-com|single_rooftop_short_cluster_plus_town": {
+   "kept": [
+    "00SCC000000000001",
+    "00SCC000000000002",
+    "00SCC000000000003",
+    "00SCC000000000004"
+   ],
+   "refused": {},
+   "tiers": {
+    "00SCC000000000001": null,
+    "00SCC000000000002": null,
+    "00SCC000000000003": null,
+    "00SCC000000000004": null
+   }
+  },
+  "legacy|shottenkirkchrysler-com|two_towns_same_cluster": {
+   "kept": [],
+   "refused": {
+    "00SCA000000000001": "target_rooftop_unidentified",
+    "00SCC000000000001": "target_rooftop_unidentified",
+    "00SCC000000000002": "target_rooftop_unidentified"
+   },
+   "tiers": {
+    "00SCA000000000001": null,
+    "00SCC000000000001": null,
+    "00SCC000000000002": null
+   }
+  },
+  "legacy|stevensonhendrickhonda-com|open_group_page_no_street": {
+   "kept": [],
+   "refused": {
+    "00SHA000000000001": "target_rooftop_unidentified",
+    "00SHB000000000001": "target_rooftop_unidentified",
+    "00SHC000000000001": "target_rooftop_unidentified"
+   },
+   "tiers": {
+    "00SHA000000000001": null,
+    "00SHB000000000001": null,
+    "00SHC000000000001": null
+   }
+  },
+  "legacy|stevensonhendrickhonda-com|open_group_page_with_street": {
+   "kept": [
+    "00SHA000000000001",
+    "00SHB000000000001",
+    "00SHB000000000002",
+    "00SHD000000000001"
+   ],
+   "refused": {
+    "00SHC000000000001": "sibling_rooftop",
+    "00SHD000000000002": "sibling_rooftop",
+    "00UNS000000000001": "unstamped_row_in_group_feed"
+   },
+   "tiers": {
+    "00SHA000000000001": null,
+    "00SHB000000000001": null,
+    "00SHB000000000002": null,
+    "00SHC000000000001": null,
+    "00SHD000000000001": null,
+    "00SHD000000000002": null,
+    "00UNS000000000001": null
+   }
+  },
+  "legacy|stevensonhendrickhonda-com|store_scoped_recipe": {
+   "kept": [
+    "00SHA000000000001",
+    "00SHB000000000001",
+    "00SHB000000000002",
+    "00SHB000000000003"
+   ],
+   "refused": {},
+   "tiers": {
+    "00SHA000000000001": null,
+    "00SHB000000000001": null,
+    "00SHB000000000002": null,
+    "00SHB000000000003": null
+   }
+  },
+  "legacy|tuttoncdjr-com|open_page_no_street": {
+   "kept": [
+    "00TCA000000000001",
+    "00TCA000000000002"
+   ],
+   "refused": {
+    "00TCB000000000001": "sibling_rooftop",
+    "00TCB000000000002": "sibling_rooftop",
+    "00UNS000000000001": "unstamped_row_in_group_feed",
+    "00VOY000000000001": "sibling_rooftop"
+   },
+   "tiers": {
+    "00TCA000000000001": null,
+    "00TCA000000000002": null,
+    "00TCB000000000001": null,
+    "00TCB000000000002": null,
+    "00UNS000000000001": null,
+    "00VOY000000000001": null
+   }
+  },
+  "legacy|tuttoncdjr-com|open_page_with_jsonld_street": {
+   "kept": [
+    "00TCA000000000001",
+    "00TCB000000000001",
+    "00TCB000000000002"
+   ],
+   "refused": {
+    "00VOY000000000001": "sibling_rooftop"
+   },
+   "tiers": {
+    "00TCA000000000001": null,
+    "00TCB000000000001": null,
+    "00TCB000000000002": null,
+    "00VOY000000000001": null
+   }
+  },
+  "legacy|tuttoncdjr-com|store_scoped_recipe": {
+   "kept": [
+    "00TCA000000000001",
+    "00TCB000000000001",
+    "00TCB000000000002",
+    "00TCB000000000003",
+    "00TCB000000000004"
+   ],
+   "refused": {},
+   "tiers": {
+    "00TCA000000000001": null,
+    "00TCB000000000001": null,
+    "00TCB000000000002": null,
+    "00TCB000000000003": null,
+    "00TCB000000000004": null
+   }
+  },
+  "scorer|claremontcdjr-com|unstamped_account": {
+   "kept": [
+    "00KCN000000000001",
+    "00KCN000000000002",
+    "00KCU000000000001",
+    "00KCU000000000002",
+    "00KCU000000000003"
+   ],
+   "refused": {},
+   "tiers": {
+    "00KCN000000000001": "no_rooftop_evidence",
+    "00KCN000000000002": "no_rooftop_evidence",
+    "00KCU000000000001": "no_rooftop_evidence",
+    "00KCU000000000002": "no_rooftop_evidence",
+    "00KCU000000000003": "no_rooftop_evidence"
+   }
+  },
+  "scorer|grandhyundaicanton-com|open_group_page": {
+   "kept": [],
+   "refused": {
+    "00APX000000000001": "target_rooftop_unidentified",
+    "00GHC000000000001": "target_rooftop_unidentified",
+    "00GHC000000000002": "target_rooftop_unidentified",
+    "00GIM000000000001": "target_rooftop_unidentified",
+    "00GMK000000000001": "target_rooftop_unidentified",
+    "00GMM000000000001": "target_rooftop_unidentified"
+   },
+   "tiers": {
+    "00APX000000000001": "target_rooftop_unidentified",
+    "00GHC000000000001": "target_rooftop_unidentified",
+    "00GHC000000000002": "target_rooftop_unidentified",
+    "00GIM000000000001": "target_rooftop_unidentified",
+    "00GMK000000000001": "target_rooftop_unidentified",
+    "00GMM000000000001": "target_rooftop_unidentified"
+   }
+  },
+  "scorer|grandhyundaicanton-com|store_scoped_location_facet": {
+   "kept": [
+    "00GHC000000000001",
+    "00GHC000000000002",
+    "00GHC000000000003",
+    "00GHC000000000004"
+   ],
+   "refused": {},
+   "tiers": {
+    "00GHC000000000001": null,
+    "00GHC000000000002": null,
+    "00GHC000000000003": null,
+    "00GHC000000000004": null
+   }
+  },
+  "scorer|greenwaycdjrofrome-com|open_page_no_street": {
+   "kept": [],
+   "refused": {
+    "00GWK000000000001": "target_rooftop_unidentified",
+    "00GWR000000000001": "target_rooftop_unidentified",
+    "00GWS000000000001": "target_rooftop_unidentified"
+   },
+   "tiers": {
+    "00GWK000000000001": "target_rooftop_unidentified",
+    "00GWR000000000001": "target_rooftop_unidentified",
+    "00GWS000000000001": "target_rooftop_unidentified"
+   }
+  },
+  "scorer|greenwaycdjrofrome-com|open_page_with_street": {
+   "kept": [
+    "00GWR000000000001",
+    "00GWR000000000002",
+    "00GWR000000000003"
+   ],
+   "refused": {
+    "00GWK000000000001": "sibling_rooftop",
+    "00GWS000000000001": "sibling_rooftop"
+   },
+   "tiers": {
+    "00GWK000000000001": "sibling_rooftop",
+    "00GWR000000000001": "street_address",
+    "00GWR000000000002": "street_address",
+    "00GWR000000000003": "street_address",
+    "00GWS000000000001": "sibling_rooftop"
+   }
+  },
+  "scorer|greenwaycdjrofrome-com|store_scoped_recipe": {
+   "kept": [
+    "00GWR000000000001",
+    "00GWR000000000002",
+    "00GWR000000000003",
+    "00GWR000000000004"
+   ],
+   "refused": {},
+   "tiers": {
+    "00GWR000000000001": null,
+    "00GWR000000000002": null,
+    "00GWR000000000003": null,
+    "00GWR000000000004": null
+   }
+  },
+  "scorer|group1fordofsouthaustin-com|open_page_lot_codes": {
+   "kept": [
+    "00GFS000000000001",
+    "00GFS000000000002",
+    "00GFS000000000003"
+   ],
+   "refused": {
+    "00GFU000000000001": "unstamped_row_in_group_feed",
+    "00GFU000000000002": "unstamped_row_in_group_feed",
+    "00GKA000000000001": "sibling_rooftop"
+   },
+   "tiers": {
+    "00GFS000000000001": "name_exact",
+    "00GFS000000000002": "name_exact",
+    "00GFS000000000003": "unstamped_under_own_source",
+    "00GFU000000000001": "unstamped_row_in_group_feed",
+    "00GFU000000000002": "unstamped_row_in_group_feed",
+    "00GKA000000000001": "sibling_rooftop"
+   }
+  },
+  "scorer|group1fordofsouthaustin-com|store_scoped_location_facet": {
+   "kept": [
+    "00GFS000000000001",
+    "00GFU000000000001",
+    "00GFU000000000002",
+    "00GFU000000000003"
+   ],
+   "refused": {},
+   "tiers": {
+    "00GFS000000000001": null,
+    "00GFU000000000001": null,
+    "00GFU000000000002": null,
+    "00GFU000000000003": null
+   }
+  },
+  "scorer|group1toyotanorthaustin-com|open_page_lot_tags": {
+   "kept": [],
+   "refused": {
+    "00GTN000000000001": "target_rooftop_unidentified",
+    "00GTN000000000002": "target_rooftop_unidentified",
+    "00GTU000000000001": "target_rooftop_unidentified",
+    "00GTU000000000002": "target_rooftop_unidentified",
+    "00GTU000000000003": "target_rooftop_unidentified",
+    "00GTU000000000004": "target_rooftop_unidentified"
+   },
+   "tiers": {
+    "00GTN000000000001": "target_rooftop_unidentified",
+    "00GTN000000000002": "target_rooftop_unidentified",
+    "00GTU000000000001": "target_rooftop_unidentified",
+    "00GTU000000000002": "target_rooftop_unidentified",
+    "00GTU000000000003": "target_rooftop_unidentified",
+    "00GTU000000000004": "target_rooftop_unidentified"
+   }
+  },
+  "scorer|group1toyotanorthaustin-com|store_scoped_identity_feed": {
+   "kept": [
+    "00GTN000000000001",
+    "00GTN000000000002",
+    "00GTN000000000003",
+    "00GTN000000000004"
+   ],
+   "refused": {},
+   "tiers": {
+    "00GTN000000000001": null,
+    "00GTN000000000002": null,
+    "00GTN000000000003": null,
+    "00GTN000000000004": null
+   }
+  },
+  "scorer|group1toyotanorthaustin-com|store_scoped_location_facet": {
+   "kept": [
+    "00GTU000000000001",
+    "00GTU000000000002",
+    "00GTU000000000003",
+    "00GTU000000000005"
+   ],
+   "refused": {},
+   "tiers": {
+    "00GTU000000000001": null,
+    "00GTU000000000002": null,
+    "00GTU000000000003": null,
+    "00GTU000000000005": null
+   }
+  },
+  "scorer|group1toyotanorthaustin-com|tags_only_page_is_one_locality": {
+   "kept": [
+    "00GTJ000000000001",
+    "00GTJ000000000002",
+    "00GTJ000000000003"
+   ],
+   "refused": {},
+   "tiers": {
+    "00GTJ000000000001": "city_state",
+    "00GTJ000000000002": "city_state",
+    "00GTJ000000000003": "city_state"
+   }
+  },
+  "scorer|hendrickbuickgmccary-com|open_group_page_before_alias": {
+   "kept": [
+    "00HBC000000000001"
+   ],
+   "refused": {
+    "00KIA000000000001": "sibling_rooftop",
+    "00NAP000000000001": "sibling_rooftop",
+    "00UNS000000000001": "unstamped_row_in_group_feed"
+   },
+   "tiers": {
+    "00HBC000000000001": "store_label_token_subset",
+    "00KIA000000000001": "sibling_rooftop",
+    "00NAP000000000001": "sibling_rooftop",
+    "00UNS000000000001": "unstamped_row_in_group_feed"
+   }
+  },
+  "scorer|hendrickbuickgmccary-com|open_group_page_with_alias": {
+   "kept": [
+    "00HBC000000000001",
+    "00HBC000000000002",
+    "00HBC000000000003",
+    "00HCC000000000001"
+   ],
+   "refused": {
+    "00KIA000000000001": "sibling_rooftop",
+    "00KIA000000000002": "sibling_rooftop",
+    "00NAP000000000001": "sibling_rooftop",
+    "00UNS000000000001": "unstamped_row_in_group_feed"
+   },
+   "tiers": {
+    "00HBC000000000001": "store_label_token_subset",
+    "00HBC000000000002": "store_label_token_subset",
+    "00HBC000000000003": "store_label_token_subset",
+    "00HCC000000000001": "store_label_token_subset",
+    "00KIA000000000001": "sibling_rooftop",
+    "00KIA000000000002": "sibling_rooftop",
+    "00NAP000000000001": "sibling_rooftop",
+    "00UNS000000000001": "unstamped_row_in_group_feed"
+   }
+  },
+  "scorer|hendrickbuickgmccary-com|store_scoped_recipe": {
+   "kept": [
+    "00HBC000000000001",
+    "00HBC000000000002",
+    "00HBC000000000003",
+    "00HBC000000000004"
+   ],
+   "refused": {},
+   "tiers": {
+    "00HBC000000000001": null,
+    "00HBC000000000002": null,
+    "00HBC000000000003": null,
+    "00HBC000000000004": null
+   }
+  },
+  "scorer|hendrickhonda-com|page_where_the_only_charlotte_rooftop_is_a_sibling": {
+   "kept": [
+    "00LEX000000000001",
+    "00LEX000000000002"
+   ],
+   "refused": {
+    "00CHS000000000001": "sibling_rooftop_weak_tier"
+   },
+   "tiers": {
+    "00CHS000000000001": "sibling_rooftop_weak_tier",
+    "00LEX000000000001": "city_state",
+    "00LEX000000000002": "city_state"
+   }
+  },
+  "scorer|hendrickhonda-com|page_with_one_charlotte_rooftop": {
+   "kept": [
+    "00HHC000000000001",
+    "00HHC000000000002"
+   ],
+   "refused": {
+    "00AUS000000000001": "sibling_rooftop_weak_tier",
+    "00CHS000000000001": "sibling_rooftop_weak_tier",
+    "00UNS000000000001": "unstamped_row_in_group_feed"
+   },
+   "tiers": {
+    "00AUS000000000001": "sibling_rooftop_weak_tier",
+    "00CHS000000000001": "sibling_rooftop_weak_tier",
+    "00HHC000000000001": "city_state",
+    "00HHC000000000002": "city_state",
+    "00UNS000000000001": "unstamped_row_in_group_feed"
+   }
+  },
+  "scorer|hendrickhonda-com|union_pass_no_street": {
+   "kept": [],
+   "refused": {
+    "00BMW000000000001": "target_rooftop_unidentified",
+    "00CHS000000000001": "target_rooftop_unidentified",
+    "00HHC000000000001": "target_rooftop_unidentified",
+    "00HHC000000000002": "target_rooftop_unidentified",
+    "00LEX000000000001": "target_rooftop_unidentified",
+    "00UNS000000000001": "target_rooftop_unidentified"
+   },
+   "tiers": {
+    "00BMW000000000001": "target_rooftop_unidentified",
+    "00CHS000000000001": "target_rooftop_unidentified",
+    "00HHC000000000001": "target_rooftop_unidentified",
+    "00HHC000000000002": "target_rooftop_unidentified",
+    "00LEX000000000001": "target_rooftop_unidentified",
+    "00UNS000000000001": "target_rooftop_unidentified"
+   }
+  },
+  "scorer|hendrickhonda-com|union_pass_with_street": {
+   "kept": [
+    "00HHC000000000001",
+    "00HHC000000000002"
+   ],
+   "refused": {
+    "00BMW000000000001": "sibling_rooftop",
+    "00LEX000000000001": "sibling_rooftop",
+    "00UNS000000000001": "unstamped_row_in_group_feed"
+   },
+   "tiers": {
+    "00BMW000000000001": "sibling_rooftop",
+    "00HHC000000000001": "street_address",
+    "00HHC000000000002": "street_address",
+    "00LEX000000000001": "sibling_rooftop",
+    "00UNS000000000001": "unstamped_row_in_group_feed"
+   }
+  },
+  "scorer|hondahuntersville-com|group_wide_source_never_vouches": {
+   "kept": [
+    "00HHN000000000001",
+    "00HHN000000000003"
+   ],
+   "refused": {
+    "00HKC000000000001": "sibling_rooftop",
+    "00UNS000000000001": "unstamped_row_in_group_feed"
+   },
+   "tiers": {
+    "00HHN000000000001": "name_exact",
+    "00HHN000000000003": "name_exact",
+    "00HKC000000000001": "sibling_rooftop",
+    "00UNS000000000001": "unstamped_row_in_group_feed"
+   }
+  },
+  "scorer|hondahuntersville-com|three_stamps_no_street": {
+   "kept": [
+    "00HHN000000000001"
+   ],
+   "refused": {
+    "00HHS000000000001": "sibling_rooftop",
+    "00HHU000000000001": "unstamped_row_in_group_feed"
+   },
+   "tiers": {
+    "00HHN000000000001": "name_exact",
+    "00HHS000000000001": "sibling_rooftop",
+    "00HHU000000000001": "unstamped_row_in_group_feed"
+   }
+  },
+  "scorer|hondahuntersville-com|three_stamps_with_street": {
+   "kept": [
+    "00HHN000000000001",
+    "00HHN000000000002",
+    "00HHS000000000001",
+    "00HHS000000000002",
+    "00HHU000000000001",
+    "00HHU000000000002"
+   ],
+   "refused": {
+    "00HOO000000000001": "sibling_rooftop",
+    "00HOO000000000002": "unstamped_row_in_group_feed"
+   },
+   "tiers": {
+    "00HHN000000000001": "name_exact",
+    "00HHN000000000002": "name_exact",
+    "00HHS000000000001": "own_street_block",
+    "00HHS000000000002": "own_street_block",
+    "00HHU000000000001": "unstamped_under_own_source",
+    "00HHU000000000002": "unstamped_under_own_source",
+    "00HOO000000000001": "sibling_rooftop",
+    "00HOO000000000002": "unstamped_row_in_group_feed"
+   }
+  },
+  "scorer|lexusofknoxville-com|lc_scoped_srp": {
+   "kept": [
+    "00LXK000000000001",
+    "00LXK000000000002",
+    "00LXK000000000003",
+    "00LXK000000000004",
+    "00LXK000000000005"
+   ],
+   "refused": {},
+   "tiers": {
+    "00LXK000000000001": "no_rooftop_evidence",
+    "00LXK000000000002": "no_rooftop_evidence",
+    "00LXK000000000003": "no_rooftop_evidence",
+    "00LXK000000000004": "no_rooftop_evidence",
+    "00LXK000000000005": "no_rooftop_evidence"
+   }
+  },
+  "scorer|lexusofknoxville-com|unscoped_group_srp": {
+   "kept": [
+    "00CHV000000000001",
+    "00GMC000000000001",
+    "00LXK000000000001",
+    "00LXK000000000002"
+   ],
+   "refused": {},
+   "tiers": {
+    "00CHV000000000001": "no_rooftop_evidence",
+    "00GMC000000000001": "no_rooftop_evidence",
+    "00LXK000000000001": "no_rooftop_evidence",
+    "00LXK000000000002": "no_rooftop_evidence"
+   }
+  },
+  "scorer|machaikchevy-com|open_group_page_named": {
+   "kept": [
+    "00MHC000000000001",
+    "00MHC000000000002"
+   ],
+   "refused": {
+    "00MHF000000000001": "sibling_rooftop",
+    "00UNS000000000001": "unstamped_row_in_group_feed"
+   },
+   "tiers": {
+    "00MHC000000000001": "name_exact",
+    "00MHC000000000002": "name_exact",
+    "00MHF000000000001": "sibling_rooftop",
+    "00UNS000000000001": "unstamped_row_in_group_feed"
+   }
+  },
+  "scorer|machaikchevy-com|store_scoped_recipe": {
+   "kept": [
+    "00MHC000000000001",
+    "00MHC000000000002",
+    "00MHC000000000003",
+    "00MHC000000000004"
+   ],
+   "refused": {},
+   "tiers": {
+    "00MHC000000000001": null,
+    "00MHC000000000002": null,
+    "00MHC000000000003": null,
+    "00MHC000000000004": null
+   }
+  },
+  "scorer|mallofgamazda-com|bogus_alias_picks_the_bare_tag": {
+   "kept": [
+    "00MZB000000000001"
+   ],
+   "refused": {
+    "00MIN000000000001": "sibling_rooftop",
+    "00MZA000000000001": "sibling_rooftop"
+   },
+   "tiers": {
+    "00MIN000000000001": "sibling_rooftop",
+    "00MZA000000000001": "sibling_rooftop",
+    "00MZB000000000001": "roster_name_alias"
+   }
+  },
+  "scorer|mallofgamazda-com|open_group_page_no_street": {
+   "kept": [],
+   "refused": {
+    "00LEE000000000001": "target_rooftop_unidentified",
+    "00MIN000000000001": "target_rooftop_unidentified",
+    "00MZA000000000001": "target_rooftop_unidentified",
+    "00MZA000000000002": "target_rooftop_unidentified",
+    "00MZB000000000001": "target_rooftop_unidentified"
+   },
+   "tiers": {
+    "00LEE000000000001": "target_rooftop_unidentified",
+    "00MIN000000000001": "target_rooftop_unidentified",
+    "00MZA000000000001": "target_rooftop_unidentified",
+    "00MZA000000000002": "target_rooftop_unidentified",
+    "00MZB000000000001": "target_rooftop_unidentified"
+   }
+  },
+  "scorer|mallofgamazda-com|open_group_page_with_jsonld_street": {
+   "kept": [
+    "00MZA000000000001",
+    "00MZA000000000002"
+   ],
+   "refused": {
+    "00MIN000000000001": "sibling_rooftop",
+    "00MZB000000000001": "sibling_rooftop",
+    "00UNS000000000001": "unstamped_row_in_group_feed"
+   },
+   "tiers": {
+    "00MIN000000000001": "sibling_rooftop",
+    "00MZA000000000001": "street_address",
+    "00MZA000000000002": "street_address",
+    "00MZB000000000001": "sibling_rooftop",
+    "00UNS000000000001": "unstamped_row_in_group_feed"
+   }
+  },
+  "scorer|mallofgamazda-com|store_scoped_recipe": {
+   "kept": [
+    "00MZA000000000001",
+    "00MZA000000000002",
+    "00MZA000000000003",
+    "00MZB000000000001",
+    "00MZB000000000002"
+   ],
+   "refused": {},
+   "tiers": {
+    "00MZA000000000001": null,
+    "00MZA000000000002": null,
+    "00MZA000000000003": null,
+    "00MZB000000000001": null,
+    "00MZB000000000002": null
+   }
+  },
+  "scorer|rickhendrickchevynaples-com|open_group_page_with_alias": {
+   "kept": [
+    "00NAP000000000001",
+    "00NAP000000000002"
+   ],
+   "refused": {
+    "00CAR000000000001": "sibling_rooftop",
+    "00CHS000000000001": "sibling_rooftop",
+    "00DUR000000000001": "sibling_rooftop",
+    "00UNS000000000001": "unstamped_row_in_group_feed"
+   },
+   "tiers": {
+    "00CAR000000000001": "sibling_rooftop",
+    "00CHS000000000001": "sibling_rooftop",
+    "00DUR000000000001": "sibling_rooftop",
+    "00NAP000000000001": "store_label_alias",
+    "00NAP000000000002": "store_label_alias",
+    "00UNS000000000001": "unstamped_row_in_group_feed"
+   }
+  },
+  "scorer|rickhendrickchevynaples-com|single_rooftop_page_without_alias": {
+   "kept": [
+    "00NAP000000000001",
+    "00NAP000000000002",
+    "00NAP000000000003"
+   ],
+   "refused": {},
+   "tiers": {
+    "00NAP000000000001": "city_state",
+    "00NAP000000000002": "city_state",
+    "00NAP000000000003": "city_state"
+   }
+  },
+  "scorer|rickhendrickchevynaples-com|store_scoped_recipe": {
+   "kept": [
+    "00NAP000000000001",
+    "00NAP000000000002",
+    "00NAP000000000003",
+    "00NAP000000000004"
+   ],
+   "refused": {},
+   "tiers": {
+    "00NAP000000000001": null,
+    "00NAP000000000002": null,
+    "00NAP000000000003": null,
+    "00NAP000000000004": null
+   }
+  },
+  "scorer|shottenkirkchrysler-com|sibling_with_locale": {
+   "kept": [
+    "00SCC000000000001",
+    "00SCC000000000002"
+   ],
+   "refused": {
+    "00SCA000000000001": "sibling_rooftop_weak_tier"
+   },
+   "tiers": {
+    "00SCA000000000001": "sibling_rooftop_weak_tier",
+    "00SCC000000000001": "city_state",
+    "00SCC000000000002": "city_state"
+   }
+  },
+  "scorer|shottenkirkchrysler-com|single_rooftop_short_cluster_plus_town": {
+   "kept": [
+    "00SCC000000000001",
+    "00SCC000000000002",
+    "00SCC000000000003",
+    "00SCC000000000004"
+   ],
+   "refused": {},
+   "tiers": {
+    "00SCC000000000001": "name_brand_alias_subset",
+    "00SCC000000000002": "name_brand_alias_subset",
+    "00SCC000000000003": "name_brand_alias_subset",
+    "00SCC000000000004": "name_brand_alias_subset"
+   }
+  },
+  "scorer|shottenkirkchrysler-com|two_towns_same_cluster": {
+   "kept": [],
+   "refused": {
+    "00SCA000000000001": "target_rooftop_unidentified",
+    "00SCC000000000001": "target_rooftop_unidentified",
+    "00SCC000000000002": "target_rooftop_unidentified"
+   },
+   "tiers": {
+    "00SCA000000000001": "target_rooftop_unidentified",
+    "00SCC000000000001": "target_rooftop_unidentified",
+    "00SCC000000000002": "target_rooftop_unidentified"
+   }
+  },
+  "scorer|stevensonhendrickhonda-com|open_group_page_no_street": {
+   "kept": [],
+   "refused": {
+    "00SHA000000000001": "target_rooftop_unidentified",
+    "00SHB000000000001": "target_rooftop_unidentified",
+    "00SHC000000000001": "target_rooftop_unidentified"
+   },
+   "tiers": {
+    "00SHA000000000001": "target_rooftop_unidentified",
+    "00SHB000000000001": "target_rooftop_unidentified",
+    "00SHC000000000001": "target_rooftop_unidentified"
+   }
+  },
+  "scorer|stevensonhendrickhonda-com|open_group_page_with_street": {
+   "kept": [
+    "00SHA000000000001",
+    "00SHB000000000001",
+    "00SHB000000000002",
+    "00SHD000000000001"
+   ],
+   "refused": {
+    "00SHC000000000001": "sibling_rooftop",
+    "00SHD000000000002": "sibling_rooftop",
+    "00UNS000000000001": "unstamped_row_in_group_feed"
+   },
+   "tiers": {
+    "00SHA000000000001": "street_address",
+    "00SHB000000000001": "street_address",
+    "00SHB000000000002": "street_address",
+    "00SHC000000000001": "sibling_rooftop",
+    "00SHD000000000001": "street_address",
+    "00SHD000000000002": "sibling_rooftop",
+    "00UNS000000000001": "unstamped_row_in_group_feed"
+   }
+  },
+  "scorer|stevensonhendrickhonda-com|store_scoped_recipe": {
+   "kept": [
+    "00SHA000000000001",
+    "00SHB000000000001",
+    "00SHB000000000002",
+    "00SHB000000000003"
+   ],
+   "refused": {},
+   "tiers": {
+    "00SHA000000000001": null,
+    "00SHB000000000001": null,
+    "00SHB000000000002": null,
+    "00SHB000000000003": null
+   }
+  },
+  "scorer|tuttoncdjr-com|open_page_no_street": {
+   "kept": [
+    "00TCA000000000001",
+    "00TCA000000000002"
+   ],
+   "refused": {
+    "00TCB000000000001": "sibling_rooftop",
+    "00TCB000000000002": "sibling_rooftop",
+    "00UNS000000000001": "unstamped_row_in_group_feed",
+    "00VOY000000000001": "sibling_rooftop"
+   },
+   "tiers": {
+    "00TCA000000000001": "name_brand_alias",
+    "00TCA000000000002": "name_brand_alias",
+    "00TCB000000000001": "sibling_rooftop",
+    "00TCB000000000002": "sibling_rooftop",
+    "00UNS000000000001": "unstamped_row_in_group_feed",
+    "00VOY000000000001": "sibling_rooftop"
+   }
+  },
+  "scorer|tuttoncdjr-com|open_page_with_jsonld_street": {
+   "kept": [
+    "00TCA000000000001",
+    "00TCB000000000001",
+    "00TCB000000000002"
+   ],
+   "refused": {
+    "00VOY000000000001": "sibling_rooftop"
+   },
+   "tiers": {
+    "00TCA000000000001": "name_brand_alias",
+    "00TCB000000000001": "own_street_block",
+    "00TCB000000000002": "own_street_block",
+    "00VOY000000000001": "sibling_rooftop"
+   }
+  },
+  "scorer|tuttoncdjr-com|store_scoped_recipe": {
+   "kept": [
+    "00TCA000000000001",
+    "00TCB000000000001",
+    "00TCB000000000002",
+    "00TCB000000000003",
+    "00TCB000000000004"
+   ],
+   "refused": {},
+   "tiers": {
+    "00TCA000000000001": null,
+    "00TCB000000000001": null,
+    "00TCB000000000002": null,
+    "00TCB000000000003": null,
+    "00TCB000000000004": null
+   }
+  }
+ },
+ "flows": {
+  "legacy|claremontcdjr-com|__all_pages__": {
+   "dealer_run": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00KCN000000000001",
+     "00KCN000000000002",
+     "00KCU000000000001",
+     "00KCU000000000002",
+     "00KCU000000000003"
+    ],
+    "refused": {},
+    "unidentified": 0
+   },
+   "delta_old": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00KCN000000000001",
+     "00KCN000000000002",
+     "00KCU000000000001",
+     "00KCU000000000002",
+     "00KCU000000000003"
+    ],
+    "refused": {},
+    "unidentified": 0
+   }
+  },
+  "legacy|claremontcdjr-com|unstamped_account": {
+   "dealer_run": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00KCN000000000001",
+     "00KCN000000000002",
+     "00KCU000000000001",
+     "00KCU000000000002",
+     "00KCU000000000003"
+    ],
+    "refused": {},
+    "unidentified": 0
+   },
+   "delta_old": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00KCN000000000001",
+     "00KCN000000000002",
+     "00KCU000000000001",
+     "00KCU000000000002",
+     "00KCU000000000003"
+    ],
+    "refused": {},
+    "unidentified": 0
+   }
+  },
+  "legacy|grandhyundaicanton-com|__all_pages__": {
+   "dealer_run": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00GHC000000000001",
+     "00GHC000000000002",
+     "00GHC000000000003",
+     "00GHC000000000004"
+    ],
+    "refused": {
+     "00APX000000000001": "target_rooftop_unidentified",
+     "00GHC000000000001": "target_rooftop_unidentified",
+     "00GHC000000000002": "target_rooftop_unidentified",
+     "00GIM000000000001": "target_rooftop_unidentified",
+     "00GMK000000000001": "target_rooftop_unidentified",
+     "00GMM000000000001": "target_rooftop_unidentified"
+    },
+    "unidentified": 6
+   },
+   "delta_old": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00GHC000000000001",
+     "00GHC000000000002",
+     "00GHC000000000003",
+     "00GHC000000000004"
+    ],
+    "refused": {
+     "00APX000000000001": "target_rooftop_unidentified",
+     "00GHC000000000001": "target_rooftop_unidentified",
+     "00GHC000000000002": "target_rooftop_unidentified",
+     "00GIM000000000001": "target_rooftop_unidentified",
+     "00GMK000000000001": "target_rooftop_unidentified",
+     "00GMM000000000001": "target_rooftop_unidentified"
+    },
+    "unidentified": 6
+   }
+  },
+  "legacy|grandhyundaicanton-com|open_group_page": {
+   "dealer_run": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [],
+    "refused": {
+     "00APX000000000001": "target_rooftop_unidentified",
+     "00GHC000000000001": "target_rooftop_unidentified",
+     "00GHC000000000002": "target_rooftop_unidentified",
+     "00GIM000000000001": "target_rooftop_unidentified",
+     "00GMK000000000001": "target_rooftop_unidentified",
+     "00GMM000000000001": "target_rooftop_unidentified"
+    },
+    "unidentified": 6
+   },
+   "delta_old": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [],
+    "refused": {
+     "00APX000000000001": "target_rooftop_unidentified",
+     "00GHC000000000001": "target_rooftop_unidentified",
+     "00GHC000000000002": "target_rooftop_unidentified",
+     "00GIM000000000001": "target_rooftop_unidentified",
+     "00GMK000000000001": "target_rooftop_unidentified",
+     "00GMM000000000001": "target_rooftop_unidentified"
+    },
+    "unidentified": 6
+   }
+  },
+  "legacy|grandhyundaicanton-com|store_scoped_location_facet": {
+   "dealer_run": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00GHC000000000001",
+     "00GHC000000000002",
+     "00GHC000000000003",
+     "00GHC000000000004"
+    ],
+    "refused": {},
+    "unidentified": 0
+   },
+   "delta_old": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00GHC000000000001",
+     "00GHC000000000002",
+     "00GHC000000000003",
+     "00GHC000000000004"
+    ],
+    "refused": {},
+    "unidentified": 0
+   }
+  },
+  "legacy|greenwaycdjrofrome-com|__all_pages__": {
+   "dealer_run": {
+    "disown": [
+     "00GWK000000000001",
+     "00GWS000000000001"
+    ],
+    "evidenced": [
+     "00GWK000000000001",
+     "00GWS000000000001"
+    ],
+    "kept": [
+     "00GWR000000000001",
+     "00GWR000000000002",
+     "00GWR000000000003",
+     "00GWR000000000004"
+    ],
+    "refused": {
+     "00GWK000000000001": "sibling_rooftop",
+     "00GWS000000000001": "sibling_rooftop"
+    },
+    "unidentified": 0
+   },
+   "delta_old": {
+    "disown": [
+     "00GWK000000000001",
+     "00GWS000000000001"
+    ],
+    "evidenced": [
+     "00GWK000000000001",
+     "00GWS000000000001"
+    ],
+    "kept": [
+     "00GWR000000000001",
+     "00GWR000000000002",
+     "00GWR000000000003",
+     "00GWR000000000004"
+    ],
+    "refused": {
+     "00GWK000000000001": "sibling_rooftop",
+     "00GWS000000000001": "sibling_rooftop"
+    },
+    "unidentified": 0
+   }
+  },
+  "legacy|greenwaycdjrofrome-com|open_page_no_street": {
+   "dealer_run": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [],
+    "refused": {
+     "00GWK000000000001": "target_rooftop_unidentified",
+     "00GWR000000000001": "target_rooftop_unidentified",
+     "00GWS000000000001": "target_rooftop_unidentified"
+    },
+    "unidentified": 3
+   },
+   "delta_old": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [],
+    "refused": {
+     "00GWK000000000001": "target_rooftop_unidentified",
+     "00GWR000000000001": "target_rooftop_unidentified",
+     "00GWS000000000001": "target_rooftop_unidentified"
+    },
+    "unidentified": 3
+   }
+  },
+  "legacy|greenwaycdjrofrome-com|open_page_with_street": {
+   "dealer_run": {
+    "disown": [
+     "00GWK000000000001",
+     "00GWS000000000001"
+    ],
+    "evidenced": [
+     "00GWK000000000001",
+     "00GWS000000000001"
+    ],
+    "kept": [
+     "00GWR000000000001",
+     "00GWR000000000002",
+     "00GWR000000000003"
+    ],
+    "refused": {
+     "00GWK000000000001": "sibling_rooftop",
+     "00GWS000000000001": "sibling_rooftop"
+    },
+    "unidentified": 0
+   },
+   "delta_old": {
+    "disown": [
+     "00GWK000000000001",
+     "00GWS000000000001"
+    ],
+    "evidenced": [
+     "00GWK000000000001",
+     "00GWS000000000001"
+    ],
+    "kept": [
+     "00GWR000000000001",
+     "00GWR000000000002",
+     "00GWR000000000003"
+    ],
+    "refused": {
+     "00GWK000000000001": "sibling_rooftop",
+     "00GWS000000000001": "sibling_rooftop"
+    },
+    "unidentified": 0
+   }
+  },
+  "legacy|greenwaycdjrofrome-com|store_scoped_recipe": {
+   "dealer_run": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00GWR000000000001",
+     "00GWR000000000002",
+     "00GWR000000000003",
+     "00GWR000000000004"
+    ],
+    "refused": {},
+    "unidentified": 0
+   },
+   "delta_old": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00GWR000000000001",
+     "00GWR000000000002",
+     "00GWR000000000003",
+     "00GWR000000000004"
+    ],
+    "refused": {},
+    "unidentified": 0
+   }
+  },
+  "legacy|group1fordofsouthaustin-com|__all_pages__": {
+   "dealer_run": {
+    "disown": [
+     "00GKA000000000001"
+    ],
+    "evidenced": [
+     "00GKA000000000001"
+    ],
+    "kept": [
+     "00GFS000000000001",
+     "00GFS000000000002",
+     "00GFS000000000003",
+     "00GFU000000000001",
+     "00GFU000000000002",
+     "00GFU000000000003"
+    ],
+    "refused": {
+     "00GFU000000000001": "unstamped_row_in_group_feed",
+     "00GFU000000000002": "unstamped_row_in_group_feed",
+     "00GKA000000000001": "sibling_rooftop"
+    },
+    "unidentified": 2
+   },
+   "delta_old": {
+    "disown": [
+     "00GKA000000000001"
+    ],
+    "evidenced": [
+     "00GKA000000000001"
+    ],
+    "kept": [
+     "00GFS000000000001",
+     "00GFS000000000002",
+     "00GFS000000000003",
+     "00GFU000000000001",
+     "00GFU000000000002",
+     "00GFU000000000003"
+    ],
+    "refused": {
+     "00GFU000000000001": "unstamped_row_in_group_feed",
+     "00GFU000000000002": "unstamped_row_in_group_feed",
+     "00GKA000000000001": "sibling_rooftop"
+    },
+    "unidentified": 2
+   }
+  },
+  "legacy|group1fordofsouthaustin-com|open_page_lot_codes": {
+   "dealer_run": {
+    "disown": [
+     "00GKA000000000001"
+    ],
+    "evidenced": [
+     "00GKA000000000001"
+    ],
+    "kept": [
+     "00GFS000000000001",
+     "00GFS000000000002",
+     "00GFS000000000003"
+    ],
+    "refused": {
+     "00GFU000000000001": "unstamped_row_in_group_feed",
+     "00GFU000000000002": "unstamped_row_in_group_feed",
+     "00GKA000000000001": "sibling_rooftop"
+    },
+    "unidentified": 2
+   },
+   "delta_old": {
+    "disown": [
+     "00GKA000000000001"
+    ],
+    "evidenced": [
+     "00GKA000000000001"
+    ],
+    "kept": [
+     "00GFS000000000001",
+     "00GFS000000000002",
+     "00GFS000000000003"
+    ],
+    "refused": {
+     "00GFU000000000001": "unstamped_row_in_group_feed",
+     "00GFU000000000002": "unstamped_row_in_group_feed",
+     "00GKA000000000001": "sibling_rooftop"
+    },
+    "unidentified": 2
+   }
+  },
+  "legacy|group1fordofsouthaustin-com|store_scoped_location_facet": {
+   "dealer_run": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00GFS000000000001",
+     "00GFU000000000001",
+     "00GFU000000000002",
+     "00GFU000000000003"
+    ],
+    "refused": {},
+    "unidentified": 0
+   },
+   "delta_old": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00GFS000000000001",
+     "00GFU000000000001",
+     "00GFU000000000002",
+     "00GFU000000000003"
+    ],
+    "refused": {},
+    "unidentified": 0
+   }
+  },
+  "legacy|group1toyotanorthaustin-com|__all_pages__": {
+   "dealer_run": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00GTJ000000000001",
+     "00GTJ000000000002",
+     "00GTJ000000000003",
+     "00GTN000000000001",
+     "00GTN000000000002",
+     "00GTN000000000003",
+     "00GTN000000000004",
+     "00GTU000000000001",
+     "00GTU000000000002",
+     "00GTU000000000003",
+     "00GTU000000000005"
+    ],
+    "refused": {
+     "00GTN000000000001": "unstamped_row_in_group_feed",
+     "00GTN000000000002": "unstamped_row_in_group_feed",
+     "00GTU000000000001": "sibling_rooftop_weak_tier",
+     "00GTU000000000002": "sibling_rooftop_weak_tier",
+     "00GTU000000000003": "unstamped_row_in_group_feed",
+     "00GTU000000000004": "unstamped_row_in_group_feed"
+    },
+    "unidentified": 6
+   },
+   "delta_old": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00GTJ000000000001",
+     "00GTJ000000000002",
+     "00GTJ000000000003",
+     "00GTN000000000001",
+     "00GTN000000000002",
+     "00GTN000000000003",
+     "00GTN000000000004",
+     "00GTU000000000001",
+     "00GTU000000000002",
+     "00GTU000000000003",
+     "00GTU000000000005"
+    ],
+    "refused": {
+     "00GTN000000000001": "target_rooftop_unidentified",
+     "00GTN000000000002": "target_rooftop_unidentified",
+     "00GTU000000000001": "target_rooftop_unidentified",
+     "00GTU000000000002": "target_rooftop_unidentified",
+     "00GTU000000000003": "target_rooftop_unidentified",
+     "00GTU000000000004": "target_rooftop_unidentified"
+    },
+    "unidentified": 6
+   }
+  },
+  "legacy|group1toyotanorthaustin-com|open_page_lot_tags": {
+   "dealer_run": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [],
+    "refused": {
+     "00GTN000000000001": "target_rooftop_unidentified",
+     "00GTN000000000002": "target_rooftop_unidentified",
+     "00GTU000000000001": "target_rooftop_unidentified",
+     "00GTU000000000002": "target_rooftop_unidentified",
+     "00GTU000000000003": "target_rooftop_unidentified",
+     "00GTU000000000004": "target_rooftop_unidentified"
+    },
+    "unidentified": 6
+   },
+   "delta_old": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [],
+    "refused": {
+     "00GTN000000000001": "target_rooftop_unidentified",
+     "00GTN000000000002": "target_rooftop_unidentified",
+     "00GTU000000000001": "target_rooftop_unidentified",
+     "00GTU000000000002": "target_rooftop_unidentified",
+     "00GTU000000000003": "target_rooftop_unidentified",
+     "00GTU000000000004": "target_rooftop_unidentified"
+    },
+    "unidentified": 6
+   }
+  },
+  "legacy|group1toyotanorthaustin-com|store_scoped_identity_feed": {
+   "dealer_run": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00GTN000000000001",
+     "00GTN000000000002",
+     "00GTN000000000003",
+     "00GTN000000000004"
+    ],
+    "refused": {},
+    "unidentified": 0
+   },
+   "delta_old": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00GTN000000000001",
+     "00GTN000000000002",
+     "00GTN000000000003",
+     "00GTN000000000004"
+    ],
+    "refused": {},
+    "unidentified": 0
+   }
+  },
+  "legacy|group1toyotanorthaustin-com|store_scoped_location_facet": {
+   "dealer_run": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00GTU000000000001",
+     "00GTU000000000002",
+     "00GTU000000000003",
+     "00GTU000000000005"
+    ],
+    "refused": {},
+    "unidentified": 0
+   },
+   "delta_old": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00GTU000000000001",
+     "00GTU000000000002",
+     "00GTU000000000003",
+     "00GTU000000000005"
+    ],
+    "refused": {},
+    "unidentified": 0
+   }
+  },
+  "legacy|group1toyotanorthaustin-com|tags_only_page_is_one_locality": {
+   "dealer_run": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00GTJ000000000001",
+     "00GTJ000000000002",
+     "00GTJ000000000003"
+    ],
+    "refused": {},
+    "unidentified": 0
+   },
+   "delta_old": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00GTJ000000000001",
+     "00GTJ000000000002",
+     "00GTJ000000000003"
+    ],
+    "refused": {},
+    "unidentified": 0
+   }
+  },
+  "legacy|hendrickbuickgmccary-com|__all_pages__": {
+   "dealer_run": {
+    "disown": [
+     "00KIA000000000001",
+     "00KIA000000000002",
+     "00NAP000000000001"
+    ],
+    "evidenced": [
+     "00KIA000000000001",
+     "00KIA000000000002",
+     "00NAP000000000001"
+    ],
+    "kept": [
+     "00HBC000000000001",
+     "00HBC000000000002",
+     "00HBC000000000003",
+     "00HBC000000000004",
+     "00HCC000000000001"
+    ],
+    "refused": {
+     "00KIA000000000001": "sibling_rooftop",
+     "00KIA000000000002": "sibling_rooftop",
+     "00NAP000000000001": "sibling_rooftop",
+     "00UNS000000000001": "unstamped_row_in_group_feed"
+    },
+    "unidentified": 2
+   },
+   "delta_old": {
+    "disown": [
+     "00KIA000000000001",
+     "00KIA000000000002",
+     "00NAP000000000001"
+    ],
+    "evidenced": [
+     "00KIA000000000001",
+     "00KIA000000000002",
+     "00NAP000000000001"
+    ],
+    "kept": [
+     "00HBC000000000001",
+     "00HBC000000000002",
+     "00HBC000000000003",
+     "00HBC000000000004",
+     "00HCC000000000001"
+    ],
+    "refused": {
+     "00KIA000000000001": "sibling_rooftop",
+     "00KIA000000000002": "sibling_rooftop",
+     "00NAP000000000001": "sibling_rooftop",
+     "00UNS000000000001": "unstamped_row_in_group_feed"
+    },
+    "unidentified": 2
+   }
+  },
+  "legacy|hendrickbuickgmccary-com|open_group_page_before_alias": {
+   "dealer_run": {
+    "disown": [
+     "00KIA000000000001",
+     "00NAP000000000001"
+    ],
+    "evidenced": [
+     "00KIA000000000001",
+     "00NAP000000000001"
+    ],
+    "kept": [
+     "00HBC000000000001"
+    ],
+    "refused": {
+     "00KIA000000000001": "sibling_rooftop",
+     "00NAP000000000001": "sibling_rooftop",
+     "00UNS000000000001": "unstamped_row_in_group_feed"
+    },
+    "unidentified": 1
+   },
+   "delta_old": {
+    "disown": [
+     "00KIA000000000001",
+     "00NAP000000000001"
+    ],
+    "evidenced": [
+     "00KIA000000000001",
+     "00NAP000000000001"
+    ],
+    "kept": [
+     "00HBC000000000001"
+    ],
+    "refused": {
+     "00KIA000000000001": "sibling_rooftop",
+     "00NAP000000000001": "sibling_rooftop",
+     "00UNS000000000001": "unstamped_row_in_group_feed"
+    },
+    "unidentified": 1
+   }
+  },
+  "legacy|hendrickbuickgmccary-com|open_group_page_with_alias": {
+   "dealer_run": {
+    "disown": [
+     "00KIA000000000001",
+     "00KIA000000000002",
+     "00NAP000000000001"
+    ],
+    "evidenced": [
+     "00KIA000000000001",
+     "00KIA000000000002",
+     "00NAP000000000001"
+    ],
+    "kept": [
+     "00HBC000000000001",
+     "00HBC000000000002",
+     "00HBC000000000003",
+     "00HCC000000000001"
+    ],
+    "refused": {
+     "00KIA000000000001": "sibling_rooftop",
+     "00KIA000000000002": "sibling_rooftop",
+     "00NAP000000000001": "sibling_rooftop",
+     "00UNS000000000001": "unstamped_row_in_group_feed"
+    },
+    "unidentified": 1
+   },
+   "delta_old": {
+    "disown": [
+     "00KIA000000000001",
+     "00KIA000000000002",
+     "00NAP000000000001"
+    ],
+    "evidenced": [
+     "00KIA000000000001",
+     "00KIA000000000002",
+     "00NAP000000000001"
+    ],
+    "kept": [
+     "00HBC000000000001",
+     "00HBC000000000002",
+     "00HBC000000000003",
+     "00HCC000000000001"
+    ],
+    "refused": {
+     "00KIA000000000001": "sibling_rooftop",
+     "00KIA000000000002": "sibling_rooftop",
+     "00NAP000000000001": "sibling_rooftop",
+     "00UNS000000000001": "unstamped_row_in_group_feed"
+    },
+    "unidentified": 1
+   }
+  },
+  "legacy|hendrickbuickgmccary-com|store_scoped_recipe": {
+   "dealer_run": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00HBC000000000001",
+     "00HBC000000000002",
+     "00HBC000000000003",
+     "00HBC000000000004"
+    ],
+    "refused": {},
+    "unidentified": 0
+   },
+   "delta_old": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00HBC000000000001",
+     "00HBC000000000002",
+     "00HBC000000000003",
+     "00HBC000000000004"
+    ],
+    "refused": {},
+    "unidentified": 0
+   }
+  },
+  "legacy|hendrickhonda-com|__all_pages__": {
+   "dealer_run": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [],
+    "refused": {
+     "00AUS000000000001": "target_rooftop_unidentified",
+     "00BMW000000000001": "target_rooftop_unidentified",
+     "00CHS000000000001": "target_rooftop_unidentified",
+     "00HHC000000000001": "target_rooftop_unidentified",
+     "00HHC000000000002": "target_rooftop_unidentified",
+     "00LEX000000000001": "target_rooftop_unidentified",
+     "00LEX000000000002": "target_rooftop_unidentified",
+     "00UNS000000000001": "target_rooftop_unidentified"
+    },
+    "unidentified": 19
+   },
+   "delta_old": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [],
+    "refused": {
+     "00AUS000000000001": "sibling_rooftop_weak_tier",
+     "00BMW000000000001": "target_rooftop_unidentified",
+     "00CHS000000000001": "sibling_rooftop_weak_tier",
+     "00HHC000000000001": "target_rooftop_unidentified",
+     "00HHC000000000002": "target_rooftop_unidentified",
+     "00LEX000000000001": "target_rooftop_unidentified",
+     "00LEX000000000002": "target_rooftop_unidentified",
+     "00UNS000000000001": "target_rooftop_unidentified"
+    },
+    "unidentified": 19
+   }
+  },
+  "legacy|hendrickhonda-com|page_where_the_only_charlotte_rooftop_is_a_sibling": {
+   "dealer_run": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00LEX000000000001",
+     "00LEX000000000002"
+    ],
+    "refused": {
+     "00CHS000000000001": "sibling_rooftop_weak_tier"
+    },
+    "unidentified": 1
+   },
+   "delta_old": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00LEX000000000001",
+     "00LEX000000000002"
+    ],
+    "refused": {
+     "00CHS000000000001": "sibling_rooftop_weak_tier"
+    },
+    "unidentified": 1
+   }
+  },
+  "legacy|hendrickhonda-com|page_with_one_charlotte_rooftop": {
+   "dealer_run": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00HHC000000000001",
+     "00HHC000000000002"
+    ],
+    "refused": {
+     "00AUS000000000001": "sibling_rooftop_weak_tier",
+     "00CHS000000000001": "sibling_rooftop_weak_tier",
+     "00UNS000000000001": "unstamped_row_in_group_feed"
+    },
+    "unidentified": 3
+   },
+   "delta_old": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00HHC000000000001",
+     "00HHC000000000002"
+    ],
+    "refused": {
+     "00AUS000000000001": "sibling_rooftop_weak_tier",
+     "00CHS000000000001": "sibling_rooftop_weak_tier",
+     "00UNS000000000001": "unstamped_row_in_group_feed"
+    },
+    "unidentified": 3
+   }
+  },
+  "legacy|hendrickhonda-com|union_pass_no_street": {
+   "dealer_run": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [],
+    "refused": {
+     "00BMW000000000001": "target_rooftop_unidentified",
+     "00CHS000000000001": "target_rooftop_unidentified",
+     "00HHC000000000001": "target_rooftop_unidentified",
+     "00HHC000000000002": "target_rooftop_unidentified",
+     "00LEX000000000001": "target_rooftop_unidentified",
+     "00UNS000000000001": "target_rooftop_unidentified"
+    },
+    "unidentified": 6
+   },
+   "delta_old": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [],
+    "refused": {
+     "00BMW000000000001": "target_rooftop_unidentified",
+     "00CHS000000000001": "target_rooftop_unidentified",
+     "00HHC000000000001": "target_rooftop_unidentified",
+     "00HHC000000000002": "target_rooftop_unidentified",
+     "00LEX000000000001": "target_rooftop_unidentified",
+     "00UNS000000000001": "target_rooftop_unidentified"
+    },
+    "unidentified": 6
+   }
+  },
+  "legacy|hendrickhonda-com|union_pass_with_street": {
+   "dealer_run": {
+    "disown": [
+     "00BMW000000000001",
+     "00LEX000000000001"
+    ],
+    "evidenced": [
+     "00BMW000000000001",
+     "00LEX000000000001"
+    ],
+    "kept": [
+     "00HHC000000000001",
+     "00HHC000000000002"
+    ],
+    "refused": {
+     "00BMW000000000001": "sibling_rooftop",
+     "00LEX000000000001": "sibling_rooftop",
+     "00UNS000000000001": "unstamped_row_in_group_feed"
+    },
+    "unidentified": 1
+   },
+   "delta_old": {
+    "disown": [
+     "00BMW000000000001",
+     "00LEX000000000001"
+    ],
+    "evidenced": [
+     "00BMW000000000001",
+     "00LEX000000000001"
+    ],
+    "kept": [
+     "00HHC000000000001",
+     "00HHC000000000002"
+    ],
+    "refused": {
+     "00BMW000000000001": "sibling_rooftop",
+     "00LEX000000000001": "sibling_rooftop",
+     "00UNS000000000001": "unstamped_row_in_group_feed"
+    },
+    "unidentified": 1
+   }
+  },
+  "legacy|hondahuntersville-com|__all_pages__": {
+   "dealer_run": {
+    "disown": [
+     "00HKC000000000001",
+     "00HOO000000000001"
+    ],
+    "evidenced": [
+     "00HKC000000000001",
+     "00HOO000000000001"
+    ],
+    "kept": [
+     "00HHN000000000001",
+     "00HHN000000000002",
+     "00HHN000000000003",
+     "00HHS000000000001",
+     "00HHS000000000002",
+     "00HHU000000000001",
+     "00HHU000000000002"
+    ],
+    "refused": {
+     "00HKC000000000001": "sibling_rooftop",
+     "00HOO000000000001": "sibling_rooftop",
+     "00HOO000000000002": "unstamped_row_in_group_feed",
+     "00UNS000000000001": "unstamped_row_in_group_feed"
+    },
+    "unidentified": 2
+   },
+   "delta_old": {
+    "disown": [
+     "00HKC000000000001",
+     "00HOO000000000001"
+    ],
+    "evidenced": [
+     "00HKC000000000001",
+     "00HOO000000000001"
+    ],
+    "kept": [
+     "00HHN000000000001",
+     "00HHN000000000002",
+     "00HHN000000000003",
+     "00HHS000000000001",
+     "00HHS000000000002",
+     "00HHU000000000001",
+     "00HHU000000000002"
+    ],
+    "refused": {
+     "00HKC000000000001": "sibling_rooftop",
+     "00HOO000000000001": "sibling_rooftop",
+     "00HOO000000000002": "unstamped_row_in_group_feed",
+     "00UNS000000000001": "unstamped_row_in_group_feed"
+    },
+    "unidentified": 2
+   }
+  },
+  "legacy|hondahuntersville-com|group_wide_source_never_vouches": {
+   "dealer_run": {
+    "disown": [
+     "00HKC000000000001"
+    ],
+    "evidenced": [
+     "00HKC000000000001"
+    ],
+    "kept": [
+     "00HHN000000000001",
+     "00HHN000000000003"
+    ],
+    "refused": {
+     "00HKC000000000001": "sibling_rooftop",
+     "00UNS000000000001": "unstamped_row_in_group_feed"
+    },
+    "unidentified": 1
+   },
+   "delta_old": {
+    "disown": [
+     "00HKC000000000001"
+    ],
+    "evidenced": [
+     "00HKC000000000001"
+    ],
+    "kept": [
+     "00HHN000000000001",
+     "00HHN000000000003"
+    ],
+    "refused": {
+     "00HKC000000000001": "sibling_rooftop",
+     "00UNS000000000001": "unstamped_row_in_group_feed"
+    },
+    "unidentified": 1
+   }
+  },
+  "legacy|hondahuntersville-com|three_stamps_no_street": {
+   "dealer_run": {
+    "disown": [
+     "00HHS000000000001"
+    ],
+    "evidenced": [
+     "00HHS000000000001"
+    ],
+    "kept": [
+     "00HHN000000000001"
+    ],
+    "refused": {
+     "00HHS000000000001": "sibling_rooftop",
+     "00HHU000000000001": "unstamped_row_in_group_feed"
+    },
+    "unidentified": 1
+   },
+   "delta_old": {
+    "disown": [
+     "00HHS000000000001"
+    ],
+    "evidenced": [
+     "00HHS000000000001"
+    ],
+    "kept": [
+     "00HHN000000000001"
+    ],
+    "refused": {
+     "00HHS000000000001": "sibling_rooftop",
+     "00HHU000000000001": "unstamped_row_in_group_feed"
+    },
+    "unidentified": 1
+   }
+  },
+  "legacy|hondahuntersville-com|three_stamps_with_street": {
+   "dealer_run": {
+    "disown": [
+     "00HOO000000000001"
+    ],
+    "evidenced": [
+     "00HOO000000000001"
+    ],
+    "kept": [
+     "00HHN000000000001",
+     "00HHN000000000002",
+     "00HHS000000000001",
+     "00HHS000000000002",
+     "00HHU000000000001",
+     "00HHU000000000002"
+    ],
+    "refused": {
+     "00HOO000000000001": "sibling_rooftop",
+     "00HOO000000000002": "unstamped_row_in_group_feed"
+    },
+    "unidentified": 1
+   },
+   "delta_old": {
+    "disown": [
+     "00HOO000000000001"
+    ],
+    "evidenced": [
+     "00HOO000000000001"
+    ],
+    "kept": [
+     "00HHN000000000001",
+     "00HHN000000000002",
+     "00HHS000000000001",
+     "00HHS000000000002",
+     "00HHU000000000001",
+     "00HHU000000000002"
+    ],
+    "refused": {
+     "00HOO000000000001": "sibling_rooftop",
+     "00HOO000000000002": "unstamped_row_in_group_feed"
+    },
+    "unidentified": 1
+   }
+  },
+  "legacy|machaikchevy-com|__all_pages__": {
+   "dealer_run": {
+    "disown": [
+     "00MHF000000000001"
+    ],
+    "evidenced": [
+     "00MHF000000000001"
+    ],
+    "kept": [
+     "00MHC000000000001",
+     "00MHC000000000002",
+     "00MHC000000000003",
+     "00MHC000000000004"
+    ],
+    "refused": {
+     "00MHF000000000001": "sibling_rooftop",
+     "00UNS000000000001": "unstamped_row_in_group_feed"
+    },
+    "unidentified": 1
+   },
+   "delta_old": {
+    "disown": [
+     "00MHF000000000001"
+    ],
+    "evidenced": [
+     "00MHF000000000001"
+    ],
+    "kept": [
+     "00MHC000000000001",
+     "00MHC000000000002",
+     "00MHC000000000003",
+     "00MHC000000000004"
+    ],
+    "refused": {
+     "00MHF000000000001": "sibling_rooftop",
+     "00UNS000000000001": "unstamped_row_in_group_feed"
+    },
+    "unidentified": 1
+   }
+  },
+  "legacy|machaikchevy-com|open_group_page_named": {
+   "dealer_run": {
+    "disown": [
+     "00MHF000000000001"
+    ],
+    "evidenced": [
+     "00MHF000000000001"
+    ],
+    "kept": [
+     "00MHC000000000001",
+     "00MHC000000000002"
+    ],
+    "refused": {
+     "00MHF000000000001": "sibling_rooftop",
+     "00UNS000000000001": "unstamped_row_in_group_feed"
+    },
+    "unidentified": 1
+   },
+   "delta_old": {
+    "disown": [
+     "00MHF000000000001"
+    ],
+    "evidenced": [
+     "00MHF000000000001"
+    ],
+    "kept": [
+     "00MHC000000000001",
+     "00MHC000000000002"
+    ],
+    "refused": {
+     "00MHF000000000001": "sibling_rooftop",
+     "00UNS000000000001": "unstamped_row_in_group_feed"
+    },
+    "unidentified": 1
+   }
+  },
+  "legacy|machaikchevy-com|store_scoped_recipe": {
+   "dealer_run": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00MHC000000000001",
+     "00MHC000000000002",
+     "00MHC000000000003",
+     "00MHC000000000004"
+    ],
+    "refused": {},
+    "unidentified": 0
+   },
+   "delta_old": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00MHC000000000001",
+     "00MHC000000000002",
+     "00MHC000000000003",
+     "00MHC000000000004"
+    ],
+    "refused": {},
+    "unidentified": 0
+   }
+  },
+  "legacy|mallofgamazda-com|__all_pages__": {
+   "dealer_run": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00MZA000000000001",
+     "00MZA000000000002",
+     "00MZA000000000003",
+     "00MZB000000000001",
+     "00MZB000000000002"
+    ],
+    "refused": {
+     "00LEE000000000001": "target_rooftop_unidentified",
+     "00MIN000000000001": "target_rooftop_unidentified",
+     "00MZA000000000001": "target_rooftop_unidentified",
+     "00MZA000000000002": "target_rooftop_unidentified",
+     "00MZB000000000001": "target_rooftop_unidentified",
+     "00UNS000000000001": "target_rooftop_unidentified"
+    },
+    "unidentified": 13
+   },
+   "delta_old": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00MZA000000000001",
+     "00MZA000000000002",
+     "00MZA000000000003",
+     "00MZB000000000001",
+     "00MZB000000000002"
+    ],
+    "refused": {
+     "00LEE000000000001": "target_rooftop_unidentified",
+     "00MIN000000000001": "target_rooftop_unidentified",
+     "00MZA000000000001": "target_rooftop_unidentified",
+     "00MZA000000000002": "target_rooftop_unidentified",
+     "00MZB000000000001": "target_rooftop_unidentified",
+     "00UNS000000000001": "target_rooftop_unidentified"
+    },
+    "unidentified": 13
+   }
+  },
+  "legacy|mallofgamazda-com|bogus_alias_picks_the_bare_tag": {
+   "dealer_run": {
+    "disown": [
+     "00MIN000000000001",
+     "00MZA000000000001"
+    ],
+    "evidenced": [
+     "00MIN000000000001",
+     "00MZA000000000001"
+    ],
+    "kept": [
+     "00MZB000000000001"
+    ],
+    "refused": {
+     "00MIN000000000001": "sibling_rooftop",
+     "00MZA000000000001": "sibling_rooftop"
+    },
+    "unidentified": 0
+   },
+   "delta_old": {
+    "disown": [
+     "00MIN000000000001",
+     "00MZA000000000001"
+    ],
+    "evidenced": [
+     "00MIN000000000001",
+     "00MZA000000000001"
+    ],
+    "kept": [
+     "00MZB000000000001"
+    ],
+    "refused": {
+     "00MIN000000000001": "sibling_rooftop",
+     "00MZA000000000001": "sibling_rooftop"
+    },
+    "unidentified": 0
+   }
+  },
+  "legacy|mallofgamazda-com|open_group_page_no_street": {
+   "dealer_run": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [],
+    "refused": {
+     "00LEE000000000001": "target_rooftop_unidentified",
+     "00MIN000000000001": "target_rooftop_unidentified",
+     "00MZA000000000001": "target_rooftop_unidentified",
+     "00MZA000000000002": "target_rooftop_unidentified",
+     "00MZB000000000001": "target_rooftop_unidentified"
+    },
+    "unidentified": 5
+   },
+   "delta_old": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [],
+    "refused": {
+     "00LEE000000000001": "target_rooftop_unidentified",
+     "00MIN000000000001": "target_rooftop_unidentified",
+     "00MZA000000000001": "target_rooftop_unidentified",
+     "00MZA000000000002": "target_rooftop_unidentified",
+     "00MZB000000000001": "target_rooftop_unidentified"
+    },
+    "unidentified": 5
+   }
+  },
+  "legacy|mallofgamazda-com|open_group_page_with_jsonld_street": {
+   "dealer_run": {
+    "disown": [
+     "00MIN000000000001",
+     "00MZB000000000001"
+    ],
+    "evidenced": [
+     "00MIN000000000001",
+     "00MZB000000000001"
+    ],
+    "kept": [
+     "00MZA000000000001",
+     "00MZA000000000002"
+    ],
+    "refused": {
+     "00MIN000000000001": "sibling_rooftop",
+     "00MZB000000000001": "sibling_rooftop",
+     "00UNS000000000001": "unstamped_row_in_group_feed"
+    },
+    "unidentified": 1
+   },
+   "delta_old": {
+    "disown": [
+     "00MIN000000000001",
+     "00MZB000000000001"
+    ],
+    "evidenced": [
+     "00MIN000000000001",
+     "00MZB000000000001"
+    ],
+    "kept": [
+     "00MZA000000000001",
+     "00MZA000000000002"
+    ],
+    "refused": {
+     "00MIN000000000001": "sibling_rooftop",
+     "00MZB000000000001": "sibling_rooftop",
+     "00UNS000000000001": "unstamped_row_in_group_feed"
+    },
+    "unidentified": 1
+   }
+  },
+  "legacy|mallofgamazda-com|store_scoped_recipe": {
+   "dealer_run": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00MZA000000000001",
+     "00MZA000000000002",
+     "00MZA000000000003",
+     "00MZB000000000001",
+     "00MZB000000000002"
+    ],
+    "refused": {},
+    "unidentified": 0
+   },
+   "delta_old": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00MZA000000000001",
+     "00MZA000000000002",
+     "00MZA000000000003",
+     "00MZB000000000001",
+     "00MZB000000000002"
+    ],
+    "refused": {},
+    "unidentified": 0
+   }
+  },
+  "legacy|rickhendrickchevynaples-com|__all_pages__": {
+   "dealer_run": {
+    "disown": [
+     "00CAR000000000001",
+     "00CHS000000000001",
+     "00DUR000000000001"
+    ],
+    "evidenced": [
+     "00CAR000000000001",
+     "00CHS000000000001",
+     "00DUR000000000001"
+    ],
+    "kept": [
+     "00NAP000000000001",
+     "00NAP000000000002",
+     "00NAP000000000003",
+     "00NAP000000000004"
+    ],
+    "refused": {
+     "00CAR000000000001": "sibling_rooftop",
+     "00CHS000000000001": "sibling_rooftop",
+     "00DUR000000000001": "sibling_rooftop",
+     "00UNS000000000001": "unstamped_row_in_group_feed"
+    },
+    "unidentified": 1
+   },
+   "delta_old": {
+    "disown": [
+     "00CAR000000000001",
+     "00CHS000000000001",
+     "00DUR000000000001"
+    ],
+    "evidenced": [
+     "00CAR000000000001",
+     "00CHS000000000001",
+     "00DUR000000000001"
+    ],
+    "kept": [
+     "00NAP000000000001",
+     "00NAP000000000002",
+     "00NAP000000000003",
+     "00NAP000000000004"
+    ],
+    "refused": {
+     "00CAR000000000001": "sibling_rooftop",
+     "00CHS000000000001": "sibling_rooftop",
+     "00DUR000000000001": "sibling_rooftop",
+     "00UNS000000000001": "unstamped_row_in_group_feed"
+    },
+    "unidentified": 1
+   }
+  },
+  "legacy|rickhendrickchevynaples-com|open_group_page_with_alias": {
+   "dealer_run": {
+    "disown": [
+     "00CAR000000000001",
+     "00CHS000000000001",
+     "00DUR000000000001"
+    ],
+    "evidenced": [
+     "00CAR000000000001",
+     "00CHS000000000001",
+     "00DUR000000000001"
+    ],
+    "kept": [
+     "00NAP000000000001",
+     "00NAP000000000002"
+    ],
+    "refused": {
+     "00CAR000000000001": "sibling_rooftop",
+     "00CHS000000000001": "sibling_rooftop",
+     "00DUR000000000001": "sibling_rooftop",
+     "00UNS000000000001": "unstamped_row_in_group_feed"
+    },
+    "unidentified": 1
+   },
+   "delta_old": {
+    "disown": [
+     "00CAR000000000001",
+     "00CHS000000000001",
+     "00DUR000000000001"
+    ],
+    "evidenced": [
+     "00CAR000000000001",
+     "00CHS000000000001",
+     "00DUR000000000001"
+    ],
+    "kept": [
+     "00NAP000000000001",
+     "00NAP000000000002"
+    ],
+    "refused": {
+     "00CAR000000000001": "sibling_rooftop",
+     "00CHS000000000001": "sibling_rooftop",
+     "00DUR000000000001": "sibling_rooftop",
+     "00UNS000000000001": "unstamped_row_in_group_feed"
+    },
+    "unidentified": 1
+   }
+  },
+  "legacy|rickhendrickchevynaples-com|single_rooftop_page_without_alias": {
+   "dealer_run": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00NAP000000000001",
+     "00NAP000000000002",
+     "00NAP000000000003"
+    ],
+    "refused": {},
+    "unidentified": 0
+   },
+   "delta_old": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00NAP000000000001",
+     "00NAP000000000002",
+     "00NAP000000000003"
+    ],
+    "refused": {},
+    "unidentified": 0
+   }
+  },
+  "legacy|rickhendrickchevynaples-com|store_scoped_recipe": {
+   "dealer_run": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00NAP000000000001",
+     "00NAP000000000002",
+     "00NAP000000000003",
+     "00NAP000000000004"
+    ],
+    "refused": {},
+    "unidentified": 0
+   },
+   "delta_old": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00NAP000000000001",
+     "00NAP000000000002",
+     "00NAP000000000003",
+     "00NAP000000000004"
+    ],
+    "refused": {},
+    "unidentified": 0
+   }
+  },
+  "legacy|shottenkirkchrysler-com|__all_pages__": {
+   "dealer_run": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00SCC000000000001",
+     "00SCC000000000002",
+     "00SCC000000000003",
+     "00SCC000000000004"
+    ],
+    "refused": {
+     "00SCA000000000001": "sibling_rooftop_weak_tier"
+    },
+    "unidentified": 2
+   },
+   "delta_old": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00SCC000000000001",
+     "00SCC000000000002",
+     "00SCC000000000003",
+     "00SCC000000000004"
+    ],
+    "refused": {
+     "00SCA000000000001": "sibling_rooftop_weak_tier",
+     "00SCC000000000001": "target_rooftop_unidentified",
+     "00SCC000000000002": "target_rooftop_unidentified"
+    },
+    "unidentified": 4
+   }
+  },
+  "legacy|shottenkirkchrysler-com|sibling_with_locale": {
+   "dealer_run": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00SCC000000000001",
+     "00SCC000000000002"
+    ],
+    "refused": {
+     "00SCA000000000001": "sibling_rooftop_weak_tier"
+    },
+    "unidentified": 1
+   },
+   "delta_old": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00SCC000000000001",
+     "00SCC000000000002"
+    ],
+    "refused": {
+     "00SCA000000000001": "sibling_rooftop_weak_tier"
+    },
+    "unidentified": 1
+   }
+  },
+  "legacy|shottenkirkchrysler-com|single_rooftop_short_cluster_plus_town": {
+   "dealer_run": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00SCC000000000001",
+     "00SCC000000000002",
+     "00SCC000000000003",
+     "00SCC000000000004"
+    ],
+    "refused": {},
+    "unidentified": 0
+   },
+   "delta_old": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00SCC000000000001",
+     "00SCC000000000002",
+     "00SCC000000000003",
+     "00SCC000000000004"
+    ],
+    "refused": {},
+    "unidentified": 0
+   }
+  },
+  "legacy|shottenkirkchrysler-com|two_towns_same_cluster": {
+   "dealer_run": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [],
+    "refused": {
+     "00SCA000000000001": "target_rooftop_unidentified",
+     "00SCC000000000001": "target_rooftop_unidentified",
+     "00SCC000000000002": "target_rooftop_unidentified"
+    },
+    "unidentified": 3
+   },
+   "delta_old": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [],
+    "refused": {
+     "00SCA000000000001": "target_rooftop_unidentified",
+     "00SCC000000000001": "target_rooftop_unidentified",
+     "00SCC000000000002": "target_rooftop_unidentified"
+    },
+    "unidentified": 3
+   }
+  },
+  "legacy|stevensonhendrickhonda-com|__all_pages__": {
+   "dealer_run": {
+    "disown": [
+     "00SHC000000000001",
+     "00SHD000000000002"
+    ],
+    "evidenced": [
+     "00SHC000000000001",
+     "00SHD000000000002"
+    ],
+    "kept": [
+     "00SHA000000000001",
+     "00SHB000000000001",
+     "00SHB000000000002",
+     "00SHB000000000003",
+     "00SHD000000000001"
+    ],
+    "refused": {
+     "00SHC000000000001": "sibling_rooftop",
+     "00SHD000000000002": "sibling_rooftop",
+     "00UNS000000000001": "unstamped_row_in_group_feed"
+    },
+    "unidentified": 1
+   },
+   "delta_old": {
+    "disown": [
+     "00SHC000000000001",
+     "00SHD000000000002"
+    ],
+    "evidenced": [
+     "00SHC000000000001",
+     "00SHD000000000002"
+    ],
+    "kept": [
+     "00SHA000000000001",
+     "00SHB000000000001",
+     "00SHB000000000002",
+     "00SHB000000000003",
+     "00SHD000000000001"
+    ],
+    "refused": {
+     "00SHC000000000001": "sibling_rooftop",
+     "00SHD000000000002": "sibling_rooftop",
+     "00UNS000000000001": "unstamped_row_in_group_feed"
+    },
+    "unidentified": 1
+   }
+  },
+  "legacy|stevensonhendrickhonda-com|open_group_page_no_street": {
+   "dealer_run": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [],
+    "refused": {
+     "00SHA000000000001": "target_rooftop_unidentified",
+     "00SHB000000000001": "target_rooftop_unidentified",
+     "00SHC000000000001": "target_rooftop_unidentified"
+    },
+    "unidentified": 3
+   },
+   "delta_old": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [],
+    "refused": {
+     "00SHA000000000001": "target_rooftop_unidentified",
+     "00SHB000000000001": "target_rooftop_unidentified",
+     "00SHC000000000001": "target_rooftop_unidentified"
+    },
+    "unidentified": 3
+   }
+  },
+  "legacy|stevensonhendrickhonda-com|open_group_page_with_street": {
+   "dealer_run": {
+    "disown": [
+     "00SHC000000000001",
+     "00SHD000000000002"
+    ],
+    "evidenced": [
+     "00SHC000000000001",
+     "00SHD000000000002"
+    ],
+    "kept": [
+     "00SHA000000000001",
+     "00SHB000000000001",
+     "00SHB000000000002",
+     "00SHD000000000001"
+    ],
+    "refused": {
+     "00SHC000000000001": "sibling_rooftop",
+     "00SHD000000000002": "sibling_rooftop",
+     "00UNS000000000001": "unstamped_row_in_group_feed"
+    },
+    "unidentified": 1
+   },
+   "delta_old": {
+    "disown": [
+     "00SHC000000000001",
+     "00SHD000000000002"
+    ],
+    "evidenced": [
+     "00SHC000000000001",
+     "00SHD000000000002"
+    ],
+    "kept": [
+     "00SHA000000000001",
+     "00SHB000000000001",
+     "00SHB000000000002",
+     "00SHD000000000001"
+    ],
+    "refused": {
+     "00SHC000000000001": "sibling_rooftop",
+     "00SHD000000000002": "sibling_rooftop",
+     "00UNS000000000001": "unstamped_row_in_group_feed"
+    },
+    "unidentified": 1
+   }
+  },
+  "legacy|stevensonhendrickhonda-com|store_scoped_recipe": {
+   "dealer_run": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00SHA000000000001",
+     "00SHB000000000001",
+     "00SHB000000000002",
+     "00SHB000000000003"
+    ],
+    "refused": {},
+    "unidentified": 0
+   },
+   "delta_old": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00SHA000000000001",
+     "00SHB000000000001",
+     "00SHB000000000002",
+     "00SHB000000000003"
+    ],
+    "refused": {},
+    "unidentified": 0
+   }
+  },
+  "legacy|tuttoncdjr-com|__all_pages__": {
+   "dealer_run": {
+    "disown": [
+     "00VOY000000000001"
+    ],
+    "evidenced": [
+     "00TCB000000000001",
+     "00TCB000000000002",
+     "00VOY000000000001"
+    ],
+    "kept": [
+     "00TCA000000000001",
+     "00TCA000000000002",
+     "00TCB000000000001",
+     "00TCB000000000002",
+     "00TCB000000000003",
+     "00TCB000000000004"
+    ],
+    "refused": {
+     "00TCB000000000001": "sibling_rooftop",
+     "00TCB000000000002": "sibling_rooftop",
+     "00UNS000000000001": "unstamped_row_in_group_feed",
+     "00VOY000000000001": "sibling_rooftop"
+    },
+    "unidentified": 1
+   },
+   "delta_old": {
+    "disown": [
+     "00VOY000000000001"
+    ],
+    "evidenced": [
+     "00TCB000000000001",
+     "00TCB000000000002",
+     "00VOY000000000001"
+    ],
+    "kept": [
+     "00TCA000000000001",
+     "00TCA000000000002",
+     "00TCB000000000001",
+     "00TCB000000000002",
+     "00TCB000000000003",
+     "00TCB000000000004"
+    ],
+    "refused": {
+     "00TCB000000000001": "sibling_rooftop",
+     "00TCB000000000002": "sibling_rooftop",
+     "00UNS000000000001": "unstamped_row_in_group_feed",
+     "00VOY000000000001": "sibling_rooftop"
+    },
+    "unidentified": 1
+   }
+  },
+  "legacy|tuttoncdjr-com|open_page_no_street": {
+   "dealer_run": {
+    "disown": [
+     "00TCB000000000001",
+     "00TCB000000000002",
+     "00VOY000000000001"
+    ],
+    "evidenced": [
+     "00TCB000000000001",
+     "00TCB000000000002",
+     "00VOY000000000001"
+    ],
+    "kept": [
+     "00TCA000000000001",
+     "00TCA000000000002"
+    ],
+    "refused": {
+     "00TCB000000000001": "sibling_rooftop",
+     "00TCB000000000002": "sibling_rooftop",
+     "00UNS000000000001": "unstamped_row_in_group_feed",
+     "00VOY000000000001": "sibling_rooftop"
+    },
+    "unidentified": 1
+   },
+   "delta_old": {
+    "disown": [
+     "00TCB000000000001",
+     "00TCB000000000002",
+     "00VOY000000000001"
+    ],
+    "evidenced": [
+     "00TCB000000000001",
+     "00TCB000000000002",
+     "00VOY000000000001"
+    ],
+    "kept": [
+     "00TCA000000000001",
+     "00TCA000000000002"
+    ],
+    "refused": {
+     "00TCB000000000001": "sibling_rooftop",
+     "00TCB000000000002": "sibling_rooftop",
+     "00UNS000000000001": "unstamped_row_in_group_feed",
+     "00VOY000000000001": "sibling_rooftop"
+    },
+    "unidentified": 1
+   }
+  },
+  "legacy|tuttoncdjr-com|open_page_with_jsonld_street": {
+   "dealer_run": {
+    "disown": [
+     "00VOY000000000001"
+    ],
+    "evidenced": [
+     "00VOY000000000001"
+    ],
+    "kept": [
+     "00TCA000000000001",
+     "00TCB000000000001",
+     "00TCB000000000002"
+    ],
+    "refused": {
+     "00VOY000000000001": "sibling_rooftop"
+    },
+    "unidentified": 0
+   },
+   "delta_old": {
+    "disown": [
+     "00VOY000000000001"
+    ],
+    "evidenced": [
+     "00VOY000000000001"
+    ],
+    "kept": [
+     "00TCA000000000001",
+     "00TCB000000000001",
+     "00TCB000000000002"
+    ],
+    "refused": {
+     "00VOY000000000001": "sibling_rooftop"
+    },
+    "unidentified": 0
+   }
+  },
+  "legacy|tuttoncdjr-com|store_scoped_recipe": {
+   "dealer_run": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00TCA000000000001",
+     "00TCB000000000001",
+     "00TCB000000000002",
+     "00TCB000000000003",
+     "00TCB000000000004"
+    ],
+    "refused": {},
+    "unidentified": 0
+   },
+   "delta_old": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00TCA000000000001",
+     "00TCB000000000001",
+     "00TCB000000000002",
+     "00TCB000000000003",
+     "00TCB000000000004"
+    ],
+    "refused": {},
+    "unidentified": 0
+   }
+  },
+  "scorer|claremontcdjr-com|__all_pages__": {
+   "dealer_run": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00KCN000000000001",
+     "00KCN000000000002",
+     "00KCU000000000001",
+     "00KCU000000000002",
+     "00KCU000000000003"
+    ],
+    "refused": {},
+    "unidentified": 0
+   },
+   "delta_old": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00KCN000000000001",
+     "00KCN000000000002",
+     "00KCU000000000001",
+     "00KCU000000000002",
+     "00KCU000000000003"
+    ],
+    "refused": {},
+    "unidentified": 0
+   }
+  },
+  "scorer|claremontcdjr-com|unstamped_account": {
+   "dealer_run": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00KCN000000000001",
+     "00KCN000000000002",
+     "00KCU000000000001",
+     "00KCU000000000002",
+     "00KCU000000000003"
+    ],
+    "refused": {},
+    "unidentified": 0
+   },
+   "delta_old": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00KCN000000000001",
+     "00KCN000000000002",
+     "00KCU000000000001",
+     "00KCU000000000002",
+     "00KCU000000000003"
+    ],
+    "refused": {},
+    "unidentified": 0
+   }
+  },
+  "scorer|grandhyundaicanton-com|__all_pages__": {
+   "dealer_run": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00GHC000000000001",
+     "00GHC000000000002",
+     "00GHC000000000003",
+     "00GHC000000000004"
+    ],
+    "refused": {
+     "00APX000000000001": "target_rooftop_unidentified",
+     "00GHC000000000001": "target_rooftop_unidentified",
+     "00GHC000000000002": "target_rooftop_unidentified",
+     "00GIM000000000001": "target_rooftop_unidentified",
+     "00GMK000000000001": "target_rooftop_unidentified",
+     "00GMM000000000001": "target_rooftop_unidentified"
+    },
+    "unidentified": 6
+   },
+   "delta_old": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00GHC000000000001",
+     "00GHC000000000002",
+     "00GHC000000000003",
+     "00GHC000000000004"
+    ],
+    "refused": {
+     "00APX000000000001": "target_rooftop_unidentified",
+     "00GHC000000000001": "target_rooftop_unidentified",
+     "00GHC000000000002": "target_rooftop_unidentified",
+     "00GIM000000000001": "target_rooftop_unidentified",
+     "00GMK000000000001": "target_rooftop_unidentified",
+     "00GMM000000000001": "target_rooftop_unidentified"
+    },
+    "unidentified": 6
+   }
+  },
+  "scorer|grandhyundaicanton-com|open_group_page": {
+   "dealer_run": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [],
+    "refused": {
+     "00APX000000000001": "target_rooftop_unidentified",
+     "00GHC000000000001": "target_rooftop_unidentified",
+     "00GHC000000000002": "target_rooftop_unidentified",
+     "00GIM000000000001": "target_rooftop_unidentified",
+     "00GMK000000000001": "target_rooftop_unidentified",
+     "00GMM000000000001": "target_rooftop_unidentified"
+    },
+    "unidentified": 6
+   },
+   "delta_old": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [],
+    "refused": {
+     "00APX000000000001": "target_rooftop_unidentified",
+     "00GHC000000000001": "target_rooftop_unidentified",
+     "00GHC000000000002": "target_rooftop_unidentified",
+     "00GIM000000000001": "target_rooftop_unidentified",
+     "00GMK000000000001": "target_rooftop_unidentified",
+     "00GMM000000000001": "target_rooftop_unidentified"
+    },
+    "unidentified": 6
+   }
+  },
+  "scorer|grandhyundaicanton-com|store_scoped_location_facet": {
+   "dealer_run": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00GHC000000000001",
+     "00GHC000000000002",
+     "00GHC000000000003",
+     "00GHC000000000004"
+    ],
+    "refused": {},
+    "unidentified": 0
+   },
+   "delta_old": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00GHC000000000001",
+     "00GHC000000000002",
+     "00GHC000000000003",
+     "00GHC000000000004"
+    ],
+    "refused": {},
+    "unidentified": 0
+   }
+  },
+  "scorer|greenwaycdjrofrome-com|__all_pages__": {
+   "dealer_run": {
+    "disown": [
+     "00GWK000000000001",
+     "00GWS000000000001"
+    ],
+    "evidenced": [
+     "00GWK000000000001",
+     "00GWS000000000001"
+    ],
+    "kept": [
+     "00GWR000000000001",
+     "00GWR000000000002",
+     "00GWR000000000003",
+     "00GWR000000000004"
+    ],
+    "refused": {
+     "00GWK000000000001": "sibling_rooftop",
+     "00GWS000000000001": "sibling_rooftop"
+    },
+    "unidentified": 0
+   },
+   "delta_old": {
+    "disown": [
+     "00GWK000000000001",
+     "00GWS000000000001"
+    ],
+    "evidenced": [
+     "00GWK000000000001",
+     "00GWS000000000001"
+    ],
+    "kept": [
+     "00GWR000000000001",
+     "00GWR000000000002",
+     "00GWR000000000003",
+     "00GWR000000000004"
+    ],
+    "refused": {
+     "00GWK000000000001": "sibling_rooftop",
+     "00GWS000000000001": "sibling_rooftop"
+    },
+    "unidentified": 0
+   }
+  },
+  "scorer|greenwaycdjrofrome-com|open_page_no_street": {
+   "dealer_run": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [],
+    "refused": {
+     "00GWK000000000001": "target_rooftop_unidentified",
+     "00GWR000000000001": "target_rooftop_unidentified",
+     "00GWS000000000001": "target_rooftop_unidentified"
+    },
+    "unidentified": 3
+   },
+   "delta_old": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [],
+    "refused": {
+     "00GWK000000000001": "target_rooftop_unidentified",
+     "00GWR000000000001": "target_rooftop_unidentified",
+     "00GWS000000000001": "target_rooftop_unidentified"
+    },
+    "unidentified": 3
+   }
+  },
+  "scorer|greenwaycdjrofrome-com|open_page_with_street": {
+   "dealer_run": {
+    "disown": [
+     "00GWK000000000001",
+     "00GWS000000000001"
+    ],
+    "evidenced": [
+     "00GWK000000000001",
+     "00GWS000000000001"
+    ],
+    "kept": [
+     "00GWR000000000001",
+     "00GWR000000000002",
+     "00GWR000000000003"
+    ],
+    "refused": {
+     "00GWK000000000001": "sibling_rooftop",
+     "00GWS000000000001": "sibling_rooftop"
+    },
+    "unidentified": 0
+   },
+   "delta_old": {
+    "disown": [
+     "00GWK000000000001",
+     "00GWS000000000001"
+    ],
+    "evidenced": [
+     "00GWK000000000001",
+     "00GWS000000000001"
+    ],
+    "kept": [
+     "00GWR000000000001",
+     "00GWR000000000002",
+     "00GWR000000000003"
+    ],
+    "refused": {
+     "00GWK000000000001": "sibling_rooftop",
+     "00GWS000000000001": "sibling_rooftop"
+    },
+    "unidentified": 0
+   }
+  },
+  "scorer|greenwaycdjrofrome-com|store_scoped_recipe": {
+   "dealer_run": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00GWR000000000001",
+     "00GWR000000000002",
+     "00GWR000000000003",
+     "00GWR000000000004"
+    ],
+    "refused": {},
+    "unidentified": 0
+   },
+   "delta_old": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00GWR000000000001",
+     "00GWR000000000002",
+     "00GWR000000000003",
+     "00GWR000000000004"
+    ],
+    "refused": {},
+    "unidentified": 0
+   }
+  },
+  "scorer|group1fordofsouthaustin-com|__all_pages__": {
+   "dealer_run": {
+    "disown": [
+     "00GKA000000000001"
+    ],
+    "evidenced": [
+     "00GKA000000000001"
+    ],
+    "kept": [
+     "00GFS000000000001",
+     "00GFS000000000002",
+     "00GFS000000000003",
+     "00GFU000000000001",
+     "00GFU000000000002",
+     "00GFU000000000003"
+    ],
+    "refused": {
+     "00GFU000000000001": "unstamped_row_in_group_feed",
+     "00GFU000000000002": "unstamped_row_in_group_feed",
+     "00GKA000000000001": "sibling_rooftop"
+    },
+    "unidentified": 2
+   },
+   "delta_old": {
+    "disown": [
+     "00GKA000000000001"
+    ],
+    "evidenced": [
+     "00GKA000000000001"
+    ],
+    "kept": [
+     "00GFS000000000001",
+     "00GFS000000000002",
+     "00GFS000000000003",
+     "00GFU000000000001",
+     "00GFU000000000002",
+     "00GFU000000000003"
+    ],
+    "refused": {
+     "00GFU000000000001": "unstamped_row_in_group_feed",
+     "00GFU000000000002": "unstamped_row_in_group_feed",
+     "00GKA000000000001": "sibling_rooftop"
+    },
+    "unidentified": 2
+   }
+  },
+  "scorer|group1fordofsouthaustin-com|open_page_lot_codes": {
+   "dealer_run": {
+    "disown": [
+     "00GKA000000000001"
+    ],
+    "evidenced": [
+     "00GKA000000000001"
+    ],
+    "kept": [
+     "00GFS000000000001",
+     "00GFS000000000002",
+     "00GFS000000000003"
+    ],
+    "refused": {
+     "00GFU000000000001": "unstamped_row_in_group_feed",
+     "00GFU000000000002": "unstamped_row_in_group_feed",
+     "00GKA000000000001": "sibling_rooftop"
+    },
+    "unidentified": 2
+   },
+   "delta_old": {
+    "disown": [
+     "00GKA000000000001"
+    ],
+    "evidenced": [
+     "00GKA000000000001"
+    ],
+    "kept": [
+     "00GFS000000000001",
+     "00GFS000000000002",
+     "00GFS000000000003"
+    ],
+    "refused": {
+     "00GFU000000000001": "unstamped_row_in_group_feed",
+     "00GFU000000000002": "unstamped_row_in_group_feed",
+     "00GKA000000000001": "sibling_rooftop"
+    },
+    "unidentified": 2
+   }
+  },
+  "scorer|group1fordofsouthaustin-com|store_scoped_location_facet": {
+   "dealer_run": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00GFS000000000001",
+     "00GFU000000000001",
+     "00GFU000000000002",
+     "00GFU000000000003"
+    ],
+    "refused": {},
+    "unidentified": 0
+   },
+   "delta_old": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00GFS000000000001",
+     "00GFU000000000001",
+     "00GFU000000000002",
+     "00GFU000000000003"
+    ],
+    "refused": {},
+    "unidentified": 0
+   }
+  },
+  "scorer|group1toyotanorthaustin-com|__all_pages__": {
+   "dealer_run": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00GTJ000000000001",
+     "00GTJ000000000002",
+     "00GTJ000000000003",
+     "00GTN000000000001",
+     "00GTN000000000002",
+     "00GTN000000000003",
+     "00GTN000000000004",
+     "00GTU000000000001",
+     "00GTU000000000002",
+     "00GTU000000000003",
+     "00GTU000000000005"
+    ],
+    "refused": {
+     "00GTN000000000001": "unstamped_row_in_group_feed",
+     "00GTN000000000002": "unstamped_row_in_group_feed",
+     "00GTU000000000001": "sibling_rooftop_weak_tier",
+     "00GTU000000000002": "sibling_rooftop_weak_tier",
+     "00GTU000000000003": "unstamped_row_in_group_feed",
+     "00GTU000000000004": "unstamped_row_in_group_feed"
+    },
+    "unidentified": 6
+   },
+   "delta_old": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00GTJ000000000001",
+     "00GTJ000000000002",
+     "00GTJ000000000003",
+     "00GTN000000000001",
+     "00GTN000000000002",
+     "00GTN000000000003",
+     "00GTN000000000004",
+     "00GTU000000000001",
+     "00GTU000000000002",
+     "00GTU000000000003",
+     "00GTU000000000005"
+    ],
+    "refused": {
+     "00GTN000000000001": "target_rooftop_unidentified",
+     "00GTN000000000002": "target_rooftop_unidentified",
+     "00GTU000000000001": "target_rooftop_unidentified",
+     "00GTU000000000002": "target_rooftop_unidentified",
+     "00GTU000000000003": "target_rooftop_unidentified",
+     "00GTU000000000004": "target_rooftop_unidentified"
+    },
+    "unidentified": 6
+   }
+  },
+  "scorer|group1toyotanorthaustin-com|open_page_lot_tags": {
+   "dealer_run": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [],
+    "refused": {
+     "00GTN000000000001": "target_rooftop_unidentified",
+     "00GTN000000000002": "target_rooftop_unidentified",
+     "00GTU000000000001": "target_rooftop_unidentified",
+     "00GTU000000000002": "target_rooftop_unidentified",
+     "00GTU000000000003": "target_rooftop_unidentified",
+     "00GTU000000000004": "target_rooftop_unidentified"
+    },
+    "unidentified": 6
+   },
+   "delta_old": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [],
+    "refused": {
+     "00GTN000000000001": "target_rooftop_unidentified",
+     "00GTN000000000002": "target_rooftop_unidentified",
+     "00GTU000000000001": "target_rooftop_unidentified",
+     "00GTU000000000002": "target_rooftop_unidentified",
+     "00GTU000000000003": "target_rooftop_unidentified",
+     "00GTU000000000004": "target_rooftop_unidentified"
+    },
+    "unidentified": 6
+   }
+  },
+  "scorer|group1toyotanorthaustin-com|store_scoped_identity_feed": {
+   "dealer_run": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00GTN000000000001",
+     "00GTN000000000002",
+     "00GTN000000000003",
+     "00GTN000000000004"
+    ],
+    "refused": {},
+    "unidentified": 0
+   },
+   "delta_old": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00GTN000000000001",
+     "00GTN000000000002",
+     "00GTN000000000003",
+     "00GTN000000000004"
+    ],
+    "refused": {},
+    "unidentified": 0
+   }
+  },
+  "scorer|group1toyotanorthaustin-com|store_scoped_location_facet": {
+   "dealer_run": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00GTU000000000001",
+     "00GTU000000000002",
+     "00GTU000000000003",
+     "00GTU000000000005"
+    ],
+    "refused": {},
+    "unidentified": 0
+   },
+   "delta_old": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00GTU000000000001",
+     "00GTU000000000002",
+     "00GTU000000000003",
+     "00GTU000000000005"
+    ],
+    "refused": {},
+    "unidentified": 0
+   }
+  },
+  "scorer|group1toyotanorthaustin-com|tags_only_page_is_one_locality": {
+   "dealer_run": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00GTJ000000000001",
+     "00GTJ000000000002",
+     "00GTJ000000000003"
+    ],
+    "refused": {},
+    "unidentified": 0
+   },
+   "delta_old": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00GTJ000000000001",
+     "00GTJ000000000002",
+     "00GTJ000000000003"
+    ],
+    "refused": {},
+    "unidentified": 0
+   }
+  },
+  "scorer|hendrickbuickgmccary-com|__all_pages__": {
+   "dealer_run": {
+    "disown": [
+     "00KIA000000000001",
+     "00KIA000000000002",
+     "00NAP000000000001"
+    ],
+    "evidenced": [
+     "00KIA000000000001",
+     "00KIA000000000002",
+     "00NAP000000000001"
+    ],
+    "kept": [
+     "00HBC000000000001",
+     "00HBC000000000002",
+     "00HBC000000000003",
+     "00HBC000000000004",
+     "00HCC000000000001"
+    ],
+    "refused": {
+     "00KIA000000000001": "sibling_rooftop",
+     "00KIA000000000002": "sibling_rooftop",
+     "00NAP000000000001": "sibling_rooftop",
+     "00UNS000000000001": "unstamped_row_in_group_feed"
+    },
+    "unidentified": 2
+   },
+   "delta_old": {
+    "disown": [
+     "00KIA000000000001",
+     "00KIA000000000002",
+     "00NAP000000000001"
+    ],
+    "evidenced": [
+     "00KIA000000000001",
+     "00KIA000000000002",
+     "00NAP000000000001"
+    ],
+    "kept": [
+     "00HBC000000000001",
+     "00HBC000000000002",
+     "00HBC000000000003",
+     "00HBC000000000004",
+     "00HCC000000000001"
+    ],
+    "refused": {
+     "00KIA000000000001": "sibling_rooftop",
+     "00KIA000000000002": "sibling_rooftop",
+     "00NAP000000000001": "sibling_rooftop",
+     "00UNS000000000001": "unstamped_row_in_group_feed"
+    },
+    "unidentified": 2
+   }
+  },
+  "scorer|hendrickbuickgmccary-com|open_group_page_before_alias": {
+   "dealer_run": {
+    "disown": [
+     "00KIA000000000001",
+     "00NAP000000000001"
+    ],
+    "evidenced": [
+     "00KIA000000000001",
+     "00NAP000000000001"
+    ],
+    "kept": [
+     "00HBC000000000001"
+    ],
+    "refused": {
+     "00KIA000000000001": "sibling_rooftop",
+     "00NAP000000000001": "sibling_rooftop",
+     "00UNS000000000001": "unstamped_row_in_group_feed"
+    },
+    "unidentified": 1
+   },
+   "delta_old": {
+    "disown": [
+     "00KIA000000000001",
+     "00NAP000000000001"
+    ],
+    "evidenced": [
+     "00KIA000000000001",
+     "00NAP000000000001"
+    ],
+    "kept": [
+     "00HBC000000000001"
+    ],
+    "refused": {
+     "00KIA000000000001": "sibling_rooftop",
+     "00NAP000000000001": "sibling_rooftop",
+     "00UNS000000000001": "unstamped_row_in_group_feed"
+    },
+    "unidentified": 1
+   }
+  },
+  "scorer|hendrickbuickgmccary-com|open_group_page_with_alias": {
+   "dealer_run": {
+    "disown": [
+     "00KIA000000000001",
+     "00KIA000000000002",
+     "00NAP000000000001"
+    ],
+    "evidenced": [
+     "00KIA000000000001",
+     "00KIA000000000002",
+     "00NAP000000000001"
+    ],
+    "kept": [
+     "00HBC000000000001",
+     "00HBC000000000002",
+     "00HBC000000000003",
+     "00HCC000000000001"
+    ],
+    "refused": {
+     "00KIA000000000001": "sibling_rooftop",
+     "00KIA000000000002": "sibling_rooftop",
+     "00NAP000000000001": "sibling_rooftop",
+     "00UNS000000000001": "unstamped_row_in_group_feed"
+    },
+    "unidentified": 1
+   },
+   "delta_old": {
+    "disown": [
+     "00KIA000000000001",
+     "00KIA000000000002",
+     "00NAP000000000001"
+    ],
+    "evidenced": [
+     "00KIA000000000001",
+     "00KIA000000000002",
+     "00NAP000000000001"
+    ],
+    "kept": [
+     "00HBC000000000001",
+     "00HBC000000000002",
+     "00HBC000000000003",
+     "00HCC000000000001"
+    ],
+    "refused": {
+     "00KIA000000000001": "sibling_rooftop",
+     "00KIA000000000002": "sibling_rooftop",
+     "00NAP000000000001": "sibling_rooftop",
+     "00UNS000000000001": "unstamped_row_in_group_feed"
+    },
+    "unidentified": 1
+   }
+  },
+  "scorer|hendrickbuickgmccary-com|store_scoped_recipe": {
+   "dealer_run": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00HBC000000000001",
+     "00HBC000000000002",
+     "00HBC000000000003",
+     "00HBC000000000004"
+    ],
+    "refused": {},
+    "unidentified": 0
+   },
+   "delta_old": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00HBC000000000001",
+     "00HBC000000000002",
+     "00HBC000000000003",
+     "00HBC000000000004"
+    ],
+    "refused": {},
+    "unidentified": 0
+   }
+  },
+  "scorer|hendrickhonda-com|__all_pages__": {
+   "dealer_run": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [],
+    "refused": {
+     "00AUS000000000001": "target_rooftop_unidentified",
+     "00BMW000000000001": "target_rooftop_unidentified",
+     "00CHS000000000001": "target_rooftop_unidentified",
+     "00HHC000000000001": "target_rooftop_unidentified",
+     "00HHC000000000002": "target_rooftop_unidentified",
+     "00LEX000000000001": "target_rooftop_unidentified",
+     "00LEX000000000002": "target_rooftop_unidentified",
+     "00UNS000000000001": "target_rooftop_unidentified"
+    },
+    "unidentified": 19
+   },
+   "delta_old": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [],
+    "refused": {
+     "00AUS000000000001": "sibling_rooftop_weak_tier",
+     "00BMW000000000001": "target_rooftop_unidentified",
+     "00CHS000000000001": "sibling_rooftop_weak_tier",
+     "00HHC000000000001": "target_rooftop_unidentified",
+     "00HHC000000000002": "target_rooftop_unidentified",
+     "00LEX000000000001": "target_rooftop_unidentified",
+     "00LEX000000000002": "target_rooftop_unidentified",
+     "00UNS000000000001": "target_rooftop_unidentified"
+    },
+    "unidentified": 19
+   }
+  },
+  "scorer|hendrickhonda-com|page_where_the_only_charlotte_rooftop_is_a_sibling": {
+   "dealer_run": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00LEX000000000001",
+     "00LEX000000000002"
+    ],
+    "refused": {
+     "00CHS000000000001": "sibling_rooftop_weak_tier"
+    },
+    "unidentified": 1
+   },
+   "delta_old": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00LEX000000000001",
+     "00LEX000000000002"
+    ],
+    "refused": {
+     "00CHS000000000001": "sibling_rooftop_weak_tier"
+    },
+    "unidentified": 1
+   }
+  },
+  "scorer|hendrickhonda-com|page_with_one_charlotte_rooftop": {
+   "dealer_run": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00HHC000000000001",
+     "00HHC000000000002"
+    ],
+    "refused": {
+     "00AUS000000000001": "sibling_rooftop_weak_tier",
+     "00CHS000000000001": "sibling_rooftop_weak_tier",
+     "00UNS000000000001": "unstamped_row_in_group_feed"
+    },
+    "unidentified": 3
+   },
+   "delta_old": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00HHC000000000001",
+     "00HHC000000000002"
+    ],
+    "refused": {
+     "00AUS000000000001": "sibling_rooftop_weak_tier",
+     "00CHS000000000001": "sibling_rooftop_weak_tier",
+     "00UNS000000000001": "unstamped_row_in_group_feed"
+    },
+    "unidentified": 3
+   }
+  },
+  "scorer|hendrickhonda-com|union_pass_no_street": {
+   "dealer_run": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [],
+    "refused": {
+     "00BMW000000000001": "target_rooftop_unidentified",
+     "00CHS000000000001": "target_rooftop_unidentified",
+     "00HHC000000000001": "target_rooftop_unidentified",
+     "00HHC000000000002": "target_rooftop_unidentified",
+     "00LEX000000000001": "target_rooftop_unidentified",
+     "00UNS000000000001": "target_rooftop_unidentified"
+    },
+    "unidentified": 6
+   },
+   "delta_old": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [],
+    "refused": {
+     "00BMW000000000001": "target_rooftop_unidentified",
+     "00CHS000000000001": "target_rooftop_unidentified",
+     "00HHC000000000001": "target_rooftop_unidentified",
+     "00HHC000000000002": "target_rooftop_unidentified",
+     "00LEX000000000001": "target_rooftop_unidentified",
+     "00UNS000000000001": "target_rooftop_unidentified"
+    },
+    "unidentified": 6
+   }
+  },
+  "scorer|hendrickhonda-com|union_pass_with_street": {
+   "dealer_run": {
+    "disown": [
+     "00BMW000000000001",
+     "00LEX000000000001"
+    ],
+    "evidenced": [
+     "00BMW000000000001",
+     "00LEX000000000001"
+    ],
+    "kept": [
+     "00HHC000000000001",
+     "00HHC000000000002"
+    ],
+    "refused": {
+     "00BMW000000000001": "sibling_rooftop",
+     "00LEX000000000001": "sibling_rooftop",
+     "00UNS000000000001": "unstamped_row_in_group_feed"
+    },
+    "unidentified": 1
+   },
+   "delta_old": {
+    "disown": [
+     "00BMW000000000001",
+     "00LEX000000000001"
+    ],
+    "evidenced": [
+     "00BMW000000000001",
+     "00LEX000000000001"
+    ],
+    "kept": [
+     "00HHC000000000001",
+     "00HHC000000000002"
+    ],
+    "refused": {
+     "00BMW000000000001": "sibling_rooftop",
+     "00LEX000000000001": "sibling_rooftop",
+     "00UNS000000000001": "unstamped_row_in_group_feed"
+    },
+    "unidentified": 1
+   }
+  },
+  "scorer|hondahuntersville-com|__all_pages__": {
+   "dealer_run": {
+    "disown": [
+     "00HKC000000000001",
+     "00HOO000000000001"
+    ],
+    "evidenced": [
+     "00HKC000000000001",
+     "00HOO000000000001"
+    ],
+    "kept": [
+     "00HHN000000000001",
+     "00HHN000000000002",
+     "00HHN000000000003",
+     "00HHS000000000001",
+     "00HHS000000000002",
+     "00HHU000000000001",
+     "00HHU000000000002"
+    ],
+    "refused": {
+     "00HKC000000000001": "sibling_rooftop",
+     "00HOO000000000001": "sibling_rooftop",
+     "00HOO000000000002": "unstamped_row_in_group_feed",
+     "00UNS000000000001": "unstamped_row_in_group_feed"
+    },
+    "unidentified": 2
+   },
+   "delta_old": {
+    "disown": [
+     "00HKC000000000001",
+     "00HOO000000000001"
+    ],
+    "evidenced": [
+     "00HKC000000000001",
+     "00HOO000000000001"
+    ],
+    "kept": [
+     "00HHN000000000001",
+     "00HHN000000000002",
+     "00HHN000000000003",
+     "00HHS000000000001",
+     "00HHS000000000002",
+     "00HHU000000000001",
+     "00HHU000000000002"
+    ],
+    "refused": {
+     "00HKC000000000001": "sibling_rooftop",
+     "00HOO000000000001": "sibling_rooftop",
+     "00HOO000000000002": "unstamped_row_in_group_feed",
+     "00UNS000000000001": "unstamped_row_in_group_feed"
+    },
+    "unidentified": 2
+   }
+  },
+  "scorer|hondahuntersville-com|group_wide_source_never_vouches": {
+   "dealer_run": {
+    "disown": [
+     "00HKC000000000001"
+    ],
+    "evidenced": [
+     "00HKC000000000001"
+    ],
+    "kept": [
+     "00HHN000000000001",
+     "00HHN000000000003"
+    ],
+    "refused": {
+     "00HKC000000000001": "sibling_rooftop",
+     "00UNS000000000001": "unstamped_row_in_group_feed"
+    },
+    "unidentified": 1
+   },
+   "delta_old": {
+    "disown": [
+     "00HKC000000000001"
+    ],
+    "evidenced": [
+     "00HKC000000000001"
+    ],
+    "kept": [
+     "00HHN000000000001",
+     "00HHN000000000003"
+    ],
+    "refused": {
+     "00HKC000000000001": "sibling_rooftop",
+     "00UNS000000000001": "unstamped_row_in_group_feed"
+    },
+    "unidentified": 1
+   }
+  },
+  "scorer|hondahuntersville-com|three_stamps_no_street": {
+   "dealer_run": {
+    "disown": [
+     "00HHS000000000001"
+    ],
+    "evidenced": [
+     "00HHS000000000001"
+    ],
+    "kept": [
+     "00HHN000000000001"
+    ],
+    "refused": {
+     "00HHS000000000001": "sibling_rooftop",
+     "00HHU000000000001": "unstamped_row_in_group_feed"
+    },
+    "unidentified": 1
+   },
+   "delta_old": {
+    "disown": [
+     "00HHS000000000001"
+    ],
+    "evidenced": [
+     "00HHS000000000001"
+    ],
+    "kept": [
+     "00HHN000000000001"
+    ],
+    "refused": {
+     "00HHS000000000001": "sibling_rooftop",
+     "00HHU000000000001": "unstamped_row_in_group_feed"
+    },
+    "unidentified": 1
+   }
+  },
+  "scorer|hondahuntersville-com|three_stamps_with_street": {
+   "dealer_run": {
+    "disown": [
+     "00HOO000000000001"
+    ],
+    "evidenced": [
+     "00HOO000000000001"
+    ],
+    "kept": [
+     "00HHN000000000001",
+     "00HHN000000000002",
+     "00HHS000000000001",
+     "00HHS000000000002",
+     "00HHU000000000001",
+     "00HHU000000000002"
+    ],
+    "refused": {
+     "00HOO000000000001": "sibling_rooftop",
+     "00HOO000000000002": "unstamped_row_in_group_feed"
+    },
+    "unidentified": 1
+   },
+   "delta_old": {
+    "disown": [
+     "00HOO000000000001"
+    ],
+    "evidenced": [
+     "00HOO000000000001"
+    ],
+    "kept": [
+     "00HHN000000000001",
+     "00HHN000000000002",
+     "00HHS000000000001",
+     "00HHS000000000002",
+     "00HHU000000000001",
+     "00HHU000000000002"
+    ],
+    "refused": {
+     "00HOO000000000001": "sibling_rooftop",
+     "00HOO000000000002": "unstamped_row_in_group_feed"
+    },
+    "unidentified": 1
+   }
+  },
+  "scorer|machaikchevy-com|__all_pages__": {
+   "dealer_run": {
+    "disown": [
+     "00MHF000000000001"
+    ],
+    "evidenced": [
+     "00MHF000000000001"
+    ],
+    "kept": [
+     "00MHC000000000001",
+     "00MHC000000000002",
+     "00MHC000000000003",
+     "00MHC000000000004"
+    ],
+    "refused": {
+     "00MHF000000000001": "sibling_rooftop",
+     "00UNS000000000001": "unstamped_row_in_group_feed"
+    },
+    "unidentified": 1
+   },
+   "delta_old": {
+    "disown": [
+     "00MHF000000000001"
+    ],
+    "evidenced": [
+     "00MHF000000000001"
+    ],
+    "kept": [
+     "00MHC000000000001",
+     "00MHC000000000002",
+     "00MHC000000000003",
+     "00MHC000000000004"
+    ],
+    "refused": {
+     "00MHF000000000001": "sibling_rooftop",
+     "00UNS000000000001": "unstamped_row_in_group_feed"
+    },
+    "unidentified": 1
+   }
+  },
+  "scorer|machaikchevy-com|open_group_page_named": {
+   "dealer_run": {
+    "disown": [
+     "00MHF000000000001"
+    ],
+    "evidenced": [
+     "00MHF000000000001"
+    ],
+    "kept": [
+     "00MHC000000000001",
+     "00MHC000000000002"
+    ],
+    "refused": {
+     "00MHF000000000001": "sibling_rooftop",
+     "00UNS000000000001": "unstamped_row_in_group_feed"
+    },
+    "unidentified": 1
+   },
+   "delta_old": {
+    "disown": [
+     "00MHF000000000001"
+    ],
+    "evidenced": [
+     "00MHF000000000001"
+    ],
+    "kept": [
+     "00MHC000000000001",
+     "00MHC000000000002"
+    ],
+    "refused": {
+     "00MHF000000000001": "sibling_rooftop",
+     "00UNS000000000001": "unstamped_row_in_group_feed"
+    },
+    "unidentified": 1
+   }
+  },
+  "scorer|machaikchevy-com|store_scoped_recipe": {
+   "dealer_run": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00MHC000000000001",
+     "00MHC000000000002",
+     "00MHC000000000003",
+     "00MHC000000000004"
+    ],
+    "refused": {},
+    "unidentified": 0
+   },
+   "delta_old": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00MHC000000000001",
+     "00MHC000000000002",
+     "00MHC000000000003",
+     "00MHC000000000004"
+    ],
+    "refused": {},
+    "unidentified": 0
+   }
+  },
+  "scorer|mallofgamazda-com|__all_pages__": {
+   "dealer_run": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00MZA000000000001",
+     "00MZA000000000002",
+     "00MZA000000000003",
+     "00MZB000000000001",
+     "00MZB000000000002"
+    ],
+    "refused": {
+     "00LEE000000000001": "target_rooftop_unidentified",
+     "00MIN000000000001": "target_rooftop_unidentified",
+     "00MZA000000000001": "target_rooftop_unidentified",
+     "00MZA000000000002": "target_rooftop_unidentified",
+     "00MZB000000000001": "target_rooftop_unidentified",
+     "00UNS000000000001": "target_rooftop_unidentified"
+    },
+    "unidentified": 13
+   },
+   "delta_old": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00MZA000000000001",
+     "00MZA000000000002",
+     "00MZA000000000003",
+     "00MZB000000000001",
+     "00MZB000000000002"
+    ],
+    "refused": {
+     "00LEE000000000001": "target_rooftop_unidentified",
+     "00MIN000000000001": "target_rooftop_unidentified",
+     "00MZA000000000001": "target_rooftop_unidentified",
+     "00MZA000000000002": "target_rooftop_unidentified",
+     "00MZB000000000001": "target_rooftop_unidentified",
+     "00UNS000000000001": "target_rooftop_unidentified"
+    },
+    "unidentified": 13
+   }
+  },
+  "scorer|mallofgamazda-com|bogus_alias_picks_the_bare_tag": {
+   "dealer_run": {
+    "disown": [
+     "00MIN000000000001",
+     "00MZA000000000001"
+    ],
+    "evidenced": [
+     "00MIN000000000001",
+     "00MZA000000000001"
+    ],
+    "kept": [
+     "00MZB000000000001"
+    ],
+    "refused": {
+     "00MIN000000000001": "sibling_rooftop",
+     "00MZA000000000001": "sibling_rooftop"
+    },
+    "unidentified": 0
+   },
+   "delta_old": {
+    "disown": [
+     "00MIN000000000001",
+     "00MZA000000000001"
+    ],
+    "evidenced": [
+     "00MIN000000000001",
+     "00MZA000000000001"
+    ],
+    "kept": [
+     "00MZB000000000001"
+    ],
+    "refused": {
+     "00MIN000000000001": "sibling_rooftop",
+     "00MZA000000000001": "sibling_rooftop"
+    },
+    "unidentified": 0
+   }
+  },
+  "scorer|mallofgamazda-com|open_group_page_no_street": {
+   "dealer_run": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [],
+    "refused": {
+     "00LEE000000000001": "target_rooftop_unidentified",
+     "00MIN000000000001": "target_rooftop_unidentified",
+     "00MZA000000000001": "target_rooftop_unidentified",
+     "00MZA000000000002": "target_rooftop_unidentified",
+     "00MZB000000000001": "target_rooftop_unidentified"
+    },
+    "unidentified": 5
+   },
+   "delta_old": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [],
+    "refused": {
+     "00LEE000000000001": "target_rooftop_unidentified",
+     "00MIN000000000001": "target_rooftop_unidentified",
+     "00MZA000000000001": "target_rooftop_unidentified",
+     "00MZA000000000002": "target_rooftop_unidentified",
+     "00MZB000000000001": "target_rooftop_unidentified"
+    },
+    "unidentified": 5
+   }
+  },
+  "scorer|mallofgamazda-com|open_group_page_with_jsonld_street": {
+   "dealer_run": {
+    "disown": [
+     "00MIN000000000001",
+     "00MZB000000000001"
+    ],
+    "evidenced": [
+     "00MIN000000000001",
+     "00MZB000000000001"
+    ],
+    "kept": [
+     "00MZA000000000001",
+     "00MZA000000000002"
+    ],
+    "refused": {
+     "00MIN000000000001": "sibling_rooftop",
+     "00MZB000000000001": "sibling_rooftop",
+     "00UNS000000000001": "unstamped_row_in_group_feed"
+    },
+    "unidentified": 1
+   },
+   "delta_old": {
+    "disown": [
+     "00MIN000000000001",
+     "00MZB000000000001"
+    ],
+    "evidenced": [
+     "00MIN000000000001",
+     "00MZB000000000001"
+    ],
+    "kept": [
+     "00MZA000000000001",
+     "00MZA000000000002"
+    ],
+    "refused": {
+     "00MIN000000000001": "sibling_rooftop",
+     "00MZB000000000001": "sibling_rooftop",
+     "00UNS000000000001": "unstamped_row_in_group_feed"
+    },
+    "unidentified": 1
+   }
+  },
+  "scorer|mallofgamazda-com|store_scoped_recipe": {
+   "dealer_run": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00MZA000000000001",
+     "00MZA000000000002",
+     "00MZA000000000003",
+     "00MZB000000000001",
+     "00MZB000000000002"
+    ],
+    "refused": {},
+    "unidentified": 0
+   },
+   "delta_old": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00MZA000000000001",
+     "00MZA000000000002",
+     "00MZA000000000003",
+     "00MZB000000000001",
+     "00MZB000000000002"
+    ],
+    "refused": {},
+    "unidentified": 0
+   }
+  },
+  "scorer|rickhendrickchevynaples-com|__all_pages__": {
+   "dealer_run": {
+    "disown": [
+     "00CAR000000000001",
+     "00CHS000000000001",
+     "00DUR000000000001"
+    ],
+    "evidenced": [
+     "00CAR000000000001",
+     "00CHS000000000001",
+     "00DUR000000000001"
+    ],
+    "kept": [
+     "00NAP000000000001",
+     "00NAP000000000002",
+     "00NAP000000000003",
+     "00NAP000000000004"
+    ],
+    "refused": {
+     "00CAR000000000001": "sibling_rooftop",
+     "00CHS000000000001": "sibling_rooftop",
+     "00DUR000000000001": "sibling_rooftop",
+     "00UNS000000000001": "unstamped_row_in_group_feed"
+    },
+    "unidentified": 1
+   },
+   "delta_old": {
+    "disown": [
+     "00CAR000000000001",
+     "00CHS000000000001",
+     "00DUR000000000001"
+    ],
+    "evidenced": [
+     "00CAR000000000001",
+     "00CHS000000000001",
+     "00DUR000000000001"
+    ],
+    "kept": [
+     "00NAP000000000001",
+     "00NAP000000000002",
+     "00NAP000000000003",
+     "00NAP000000000004"
+    ],
+    "refused": {
+     "00CAR000000000001": "sibling_rooftop",
+     "00CHS000000000001": "sibling_rooftop",
+     "00DUR000000000001": "sibling_rooftop",
+     "00UNS000000000001": "unstamped_row_in_group_feed"
+    },
+    "unidentified": 1
+   }
+  },
+  "scorer|rickhendrickchevynaples-com|open_group_page_with_alias": {
+   "dealer_run": {
+    "disown": [
+     "00CAR000000000001",
+     "00CHS000000000001",
+     "00DUR000000000001"
+    ],
+    "evidenced": [
+     "00CAR000000000001",
+     "00CHS000000000001",
+     "00DUR000000000001"
+    ],
+    "kept": [
+     "00NAP000000000001",
+     "00NAP000000000002"
+    ],
+    "refused": {
+     "00CAR000000000001": "sibling_rooftop",
+     "00CHS000000000001": "sibling_rooftop",
+     "00DUR000000000001": "sibling_rooftop",
+     "00UNS000000000001": "unstamped_row_in_group_feed"
+    },
+    "unidentified": 1
+   },
+   "delta_old": {
+    "disown": [
+     "00CAR000000000001",
+     "00CHS000000000001",
+     "00DUR000000000001"
+    ],
+    "evidenced": [
+     "00CAR000000000001",
+     "00CHS000000000001",
+     "00DUR000000000001"
+    ],
+    "kept": [
+     "00NAP000000000001",
+     "00NAP000000000002"
+    ],
+    "refused": {
+     "00CAR000000000001": "sibling_rooftop",
+     "00CHS000000000001": "sibling_rooftop",
+     "00DUR000000000001": "sibling_rooftop",
+     "00UNS000000000001": "unstamped_row_in_group_feed"
+    },
+    "unidentified": 1
+   }
+  },
+  "scorer|rickhendrickchevynaples-com|single_rooftop_page_without_alias": {
+   "dealer_run": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00NAP000000000001",
+     "00NAP000000000002",
+     "00NAP000000000003"
+    ],
+    "refused": {},
+    "unidentified": 0
+   },
+   "delta_old": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00NAP000000000001",
+     "00NAP000000000002",
+     "00NAP000000000003"
+    ],
+    "refused": {},
+    "unidentified": 0
+   }
+  },
+  "scorer|rickhendrickchevynaples-com|store_scoped_recipe": {
+   "dealer_run": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00NAP000000000001",
+     "00NAP000000000002",
+     "00NAP000000000003",
+     "00NAP000000000004"
+    ],
+    "refused": {},
+    "unidentified": 0
+   },
+   "delta_old": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00NAP000000000001",
+     "00NAP000000000002",
+     "00NAP000000000003",
+     "00NAP000000000004"
+    ],
+    "refused": {},
+    "unidentified": 0
+   }
+  },
+  "scorer|shottenkirkchrysler-com|__all_pages__": {
+   "dealer_run": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00SCC000000000001",
+     "00SCC000000000002",
+     "00SCC000000000003",
+     "00SCC000000000004"
+    ],
+    "refused": {
+     "00SCA000000000001": "sibling_rooftop_weak_tier"
+    },
+    "unidentified": 2
+   },
+   "delta_old": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00SCC000000000001",
+     "00SCC000000000002",
+     "00SCC000000000003",
+     "00SCC000000000004"
+    ],
+    "refused": {
+     "00SCA000000000001": "sibling_rooftop_weak_tier",
+     "00SCC000000000001": "target_rooftop_unidentified",
+     "00SCC000000000002": "target_rooftop_unidentified"
+    },
+    "unidentified": 4
+   }
+  },
+  "scorer|shottenkirkchrysler-com|sibling_with_locale": {
+   "dealer_run": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00SCC000000000001",
+     "00SCC000000000002"
+    ],
+    "refused": {
+     "00SCA000000000001": "sibling_rooftop_weak_tier"
+    },
+    "unidentified": 1
+   },
+   "delta_old": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00SCC000000000001",
+     "00SCC000000000002"
+    ],
+    "refused": {
+     "00SCA000000000001": "sibling_rooftop_weak_tier"
+    },
+    "unidentified": 1
+   }
+  },
+  "scorer|shottenkirkchrysler-com|single_rooftop_short_cluster_plus_town": {
+   "dealer_run": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00SCC000000000001",
+     "00SCC000000000002",
+     "00SCC000000000003",
+     "00SCC000000000004"
+    ],
+    "refused": {},
+    "unidentified": 0
+   },
+   "delta_old": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00SCC000000000001",
+     "00SCC000000000002",
+     "00SCC000000000003",
+     "00SCC000000000004"
+    ],
+    "refused": {},
+    "unidentified": 0
+   }
+  },
+  "scorer|shottenkirkchrysler-com|two_towns_same_cluster": {
+   "dealer_run": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [],
+    "refused": {
+     "00SCA000000000001": "target_rooftop_unidentified",
+     "00SCC000000000001": "target_rooftop_unidentified",
+     "00SCC000000000002": "target_rooftop_unidentified"
+    },
+    "unidentified": 3
+   },
+   "delta_old": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [],
+    "refused": {
+     "00SCA000000000001": "target_rooftop_unidentified",
+     "00SCC000000000001": "target_rooftop_unidentified",
+     "00SCC000000000002": "target_rooftop_unidentified"
+    },
+    "unidentified": 3
+   }
+  },
+  "scorer|stevensonhendrickhonda-com|__all_pages__": {
+   "dealer_run": {
+    "disown": [
+     "00SHC000000000001",
+     "00SHD000000000002"
+    ],
+    "evidenced": [
+     "00SHC000000000001",
+     "00SHD000000000002"
+    ],
+    "kept": [
+     "00SHA000000000001",
+     "00SHB000000000001",
+     "00SHB000000000002",
+     "00SHB000000000003",
+     "00SHD000000000001"
+    ],
+    "refused": {
+     "00SHC000000000001": "sibling_rooftop",
+     "00SHD000000000002": "sibling_rooftop",
+     "00UNS000000000001": "unstamped_row_in_group_feed"
+    },
+    "unidentified": 1
+   },
+   "delta_old": {
+    "disown": [
+     "00SHC000000000001",
+     "00SHD000000000002"
+    ],
+    "evidenced": [
+     "00SHC000000000001",
+     "00SHD000000000002"
+    ],
+    "kept": [
+     "00SHA000000000001",
+     "00SHB000000000001",
+     "00SHB000000000002",
+     "00SHB000000000003",
+     "00SHD000000000001"
+    ],
+    "refused": {
+     "00SHC000000000001": "sibling_rooftop",
+     "00SHD000000000002": "sibling_rooftop",
+     "00UNS000000000001": "unstamped_row_in_group_feed"
+    },
+    "unidentified": 1
+   }
+  },
+  "scorer|stevensonhendrickhonda-com|open_group_page_no_street": {
+   "dealer_run": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [],
+    "refused": {
+     "00SHA000000000001": "target_rooftop_unidentified",
+     "00SHB000000000001": "target_rooftop_unidentified",
+     "00SHC000000000001": "target_rooftop_unidentified"
+    },
+    "unidentified": 3
+   },
+   "delta_old": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [],
+    "refused": {
+     "00SHA000000000001": "target_rooftop_unidentified",
+     "00SHB000000000001": "target_rooftop_unidentified",
+     "00SHC000000000001": "target_rooftop_unidentified"
+    },
+    "unidentified": 3
+   }
+  },
+  "scorer|stevensonhendrickhonda-com|open_group_page_with_street": {
+   "dealer_run": {
+    "disown": [
+     "00SHC000000000001",
+     "00SHD000000000002"
+    ],
+    "evidenced": [
+     "00SHC000000000001",
+     "00SHD000000000002"
+    ],
+    "kept": [
+     "00SHA000000000001",
+     "00SHB000000000001",
+     "00SHB000000000002",
+     "00SHD000000000001"
+    ],
+    "refused": {
+     "00SHC000000000001": "sibling_rooftop",
+     "00SHD000000000002": "sibling_rooftop",
+     "00UNS000000000001": "unstamped_row_in_group_feed"
+    },
+    "unidentified": 1
+   },
+   "delta_old": {
+    "disown": [
+     "00SHC000000000001",
+     "00SHD000000000002"
+    ],
+    "evidenced": [
+     "00SHC000000000001",
+     "00SHD000000000002"
+    ],
+    "kept": [
+     "00SHA000000000001",
+     "00SHB000000000001",
+     "00SHB000000000002",
+     "00SHD000000000001"
+    ],
+    "refused": {
+     "00SHC000000000001": "sibling_rooftop",
+     "00SHD000000000002": "sibling_rooftop",
+     "00UNS000000000001": "unstamped_row_in_group_feed"
+    },
+    "unidentified": 1
+   }
+  },
+  "scorer|stevensonhendrickhonda-com|store_scoped_recipe": {
+   "dealer_run": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00SHA000000000001",
+     "00SHB000000000001",
+     "00SHB000000000002",
+     "00SHB000000000003"
+    ],
+    "refused": {},
+    "unidentified": 0
+   },
+   "delta_old": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00SHA000000000001",
+     "00SHB000000000001",
+     "00SHB000000000002",
+     "00SHB000000000003"
+    ],
+    "refused": {},
+    "unidentified": 0
+   }
+  },
+  "scorer|tuttoncdjr-com|__all_pages__": {
+   "dealer_run": {
+    "disown": [
+     "00VOY000000000001"
+    ],
+    "evidenced": [
+     "00TCB000000000001",
+     "00TCB000000000002",
+     "00VOY000000000001"
+    ],
+    "kept": [
+     "00TCA000000000001",
+     "00TCA000000000002",
+     "00TCB000000000001",
+     "00TCB000000000002",
+     "00TCB000000000003",
+     "00TCB000000000004"
+    ],
+    "refused": {
+     "00TCB000000000001": "sibling_rooftop",
+     "00TCB000000000002": "sibling_rooftop",
+     "00UNS000000000001": "unstamped_row_in_group_feed",
+     "00VOY000000000001": "sibling_rooftop"
+    },
+    "unidentified": 1
+   },
+   "delta_old": {
+    "disown": [
+     "00VOY000000000001"
+    ],
+    "evidenced": [
+     "00TCB000000000001",
+     "00TCB000000000002",
+     "00VOY000000000001"
+    ],
+    "kept": [
+     "00TCA000000000001",
+     "00TCA000000000002",
+     "00TCB000000000001",
+     "00TCB000000000002",
+     "00TCB000000000003",
+     "00TCB000000000004"
+    ],
+    "refused": {
+     "00TCB000000000001": "sibling_rooftop",
+     "00TCB000000000002": "sibling_rooftop",
+     "00UNS000000000001": "unstamped_row_in_group_feed",
+     "00VOY000000000001": "sibling_rooftop"
+    },
+    "unidentified": 1
+   }
+  },
+  "scorer|tuttoncdjr-com|open_page_no_street": {
+   "dealer_run": {
+    "disown": [
+     "00TCB000000000001",
+     "00TCB000000000002",
+     "00VOY000000000001"
+    ],
+    "evidenced": [
+     "00TCB000000000001",
+     "00TCB000000000002",
+     "00VOY000000000001"
+    ],
+    "kept": [
+     "00TCA000000000001",
+     "00TCA000000000002"
+    ],
+    "refused": {
+     "00TCB000000000001": "sibling_rooftop",
+     "00TCB000000000002": "sibling_rooftop",
+     "00UNS000000000001": "unstamped_row_in_group_feed",
+     "00VOY000000000001": "sibling_rooftop"
+    },
+    "unidentified": 1
+   },
+   "delta_old": {
+    "disown": [
+     "00TCB000000000001",
+     "00TCB000000000002",
+     "00VOY000000000001"
+    ],
+    "evidenced": [
+     "00TCB000000000001",
+     "00TCB000000000002",
+     "00VOY000000000001"
+    ],
+    "kept": [
+     "00TCA000000000001",
+     "00TCA000000000002"
+    ],
+    "refused": {
+     "00TCB000000000001": "sibling_rooftop",
+     "00TCB000000000002": "sibling_rooftop",
+     "00UNS000000000001": "unstamped_row_in_group_feed",
+     "00VOY000000000001": "sibling_rooftop"
+    },
+    "unidentified": 1
+   }
+  },
+  "scorer|tuttoncdjr-com|open_page_with_jsonld_street": {
+   "dealer_run": {
+    "disown": [
+     "00VOY000000000001"
+    ],
+    "evidenced": [
+     "00VOY000000000001"
+    ],
+    "kept": [
+     "00TCA000000000001",
+     "00TCB000000000001",
+     "00TCB000000000002"
+    ],
+    "refused": {
+     "00VOY000000000001": "sibling_rooftop"
+    },
+    "unidentified": 0
+   },
+   "delta_old": {
+    "disown": [
+     "00VOY000000000001"
+    ],
+    "evidenced": [
+     "00VOY000000000001"
+    ],
+    "kept": [
+     "00TCA000000000001",
+     "00TCB000000000001",
+     "00TCB000000000002"
+    ],
+    "refused": {
+     "00VOY000000000001": "sibling_rooftop"
+    },
+    "unidentified": 0
+   }
+  },
+  "scorer|tuttoncdjr-com|store_scoped_recipe": {
+   "dealer_run": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00TCA000000000001",
+     "00TCB000000000001",
+     "00TCB000000000002",
+     "00TCB000000000003",
+     "00TCB000000000004"
+    ],
+    "refused": {},
+    "unidentified": 0
+   },
+   "delta_old": {
+    "disown": [],
+    "evidenced": [],
+    "kept": [
+     "00TCA000000000001",
+     "00TCB000000000001",
+     "00TCB000000000002",
+     "00TCB000000000003",
+     "00TCB000000000004"
+    ],
+    "refused": {},
+    "unidentified": 0
+   }
+  }
+ }
+}

@@ -27,7 +27,9 @@ _CLASSIFY_SEM = threading.Semaphore(3)
 
 logger = logging.getLogger(__name__)
 
-_CLAUDE_MODEL = "claude-haiku-4-5-20251001"
+from backend.llm.client import ROLE_MODELS as _ROLE_MODELS
+
+_CLAUDE_MODEL = _ROLE_MODELS["vision"]  # back-compat name; calls route by role "vision"
 _FETCH_TIMEOUT = 12.0
 _FETCH_UA = (
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
@@ -239,19 +241,18 @@ def _classify_batch(
     content.append({"type": "text", "text": "Classify each image as described. Return JSON array only."})
 
     try:
-        import anthropic
-        from backend.vision.claude_rate_limit import anthropic_messages_create
+        from backend.llm.client import complete
 
-        client = anthropic.Anthropic(api_key=api_key)
         with _CLASSIFY_SEM:
-            msg = anthropic_messages_create(
-                client,
-                model=_CLAUDE_MODEL,
+            res = complete(
+                model_role="vision",
                 max_tokens=512,
                 system=[{"type": "text", "text": _CLASSIFY_PROMPT, "cache_control": {"type": "ephemeral"}}],
                 messages=[{"role": "user", "content": content}],
+                api_key=api_key,
             )
-        text = msg.content[0].text.strip()
+        res.require_complete()  # refusal / cut -> keep-all fallback, as before
+        text = res.text.strip()
         if text.startswith("```"):
             text = text.split("```")[1]
             if text.startswith("json"):
@@ -472,19 +473,23 @@ def analyze_equipment_from_image_urls(
     content.append({"type": "text", "text": "List visible optional equipment. Return JSON only."})
 
     try:
-        import anthropic
-        from backend.vision.claude_rate_limit import anthropic_messages_create
+        from backend.llm.client import complete
 
-        client = anthropic.Anthropic(api_key=key)
         with _CLASSIFY_SEM:
-            msg = anthropic_messages_create(
-                client,
-                model=_CLAUDE_MODEL,
+            res = complete(
+                model_role="vision",
                 max_tokens=640,
                 system=[{"type": "text", "text": _EQUIPMENT_PROMPT, "cache_control": {"type": "ephemeral"}}],
                 messages=[{"role": "user", "content": content}],
+                api_key=key,
             )
-        text = msg.content[0].text.strip()
+        if res.refused:
+            # API-level refusal: same outcome as a text refusal below — not an
+            # assessed-empty {} (which callers count as a successful look).
+            logger.warning("Claude equipment batch refused (stop_reason=refusal)")
+            return VisionRefusal()
+        res.require_complete()  # max_tokens cut -> failure {}, as before
+        text = res.text.strip()
         if text.startswith("```"):
             text = text.split("```")[1]
             if text.startswith("json"):

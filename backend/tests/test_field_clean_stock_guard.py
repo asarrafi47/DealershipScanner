@@ -113,8 +113,8 @@ class CleanCarRowStockGuardTest(unittest.TestCase):
 
     def test_4x4_drivetrain_still_canonicalized_not_rejected(self) -> None:
         out = clean_car_row_dict({"vin": "1", "drivetrain": "4x4"})
-        # coerce_drivetrain_stored maps 4x4 → AWD; guard must not null it
-        self.assertEqual(out["drivetrain"], "AWD")
+        # coerce_drivetrain_stored maps 4x4 → 4WD (vehicle_facts); guard must not null it
+        self.assertEqual(out["drivetrain"], "4WD")
 
     def test_identical_but_legit_value_across_four_fields_untouched(self) -> None:
         # Degenerate feed with the same real word everywhere: not a stock code

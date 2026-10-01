@@ -23,9 +23,7 @@ from __future__ import annotations
 import argparse
 import json
 import logging
-import os
 import random
-import re
 import sys
 import time
 from pathlib import Path
@@ -34,6 +32,8 @@ from typing import Any
 _REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
+
+from backend.db.connect import connect as db_connect  # noqa: E402
 
 from backend.vision.image_text import (  # noqa: E402
     IMAGE_TEXT_VERSION,
@@ -53,20 +53,6 @@ _UA = (
 # Per-image ceiling. Galleries run to 40-50 images; the sticker and highlights slides
 # are usually in the back half, so we do not truncate aggressively, but we do cap.
 _MAX_IMAGES_PER_CAR = 60
-
-
-def _dsn() -> str:
-    dsn = (os.environ.get("INVENTORY_DATABASE_URL") or os.environ.get("DATABASE_URL") or "").strip()
-    if dsn:
-        return dsn
-    # python-dotenv's find_dotenv() asserts under some interpreter entry points here,
-    # so the file is parsed directly rather than loaded through it.
-    env = _REPO_ROOT / ".env"
-    if env.exists():
-        m = re.search(r"^INVENTORY_DATABASE_URL=(.+)$", env.read_text(), re.M)
-        if m:
-            return m.group(1).strip().strip("'\"")
-    raise SystemExit("INVENTORY_DATABASE_URL is not set")
 
 
 def _make_fetcher(delay: float):
@@ -275,10 +261,7 @@ def main() -> int:
         )
         return 2
 
-    import psycopg
-
-    conn = psycopg.connect(_dsn(), connect_timeout=15)
-    conn.autocommit = True
+    conn = db_connect(autocommit=True)
     cur = conn.cursor()
 
     rows = _select_cars(

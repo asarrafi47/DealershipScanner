@@ -310,19 +310,22 @@ def _is_price_question(message: str) -> bool:
 
 
 def _claude_reply(system: str, msg: str, *, max_tokens: int) -> str:
-    import anthropic
-
+    from backend.llm.client import complete
     from backend.utils.llm_client import anthropic_key
 
-    client = anthropic.Anthropic(api_key=anthropic_key())
-    resp = client.messages.create(
-        model="claude-haiku-4-5-20251001",
+    resp = complete(
+        msg,
+        model_role="chat",
         max_tokens=max_tokens,
         system=[{"type": "text", "text": system, "cache_control": {"type": "ephemeral"}}],
-        messages=[{"role": "user", "content": msg}],
+        api_key=anthropic_key(),
     )
-    text = "".join(b.text for b in resp.content if getattr(b, "type", None) == "text")
-    if resp.stop_reason == "max_tokens":
+    text = resp.text
+    if resp.refused:
+        # Explicit, not silent: the caller still gets the (usually empty) text,
+        # exactly as before, but the refusal is logged with the question.
+        _logger.warning("claude chat refused (msg=%r)", msg[:120])
+    if resp.truncated:
         # The answer was cut by the token budget, not finished. Chat bubbles are
         # plain text (see _plain_chat_reply), so a trailing ellipsis renders
         # fine and signals the cut; the log line makes truncations observable.

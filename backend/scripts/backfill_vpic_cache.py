@@ -84,13 +84,9 @@ def main() -> int:
     args = ap.parse_args()
     dealers = [d.strip() for d in args.dealers.split(",") if d.strip()]
 
-    import psycopg
+    from backend.db.connect import connect as db_connect
 
-    url = re.search(
-        r"^INVENTORY_DATABASE_URL=(.+)$", open(".env").read(), re.M
-    ).group(1).strip()
-    conn = psycopg.connect(url)
-    conn.autocommit = True
+    conn = db_connect(autocommit=True, timeout=None)
     cur = conn.cursor()
 
     cur.execute(

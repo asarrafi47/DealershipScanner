@@ -153,6 +153,12 @@ def ensure_grid_cards_table() -> bool:
     with _table_lock:
         if _table_ready:
             return True
+        if is_inventory_postgres():
+            from backend.db.schema_version import schema_is_current
+
+            if schema_is_current():  # V023 owns listings_grid_cards
+                _table_ready = True
+                return True
         try:
             with db_conn() as conn:
                 conn.execute(_CREATE_SQL)

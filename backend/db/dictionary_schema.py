@@ -8,6 +8,10 @@ from typing import Any
 def ensure_dictionary_tables(cur: Any, *, postgres: bool = False) -> None:
     if postgres:
         from backend.db.inventory_pg import pg_add_columns
+        from backend.db.schema_version import schema_is_current
+
+        if schema_is_current():  # V001/V019 own dictionary_options + epa_master columns
+            return
 
         cur.execute(
             """

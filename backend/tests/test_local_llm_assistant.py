@@ -519,7 +519,7 @@ def client(monkeypatch):
     app = flask.Flask(__name__)
     app.register_blueprint(bp.ai_chat_bp)
     monkeypatch.setattr(bp, "allow_request", lambda *a, **k: True)
-    monkeypatch.setattr(bp, "require_feature", lambda *a, **k: (True, ""))
+    monkeypatch.setattr(bp.paid_access, "check_feature", lambda *a, **k: (True, ""))
     return app.test_client()
 
 

@@ -75,7 +75,6 @@ from __future__ import annotations
 import argparse
 import json
 import math
-import os
 import re
 import sys
 import time
@@ -86,6 +85,8 @@ from typing import Any
 REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
+
+from backend.db.connect import connect as db_connect, inventory_dsn  # noqa: E402
 
 DEFAULT_BASELINE_PATH = Path(__file__).with_name("data_quality_invariants_baseline.json")
 #: Append-only history of every baseline rewrite: one JSON line per --write-baseline
@@ -584,15 +585,11 @@ SQL_INVARIANTS: tuple[SqlInvariant, ...] = (
 
 
 def _inventory_url() -> str:
-    url = os.environ.get("INVENTORY_DATABASE_URL")
-    if url:
-        return url.strip().strip("'\"")
-    env_path = REPO_ROOT / ".env"
-    if env_path.exists():
-        m = re.search(r"^INVENTORY_DATABASE_URL=(.+)$", env_path.read_text(), re.M)
-        if m:
-            return m.group(1).strip().strip("'\"")
-    raise RuntimeError("INVENTORY_DATABASE_URL is not set and is not in .env")
+    """The inventory DSN by the one precedence in ``backend.db.connect``.
+
+    Raises ``InventoryDsnMissing`` (a ``RuntimeError``) when there is none.
+    """
+    return inventory_dsn()
 
 
 def open_readonly_connection():
@@ -603,13 +600,7 @@ def open_readonly_connection():
     raises ``ReadOnlySqlTransaction`` from the server. The invariant suite must
     never be a way to "fix" data, and this makes that structural.
     """
-    import psycopg
-
-    conn = psycopg.connect(_inventory_url())
-    with conn.cursor() as cur:
-        cur.execute("SET SESSION CHARACTERISTICS AS TRANSACTION READ ONLY")
-    conn.commit()
-    return conn
+    return db_connect(read_only=True, timeout=None, dsn=_inventory_url())
 
 
 # --------------------------------------------------------------------------

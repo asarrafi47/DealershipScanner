@@ -32,8 +32,6 @@ from __future__ import annotations
 import argparse
 import json
 import logging
-import os
-import re
 import sys
 from pathlib import Path
 
@@ -41,28 +39,13 @@ _REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
 
+from backend.db.connect import connect as db_connect  # noqa: E402
+
 _log = logging.getLogger("attribution_batch")
 
 
-def _dsn() -> str:
-    dsn = (os.environ.get("INVENTORY_DATABASE_URL") or os.environ.get("DATABASE_URL") or "").strip()
-    if dsn:
-        return dsn
-    env = _REPO_ROOT / ".env"
-    if env.exists():
-        m = re.search(r"^INVENTORY_DATABASE_URL=(.+)$", env.read_text(), re.M)
-        if m:
-            return m.group(1).strip().strip("'\"")
-    raise SystemExit("INVENTORY_DATABASE_URL is not set")
-
-
 def _connect():
-    import psycopg
-
-    os.environ.setdefault("INVENTORY_DATABASE_URL", _dsn())
-    conn = psycopg.connect(_dsn(), connect_timeout=20)
-    conn.autocommit = True
-    return conn
+    return db_connect(autocommit=True, timeout=20, export=True)
 
 
 # Shared with the sweep. See the note in recheck_msrp: three separate defects today came

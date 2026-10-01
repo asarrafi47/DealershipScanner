@@ -210,16 +210,18 @@ def _can_be_plugged_in(car: dict[str, Any], vs: dict[str, Any]) -> bool:
     plugs in would let the bad match authorise itself. *vs* is accepted and
     deliberately unused so callers cannot pass it in expecting it to widen this.
 
-    Delegates to ``ev_range_estimates._is_electrified_car`` rather than
-    restating the fuel-type rule, so this sheet and the range resolver cannot
-    disagree about a PHEV. If that import fails the answer is False: a missing
-    row is always acceptable, a fabricated one never is.
+    One exception: the per-VIN NHTSA decode (``vs["vpic_electrification"]``)
+    is not a model-level match and outranks the fuel label (owner rule), so it
+    is the only key of *vs* read. Decided by ``vehicle_facts.electrification``
+    (the same rule ``ev_range_estimates._is_electrified_car`` uses, so this sheet
+    and the range resolver cannot disagree about a PHEV). On any error the
+    answer is False: a missing row is always acceptable, a fabricated one never is.
     """
-    del vs
     try:
-        from backend.intelligence.ev_range_estimates import _is_electrified_car
+        from backend.vehicle_facts.electrification import can_plug_in
 
-        return _is_electrified_car(car)
+        vpic = (vs or {}).get("vpic_electrification") if isinstance(vs, dict) else None
+        return can_plug_in(car or {}, vpic=vpic)
     except Exception:
         return False
 
@@ -418,101 +420,60 @@ def _extended_select() -> str:
     return ", ".join((*_ATTRIBUTABLE_SPEC_FIELDS, "year", "make", "model", "specs_json"))
 
 
-def _fetch_extended_row(where: str, params: tuple[Any, ...]) -> tuple[Any, ...] | None:
-    conn = None
-    try:
-        from backend.db.inventory_db import get_conn
-
-        conn = get_conn()
-        cur = conn.cursor()
-        cur.execute(
-            f"SELECT {_extended_select()} FROM epa_extended_specs {where} LIMIT 1", params
-        )
-        return cur.fetchone()
-    except Exception:
+def _as_row_tuple(row: dict[str, Any] | None) -> tuple[Any, ...] | None:
+    """Reader dict -> the positional row this module indexes (fields, year, make, model, specs_json)."""
+    if row is None:
         return None
-    finally:
-        if conn is not None:
-            try:
-                conn.close()
-            except Exception:
-                pass
+    return tuple(row.get(c) for c in (*_ATTRIBUTABLE_SPEC_FIELDS, "year", "make", "model", "specs_json"))
 
 
-@lru_cache(maxsize=8192)
 def _extended_row_by_master_id(epa_master_id: int) -> tuple[Any, ...] | None:
-    return _fetch_extended_row("WHERE epa_master_id=?", (epa_master_id,))
+    """Row through ``vehicle_facts.extended_specs`` (the one cached reader)."""
+    from backend.vehicle_facts import extended_specs
+
+    return _as_row_tuple(extended_specs.row_by_master_id(epa_master_id))
 
 
-@lru_cache(maxsize=16384)
 def _extended_row_by_ymmt(
     year: int, make: str, model: str, trim: str
 ) -> tuple[Any, ...] | None:
-    if trim:
-        row = _fetch_extended_row(
-            "WHERE year=? AND lower(make)=lower(?) AND lower(model)=lower(?) "
-            "AND lower(trim)=lower(?)",
-            (year, make, model, trim),
-        )
-        if row is not None:
-            return row
-    return _fetch_extended_row(
-        "WHERE year=? AND lower(make)=lower(?) AND lower(model)=lower(?)",
-        (year, make, model),
-    )
+    from backend.vehicle_facts import extended_specs
+
+    return _as_row_tuple(extended_specs.row_by_ymmt(year, make, model, trim))
 
 
-@lru_cache(maxsize=16384)
 def _fields_shared_across_trims(year: int, make: str, model: str) -> frozenset[str]:
     """Fields whose stored value is the SAME on two or more trims of this config.
 
     Such a value cannot tell those trims apart, so it describes at most one of
     them and is not attributable to any particular car. Configs with a single
-    trim row are not evidence either way and contribute nothing here.
+    trim row are not evidence either way and contribute nothing here. An
+    unreadable spread suppresses every field: unknown spread is not permission
+    to render.
     """
-    cols = ", ".join(
-        f"count(DISTINCT trim) FILTER (WHERE {f} IS NOT NULL), "
-        f"count(DISTINCT {f})"
-        for f in _ATTRIBUTABLE_SPEC_FIELDS
-    )
-    conn = None
-    try:
-        from backend.db.inventory_db import get_conn
+    from backend.vehicle_facts import extended_specs
 
-        conn = get_conn()
-        cur = conn.cursor()
-        cur.execute(
-            f"SELECT {cols} FROM epa_extended_specs "
-            "WHERE year=? AND lower(make)=lower(?) AND lower(model)=lower(?)",
-            (year, make, model),
-        )
-        row = cur.fetchone()
-    except Exception:
-        # Unknown spread is not permission to render: a value we cannot show is
-        # trim-specific stays off the page.
+    shared = extended_specs.fields_shared_across_trims(year, make, model, _ATTRIBUTABLE_SPEC_FIELDS)
+    if shared is None:
         return frozenset(_ATTRIBUTABLE_SPEC_FIELDS)
-    finally:
-        if conn is not None:
-            try:
-                conn.close()
-            except Exception:
-                pass
-    if not row:
-        return frozenset()
-    shared: set[str] = set()
-    for idx, field in enumerate(_ATTRIBUTABLE_SPEC_FIELDS):
-        trims = _int_or_none(row[idx * 2]) or 0
-        values = _int_or_none(row[idx * 2 + 1]) or 0
-        if trims >= 2 and values <= 1:
-            shared.add(field)
-    return frozenset(shared)
+    return shared
+
+
+def _clear_reader_cache() -> None:
+    from backend.vehicle_facts import extended_specs
+
+    extended_specs.clear_cache()
+
+
+# Old cache handles (tests call ``_fields_shared_across_trims.cache_clear()``).
+_fields_shared_across_trims.cache_clear = _clear_reader_cache  # type: ignore[attr-defined]
+_extended_row_by_master_id.cache_clear = _clear_reader_cache  # type: ignore[attr-defined]
+_extended_row_by_ymmt.cache_clear = _clear_reader_cache  # type: ignore[attr-defined]
 
 
 def clear_attributable_spec_cache() -> None:
     """Drop the memoized catalog reads (tests, and after a catalog reload)."""
-    _extended_row_by_master_id.cache_clear()
-    _extended_row_by_ymmt.cache_clear()
-    _fields_shared_across_trims.cache_clear()
+    _clear_reader_cache()
 
 
 def _attributable_extended_specs(car: dict[str, Any]) -> dict[str, dict[str, Any]]:

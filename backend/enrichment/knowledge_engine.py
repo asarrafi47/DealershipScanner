@@ -11,6 +11,9 @@ from functools import lru_cache
 from typing import Any
 
 from backend.db.inventory_db import get_conn
+from backend.vehicle_facts import extended_specs as _xspecs
+from backend.vehicle_facts.drivetrain import normalize_drivetrain
+from backend.vehicle_facts.electrification import LEGACY_CODE, vpic_electrification
 
 
 def _conn():
@@ -434,18 +437,14 @@ def decode_trim_logic(
 
 
 def _norm_drive_epa(d: str | None) -> str | None:
+    """EPA ``drive`` -> FWD/RWD/AWD/4WD (``vehicle_facts.normalize_drivetrain``).
+
+    "2-Wheel Drive" is None (unknown end); "4-Wheel Drive" / "Four-Wheel Drive"
+    are 4WD (they used to leak through raw and part-time 4WD vs plain 4WD split).
+    """
     if not d:
         return None
-    u = d.strip().upper()
-    if "4WD" in u or "ALL" in u or "AWD" in u:
-        return "AWD"
-    if "PART" in u and "4" in u:
-        return "4WD"
-    if "FWD" in u or "FRONT" in u:
-        return "FWD"
-    if "RWD" in u or "REAR" in u:
-        return "RWD"
-    return d
+    return normalize_drivetrain(d, "epa")
 
 
 def _gears_from_trany(trany: str | None) -> int | None:
@@ -561,52 +560,65 @@ def _extended_family_suspicious(cur, year: int, make: str, model: str) -> bool:
     horsepower — a scrape bug fingerprint (e.g. 2011 E-Class: E350, E550 and
     the 518-hp E63 all stored as 375). Such hp/torque must not be displayed, and
     as of 2026-08-02 nothing fills in behind them — the field goes blank.
+
+    Reads through ``vehicle_facts.extended_specs`` (*cur* is accepted for the old
+    signature and unused).
     """
-    try:
-        cur.execute(
-            "SELECT COUNT(*), COUNT(DISTINCT horsepower) FROM epa_extended_specs "
-            "WHERE year=? AND lower(make)=lower(?) AND lower(model)=lower(?) AND horsepower IS NOT NULL",
-            (year, make.strip(), model.strip()),
-        )
-        n, distinct = cur.fetchone()
-        return int(n or 0) >= 4 and int(distinct or 0) == 1
-    except Exception:
-        return False
+    del cur
+    return _xspecs.hp_family_suspicious(int(year), str(make or "").strip(), str(model or "").strip())
 
 
-@lru_cache(maxsize=4096)
+def _plausible_extended(row: dict[str, Any] | None, year: Any, make: Any, model: Any) -> dict[str, Any]:
+    """Spec columns of an ``epa_extended_specs`` row with the knowledge-engine guards:
+    out-of-band hp/torque dropped, same-hp-for-every-trim families dropped."""
+    if not row:
+        return {}
+    result = {k: row[k] for k in _EXTENDED_SPECS_COLUMNS if row.get(k) is not None}
+    if result.get("horsepower") is not None and not (60 <= result["horsepower"] <= 1600):
+        result.pop("horsepower")
+    if result.get("torque_lb_ft") is not None and not (40 <= result["torque_lb_ft"] <= 1500):
+        result.pop("torque_lb_ft")
+    if (result.get("horsepower") is not None or result.get("torque_lb_ft") is not None) and year:
+        if _extended_family_suspicious(None, int(year), str(make or ""), str(model or "")):
+            result.pop("horsepower", None)
+            result.pop("torque_lb_ft", None)
+    return result
+
+
 def _lookup_extended_by_master_id_cached(epa_master_id: int) -> frozenset:
-    cols = ", ".join(_EXTENDED_SPECS_COLUMNS)
+    """Row via ``vehicle_facts.extended_specs`` (its cache), family check keyed on
+    the ``epa_master`` row's (year, make, model) as before."""
+    row = _xspecs.row_by_master_id(epa_master_id)
+    if not row:
+        return frozenset()
+    ymm = _epa_master_ymm(int(epa_master_id))
+    if ymm is None:
+        result = _plausible_extended(row, None, None, None)
+    else:
+        result = _plausible_extended(row, *ymm)
+    # NO ``ai_model_specs`` FALLBACK HERE. See the block comment above
+    # ``_merge_ai_model_specs``: every row of that table is a number a model
+    # wrote. A still-missing field stays missing.
+    return frozenset(result.items())
+
+
+_lookup_extended_by_master_id_cached.cache_clear = _xspecs.clear_cache  # type: ignore[attr-defined]
+
+
+@lru_cache(maxsize=8192)
+def _epa_master_ymm(epa_master_id: int) -> tuple[int, str, str] | None:
     conn = None
     try:
         conn = _conn()
         cur = conn.cursor()
-        cur.execute(
-            f"SELECT {cols} FROM epa_extended_specs WHERE epa_master_id=? LIMIT 1",
-            (int(epa_master_id),),
-        )
-        row = cur.fetchone()
-        result = _extended_specs_row_to_dict(row) if row else {}
-        if result.get("horsepower") is not None and not (60 <= result["horsepower"] <= 1600):
-            result.pop("horsepower")
-        if result.get("torque_lb_ft") is not None and not (40 <= result["torque_lb_ft"] <= 1500):
-            result.pop("torque_lb_ft")
         cur.execute("SELECT year, make, model, trim FROM epa_master WHERE id=?", (int(epa_master_id),))
-        ymm = cur.fetchone()
-        if ymm and (result.get("horsepower") is not None or result.get("torque_lb_ft") is not None):
-            if _extended_family_suspicious(cur, int(ymm[0]), str(ymm[1] or ""), str(ymm[2] or "")):
-                result.pop("horsepower", None)
-                result.pop("torque_lb_ft", None)
-        # NO ``ai_model_specs`` FALLBACK HERE. See the block comment above
-        # ``_merge_ai_model_specs``: every row of that table is a number a model
-        # wrote. A still-missing field stays missing.
-        return frozenset(result.items())
+        r = cur.fetchone()
+        return (int(r[0]), str(r[1] or ""), str(r[2] or "")) if r else None
     except Exception:
-        pass
+        return None
     finally:
         if conn is not None:
             conn.close()
-    return frozenset()
 
 
 def lookup_epa_extended_specs_by_master_id(epa_master_id: Any) -> dict[str, Any]:
@@ -659,7 +671,7 @@ def _lookup_epa_by_trim_uncached(
             row = cur.fetchone()
         # Try normalized model names (e.g. "Silverado 1500" → "Silverado")
         if not row:
-            for fallback_model in _model_epa_fallbacks(make, model):
+            for fallback_model in epa_model_candidates(make, model, strategy="by_trim"):
                 cur.execute(
                     """
                     SELECT cylinders, drive, trany, displacement,
@@ -722,18 +734,7 @@ def _epa_row_to_dict(row: tuple) -> dict[str, Any]:
     return out
 
 
-_EXTENDED_SPECS_COLUMNS = (
-    "horsepower",
-    "torque_lb_ft",
-    "torque_nm",
-    "curb_weight_lb",
-    "curb_weight_kg",
-    "zero_to_60_sec",
-    "fuel_tank_gal",
-    "ev_range_miles",
-    "battery_kwh",
-    "tow_capacity_lb",
-)
+_EXTENDED_SPECS_COLUMNS = _xspecs.SPEC_COLUMNS
 
 
 def _extended_specs_row_to_dict(row: tuple) -> dict[str, Any]:
@@ -744,11 +745,13 @@ def _extended_specs_row_to_dict(row: tuple) -> dict[str, Any]:
     return out
 
 
-@lru_cache(maxsize=16384)
 def _lookup_epa_extended_specs_cached(key: tuple[int, str, str, str]) -> frozenset[tuple[str, Any]]:
     year, make, model, trim_clean = key
     result = _lookup_epa_extended_specs_uncached(year, make, model, trim_clean)
     return frozenset(result.items())
+
+
+_lookup_epa_extended_specs_cached.cache_clear = _xspecs.clear_cache  # type: ignore[attr-defined]
 
 
 def clear_epa_extended_specs_lookup_cache() -> None:
@@ -780,54 +783,12 @@ def _lookup_epa_extended_specs_uncached(
     model: str,
     trim_clean: str,
 ) -> dict[str, Any]:
-    cols = ", ".join(_EXTENDED_SPECS_COLUMNS)
-    conn = None
-    try:
-        conn = _conn()
-        cur = conn.cursor()
-        cur.execute(
-            f"""
-            SELECT {cols}
-            FROM epa_extended_specs
-            WHERE year=? AND lower(make)=lower(?) AND lower(model)=lower(?) AND lower(trim)=lower(?)
-            LIMIT 1
-            """,
-            (year, make.strip(), model.strip(), trim_clean),
-        )
-        row = cur.fetchone()
-        if not row:
-            cur.execute(
-                f"""
-                SELECT {cols}
-                FROM epa_extended_specs
-                WHERE year=? AND lower(make)=lower(?) AND lower(model)=lower(?)
-                LIMIT 1
-                """,
-                (year, make.strip(), model.strip()),
-            )
-            row = cur.fetchone()
-        result = _extended_specs_row_to_dict(row) if row else {}
-        # Drop implausible scraped values (e.g. a mis-scraped 40-hp Porsche) so no
-        # garbage reaches a page. Nothing fills in behind them. Ceiling 1600 keeps
-        # real hypercars (Bugatti 1500); torque band keeps HD diesels.
-        if result.get("horsepower") is not None and not (60 <= result["horsepower"] <= 1600):
-            result.pop("horsepower")
-        if result.get("torque_lb_ft") is not None and not (40 <= result["torque_lb_ft"] <= 1500):
-            result.pop("torque_lb_ft")
-        # Same-hp-for-every-trim families are scrape garbage — dropped, not replaced.
-        if result.get("horsepower") is not None or result.get("torque_lb_ft") is not None:
-            if _extended_family_suspicious(cur, year, make, model):
-                result.pop("horsepower", None)
-                result.pop("torque_lb_ft", None)
-        # NO ``ai_model_specs`` FALLBACK HERE either — same reason as the
-        # by-master-id path above. A field with no scraped value stays absent.
-        return result
-    except Exception:
-        pass
-    finally:
-        if conn is not None:
-            conn.close()
-    return {}
+    """Exact (year, make, model, trim) row, else any row for (year, make, model),
+    via ``vehicle_facts.extended_specs``; implausible / family-suspicious hp and
+    torque dropped. Nothing fills in behind a dropped value (no ``ai_model_specs``
+    fallback here either)."""
+    row = _xspecs.row_by_ymmt(year, make, model, trim_clean)
+    return _plausible_extended(row, year, make, model)
 
 
 # ---------------------------------------------------------------------------
@@ -1274,242 +1235,20 @@ def _ford_epa_pickup_like_pattern(make: str | None, model: str | None) -> str | 
     return f"F{m.group(1)} Pickup%"
 
 
-# Body-style / drivetrain / cab-config tokens dealers append to model names;
-# EPA model strings never carry these.
-_EPA_MODEL_NOISE_SUFFIX_RE = re.compile(
-    r"\s+(?:Sedan|Coupe|Hatchback|Wagon|Convertible|Cabriolet|Roadster|SUV|Minivan|"
-    r"Van|Cargo(?:\s+Van)?|Passenger(?:\s+Van)?|Crew\s+Cab|Cutaway|Chassis(?:\s+Cab)?|"
-    r"2WD|4WD|AWD|RWD|FWD|4X4|4X2|4xe|Max)\s*$",
-    re.I,
+# Listing model -> EPA model fallbacks moved to ``backend.vehicle_facts.epa_model``;
+# the two EPA lookups read them as ``epa_model_candidates(strategy="by_trim" /
+# "aggregate")``. Re-exported here for old importers.
+from backend.vehicle_facts.epa_model import (  # noqa: E402,F401
+    _EPA_MODEL_NOISE_SUFFIX_RE,
+    _model_epa_fallbacks,
+    epa_model_candidates,
 )
 
 
-def _model_epa_fallbacks(make: str | None, model: str | None) -> list[str]:
-    """
-    Alternative EPA model strings to try when exact model match fails.
-
-    Many dealers store extended model names (e.g. "Silverado 1500", "GLC 300") while
-    EPA uses base names ("Silverado", "GLC-Class"). Returns a list ordered most→least specific.
-    """
-    mk = (make or "").strip().upper()
-    mo = (model or "").strip()
-    mo_u = mo.upper()
-    fallbacks: list[str] = []
-
-    # --- Chevrolet: Silverado 1500 → Silverado (1500 ONLY — EPA has no >8500-GVWR
-    # trucks, so 2500 HD/3500 HD must never inherit light-duty Silverado specs) ---
-    if mk == "CHEVROLET":
-        if re.match(r"^Silverado\s+1500\b", mo, re.I):
-            fallbacks.append("Silverado")
-        m = re.match(r"^(Colorado)\s+\S", mo, re.I)
-        if m:
-            fallbacks.append(m.group(1))
-        # Corvette Stingray / Corvette Z06 → Corvette
-        if re.match(r"^Corvette\s+\S", mo, re.I):
-            fallbacks.append("Corvette")
-
-    # --- GMC: Sierra 1500 → Sierra (1500 ONLY — no EPA data for the HDs, see
-    # Silverado above; skip Sierra EV — different arch) ---
-    if mk == "GMC":
-        if re.match(r"^Sierra\s+1500\b", mo, re.I):
-            fallbacks.append("Sierra")
-        m = re.match(r"^(Canyon|Yukon|Acadia)\s+\S", mo, re.I)
-        if m and "EV" not in mo_u:
-            fallbacks.append(m.group(1))
-        # HUMMER EV SUV → Hummer EV
-        if re.match(r"^HUMMER\s+EV\s+SUV\b", mo, re.I):
-            fallbacks.append("Hummer EV")
-
-    # --- Buick: Encore GX → Encore ---
-    if mk == "BUICK":
-        if re.match(r"^Encore\s+GX\b", mo, re.I):
-            fallbacks.append("Encore")
-
-    # --- Kia: Sportage Hybrid / Niro PHEV → base model ---
-    if mk == "KIA":
-        stripped = re.sub(r"\s+(Hybrid|Plug[-\s]?In\s+Hybrid|PHEV|EV)\s*$", "", mo, flags=re.I).strip()
-        if stripped.lower() != mo.lower():
-            fallbacks.append(stripped)
-
-    # --- Toyota: "Tundra Hybrid" → "Tundra", "Tacoma i-FORCE MAX" → "Tacoma", etc. ---
-    if mk == "TOYOTA":
-        stripped = re.sub(r"\s+(Hybrid|Plug[-\s]?In\s+Hybrid|i-FORCE\s+MAX)\s*$", "", mo, flags=re.I).strip()
-        if stripped.lower() != mo.lower():
-            fallbacks.append(stripped)
-
-    # --- Hyundai: Kona N → Kona, Ioniq 5 N → Ioniq 5 ---
-    if mk == "HYUNDAI":
-        stripped = re.sub(r"\s+N\s*$", "", mo, flags=re.I).strip()
-        if stripped.lower() != mo.lower():
-            fallbacks.append(stripped)
-
-    # --- Ram: 1500 Classic → 1500; ProMaster City variants ---
-    if mk == "RAM":
-        m = re.match(r"^(1500|2500|3500)\s+Classic\b", mo, re.I)
-        if m:
-            fallbacks.append(m.group(1))
-        if re.match(r"^ProMaster\s+City\b", mo, re.I):
-            fallbacks.append("Promaster City")
-
-    # --- Chrysler: "Town & Country" → "Town and Country" ---
-    if mk == "CHRYSLER":
-        if re.match(r"^Town\s*&\s*Country\b", mo, re.I):
-            fallbacks.append("Town and Country")
-
-    # --- Volvo: "XC40 Recharge Pure Electric" / "XC60 Recharge" → base model ---
-    if mk == "VOLVO":
-        m = re.match(r"^(XC40|XC60|XC90|S60|S90|V60|V90)\s+\S", mo, re.I)
-        if m:
-            fallbacks.append(m.group(1))
-
-    # --- Nissan: Kicks Play → Kicks; NV200 Compact Cargo → NV200 Cargo Van ---
-    if mk == "NISSAN":
-        if re.match(r"^Kicks\s+Play\b", mo, re.I):
-            fallbacks.append("Kicks")
-        if re.match(r"^NV200\s+Compact\s+Cargo\b", mo, re.I):
-            fallbacks.append("NV200 Cargo Van")
-
-    # --- Jeep: Wrangler Unlimited / Wrangler JK Unlimited → Wrangler; Wagoneer S → Wagoneer ---
-    if mk == "JEEP":
-        if re.match(r"^Wrangler\s+(Unlimited|JK\s+Unlimited)\b", mo, re.I):
-            fallbacks.append("Wrangler")
-        if re.match(r"^Wagoneer\s+S\b", mo, re.I):
-            fallbacks.append("Wagoneer")
-
-    # --- Mercedes-Benz: "GLC 300" → "GLC-Class", "E 350" → "E-Class", "AMG GLC63" → "GLC-Class" ---
-    if "MERCEDES" in mk:
-        seg_map = {
-            "A": "A-Class", "C": "C-Class", "CLA": "CLA-Class", "CLE": "CLE-Class",
-            "CLS": "CLS-Class", "E": "E-Class", "G": "G-Class",
-            "GLA": "GLA-Class", "GLB": "GLB-Class", "GLC": "GLC-Class",
-            "GLE": "GLE-Class", "GLS": "GLS-Class", "S": "S-Class", "SL": "SL-Class",
-        }
-        m = re.match(r"^([A-Z]+)\s+\d{3}\b", mo_u)
-        if m:
-            epa_cls = seg_map.get(m.group(1))
-            if epa_cls:
-                fallbacks.append(epa_cls)
-        # "AMG GLC 63" form
-        m2 = re.match(r"^AMG\s+([A-Z]+)\s*\d{2}", mo_u)
-        if m2:
-            epa_cls = seg_map.get(m2.group(1))
-            if epa_cls:
-                fallbacks.append(epa_cls)
-        # Bare series ("GLC", "GLE") — dealer feeds often omit the number entirely
-        m3 = re.match(r"^([A-Z]{1,3})\b", mo_u)
-        if m3:
-            epa_cls = seg_map.get(m3.group(1))
-            if epa_cls and epa_cls.lower() != mo.lower():
-                fallbacks.append(epa_cls)
-
-    # --- Mitsubishi: Outlander Phev / Outlander Sport → Outlander ---
-    if mk == "MITSUBISHI":
-        if re.match(r"^Outlander\s+(Phev|Sport)\b", mo, re.I):
-            fallbacks.append("Outlander")
-
-    # --- Volkswagen: Atlas Cross Sport → Atlas ---
-    if mk == "VOLKSWAGEN":
-        if re.match(r"^Atlas\s+Cross\s+Sport\b", mo, re.I):
-            fallbacks.append("Atlas")
-
-    # --- Mazda: "MX-5 MIATA" → "MX-5"; "Mazda CX-9" / "Mazda3" → strip "Mazda" prefix ---
-    if mk == "MAZDA":
-        if re.match(r"^MX-5\s+MIATA\b", mo, re.I):
-            fallbacks.append("MX-5")
-        else:
-            m = re.match(r"^Mazda\s+(.+)", mo, re.I)
-            if m:
-                fallbacks.append(m.group(1).strip())
-
-    # --- BMW: numeric sedan/coupe → Series name (330i → "3 Series", M3 → "M", etc.) ---
-    if mk == "BMW":
-        mo_stripped = mo.strip()
-        mo_s_u = mo_stripped.upper()
-        # Standalone M models: M3, M4, M5, M8
-        if re.match(r"^M[3458]\b", mo_s_u) and " " not in mo_stripped:
-            fallbacks.append("M")
-        # X3 M / X5 M / X6 M → try "M" then base X-series
-        elif re.match(r"^X([3-6])\s+M\b", mo_s_u):
-            fallbacks.append("M")
-            base = re.match(r"^(X[3-6])\b", mo_s_u).group(1).title()
-            fallbacks.append(base)
-        # Standard numeric: 228i, 330i, 435i, 530e, 740i, 840i → "{n} Series"
-        elif re.match(r"^[2-8]\d{2}[iIeE]?\b", mo_s_u) and " " not in mo_stripped:
-            fallbacks.append(f"{mo_s_u[0]} Series")
-        # M-prefix numeric: M235i, M340i, M440i → "{n} Series"
-        elif re.match(r"^M([2-8])\d{2}[iI]\b", mo_s_u) and " " not in mo_stripped:
-            s = re.match(r"^M([2-8])", mo_s_u).group(1)
-            fallbacks.append(f"{s} Series")
-
-    # --- Audi: dealer model strings vs EPA base names ---
-    if mk == "AUDI":
-        mo_compact = mo_u.replace("-", "")
-        if re.match(r"^A8\b", mo, re.I):
-            fallbacks.extend(["A8", "A8 L"])
-        if re.match(r"^Q6\b", mo, re.I) and "ETRON" in mo_compact:
-            fallbacks.extend(["Q6 e-tron", "Q6"])
-        if re.match(r"^Q8\b", mo, re.I) and "ETRON" in mo_compact:
-            fallbacks.extend(["Q8 e-tron", "Q8"])
-        for base in ("A3", "A4", "A5", "A6", "A7", "A8", "Q3", "Q5", "Q6", "Q7", "Q8"):
-            if re.match(rf"^{base}\b", mo, re.I):
-                fallbacks.append(base)
-        stripped = re.sub(r"\s+(Sportback|Sedan|Coupe|allroad)\s*$", "", mo, flags=re.I).strip()
-        if stripped and stripped.lower() != mo.lower():
-            fallbacks.append(stripped)
-
-    # --- Generic (all makes): dealer feeds decorate models with sale status
-    # ("New 2026 Hyundai IONIQ 5 SEL"), body style ("Accord Sedan"), and
-    # drivetrain ("Tacoma 2WD") tokens EPA never uses. Candidates go most→least
-    # specific; the caller stops at the first hit, so shorter (riskier) forms
-    # only fire when everything longer missed. ---
-    generic: list[str] = []
-    cleaned = re.sub(
-        r"^(?:New|Used|Certified(?:\s+Pre[-\s]?Owned)?)\s+(?:\d{4}\s+)?", "", mo, flags=re.I
-    ).strip()
-    if mk and cleaned.upper().startswith(mk + " "):
-        cleaned = cleaned[len(mk):].strip()
-    if cleaned:
-        generic.append(cleaned)
-        cur = cleaned
-        while True:
-            stripped = _EPA_MODEL_NOISE_SUFFIX_RE.sub("", cur).strip()
-            if not stripped or stripped.lower() == cur.lower():
-                break
-            cur = stripped
-            generic.append(cur)
-        # Last resort: shed trailing words (trim levels like "SEL" / "Limited"),
-        # at most three, never below one word.
-        words = cur.split()
-        for i in range(len(words) - 1, max(0, len(words) - 4), -1):
-            generic.append(" ".join(words[:i]))
-
-    # A heavy-duty truck ("Silverado 2500HD") must never shed down to the
-    # light-duty base name (EPA has no >8500-GVWR trucks — that fallback would
-    # serve 1500 specs on an HD listing), and an EV nameplate ("Silverado EV")
-    # must never shed down to its gas sibling.
-    _hd_re = re.compile(r"([2-5]500|\bHD\b|\bEV\b)")
-    is_hd = bool(_hd_re.search(mo_u))
-    seen = {mo.lower()} | {f.lower() for f in fallbacks}
-    for cand in generic:
-        c = cand.strip()
-        if is_hd and not _hd_re.search(c.upper()):
-            continue
-        if len(c) >= 2 and c.lower() not in seen:
-            seen.add(c.lower())
-            fallbacks.append(c)
-
-    return fallbacks
-
-
-_VPIC_DRIVE_MAP = {
-    "fwd": "FWD", "front-wheel drive": "FWD", "front wheel drive": "FWD",
-    "rwd": "RWD", "rear-wheel drive": "RWD", "rear wheel drive": "RWD",
-    # "4x2" / "2WD" is two-wheel drive of UNKNOWN end: vPIC stamps it on FWD Camrys,
-    # HR-Vs and Pilots as much as on RWD trucks. Mapping it to RWD (pre-2026-09-23)
-    # made the resolver reject every FWD catalog row for those cars.
-    "awd": "AWD", "all-wheel drive": "AWD", "all wheel drive": "AWD",
-    "4wd": "4WD", "4x4": "4WD", "four-wheel drive": "4WD", "four wheel drive": "4WD",
-}
+# vPIC DriveType is normalized by ``vehicle_facts.normalize_drivetrain`` ("4x2" /
+# "2WD" is two-wheel drive of UNKNOWN end -> None: vPIC stamps it on FWD Camrys,
+# HR-Vs and Pilots as much as on RWD trucks. Mapping it to RWD (pre-2026-09-23)
+# made the resolver reject every FWD catalog row for those cars.)
 
 _VPIC_BODY_MAP = {
     "sedan": "Sedan", "coupe": "Coupe", "convertible": "Convertible",
@@ -1632,14 +1371,7 @@ def _normalize_vpic_response(r: dict[str, Any]) -> dict[str, Any]:
         else:
             out["transmission"] = ts.title()
 
-    dt = (r.get("DriveType") or "").strip()
-    out["drivetrain"] = _VPIC_DRIVE_MAP.get(dt.lower()) or (
-        "AWD" if "all" in dt.lower() or "awd" in dt.lower()
-        else "4WD" if "4wd" in dt.lower() or "4x4" in dt.lower()
-        else "FWD" if "fwd" in dt.lower() or "front" in dt.lower()
-        else "RWD" if ("rwd" in dt.lower() or "rear" in dt.lower())
-        else None
-    )
+    out["drivetrain"] = normalize_drivetrain(r.get("DriveType"), "vpic")
 
     cyl_raw = (r.get("EngineCylinders") or "").strip()
     if cyl_raw and cyl_raw.isdigit():
@@ -1665,15 +1397,10 @@ def _normalize_vpic_response(r: dict[str, Any]) -> dict[str, Any]:
         else:
             out["fuel_type"] = ft
 
-    el = (r.get("ElectrificationLevel") or "").strip().lower()
-    if "bev" in el or (out["fuel_type"] == "Electric" and not el):
-        out["electrification"] = "ev"
-    elif "phev" in el or "plug-in" in el:
-        out["electrification"] = "phev"
-    elif "mild" in el:
-        out["electrification"] = None  # 48V assist: EPA and dealers disagree on the label; no override
-    elif "hev" in el:
-        out["electrification"] = "hybrid"
+    # vehicle_facts.vpic_electrification: BEV / PHEV / HEV / FCEV; a MILD hybrid
+    # (48V assist: EPA and dealers disagree on the label) is no override -> None.
+    _el = vpic_electrification(r)
+    out["electrification"] = LEGACY_CODE.get(_el) if _el else None
     bc = (r.get("BodyClass") or "").strip()
     out["body_style"] = _VPIC_BODY_MAP.get(bc.lower())
 
@@ -1828,7 +1555,7 @@ def _lookup_epa_aggregate_uncached(
                     row = _pick(cur.fetchall())
         # Generic model-name normalization fallbacks (Silverado 1500 → Silverado, GLC 300 → GLC-Class, etc.)
         if not row:
-            for fallback_model in _model_epa_fallbacks(make, model):
+            for fallback_model in epa_model_candidates(make, model, strategy="aggregate"):
                 cur.execute(
                     sql_mode.format(model_clause="lower(model) = lower(?)"),
                     (year, make.strip(), fallback_model),

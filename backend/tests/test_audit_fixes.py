@@ -279,8 +279,6 @@ def test_car_page_hides_ask_ai_for_guests(monkeypatch: pytest.MonkeyPatch, tmp_p
             "packages_panel_has_content": False,
         },
     )
-    monkeypatch.setattr(main, "_session_has_paid_access", lambda: False)
-    monkeypatch.setattr(main, "_viewer_sees_premium_features", lambda: False)
 
     with main.app.test_client() as client:
         rv = client.get("/car/55")

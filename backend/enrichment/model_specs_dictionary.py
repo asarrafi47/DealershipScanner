@@ -7,7 +7,6 @@ completeness checks aligned with the project's spec dictionary.
 from __future__ import annotations
 
 import os
-import re
 from functools import lru_cache
 from typing import Any
 
@@ -159,38 +158,12 @@ _MODEL_FALLBACK: dict[tuple[str, str], dict[str, Any]] = {
     },
 }
 
-_VARIANT_SUFFIX_RES = (
-    re.compile(r"\s+(plug[\s-]?in\s+)?hybrid\s*$", re.I),
-    re.compile(r"\s+plug[\s-]?in\s+hybrid\s*$", re.I),
-    re.compile(r"\s+4xe\s*$", re.I),
-    re.compile(r"\s+phev\s*$", re.I),
-    re.compile(r"\s+electric\s*$", re.I),
+# Suffix strips moved to ``backend.vehicle_facts.epa_model`` (merged alias list).
+from backend.vehicle_facts.epa_model import (  # noqa: E402,F401  (re-exports)
+    _VARIANT_SUFFIX_RES,
+    epa_model_candidates,
+    iter_model_lookup_variants,
 )
-
-
-def iter_model_lookup_variants(model: str) -> list[str]:
-    """Original model plus stripped suffixes (e.g. Elantra Hybrid → Elantra)."""
-    m = (model or "").strip()
-    if not m:
-        return []
-    seen: set[str] = set()
-    out: list[str] = []
-    for candidate in (m, m.lower(), m.title()):
-        c = candidate.strip()
-        if c and c.lower() not in seen:
-            seen.add(c.lower())
-            out.append(c)
-    lower = m.lower()
-    cur = lower
-    for rx in _VARIANT_SUFFIX_RES:
-        nxt = rx.sub("", cur).strip()
-        if nxt and nxt != cur:
-            for candidate in (nxt, nxt.title()):
-                if candidate.lower() not in seen:
-                    seen.add(candidate.lower())
-                    out.append(candidate)
-            cur = nxt
-    return out
 
 
 def _query_sqlite_row(canonical_make: str, model_variant: str) -> dict[str, Any] | None:
@@ -231,21 +204,11 @@ def _query_sqlite_row(canonical_make: str, model_variant: str) -> dict[str, Any]
             conn.close()
 
 
-_SHORT_DRIVE_MAP = {
-    "fwd": "FWD",
-    "front-wheel drive": "FWD",
-    "rwd": "RWD",
-    "rear-wheel drive": "RWD",
-    "awd": "AWD",
-    "all-wheel drive": "AWD",
-    "4wd": "4WD",
-    "four-wheel drive": "4WD",
-}
-
-
 def _short_drivetrain(s: str) -> str:
-    k = s.strip().lower()
-    return _SHORT_DRIVE_MAP.get(k, s)
+    """FWD/RWD/AWD/4WD via ``vehicle_facts.normalize_drivetrain``; unrecognised text unchanged."""
+    from backend.vehicle_facts.drivetrain import normalize_drivetrain
+
+    return normalize_drivetrain(s, "dealer") or s
 
 
 @lru_cache(maxsize=8192)
@@ -282,7 +245,7 @@ def _lookup_model_specs_dictionary_uncached(make: str | None, model: str | None)
     except Exception:
         canon = mk
 
-    for variant in iter_model_lookup_variants(md):
+    for variant in epa_model_candidates(mk, md, strategy="model_specs"):
         row = _query_sqlite_row(canon, variant)
         if row:
             return row

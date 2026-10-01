@@ -1,0 +1,1930 @@
+{
+ "agent.claude_reply|fenced": {
+  "requests": [
+   {
+    "max_tokens": 600,
+    "messages": [
+     {
+      "content": "Does it have AWD?",
+      "role": "user"
+     }
+    ],
+    "model": "claude-haiku-4-5-20251001",
+    "system": [
+     {
+      "cache_control": {
+       "type": "ephemeral"
+      },
+      "text": "You are a car assistant.",
+      "type": "text"
+     }
+    ],
+    "temperature": null,
+    "timeout": null
+   }
+  ],
+  "result": {
+   "type": "str",
+   "value": "```json\n{\"observed_features\": [\"Wireless Charging Pad\"], \"options\": [{\"name\": \"Convenience Package\", \"price\": 1050, \"code\": \"CP\"}], \"interior_color_bucket\": \"black\", \"confidence\": 0.9, \"summary\": \"dealer site 403\", \"category\": \"network\", \"root_cause\": \"blocked\", \"retry_recommended\": true, \"retry_strategy\": \"simple_retry\", \"retry_actions\": [], \"engine_l\": 2.5, \"cylinders\": 4, \"transmission\": \"8-Speed Automatic\", \"drivetrain\": \"FWD\", \"fuel_type\": \"Gasoline\", \"mpg_city\": 28, \"mpg_highway\": 39, \"interior_color_hint\": \"black fabric\", \"packages\": []}\n```"
+  }
+ },
+ "agent.claude_reply|ok": {
+  "requests": [
+   {
+    "max_tokens": 600,
+    "messages": [
+     {
+      "content": "Does it have AWD?",
+      "role": "user"
+     }
+    ],
+    "model": "claude-haiku-4-5-20251001",
+    "system": [
+     {
+      "cache_control": {
+       "type": "ephemeral"
+      },
+      "text": "You are a car assistant.",
+      "type": "text"
+     }
+    ],
+    "temperature": null,
+    "timeout": null
+   }
+  ],
+  "result": {
+   "type": "str",
+   "value": "{\"observed_features\": [\"Wireless Charging Pad\"], \"options\": [{\"name\": \"Convenience Package\", \"price\": 1050, \"code\": \"CP\"}], \"interior_color_bucket\": \"black\", \"confidence\": 0.9, \"summary\": \"dealer site 403\", \"category\": \"network\", \"root_cause\": \"blocked\", \"retry_recommended\": true, \"retry_strategy\": \"simple_retry\", \"retry_actions\": [], \"engine_l\": 2.5, \"cylinders\": 4, \"transmission\": \"8-Speed Automatic\", \"drivetrain\": \"FWD\", \"fuel_type\": \"Gasoline\", \"mpg_city\": 28, \"mpg_highway\": 39, \"interior_color_hint\": \"black fabric\", \"packages\": []}"
+  }
+ },
+ "agent.claude_reply|refusal": {
+  "requests": [
+   {
+    "max_tokens": 600,
+    "messages": [
+     {
+      "content": "Does it have AWD?",
+      "role": "user"
+     }
+    ],
+    "model": "claude-haiku-4-5-20251001",
+    "system": [
+     {
+      "cache_control": {
+       "type": "ephemeral"
+      },
+      "text": "You are a car assistant.",
+      "type": "text"
+     }
+    ],
+    "temperature": null,
+    "timeout": null
+   }
+  ],
+  "result": {
+   "type": "str",
+   "value": ""
+  }
+ },
+ "agent.claude_reply|truncated": {
+  "requests": [
+   {
+    "max_tokens": 600,
+    "messages": [
+     {
+      "content": "Does it have AWD?",
+      "role": "user"
+     }
+    ],
+    "model": "claude-haiku-4-5-20251001",
+    "system": [
+     {
+      "cache_control": {
+       "type": "ephemeral"
+      },
+      "text": "You are a car assistant.",
+      "type": "text"
+     }
+    ],
+    "temperature": null,
+    "timeout": null
+   }
+  ],
+  "result": {
+   "type": "str",
+   "value": "{\"observed_features\": [\"Wireless Charging Pad\", \"Pano …"
+  }
+ },
+ "brochure.call_claude|fenced": {
+  "requests": [
+   {
+    "max_tokens": 2048,
+    "messages": [
+     {
+      "content": "2025 Toyota Camry trims: LE, SE, XLE, XSE",
+      "role": "user"
+     }
+    ],
+    "model": "claude-haiku-4-5-20251001",
+    "system": "You are an advanced automotive normalization engine parsing data for a premium car platform.\nReturn only valid JSON matching the requested schema. Never add commentary outside the JSON object.",
+    "temperature": null,
+    "timeout": null
+   }
+  ],
+  "result": {
+   "type": "str",
+   "value": "```json\n{\"observed_features\": [\"Wireless Charging Pad\"], \"options\": [{\"name\": \"Convenience Package\", \"price\": 1050, \"code\": \"CP\"}], \"interior_color_bucket\": \"black\", \"confidence\": 0.9, \"summary\": \"dealer site 403\", \"category\": \"network\", \"root_cause\": \"blocked\", \"retry_recommended\": true, \"retry_strategy\": \"simple_retry\", \"retry_actions\": [], \"engine_l\": 2.5, \"cylinders\": 4, \"transmission\": \"8-Speed Automatic\", \"drivetrain\": \"FWD\", \"fuel_type\": \"Gasoline\", \"mpg_city\": 28, \"mpg_highway\": 39, \"interior_color_hint\": \"black fabric\", \"packages\": []}\n```"
+  }
+ },
+ "brochure.call_claude|ok": {
+  "requests": [
+   {
+    "max_tokens": 2048,
+    "messages": [
+     {
+      "content": "2025 Toyota Camry trims: LE, SE, XLE, XSE",
+      "role": "user"
+     }
+    ],
+    "model": "claude-haiku-4-5-20251001",
+    "system": "You are an advanced automotive normalization engine parsing data for a premium car platform.\nReturn only valid JSON matching the requested schema. Never add commentary outside the JSON object.",
+    "temperature": null,
+    "timeout": null
+   }
+  ],
+  "result": {
+   "type": "str",
+   "value": "{\"observed_features\": [\"Wireless Charging Pad\"], \"options\": [{\"name\": \"Convenience Package\", \"price\": 1050, \"code\": \"CP\"}], \"interior_color_bucket\": \"black\", \"confidence\": 0.9, \"summary\": \"dealer site 403\", \"category\": \"network\", \"root_cause\": \"blocked\", \"retry_recommended\": true, \"retry_strategy\": \"simple_retry\", \"retry_actions\": [], \"engine_l\": 2.5, \"cylinders\": 4, \"transmission\": \"8-Speed Automatic\", \"drivetrain\": \"FWD\", \"fuel_type\": \"Gasoline\", \"mpg_city\": 28, \"mpg_highway\": 39, \"interior_color_hint\": \"black fabric\", \"packages\": []}"
+  }
+ },
+ "brochure.call_claude|refusal": {
+  "requests": [
+   {
+    "max_tokens": 2048,
+    "messages": [
+     {
+      "content": "2025 Toyota Camry trims: LE, SE, XLE, XSE",
+      "role": "user"
+     }
+    ],
+    "model": "claude-haiku-4-5-20251001",
+    "system": "You are an advanced automotive normalization engine parsing data for a premium car platform.\nReturn only valid JSON matching the requested schema. Never add commentary outside the JSON object.",
+    "temperature": null,
+    "timeout": null
+   }
+  ],
+  "result": {
+   "exc": "IndexError",
+   "type": "raises"
+  }
+ },
+ "brochure.call_claude|truncated": {
+  "requests": [
+   {
+    "max_tokens": 2048,
+    "messages": [
+     {
+      "content": "2025 Toyota Camry trims: LE, SE, XLE, XSE",
+      "role": "user"
+     }
+    ],
+    "model": "claude-haiku-4-5-20251001",
+    "system": "You are an advanced automotive normalization engine parsing data for a premium car platform.\nReturn only valid JSON matching the requested schema. Never add commentary outside the JSON object.",
+    "temperature": null,
+    "timeout": null
+   }
+  ],
+  "result": {
+   "type": "str",
+   "value": "{\"observed_features\": [\"Wireless Charging Pad\", \"Pano"
+  }
+ },
+ "claude_vision.classify_batch|fenced": {
+  "requests": [
+   {
+    "max_tokens": 512,
+    "messages": [
+     {
+      "content": [
+       {
+        "text": "Image 0 (idx=0):",
+        "type": "text"
+       },
+       {
+        "source": {
+         "data": "sha256:a135823e1f3518ee",
+         "media_type": "image/jpeg",
+         "type": "base64"
+        },
+        "type": "image"
+       },
+       {
+        "text": "Image 1 (idx=1):",
+        "type": "text"
+       },
+       {
+        "source": {
+         "data": "sha256:a135823e1f3518ee",
+         "media_type": "image/jpeg",
+         "type": "base64"
+        },
+        "type": "image"
+       },
+       {
+        "text": "Classify each image as described. Return JSON array only.",
+        "type": "text"
+       }
+      ],
+      "role": "user"
+     }
+    ],
+    "model": "claude-haiku-4-5-20251001",
+    "system": [
+     {
+      "cache_control": {
+       "type": "ephemeral"
+      },
+      "text": "You are classifying car dealership listing photos. For each image I send, tell me:\n- keep: true if it is an actual vehicle photo (exterior shot, interior, engine bay, trunk, wheels, dashboard, seats)\n- keep: false if it is a badge, logo, award, CARFAX report, financing offer, promo banner, captcha, QR code, watermark-only slide, or dealership marketing material\n- quality: \"good\" | \"acceptable\" | \"poor\" — poor = very dark, tiny, heavy watermark, motion blur, or unusable; use \"n/a\" when keep is false\n\nRespond ONLY with a JSON array, one entry per image, in order:\n[{\"idx\": 0, \"keep\": true, \"category\": \"exterior\", \"quality\": \"good\"}, {\"idx\": 1, \"keep\": false, \"category\": \"badge\", \"quality\": \"n/a\"}, ...]\n\nCategories: exterior, interior, engine, wheels, trunk, dashboard, seats, badge, promo, award, carfax, other_keep, other_drop\n",
+      "type": "text"
+     }
+    ],
+    "temperature": null,
+    "timeout": null
+   }
+  ],
+  "result": {
+   "type": "list",
+   "value": [
+    [
+     0,
+     "https://cdn.example.com/89732/0.jpg",
+     false,
+     "dealer_banner"
+    ],
+    [
+     1,
+     "https://cdn.example.com/89732/1.jpg",
+     true,
+     "unknown"
+    ]
+   ]
+  }
+ },
+ "claude_vision.classify_batch|ok": {
+  "requests": [
+   {
+    "max_tokens": 512,
+    "messages": [
+     {
+      "content": [
+       {
+        "text": "Image 0 (idx=0):",
+        "type": "text"
+       },
+       {
+        "source": {
+         "data": "sha256:a135823e1f3518ee",
+         "media_type": "image/jpeg",
+         "type": "base64"
+        },
+        "type": "image"
+       },
+       {
+        "text": "Image 1 (idx=1):",
+        "type": "text"
+       },
+       {
+        "source": {
+         "data": "sha256:a135823e1f3518ee",
+         "media_type": "image/jpeg",
+         "type": "base64"
+        },
+        "type": "image"
+       },
+       {
+        "text": "Classify each image as described. Return JSON array only.",
+        "type": "text"
+       }
+      ],
+      "role": "user"
+     }
+    ],
+    "model": "claude-haiku-4-5-20251001",
+    "system": [
+     {
+      "cache_control": {
+       "type": "ephemeral"
+      },
+      "text": "You are classifying car dealership listing photos. For each image I send, tell me:\n- keep: true if it is an actual vehicle photo (exterior shot, interior, engine bay, trunk, wheels, dashboard, seats)\n- keep: false if it is a badge, logo, award, CARFAX report, financing offer, promo banner, captcha, QR code, watermark-only slide, or dealership marketing material\n- quality: \"good\" | \"acceptable\" | \"poor\" — poor = very dark, tiny, heavy watermark, motion blur, or unusable; use \"n/a\" when keep is false\n\nRespond ONLY with a JSON array, one entry per image, in order:\n[{\"idx\": 0, \"keep\": true, \"category\": \"exterior\", \"quality\": \"good\"}, {\"idx\": 1, \"keep\": false, \"category\": \"badge\", \"quality\": \"n/a\"}, ...]\n\nCategories: exterior, interior, engine, wheels, trunk, dashboard, seats, badge, promo, award, carfax, other_keep, other_drop\n",
+      "type": "text"
+     }
+    ],
+    "temperature": null,
+    "timeout": null
+   }
+  ],
+  "result": {
+   "type": "list",
+   "value": [
+    [
+     0,
+     "https://cdn.example.com/89732/0.jpg",
+     false,
+     "dealer_banner"
+    ],
+    [
+     1,
+     "https://cdn.example.com/89732/1.jpg",
+     true,
+     "unknown"
+    ]
+   ]
+  }
+ },
+ "claude_vision.classify_batch|refusal": {
+  "requests": [
+   {
+    "max_tokens": 512,
+    "messages": [
+     {
+      "content": [
+       {
+        "text": "Image 0 (idx=0):",
+        "type": "text"
+       },
+       {
+        "source": {
+         "data": "sha256:a135823e1f3518ee",
+         "media_type": "image/jpeg",
+         "type": "base64"
+        },
+        "type": "image"
+       },
+       {
+        "text": "Image 1 (idx=1):",
+        "type": "text"
+       },
+       {
+        "source": {
+         "data": "sha256:a135823e1f3518ee",
+         "media_type": "image/jpeg",
+         "type": "base64"
+        },
+        "type": "image"
+       },
+       {
+        "text": "Classify each image as described. Return JSON array only.",
+        "type": "text"
+       }
+      ],
+      "role": "user"
+     }
+    ],
+    "model": "claude-haiku-4-5-20251001",
+    "system": [
+     {
+      "cache_control": {
+       "type": "ephemeral"
+      },
+      "text": "You are classifying car dealership listing photos. For each image I send, tell me:\n- keep: true if it is an actual vehicle photo (exterior shot, interior, engine bay, trunk, wheels, dashboard, seats)\n- keep: false if it is a badge, logo, award, CARFAX report, financing offer, promo banner, captcha, QR code, watermark-only slide, or dealership marketing material\n- quality: \"good\" | \"acceptable\" | \"poor\" — poor = very dark, tiny, heavy watermark, motion blur, or unusable; use \"n/a\" when keep is false\n\nRespond ONLY with a JSON array, one entry per image, in order:\n[{\"idx\": 0, \"keep\": true, \"category\": \"exterior\", \"quality\": \"good\"}, {\"idx\": 1, \"keep\": false, \"category\": \"badge\", \"quality\": \"n/a\"}, ...]\n\nCategories: exterior, interior, engine, wheels, trunk, dashboard, seats, badge, promo, award, carfax, other_keep, other_drop\n",
+      "type": "text"
+     }
+    ],
+    "temperature": null,
+    "timeout": null
+   }
+  ],
+  "result": {
+   "type": "list",
+   "value": [
+    [
+     0,
+     "https://cdn.example.com/89732/0.jpg",
+     true,
+     "unknown"
+    ],
+    [
+     1,
+     "https://cdn.example.com/89732/1.jpg",
+     true,
+     "unknown"
+    ]
+   ]
+  }
+ },
+ "claude_vision.classify_batch|truncated": {
+  "requests": [
+   {
+    "max_tokens": 512,
+    "messages": [
+     {
+      "content": [
+       {
+        "text": "Image 0 (idx=0):",
+        "type": "text"
+       },
+       {
+        "source": {
+         "data": "sha256:a135823e1f3518ee",
+         "media_type": "image/jpeg",
+         "type": "base64"
+        },
+        "type": "image"
+       },
+       {
+        "text": "Image 1 (idx=1):",
+        "type": "text"
+       },
+       {
+        "source": {
+         "data": "sha256:a135823e1f3518ee",
+         "media_type": "image/jpeg",
+         "type": "base64"
+        },
+        "type": "image"
+       },
+       {
+        "text": "Classify each image as described. Return JSON array only.",
+        "type": "text"
+       }
+      ],
+      "role": "user"
+     }
+    ],
+    "model": "claude-haiku-4-5-20251001",
+    "system": [
+     {
+      "cache_control": {
+       "type": "ephemeral"
+      },
+      "text": "You are classifying car dealership listing photos. For each image I send, tell me:\n- keep: true if it is an actual vehicle photo (exterior shot, interior, engine bay, trunk, wheels, dashboard, seats)\n- keep: false if it is a badge, logo, award, CARFAX report, financing offer, promo banner, captcha, QR code, watermark-only slide, or dealership marketing material\n- quality: \"good\" | \"acceptable\" | \"poor\" — poor = very dark, tiny, heavy watermark, motion blur, or unusable; use \"n/a\" when keep is false\n\nRespond ONLY with a JSON array, one entry per image, in order:\n[{\"idx\": 0, \"keep\": true, \"category\": \"exterior\", \"quality\": \"good\"}, {\"idx\": 1, \"keep\": false, \"category\": \"badge\", \"quality\": \"n/a\"}, ...]\n\nCategories: exterior, interior, engine, wheels, trunk, dashboard, seats, badge, promo, award, carfax, other_keep, other_drop\n",
+      "type": "text"
+     }
+    ],
+    "temperature": null,
+    "timeout": null
+   }
+  ],
+  "result": {
+   "type": "list",
+   "value": [
+    [
+     0,
+     "https://cdn.example.com/89732/0.jpg",
+     true,
+     "unknown"
+    ],
+    [
+     1,
+     "https://cdn.example.com/89732/1.jpg",
+     true,
+     "unknown"
+    ]
+   ]
+  }
+ },
+ "claude_vision.equipment_batch|fenced": {
+  "requests": [
+   {
+    "max_tokens": 640,
+    "messages": [
+     {
+      "content": [
+       {
+        "text": "Image 0:",
+        "type": "text"
+       },
+       {
+        "source": {
+         "data": "sha256:a135823e1f3518ee",
+         "media_type": "image/jpeg",
+         "type": "base64"
+        },
+        "type": "image"
+       },
+       {
+        "text": "Image 1:",
+        "type": "text"
+       },
+       {
+        "source": {
+         "data": "sha256:a135823e1f3518ee",
+         "media_type": "image/jpeg",
+         "type": "base64"
+        },
+        "type": "image"
+       },
+       {
+        "text": "List visible optional equipment. Return JSON only.",
+        "type": "text"
+       }
+      ],
+      "role": "user"
+     }
+    ],
+    "model": "claude-haiku-4-5-20251001",
+    "system": [
+     {
+      "cache_control": {
+       "type": "ephemeral"
+      },
+      "text": "From these vehicle listing photos, report ONLY optional/upgraded equipment clearly visible.\nLook for: HUD, 360/surround cameras on mirrors or grille, ACC/LKA steering buttons, panoramic sunroof, heated/ventilated seats, premium audio badges, tow hitch, red calipers, night vision grille, blind-spot indicators, digital cluster, wireless charging pad, aftermarket wheels/lift/steps.\nDo NOT list base-trim staples (alloy wheels, power mirrors, fog lights, floor mats).\nReturn ONLY JSON:\n{\"observed_features\": string[], \"possible_packages\": string[], \"detected_adas\": string[]}\nUse [] when none. detected_adas tokens: acc, lka, hud, 360_cameras, blind_spot, night_vision, parking_sensors.\n",
+      "type": "text"
+     }
+    ],
+    "temperature": null,
+    "timeout": null
+   }
+  ],
+  "result": {
+   "type": "dict",
+   "value": {
+    "category": "network",
+    "confidence": 0.9,
+    "cylinders": 4,
+    "drivetrain": "FWD",
+    "engine_l": 2.5,
+    "fuel_type": "Gasoline",
+    "interior_color_bucket": "black",
+    "interior_color_hint": "black fabric",
+    "mpg_city": 28,
+    "mpg_highway": 39,
+    "observed_features": [
+     "Wireless Charging Pad"
+    ],
+    "options": [
+     {
+      "code": "CP",
+      "name": "Convenience Package",
+      "price": 1050
+     }
+    ],
+    "packages": [],
+    "retry_actions": [],
+    "retry_recommended": true,
+    "retry_strategy": "simple_retry",
+    "root_cause": "blocked",
+    "summary": "dealer site 403",
+    "transmission": "8-Speed Automatic"
+   }
+  }
+ },
+ "claude_vision.equipment_batch|ok": {
+  "requests": [
+   {
+    "max_tokens": 640,
+    "messages": [
+     {
+      "content": [
+       {
+        "text": "Image 0:",
+        "type": "text"
+       },
+       {
+        "source": {
+         "data": "sha256:a135823e1f3518ee",
+         "media_type": "image/jpeg",
+         "type": "base64"
+        },
+        "type": "image"
+       },
+       {
+        "text": "Image 1:",
+        "type": "text"
+       },
+       {
+        "source": {
+         "data": "sha256:a135823e1f3518ee",
+         "media_type": "image/jpeg",
+         "type": "base64"
+        },
+        "type": "image"
+       },
+       {
+        "text": "List visible optional equipment. Return JSON only.",
+        "type": "text"
+       }
+      ],
+      "role": "user"
+     }
+    ],
+    "model": "claude-haiku-4-5-20251001",
+    "system": [
+     {
+      "cache_control": {
+       "type": "ephemeral"
+      },
+      "text": "From these vehicle listing photos, report ONLY optional/upgraded equipment clearly visible.\nLook for: HUD, 360/surround cameras on mirrors or grille, ACC/LKA steering buttons, panoramic sunroof, heated/ventilated seats, premium audio badges, tow hitch, red calipers, night vision grille, blind-spot indicators, digital cluster, wireless charging pad, aftermarket wheels/lift/steps.\nDo NOT list base-trim staples (alloy wheels, power mirrors, fog lights, floor mats).\nReturn ONLY JSON:\n{\"observed_features\": string[], \"possible_packages\": string[], \"detected_adas\": string[]}\nUse [] when none. detected_adas tokens: acc, lka, hud, 360_cameras, blind_spot, night_vision, parking_sensors.\n",
+      "type": "text"
+     }
+    ],
+    "temperature": null,
+    "timeout": null
+   }
+  ],
+  "result": {
+   "type": "dict",
+   "value": {
+    "category": "network",
+    "confidence": 0.9,
+    "cylinders": 4,
+    "drivetrain": "FWD",
+    "engine_l": 2.5,
+    "fuel_type": "Gasoline",
+    "interior_color_bucket": "black",
+    "interior_color_hint": "black fabric",
+    "mpg_city": 28,
+    "mpg_highway": 39,
+    "observed_features": [
+     "Wireless Charging Pad"
+    ],
+    "options": [
+     {
+      "code": "CP",
+      "name": "Convenience Package",
+      "price": 1050
+     }
+    ],
+    "packages": [],
+    "retry_actions": [],
+    "retry_recommended": true,
+    "retry_strategy": "simple_retry",
+    "root_cause": "blocked",
+    "summary": "dealer site 403",
+    "transmission": "8-Speed Automatic"
+   }
+  }
+ },
+ "claude_vision.equipment_batch|refusal": {
+  "requests": [
+   {
+    "max_tokens": 640,
+    "messages": [
+     {
+      "content": [
+       {
+        "text": "Image 0:",
+        "type": "text"
+       },
+       {
+        "source": {
+         "data": "sha256:a135823e1f3518ee",
+         "media_type": "image/jpeg",
+         "type": "base64"
+        },
+        "type": "image"
+       },
+       {
+        "text": "Image 1:",
+        "type": "text"
+       },
+       {
+        "source": {
+         "data": "sha256:a135823e1f3518ee",
+         "media_type": "image/jpeg",
+         "type": "base64"
+        },
+        "type": "image"
+       },
+       {
+        "text": "List visible optional equipment. Return JSON only.",
+        "type": "text"
+       }
+      ],
+      "role": "user"
+     }
+    ],
+    "model": "claude-haiku-4-5-20251001",
+    "system": [
+     {
+      "cache_control": {
+       "type": "ephemeral"
+      },
+      "text": "From these vehicle listing photos, report ONLY optional/upgraded equipment clearly visible.\nLook for: HUD, 360/surround cameras on mirrors or grille, ACC/LKA steering buttons, panoramic sunroof, heated/ventilated seats, premium audio badges, tow hitch, red calipers, night vision grille, blind-spot indicators, digital cluster, wireless charging pad, aftermarket wheels/lift/steps.\nDo NOT list base-trim staples (alloy wheels, power mirrors, fog lights, floor mats).\nReturn ONLY JSON:\n{\"observed_features\": string[], \"possible_packages\": string[], \"detected_adas\": string[]}\nUse [] when none. detected_adas tokens: acc, lka, hud, 360_cameras, blind_spot, night_vision, parking_sensors.\n",
+      "type": "text"
+     }
+    ],
+    "temperature": null,
+    "timeout": null
+   }
+  ],
+  "result": {
+   "type": "dict",
+   "value": {}
+  }
+ },
+ "claude_vision.equipment_batch|truncated": {
+  "requests": [
+   {
+    "max_tokens": 640,
+    "messages": [
+     {
+      "content": [
+       {
+        "text": "Image 0:",
+        "type": "text"
+       },
+       {
+        "source": {
+         "data": "sha256:a135823e1f3518ee",
+         "media_type": "image/jpeg",
+         "type": "base64"
+        },
+        "type": "image"
+       },
+       {
+        "text": "Image 1:",
+        "type": "text"
+       },
+       {
+        "source": {
+         "data": "sha256:a135823e1f3518ee",
+         "media_type": "image/jpeg",
+         "type": "base64"
+        },
+        "type": "image"
+       },
+       {
+        "text": "List visible optional equipment. Return JSON only.",
+        "type": "text"
+       }
+      ],
+      "role": "user"
+     }
+    ],
+    "model": "claude-haiku-4-5-20251001",
+    "system": [
+     {
+      "cache_control": {
+       "type": "ephemeral"
+      },
+      "text": "From these vehicle listing photos, report ONLY optional/upgraded equipment clearly visible.\nLook for: HUD, 360/surround cameras on mirrors or grille, ACC/LKA steering buttons, panoramic sunroof, heated/ventilated seats, premium audio badges, tow hitch, red calipers, night vision grille, blind-spot indicators, digital cluster, wireless charging pad, aftermarket wheels/lift/steps.\nDo NOT list base-trim staples (alloy wheels, power mirrors, fog lights, floor mats).\nReturn ONLY JSON:\n{\"observed_features\": string[], \"possible_packages\": string[], \"detected_adas\": string[]}\nUse [] when none. detected_adas tokens: acc, lka, hud, 360_cameras, blind_spot, night_vision, parking_sensors.\n",
+      "type": "text"
+     }
+    ],
+    "temperature": null,
+    "timeout": null
+   }
+  ],
+  "result": {
+   "type": "dict",
+   "value": {}
+  }
+ },
+ "enrichment.haiku_specs|fenced": {
+  "requests": [
+   {
+    "max_tokens": 256,
+    "messages": [
+     {
+      "content": "Return mechanical specs for a 2025 Toyota Camry LE as JSON only. Use typical/most-common specs if a trim has variants. Fields:\n{\"engine_l\": number|null, \"cylinders\": integer|null, \"transmission\": string|null, \"drivetrain\": \"FWD\"|\"RWD\"|\"AWD\"|\"4WD\"|null, \"fuel_type\": string|null, \"mpg_city\": integer|null, \"mpg_highway\": integer|null}\nengine_l: displacement in liters (e.g. 2.5), or \"Electric\" / \"PHEV\" string. transmission: e.g. \"8-Speed Automatic\", \"6-Speed Manual\". fuel_type: e.g. \"Gasoline\", \"Electric\", \"Plug-In Hybrid\". Return null for unknown fields. Raw JSON only, no explanation.",
+      "role": "user"
+     }
+    ],
+    "model": "claude-haiku-4-5-20251001",
+    "system": "JSON-only response engine. Output a single valid JSON object, nothing else.",
+    "temperature": null,
+    "timeout": 20.0
+   }
+  ],
+  "result": {
+   "type": "dict",
+   "value": {
+    "category": "network",
+    "confidence": 0.9,
+    "cylinders": 4,
+    "drivetrain": "FWD",
+    "engine_l": 2.5,
+    "fuel_type": "Gasoline",
+    "interior_color_bucket": "black",
+    "interior_color_hint": "black fabric",
+    "mpg_city": 28,
+    "mpg_highway": 39,
+    "observed_features": [
+     "Wireless Charging Pad"
+    ],
+    "options": [
+     {
+      "code": "CP",
+      "name": "Convenience Package",
+      "price": 1050
+     }
+    ],
+    "packages": [],
+    "retry_actions": [],
+    "retry_recommended": true,
+    "retry_strategy": "simple_retry",
+    "root_cause": "blocked",
+    "summary": "dealer site 403",
+    "transmission": "8-Speed Automatic"
+   }
+  }
+ },
+ "enrichment.haiku_specs|ok": {
+  "requests": [
+   {
+    "max_tokens": 256,
+    "messages": [
+     {
+      "content": "Return mechanical specs for a 2025 Toyota Camry LE as JSON only. Use typical/most-common specs if a trim has variants. Fields:\n{\"engine_l\": number|null, \"cylinders\": integer|null, \"transmission\": string|null, \"drivetrain\": \"FWD\"|\"RWD\"|\"AWD\"|\"4WD\"|null, \"fuel_type\": string|null, \"mpg_city\": integer|null, \"mpg_highway\": integer|null}\nengine_l: displacement in liters (e.g. 2.5), or \"Electric\" / \"PHEV\" string. transmission: e.g. \"8-Speed Automatic\", \"6-Speed Manual\". fuel_type: e.g. \"Gasoline\", \"Electric\", \"Plug-In Hybrid\". Return null for unknown fields. Raw JSON only, no explanation.",
+      "role": "user"
+     }
+    ],
+    "model": "claude-haiku-4-5-20251001",
+    "system": "JSON-only response engine. Output a single valid JSON object, nothing else.",
+    "temperature": null,
+    "timeout": 20.0
+   }
+  ],
+  "result": {
+   "type": "dict",
+   "value": {
+    "category": "network",
+    "confidence": 0.9,
+    "cylinders": 4,
+    "drivetrain": "FWD",
+    "engine_l": 2.5,
+    "fuel_type": "Gasoline",
+    "interior_color_bucket": "black",
+    "interior_color_hint": "black fabric",
+    "mpg_city": 28,
+    "mpg_highway": 39,
+    "observed_features": [
+     "Wireless Charging Pad"
+    ],
+    "options": [
+     {
+      "code": "CP",
+      "name": "Convenience Package",
+      "price": 1050
+     }
+    ],
+    "packages": [],
+    "retry_actions": [],
+    "retry_recommended": true,
+    "retry_strategy": "simple_retry",
+    "root_cause": "blocked",
+    "summary": "dealer site 403",
+    "transmission": "8-Speed Automatic"
+   }
+  }
+ },
+ "enrichment.haiku_specs|refusal": {
+  "requests": [
+   {
+    "max_tokens": 256,
+    "messages": [
+     {
+      "content": "Return mechanical specs for a 2025 Toyota Camry LE as JSON only. Use typical/most-common specs if a trim has variants. Fields:\n{\"engine_l\": number|null, \"cylinders\": integer|null, \"transmission\": string|null, \"drivetrain\": \"FWD\"|\"RWD\"|\"AWD\"|\"4WD\"|null, \"fuel_type\": string|null, \"mpg_city\": integer|null, \"mpg_highway\": integer|null}\nengine_l: displacement in liters (e.g. 2.5), or \"Electric\" / \"PHEV\" string. transmission: e.g. \"8-Speed Automatic\", \"6-Speed Manual\". fuel_type: e.g. \"Gasoline\", \"Electric\", \"Plug-In Hybrid\". Return null for unknown fields. Raw JSON only, no explanation.",
+      "role": "user"
+     }
+    ],
+    "model": "claude-haiku-4-5-20251001",
+    "system": "JSON-only response engine. Output a single valid JSON object, nothing else.",
+    "temperature": null,
+    "timeout": 20.0
+   }
+  ],
+  "result": {
+   "type": "NoneType",
+   "value": null
+  }
+ },
+ "enrichment.haiku_specs|truncated": {
+  "requests": [
+   {
+    "max_tokens": 256,
+    "messages": [
+     {
+      "content": "Return mechanical specs for a 2025 Toyota Camry LE as JSON only. Use typical/most-common specs if a trim has variants. Fields:\n{\"engine_l\": number|null, \"cylinders\": integer|null, \"transmission\": string|null, \"drivetrain\": \"FWD\"|\"RWD\"|\"AWD\"|\"4WD\"|null, \"fuel_type\": string|null, \"mpg_city\": integer|null, \"mpg_highway\": integer|null}\nengine_l: displacement in liters (e.g. 2.5), or \"Electric\" / \"PHEV\" string. transmission: e.g. \"8-Speed Automatic\", \"6-Speed Manual\". fuel_type: e.g. \"Gasoline\", \"Electric\", \"Plug-In Hybrid\". Return null for unknown fields. Raw JSON only, no explanation.",
+      "role": "user"
+     }
+    ],
+    "model": "claude-haiku-4-5-20251001",
+    "system": "JSON-only response engine. Output a single valid JSON object, nothing else.",
+    "temperature": null,
+    "timeout": 20.0
+   }
+  ],
+  "result": {
+   "type": "dict",
+   "value": {
+    "observed_features": [
+     "Wireless Charging Pad"
+    ]
+   }
+  }
+ },
+ "enrichment.vision_analyze_car|fenced": {
+  "requests": [
+   {
+    "max_tokens": 768,
+    "messages": [
+     {
+      "content": [
+       {
+        "source": {
+         "data": "sha256:a135823e1f3518ee",
+         "media_type": "image/jpeg",
+         "type": "base64"
+        },
+        "type": "image"
+       },
+       {
+        "text": "Analyze this dealership car photo. Report ONLY optional/upgraded equipment you can clearly see.\n\nDO NOT list standard base-trim items that most vehicles have (alloy wheels, chrome grille, LED headlights, power windows/locks/mirrors, fog lights, floor mats, steering-wheel controls, cup holders, generic trim badges).\n\nLOOK FOR THESE SPECIFIC UPGRADES (only when clearly visible):\n- Adaptive Cruise Control: steering wheel buttons labeled SET+/SET-/CANC/RES with distance/car icons\n- Lane Keep Assist / Lane Departure: steering wheel buttons with lane-line icons, or windshield camera mount\n- Heads-Up Display (HUD): small frosted/clear rectangular projection zone on dashboard top\n- Surround View / 360 Cameras: cameras embedded in side mirrors or front grille mesh holes\n- Night Vision: circular mesh hole in center of front grille (thermal camera housing)\n- Blind Spot Monitoring: amber warning indicators on mirrors or A-pillars\n- Parking Sensors: small round dots on front/rear bumpers\n- Panoramic Sunroof: large glass roof panel visible from interior or exterior\n- Heated/Ventilated Seats: buttons with wavy lines or fan icons on center console\n- Massage Seats: buttons with wavy line patterns on seat controls\n- Memory Seats: numbered buttons on door panel (1, 2, 3)\n- Ambient Lighting: colored LED strips along dash/doors\n- Digital Instrument Cluster: full-screen display replacing analog gauges\n- Wireless Charging Pad: Qi symbol or phone charging pad on center console\n- Sunroof/Moonroof: glass panel in roof visible from interior\n- Sport/Performance Package: red brake calipers, sport seats, carbon fiber trim\n- Premium audio: Bang & Olufsen (B&O), Bose, Harman Kardon, Burmester, Meridian, JBL, Sony badges on speakers or dash\n- Tow package: visible trailer hitch receiver, tow hooks, trailer wiring connector at rear\n- Exhaust: quad exhaust tips, dual exhaust, performance exhaust\n- Red brake calipers: brightly colored (often red) calipers visible through wheel spokes\n- 360° / surround-view cameras: bird's-eye view on infotainment screen, camera icons, mirror/grille camera lenses\n- Ventilated Seats: mesh perforations on seat surfaces\n- Window sticker / Monroney label: paper label on window — read ALL options/packages listed\n\nAFTERMARKET & ADD-ON EQUIPMENT (always list in observed_features when visible):\n- Aftermarket wheels / rims (non-OEM design, black/machined/custom finish unlike stock for trim)\n- Suspension lift / leveling kit (raised ride height, oversized tires, extra wheel-well gap)\n- Aftermarket side step rails / running boards / nerf bars (metal tubes or step-in rails under doors)\n- Aftermarket drop steps or side steps (individual steps below each door)\n- Aftermarket fender flares (bolt-on or wide body flares)\n- Aftermarket grille, bull bar, or brush guard\n- Aftermarket bed liner, tonneau cover, bed cap, or toolbox (trucks)\n- Roof rack, cross bars, or cargo basket\n- Aftermarket exhaust tips or performance exhaust\n- Aftermarket hood scoop or vented hood\n- Aftermarket tint (very dark windows)\n- Aftermarket lighting (LED light bar, fog light pods)\n\nexterior_color: name the paint color if visible (e.g. 'Alpine White', 'Midnight Blue', 'Gray'). Set confidence.exterior_color to 'high' when certain, 'medium' when likely but not 100%.\ninterior_color: name the cabin/seat color as a simple color word (e.g. 'Black', 'Tan', 'Gray', 'Beige', 'Red', 'Brown'). Use the most prominent color visible on seats/trim. Set confidence.interior_color to 'high' or 'medium'.\ninterior_color_hint: brief description of cabin material/color (e.g. 'black leather', 'tan perforated leather').\n\nOutput raw JSON only:\n{\"observed_features\": string[], \"observed_badges\": string[], \"possible_packages\": string[], \"detected_adas\": string[], \"confidence\": {\"exterior_color\": \"low\"|\"medium\"|\"high\"|null, \"interior_color\": \"low\"|\"medium\"|\"high\"|null}, \"exterior_color\": string|null, \"interior_color\": string|null, \"interior_color_hint\": string|null, \"vin\": string|null, \"msrp\": number|null, \"sticker_options\": string[]}\n\nobserved_features: optional/upgraded factory equipment and visible aftermarket add-ons only. Use short plain-English labels. Skip standard trim equipment.\npossible_packages: inferred OEM packages only when multiple upgraded features clearly suggest one.\ndetected_adas: list confirmed ADAS features you SEE (ACC, LKA, HUD, 360_cameras, night_vision, blind_spot, etc.)\nsticker_options: if a window sticker is visible, list every option/package name from it\nUse null/[] when unknown.",
+        "type": "text"
+       }
+      ],
+      "role": "user"
+     }
+    ],
+    "model": "claude-haiku-4-5-20251001",
+    "system": "You are a JSON-only response engine for dealership vehicle photo analysis. List only clearly visible optional/upgraded equipment and aftermarket add-ons. Do not guess standard base-trim features. Never output text other than a valid JSON object. If you are unsure about a field, return null. Do not explain yourself.",
+    "temperature": null,
+    "timeout": 45.0
+   }
+  ],
+  "result": {
+   "type": "dict",
+   "value": {
+    "category": "network",
+    "confidence": 0.9,
+    "cylinders": 4,
+    "drivetrain": "FWD",
+    "engine_l": 2.5,
+    "fuel_type": "Gasoline",
+    "interior_color_bucket": "black",
+    "interior_color_hint": "black fabric",
+    "mpg_city": 28,
+    "mpg_highway": 39,
+    "observed_features": [
+     "Wireless Charging Pad"
+    ],
+    "options": [
+     {
+      "code": "CP",
+      "name": "Convenience Package",
+      "price": 1050
+     }
+    ],
+    "packages": [],
+    "retry_actions": [],
+    "retry_recommended": true,
+    "retry_strategy": "simple_retry",
+    "root_cause": "blocked",
+    "summary": "dealer site 403",
+    "transmission": "8-Speed Automatic"
+   }
+  }
+ },
+ "enrichment.vision_analyze_car|ok": {
+  "requests": [
+   {
+    "max_tokens": 768,
+    "messages": [
+     {
+      "content": [
+       {
+        "source": {
+         "data": "sha256:a135823e1f3518ee",
+         "media_type": "image/jpeg",
+         "type": "base64"
+        },
+        "type": "image"
+       },
+       {
+        "text": "Analyze this dealership car photo. Report ONLY optional/upgraded equipment you can clearly see.\n\nDO NOT list standard base-trim items that most vehicles have (alloy wheels, chrome grille, LED headlights, power windows/locks/mirrors, fog lights, floor mats, steering-wheel controls, cup holders, generic trim badges).\n\nLOOK FOR THESE SPECIFIC UPGRADES (only when clearly visible):\n- Adaptive Cruise Control: steering wheel buttons labeled SET+/SET-/CANC/RES with distance/car icons\n- Lane Keep Assist / Lane Departure: steering wheel buttons with lane-line icons, or windshield camera mount\n- Heads-Up Display (HUD): small frosted/clear rectangular projection zone on dashboard top\n- Surround View / 360 Cameras: cameras embedded in side mirrors or front grille mesh holes\n- Night Vision: circular mesh hole in center of front grille (thermal camera housing)\n- Blind Spot Monitoring: amber warning indicators on mirrors or A-pillars\n- Parking Sensors: small round dots on front/rear bumpers\n- Panoramic Sunroof: large glass roof panel visible from interior or exterior\n- Heated/Ventilated Seats: buttons with wavy lines or fan icons on center console\n- Massage Seats: buttons with wavy line patterns on seat controls\n- Memory Seats: numbered buttons on door panel (1, 2, 3)\n- Ambient Lighting: colored LED strips along dash/doors\n- Digital Instrument Cluster: full-screen display replacing analog gauges\n- Wireless Charging Pad: Qi symbol or phone charging pad on center console\n- Sunroof/Moonroof: glass panel in roof visible from interior\n- Sport/Performance Package: red brake calipers, sport seats, carbon fiber trim\n- Premium audio: Bang & Olufsen (B&O), Bose, Harman Kardon, Burmester, Meridian, JBL, Sony badges on speakers or dash\n- Tow package: visible trailer hitch receiver, tow hooks, trailer wiring connector at rear\n- Exhaust: quad exhaust tips, dual exhaust, performance exhaust\n- Red brake calipers: brightly colored (often red) calipers visible through wheel spokes\n- 360° / surround-view cameras: bird's-eye view on infotainment screen, camera icons, mirror/grille camera lenses\n- Ventilated Seats: mesh perforations on seat surfaces\n- Window sticker / Monroney label: paper label on window — read ALL options/packages listed\n\nAFTERMARKET & ADD-ON EQUIPMENT (always list in observed_features when visible):\n- Aftermarket wheels / rims (non-OEM design, black/machined/custom finish unlike stock for trim)\n- Suspension lift / leveling kit (raised ride height, oversized tires, extra wheel-well gap)\n- Aftermarket side step rails / running boards / nerf bars (metal tubes or step-in rails under doors)\n- Aftermarket drop steps or side steps (individual steps below each door)\n- Aftermarket fender flares (bolt-on or wide body flares)\n- Aftermarket grille, bull bar, or brush guard\n- Aftermarket bed liner, tonneau cover, bed cap, or toolbox (trucks)\n- Roof rack, cross bars, or cargo basket\n- Aftermarket exhaust tips or performance exhaust\n- Aftermarket hood scoop or vented hood\n- Aftermarket tint (very dark windows)\n- Aftermarket lighting (LED light bar, fog light pods)\n\nexterior_color: name the paint color if visible (e.g. 'Alpine White', 'Midnight Blue', 'Gray'). Set confidence.exterior_color to 'high' when certain, 'medium' when likely but not 100%.\ninterior_color: name the cabin/seat color as a simple color word (e.g. 'Black', 'Tan', 'Gray', 'Beige', 'Red', 'Brown'). Use the most prominent color visible on seats/trim. Set confidence.interior_color to 'high' or 'medium'.\ninterior_color_hint: brief description of cabin material/color (e.g. 'black leather', 'tan perforated leather').\n\nOutput raw JSON only:\n{\"observed_features\": string[], \"observed_badges\": string[], \"possible_packages\": string[], \"detected_adas\": string[], \"confidence\": {\"exterior_color\": \"low\"|\"medium\"|\"high\"|null, \"interior_color\": \"low\"|\"medium\"|\"high\"|null}, \"exterior_color\": string|null, \"interior_color\": string|null, \"interior_color_hint\": string|null, \"vin\": string|null, \"msrp\": number|null, \"sticker_options\": string[]}\n\nobserved_features: optional/upgraded factory equipment and visible aftermarket add-ons only. Use short plain-English labels. Skip standard trim equipment.\npossible_packages: inferred OEM packages only when multiple upgraded features clearly suggest one.\ndetected_adas: list confirmed ADAS features you SEE (ACC, LKA, HUD, 360_cameras, night_vision, blind_spot, etc.)\nsticker_options: if a window sticker is visible, list every option/package name from it\nUse null/[] when unknown.",
+        "type": "text"
+       }
+      ],
+      "role": "user"
+     }
+    ],
+    "model": "claude-haiku-4-5-20251001",
+    "system": "You are a JSON-only response engine for dealership vehicle photo analysis. List only clearly visible optional/upgraded equipment and aftermarket add-ons. Do not guess standard base-trim features. Never output text other than a valid JSON object. If you are unsure about a field, return null. Do not explain yourself.",
+    "temperature": null,
+    "timeout": 45.0
+   }
+  ],
+  "result": {
+   "type": "dict",
+   "value": {
+    "category": "network",
+    "confidence": 0.9,
+    "cylinders": 4,
+    "drivetrain": "FWD",
+    "engine_l": 2.5,
+    "fuel_type": "Gasoline",
+    "interior_color_bucket": "black",
+    "interior_color_hint": "black fabric",
+    "mpg_city": 28,
+    "mpg_highway": 39,
+    "observed_features": [
+     "Wireless Charging Pad"
+    ],
+    "options": [
+     {
+      "code": "CP",
+      "name": "Convenience Package",
+      "price": 1050
+     }
+    ],
+    "packages": [],
+    "retry_actions": [],
+    "retry_recommended": true,
+    "retry_strategy": "simple_retry",
+    "root_cause": "blocked",
+    "summary": "dealer site 403",
+    "transmission": "8-Speed Automatic"
+   }
+  }
+ },
+ "enrichment.vision_analyze_car|refusal": {
+  "requests": [
+   {
+    "max_tokens": 768,
+    "messages": [
+     {
+      "content": [
+       {
+        "source": {
+         "data": "sha256:a135823e1f3518ee",
+         "media_type": "image/jpeg",
+         "type": "base64"
+        },
+        "type": "image"
+       },
+       {
+        "text": "Analyze this dealership car photo. Report ONLY optional/upgraded equipment you can clearly see.\n\nDO NOT list standard base-trim items that most vehicles have (alloy wheels, chrome grille, LED headlights, power windows/locks/mirrors, fog lights, floor mats, steering-wheel controls, cup holders, generic trim badges).\n\nLOOK FOR THESE SPECIFIC UPGRADES (only when clearly visible):\n- Adaptive Cruise Control: steering wheel buttons labeled SET+/SET-/CANC/RES with distance/car icons\n- Lane Keep Assist / Lane Departure: steering wheel buttons with lane-line icons, or windshield camera mount\n- Heads-Up Display (HUD): small frosted/clear rectangular projection zone on dashboard top\n- Surround View / 360 Cameras: cameras embedded in side mirrors or front grille mesh holes\n- Night Vision: circular mesh hole in center of front grille (thermal camera housing)\n- Blind Spot Monitoring: amber warning indicators on mirrors or A-pillars\n- Parking Sensors: small round dots on front/rear bumpers\n- Panoramic Sunroof: large glass roof panel visible from interior or exterior\n- Heated/Ventilated Seats: buttons with wavy lines or fan icons on center console\n- Massage Seats: buttons with wavy line patterns on seat controls\n- Memory Seats: numbered buttons on door panel (1, 2, 3)\n- Ambient Lighting: colored LED strips along dash/doors\n- Digital Instrument Cluster: full-screen display replacing analog gauges\n- Wireless Charging Pad: Qi symbol or phone charging pad on center console\n- Sunroof/Moonroof: glass panel in roof visible from interior\n- Sport/Performance Package: red brake calipers, sport seats, carbon fiber trim\n- Premium audio: Bang & Olufsen (B&O), Bose, Harman Kardon, Burmester, Meridian, JBL, Sony badges on speakers or dash\n- Tow package: visible trailer hitch receiver, tow hooks, trailer wiring connector at rear\n- Exhaust: quad exhaust tips, dual exhaust, performance exhaust\n- Red brake calipers: brightly colored (often red) calipers visible through wheel spokes\n- 360° / surround-view cameras: bird's-eye view on infotainment screen, camera icons, mirror/grille camera lenses\n- Ventilated Seats: mesh perforations on seat surfaces\n- Window sticker / Monroney label: paper label on window — read ALL options/packages listed\n\nAFTERMARKET & ADD-ON EQUIPMENT (always list in observed_features when visible):\n- Aftermarket wheels / rims (non-OEM design, black/machined/custom finish unlike stock for trim)\n- Suspension lift / leveling kit (raised ride height, oversized tires, extra wheel-well gap)\n- Aftermarket side step rails / running boards / nerf bars (metal tubes or step-in rails under doors)\n- Aftermarket drop steps or side steps (individual steps below each door)\n- Aftermarket fender flares (bolt-on or wide body flares)\n- Aftermarket grille, bull bar, or brush guard\n- Aftermarket bed liner, tonneau cover, bed cap, or toolbox (trucks)\n- Roof rack, cross bars, or cargo basket\n- Aftermarket exhaust tips or performance exhaust\n- Aftermarket hood scoop or vented hood\n- Aftermarket tint (very dark windows)\n- Aftermarket lighting (LED light bar, fog light pods)\n\nexterior_color: name the paint color if visible (e.g. 'Alpine White', 'Midnight Blue', 'Gray'). Set confidence.exterior_color to 'high' when certain, 'medium' when likely but not 100%.\ninterior_color: name the cabin/seat color as a simple color word (e.g. 'Black', 'Tan', 'Gray', 'Beige', 'Red', 'Brown'). Use the most prominent color visible on seats/trim. Set confidence.interior_color to 'high' or 'medium'.\ninterior_color_hint: brief description of cabin material/color (e.g. 'black leather', 'tan perforated leather').\n\nOutput raw JSON only:\n{\"observed_features\": string[], \"observed_badges\": string[], \"possible_packages\": string[], \"detected_adas\": string[], \"confidence\": {\"exterior_color\": \"low\"|\"medium\"|\"high\"|null, \"interior_color\": \"low\"|\"medium\"|\"high\"|null}, \"exterior_color\": string|null, \"interior_color\": string|null, \"interior_color_hint\": string|null, \"vin\": string|null, \"msrp\": number|null, \"sticker_options\": string[]}\n\nobserved_features: optional/upgraded factory equipment and visible aftermarket add-ons only. Use short plain-English labels. Skip standard trim equipment.\npossible_packages: inferred OEM packages only when multiple upgraded features clearly suggest one.\ndetected_adas: list confirmed ADAS features you SEE (ACC, LKA, HUD, 360_cameras, night_vision, blind_spot, etc.)\nsticker_options: if a window sticker is visible, list every option/package name from it\nUse null/[] when unknown.",
+        "type": "text"
+       }
+      ],
+      "role": "user"
+     }
+    ],
+    "model": "claude-haiku-4-5-20251001",
+    "system": "You are a JSON-only response engine for dealership vehicle photo analysis. List only clearly visible optional/upgraded equipment and aftermarket add-ons. Do not guess standard base-trim features. Never output text other than a valid JSON object. If you are unsure about a field, return null. Do not explain yourself.",
+    "temperature": null,
+    "timeout": 45.0
+   }
+  ],
+  "result": {
+   "type": "NoneType",
+   "value": null
+  }
+ },
+ "enrichment.vision_analyze_car|truncated": {
+  "requests": [
+   {
+    "max_tokens": 768,
+    "messages": [
+     {
+      "content": [
+       {
+        "source": {
+         "data": "sha256:a135823e1f3518ee",
+         "media_type": "image/jpeg",
+         "type": "base64"
+        },
+        "type": "image"
+       },
+       {
+        "text": "Analyze this dealership car photo. Report ONLY optional/upgraded equipment you can clearly see.\n\nDO NOT list standard base-trim items that most vehicles have (alloy wheels, chrome grille, LED headlights, power windows/locks/mirrors, fog lights, floor mats, steering-wheel controls, cup holders, generic trim badges).\n\nLOOK FOR THESE SPECIFIC UPGRADES (only when clearly visible):\n- Adaptive Cruise Control: steering wheel buttons labeled SET+/SET-/CANC/RES with distance/car icons\n- Lane Keep Assist / Lane Departure: steering wheel buttons with lane-line icons, or windshield camera mount\n- Heads-Up Display (HUD): small frosted/clear rectangular projection zone on dashboard top\n- Surround View / 360 Cameras: cameras embedded in side mirrors or front grille mesh holes\n- Night Vision: circular mesh hole in center of front grille (thermal camera housing)\n- Blind Spot Monitoring: amber warning indicators on mirrors or A-pillars\n- Parking Sensors: small round dots on front/rear bumpers\n- Panoramic Sunroof: large glass roof panel visible from interior or exterior\n- Heated/Ventilated Seats: buttons with wavy lines or fan icons on center console\n- Massage Seats: buttons with wavy line patterns on seat controls\n- Memory Seats: numbered buttons on door panel (1, 2, 3)\n- Ambient Lighting: colored LED strips along dash/doors\n- Digital Instrument Cluster: full-screen display replacing analog gauges\n- Wireless Charging Pad: Qi symbol or phone charging pad on center console\n- Sunroof/Moonroof: glass panel in roof visible from interior\n- Sport/Performance Package: red brake calipers, sport seats, carbon fiber trim\n- Premium audio: Bang & Olufsen (B&O), Bose, Harman Kardon, Burmester, Meridian, JBL, Sony badges on speakers or dash\n- Tow package: visible trailer hitch receiver, tow hooks, trailer wiring connector at rear\n- Exhaust: quad exhaust tips, dual exhaust, performance exhaust\n- Red brake calipers: brightly colored (often red) calipers visible through wheel spokes\n- 360° / surround-view cameras: bird's-eye view on infotainment screen, camera icons, mirror/grille camera lenses\n- Ventilated Seats: mesh perforations on seat surfaces\n- Window sticker / Monroney label: paper label on window — read ALL options/packages listed\n\nAFTERMARKET & ADD-ON EQUIPMENT (always list in observed_features when visible):\n- Aftermarket wheels / rims (non-OEM design, black/machined/custom finish unlike stock for trim)\n- Suspension lift / leveling kit (raised ride height, oversized tires, extra wheel-well gap)\n- Aftermarket side step rails / running boards / nerf bars (metal tubes or step-in rails under doors)\n- Aftermarket drop steps or side steps (individual steps below each door)\n- Aftermarket fender flares (bolt-on or wide body flares)\n- Aftermarket grille, bull bar, or brush guard\n- Aftermarket bed liner, tonneau cover, bed cap, or toolbox (trucks)\n- Roof rack, cross bars, or cargo basket\n- Aftermarket exhaust tips or performance exhaust\n- Aftermarket hood scoop or vented hood\n- Aftermarket tint (very dark windows)\n- Aftermarket lighting (LED light bar, fog light pods)\n\nexterior_color: name the paint color if visible (e.g. 'Alpine White', 'Midnight Blue', 'Gray'). Set confidence.exterior_color to 'high' when certain, 'medium' when likely but not 100%.\ninterior_color: name the cabin/seat color as a simple color word (e.g. 'Black', 'Tan', 'Gray', 'Beige', 'Red', 'Brown'). Use the most prominent color visible on seats/trim. Set confidence.interior_color to 'high' or 'medium'.\ninterior_color_hint: brief description of cabin material/color (e.g. 'black leather', 'tan perforated leather').\n\nOutput raw JSON only:\n{\"observed_features\": string[], \"observed_badges\": string[], \"possible_packages\": string[], \"detected_adas\": string[], \"confidence\": {\"exterior_color\": \"low\"|\"medium\"|\"high\"|null, \"interior_color\": \"low\"|\"medium\"|\"high\"|null}, \"exterior_color\": string|null, \"interior_color\": string|null, \"interior_color_hint\": string|null, \"vin\": string|null, \"msrp\": number|null, \"sticker_options\": string[]}\n\nobserved_features: optional/upgraded factory equipment and visible aftermarket add-ons only. Use short plain-English labels. Skip standard trim equipment.\npossible_packages: inferred OEM packages only when multiple upgraded features clearly suggest one.\ndetected_adas: list confirmed ADAS features you SEE (ACC, LKA, HUD, 360_cameras, night_vision, blind_spot, etc.)\nsticker_options: if a window sticker is visible, list every option/package name from it\nUse null/[] when unknown.",
+        "type": "text"
+       }
+      ],
+      "role": "user"
+     }
+    ],
+    "model": "claude-haiku-4-5-20251001",
+    "system": "You are a JSON-only response engine for dealership vehicle photo analysis. List only clearly visible optional/upgraded equipment and aftermarket add-ons. Do not guess standard base-trim features. Never output text other than a valid JSON object. If you are unsure about a field, return null. Do not explain yourself.",
+    "temperature": null,
+    "timeout": 45.0
+   }
+  ],
+  "result": {
+   "type": "dict",
+   "value": {
+    "observed_features": [
+     "Wireless Charging Pad"
+    ]
+   }
+  }
+ },
+ "job_diagnosis.llm|fenced": {
+  "requests": [
+   {
+    "max_tokens": 700,
+    "messages": [
+     {
+      "content": "{\"error\": \"HTTP 403 on inventory feed\", \"job_type\": \"scan\", \"dealer_id\": \"example-toyota\", \"payload\": {\"dealer_id\": \"example-toyota\"}, \"log_tail\": \"GET https://www.example-toyota.com/apis/widget 403\"}",
+      "role": "user"
+     }
+    ],
+    "model": "claude-haiku-4-5-20251001",
+    "system": "You diagnose failed dealership inventory scanner jobs for operators. Return ONLY minified JSON with keys: summary, category, root_cause, retry_recommended (bool), retry_strategy, retry_actions (array of {type,value} or {type,key,value}), code_fix_hint (string|null), confidence (0-1). category must be one of: ['code_bug', 'configuration', 'dealer_site', 'infrastructure', 'transient', 'unknown']. retry_strategy must be one of: ['needs_code_fix', 'needs_manual', 'no_retry', 'retry_with_env', 'retry_with_profile', 'retry_with_python_scanner', 'simple_retry']. retry_actions types: set_env, set_profile, use_python_scanner. If the log shows qemu-x86_64 or ld-linux-x86-64.so.2, category=infrastructure and suggest set_env PUPPETEER_EXECUTABLE_PATH to Playwright chromium. If a code bug in our repo is likely, use code_bug and needs_code_fix.",
+    "temperature": 0,
+    "timeout": null
+   }
+  ],
+  "result": {
+   "type": "dict",
+   "value": {
+    "category": "unknown",
+    "code_fix_hint": null,
+    "confidence": 0.9,
+    "retry_actions": [],
+    "retry_recommended": true,
+    "retry_strategy": "simple_retry",
+    "root_cause": "blocked",
+    "source": "llm",
+    "summary": "dealer site 403"
+   }
+  }
+ },
+ "job_diagnosis.llm|ok": {
+  "requests": [
+   {
+    "max_tokens": 700,
+    "messages": [
+     {
+      "content": "{\"error\": \"HTTP 403 on inventory feed\", \"job_type\": \"scan\", \"dealer_id\": \"example-toyota\", \"payload\": {\"dealer_id\": \"example-toyota\"}, \"log_tail\": \"GET https://www.example-toyota.com/apis/widget 403\"}",
+      "role": "user"
+     }
+    ],
+    "model": "claude-haiku-4-5-20251001",
+    "system": "You diagnose failed dealership inventory scanner jobs for operators. Return ONLY minified JSON with keys: summary, category, root_cause, retry_recommended (bool), retry_strategy, retry_actions (array of {type,value} or {type,key,value}), code_fix_hint (string|null), confidence (0-1). category must be one of: ['code_bug', 'configuration', 'dealer_site', 'infrastructure', 'transient', 'unknown']. retry_strategy must be one of: ['needs_code_fix', 'needs_manual', 'no_retry', 'retry_with_env', 'retry_with_profile', 'retry_with_python_scanner', 'simple_retry']. retry_actions types: set_env, set_profile, use_python_scanner. If the log shows qemu-x86_64 or ld-linux-x86-64.so.2, category=infrastructure and suggest set_env PUPPETEER_EXECUTABLE_PATH to Playwright chromium. If a code bug in our repo is likely, use code_bug and needs_code_fix.",
+    "temperature": 0,
+    "timeout": null
+   }
+  ],
+  "result": {
+   "type": "dict",
+   "value": {
+    "category": "unknown",
+    "code_fix_hint": null,
+    "confidence": 0.9,
+    "retry_actions": [],
+    "retry_recommended": true,
+    "retry_strategy": "simple_retry",
+    "root_cause": "blocked",
+    "source": "llm",
+    "summary": "dealer site 403"
+   }
+  }
+ },
+ "job_diagnosis.llm|refusal": {
+  "requests": [
+   {
+    "max_tokens": 700,
+    "messages": [
+     {
+      "content": "{\"error\": \"HTTP 403 on inventory feed\", \"job_type\": \"scan\", \"dealer_id\": \"example-toyota\", \"payload\": {\"dealer_id\": \"example-toyota\"}, \"log_tail\": \"GET https://www.example-toyota.com/apis/widget 403\"}",
+      "role": "user"
+     }
+    ],
+    "model": "claude-haiku-4-5-20251001",
+    "system": "You diagnose failed dealership inventory scanner jobs for operators. Return ONLY minified JSON with keys: summary, category, root_cause, retry_recommended (bool), retry_strategy, retry_actions (array of {type,value} or {type,key,value}), code_fix_hint (string|null), confidence (0-1). category must be one of: ['code_bug', 'configuration', 'dealer_site', 'infrastructure', 'transient', 'unknown']. retry_strategy must be one of: ['needs_code_fix', 'needs_manual', 'no_retry', 'retry_with_env', 'retry_with_profile', 'retry_with_python_scanner', 'simple_retry']. retry_actions types: set_env, set_profile, use_python_scanner. If the log shows qemu-x86_64 or ld-linux-x86-64.so.2, category=infrastructure and suggest set_env PUPPETEER_EXECUTABLE_PATH to Playwright chromium. If a code bug in our repo is likely, use code_bug and needs_code_fix.",
+    "temperature": 0,
+    "timeout": null
+   }
+  ],
+  "result": {
+   "type": "NoneType",
+   "value": null
+  }
+ },
+ "job_diagnosis.llm|truncated": {
+  "requests": [
+   {
+    "max_tokens": 700,
+    "messages": [
+     {
+      "content": "{\"error\": \"HTTP 403 on inventory feed\", \"job_type\": \"scan\", \"dealer_id\": \"example-toyota\", \"payload\": {\"dealer_id\": \"example-toyota\"}, \"log_tail\": \"GET https://www.example-toyota.com/apis/widget 403\"}",
+      "role": "user"
+     }
+    ],
+    "model": "claude-haiku-4-5-20251001",
+    "system": "You diagnose failed dealership inventory scanner jobs for operators. Return ONLY minified JSON with keys: summary, category, root_cause, retry_recommended (bool), retry_strategy, retry_actions (array of {type,value} or {type,key,value}), code_fix_hint (string|null), confidence (0-1). category must be one of: ['code_bug', 'configuration', 'dealer_site', 'infrastructure', 'transient', 'unknown']. retry_strategy must be one of: ['needs_code_fix', 'needs_manual', 'no_retry', 'retry_with_env', 'retry_with_profile', 'retry_with_python_scanner', 'simple_retry']. retry_actions types: set_env, set_profile, use_python_scanner. If the log shows qemu-x86_64 or ld-linux-x86-64.so.2, category=infrastructure and suggest set_env PUPPETEER_EXECUTABLE_PATH to Playwright chromium. If a code bug in our repo is likely, use code_bug and needs_code_fix.",
+    "temperature": 0,
+    "timeout": null
+   }
+  ],
+  "result": {
+   "type": "NoneType",
+   "value": null
+  }
+ },
+ "listing_description.llm_extract|fenced": {
+  "requests": [
+   {
+    "max_tokens": 512,
+    "messages": [
+     {
+      "content": "Extract ONLY explicit factual claims about interior color, exterior color, and option packages from the listing text. Rules:\n- Output a single JSON object matching this shape: {\"interior_color_hint\":string|null,\"exterior_color_hint\":string|null,\"packages\":[{\"name\":string,\"features\":string[],\"evidence_spans\":string[]}],\"standalone_features\":string[]}\n- evidence_spans: 1–3 short verbatim snippets from the text per package (max 120 chars each).\n- Do not invent packages or features; omit unknown fields (use null or []).\n- Ignore dealer marketing fluff with no concrete equipment.\n\nVehicle context: make=Toyota; model=Camry; year=2025; trim=LE; vin=4T1DAACK0SU083969\n\nListing text:\n2025 Toyota Camry LE: Redefining the Daily Drive The 2025 Toyota Camry LE sets the benchmark for modern midsize sedans, blending exceptional fuel economy with sophisticated style and everyday utility. Dressed in striking Celestial Silver Metallic, this front-wheel-drive sedan has a Black Fabric interior and the Convenience Package with power driver seat and wireless charging.",
+      "role": "user"
+     }
+    ],
+    "model": "claude-haiku-4-5-20251001",
+    "system": "You output JSON only. No prose.",
+    "temperature": null,
+    "timeout": 60
+   }
+  ],
+  "result": {
+   "type": "dict",
+   "value": {
+    "category": "network",
+    "confidence": 0.9,
+    "cylinders": 4,
+    "drivetrain": "FWD",
+    "engine_l": 2.5,
+    "fuel_type": "Gasoline",
+    "interior_color_bucket": "black",
+    "interior_color_hint": "black fabric",
+    "mpg_city": 28,
+    "mpg_highway": 39,
+    "observed_features": [
+     "Wireless Charging Pad"
+    ],
+    "options": [
+     {
+      "code": "CP",
+      "name": "Convenience Package",
+      "price": 1050
+     }
+    ],
+    "packages": [],
+    "retry_actions": [],
+    "retry_recommended": true,
+    "retry_strategy": "simple_retry",
+    "root_cause": "blocked",
+    "summary": "dealer site 403",
+    "transmission": "8-Speed Automatic"
+   }
+  }
+ },
+ "listing_description.llm_extract|ok": {
+  "requests": [
+   {
+    "max_tokens": 512,
+    "messages": [
+     {
+      "content": "Extract ONLY explicit factual claims about interior color, exterior color, and option packages from the listing text. Rules:\n- Output a single JSON object matching this shape: {\"interior_color_hint\":string|null,\"exterior_color_hint\":string|null,\"packages\":[{\"name\":string,\"features\":string[],\"evidence_spans\":string[]}],\"standalone_features\":string[]}\n- evidence_spans: 1–3 short verbatim snippets from the text per package (max 120 chars each).\n- Do not invent packages or features; omit unknown fields (use null or []).\n- Ignore dealer marketing fluff with no concrete equipment.\n\nVehicle context: make=Toyota; model=Camry; year=2025; trim=LE; vin=4T1DAACK0SU083969\n\nListing text:\n2025 Toyota Camry LE: Redefining the Daily Drive The 2025 Toyota Camry LE sets the benchmark for modern midsize sedans, blending exceptional fuel economy with sophisticated style and everyday utility. Dressed in striking Celestial Silver Metallic, this front-wheel-drive sedan has a Black Fabric interior and the Convenience Package with power driver seat and wireless charging.",
+      "role": "user"
+     }
+    ],
+    "model": "claude-haiku-4-5-20251001",
+    "system": "You output JSON only. No prose.",
+    "temperature": null,
+    "timeout": 60
+   }
+  ],
+  "result": {
+   "type": "dict",
+   "value": {
+    "category": "network",
+    "confidence": 0.9,
+    "cylinders": 4,
+    "drivetrain": "FWD",
+    "engine_l": 2.5,
+    "fuel_type": "Gasoline",
+    "interior_color_bucket": "black",
+    "interior_color_hint": "black fabric",
+    "mpg_city": 28,
+    "mpg_highway": 39,
+    "observed_features": [
+     "Wireless Charging Pad"
+    ],
+    "options": [
+     {
+      "code": "CP",
+      "name": "Convenience Package",
+      "price": 1050
+     }
+    ],
+    "packages": [],
+    "retry_actions": [],
+    "retry_recommended": true,
+    "retry_strategy": "simple_retry",
+    "root_cause": "blocked",
+    "summary": "dealer site 403",
+    "transmission": "8-Speed Automatic"
+   }
+  }
+ },
+ "listing_description.llm_extract|refusal": {
+  "requests": [
+   {
+    "max_tokens": 512,
+    "messages": [
+     {
+      "content": "Extract ONLY explicit factual claims about interior color, exterior color, and option packages from the listing text. Rules:\n- Output a single JSON object matching this shape: {\"interior_color_hint\":string|null,\"exterior_color_hint\":string|null,\"packages\":[{\"name\":string,\"features\":string[],\"evidence_spans\":string[]}],\"standalone_features\":string[]}\n- evidence_spans: 1–3 short verbatim snippets from the text per package (max 120 chars each).\n- Do not invent packages or features; omit unknown fields (use null or []).\n- Ignore dealer marketing fluff with no concrete equipment.\n\nVehicle context: make=Toyota; model=Camry; year=2025; trim=LE; vin=4T1DAACK0SU083969\n\nListing text:\n2025 Toyota Camry LE: Redefining the Daily Drive The 2025 Toyota Camry LE sets the benchmark for modern midsize sedans, blending exceptional fuel economy with sophisticated style and everyday utility. Dressed in striking Celestial Silver Metallic, this front-wheel-drive sedan has a Black Fabric interior and the Convenience Package with power driver seat and wireless charging.",
+      "role": "user"
+     }
+    ],
+    "model": "claude-haiku-4-5-20251001",
+    "system": "You output JSON only. No prose.",
+    "temperature": null,
+    "timeout": 60
+   }
+  ],
+  "result": {
+   "type": "NoneType",
+   "value": null
+  }
+ },
+ "listing_description.llm_extract|truncated": {
+  "requests": [
+   {
+    "max_tokens": 512,
+    "messages": [
+     {
+      "content": "Extract ONLY explicit factual claims about interior color, exterior color, and option packages from the listing text. Rules:\n- Output a single JSON object matching this shape: {\"interior_color_hint\":string|null,\"exterior_color_hint\":string|null,\"packages\":[{\"name\":string,\"features\":string[],\"evidence_spans\":string[]}],\"standalone_features\":string[]}\n- evidence_spans: 1–3 short verbatim snippets from the text per package (max 120 chars each).\n- Do not invent packages or features; omit unknown fields (use null or []).\n- Ignore dealer marketing fluff with no concrete equipment.\n\nVehicle context: make=Toyota; model=Camry; year=2025; trim=LE; vin=4T1DAACK0SU083969\n\nListing text:\n2025 Toyota Camry LE: Redefining the Daily Drive The 2025 Toyota Camry LE sets the benchmark for modern midsize sedans, blending exceptional fuel economy with sophisticated style and everyday utility. Dressed in striking Celestial Silver Metallic, this front-wheel-drive sedan has a Black Fabric interior and the Convenience Package with power driver seat and wireless charging.",
+      "role": "user"
+     }
+    ],
+    "model": "claude-haiku-4-5-20251001",
+    "system": "You output JSON only. No prose.",
+    "temperature": null,
+    "timeout": 60
+   }
+  ],
+  "result": {
+   "type": "NoneType",
+   "value": null
+  }
+ },
+ "llm_client.complete_claude|fenced": {
+  "requests": [
+   {
+    "max_tokens": 1024,
+    "messages": [
+     {
+      "content": "Summarize this car.",
+      "role": "user"
+     }
+    ],
+    "model": "claude-haiku-4-5-20251001",
+    "system": "Be brief.",
+    "temperature": 0.3,
+    "timeout": null
+   }
+  ],
+  "result": {
+   "provider": "claude",
+   "stop_reason": "end_turn",
+   "truncated": false,
+   "type": "Completion",
+   "value": "```json\n{\"observed_features\": [\"Wireless Charging Pad\"], \"options\": [{\"name\": \"Convenience Package\", \"price\": 1050, \"code\": \"CP\"}], \"interior_color_bucket\": \"black\", \"confidence\": 0.9, \"summary\": \"dealer site 403\", \"category\": \"network\", \"root_cause\": \"blocked\", \"retry_recommended\": true, \"retry_strategy\": \"simple_retry\", \"retry_actions\": [], \"engine_l\": 2.5, \"cylinders\": 4, \"transmission\": \"8-Speed Automatic\", \"drivetrain\": \"FWD\", \"fuel_type\": \"Gasoline\", \"mpg_city\": 28, \"mpg_highway\": 39, \"interior_color_hint\": \"black fabric\", \"packages\": []}\n```"
+  }
+ },
+ "llm_client.complete_claude|ok": {
+  "requests": [
+   {
+    "max_tokens": 1024,
+    "messages": [
+     {
+      "content": "Summarize this car.",
+      "role": "user"
+     }
+    ],
+    "model": "claude-haiku-4-5-20251001",
+    "system": "Be brief.",
+    "temperature": 0.3,
+    "timeout": null
+   }
+  ],
+  "result": {
+   "provider": "claude",
+   "stop_reason": "end_turn",
+   "truncated": false,
+   "type": "Completion",
+   "value": "{\"observed_features\": [\"Wireless Charging Pad\"], \"options\": [{\"name\": \"Convenience Package\", \"price\": 1050, \"code\": \"CP\"}], \"interior_color_bucket\": \"black\", \"confidence\": 0.9, \"summary\": \"dealer site 403\", \"category\": \"network\", \"root_cause\": \"blocked\", \"retry_recommended\": true, \"retry_strategy\": \"simple_retry\", \"retry_actions\": [], \"engine_l\": 2.5, \"cylinders\": 4, \"transmission\": \"8-Speed Automatic\", \"drivetrain\": \"FWD\", \"fuel_type\": \"Gasoline\", \"mpg_city\": 28, \"mpg_highway\": 39, \"interior_color_hint\": \"black fabric\", \"packages\": []}"
+  }
+ },
+ "llm_client.complete_claude|refusal": {
+  "requests": [
+   {
+    "max_tokens": 1024,
+    "messages": [
+     {
+      "content": "Summarize this car.",
+      "role": "user"
+     }
+    ],
+    "model": "claude-haiku-4-5-20251001",
+    "system": "Be brief.",
+    "temperature": 0.3,
+    "timeout": null
+   }
+  ],
+  "result": {
+   "provider": "claude",
+   "stop_reason": "refusal",
+   "truncated": false,
+   "type": "Completion",
+   "value": ""
+  }
+ },
+ "llm_client.complete_claude|truncated": {
+  "requests": [
+   {
+    "max_tokens": 1024,
+    "messages": [
+     {
+      "content": "Summarize this car.",
+      "role": "user"
+     }
+    ],
+    "model": "claude-haiku-4-5-20251001",
+    "system": "Be brief.",
+    "temperature": 0.3,
+    "timeout": null
+   }
+  ],
+  "result": {
+   "provider": "claude",
+   "stop_reason": "max_tokens",
+   "truncated": true,
+   "type": "Completion",
+   "value": "{\"observed_features\": [\"Wireless Charging Pad\", \"Pano"
+  }
+ },
+ "post_scan.interior_vision|fenced": {
+  "requests": [
+   {
+    "max_tokens": 128,
+    "messages": [
+     {
+      "content": [
+       {
+        "source": {
+         "data": "sha256:f42beb32ea50c29b",
+         "media_type": "image/jpeg",
+         "type": "base64"
+        },
+        "type": "image"
+       },
+       {
+        "text": "What is the interior color of this car? Respond with JSON only: {\"interior_color_bucket\": \"<one of: black, gray, beige, tan, brown, white, red, blue, other>\", \"confidence\": <0.0-1.0>}",
+        "type": "text"
+       }
+      ],
+      "role": "user"
+     }
+    ],
+    "model": "claude-haiku-4-5-20251001",
+    "system": null,
+    "temperature": null,
+    "timeout": 45.0
+   }
+  ],
+  "result": {
+   "type": "dict",
+   "value": {
+    "confidence": 0.9,
+    "interior_color_bucket": "black",
+    "raw": "```json\n{\"observed_features\": [\"Wireless Charging Pad\"], \"options\": [{\"name\": \"Convenience Package\", \"price\": 1050, \"code\": \"CP\"}], \"interior_color_bucket\": \"black\", \"confidence\": 0.9, \"summary\": \"dealer site 403\", \"category\": \"network\", \"root_cause\": \"blocked\", \"retry_recommended\": true, \"retry_strategy\": \"simple_retry\", \"retry_actions\": [], \"engine_l\": 2.5, \"cylinders\": 4, \"transmission\": \"8-Speed Automatic\", \"drivetrain\": \"FWD\", \"fuel_type\": \"Gasoline\", \"mpg_city\": 28, \"mpg_highway\": 39, \"interior_color_hint\": \"black fabric\", \"packages\": []}\n```"
+   }
+  }
+ },
+ "post_scan.interior_vision|ok": {
+  "requests": [
+   {
+    "max_tokens": 128,
+    "messages": [
+     {
+      "content": [
+       {
+        "source": {
+         "data": "sha256:f42beb32ea50c29b",
+         "media_type": "image/jpeg",
+         "type": "base64"
+        },
+        "type": "image"
+       },
+       {
+        "text": "What is the interior color of this car? Respond with JSON only: {\"interior_color_bucket\": \"<one of: black, gray, beige, tan, brown, white, red, blue, other>\", \"confidence\": <0.0-1.0>}",
+        "type": "text"
+       }
+      ],
+      "role": "user"
+     }
+    ],
+    "model": "claude-haiku-4-5-20251001",
+    "system": null,
+    "temperature": null,
+    "timeout": 45.0
+   }
+  ],
+  "result": {
+   "type": "dict",
+   "value": {
+    "confidence": 0.9,
+    "interior_color_bucket": "black",
+    "raw": "{\"observed_features\": [\"Wireless Charging Pad\"], \"options\": [{\"name\": \"Convenience Package\", \"price\": 1050, \"code\": \"CP\"}], \"interior_color_bucket\": \"black\", \"confidence\": 0.9, \"summary\": \"dealer site 403\", \"category\": \"network\", \"root_cause\": \"blocked\", \"retry_recommended\": true, \"retry_strategy\": \"simple_retry\", \"retry_actions\": [], \"engine_l\": 2.5, \"cylinders\": 4, \"transmission\": \"8-Speed Automatic\", \"drivetrain\": \"FWD\", \"fuel_type\": \"Gasoline\", \"mpg_city\": 28, \"mpg_highway\": 39, \"interior_color_hint\": \"black fabric\", \"packages\": []}"
+   }
+  }
+ },
+ "post_scan.interior_vision|refusal": {
+  "requests": [
+   {
+    "max_tokens": 128,
+    "messages": [
+     {
+      "content": [
+       {
+        "source": {
+         "data": "sha256:f42beb32ea50c29b",
+         "media_type": "image/jpeg",
+         "type": "base64"
+        },
+        "type": "image"
+       },
+       {
+        "text": "What is the interior color of this car? Respond with JSON only: {\"interior_color_bucket\": \"<one of: black, gray, beige, tan, brown, white, red, blue, other>\", \"confidence\": <0.0-1.0>}",
+        "type": "text"
+       }
+      ],
+      "role": "user"
+     }
+    ],
+    "model": "claude-haiku-4-5-20251001",
+    "system": null,
+    "temperature": null,
+    "timeout": 45.0
+   }
+  ],
+  "result": {
+   "type": "NoneType",
+   "value": null
+  }
+ },
+ "post_scan.interior_vision|truncated": {
+  "requests": [
+   {
+    "max_tokens": 128,
+    "messages": [
+     {
+      "content": [
+       {
+        "source": {
+         "data": "sha256:f42beb32ea50c29b",
+         "media_type": "image/jpeg",
+         "type": "base64"
+        },
+        "type": "image"
+       },
+       {
+        "text": "What is the interior color of this car? Respond with JSON only: {\"interior_color_bucket\": \"<one of: black, gray, beige, tan, brown, white, red, blue, other>\", \"confidence\": <0.0-1.0>}",
+        "type": "text"
+       }
+      ],
+      "role": "user"
+     }
+    ],
+    "model": "claude-haiku-4-5-20251001",
+    "system": null,
+    "temperature": null,
+    "timeout": 45.0
+   }
+  ],
+  "result": {
+   "type": "NoneType",
+   "value": null
+  }
+ },
+ "window_sticker.image|fenced": {
+  "requests": [
+   {
+    "max_tokens": 1536,
+    "messages": [
+     {
+      "content": [
+       {
+        "source": {
+         "data": "sha256:09533a9fd3f19f74",
+         "media_type": "image/jpeg",
+         "type": "base64"
+        },
+        "type": "image"
+       },
+       {
+        "text": "Vehicle: 2025 Toyota Camry LE\nVIN: 4T1DAACK0SU083969\n\nThis image is a window sticker / Monroney label. Extract ALL factory options and packages.\nReturn ONLY valid JSON:\n{\"options\": [{\"name\": string, \"price\": number|null, \"code\": string|null}], \"standard_equipment\": string[], \"exterior_color\": string|null, \"interior_color\": string|null, \"msrp\": number|null}\noptions: paid packages and optional equipment only. Include MSRP add-on price when visible.\n",
+        "type": "text"
+       }
+      ],
+      "role": "user"
+     }
+    ],
+    "model": "claude-haiku-4-5-20251001",
+    "system": "You output JSON only. No markdown.",
+    "temperature": null,
+    "timeout": null
+   }
+  ],
+  "result": {
+   "type": "dict",
+   "value": {
+    "category": "network",
+    "confidence": 0.9,
+    "cylinders": 4,
+    "drivetrain": "FWD",
+    "engine_l": 2.5,
+    "fuel_type": "Gasoline",
+    "interior_color_bucket": "black",
+    "interior_color_hint": "black fabric",
+    "mpg_city": 28,
+    "mpg_highway": 39,
+    "observed_features": [
+     "Wireless Charging Pad"
+    ],
+    "options": [
+     {
+      "code": "CP",
+      "name": "Convenience Package",
+      "price": 1050
+     }
+    ],
+    "packages": [],
+    "retry_actions": [],
+    "retry_recommended": true,
+    "retry_strategy": "simple_retry",
+    "root_cause": "blocked",
+    "summary": "dealer site 403",
+    "transmission": "8-Speed Automatic"
+   }
+  }
+ },
+ "window_sticker.image|ok": {
+  "requests": [
+   {
+    "max_tokens": 1536,
+    "messages": [
+     {
+      "content": [
+       {
+        "source": {
+         "data": "sha256:09533a9fd3f19f74",
+         "media_type": "image/jpeg",
+         "type": "base64"
+        },
+        "type": "image"
+       },
+       {
+        "text": "Vehicle: 2025 Toyota Camry LE\nVIN: 4T1DAACK0SU083969\n\nThis image is a window sticker / Monroney label. Extract ALL factory options and packages.\nReturn ONLY valid JSON:\n{\"options\": [{\"name\": string, \"price\": number|null, \"code\": string|null}], \"standard_equipment\": string[], \"exterior_color\": string|null, \"interior_color\": string|null, \"msrp\": number|null}\noptions: paid packages and optional equipment only. Include MSRP add-on price when visible.\n",
+        "type": "text"
+       }
+      ],
+      "role": "user"
+     }
+    ],
+    "model": "claude-haiku-4-5-20251001",
+    "system": "You output JSON only. No markdown.",
+    "temperature": null,
+    "timeout": null
+   }
+  ],
+  "result": {
+   "type": "dict",
+   "value": {
+    "category": "network",
+    "confidence": 0.9,
+    "cylinders": 4,
+    "drivetrain": "FWD",
+    "engine_l": 2.5,
+    "fuel_type": "Gasoline",
+    "interior_color_bucket": "black",
+    "interior_color_hint": "black fabric",
+    "mpg_city": 28,
+    "mpg_highway": 39,
+    "observed_features": [
+     "Wireless Charging Pad"
+    ],
+    "options": [
+     {
+      "code": "CP",
+      "name": "Convenience Package",
+      "price": 1050
+     }
+    ],
+    "packages": [],
+    "retry_actions": [],
+    "retry_recommended": true,
+    "retry_strategy": "simple_retry",
+    "root_cause": "blocked",
+    "summary": "dealer site 403",
+    "transmission": "8-Speed Automatic"
+   }
+  }
+ },
+ "window_sticker.image|refusal": {
+  "requests": [
+   {
+    "max_tokens": 1536,
+    "messages": [
+     {
+      "content": [
+       {
+        "source": {
+         "data": "sha256:09533a9fd3f19f74",
+         "media_type": "image/jpeg",
+         "type": "base64"
+        },
+        "type": "image"
+       },
+       {
+        "text": "Vehicle: 2025 Toyota Camry LE\nVIN: 4T1DAACK0SU083969\n\nThis image is a window sticker / Monroney label. Extract ALL factory options and packages.\nReturn ONLY valid JSON:\n{\"options\": [{\"name\": string, \"price\": number|null, \"code\": string|null}], \"standard_equipment\": string[], \"exterior_color\": string|null, \"interior_color\": string|null, \"msrp\": number|null}\noptions: paid packages and optional equipment only. Include MSRP add-on price when visible.\n",
+        "type": "text"
+       }
+      ],
+      "role": "user"
+     }
+    ],
+    "model": "claude-haiku-4-5-20251001",
+    "system": "You output JSON only. No markdown.",
+    "temperature": null,
+    "timeout": null
+   }
+  ],
+  "result": {
+   "type": "NoneType",
+   "value": null
+  }
+ },
+ "window_sticker.image|truncated": {
+  "requests": [
+   {
+    "max_tokens": 1536,
+    "messages": [
+     {
+      "content": [
+       {
+        "source": {
+         "data": "sha256:09533a9fd3f19f74",
+         "media_type": "image/jpeg",
+         "type": "base64"
+        },
+        "type": "image"
+       },
+       {
+        "text": "Vehicle: 2025 Toyota Camry LE\nVIN: 4T1DAACK0SU083969\n\nThis image is a window sticker / Monroney label. Extract ALL factory options and packages.\nReturn ONLY valid JSON:\n{\"options\": [{\"name\": string, \"price\": number|null, \"code\": string|null}], \"standard_equipment\": string[], \"exterior_color\": string|null, \"interior_color\": string|null, \"msrp\": number|null}\noptions: paid packages and optional equipment only. Include MSRP add-on price when visible.\n",
+        "type": "text"
+       }
+      ],
+      "role": "user"
+     }
+    ],
+    "model": "claude-haiku-4-5-20251001",
+    "system": "You output JSON only. No markdown.",
+    "temperature": null,
+    "timeout": null
+   }
+  ],
+  "result": {
+   "type": "NoneType",
+   "value": null
+  }
+ },
+ "window_sticker.text|fenced": {
+  "requests": [
+   {
+    "max_tokens": 1024,
+    "messages": [
+     {
+      "content": "Vehicle: 2025 Toyota Camry LE\nVIN: 4T1DAACK0SU083969\n\nExtract window sticker / Monroney label data from the text below.\nReturn ONLY valid JSON:\n{\"options\": [{\"name\": string, \"price\": number|null, \"code\": string|null}], \"standard_equipment\": string[], \"exterior_color\": string|null, \"interior_color\": string|null, \"msrp\": number|null, \"base_price\": number|null, \"total_price\": number|null}\noptions: paid optional equipment/packages only. Include MSRP add-on price in dollars when listed (negative for credits). Use code when the sticker shows a factory code (e.g. DG3, DC1).\nstandard_equipment: up to 25 major standard feature lines if listed.\nmsrp: total/sticker price if shown; base_price if only base is clear.\n\n--- STICKER TEXT ---\n2025 CAMRY LE  VIN 4T1DAACK0SU083969\nBASE PRICE $28,400\nCONVENIENCE PACKAGE  $1,050\nCARPET FLOOR MATS (FE) $299\nTOTAL MSRP $30,844",
+      "role": "user"
+     }
+    ],
+    "model": "claude-haiku-4-5-20251001",
+    "system": "You output JSON only. No markdown.",
+    "temperature": null,
+    "timeout": null
+   }
+  ],
+  "result": {
+   "type": "dict",
+   "value": {
+    "category": "network",
+    "confidence": 0.9,
+    "cylinders": 4,
+    "drivetrain": "FWD",
+    "engine_l": 2.5,
+    "fuel_type": "Gasoline",
+    "interior_color_bucket": "black",
+    "interior_color_hint": "black fabric",
+    "mpg_city": 28,
+    "mpg_highway": 39,
+    "observed_features": [
+     "Wireless Charging Pad"
+    ],
+    "options": [
+     {
+      "code": "CP",
+      "name": "Convenience Package",
+      "price": 1050
+     }
+    ],
+    "packages": [],
+    "retry_actions": [],
+    "retry_recommended": true,
+    "retry_strategy": "simple_retry",
+    "root_cause": "blocked",
+    "summary": "dealer site 403",
+    "transmission": "8-Speed Automatic"
+   }
+  }
+ },
+ "window_sticker.text|ok": {
+  "requests": [
+   {
+    "max_tokens": 1024,
+    "messages": [
+     {
+      "content": "Vehicle: 2025 Toyota Camry LE\nVIN: 4T1DAACK0SU083969\n\nExtract window sticker / Monroney label data from the text below.\nReturn ONLY valid JSON:\n{\"options\": [{\"name\": string, \"price\": number|null, \"code\": string|null}], \"standard_equipment\": string[], \"exterior_color\": string|null, \"interior_color\": string|null, \"msrp\": number|null, \"base_price\": number|null, \"total_price\": number|null}\noptions: paid optional equipment/packages only. Include MSRP add-on price in dollars when listed (negative for credits). Use code when the sticker shows a factory code (e.g. DG3, DC1).\nstandard_equipment: up to 25 major standard feature lines if listed.\nmsrp: total/sticker price if shown; base_price if only base is clear.\n\n--- STICKER TEXT ---\n2025 CAMRY LE  VIN 4T1DAACK0SU083969\nBASE PRICE $28,400\nCONVENIENCE PACKAGE  $1,050\nCARPET FLOOR MATS (FE) $299\nTOTAL MSRP $30,844",
+      "role": "user"
+     }
+    ],
+    "model": "claude-haiku-4-5-20251001",
+    "system": "You output JSON only. No markdown.",
+    "temperature": null,
+    "timeout": null
+   }
+  ],
+  "result": {
+   "type": "dict",
+   "value": {
+    "category": "network",
+    "confidence": 0.9,
+    "cylinders": 4,
+    "drivetrain": "FWD",
+    "engine_l": 2.5,
+    "fuel_type": "Gasoline",
+    "interior_color_bucket": "black",
+    "interior_color_hint": "black fabric",
+    "mpg_city": 28,
+    "mpg_highway": 39,
+    "observed_features": [
+     "Wireless Charging Pad"
+    ],
+    "options": [
+     {
+      "code": "CP",
+      "name": "Convenience Package",
+      "price": 1050
+     }
+    ],
+    "packages": [],
+    "retry_actions": [],
+    "retry_recommended": true,
+    "retry_strategy": "simple_retry",
+    "root_cause": "blocked",
+    "summary": "dealer site 403",
+    "transmission": "8-Speed Automatic"
+   }
+  }
+ },
+ "window_sticker.text|refusal": {
+  "requests": [
+   {
+    "max_tokens": 1024,
+    "messages": [
+     {
+      "content": "Vehicle: 2025 Toyota Camry LE\nVIN: 4T1DAACK0SU083969\n\nExtract window sticker / Monroney label data from the text below.\nReturn ONLY valid JSON:\n{\"options\": [{\"name\": string, \"price\": number|null, \"code\": string|null}], \"standard_equipment\": string[], \"exterior_color\": string|null, \"interior_color\": string|null, \"msrp\": number|null, \"base_price\": number|null, \"total_price\": number|null}\noptions: paid optional equipment/packages only. Include MSRP add-on price in dollars when listed (negative for credits). Use code when the sticker shows a factory code (e.g. DG3, DC1).\nstandard_equipment: up to 25 major standard feature lines if listed.\nmsrp: total/sticker price if shown; base_price if only base is clear.\n\n--- STICKER TEXT ---\n2025 CAMRY LE  VIN 4T1DAACK0SU083969\nBASE PRICE $28,400\nCONVENIENCE PACKAGE  $1,050\nCARPET FLOOR MATS (FE) $299\nTOTAL MSRP $30,844",
+      "role": "user"
+     }
+    ],
+    "model": "claude-haiku-4-5-20251001",
+    "system": "You output JSON only. No markdown.",
+    "temperature": null,
+    "timeout": null
+   }
+  ],
+  "result": {
+   "type": "NoneType",
+   "value": null
+  }
+ },
+ "window_sticker.text|truncated": {
+  "requests": [
+   {
+    "max_tokens": 1024,
+    "messages": [
+     {
+      "content": "Vehicle: 2025 Toyota Camry LE\nVIN: 4T1DAACK0SU083969\n\nExtract window sticker / Monroney label data from the text below.\nReturn ONLY valid JSON:\n{\"options\": [{\"name\": string, \"price\": number|null, \"code\": string|null}], \"standard_equipment\": string[], \"exterior_color\": string|null, \"interior_color\": string|null, \"msrp\": number|null, \"base_price\": number|null, \"total_price\": number|null}\noptions: paid optional equipment/packages only. Include MSRP add-on price in dollars when listed (negative for credits). Use code when the sticker shows a factory code (e.g. DG3, DC1).\nstandard_equipment: up to 25 major standard feature lines if listed.\nmsrp: total/sticker price if shown; base_price if only base is clear.\n\n--- STICKER TEXT ---\n2025 CAMRY LE  VIN 4T1DAACK0SU083969\nBASE PRICE $28,400\nCONVENIENCE PACKAGE  $1,050\nCARPET FLOOR MATS (FE) $299\nTOTAL MSRP $30,844",
+      "role": "user"
+     }
+    ],
+    "model": "claude-haiku-4-5-20251001",
+    "system": "You output JSON only. No markdown.",
+    "temperature": null,
+    "timeout": null
+   }
+  ],
+  "result": {
+   "type": "NoneType",
+   "value": null
+  }
+ }
+}

@@ -28,7 +28,6 @@ from __future__ import annotations
 import argparse
 import json
 import logging
-import os
 import random
 import re
 import sys
@@ -42,6 +41,8 @@ from typing import Any
 _REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
+
+from backend.db.connect import connect as db_connect  # noqa: E402
 
 _log = logging.getLogger("image_batch")
 
@@ -172,24 +173,8 @@ def _looks_like_image(blob: bytes) -> bool:
     return False
 
 
-def _dsn() -> str:
-    dsn = (os.environ.get("INVENTORY_DATABASE_URL") or os.environ.get("DATABASE_URL") or "").strip()
-    if dsn:
-        return dsn
-    env = _REPO_ROOT / ".env"
-    if env.exists():
-        m = re.search(r"^INVENTORY_DATABASE_URL=(.+)$", env.read_text(), re.M)
-        if m:
-            return m.group(1).strip().strip("'\"")
-    raise SystemExit("INVENTORY_DATABASE_URL is not set")
-
-
 def _connect():
-    import psycopg
-
-    conn = psycopg.connect(_dsn(), connect_timeout=15)
-    conn.autocommit = True
-    return conn
+    return db_connect(autocommit=True)
 
 
 def _select_images(urls: list[str], budget: int) -> list[str]:

@@ -2,7 +2,8 @@
 Process-wide Anthropic API rate limiting for scanner/enrichment vision calls.
 
 Haiku tier is often ~50 RPM; default cap is 42 RPM with jittered acquire.
-Use ``anthropic_messages_create`` as a drop-in wrapper around ``client.messages.create``.
+Every Anthropic call goes through ``backend.llm.client.complete``, which takes one
+slot here per attempt; ``anthropic_messages_create`` remains as a back-compat shim.
 """
 from __future__ import annotations
 
@@ -61,34 +62,16 @@ def acquire_vision_slot(*, cost: float = 1.0) -> None:
 
 def anthropic_messages_create(client: Any, **kwargs: Any) -> Any:
     """
-    Rate-limited ``client.messages.create`` with 429 exponential backoff.
+    Rate-limited ``client.messages.create`` (back-compat shim).
+
+    New code calls ``backend.llm.client.complete``. This keeps the old surface
+    but runs under the same single retry policy (429/5xx/overloaded/connection,
+    jittered backoff, this module's limiter per attempt).
     """
-    last_err: Exception | None = None
-    for attempt in range(_max_retries()):
-        acquire_vision_slot()
-        try:
-            return client.messages.create(**kwargs)
-        except Exception as e:
-            last_err = e
-            status = getattr(e, "status_code", None)
-            if status is None:
-                resp = getattr(e, "response", None)
-                status = getattr(resp, "status_code", None) if resp is not None else None
-            msg = str(e).lower()
-            is_429 = status == 429 or "429" in msg or "rate" in msg
-            if not is_429 or attempt >= _max_retries() - 1:
-                raise
-            wait = min(60.0, 8.0 * (2**attempt)) + random.uniform(0.1, 0.5)
-            logger.warning(
-                "Anthropic rate limited (attempt %d/%d), sleeping %.1fs",
-                attempt + 1,
-                _max_retries(),
-                wait,
-            )
-            time.sleep(wait)
-    if last_err is not None:
-        raise last_err
-    raise RuntimeError("anthropic_messages_create failed")
+    from backend.llm.client import call_with_retry
+
+    value, _attempts = call_with_retry(lambda: client.messages.create(**kwargs))
+    return value
 
 
 def run_with_vision_limit(fn: Callable[[], _T]) -> _T:

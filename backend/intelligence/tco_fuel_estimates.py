@@ -11,7 +11,6 @@ what it used to return instead and how much of the column that was.
 from __future__ import annotations
 
 import json
-from functools import lru_cache
 from typing import Any
 
 # NOT sourced, and still live. These two fall back to a flat constant when the
@@ -177,58 +176,32 @@ def _quoted_specs_for_car(car: dict[str, Any]) -> dict[str, tuple[float, str]]:
 # 13,340 distinct (year, make, model, trim) combinations (measured 2026-07-31).
 
 
-@lru_cache(maxsize=8192)
 def _quoted_specs_by_master_id(epa_master_id: int) -> tuple[tuple[str, tuple[float, str]], ...]:
-    return _quoted_specs_from_query(
-        "WHERE epa_master_id=?",
-        (epa_master_id,),
-    )
+    from backend.vehicle_facts import extended_specs
+
+    return _quoted_from_row(extended_specs.row_by_master_id(epa_master_id))
 
 
-@lru_cache(maxsize=16384)
 def _quoted_specs_by_ymmt(
     year: int, make: str, model: str, trim: str
 ) -> tuple[tuple[str, tuple[float, str]], ...]:
+    from backend.vehicle_facts import extended_specs
+
     if trim:
-        found = _quoted_specs_from_query(
-            "WHERE year=? AND lower(make)=lower(?) AND lower(model)=lower(?) AND lower(trim)=lower(?)",
-            (year, make, model, trim),
-        )
+        # Exact-trim row first; fall back to the (year, make, model) row when the
+        # trim row quotes nothing (not only when there is no trim row).
+        found = _quoted_from_row(extended_specs.row_by_ymmt(year, make, model, trim))
         if found:
             return found
-    return _quoted_specs_from_query(
-        "WHERE year=? AND lower(make)=lower(?) AND lower(model)=lower(?)",
-        (year, make, model),
-    )
+    return _quoted_from_row(extended_specs.row_by_ymmt(year, make, model, ""))
 
 
-def _quoted_specs_from_query(
-    where: str, params: tuple[Any, ...]
-) -> tuple[tuple[str, tuple[float, str]], ...]:
-    cols = ", ".join(_QUOTABLE_SPEC_FIELDS)
-    conn = None
-    try:
-        from backend.db.inventory_db import get_conn
-
-        conn = get_conn()
-        cur = conn.cursor()
-        cur.execute(
-            f"SELECT {cols}, specs_json FROM epa_extended_specs {where} LIMIT 1",
-            params,
-        )
-        row = cur.fetchone()
-    except Exception:
-        return ()
-    finally:
-        if conn is not None:
-            try:
-                conn.close()
-            except Exception:
-                pass
+def _quoted_from_row(row: dict[str, Any] | None) -> tuple[tuple[str, tuple[float, str]], ...]:
+    """Rows come from ``vehicle_facts.extended_specs`` (the one cached reader)."""
     if not row:
         return ()
-    stored = dict(zip(_QUOTABLE_SPEC_FIELDS, row))
-    return _quotable_from_specs_json(stored, row[len(_QUOTABLE_SPEC_FIELDS)])
+    stored = {f: row.get(f) for f in _QUOTABLE_SPEC_FIELDS}
+    return _quotable_from_specs_json(stored, row.get("specs_json"))
 
 
 def _quotable_from_specs_json(
@@ -280,8 +253,9 @@ def _load_specs_json(value: Any) -> dict[str, Any]:
 
 def clear_quoted_extended_spec_cache() -> None:
     """Drop the memoized row lookups (tests, and after a catalog reload)."""
-    _quoted_specs_by_master_id.cache_clear()
-    _quoted_specs_by_ymmt.cache_clear()
+    from backend.vehicle_facts import extended_specs
+
+    extended_specs.clear_cache()
 
 
 def average_mpg_city_highway(mpg_city: Any, mpg_highway: Any) -> float | None:

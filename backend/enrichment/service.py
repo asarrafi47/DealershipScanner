@@ -65,11 +65,15 @@ _ENRICHMENT_COLUMNS: tuple[tuple[str, str], ...] = (
 )
 
 
-_EV_LABELS = {"electric", "phev"}
-
-
 def _is_ev_label(val: Any) -> bool:
-    return isinstance(val, str) and val.strip().lower() in _EV_LABELS
+    """``engine_l`` holds a plug-in marker ("Electric" / "PHEV") instead of a
+    displacement. Read with ``vehicle_facts.fuel_label_electrification``: BEV or
+    PHEV (so "EV", "Electricity", "Plug-In Hybrid" count too; "Hybrid" does not)."""
+    if not isinstance(val, str):
+        return False
+    from backend.vehicle_facts.electrification import BEV, PHEV, fuel_label_electrification
+
+    return fuel_label_electrification(val) in (BEV, PHEV)
 
 
 def _safe_float(val: Any, default: float = 0.0) -> float:
@@ -210,23 +214,21 @@ def _ask_haiku_specs(make: str, model: str, year: Any, trim: str | None) -> dict
     )
 
     try:
-        r = requests.post(
-            "https://api.anthropic.com/v1/messages",
-            headers={
-                "x-api-key": api_key,
-                "anthropic-version": "2023-06-01",
-                "content-type": "application/json",
-            },
-            json={
-                "model": "claude-haiku-4-5-20251001",
-                "max_tokens": 256,
-                "system": "JSON-only response engine. Output a single valid JSON object, nothing else.",
-                "messages": [{"role": "user", "content": prompt}],
-            },
+        from backend.llm.client import complete
+
+        res = complete(
+            prompt,
+            model_role="extract",
+            max_tokens=256,
+            system="JSON-only response engine. Output a single valid JSON object, nothing else.",
             timeout=20.0,
+            api_key=api_key,
+            max_attempts=1,  # one request, as before the consolidation (no retries)
         )
-        r.raise_for_status()
-        text = (r.json().get("content") or [{}])[0].get("text") or ""
+        # A refused or max_tokens-cut answer is not a spec sheet; repairing the
+        # partial JSON would cache half a spec sheet for this make/model/year/trim.
+        res.require_complete()
+        text = res.text
     except Exception as e:
         logger.debug("Haiku spec lookup failed for %s: %s", car_desc, e)
         return None
@@ -759,72 +761,41 @@ def _vision_analyze_car(row: dict[str, Any], prefetch_cache: _PrefetchCache | No
         _log_vision_skipped(RuntimeError("ANTHROPIC_API_KEY not set"))
         return None
 
-    _vision_payload = {
-        "model": "claude-haiku-4-5-20251001",
-        "max_tokens": 768,
-        "system": (
-            "You are a JSON-only response engine for dealership vehicle photo analysis. "
-            "List only clearly visible optional/upgraded equipment and aftermarket add-ons. "
-            "Do not guess standard base-trim features. "
-            "Never output text other than a valid JSON object. "
-            "If you are unsure about a field, return null. "
-            "Do not explain yourself."
-        ),
-        "messages": [
-            {
-                "role": "user",
-                "content": [
-                    {
-                        "type": "image",
-                        "source": {"type": "base64", "media_type": "image/jpeg", "data": b64},
-                    },
-                    {"type": "text", "text": prompt},
-                ],
-            }
-        ],
-    }
-    _vision_headers = {
-        "x-api-key": api_key,
-        "anthropic-version": "2023-06-01",
-        "content-type": "application/json",
-    }
+    from backend.llm.client import complete
 
-    raw_content = ""
-    stop_reason: str | None = None
-    _max_retries = 5
-    _retry_delay = 10.0
-    for _attempt in range(_max_retries):
-        try:
-            import requests as _requests
-            from backend.vision.claude_rate_limit import acquire_vision_slot
-
-            acquire_vision_slot()
-            r = _requests.post(
-                "https://api.anthropic.com/v1/messages",
-                headers=_vision_headers,
-                json=_vision_payload,
-                timeout=45.0,
-            )
-            if r.status_code == 429:
-                retry_after = float(r.headers.get("retry-after") or _retry_delay)
-                wait = min(retry_after, 60.0) * (2 ** _attempt)
-                logger.warning("Vision 429 rate-limited (attempt %d/%d), sleeping %.0fs", _attempt + 1, _max_retries, wait)
-                time.sleep(wait)
-                continue
-            r.raise_for_status()
-            data = r.json()
-            stop_reason = data.get("stop_reason")
-            raw_content = (data.get("content") or [{}])[0].get("text") or ""
-            break
-        except Exception as e:
-            if _attempt < _max_retries - 1:
-                time.sleep(_retry_delay * (2 ** _attempt))
-                continue
-            _log_vision_skipped(e)
-            return None
-    else:
-        _log_vision_skipped(RuntimeError("Vision API rate-limited after all retries"))
+    try:
+        res = complete(
+            prompt,
+            model_role="vision",
+            max_tokens=768,
+            system=(
+                "You are a JSON-only response engine for dealership vehicle photo analysis. "
+                "List only clearly visible optional/upgraded equipment and aftermarket add-ons. "
+                "Do not guess standard base-trim features. "
+                "Never output text other than a valid JSON object. "
+                "If you are unsure about a field, return null. "
+                "Do not explain yourself."
+            ),
+            images=[("image/jpeg", b64)],
+            timeout=45.0,
+            api_key=api_key,
+        )
+    except Exception as e:
+        # Transport failures already went through the shared retry policy
+        # (429/5xx/overloaded/connection, jittered backoff, shared limiter).
+        _log_vision_skipped(e)
         return None
+    if res.refused:
+        # API-level refusal (stop_reason="refusal"): an unassessed outcome, the
+        # same as a text refusal — never a parse error, never a success.
+        _log_vision_skipped(
+            ValueError("model refused / could not assess"),
+            context=f"id={car_id}",
+            raw_response=res.text,
+        )
+        return VisionRefusal()
+    raw_content = res.text
+    stop_reason: str | None = res.stop_reason
 
     content = raw_content
     if _stop_reason_is_truncation(stop_reason):

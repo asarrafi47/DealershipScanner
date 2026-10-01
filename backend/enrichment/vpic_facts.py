@@ -45,9 +45,9 @@ def vin_facts_enabled() -> bool:
 
 
 def _drive_bucket(s: Any) -> str:
-    from backend.catalog.resolver import _drive_bucket as _b
+    from backend.vehicle_facts.drivetrain import normalize_drivetrain
 
-    return _b(s)
+    return normalize_drivetrain(s, "dealer") or ""
 
 
 def _fuel_bucket(s: Any) -> str:
@@ -57,9 +57,9 @@ def _fuel_bucket(s: Any) -> str:
 
 
 def _drive_same(a: str, b: str) -> bool:
-    if not a or not b:
-        return True
-    return a == b or {a, b} <= {"AWD", "4WD"}
+    from backend.vehicle_facts.drivetrain import same_drive_wheels
+
+    return same_drive_wheels(a, b)
 
 
 def vin_overrides(row: dict[str, Any], vpic: dict[str, Any] | None) -> dict[str, tuple[Any, str]]:

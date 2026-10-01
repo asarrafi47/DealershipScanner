@@ -63,9 +63,12 @@ _PG_INV_SCHEMA_OK = False
 
 
 def reset_postgres_inventory_schema_cache() -> None:
-    """Tests / tooling: next ``init_postgres_inventory`` runs full DDL again."""
+    """Tests / tooling: next ``init_postgres_inventory`` re-checks (and, if behind, re-runs DDL)."""
     global _PG_INV_SCHEMA_OK
     _PG_INV_SCHEMA_OK = False
+    from backend.db.schema_version import reset_schema_check_cache
+
+    reset_schema_check_cache()
 
 
 def inventory_postgres_dsn() -> str | None:
@@ -285,20 +288,47 @@ def pg_add_columns(cur, table: str, additive: list[tuple[str, str]]) -> None:
 
 
 def init_postgres_inventory(conn: Any) -> None:
-    """Create inventory tables and indexes on PostgreSQL (idempotent).
+    """Confirm inventory Postgres is at the schema ``migrations/`` defines.
 
-    Runs on every fresh process (``_PG_INV_SCHEMA_OK`` is per-process), which makes
-    the lock behaviour here a site-wide availability concern rather than a startup
-    detail. ``CREATE INDEX`` takes a SHARE lock, so while a scanner holds open
+    The versioned chain in ``migrations/`` is the schema. This used to re-create
+    17 of its tables by hand on every process start (``CREATE TABLE IF NOT EXISTS``
+    + ``pg_add_columns`` + ``CREATE INDEX``) -- a second copy that had to be synced
+    by hand, and whose ``CREATE INDEX`` caused the 2026-07-30 lock pile-up. Now it
+    is a two-query check (:func:`backend.db.schema_version.ensure_schema_current`):
+
+    * at the expected version -> no DDL at all;
+    * behind, ``INVENTORY_SCHEMA_CHECK=warn`` (default) -> loud warning naming the
+      operator command, then the legacy DDL below runs exactly as before (prod's
+      ``schema_migrations`` is still at V018 until an operator baselines V019);
+    * behind, ``INVENTORY_SCHEMA_CHECK=strict`` -> ``SchemaNotMigratedError``;
+    * ``INVENTORY_AUTO_MIGRATE=1`` -> applies ``migrations/`` first (dev).
+
+    Per-process: after the first success it is a no-op.
+    """
+    global _PG_INV_SCHEMA_OK
+    if _PG_INV_SCHEMA_OK:
+        return
+    from backend.db.schema_version import ensure_schema_current
+
+    if ensure_schema_current(conn):
+        _PG_INV_SCHEMA_OK = True
+        return
+    _legacy_postgres_inventory_ddl(conn)
+
+
+def _legacy_postgres_inventory_ddl(conn: Any) -> None:
+    """Pre-migration runtime DDL, kept ONLY for databases behind the chain.
+
+    Everything here is also created by ``migrations/``: checked statically against
+    the captured runtime schema (``backend/tests/fixtures/runtime_ddl_schema_golden.json``)
+    and, opt-in, by a live build-and-diff (``SCHEMA_PARITY_PG_DSN``), both in
+    ``backend/tests/test_schema_from_migrations.py``. Delete once every database
+    (prod, local, mini) records V025+ in ``schema_migrations``.
+
+    Lock behaviour: ``CREATE INDEX`` takes a SHARE lock, so while a scanner holds open
     transactions on ``cars`` the statement queues -- and in PostgreSQL a waiting
-    strong lock parks every later reader and writer behind it. Observed on
-    2026-07-30: a ``scanner.py --delta`` run left 15 idle-in-transaction sessions,
-    a web restart queued on ``idx_cars_dealer_listing``, and 17 further sessions
-    stacked up behind it, stalling car pages for tens of seconds.
-
-    A short ``lock_timeout`` turns that from an outage into a no-op: the real
-    schema is owned by the versioned migrations (``migrations/V001__baseline.sql``),
-    so this pass is belt-and-braces and is safe to abandon when the table is busy.
+    strong lock parks every later reader and writer behind it (2026-07-30 incident).
+    A short ``lock_timeout`` turns that from an outage into a no-op.
     """
     global _PG_INV_SCHEMA_OK
     if _PG_INV_SCHEMA_OK:

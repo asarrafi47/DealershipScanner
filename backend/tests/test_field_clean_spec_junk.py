@@ -42,7 +42,8 @@ class FieldCleanSpecJunkTest(unittest.TestCase):
         self.assertIsNone(
             coerce_drivetrain_stored("https://schema.org/UnknownType"),
         )
-        self.assertEqual(coerce_drivetrain_stored("xDrive AWD"), "xDrive AWD")
+        # Brand AWD names canonicalize (vehicle_facts.normalize_drivetrain).
+        self.assertEqual(coerce_drivetrain_stored("xDrive AWD"), "AWD")
 
     def test_clean_car_row_dict_drivetrain_schema(self) -> None:
         d = {

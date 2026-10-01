@@ -23,8 +23,6 @@ import re
 _LAYOUT_TOKEN = re.compile(r"\b([VIHW])[-\s]?(\d{1,2})\b", re.I)
 # "6-cyl", "6 cylinder", "6cyl"
 _CYL_PHRASE = re.compile(r"\b(\d{1,2})\s*[-\s]?cyl(?:inder)?s?\b", re.I)
-# Battery-electric fuel types (NOT plug-in/hybrid, which keep a gas engine).
-_BEV_FUEL_RE = re.compile(r"\b(bev|battery\s*electric)\b", re.I)
 
 
 def is_bev_fuel(fuel_type: str | None) -> bool:
@@ -35,12 +33,9 @@ def is_bev_fuel(fuel_type: str | None) -> bool:
     """
     if not fuel_type:
         return False
-    t = str(fuel_type).strip().lower()
-    if not t:
-        return False
-    if "hybrid" in t or "plug" in t or "gas" in t or "petrol" in t or "diesel" in t or "/" in t:
-        return False
-    return t in ("electric", "ev", "electricity") or bool(_BEV_FUEL_RE.search(t))
+    from backend.vehicle_facts.electrification import BEV, fuel_label_electrification
+
+    return fuel_label_electrification(fuel_type) == BEV
 
 
 # "2.7L", "2.7-Liter", "2.7 L", "3.5-L" — a displacement in dealer engine copy.

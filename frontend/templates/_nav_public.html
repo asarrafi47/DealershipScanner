@@ -11,6 +11,6 @@
 {% endif %}
 
 {# AI assistant chatbot — paid/dev users only; show/hide persists across pages. #}
-{% if has_paid_access %}
+{% if has_paid_access and viewer_can('ai_car_chat') %}
 {% include '_ai_chatbot.html' %}
 {% endif %}

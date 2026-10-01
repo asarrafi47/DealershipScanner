@@ -51,7 +51,6 @@ from __future__ import annotations
 
 import argparse
 import logging
-import re
 import ssl
 import sys
 import urllib.error
@@ -64,6 +63,8 @@ from urllib.parse import urlparse
 _REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
+
+from backend.db.connect import connect as db_connect  # noqa: E402
 
 _log = logging.getLogger("dealer_audit")
 
@@ -96,20 +97,6 @@ _PLATFORM_MARKERS = (
     ("fox dealer", "foxdealer"),
     ("foxdealer", "foxdealer"),
 )
-
-
-def _dsn() -> str:
-    import os
-
-    dsn = (os.environ.get("INVENTORY_DATABASE_URL") or os.environ.get("DATABASE_URL") or "").strip()
-    if dsn:
-        return dsn
-    env = _REPO_ROOT / ".env"
-    if env.exists():
-        m = re.search(r"^INVENTORY_DATABASE_URL=(.+)$", env.read_text(), re.M)
-        if m:
-            return m.group(1).strip().strip("'\"")
-    raise SystemExit("INVENTORY_DATABASE_URL is not set")
 
 
 def _dealer_key(url: str) -> str:
@@ -241,10 +228,7 @@ def main() -> int:
 
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 
-    import psycopg
-
-    conn = psycopg.connect(_dsn(), connect_timeout=15)
-    conn.autocommit = True
+    conn = db_connect(autocommit=True)
     cur = conn.cursor()
 
     if args.report:

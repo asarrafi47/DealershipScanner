@@ -78,6 +78,12 @@ def _ensure_schema(conn) -> None:
     is_pg = inventory_pg.is_inventory_postgres()
     if is_pg and _PG_INC_SCHEMA_OK:
         return
+    if is_pg:
+        from backend.db.schema_version import schema_is_current
+
+        if schema_is_current():  # migrations/ owns these tables
+            _PG_INC_SCHEMA_OK = True
+            return
     cur = conn.cursor()
     if is_pg:
         try:

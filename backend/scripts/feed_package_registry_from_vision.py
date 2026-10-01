@@ -40,7 +40,6 @@ from __future__ import annotations
 import argparse
 import json
 import logging
-import re
 import sys
 from pathlib import Path
 from typing import Any
@@ -49,25 +48,13 @@ _REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
 
+from backend.db.connect import connect as db_connect, inventory_dsn  # noqa: E402
+
 _log = logging.getLogger("vision_to_registry")
 
 # Declared in backend/enrichment/package_registry.py, in BOTH the authority and
 # confidence maps. This script only asserts it is there.
 VISION_SOURCE = "sticker_photo"
-
-
-def _dsn() -> str:
-    import os
-
-    dsn = (os.environ.get("INVENTORY_DATABASE_URL") or os.environ.get("DATABASE_URL") or "").strip()
-    if dsn:
-        return dsn
-    env = _REPO_ROOT / ".env"
-    if env.exists():
-        m = re.search(r"^INVENTORY_DATABASE_URL=(.+)$", env.read_text(), re.M)
-        if m:
-            return m.group(1).strip().strip("'\"")
-    raise SystemExit("INVENTORY_DATABASE_URL is not set")
 
 
 # One canonical spelling per marque, keyed on the name with all non-letters stripped.
@@ -293,15 +280,10 @@ def main() -> int:
     args = ap.parse_args()
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 
-    # Export the DSN before touching repo internals. This script parses .env directly
-    # (python-dotenv asserts under some entry points here), but package_registry and the
-    # rest of backend.db read os.environ -- so without this they raise
-    # "INVENTORY_DATABASE_URL must be set" while the URL sits in a local variable.
-    import os
-
-    os.environ.setdefault("INVENTORY_DATABASE_URL", _dsn())
-
-    import psycopg
+    # Export the DSN before touching repo internals: package_registry and the rest of
+    # backend.db read os.environ, so without this they raise "INVENTORY_DATABASE_URL
+    # must be set" when the URL came from DATABASE_URL alone.
+    inventory_dsn(export=True)
 
     from backend.enrichment import package_registry
 
@@ -313,8 +295,7 @@ def main() -> int:
             f"{VISION_SOURCE!r} is not registered in backend/enrichment/package_registry.py"
         )
 
-    conn = psycopg.connect(_dsn(), connect_timeout=15)
-    conn.autocommit = True
+    conn = db_connect(autocommit=True)
     cur = conn.cursor()
 
     # Fail fast if the rejection ledger is missing: registry observations are

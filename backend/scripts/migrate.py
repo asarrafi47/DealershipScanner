@@ -178,13 +178,13 @@ def read_applied(cur) -> dict[int, str]:
     """version -> checksum for everything already recorded, {} before first run."""
     if not _migrations_table_exists(cur):
         return {}
-    cur.execute("SELECT version, checksum FROM schema_migrations")
+    cur.execute("SELECT version, checksum FROM public.schema_migrations")
     return {int(v): str(c) for v, c in cur.fetchall()}
 
 
 def _record(cur, mig: Migration) -> None:
     cur.execute(
-        "INSERT INTO schema_migrations (version, name, checksum) VALUES (%s, %s, %s)",
+        "INSERT INTO public.schema_migrations (version, name, checksum) VALUES (%s, %s, %s)",
         (mig.version, mig.name, mig.checksum),
     )
 
@@ -201,6 +201,12 @@ def apply_migration(conn, mig: Migration) -> None:
     cur = conn.cursor()
     try:
         cur.execute(sql)
+        # pg_dump-generated files (V001) run set_config('search_path', '', false),
+        # which outlives the file for the rest of the session: the unqualified
+        # bookkeeping INSERT below then fails with "relation schema_migrations
+        # does not exist" and every later file runs with an empty search_path.
+        # Restore the session default after each file.
+        cur.execute("SET search_path TO DEFAULT")
         _record(cur, mig)
         conn.commit()
     except Exception:

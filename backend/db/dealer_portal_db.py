@@ -135,6 +135,11 @@ _INDEX_STATEMENTS = (
 
 
 def init_dealer_portal_db() -> None:
+    if inventory_pg.is_inventory_postgres():
+        from backend.db.schema_version import schema_is_current
+
+        if schema_is_current():  # V012 owns dealer_vehicles
+            return
     conn = get_conn()
     try:
         cur = conn.cursor()

@@ -91,7 +91,7 @@ def test_api_car_detail_includes_dealer_google_rating(monkeypatch) -> None:
 def test_api_car_detail_market_intel_when_paid(monkeypatch) -> None:
     car = _sample_car(7)
     monkeypatch.setattr("backend.main.get_car_by_id", lambda cid, **kw: car if cid == 7 else None)
-    monkeypatch.setattr("backend.main._session_has_paid_access", lambda: True)
+    monkeypatch.setattr("backend.billing.access.current_access", lambda: _viewer(True))
     monkeypatch.setattr(
         "backend.main.prepare_car_detail_context",
         lambda _raw: {"verified_specs": {}, "gallery_images": []},
@@ -109,3 +109,14 @@ def test_api_car_detail_market_intel_when_paid(monkeypatch) -> None:
     assert rv.status_code == 200
     body = rv.get_json()
     assert body["market_intel"]["avg_price"] == 31000
+
+
+def _viewer(paid: bool, *, billing: bool = True):
+    """A signed-in viewer for ``backend.billing.access.current_access`` (paid = Complete)."""
+    from backend.billing.access import AccessContext
+    from backend.billing.catalog import COMPLETE_FEATURES
+
+    return AccessContext(
+        logged_in=True, user_id=1, is_premium=paid,
+        features=COMPLETE_FEATURES if paid else frozenset(), billing_enabled=billing,
+    )

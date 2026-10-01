@@ -60,12 +60,15 @@ def test_parse_truncated_payload_repaired_with_stop_reason() -> None:
     assert out.get("observed_features") == ["Tow hitch"]
 
 
-def _mock_vision_response(payload: dict) -> MagicMock:
-    resp = MagicMock()
-    resp.status_code = 200
-    resp.raise_for_status.return_value = None
-    resp.json.return_value = payload
-    return resp
+def _mock_vision_response(payload: dict):
+    """Patch the one Anthropic transport (backend.llm.client) to answer *payload*."""
+    from types import SimpleNamespace
+
+    blocks = [SimpleNamespace(type="text", text=b["text"]) for b in payload.get("content") or []]
+    msg = SimpleNamespace(content=blocks, stop_reason=payload.get("stop_reason"), usage=None)
+    client = MagicMock()
+    client.messages.create.return_value = msg
+    return patch("backend.llm.client._sdk_client", return_value=client)
 
 
 def test_vision_analyze_car_reads_stop_reason(monkeypatch, caplog) -> None:
@@ -77,7 +80,7 @@ def test_vision_analyze_car_reads_stop_reason(monkeypatch, caplog) -> None:
     }
     with patch("backend.enrichment.service._fetch_image_b64_optimized", return_value="e30="):
         with patch("backend.vision.claude_rate_limit.acquire_vision_slot", lambda: None):
-            with patch("requests.post", return_value=_mock_vision_response(api_payload)):
+            with _mock_vision_response(api_payload):
                 with caplog.at_level("WARNING"):
                     out = _vision_analyze_car(row, None, url_override=row["image_url"])
     assert out == {"observed_features": ["Tow hitch"]}
@@ -93,7 +96,7 @@ def test_vision_analyze_car_refusal_not_logged_as_non_json(monkeypatch, caplog) 
     }
     with patch("backend.enrichment.service._fetch_image_b64_optimized", return_value="e30="):
         with patch("backend.vision.claude_rate_limit.acquire_vision_slot", lambda: None):
-            with patch("requests.post", return_value=_mock_vision_response(api_payload)):
+            with _mock_vision_response(api_payload):
                 with caplog.at_level("WARNING"):
                     out = _vision_analyze_car(row, None, url_override=row["image_url"])
     assert isinstance(out, VisionRefusal)
@@ -194,9 +197,7 @@ def test_batch_call_refusal_returns_typed_sentinel(monkeypatch) -> None:
 
     monkeypatch.setattr(claude_vision, "_api_key", lambda: "test-key")
     monkeypatch.setattr(claude_vision, "_fetch_image_b64", lambda u, r: "e30=")
-    msg = MagicMock()
-    msg.content = [MagicMock(text="I'm unable to identify optional equipment in these photos.")]
-    with patch("backend.vision.claude_rate_limit.anthropic_messages_create", return_value=msg):
+    with _mock_vision_response({"stop_reason": "end_turn", "content": [{"text": "I'm unable to identify optional equipment in these photos."}]}):
         out = claude_vision.analyze_equipment_from_image_urls(["https://cdn.example.com/1.jpg"])
     assert isinstance(out, VisionRefusal)
     assert not out
@@ -207,9 +208,7 @@ def test_batch_call_non_json_still_plain_empty(monkeypatch) -> None:
 
     monkeypatch.setattr(claude_vision, "_api_key", lambda: "test-key")
     monkeypatch.setattr(claude_vision, "_fetch_image_b64", lambda u, r: "e30=")
-    msg = MagicMock()
-    msg.content = [MagicMock(text="The photos show a red truck with alloy wheels.")]
-    with patch("backend.vision.claude_rate_limit.anthropic_messages_create", return_value=msg):
+    with _mock_vision_response({"stop_reason": "end_turn", "content": [{"text": "The photos show a red truck with alloy wheels."}]}):
         out = claude_vision.analyze_equipment_from_image_urls(["https://cdn.example.com/1.jpg"])
     assert out == {}
     assert not isinstance(out, VisionRefusal)

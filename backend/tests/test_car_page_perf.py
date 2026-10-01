@@ -385,8 +385,7 @@ def ensure_client(monkeypatch, drain_ensure_workers):
     }
     state = {"row": row}
 
-    monkeypatch.setattr(main_mod, "_billing_enabled", lambda: False)
-    monkeypatch.setattr(main_mod, "_session_has_paid_access", lambda: True)
+    monkeypatch.setenv("BILLING_STRIPE_ENABLED", "0")
     monkeypatch.setattr(main_mod, "get_car_by_id", lambda car_id, **kw: dict(state["row"]))
     monkeypatch.setattr(
         main_mod,

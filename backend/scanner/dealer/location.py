@@ -365,8 +365,8 @@ def filter_sister_store_vehicles(
     kept: list[dict[str, Any]] = []
     for v in vehicles:
         # Rows the feed stamped with a rooftop have already been ruled on by
-        # backend.parsers.resolve_rooftop_attribution, which runs inside
-        # parse() on every path. Two filters over one row is worse than one:
+        # the rooftop gate (backend.attribution: gate_page inside parse() on
+        # every path, then decide() over the whole capture). Two filters over one row is worse than one:
         # this classifier reads the merged best-effort ``_lot_location`` blob
         # and matches it fuzzily, so on a row the gate KEPT it can only take
         # cars away, and it has no evidence the gate did not already weigh.

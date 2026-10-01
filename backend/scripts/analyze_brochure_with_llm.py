@@ -42,7 +42,6 @@ from backend.utils.project_env import load_project_dotenv  # noqa: E402
 
 logger = logging.getLogger(__name__)
 
-_MODEL = "claude-haiku-4-5-20251001"
 _MAX_BROCHURE_CHARS = 8_000
 _MAX_LLM_TOKENS = 2048
 _SOURCE = "brochure_llm"
@@ -310,16 +309,22 @@ def build_llm_user_prompt(
 
 
 def _call_claude(client: Any, prompt: str) -> str:
-    from backend.vision.claude_rate_limit import anthropic_messages_create
+    """One extraction call. *client* (from ``_get_client``) supplies the key.
 
-    msg = anthropic_messages_create(
-        client,
-        model=_MODEL,
+    A refused or max_tokens-cut answer raises (LLMRefusal / LLMTruncated)
+    instead of returning partial JSON that could be repaired into an overlay.
+    """
+    from backend.llm.client import complete
+
+    res = complete(
+        prompt,
+        model_role="extract",
         max_tokens=_MAX_LLM_TOKENS,
         system=_SYSTEM,
-        messages=[{"role": "user", "content": prompt}],
+        api_key=key if isinstance(key := getattr(client, "api_key", None), str) else None,
     )
-    return msg.content[0].text.strip()
+    res.require_complete()
+    return res.text.strip()
 
 
 def _is_auth_error(exc: Exception) -> bool:

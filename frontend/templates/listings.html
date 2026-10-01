@@ -23,7 +23,7 @@
 <script type="application/json" id="ds-listings-dealer-coords" nonce="{{ csp_nonce }}">{{ (options.dealer_coords if options.dealer_coords is defined else {}) | tojson }}</script>
 <script type="application/json" id="ds-listings-initial-grid" nonce="{{ csp_nonce }}">{{ (initial_grid_cars or []) | tojson }}</script>
 <script type="application/json" id="ds-listings-package-rows" nonce="{{ csp_nonce }}">{{ (options.package_rows or []) | tojson }}</script>
-<script type="application/json" id="ds-listings-premium" nonce="{{ csp_nonce }}">{{ has_paid_access | tojson }}</script>
+<script type="application/json" id="ds-listings-premium" nonce="{{ csp_nonce }}">{{ (has_paid_access and viewer_can('market_intel')) | tojson }}</script>
 <script type="application/json" id="ds-listings-saved-ids" nonce="{{ csp_nonce }}">{{ (saved_car_ids or []) | tojson }}</script>
 <script type="application/json" id="ds-listings-hidden-dealers" nonce="{{ csp_nonce }}">{{ (hidden_dealer_ids or []) | tojson }}</script>
 
@@ -508,7 +508,7 @@
 <script src="{{ url_for('static', filename='main.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>
 <script src="{{ url_for('static', filename='compare.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>
 <script src="{{ url_for('static', filename='listings.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>
-<script type="application/json" id="ds-listings-paid-access" nonce="{{ csp_nonce }}">{{ has_paid_access | tojson }}</script>
+<script type="application/json" id="ds-listings-paid-access" nonce="{{ csp_nonce }}">{{ (has_paid_access and viewer_can('nearby_dealers')) | tojson }}</script>
 <script nonce="{{ csp_nonce }}">
 (function () {
     const picker = document.getElementById("dealer-filter-group");

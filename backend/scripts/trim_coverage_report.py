@@ -95,7 +95,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import os
 import re
 import sys
 import time
@@ -107,6 +106,8 @@ from typing import Any
 _REPO = Path(__file__).resolve().parents[2]
 if str(_REPO) not in sys.path:
     sys.path.insert(0, str(_REPO))
+
+from backend.db.connect import connection as db_connection, inventory_dsn  # noqa: E402
 
 from backend.enrichment.brochure_extract import (  # noqa: E402
     ADMISSIBLE_LADDER_BULLET_STORES,
@@ -167,10 +168,7 @@ REASON_RUNG_NOT_ON_LADDER = "verified_walk_has_this_trim_but_ladder_has_no_such_
 
 
 def _inventory_dsn() -> str:
-    """INVENTORY_DATABASE_URL from the environment, else out of ``.env``.
-
-    python-dotenv is deliberately not used: importing it here has crashed under
-    ``python -c`` in this repo.
+    """The inventory DSN (backend.db.connect precedence), EXPORTED to the process.
 
     THE DSN IS EXPORTED, not just returned, and that is load-bearing. This report
     calls ``resolve_trim_ladder``, which builds a ladder out of active inventory
@@ -181,21 +179,9 @@ def _inventory_dsn() -> str:
     returned None for every inventory-backed model, the probe saw no ladder, and
     the run reported 48 combos with a rung where the true figure is thousands.
     Reading .env without exporting it is a silent, plausible-looking undercount,
-    so it is done once, here, for the whole process.
+    so it is done once, here, for the whole process (``export=True``).
     """
-    dsn = os.environ.get("INVENTORY_DATABASE_URL")
-    if dsn:
-        return dsn
-    env_path = _REPO / ".env"
-    if env_path.exists():
-        match = re.search(
-            r"^INVENTORY_DATABASE_URL=(.+)$", env_path.read_text(encoding="utf-8"), re.M
-        )
-        if match:
-            dsn = match.group(1).strip().strip("'\"")
-            os.environ["INVENTORY_DATABASE_URL"] = dsn
-            return dsn
-    raise SystemExit("INVENTORY_DATABASE_URL not set and not found in .env")
+    return inventory_dsn(export=True)
 
 
 def assert_ladders_reachable() -> None:
@@ -207,9 +193,7 @@ def assert_ladders_reachable() -> None:
     the most numerous model in active inventory must produce a ladder with at
     least two rungs.
     """
-    import psycopg
-
-    with psycopg.connect(_inventory_dsn()) as conn:
+    with db_connection(timeout=None, dsn=_inventory_dsn()) as conn:
         with conn.cursor() as cur:
             cur.execute(
                 """
@@ -248,9 +232,7 @@ def fetch_inventory(min_year: int) -> tuple[list[dict[str, Any]], dict[str, int]
     blank: they cannot be matched to a rung by anyone, so they are reported
     separately rather than silently inflating or deflating the base.
     """
-    import psycopg
-
-    with psycopg.connect(_inventory_dsn()) as conn:
+    with db_connection(timeout=None, dsn=_inventory_dsn()) as conn:
         with conn.cursor() as cur:
             cur.execute(
                 """

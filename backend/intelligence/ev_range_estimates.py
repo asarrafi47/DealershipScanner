@@ -36,7 +36,6 @@ _EPA_VEHICLES_CSV_URL = "https://fueleconomy.gov/feg/epadata/vehicles.csv"
 _EPA_RANGE_CACHE_PATH = (
     Path(__file__).resolve().parents[1] / "dictionary" / "derived" / "epa_ev_range_miles.json"
 )
-_ELECTRIFIED_FUEL_TYPES = frozenset({"electric", "ev", "electricity", "plug-in hybrid", "plug in hybrid", "phev"})
 
 # ---------------------------------------------------------------------------
 # Three removed sources, and why none of them is coming back
@@ -125,14 +124,14 @@ def _parse_year(value: Any) -> int | None:
 
 
 def _is_electrified_car(car: dict[str, Any] | None) -> bool:
+    """BEV or plug-in hybrid (``vehicle_facts.electrification``): the car has a
+    battery-only range. A conventional hybrid ("Hybrid Electric", "Gas/Electric")
+    does not; a ``vpic_electrification`` key on *car* outranks the fuel label."""
     if not car:
         return False
-    fuel = str(car.get("fuel_type") or "").strip().lower()
-    if fuel in _ELECTRIFIED_FUEL_TYPES:
-        return True
-    if "electric" in fuel or "plug" in fuel:
-        return True
-    return False
+    from backend.vehicle_facts.electrification import can_plug_in
+
+    return can_plug_in(car)
 
 
 def _listing_range_tokens(*parts: Any) -> set[str]:

@@ -51,8 +51,7 @@ def test_prepare_car_detail_includes_sticker_options() -> None:
 def test_api_window_sticker_requires_premium(monkeypatch) -> None:
     from backend import main as main_mod
 
-    monkeypatch.setattr(main_mod, "_billing_enabled", lambda: True)
-    monkeypatch.setattr(main_mod, "_session_has_paid_access", lambda: False)
+    monkeypatch.setenv("BILLING_STRIPE_ENABLED", "1")
     with main_mod.app.test_client() as c:
         r = c.get("/api/cars/1/window-sticker")
     assert r.status_code == 403
@@ -124,8 +123,7 @@ def test_car_sticker_packages_need_analysis_when_pdf_only(tmp_path, monkeypatch)
 def test_api_packages_ensure_requires_premium(monkeypatch) -> None:
     from backend import main as main_mod
 
-    monkeypatch.setattr(main_mod, "_billing_enabled", lambda: True)
-    monkeypatch.setattr(main_mod, "_session_has_paid_access", lambda: False)
+    monkeypatch.setenv("BILLING_STRIPE_ENABLED", "1")
     with main_mod.app.test_client() as c:
         r = c.post("/api/cars/1/packages/ensure", headers={"X-CSRF-Token": "test"})
     assert r.status_code == 403
@@ -135,8 +133,7 @@ def test_api_packages_ensure_csrf_passes_when_token_matches(monkeypatch) -> None
     """Regression: ``if not validate_csrf_header()`` wrongly treated success (None) as failure."""
     from backend import main as main_mod
 
-    monkeypatch.setattr(main_mod, "_billing_enabled", lambda: False)
-    monkeypatch.setattr(main_mod, "_session_has_paid_access", lambda: True)
+    monkeypatch.setenv("BILLING_STRIPE_ENABLED", "0")
     monkeypatch.setattr(
         "backend.enrichment.window_sticker_service.ensure_window_sticker_for_car",
         lambda car_id, **_: {

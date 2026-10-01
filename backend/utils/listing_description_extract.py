@@ -447,12 +447,6 @@ def _llm_extract(norm: str, context: dict[str, Any]) -> dict[str, Any] | None:
         logger.info("ANTHROPIC_API_KEY not set; skipping LLM listing description tier")
         return None
 
-    try:
-        import requests
-    except ImportError:
-        logger.warning("requests not available; skipping LLM listing description tier")
-        return None
-
     schema_hint = (
         '{"interior_color_hint":string|null,"exterior_color_hint":string|null,'
         '"packages":[{"name":string,"features":string[],"evidence_spans":string[]}],'
@@ -477,24 +471,18 @@ def _llm_extract(norm: str, context: dict[str, Any]) -> dict[str, Any] | None:
         + norm[:6000]
     )
     try:
-        r = requests.post(
-            "https://api.anthropic.com/v1/messages",
-            headers={
-                "x-api-key": api_key,
-                "anthropic-version": "2023-06-01",
-                "content-type": "application/json",
-            },
-            json={
-                "model": "claude-haiku-4-5-20251001",
-                "max_tokens": 512,
-                "system": "You output JSON only. No prose.",
-                "messages": [{"role": "user", "content": prompt}],
-            },
+        from backend.llm.client import complete
+
+        res = complete(
+            prompt,
+            model_role="extract",
+            max_tokens=512,
+            system="You output JSON only. No prose.",
             timeout=60,
+            api_key=api_key,
         )
-        r.raise_for_status()
-        body = r.json()
-        content = ((body.get("content") or [{}])[0].get("text") or "").strip()
+        res.require_complete()  # refusal / max_tokens cut: no claims extracted
+        content = res.text.strip()
         if content.startswith("```"):
             content = content.split("```")[1]
             if content.startswith("json"):

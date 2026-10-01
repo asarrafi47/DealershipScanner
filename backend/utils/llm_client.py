@@ -29,13 +29,14 @@ from __future__ import annotations
 import logging
 import os
 import time
-from typing import Any
 
 from backend.utils.local_llm import Completion
 
 logger = logging.getLogger("llm_client")
 
-DEFAULT_CLAUDE_MODEL = "claude-haiku-4-5-20251001"
+from backend.llm.client import ROLE_MODELS as _ROLE_MODELS
+
+DEFAULT_CLAUDE_MODEL = _ROLE_MODELS["chat"]  # back-compat name; the table is backend/llm/client.py
 
 # Values people leave lying around in a shell profile / .env.example. A literal
 # "your-api-key-here" exported by a dotfile made active_provider() answer
@@ -105,7 +106,11 @@ def active_provider() -> str:
 
 
 def _claude_model() -> str:
-    return (os.environ.get("LLM_CLAUDE_MODEL") or DEFAULT_CLAUDE_MODEL).strip()
+    # One table for every Anthropic call (backend/llm/client.py, role "chat");
+    # LLM_CLAUDE_MODEL still overrides it, as before.
+    from backend.llm.client import model_for
+
+    return model_for("chat")
 
 
 def _claude_max_tokens() -> int:
@@ -118,23 +123,21 @@ def _claude_max_tokens() -> int:
 def _complete_claude(
     prompt: str, *, system: str | None, temperature: float, max_tokens: int | None,
 ) -> Completion:
-    import anthropic
+    from backend.llm.client import complete as _anthropic_complete
 
-    client = anthropic.Anthropic(api_key=anthropic_key())
-    kwargs: dict[str, Any] = {
-        "model": _claude_model(),
-        "max_tokens": max_tokens or _claude_max_tokens(),
-        "temperature": temperature,
-        "messages": [{"role": "user", "content": prompt}],
-    }
-    if system:
-        kwargs["system"] = system
-    resp = client.messages.create(**kwargs)
-    parts = [b.text for b in resp.content if getattr(b, "type", None) == "text"]
-    stop = getattr(resp, "stop_reason", None)
+    resp = _anthropic_complete(
+        prompt,
+        model_role="chat",
+        max_tokens=max_tokens or _claude_max_tokens(),
+        system=system,
+        temperature=temperature,
+        api_key=anthropic_key(),
+    )
+    # Completion carries stop_reason, so a refusal ("refusal") or a cut answer
+    # (truncated=True) stays visible to the caller instead of passing as done.
     return Completion(
-        "".join(parts).strip(),
-        stop_reason=stop, truncated=stop == "max_tokens", provider="claude",
+        resp.text.strip(),
+        stop_reason=resp.stop_reason, truncated=resp.truncated, provider="claude",
     )
 
 

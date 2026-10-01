@@ -886,8 +886,7 @@ def test_trim_ladder_free_tier_strips_adds_on_api_without_premium(monkeypatch) -
         "active": 1,
     }
     monkeypatch.setattr("backend.main.get_car_by_id", lambda cid, **kw: car if cid == 99 else None)
-    monkeypatch.setattr("backend.main._viewer_sees_premium_features", lambda: False)
-    monkeypatch.setattr("backend.main._session_has_paid_access", lambda: False)
+    monkeypatch.setattr("backend.billing.access.current_access", lambda: _viewer(False))
     monkeypatch.setattr(
         "backend.main.prepare_car_detail_context",
         lambda _raw: {"verified_specs": {}, "gallery_images": []},
@@ -924,8 +923,7 @@ def test_trim_ladder_in_api_when_premium_renegade(monkeypatch) -> None:
         "active": 1,
     }
     monkeypatch.setattr("backend.main.get_car_by_id", lambda cid, **kw: car if cid == 101 else None)
-    monkeypatch.setattr("backend.main._viewer_sees_premium_features", lambda: True)
-    monkeypatch.setattr("backend.main._session_has_paid_access", lambda: True)
+    monkeypatch.setattr("backend.billing.access.current_access", lambda: _viewer(True))
     monkeypatch.setattr(
         "backend.main.prepare_car_detail_context",
         lambda _raw: {"verified_specs": {}, "gallery_images": []},
@@ -956,8 +954,7 @@ def test_trim_ladder_in_api_when_paid(monkeypatch) -> None:
         "active": 1,
     }
     monkeypatch.setattr("backend.main.get_car_by_id", lambda cid, **kw: car if cid == 100 else None)
-    monkeypatch.setattr("backend.main._viewer_sees_premium_features", lambda: True)
-    monkeypatch.setattr("backend.main._session_has_paid_access", lambda: True)
+    monkeypatch.setattr("backend.billing.access.current_access", lambda: _viewer(True))
     monkeypatch.setattr(
         "backend.main.prepare_car_detail_context",
         lambda _raw: {"verified_specs": {}, "gallery_images": []},
@@ -1735,3 +1732,14 @@ def test_elantra_se_uses_brochure_standard_features_not_placeholder(monkeypatch)
     joined = " ".join(adds).lower()
     assert "forward collision" in joined or "2.0l" in joined
     assert "entry-level trim with core standard equipment" not in joined
+
+
+def _viewer(paid: bool, *, billing: bool = True):
+    """A signed-in viewer for ``backend.billing.access.current_access`` (paid = Complete)."""
+    from backend.billing.access import AccessContext
+    from backend.billing.catalog import COMPLETE_FEATURES
+
+    return AccessContext(
+        logged_in=True, user_id=1, is_premium=paid,
+        features=COMPLETE_FEATURES if paid else frozenset(), billing_enabled=billing,
+    )

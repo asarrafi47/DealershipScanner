@@ -8,7 +8,9 @@ import os
 import time
 from typing import Any
 
-from backend.parsers import parse, resolve_rooftop_attribution
+# Rooftop attribution (per-page gate + the one all-rows pass) lives in backend.attribution.
+from backend.attribution import DealerCtx, decide
+from backend.parsers import parse
 from backend.parsers.vdp_urls import apply_vehicle_source_url
 from backend.scanner.constants import DEBUG_DIR, KNOWN_HAR_PROVIDERS
 from backend.scanner.dealer_site_url import dealer_inventory_base_url
@@ -16,7 +18,6 @@ from backend.scanner.inventory_write import InventoryWriteCoordinator
 # One shared rooftop reconcile policy for the browser path and the delta path.
 from backend.scanner.rooftop_disown import (
     disown_foreign_rooftop_vins,
-    roster_place as rooftop_roster_place,
     split_refusals,
 )
 from backend.scanner.phases.upsert import upsert_vehicles_for_dealer
@@ -330,14 +331,13 @@ async def run_dealer(
         merged_card_locations: dict[str, str] = {}
         if recipe_records:
             intercept_records.extend(recipe_records)
-        # This store's postal address from the registry, looked up ONCE and
-        # handed to every parse() below. A group feed whose rooftops are address
-        # blocks carrying no store name can only be told apart by address; omit
-        # these and the gate refuses every page of such a feed.
-        from backend.scanner.dealer_place import roster_place_with_hints
-
-        # registry town + the page-learned street from scan hints (street-block stamps)
-        roster_place = await asyncio.to_thread(roster_place_with_hints, url, dealer_id)
+        # This store's place (registry town + the page-learned street from scan
+        # hints), looked up ONCE and handed to every parse below and to the
+        # all-rows pass. A group feed whose rooftops are address blocks carrying
+        # no store name can only be told apart by address; omit it and the gate
+        # refuses every page of such a feed.
+        attr_ctx = await asyncio.to_thread(DealerCtx.for_store, dealer_id, name, url)
+        roster_place = attr_ctx.place
 
         body_parse_cache: dict[int, list[dict[str, Any]]] = {}
         # Rows this store's own site served that the feed assigns to a DIFFERENT
@@ -429,31 +429,16 @@ async def run_dealer(
                 dealer=dealer,
             )
         )
-        # Rooftop attribution is settled ONCE, here, over the final row set:
-        # recovery may have replaced every intercepted row with output from a
-        # scraper strategy that never went through parse(). Per-page marks are
-        # cleared first because a page holding nothing but one sibling's cars
-        # looks like a single-store payload on its own, and only reads as a
-        # sibling next to this store's own rooftop across the whole capture —
-        # the same union re-run backend.scanner.delta_scan does.
-        all_vehicles = recovery.vehicles
-        for _v in all_vehicles:
-            _v.pop("_rooftop_reject", None)
-        # Rows a store-scoped recipe returned (CarsCommerce facetFilters.source_id,
-        # verified at synthesis) are this store's by construction; re-gating them
-        # here kept 5 of Tutton CDJR's 346 cars on 2026-09-26 (the gate can only
-        # pick ONE of the two stamps its feeds use). Gate only the rest.
-        _scoped = [v for v in all_vehicles if v.get("_feed_scoped")]
-        _open = [v for v in all_vehicles if not v.get("_feed_scoped")]
-        if _open:
-            _open, rooftop_refused = resolve_rooftop_attribution(
-                _open, dealer_id=dealer_id, dealer_name=name, dealer_url=url, **roster_place,
-            )
-        else:
-            rooftop_refused = []
-        if _scoped:
-            logger.info("rooftop attribution [%s]: %d row(s) from store-scoped recipe(s) kept without the union gate", dealer_id, len(_scoped))
-        all_vehicles = _scoped + _open
+        # Rooftop attribution is settled ONCE, here, over the final row set
+        # (backend.attribution.decide — the same all-rows pass the delta scan
+        # runs): recovery may have replaced every intercepted row with output
+        # from a scraper strategy that never went through parse(), and a page
+        # holding nothing but one sibling's cars only reads as a sibling next to
+        # this store's own rooftop across the whole capture. Store-scoped recipe
+        # rows (_feed_scoped) are kept without the re-gate there.
+        attribution = decide(recovery.vehicles, attr_ctx)
+        all_vehicles = attribution.kept
+        rooftop_refused = attribution.refused
         if rooftop_refused:
             result["rooftop_refused_rows"] = len(rooftop_refused)
         result["inventory_rows"] = len(all_vehicles)

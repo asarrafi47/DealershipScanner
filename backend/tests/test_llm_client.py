@@ -60,7 +60,7 @@ def test_claude_truncation_flagged(monkeypatch):
             return _Resp()
 
     class _Anthropic:
-        def __init__(self, api_key=None):
+        def __init__(self, api_key=None, **kw):
             self.messages = _Messages()
 
     import sys

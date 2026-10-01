@@ -5,9 +5,10 @@ from __future__ import annotations
 
 def test_dev_admin_grants_premium_access(monkeypatch):
     import backend.main as main
+    from backend.billing import access
 
-    monkeypatch.setattr(main, "_billing_enabled", lambda: True)
-    monkeypatch.setattr(main, "is_production_env", lambda: True)
+    monkeypatch.setenv("BILLING_STRIPE_ENABLED", "1")
+    monkeypatch.setattr("backend.utils.runtime_env.is_production_env", lambda: True)
 
     ctx = main.app.test_request_context("/dev/scan-lab")
     ctx.push()
@@ -16,10 +17,12 @@ def test_dev_admin_grants_premium_access(monkeypatch):
 
         session["admin_user_id"] = 1
         session["admin_username"] = "testdev"
-        assert main._dev_operator_grants_premium() is True
-        ok, err = main._require_premium_feature()
+        viewer = access.current_access()
+        assert viewer.dev_operator is True
+        ok, err = main._require_feature("window_sticker")
         assert ok is True
         assert err == ""
-        assert main._session_has_paid_access() is True
+        assert viewer.sees_paid_ui() is True
+        assert viewer.shows("ai_car_chat") is True
     finally:
         ctx.pop()

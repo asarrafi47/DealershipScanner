@@ -303,13 +303,17 @@ def _is_battery_electric(car: dict[str, Any], specs: dict[str, Any]) -> bool:
     (3.9 s / 3.5 s) and were the last cars still quoting it. The plug-in hybrids
     that genuinely are this quick carry a badge that says so (AMG S 63 E,
     911 Turbo S E-Hybrid, BMW XM) and pass on that instead.
+
+    Decided by ``vehicle_facts.electrification``: the VIN decode (a
+    ``vpic_electrification`` key on *specs* / *car*) outranks the fuel label.
     """
-    fuel = str(car.get("fuel_type") or specs.get("fuel_type") or "").strip().lower()
-    if not fuel:
-        return False
-    if "plug" in fuel:
-        return False
-    return "electric" in fuel and "gas" not in fuel and "hybrid" not in fuel
+    from backend.vehicle_facts.electrification import BEV, electrification
+
+    fields = {
+        "fuel_type": car.get("fuel_type") or specs.get("fuel_type"),
+        "vpic_electrification": car.get("vpic_electrification") or specs.get("vpic_electrification"),
+    }
+    return electrification(fields) == BEV
 
 
 def implausible_extended_spec_fields(
@@ -807,14 +811,12 @@ def merge_verified_specs(
     # AWD) is overridden; a blank decode leaves the cascade alone.
     _vpic_drive = vpic.get("drivetrain")
     if _vpic_drive:
-        try:
-            from backend.catalog.resolver import _drive_bucket as _db_
+        from backend.vehicle_facts.drivetrain import normalize_drivetrain, same_drive_wheels
 
-            _a, _b = _db_(dealer_drive), _db_(_vpic_drive)
-            if _a and _b and _a != _b and not ({_a, _b} <= {"AWD", "4WD"}):
-                drive_ver = _vpic_drive
-        except Exception:
-            pass
+        _a = normalize_drivetrain(dealer_drive, "dealer")
+        _b = normalize_drivetrain(_vpic_drive, "vpic")
+        if _a and _b and not same_drive_wheels(_a, _b):
+            drive_ver = _vpic_drive
     if not drive_ver and dealer_drive and not _is_na_spec(dealer_drive):
         drive_ver = dealer_drive
     if not drive_ver and dict_specs and dict_specs.get("drivetrain"):
@@ -920,6 +922,16 @@ def merge_verified_specs(
     sticker_pkg = _sticker_specs_from_packages(car)
     if sticker_pkg.get("fuel_type") == "Electric":
         is_bev = True
+    # NHTSA vPIC outranks every signal above (owner rule, vehicle_facts.
+    # electrification): a decode saying BEV / FCEV makes the car electric-drive;
+    # one naming a combustion engine, a hybrid or a plug-in hybrid vetoes it.
+    from backend.vehicle_facts.electrification import NO_ENGINE, electrification
+
+    _vpic_el = electrification({}, vpic=vpic) if vpic else None
+    if _vpic_el in NO_ENGINE:
+        is_bev = True
+    elif _vpic_el is not None:
+        is_bev = False
     if is_bev:
         cyl_ver = 0
         display_cyl = 0

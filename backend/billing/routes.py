@@ -6,7 +6,8 @@ from typing import Any
 from flask import Blueprint, abort, jsonify, redirect, render_template, request, session, url_for
 
 from backend.billing.checkout_service import create_plan_checkout_session, verify_plan_checkout_session
-from backend.billing.catalog import get_plan, plan_display_list
+from backend.billing.access import invalidate_access, is_site_admin
+from backend.billing.catalog import LEGACY_PREMIUM_PLAN_ID, get_plan, plan_display_list
 from backend.billing.stripe_billing import (
     billing_enabled,
     construct_premium_webhook_event,
@@ -27,7 +28,7 @@ from backend.db.users_db import (
     revoke_user_premium,
     update_org_stripe_subscription,
 )
-from backend.utils.roles import is_admin_role
+from backend.utils.roles import is_admin_role  # noqa: F401  (re-export)
 
 _log = logging.getLogger(__name__)
 
@@ -61,7 +62,7 @@ def billing_required():
     uid = _require_app_login()
     if not uid:
         return redirect(url_for("login_page"))
-    if is_admin_role(session.get("user_role")):
+    if is_site_admin():
         return redirect(url_for("app_home"))
     org_id = _session_org_id()
     org = get_org(org_id) if org_id else None
@@ -75,7 +76,7 @@ def billing_checkout():
     uid = _require_app_login()
     if not uid:
         return redirect(url_for("login_page"))
-    if is_admin_role(session.get("user_role")):
+    if is_site_admin():
         return redirect(url_for("app_home"))
     org_id = _session_org_id()
     if not org_id:
@@ -99,7 +100,7 @@ def billing_success():
     uid = _require_app_login()
     if not uid:
         return redirect(url_for("login_page"))
-    if is_admin_role(session.get("user_role")):
+    if is_site_admin():
         return redirect(url_for("app_home"))
     org_id = _session_org_id()
     if not org_id:
@@ -207,6 +208,7 @@ def premium_success():
         elif verify_premium_checkout_session(session_id=stripe_sid, user_id=uid):
             grant_user_premium(uid, session_id=stripe_sid)
             invalidate_billing_cache(uid)
+            invalidate_access()
             session["user_is_premium"] = True
             activated = True
         else:
@@ -344,7 +346,10 @@ def plan_checkout_success():
         elif verify_plan_checkout_session(session_id=stripe_sid, user_id=uid, plan_id=plan_id):
             grant_user_premium(uid, session_id=stripe_sid, plan_id=plan_id)
             invalidate_billing_cache(uid)
-            session["user_is_premium"] = True
+            invalidate_access()
+            # The plan decides the features (backend.billing.access reads it from
+            # the DB); the legacy "premium" flag means the Complete bundle only.
+            session["user_is_premium"] = plan_id == LEGACY_PREMIUM_PLAN_ID
             session["subscription_plan_id"] = plan_id
             activated = True
         else:

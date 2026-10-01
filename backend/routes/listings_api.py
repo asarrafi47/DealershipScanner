@@ -25,6 +25,7 @@ from backend.db.inventory_db import (
 )
 from backend.listings.geo_session import apply_listings_geo_to_session
 from backend.listings.routes import listings_page
+from backend.billing import access as paid_access
 from backend.routes._shared import _client_ip, main_module
 from backend.utils.ip_rate_limit import allow_request
 from backend.utils.query_parser import parse_natural_query
@@ -408,9 +409,9 @@ def api_listings_cars():
 def api_listings_market_stats():
     """Trim-level average prices for premium listings grid (cached server-side)."""
     main = main_module()
-    ok, err = main._require_feature(FEATURE_MARKET_INTEL)
+    ok, err = paid_access.check_feature(FEATURE_MARKET_INTEL)
     if not ok:
-        return jsonify(main._feature_denied_json(FEATURE_MARKET_INTEL, err)), 403
+        return jsonify(paid_access.denied_json(FEATURE_MARKET_INTEL, err)), 403
     from backend.listings.geo_session import listings_geo_kwargs_from_session
     from backend.utils.market_price import trim_price_stats_for_client
 
@@ -682,9 +683,9 @@ def _clean_saved_search_filters(raw) -> dict | None:
 def api_saved_searches_list():
     """This user's saved searches (listings toolbar "Saved searches" panel)."""
     main = main_module()
-    ok, err = main._require_feature(FEATURE_SAVED_SEARCHES)
+    ok, err = paid_access.check_feature(FEATURE_SAVED_SEARCHES)
     if not ok:
-        return jsonify(main._feature_denied_json(FEATURE_SAVED_SEARCHES, err, searches=[])), 403
+        return jsonify(paid_access.denied_json(FEATURE_SAVED_SEARCHES, err, searches=[])), 403
     uid = session.get("user_id")
     if not uid:
         return jsonify({"ok": False, "error": "not_logged_in", "searches": []}), 401
@@ -695,9 +696,9 @@ def api_saved_searches_list():
 def api_saved_searches_create():
     """Persist the listings page's current filter state ("Save this search")."""
     main = main_module()
-    ok, err = main._require_feature(FEATURE_SAVED_SEARCHES)
+    ok, err = paid_access.check_feature(FEATURE_SAVED_SEARCHES)
     if not ok:
-        return jsonify(main._feature_denied_json(FEATURE_SAVED_SEARCHES, err)), 403
+        return jsonify(paid_access.denied_json(FEATURE_SAVED_SEARCHES, err)), 403
     uid = session.get("user_id")
     if not uid:
         return jsonify({"ok": False, "error": "not_logged_in"}), 401
@@ -714,9 +715,9 @@ def api_saved_searches_create():
 
 def api_saved_searches_delete(search_id):
     main = main_module()
-    ok, err = main._require_feature(FEATURE_SAVED_SEARCHES)
+    ok, err = paid_access.check_feature(FEATURE_SAVED_SEARCHES)
     if not ok:
-        return jsonify(main._feature_denied_json(FEATURE_SAVED_SEARCHES, err)), 403
+        return jsonify(paid_access.denied_json(FEATURE_SAVED_SEARCHES, err)), 403
     uid = session.get("user_id")
     if not uid:
         return jsonify({"ok": False, "error": "not_logged_in"}), 401

@@ -4,7 +4,7 @@ Route modules extracted from ``backend/main.py`` follow two rules so existing
 tests and reload semantics keep working:
 
 1. Any name that tests monkeypatch on ``backend.main`` (``get_car_by_id``,
-   ``_session_has_paid_access``, ``_nhtsa_recalls_lookup_payload``, env-derived
+   ``_nhtsa_recalls_lookup_payload``, env-derived
    rate-limit globals, ...) is resolved through the ``backend.main`` module
    object at request time (``main_module().<name>``) instead of being imported
    by value. Patching ``backend.main.X`` therefore still affects moved views.

@@ -816,6 +816,12 @@ _CLAUDE_INTERIOR_PROMPT = (
 )
 
 
+def _interior_vision_model() -> str:
+    from backend.llm.client import model_for
+
+    return model_for("vision")
+
+
 def _analyze_interior_with_claude(image_url: str) -> dict[str, Any] | None:
     """
     Call Claude Haiku vision to classify the interior color from an image URL.
@@ -867,39 +873,18 @@ def _analyze_interior_with_claude(image_url: str) -> dict[str, Any] | None:
         return None
 
     try:
-        import requests as _req
-        resp = _req.post(
-            "https://api.anthropic.com/v1/messages",
-            headers={
-                "x-api-key": api_key,
-                "anthropic-version": "2023-06-01",
-                "content-type": "application/json",
-            },
-            json={
-                "model": "claude-haiku-4-5-20251001",
-                "max_tokens": 128,
-                "messages": [
-                    {
-                        "role": "user",
-                        "content": [
-                            {
-                                "type": "image",
-                                "source": {
-                                    "type": "base64",
-                                    "media_type": "image/jpeg",
-                                    "data": b64,
-                                },
-                            },
-                            {"type": "text", "text": _CLAUDE_INTERIOR_PROMPT},
-                        ],
-                    }
-                ],
-            },
+        from backend.llm.client import complete
+
+        res = complete(
+            _CLAUDE_INTERIOR_PROMPT,
+            model_role="vision",
+            max_tokens=128,
+            images=[("image/jpeg", b64)],
             timeout=45.0,
+            api_key=api_key,
         )
-        resp.raise_for_status()
-        data = resp.json()
-        raw_text = data["content"][0]["text"].strip()
+        res.require_complete()  # refusal / max_tokens cut is not a colour reading
+        raw_text = res.text.strip()
     except Exception as e:
         logger.warning("Interior vision: Claude API call failed: %s", e)
         return None
@@ -988,7 +973,7 @@ def run_interior_vision_for_vins(
                     "interior_guess_text": bucket.title() if bucket != "other" else "",
                     "confidence": vision_result.get("confidence", 0.5),
                     "evidence": vision_result.get("raw", "")[:160],
-                    "model": "claude-haiku-4-5-20251001",
+                    "model": _interior_vision_model(),
                     "inference_context": inference_ctx,
                 }
                 break

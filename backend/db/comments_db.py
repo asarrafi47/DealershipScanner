@@ -295,11 +295,21 @@ _COMMENT_ATTACHMENTS_TABLE_OK = False
 _DEALER_RATINGS_TABLE_OK = False
 
 
+def _migrated() -> bool:
+    """Postgres at the migrations/ version (V002/V004/V005 own these tables)."""
+    from backend.db.schema_version import schema_is_current
+
+    return schema_is_current()
+
+
 def ensure_comment_tables(cur: Any) -> None:
     """Create both comment tables + indexes if absent (idempotent, no commit)."""
     global _COMMENT_TABLES_OK
     postgres = inventory_pg.is_inventory_postgres()
     if postgres and _COMMENT_TABLES_OK:
+        return
+    if postgres and _migrated():
+        _COMMENT_TABLES_OK = True
         return
     for table, subject_col in _SCOPES.values():
         cur.execute(_ddl_comments(table, subject_col, postgres=postgres))
@@ -315,6 +325,9 @@ def ensure_comment_flags_table(cur: Any) -> None:
     postgres = inventory_pg.is_inventory_postgres()
     if postgres and _COMMENT_FLAGS_TABLE_OK:
         return
+    if postgres and _migrated():
+        _COMMENT_FLAGS_TABLE_OK = True
+        return
     cur.execute(_DDL_COMMENT_FLAGS_PG if postgres else _DDL_COMMENT_FLAGS_SQLITE)
     cur.execute(
         "CREATE INDEX IF NOT EXISTS idx_comment_flags_comment ON comment_flags (scope, comment_id)"
@@ -329,6 +342,9 @@ def ensure_comment_attachments_table(cur: Any) -> None:
     postgres = inventory_pg.is_inventory_postgres()
     if postgres and _COMMENT_ATTACHMENTS_TABLE_OK:
         return
+    if postgres and _migrated():
+        _COMMENT_ATTACHMENTS_TABLE_OK = True
+        return
     cur.execute(_DDL_COMMENT_ATTACHMENTS_PG if postgres else _DDL_COMMENT_ATTACHMENTS_SQLITE)
     for name, columns, where in _ATTACHMENT_INDEXES:
         cur.execute(_create_index_sql(name, "comment_attachments", columns, where))
@@ -341,6 +357,9 @@ def ensure_dealer_ratings_table(cur: Any) -> None:
     global _DEALER_RATINGS_TABLE_OK
     postgres = inventory_pg.is_inventory_postgres()
     if postgres and _DEALER_RATINGS_TABLE_OK:
+        return
+    if postgres and _migrated():
+        _DEALER_RATINGS_TABLE_OK = True
         return
     cur.execute(_DDL_RATINGS_PG if postgres else _DDL_RATINGS_SQLITE)
     for name, columns, where in _RATING_INDEXES:

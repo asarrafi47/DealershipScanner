@@ -22,6 +22,9 @@ from typing import Any
 
 from backend.db.inventory_db import get_conn
 from backend.utils.engine_consistency import cylinders_from_engine_text, liters_from_engine_text
+from backend.vehicle_facts.drivetrain import normalize_drivetrain
+from backend.vehicle_facts.electrification import LEGACY_CODE, electrification_from_text
+from backend.vehicle_facts.epa_model import _MODEL_SUFFIXES, epa_model_candidates  # noqa: F401  (re-export)
 
 # Link only when we're at least this confident (0-1 scale).
 MIN_CONFIDENCE = 0.45
@@ -45,19 +48,9 @@ def _norm(s: Any) -> str:
 
 
 def _drive_bucket(s: Any) -> str:
-    t = str(s or "").upper()
-    if "4X2" in t or t.startswith("2WD") or "2-WHEEL" in t or "TWO-WHEEL" in t:
-        return ""  # two-wheel drive of unknown end (vPIC "4x2/2-Wheel Drive"): no signal
-    if "ALL" in t or "AWD" in t or "4MATIC" in t or "XDRIVE" in t or "QUATTRO" in t:
-        return "AWD"
-    # EPA spells it out ("Four-Wheel Drive"); dealers abbreviate ("4WD").
-    if ("4" in t or "FOUR" in t) and ("WD" in t or "WHEEL" in t):
-        return "4WD"
-    if "FRONT" in t or "FWD" in t:
-        return "FWD"
-    if "REAR" in t or "RWD" in t:
-        return "RWD"
-    return ""
+    """FWD/RWD/AWD/4WD, or "" for no signal (4x2 / 2WD of unknown end, ambiguous,
+    blank). ``vehicle_facts.normalize_drivetrain`` with "" for None."""
+    return normalize_drivetrain(s, "dealer") or ""
 
 
 def _fuel_bucket(s: Any) -> str:
@@ -78,39 +71,11 @@ def _fuel_bucket(s: Any) -> str:
     return ""
 
 
-# Powertrain suffixes dealers append to model names that EPA folds into trims
-_MODEL_SUFFIXES = (
-    " plug-in hybrid electric vehicle", " hybrid electric vehicle",
-    " electric vehicle", " plug-in hybrid", " i-force max", " hybrid max",
-    " hybrid", " prime", " phev", " ev",
-)
-
-
 def _model_variants(make: str, model: str) -> list[str]:
-    out = [model.strip()]
-    try:
-        from backend.utils.model_aliases import alias_spellings
-
-        for alt in alias_spellings(make, model):
-            if alt and alt not in out:
-                out.append(alt)
-    except ImportError:
-        pass
-    low = model.lower()
-    for suf in _MODEL_SUFFIXES:
-        if low.endswith(suf):
-            base = model[: len(model) - len(suf)].strip()
-            if base and base not in out:
-                out.append(base)
-    try:
-        from backend.enrichment.knowledge_engine import _model_epa_fallbacks
-
-        for fb in _model_epa_fallbacks(make, model):
-            if fb and fb not in out:
-                out.append(fb)
-    except ImportError:
-        pass
-    return out
+    """EPA model spellings to match: ``vehicle_facts.epa_model_candidates``
+    (strategy "catalog": listing model, alias spellings, powertrain suffix strips,
+    then the knowledge-engine per-make fallbacks)."""
+    return epa_model_candidates(make, model, strategy="catalog")
 
 
 def _query_year_make(cur, year: int, make: str) -> list[dict[str, Any]]:
@@ -176,25 +141,10 @@ def _candidates(cur, year: int, make: str, model: str) -> list[dict[str, Any]]:
 
 
 def _electrification(text: str, fuel_text: str | None = None) -> str:
-    """'phev' | 'hybrid' | 'ev' | '' from free text.
-
-    fuel_text: when provided, the gas-AND-electricity PHEV test runs against
-    this field alone — a trim like "Premium AWD" on a pure EV must not read
-    as the "Premium" gasoline grade word.
-    """
-    t = text.lower()
-    ft = t if fuel_text is None else fuel_text.lower()
-    if "plug-in" in t or "plugin" in t or "phev" in t or "prime" in t:
-        return "phev"
-    # EPA writes PHEV fuel as "<grade> Gasoline / Electricity" — gas AND
-    # electricity together is a plug-in, not an EV.
-    if "electricity" in ft and any(g in ft for g in ("gasoline", "premium", "regular", "midgrade", "e85")):
-        return "phev"
-    if "hybrid" in t or "i-force max" in t or "powerboost" in t or "etorque hybrid" in t:
-        return "hybrid"
-    if ("electric" in t and "hybrid" not in t) or " bev" in t or t.strip() == "ev":
-        return "ev"
-    return ""
+    """'phev' | 'hybrid' | 'ev' | '' from free text (``vehicle_facts.
+    electrification_from_text`` in the resolver's lower-case codes)."""
+    e = electrification_from_text(text, fuel_text)
+    return LEGACY_CODE.get(e, "") if e else ""
 
 
 def _clean_engine_text(s: Any) -> str:

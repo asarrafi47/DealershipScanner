@@ -17,7 +17,8 @@ def client(monkeypatch):
 
 
 def _allow_feature(monkeypatch, ok=True):
-    monkeypatch.setattr(bp, "require_feature", lambda *a, **k: (ok, "" if ok else "not_entitled"))
+    # The endpoint uses the shared gate in backend.billing.access (W2).
+    monkeypatch.setattr(bp.paid_access, "check_feature", lambda *a, **k: (ok, "" if ok else "premium_required"))
 
 
 def test_gated_without_entitlement(client, monkeypatch):
@@ -126,10 +127,11 @@ def test_complete_rewrite_still_used_when_not_truncated(client, monkeypatch):
 
 
 def test_anonymous_blocked_in_production_even_with_billing_off(client, monkeypatch):
-    """2026-09-30: with billing off require_feature() passes everyone, so anonymous
-    visitors could spend paid model calls. Production now needs an account."""
-    _allow_feature(monkeypatch, ok=True)
-    monkeypatch.setattr(bp, "is_production_env", lambda: True)
+    """2026-09-30: with billing off the feature gate passes everyone, so anonymous
+    visitors could spend paid model calls. Production needs an account (the shared
+    access gate returns login_required; the endpoint answers 401)."""
+    monkeypatch.setenv("BILLING_STRIPE_ENABLED", "0")
+    monkeypatch.setenv("FLASK_ENV", "production")
     r = client.post("/api/ai/chat", json={"message": "hi"})
     assert r.status_code == 401
     assert r.get_json()["error"] == "login_required"

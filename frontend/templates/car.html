@@ -177,7 +177,8 @@
             {% set listing_vdp_url = car.listing_vdp_url or car.source_url %}
             {% set dealership_view_url = listing_vdp_url or car.dealer_url %}
             {% set listing_link_is_vdp = listing_vdp_url and car.dealer_url and listing_vdp_url.rstrip('/') != car.dealer_url.rstrip('/') %}
-            {% set show_premium_features = has_paid_access or (logged_in and not billing_stripe_enabled) %}
+            {# Paid UI pieces follow the API that serves them (backend.billing.access): equipment/sticker/EV pieces = window_sticker. #}
+            {% set show_premium_features = viewer_can('window_sticker') %}
             {% set show_options_tab = logged_in or has_paid_access %}
             {% set show_deal_detail = deal_score_detail %}
             {% set show_deal_upsell = car.deal_score and car.deal_score.label and car.deal_score.label != 'insufficient_data' and not show_deal_detail and billing_stripe_enabled and not show_premium_features %}
@@ -1067,7 +1068,7 @@
 
                     {% if show_options_tab %}
                     <section class="car-vdp-panel" id="car-panel-options" role="tabpanel" aria-labelledby="car-tab-options" data-panel="options" hidden>
-                        {% if logged_in and billing_stripe_enabled and not has_paid_access %}
+                        {% if logged_in and billing_stripe_enabled and not viewer_can('packages_ensure') %}
                         <div class="car-premium-upsell car-premium-upsell--inline" aria-labelledby="car-premium-upsell-heading">
                             <h2 id="car-premium-upsell-heading" class="car-vdp-panel-title">Factory options &amp; window sticker</h2>
                             <p class="car-packages-hint">Detailed equipment, OEM window sticker analysis, and listing assistant are included with <a href="{{ url_for('premium_page') }}">Premium</a>.</p>
@@ -1499,7 +1500,7 @@
     {% if show_premium_features %}
     <script src="{{ url_for('static', filename='car_trim_ladder.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>
     {% endif %}
-    {% if has_paid_access or (logged_in and not billing_stripe_enabled) %}
+    {% if viewer_can('packages_ensure') %}
     <script src="{{ url_for('static', filename='car_packages.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>
     {% endif %}
     <script nonce="{{ csp_nonce }}">

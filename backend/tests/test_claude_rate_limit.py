@@ -25,8 +25,10 @@ def test_anthropic_messages_create_retries_429(monkeypatch) -> None:
     err.status_code = 429
     ok = MagicMock()
     client.messages.create.side_effect = [err, ok]
+    from backend.llm import client as llm
+
     with patch.object(rl, "acquire_vision_slot"):
-        with patch.object(rl.time, "sleep"):
+        with patch.object(llm, "_sleep"):
             out = rl.anthropic_messages_create(client, model="m", max_tokens=1, messages=[])
     assert out is ok
     assert client.messages.create.call_count == 2

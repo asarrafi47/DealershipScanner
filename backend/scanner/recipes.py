@@ -980,16 +980,12 @@ async def try_fetch_via_recipes(
     # host tiers, exactly as before.
     if not recipe_fetch_enabled():
         return None
-    from backend.scanner.rooftop_disown import roster_place
+    from backend.attribution import DealerCtx, mark_payload_feed_scoped, parse_page
 
-    # Registry lookup hits the DB — keep it off the event loop, and don't pay
-    # for it at all when recipe fetch is disabled.
-    try:
-        from backend.scanner.dealer_place import roster_place_with_hints
-
-        _place = await asyncio.to_thread(roster_place_with_hints, base_url, dealer_id)
-    except Exception:  # noqa: BLE001 - attribution help must never break a scan
-        _place = {}
+    # The store place (backend.attribution.store_place: registry + page-learned
+    # street) hits the DB — keep it off the event loop, and don't pay for it at
+    # all when recipe fetch is disabled. Never raises (falls back to no place).
+    attr_ctx = await asyncio.to_thread(DealerCtx.for_store, dealer_id, dealer_name, base_url)
     # load_recipes may consult Postgres (recipe_store sync) — keep that
     # blocking I/O off the event loop this coroutine runs on.
     loaded = await asyncio.to_thread(load_recipes, dealer_id)
@@ -1001,7 +997,6 @@ async def try_fetch_via_recipes(
     stale_retry = [r for r in loaded if r.stale and (r.method == "GET" or _parses_json(r.post_template))]
     if not live and not stale_retry:
         return None
-    from backend.parsers import parse
 
     min_vehicles = recipe_min_vehicles()
     union_records: list[tuple[str, Any]] = []
@@ -1071,12 +1066,13 @@ async def try_fetch_via_recipes(
                 break
             if parsed is None:
                 break
-            if isinstance(parsed, dict) and recipe_is_store_scoped(recipe, dealer_name):
+            store_scoped = recipe_is_store_scoped(recipe, dealer_name)
+            if store_scoped:
                 # dealer_run re-parses these payloads later (recovery / final
                 # row set) without knowing the recipe; the marker travels with
                 # the payload so no later parse() re-gates the store's own feed
                 # (Tutton CDJR: 346 -> 5 rows through that second gate, 2026-09-26)
-                parsed["_feed_scoped"] = True
+                mark_payload_feed_scoped(parsed)
             # rejected_out is REQUIRED, not optional decoration. parse() ends with:
             #
             #     if rejected_out is None:
@@ -1090,16 +1086,12 @@ async def try_fetch_via_recipes(
             # bug that gave bmwofmurrieta-com 1,921 cars across 37 makes.
             #
             # Passing a list makes parse() return only `kept`, which is what every other
-            # caller already does.
+            # caller already does. parse_page (backend.attribution) always passes one.
             _refused: list[dict] = []
-            page_vehicles = list(parse(
-                recipe.provider_hint or provider, parsed,
-                base_url=base_url, dealer_id=dealer_id,
-                dealer_name=dealer_name, dealer_url=base_url,
-                rejected_out=_refused,
-                trust_feed_scope=recipe_is_store_scoped(recipe, dealer_name),
-                **_place,
-            ))
+            page_vehicles = parse_page(
+                recipe.provider_hint or provider, parsed, attr_ctx, _refused,
+                trust_feed_scope=store_scoped,
+            )
             new = _unique_vins(page_vehicles) - vins
             records.append((recipe.url, parsed))
             if page_i == 0 and recipe.pagination == PAGINATION_DEALER_COM:

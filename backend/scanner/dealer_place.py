@@ -153,23 +153,6 @@ def place_label(place: dict[str, Any] | None) -> str:
     return f"{str(place['dealer_city']).strip()}, {str(place['dealer_state']).strip().upper()}"
 
 
-def roster_place_with_hints(dealer_url: str, dealer_id: str) -> dict[str, Any]:
-    """The registry place, completed with the page-learned street from scan hints
-    when the roster has the town but no street (the gate matches street-block
-    stamps only against a known street; Honda of Huntersville 2026-09-26)."""
-    try:
-        from backend.scanner.rooftop_disown import roster_place
-
-        place = dict(roster_place(dealer_url) or {})
-    except Exception:  # noqa: BLE001
-        place = {}
-    try:
-        hinted = place_kwargs(place_from_hints(dealer_id))
-    except Exception:  # noqa: BLE001
-        hinted = {}
-    if not place.get("dealer_city"):
-        return hinted
-    if not place.get("dealer_address") and hinted.get("dealer_address"):
-        place["dealer_address"] = hinted["dealer_address"]
-        place["dealer_address_source"] = "site_jsonld"
-    return place
+# The one store-place lookup lives in the attribution package now (2026-10-01);
+# this name stays the same function object so ``is`` checks and imports hold.
+from backend.attribution.place import store_place as roster_place_with_hints  # noqa: E402,F401

@@ -700,27 +700,18 @@ def _analyze_sticker_image_with_claude(image_bytes: bytes, car: dict[str, Any]) 
         "options: paid packages and optional equipment only. Include MSRP add-on price when visible.\n"
     )
     try:
-        import anthropic
+        from backend.llm.client import complete
 
-        client = anthropic.Anthropic(api_key=api_key)
-        resp = client.messages.create(
-            model="claude-haiku-4-5-20251001",
+        res = complete(
+            prompt,
+            model_role="vision",
             max_tokens=1536,
             system="You output JSON only. No markdown.",
-            messages=[
-                {
-                    "role": "user",
-                    "content": [
-                        {
-                            "type": "image",
-                            "source": {"type": "base64", "media_type": media_type, "data": b64},
-                        },
-                        {"type": "text", "text": prompt},
-                    ],
-                }
-            ],
+            images=[(media_type, b64)],
+            api_key=api_key,
         )
-        text = (resp.content[0].text or "").strip()
+        res.require_complete()  # refusal / max_tokens cut -> no options (as before: unparseable)
+        text = res.text.strip()
         if text.startswith("```"):
             text = re.sub(r"^```(?:json)?\n?", "", text)
             text = re.sub(r"\n?```$", "", text)
@@ -941,16 +932,17 @@ def _analyze_sticker_text_with_claude(raw_text: str, car: dict[str, Any]) -> dic
         f"--- STICKER TEXT ---\n{snippet}"
     )
     try:
-        import anthropic
+        from backend.llm.client import complete
 
-        client = anthropic.Anthropic(api_key=api_key)
-        resp = client.messages.create(
-            model="claude-haiku-4-5-20251001",
+        res = complete(
+            prompt,
+            model_role="extract",
             max_tokens=1024,
             system="You output JSON only. No markdown.",
-            messages=[{"role": "user", "content": prompt}],
+            api_key=api_key,
         )
-        text = (resp.content[0].text or "").strip()
+        res.require_complete()  # refusal / max_tokens cut -> no options (as before: unparseable)
+        text = res.text.strip()
         if text.startswith("```"):
             text = re.sub(r"^```(?:json)?\n?", "", text)
             text = re.sub(r"\n?```$", "", text)

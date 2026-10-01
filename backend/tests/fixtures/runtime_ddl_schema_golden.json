@@ -1,0 +1,2344 @@
+{
+ "_about": "Schema produced by the Postgres runtime DDL in backend/db (init_postgres_inventory, ensure_dealerships_table, incomplete_listings _ensure_schema, comments_db ensure_*, ensure_dictionary_tables, init_dealer_portal_db, ensure_grid_cards_table) on an empty database, captured 2026-10-01 before that DDL was retired. test_schema_from_migrations asserts the migration chain still creates all of it.",
+ "constraints": [
+  {
+   "def": "CHECK ((char_length(body) <= 4000))",
+   "name": "car_comments_body_length",
+   "table": "car_comments",
+   "type": "c"
+  },
+  {
+   "def": "CHECK ((btrim(body) <> ''::text))",
+   "name": "car_comments_body_not_blank",
+   "table": "car_comments",
+   "type": "c"
+  },
+  {
+   "def": "FOREIGN KEY (car_id) REFERENCES cars(id) ON DELETE CASCADE",
+   "name": "car_comments_car_id_fkey",
+   "table": "car_comments",
+   "type": "f"
+  },
+  {
+   "def": "CHECK ((flag_count >= 0))",
+   "name": "car_comments_flag_count_nonneg",
+   "table": "car_comments",
+   "type": "c"
+  },
+  {
+   "def": "PRIMARY KEY (id)",
+   "name": "car_comments_pkey",
+   "table": "car_comments",
+   "type": "p"
+  },
+  {
+   "def": "PRIMARY KEY (id)",
+   "name": "cars_pkey",
+   "table": "cars",
+   "type": "p"
+  },
+  {
+   "def": "UNIQUE (vin)",
+   "name": "cars_vin_key",
+   "table": "cars",
+   "type": "u"
+  },
+  {
+   "def": "CHECK (((width > 0) AND (height > 0)))",
+   "name": "comment_attachments_dims_positive",
+   "table": "comment_attachments",
+   "type": "c"
+  },
+  {
+   "def": "CHECK ((mime_type = ANY (ARRAY['image/jpeg'::text, 'image/png'::text, 'image/webp'::text])))",
+   "name": "comment_attachments_mime_allowed",
+   "table": "comment_attachments",
+   "type": "c"
+  },
+  {
+   "def": "PRIMARY KEY (id)",
+   "name": "comment_attachments_pkey",
+   "table": "comment_attachments",
+   "type": "p"
+  },
+  {
+   "def": "CHECK ((scope = ANY (ARRAY['car'::text, 'dealer'::text])))",
+   "name": "comment_attachments_scope_known",
+   "table": "comment_attachments",
+   "type": "c"
+  },
+  {
+   "def": "CHECK ((byte_size > 0))",
+   "name": "comment_attachments_size_positive",
+   "table": "comment_attachments",
+   "type": "c"
+  },
+  {
+   "def": "CHECK ((sort_order >= 0))",
+   "name": "comment_attachments_sort_order_nonneg",
+   "table": "comment_attachments",
+   "type": "c"
+  },
+  {
+   "def": "UNIQUE (storage_key)",
+   "name": "comment_attachments_storage_key_key",
+   "table": "comment_attachments",
+   "type": "u"
+  },
+  {
+   "def": "UNIQUE (scope, comment_id, ip_hash)",
+   "name": "comment_flags_scope_comment_id_ip_hash_key",
+   "table": "comment_flags",
+   "type": "u"
+  },
+  {
+   "def": "CHECK ((char_length(body) <= 4000))",
+   "name": "dealer_comments_body_length",
+   "table": "dealer_comments",
+   "type": "c"
+  },
+  {
+   "def": "CHECK ((btrim(body) <> ''::text))",
+   "name": "dealer_comments_body_not_blank",
+   "table": "dealer_comments",
+   "type": "c"
+  },
+  {
+   "def": "FOREIGN KEY (dealership_id) REFERENCES dealerships(id) ON DELETE CASCADE",
+   "name": "dealer_comments_dealership_id_fkey",
+   "table": "dealer_comments",
+   "type": "f"
+  },
+  {
+   "def": "CHECK ((flag_count >= 0))",
+   "name": "dealer_comments_flag_count_nonneg",
+   "table": "dealer_comments",
+   "type": "c"
+  },
+  {
+   "def": "PRIMARY KEY (id)",
+   "name": "dealer_comments_pkey",
+   "table": "dealer_comments",
+   "type": "p"
+  },
+  {
+   "def": "PRIMARY KEY (dealer_url)",
+   "name": "dealer_geopoints_pkey",
+   "table": "dealer_geopoints",
+   "type": "p"
+  },
+  {
+   "def": "FOREIGN KEY (dealership_id) REFERENCES dealerships(id) ON DELETE CASCADE",
+   "name": "dealer_ratings_dealership_id_fkey",
+   "table": "dealer_ratings",
+   "type": "f"
+  },
+  {
+   "def": "PRIMARY KEY (dealership_id)",
+   "name": "dealer_ratings_pkey",
+   "table": "dealer_ratings",
+   "type": "p"
+  },
+  {
+   "def": "CHECK (((google_rating IS NULL) OR ((google_rating >= (0)::numeric) AND (google_rating <= (5)::numeric))))",
+   "name": "dealer_ratings_rating_range",
+   "table": "dealer_ratings",
+   "type": "c"
+  },
+  {
+   "def": "CHECK (((google_review_count IS NULL) OR (google_review_count >= 0)))",
+   "name": "dealer_ratings_review_count_nonneg",
+   "table": "dealer_ratings",
+   "type": "c"
+  },
+  {
+   "def": "PRIMARY KEY (dealer_id)",
+   "name": "dealer_scan_profile_pkey",
+   "table": "dealer_scan_profile",
+   "type": "p"
+  },
+  {
+   "def": "PRIMARY KEY (id)",
+   "name": "dealer_vehicles_pkey",
+   "table": "dealer_vehicles",
+   "type": "p"
+  },
+  {
+   "def": "UNIQUE (user_id, vin)",
+   "name": "dealer_vehicles_user_id_vin_key",
+   "table": "dealer_vehicles",
+   "type": "u"
+  },
+  {
+   "def": "FOREIGN KEY (duplicate_of_id) REFERENCES dealerships(id)",
+   "name": "dealerships_duplicate_of_id_fkey",
+   "table": "dealerships",
+   "type": "f"
+  },
+  {
+   "def": "PRIMARY KEY (id)",
+   "name": "dealerships_pkey",
+   "table": "dealerships",
+   "type": "p"
+  },
+  {
+   "def": "PRIMARY KEY (id)",
+   "name": "dictionary_options_pkey",
+   "table": "dictionary_options",
+   "type": "p"
+  },
+  {
+   "def": "FOREIGN KEY (epa_master_id) REFERENCES epa_master(id) ON DELETE CASCADE",
+   "name": "epa_extended_specs_epa_master_id_fkey",
+   "table": "epa_extended_specs",
+   "type": "f"
+  },
+  {
+   "def": "PRIMARY KEY (epa_master_id)",
+   "name": "epa_extended_specs_pkey",
+   "table": "epa_extended_specs",
+   "type": "p"
+  },
+  {
+   "def": "PRIMARY KEY (id)",
+   "name": "epa_master_pkey",
+   "table": "epa_master",
+   "type": "p"
+  },
+  {
+   "def": "PRIMARY KEY (car_id)",
+   "name": "incomplete_listings_pkey",
+   "table": "incomplete_listings",
+   "type": "p"
+  },
+  {
+   "def": "PRIMARY KEY (k)",
+   "name": "incomplete_listings_meta_pkey",
+   "table": "incomplete_listings_meta",
+   "type": "p"
+  },
+  {
+   "def": "PRIMARY KEY (car_id)",
+   "name": "listings_grid_cards_pkey",
+   "table": "listings_grid_cards",
+   "type": "p"
+  },
+  {
+   "def": "PRIMARY KEY (make, model)",
+   "name": "model_specs_pkey",
+   "table": "model_specs",
+   "type": "p"
+  },
+  {
+   "def": "PRIMARY KEY (vin)",
+   "name": "nhtsa_vpic_cache_pkey",
+   "table": "nhtsa_vpic_cache",
+   "type": "p"
+  },
+  {
+   "def": "PRIMARY KEY (id)",
+   "name": "package_observations_pkey",
+   "table": "package_observations",
+   "type": "p"
+  },
+  {
+   "def": "UNIQUE (vin, kind, name_norm, source)",
+   "name": "package_observations_vin_kind_name_norm_source_key",
+   "table": "package_observations",
+   "type": "u"
+  },
+  {
+   "def": "PRIMARY KEY (id)",
+   "name": "package_values_pkey",
+   "table": "package_values",
+   "type": "p"
+  },
+  {
+   "def": "UNIQUE (year, make, model, \"trim\", kind, match_key)",
+   "name": "package_values_year_make_model_trim_kind_match_key_key",
+   "table": "package_values",
+   "type": "u"
+  },
+  {
+   "def": "PRIMARY KEY (id)",
+   "name": "saved_cars_pkey",
+   "table": "saved_cars",
+   "type": "p"
+  },
+  {
+   "def": "UNIQUE (user_id, car_id)",
+   "name": "saved_cars_user_id_car_id_key",
+   "table": "saved_cars",
+   "type": "u"
+  },
+  {
+   "def": "PRIMARY KEY (id)",
+   "name": "saved_searches_pkey",
+   "table": "saved_searches",
+   "type": "p"
+  },
+  {
+   "def": "PRIMARY KEY (id)",
+   "name": "scan_runs_pkey",
+   "table": "scan_runs",
+   "type": "p"
+  },
+  {
+   "def": "PRIMARY KEY (id)",
+   "name": "user_hidden_dealers_pkey",
+   "table": "user_hidden_dealers",
+   "type": "p"
+  },
+  {
+   "def": "UNIQUE (user_id, dealer_id)",
+   "name": "user_hidden_dealers_user_id_dealer_id_key",
+   "table": "user_hidden_dealers",
+   "type": "u"
+  },
+  {
+   "def": "PRIMARY KEY (id)",
+   "name": "user_search_history_pkey",
+   "table": "user_search_history",
+   "type": "p"
+  }
+ ],
+ "indexes": [
+  {
+   "def": "public.car_comments USING btree (id)",
+   "name": "car_comments_pkey",
+   "table": "car_comments"
+  },
+  {
+   "def": "public.car_comments USING btree (flag_count DESC, created_at DESC) WHERE (flag_count > 0)",
+   "name": "idx_car_comments_moderation",
+   "table": "car_comments"
+  },
+  {
+   "def": "public.car_comments USING btree (car_id, created_at DESC) WHERE ((deleted_at IS NULL) AND (is_hidden = false))",
+   "name": "idx_car_comments_thread",
+   "table": "car_comments"
+  },
+  {
+   "def": "public.car_comments USING btree (user_id, created_at DESC)",
+   "name": "idx_car_comments_user_recent",
+   "table": "car_comments"
+  },
+  {
+   "def": "public.cars USING btree (id)",
+   "name": "cars_pkey",
+   "table": "cars"
+  },
+  {
+   "def": "public.cars USING btree (vin)",
+   "name": "cars_vin_key",
+   "table": "cars"
+  },
+  {
+   "def": "public.cars USING btree (make, model, \"trim\", fuel_type, cylinders, drivetrain, body_style) WHERE (COALESCE(listing_active, 1) = 1)",
+   "name": "idx_cars_active_facet_combo",
+   "table": "cars"
+  },
+  {
+   "def": "public.cars USING btree (make) WHERE ((COALESCE(listing_active, 1) = 1) AND (make IS NOT NULL))",
+   "name": "idx_cars_active_make",
+   "table": "cars"
+  },
+  {
+   "def": "public.cars USING btree (make, model) WHERE ((COALESCE(listing_active, 1) = 1) AND (packages IS NOT NULL) AND (packages <> ALL (ARRAY['{}'::text, '[]'::text, 'null'::text, ''::text])))",
+   "name": "idx_cars_active_packages",
+   "table": "cars"
+  },
+  {
+   "def": "public.cars USING btree (price) WHERE (COALESCE(listing_active, 1) = 1)",
+   "name": "idx_cars_active_price",
+   "table": "cars"
+  },
+  {
+   "def": "public.cars USING btree (dealership_registry_id) WHERE ((COALESCE(listing_active, 1) = 1) AND (dealership_registry_id IS NOT NULL))",
+   "name": "idx_cars_active_registry",
+   "table": "cars"
+  },
+  {
+   "def": "public.cars USING btree (zip_code) WHERE ((COALESCE(listing_active, 1) = 1) AND (zip_code IS NOT NULL))",
+   "name": "idx_cars_active_zip",
+   "table": "cars"
+  },
+  {
+   "def": "public.cars USING btree (dealer_id, listing_active)",
+   "name": "idx_cars_dealer_listing",
+   "table": "cars"
+  },
+  {
+   "def": "public.comment_attachments USING btree (id)",
+   "name": "comment_attachments_pkey",
+   "table": "comment_attachments"
+  },
+  {
+   "def": "public.comment_attachments USING btree (storage_key)",
+   "name": "comment_attachments_storage_key_key",
+   "table": "comment_attachments"
+  },
+  {
+   "def": "public.comment_attachments USING btree (scope, comment_id, sort_order) WHERE (deleted_at IS NULL)",
+   "name": "idx_comment_attachments_comment",
+   "table": "comment_attachments"
+  },
+  {
+   "def": "public.comment_attachments USING btree (user_id, created_at DESC)",
+   "name": "idx_comment_attachments_user",
+   "table": "comment_attachments"
+  },
+  {
+   "def": "public.comment_flags USING btree (scope, comment_id, ip_hash)",
+   "name": "comment_flags_scope_comment_id_ip_hash_key",
+   "table": "comment_flags"
+  },
+  {
+   "def": "public.comment_flags USING btree (scope, comment_id)",
+   "name": "idx_comment_flags_comment",
+   "table": "comment_flags"
+  },
+  {
+   "def": "public.dealer_comments USING btree (id)",
+   "name": "dealer_comments_pkey",
+   "table": "dealer_comments"
+  },
+  {
+   "def": "public.dealer_comments USING btree (flag_count DESC, created_at DESC) WHERE (flag_count > 0)",
+   "name": "idx_dealer_comments_moderation",
+   "table": "dealer_comments"
+  },
+  {
+   "def": "public.dealer_comments USING btree (dealership_id, created_at DESC) WHERE ((deleted_at IS NULL) AND (is_hidden = false))",
+   "name": "idx_dealer_comments_thread",
+   "table": "dealer_comments"
+  },
+  {
+   "def": "public.dealer_comments USING btree (user_id, created_at DESC)",
+   "name": "idx_dealer_comments_user_recent",
+   "table": "dealer_comments"
+  },
+  {
+   "def": "public.dealer_geopoints USING btree (dealer_url)",
+   "name": "dealer_geopoints_pkey",
+   "table": "dealer_geopoints"
+  },
+  {
+   "def": "public.dealer_geopoints USING btree (dealer_url)",
+   "name": "idx_dgp_dealer_url",
+   "table": "dealer_geopoints"
+  },
+  {
+   "def": "public.dealer_ratings USING btree (dealership_id)",
+   "name": "dealer_ratings_pkey",
+   "table": "dealer_ratings"
+  },
+  {
+   "def": "public.dealer_ratings USING btree (fetched_at)",
+   "name": "idx_dealer_ratings_fetched",
+   "table": "dealer_ratings"
+  },
+  {
+   "def": "public.dealer_ratings USING btree (google_place_id)",
+   "name": "idx_dealer_ratings_place",
+   "table": "dealer_ratings"
+  },
+  {
+   "def": "public.dealer_scan_profile USING btree (dealer_id)",
+   "name": "dealer_scan_profile_pkey",
+   "table": "dealer_scan_profile"
+  },
+  {
+   "def": "public.dealer_vehicles USING btree (id)",
+   "name": "dealer_vehicles_pkey",
+   "table": "dealer_vehicles"
+  },
+  {
+   "def": "public.dealer_vehicles USING btree (user_id, vin)",
+   "name": "dealer_vehicles_user_id_vin_key",
+   "table": "dealer_vehicles"
+  },
+  {
+   "def": "public.dealer_vehicles USING btree (user_id)",
+   "name": "idx_dealer_vehicles_user",
+   "table": "dealer_vehicles"
+  },
+  {
+   "def": "public.dealer_vehicles USING btree (vin)",
+   "name": "idx_dealer_vehicles_vin",
+   "table": "dealer_vehicles"
+  },
+  {
+   "def": "public.dealerships USING btree (id)",
+   "name": "dealerships_pkey",
+   "table": "dealerships"
+  },
+  {
+   "def": "public.dealerships USING btree (created_at DESC)",
+   "name": "idx_dealerships_created",
+   "table": "dealerships"
+  },
+  {
+   "def": "public.dealerships USING btree (google_place_id)",
+   "name": "idx_dealerships_google_place",
+   "table": "dealerships"
+  },
+  {
+   "def": "public.dealerships USING btree (zip_code)",
+   "name": "idx_dealerships_zip",
+   "table": "dealerships"
+  },
+  {
+   "def": "public.dictionary_options USING btree (id)",
+   "name": "dictionary_options_pkey",
+   "table": "dictionary_options"
+  },
+  {
+   "def": "public.dictionary_options USING btree (year, make, model)",
+   "name": "idx_dict_options_lookup",
+   "table": "dictionary_options"
+  },
+  {
+   "def": "public.dictionary_options USING btree (year, make, model, \"trim\")",
+   "name": "idx_dict_options_trim",
+   "table": "dictionary_options"
+  },
+  {
+   "def": "public.epa_extended_specs USING btree (epa_master_id)",
+   "name": "epa_extended_specs_pkey",
+   "table": "epa_extended_specs"
+  },
+  {
+   "def": "public.epa_extended_specs USING btree (year, make, model)",
+   "name": "idx_epa_extended_specs_ymm",
+   "table": "epa_extended_specs"
+  },
+  {
+   "def": "public.epa_master USING btree (id)",
+   "name": "epa_master_pkey",
+   "table": "epa_master"
+  },
+  {
+   "def": "public.epa_master USING btree (year, make, model)",
+   "name": "idx_epa_master_lookup",
+   "table": "epa_master"
+  },
+  {
+   "def": "public.epa_master USING btree (year, make, model, \"trim\")",
+   "name": "idx_epa_master_trim",
+   "table": "epa_master"
+  },
+  {
+   "def": "public.incomplete_listings USING btree (updated_at DESC)",
+   "name": "idx_incomplete_listings_updated",
+   "table": "incomplete_listings"
+  },
+  {
+   "def": "public.incomplete_listings USING btree (car_id)",
+   "name": "incomplete_listings_pkey",
+   "table": "incomplete_listings"
+  },
+  {
+   "def": "public.incomplete_listings_meta USING btree (k)",
+   "name": "incomplete_listings_meta_pkey",
+   "table": "incomplete_listings_meta"
+  },
+  {
+   "def": "public.listings_grid_cards USING btree (car_id)",
+   "name": "listings_grid_cards_pkey",
+   "table": "listings_grid_cards"
+  },
+  {
+   "def": "public.model_specs USING btree (make, model)",
+   "name": "model_specs_pkey",
+   "table": "model_specs"
+  },
+  {
+   "def": "public.nhtsa_vpic_cache USING btree (vin)",
+   "name": "nhtsa_vpic_cache_pkey",
+   "table": "nhtsa_vpic_cache"
+  },
+  {
+   "def": "public.package_observations USING btree (year, make, model, \"trim\")",
+   "name": "idx_package_obs_ymm",
+   "table": "package_observations"
+  },
+  {
+   "def": "public.package_observations USING btree (id)",
+   "name": "package_observations_pkey",
+   "table": "package_observations"
+  },
+  {
+   "def": "public.package_observations USING btree (vin, kind, name_norm, source)",
+   "name": "package_observations_vin_kind_name_norm_source_key",
+   "table": "package_observations"
+  },
+  {
+   "def": "public.package_values USING btree (year, make, model, \"trim\")",
+   "name": "idx_package_values_ymm",
+   "table": "package_values"
+  },
+  {
+   "def": "public.package_values USING btree (id)",
+   "name": "package_values_pkey",
+   "table": "package_values"
+  },
+  {
+   "def": "public.package_values USING btree (year, make, model, \"trim\", kind, match_key)",
+   "name": "package_values_year_make_model_trim_kind_match_key_key",
+   "table": "package_values"
+  },
+  {
+   "def": "public.saved_cars USING btree (id)",
+   "name": "saved_cars_pkey",
+   "table": "saved_cars"
+  },
+  {
+   "def": "public.saved_cars USING btree (user_id, car_id)",
+   "name": "saved_cars_user_id_car_id_key",
+   "table": "saved_cars"
+  },
+  {
+   "def": "public.saved_searches USING btree (user_id, created_at)",
+   "name": "idx_saved_searches_user",
+   "table": "saved_searches"
+  },
+  {
+   "def": "public.saved_searches USING btree (id)",
+   "name": "saved_searches_pkey",
+   "table": "saved_searches"
+  },
+  {
+   "def": "public.scan_runs USING btree (dealer_id, finished_at DESC)",
+   "name": "idx_scan_runs_dealer_time",
+   "table": "scan_runs"
+  },
+  {
+   "def": "public.scan_runs USING btree (id)",
+   "name": "scan_runs_pkey",
+   "table": "scan_runs"
+  },
+  {
+   "def": "public.user_hidden_dealers USING btree (user_id, created_at)",
+   "name": "idx_user_hidden_dealers_user",
+   "table": "user_hidden_dealers"
+  },
+  {
+   "def": "public.user_hidden_dealers USING btree (id)",
+   "name": "user_hidden_dealers_pkey",
+   "table": "user_hidden_dealers"
+  },
+  {
+   "def": "public.user_hidden_dealers USING btree (user_id, dealer_id)",
+   "name": "user_hidden_dealers_user_id_dealer_id_key",
+   "table": "user_hidden_dealers"
+  },
+  {
+   "def": "public.user_search_history USING btree (user_id, created_at DESC, id DESC)",
+   "name": "idx_user_search_history_user",
+   "table": "user_search_history"
+  },
+  {
+   "def": "public.user_search_history USING btree (id)",
+   "name": "user_search_history_pkey",
+   "table": "user_search_history"
+  }
+ ],
+ "tables": {
+  "car_comments": {
+   "body": {
+    "default": "",
+    "nullable": false,
+    "type": "text"
+   },
+   "car_id": {
+    "default": "",
+    "nullable": false,
+    "type": "bigint"
+   },
+   "created_at": {
+    "default": "now()",
+    "nullable": false,
+    "type": "timestamp with time zone"
+   },
+   "deleted_at": {
+    "default": "",
+    "nullable": true,
+    "type": "timestamp with time zone"
+   },
+   "flag_count": {
+    "default": "0",
+    "nullable": false,
+    "type": "integer"
+   },
+   "id": {
+    "default": "nextval('car_comments_id_seq'::regclass)",
+    "nullable": false,
+    "type": "bigint"
+   },
+   "ip_hash": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "is_hidden": {
+    "default": "false",
+    "nullable": false,
+    "type": "boolean"
+   },
+   "updated_at": {
+    "default": "now()",
+    "nullable": false,
+    "type": "timestamp with time zone"
+   },
+   "user_id": {
+    "default": "",
+    "nullable": false,
+    "type": "bigint"
+   }
+  },
+  "cars": {
+   "body_style": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "carfax_url": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "condition": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "cylinders": {
+    "default": "",
+    "nullable": true,
+    "type": "integer"
+   },
+   "data_quality_score": {
+    "default": "",
+    "nullable": true,
+    "type": "double precision"
+   },
+   "dealer_id": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "dealer_name": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "dealer_url": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "dealership_registry_id": {
+    "default": "",
+    "nullable": true,
+    "type": "integer"
+   },
+   "description": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "drivetrain": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "engine_description": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "engine_l": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "epa_master_id": {
+    "default": "",
+    "nullable": true,
+    "type": "bigint"
+   },
+   "epa_match_confidence": {
+    "default": "",
+    "nullable": true,
+    "type": "double precision"
+   },
+   "epa_match_method": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "exterior_color": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "first_seen_at": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "forced_induction": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "fuel_type": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "gallery": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "history_highlights": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "id": {
+    "default": "nextval('cars_id_seq'::regclass)",
+    "nullable": false,
+    "type": "bigint"
+   },
+   "image_url": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "interior_color": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "interior_color_buckets": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "interior_pano": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "internal_notes": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "is_cpo": {
+    "default": "",
+    "nullable": true,
+    "type": "integer"
+   },
+   "last_price_change_at": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "listing_active": {
+    "default": "1",
+    "nullable": true,
+    "type": "integer"
+   },
+   "listing_removed_at": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "make": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "marked_for_review": {
+    "default": "",
+    "nullable": true,
+    "type": "integer"
+   },
+   "mileage": {
+    "default": "",
+    "nullable": true,
+    "type": "integer"
+   },
+   "missing_field_count": {
+    "default": "",
+    "nullable": true,
+    "type": "integer"
+   },
+   "model": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "model_full_raw": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "mpg_city": {
+    "default": "",
+    "nullable": true,
+    "type": "integer"
+   },
+   "mpg_highway": {
+    "default": "",
+    "nullable": true,
+    "type": "integer"
+   },
+   "msrp": {
+    "default": "",
+    "nullable": true,
+    "type": "double precision"
+   },
+   "packages": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "price": {
+    "default": "",
+    "nullable": true,
+    "type": "double precision"
+   },
+   "price_provenance_json": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "recoverability_score": {
+    "default": "",
+    "nullable": true,
+    "type": "double precision"
+   },
+   "recovery_attempted_at": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "recovery_notes": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "recovery_source": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "recovery_status": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "scraped_at": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "source_url": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "spec_source_json": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "spin_frames": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "stock_number": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "title": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "transmission": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "transmission_type": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "trim": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "vin": {
+    "default": "",
+    "nullable": false,
+    "type": "text"
+   },
+   "window_sticker_url": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "year": {
+    "default": "",
+    "nullable": true,
+    "type": "integer"
+   },
+   "zip_code": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   }
+  },
+  "comment_attachments": {
+   "byte_size": {
+    "default": "",
+    "nullable": false,
+    "type": "integer"
+   },
+   "comment_id": {
+    "default": "",
+    "nullable": false,
+    "type": "bigint"
+   },
+   "created_at": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "deleted_at": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "height": {
+    "default": "",
+    "nullable": false,
+    "type": "integer"
+   },
+   "id": {
+    "default": "nextval('comment_attachments_id_seq'::regclass)",
+    "nullable": false,
+    "type": "bigint"
+   },
+   "mime_type": {
+    "default": "",
+    "nullable": false,
+    "type": "text"
+   },
+   "scope": {
+    "default": "",
+    "nullable": false,
+    "type": "text"
+   },
+   "sort_order": {
+    "default": "0",
+    "nullable": false,
+    "type": "integer"
+   },
+   "storage_key": {
+    "default": "",
+    "nullable": false,
+    "type": "text"
+   },
+   "user_id": {
+    "default": "",
+    "nullable": false,
+    "type": "bigint"
+   },
+   "width": {
+    "default": "",
+    "nullable": false,
+    "type": "integer"
+   }
+  },
+  "comment_flags": {
+   "comment_id": {
+    "default": "",
+    "nullable": false,
+    "type": "bigint"
+   },
+   "created_at": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "ip_hash": {
+    "default": "",
+    "nullable": false,
+    "type": "text"
+   },
+   "scope": {
+    "default": "",
+    "nullable": false,
+    "type": "text"
+   }
+  },
+  "dealer_comments": {
+   "body": {
+    "default": "",
+    "nullable": false,
+    "type": "text"
+   },
+   "created_at": {
+    "default": "now()",
+    "nullable": false,
+    "type": "timestamp with time zone"
+   },
+   "dealership_id": {
+    "default": "",
+    "nullable": false,
+    "type": "bigint"
+   },
+   "deleted_at": {
+    "default": "",
+    "nullable": true,
+    "type": "timestamp with time zone"
+   },
+   "flag_count": {
+    "default": "0",
+    "nullable": false,
+    "type": "integer"
+   },
+   "id": {
+    "default": "nextval('dealer_comments_id_seq'::regclass)",
+    "nullable": false,
+    "type": "bigint"
+   },
+   "ip_hash": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "is_hidden": {
+    "default": "false",
+    "nullable": false,
+    "type": "boolean"
+   },
+   "updated_at": {
+    "default": "now()",
+    "nullable": false,
+    "type": "timestamp with time zone"
+   },
+   "user_id": {
+    "default": "",
+    "nullable": false,
+    "type": "bigint"
+   }
+  },
+  "dealer_geopoints": {
+   "city": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "dealer_name": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "dealer_url": {
+    "default": "",
+    "nullable": false,
+    "type": "text"
+   },
+   "geocode_source": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "geocoded_at": {
+    "default": "(CURRENT_TIMESTAMP)::text",
+    "nullable": true,
+    "type": "text"
+   },
+   "lat": {
+    "default": "",
+    "nullable": true,
+    "type": "double precision"
+   },
+   "lon": {
+    "default": "",
+    "nullable": true,
+    "type": "double precision"
+   },
+   "state": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "zip_code": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   }
+  },
+  "dealer_ratings": {
+   "dealership_id": {
+    "default": "",
+    "nullable": false,
+    "type": "bigint"
+   },
+   "fetched_at": {
+    "default": "now()",
+    "nullable": false,
+    "type": "timestamp with time zone"
+   },
+   "google_place_id": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "google_rating": {
+    "default": "",
+    "nullable": true,
+    "type": "numeric"
+   },
+   "google_review_count": {
+    "default": "",
+    "nullable": true,
+    "type": "integer"
+   },
+   "source": {
+    "default": "'google_places'::text",
+    "nullable": false,
+    "type": "text"
+   }
+  },
+  "dealer_scan_profile": {
+   "dealer_id": {
+    "default": "",
+    "nullable": false,
+    "type": "text"
+   },
+   "last_winning_strategy": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "platform_hints_json": {
+    "default": "'[]'::text",
+    "nullable": false,
+    "type": "text"
+   },
+   "updated_at": {
+    "default": "",
+    "nullable": false,
+    "type": "text"
+   }
+  },
+  "dealer_vehicles": {
+   "body_style": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "created_at": {
+    "default": "",
+    "nullable": false,
+    "type": "text"
+   },
+   "cylinders": {
+    "default": "",
+    "nullable": true,
+    "type": "integer"
+   },
+   "drivetrain": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "engine_description": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "exterior_color": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "fuel_type": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "gallery_json": {
+    "default": "'[]'::text",
+    "nullable": false,
+    "type": "text"
+   },
+   "id": {
+    "default": "nextval('dealer_vehicles_id_seq'::regclass)",
+    "nullable": false,
+    "type": "bigint"
+   },
+   "interior_color": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "make": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "mileage": {
+    "default": "",
+    "nullable": true,
+    "type": "integer"
+   },
+   "model": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "notes": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "price": {
+    "default": "",
+    "nullable": true,
+    "type": "double precision"
+   },
+   "stock_number": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "title": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "transmission": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "trim": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "updated_at": {
+    "default": "",
+    "nullable": false,
+    "type": "text"
+   },
+   "user_id": {
+    "default": "",
+    "nullable": false,
+    "type": "bigint"
+   },
+   "vin": {
+    "default": "",
+    "nullable": false,
+    "type": "text"
+   },
+   "year": {
+    "default": "",
+    "nullable": true,
+    "type": "integer"
+   }
+  },
+  "dealerships": {
+   "business_status": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "city": {
+    "default": "",
+    "nullable": false,
+    "type": "text"
+   },
+   "created_at": {
+    "default": "(CURRENT_TIMESTAMP)::text",
+    "nullable": false,
+    "type": "text"
+   },
+   "dealer_website_url": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "duplicate_of_id": {
+    "default": "",
+    "nullable": true,
+    "type": "bigint"
+   },
+   "duplicate_score": {
+    "default": "",
+    "nullable": true,
+    "type": "double precision"
+   },
+   "google_place_id": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "google_primary_type": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "google_rating": {
+    "default": "",
+    "nullable": true,
+    "type": "double precision"
+   },
+   "google_rating_fetched_at": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "google_review_count": {
+    "default": "",
+    "nullable": true,
+    "type": "integer"
+   },
+   "id": {
+    "default": "nextval('dealerships_id_seq'::regclass)",
+    "nullable": false,
+    "type": "bigint"
+   },
+   "is_active": {
+    "default": "1",
+    "nullable": false,
+    "type": "integer"
+   },
+   "latitude": {
+    "default": "",
+    "nullable": true,
+    "type": "double precision"
+   },
+   "longitude": {
+    "default": "",
+    "nullable": true,
+    "type": "double precision"
+   },
+   "name": {
+    "default": "",
+    "nullable": false,
+    "type": "text"
+   },
+   "oem_brand": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "osm_id": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "phone": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "platform": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "source_dmv": {
+    "default": "0",
+    "nullable": false,
+    "type": "integer"
+   },
+   "source_osm": {
+    "default": "0",
+    "nullable": false,
+    "type": "integer"
+   },
+   "source_web": {
+    "default": "0",
+    "nullable": false,
+    "type": "integer"
+   },
+   "state": {
+    "default": "",
+    "nullable": false,
+    "type": "text"
+   },
+   "sticker_ipacket_fail_count": {
+    "default": "0",
+    "nullable": false,
+    "type": "integer"
+   },
+   "sticker_provider": {
+    "default": "'unknown'::text",
+    "nullable": false,
+    "type": "text"
+   },
+   "sticker_provider_updated_at": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "strategy": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "street_address": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "street_address_source": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "street_address_verified_at": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "website_url": {
+    "default": "",
+    "nullable": false,
+    "type": "text"
+   },
+   "zip_code": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   }
+  },
+  "dictionary_options": {
+   "body_style": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "cylinders": {
+    "default": "",
+    "nullable": true,
+    "type": "integer"
+   },
+   "displacement": {
+    "default": "",
+    "nullable": true,
+    "type": "double precision"
+   },
+   "drivetrain": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "engine_display": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "engine_options": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "exterior_colors": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "forced_induction": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "fuel_type": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "id": {
+    "default": "nextval('dictionary_options_id_seq'::regclass)",
+    "nullable": false,
+    "type": "bigint"
+   },
+   "make": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "model": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "mpg_city": {
+    "default": "",
+    "nullable": true,
+    "type": "double precision"
+   },
+   "mpg_combined": {
+    "default": "",
+    "nullable": true,
+    "type": "double precision"
+   },
+   "mpg_highway": {
+    "default": "",
+    "nullable": true,
+    "type": "double precision"
+   },
+   "option_details": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "options": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "package_details": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "packages": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "transmission": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "trim": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "year": {
+    "default": "",
+    "nullable": true,
+    "type": "integer"
+   }
+  },
+  "epa_extended_specs": {
+   "battery_kwh": {
+    "default": "",
+    "nullable": true,
+    "type": "double precision"
+   },
+   "body_style_detail": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "curb_weight_kg": {
+    "default": "",
+    "nullable": true,
+    "type": "integer"
+   },
+   "curb_weight_lb": {
+    "default": "",
+    "nullable": true,
+    "type": "integer"
+   },
+   "epa_master_id": {
+    "default": "",
+    "nullable": false,
+    "type": "bigint"
+   },
+   "ev_range_miles": {
+    "default": "",
+    "nullable": true,
+    "type": "integer"
+   },
+   "fuel_tank_gal": {
+    "default": "",
+    "nullable": true,
+    "type": "double precision"
+   },
+   "horsepower": {
+    "default": "",
+    "nullable": true,
+    "type": "integer"
+   },
+   "last_error": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "make": {
+    "default": "",
+    "nullable": false,
+    "type": "text"
+   },
+   "model": {
+    "default": "",
+    "nullable": false,
+    "type": "text"
+   },
+   "scrape_status": {
+    "default": "'pending'::text",
+    "nullable": false,
+    "type": "text"
+   },
+   "scraped_at": {
+    "default": "",
+    "nullable": true,
+    "type": "timestamp with time zone"
+   },
+   "source_host": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "source_url": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "specs_json": {
+    "default": "'{}'::jsonb",
+    "nullable": false,
+    "type": "jsonb"
+   },
+   "torque_lb_ft": {
+    "default": "",
+    "nullable": true,
+    "type": "integer"
+   },
+   "torque_nm": {
+    "default": "",
+    "nullable": true,
+    "type": "integer"
+   },
+   "tow_capacity_lb": {
+    "default": "",
+    "nullable": true,
+    "type": "integer"
+   },
+   "trim": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "year": {
+    "default": "",
+    "nullable": false,
+    "type": "integer"
+   },
+   "zero_to_60_sec": {
+    "default": "",
+    "nullable": true,
+    "type": "double precision"
+   }
+  },
+  "epa_master": {
+   "atv_type": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "body_style": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "city08": {
+    "default": "",
+    "nullable": true,
+    "type": "double precision"
+   },
+   "city_e": {
+    "default": "",
+    "nullable": true,
+    "type": "double precision"
+   },
+   "cylinders": {
+    "default": "",
+    "nullable": true,
+    "type": "integer"
+   },
+   "displacement": {
+    "default": "",
+    "nullable": true,
+    "type": "double precision"
+   },
+   "drive": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "engine_description": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "engine_display": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "epa_vehicle_id": {
+    "default": "",
+    "nullable": true,
+    "type": "integer"
+   },
+   "forced_induction": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "fuel_type": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "highway08": {
+    "default": "",
+    "nullable": true,
+    "type": "double precision"
+   },
+   "highway_e": {
+    "default": "",
+    "nullable": true,
+    "type": "double precision"
+   },
+   "id": {
+    "default": "nextval('epa_master_id_seq'::regclass)",
+    "nullable": false,
+    "type": "bigint"
+   },
+   "make": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "model": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "trany": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "trim": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "year": {
+    "default": "",
+    "nullable": true,
+    "type": "integer"
+   }
+  },
+  "incomplete_listings": {
+   "car_id": {
+    "default": "",
+    "nullable": false,
+    "type": "bigint"
+   },
+   "missing_fields_json": {
+    "default": "",
+    "nullable": false,
+    "type": "text"
+   },
+   "updated_at": {
+    "default": "",
+    "nullable": false,
+    "type": "text"
+   },
+   "vin": {
+    "default": "",
+    "nullable": false,
+    "type": "text"
+   }
+  },
+  "incomplete_listings_meta": {
+   "k": {
+    "default": "",
+    "nullable": false,
+    "type": "text"
+   },
+   "v": {
+    "default": "",
+    "nullable": false,
+    "type": "text"
+   }
+  },
+  "listings_grid_cards": {
+   "aux_key": {
+    "default": "",
+    "nullable": false,
+    "type": "text"
+   },
+   "built_day": {
+    "default": "",
+    "nullable": false,
+    "type": "integer"
+   },
+   "car_id": {
+    "default": "",
+    "nullable": false,
+    "type": "bigint"
+   },
+   "card_json": {
+    "default": "",
+    "nullable": false,
+    "type": "text"
+   },
+   "content_key": {
+    "default": "",
+    "nullable": false,
+    "type": "text"
+   },
+   "day_dep": {
+    "default": "0",
+    "nullable": false,
+    "type": "integer"
+   },
+   "row_ver": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "sort_bucket": {
+    "default": "0",
+    "nullable": false,
+    "type": "integer"
+   },
+   "sort_price": {
+    "default": "",
+    "nullable": true,
+    "type": "double precision"
+   }
+  },
+  "model_specs": {
+   "body_style": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "cylinders": {
+    "default": "",
+    "nullable": true,
+    "type": "integer"
+   },
+   "drivetrain": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "fuel_type": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "gears": {
+    "default": "",
+    "nullable": true,
+    "type": "integer"
+   },
+   "make": {
+    "default": "",
+    "nullable": false,
+    "type": "text"
+   },
+   "model": {
+    "default": "",
+    "nullable": false,
+    "type": "text"
+   },
+   "transmission": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   }
+  },
+  "nhtsa_vpic_cache": {
+   "fetched_at": {
+    "default": "(CURRENT_TIMESTAMP)::text",
+    "nullable": false,
+    "type": "text"
+   },
+   "response_json": {
+    "default": "",
+    "nullable": false,
+    "type": "text"
+   },
+   "vin": {
+    "default": "",
+    "nullable": false,
+    "type": "text"
+   }
+  },
+  "package_observations": {
+   "category": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "code": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "id": {
+    "default": "nextval('package_observations_id_seq'::regclass)",
+    "nullable": false,
+    "type": "bigint"
+   },
+   "kind": {
+    "default": "",
+    "nullable": false,
+    "type": "text"
+   },
+   "make": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "model": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "name_norm": {
+    "default": "",
+    "nullable": false,
+    "type": "text"
+   },
+   "price": {
+    "default": "",
+    "nullable": true,
+    "type": "double precision"
+   },
+   "raw_name": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "seen_at": {
+    "default": "",
+    "nullable": false,
+    "type": "text"
+   },
+   "source": {
+    "default": "",
+    "nullable": false,
+    "type": "text"
+   },
+   "trim": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "vin": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "year": {
+    "default": "",
+    "nullable": true,
+    "type": "integer"
+   }
+  },
+  "package_values": {
+   "category": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "code": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "confidence": {
+    "default": "0",
+    "nullable": false,
+    "type": "double precision"
+   },
+   "first_seen_at": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "id": {
+    "default": "nextval('package_values_id_seq'::regclass)",
+    "nullable": false,
+    "type": "bigint"
+   },
+   "kind": {
+    "default": "",
+    "nullable": false,
+    "type": "text"
+   },
+   "last_seen_at": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "make": {
+    "default": "",
+    "nullable": false,
+    "type": "text"
+   },
+   "match_key": {
+    "default": "",
+    "nullable": false,
+    "type": "text"
+   },
+   "model": {
+    "default": "",
+    "nullable": false,
+    "type": "text"
+   },
+   "msrp": {
+    "default": "",
+    "nullable": true,
+    "type": "double precision"
+   },
+   "msrp_authority": {
+    "default": "0",
+    "nullable": false,
+    "type": "integer"
+   },
+   "msrp_source": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "name_display": {
+    "default": "",
+    "nullable": false,
+    "type": "text"
+   },
+   "name_norm": {
+    "default": "",
+    "nullable": false,
+    "type": "text"
+   },
+   "observation_count": {
+    "default": "0",
+    "nullable": false,
+    "type": "integer"
+   },
+   "sticker_count": {
+    "default": "0",
+    "nullable": false,
+    "type": "integer"
+   },
+   "trim": {
+    "default": "''::text",
+    "nullable": false,
+    "type": "text"
+   },
+   "year": {
+    "default": "",
+    "nullable": true,
+    "type": "integer"
+   }
+  },
+  "saved_cars": {
+   "car_id": {
+    "default": "",
+    "nullable": false,
+    "type": "bigint"
+   },
+   "id": {
+    "default": "nextval('saved_cars_id_seq'::regclass)",
+    "nullable": false,
+    "type": "bigint"
+   },
+   "saved_at": {
+    "default": "(CURRENT_TIMESTAMP)::text",
+    "nullable": true,
+    "type": "text"
+   },
+   "user_id": {
+    "default": "",
+    "nullable": false,
+    "type": "bigint"
+   }
+  },
+  "saved_searches": {
+   "created_at": {
+    "default": "(CURRENT_TIMESTAMP)::text",
+    "nullable": true,
+    "type": "text"
+   },
+   "filters_json": {
+    "default": "",
+    "nullable": false,
+    "type": "text"
+   },
+   "id": {
+    "default": "nextval('saved_searches_id_seq'::regclass)",
+    "nullable": false,
+    "type": "bigint"
+   },
+   "last_notified_at": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "user_id": {
+    "default": "",
+    "nullable": false,
+    "type": "bigint"
+   }
+  },
+  "scan_runs": {
+   "dealer_id": {
+    "default": "",
+    "nullable": false,
+    "type": "text"
+   },
+   "dealer_name": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "deduped_rows": {
+    "default": "",
+    "nullable": true,
+    "type": "integer"
+   },
+   "duration_seconds": {
+    "default": "",
+    "nullable": true,
+    "type": "double precision"
+   },
+   "error": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "finished_at": {
+    "default": "",
+    "nullable": false,
+    "type": "text"
+   },
+   "id": {
+    "default": "nextval('scan_runs_id_seq'::regclass)",
+    "nullable": false,
+    "type": "bigint"
+   },
+   "inventory_rows": {
+    "default": "",
+    "nullable": true,
+    "type": "integer"
+   },
+   "provider": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "summary_json": {
+    "default": "'{}'::text",
+    "nullable": false,
+    "type": "text"
+   },
+   "upserted": {
+    "default": "",
+    "nullable": true,
+    "type": "integer"
+   },
+   "vdps_visited": {
+    "default": "",
+    "nullable": true,
+    "type": "integer"
+   },
+   "vehicles_vdp_enriched": {
+    "default": "",
+    "nullable": true,
+    "type": "integer"
+   }
+  },
+  "user_hidden_dealers": {
+   "created_at": {
+    "default": "(CURRENT_TIMESTAMP)::text",
+    "nullable": true,
+    "type": "text"
+   },
+   "dealer_id": {
+    "default": "",
+    "nullable": false,
+    "type": "text"
+   },
+   "dealer_name": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "id": {
+    "default": "nextval('user_hidden_dealers_id_seq'::regclass)",
+    "nullable": false,
+    "type": "bigint"
+   },
+   "user_id": {
+    "default": "",
+    "nullable": false,
+    "type": "bigint"
+   }
+  },
+  "user_search_history": {
+   "created_at": {
+    "default": "(CURRENT_TIMESTAMP)::text",
+    "nullable": true,
+    "type": "text"
+   },
+   "filters_json": {
+    "default": "",
+    "nullable": false,
+    "type": "text"
+   },
+   "id": {
+    "default": "nextval('user_search_history_id_seq'::regclass)",
+    "nullable": false,
+    "type": "bigint"
+   },
+   "query_text": {
+    "default": "",
+    "nullable": true,
+    "type": "text"
+   },
+   "result_count": {
+    "default": "",
+    "nullable": true,
+    "type": "integer"
+   },
+   "user_id": {
+    "default": "",
+    "nullable": false,
+    "type": "bigint"
+   }
+  }
+ }
+}

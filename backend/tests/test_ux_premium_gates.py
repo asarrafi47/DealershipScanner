@@ -5,7 +5,7 @@ Three defects pinned here:
 1. A signed-in user whose paid access comes from an active org subscription (or
    an admin role) must not be shown "View plans and upgrade" on /account/billing
    -- ``is_premium`` there is only the DB column, paid access is
-   ``_session_has_paid_access()``.
+   ``backend.billing.access`` (sees_paid_ui), read from the DB rows.
 2. The premium upsell (home panel, dashboard quick action, sidebar link) must
    render for a free user while billing is ON, and none of it may render when
    ``BILLING_STRIPE_ENABLED`` is off -- with billing off every logged-in user
@@ -69,6 +69,23 @@ _ORG_PREMIUM_SESSION = {
 }
 
 
+def _patch_org_premium_user(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Paid access is read from the DB users/org rows (backend.billing.access), not
+    the cookie's org_subscription_status: give user 1 an org with an active sub."""
+    from backend.billing.entitlements import invalidate_org_billing_cache
+
+    invalidate_org_billing_cache()
+    monkeypatch.setattr(
+        "backend.db.users_db.get_user_profile",
+        lambda *_a, **_k: {"id": 1, "username": "ux_probe", "role": "general_user",
+                           "org_id": 5, "is_premium": False, "subscription_plan_id": None},
+    )
+    monkeypatch.setattr(
+        "backend.db.users_db.get_org",
+        lambda *_a, **_k: {"id": 5, "stripe_subscription_status": "active"},
+    )
+
+
 def _patch_billing_snapshot(monkeypatch: pytest.MonkeyPatch, snapshot: dict) -> None:
     monkeypatch.setattr(
         "backend.db.users_db.get_user_billing_snapshot",
@@ -82,6 +99,7 @@ def test_org_premium_user_sees_no_upgrade_prompt_on_billing_page(
     """Defect 1: org-subscription paid access, but the DB is_premium column is False."""
     main = _make_app(app_factory, tmp_path, BILLING_STRIPE_ENABLED="1")
     _patch_billing_snapshot(monkeypatch, {"is_premium": False})
+    _patch_org_premium_user(monkeypatch)
     client = _client_with_session(main, _ORG_PREMIUM_SESSION)
     rv = client.get("/account/billing")
     assert rv.status_code == 200
@@ -122,6 +140,7 @@ def test_premium_user_sees_no_upsell_when_billing_on(
     monkeypatch: pytest.MonkeyPatch, tmp_path, app_factory
 ) -> None:
     main = _make_app(app_factory, tmp_path, BILLING_STRIPE_ENABLED="1")
+    _patch_org_premium_user(monkeypatch)
     client = _client_with_session(main, _ORG_PREMIUM_SESSION)
 
     home = client.get("/home")

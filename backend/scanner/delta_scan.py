@@ -31,8 +31,10 @@ from backend.scanner.rooftop_disown import (
     split_refusals,
 )
 # Same store place as the full scan: registry town + the page-learned street
-# from scan hints (dealer_run.run_dealer and recipes use this one too).
-from backend.scanner.dealer_place import roster_place_with_hints as _roster_place
+# from scan hints. The lookup and the all-rows pass are backend.attribution's,
+# shared with dealer_run.run_dealer and recipes.try_fetch_via_recipes.
+from backend.attribution import DealerCtx, decide, parse_page
+from backend.scanner.dealer_place import roster_place_with_hints as _roster_place  # noqa: F401 - the one place function (DealerCtx.for_store)
 
 logger = logging.getLogger("scanner")
 
@@ -123,7 +125,6 @@ def _active_count(dealer_id: str) -> int:
 
 
 async def delta_scan_dealer(dealer: dict[str, Any]) -> dict[str, Any]:
-    from backend.parsers import parse
     from backend.scanner.inventory_recovery import _dedupe_vin_list, _price_coverage
     from backend.scanner.inventory_reconcile import normalized_vin_set_from_vehicles
     from backend.scanner.recipes import try_fetch_via_recipes
@@ -166,44 +167,28 @@ async def delta_scan_dealer(dealer: dict[str, Any]) -> dict[str, Any]:
         return out
     records, _vin_yield = fetched
 
-    vehicles: list[dict[str, Any]] = []
-    refused: list[dict[str, Any]] = []
-    # The store's postal address, looked up ONCE for both the per-page gate and
-    # the union re-run below. Without it a group feed of unnamed address-block
+    # The store's place, looked up ONCE for both the per-page gate and the
+    # all-rows pass below. Without it a group feed of unnamed address-block
     # rooftops refuses every page, leaving nothing for the union pass to keep
     # and handing every VIN to _disown_foreign_rooftop_vins. The street learned
     # from the dealer page (scan hints) completes a roster that has only the
     # town, exactly as in the full scan.
-    roster_place = await asyncio.to_thread(_roster_place, url, dealer_id)
+    attr_ctx = await asyncio.to_thread(DealerCtx.for_store, dealer_id, name, url)
+    page_kept: list[dict[str, Any]] = []
+    page_refused: list[dict[str, Any]] = []
     for _rec_url, body in records:
-        vehicles.extend(parse(
-            provider, body, base_url=url, dealer_id=dealer_id,
-            dealer_name=name, dealer_url=url, rejected_out=refused,
-            **roster_place,
-        ))
-    # Re-run the gate over the whole replay. It ran per PAGE above, where a page
-    # holding only an unnamed sibling rooftop looks like a single-store payload;
-    # across the union that sibling sits next to this store's own rooftop and is
-    # recognisable as separate.
-    # Rows a store-scoped recipe returned (CarsCommerce facetFilters.source_id,
-    # verified at synthesis) are this store's by construction; re-gating them
-    # kept 5 of Tutton CDJR's 346 cars on 2026-09-26 and handed the rest to
-    # _disown_foreign_rooftop_vins. Gate only the rest, as dealer_run does.
-    from backend.parsers import resolve_rooftop_attribution
-
-    scoped = [v for v in vehicles if v.get("_feed_scoped")]
-    open_rows = [v for v in vehicles if not v.get("_feed_scoped")]
-    if open_rows:
-        open_rows, union_refused = resolve_rooftop_attribution(
-            open_rows, dealer_id=dealer_id, dealer_name=name, dealer_url=url, **roster_place,
-        )
-        refused.extend(union_refused)
-    if scoped:
-        logger.info(
-            "Delta [%s]: %d row(s) from store-scoped recipe(s) kept without the union gate",
-            name, len(scoped),
-        )
-    vehicles = scoped + open_rows
+        page_kept.extend(parse_page(provider, body, attr_ctx, page_refused))
+    # Settle attribution once over the whole replay, as the full scan does: the
+    # per-page pass saw one page at a time, where a page holding only an unnamed
+    # sibling rooftop looks like a single-store payload and a page missing this
+    # store's own rooftop refuses everything. Every row the replay produced —
+    # kept or refused per page — goes into the one all-rows pass; store-scoped
+    # recipe rows (_feed_scoped) are kept without the re-gate (Tutton CDJR kept 5
+    # of 346 cars on 2026-09-26 when they were re-gated, and the rest were handed
+    # to _disown_foreign_rooftop_vins).
+    attribution = decide(page_kept + page_refused, attr_ctx)
+    vehicles = attribution.kept
+    refused = attribution.refused
     for v in vehicles:
         v.setdefault("dealer_name", name)
         v.setdefault("dealer_url", url)

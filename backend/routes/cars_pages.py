@@ -1,8 +1,7 @@
 """Car detail (VDP), compare page, window sticker, and AI chat routes.
 
 This is the most monkeypatched cluster in the test suite: ``get_car_by_id``,
-``prepare_car_detail_context``, ``_session_has_paid_access``,
-``_viewer_sees_premium_features``, ``listings_geo_kwargs_from_session``,
+``prepare_car_detail_context``, ``listings_geo_kwargs_from_session``,
 ``run_car_page_chat`` and friends are all patched on ``backend.main``.  Every
 main-owned helper is therefore resolved through the module object at request
 time (see ``backend.routes._shared``).  ``backend.main`` re-exports
@@ -22,10 +21,12 @@ from werkzeug.exceptions import HTTPException
 from backend.billing.catalog import (
     FEATURE_AI_CAR_CHAT,
     FEATURE_AI_COMPARE_CHAT,
+    FEATURE_MARKET_INTEL,
     FEATURE_PACKAGES_ENSURE,
     FEATURE_VEHICLE_HISTORY,
     FEATURE_WINDOW_STICKER,
 )
+from backend.billing import access as paid_access
 from backend.routes._shared import _client_ip, main_module
 from backend.utils.car_chat_policy import (
     car_chat_listing_daily_limit,
@@ -364,7 +365,7 @@ def _serve_car_window_sticker_preview(car_id: int):
     car = main.get_car_by_id(car_id, include_inactive=False)
     if not car:
         abort(404)
-    ok, _err = main._require_feature(FEATURE_WINDOW_STICKER)
+    ok, _err = paid_access.check_feature(FEATURE_WINDOW_STICKER)
     if not ok:
         abort(403)
     from backend.enrichment.window_sticker_service import (
@@ -419,10 +420,7 @@ def compare_page():
     ctx = build_compare_context(raw_cars)
     show_compare_chat = bool(
         ctx["cars"]
-        and (
-            main._session_has_paid_access()
-            or (session.get("user_id") and not main._billing_enabled())
-        )
+        and paid_access.shows(FEATURE_AI_COMPARE_CHAT)
     )
     return render_template(
         "compare.html",
@@ -468,7 +466,8 @@ def _build_car_detail_view_context(car_id: int, car_raw: dict) -> dict:
     sticker_visual = show_sticker_ui and window_sticker_has_visual(car_raw)
     listing_sticker_urls = car_listing_sticker_urls(car_raw) if car_listing_may_have_sticker(car_raw) else []
     listing_sticker_image_url = listing_sticker_urls[0] if listing_sticker_urls else None
-    premium_viewer = main._viewer_sees_premium_features()
+    # Sticker preview embed: only for a viewer the sticker preview API will serve.
+    premium_viewer = paid_access.shows(FEATURE_WINDOW_STICKER)
     sticker_preview_api = _car_window_sticker_preview_url(car_id)
     # Window sticker fetch runs async via car_packages.js — avoid blocking VDP render.
     sticker_preview_embed_url = (
@@ -562,7 +561,9 @@ def _build_car_detail_view_context(car_id: int, car_raw: dict) -> dict:
     market_intel = None
     trim_ladder = None
     deal_score_detail = None
-    if main._session_has_paid_access():
+    # Paid members only (also with billing off), and only if the market-intel
+    # APIs would serve this viewer.
+    if paid_access.sees_paid_ui() and paid_access.shows(FEATURE_MARKET_INTEL):
         from backend.utils.market_price import market_price_for_car
 
         geo = main.listings_geo_kwargs_from_session(session)
@@ -592,7 +593,8 @@ def _build_car_detail_view_context(car_id: int, car_raw: dict) -> dict:
         year=car_raw.get("year"),
         trim=car_raw.get("trim"),
     )
-    if trim_ladder and not main._viewer_sees_premium_features():
+    # Per-rung equipment comes from window stickers: same gate as the sticker UI.
+    if trim_ladder and not paid_access.shows(FEATURE_WINDOW_STICKER):
         _ADDS_FIELDS = (
             "adds", "sticker_adds", "sticker_adds_note",
             "sticker_equipment", "sticker_equipment_note", "sticker_equipment_car_ids",
@@ -781,9 +783,9 @@ def api_car_detail(car_id):
 def api_car_window_sticker(car_id: int):
     """Serve stored OEM window sticker PDF (premium only)."""
     main = main_module()
-    ok, err = main._require_feature(FEATURE_WINDOW_STICKER)
+    ok, err = paid_access.check_feature(FEATURE_WINDOW_STICKER)
     if not ok:
-        return jsonify(main._feature_denied_json(FEATURE_WINDOW_STICKER, err)), 403
+        return jsonify(paid_access.denied_json(FEATURE_WINDOW_STICKER, err)), 403
     car = main.get_car_by_id(car_id, include_inactive=False)
     if not car:
         return jsonify({"ok": False, "error": "not_found"}), 404
@@ -850,9 +852,9 @@ def api_car_nhtsa_recalls(car_id: int):
 def api_car_vehicle_history_intelligence(car_id: int):
     """NHTSA recalls + vPIC validation + listing title flags (premium; no Carfax)."""
     main = main_module()
-    ok, err = main._require_feature(FEATURE_VEHICLE_HISTORY)
+    ok, err = paid_access.check_feature(FEATURE_VEHICLE_HISTORY)
     if not ok:
-        return jsonify(main._feature_denied_json(FEATURE_VEHICLE_HISTORY, err)), 403
+        return jsonify(paid_access.denied_json(FEATURE_VEHICLE_HISTORY, err)), 403
     car = main.get_car_by_id(car_id, include_inactive=False)
     if not car:
         return jsonify({"ok": False, "error": "not_found"}), 404
@@ -1036,9 +1038,9 @@ def api_car_packages_ensure(car_id: int):
     """
     t0 = time.perf_counter()
     main = main_module()
-    ok, err = main._require_feature(FEATURE_PACKAGES_ENSURE)
+    ok, err = paid_access.check_feature(FEATURE_PACKAGES_ENSURE)
     if not ok:
-        return jsonify(main._feature_denied_json(FEATURE_PACKAGES_ENSURE, err)), 403
+        return jsonify(paid_access.denied_json(FEATURE_PACKAGES_ENSURE, err)), 403
     try:
         validate_csrf_header()
     except HTTPException:
@@ -1127,9 +1129,9 @@ def api_car_packages_ensure(car_id: int):
 
 def api_car_chat(car_id: int):
     main = main_module()
-    ok, err = main._require_feature(FEATURE_AI_CAR_CHAT)
+    ok, err = paid_access.check_feature(FEATURE_AI_CAR_CHAT)
     if not ok:
-        return jsonify(main._feature_denied_json(FEATURE_AI_CAR_CHAT, err)), 403
+        return jsonify(paid_access.denied_json(FEATURE_AI_CAR_CHAT, err)), 403
 
     ip = _client_ip()
     rpm_pair, rpm_ip, rpm_global = car_chat_rate_limits()
@@ -1237,9 +1239,9 @@ def api_car_chat(car_id: int):
 def api_compare_chat():
     """Premium compare assistant — side-by-side listing Q&A (up to 4 cars)."""
     main = main_module()
-    ok, err = main._require_feature(FEATURE_AI_COMPARE_CHAT)
+    ok, err = paid_access.check_feature(FEATURE_AI_COMPARE_CHAT)
     if not ok:
-        return jsonify(main._feature_denied_json(FEATURE_AI_COMPARE_CHAT, err)), 403
+        return jsonify(paid_access.denied_json(FEATURE_AI_COMPARE_CHAT, err)), 403
 
     ip = _client_ip()
     rpm_pair, rpm_ip, rpm_global = car_chat_rate_limits()

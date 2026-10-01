@@ -35,8 +35,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import os
-import re
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -46,28 +44,12 @@ _REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
 
-
-def _dsn() -> str:
-    dsn = (os.environ.get("INVENTORY_DATABASE_URL") or os.environ.get("DATABASE_URL") or "").strip()
-    if dsn:
-        return dsn
-    env = _REPO_ROOT / ".env"
-    if env.exists():
-        m = re.search(r"^INVENTORY_DATABASE_URL=(.+)$", env.read_text(), re.M)
-        if m:
-            return m.group(1).strip().strip("'\"")
-    raise SystemExit("INVENTORY_DATABASE_URL is not set")
+from backend.db.connect import connect as db_connect  # noqa: E402
 
 
 def _connect():
-    import psycopg
-
-    conn = psycopg.connect(_dsn(), connect_timeout=15)
-    with conn.cursor() as cur:
-        # A census must not become a way to edit history.
-        cur.execute("SET SESSION CHARACTERISTICS AS TRANSACTION READ ONLY")
-    conn.commit()
-    return conn
+    # A census must not become a way to edit history.
+    return db_connect(read_only=True)
 
 
 def _as_utc(ts: Any) -> datetime | None:

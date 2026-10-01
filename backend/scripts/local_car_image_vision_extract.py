@@ -43,6 +43,8 @@ _REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
 
+from backend.db.connect import connect as db_connect, inventory_dsn  # noqa: E402
+
 _log = logging.getLogger("local_car_image_vision")
 
 LM_STUDIO_URL = "http://localhost:1234/v1/chat/completions"
@@ -72,20 +74,6 @@ PROMPT_TEMPLATE = (
     '{{"facts": [{{"fact_type": "spec|option|package|package_feature|trim_add", "name": "...", '
     '"value_text": "...", "price": null, "trim": null, "quoted_text": "..."}}]}}'
 )
-
-
-def _dsn() -> str:
-    import os
-
-    dsn = (os.environ.get("INVENTORY_DATABASE_URL") or os.environ.get("DATABASE_URL") or "").strip()
-    if dsn:
-        return dsn
-    env = _REPO_ROOT / ".env"
-    if env.exists():
-        m = re.search(r"^INVENTORY_DATABASE_URL=(.+)$", env.read_text(), re.M)
-        if m:
-            return m.group(1).strip().strip("'\"")
-    raise SystemExit("INVENTORY_DATABASE_URL is not set")
 
 
 def _candidate_images(cur, limit: int | None) -> list[dict[str, Any]]:
@@ -284,14 +272,10 @@ def main() -> int:
 
     MODEL_ID = args.model
 
-    import os
     from concurrent.futures import ThreadPoolExecutor, as_completed
 
-    import psycopg
-
-    os.environ.setdefault("INVENTORY_DATABASE_URL", _dsn())
-    conn = psycopg.connect(_dsn(), connect_timeout=15)
-    conn.autocommit = True
+    inventory_dsn(export=True)
+    conn = db_connect(autocommit=True)
     cur = conn.cursor()
 
     items = _candidate_images(cur, args.limit)

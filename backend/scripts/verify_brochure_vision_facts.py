@@ -92,7 +92,6 @@ from __future__ import annotations
 import argparse
 import hashlib
 import logging
-import os
 import re
 import sys
 from collections import Counter
@@ -143,11 +142,9 @@ _HIGH_REJECT_ALARM = 0.30
 
 
 def _connect():
-    import psycopg
-    from dotenv import load_dotenv
+    from backend.db.connect import connect as db_connect
 
-    load_dotenv()
-    return psycopg.connect(os.environ["INVENTORY_DATABASE_URL"])
+    return db_connect(timeout=None)
 
 
 def _sha256(path: Path) -> str:

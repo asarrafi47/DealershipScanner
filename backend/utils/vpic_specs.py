@@ -190,9 +190,15 @@ def vpic_is_hybrid(specs: dict[str, Any]) -> bool:
     decodes to 145 hp where the system makes 204 (visual review 2026-09-28,
     DC-1: 36,711 of 39,761 HEV/PHEV decodes on active listings carry one).
     """
-    if hybrid_text(specs.get("electrification_level")):
-        return True
-    return str(specs.get("fuel_type_secondary") or "").strip().lower() == "electric"
+    from backend.vehicle_facts.electrification import HEV, PHEV, _MILD, _vpic_verdict
+
+    return _vpic_verdict(
+        {
+            "electrification_level": specs.get("electrification_level"),
+            "fuel_type_primary": specs.get("fuel_type_primary"),
+            "fuel_type_secondary": specs.get("fuel_type_secondary"),
+        }
+    ) in (HEV, PHEV, _MILD)
 
 
 def reset_cache() -> None:

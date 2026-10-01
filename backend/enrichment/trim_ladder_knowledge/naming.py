@@ -146,43 +146,9 @@ def _resolve_trim_model_key(make: str, model: str | None) -> tuple[str, str]:
     return mk, mod
 
 
-_EPA_MODEL_SEARCH_NAMES: dict[tuple[str, str], str] = {
-    ("mini", "cooper"): "Cooper",
-    ("mini", "countryman"): "Countryman",
-    ("toyota", "crownsignia"): "Crown Signia",
-    ("toyota", "grsupra"): "GR Supra",
-    ("toyota", "corolla"): "Corolla",
-    ("toyota", "bz"): "bZ",
-    ("bmw", "2series"): "2 Series",
-    ("bmw", "4series"): "4 Series",
-    ("bmw", "8series"): "8 Series",
-    ("jeep", "wagoneer"): "Wagoneer",
-    ("jeep", "grandwagoneer"): "Grand Wagoneer",
-    ("audi", "a8"): "A8",
-    ("audi", "r8"): "R8",
-    ("audi", "r8spyder"): "R8 Spyder",
-    ("audi", "q6etron"): "Q6 e-tron",
-    ("audi", "q8etron"): "Q8 e-tron",
-    ("audi", "q5"): "Q5",
-    ("audi", "a4"): "A4",
-    ("audi", "a6"): "A6",
-    ("audi", "a3"): "A3",
-    ("audi", "q7"): "Q7",
-    ("audi", "q8"): "Q8",
-    ("audi", "rs6"): "RS 6",
-    ("mercedesbenz", "glc"): "GLC-Class",
-    ("mercedesbenz", "gle"): "GLE-Class",
-    ("mercedesbenz", "gla"): "GLA-Class",
-    ("mercedesbenz", "glb"): "GLB-Class",
-    ("mercedesbenz", "gls"): "GLS-Class",
-    ("mercedesbenz", "sl"): "SL-Class",
-    ("mercedesbenz", "slclass"): "SL-Class",
-    ("mercedesbenz", "slc"): "SLC-Class",
-    ("mercedesbenz", "slk"): "SLK-Class",
-    ("mercedesbenz", "cclass"): "C-Class",
-    ("mercedesbenz", "eclass"): "E-Class",
-    ("mercedesbenz", "cle"): "CLE-Class",
-}
+# EPA search-name table moved to ``backend.vehicle_facts.epa_model`` (one owner
+# for every listing-model -> EPA-model map); re-exported for old importers.
+from backend.vehicle_facts.epa_model import _EPA_MODEL_SEARCH_NAMES  # noqa: E402,F401
 
 
 AUDI_DEALER_TRIM_TOKENS: tuple[str, ...] = (
@@ -216,9 +182,10 @@ def audi_dealer_trim_tokens(raw: str) -> list[str]:
 
 
 def epa_model_search_name(make: str, model: str | None) -> str:
-    """Model label used when locating EPA CSV files."""
-    mk, mod = _resolve_trim_model_key(make, model)
-    return _EPA_MODEL_SEARCH_NAMES.get((mk, mod), (model or "").strip())
+    """Model label used when locating EPA CSV files (trim-ladder FAMILY label)."""
+    from backend.vehicle_facts.epa_model import epa_model_search_name as _impl
+
+    return _impl(make, model)
 
 
 def _model_trim_order(make: str, model: str | None) -> tuple[str, ...]:

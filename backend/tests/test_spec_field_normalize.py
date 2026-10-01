@@ -20,7 +20,8 @@ class SpecFieldNormalizeTest(unittest.TestCase):
         self.assertEqual(normalize_drivetrain_from_fields("All Wheel Drive"), "AWD")
         self.assertEqual(normalize_drivetrain_from_fields("All-Wheel Drive"), "AWD")
         self.assertEqual(normalize_drivetrain_from_fields("A"), "AWD")
-        self.assertEqual(normalize_drivetrain_from_fields("4x4"), "AWD")
+        # 4x4 is four-wheel drive (vPIC spells its 4WD value "4WD/4-Wheel Drive/4x4").
+        self.assertEqual(normalize_drivetrain_from_fields("4x4"), "4WD")
         self.assertEqual(normalize_drivetrain_from_fields("Front Wheel Drive"), "FWD")
         self.assertEqual(normalize_drivetrain_from_fields("F"), "FWD")
         self.assertEqual(normalize_drivetrain_from_fields("4x2"), "2WD")  # two driven wheels, end unknown (2026-09-26)

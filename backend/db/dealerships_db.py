@@ -35,9 +35,12 @@ def ensure_dealerships_table(cursor: sqlite3.Cursor) -> None:
     from backend.db.inventory_pg import is_inventory_postgres, pg_add_columns
 
     if is_inventory_postgres():
-        # Base table + google_* columns are created by init_postgres_inventory;
-        # here we additively add the newer discovery/classification columns
-        # (idempotent — pg_add_columns skips columns that already exist).
+        from backend.db.schema_version import schema_is_current
+
+        # migrations/ owns the table (V001 + V020 add these columns). Only a
+        # database behind the chain still gets the legacy additive pass.
+        if schema_is_current():
+            return
         pg_add_columns(cursor, "dealerships", _DISCOVERY_EXTRA_COLUMNS)
         return
     cursor.execute(

@@ -63,20 +63,15 @@ def _norm_transmission(s: str | None) -> str | None:
 
 
 def _norm_drivetrain(s: str | None) -> str | None:
+    """Storage drivetrain (``coerce_drivetrain_stored``); unrecognised text is
+    title-cased as before. "2wd" is no longer FWD: two wheels, unknown end."""
     if s is None or is_effectively_empty(s):
         return None
-    raw = str(s).strip()
-    if "schema.org" in raw.lower():
-        return coerce_drivetrain_stored(raw)
-    low = raw.lower()
-    if "all-wheel" in low or low == "awd" or "xdrive" in low:
-        return "AWD"
-    if "four-wheel" in low or "4-wheel" in low or low in ("4wd", "4x4") or "4x4" in low or "4 wd" in low:
-        return "4WD"
-    if "front-wheel" in low or low in ("fwd", "2wd"):
-        return "FWD"
-    if "rear-wheel" in low or low in ("rwd",):
-        return "RWD"
+    out = coerce_drivetrain_stored(s)
+    if out is None:
+        return None
+    if out in ("FWD", "RWD", "AWD", "4WD", "2WD"):
+        return out
     return _title_case_phrase(str(s))
 
 

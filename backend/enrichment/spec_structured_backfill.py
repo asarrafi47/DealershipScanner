@@ -87,8 +87,10 @@ def vpic_trim_rejection_reason(car: dict[str, Any], trim: Any) -> str | None:
 
 
 def _is_ev_fuel_hint(car: dict[str, Any]) -> bool:
-    ft = str(car.get("fuel_type") or "").lower()
-    return "electric" in ft and "plug" not in ft
+    """No engine to have cylinders: ``vehicle_facts.electrification`` BEV / FCEV."""
+    from backend.vehicle_facts.electrification import NO_ENGINE, electrification
+
+    return electrification(car) in NO_ENGINE
 
 
 def slot_fillable_for_vpic(car: dict[str, Any], key: str, *, allow_overwrite_dealer: bool) -> bool:

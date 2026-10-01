@@ -15,7 +15,6 @@ from typing import Any
 
 _log = logging.getLogger(__name__)
 
-_MODEL = "claude-haiku-4-5-20251001"
 
 _CATEGORIES = frozenset(
     {"infrastructure", "transient", "dealer_site", "code_bug", "configuration", "unknown"}
@@ -150,8 +149,7 @@ def _llm_diagnosis(
     if not key:
         return None
     try:
-        import anthropic
-        from backend.vision.claude_rate_limit import anthropic_messages_create
+        from backend.llm.client import complete
     except ImportError:
         return None
 
@@ -175,20 +173,16 @@ def _llm_diagnosis(
         "If a code bug in our repo is likely, use code_bug and needs_code_fix."
     )
     try:
-        client = anthropic.Anthropic(api_key=key)
-        msg = anthropic_messages_create(
-            client,
-            model=_MODEL,
+        res = complete(
+            json.dumps(prompt, ensure_ascii=False),
+            model_role="extract",
             max_tokens=700,
             temperature=0,
             system=system,
-            messages=[{"role": "user", "content": json.dumps(prompt, ensure_ascii=False)}],
+            api_key=key,
         )
-        text = ""
-        for block in msg.content:
-            if getattr(block, "type", None) == "text":
-                text += block.text
-        text = text.strip()
+        res.require_complete()  # a refused / cut diagnosis is no diagnosis
+        text = res.text.strip()
         if text.startswith("```"):
             text = re.sub(r"^```(?:json)?\s*", "", text)
             text = re.sub(r"\s*```$", "", text)
