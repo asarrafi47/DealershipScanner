@@ -61,6 +61,7 @@ from .admin import (
 )
 from .auth import (
     authenticate_app_user,
+    submitted_password_attempts,
     change_user_password,
     check_user,
     clear_user_email_verify_token,
@@ -123,6 +124,7 @@ __all__ = [
     "change_user_password",
     "reset_user_password",
     "authenticate_app_user",
+    "submitted_password_attempts",
     "get_user_profile",
     "get_user_email_verification_state",
     "set_user_email_verify_token",

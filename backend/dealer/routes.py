@@ -28,6 +28,7 @@ from flask import (
 from backend.db import dealer_portal_db as ddb
 from backend.db.users_db import (
     check_user,
+    submitted_password_attempts,
     create_org,
     get_user_by_login,
     get_user_profile,
@@ -81,10 +82,10 @@ def dealer_login():
                 429,
             )
         login_input = (request.form.get("login") or "").strip()
-        password = (request.form.get("password") or "").strip()
-        if not login_input or not password:
+        attempts = submitted_password_attempts(request.form.get("password"))
+        if not login_input or not attempts:
             return render_template("dealer_login.html", error="Enter username/email and password.")
-        if check_user(login_input, password):
+        if any(check_user(login_input, pw) for pw in attempts):
             u = get_user_by_login(login_input)
             if not u:
                 return render_template("dealer_login.html", error="Invalid username or password.")

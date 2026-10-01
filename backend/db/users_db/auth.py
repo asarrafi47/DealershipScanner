@@ -228,6 +228,19 @@ def reset_user_password(user_id: int, new_password: str) -> str | None:
     return None
 
 
+def submitted_password_attempts(raw_password: str | None) -> list[str]:
+    """Passwords to try for one login form/API submission, in order.
+
+    Every login path strips the password; /register kept outer spaces before
+    2026-09-30, so those accounts' hashes need the raw text as a second try.
+    """
+    raw = raw_password or ""
+    stripped = raw.strip()
+    if not stripped:
+        return []
+    return [stripped] if raw == stripped else [stripped, raw]
+
+
 def authenticate_app_user(login_input: str, password: str) -> dict | None:
     """Verify credentials and return the user row, or None."""
     li = (login_input or "").strip()

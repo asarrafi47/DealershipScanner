@@ -97,6 +97,7 @@ from backend.db.user_history_db import (
 )
 from backend.db.users_db import (
     authenticate_app_user,
+    submitted_password_attempts,
     change_user_password,
     update_user_profile,
     check_user,
@@ -856,14 +857,10 @@ def login_page():
         if not allow_request(f"login:{ip}", max_events=_LOGIN_RPM, window_seconds=60.0):
             return render_template("login.html", error="Too many login attempts. Try again in a minute."), 429
         login_input = (request.form.get("login") or "").strip()
-        raw_password = request.form.get("password") or ""
-        password = raw_password.strip()
-        if not login_input or not password:
+        attempts = submitted_password_attempts(request.form.get("password"))
+        if not login_input or not attempts:
             return render_template("login.html", error="Enter username/email and password.")
-        u = authenticate_app_user(login_input, password)
-        if not u and raw_password != password:
-            # /register kept outer spaces before 2026-09-30; those hashes need the raw text.
-            u = authenticate_app_user(login_input, raw_password)
+        u = next((x for x in (authenticate_app_user(login_input, pw) for pw in attempts) if x), None)
         if u:
             sync_env_admin_user_row(int(u["id"]))
             session.clear()
@@ -1240,10 +1237,10 @@ def api_auth_login():
         return jsonify({"ok": False, "error": "rate_limited"}), 429
     data = request.get_json(silent=True) or {}
     login_input = (data.get("login") or "").strip()
-    password = (data.get("password") or "").strip()
-    if not login_input or not password:
+    attempts = submitted_password_attempts(data.get("password"))
+    if not login_input or not attempts:
         return jsonify({"ok": False, "error": "missing_credentials"}), 400
-    u = authenticate_app_user(login_input, password)
+    u = next((x for x in (authenticate_app_user(login_input, pw) for pw in attempts) if x), None)
     if not u:
         return jsonify({"ok": False, "error": "invalid_credentials"}), 401
     sync_env_admin_user_row(int(u["id"]))

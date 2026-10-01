@@ -103,3 +103,24 @@ def test_relative_users_db_path_resolves_against_repo_root(monkeypatch, tmp_path
     assert dev_users_sqlite.dev_users_db_path() == os.path.join(dev_users_sqlite._REPO_ROOT, "dev_users.db")
     monkeypatch.setenv("USERS_DB_PATH", "/abs/users.db")
     assert users_sqlite.users_db_path() == "/abs/users.db"
+
+
+def test_password_attempts_shared_by_every_login_path():
+    from backend.db.users_db import submitted_password_attempts
+
+    assert submitted_password_attempts("  pw-123  ") == ["pw-123", "  pw-123  "]
+    assert submitted_password_attempts("pw-123") == ["pw-123"]
+    assert submitted_password_attempts("   ") == []
+    assert submitted_password_attempts(None) == []
+
+
+def test_api_login_accepts_pre_fix_spaced_password(monkeypatch, tmp_path):
+    main = _fresh_app(monkeypatch, tmp_path)
+    from backend.db.users_db import save_user
+
+    save_user("legacy_api", "legacy_api@example.com", " spaced-password-123 ", role="general", org_id=None)
+    with main.app.test_client() as c:
+        tok = c.get("/api/auth/csrf").get_json()["csrf_token"]
+        rv = c.post("/api/auth/login", json={"login": "legacy_api", "password": " spaced-password-123 "},
+                    headers={"X-CSRF-Token": tok})
+        assert rv.status_code == 200
