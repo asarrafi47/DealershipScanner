@@ -171,64 +171,6 @@ def intercept_feed_is_sufficient(
     return best_n >= _intercept_min_rows() and rows >= _intercept_min_rows()
 
 
-def effective_vdp_ep_max(deduped_rows: int) -> int:
-    """
-    Cap EP VDP visits per dealer. When SCANNER_VDP_COMPLETENESS_PASS=1, visit all rows
-    (up to SCANNER_VDP_COMPLETENESS_MAX, default 400) so public-incomplete lots get filled.
-    """
-    completeness = (os.environ.get("SCANNER_VDP_COMPLETENESS_PASS") or "").strip().lower() in (
-        "1",
-        "true",
-        "yes",
-        "on",
-    )
-    if completeness:
-        try:
-            cap = int((os.environ.get("SCANNER_VDP_COMPLETENESS_MAX") or "400").strip())
-        except ValueError:
-            cap = 400
-        return min(max(0, deduped_rows), max(1, cap))
-    raw = (os.environ.get("SCANNER_VDP_EP_MAX") or "").strip()
-    if raw:
-        try:
-            return max(0, min(5000, int(raw)))
-        except ValueError:
-            pass
-    # Default 0 since 2026-09-23: browser visits are need-driven (price / spec gap /
-    # description probe / thin gallery). The blind 10-car rotation predates the HTTP
-    # passes and the VIN decode that now cover what it used to spot-check.
-    return 0
-
-
-def effective_vdp_price_max(deduped_rows: int) -> int:
-    """Cap price VDP visits by lot size unless SCANNER_VDP_PRICE_MAX overrides."""
-    raw = (os.environ.get("SCANNER_VDP_PRICE_MAX") or "").strip()
-    if raw:
-        try:
-            return max(0, min(5000, int(raw)))
-        except ValueError:
-            pass
-    if scanner_fast_mode_enabled():
-        return min(80, max(0, deduped_rows // 4))
-    return min(400, max(0, deduped_rows))
-
-
-def effective_vdp_spec_gap_max(deduped_rows: int) -> int:
-    """
-    Extra VDP visits for rows missing engine/transmission/etc. after inventory JSON.
-
-    Set ``SCANNER_VDP_SPEC_GAP_MAX`` (e.g. 40) for scan-only runs that skip full EP caps.
-  """
-    raw = (os.environ.get("SCANNER_VDP_SPEC_GAP_MAX") or "").strip()
-    if not raw:
-        return 0
-    try:
-        cap = max(0, min(500, int(raw)))
-    except ValueError:
-        return 0
-    return min(cap, max(0, deduped_rows))
-
-
 def gallery_vision_inline_enabled() -> bool:
     """Claude gallery filter during ``run_dealer`` (blocks upsert). Default off."""
     if scanner_fast_mode_enabled():

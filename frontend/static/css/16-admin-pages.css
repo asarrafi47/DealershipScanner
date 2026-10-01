@@ -9,7 +9,6 @@
    here can reach another page. Loaded after _head_css.html, matching where the
    inline blocks sat in the cascade. */
 
-
 /* ---- Site admin hub (/admin/site) -- admin/site_hub.html ---- */
 
 /* Editorial layout: sections separated by hairlines, no cards, tiles or pills. */
@@ -310,7 +309,6 @@
         grid-template-columns: 1fr;
     }
 }
-
 
 /* ---- Dealer onboarding (/admin/dealers) -- admin/dealers.html ---- */
 
@@ -665,7 +663,6 @@
     color: #b91c1c;
 }
 
-
 /* ---- App users (/admin/users) -- admin/users.html ---- */
 
 .admin-page--users .users-hub__lead {
@@ -879,7 +876,6 @@
     border: 0;
 }
 
-
 /* ---- New / edit user (/admin/users/new, /admin/users/<id>) -- admin/user_form.html ---- */
 
 .admin-page--user-form .user-form {
@@ -1006,12 +1002,6 @@
     background: #fee2e2;
 }
 
-.admin-page--user-form .icon-button--icon-only {
-    padding: 8px;
-    min-width: 36px;
-}
-
-
 /* ---- Flagged reviews (/admin/reviews) -- admin/reviews.html ---- */
 
 .admin-page--reviews .reviews-actions {
@@ -1022,7 +1012,6 @@
 .admin-page--reviews .reviews-actions .admin-inline-form {
     margin-top: 0;
 }
-
 
 /* ---- Dealer inventory sub-nav -- inventory/base_inventory.html ---- */
 
@@ -1056,7 +1045,6 @@
     color: var(--navy, #0b1f3a);
     border-bottom-color: var(--navy, #0b1f3a);
 }
-
 
 /* ---- Scan lab results (/dev/scan-lab/listings) -- dev_scan_lab_listings.html ---- */
 

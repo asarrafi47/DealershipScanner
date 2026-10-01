@@ -23,8 +23,6 @@ SarrafiCars/SarrafiCars/
 └── Resources/
 ```
 
-`Legacy/` holds old tab prototypes — **not** in the Xcode target.
-
 ## Run
 
 ```bash

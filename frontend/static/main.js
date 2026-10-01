@@ -431,18 +431,6 @@ document.addEventListener("DOMContentLoaded", () => {
         ["country", "make", "model", "trim", "fuel_type", "cylinders",
          "transmission", "drivetrain", "forced_induction", "body_style", "exterior_color", "interior_color", "package"]
             .forEach(updateCount);
-
-        // Sidebar total badge
-        const totalEl = document.getElementById("docked-total");
-        if (totalEl) {
-            const total = [...document.querySelectorAll(".filter-option input:checked")]
-                .filter(cb => {
-                    const opt = cb.closest(".filter-option");
-                    return opt ? opt.style.display !== "none" : true;
-                }).length;
-            totalEl.textContent = total;
-            totalEl.style.display = total > 0 ? "inline" : "none";
-        }
     }
 
     // ── Wire all checkboxes → sync twin + live render (cascade on panel open) ───────
@@ -2813,7 +2801,6 @@ document.addEventListener("DOMContentLoaded", () => {
     function filterOptionVisible(cb) {
         const opt = cb.closest(".filter-option");
         if (!opt) return true;
-        if (opt.closest("#filter-docked-inner")) return false;
         if (opt.style.display === "none") return false;
         return true;
     }

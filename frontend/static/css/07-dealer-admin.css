@@ -1,10 +1,4 @@
 /* ── Dealer portal (/inventory) ── */
-.nav-link-active {
-    color: #ffffff;
-    font-weight: 600;
-    border-bottom: 2px solid rgba(255, 255, 255, 0.35);
-    padding-bottom: 2px;
-}
 
 .dealer-inv-layout {
     max-width: 1200px;
@@ -377,15 +371,6 @@ body:has(.app-sidebar) {
     grid-column: auto;
 }
 
-.sidebar-search__label {
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: rgba(255, 252, 248, 0.45);
-    padding-left: 2px;
-}
-
 .visually-hidden {
     position: absolute;
     width: 1px;
@@ -714,56 +699,6 @@ body.listings-page .page:has(.app-sidebar) .listings-layout {
    No cards, KPI tiles, pills or tinted panels (owner rule, 2026-09-30). */
 .admin-shell-body {
     background: var(--bg-page);
-}
-
-/* Legacy horizontal admin topbar — replaced by app-sidebar */
-.topbar--admin {
-    display: none;
-}
-
-.nav-links--admin {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 4px 12px;
-    font-size: 14px;
-}
-
-.admin-nav-group-label {
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--text-muted);
-    margin-right: 4px;
-}
-
-.admin-nav-link {
-    color: var(--text-secondary);
-    text-decoration: none;
-    padding: 4px 0;
-}
-
-.admin-nav-link:hover {
-    color: var(--text-primary);
-    text-decoration: underline;
-    text-underline-offset: 3px;
-}
-
-.admin-nav-link--active {
-    color: var(--text-primary);
-    font-weight: 600;
-}
-
-.admin-nav-divider {
-    width: 1px;
-    height: 18px;
-    background: var(--border-light);
-    margin: 0 4px;
-}
-
-.nav-app-link--admin {
-    color: var(--accent);
 }
 
 .admin-main {

@@ -16,7 +16,6 @@ import signal
 import time
 from typing import Any
 
-from backend.scanner.bmw_enhancer import enhance_scraping_for_bmw_dealerships
 from backend.scanner.constants import DEBUG_DIR, MANIFEST_PATH
 from backend.scanner import scan_log
 from backend.scanner.manifest import filter_oem_manufacturers, load_manifest
@@ -281,8 +280,6 @@ async def _main_impl(
     logger.info("Scanner: dealer concurrency = %d", dealer_conc)
     logger.info("Scanner: VDP concurrency = %d", vdp_conc)
 
-    bmw_enhanced_dealers = enhance_scraping_for_bmw_dealerships(dealers)
-
     from datetime import datetime, timezone
     from pathlib import Path
     _ts = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S")
@@ -296,7 +293,7 @@ async def _main_impl(
     outcomes: list[Any] = []
     dealer_timeout = _dealer_timeout_sec()
     completed_count = 0
-    total_dealers = len(bmw_enhanced_dealers)
+    total_dealers = len(dealers)
     shutdown_skipped_dealer_ids: list[str] = []
 
     async def run_dealers_with_browser(p) -> list[Any]:
@@ -315,8 +312,6 @@ async def _main_impl(
 
         async def one_dealer(dealer: dict) -> dict[str, Any]:
             did = dealer.get("dealer_id", "")
-            if dealer.get("optimize_for") == "bmw":
-                logger.info("Applying BMW-specific optimization for %s", dealer.get("name"))
             try:
                 coro = run_dealer(
                     browser,
@@ -397,7 +392,7 @@ async def _main_impl(
                 with contextlib.suppress(Exception):
                     loop.add_signal_handler(_sig, on_scanner_shutdown_signal)
             return await asyncio.gather(
-                *[bounded(d) for d in bmw_enhanced_dealers],
+                *[bounded(d) for d in dealers],
                 return_exceptions=True,
             )
         finally:

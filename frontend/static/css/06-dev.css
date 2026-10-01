@@ -81,52 +81,6 @@
     margin-top: 4px;
 }
 
-.dev-two-col {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 28px;
-    align-items: start;
-}
-
-@media (max-width: 900px) {
-    .dev-two-col {
-        grid-template-columns: 1fr;
-    }
-}
-
-.dev-form .field-group input {
-    width: 100%;
-    background-color: var(--bg-card);
-    color: var(--text);
-    border: 1px solid var(--border-medium);
-    border-radius: var(--main-radius);
-    padding: 12px 14px;
-    font-family: inherit;
-    font-size: 14px;
-}
-
-.dev-form .field-group input:focus {
-    border-color: var(--navy);
-    outline: none;
-}
-
-.dev-form-row {
-    display: grid;
-    grid-template-columns: 1fr 100px;
-    gap: 16px;
-}
-
-.dev-state-input {
-    text-transform: uppercase;
-}
-
-.dev-form-msg {
-    font-size: 13px;
-    color: var(--text-muted);
-    margin-top: 12px;
-    min-height: 1.2em;
-}
-
 .dev-hint {
     font-size: 13px;
     color: var(--text-muted);
@@ -171,11 +125,6 @@
     flex-wrap: wrap;
     align-items: center;
     margin-bottom: 12px;
-}
-
-.dev-scan-input {
-    flex: 1;
-    min-width: 200px;
 }
 
 .dev-log-pre {
@@ -347,15 +296,6 @@
 
 .dev-playground-row--mt {
     margin-top: 14px;
-}
-
-.dev-checkbox-label {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 14px;
-    color: var(--text);
-    cursor: pointer;
 }
 
 .dev-queue-panel {
@@ -629,22 +569,6 @@
     padding-top: 28px;
 }
 
-.car-chat-heading {
-    font-size: 1.25rem;
-    margin-bottom: 8px;
-}
-
-.car-chat-hint {
-    font-size: 13px;
-    color: var(--text-muted);
-    margin-bottom: 16px;
-}
-
-.car-chat-hint code {
-    font-size: 12px;
-    color: var(--text-muted);
-}
-
 .car-chat-messages {
     min-height: 120px;
     max-height: 320px;
@@ -725,17 +649,6 @@
     cursor: not-allowed;
 }
 
-/* ── Car detail: back control (button styled as link; avoids javascript: href CSP) ── */
-button.back-link:not(.car-back-link) {
-    background: none;
-    border: none;
-    padding: 0;
-    font: inherit;
-    color: inherit;
-    cursor: pointer;
-    text-align: left;
-}
-
 /* ── Car detail: gallery thumbnail strip (moved from car.html for CSP style-src) ── */
 .car-gallery-thumbs-wrap {
     overflow: hidden;
@@ -798,22 +711,11 @@ button.back-link:not(.car-back-link) {
     color: var(--text);
 }
 
-.car-detail-dealer-link-unavailable {
-    opacity: 0.55;
-    pointer-events: none;
-}
-
 /* ── Car detail: packages + window sticker (premium) ── */
 .car-packages-section {
     max-width: 960px;
     margin: 48px auto 0;
     padding: 0 20px 32px;
-}
-
-.car-packages-heading {
-    font-size: 1.35rem;
-    margin-bottom: 8px;
-    color: var(--navy);
 }
 
 .car-packages-hint {
@@ -901,20 +803,6 @@ button.back-link:not(.car-back-link) {
     background: #fff;
 }
 
-.car-window-sticker-pdf-object {
-    display: block;
-    width: 100%;
-    min-height: 520px;
-    border: 0;
-}
-
-.car-window-sticker-pdf-fallback {
-    margin: 0;
-    padding: 16px;
-    text-align: center;
-    font-size: 14px;
-}
-
 .car-window-sticker-img {
     display: block;
     width: 100%;
@@ -927,16 +815,6 @@ button.back-link:not(.car-back-link) {
     background: #fff;
     object-fit: contain;
     image-rendering: auto;
-}
-
-.car-window-sticker-canvas {
-    display: block;
-    width: 100%;
-    max-width: 720px;
-    height: auto;
-    border: 1px solid var(--border-light);
-    border-radius: 6px;
-    box-shadow: 0 2px 10px rgba(15, 23, 42, 0.06);
 }
 
 .car-window-sticker-specs {
@@ -1057,10 +935,6 @@ button.back-link:not(.car-back-link) {
 .car-sticker-colors--embed {
     margin: 8px 0 10px;
     font-size: 0.88rem;
-}
-
-.car-sticker-base-disclosure {
-    margin-top: 8px;
 }
 
 /* Generated build sheet — synthesized window sticker rendered for every car
@@ -1334,26 +1208,10 @@ button.back-link:not(.car-back-link) {
     padding-left: 0;
 }
 
-.car-window-sticker-std-list {
-    color: var(--text-muted);
-}
-
 .listing-package-plain {
     margin: 8px 0 12px;
     font-size: 0.95rem;
     color: var(--text);
-}
-
-.listing-package-plain-note {
-    color: var(--text-muted);
-    font-size: 0.88rem;
-}
-
-.listing-packages-photo-note {
-    margin: 0 0 10px;
-    font-size: 0.88rem;
-    color: var(--text-muted);
-    line-height: 1.45;
 }
 
 .car-sticker-colors {
@@ -1394,17 +1252,6 @@ body.car-detail-page .listing-packages-empty {
     border-top: 1px solid var(--border-light);
 }
 
-.listing-packages-heading {
-    font-size: 1.05rem;
-    margin-bottom: 6px;
-}
-
-.listing-packages-lead {
-    font-size: 0.85rem;
-    color: rgba(255, 255, 255, 0.55);
-    margin-bottom: 12px;
-}
-
 .listing-packages-empty {
     font-size: 0.88rem;
     color: rgba(255, 255, 255, 0.5);
@@ -1433,76 +1280,6 @@ body.car-detail-page .listing-packages-empty {
 
 .listing-package-inline-list {
     margin-top: 6px;
-}
-
-.listing-package-disclosure {
-    border-top: 1px solid var(--border-light);
-    padding: 10px 0;
-}
-
-.listing-package-disclosure:first-of-type {
-    border-top: none;
-    padding-top: 4px;
-}
-
-.listing-package-summary {
-    font-family: var(--font-ui);
-    font-weight: 600;
-    cursor: pointer;
-    list-style: none;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 0;
-    user-select: none;
-    transition: opacity 0.15s ease-out;
-}
-
-.listing-package-summary:hover {
-    opacity: 0.85;
-}
-
-.listing-package-summary::-webkit-details-marker {
-    display: none;
-}
-
-.listing-package-summary::before {
-    content: "▸";
-    display: inline-block;
-    width: 1.2em;
-    text-align: center;
-    color: var(--text-muted);
-    transition: transform 0.2s ease-out;
-    font-size: 0.9em;
-    margin-right: 0.2em;
-}
-
-details[open] > .listing-package-summary::before {
-    transform: rotate(90deg);
-    color: var(--text);
-}
-
-.listing-package-title {
-    flex: 1 1 auto;
-}
-
-.listing-package-features {
-    margin: 12px 0 0 2.2rem;
-    padding: 0;
-    font-size: 0.9rem;
-    color: var(--text);
-    line-height: 1.55;
-    list-style: disc;
-}
-
-.listing-package-features li {
-    margin-bottom: 6px;
-    padding-left: 0;
-}
-
-.listing-package-features li:last-child {
-    margin-bottom: 0;
 }
 
 /* Spec provenance note on the car page: small muted text, not a pill. */

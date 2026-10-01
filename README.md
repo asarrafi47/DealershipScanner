@@ -136,7 +136,7 @@ PYTHONPATH=. python backend/scripts/migrate_inventory_sqlite_to_postgres.py --dr
 | `.env` | Secrets | Create locally |
 | `*.db` (app DBs) | Private / large | App + scanner |
 | `csv_out*` under root or `backend/dictionary/` | Large listing/options scrapes | `car_data_scraper.py` + cleaning scripts |
-| `backend/data/oem/`, pipeline JSON scratch | BMW / OEM pipeline outputs | OEM intake scripts |
+| `backend/data/oem/`, pipeline JSON scratch | BMW / OEM pipeline outputs (intake deleted 2026-10-01; `data/oem/bmw/bmw_intake.db` is still read by `backend/vector/bmw_store.py` if present) | none |
 | `.fuse*`, `backend/fuse_artifacts/` | macOS/FUSE noise | N/A — delete locally |
 
 ## More documentation

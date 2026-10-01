@@ -35,8 +35,7 @@ ios/
         │   ├── Dealers/
         │   └── Premium/
         ├── Web/                # WKWebView wrappers only
-        ├── Resources/          # Info.plist, Assets
-        └── Legacy/             # Old tabs — not in Xcode target
+        └── Resources/          # Info.plist, Assets
 ```
 
 ## Feature rules

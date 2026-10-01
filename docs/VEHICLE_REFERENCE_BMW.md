@@ -9,24 +9,24 @@ This project adds a **normalized SQLite** store under `data/vehicle_reference/bm
 Run from the repository root (same layout as other tools using `SCRAPING.paths`).
 
 ```bash
-# Recreate database from schema (vehicle_reference/schema/schema.sql) + seeds/bmw/*.json
-python -m vehicle_reference.cli rebuild
+# Recreate database from schema (backend/oem/vehicle_reference/schema/schema.sql) + seeds/bmw/*.json
+python -m backend.oem.vehicle_reference.cli rebuild
 
 # Export every BMW vehicle row to CSV
-python -m vehicle_reference.cli export-all
+python -m backend.oem.vehicle_reference.cli export-all
 # equivalent:
-python -m vehicle_reference.cli export --out data/vehicle_reference/bmw_export_all.csv
+python -m backend.oem.vehicle_reference.cli export --out data/vehicle_reference/bmw_export_all.csv
 
 # Export one model (matches ref_vehicle.series_name exactly)
-python -m vehicle_reference.cli export --out data/vehicle_reference/bmw_x2_only.csv --model "X2"
+python -m backend.oem.vehicle_reference.cli export --out data/vehicle_reference/bmw_x2_only.csv --model "X2"
 
-python -m vehicle_reference.cli export --out data/vehicle_reference/bmw_3_series.csv --model "3 Series"
+python -m backend.oem.vehicle_reference.cli export --out data/vehicle_reference/bmw_3_series.csv --model "3 Series"
 
 # Optional year window
-python -m vehicle_reference.cli export --out /tmp/bmw_recent.csv --year-from 2020
+python -m backend.oem.vehicle_reference.cli export --out /tmp/bmw_recent.csv --year-from 2020
 
 # Regenerate bundled template sample
-python -m vehicle_reference.cli export-sample
+python -m backend.oem.vehicle_reference.cli export-sample
 ```
 
 The default database path is `data/vehicle_reference/bmw_reference.db` (override with `--db`).
@@ -47,10 +47,10 @@ Internal columns (`ref_vehicle.source_id`, linked package/color sources) are **n
 
 ## Ingestion model
 
-1. Add curated JSON under `vehicle_reference/seeds/bmw/` (lexicographic order: `bmw_01_…`, `bmw_02_…`, etc.).
+1. Add curated JSON under `backend/oem/vehicle_reference/seeds/bmw/` (lexicographic order: `bmw_01_…`, `bmw_02_…`, etc.).
 2. Each vehicle object references a `source` block (`label`, `url`, optional `source_group_key`, `notes`).
 3. Leave unknown scalar specs as omitted or `null` in JSON; the loader stores SQL `NULL` and export writes empty CSV cells.
-4. For other brands later: insert a row in `ref_brand`, add `vehicle_reference/seeds/<brand>/`, and extend the CLI to pass `brand_code` (small code change).
+4. For other brands later: insert a row in `ref_brand`, add `backend/oem/vehicle_reference/seeds/<brand>/`, and extend the CLI to pass `brand_code` (small code change).
 
 ## Coverage gaps (honest)
 
@@ -69,4 +69,4 @@ After `rebuild`, `export-sample` writes:
 
 `data/vehicle_reference/samples/bmw_reference_template_sample.csv`
 
-This matches the template column order in `vehicle_reference.csv_export.flat_export.CSV_COLUMNS` (also re-exported as `vehicle_reference.export_csv.CSV_COLUMNS`).
+This matches the template column order in `backend.oem.vehicle_reference.csv_export.flat_export.CSV_COLUMNS` (also re-exported as `backend.oem.vehicle_reference.csv_export.CSV_COLUMNS`).

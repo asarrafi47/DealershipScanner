@@ -1,125 +1,4 @@
-/* Landing hero search */
-.lp-hero-search {
-    background: none;
-    border: 0;
-    border-top: 1px solid var(--border-light);
-    border-bottom: 1px solid var(--border-light);
-    border-radius: 0;
-    padding: 20px 0;
-    box-shadow: none;
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-}
 
-.lp-hero-search-head {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-}
-
-.lp-hero-search-label {
-    margin: 0;
-    font-size: 13px;
-    font-weight: 600;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--text-muted);
-}
-
-.lp-hero-search-live {
-    font-size: 12px;
-    font-weight: 700;
-    color: var(--navy);
-}
-
-.lp-hero-search-field {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-}
-
-.lp-hero-search-field-label {
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--text-muted);
-}
-
-.lp-hero-search-input {
-    width: 100%;
-    min-height: 52px;
-    padding: 14px 16px;
-    border-radius: 14px;
-    border: 1px solid var(--border-medium);
-    font-family: inherit;
-    font-size: 16px;
-}
-
-.lp-hero-search-geo {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-}
-
-.lp-hero-search-zip,
-.lp-hero-search-radius {
-    width: 100%;
-    min-height: 44px;
-    padding: 10px 12px;
-    border-radius: 12px;
-    border: 1px solid var(--border-medium);
-    font-family: inherit;
-    font-size: 15px;
-}
-
-.lp-hero-search-submit {
-    width: 100%;
-    min-height: 48px;
-    justify-content: center;
-    touch-action: manipulation;
-}
-
-.lp-hero-search-hint {
-    margin: 0;
-    font-size: 13px;
-    color: var(--text-muted);
-    text-align: center;
-}
-
-.lp-trust {
-    border-bottom: 1px solid var(--border-light);
-    background: var(--bg-card);
-    padding: 14px 0;
-}
-
-.lp-trust-inner {
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 0 24px;
-}
-
-.lp-trust-list {
-    list-style: none;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 10px 20px;
-    margin: 0;
-    padding: 0;
-    font-size: 14px;
-    color: var(--text-muted);
-}
-
-.lp-trust-list li {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-}
-
-.lp-trust-list strong {
-    color: var(--navy);
-}
 
 /* Compare page */
 .compare-page-section {
@@ -316,16 +195,6 @@
 .compare-toggle-btn--active {
     border-color: var(--navy);
     background: rgba(42, 77, 115, 0.08);
-}
-
-.compare-toggle-btn--guest {
-    text-decoration: none;
-    opacity: 0.75;
-}
-
-.compare-toggle-btn--guest:hover {
-    opacity: 1;
-    text-decoration: none;
 }
 
 .compare-chat-section,
@@ -689,8 +558,6 @@ body.find-dealers-page {
     color: var(--text-secondary);
 }
 
-.find-dealers-empty[hidden],
-.find-dealers-results[hidden],
 .find-dealers-map-placeholder[hidden],
 .find-dealers-sidebar-empty[hidden],
 .find-dealers-list-wrap[hidden] {
@@ -738,24 +605,8 @@ body.find-dealers-page {
     pointer-events: none;
 }
 
-.find-dealers-empty {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(280px, 360px);
-    gap: 16px;
-    align-items: stretch;
-    margin-bottom: 8px;
-}
-
 @media (min-width: 1200px) {
     .find-dealers-stage {
-        grid-template-columns: minmax(0, 1fr) 380px;
-    }
-
-    .find-dealers-empty {
-        grid-template-columns: minmax(0, 1fr) 380px;
-    }
-
-    .find-dealers-results {
         grid-template-columns: minmax(0, 1fr) 380px;
     }
 
@@ -784,13 +635,6 @@ body.find-dealers-page {
     font-size: 14px;
     line-height: 1.55;
     color: var(--text-muted);
-}
-
-.find-dealers-results {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(300px, 360px);
-    gap: 16px;
-    align-items: start;
 }
 
 .find-dealers-map-shell {
@@ -921,22 +765,11 @@ body.find-dealers-page {
     color: var(--text-muted);
 }
 
-.find-dealers-list-item__sync,
-.find-dealers-sync {
-    margin: 0;
-    font-size: 12px;
-    color: var(--text-muted);
-}
-
 .find-dealers-list-scraped,
 .find-dealers-scraped {
     font-size: 12px;
     color: var(--accent, #1a5f4a);
     font-weight: 600;
-}
-
-.find-dealers-list-item__sync {
-    margin-top: 2px;
 }
 
 .find-dealers-admin-btn {
@@ -1007,9 +840,7 @@ body.find-dealers-page {
 }
 
 @media (max-width: 960px) {
-    .find-dealers-stage,
-    .find-dealers-empty,
-    .find-dealers-results {
+    .find-dealers-stage {
         grid-template-columns: 1fr;
     }
 

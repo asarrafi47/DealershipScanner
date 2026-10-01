@@ -69,30 +69,6 @@ def test_extract_description_from_description_heading() -> None:
     assert len(desc) > 100
 
 
-def test_should_extract_thin_gallery(monkeypatch) -> None:
-    from backend.scanner import claude_vdp_extract as cve
-
-    monkeypatch.setenv("ANTHROPIC_API_KEY", "sk-test")
-    monkeypatch.setenv("SCANNER_CLAUDE_VDP", "1")
-    monkeypatch.setenv("SCANNER_CLAUDE_VDP_GALLERY_MIN", "20")
-    v = {
-        "vin": "1" * 17,
-        "price": 25000,
-        "condition": "Used",
-        "exterior_color": "Black",
-        "interior_color": "Black",
-        "packages": "[]",
-        "description": "ok",
-        "transmission": "Auto",
-        "drivetrain": "AWD",
-        "fuel_type": "Gasoline",
-        "cylinders": 4,
-        "body_style": "SUV",
-        "gallery": ["https://x.com/1.jpg"],
-    }
-    assert cve.should_extract_from_page(v) is True
-
-
 PAD = "<!-- " + "x" * 600 + " -->"
 CLOUDINARY = "https://res.cloudinary.com/dealer/image/upload/c_fill,w_800,h_600,q_auto/v1/inventory/1HGBH41JXMN109186/01.jpg"
 

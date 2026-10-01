@@ -1029,9 +1029,8 @@
 
 @media (max-width: 1000px) {
     .results-grid { grid-template-columns: repeat(2, 1fr); }
-    .dashboard-grid, .listings-grid { grid-template-columns: 1fr; }
-    .car-detail-hero,
-    .car-detail-layout { grid-template-columns: 1fr; }
+    .listings-grid { grid-template-columns: 1fr; }
+    .car-detail-hero { grid-template-columns: 1fr; }
     .car-detail-info { padding: 24px 0 32px; }
     .car-vdp-tabs {
         margin-left: -4px;
@@ -1097,9 +1096,6 @@
         padding: 12px 14px 48px;
         gap: 20px;
     }
-    .page.docked .listings-main.dash-content {
-        padding-top: 24px;
-    }
     .listings-search-card {
         padding: 16px 14px 14px;
     }
@@ -1110,8 +1106,6 @@
         min-height: 36vh;
         padding: 24px 12px 48px;
     }
-    .filter-docked-inner { display: none; }
-    .page.docked .dash-content { margin-left: 0; }
     .car-detail { padding: 20px; }
 }
 

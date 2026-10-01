@@ -112,7 +112,7 @@ Headless browser test via `/register` → dashboard:
 python -m pytest backend/tests/test_billing_gate.py backend/tests/test_app_security_basics.py -q
 # 15 passed
 
-python scripts/e2e_user_audit.py
+python scripts/e2e_user_audit.py   # deleted 2026-10-01 (monolith audit); in git history
 # 31 passed (isolated server, billing on)
 ```
 

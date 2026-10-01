@@ -1,22 +1,20 @@
 """
-VDP (Vehicle Detail Page) enrichment — gallery, price, packages, specs, Claude extraction.
+VDP (vehicle detail page) helpers for HTTP-only scans.
 
-- core           — main enrich_vehicles_vdp orchestrator
-- html_recovery  — thin gallery recovery from listing HTML
-- packages       — structured options/packages parsing
-- spec_fetch     — single-URL spec fetch (optional tier)
-- specs          — spec-sheet extraction from PAGE_EXTRACT_JS
-- claude_extract — Claude Haiku inline VDP extraction
+- prefetch       — per-car detail-page HTML pass + DB carry-forward (scan time)
+- vdp_recipes    — per-dealer VDP JSON recipe capture/replay
+- extract        — capture analysis / EP fragments used by vdp_recipes
+- html_recovery  — gallery/description recovery from listing HTML (post-scan)
+- spec_fetch     — single-URL spec fetch (enrichment)
+- queue          — per-row gap predicates (spec gap, HTTPS gallery count)
+- config         — env knobs (VDP concurrency)
+- core           — re-export surface (see its docstring)
 """
-from backend.scanner.vdp.core import *  # noqa: F401, F403
-from backend.scanner.vdp.core import (
+from backend.scanner.vdp.core import (  # noqa: F401
+    _count_https_gallery_urls,
     _is_generic_vhr_vin_only_url,
     _max_vdp_concurrency,
     _merge_vdp_vehicle_history_url,
     _pick_best_vehicle_history_url,
-    _vehicle_needs_description_vdp,
     _vehicle_needs_spec_gap_vdp,
-    _vdp_gallery_loop_max_sec,
-    _vdp_queue_sort_key,
-    _vdp_response_text_timeout_sec,
 )

@@ -23,15 +23,7 @@
 .dealer-research__counts { display: flex; gap: 1.5rem; margin: .25rem 0 1rem; flex-wrap: wrap; }
 .dealer-research__count b { font-size: 1.35rem; display: block; line-height: 1; }
 .dealer-research__count span { font-size: .78rem; opacity: .65; text-transform: uppercase; letter-spacing: .05em; }
-.dealer-research__grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 1rem; }
 /* Status words are coloured text, never filled pills (owner rule 2026-09-30). */
-.dr-chips { display: flex; flex-wrap: wrap; gap: .1rem .75rem; margin: .1rem 0 .15rem; }
-.dr-chip { font-size: .64rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; line-height: 1.6; }
-.dr-chip--cpo { color: var(--navy); }
-.dr-chip--carfax { color: var(--text-muted); }
-.dr-chip--drop { color: #2e7d4f; }
-.dr-chip--deal-good { color: #2e7d4f; }
-.dr-chip--deal-high { color: #b3453f; }
 .dealer-research-map { height: 360px; width: 100%; border-radius: 0; overflow: hidden; }
 .dealer-research__contact { display: grid; gap: .5rem; font-size: .95rem; }
 .dealer-research__contact a { color: inherit; }

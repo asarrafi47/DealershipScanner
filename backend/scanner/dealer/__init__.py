@@ -5,5 +5,4 @@ Dealer configuration and detection helpers.
 - profile         — per-dealer winning strategy cache
 - site_url        — inventory base URL normalization (Dealer.com paths)
 - sticker_provider — window sticker provider detection (iPacket, embed, none)
-- bmw_enhancer    — BMW-specific Playwright timeouts and selectors
 """

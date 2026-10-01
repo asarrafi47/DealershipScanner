@@ -16,18 +16,14 @@
 
 @media (max-width: 768px) {
     /* App + marketing nav: logo + account on one row; links scroll horizontally */
-    .topbar--app,
-    .topbar--marketing,
-    .topbar--public {
+    .topbar--marketing {
         flex-wrap: wrap;
         align-items: center;
         gap: 10px 12px;
         padding: 12px 16px;
     }
 
-    .topbar--app .logo,
-    .topbar--marketing .logo,
-    .topbar--public .logo {
+    .topbar--marketing .logo {
         margin-right: auto;
     }
 
@@ -37,21 +33,12 @@
         max-width: none;
     }
 
-    .topbar--app .nav-links--account,
-    .topbar--marketing .nav-links--account,
-    .topbar--public .nav-links--account {
+    .topbar--marketing .nav-links--account {
         flex-shrink: 0;
         gap: 10px;
     }
 
-    .topbar--app .nav-app-user__name,
-    .nav-app-user__name {
-        display: none;
-    }
-
-    .topbar--app .nav-links--site,
-    .topbar--marketing .nav-links--site,
-    .topbar--public .nav-links--site {
+    .topbar--marketing .nav-links--site {
         order: 3;
         flex: 1 1 100%;
         width: 100%;
@@ -67,12 +54,10 @@
         mask-image: linear-gradient(90deg, transparent, #000 6px, #000 calc(100% - 12px), transparent);
     }
 
-    .topbar--app .nav-links--site::-webkit-scrollbar,
     .topbar--marketing .nav-links--site::-webkit-scrollbar {
         display: none;
     }
 
-    .nav-app-link,
     .nav-mkt-link {
         flex-shrink: 0;
         min-height: 44px;
@@ -104,11 +89,6 @@
     .listings-sort-select {
         min-width: 0;
         flex: 1;
-    }
-
-    body.listings-page .filter-controls-row.filter-grid,
-    body.listings-page .filter-basics-row.filter-grid {
-        grid-template-columns: 1fr;
     }
 
     body.listings-page .filter-controls-row .pill-group.pill-select-group {
@@ -186,11 +166,6 @@
         grid-template-columns: 1fr;
     }
 
-    .listings-results-head {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
     .listings-active-chips-wrap {
         flex-direction: column;
         align-items: stretch;
@@ -227,15 +202,6 @@
         grid-template-columns: 1fr 1fr;
     }
 
-    .lp-container {
-        padding-left: 16px;
-        padding-right: 16px;
-    }
-
-    .lp-hero {
-        padding: 40px 0 32px;
-    }
-
     .primary-button,
     .secondary-button {
         padding: 12px 18px;
@@ -251,15 +217,6 @@
         min-height: 44px;
         padding: 10px 0;
         font-size: 13px;
-    }
-
-    .listings-hero-band__head .listings-intro-heading {
-        font-size: 26px;
-    }
-
-    body.listings-page .smart-search-input--hero {
-        min-height: 48px;
-        font-size: 16px;
     }
 
     .find-dealers-location-modes {

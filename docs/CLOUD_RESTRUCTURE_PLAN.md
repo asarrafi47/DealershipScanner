@@ -52,7 +52,7 @@ Evidence: `backend/scanner/node_modules/` is empty; no Python imports Node code;
 | `scripts/docker-entrypoint-scanner-worker.sh:12-16` | Delete the `npm ci` bind-mount workaround |
 | `README.md:101-108` ("8. Optional: Node"), `docs/SCANNER_NODE.md` | Delete section and file |
 | `docs/DATA_QUALITY_ROLLOUT.md:15,29,61,77`, `master-todo.md:34` (C1) | Update references; mark C1 done |
-| Docstring-only mentions (`backend/oem/scraper/crawl4ai_inventory.py:13`, `crawl4ai_discovery.py:4,140`, `backend/dev/dealers.py:29,74,249`, `backend/db/repositories/dealers_repo.py:116`, `backend/intelligence/dealer_score.py:426`, `backend/scanner/vdp/config.py:26`, `backend/scanner/scrape_confidence.py:14`, `backend/scanner/job_diagnosis.py:67,76`, `run_nationwide_discovery.py:8`) | Reword "parity with scanner.js" comments; no logic change |
+| Docstring-only mentions (`backend/oem/scraper/crawl4ai_*` deleted 2026-10-01, `backend/dev/dealers.py:29,74,249`, `backend/db/repositories/dealers_repo.py:116`, `backend/intelligence/dealer_score.py:426`, `backend/scanner/vdp/config.py:26`, `backend/scanner/scrape_confidence.py:14`, `backend/scanner/job_diagnosis.py:67,76`, `run_nationwide_discovery.py:8`) | Reword "parity with scanner.js" comments; no logic change |
 
 ### 0.2 Remove Flask-SocketIO
 
@@ -79,7 +79,7 @@ Verified against `backend/scanner/scanner.js` and its Python consumer `backend/d
 
 | Node capability | Python replacement (exists / to build) |
 |---|---|
-| `--smart-import` dealer metadata: name from JSON-LD `AutomotiveBusiness`/`AutoDealer`, `og:site_name`, `og:title`, address city/state (`scanner.js:2521-2620 discoverDealerMetadata`) | **Exists.** `scanner.js:2360 runCrawl4aiDiscoverySubprocess` already shells out to `backend/oem/scraper/crawl4ai_discovery.py` (`:167-203` parses the same JSON-LD/OG fields). Also `backend/dev/dealer_url_infer.py:321` (`og:site_name`) and `backend/discovery/address_enrich.py:28` (JSON-LD address). The new `scanner.py --url` path calls `crawl4ai_discovery` directly |
+| `--smart-import` dealer metadata: name from JSON-LD `AutomotiveBusiness`/`AutoDealer`, `og:site_name`, `og:title`, address city/state (`scanner.js:2521-2620 discoverDealerMetadata`) | **Exists.** `scanner.js:2360 runCrawl4aiDiscoverySubprocess` already shells out to `backend/oem/scraper/crawl4ai_discovery.py` (`:167-203` parses the same JSON-LD/OG fields). Also `backend/dev/dealer_url_infer.py:321` (`og:site_name`) and `backend/discovery/address_enrich.py:28` (JSON-LD address; deleted 2026-10-01, unimported — `backend/scripts/backfill_dealership_addresses.py` is the live address filler). The new `scanner.py --url` path calls `crawl4ai_discovery` directly |
 | `DISCOVERY:` / `SMART_IMPORT_RESULT:` / `SMART_IMPORT_ERROR:` stdout protocol (`dev/routes.py:712-736`) | Replace with `set_progress(job_id, {...})` from 2.1; worker writes the same dict the UI reads today |
 | Post-scan persistence: `upsert_dealer_manifest_row`, `insert_dealership`, `link_cars_to_dealership_registry` (`dev/routes.py:782-798`, `backend/dev/dealers.py:61,247,264`) | **Exists.** Moves from the web thread into the worker's onboard handler unchanged |
 | `--profile default / resilient / bare` retry ladder (`dev/routes.py:292,681`) | **Exists** as the recovery chain: `backend/scanner/dealer/profile.py:92 prioritize_recovery_chain`, `:104 manifest_recovery_strategies`, plus per-dealer `scan_hints` in `dealer_recipes` |
@@ -161,7 +161,7 @@ Only one web feature reaches Playwright: car/compare chat web research (`backend
 | File | Change |
 |---|---|
 | `scripts/scanner_worker_loop.py:39-58` | Dispatch table by `job_type`: `refresh`/`rescan` → `scanner.py --dealer-id X --scan-only`; `onboard` → `scanner.py --url <url> --dealer-id <slug>` (new flag, below); `enrich` → `python -m backend.scripts.<enricher>` (whatever `InventoryEnricher().run_all` at `backend/dev/routes.py:1339-1346` wraps); `vector_reindex` → `backend.vector.pgvector_service.reindex_all` in-process |
-| `scripts/scanner_worker_loop.py:83-140` (`_sync_dealer_sqlite_to_postgres`) | Delete. Inventory is Postgres-only (SEC-102); this reads a SQLite `cars` table that no longer exists in prod |
+| `scripts/scanner_worker_loop.py:83-140` (`_sync_dealer_sqlite_to_postgres`) | Delete. **Done 2026-10-01** (monolith audit phase 2). Inventory is Postgres-only (SEC-102); this reads a SQLite `cars` table that no longer exists in prod |
 | `scripts/scanner_worker_loop.py:163-179` | Wrap the loop body in `try/except Exception: log.exception(); sleep` like the scheduler (`scripts/scanner_scheduler_loop.py:31-38`). Today one exception kills the worker |
 | `scripts/scanner_worker_loop.py:62-69` | Stream child stdout to `append_log` instead of `capture_output=True` so the UI can tail; poll `is_cancel_requested` and `proc.terminate()` |
 | `scripts/scanner_worker_loop.py` after `finish_job` (`:178`) | Call `record_scan_outcomes` (`backend/db/repositories/dealers_repo.py:15`) so `scan_runs` is written by queue-driven scans. Today only `backend/scanner/orchestrator.py:95` writes it and `backend/scanner/delta_scan.py` never does, which is why `scan_runs` stopped at 2026-07-21 while cars kept updating |
@@ -339,11 +339,11 @@ Move `backend/main.py:740-1195` (18 routes) plus helpers `_account_profile_conte
 | `backend/enrichment/brochure_extract.py` | 2,402 | already has `brochure_sources/` (17 modules); move extraction stages there |
 | `backend/enrichment/brochure_trim_candidates.py` | 2,303 | candidates / scoring / output |
 | `backend/enrichment/knowledge_engine.py` + `knowledge_engine_specs.py` | 3,325 | lookups by store (epa, extended, engine, aggregate) mirroring the 7 `lru_cache` groups |
-| `backend/oem/scraper/oem/bmw_locator_discovery.py` | 1,890 | already has `bmw_debug.py`, `bmw_parse_trace.py`; split network vs parse |
+| `backend/oem/scraper/oem/bmw_locator_discovery.py` | 1,890 | DELETED 2026-10-01 (unreachable; see docs/monolith_audit_2026_10_01/enrich.md #12) |
 | `backend/scanner/recipe_synth.py` | 1,527 | synth / verify / persist (persist collapses into `recipe_store`) |
 | `backend/dev/routes.py` | 1,482 → much smaller after Phase 2.2 removes ~450 lines of job plumbing | status / dealers / imports / enrich blueprints |
 | `frontend/static/main.js` | 3,280 | continue the `listings_boot`/`market_intel`/`geo` extraction |
-| `frontend/static/car_page.js` | 2,799 | gallery / packages / chat / spin already have sibling files (`car_packages.js`, `car_chat.js`, `car_spin.js`); move the rest |
+| `frontend/static/car_page.js` | 2,799 | gallery / packages / spin already have sibling files (`car_packages.js`, `car_spin.js`; the old `car_chat.js` was dead and deleted 2026-10-01); move the rest |
 | `frontend/templates/car.html` | 1,555 | Jinja includes per tab |
 
 ---

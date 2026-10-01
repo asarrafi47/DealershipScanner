@@ -71,64 +71,7 @@ def _run_dealer_scan(dealer_id: str, job_type: str, payload: dict) -> tuple[bool
     result = merge_result_with_scanner_stdout({"log_tail": tail[-800:]}, proc.stdout or "")
     if soft_scrape_failure(job_type, result):
         return False, "scrape_empty", result
-    _sync_dealer_sqlite_to_postgres(dealer_id)
     return True, "", result
-
-
-def _sync_dealer_sqlite_to_postgres(dealer_id: str) -> None:
-    """scanner.js writes SQLite; upsert this dealer's rows into Postgres when configured."""
-    from backend.db.inventory_pg import is_inventory_postgres
-
-    if not is_inventory_postgres() or not dealer_id:
-        return
-    db_path = (os.environ.get("INVENTORY_DB_PATH") or "").strip()
-    if not db_path or not os.path.isfile(db_path):
-        return
-    try:
-        import sqlite3
-
-        from backend.db.inventory_pg import init_postgres_inventory, pg_connect
-
-        sq = sqlite3.connect(db_path)
-        sq.row_factory = sqlite3.Row
-        try:
-            sq_cols = [r[1] for r in sq.execute("PRAGMA table_info(cars)")]
-            rows = sq.execute(
-                f"SELECT {', '.join(sq_cols)} FROM cars WHERE dealer_id = ?",
-                (dealer_id,),
-            ).fetchall()
-        finally:
-            sq.close()
-        if not rows:
-            return
-        pg = pg_connect()
-        try:
-            init_postgres_inventory(pg)
-            cur = pg.cursor()
-            pg_cols = {
-                r[0]
-                for r in cur.execute(
-                    """
-                    SELECT column_name FROM information_schema.columns
-                    WHERE table_schema = 'public' AND table_name = 'cars'
-                    """
-                ).fetchall()
-            }
-            use_cols = [c for c in sq_cols if c in pg_cols and c != "id"]
-            col_list = ", ".join(f'"{c}"' for c in use_cols)
-            placeholders = ", ".join("%s" for _ in use_cols)
-            sql = (
-                f'INSERT INTO cars ({col_list}) VALUES ({placeholders}) '
-                "ON CONFLICT (vin) DO NOTHING"
-            )
-            batch = [tuple(row[c] for c in use_cols) for row in rows]
-            cur.executemany(sql, batch)
-            pg.commit()
-            _log.info("Synced %s vehicle(s) for %s to Postgres", len(batch), dealer_id)
-        finally:
-            pg.close()
-    except Exception as ex:
-        _log.warning("Postgres inventory sync failed for %s: %s", dealer_id, ex)
 
 
 def main() -> int:

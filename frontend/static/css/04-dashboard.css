@@ -337,12 +337,6 @@ body.hub-page {
     text-underline-offset: 3px;
 }
 
-.dealer-card-link--icon {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-}
-
 .dash-hub-action__title {
     display: inline-flex;
     align-items: center;
@@ -494,15 +488,6 @@ body.hub-page {
     font-size: 14px;
     color: var(--text-muted);
     margin: 0;
-}
-
-.dash-hub-hint {
-    margin-top: 14px;
-}
-
-.dash-hub-hint a {
-    color: var(--navy);
-    font-weight: 500;
 }
 
 .dash-hub-trends {
@@ -659,14 +644,6 @@ body.hub-page {
     max-width: 32rem;
 }
 
-.find-cars-card-inner {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 24px;
-    margin-bottom: 22px;
-}
-
 .find-cars-label {
     font-size: 17px;
     font-weight: 600;
@@ -733,17 +710,6 @@ body.hub-page {
     color: var(--text-faint);
 }
 
-.find-cars-card.is-nav-loading,
-.primary-button.is-nav-loading {
-    pointer-events: none;
-    opacity: 0.72;
-    cursor: wait;
-}
-
-.find-cars-card.is-nav-loading .find-cars-arrow {
-    animation: find-cars-pulse 0.9s ease-in-out infinite;
-}
-
 @keyframes find-cars-pulse {
     0%, 100% { opacity: 1; }
     50% { opacity: 0.45; }
@@ -767,14 +733,6 @@ a.is-car-nav-pending,
 .result-card-link.is-car-nav-pending {
     opacity: 0.82;
     cursor: wait;
-}
-
-.listings-inventory-loading {
-    grid-column: 1 / -1;
-    padding: 48px 16px;
-    text-align: center;
-    font-size: 15px;
-    color: var(--text-muted);
 }
 
 /* Saved Cars */

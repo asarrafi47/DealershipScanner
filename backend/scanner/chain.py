@@ -36,9 +36,9 @@ The fetch half of this chain backs
 listing-HTML seam shared by gap_fill, ``vdp/html_recovery``,
 ``enrichment/listing_packages_service`` and
 ``enrichment/window_sticker_service``). The extract half is framework-only for
-now: existing extraction machinery (``claude_vdp_extract``,
-``vdp_spec_extract``, ``backend/scanner/scrapers/``) can opt in later by
-wrapping itself in ``Extractor`` subclasses; nothing existing depends on it.
+now: existing extraction machinery (``vdp_spec_extract``,
+``backend/scanner/scrapers/``) can opt in later by wrapping
+itself in ``Extractor`` subclasses; nothing existing depends on it.
 
 Sync-context caveat: ``PlaywrightFetcher.fetch`` uses sync Playwright, which
 raises if called from inside a running asyncio event loop — call it from a

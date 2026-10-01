@@ -20,9 +20,9 @@ from typing import Any
 from backend.db.inventory_db import get_conn as inventory_get_conn
 from backend.utils.field_clean import is_effectively_empty
 from backend.vector.listings_semantic import build_semantic_listing_document
-from backend.oem.intake.paths import BMW_DB_PATH
-from backend.oem.intake.sqlite_store import connect as bmw_connect
-from backend.oem.intake.sqlite_store import init_schema as bmw_init_schema
+from backend.vector.bmw_store import BMW_DB_PATH
+from backend.vector.bmw_store import connect as bmw_connect
+from backend.vector.bmw_store import init_schema as bmw_init_schema
 
 logger = logging.getLogger(__name__)
 

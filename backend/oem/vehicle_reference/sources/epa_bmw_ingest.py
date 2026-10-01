@@ -118,7 +118,7 @@ def ingest_epa_bmw_range(
     Returns (vehicles_inserted, vehicles_skipped).
     Deletes prior epa_fueleconomy rows for this brand first.
     """
-    from oem.vehicle_reference.ingestion.bundle import _get_brand_id
+    from backend.oem.vehicle_reference.ingestion.bundle import _get_brand_id
 
     def _log(msg: str) -> None:
         if log:

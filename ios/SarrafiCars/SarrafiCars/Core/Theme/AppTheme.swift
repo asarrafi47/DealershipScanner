@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// Website design tokens from `frontend/static/style.css`.
+/// Website design tokens from `frontend/static/css/00-base.css` (`:root`).
 enum AppTheme {
     static let navy = Color(red: 28 / 255, green: 53 / 255, blue: 82 / 255)
     static let navyDeep = Color(red: 20 / 255, green: 42 / 255, blue: 64 / 255)

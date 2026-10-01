@@ -1,34 +1,4 @@
 /* ── Dealership card (car detail page) ─────────────────────────────── */
-.car-dealer-card-section {
-    max-width: 960px;
-    margin: 0 auto 0;
-    padding: 0 20px;
-}
-
-.car-dealer-card {
-    background: transparent;
-    border: none;
-    border-top: 1px solid var(--border-light);
-    border-radius: 0;
-    padding: 24px 0;
-    margin: 28px 0;
-}
-
-.dealer-card-heading {
-    font-size: 14px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--text-muted);
-    margin: 0 0 12px;
-}
-
-.dealer-card-name {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: var(--text);
-    margin: 0 0 4px;
-}
 
 .dealer-card-address,
 .dealer-card-location {
@@ -370,28 +340,6 @@
     font-weight: 600;
 }
 
-.result-market {
-    font-size: 12px;
-    margin: -2px 0 6px;
-    line-height: 1.35;
-}
-
-.result-market--below_market {
-    color: #1a7f4c;
-}
-
-.result-market--above_market {
-    color: #b45309;
-}
-
-.result-market--near_market {
-    color: var(--text-muted);
-}
-
-.result-market-delta {
-    font-weight: 600;
-}
-
 .car-market-panel {
     margin-top: 20px;
     margin-bottom: 4px;
@@ -402,14 +350,6 @@
     border-bottom: 1px solid var(--border-light);
     background: transparent;
     max-width: 520px;
-}
-
-.car-market-eyebrow {
-    font-size: 0.72rem;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    margin: 0 0 10px;
 }
 
 .car-market-line {
@@ -446,8 +386,7 @@
     color: #b45309;
 }
 
-.car-market-cohort,
-.car-market-disclaimer {
+.car-market-cohort {
     margin: 8px 0 0;
     font-size: 0.82rem;
     color: var(--text-muted);
@@ -791,17 +730,6 @@ body.listings-page .listings-toolbar .results-count {
     margin-bottom: 14px;
 }
 
-.filter-advanced-label {
-    width: 100%;
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--text-faint);
-    margin: 8px 0 10px;
-    grid-column: 1 / -1;
-}
-
 .listings-filters-sheet-done {
     display: none !important;
     width: 100%;
@@ -1036,10 +964,6 @@ body.listings-page .listings-toolbar .results-count {
         padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px));
     }
 
-    .car-detail-actions--hero .primary-button {
-        width: 100%;
-        justify-content: center;
-    }
 }
 
 @media (min-width: 961px) {

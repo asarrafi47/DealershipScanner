@@ -12,5 +12,5 @@ Layout
 ``sources/`` — EPA and other upstream clients  
 ``parsers/`` — ordering-guide column conventions  
 ``seeds/`` — BMW bootstrap JSON  
-CLI entrypoint: ``python -m vehicle_reference.cli``.
+CLI entrypoint: ``python -m backend.oem.vehicle_reference.cli``.
 """

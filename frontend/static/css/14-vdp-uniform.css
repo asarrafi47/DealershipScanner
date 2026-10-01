@@ -32,8 +32,7 @@ body.car-detail-page {
    text. The only framed surfaces left are the two that reproduce a physical
    document: the Monroney build sheet sections and the window-sticker embed. */
 
-body.car-detail-page .build-sheet-section,
-body.car-detail-page .car-window-sticker-frame {
+body.car-detail-page .build-sheet-section {
     background: var(--vdp-card-bg);
     border: 1px solid var(--vdp-card-border-color);
     border-radius: var(--vdp-card-radius);

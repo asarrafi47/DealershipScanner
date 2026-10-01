@@ -29,17 +29,6 @@
 
 /* ZIP and radius always appear first in the pill row */
 
-.smart-search-label {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    border: 0;
-}
-
 .smart-search-input {
     width: 100%;
     padding: 10px 14px;
@@ -97,14 +86,11 @@
     color: #e8f8fc;
 }
 
-.pill-group.pill-select-group.smart-parse-active .pill-select-label,
-.acc-plain-group.smart-parse-active .acc-plain-label {
+.pill-group.pill-select-group.smart-parse-active .pill-select-label {
     color: #00bde3;
 }
 
-.pill-group.pill-select-group.smart-parse-active .pill-select,
-.acc-plain-group.smart-parse-active .sidebar-select,
-.acc-plain-group.smart-parse-active .sidebar-input {
+.pill-group.pill-select-group.smart-parse-active .pill-select {
     border-color: rgba(0, 189, 227, 0.5);
 }
 
@@ -148,13 +134,6 @@
     box-shadow: 0 12px 40px rgba(20, 36, 54, 0.06);
 }
 
-/* hidden when docked */
-.filter-bar.docked .filter-top-row {
-    opacity: 0;
-    pointer-events: none;
-    transform: translateY(-8px);
-}
-
 /* ── Pill buttons ── */
 
 .pill-group {
@@ -192,12 +171,6 @@
     border-color: rgba(100,200,255,0.4);
     color: #7dd3fc;
     cursor: default;
-}
-
-.pill-label {
-    font-size: 12px;
-    font-weight: 500;
-    letter-spacing: 0.03em;
 }
 
 .pill-count {
@@ -295,19 +268,6 @@
     border-color: var(--navy);
 }
 
-.pill-actions {
-    display: flex;
-    align-items: center;
-    align-self: center;
-    gap: 10px;
-    margin-left: 4px;
-}
-
-.pill-search-btn {
-    padding: 7px 18px;
-    font-size: 13px;
-}
-
 .pill-clear-btn {
     font-size: 12px;
     color: var(--text-muted);
@@ -319,88 +279,7 @@
     color: var(--navy);
 }
 
-/* ── DOCKED MODE: vertical sidebar ── */
-
-.filter-docked-inner {
-    pointer-events: none;
-    position: fixed;
-    top: 73px;
-    left: 0;
-    width: 240px;
-    height: calc(100vh - 73px);
-    background: linear-gradient(180deg, var(--bg-elevated) 0%, var(--bg-subtle) 100%);
-    border-right: 1px solid var(--border-light);
-    display: flex;
-    flex-direction: column;
-    opacity: 0;
-    transform: translateX(-20px);
-    /* Animated by Motion.dev on listings page when docking */
-}
-
-.filter-bar.docked .filter-docked-inner {
-    pointer-events: all;
-}
-
-.docked-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 18px 18px 14px;
-    border-bottom: 1px solid var(--border-light);
-    flex-shrink: 0;
-}
-
-.docked-title {
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--text-muted);
-}
-
-.docked-count {
-    color: var(--navy);
-    font-size: 12px;
-    font-weight: 700;
-    font-variant-numeric: tabular-nums;
-    line-height: 1.6;
-}
-
-.docked-body {
-    flex: 1;
-    overflow-y: auto;
-    scrollbar-width: thin;
-    scrollbar-color: rgba(28, 53, 82, 0.25) transparent;
-}
-
-.docked-body::-webkit-scrollbar { width: 3px; }
-.docked-body::-webkit-scrollbar-thumb {
-    background: rgba(28, 53, 82, 0.2);
-    border-radius: 2px;
-}
-
-.docked-footer {
-    padding: 14px;
-    border-top: 1px solid var(--border-light);
-    display: flex;
-    gap: 8px;
-    flex-shrink: 0;
-}
-
-.docked-search-btn {
-    flex: 1;
-    text-align: center;
-    padding: 11px 14px;
-    font-size: 13px;
-}
-
-.docked-clear-btn {
-    padding: 11px 14px;
-    font-size: 13px;
-    text-align: center;
-}
-
-/* ── Accordion (docked sidebar) ── */
+/* ── Accordion (listings sidebar filter groups) ── */
 
 .acc-section {
     border-bottom: 1px solid var(--border-light);
@@ -466,30 +345,6 @@
 .acc-body.open { display: block; }
 
 .acc-options { display: flex; flex-direction: column; }
-
-.acc-plain-group {
-    padding: 10px 0 4px 0;
-    border-bottom: 1px solid var(--border-light);
-}
-
-/* Location group at top of sidebar — subtle highlight to distinguish */
-.acc-plain-group.sidebar-location-group {
-    background: var(--navy-soft);
-    border-bottom-color: var(--border-medium);
-}
-
-.acc-plain-group.sidebar-location-group .acc-plain-label {
-    color: var(--text-muted);
-}
-
-.acc-plain-label {
-    font-size: 10px;
-    font-weight: 500;
-    color: var(--text-muted);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    padding: 0 18px 5px 18px;
-}
 
 /* ── Shared checkbox options ── */
 
@@ -594,15 +449,6 @@ body.listings-page .listings-main.dash-content {
     transition: none;
 }
 
-.page.docked .dash-content {
-    margin-right: 0;
-    padding: 36px 32px 80px 32px;
-}
-
-.page.docked .listings-main.dash-content {
-    padding-top: 36px;
-}
-
 /* ── Listings page (search) — full-width marketplace layout ── */
 
 body.listings-page {
@@ -633,84 +479,6 @@ body.listings-page .listings-form {
     width: 100%;
 }
 
-.listings-hero-band {
-    width: 100%;
-    border-bottom: 1px solid var(--border-light);
-    background:
-        linear-gradient(165deg, rgba(255, 255, 255, 0.9) 0%, transparent 45%),
-        linear-gradient(120deg, rgba(28, 53, 82, 0.06) 0%, transparent 55%),
-        var(--bg-page);
-    padding: clamp(24px, 4vw, 40px) clamp(16px, 3vw, 48px) clamp(20px, 3vw, 32px);
-    box-sizing: border-box;
-}
-
-.listings-hero-band__inner {
-    width: 100%;
-    max-width: 1680px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(300px, 440px);
-    gap: clamp(20px, 3vw, 40px);
-    align-items: start;
-}
-
-.listings-hero-band__head {
-    text-align: left;
-    align-self: start;
-    grid-column: 1;
-    grid-row: 1;
-    min-width: 0;
-}
-
-.listings-hero-band__head .listings-intro-heading {
-    font-size: clamp(28px, 4vw, 44px);
-    font-weight: 700;
-    letter-spacing: -0.03em;
-    line-height: 1.05;
-    margin-bottom: 10px;
-}
-
-.listings-search-card--hero {
-    grid-column: 2;
-    grid-row: 1;
-    justify-self: end;
-    align-self: start;
-    width: 100%;
-    max-width: 440px;
-    padding: 18px 0 20px;
-}
-
-.listings-search-card--unified .smart-search-hint--in-card {
-    margin: 0 0 14px;
-    padding: 0 0 14px;
-    border: none;
-    border-radius: 0;
-    background: transparent;
-    box-shadow: none;
-    border-bottom: 1px solid var(--border-light);
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    gap: 8px 12px;
-}
-
-.listings-search-card--unified .smart-search-hint__label {
-    margin-bottom: 0;
-}
-
-.listings-search-card--unified .smart-search-hint__text {
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--text);
-    line-height: 1.45;
-}
-
-body.listings-page .smart-search-input--hero {
-    min-height: 54px;
-    font-size: 16px;
-    border-radius: 16px;
-}
-
 body.listings-page .listings-layout {
     display: grid;
     grid-template-columns: minmax(280px, 320px) minmax(0, 1fr);
@@ -722,32 +490,6 @@ body.listings-page .listings-layout {
     padding: clamp(20px, 3vw, 32px) clamp(16px, 3vw, 48px) clamp(64px, 6vw, 96px);
     box-sizing: border-box;
     align-items: start;
-}
-
-.listings-refine-heading {
-    font-size: 13px;
-    font-weight: 600;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    margin: 0 0 14px;
-}
-
-.listings-results-head {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px 20px;
-    margin-bottom: 20px;
-}
-
-.listings-results-title {
-    font-size: clamp(20px, 2.5vw, 26px);
-    font-weight: 600;
-    letter-spacing: -0.02em;
-    margin: 0;
-    color: var(--text);
 }
 
 body.listings-page .listings-sidebar {
@@ -1058,11 +800,6 @@ body.listings-page .listings-intro--dense {
     margin-bottom: 10px;
 }
 
-body.listings-page .listings-intro--dense .listings-intro-eyebrow {
-    margin: 0;
-    font-size: 10px;
-}
-
 body.listings-page .listings-intro--dense .listings-intro-heading {
     font-size: 18px;
     margin: 0;
@@ -1153,14 +890,6 @@ body.listings-page .listings-intro {
     max-width: none;
 }
 
-.listings-intro-eyebrow {
-    font-size: 11px;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    margin: 0 0 8px;
-}
-
 .listings-intro-heading {
     font-size: clamp(22px, 3.2vw, 30px);
     font-weight: 600;
@@ -1191,16 +920,6 @@ body.listings-page .listings-intro {
     width: 100%;
 }
 
-.smart-search-hint__label {
-    display: block;
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    margin-bottom: 6px;
-}
-
 .listings-search-card {
     background: transparent;
     border: none;
@@ -1214,11 +933,6 @@ body.listings-page .filter-controls-row {
     margin-top: 10px;
     padding-top: 10px;
     gap: 6px;
-}
-
-body.listings-page .filter-controls-row.filter-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 body.listings-page .filter-controls-row .pill-group {
@@ -1239,16 +953,6 @@ body.listings-page .filter-controls-row .pill-group.pill-select-group {
 body.listings-page .filter-controls-row .pill-group.pill-select-group .pill-select,
 body.listings-page .filter-controls-row .pill-group.pill-select-group .pill-zip {
     width: 100%;
-}
-
-body.listings-page .pill-actions {
-    align-self: stretch;
-    margin-left: 0;
-    margin-top: 10px;
-    padding-top: 12px;
-    border-top: 1px solid var(--border-light);
-    width: 100%;
-    justify-content: flex-start;
 }
 
 body.listings-page .listings-sidebar .pill-dropdown {
@@ -1302,31 +1006,9 @@ body.listings-page .pill-zip {
     border-radius: 12px;
 }
 
-/* Legacy scroll-dock sidebar (duplicate accordion) — hidden; filters are in .listings-sidebar */
-body.listings-page .filter-docked-inner {
-    display: none !important;
-}
-
 @media (max-width: 1100px) {
     body.listings-page .results-grid {
         grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    }
-}
-
-@media (max-width: 960px) {
-    .listings-hero-band__inner {
-        grid-template-columns: 1fr;
-    }
-
-    .listings-hero-band__head,
-    .listings-search-card--hero {
-        grid-column: 1;
-        max-width: none;
-        justify-self: stretch;
-    }
-
-    .listings-hero-band {
-        padding: 20px 16px 18px;
     }
 }
 
@@ -1439,23 +1121,6 @@ body.listings-page .filter-top-row.listings-filters-compact {
     }
 }
 
-/* ── Welcome state ── */
-
-.welcome-state {
-    margin-bottom: 48px;
-    text-align: center;
-}
-
-.welcome-state h1 {
-    font-size: 52px;
-    margin-bottom: 14px;
-}
-
-.welcome-state .hero-text {
-    max-width: 500px;
-    margin: 0 auto;
-}
-
 /* ── Results ── */
 
 .results-count {
@@ -1533,14 +1198,6 @@ body.listings-page .results-grid {
 
 body.listings-page .result-image {
     height: clamp(180px, 22vw, 220px);
-}
-
-.listings-inventory-loading {
-    grid-column: 1 / -1;
-    padding: 48px 16px;
-    text-align: center;
-    font-size: 15px;
-    color: var(--text-muted);
 }
 
 .result-image-wrap {
@@ -1761,7 +1418,6 @@ body.listings-page .result-image {
     max-width: 28rem;
     margin: 0 auto;
 }
-
 
 /* ── Search gate (owner decision 2026-09-28): no cars until a search begins ── */
 .listings-start-prompt {

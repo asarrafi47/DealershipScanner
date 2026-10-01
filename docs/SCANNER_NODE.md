@@ -100,8 +100,7 @@ The existing **`model_specs`** table remains for manual overrides; the Node scan
 ## AI co-pilot (GPT-4o + EPA verification)
 
 - **Env:** `OPENAI_API_KEY` (required for live answers). Optional: `OPENAI_CHAT_MODEL` (default `gpt-4o`).
-- **Backend:** `backend/ai_agent.py` — `verify_car_data(vin)` compares listing vs `epa_master` + trim decoder; `POST /api/ai/chat` runs the assistant with that JSON in context.
-- **Debug:** `GET /api/ai/verify/<vin>` returns verification JSON only (no OpenAI call).
+- **Backend:** `backend/intelligence/ai/agent.py` — `run_car_page_chat` / `run_compare_chat`; `POST /api/ai/chat` runs the assistant on the listing context. (`verify_car_data` and `GET /api/ai/verify/<vin>` were removed: no callers; spec verification lives in `merge_verified_specs` + vPIC.)
 - **Frontend:** `frontend/static/ai_widget.js` — floating **Co-Pilot** on listings & dashboard; car detail uses the gallery chat + same API. Amber highlight on `data-spec-field` rows when `discrepancy_flags` is returned.
 - **Legacy:** `POST /api/chat` (Ollama) is unchanged if you still use local LLM elsewhere.
 

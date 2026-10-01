@@ -122,7 +122,7 @@
 | `CSP_ENFORCE` | Optional | `1`/`0`: force `Content-Security-Policy` on vs off. If unset, **on** in production, **off** in non-production (see SEC-032). |
 | `CSP_REPORT_ONLY` | Optional (`1` / `true`) | `Content-Security-Policy-Report-Only` when `CSP_ENFORCE` is off (see SEC-032) |
 | `RATE_LIMIT_SQLITE_PATH` | Optional | Shared SQLite file for per-IP rate limit state across multiple workers (see SEC-040) |
-| `GOOGLE_CSE_API_KEY` | Optional spec search tier | Google Programmable Search JSON API key (never commit; used by `scripts/backfill_vehicle_specs.py` / `POST /dev/api/cars/<id>/spec-backfill` only when enabled) |
+| `GOOGLE_CSE_API_KEY` | Optional spec search tier | Google Programmable Search JSON API key (never commit; used by `POST /dev/api/cars/<id>/spec-backfill` only when enabled) |
 | `GOOGLE_CSE_ID` | With `GOOGLE_CSE_API_KEY` | Programmable Search Engine cx identifier |
 | `GOOGLE_OAUTH_CLIENT_ID` | Optional Google sign-in | OAuth 2.0 web client id (never commit) |
 | `GOOGLE_OAUTH_CLIENT_SECRET` | With `GOOGLE_OAUTH_CLIENT_ID` | OAuth client secret (never commit) |
