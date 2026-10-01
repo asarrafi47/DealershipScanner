@@ -56,9 +56,15 @@ import pytest
 
 @pytest.fixture(autouse=True)
 def _inventory_sqlite_tests_mode(monkeypatch: pytest.MonkeyPatch) -> None:
-    """Default tests to SQLite inventory unless they set INVENTORY_DATABASE_URL."""
-    monkeypatch.delenv("INVENTORY_DATABASE_URL", raising=False)
-    monkeypatch.delenv("DATABASE_URL", raising=False)
+    """Default tests to SQLite inventory unless they set INVENTORY_DATABASE_URL.
+
+    setenv(""), never delenv: this fixture runs after the root one, and a
+    deleted key used to be refilled from .env by the next importlib.reload of
+    backend.main (load_project_dotenv), pointing the test at the real database.
+    An empty value stays empty and is falsy everywhere the URL is read.
+    """
+    monkeypatch.setenv("INVENTORY_DATABASE_URL", "")
+    monkeypatch.setenv("DATABASE_URL", "")
     monkeypatch.setenv("INVENTORY_SQLITE_TESTS", "1")
 
 

@@ -26,24 +26,12 @@ document.addEventListener("DOMContentLoaded", () => {
     let currentQueueId = null;
     /** null | "smart" — which bulk queue API to poll */
     let currentQueueKind = null;
-    /** Last single-URL Smart Import target (for headed retry). */
-    let lastSingleSmartUrl = null;
     /** Avoid re-rendering scanner log every poll tick (preserves text selection while job runs). */
     let lastScanLogSnapshot = "";
     let lastDiscoverySnapshot = "";
 
-    const headedRetryWrap = document.getElementById("dev-headed-retry-wrap");
-    const headedRetryBtn = document.getElementById("dev-headed-retry");
-
     function setImportButtonsDisabled(disabled) {
         if (smartBtn) smartBtn.disabled = disabled;
-    }
-
-    function logIndicatesZeroVehicles(log) {
-        if (!log) return false;
-        if (/Upserted\s+0\s+unique vehicles/i.test(log)) return true;
-        if (/SCAN_VEHICLE_COUNT:\s*0\b/.test(log)) return true;
-        return false;
     }
 
     /** Flask ``SCRIPT_NAME`` / reverse-proxy mount (empty when served at site root). */
@@ -104,10 +92,14 @@ document.addEventListener("DOMContentLoaded", () => {
         return res;
     }
 
+    /** Escape for HTML text and quoted attribute values (`value="…"`). */
     function escHtml(s) {
-        const d = document.createElement("div");
-        d.textContent = s;
-        return d.innerHTML;
+        return String(s ?? "")
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#39;");
     }
 
     function isHttpUrl(s) {
@@ -355,6 +347,8 @@ document.addEventListener("DOMContentLoaded", () => {
             stopPoll();
             setImportButtonsDisabled(false);
             let tail = `\n---\nExit code: ${data.exit_code ?? "unknown"}\n`;
+            if (data.dealer_id) tail += `Dealer id: ${data.dealer_id}\n`;
+            if (data.verdict) tail += `Pipeline verdict: ${data.verdict} (${data.rows ?? 0} rows)\n`;
             if (data.insert_id != null) tail += `Saved dealership id: ${data.insert_id}\n`;
             if (data.cars_linked != null) tail += `Cars linked to registry: ${data.cars_linked}\n`;
             if (data.insert_error) tail += `Insert validation: ${JSON.stringify(data.insert_error)}\n`;
@@ -365,12 +359,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 renderDiscovery(data.discovery);
             }
             syncScanPollSnapshots(finalLog, data.discovery || []);
-            if (headedRetryWrap) {
-                headedRetryWrap.hidden = !(
-                    lastSingleSmartUrl &&
-                    logIndicatesZeroVehicles(finalLog)
-                );
-            }
             refreshDealersTable();
             refreshIncompleteCars();
             return;
@@ -392,7 +380,11 @@ document.addEventListener("DOMContentLoaded", () => {
             tdS.textContent = row.queue_status || "—";
 
             const tdR = document.createElement("td");
-            tdR.textContent = row.insert_id != null ? `#${row.insert_id}` : "—";
+            if (row.verdict) {
+                tdR.textContent = `${row.verdict} · ${row.rows ?? 0} rows`;
+            } else {
+                tdR.textContent = row.insert_id != null ? `#${row.insert_id}` : "—";
+            }
 
             const tdA = document.createElement("td");
             if (row.insert_id && row.queue_status === "completed") {
@@ -487,39 +479,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    if (headedRetryBtn) {
-        headedRetryBtn.addEventListener("click", async () => {
-            if (!lastSingleSmartUrl) return;
-            if (headedRetryWrap) headedRetryWrap.hidden = true;
-            setImportButtonsDisabled(true);
-            renderDiscovery([{ message: "Starting headed retry…" }]);
-            renderLog(scanLog, "Retrying with visible browser (headed)…\n");
-            syncScanPollSnapshots("Retrying with visible browser (headed)…\n", [
-                { message: "Starting headed retry…" },
-            ]);
-            const res = await devFetch(devApi("smart-import"), {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ url: lastSingleSmartUrl, headed: true }),
-            });
-            const data = await res.json();
-            if (!res.ok || !data.job_id) {
-                const err = data.error || "Failed to start headed retry.";
-                renderLog(scanLog, err);
-                syncScanPollSnapshots(err, []);
-                setImportButtonsDisabled(false);
-                return;
-            }
-            currentQueueId = null;
-            currentQueueKind = null;
-            if (queuePanel) queuePanel.hidden = true;
-            stopQueuePoll();
-            activeJobId = data.job_id;
-            pollTimer = setInterval(() => pollScannerJob(data.job_id), 400);
-            pollScannerJob(data.job_id);
-        });
-    }
-
     if (smartBtn && urlsTa && scanLog) {
         smartBtn.addEventListener("click", async () => {
             const urls = parseUrlLines();
@@ -529,13 +488,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
             setImportButtonsDisabled(true);
-            if (headedRetryWrap) headedRetryWrap.hidden = true;
             renderDiscovery([{ message: "Starting…" }]);
             renderLog(scanLog, "Starting import jobs…\n");
             syncScanPollSnapshots("Starting import jobs…\n", [{ message: "Starting…" }]);
 
             if (urls.length === 1) {
-                lastSingleSmartUrl = urls[0];
                 const res = await devFetch(devApi("smart-import"), {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
@@ -559,7 +516,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
-            lastSingleSmartUrl = null;
             const res = await devFetch(devApi("smart-import-bulk"), {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -622,16 +578,11 @@ document.addEventListener("DOMContentLoaded", () => {
         const data = await res.json();
         if (!data.ok) return;
         const dbCls = data.db_connected ? "dev-ok" : "dev-bad";
-        const nodeCls = data.node_version ? "dev-ok" : "dev-bad";
+        const pipelineCls = data.scan_pipeline_ok ? "dev-ok" : "dev-bad";
         const adminCls = data.admin_password_configured ? "dev-ok" : "dev-bad";
         const regCls = data.dev_registration_open ? "dev-ok" : "dev-bad";
         const dbPath = escHtml(data.inventory_db_path || "");
-        const nodePath = escHtml(
-            data.node_status_line ||
-                data.node_executable ||
-                "Install Node 18+; server probes PATH, NODE_BINARY, Homebrew, and nvm."
-        );
-        const nodeVer = escHtml(data.node_version || "Not verified");
+        const pipelineLine = escHtml(data.scan_pipeline_status_line || "");
         const adminMeta = data.is_production
             ? "Production requires ADMIN_PASSWORD."
             : "Non-production may use env defaults.";
@@ -648,9 +599,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 <p class="dev-status-meta">${dbPath}</p>
             </div>
             <div class="dev-status-card">
-                <p class="dev-status-label">Node.js</p>
-                <p class="dev-status-value ${nodeCls}">${nodeVer}</p>
-                <p class="dev-status-meta" style="white-space: pre-wrap; word-break: break-word;">${nodePath}</p>
+                <p class="dev-status-label">Scan pipeline</p>
+                <p class="dev-status-value ${pipelineCls}">${data.scan_pipeline_ok ? "Ready" : "Unavailable"}</p>
+                <p class="dev-status-meta">${pipelineLine}</p>
             </div>
             <div class="dev-status-card">
                 <p class="dev-status-label">Dev accounts DB</p>

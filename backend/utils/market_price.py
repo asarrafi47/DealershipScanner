@@ -8,7 +8,9 @@ sample count is too low.
 from __future__ import annotations
 
 import os
-from collections import defaultdict
+import threading
+import time
+from collections import OrderedDict, defaultdict
 from pathlib import Path
 from typing import Any
 
@@ -18,20 +20,80 @@ _MIN_LISTINGS_FOR_AVG = max(2, int(os.environ.get("MARKET_PRICE_MIN_SAMPLES", "3
 _YEAR_WINDOW = max(0, int(os.environ.get("MARKET_PRICE_YEAR_WINDOW", "1")))
 _DEFAULT_RADIUS_MI = float(os.environ.get("MARKET_PRICE_DEFAULT_RADIUS_MI", "50"))
 
-# Cache: (db_mtime, zip, radius) -> CohortIndex snapshot
-_cohort_cache: dict[tuple[float, str, float], "CohortIndex"] = {}
+# Cohort snapshots, keyed on (zip, radius). Each entry carries the time it was
+# built and the inventory "version" it was built against. Every snapshot is a
+# full scan of active listings, so the cache is bounded (LRU) and entries expire
+# after a TTL. The version is the SQLite file's mtime in SQLite mode; under
+# Postgres there is no file to watch (DB_PATH still names a SQLite path that
+# Postgres writes never touch), so the TTL alone decides freshness there.
+_DEFAULT_CACHE_TTL_SEC = 900.0
+_DEFAULT_CACHE_MAX_ENTRIES = 32
+_cohort_cache: "OrderedDict[tuple[str, float], tuple[float, float | None, CohortIndex]]" = OrderedDict()
+_cohort_cache_lock = threading.Lock()
+
+
+def _cache_ttl_sec() -> float:
+    raw = (os.environ.get("MARKET_PRICE_CACHE_TTL_SEC") or "").strip()
+    try:
+        return max(0.0, float(raw)) if raw else _DEFAULT_CACHE_TTL_SEC
+    except ValueError:
+        return _DEFAULT_CACHE_TTL_SEC
+
+
+def _cache_max_entries() -> int:
+    raw = (os.environ.get("MARKET_PRICE_CACHE_MAX") or "").strip()
+    try:
+        return max(1, int(raw)) if raw else _DEFAULT_CACHE_MAX_ENTRIES
+    except ValueError:
+        return _DEFAULT_CACHE_MAX_ENTRIES
 
 
 def _inventory_db_mtime() -> float:
     try:
-        from backend.db.inventory_db import DB_PATH
+        from backend.db.inventory_db import _resolve_db_path
 
-        p = Path(DB_PATH)
+        p = Path(_resolve_db_path())
         if p.is_file():
             return p.stat().st_mtime
     except Exception:
         pass
     return 0.0
+
+
+def _inventory_version() -> float | None:
+    """SQLite file mtime, or None under Postgres (no file reflects its writes)."""
+    try:
+        from backend.db.inventory_db import is_inventory_postgres
+
+        if is_inventory_postgres():
+            return None
+    except Exception:
+        pass
+    return _inventory_db_mtime()
+
+
+def _cache_get(key: tuple[str, float], version: float | None) -> "CohortIndex | None":
+    now = time.monotonic()
+    ttl = _cache_ttl_sec()
+    with _cohort_cache_lock:
+        entry = _cohort_cache.get(key)
+        if entry is None:
+            return None
+        built_at, built_version, idx = entry
+        if built_version != version or now - built_at >= ttl:
+            del _cohort_cache[key]
+            return None
+        _cohort_cache.move_to_end(key)
+        return idx
+
+
+def _cache_put(key: tuple[str, float], version: float | None, idx: "CohortIndex") -> None:
+    limit = _cache_max_entries()
+    with _cohort_cache_lock:
+        _cohort_cache[key] = (time.monotonic(), version, idx)
+        _cohort_cache.move_to_end(key)
+        while len(_cohort_cache) > limit:
+            _cohort_cache.popitem(last=False)
 
 
 def _trim_key(make: str | None, model: str | None, trim: str | None) -> tuple[str, str, str]:
@@ -358,14 +420,14 @@ def get_cohort_index(
     zip_code: str | None = None,
     radius_miles: float | None = None,
 ) -> CohortIndex:
-    mtime = _inventory_db_mtime()
+    version = _inventory_version()
     z = (zip_code or "").strip()
     try:
         r = float(radius_miles) if radius_miles is not None else 0.0
     except (TypeError, ValueError):
         r = 0.0
-    cache_key = (mtime, z, round(r, 2))
-    cached = _cohort_cache.get(cache_key)
+    cache_key = (z, round(r, 2))
+    cached = _cache_get(cache_key, version)
     if cached is not None:
         return cached
 
@@ -388,7 +450,7 @@ def get_cohort_index(
         groups[(mk, md, tr, y, mb)].append(price)
 
     idx = CohortIndex(dict(groups), geo_label=geo_label, region_count=len(regional))
-    _cohort_cache[cache_key] = idx
+    _cache_put(cache_key, version, idx)
     return idx
 
 

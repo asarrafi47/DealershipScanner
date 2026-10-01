@@ -8,8 +8,9 @@
     <title>Scan lab results — Dev</title>
     {% include "_head_css.html" %}
     {% include "_head_meta.html" %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/16-admin-pages.css') }}?v={{ static_cache_ver }}">
 </head>
-<body class="listings-page">
+<body class="listings-page scan-lab-listings-page">
 <div class="page">
     <nav class="topbar">
         <div class="logo">Sarrafi Cars</div>
@@ -76,11 +77,6 @@
     "dealer_id": filter_dealer_id,
     "vdp_base": url_for('dev.scan_lab_home').replace('/scan-lab', '/scan-lab/car')
 } | tojson }}</script>
-<style>
-.scan-lab-thumb { width: 88px; height: 58px; object-fit: cover; background: var(--border-light); display: block; }
-.scan-lab-incomplete td:first-child { box-shadow: inset 2px 0 0 #d97706; padding-left: 8px; }
-.scan-lab-results-table td { vertical-align: top; }
-</style>
 <script src="{{ url_for('static', filename='dev_scan_lab.js') }}?v={{ static_cache_ver }}"></script>
 {% include "_footer_version.html" %}
 </body>

@@ -33,11 +33,11 @@
                 <p class="dev-status-meta">{{ status.inventory_db_path }}</p>
             </div>
             <div class="dev-status-card">
-                <p class="dev-status-label">Node.js</p>
-                <p class="dev-status-value {% if status.node_version %}dev-ok{% else %}dev-bad{% endif %}">
-                    {{ status.node_version or "Not verified" }}
+                <p class="dev-status-label">Scan pipeline</p>
+                <p class="dev-status-value {% if status.scan_pipeline_ok %}dev-ok{% else %}dev-bad{% endif %}">
+                    {% if status.scan_pipeline_ok %}Ready{% else %}Unavailable{% endif %}
                 </p>
-                <p class="dev-status-meta" style="white-space: pre-wrap; word-break: break-word;">{{ status.node_status_line or "Probing `node`…" }}</p>
+                <p class="dev-status-meta">{{ status.scan_pipeline_status_line }}</p>
             </div>
             <div class="dev-status-card">
                 <p class="dev-status-label">Dev accounts DB</p>
@@ -60,7 +60,7 @@
             <p class="db-eyebrow">Smart import</p>
             <h2 class="db-section-title">Bulk magic URLs</h2>
         </div>
-        <p class="dev-hint">Runs <code>node scanner.js --url … --smart-import</code>. On success, updates project-root <code>dealers.json</code> so <code>python scanner.py --dealer-id …</code> can re-run the dealer.</p>
+        <p class="dev-hint">Adds each URL to project-root <code>dealers.json</code> (the roster the scanner reads), then runs <code>python -m backend.scripts.dealer_pipeline --dealers …</code>: recipe synthesized from the homepage, HTTP-only scan, NHTSA check, verdict and logs under <code>workspace/dealer_logs/&lt;dealer_id&gt;/</code>. When the HTTP recipe finds nothing, the pipeline runs the headless discovery capture itself. The registry row (city/state for geocoding and listings filters) is not written here; add it with Insert dealer.</p>
         <label class="dev-textarea-label" for="dev-smart-urls">Dealer URLs (one per line)</label>
         <textarea id="dev-smart-urls" class="dev-url-textarea" rows="5" placeholder="https://www.example-bmw.com&#10;https://www.other-dealer.com"></textarea>
         <div class="dev-playground-row dev-playground-row--mt">
@@ -75,7 +75,7 @@
                         <tr>
                             <th>URL</th>
                             <th>Status</th>
-                            <th>Registry</th>
+                            <th>Result</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -92,10 +92,6 @@
         </div>
 
         <div class="dev-log-pre" id="dev-scan-log" aria-label="Scanner output">Ready. Add URLs above and click Import &amp; scan.</div>
-        <div class="dev-headed-retry-wrap" id="dev-headed-retry-wrap" hidden>
-            <button type="button" class="secondary-button" id="dev-headed-retry">Retry with Headless: False</button>
-            <p class="dev-hint">Runs the scanner in a visible browser window (useful when inventory stays at zero).</p>
-        </div>
     </section>
 
     <section class="db-section dev-section">

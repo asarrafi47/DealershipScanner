@@ -1,0 +1,1078 @@
+/* Page-specific rules that used to live in inline <style> elements.
+
+   Production enforces CSP "style-src-elem 'self'" (backend/main.py,
+   _csp_header_value_enforced), which blocks every <style> element, so these
+   pages rendered partly unstyled in prod. Templates must not carry <style>
+   elements (backend/tests/test_no_inline_style_elements.py); page CSS lives here.
+
+   Every selector is scoped by a body class the owning template sets, so nothing
+   here can reach another page. Loaded after _head_css.html, matching where the
+   inline blocks sat in the cascade. */
+
+
+/* ---- Site admin hub (/admin/site) -- admin/site_hub.html ---- */
+
+/* Editorial layout: sections separated by hairlines, no cards, tiles or pills. */
+
+.admin-page--site .platform-dash {
+    max-width: 1180px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.admin-page--site .platform-hero {
+    padding: 4px 0 24px;
+}
+
+.admin-page--site .platform-hero__title {
+    font-size: clamp(26px, 3vw, 34px);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: var(--text);
+    margin: 0 0 8px;
+}
+
+.admin-page--site .platform-hero__lead {
+    margin: 0;
+    max-width: 42rem;
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--text-muted);
+}
+
+.admin-page--site .platform-panel {
+    border-top: 1px solid var(--border-light);
+    padding: 22px 0 30px;
+}
+
+.admin-page--site .platform-panel__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 12px 16px;
+    margin-bottom: 16px;
+}
+
+.admin-page--site .platform-panel__title {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.01em;
+}
+
+.admin-page--site .platform-panel__sub {
+    margin: 2px 0 0;
+    font-size: 13px;
+    color: var(--text-muted);
+}
+
+.admin-page--site .platform-health {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 22px;
+    align-items: baseline;
+    font-size: 14px;
+}
+
+.admin-page--site .platform-health__item {
+    font-weight: 600;
+    color: var(--text);
+}
+
+.admin-page--site .platform-health__item--ok {
+    color: #047857;
+}
+
+.admin-page--site .platform-health__item--warn {
+    color: #b45309;
+}
+
+.admin-page--site .platform-health__item--bad {
+    color: #b91c1c;
+}
+
+.admin-page--site .platform-health__meta {
+    width: 100%;
+    margin: 4px 0 0;
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+/* Figures: a plain definition list, numbers over labels, no tiles. */
+
+.admin-page--site .platform-metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 16px 28px;
+    margin: 0;
+}
+
+.admin-page--site .platform-metric {
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 2px;
+    margin: 0;
+}
+
+.admin-page--site .platform-metric__value {
+    margin: 0;
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    color: var(--text);
+    font-variant-numeric: tabular-nums;
+}
+
+.admin-page--site .platform-metric__label {
+    font-size: 12px;
+    line-height: 1.35;
+    color: var(--text-muted);
+}
+
+.admin-page--site .platform-metric--highlight .platform-metric__value {
+    color: var(--navy);
+}
+
+.admin-page--site .platform-subgroup {
+    margin-top: 22px;
+}
+
+.admin-page--site .platform-subgroup:first-of-type {
+    margin-top: 0;
+}
+
+.admin-page--site .platform-subgroup__label {
+    margin: 0 0 10px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+}
+
+.admin-page--site .platform-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: flex-end;
+}
+
+.admin-page--site .platform-toolbar label {
+    display: grid;
+    gap: 5px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+}
+
+.admin-page--site .platform-toolbar select {
+    min-width: 132px;
+    padding: 8px 32px 8px 10px;
+    border-radius: 4px;
+    border: 1px solid var(--border-medium);
+    background: var(--bg-card) var(--select-chevron) no-repeat right 12px center;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    appearance: none;
+}
+
+.admin-page--site .platform-toolbar button {
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.admin-page--site .platform-insights {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 8px 32px;
+    margin-top: 28px;
+}
+
+.admin-page--site .platform-insight {
+    border-top: 1px solid var(--border-light);
+    padding-top: 12px;
+}
+
+.admin-page--site .platform-insight__title {
+    margin: 0 0 8px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+}
+
+.admin-page--site .platform-insight__empty {
+    margin: 0;
+    font-size: 13px;
+    color: var(--text-faint);
+}
+
+.admin-page--site .platform-rank {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.admin-page--site .platform-rank li {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 2px 10px;
+    align-items: baseline;
+    padding: 5px 0;
+    font-size: 13px;
+}
+
+.admin-page--site .platform-rank__label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--text);
+}
+
+.admin-page--site .platform-rank__bar-wrap {
+    grid-column: 1 / -1;
+    margin-top: 3px;
+    height: 2px;
+    background: var(--border-light);
+    overflow: hidden;
+}
+
+.admin-page--site .platform-rank__bar {
+    display: block;
+    height: 100%;
+    background: var(--navy);
+}
+
+.admin-page--site .platform-rank__count {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    font-variant-numeric: tabular-nums;
+}
+
+/* Operator actions: a hairline index of links, not an icon grid. */
+
+.admin-page--site .platform-actions {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    column-gap: 32px;
+}
+
+.admin-page--site .platform-action {
+    display: block;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border-light);
+    text-decoration: none;
+    color: inherit;
+}
+
+.admin-page--site .platform-action__title {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--navy);
+}
+
+.admin-page--site .platform-action:hover .platform-action__title {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.admin-page--site .platform-action__sub {
+    margin: 2px 0 0;
+    font-size: 13px;
+    line-height: 1.45;
+    color: var(--text-muted);
+}
+
+@media (max-width: 640px) {
+    .admin-page--site .platform-metrics {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .admin-page--site .platform-metric__value {
+        font-size: 22px;
+    }
+    .admin-page--site .platform-actions {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+/* ---- Dealer onboarding (/admin/dealers) -- admin/dealers.html ---- */
+
+.admin-page--dealers .dealers-hub > section {
+    margin: 28px 0 0;
+    padding-top: 16px;
+    border-top: 1px solid var(--border-light);
+}
+
+.admin-page--dealers .dealers-hub > section > h2 {
+    margin: 0 0 12px;
+    font-size: 1.25rem;
+}
+
+.admin-page--dealers .dealers-hub .error-box {
+    padding: 0;
+    border: none;
+    border-radius: 0;
+    background: none;
+    color: #b91c1c;
+    font-weight: 600;
+}
+
+.admin-page--dealers .dealers-hub table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.admin-page--dealers .dealers-hub th,
+.admin-page--dealers .dealers-hub td {
+    border-bottom: 1px solid var(--border-light);
+    padding: 10px 12px;
+    text-align: left;
+}
+
+.admin-page--dealers .dealers-hub th {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+}
+
+.admin-page--dealers .dealers-form {
+    display: grid;
+    gap: 12px;
+    max-width: 480px;
+}
+
+.admin-page--dealers .dealers-form label {
+    display: grid;
+    gap: 4px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.admin-page--dealers .dealers-form input {
+    padding: 8px 10px;
+    border: 1px solid var(--border-medium);
+    border-radius: 4px;
+}
+
+/* Job status is colored text, not a pill. */
+
+.admin-page--dealers .status-pill {
+    display: inline;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.admin-page--dealers .status-pill--queued {
+    color: #3730a3;
+}
+
+.admin-page--dealers .status-pill--running {
+    color: #b45309;
+}
+
+.admin-page--dealers .status-pill--done {
+    color: #047857;
+}
+
+.admin-page--dealers .status-pill--incomplete {
+    color: #c2410c;
+}
+
+.admin-page--dealers .status-pill--failed {
+    color: #b91c1c;
+}
+
+.admin-page--dealers .dealers-hub__live {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-left: 8px;
+}
+
+.admin-page--dealers .dealers-hub__live--on::before {
+    content: "";
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #22c55e;
+    margin-right: 6px;
+    animation: dealers-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes dealers-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
+
+.admin-page--dealers .dealers-job-row {
+    cursor: pointer;
+}
+
+.admin-page--dealers .dealers-job-row:hover {
+    background: var(--navy-soft, #f8fafc);
+}
+
+.admin-page--dealers .dealers-job-row--selected {
+    background: #eef2ff;
+}
+
+.admin-page--dealers .dealers-job-actions {
+    white-space: nowrap;
+}
+
+.admin-page--dealers .dealers-job-detail-btn {
+    font-size: 12px;
+    padding: 4px 10px;
+    border: 1px solid var(--border-light);
+    border-radius: 4px;
+    background: #fff;
+    cursor: pointer;
+}
+
+.admin-page--dealers .dealers-job-detail-btn:hover {
+    background: var(--navy-soft, #f1f5f9);
+}
+
+.admin-page--dealers .dealers-job-retry-btn {
+    font-size: 12px;
+    padding: 4px 10px;
+    border: 1px solid #fecaca;
+    border-radius: 4px;
+    background: #fef2f2;
+    color: #991b1b;
+    cursor: pointer;
+    margin-left: 6px;
+}
+
+.admin-page--dealers .dealers-job-retry-btn:hover {
+    background: #fee2e2;
+}
+
+.admin-page--dealers .dealers-job-retry-btn:disabled {
+    opacity: 0.55;
+    cursor: wait;
+}
+
+.admin-page--dealers .dealers-jobs-flash {
+    margin: 0 0 12px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #1e3a8a;
+}
+
+.admin-page--dealers .dealers-jobs-flash--error {
+    color: #b91c1c;
+}
+
+.admin-page--dealers .dealers-job-diagnosis {
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border-light);
+}
+
+.admin-page--dealers .dealers-job-diagnosis h3 {
+    margin: 0 0 8px;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--text-muted);
+}
+
+.admin-page--dealers .dealers-job-diagnosis p {
+    margin: 0 0 8px;
+    font-size: 13px;
+    line-height: 1.45;
+}
+
+.admin-page--dealers .dealers-job-diagnosis__meta {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.admin-page--dealers .dealers-job-confidence {
+    margin-top: 12px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.admin-page--dealers .dealers-job-confidence--high {
+    color: #047857;
+}
+
+.admin-page--dealers .dealers-job-confidence--medium {
+    color: #b45309;
+}
+
+.admin-page--dealers .dealers-job-confidence--low {
+    color: #b91c1c;
+}
+
+.admin-page--dealers .dealers-job-smart-retry-btn {
+    font-size: 12px;
+    padding: 4px 10px;
+    border: 1px solid #93c5fd;
+    border-radius: 4px;
+    background: #eff6ff;
+    color: #1d4ed8;
+    cursor: pointer;
+    margin-left: 6px;
+}
+
+.admin-page--dealers .dealers-job-smart-retry-btn:hover {
+    background: #dbeafe;
+}
+
+.admin-page--dealers .dealers-job-sidebar-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.35);
+    z-index: 1200;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+}
+
+.admin-page--dealers .dealers-job-sidebar-backdrop.is-open {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.admin-page--dealers .dealers-job-sidebar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: min(420px, 100vw);
+    height: 100vh;
+    background: #fff;
+    border-left: 1px solid var(--border-light);
+    z-index: 1201;
+    transform: translateX(100%);
+    transition: transform 0.22s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.admin-page--dealers .dealers-job-sidebar.is-open {
+    transform: translateX(0);
+}
+
+.admin-page--dealers .dealers-job-sidebar__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 16px 18px;
+    border-bottom: 1px solid var(--border-light);
+}
+
+.admin-page--dealers .dealers-job-sidebar__title {
+    margin: 0;
+    font-size: 1.05rem;
+}
+
+.admin-page--dealers .dealers-job-sidebar__close {
+    border: none;
+    background: transparent;
+    font-size: 1.4rem;
+    line-height: 1;
+    cursor: pointer;
+    color: var(--text-muted);
+}
+
+.admin-page--dealers .dealers-job-sidebar__body {
+    flex: 1;
+    overflow: auto;
+    padding: 16px 18px 24px;
+    font-size: 14px;
+}
+
+.admin-page--dealers .dealers-job-sidebar__meta {
+    display: grid;
+    gap: 10px;
+    margin-bottom: 18px;
+}
+
+.admin-page--dealers .dealers-job-sidebar__row {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    gap: 8px;
+}
+
+.admin-page--dealers .dealers-job-sidebar__label {
+    color: var(--text-muted);
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.admin-page--dealers .dealers-job-sidebar__section {
+    margin-top: 18px;
+}
+
+.admin-page--dealers .dealers-job-sidebar__section h3 {
+    margin: 0 0 8px;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--text-muted);
+}
+
+.admin-page--dealers .dealers-job-sidebar__log {
+    margin: 0;
+    padding: 10px 0;
+    color: var(--text);
+    border-top: 1px solid var(--border-light);
+    border-bottom: 1px solid var(--border-light);
+    font-size: 11px;
+    line-height: 1.45;
+    white-space: pre-wrap;
+    word-break: break-word;
+    max-height: 280px;
+    overflow: auto;
+}
+
+.admin-page--dealers .dealers-job-sidebar__foot {
+    padding: 14px 18px;
+    border-top: 1px solid var(--border-light);
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.admin-page--dealers .dealers-job-sidebar__status {
+    font-size: 13px;
+    color: var(--text-muted);
+}
+
+.admin-page--dealers .dealers-job-sidebar__status--error {
+    color: #b91c1c;
+}
+
+
+/* ---- App users (/admin/users) -- admin/users.html ---- */
+
+.admin-page--users .users-hub__lead {
+    color: var(--text-secondary);
+    font-size: 15px;
+    line-height: 1.55;
+    margin: 0 0 20px;
+    max-width: 52rem;
+}
+
+.admin-page--users .users-hub__toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.admin-page--users .users-hub__stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 36px;
+    margin-bottom: 20px;
+    padding: 12px 0;
+    border-top: 1px solid var(--border-light);
+    border-bottom: 1px solid var(--border-light);
+}
+
+.admin-page--users .users-hub__stat {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.admin-page--users .users-hub__stat strong {
+    display: block;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.2;
+}
+
+.admin-page--users .users-search {
+    display: flex;
+    gap: 8px;
+    max-width: 520px;
+    flex: 1;
+    min-width: 200px;
+}
+
+.admin-page--users .users-search input {
+    flex: 1;
+    padding: 10px 12px;
+    border: 1px solid var(--border-medium);
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.admin-page--users .users-table-wrap {
+    overflow-x: auto;
+    border-top: 1px solid var(--border-medium);
+}
+
+.admin-page--users .users-hub table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    min-width: 1040px;
+}
+
+.admin-page--users .users-hub th,
+.admin-page--users .users-hub td {
+    border-bottom: 1px solid var(--border-light);
+    padding: 10px 12px;
+    text-align: left;
+    vertical-align: middle;
+}
+
+.admin-page--users .users-hub th {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+
+.admin-page--users .users-hub tr:last-child td {
+    border-bottom: none;
+}
+
+.admin-page--users .users-hub__user-cell {
+    min-width: 120px;
+}
+
+.admin-page--users .users-hub__username {
+    font-weight: 600;
+    color: var(--text);
+}
+
+.admin-page--users .users-hub__id {
+    font-size: 11px;
+    color: var(--text-muted);
+}
+
+.admin-page--users .users-hub__email {
+    word-break: break-word;
+    max-width: 220px;
+}
+
+/* Status reads as colored text, not a pill. */
+
+.admin-page--users .status-pill {
+    display: inline;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.admin-page--users .status-pill + .status-pill {
+    margin-left: 8px;
+}
+
+.admin-page--users .status-pill--active {
+    color: #047857;
+}
+
+.admin-page--users .status-pill--suspended {
+    color: #b91c1c;
+}
+
+.admin-page--users .status-pill--verified {
+    color: #1e40af;
+}
+
+.admin-page--users .status-pill--unverified {
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.admin-page--users .status-pill--stripe {
+    color: #5b21b6;
+}
+
+.admin-page--users .status-pill--plan {
+    color: var(--navy);
+}
+
+.admin-page--users .users-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: center;
+}
+
+.admin-page--users .icon-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    padding: 7px;
+    min-width: 34px;
+    min-height: 34px;
+    border-radius: 4px;
+    border: 1px solid var(--border-medium);
+    background: var(--bg-card);
+    color: var(--text);
+    font-family: inherit;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.admin-page--users .icon-button:hover {
+    background: var(--navy-soft);
+    border-color: var(--navy);
+    color: var(--navy);
+}
+
+.admin-page--users .icon-button--primary {
+    background: var(--navy);
+    border-color: var(--navy);
+    color: #fff;
+    padding: 9px 14px;
+    gap: 6px;
+    min-width: auto;
+}
+
+.admin-page--users .icon-button--primary:hover {
+    background: var(--navy-deep);
+    color: #fff;
+}
+
+.admin-page--users .icon-button--danger:hover {
+    background: #fee2e2;
+    border-color: #fecaca;
+    color: #991b1b;
+}
+
+.admin-page--users .users-hub__muted {
+    color: var(--text-muted);
+}
+
+.admin-page--users .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0,0,0,0);
+    white-space: nowrap;
+    border: 0;
+}
+
+
+/* ---- New / edit user (/admin/users/new, /admin/users/<id>) -- admin/user_form.html ---- */
+
+.admin-page--user-form .user-form {
+    max-width: 640px;
+}
+
+.admin-page--user-form .user-form__back {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 16px;
+    color: var(--navy);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.admin-page--user-form .user-form__back:hover {
+    text-decoration: underline;
+}
+
+.admin-page--user-form .user-form__grid {
+    display: grid;
+    gap: 14px;
+    margin-bottom: 24px;
+}
+
+.admin-page--user-form .user-form__field label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: var(--text);
+}
+
+.admin-page--user-form .user-form__field input,
+.admin-page--user-form .user-form__field select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--border-medium);
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: inherit;
+    box-sizing: border-box;
+}
+
+.admin-page--user-form .user-form__hint {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 4px;
+}
+
+.admin-page--user-form .user-form__section {
+    margin-top: 28px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-light);
+}
+
+.admin-page--user-form .user-form__section-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 15px;
+    font-weight: 700;
+    margin: 0 0 14px;
+    color: var(--text);
+}
+
+.admin-page--user-form .user-form__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.admin-page--user-form .user-form__danger {
+    margin-top: 32px;
+    padding-top: 20px;
+    border-top: 1px solid #fecaca;
+}
+
+.admin-page--user-form .icon-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--border-medium);
+    background: var(--bg-card);
+    color: var(--text);
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.admin-page--user-form .icon-button:hover {
+    background: var(--navy-soft);
+    border-color: var(--navy);
+    color: var(--navy);
+}
+
+.admin-page--user-form .icon-button--primary {
+    background: var(--navy);
+    border-color: var(--navy);
+    color: #fff;
+}
+
+.admin-page--user-form .icon-button--primary:hover {
+    background: var(--navy-deep);
+    color: #fff;
+}
+
+.admin-page--user-form .icon-button--danger {
+    border-color: #fecaca;
+    color: #991b1b;
+    background: #fef2f2;
+}
+
+.admin-page--user-form .icon-button--danger:hover {
+    background: #fee2e2;
+}
+
+.admin-page--user-form .icon-button--icon-only {
+    padding: 8px;
+    min-width: 36px;
+}
+
+
+/* ---- Flagged reviews (/admin/reviews) -- admin/reviews.html ---- */
+
+.admin-page--reviews .reviews-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.admin-page--reviews .reviews-actions .admin-inline-form {
+    margin-top: 0;
+}
+
+
+/* ---- Dealer inventory sub-nav -- inventory/base_inventory.html ---- */
+
+/* Dealer inventory sub-nav (tab bar under the shared sidebar shell). */
+
+.dealer-inv-body .dealer-inv-subnav {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin: 0 0 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(11, 31, 58, 0.12);
+}
+
+.dealer-inv-body .dealer-inv-subnav__link {
+    display: inline-block;
+    padding: 4px 0;
+    margin-right: 16px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+    color: var(--text-muted);
+    border-bottom: 2px solid transparent;
+}
+
+.dealer-inv-body .dealer-inv-subnav__link:hover {
+    color: var(--navy, #0b1f3a);
+}
+
+.dealer-inv-body .dealer-inv-subnav__link--active {
+    color: var(--navy, #0b1f3a);
+    border-bottom-color: var(--navy, #0b1f3a);
+}
+
+
+/* ---- Scan lab results (/dev/scan-lab/listings) -- dev_scan_lab_listings.html ---- */
+
+.scan-lab-listings-page .scan-lab-thumb {
+    width: 88px;
+    height: 58px;
+    object-fit: cover;
+    background: var(--border-light);
+    display: block;
+}
+
+.scan-lab-listings-page .scan-lab-incomplete td:first-child {
+    box-shadow: inset 2px 0 0 #d97706;
+    padding-left: 8px;
+}
+
+.scan-lab-listings-page .scan-lab-results-table td {
+    vertical-align: top;
+}

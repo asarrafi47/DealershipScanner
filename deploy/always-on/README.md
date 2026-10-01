@@ -9,19 +9,20 @@ This complements `start.sh` (interactive dev) with **supervised** process exampl
 From the repo root:
 
 ```bash
-./scripts/start-always-on.sh
+set -a; source .env; set +a
+cloudflared tunnel run --url http://127.0.0.1:5001 sarraficars &
+python3 -m gunicorn -w 1 --threads 4 -b 127.0.0.1:5001 --timeout 120 backend.main:app
 ```
 
-Loads `.env`, starts Cloudflare tunnel + Flask via **`run.py`** (`PUBLIC=1`, port **5001** by default). Ctrl-C stops both.
+Serves the app with **gunicorn** (same as `Dockerfile.web` / `scripts/docker-entrypoint-web.sh`) behind the tunnel. Never put the Werkzeug dev server in `run.py` behind the public tunnel.
 
-For **supervised production** hosts, use the `launchd` / `systemd` examples below — they run **gunicorn** (same as `Dockerfile.web`), not the Werkzeug dev server in `run.py`.
+For **supervised production** hosts, use the `launchd` / `systemd` examples below.
 
 ## Environment
 
 | Variable | Purpose |
 |----------|---------|
 | `PORT` | Flask listen port (default `5001`) |
-| `PUBLIC` | Set to `1` for `0.0.0.0` bind (set by start script) |
 | `FLASK_ENV` | Use `production` on a real host; set `SECRET_KEY` |
 | Cloudflare | Tunnel name/token in your `cloudflared` config (see `start.sh`) |
 

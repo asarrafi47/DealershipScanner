@@ -5,7 +5,6 @@ Smart URL import, scanner jobs, dealership registry tools.
 
 from __future__ import annotations
 
-import glob
 import ipaddress
 import json
 import logging
@@ -14,10 +13,9 @@ import os
 from backend.config import Config
 import posixpath
 import re
-import shutil
+import signal
 import sqlite3
 import subprocess
-import sys
 import threading
 import time
 import uuid
@@ -44,10 +42,19 @@ from backend.db.dealerships_db import (
     list_recent_dealerships,
 )
 from backend.dev.dealers import (
+    DEALERS_PATH,
+    load_dealers,
     normalize_manifest_url,
+    slug_from_url,
     smart_import_manifest_display_name,
-    smart_import_scrape_succeeded,
     upsert_dealer_manifest_row,
+)
+from backend.dev.pipeline_jobs import (
+    PIPELINE_SUCCESS_VERDICTS,
+    pipeline_command,
+    pipeline_out_dir,
+    read_triage_row,
+    summarize_triage_row,
 )
 from backend.db.incomplete_listings_db import get_incomplete_listings_count
 from backend.db.inventory_db import (
@@ -55,7 +62,6 @@ from backend.db.inventory_db import (
     get_car_by_vin,
     get_conn,
     get_dealership_issue_stats,
-    link_cars_to_dealership_registry,
 )
 from backend.enrichment.knowledge_engine import prepare_car_detail_context
 from backend.utils.car_serialize import (
@@ -290,8 +296,6 @@ def _dev_queue_patch_item(queue_id: str, job_id: str, **fields: Any) -> None:
             conn.close()
 
 
-SCANNER_PROFILES = ("default", "resilient", "bare")
-
 LAST_SCRAPE_SAMPLES_PATH = PROJECT_ROOT / "debug" / "last_scrape_samples.json"
 
 logger = logging.getLogger(__name__)
@@ -437,182 +441,113 @@ def _dev_scanner_url_or_error(url: str) -> tuple[str | None, str | None]:
     return normalized, None
 
 
-def _node_version_string(exe: str) -> str | None:
-    try:
-        p = subprocess.run(
-            [exe, "-v"],
-            capture_output=True,
-            text=True,
-            timeout=5,
-            check=False,
+def _scan_pipeline_status() -> tuple[bool, str]:
+    """Whether the dev import / scan buttons can run, and the line the status panel shows."""
+    script = PROJECT_ROOT / "backend" / "scripts" / "dealer_pipeline.py"
+    if not script.is_file():
+        return False, f"backend/scripts/dealer_pipeline.py is missing at {script}."
+    if not DEALERS_PATH.is_file():
+        return True, (
+            f"python -m backend.scripts.dealer_pipeline (HTTP-only). Dealer manifest not found at "
+            f"{DEALERS_PATH}; the first smart import creates it."
         )
-        out = (p.stdout or p.stderr or "").strip()
-        if p.returncode == 0 and out.startswith("v"):
-            return out
-    except (OSError, subprocess.TimeoutExpired):
+    return True, f"python -m backend.scripts.dealer_pipeline (HTTP-only) · manifest {DEALERS_PATH}"
+
+
+def _dev_status() -> dict[str, Any]:
+    db_ok = False
+    try:
+        conn = get_conn()
+        conn.cursor().execute("SELECT 1")
+        conn.close()
+        db_ok = True
+    except (OSError, sqlite3.Error):
         pass
-    return None
+    from backend.utils.runtime_env import is_production_env
 
-
-_NODE_BINARY_CACHE_TTL_S = 60.0
-_node_binary_cache: tuple[float, tuple[str | None, str | None, str, str | None]] | None = None
-
-
-def _probe_node_binary() -> tuple[str | None, str | None, str, str | None]:
-    cands: list[str] = []
-    seen: set[str] = set()
-    for raw in (os.environ.get("NODE_BINARY") or "", os.environ.get("NODE") or ""):
-        t = (raw or "").strip()
-        if t and t not in seen and os.path.isfile(t) and os.access(t, os.X_OK):
-            seen.add(t)
-            cands.append(t)
-    which = shutil.which("node")
-    if which and which not in seen and os.path.isfile(which) and os.access(which, os.X_OK):
-        seen.add(which)
-        cands.append(which)
-    for c in ("/opt/homebrew/bin/node", "/usr/local/bin/node"):
-        if c not in seen and os.path.isfile(c) and os.access(c, os.X_OK):
-            seen.add(c)
-            cands.append(c)
-    home = Path(os.path.expanduser("~"))
-    for m in glob.glob(str(home / ".nvm/versions/node/v*/bin/node")):
-        t = str(Path(m).resolve())
-        if t not in seen and os.path.isfile(t) and os.access(t, os.X_OK):
-            seen.add(t)
-            cands.append(t)
-
-    which_norm = os.path.normpath(which) if which else None
-    for exe in cands:
-        ver = _node_version_string(exe)
-        if not ver:
-            continue
-        en = os.path.normpath(exe)
-        on_path = bool(which_norm and en == which_norm)
-        env_set = bool((os.environ.get("NODE_BINARY") or os.environ.get("NODE") or "").strip())
-        if on_path and which is not None:
-            line = f"{ver} — {exe} (this process: `shutil.which('node')` → {which!r} and `node -v` works)"
-        elif which is None and not env_set:
-            line = (
-                f"{ver} — {exe} (no `node` on PATH in this process; found via a fixed path or nvm. "
-                "The scraper uses this full path.)"
-            )
-        else:
-            line = (
-                f"{ver} — {exe} (runnable, but `shutil.which` → {which!r} differs; "
-                "set NODE_BINARY or align PATH with your terminal, or the scraper still uses this file.)"
-            )
-        return exe, ver, line, which
-
-    wnote = f"`shutil.which('node')` → {which!r} on this process"
-    if which and _node_version_string(which) is None:
-        wnote += f"; {which!r} did not return a v… from `node -v` (broken or wrong binary)"
-    fail = (
-        f"Could not verify Node: {wnote}. Tried common paths; "
-        "install Node 18+ and ensure this server’s PATH (or set NODE_BINARY to the full `node` path) matches where Node is installed."
-    )
-    return None, None, fail, which
-
-
-def clear_node_binary_cache() -> None:
-    global _node_binary_cache
-    _node_binary_cache = None
-
-
-def _resolve_node_binary(*, force_refresh: bool = False) -> tuple[str | None, str | None, str, str | None]:
-    global _node_binary_cache
-    now = time.monotonic()
-    if (
-        not force_refresh
-        and _node_binary_cache is not None
-        and now - _node_binary_cache[0] < _NODE_BINARY_CACHE_TTL_S
-    ):
-        return _node_binary_cache[1]
-    result = _probe_node_binary()
-    _node_binary_cache = (now, result)
-    return result
-
-
-def _node_for_scanner() -> str:
-    """Node binary to pass to Popen; falls back to `node` and may FileNotFoundError."""
-    p, _, _, _ = _resolve_node_binary()
-    return p or "node"
+    prod = is_production_env()
+    env_file = PROJECT_ROOT / ".env"
+    admin_pw_set = bool((os.environ.get("ADMIN_PASSWORD") or "").strip())
+    pipeline_ok, pipeline_line = _scan_pipeline_status()
+    return {
+        "db_connected": db_ok,
+        "inventory_db_path": str(DB_PATH),
+        "dev_users_db_path": dev_users_db_path(),
+        "dev_registration_open": dev_public_registration_allowed(),
+        "scan_pipeline_ok": pipeline_ok,
+        "scan_pipeline_status_line": pipeline_line,
+        "is_production": prod,
+        "admin_password_configured": admin_pw_set or not prod,
+        "dotenv_file_present": env_file.is_file(),
+        "dotenv_file_path": str(env_file),
+    }
 
 
 def _dev_status_shell() -> dict[str, Any]:
-    """Fast status for SSR — avoids Node probing on first paint after login."""
-    db_ok = False
+    """Status for SSR. Every check is cheap now (no Node probe), so it is the full status."""
+    return _dev_status()
+
+
+# Pipeline stdout lines that start with a stage name become "discovery" steps in
+# the dev UI (the old scanner.js printed DISCOVERY:{json} lines for the same panel).
+_PIPELINE_STAGE_RE = re.compile(r"^(recipe|probe|scan|vpic|assess|lifecyc|log)\s+\S")
+_HEADED_NOTE = (
+    "[dev] 'headed' is ignored: scans are HTTP-only by policy (backend/scanner/browser_gate.py). "
+    "When the HTTP recipe finds nothing, the pipeline runs the one sanctioned headless "
+    "discovery capture itself.\n"
+)
+
+
+def _manifest_row_for_url(url: str) -> dict[str, Any] | None:
+    """The dealers.json row whose url (or url-derived dealer_id) matches ``url``."""
+    key_url = normalize_manifest_url(url).lower()
+    if not key_url:
+        return None
+    slug = slug_from_url(key_url)
     try:
-        conn = get_conn()
-        conn.cursor().execute("SELECT 1")
-        conn.close()
-        db_ok = True
-    except (OSError, sqlite3.Error):
-        pass
-    from backend.utils.runtime_env import is_production_env
-
-    prod = is_production_env()
-    env_file = PROJECT_ROOT / ".env"
-    admin_pw_set = bool((os.environ.get("ADMIN_PASSWORD") or "").strip())
-    return {
-        "db_connected": db_ok,
-        "inventory_db_path": str(DB_PATH),
-        "dev_users_db_path": dev_users_db_path(),
-        "dev_registration_open": dev_public_registration_allowed(),
-        "node_executable": None,
-        "node_version": None,
-        "node_status_line": "Checking Node.js…",
-        "node_which": None,
-        "is_production": prod,
-        "admin_password_configured": admin_pw_set or not prod,
-        "dotenv_file_present": env_file.is_file(),
-        "dotenv_file_path": str(env_file),
-    }
+        rows = load_dealers(DEALERS_PATH)
+    except (OSError, ValueError):
+        return None
+    for r in rows:
+        if normalize_manifest_url(str(r.get("url") or "")).lower() == key_url:
+            return r
+    for r in rows:
+        if str(r.get("dealer_id") or "").strip() == slug:
+            return r
+    return None
 
 
-def _dev_status(*, force_node_refresh: bool = False) -> dict[str, Any]:
-    db_ok = False
+def _smart_import_display_name(url: str) -> str:
+    """Dealer name for a new manifest row: the homepage's own name, else the title-cased host."""
     try:
-        conn = get_conn()
-        conn.cursor().execute("SELECT 1")
-        conn.close()
-        db_ok = True
-    except (OSError, sqlite3.Error):
-        pass
-    from backend.utils.runtime_env import is_production_env
+        from backend.dev.dealer_url_infer import infer_dealer_from_url
 
-    prod = is_production_env()
-    env_file = PROJECT_ROOT / ".env"
-    admin_pw_set = bool((os.environ.get("ADMIN_PASSWORD") or "").strip())
-    n_path, n_ver, n_line, n_which = _resolve_node_binary(force_refresh=force_node_refresh)
-    return {
-        "db_connected": db_ok,
-        "inventory_db_path": str(DB_PATH),
-        "dev_users_db_path": dev_users_db_path(),
-        "dev_registration_open": dev_public_registration_allowed(),
-        "node_executable": n_path,
-        "node_version": n_ver,
-        "node_status_line": n_line,
-        "node_which": n_which,
-        "is_production": prod,
-        "admin_password_configured": admin_pw_set or not prod,
-        "dotenv_file_present": env_file.is_file(),
-        "dotenv_file_path": str(env_file),
-    }
+        inferred = infer_dealer_from_url(url, timeout=15.0)
+    except Exception:  # noqa: BLE001 - a name lookup must never fail the import
+        inferred = {}
+    name = str(((inferred or {}).get("dealer") or {}).get("name") or "").strip()
+    if (inferred or {}).get("ok") and name and name != "Dealership":
+        return name
+    return smart_import_manifest_display_name(url, resolved=None, error_partial={}, discovery=[])
 
 
-def _run_scanner_job(job_id: str, url: str, headed: bool = False) -> None:
-    log_parts: list[str] = []
+def _run_dealer_pipeline(
+    job_id: str,
+    dealer_id: str,
+    *,
+    append,
+    discovery: list[dict[str, Any]],
+    cancel_requested=None,
+) -> tuple[int | None, dict[str, Any]]:
+    """Run ``backend.scripts.dealer_pipeline`` for one dealer, streaming its log into the job.
 
-    def append(text: str) -> None:
-        log_parts.append(text)
-        _dev_store_patch("jobs", job_id, {"log": "".join(log_parts)})
-
-    code: int | None = None
+    Returns ``(exit_code, summary)``; ``summary`` is the dealer's triage verdict
+    (``backend.dev.pipeline_jobs.summarize_triage_row``) plus ``out_dir``.
+    """
+    out_dir = pipeline_out_dir(f"{dealer_id}_{job_id[:8]}")
+    cmd = pipeline_command(dealer_id, out_dir, manifest_path=DEALERS_PATH)
+    append(f"[dev] Running: python {' '.join(cmd[1:])}\n")
     try:
-        nexe = _node_for_scanner()
-        cmd = [nexe, str(PROJECT_ROOT / "backend" / "scanner" / "scanner.js"), "--url", url]
-        if headed:
-            cmd.append("--headed")
         proc = subprocess.Popen(
             cmd,
             cwd=str(PROJECT_ROOT),
@@ -620,42 +555,115 @@ def _run_scanner_job(job_id: str, url: str, headed: bool = False) -> None:
             stderr=subprocess.STDOUT,
             text=True,
             bufsize=1,
+            # Own process group: a cancel stops the pipeline and the scanner it spawned.
+            start_new_session=True,
         )
-        if proc.stdout:
-            for line in proc.stdout:
-                append(line)
-        code = proc.wait()
     except FileNotFoundError as e:
-        append(f"\n[dev] Failed to start scanner: {e}\n")
-        code = 127
+        append(f"\n[dev] Failed to start the dealer pipeline: {e}\n")
+        return 127, {**summarize_triage_row(None), "out_dir": str(out_dir)}
     except OSError as e:
-        append(f"\n[dev] Scanner error: {e}\n")
-        code = -1
+        append(f"\n[dev] Dealer pipeline error: {e}\n")
+        return -1, {**summarize_triage_row(None), "out_dir": str(out_dir)}
 
-    _dev_store_patch("jobs", job_id, {"done": True, "exit_code": code})
+    if cancel_requested is not None:
 
-    if code == 0:
+        def watch_for_cancel() -> None:
+            # Own thread so a pipeline with no output at all (a true hang) still
+            # gets torn down promptly; the stdout loop below blocks on readline.
+            while proc.poll() is None:
+                if cancel_requested():
+                    try:
+                        os.killpg(proc.pid, signal.SIGTERM)
+                    except OSError:
+                        try:
+                            proc.terminate()
+                        except OSError:
+                            pass
+                    return
+                time.sleep(0.5)
+
+        threading.Thread(target=watch_for_cancel, daemon=True).start()
+
+    if proc.stdout:
+        for line in proc.stdout:
+            append(line)
+            if _PIPELINE_STAGE_RE.match(line):
+                discovery.append({"step": line.split(None, 1)[0], "message": line.strip()[:300]})
+                _dev_store_patch("jobs", job_id, {"discovery": list(discovery)})
+    code = proc.wait()
+    summary = {**summarize_triage_row(read_triage_row(out_dir, dealer_id)), "out_dir": str(out_dir)}
+    append(
+        f"\n[dev] Pipeline verdict: {summary.get('verdict') or 'none'} "
+        f"({summary.get('rows', 0)} rows) {summary.get('reason') or ''}\n"
+        f"[dev] Triage: {out_dir / 'triage.json'} · dealer logs: workspace/dealer_logs/{dealer_id}/\n"
+    )
+    return code, summary
+
+
+def _pipeline_error(summary: dict[str, Any], code: int | None) -> dict[str, Any] | None:
+    """``smart_error`` payload for the UI, or None when the pipeline landed rows."""
+    verdict = summary.get("verdict")
+    if code == 0 and verdict in PIPELINE_SUCCESS_VERDICTS:
+        return None
+    return {
+        "reason": verdict or ("pipeline_exit_" + str(code)),
+        "detail": summary.get("reason"),
+        "retryable": False,
+    }
+
+
+def _run_scanner_job(job_id: str, url: str, headed: bool = False) -> None:
+    """Scan a dealer that is already on the roster (dealers.json or the DB) by its URL.
+
+    Was ``node scanner.js --url``; now the dealer pipeline for the dealer the URL
+    names. A URL nobody knows yet goes through smart import, which adds the
+    manifest row first.
+    """
+    log_parts: list[str] = []
+    discovery: list[dict[str, Any]] = []
+
+    def append(text: str) -> None:
+        log_parts.append(text)
+        _dev_store_patch("jobs", job_id, {"log": "".join(log_parts)})
+
+    if headed:
+        append(_HEADED_NOTE)
+    row = _manifest_row_for_url(url)
+    dealer_id = str((row or {}).get("dealer_id") or "") or slug_from_url(url)
+    if not row:
+        append(
+            f"[dev] {url} is not in {DEALERS_PATH.name}; the pipeline will look up "
+            f"dealer_id={dealer_id} in the database. Use Import & scan to add a new dealer.\n"
+        )
+    code, summary = _run_dealer_pipeline(job_id, dealer_id, append=append, discovery=discovery)
+    _dev_store_patch(
+        "jobs",
+        job_id,
+        {
+            "done": True,
+            "exit_code": code,
+            "discovery": list(discovery),
+            "dealer_id": dealer_id,
+            "verdict": summary.get("verdict"),
+            "rows": summary.get("rows"),
+            "smart_error": _pipeline_error(summary, code),
+        },
+    )
+    if _pipeline_error(summary, code) is None:
         _spawn_vector_reindex_background()
 
 
-def _parse_prefixed_json(line: str, prefix: str) -> dict[str, Any] | None:
-    s = line.strip()
-    if not s.startswith(prefix):
-        return None
-    raw = s[len(prefix) :].strip()
-    try:
-        return json.loads(raw)
-    except json.JSONDecodeError:
-        return None
-
-
 def _run_smart_import_job(job_id: str, url: str, headed: bool = False) -> None:
+    """Add a dealer by URL and scan it: dealers.json upsert -> dealer pipeline.
+
+    Replaced ``node scanner.js --smart-import`` (Puppeteer, three browser profiles).
+    The pipeline synthesizes the recipe from the homepage, scans over HTTP, checks
+    VINs against NHTSA and writes the dealer logs. The registry row (city/state) is
+    not written here: nothing in the HTTP path resolves a street address yet, so
+    add it with "Insert dealer" when needed (the manifest row is enough to scan).
+    """
     log_parts: list[str] = []
     discovery: list[dict[str, Any]] = []
-    resolved_result: dict[str, Any] | None = None
-    last_error: dict[str, Any] | None = None
-    final_code: int | None = None
-    error_partial: dict[str, Any] = {}
 
     def append(text: str) -> None:
         log_parts.append(text)
@@ -665,186 +673,68 @@ def _run_smart_import_job(job_id: str, url: str, headed: bool = False) -> None:
         job = _dev_store_get("jobs", job_id)
         return bool(job and job.get("cancel_requested"))
 
-    def watch_for_cancel(proc: subprocess.Popen) -> None:
-        # Runs on its own thread so a job with no stdout output at all (a
-        # true hang, not just a slow one) still gets torn down promptly —
-        # the stdout-reading loop below has no way to notice a cancel flag
-        # on its own while blocked waiting on the next line.
-        while proc.poll() is None:
-            if cancel_requested():
-                try:
-                    proc.terminate()
-                except OSError:
-                    pass
-                return
-            time.sleep(0.5)
-
-    for attempt, profile in enumerate(SCANNER_PROFILES):
-        if cancel_requested():
-            append("\n[dev] Job cancelled before starting the next attempt.\n")
-            last_error = {"reason": "cancelled", "retryable": False}
-            break
-        append(f"\n--- Scanner attempt {attempt + 1}/{len(SCANNER_PROFILES)} (profile={profile}) ---\n")
-        attempt_result: dict[str, Any] | None = None
-        attempt_error: dict[str, Any] | None = None
-        try:
-            nexe = _node_for_scanner()
-            cmd = [
-                nexe,
-                str(PROJECT_ROOT / "backend" / "scanner" / "scanner.js"),
-                "--url",
-                url,
-                "--smart-import",
-                "--profile",
-                profile,
-            ]
-            if headed:
-                cmd.append("--headed")
-            proc = subprocess.Popen(
-                cmd,
-                cwd=str(PROJECT_ROOT),
-                stdout=subprocess.PIPE,
-                stderr=subprocess.STDOUT,
-                text=True,
-                bufsize=1,
-            )
-            threading.Thread(target=watch_for_cancel, args=(proc,), daemon=True).start()
-            if proc.stdout:
-                for line in proc.stdout:
-                    append(line)
-                    if line.startswith("DISCOVERY:"):
-                        payload = _parse_prefixed_json(line, "DISCOVERY:")
-                        if isinstance(payload, dict):
-                            discovery.append(payload)
-                            _dev_store_patch("jobs", job_id, {"discovery": list(discovery)})
-                    if "SMART_IMPORT_RESULT:" in line:
-                        idx = line.index("SMART_IMPORT_RESULT:")
-                        raw = line[idx + len("SMART_IMPORT_RESULT:") :].strip()
-                        try:
-                            attempt_result = json.loads(raw)
-                        except json.JSONDecodeError:
-                            pass
-                    if "SMART_IMPORT_ERROR:" in line:
-                        idx = line.index("SMART_IMPORT_ERROR:")
-                        raw = line[idx + len("SMART_IMPORT_ERROR:") :].strip()
-                        try:
-                            attempt_error = json.loads(raw)
-                            par = attempt_error.get("partial") if isinstance(attempt_error, dict) else None
-                            if isinstance(par, dict):
-                                for pk, pv in par.items():
-                                    if pv not in (None, "", [], {}):
-                                        error_partial[str(pk)] = pv
-                        except json.JSONDecodeError:
-                            attempt_error = {"reason": "parse_error", "raw": raw[:200]}
-
-            final_code = proc.wait()
-        except FileNotFoundError as e:
-            append(f"\n[dev] Failed to start scanner: {e}\n")
-            final_code = 127
-            last_error = {"reason": "node_missing", "retryable": False}
-            break
-        except OSError as e:
-            append(f"\n[dev] Scanner error: {e}\n")
-            final_code = -1
-            last_error = {"reason": "os_error", "detail": str(e), "retryable": False}
-            break
-
-        _dev_store_patch("jobs", job_id, {"exit_code": final_code})
-
-        last_error = attempt_error or last_error
-
-        if cancel_requested():
-            append("\n[dev] Job cancelled; stopping (no further retry attempts).\n")
-            last_error = {"reason": "cancelled", "retryable": False}
-            break
-        if attempt_result:
-            resolved_result = attempt_result
-            break
-        if attempt_error and not attempt_error.get("retryable"):
-            last_error = attempt_error
-            break
-        if attempt < len(SCANNER_PROFILES) - 1:
-            append("\n[dev] Retrying with a different Puppeteer profile…\n")
-
-    insert_error: list | None = None
-    insert_id: int | None = None
-    cars_linked = 0
-    manifest_written = False
-    full_log = "".join(log_parts)
-
-    if resolved_result:
-        try:
-            body = DealerCreate.model_validate(resolved_result)
-            rd = body.row_dict()
-            manifest_id = ""
-            try:
-                action, manifest_id = upsert_dealer_manifest_row(
-                    name=str(rd.get("name") or ""),
-                    website_url=str(rd.get("website_url") or ""),
-                    provider="dealer_dot_com",
-                )
-                append(
-                    f"[dev] dealers.json {action}: dealer_id={manifest_id} "
-                    f"(python scanner.py --dealer-id)\n"
-                )
-                manifest_written = True
-            except ValueError as e:
-                append(f"[dev] dealers.json upsert skipped (registry path): {e}\n")
-            insert_id = insert_dealership(rd)
-            cars_linked = link_cars_to_dealership_registry(
-                insert_id, str(body.website_url), dealer_id_slug=manifest_id
-            )
-        except ValidationError as e:
-            insert_error = e.errors()
-
-    scrape_ok = smart_import_scrape_succeeded(final_code, full_log)
-    if scrape_ok and not manifest_written:
-        wurl = normalize_manifest_url(url)
-        if not wurl:
-            append("[dev] dealers.json skipped (manifest-only): could not normalize job URL\n")
-        else:
-            try:
-                disp = smart_import_manifest_display_name(
-                    url,
-                    resolved=resolved_result,
-                    error_partial=error_partial,
-                    discovery=discovery,
-                )
-                action, manifest_id = upsert_dealer_manifest_row(
-                    name=disp,
-                    website_url=wurl,
-                    provider="dealer_dot_com",
-                )
-                manifest_written = True
-                append(
-                    f"[dev] dealers.json {action} (manifest-only; registry row skipped until "
-                    f"city/state are resolved): dealer_id={manifest_id}\n"
-                )
-            except ValueError as e:
-                append(f"[dev] dealers.json manifest-only upsert skipped: {e}\n")
-    elif final_code == 0 and not manifest_written:
-        append(
-            "[dev] dealers.json skipped: process exited 0 but log shows no persisted vehicles "
-            "(expected SCAN_VEHICLE_COUNT > 0 or Upserted N > 0).\n"
+    def finish(code: int | None, fields: dict[str, Any]) -> None:
+        _dev_store_patch(
+            "jobs",
+            job_id,
+            {"done": True, "exit_code": code, "discovery": list(discovery), "insert_id": None, **fields},
         )
 
-    updated = _dev_store_patch(
-        "jobs",
-        job_id,
-        {
-            "done": True,
-            "exit_code": final_code,
-            "discovery": list(discovery),
-            "insert_id": insert_id,
-            "insert_error": insert_error,
-            "smart_error": last_error if not resolved_result else None,
-            "cars_linked": cars_linked,
-        },
-    )
-    if not updated:
+    if headed:
+        append(_HEADED_NOTE)
+    if cancel_requested():
+        append("\n[dev] Job cancelled before starting.\n")
+        finish(None, {"smart_error": {"reason": "cancelled", "retryable": False}})
         return
 
-    if final_code == 0:
+    wurl = normalize_manifest_url(url)
+    if not wurl:
+        append("[dev] Could not normalize the URL for dealers.json.\n")
+        finish(None, {"smart_error": {"reason": "invalid_url", "retryable": False}})
+        return
+
+    existing = _manifest_row_for_url(wurl)
+    try:
+        if existing:
+            action, dealer_id = upsert_dealer_manifest_row(
+                name=str(existing.get("name") or ""),
+                website_url=wurl,
+                provider=str(existing.get("provider") or "unknown"),
+                dealer_id=str(existing.get("dealer_id") or "") or None,
+                manifest_path=DEALERS_PATH,
+            )
+        else:
+            name = _smart_import_display_name(wurl)
+            discovery.append({"step": "name", "message": f"Found name: {name}"})
+            # provider "unknown": recipe synthesis fingerprints the platform itself.
+            action, dealer_id = upsert_dealer_manifest_row(
+                name=name, website_url=wurl, provider="unknown", manifest_path=DEALERS_PATH
+            )
+    except (OSError, ValueError) as e:
+        append(f"[dev] dealers.json upsert failed: {e}\n")
+        finish(None, {"smart_error": {"reason": "manifest_write_failed", "detail": str(e), "retryable": False}})
+        return
+    append(f"[dev] dealers.json {action}: dealer_id={dealer_id} ({DEALERS_PATH})\n")
+
+    code, summary = _run_dealer_pipeline(
+        job_id, dealer_id, append=append, discovery=discovery, cancel_requested=cancel_requested
+    )
+    error = _pipeline_error(summary, code)
+    if cancel_requested():
+        append("\n[dev] Job cancelled.\n")
+        error = {"reason": "cancelled", "retryable": False}
+    finish(
+        code,
+        {
+            "dealer_id": dealer_id,
+            "verdict": summary.get("verdict"),
+            "rows": summary.get("rows"),
+            "insert_error": None,
+            "smart_error": error,
+            "cars_linked": None,
+        },
+    )
+    if error is None:
         _spawn_vector_reindex_background()
 
 
@@ -974,10 +864,7 @@ def dev_dashboard():
 
 @dev_bp.route("/api/status")
 def api_dev_status():
-    force = (request.args.get("refresh") or "").strip().lower() in ("1", "true", "yes", "on")
-    if force:
-        clear_node_binary_cache()
-    return jsonify({"ok": True, **_dev_status(force_node_refresh=force)})
+    return jsonify({"ok": True, **_dev_status()})
 
 
 @dev_bp.route("/api/dealers")
@@ -1066,7 +953,8 @@ def api_audit_last_scrape():
             "diagnostics": diagnostics,
             "last_scrape_samples_file": str(LAST_SCRAPE_SAMPLES_PATH),
             "last_scrape_samples_generated_at": samples_meta.get("generated_at"),
-            "note": "Run node scanner.js to refresh debug/last_scrape_samples.json. "
+            "note": "debug/last_scrape_samples.json was written by the retired scanner.js; the "
+            "Python scanner does not write it, so raw samples appear only if an old file exists. "
             "cars has no is_active; registry_is_active is from dealerships.",
         }
     )
@@ -1178,6 +1066,9 @@ def api_scanner_job(job_id: str):
             "insert_error": job.get("insert_error"),
             "smart_error": job.get("smart_error"),
             "cars_linked": job.get("cars_linked"),
+            "dealer_id": job.get("dealer_id"),
+            "verdict": job.get("verdict"),
+            "rows": job.get("rows"),
         }
     )
 
@@ -1284,6 +1175,9 @@ def api_import_queue(queue_id: str):
                 "insert_error": job.get("insert_error"),
                 "smart_error": job.get("smart_error"),
                 "cars_linked": job.get("cars_linked"),
+                "dealer_id": job.get("dealer_id"),
+                "verdict": job.get("verdict"),
+                "rows": job.get("rows"),
             }
         )
     return jsonify({"ok": True, "queue_done": q.get("done"), "items": out})

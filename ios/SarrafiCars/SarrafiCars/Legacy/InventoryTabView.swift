@@ -12,6 +12,11 @@ struct InventoryTabView: View {
                     headerSection
                     geoSection
                     searchSection
+                    if let saveError = session.sessionSaveError {
+                        Text(saveError)
+                            .font(.footnote)
+                            .foregroundStyle(.secondary)
+                    }
                     if let hint = session.geoHint {
                         Text(hint)
                             .font(.subheadline)
@@ -27,7 +32,7 @@ struct InventoryTabView: View {
                     } else if let err = session.errorMessage {
                         EmptyStateView(title: "Could not load", systemImage: "wifi.exclamationmark", message: err)
                             .frame(minHeight: 200)
-                    } else if !session.isZipValid {
+                    } else if !session.isZipValid || session.needsZip {
                         EmptyStateView(
                             title: "Set your location",
                             systemImage: "location.circle",

@@ -85,6 +85,12 @@ def _delegate_dev_operator_routes(app: Flask) -> None:
         ("POST", "/api/admin/operator/smart-import-bulk", dev_routes.api_smart_import_bulk, []),
         ("GET", "/api/admin/operator/scanner-job/<job_id>", dev_routes.api_scanner_job, ["job_id"]),
         ("GET", "/api/admin/operator/import-queue/<queue_id>", dev_routes.api_import_queue, ["queue_id"]),
+        (
+            "POST",
+            "/api/admin/operator/import-queue/<queue_id>/skip-item",
+            dev_routes.api_import_queue_skip_item,
+            ["queue_id"],
+        ),
         ("DELETE", "/api/admin/operator/dealer/<int:dealer_id>", dev_routes.api_delete_dealer, ["dealer_id"]),
     ]
 

@@ -28,9 +28,11 @@ from typing import Any
 # two cannot drift; see backend/scanner/rooftop_disown.py for the rules.
 from backend.scanner.rooftop_disown import (
     disown_foreign_rooftop_vins as _disown_foreign_rooftop_vins,
-    roster_place as _roster_place,
     split_refusals,
 )
+# Same store place as the full scan: registry town + the page-learned street
+# from scan hints (dealer_run.run_dealer and recipes use this one too).
+from backend.scanner.dealer_place import roster_place_with_hints as _roster_place
 
 logger = logging.getLogger("scanner")
 
@@ -169,8 +171,10 @@ async def delta_scan_dealer(dealer: dict[str, Any]) -> dict[str, Any]:
     # The store's postal address, looked up ONCE for both the per-page gate and
     # the union re-run below. Without it a group feed of unnamed address-block
     # rooftops refuses every page, leaving nothing for the union pass to keep
-    # and handing every VIN to _disown_foreign_rooftop_vins.
-    roster_place = await asyncio.to_thread(_roster_place, url)
+    # and handing every VIN to _disown_foreign_rooftop_vins. The street learned
+    # from the dealer page (scan hints) completes a roster that has only the
+    # town, exactly as in the full scan.
+    roster_place = await asyncio.to_thread(_roster_place, url, dealer_id)
     for _rec_url, body in records:
         vehicles.extend(parse(
             provider, body, base_url=url, dealer_id=dealer_id,
@@ -181,12 +185,25 @@ async def delta_scan_dealer(dealer: dict[str, Any]) -> dict[str, Any]:
     # holding only an unnamed sibling rooftop looks like a single-store payload;
     # across the union that sibling sits next to this store's own rooftop and is
     # recognisable as separate.
+    # Rows a store-scoped recipe returned (CarsCommerce facetFilters.source_id,
+    # verified at synthesis) are this store's by construction; re-gating them
+    # kept 5 of Tutton CDJR's 346 cars on 2026-09-26 and handed the rest to
+    # _disown_foreign_rooftop_vins. Gate only the rest, as dealer_run does.
     from backend.parsers import resolve_rooftop_attribution
 
-    vehicles, union_refused = resolve_rooftop_attribution(
-        vehicles, dealer_id=dealer_id, dealer_name=name, dealer_url=url, **roster_place,
-    )
-    refused.extend(union_refused)
+    scoped = [v for v in vehicles if v.get("_feed_scoped")]
+    open_rows = [v for v in vehicles if not v.get("_feed_scoped")]
+    if open_rows:
+        open_rows, union_refused = resolve_rooftop_attribution(
+            open_rows, dealer_id=dealer_id, dealer_name=name, dealer_url=url, **roster_place,
+        )
+        refused.extend(union_refused)
+    if scoped:
+        logger.info(
+            "Delta [%s]: %d row(s) from store-scoped recipe(s) kept without the union gate",
+            name, len(scoped),
+        )
+    vehicles = scoped + open_rows
     for v in vehicles:
         v.setdefault("dealer_name", name)
         v.setdefault("dealer_url", url)

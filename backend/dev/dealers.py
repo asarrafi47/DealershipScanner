@@ -2,13 +2,19 @@
 from __future__ import annotations
 
 import json
+import os
 import re
 from pathlib import Path
 from typing import Any
 from urllib.parse import urlparse
 
-ROOT = Path(__file__).resolve().parent.parent
-DEALERS_PATH = ROOT / "dealers.json"
+# Repo root. This module lives at backend/dev/dealers.py, so the root is three
+# levels up; ``parent.parent`` (backend/) once pointed the dev tools at a stray
+# backend/dealers.json the scanner never reads.
+ROOT = Path(__file__).resolve().parents[2]
+# Same file the scanner CLI, dealer_pipeline and discovery_probe read
+# (backend/scanner/constants.py MANIFEST_PATH), including the env override.
+DEALERS_PATH = Path(os.environ.get("DEALERS_MANIFEST_PATH") or (ROOT / "dealers.json"))
 PROVIDERS = frozenset(
     {
         "dealer_dot_com",
@@ -74,14 +80,14 @@ def upsert_dealer_manifest_row(
     Default ``provider`` matches ``scanner.js`` smart-import (``dealer_dot_com``). Some stacks
     (e.g. Keffer/CDJR) may need ``dealer_on`` once detected — pass explicitly when known.
 
-    ``manifest_path`` — optional absolute path to ``dealers.json``. Use the same directory as
-    ``scanner.py`` (project root). When omitted, uses ``DEALERS_PATH`` derived from this module’s
-    location (can mismatch ``scanner.py`` if ``backend`` is imported from site-packages).
+    ``manifest_path`` — optional absolute path to ``dealers.json``. When omitted, uses
+    ``DEALERS_PATH`` (repo-root ``dealers.json`` or ``DEALERS_MANIFEST_PATH``), the file the
+    scanner and ``backend.scripts.dealer_pipeline`` read.
 
     Returns ``("inserted"|"updated", dealer_id)``. Raises ``ValueError`` like ``validate_dealers``.
 
-    Manual checklist: smart-import success → ``dealers.json`` contains row →
-    ``python scanner.py --dealer-id <slug>`` picks it up.
+    Manual checklist: smart-import → ``dealers.json`` contains row →
+    ``python -m backend.scripts.dealer_pipeline --dealers <slug>`` picks it up.
     """
     path = manifest_path if manifest_path is not None else DEALERS_PATH
 
@@ -358,13 +364,26 @@ def validate_dealers(rows: list) -> list[dict]:
     return normalized
 
 
-def save_dealers(rows: list[dict], path: Path | None = None, *, compact: bool = False) -> None:
+def _file_is_compact(path: Path) -> bool:
+    """True when an existing manifest was written without indentation (``[{...},{...}]``)."""
+    try:
+        with path.open("rb") as f:
+            head = f.read(2)
+    except OSError:
+        return False
+    return head == b"[{"
+
+
+def save_dealers(rows: list[dict], path: Path | None = None, *, compact: bool | None = None) -> None:
     """Write validated dealers to ``path`` (default ``DEALERS_PATH``).
 
     Use ``compact=True`` for large manifests (no indentation; smaller files and lower peak memory
-    during ``json.dump`` vs pretty-printed ``dumps`` strings).
+    during ``json.dump`` vs pretty-printed ``dumps`` strings). ``None`` keeps the existing file's
+    style, so a one-row upsert into the compact root manifest does not reformat all of it.
     """
     path = path if path is not None else DEALERS_PATH
+    if compact is None:
+        compact = _file_is_compact(path)
     validated = validate_dealers(rows)
     tmp = path.with_suffix(".json.tmp")
     if compact:

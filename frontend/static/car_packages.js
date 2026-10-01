@@ -199,9 +199,12 @@
     }
 
     function esc(s) {
-        const el = document.createElement("div");
-        el.textContent = s == null ? "" : String(s);
-        return el.innerHTML;
+        return String(s == null ? "" : s)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#39;");
     }
 
     function ensureStickerWrapVisible() {

@@ -6,9 +6,11 @@
     <title>{% block title %}Admin{% endblock %} — Sarrafi Cars</title>
     {% include "_head_css.html" %}
     {% include "_head_meta.html" %}
+    {# Page-specific admin CSS: prod CSP blocks inline style elements, so it lives in 16-admin-pages.css. #}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/16-admin-pages.css') }}?v={{ static_cache_ver }}">
     {% block extra_head %}{% endblock %}
 </head>
-<body class="admin-shell-body app-layout-body">
+<body class="admin-shell-body app-layout-body{% block body_class %}{% endblock %}">
 <div class="page page--app-layout">
     {% include "_nav_sidebar.html" %}
     {% with messages = get_flashed_messages(with_categories=true) %}

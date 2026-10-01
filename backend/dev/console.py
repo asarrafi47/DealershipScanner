@@ -7,10 +7,8 @@ import os
 import posixpath
 import secrets
 import subprocess
-import sys
 import threading
 from functools import wraps
-from pathlib import Path
 from urllib.parse import urlparse
 
 from flask import (
@@ -24,6 +22,7 @@ from flask import (
 )
 
 from backend.dev.dealers import DEALERS_PATH, load_dealers, save_dealers, validate_dealers, PROVIDERS
+from backend.dev.pipeline_jobs import REPO_ROOT, pipeline_command, pipeline_out_dir, read_triage_row
 
 bp = Blueprint("dev_console", __name__)
 logger = logging.getLogger(__name__)
@@ -44,8 +43,7 @@ def _dev_console_csrf() -> None:
         validate_csrf_header()
 
 
-_PROJECT_ROOT = Path(__file__).resolve().parent.parent
-_SCANNER_SCRIPT = _PROJECT_ROOT / "scanner.py"
+_PROJECT_ROOT = REPO_ROOT
 
 
 def dev_console_enabled() -> bool:
@@ -220,24 +218,30 @@ def api_dev_dealers_put():
 
 
 def _run_scanner_subprocess(dealer_id: str) -> None:
-    """Blocking: run inventory scanner for one manifest row (background thread)."""
-    if not _SCANNER_SCRIPT.is_file():
-        logger.error("scanner.py not found at %s", _SCANNER_SCRIPT)
-        return
-    logger.info("Scanner subprocess starting: dealer_id=%s", dealer_id)
+    """Blocking: run the HTTP-only dealer pipeline for one manifest row (background thread).
+
+    ``backend/scripts/dealer_pipeline.py`` is the per-dealer loop (recipe -> scan ->
+    NHTSA -> assess -> dealer logs); it replaced the bare ``scanner.py --dealer-id`` run
+    so a console scan leaves the same logs as a fleet scan.
+    """
+    out_dir = pipeline_out_dir(f"console_{dealer_id}")
+    logger.info("Dealer pipeline starting: dealer_id=%s out=%s", dealer_id, out_dir)
     try:
         proc = subprocess.run(
-            [sys.executable, str(_SCANNER_SCRIPT), "--dealer-id", dealer_id],
+            pipeline_command(dealer_id, out_dir, manifest_path=DEALERS_PATH),
             cwd=str(_PROJECT_ROOT),
             env=os.environ.copy(),
         )
+        row = read_triage_row(out_dir, dealer_id) or {}
         logger.info(
-            "Scanner subprocess finished: dealer_id=%s exit_code=%s",
+            "Dealer pipeline finished: dealer_id=%s exit_code=%s verdict=%s reason=%s",
             dealer_id,
             proc.returncode,
+            row.get("verdict"),
+            row.get("reason"),
         )
     except Exception:
-        logger.exception("Scanner subprocess failed for dealer_id=%s", dealer_id)
+        logger.exception("Dealer pipeline failed for dealer_id=%s", dealer_id)
 
 
 def _scan_dealer_error(
@@ -264,7 +268,7 @@ def _scan_dealer_error(
 @bp.post("/api/dev/scan-dealer")
 @require_dev_access(api=True)
 def api_dev_scan_dealer():
-    """Start ``python scanner.py --dealer-id …`` in a background thread (non-blocking HTTP)."""
+    """Start the dealer pipeline for one manifest row in a background thread (non-blocking HTTP)."""
     raw_body = request.get_data(cache=True) or b""
 
     if not raw_body.strip():
@@ -381,7 +385,9 @@ def api_dev_scan_dealer():
                 "dealer_id": dealer_id,
                 "message": (
                     f"Scan accepted for {dealer_id!r} (HTTP 202). "
-                    "Running python scanner.py --dealer-id in the background; watch this server terminal for logs."
+                    "Running python -m backend.scripts.dealer_pipeline --dealers in the background "
+                    "(HTTP-only scan, NHTSA check, dealer logs under workspace/dealer_logs/); "
+                    "watch this server terminal for the verdict."
                 ),
             }
         ),

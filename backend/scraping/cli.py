@@ -83,9 +83,9 @@ def _empty_site_result(url: str, mode: str, err: str) -> SiteResult:
 
 def _run_adjudicate_mode(args: argparse.Namespace) -> int:
     """Hybrid crawl + rules + LLM adjudication + run summary artifact."""
-    from scraping.canonical_groups import load_alias_table_from_json
-    from intelligence.pipeline.eval_report import print_batch_eval_summary, write_hybrid_eval_csv
-    from intelligence.pipeline.orchestrator import run_hybrid_batch, save_hybrid_run
+    from backend.scraping.canonical_groups import load_alias_table_from_json
+    from backend.intelligence.pipeline.eval_report import print_batch_eval_summary, write_hybrid_eval_csv
+    from backend.intelligence.pipeline.orchestrator import run_hybrid_batch, save_hybrid_run
 
     alias_path = args.known_group_aliases or default_known_group_aliases_path()
     n_alias = load_alias_table_from_json(alias_path)
@@ -282,7 +282,7 @@ def main() -> int:
     args = ap.parse_args()
 
     if args.fixture_test:
-        from scraping.fixture_tests import main as fixture_main
+        from backend.scraping.fixture_tests import main as fixture_main
 
         return fixture_main()
 

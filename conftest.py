@@ -1,12 +1,48 @@
 """Root pytest configuration — ensures ``backend/`` is on sys.path for bare-import modules."""
+import atexit
 import os
+import shutil
 import sys
+import tempfile
 from pathlib import Path
 
 import pytest
 
 # Dev/test may use plain SQLite for users.db; production forbids this (SEC-088).
 os.environ.setdefault("ALLOW_UNENCRYPTED_USER_DB", "1")
+
+# --- Hermetic databases ------------------------------------------------------------
+#
+# This runs at conftest import, i.e. before collection imports any test module.
+# Nine test modules import ``backend.main`` at module top, and main.py loads .env
+# and runs init_* on whatever databases the environment names, so per-test
+# fixtures were too late: collection alone opened the developer's real users.db /
+# dev_users.db and the local Postgres inventory, and test_compare_and_stats wrote
+# rows into the real users.db (audit 2026-10-01, tests.md F1). Every database the
+# code reads from the environment is pinned here to "" (Postgres URLs: off, tests
+# are SQLite-only) or to a file in a per-session tmp dir, and loading .env is
+# switched off for the whole session (``PROJECT_DOTENV_DISABLE``, honoured by
+# ``backend.utils.project_env.load_project_dotenv``), so ``importlib.reload(main)``
+# can no longer refill a blanked key or override a value a test set. These are
+# assignments, not setdefault: a shell-exported URL must not leak in either.
+# INVENTORY_DB_PATH is left to the fixtures below (they pin the default test
+# inventory sqlite per test).
+_HERMETIC_DB_DIR = tempfile.mkdtemp(prefix="pytest-dbs-")
+atexit.register(shutil.rmtree, _HERMETIC_DB_DIR, True)
+
+HERMETIC_DB_ENV: dict = {
+    "INVENTORY_DATABASE_URL": "",
+    "DATABASE_URL": "",
+    "PGVECTOR_URL": "",
+    "USERS_DB_PATH": os.path.join(_HERMETIC_DB_DIR, "users.db"),
+    "DEV_USERS_DB_PATH": os.path.join(_HERMETIC_DB_DIR, "dev_users.db"),
+    "DEALER_PORTAL_DB_PATH": os.path.join(_HERMETIC_DB_DIR, "dealer_portal.db"),
+    "INCOMPLETE_LISTINGS_DB_PATH": os.path.join(_HERMETIC_DB_DIR, "incomplete_listings.db"),
+    "SCAN_LAB_INVENTORY_DB_PATH": os.path.join(_HERMETIC_DB_DIR, "scan_lab_inventory.db"),
+}
+os.environ.update(HERMETIC_DB_ENV)
+os.environ["INVENTORY_SQLITE_TESTS"] = "1"
+os.environ["PROJECT_DOTENV_DISABLE"] = "1"
 
 PROD_TEST_USERS_DB_KEY = "pytest-users-db-encryption-key-32chars!"
 PROD_TEST_DEV_USERS_DB_KEY = "pytest-dev-users-db-enc-key-32c!"
@@ -107,8 +143,18 @@ def _ensure_default_inventory_schema() -> None:
     try:
         import backend.db.inventory_db as inv_db
 
+        # The scan-lab inventory now lives in the session tmp dir (HERMETIC_DB_ENV);
+        # give it the same empty schema so dev scan-lab listings read zero cars.
+        inv_db.DB_PATH = HERMETIC_DB_ENV["SCAN_LAB_INVENTORY_DB_PATH"]
+        inv_db.init_inventory_db()
+
         inv_db.DB_PATH = inv_db._default_inventory_db_path()
         inv_db.init_inventory_db()
+        # The dealer-portal sidecar now lives in the session tmp dir (HERMETIC_DB_ENV);
+        # account deletion runs DELETE FROM dealer_vehicles, so the table must exist.
+        from backend.db import dealer_portal_db
+
+        dealer_portal_db.init_dealer_portal_db()
     finally:
         mp.undo()
 

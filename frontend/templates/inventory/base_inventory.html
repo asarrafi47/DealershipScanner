@@ -8,36 +8,9 @@
     {% include "_head_css.html" %}
     {% include "_head_meta.html" %}
     {% include "_head_perf.html" %}
-    <style nonce="{{ csp_nonce }}">
-    /* Dealer inventory sub-nav (tab bar under the shared sidebar shell). */
-    .dealer-inv-subnav {
-        display: flex;
-        gap: 8px;
-        flex-wrap: wrap;
-        margin: 0 0 20px;
-        padding-bottom: 12px;
-        border-bottom: 1px solid rgba(11, 31, 58, 0.12);
-    }
-    .dealer-inv-subnav__link {
-        display: inline-block;
-        padding: 4px 0;
-        margin-right: 16px;
-        font-size: 0.9rem;
-        font-weight: 600;
-        text-decoration: none;
-        color: var(--text-muted);
-        border-bottom: 2px solid transparent;
-    }
-    .dealer-inv-subnav__link:hover {
-        color: var(--navy, #0b1f3a);
-    }
-    .dealer-inv-subnav__link--active {
-        color: var(--navy, #0b1f3a);
-        border-bottom-color: var(--navy, #0b1f3a);
-    }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/16-admin-pages.css') }}?v={{ static_cache_ver }}">
 </head>
-<body class="app-layout-body">
+<body class="app-layout-body dealer-inv-body">
 <div class="page page--app-layout">
     {% set nav_active = "dealer_tools" %}
     {% include "_nav_sidebar.html" %}

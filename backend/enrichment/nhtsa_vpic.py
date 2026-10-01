@@ -69,18 +69,31 @@ def _pretty_make_model(s: str) -> str:
 
 
 def _normalize_drivetrain(raw: str) -> str | None:
+    """
+    Map a vPIC ``DriveType`` to the canonical FWD / RWD / AWD / 4WD, else ``None``.
+
+    "4x2" (and "2WD", "2-Wheel Drive") says two driven wheels, NOT which end:
+    vPIC stamps it on FWD Camrys and Pilots as much as on RWD trucks (91k of the
+    local decode cache, 2026-10-01). It must never be written as RWD or as the raw
+    string, so it returns ``None`` and the dealer feed / catalog tiebreak decide
+    (same rule as ``knowledge_engine._VPIC_DRIVE_MAP`` and ``catalog.resolver``).
+    "2WD/4WD" is equally undecided. Anything unrecognised also returns ``None``
+    rather than leaking a raw vPIC label into ``cars.drivetrain``.
+    """
     if _vpic_scalar_empty(raw):
         return None
     u = raw.strip().upper()
-    if "AWD" in u or "ALL-WHEEL" in u:
+    if "4X2" in u or "2WD" in u or "2-WHEEL" in u or "TWO-WHEEL" in u:
+        return None
+    if "AWD" in u or "ALL-WHEEL" in u or "ALL WHEEL" in u:
         return "AWD"
-    if "4WD" in u or "4-WHEEL" in u or "4X4" in u:
+    if "4WD" in u or "4-WHEEL" in u or "4X4" in u or "FOUR-WHEEL" in u or "FOUR WHEEL" in u:
         return "4WD"
-    if "FWD" in u or "FRONT-WHEEL" in u:
+    if "FWD" in u or "FRONT-WHEEL" in u or "FRONT WHEEL" in u:
         return "FWD"
-    if "RWD" in u or "REAR-WHEEL" in u:
+    if "RWD" in u or "REAR-WHEEL" in u or "REAR WHEEL" in u:
         return "RWD"
-    return raw.strip()
+    return None
 
 
 def _parse_engine_cylinder_count(flat: dict[str, str]) -> int | None:

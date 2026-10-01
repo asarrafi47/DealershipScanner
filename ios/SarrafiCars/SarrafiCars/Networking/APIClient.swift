@@ -6,6 +6,9 @@ enum APIError: LocalizedError {
     case server(String)
     case decoding(Error)
     case unreachable(baseURL: URL)
+    /// The listings API is scoped to a ZIP + radius (contract v2, 2026-09-28) and answers
+    /// 400 `zip_required` without one. The UI prompts for a ZIP instead of an error.
+    case zipRequired
 
     var errorDescription: String? {
         switch self {
@@ -15,6 +18,8 @@ enum APIError: LocalizedError {
             return msg ?? "Request failed (\(code))"
         case .server(let msg):
             return msg
+        case .zipRequired:
+            return "Enter a 5-digit ZIP to see nearby inventory."
         case .unreachable(let baseURL):
             #if DEBUG
             return """
@@ -112,8 +117,35 @@ final class APIClient {
         await SessionCookieBridge.clearSessionCookies()
     }
 
-    func fetchListings() async throws -> [ListingCar] {
-        let resp: ListingsResponse = try await get("/api/listings/cars")
+    /// Path for `GET /api/listings/cars` scoped to one area. The server reads `zip`
+    /// (or `zip_code`) and `radius` (or `radius_miles`); without a ZIP it falls back to the
+    /// one remembered in the session cookie, so the app always sends both explicitly.
+    /// Returns nil when `zip` is not five digits.
+    static func listingsCarsPath(zip: String, radiusMiles: Int) -> String? {
+        let z = zip.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard z.count == 5, z.allSatisfy(\.isASCII), z.allSatisfy(\.isNumber) else { return nil }
+        return "/api/listings/cars?zip=\(z)&radius=\(radiusMiles)"
+    }
+
+    /// The server's no-area answer (400 `zip_required`) becomes `.zipRequired`, so the
+    /// UI prompts for a ZIP; every other error passes through unchanged.
+    static func mapListingsError(_ error: Error) -> Error {
+        if case APIError.httpStatus(400, "zip_required"?) = error {
+            return APIError.zipRequired
+        }
+        return error
+    }
+
+    func fetchListings(zip: String, radiusMiles: Int) async throws -> [ListingCar] {
+        guard let path = Self.listingsCarsPath(zip: zip, radiusMiles: radiusMiles) else {
+            throw APIError.zipRequired
+        }
+        let resp: ListingsResponse
+        do {
+            resp = try await get(path)
+        } catch {
+            throw Self.mapListingsError(error)
+        }
         guard resp.ok else { throw APIError.server("listings_failed") }
         return resp.cars
     }

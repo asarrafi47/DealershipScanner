@@ -1,7 +1,7 @@
 """
 Unit-style checks for org validation and extraction (no network).
 
-Run: python -m SCRAPING.fixture_tests
+Run: python -m backend.scraping.fixture_tests
 """
 from __future__ import annotations
 
@@ -112,7 +112,7 @@ def test_tuttle_part_of_article_phrase() -> None:
 
 
 def test_threshold_status() -> None:
-    from scraping.org_validation import finalize_status
+    from backend.scraping.org_validation import finalize_status
 
     _assert(finalize_status(0.82, "X") == "assigned", "high")
     _assert(finalize_status(0.60, "Y") == "manual_review", "mid band")

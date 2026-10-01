@@ -157,7 +157,10 @@ final class ListingsFacetCatalog: ObservableObject {
 
     private var didLoad = false
 
-    func loadIfNeeded() async {
+    /// Loads the server facet catalog once. When that fails or comes back empty, falls
+    /// back to the cars of one area: `/api/listings/cars` is scoped to a ZIP + radius and
+    /// has no whole-fleet answer, so without a valid `zip` there is no fallback.
+    func loadIfNeeded(zip: String? = nil, radiusMiles: Int = ListingsRadius.mi50.rawValue) async {
         guard !didLoad else { return }
         isLoading = true
         defer {
@@ -168,16 +171,18 @@ final class ListingsFacetCatalog: ObservableObject {
             let resp = try await APIClient.shared.fetchListingsFilterOptions()
             apply(response: resp)
             if makes.isEmpty {
-                let cars = try await APIClient.shared.fetchListings()
-                applyFromCars(cars)
+                await applyFromArea(zip: zip, radiusMiles: radiusMiles)
             }
         } catch {
-            do {
-                let cars = try await APIClient.shared.fetchListings()
-                applyFromCars(cars)
-            } catch {
-                // Result-set facets still apply after search.
-            }
+            await applyFromArea(zip: zip, radiusMiles: radiusMiles)
+        }
+    }
+
+    private func applyFromArea(zip: String?, radiusMiles: Int) async {
+        guard let zip, APIClient.listingsCarsPath(zip: zip, radiusMiles: radiusMiles) != nil else { return }
+        // Result-set facets still apply after search, so a failure here is not fatal.
+        if let cars = try? await APIClient.shared.fetchListings(zip: zip, radiusMiles: radiusMiles) {
+            applyFromCars(cars)
         }
     }
 
@@ -252,6 +257,12 @@ final class ListingsFacetCatalog: ObservableObject {
     }
 }
 
+/// The ZIP + radius one listings request is scoped to.
+struct ListingsArea: Equatable {
+    let zip: String
+    let radiusMiles: Int
+}
+
 @MainActor
 final class ListingsSession: ObservableObject {
     @Published var zipCode: String = ""
@@ -269,11 +280,20 @@ final class ListingsSession: ObservableObject {
     @Published private(set) var geoHint: String?
     @Published private(set) var emptyMessage: String?
     @Published private(set) var errorMessage: String?
+    /// True when the server answered `zip_required`: the UI asks for a ZIP instead of
+    /// showing a generic error.
+    @Published private(set) var needsZip = false
+    /// Set when remembering the ZIP + radius in the server session failed. Listings still
+    /// load (every request carries the area explicitly), but dashboard recommendations
+    /// that read the remembered area will not match, so the user is told.
+    @Published private(set) var sessionSaveError: String?
     @Published var visibleCount = AppConfig.pageSize
 
     let facetCatalog = ListingsFacetCatalog()
 
     private var allCars: [ListingCar] = []
+    /// The ZIP + radius `allCars` was fetched for; the server scopes cars to that area.
+    private var allCarsArea: ListingsArea?
     private var smartSearchActive = false
 
     var isZipValid: Bool {
@@ -284,30 +304,35 @@ final class ListingsSession: ObservableObject {
     /// - Parameter forceReloadInventory: When true, refetches `/api/listings/cars` (pull-to-refresh).
     func refresh(forceReloadInventory: Bool = false) async {
         guard isZipValid else {
-            geoHint = "Enter a 5-digit ZIP to search nearby inventory."
-            displayedCars = []
-            facetPool = []
+            promptForZip()
             return
         }
         isLoading = true
         errorMessage = nil
+        needsZip = false
         geoHint = nil
         emptyMessage = nil
         defer { isLoading = false }
 
         let zip = zipCode.trimmingCharacters(in: .whitespacesAndNewlines)
+        let area = ListingsArea(zip: zip, radiusMiles: radiusMiles)
         do {
             guard let origin = try await ZipCoordCache.shared.coords(for: zip) else {
                 geoHint = "ZIP code not found — check and try again."
                 displayedCars = []
                 return
             }
-            try? await APIClient.shared.persistListingsGeo(zip: zip, radiusMiles: radiusMiles)
+            await rememberArea(area)
 
-            if forceReloadInventory || allCars.isEmpty {
-                allCars = try await APIClient.shared.fetchListings()
-                try await ListingsGeoMapsCache.shared.reload()
-                await facetCatalog.loadIfNeeded()
+            if forceReloadInventory || allCarsArea != area {
+                allCars = try await APIClient.shared.fetchListings(zip: zip, radiusMiles: radiusMiles)
+                allCarsArea = area
+                // The coord maps are fleet-wide (not area-scoped): `maps()` loads them once;
+                // only pull-to-refresh refetches, not every ZIP or radius change.
+                if forceReloadInventory {
+                    try await ListingsGeoMapsCache.shared.reload()
+                }
+                await facetCatalog.loadIfNeeded(zip: zip, radiusMiles: radiusMiles)
                 if facetCatalog.makes.isEmpty {
                     facetCatalog.applyFromCars(allCars)
                 }
@@ -349,9 +374,34 @@ final class ListingsSession: ObservableObject {
                     geoHint = "No matches with current filters."
                 }
             }
+        } catch APIError.zipRequired {
+            promptForZip()
         } catch {
             errorMessage = error.localizedDescription
             displayedCars = []
+        }
+    }
+
+    /// No usable ZIP (none typed, or the server answered `zip_required`): ask for one.
+    private func promptForZip() {
+        needsZip = true
+        errorMessage = nil
+        geoHint = APIError.zipRequired.errorDescription
+        allCars = []
+        allCarsArea = nil
+        displayedCars = []
+        facetPool = []
+    }
+
+    /// Remembers the area in the server session (dashboard recommendations read it).
+    /// A failure is surfaced in `sessionSaveError`, not swallowed; it does not block the
+    /// listings fetch, which carries the area explicitly.
+    private func rememberArea(_ area: ListingsArea) async {
+        do {
+            try await APIClient.shared.persistListingsGeo(zip: area.zip, radiusMiles: area.radiusMiles)
+            sessionSaveError = nil
+        } catch {
+            sessionSaveError = "Could not save your ZIP for recommendations: \(error.localizedDescription)"
         }
     }
 

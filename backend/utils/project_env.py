@@ -17,6 +17,21 @@ def ensure_backend_on_sys_path() -> None:
         sys.path.insert(0, backend_dir)
 
 
+DOTENV_DISABLE_ENV = "PROJECT_DOTENV_DISABLE"
+
+
+def dotenv_disabled() -> bool:
+    """
+    True when ``PROJECT_DOTENV_DISABLE`` is set (the root ``conftest.py`` sets it
+    for every pytest session). Tests blank database URLs and point user DBs at
+    tmp files; ``.env`` must neither refill a blanked key nor override a value a
+    test set, so loading it is skipped entirely while the flag is on.
+    """
+    import os
+
+    return (os.environ.get(DOTENV_DISABLE_ENV) or "").strip().lower() in ("1", "true", "yes", "on")
+
+
 def load_project_dotenv(*, override: bool = False) -> None:
     """
     Load ``<repo>/.env`` if the file exists. Shell-exported variables win when
@@ -25,9 +40,14 @@ def load_project_dotenv(*, override: bool = False) -> None:
     Exception: ANTHROPIC_API_KEY is always taken from .env when the shell
     value is clearly invalid (too short to be a real key), so Claude features
     work even when the shell has a placeholder value.
+
+    No-op (beyond the ``sys.path`` fix-up) while :func:`dotenv_disabled`.
     """
     import os
 
+    if dotenv_disabled():
+        ensure_backend_on_sys_path()
+        return
     try:
         from dotenv import load_dotenv, dotenv_values
     except ImportError:

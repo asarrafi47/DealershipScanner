@@ -167,7 +167,7 @@ struct HomeView: View {
 
         .task(id: session.isZipValid) {
             guard session.isZipValid else { return }
-            await session.facetCatalog.loadIfNeeded()
+            await session.facetCatalog.loadIfNeeded(zip: session.zipCode, radiusMiles: session.radiusMiles)
         }
 
     }
@@ -194,6 +194,18 @@ struct ListingsResultsView: View {
 
                     .padding(.vertical, 32)
 
+            } else if session.needsZip {
+
+                EmptyStateView(
+
+                    title: "Set your location",
+
+                    systemImage: "location.circle",
+
+                    message: session.geoHint ?? "Enter a 5-digit ZIP to see nearby inventory."
+
+                )
+
             } else if let err = session.errorMessage {
 
                 EmptyStateView(title: "Error", systemImage: "exclamationmark.triangle", message: err)
@@ -213,6 +225,18 @@ struct ListingsResultsView: View {
             } else {
 
                 VStack(alignment: .leading, spacing: 8) {
+
+                    if let saveError = session.sessionSaveError {
+
+                        Text(saveError)
+
+                            .font(.footnote)
+
+                            .foregroundStyle(AppTheme.textMuted)
+
+                            .padding(.horizontal, 16)
+
+                    }
 
                     Text("\(session.displayedCars.count.formatted()) vehicles")
 
