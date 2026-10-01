@@ -5,6 +5,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import pytest
+
 from backend.enrichment.trim_diff_engine import (
     compute_ladder_adds_by_step_name,
     compute_step_adds,
@@ -94,7 +96,7 @@ def test_compute_ladder_follows_baseline_to_top_order() -> None:
 def test_jeep_curated_sheet_limited_x_delta() -> None:
     sheet = load_spec_sheet("jeep_grand_cherokee_wk2")
     if sheet is None:
-        return
+        pytest.skip("trim spec sheet jeep_grand_cherokee_wk2.json not present")
     ladder = {
         "steps": [
             {"name": "Summit", "aliases": []},

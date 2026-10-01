@@ -5,8 +5,6 @@ Postgres.
 """
 from __future__ import annotations
 
-import os
-
 import pytest
 
 from backend.reviews.guards import hash_ip, validate_review
@@ -17,18 +15,6 @@ from backend.reviews.store import (
     review_summary,
     upsert_review,
 )
-
-
-@pytest.fixture()
-def sqlite_inventory(tmp_path, monkeypatch):
-    monkeypatch.setenv("INVENTORY_SQLITE_TESTS", "1")
-    monkeypatch.setenv("INVENTORY_DATABASE_URL", "")
-    monkeypatch.setenv("DATABASE_URL", "")
-    from backend.db import inventory_db
-
-    db_path = os.path.join(str(tmp_path), "inv.db")
-    monkeypatch.setattr(inventory_db, "DB_PATH", db_path)
-    return inventory_db
 
 
 # ---------------------------------------------------------------------------

@@ -4,7 +4,6 @@ SQLite isolation mirrors ``test_dealer_reviews.py`` — never touches prod Postg
 """
 from __future__ import annotations
 
-import os
 from datetime import datetime, timedelta, timezone
 
 import pytest
@@ -29,18 +28,6 @@ from backend.db.comments_db import (
     upsert_dealer_rating,
 )
 from backend.enrichment.dealer_ratings import classify_places_error
-
-
-@pytest.fixture()
-def sqlite_inventory(tmp_path, monkeypatch):
-    monkeypatch.setenv("INVENTORY_SQLITE_TESTS", "1")
-    monkeypatch.setenv("INVENTORY_DATABASE_URL", "")
-    monkeypatch.setenv("DATABASE_URL", "")
-    from backend.db import inventory_db
-
-    db_path = os.path.join(str(tmp_path), "inv.db")
-    monkeypatch.setattr(inventory_db, "DB_PATH", db_path)
-    return inventory_db
 
 
 @pytest.fixture()

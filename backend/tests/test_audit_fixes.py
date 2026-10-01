@@ -2,40 +2,21 @@
 
 from __future__ import annotations
 
-import importlib
-
 import pytest
 
 
-def _fresh_app(monkeypatch: pytest.MonkeyPatch, tmp_path, **env):
-    flask_env = env.pop("FLASK_ENV", "development")
-    monkeypatch.setenv("FLASK_ENV", flask_env)
-    monkeypatch.setenv("MFA_DELIVERY_MODE", "log")
-    monkeypatch.setenv("USERS_DB_PATH", str(tmp_path / "users_test.db"))
-    monkeypatch.setenv("DEV_USERS_DB_PATH", str(tmp_path / "dev_users_test.db"))
-    monkeypatch.setenv("ALLOW_DEFAULT_APP_USER", "0")
-    monkeypatch.setenv("RATE_LIMIT_SQLITE_PATH", str(tmp_path / "rate_limits.db"))
-    monkeypatch.delenv("USERS_DB_ENCRYPTION_KEY", raising=False)
-    if flask_env == "production":
-        monkeypatch.setenv("SECRET_KEY", "pytest-secret-key-do-not-use-in-deployment")
-        monkeypatch.setenv("ADMIN_PASSWORD", "pytest-admin-bootstrap-do-not-use-in-deployment")
-        from conftest import apply_production_credential_encryption_env
-
-        apply_production_credential_encryption_env(monkeypatch)
-    for k, v in env.items():
-        monkeypatch.setenv(k, v)
-    import backend.main as main
-
-    importlib.reload(main)
-    return main
-
-
-def test_sticker_preview_requires_premium_when_billing_on(monkeypatch: pytest.MonkeyPatch, tmp_path) -> None:
-    main = _fresh_app(
-        monkeypatch,
-        tmp_path,
-        BILLING_STRIPE_ENABLED="1",
+def _make_app(app_factory, tmp_path, **env):
+    production = env.pop("FLASK_ENV", "development") == "production"
+    return app_factory(
+        production=production,
+        ALLOW_DEFAULT_APP_USER="0",
+        RATE_LIMIT_SQLITE_PATH=str(tmp_path / "rate_limits.db"),
+        **env,
     )
+
+
+def test_sticker_preview_requires_premium_when_billing_on(monkeypatch: pytest.MonkeyPatch, tmp_path, app_factory) -> None:
+    main = _make_app(app_factory, tmp_path, BILLING_STRIPE_ENABLED="1")
     car = {
         "id": 7,
         "vin": "1C6RRFFG4NN401203",
@@ -73,14 +54,9 @@ def test_sticker_preview_requires_premium_when_billing_on(monkeypatch: pytest.Mo
 
 
 def test_sticker_preview_requires_login_in_production_when_billing_off(
-    monkeypatch: pytest.MonkeyPatch, tmp_path
+    monkeypatch: pytest.MonkeyPatch, tmp_path, app_factory
 ) -> None:
-    main = _fresh_app(
-        monkeypatch,
-        tmp_path,
-        FLASK_ENV="production",
-        BILLING_STRIPE_ENABLED="0",
-    )
+    main = _make_app(app_factory, tmp_path, FLASK_ENV="production", BILLING_STRIPE_ENABLED="0")
     car = {
         "id": 7,
         "vin": "1C6RRFFG4NN401203",
@@ -120,13 +96,8 @@ def test_sticker_preview_requires_login_in_production_when_billing_off(
     assert rv2.status_code == 200
 
 
-def test_car_chat_requires_login_in_production_when_billing_off(monkeypatch: pytest.MonkeyPatch, tmp_path) -> None:
-    main = _fresh_app(
-        monkeypatch,
-        tmp_path,
-        FLASK_ENV="production",
-        BILLING_STRIPE_ENABLED="0",
-    )
+def test_car_chat_requires_login_in_production_when_billing_off(monkeypatch: pytest.MonkeyPatch, tmp_path, app_factory) -> None:
+    main = _make_app(app_factory, tmp_path, FLASK_ENV="production", BILLING_STRIPE_ENABLED="0")
     monkeypatch.setattr(
         main,
         "get_car_by_id",
@@ -149,9 +120,9 @@ def test_car_chat_requires_login_in_production_when_billing_off(monkeypatch: pyt
         assert body.get("error") == "login_required"
 
 
-def test_car_chat_daily_limit_is_per_user(monkeypatch: pytest.MonkeyPatch, tmp_path) -> None:
-    main = _fresh_app(
-        monkeypatch,
+def test_car_chat_daily_limit_is_per_user(monkeypatch: pytest.MonkeyPatch, tmp_path, app_factory) -> None:
+    main = _make_app(
+        app_factory,
         tmp_path,
         BILLING_STRIPE_ENABLED="0",
         CAR_CHAT_MAX_PER_USER_DAILY="1",
@@ -183,10 +154,10 @@ def test_car_chat_daily_limit_is_per_user(monkeypatch: pytest.MonkeyPatch, tmp_p
         assert body.get("error") == "user_chat_limit_reached"
 
 
-def test_car_chat_listing_tier_blocks_one_car_not_another(monkeypatch: pytest.MonkeyPatch, tmp_path) -> None:
+def test_car_chat_listing_tier_blocks_one_car_not_another(monkeypatch: pytest.MonkeyPatch, tmp_path, app_factory) -> None:
     """Default per-listing tier (10/day) blocks the 11th message on ONE car; other cars still work."""
-    main = _fresh_app(
-        monkeypatch,
+    main = _make_app(
+        app_factory,
         tmp_path,
         BILLING_STRIPE_ENABLED="0",
         CAR_CHAT_MAX_PER_USER_DAILY="100",
@@ -227,10 +198,10 @@ def test_car_chat_listing_tier_blocks_one_car_not_another(monkeypatch: pytest.Mo
         assert rv_other.status_code == 200
 
 
-def test_compare_chat_has_own_daily_namespace(monkeypatch: pytest.MonkeyPatch, tmp_path) -> None:
+def test_compare_chat_has_own_daily_namespace(monkeypatch: pytest.MonkeyPatch, tmp_path, app_factory) -> None:
     """Compare chat ('cmp:daily:') must not drain the car-chat daily budget."""
-    main = _fresh_app(
-        monkeypatch,
+    main = _make_app(
+        app_factory,
         tmp_path,
         BILLING_STRIPE_ENABLED="0",
         CAR_CHAT_MAX_PER_USER_DAILY="1",
@@ -281,12 +252,8 @@ def test_compare_chat_has_own_daily_namespace(monkeypatch: pytest.MonkeyPatch, t
         assert rv_cmp2.get_json().get("error") == "user_chat_limit_reached"
 
 
-def test_car_page_hides_ask_ai_for_guests(monkeypatch: pytest.MonkeyPatch, tmp_path) -> None:
-    main = _fresh_app(
-        monkeypatch,
-        tmp_path,
-        BILLING_STRIPE_ENABLED="1",
-    )
+def test_car_page_hides_ask_ai_for_guests(monkeypatch: pytest.MonkeyPatch, tmp_path, app_factory) -> None:
+    main = _make_app(app_factory, tmp_path, BILLING_STRIPE_ENABLED="1")
     car = {
         "id": 55,
         "vin": "1C6RRFFG4NN401299",

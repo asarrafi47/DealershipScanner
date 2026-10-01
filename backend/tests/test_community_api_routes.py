@@ -10,7 +10,6 @@ SQLite isolation mirrors ``test_comments_db.py`` — never touches prod Postgres
 from __future__ import annotations
 
 import json
-import os
 from pathlib import Path
 
 import pytest
@@ -24,22 +23,11 @@ CAR_ID = 101
 
 
 @pytest.fixture()
-def sqlite_inventory(tmp_path, monkeypatch):
-    monkeypatch.setenv("INVENTORY_SQLITE_TESTS", "1")
-    monkeypatch.setenv("INVENTORY_DATABASE_URL", "")
-    monkeypatch.setenv("DATABASE_URL", "")
+def seeded(sqlite_inventory, monkeypatch):
     # Volume limits are not what these tests are about, and the in-process
     # limiter is shared across the whole session.
     monkeypatch.setenv("COMMENT_FLAG_RPM", "500")
     monkeypatch.setenv("COMMENT_POST_RPM", "500")
-    from backend.db import inventory_db
-
-    monkeypatch.setattr(inventory_db, "DB_PATH", os.path.join(str(tmp_path), "inv.db"))
-    return inventory_db
-
-
-@pytest.fixture()
-def seeded(sqlite_inventory):
     conn = sqlite_inventory.get_conn()
     try:
         cur = conn.cursor()

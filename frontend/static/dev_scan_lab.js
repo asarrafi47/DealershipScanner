@@ -3,8 +3,7 @@
  */
 (function () {
     function readCsrfToken() {
-        const m = document.querySelector('meta[name="csrf-token"]');
-        return m ? (m.getAttribute("content") || "").trim() : "";
+        return window.DS.csrfToken();
     }
 
     function appPathPrefix() {
@@ -215,9 +214,7 @@
     }
 
     function formatPrice(n) {
-        if (n == null || n === "") return "—";
-        const v = Number(n);
-        return Number.isFinite(v) ? "$" + v.toLocaleString("en-US", { maximumFractionDigits: 0 }) : "—";
+        return window.DS.formatUsd(n, { empty: "—", zeroIsEmpty: false, invalid: "—" });
     }
 
     function formatMiles(n) {

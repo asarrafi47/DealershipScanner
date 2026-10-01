@@ -626,6 +626,7 @@
 
 {# dealership_page.js MUST load before main.js: it redirects main.js's hard-coded
    facet-options URL to the dealer-scoped one before main.js fires that request. #}
+<script src="{{ url_for('static', filename='ds_core.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>
 <script src="{{ url_for('static', filename='sc-helpers.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>
 <script src="{{ url_for('static', filename='dealership_page.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>
 {# listings_boot must follow dealership_page.js (boot handler order) and precede main.js. #}

@@ -2,26 +2,12 @@
 
 from __future__ import annotations
 
-import importlib
+
+_APP_ENV = {"ADMIN_PASSWORD": None, "ADMIN_USERNAME": None, "ADMIN_EMAIL": None}
 
 
-def _fresh_app(monkeypatch, tmp_path):
-    monkeypatch.setenv("FLASK_ENV", "development")
-    monkeypatch.setenv("USERS_DB_PATH", str(tmp_path / "users_test.db"))
-    monkeypatch.setenv("DEV_USERS_DB_PATH", str(tmp_path / "dev_users_test.db"))
-    monkeypatch.delenv("ADMIN_PASSWORD", raising=False)
-    monkeypatch.delenv("ADMIN_USERNAME", raising=False)
-    monkeypatch.delenv("ADMIN_EMAIL", raising=False)
-    monkeypatch.delenv("USERS_DB_ENCRYPTION_KEY", raising=False)
-    monkeypatch.delenv("DEV_USERS_DB_ENCRYPTION_KEY", raising=False)
-    import backend.main as main
-
-    importlib.reload(main)
-    return main.app
-
-
-def test_app_register_login_password_only(monkeypatch, tmp_path):
-    app = _fresh_app(monkeypatch, tmp_path)
+def test_app_register_login_password_only(monkeypatch, tmp_path, app_factory):
+    app = app_factory(**_APP_ENV).app
     client = app.test_client()
     with client:
         client.get("/register")
@@ -68,8 +54,8 @@ def test_app_register_login_password_only(monkeypatch, tmp_path):
         assert session.get("mfa_ok") is True
 
 
-def test_legacy_mfa_urls_redirect(monkeypatch, tmp_path):
-    app = _fresh_app(monkeypatch, tmp_path)
+def test_legacy_mfa_urls_redirect(monkeypatch, tmp_path, app_factory):
+    app = app_factory(**_APP_ENV).app
     client = app.test_client()
     with client:
         for path in ("/mfa/choose", "/mfa/setup", "/mfa/verify", "/mfa/qr-wait"):
@@ -95,9 +81,9 @@ def test_legacy_mfa_urls_redirect(monkeypatch, tmp_path):
         assert (rv2.headers.get("Location") or "").endswith("/home")
 
 
-def test_dev_login_password_only_no_mfa(monkeypatch, tmp_path):
+def test_dev_login_password_only_no_mfa(monkeypatch, tmp_path, app_factory):
     monkeypatch.setenv("ALLOW_DEV_PUBLIC_REGISTER", "1")
-    app = _fresh_app(monkeypatch, tmp_path)
+    app = app_factory(**_APP_ENV).app
     client = app.test_client()
     with client:
         client.get("/dev/register")

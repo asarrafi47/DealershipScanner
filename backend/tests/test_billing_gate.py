@@ -1,35 +1,10 @@
 from __future__ import annotations
 
-import importlib
 
-
-def _fresh_app(monkeypatch, tmp_path, *, production: bool = False):
-    if production:
-        monkeypatch.setenv("FLASK_ENV", "production")
-        monkeypatch.setenv("SECRET_KEY", "pytest-secret-key-do-not-use-in-deployment")
-        monkeypatch.setenv("ADMIN_PASSWORD", "pytest-admin-bootstrap-do-not-use-in-deployment")
-        from conftest import apply_production_credential_encryption_env
-
-        apply_production_credential_encryption_env(monkeypatch)
-    else:
-        monkeypatch.setenv("FLASK_ENV", "development")
-    monkeypatch.setenv("MFA_DELIVERY_MODE", "log")
-    monkeypatch.setenv("USERS_DB_PATH", str(tmp_path / "users_test.db"))
-    monkeypatch.setenv("DEV_USERS_DB_PATH", str(tmp_path / "dev_users_test.db"))
-    if not production:
-        monkeypatch.delenv("USERS_DB_ENCRYPTION_KEY", raising=False)
-        monkeypatch.delenv("DEV_USERS_DB_ENCRYPTION_KEY", raising=False)
-    # Import after env wiring so backend.main initializes with our temp DB path
-    import backend.main as main
-
-    importlib.reload(main)
-    return main.app
-
-
-def test_env_admin_email_login_bypasses_billing(monkeypatch, tmp_path):
+def test_env_admin_email_login_bypasses_billing(monkeypatch, tmp_path, app_factory):
     monkeypatch.setenv("BILLING_STRIPE_ENABLED", "1")
     monkeypatch.setenv("APP_ADMIN_EMAILS", "admin@example.com")
-    app = _fresh_app(monkeypatch, tmp_path)
+    app = app_factory().app
     from backend.db.users_db import save_user, sync_env_admin_user_row
     from backend.utils.roles import ROLE_GENERAL
 
@@ -61,10 +36,10 @@ def test_env_admin_email_login_bypasses_billing(monkeypatch, tmp_path):
         assert not session.get("mfa_pending_user_id")
 
 
-def test_register_rejects_env_admin_email(monkeypatch, tmp_path):
+def test_register_rejects_env_admin_email(monkeypatch, tmp_path, app_factory):
     monkeypatch.setenv("BILLING_STRIPE_ENABLED", "1")
     monkeypatch.setenv("APP_ADMIN_EMAILS", "admin@example.com")
-    app = _fresh_app(monkeypatch, tmp_path)
+    app = app_factory().app
     client = app.test_client()
     with client:
         r0 = client.get("/register")
@@ -86,10 +61,10 @@ def test_register_rejects_env_admin_email(monkeypatch, tmp_path):
         assert b"reserved" in r.data.lower() or b"administrator" in r.data.lower()
 
 
-def test_register_non_admin_requires_billing(monkeypatch, tmp_path):
+def test_register_non_admin_requires_billing(monkeypatch, tmp_path, app_factory):
     monkeypatch.setenv("BILLING_STRIPE_ENABLED", "1")
     monkeypatch.setenv("APP_ADMIN_EMAILS", "")
-    app = _fresh_app(monkeypatch, tmp_path)
+    app = app_factory().app
     client = app.test_client()
     with client:
         r0 = client.get("/dealer/register")
@@ -119,14 +94,14 @@ def test_register_non_admin_requires_billing(monkeypatch, tmp_path):
         assert not session.get("mfa_pending_user_id")
 
 
-def test_env_admin_username_login_bypasses_billing(monkeypatch, tmp_path):
+def test_env_admin_username_login_bypasses_billing(monkeypatch, tmp_path, app_factory):
     monkeypatch.setenv("BILLING_STRIPE_ENABLED", "1")
     monkeypatch.setenv("STRIPE_SECRET_KEY", "sk_test_fake")
     monkeypatch.setenv("STRIPE_WEBHOOK_SECRET", "whsec_fake")
     monkeypatch.setenv("STRIPE_PRICE_ID", "price_fake")
     monkeypatch.setenv("APP_ADMIN_EMAILS", "")
     monkeypatch.setenv("APP_ADMIN_USERNAMES", "power_ops")
-    app = _fresh_app(monkeypatch, tmp_path, production=True)
+    app = app_factory(production=True).app
     from backend.db.users_db import save_user, sync_env_admin_user_row
     from backend.utils.roles import ROLE_GENERAL
 
@@ -157,10 +132,10 @@ def test_env_admin_username_login_bypasses_billing(monkeypatch, tmp_path):
         assert not session.get("mfa_pending_user_id")
 
 
-def test_register_rejects_env_admin_username(monkeypatch, tmp_path):
+def test_register_rejects_env_admin_username(monkeypatch, tmp_path, app_factory):
     monkeypatch.setenv("BILLING_STRIPE_ENABLED", "1")
     monkeypatch.setenv("APP_ADMIN_USERNAMES", "power_ops")
-    app = _fresh_app(monkeypatch, tmp_path, production=True)
+    app = app_factory(production=True).app
     client = app.test_client()
     with client:
         r0 = client.get("/register")
@@ -181,12 +156,12 @@ def test_register_rejects_env_admin_username(monkeypatch, tmp_path):
         assert b"reserved" in r.data.lower() or b"administrator" in r.data.lower()
 
 
-def test_stripe_webhook_rejects_invalid_signature(monkeypatch, tmp_path):
+def test_stripe_webhook_rejects_invalid_signature(monkeypatch, tmp_path, app_factory):
     monkeypatch.setenv("BILLING_STRIPE_ENABLED", "1")
     monkeypatch.setenv("STRIPE_SECRET_KEY", "sk_test_fake")
     monkeypatch.setenv("STRIPE_WEBHOOK_SECRET", "whsec_test_secret")
     monkeypatch.setenv("STRIPE_PRICE_ID", "price_fake")
-    app = _fresh_app(monkeypatch, tmp_path)
+    app = app_factory().app
     client = app.test_client()
     rv = client.post(
         "/billing/webhook",
@@ -199,9 +174,9 @@ def test_stripe_webhook_rejects_invalid_signature(monkeypatch, tmp_path):
     assert body.get("error") == "invalid_signature"
 
 
-def test_stripe_webhook_disabled_returns_404(monkeypatch, tmp_path):
+def test_stripe_webhook_disabled_returns_404(monkeypatch, tmp_path, app_factory):
     monkeypatch.setenv("BILLING_STRIPE_ENABLED", "0")
-    app = _fresh_app(monkeypatch, tmp_path)
+    app = app_factory().app
     client = app.test_client()
     rv = client.post("/billing/webhook", data=b"{}")
     assert rv.status_code == 404

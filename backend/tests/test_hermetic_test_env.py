@@ -62,6 +62,28 @@ def test_users_db_paths_live_in_a_tmp_dir() -> None:
         assert not real.startswith(str(REPO_ROOT)), real
 
 
+def test_default_inventory_is_a_session_copy_not_the_dev_file() -> None:
+    """The default SQLite inventory is a tmp copy; backend/inventory.db is never opened for writes."""
+    from backend.db import inventory_db
+    from backend.db.repositories import base_repo
+
+    tmp_root = os.path.realpath(tempfile.gettempdir())
+    for path in (inventory_db.DB_PATH, base_repo._resolve_db_path(), base_repo.DB_PATH):
+        real = os.path.realpath(path)
+        assert real.startswith(tmp_root), real
+        assert not real.startswith(str(REPO_ROOT)), real
+
+
+def test_app_factory_pins_every_user_db_under_tmp_path(app_factory, tmp_path: Path) -> None:
+    main = app_factory()
+    assert main.app is not None
+    for key in ("USERS_DB_PATH", "DEV_USERS_DB_PATH", "DEALER_PORTAL_DB_PATH"):
+        assert os.environ[key].startswith(str(tmp_path)), key
+    assert os.environ["FLASK_ENV"] == "development"
+    assert os.environ["USERS_DB_ENCRYPTION_KEY"] == ""
+    assert os.environ["TRUST_PROXY_HEADERS"] == ""
+
+
 def test_no_db_env_matches_dotenv() -> None:
     dot = _dotenv_db_values()
     for key, value in dot.items():

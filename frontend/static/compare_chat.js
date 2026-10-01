@@ -5,8 +5,7 @@
     "use strict";
 
     function readCsrfToken() {
-        const m = document.querySelector('meta[name="csrf-token"]');
-        return m ? (m.getAttribute("content") || "").trim() : "";
+        return window.DS.csrfToken();
     }
 
     const root = document.getElementById("compare-chat-section");

@@ -5,6 +5,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import pytest
+
 from backend.enrichment.brochure_promote import (
     extract_promotable_overlay,
     meets_gc_quality_bar,
@@ -27,7 +29,7 @@ def test_meets_gc_quality_bar_reference_shape() -> None:
 def test_promote_2012_honda_accord_from_brochure_text() -> None:
     data = load_brochure_text_json("2012|honda|accord")
     if not data:
-        return
+        pytest.skip("brochure text JSON 2012|honda|accord not present")
     payload = extract_promotable_overlay(data)
     assert payload is not None
     adds = payload.get("adds_by_trim") or {}
@@ -38,7 +40,7 @@ def test_promote_2012_honda_accord_from_brochure_text() -> None:
 def test_promote_2025_camry_from_brochure_text() -> None:
     data = load_brochure_text_json("2025|toyota|camry")
     if not data:
-        return
+        pytest.skip("brochure text JSON 2025|toyota|camry not present")
     payload = extract_promotable_overlay(data)
     assert payload is not None
     assert payload.get("source") == "promoted_brochure_auto"

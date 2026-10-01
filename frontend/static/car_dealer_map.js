@@ -66,11 +66,7 @@
     };
 
     function escapeHtml(s) {
-        return String(s)
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/"/g, "&quot;")
-            .replace(/'/g, "&#39;");
+        // Both call sites pass a truthy value, so DS's null -> "" never applies.
+        return window.DS.escapeHtml(s);
     }
 })();

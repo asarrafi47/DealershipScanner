@@ -142,7 +142,7 @@ def test_resolve_trim_ladder_uses_brochure_overlay(monkeypatch):
     # provenance gates at their defaults every rung is (correctly) dropped and
     # the resolver returns None for a reason unrelated to what this test pins:
     # that the overlay's trim list and adds are consumed at all. Run it under
-    # the documented kill switches (same pattern as test_trim_ladder.py's
+    # the documented kill switches (same pattern as trim_ladder/conftest.py's
     # ``_legacy_rung_gate_off``); the gates themselves are tested with
     # verified synthetic citations in
     # ``test_resolve_trim_ladder_uses_a_synthetic_verified_overlay`` below.

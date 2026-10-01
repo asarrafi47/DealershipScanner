@@ -1,8 +1,6 @@
 """Round-trip test for the dealer_specials store (SQLite backend)."""
 from __future__ import annotations
 
-import os
-
 import pytest
 
 from backend.scanner.specials.store import (
@@ -10,18 +8,6 @@ from backend.scanner.specials.store import (
     get_specials_for_dealer,
     upsert_specials,
 )
-
-
-@pytest.fixture()
-def sqlite_inventory(tmp_path, monkeypatch):
-    monkeypatch.setenv("INVENTORY_SQLITE_TESTS", "1")
-    monkeypatch.setenv("INVENTORY_DATABASE_URL", "")
-    monkeypatch.setenv("DATABASE_URL", "")
-    from backend.db import inventory_db
-
-    db_path = os.path.join(str(tmp_path), "inv.db")
-    monkeypatch.setattr(inventory_db, "DB_PATH", db_path)
-    return inventory_db
 
 
 def _offer(**kw):

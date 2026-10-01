@@ -14,19 +14,18 @@ DEALER_ID = "t-dealer"
 T0 = datetime(2026, 9, 28, 12, 0, 0, tzinfo=timezone.utc)
 
 
-def _fresh_app(monkeypatch, tmp_path: Path):
-    monkeypatch.setenv("USERS_DB_PATH", str(tmp_path / "users.db"))
-    monkeypatch.setenv("INVENTORY_DB_PATH", str(tmp_path / "inventory.db"))
-    monkeypatch.setenv("BILLING_STRIPE_ENABLED", "0")
-    monkeypatch.setenv("DATABASE_URL", "")
-    monkeypatch.setenv("INVENTORY_DATABASE_URL", "")
+def _make_app(app_factory, monkeypatch, tmp_path: Path):
+    """Reloaded app on a tmp inventory (and tmp user DBs from app_factory)."""
+    inv = str(tmp_path / "inventory.db")
     monkeypatch.setattr("backend.db.inventory_pg.is_inventory_postgres", lambda: False)
     from backend.db import inventory_db
     from backend.db.inventory_db import init_inventory_db
     from backend.db.users_db import init_users_db, save_user
-    from backend.main import app
 
-    monkeypatch.setattr(inventory_db, "DB_PATH", str(tmp_path / "inventory.db"))
+    # inventory_db.DB_PATH is resolved once at import time, so the env var has no
+    # effect on it post-import — patch the module attribute before the reload.
+    monkeypatch.setattr(inventory_db, "DB_PATH", inv)
+    app = app_factory(INVENTORY_DB_PATH=inv, BILLING_STRIPE_ENABLED="0").app
     init_users_db()
     init_inventory_db()
     app.config["TESTING"] = True
@@ -63,8 +62,8 @@ def _insert_car(vin: str, dealer_id: str, model: str = "Civic") -> int:
 
 
 @pytest.fixture
-def env(monkeypatch, tmp_path):
-    app, save_user = _fresh_app(monkeypatch, tmp_path)
+def env(monkeypatch, tmp_path, app_factory):
+    app, save_user = _make_app(app_factory, monkeypatch, tmp_path)
     car_id = _insert_car("1HGBH41JXMN109186", DEALER_ID)
     uid = save_user("histuser", "hist@example.com", "longpassword123", role="general", org_id=None)
     other = save_user("otheruser", "other@example.com", "longpassword123", role="general", org_id=None)

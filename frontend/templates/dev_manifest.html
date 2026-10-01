@@ -96,6 +96,7 @@
 </div>
 
 <script type="application/json" id="dev-providers-json" nonce="{{ csp_nonce }}">{{ providers | tojson }}</script>
+<script src="{{ url_for('static', filename='ds_core.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>
 <script src="{{ url_for('static', filename='dev_console.js') }}" defer nonce="{{ csp_nonce }}"></script>
 {% include "_footer_version.html" %}
 </body>

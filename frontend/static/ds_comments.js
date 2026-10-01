@@ -50,8 +50,7 @@
     };
 
     function csrfToken() {
-        var m = document.querySelector('meta[name="csrf-token"]');
-        return m ? m.getAttribute("content") || "" : "";
+        return window.DS.csrfToken();
     }
 
     function el(tag, cls, text) {

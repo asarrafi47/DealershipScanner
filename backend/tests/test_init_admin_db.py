@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-import importlib
-
 import pytest
 
 from backend.db.admin_users_db import authenticate_admin, init_admin_db, save_dev_admin_user
@@ -58,10 +56,7 @@ def test_init_admin_db_force_sync_overwrites_password(dev_admin_db, monkeypatch)
     assert authenticate_admin("admin", "user-chosen-password") is None
 
 
-def test_main_reload_does_not_reset_dev_admin_password(dev_admin_db, monkeypatch, tmp_path) -> None:
-    monkeypatch.setenv("ADMIN_PASSWORD", "vault-default-password")
-    monkeypatch.setenv("USERS_DB_PATH", str(tmp_path / "users.db"))
-    monkeypatch.setenv("DEV_USERS_DB_PATH", str(dev_admin_db))
+def test_main_reload_does_not_reset_dev_admin_password(dev_admin_db, monkeypatch, tmp_path, app_factory) -> None:
     import sqlite3
 
     conn = sqlite3.connect(str(dev_admin_db))
@@ -72,7 +67,9 @@ def test_main_reload_does_not_reset_dev_admin_password(dev_admin_db, monkeypatch
     conn.commit()
     conn.close()
 
-    import backend.main as main
-
-    importlib.reload(main)
+    app_factory(
+        ADMIN_PASSWORD="vault-default-password",
+        USERS_DB_PATH=str(tmp_path / "users.db"),
+        DEV_USERS_DB_PATH=str(dev_admin_db),
+    )
     assert authenticate_admin("admin", "user-chosen-password") is not None

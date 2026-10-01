@@ -8,25 +8,9 @@
 """
 from __future__ import annotations
 
-import importlib
 import os
 
 _TOK = "t" * 32
-
-
-def _fresh_app(monkeypatch, tmp_path, **env):
-    monkeypatch.setenv("FLASK_ENV", "development")
-    monkeypatch.setenv("MFA_DELIVERY_MODE", "log")
-    monkeypatch.setenv("USERS_DB_PATH", str(tmp_path / "users_test.db"))
-    monkeypatch.setenv("DEV_USERS_DB_PATH", str(tmp_path / "dev_users_test.db"))
-    monkeypatch.setenv("USERS_DB_ENCRYPTION_KEY", "")
-    monkeypatch.setenv("TRUST_PROXY_HEADERS", "")
-    for k, v in env.items():
-        monkeypatch.setenv(k, v)
-    import backend.main as main
-
-    importlib.reload(main)
-    return main
 
 
 def _post_form(client, url, data):
@@ -37,8 +21,8 @@ def _post_form(client, url, data):
     return client.post(url, data={"csrf_token": _TOK, **data})
 
 
-def test_login_session_is_permanent(monkeypatch, tmp_path):
-    main = _fresh_app(monkeypatch, tmp_path)
+def test_login_session_is_permanent(monkeypatch, tmp_path, app_factory):
+    main = app_factory()
     with main.app.test_client() as c:
         rv = _post_form(c, "/register", {
             "username": "perm_user", "email": "perm@example.com",
@@ -54,8 +38,8 @@ def test_login_session_is_permanent(monkeypatch, tmp_path):
             assert sess.permanent and sess.get("username") == "perm_user"
 
 
-def test_register_strips_password_like_login(monkeypatch, tmp_path):
-    main = _fresh_app(monkeypatch, tmp_path)
+def test_register_strips_password_like_login(monkeypatch, tmp_path, app_factory):
+    main = app_factory()
     with main.app.test_client() as c:
         _post_form(c, "/register", {
             "username": "space_user", "email": "space@example.com",
@@ -66,8 +50,8 @@ def test_register_strips_password_like_login(monkeypatch, tmp_path):
         assert rv.status_code == 302
 
 
-def test_pre_fix_account_with_spaced_password_still_logs_in(monkeypatch, tmp_path):
-    main = _fresh_app(monkeypatch, tmp_path)
+def test_pre_fix_account_with_spaced_password_still_logs_in(monkeypatch, tmp_path, app_factory):
+    main = app_factory()
     from backend.db.users_db import save_user
 
     save_user("legacy_user", "legacy@example.com", " spaced-password-123 ", role="general", org_id=None)
@@ -79,8 +63,8 @@ def test_pre_fix_account_with_spaced_password_still_logs_in(monkeypatch, tmp_pat
         assert rv.status_code == 200 and b"Invalid" in rv.data
 
 
-def test_proxy_fix_keeps_https_behind_trusted_proxy(monkeypatch, tmp_path):
-    main = _fresh_app(monkeypatch, tmp_path, TRUST_PROXY_HEADERS="1")
+def test_proxy_fix_keeps_https_behind_trusted_proxy(monkeypatch, tmp_path, app_factory):
+    main = app_factory(TRUST_PROXY_HEADERS="1")
     from werkzeug.middleware.proxy_fix import ProxyFix
 
     assert isinstance(main.app.wsgi_app, ProxyFix)
@@ -89,7 +73,7 @@ def test_proxy_fix_keeps_https_behind_trusted_proxy(monkeypatch, tmp_path):
     main.app.add_url_rule("/_scheme_probe", "_scheme_probe", lambda: request.scheme)
     with main.app.test_client() as c:
         assert c.get("/_scheme_probe", headers={"X-Forwarded-Proto": "https"}).data == b"https"
-    main2 = _fresh_app(monkeypatch, tmp_path)
+    main2 = app_factory()
     assert not isinstance(main2.app.wsgi_app, ProxyFix)
 
 
@@ -114,8 +98,8 @@ def test_password_attempts_shared_by_every_login_path():
     assert submitted_password_attempts(None) == []
 
 
-def test_api_login_accepts_pre_fix_spaced_password(monkeypatch, tmp_path):
-    main = _fresh_app(monkeypatch, tmp_path)
+def test_api_login_accepts_pre_fix_spaced_password(monkeypatch, tmp_path, app_factory):
+    main = app_factory()
     from backend.db.users_db import save_user
 
     save_user("legacy_api", "legacy_api@example.com", " spaced-password-123 ", role="general", org_id=None)

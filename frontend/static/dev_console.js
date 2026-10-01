@@ -1,7 +1,6 @@
 (function () {
   function readCsrfToken() {
-    const m = document.querySelector('meta[name="csrf-token"]');
-    return m ? (m.getAttribute("content") || "").trim() : "";
+    return window.DS.csrfToken();
   }
 
   function headersWithCsrf(base) {

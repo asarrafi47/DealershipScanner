@@ -2,29 +2,9 @@
 
 from __future__ import annotations
 
-import importlib
 
-
-def _app(monkeypatch, tmp_path):
-    monkeypatch.setenv("FLASK_ENV", "development")
-    monkeypatch.setenv("USERS_DB_PATH", str(tmp_path / "users_mfa_qr.db"))
-    monkeypatch.setenv("DEV_USERS_DB_PATH", str(tmp_path / "dev_users_mfa_qr.db"))
-    for k in (
-        "ADMIN_PASSWORD",
-        "ADMIN_USERNAME",
-        "ADMIN_EMAIL",
-        "USERS_DB_ENCRYPTION_KEY",
-        "DEV_USERS_DB_ENCRYPTION_KEY",
-    ):
-        monkeypatch.delenv(k, raising=False)
-    import backend.main as main
-
-    importlib.reload(main)
-    return main.app
-
-
-def test_legacy_mfa_qr_routes_redirect(monkeypatch, tmp_path):
-    app = _app(monkeypatch, tmp_path)
+def test_legacy_mfa_qr_routes_redirect(monkeypatch, tmp_path, app_factory):
+    app = app_factory(ADMIN_PASSWORD=None, ADMIN_USERNAME=None, ADMIN_EMAIL=None).app
     client = app.test_client()
     with client:
         client.get("/register")

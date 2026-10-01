@@ -145,6 +145,7 @@
     "active_job_id": (active_job.job_id if active_job else none),
     "manifest_path": lab.manifest_path
 } | tojson }}</script>
+<script src="{{ url_for('static', filename='ds_core.js') }}?v={{ static_cache_ver }}"></script>
 <script src="{{ url_for('static', filename='dev_scan_lab.js') }}?v={{ static_cache_ver }}"></script>
 {% include "_footer_version.html" %}
 </body>

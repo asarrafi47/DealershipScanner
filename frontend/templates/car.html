@@ -1492,6 +1492,7 @@
         "premium_url": url_for('premium_page')
     } | tojson }}</script>
     {% endif %}
+    <script src="{{ url_for('static', filename='ds_core.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>
     <script src="{{ url_for('static', filename='car_page_helpers.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>
     <script src="{{ url_for('static', filename='ds_comments.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>
     <script src="{{ url_for('static', filename='car_page.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>

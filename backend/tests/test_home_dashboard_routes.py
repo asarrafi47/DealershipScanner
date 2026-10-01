@@ -1,33 +1,23 @@
 """Home (/home) and Dashboard (/dashboard) must serve different pages."""
 from __future__ import annotations
 
-import tempfile
 from pathlib import Path
 
 import pytest
 
 
-def _fresh_app(monkeypatch, tmp_path: Path):
-    monkeypatch.setenv("USERS_DB_PATH", str(tmp_path / "users.db"))
-    monkeypatch.setenv("INVENTORY_DB_PATH", str(tmp_path / "inventory.db"))
-    monkeypatch.setenv("BILLING_STRIPE_ENABLED", "0")
-    monkeypatch.setenv("DATABASE_URL", "")
-    monkeypatch.setenv("INVENTORY_DATABASE_URL", "")
-    monkeypatch.setattr(
-        "backend.db.inventory_pg.is_inventory_postgres",
-        lambda: False,
-    )
+def _make_app(app_factory, monkeypatch, tmp_path: Path):
+    """Reloaded app on a tmp inventory (and tmp user DBs from app_factory)."""
+    inv = str(tmp_path / "inventory.db")
+    monkeypatch.setattr("backend.db.inventory_pg.is_inventory_postgres", lambda: False)
     from backend.db import inventory_db
     from backend.db.inventory_db import init_inventory_db
     from backend.db.users_db import init_users_db, save_user
-    from backend.main import app
 
-    # inventory_db.DB_PATH is resolved once at import time, so the env var above has no
-    # effect on it post-import — patch the module attribute directly (matches the pattern
-    # in root conftest.py's _isolate_listings_env fixture) or this test silently reuses
-    # whatever real sqlite file DB_PATH already pointed to.
-    monkeypatch.setattr(inventory_db, "DB_PATH", str(tmp_path / "inventory.db"))
-
+    # inventory_db.DB_PATH is resolved once at import time, so the env var has no
+    # effect on it post-import — patch the module attribute before the reload.
+    monkeypatch.setattr(inventory_db, "DB_PATH", inv)
+    app = app_factory(INVENTORY_DB_PATH=inv, BILLING_STRIPE_ENABLED="0").app
     init_users_db()
     init_inventory_db()
     app.config["TESTING"] = True
@@ -80,16 +70,15 @@ def _insert_test_car() -> int:
 
 
 @pytest.fixture
-def client(monkeypatch):
-    with tempfile.TemporaryDirectory() as td:
-        app, save_user = _fresh_app(monkeypatch, Path(td))
-        c = app.test_client()
-        uid = save_user("routeuser", "route@example.com", "longpassword123", role="general", org_id=None)
-        with c.session_transaction() as sess:
-            sess["user_id"] = uid
-            sess["username"] = "routeuser"
-            sess["mfa_ok"] = True
-        yield c, Path(td)
+def client(monkeypatch, tmp_path, app_factory):
+    app, save_user = _make_app(app_factory, monkeypatch, tmp_path)
+    c = app.test_client()
+    uid = save_user("routeuser", "route@example.com", "longpassword123", role="general", org_id=None)
+    with c.session_transaction() as sess:
+        sess["user_id"] = uid
+        sess["username"] = "routeuser"
+        sess["mfa_ok"] = True
+    yield c, tmp_path
 
 
 def test_root_redirects_signed_in_user_to_home(client):

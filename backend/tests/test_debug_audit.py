@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-import importlib
-
 import pytest
 
 from backend.utils.car_serialize import SENSITIVE_CAR_ROW_KEYS, redact_sensitive_car_row
@@ -43,15 +41,10 @@ def test_redact_sensitive_car_row() -> None:
     )
 
 
-def test_smart_search_api_returns_trimmed_meta(monkeypatch: pytest.MonkeyPatch, tmp_path) -> None:
-    monkeypatch.setenv("FLASK_ENV", "development")
-    monkeypatch.setenv("USERS_DB_PATH", str(tmp_path / "users_ss.db"))
-    monkeypatch.setenv("DEV_USERS_DB_PATH", str(tmp_path / "dev_ss.db"))
-    monkeypatch.setenv("ALLOW_DEFAULT_APP_USER", "0")
-    import backend.main as main
+def test_smart_search_api_returns_trimmed_meta(monkeypatch: pytest.MonkeyPatch, tmp_path, app_factory) -> None:
     from backend.utils.csrf import _SESSION_KEY
 
-    importlib.reload(main)
+    main = app_factory(ALLOW_DEFAULT_APP_USER="0")
     client = main.app.test_client()
     tok = "pytest-csrf-token-for-smart-search"
     with client.session_transaction() as sess:

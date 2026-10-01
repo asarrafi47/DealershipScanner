@@ -31,6 +31,9 @@ So this file provides, in order:
   to call.
 * ``sqlite_inventory`` - an isolated SQLite ``cars`` table a test can seed, so
   fleet-backed code paths have a real database to read.
+* ``app_factory`` - the one way a test gets a freshly reloaded ``backend.main``
+  with every user database in its own tmp dir (21 hand-rolled ``_fresh_app``
+  copies used to drift on which keys they set).
 * asset-gated skip accounting - the brochure PDFs are gitignored and parts of
   ``backend/dictionary`` exist only on dev machines, so a class of tests skips
   silently on CI and a regression in what they cover has no failing test
@@ -44,6 +47,7 @@ from __future__ import annotations
 
 import builtins
 import hashlib
+import importlib
 import io
 import os
 import sqlite3
@@ -471,6 +475,12 @@ class SqliteInventory:
     def __init__(self, path: Path) -> None:
         self.path = path
 
+    def get_conn(self):
+        """A connection to this inventory, through ``inventory_db.get_conn``."""
+        from backend.db import inventory_db as inv_db
+
+        return inv_db.get_conn()
+
     def add_cars(self, rows: list[dict[str, Any]]) -> int:
         """Insert *rows* (any subset of ``cars`` columns; ``vin`` auto-filled)."""
         inserted = 0
@@ -586,3 +596,65 @@ def sqlite_inventory(tmp_path: Path) -> Iterator[SqliteInventory]:
     finally:
         mp.undo()
         _clear_inventory_derived_caches()
+
+
+# ---------------------------------------------------------------------------
+# 4. One app factory: a freshly reloaded backend.main on tmp databases
+# ---------------------------------------------------------------------------
+
+PRODUCTION_TEST_SECRET_KEY = "pytest-secret-key-do-not-use-in-deployment"
+PRODUCTION_TEST_ADMIN_PASSWORD = "pytest-admin-bootstrap-do-not-use-in-deployment"
+
+
+def app_env_defaults(tmp_path: Path) -> dict[str, str]:
+    """The complete env every reloaded ``backend.main`` starts from.
+
+    Every user-facing database lives under *tmp_path*; encryption keys and proxy
+    trust are blanked with ``""`` (not deleted), so nothing a shell exported can
+    leak into the app under test.
+    """
+    return {
+        "FLASK_ENV": "development",
+        "MFA_DELIVERY_MODE": "log",
+        "USERS_DB_PATH": str(tmp_path / "users_test.db"),
+        "DEV_USERS_DB_PATH": str(tmp_path / "dev_users_test.db"),
+        "DEALER_PORTAL_DB_PATH": str(tmp_path / "dealer_portal_test.db"),
+        "USERS_DB_ENCRYPTION_KEY": "",
+        "DEV_USERS_DB_ENCRYPTION_KEY": "",
+        "TRUST_PROXY_HEADERS": "",
+    }
+
+
+@pytest.fixture
+def app_factory(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Callable[..., Any]:
+    """``app_factory(**env) -> backend.main``, reloaded under a complete test env.
+
+    Starts from :func:`app_env_defaults`, then applies the caller's overrides: a
+    string value is set, ``None`` deletes the key. ``production=True`` switches to
+    ``FLASK_ENV=production`` with the throwaway secret/admin password and the
+    SQLCipher test keys (``apply_production_credential_encryption_env``) applied
+    before the overrides. Returns the module; ``.app`` is the Flask app.
+    """
+
+    def _make(*, production: bool = False, **env: Any):
+        values: dict[str, Any] = app_env_defaults(tmp_path)
+        if production:
+            values["FLASK_ENV"] = "production"
+            values["SECRET_KEY"] = PRODUCTION_TEST_SECRET_KEY
+            values["ADMIN_PASSWORD"] = PRODUCTION_TEST_ADMIN_PASSWORD
+        values.update(env)
+        for key, value in values.items():
+            if value is None:
+                monkeypatch.delenv(key, raising=False)
+            else:
+                monkeypatch.setenv(key, str(value))
+        if production and "USERS_DB_ENCRYPTION_KEY" not in env:
+            from conftest import apply_production_credential_encryption_env
+
+            apply_production_credential_encryption_env(monkeypatch)
+        import backend.main as main
+
+        importlib.reload(main)
+        return main
+
+    return _make

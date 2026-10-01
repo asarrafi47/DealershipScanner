@@ -498,6 +498,7 @@
     </div>
 </div>
 
+<script src="{{ url_for('static', filename='ds_core.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>
 <script src="{{ url_for('static', filename='sc-helpers.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>
 {# listings_boot.js, market_intel.js and geo.js are extracted from main.js and
    MUST load before it (they populate window.SC / the boot globals it reads). #}

@@ -2,30 +2,19 @@
 
 from __future__ import annotations
 
-import importlib
-
 import pytest
 
 from backend.db.users_db import init_users_db, save_user
 from backend.utils.roles import ROLE_ADMIN
 
 
-def _fresh_app(monkeypatch, tmp_path):
-    monkeypatch.setenv("FLASK_ENV", "development")
-    monkeypatch.setenv("USERS_DB_PATH", str(tmp_path / "users_test.db"))
-    monkeypatch.setenv("DEV_USERS_DB_PATH", str(tmp_path / "dev_users_test.db"))
-    monkeypatch.setenv("INVENTORY_DB_PATH", str(tmp_path / "inv_test.db"))
-    monkeypatch.delenv("INVENTORY_DATABASE_URL", raising=False)
-    monkeypatch.delenv("DATABASE_URL", raising=False)
-    # inventory_db.DB_PATH is resolved once at import time, so the env var above has no
+def _make_app(app_factory, monkeypatch, tmp_path):
+    # inventory_db.DB_PATH is resolved once at import time, so the env var has no
     # effect on it post-import — patch the module attribute directly.
     from backend.db import inventory_db as inv_db
 
     monkeypatch.setattr(inv_db, "DB_PATH", str(tmp_path / "inv_test.db"))
-    import backend.main as main
-
-    importlib.reload(main)
-    return main.app
+    return app_factory(INVENTORY_DB_PATH=str(tmp_path / "inv_test.db")).app
 
 
 def _login_admin(client, tmp_path):
@@ -51,15 +40,15 @@ def _login_admin(client, tmp_path):
     )
 
 
-def test_operator_incomplete_cars_forbidden_without_admin(monkeypatch, tmp_path):
-    app = _fresh_app(monkeypatch, tmp_path)
+def test_operator_incomplete_cars_forbidden_without_admin(monkeypatch, tmp_path, app_factory):
+    app = _make_app(app_factory, monkeypatch, tmp_path)
     client = app.test_client()
     rv = client.get("/api/admin/operator/incomplete-cars")
     assert rv.status_code == 403
 
 
-def test_operator_incomplete_cars_ok_for_site_admin(monkeypatch, tmp_path):
-    app = _fresh_app(monkeypatch, tmp_path)
+def test_operator_incomplete_cars_ok_for_site_admin(monkeypatch, tmp_path, app_factory):
+    app = _make_app(app_factory, monkeypatch, tmp_path)
     client = app.test_client()
     with client:
         _login_admin(client, tmp_path)
@@ -71,8 +60,8 @@ def test_operator_incomplete_cars_ok_for_site_admin(monkeypatch, tmp_path):
     assert "issues_summary" in data
 
 
-def test_admin_data_quality_page_requires_site_admin(monkeypatch, tmp_path):
-    app = _fresh_app(monkeypatch, tmp_path)
+def test_admin_data_quality_page_requires_site_admin(monkeypatch, tmp_path, app_factory):
+    app = _make_app(app_factory, monkeypatch, tmp_path)
     init_users_db()
     save_user(
         username="member",
@@ -99,8 +88,8 @@ def test_admin_data_quality_page_requires_site_admin(monkeypatch, tmp_path):
     assert rv.status_code == 302
 
 
-def test_admin_data_quality_page_ok_for_site_admin(monkeypatch, tmp_path):
-    app = _fresh_app(monkeypatch, tmp_path)
+def test_admin_data_quality_page_ok_for_site_admin(monkeypatch, tmp_path, app_factory):
+    app = _make_app(app_factory, monkeypatch, tmp_path)
     monkeypatch.setattr(
         "backend.dealer.admin.data_quality_hub.get_dealership_issue_stats",
         lambda limit=25: [],
@@ -114,10 +103,10 @@ def test_admin_data_quality_page_ok_for_site_admin(monkeypatch, tmp_path):
     assert b"Dealerships with issues" in rv.data
 
 
-def test_admin_data_quality_page_renders_invariants_banner(monkeypatch, tmp_path):
+def test_admin_data_quality_page_renders_invariants_banner(monkeypatch, tmp_path, app_factory):
     """Item 1/2/6: the nightly invariants report renders with a pass/fail banner,
     a NEW DEFECT CLASS tag, and a PARTIAL-coverage banner when sample_mode is set."""
-    app = _fresh_app(monkeypatch, tmp_path)
+    app = _make_app(app_factory, monkeypatch, tmp_path)
     monkeypatch.setattr(
         "backend.dealer.admin.data_quality_hub.get_dealership_issue_stats",
         lambda limit=25: [],
@@ -151,8 +140,8 @@ def test_admin_data_quality_page_renders_invariants_banner(monkeypatch, tmp_path
     assert "car 123" in body
 
 
-def test_admin_data_quality_page_ok_with_no_invariants_report(monkeypatch, tmp_path):
-    app = _fresh_app(monkeypatch, tmp_path)
+def test_admin_data_quality_page_ok_with_no_invariants_report(monkeypatch, tmp_path, app_factory):
+    app = _make_app(app_factory, monkeypatch, tmp_path)
     monkeypatch.setattr(
         "backend.dealer.admin.data_quality_hub.get_dealership_issue_stats",
         lambda limit=25: [],
@@ -180,18 +169,18 @@ _ATTRIBUTION_ROWS = [
 ]
 
 
-def test_admin_attribution_page_requires_site_admin(monkeypatch, tmp_path):
-    app = _fresh_app(monkeypatch, tmp_path)
+def test_admin_attribution_page_requires_site_admin(monkeypatch, tmp_path, app_factory):
+    app = _make_app(app_factory, monkeypatch, tmp_path)
     client = app.test_client()
     with client:
         rv = client.get("/admin/attribution", follow_redirects=False)
     assert rv.status_code == 302
 
 
-def test_admin_attribution_page_ok_for_site_admin_sorted_by_stuck(monkeypatch, tmp_path):
+def test_admin_attribution_page_ok_for_site_admin_sorted_by_stuck(monkeypatch, tmp_path, app_factory):
     """Item 5: confirmed/conflicting/unverified/stuck-and-why per group-fed dealer,
     default-sorted worst (stuck) first."""
-    app = _fresh_app(monkeypatch, tmp_path)
+    app = _make_app(app_factory, monkeypatch, tmp_path)
     monkeypatch.setattr(
         "backend.dealer.admin.attribution_hub.dealer_attribution_resolution",
         lambda: list(_ATTRIBUTION_ROWS),
@@ -207,8 +196,8 @@ def test_admin_attribution_page_ok_for_site_admin_sorted_by_stuck(monkeypatch, t
     assert body.index("BMW of Murrieta") < body.index("Mercedes-Benz of Ontario")
 
 
-def test_admin_attribution_page_sortable_by_other_columns(monkeypatch, tmp_path):
-    app = _fresh_app(monkeypatch, tmp_path)
+def test_admin_attribution_page_sortable_by_other_columns(monkeypatch, tmp_path, app_factory):
+    app = _make_app(app_factory, monkeypatch, tmp_path)
     monkeypatch.setattr(
         "backend.dealer.admin.attribution_hub.dealer_attribution_resolution",
         lambda: list(_ATTRIBUTION_ROWS),
@@ -222,8 +211,8 @@ def test_admin_attribution_page_sortable_by_other_columns(monkeypatch, tmp_path)
     assert body.index("BMW of Murrieta") < body.index("Mercedes-Benz of Ontario")
 
 
-def test_admin_attribution_page_empty_state(monkeypatch, tmp_path):
-    app = _fresh_app(monkeypatch, tmp_path)
+def test_admin_attribution_page_empty_state(monkeypatch, tmp_path, app_factory):
+    app = _make_app(app_factory, monkeypatch, tmp_path)
     monkeypatch.setattr(
         "backend.dealer.admin.attribution_hub.dealer_attribution_resolution",
         lambda: [],
@@ -236,8 +225,8 @@ def test_admin_attribution_page_empty_state(monkeypatch, tmp_path):
     assert b"No group-fed dealer has a judged car yet" in rv.data
 
 
-def test_admin_scanner_ops_page_ok_for_site_admin(monkeypatch, tmp_path):
-    app = _fresh_app(monkeypatch, tmp_path)
+def test_admin_scanner_ops_page_ok_for_site_admin(monkeypatch, tmp_path, app_factory):
+    app = _make_app(app_factory, monkeypatch, tmp_path)
     client = app.test_client()
     with client:
         _login_admin(client, tmp_path)

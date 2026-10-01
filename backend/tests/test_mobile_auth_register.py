@@ -2,21 +2,7 @@
 
 from __future__ import annotations
 
-import importlib
-
 import pytest
-
-
-def _fresh_app(monkeypatch, tmp_path):
-    monkeypatch.setenv("FLASK_ENV", "development")
-    monkeypatch.setenv("MFA_DELIVERY_MODE", "log")
-    monkeypatch.setenv("USERS_DB_PATH", str(tmp_path / "users_test.db"))
-    monkeypatch.setenv("DEV_USERS_DB_PATH", str(tmp_path / "dev_users_test.db"))
-    monkeypatch.delenv("USERS_DB_ENCRYPTION_KEY", raising=False)
-    import backend.main as main
-
-    importlib.reload(main)
-    return main.app
 
 
 def _csrf(client) -> str:
@@ -24,8 +10,8 @@ def _csrf(client) -> str:
     return rv.get_json()["csrf_token"]
 
 
-def test_api_register_creates_user_visible_on_web_login(monkeypatch, tmp_path) -> None:
-    app = _fresh_app(monkeypatch, tmp_path)
+def test_api_register_creates_user_visible_on_web_login(monkeypatch, tmp_path, app_factory) -> None:
+    app = app_factory().app
     with app.test_client() as client:
         token = _csrf(client)
         rv = client.post(
@@ -58,8 +44,8 @@ def test_api_register_creates_user_visible_on_web_login(monkeypatch, tmp_path) -
         assert login_rv.get_json()["user"]["email"] == "ios@example.com"
 
 
-def test_api_register_duplicate_returns_409(monkeypatch, tmp_path) -> None:
-    app = _fresh_app(monkeypatch, tmp_path)
+def test_api_register_duplicate_returns_409(monkeypatch, tmp_path, app_factory) -> None:
+    app = app_factory().app
     payload = {
         "username": "dup_user",
         "email": "dup@example.com",
@@ -75,8 +61,8 @@ def test_api_register_duplicate_returns_409(monkeypatch, tmp_path) -> None:
     assert rv.get_json().get("error") == "duplicate_user"
 
 
-def test_api_register_requires_csrf(monkeypatch, tmp_path) -> None:
-    app = _fresh_app(monkeypatch, tmp_path)
+def test_api_register_requires_csrf(monkeypatch, tmp_path, app_factory) -> None:
+    app = app_factory().app
     with app.test_client() as client:
         rv = client.post(
             "/api/auth/register",

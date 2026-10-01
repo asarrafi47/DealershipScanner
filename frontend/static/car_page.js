@@ -1015,8 +1015,7 @@
     }
 
     function formatTcoCurrency(amount) {
-        if (!Number.isFinite(amount)) return "$--";
-        return "$" + Math.round(amount).toLocaleString("en-US");
+        return window.DS.formatUsd(amount, { strict: true });
     }
 
     function formatTcoFuelTierLabel(fuelTier) {
@@ -1085,8 +1084,7 @@
     }
 
     function formatTcoFillUpCurrency(amount) {
-        if (!Number.isFinite(amount)) return "$--";
-        return "$" + amount.toFixed(2);
+        return window.DS.formatUsd(amount, { strict: true, cents: true });
     }
 
     function computeTcoFillUpCost(rate, tankGallons) {
@@ -1203,16 +1201,7 @@
     }
 
     function formatTcoCostCurrencyShort(amount) {
-        if (!Number.isFinite(amount)) return "$--";
-        if (amount >= 1000) {
-            const thousands = amount / 1000;
-            const rounded =
-                thousands >= 100
-                    ? Math.round(thousands)
-                    : parseFloat(thousands.toFixed(thousands < 10 ? 1 : 0));
-            return "$" + rounded.toLocaleString("en-US") + "k";
-        }
-        return formatTcoCurrency(amount);
+        return window.DS.formatUsd(amount, { strict: true, short: true });
     }
 
     function computeTcoAnnualFuelSpend(rate, avgMpg) {

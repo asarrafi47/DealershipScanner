@@ -73,8 +73,7 @@
     // Signed-in only (the template omits the button otherwise). Talks to the
     // same per-user list the profile page manages (/api/profile/hidden-dealers).
     function csrfToken() {
-        var m = document.querySelector('meta[name="csrf-token"]');
-        return m && m.content ? m.content : "";
+        return window.DS.csrfToken();
     }
 
     function wireHideToggle() {

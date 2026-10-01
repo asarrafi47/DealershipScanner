@@ -178,10 +178,10 @@ def test_no_dev_tool_spawns_retired_scanners() -> None:
         assert '_PROJECT_ROOT / "scanner.py"' not in src, name
 
 
-def test_operator_api_exposes_queue_skip(monkeypatch: pytest.MonkeyPatch, tmp_path) -> None:
-    from backend.tests.test_admin_operator_api import _fresh_app
+def test_operator_api_exposes_queue_skip(monkeypatch: pytest.MonkeyPatch, tmp_path, app_factory) -> None:
+    from backend.tests.test_admin_operator_api import _make_app
 
-    app = _fresh_app(monkeypatch, tmp_path)
+    app = _make_app(app_factory, monkeypatch, tmp_path)
     rules = {r.rule: r.methods for r in app.url_map.iter_rules()}
     assert "POST" in rules["/api/admin/operator/import-queue/<queue_id>/skip-item"]
     assert "POST" in rules["/api/admin/operator/smart-import"]

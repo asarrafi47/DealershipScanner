@@ -2,8 +2,7 @@
  * Smart search: instant client filter on every keystroke + debounced authoritative POST.
  */
 function listingsCsrfToken() {
-    const m = document.querySelector('meta[name="csrf-token"]');
-    return m ? (m.getAttribute("content") || "").trim() : "";
+    return window.DS.csrfToken();
 }
 
 const SMART_SEARCH_STOP_WORDS = new Set([

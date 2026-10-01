@@ -438,6 +438,7 @@ def test_the_session_is_put_in_read_only_mode(monkeypatch: pytest.MonkeyPatch) -
 LIVE = os.environ.get("DQ_INVARIANTS_LIVE_DB") == "1"
 
 
+@pytest.mark.integration
 @pytest.mark.skipif(not LIVE, reason="set DQ_INVARIANTS_LIVE_DB=1 to run against Postgres")
 def test_live_seeded_regression_in_a_temp_table() -> None:
     """

@@ -6,6 +6,9 @@ do not replay full-grid radius filters.
 """
 
 import json
+import sqlite3
+
+import pytest
 
 from backend.db.inventory_db import search_cars_by_make_model_pairs
 from backend.main import app
@@ -49,6 +52,11 @@ def test_search_cars_by_make_model_pairs_empty():
     assert search_cars_by_make_model_pairs([]) == []
 
 
+# The two wall-clock tests below run against the shared dev inventory.db and the
+# speed of whatever machine runs them, so they are ``slow`` (out of the default
+# run; ``pytest -m slow`` runs them). The regressions they guard are pinned
+# deterministically by the statement-count tests that follow them.
+@pytest.mark.slow
 def test_search_cars_by_make_model_pairs_warm_under_200ms():
     import time
 
@@ -63,6 +71,7 @@ def test_search_cars_by_make_model_pairs_warm_under_200ms():
     assert elapsed < 0.2, f"warm make/model search too slow: {elapsed:.2f}s"
 
 
+@pytest.mark.slow
 def test_listings_grid_cold_build_under_one_second():
     import time
 
@@ -74,6 +83,93 @@ def test_listings_grid_cold_build_under_one_second():
     elapsed = time.perf_counter() - t0
     assert isinstance(cars, list)
     assert elapsed < 1.0, f"cold grid build too slow: {elapsed:.2f}s"
+
+
+def _sqlite_statements(monkeypatch, fn):
+    """Run *fn* and return every SQL statement it sent to SQLite (all connections)."""
+    statements: list[str] = []
+    real_connect = sqlite3.connect
+
+    def connect(*args, **kwargs):
+        conn = real_connect(*args, **kwargs)
+        conn.set_trace_callback(statements.append)
+        return conn
+
+    monkeypatch.setattr(sqlite3, "connect", connect)
+    try:
+        result = fn()
+    finally:
+        monkeypatch.setattr(sqlite3, "connect", real_connect)
+    return result, statements
+
+
+def _seed_make_model_fleet(sqlite_inventory, n: int, batch: str = "A") -> None:
+    """``n`` cars each of three make/models, with VINs unique per *batch*."""
+    sqlite_inventory.add_cars(
+        [
+            {
+                "vin": f"PERF{batch}{k}{i:011d}"[:17],
+                "title": f"2022 {make} {model} #{i}",
+                "year": 2022,
+                "make": make,
+                "model": model,
+                "trim": "LE",
+                "price": 20000 + i,
+                "mileage": 1000 + i,
+                "dealer_name": "Test Motors",
+                "dealer_url": "https://dealer.example.com",
+                "image_url": f"https://cdn.example.com/{batch}{k}{i}.jpg",
+                "gallery": json.dumps([f"https://cdn.example.com/{batch}{k}{i}-{p}.jpg" for p in range(3)]),
+            }
+            for i in range(n)
+            for k, (make, model) in enumerate(
+                (("Toyota", "Camry"), ("Honda", "Accord"), ("Ford", "F-150"))
+            )
+        ]
+    )
+
+
+def test_warm_make_model_search_is_one_round_trip(sqlite_inventory, monkeypatch):
+    """
+    What "warm search under 200ms" protects, without a clock: once the incomplete
+    index is cached, a make/model search is a single SELECT on ``cars`` — it does
+    not rebuild the incomplete index or fan out per row.
+    """
+    from backend.db.inventory_db import _incomplete_car_ids_for_listings
+
+    _seed_make_model_fleet(sqlite_inventory, 20)
+    pairs = [("Toyota", "Camry"), ("Honda", "Accord")]
+    _incomplete_car_ids_for_listings()
+
+    cars, statements = _sqlite_statements(
+        monkeypatch,
+        lambda: search_cars_by_make_model_pairs(pairs, sql_limit=60, include_incomplete=False),
+    )
+    assert 0 < len(cars) <= 40
+    assert {(c["make"], c["model"]) for c in cars} == {("Toyota", "Camry"), ("Honda", "Accord")}
+    selects = [s for s in statements if s.lstrip().upper().startswith("SELECT")]
+    assert len(selects) == 1, selects
+    assert "FROM cars" in selects[0]
+    assert not any("incomplete_listings" in s for s in statements), statements
+
+
+def test_grid_cold_build_query_count_does_not_grow_with_the_fleet(sqlite_inventory, monkeypatch):
+    """
+    What "cold grid build under one second" protects, without a clock: the
+    rebuild issues a fixed number of statements however many cars are listed
+    (no per-car query).
+    """
+    from backend.db.inventory_db import clear_inventory_listings_cache, listings_grid_serialized_cars
+
+    counts = {}
+    for batch, n in (("S", 1), ("B", 10)):
+        _seed_make_model_fleet(sqlite_inventory, n, batch)
+        clear_inventory_listings_cache()
+        cars, statements = _sqlite_statements(monkeypatch, listings_grid_serialized_cars)
+        counts[n] = (len(cars), len(statements))
+    (small_cars, small_stmts), (big_cars, big_stmts) = counts[1], counts[10]
+    assert (small_cars, big_cars) == (3, 33)
+    assert big_stmts == small_stmts, counts
 
 
 def test_listings_grid_photo_count_matches_full_gallery() -> None:

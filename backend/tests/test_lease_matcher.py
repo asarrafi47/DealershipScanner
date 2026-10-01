@@ -3,23 +3,9 @@ matching + match cache). No model or network — parsing is pure regex.
 """
 from __future__ import annotations
 
-import os
-
 import pytest
 
 from backend.intelligence import lease_matcher as lm
-
-
-@pytest.fixture()
-def sqlite_inventory(tmp_path, monkeypatch):
-    monkeypatch.setenv("INVENTORY_SQLITE_TESTS", "1")
-    monkeypatch.setenv("INVENTORY_DATABASE_URL", "")
-    monkeypatch.setenv("DATABASE_URL", "")
-    from backend.db import inventory_db
-
-    db_path = os.path.join(str(tmp_path), "inv.db")
-    monkeypatch.setattr(inventory_db, "DB_PATH", db_path)
-    return inventory_db
 
 
 def _seed_cars(conn, rows):

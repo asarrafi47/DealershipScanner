@@ -2,52 +2,33 @@
 
 from __future__ import annotations
 
-import importlib
 from unittest.mock import patch
 
 import pytest
 
 
-def _fresh_app(
-    monkeypatch: pytest.MonkeyPatch,
-    tmp_path,
-    *,
-    show_button: bool = False,
-    google: bool = False,
-):
-    monkeypatch.setenv("FLASK_ENV", "development")
-    monkeypatch.setenv("USERS_DB_PATH", str(tmp_path / "users_test.db"))
-    monkeypatch.setenv("DEV_USERS_DB_PATH", str(tmp_path / "dev_users_test.db"))
-    monkeypatch.setenv("BILLING_STRIPE_ENABLED", "0")
-    monkeypatch.setenv("ALLOW_DEFAULT_APP_USER", "0")
-    monkeypatch.delenv("USERS_DB_ENCRYPTION_KEY", raising=False)
-    monkeypatch.delenv("GOOGLE_OAUTH_SHOW_BUTTON", raising=False)
-    monkeypatch.delenv("GOOGLE_OAUTH_OFFER_PREMIUM_ON_LOGIN", raising=False)
+def _make_app(app_factory, *, show_button: bool = False, google: bool = False):
+    env = {
+        "BILLING_STRIPE_ENABLED": "0",
+        "ALLOW_DEFAULT_APP_USER": "0",
+        "GOOGLE_OAUTH_SHOW_BUTTON": "1" if show_button else None,
+        "GOOGLE_OAUTH_OFFER_PREMIUM_ON_LOGIN": None,
+    }
     if google:
-        monkeypatch.setenv("GOOGLE_OAUTH_CLIENT_ID", "test-client-id")
-        monkeypatch.setenv("GOOGLE_OAUTH_CLIENT_SECRET", "test-client-secret")
-        monkeypatch.setenv(
-            "GOOGLE_OAUTH_REDIRECT_URI",
-            "http://localhost/auth/google/callback",
-        )
+        env["GOOGLE_OAUTH_CLIENT_ID"] = "test-client-id"
+        env["GOOGLE_OAUTH_CLIENT_SECRET"] = "test-client-secret"
+        env["GOOGLE_OAUTH_REDIRECT_URI"] = "http://localhost/auth/google/callback"
     else:
-        # setenv("") not delenv: reload(main) re-runs load_project_dotenv(override=False),
-        # which would re-populate deleted vars from .env; empty values survive.
-        monkeypatch.setenv("GOOGLE_OAUTH_CLIENT_ID", "")
-        monkeypatch.setenv("GOOGLE_OAUTH_CLIENT_SECRET", "")
-        monkeypatch.setenv("GOOGLE_OAUTH_REDIRECT_URI", "")
-    if show_button:
-        monkeypatch.setenv("GOOGLE_OAUTH_SHOW_BUTTON", "1")
-    import backend.main as main
-
-    importlib.reload(main)
-    return main.app
+        env["GOOGLE_OAUTH_CLIENT_ID"] = ""
+        env["GOOGLE_OAUTH_CLIENT_SECRET"] = ""
+        env["GOOGLE_OAUTH_REDIRECT_URI"] = ""
+    return app_factory(**env).app
 
 
 def test_google_start_redirects_to_login_when_unconfigured(
-    monkeypatch: pytest.MonkeyPatch, tmp_path
+    monkeypatch: pytest.MonkeyPatch, tmp_path, app_factory
 ) -> None:
-    app = _fresh_app(monkeypatch, tmp_path)
+    app = _make_app(app_factory)
     client = app.test_client()
     r = client.get("/auth/google", follow_redirects=False)
     assert r.status_code in (302, 303)
@@ -55,9 +36,9 @@ def test_google_start_redirects_to_login_when_unconfigured(
 
 
 def test_google_start_redirects_to_google_when_configured(
-    monkeypatch: pytest.MonkeyPatch, tmp_path
+    monkeypatch: pytest.MonkeyPatch, tmp_path, app_factory
 ) -> None:
-    app = _fresh_app(monkeypatch, tmp_path, google=True)
+    app = _make_app(app_factory, google=True)
     client = app.test_client()
     with client.session_transaction() as sess:
         sess.clear()
@@ -70,9 +51,9 @@ def test_google_start_redirects_to_google_when_configured(
 
 
 def test_google_callback_creates_user_and_logs_in(
-    monkeypatch: pytest.MonkeyPatch, tmp_path
+    monkeypatch: pytest.MonkeyPatch, tmp_path, app_factory
 ) -> None:
-    app = _fresh_app(monkeypatch, tmp_path, google=True)
+    app = _make_app(app_factory, google=True)
     client = app.test_client()
 
     with client.session_transaction() as sess:
@@ -114,9 +95,9 @@ def test_google_callback_creates_user_and_logs_in(
 
 
 def test_google_callback_returning_user_skips_premium_offer_by_default(
-    monkeypatch: pytest.MonkeyPatch, tmp_path
+    monkeypatch: pytest.MonkeyPatch, tmp_path, app_factory
 ) -> None:
-    app = _fresh_app(monkeypatch, tmp_path, google=True)
+    app = _make_app(app_factory, google=True)
     from backend.db.users_db import get_user_by_google_sub, save_user
     from backend.utils.roles import ROLE_GENERAL
 
@@ -150,9 +131,9 @@ def test_google_callback_returning_user_skips_premium_offer_by_default(
 
 
 def test_google_start_premium_intent_offers_premium_for_returning_user(
-    monkeypatch: pytest.MonkeyPatch, tmp_path
+    monkeypatch: pytest.MonkeyPatch, tmp_path, app_factory
 ) -> None:
-    app = _fresh_app(monkeypatch, tmp_path, google=True)
+    app = _make_app(app_factory, google=True)
     from backend.db.users_db import save_user
     from backend.utils.roles import ROLE_GENERAL
 
@@ -184,9 +165,9 @@ def test_google_start_premium_intent_offers_premium_for_returning_user(
 
 
 def test_google_callback_links_existing_email_user(
-    monkeypatch: pytest.MonkeyPatch, tmp_path
+    monkeypatch: pytest.MonkeyPatch, tmp_path, app_factory
 ) -> None:
-    app = _fresh_app(monkeypatch, tmp_path, google=True)
+    app = _make_app(app_factory, google=True)
     from backend.db.users_db import get_user_by_google_sub, save_user
     from backend.utils.roles import ROLE_GENERAL
 
@@ -219,9 +200,9 @@ def test_google_callback_links_existing_email_user(
 
 
 def test_google_callback_rejects_state_mismatch(
-    monkeypatch: pytest.MonkeyPatch, tmp_path
+    monkeypatch: pytest.MonkeyPatch, tmp_path, app_factory
 ) -> None:
-    app = _fresh_app(monkeypatch, tmp_path, google=True)
+    app = _make_app(app_factory, google=True)
     client = app.test_client()
 
     with client.session_transaction() as sess:
@@ -239,15 +220,15 @@ def test_google_callback_rejects_state_mismatch(
 
 
 def test_login_template_hides_google_button_until_show_flag(
-    monkeypatch: pytest.MonkeyPatch, tmp_path
+    monkeypatch: pytest.MonkeyPatch, tmp_path, app_factory
 ) -> None:
-    app = _fresh_app(monkeypatch, tmp_path, google=True, show_button=False)
+    app = _make_app(app_factory, google=True, show_button=False)
     client = app.test_client()
     r = client.get("/login")
     assert b"Sign in with Google" in r.data
     assert b"hidden" in r.data
 
-    app_visible = _fresh_app(monkeypatch, tmp_path, google=True, show_button=True)
+    app_visible = _make_app(app_factory, google=True, show_button=True)
     r2 = app_visible.test_client().get("/login")
     assert b"Sign in with Google" in r2.data
     assert b'class="auth-oauth" hidden' not in r2.data

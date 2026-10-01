@@ -104,6 +104,7 @@
 {% endif %}
 <script src="{{ url_for('static', filename='compare.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>
 {% if show_compare_chat %}
+<script src="{{ url_for('static', filename='ds_core.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>
 <script src="{{ url_for('static', filename='compare_chat.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>
 {% endif %}
 {% include "_footer_version.html" %}

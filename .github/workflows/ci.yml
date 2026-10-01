@@ -45,14 +45,28 @@ jobs:
           pip install pytest
 
       - name: Run offline tests
-        run: python -m pytest backend/tests -m "not integration" -q -p no:cacheprovider
+        # pytest.ini's default ``-m "not slow"`` is replaced by any explicit -m,
+        # so the wall-clock tier is excluded here by name.
+        run: python -m pytest backend/tests -m "not integration and not slow" -q -p no:cacheprovider
 
   # The offline job above excludes -m integration, so without this job a test
   # tagged @pytest.mark.integration would silently leave CI coverage entirely.
-  # Integration tests self-skip when no live stack is reachable (stack_up
-  # fixture in conftest.py), so on a bare runner they collect, run their skip
-  # path, and pass. Exit code 5 (= tier is empty, nothing collected) is
-  # tolerated: the tier starts empty on purpose.
+  #
+  # What this job actually covers today (2026-10-01): ONE test,
+  # test_data_quality_invariants.py::test_live_seeded_regression_in_a_temp_table,
+  # which needs a real Postgres holding the inventory schema
+  # (INVENTORY_DATABASE_URL + DQ_INVARIANTS_LIVE_DB=1). This runner has neither,
+  # so the job proves the integration tier collects and skips cleanly; it does
+  # NOT exercise Postgres. Running it for real needs a postgres service with the
+  # migration chain applied (docs/monolith_audit_2026_10_01/tests.md F3/F8).
+  #
+  # Asset-gated tests (brochure PDFs, catalog DB) are deliberately NOT tagged
+  # integration: they need local files, not a live stack, and are accounted for
+  # by the ASSET-GATED SKIPS summary in backend/tests/conftest.py
+  # (REQUIRE_LOCAL_ASSETS=1 turns those skips into failures).
+  #
+  # Exit code 5 (nothing collected) is NOT tolerated any more: if the tier ever
+  # empties again this job fails instead of passing on zero tests.
   pytest-integration:
     runs-on: ubuntu-latest
     needs: lint
@@ -70,5 +84,5 @@ jobs:
           pip install -r requirements.txt
           pip install pytest
 
-      - name: Run integration tier (self-skips without a live stack)
-        run: python -m pytest backend/tests -m integration -q -p no:cacheprovider || [ $? -eq 5 ]
+      - name: Run integration tier (skips without a live Postgres; fails if empty)
+        run: python -m pytest backend/tests -m integration -q -p no:cacheprovider -rs

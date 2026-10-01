@@ -29,8 +29,7 @@
     })();
 
     function csrfToken() {
-        const m = document.querySelector('meta[name="csrf-token"]');
-        return m && m.content ? m.content : "";
+        return window.DS.csrfToken();
     }
 
     function canRequestScrape(d) {

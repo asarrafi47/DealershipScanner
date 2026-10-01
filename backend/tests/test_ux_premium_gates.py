@@ -16,8 +16,6 @@ Three defects pinned here:
 
 from __future__ import annotations
 
-import importlib
-
 import pytest
 
 _FAKE_CAR = {
@@ -39,20 +37,12 @@ _DASH_UPSELL = "dash-hub-action--accent"
 _SIDEBAR_UPSELL = "app-sidebar__link--premium"
 
 
-def _fresh_app(monkeypatch: pytest.MonkeyPatch, tmp_path, **env):
-    monkeypatch.setenv("FLASK_ENV", "development")
-    monkeypatch.setenv("MFA_DELIVERY_MODE", "log")
-    monkeypatch.setenv("USERS_DB_PATH", str(tmp_path / "users_test.db"))
-    monkeypatch.setenv("DEV_USERS_DB_PATH", str(tmp_path / "dev_users_test.db"))
-    monkeypatch.setenv("ALLOW_DEFAULT_APP_USER", "0")
-    monkeypatch.setenv("RATE_LIMIT_SQLITE_PATH", str(tmp_path / "rate_limits.db"))
-    for k, v in env.items():
-        # setenv (never delenv): delenv + module reload re-populates from .env.
-        monkeypatch.setenv(k, v)
-    import backend.main as main
-
-    importlib.reload(main)
-    return main
+def _make_app(app_factory, tmp_path, **env):
+    return app_factory(
+        ALLOW_DEFAULT_APP_USER="0",
+        RATE_LIMIT_SQLITE_PATH=str(tmp_path / "rate_limits.db"),
+        **env,
+    )
 
 
 def _client_with_session(main, sess_values: dict):
@@ -87,10 +77,10 @@ def _patch_billing_snapshot(monkeypatch: pytest.MonkeyPatch, snapshot: dict) -> 
 
 
 def test_org_premium_user_sees_no_upgrade_prompt_on_billing_page(
-    monkeypatch: pytest.MonkeyPatch, tmp_path
+    monkeypatch: pytest.MonkeyPatch, tmp_path, app_factory
 ) -> None:
     """Defect 1: org-subscription paid access, but the DB is_premium column is False."""
-    main = _fresh_app(monkeypatch, tmp_path, BILLING_STRIPE_ENABLED="1")
+    main = _make_app(app_factory, tmp_path, BILLING_STRIPE_ENABLED="1")
     _patch_billing_snapshot(monkeypatch, {"is_premium": False})
     client = _client_with_session(main, _ORG_PREMIUM_SESSION)
     rv = client.get("/account/billing")
@@ -99,10 +89,10 @@ def test_org_premium_user_sees_no_upgrade_prompt_on_billing_page(
 
 
 def test_truly_free_user_still_sees_upgrade_prompt_on_billing_page(
-    monkeypatch: pytest.MonkeyPatch, tmp_path
+    monkeypatch: pytest.MonkeyPatch, tmp_path, app_factory
 ) -> None:
     """Guard the other direction: the prompt must not vanish for actual free users."""
-    main = _fresh_app(monkeypatch, tmp_path, BILLING_STRIPE_ENABLED="1")
+    main = _make_app(app_factory, tmp_path, BILLING_STRIPE_ENABLED="1")
     _patch_billing_snapshot(monkeypatch, {"is_premium": False})
     client = _client_with_session(main, _FREE_SESSION)
     rv = client.get("/account/billing")
@@ -111,10 +101,10 @@ def test_truly_free_user_still_sees_upgrade_prompt_on_billing_page(
 
 
 def test_free_user_sees_upsell_everywhere_when_billing_on(
-    monkeypatch: pytest.MonkeyPatch, tmp_path
+    monkeypatch: pytest.MonkeyPatch, tmp_path, app_factory
 ) -> None:
     """Defect 2 (billing on): home panel, dashboard action, and sidebar link all render."""
-    main = _fresh_app(monkeypatch, tmp_path, BILLING_STRIPE_ENABLED="1")
+    main = _make_app(app_factory, tmp_path, BILLING_STRIPE_ENABLED="1")
     client = _client_with_session(main, _FREE_SESSION)
 
     home = client.get("/home")
@@ -129,9 +119,9 @@ def test_free_user_sees_upsell_everywhere_when_billing_on(
 
 
 def test_premium_user_sees_no_upsell_when_billing_on(
-    monkeypatch: pytest.MonkeyPatch, tmp_path
+    monkeypatch: pytest.MonkeyPatch, tmp_path, app_factory
 ) -> None:
-    main = _fresh_app(monkeypatch, tmp_path, BILLING_STRIPE_ENABLED="1")
+    main = _make_app(app_factory, tmp_path, BILLING_STRIPE_ENABLED="1")
     client = _client_with_session(main, _ORG_PREMIUM_SESSION)
 
     home = client.get("/home")
@@ -146,11 +136,11 @@ def test_premium_user_sees_no_upsell_when_billing_on(
 
 
 def test_billing_off_hides_every_upsell_and_dead_upgrade_button(
-    monkeypatch: pytest.MonkeyPatch, tmp_path
+    monkeypatch: pytest.MonkeyPatch, tmp_path, app_factory
 ) -> None:
     """Defect 2 (billing off): everyone logged-in effectively has premium, so no upsell
     and no dead "Upgrade to Premium" checkout button on /premium."""
-    main = _fresh_app(monkeypatch, tmp_path, BILLING_STRIPE_ENABLED="0")
+    main = _make_app(app_factory, tmp_path, BILLING_STRIPE_ENABLED="0")
     client = _client_with_session(main, _FREE_SESSION)
 
     home = client.get("/home")
@@ -175,10 +165,10 @@ def test_billing_off_hides_every_upsell_and_dead_upgrade_button(
 
 
 def test_car_page_keeps_logout_control_for_signed_in_user(
-    monkeypatch: pytest.MonkeyPatch, tmp_path
+    monkeypatch: pytest.MonkeyPatch, tmp_path, app_factory
 ) -> None:
     """Defect 3 regression pin: /car/<id> renders the shared nav's logout form."""
-    main = _fresh_app(monkeypatch, tmp_path, BILLING_STRIPE_ENABLED="1")
+    main = _make_app(app_factory, tmp_path, BILLING_STRIPE_ENABLED="1")
     monkeypatch.setattr(main, "get_car_by_id", lambda *_a, **_k: dict(_FAKE_CAR))
     client = _client_with_session(main, _FREE_SESSION)
     rv = client.get("/car/7")

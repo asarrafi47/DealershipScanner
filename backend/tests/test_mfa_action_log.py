@@ -2,24 +2,13 @@
 
 from __future__ import annotations
 
-import importlib
 import json
 
 
-def _fresh_app(monkeypatch, tmp_path):
-    monkeypatch.setenv("FLASK_ENV", "development")
-    monkeypatch.setenv("USERS_DB_PATH", str(tmp_path / "users_test.db"))
-    monkeypatch.delenv("USERS_DB_ENCRYPTION_KEY", raising=False)
-    import backend.main as main
-
-    importlib.reload(main)
-    return main.app
-
-
-def test_register_does_not_write_mfa_action_log(monkeypatch, tmp_path):
+def test_register_does_not_write_mfa_action_log(monkeypatch, tmp_path, app_factory):
     log_path = tmp_path / "mfa.jsonl"
     monkeypatch.setenv("MFA_ACTION_LOG_PATH", str(log_path))
-    app = _fresh_app(monkeypatch, tmp_path)
+    app = app_factory().app
     client = app.test_client()
     with client:
         client.get("/register")

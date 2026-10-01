@@ -2,23 +2,10 @@
 
 from __future__ import annotations
 
-import importlib
-
 import pytest
 
 
-def _fresh_app(monkeypatch: pytest.MonkeyPatch, tmp_path):
-    monkeypatch.setenv("FLASK_ENV", "development")
-    monkeypatch.setenv("MFA_DELIVERY_MODE", "log")
-    monkeypatch.setenv("USERS_DB_PATH", str(tmp_path / "users_test.db"))
-    monkeypatch.setenv("DEV_USERS_DB_PATH", str(tmp_path / "dev_users_test.db"))
-    monkeypatch.setenv("BILLING_STRIPE_ENABLED", "0")
-    monkeypatch.setenv("ALLOW_DEFAULT_APP_USER", "0")
-    monkeypatch.delenv("USERS_DB_ENCRYPTION_KEY", raising=False)
-    import backend.main as main
-
-    importlib.reload(main)
-    return main.app
+_APP_ENV = {"BILLING_STRIPE_ENABLED": "0", "ALLOW_DEFAULT_APP_USER": "0"}
 
 
 def _register(client, *, username: str, email: str, password: str = "long-enough-password"):
@@ -39,8 +26,8 @@ def _register(client, *, username: str, email: str, password: str = "long-enough
     )
 
 
-def test_register_normalizes_email_and_rejects_case_duplicate(monkeypatch: pytest.MonkeyPatch, tmp_path) -> None:
-    app = _fresh_app(monkeypatch, tmp_path)
+def test_register_normalizes_email_and_rejects_case_duplicate(monkeypatch: pytest.MonkeyPatch, tmp_path, app_factory) -> None:
+    app = app_factory(**_APP_ENV).app
     client = app.test_client()
     with client:
         r1 = _register(client, username="user1", email="Test@Example.com")
@@ -57,9 +44,9 @@ def test_register_normalizes_email_and_rejects_case_duplicate(monkeypatch: pytes
         assert b"already registered" in r2.data
 
 
-def test_register_rejects_env_admin_email(monkeypatch: pytest.MonkeyPatch, tmp_path) -> None:
+def test_register_rejects_env_admin_email(monkeypatch: pytest.MonkeyPatch, tmp_path, app_factory) -> None:
     monkeypatch.setenv("APP_ADMIN_EMAILS", "admin@example.com")
-    app = _fresh_app(monkeypatch, tmp_path)
+    app = app_factory(**_APP_ENV).app
     client = app.test_client()
     with client:
         r = _register(client, username="admin1", email="admin@example.com")
@@ -67,9 +54,9 @@ def test_register_rejects_env_admin_email(monkeypatch: pytest.MonkeyPatch, tmp_p
         assert b"reserved" in r.data.lower() or b"administrator" in r.data.lower()
 
 
-def test_login_promotes_env_admin_after_manual_create(monkeypatch: pytest.MonkeyPatch, tmp_path) -> None:
+def test_login_promotes_env_admin_after_manual_create(monkeypatch: pytest.MonkeyPatch, tmp_path, app_factory) -> None:
     monkeypatch.setenv("APP_ADMIN_EMAILS", "admin@example.com")
-    app = _fresh_app(monkeypatch, tmp_path)
+    app = app_factory(**_APP_ENV).app
     from backend.db.users_db import save_user, sync_env_admin_user_row
     from backend.utils.roles import ROLE_GENERAL
 

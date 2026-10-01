@@ -32,7 +32,6 @@ Two regressions cost real page time and both are cheap to pin down:
 
 import json
 import threading
-import time
 
 import pytest
 
@@ -219,20 +218,59 @@ def test_window_sticker_status_never_says_fetching_without_a_live_fetch():
                     assert st != STICKER_STATUS_FETCHING, (show, ready, visual, has_source)
 
 
+# Fake slow OEM fetches block on this event instead of sleeping. A worker is
+# "still running" for exactly as long as the test wants and no longer, so the
+# assertions below are about ORDER ("the request came back while the fetch was
+# still blocked") rather than seconds on whatever machine runs the suite. The
+# 30s cap only matters if a regression makes the code wait for the worker: the
+# test then fails instead of hanging.
+_RELEASE_WORKERS = threading.Event()
+_WORKER_CAP_S = 30.0
+
+
+def _wait_for_release() -> None:
+    _RELEASE_WORKERS.wait(_WORKER_CAP_S)
+
+
 @pytest.fixture
 def drain_ensure_workers():
     """Don't leak the fake slow-fetch workers (or their bookkeeping) into the next test."""
+    _RELEASE_WORKERS.clear()
     cars_pages._packages_ensure_inflight.clear()
     cars_pages._packages_ensure_snapshot.clear()
     cars_pages._packages_ensure_attempted_at.clear()
     cars_pages._packages_ensure_panel_cache.clear()
     yield
+    _RELEASE_WORKERS.set()
     for t in list(cars_pages._packages_ensure_inflight.values()):
         t.join(10.0)
     cars_pages._packages_ensure_inflight.clear()
     cars_pages._packages_ensure_snapshot.clear()
     cars_pages._packages_ensure_attempted_at.clear()
     cars_pages._packages_ensure_panel_cache.clear()
+    _RELEASE_WORKERS.clear()
+
+
+def _spy(monkeypatch, name: str) -> list:
+    """Count calls to ``cars_pages.<name>`` (the route looks these up as module globals)."""
+    calls: list = []
+    real = getattr(cars_pages, name)
+
+    def wrapper(*args, **kwargs):
+        calls.append((args, kwargs))
+        return real(*args, **kwargs)
+
+    monkeypatch.setattr(cars_pages, name, wrapper)
+    return calls
+
+
+def _release_and_join_workers() -> None:
+    """Let every blocked fake fetch finish, and wait until its bookkeeping has run."""
+    threads = list(cars_pages._packages_ensure_inflight.values())
+    _RELEASE_WORKERS.set()
+    for t in threads:
+        t.join(10.0)
+        assert not t.is_alive()
 
 
 def test_packages_ensure_budget_env(monkeypatch):
@@ -261,42 +299,51 @@ def test_packages_ensure_returns_within_budget(monkeypatch, drain_ensure_workers
 
     def slow(car_id, **kw):
         started.set()
-        time.sleep(1.5)
+        _wait_for_release()
         return {"ok": True, "car_id": car_id}
 
     monkeypatch.setattr(lps, "ensure_listing_packages_for_car", slow)
 
-    t = time.perf_counter()
-    status, outcome = _run_packages_ensure_with_budget(-4242, allow_vision=False, budget=0.5)
-    elapsed = time.perf_counter() - t
+    status, outcome = _run_packages_ensure_with_budget(-4242, allow_vision=False, budget=0.1)
 
-    assert started.wait(2.0)
+    assert started.wait(5.0)
     assert outcome == ENSURE_TIMEOUT
     assert status is None
-    assert elapsed < 2.0, f"request held open for {elapsed:.2f}s despite a 0.5s budget"
+    # The call came back while the fetch was still blocked: the budget ended the
+    # wait, not the fetch. Waiting for the worker would have returned COMPLETED.
+    assert not _RELEASE_WORKERS.is_set()
+    assert cars_pages._packages_ensure_worker_alive(-4242)
 
 
 def test_packages_ensure_single_flight(monkeypatch, drain_ensure_workers):
-    """A second view of the same VIN must not start a second fetch."""
+    """A second view of the same VIN must not start a second fetch, nor wait on the first."""
     import backend.enrichment.listing_packages_service as lps
 
     calls = []
 
     def slow(car_id, **kw):
         calls.append(car_id)
-        time.sleep(1.5)
+        _wait_for_release()
         return {"ok": True, "car_id": car_id}
 
     monkeypatch.setattr(lps, "ensure_listing_packages_for_car", slow)
 
-    _run_packages_ensure_with_budget(-4243, allow_vision=False, budget=0.3)
-    t = time.perf_counter()
-    status, outcome = _run_packages_ensure_with_budget(-4243, allow_vision=False, budget=0.3)
-    elapsed = time.perf_counter() - t
+    _run_packages_ensure_with_budget(-4243, allow_vision=False, budget=0.1)
+    worker = cars_pages._packages_ensure_inflight[-4243]
+    joins = []
+    real_join = worker.join
+
+    def counting_join(*a, **kw):
+        joins.append(a)
+        return real_join(*a, **kw)
+
+    worker.join = counting_join
+
+    status, outcome = _run_packages_ensure_with_budget(-4243, allow_vision=False, budget=0.1)
 
     assert outcome == ENSURE_INFLIGHT
     assert status is None
-    assert elapsed < 0.2, f"second view waited {elapsed:.2f}s instead of short-circuiting"
+    assert joins == [], "second view waited on the running fetch instead of short-circuiting"
     assert len(calls) == 1
 
 
@@ -369,11 +416,9 @@ def ensure_client(monkeypatch, drain_ensure_workers):
             sess["_csrf_token"] = token
 
         def post():
-            t = time.perf_counter()
-            r = c.post(
+            return c.post(
                 f"/api/cars/{_ENSURE_CAR_ID}/packages/ensure", headers={"X-CSRF-Token": token}
             )
-            return r, time.perf_counter() - t
 
         yield post, state
 
@@ -383,29 +428,34 @@ def test_endpoint_honours_wall_clock_budget(monkeypatch, ensure_client):
     The regression this exists for: the budget bounded the inner ``ensure`` call
     only, and the route then did its DB/panel work alongside the still-running
     worker — 6s budget, 13-17s responses.
+
+    Pinned structurally: the inner call gets at most the request's budget, the
+    panel is built once (before the worker starts, never alongside it), and the
+    response is back while the fetch is still blocked.
     """
     import backend.enrichment.listing_packages_service as lps
 
     post, _state = ensure_client
-    monkeypatch.setenv("CAR_PACKAGES_ENSURE_BUDGET_SECONDS", "1.0")
+    monkeypatch.setenv("CAR_PACKAGES_ENSURE_BUDGET_SECONDS", "0.2")
 
     def slow(car_id, **kw):
-        time.sleep(4)
+        _wait_for_release()
         return {"ok": True, "car_id": car_id}
 
     monkeypatch.setattr(lps, "ensure_listing_packages_for_car", slow)
+    runs = _spy(monkeypatch, "_run_packages_ensure_with_budget")
+    panel_builds = _spy(monkeypatch, "_packages_ensure_payload")
 
-    r, elapsed = post()
+    r = post()
     assert r.status_code == 200
-    assert elapsed < 2.0, f"endpoint took {elapsed:.2f}s against a 1.0s budget"
+    assert len(runs) == 1
+    inner_budget = runs[0][1]["budget"]
+    assert 0 < inner_budget <= 0.2, f"inner call got {inner_budget}s of a 0.2s request budget"
+    assert len(panel_builds) == 1, "panel was rebuilt alongside the still-running worker"
+    assert not _RELEASE_WORKERS.is_set()
+    assert cars_pages._packages_ensure_worker_alive(_ENSURE_CAR_ID)
+
     body = r.get_json()
-    assert body["window_sticker_status"] in (
-        STICKER_STATUS_READY,
-        STICKER_STATUS_FETCHING,
-        STICKER_STATUS_PENDING,
-        STICKER_STATUS_UNAVAILABLE,
-        STICKER_STATUS_HIDDEN,
-    )
     # The worker is still going, so the client must be told to come back.
     assert body["window_sticker_status"] == STICKER_STATUS_FETCHING
     assert body["window_sticker_fetch_in_flight"] is True
@@ -423,22 +473,21 @@ def test_endpoint_repeat_views_do_not_re_pay_the_budget(monkeypatch, ensure_clie
 
     calls = []
 
-    def slow(car_id, **kw):
+    def fetch(car_id, **kw):
         calls.append(car_id)
-        time.sleep(0.3)
         return {"ok": True, "car_id": car_id}
 
-    monkeypatch.setattr(lps, "ensure_listing_packages_for_car", slow)
+    monkeypatch.setattr(lps, "ensure_listing_packages_for_car", fetch)
 
-    first_r, first = post()
+    first_r = post()
     assert first_r.status_code == 200
-    times = []
+    # Paying the budget again means entering the budgeted runner again.
+    runs = _spy(monkeypatch, "_run_packages_ensure_with_budget")
     for _ in range(4):
-        r, el = post()
+        r = post()
         assert r.status_code == 200
-        times.append(el)
     assert len(calls) == 1, f"pipeline ran {len(calls)} times for one car"
-    assert max(times) < 0.5, f"repeat views cost {[round(t, 2) for t in times]}s"
+    assert runs == [], f"repeat views entered the budgeted runner {len(runs)} times"
     body = r.get_json()
     assert body.get("window_sticker_ensure_skipped") == ENSURE_COOLDOWN
 
@@ -462,7 +511,7 @@ def test_cooldown_skipped_view_never_claims_a_fetch_is_running(monkeypatch, ensu
     )
 
     for i in range(4):
-        r, _el = post()
+        r = post()
         body = r.get_json()
         alive = cars_pages._packages_ensure_worker_alive(_ENSURE_CAR_ID)
         assert alive is False
@@ -488,7 +537,7 @@ def test_settled_states_tell_the_client_to_stop(monkeypatch, ensure_client):
         lps, "ensure_listing_packages_for_car", lambda car_id, **kw: {"ok": True, "car_id": car_id}
     )
 
-    r, _el = post()
+    r = post()
     body = r.get_json()
     assert body["window_sticker_status"] == STICKER_STATUS_UNAVAILABLE
     assert body["window_sticker_should_retry"] is False
@@ -496,7 +545,7 @@ def test_settled_states_tell_the_client_to_stop(monkeypatch, ensure_client):
 
     state["row"]["_stored"] = True
     cars_pages._packages_ensure_panel_cache.clear()
-    r, _el = post()
+    r = post()
     body = r.get_json()
     assert body["window_sticker_status"] == STICKER_STATUS_READY
     assert body["window_sticker_should_retry"] is False
@@ -510,26 +559,32 @@ def test_polling_client_sees_the_sticker_the_background_worker_stored(monkeypatc
     later that the shopper never saw, because the browser asks once.
 
     Drive the loop the contract promises — retry while ``should_retry``, sleeping
-    ``retry_after_seconds`` — and it must terminate on the stored sticker.
+    ``retry_after_seconds`` — and it must terminate on the stored sticker. The
+    client's sleep is faked: the fetch lands during the client's second wait.
     """
     import backend.enrichment.listing_packages_service as lps
 
     post, state = ensure_client
-    monkeypatch.setenv("CAR_PACKAGES_ENSURE_BUDGET_SECONDS", "0.3")
+    monkeypatch.setenv("CAR_PACKAGES_ENSURE_BUDGET_SECONDS", "0.1")
     monkeypatch.setenv("CAR_PACKAGES_ENSURE_COOLDOWN_SECONDS", "300")
     monkeypatch.setenv("CAR_PACKAGES_ENSURE_PANEL_TTL_SECONDS", "300")
     monkeypatch.setenv("CAR_PACKAGES_ENSURE_POLL_SECONDS", "0.25")
 
     def slow(car_id, **kw):
-        time.sleep(1.2)  # stands in for the 18.9s real OEM fetch
+        _wait_for_release()  # stands in for the 18.9s real OEM fetch
         state["row"]["_stored"] = True
         return {"ok": True, "car_id": car_id}
 
     monkeypatch.setattr(lps, "ensure_listing_packages_for_car", slow)
 
-    r, elapsed = post()
-    body = r.get_json()
-    assert elapsed < 1.0, f"first view took {elapsed:.2f}s against a 0.3s budget"
+    slept = []
+
+    def client_sleep(seconds: float) -> None:
+        slept.append(seconds)
+        if len(slept) == 2:
+            _release_and_join_workers()
+
+    body = post().get_json()
     assert body["window_sticker_status"] == STICKER_STATUS_FETCHING
     assert body["window_sticker_should_retry"] is True
 
@@ -537,13 +592,14 @@ def test_polling_client_sees_the_sticker_the_background_worker_stored(monkeypatc
     for _ in range(40):
         if not body["window_sticker_should_retry"]:
             break
-        time.sleep(float(body["window_sticker_retry_after_seconds"]))
-        r, _el = post()
-        body = r.get_json()
+        client_sleep(float(body["window_sticker_retry_after_seconds"]))
+        body = post().get_json()
         seen.append(body["window_sticker_status"])
     assert body["window_sticker_should_retry"] is False
     assert body["window_sticker_status"] == STICKER_STATUS_READY, seen
     assert body["window_sticker_available"] is True
+    assert seen[:2] == [STICKER_STATUS_FETCHING, STICKER_STATUS_FETCHING], seen
+    assert slept == [0.25, 0.25], slept
 
 
 def test_endpoint_status_is_stable_across_repeat_views(monkeypatch, ensure_client):
@@ -563,7 +619,7 @@ def test_endpoint_status_is_stable_across_repeat_views(monkeypatch, ensure_clien
     seen = []
     panel = []
     for _ in range(6):
-        r, _el = post()
+        r = post()
         body = r.get_json()
         seen.append(body["window_sticker_status"])
         panel.append(
@@ -586,31 +642,34 @@ def test_endpoint_replays_snapshot_while_a_worker_is_running(monkeypatch, ensure
     import backend.enrichment.listing_packages_service as lps
 
     post, state = ensure_client
-    monkeypatch.setenv("CAR_PACKAGES_ENSURE_BUDGET_SECONDS", "0.3")
+    monkeypatch.setenv("CAR_PACKAGES_ENSURE_BUDGET_SECONDS", "0.1")
 
     def slow(car_id, **kw):
         # Mutate the row mid-flight, the way the real pipeline does.
         state["row"]["_urls"] = ["https://dealer.example.com/sticker.pdf"]
-        time.sleep(1.5)
+        _wait_for_release()
         return {"ok": True, "car_id": car_id}
 
     monkeypatch.setattr(lps, "ensure_listing_packages_for_car", slow)
 
-    first = post()[0].get_json()
+    first = post().get_json()
     base_panel = {k: first.get(k) for k in cars_pages.PACKAGES_ENSURE_PANEL_FIELDS}
     # The worker mutated the row on entry; the panel content must still be the
     # pre-worker snapshot, and every view in this window must agree.
     assert first["window_sticker_source_known"] is False
     assert first["window_sticker_status"] == STICKER_STATUS_FETCHING
+    # Views in the window answer from the snapshot: no panel build, no budget.
+    panel_builds = _spy(monkeypatch, "_packages_ensure_panel_snapshot")
+    runs = _spy(monkeypatch, "_run_packages_ensure_with_budget")
     for _ in range(3):
-        r, el = post()
-        body = r.get_json()
-        assert el < 0.5
+        body = post().get_json()
         assert {k: body.get(k) for k in cars_pages.PACKAGES_ENSURE_PANEL_FIELDS} == base_panel
         # Fetch state is live and honest: a worker really is running.
         assert body["window_sticker_fetch_in_flight"] is True
         assert body["window_sticker_status"] == STICKER_STATUS_FETCHING
         assert body["window_sticker_should_retry"] is True
+    assert panel_builds == [], "an in-flight view rebuilt the panel from the half-written row"
+    assert runs == [], "an in-flight view paid the budget again"
 
 
 def test_endpoint_shows_what_the_worker_stored_on_the_next_view(monkeypatch, ensure_client):
@@ -621,28 +680,26 @@ def test_endpoint_shows_what_the_worker_stored_on_the_next_view(monkeypatch, ens
     import backend.enrichment.listing_packages_service as lps
 
     post, state = ensure_client
-    monkeypatch.setenv("CAR_PACKAGES_ENSURE_BUDGET_SECONDS", "0.3")
+    monkeypatch.setenv("CAR_PACKAGES_ENSURE_BUDGET_SECONDS", "0.1")
     monkeypatch.setenv("CAR_PACKAGES_ENSURE_COOLDOWN_SECONDS", "300")
     monkeypatch.setenv("CAR_PACKAGES_ENSURE_PANEL_TTL_SECONDS", "300")
 
     done = threading.Event()
 
     def slow(car_id, **kw):
-        time.sleep(1.0)
+        _wait_for_release()
         state["row"]["_urls"] = ["https://dealer.example.com/sticker.pdf"]
         done.set()
         return {"ok": True, "car_id": car_id}
 
     monkeypatch.setattr(lps, "ensure_listing_packages_for_car", slow)
 
-    first, _el = post()
+    first = post()
     assert first.get_json()["window_sticker_status"] == STICKER_STATUS_FETCHING
-    assert done.wait(10.0)
     # The worker's own completion hook drops the cached panel build.
-    for t in list(cars_pages._packages_ensure_inflight.values()):
-        t.join(10.0)
-    later, _el = post()
-    body = later.get_json()
+    _release_and_join_workers()
+    assert done.is_set()
+    body = post().get_json()
     # It stored a source URL but no sticker file: source known, nothing running.
     assert body["window_sticker_status"] == STICKER_STATUS_PENDING
     assert body["window_sticker_fetch_in_flight"] is False
@@ -656,7 +713,6 @@ def test_endpoint_always_reports_the_contract_fields(monkeypatch, ensure_client)
     monkeypatch.setattr(
         lps, "ensure_listing_packages_for_car", lambda car_id, **kw: {"ok": True, "car_id": car_id}
     )
-    r, _el = post()
-    body = r.get_json()
+    body = post().get_json()
     for field in cars_pages.PACKAGES_ENSURE_RESPONSE_FIELDS:
         assert field in body, f"{field} missing from the ensure payload"

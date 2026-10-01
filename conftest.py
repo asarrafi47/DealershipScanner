@@ -25,8 +25,7 @@ os.environ.setdefault("ALLOW_UNENCRYPTED_USER_DB", "1")
 # ``backend.utils.project_env.load_project_dotenv``), so ``importlib.reload(main)``
 # can no longer refill a blanked key or override a value a test set. These are
 # assignments, not setdefault: a shell-exported URL must not leak in either.
-# INVENTORY_DB_PATH is left to the fixtures below (they pin the default test
-# inventory sqlite per test).
+# INVENTORY_DB_PATH is pinned just below to a session copy of the dev inventory.
 _HERMETIC_DB_DIR = tempfile.mkdtemp(prefix="pytest-dbs-")
 atexit.register(shutil.rmtree, _HERMETIC_DB_DIR, True)
 
@@ -43,6 +42,48 @@ HERMETIC_DB_ENV: dict = {
 os.environ.update(HERMETIC_DB_ENV)
 os.environ["INVENTORY_SQLITE_TESTS"] = "1"
 os.environ["PROJECT_DOTENV_DISABLE"] = "1"
+
+# --- Hermetic default inventory ------------------------------------------------------
+#
+# The default SQLite inventory used to be the developer's own ``backend/inventory.db``
+# (``_default_inventory_db_path()``): every test without its own DB fixture read AND
+# wrote it, so results depended on what earlier runs had left there (tests.md F6).
+# The session now gets a private copy: the dev file is copied once, read-only, into
+# the session tmp dir when it exists (tests that need its rows, e.g. car 3608, still
+# find them and skip when absent); otherwise the copy starts empty and
+# ``_ensure_default_inventory_schema`` below builds the schema in it. The env var is
+# set here, at conftest import, because collection-time ``import backend.main`` runs
+# ``init_inventory_db()`` on ``base_repo.DB_PATH``, which reads INVENTORY_DB_PATH.
+_REAL_DEFAULT_INVENTORY_DB = Path(__file__).resolve().parent / "backend" / "inventory.db"
+TEST_INVENTORY_DB_PATH = os.path.join(_HERMETIC_DB_DIR, "inventory.db")
+
+
+def _copy_default_inventory_db(src: Path, dst: str) -> None:
+    """Snapshot *src* into *dst* through a read-only connection (WAL content included)."""
+    import sqlite3
+
+    if not src.is_file():
+        return
+    try:
+        source = sqlite3.connect(f"file:{src}?mode=ro", uri=True)
+    except sqlite3.Error:
+        return
+    try:
+        target = sqlite3.connect(dst)
+        try:
+            source.backup(target)
+        finally:
+            target.close()
+    except sqlite3.Error:
+        # Unreadable dev file: an empty session copy, built by the schema fixture.
+        if os.path.exists(dst):
+            os.remove(dst)
+    finally:
+        source.close()
+
+
+_copy_default_inventory_db(_REAL_DEFAULT_INVENTORY_DB, TEST_INVENTORY_DB_PATH)
+os.environ["INVENTORY_DB_PATH"] = TEST_INVENTORY_DB_PATH
 
 PROD_TEST_USERS_DB_KEY = "pytest-users-db-encryption-key-32chars!"
 PROD_TEST_DEV_USERS_DB_KEY = "pytest-dev-users-db-enc-key-32c!"
@@ -148,7 +189,7 @@ def _ensure_default_inventory_schema() -> None:
         inv_db.DB_PATH = HERMETIC_DB_ENV["SCAN_LAB_INVENTORY_DB_PATH"]
         inv_db.init_inventory_db()
 
-        inv_db.DB_PATH = inv_db._default_inventory_db_path()
+        inv_db.DB_PATH = TEST_INVENTORY_DB_PATH
         inv_db.init_inventory_db()
         # The dealer-portal sidecar now lives in the session tmp dir (HERMETIC_DB_ENV);
         # account deletion runs DELETE FROM dealer_vehicles, so the table must exist.
@@ -164,6 +205,9 @@ def _isolate_listings_env(monkeypatch: pytest.MonkeyPatch) -> None:
     """Prevent ``FLASK_ENV=production`` and strict listings flags leaking across tests."""
     monkeypatch.delenv("FLASK_ENV", raising=False)
     monkeypatch.delenv("LISTINGS_INCLUDE_INCOMPLETE_CARS", raising=False)
+    # Unset, not pinned: query_parser prefers the env var over inventory_db.DB_PATH,
+    # so a pinned value would outrank a test's own DB_PATH patch. DB_PATH itself is
+    # pointed at the session copy below, never at the developer's backend/inventory.db.
     monkeypatch.delenv("INVENTORY_DB_PATH", raising=False)
     # Tests are SQLite-only. The session fixture above assumed this fixture
     # blanked the Postgres URL; it never did, so every test that called
@@ -175,9 +219,8 @@ def _isolate_listings_env(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("INVENTORY_SQLITE_TESTS", "1")
     try:
         from backend.db import inventory_db as inv_db
-        from backend.db.inventory_db import _default_inventory_db_path
 
-        monkeypatch.setattr(inv_db, "DB_PATH", _default_inventory_db_path(), raising=False)
+        monkeypatch.setattr(inv_db, "DB_PATH", TEST_INVENTORY_DB_PATH, raising=False)
     except Exception:
         pass
 

@@ -22,8 +22,7 @@ window.SC = window.SC || {};
     function fmt(n)  { return Number(n).toLocaleString(); }
 
     function fmtUSD(n) {
-        if (n == null || n === "" || Number(n) === 0) return "Call for Price";
-        return "$" + Number(n).toLocaleString("en-US", {maximumFractionDigits: 0});
+        return window.DS.formatUsd(n);
     }
 
     /** Resolve URL and allow only http(s) for listing images (mitigates javascript: / data:). */

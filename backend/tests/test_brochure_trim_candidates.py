@@ -5,6 +5,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import pytest
+
 from backend.enrichment.brochure_trim_candidates import (
     build_trim_candidate,
     parse_trim_names_from_text,
@@ -17,7 +19,7 @@ def test_parse_trim_names_2025_camry():
         / "dictionary/derived/brochure_text/2025__toyota__camry.json"
     )
     if not path.is_file():
-        return
+        pytest.skip(f"brochure text {path.name} not present")
     data = json.loads(path.read_text(encoding="utf-8"))
     text = data.get("combined_trim_pages_text") or ""
     trims = parse_trim_names_from_text(text, make="Toyota", model="Camry")

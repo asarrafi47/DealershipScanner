@@ -1205,8 +1205,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!wrap || !saveBtn || !toggleBtn || !panel) return;
 
         function csrfToken() {
-            const m = document.querySelector('meta[name="csrf-token"]');
-            return m && m.content ? m.content : "";
+            return window.DS.csrfToken();
         }
 
         function showStatus(msg, isLink) {
@@ -1874,8 +1873,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (payload === _listingsGeoLastSent) return;
         clearTimeout(_listingsGeoPersistTimer);
         _listingsGeoPersistTimer = setTimeout(() => {
-            const m = document.querySelector('meta[name="csrf-token"]');
-            const csrf = m && m.content ? m.content : "";
+            const csrf = window.DS.csrfToken();
             fetch("/api/session/listings-geo", {
                 method: "POST",
                 credentials: "same-origin",
@@ -2983,8 +2981,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 e.stopPropagation();
                 const carId = btn.dataset.carId;
                 if (!carId) return;
-                const m = document.querySelector('meta[name="csrf-token"]');
-                const csrf = m && m.content ? m.content : "";
+                const csrf = window.DS.csrfToken();
                 const idNum = Number(carId);
                 const wasSaved = btn.classList.contains("result-save-btn--saved");
                 const optimisticSaved = !wasSaved;

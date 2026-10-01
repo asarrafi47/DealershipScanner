@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-import importlib
-
 import pytest
 
 from backend.db.users_db import (
@@ -30,25 +28,13 @@ def users_db(tmp_path, monkeypatch):
     return db_path
 
 
-def _fresh_app(monkeypatch, tmp_path):
-    monkeypatch.setenv("FLASK_ENV", "development")
-    monkeypatch.setenv("MFA_DELIVERY_MODE", "log")
-    monkeypatch.setenv("USERS_DB_PATH", str(tmp_path / "users_test.db"))
-    monkeypatch.setenv("DEV_USERS_DB_PATH", str(tmp_path / "dev_users_test.db"))
-    monkeypatch.setenv("INVENTORY_DB_PATH", str(tmp_path / "inv_test.db"))
-    monkeypatch.delenv("INVENTORY_DATABASE_URL", raising=False)
-    monkeypatch.delenv("DATABASE_URL", raising=False)
-    monkeypatch.delenv("USERS_DB_ENCRYPTION_KEY", raising=False)
-    monkeypatch.delenv("DEV_USERS_DB_ENCRYPTION_KEY", raising=False)
-    # inventory_db.DB_PATH is resolved once at import time, so the env var above has no
+def _make_app(app_factory, monkeypatch, tmp_path):
+    # inventory_db.DB_PATH is resolved once at import time, so the env var has no
     # effect on it post-import — patch the module attribute directly.
     from backend.db import inventory_db as inv_db
 
     monkeypatch.setattr(inv_db, "DB_PATH", str(tmp_path / "inv_test.db"))
-    import backend.main as main
-
-    importlib.reload(main)
-    return main.app
+    return app_factory(INVENTORY_DB_PATH=str(tmp_path / "inv_test.db")).app
 
 
 def test_list_users_for_admin(users_db) -> None:
@@ -164,8 +150,8 @@ def test_admin_cannot_demote_env_admin(users_db, monkeypatch) -> None:
     assert record["role"] == ROLE_ADMIN
 
 
-def test_admin_users_hub_create_via_http(monkeypatch, tmp_path) -> None:
-    app = _fresh_app(monkeypatch, tmp_path)
+def test_admin_users_hub_create_via_http(monkeypatch, tmp_path, app_factory) -> None:
+    app = _make_app(app_factory, monkeypatch, tmp_path)
     save_user("hubadmin", "hubadmin@example.com", "long-enough-password", role=ROLE_ADMIN)
     client = app.test_client()
     with client:

@@ -2,23 +2,14 @@
 
 from __future__ import annotations
 
-import importlib
-
 import pytest
 
 from backend.auth import apple_oauth
 
 
 @pytest.fixture
-def client(monkeypatch: pytest.MonkeyPatch, tmp_path):
-    monkeypatch.setenv("FLASK_ENV", "development")
-    monkeypatch.setenv("USERS_DB_PATH", str(tmp_path / "users_test.db"))
-    monkeypatch.setenv("DEV_USERS_DB_PATH", str(tmp_path / "dev_users_test.db"))
-    monkeypatch.delenv("USERS_DB_ENCRYPTION_KEY", raising=False)
-    monkeypatch.delenv("DEV_USERS_DB_ENCRYPTION_KEY", raising=False)
-    import backend.main as main
-
-    importlib.reload(main)
+def client(app_factory):
+    main = app_factory()
     main.app.config["TESTING"] = True
     return main.app.test_client()
 

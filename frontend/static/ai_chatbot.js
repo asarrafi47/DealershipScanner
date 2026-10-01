@@ -118,8 +118,7 @@
         } catch (e) {}
 
         function csrf() {
-            var m = document.querySelector('meta[name="csrf-token"]');
-            return m && m.content ? m.content : "";
+            return window.DS.csrfToken();
         }
 
         // Mini result cards (top few matches) shown inline after a search applies.

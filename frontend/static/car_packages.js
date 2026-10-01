@@ -81,8 +81,7 @@
     }
 
     function readCsrf() {
-        const m = document.querySelector('meta[name="csrf-token"]');
-        return m ? (m.getAttribute("content") || "").trim() : "";
+        return window.DS.csrfToken();
     }
 
     function hideStickerLoading() {
@@ -199,12 +198,7 @@
     }
 
     function esc(s) {
-        return String(s == null ? "" : s)
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/"/g, "&quot;")
-            .replace(/'/g, "&#39;");
+        return window.DS.escapeHtml(s);
     }
 
     function ensureStickerWrapVisible() {
