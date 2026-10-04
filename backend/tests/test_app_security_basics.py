@@ -65,7 +65,8 @@ def test_ip_rate_limit_sqlite_shared(tmp_path, monkeypatch) -> None:
 
 def test_csp_enforce_header_when_enabled(monkeypatch) -> None:
     monkeypatch.setenv("CSP_ENFORCE", "1")
-    from backend.main import _csp_enforce_wanted, app
+    from backend.main import app
+    from backend.web.security import _csp_enforce_wanted
 
     assert _csp_enforce_wanted() is True
     with app.test_client() as c:

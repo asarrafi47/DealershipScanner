@@ -32,7 +32,7 @@ python -m pytest backend/tests/test_mobile_api_contract.py \
 ## Adding an endpoint
 
 1. Implement in `backend/main.py` (or extract to a blueprint under `backend/mobile/` later).
-2. Register CSRF in `_csrf_mutating_requests` if POST.
+2. Register CSRF in `_csrf_mutating_requests` (`backend/web/security.py`) if POST.
 3. Add row to `contract.py` and `ios/docs/API_CONTRACT.md`.
 4. Add behavior test under `backend/tests/test_mobile_*.py`.
 5. Update `docs/SECURITY_MASTER_TODO.md` if auth/CSRF/rate limits apply.

@@ -730,7 +730,7 @@ def api_saved_searches_delete(search_id):
 
 # ---------------------------------------------------------------------------
 # Hidden dealerships (account profile). Free for every signed-in user -- no
-# _require_feature gate, only the login check the saved-search routes make.
+# paid_access.check_feature gate, only the login check the saved-search routes make.
 # ---------------------------------------------------------------------------
 
 _DEALER_ID_MAX_LEN = 128

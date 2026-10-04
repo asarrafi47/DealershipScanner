@@ -11,27 +11,20 @@ load_kmac_vault_secrets()
 # Central env access (single read point; see backend/config.py).
 from backend.config import Config
 
-import gzip
-import inspect
 import json
 import logging
-import mimetypes
 import os
 import re
-import secrets
 import sqlite3
 import time
 from datetime import timedelta
-from pathlib import Path
 
-from flask import Flask, abort, g, jsonify, make_response, redirect, render_template, request, send_from_directory, session, url_for
+from flask import Flask, abort, jsonify, make_response, redirect, render_template, request, session, url_for
 from werkzeug.exceptions import HTTPException
 
 from backend.intelligence.ai.agent import run_car_page_chat, run_compare_chat
-from backend.auth.apple_oauth import apple_oauth_configured, apple_signin_visible
 from backend.auth.apple_oauth import bp as apple_oauth_bp
 from backend.auth.google_oauth import bp as google_oauth_bp
-from backend.auth.google_oauth import google_oauth_configured, google_signin_visible
 from backend.billing.routes import bp as billing_bp
 from backend.billing.catalog import (
     FEATURE_AI_CAR_CHAT,
@@ -112,18 +105,12 @@ from backend.listings.geo_session import (
     persist_listings_geo_from_request,
 )
 from backend.listings.routes import listings_page
-from backend.utils.car_serialize import format_display_value, serialize_car_for_api
+from backend.utils.car_serialize import serialize_car_for_api
 from backend.utils.listing_completeness import INCOMPLETE_FIELD_LABELS
 from backend.utils.car_chat_policy import car_chat_rate_limits, car_chat_user_daily_limit, web_research_playwright_allowed
 from backend.utils.client_ip import client_ip as _client_ip_from_request
 from backend.utils.client_ip import trust_proxy_headers
-from backend.utils.csrf import ensure_csrf_token, validate_csrf_form, validate_csrf_header
-
-if not (validate_csrf_header.__code__.co_flags & inspect.CO_VARARGS):
-    raise ImportError(
-        "backend.utils.csrf.validate_csrf_header must be defined with *args (see repo csrf.py). "
-        "Restart the server after git pull; check PYTHONPATH is not shadowing backend/utils/csrf.py."
-    )
+from backend.utils.csrf import ensure_csrf_token
 from backend.utils.ip_rate_limit import allow_request
 from backend.utils.query_parser import parse_natural_query
 from backend.utils.runtime_env import is_production_env, session_cookie_secure_default
@@ -139,12 +126,12 @@ _logger = logging.getLogger(__name__)
 # Backward-compatible re-import: shared with the extracted route modules.
 from backend.routes._shared import _client_ip  # noqa: E402
 from backend.auth.session import (  # noqa: E402
-    billing_enabled as _billing_enabled,
     finalize_app_session as _finalize_app_session,
     post_login_redirect as _post_login_redirect,
-    require_paid_org_session as _require_paid_org_session,
-    session_belongs_to_paid_org as _session_belongs_to_paid_org,
 )
+from backend.web.security import register_security  # noqa: E402
+from backend.web.static import register_static  # noqa: E402
+from backend.web.templating import register_templating  # noqa: E402
 
 app = Flask(
     __name__,
@@ -180,132 +167,9 @@ app.config["SESSION_COOKIE_SECURE"] = session_cookie_secure_default()
 app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(days=14)
 app.config["SESSION_REFRESH_EACH_REQUEST"] = True
 
-# ---- Static assets: cache policy + cache-buster ------------------------------------
-#
-# Every static URL the templates emit carries ?v={{ static_cache_ver }}, so the files
-# can be cached for a year and marked immutable; a changed asset gets a new query
-# string and therefore a new cache entry. The version used to be the mtime of the
-# dead style.css (nothing loads it, last touched 2026-08-03), which never moved when
-# a real partial or script changed -- harmless under Flask's default
-# ``Cache-Control: no-cache``, a stale-asset bug the moment a long max-age is set.
-# It is now the newest mtime under frontend/static (precompressed siblings excluded,
-# they are rebuilt from the sources and would only echo the same change).
-_STATIC_MAX_AGE = 31536000
-_STATIC_UNSTAMPED_MAX_AGE = 3600
-_STATIC_COMPRESSED_SUFFIXES = (".gz", ".br")
-app.config["SEND_FILE_MAX_AGE_DEFAULT"] = _STATIC_MAX_AGE
+# Static assets: year-long cache, ?v= cache-buster, precompressed siblings.
+register_static(app)
 
-
-def compute_static_cache_ver(static_root) -> str:
-    """Newest mtime (whole seconds) of any source file under ``static_root``.
-
-    Pure so it can be unit-tested against a temp tree. ``.gz``/``.br`` siblings
-    are skipped: they are derived from the sources by
-    scripts/build_static_compressed.py and never change on their own."""
-    newest = 0
-    for dirpath, _dirs, files in os.walk(str(static_root)):
-        for name in files:
-            if name.endswith(_STATIC_COMPRESSED_SUFFIXES):
-                continue
-            try:
-                mt = os.stat(os.path.join(dirpath, name)).st_mtime
-            except OSError:
-                continue
-            if mt > newest:
-                newest = mt
-    return str(int(newest)) if newest else "1"
-
-
-_static_cache_ver_memo: str | None = None
-
-
-def static_cache_ver() -> str:
-    """The ?v= stamp for this process.
-
-    Computed once per process (gunicorn preloads the app, so the walk runs once);
-    the Werkzeug dev server runs with debug=True and no reloader, where a static
-    edit must show up on the next request, so debug recomputes every call (a
-    few dozen stats)."""
-    global _static_cache_ver_memo
-    if app.debug or _static_cache_ver_memo is None:
-        _static_cache_ver_memo = compute_static_cache_ver(Path(app.static_folder).resolve())
-    return _static_cache_ver_memo
-
-
-def _precompressed_static_sibling(filename: str):
-    """(encoding, sibling filename) for a ``.br``/``.gz`` sibling the client
-    accepts, or None. A sibling older than its source is ignored, so an edited
-    source is never shadowed by a stale build (scripts/build_static_compressed.py
-    stamps each sibling with its source's mtime)."""
-    from werkzeug.security import safe_join
-
-    source = safe_join(app.static_folder, filename)
-    if not source:
-        return None
-    try:
-        src_mtime = os.stat(source).st_mtime
-    except OSError:
-        return None
-    accepted = request.accept_encodings
-    for encoding, suffix in (("br", ".br"), ("gzip", ".gz")):
-        if accepted.quality(encoding) <= 0:
-            continue
-        try:
-            st = os.stat(source + suffix)
-        except OSError:
-            continue
-        if st.st_size > 0 and st.st_mtime >= src_mtime:
-            return encoding, filename + suffix
-    return None
-
-
-def _static_view(filename: str):
-    """Flask's static view, plus precompressed siblings.
-
-    Nothing between the app and the browser compresses static files (gunicorn
-    does not, Railway's edge does not), so a cold visit downloaded ~550 KB of
-    CSS+JS that gzips to ~110 KB. The siblings are built by
-    scripts/build_static_compressed.py (Dockerfile.web runs it)."""
-    pick = _precompressed_static_sibling(filename)
-    if pick is None:
-        resp = app.send_static_file(filename)
-    else:
-        encoding, sibling = pick
-        mimetype = mimetypes.guess_type(filename)[0] or "application/octet-stream"
-        resp = send_from_directory(
-            app.static_folder,
-            sibling,
-            mimetype=mimetype,
-            max_age=app.get_send_file_max_age(filename),
-            conditional=True,
-        )
-        resp.headers["Content-Encoding"] = encoding
-    if filename.endswith((".js", ".css")):
-        resp.vary.add("Accept-Encoding")
-    return resp
-
-
-app.view_functions["static"] = _static_view
-
-
-@app.after_request
-def _static_cache_headers(resp):
-    """``immutable`` for stamped static URLs; a short max-age for unstamped ones.
-
-    An unstamped /static URL (favicon, placeholder.svg, brand art, Leaflet's
-    marker PNGs referenced from its own CSS) has no way to bust the cache, so a
-    year there would pin the old bytes until the browser evicts them."""
-    if request.endpoint != "static" or resp.status_code not in (200, 304):
-        return resp
-    filename = (request.view_args or {}).get("filename") or ""
-    if request.args.get("v") or filename.startswith("fonts/"):
-        # Font files are named with their upstream version (inter-latin-v20), so
-        # the name is the stamp; the @font-face url cannot carry ?v=.
-        resp.cache_control.immutable = True
-    elif resp.cache_control.max_age == _STATIC_MAX_AGE:
-        resp.cache_control.max_age = _STATIC_UNSTAMPED_MAX_AGE
-        resp.expires = None
-    return resp
 
 
 from backend.utils.production_security import assert_production_security_config
@@ -403,289 +267,11 @@ _dealer_reviews_routes.register(app)
 _fuel_api_routes.register(app)
 _admin_dealer_api_routes.register(app)
 
-@app.after_request
-def _gzip_large_json(resp):
-    """Shrink large listings payloads over the wire (browser must send Accept-Encoding: gzip).
-
-    text/html is included because the server-rendered /listings document is the single
-    biggest response the site sends -- it carries the facet checkboxes and the packed
-    cascade table inline, and at ~823 KB uncompressed it was the critical-path bottleneck
-    for time-to-first-cards. It is highly repetitive markup, so gzip takes roughly an
-    order of magnitude off it.
-    """
-    if resp.status_code != 200 or resp.direct_passthrough:
-        return resp
-    ct = (resp.content_type or "").split(";")[0].strip().lower()
-    if ct not in ("application/json", "text/html"):
-        return resp
-    if resp.headers.get("Content-Encoding"):
-        return resp
-    if "gzip" not in (request.headers.get("Accept-Encoding") or "").lower():
-        return resp
-    raw = resp.get_data()
-    if len(raw) < 2048:
-        return resp
-    compressed = gzip.compress(raw, compresslevel=5)
-    resp.set_data(compressed)
-    resp.headers["Content-Encoding"] = "gzip"
-    resp.headers["Content-Length"] = str(len(compressed))
-    resp.headers["Vary"] = "Accept-Encoding"
-    return resp
-
-
-@app.context_processor
-def inject_csrf_and_flags():
-    from backend.routes.site_misc import _app_version
-    from backend.utils.roles import is_dealer_portal_role
-
-    static_ver = static_cache_ver()
-    # One DB read per request (cached on g) serves the admin flag, the store-ops
-    # nav and every paid-access flag; the cookie's role is never trusted here.
-    access_ctx = paid_access.current_access()
-    _is_admin = access_ctx.is_admin
-    store_ops_nav = False
-    prof = access_ctx.profile
-    if prof and not _is_admin:
-        store_ops_nav = bool(
-            (prof.get("dealer_id") or "").strip()
-            or prof.get("dealership_registry_id")
-        )
-    return {
-        "csrf_token": ensure_csrf_token(),
-        "csp_nonce": getattr(g, "csp_nonce", "") or "",
-        "is_production": is_production_env(),
-        "logged_in_user": session.get("username") or session.get("admin_username"),
-        "is_admin": _is_admin,
-        "is_store_admin": _is_admin,
-        **paid_access.template_context(),
-        "billing_stripe_enabled": _billing_enabled(),
-        "show_dealer_inventory_nav": bool(session.get("user_id"))
-        and is_dealer_portal_role(session.get("user_role")),
-        "show_store_ops_nav": store_ops_nav,
-        "static_cache_ver": static_ver,
-        "personal_home_url": (
-            url_for("app_home") if session.get("user_id") else url_for("home")
-        ),
-        "google_signin_enabled": google_oauth_configured(),
-        "google_signin_visible": google_signin_visible(),
-        "apple_signin_enabled": apple_oauth_configured(),
-        "apple_signin_visible": apple_signin_visible(),
-        "password_reset_enabled": _password_reset_enabled(),
-        "app_version": _app_version(),
-    }
-
-
-def _password_reset_enabled() -> bool:
-    from backend.auth.password_reset import password_reset_enabled
-
-    return password_reset_enabled()
-
-
-@app.before_request
-def _per_request_csp_nonce() -> None:
-    g.csp_nonce = secrets.token_urlsafe(16)
-
-
-# State-changing JSON routes served on DELETE. The browser clients already send
-# X-CSRF-Token on these; SameSite=Lax and the absence of CORS kept them safe,
-# this makes the token mandatory too (security review 2026-09-28).
-_CSRF_HEADER_DELETE_ENDPOINTS = frozenset({
-    "api_saved_searches_delete",
-    "api_hidden_dealers_remove",
-    "api_search_history_delete",
-    "api_search_history_clear",
-})
-
-
-@app.before_request
-def _csrf_mutating_requests():
-    if request.method == "DELETE":
-        # Only a logged-in session can be forged cross-site; anonymous callers
-        # get the view's own 401 rather than a 403 about a token they lack.
-        if (request.endpoint or "") in _CSRF_HEADER_DELETE_ENDPOINTS and session.get("user_id"):
-            validate_csrf_header()
-        return
-    if request.method != "POST":
-        return
-    ep = request.endpoint or ""
-    if ep in (
-        "login_page",
-        "register_page",
-        "logout_page",
-        "verify_email_page",
-        "resend_verification",
-        "forgot_password_page",
-        "reset_password_page",
-        "account_password_page",
-        "account_profile_page",
-        "dev.admin_login",
-        "dev.admin_register",
-        "dev.admin_logout",
-        "dealership_submit_review",
-        "dealership_report_review",
-    ):
-        csrf_resp = validate_csrf_form()
-        if csrf_resp is not None:
-            return csrf_resp
-    elif ep and str(ep).startswith("dealer_portal."):
-        csrf_resp = validate_csrf_form()
-        if csrf_resp is not None:
-            return csrf_resp
-    elif ep and str(ep).startswith("store_admin."):
-        csrf_resp = validate_csrf_form()
-        if csrf_resp is not None:
-            return csrf_resp
-    elif ep in (
-        "api_search_smart",
-        "api_car_chat",
-        "api_compare_chat",
-        "ai_chat_bp.api_ai_chat",
-        "api_toggle_save",
-        "api_saved_searches_create",
-        "api_hidden_dealers_add",
-        "api_session_listings_geo",
-        "api_car_packages_ensure",
-        "api_car_vehicle_history_intelligence",
-        "api_auth_login",
-        "api_auth_register",
-        "api_auth_logout",
-        "api_admin_dealer_onboard",
-        "api_admin_dealer_job_retry",
-        "api_admin_dealer_job_smart_retry",
-        "api_admin_dealer_job_diagnose",
-    ) or (ep and str(ep).startswith("api_admin_operator_")):
-        validate_csrf_header()
-    return None
-
-
-def _require_feature(feature_id: str) -> tuple[bool, str]:
-    """Per-plan feature gate. Returns (ok, error_code). See ``backend.billing.access``."""
-    return paid_access.check_feature(feature_id)
-
-
-_feature_denied_json = paid_access.denied_json
-
-
-@app.before_request
-def _billing_gate_paid_routes():
-    if not _billing_enabled():
-        return None
-    ep = request.endpoint or ""
-    if not ep:
-        return None
-    if ep in ("login_page", "register_page", "logout_page", "favicon"):
-        return None
-    if str(ep).startswith("google_oauth."):
-        return None
-    if str(ep).startswith("apple_oauth."):
-        return None
-    if str(ep).startswith("dev.") or str(ep).startswith("billing."):
-        return None
-    if not session.get("user_id"):
-        return None
-    if paid_access.is_site_admin():
-        return None
-    if not _session_belongs_to_paid_org():
-        return None
-    if ep in ("app_home", "dashboard") or str(ep).startswith("dealer_portal.") or str(ep).startswith("store_admin."):
-        if not _require_paid_org_session():
-            return redirect(url_for("billing.billing_required"))
-    return None
-
-
-def _csp_enforce_wanted() -> bool:
-    v = Config.csp_enforce_raw()
-    if v in ("0", "false", "no", "off"):
-        return False
-    if v in ("1", "true", "yes", "on"):
-        return True
-    return is_production_env()
-
-
-def _csp_header_value_enforced(nonce: str) -> str:
-    # style-src: 'unsafe-inline' for existing inline style="" attributes; script nonces for all script elements.
-    return (
-        "default-src 'self'; "
-        "base-uri 'self'; "
-        "form-action 'self'; "
-        "frame-ancestors 'none'; "
-        "object-src 'none'; "
-        "frame-src 'self'; "
-        "img-src 'self' data: https: http: blob:; "
-        "font-src 'self' data:; "
-        "style-src 'self' 'unsafe-inline'; "
-        "style-src-elem 'self'; "
-        f"script-src 'self' 'nonce-{nonce}' https://esm.sh; "
-        "connect-src 'self' https://esm.sh https://tile.openstreetmap.org; "
-        "worker-src 'self'; "
-    )
-
-
-# Report-only CSP (SEC-032): opt-in via CSP_REPORT_ONLY=1; use for violation collection when not enforcing.
-_CSP_REPORT_ONLY = (
-    "default-src 'self'; "
-    "base-uri 'self'; "
-    "form-action 'self'; "
-    "frame-ancestors 'none'; "
-    "object-src 'none'; "
-    "img-src 'self' data: https: http: blob:; "
-    "font-src 'self' data:; "
-    "style-src 'self' 'unsafe-inline'; "
-    "style-src-elem 'self'; "
-    "script-src 'self' https://esm.sh; "
-    "connect-src 'self' https://esm.sh https://tile.openstreetmap.org; "
-    "worker-src 'self'; "
-)
-
-
-@app.after_request
-def _csp_headers(response):
-    response.headers.setdefault("X-Content-Type-Options", "nosniff")
-    response.headers.setdefault("X-Frame-Options", "DENY")
-    response.headers.setdefault("Referrer-Policy", "strict-origin-when-cross-origin")
-    if session_cookie_secure_default():
-        response.headers.setdefault(
-            "Strict-Transport-Security",
-            "max-age=31536000; includeSubDomains",
-        )
-    if _csp_enforce_wanted():
-        nonce = (getattr(g, "csp_nonce", None) or "") or ""
-        if nonce and not response.headers.get("Content-Security-Policy"):
-            response.headers["Content-Security-Policy"] = _csp_header_value_enforced(nonce)
-        return response
-    if Config.csp_report_only_enabled():
-        if not response.headers.get("Content-Security-Policy-Report-Only"):
-            response.headers["Content-Security-Policy-Report-Only"] = _CSP_REPORT_ONLY
-    return response
-
-
-@app.template_filter("fmt_spec")
-def _jinja_fmt_spec(value):
-    return format_display_value(value)
-
-
-@app.template_filter("http_url")
-def _jinja_http_url(value):
-    """Scheme-validate a stored URL before it lands in an href.
-
-    Dealer/listing URLs come from scraped feeds; a poisoned row could carry a
-    javascript:/data: scheme. Autoescape stops attribute breakout but not a
-    hostile scheme, so hrefs must go through this (returns "" for anything
-    that is not http(s))."""
-    from backend.utils.field_clean import normalize_optional_url
-
-    u = normalize_optional_url(value)
-    return u if u and u.lower().startswith(("http://", "https://")) else ""
-
-
-@app.errorhandler(404)
-def page_not_found(_exc):
-    if request.path.startswith("/api/") or (
-        request.accept_mimetypes.best_match(["application/json", "text/html"]) == "application/json"
-        and request.accept_mimetypes["application/json"] > request.accept_mimetypes["text/html"]
-    ):
-        return jsonify({"error": "not_found"}), 404
-    return render_template("not_found.html"), 404
+# App-wide hooks, in the original order (pinned by test_app_surface_golden):
+# gzip after_request + context processor + filters + 404, then the CSP nonce,
+# CSRF and billing-gate before_request hooks and the CSP headers after_request.
+register_templating(app)
+register_security(app)
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -867,7 +453,7 @@ def _account_profile_context(uid: int, **extra):
         "hidden_dealers": _hidden_dealers_for_profile(uid),
         "recent_searches": _recent_searches_for_profile(uid),
         "saved_searches": _saved_searches_for_profile(uid),
-        "saved_searches_enabled": _require_feature(FEATURE_SAVED_SEARCHES)[0],
+        "saved_searches_enabled": paid_access.check_feature(FEATURE_SAVED_SEARCHES)[0],
         "recent_searches_limit": _PROFILE_RECENT_SEARCHES,
     }
     ctx.update(extra)

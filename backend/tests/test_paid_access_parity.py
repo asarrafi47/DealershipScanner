@@ -159,7 +159,7 @@ def _observe(main, persona, ids):
     with main.app.test_request_context("/"):
         session.update(_session_for(persona, ids))
         for fid in FEATURES:
-            ok, err = main._require_feature(fid)
+            ok, err = access.check_feature(fid)
             out[f"api:{fid}"] = "ok" if ok else err
         ctx = access.current_access()
         out["has_paid_access"] = ctx.sees_paid_ui()
@@ -168,7 +168,7 @@ def _observe(main, persona, ids):
         out["srv:car_market_intel"] = ctx.sees_paid_ui() and ctx.shows("market_intel")
         out["srv:trim_ladder_adds"] = ctx.shows("window_sticker")
         out["srv:compare_chat"] = ctx.shows("ai_compare_chat")
-        out["srv:saved_searches_enabled"] = bool(main._require_feature("saved_searches")[0])
+        out["srv:saved_searches_enabled"] = bool(access.check_feature("saved_searches")[0])
         for k, (_tpl, expr) in NEW_UI.items():
             v = render_template_string("{{ 1 if (" + expr + ") else 0 }}", logged_in=bool(session.get("user_id")))
             out[f"ui:{k}"] = v.strip() == "1"

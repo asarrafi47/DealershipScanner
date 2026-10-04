@@ -17,7 +17,7 @@
 Reading is public; writing requires a signed-in user (``session['user_id']``,
 the same check as ``listings_api.api_saved_cars``).
 
-CSRF is enforced *in this module* rather than through ``backend/main.py``'s
+CSRF is enforced *in this module* rather than through ``backend/web/security.py``'s
 ``_csrf_mutating_requests`` hook, which matches endpoints against a hardcoded
 list and does not cover DELETE at all. Clients must send ``X-CSRF-Token``
 (from ``GET /api/auth/csrf`` or the ``csrf_token`` template global) on every

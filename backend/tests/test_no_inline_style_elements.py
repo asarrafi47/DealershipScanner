@@ -1,6 +1,6 @@
 """Templates must not contain <style> elements.
 
-Production enforces CSP ``style-src-elem 'self'`` (backend/main.py,
+Production enforces CSP ``style-src-elem 'self'`` (backend/web/security.py,
 ``_csp_header_value_enforced``), which blocks every inline <style> element, so a
 page that keeps its CSS in one renders unstyled in prod while looking fine in dev.
 Page CSS belongs in frontend/static/css/ (admin and dealer-inventory pages use
@@ -13,7 +13,7 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
-from backend.main import _csp_header_value_enforced
+from backend.web.security import _csp_header_value_enforced
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 TEMPLATES = REPO_ROOT / "frontend" / "templates"

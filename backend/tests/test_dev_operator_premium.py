@@ -19,7 +19,7 @@ def test_dev_admin_grants_premium_access(monkeypatch):
         session["admin_username"] = "testdev"
         viewer = access.current_access()
         assert viewer.dev_operator is True
-        ok, err = main._require_feature("window_sticker")
+        ok, err = access.check_feature("window_sticker")
         assert ok is True
         assert err == ""
         assert viewer.sees_paid_ui() is True

@@ -2,7 +2,7 @@
 """Write precompressed ``.gz`` (and ``.br`` when the brotli module is importable)
 siblings next to every ``.js`` and ``.css`` file under ``frontend/static``.
 
-The Flask static view (``backend/main.py``, ``_static_view``) serves a sibling in
+The Flask static view (``backend/web/static.py``, ``_static_view``) serves a sibling in
 place of the source when the request's ``Accept-Encoding`` allows it AND the
 sibling is at least as new as its source, so a stale sibling is never served;
 it is simply ignored until this script runs again. Nothing else compresses

@@ -23,7 +23,7 @@ def _touch(path: Path, mtime: float) -> None:
 
 
 def test_version_changes_when_a_static_file_mtime_changes(tmp_path: Path):
-    from backend.main import compute_static_cache_ver
+    from backend.web.static import compute_static_cache_ver
 
     css = tmp_path / "css"
     css.mkdir()
@@ -53,14 +53,14 @@ def test_version_changes_when_a_static_file_mtime_changes(tmp_path: Path):
 
 
 def test_version_is_stable_when_nothing_changes(tmp_path: Path):
-    from backend.main import compute_static_cache_ver
+    from backend.web.static import compute_static_cache_ver
 
     (tmp_path / "x.js").write_text("x")
     assert compute_static_cache_ver(tmp_path) == compute_static_cache_ver(tmp_path)
 
 
 def test_empty_static_root_has_a_version(tmp_path: Path):
-    from backend.main import compute_static_cache_ver
+    from backend.web.static import compute_static_cache_ver
 
     assert compute_static_cache_ver(tmp_path) == "1"
 
