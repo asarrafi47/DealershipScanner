@@ -2,6 +2,23 @@
 
 ## [Unreleased]
 
+## [1.5.0] - 2026-10-04
+
+### Fixed
+- Live bugs B1-B12 from the 2026-10-01 monolith audit: admin inline styles blocked by CSP,
+  delta-scan scoping, raw vPIC "4x2" drivetrain, frozen market_price cache on Postgres,
+  tests writing to real local DBs, iOS listings without zip, dev tools calling scanner.js.
+- Migrations: V019 baselined; V020-V025 now apply (local).
+
+### Changed
+- One source of truth per duplicated rule (db/connect, billing/access, attribution/,
+  vehicle_facts/, llm/client, schema from migrations).
+- God functions split into named steps behind golden tests (no behavior change).
+- Hermetic test suite, single app factory, JS unit tests.
+
+### Removed
+- ~20,000 lines of proven-dead code.
+
 ## [1.4.4] - 2026-09-30
 
 ### Fixed
