@@ -69,7 +69,7 @@ def register_scan_lab_routes(dev_bp: Blueprint) -> None:
         car_raw = sl.get_scan_lab_car_by_id(car_id, include_inactive=False)
         if not car_raw or not sl.car_in_manifest_scope(car_raw):
             abort(404)
-        from backend.main import _build_car_detail_view_context
+        from backend.routes.cars_pages import _build_car_detail_view_context
 
         ctx = _build_car_detail_view_context(car_id, car_raw)
         ctx["logged_in"] = True

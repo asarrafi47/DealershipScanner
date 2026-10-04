@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from backend.routes.home_dashboard import _invalidate_reco_cache
+
 
 def record_view_and_saved_state(main, uid, car_id: int) -> bool:
     """Record a signed-in viewer's car view (best effort); return ``car_is_saved``."""
@@ -9,7 +11,7 @@ def record_view_and_saved_state(main, uid, car_id: int) -> bool:
     if uid:
         try:
             main.record_car_view(int(uid), car_id)
-            main._invalidate_reco_cache(int(uid))
+            _invalidate_reco_cache(int(uid))
         except Exception:
             pass
         try:

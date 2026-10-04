@@ -26,6 +26,7 @@ from backend.db.inventory_db import (
 from backend.listings.geo_session import apply_listings_geo_to_session
 from backend.listings.routes import listings_page
 from backend.billing import access as paid_access
+from backend.config import Config
 from backend.routes._shared import _client_ip, main_module
 from backend.utils.ip_rate_limit import allow_request
 from backend.utils.query_parser import parse_natural_query
@@ -511,7 +512,7 @@ def _highlight_params_from_filters(filters: dict) -> list[str]:
 def api_search_smart_parse():
     """Fast parse-only for listings instant preview (no DB search)."""
     ip = _client_ip()
-    if not allow_request(f"smart:{ip}", max_events=main_module()._SMART_SEARCH_RPM, window_seconds=60.0):
+    if not allow_request(f"smart:{ip}", max_events=Config.RATE_LIMIT_SMART_SEARCH_PER_MIN, window_seconds=60.0):
         return jsonify({"ok": False, "error": "rate_limited"}), 429
     q = (request.args.get("query") or request.args.get("q") or "").strip()[:_SMART_QUERY_MAX_LEN]
     filters = parse_natural_query(q)
@@ -528,10 +529,10 @@ def api_search_smart():
     """Listings search bar: local ``parse_natural_query`` + SQL/pgvector only (no Claude)."""
     main = main_module()
     ip = _client_ip()
-    if not allow_request(f"smart:{ip}", max_events=main._SMART_SEARCH_RPM, window_seconds=60.0):
+    if not allow_request(f"smart:{ip}", max_events=Config.RATE_LIMIT_SMART_SEARCH_PER_MIN, window_seconds=60.0):
         return jsonify({"ok": False, "error": "rate_limited"}), 429
 
-    if request.content_length is not None and request.content_length > main._CHAT_MAX_BODY:
+    if request.content_length is not None and request.content_length > Config.CHAT_MAX_BODY_BYTES:
         return jsonify({"ok": False, "error": "payload_too_large"}), 413
 
     data = request.get_json() or {}

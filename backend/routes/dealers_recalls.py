@@ -1,8 +1,7 @@
 """Dealer locator + NHTSA recall lookup routes (HTML page and JSON APIs).
 
-``_nhtsa_recalls_lookup_payload`` stays in ``backend.main`` (tests monkeypatch
-it there); views resolve it and the feature-gate helpers through the module
-object at request time. See ``backend.routes._shared``.
+The NHTSA lookup itself lives in ``backend.enrichment.recalls_lookup`` and is
+resolved through that module at call time (tests monkeypatch it there).
 """
 
 from __future__ import annotations
@@ -13,6 +12,8 @@ from flask import jsonify, render_template, request, session
 
 from backend.billing.catalog import FEATURE_NEARBY_DEALERS
 from backend.billing import access as paid_access
+from backend.config import Config
+from backend.enrichment import recalls_lookup
 from backend.routes._shared import _client_ip, main_module
 from backend.utils.ip_rate_limit import allow_request
 from backend.utils.runtime_env import is_production_env
@@ -68,7 +69,7 @@ def find_dealers_page():
 
 def api_nhtsa_recalls_lookup():
     """JSON NHTSA recall lookup for inline VDP (same inputs as /nhtsa-recalls)."""
-    payload, status = main_module()._nhtsa_recalls_lookup_payload(
+    payload, status = recalls_lookup.nhtsa_recalls_lookup_payload(
         vin_raw=(request.args.get("vin") or "").strip(),
         make=request.args.get("make"),
         model=request.args.get("model"),
@@ -81,7 +82,7 @@ def api_nhtsa_recalls_lookup():
 def nhtsa_recalls_lookup():
     """VIN recall lookup using NHTSA public API (auto-runs on page load)."""
     vin_raw = (request.args.get("vin") or "").strip()
-    payload, status = main_module()._nhtsa_recalls_lookup_payload(
+    payload, status = recalls_lookup.nhtsa_recalls_lookup_payload(
         vin_raw=vin_raw,
         make=request.args.get("make"),
         model=request.args.get("model"),
@@ -104,7 +105,7 @@ def api_dealer_locator():
     ip = _client_ip()
     if not allow_request(
         f"dealer-locator:{ip}",
-        max_events=main_module()._DEALER_LOCATOR_RPM,
+        max_events=Config.RATE_LIMIT_DEALER_LOCATOR_PER_MIN,
         window_seconds=60.0,
     ):
         return jsonify({"ok": False, "error": "rate_limited", "dealers": []}), 429

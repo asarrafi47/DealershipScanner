@@ -1,9 +1,8 @@
 """Fuel/TCO lookup API: cached EIA regional fuel + residential electricity rates.
 
 The live-gas-prices cache state (``_LIVE_GAS_PRICES_PATH``,
-``_live_gas_prices_cache``, ``_live_gas_prices_cache_mtime``) intentionally
-stays on ``backend.main`` — tests monkeypatch those attributes there and
-``importlib.reload(backend.main)`` resets them. See ``_shared`` docstring.
+``_live_gas_prices_cache``, ``_live_gas_prices_cache_mtime``) lives here, in the
+only module that reads and writes it; tests monkeypatch it on this module.
 """
 
 from __future__ import annotations
@@ -11,14 +10,20 @@ from __future__ import annotations
 import json
 import logging
 import re
+from pathlib import Path
 from typing import Any
 
 from flask import jsonify, request, session
 
 from backend.listings.geo_session import listings_geo_kwargs_from_session
-from backend.routes._shared import main_module
 
 _logger = logging.getLogger(__name__)
+
+_LIVE_GAS_PRICES_PATH = (
+    Path(__file__).resolve().parent.parent / "dictionary" / "derived" / "live_gas_prices.json"
+)
+_live_gas_prices_cache: dict[str, Any] | None = None
+_live_gas_prices_cache_mtime: float | None = None
 
 _FUEL_TIER_ALIASES: dict[str, str] = {
     "regular": "regular",
@@ -51,16 +56,16 @@ def _normalize_fuel_tier_param(raw: str | None) -> str:
 
 
 def _load_live_gas_prices_payload() -> dict[str, Any] | None:
-    main = main_module()
-    path = main._LIVE_GAS_PRICES_PATH
+    global _live_gas_prices_cache, _live_gas_prices_cache_mtime
+    path = _LIVE_GAS_PRICES_PATH
     if not path.is_file():
         return None
     try:
         mtime = path.stat().st_mtime
     except OSError:
         return None
-    if main._live_gas_prices_cache is not None and main._live_gas_prices_cache_mtime == mtime:
-        return main._live_gas_prices_cache
+    if _live_gas_prices_cache is not None and _live_gas_prices_cache_mtime == mtime:
+        return _live_gas_prices_cache
     try:
         with path.open(encoding="utf-8") as fh:
             payload = json.load(fh)
@@ -69,8 +74,8 @@ def _load_live_gas_prices_payload() -> dict[str, Any] | None:
         return None
     if not isinstance(payload, dict):
         return None
-    main._live_gas_prices_cache = payload
-    main._live_gas_prices_cache_mtime = mtime
+    _live_gas_prices_cache = payload
+    _live_gas_prices_cache_mtime = mtime
     return payload
 
 

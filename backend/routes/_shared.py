@@ -4,10 +4,13 @@ Route modules extracted from ``backend/main.py`` follow two rules so existing
 tests and reload semantics keep working:
 
 1. Any name that tests monkeypatch on ``backend.main`` (``get_car_by_id``,
-   ``_nhtsa_recalls_lookup_payload``, env-derived
-   rate-limit globals, ...) is resolved through the ``backend.main`` module
-   object at request time (``main_module().<name>``) instead of being imported
-   by value. Patching ``backend.main.X`` therefore still affects moved views.
+   ``prepare_car_detail_context``, ...) is resolved through the ``backend.main``
+   module object at request time (``main_module().<name>``) instead of being
+   imported by value. Patching ``backend.main.X`` therefore still affects moved
+   views. This indirection is being retired (monolith audit W1): state and
+   helpers that have an owning module (reco cache, gas-price cache, NHTSA
+   recall lookup, rate-limit/body-size limits read from ``Config``) are now
+   read from that module, and tests patch them there.
 2. ``importlib.reload(backend.main)`` re-executes main's import-time pipeline;
    attribute lookups on the module object always see the freshly computed
    values, so the moved views stay reload-safe.

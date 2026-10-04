@@ -298,12 +298,13 @@ def test_user_is_premium_is_set_once_and_never_flips(app_factory, persona, flag)
     main = app_factory(BILLING_STRIPE_ENABLED="1")
     from flask import session
 
+    from backend.auth.session import finalize_app_session
     from backend.billing import access
 
     with main.app.app_context():
         ids = _seed()
     with main.app.test_request_context("/"):
-        assert main._finalize_app_session(ids[persona])
+        assert finalize_app_session(ids[persona])
         after_login = dict(session)
         assert after_login["user_is_premium"] is flag
     with main.app.test_request_context("/"):

@@ -18,7 +18,7 @@ def test_api_car_nhtsa_recalls_ok(monkeypatch) -> None:
     car = _sample_car(42)
     monkeypatch.setattr("backend.main.get_car_by_id", lambda cid, **kw: car if cid == 42 else None)
     monkeypatch.setattr(
-        "backend.main._nhtsa_recalls_lookup_payload",
+        "backend.enrichment.recalls_lookup.nhtsa_recalls_lookup_payload",
         lambda **_kw: (
             {
                 "ok": True,
@@ -40,7 +40,7 @@ def test_api_car_nhtsa_recalls_ok(monkeypatch) -> None:
 
 def test_api_nhtsa_recalls_query_ok(monkeypatch) -> None:
     monkeypatch.setattr(
-        "backend.main._nhtsa_recalls_lookup_payload",
+        "backend.enrichment.recalls_lookup.nhtsa_recalls_lookup_payload",
         lambda **_kw: (
             {
                 "ok": True,

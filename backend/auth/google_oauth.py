@@ -186,7 +186,8 @@ def _should_offer_premium_after_google_login(*, is_new_user: bool) -> bool:
 
 
 def _complete_login(user_id: int, *, is_new_user: bool = False):
-    from backend.main import _finalize_app_session, _post_login_redirect
+    from backend.auth.session import finalize_app_session as _finalize_app_session
+    from backend.auth.session import post_login_redirect as _post_login_redirect
     from backend.utils.roles import is_admin_role
 
     oauth_post_intent = (session.pop("google_oauth_post_intent", None) or "").strip().lower()

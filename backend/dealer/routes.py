@@ -93,7 +93,7 @@ def dealer_login():
             u = get_user_by_login(login_input)
             if not u:
                 return render_template("dealer_login.html", error="Invalid username or password.")
-            from backend.main import _finalize_app_session, _post_login_redirect  # noqa: PLC0415
+            from backend.auth.session import finalize_app_session as _finalize_app_session, post_login_redirect as _post_login_redirect  # noqa: PLC0415
             session.clear()
             if not _finalize_app_session(int(u["id"])):
                 return render_template("dealer_login.html", error="Login failed. Try again.")
@@ -141,7 +141,7 @@ def dealer_register():
             uid = save_user(username, email, password, role=role, org_id=org_id)
         except sqlite3.IntegrityError:
             return render_template("dealer_register.html", error="That username or email is already registered.")
-        from backend.main import _finalize_app_session, _post_login_redirect  # noqa: PLC0415
+        from backend.auth.session import finalize_app_session as _finalize_app_session, post_login_redirect as _post_login_redirect  # noqa: PLC0415
         session.clear()
         if not _finalize_app_session(int(uid)):
             return render_template("dealer_register.html", error="Registration failed. Try again.")

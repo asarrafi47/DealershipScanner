@@ -23,7 +23,6 @@ import sqlite3
 import time
 from datetime import timedelta
 from pathlib import Path
-from typing import Any
 
 from flask import Flask, abort, g, jsonify, make_response, redirect, render_template, request, send_from_directory, session, url_for
 from werkzeug.exceptions import HTTPException
@@ -47,7 +46,6 @@ from backend.billing.catalog import (
     minimum_plan_for_feature,
 )
 from backend.billing import access as paid_access
-from backend.billing.entitlements import entitlements_from_session
 from backend.dealer.admin import store_admin_bp
 
 # Site-admin hub pages (must load before first url_for in templates).
@@ -138,47 +136,15 @@ _MIN_PASSWORD_LEN = Config.MIN_PASSWORD_LENGTH
 _logger = logging.getLogger(__name__)
 
 
-_CHAT_MAX_MESSAGE = Config.CHAT_MAX_MESSAGE_CHARS
-_CHAT_MAX_BODY = Config.CHAT_MAX_BODY_BYTES
-# Cap JSON POST bodies (smart search, chat) and allow dealer multipart uploads (8 MiB+).
-_MAX_REQUEST_BODY = Config.MAX_REQUEST_BODY_BYTES
-_SMART_SEARCH_RPM = Config.RATE_LIMIT_SMART_SEARCH_PER_MIN
-_LOGIN_RPM = Config.RATE_LIMIT_LOGIN_PER_MIN
-_REGISTER_RPM = Config.RATE_LIMIT_REGISTER_PER_MIN
-_DEALER_LOCATOR_RPM = Config.RATE_LIMIT_DEALER_LOCATOR_PER_MIN
-_NHTSA_RECALLS_RPM = Config.RATE_LIMIT_NHTSA_RECALLS_PER_MIN
-
-
 # Backward-compatible re-import: shared with the extracted route modules.
 from backend.routes._shared import _client_ip  # noqa: E402
-
-
-def _session_belongs_to_paid_org() -> bool:
-    """Stripe subscription (when enabled) applies only to users tied to a dealership org."""
-    if not session.get("user_id"):
-        return False
-    oid = session.get("org_id")
-    if oid is None:
-        return False
-    try:
-        return int(oid) > 0
-    except (TypeError, ValueError):
-        return False
-
-
-def _post_login_redirect():
-    post_intent = session.pop("post_auth_intent", None)
-    if (
-        _billing_enabled()
-        and (not paid_access.is_site_admin())
-        and _session_belongs_to_paid_org()
-        and (not _require_paid_org_session())
-    ):
-        return redirect(url_for("billing.billing_required"))
-    if post_intent == "premium":
-        return redirect(url_for("premium_page"))
-    return redirect(url_for("app_home"))
-
+from backend.auth.session import (  # noqa: E402
+    billing_enabled as _billing_enabled,
+    finalize_app_session as _finalize_app_session,
+    post_login_redirect as _post_login_redirect,
+    require_paid_org_session as _require_paid_org_session,
+    session_belongs_to_paid_org as _session_belongs_to_paid_org,
+)
 
 app = Flask(
     __name__,
@@ -197,7 +163,8 @@ else:
     import secrets as _secrets_mod
     app.secret_key = _raw_secret or _secrets_mod.token_hex(32)
 
-app.config["MAX_CONTENT_LENGTH"] = _MAX_REQUEST_BODY
+# Cap JSON POST bodies (smart search, chat) and allow dealer multipart uploads (8 MiB+).
+app.config["MAX_CONTENT_LENGTH"] = Config.MAX_REQUEST_BODY_BYTES
 
 if trust_proxy_headers():
     # Railway's edge terminates TLS and sets X-Forwarded-Proto; without this the app
@@ -436,34 +403,6 @@ _dealer_reviews_routes.register(app)
 _fuel_api_routes.register(app)
 _admin_dealer_api_routes.register(app)
 
-# Backward-compatible re-exports: these names historically lived here and are
-# still imported from backend.main (e.g. backend/dev/scan_lab_routes.py) or
-# resolved through this module by the extracted route modules.
-from backend.routes.cars_pages import (  # noqa: E402
-    _build_car_detail_view_context,
-    _car_window_sticker_preview_url,
-    _serve_car_window_sticker_preview,
-)
-from backend.routes.fuel_api import (  # noqa: E402
-    _fuel_market_payload,
-    _load_live_gas_prices_payload,
-    _normalize_fuel_tier_param,
-    _resolve_fuel_lookup_state,
-    _resolve_live_electricity_lookup,
-    _resolve_live_gas_lookup,
-)
-from backend.routes.home_dashboard import (  # noqa: E402
-    _inventory_count_display,
-    _invalidate_reco_cache,
-    _recommendations_for_user,
-    _render_personal_home,
-)
-from backend.routes.listings_api import (  # noqa: E402
-    _highlight_params_from_filters,
-    _listings_client_poll_ms,
-)
-
-
 @app.after_request
 def _gzip_large_json(resp):
     """Shrink large listings payloads over the wire (browser must send Accept-Encoding: gzip).
@@ -540,26 +479,6 @@ def _password_reset_enabled() -> bool:
     from backend.auth.password_reset import password_reset_enabled
 
     return password_reset_enabled()
-
-
-def _billing_enabled() -> bool:
-    return Config.billing_stripe_enabled()
-
-
-def _org_subscription_active(status: str | None) -> bool:
-    s = (status or "").strip().lower()
-    return s in ("active", "trialing")
-
-
-def _require_paid_org_session() -> bool:
-    if not _billing_enabled():
-        return True
-    if not session.get("user_id"):
-        return True
-    if paid_access.is_site_admin():
-        return True
-    st = session.get("org_subscription_status")
-    return bool(_org_subscription_active(st))
 
 
 @app.before_request
@@ -780,7 +699,7 @@ def login_page():
             return render_template("login.html", error=oauth_err)
     if request.method == "POST":
         ip = _client_ip()
-        if not allow_request(f"login:{ip}", max_events=_LOGIN_RPM, window_seconds=60.0):
+        if not allow_request(f"login:{ip}", max_events=Config.RATE_LIMIT_LOGIN_PER_MIN, window_seconds=60.0):
             return render_template("login.html", error="Too many login attempts. Try again in a minute."), 429
         login_input = (request.form.get("login") or "").strip()
         attempts = submitted_password_attempts(request.form.get("password"))
@@ -801,7 +720,7 @@ def login_page():
 def register_page():
     if request.method == "POST":
         ip = _client_ip()
-        if not allow_request(f"register:{ip}", max_events=_REGISTER_RPM, window_seconds=60.0):
+        if not allow_request(f"register:{ip}", max_events=Config.RATE_LIMIT_REGISTER_PER_MIN, window_seconds=60.0):
             return render_template("register.html", error="Too many registration attempts. Try again later."), 429
         from backend.auth.app_registration import register_general_app_user
 
@@ -1159,7 +1078,7 @@ def api_auth_me():
 @app.route("/api/auth/login", methods=["POST"])
 def api_auth_login():
     ip = _client_ip()
-    if not allow_request(f"login:{ip}", max_events=_LOGIN_RPM, window_seconds=60.0):
+    if not allow_request(f"login:{ip}", max_events=Config.RATE_LIMIT_LOGIN_PER_MIN, window_seconds=60.0):
         return jsonify({"ok": False, "error": "rate_limited"}), 429
     data = request.get_json(silent=True) or {}
     login_input = (data.get("login") or "").strip()
@@ -1180,7 +1099,7 @@ def api_auth_login():
 def api_auth_register():
     """Create app user in ``users.db`` (same as HTML ``/register``) for native clients."""
     ip = _client_ip()
-    if not allow_request(f"register:{ip}", max_events=_REGISTER_RPM, window_seconds=60.0):
+    if not allow_request(f"register:{ip}", max_events=Config.RATE_LIMIT_REGISTER_PER_MIN, window_seconds=60.0):
         return jsonify({"ok": False, "error": "rate_limited"}), 429
 
     data = request.get_json(silent=True) or {}
@@ -1265,138 +1184,3 @@ def mfa_qr_complete_gone():
 @app.route("/mfa/qr-confirm/<path:token>", methods=["GET", "POST"])
 def mfa_qr_confirm_gone(token):
     return _app_mfa_gone()
-
-
-def _finalize_app_session(user_id: int) -> bool:
-    from backend.db.users_db import get_org
-
-    try:
-        uid = int(user_id)
-    except (TypeError, ValueError):
-        return False
-    u = get_user_profile(uid)
-    if not u:
-        return False
-    from backend.db.users_db import _user_row_is_active
-
-    if not _user_row_is_active(u):
-        return False
-    session.permanent = True
-    session["user_id"] = int(u["id"])
-    session["username"] = u["username"]
-    session["user_email"] = (u.get("email") or "").strip()
-    session["user_role"] = normalize_role(u.get("role"))
-    session["user_dealer_id"] = (u.get("dealer_id") or "").strip()
-    rid = u.get("dealership_registry_id")
-    session["user_dealership_registry_id"] = str(int(rid)) if rid is not None else ""
-    session["org_id"] = int(u.get("org_id") or 0) if u.get("org_id") else 0
-    session["user_is_premium"] = bool(u.get("is_premium"))
-    session["subscription_plan_id"] = (u.get("subscription_plan_id") or "").strip() or None
-    session["entitlements"] = sorted(entitlements_from_session(session))
-    # entitlements_from_session self-heals user_is_premium to the raw DB column;
-    # store the AccessContext rule instead so the flag does not flip on the next
-    # request (access.build_access_context heals with the same rule).
-    from backend.billing.access import session_premium_flag
-
-    session["user_is_premium"] = session_premium_flag(
-        u.get("is_premium"), session.get("subscription_plan_id")
-    )
-    for _stale in (
-        "mfa_pending_user_id",
-        "mfa_pending_login",
-        "mfa_pending_method",
-        "mfa_qr_attempt_id",
-        "mfa_test_last_code",
-        "mfa_next",
-    ):
-        session.pop(_stale, None)
-    session["mfa_ok"] = True
-    session["org_subscription_status"] = None
-    if session.get("org_id"):
-        try:
-            org = get_org(int(session["org_id"]))
-            if org:
-                session["org_subscription_status"] = (
-                    (org.get("stripe_subscription_status") or "").strip().lower() or None
-                )
-        except Exception:
-            session["org_subscription_status"] = None
-    return True
-
-
-# Recommendation scoring walks recent views/compares against live inventory
-# (~1s+); Home and Dashboard both need it on every visit, so cache per
-# (user, geo) briefly and invalidate on new view/compare signals.
-_RECO_CACHE_TTL_S = 120.0
-_reco_cache: dict[tuple, tuple[float, list, dict]] = {}
-
-
-_LIVE_GAS_PRICES_PATH = (
-    Path(__file__).resolve().parent / "dictionary" / "derived" / "live_gas_prices.json"
-)
-_live_gas_prices_cache: dict[str, Any] | None = None
-_live_gas_prices_cache_mtime: float | None = None
-
-
-def _nhtsa_recalls_lookup_payload(
-    *,
-    vin_raw: str,
-    make: str | None = None,
-    model: str | None = None,
-    year: str | None = None,
-    rate_key: str,
-) -> tuple[dict, int]:
-    """Shared NHTSA recall lookup for HTML page and JSON API."""
-    from backend.enrichment.vehicle_history_intelligence import fetch_nhtsa_recalls
-    from backend.utils.hybrid_search import _normalize_listings_vin_query
-
-    if not allow_request(
-        rate_key,
-        max_events=_NHTSA_RECALLS_RPM,
-        window_seconds=60.0,
-    ):
-        return {"ok": False, "error": "rate_limited", "recalls": []}, 429
-
-    vin_norm = _normalize_listings_vin_query(vin_raw) if vin_raw else None
-    ymm_make = (make or "").strip() or None
-    ymm_model = (model or "").strip() or None
-    ymm_year = (year or "").strip() or None
-    vehicle_label = (
-        f"{ymm_year} {ymm_make} {ymm_model}".strip()
-        if ymm_make and ymm_model and ymm_year
-        else None
-    )
-
-    if vin_raw and not vin_norm:
-        return {
-            "ok": False,
-            "error": "invalid_vin",
-            "vin": None,
-            "vin_raw": vin_raw,
-            "recalls": [],
-            "vehicle_label": vehicle_label,
-        }, 400
-    if not vin_norm:
-        return {
-            "ok": False,
-            "error": "missing_vin",
-            "recalls": [],
-            "vehicle_label": vehicle_label,
-        }, 400
-
-    recalls, api_err = fetch_nhtsa_recalls(
-        vin_norm,
-        make=ymm_make,
-        model=ymm_model,
-        year=ymm_year,
-    )
-    payload: dict = {
-        "ok": api_err is None,
-        "vin": vin_norm,
-        "recalls": recalls,
-        "vehicle_label": vehicle_label,
-        "error": api_err,
-    }
-    if api_err:
-        return payload, 502
-    return payload, 200

@@ -36,13 +36,14 @@ def test_login_post_bad_csrf_redirects_not_authenticates() -> None:
 
 def test_smart_search_payload_too_large() -> None:
     from backend import main
+    from backend.config import Config
     from backend.utils.csrf import _SESSION_KEY
 
     tok = "z" * 32
     with main.app.test_client() as c:
         with c.session_transaction() as sess:
             sess[_SESSION_KEY] = tok
-        big = "x" * (main._CHAT_MAX_BODY + 8)
+        big = "x" * (Config.CHAT_MAX_BODY_BYTES + 8)
         rv = c.post(
             "/api/search/smart",
             json={"q": big},

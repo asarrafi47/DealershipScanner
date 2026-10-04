@@ -155,14 +155,16 @@ def golden_app(app_factory, monkeypatch):
 
 def _render(main, monkeypatch, car_ids: list[int]) -> dict:
     captured: dict = {}
-    real = main._build_car_detail_view_context
+    from backend.routes import cars_pages
+
+    real = cars_pages._build_car_detail_view_context
 
     def recording(car_id, car_raw):
         ctx = real(car_id, car_raw)
         captured["ctx"] = dict(ctx)
         return ctx
 
-    monkeypatch.setattr(main, "_build_car_detail_view_context", recording)
+    monkeypatch.setattr(cars_pages, "_build_car_detail_view_context", recording)
     out: dict = {}
     for persona in PERSONAS:
         with main.app.test_client() as client:

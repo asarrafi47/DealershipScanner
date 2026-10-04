@@ -1,10 +1,9 @@
 """Landing page, signed-in Home feed, Dashboard, and recommendation helpers.
 
-The recommendation cache dict (``_reco_cache``/``_RECO_CACHE_TTL_S``) stays on
-``backend.main`` so ``importlib.reload(backend.main)`` resets it exactly as
-before the extraction; helpers here access it through the module object.
-Inventory/user-history accessors are resolved the same way because tests
-monkeypatch them on ``backend.main`` (see ``backend.routes._shared``).
+The recommendation cache (``_reco_cache``/``_RECO_CACHE_TTL_S``) lives here, in
+its only reader/writer. Inventory/user-history accessors are still resolved
+through ``backend.main`` because tests monkeypatch them there (see
+``backend.routes._shared``).
 """
 
 from __future__ import annotations
@@ -14,6 +13,12 @@ import time
 from flask import redirect, render_template, session, url_for
 
 from backend.routes._shared import main_module
+
+# Recommendation scoring walks recent views/compares against live inventory
+# (~1s+); Home and Dashboard both need it on every visit, so cache per
+# (user, geo) briefly and invalidate on new view/compare signals.
+_RECO_CACHE_TTL_S = 120.0
+_reco_cache: dict[tuple, tuple[float, list, dict]] = {}
 
 
 def _inventory_count_display() -> str:
@@ -100,7 +105,7 @@ def _make_model_pairs_from_cars(cars: list[dict]) -> list[tuple[str, str]]:
 
 
 def _invalidate_reco_cache(user_id: int) -> None:
-    cache = main_module()._reco_cache
+    cache = _reco_cache
     for key in [k for k in cache if k[0] == int(user_id)]:
         cache.pop(key, None)
 
@@ -124,14 +129,14 @@ def _recommendations_for_user(
         geo_kw = {**geo_kw, "exclude_dealer_ids": tuple(sorted(hidden))}
     key = (int(user_id), int(limit), tuple(sorted((k, str(v)) for k, v in geo_kw.items())))
     now = time.monotonic()
-    hit = main._reco_cache.get(key)
+    hit = _reco_cache.get(key)
     if hit is not None and hit[0] > now:
         rows, heading = hit[1], hit[2]
         return (list(rows) if serialize else len(rows)), dict(heading)
     rows, heading = _recommendations_for_user_uncached(user_id, limit, serialize=True, **geo_kw)
-    if len(main._reco_cache) >= 500:
-        main._reco_cache.clear()
-    main._reco_cache[key] = (now + main._RECO_CACHE_TTL_S, rows, heading)
+    if len(_reco_cache) >= 500:
+        _reco_cache.clear()
+    _reco_cache[key] = (now + _RECO_CACHE_TTL_S, rows, heading)
     return (list(rows) if serialize else len(rows)), dict(heading)
 
 

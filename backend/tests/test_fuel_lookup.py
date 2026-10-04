@@ -8,6 +8,7 @@ from pathlib import Path
 import pytest
 
 import backend.main as main_mod
+from backend.routes import fuel_api
 
 
 @pytest.fixture()
@@ -37,14 +38,14 @@ def live_gas_prices_file(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Pat
     }
     path = tmp_path / "live_gas_prices.json"
     path.write_text(json.dumps(payload), encoding="utf-8")
-    monkeypatch.setattr(main_mod, "_LIVE_GAS_PRICES_PATH", path)
-    monkeypatch.setattr(main_mod, "_live_gas_prices_cache", None)
-    monkeypatch.setattr(main_mod, "_live_gas_prices_cache_mtime", None)
+    monkeypatch.setattr(fuel_api, "_LIVE_GAS_PRICES_PATH", path)
+    monkeypatch.setattr(fuel_api, "_live_gas_prices_cache", None)
+    monkeypatch.setattr(fuel_api, "_live_gas_prices_cache_mtime", None)
     return path
 
 
 def test_resolve_live_gas_lookup_state_tier(live_gas_prices_file: Path) -> None:
-    resolved = main_mod._resolve_live_gas_lookup("CA", "premium")
+    resolved = fuel_api._resolve_live_gas_lookup("CA", "premium")
     assert resolved is not None
     rate, region = resolved
     assert rate == 6.26
@@ -52,7 +53,7 @@ def test_resolve_live_gas_lookup_state_tier(live_gas_prices_file: Path) -> None:
 
 
 def test_resolve_live_gas_lookup_falls_back_to_national(live_gas_prices_file: Path) -> None:
-    resolved = main_mod._resolve_live_gas_lookup("TX", "regular")
+    resolved = fuel_api._resolve_live_gas_lookup("TX", "regular")
     assert resolved is not None
     rate, region = resolved
     assert rate == 3.24
@@ -60,7 +61,7 @@ def test_resolve_live_gas_lookup_falls_back_to_national(live_gas_prices_file: Pa
 
 
 def test_resolve_live_electricity_lookup_state(live_gas_prices_file: Path) -> None:
-    rate, region = main_mod._resolve_live_electricity_lookup("NC")
+    rate, region = fuel_api._resolve_live_electricity_lookup("NC")
     assert rate == 0.16
     assert region == "North Carolina"
 
@@ -97,9 +98,9 @@ def test_api_fuel_lookup_zip_code(live_gas_prices_file: Path, monkeypatch: pytes
 
 def test_api_fuel_lookup_missing_file_uses_fallback(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
     missing = tmp_path / "missing.json"
-    monkeypatch.setattr(main_mod, "_LIVE_GAS_PRICES_PATH", missing)
-    monkeypatch.setattr(main_mod, "_live_gas_prices_cache", None)
-    monkeypatch.setattr(main_mod, "_live_gas_prices_cache_mtime", None)
+    monkeypatch.setattr(fuel_api, "_LIVE_GAS_PRICES_PATH", missing)
+    monkeypatch.setattr(fuel_api, "_live_gas_prices_cache", None)
+    monkeypatch.setattr(fuel_api, "_live_gas_prices_cache_mtime", None)
     client = main_mod.app.test_client()
     resp = client.get("/api/fuel/lookup?state=NC&fuel_tier=regular")
     assert resp.status_code == 200

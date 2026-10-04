@@ -4,8 +4,8 @@ This is the most monkeypatched cluster in the test suite: ``get_car_by_id``,
 ``prepare_car_detail_context``, ``listings_geo_kwargs_from_session``,
 ``run_car_page_chat`` and friends are all patched on ``backend.main``.  Every
 main-owned helper is therefore resolved through the module object at request
-time (see ``backend.routes._shared``).  ``backend.main`` re-exports
-``_build_car_detail_view_context`` for ``backend.dev.scan_lab_routes``.
+time (see ``backend.routes._shared``).  ``_build_car_detail_view_context`` is
+also used by ``backend.dev.scan_lab_routes`` (imported from here).
 """
 
 from __future__ import annotations
@@ -24,7 +24,10 @@ from backend.billing.catalog import (
     FEATURE_WINDOW_STICKER,
 )
 from backend.billing import access as paid_access
+from backend.config import Config
+from backend.enrichment import recalls_lookup
 from backend.routes._shared import _client_ip, main_module
+from backend.routes.home_dashboard import _invalidate_reco_cache
 from backend.utils.car_chat_policy import (
     car_chat_listing_daily_limit,
     car_chat_rate_limits,
@@ -140,7 +143,7 @@ def compare_page():
     if ids and session.get("user_id"):
         try:
             main.record_compare_session(int(session["user_id"]), ids)
-            main._invalidate_reco_cache(int(session["user_id"]))
+            _invalidate_reco_cache(int(session["user_id"]))
         except (TypeError, ValueError):
             pass
     raw_cars = main.get_cars_by_ids(ids)
@@ -215,7 +218,7 @@ def car_detail(car_id):
     if not car_raw:
         abort(404)
     embed = request.args.get("embed") in ("1", "true", "yes")
-    ctx = main._build_car_detail_view_context(car_id, car_raw)
+    ctx = _build_car_detail_view_context(car_id, car_raw)
     ctx["car_embed"] = embed
     resp = make_response(render_template("car.html", **ctx))
     resp.headers["Cache-Control"] = "private, max-age=180"
@@ -227,7 +230,7 @@ def api_car_detail(car_id):
     car_raw = main.get_car_by_id(car_id, include_inactive=False)
     if not car_raw:
         return jsonify({"ok": False, "error": "not_found"}), 404
-    return jsonify({"ok": True, **main._build_car_detail_view_context(car_id, car_raw)})
+    return jsonify({"ok": True, **_build_car_detail_view_context(car_id, car_raw)})
 
 
 def api_car_window_sticker(car_id: int):
@@ -289,7 +292,7 @@ def api_car_nhtsa_recalls(car_id: int):
     car = main.get_car_by_id(car_id, include_inactive=False)
     if not car:
         return jsonify({"ok": False, "error": "not_found"}), 404
-    payload, status = main._nhtsa_recalls_lookup_payload(
+    payload, status = recalls_lookup.nhtsa_recalls_lookup_payload(
         vin_raw=str(car.get("vin") or "").strip(),
         make=str(car.get("make") or "").strip() or None,
         model=str(car.get("model") or "").strip() or None,
@@ -629,7 +632,7 @@ def api_car_chat(car_id: int):
         ):
             return jsonify({"ok": False, "error": "listing_chat_limit_reached"}), 429
 
-    if request.content_length is not None and request.content_length > main._CHAT_MAX_BODY:
+    if request.content_length is not None and request.content_length > Config.CHAT_MAX_BODY_BYTES:
         return jsonify({"ok": False, "error": "payload_too_large"}), 413
 
     car_raw = main.get_car_by_id(car_id, include_inactive=False)
@@ -671,7 +674,7 @@ def api_car_chat(car_id: int):
     message = (body.get("message") or body.get("q") or "").strip()
     if not message:
         return jsonify({"ok": False, "error": "message_required"}), 400
-    if len(message) > main._CHAT_MAX_MESSAGE:
+    if len(message) > Config.CHAT_MAX_MESSAGE_CHARS:
         return jsonify({"ok": False, "error": "message_too_long"}), 400
 
     allow_playwright = web_research_playwright_allowed(session.get("user_id"))
@@ -726,7 +729,7 @@ def api_compare_chat():
         ):
             return jsonify({"ok": False, "error": "user_chat_limit_reached"}), 429
 
-    if request.content_length is not None and request.content_length > main._CHAT_MAX_BODY:
+    if request.content_length is not None and request.content_length > Config.CHAT_MAX_BODY_BYTES:
         return jsonify({"ok": False, "error": "payload_too_large"}), 413
 
     body = request.get_json(silent=True) or {}
@@ -749,7 +752,7 @@ def api_compare_chat():
     message = (body.get("message") or body.get("q") or "").strip()
     if not message:
         return jsonify({"ok": False, "error": "message_required"}), 400
-    if len(message) > main._CHAT_MAX_MESSAGE:
+    if len(message) > Config.CHAT_MAX_MESSAGE_CHARS:
         return jsonify({"ok": False, "error": "message_too_long"}), 400
 
     raw_cars = main.get_cars_by_ids(id_list)
