@@ -1,6 +1,8 @@
 # Owner decisions from the 2026-10-05 audit follow-ups
 
-These came out of workflow wf_c6536bac-5aa. Every step was a no-behavior-change refactor, so each item is current behavior the agents flagged and deliberately did NOT change. Nothing here is fixed yet.
+These came out of workflow wf_c6536bac-5aa. Every step was a no-behavior-change refactor, so each item is current behavior the agents flagged and deliberately did NOT change. Resolved items are marked below; the rest are open.
+
+**Resolved 2026-10-05 (owner approved):** replay now uses SCANNER_HTTP_PROXY when set (no proxy is configured on any Railway service or locally, so no effect until one is); VDP prefetch rejects 200 challenge pages as 403 + `Challenge` error (19 of 74 saved dealer pages in workspace/data_quality, including 2 VDP fetches, were such interstitials, 0 false positives); the SSRF guard blocks unresolvable hostnames.
 
 ## 1. Which rule decides that a recipe works
 
@@ -22,9 +24,9 @@ Commit: `5986b498b`.
 
 Recommendation, in order of payoff: (a) send replay through `scanner_proxies()` so SCANNER_HTTP_PROXY covers the main feed path (the 09-29 Railway 403s); (b) add challenge detection to VDP prefetch so a Cloudflare page is never parsed as a vehicle; (c) one fingerprint-block status set and one profile rotation for every curl_cffi path. Each is now an option change at its call site into `backend/scanner/net/client.py`, and `test_scanner_http_characterization.py` pins today's behavior, so a change shows up as an intended test edit.
 
-- backend/scanner/recipes.py:731-744 and :786 — Recipe replay (the main scan path) passes no proxies= to curl_cffi or requests, so SCANNER_HTTP_PROXY is never used. Only HTTPS_PROXY/HTTP_PROXY can apply, through libcurl's and requests' own environment lookup. Every other curl_cffi fetcher passes scanner_proxies(). Should replay use the scanner proxy?
+- RESOLVED: backend/scanner/recipes.py:731-744 and :786 — Recipe replay (the main scan path) passes no proxies= to curl_cffi or requests, so SCANNER_HTTP_PROXY is never used. Only HTTPS_PROXY/HTTP_PROXY can apply, through libcurl's and requests' own environment lookup. Every other curl_cffi fetcher passes scanner_proxies(). Should replay use the scanner proxy?
 - backend/scanner/chain.py:272-280 — RequestsFetcher passes no proxies=, so it also ignores SCANNER_HTTP_PROXY (requests still honors the standard proxy variables through trust_env). ImpersonatingFetcher in the same file does pass the proxy.
-- backend/scanner/vdp/prefetch.py:363 — VDP prefetch does no challenge detection: a 200 HTML Cloudflare 'Just a moment' page is returned as the VDP and parsed. synth/http rejects such pages (looks_like_challenge plus a 2000-byte minimum).
+- RESOLVED: backend/scanner/vdp/prefetch.py:363 — VDP prefetch does no challenge detection: a 200 HTML Cloudflare 'Just a moment' page is returned as the VDP and parsed. synth/http rejects such pages (looks_like_challenge plus a 2000-byte minimum).
 - backend/scanner/vdp/prefetch.py:365 vs backend/scanner/recipes.py:711 — the fingerprint-block status sets differ. Prefetch treats {403, 429, 503} as a block and skips the requests fallback; replay and synth escalate on {403, 405, 429}. A 405 in prefetch falls back to plain requests, and a 503 in replay does not escalate to impersonation.
 - backend/scanner/vdp/prefetch.py:360 and backend/scanner/vdp/vdp_recipes.py:266 — Prefetch and VDP JSON use the single profile 'chrome' with no rotation. Chain, synth and replay rotate chrome, chrome124 and safari17_0 (29 of 30 cleared, versus about half for chrome alone).
 - backend/scanner/vdp/vdp_recipes.py:278-281 — _fetch_json never falls back to plain requests on a curl_cffi error (it returns (0, None)); it falls back only when curl_cffi is not installed. Prefetch does fall back on errors.
@@ -51,5 +53,5 @@ Commit: `39d7241db`.
 
 Recommendation: block unresolvable hostnames in the SSRF guard (fail closed).
 
-- backend/utils/outbound_url.py:45 - destination_host_blocked_after_dns allows hostnames that cannot be resolved (it returns False when the lookup fails). The guard is there to stop requests to private addresses, but this lets through a name that fails to resolve at check time and resolves privately later (DNS rebinding). Should unresolvable names be blocked? The new test in test_outbound_url.py pins the current allow behavior.
+- RESOLVED: backend/utils/outbound_url.py:45 - destination_host_blocked_after_dns allows hostnames that cannot be resolved (it returns False when the lookup fails). The guard is there to stop requests to private addresses, but this lets through a name that fails to resolve at check time and resolves privately later (DNS rebinding). Should unresolvable names be blocked? The new test in test_outbound_url.py pins the current allow behavior.
 - backend/enrichment/nhtsa_vpic.py:342 - the vPIC HTTP getter is a closure inside fetch_decode_vin_values_extended, so a test can only stub it by swapping the `urllib` name inside the module. Moving it to a module-level function would make it easier to stub. That is a small production refactor, so I did not do it in this tests-only step.

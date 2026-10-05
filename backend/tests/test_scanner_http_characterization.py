@@ -447,12 +447,17 @@ def test_replay_get_200_json(wire):
                             "kwargs": {"headers": _replay_headers(auth={"X-Key": "k"}), "timeout": 20.0}}]
 
 
-def test_replay_403_clears_via_impersonation_without_proxy(proxied):
+def test_replay_403_clears_via_impersonation_through_proxy(proxied):
+    # Replay routes through SCANNER_HTTP_PROXY on both clients (owner decision 2026-10-05;
+    # it used to ignore the scanner proxy).
     proxied.queue("requests", FakeResp(403))
     proxied.queue("curl_cffi", FakeResp(403), FakeResp(200, JSON_BODY))
     assert rec._replay_request(_recipe(), None, BASE, url=API + "?page=2") == (200, {"inventory": [{"vin": "1"}]})
+    p = {"http": PROXY, "https": PROXY}
+    assert proxied.calls("requests")[0]["kwargs"]["proxies"] == p
     assert proxied.calls("curl_cffi") == [
-        _cffi_get(API + "?page=2", p, headers=_replay_headers(), timeout=20.0) for p in ("chrome", "chrome124")
+        _cffi_get(API + "?page=2", prof, headers=_replay_headers(), timeout=20.0, proxies=p)
+        for prof in ("chrome", "chrome124")
     ]
 
 
@@ -566,9 +571,21 @@ def test_prefetch_200_html(wire):
     assert pf._LAST_STATUS[VDP] == 200
 
 
-def test_prefetch_returns_challenge_page_as_html(wire):
+def test_prefetch_rejects_challenge_page_as_403(wire):
+    # A 200 interstitial is not a VDP: None, recorded as 403 (host cool-down) plus a
+    # Challenge error, and no plain-requests fallback (owner decision 2026-10-05).
     wire.queue("curl_cffi", FakeResp(200, CHALLENGE))
-    assert pf._fetch_html(VDP) == CHALLENGE
+    assert pf._fetch_html(VDP) is None
+    assert wire.events == [_pf_cffi()]
+    assert pf._LAST_STATUS[VDP] == 403
+    assert pf._LAST_ERROR[VDP].startswith("Challenge:")
+
+
+def test_prefetch_rejects_challenge_page_on_requests_fallback(wire):
+    wire.queue("curl_cffi", FakeResp(404))
+    wire.queue("requests", FakeResp(200, CHALLENGE))
+    assert pf._fetch_html(VDP) is None
+    assert pf._LAST_STATUS[VDP] == 403
 
 
 @pytest.mark.parametrize("status", [403, 429, 503])

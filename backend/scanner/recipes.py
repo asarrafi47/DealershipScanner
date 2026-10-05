@@ -711,6 +711,14 @@ def _url_for_page(recipe: EndpointRecipe, page_index: int) -> str:
 _TLS_FINGERPRINT_STATUSES = net_client.TLS_FINGERPRINT_STATUSES
 
 
+def _replay_proxy_kwargs() -> dict[str, Any]:
+    """``{"proxies": ...}`` when SCANNER_HTTP_PROXY (or HTTPS_PROXY/HTTP_PROXY) is set, else
+    nothing. Replay is the main feed path, so it routes the same way as every other scanner
+    fetcher (it used to ignore the scanner proxy; audit F-18, owner decision 2026-10-05)."""
+    proxies = net_client.scanner_proxies()
+    return {"proxies": proxies} if proxies else {}
+
+
 def _replay_impersonated(
     recipe: EndpointRecipe, req_url: str, headers: dict[str, str], payload: str | None
 ) -> tuple[int, Any | None]:
@@ -728,9 +736,7 @@ def _replay_impersonated(
     if cffi_requests is None:
         return 0, None
 
-    # No proxies= here: replay has never routed through SCANNER_HTTP_PROXY (pinned by
-    # test_scanner_http_characterization; an open owner question, audit F-18).
-    send_kwargs: dict[str, Any] = {"headers": headers}
+    send_kwargs: dict[str, Any] = {"headers": headers, **_replay_proxy_kwargs()}
     if recipe.method != "GET":
         send_kwargs["data"] = payload
 
@@ -783,11 +789,14 @@ def _replay_request(
 
     try:
         if recipe.method == "GET":
-            resp = net_client.send(requests, "GET", req_url, via_get=True, headers=headers, timeout=_REPLAY_TIMEOUT_S)
+            resp = net_client.send(
+                requests, "GET", req_url, via_get=True, headers=headers, timeout=_REPLAY_TIMEOUT_S,
+                **_replay_proxy_kwargs(),
+            )
         else:
             resp = net_client.send(
                 requests, recipe.method, req_url, via_get=False, headers=headers,
-                data=payload, timeout=_REPLAY_TIMEOUT_S,
+                data=payload, timeout=_REPLAY_TIMEOUT_S, **_replay_proxy_kwargs(),
             )
     except requests.RequestException as e:
         logger.debug("Recipe replay request failed (%s): %s", recipe.url[:80], str(e)[:150])

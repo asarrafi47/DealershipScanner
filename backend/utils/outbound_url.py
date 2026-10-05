@@ -34,16 +34,17 @@ def destination_host_blocked(hostname: str) -> bool:
 
 def destination_host_blocked_after_dns(hostname: str) -> bool:
     """
-    True when the hostname is blocked literally or resolves to a non-public address.
-    Unresolvable hostnames are allowed (scanner may fail later on the public internet).
+    True when the hostname is blocked literally, does not resolve, or resolves to a
+    non-public address. Unresolvable names are blocked (fail closed): a name that fails
+    the check and resolves privately a moment later is the DNS-rebinding gap.
     """
     if destination_host_blocked(hostname):
         return True
     h = hostname.strip().lower().rstrip(".")
     try:
         infos = socket.getaddrinfo(h, None, type=socket.SOCK_STREAM)
-    except socket.gaierror:
-        return False
+    except (socket.gaierror, UnicodeError):
+        return True
     for fam, _, _, _, sockaddr in infos:
         if fam not in (socket.AF_INET, socket.AF_INET6):
             continue

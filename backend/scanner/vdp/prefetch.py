@@ -333,13 +333,25 @@ def _note_status(url: str, status: int) -> None:
     _LAST_STATUS[url] = status
 
 
+class Challenge(Exception):
+    """A 200 response whose body is an anti-bot interstitial."""
+
+
+def _challenge(url: str) -> None:
+    _note_status(url, 403)
+    _note_error(url, Challenge("anti-bot interstitial served as 200"))
+    return None
+
+
 def _fetch_html(url: str) -> str | None:
     """Fetch a VDP with a browser TLS fingerprint first (curl_cffi); Dealer Inspire's
     Cloudflare returns 403 to plain requests on every rooftop. Falls back to
     requests when curl_cffi is missing or errors.
 
-    No challenge detection here (unlike synth's fetchers): a 200 HTML challenge page
-    is returned as the VDP. Pinned by test_scanner_http_characterization (audit F-18)."""
+    A 200 HTML anti-bot interstitial ("Just a moment...") is not a VDP: it is
+    recorded as a 403 (so the host gets the WAF cool-down) plus a ``Challenge``
+    error, and None is returned without the plain-requests fallback (audit F-18,
+    owner decision 2026-10-05)."""
     from backend.scanner.net import client as net_client
 
     from urllib.parse import urlparse as _up
@@ -361,6 +373,8 @@ def _fetch_html(url: str) -> str | None:
         )
         _note_status(url, int(resp.status_code))
         if resp.status_code == 200 and "html" in (resp.headers.get("content-type") or ""):
+            if net_client.looks_like_challenge(resp.text or ""):
+                return _challenge(url)
             return resp.text
         if net_client.is_fingerprint_block(resp.status_code, net_client.VDP_FINGERPRINT_BLOCK_STATUSES):
             return None  # a fingerprint block; plain requests will not do better
@@ -378,6 +392,8 @@ def _fetch_html(url: str) -> str | None:
         _note_status(url, int(resp.status_code))
         if resp.status_code != 200 or "html" not in (resp.headers.get("content-type") or ""):
             return None
+        if net_client.looks_like_challenge(resp.text or ""):
+            return _challenge(url)
         return resp.text
     except Exception as exc:  # noqa: BLE001
         _note_error(url, exc)
