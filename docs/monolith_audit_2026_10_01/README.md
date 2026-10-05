@@ -111,11 +111,12 @@ Every CSS move needs a screenshot diff at 390 and 1440 px: load order is the cas
 | 4 Single sources of truth | 75671a38f | backend/db/connect.py, billing/access.py, attribution/, vehicle_facts/, llm/client.py, schema from migrations (V025) |
 | 5 God functions | 14dc85936 | run_dealer, upsert_vehicles, merge_verified_specs, serialize_car_for_api, car detail context, search_cars, main.js, car_page.js split behind goldens |
 | 6 main.py split | b3e829f0d, 0f439058d, 5bf71ff0a, d8618fced | main.py 1,402 -> 192 lines (app assembly only): auth/session.py, web/{static,security,templating}.py, auth/pages.py, routes/account.py, enrichment/recalls_lookup.py; main_module() retired; app-surface golden test |
+| 7 Scanner splits | 72165d2ba, b782f9ee0, f421a522c | hanging Overpass test made hermetic (0.5 s); recipe_synth.py 2,454 -> 287-line facade over backend/scanner/synth/ (http, common, registry, validate, platforms/*); dealer_pipeline.py 1,394 -> 165-line CLI over backend/scanner/pipeline/ (db, roster, recipes, runner, vpic, dealer_logs, reconcile, assess, lifecycle, triage, run); surface goldens for both |
 | 7 recipe_synth split (F-6) | `git log -- backend/scanner/synth` | recipe_synth.py 2,454 lines -> facade over backend/scanner/synth/{http,common,registry,validate}.py + platforms/ (one module per template, carscommerce_scope.py for the store filter); pure move, surface + registry-order pinned by test_recipe_synth_surface.py; tests now patch the owning synth module. Follow-ups: chain.py/recipes.py/vdp fetchers onto synth/http.py; merge synth/validate.py with recipe_validation.py |
 
-Still open from this audit: `init_job_queue_schema()` and init_*_db() still run on web import; `dealer_pipeline.py` and `fetch_oem_brochures.py` splits;
+Still open from this audit: `init_job_queue_schema()` and init_*_db() still run on web import; `fetch_oem_brochures.py` split; merge synth/validate.py into
+recipe_validation.py; make synth/http.py the one fetcher for chain.py/recipes.py/vdp; stub vPIC in
+upsert tests (they try NHTSA);
 `brochure_extract.py`; `comments_db.py`; the six scanner HTTP fetchers; the four spec-column
 writers; 139 scanner env knobs; inline template scripts and CSS files whose contents belong to
-other pages; a base layout for public templates. Operational: run
-`python -m backend.scripts.migrate --baseline 19 --apply` on local and prod (V019 fails on every
-boot; V020+ never apply) — needs owner approval.
+other pages; a base layout for public templates. Operational: V019 baselined on local 2026-10-04 (prod never failed; it applied V025 on the 1.5.0 boot).

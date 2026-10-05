@@ -153,6 +153,14 @@ def _inject_refs(monkeypatch):
     monkeypatch.setattr(synth_common, "load_recipes", lambda did: list(refs.get(did, [])))
 
 
+@pytest.fixture
+def _offline_carscommerce_scope(monkeypatch):
+    """Store-scope replays fail as they would offline (no live carscommerce API)."""
+    from backend.scanner.synth.platforms import carscommerce_scope
+
+    monkeypatch.setattr(carscommerce_scope, "_replay_request", lambda *a, **k: (None, None))
+
+
 # ── fingerprint_platform ──────────────────────────────────────────────────────
 
 
@@ -221,7 +229,7 @@ def test_synthesize_dealer_com_needs_siteid(_inject_refs):
 # ── synthesize_recipe: CarsCommerce ───────────────────────────────────────────
 
 
-def test_synthesize_carscommerce_extracts_ccid_and_key(_inject_refs):
+def test_synthesize_carscommerce_extracts_ccid_and_key(_inject_refs, _offline_carscommerce_scope):
     r = recipe_synth.synthesize_recipe(
         "somedealer-com", "https://www.somedealer.com", _CARSCOMMERCE_HTML, "carscommerce"
     )
@@ -237,7 +245,7 @@ def test_synthesize_carscommerce_extracts_ccid_and_key(_inject_refs):
     assert body["perPage"] == 100
 
 
-def test_synthesize_carscommerce_falls_back_to_shared_key(_inject_refs):
+def test_synthesize_carscommerce_falls_back_to_shared_key(_inject_refs, _offline_carscommerce_scope):
     html = _CARSCOMMERCE_HTML.replace('"apiKey":"ABCDEF0123456789ABCD"', '"other":"1"')
     r = recipe_synth.synthesize_recipe("d-com", "https://d.com", html, "carscommerce")
     assert r is not None

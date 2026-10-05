@@ -73,7 +73,7 @@ Playbook (how this project learns a dealer site over HTTP, from workspace/scan_l
    (/api/vhcliaa/vehicle-pages/cosmos/srp/vehicles/{dealerId}/{pageId}?pt=N&pn=96, one pageId per SRP section found
    in /searchnew.aspx and /searchused.aspx page config), typesense (multi_search, host+key+collection in page JS),
    team_velocity (/inventory-new.json, /inventory-used.json ?page=N), dealer_eprocess, motive, overfuel, nabthat,
-   chapman, jazel, dealermasters. Read backend/scanner/synth/platforms/<name>.py for each template's markers (registry order in synth/registry.py).
+   chapman, jazel, dealermasters. Read backend/scanner/synth/platforms/<module>.py for each template's markers (registry order in synth/registry.py); module names differ from fingerprint names for dealer_dot_com (dealer_com.py), dealer_on_cosmos (dealeron_cosmos.py), motive_ridemotive (motive.py), wp_vehicles_index (wp_vehicles.py).
 3. If synthesize_recipes returns candidates, validate_recipe(candidate, url, dealer_id, name) counts VINs over HTTP.
 4. If nothing synthesizes: look in the HTML for JSON-LD Vehicle blocks, inline JSON (window.*, data-* attributes),
    script src hosts that look like inventory APIs (algolia, typesense, carscommerce, dealeron, /api/), and try

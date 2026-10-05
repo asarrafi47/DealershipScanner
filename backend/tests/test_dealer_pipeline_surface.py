@@ -40,7 +40,7 @@ SURFACE = [
     "_NO_URL_SYNTHS", "_scan_hints", "_set_scan_hints", "_learning_append", "route_verdict",
     "lifecycle_attempted_today", "validate_live_recipes", "_lifecycle_block", "run_lifecycle",
     "scan_retry_batch", "run_lifecycle_pass", "triage_table", "platform_cluster_lines", "write_needs_discovery",
-    "main", "write_slow_dealers",
+    "main", "run", "write_slow_dealers",
 ]
 
 CONSTANTS = {

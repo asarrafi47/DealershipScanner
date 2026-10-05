@@ -18,7 +18,7 @@ from backend.discovery.normalize import (
     normalize_url,
     normalize_us_state_to_code,
 )
-from backend.discovery.osm import _parse_osm_element
+from backend.discovery.osm import _parse_osm_element, overpass_endpoints
 from backend.discovery.pipeline import run_discovery
 from backend.discovery.web import ddg_find_dealer_url
 from backend.discovery.zcta_gazetteer import (
@@ -185,7 +185,7 @@ def test_run_discovery_overpass_timeout_returns_empty_osm(
     assert isinstance(rows, list)
     assert rows == []
     # The OSM tier really ran and exhausted its retries on every mirror.
-    assert mock_post.call_count == 3 * 3
+    assert mock_post.call_count == 3 * len(overpass_endpoints())
     mock_ddg.assert_not_called()
 
 
