@@ -20,6 +20,9 @@ than a mistake in any one test:
 
 So this file provides, in order:
 
+* ``_vpic_offline`` (autouse) - NHTSA vPIC decodes fail the way an unreachable
+  vPIC fails, so no test reaches vpic.nhtsa.dot.gov; ``@pytest.mark.real_vpic_client``
+  opts out. ``fake_dns`` resolves public names from a table for the SSRF guards.
 * ``_forbid_real_dictionary_writes`` (session, autouse) - makes writing anywhere
   under the real dictionary tree raise ``RealDictionaryWriteBlocked``, no matter
   which module's namespace holds the path. The patches are in-process, so a test
@@ -49,9 +52,14 @@ import builtins
 import hashlib
 import importlib
 import io
+import ipaddress
 import os
+import socket
 import sqlite3
 import sys
+import types
+import urllib.error
+import urllib.request
 from pathlib import Path
 from typing import Any, Callable, Iterator
 
@@ -70,6 +78,112 @@ def _inventory_sqlite_tests_mode(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("INVENTORY_DATABASE_URL", "")
     monkeypatch.setenv("DATABASE_URL", "")
     monkeypatch.setenv("INVENTORY_SQLITE_TESTS", "1")
+
+
+# ---------------------------------------------------------------------------
+# NHTSA vPIC is offline by default
+# ---------------------------------------------------------------------------
+#
+# ``upsert_vehicles`` -> ``post_write.sync_incomplete_and_backfill_specs`` ->
+# ``spec_structured_backfill.apply_structured_spec_backfill_for_car`` ->
+# ``nhtsa_vpic.fetch_decode_vin_values_extended`` decodes any well-formed VIN with
+# fillable slots, and without a ``get_json`` its ``_default_get`` closure calls
+# ``urllib.request.urlopen`` on vpic.nhtsa.dot.gov. ~20 upsert tests reached
+# NHTSA that way (2026-10-05, measured with a socket-blocking plugin): their
+# results depended on the network and on what vPIC returned that day.
+#
+# The stub swaps the ``urllib`` that ``nhtsa_vpic`` looks up at call time for a
+# namespace whose ``request.urlopen`` raises ``URLError``. Every caller, however
+# it imported ``fetch_decode_vin_values_extended``, then gets exactly what an
+# unreachable vPIC gives it: ``(None, None, "url_error")``. A ``get_json`` passed
+# by a test still wins (it never touches urllib). The batch decoder
+# ``vpic_facts.fetch_vpic_batch`` (``requests.post``) raises ConnectionError the
+# same way. A test that drives the real HTTP client with its own mock of
+# ``urllib.request.urlopen`` / ``requests.post`` opts out with
+# ``@pytest.mark.real_vpic_client``.
+
+VPIC_OFFLINE_MARKER = "real_vpic_client"
+
+
+class VpicOffline(urllib.error.URLError):
+    """Raised in place of the vPIC HTTP call while tests run offline."""
+
+
+def _vpic_offline_urlopen(*_args: Any, **_kwargs: Any) -> Any:
+    raise VpicOffline("vPIC is stubbed offline in tests (mark real_vpic_client to opt out)")
+
+
+def _vpic_offline_batch(vins: Any) -> Any:
+    import requests
+
+    raise requests.exceptions.ConnectionError(
+        "vPIC batch is stubbed offline in tests (mark real_vpic_client to opt out)"
+    )
+
+
+_VPIC_OFFLINE_URLLIB = types.SimpleNamespace(
+    request=types.SimpleNamespace(
+        Request=urllib.request.Request,
+        urlopen=_vpic_offline_urlopen,
+    ),
+    error=urllib.error,
+)
+
+
+@pytest.fixture(autouse=True)
+def _vpic_offline(request: pytest.FixtureRequest, monkeypatch: pytest.MonkeyPatch) -> None:
+    if request.node.get_closest_marker(VPIC_OFFLINE_MARKER):
+        return
+    from backend.enrichment import nhtsa_vpic, vpic_facts
+
+    monkeypatch.setattr(nhtsa_vpic, "urllib", _VPIC_OFFLINE_URLLIB)
+    monkeypatch.setattr(vpic_facts, "fetch_vpic_batch", _vpic_offline_batch)
+
+
+# ---------------------------------------------------------------------------
+# Fake DNS for the SSRF host guards
+# ---------------------------------------------------------------------------
+#
+# ``outbound_url.destination_host_blocked_after_dns`` resolves the host with
+# ``socket.getaddrinfo``; the web-research href filter and the dev-scanner URL
+# validator go through it. Tests that feed it public names take this fixture so
+# they resolve from a table instead of the network. Unknown names get a public
+# address (example.com's), names in ``fake_dns.table`` get what the test put
+# there, and loopback names still go to the real resolver.
+
+_FAKE_DNS_PUBLIC_IP = "93.184.215.14"
+
+
+class FakeDns:
+    def __init__(self, real: Callable[..., Any]) -> None:
+        self.table: dict[str, str | None] = {}
+        self.lookups: list[str] = []
+        self._real = real
+
+    def getaddrinfo(self, host: Any, port: Any, *args: Any, **kwargs: Any) -> Any:
+        name = host.decode() if isinstance(host, bytes) else str(host or "")
+        name = name.strip().lower().rstrip(".")
+        if name in ("", "localhost") or name.endswith(".localhost"):
+            return self._real(host, port, *args, **kwargs)
+        try:
+            ipaddress.ip_address(name)
+            return self._real(host, port, *args, **kwargs)
+        except ValueError:
+            pass
+        self.lookups.append(name)
+        ip = self.table.get(name, _FAKE_DNS_PUBLIC_IP)
+        if ip is None:
+            raise socket.gaierror(socket.EAI_NONAME, "fake_dns: unknown host")
+        fam = socket.AF_INET6 if ":" in ip else socket.AF_INET
+        sockaddr = (ip, port or 0, 0, 0) if fam == socket.AF_INET6 else (ip, port or 0)
+        return [(fam, socket.SOCK_STREAM, 6, "", sockaddr)]
+
+
+@pytest.fixture
+def fake_dns(monkeypatch: pytest.MonkeyPatch) -> FakeDns:
+    dns = FakeDns(socket.getaddrinfo)
+    monkeypatch.setattr(socket, "getaddrinfo", dns.getaddrinfo)
+    return dns
 
 
 # ---------------------------------------------------------------------------

@@ -43,7 +43,7 @@ def test_web_research_playwright_force_on(monkeypatch: pytest.MonkeyPatch) -> No
     assert m.web_research_playwright_allowed(None) is True
 
 
-def test_href_blocks_private_and_allowlist(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_href_blocks_private_and_allowlist(monkeypatch: pytest.MonkeyPatch, fake_dns) -> None:
     from backend.utils import web_researcher as wr
 
     monkeypatch.delenv("WEB_RESEARCH_ALLOWED_HOSTS", raising=False)
