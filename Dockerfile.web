@@ -32,7 +32,7 @@ RUN playwright install chromium && playwright install-deps chromium
 # Copy application code
 COPY . .
 
-# Precompressed .gz/.br siblings for /static (served by backend/main.py::_static_view).
+# Precompressed .gz/.br siblings for /static (served by backend/web/static.py::_static_view).
 RUN python scripts/build_static_compressed.py --quiet
 
 EXPOSE 8000

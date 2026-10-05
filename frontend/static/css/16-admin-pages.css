@@ -1,6 +1,6 @@
 /* Page-specific rules that used to live in inline <style> elements.
 
-   Production enforces CSP "style-src-elem 'self'" (backend/main.py,
+   Production enforces CSP "style-src-elem 'self'" (backend/web/security.py,
    _csp_header_value_enforced), which blocks every <style> element, so these
    pages rendered partly unstyled in prod. Templates must not carry <style>
    elements (backend/tests/test_no_inline_style_elements.py); page CSS lives here.

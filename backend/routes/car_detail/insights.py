@@ -2,11 +2,11 @@
 
 from __future__ import annotations
 
-from backend.listings.geo_session import listings_geo_kwargs_from_session
 from flask import session
 
 from backend.billing import access as paid_access
 from backend.billing.catalog import FEATURE_MARKET_INTEL, FEATURE_WINDOW_STICKER
+from backend.listings.geo_session import listings_geo_kwargs_from_session
 
 # Per-rung equipment diff ("what this trim adds") — a Premium feature.
 TRIM_LADDER_ADDS_FIELDS = (

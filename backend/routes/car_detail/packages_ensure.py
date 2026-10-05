@@ -1,10 +1,8 @@
 """Process-local job manager for the on-demand window-sticker / packages fetch.
 
 Moved verbatim out of ``backend/routes/cars_pages.py`` (monolith audit
-2026-10-01, W5). ``cars_pages`` re-exports every name below, so
-``from backend.routes.cars_pages import _run_packages_ensure_with_budget`` and
-``cars_pages._packages_ensure_inflight.clear()`` keep working: the bookkeeping
-dicts and the lock are the same objects under both names.
+2026-10-01, W5). Import these names from this module; ``cars_pages`` imports
+only the ones its route uses.
 
 What lives here is the state machine only (budget/cooldown/TTL/poll knobs, the
 in-flight thread registry, the panel snapshot/cache dicts, the status

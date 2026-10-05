@@ -113,12 +113,11 @@ def _cars(resp):
 def _forbid_whole_fleet(monkeypatch):
     import backend.db.inventory_db as inv
     import backend.db.repositories.listings_repo as lr
-    import backend.main as main
 
     def boom(*_a, **_k):
         raise AssertionError("whole-fleet grid built on a request path")
 
-    for mod in (inv, lr, main):
+    for mod in (inv, lr):
         monkeypatch.setattr(mod, "listings_grid_serialized_cars", boom, raising=False)
     monkeypatch.setattr(lr, "_build_grid_cars_uncached", boom)
 

@@ -110,8 +110,9 @@ Every CSS move needs a screenshot diff at 390 and 1440 px: load order is the cas
 | 3 Test safety | b1578241d | hermetic DBs, one app_factory, JS unit tests (node:test via pytest), trim_ladder split |
 | 4 Single sources of truth | 75671a38f | backend/db/connect.py, billing/access.py, attribution/, vehicle_facts/, llm/client.py, schema from migrations (V025) |
 | 5 God functions | 14dc85936 | run_dealer, upsert_vehicles, merge_verified_specs, serialize_car_for_api, car detail context, search_cars, main.js, car_page.js split behind goldens |
+| 6 main.py split | b3e829f0d, 0f439058d, 5bf71ff0a, d8618fced | main.py 1,402 -> 192 lines (app assembly only): auth/session.py, web/{static,security,templating}.py, auth/pages.py, routes/account.py, enrichment/recalls_lookup.py; main_module() retired; app-surface golden test |
 
-Still open from this audit: `backend/main.py` (move state out, then split routes); `recipe_synth.py`
+Still open from this audit: `init_job_queue_schema()` and init_*_db() still run on web import; `recipe_synth.py`
 platform plugins into a package; `dealer_pipeline.py` and `fetch_oem_brochures.py` splits;
 `brochure_extract.py`; `comments_db.py`; the six scanner HTTP fetchers; the four spec-column
 writers; 139 scanner env knobs; inline template scripts and CSS files whose contents belong to
