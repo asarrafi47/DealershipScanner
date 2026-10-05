@@ -30,7 +30,8 @@ Layout (audit F-6, 2026-10): this module is now a FACADE over the
   synth/common.py               _origin, reference-recipe lookup
   synth/platforms/<name>.py     one module per platform template (detect + synth)
   synth/registry.py             PLATFORM_TEMPLATES, fingerprint/synthesize, HTML harvest
-  synth/validate.py             validate_recipe + per-shape replay walkers
+  synth/validate.py             shim; validate_recipe + replay walkers live in
+                                backend/scanner/recipe_validation.py
 
 Every name callers used from here is re-exported, so imports keep working. A
 test that monkeypatches a helper must patch the synth module that LOOKS IT UP
@@ -273,7 +274,7 @@ from backend.scanner.synth.registry import (  # noqa: F401
     harvest_html_vehicles,
     detect_html_harvest,
 )
-from backend.scanner.synth.validate import (  # noqa: F401
+from backend.scanner.recipe_validation import (  # noqa: F401
     _VALIDATE_MAX_PAGES,
     validate_recipe,
     _validate_json_feed,

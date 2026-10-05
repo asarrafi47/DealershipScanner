@@ -114,8 +114,8 @@ Every CSS move needs a screenshot diff at 390 and 1440 px: load order is the cas
 | 7 Scanner splits | 72165d2ba, b782f9ee0, f421a522c | hanging Overpass test made hermetic (0.5 s); recipe_synth.py 2,454 -> 287-line facade over backend/scanner/synth/ (http, common, registry, validate, platforms/*); dealer_pipeline.py 1,394 -> 165-line CLI over backend/scanner/pipeline/ (db, roster, recipes, runner, vpic, dealer_logs, reconcile, assess, lifecycle, triage, run); surface goldens for both |
 | 7 recipe_synth split (F-6) | `git log -- backend/scanner/synth` | recipe_synth.py 2,454 lines -> facade over backend/scanner/synth/{http,common,registry,validate}.py + platforms/ (one module per template, carscommerce_scope.py for the store filter); pure move, surface + registry-order pinned by test_recipe_synth_surface.py; tests now patch the owning synth module. Follow-ups: chain.py/recipes.py/vdp fetchers onto synth/http.py; merge synth/validate.py with recipe_validation.py |
 
-Still open from this audit: `init_job_queue_schema()` and init_*_db() still run on web import; `fetch_oem_brochures.py` split; merge synth/validate.py into
-recipe_validation.py; make synth/http.py the one fetcher for chain.py/recipes.py/vdp; stub vPIC in
+Still open from this audit: `init_job_queue_schema()` and init_*_db() still run on web import; `fetch_oem_brochures.py` split; reconcile the two "recipe works" rules (validate_recipe's
+VIN count vs validate_recipe_set's verdict; code now lives in one module, recipe_validation.py); make synth/http.py the one fetcher for chain.py/recipes.py/vdp; stub vPIC in
 upsert tests (they try NHTSA);
 `brochure_extract.py`; `comments_db.py`; the six scanner HTTP fetchers; the four spec-column
 writers; 139 scanner env knobs; inline template scripts and CSS files whose contents belong to

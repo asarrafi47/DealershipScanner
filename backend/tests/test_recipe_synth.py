@@ -14,7 +14,7 @@ from backend.scanner import recipe_synth
 from backend.scanner.synth import common as synth_common
 from backend.scanner.synth import http as synth_http
 from backend.scanner.synth import registry as synth_registry
-from backend.scanner.synth import validate as synth_validate
+from backend.scanner import recipe_validation as synth_validate  # validate_recipe lives here now
 from backend.scanner.synth.platforms import (
     chapman,
     dealer_eprocess,
