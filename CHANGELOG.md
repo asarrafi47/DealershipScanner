@@ -2,6 +2,19 @@
 
 ## [Unreleased]
 
+## [1.5.2] - 2026-10-05
+
+### Changed
+- backend/scanner/recipe_synth.py split into backend/scanner/synth/ (http, common, registry,
+  validate, one module per platform template); recipe_synth.py stays as a re-exporting facade.
+- backend/scripts/dealer_pipeline.py split into backend/scanner/pipeline/ (db, roster, recipes,
+  runner, vpic, dealer_logs, reconcile, assess, lifecycle, triage, run); the script keeps its CLI.
+  Pure moves; surface tests pin exported names, registry order, CLI options and subprocess argv.
+
+### Fixed
+- test_run_discovery_overpass_timeout_returns_empty_osm no longer hangs (~100 s of unstubbed
+  Overpass backoff); carscommerce synth tests no longer try the live API.
+
 ## [1.5.1] - 2026-10-05
 
 ### Changed
