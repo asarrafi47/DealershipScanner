@@ -10,6 +10,7 @@ from backend.parsers import parse
 from backend.parsers.base import get_total_count
 from backend.parsers.oneaudi import total_count
 from backend.scanner import recipe_synth as rs
+from backend.scanner.synth.platforms import oneaudi as rs_oneaudi  # patch where the name is looked up
 from backend.scanner.recipes import PAGINATION_GRAPHQL_OFFSET, _mutate_for_page
 
 
@@ -74,8 +75,8 @@ def test_inputs_from_url_encoded_apollo_cache():
 
 def test_synth_builds_new_and_used_recipes(monkeypatch):
     html = quote('"criteria":[{\\"id\\":\\"dealer\\",\\"items\\":[\\"07B04\\"]}]').replace("%5C%22", '\\"')
-    monkeypatch.setattr(rs, "_dep_fetch_html", lambda url: None)
-    monkeypatch.setattr(rs, "_fetch_impersonated", lambda url, **k: None)
+    monkeypatch.setattr(rs_oneaudi, "_dep_fetch_html", lambda url: None)
+    monkeypatch.setattr(rs_oneaudi, "_fetch_impersonated", lambda url, **k: None)
     calls: list[dict] = []
 
     def fake_replay(recipe, body, origin, url=None):
@@ -83,7 +84,7 @@ def test_synth_builds_new_and_used_recipes(monkeypatch):
         t = body["variables"]["si"]["stockCarsType"]
         return 200, _payload([_car("WA1EVBF13SD035902", used=(t == "USED"))], total=133 if t == "NEW" else 210)
 
-    monkeypatch.setattr(rs, "_replay_request", fake_replay)
+    monkeypatch.setattr(rs_oneaudi, "_replay_request", fake_replay)
     recipes = rs._synth_oneaudi("audihuntsville-com", "https://www.audihuntsville.com", '"id":"dealer","items":["07B04"]')
     assert [json.loads(r.post_template)["variables"]["si"]["stockCarsType"] for r in recipes] == ["NEW", "USED"]
     assert [r.total_count for r in recipes] == [133, 210]

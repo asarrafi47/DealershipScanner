@@ -7,6 +7,7 @@ import pytest
 from backend.parsers import parse
 from backend.parsers.html_cards import detect
 from backend.scanner import recipe_synth as rs
+from backend.scanner.synth.platforms import html_cards as rs_html_cards  # patch where the name is looked up
 
 
 @pytest.fixture(autouse=True)
@@ -51,8 +52,8 @@ def test_parse_merges_cards_and_hydration_objects():
 
 def test_synth_builds_html_page_recipe(monkeypatch):
     page = _page(0, 15)
-    monkeypatch.setattr(rs, "_fetch_impersonated", lambda url, **k: page if url.endswith("/inventory/") else None)
-    monkeypatch.setattr(rs, "_dep_fetch_html", lambda url: None)
+    monkeypatch.setattr(rs_html_cards, "_fetch_impersonated", lambda url, **k: page if url.endswith("/inventory/") else None)
+    monkeypatch.setattr(rs_html_cards, "_dep_fetch_html", lambda url: None)
     recipes = rs._synth_html_cards("q-com", "https://www.q.com", "<html>data-vin= /inventory</html>")
     assert len(recipes) == 1 and recipes[0].provider_hint == "html_cards" and recipes[0].url == "https://www.q.com/inventory/"
     assert recipes[0].vehicle_rows == 15

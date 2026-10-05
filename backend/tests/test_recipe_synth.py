@@ -10,6 +10,21 @@ import json
 import pytest
 
 from backend.scanner import recipe_synth
+# Patches go on the synth module that LOOKS THE NAME UP (recipe_synth is a facade).
+from backend.scanner.synth import common as synth_common
+from backend.scanner.synth import http as synth_http
+from backend.scanner.synth import registry as synth_registry
+from backend.scanner.synth import validate as synth_validate
+from backend.scanner.synth.platforms import (
+    chapman,
+    dealer_eprocess,
+    dealeron_cosmos,
+    jazel,
+    nabthat,
+    overfuel,
+    team_velocity,
+    typesense,
+)
 from backend.scanner.recipes import (
     PAGINATION_CARSCOMMERCE,
     PAGINATION_DEALER_COM,
@@ -135,7 +150,7 @@ def _inject_refs(monkeypatch):
         "courtesychev-com": [_carscommerce_ref()],
         "toyotaoforange-com": [_typesense_ref()],
     }
-    monkeypatch.setattr(recipe_synth, "load_recipes", lambda did: list(refs.get(did, [])))
+    monkeypatch.setattr(synth_common, "load_recipes", lambda did: list(refs.get(did, [])))
 
 
 # ── fingerprint_platform ──────────────────────────────────────────────────────
@@ -232,8 +247,10 @@ def test_synthesize_carscommerce_falls_back_to_shared_key(_inject_refs):
 # ── synthesize_recipe: DealerOn cosmos ────────────────────────────────────────
 
 
-def test_synthesize_cosmos_from_srp_in_html():
+def test_synthesize_cosmos_from_srp_in_html(monkeypatch):
     # itemlist blob already present in the passed html → no extra fetch needed.
+    # The synth still probes the used/new SRP paths; keep that off the network.
+    monkeypatch.setattr(dealeron_cosmos, "fetch_dealer_html", lambda url, **k: None)
     r = recipe_synth.synthesize_recipe(
         "bellroadtoyota-com", "https://www.bellroadtoyota.com", _COSMOS_SRP_HTML, "dealer_on_cosmos"
     )
@@ -248,7 +265,7 @@ def test_synthesize_cosmos_from_srp_in_html():
 
 def test_synthesize_cosmos_fetches_srp_for_pagecfg(monkeypatch):
     # Homepage has the account but not the pagecfg; synth must fetch an SRP page.
-    monkeypatch.setattr(recipe_synth, "fetch_dealer_html", lambda url, **k: _COSMOS_SRP_HTML)
+    monkeypatch.setattr(dealeron_cosmos, "fetch_dealer_html", lambda url, **k: _COSMOS_SRP_HTML)
     r = recipe_synth.synthesize_recipe(
         "bellroadtoyota-com", "https://www.bellroadtoyota.com", _COSMOS_HOME_HTML, "dealer_on_cosmos"
     )
@@ -258,7 +275,7 @@ def test_synthesize_cosmos_fetches_srp_for_pagecfg(monkeypatch):
 
 def test_synthesize_cosmos_needs_pagecfg(monkeypatch):
     # No itemlist config anywhere → cannot synthesize.
-    monkeypatch.setattr(recipe_synth, "fetch_dealer_html", lambda url, **k: None)
+    monkeypatch.setattr(dealeron_cosmos, "fetch_dealer_html", lambda url, **k: None)
     assert recipe_synth.synthesize_recipe(
         "x-com", "https://x.com", _COSMOS_HOME_HTML, "dealer_on_cosmos"
     ) is None
@@ -292,7 +309,7 @@ def test_synthesize_typesense(_inject_refs):
 
 def test_synthesize_typesense_needs_collection(_inject_refs, monkeypatch):
     # No collection in the homepage and the SRP-config fallback finds nothing.
-    monkeypatch.setattr(recipe_synth, "fetch_dealer_html", lambda url, **k: None)
+    monkeypatch.setattr(typesense, "fetch_dealer_html", lambda url, **k: None)
     html = '<script>var __tsHost="x.a1.typesense.net";var __tsApiKey="k00000000000000000";</script>'
     assert recipe_synth.synthesize_recipe("x-com", "https://x.com", html, "typesense") is None
 
@@ -308,7 +325,7 @@ def test_synthesize_team_velocity_feed(monkeypatch):
         kind = "new" if "-new.json" in url else "used"
         return {"totalVehicles": totals[kind], "totalPages": 4, "vehicles": [{"vin": f"V-{kind}"}]}
 
-    monkeypatch.setattr(recipe_synth, "_cosmos_get_json", fake_feed)
+    monkeypatch.setattr(team_velocity, "_cosmos_get_json", fake_feed)
     # Full lot => TWO recipes: used + new (CPO ⊆ used, no combined feed exists).
     recipes = recipe_synth.synthesize_recipes(
         "righthonda-com", "https://www.righthonda.com", _TEAM_VELOCITY_HTML, "team_velocity"
@@ -334,7 +351,7 @@ def test_synthesize_team_velocity_feed(monkeypatch):
 
 
 def test_synthesize_team_velocity_missing_feed_returns_none(monkeypatch):
-    monkeypatch.setattr(recipe_synth, "_cosmos_get_json", lambda url: None)
+    monkeypatch.setattr(team_velocity, "_cosmos_get_json", lambda url: None)
     assert recipe_synth.synthesize_recipe(
         "x-com", "https://x.com", _TEAM_VELOCITY_HTML, "team_velocity"
     ) is None
@@ -376,16 +393,16 @@ class _FakeResp:
 # rejection takes. These two pin the urllib verdict itself, with the escalation stubbed
 # out; test_fetch_escalates_* below pin the escalation.
 def test_fetch_rejects_thin_body(monkeypatch):
-    monkeypatch.setattr(recipe_synth, "open_url", lambda *a, **k: _FakeResp(b"<html>tiny</html>"))
-    monkeypatch.setattr(recipe_synth, "_fetch_impersonated", lambda *a, **k: None)
+    monkeypatch.setattr(synth_http, "open_url", lambda *a, **k: _FakeResp(b"<html>tiny</html>"))
+    monkeypatch.setattr(synth_http, "_fetch_impersonated", lambda *a, **k: None)
     assert recipe_synth.fetch_dealer_html("https://x.com") is None
 
 
 def test_fetch_rejects_challenge_page(monkeypatch):
     body = (b"<html><body>Just a moment... Checking your browser before accessing. "
             + b"cf-challenge " * 200 + b"</body></html>")
-    monkeypatch.setattr(recipe_synth, "open_url", lambda *a, **k: _FakeResp(body))
-    monkeypatch.setattr(recipe_synth, "_fetch_impersonated", lambda *a, **k: None)
+    monkeypatch.setattr(synth_http, "open_url", lambda *a, **k: _FakeResp(body))
+    monkeypatch.setattr(synth_http, "_fetch_impersonated", lambda *a, **k: None)
     assert recipe_synth.fetch_dealer_html("https://x.com") is None
 
 
@@ -393,8 +410,8 @@ def test_fetch_escalates_challenge_to_impersonation(monkeypatch):
     """The Cloudflare case: urllib sees a challenge, impersonation gets the real page."""
     body = (b"<html><body>Just a moment... Checking your browser before accessing. "
             + b"cf-challenge " * 200 + b"</body></html>")
-    monkeypatch.setattr(recipe_synth, "open_url", lambda *a, **k: _FakeResp(body))
-    monkeypatch.setattr(recipe_synth, "_fetch_impersonated", lambda *a, **k: "<html>real inventory</html>")
+    monkeypatch.setattr(synth_http, "open_url", lambda *a, **k: _FakeResp(body))
+    monkeypatch.setattr(synth_http, "_fetch_impersonated", lambda *a, **k: "<html>real inventory</html>")
     assert recipe_synth.fetch_dealer_html("https://x.com") == "<html>real inventory</html>"
 
 
@@ -405,26 +422,26 @@ def test_fetch_escalates_http_error_to_impersonation(monkeypatch):
     def _raise(*a, **k):
         raise urllib.error.HTTPError("https://x.com", 403, "Forbidden", {}, None)
 
-    monkeypatch.setattr(recipe_synth, "open_url", _raise)
-    monkeypatch.setattr(recipe_synth, "_fetch_impersonated", lambda *a, **k: "<html>cleared</html>")
+    monkeypatch.setattr(synth_http, "open_url", _raise)
+    monkeypatch.setattr(synth_http, "_fetch_impersonated", lambda *a, **k: "<html>cleared</html>")
     assert recipe_synth.fetch_dealer_html("https://x.com") == "<html>cleared</html>"
 
 
 def test_fetch_does_not_escalate_when_urllib_succeeds(monkeypatch):
     """Impersonation costs a request; the common path must not pay it."""
     body = b"<html><body>" + b"real dealership content " * 200 + b"</body></html>"
-    monkeypatch.setattr(recipe_synth, "open_url", lambda *a, **k: _FakeResp(body))
+    monkeypatch.setattr(synth_http, "open_url", lambda *a, **k: _FakeResp(body))
 
     def _boom(*a, **k):
         raise AssertionError("must not escalate when the plain fetch worked")
 
-    monkeypatch.setattr(recipe_synth, "_fetch_impersonated", _boom)
+    monkeypatch.setattr(synth_http, "_fetch_impersonated", _boom)
     assert "real dealership content" in (recipe_synth.fetch_dealer_html("https://x.com") or "")
 
 
 def test_fetch_accepts_real_html(monkeypatch):
     body = b"<html><body>" + b"real dealership content " * 200 + b"</body></html>"
-    monkeypatch.setattr(recipe_synth, "open_url", lambda *a, **k: _FakeResp(body))
+    monkeypatch.setattr(synth_http, "open_url", lambda *a, **k: _FakeResp(body))
     html = recipe_synth.fetch_dealer_html("https://x.com")
     assert html and "real dealership content" in html
 
@@ -601,7 +618,7 @@ def test_synthesize_dealer_alchemist_via_typesense():
 def test_synthesize_overfuel(monkeypatch):
     from backend.scanner.recipes import PAGINATION_HTML_PAGE
 
-    monkeypatch.setattr(recipe_synth, "_dep_fetch_html", lambda url: _OVERFUEL_SRP)
+    monkeypatch.setattr(overfuel, "_dep_fetch_html", lambda url: _OVERFUEL_SRP)
     r = recipe_synth.synthesize_recipe(
         "autoboutiqueflorida-com", "https://www.autoboutiqueflorida.com", _OVERFUEL_HTML, "overfuel"
     )
@@ -614,7 +631,7 @@ def test_synthesize_overfuel(monkeypatch):
 
 
 def test_synthesize_overfuel_no_vehicles(monkeypatch):
-    monkeypatch.setattr(recipe_synth, "_dep_fetch_html", lambda url: "<html><body>empty</body></html>")
+    monkeypatch.setattr(overfuel, "_dep_fetch_html", lambda url: "<html><body>empty</body></html>")
     assert recipe_synth.synthesize_recipe(
         "x-com", "https://x.com", _OVERFUEL_HTML, "overfuel"
     ) is None
@@ -630,7 +647,7 @@ def test_synthesize_nabthat(monkeypatch):
         # used path has vehicles; new path is empty -> single used recipe.
         return _NABTHAT_SRP if url.endswith("/inventory/used") else "<html>nabthat.com</html>"
 
-    monkeypatch.setattr(recipe_synth, "_dep_fetch_html", fake)
+    monkeypatch.setattr(nabthat, "_dep_fetch_html", fake)
     recipes = recipe_synth.synthesize_recipes(
         "mossytoyota-com", "https://www.mossytoyota.com", _NABTHAT_HTML, "nabthat"
     )
@@ -647,7 +664,7 @@ def test_synthesize_nabthat(monkeypatch):
 def test_synthesize_chapman(monkeypatch):
     from backend.scanner.recipes import PAGINATION_NONE
 
-    monkeypatch.setattr(recipe_synth, "_cosmos_get_json", lambda url: list(_CHAPMAN_ROWS))
+    monkeypatch.setattr(chapman, "_cosmos_get_json", lambda url: list(_CHAPMAN_ROWS))
     recipes = recipe_synth.synthesize_recipes(
         "chapmanfordaz-com", "https://www.chapmanfordaz.com", _CHAPMAN_HTML, "chapman"
     )
@@ -665,7 +682,7 @@ def test_synthesize_chapman(monkeypatch):
 
 
 def test_synthesize_chapman_needs_arkona(monkeypatch):
-    monkeypatch.setattr(recipe_synth, "_cosmos_get_json", lambda url: list(_CHAPMAN_ROWS))
+    monkeypatch.setattr(chapman, "_cosmos_get_json", lambda url: list(_CHAPMAN_ROWS))
     html = "<html><body>chapmanapps.com but no arkona asset</body></html>"
     assert recipe_synth.synthesize_recipes("x-com", "https://x.com", html, "chapman") == []
 
@@ -676,7 +693,7 @@ def test_synthesize_chapman_needs_arkona(monkeypatch):
 def test_synthesize_jazel(monkeypatch):
     from backend.scanner.recipes import PAGINATION_JAZEL_SRP
 
-    monkeypatch.setattr(recipe_synth, "_dep_fetch_html", lambda url: _JAZEL_SRP)
+    monkeypatch.setattr(jazel, "_dep_fetch_html", lambda url: _JAZEL_SRP)
     r = recipe_synth.synthesize_recipe(
         "5starford-com", "https://www.5starford.com", _JAZEL_HTML, "jazel"
     )
@@ -739,7 +756,7 @@ def test_detect_html_harvest_probes_srp_when_home_bare(monkeypatch):
     def fake_fetch(url, **kwargs):
         return _CUSTOM_SRP_HTML if url.endswith("/inventory") else None
 
-    monkeypatch.setattr(recipe_synth, "fetch_dealer_html", fake_fetch)
+    monkeypatch.setattr(synth_registry, "fetch_dealer_html", fake_fetch)
     n, src = recipe_synth.detect_html_harvest(
         "https://bespokemotors.com", _CUSTOM_HOME_HTML, min_vins=2
     )
@@ -748,7 +765,7 @@ def test_detect_html_harvest_probes_srp_when_home_bare(monkeypatch):
 
 
 def test_detect_html_harvest_no_vehicles_returns_zero(monkeypatch):
-    monkeypatch.setattr(recipe_synth, "fetch_dealer_html", lambda *a, **k: None)
+    monkeypatch.setattr(synth_registry, "fetch_dealer_html", lambda *a, **k: None)
     n, src = recipe_synth.detect_html_harvest(
         "https://bespokemotors.com", _CUSTOM_HOME_HTML, min_vins=2
     )
@@ -782,7 +799,7 @@ def test_synthesize_cosmos_yields_one_recipe_per_srp_section(monkeypatch):
     def fake_fetch(url, **k):
         return new_html if "new" in url else used_html
 
-    monkeypatch.setattr(recipe_synth, "fetch_dealer_html", fake_fetch)
+    monkeypatch.setattr(dealeron_cosmos, "fetch_dealer_html", fake_fetch)
     recipes = recipe_synth.synthesize_recipes(
         "bellroadtoyota-com", "https://www.bellroadtoyota.com", _COSMOS_HOME_HTML, "dealer_on_cosmos"
     )
@@ -819,12 +836,12 @@ def test_strong_marker_is_a_challenge_regardless_of_size():
 def test_fetch_accepts_real_page_carrying_beacon(monkeypatch):
     body = ("<html><head>" + _BEACON + "</head><body>"
             + "dealereprocess real inventory " * 2000 + "</body></html>").encode()
-    monkeypatch.setattr(recipe_synth, "open_url", lambda *a, **k: _FakeResp(body))
+    monkeypatch.setattr(synth_http, "open_url", lambda *a, **k: _FakeResp(body))
 
     def _boom(*a, **k):
         raise AssertionError("beacon on a real page must not escalate")
 
-    monkeypatch.setattr(recipe_synth, "_fetch_impersonated", _boom)
+    monkeypatch.setattr(synth_http, "_fetch_impersonated", _boom)
     html = recipe_synth.fetch_dealer_html("https://www.hondaofelcajon.com")
     assert html and "real inventory" in html
 
@@ -848,7 +865,7 @@ def test_dep_fetch_sends_same_site_referer(monkeypatch):
         seen["headers"] = dict(req.header_items())
         return _FakeRedirResp(b"<html>ok</html>", req.full_url)
 
-    monkeypatch.setattr(recipe_synth, "open_url", fake_open)
+    monkeypatch.setattr(synth_http, "open_url", fake_open)
     html, final = recipe_synth._dep_fetch_page("https://www.hondaofelcajon.com/used-inventory/")
     assert html == "<html>ok</html>"
     assert final == "https://www.hondaofelcajon.com/used-inventory/"
@@ -860,7 +877,7 @@ def test_dep_fetch_sends_same_site_referer(monkeypatch):
 def test_dep_fetch_returns_redirect_target(monkeypatch):
     """/used-inventory/ 302s to /search/used/?tp=used; the walk must use THAT URL."""
     monkeypatch.setattr(
-        recipe_synth, "open_url",
+        synth_http, "open_url",
         lambda req, timeout=0: _FakeRedirResp(b"<html>srp</html>", "https://www.hondaofelcajon.com/search/used/?tp=used"),
     )
     html, final = recipe_synth._dep_fetch_page("https://www.hondaofelcajon.com/used-inventory/")
@@ -882,8 +899,8 @@ def test_dep_fetch_escalates_403_to_impersonation_with_referer(monkeypatch):
         captured["min_bytes"] = min_bytes
         return "<html>cleared</html>"
 
-    monkeypatch.setattr(recipe_synth, "open_url", _raise)
-    monkeypatch.setattr(recipe_synth, "_fetch_impersonated", fake_imp)
+    monkeypatch.setattr(synth_http, "open_url", _raise)
+    monkeypatch.setattr(synth_http, "_fetch_impersonated", fake_imp)
     html, _ = recipe_synth._dep_fetch_page("https://www.hondaofelcajon.com/search/used/?tp=used")
     assert html == "<html>cleared</html>"
     assert captured["headers"]["Referer"] == "https://www.hondaofelcajon.com/"
@@ -899,15 +916,15 @@ def test_dep_fetch_does_not_escalate_404(monkeypatch):
     def _boom(*a, **k):
         raise AssertionError("404 is not a fingerprint rejection")
 
-    monkeypatch.setattr(recipe_synth, "open_url", _raise)
-    monkeypatch.setattr(recipe_synth, "_fetch_impersonated", _boom)
+    monkeypatch.setattr(synth_http, "open_url", _raise)
+    monkeypatch.setattr(synth_http, "_fetch_impersonated", _boom)
     assert recipe_synth._dep_fetch_html("https://x.com/new-inventory/") is None
 
 
 def test_dep_fetch_escalates_challenge_shell(monkeypatch):
     shell = b"<html><body>Just a moment... __cf_chl</body></html>"
-    monkeypatch.setattr(recipe_synth, "open_url", lambda req, timeout=0: _FakeRedirResp(shell, req.full_url))
-    monkeypatch.setattr(recipe_synth, "_fetch_impersonated", lambda url, **k: "<html>real</html>")
+    monkeypatch.setattr(synth_http, "open_url", lambda req, timeout=0: _FakeRedirResp(shell, req.full_url))
+    monkeypatch.setattr(synth_http, "_fetch_impersonated", lambda url, **k: "<html>real</html>")
     assert recipe_synth._dep_fetch_html("https://x.com/search/used/?tp=used") == "<html>real</html>"
 
 
@@ -967,7 +984,7 @@ def test_synthesize_dep_uses_redirect_target_and_honoured_page_size(monkeypatch)
             return _dep_srp(_vins("1HGCY1F3XRA", 48), 343), url
         raise AssertionError(f"unexpected fetch {url}")
 
-    monkeypatch.setattr(recipe_synth, "_dep_fetch_page", fake)
+    monkeypatch.setattr(dealer_eprocess, "_dep_fetch_page", fake)
     recipes = recipe_synth.synthesize_recipes("hondaofelcajon-com", origin, "<html>dealereprocess</html>", "dealer_eprocess")
     assert [r.url for r in recipes] == [
         origin + "/search/used/?tp=used&ct=48",
@@ -989,7 +1006,7 @@ def test_synthesize_dep_falls_back_when_page_size_not_honoured(monkeypatch):
             return _dep_srp(_vins("2HGFC2F5XNH", 12), 56), url
         return None, url
 
-    monkeypatch.setattr(recipe_synth, "_dep_fetch_page", fake)
+    monkeypatch.setattr(dealer_eprocess, "_dep_fetch_page", fake)
     recipes = recipe_synth.synthesize_recipes("x-com", origin, "<html>dealereprocess</html>", "dealer_eprocess")
     assert [r.url for r in recipes] == [origin + "/used-inventory/"]
 
@@ -1004,7 +1021,7 @@ def test_synthesize_dep_skips_page_size_probe_when_page1_is_whole_lot(monkeypatc
             return _dep_srp(_vins("2HGFC2F5XNH", 5), 5), url
         return None, url
 
-    monkeypatch.setattr(recipe_synth, "_dep_fetch_page", fake)
+    monkeypatch.setattr(dealer_eprocess, "_dep_fetch_page", fake)
     recipes = recipe_synth.synthesize_recipes("x-com", origin, "<html>dealereprocess</html>", "dealer_eprocess")
     assert [r.url for r in recipes] == [origin + "/used-inventory/"]
     assert not any("ct=" in c for c in calls)
@@ -1027,7 +1044,7 @@ def test_validate_dep_keeps_recipe_query_and_sets_p(monkeypatch):
         m = __import__("re").search(r"[?&]p=(\d+)", url)
         return pages.get(int(m.group(1)), "<html>dealereprocess</html>")
 
-    monkeypatch.setattr(recipe_synth, "_dep_fetch_html", fake)
+    monkeypatch.setattr(synth_validate, "_dep_fetch_html", fake)
     recipe = EndpointRecipe(
         dealer_id="hondaofelcajon-com", url=origin + "/search/used/?tp=used&ct=48",
         method="GET", content_type="text/html", post_template=None, auth_headers={},

@@ -27,8 +27,8 @@ correctly.
      headers the WAF wants), then rerun the discovery phase.
 - Repeat this loop until you get VDP data. Only then move to the scanning phase.
 
-Discovery here means the HTTP probing playbook (`backend/scanner/recipe_synth.py`
-platform templates, `backend/scripts/synthesize_recipes.py`, the probes recorded in
+Discovery here means the HTTP probing playbook (`backend/scanner/synth/platforms/`
+platform templates, imported via the `backend/scanner/recipe_synth.py` facade; `backend/scripts/synthesize_recipes.py`, the probes recorded in
 `workspace/scan_lab/lab_20260923_http/NOTES.md`). Not a browser.
 
 ### 2. Scanning

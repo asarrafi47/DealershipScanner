@@ -6,6 +6,7 @@ from __future__ import annotations
 
 from backend.parsers import parse
 from backend.scanner import recipe_synth as rs
+from backend.scanner.synth.platforms import autowall as rs_autowall  # patch where the name is looked up
 from backend.scanner.recipes import PAGINATION_HTML_PAGE
 
 _CARD = """
@@ -32,7 +33,7 @@ def test_detect_from_homepage_links():
 
 
 def test_synth_builds_html_page_walk(monkeypatch):
-    monkeypatch.setattr(rs, "_dep_fetch_html", lambda url: _page(25) if url.endswith("/gs-vehicle/list?filter=All") else None)
+    monkeypatch.setattr(rs_autowall, "_dep_fetch_html", lambda url: _page(25) if url.endswith("/gs-vehicle/list?filter=All") else None)
     r = rs._synth_autowall("longofathens-com", "https://longofathens.com", "<a href='/gs-vehicle/list?filter=All'>")
     assert r is not None
     assert r.url == "https://longofathens.com/gs-vehicle/list?filter=All"
@@ -41,7 +42,7 @@ def test_synth_builds_html_page_walk(monkeypatch):
 
 
 def test_synth_refuses_without_card_markup(monkeypatch):
-    monkeypatch.setattr(rs, "_dep_fetch_html", lambda url: "<html><title>Long Of Athens Powered By autoWALL</title></html>")
+    monkeypatch.setattr(rs_autowall, "_dep_fetch_html", lambda url: "<html><title>Long Of Athens Powered By autoWALL</title></html>")
     assert rs._synth_autowall("longofathens-com", "https://longofathens.com", "") is None
 
 

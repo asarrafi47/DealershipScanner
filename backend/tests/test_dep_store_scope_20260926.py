@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from backend.scanner import recipe_synth as rs
+from backend.scanner.synth.platforms import dealer_eprocess as rs_dealer_eprocess  # patch where the name is looked up
 
 _KNOX = ('<a href="https://www.lexusofknoxville.com/search/new-lexus-nx-450h+-lexus-of-knoxville/?cy=37922&lc=15578&md=12629&mk=33&tp=new">NX</a>'
          '<a href="/search/pre-owned/?tp=pre_owned&ct=48">Pre-Owned</a>')
@@ -29,8 +30,8 @@ def test_dep_recipe_walks_the_store_scoped_url(monkeypatch):
     def fake_fetch(url):
         return (scoped if "lc=15578" in url else group), url
 
-    monkeypatch.setattr(rs, "_dep_fetch_page", fake_fetch)
-    monkeypatch.setattr(rs, "_dep_page_size", lambda html: None)
+    monkeypatch.setattr(rs_dealer_eprocess, "_dep_fetch_page", fake_fetch)
+    monkeypatch.setattr(rs_dealer_eprocess, "_dep_page_size", lambda html: None)
     out = rs._dep_srp_recipe("lexusofknoxville-com", "https://www.lexusofknoxville.com", "/search/pre-owned/?tp=pre_owned&ct=48")
     assert out is not None
     recipe, vins = out

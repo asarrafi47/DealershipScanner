@@ -13,6 +13,7 @@ import pytest
 from backend.parsers.carscommerce import rooftop_of
 from backend.parsers import rooftop_aliases
 from backend.scanner import recipe_synth as rs
+from backend.scanner.synth.platforms import carscommerce_scope as rs_carscommerce_scope  # patch where the name is looked up
 from backend.scanner.dealer_place import name_from_html, oem_code_from_html
 
 
@@ -99,7 +100,7 @@ def cary_recipe():
 
 def test_store_filter_picks_identity_feed_and_records_alias(monkeypatch, cary_recipe):
     feed = _FakeFeed()
-    monkeypatch.setattr(rs, "_replay_request", feed)
+    monkeypatch.setattr(rs_carscommerce_scope, "_replay_request", feed)
     monkeypatch.setattr("backend.scanner.dealer_place.learn_place", lambda *a, **k: {"dealer_city": "Cary", "dealer_state": "NC", "place_source": "registry"})
     recorded: list[tuple] = []
     monkeypatch.setattr(rooftop_aliases, "record_rooftop_alias", lambda d, n, **k: recorded.append((d, n, k)) or True)
@@ -116,7 +117,7 @@ def test_store_filter_rejects_multi_store_location_value(monkeypatch, cary_recip
     """No identity feed on the page: the Location facet value 'Cary, NC' covers
     three stores, so it must NOT be chosen; the gate filters per row instead."""
     feed = _FakeFeed()
-    monkeypatch.setattr(rs, "_replay_request", feed)
+    monkeypatch.setattr(rs_carscommerce_scope, "_replay_request", feed)
     monkeypatch.setattr("backend.scanner.dealer_place.learn_place", lambda *a, **k: {"dealer_city": "Cary", "dealer_state": "NC"})
     html = '"Location":"custom_text_25"'
     rs._carscommerce_store_filter(cary_recipe, "hendrickbuickgmccary-com", "https://www.hendrickbuickgmccary.com", html)
@@ -138,7 +139,7 @@ def test_store_filter_merges_every_identity_feed(monkeypatch, cary_recipe):
                 f["values"] = [{"key": k, "doc_count": sum(1 for r in feed.rows if r["source_id"] == k)} for k in ("MallofGeorgiaMazda", "23978", "RHendrickUsed")]
         return st, d
 
-    monkeypatch.setattr(rs, "_replay_request", facets_call)
+    monkeypatch.setattr(rs_carscommerce_scope, "_replay_request", facets_call)
     monkeypatch.setattr("backend.scanner.dealer_place.learn_place", lambda *a, **k: {"dealer_city": "Buford", "dealer_state": "GA"})
     monkeypatch.setattr(rooftop_aliases, "record_rooftop_alias", lambda *a, **k: True)
     html = '"dealername":"Mall of Georgia Mazda","oem_code":"23978"'
@@ -166,7 +167,7 @@ def test_store_filter_merges_same_rooftop_feed_but_not_same_city_sibling(monkeyp
                 f["values"] = [{"key": k, "doc_count": sum(1 for r in feed.rows if r["source_id"] == k)} for k in ("208763", "9048741", "9077258", "RHendrickUsed")]
         return st, d
 
-    monkeypatch.setattr(rs, "_replay_request", call)
+    monkeypatch.setattr(rs_carscommerce_scope, "_replay_request", call)
     monkeypatch.setattr("backend.scanner.dealer_place.learn_place", lambda *a, **k: {"dealer_city": "Wilmington", "dealer_state": "NC"})
     monkeypatch.setattr(rooftop_aliases, "record_rooftop_alias", lambda *a, **k: True)
     html = '"dealername":"Stevenson Hendrick Honda Wilmington","oem_code":"208763"'
@@ -186,7 +187,7 @@ def test_store_filter_never_merges_on_a_bare_city_stamp(monkeypatch, cary_recipe
                 f["values"] = [{"key": k, "doc_count": 10} for k in ("292164", "555555")]
         return st, d
 
-    monkeypatch.setattr(rs, "_replay_request", call)
+    monkeypatch.setattr(rs_carscommerce_scope, "_replay_request", call)
     monkeypatch.setattr("backend.scanner.dealer_place.learn_place", lambda *a, **k: {"dealer_city": "Naples", "dealer_state": "FL"})
     html = '"dealername":"Rick Hendrick Chevrolet Naples","oem_code":"292164"'
     rs._carscommerce_store_filter(cary_recipe, "rickhendrickchevynaples-com", "https://www.rickhendrickchevynaples.com", html)
@@ -211,7 +212,7 @@ def test_store_filter_merges_street_feed_when_identity_feed_is_bare_city(monkeyp
                 f["values"] = [{"key": k, "doc_count": sum(1 for r in feed.rows if r["source_id"] == k)} for k in ("24009", "9055689", "9048741")]
         return st, d
 
-    monkeypatch.setattr(rs, "_replay_request", call)
+    monkeypatch.setattr(rs_carscommerce_scope, "_replay_request", call)
     monkeypatch.setattr("backend.scanner.dealer_place.learn_place",
                         lambda *a, **k: {"dealer_city": "Wilmington", "dealer_state": "NC", "dealer_address": "5911 Market Street", "place_source": "title"})
     html = '"dealername":"Stevenson Hendrick Mazda Wilmington","oem_code":"24009"'
@@ -289,7 +290,7 @@ def test_identity_feed_with_placeless_name_stamp_is_accepted(monkeypatch, cary_r
                 f["values"] = [{"key": k, "doc_count": 5} for k in ("27250", "88")]
         return st, d
 
-    monkeypatch.setattr(rs, "_replay_request", call)
+    monkeypatch.setattr(rs_carscommerce_scope, "_replay_request", call)
     monkeypatch.setattr("backend.scanner.dealer_place.learn_place", lambda *a, **k: {"dealer_city": "Jasper", "dealer_state": "GA"})
     monkeypatch.setattr(rooftop_aliases, "record_rooftop_alias", lambda *a, **k: True)
     html = '"dealername":"Tutton Chrysler Dodge Jeep RAM of Jasper","oem_code":"27250"'
@@ -312,7 +313,7 @@ def test_named_feed_id_without_town_and_stampless_rows_are_identity(monkeypatch,
                 f["values"] = [{"key": k, "doc_count": sum(1 for r in feed.rows if r["source_id"] == k)} for k in ("27250", "TuttonChryslerDodgeJeepRam", "42409", "88")]
         return st, d
 
-    monkeypatch.setattr(rs, "_replay_request", call)
+    monkeypatch.setattr(rs_carscommerce_scope, "_replay_request", call)
     monkeypatch.setattr("backend.scanner.dealer_place.learn_place", lambda *a, **k: {"dealer_city": "Jasper", "dealer_state": "GA"})
     monkeypatch.setattr(rooftop_aliases, "record_rooftop_alias", lambda *a, **k: True)
     html = '"dealername":"Tutton Chrysler Dodge Jeep RAM of Jasper","oem_code":"27250"'
@@ -355,7 +356,7 @@ def test_store_name_location_facet_becomes_an_extra_recipe(monkeypatch, cary_rec
                 facets.append({"name": name, "values": []})
         return 200, {"data": {"total_vehicle_count": len(rows) if ff else 200, "listings": rows[: body.get("perPage", 100)], "facets": facets}}
 
-    monkeypatch.setattr(rs, "_replay_request", call)
+    monkeypatch.setattr(rs_carscommerce_scope, "_replay_request", call)
     monkeypatch.setattr("backend.scanner.dealer_place.learn_place", lambda *a, **k: {"dealer_city": "Austin", "dealer_state": "TX"})
     monkeypatch.setattr(rooftop_aliases, "record_rooftop_alias", lambda *a, **k: True)
     html = '"dealername":"Group 1 Toyota North Austin","oem_code":"42409","Location":"custom_text_13"'
@@ -380,7 +381,7 @@ def test_fully_unstamped_account_over_the_cap_is_one_store(monkeypatch, cary_rec
                 f["values"] = [{"key": k, "doc_count": sum(1 for r in feed.rows if r["source_id"] == k)} for k in ("27302", "MP15994")]
         return st, d
 
-    monkeypatch.setattr(rs, "_replay_request", call)
+    monkeypatch.setattr(rs_carscommerce_scope, "_replay_request", call)
     monkeypatch.setattr("backend.scanner.dealer_place.learn_place", lambda *a, **k: {"dealer_city": "Claremont", "dealer_state": "CA"})
     monkeypatch.setattr(rooftop_aliases, "record_rooftop_alias", lambda *a, **k: True)
     html = '"dealername":"Knight Claremont Chrysler Dodge Jeep RAM","oem_code":"27302"'
@@ -414,7 +415,7 @@ def test_location_facet_naming_the_store_on_every_car_is_single_store(monkeypatc
                 f["values"] = [{"key": "Group 1 Ford of South Austin", "doc_count": 748}]
         return st, d
 
-    monkeypatch.setattr(rs, "_replay_request", call)
+    monkeypatch.setattr(rs_carscommerce_scope, "_replay_request", call)
     monkeypatch.setattr("backend.scanner.dealer_place.learn_place", lambda *a, **k: {"dealer_city": "Austin", "dealer_state": "TX"})
     monkeypatch.setattr(rooftop_aliases, "record_rooftop_alias", lambda *a, **k: True)
     html = ('"dealername":"Group 1 Ford of South Austin","oem_code":"02923"'

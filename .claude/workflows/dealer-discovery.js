@@ -73,7 +73,7 @@ Playbook (how this project learns a dealer site over HTTP, from workspace/scan_l
    (/api/vhcliaa/vehicle-pages/cosmos/srp/vehicles/{dealerId}/{pageId}?pt=N&pn=96, one pageId per SRP section found
    in /searchnew.aspx and /searchused.aspx page config), typesense (multi_search, host+key+collection in page JS),
    team_velocity (/inventory-new.json, /inventory-used.json ?page=N), dealer_eprocess, motive, overfuel, nabthat,
-   chapman, jazel, dealermasters. Read backend/scanner/recipe_synth.py for each template's markers.
+   chapman, jazel, dealermasters. Read backend/scanner/synth/platforms/<name>.py for each template's markers (registry order in synth/registry.py).
 3. If synthesize_recipes returns candidates, validate_recipe(candidate, url, dealer_id, name) counts VINs over HTTP.
 4. If nothing synthesizes: look in the HTML for JSON-LD Vehicle blocks, inline JSON (window.*, data-* attributes),
    script src hosts that look like inventory APIs (algolia, typesense, carscommerce, dealeron, /api/), and try
@@ -122,7 +122,7 @@ const results = await pipeline(
     `Platform group "${p}". Findings from the investigators (JSON): ${JSON.stringify(groups[p])}\n` +
     `Make these dealers scan HTTP-only. Prefer, in order: (a) a recipe file under workspace/recipes/<dealer>.json written by ` +
     `backend/scripts/synthesize_recipes.py --dealer-id X --url U --name N --force; (b) a fix to the platform template in ` +
-    `backend/scanner/recipe_synth.py or its parser under backend/parsers/; (c) a new PlatformTemplate when the platform is new and the ` +
+    `backend/scanner/synth/platforms/<name>.py or its parser under backend/parsers/; (c) a new PlatformTemplate (module under synth/platforms/ + an entry in synth/registry.py) when the platform is new and the ` +
     `finding gives a working endpoint + pagination. Every code change needs a unit test in backend/tests/ and ` +
     `.venv/bin/ruff check + .venv/bin/pytest -q on the touched test files must pass. Do not touch the DB, do not run a browser, ` +
     `do not commit. Append what you changed and why to workspace/dealer_logs/<dealer_id>/summary.md for each dealer in the group ` +
