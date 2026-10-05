@@ -157,8 +157,8 @@ def unsupported_reason(make: str) -> str | None:
     This says nothing about the archive tier. A make can be unsupported at the
     OEM tier and still resolvable at ``tier="archive"`` -- that is the entire
     reason the archive tier exists. Callers that want the combined answer must
-    ask both; ``fetch_oem_brochures.resolve_source`` does exactly that, OEM
-    first.
+    ask both; ``brochure_acquisition.sources.resolve_source`` does exactly that,
+    OEM first.
     """
     token = _make_token(make)
     if token in VERIFIED_MAKES:

@@ -639,8 +639,9 @@ def brochure_text_rejection(result: BrochureTextResult) -> str:
     :func:`persist_brochure_text` has three callers and only one of them ran
     those gates first:
 
-    * ``backend/scripts/fetch_oem_brochures.py`` — checks both, then persists.
-      The check here repeats its verdict and changes nothing.
+    * ``backend/scripts/fetch_oem_brochures.py`` (code in
+      ``backend/enrichment/brochure_acquisition/download.py``) — checks both,
+      then persists. The check here repeats its verdict and changes nothing.
     * ``backend/scripts/reingest_brochures.py`` — checks neither. It consults
       ``brochure_sources.is_quarantined`` so it cannot resurrect a file already
       moved aside, but a document it extracts for the first time was written
@@ -652,8 +653,8 @@ def brochure_text_rejection(result: BrochureTextResult) -> str:
     two. Imported lazily because ``brochure_sources`` imports this module.
 
     TWO READINGS OF THE PAGE, both checked, because the two existing lanes do
-    not agree on what a page's text is: ``fetch_oem_brochures.page_texts``
-    appends the layout table lines, ``fetch_oem_brochures.corpus_page_texts``
+    not agree on what a page's text is: ``brochure_acquisition.corpus.page_texts``
+    appends the layout table lines, ``brochure_acquisition.corpus.corpus_page_texts``
     (the re-validation sweep) reads ``page.text`` alone. A document can pass one
     and fail the other — the table lines carry most of a spec grid's digits.
     Failing either one is a rejection here, so this never admits something the
