@@ -112,12 +112,13 @@ Every CSS move needs a screenshot diff at 390 and 1440 px: load order is the cas
 | 5 God functions | 14dc85936 | run_dealer, upsert_vehicles, merge_verified_specs, serialize_car_for_api, car detail context, search_cars, main.js, car_page.js split behind goldens |
 | 6 main.py split | b3e829f0d, 0f439058d, 5bf71ff0a, d8618fced | main.py 1,402 -> 192 lines (app assembly only): auth/session.py, web/{static,security,templating}.py, auth/pages.py, routes/account.py, enrichment/recalls_lookup.py; main_module() retired; app-surface golden test |
 | 7 Scanner splits | 72165d2ba, b782f9ee0, f421a522c | hanging Overpass test made hermetic (0.5 s); recipe_synth.py 2,454 -> 287-line facade over backend/scanner/synth/ (http, common, registry, validate, platforms/*); dealer_pipeline.py 1,394 -> 165-line CLI over backend/scanner/pipeline/ (db, roster, recipes, runner, vpic, dealer_logs, reconcile, assess, lifecycle, triage, run); surface goldens for both |
+| 8 Follow-ups | 39d7241db, 787546e21, 5986b498b, d096c2221 | suite fully offline (vPIC autouse stub + `real_vpic_client` opt-out, fake DNS; 0 network attempts); one validation module (recipe_validation.py); backend/scanner/net/client.py shared by chain/synth/replay/prefetch/vdp_recipes with per-site behavior pinned by test_scanner_http_characterization.py; fetch_oem_brochures.py 2,507 -> 348-line CLI over backend/enrichment/brochure_acquisition/. Open questions: OWNER_DECISIONS.md |
 | 7 recipe_synth split (F-6) | `git log -- backend/scanner/synth` | recipe_synth.py 2,454 lines -> facade over backend/scanner/synth/{http,common,registry,validate}.py + platforms/ (one module per template, carscommerce_scope.py for the store filter); pure move, surface + registry-order pinned by test_recipe_synth_surface.py; tests now patch the owning synth module. Follow-ups: chain.py/recipes.py/vdp fetchers onto synth/http.py; merge synth/validate.py with recipe_validation.py |
 | 7 fetch_oem_brochures split (datascripts F7) | `git log -- backend/enrichment/brochure_acquisition` | fetch_oem_brochures.py 2,507 lines -> 348-line CLI (docstring, argparse, mode dispatch) over backend/enrichment/brochure_acquisition/{paths,gaps,sources,download,corpus,quarantine,audits,reachability,html_specs,plan}.py; bodies byte-identical, every old name re-exported; argparse surface + dispatch order pinned by test_fetch_oem_brochures_surface.py, --help output unchanged; plan_and_download(args) is the default mode. Not done: subcommands (plan|download|quarantine|audit|html-specs|probe) -- flags kept as-is |
 
-Still open from this audit: `init_job_queue_schema()` and init_*_db() still run on web import; fetch_oem_brochures subcommands; reconcile the two "recipe works" rules (validate_recipe's
-VIN count vs validate_recipe_set's verdict; code now lives in one module, recipe_validation.py); make synth/http.py the one fetcher for chain.py/recipes.py/vdp; stub vPIC in
-upsert tests (they try NHTSA);
-`brochure_extract.py`; `comments_db.py`; the six scanner HTTP fetchers; the four spec-column
-writers; 139 scanner env knobs; inline template scripts and CSS files whose contents belong to
-other pages; a base layout for public templates. Operational: V019 baselined on local 2026-10-04 (prod never failed; it applied V025 on the 1.5.0 boot).
+Still open from this audit: `init_job_queue_schema()` and init_*_db() still run on web import; the owner
+decisions in OWNER_DECISIONS.md (recipe-works rule, per-fetcher HTTP differences, brochure CLI);
+`brochure_extract.py`; `comments_db.py`; the bare-requests scrapers (dealer_inspire, dealer_venom,
+gap_fill) and four stray curl_cffi call sites outside net/client.py; the four spec-column writers;
+139 scanner env knobs; inline template scripts and CSS files whose contents belong to other pages;
+a base layout for public templates. Operational: V019 baselined on local 2026-10-04 (prod never failed; it applied V025 on the 1.5.0 boot).
