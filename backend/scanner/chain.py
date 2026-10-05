@@ -52,6 +52,8 @@ from collections.abc import Callable
 from dataclasses import dataclass, field
 from typing import Any
 
+from backend.scanner.net.client import IMPERSONATE_PROFILES
+
 logger = logging.getLogger(__name__)
 
 _UA = (
@@ -212,19 +214,16 @@ class ImpersonatingFetcher(Fetcher):
     name = "impersonate"
 
     # Ordered by observed hit rate.
-    PROFILES = ("chrome", "chrome124", "safari17_0")
+    PROFILES = IMPERSONATE_PROFILES
 
     def __init__(self, timeout_s: float = 25.0):
         self.timeout_s = timeout_s
         self._winning: dict[str, str] = {}
 
     def available(self) -> bool:
-        try:
-            import curl_cffi  # noqa: F401
+        from backend.scanner.net.client import curl_cffi_available
 
-            return True
-        except ImportError:
-            return False
+        return curl_cffi_available()
 
     @staticmethod
     def _host(url: str) -> str:
@@ -233,38 +232,34 @@ class ImpersonatingFetcher(Fetcher):
         return urlparse(url).netloc.lower()
 
     def fetch(self, url: str) -> str:
-        from curl_cffi import requests as cffi_requests
+        from backend.scanner.net import client
 
-        from backend.scanner.http_fetch import proxy_url
-
-        proxy = proxy_url()
-        proxies = {"http": proxy, "https": proxy} if proxy else None
+        cffi_requests = client.import_curl_cffi()
+        proxies = client.scanner_proxies()
 
         host = self._host(url)
         # Try the signature that already worked for this host first.
         known = self._winning.get(host)
         order = ([known] + [p for p in self.PROFILES if p != known]) if known else list(self.PROFILES)
 
-        last_status: int | None = None
-        for profile in order:
-            try:
-                resp = cffi_requests.get(
-                    url,
-                    impersonate=profile,
-                    timeout=self.timeout_s,
-                    proxies=proxies,
-                    allow_redirects=True,
-                )
-            except Exception as exc:  # curl_cffi has its own error hierarchy
-                last_status = None
-                logger.debug("impersonate %s failed for %s: %s", profile, host, exc)
-                continue
-            if resp.status_code == 200 and resp.text and resp.text.strip():
-                self._winning[host] = profile
-                return resp.text
-            last_status = resp.status_code
+        def _failed(profile: str, exc: Exception) -> None:
+            logger.debug("impersonate %s failed for %s: %s", profile, host, exc)
 
-        raise FetchError(f"impersonation exhausted for {host} (last status {last_status})")
+        got = client.rotate_impersonation(
+            cffi_requests,
+            url,
+            profiles=order,
+            accept=lambda resp: bool(resp.status_code == 200 and resp.text and resp.text.strip()),
+            on_error=_failed,
+            timeout=self.timeout_s,
+            proxies=proxies,
+            allow_redirects=True,
+        )
+        if got.response is not None:
+            self._winning[host] = got.profile
+            return got.response.text
+
+        raise FetchError(f"impersonation exhausted for {host} (last status {got.last_status})")
 
 
 class RequestsFetcher(Fetcher):
@@ -275,10 +270,13 @@ class RequestsFetcher(Fetcher):
         self.user_agent = user_agent
 
     def fetch(self, url: str) -> str:
-        import requests
+        from backend.scanner.net import client
 
-        resp = requests.get(
+        resp = client.send(
+            client.import_requests(),
+            "GET",
             url,
+            via_get=True,
             timeout=self.timeout_s,
             headers={"User-Agent": self.user_agent},
             allow_redirects=True,

@@ -255,22 +255,25 @@ def _fetch_json(recipe: VdpRecipe, url: str, payload: str | None, base_url: str)
     }
     if recipe.method != "GET":
         headers["Content-Type"] = "application/json"
-    from backend.scanner.http_fetch import proxy_url
+    from backend.scanner.net import client as net_client
 
-    proxies = {"http": proxy_url(), "https": proxy_url()} if proxy_url() else None
+    proxies = net_client.scanner_proxies()
     try:
-        from curl_cffi import requests as cffi_requests
+        cffi_requests = net_client.import_curl_cffi()
 
-        resp = cffi_requests.request(
-            recipe.method, url, headers=headers, data=payload, impersonate="chrome",
-            timeout=_REPLAY_TIMEOUT_S, proxies=proxies,
+        resp = net_client.send(
+            cffi_requests, recipe.method, url, via_get=False, headers=headers, data=payload,
+            impersonate="chrome", timeout=_REPLAY_TIMEOUT_S, proxies=proxies,
         )
         status, text = resp.status_code, resp.text
     except ImportError:
-        import requests
+        requests = net_client.import_requests()
 
         try:
-            resp = requests.request(recipe.method, url, headers=headers, data=payload, timeout=_REPLAY_TIMEOUT_S, proxies=proxies)
+            resp = net_client.send(
+                requests, recipe.method, url, via_get=False,
+                headers=headers, data=payload, timeout=_REPLAY_TIMEOUT_S, proxies=proxies,
+            )
             status, text = resp.status_code, resp.text
         except Exception:  # noqa: BLE001
             return 0, None

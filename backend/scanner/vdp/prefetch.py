@@ -336,8 +336,11 @@ def _note_status(url: str, status: int) -> None:
 def _fetch_html(url: str) -> str | None:
     """Fetch a VDP with a browser TLS fingerprint first (curl_cffi); Dealer Inspire's
     Cloudflare returns 403 to plain requests on every rooftop. Falls back to
-    requests when curl_cffi is missing or errors."""
-    from backend.scanner.http_fetch import proxy_url
+    requests when curl_cffi is missing or errors.
+
+    No challenge detection here (unlike synth's fetchers): a 200 HTML challenge page
+    is returned as the VDP. Pinned by test_scanner_http_characterization (audit F-18)."""
+    from backend.scanner.net import client as net_client
 
     from urllib.parse import urlparse as _up
 
@@ -348,26 +351,30 @@ def _fetch_html(url: str) -> str | None:
     # Cajon: 0/4 without, 7/7 with).
     headers = {"User-Agent": _UA, "Accept": "text/html,application/xhtml+xml", "Referer": _origin,
                "Sec-Fetch-Site": "same-origin", "Sec-Fetch-Mode": "navigate", "Sec-Fetch-Dest": "document"}
-    proxies = {"http": proxy_url(), "https": proxy_url()} if proxy_url() else None
+    proxies = net_client.scanner_proxies()
     try:
-        from curl_cffi import requests as cffi_requests
+        cffi_requests = net_client.import_curl_cffi()
 
-        resp = cffi_requests.get(
-            url, headers=headers, impersonate="chrome", timeout=_HTTP_FETCH_TIMEOUT_S, proxies=proxies
+        resp = net_client.send(
+            cffi_requests, "GET", url, via_get=True,
+            headers=headers, impersonate="chrome", timeout=_HTTP_FETCH_TIMEOUT_S, proxies=proxies,
         )
         _note_status(url, int(resp.status_code))
         if resp.status_code == 200 and "html" in (resp.headers.get("content-type") or ""):
             return resp.text
-        if resp.status_code in (403, 429, 503):
+        if net_client.is_fingerprint_block(resp.status_code, net_client.VDP_FINGERPRINT_BLOCK_STATUSES):
             return None  # a fingerprint block; plain requests will not do better
     except ImportError:
         pass
     except Exception as exc:  # noqa: BLE001 - fall through to plain requests, but remember why
         _note_error(url, exc)
-    import requests
+    requests = net_client.import_requests()
 
     try:
-        resp = requests.get(url, headers=headers, timeout=_HTTP_FETCH_TIMEOUT_S, proxies=proxies)
+        resp = net_client.send(
+            requests, "GET", url, via_get=True,
+            headers=headers, timeout=_HTTP_FETCH_TIMEOUT_S, proxies=proxies,
+        )
         _note_status(url, int(resp.status_code))
         if resp.status_code != 200 or "html" not in (resp.headers.get("content-type") or ""):
             return None

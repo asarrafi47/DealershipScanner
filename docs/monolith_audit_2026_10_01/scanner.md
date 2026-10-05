@@ -449,6 +449,18 @@ with impersonation profiles, proxy, pacing, challenge detection, egress tag, sta
 all six call it. chain.py's Fetcher classes become thin adapters.
 Blast radius: internal to each module; tests patch the private fetchers (`_fetch_impersonated`,
 `_replay_request`, `_fetch_html`) — keep those names as wrappers during migration.
+Progress 2026-10-05 (behavior-preserving step): backend/scanner/net/client.py holds the shared
+primitives (lazy curl_cffi/requests import, scanner_proxies, send, rotate_impersonation with
+accept/pacing/error hooks, looks_like_challenge, status sets). chain Impersonating/Requests
+fetchers, synth/http._fetch_impersonated, recipes._replay_impersonated/_replay_request,
+vdp/prefetch._fetch_html and vdp/vdp_recipes._fetch_json call it with options reproducing their
+old behavior, pinned by backend/tests/test_scanner_http_characterization.py. NOT yet unified (owner
+decisions): replay still sends no proxies= (curl_cffi 0.16 never reads proxy env in Python —
+`trust_env` is stored but unused; with proxies unset, libcurl's own env lookup may still apply
+https_proxy/HTTPS_PROXY, but SCANNER_HTTP_PROXY is never seen); prefetch still has no challenge
+detection; timeouts/headers/retries still differ per site. Untouched: scrapers/dealer_inspire,
+dealer_venom, post_scan/gap_fill bare requests; pipeline/recipes.py and synth/platforms/wp_vehicles.py
+own curl_cffi calls; PlaywrightFetcher.
 
 ### job_queue.py — 810 lines, 25 defs, fan_in 15. P3
 Postgres job queue (DDL ensure_job_tables 25-71, enqueue/claim/finish/reap 83-280) + refresh

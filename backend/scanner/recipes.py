@@ -31,6 +31,8 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import parse_qsl, urlencode, urlparse, urlunparse
 
+from backend.scanner.net import client as net_client
+
 logger = logging.getLogger("scanner")
 
 RECIPES_DIR = Path("workspace") / "recipes"
@@ -706,7 +708,7 @@ def _url_for_page(recipe: EndpointRecipe, page_index: int) -> str:
 
 # Statuses a WAF returns when it dislikes the TLS handshake rather than the request.
 # Cloudflare and Akamai use 403; DataDome and some Akamai configs use 405/429.
-_TLS_FINGERPRINT_STATUSES = (403, 405, 429)
+_TLS_FINGERPRINT_STATUSES = net_client.TLS_FINGERPRINT_STATUSES
 
 
 def _replay_impersonated(
@@ -722,27 +724,27 @@ def _replay_impersonated(
     sample "chrome" alone cleared about half while chrome/chrome124/safari17_0 together
     cleared 29 of 30.
     """
-    try:
-        from curl_cffi import requests as cffi_requests
-    except ImportError:
+    cffi_requests = net_client.curl_cffi_requests()
+    if cffi_requests is None:
         return 0, None
 
-    for profile in ("chrome", "chrome124", "safari17_0"):
-        try:
-            if recipe.method == "GET":
-                resp = cffi_requests.get(
-                    req_url, headers=headers, impersonate=profile, timeout=_REPLAY_TIMEOUT_S
-                )
-            else:
-                resp = cffi_requests.request(
-                    recipe.method, req_url, headers=headers, data=payload,
-                    impersonate=profile, timeout=_REPLAY_TIMEOUT_S,
-                )
-        except Exception as exc:  # curl_cffi raises its own error hierarchy
-            logger.debug("impersonated replay %s failed: %s", profile, str(exc)[:120])
-            continue
-        if resp.status_code != 200:
-            continue
+    # No proxies= here: replay has never routed through SCANNER_HTTP_PROXY (pinned by
+    # test_scanner_http_characterization; an open owner question, audit F-18).
+    send_kwargs: dict[str, Any] = {"headers": headers}
+    if recipe.method != "GET":
+        send_kwargs["data"] = payload
+
+    def _failed(profile: str, exc: Exception) -> None:
+        logger.debug("impersonated replay %s failed: %s", profile, str(exc)[:120])
+
+    got = net_client.rotate_impersonation(
+        cffi_requests, req_url, method=recipe.method, via_get=recipe.method == "GET",
+        profiles=net_client.IMPERSONATE_PROFILES,
+        accept=lambda r: r.status_code == 200, on_error=_failed,
+        timeout=_REPLAY_TIMEOUT_S, **send_kwargs,
+    )
+    if got.response is not None:
+        resp, profile = got.response, got.profile
         logger.info("recipe replay cleared via TLS impersonation (%s): %s", profile, req_url[:70])
         if recipe.pagination in (PAGINATION_DEP_SRP, PAGINATION_HTML_PAGE, PAGINATION_JAZEL_SRP) or recipe.provider_hint == "html_cards":
             return resp.status_code, resp.text or None
@@ -781,17 +783,17 @@ def _replay_request(
 
     try:
         if recipe.method == "GET":
-            resp = requests.get(req_url, headers=headers, timeout=_REPLAY_TIMEOUT_S)
+            resp = net_client.send(requests, "GET", req_url, via_get=True, headers=headers, timeout=_REPLAY_TIMEOUT_S)
         else:
-            resp = requests.request(
-                recipe.method, req_url, headers=headers,
+            resp = net_client.send(
+                requests, recipe.method, req_url, via_get=False, headers=headers,
                 data=payload, timeout=_REPLAY_TIMEOUT_S,
             )
     except requests.RequestException as e:
         logger.debug("Recipe replay request failed (%s): %s", recipe.url[:80], str(e)[:150])
         return _replay_impersonated(recipe, req_url, headers, payload)
 
-    if resp.status_code in _TLS_FINGERPRINT_STATUSES:
+    if net_client.is_fingerprint_block(resp.status_code, _TLS_FINGERPRINT_STATUSES):
         # The edge rejected the handshake, not the request. Retry with a real browser's
         # TLS signature before treating this as a dead recipe.
         #

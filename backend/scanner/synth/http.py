@@ -3,7 +3,10 @@ Plain-HTTP fetch layer for recipe synthesis: browser-navigation headers, global
 fetch pacing, Cloudflare challenge detection, and the urllib -> curl_cffi
 (TLS-impersonated) escalation used by every synth template and validator.
 
-Moved verbatim from ``backend/scanner/recipe_synth.py`` (audit F-6). The pacing
+Moved verbatim from ``backend/scanner/recipe_synth.py`` (audit F-6). Since audit
+F-18 the curl_cffi rotation, proxy mapping and challenge detection come from the
+shared layer :mod:`backend.scanner.net.client`; this module keeps its own options
+(pacing per attempt, challenge + thin-body rejection) and names. The pacing
 clock (``_last_fetch_at``) lives here: ``_pace`` is one global clock for the
 whole process, whichever module calls it.
 """
@@ -18,6 +21,17 @@ from typing import Any
 from urllib.parse import urlparse
 
 from backend.scanner.http_fetch import open_url
+from backend.scanner.net import client as net_client
+
+# Challenge detection lives in the shared HTTP layer (audit F-18); the names stay
+# importable from here (and from the recipe_synth facade) for their callers.
+from backend.scanner.net.client import (
+    _CHALLENGE_BEACON_MARKERS,
+    _CHALLENGE_MARKERS,
+    _MAX_CHALLENGE_SHELL_BYTES,
+    _MIN_REAL_HTML_BYTES,
+    looks_like_challenge,
+)
 
 logger = logging.getLogger("scanner")
 
@@ -72,49 +86,12 @@ def _pace() -> None:
         _last_fetch_at = time.monotonic()
 
 
-# Markers that mean "this is a JS challenge / anti-bot shell, not real HTML".
-_CHALLENGE_MARKERS = (
-    "just a moment",
-    "checking your browser",
-    "cf-challenge",
-    "__cf_chl",
-    "attention required",
-    "enable javascript and cookies",
-    "cf-browser-verification",
-    "px-captcha",
-)
-# Markers that Cloudflare also injects into REAL pages as a passive bot-management
-# beacon (``s.src='/cdn-cgi/challenge-platform/scripts/...'``). On their own they
-# prove nothing: Honda of El Cajon serves a 459KB genuine Dealer eProcess homepage
-# carrying that beacon, and treating it as a challenge made the whole dealer read as
-# ``homepage_unreachable_200``. A beacon only counts as a challenge when the body is
-# thin (a real interstitial is a few KB) or a strong marker is present as well.
-_CHALLENGE_BEACON_MARKERS = ("/cdn-cgi/challenge-platform",)
-_MIN_REAL_HTML_BYTES = 2000
-_MAX_CHALLENGE_SHELL_BYTES = 20_000
-
-
-def looks_like_challenge(html: str) -> bool:
-    """True when *html* is an anti-bot interstitial rather than a real page.
-
-    Strong markers ("just a moment", ``__cf_chl``, ...) decide on their own. A
-    passive beacon (``/cdn-cgi/challenge-platform``) decides only for a thin body,
-    because Cloudflare injects the same script tag into pages it served normally.
-    """
-    low = html.lower()
-    if any(m in low for m in _CHALLENGE_MARKERS):
-        return True
-    if len(html) < _MAX_CHALLENGE_SHELL_BYTES and any(m in low for m in _CHALLENGE_BEACON_MARKERS):
-        return True
-    return False
-
-
 # ── HTTP fetch ────────────────────────────────────────────────────────────────
 
 
 # HTTP statuses worth a short retry — transient rate limits / gateway blips, not
 # a hard "this needs a browser" signal.
-_RETRYABLE_STATUS = frozenset({429, 500, 502, 503, 504})
+_RETRYABLE_STATUS = net_client.RETRYABLE_STATUSES
 
 
 def _fetch_impersonated(
@@ -138,36 +115,36 @@ def _fetch_impersonated(
     The same quality bar as the urllib path applies -- a challenge interstitial is a
     couple of hundred KB of markup and would otherwise read as a successful fetch.
     """
-    try:
-        from curl_cffi import requests as cffi_requests
-    except ImportError:
+    cffi_requests = net_client.curl_cffi_requests()
+    if cffi_requests is None:
         return None
 
     from backend.scanner.chain import ImpersonatingFetcher
-    from backend.scanner.http_fetch import proxy_url
 
-    proxy = proxy_url()
-    proxies = {"http": proxy, "https": proxy} if proxy else None
+    proxies = net_client.scanner_proxies()
 
-    for profile in ImpersonatingFetcher.PROFILES:
-        _pace()
-        try:
-            resp = cffi_requests.get(
-                url, impersonate=profile, timeout=timeout, proxies=proxies,
-                allow_redirects=True, headers=headers or None,
-            )
-        except Exception as exc:
-            logger.debug("recipe_synth impersonate %s failed %s: %s", profile, url[:70], str(exc)[:90])
-            continue
+    def _accept(resp: Any) -> bool:
         if resp.status_code != 200:
-            continue
+            return False
         html = resp.text or ""
         if len(html) < min_bytes:
-            continue
+            return False
         if looks_like_challenge(html):
-            continue
-        return html
-    return None
+            return False
+        return True
+
+    def _failed(profile: str, exc: Exception) -> None:
+        logger.debug("recipe_synth impersonate %s failed %s: %s", profile, url[:70], str(exc)[:90])
+
+    got = net_client.rotate_impersonation(
+        cffi_requests, url,
+        profiles=ImpersonatingFetcher.PROFILES, accept=_accept,
+        before_attempt=_pace, on_error=_failed,
+        timeout=timeout, proxies=proxies, allow_redirects=True, headers=headers or None,
+    )
+    if got.response is None:
+        return None
+    return got.response.text or ""
 
 
 def fetch_dealer_html(url: str, *, timeout: float = 25.0, retries: int = 2) -> str | None:
@@ -266,7 +243,7 @@ def _dep_fetch_page(url: str) -> tuple[str | None, str]:
 
 # Statuses a WAF returns when it dislikes the TLS handshake rather than the request
 # (same set as recipes._TLS_FINGERPRINT_STATUSES).
-_DEP_ESCALATE_STATUSES = frozenset({403, 405, 429})
+_DEP_ESCALATE_STATUSES = frozenset(net_client.TLS_FINGERPRINT_STATUSES)
 
 
 def _dep_fetch_html(url: str) -> str | None:
