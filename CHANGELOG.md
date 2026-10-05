@@ -2,6 +2,15 @@
 
 ## [Unreleased]
 
+## [1.5.1] - 2026-10-05
+
+### Changed
+- backend/main.py split into owning modules (1,402 -> 192 lines; app assembly only):
+  auth/session.py, auth/pages.py, routes/account.py, web/static.py, web/security.py,
+  web/templating.py, enrichment/recalls_lookup.py. No behavior change; routes, endpoint
+  names, hook order, filters and error handlers pinned by test_app_surface_golden.py.
+- main_module() indirection removed; route modules import helpers from their owners.
+
 ## [1.5.0] - 2026-10-04
 
 ### Fixed
