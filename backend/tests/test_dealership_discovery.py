@@ -162,13 +162,31 @@ def test_merge_dedupe_fuzzy_same_dealer():
     assert m[0].osm_id == "n/1"
 
 
+@patch("backend.discovery.osm.time.sleep")
+@patch("backend.discovery.osm.requests.Session.get")
 @patch("backend.discovery.osm.requests.Session.post")
+@patch("backend.discovery.pipeline.fetch_google_places_dealerships", return_value=[])
 @patch("backend.discovery.pipeline.ddg_find_dealer_url")
-def test_run_discovery_overpass_timeout_returns_empty_osm(mock_ddg, mock_post):
+def test_run_discovery_overpass_timeout_returns_empty_osm(
+    mock_ddg, _mock_gp, mock_post, mock_status_get, mock_sleep, monkeypatch
+):
+    """Every Overpass POST times out: the OSM tier degrades to empty, the run still returns a list.
+
+    Hermetic: the Overpass slot probe (``Session.get`` on ``/api/status``) and the
+    retry backoff (``time.sleep``, 10-20 s per attempt across 3 mirrors) are stubbed,
+    and the Google Places tier is mocked so a real GOOGLE_MAPS_API_KEY never matters.
+    """
+    monkeypatch.setenv("DISCOVERY_OVERPASS_URLS", "")
+    monkeypatch.setenv("DISCOVERY_OVERPASS_NO_FALLBACK", "")
     mock_post.side_effect = requests.Timeout("network")
+    mock_status_get.side_effect = requests.ConnectionError("no network in tests")
     mock_ddg.return_value = None
     rows = run_discovery("28210", 25.0, fill_urls_via_ddg=False)
     assert isinstance(rows, list)
+    assert rows == []
+    # The OSM tier really ran and exhausted its retries on every mirror.
+    assert mock_post.call_count == 3 * 3
+    mock_ddg.assert_not_called()
 
 
 @patch("backend.discovery.osm.fetch_osm_dealerships", return_value=[])
