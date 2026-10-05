@@ -885,10 +885,10 @@ def test_trim_ladder_free_tier_strips_adds_on_api_without_premium(monkeypatch) -
         "dealer_id": "demo",
         "active": 1,
     }
-    monkeypatch.setattr("backend.main.get_car_by_id", lambda cid, **kw: car if cid == 99 else None)
+    monkeypatch.setattr("backend.routes.cars_pages.get_car_by_id", lambda cid, **kw: car if cid == 99 else None)
     monkeypatch.setattr("backend.billing.access.current_access", lambda: _viewer(False))
     monkeypatch.setattr(
-        "backend.main.prepare_car_detail_context",
+        "backend.routes.cars_pages.prepare_car_detail_context",
         lambda _raw: {"verified_specs": {}, "gallery_images": []},
     )
     with app.test_client() as client:
@@ -922,10 +922,10 @@ def test_trim_ladder_in_api_when_premium_renegade(monkeypatch) -> None:
         "dealer_id": "demo",
         "active": 1,
     }
-    monkeypatch.setattr("backend.main.get_car_by_id", lambda cid, **kw: car if cid == 101 else None)
+    monkeypatch.setattr("backend.routes.cars_pages.get_car_by_id", lambda cid, **kw: car if cid == 101 else None)
     monkeypatch.setattr("backend.billing.access.current_access", lambda: _viewer(True))
     monkeypatch.setattr(
-        "backend.main.prepare_car_detail_context",
+        "backend.routes.cars_pages.prepare_car_detail_context",
         lambda _raw: {"verified_specs": {}, "gallery_images": []},
     )
     with app.test_client() as client:
@@ -953,10 +953,10 @@ def test_trim_ladder_in_api_when_paid(monkeypatch) -> None:
         "dealer_id": "demo",
         "active": 1,
     }
-    monkeypatch.setattr("backend.main.get_car_by_id", lambda cid, **kw: car if cid == 100 else None)
+    monkeypatch.setattr("backend.routes.cars_pages.get_car_by_id", lambda cid, **kw: car if cid == 100 else None)
     monkeypatch.setattr("backend.billing.access.current_access", lambda: _viewer(True))
     monkeypatch.setattr(
-        "backend.main.prepare_car_detail_context",
+        "backend.routes.cars_pages.prepare_car_detail_context",
         lambda _raw: {"verified_specs": {}, "gallery_images": []},
     )
     with app.test_client() as client:

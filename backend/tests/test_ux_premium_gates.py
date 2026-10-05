@@ -18,6 +18,8 @@ from __future__ import annotations
 
 import pytest
 
+from backend.routes import cars_pages as _cars_pages_routes
+
 _FAKE_CAR = {
     "id": 7,
     "vin": "1C6RRFFG4NN401203",
@@ -188,7 +190,7 @@ def test_car_page_keeps_logout_control_for_signed_in_user(
 ) -> None:
     """Defect 3 regression pin: /car/<id> renders the shared nav's logout form."""
     main = _make_app(app_factory, tmp_path, BILLING_STRIPE_ENABLED="1")
-    monkeypatch.setattr(main, "get_car_by_id", lambda *_a, **_k: dict(_FAKE_CAR))
+    monkeypatch.setattr(_cars_pages_routes, "get_car_by_id", lambda *_a, **_k: dict(_FAKE_CAR))
     client = _client_with_session(main, _FREE_SESSION)
     rv = client.get("/car/7")
     assert rv.status_code == 200

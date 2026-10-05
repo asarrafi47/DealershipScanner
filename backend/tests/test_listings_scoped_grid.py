@@ -13,6 +13,8 @@ import sqlite3
 
 import pytest
 
+from backend.routes import listings_api as _listings_api_routes
+
 # pgeocode centroid for 92694 (Ladera Ranch, CA) is ~(33.55, -117.64).
 NEAR = (33.56, -117.66)      # ~1 mi
 MID = (33.75, -117.87)       # ~18 mi
@@ -189,9 +191,8 @@ def test_cards_have_the_grid_serializer_keys(scoped, client):
 
 
 def test_hidden_dealers_are_excluded(scoped, client, monkeypatch):
-    import backend.main as main
 
-    monkeypatch.setattr(main, "hidden_dealer_ids_for_user", lambda _uid: {"near-motors-test"})
+    monkeypatch.setattr(_listings_api_routes, "hidden_dealer_ids_for_user", lambda _uid: {"near-motors-test"})
     r = client.get("/api/listings/cars?zip=92694&radius=50")
     data = _cars(r)
     assert data["cars"], "other dealers must still be served"

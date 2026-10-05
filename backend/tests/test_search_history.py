@@ -9,6 +9,8 @@ from urllib.parse import parse_qs, urlsplit
 
 import pytest
 
+from backend.routes import listings_api as _listings_api_routes
+
 CSRF = "search-history-test-csrf-token-32-chars-long"
 DEALER_ID = "t-dealer"
 T0 = datetime(2026, 9, 28, 12, 0, 0, tzinfo=timezone.utc)
@@ -420,13 +422,12 @@ def test_smart_search_records_for_logged_in_user_only(env):
 
 def test_failing_history_write_does_not_break_search(env, monkeypatch):
     import backend.listings.routes as listings_routes
-    import backend.main as main
 
     def boom(*a, **k):
         raise RuntimeError("history table is on fire")
 
     monkeypatch.setattr(listings_routes, "record_search_history", boom)
-    monkeypatch.setattr(main, "record_search_history", boom)
+    monkeypatch.setattr(_listings_api_routes, "record_search_history", boom)
 
     client = env["app"].test_client()
     _login(client, env["uid"])

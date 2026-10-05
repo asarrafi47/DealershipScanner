@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import pytest
 
+from backend.routes import cars_pages as _cars_pages_routes
+
 
 def test_web_research_playwright_auto_prod_requires_login(monkeypatch: pytest.MonkeyPatch) -> None:
     from backend.utils import car_chat_policy as m
@@ -113,9 +115,9 @@ def test_car_chat_global_rate_limit(monkeypatch: pytest.MonkeyPatch, tmp_path) -
         "inactive": 0,
     }
 
-    monkeypatch.setattr(main, "get_car_by_id", lambda *_a, **_k: dummy_car)
+    monkeypatch.setattr(_cars_pages_routes, "get_car_by_id", lambda *_a, **_k: dummy_car)
     monkeypatch.setattr(
-        main,
+        _cars_pages_routes,
         "run_car_page_chat",
         lambda *_a, **_k: {"reply": "ok", "error": None, "discrepancy_flags": []},
     )

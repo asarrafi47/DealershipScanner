@@ -11,32 +11,16 @@ load_kmac_vault_secrets()
 # Central env access (single read point; see backend/config.py).
 from backend.config import Config
 
-import json
 import logging
 import os
-import re
-import sqlite3
 import time
 from datetime import timedelta
 
-from flask import Flask, abort, make_response
-from werkzeug.exceptions import HTTPException
+from flask import Flask
 
-from backend.intelligence.ai.agent import run_car_page_chat, run_compare_chat
 from backend.auth.apple_oauth import bp as apple_oauth_bp
 from backend.auth.google_oauth import bp as google_oauth_bp
 from backend.billing.routes import bp as billing_bp
-from backend.billing.catalog import (
-    FEATURE_AI_CAR_CHAT,
-    FEATURE_AI_COMPARE_CHAT,
-    FEATURE_MARKET_INTEL,
-    FEATURE_NEARBY_DEALERS,
-    FEATURE_PACKAGES_ENSURE,
-    FEATURE_VEHICLE_HISTORY,
-    FEATURE_WINDOW_STICKER,
-    get_plan,
-    minimum_plan_for_feature,
-)
 from backend.dealer.admin import store_admin_bp
 
 # Site-admin hub pages (must load before first url_for in templates).
@@ -51,60 +35,10 @@ from backend.routes.health import bp as health_api_bp
 from backend.dev.routes import dev_bp
 from backend.db.admin_users_db import init_admin_db
 from backend.db.dealer_portal_db import init_dealer_portal_db
-from backend.db.inventory_db import (
-    clear_search_history,
-    create_saved_search,
-    delete_saved_search,
-    delete_search_history_entry,
-    get_car_by_id,
-    get_cars_by_ids,
-    get_filter_options,
-    get_saved_car_ids,
-    hidden_dealer_ids_for_user,
-    hide_dealer,
-    init_inventory_db,
-    is_car_saved,
-    is_dealer_hidden,
-    list_hidden_dealers,
-    list_saved_searches,
-    list_search_history,
-    listings_geo_coords_maps,
-    record_search_history,
-    save_car,
-    search_cars,
-    search_cars_by_make_model_pairs,
-    serialize_car_for_listings_grid,
-    serialize_cars_for_listings_grid,
-    unhide_dealer,
-    unsave_car,
-)
-from backend.db.user_history_db import (
-    count_viewed_cars,
-    get_recent_compared_car_ids,
-    get_recent_viewed_car_ids,
-    record_car_view,
-    record_compare_session,
-)
-from backend.db.users_db import (
-    check_user,
-    get_user_by_login,
-    init_users_db,
-)
-from backend.enrichment.knowledge_engine import prepare_car_detail_context
-from backend.listings.geo_session import (
-    apply_listings_geo_to_session,
-    listings_geo_kwargs_from_session,
-    persist_listings_geo_from_request,
-)
-from backend.listings.routes import listings_page
-from backend.utils.car_serialize import serialize_car_for_api
-from backend.utils.listing_completeness import INCOMPLETE_FIELD_LABELS
-from backend.utils.car_chat_policy import car_chat_rate_limits, car_chat_user_daily_limit, web_research_playwright_allowed
-from backend.utils.client_ip import client_ip as _client_ip_from_request
+from backend.db.inventory_db import init_inventory_db
+from backend.db.users_db import init_users_db
 from backend.utils.client_ip import trust_proxy_headers
-from backend.utils.query_parser import parse_natural_query
 from backend.utils.runtime_env import is_production_env, session_cookie_secure_default
-from backend.utils.roles import is_admin_role
 
 _logger = logging.getLogger(__name__)
 
@@ -149,8 +83,6 @@ app.config["SESSION_REFRESH_EACH_REQUEST"] = True
 
 # Static assets: year-long cache, ?v= cache-buster, precompressed siblings.
 register_static(app)
-
-
 
 from backend.utils.production_security import assert_production_security_config
 
@@ -221,10 +153,8 @@ register_dev_console(app)
 
 # Route modules extracted from this file. Each exposes ``register(app)`` and
 # keeps the original bare endpoint names (templates, the CSRF hook, and the
-# billing gate all match endpoints by bare name). The modules resolve
-# main-owned helpers through this module at request time so existing
-# ``backend.main`` monkeypatch targets and ``importlib.reload(backend.main)``
-# keep working — see backend/routes/_shared.py.
+# billing gate all match endpoints by bare name). Each module imports its
+# helpers from their owning modules; tests patch them on the route module.
 from backend.routes import admin_dealer_api as _admin_dealer_api_routes  # noqa: E402
 from backend.routes import cars_pages as _cars_pages_routes  # noqa: E402
 from backend.routes import community_api as _community_api_routes  # noqa: E402

@@ -15,6 +15,8 @@ from contextlib import contextmanager
 
 import pytest
 
+from backend.routes import home_dashboard as _home_dashboard_routes
+
 _ATTRIBUTION_DDL = """
 CREATE TABLE IF NOT EXISTS car_attribution (
     car_id           INTEGER PRIMARY KEY,
@@ -234,12 +236,11 @@ def test_home_rails_carry_the_caveat(fleet, monkeypatch):
     batches the verdict read itself — they used to call the per-car serializer
     with no attribution at all and stated the contradicted dealership as fact.
     """
-    import backend.main as main
     from backend.routes import home_dashboard as hd
 
-    monkeypatch.setattr(main, "get_recent_viewed_car_ids", lambda uid, limit=12: [1, 2])
+    monkeypatch.setattr(_home_dashboard_routes, "get_recent_viewed_car_ids", lambda uid, limit=12: [1, 2])
     monkeypatch.setattr(
-        main, "get_cars_by_ids", lambda ids: [dict(CARS[0]), dict(CARS[1])]
+        _home_dashboard_routes, "get_cars_by_ids", lambda ids: [dict(CARS[0]), dict(CARS[1])]
     )
 
     by_id = {c["id"]: c for c in hd._recently_viewed_for_user(7)}

@@ -14,7 +14,7 @@ short orchestrator that calls these steps in the original order:
 * :mod:`.assemble`        — the final context dict (key order preserved)
 * :mod:`.packages_ensure` — the process-local packages/sticker fetch job manager
 
-Steps resolve ``backend.main`` helpers through the ``main`` module object the
-orchestrator passes in, so tests that monkeypatch ``backend.main.<name>`` keep
-working. Heavy imports stay function-local, exactly as they were.
+Steps import their helpers from the owning modules (tests patch them on the
+step module that looks them up). Heavy imports stay function-local, exactly as
+they were.
 """

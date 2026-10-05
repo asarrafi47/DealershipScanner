@@ -7,7 +7,7 @@ from backend.tests.test_car_detail_api import _sample_car
 
 
 def test_api_car_nhtsa_recalls_not_found(monkeypatch) -> None:
-    monkeypatch.setattr("backend.main.get_car_by_id", lambda *_a, **_k: None)
+    monkeypatch.setattr("backend.routes.cars_pages.get_car_by_id", lambda *_a, **_k: None)
     with app.test_client() as client:
         rv = client.get("/api/cars/99999999/nhtsa-recalls")
     assert rv.status_code == 404
@@ -16,7 +16,7 @@ def test_api_car_nhtsa_recalls_not_found(monkeypatch) -> None:
 
 def test_api_car_nhtsa_recalls_ok(monkeypatch) -> None:
     car = _sample_car(42)
-    monkeypatch.setattr("backend.main.get_car_by_id", lambda cid, **kw: car if cid == 42 else None)
+    monkeypatch.setattr("backend.routes.cars_pages.get_car_by_id", lambda cid, **kw: car if cid == 42 else None)
     monkeypatch.setattr(
         "backend.enrichment.recalls_lookup.nhtsa_recalls_lookup_payload",
         lambda **_kw: (

@@ -2,11 +2,12 @@
 
 from __future__ import annotations
 
+from backend.utils.car_serialize import serialize_car_for_api
 from backend.utils.listing_completeness import INCOMPLETE_FIELD_LABELS
 
 
-def serialize_car(main, car_raw: dict, ctx: dict) -> dict:
-    return main.serialize_car_for_api(
+def serialize_car(car_raw: dict, ctx: dict) -> dict:
+    return serialize_car_for_api(
         car_raw,
         include_verified=False,
         verified_specs=ctx.get("verified_specs") or {},

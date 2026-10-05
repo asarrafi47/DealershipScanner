@@ -2,9 +2,9 @@
 
 This is the most monkeypatched cluster in the test suite: ``get_car_by_id``,
 ``prepare_car_detail_context``, ``listings_geo_kwargs_from_session``,
-``run_car_page_chat`` and friends are all patched on ``backend.main``.  Every
-main-owned helper is therefore resolved through the module object at request
-time (see ``backend.routes._shared``).  ``_build_car_detail_view_context`` is
+``run_car_page_chat`` and friends are imported from their owning modules and
+looked up as globals of this module at request time, so tests patch them here
+(``backend.routes.cars_pages.<name>``).  ``_build_car_detail_view_context`` is
 also used by ``backend.dev.scan_lab_routes`` (imported from here).
 """
 
@@ -26,7 +26,18 @@ from backend.billing.catalog import (
 from backend.billing import access as paid_access
 from backend.config import Config
 from backend.enrichment import recalls_lookup
-from backend.routes._shared import _client_ip, main_module
+from backend.db.inventory_db import (
+    get_car_by_id,
+    get_cars_by_ids,
+)
+from backend.db.user_history_db import record_compare_session
+from backend.enrichment.knowledge_engine import prepare_car_detail_context
+from backend.intelligence.ai.agent import (
+    run_car_page_chat,
+    run_compare_chat,
+)
+from backend.listings.geo_session import listings_geo_kwargs_from_session
+from backend.routes._shared import _client_ip
 from backend.routes.home_dashboard import _invalidate_reco_cache
 from backend.utils.car_chat_policy import (
     car_chat_listing_daily_limit,
@@ -37,40 +48,26 @@ from backend.utils.car_chat_policy import (
 from backend.utils.csrf import validate_csrf_header
 from backend.utils.ip_rate_limit import allow_request
 
-# The packages/sticker fetch job manager moved to car_detail/packages_ensure.py
-# (monolith audit 2026-10-01, W5). Every name is re-exported here: tests and
-# the ensure route below use them as ``cars_pages`` globals, and the dicts and
-# lock are the very same objects in both modules.
-from backend.routes.car_detail.packages_ensure import (  # noqa: F401
+# The packages/sticker fetch job manager lives in car_detail/packages_ensure.py
+# (monolith audit 2026-10-01, W5). The names the routes below use are imported
+# as ``cars_pages`` globals (tests spy on ``_run_packages_ensure_with_budget``
+# here); the dicts and lock are the very same objects in both modules.
+from backend.routes.car_detail.packages_ensure import (
     ENSURE_COMPLETED,
     ENSURE_COOLDOWN,
     ENSURE_INFLIGHT,
     ENSURE_TIMEOUT,
-    PACKAGES_ENSURE_FETCH_FIELDS,
     PACKAGES_ENSURE_PANEL_FIELDS,
-    PACKAGES_ENSURE_RESPONSE_FIELDS,
-    STICKER_STATUS_FETCHING,
-    STICKER_STATUS_HIDDEN,
     STICKER_STATUS_PENDING,
-    STICKER_STATUS_READY,
-    STICKER_STATUS_UNAVAILABLE,
-    _PACKAGES_ENSURE_DEFAULT_BUDGET,
-    _PACKAGES_ENSURE_DEFAULT_COOLDOWN,
-    _PACKAGES_ENSURE_DEFAULT_PANEL_TTL,
-    _PACKAGES_ENSURE_DEFAULT_POLL,
-    _PACKAGES_ENSURE_TRACK_MAX,
-    _packages_ensure_attempted_at,
     _packages_ensure_budget_seconds,
     _packages_ensure_cooldown_remaining,
     _packages_ensure_cooldown_seconds,
     _packages_ensure_in_cooldown,
-    _packages_ensure_inflight,
     _packages_ensure_inflight_snapshot,
     _packages_ensure_lock,
     _packages_ensure_panel_cache,
     _packages_ensure_panel_ttl_seconds,
     _packages_ensure_poll_seconds,
-    _packages_ensure_snapshot,
     _packages_ensure_worker_alive,
     _prune_packages_ensure_tracking,
     _run_packages_ensure_with_budget,
@@ -83,7 +80,7 @@ from backend.routes.car_detail import location as _cd_location
 from backend.routes.car_detail import options as _cd_options
 from backend.routes.car_detail import sticker as _cd_sticker
 from backend.routes.car_detail import viewer as _cd_viewer
-from backend.routes.car_detail.sticker import _car_window_sticker_preview_url  # noqa: F401
+from backend.routes.car_detail.sticker import _car_window_sticker_preview_url
 
 
 logger = logging.getLogger(__name__)
@@ -91,8 +88,7 @@ logger = logging.getLogger(__name__)
 
 def _serve_car_window_sticker_preview(car_id: int):
     """Render page 1 of stored Monroney PDF as PNG (same gate as chat/packages; SEC-072/073)."""
-    main = main_module()
-    car = main.get_car_by_id(car_id, include_inactive=False)
+    car = get_car_by_id(car_id, include_inactive=False)
     if not car:
         abort(404)
     ok, _err = paid_access.check_feature(FEATURE_WINDOW_STICKER)
@@ -136,17 +132,16 @@ def car_window_sticker_preview_png(car_id: int):
 
 def compare_page():
     """Side-by-side specs; public (ids in query string), history recorded for signed-in users."""
-    main = main_module()
     from backend.utils.compare_specs import build_compare_context, parse_compare_car_ids
 
     ids = parse_compare_car_ids(request.args.get("ids"))
     if ids and session.get("user_id"):
         try:
-            main.record_compare_session(int(session["user_id"]), ids)
+            record_compare_session(int(session["user_id"]), ids)
             _invalidate_reco_cache(int(session["user_id"]))
         except (TypeError, ValueError):
             pass
-    raw_cars = main.get_cars_by_ids(ids)
+    raw_cars = get_cars_by_ids(ids)
     ctx = build_compare_context(raw_cars)
     show_compare_chat = bool(
         ctx["cars"]
@@ -165,21 +160,20 @@ def _build_car_detail_view_context(car_id: int, car_raw: dict) -> dict:
     """Context for the car detail page; shared by ``car_detail``, ``api_car_detail``
     and the dev scan lab. Each step lives in ``backend/routes/car_detail/``; the
     order below is the historical one (only the first step writes anything)."""
-    main = main_module()
     uid = session.get("user_id")
-    car_is_saved = _cd_viewer.record_view_and_saved_state(main, uid, car_id)
-    ctx = main.prepare_car_detail_context(car_raw)
+    car_is_saved = _cd_viewer.record_view_and_saved_state(uid, car_id)
+    ctx = prepare_car_detail_context(car_raw)
     sticker = _cd_sticker.resolve_window_sticker_view(car_id, car_raw, ctx)
-    car = _cd_listing.serialize_car(main, car_raw, ctx)
+    car = _cd_listing.serialize_car(car_raw, ctx)
     listing_incomplete_fields = _cd_listing.listing_incomplete_fields(car_id)
     dealer_info = _cd_listing.registry_dealer_info(car_raw)
     attribution, attribution_fields = _cd_listing.apply_attribution_overlay(car_id, car)
     _cd_listing.apply_sticker_fact_overlays(car_id, car, car_raw)
     dealer_map = _cd_location.dealer_map_for_car(car_raw, dealer_info, attribution)
-    market_intel, deal_score_detail = _cd_insights.market_intel_for_viewer(main, car_raw)
+    market_intel, deal_score_detail = _cd_insights.market_intel_for_viewer(car_raw)
     trim_ladder = _cd_insights.trim_ladder_for_viewer(car_raw)
     rarity = _cd_insights.inventory_rarity(car_raw)
-    listings_geo = main.listings_geo_kwargs_from_session(session)
+    listings_geo = listings_geo_kwargs_from_session(session)
     hero_location = _cd_location.hero_location(dealer_map, listings_geo)
     generated_spec_sheet = _cd_options.generated_spec_sheet_for(
         car_raw, ctx, has_real_sticker=_cd_sticker.has_real_sticker(sticker, ctx)
@@ -213,8 +207,7 @@ def _build_car_detail_view_context(car_id: int, car_raw: dict) -> dict:
 
 
 def car_detail(car_id):
-    main = main_module()
-    car_raw = main.get_car_by_id(car_id, include_inactive=False)
+    car_raw = get_car_by_id(car_id, include_inactive=False)
     if not car_raw:
         abort(404)
     embed = request.args.get("embed") in ("1", "true", "yes")
@@ -226,8 +219,7 @@ def car_detail(car_id):
 
 
 def api_car_detail(car_id):
-    main = main_module()
-    car_raw = main.get_car_by_id(car_id, include_inactive=False)
+    car_raw = get_car_by_id(car_id, include_inactive=False)
     if not car_raw:
         return jsonify({"ok": False, "error": "not_found"}), 404
     return jsonify({"ok": True, **_build_car_detail_view_context(car_id, car_raw)})
@@ -235,11 +227,10 @@ def api_car_detail(car_id):
 
 def api_car_window_sticker(car_id: int):
     """Serve stored OEM window sticker PDF (premium only)."""
-    main = main_module()
     ok, err = paid_access.check_feature(FEATURE_WINDOW_STICKER)
     if not ok:
         return jsonify(paid_access.denied_json(FEATURE_WINDOW_STICKER, err)), 403
-    car = main.get_car_by_id(car_id, include_inactive=False)
+    car = get_car_by_id(car_id, include_inactive=False)
     if not car:
         return jsonify({"ok": False, "error": "not_found"}), 404
     from backend.enrichment.window_sticker_service import (
@@ -288,8 +279,7 @@ def api_car_window_sticker_preview(car_id: int):
 
 def api_car_nhtsa_recalls(car_id: int):
     """NHTSA recall campaigns for a listing VIN (public JSON)."""
-    main = main_module()
-    car = main.get_car_by_id(car_id, include_inactive=False)
+    car = get_car_by_id(car_id, include_inactive=False)
     if not car:
         return jsonify({"ok": False, "error": "not_found"}), 404
     payload, status = recalls_lookup.nhtsa_recalls_lookup_payload(
@@ -304,11 +294,10 @@ def api_car_nhtsa_recalls(car_id: int):
 
 def api_car_vehicle_history_intelligence(car_id: int):
     """NHTSA recalls + vPIC validation + listing title flags (premium; no Carfax)."""
-    main = main_module()
     ok, err = paid_access.check_feature(FEATURE_VEHICLE_HISTORY)
     if not ok:
         return jsonify(paid_access.denied_json(FEATURE_VEHICLE_HISTORY, err)), 403
-    car = main.get_car_by_id(car_id, include_inactive=False)
+    car = get_car_by_id(car_id, include_inactive=False)
     if not car:
         return jsonify({"ok": False, "error": "not_found"}), 404
     from backend.enrichment.vehicle_history_intelligence import build_vehicle_history_intelligence
@@ -327,12 +316,11 @@ def _packages_ensure_payload(car_id: int, base: dict | None = None, car: dict | 
     unchanged row and you get the same dict.  *base* is the result of an ensure
     run when one completed inside the request; otherwise just ``ok``/``car_id``.
     """
-    main = main_module()
     status: dict = dict(base) if base else {}
     status.setdefault("ok", True)
     status.setdefault("car_id", int(car_id))
-    car2 = car or main.get_car_by_id(car_id, include_inactive=False) or {}
-    ctx = main.prepare_car_detail_context(car2)
+    car2 = car or get_car_by_id(car_id, include_inactive=False) or {}
+    ctx = prepare_car_detail_context(car2)
     status["window_sticker_available"] = bool(status.get("window_sticker_available"))
     from backend.enrichment.window_sticker_service import (
         sticker_panel_payload,
@@ -490,7 +478,6 @@ def api_car_packages_ensure(car_id: int):
     the car is in cooldown and ``should_retry`` goes false.
     """
     t0 = time.perf_counter()
-    main = main_module()
     ok, err = paid_access.check_feature(FEATURE_PACKAGES_ENSURE)
     if not ok:
         return jsonify(paid_access.denied_json(FEATURE_PACKAGES_ENSURE, err)), 403
@@ -498,7 +485,7 @@ def api_car_packages_ensure(car_id: int):
         validate_csrf_header()
     except HTTPException:
         return jsonify({"ok": False, "error": "csrf_required"}), 403
-    car = main.get_car_by_id(car_id, include_inactive=False)
+    car = get_car_by_id(car_id, include_inactive=False)
     if not car:
         return jsonify({"ok": False, "error": "not_found"}), 404
 
@@ -581,7 +568,6 @@ def api_car_packages_ensure(car_id: int):
 
 
 def api_car_chat(car_id: int):
-    main = main_module()
     ok, err = paid_access.check_feature(FEATURE_AI_CAR_CHAT)
     if not ok:
         return jsonify(paid_access.denied_json(FEATURE_AI_CAR_CHAT, err)), 403
@@ -635,7 +621,7 @@ def api_car_chat(car_id: int):
     if request.content_length is not None and request.content_length > Config.CHAT_MAX_BODY_BYTES:
         return jsonify({"ok": False, "error": "payload_too_large"}), 413
 
-    car_raw = main.get_car_by_id(car_id, include_inactive=False)
+    car_raw = get_car_by_id(car_id, include_inactive=False)
     if not car_raw:
         return jsonify({"ok": False, "error": "not_found"}), 404
 
@@ -678,7 +664,7 @@ def api_car_chat(car_id: int):
         return jsonify({"ok": False, "error": "message_too_long"}), 400
 
     allow_playwright = web_research_playwright_allowed(session.get("user_id"))
-    out = main.run_car_page_chat(car_dict, message, allow_web_research=allow_playwright)
+    out = run_car_page_chat(car_dict, message, allow_web_research=allow_playwright)
     err = out.get("error")
     return jsonify(
         {
@@ -691,7 +677,6 @@ def api_car_chat(car_id: int):
 
 def api_compare_chat():
     """Premium compare assistant — side-by-side listing Q&A (up to 4 cars)."""
-    main = main_module()
     ok, err = paid_access.check_feature(FEATURE_AI_COMPARE_CHAT)
     if not ok:
         return jsonify(paid_access.denied_json(FEATURE_AI_COMPARE_CHAT, err)), 403
@@ -755,12 +740,12 @@ def api_compare_chat():
     if len(message) > Config.CHAT_MAX_MESSAGE_CHARS:
         return jsonify({"ok": False, "error": "message_too_long"}), 400
 
-    raw_cars = main.get_cars_by_ids(id_list)
+    raw_cars = get_cars_by_ids(id_list)
     if not raw_cars:
         return jsonify({"ok": False, "error": "not_found"}), 404
 
     allow_playwright = web_research_playwright_allowed(session.get("user_id"))
-    out = main.run_compare_chat(raw_cars, message, allow_web_research=allow_playwright)
+    out = run_compare_chat(raw_cars, message, allow_web_research=allow_playwright)
     err = out.get("error")
     return jsonify(
         {

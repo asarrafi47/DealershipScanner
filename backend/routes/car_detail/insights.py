@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from backend.listings.geo_session import listings_geo_kwargs_from_session
 from flask import session
 
 from backend.billing import access as paid_access
@@ -14,7 +15,7 @@ TRIM_LADDER_ADDS_FIELDS = (
 )
 
 
-def market_intel_for_viewer(main, car_raw: dict):
+def market_intel_for_viewer(car_raw: dict):
     """``(market_intel, deal_score_detail)`` — both ``None`` unless the viewer pays.
 
     Paid members only (also with billing off), and only if the market-intel APIs
@@ -25,7 +26,7 @@ def market_intel_for_viewer(main, car_raw: dict):
     if paid_access.sees_paid_ui() and paid_access.shows(FEATURE_MARKET_INTEL):
         from backend.utils.market_price import market_price_for_car
 
-        geo = main.listings_geo_kwargs_from_session(session)
+        geo = listings_geo_kwargs_from_session(session)
         market_intel = market_price_for_car(
             car_raw,
             zip_code=geo.get("zip_code"),

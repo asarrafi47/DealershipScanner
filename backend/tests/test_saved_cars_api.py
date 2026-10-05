@@ -26,10 +26,10 @@ def test_saved_cars_returns_saved_list(monkeypatch, tmp_path, app_factory) -> No
         "mileage": 41000,
         "active": 1,
     }
-    monkeypatch.setattr("backend.main.get_saved_car_ids", lambda _uid: [101] if int(_uid) == int(uid) else [])
-    monkeypatch.setattr("backend.main.get_cars_by_ids", lambda ids: [sample] if 101 in ids else [])
+    monkeypatch.setattr("backend.routes.listings_api.get_saved_car_ids", lambda _uid: [101] if int(_uid) == int(uid) else [])
+    monkeypatch.setattr("backend.routes.listings_api.get_cars_by_ids", lambda ids: [sample] if 101 in ids else [])
     monkeypatch.setattr(
-        "backend.main.serialize_cars_for_listings_grid",
+        "backend.routes.listings_api.serialize_cars_for_listings_grid",
         lambda cars: [
             {"id": c["id"], "make": c["make"], "model": c["model"], "year": c["year"]}
             for c in cars

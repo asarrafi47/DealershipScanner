@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import pytest
 
+from backend.routes import cars_pages as _cars_pages_routes
+
 
 def _make_app(app_factory, tmp_path, **env):
     production = env.pop("FLASK_ENV", "development") == "production"
@@ -24,7 +26,7 @@ def test_sticker_preview_requires_premium_when_billing_on(monkeypatch: pytest.Mo
         "inactive": 0,
         "gallery": [],
     }
-    monkeypatch.setattr(main, "get_car_by_id", lambda *_a, **_k: car)
+    monkeypatch.setattr(_cars_pages_routes, "get_car_by_id", lambda *_a, **_k: car)
 
     from pathlib import Path
 
@@ -64,7 +66,7 @@ def test_sticker_preview_requires_login_in_production_when_billing_off(
         "inactive": 0,
         "gallery": [],
     }
-    monkeypatch.setattr(main, "get_car_by_id", lambda *_a, **_k: car)
+    monkeypatch.setattr(_cars_pages_routes, "get_car_by_id", lambda *_a, **_k: car)
 
     from pathlib import Path
 
@@ -99,7 +101,7 @@ def test_sticker_preview_requires_login_in_production_when_billing_off(
 def test_car_chat_requires_login_in_production_when_billing_off(monkeypatch: pytest.MonkeyPatch, tmp_path, app_factory) -> None:
     main = _make_app(app_factory, tmp_path, FLASK_ENV="production", BILLING_STRIPE_ENABLED="0")
     monkeypatch.setattr(
-        main,
+        _cars_pages_routes,
         "get_car_by_id",
         lambda *_a, **_k: {"id": 1, "year": 2020, "make": "Test", "model": "Car", "inactive": 0},
     )
@@ -131,9 +133,9 @@ def test_car_chat_daily_limit_is_per_user(monkeypatch: pytest.MonkeyPatch, tmp_p
         RATE_LIMIT_CAR_CHAT_PER_MIN="500",
     )
     dummy_car = {"id": 1, "year": 2020, "make": "Test", "model": "Car", "vin": "X", "inactive": 0}
-    monkeypatch.setattr(main, "get_car_by_id", lambda *_a, **_k: dummy_car)
+    monkeypatch.setattr(_cars_pages_routes, "get_car_by_id", lambda *_a, **_k: dummy_car)
     monkeypatch.setattr(
-        main,
+        _cars_pages_routes,
         "run_car_page_chat",
         lambda *_a, **_k: {"reply": "ok", "error": None, "discrepancy_flags": []},
     )
@@ -171,9 +173,9 @@ def test_car_chat_listing_tier_blocks_one_car_not_another(monkeypatch: pytest.Mo
 
     clear_rate_limit_state()
     dummy_car = {"id": 1, "year": 2020, "make": "Test", "model": "Car", "vin": "X", "inactive": 0}
-    monkeypatch.setattr(main, "get_car_by_id", lambda *_a, **_k: dummy_car)
+    monkeypatch.setattr(_cars_pages_routes, "get_car_by_id", lambda *_a, **_k: dummy_car)
     monkeypatch.setattr(
-        main,
+        _cars_pages_routes,
         "run_car_page_chat",
         lambda *_a, **_k: {"reply": "ok", "error": None, "discrepancy_flags": []},
     )
@@ -214,19 +216,19 @@ def test_compare_chat_has_own_daily_namespace(monkeypatch: pytest.MonkeyPatch, t
 
     clear_rate_limit_state()
     dummy_car = {"id": 1, "year": 2020, "make": "Test", "model": "Car", "vin": "X", "inactive": 0}
-    monkeypatch.setattr(main, "get_car_by_id", lambda *_a, **_k: dummy_car)
+    monkeypatch.setattr(_cars_pages_routes, "get_car_by_id", lambda *_a, **_k: dummy_car)
     monkeypatch.setattr(
-        main,
+        _cars_pages_routes,
         "get_cars_by_ids",
         lambda *_a, **_k: [dummy_car, {**dummy_car, "id": 2, "vin": "Y"}],
     )
     monkeypatch.setattr(
-        main,
+        _cars_pages_routes,
         "run_car_page_chat",
         lambda *_a, **_k: {"reply": "ok", "error": None, "discrepancy_flags": []},
     )
     monkeypatch.setattr(
-        main,
+        _cars_pages_routes,
         "run_compare_chat",
         lambda *_a, **_k: {"reply": "ok", "error": None},
     )
@@ -269,9 +271,9 @@ def test_car_page_hides_ask_ai_for_guests(monkeypatch: pytest.MonkeyPatch, tmp_p
         "gallery": [],
         "history_highlights": [],
     }
-    monkeypatch.setattr(main, "get_car_by_id", lambda *_a, **_k: car)
+    monkeypatch.setattr(_cars_pages_routes, "get_car_by_id", lambda *_a, **_k: car)
     monkeypatch.setattr(
-        main,
+        _cars_pages_routes,
         "prepare_car_detail_context",
         lambda _raw: {
             "verified_specs": {},

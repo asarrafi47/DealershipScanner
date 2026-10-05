@@ -151,7 +151,7 @@ def test_api_packages_ensure_csrf_passes_when_token_matches(monkeypatch) -> None
         },
     )
     monkeypatch.setattr(
-        "backend.main.get_car_by_id",
+        "backend.routes.cars_pages.get_car_by_id",
         lambda car_id, **_: {
             "id": car_id,
             "vin": "1C4RJHBG9SC340097",

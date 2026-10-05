@@ -14,14 +14,14 @@ from backend.billing.catalog import FEATURE_NEARBY_DEALERS
 from backend.billing import access as paid_access
 from backend.config import Config
 from backend.enrichment import recalls_lookup
-from backend.routes._shared import _client_ip, main_module
+from backend.db.inventory_db import hidden_dealer_ids_for_user
+from backend.routes._shared import _client_ip
 from backend.utils.ip_rate_limit import allow_request
 from backend.utils.runtime_env import is_production_env
 
 
 def api_nearby_dealers():
     """Return dealerships within radius of a ZIP code (max 50 mi). Premium when billing enabled."""
-    main = main_module()
     ok, err = paid_access.check_feature(FEATURE_NEARBY_DEALERS)
     if not ok:
         return jsonify(paid_access.denied_json(FEATURE_NEARBY_DEALERS, err, dealers=[])), 403
@@ -45,7 +45,7 @@ def api_nearby_dealers():
     # the picker and its search, as they do on every other listings/geo endpoint.
     hidden_dealer_ids: set[str] = set()
     try:
-        hidden_dealer_ids = main.hidden_dealer_ids_for_user(session.get("user_id"))
+        hidden_dealer_ids = hidden_dealer_ids_for_user(session.get("user_id"))
     except Exception:
         hidden_dealer_ids = set()
     payload = resolve_nearby_dealers_for_listings(

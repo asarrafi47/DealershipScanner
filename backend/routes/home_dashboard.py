@@ -1,9 +1,8 @@
 """Landing page, signed-in Home feed, Dashboard, and recommendation helpers.
 
 The recommendation cache (``_reco_cache``/``_RECO_CACHE_TTL_S``) lives here, in
-its only reader/writer. Inventory/user-history accessors are still resolved
-through ``backend.main`` because tests monkeypatch them there (see
-``backend.routes._shared``).
+its only reader/writer. Inventory/user-history accessors are imported from
+their owning modules; tests patch them on this module.
 """
 
 from __future__ import annotations
@@ -12,7 +11,19 @@ import time
 
 from flask import redirect, render_template, session, url_for
 
-from backend.routes._shared import main_module
+from backend.db.inventory_db import (
+    get_cars_by_ids,
+    get_saved_car_ids,
+    hidden_dealer_ids_for_user,
+    search_cars_by_make_model_pairs,
+    serialize_cars_for_listings_grid,
+)
+from backend.db.user_history_db import (
+    count_viewed_cars,
+    get_recent_compared_car_ids,
+    get_recent_viewed_car_ids,
+)
+from backend.listings.geo_session import listings_geo_kwargs_from_session
 
 # Recommendation scoring walks recent views/compares against live inventory
 # (~1s+); Home and Dashboard both need it on every visit, so cache per
@@ -73,7 +84,7 @@ def _similar_recommendation_rows(
     """Cars matching recent make/model, excluding viewed ids; optional ZIP radius via ``geo_kw``."""
     if not seen_mm:
         return []
-    candidates = main_module().search_cars_by_make_model_pairs(
+    candidates = search_cars_by_make_model_pairs(
         seen_mm[:5],
         sql_limit=max(limit * 6, 60),
         **geo_kw,
@@ -118,11 +129,10 @@ def _recommendations_for_user(
     **geo_kw: object,
 ) -> tuple[list[dict] | int, dict[str, str]]:
     """Cached wrapper: serialized rows (or their count) + heading copy."""
-    main = main_module()
     # The user's hidden dealerships ride along in the kwargs so they reach
     # search_cars_by_make_model_pairs AND take part in the cache key.
     try:
-        hidden = main.hidden_dealer_ids_for_user(user_id)
+        hidden = hidden_dealer_ids_for_user(user_id)
     except Exception:
         hidden = set()
     if hidden:
@@ -148,19 +158,18 @@ def _recommendations_for_user_uncached(
     **geo_kw: object,
 ) -> tuple[list[dict] | int, dict[str, str]]:
     """Return serialized carousel rows and heading copy for the dashboard."""
-    main = main_module()
     default_heading = {
         "eyebrow": "Based on your history",
         "title": "Recommended for You",
         "hint": "",
     }
-    viewed_ids = main.get_recent_viewed_car_ids(user_id, limit=30)
-    compared_ids = main.get_recent_compared_car_ids(user_id, limit=30)
+    viewed_ids = get_recent_viewed_car_ids(user_id, limit=30)
+    compared_ids = get_recent_compared_car_ids(user_id, limit=30)
     if not viewed_ids and not compared_ids:
         return (0 if not serialize else []), default_heading
 
-    viewed_cars = main.get_cars_by_ids(viewed_ids) if viewed_ids else []
-    compared_cars = main.get_cars_by_ids(compared_ids) if compared_ids else []
+    viewed_cars = get_cars_by_ids(viewed_ids) if viewed_ids else []
+    compared_cars = get_cars_by_ids(compared_ids) if compared_ids else []
     if not viewed_cars and not compared_cars:
         return (0 if not serialize else []), default_heading
 
@@ -260,45 +269,42 @@ def _recommendations_for_user_uncached(
         return len(out_cars[:limit]), heading
 
     return (
-        main.serialize_cars_for_listings_grid(out_cars[:limit]),
+        serialize_cars_for_listings_grid(out_cars[:limit]),
         heading,
     )
 
 
 def _recently_compared_for_user(user_id: int, limit: int = 12) -> list[dict]:
     """Serialized listing rows for cars the user recently compared."""
-    main = main_module()
-    compared_ids = main.get_recent_compared_car_ids(user_id, limit=limit)
+    compared_ids = get_recent_compared_car_ids(user_id, limit=limit)
     if not compared_ids:
         return []
-    raw = main.get_cars_by_ids(compared_ids)
+    raw = get_cars_by_ids(compared_ids)
     by_id = {int(c["id"]): c for c in raw if c.get("id") is not None}
     ordered = [by_id[cid] for cid in compared_ids if cid in by_id]
-    return main.serialize_cars_for_listings_grid(ordered)
+    return serialize_cars_for_listings_grid(ordered)
 
 
 def _recently_viewed_for_user(user_id: int, limit: int = 12) -> list[dict]:
     """Serialized listing rows for cars the user recently opened."""
-    main = main_module()
-    viewed_ids = main.get_recent_viewed_car_ids(user_id, limit=limit)
+    viewed_ids = get_recent_viewed_car_ids(user_id, limit=limit)
     if not viewed_ids:
         return []
-    raw = main.get_cars_by_ids(viewed_ids)
+    raw = get_cars_by_ids(viewed_ids)
     by_id = {int(c["id"]): c for c in raw if c.get("id") is not None}
     ordered = [by_id[cid] for cid in viewed_ids if cid in by_id]
-    return main.serialize_cars_for_listings_grid(ordered)
+    return serialize_cars_for_listings_grid(ordered)
 
 
 def _browse_trends_for_user(user_id: int, limit: int = 6) -> list[tuple[str, int]]:
     """Top makes from recent view history for dashboard trends."""
     from collections import Counter
 
-    main = main_module()
-    viewed_ids = main.get_recent_viewed_car_ids(user_id, limit=40)
+    viewed_ids = get_recent_viewed_car_ids(user_id, limit=40)
     if not viewed_ids:
         return []
     counts: Counter[str] = Counter()
-    for c in main.get_cars_by_ids(viewed_ids):
+    for c in get_cars_by_ids(viewed_ids):
         make = (c.get("make") or "").strip()
         if make:
             counts[make] += 1
@@ -307,7 +313,6 @@ def _browse_trends_for_user(user_id: int, limit: int = 6) -> list[tuple[str, int
 
 def _render_personal_home():
     """Logged-in landing: recommendations, saved cars, browsing history."""
-    main = main_module()
     user_id = session.get("user_id")
     recommendations = []
     saved_cars_list = []
@@ -319,14 +324,14 @@ def _render_personal_home():
     if user_id:
         uid = int(user_id)
         recommendations, rec_heading = _recommendations_for_user(
-            uid, **main.listings_geo_kwargs_from_session(session)
+            uid, **listings_geo_kwargs_from_session(session)
         )
         recommendations_eyebrow = rec_heading.get("eyebrow") or ""
         recommendations_title = rec_heading.get("title") or "Recommended for You"
         recommendations_hint = rec_heading.get("hint") or ""
-        saved_ids = main.get_saved_car_ids(uid)
-        raw_saved = main.get_cars_by_ids(saved_ids)
-        saved_cars_list = main.serialize_cars_for_listings_grid(raw_saved)
+        saved_ids = get_saved_car_ids(uid)
+        raw_saved = get_cars_by_ids(saved_ids)
+        saved_cars_list = serialize_cars_for_listings_grid(raw_saved)
         recently_compared = _recently_compared_for_user(uid)
         recently_viewed = _recently_viewed_for_user(uid)
     return render_template(
@@ -343,16 +348,15 @@ def _render_personal_home():
 
 def dashboard():
     """Stats, preferences, and quick actions (personal feed lives on Home)."""
-    main = main_module()
     if not session.get("user_id"):
         return redirect(url_for("login_page"))
     uid = int(session["user_id"])
-    geo = main.listings_geo_kwargs_from_session(session)
-    saved_ids = main.get_saved_car_ids(uid)
+    geo = listings_geo_kwargs_from_session(session)
+    saved_ids = get_saved_car_ids(uid)
     reco_count, _ = _recommendations_for_user(uid, limit=20, serialize=False, **geo)
     return render_template(
         "dashboard.html",
-        viewed_count=main.count_viewed_cars(uid),
+        viewed_count=count_viewed_cars(uid),
         saved_count=len(saved_ids),
         reco_count=reco_count,
         geo_zip=geo.get("zip_code") or "",

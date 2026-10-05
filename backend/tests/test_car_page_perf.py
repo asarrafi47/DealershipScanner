@@ -36,7 +36,8 @@ import threading
 import pytest
 
 from backend.routes import cars_pages
-from backend.routes.cars_pages import (
+from backend.routes.car_detail import packages_ensure
+from backend.routes.car_detail.packages_ensure import (
     ENSURE_COMPLETED,
     ENSURE_COOLDOWN,
     ENSURE_INFLIGHT,
@@ -236,18 +237,18 @@ def _wait_for_release() -> None:
 def drain_ensure_workers():
     """Don't leak the fake slow-fetch workers (or their bookkeeping) into the next test."""
     _RELEASE_WORKERS.clear()
-    cars_pages._packages_ensure_inflight.clear()
-    cars_pages._packages_ensure_snapshot.clear()
-    cars_pages._packages_ensure_attempted_at.clear()
-    cars_pages._packages_ensure_panel_cache.clear()
+    packages_ensure._packages_ensure_inflight.clear()
+    packages_ensure._packages_ensure_snapshot.clear()
+    packages_ensure._packages_ensure_attempted_at.clear()
+    packages_ensure._packages_ensure_panel_cache.clear()
     yield
     _RELEASE_WORKERS.set()
-    for t in list(cars_pages._packages_ensure_inflight.values()):
+    for t in list(packages_ensure._packages_ensure_inflight.values()):
         t.join(10.0)
-    cars_pages._packages_ensure_inflight.clear()
-    cars_pages._packages_ensure_snapshot.clear()
-    cars_pages._packages_ensure_attempted_at.clear()
-    cars_pages._packages_ensure_panel_cache.clear()
+    packages_ensure._packages_ensure_inflight.clear()
+    packages_ensure._packages_ensure_snapshot.clear()
+    packages_ensure._packages_ensure_attempted_at.clear()
+    packages_ensure._packages_ensure_panel_cache.clear()
     _RELEASE_WORKERS.clear()
 
 
@@ -266,7 +267,7 @@ def _spy(monkeypatch, name: str) -> list:
 
 def _release_and_join_workers() -> None:
     """Let every blocked fake fetch finish, and wait until its bookkeeping has run."""
-    threads = list(cars_pages._packages_ensure_inflight.values())
+    threads = list(packages_ensure._packages_ensure_inflight.values())
     _RELEASE_WORKERS.set()
     for t in threads:
         t.join(10.0)
@@ -312,7 +313,7 @@ def test_packages_ensure_returns_within_budget(monkeypatch, drain_ensure_workers
     # The call came back while the fetch was still blocked: the budget ended the
     # wait, not the fetch. Waiting for the worker would have returned COMPLETED.
     assert not _RELEASE_WORKERS.is_set()
-    assert cars_pages._packages_ensure_worker_alive(-4242)
+    assert packages_ensure._packages_ensure_worker_alive(-4242)
 
 
 def test_packages_ensure_single_flight(monkeypatch, drain_ensure_workers):
@@ -329,7 +330,7 @@ def test_packages_ensure_single_flight(monkeypatch, drain_ensure_workers):
     monkeypatch.setattr(lps, "ensure_listing_packages_for_car", slow)
 
     _run_packages_ensure_with_budget(-4243, allow_vision=False, budget=0.1)
-    worker = cars_pages._packages_ensure_inflight[-4243]
+    worker = packages_ensure._packages_ensure_inflight[-4243]
     joins = []
     real_join = worker.join
 
@@ -386,9 +387,9 @@ def ensure_client(monkeypatch, drain_ensure_workers):
     state = {"row": row}
 
     monkeypatch.setenv("BILLING_STRIPE_ENABLED", "0")
-    monkeypatch.setattr(main_mod, "get_car_by_id", lambda car_id, **kw: dict(state["row"]))
+    monkeypatch.setattr(cars_pages, "get_car_by_id", lambda car_id, **kw: dict(state["row"]))
     monkeypatch.setattr(
-        main_mod,
+        cars_pages,
         "prepare_car_detail_context",
         lambda car: {"packages_panel_has_content": False, "listing_sticker_options": []},
     )
@@ -452,7 +453,7 @@ def test_endpoint_honours_wall_clock_budget(monkeypatch, ensure_client):
     assert 0 < inner_budget <= 0.2, f"inner call got {inner_budget}s of a 0.2s request budget"
     assert len(panel_builds) == 1, "panel was rebuilt alongside the still-running worker"
     assert not _RELEASE_WORKERS.is_set()
-    assert cars_pages._packages_ensure_worker_alive(_ENSURE_CAR_ID)
+    assert packages_ensure._packages_ensure_worker_alive(_ENSURE_CAR_ID)
 
     body = r.get_json()
     # The worker is still going, so the client must be told to come back.
@@ -512,7 +513,7 @@ def test_cooldown_skipped_view_never_claims_a_fetch_is_running(monkeypatch, ensu
     for i in range(4):
         r = post()
         body = r.get_json()
-        alive = cars_pages._packages_ensure_worker_alive(_ENSURE_CAR_ID)
+        alive = packages_ensure._packages_ensure_worker_alive(_ENSURE_CAR_ID)
         assert alive is False
         assert body["window_sticker_fetch_in_flight"] is False
         assert body["window_sticker_status"] == STICKER_STATUS_PENDING, body[
@@ -543,7 +544,7 @@ def test_settled_states_tell_the_client_to_stop(monkeypatch, ensure_client):
     assert body["window_sticker_retry_after_seconds"] is None
 
     state["row"]["_stored"] = True
-    cars_pages._packages_ensure_panel_cache.clear()
+    packages_ensure._packages_ensure_panel_cache.clear()
     r = post()
     body = r.get_json()
     assert body["window_sticker_status"] == STICKER_STATUS_READY
@@ -623,7 +624,7 @@ def test_endpoint_status_is_stable_across_repeat_views(monkeypatch, ensure_clien
         seen.append(body["window_sticker_status"])
         panel.append(
             json.dumps(
-                {k: body.get(k) for k in cars_pages.PACKAGES_ENSURE_PANEL_FIELDS},
+                {k: body.get(k) for k in packages_ensure.PACKAGES_ENSURE_PANEL_FIELDS},
                 sort_keys=True,
                 default=str,
             )
@@ -652,7 +653,7 @@ def test_endpoint_replays_snapshot_while_a_worker_is_running(monkeypatch, ensure
     monkeypatch.setattr(lps, "ensure_listing_packages_for_car", slow)
 
     first = post().get_json()
-    base_panel = {k: first.get(k) for k in cars_pages.PACKAGES_ENSURE_PANEL_FIELDS}
+    base_panel = {k: first.get(k) for k in packages_ensure.PACKAGES_ENSURE_PANEL_FIELDS}
     # The worker mutated the row on entry; the panel content must still be the
     # pre-worker snapshot, and every view in this window must agree.
     assert first["window_sticker_source_known"] is False
@@ -662,7 +663,7 @@ def test_endpoint_replays_snapshot_while_a_worker_is_running(monkeypatch, ensure
     runs = _spy(monkeypatch, "_run_packages_ensure_with_budget")
     for _ in range(3):
         body = post().get_json()
-        assert {k: body.get(k) for k in cars_pages.PACKAGES_ENSURE_PANEL_FIELDS} == base_panel
+        assert {k: body.get(k) for k in packages_ensure.PACKAGES_ENSURE_PANEL_FIELDS} == base_panel
         # Fetch state is live and honest: a worker really is running.
         assert body["window_sticker_fetch_in_flight"] is True
         assert body["window_sticker_status"] == STICKER_STATUS_FETCHING
@@ -713,5 +714,5 @@ def test_endpoint_always_reports_the_contract_fields(monkeypatch, ensure_client)
         lps, "ensure_listing_packages_for_car", lambda car_id, **kw: {"ok": True, "car_id": car_id}
     )
     body = post().get_json()
-    for field in cars_pages.PACKAGES_ENSURE_RESPONSE_FIELDS:
+    for field in packages_ensure.PACKAGES_ENSURE_RESPONSE_FIELDS:
         assert field in body, f"{field} missing from the ensure payload"

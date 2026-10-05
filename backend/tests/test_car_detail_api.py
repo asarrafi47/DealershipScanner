@@ -25,7 +25,7 @@ def _sample_car(car_id: int = 42) -> dict:
 
 
 def test_api_car_detail_not_found(monkeypatch) -> None:
-    monkeypatch.setattr("backend.main.get_car_by_id", lambda *_a, **_k: None)
+    monkeypatch.setattr("backend.routes.cars_pages.get_car_by_id", lambda *_a, **_k: None)
     with app.test_client() as client:
         rv = client.get("/api/cars/99999999")
     assert rv.status_code == 404
@@ -34,9 +34,9 @@ def test_api_car_detail_not_found(monkeypatch) -> None:
 
 def test_api_car_detail_ok(monkeypatch) -> None:
     car = _sample_car(42)
-    monkeypatch.setattr("backend.main.get_car_by_id", lambda cid, **kw: car if cid == 42 else None)
+    monkeypatch.setattr("backend.routes.cars_pages.get_car_by_id", lambda cid, **kw: car if cid == 42 else None)
     monkeypatch.setattr(
-        "backend.main.prepare_car_detail_context",
+        "backend.routes.cars_pages.prepare_car_detail_context",
         lambda _raw: {
             "verified_specs": {},
             "gallery_images": ["https://example.com/photo1.jpg"],
@@ -59,9 +59,9 @@ def test_api_car_detail_ok(monkeypatch) -> None:
 def test_api_car_detail_includes_dealer_google_rating(monkeypatch) -> None:
     car = _sample_car(42)
     car["dealership_registry_id"] = 5
-    monkeypatch.setattr("backend.main.get_car_by_id", lambda cid, **kw: car if cid == 42 else None)
+    monkeypatch.setattr("backend.routes.cars_pages.get_car_by_id", lambda cid, **kw: car if cid == 42 else None)
     monkeypatch.setattr(
-        "backend.main.prepare_car_detail_context",
+        "backend.routes.cars_pages.prepare_car_detail_context",
         lambda _raw: {"verified_specs": {}, "gallery_images": []},
     )
     monkeypatch.setattr(
@@ -90,16 +90,17 @@ def test_api_car_detail_includes_dealer_google_rating(monkeypatch) -> None:
 
 def test_api_car_detail_market_intel_when_paid(monkeypatch) -> None:
     car = _sample_car(7)
-    monkeypatch.setattr("backend.main.get_car_by_id", lambda cid, **kw: car if cid == 7 else None)
+    monkeypatch.setattr("backend.routes.cars_pages.get_car_by_id", lambda cid, **kw: car if cid == 7 else None)
     monkeypatch.setattr("backend.billing.access.current_access", lambda: _viewer(True))
     monkeypatch.setattr(
-        "backend.main.prepare_car_detail_context",
+        "backend.routes.cars_pages.prepare_car_detail_context",
         lambda _raw: {"verified_specs": {}, "gallery_images": []},
     )
-    monkeypatch.setattr(
-        "backend.main.listings_geo_kwargs_from_session",
-        lambda _sess: {"zip_code": "92694", "radius_miles": 50},
-    )
+    for target in (
+        "backend.routes.cars_pages.listings_geo_kwargs_from_session",
+        "backend.routes.car_detail.insights.listings_geo_kwargs_from_session",
+    ):
+        monkeypatch.setattr(target, lambda _sess: {"zip_code": "92694", "radius_miles": 50})
     monkeypatch.setattr(
         "backend.utils.market_price.market_price_for_car",
         lambda *_a, **_k: {"avg_price": 31000, "sample_count": 12},

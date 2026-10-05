@@ -1,10 +1,9 @@
 """Listings pages + listings/search/geo/saved-cars JSON APIs.
 
-Inventory accessors that tests monkeypatch on ``backend.main``
-(``get_saved_car_ids``, ``get_cars_by_ids``, ``serialize_cars_for_listings_grid``,
-``get_car_by_id``, ``listings_geo_kwargs_from_session``) and the env-derived
-rate-limit globals are resolved through the module object at request time.
-See ``backend.routes._shared``.
+Inventory accessors (``get_saved_car_ids``, ``get_cars_by_ids``,
+``serialize_cars_for_listings_grid``, ``get_car_by_id``, ...) are imported from
+``backend.db.inventory_db`` and looked up as globals of this module at request
+time, so tests patch them here (``backend.routes.listings_api.<name>``).
 """
 
 from __future__ import annotations
@@ -27,7 +26,27 @@ from backend.listings.geo_session import apply_listings_geo_to_session
 from backend.listings.routes import listings_page
 from backend.billing import access as paid_access
 from backend.config import Config
-from backend.routes._shared import _client_ip, main_module
+from backend.db.inventory_db import (
+    clear_search_history,
+    create_saved_search,
+    delete_saved_search,
+    delete_search_history_entry,
+    get_car_by_id,
+    get_cars_by_ids,
+    get_saved_car_ids,
+    hidden_dealer_ids_for_user,
+    hide_dealer,
+    is_car_saved,
+    list_hidden_dealers,
+    list_saved_searches,
+    list_search_history,
+    record_search_history,
+    save_car,
+    serialize_cars_for_listings_grid,
+    unhide_dealer,
+    unsave_car,
+)
+from backend.routes._shared import _client_ip
 from backend.utils.ip_rate_limit import allow_request
 from backend.utils.query_parser import parse_natural_query
 
@@ -383,10 +402,9 @@ def api_listings_cars():
     if origin is None:
         return jsonify({"ok": False, "error": "zip_not_found"}), 400
 
-    main = main_module()
     hidden: tuple = ()
     try:
-        hidden = tuple(sorted(main.hidden_dealer_ids_for_user(session.get("user_id")) or ()))
+        hidden = tuple(sorted(hidden_dealer_ids_for_user(session.get("user_id")) or ()))
     except Exception:
         hidden = ()
 
@@ -409,7 +427,6 @@ def api_listings_cars():
 
 def api_listings_market_stats():
     """Trim-level average prices for premium listings grid (cached server-side)."""
-    main = main_module()
     ok, err = paid_access.check_feature(FEATURE_MARKET_INTEL)
     if not ok:
         return jsonify(paid_access.denied_json(FEATURE_MARKET_INTEL, err)), 403
@@ -527,7 +544,6 @@ def api_search_smart_parse():
 
 def api_search_smart():
     """Listings search bar: local ``parse_natural_query`` + SQL/pgvector only (no Claude)."""
-    main = main_module()
     ip = _client_ip()
     if not allow_request(f"smart:{ip}", max_events=Config.RATE_LIMIT_SMART_SEARCH_PER_MIN, window_seconds=60.0):
         return jsonify({"ok": False, "error": "rate_limited"}), 429
@@ -560,7 +576,7 @@ def api_search_smart():
 
     hidden_dealers: set[str] = set()
     try:
-        hidden_dealers = main.hidden_dealer_ids_for_user(session.get("user_id"))
+        hidden_dealers = hidden_dealer_ids_for_user(session.get("user_id"))
     except Exception:
         hidden_dealers = set()
     results, search_meta = hybrid_smart_search(
@@ -570,7 +586,7 @@ def api_search_smart():
         listing_geo_kwargs=geo_kw if geo_kw else None,
         exclude_dealer_ids=hidden_dealers or None,
     )
-    safe_results = main.serialize_cars_for_listings_grid(results)
+    safe_results = serialize_cars_for_listings_grid(results)
     try:
         from backend.db.search_analytics_db import analytics_session_key, record_search_event
 
@@ -587,7 +603,7 @@ def api_search_smart():
         )
     except Exception:
         pass
-    _record_smart_search_history(main, q, geo_kw, len(safe_results))
+    _record_smart_search_history(q, geo_kw, len(safe_results))
     empty_message = None
     if not safe_results and search_meta.get("mode") == "no_parse_match":
         empty_message = NO_PARSE_MATCH_MESSAGE
@@ -604,7 +620,7 @@ def api_search_smart():
     )
 
 
-def _record_smart_search_history(main, q: str, geo_kw: dict, result_count: int) -> None:
+def _record_smart_search_history(q: str, geo_kw: dict, result_count: int) -> None:
     """Profile -> Recent searches row for a signed-in smart search.
 
     Stored as the listings-URL shape (``q`` + zip/radius) so "Run again" is a plain
@@ -622,7 +638,7 @@ def _record_smart_search_history(main, q: str, geo_kw: dict, result_count: int) 
         filters = _clean_saved_search_filters(raw)
         if not filters:
             return
-        main.record_search_history(
+        record_search_history(
             int(uid_raw), filters, query_text=q, result_count=result_count
         )
     except Exception:
@@ -631,18 +647,16 @@ def _record_smart_search_history(main, q: str, geo_kw: dict, result_count: int) 
 
 def api_saved_cars():
     """Saved inventory for the signed-in user (native clients)."""
-    main = main_module()
     uid = session.get("user_id")
     if not uid:
         return jsonify({"ok": False, "error": "not_logged_in"}), 401
-    saved_ids = main.get_saved_car_ids(int(uid))
-    raw_saved = main.get_cars_by_ids(saved_ids)
-    cars = main.serialize_cars_for_listings_grid(raw_saved)
+    saved_ids = get_saved_car_ids(int(uid))
+    raw_saved = get_cars_by_ids(saved_ids)
+    cars = serialize_cars_for_listings_grid(raw_saved)
     return jsonify({"ok": True, "cars": cars})
 
 
 def api_toggle_save(car_id):
-    main = main_module()
     try:
         uid = session["user_id"]
     except KeyError:
@@ -650,13 +664,13 @@ def api_toggle_save(car_id):
     if not uid:
         return jsonify({"ok": False, "error": "not_logged_in"}), 401
     uid = int(uid)
-    if not main.get_car_by_id(car_id, include_inactive=False):
+    if not get_car_by_id(car_id, include_inactive=False):
         return jsonify({"ok": False, "error": "not_found"}), 404
-    currently_saved = main.is_car_saved(uid, car_id)
+    currently_saved = is_car_saved(uid, car_id)
     if currently_saved:
-        main.unsave_car(uid, car_id)
+        unsave_car(uid, car_id)
     else:
-        main.save_car(uid, car_id)
+        save_car(uid, car_id)
     return jsonify({"ok": True, "saved": not currently_saved})
 
 
@@ -683,20 +697,18 @@ def _clean_saved_search_filters(raw) -> dict | None:
 
 def api_saved_searches_list():
     """This user's saved searches (listings toolbar "Saved searches" panel)."""
-    main = main_module()
     ok, err = paid_access.check_feature(FEATURE_SAVED_SEARCHES)
     if not ok:
         return jsonify(paid_access.denied_json(FEATURE_SAVED_SEARCHES, err, searches=[])), 403
     uid = session.get("user_id")
     if not uid:
         return jsonify({"ok": False, "error": "not_logged_in", "searches": []}), 401
-    searches = main.list_saved_searches(int(uid))
+    searches = list_saved_searches(int(uid))
     return jsonify({"ok": True, "searches": searches})
 
 
 def api_saved_searches_create():
     """Persist the listings page's current filter state ("Save this search")."""
-    main = main_module()
     ok, err = paid_access.check_feature(FEATURE_SAVED_SEARCHES)
     if not ok:
         return jsonify(paid_access.denied_json(FEATURE_SAVED_SEARCHES, err)), 403
@@ -708,21 +720,20 @@ def api_saved_searches_create():
     if filters is None:
         return jsonify({"ok": False, "error": "filters_required"}), 400
     try:
-        search_id = main.create_saved_search(int(uid), filters)
+        search_id = create_saved_search(int(uid), filters)
     except ValueError:
         return jsonify({"ok": False, "error": "filters_too_large"}), 400
     return jsonify({"ok": True, "id": search_id, "filters": filters})
 
 
 def api_saved_searches_delete(search_id):
-    main = main_module()
     ok, err = paid_access.check_feature(FEATURE_SAVED_SEARCHES)
     if not ok:
         return jsonify(paid_access.denied_json(FEATURE_SAVED_SEARCHES, err)), 403
     uid = session.get("user_id")
     if not uid:
         return jsonify({"ok": False, "error": "not_logged_in"}), 401
-    removed = main.delete_saved_search(int(uid), int(search_id))
+    removed = delete_saved_search(int(uid), int(search_id))
     if not removed:
         return jsonify({"ok": False, "error": "not_found"}), 404
     return jsonify({"ok": True})
@@ -779,17 +790,15 @@ def _known_dealer_name(dealer_id: str) -> tuple[bool, str | None]:
 
 def api_hidden_dealers_list():
     """GET /api/profile/hidden-dealers -- this user's hidden dealerships."""
-    main = main_module()
     uid = session.get("user_id")
     if not uid:
         return jsonify({"ok": False, "error": "not_logged_in", "dealers": []}), 401
-    dealers = main.list_hidden_dealers(int(uid))
+    dealers = list_hidden_dealers(int(uid))
     return jsonify({"ok": True, "dealers": dealers})
 
 
 def api_hidden_dealers_add():
     """POST /api/profile/hidden-dealers {dealer_id} -- hide a dealership for this user."""
-    main = main_module()
     uid = session.get("user_id")
     if not uid:
         return jsonify({"ok": False, "error": "not_logged_in"}), 401
@@ -801,7 +810,7 @@ def api_hidden_dealers_add():
     if not known:
         return jsonify({"ok": False, "error": "not_found"}), 404
     try:
-        added = main.hide_dealer(int(uid), dealer_id, name)
+        added = hide_dealer(int(uid), dealer_id, name)
     except ValueError:
         return jsonify({"ok": False, "error": "list_full"}), 400
     return jsonify(
@@ -816,14 +825,13 @@ def api_hidden_dealers_add():
 
 def api_hidden_dealers_remove(dealer_id):
     """DELETE /api/profile/hidden-dealers/<dealer_id> -- unhide."""
-    main = main_module()
     uid = session.get("user_id")
     if not uid:
         return jsonify({"ok": False, "error": "not_logged_in"}), 401
     key = _clean_dealer_id_param(dealer_id)
     if not key:
         return jsonify({"ok": False, "error": "not_found"}), 404
-    removed = main.unhide_dealer(int(uid), key)
+    removed = unhide_dealer(int(uid), key)
     if not removed:
         return jsonify({"ok": False, "error": "not_found"}), 404
     return jsonify({"ok": True, "hidden": False, "dealer_id": key})
@@ -840,7 +848,6 @@ _SEARCH_HISTORY_DEFAULT_LIMIT = 20
 
 def api_search_history_list():
     """GET /api/profile/search-history?limit=20 -- this user's recent searches, newest first."""
-    main = main_module()
     uid = session.get("user_id")
     if not uid:
         return jsonify({"ok": False, "error": "not_logged_in", "searches": []}), 401
@@ -850,17 +857,16 @@ def api_search_history_list():
         limit = int(request.args.get("limit", _SEARCH_HISTORY_DEFAULT_LIMIT))
     except (TypeError, ValueError):
         limit = _SEARCH_HISTORY_DEFAULT_LIMIT
-    rows = main.list_search_history(int(uid), limit)
+    rows = list_search_history(int(uid), limit)
     return jsonify({"ok": True, "searches": decorate_search_rows(rows)})
 
 
 def api_search_history_delete(entry_id):
     """DELETE /api/profile/search-history/<id> -- forget one search."""
-    main = main_module()
     uid = session.get("user_id")
     if not uid:
         return jsonify({"ok": False, "error": "not_logged_in"}), 401
-    removed = main.delete_search_history_entry(int(uid), int(entry_id))
+    removed = delete_search_history_entry(int(uid), int(entry_id))
     if not removed:
         return jsonify({"ok": False, "error": "not_found"}), 404
     return jsonify({"ok": True, "id": int(entry_id)})
@@ -868,11 +874,10 @@ def api_search_history_delete(entry_id):
 
 def api_search_history_clear():
     """DELETE /api/profile/search-history -- forget every search."""
-    main = main_module()
     uid = session.get("user_id")
     if not uid:
         return jsonify({"ok": False, "error": "not_logged_in"}), 401
-    removed = main.clear_search_history(int(uid))
+    removed = clear_search_history(int(uid))
     return jsonify({"ok": True, "removed": int(removed or 0)})
 
 
