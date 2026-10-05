@@ -105,7 +105,9 @@ workspace/dealer_logs/
 
 - `backend/scripts/dealer_pipeline.py` — recipe → HTTP-only scan → NHTSA heal → assess
   (verification: new/used, location facts, incomplete fields, discrepancies) → per-dealer
-  logs. Runs the probe below on every synthesis failure.
+  logs. Runs the probe below on every synthesis failure. The CLI lives there; the code lives
+  in `backend/scanner/pipeline/` (`run.py` the steps, `dealer_logs.py` the per-dealer logs,
+  `reconcile.py` the listing retirement, `assess.py`, `lifecycle.py`, `runner.py`, `triage.py`).
 - The recipe lifecycle inside the pipeline (after all batches, `--no-lifecycle` to skip): a
   dealer that came back `no_recipe` / `no_rows` / `validated_zero` / an auth error, or whose
   `scan_hints.recipe_status` says `stale:` (a replay answered 401/403) — or `rejected:` while

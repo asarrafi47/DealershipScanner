@@ -54,9 +54,15 @@ def test_two_shards_hold_independent_locks(scan_lock, tmp_path):
 
 def test_pipeline_lock_file_follows_env(monkeypatch, tmp_path):
     monkeypatch.setenv("SCANNER_LOCK_PATH", str(tmp_path / "shard7.lock"))
+    # LOCK_FILE is computed in backend/scanner/pipeline/runner.py (audit F11): reload
+    # the module that reads it, then the facade that re-exports it.
+    import backend.scanner.pipeline.runner as runner
     import backend.scripts.dealer_pipeline as dp
 
+    runner = importlib.reload(runner)
     dp = importlib.reload(dp)
+    assert runner.LOCK_FILE == tmp_path / "shard7.lock"
     assert dp.LOCK_FILE == tmp_path / "shard7.lock"
     monkeypatch.setenv("SCANNER_LOCK_PATH", "")
+    importlib.reload(runner)
     importlib.reload(dp)

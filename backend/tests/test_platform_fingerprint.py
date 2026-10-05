@@ -348,9 +348,10 @@ def test_report_for_run_never_raises(tmp_path, monkeypatch):
 
 def test_pipeline_hook_uses_log_root(tmp_path, monkeypatch):
     from backend.scripts import dealer_pipeline as dp
+    from backend.tests.pipeline_patch import patch_pipeline
 
     root = _write_root(tmp_path)
-    monkeypatch.setattr(dp, "LOG_ROOT", root)
+    patch_pipeline(monkeypatch, "LOG_ROOT", root)
     monkeypatch.setattr(pc, "recipe_state", lambda d: "none")
     lines = dp.platform_cluster_lines(["delta-cdjr-com", "echo-toyota-com", "audi-somewhere-com"])
     assert len(lines) == 1

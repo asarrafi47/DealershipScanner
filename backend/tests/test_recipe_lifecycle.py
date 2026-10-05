@@ -22,6 +22,7 @@ import pytest
 from backend.scanner.network_observer import CapturedEndpoint
 from backend.scanner.recipes import load_recipes, mark_stale, promote_from_ledger
 from backend.scripts import dealer_pipeline as dp
+from backend.tests.pipeline_patch import patch_pipeline
 
 D = "lifecycle-dealer-com"
 URL = "https://www.lifecycle-dealer.com"
@@ -68,7 +69,7 @@ def hints(monkeypatch):
 @pytest.fixture()
 def log_root(tmp_path, monkeypatch):
     root = tmp_path / "dealer_logs"
-    monkeypatch.setattr(dp, "LOG_ROOT", root)
+    patch_pipeline(monkeypatch, "LOG_ROOT", root)
     monkeypatch.setenv("DEALER_LOGS_ROOT", str(root))
     return root
 
@@ -245,8 +246,8 @@ def test_run_lifecycle_skips_a_dealer_already_attempted_today(monkeypatch, hints
     def never(*a, **k):
         raise AssertionError("ensure_recipe must not run twice in one day")
 
-    monkeypatch.setattr(dp, "ensure_recipe", never)
-    monkeypatch.setattr(dp, "run_discovery_capture", never)
+    patch_pipeline(monkeypatch, "ensure_recipe", never)
+    patch_pipeline(monkeypatch, "run_discovery_capture", never)
     out = dp.run_lifecycle(DEALER, _res("no_rows", "recipe replay yielded 0 rows"), trigger="no_rows")
     assert out["lifecycle"] == "failed:attempted_today"
     text = (log_root / D / "discovery.md").read_text(encoding="utf-8")
@@ -256,10 +257,10 @@ def test_run_lifecycle_skips_a_dealer_already_attempted_today(monkeypatch, hints
 # ── run_lifecycle steps ────────────────────────────────────────────────────────
 
 def test_run_lifecycle_step1_resynth_ok(monkeypatch, hints, log_root):
-    monkeypatch.setattr(dp, "ensure_recipe", lambda dealer, force=False: {
+    patch_pipeline(monkeypatch, "ensure_recipe", lambda dealer, force=False: {
         "had_recipes": 0, "synth": "saved_2", "platform": "carscommerce", "synth_vins": 120, "recipe_status": "ok",
         "validation": {"verdict": "ok", "vins_total": 120, "site_total": 121}, "providers": ["carscommerce"]} if force else {"had_recipes": 0, "synth": None})
-    monkeypatch.setattr(dp, "run_discovery_capture", lambda *a, **k: pytest.fail("capture must not run when re-synth saved"))
+    patch_pipeline(monkeypatch, "run_discovery_capture", lambda *a, **k: pytest.fail("capture must not run when re-synth saved"))
     out = dp.run_lifecycle(DEALER, _res("no_rows", "recipe replay yielded 0 rows", had=1), trigger="no_rows", stamp="2026-09-28 12:00 UTC")
     assert out["lifecycle"] == "resynth_ok" and out["recipe"]["synth"] == "saved_2"
     assert hints[D]["lifecycle_last_attempt"]
@@ -270,7 +271,7 @@ def test_run_lifecycle_step1_resynth_ok(monkeypatch, hints, log_root):
 
 
 def test_run_lifecycle_step2_capture_ok(monkeypatch, hints, log_root):
-    monkeypatch.setattr(dp, "ensure_recipe", lambda dealer, force=False: {"had_recipes": 0, "synth": "no_template_for_unknown", "platform": None})
+    patch_pipeline(monkeypatch, "ensure_recipe", lambda dealer, force=False: {"had_recipes": 0, "synth": "no_template_for_unknown", "platform": None})
     captured = []
 
     def capture(dealer_id, timeout_sec=900):
@@ -278,7 +279,7 @@ def test_run_lifecycle_step2_capture_ok(monkeypatch, hints, log_root):
         return {"seconds": 88, "rc": 0, "records": 40, "recipes_before": 0, "recipes_after": 1, "endpoints": 1,
                 "validation": {"verdict": "ok", "status": "ok"}}
 
-    monkeypatch.setattr(dp, "run_discovery_capture", capture)
+    patch_pipeline(monkeypatch, "run_discovery_capture", capture)
 
     class Rep:
         verdict, reasons, vins_total, site_total, status = "ok", [], 97, 97, "ok"
@@ -286,7 +287,7 @@ def test_run_lifecycle_step2_capture_ok(monkeypatch, hints, log_root):
         def summary(self):
             return {"verdict": "ok", "vins_total": 97}
 
-    monkeypatch.setattr(dp, "validate_live_recipes", lambda dealer, context="lifecycle capture": Rep())
+    patch_pipeline(monkeypatch, "validate_live_recipes", lambda dealer, context="lifecycle capture": Rep())
     out = dp.run_lifecycle(DEALER, _res("no_recipe", "no_template_for_unknown", synth="no_template_for_unknown", had=0), trigger="no_recipe", stamp="2026-09-28 12:00 UTC")
     assert out["lifecycle"] == "capture_ok" and captured == [D]
     assert [s["step"] for s in out["steps"]] == ["resynth", "capture"]
@@ -299,13 +300,13 @@ def test_run_lifecycle_step2_capture_ok(monkeypatch, hints, log_root):
 
 
 def test_run_lifecycle_capture_rejected_or_skipped_fails(monkeypatch, hints, log_root):
-    monkeypatch.setattr(dp, "ensure_recipe", lambda dealer, force=False: {"had_recipes": 0, "synth": "validated_zero", "platform": "dealer_dot_com"})
-    monkeypatch.setattr(dp, "run_discovery_capture", lambda *a, **k: {"skipped": "already captured today", "recipes_after": 0})
+    patch_pipeline(monkeypatch, "ensure_recipe", lambda dealer, force=False: {"had_recipes": 0, "synth": "validated_zero", "platform": "dealer_dot_com"})
+    patch_pipeline(monkeypatch, "run_discovery_capture", lambda *a, **k: {"skipped": "already captured today", "recipes_after": 0})
     out = dp.run_lifecycle(DEALER, _res("no_recipe", "validated_zero", synth="validated_zero", had=0), trigger="validated_zero")
     assert out["lifecycle"] == "failed:capture_skipped_today"
 
     hints.clear()  # a fresh day for the next scenario
-    monkeypatch.setattr(dp, "run_discovery_capture", lambda *a, **k: {"recipes_after": 2, "records": 10})
+    patch_pipeline(monkeypatch, "run_discovery_capture", lambda *a, **k: {"recipes_after": 2, "records": 10})
 
     class Reject:
         verdict, reasons, vins_total, site_total, status = "reject", ["one_condition: only new rows"], 50, 90, "rejected:one_condition"
@@ -313,7 +314,7 @@ def test_run_lifecycle_capture_rejected_or_skipped_fails(monkeypatch, hints, log
         def summary(self):
             return {"verdict": "reject"}
 
-    monkeypatch.setattr(dp, "validate_live_recipes", lambda dealer, context="lifecycle capture": Reject())
+    patch_pipeline(monkeypatch, "validate_live_recipes", lambda dealer, context="lifecycle capture": Reject())
     out = dp.run_lifecycle(DEALER, _res("no_rows"), trigger="no_rows")
     assert out["lifecycle"] == "failed:capture_validation_rejected:one_condition"
     idx = (log_root / "_learning" / "errors_index.md").read_text(encoding="utf-8")
@@ -325,8 +326,8 @@ def test_run_lifecycle_never_captures_for_a_dealer_whose_scan_passed(monkeypatch
     """A stale: status the replay could not clear (or a rejected: re-synth) beside
     an ok / thin / inaccurate verdict: step 1 may re-synth, step 2 never launches
     the browser, and the outcome is not a needs_discovery one."""
-    monkeypatch.setattr(dp, "ensure_recipe", lambda dealer, force=False: {"had_recipes": 1, "synth": "rejected:one_condition", "platform": "team_velocity", "recipe_status": "rejected:one_condition"})
-    monkeypatch.setattr(dp, "run_discovery_capture", lambda *a, **k: pytest.fail("no browser capture for a dealer whose recipe replays"))
+    patch_pipeline(monkeypatch, "ensure_recipe", lambda dealer, force=False: {"had_recipes": 1, "synth": "rejected:one_condition", "platform": "team_velocity", "recipe_status": "rejected:one_condition"})
+    patch_pipeline(monkeypatch, "run_discovery_capture", lambda *a, **k: pytest.fail("no browser capture for a dealer whose recipe replays"))
     for verdict in ("ok", "thin", "inaccurate"):
         hints.clear()
         out = dp.run_lifecycle(DEALER, _res(verdict, "complete and verified"), trigger="recipe_status stale:403:2026-09-28T01:00:00+00:00", stamp="2026-09-28 12:00 UTC")
@@ -340,8 +341,8 @@ def test_run_lifecycle_never_captures_for_a_dealer_whose_scan_passed(monkeypatch
 
 
 def test_run_lifecycle_no_discover_stops_after_step1(monkeypatch, hints, log_root):
-    monkeypatch.setattr(dp, "ensure_recipe", lambda dealer, force=False: {"had_recipes": 0, "synth": "homepage_unreachable_503"})
-    monkeypatch.setattr(dp, "run_discovery_capture", lambda *a, **k: pytest.fail("--no-discover forbids the capture"))
+    patch_pipeline(monkeypatch, "ensure_recipe", lambda dealer, force=False: {"had_recipes": 0, "synth": "homepage_unreachable_503"})
+    patch_pipeline(monkeypatch, "run_discovery_capture", lambda *a, **k: pytest.fail("--no-discover forbids the capture"))
     out = dp.run_lifecycle(DEALER, _res("no_recipe", had=0, synth="homepage_unreachable_503"), trigger="no_recipe", no_discover=True)
     assert out["lifecycle"] == "failed:homepage_unreachable_503"
     assert "discovery capture disabled (--no-discover)" in (log_root / D / "discovery.md").read_text(encoding="utf-8")
@@ -381,8 +382,8 @@ def test_lifecycle_pass_rescans_only_validated_dealers(monkeypatch, hints, log_r
             return {"had_recipes": 1, "synth": "saved_1", "platform": "carscommerce", "synth_vins": 30, "providers": ["carscommerce"]}
         return {"had_recipes": 0, "synth": "no_template_for_wix", "platform": "wix"}
 
-    monkeypatch.setattr(dp, "ensure_recipe", ensure)
-    monkeypatch.setattr(dp, "run_discovery_capture", lambda did, timeout_sec=900: {"error": "capture timed out after 900s", "recipes_after": 0})
+    patch_pipeline(monkeypatch, "ensure_recipe", ensure)
+    patch_pipeline(monkeypatch, "run_discovery_capture", lambda did, timeout_sec=900: {"error": "capture timed out after 900s", "recipes_after": 0})
     scanned: list[list[str]] = []
 
     def fake_scan(dealer_ids, *, concurrency, log_path, timeout_sec):
@@ -391,12 +392,12 @@ def test_lifecycle_pass_rescans_only_validated_dealers(monkeypatch, hints, log_r
             _seed_retry_rows(sqlite_inventory.path, did, 18, 12)
         return 0
 
-    monkeypatch.setattr(dp, "run_http_only_scan", fake_scan)
-    monkeypatch.setattr(dp, "wait_for_db", lambda *a, **k: True)
-    monkeypatch.setattr(dp, "wait_for_scanner_lock", lambda *a, **k: True)
-    monkeypatch.setattr(dp, "chromium_process_count", lambda: 0)
-    monkeypatch.setattr(dp, "vpic_for_dealers", lambda ids: pytest.fail("--no-vpic"))
-    monkeypatch.setattr(dp, "verify_accuracy", lambda conn, did, since: {"rows": 30, "vpic_cached": 30, "incomplete_rows": 0, "missing": {}, "hard": {}, "hard_rows": 0, "examples": {}})
+    patch_pipeline(monkeypatch, "run_http_only_scan", fake_scan)
+    patch_pipeline(monkeypatch, "wait_for_db", lambda *a, **k: True)
+    patch_pipeline(monkeypatch, "wait_for_scanner_lock", lambda *a, **k: True)
+    patch_pipeline(monkeypatch, "chromium_process_count", lambda: 0)
+    patch_pipeline(monkeypatch, "vpic_for_dealers", lambda ids: pytest.fail("--no-vpic"))
+    patch_pipeline(monkeypatch, "verify_accuracy", lambda conn, did, since: {"rows": 30, "vpic_cached": 30, "incomplete_rows": 0, "missing": {}, "hard": {}, "hard_rows": 0, "examples": {}})
 
     summary = dp.run_lifecycle_pass(results, dealers, {A: 100, B: 0, C: 0}, out_dir=tmp_path / "out", stamp="2026-09-28 12:00 UTC",
                                     batch=4, no_vpic=True, no_reconcile=True)
@@ -438,8 +439,8 @@ def test_lifecycle_pass_rescans_only_validated_dealers(monkeypatch, hints, log_r
 
 def test_lifecycle_pass_with_nothing_to_route_does_not_scan(monkeypatch, hints, log_root, tmp_path):
     results = [{"dealer_id": D, "verdict": "thin", "reason": "key fields below 90%: price=10%", "recipe": {"had_recipes": 1}}]
-    monkeypatch.setattr(dp, "scan_retry_batch", lambda *a, **k: pytest.fail("no retry batch without a lifecycle success"))
-    monkeypatch.setattr(dp, "ensure_recipe", lambda *a, **k: pytest.fail("thin is not a recipe problem"))
+    patch_pipeline(monkeypatch, "scan_retry_batch", lambda *a, **k: pytest.fail("no retry batch without a lifecycle success"))
+    patch_pipeline(monkeypatch, "ensure_recipe", lambda *a, **k: pytest.fail("thin is not a recipe problem"))
     summary = dp.run_lifecycle_pass(results, {D: DEALER}, {D: 50}, out_dir=tmp_path, stamp="s")
     assert summary["routed"] == 0 and results[0]["lifecycle"] == "none"
 
@@ -450,12 +451,12 @@ def _main_env(monkeypatch, tmp_path, hints, log_root, flag: bool):
     manifest = tmp_path / "dealers.json"
     manifest.write_text(json.dumps({"dealers": [dict(DEALER, provider="unknown")]}), encoding="utf-8")
     out = tmp_path / ("out_flag" if flag else "out_noflag")
-    monkeypatch.setattr(dp, "ensure_recipe", lambda dealer, force=False: {"had_recipes": 0, "synth": "no_template_for_unknown", "platform": None})
-    monkeypatch.setattr(dp, "run_discovery_capture", lambda did, timeout_sec=900: {"skipped": "already captured today", "recipes_after": 0})
+    patch_pipeline(monkeypatch, "ensure_recipe", lambda dealer, force=False: {"had_recipes": 0, "synth": "no_template_for_unknown", "platform": None})
+    patch_pipeline(monkeypatch, "run_discovery_capture", lambda did, timeout_sec=900: {"skipped": "already captured today", "recipes_after": 0})
     from backend.scripts import discovery_probe
 
     monkeypatch.setattr(discovery_probe, "probe_dealer", lambda did, url, paths=True: {"classification": "unknown_platform"})
-    monkeypatch.setattr(dp, "run_http_only_scan", lambda *a, **k: pytest.fail("no recipe, nothing to scan"))
+    patch_pipeline(monkeypatch, "run_http_only_scan", lambda *a, **k: pytest.fail("no recipe, nothing to scan"))
     calls: list[str] = []
 
     def spy(results, dealers, known, **kw):
@@ -464,7 +465,7 @@ def _main_env(monkeypatch, tmp_path, hints, log_root, flag: bool):
             r["lifecycle"] = "failed:capture_skipped_today"
         return {"routed": 1, "resynth_ok": 0, "capture_ok": 0, "failed": 1, "retried": {}, "chromium_leaks": []}
 
-    monkeypatch.setattr(dp, "run_lifecycle_pass", spy)
+    patch_pipeline(monkeypatch, "run_lifecycle_pass", spy)
     argv = ["dealer_pipeline", "--dealers", D, "--manifest", str(manifest), "--out", str(out), "--no-vpic", "--no-reconcile"]
     if flag:
         argv.append("--no-lifecycle")

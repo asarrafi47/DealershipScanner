@@ -362,8 +362,9 @@ def test_pipeline_slow_dealers_file_and_errors_index(monkeypatch, tmp_path):
     from datetime import datetime, timezone
 
     from backend.scripts import dealer_pipeline as dp
+    from backend.tests.pipeline_patch import patch_pipeline
 
-    monkeypatch.setattr(dp, "LOG_ROOT", tmp_path / "dealer_logs")
+    patch_pipeline(monkeypatch, "LOG_ROOT", tmp_path / "dealer_logs")
     results = [
         {"dealer_id": "avondaletoyota-com", "minutes": 15.3,
          "timing": {"minutes": 15.3, "flags": ["cap_hit", "host_exhausted", "slowed_host", "slow", "upsert_slow"],
