@@ -1,11 +1,21 @@
 #!/usr/bin/env python3
 """
-Download EPA fueleconomy.gov vehicles.csv and import into SQLite table `epa_master`.
+Download EPA fueleconomy.gov vehicles.csv and import it into the inventory `epa_master`.
 
 Usage (from repo root):
-  PYTHONPATH=. python backend/scripts/import_epa_master.py
+  PYTHONPATH=. python backend/scripts/import_epa_master.py --append-years 2027
+  PYTHONPATH=. python backend/scripts/import_epa_master.py --yes   # full replace, guarded
 
-Requires: inventory.db (or INVENTORY_DB_PATH). Creates `epa_master` if missing.
+Runs on the inventory backend (Postgres via INVENTORY_DATABASE_URL; SQLite only under
+pytest). Creates `epa_master` if missing.
+
+``--append-years`` only inserts rows whose epa_vehicle_id is new; it never deletes.
+
+The full replace (``--yes``, or ``import_csv(append=False)``) runs ``DELETE FROM
+epa_master`` and reloads with fresh ids. That deletion cascades to
+``epa_extended_specs`` and leaves every ``cars.epa_master_id`` dangling, so it is
+refused (RuntimeError; exit 2 from the CLI, with the counts printed) while any car is
+linked or any extended-specs row exists. It still works on an empty, unlinked catalog.
 
 Data: https://www.fueleconomy.gov/feg/epadata/vehicles.csv
 """
@@ -13,6 +23,7 @@ from __future__ import annotations
 
 import csv
 import os
+import sqlite3
 import sys
 import urllib.request
 from pathlib import Path
@@ -75,14 +86,91 @@ def _insert_batch(conn: Any, batch: list[tuple]) -> None:
         conn.execute(_INSERT_SQL, row)
 
 
+EXIT_REFUSED = 2
+
+
+class FullReplaceRefused(RuntimeError):
+    """A full replace of ``epa_master`` would orphan car links or extended specs."""
+
+    def __init__(self, *, linked_cars: int, extended_specs: int, catalog_rows: int) -> None:
+        self.linked_cars = linked_cars
+        self.extended_specs = extended_specs
+        self.catalog_rows = catalog_rows
+        super().__init__(
+            "Refusing to replace epa_master: "
+            f"{linked_cars} car(s) have cars.epa_master_id set and epa_extended_specs holds "
+            f"{extended_specs} row(s) (epa_master has {catalog_rows} row(s)). "
+            "DELETE FROM epa_master would cascade to epa_extended_specs and leave every car "
+            "link pointing at an id that no longer exists. Use --append-years to add model years."
+        )
+
+
+def _is_missing_table_error(exc: BaseException) -> bool:
+    """True only for "table does not exist" (SQLite OperationalError / Postgres 42P01)."""
+    if getattr(exc, "sqlstate", None) == "42P01":
+        return True
+    return isinstance(exc, sqlite3.OperationalError) and "no such table" in str(exc).lower()
+
+
+def _scalar_count(conn: Any, sql: str) -> int:
+    cur = conn.cursor()
+    cur.execute(sql)
+    row = cur.fetchone()
+    return int(row[0] or 0) if row else 0
+
+
+def _count_extended_specs(conn: Any) -> int:
+    """Rows in ``epa_extended_specs``; 0 only when the table does not exist.
+
+    The probe runs inside a savepoint: on Postgres a failed statement (the table is
+    absent on SQLite and on some fresh databases) would otherwise abort the whole
+    transaction. Any other error is re-raised, so the guard fails closed.
+    """
+    conn.execute("SAVEPOINT epa_xspecs_probe")
+    try:
+        n = _scalar_count(conn, "SELECT COUNT(*) FROM epa_extended_specs")
+    except Exception as exc:
+        conn.execute("ROLLBACK TO SAVEPOINT epa_xspecs_probe")
+        conn.execute("RELEASE SAVEPOINT epa_xspecs_probe")
+        if _is_missing_table_error(exc):
+            return 0
+        raise
+    conn.execute("RELEASE SAVEPOINT epa_xspecs_probe")
+    return n
+
+
+def assert_full_replace_allowed(conn: Any) -> None:
+    """Raise :class:`FullReplaceRefused` unless ``epa_master`` is safe to delete.
+
+    Safe means no car carries an ``epa_master_id`` and ``epa_extended_specs`` is empty
+    (or absent). Errors reading ``cars`` propagate, so the replace does not run.
+    """
+    linked = _scalar_count(conn, "SELECT COUNT(*) FROM cars WHERE epa_master_id IS NOT NULL")
+    xspecs = _count_extended_specs(conn)
+    if linked or xspecs:
+        catalog = _scalar_count(conn, "SELECT COUNT(*) FROM epa_master")
+        raise FullReplaceRefused(linked_cars=linked, extended_specs=xspecs, catalog_rows=catalog)
+
+
 def import_csv(path: str, conn: Any, *, years: set[int] | None = None, append: bool = False) -> int:
     """Import vehicles.csv. ``append=True`` keeps every existing row and inserts
     only rows (restricted to *years* when given) whose epa_vehicle_id is not in
     the table yet: the way to pull a new model year (2027: 84 rows in July, 541
     in the September file) without touching the curated columns other scripts
-    added (trim, body_style, engine_description)."""
+    added (trim, body_style, engine_description).
+
+    ``append=False`` replaces the whole table, and raises :class:`FullReplaceRefused`
+    (a RuntimeError) before the DELETE while any car is linked or any extended-specs
+    row exists. The check runs again just before the commit, in the same transaction,
+    so a link written while the CSV loads rolls the replace back too."""
     ensure_table(conn)
     existing_ids: set[int] = set()
+    if not append:
+        try:
+            assert_full_replace_allowed(conn)
+        except Exception:
+            conn.rollback()
+            raise
     if append:
         cur = conn.cursor()
         if years:
@@ -197,11 +285,17 @@ def import_csv(path: str, conn: Any, *, years: set[int] | None = None, append: b
                 batch = []
         if batch:
             _insert_batch(conn, batch)
+    if not append:
+        try:
+            assert_full_replace_allowed(conn)
+        except Exception:
+            conn.rollback()
+            raise
     conn.commit()
     return rows
 
 
-def main() -> int:
+def main(argv: list[str] | None = None) -> int:
     import argparse
     import tempfile
 
@@ -213,9 +307,10 @@ def main() -> int:
         action="store_true",
         help="Required: this replaces ALL of epa_master with the downloaded government CSV "
         "(DELETE FROM epa_master, then reimport) — including this project's own curated/merged "
-        "rows built by build_epa_master_pg.py and the 2026-07-06 dump import.",
+        "rows built by build_epa_master_pg.py and the 2026-07-06 dump import. Refused (exit 2) "
+        "while any cars.epa_master_id is set or epa_extended_specs has rows.",
     )
-    args = ap.parse_args()
+    args = ap.parse_args(argv)
 
     from backend.db.inventory_db import get_conn
     from backend.db.inventory_pg import is_inventory_postgres
@@ -253,6 +348,18 @@ def main() -> int:
         )
         return 1
 
+    # Checked before the download (and again inside import_csv, in the replace's own
+    # transaction). A short-lived connection, so no snapshot is held while downloading.
+    conn = get_conn()
+    try:
+        ensure_table(conn)
+        assert_full_replace_allowed(conn)
+    except FullReplaceRefused as exc:
+        print(str(exc), file=sys.stderr)
+        return EXIT_REFUSED
+    finally:
+        conn.close()
+
     tmp = tempfile.NamedTemporaryFile(mode="w+b", suffix=".csv", delete=False)
     tmp.close()
     path = tmp.name
@@ -261,8 +368,10 @@ def main() -> int:
         urllib.request.urlretrieve(EPA_URL, path)
         conn = get_conn()
         try:
-            ensure_table(conn)
             n = import_csv(path, conn)
+        except FullReplaceRefused as exc:
+            print(str(exc), file=sys.stderr)
+            return EXIT_REFUSED
         finally:
             conn.close()
         print(f"Imported {n} EPA vehicle rows into epa_master.")
