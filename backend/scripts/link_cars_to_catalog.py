@@ -7,6 +7,9 @@ Adds ``cars.epa_master_id`` / ``epa_match_confidence`` / ``epa_match_method``
 resolver over the fleet. Low-confidence cars stay unlinked — they render with
 dealer-observed data only.
 
+A catalog read error (``CatalogUnavailableError``) stops the run before any
+UPDATE, with exit status 2: a half-read catalog must never decide links.
+
 Usage::
 
   PYTHONPATH=. python backend/scripts/link_cars_to_catalog.py --dry-run
@@ -28,7 +31,11 @@ from backend.utils.project_env import load_project_dotenv
 load_project_dotenv()
 
 from backend.catalog.generations import seed_model_generations  # noqa: E402
-from backend.catalog.resolver import candidates_for, resolve_from_candidates  # noqa: E402
+from backend.catalog.resolver import (  # noqa: E402
+    CatalogUnavailableError,
+    candidates_for,
+    resolve_from_candidates,
+)
 from backend.db.inventory_db import get_conn  # noqa: E402
 
 _LINK_COLUMNS = (
@@ -112,7 +119,16 @@ def link_fleet(*, dry_run: bool, only_missing: bool, dealers: tuple[str, ...] = 
             continue
         key = (y, mk.lower(), md.lower())
         if key not in cand_cache:
-            cand_cache[key] = candidates_for(cur, y, mk, md)
+            try:
+                cand_cache[key] = candidates_for(cur, y, mk, md)
+            except CatalogUnavailableError:
+                # Every UPDATE runs after this loop, so nothing has been written.
+                for step in (conn.rollback, conn.close):
+                    try:
+                        step()
+                    except Exception:  # noqa: BLE001 - re-raising the catalog error
+                        pass
+                raise
         match = resolve_from_candidates(car, cand_cache[key])
         if match is None:
             stats["unlinked"] += 1
@@ -147,11 +163,15 @@ def main() -> None:
         n = seed_model_generations()
         print(f"model_generations seeded (+{n} rows)", flush=True)
 
-    out = link_fleet(
-        dry_run=args.dry_run, only_missing=args.only_missing,
-        dealers=tuple(d.strip() for d in args.dealers.split(",") if d.strip()),
-        years=tuple(int(y) for y in args.years.split(",") if y.strip().isdigit()),
-    )
+    try:
+        out = link_fleet(
+            dry_run=args.dry_run, only_missing=args.only_missing,
+            dealers=tuple(d.strip() for d in args.dealers.split(",") if d.strip()),
+            years=tuple(int(y) for y in args.years.split(",") if y.strip().isdigit()),
+        )
+    except CatalogUnavailableError as exc:
+        print(f"catalog unavailable, no links written: {exc}", file=sys.stderr, flush=True)
+        raise SystemExit(2) from exc
     print(f"link stats: {out['stats']}", flush=True)
     print(f"confidence histogram: {out['confidence_hist']}", flush=True)
 
