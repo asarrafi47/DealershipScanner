@@ -14,6 +14,7 @@ and inside ``try: ... except ImportError`` blocks, plus string-literal
 it is stdlib, first-party (this repo), declared in requirements.txt (following
 ``-r`` includes), or listed in ``ALLOWED_UNDECLARED`` below with a reason.
 """
+
 from __future__ import annotations
 
 import ast
@@ -216,18 +217,53 @@ def test_p1a6_packages_declared_with_floor(dist, floor):
     assert f">={floor}" in line.replace(" ", ""), f"{dist}: expected a >={floor} floor, got {line!r}"
 
 
+def _release(text: str) -> tuple[int, ...]:
+    """Release tuple with trailing zeros dropped, so 1, 1.0 and 1.0.0 compare equal."""
+    parts = [int(p) for p in text.split(".")]
+    while len(parts) > 1 and parts[-1] == 0:
+        parts.pop()
+    return tuple(parts)
+
+
+_SPEC_CLAUSE = re.compile(r"^\s*(===|==|~=|<=|<)\s*(\d+(?:\.\d+)*)(\.\*)?\s*$")
+
+
 def _caps_below_major_1(requirement: str) -> bool:
-    """True when the requirement's specifiers exclude every 1.x release."""
+    """True when one specifier clause alone excludes every release >= 1.0.0.
+
+    Fails closed: a clause it cannot read (pre-release suffixes, ``!=``, lower
+    bounds) never counts as a cap."""
     spec = requirement.split(";", 1)[0]  # drop environment markers
     spec = re.sub(r"^[A-Za-z0-9._-]+(\[[^\]]*\])?", "", spec.strip())  # drop name and extras
+    one = (1,)
     for clause in spec.split(","):
-        m = re.match(r"\s*(<=|<|==|~=)\s*(\d+)(?:\.(\d+))?", clause)
+        m = _SPEC_CLAUSE.match(clause)
         if not m:
             continue
-        op, major, minor = m.group(1), int(m.group(2)), int(m.group(3) or 0)
-        if op == "<" and (major == 0 or (major == 1 and minor == 0)):
+        op, release, wildcard = m.group(1), _release(m.group(2)), bool(m.group(3))
+        if op == "<" and release <= one:  # <1, <1.0, <0.200; not <1.0.1 (admits 1.0.0)
             return True
-        if op in {"<=", "==", "~="} and major == 0:
+        if op == "<=" and release < one:  # <=0.999; not <=1 (admits 1.0.0)
+            return True
+        if op in {"==", "==="} and (release[0] == 0 if wildcard else release < one):
+            return True
+        if op == "~=" and release[0] == 0:  # ~=0.116 is >=0.116,==0.*
+            return True
+    return False
+
+
+def _sends_temperature(source: str) -> bool:
+    """True when the module can put ``temperature`` into an SDK request: a
+    parameter, a keyword argument or a string literal of that name anywhere in
+    it. Deliberately broad (``kwargs["temperature"]``, ``kwargs.update(temperature=t)``,
+    ``{"temperature": t}``, ``setdefault("temperature", t)`` all count), so a
+    refactor cannot hide the forwarding from the cap guard below."""
+    for node in ast.walk(ast.parse(source)):
+        if isinstance(node, ast.arg) and node.arg == "temperature":
+            return True
+        if isinstance(node, ast.keyword) and node.arg == "temperature":
+            return True
+        if isinstance(node, ast.Constant) and node.value == "temperature":
             return True
     return False
 
@@ -237,13 +273,40 @@ def test_anthropic_capped_below_1_while_the_client_sends_temperature():
     2026-10-07: 1.12.0 raises ``TypeError: ... unexpected keyword argument
     'temperature'``). backend/llm/client.py forwards it, and car chat
     (backend/utils/llm_client._complete_claude) always passes one, so an
-    uncapped floor would install 1.x and break every chat call. Lift the cap
-    together with the client change."""
+    uncapped floor would install 1.x and break every chat call.
+
+    Fails closed, never skips: lifting the cap is allowed only once no
+    ``temperature`` parameter, keyword or literal is left in the client."""
     client_src = (REPO_ROOT / "backend" / "llm" / "client.py").read_text(encoding="utf-8")
-    if 'kwargs["temperature"]' not in client_src:
-        pytest.skip("backend/llm/client.py no longer forwards temperature; revisit the anthropic<1 cap")
     line = declared_distributions()["anthropic"]
-    assert _caps_below_major_1(line), f"anthropic must stay below 1.0 while the client sends temperature: {line!r}"
+    assert _caps_below_major_1(line) or not _sends_temperature(client_src), (
+        f"anthropic must stay below 1.0 while backend/llm/client.py sends temperature: {line!r}"
+    )
+
+
+def test_the_client_really_sends_temperature_today():
+    # Pins the premise of the cap guard: if this fails, the detector went blind,
+    # not the client. Update it together with the anthropic 1.x migration.
+    client_src = (REPO_ROOT / "backend" / "llm" / "client.py").read_text(encoding="utf-8")
+    assert _sends_temperature(client_src)
+
+
+@pytest.mark.parametrize(
+    "source,sends",
+    [
+        ('kwargs["temperature"] = t\n', True),
+        ("kwargs['temperature'] = t\n", True),
+        ("kwargs.update(temperature=t)\n", True),
+        ('kwargs.setdefault("temperature", t)\n', True),
+        ('req = {"model": m, "temperature": t}\n', True),
+        ("def complete(prompt, *, temperature=None):\n    pass\n", True),
+        ("client.messages.create(model=m, temperature=0.2)\n", True),
+        ('kwargs = {"model": m, "max_tokens": 10}\n', False),
+        ("def complete(prompt, *, top_k=None):\n    pass\n", False),
+    ],
+)
+def test_sends_temperature_detector(source, sends):
+    assert _sends_temperature(source) is sends
 
 
 @pytest.mark.parametrize(
@@ -251,10 +314,24 @@ def test_anthropic_capped_below_1_while_the_client_sends_temperature():
     [
         ("anthropic>=0.116,<1", True),
         ("anthropic>=0.116, <1.0", True),
+        ("anthropic>=0.116,<1.0.0", True),
+        ("anthropic>=0.116,<0.200", True),
         ("anthropic~=0.116", True),
+        ("anthropic~=0.116.0", True),
         ("anthropic==0.125.0", True),
+        ("anthropic==0.*", True),
+        ("anthropic<=0.999", True),
+        ("anthropic[bedrock]>=0.116,<1", True),
+        ("anthropic>=0.116,<1; python_version >= '3.9'", True),
         ("anthropic>=0.116", False),
         ("anthropic>=0.116,<2", False),
+        ("anthropic>=0.116,<1.0.1", False),
+        ("anthropic<=1", False),
+        ("anthropic<=1.0.0", False),
+        ("anthropic==1.*", False),
+        ("anthropic~=1.0", False),
+        ("anthropic>=0.116,!=1.0.0", False),
+        ("anthropic<1.0.0a1", False),
     ],
 )
 def test_caps_below_major_1_parser(requirement, capped):
