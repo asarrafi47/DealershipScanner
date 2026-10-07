@@ -53,5 +53,9 @@ def test_both_conditions_returned_still_retires_missing_cars(monkeypatch):
 def test_condition_buckets():
     assert ir.condition_bucket("New") == "new"
     assert ir.condition_bucket("Certified Pre-Owned") == "used"
-    assert ir.condition_bucket("") == ""
+    # blank is unknown, never used (P1A.1: assess's rows_used counts blanks as used)
+    assert ir.condition_bucket("") == "unknown"
+    assert ir.condition_bucket(None) == "unknown"
+    assert ir.condition_bucket("   ") == "unknown"
     assert ir.condition_buckets_from_vehicles([{"condition": "new"}, {"condition": "CPO"}, {}]) == {"new", "used"}
+    assert ir.condition_buckets_from_vehicles([{}, {"condition": ""}]) == set()

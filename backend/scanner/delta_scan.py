@@ -330,6 +330,7 @@ async def delta_scan_dealer(dealer: dict[str, Any]) -> dict[str, Any]:
     if valid_cov >= _RECONCILE_VIN_COVERAGE:
         try:
             from backend.scanner.inventory_reconcile import (
+                condition_buckets_from_vehicles,
                 reconcile_dealer_inventory_after_scan,
             )
 
@@ -339,8 +340,12 @@ async def delta_scan_dealer(dealer: dict[str, Any]) -> dict[str, Any]:
             # was NULL on all 58k rows). Unique scraped VINs is the deduped
             # row count for a delta run.
             out["deduped_rows"] = len(scraped_norm)
+            # The same per-condition guards as the full scan (P1A.1): without the
+            # run's buckets a new-only replay that clears 80% of the lot retires
+            # every used car it never asked for.
             out["reconcile"] = await asyncio.to_thread(
-                reconcile_dealer_inventory_after_scan, dealer_id, url, scraped_norm, out
+                reconcile_dealer_inventory_after_scan, dealer_id, url, scraped_norm, out,
+                scraped_conditions=condition_buckets_from_vehicles(vehicles),
             )
         except Exception as e:
             logger.warning("Delta reconcile failed for %s: %s", name, e)

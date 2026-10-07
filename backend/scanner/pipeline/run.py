@@ -4,6 +4,7 @@ and calls it. Moved verbatim from dealer_pipeline.main (audit F11)."""
 from __future__ import annotations
 
 import json
+import os
 import time
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -14,7 +15,7 @@ from backend.scanner.pipeline.constants import BASELINE_DAYS
 from backend.scanner.pipeline.db import _assess_conn, _conn_alive, _rows, chromium_process_count, get_conn, wait_for_db
 from backend.scanner.pipeline.dealer_logs import log_discovery, log_scan_run, write_instructions_if_first_success
 from backend.scanner.pipeline.lifecycle import run_lifecycle_pass
-from backend.scanner.pipeline.reconcile import reconcile_dealer
+from backend.scanner.pipeline.reconcile import bucket_counts, reconcile_dealer
 from backend.scanner.pipeline.recipes import ensure_recipe
 from backend.scanner.pipeline.roster import dealer_from_manifest, dealers_from_db, load_manifest_dealers
 from backend.scanner.pipeline.runner import run_discovery_capture, run_http_only_scan, wait_for_scanner_lock
@@ -23,6 +24,25 @@ from backend.scanner.pipeline.vpic import vpic_for_dealers
 
 
 def run(args) -> int:
+    """Run the pipeline. ``--no-reconcile`` reaches the scanner too (P1A.1): the
+    scanner subprocesses copy ``os.environ`` (runner.run_http_only_scan), and
+    without ``SCANNER_RECONCILE=0`` there inventory_reconcile kept retiring rows
+    while this process only reported. Restored on return, so a caller that
+    imports and runs the pipeline keeps its own environment."""
+    if not getattr(args, "no_reconcile", False):
+        return _run(args)
+    prev = os.environ.get("SCANNER_RECONCILE")
+    os.environ["SCANNER_RECONCILE"] = "0"
+    try:
+        return _run(args)
+    finally:
+        if prev is None:
+            os.environ.pop("SCANNER_RECONCILE", None)
+        else:
+            os.environ["SCANNER_RECONCILE"] = prev
+
+
+def _run(args) -> int:
     manifest = load_manifest_dealers(args.manifest)
     if args.dealers:
         ids = [d.strip() for d in args.dealers.split(",") if d.strip()]
@@ -38,12 +58,16 @@ def run(args) -> int:
 
     conn = get_conn()
     known: dict[str, int] = {}
+    known_buckets: dict[str, dict[str, int]] = {}
     for did in ids:
         # Rows seen in the 30 days before this run. Every active row would count
         # cars nobody has seen since July (Right Toyota: 3,034 "active", 1,367 seen
         # in September) and the floor then calls a full 1,273-car replay no_rows.
         known[did] = int(_rows(conn, "SELECT COUNT(*) AS n FROM cars WHERE dealer_id = ? AND COALESCE(listing_active,1)=1 AND scraped_at >= ?",
                                 (did, baseline_since))[0]["n"])
+        # The same window per condition bucket: reconcile retires a bucket only
+        # when this run returned enough of it (P1A.1).
+        known_buckets[did] = bucket_counts(conn, did, since_iso=baseline_since)
     conn.close()
 
     recipe_info: dict[str, dict[str, Any]] = {}
@@ -158,7 +182,8 @@ def run(args) -> int:
                 # cars on 2026-09-28 (mbbeverlyhills-com, fjmercedes-com).
                 rows_kept = int(r.get("rows_stamped") if r.get("rows_stamped") is not None else (r.get("rows") or 0))
                 r["reconcile"] = reconcile_dealer(conn, did, since_iso, known[did], rows_kept, str(r.get("verdict")),
-                                                  dry_run=args.no_reconcile)
+                                                  dry_run=args.no_reconcile, baseline_buckets=known_buckets[did],
+                                                  rows_buckets=bucket_counts(conn, did, since_iso=since_iso))
             except Exception as exc:  # noqa: BLE001
                 r["reconcile"] = {"error": str(exc)[:120]}
             results.append(r)
@@ -178,7 +203,7 @@ def run(args) -> int:
         try:
             lifecycle_summary = run_lifecycle_pass(results, dealers_by_id, known, out_dir=out_dir, stamp=stamp, no_discover=args.no_discover,
                                                    batch=args.batch, scan_timeout=args.scan_timeout, lock_wait=args.lock_wait,
-                                                   no_vpic=args.no_vpic, no_reconcile=args.no_reconcile)
+                                                   no_vpic=args.no_vpic, no_reconcile=args.no_reconcile, known_buckets=known_buckets)
             lifecycle_summary["enabled"] = True
         except Exception as exc:  # noqa: BLE001 - the triage must still be written
             import traceback as _tb

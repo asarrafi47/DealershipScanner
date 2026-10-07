@@ -10,7 +10,7 @@ from backend.scanner.pipeline.assess import assess
 from backend.scanner.pipeline.constants import LOG_ROOT
 from backend.scanner.pipeline.db import _assess_conn, _conn_alive
 from backend.scanner.pipeline.dealer_logs import _log_append, log_scan_run, write_instructions_if_first_success
-from backend.scanner.pipeline.reconcile import reconcile_dealer
+from backend.scanner.pipeline.reconcile import bucket_counts, reconcile_dealer
 from backend.scanner.pipeline.recipes import ensure_recipe
 from backend.scanner.pipeline.runner import run_discovery_capture, scan_retry_batch
 from backend.scanner.pipeline.vpic import vpic_for_dealers
@@ -270,11 +270,16 @@ def run_lifecycle(dealer: dict[str, Any], result: dict[str, Any], *, trigger: st
 def run_lifecycle_pass(results: list[dict[str, Any]], dealers: dict[str, dict[str, Any]], known: dict[str, int], *,
                        out_dir: Path, stamp: str, no_discover: bool = False, batch: int = 4, scan_timeout: int = 3600,
                        lock_wait: int = 5400, no_vpic: bool = False, no_reconcile: bool = False,
-                       now: datetime | None = None) -> dict[str, Any]:
+                       now: datetime | None = None, known_buckets: dict[str, dict[str, int]] | None = None) -> dict[str, Any]:
     """Route every assessed dealer, run the lifecycle for the ones that need it,
     rescan the dealers whose recipe now validates in one final retry batch and
     assess them again. Mutates *results* in place (each row gains ``lifecycle``,
-    ``lifecycle_detail`` and, when rescanned, ``retried``). Returns the summary."""
+    ``lifecycle_detail`` and, when rescanned, ``retried``). Returns the summary.
+
+    *known_buckets* is the pre-run baseline per condition bucket (run.py); the
+    retry's reconcile compares it with the retry run's own bucket counts. A
+    dealer missing from it gets an empty baseline, which falls back per bucket
+    to the rows seen in the 90 days before the retry (P1A.1)."""
     now = now or datetime.now(timezone.utc)
     retry: list[str] = []
     summary: dict[str, Any] = {"routed": 0, "resynth_ok": 0, "capture_ok": 0, "failed": 0, "resynth_failed": 0, "retried": {}, "chromium_leaks": []}
@@ -328,7 +333,9 @@ def run_lifecycle_pass(results: list[dict[str, Any]], dealers: dict[str, dict[st
                 # stamped rows, never the raw feed count (same rule as the main pass)
                 rows_kept2 = int(r2.get("rows_stamped") if r2.get("rows_stamped") is not None else (r2.get("rows") or 0))
                 r2["reconcile"] = reconcile_dealer(conn, did, retry_since.isoformat(), known.get(did, 0), rows_kept2,
-                                                   str(r2.get("verdict")), dry_run=no_reconcile)
+                                                   str(r2.get("verdict")), dry_run=no_reconcile,
+                                                   baseline_buckets=(known_buckets or {}).get(did) or {},
+                                                   rows_buckets=bucket_counts(conn, did, since_iso=retry_since.isoformat()))
             except Exception as exc:  # noqa: BLE001
                 r2["reconcile"] = {"error": str(exc)[:120]}
             for k in ("lifecycle", "lifecycle_detail", "lifecycle_route"):
