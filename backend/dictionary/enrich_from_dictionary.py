@@ -20,9 +20,16 @@ NHTSA ``DecodeVinValuesExtended`` is used (disable with ``--no-vpic`` or offline
 
 Usage:
   python enrich_from_dictionary.py             # fill only gaps
-  python enrich_from_dictionary.py --all       # reapply to all cars
   python enrich_from_dictionary.py --dry-run   # show changes without writing
   python enrich_from_dictionary.py --no-vpic   # no NHTSA HTTP (EPA + text only)
+  ALLOW_DICTIONARY_OVERWRITE=1 python enrich_from_dictionary.py --all   # overwrite (see below)
+
+``--all`` is disarmed: it refuses (exit 2, before any DB connection) unless
+``ALLOW_DICTIONARY_OVERWRITE=1`` is exported for that command. ``--all`` overwrites
+filled values with the EPA CSV pick, including VIN-decoded (vPIC) drivetrain and
+cylinders and the dealer's own engine text, which outrank the catalog. The opt-in is
+read from the shell before ``.env`` is loaded, so a ``.env`` line cannot leave it
+disarmed. Remediation plan P1A.5; P8B.5 replaces this guard with per-field precedence.
 """
 from __future__ import annotations
 
@@ -564,10 +571,37 @@ _SQL_JUNK_TEXT_IN = (
 )
 
 
+ALLOW_OVERWRITE_ENV = "ALLOW_DICTIONARY_OVERWRITE"
+
+_OVERWRITE_REFUSAL = (
+    "enrich_from_dictionary: --all is disabled.\n"
+    "  --all re-applies the EPA CSV pick to every car and overwrites values that are\n"
+    "  already filled, including VIN-decoded (NHTSA vPIC) drivetrain and cylinders and\n"
+    "  the dealer's own engine text. Those sources outrank the EPA catalog, so a run\n"
+    "  replaces better data with worse.\n"
+    "  The default mode (no --all) fills only empty fields and is unaffected.\n"
+    "  To overwrite anyway, export the opt-in for this one command (add --dry-run first\n"
+    "  to preview what would change):\n"
+    f"    {ALLOW_OVERWRITE_ENV}=1 python -m backend.dictionary.enrich_from_dictionary --all\n"
+    "  (remediation plan P1A.5; P8B.5 replaces this guard with per-field precedence)"
+)
+
+
+def _overwrite_allowed() -> bool:
+    """True only when the shell exported ``ALLOW_DICTIONARY_OVERWRITE=1`` exactly."""
+    return (os.environ.get(ALLOW_OVERWRITE_ENV) or "").strip() == "1"
+
+
 def main():
-    _configure_cli_process()
     ap = argparse.ArgumentParser(description="Enrich cars from DICTIONARY EPA data")
-    ap.add_argument("--all", action="store_true", help="Reapply to all cars (not just those with gaps)")
+    ap.add_argument(
+        "--all",
+        action="store_true",
+        help=(
+            "Reapply to all cars, overwriting filled values (refused unless "
+            f"{ALLOW_OVERWRITE_ENV}=1 is exported)"
+        ),
+    )
     ap.add_argument("--dry-run", action="store_true", help="Show what would be filled without writing")
     ap.add_argument(
         "--no-vpic",
@@ -575,6 +609,12 @@ def main():
         help="Do not call NHTSA vPIC when transmission is still missing (EPA + listing text only)",
     )
     args = ap.parse_args()
+    # Checked before _configure_cli_process() loads .env and before any DB connection:
+    # the opt-in has to come from the invoking shell, never from a file left behind.
+    if args.all and not _overwrite_allowed():
+        print(_OVERWRITE_REFUSAL, file=sys.stderr)
+        raise SystemExit(2)
+    _configure_cli_process()
 
     from backend.db.inventory_db import get_conn
 
