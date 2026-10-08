@@ -21,12 +21,16 @@ SET statement_timeout = '20s';
 --
 -- Requires psql >= 10 (\gset/\if) and a server >= 16 (IS JSON predicate in Q10).
 -- Sections are numbered as in the plan (Q1..Q14); Q15/Q16 are the chain-vs-live
--- object diff that P4.3 (V026) and D-DB7 need. The VALUES lists in Q2 and
--- Q15/Q16 were generated from migrations/ at commit dbdbf5cba (V001..V025);
--- regenerate them if a migration is added. Q15/Q16 are a name-level diff (a
--- static parse of CREATE/ADD CONSTRAINT names), not a definition diff: that is
--- P4.1's drift report.
--- Output contains no secret: no DSN, no client address, no user e-mail or seed.
+-- relation/constraint diff and Q17 the other object kinds (extensions,
+-- functions, triggers, views, schemas, explicitly named constraints) that P4.3
+-- (V026) and D-DB7 need. The VALUES lists in Q2, Q15/Q16 and Q17 were generated
+-- from migrations/ at commit afa063a22 (V001..V025; byte-identical to dbdbf5cba)
+-- by a static parse of CREATE TABLE/INDEX/SEQUENCE/FUNCTION/TRIGGER/EXTENSION
+-- and CONSTRAINT <name> PRIMARY KEY|UNIQUE|FOREIGN KEY|CHECK; regenerate them
+-- if a migration is added. This is a name-level diff, not a definition diff:
+-- that is P4.1's drift report.
+-- Output contains no secret: no DSN, no client address, no user e-mail or seed,
+-- no row of the users table (counts only).
 -- =============================================================================
 \set ON_ERROR_STOP off
 \pset pager off
@@ -84,6 +88,10 @@ SELECT coalesce(datname, '-') AS db, coalesce(nullif(application_name, ''), '(no
        coalesce(state, '(hidden)') AS state, count(*) AS n
   FROM pg_stat_activity WHERE backend_type = 'client backend'
  GROUP BY 1, 2, 3 ORDER BY 4 DESC, 1, 2;
+-- every database on this server (names and sizes only), to answer "which DBs"
+SELECT datname, pg_size_pretty(pg_database_size(datname)) AS size,
+       datname = current_database() AS is_current
+  FROM pg_database WHERE NOT datistemplate ORDER BY datname;
 
 \echo '=== Q2 schema_migrations ledger, pending files, checksum drift ==='
 \if :has_schema_migrations
@@ -136,24 +144,32 @@ SELECT (SELECT max(version) FROM public.schema_migrations) AS db_high_water,
 \endif
 
 \echo '=== Q3 out-of-chain / V019-only / runtime-only relations, *_embeddings, extensions ==='
+-- exact_rows: count(*) through query_to_xml (a SELECT, so it runs in a read-only
+-- transaction); only for tables that exist.
 SELECT o.name,
        to_regclass('public.' || o.name) IS NOT NULL AS present,
-       coalesce((SELECT c.relkind::text FROM pg_class c WHERE c.oid = to_regclass('public.' || o.name)), '-') AS relkind
+       coalesce((SELECT c.relkind::text FROM pg_class c WHERE c.oid = to_regclass('public.' || o.name)), '-') AS relkind,
+       CASE WHEN (SELECT c.relkind FROM pg_class c WHERE c.oid = to_regclass('public.' || o.name)) = 'r'
+            THEN (xpath('/row/n/text()', query_to_xml(format('SELECT count(*) AS n FROM public.%I', o.name), false, true, '')))[1]::text
+            ELSE '' END AS exact_rows
   FROM (VALUES ('review_reports'), ('haiku_spec_cache'), ('car_move_log'), ('car_move_log_id_seq'),
-               ('cars_trim_quarantine'), ('package_values_msrp_quarantine')) AS o(name)
+               ('cars_trim_quarantine'), ('package_values_msrp_quarantine'),
+               ('image_summary_restore_log'), ('make_canon_log'), ('model_canon_log'),
+               ('package_value_purge_log')) AS o(name)
  ORDER BY 1;
 -- car_move_log_pkey is the one constraint V019 alone creates
 SELECT conname, conrelid::regclass AS on_table FROM pg_constraint WHERE conname = 'car_move_log_pkey';
 -- every *_embeddings relation, and every column of type vector anywhere in public
-SELECT c.relname, c.relkind, c.reltuples::bigint AS approx_rows,
+SELECT n.nspname AS schema, c.relname, c.relkind, c.reltuples::bigint AS approx_rows,
        pg_size_pretty(pg_total_relation_size(c.oid)) AS total_size
   FROM pg_class c JOIN pg_namespace n ON n.oid = c.relnamespace
- WHERE n.nspname = 'public' AND c.relname LIKE '%\_embeddings' ESCAPE '\'
- ORDER BY 1;
-SELECT table_name, column_name, udt_name
-  FROM information_schema.columns
- WHERE table_schema = 'public' AND udt_name = 'vector'
+ WHERE n.nspname NOT IN ('pg_catalog', 'information_schema', 'pg_toast')
+   AND c.relname LIKE '%\_embeddings' ESCAPE '\'
  ORDER BY 1, 2;
+SELECT table_schema, table_name, column_name, udt_name
+  FROM information_schema.columns
+ WHERE table_schema NOT IN ('pg_catalog', 'information_schema') AND udt_name = 'vector'
+ ORDER BY 1, 2, 3;
 SELECT extname, extversion, n.nspname AS schema
   FROM pg_extension e JOIN pg_namespace n ON n.oid = e.extnamespace ORDER BY 1;
 
@@ -188,6 +204,7 @@ SELECT (SELECT count(*) FROM option_rejections) AS total_rows,
 
 \echo '=== Q6 backup/dump tables (public, name ~ bak|backup|dump) ==='
 SELECT c.relname, c.relkind, c.reltuples::bigint AS approx_rows,
+       (xpath('/row/n/text()', query_to_xml(format('SELECT count(*) AS n FROM public.%I', c.relname), false, true, '')))[1]::text::bigint AS exact_rows,
        pg_total_relation_size(c.oid) AS total_bytes,
        pg_size_pretty(pg_total_relation_size(c.oid)) AS total_size
   FROM pg_class c JOIN pg_namespace n ON n.oid = c.relnamespace
@@ -414,6 +431,20 @@ SELECT count(*) AS users_rows, 'no totp_secret column' AS note FROM users;
 -- direction = chain_count : how many objects of each kind the chain names.
 -- Name-level only; definitions are compared by P4.1's drift report.
 WITH chain(kind, name, versions) AS (VALUES
+  ('CONSTRAINT_CHECK','car_comments_body_length','2'),
+  ('CONSTRAINT_CHECK','car_comments_body_not_blank','2'),
+  ('CONSTRAINT_CHECK','car_comments_flag_count_nonneg','2'),
+  ('CONSTRAINT_CHECK','comment_attachments_dims_positive','5'),
+  ('CONSTRAINT_CHECK','comment_attachments_mime_allowed','5'),
+  ('CONSTRAINT_CHECK','comment_attachments_scope_known','5'),
+  ('CONSTRAINT_CHECK','comment_attachments_size_positive','5'),
+  ('CONSTRAINT_CHECK','comment_attachments_sort_order_nonneg','5'),
+  ('CONSTRAINT_CHECK','dealer_comments_body_length','2'),
+  ('CONSTRAINT_CHECK','dealer_comments_body_not_blank','2'),
+  ('CONSTRAINT_CHECK','dealer_comments_flag_count_nonneg','2'),
+  ('CONSTRAINT_CHECK','dealer_ratings_rating_range','2'),
+  ('CONSTRAINT_CHECK','dealer_ratings_review_count_nonneg','2'),
+  ('CONSTRAINT_CHECK','vehicles_year_check','1,19'),
   ('CONSTRAINT_FOREIGN_KEY','dealerships_duplicate_of_id_fkey','1'),
   ('CONSTRAINT_FOREIGN_KEY','epa_extended_specs_epa_master_id_fkey','1'),
   ('CONSTRAINT_FOREIGN_KEY','exterior_colors_vehicle_id_fkey','1,19'),
@@ -675,6 +706,26 @@ SELECT 'live_only' AS direction,
             AND l.parent IN (SELECT name FROM chain_tables))
    AND NOT (l.relkind = 'S' AND l.parent IN (SELECT name FROM chain_tables))
 UNION ALL
+-- explicitly named live constraints (PK/UNIQUE/FK/CHECK/EXCLUDE) the chain never
+-- names. Default-named ones (<table>_..._pkey|key|fkey|check|excl, what an inline
+-- unnamed constraint gets) are skipped: the chain creates many of those unnamed.
+-- A default name cut to 63 bytes (NAMEDATALEN) truncates the table part too, so a
+-- 63-byte default-suffixed name that shares the table's first 8 chars also counts
+-- as default (V016's brochure_local_extraction_fai_..._key).
+SELECT 'live_only',
+       'CONSTRAINT_' || CASE k.contype WHEN 'p' THEN 'PRIMARY_KEY' WHEN 'u' THEN 'UNIQUE' WHEN 'f' THEN 'FOREIGN_KEY'
+                                       WHEN 'c' THEN 'CHECK' WHEN 'x' THEN 'EXCLUDE' END,
+       k.conname, t.relname, (t.relname IN (SELECT name FROM chain_tables))::text, '', '',
+       left(pg_get_constraintdef(k.oid), 160)
+  FROM pg_constraint k
+  JOIN pg_class t ON t.oid = k.conrelid
+  JOIN pg_namespace n ON n.oid = t.relnamespace
+ WHERE n.nspname = 'public' AND k.contype IN ('p', 'u', 'f', 'c', 'x')
+   AND NOT EXISTS (SELECT 1 FROM chain ch WHERE ch.name = k.conname)
+   AND k.conname !~ ('^' || t.relname || '_(.*_)?(pkey|key|fkey|check|excl)[0-9]*$')
+   AND NOT (octet_length(k.conname) = 63 AND left(k.conname, 8) = left(t.relname, 8)
+            AND k.conname ~ '_(pkey|key|fkey|check|excl)[0-9]*$')
+UNION ALL
 SELECT 'chain_only', ch.kind, ch.name, '', '', '', '', 'created in V' || ch.versions
   FROM chain ch
  WHERE CASE WHEN ch.kind LIKE 'CONSTRAINT_%'
@@ -686,6 +737,55 @@ SELECT 'chain_only', ch.kind, ch.name, '', '', '', '', 'created in V' || ch.vers
 UNION ALL
 SELECT 'chain_count', kind, count(*)::text, '', '', '', '', '' FROM chain GROUP BY kind
  ORDER BY 1, 2, 3;
+
+\echo '=== Q17 other object kinds vs the chain: extensions, functions, triggers, views, schemas ==='
+-- chain: V001 (and V019 again) create extensions dblink + vector, functions
+-- refresh_vehicle_search_vector() + set_updated_at(), triggers
+-- trg_vehicles_search_vector + trg_vehicles_updated_at on catalog_trims; no view,
+-- no type, no schema. plpgsql is the server default.
+SELECT e.extname, e.extversion, n.nspname AS schema,
+       CASE WHEN e.extname IN ('dblink', 'vector') THEN 'chain'
+            WHEN e.extname = 'plpgsql' THEN 'server default' ELSE 'OUT OF CHAIN' END AS status
+  FROM pg_extension e JOIN pg_namespace n ON n.oid = e.extnamespace ORDER BY 1;
+-- functions/procedures outside system schemas that no extension owns
+SELECT n.nspname AS schema, p.proname, pg_get_function_identity_arguments(p.oid) AS args,
+       CASE WHEN n.nspname = 'public' AND p.proname IN ('refresh_vehicle_search_vector', 'set_updated_at')
+            THEN 'chain' ELSE 'OUT OF CHAIN' END AS status
+  FROM pg_proc p JOIN pg_namespace n ON n.oid = p.pronamespace
+ WHERE n.nspname NOT IN ('pg_catalog', 'information_schema')
+   AND NOT EXISTS (SELECT 1 FROM pg_depend d WHERE d.classid = 'pg_proc'::regclass AND d.objid = p.oid AND d.deptype = 'e')
+ ORDER BY 1, 2, 3;
+SELECT 'public.refresh_vehicle_search_vector()' AS chain_function,
+       to_regprocedure('public.refresh_vehicle_search_vector()') IS NOT NULL AS present
+UNION ALL
+SELECT 'public.set_updated_at()', to_regprocedure('public.set_updated_at()') IS NOT NULL;
+-- user triggers
+SELECT c.relname AS on_table, t.tgname, NOT t.tgenabled = 'D' AS enabled,
+       CASE WHEN t.tgname IN ('trg_vehicles_search_vector', 'trg_vehicles_updated_at') AND c.relname = 'catalog_trims'
+            THEN 'chain' ELSE 'OUT OF CHAIN' END AS status
+  FROM pg_trigger t JOIN pg_class c ON c.oid = t.tgrelid JOIN pg_namespace n ON n.oid = c.relnamespace
+ WHERE NOT t.tgisinternal AND n.nspname NOT IN ('pg_catalog', 'information_schema')
+ ORDER BY 1, 2;
+-- views / materialized views anywhere outside system schemas (the chain has none)
+SELECT n.nspname AS schema, c.relname, c.relkind
+  FROM pg_class c JOIN pg_namespace n ON n.oid = c.relnamespace
+ WHERE c.relkind IN ('v', 'm') AND n.nspname NOT IN ('pg_catalog', 'information_schema')
+ ORDER BY 1, 2;
+-- user types that are not a relation's row type and not extension-owned
+SELECT n.nspname AS schema, t.typname, t.typtype
+  FROM pg_type t JOIN pg_namespace n ON n.oid = t.typnamespace
+ WHERE n.nspname NOT IN ('pg_catalog', 'information_schema', 'pg_toast')
+   AND t.typtype IN ('e', 'd', 'c', 'r', 'm')
+   AND NOT (t.typtype = 'c' AND EXISTS (SELECT 1 FROM pg_class c WHERE c.oid = t.typrelid AND c.relkind <> 'c'))
+   AND NOT EXISTS (SELECT 1 FROM pg_depend d WHERE d.classid = 'pg_type'::regclass AND d.objid = t.oid AND d.deptype = 'e')
+   AND t.typname NOT LIKE '\_%' ESCAPE '\'
+ ORDER BY 1, 2;
+-- non-system schemas and how many relations each holds (the chain uses public only)
+SELECT n.nspname AS schema, count(c.oid) AS relations
+  FROM pg_namespace n LEFT JOIN pg_class c ON c.relnamespace = n.oid
+ WHERE n.nspname NOT IN ('pg_catalog', 'information_schema', 'pg_toast')
+   AND n.nspname NOT LIKE 'pg\_temp\_%' ESCAPE '\' AND n.nspname NOT LIKE 'pg\_toast\_temp\_%' ESCAPE '\'
+ GROUP BY 1 ORDER BY 1;
 
 \echo '=== Q99 session proof at end (must still read on) ==='
 SELECT current_setting('transaction_read_only') AS txn_read_only,

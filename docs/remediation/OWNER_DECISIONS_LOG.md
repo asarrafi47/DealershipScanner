@@ -10,3 +10,6 @@ Answers to the decisions in `docs/REMEDIATION_PLAN_2026_10.md` Section 7, in the
 | 2026-10-07 | Phase 0A/0B approvals | Approved: P0A.6 offline-suite baseline (AC power); 0B network measurements from the MBP on AC; D-SEC1 stopgap `CAR_CHAT_WEB_RESEARCH=0` on Railway web + redeploy | NOT approved: SSH to the mini. The mini parts of P0A.5 and P0B.5 stay BLOCKED. |
 | 2026-10-07 | Battery | Owner allows the running Phase 0A/0B and 1A work, incl. the P0B.3 Chromium measurement, to continue on battery | Overrides the "AC only" condition above for this run. |
 | 2026-10-08 | D-RS5 audit/attribution scripts write recipe state? | Yes, keep writing (owner overrode the "No" recommendation) | P1B.5 (persist=False) DROPPED. Geocode, rooftop attribution and coverage audit keep marking stale / updating coverage. |
+| 2026-10-08 | D-SR7 test-leak artifacts | Delete after a tarball backup (dry-run first) | P1C.1 |
+| 2026-10-08 | Phase 1C local data repairs | Dry-run first; owner OKs each apply after seeing the counts | P1C.3, P1C.4 |
+| 2026-10-08 | Mini SSH for Phase 1C | Not now | Mini steps of P1C.1/P1C.4 BLOCKED; the mini must not scan until repaired. |
