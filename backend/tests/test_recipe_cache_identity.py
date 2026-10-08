@@ -33,6 +33,7 @@ from pathlib import Path
 import pytest
 
 import backend.scanner.recipes as rec
+from backend.scanner import recipe_store
 from backend.scanner.recipes import EndpointRecipe, load_recipes
 from backend.tests.recipe_store_harness import TwoHostRecipeStore
 
@@ -55,6 +56,8 @@ def store(tmp_path, monkeypatch):
     s = TwoHostRecipeStore(tmp_path, monkeypatch)
     monkeypatch.setenv("DATABASE_URL", "")
     monkeypatch.setenv("INVENTORY_DATABASE_URL", LOCAL_DSN)
+    for var in ("PGHOST", "PGPORT", "PGDATABASE"):  # the shell's libpq defaults never leak in
+        monkeypatch.setenv(var, "")
     return s
 
 
@@ -109,6 +112,17 @@ def test_fingerprint_is_host_port_and_dbname_never_credentials(store, monkeypatc
     assert _fp(monkeypatch, PROD_DSN) != local
     for secret in SECRETS:
         assert secret not in rec._pg_store_identity(PROD_DSN)
+
+
+def test_parts_the_url_leaves_out_come_from_the_libpq_environment(store, monkeypatch):
+    # psycopg hands the URL to libpq, which fills a missing host / port / dbname from
+    # PGHOST / PGPORT / PGDATABASE; the identity must name the store libpq reaches.
+    monkeypatch.setenv("PGHOST", "prod-db.example.net")
+    monkeypatch.setenv("PGPORT", "41234")
+    monkeypatch.setenv("PGDATABASE", "railway")
+    assert rec._pg_store_identity("postgresql:///") == "postgres:prod-db.example.net:41234/railway"
+    assert rec._pg_store_identity("postgresql:///cars") == "postgres:prod-db.example.net:41234/cars"
+    assert rec._pg_store_identity(LOCAL_DSN) == "postgres:localhost:5432/cars", "the URL's own parts win"
 
 
 def test_no_store_means_no_fingerprint_and_sqlite_is_named_by_its_file(store, monkeypatch):
@@ -195,7 +209,8 @@ def test_mismatch_replay_success_saves_the_store_set_not_the_cache_set(store, mo
     _tag_for(store.dirs["mbp"], LOCAL_DSN, monkeypatch)
     _on_store(monkeypatch, PROD_DSN)
     store.write_db(D, [_row(PROD_URL, OLD, stale=True, stale_reason="403 from railway")])
-    store.write_file("mbp", D, [_row(LOCAL_URL, NEW)])
+    cache_file = store.write_file("mbp", D, [_row(LOCAL_URL, NEW)])
+    file_before = cache_file.read_bytes()
     (stored,) = load_recipes(D)
     stored.last_ok_at = NEW + 5
 
@@ -203,6 +218,104 @@ def test_mismatch_replay_success_saves_the_store_set_not_the_cache_set(store, mo
 
     (row,) = store.db_row(D)["rows"]
     assert row["url"] == PROD_URL and row["stale"] is False and row["last_ok_at"] == NEW + 5
+    assert cache_file.read_bytes() == file_before, "the save went to the store only, not into the cache"
+
+
+# ── a mismatch leaves the cache alone: it stays its own store's mirror ────────
+
+def _wire(monkeypatch, harness: TwoHostRecipeStore, dsn: str) -> None:
+    """This process now writes through to ``harness``'s store, which ``dsn`` names."""
+    monkeypatch.setattr(recipe_store, "_conn", harness._connect)
+    monkeypatch.setattr(recipe_store, "_table_ready", False)
+    monkeypatch.setenv("INVENTORY_DATABASE_URL", dsn)
+
+
+def _snapshot(cache: Path) -> dict[str, bytes]:
+    return {str(p.relative_to(cache)): p.read_bytes() for p in sorted(cache.rglob("*")) if p.is_file()}
+
+
+def test_a_mismatched_run_leaves_the_cache_byte_identical_and_never_reverts_its_store(
+        tmp_path, monkeypatch, caplog):
+    # Two real stores (two SQLite files) and the one MBP cache, which mirrors the local
+    # store. A mismatched run (a mini command without the tunnel prefix, or P6B.2 without
+    # its scratch RECIPES_CACHE_DIR) loads, replays and stales against the other store.
+    # Before the cache was read-only on a mismatch, those saves and the DB adoption wrote
+    # the other store's sets into this cache with fresh stamps, and the next correctly
+    # configured run pushed them up over the local store's newer sets.
+    local = TwoHostRecipeStore(tmp_path / "local", monkeypatch)
+    prod = TwoHostRecipeStore(tmp_path / "prod", monkeypatch)
+    monkeypatch.setenv("DATABASE_URL", "")
+    for var in ("PGHOST", "PGPORT", "PGDATABASE"):
+        monkeypatch.setenv(var, "")
+    cache = local.dirs["mbp"]
+    monkeypatch.setattr(rec, "RECIPES_DIR", cache)
+    D3 = "only-in-prod-com"
+    MID = (OLD + NEW) / 2
+
+    _wire(monkeypatch, local, LOCAL_DSN)
+    for dealer, rows in ((D, [_row(LOCAL_URL, MID)]), (D2, [_row(LOCAL_URL, OLD)])):
+        local.write_db(dealer, rows)
+        local.write_file("mbp", dealer, rows)
+    assert [r.url for r in load_recipes(D)] == [LOCAL_URL]       # in sync; tags the cache local
+    assert rec.check_cache_store().verdict == "match"
+    local_rows_before = {d: local.db_row(d) for d in (D, D2, D3)}
+
+    _wire(monkeypatch, prod, PROD_DSN)
+    prod.write_db(D, [_row(PROD_URL, OLD, stale=True, stale_reason="403 from railway")])  # file newer
+    prod.write_db(D2, [_row(PROD_URL, NEW)])                                                # store newer
+    prod.write_db(D3, [_row(PROD_URL, NEW)])                                                # no cache file
+    cache_before = _snapshot(cache)
+    local.freeze_clock(NEW + 100)                     # every save below outranks every copy above
+
+    with caplog.at_level(logging.DEBUG, logger="scanner"):
+        (r1,) = load_recipes(D)
+        r1.last_ok_at = NEW + 50
+        rec._persist_replay_success(D, r1, retrying_stale=True)
+        (r2,) = load_recipes(D2)
+        rec.mark_stale(D2, r2, "HTTP 403")
+        (r3,) = load_recipes(D3)
+        r3.last_ok_at = NEW + 60
+        rec._persist_replay_success(D3, r3, retrying_stale=False)
+
+    assert [r1.url, r2.url, r3.url] == [PROD_URL] * 3, "the store's own copies are served"
+    assert _snapshot(cache) == cache_before, "the foreign cache is byte-identical: no save, no adoption"
+    assert len(_mismatch_warnings(caplog)) == 1
+    assert any("cache file was left as it is" in m.getMessage() for m in caplog.records
+               if m.levelno == logging.DEBUG)
+    # The saves landed in this process's own store.
+    (p1,) = prod.db_row(D)["rows"]
+    assert p1["url"] == PROD_URL and p1["stale"] is False and p1["last_ok_at"] == NEW + 50
+    assert prod.db_row(D2)["rows"][0]["stale"] is True
+    assert prod.db_row(D3)["rows"][0]["last_ok_at"] == NEW + 60
+
+    # Back on the store the cache mirrors: nothing is pushed up, the local sets stand.
+    _wire(monkeypatch, local, LOCAL_DSN)
+    caplog.clear()
+    with caplog.at_level(logging.WARNING, logger="scanner"):
+        assert [r.url for r in load_recipes(D)] == [LOCAL_URL]
+        assert [r.url for r in load_recipes(D2)] == [LOCAL_URL]
+        assert load_recipes(D3) == []
+    assert {d: local.db_row(d) for d in (D, D2, D3)} == local_rows_before, "the local store is unchanged"
+    assert _push_up_warnings(caplog) == [] and _mismatch_warnings(caplog) == []
+    assert _snapshot(cache) == cache_before
+
+
+def test_a_mismatched_save_whose_store_write_fails_warns(store, monkeypatch, caplog):
+    # On a foreign cache the store is the only copy a save makes, so a failed write is a
+    # lost save: one WARNING, and the cache is still left alone.
+    _tag_for(store.dirs["mbp"], LOCAL_DSN, monkeypatch)
+    _on_store(monkeypatch, PROD_DSN)
+    path = store.write_file("mbp", D, [_row(LOCAL_URL, NEW)])
+    before = path.read_bytes()
+    monkeypatch.setattr(recipe_store, "db_save_recipes", lambda *_a, **_k: False)
+    monkeypatch.setattr(rec, "_foreign_save_failure_warned", False)
+
+    with caplog.at_level(logging.WARNING, logger="scanner"):
+        rec.save_recipes(D, [EndpointRecipe(dealer_id=D, url=PROD_URL, method="GET",
+                                            content_type="application/json", post_template=None)])
+
+    assert path.read_bytes() == before
+    assert any("were not saved" in m.getMessage() for m in caplog.records if m.levelno == logging.WARNING)
 
 
 def test_an_unreadable_tag_counts_as_a_mismatch(store, monkeypatch, caplog):
@@ -301,6 +414,34 @@ def test_status_cli_reads_the_cache_dir_named_by_recipes_cache_dir(tmp_path, mon
     for secret in SECRETS:
         assert secret not in out.stdout + out.stderr
     assert sorted(p.name for p in cache.iterdir()) == before, "--status writes nothing"
+
+
+def test_the_cli_honours_a_recipes_cache_dir_that_only_dotenv_sets(tmp_path):
+    # The scanner (cli.py) loads .env before it imports recipes, so a RECIPES_CACHE_DIR
+    # set only in .env names its cache. `python -m backend.scanner.recipes` must act on
+    # that same dir, or a --reseed would retag the default cache, not the scanner's.
+    # .env is simulated by a load_project_dotenv that sets the variable; the real .env
+    # is never read.
+    cache = tmp_path / "dotenv-only-cache"
+    script = (
+        "import os, runpy, sys\n"
+        "import backend.utils.project_env as pe\n"
+        "def _dotenv(*_a, **_k):\n"
+        f"    os.environ.setdefault('RECIPES_CACHE_DIR', {str(cache)!r})\n"
+        "pe.load_project_dotenv = _dotenv\n"
+        "sys.argv = ['recipes', '--status']\n"
+        "runpy.run_module('backend.scanner.recipes', run_name='__main__', alter_sys=True)\n"
+    )
+    env = {**os.environ, "PROJECT_DOTENV_DISABLE": "1", "RECIPES_DB_DISABLED": "1",
+           "INVENTORY_DATABASE_URL": "", "DATABASE_URL": ""}
+    env.pop("RECIPES_CACHE_DIR", None)
+
+    out = subprocess.run([sys.executable, "-c", script], cwd=REPO, env=env,
+                         capture_output=True, text=True, timeout=90)
+
+    assert out.returncode == 0, out.stdout + out.stderr
+    assert f"recipe cache: {cache} (0 dealer recipe file(s))" in out.stdout, out.stdout
+    assert not cache.exists(), "--status writes nothing"
 
 
 def test_reseed_moves_the_dealer_files_aside_and_tags_the_cache_for_this_store(store, monkeypatch, capsys,
