@@ -39,7 +39,8 @@ async def fetch_recipe_feed(run: DealerRun) -> None:
         if _recipe_hit:
             recipe_records, _recipe_vins = _recipe_hit
             if _http_only():
-                _apply_recipe_provider_hint(run)
+                # load_recipes reads the cache file and syncs with dealer_recipes.
+                await asyncio.to_thread(_apply_recipe_provider_hint, run)
             _known = await asyncio.to_thread(last_known_vin_count, dealer_id)
             result["recipe_coverage"] = {
                 k: round(float(v), 3) for k, v in _recipe_cov.items() if k != "n"
@@ -75,7 +76,10 @@ async def fetch_recipe_feed(run: DealerRun) -> None:
 
 
 def _apply_recipe_provider_hint(run: DealerRun) -> None:
-    """No site profile ran; the recipe's own provider hint is the truth."""
+    """No site profile ran; the recipe's own provider hint is the truth.
+
+    Blocking store I/O (load_recipes): ``fetch_recipe_feed`` runs it with
+    ``asyncio.to_thread``."""
     try:
         from backend.scanner.recipes import load_recipes as _lr
 

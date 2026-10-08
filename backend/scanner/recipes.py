@@ -1051,6 +1051,27 @@ def last_known_vin_count(dealer_id: str) -> int:
         return 0
 
 
+def _persist_replay_success(dealer_id: str, recipe: EndpointRecipe, retrying_stale: bool) -> None:
+    """Write a successful replay back to the dealer's stored set: the recipe's
+    ``last_ok_at`` and measured ``field_coverage``, and, when a stale recipe
+    answered again, its un-stale.
+
+    Blocking store I/O (the cache file read and write, and the ``dealer_recipes``
+    sync inside ``load_recipes`` / ``save_recipes``), so ``try_fetch_via_recipes``
+    runs it with ``asyncio.to_thread``; it never runs on the event loop.
+    """
+    all_r = load_recipes(dealer_id)
+    for r in all_r:
+        if r.key() == recipe.key():
+            r.last_ok_at = recipe.last_ok_at
+            r.field_coverage = dict(recipe.field_coverage)
+            if retrying_stale:
+                # The key rotated back (or the WAF let us through): live again.
+                r.stale = False
+                r.stale_reason = ""
+    save_recipes(dealer_id, all_r)
+
+
 async def try_fetch_via_recipes(
     dealer_id: str,
     provider: str,
@@ -1240,16 +1261,8 @@ async def try_fetch_via_recipes(
             recipe.field_coverage = {
                 k: v for k, v in recipe_field_coverage(vehicles).items() if k != "n"
             }
-            all_r = load_recipes(dealer_id)
-            for r in all_r:
-                if r.key() == recipe.key():
-                    r.last_ok_at = recipe.last_ok_at
-                    r.field_coverage = dict(recipe.field_coverage)
-                    if retrying_stale:
-                        # The key rotated back (or the WAF let us through): live again.
-                        r.stale = False
-                        r.stale_reason = ""
-            save_recipes(dealer_id, all_r)
+            # File read + write and the dealer_recipes sync: off the event loop.
+            await asyncio.to_thread(_persist_replay_success, dealer_id, recipe, retrying_stale)
             logger.info(
                 "Recipe fetch [%s]: %d unique VIN(s) from %d page(s) via %s%s",
                 dealer_name, len(vins), len(records), recipe.url[:80],
