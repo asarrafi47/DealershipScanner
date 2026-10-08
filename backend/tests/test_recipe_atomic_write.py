@@ -17,6 +17,7 @@ import ast
 import json
 import logging
 import os
+import sqlite3
 import subprocess
 import sys
 import threading
@@ -354,22 +355,30 @@ def test_audit_recipe_coverage_glob_skips_temp_files(tmp_path):
 
 
 def test_import_recipes_to_db_glob_skips_temp_files(tmp_path):
+    """import_recipes_to_db is a ``reconcile_recipe_store --cache-dir`` wrapper (P1C.2):
+    its dry run over the cache dir (RECIPES_CACHE_DIR) reports exactly the two dealer
+    files, against a scratch SQLite store, and writes nothing to the store."""
     cache = _cache_with_leftover_temp(tmp_path)
+    store_db = tmp_path / "store.db"
+    with sqlite3.connect(store_db) as conn:
+        conn.execute(rstore._DDL_SQLITE)
+    out_dir = tmp_path / "backups"
     out = _run_script_probe(
-        "import json, sys\n"
+        "import csv, json, os, sqlite3, sys\n"
         "from pathlib import Path\n"
+        "os.environ['RECIPES_DB_DISABLED'] = ''\n"
+        "os.environ['INVENTORY_SQLITE_TESTS'] = '1'\n"
+        f"os.environ['INVENTORY_DB_PATH'] = {str(store_db)!r}\n"
         "import backend.scripts.import_recipes_to_db as m\n"
-        f"m.RECIPES_DIR = Path({str(cache)!r})\n"
-        "seen = []\n"
-        "m.db_load_recipes = lambda d: seen.append(d)\n"
-        "def no_save(*a, **k): raise SystemExit('dry run must not save')\n"
-        "m.db_save_recipes = no_save\n"
-        "sys.argv = ['import_recipes_to_db', '--dry-run']\n"
-        "m.main()\n"
-        "print(json.dumps(sorted(seen)))\n",
+        f"rc = m.main(['--dry-run', '--backup-dir', {str(out_dir)!r}])\n"
+        f"[run] = Path({str(out_dir)!r}).iterdir()\n"
+        "with open(run / 'report.tsv', encoding='utf-8') as fh:\n"
+        "    ids = sorted(r['dealer_id'] for r in csv.DictReader(fh, delimiter='\\t'))\n"
+        f"rows = sqlite3.connect({str(store_db)!r}).execute('SELECT count(*) FROM dealer_recipes').fetchone()[0]\n"
+        "print(json.dumps([rc, ids, rows]))\n",
         cache, tmp_path,
     )
-    assert json.loads(out) == ["alpha", "beta"]
+    assert json.loads(out) == [0, ["alpha", "beta"], 0]
 
 
 def test_heal_from_recipes_glob_skips_temp_files(tmp_path):
