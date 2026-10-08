@@ -17,6 +17,9 @@ For each dealer this script:
        (and no healthy recipe already exists for that dealer).
 
 It NEVER launches a browser and NEVER overwrites a healthy existing recipe.
+The set gate's record (a discovery.md entry and ``scan_hints.recipe_status``)
+is written only when the set is saved: ``--dry-run`` and a dealer that keeps
+its healthy recipe get the verdict in the table and nothing in the store.
 
 Usage (repo root)::
 
@@ -244,15 +247,21 @@ def _process_dealer(
     # one-condition / section-scoped / short-page set is refused here.
     from backend.scanner.recipe_validation import gate_recipes
 
+    # Decide whether this run saves BEFORE gating. The gate's record (a
+    # discovery.md entry, scan_hints.recipe_status) describes the set a dealer is
+    # given, so a dry run, or a dealer that keeps its healthy recipe, still gets
+    # the verdict in the table but writes neither.
+    keeps_healthy = not force and _healthy_recipe_exists(dealer_id)
+    will_save = not dry_run and not keeps_healthy
     kept, report = gate_recipes(dealer_id, kept, base_url=dealer_url.rstrip("/"), dealer_name=dealer_name or dealer_id,
-                                context="synthesize_recipes")
+                                context="synthesize_recipes", record=will_save)
     row["validation"] = report.status
     if not kept:
         row["strategy"] = ""
         row["note"] = f"rejected by validation: {'; '.join(report.reasons)[:160]}"
         return row
 
-    if not force and _healthy_recipe_exists(dealer_id):
+    if keeps_healthy:
         row["note"] = "healthy recipe already exists — not overwritten"
         return row
     if dry_run:
@@ -303,7 +312,8 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--url", help="one-off: dealer homepage URL")
     ap.add_argument("--name", help="one-off: dealer display name")
     ap.add_argument("--min-vins", type=int, default=5, help="min unique VINs to accept (default 5)")
-    ap.add_argument("--dry-run", action="store_true", help="fingerprint/synthesize/validate but do not save")
+    ap.add_argument("--dry-run", action="store_true",
+                    help="fingerprint/synthesize/validate/gate, but write no recipe, discovery.md entry or recipe_status")
     ap.add_argument("--force", action="store_true", help="save even if a healthy recipe already exists")
     args = ap.parse_args(argv)
 
