@@ -25,6 +25,10 @@
   active cars locally); `enrich_from_dictionary.py --all` refuses unless
   `ALLOW_DICTIONARY_OVERWRITE=1` is exported; `heal_cylinders_from_vpic.py` runs the
   forced-induction Phase B only with `--phase-b` (P1A.5).
+- requirements.txt declares `anthropic>=0.116,<1` (the only Claude transport; nothing installed
+  it, so prod car chat likely failed), `pdfplumber>=0.11` and `brotli>=1.1`. anthropic is capped
+  below 1 because 1.x rejects the `temperature` argument car chat sends. New
+  `test_requirements_hygiene.py` fails on any third-party import that is not declared (P1A.6).
 
 ## [1.5.2] - 2026-10-05
 
