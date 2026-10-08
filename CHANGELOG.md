@@ -24,6 +24,12 @@
   PR's merge commit with origin/main and a push to main with `github.event.before`.
   `backend/tests/test_release_tooling.py` covers bump_version.sh, the pre-push hook, the
   guard and the CI job's base selection against local git repos (P2A.4).
+- `docs/monolith_audit_2026_10_01/tests.md` gains the CI failure ledger for shakedown-1 (run
+  37850535029): the 3 failures and the 5 network-touching tests, each with its class (a)-(f),
+  cause, planned fix and owner, plus product finding PF-1: without the gitignored
+  `dictionary_catalog.db` (which prod has never had, P0A.3) the EPA file fallback resolves
+  129 YMMs to another model's file (2026 Audi A5 -> 2025 A4 mild hybrid), owned by Phase 9
+  (P2A.6).
 
 ### Changed
 - CI (`.github/workflows/ci.yml`) runs on every branch push, on PRs to main and on manual
@@ -44,6 +50,15 @@
 - `ruff check .` is green again: the hidden-dealers `env` fixture body is now the helper
   `make_account_env`, and `test_csrf_delete_routes.py` imports the helper instead of
   re-exporting the fixture (F811) (P2A.1).
+- The offline suite passes in a clean checkout (CI) without the gitignored dictionary index,
+  with no new skips. The two manifest write-guard tests in `test_dictionary_catalog.py`
+  accept an absent `index/manifest.json` (the write must still be refused, and the file must
+  still be absent afterwards). `test_merge_verified_specs_golden_hermetic` builds its own
+  dictionary catalog DB from the tracked tree in `tmp_path` instead of reading the machine's
+  index, so the 2026 Audi A5 no longer falls to the no-catalog fallback (PF-1, not fixed
+  here). The `TestFetchListingHtmlIntegration` tests in `test_scraper_chain.py` stub the
+  curl_cffi transport, so `TESTS_BLOCK_NETWORK=1` records no refused connects for them (was
+  15 in 5 tests) (P2A.7).
 
 ## [1.5.3] - 2026-10-08
 
