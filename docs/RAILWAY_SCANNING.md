@@ -108,9 +108,28 @@ Postgres would be a rewrite and would put megabytes of markdown into the product
 inventory database. The volume keeps the tree exactly as on a laptop:
 `/data/workspace/dealer_logs/<dealer_id>/…`, `/data/workspace/pipeline/fleet_<UTC stamp>/`
 (`s<i>.txt` roster, `s<i>.out` pipeline output, `s<i>/scanner.log`, `s<i>/triage.json`,
-`fleet_summary.json`). Recipes themselves are in `dealer_recipes` (Postgres) and
-materialize into the volume on first use. The stdout summary lines stay in Railway's log
-retention.
+`fleet_summary.json`). Recipes themselves are in `dealer_recipes` (Postgres). The volume
+keeps a file cache of them (`/data/workspace/recipes`), filled from the store on first use
+and compared with it by `saved_at` after that, so it is not a plain copy of the store (see
+the next paragraph). The stdout summary lines stay in Railway's log retention.
+
+**The volume cache keeps the 2026-09-29 stale flags until Phase 0 recipe code is deployed**
+(corrected 2026-10-08, remediation plan P1C.6; deploy in P6B.1, prod un-stale in P6B.2).
+The 09-29 fleet flagged recipes stale on Railway 403s (see "Bug found: Railway 403s staled
+shared recipes" below), and each flag went into the store and into this cache in one save,
+so both copies carry the same max `saved_at`. Code from before Phase 0 (VERSION 1.5.2 and
+older, which includes the deployed image `89c13ad52`) never moves `saved_at` when it flags
+or un-stales a recipe, and on equal stamps `load_recipes` keeps the cache file and writes
+nothing. An un-stale written by such code, from any host, therefore never reaches this
+cache: Railway keeps loading the stale set, and any later Railway save of the set it
+loaded (a replay update or a stale flag on another recipe of that dealer) writes those
+stale flags back into the store. Phase 0 code stamps `saved_at` on every save (see "Recipe
+cache and store sync" in docs/data_architecture_plan.md), so the P6B.2 un-stale, run from a
+home IP after P6B.1 has put that code on every writer host, leaves a store copy newer than
+the volume file, and the next Railway load adopts it. P6B.2 checks that adoption for 5
+dealers in P6B.4's logs. Until P6B.1, the deployed image also stales shared recipes on any
+new Railway 401/403 (it predates `SCANNER_EGRESS_TAG`), so a scanner-nightly run before
+then adds stale flags of its own.
 
 A stopped service exposes no volume (`railway volume files download` fails with an SFTP
 timeout). To read the logs, start an idle container and copy them out while it holds:
@@ -492,7 +511,9 @@ First full run with the active-inventory roster and the VIN ownership guard.
   `scripts/railway_scan_fleet.sh`) records `recipe_status = blocked:railway:...`
   and leaves the recipe live. Repair for recipes already staled, from a home IP:
   `python -m backend.scripts.unstale_host_blocked_recipes` (lists) then
-  `--apply` against prod (replays, un-stales what answers).
+  `--apply` against prod (replays, un-stales what answers). Run it only with Phase 0
+  recipe code and an empty scratch `RECIPES_CACHE_DIR`, as P6B.2 does: an un-stale from
+  older code never reaches the volume cache (see "Where the logs live").
 - Those ~25 dealers still cannot be scanned from Railway. They need a home-IP
   scanner (the mac mini) or they go stale in prod.
 - Nightly cron still off until: the repair runs on prod, the conflict breakdown is
