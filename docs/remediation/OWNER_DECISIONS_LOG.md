@@ -19,3 +19,11 @@ Answers to the decisions in `docs/REMEDIATION_PLAN_2026_10.md` Section 7, in the
 | 2026-10-08 | P1C.4 saved_at=0 rule | A saved_at=0 recipe counts as written at its newest last_ok_at (keep the 09-29 synthesized sets) | Departs from the literal plan text on purpose. |
 | 2026-10-08 | P1C.4 overlapping recipes (7 dealers) | Keep both now; clean up in Phase 7 | andymohrford, dchparamushonda, stevenscreektoyota, huntersvilleford, bmwofmtlaurel, kunilexusofgreenwoodvillage, tuttleclickmazda |
 | 2026-10-08 | Phase 1 release step | Approved: bump_version.sh patch (1.5.3), secrets scan, push feature/http-only-scans to origin (no deploy, nothing to main) | |
+| 2026-10-08 | D-REL2 branching | (a) trunk: phase/* branches fast-forwarded into main; retire feature/http-only-scans after the first release | |
+| 2026-10-08 | D-REL4 unmerged remotes | (a) archive/* tag then delete; tell ksarrafi first | owner tells ksarrafi |
+| 2026-10-08 | D-REL5 repo visibility | (a) keep PUBLIC | D-HY2 (7 history accounts) still owed |
+| 2026-10-08 | D-REL6 main protection | (a) ruleset: no delete/force-push, 4 required checks pinned to Actions, owner bypass | |
+| 2026-10-08 | D-REL7 retro tags | yes, 1.3.2..1.5.2 | |
+| 2026-10-08 | D-REL8 first deploy | (b) web on the first release; scanner-nightly at P6B.1 | |
+| 2026-10-08 | D-REL9 first release level | patch | |
+| 2026-10-08 | D-REL10 scanner-nightly deploys from a tag | (a) yes, with loud ALLOW_UNRELEASED_DEPLOY=1 override | |
