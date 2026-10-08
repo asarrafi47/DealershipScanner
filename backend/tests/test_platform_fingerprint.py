@@ -4,13 +4,18 @@ backend/scanner/platform_fingerprint.py: features from one discovery_<stamp>.jso
 (the probe's real field names), a stable signature, own-host / CDN dropping,
 clustering by signature with the Jaccard merge. backend/scripts/platform_candidates.py:
 the log walk, the recipe-state filter, the markdown under _learning/, the run
-hook the pipeline prints from. No HTTP, no database: every record is built here
-and every recipe-state lookup is a stub.
+hook the pipeline prints from. No HTTP: every record is built here. Recipe-state
+lookups are stubs, except the P1B.7 cases at the end, which read a tmp recipe
+cache and a tmp SQLite ``dealer_recipes`` store wired through ``recipe_store._conn``.
 """
 from __future__ import annotations
 
 import json
+import logging
+import os
+import sqlite3
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
@@ -371,3 +376,291 @@ def test_cli_root_override_and_all(tmp_path, capsys, monkeypatch):
     assert (root / "_learning" / "platform_candidates.md").exists()
     assert pc.main(["--root", str(root), "--no-write", "--dealers", "alpha-motors-com"]) == 0
     assert "0 dealers considered" in capsys.readouterr().out   # every dealer live -> filtered out
+
+
+# ── P1B.7: fail closed, census, dated verdicts, no contradictions ──────────────
+
+def _recipe_row(dealer_id: str, *, stale: bool = False, saved_at: float = 0.0) -> dict:
+    return {"dealer_id": dealer_id, "url": f"https://api.example.com/{dealer_id}/inventory", "method": "GET",
+            "content_type": "application/json", "post_template": None, "stale": stale, "saved_at": saved_at}
+
+
+def _store(db: Path, dealer_id: str, rows: list | None = None, *, saved: float = 0.0, hints: dict | None = None,
+           recipes_json: str | None = None) -> None:
+    conn = sqlite3.connect(db)
+    conn.execute("CREATE TABLE IF NOT EXISTS dealer_recipes (dealer_id TEXT PRIMARY KEY, recipes_json TEXT, "
+                 "max_saved_at REAL, scan_hints TEXT, updated_at TEXT)")
+    payload = recipes_json if recipes_json is not None else json.dumps(rows if rows is not None else [])
+    conn.execute("INSERT OR REPLACE INTO dealer_recipes VALUES (?, ?, ?, ?, ?)",
+                 (dealer_id, payload, saved, json.dumps(hints) if hints is not None else None, "2026-10-01"))
+    conn.commit()
+    conn.close()
+
+
+def _dump(db: Path) -> list:
+    if not db.exists():
+        return []
+    conn = sqlite3.connect(db)
+    try:
+        return list(conn.iterdump())
+    finally:
+        conn.close()
+
+
+@pytest.fixture
+def recipe_env(tmp_path, monkeypatch):
+    """A tmp recipe cache and a tmp SQLite store behind ``recipe_store._conn``.
+    Every recipe-state write path is a tripwire: recipe_state must read only."""
+    from backend.scanner import recipe_store
+    from backend.scanner import recipes as rcp
+
+    cache = tmp_path / "recipes"
+    cache.mkdir()
+    db = tmp_path / "store.db"
+    monkeypatch.setattr(rcp, "RECIPES_DIR", cache)
+    monkeypatch.setenv("RECIPES_DB_DISABLED", "")
+    monkeypatch.setattr(recipe_store, "_conn", lambda: sqlite3.connect(db))
+    monkeypatch.setattr(pc, "_warned", set())
+    writes: list[str] = []
+
+    def tripwire(name):
+        def _hit(*a, **k):
+            writes.append(name)
+            raise AssertionError(f"platform_candidates called {name}")
+        return _hit
+
+    for mod, name in ((rcp, "load_recipes"), (rcp, "save_recipes"), (rcp, "mark_stale"), (rcp, "_atomic_write_json"),
+                      (recipe_store, "db_save_recipes"), (recipe_store, "set_scan_hints"),
+                      (recipe_store, "_ensure_table")):
+        monkeypatch.setattr(mod, name, tripwire(f"{mod.__name__}.{name}"))
+
+    def put_file(dealer_id: str, content) -> Path:
+        path = cache / f"{dealer_id}.json"
+        path.write_text(content if isinstance(content, str) else json.dumps(content), encoding="utf-8")
+        return path
+
+    return SimpleNamespace(cache=cache, db=db, writes=writes, put_file=put_file)
+
+
+def test_recipe_state_reads_file_and_store_without_writing(recipe_env):
+    env = recipe_env
+    assert pc.recipe_state("nothing-com") == "none"                      # no file, no store table
+    env.put_file("live-com", [_recipe_row("live-com"), _recipe_row("live-com", stale=True)])
+    assert pc.recipe_state("live-com") == "live"
+    env.put_file("stale-com", [_recipe_row("stale-com", stale=True)])
+    assert pc.recipe_state("stale-com") == "stale"
+    _store(env.db, "dbonly-com", [_recipe_row("dbonly-com")], saved=5.0)
+    assert pc.recipe_state("dbonly-com") == "live"                      # DB copy alone answers
+    # A newer DB copy wins over the file, as in load_recipes, but the file is not rewritten.
+    f = env.put_file("newer-db-com", [_recipe_row("newer-db-com", saved_at=10.0)])
+    before = (f.read_bytes(), f.stat().st_mtime_ns)
+    _store(env.db, "newer-db-com", [_recipe_row("newer-db-com", stale=True, saved_at=20.0)], saved=20.0)
+    # A newer file wins over the DB, and the DB row is not pushed up.
+    env.put_file("newer-file-com", [_recipe_row("newer-file-com", saved_at=30.0)])
+    _store(env.db, "newer-file-com", [_recipe_row("newer-file-com", stale=True, saved_at=1.0)], saved=1.0)
+    _store(env.db, "rejected-com", [], hints={"recipe_status": "rejected:auth_needed"})
+    env.put_file("rejected-com", [_recipe_row("rejected-com")])
+    db_before = _dump(env.db)
+    assert pc.recipe_state("newer-db-com") == "stale"
+    assert pc.recipe_state("newer-file-com") == "live"
+    assert pc.recipe_state("rejected-com") == "rejected:auth_needed"   # the status outranks a live file
+    assert (f.read_bytes(), f.stat().st_mtime_ns) == before
+    assert _dump(env.db) == db_before
+    # A URL-rekeyed dealer reads its recipes through _aliases.json.
+    (env.cache / "_aliases.json").write_text(json.dumps({"old-name-com": "new-name-com"}), encoding="utf-8")
+    env.put_file("old-name-com", [_recipe_row("old-name-com")])
+    assert pc.recipe_state("new-name-com") == "live"
+    assert env.writes == []
+    assert sorted(p.name for p in env.cache.iterdir()) == sorted(
+        ["_aliases.json", "live-com.json", "stale-com.json", "newer-db-com.json", "newer-file-com.json",
+         "rejected-com.json", "old-name-com.json"])
+
+
+def test_recipe_state_fails_closed(recipe_env, monkeypatch, caplog):
+    from backend.scanner import recipe_store
+
+    env = recipe_env
+    env.put_file("corrupt-com", "[{\"url\": ")                               # unreadable: does not parse
+    env.put_file("empty-com", "[]")                                          # exists, nothing comes back
+    env.put_file("drift-com", [{"some_future_field": 1}])                    # rows that are not recipes
+    env.put_file("object-com", {"url": "https://x"})                         # not a list
+    for did in ("corrupt-com", "empty-com", "drift-com", "object-com"):
+        assert pc.recipe_state(did) == "unknown", did
+    state, reason = pc.recipe_state_detail("corrupt-com")
+    assert state == "unknown" and "JSONDecodeError" in reason
+    assert "exists but no recipe came back" in pc.recipe_state_detail("empty-com")[1]
+    # A store row holding only hints (recipes "[]") is a real "none", not unknown.
+    _store(env.db, "hints-only-com", [], hints={"notes": "needs synth"})
+    assert pc.recipe_state("hints-only-com") == "none"
+    # A stored payload that does not parse: unknown, not none.
+    _store(env.db, "bad-db-com", recipes_json="{oops")
+    assert pc.recipe_state("bad-db-com") == "unknown"
+    _store(env.db, "bad-hints-com", [_recipe_row("bad-hints-com")])
+    conn = sqlite3.connect(env.db)
+    conn.execute("UPDATE dealer_recipes SET scan_hints = 'nope' WHERE dealer_id = 'bad-hints-com'")
+    conn.commit()
+    conn.close()
+    assert pc.recipe_state("bad-hints-com") == "unknown"
+    # The store is on but unreachable: unknown even with a live file.
+    env.put_file("live-com", [_recipe_row("live-com")])
+
+    def down():
+        raise sqlite3.OperationalError("unable to open database file")
+
+    monkeypatch.setattr(recipe_store, "_conn", down)
+    caplog.set_level(logging.WARNING, logger="scanner.platform_candidates")
+    assert pc.recipe_state("live-com") == "unknown"
+    assert "recipe lookup raised OperationalError" in caplog.text and "live-com" in caplog.text
+    # The store switched off on purpose: the file alone decides.
+    monkeypatch.setenv("RECIPES_DB_DISABLED", "1")
+    assert pc.recipe_state("live-com") == "live"
+    assert env.writes == []
+
+
+def test_recipe_state_unreadable_file_permission(recipe_env):
+    path = recipe_env.put_file("locked-com", [_recipe_row("locked-com")])
+    path.chmod(0)
+    try:
+        try:
+            path.read_bytes()
+        except PermissionError:
+            pass
+        else:
+            pytest.skip("running with permission to read a mode-000 file (root)")
+        assert pc.recipe_state("locked-com") == "unknown"
+        assert "PermissionError" in pc.recipe_state_detail("locked-com")[1]
+    finally:
+        path.chmod(0o600)
+
+
+def test_unknown_is_counted_not_clustered_and_census_header(tmp_path):
+    root = _write_root(tmp_path)
+    states = {"alpha-motors-com": "unknown", "beta-autos-com": "none", "audi-somewhere-com": "live",
+              "delta-cdjr-com": "rejected:auth_needed", "echo-toyota-com": "stale"}
+    res = pc.build(root, state_fn=lambda d: states[d])
+    assert res["considered"] == 3                                            # beta, delta, echo
+    assert [c.dealer_ids for c in res["clusters"]] == [["delta-cdjr-com", "echo-toyota-com"]]
+    assert res["unknown"] == ["alpha-motors-com"]
+    assert res["census"] == {"live": 1, "none": 1, "stale": 1, "rejected": 1, "unknown": 1}
+    md = res["path"].read_text(encoding="utf-8")
+    assert ("Recipe census (5 dealers with a discovery record): "
+            "live 1 / none 1 / stale 1 / rejected 1 / unknown 1.") in md
+    assert f"Read from: dealer logs `{root}`; recipe cache `" in md
+    assert f"cwd `{os.getcwd()}`." in md
+    head, _, unknown_part = md.partition("## Recipe state unknown: counted, not clustered (1)")
+    assert unknown_part and "`alpha-motors-com` — last verdict: NO RECIPE: needs discovery" in unknown_part
+    assert "alpha-motors-com" not in head.split("## Cluster 1", 1)[1]     # never a cluster member
+    # --all takes no census and keeps every dealer.
+    res_all = pc.build(root, state_fn=lambda d: states[d], only_needing=False, write=False)
+    assert res_all["census"] is None and res_all["considered"] == 5
+
+
+def test_builtin_lookup_puts_the_unknown_reason_in_the_report(recipe_env, tmp_path, capsys):
+    root = _write_root(tmp_path)
+    recipe_env.put_file("alpha-motors-com", "not json")
+    recipe_env.put_file("audi-somewhere-com", [_recipe_row("audi-somewhere-com")])
+    assert pc.main(["--root", str(root)]) == 0                             # default state_fn: the real lookup
+    out = capsys.readouterr().out
+    assert "recipe census live 1 / none 3 / stale 0 / rejected 0 / unknown 1; unknown: alpha-motors-com" in out
+    assert "platform_candidates: unknown alpha-motors-com: recipe lookup raised JSONDecodeError" in out
+    md = (root / "_learning" / "platform_candidates.md").read_text(encoding="utf-8")
+    assert "recipe lookup raised JSONDecodeError" in md.split("## Recipe state unknown", 1)[1]
+    assert f"recipe cache `{recipe_env.cache}`" in md
+    assert recipe_env.writes == []
+
+
+def _scan_block(stamp: str, verdict: str, rows: int | str = "-") -> str:
+    return (f"## {stamp} scan — verdict **{verdict}** (reason)\n"
+            f"- rows written: {rows} (new 0, used {rows}); listed before: 0; active after: 0\n"
+            "- recipe: full coverage {}; provider x; 1.0 min\n\n")
+
+
+def test_member_with_a_newer_good_scan_is_dropped_with_a_note(tmp_path):
+    root = _write_root(tmp_path)                                             # every probe: 2026-09-28T10:00:00+00:00
+    hdr = "# x — scan_runs\n\nProcess: docs/NETWORK_SCAN_PROCESS.md\n\n"
+    (root / "delta-cdjr-com" / "scan_runs.md").write_text(
+        hdr + _scan_block("2026-09-27 09:00 UTC", "error") + _scan_block("2026-09-29 13:45 UTC", "inaccurate", 3958)
+        + "## 2026-09-30 08:00 UTC retroactive reconcile\n- retired: 0\n\n", encoding="utf-8")
+    # newest scan failed: kept, although an earlier one after the probe was ok
+    (root / "echo-toyota-com" / "scan_runs.md").write_text(
+        hdr + _scan_block("2026-09-28 12:00 UTC", "ok", 40) + _scan_block("2026-09-29 12:00 UTC", "no_rows", 0),
+        encoding="utf-8")
+    # ok scan older than the probe: kept
+    (root / "alpha-motors-com" / "scan_runs.md").write_text(hdr + _scan_block("2026-09-28 09:59 UTC", "ok", 12),
+                                                            encoding="utf-8")
+    scan = pc.newest_scan(root, "delta-cdjr-com")
+    assert (scan["verdict"], scan["stamp"], scan["rows"]) == ("inaccurate", "2026-09-29 13:45 UTC", 3958)
+    res = pc.build(root, state_fn=lambda d: "none")
+    assert res["dropped"] == ["delta-cdjr-com"]
+    assert [c.dealer_ids for c in res["clusters"]] == [["alpha-motors-com", "beta-autos-com"]]
+    assert res["considered"] == 4
+    md = res["path"].read_text(encoding="utf-8")
+    assert "## Dropped: scanned after the probe (1)" in md
+    assert ("- `delta-cdjr-com` — probe 2026-09-28 10:00 UTC (homepage_http_403); newest scan 2026-09-29 13:45 UTC "
+            "verdict inaccurate, 3,958 rows (workspace/dealer_logs/delta-cdjr-com/scan_runs.md)") in md
+    assert "`delta-cdjr-com` — recipe" not in md                             # not listed as a member
+    # Without the recipe filter (--all) nothing is dropped.
+    assert pc.build(root, state_fn=lambda d: "none", only_needing=False, write=False)["dropped"] == []
+    # A newer ok scan excludes the member too; its partner is left alone, so no cluster remains.
+    (root / "beta-autos-com" / "scan_runs.md").write_text(hdr + _scan_block("2026-09-28 10:01 UTC", "ok", 55),
+                                                          encoding="utf-8")
+    res = pc.build(root, state_fn=lambda d: "none")
+    assert res["dropped"] == ["beta-autos-com", "delta-cdjr-com"]
+    assert res["clusters"] == [] and res["considered"] == 3
+    assert "- `beta-autos-com` — probe 2026-09-28 10:00 UTC (unknown_platform); newest scan 2026-09-28 10:01 UTC " \
+           "verdict ok, 55 rows" in res["path"].read_text(encoding="utf-8")
+
+
+def test_last_verdict_is_dated_and_member_lines_show_it(tmp_path):
+    root = _write_root(tmp_path)
+    assert pc.last_verdict_dated(root, "alpha-motors-com", None) == (
+        "NO RECIPE: needs discovery (probe how the site presents data, then rerun)", "2026-09-28 11:00 UTC")
+    (root / "beta-autos-com" / "discovery.md").write_text(
+        "## 2026-09-26T12:23:19+00:00 discovery probe — homepage_http_403\n- url: x\n", encoding="utf-8")
+    assert pc.last_verdict_dated(root, "beta-autos-com", None) == ("homepage_http_403", "2026-09-26 12:23 UTC")
+    assert pc.last_verdict_dated(root, "missing-com", {"classification": "homepage_http_403",
+                                                       "stamp": "2026-09-20T01:02:03+00:00"}) == (
+        "homepage_http_403", "2026-09-20 01:02 UTC")
+    md = pc.build(root, state_fn=lambda d: "none")["path"].read_text(encoding="utf-8")
+    assert ("`alpha-motors-com` — recipe none; last verdict: NO RECIPE: needs discovery (probe how the site presents "
+            "data, then rerun) — dated 2026-09-28 11:00 UTC (probe 2026-09-28T10:00:00+00:00;") in md
+    assert "`beta-autos-com` — recipe none; last verdict: homepage_http_403 — dated 2026-09-26 12:23 UTC" in md
+
+
+def test_parse_stamp_forms():
+    utc = "2026-09-26 12:23 UTC"
+    assert pc.format_stamp(pc.parse_stamp("2026-09-26 12:23 UTC")) == utc
+    assert pc.format_stamp(pc.parse_stamp("2026-09-26T12:23:19+00:00")) == utc
+    assert pc.format_stamp(pc.parse_stamp("2026-09-26T08:23:19-04:00")) == utc
+    assert pc.format_stamp(pc.parse_stamp("2026-09-26T12:23:19Z")) == utc
+    assert pc.format_stamp(pc.parse_stamp("20260926T122319")) == utc
+    assert pc.format_stamp(pc.parse_stamp("20260926T122319+0000")) == utc
+    assert pc.parse_stamp("") is None and pc.parse_stamp("soon") is None and pc.format_stamp(None) == ""
+
+
+def test_no_contradictory_template_lines(tmp_path):
+    root = _write_root(tmp_path)
+    for i in range(2):
+        r = record(f"tv{i}-com", f"www.tv{i}.com", script_hosts=["cdn.teamvelocity.example"],
+                   detect=_detect(team_velocity=True), path_status=200, vins_on=("/inventory/",))
+        d = root / r["dealer_id"]
+        d.mkdir()
+        (d / "discovery_20260928T100000+0000.json").write_text(json.dumps(r), encoding="utf-8")
+    md = pc.build(root, state_fn=lambda d: "none")["path"].read_text(encoding="utf-8")
+    sections = {s.split("\n", 1)[0]: s for s in md.split("\n## ")[1:]}
+    tv = next(s for s in sections.values() if "`tv0-com`" in s)
+    supa = next(s for s in sections.values() if "`alpha-motors-com`" in s)
+    assert "- template already detecting: team_velocity (2 of 2 members)" in tv
+    assert "nearest known template" not in tv                                # never "none ... all false" here
+    assert "- nearest known template: none scores partially (detect map is boolean, all false)" in supa
+    assert "template already detecting" not in supa
+    # A partial score is still shown next to a detecting template.
+    r = record("tv2-com", "www.tv2.com", script_hosts=["cdn.teamvelocity.example"],
+               detect=_detect(team_velocity=True, oneaudi=0.4), path_status=200, vins_on=("/inventory/",))
+    (root / "tv2-com").mkdir()
+    (root / "tv2-com" / "discovery_20260928T100000+0000.json").write_text(json.dumps(r), encoding="utf-8")
+    md = pc.build(root, state_fn=lambda d: "none")["path"].read_text(encoding="utf-8")
+    tv = next(s for s in md.split("\n## ")[1:] if "`tv0-com`" in s)
+    assert "template already detecting: team_velocity (3 of 3 members)" in tv
+    assert "nearest known template: `oneaudi` (partial detect score 0.40)" in tv
+    assert "all false" not in tv
