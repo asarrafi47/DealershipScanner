@@ -48,7 +48,10 @@ _VDP_PRICE_COMPLETE_MAX = 40
 
 
 def _write_hint_note(dealer_id: str, note: str, extra: dict[str, Any] | None = None) -> None:
-    """Record what this run learned about a dealer (best-effort, merge semantics)."""
+    """Record what this run learned about a dealer (best-effort, merge semantics).
+
+    Blocking store I/O (``set_scan_hints``): ``delta_scan_dealer`` runs it with
+    ``asyncio.to_thread``."""
     try:
         from backend.scanner.recipe_store import set_scan_hints
 
@@ -162,7 +165,9 @@ async def delta_scan_dealer(dealer: dict[str, Any]) -> dict[str, Any]:
             out["skipped"] = "no_recipe (needs_http_proxy hinted — rerun with SCANNER_HTTP_PROXY)"
         else:
             out["skipped"] = "no_recipe_yield"
-            _write_hint_note(dealer_id, "no recipe yield on delta replay; needs synth (full scan) or browser")
+            await asyncio.to_thread(
+                _write_hint_note, dealer_id, "no recipe yield on delta replay; needs synth (full scan) or browser"
+            )
         logger.info("Delta [%s]: skipped — %s", name, out["skipped"])
         return out
     records, _vin_yield = fetched
@@ -210,7 +215,8 @@ async def delta_scan_dealer(dealer: dict[str, Any]) -> dict[str, Any]:
             "street_address in the `dealerships` roster so the gate can tell it from its siblings.",
             name, unidentified,
         )
-        _write_hint_note(
+        await asyncio.to_thread(
+            _write_hint_note,
             dealer_id,
             "rooftop gate could not identify this store in its own group feed; "
             "needs roster street_address",
@@ -263,14 +269,16 @@ async def delta_scan_dealer(dealer: dict[str, Any]) -> dict[str, Any]:
             if missing_price > _VDP_PRICE_COMPLETE_MAX:
                 # Too many priceless rows for VDP completion — needs the full
                 # browser scan to price at scale.
-                _write_hint_note(
+                await asyncio.to_thread(
+                    _write_hint_note,
                     dealer_id,
                     f"{missing_price} priceless rows on delta replay (feed carries no price, "
                     f"pricing API/VDP bot-walled); needs full browser scan to price",
                     extra={"price_requires_full_scan": True, "price_source": None},
                 )
             elif hints.get("price_source") != "vdp":
-                _write_hint_note(
+                await asyncio.to_thread(
+                    _write_hint_note,
                     dealer_id,
                     f"feed priced {price_cov:.0%} on delta replay; price likely lives on VDP/second endpoint",
                     extra={"price_source": "vdp"},

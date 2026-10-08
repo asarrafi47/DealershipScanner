@@ -81,9 +81,13 @@ async def capture_endpoints(
     dealer.setdefault("url", url)
     dealer.setdefault("name", dealer_name or dealer_id)
     dealer.setdefault("provider", provider)
+    # Recipe-store I/O (load_recipes, promote_from_ledger: the cache file and the
+    # dealer_recipes sync) runs off the event loop the browser capture shares.
+    started = time.time()
+    recipes_before = len([r for r in await asyncio.to_thread(load_recipes, dealer_id) if not r.stale])
     out: dict[str, Any] = {
-        "dealer_id": dealer_id, "url": origin, "mode": describe(), "started": time.time(),
-        "paths": [], "endpoints": [], "records": 0, "recipes_before": len([r for r in load_recipes(dealer_id) if not r.stale]),
+        "dealer_id": dealer_id, "url": origin, "mode": describe(), "started": started,
+        "paths": [], "endpoints": [], "records": 0, "recipes_before": recipes_before,
         "recipes_written": 0, "profile": None, "errors": [],
     }
     t0 = time.perf_counter()
@@ -165,18 +169,24 @@ async def capture_endpoints(
         # (recipe_validation): a one-condition / section-scoped / short-page /
         # dead-auth capture is refused here, not by a fleet verdict a scan later.
         validation: dict[str, Any] = {}
-        try:
-            out["recipes_written"] = int(promote_from_ledger(
+
+        def _promote() -> int:
+            # capture_place reads the registry and scan hints; promote_from_ledger
+            # validates over HTTP and writes the recipe file and dealer_recipes.
+            return int(promote_from_ledger(
                 dealer_id, provider, uniq, validate=True, base_url=origin, dealer_name=dealer.get("name") or dealer_id,
                 place=capture_place(dealer, origin), validation_out=validation,
             ) or 0)
+
+        try:
+            out["recipes_written"] = await asyncio.to_thread(_promote)
         except Exception as exc:  # noqa: BLE001
             out["errors"].append(f"promote: {str(exc)[:160]}")
         if validation:
             out["validation"] = validation
             if validation.get("verdict") == "reject":
                 out["errors"].append("validation: " + "; ".join(validation.get("reasons") or [])[:200])
-    out["recipes_after"] = len([r for r in load_recipes(dealer_id) if not r.stale])
+    out["recipes_after"] = len([r for r in await asyncio.to_thread(load_recipes, dealer_id) if not r.stale])
     out["seconds"] = round(time.perf_counter() - t0, 1)
     return out
 
