@@ -362,3 +362,152 @@ Nothing was edited or run except `pytest --collect-only -q test_rooftop_corpus.p
 - test_recipe_synth.py (1039 lines): single unit, coherent - size alone is not a problem.
 - Postgres-required guard tests (test_inventory_postgres_required.py, test_inventory_write.py) use fake
   DSNs and never connect.
+
+# CI FAILURE LEDGER (P2A.6, 2026-10-08)
+
+Remediation plan unit P2A.6 (cluster unit tests-ci-3a). This section classifies every failure,
+every error and every network-touching test from the first CI shakedown. P2A.7 fixes the
+test-only classes from it; class (e) findings are recorded here and never fixed in P2A.7.
+
+## Source
+
+- GitHub Actions run 37850535029, branch `ci/shakedown-1`, push event, head `836cf1060`,
+  2026-10-08T21:59Z. CI is the source of truth; local runs only reproduce.
+- Jobs: `lint` success; `pytest` failure (job 113562137045, 7m53s); `pytest-integration`
+  success; `release-guard` skipped, as designed (it runs only for main and PRs to main, D-REL3).
+- pytest job: Python 3.12.15 on ubuntu-latest, `TESTS_BLOCK_NETWORK=1`, selection
+  `not integration and not slow and not pg`, junit artifact `junit-offline/offline.xml`.
+- Result: **3 failed, 0 errors**, 5037 passed, 34 skipped, 30 xfailed, 5 deselected, 377 s.
+  The junit header says `tests=5124 failures=3 errors=0 skipped=64`; its 64 is the 34 skips
+  plus the 30 strict xfails (F2).
+- Terminal summaries: `NETWORK-BLOCKED CONNECTS: 15 in 5 test(s)`; `ASSET-GATED SKIPS: 9`.
+  The junit carries one `network_blocked` property per refused connect (15).
+
+Classes: (a) needs a gitignored local asset or the dev DB copy but is not an asset-gated skip;
+(b) Python 3.12 vs local 3.14; (c) macOS-only assumption or case-sensitive path; (d) missing
+tool (node, pdftotext); (e) real product bug: filed here, not fixed; (f) network access (from
+the P2A.3 counter).
+
+## Ledger
+
+Paths are under `backend/tests/`. "Reproduced" means the same result in a fresh worktree of
+`feature/http-only-scans` at `12c56bf49` (which, like the runner, lacks every gitignored file),
+with local Python 3.14.7. The same tests pass in the main checkout, which has the index files.
+
+| # | Test | Class | CI symptom | Cause | Planned fix | Owner |
+|---|---|---|---|---|---|---|
+| 1 | `test_dictionary_catalog.py::test_writing_the_real_manifest_is_blocked` | (a) | `FileNotFoundError` on `backend/dictionary/index/manifest.json` at :122. Reproduced. | The manifest is gitignored (`.gitignore:109`) and absent from a clean checkout. The test's `skipif` checks only `DICTIONARY_ROOT.is_dir()`, and that directory is tracked. The test reads the file for its before/after byte check. | Keep the coverage; no skip needed. Take the baseline as the bytes, or `None` when the file is absent. Then assert that all three writes raise `RealDictionaryWriteBlocked` naming the real path, and that the file is unchanged (still absent) afterwards. The write guard blocks by path prefix, so it refuses the write whether or not the file exists. A throwaway probe confirmed this passes in a clean worktree, and the probe was deleted. Fallback if the reviewer prefers a skip: `pytest.skip("manifest not built")`, since "not built" is in `_ASSET_GATE_SKIP_REASONS`. | P2A.7, class (a) |
+| 2 | `test_dictionary_catalog.py::test_the_2026_07_31_incident_shape_is_now_stopped` | (a) | Same `FileNotFoundError`, at :154. Reproduced. | Same as #1. | Same as #1. `rebuild_catalog([], enrich_derived=False)` still raises at the manifest write (`open(mode='w') would write the real dictionary tree at .../index/manifest.json`), and the probe confirmed it. | P2A.7, class (a) |
+| 3 | `test_merge_verified_specs_golden.py::test_merge_verified_specs_golden_hermetic` | (a), plus product finding PF-1 (e) | 2 golden mismatches, both car `live:1239391` (a 2026 Audi A5 Premium Plus 2.0 TFSI quattro), one per `include_extended_specs` value. `epa_engine_description` is `'2.0L I4 (SIDI)'` in the golden and `'Hybrid 2.0L I4 (SIDI; Mild Hybrid)'` in CI; `epa_city08`/`epa_highway08` are 22/32 vs 26/36; `fuel_economy_display` is `22 City / 32 Hwy` vs `26 City / 36 Hwy`. Reproduced exactly. | The golden was recorded with `backend/dictionary/index/dictionary_catalog.db` present, and that file is gitignored (`.gitignore:110`). Without it, `find_epa_csv('Audi', 'A5', 2026)` resolves to `epa/Audi/2025_Audi_A4_EPA.csv` instead of `epa/Audi/2026_Audi_A5_EPA.csv`. PF-1 below has the mechanism. The other 2,033 of the 2,034 golden keys (2,000 live cars plus 34 hand-built rows) match in both environments. | Keep the coverage. Do not skip the whole golden, and do not re-record it without the catalog, which would pin PF-1 as expected output. Pin the catalog-dependent keys as `_CATALOG_DEPENDENT = frozenset({"live:1239391"})`, the set CI measured, and assert it is a subset of the golden's keys. The hermetic test compares every other key, everywhere. A new test compares only the pinned keys and calls `pytest.skip("catalog db not built")` when `dictionary_catalog.CATALOG_DB_PATH` is absent, so the gap is counted under ASSET-GATED SKIPS. Expected effect: the gated-skip count goes from 9 to 10 on CI. | P2A.7, class (a). PF-1 belongs to Phase 9 |
+| 4 | `test_scraper_chain.py::TestFetchListingHtmlIntegration::test_requests_result_accepted_when_sufficient` | (f) | Passed. 3 refused connects, `d.example:443 (curl_cffi)`. Reproduced (15 in 5 tests, locally too). | `gap_fill._fetch_listing_html_via_chain` puts `ImpersonatingFetcher()` first (`backend/scanner/post_scan/gap_fill.py:153`). It makes one curl_cffi request per profile in `IMPERSONATE_PROFILES = ("chrome", "chrome124", "safari17_0")` (`backend/scanner/net/client.py:41`). The tests stub only `_requests_fetch_html` and `_playwright_fetch_html`. They pass because the refused stage raises `FetchError` and the chain falls through to the stubs. Without the guard, each test makes a real DNS query for `d.example` (a reserved TLD, so NXDOMAIN on a sane resolver) plus up to 3 connects with a 25 s timeout. A wildcard-DNS or captive-portal resolver would turn that into real traffic or a long hang. | Add a class-level autouse fixture that stubs the curl_cffi transport: monkeypatch `backend.scanner.net.client.import_curl_cffi` to return a fake module whose request entry point (reached through `client.send`, from `rotate_impersonation` at `client.py:194`) raises a connection error and records each call. The test still means "the impersonate stage fails, so the requests stage decides". Assert the fake saw 3 calls, which pins the profile rotation instead of leaking it. Accept: `TESTS_BLOCK_NETWORK=1` on `test_scraper_chain.py` prints "no refused connects". | P2A.7, class (f) |
+| 5 | `...::test_thin_requests_result_falls_through_to_playwright` | (f) | Passed; 3 refused, same host. | Same as #4. | Same fixture as #4. | P2A.7, class (f) |
+| 6 | `...::test_thin_requests_result_stays_http_in_scans` | (f) | Passed; 3 refused, same host. | Same as #4. | Same fixture as #4. | P2A.7, class (f) |
+| 7 | `...::test_total_failure_returns_none` | (f) | Passed; 3 refused, same host. | Same as #4. | Same fixture as #4. | P2A.7, class (f) |
+| 8 | `...::test_works_inside_running_event_loop` | (f) | Passed; 3 refused, same host. | Same as #4. | Same fixture as #4. | P2A.7, class (f) |
+
+The other three tests in that class (`test_non_http_url_returns_none_without_fetching`,
+`test_env_flag_forces_legacy_path`, `test_chain_bug_falls_back_to_legacy`) never reach the
+chain's impersonate stage and record no connects.
+
+Classes (b), (c) and (d): **none in this run.** No failure depends on the Python version or
+the OS. node 20 is installed by the job, and `test_js_unit.py::test_js_unit_suite_passes` ran
+and passed. No test skipped for a missing tool.
+
+### P2A.7 file lists (one worktree per class)
+
+| Class | Files | Tests |
+|---|---|---|
+| (a) | `backend/tests/test_dictionary_catalog.py`, `backend/tests/test_merge_verified_specs_golden.py` | #1-#3 |
+| (f) | `backend/tests/test_scraper_chain.py` | #4-#8 |
+| (b), (c), (d) | none | none |
+
+P2A.7 exit check: the changed tests pass both with and without the gitignored index files. A
+fresh worktree simulates "without", and the main checkout provides "with". `TESTS_BLOCK_NETWORK=1`
+on `test_scraper_chain.py` must show 0 refused connects.
+
+## Product findings (class (e): filed, not fixed)
+
+### PF-1: without the dictionary catalog DB, the EPA file resolver picks another model's file (Audi S/A5 models, Audi e-tron variants, Toyota Supra)
+
+- **Owner:** Phase 9: P9.2 (single resolver) and P9.6 (in-image catalog). The decisions are
+  D-HY1 and D-HY9. The P0A.3 ops-log block and this unit's brief name it "Phase 9 / D-DC5", but
+  Section 7's D-DC5 is browser retirement, so D-HY9 (should prod serve catalog-resolved
+  dictionary content) is the matching decision. Do not fix it in Phase 2A.
+- **Prod exposure:** prod has never had `backend/dictionary/index/dictionary_catalog.db`.
+  P0A.3 (SCANNING_OPS_LOG.md, P0A.3 block) confirmed it absent from the web image, excluded by
+  `.railwayignore:20 *.db`, with `DICTIONARY_CATALOG_DB_PATH` unset. The same block found that
+  prod ships all 12,126 `epa/` files. So prod resolves EPA files the way CI does.
+- **Mechanism:**
+  1. `dictionary_catalog._find_epa_csv_uncached` tries the catalog SQL candidates first. With
+     no DB, it drops to `_legacy_glob_find`.
+  2. That fallback searches under the trim-ladder family label, not the model:
+     `model_label = epa_model_search_name(make, model)` (`dictionary_catalog.py:448`).
+     `_resolve_trim_model_key('Audi', 'A5')` is `('audi', 'a4')`, so the label is `'A4'`.
+     `backend/vehicle_facts/epa_model.py` already says "epa_model_search_name is a trim-ladder
+     FAMILY label (S5 -> 'A4')".
+  3. Its glob is non-recursive (`root.glob(pat)`, `:463`), so it never sees the sharded
+     `epa/<Make>/` files. The fuzzy scan then matches the family label's file by model name
+     and year distance.
+  4. `epa_csv_is_for_model` accepts that file, because its `wanted` set includes the family
+     label (`:566`).
+  5. `knowledge_engine._lookup_epa_from_dictionary_csv` then matches rows by trim substring
+     only. For the 2026 A5 that is `quattro`, so it returns the 2025 A4 mild-hybrid row.
+  6. That row's 26/36 mpg replaces the dealer's own 22/32, because `fuel_economy.py` ranks
+     the EPA figure above the dealer mpg columns.
+- **Size, measured locally and read-only** (2026-10-08): `find_epa_csv(make, model, year)`
+  was run for each of the 12,126 sharded EPA files' own (year, make, model), with the catalog
+  (a scratch copy of the MBP's DB) and without it.
+  - With the catalog, 12,115 resolve to their own file. Without it, 11,987 do.
+  - 130 differ, and 129 of those resolve to a **different model's** file without the catalog:
+
+    | Requested | Resolves to | YMMs |
+    |---|---|---|
+    | Audi S4 | A4 | 27 |
+    | Audi S6 | A6 | 20 |
+    | Audi A5 | A4 | 19 |
+    | Audi S5 | A4 | 19 |
+    | Audi SQ5 | Q5 | 13 |
+    | Toyota Supra | GR Supra | 13 |
+    | Audi S3 | A3 | 11 |
+    | Audi SQ8 e-tron | Q8 e-tron | 2 |
+    | Audi SQ6 e-tron | Q6 e-tron | 2 |
+    | Audi A6 e-tron | A6 | 1 |
+    | Audi S6 e-tron | A6 | 1 |
+
+  - The 130th is a J.K. Motors spelling variant.
+  - Recent model years are affected: 2024 and 2025 A5/S3/S4/S5/S6/SQ5, and 2026
+    A5/S3/S5/SQ5. 2026 A5 and S5 resolve to the **2025 A4** file.
+  - The worst cases cross powertrains: 2027 A6 e-tron and S6 e-tron (battery-electric)
+    resolve to the gas 2026 A6 file.
+  - The sweep ran on macOS. CI (Linux) reproduced the A5 case identically. Active-inventory
+    and prod-page counts were not measured.
+- **Request-path reach:**
+  - `merge_verified_specs` reaches the dictionary CSV only when the car has no accepted
+    `epa_master_id` link and `epa_master` has no per-trim row (`knowledge_engine.py:709`). Car
+    1239391 itself carries a link (19023), so on prod's Postgres its by-id row should win.
+  - The trim ladder calls `find_epa_csv` directly (`trim_ladder/selection.py:254`,
+    `trim_ladder/citations.py:132`), as does `trim_spec_extractor.py:881`.
+- **Rules at stake:** the EPA catalog never outranks the dealer's own engine text or the VIN
+  decode, and vPIC outranks the dealer feed for electrification. A gas A6 row served for an
+  A6 e-tron, or a mild-hybrid A4 row served for a non-hybrid A5, breaks both.
+- **Bearing on the plan:** P9.2 states "The EPA fuzzy fallback is unchanged; it already
+  reaches parity, 217/217". That count shows a file resolves in both setups, not that it is
+  the same file. P9.2's Accept should add an EPA file-identity parity check (catalog vs no
+  catalog) that covers these 129 YMMs. A likely direction is to search the raw model before
+  the family label and to glob the sharded tree, but Phase 9 decides.
+
+## Observed in the same run, not failures (for P14C.3's skip budget)
+
+| Skip | Count | Note | Owner |
+|---|---|---|---|
+| Asset-gated (brochure PDFs, catalog db) | 9 | The P14C.3 baseline. Expected to be 10 after P2A.7 #3. | P14C.3 |
+| `test_car_detail_context_golden.py[shard_0..5]`: "needs PYTHONHASHSEED=0" | 6 | Not asset-gated, so not counted, and it runs nowhere in CI: a silent coverage gap. Options: set `PYTHONHASHSEED=0` for that test in CI, or make the trim-ladder order deterministic. | P14C.3 decides; not a P2A.7 item |
+| `test_search_golden.py::*_postgres`: "SEARCH_GOLDEN_PG=1 not set" | 17 | Postgres tier (F8). | Phase 14A/14B |
+| `test_charger_daytona_specs.py`: "car 3608 absent" | 1 | Already ranked P1 #3 above (vacuous and writing). | existing finding |
+| `test_llm_call_site_parity.py::test_regenerate_goldens` | 1 | Intentional regen switch. | none |
+
+Reproduce: `gh run view 37850535029 --log-failed` and `gh run download 37850535029` (junit).
+Local: in a fresh worktree, run `TESTS_BLOCK_NETWORK=1 .venv/bin/python -m pytest
+backend/tests/test_dictionary_catalog.py backend/tests/test_merge_verified_specs_golden.py
+backend/tests/test_scraper_chain.py -q -p no:cacheprovider`. Expect 3 failed and 15 refused
+connects in 5 tests.
