@@ -1,0 +1,91 @@
+dealer,i,stratum,method,pagination,platform,recipe (redacted),stored_vehicle_rows,stored_total_count,validate_recipe,set_p2_vins,set_p40_vins,p40_pages,p40_exhausted,site_total,p40_statuses,gate_rejected_p40
+5starford-com,0,html_page_query / jazel,GET,jazel_srp_page,jazel,www.5starford.com/inventory/all-vehicles/,96,1338,947,48,952,40,False,,200,0
+audibellevue-com,0,other (none),GET,none,dealer_dot_com,audibellevue.autonation.com/api/dealer_used_inventory?…,30,,30,30,30,1,True,30,200,0
+audibellevue-com,1,other (none),GET,none,dealer_dot_com,audibellevue.autonation.com/api/dealer_new_inventory?…,4,,2,2,2,1,True,2,200,0
+audisouthaustin-com,0,dealer_com,POST,dealer_com_start,dealer_dot_com,www.audisouthaustin.com/api/widget/ws-inv-data/getInventory,48,,48,96,408,10,True,466,200,58
+autoboutiqueohio-com,0,html_page_query / jazel,GET,html_page_query,overfuel,www.autoboutiqueohio.com/inventory,1000,1001,885,50,885,37,True,,200,0
+bentleygmc-com,0,cosmos_pt,GET,cosmos_pt,dealer_on_cosmos,www.bentleygmc.com/api/vhcliaa/vehicle-pages/cosmos/srp/vehicles/27303/2860496,484,,443,192,443,5,True,443,200,0
+bentleygmc-com,1,cosmos_pt,GET,cosmos_pt,dealer_on_cosmos,www.bentleygmc.com/api/vhcliaa/vehicle-pages/cosmos/srp/vehicles/27303/2860461,514,,515,192,515,6,True,515,200,0
+bentleyhyundai-com,0,cosmos_pt,GET,cosmos_pt,dealer_on_cosmos,www.bentleyhyundai.com/api/vhcliaa/vehicle-pages/cosmos/srp/vehicles/27897/3206830,528,,493,192,493,6,True,493,200,0
+bentleyhyundai-com,1,cosmos_pt,GET,cosmos_pt,dealer_on_cosmos,www.bentleyhyundai.com/api/vhcliaa/vehicle-pages/cosmos/srp/vehicles/27897/3206828,408,,393,192,393,5,True,393,200,0
+bmwmainline-com,0,dealer_com,POST,dealer_com_start,dealer_dot_com,www.bmwmainline.com/api/widget/ws-inv-data/getInventory,50,312,48,96,357,8,True,357,200,0
+bmwmainline-com,1,dealer_com,POST,dealer_com_start,dealer_dot_com,www.bmwmainline.com/api/widget/ws-inv-data/getInventoryAndFacets,24,312,312,48,357,15,True,357,200,0
+bmwmainline-com,2,dealer_com,POST,dealer_com_start,dealer_dot_com,www.bmwmainline.com/api/widget/ws-inv-data/getInventory,50,97,48,96,116,3,True,116,200,0
+bmwmainline-com,3,dealer_com,POST,dealer_com_start,dealer_dot_com,www.bmwmainline.com/api/widget/ws-inv-data/getInventoryAndFacets,24,97,116,48,116,5,True,116,200,0
+bmwmainline-com,4,dealer_com,POST,dealer_com_start,dealer_dot_com,www.bmwmainline.com/api/widget/ws-inv-data/getInventory,41,41,48,54,54,2,True,54,200,0
+bmwmainline-com,5,dealer_com,POST,dealer_com_start,dealer_dot_com,www.bmwmainline.com/api/widget/ws-inv-data/getInventoryAndFacets,18,41,54,36,54,3,True,54,200,0
+bmwoffremont-com,0,dealer_com,POST,dealer_com_start,dealer_dot_com,www.bmwoffremont.com/api/widget/ws-inv-data/getInventory,50,348,48,74,74,3,True,364,200,70
+bmwoffremont-com,1,dealer_com,POST,dealer_com_start,dealer_dot_com,www.bmwoffremont.com/api/widget/ws-inv-data/getInventoryAndFacets,24,348,74,48,74,5,True,364,200,46
+bmwoffremont-com,2,dealer_com,POST,dealer_com_start,dealer_dot_com,www.bmwoffremont.com/api/widget/ws-inv-data/getInventory,50,266,48,96,249,6,True,249,200,0
+bmwoffremont-com,3,dealer_com,POST,dealer_com_start,dealer_dot_com,www.bmwoffremont.com/api/widget/ws-inv-data/getInventoryAndFacets,24,266,249,48,249,11,True,249,200,0
+bmwoffremont-com,4,dealer_com,POST,dealer_com_start,dealer_dot_com,www.bmwoffremont.com/api/widget/ws-inv-data/getInventory,25,25,13,13,13,1,True,13,200,0
+bmwoffremont-com,5,dealer_com,POST,dealer_com_start,dealer_dot_com,www.bmwoffremont.com/api/widget/ws-inv-data/getInventoryAndFacets,1,25,13,13,13,1,True,13,200,0
+covertbuickgmc-com,0,carscommerce,POST,carscommerce_page,carscommerce,websites-search.api.carscommerce.inc/api/v1/listings/22701/search,813,,763,200,763,9,True,764,200,0
+covertbuickgmc-com,1,carscommerce,POST,carscommerce_page,carscommerce,websites-search.api.carscommerce.inc/api/v1/listings/22701/search,5,5,4,4,4,1,True,4,200,0
+crownlexus-com,0,dealer_com,POST,dealer_com_start,dealer_dot_com,www.crownlexus.com/api/widget/ws-inv-data/getInventoryAndFacets,24,900,884,48,884,38,True,887,200,0
+crownlexus-com,1,dealer_com,POST,dealer_com_start,dealer_dot_com,www.crownlexus.com/api/widget/ws-inv-data/getInventory,100,100,48,96,347,8,True,347,200,0
+crownlexus-com,2,other (none),POST,none,unknown,www.crownlexus.com/api/widget/ws-rec-vehicles/vehicles-recommendations/soniccrownlexus,6,,6,6,6,1,True,,200,0
+darcarshondatenafly-com,0,other (none),POST,none,algolia,g58lko3etj-dsn.algolia.net/1/indexes/production-inventory-global_price_asc/query?…,6,6,10,10,10,1,True,10,200,0
+doggetthondamedcenter-com,0,other (algolia_page),POST,algolia_page,algolia,G58LKO3ETJ-dsn.algolia.net/1/indexes/production-inventory-global_price_desc/query,983,,1022,1022,1022,2,True,1022,200,0
+downeyhyundai-com,0,dep_srp_page,GET,dep_srp_page,dealer_eprocess,www.downeyhyundai.com/search/used/?tp=used,195,195,183,24,183,16,True,183,200,0
+downeyhyundai-com,1,dep_srp_page,GET,dep_srp_page,dealer_eprocess,www.downeyhyundai.com/search/new-hyundai/?tp=new,480,1384,480,24,480,40,False,1357,200,0
+encinitasford-com,0,html_page_query / jazel,GET,jazel_srp_page,jazel,www.encinitasford.com/inventory/all-vehicles/,213,214,216,24,252,22,True,,200,0
+fivestarforddallas-com,0,html_page_query / jazel,GET,jazel_srp_page,jazel,www.fivestarforddallas.com/inventory/all-vehicles/,922,924,927,72,933,28,True,,200,0
+gardenahonda-com,0,other (none),GET,none,dealermasters,www.gardenahonda.com/page-data/sq/d/3321282244.json,653,653,649,649,649,1,True,,200,0
+gardenahonda-com,1,other (none),GET,none,dealer_dot_com,www.gardenahonda.com/page-data/sq/d/668476064.json,50,,649,649,649,1,True,,200,0
+gardenahonda-com,2,other (none),GET,none,dealer_dot_com,www.gardenahonda.com/page-data/inventory/used/page-data.json?…,50,,649,649,649,1,True,,200,0
+gardenahonda-com,3,other (none),GET,none,team_velocity,www.gardenahonda.com/page-data/new-inventory/page-data.json,50,,649,649,649,1,True,,200,0
+gardenahonda-com,4,other (none),GET,none,team_velocity,www.gardenahonda.com/page-data/certified-inventory/page-data.json,50,,649,649,649,1,True,,200,0
+gardenahonda-com,5,other (none),GET,none,team_velocity,www.gardenahonda.com/page-data/used-inventory/page-data.json,50,,649,649,649,1,True,,200,0
+gardenahonda-com,6,other (none),GET,none,dealer_dot_com,www.gardenahonda.com/page-data/search/page-data.json,50,,649,649,649,1,True,,200,0
+gardenahonda-com,7,other (none),GET,none,dealer_dot_com,www.gardenahonda.com/page-data/index/page-data.json,6,,0,0,0,1,True,,200,0
+hanselbmwofsantarosa-com,0,page_query (Team Velocity),GET,page_query,team_velocity,www.hanselbmwofsantarosa.com/inventory-used.json,29,263,32,7,32,7,True,276,200,244
+hanselbmwofsantarosa-com,1,page_query (Team Velocity),GET,page_query,team_velocity,www.hanselbmwofsantarosa.com/inventory-new.json,143,143,131,100,131,3,True,131,200,0
+harbinfordscottsboro-com,0,dealer_com,POST,dealer_com_start,dealer_dot_com,www.harbinfordscottsboro.com/api/widget/ws-inv-data/getInventory,100,100,48,96,354,8,True,354,200,0
+hemborgford-com,0,html_page_query / jazel,GET,jazel_srp_page,jazel,www.hemborgford.com/inventory/all-vehicles/,292,294,285,24,285,25,True,,200,0
+hendrickbmwnorthlake-com,0,dealer_com,POST,dealer_com_start,dealer_dot_com,www.hendrickbmwnorthlake.com/api/widget/ws-inv-data/getInventory,280,280,62,96,612,22,True,980,200,368
+highcountrytoyota-com,0,html_page_query / jazel,GET,html_page_query,dealer_eprocess,www.highcountrytoyota.com/inventory/used,117,117,92,32,92,7,True,,200,0
+highcountrytoyota-com,1,html_page_query / jazel,GET,html_page_query,dealer_eprocess,www.highcountrytoyota.com/inventory/new,186,186,138,32,138,10,True,,200,0
+hondaofcartersville-com,0,other (typesense_page),POST,typesense_page,typesense,hjnrb3s21408ezpfp.a1.typesense.net/multi_search?…,689,689,392,392,392,3,True,780,200,358
+hondaofelcajon-com,0,dep_srp_page,GET,dep_srp_page,dealer_eprocess,www.hondaofelcajon.com/search/used/?tp=used&ct=48,56,56,65,65,65,2,True,65,200,0
+hondaofelcajon-com,1,dep_srp_page,GET,dep_srp_page,dealer_eprocess,www.hondaofelcajon.com/search/new-honda/?tp=new&ct=48,343,343,357,96,357,8,True,357,200,0
+howardorloffvolvocars-com,0,dealer_com,POST,dealer_com_start,dealer_dot_com,www.howardorloffvolvocars.com/api/widget/ws-inv-data/getInventory,50,191,48,96,197,5,True,197,200,0
+howardorloffvolvocars-com,1,dealer_com,POST,dealer_com_start,dealer_dot_com,www.howardorloffvolvocars.com/api/widget/ws-inv-data/getInventoryAndFacets,8,191,192,16,197,25,True,197,200,0
+howardorloffvolvocars-com,2,dealer_com,POST,dealer_com_start,dealer_dot_com,www.howardorloffvolvocars.com/api/widget/ws-inv-data/getInventory,50,103,48,96,115,3,True,115,200,0
+howardorloffvolvocars-com,3,dealer_com,POST,dealer_com_start,dealer_dot_com,www.howardorloffvolvocars.com/api/widget/ws-inv-data/getInventoryAndFacets,8,103,104,16,115,15,True,115,200,0
+howardorloffvolvocars-com,4,dealer_com,POST,dealer_com_start,dealer_dot_com,www.howardorloffvolvocars.com/api/widget/ws-inv-data/getInventory,22,22,35,35,35,1,True,35,200,0
+howardorloffvolvocars-com,5,dealer_com,POST,dealer_com_start,dealer_dot_com,www.howardorloffvolvocars.com/api/widget/ws-inv-data/getInventoryAndFacets,8,22,24,16,35,5,True,35,200,0
+hyundaiofcookeville-com,0,dep_srp_page,GET,dep_srp_page,dealer_eprocess,www.hyundaiofcookeville.com/search/pre-owned/?tp=pre_owned,451,1282,457,24,457,40,False,1080,200,0
+hyundaiofcookeville-com,1,dep_srp_page,GET,dep_srp_page,dealer_eprocess,www.hyundaiofcookeville.com/search/new-hyundai/?tp=new,337,337,348,24,360,30,True,360,200,0
+hyundaiofsanbruno-com,0,page_query (Team Velocity),GET,page_query,team_velocity,hyundaiofsanbruno.com/inventory-used.json,55,55,53,53,53,2,True,53,200,0
+hyundaiofsanbruno-com,1,page_query (Team Velocity),GET,page_query,team_velocity,hyundaiofsanbruno.com/inventory-new.json,439,439,469,100,469,10,True,469,200,0
+jordanford-net,0,other (none),GET,none,dealer_dot_com,www.jordanford.net/api/KeyFeatures/GetKeyFeaturesByVins?…,50,,2,2,2,1,True,14,200,0
+jordanford-net,1,other (none),GET,none,dealer_dot_com,www.jordanford.net/api/KeyFeatures/GetListOfSpecialVins?inventoryType=cpo&…,6,,2,2,2,1,True,2,200,0
+jordanford-net,2,page_query (Team Velocity),GET,page_query,team_velocity,www.jordanford.net/inventory-used.json,157,240,142,64,142,6,True,213,200,70
+jordanford-net,3,page_query (Team Velocity),GET,page_query,team_velocity,www.jordanford.net/inventory-new.json,623,623,647,100,647,13,True,647,200,0
+kiaonatlantic-com,0,carscommerce,POST,carscommerce_page,carscommerce,websites-search.api.carscommerce.inc/api/v1/listings/5243533/search,546,,535,200,535,7,True,536,200,0
+lenoircityford-com,0,cosmos_pt,GET,cosmos_pt,dealer_on_cosmos,www.lenoircityford.com/api/vhcliaa/vehicle-pages/cosmos/srp/vehicles/14759/926239,91,,90,90,90,1,True,90,200,0
+lenoircityford-com,1,cosmos_pt,GET,cosmos_pt,dealer_on_cosmos,www.lenoircityford.com/api/vhcliaa/vehicle-pages/cosmos/srp/vehicles/14759/926232,157,,161,161,161,2,True,161,200,0
+marinochryslerjeepdodge-net,0,carscommerce,POST,carscommerce_page,carscommerce,websites-search.api.carscommerce.inc/api/v1/listings/155869/search,457,,445,200,445,6,True,446,200,0
+mcgrathcityhonda-com,0,dep_srp_page,GET,dep_srp_page,dealer_eprocess,www.mcgrathcityhonda.com/search/new-honda/?tp=new%2F&ct=48,144,138,144,96,256,6,True,256,200,0
+mikecalverttoyota-com,0,cosmos_pt,GET,cosmos_pt,dealer_on_cosmos,www.mikecalverttoyota.com/api/vhcliaa/vehicle-pages/cosmos/srp/vehicles/24619/2709681?host=www.mikecalverttoyota.com&…,12,,723,192,723,8,True,723,200,0
+mikecalverttoyota-com,1,cosmos_pt,GET,cosmos_pt,dealer_on_cosmos,www.mikecalverttoyota.com/api/vhcliaa/vehicle-pages/cosmos/srp/vehicles/24619/2710564?host=www.mikecalverttoyota.com&…,12,,133,133,133,2,True,133,200,0
+mikecalverttoyota-com,2,cosmos_pt,GET,cosmos_pt,dealer_on_cosmos,www.mikecalverttoyota.com/api/vhcliaa/vehicle-pages/cosmos/srp/vehicles/24619/2709686?cpo=1&host=www.mikecalverttoyota.com&…,12,,334,124,124,2,True,124,200,0
+mikecalverttoyota-com,3,cosmos_pt,GET,cosmos_pt,dealer_on_cosmos,www.mikecalverttoyota.com/api/vhcliaa/vehicle-pages/cosmos/srp/vehicles/24619/3212662?host=www.mikecalverttoyota.com&…,9,,12,12,12,1,True,12,200,0
+mymetrohonda-com,0,dep_srp_page,GET,dep_srp_page,dealer_eprocess,www.mymetrohonda.com/search/new-honda/?tp=new&ct=48,748,753,768,96,779,17,True,779,200,0
+nissanofcookeville-com,0,dep_srp_page,GET,dep_srp_page,dealer_eprocess,www.nissanofcookeville.com/search/used/?tp=used&ct=48,1229,1311,980,94,979,23,True,1050,200,0
+northhollywoodtoyota-com,0,page_query (Team Velocity),GET,page_query,team_velocity,www.northhollywoodtoyota.com/inventory-used.json,112,113,107,100,107,3,True,107,200,0
+northhollywoodtoyota-com,1,page_query (Team Velocity),GET,page_query,team_velocity,www.northhollywoodtoyota.com/inventory-new.json,486,486,552,100,552,12,True,552,200,0
+pugmirefordcartersville-com,0,cosmos_pt,GET,cosmos_pt,dealer_on_cosmos,www.pugmirefordcartersville.com/api/vhcliaa/vehicle-pages/cosmos/srp/vehicles/23243/2112510,141,,134,134,134,2,True,134,200,0
+pugmirefordcartersville-com,1,cosmos_pt,GET,cosmos_pt,dealer_on_cosmos,www.pugmirefordcartersville.com/api/vhcliaa/vehicle-pages/cosmos/srp/vehicles/23243/2112501,385,,422,192,422,5,True,422,200,0
+robinsford-com,0,html_page_query / jazel,GET,jazel_srp_page,jazel,www.robinsford.com/inventory/all-vehicles/,266,266,276,24,293,26,True,,200,0
+scottclarkstoyota-com,0,page_query (Team Velocity),GET,page_query,team_velocity,www.scottclarkstoyota.com/inventory-used.json,0,571,239,100,239,6,True,568,200,61
+scottclarkstoyota-com,1,page_query (Team Velocity),GET,page_query,team_velocity,www.scottclarkstoyota.com/inventory-new.json,0,563,567,100,567,12,True,567,200,0
+toyotaofhb-com,0,page_query (Team Velocity),GET,page_query,team_velocity,www.toyotaofhb.com/inventory-new.json,688,688,764,100,764,16,True,764,200,0
+toyotaofhb-com,1,page_query (Team Velocity),GET,page_query,team_velocity,www.toyotaofhb.com/inventory-used.json,142,142,141,100,141,3,True,141,200,0
+toyotaofhb-com,2,other (none),GET,none,dealer_dot_com,www.toyotaofhb.com/api/KeyFeatures/GetListOfSpecialVins?inventoryType=used&…,7,,0,0,0,1,True,0,200,0
+toyotaofhb-com,3,other (none),GET,none,dealer_dot_com,www.toyotaofhb.com/api/Inventory/vehicle?…,7,,0,0,0,1,True,,204,0
+tustinhyundai-com,0,page_query (Team Velocity),GET,page_query,team_velocity,www.tustinhyundai.com/inventory-used.json,35,195,35,35,35,2,True,189,200,65
+tustinhyundai-com,1,page_query (Team Velocity),GET,page_query,team_velocity,www.tustinhyundai.com/inventory-new.json,280,280,205,100,205,5,True,205,200,0
+tuttleclickstustinjeep-com,0,carscommerce,POST,carscommerce_page,carscommerce,websites-search.api.carscommerce.inc/api/v1/listings/6076768/search,175,,169,169,169,2,True,169,200,0
+villaford-com,0,carscommerce,POST,carscommerce_page,carscommerce,websites-search.api.carscommerce.inc/api/v1/listings/969/search,532,,453,200,453,5,True,453,200,0

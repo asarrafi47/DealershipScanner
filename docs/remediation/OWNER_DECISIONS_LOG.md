@@ -1,0 +1,12 @@
+# Owner decisions log (remediation plan 2026-10)
+
+Answers to the decisions in `docs/REMEDIATION_PLAN_2026_10.md` Section 7, in the order given.
+
+| Date | Decision | Answer | Notes |
+|---|---|---|---|
+| 2026-10-07 | D-REL1 legacy scanner-worker / scanner-scheduler | (a) stop + delete | Record variable names, settings, volumes first. Volumes dropped only after a separate owner OK on the dry-run list. |
+| 2026-10-07 | D-IF7 data-quality / rooftop-refusal report jobs | (a) unload on the MBP now, re-home later (P18A.6) | Plist files kept. |
+| 2026-10-07 | Phase 0A prod access | An agent runs the read-only parts (Railway audit, prod census in a READ ONLY session, web container file list) | No secret values written. Service deletion waits for the owner's OK on the dry-run list. |
+| 2026-10-07 | Phase 0A/0B approvals | Approved: P0A.6 offline-suite baseline (AC power); 0B network measurements from the MBP on AC; D-SEC1 stopgap `CAR_CHAT_WEB_RESEARCH=0` on Railway web + redeploy | NOT approved: SSH to the mini. The mini parts of P0A.5 and P0B.5 stay BLOCKED. |
+| 2026-10-07 | Battery | Owner allows the running Phase 0A/0B and 1A work, incl. the P0B.3 Chromium measurement, to continue on battery | Overrides the "AC only" condition above for this run. |
+| 2026-10-08 | D-RS5 audit/attribution scripts write recipe state? | Yes, keep writing (owner overrode the "No" recommendation) | P1B.5 (persist=False) DROPPED. Geocode, rooftop attribution and coverage audit keep marking stale / updating coverage. |
