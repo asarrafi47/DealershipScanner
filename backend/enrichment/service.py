@@ -94,7 +94,35 @@ def _is_missing(val: Any) -> bool:
     return is_effectively_empty(val)
 
 
-def ensure_enrichment_columns(conn: sqlite3.Connection) -> None:
+def _is_sqlite_conn(conn: Any) -> bool:
+    """True only for a connection known to be SQLite: a raw ``sqlite3.Connection``
+    or an inventory compat connection on the sqlite backend (pytest).
+
+    The enrichment DDL below runs only on a positive match. Anything else (the
+    Postgres compat connection, a raw psycopg connection, an unrecognised object)
+    takes the no-DDL path, so an unrecognised connection can never reach
+    ``ALTER TABLE cars``.
+    """
+    if isinstance(conn, sqlite3.Connection):
+        return True
+    return getattr(conn, "_backend", None) == "sqlite"
+
+
+def ensure_enrichment_columns(conn: Any) -> None:
+    """Make sure ``cars`` has the enrichment columns and ``haiku_spec_cache`` exists.
+
+    Postgres: no DDL on ``cars``. Migration V001 owns engine_l, mpg_city,
+    mpg_highway and packages. The SQLite probe below cannot work there: the
+    Postgres adapter turns ``PRAGMA table_info`` into a no-op (inventory_compat),
+    so the probe saw no columns and issued ``ALTER TABLE cars ADD COLUMN
+    engine_l``, which queued for an ACCESS EXCLUSIVE lock on ``cars`` behind
+    every running reader before failing with DuplicateColumn.
+
+    SQLite (tests): unchanged; adds whichever columns are missing.
+    """
+    if not _is_sqlite_conn(conn):
+        _ensure_haiku_cache_table(conn)
+        return
     cur = conn.cursor()
     cur.execute("PRAGMA table_info(cars)")
     existing = {row[1] for row in cur.fetchall()}
@@ -105,7 +133,66 @@ def ensure_enrichment_columns(conn: sqlite3.Connection) -> None:
     _ensure_haiku_cache_table(conn)
 
 
-def _ensure_haiku_cache_table(conn: sqlite3.Connection) -> None:
+# Postgres shape of the table the SQLite DDL below produced through the adapter
+# (``datetime('now')`` -> ``CURRENT_TIMESTAMP``), written out so it does not depend
+# on adapter rewrites. V026 (remediation P4.3) takes ownership of this table.
+_HAIKU_CACHE_PG_DDL = """
+CREATE TABLE IF NOT EXISTS haiku_spec_cache (
+    cache_key TEXT PRIMARY KEY,
+    make TEXT,
+    model TEXT,
+    year INTEGER,
+    trim TEXT,
+    engine_l TEXT,
+    cylinders INTEGER,
+    transmission TEXT,
+    drivetrain TEXT,
+    fuel_type TEXT,
+    mpg_city INTEGER,
+    mpg_highway INTEGER,
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP
+)
+"""
+
+_HAIKU_CACHE_PG_LOCK_TIMEOUT = "3s"
+
+
+def _first_value(row: Any) -> Any:
+    if row is None:
+        return None
+    if isinstance(row, dict):
+        return next(iter(row.values()), None)
+    return row[0]
+
+
+def _ensure_haiku_cache_table_pg(conn: Any) -> None:
+    """Postgres: create ``haiku_spec_cache`` only when ``to_regclass`` says it is
+    absent, and never wait more than 3 s for a lock while doing it.
+
+    A present table costs one catalog lookup and no DDL. A failed create (lock
+    timeout or anything else) rolls back and raises: enrichment does not run
+    against a cache table it could not confirm.
+    """
+    row = conn.execute("SELECT to_regclass('haiku_spec_cache')").fetchone()
+    if _first_value(row) is not None:
+        conn.commit()  # end the probe's read transaction
+        return
+    try:
+        conn.execute(f"SET LOCAL lock_timeout = '{_HAIKU_CACHE_PG_LOCK_TIMEOUT}'")
+        conn.execute(_HAIKU_CACHE_PG_DDL)
+        conn.commit()
+    except Exception:
+        try:
+            conn.rollback()
+        except Exception:
+            pass
+        raise
+
+
+def _ensure_haiku_cache_table(conn: Any) -> None:
+    if not _is_sqlite_conn(conn):
+        _ensure_haiku_cache_table_pg(conn)
+        return
     conn.execute(
         """
         CREATE TABLE IF NOT EXISTS haiku_spec_cache (
