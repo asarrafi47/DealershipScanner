@@ -8,7 +8,8 @@ name: CI
 #
 # backend/tests/test_ci_workflow.py pins the triggers, permissions, job ids,
 # `needs: lint`, timeouts, install order and the offline selection. Change both
-# together.
+# together. The release-guard job (P2A.4) runs only for pushes and PRs to main;
+# backend/tests/test_release_tooling.py pins it.
 on:
   push:
     branches: ["**"]
@@ -155,3 +156,48 @@ jobs:
 
       - name: Run integration tier (skips without a live Postgres; fails if empty)
         run: python -m pytest backend/tests -m integration -q -p no:cacheprovider -rs
+
+  # "Releasable?" (remediation P2A.4, D-REL3): VERSION must rise above main's
+  # (semver, 1.5.10 > 1.5.9) and CHANGELOG.md must have a filled section for it.
+  # D-REL3 keeps "every push bumps VERSION" in the local pre-push hook, but this
+  # job judges ONLY pushes to main and PRs to main, so work-in-progress branch
+  # pushes never go red on it. On other branches it shows as skipped by design;
+  # it is not a stand-in for the test jobs, which always run.
+  #
+  # The base is what the commit would replace:
+  #   - pull_request: the current main (HEAD is GitHub's PR merge commit);
+  #   - push to main: github.event.before, the main this push replaced. Not
+  #     origin/main: after the push that IS HEAD, and "HEAD already contained
+  #     in the base" would pass every main push unseen;
+  #   - workflow_dispatch on main: nothing to compare with (all zeros), so
+  #     only the CHANGELOG section and a well-formed VERSION are checked.
+  # python3 is the runner's own: the script is stdlib-only and 3.9-compatible.
+  #
+  # backend/tests/test_release_tooling.py pins this job (id, needs, if, fetch,
+  # base selection). Change both together.
+  release-guard:
+    runs-on: ubuntu-latest
+    needs: lint
+    if: github.ref == 'refs/heads/main' || github.event_name == 'pull_request'
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch main
+        run: git fetch --no-tags --depth=50 origin +refs/heads/main:refs/remotes/origin/main
+
+      - name: VERSION rises and CHANGELOG has its section
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BEFORE_SHA: ${{ github.event.before }}
+        run: |
+          zero=0000000000000000000000000000000000000000
+          case "$EVENT_NAME" in
+            pull_request) base=origin/main ;;
+            push) base="$BEFORE_SHA" ;;
+            *) base="$zero" ;;
+          esac
+          if [ "$base" != origin/main ] && [ "$base" != "$zero" ]; then
+            git fetch --no-tags --depth=1 origin "$base"
+          fi
+          python3 scripts/release_guard.py --base "$base"
