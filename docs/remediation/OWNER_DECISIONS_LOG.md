@@ -13,3 +13,5 @@ Answers to the decisions in `docs/REMEDIATION_PLAN_2026_10.md` Section 7, in the
 | 2026-10-08 | D-SR7 test-leak artifacts | Delete after a tarball backup (dry-run first) | P1C.1 |
 | 2026-10-08 | Phase 1C local data repairs | Dry-run first; owner OKs each apply after seeing the counts | P1C.3, P1C.4 |
 | 2026-10-08 | Mini SSH for Phase 1C | Not now | Mini steps of P1C.1/P1C.4 BLOCKED; the mini must not scan until repaired. |
+| 2026-10-08 | D-REL3 VERSION bump scope | (a) every push bumps; CI release-guard judges only pushes/PRs to main; ci/* shakedown branches may push without a bump during P2A.5; a release needs a CHANGELOG section | P2A.4, P2A.5, P2B.1, P2B.7 |
+| 2026-10-08 | D-TC5 CI dependency install | Full requirements.txt with CPU torch installed first | P2A.2 |
