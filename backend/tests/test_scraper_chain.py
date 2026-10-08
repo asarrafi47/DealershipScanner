@@ -342,12 +342,48 @@ GOOD_HTML = "<html>" + ("x" * 9000) + ' application/ld+json vehiclecondition</ht
 THIN_HTML = "<html>tiny spa shell</html>"
 
 
+class _UnreachableCurlCffi:
+    """Stands in for ``curl_cffi.requests``: every request fails like a dead host.
+
+    The chain's lead stage, ``ImpersonatingFetcher``, sends through
+    ``client.import_curl_cffi()``. These tests stub the requests and Playwright
+    stages but not that one, so each of them used to send real curl_cffi
+    requests to d.example (3 per test, one per impersonation profile; CI run
+    37850535029 listed 15 refused connects in 5 tests). The fetcher still runs
+    its real rotation over this object; only the transport is replaced, and
+    every attempt raises the way an unreachable host does, which is what the
+    tests have always assumed of that stage.
+    """
+
+    def __init__(self) -> None:
+        self.attempts: list[tuple[str, str, str | None]] = []
+
+    def _refuse(self, method: str, url: str, kwargs: dict) -> None:
+        self.attempts.append((method, url, kwargs.get("impersonate")))
+        raise ConnectionError(f"curl_cffi stubbed in tests: {method} {url} not sent")
+
+    def get(self, url, **kwargs):
+        self._refuse("GET", url, kwargs)
+
+    def request(self, method, url, **kwargs):
+        self._refuse(method, url, kwargs)
+
+
 class TestFetchListingHtmlIntegration:
     @pytest.fixture(autouse=True)
     def _chain_enabled(self, monkeypatch):
         monkeypatch.delenv("SCANNER_LISTING_FETCH_CHAIN", raising=False)
 
-    def test_requests_result_accepted_when_sufficient(self, monkeypatch):
+    @pytest.fixture(autouse=True)
+    def unreachable_curl_cffi(self, monkeypatch):
+        from backend.scanner.net import client
+
+        fake = _UnreachableCurlCffi()
+        monkeypatch.setattr(client, "import_curl_cffi", lambda: fake)
+        return fake
+
+    def test_requests_result_accepted_when_sufficient(self, monkeypatch, unreachable_curl_cffi):
+        from backend.scanner.chain import ImpersonatingFetcher
         from backend.scanner.post_scan import gap_fill
 
         monkeypatch.setattr(gap_fill, "_requests_fetch_html", lambda u, **kw: GOOD_HTML)
@@ -357,6 +393,12 @@ class TestFetchListingHtmlIntegration:
             lambda u, **kw: pytest.fail("playwright must not run"),
         )
         assert gap_fill.fetch_listing_html("https://d.example/vdp") == GOOD_HTML
+        if ImpersonatingFetcher().available():
+            # The impersonation stage still led, through the stub, once per profile.
+            assert [a[1] for a in unreachable_curl_cffi.attempts] == ["https://d.example/vdp"] * len(
+                ImpersonatingFetcher.PROFILES
+            )
+            assert [a[2] for a in unreachable_curl_cffi.attempts] == list(ImpersonatingFetcher.PROFILES)
 
     def test_thin_requests_result_falls_through_to_playwright(self, monkeypatch):
         from backend.scanner.post_scan import gap_fill
