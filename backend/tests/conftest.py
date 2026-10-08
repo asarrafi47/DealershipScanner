@@ -24,10 +24,12 @@ So this file provides, in order:
   vPIC fails, so no test reaches vpic.nhtsa.dot.gov; ``@pytest.mark.real_vpic_client``
   opts out. ``fake_dns`` resolves public names from a table for the SSRF guards.
 * ``_network_guard`` (session, autouse) - with ``TESTS_BLOCK_NETWORK=1`` (CI sets
-  it) every connect to a non-loopback address is refused with ``NetworkBlocked``
-  and counted per test; the terminal summary lists the tests that tried
-  ("NETWORK-BLOCKED CONNECTS") and the junit XML carries a ``network_blocked``
-  property per destination. Unset, nothing is patched.
+  it) a Python socket connect or a curl_cffi request to a non-loopback address
+  is refused and counted per test; the terminal summary lists the tests that
+  tried ("NETWORK-BLOCKED CONNECTS") and the junit XML carries a
+  ``network_blocked`` property per destination. It cannot see every path (DNS,
+  UDP sendto, libpq, subprocesses, browsers: the guard's comment lists them).
+  Unset, nothing is patched.
 * ``_forbid_real_dictionary_writes`` (session, autouse) - makes writing anywhere
   under the real dictionary tree raise ``RealDictionaryWriteBlocked``, no matter
   which module's namespace holds the path. The patches are in-process, so a test
@@ -54,7 +56,9 @@ So this file provides, in order:
 from __future__ import annotations
 
 import builtins
+import contextlib
 import errno
+import functools
 import hashlib
 import importlib
 import io
@@ -66,8 +70,10 @@ import sys
 import types
 import urllib.error
 import urllib.request
+import weakref
 from pathlib import Path
 from typing import Any, Callable, Iterator
+from urllib.parse import urljoin, urlsplit
 
 import pytest
 
@@ -197,26 +203,66 @@ def fake_dns(monkeypatch: pytest.MonkeyPatch) -> FakeDns:
 # ---------------------------------------------------------------------------
 #
 # The vPIC stub and ``fake_dns`` above close the two network paths we knew
-# about. Anything else a test reaches (a scanner fetch nobody stubbed, a
-# geocoder, an OEM endpoint) goes to the real internet, so a result can depend
-# on what a remote host said that day, and on CI it can hang or flake. With
-# ``TESTS_BLOCK_NETWORK=1`` (CI sets it) every socket connect to a non-loopback
-# destination is refused with ``NetworkBlocked``: a ``ConnectionRefusedError``
-# (ECONNREFUSED), so the code under test sees what a firewalled host gives it.
-# ``connect_ex`` returns ECONNREFUSED instead of raising, as the real one does.
+# about. Anything else a test reaches (a geocoder, an OEM endpoint, a scanner
+# fetch nobody stubbed) goes to the real internet, so a result can depend on
+# what a remote host said that day, and on CI it can hang or flake. With
+# ``TESTS_BLOCK_NETWORK=1`` (CI sets it) two layers refuse a non-loopback
+# destination:
+#
+# * Python sockets. ``socket.socket.connect``/``connect_ex`` and
+#   ``socket.create_connection`` are patched on the class, so requests/urllib3,
+#   urllib, httpx, aiohttp, asyncio streams and ssl sockets all go through them.
+#   ``connect`` raises ``NetworkBlocked``, a ``ConnectionRefusedError``
+#   (ECONNREFUSED), so the code under test sees what a firewalled host gives
+#   it; ``connect_ex`` returns ECONNREFUSED instead, as the real one does.
+# * curl_cffi, the scanner's main HTTP client (net/client.py, chain.py's
+#   impersonate stage, synth/http.py, recipes, vdp/prefetch). libcurl opens its
+#   sockets and resolves names in C, where the socket patch never sees them, so
+#   its Python entry points are wrapped instead. ``Session.request`` and
+#   ``AsyncSession.request`` (every ``curl_cffi.requests.get``/``post``/...
+#   goes through one) refuse by the URL's host before libcurl runs - no DNS
+#   lookup, no connect - and raise ``curl_cffi.requests.exceptions.ConnectionError``
+#   (code 7, COULDNT_CONNECT) chained from ``NetworkBlocked``: the error callers
+#   already catch. A request with a proxy is left to the backstop, which sees
+#   the proxy libcurl was actually given. The backstop, for direct ``Curl``
+#   users too: ``Curl.setopt`` remembers the URL and proxy a handle was given
+#   (``reset`` forgets them, ``duphandle`` copies them), and ``Curl.perform`` /
+#   ``AsyncCurl.add_handle`` refuse the handle's first hop - the proxy when one
+#   is set, else the URL's host - with the same ConnectionError.
+#
 # Each refused attempt is counted against the running test: the terminal
 # summary lists those tests ("NETWORK-BLOCKED CONNECTS"), and every distinct
-# destination becomes a ``network_blocked`` property on the test's junit case.
-# That list is class (f) of the CI failure ledger.
+# destination becomes a ``network_blocked`` property on the test's junit case
+# (curl_cffi ones are tagged "(curl_cffi)"). That list is class (f) of the CI
+# failure ledger.
 #
 # Allowed: 127.0.0.0/8, ::1 (also as ::ffff:127.x), the unspecified address
 # (0.0.0.0, ::, "" - a connect there lands on this host), the localhost names,
-# and every non-IP family, i.e. unix sockets. A private LAN address is the
-# network (the mini is 192.168.1.89), so it is refused. A hostname that is not a
-# localhost name is refused WITHOUT being resolved: it cannot be proven local
-# without DNS. Not covered: name resolution itself (``getaddrinfo`` is not a
-# connect; ``fake_dns`` covers the tests that need it) and connects made while
-# test modules are imported, before the session fixture is set up.
+# and every non-IP family, i.e. unix sockets; for curl_cffi also ``file:`` URLs
+# and an empty URL. A curl URL whose host cannot be read is refused: libcurl
+# reads more into a URL than ``urlsplit`` does (``http:///name``). A private LAN
+# address is the network (the mini is 192.168.1.89), so it is refused. A
+# hostname that is not a localhost name is refused WITHOUT being resolved: it
+# cannot be proven local without DNS.
+#
+# NOT covered - these still reach the network with the variable set:
+# * DNS. ``getaddrinfo`` is not a connect (``fake_dns`` covers the tests that
+#   need it), so requests/urllib3 still resolve a name before the per-address
+#   connect is refused, and DNS done inside other C libraries is never seen.
+# * Unconnected UDP: ``socket.sendto`` to a public address goes out.
+# * libpq/psycopg: libpq connects in C. The fixture above blanks
+#   INVENTORY_DATABASE_URL and DATABASE_URL; a test that sets its own (the
+#   ``pg`` ones, which CI deselects) connects for real.
+# * Subprocess children: they inherit TESTS_BLOCK_NETWORK, but a child
+#   interpreter does not load this conftest, and several test files spawn
+#   scripts.
+# * Playwright and other browser processes: their own processes and sockets.
+# * What libcurl decides by itself after the backstop let a handle through:
+#   redirects it follows (a loopback server answering 302 to a public host), a
+#   proxy it reads from http(s)_proxy/ALL_PROXY, CONNECT_TO, DOH_URL.
+# * Connects made while test modules are imported, before the session fixture
+#   is set up. A connect from a background thread that outlives its test is
+#   refused but counted under "<outside a test>", with no junit property.
 #
 # Unset, or any value other than "1": nothing is patched at all.
 
@@ -271,6 +317,48 @@ def describe_destination(address: Any) -> str:
     return repr(address)
 
 
+_URL_DEFAULT_PORTS = {
+    "http": 80, "https": 443, "ws": 80, "wss": 443, "ftp": 21, "ftps": 990,
+    "socks4": 1080, "socks4a": 1080, "socks5": 1080, "socks5h": 1080,
+}
+
+
+def url_destination(url: Any) -> str | None:
+    """Where libcurl would connect for *url* (``host:port``), or None when it stays local.
+
+    Local: no URL at all (libcurl will not start) and ``file:`` URLs. A URL
+    without a scheme is read as http, as libcurl guesses. Anything whose host
+    cannot be read comes back as itself, i.e. refused: libcurl is more lenient
+    than ``urlsplit`` (it takes ``http:///name`` as a request to ``name``), so
+    an unreadable host is not proven local. Used for request and proxy URLs.
+    """
+    if isinstance(url, (bytes, bytearray)):
+        url = bytes(url).decode("utf-8", "replace")
+    text = str(url if url is not None else "").strip()
+    if not text:
+        return None
+    if "://" not in text:
+        text = "http://" + text
+    try:
+        parts = urlsplit(text)
+        host = parts.hostname
+    except ValueError:
+        return text
+    scheme = parts.scheme.lower()
+    if scheme == "file":
+        return None
+    if not host:
+        return text
+    if host_is_loopback(host):
+        return None
+    try:
+        port = parts.port
+    except ValueError:
+        port = None
+    port = port or _URL_DEFAULT_PORTS.get(scheme)
+    return describe_destination((host, port)) if port else host
+
+
 class NetworkGuard:
     """Refuses non-loopback connects and remembers which test tried them.
 
@@ -283,6 +371,7 @@ class NetworkGuard:
         self.attempts: dict[str, list[str]] = {}
         self.current: Any = None
         self.installed = False
+        self.curl_cffi_guarded = False
 
     def _refused(self, destination: str) -> NetworkBlocked:
         item = self.current
@@ -299,7 +388,8 @@ class NetworkGuard:
         )
 
     def install(self, mp: pytest.MonkeyPatch) -> None:
-        """Patch ``socket.socket.connect``/``connect_ex`` and ``socket.create_connection``.
+        """Patch ``socket.socket.connect``/``connect_ex``, ``socket.create_connection``
+        and, when it imports, curl_cffi (``_install_curl_cffi``).
 
         The class attributes are patched, so every socket - including
         ``ssl.SSLSocket`` and the ones urllib3/asyncio create - goes through
@@ -333,7 +423,139 @@ class NetworkGuard:
         mp.setattr(socket.socket, "connect", connect)
         mp.setattr(socket.socket, "connect_ex", connect_ex)
         mp.setattr(socket, "create_connection", create_connection)
+        self.curl_cffi_guarded = self._install_curl_cffi(mp)
         self.installed = True
+
+    def _install_curl_cffi(self, mp: pytest.MonkeyPatch) -> bool:
+        """Wrap curl_cffi's entry points; False when curl_cffi does not import.
+
+        libcurl's connects and DNS lookups happen in C, below the socket patch,
+        so this is the only place a curl_cffi request can be stopped. See the
+        comment above ``TESTS_BLOCK_NETWORK_ENV`` for the layers.
+        """
+        try:
+            from curl_cffi import requests as cffi_requests
+            from curl_cffi.const import CurlECode, CurlOpt
+            from curl_cffi.curl import Curl
+            from curl_cffi.requests.exceptions import ConnectionError as CurlConnectionError
+        except ImportError:
+            return False
+        try:
+            from curl_cffi.aio import AsyncCurl
+        except ImportError:  # pragma: no cover - ships with curl_cffi
+            AsyncCurl = None  # noqa: N806
+
+        guard = self
+        url_opt, proxy_opt = int(CurlOpt.URL), int(CurlOpt.PROXY)
+        # URL and proxy each Curl handle was given, keyed weakly by the handle.
+        targets: weakref.WeakKeyDictionary[Any, dict[int, str]] = weakref.WeakKeyDictionary()
+
+        def refuse(destination: str) -> Exception:
+            blocked = guard._refused(destination)
+            error = CurlConnectionError(f"curl: (7) {blocked.strerror}", CurlECode.COULDNT_CONNECT)
+            error.__cause__ = blocked
+            return error
+
+        def request_refusal(session: Any, url: Any, kwargs: dict[str, Any]) -> Exception | None:
+            if kwargs.get("proxy") or kwargs.get("proxies") or getattr(session, "proxies", None):
+                return None  # first hop is a proxy: the Curl backstop judges it
+            base = getattr(session, "base_url", None)
+            full = urljoin(base, url) if base and isinstance(url, str) else url
+            destination = url_destination(full)
+            return None if destination is None else refuse(f"{destination} (curl_cffi)")
+
+        def handle_refusal(curl: Any) -> Exception | None:
+            given = targets.get(curl) or {}
+            if given.get(proxy_opt):
+                destination = url_destination(given[proxy_opt])
+                tag = "curl_cffi proxy"
+            else:
+                destination = url_destination(given.get(url_opt))
+                tag = "curl_cffi"
+            return None if destination is None else refuse(f"{destination} ({tag})")
+
+        real_request = cffi_requests.Session.request
+        real_async_request = cffi_requests.AsyncSession.request
+        real_setopt = Curl.setopt
+        real_reset = Curl.reset
+        real_duphandle = Curl.duphandle
+        real_perform = Curl.perform
+
+        @functools.wraps(real_request)
+        def request(session: Any, method: Any, url: Any, *args: Any, **kwargs: Any) -> Any:
+            error = request_refusal(session, url, kwargs)
+            if error is not None:
+                raise error
+            return real_request(session, method, url, *args, **kwargs)
+
+        @functools.wraps(real_async_request)
+        async def async_request(session: Any, method: Any, url: Any, *args: Any, **kwargs: Any) -> Any:
+            error = request_refusal(session, url, kwargs)
+            if error is not None:
+                raise error
+            return await real_async_request(session, method, url, *args, **kwargs)
+
+        @functools.wraps(real_setopt)
+        def setopt(curl: Any, option: Any, value: Any) -> Any:
+            try:
+                key = int(option)
+            except (TypeError, ValueError):
+                key = None
+            if key in (url_opt, proxy_opt):
+                given = targets.setdefault(curl, {})
+                text = value
+                if isinstance(text, (bytes, bytearray)):
+                    text = bytes(text).decode("utf-8", "replace")
+                if text:
+                    given[key] = str(text)
+                else:
+                    given.pop(key, None)
+            return real_setopt(curl, option, value)
+
+        @functools.wraps(real_reset)
+        def reset(curl: Any) -> Any:
+            targets.pop(curl, None)
+            return real_reset(curl)
+
+        @functools.wraps(real_duphandle)
+        def duphandle(curl: Any) -> Any:
+            dup = real_duphandle(curl)
+            if curl in targets:
+                targets[dup] = dict(targets[curl])
+            return dup
+
+        @functools.wraps(real_perform)
+        def perform(curl: Any, *args: Any, **kwargs: Any) -> Any:
+            error = handle_refusal(curl)
+            if error is not None:
+                with contextlib.suppress(Exception):  # what the real perform does on its way out
+                    curl.clean_handles_and_buffers(*args, **kwargs)
+                raise error
+            return real_perform(curl, *args, **kwargs)
+
+        mp.setattr(cffi_requests.Session, "request", request)
+        mp.setattr(cffi_requests.AsyncSession, "request", async_request)
+        mp.setattr(Curl, "setopt", setopt)
+        mp.setattr(Curl, "reset", reset)
+        mp.setattr(Curl, "duphandle", duphandle)
+        mp.setattr(Curl, "perform", perform)
+
+        if AsyncCurl is not None:
+            real_add_handle = AsyncCurl.add_handle
+
+            @functools.wraps(real_add_handle)
+            def add_handle(acurl: Any, curl: Any) -> Any:
+                # The async perform: hand back an already-failed future, so
+                # ``await`` raises where the real transfer's error would.
+                error = handle_refusal(curl)
+                if error is None:
+                    return real_add_handle(acurl, curl)
+                future = acurl.loop.create_future()
+                future.set_exception(error)
+                return future
+
+            mp.setattr(AsyncCurl, "add_handle", add_handle)
+        return True
 
 
 _NETWORK_GUARD = NetworkGuard()
@@ -366,15 +588,21 @@ def _network_guard_summary(terminalreporter: Any) -> None:
         return
     attempts = _NETWORK_GUARD.attempts
     total = sum(len(v) for v in attempts.values())
+    guarded = "Python sockets" + (" and curl_cffi" if _NETWORK_GUARD.curl_cffi_guarded else "")
     if not attempts:
         terminalreporter.section(
-            f"NETWORK GUARD ({TESTS_BLOCK_NETWORK_ENV}=1): no test tried to reach the network",
+            f"NETWORK GUARD ({TESTS_BLOCK_NETWORK_ENV}=1): no refused connects "
+            f"through {guarded}",
             sep="=",
+        )
+        terminalreporter.line(
+            "  (DNS, UDP sendto, libpq, subprocesses and browsers are not guarded: "
+            "see the network guard comment in backend/tests/conftest.py)"
         )
         return
     terminalreporter.section(
         f"NETWORK-BLOCKED CONNECTS: {total} in {len(attempts)} test(s) "
-        f"({TESTS_BLOCK_NETWORK_ENV}=1)",
+        f"({TESTS_BLOCK_NETWORK_ENV}=1, {guarded})",
         sep="=",
     )
     for nodeid, dests in attempts.items():
@@ -382,8 +610,8 @@ def _network_guard_summary(terminalreporter: Any) -> None:
         shown = ", ".join(unique[:3]) + (f", +{len(unique) - 3} more" if len(unique) > 3 else "")
         terminalreporter.line(f"  {nodeid}  [{len(dests)}x: {shown}]")
     terminalreporter.line(
-        "  (each was refused with NetworkBlocked; stub these calls - they are "
-        "class (f) of the CI failure ledger)"
+        "  (each was refused: NetworkBlocked, or a curl_cffi ConnectionError caused "
+        "by it; stub these calls - they are class (f) of the CI failure ledger)"
     )
 
 
