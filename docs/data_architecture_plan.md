@@ -130,8 +130,10 @@ never stamps them.
   `python -m backend.scanner.recipes --status` prints the tag and the verdict
   (`--require-match` gates a script on `match`), and `--reseed` re-tags a
   cache for a new store. Cross-store work, such as the home-IP prod repair,
-  runs on `RECIPES_CACHE_DIR=<empty scratch dir>`. Bulk imports with
-  `backend/scripts/import_recipes_to_db.py` are not gated by the tag. The full
+  runs on `RECIPES_CACHE_DIR=<empty scratch dir>`. Bulk imports
+  (`backend/scripts/import_recipes_to_db.py`, a wrapper around
+  `reconcile_recipe_store.py --cache-dir` since P1C.2) merge per recipe and
+  refuse to apply unless the verdict is `match` or `untagged`. The full
   rules are in docs/RAILWAY_SCANNING.md, "The recipe cache is tagged with its
   store".
 

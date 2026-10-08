@@ -205,12 +205,12 @@ holds only the hash and the store kind).
   A cache copied from the MBP to the mini and used by a mini command without the tunnel
   prefix reads as a match, and its newer files are pushed into the mini's own store (the
   harm stays on the mini). Never copy a cache between machines; let each host fill its own.
-- Not gated by the tag: `backend/scripts/import_recipes_to_db.py` bulk-pushes every cache file
-  whose max `saved_at` is newer than the store's copy, the same file-to-DB rule as
-  `load_recipes`, and never reads `_store.json`. Run against prod with the MBP cache it is
-  exactly the push this tag exists to stop. Gate it with
-  `python -m backend.scanner.recipes --status --require-match && <import>` (follow-up: have it
-  call `check_cache_store()` and refuse unless the verdict is `match`).
+- Bulk imports read the tag too (since P1C.2): `backend/scripts/import_recipes_to_db.py` is a
+  wrapper around `backend/scripts/reconcile_recipe_store.py --cache-dir`, which merges the
+  cache into the store per recipe (it never replaces a newer store set wholesale) and refuses
+  to apply (exit 2, nothing written) unless the verdict is `match` or `untagged`. An untagged
+  cache is still merged, so run an import only against the store the cache mirrors, or gate it
+  with `python -m backend.scanner.recipes --status --require-match && <import>`.
 - To move a cache to another store for good: stop the scanners that use it (`--reseed` does
   not check for a live scanner), put that store's URL in the environment, run
   `python -m backend.scanner.recipes --reseed --dry-run`, then `--reseed`. It moves the dealer
