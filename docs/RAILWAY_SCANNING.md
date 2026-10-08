@@ -226,11 +226,20 @@ holds only the hash and the store kind).
 
 ## How to run it
 
-Deploy (tracked files of `HEAD` only — never `.env`, never `workspace/`):
+Deploy a tagged release on `main` (tracked files of the tag only — never `.env`, never
+`workspace/`). The script refuses unless HEAD is `main` on origin and carries the annotated
+tag `v$(cat VERSION)`. The release flow, the source policy and rollback are in
+`docs/RELEASING.md`:
 
 ```bash
-deploy/railway/deploy_scanner_nightly.sh          # railway up --detach from a clean git archive
+deploy/railway/deploy_scanner_nightly.sh --dry-run   # guard + stage + plan; never calls railway
+deploy/railway/deploy_scanner_nightly.sh             # railway up --detach from a git archive of the tag
 ```
+
+A deploy starts the container once, and it scans if `SCAN_FLEET=1` or `SCAN_DEALERS` is
+set (P0A.1 found `SCAN_FLEET=1` still set on 2026-10-07), so check both variables first.
+Mid-fleet hotfix only (D-REL10): `ALLOW_UNRELEASED_DEPLOY=1` ships the committed tree of
+HEAD with a loud warning and `BUILD_TAG=unreleased`. Cut a release afterwards.
 
 Run a scan manually:
 
@@ -386,8 +395,12 @@ wall-clock cap), 594 / (shards x 6) batches per shard, plus ~10-15 min of vPIC, 
 lifecycle per shard; the laptop's 8-shard fleet took ~1.5 h for 458 dealers. 16 shards
 stops being linear: shared platform hosts (carscommerce API, typesense cluster) see twice
 the concurrent requests (429 risk) and production Postgres, which also serves the web,
-takes ~6 cores of upsert load at the peak. The old idle `scanner-worker` / `scanner-scheduler`
-services cost ~30 MB each (~$0.60/month together); they were not touched.
+takes ~6 cores of upsert load at the peak. The old `scanner-worker` / `scanner-scheduler`
+services cost ~30 MB each (~$0.60/month together), and this test did not touch them. They
+are gone now: the owner deleted both on 2026-10-08 (D-REL1 (a)), after `railway down` had
+removed the scheduler's still-running June deployment `50ac4514`. The project now holds
+Postgres, scanner-nightly and web (`docs/SCANNING_OPS_LOG.md`, P0A.4 and the owner's
+2026-10-08 block).
 
 ## Incident 2026-09-29: first full fleet run reassigned 6,961 VINs
 

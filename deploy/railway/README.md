@@ -24,15 +24,30 @@ Only **one** sensitive bootstrap variable is required on the web service: `VAULT
 - **kmac-vault** service already deployed in the same Railway project
 - Project linked: `railway link` (from repo root, on the **web** service)
 
-## 1. Create / deploy the web service
+## 1. Deploy the web service
 
-Railway reads `railway.toml` at the repo root and builds `Dockerfile.web`.
+Deploys come only from a tagged release on `main`, through the guarded script. The full
+release checklist, the rollback recipe and the source policy are in
+[`docs/RELEASING.md`](../../docs/RELEASING.md).
 
 ```bash
-railway up
+deploy/railway/deploy_web.sh --dry-run    # guard + stage + plan; never calls railway
+deploy/railway/deploy_web.sh              # railway up <stage> --path-as-root --service web --detach
 ```
 
-Or connect the GitHub repo in the Railway dashboard and deploy from `main`.
+The script refuses (exit 1: nothing staged, railway not called) unless the tracked tree is
+clean, HEAD is `main` on origin, and HEAD carries the annotated tag `v$(cat VERSION)`,
+which origin must also have. It uploads a `git archive` of that tag plus `BUILD_COMMIT`
+(the full SHA) and `BUILD_TAG`. Railway builds it from the root `railway.toml`, which
+selects `Dockerfile.web`. `--keep-stage DIR` keeps the stage for a local
+`docker build -f DIR/Dockerfile.web DIR`. scanner-nightly has its own script,
+`deploy/railway/deploy_scanner_nightly.sh`, with the same guard.
+
+**Never attach a GitHub source to a Railway service**, and never turn on autodeploy or
+run `railway redeploy --from-source`. On 2026-09-11 a GitHub build of `main` replaced
+prod with the June 0.2.0 app. Do not run a bare `railway up` from a checkout either: it
+uploads the working tree, uncommitted files included, to whatever service the directory
+is linked to.
 
 ## 2. Wire vault connection (recommended)
 
@@ -128,7 +143,7 @@ Upload initial DBs or run discovery/scans after first deploy.
 
 ## 5. Health check
 
-Railway uses `GET /health` (configured in `railway.toml`). App binds to `0.0.0.0:$PORT` automatically.
+Railway uses `GET /health` (configured in `railway.toml`), which only needs a 200. App binds to `0.0.0.0:$PORT` automatically. `/health` and `/api/health` both return `{status, version, commit}`. `commit` is the `BUILD_COMMIT` the deploy script wrote, or `unknown` for an image built any other way.
 
 ## 6. Custom domain
 
@@ -146,7 +161,8 @@ In Railway → Settings → Networking → add domain, then set `PUBLIC_BASE_URL
 ## Verify after deploy
 
 ```bash
-railway logs
+curl -fsS https://sarraficars.com/api/health   # version = the tag, commit = its full SHA
+railway logs --service web
 ```
 
 Look for: `Loaded N secret(s) from kmac vault: GOOGLE_MAPS_API_KEY, ...`
