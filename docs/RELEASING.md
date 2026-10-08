@@ -113,7 +113,10 @@ below stands for its name. `V` is the new version, set in step 3.
 
    Verify: `git status` prints nothing and `fast-forward-ok` prints. The phase's exit gate
    has passed (see the plan). If the last command lists migration files, do
-   [Migrations](#migrations) before the deploy in step 12.
+   [Migrations](#migrations) before the deploy in step 12. For the first release it lists
+   `migrations/README.md` and V001 to V025, because `origin/main` is still the June 0.2.0
+   commit. Prod is already at V025 (P0A.1), so the Migrations dry run should log
+   `database is up to date`.
 
 2. **CHANGELOG.** `## [Unreleased]` lists everything since the last release. Units add
    their lines as they merge.
@@ -138,15 +141,23 @@ below stands for its name. `V` is the new version, set in step 3.
 
    ```bash
    git log -p origin/main..HEAD | grep -nE 'AIza[0-9A-Za-z_-]{35}|sk-ant-[0-9A-Za-z_-]{20,}|sk_live_[0-9A-Za-z]{16,}|AKIA[0-9A-Z]{16}|gh[pousr]_[0-9A-Za-z]{36}|-----BEGIN [A-Z ]*PRIVATE KEY-----|postgres(ql)?://[^:/@ ]+:[^@/ ]+@|eyJ[0-9A-Za-z_-]{10,}\.eyJ[0-9A-Za-z_-]{10,}'
-   git diff --name-only origin/main..HEAD | grep -E '(^|/)\.env$|\.(db|sqlite3?|pem|key)$'
+   git diff --no-renames --diff-filter=AM --name-only origin/main..HEAD | grep -E '(^|/)\.env$|\.(db|sqlite3?|pem|key)$'
    ```
 
-   Verify: both commands print nothing. Look at every hit before going on. Placeholders
-   are fine. On 2026-10-08 the range up to 1.5.3 held only placeholders: an
+   The second command lists files the range adds or changes (`--no-renames`, so a file
+   that git pairs with an unrelated deleted file still shows as added). A deleted file
+   was already public on `main`.
+
+   Verify: look at every hit of both commands before going on. Each one must be a
+   placeholder or an empty file, so the output is reviewed, not expected to be empty. On
+   2026-10-08 the range up to 1.5.3 held only these. Content: an
    `sk-ant-api03-parity-test-...` test key, localhost DSNs in tests and in
-   `docs/monolith_audit_2026_10_01/tests.md`, a `prod-db.example.net` DSN in a test, and
-   the plan's own `user:pw` example. A real secret stops the release. Deleting it is not
-   enough, because it stays in the history: it has to be rotated.
+   `docs/monolith_audit_2026_10_01/tests.md`, a `prod-db.example.net` DSN in a test,
+   commented `user:pass@localhost` examples in `.env.example`, and the plan's own
+   `user:pw` example. Files: `backend/dictionary/derived/dictionary_catalog.sqlite3`, which
+   is empty (`git cat-file -s HEAD:backend/dictionary/derived/dictionary_catalog.sqlite3`
+   prints `0`). A real secret stops the release. Deleting it is not enough, because it
+   stays in the history: it has to be rotated.
 
 5. **Lint and targeted tests.** The full offline suite runs in CI.
 
@@ -167,7 +178,10 @@ below stands for its name. `V` is the new version, set in step 3.
 
    Verify: in the push run, `lint`, `pytest` and `pytest-integration` show `success`, and
    `release-guard` shows `skipped`, as designed on a branch push. If the run is red, fix
-   forward with a new commit. Every push bumps, so bump again. Never force-push.
+   forward, never force-push. Commit the fix with a line for it under `## [Unreleased]`
+   in CHANGELOG.md, then repeat step 3 (bump, `V=$(cat VERSION)`, commit) and push again.
+   Without that line the new section is empty and the guard refuses it. The earlier
+   version is never released on its own, and its section stays in CHANGELOG.md as it is.
 
 7. **Open the release PR, so `release-guard` runs in CI before `main` moves.**
 
@@ -182,17 +196,33 @@ below stands for its name. `V` is the new version, set in step 3.
    head in step 8.
 
 8. **Fast-forward `main`.** First take a Railway snapshot, which step 11 compares
-   against:
+   against. The snapshot keeps only the ids of each service's 5 newest deployments, one
+   line per service. It fails closed: if any `railway deployment list` call fails or
+   returns no deployments (expired token, wrong linked project, a renamed service), the
+   function stops with `SNAPSHOT-FAILED <service>` and `snapshot-ok` does not print.
 
    ```bash
-   for s in web scanner-nightly Postgres; do railway deployment list -s "$s" --limit 5 --json; done > /tmp/railway_deploys_before.json
+   railway_snapshot() {
+     for s in web scanner-nightly Postgres; do
+       railway deployment list -s "$s" --limit 5 --json \
+         | python3 -c 'import json,sys; ids=[d["id"] for d in json.load(sys.stdin)]; assert ids; print(sys.argv[1], *ids)' "$s" \
+         || { echo "SNAPSHOT-FAILED $s" >&2; return 1; }
+     done
+   }
+   railway_snapshot > /tmp/railway_deploys_before.txt && echo snapshot-ok
+   ```
+
+   Do not push until `snapshot-ok` prints. Then:
+
+   ```bash
    git push origin <branch>:main
    ```
 
    Never pass `--force`. git refuses a non-fast-forward on its own. The pre-push hook runs
    `scripts/release_guard.py` against the `main` that origin reports.
 
-   Verify: `test "$(git ls-remote origin refs/heads/main | cut -f1)" = "$(git rev-parse HEAD)" && echo main-released`
+   Verify: `snapshot-ok` printed before the push, and
+   `test "$(git ls-remote origin refs/heads/main | cut -f1)" = "$(git rev-parse HEAD)" && echo main-released`
    prints `main-released`.
 
 9. **Tag the release.** The tag must be annotated, sit at the release commit, and be on
@@ -226,17 +256,28 @@ below stands for its name. `V` is the new version, set in step 3.
 
 11. **Check that no Railway build fired.** Do this within 15 minutes of step 8.
 
+    In a new shell, paste the `railway_snapshot` definition from step 8 first.
+
     ```bash
-    for s in web scanner-nightly Postgres; do railway deployment list -s "$s" --limit 5 --json; done > /tmp/railway_deploys_after.json
-    diff /tmp/railway_deploys_before.json /tmp/railway_deploys_after.json && echo no-new-deployment
+    railway_snapshot > /tmp/railway_deploys_after.txt \
+      && test "$(grep -c . /tmp/railway_deploys_before.txt)" = 3 \
+      && test "$(grep -c . /tmp/railway_deploys_after.txt)" = 3 \
+      && diff /tmp/railway_deploys_before.txt /tmp/railway_deploys_after.txt \
+      && echo no-new-deployment
     ```
 
-    Verify: `no-new-deployment` prints. A new deployment here means some service builds
-    from GitHub. Roll it back ([Rollback](#rollback)), then fix the source
+    Verify: `no-new-deployment` prints. Without it nothing was proven. `SNAPSHOT-FAILED`
+    or a line count other than 3 means a snapshot is missing or partial: fix the CLI
+    (`railway whoami`, `railway status`) and rerun this step. Never replace the step 8
+    snapshot after the push, because it is the only record of the state before it. A
+    `diff` that shows a new id means some service builds from GitHub. Roll it back
+    ([Rollback](#rollback)), then fix the source
     ([Railway source policy](#railway-source-policy)).
 
-12. **Deploy web from the tag.** Web is deployed on every release (D-REL8 (b)). Always do
-    the dry run first.
+12. **Deploy web from the tag.** D-REL8 (b) decided that the first release deploys web and
+    that scanner-nightly waits for P6B.1. Deploying web from the tag on every later
+    release is the plan's release checklist (P2B.7), not an owner decision. Always do the
+    dry run first.
 
     ```bash
     deploy/railway/deploy_web.sh --dry-run
@@ -264,7 +305,11 @@ below stands for its name. `V` is the new version, set in step 3.
     Verify: it prints the full SHA of `v$V`, then `v$V`. `--keep-stage` needs a new or
     empty directory.
 
-13. **Verify prod.**
+13. **Verify prod.** `deploy_web.sh` uploads with `--detach`, so it returns before Railway
+    has built anything. Railway marks the new deployment SUCCESS only after `/health`
+    answers within 300 s. Until then the old deployment serves, and the check below shows
+    the old version and exits 1. Wait until `railway deployment list -s web --limit 3`
+    shows the new deployment (newest first) as SUCCESS, then run:
 
     ```bash
     curl -fsS https://sarraficars.com/api/health | python3 -c 'import json,sys; h=json.load(sys.stdin); got=(h.get("version"), h.get("commit")); print(got); sys.exit(got != (sys.argv[1], sys.argv[2]))' "$V" "$(git rev-parse "v$V^{commit}")"
@@ -272,8 +317,10 @@ below stands for its name. `V` is the new version, set in step 3.
 
     Verify: exit 0. The printed version is `$V` and the commit is the tag's full SHA.
     `/health` returns the same body. It is Railway's healthcheck path (`railway.toml`), and
-    the healthcheck only needs a 200. Railway marks the deployment SUCCESS only after
-    `/health` answers within 300 s. `railway deployment list -s web --limit 3` shows it.
+    the healthcheck only needs a 200. If the deployment ends FAILED instead, the old one
+    keeps serving. Read its logs by id (without an id, `railway logs` shows the last
+    successful deployment): `railway logs -s web --build --lines 200 <deployment id>`, or
+    `--deployment` for the runtime log. Then fix forward.
 
 14. **Record the deployment.** Take the id of the new SUCCESS deployment from
     `railway deployment list -s web --limit 3` (newest first). Add a row to the
@@ -290,12 +337,16 @@ below stands for its name. `V` is the new version, set in step 3.
     deploy/railway/deploy_scanner_nightly.sh
     ```
 
-    A deploy starts the container once. It scans if `SCAN_FLEET=1` or `SCAN_DEALERS` is
-    set. P0A.1 found `SCAN_FLEET=1` still set on 2026-10-07. The first command must print
-    nothing unless you intend a run. `--kv` prints raw values, and the grep keeps only
-    these two non-secret lines. The script stages the tag with the archive's own
-    `deploy/railway/railway.scanner-nightly.json` as the stage's `railway.json`
-    (`Dockerfile.scanner`). It refuses `SERVICE=web`.
+    A deploy starts the container once. It scans if `SCAN_FLEET` is `1`, `true` or `yes`,
+    or if `SCAN_DEALERS` is non-empty (`backend/scripts/fleet_scan.py`, the same at
+    `89c13ad52`). P0A.1 found `SCAN_FLEET=1` still set on 2026-10-07. Unless you intend a
+    run, the first command must print nothing or only `SCAN_FLEET=0`. To turn the fleet
+    off without starting the container, run
+    `railway variable set SCAN_FLEET=0 -s scanner-nightly --skip-deploys`.
+    `railway variable delete` has no `--skip-deploys` in CLI 5.57.2. `--kv` prints raw
+    values, and the grep keeps only these two non-secret lines. The script stages the tag
+    with the archive's own `deploy/railway/railway.scanner-nightly.json` as the stage's
+    `railway.json` (`Dockerfile.scanner`). It refuses `SERVICE=web`.
 
     Verify: the dry run passes as in step 12. Afterwards,
     `railway deployment list -s scanner-nightly --limit 3` shows the new deployment, and
@@ -366,9 +417,23 @@ No Railway service builds from GitHub. Code reaches Railway only as a CLI upload
   2026-10-08 a bare `railway up` uploaded a checkout to scanner-nightly by accident. The
   upload failed before anything ran.
 - **To apply a variable change**, run `railway variable set ... -s <service>` without
-  `--skip-deploys`. Or stage the change and run `railway redeploy -s <service> -y`, which
-  rebuilds that deployment's own stored snapshot. `--skip-deploys` followed by
-  `railway restart` does not apply the change.
+  `--skip-deploys`. Or stage the change with `--skip-deploys` and run
+  `railway redeploy -s <service> -y`, which redeploys the existing latest deployment
+  with the same image (`railway redeploy --help`; only `--from-source` pulls new code).
+  The 2026-10-08 `d9aaa75e` redeploy of web did exactly this. `--skip-deploys` followed
+  by `railway restart` does not apply the change. Always pass `-s`. On 2026-10-08 the
+  main checkout was linked to scanner-nightly, so a command without `-s` acted on it.
+
+  **On scanner-nightly, either command starts the container once**, and that runs a full
+  fleet scan against prod Postgres if `SCAN_FLEET=1` or `SCAN_DEALERS` is set. P0A.1
+  found `SCAN_FLEET=1` still set, on an image that stales shared recipes on Railway
+  401/403s. Run the release step 15 check first
+  (`railway variable list -s scanner-nightly --kv | grep -E '^SCAN_(FLEET|DEALERS)='`),
+  and unless a run is intended, turn the fleet off without a deploy:
+  `railway variable set SCAN_FLEET=0 -s scanner-nightly --skip-deploys`. Do not use
+  `railway variable delete` for this: it has no `--skip-deploys` in CLI 5.57.2. The same
+  check comes before deleting `SCAN_DEALERS` after a manual run: if that change deploys
+  while `SCAN_FLEET=1` is set, the container runs the whole fleet.
 
 ### State as of the 2026-10-08 ops log (P0A.1 and P0A.4, `docs/SCANNING_OPS_LOG.md`)
 
@@ -386,6 +451,14 @@ No Railway service builds from GitHub. Code reaches Railway only as a CLI upload
   runs `redeploy --from-source`, Railway can build `main` again. The fix is to disconnect
   web's source (Settings → Source → Disconnect) and to confirm at
   github.com/settings/installations that the Railway app cannot see this repo.
+- **`SCAN_FLEET=1` is still set on scanner-nightly** (with `SCAN_SHARDS=8` and
+  `SCAN_BATCH=6`; P0A.1). The owner's 2026-10-08 actions did not change it. The deployed
+  image is `89c13ad52` (deployment `90a3d2a0`, 2026-09-29), which predates the egress tag
+  `1707e1349`, so a run on it stales shared recipes on Railway 401/403s (P0A.1 answer
+  3). Any new scanner-nightly deployment (a variable change without `--skip-deploys`, a
+  redeploy, a rollback, a deploy) starts a full fleet run against prod Postgres (561
+  dealers on 2026-09-29) until `SCAN_FLEET` is turned off. See the variable-change
+  bullet above.
 - **Config as code is deprecated.** The root `railway.toml` (web) and the staged
   `railway.json` (scanner-nightly) are config-as-code files. Railway says existing files
   keep working until 2026-12-01, so the deploy flow needs a replacement before then
@@ -418,6 +491,14 @@ Every migration follows the D-DB6 protocol in Appendix C.1 of
    it (`pg_restore -l`). Then the owner runs `python -m backend.scripts.migrate --dry-run`
    and `python -m backend.scripts.migrate --apply` against prod.
 3. Only then deploy (release step 12).
+4. A migration that drops or constrains data merges only after its dumps or prerequisite
+   repairs exist: every checkout's `--apply` and every web boot apply all pending files.
+5. A migration that locks `cars` (indexes, foreign keys) runs in a quiet window, after
+   `pg_stat_activity` shows no idle-in-transaction session, with `SET LOCAL lock_timeout`.
+
+Appendix C.1 applies with `--apply --target N`. `migrate.py` has no `--target` until P4
+adds it, so until then `--apply` applies every pending file. Update the command above
+when P4 lands.
 
 Release step 1 lists the migrations a release carries. Verify: a second
 `python -m backend.scripts.migrate --dry-run` against prod logs `database is up to date`.

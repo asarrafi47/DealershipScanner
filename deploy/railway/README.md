@@ -21,7 +21,10 @@ Only **one** sensitive bootstrap variable is required on the web service: `VAULT
 
 - [Railway CLI](https://docs.railway.com/guides/cli): `npm i -g @railway/cli` or `brew install railway`
 - Logged in: `railway login`
-- **kmac-vault** service already deployed in the same Railway project
+- **kmac-vault** service already deployed in the same Railway project. Stale: P0A.1
+  (`docs/SCANNING_OPS_LOG.md`, 2026-10-07) found no kmac-vault service in this project or
+  any visible one. Prod web uses `vault-api` in the separate `revest-vault` project
+  (`REVEST_VAULT_*` variables). The vault sections below predate that finding.
 - Project linked: `railway link` (from repo root, on the **web** service)
 
 ## 1. Deploy the web service
@@ -161,7 +164,7 @@ In Railway → Settings → Networking → add domain, then set `PUBLIC_BASE_URL
 ## Verify after deploy
 
 ```bash
-curl -fsS https://sarraficars.com/api/health   # version = the tag, commit = its full SHA
+curl -fsS https://sarraficars.com/api/health   # version = VERSION (the tag without its v), commit = the tag's full SHA
 railway logs --service web
 ```
 

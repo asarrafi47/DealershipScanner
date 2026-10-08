@@ -248,11 +248,22 @@ Run a scan manually:
 railway variable set 'SCAN_DEALERS=harehonda-com,toyotaplace-com' --service scanner-nightly
 #   (setting a variable redeploys; the container scans and exits)
 railway logs --service scanner-nightly                   # follow
-railway variable delete SCAN_DEALERS --service scanner-nightly   # back to idle
+railway variable delete SCAN_DEALERS --service scanner-nightly   # back to idle (see below)
 
 # the whole fleet once
 railway variable set SCAN_FLEET=1 --service scanner-nightly
+# after the run: turn it off without starting the container
+railway variable set SCAN_FLEET=0 --service scanner-nightly --skip-deploys
 ```
+
+`SCAN_FLEET=1` left set is a standing hazard: P0A.1 found it still set on 2026-10-07, on
+the `89c13ad52` image that stales shared recipes on Railway 401/403s. While it is set, any
+new deployment (a variable change without `--skip-deploys`, a redeploy, a rollback)
+starts the whole fleet, including one that deleting `SCAN_DEALERS` may trigger.
+`railway variable delete` has no `--skip-deploys` in CLI 5.57.2. Check first with
+`railway variable list -s scanner-nightly --kv | grep -E '^SCAN_(FLEET|DEALERS)='`, and
+set `SCAN_FLEET=0` with `--skip-deploys` (the scanner treats only `1`, `true` and `yes` as
+on). `docs/RELEASING.md` (Railway source policy) has the rest.
 
 Locally, the same entrypoint (proven 2026-09-28 against local Postgres):
 

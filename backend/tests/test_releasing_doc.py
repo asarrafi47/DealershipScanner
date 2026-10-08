@@ -9,10 +9,13 @@ read the doc and the scripts as text (no git, no network, no Railway) and pin:
   quotes are lines the script prints;
 - bump_version.sh, release_guard.py and migrate are called with arguments
   those scripts accept;
-- the four CI job ids the doc names are exactly the jobs in ci.yml;
+- the four CI job ids the doc names (the required checks) are jobs in ci.yml;
 - every numbered checklist step carries a "Verify" with a command;
 - none of the docs this unit rewrote tells anyone to deploy from main or to
-  connect the GitHub repo to Railway.
+  connect the GitHub repo to Railway;
+- every passage that tells the reader to redeploy or to set a Railway variable
+  also names the SCAN_FLEET hazard on scanner-nightly (P0A.1), and the
+  Railway snapshot in the checklist fails closed.
 """
 
 from __future__ import annotations
@@ -144,8 +147,10 @@ def test_bump_guard_and_migrate_arguments_exist(doc):
 
 
 def test_ci_job_ids_in_the_doc_are_the_ci_jobs(doc):
+    # A subset check: later units (coverage map, pip-audit, drift check) may add
+    # jobs. These four are the ones the release checklist and the ruleset require.
     jobs = set(yaml.safe_load(CI_YML.read_text(encoding="utf-8"))["jobs"])
-    assert jobs == CI_JOBS
+    assert CI_JOBS <= jobs, sorted(CI_JOBS - jobs)
     for job in CI_JOBS:
         assert f"`{job}`" in doc, job
 
@@ -173,3 +178,64 @@ def test_no_rewritten_doc_says_deploy_from_main(path):
     text = path.read_text(encoding="utf-8")
     assert not re.search(r"deploy from .main", text), path
     assert not re.search(r"connect the GitHub repo", text, flags=re.IGNORECASE), path
+
+
+def _passages(text: str) -> list[str]:
+    """Top-level list items (with their indented paragraphs and code blocks) and
+    plain paragraphs, each joined onto one line. Table rows are dropped."""
+    passages: list[str] = []
+    current: list[str] = []
+    in_item = blank = False
+
+    def flush() -> None:
+        if current:
+            passages.append(" ".join(current))
+            current.clear()
+
+    for line in text.splitlines():
+        stripped = line.strip()
+        if not stripped:
+            blank = True
+            if not in_item:
+                flush()
+            continue
+        if stripped.startswith("|"):
+            flush()
+            in_item = blank = False
+            continue
+        if re.match(r"(?:[-*]|\d+\.)\s", line):
+            flush()
+            in_item = True
+        elif blank and not line.startswith(" "):
+            flush()
+            in_item = False
+        blank = False
+        current.append(stripped)
+    flush()
+    return passages
+
+
+def test_redeploy_and_variable_set_advice_names_the_scan_fleet_hazard(doc):
+    """A redeploy or a deploying variable change on scanner-nightly starts a fleet
+    run while SCAN_FLEET=1 is set (P0A.1). Every passage that gives that advice
+    must carry the warning."""
+    advice = re.compile(r"railway redeploy(?! --from-source)|railway variable set")
+    hits = [p for p in _passages(doc) if advice.search(p)]
+    assert hits, "expected the doc to explain how to apply a variable change"
+    for passage in hits:
+        assert "SCAN_FLEET" in passage, passage[:200]
+    source_policy = doc[doc.index("## Railway source policy") : doc.index("## Migrations")]
+    assert "SCAN_FLEET=1" in source_policy and "89c13ad52" in source_policy
+    assert "railway variable set SCAN_FLEET=0 -s scanner-nightly --skip-deploys" in source_policy
+
+
+def test_railway_snapshot_fails_closed(doc):
+    section = doc[doc.index("## Release checklist") :]
+    assert "railway_snapshot() {" in section
+    assert 'echo "SNAPSHOT-FAILED $s" >&2; return 1' in section
+    assert "assert ids" in section
+    assert "railway_snapshot > /tmp/railway_deploys_before.txt && echo snapshot-ok" in section
+    after = section[section.index("railway_snapshot > /tmp/railway_deploys_after.txt") :]
+    after = after[: after.index("```")]
+    assert "&& echo no-new-deployment" in after
+    assert after.count("grep -c .") == 2
