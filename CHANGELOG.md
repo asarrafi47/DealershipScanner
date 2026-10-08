@@ -2,6 +2,30 @@
 
 ## [Unreleased]
 
+### Fixed
+- Listing retirement checks each condition bucket (new / used / unknown) in the full scan, the
+  delta scan and the pipeline: a run that re-sees only the new cars no longer retires the used
+  ones, blank-condition rows retire only when both buckets qualify, and `--no-reconcile` now
+  also stops the scanner subprocesses from retiring (P1A.1).
+- The catalog linker no longer clears car links when the epa_master read fails: it writes
+  nothing and `link_cars_to_catalog.py` exits 2; score ties go to the lowest catalog id
+  (6 of 214,546 local links flip) (P1A.3).
+- InventoryEnricher no longer sends `ALTER TABLE cars` on Postgres (an ACCESS EXCLUSIVE lock
+  request that then failed with DuplicateColumn); haiku_spec_cache is created only when absent,
+  under a 3 s lock timeout (P1A.4).
+
+### Changed
+- `build_epa_master_pg.py` refuses every write mode, `--rebuild` included, with exit 2 before
+  any DB connection until the id-preserving builder lands (P10B.2); `--dry-run` reads
+  backend/dictionary/epa recursively and refuses a source with fewer than 10,000 CSVs.
+  `import_epa_master.py` refuses a full replace while any car is linked or epa_extended_specs
+  has rows (P1A.2).
+- Destructive enrichment scripts disarmed: `backend/scripts/backfill_forced_induction_pg.py`
+  is deleted (it re-guessed forced_induction from listing text for every NULL row, 125,231
+  active cars locally); `enrich_from_dictionary.py --all` refuses unless
+  `ALLOW_DICTIONARY_OVERWRITE=1` is exported; `heal_cylinders_from_vpic.py` runs the
+  forced-induction Phase B only with `--phase-b` (P1A.5).
+
 ## [1.5.2] - 2026-10-05
 
 ### Changed
