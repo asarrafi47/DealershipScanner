@@ -148,12 +148,16 @@ def test_unserializable_rows_never_create_a_temp_file():
 
 
 def test_successful_save_bytes_match_the_previous_format():
-    """Same bytes as the old ``write_text(json.dumps(rows, indent=1))``."""
+    """Same bytes as the old ``write_text(json.dumps(rows, indent=1))``, apart from
+    ``saved_at``, which save_recipes stamps with the save's own time (P1B.3)."""
     r = _recipe("d3", "https://a.example/feed")
     save_recipes("d3", [r])
     from dataclasses import asdict
 
-    assert rec._recipe_path("d3").read_text(encoding="utf-8") == json.dumps([asdict(r)], indent=1)
+    text = rec._recipe_path("d3").read_text(encoding="utf-8")
+    stamp = json.loads(text)[0]["saved_at"]
+    assert stamp > 0
+    assert text == json.dumps([dict(asdict(r), saved_at=stamp)], indent=1)
     assert _leftovers(rec.RECIPES_DIR) == []
 
 

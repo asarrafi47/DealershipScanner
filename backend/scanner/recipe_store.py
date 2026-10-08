@@ -9,10 +9,18 @@ discovery scan. One row per dealer mirroring the file exactly, plus derived
 health columns for the scanner-ops views.
 
 Sync model (see ``backend.scanner.recipes``):
-  - ``save_recipes`` writes the file, then write-through here;
+  - ``saved_at`` on a recipe row means "last write of this dealer's set".
+    ``save_recipes`` stamps every row with one ``time.time()`` per call, before
+    it writes the file and then writes through here, so the file and the DB row
+    carry the same stamp and ``max_saved_at`` is that stamp. It stays a
+    per-write stamp in later phases: hosts running older code still compare it.
+    This module stores rows as given and never stamps them.
   - ``load_recipes`` compares file vs DB freshness (max ``saved_at``): a newer
-    DB row materializes the local file (new machine); a newer file lazily
-    pushes to the DB (covers scans that wrote files with pre-DB code).
+    DB row materializes the local file (another host wrote the set since); a
+    newer file is pushed up as it is (a write-through that failed, or a file
+    written by pre-DB code), with a WARNING naming the dealer and the DB copy it
+    replaced. Neither direction re-stamps.
+  - ``updated_at`` is not a recipe-write stamp: every ``set_scan_hints`` bumps it.
 
 Every DB touch is best-effort: a scan must never fail because Postgres was
 unreachable, so errors log and fall back to file behavior. A failed
@@ -159,7 +167,10 @@ def _derive_meta(rows: list[dict[str, Any]]) -> dict[str, Any]:
 
 
 def db_save_recipes(dealer_id: str, rows: list[dict[str, Any]]) -> bool:
-    """Upsert the dealer's full recipe list. Best-effort; returns success."""
+    """Upsert the dealer's full recipe list. Best-effort; returns success.
+
+    The rows are stored as given: ``save_recipes`` has already stamped their
+    ``saved_at``, and a ``load_recipes`` push-up must keep the file's stamp."""
     if not _enabled() or not dealer_id:
         return False
     try:
