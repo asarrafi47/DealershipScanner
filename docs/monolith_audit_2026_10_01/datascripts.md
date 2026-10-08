@@ -595,7 +595,7 @@ stop implying a schedule exists; sync_gas_prices.fallback_payload (82 lines) is 
 - backend/scripts/backfill_dealership_registry.py	F1
 - backend/scripts/backfill_dealerships_from_roster.py	 DEAD
 - backend/scripts/backfill_engine_l.py	 DEAD
-- backend/scripts/backfill_forced_induction_pg.py	 DEAD
+- backend/scripts/backfill_forced_induction_pg.py	 DEAD — DELETED 2026-10-07 (remediation P1A.5: one run re-guessed every NULL forced_induction row from listing text; local 2026-10-07: 220,324 NULL rows, 125,231 of them active)
 - backend/scripts/backfill_inactive_from_last_scan.py	 DEAD
 - backend/scripts/backfill_interior_color_buckets.py	 DEAD
 - backend/scripts/backfill_interior_from_vision.py	 DEAD
@@ -787,7 +787,7 @@ Delete now (broken or dangerous):
 Archive (one-shots already applied / superseded):
 - schema one-shots now covered by migrations/: rename_catalog_tables (06-26), drop_dead_zip_code_column (07-06),
   drop_dead_kbb_columns (07-06), migrate_placeholder_nulls (07-07), remove_dummy_vin_cars (05-03), migrate_recipe_aliases (08-20),
-  backfill_inactive_from_last_scan (07-19, "One-time backfill"), backfill_forced_induction_pg (07-07), backfill_engine_l (05-03),
+  backfill_inactive_from_last_scan (07-19, "One-time backfill"), backfill_forced_induction_pg (07-07; deleted 2026-10-07, P1A.5), backfill_engine_l (05-03),
   backfill_specs_from_structured_sources (05-03), backfill_interior_color_buckets (05-03), backfill_vehicle_specs (05-03, "SQLite cars"),
   apply_model_specs (05-03), normalize_transmission_inventory (05-06), fill_incomplete_listings (05-06), parse_listing_descriptions (05-22),
   backfill_interior_from_vision (05-22 wrapper), image_analyzer (05-22, 406 L), verify_decode_trim (05-03), trace_car_vin (05-03)

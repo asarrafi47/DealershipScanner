@@ -11,11 +11,18 @@ Phase B — forced induction: re-run the (year-guarded) classifier for rows
 with a stored label and year < 2016; blanket make-era guesses are cleared,
 explicit-marker labels (turbo in trim/description) survive.
 
+Phase B is OFF by default and runs only with an explicit ``--phase-b``. The
+classifier only reads listing text, so it also clears or rewrites labels that
+came from the EPA catalog or the VIN decode (sources that outrank it). Remediation
+plan P1A.5 gates it; P10C.6 makes it skip NA and EPA/vPIC-backed labels (or
+retires it) and removes the flag. Phase A (cylinders) is unchanged.
+
 Usage::
 
   PYTHONPATH=. python backend/scripts/heal_cylinders_from_vpic.py --dry-run
   PYTHONPATH=. python backend/scripts/heal_cylinders_from_vpic.py
   PYTHONPATH=. python backend/scripts/heal_cylinders_from_vpic.py --limit 500
+  PYTHONPATH=. python backend/scripts/heal_cylinders_from_vpic.py --phase-b --dry-run
 """
 from __future__ import annotations
 
@@ -150,20 +157,39 @@ def heal_forced_induction(*, dry_run: bool) -> dict[str, int]:
 
 
 def main() -> None:
-    ap = argparse.ArgumentParser(description="Heal cylinders + forced_induction against NHTSA vPIC")
+    ap = argparse.ArgumentParser(description="Heal cylinders (and, opt-in, forced_induction) against NHTSA vPIC")
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--limit", type=int, default=None, help="Only process the first N rows (testing)")
-    ap.add_argument("--skip-fi", action="store_true", help="Skip the forced-induction recompute phase")
+    phase_b = ap.add_mutually_exclusive_group()
+    phase_b.add_argument(
+        "--phase-b",
+        action="store_true",
+        help=(
+            "Also run Phase B, the forced_induction recompute for year<2016. Off by default: "
+            "it clears EPA- and VIN-backed labels (remediation plan P1A.5, fixed in P10C.6)"
+        ),
+    )
+    phase_b.add_argument(
+        "--skip-fi",
+        action="store_true",
+        help="Skip the forced-induction recompute phase (now the default; kept for old command lines)",
+    )
     args = ap.parse_args()
 
     print(f"Phase A — cylinders vs vPIC ({'DRY RUN' if args.dry_run else 'live'})", flush=True)
     a = heal_cylinders(dry_run=args.dry_run, limit=args.limit)
     print(f"Phase A done: {a}", flush=True)
 
-    if not args.skip_fi:
+    if args.phase_b and not args.skip_fi:
         print(f"Phase B — forced_induction recompute, year<2016 ({'DRY RUN' if args.dry_run else 'live'})", flush=True)
         b = heal_forced_induction(dry_run=args.dry_run)
         print(f"Phase B done: {b}", flush=True)
+    else:
+        print(
+            "Phase B — forced_induction recompute skipped (opt-in with --phase-b; it clears "
+            "EPA- and VIN-backed labels until P10C.6)",
+            flush=True,
+        )
 
 
 if __name__ == "__main__":
