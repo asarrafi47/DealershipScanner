@@ -2,6 +2,31 @@
 
 ## [Unreleased]
 
+### Added
+- `backend/scripts/reconcile_recipe_store.py` reconciles a recipe cache dir (`--cache-dir`) or a
+  second store (`--source-dsn` / `--target-dsn`) with dealer_recipes per recipe instead of by
+  whole set: a recipe on both sides comes from the side with the newer last_ok_at (stale follows
+  the DB unless the cache has a strictly newer success; a tie with a DB-only stale flag resolves
+  to live), a cache-only recipe is added only when its write stamp is newer than the DB set's
+  last write (a `saved_at=0` row counts at its set's newest last_ok_at, never `updated_at`), and
+  DB-only recipes are kept. Dry run by default (report.tsv, keys.tsv and summary.json under
+  `workspace/backups/recipes_reconcile_<stamp>/`); `--apply` needs `--backup-dir`, tars the
+  cache and exports every row it will write first, writes through a guarded
+  `UPDATE ... WHERE dealer_id=? AND updated_at=?`, skips a row changed since the read, rewrites
+  the differing cache files from the DB and writes the `_reconciled` marker; `--restore` undoes
+  an apply. `import_recipes_to_db.py` keeps its CLI as a wrapper around it: it no longer pushes
+  a newer-stamped file over a DB set wholesale (a July file over a September set saved with
+  `saved_at=0`), and it refuses a cache tagged for another store (P1C.2).
+- `python -m backend.scripts.backfill_recipe_saved_at` stamps dealer_recipes entries saved with
+  `saved_at` 0 or null (sets synthesized or cascaded before P1B.3; 201 local rows) with the
+  row's newest last_ok_at, else its updated_at, and recomputes max_saved_at, so an older cache
+  file no longer outranks those sets. Dry run by default (counts and up to 20 ids); `--apply`
+  needs `--backup-dir`, writes a mode-0600 JSON export of the touched rows first, then one
+  guarded UPDATE per row that skips a row changed since the read; scan_hints and other columns
+  are never touched. A dealer whose cache file has a newer success for a key is skipped and left
+  to the reconcile (scottclarkhonda-com locally), and `--apply` is refused when the cache dir is
+  missing, empty or tagged for another store. `--restore` puts rows back from the export (P1C.3).
+
 ### Fixed
 - Listing retirement checks each condition bucket (new / used / unknown) in the full scan, the
   delta scan and the pipeline: a run that re-sees only the new cars no longer retires the used
@@ -35,6 +60,22 @@
   unknown census with the roots and cwd used, dates each verdict, drops members scanned after
   their probe (autosavvy-com: 403 probe 09-26, 3,958 rows 09-28), and no longer prints
   "nearest known template: none" when a template already detects members (P1B.7).
+- The docs describe the recipe cache/store sync as it works: docs/data_architecture_plan.md
+  gains "Recipe cache and store sync" (`saved_at` is the last-write stamp, the sync rule,
+  `updated_at` is not a freshness stamp, the push-up WARNING, `RECIPES_CACHE_DIR`, the
+  `_store.json` fingerprint, the 201 local / 235 prod `max_saved_at=0` rows);
+  docs/CLOUD_RESTRUCTURE_PLAN.md:295 no longer says `load_recipes` "prefers the newer copy";
+  docs/RAILWAY_SCANNING.md says the volume cache keeps the 2026-09-29 stale flags until Phase 0
+  recipe code is deployed (P6B.1), and all three say `import_recipes_to_db.py` now merges per
+  recipe and reads the store tag (P1C.6).
+- Recipe replay honors `SCANNER_HTTP_PROXY` (through `scanner_proxies()`, as the other scanner
+  fetchers do); VDP prefetch treats a 200 anti-bot interstitial as a 403 (the host gets the WAF
+  cool-down instead of the page being parsed as a VDP); the SSRF guard
+  `destination_host_blocked_after_dns` blocks hostnames that do not resolve (1344cbd09).
+- The test suite stays off the network: an autouse stub makes vPIC unreachable (opt out with
+  `@pytest.mark.real_vpic_client`; ~20 upsert tests used to reach vpic.nhtsa.dot.gov), a
+  `fake_dns` fixture serves the SSRF host guards, and the web-research tests run on canned pages
+  (39d7241db).
 
 ### Changed
 - `build_epa_master_pg.py` refuses every write mode, `--rebuild` included, with exit 2 before
@@ -62,6 +103,19 @@
   session tmp dir, gives every test its own `RECIPES_DIR` / `VDP_RECIPES_DIR`, and fails the
   session when a name or mtime under workspace/dealer_logs or workspace/recipes changed
   (warning only while a scanner or pipeline is live; `WORKSPACE_GUARD=0` turns it off) (P1B.1).
+- Recipe validation is one module: `validate_recipe` and its replay walkers move byte-identical
+  from backend/scanner/synth/validate.py (now a re-export shim) into
+  backend/scanner/recipe_validation.py. No behavior change (787546e21).
+- backend/scanner/net/client.py is the one HTTP layer for the scanner fetchers (the chain
+  fetchers, synth http, recipe replay, VDP prefetch, VDP recipes): lazy curl_cffi / requests
+  import, proxies, send, impersonation rotation and challenge detection. No behavior change;
+  test_scanner_http_characterization.py pins each fetcher's requests and returns (5986b498b).
+- backend/scripts/fetch_oem_brochures.py split (2,507 -> 348 lines): the library code moves
+  byte-identical into backend/enrichment/brochure_acquisition/ (paths, gaps, sources, download,
+  corpus, quarantine, audits, reachability, html_specs, plan); the flags, defaults and mode
+  dispatch order are unchanged, pinned by test_fetch_oem_brochures_surface.py (d096c2221).
+- docs/monolith_audit_2026_10_01/: audit follow-up progress and the OWNER_DECISIONS.md list
+  (77cddcb56).
 
 ## [1.5.2] - 2026-10-05
 
