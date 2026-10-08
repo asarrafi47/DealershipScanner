@@ -27,6 +27,14 @@ unreachable, so errors log and fall back to file behavior. A failed
 write-through (``db_save_recipes``) logs at WARNING the first time each error
 class is seen in a process, then at DEBUG. Set ``RECIPES_DB_DISABLED=1`` to opt
 out entirely.
+
+One read is not best-effort: ``db_load_recipes(..., strict=True)`` raises
+``RecipeStoreReadError`` when it cannot tell whether the store holds a copy (the
+read raised, or the row's ``recipes_json`` is not a JSON list), where the
+default read returns ``None`` for both that and a missing row. A recipe cache
+tagged for another store (``backend.scanner.recipes.check_cache_store``) uses
+it: there the store is the only copy a save makes, so a save must never act on
+an absence the read did not prove.
 """
 from __future__ import annotations
 
@@ -47,12 +55,14 @@ _save_failure_warned: set[str] = set()
 _save_failure_lock = threading.Lock()
 
 
-def _log_save_failure(dealer_id: str, exc: BaseException) -> None:
-    """Log a failed ``dealer_recipes`` write-through.
+def _log_save_failure(dealer_id: str, exc: BaseException, *, file_written: bool = True) -> None:
+    """Log a failed ``dealer_recipes`` write.
 
-    The recipe file was written but the shared store was not, so other hosts
-    will not see this save. That is worth a WARNING, but a dead DB fails every
-    save of a fleet run, so only the first failure of each error class per
+    Normally the recipe file was written but the shared store was not, so other
+    hosts will not see this save. With ``file_written=False`` (a save on a recipe
+    cache tagged for another store, which writes the store only) nothing was
+    written and the save is lost. Either is worth a WARNING, but a dead DB fails
+    every save of a fleet run, so only the first failure of each error class per
     process logs at WARNING; repeats log at DEBUG.
     """
     cls = type(exc)
@@ -61,14 +71,23 @@ def _log_save_failure(dealer_id: str, exc: BaseException) -> None:
         first = key not in _save_failure_warned
         _save_failure_warned.add(key)
     if first:
+        if file_written:
+            write, what = "write-through", "the recipe file was written but the shared store was not"
+        else:
+            write, what = "write", ("the recipe cache is tagged for another store, so no recipe "
+                                    "file was written either and this save was lost")
         logger.warning(
-            "dealer_recipes write-through failed for %s (%s: %s); the recipe file "
-            "was written but the shared store was not. Further %s failures in "
+            "dealer_recipes %s failed for %s (%s: %s); %s. Further %s failures in "
             "this process log at DEBUG.",
-            dealer_id, cls.__name__, exc, cls.__name__,
+            write, dealer_id, cls.__name__, exc, what, cls.__name__,
         )
     else:
         logger.debug("dealer_recipes save skipped for %s: %s", dealer_id, exc)
+
+
+class RecipeStoreReadError(Exception):
+    """A strict ``db_load_recipes`` could not tell whether the store holds a copy:
+    the read raised, or the stored ``recipes_json`` is not a JSON list."""
 
 
 _DDL_PG = """
@@ -166,11 +185,13 @@ def _derive_meta(rows: list[dict[str, Any]]) -> dict[str, Any]:
     }
 
 
-def db_save_recipes(dealer_id: str, rows: list[dict[str, Any]]) -> bool:
+def db_save_recipes(dealer_id: str, rows: list[dict[str, Any]], *, file_written: bool = True) -> bool:
     """Upsert the dealer's full recipe list. Best-effort; returns success.
 
     The rows are stored as given: ``save_recipes`` has already stamped their
-    ``saved_at``, and a ``load_recipes`` push-up must keep the file's stamp."""
+    ``saved_at``, and a ``load_recipes`` push-up must keep the file's stamp.
+    ``file_written=False`` says the caller wrote no recipe file (a cache tagged
+    for another store), so a failure is logged as a lost save."""
     if not _enabled() or not dealer_id:
         return False
     try:
@@ -201,7 +222,7 @@ def db_save_recipes(dealer_id: str, rows: list[dict[str, Any]]) -> bool:
         finally:
             conn.close()
     except Exception as exc:  # noqa: BLE001 — never let DB issues break a scan
-        _log_save_failure(dealer_id, exc)
+        _log_save_failure(dealer_id, exc, file_written=file_written)
         return False
 
 
@@ -222,22 +243,31 @@ def _alias_read_slug(dealer_id: str) -> str | None:
         return None
 
 
-def db_load_recipes(dealer_id: str) -> tuple[list[dict[str, Any]], float] | None:
+def db_load_recipes(
+    dealer_id: str, *, strict: bool = False,
+) -> tuple[list[dict[str, Any]], float] | None:
     """(recipe rows, max_saved_at) from the DB, or None. Best-effort.
 
     Falls back to the dealer's pre-rename key (``_aliases.json``) when the
     current key has no row.
+
+    By default ``None`` means "no copy was read": no row, or the read failed
+    (logged at DEBUG). With ``strict=True`` ``None`` means the store has no row
+    under either key, and a read that cannot show that (it raised, or a row's
+    ``recipes_json`` is not a JSON list) raises ``RecipeStoreReadError``.
     """
-    found = _db_load_recipes_exact(dealer_id)
+    found = _db_load_recipes_exact(dealer_id, strict=strict)
     if found is not None:
         return found
     old_slug = _alias_read_slug(dealer_id)
     if old_slug:
-        return _db_load_recipes_exact(old_slug)
+        return _db_load_recipes_exact(old_slug, strict=strict)
     return None
 
 
-def _db_load_recipes_exact(dealer_id: str) -> tuple[list[dict[str, Any]], float] | None:
+def _db_load_recipes_exact(
+    dealer_id: str, *, strict: bool = False,
+) -> tuple[list[dict[str, Any]], float] | None:
     if not _enabled() or not dealer_id:
         return None
     try:
@@ -254,14 +284,28 @@ def _db_load_recipes_exact(dealer_id: str) -> tuple[list[dict[str, Any]], float]
             conn.close()
     except Exception as exc:  # noqa: BLE001
         logger.debug("dealer_recipes load skipped for %s: %s", dealer_id, exc)
+        if strict:
+            # The class only: the error text (logged above at DEBUG) can quote the URL.
+            raise RecipeStoreReadError(
+                f"dealer_recipes read for {dealer_id} failed ({type(exc).__name__})"
+            ) from exc
         return None
-    if not row or not row[0]:
+    if not row:
+        return None
+    unreadable = f"dealer_recipes row for {dealer_id} has unreadable recipes_json"
+    if not row[0]:
+        if strict:
+            raise RecipeStoreReadError(unreadable + " (empty)")
         return None
     try:
         rows = json.loads(row[0])
-    except (TypeError, ValueError):
+    except (TypeError, ValueError) as exc:
+        if strict:
+            raise RecipeStoreReadError(unreadable + " (not JSON)") from exc
         return None
     if not isinstance(rows, list):
+        if strict:
+            raise RecipeStoreReadError(unreadable + " (not a list)")
         return None
     try:
         max_saved = float(row[1] or 0.0)

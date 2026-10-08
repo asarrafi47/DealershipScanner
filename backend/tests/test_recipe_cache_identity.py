@@ -8,10 +8,14 @@ with that cache (the P6B.2 repair) would push every newer local set into prod.
 (a sha256 of host, port and database name, never credentials):
 
 - a matching fingerprint behaves as before (push-up, DB adoption);
-- a different one (or an unreadable tag) warns once per process and refuses the
-  push-up, and the store's own copy is served instead of the newer file, so a caller
-  that saves the set (a replay's last_ok update, an un-stale) cannot write the other
-  store's file back through either;
+- a different one (or an unreadable tag, or a tagged cache while the process's store
+  cannot be named) warns once per process and refuses the push-up, and the store's own
+  copy is served instead of the newer file, so a caller that saves the set (a replay's
+  last_ok update, an un-stale) cannot write the other store's file back through either;
+- when the store's copy cannot be read on such a cache (the read raised, or the row is
+  corrupt), the cache file is served for replay but that dealer's saves are refused
+  until a store read shows the store has no copy: a failed read never lets the other
+  store's set overwrite this store's copy;
 - a missing tag is created on the first load that reached the store;
 - another cache dir (``RECIPES_CACHE_DIR``) or a re-seed
   (``python -m backend.scanner.recipes --reseed``) gives the process a cache of its own.
@@ -25,8 +29,10 @@ from __future__ import annotations
 import json
 import logging
 import os
+import sqlite3
 import subprocess
 import sys
+from contextlib import closing
 from dataclasses import asdict
 from pathlib import Path
 
@@ -49,6 +55,14 @@ NEW = 1_800_000_000.0
 LOCAL_DSN = "postgresql://scanner:local-secret-pw@localhost:5432/cars"
 PROD_DSN = "postgresql://railway_admin:prod-secret-pw@prod-db.example.net:41234/railway"
 SECRETS = ("local-secret-pw", "prod-secret-pw", "railway_admin", "scanner:", "scanner@")
+
+
+@pytest.fixture(autouse=True)
+def _fresh_process_state(monkeypatch):
+    """Each test is a fresh process for the foreign-cache bookkeeping and warn-once sets."""
+    monkeypatch.setattr(rec, "_foreign_unread", set())
+    monkeypatch.setattr(rec, "_foreign_warned", set())
+    monkeypatch.setattr(recipe_store, "_save_failure_warned", set())
 
 
 @pytest.fixture
@@ -300,22 +314,30 @@ def test_a_mismatched_run_leaves_the_cache_byte_identical_and_never_reverts_its_
     assert _snapshot(cache) == cache_before
 
 
-def test_a_mismatched_save_whose_store_write_fails_warns(store, monkeypatch, caplog):
+def test_a_mismatched_save_whose_store_write_fails_warns_once_as_a_lost_save(store, monkeypatch, caplog):
     # On a foreign cache the store is the only copy a save makes, so a failed write is a
-    # lost save: one WARNING, and the cache is still left alone.
+    # lost save: one WARNING that says so (not "the recipe file was written"), and the
+    # cache is still left alone.
     _tag_for(store.dirs["mbp"], LOCAL_DSN, monkeypatch)
     _on_store(monkeypatch, PROD_DSN)
     path = store.write_file("mbp", D, [_row(LOCAL_URL, NEW)])
     before = path.read_bytes()
-    monkeypatch.setattr(recipe_store, "db_save_recipes", lambda *_a, **_k: False)
-    monkeypatch.setattr(rec, "_foreign_save_failure_warned", False)
 
+    def dead_store():
+        raise ConnectionError("server closed the connection unexpectedly")
+
+    monkeypatch.setattr(recipe_store, "_conn", dead_store)
+    new_set = [EndpointRecipe(dealer_id=D, url=PROD_URL, method="GET",
+                              content_type="application/json", post_template=None)]
     with caplog.at_level(logging.WARNING, logger="scanner"):
-        rec.save_recipes(D, [EndpointRecipe(dealer_id=D, url=PROD_URL, method="GET",
-                                            content_type="application/json", post_template=None)])
+        rec.save_recipes(D, new_set)
+        rec.save_recipes(D2, new_set)
 
     assert path.read_bytes() == before
-    assert any("were not saved" in m.getMessage() for m in caplog.records if m.levelno == logging.WARNING)
+    warnings = [m.getMessage() for m in caplog.records if m.levelno == logging.WARNING]
+    lost = [m for m in warnings if "this save was lost" in m]
+    assert len(lost) == 1 and "ConnectionError" in lost[0] and D in lost[0], warnings
+    assert not any("the recipe file was written" in m for m in warnings), warnings
 
 
 def test_an_unreadable_tag_counts_as_a_mismatch(store, monkeypatch, caplog):
@@ -332,6 +354,213 @@ def test_an_unreadable_tag_counts_as_a_mismatch(store, monkeypatch, caplog):
     (warning,) = _mismatch_warnings(caplog)
     assert "unreadable store tag" in warning.getMessage()
     assert (cache / rec.STORE_TAG_FILENAME).read_text(encoding="utf-8") == "{not json", "never overwritten"
+
+
+# ── a failed store read on a foreign cache fails closed ──────────────────────
+
+LOCAL_A = "https://api.identity-dealer.example/local-set-a"
+LOCAL_B = "https://api.identity-dealer.example/local-set-b"
+
+
+def _store_fails(monkeypatch, store: TwoHostRecipeStore, times: int = 1) -> dict[str, int]:
+    """The next ``times`` store connections raise (a reset link, a timeout); later ones work."""
+    calls = {"failed": 0}
+
+    def flaky():
+        if calls["failed"] < times:
+            calls["failed"] += 1
+            raise OSError("connection reset by peer")
+        return store._connect()
+
+    monkeypatch.setattr(recipe_store, "_conn", flaky)
+    return calls
+
+
+def _foreign_with_prod_row(store: TwoHostRecipeStore, monkeypatch) -> tuple[Path, bytes, dict]:
+    """The MBP cache (tagged local) holds the newer local set; this process is on prod,
+    whose store holds 'prod-set'."""
+    _tag_for(store.dirs["mbp"], LOCAL_DSN, monkeypatch)
+    _on_store(monkeypatch, PROD_DSN)
+    store.write_db(D, [_row(PROD_URL, OLD)])
+    path = store.write_file("mbp", D, [_row(LOCAL_A, NEW), _row(LOCAL_B, NEW)])
+    return path, path.read_bytes(), store.db_row(D)
+
+
+def _raw_row(store: TwoHostRecipeStore, dealer_id: str) -> tuple | None:
+    with closing(sqlite3.connect(store.db_path)) as conn:
+        return conn.execute("SELECT * FROM dealer_recipes WHERE dealer_id = ?",
+                            (rec._recipe_slug(dealer_id),)).fetchone()
+
+
+def _unread_warnings(caplog) -> list[str]:
+    return [r.getMessage() for r in caplog.records
+            if r.levelno == logging.WARNING and "could not be read" in r.getMessage()]
+
+
+def _refused_warnings(caplog) -> list[str]:
+    return [r.getMessage() for r in caplog.records
+            if r.levelno == logging.WARNING and "recipe(s) refused" in r.getMessage()]
+
+
+def test_a_failed_store_read_never_lets_mark_stale_write_the_cache_set_over_the_store(
+        store, monkeypatch, caplog):
+    path, file_before, row_before = _foreign_with_prod_row(store, monkeypatch)
+    calls = _store_fails(monkeypatch, store, times=1)
+
+    with caplog.at_level(logging.DEBUG, logger="scanner"):
+        rec.mark_stale(D, EndpointRecipe(dealer_id=D, url=LOCAL_A, method="GET",
+                                         content_type="application/json", post_template=None), "HTTP 403")
+
+    assert calls["failed"] == 1, "the load's store read is the one that failed"
+    assert store.db_row(D) == row_before, "the store row is byte-identical: no foreign set was written"
+    assert path.read_bytes() == file_before, "the cache file is byte-identical"
+    (unread,) = _unread_warnings(caplog)
+    assert D in unread and "OSError" in unread
+    (refused,) = _refused_warnings(caplog)
+    assert D in refused and "the store holds a copy" in refused
+    for secret in SECRETS:
+        assert all(secret not in r.getMessage() for r in caplog.records)
+
+
+def test_a_failed_store_read_never_lets_a_replay_success_drop_the_store_set(store, monkeypatch, caplog):
+    # The reviewer's case: 'prod-set' replayed and answered; its last_ok write reloads the
+    # set, and that reload's store read fails. Before the fix the save wrote the MBP set
+    # into prod with a fresh stamp, dropping the recipe that had just answered.
+    path, file_before, row_before = _foreign_with_prod_row(store, monkeypatch)
+    (answered,) = load_recipes(D)
+    assert answered.url == PROD_URL
+    answered.last_ok_at = NEW + 5
+    _store_fails(monkeypatch, store, times=1)
+
+    with caplog.at_level(logging.WARNING, logger="scanner"):
+        rec._persist_replay_success(D, answered, retrying_stale=False)
+
+    assert store.db_row(D) == row_before, "the store row is byte-identical"
+    assert path.read_bytes() == file_before
+    assert len(_unread_warnings(caplog)) == 1 and len(_refused_warnings(caplog)) == 1
+
+
+def test_a_corrupt_store_row_is_not_proof_of_absence(store, monkeypatch, caplog):
+    # recipes_json that is not a JSON list reads as None on the default (best-effort)
+    # path; on a foreign cache it is "unreadable", never "no copy".
+    path, file_before, _ = _foreign_with_prod_row(store, monkeypatch)
+    with sqlite3.connect(store.db_path) as conn:
+        conn.execute("UPDATE dealer_recipes SET recipes_json = ? WHERE dealer_id = ?",
+                     ("{truncated", rec._recipe_slug(D)))
+    row_before = _raw_row(store, D)
+
+    with caplog.at_level(logging.WARNING, logger="scanner"):
+        served = load_recipes(D)
+        rec.mark_stale(D, served[0], "HTTP 403")
+
+    assert [r.url for r in served] == [LOCAL_A, LOCAL_B], "served for replay"
+    assert _raw_row(store, D) == row_before, "the corrupt row is left for a person to look at"
+    assert path.read_bytes() == file_before
+    (refused,) = _refused_warnings(caplog)
+    assert "unreadable recipes_json" in refused
+
+
+def test_a_failed_read_holds_the_dealer_even_when_a_later_load_reads_the_store(store, monkeypatch, caplog):
+    # Nothing shows which load a save's set came from, so once a load served the cache
+    # file because the store could not be read, the dealer's saves stay refused while the
+    # store holds a copy (a lost last_ok update, never a foreign overwrite).
+    _, _, row_before = _foreign_with_prod_row(store, monkeypatch)
+    _store_fails(monkeypatch, store, times=1)
+    assert [r.url for r in load_recipes(D)] == [LOCAL_A, LOCAL_B]
+    (fresh,) = load_recipes(D)                          # the store reads fine now
+    assert fresh.url == PROD_URL
+    fresh.last_ok_at = NEW + 9
+
+    with caplog.at_level(logging.DEBUG, logger="scanner"):
+        rec.save_recipes(D, [fresh])
+
+    assert store.db_row(D) == row_before
+    assert any("recipe(s) refused" in r.getMessage() for r in caplog.records)
+    # Other dealers are not held.
+    store.write_db(D2, [_row(PROD_URL, OLD)])
+    (other,) = load_recipes(D2)
+    other.last_ok_at = NEW + 9
+    rec.save_recipes(D2, [other])
+    assert store.db_row(D2)["rows"][0]["last_ok_at"] == NEW + 9
+
+
+def test_a_failed_read_then_a_store_with_no_copy_lets_the_save_seed_it(store, monkeypatch):
+    # When a store read at save time shows the store has no copy, the save replaces
+    # nothing: it seeds the store (the same as a load that proved absence), and the
+    # dealer is no longer held.
+    _tag_for(store.dirs["mbp"], LOCAL_DSN, monkeypatch)
+    _on_store(monkeypatch, PROD_DSN)
+    path = store.write_file("mbp", D, [_row(LOCAL_A, NEW)])
+    file_before = path.read_bytes()
+    _store_fails(monkeypatch, store, times=1)
+
+    (served,) = load_recipes(D)
+    served.last_ok_at = NEW + 7
+    rec.save_recipes(D, [served])
+
+    (row,) = store.db_row(D)["rows"]
+    assert row["url"] == LOCAL_A and row["last_ok_at"] == NEW + 7
+    assert path.read_bytes() == file_before, "the cache is still never written"
+    assert not rec._foreign_unread
+
+
+def test_a_store_still_unreachable_at_save_time_refuses(store, monkeypatch, caplog):
+    _tag_for(store.dirs["mbp"], LOCAL_DSN, monkeypatch)
+    _on_store(monkeypatch, PROD_DSN)
+    store.write_file("mbp", D, [_row(LOCAL_A, NEW)])
+    calls = _store_fails(monkeypatch, store, times=2)    # the load's read and the save's read
+
+    with caplog.at_level(logging.WARNING, logger="scanner"):
+        rec.mark_stale(D, EndpointRecipe(dealer_id=D, url=LOCAL_A, method="GET",
+                                         content_type="application/json", post_template=None), "HTTP 403")
+
+    assert calls["failed"] == 2
+    assert store.db_row(D) is None, "no write was attempted"
+    (refused,) = _refused_warnings(caplog)
+    assert "still cannot be read" in refused
+
+
+def test_the_strict_store_read_tells_absent_from_unavailable(store, monkeypatch):
+    slug = rec._recipe_slug(D)
+    assert recipe_store.db_load_recipes(slug, strict=True) is None, "no row: absent"
+    store.write_db(D, [_row(PROD_URL, OLD)])
+    rows, saved = recipe_store.db_load_recipes(slug, strict=True)
+    assert rows[0]["url"] == PROD_URL and saved == OLD
+    with sqlite3.connect(store.db_path) as conn:
+        conn.execute("UPDATE dealer_recipes SET recipes_json = '{\"a\": 1}' WHERE dealer_id = ?", (slug,))
+    assert recipe_store.db_load_recipes(slug) is None, "the default read stays best-effort"
+    with pytest.raises(recipe_store.RecipeStoreReadError):
+        recipe_store.db_load_recipes(slug, strict=True)
+    _store_fails(monkeypatch, store, times=2)
+    assert recipe_store.db_load_recipes(slug) is None
+    with pytest.raises(recipe_store.RecipeStoreReadError) as err:
+        recipe_store.db_load_recipes(slug, strict=True)
+    assert "OSError" in str(err.value)
+
+
+def test_an_unnamed_store_treats_a_tagged_cache_as_foreign(store, monkeypatch, caplog):
+    # The store is on but its identity cannot be worked out: a tagged cache cannot be
+    # shown to mirror it, so nothing is pushed up. An untagged cache behaves as before.
+    cache = store.dirs["mbp"]
+    _tag_for(cache, LOCAL_DSN, monkeypatch)
+    store.write_db(D, [_row(PROD_URL, OLD)])
+    path = store.write_file("mbp", D, [_row(LOCAL_URL, NEW)])
+    before = path.read_bytes()
+
+    def unparseable(_dsn):
+        raise ValueError("Invalid IPv6 URL")
+
+    monkeypatch.setattr(rec, "_pg_store_identity", unparseable)
+    with caplog.at_level(logging.WARNING, logger="scanner"):
+        (r,) = load_recipes(D)
+
+    assert r.url == PROD_URL and [x["url"] for x in store.db_row(D)["rows"]] == [PROD_URL]
+    assert path.read_bytes() == before
+    (warning,) = _mismatch_warnings(caplog)
+    assert "could not be named" in warning.getMessage()
+    assert rec.check_cache_store().verdict == "mismatch"
+    (cache / rec.STORE_TAG_FILENAME).unlink()
+    assert rec.check_cache_store().verdict == "store unknown" and not rec.check_cache_store().foreign
 
 
 # ── a missing tag ──────────────────────────────────────────────────────────────
@@ -414,6 +643,18 @@ def test_status_cli_reads_the_cache_dir_named_by_recipes_cache_dir(tmp_path, mon
     for secret in SECRETS:
         assert secret not in out.stdout + out.stderr
     assert sorted(p.name for p in cache.iterdir()) == before, "--status writes nothing"
+
+
+def test_status_require_match_fails_an_untagged_cache(store, monkeypatch, capsys):
+    # A script gate (`--status --require-match && <push the cache into the store>`) must
+    # not pass a cache that was never tied to this store.
+    assert rec.main(["--status"]) == 0 and "verdict:      untagged" in capsys.readouterr().out
+    assert rec.main(["--status", "--require-match"]) == 1
+    _tag_for(store.dirs["mbp"], LOCAL_DSN, monkeypatch)
+    assert rec.main(["--status", "--require-match"]) == 0
+    assert "verdict:      match" in capsys.readouterr().out
+    with pytest.raises(SystemExit):
+        rec.main(["--reseed", "--require-match"])
 
 
 def test_the_cli_honours_a_recipes_cache_dir_that_only_dotenv_sets(tmp_path):
