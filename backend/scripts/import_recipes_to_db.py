@@ -1,65 +1,55 @@
 #!/usr/bin/env python3
 """
-Backfill ``workspace/recipes/*.json`` into the ``dealer_recipes`` table.
+Import ``workspace/recipes/*.json`` into the ``dealer_recipes`` table.
 
-Idempotent: a dealer's DB row is only overwritten when the file is fresher
-(max ``saved_at``). Safe to re-run any time — e.g. after a scan that ran with
-pre-DB code finishes writing recipe files.
+A wrapper around ``reconcile_recipe_store --cache-dir`` on the recipe cache dir
+(``RECIPES_CACHE_DIR``, else ``<repo>/workspace/recipes``); see that module for the
+rules. It merges each cache file into the store per recipe and never overwrites a newer
+DB set wholesale: a cache recipe older than the DB set's last write is dropped, the DB's
+copy of a recipe on both sides stays unless the cache shows a newer success, and DB-only
+recipes are kept. (Until P1C.2 it pushed every file whose max ``saved_at`` beat the DB
+row's over that row, so a July file replaced a September set saved with ``saved_at=0``.)
+The cache files that differ from the merged set are then rewritten from the DB.
 
-  PYTHONPATH=. python backend/scripts/import_recipes_to_db.py [--dry-run]
+Without ``--dry-run`` it applies: the cache dir is tarred and every row it will write is
+exported into ``<backup dir>/recipes_reconcile_<UTC stamp>/`` first (default backup dir
+``<repo>/workspace/backups``), each write is guarded, and a cache tagged for another
+store (``_store.json``) is refused. Exit status: 0 done, 1 some dealer skipped or
+failed (see the report), 2 refused.
+
+  PYTHONPATH=. python backend/scripts/import_recipes_to_db.py [--dry-run] [--backup-dir DIR]
 """
 from __future__ import annotations
 
 import argparse
-import json
 import sys
 from pathlib import Path
 
 _REPO_ROOT = Path(__file__).resolve().parents[2]
-sys.path.insert(0, str(_REPO_ROOT))
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
 
-from backend.utils.project_env import load_project_dotenv
+from backend.utils.project_env import load_project_dotenv  # noqa: E402
 
 load_project_dotenv()
 
-from backend.scanner.recipe_store import db_load_recipes, db_save_recipes  # noqa: E402
-from backend.scanner.recipes import RECIPES_DIR  # noqa: E402
+from backend.scanner import recipes  # noqa: E402
+from backend.scripts import reconcile_recipe_store  # noqa: E402
 
 
-def main() -> None:
-    ap = argparse.ArgumentParser(description="Import recipe files into dealer_recipes")
-    ap.add_argument("--dry-run", action="store_true")
-    args = ap.parse_args()
-
-    # Underscore-prefixed files (e.g. _aliases.json) are metadata, not dealer recipes.
-    files = (
-        sorted(p for p in RECIPES_DIR.glob("*.json") if not p.name.startswith("_"))
-        if RECIPES_DIR.is_dir() else []
-    )
-    stats = {"files": len(files), "imported": 0, "kept_db": 0, "unparsable": 0}
-    for path in files:
-        try:
-            rows = json.loads(path.read_text(encoding="utf-8"))
-        except (OSError, ValueError):
-            stats["unparsable"] += 1
-            continue
-        if not isinstance(rows, list) or not rows:
-            stats["unparsable"] += 1
-            continue
-        dealer_id = path.stem
-        file_saved = max(
-            (float(r.get("saved_at") or 0) for r in rows if isinstance(r, dict)),
-            default=0.0,
-        )
-        existing = db_load_recipes(dealer_id)
-        if existing is not None and existing[1] >= file_saved:
-            stats["kept_db"] += 1
-            continue
-        stats["imported"] += 1
-        if not args.dry_run:
-            db_save_recipes(dealer_id, rows)
-    print(stats, flush=True)
+def main(argv: list[str] | None = None) -> int:
+    ap = argparse.ArgumentParser(description="Import recipe files into dealer_recipes "
+                                             "(reconcile_recipe_store --cache-dir on the recipe cache dir)")
+    ap.add_argument("--dry-run", action="store_true", help="report only; write nothing but the report")
+    ap.add_argument("--backup-dir", default=None,
+                    help=f"where the run dir goes (default {reconcile_recipe_store.DEFAULT_BACKUP_PARENT})")
+    args = ap.parse_args(argv)
+    backup_dir = args.backup_dir or str(reconcile_recipe_store.DEFAULT_BACKUP_PARENT)
+    forwarded = ["--cache-dir", str(recipes.RECIPES_DIR), "--backup-dir", backup_dir]
+    if not args.dry_run:
+        forwarded.append("--apply")
+    return reconcile_recipe_store.main(forwarded)
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())
