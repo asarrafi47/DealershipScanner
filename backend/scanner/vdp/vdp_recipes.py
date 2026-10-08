@@ -14,8 +14,10 @@ Lifecycle
   dealer done    -> ``promote_candidates`` (dispatch, after the VDP pool)
   next scan      -> ``apply_vdp_recipes``  (prefetch, before the HTML http-first pass)
 
-Storage: ``workspace/recipes/vdp/<dealer>.json`` (file only for now; the list
-recipes' Postgres mirror does not carry these yet).
+Storage: ``<recipe cache dir>/vdp/<dealer>.json``, i.e.
+``<repo>/workspace/recipes/vdp`` or ``$RECIPES_CACHE_DIR/vdp`` (see
+``backend.scanner.recipes.resolve_recipes_dir``); file only for now, the list
+recipes' Postgres mirror does not carry these yet. Saves are atomic.
 """
 from __future__ import annotations
 
@@ -30,9 +32,14 @@ from pathlib import Path
 from typing import Any, Callable
 from urllib.parse import urlparse
 
+from backend.scanner.recipes import _atomic_write_json, resolve_recipes_dir
+
 log = logging.getLogger("scanner.vdp")
 
-VDP_RECIPES_DIR = Path(__file__).resolve().parents[3] / "workspace" / "recipes" / "vdp"
+# Follows the list-recipe cache: ``<repo>/workspace/recipes/vdp`` (anchored at
+# the repo root, not the cwd), or ``$RECIPES_CACHE_DIR/vdp``. Tests monkeypatch
+# this name.
+VDP_RECIPES_DIR = resolve_recipes_dir() / "vdp"
 
 _MAX_RECIPES_PER_DEALER = 6
 _MAX_FAILS_BEFORE_STALE = 3
@@ -238,7 +245,7 @@ def load_vdp_recipes(dealer_id: str) -> list[VdpRecipe]:
 
 def save_vdp_recipes(dealer_id: str, recipes: list[VdpRecipe]) -> None:
     VDP_RECIPES_DIR.mkdir(parents=True, exist_ok=True)
-    _path(dealer_id).write_text(json.dumps([asdict(r) for r in recipes], indent=1), encoding="utf-8")
+    _atomic_write_json(_path(dealer_id), [asdict(r) for r in recipes])
 
 
 # --------------------------------------------------------------------------

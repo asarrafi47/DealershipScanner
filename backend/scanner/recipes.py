@@ -7,6 +7,14 @@ pagination shape) proven to return vehicle rows during a browser scan. Recipes
 are promoted from the ``NetworkObserver`` ledger at the end of each dealer run
 and stored per dealer under ``workspace/recipes/<dealer_id>.json``.
 
+The cache dir (``RECIPES_DIR``) is anchored at the repo root, never the
+process cwd: ``<repo>/workspace/recipes`` (``/app/workspace/recipes`` in the
+Railway image, where ``/app/workspace`` is a symlink onto the volume).
+``RECIPES_CACHE_DIR`` overrides it for the whole process (read once, at
+import); the VDP recipes follow the override as ``<override>/vdp``. Every
+cache write is atomic (``_atomic_write_json``): a crash or a concurrent
+reader never sees a half-written file.
+
 Replay contract (``recipe_fetch`` phase, see ``try_fetch_via_recipes``):
   - attempt each stored recipe over HTTP with the recorded headers;
   - accept only when the parsed result yields >= ``min_vehicles`` unique VINs;
@@ -24,7 +32,9 @@ import json
 import logging
 import os
 import re
+import threading
 import time
+from collections.abc import Mapping
 from datetime import datetime, timezone
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
@@ -35,7 +45,61 @@ from backend.scanner.net import client as net_client
 
 logger = logging.getLogger("scanner")
 
-RECIPES_DIR = Path("workspace") / "recipes"
+RECIPES_CACHE_DIR_ENV = "RECIPES_CACHE_DIR"
+
+
+def resolve_recipes_dir(
+    module_file: str | os.PathLike[str] | None = None,
+    environ: Mapping[str, str] | None = None,
+) -> Path:
+    """The recipe file cache dir: ``RECIPES_CACHE_DIR`` when set, else
+    ``<repo root>/workspace/recipes``.
+
+    The root comes from this module's own location
+    (``<root>/backend/scanner/recipes.py``), so the result never depends on the
+    process cwd. The real path of this file is used but the returned dir is not
+    resolved, so the Railway layout (``/app/workspace`` symlinked onto the
+    volume) keeps ``/app/workspace/recipes``. A relative override is pinned
+    against the cwd once, here, so a later ``chdir`` cannot move the cache.
+    """
+    env = os.environ if environ is None else environ
+    override = (env.get(RECIPES_CACHE_DIR_ENV) or "").strip()
+    if override:
+        return Path(override).expanduser().absolute()
+    root = Path(__file__ if module_file is None else module_file).resolve().parents[2]
+    return root / "workspace" / "recipes"
+
+
+# Module-level name kept on purpose: tests monkeypatch ``RECIPES_DIR`` and
+# scripts import it. Every reader below looks it up at call time.
+RECIPES_DIR = resolve_recipes_dir()
+
+
+def _atomic_write_json(path: Path, obj: Any) -> None:
+    """Write ``obj`` as JSON (``indent=1``, as before) to ``path`` atomically.
+
+    The bytes go to ``<name>.tmp.<pid>.<thread>`` in the same directory, are
+    flushed and fsynced, then ``os.replace``d over ``path``. Readers see the old
+    file or the new one, never a torn one. On any failure the temp file is
+    removed and the previous ``path`` is left byte-identical. Temp names end in
+    ``.tmp.<pid>.<thread>``, so the ``*.json`` globs over the cache dir never
+    match them.
+    """
+    payload = json.dumps(obj, indent=1)
+    tmp = path.with_name(f"{path.name}.tmp.{os.getpid()}.{threading.get_ident()}")
+    try:
+        with open(tmp, "w", encoding="utf-8") as fh:
+            fh.write(payload)
+            fh.flush()
+            os.fsync(fh.fileno())
+        os.replace(tmp, path)
+    except BaseException:
+        try:
+            os.unlink(tmp)
+        except OSError:
+            pass
+        raise
+
 
 # Pagination shapes we know how to walk during replay.
 PAGINATION_CARSCOMMERCE = "carscommerce_page"   # POST body {"page": N, "perPage": M}
@@ -255,7 +319,7 @@ def load_recipes(dealer_id: str) -> list[EndpointRecipe]:
         # (under the current slug, even when the read came from an alias).
         try:
             RECIPES_DIR.mkdir(parents=True, exist_ok=True)
-            _recipe_path(dealer_id).write_text(json.dumps(db_rows, indent=1), encoding="utf-8")
+            _atomic_write_json(_recipe_path(dealer_id), db_rows)
         except OSError:
             pass
         return _rows_to_recipes(db_rows)
@@ -273,7 +337,7 @@ def save_recipes(dealer_id: str, recipes: list[EndpointRecipe]) -> None:
     RECIPES_DIR.mkdir(parents=True, exist_ok=True)
     path = _recipe_path(dealer_id)
     rows = [asdict(r) for r in recipes]
-    path.write_text(json.dumps(rows, indent=1), encoding="utf-8")
+    _atomic_write_json(path, rows)
     try:
         from backend.scanner.recipe_store import db_save_recipes
 

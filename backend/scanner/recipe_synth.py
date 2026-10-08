@@ -43,7 +43,6 @@ lives in ``synth.http`` and is not mirrored here.
 from __future__ import annotations
 
 import logging
-from pathlib import Path
 
 from backend.scanner.http_fetch import open_url  # noqa: F401
 from backend.scanner.recipes import (  # noqa: F401
@@ -285,4 +284,14 @@ from backend.scanner.recipe_validation import (  # noqa: F401
 
 logger = logging.getLogger("scanner")
 
-RECIPES_DIR = Path("workspace") / "recipes"
+
+def __getattr__(name: str):
+    """``RECIPES_DIR`` is the recipe cache dir owned by ``backend.scanner.recipes``
+    (anchored at the repo root, ``RECIPES_CACHE_DIR`` override). It used to be a
+    cwd-relative duplicate here; forward it live so this facade name always
+    equals ``recipes.RECIPES_DIR``, monkeypatched or not."""
+    if name == "RECIPES_DIR":
+        from backend.scanner import recipes as _recipes
+
+        return _recipes.RECIPES_DIR
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
