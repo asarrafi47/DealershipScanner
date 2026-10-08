@@ -124,6 +124,87 @@ After a run, append the per-dealer blocks to the local tree (`workspace/dealer_l
 the learning logs stay in one place — done for the 2026-09-28 test runs (blocks marked
 `appended from the Railway scanner-nightly volume`).
 
+### The recipe cache is tagged with its store
+
+A recipe file cache (`workspace/recipes`, or the dir `RECIPES_CACHE_DIR` names) mirrors one
+`dealer_recipes` store, and `load_recipes` pushes a cache file up into the store whenever the
+file is newer than the store's copy. A cache filled from one store must therefore never be
+used against another: the MBP cache mirrors the local Postgres, and a home-IP run against
+prod with it would push every newer local set into prod. Since P1B.6 each cache dir carries
+`_store.json`, the fingerprint of the store it mirrors: a sha256 of the host, port and
+database name from `INVENTORY_DATABASE_URL` / `DATABASE_URL` (a part the URL leaves out comes
+from `PGHOST` / `PGPORT` / `PGDATABASE`, as libpq does), never the user or password (the file
+holds only the hash and the store kind).
+
+- An untagged cache is tagged for the process's store on the first load that reaches the
+  store (a DB copy came back, or a push-up landed): trust on first use. Every cache that
+  predates this code is untagged until then, so on each host let one ordinary scan run
+  against its usual store before that cache is ever pointed elsewhere, and check that
+  `--status` (below) reads `match` for the expected store: `postgres:localhost:5432/cars` on
+  the MBP, the tunnel's `postgres:localhost:15432/cars` on the mini. A mini command run
+  without the tunnel prefix (the mini `.env` points at its own Postgres) would tag the mini
+  cache for the mini's own store.
+- A process whose store has another fingerprint, or that finds an unreadable tag, or that
+  cannot name its own store (an unparseable URL) while the cache carries a tag, logs one
+  WARNING (`... does not mirror this store ...`) and treats that cache as read-only. It
+  refuses every push-up from the cache, it never writes its store's sets into the cache (no
+  DB adoption), and its saves (a replay's last_ok / un-stale, a stale flag, a promote) go to
+  its own store only. Whenever the store has a copy of a dealer it serves that copy, newer
+  cache file or not, so a save writes the store's set back, not the cache's. The cache
+  therefore stays a faithful mirror of the store it is tagged for, and the next correctly
+  configured run finds nothing in it newer than that store to push up.
+- On such a cache the store read is strict: "no copy" must be shown by the read. When the
+  read fails (a reset link, a statement timeout, a pool error) or the row's `recipes_json`
+  is corrupt, the cache file is served for replay, one WARNING says so (`... could not be
+  read ...`), and every save of that dealer in this process is refused (`... recipe(s)
+  refused ...`, WARNING once, then DEBUG) unless a store read made at save time shows the
+  store has no copy. A refusal holds even after a later load reads the store's copy, since
+  nothing shows which load a save's set came from: a transient failure costs that dealer's
+  last_ok / stale updates for the rest of the run, never the store's copy. A corrupt row is
+  left as it is for a person to look at.
+- With the cache read-only the store is the only copy a save makes, so a failed store write
+  is a lost save and logs one WARNING per error class (`... this save was lost ...`).
+- One gap remains, by design: a dealer whose store read showed no copy gets the cache file,
+  and a save of it seeds the process's store with the other store's set. That is a replay
+  that answered (its last_ok, which a live replay vouches for) or a stale flag after one
+  that failed (the set lands flagged stale). Neither overwrites a store copy. The tag is a
+  guard, not a substitute for the next rule.
+- A process with `RECIPES_DB_DISABLED=1` uses no store, so the tag does not apply to it: it
+  writes its saves into whatever cache it runs on, and the next run on that cache's own
+  store pushes those files up into that store. That is the cache's own store, so it is not a
+  cross-store push, but run file-only work on a scratch `RECIPES_CACHE_DIR` when its saves
+  should not reach the store.
+- Cross-store work gets a cache of its own: `RECIPES_CACHE_DIR=<empty scratch dir>`, as the
+  home-IP prod repair (P6B.2) does. The VDP recipes follow it (`<dir>/vdp`).
+- The same store reached through two URLs (Railway's internal host and the public proxy URL,
+  or a changed proxy port; the mini's tunnel port and `localhost:5432` on the MBP) has two
+  fingerprints. A second URL reads as another store, so the guard fails toward refusing
+  push-ups and leaving the cache alone, never toward pushing.
+- The reverse also holds: the identity is the URL's host, port and database, not the
+  machine, so two different stores behind the same loopback URL share a fingerprint. The
+  MBP's local Postgres and the mini's own Postgres both read `postgres:localhost:5432/cars`.
+  A cache copied from the MBP to the mini and used by a mini command without the tunnel
+  prefix reads as a match, and its newer files are pushed into the mini's own store (the
+  harm stays on the mini). Never copy a cache between machines; let each host fill its own.
+- Not gated by the tag: `backend/scripts/import_recipes_to_db.py` bulk-pushes every cache file
+  whose max `saved_at` is newer than the store's copy, the same file-to-DB rule as
+  `load_recipes`, and never reads `_store.json`. Run against prod with the MBP cache it is
+  exactly the push this tag exists to stop. Gate it with
+  `python -m backend.scanner.recipes --status --require-match && <import>` (follow-up: have it
+  call `check_cache_store()` and refuse unless the verdict is `match`).
+- To move a cache to another store for good: stop the scanners that use it (`--reseed` does
+  not check for a live scanner), put that store's URL in the environment, run
+  `python -m backend.scanner.recipes --reseed --dry-run`, then `--reseed`. It moves the dealer
+  files into `<cache>/_reseed_backups/<UTC stamp>/` and tags the cache for the store; files
+  refill from the store as dealers load. `_aliases.json` and `vdp/` stay. A backed-up set
+  goes into the store only by a deliberate import.
+- `python -m backend.scanner.recipes --status` prints the cache dir, its tag, this process's
+  store and the verdict (`match`, `untagged`, `mismatch`, `no store`, `store unknown`). It
+  writes nothing and exits 1 on a mismatch; with `--require-match` it exits 1 unless the
+  verdict is `match`, so a script gate never passes an untagged cache. Like the scanner, both
+  modes load `.env` before they resolve the cache dir, so a `RECIPES_CACHE_DIR` set only in
+  `.env` names the same cache the scanner uses.
+
 ## How to run it
 
 Deploy (tracked files of `HEAD` only — never `.env`, never `workspace/`):
