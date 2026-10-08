@@ -27,6 +27,15 @@ stripe>=8
 PyJWT[crypto]>=2.8
 pypdf>=4.0
 pymupdf>=1.24
+# Claude SDK: backend/llm/client.py is the only Claude transport (car chat, enrichment).
+# Capped below 1: anthropic 1.x removed temperature from Messages.create (1.12.0 raises
+# TypeError), and the car-chat path always sends one. Lift the cap with that migration.
+anthropic>=0.116,<1
+# PDF text with layout: post_scan/window_sticker.py, enrichment/brochure_extract.py.
+pdfplumber>=0.11
+# .br precompression in the Dockerfile.web build (scripts/build_static_compressed.py);
+# it used to arrive only as a crawl4ai dependency.
+brotli>=1.1
 
 # Browser binaries (not installed by pip). After pip install, run ONE of:
 #   ./backend/scripts/install_scraper_browsers.sh
