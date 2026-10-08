@@ -18,6 +18,13 @@ Storage: ``<recipe cache dir>/vdp/<dealer>.json``, i.e.
 ``<repo>/workspace/recipes/vdp`` or ``$RECIPES_CACHE_DIR/vdp`` (see
 ``backend.scanner.recipes.resolve_recipes_dir``); file only for now, the list
 recipes' Postgres mirror does not carry these yet. Saves are atomic.
+
+The cache dir's store tag (``<recipe cache dir>/_store.json``, see
+``backend.scanner.recipes.check_cache_store``) gates only the list recipes'
+push-ups into ``dealer_recipes``. VDP recipes have no store mirror, so nothing
+here is pushed up, and ``python -m backend.scanner.recipes --reseed`` leaves
+``vdp/`` in place: these are this host's own captures, valid whichever store the
+list cache mirrors.
 """
 from __future__ import annotations
 

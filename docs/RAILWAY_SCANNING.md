@@ -124,6 +124,42 @@ After a run, append the per-dealer blocks to the local tree (`workspace/dealer_l
 the learning logs stay in one place — done for the 2026-09-28 test runs (blocks marked
 `appended from the Railway scanner-nightly volume`).
 
+### The recipe cache is tagged with its store
+
+A recipe file cache (`workspace/recipes`, or the dir `RECIPES_CACHE_DIR` names) mirrors one
+`dealer_recipes` store, and `load_recipes` pushes a cache file up into the store whenever the
+file is newer than the store's copy. A cache filled from one store must therefore never be
+used against another: the MBP cache mirrors the local Postgres, and a home-IP run against
+prod with it would push every newer local set into prod. Since P1B.6 each cache dir carries
+`_store.json`, the fingerprint of the store it mirrors: a sha256 of the host, port and
+database name from `INVENTORY_DATABASE_URL` / `DATABASE_URL`, never the user or password
+(the file holds only the hash and the store kind).
+
+- An untagged cache is tagged for the process's store on the first load that reaches the
+  store (a DB copy came back, or a push-up landed). Every cache that predates this code is
+  untagged until then, so on each host let one ordinary scan run against its usual store
+  before that cache is ever pointed elsewhere.
+- A process whose store has another fingerprint, or that finds an unreadable tag, logs one
+  WARNING (`... does not mirror this store ...`) and refuses every push-up from that cache.
+  For a dealer whose cache file is newer it serves the store's own copy instead, so a replay
+  or an un-stale that saves the set writes the store's set back, not the cache's. Two gaps
+  remain: a dealer with no copy in the store still gets the cache file (and a successful
+  replay then saves it into the store), and everything the run saves or adopts still lands
+  in the foreign cache. The tag is a guard, not a substitute for the next rule.
+- Cross-store work gets a cache of its own: `RECIPES_CACHE_DIR=<empty scratch dir>`, as the
+  home-IP prod repair (P6B.2) does. The VDP recipes follow it (`<dir>/vdp`).
+- The same store reached through two URLs (Railway's internal host and the public proxy URL;
+  the mini's tunnel port and `localhost:5432` on the MBP) has two fingerprints. The tag errs
+  toward refusing, never toward pushing.
+- To move a cache to another store for good: stop the scanners that use it, put that store's
+  URL in the environment, run `python -m backend.scanner.recipes --reseed --dry-run`, then
+  `--reseed`. It moves the dealer files into `<cache>/_reseed_backups/<UTC stamp>/` and tags
+  the cache for the store; files refill from the store as dealers load. `_aliases.json` and
+  `vdp/` stay. A backed-up set goes into the store only by a deliberate import.
+- `python -m backend.scanner.recipes --status` prints the cache dir, its tag, this process's
+  store and the verdict (`match`, `untagged`, `mismatch`, `no store`). It writes nothing and
+  exits 1 on a mismatch.
+
 ## How to run it
 
 Deploy (tracked files of `HEAD` only — never `.env`, never `workspace/`):

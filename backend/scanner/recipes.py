@@ -15,6 +15,14 @@ import); the VDP recipes follow the override as ``<override>/vdp``. Every
 cache write is atomic (``_atomic_write_json``): a crash or a concurrent
 reader never sees a half-written file.
 
+The cache is tagged with the ``dealer_recipes`` store it mirrors:
+``<cache dir>/_store.json`` holds a fingerprint (a sha256 of the store's
+host, port and database name, never credentials). A process whose store has
+another fingerprint warns once and never pushes this cache's files up into
+its store (see ``check_cache_store`` and ``load_recipes``). Re-seed a cache
+for a new store with ``python -m backend.scanner.recipes --reseed``, or point
+``RECIPES_CACHE_DIR`` at a cache of its own.
+
 Replay contract (``recipe_fetch`` phase, see ``try_fetch_via_recipes``):
   - attempt each stored recipe over HTTP with the recorded headers;
   - accept only when the parsed result yields >= ``min_vehicles`` unique VINs;
@@ -28,6 +36,7 @@ from __future__ import annotations
 
 import asyncio
 import copy
+import hashlib
 import json
 import logging
 import os
@@ -39,7 +48,7 @@ from datetime import datetime, timezone
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any
-from urllib.parse import parse_qsl, urlencode, urlparse, urlunparse
+from urllib.parse import parse_qsl, unquote, urlencode, urlparse, urlsplit, urlunparse
 
 from backend.scanner.net import client as net_client
 
@@ -265,6 +274,206 @@ def _recipe_read_path(dealer_id: str) -> Path:
     return path
 
 
+# ── Store identity: which dealer_recipes store this cache mirrors ──────────────
+#
+# A recipe cache dir mirrors ONE ``dealer_recipes`` store. ``load_recipes`` pushes
+# a cache file up into the store when the file is newer, which is right for the
+# store the cache was filled from and wrong for any other: the MBP cache mirrors
+# the local Postgres, and a home-IP run against prod with that cache would push
+# every newer local set into prod. ``_store.json`` in the cache dir records the
+# fingerprint of the store the cache mirrors. The underscore keeps it out of the
+# ``*.json`` dealer listings, like ``_aliases.json``.
+STORE_TAG_FILENAME = "_store.json"
+STORE_TAG_VERSION = 1
+RESEED_BACKUP_DIRNAME = "_reseed_backups"
+_PG_DEFAULT_PORT = 5432
+_LOOPBACK_HOSTS = frozenset({"localhost", "127.0.0.1", "::1"})
+_store_tag_warned: set[tuple[str, str, str]] = set()
+_store_tag_lock = threading.Lock()
+
+
+def _pg_store_identity(dsn: str) -> str:
+    """``postgres:<host>:<port>/<dbname>`` for a Postgres URL.
+
+    Never the user, the password or any other parameter. The port is part of the
+    identity because hosts differ only by port in practice: on the mac mini,
+    ``localhost:15432/cars`` is the SSH tunnel to the MBP's store and
+    ``localhost:5432/cars`` is the mini's own Postgres. Loopback names and a
+    Unix-socket host (empty, or a ``/`` directory) all read ``localhost``.
+    """
+    parts = urlsplit(dsn)
+    query = dict(parse_qsl(parts.query))
+    try:
+        host = parts.hostname or ""
+        port: int | None = parts.port
+    except ValueError:  # multi-host lists ("h1:5432,h2:5432") carry no single port
+        host, port = parts.netloc.rsplit("@", 1)[-1], None
+    host = (host or query.get("host") or "").strip().lower()
+    if not host or host.startswith("/") or host in _LOOPBACK_HOSTS:
+        host = "localhost"
+    if port is None:
+        try:
+            port = int(query.get("port") or _PG_DEFAULT_PORT)
+        except ValueError:
+            port = _PG_DEFAULT_PORT
+    dbname = unquote(parts.path.lstrip("/")) or query.get("dbname") or ""
+    return f"postgres:{host}:{port}/{dbname}"
+
+
+def store_identity() -> str | None:
+    """The ``dealer_recipes`` store this process writes through to, as a
+    credential-free string, or ``None`` when it uses no store.
+
+    Mirrors how ``recipe_store`` connects (``backend.db.inventory_db.get_conn``):
+    the Postgres URL from ``INVENTORY_DATABASE_URL`` / ``DATABASE_URL``, else the
+    SQLite inventory file the test suite runs on. ``None`` when
+    ``RECIPES_DB_DISABLED`` is on or no store is configured: then nothing is
+    pushed up and there is nothing to tag.
+    """
+    try:
+        from backend.scanner.recipe_store import _enabled
+
+        if not _enabled():
+            return None
+        from backend.db import inventory_pg
+
+        dsn = inventory_pg.inventory_postgres_dsn()
+        if dsn:
+            return _pg_store_identity(dsn)
+        if inventory_pg.inventory_sqlite_tests_allowed():
+            from backend.db.repositories.base_repo import _resolve_db_path
+
+            return "sqlite:" + os.path.realpath(_resolve_db_path())
+    except Exception:  # noqa: BLE001 — no identity means no tag, never a failed load
+        return None
+    return None
+
+
+def store_fingerprint(identity: str | None = None) -> str | None:
+    """sha256 hex of ``identity`` (default: this process's ``store_identity()``)."""
+    ident = store_identity() if identity is None else identity
+    if not ident:
+        return None
+    return hashlib.sha256(ident.encode("utf-8")).hexdigest()
+
+
+def read_store_tag(cache_dir: Path | None = None) -> tuple[str, str | None]:
+    """``(state, fingerprint)`` of ``<cache dir>/_store.json``.
+
+    ``state`` is ``"missing"`` (no file), ``"tagged"`` (a fingerprint was read) or
+    ``"unreadable"`` (unreadable, not JSON, or no fingerprint in it).
+    """
+    path = (RECIPES_DIR if cache_dir is None else cache_dir) / STORE_TAG_FILENAME
+    try:
+        raw = json.loads(path.read_text(encoding="utf-8"))
+    except FileNotFoundError:
+        return "missing", None
+    except (OSError, ValueError):
+        return "unreadable", None
+    fp = raw.get("fingerprint") if isinstance(raw, dict) else None
+    if not isinstance(fp, str) or not fp.strip():
+        return "unreadable", None
+    return "tagged", fp.strip()
+
+
+def write_store_tag(identity: str, *, source: str, cache_dir: Path | None = None) -> Path:
+    """Tag the cache dir as the mirror of ``identity``'s store (atomic write).
+
+    The file holds the fingerprint and the store kind (``postgres`` / ``sqlite``),
+    never the identity itself.
+    """
+    d = RECIPES_DIR if cache_dir is None else cache_dir
+    d.mkdir(parents=True, exist_ok=True)
+    path = d / STORE_TAG_FILENAME
+    _atomic_write_json(path, {
+        "version": STORE_TAG_VERSION,
+        "fingerprint": store_fingerprint(identity),
+        "kind": identity.split(":", 1)[0],
+        "tagged_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "tagged_by": source,
+    })
+    return path
+
+
+@dataclass(frozen=True)
+class CacheStoreCheck:
+    """This process's store against the store the cache dir is tagged with."""
+
+    cache_dir: Path
+    identity: str | None             # this process's store (None: no store in use)
+    fingerprint: str | None
+    tag_state: str                   # "missing" | "tagged" | "unreadable"
+    tag_fingerprint: str | None
+
+    @property
+    def foreign(self) -> bool:
+        """The cache mirrors another store (or its tag cannot be read): its
+        files are never pushed up into this process's store."""
+        if self.fingerprint is None:
+            return False
+        if self.tag_state == "unreadable":
+            return True
+        return self.tag_state == "tagged" and self.tag_fingerprint != self.fingerprint
+
+    @property
+    def untagged(self) -> bool:
+        """No tag yet and a store in use: the first successful load tags it."""
+        return self.fingerprint is not None and self.tag_state == "missing"
+
+    @property
+    def verdict(self) -> str:
+        if self.fingerprint is None:
+            return "no store"
+        if self.foreign:
+            return "mismatch"
+        return "untagged" if self.untagged else "match"
+
+
+def check_cache_store(cache_dir: Path | None = None) -> CacheStoreCheck:
+    """Compare this process's store with the cache's ``_store.json`` tag.
+
+    On a mismatch (or an unreadable tag) it logs one WARNING per process for that
+    cache dir and pair of fingerprints; ``load_recipes`` then refuses push-ups.
+    """
+    d = RECIPES_DIR if cache_dir is None else cache_dir
+    identity = store_identity()
+    fp = store_fingerprint(identity) if identity else None
+    state, tag_fp = read_store_tag(d)
+    check = CacheStoreCheck(d, identity, fp, state, tag_fp)
+    if check.foreign:
+        key = (str(d), tag_fp or "<unreadable>", fp or "")
+        with _store_tag_lock:
+            first = key not in _store_tag_warned
+            _store_tag_warned.add(key)
+        if first:
+            tagged = f"tagged for store {tag_fp[:12]}" if tag_fp else "carries an unreadable store tag"
+            logger.warning(
+                "Recipe cache %s %s, but this process writes to %s (%s): it does not mirror this "
+                "store, so no cache file is pushed up into it and a newer cache file never wins "
+                "over the store's own copy. Point RECIPES_CACHE_DIR at a cache for this store, or "
+                "re-seed this one with `python -m backend.scanner.recipes --reseed`.",
+                d, tagged, identity, (fp or "")[:12],
+            )
+    return check
+
+
+def _tag_untagged_cache(check: CacheStoreCheck) -> None:
+    """First successful load on an untagged cache: it now mirrors this store."""
+    if not check.untagged or not check.identity:
+        return
+    if read_store_tag(check.cache_dir)[0] != "missing":
+        return  # another loader tagged it meanwhile; its tag stands
+    try:
+        write_store_tag(check.identity, source="load_recipes", cache_dir=check.cache_dir)
+    except OSError as exc:
+        logger.debug("Recipe cache %s: store tag not written: %s", check.cache_dir, exc)
+        return
+    logger.info(
+        "Recipe cache %s tagged as the mirror of store %s (%s)",
+        check.cache_dir, (check.fingerprint or "")[:12], check.identity.split(":", 1)[0],
+    )
+
+
 def _rows_to_recipes(raw: Any) -> list[EndpointRecipe]:
     out: list[EndpointRecipe] = []
     for row in raw if isinstance(raw, list) else []:
@@ -303,8 +512,17 @@ def load_recipes(dealer_id: str) -> list[EndpointRecipe]:
       copy it replaced.
     - Equal: the file is returned and nothing is written.
 
+    Store identity (``_store.json``, see ``check_cache_store``): when the cache
+    dir is tagged for another store than this process's, the push-up is
+    refused, and the store's own copy is returned instead of the newer file
+    (when the store has one), so a caller that saves the set cannot write the
+    other store's file back through. One WARNING per process names the
+    mismatch. An untagged cache is tagged for this process's store on the first
+    load that reached the store (a DB copy came back, or a push-up landed).
+
     Either side being unavailable degrades to the other.
     """
+    store_check = check_cache_store()
     # Read may resolve through _aliases.json (URL-rekeyed dealer); any write
     # below targets the CURRENT slug so the content migrates forward.
     read_path = _recipe_read_path(dealer_id)
@@ -318,12 +536,14 @@ def load_recipes(dealer_id: str) -> list[EndpointRecipe]:
 
     db_rows: list[dict] = []
     db_saved = -1.0
+    store_copy = False
     try:
         from backend.scanner.recipe_store import db_load_recipes
 
         found = db_load_recipes(_recipe_slug(dealer_id))
         if found is not None:
             db_rows, db_saved = found
+            store_copy = True
     except Exception:  # noqa: BLE001 — DB is optional here
         pass
 
@@ -340,11 +560,22 @@ def load_recipes(dealer_id: str) -> list[EndpointRecipe]:
             _atomic_write_json(_recipe_path(dealer_id), db_rows)
         except OSError:
             pass
+        _tag_untagged_cache(store_check)
         return _rows_to_recipes(db_rows)
+    pushed = False
     if file_rows and file_saved > db_saved:
+        if store_check.foreign:
+            # The cache mirrors another store: its newer file is not this store's
+            # history. Never push it up, and never hand it to a caller that would
+            # save it back through (a replay's last_ok update, an un-stale).
+            logger.debug(
+                "Recipes [%s]: push-up refused, the recipe cache is tagged for another store; "
+                "serving %s", dealer_id,
+                f"the store's copy ({len(db_rows)} recipe(s))" if store_copy else "the cache file (no store copy)",
+            )
+            return _rows_to_recipes(db_rows if store_copy else file_rows)
         # Push-up: the rows go up exactly as on file. Never re-stamp here, or the
         # pushed copy would outrank writes other hosts made after this file.
-        pushed = False
         try:
             from backend.scanner.recipe_store import db_save_recipes
 
@@ -361,6 +592,8 @@ def load_recipes(dealer_id: str) -> list[EndpointRecipe]:
                 "(max saved_at %.3f) up and %s",
                 dealer_id, len(file_rows), file_saved, replaced,
             )
+    if store_copy or pushed:
+        _tag_untagged_cache(store_check)
     return _rows_to_recipes(file_rows or db_rows)
 
 
@@ -1286,3 +1519,120 @@ async def try_fetch_via_recipes(
         )
         return union_records, len(union_vins)
     return None
+
+
+# ── Re-seeding a cache for another store (``--reseed``) ───────────────────────
+
+
+@dataclass
+class ReseedResult:
+    cache_dir: Path
+    identity: str
+    fingerprint: str
+    previous_tag: tuple[str, str | None]
+    moved: list[str]
+    backup_dir: Path | None
+    dry_run: bool
+
+
+def reseed_cache(*, cache_dir: Path | None = None, dry_run: bool = False) -> ReseedResult:
+    """Make the cache dir a mirror of this process's store.
+
+    Every dealer recipe file (``*.json`` without a leading underscore) is moved
+    into ``<cache dir>/_reseed_backups/<UTC stamp>/``, then ``_store.json`` is
+    rewritten for this process's store. The files move first and the tag is
+    written last, so an interrupted re-seed leaves the old tag (push-ups still
+    refused), never the new tag over old files. The cache refills from the store
+    as dealers load (a missing file adopts the DB copy). ``_aliases.json`` and the
+    ``vdp/`` dir stay: the alias map is this host's, and VDP recipes have no store
+    mirror. Raises ``RuntimeError`` when this process uses no store.
+    """
+    d = RECIPES_DIR if cache_dir is None else cache_dir
+    identity = store_identity()
+    if not identity:
+        raise RuntimeError(
+            "no recipe store in use (RECIPES_DB_DISABLED is on, or neither INVENTORY_DATABASE_URL "
+            "nor DATABASE_URL names a Postgres store); nothing to re-seed against"
+        )
+    previous = read_store_tag(d)
+    files = sorted(p for p in d.glob("*.json") if not p.name.startswith("_")) if d.is_dir() else []
+    backup: Path | None = None
+    if files:
+        stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+        backup = d / RESEED_BACKUP_DIRNAME / stamp
+    if not dry_run:
+        if backup is not None:
+            base, n = backup, 1
+            while True:  # never mix two re-seeds' files in one backup dir
+                try:
+                    backup.mkdir(parents=True, exist_ok=False)
+                    break
+                except FileExistsError:
+                    n += 1
+                    backup = base.with_name(f"{base.name}-{n}")
+            for p in files:
+                os.replace(p, backup / p.name)
+        write_store_tag(identity, source="reseed", cache_dir=d)
+    return ReseedResult(d, identity, store_fingerprint(identity) or "", previous,
+                        [p.name for p in files], backup, dry_run)
+
+
+def main(argv: list[str] | None = None) -> int:
+    """``python -m backend.scanner.recipes [--status | --reseed [--dry-run]]``."""
+    import argparse
+
+    from backend.utils.project_env import load_project_dotenv
+
+    ap = argparse.ArgumentParser(
+        prog="python -m backend.scanner.recipes",
+        description="Show or re-seed the store tag (_store.json) of the recipe cache dir "
+                    "(RECIPES_CACHE_DIR, else <repo>/workspace/recipes).",
+    )
+    mode = ap.add_mutually_exclusive_group()
+    mode.add_argument("--status", action="store_true",
+                      help="print the cache dir, its tag and this process's store (default)")
+    mode.add_argument("--reseed", action="store_true",
+                      help="move the dealer recipe files into _reseed_backups/<stamp>/ and tag the "
+                           "cache for this process's store; stop scanners on this cache first")
+    ap.add_argument("--dry-run", action="store_true", help="with --reseed: report, change nothing")
+    args = ap.parse_args(argv)
+    if args.dry_run and not args.reseed:
+        ap.error("--dry-run only goes with --reseed")
+    # The same .env the scanner loads (shell values win), so the store matches a scan's.
+    load_project_dotenv()
+
+    if args.reseed:
+        try:
+            res = reseed_cache(dry_run=args.dry_run)
+        except RuntimeError as exc:
+            print(f"reseed refused: {exc}")
+            return 2
+        verb = "would move" if res.dry_run else "moved"
+        prev_state, prev_fp = res.previous_tag
+        prev = f"{prev_state} {prev_fp[:12]}" if prev_fp else prev_state
+        print(f"recipe cache: {res.cache_dir}")
+        print(f"previous tag: {prev}")
+        print(f"{verb} {len(res.moved)} dealer recipe file(s)"
+              + (f" to {res.backup_dir}" if res.backup_dir else ""))
+        print(f"{'would tag' if res.dry_run else 'tagged'} for store {res.identity} "
+              f"(fingerprint {res.fingerprint[:12]}); the cache refills from the store as dealers load")
+        return 0
+
+    check = check_cache_store()
+    files = sorted(p for p in check.cache_dir.glob("*.json") if not p.name.startswith("_")) \
+        if check.cache_dir.is_dir() else []
+    print(f"recipe cache: {check.cache_dir} ({len(files)} dealer recipe file(s))")
+    print(f"cache tag:    {check.tag_state}"
+          + (f" {check.tag_fingerprint[:12]}" if check.tag_fingerprint else ""))
+    print(f"this process: {check.identity or 'no recipe store'}"
+          + (f" (fingerprint {check.fingerprint[:12]})" if check.fingerprint else ""))
+    print(f"verdict:      {check.verdict}")
+    return 1 if check.foreign else 0
+
+
+if __name__ == "__main__":
+    # Run the imported module's main, not this __main__ copy, so module state
+    # (RECIPES_DIR, the warn-once set) is the one every other importer sees.
+    from backend.scanner.recipes import main as _main
+
+    raise SystemExit(_main())
