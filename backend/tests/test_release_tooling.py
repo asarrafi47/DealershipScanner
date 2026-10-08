@@ -21,6 +21,9 @@ Covered:
   origin/main;
 - the hook on main: the release guard, based on the sha the remote reported
   (not a stale local origin/main);
+- D-REL3 (a) (P2B.1): no branch-name exemption (phase/* and ci/* bump like any
+  branch; a shakedown re-uses a bump only under a new branch name), and a
+  ``<branch>:main`` push is judged by the release guard, not the branch rule;
 - the guard itself: semver rise, CHANGELOG section parsing, containment,
   all-zero base, unresolvable refs, Python 3.9 / stdlib-only source;
 - the CI ``release-guard`` job: id, needs, if, fetch, and its base selection
@@ -462,6 +465,91 @@ def test_hook_main_push_that_creates_main_needs_only_the_section(tmp_path, git_e
         repo.git("config", "core.hooksPath", "scripts/git-hooks")
         proc = repo.push("main")
         assert (proc.returncode == 0) is ok, (name, proc.stderr)
+
+
+# --- D-REL3 (a): every push bumps; main also gets the release guard (P2B.1) ---------
+#
+# Owner decision 2026-10-08: option (a), not (b). The hook keeps "VERSION must
+# change" on every branch, with no exemption by branch name, and adds the release
+# guard for pushes to main. These pin that for the D-REL2 trunk model: phase/*
+# branches, the P2A.5 ci/shakedown-<n> branches, and the `git push origin
+# <branch>:main` fast-forward that P2B.3 releases with.
+
+
+@pytest.mark.parametrize("branch", ["phase/3", "ci/shakedown-1"])
+def test_d_rel3_phase_and_ci_branches_need_a_new_version_like_any_branch(pushed, branch):
+    repo = pushed
+    repo.git("checkout", "-q", "-b", branch)
+    repo.commit("work", {"app.py": "x = 20\n"})
+
+    refused = repo.push(branch)
+    assert refused.returncode != 0
+    assert "pre-push: VERSION is still 1.5.3" in refused.stderr
+    assert remote_sha(repo, f"refs/heads/{branch}") == ""
+
+    # A bump with an empty [Unreleased] leaves an empty [1.5.4] section. The
+    # release guard would refuse that; on a non-main branch it does not run.
+    assert repo.bump("patch").returncode == 0
+    repo.git("commit", "-q", "-m", "bump")
+    accepted = repo.push(branch)
+    assert accepted.returncode == 0, accepted.stderr
+    assert "release_guard" not in accepted.stdout + accepted.stderr
+    assert remote_sha(repo, f"refs/heads/{branch}") == repo.sha()
+
+
+def test_d_rel3_ci_shakedown_reuses_the_bump_only_under_a_new_branch_name(pushed):
+    # P2A.5: the bumped integration HEAD goes to a NEW ci/shakedown-<n>. A new
+    # branch is compared with origin/main, whose VERSION is older, so it needs
+    # no extra bump. Re-pushing the same name with more work would need one,
+    # which is why every iteration takes a new name.
+    repo = pushed
+    repo.git("checkout", "-q", "-b", "integration")
+    repo.commit("work, bumped", {"app.py": "x = 21\n", "VERSION": "1.5.4\n"})
+    first = repo.push("HEAD:refs/heads/ci/shakedown-1")
+    assert first.returncode == 0, first.stderr
+
+    repo.commit("ci fix", {"app.py": "x = 22\n"})  # still 1.5.4
+    again = repo.push("HEAD:refs/heads/ci/shakedown-1")
+    assert again.returncode != 0
+    assert "pre-push: VERSION is still 1.5.4" in again.stderr
+
+    fresh = repo.push("HEAD:refs/heads/ci/shakedown-2")
+    assert fresh.returncode == 0, fresh.stderr
+    assert remote_sha(repo, "refs/heads/ci/shakedown-2") == repo.sha()
+
+
+def test_d_rel3_a_branch_pushed_to_main_is_judged_by_the_release_guard(pushed):
+    # P2B.3 releases with `git push origin <branch>:main`. The hook keys on the
+    # remote ref, so the branch's own rule (VERSION differs) is not enough for
+    # main: VERSION must rise and CHANGELOG.md needs a filled section.
+    repo = pushed
+    main_before = remote_sha(repo, "refs/heads/main")
+    repo.git("checkout", "-q", "-b", "phase/3")
+    repo.commit("work", {"app.py": "x = 23\n"})
+
+    unbumped = repo.push("phase/3:main")
+    assert unbumped.returncode != 0
+    assert "does not rise above 1.5.3" in unbumped.stderr
+
+    assert repo.bump("patch").returncode == 0  # empty [Unreleased] -> empty [1.5.4]
+    repo.git("commit", "-q", "-m", "bump, no notes")
+    assert repo.push("phase/3").returncode == 0  # the branch rule is satisfied
+
+    no_notes = repo.push("phase/3:main")
+    assert no_notes.returncode != 0
+    assert "empty '## [1.5.4]' section" in no_notes.stderr
+    assert "pre-push: refused the push to main" in no_notes.stderr
+    assert remote_sha(repo, "refs/heads/main") == main_before
+
+    text = repo.read("CHANGELOG.md")
+    heading = next(line for line in text.splitlines() if line.startswith("## [1.5.4]"))
+    repo.commit("notes", {"CHANGELOG.md": text.replace(heading, heading + "\n\n### Fixed\n- x is 23.")})
+    assert repo.push("phase/3").returncode == 0  # CHANGELOG-only: bump-only path
+
+    released = repo.push("phase/3:main")
+    assert released.returncode == 0, released.stderr
+    assert "release_guard: OK" in released.stdout + released.stderr
+    assert remote_sha(repo, "refs/heads/main") == repo.sha() == remote_sha(repo, "refs/heads/phase/3")
 
 
 # --- release_guard.py -------------------------------------------------------------
