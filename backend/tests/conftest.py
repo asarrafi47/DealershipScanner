@@ -23,6 +23,11 @@ So this file provides, in order:
 * ``_vpic_offline`` (autouse) - NHTSA vPIC decodes fail the way an unreachable
   vPIC fails, so no test reaches vpic.nhtsa.dot.gov; ``@pytest.mark.real_vpic_client``
   opts out. ``fake_dns`` resolves public names from a table for the SSRF guards.
+* ``_network_guard`` (session, autouse) - with ``TESTS_BLOCK_NETWORK=1`` (CI sets
+  it) every connect to a non-loopback address is refused with ``NetworkBlocked``
+  and counted per test; the terminal summary lists the tests that tried
+  ("NETWORK-BLOCKED CONNECTS") and the junit XML carries a ``network_blocked``
+  property per destination. Unset, nothing is patched.
 * ``_forbid_real_dictionary_writes`` (session, autouse) - makes writing anywhere
   under the real dictionary tree raise ``RealDictionaryWriteBlocked``, no matter
   which module's namespace holds the path. The patches are in-process, so a test
@@ -49,6 +54,7 @@ So this file provides, in order:
 from __future__ import annotations
 
 import builtins
+import errno
 import hashlib
 import importlib
 import io
@@ -187,6 +193,201 @@ def fake_dns(monkeypatch: pytest.MonkeyPatch) -> FakeDns:
 
 
 # ---------------------------------------------------------------------------
+# Network guard: TESTS_BLOCK_NETWORK=1 refuses non-loopback connects
+# ---------------------------------------------------------------------------
+#
+# The vPIC stub and ``fake_dns`` above close the two network paths we knew
+# about. Anything else a test reaches (a scanner fetch nobody stubbed, a
+# geocoder, an OEM endpoint) goes to the real internet, so a result can depend
+# on what a remote host said that day, and on CI it can hang or flake. With
+# ``TESTS_BLOCK_NETWORK=1`` (CI sets it) every socket connect to a non-loopback
+# destination is refused with ``NetworkBlocked``: a ``ConnectionRefusedError``
+# (ECONNREFUSED), so the code under test sees what a firewalled host gives it.
+# ``connect_ex`` returns ECONNREFUSED instead of raising, as the real one does.
+# Each refused attempt is counted against the running test: the terminal
+# summary lists those tests ("NETWORK-BLOCKED CONNECTS"), and every distinct
+# destination becomes a ``network_blocked`` property on the test's junit case.
+# That list is class (f) of the CI failure ledger.
+#
+# Allowed: 127.0.0.0/8, ::1 (also as ::ffff:127.x), the unspecified address
+# (0.0.0.0, ::, "" - a connect there lands on this host), the localhost names,
+# and every non-IP family, i.e. unix sockets. A private LAN address is the
+# network (the mini is 192.168.1.89), so it is refused. A hostname that is not a
+# localhost name is refused WITHOUT being resolved: it cannot be proven local
+# without DNS. Not covered: name resolution itself (``getaddrinfo`` is not a
+# connect; ``fake_dns`` covers the tests that need it) and connects made while
+# test modules are imported, before the session fixture is set up.
+#
+# Unset, or any value other than "1": nothing is patched at all.
+
+TESTS_BLOCK_NETWORK_ENV = "TESTS_BLOCK_NETWORK"
+NETWORK_BLOCKED_PROPERTY = "network_blocked"
+_LOOPBACK_NAMES = frozenset({"", "localhost", "localhost.localdomain", "ip6-localhost", "ip6-loopback"})
+
+
+class NetworkBlocked(ConnectionRefusedError):
+    """A test connected to a non-loopback address while ``TESTS_BLOCK_NETWORK=1``."""
+
+
+def network_guard_enabled() -> bool:
+    return (os.environ.get(TESTS_BLOCK_NETWORK_ENV) or "").strip() == "1"
+
+
+def host_is_loopback(host: Any) -> bool:
+    """True when *host* (an IP literal or a name) is this machine without DNS."""
+    if isinstance(host, (bytes, bytearray)):
+        host = bytes(host).decode("ascii", "replace")
+    name = str(host if host is not None else "").strip().lower().rstrip(".")
+    if name.startswith("[") and name.endswith("]"):
+        name = name[1:-1]
+    if name in _LOOPBACK_NAMES or name.endswith(".localhost"):
+        return True
+    try:
+        ip = ipaddress.ip_address(name)
+    except ValueError:
+        return False  # a name we cannot prove local without resolving it
+    mapped = getattr(ip, "ipv4_mapped", None)
+    if mapped is not None:
+        ip = mapped
+    return ip.is_loopback or ip.is_unspecified
+
+
+def destination_allowed(family: Any, address: Any) -> bool:
+    """Whether a ``connect(address)`` on a socket of *family* stays on this host."""
+    if family not in (socket.AF_INET, socket.AF_INET6):
+        return True  # AF_UNIX and the other local families
+    if not isinstance(address, tuple) or not address:
+        return True  # malformed: let the real connect raise its own error
+    return host_is_loopback(address[0])
+
+
+def describe_destination(address: Any) -> str:
+    if isinstance(address, tuple) and len(address) >= 2:
+        host = address[0]
+        if isinstance(host, (bytes, bytearray)):
+            host = bytes(host).decode("ascii", "replace")
+        host = str(host)
+        return f"[{host}]:{address[1]}" if ":" in host else f"{host}:{address[1]}"
+    return repr(address)
+
+
+class NetworkGuard:
+    """Refuses non-loopback connects and remembers which test tried them.
+
+    ``current`` is the pytest item running now (set by the
+    ``pytest_runtest_protocol`` wrapper below); ``attempts`` maps its nodeid to
+    every destination it was refused, repeats included.
+    """
+
+    def __init__(self) -> None:
+        self.attempts: dict[str, list[str]] = {}
+        self.current: Any = None
+        self.installed = False
+
+    def _refused(self, destination: str) -> NetworkBlocked:
+        item = self.current
+        nodeid = getattr(item, "nodeid", None) or "<outside a test>"
+        seen = self.attempts.setdefault(nodeid, [])
+        if destination not in seen and item is not None:
+            item.user_properties.append((NETWORK_BLOCKED_PROPERTY, destination))
+        seen.append(destination)
+        return NetworkBlocked(
+            errno.ECONNREFUSED,
+            f"{TESTS_BLOCK_NETWORK_ENV}=1 refused a connect to {destination}: tests "
+            "must not reach the network. Stub the call (the vPIC stub and "
+            "fake_dns in backend/tests/conftest.py show how) or connect to loopback.",
+        )
+
+    def install(self, mp: pytest.MonkeyPatch) -> None:
+        """Patch ``socket.socket.connect``/``connect_ex`` and ``socket.create_connection``.
+
+        The class attributes are patched, so every socket - including
+        ``ssl.SSLSocket`` and the ones urllib3/asyncio create - goes through
+        them. What is wrapped is whatever is installed now, so a second guard
+        stacks on the first and ``mp.undo()`` restores it.
+        """
+        real_connect = socket.socket.connect
+        real_connect_ex = socket.socket.connect_ex
+        real_create_connection = socket.create_connection
+        guard = self
+
+        def connect(sock: socket.socket, address: Any) -> None:
+            if not destination_allowed(sock.family, address):
+                raise guard._refused(describe_destination(address))
+            return real_connect(sock, address)
+
+        def connect_ex(sock: socket.socket, address: Any) -> int:
+            if not destination_allowed(sock.family, address):
+                guard._refused(describe_destination(address))
+                return errno.ECONNREFUSED
+            return real_connect_ex(sock, address)
+
+        def create_connection(address: Any, *args: Any, **kwargs: Any) -> socket.socket:
+            # Checked before the real one resolves the name, so a refused host
+            # costs no DNS lookup; an allowed one is re-checked per resolved
+            # address by ``connect`` above.
+            if isinstance(address, tuple) and address and not host_is_loopback(address[0]):
+                raise guard._refused(describe_destination(address))
+            return real_create_connection(address, *args, **kwargs)
+
+        mp.setattr(socket.socket, "connect", connect)
+        mp.setattr(socket.socket, "connect_ex", connect_ex)
+        mp.setattr(socket, "create_connection", create_connection)
+        self.installed = True
+
+
+_NETWORK_GUARD = NetworkGuard()
+
+
+@pytest.fixture(scope="session", autouse=True)
+def _network_guard() -> Iterator[NetworkGuard | None]:
+    """Session-wide, so module- and class-scoped fixtures are covered too."""
+    if not network_guard_enabled():
+        yield None
+        return
+    mp = pytest.MonkeyPatch()
+    _NETWORK_GUARD.install(mp)
+    try:
+        yield _NETWORK_GUARD
+    finally:
+        mp.undo()
+
+
+@pytest.hookimpl(hookwrapper=True)
+def pytest_runtest_protocol(item: Any, nextitem: Any):  # noqa: ANN201 - pytest hook
+    """Attribute refused connects to the test whose setup/call/teardown made them."""
+    _NETWORK_GUARD.current = item
+    yield
+    _NETWORK_GUARD.current = None
+
+
+def _network_guard_summary(terminalreporter: Any) -> None:
+    if not _NETWORK_GUARD.installed:
+        return
+    attempts = _NETWORK_GUARD.attempts
+    total = sum(len(v) for v in attempts.values())
+    if not attempts:
+        terminalreporter.section(
+            f"NETWORK GUARD ({TESTS_BLOCK_NETWORK_ENV}=1): no test tried to reach the network",
+            sep="=",
+        )
+        return
+    terminalreporter.section(
+        f"NETWORK-BLOCKED CONNECTS: {total} in {len(attempts)} test(s) "
+        f"({TESTS_BLOCK_NETWORK_ENV}=1)",
+        sep="=",
+    )
+    for nodeid, dests in attempts.items():
+        unique = list(dict.fromkeys(dests))
+        shown = ", ".join(unique[:3]) + (f", +{len(unique) - 3} more" if len(unique) > 3 else "")
+        terminalreporter.line(f"  {nodeid}  [{len(dests)}x: {shown}]")
+    terminalreporter.line(
+        "  (each was refused with NetworkBlocked; stub these calls - they are "
+        "class (f) of the CI failure ledger)"
+    )
+
+
+# ---------------------------------------------------------------------------
 # 0. Asset-gated skips are counted, and on asset-bearing machines they fail
 # ---------------------------------------------------------------------------
 #
@@ -245,6 +446,11 @@ def pytest_runtest_makereport(item: Any, call: Any):  # noqa: ANN201 - pytest ho
 
 
 def pytest_terminal_summary(terminalreporter: Any, exitstatus: int, config: Any) -> None:
+    _network_guard_summary(terminalreporter)
+    _asset_gate_summary(terminalreporter)
+
+
+def _asset_gate_summary(terminalreporter: Any) -> None:
     gated: list[tuple[str, str]] = []
     for report in terminalreporter.stats.get("skipped", ()):
         reason = _skip_reason_of(report)
