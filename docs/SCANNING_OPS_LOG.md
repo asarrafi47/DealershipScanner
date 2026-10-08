@@ -1260,3 +1260,17 @@ Review: pass, no blocking items. On 2026-10-08 the reviewer confirmed the job st
   3. Verify: the variable reads `0`; web's newest deployment is SUCCESS; `/api/health` reports 1.5.1 on both origins; the car-chat research path no longer launches Playwright for a logged-in session.
   4. Append the result here as a dated block.
 - Phase 0A exit gate item "The D-SEC1 stopgap env is set on Railway web" stays unmet until then.
+
+## Owner prod actions and an accidental-command revert (2026-10-08)
+
+Run by the owner from a terminal in this checkout (Railway CLI linked to dealership-scanner / scanner-nightly), verified read-only afterwards with the GraphQL snapshot helper (deployment lists for all services in all visible projects) and the variable-name filter.
+
+- P0A.4 step 4: `railway down -s scanner-scheduler -y` removed deployment 50ac4514 (SUCCESS -> REMOVED). dealer_jobs was empty at every check.
+- D-REL1 (a): scanner-scheduler and scanner-worker deleted in the dashboard (staged, then applied by the owner). The project now has Postgres, scanner-nightly, web. Neither deleted service had a volume; web carries REVEST_VAULT_TOKEN / REVEST_VAULT_URL.
+- D-SEC1 stopgap: `CAR_CHAT_WEB_RESEARCH=0` set on web (`--skip-deploys`).
+- Security: `ALLOW_APP_ADMIN_DEV_PASS_THROUGH` deleted from web. App role=admin sessions no longer pass into /dev; /dev needs a /dev/login account.
+- Accidental commands meant for another project (owner ran them in this checkout):
+  - `railway variable set STUDIO_DIGEST_HOUR=13 STUDIO_DIGEST_DISABLED=1 --service web --skip-deploys` added two variables to dealership-scanner web. Reverted: both deleted. Web variable names now equal the 10-07 P0A.1 baseline except the two intended changes above (+CAR_CHAT_WEB_RESEARCH, -ALLOW_APP_ADMIN_DEV_PASS_THROUGH).
+  - A bare `railway up` (zsh `!` plus line breaks dropped the arguments) uploaded this checkout to the linked service scanner-nightly and was interrupted with Ctrl-C. Railway recorded deployment 152fb03c as FAILED ("Failed to create code snapshot"); nothing ran, the 09-29 deployment 90a3d2a0 is unchanged, no fleet started. Nothing to revert.
+- `railway redeploy -s web` (same image) applied the variable changes: deployment d9aaa75e SUCCESS (16:54 EDT), c9872e66 REMOVED; https://sarraficars.com/api/health = 200 {"status":"ok","version":"1.5.1"}.
+- Lesson: the Railway CLI targets the project linked to the current directory; run `railway status` first. In a plain terminal there is no `!` prefix; keep a pasted command on one line or end lines with `\`.
