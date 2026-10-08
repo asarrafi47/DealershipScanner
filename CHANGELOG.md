@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [1.5.3] - 2026-10-08
+
 ### Added
 - `backend/scripts/reconcile_recipe_store.py` reconciles a recipe cache dir (`--cache-dir`) or a
   second store (`--source-dsn` / `--target-dsn`) with dealer_recipes per recipe instead of by
