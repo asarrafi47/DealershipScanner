@@ -28,7 +28,7 @@
   37850535029): the 3 failures and the 5 network-touching tests, each with its class (a)-(f),
   cause, planned fix and owner, plus product finding PF-1: without the gitignored
   `dictionary_catalog.db` (which prod has never had, P0A.3) the EPA file fallback resolves
-  129 YMMs to another model's file (2026 Audi A5 -> 2025 A4 mild hybrid), owned by Phase 9
+  128 YMMs to another model's file (2026 Audi A5 -> 2025 A4 mild hybrid), owned by Phase 9
   (P2A.6).
 
 ### Changed

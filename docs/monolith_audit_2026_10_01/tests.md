@@ -476,7 +476,7 @@ P2A.7 ran in parallel with this ledger, and two of its fixes differ from the pla
   was run for each of the 12,126 sharded EPA files' own (year, make, model), with the catalog
   (a scratch copy of the MBP's DB) and without it.
   - With the catalog, 12,115 resolve to their own file. Without it, 11,987 do.
-  - 130 differ, and 129 of those resolve to a **different model's** file without the catalog:
+  - 130 differ, and 128 of those resolve to a **different model's** file without the catalog:
 
     | Requested | Resolves to | YMMs |
     |---|---|---|
@@ -492,7 +492,7 @@ P2A.7 ran in parallel with this ledger, and two of its fixes differ from the pla
     | Audi A6 e-tron | A6 | 1 |
     | Audi S6 e-tron | A6 | 1 |
 
-  - The 130th is a J.K. Motors spelling variant.
+  - The other 2 are a J.K. Motors spelling-variant pair (MERC.BENZ.300SE <-> MERC BENZ 300SE, opposite directions).
   - Recent model years are affected: 2024 and 2025 A5/S3/S4/S5/S6/SQ5, and 2026
     A5/S3/S5/SQ5. 2026 A5 and S5 resolve to the **2025 A4** file.
   - The worst cases cross powertrains: 2027 A6 e-tron and S6 e-tron (battery-electric)
@@ -511,7 +511,7 @@ P2A.7 ran in parallel with this ledger, and two of its fixes differ from the pla
 - **Bearing on the plan:** P9.2 states "The EPA fuzzy fallback is unchanged; it already
   reaches parity, 217/217". That count shows a file resolves in both setups, not that it is
   the same file. P9.2's Accept should add an EPA file-identity parity check (catalog vs no
-  catalog) that covers these 129 YMMs. A likely direction is to search the raw model before
+  catalog) that covers these 128 YMMs. A likely direction is to search the raw model before
   the family label and to glob the sharded tree, but Phase 9 decides.
 
 ## Observed in the same run, not failures (for P14C.3's skip budget)
