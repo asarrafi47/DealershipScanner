@@ -13,6 +13,28 @@
 - InventoryEnricher no longer sends `ALTER TABLE cars` on Postgres (an ACCESS EXCLUSIVE lock
   request that then failed with DuplicateColumn); haiku_spec_cache is created only when absent,
   under a 3 s lock timeout (P1A.4).
+- Recipe and VDP recipe cache files are written atomically (temp file in the same dir, fsync,
+  `os.replace`): a failed write leaves the previous file byte-identical and no temp file. The
+  cache dir is anchored at the repo root instead of the cwd (`/app/workspace/recipes` on
+  Railway), `RECIPES_CACHE_DIR` overrides it (VDP recipes follow in `<dir>/vdp`), and a failed
+  dealer_recipes write-through logs a WARNING once per process and error class instead of
+  DEBUG (P1B.2).
+- `save_recipes` stamps every row's `saved_at` once per call, so stale flags, un-stales,
+  coverage updates and synthesized or cascaded sets reach the other hosts instead of being
+  reverted by an older cache; the file-to-DB push-up in `load_recipes` does not stamp and logs
+  a WARNING naming the dealer and the DB copy it overwrote (P1B.3).
+- Recipe-store I/O no longer blocks the event loop: the replay success write-back, the feed
+  provider hint, the discovery capture recipe counts and promote, and the four delta-scan hint
+  notes run in `asyncio.to_thread` (P1B.4).
+- `synthesize_recipes --dry-run` writes nothing: `gate_recipes(record=False)` returns the
+  verdict without writing discovery.md or recipe_status, and a run that keeps a healthy recipe
+  without `--force` no longer overwrites its recipe_status (P1B.8).
+- `platform_candidates.py` no longer calls `load_recipes` (which rewrote the cache and pushed
+  rows up): it reads the recipe file and the dealer_recipes row read-only, and a failed lookup
+  is `unknown` (counted, never clustered). The report prints a live / none / stale / rejected /
+  unknown census with the roots and cwd used, dates each verdict, drops members scanned after
+  their probe (autosavvy-com: 403 probe 09-26, 3,958 rows 09-28), and no longer prints
+  "nearest known template: none" when a template already detects members (P1B.7).
 
 ### Changed
 - `build_epa_master_pg.py` refuses every write mode, `--rebuild` included, with exit 2 before
@@ -29,6 +51,17 @@
   it, so prod car chat likely failed), `pdfplumber>=0.11` and `brotli>=1.1`. anthropic is capped
   below 1 because 1.x rejects the `temperature` argument car chat sends. New
   `test_requirements_hygiene.py` fails on any third-party import that is not declared (P1A.6).
+- Each recipe cache dir carries `_store.json`, a sha256 of the host, port and database name of
+  the store it mirrors (no credentials). A cache tagged for another store is read-only for the
+  process: no file-to-DB push-ups, the store's own copy is served, saves go to the store only,
+  and a failed store read holds that dealer's saves. `python -m backend.scanner.recipes
+  --status` shows the tag and verdict, and `--reseed` moves the dealer files into
+  `_reseed_backups/<stamp>/` and tags the cache for the current store; docs/RAILWAY_SCANNING.md
+  explains it (P1B.6).
+- Tests can no longer write the real workspace/: conftest.py pins `DEALER_LOGS_ROOT` to a
+  session tmp dir, gives every test its own `RECIPES_DIR` / `VDP_RECIPES_DIR`, and fails the
+  session when a name or mtime under workspace/dealer_logs or workspace/recipes changed
+  (warning only while a scanner or pipeline is live; `WORKSPACE_GUARD=0` turns it off) (P1B.1).
 
 ## [1.5.2] - 2026-10-05
 
