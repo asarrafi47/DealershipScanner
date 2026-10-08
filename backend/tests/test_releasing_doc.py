@@ -15,7 +15,12 @@ read the doc and the scripts as text (no git, no network, no Railway) and pin:
   connect the GitHub repo to Railway;
 - every passage that tells the reader to redeploy or to set a Railway variable
   also names the SCAN_FLEET hazard on scanner-nightly (P0A.1), and the
-  Railway snapshot in the checklist fails closed.
+  Railway snapshot in the checklist fails closed;
+- the Rollback section says that a Railway rollback restores the target
+  deployment's custom variables as well as its image (Railway's
+  deployment-actions docs), so SCAN_FLEET=0 cannot make a scanner-nightly
+  rollback safe, and no passage in RELEASING.md or RAILWAY_SCANNING.md pairs a
+  rollback with SCAN_FLEET without saying so.
 """
 
 from __future__ import annotations
@@ -28,6 +33,7 @@ import yaml
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 RELEASING = REPO_ROOT / "docs" / "RELEASING.md"
+RAILWAY_SCANNING = REPO_ROOT / "docs" / "RAILWAY_SCANNING.md"
 GUARD_LIB = REPO_ROOT / "deploy" / "railway" / "_guarded_deploy.sh"
 DEPLOY_SCRIPTS = ("deploy_web.sh", "deploy_scanner_nightly.sh")
 BUMP = REPO_ROOT / "scripts" / "bump_version.sh"
@@ -39,8 +45,12 @@ CI_JOBS = {"lint", "pytest", "pytest-integration", "release-guard"}
 REWRITTEN_DOCS = (
     RELEASING,
     REPO_ROOT / "deploy" / "railway" / "README.md",
-    REPO_ROOT / "docs" / "RAILWAY_SCANNING.md",
+    RAILWAY_SCANNING,
     REPO_ROOT / "RESUME_HERE.md",
+)
+# Railway's docs (https://docs.railway.com/guides/deployment-actions, "Rollback"), verbatim.
+RAILWAY_ROLLBACK_QUOTE = (
+    "Both the Docker image and custom variables are restored during the rollback process."
 )
 
 _REPO_PATH = re.compile(r"(?<![\w./-])((?:deploy|scripts|backend|docs|migrations|\.github)/[\w.*/-]+)")
@@ -62,8 +72,9 @@ def _args_after(text: str, command: str) -> list[list[str]]:
 
 
 def _flags_after(text: str, command: str) -> list[str]:
-    """Every ``-x`` / ``--x`` token that follows ``command`` on the same line."""
-    return [tok for args in _args_after(text, command) for tok in args if tok.startswith("-")]
+    """Every ``-x`` / ``--x`` token that follows ``command`` on the same line, without
+    a shell quote that closes around it (``sh -c '... --dry-run'``)."""
+    return [tok.strip("'\"") for args in _args_after(text, command) for tok in args if tok.startswith("-")]
 
 
 def _guard_options() -> set[str]:
@@ -235,7 +246,62 @@ def test_railway_snapshot_fails_closed(doc):
     assert 'echo "SNAPSHOT-FAILED $s" >&2; return 1' in section
     assert "assert ids" in section
     assert "railway_snapshot > /tmp/railway_deploys_before.txt && echo snapshot-ok" in section
+    # The whole list, sorted: a new id shows in the diff whatever order the CLI uses,
+    # and a full page (possibly cut off) fails closed.
+    assert "--limit 1000 --json" in section and "sorted(" in section
+    assert "assert ids and len(ids) < 1000" in section
     after = section[section.index("railway_snapshot > /tmp/railway_deploys_after.txt") :]
     after = after[: after.index("```")]
     assert "&& echo no-new-deployment" in after
     assert after.count("grep -c .") == 2
+
+
+def _one_line(text: str) -> str:
+    return " ".join(text.split())
+
+
+def test_release_log_grep_matches_the_table_format(doc):
+    assert 'grep -nF "| $V |" docs/RELEASING.md' in doc
+    log = doc[doc.index("## Release log") :]
+    assert "| version |" in log
+    # Version cells are bare (no leading v), which is what the step 14 grep looks for.
+    assert "| 1.5.0 |" in log and "| v1.5" not in log
+
+
+def test_rollback_section_says_variables_are_restored(doc):
+    """A Railway rollback runs with the target deployment's variable snapshot, so
+    the recipe must say so, re-apply today's web variables, and keep
+    scanner-nightly away from a rollback to a SCAN_FLEET=1 snapshot."""
+    section = doc[doc.index("## Rollback") : doc.index("## Railway source policy")]
+    flat = _one_line(section)
+    assert RAILWAY_ROLLBACK_QUOTE in flat
+    assert "https://docs.railway.com/guides/deployment-actions" in flat
+    assert "retention" in flat
+
+    web = section[section.index("### web") : section.index("### scanner-nightly")]
+    assert "--skip-deploys" in web and "railway redeploy -s web -y" in web
+    assert "vars-match" in web and "shasum" in web
+    # The fingerprint never writes a value: only a hash and the names.
+    for line in web.splitlines():
+        if "railway variable list -s web --kv" in line and "> /tmp/" in line:
+            assert "shasum" in line or "cut -d= -f1" in line, line
+
+    nightly = _one_line(section[section.index("### scanner-nightly") :])
+    assert "Do not use a Railway rollback on scanner-nightly" in nightly
+    assert "90a3d2a0" in nightly and "SCAN_FLEET=1" in nightly
+    assert "ALLOW_UNRELEASED_DEPLOY=1 deploy/railway/deploy_scanner_nightly.sh" in nightly
+    assert "railway variable list -s scanner-nightly --kv" in nightly
+
+
+_ROLLBACK = re.compile(r"\broll(?:s|ed|ing)?[ -]?back\b|\brollback", re.IGNORECASE)
+
+
+@pytest.mark.parametrize("path", (RELEASING, RAILWAY_SCANNING), ids=lambda p: p.name)
+def test_no_passage_treats_scan_fleet_off_as_rollback_protection(path):
+    """Setting SCAN_FLEET=0 protects against deploys that use the current
+    variables, never against a rollback, which restores the target's snapshot.
+    Any passage that pairs a rollback with SCAN_FLEET must say that."""
+    hits = [p for p in _passages(path.read_text(encoding="utf-8")) if _ROLLBACK.search(p) and "SCAN_FLEET" in p]
+    assert hits, f"expected {path.name} to warn about scanner-nightly rollbacks"
+    for passage in hits:
+        assert re.search(r"restor|snapshot|revert", passage), passage[:300]

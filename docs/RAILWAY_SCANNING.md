@@ -236,10 +236,12 @@ deploy/railway/deploy_scanner_nightly.sh --dry-run   # guard + stage + plan; nev
 deploy/railway/deploy_scanner_nightly.sh             # railway up --detach from a git archive of the tag
 ```
 
-A deploy starts the container once, and it scans if `SCAN_FLEET=1` or `SCAN_DEALERS` is
-set (P0A.1 found `SCAN_FLEET=1` still set on 2026-10-07), so check both variables first.
-Mid-fleet hotfix only (D-REL10): `ALLOW_UNRELEASED_DEPLOY=1` ships the committed tree of
-HEAD with a loud warning and `BUILD_TAG=unreleased`. Cut a release afterwards.
+Until P6B.1, do not deploy scanner-nightly at all: D-REL8 (b) deploys only web on the
+first release (`docs/RELEASING.md`, release step 15). A deploy starts the container
+once, and it scans if `SCAN_FLEET=1` or `SCAN_DEALERS` is set (P0A.1 found `SCAN_FLEET=1`
+still set on 2026-10-07), so check both variables first. Mid-fleet hotfix only (D-REL10):
+`ALLOW_UNRELEASED_DEPLOY=1` ships the committed tree of HEAD with a loud warning and
+`BUILD_TAG=unreleased`. Cut a release afterwards.
 
 Run a scan manually:
 
@@ -258,12 +260,25 @@ railway variable set SCAN_FLEET=0 --service scanner-nightly --skip-deploys
 
 `SCAN_FLEET=1` left set is a standing hazard: P0A.1 found it still set on 2026-10-07, on
 the `89c13ad52` image that stales shared recipes on Railway 401/403s. While it is set, any
-new deployment (a variable change without `--skip-deploys`, a redeploy, a rollback)
-starts the whole fleet, including one that deleting `SCAN_DEALERS` may trigger.
-`railway variable delete` has no `--skip-deploys` in CLI 5.57.2. Check first with
+new deployment that runs with the current variables (a variable change without
+`--skip-deploys`, a redeploy, a deploy) starts the whole fleet, including one that
+deleting `SCAN_DEALERS` may trigger. `railway variable delete` has no `--skip-deploys` in
+CLI 5.57.2. Check first with
 `railway variable list -s scanner-nightly --kv | grep -E '^SCAN_(FLEET|DEALERS)='`, and
 set `SCAN_FLEET=0` with `--skip-deploys` (the scanner treats only `1`, `true` and `yes` as
 on). `docs/RELEASING.md` (Railway source policy) has the rest.
+
+A Railway rollback is not covered by that check. Railway restores both the Docker image
+and the custom variables of the deployment you roll back to
+(https://docs.railway.com/guides/deployment-actions, "Rollback"), so the rolled-back
+container runs with that deployment's `SCAN_FLEET` and `SCAN_DEALERS`, whatever the
+service holds now. `90a3d2a0` (2026-09-29) ran the 561-dealer fleet with `SCAN_FLEET=1`:
+rolling back to it starts a full fleet against prod Postgres on the `89c13ad52` image.
+Never roll scanner-nightly back to a deployment whose snapshot had `SCAN_FLEET` on or
+`SCAN_DEALERS` set. Fix forward with a release, or mid-fleet (D-REL10) deploy a
+known-good release tag with `ALLOW_UNRELEASED_DEPLOY=1`, which runs with the current
+variables (`docs/RELEASING.md`, Rollback). After any rollback, re-run the variable check
+above, since the service's values may have been reverted too.
 
 Locally, the same entrypoint (proven 2026-09-28 against local Postgres):
 

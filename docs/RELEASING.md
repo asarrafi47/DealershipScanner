@@ -88,7 +88,7 @@ passes. It drives the real hook and guard in scratch repositories.
 ## CI runs per release
 
 A branch with an open PR to `main` runs CI twice per push: once as `push` (concurrency
-group `refs/heads/<branch>`) and once as `pull_request` (group = the PR number). This is
+group `ci-refs/heads/<branch>`) and once as `pull_request` (group `ci-<PR number>`). This is
 deliberate (see the comment in `.github/workflows/ci.yml`). An `if:` that skipped one of
 the two would leave skipped jobs on the same SHA, and GitHub counts a skipped job as a
 success, so a red run could be hidden. The push to `main` runs CI a third time on the
@@ -196,21 +196,30 @@ below stands for its name. `V` is the new version, set in step 3.
    head in step 8.
 
 8. **Fast-forward `main`.** First take a Railway snapshot, which step 11 compares
-   against. The snapshot keeps only the ids of each service's 5 newest deployments, one
-   line per service. It fails closed: if any `railway deployment list` call fails or
-   returns no deployments (expired token, wrong linked project, a renamed service), the
-   function stops with `SNAPSHOT-FAILED <service>` and `snapshot-ok` does not print.
+   against. The snapshot asks for up to 1000 deployments per service, so it holds each
+   service's whole list (web had 70 on 2026-10-08), sorted, with the count first, one
+   line per service. A new deployment then shows up in the diff whatever order the CLI
+   lists them in. It fails closed: if any `railway deployment list` call fails, returns
+   no deployments, returns 1000 (the list may be cut off) or prints JSON of another shape
+   (expired token, wrong linked project, a renamed service), the function stops with
+   `SNAPSHOT-FAILED <service>` and `snapshot-ok` does not print.
 
    ```bash
    railway_snapshot() {
      for s in web scanner-nightly Postgres; do
-       railway deployment list -s "$s" --limit 5 --json \
-         | python3 -c 'import json,sys; ids=[d["id"] for d in json.load(sys.stdin)]; assert ids; print(sys.argv[1], *ids)' "$s" \
+       railway deployment list -s "$s" --limit 1000 --json \
+         | python3 -c 'import json,sys; ids=sorted(d["id"] for d in json.load(sys.stdin)); assert ids and len(ids) < 1000; print(sys.argv[1], len(ids), *ids)' "$s" \
          || { echo "SNAPSHOT-FAILED $s" >&2; return 1; }
      done
    }
    railway_snapshot > /tmp/railway_deploys_before.txt && echo snapshot-ok
    ```
+
+   The JSON shape (a list of objects with an `id`) has not been seen live yet. On the
+   first release (P2B.3), check that each line's count matches the service's deployment
+   count in the dashboard. If the shape differs, the snapshot fails closed: use the
+   GraphQL deployments query from the P0A.1 "Reproducing the checks" block in
+   `docs/SCANNING_OPS_LOG.md` instead, and fix this function.
 
    Do not push until `snapshot-ok` prints. Then:
 
@@ -270,9 +279,10 @@ below stands for its name. `V` is the new version, set in step 3.
     or a line count other than 3 means a snapshot is missing or partial: fix the CLI
     (`railway whoami`, `railway status`) and rerun this step. Never replace the step 8
     snapshot after the push, because it is the only record of the state before it. A
-    `diff` that shows a new id means some service builds from GitHub. Roll it back
-    ([Rollback](#rollback)), then fix the source
-    ([Railway source policy](#railway-source-policy)).
+    `diff` that shows a new id means some service builds from GitHub. For web, roll it
+    back ([Rollback](#rollback), web). For scanner-nightly, never use a Railway rollback:
+    follow Rollback, scanner-nightly, and run step 15's variable check at once. Then fix
+    the source ([Railway source policy](#railway-source-policy)).
 
 12. **Deploy web from the tag.** D-REL8 (b) decided that the first release deploys web and
     that scanner-nightly waits for P6B.1. Deploying web from the tag on every later
@@ -325,9 +335,10 @@ below stands for its name. `V` is the new version, set in step 3.
 14. **Record the deployment.** Take the id of the new SUCCESS deployment from
     `railway deployment list -s web --limit 3` (newest first). Add a row to the
     [Release log](#release-log) on the next phase branch, so it ships with the next
-    release. A docs-only push to `main` would need a bump of its own.
+    release. Write the version column bare, as in the table (`| 1.5.4 |`, no `v`). A
+    docs-only push to `main` would need a bump of its own.
 
-    Verify: `grep -n "v$V" docs/RELEASING.md` shows the row with the deployment id.
+    Verify: `grep -nF "| $V |" docs/RELEASING.md` shows the row with the deployment id.
 
 15. **scanner-nightly**, from P6B.1 on only (D-REL8 (b)). Before then, do not deploy it.
 
@@ -351,9 +362,11 @@ below stands for its name. `V` is the new version, set in step 3.
     Verify: the dry run passes as in step 12. Afterwards,
     `railway deployment list -s scanner-nightly --limit 3` shows the new deployment, and
     `railway logs -s scanner-nightly --lines 50` shows `idle`. While the idle container
-    holds (`SCAN_IDLE_HOLD_SECONDS`),
-    `railway ssh --service scanner-nightly -- cat /app/BUILD_COMMIT /app/BUILD_TAG`
-    prints the tag's SHA and `v$V`. Record the id in the release log too.
+    holds, `railway ssh --service scanner-nightly -- cat /app/BUILD_COMMIT /app/BUILD_TAG`
+    prints the tag's SHA and `v$V`. The hold lasts `SCAN_IDLE_HOLD_SECONDS`, which
+    `backend/scripts/fleet_scan.py` defaults to 0 (exit at once). P0A.1 found it set on
+    scanner-nightly; if it is unset or 0, there is no container to `ssh` into and this
+    check cannot run. Record the id in the release log too.
 
 ## Hotfixes (D-REL10)
 
@@ -365,17 +378,48 @@ below stands for its name. `V` is the new version, set in step 3.
   Verify first with
   `ALLOW_UNRELEASED_DEPLOY=1 deploy/railway/deploy_scanner_nightly.sh --dry-run`. When the
   guard fails, its plan says `GUARD OVERRIDDEN` and shows the `BUILD_TAG` that will ship.
+  Putting a known-good release back mid-fleet uses the same override from a checkout of
+  that release's tag ([Rollback](#rollback), scanner-nightly).
 - **web:** do not use the override. Cut a patch release (steps 1 to 13).
 
 ## Rollback
 
 `main` only moves forward. Never force-push it back. Either fix forward with a new patch
-release, or roll the Railway service back to an earlier deployment:
+release, or roll web back to an earlier deployment. Never roll scanner-nightly back
+([below](#scanner-nightly)).
+
+**A Railway rollback restores the target deployment's variables, not only its image.**
+Railway's docs (https://docs.railway.com/guides/deployment-actions, "Rollback") say: "A
+deployment rollback will revert to the previously successful deployment. Both the Docker
+image and custom variables are restored during the rollback process." So the rolled-back
+service runs with the variable values the target deployment had, not today's. Any
+variable changed since then (a rotated secret, `TRUSTED_PROXY_HOPS`, a security switch)
+quietly reverts. Railway does not say whether the restore also writes those values back
+to the service's variables, where every later deploy would pick them up. Assume it may,
+and check the variables after every rollback. The same page says a deployment older than
+the plan's retention policy cannot be rolled back (the option is not shown), so an old id
+in the release log may no longer be a target.
+
+### web
 
 1. Find the last good deployment: `railway deployment list -s web --limit 10`. The
-   release log has the id.
-2. Roll back to it. In the dashboard: web → Deployments → that deployment → ⋯ →
-   Rollback. Or use GraphQL, since the CLI (5.57.2) has no rollback command:
+   release log has the id. Then list every web variable changed since that deployment
+   (the dated blocks in `docs/SCANNING_OPS_LOG.md` and the release log notes record
+   them). Example: a rollback to `c9872e66` would bring back
+   `ALLOW_APP_ADMIN_DEV_PASS_THROUGH` and drop `CAR_CHAT_WEB_RESEARCH=0`, the two
+   2026-10-08 changes that `d9aaa75e` was redeployed to apply.
+2. Fingerprint the current variables, so you can prove later that they are back. This
+   writes only names and a hash, never a value:
+
+   ```bash
+   railway variable list -s web --kv | grep -v '^RAILWAY_' | sort | shasum -a 256 > /tmp/web_vars_before.sha
+   railway variable list -s web --kv | grep -v '^RAILWAY_' | cut -d= -f1 | sort > /tmp/web_var_names_before.txt
+   ```
+
+   Verify: `cat /tmp/web_var_names_before.txt` lists the variable names you expect
+   (names only, no values), and `/tmp/web_vars_before.sha` holds one hash.
+3. Roll back. In the dashboard: web → Deployments → that deployment → ⋯ → Rollback. Or
+   use GraphQL, since the CLI (5.57.2) has no rollback command:
 
    ```bash
    TOKEN=$(python3 -c 'import json,os; print(json.load(open(os.path.expanduser("~/.railway/config.json")))["user"]["accessToken"])')
@@ -388,16 +432,78 @@ release, or roll the Railway service back to an earlier deployment:
    Never print the token. Send the `User-Agent: railway-cli/...` header, or Cloudflare
    answers with error 1010. If the token is refused (`Not Authorized`), run
    `railway whoami` to refresh it.
-3. Verify: `curl -fsS https://sarraficars.com/api/health` shows the earlier version and
-   commit, and `railway deployment list -s web --limit 3` shows the rollback deployment as
-   SUCCESS.
+
+   Verify: `railway deployment list -s web --limit 3` shows the rollback deployment as
+   SUCCESS, and `curl -fsS https://sarraficars.com/api/health` shows the earlier version
+   and commit.
+4. Put today's variables back on the rolled-back image. Compare first:
+
+   ```bash
+   railway variable list -s web --kv | grep -v '^RAILWAY_' | cut -d= -f1 | sort | diff /tmp/web_var_names_before.txt -
+   railway variable list -s web --kv | grep -v '^RAILWAY_' | sort | shasum -a 256 | diff /tmp/web_vars_before.sha - && echo vars-match
+   ```
+
+   If they differ, the rollback wrote the old values back. Re-apply each changed
+   variable without a deploy: `read -rs VALUE`, then
+   `railway variable set "NAME=$VALUE" -s web --skip-deploys`, so a secret never reaches
+   the screen or the shell history. To remove a variable the rollback brought back, use
+   the dashboard's Variables tab or `railway variable delete NAME -s web`. Either may
+   start a deployment of its own (the CLI delete has no `--skip-deploys` in CLI 5.57.2),
+   so check `railway deployment list -s web --limit 3` afterwards. Repeat the compare
+   until it prints `vars-match`. Then, even if it matched the first time (the running
+   deployment still has the target's snapshot):
+
+   ```bash
+   railway redeploy -s web -y
+   ```
+
+   It redeploys the latest deployment, which is now the rollback's image, with the
+   current variables. This is web only. On scanner-nightly a redeploy starts the
+   container, and that runs a fleet if `SCAN_FLEET` is on (below).
+
+   Verify: `vars-match` prints, the new deployment is SUCCESS in
+   `railway deployment list -s web --limit 3`, `/api/health` still shows the earlier
+   version and commit, and any switch you re-applied behaves as it did before the
+   rollback.
 
 A rollback does not undo a migration. Migrations only go forward. If the bad release
 applied one, the older code must still run on the new schema. Otherwise the owner
 restores the dump taken before the deploy ([Migrations](#migrations)).
 
-Rolling back scanner-nightly creates a new deployment, so its container starts once.
-Check `SCAN_FLEET` and `SCAN_DEALERS` first (step 15).
+### scanner-nightly
+
+Do not use a Railway rollback on scanner-nightly. A rollback starts the container once
+with the target deployment's variables, so setting `SCAN_FLEET=0` beforehand does not
+help. Never roll back to a deployment whose snapshot had `SCAN_FLEET` on or
+`SCAN_DEALERS` set. `90a3d2a0` (2026-09-29) ran the 561-dealer fleet, so its snapshot
+has `SCAN_FLEET=1`: a rollback to it starts a full fleet against prod Postgres on the
+`89c13ad52` image, which stales shared recipes on Railway 401/403s. This doc has no
+verified way to read an older deployment's variable snapshot, so treat every earlier
+scanner-nightly deployment the same way.
+
+Before P6B.1, scanner-nightly is not deployed at all (D-REL8 (b)). From P6B.1 on, put
+known-good code back with a deploy, which uses the current variables:
+
+- Normally fix forward: revert the bad change on the next phase branch and cut a patch
+  release (steps 1 to 15).
+- Mid-fleet only (D-REL10): run step 15's variable check, then in the main checkout (the
+  directory Railway is linked to) check out the known-good release tag and use the
+  override:
+
+  ```bash
+  git switch --detach v<good version>
+  ALLOW_UNRELEASED_DEPLOY=1 deploy/railway/deploy_scanner_nightly.sh --dry-run
+  ALLOW_UNRELEASED_DEPLOY=1 deploy/railway/deploy_scanner_nightly.sh
+  git switch -
+  ```
+
+  Verify: the dry run's plan says `GUARD OVERRIDDEN` with `BUILD_TAG=v<good version>`,
+  and afterwards the step 15 checks pass. Record the deployment in the release log.
+
+After anything that touched scanner-nightly, including a rollback someone ran by
+mistake, re-run step 15's check
+(`railway variable list -s scanner-nightly --kv | grep -E '^SCAN_(FLEET|DEALERS)='`),
+because the service's values may have been reverted.
 
 Never use `railway redeploy --from-source` or a bare `railway up` to roll back
 ([Railway source policy](#railway-source-policy)).
@@ -416,24 +522,30 @@ No Railway service builds from GitHub. Code reaches Railway only as a CLI upload
   uncommitted files included, to whatever service the directory is linked to. On
   2026-10-08 a bare `railway up` uploaded a checkout to scanner-nightly by accident. The
   upload failed before anything ran.
-- **To apply a variable change**, run `railway variable set ... -s <service>` without
-  `--skip-deploys`. Or stage the change with `--skip-deploys` and run
-  `railway redeploy -s <service> -y`, which redeploys the existing latest deployment
-  with the same image (`railway redeploy --help`; only `--from-source` pulls new code).
-  The 2026-10-08 `d9aaa75e` redeploy of web did exactly this. `--skip-deploys` followed
-  by `railway restart` does not apply the change. Always pass `-s`. On 2026-10-08 the
-  main checkout was linked to scanner-nightly, so a command without `-s` acted on it.
+- **To apply a variable change**, stage it with
+  `railway variable set NAME=value -s <service> --skip-deploys`, then run
+  `railway redeploy -s <service> -y`. That redeploys the existing latest deployment with
+  the same image and the current variables (`railway redeploy --help`; only
+  `--from-source` pulls new code). The 2026-10-08 `d9aaa75e` redeploy of web did exactly
+  this. On web, do not apply a change with a deploying `railway variable set` (one
+  without `--skip-deploys`) while web still records a GitHub source (open item below):
+  on 2026-09-11 exactly that rebuilt web from GitHub `main`. `--skip-deploys` followed
+  by `railway restart` does not apply the change, because a restart relaunches the same
+  deployment with its old variables. Always pass `-s`. On 2026-10-08 the main checkout
+  was linked to scanner-nightly, so a command without `-s` acted on it.
 
-  **On scanner-nightly, either command starts the container once**, and that runs a full
-  fleet scan against prod Postgres if `SCAN_FLEET=1` or `SCAN_DEALERS` is set. P0A.1
-  found `SCAN_FLEET=1` still set, on an image that stales shared recipes on Railway
-  401/403s. Run the release step 15 check first
+  **On scanner-nightly, a redeploy or a deploying variable change starts the container
+  once**, and that runs a full fleet scan against prod Postgres if `SCAN_FLEET=1` or
+  `SCAN_DEALERS` is set. P0A.1 found `SCAN_FLEET=1` still set, on an image that stales
+  shared recipes on Railway 401/403s. Run the release step 15 check first
   (`railway variable list -s scanner-nightly --kv | grep -E '^SCAN_(FLEET|DEALERS)='`),
   and unless a run is intended, turn the fleet off without a deploy:
   `railway variable set SCAN_FLEET=0 -s scanner-nightly --skip-deploys`. Do not use
   `railway variable delete` for this: it has no `--skip-deploys` in CLI 5.57.2. The same
   check comes before deleting `SCAN_DEALERS` after a manual run: if that change deploys
-  while `SCAN_FLEET=1` is set, the container runs the whole fleet.
+  while `SCAN_FLEET=1` is set, the container runs the whole fleet. None of this protects
+  against a Railway rollback, which restores the target deployment's own variables
+  ([Rollback](#rollback), scanner-nightly).
 
 ### State as of the 2026-10-08 ops log (P0A.1 and P0A.4, `docs/SCANNING_OPS_LOG.md`)
 
@@ -455,10 +567,15 @@ No Railway service builds from GitHub. Code reaches Railway only as a CLI upload
   `SCAN_BATCH=6`; P0A.1). The owner's 2026-10-08 actions did not change it. The deployed
   image is `89c13ad52` (deployment `90a3d2a0`, 2026-09-29), which predates the egress tag
   `1707e1349`, so a run on it stales shared recipes on Railway 401/403s (P0A.1 answer
-  3). Any new scanner-nightly deployment (a variable change without `--skip-deploys`, a
-  redeploy, a rollback, a deploy) starts a full fleet run against prod Postgres (561
-  dealers on 2026-09-29) until `SCAN_FLEET` is turned off. See the variable-change
-  bullet above.
+  3). Any new scanner-nightly deployment that runs with the current variables (a
+  variable change without `--skip-deploys`, a redeploy, a deploy) starts a full fleet
+  run against prod Postgres (561 dealers on 2026-09-29) until `SCAN_FLEET` is turned
+  off. See the variable-change bullet above. A rollback is different: it restores the
+  target deployment's variables (Railway's deployment-actions docs), and `90a3d2a0`'s
+  have `SCAN_FLEET=1`, so turning `SCAN_FLEET` off does not make a rollback to it safe.
+  Never roll scanner-nightly back to it ([Rollback](#rollback)). After any rollback,
+  re-run release step 15's variable check, since the service's values may have been
+  reverted.
 - **Config as code is deprecated.** The root `railway.toml` (web) and the staged
   `railway.json` (scanner-nightly) are config-as-code files. Railway says existing files
   keep working until 2026-12-01, so the deploy flow needs a replacement before then
@@ -489,7 +606,8 @@ Every migration follows the D-DB6 protocol in Appendix C.1 of
 1. Apply it locally when it merges.
 2. Before any deploy that contains it, the owner takes a prod `pg_dump -Fc` and verifies
    it (`pg_restore -l`). Then the owner runs `python -m backend.scripts.migrate --dry-run`
-   and `python -m backend.scripts.migrate --apply` against prod.
+   and `python -m backend.scripts.migrate --apply` against prod, in the form under
+   "Targeting prod" below.
 3. Only then deploy (release step 12).
 4. A migration that drops or constrains data merges only after its dumps or prerequisite
    repairs exist: every checkout's `--apply` and every web boot apply all pending files.
@@ -500,8 +618,31 @@ Appendix C.1 applies with `--apply --target N`. `migrate.py` has no `--target` u
 adds it, so until then `--apply` applies every pending file. Update the command above
 when P4 lands.
 
+**Targeting prod.** `migrate.py` reads `INVENTORY_DATABASE_URL` from the environment,
+and the checkout's `.env` fills it in when it is unset (a value set in the shell wins).
+It does not log the host. Run plainly in a checkout, it checks the local Postgres,
+which is also at V025, and prints `database is up to date` without proving anything
+about prod. That matters because every web boot applies pending migrations
+(`MIGRATE_ON_BOOT`, default `1`, in `scripts/docker-entrypoint-web.sh`), so a false "up to
+date" ships the release's migrations at boot, without the dump. Point it at prod
+explicitly, the way the ops log reaches prod Postgres (P0A.4), with the DSN never
+printed:
+
+```bash
+railway run -s Postgres -- sh -c 'export INVENTORY_DATABASE_URL="$DATABASE_PUBLIC_URL"; case "$INVENTORY_DATABASE_URL" in ""|*@localhost*|*@127.0.0.1*) echo "target: LOCAL, stopping"; exit 1 ;; *) echo "target: remote" ;; esac; .venv/bin/python -m backend.scripts.migrate --dry-run'
+```
+
+Verify: it prints `target: remote`, then the migrate log. `railway run` loads the
+Postgres service's variables into this one local command, and the explicit
+`INVENTORY_DATABASE_URL` wins over `.env`. For `--apply`, run the same command with
+`--apply` in place of `--dry-run`, and only after the dump. The first release (P2B.3)
+carries V001 to V025, which prod already has, so its dry run must log
+`database is up to date` and nothing needs applying. The first planned migration prod
+does not have is V026 (P4.8, which spells out its prod rollout).
+
 Release step 1 lists the migrations a release carries. Verify: a second
-`python -m backend.scripts.migrate --dry-run` against prod logs `database is up to date`.
+`python -m backend.scripts.migrate --dry-run` against prod, in the form above, logs
+`database is up to date`.
 
 ## Release log
 
@@ -518,3 +659,8 @@ have contained uncommitted files (P2B.4 tags these releases retroactively):
 | 1.5.0 | `db4b6df8d` | `62f93905` (2026-10-04) | | applied V025 |
 | 1.5.1 | `90c9d6160` | `c9872e66` (2026-10-05), then `d9aaa75e` (2026-10-08) | | `d9aaa75e` is `railway redeploy -s web` of the same image, done to apply variable changes |
 | (none) | `89c13ad52` | | `90a3d2a0` (2026-09-29) | `git archive HEAD` upload, no release tag |
+
+These ids are rollback targets only while Railway's retention policy keeps them, and a
+rollback to one restores its variable snapshot too ([Rollback](#rollback)). `62f93905`
+and `c9872e66` predate the 2026-10-08 web variable changes. `90a3d2a0` has
+`SCAN_FLEET=1` and must never be a rollback target.

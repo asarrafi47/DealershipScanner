@@ -54,6 +54,15 @@ is linked to.
 
 ## 2. Wire vault connection (recommended)
 
+**Do not run `sync-vault-to-railway.sh` as written.** It acts on whichever service the
+checkout is linked to unless `RAILWAY_SERVICE` is set (scanner-nightly on 2026-10-08; its
+`variables delete` calls and its `--mirror-secrets` sets ignore `RAILWAY_SERVICE`
+altogether). It sets about a dozen variables without `--skip-deploys`, so each one is a
+deploy, and on scanner-nightly a fleet run while `SCAN_FLEET=1` is set. It defaults
+`TRUSTED_PROXY_HOPS` to `1`, where prod needs `2` since 1.4.4, and it ends with "Deploy:
+railway up", which the release policy forbids. Apply variable changes as
+[`docs/RELEASING.md`](../../docs/RELEASING.md) (Railway source policy) describes.
+
 Run locally after `railway link`:
 
 ```bash
