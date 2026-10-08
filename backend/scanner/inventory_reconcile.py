@@ -110,19 +110,65 @@ def _reconcile_min_coverage() -> float:
         return 0.5
 
 
+BUCKET_UNKNOWN = "unknown"
+CONDITION_BUCKETS = ("new", "used", BUCKET_UNKNOWN)
+
+
 def condition_bucket(value: Any) -> str:
-    """``new`` / ``used`` (certified counts as used) / ``""`` when unknown."""
+    """``new`` / ``used`` (certified counts as used) / ``unknown`` when blank.
+
+    The one bucket rule of every retirement writer: this scanner reconcile, the
+    delta scan and the dealer pipeline's ``reconcile_dealer`` (P1A.1). Blank is
+    ``unknown``, never ``used``: assess's ``rows_used`` counts blanks as used and
+    is a verdict input, not a retirement rule.
+    """
     c = str(value or "").strip().lower()
     if not c:
-        return ""
+        return BUCKET_UNKNOWN
     if c.startswith("new"):
         return "new"
     return "used"
 
 
 def condition_buckets_from_vehicles(vehicles: list[dict[str, Any]]) -> set[str]:
-    """The condition buckets this run actually returned rows for."""
-    return {b for b in (condition_bucket(v.get("condition")) for v in vehicles) if b}
+    """The known condition buckets (``new`` / ``used``) this run actually returned rows for."""
+    return {b for b in (condition_bucket(v.get("condition")) for v in vehicles) if b != BUCKET_UNKNOWN}
+
+
+def _bucket_keep_reasons(
+    active_by: dict[str, int],
+    matched_by: dict[str, int],
+    scraped_conditions: set[str] | None,
+    min_cov: float,
+) -> dict[str, str]:
+    """Why each bucket's unseen rows stay listed (``""`` = the bucket may retire).
+
+    * ``missing_condition``: the run returned no row of that condition (the
+      zero-only guard of 2026-09-28).
+    * ``low_bucket``: the run re-saw under *min_cov* of that bucket's active rows.
+      A lot-wide share hides a one-sided run: 300 new + 5 used re-seen of 300 new
+      + 200 used is 61% of the lot and 2.5% of the used cars.
+    * Blank-condition rows retire only when both new and used qualify, since
+      nothing says which side of the lot they belong to. A caller that passes no
+      *scraped_conditions* (legacy, no condition evidence at all) keeps the old
+      rule: blank rows are their own bucket under the coverage share.
+    """
+    def _low(b: str) -> bool:
+        return min_cov > 0 and active_by[b] > 0 and matched_by[b] < min_cov * active_by[b]
+
+    why: dict[str, str] = {}
+    for b in ("new", "used"):
+        if scraped_conditions is not None and b not in scraped_conditions:
+            why[b] = "missing_condition"
+        elif _low(b):
+            why[b] = "low_bucket"
+        else:
+            why[b] = ""
+    if scraped_conditions is None:
+        why[BUCKET_UNKNOWN] = "low_bucket" if _low(BUCKET_UNKNOWN) else ""
+    else:
+        why[BUCKET_UNKNOWN] = why["new"] or why["used"]
+    return why
 
 
 def reconcile_dealer_inventory_after_scan(
@@ -202,30 +248,42 @@ def reconcile_dealer_inventory_after_scan(
             tuple(scope_params),
         )
         rows = cur.fetchall()
-        stale_ids: list[int] = []
-        active_known = 0
-        matched = 0
-        # A one-condition replay (a "new" recipe section, a used-only capture)
-        # re-sees half the lot and, at 50% coverage, passes the gate below and
-        # retires the other half: parksidekia-com 2026-09-28 returned 306 new /
-        # 0 used and un-listed 206 used cars; covertbuickgmc-com 811 of 2,160.
-        # Never retire a condition this run returned nothing for.
-        kept_condition = 0
+        # Active rows (valid VIN) per condition bucket, and how many of them this
+        # run re-saw. A one-condition replay (a "new" recipe section, a used-only
+        # capture) re-sees half the lot and, at 50% coverage, passes the lot-wide
+        # gate below and retires the other half: parksidekia-com 2026-09-28
+        # returned 306 new / 0 used and un-listed 206 used cars; covertbuickgmc-com
+        # 811 of 2,160. A run that returns a handful of one condition does the
+        # same, so every bucket must clear the coverage share on its own (P1A.1).
+        active_by: dict[str, int] = dict.fromkeys(CONDITION_BUCKETS, 0)
+        matched_by: dict[str, int] = dict.fromkeys(CONDITION_BUCKETS, 0)
+        unseen: list[tuple[int, str]] = []
         for row in rows:
-            rid = int(row[0])
             vnorm = normalize_scanner_vin(row[1])
             if not vnorm:
                 continue
-            active_known += 1
+            bucket = condition_bucket(row[2] if len(row) > 2 else "")
+            active_by[bucket] += 1
             if vnorm in scraped_vins:
-                matched += 1
-                continue
-            if scraped_conditions:
-                bucket = condition_bucket(row[2] if len(row) > 2 else "")
-                if bucket and bucket not in scraped_conditions:
-                    kept_condition += 1
-                    continue
-            stale_ids.append(rid)
+                matched_by[bucket] += 1
+            else:
+                unseen.append((int(row[0]), bucket))
+        active_known = sum(active_by.values())
+        matched = sum(matched_by.values())
+
+        min_cov = _reconcile_min_coverage()
+        keep_why = _bucket_keep_reasons(active_by, matched_by, scraped_conditions, min_cov)
+        stale_ids: list[int] = []
+        kept_condition = 0
+        kept_low = 0
+        for rid, bucket in unseen:
+            why = keep_why[bucket]
+            if why == "missing_condition":
+                kept_condition += 1
+            elif why == "low_bucket":
+                kept_low += 1
+            else:
+                stale_ids.append(rid)
         if kept_condition:
             out["kept_missing_condition"] = kept_condition
             logger.warning(
@@ -234,8 +292,16 @@ def reconcile_dealer_inventory_after_scan(
                 "/".join(sorted({"new", "used"} - set(scraped_conditions or ()))) or "?",
                 kept_condition,
             )
+        if kept_low:
+            out["kept_low_bucket"] = kept_low
+            logger.warning(
+                "Inventory reconcile %s: %s re-seen under %.0f%% of its active rows; keeping %d active row(s)",
+                (dealer_id or "").strip() or "?",
+                ", ".join(f"{b} {matched_by[b]}/{active_by[b]}" for b in CONDITION_BUCKETS if keep_why[b] == "low_bucket"),
+                min_cov * 100,
+                kept_low,
+            )
 
-        min_cov = _reconcile_min_coverage()
         if min_cov > 0 and active_known >= min_rows and matched < min_cov * active_known:
             out["skipped_reason"] = (
                 f"low_coverage(matched={matched},active={active_known},min={min_cov:.0%})"
