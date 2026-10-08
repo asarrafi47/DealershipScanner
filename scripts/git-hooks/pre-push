@@ -5,13 +5,40 @@
 # the remote's current commit for that ref (or the remote's main for a brand-new
 # branch). Identical VERSION with any other change in the tree aborts the push.
 #
+# Pushes to main get the release guard instead (remediation P2A.4, D-REL3):
+# scripts/release_guard.py refuses unless VERSION rises above the remote's main
+# (semver: 1.5.10 > 1.5.9) and CHANGELOG.md has a filled section for it. Its base
+# is the sha the remote itself reported for main ($remote_sha), never the local
+# origin/main, which may be stale. CI's release-guard job runs the same script.
+#
 # Install once per clone:  git config core.hooksPath scripts/git-hooks
 # Bump:                     scripts/bump_version.sh patch|minor|major
 remote="$1"
 zero=0000000000000000000000000000000000000000
+guard="$(git rev-parse --show-toplevel 2>/dev/null)/scripts/release_guard.py"
 
 while read -r local_ref local_sha remote_ref remote_sha; do
   [ "$local_sha" = "$zero" ] && continue            # deleting a remote ref
+
+  # Main: VERSION must rise and CHANGELOG.md needs the section. Checked before
+  # the tag skip, so `git push origin <tag>:main` is judged too.
+  if [ "$remote_ref" = "refs/heads/main" ]; then
+    if ! command -v python3 >/dev/null 2>&1; then
+      echo "pre-push: python3 not found; cannot run $guard for a push to main." >&2
+      exit 1
+    fi
+    if [ ! -f "$guard" ]; then
+      echo "pre-push: $guard is missing; refusing the push to main." >&2
+      exit 1
+    fi
+    # </dev/null: the ref list on stdin belongs to this loop, not to the guard.
+    if ! python3 "$guard" --base "$remote_sha" --head "$local_sha" </dev/null; then
+      echo "pre-push: refused the push to main on $remote (release guard above)." >&2
+      exit 1
+    fi
+    continue
+  fi
+
   case "$local_ref" in refs/tags/*) continue ;; esac  # tags carry no VERSION diff
 
   base="$remote_sha"
