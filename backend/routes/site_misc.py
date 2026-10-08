@@ -2,29 +2,48 @@
 
 from __future__ import annotations
 
-import os
+import re
 from pathlib import Path
 
 from flask import abort, current_app, jsonify, send_from_directory
 
+# Project root: VERSION lives here, and so does BUILD_COMMIT in a deployed image.
+_ROOT_DIR = Path(__file__).resolve().parent.parent.parent
+
 # Serve locally-downloaded car images (written by image_downloader.py).
 # Stored under <project_root>/car_images/<dealer_id>/<vin>/<file>.
-_CAR_IMAGES_DIR = Path(__file__).resolve().parent.parent.parent / "car_images"
+_CAR_IMAGES_DIR = _ROOT_DIR / "car_images"
+
+# A git object name: SHA-1 (40) or SHA-256 (64) hex, abbreviated forms allowed.
+_COMMIT_RE = re.compile(r"[0-9a-f]{7,64}")
+
+
+def _read_root_file(name: str) -> str:
+    """Stripped text of a small file at the project root; "" when unreadable."""
+    try:
+        return (_ROOT_DIR / name).read_text(encoding="utf-8").strip()
+    except (OSError, ValueError):
+        return ""
 
 
 def _app_version() -> str:
-    version_path = os.path.join(
-        os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "VERSION"
-    )
-    try:
-        with open(version_path, encoding="utf-8") as fh:
-            return (fh.read() or "").strip() or "dev"
-    except OSError:
-        return "dev"
+    return _read_root_file("VERSION") or "dev"
+
+
+def _build_commit() -> str:
+    """Full SHA of the deployed commit, or ``"unknown"``.
+
+    deploy/railway/deploy_web.sh and deploy_scanner_nightly.sh (remediation
+    P2B.2) write BUILD_COMMIT next to VERSION in the stage they upload. A dev
+    checkout has no such file, and a malformed one is not echoed back.
+    """
+    commit = _read_root_file("BUILD_COMMIT")
+    return commit if _COMMIT_RE.fullmatch(commit) else "unknown"
 
 
 def health():
-    return jsonify({"status": "ok", "version": _app_version()}), 200
+    # Railway's healthcheck (railway.toml healthcheckPath) only needs the 200.
+    return jsonify({"status": "ok", "version": _app_version(), "commit": _build_commit()}), 200
 
 
 def favicon():

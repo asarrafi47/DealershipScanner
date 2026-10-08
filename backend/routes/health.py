@@ -1,6 +1,8 @@
 """Health + readiness checks for DealershipScanner.
 
 GET /api/health — liveness: cheap, no dependency access, always 200.
+                  Body: {status, version, commit}; ``commit`` is the
+                  BUILD_COMMIT the deploy stage wrote, else "unknown".
 GET /api/ready  — readiness: per-dependency checks, each wrapped in its own
                   try/except so one broken dep never masks the others.
                   Returns 200 only when every *required* check is "ok",
@@ -21,7 +23,7 @@ import os
 from flask import Blueprint, jsonify
 
 from backend.config import Config
-from backend.routes.site_misc import _app_version
+from backend.routes.site_misc import _app_version, _build_commit
 
 bp = Blueprint("health_api", __name__, url_prefix="/api")
 
@@ -85,7 +87,7 @@ def _check_pgvector() -> str | None:
 @bp.get("/health")
 def api_health():
     """Liveness: never touches a dependency; must not flap when a DB is down."""
-    return jsonify(status="ok", version=_app_version())
+    return jsonify(status="ok", version=_app_version(), commit=_build_commit())
 
 
 @bp.get("/ready")
