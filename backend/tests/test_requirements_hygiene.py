@@ -13,6 +13,11 @@ and inside ``try: ... except ImportError`` blocks, plus string-literal
 ``importlib.import_module("x")`` / ``__import__("x")`` calls. A name passes when
 it is stdlib, first-party (this repo), declared in requirements.txt (following
 ``-r`` includes), or listed in ``ALLOWED_UNDECLARED`` below with a reason.
+
+Test-only packages (pytest, pyyaml, ...) live in requirements-test.txt (P2A.2),
+which CI installs next to requirements.txt and no deploy image installs. A name
+declared only there passes for imports under ``backend/tests/`` and fails
+anywhere else, so runtime code cannot lean on a package the image lacks.
 """
 
 from __future__ import annotations
@@ -27,6 +32,8 @@ import pytest
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 REQUIREMENTS = REPO_ROOT / "requirements.txt"
+TEST_REQUIREMENTS = REPO_ROOT / "requirements-test.txt"
+TEST_CODE_PREFIX = "backend/tests/"
 SCAN_DIRS = ("backend", "scripts")
 SKIP_DIR_NAMES = {"__pycache__", "node_modules", ".venv", "venv", "site-packages"}
 
@@ -44,10 +51,6 @@ ALLOWED_UNDECLARED: dict[str, str] = {
     # backend/main.py ProxyFix, backend/web/static.py safe_join, error types.
     # Flask hard-requires Werkzeug and its API is part of Flask's.
     "werkzeug": "transitive: flask",
-    # Test-only. requirements.txt is the runtime / deploy-image file; CI runs
-    # `pip install pytest` after it (.github/workflows/ci.yml). P2A.2 adds
-    # requirements-test.txt.
-    "pytest": "test-only: CI installs it separately",
 }
 
 # Distribution name (PEP 503 normalised) -> import names, only where the import
@@ -58,6 +61,7 @@ DIST_IMPORT_NAMES: dict[str, set[str]] = {
     "python-dotenv": {"dotenv"},
     "pyjwt": {"jwt"},
     "pymupdf": {"fitz", "pymupdf"},
+    "pyyaml": {"yaml"},
 }
 
 # The packages P1A.6 declares, with their floors. Pinned here so a later
@@ -185,26 +189,51 @@ def imports() -> dict[str, list[str]]:
     return third_party_imports()
 
 
+def undeclared_imports(
+    imports: dict[str, list[str]],
+    declared: set[str],
+    declared_for_tests: set[str],
+    allowed=ALLOWED_UNDECLARED,
+) -> dict[str, list[str]]:
+    """Import name -> the sites no declaration covers. A requirements-test.txt
+    name covers only sites under ``backend/tests/``."""
+    missing: dict[str, list[str]] = {}
+    for name, sites in sorted(imports.items()):
+        if name in declared or name in allowed:
+            continue
+        if name in declared_for_tests:
+            sites = [s for s in sites if not s.startswith(TEST_CODE_PREFIX)]
+        if sites:
+            missing[name] = sites
+    return missing
+
+
 @pytest.fixture(scope="module")
 def declared() -> set[str]:
     return declared_import_names()
 
 
-def test_every_third_party_import_is_declared(imports, declared):
-    missing = {
-        name: sites
-        for name, sites in sorted(imports.items())
-        if name not in declared and name not in ALLOWED_UNDECLARED
-    }
+@pytest.fixture(scope="module")
+def declared_for_tests() -> set[str]:
+    return declared_import_names(TEST_REQUIREMENTS)
+
+
+def test_every_third_party_import_is_declared(imports, declared, declared_for_tests):
+    missing = undeclared_imports(imports, declared, declared_for_tests)
     assert not missing, (
-        "third-party imports not declared in requirements.txt (declare them, or add "
-        "them to ALLOWED_UNDECLARED with a reason):\n"
+        "third-party imports not declared in requirements.txt (declare them there, in "
+        "requirements-test.txt when only backend/tests/ imports them, or add them to "
+        "ALLOWED_UNDECLARED with a reason):\n"
         + "\n".join(f"  {name}: {', '.join(sites[:5])}" for name, sites in missing.items())
     )
 
 
-def test_allowlist_has_no_stale_entries(imports, declared):
-    now_declared = sorted(n for n in ALLOWED_UNDECLARED if n in declared)
+def test_allowlist_has_no_stale_entries(imports, declared, declared_for_tests):
+    now_declared = sorted(
+        n
+        for n in ALLOWED_UNDECLARED
+        if not undeclared_imports({n: imports.get(n, ["?"])}, declared, declared_for_tests, allowed={})
+    )
     assert not now_declared, f"declared now, drop from ALLOWED_UNDECLARED: {now_declared}"
     unused = sorted(n for n in ALLOWED_UNDECLARED if n not in imports)
     assert not unused, f"no longer imported, drop from ALLOWED_UNDECLARED: {unused}"
@@ -336,6 +365,24 @@ def test_sends_temperature_detector(source, sends):
 )
 def test_caps_below_major_1_parser(requirement, capped):
     assert _caps_below_major_1(requirement) is capped
+
+
+def test_test_requirements_cover_test_code_only():
+    imports = {
+        "yaml": ["backend/tests/test_ci_workflow.py:31"],
+        "pytest": ["backend/tests/test_a.py:1", "backend/web/routes.py:2"],
+        "requests": ["backend/net/client.py:1"],
+        "numpy": ["backend/db/geo.py:3"],
+    }
+    missing = undeclared_imports(imports, {"requests"}, {"yaml", "pytest"}, allowed={"numpy": "x"})
+    # Runtime code importing a test-only package is still caught.
+    assert missing == {"pytest": ["backend/web/routes.py:2"]}
+
+
+def test_requirements_test_declares_the_test_tooling():
+    # pytest is no longer an ALLOWED_UNDECLARED entry: requirements-test.txt
+    # declares it, and pyyaml backs backend/tests/test_ci_workflow.py.
+    assert {"pytest", "yaml", "pytest_timeout"} <= declared_import_names(TEST_REQUIREMENTS)
 
 
 @pytest.mark.parametrize("dist", sorted(P1A6_DECLARED))

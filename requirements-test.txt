@@ -1,0 +1,15 @@
+# Test-only dependencies (remediation P2A.2). CI installs them next to the
+# runtime file:
+#
+#   pip install torch --index-url https://download.pytorch.org/whl/cpu   # D-TC5
+#   pip install -r requirements.txt -r requirements-test.txt
+#
+# requirements.txt is the deploy image; nothing here may land in it. Exact pins,
+# so a new pytest or plugin release cannot turn a green branch red on its own.
+# backend/tests/test_requirements_hygiene.py accepts these names for imports
+# under backend/tests/ only, and backend/tests/test_ci_workflow.py pins the file.
+pytest==9.1.1
+# --timeout in the CI pytest step (.github/workflows/ci.yml).
+pytest-timeout==2.4.0
+# backend/tests/test_ci_workflow.py parses ci.yml with it.
+pyyaml==6.0.3
