@@ -15,6 +15,15 @@
   per test, listed in a "NETWORK-BLOCKED CONNECTS" terminal summary and recorded as
   `network_blocked` junit properties. Unset, nothing is patched. DNS, UDP sendto, libpq,
   subprocesses and browsers are not guarded (P2A.3).
+- `scripts/release_guard.py --base <ref> [--head <ref>]` (stdlib only) judges whether a
+  commit is releasable: VERSION at the head must be semver-greater than at the base
+  (1.5.10 > 1.5.9) and CHANGELOG.md at the head must have a filled `## [<VERSION>]`
+  section; a head already contained in the base passes; an all-zero base checks only the
+  section. Exit 0 releasable, 1 refused, 2 unresolvable ref. CI gains a `release-guard` job
+  (`needs: lint`) that runs only for pushes to main and PRs to main (D-REL3), comparing a
+  PR's merge commit with origin/main and a push to main with `github.event.before`.
+  `backend/tests/test_release_tooling.py` covers bump_version.sh, the pre-push hook, the
+  guard and the CI job's base selection against local git repos (P2A.4).
 
 ### Changed
 - CI (`.github/workflows/ci.yml`) runs on every branch push, on PRs to main and on manual
@@ -25,6 +34,11 @@
   `not integration and not slow and not pg` under `TESTS_BLOCK_NETWORK=1` with
   `--timeout=300`, and uploads the junit report. Job ids `lint`, `pytest` and
   `pytest-integration` are unchanged (P2A.2).
+- The pre-push hook runs the release guard for pushes to `refs/heads/main`, with the sha the
+  remote reported as base (never a possibly stale local origin/main), and fails closed when
+  python3 or the script is missing or the remote main is not fetched. Pushes to every other
+  ref keep the existing rule (VERSION must differ; bump-only, tag and deletion pushes
+  skipped) (P2A.4).
 
 ### Fixed
 - `ruff check .` is green again: the hidden-dealers `env` fixture body is now the helper
