@@ -106,6 +106,16 @@ def test_manifest_builds_on_real_dictionary() -> None:
 
 
 # --- the real index cannot be written from a test ---------------------------
+#
+# ``index/manifest.json`` is gitignored (.gitignore:109), so a clean checkout
+# (CI) has the tracked dictionary tree but no manifest. The guard has to hold
+# there too: the write is refused either way, and "unchanged" then means the
+# blocked write did not create the file.
+
+
+def _manifest_state(path: Path) -> bytes | None:
+    """The manifest's bytes, or None when this checkout has no manifest."""
+    return path.read_bytes() if path.is_file() else None
 
 
 @pytest.mark.skipif(not DICTIONARY_ROOT.is_dir(), reason="dictionary not present")
@@ -114,12 +124,13 @@ def test_writing_the_real_manifest_is_blocked() -> None:
 
     Goes through ``dictionary_catalog``'s OWN ``MANIFEST_PATH`` -- the private
     copy that made redirecting ``dictionary_paths`` insufficient -- and through
-    ``write_manifest()``, the writer ``rebuild_catalog()`` calls first.
+    ``write_manifest()``, the writer ``rebuild_catalog()`` calls first. Runs
+    with or without the gitignored manifest on disk.
     """
     from backend.enrichment import dictionary_catalog
     from backend.tests.conftest import RealDictionaryWriteBlocked
 
-    before = dictionary_catalog.MANIFEST_PATH.read_bytes()
+    before = _manifest_state(dictionary_catalog.MANIFEST_PATH)
     real = str(dictionary_catalog.MANIFEST_PATH.resolve())
 
     with pytest.raises(RealDictionaryWriteBlocked) as e1:
@@ -134,7 +145,7 @@ def test_writing_the_real_manifest_is_blocked() -> None:
     # aimed at production data and would have landed without the guard.
     for excinfo in (e1, e2, e3):
         assert real in str(excinfo.value)
-    assert dictionary_catalog.MANIFEST_PATH.read_bytes() == before
+    assert _manifest_state(dictionary_catalog.MANIFEST_PATH) == before
 
 
 @pytest.mark.skipif(not DICTIONARY_ROOT.is_dir(), reason="dictionary not present")
@@ -146,12 +157,13 @@ def test_the_2026_07_31_incident_shape_is_now_stopped(
     That is what a test did on 2026-07-31, and because ``dictionary_catalog``
     holds its own copies of the index paths the rebuild landed on the real index
     (entry_count 14,598 -> 1). The same code now raises before it can write, and
-    the manifest is byte-identical afterwards.
+    the manifest is byte-identical afterwards (or still absent, in a checkout
+    without the gitignored manifest).
     """
     from backend.enrichment import dictionary_catalog, dictionary_paths
     from backend.tests.conftest import RealDictionaryWriteBlocked
 
-    before = dictionary_catalog.MANIFEST_PATH.read_bytes()
+    before = _manifest_state(dictionary_catalog.MANIFEST_PATH)
     for attr, value in (
         ("DICTIONARY_ROOT", tmp_path),
         ("INDEX_DIR", tmp_path / "index"),
@@ -163,7 +175,7 @@ def test_the_2026_07_31_incident_shape_is_now_stopped(
     with pytest.raises(RealDictionaryWriteBlocked):
         rebuild_catalog([], enrich_derived=False)
 
-    assert dictionary_catalog.MANIFEST_PATH.read_bytes() == before
+    assert _manifest_state(dictionary_catalog.MANIFEST_PATH) == before
 
 
 @pytest.mark.skipif(not DICTIONARY_ROOT.is_dir(), reason="dictionary not present")

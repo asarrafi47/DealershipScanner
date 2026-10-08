@@ -20,8 +20,10 @@ Inputs (``fixtures/merge_verified_specs_golden.json.gz``):
 Expectations:
 
 * ``hermetic`` — computed under the suite's normal SQLite-tests environment
-  with vPIC replayed from the fixture. Runs everywhere the dictionary tree is
-  on disk.
+  with vPIC replayed from the fixture, and with the dictionary catalog DB built
+  from the tracked dictionary tree into ``tmp_path`` (see
+  :func:`_use_catalog_built_from_tree`). Runs in any checkout, including a
+  clean one (CI) that has no gitignored ``backend/dictionary/index``.
 * ``live`` — computed against local Postgres (read-only). Opt in with
   ``MERGE_SPECS_GOLDEN_LIVE_DB=1``.
 
@@ -237,6 +239,40 @@ def _clear_caches() -> None:
         pass
 
 
+def _use_catalog_built_from_tree(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Path:
+    """Point the EPA/options file lookups at a catalog DB built from the dictionary tree.
+
+    ``find_epa_csv`` ranks candidates from ``index/dictionary_catalog.db`` and
+    only falls back to a filename glob when that DB is absent. The DB is
+    gitignored (.gitignore:110), so a clean checkout has none, and there the
+    glob resolves car ``live:1239391`` (2026 Audi A5) to a different EPA file
+    whose first matching row is the mild hybrid: 2 golden mismatches on CI run
+    37850535029. That fallback is the path prod takes (prod has never had the
+    DB) and is filed as a product finding in
+    docs/monolith_audit_2026_10_01/tests.md, not changed here.
+
+    The DB is a pure function of the tracked tree (``build_manifest_entries`` +
+    ``rebuild_catalog_db``, what ``build_dictionary_manifest.py`` runs minus the
+    derived-file enrichment, whose columns no lookup reads), so this golden
+    builds its own copy in ``tmp_path`` instead of reading whatever index the
+    machine happens to hold. Measured 2026-10-08: the tree build has the same
+    14,598 entries as the MBP's on-disk index, and every recorded car matches
+    with it, in the main checkout and in a clean worktree alike. Only
+    ``dictionary_catalog``'s own copies of the paths are redirected; the real
+    index is never opened for writing (the session guard in conftest would
+    refuse it anyway).
+    """
+    from backend.enrichment import dictionary_catalog as dc
+
+    db_path = tmp_path / "dictionary_catalog.db"
+    monkeypatch.setattr(dc, "INDEX_DIR", tmp_path)
+    monkeypatch.setattr(dc, "CATALOG_DB_PATH", db_path)
+    built = dc.rebuild_catalog_db(dc.build_manifest_entries())
+    assert built == db_path and db_path.is_file()
+    dc.invalidate_catalog_cache()
+    return db_path
+
+
 def _load() -> dict[str, Any]:
     if not FIXTURE.is_file():
         pytest.skip("merge_verified_specs golden fixture not present")
@@ -302,8 +338,9 @@ def _compare(expected: dict[str, dict[str, Any]], got: dict[str, dict[str, Any]]
 # ---------------------------------------------------------------------------
 
 
-def test_merge_verified_specs_golden_hermetic() -> None:
+def test_merge_verified_specs_golden_hermetic(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
     data = _load()
+    _use_catalog_built_from_tree(monkeypatch, tmp_path)
     _clear_caches()
     try:
         got = _run_all(data, replay_vpic=True)
