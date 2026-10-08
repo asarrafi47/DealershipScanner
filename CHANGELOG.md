@@ -2,6 +2,35 @@
 
 ## [Unreleased]
 
+### Added
+- `requirements-test.txt` pins the test-only dependencies (`pytest==9.1.1`,
+  `pytest-timeout==2.4.0`, `pyyaml==6.0.3`); none of them may land in the deploy
+  `requirements.txt`, and `test_requirements_hygiene.py` accepts them for imports under
+  `backend/tests/` only. `backend/tests/test_ci_workflow.py` pins ci.yml's triggers,
+  permissions, job ids, `needs: lint`, timeouts, install order, ruff version and offline
+  selection (P2A.2).
+- `TESTS_BLOCK_NETWORK=1` (CI sets it) makes `backend/tests/conftest.py` refuse Python socket
+  connects and curl_cffi requests to any non-loopback destination (127.0.0.0/8, ::1 and unix
+  sockets stay allowed) with the error a firewalled host gives; refused attempts are counted
+  per test, listed in a "NETWORK-BLOCKED CONNECTS" terminal summary and recorded as
+  `network_blocked` junit properties. Unset, nothing is patched. DNS, UDP sendto, libpq,
+  subprocesses and browsers are not guarded (P2A.3).
+
+### Changed
+- CI (`.github/workflows/ci.yml`) runs on every branch push, on PRs to main and on manual
+  dispatch, with `permissions: contents: read`, one cancellable run per branch or PR (never
+  cancelled on main) and timeouts (lint 5, pytest 30, pytest-integration 15 min). The pytest
+  job installs the CPU-only torch wheel first (D-TC5), then `requirements.txt` and
+  `requirements-test.txt`, sets up node 20 so the JS unit tests run, selects
+  `not integration and not slow and not pg` under `TESTS_BLOCK_NETWORK=1` with
+  `--timeout=300`, and uploads the junit report. Job ids `lint`, `pytest` and
+  `pytest-integration` are unchanged (P2A.2).
+
+### Fixed
+- `ruff check .` is green again: the hidden-dealers `env` fixture body is now the helper
+  `make_account_env`, and `test_csrf_delete_routes.py` imports the helper instead of
+  re-exporting the fixture (F811) (P2A.1).
+
 ## [1.5.3] - 2026-10-08
 
 ### Added
