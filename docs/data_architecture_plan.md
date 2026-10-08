@@ -28,7 +28,7 @@ dealer-observed engine text (`backend/utils/engine_consistency.py`).
 | 5 | Safety & recalls cache | (yr/make/model) ratings; VIN campaigns | future — cache the live NHTSA calls |
 | 6 | Options/packages catalog | trim → option codes / MSRP | future — hardest to keep clean, last |
 | 7 | Dealer registry + quality metrics | dealership | exists (`dealership_registry`, reviews) |
-| 8 | **Scan recipes + per-dealer scan hints** — `dealer_recipes` (HTTP replay shortcuts, stale/health state, `scan_hints` instructions) | dealer_id | **built 2026-07-19**; `workspace/recipes/` files stay the local hot cache, `backend/scanner/recipe_store.py` syncs both ways so recipes follow the dealer to any machine |
+| 8 | **Scan recipes + per-dealer scan hints** — `dealer_recipes` (HTTP replay shortcuts, stale/health state, `scan_hints` instructions) | dealer_id | **built 2026-07-19**; `workspace/recipes/` files stay the local hot cache, and `load_recipes` / `save_recipes` (`backend/scanner/recipes.py`) keep each dealer's set in step with its row by a last-write stamp, so recipes follow the dealer to any machine (see "Recipe cache and store sync" below) |
 
 ### Per-dealer scan hints (`dealer_recipes.scan_hints`)
 
@@ -50,6 +50,90 @@ synth; `price_source=vdp` → route the price-heal/VDP path after capture;
 
 All stores are **tables in the one Postgres**, not separate databases — the
 value is in the joins.
+
+### Recipe cache and store sync (`dealer_recipes` and `workspace/recipes/`)
+
+*Documented 2026-10-08 (P1C.6). "Phase 0" here is the recipe-store fix in
+docs/REMEDIATION_PLAN_2026_10.md Phase 1B (units P1B.2, P1B.3 and P1B.6), not a
+phase of the catalog plan below.*
+
+Each dealer's recipe set lives twice: as its `dealer_recipes` row (the store)
+and as a file in each scanning host's cache. `load_recipes` and `save_recipes`
+in `backend/scanner/recipes.py` keep the two in step.
+`backend/scanner/recipe_store.py` reads and writes rows exactly as given and
+never stamps them.
+
+- **Cache dir.** `<repo>/workspace/recipes/<dealer_id>.json`, anchored at the
+  repo root, never the process cwd (`/app/workspace/recipes` on Railway, where
+  `/app/workspace` is a symlink onto the volume). `RECIPES_CACHE_DIR`
+  overrides it for the whole process. It is read once, at import, and a
+  relative value is pinned against the cwd at that moment. VDP recipes follow
+  the override as `<dir>/vdp`. Every cache write is atomic: a temp file in the
+  same dir, fsync, then `os.replace`.
+- **`saved_at` is the last-write stamp.** `save_recipes` stamps every row of
+  the set with one `time.time()` per call, before it writes the file and then
+  the row, so the file and the row carry the same stamp and the row's
+  `max_saved_at` is that stamp. Every write gets a stamp: a stale flag, a
+  replay's last_ok / coverage / un-stale update, promote, `ensure_recipe`,
+  cascade and synthesize. A copy's freshness is its max `saved_at`. The stamp
+  stays a per-write stamp in later phases, because hosts that run older code
+  still compare it.
+- **The sync rule** (`load_recipes`) compares the file's max `saved_at` with
+  the row's `max_saved_at`:
+  - the row is newer: another host wrote the set since. The row wins and is
+    written into the cache as it is;
+  - the file is newer: a write-through failed, or the file predates the store.
+    The file is pushed up into the store as it is (the push-up, below);
+  - the stamps are equal: the file is returned and neither copy is written.
+
+  Neither direction re-stamps, so every copy keeps the stamp of the write that
+  made it.
+- **`updated_at` is not a freshness stamp.** Every `set_scan_hints` call bumps
+  it, and nearly every row carries hints (683 of 687 local rows on
+  2026-10-08). Never compare it with `saved_at`.
+- **Before Phase 0, "newer" meant "created later".** In VERSION 1.5.2
+  and older (which includes the scanner-nightly image on Railway), `saved_at`
+  was set only when a set was created: by promote, and by the
+  `synthesize_recipes` CLI. Stale flags, un-stales and coverage updates never
+  moved it, and sets synthesized by the pipeline (`ensure_recipe` in
+  `dealer_pipeline.py`) or cascaded were saved with `saved_at=0`. The same
+  comparison therefore ranked creation times, not writes. A stale flag or an
+  un-stale written on one host left the stamps equal, so every other host kept
+  its own file. Any older cache file with a nonzero stamp outranked a set saved
+  with `saved_at=0` and was pushed back up over it.
+- **Rows with `max_saved_at=0`.** Sets saved that way still carry
+  `max_saved_at=0`: 201 local and 235 prod rows in the 2026-10-08 census
+  (docs/db_layer/SCHEMA_LEDGER_2026_10.md). Under Phase 0 code too, such a row
+  loses to any file with a nonzero stamp, however old, in a cache that mirrors
+  its store, until the row is backfilled from its `last_ok_at` (remediation
+  plan P1C.3 locally, P6B.2 on prod). Run that backfill against a store only
+  once every host that writes the store runs Phase 0 code.
+- **The push-up warning.** A push-up logs one WARNING:
+  `Recipes [<dealer>]: local cache is newer than dealer_recipes; pushed N file
+  recipe(s) (max saved_at S) up and overwrote the DB copy of M recipe(s) (max
+  saved_at D)`, or `... up and no DB copy was read`. Under Phase 0 code it
+  should be rare. The expected causes are an earlier failed write-through
+  (that failure logs its own WARNING, once per error class per process), a
+  file that predates the store, and a `max_saved_at=0` row (not yet
+  backfilled, or written since by a host that still runs pre-Phase 0 code).
+  Any other push-up means the cache is out of step with the store: check its
+  store tag (next item) before anything else runs on that cache.
+- **Store fingerprint (`_store.json`).** A cache mirrors one store.
+  `<cache dir>/_store.json` holds the sha256 of that store's host, port and
+  database name, taken from `INVENTORY_DATABASE_URL` / `DATABASE_URL` (a part
+  the URL leaves out comes from `PGHOST` / `PGPORT` / `PGDATABASE`), never the
+  user or password. An untagged cache is tagged for the process's store on the
+  first load that reaches the store. A process whose store has another
+  fingerprint warns once and treats the cache as read-only: no push-ups, no
+  writes into the cache, the store's own copy is served, saves go to the store
+  only, and a failed store read holds that dealer's saves.
+  `python -m backend.scanner.recipes --status` prints the tag and the verdict
+  (`--require-match` gates a script on `match`), and `--reseed` re-tags a
+  cache for a new store. Cross-store work, such as the home-IP prod repair,
+  runs on `RECIPES_CACHE_DIR=<empty scratch dir>`. Bulk imports with
+  `backend/scripts/import_recipes_to_db.py` are not gated by the tag. The full
+  rules are in docs/RAILWAY_SCANNING.md, "The recipe cache is tagged with its
+  store".
 
 ## Phase 1 (this change)
 
