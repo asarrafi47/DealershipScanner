@@ -921,13 +921,21 @@ def gate_recipes(
     fetch: Fetch | None = None,
     context: str = "synth",
     log_root: Path | None = None,
+    record: bool = True,
 ) -> tuple[list[EndpointRecipe], RecipeValidationReport]:
     """Validate the set and apply the verdict: ``reject`` returns ``[]`` (nothing
     to save) and logs the report; ``uncertain`` and ``ok`` return the recipes.
-    Every outcome lands in discovery.md and ``scan_hints.recipe_status``."""
+
+    With ``record=True`` (the default) every outcome lands in discovery.md (a
+    reject also in ``_learning/errors_index.md``) and ``scan_hints.recipe_status``.
+    ``record=False`` is for a caller that will not save the set (a dry run, or a
+    dealer that keeps its healthy recipe): the same verdict comes back and
+    nothing is written, so a status that describes no saved set never reaches
+    the store."""
     report = validate_recipe_set(dealer_id, recipes, fetch, base_url=base_url, dealer_name=dealer_name, place=place)
-    write_discovery_log(dealer_id, report, context, log_root)
-    record_recipe_status(dealer_id, report, context)
+    if record:
+        write_discovery_log(dealer_id, report, context, log_root)
+        record_recipe_status(dealer_id, report, context)
     if report.verdict == "reject":
         logger.warning("recipe validation [%s] REJECT (%s): %s", dealer_id, context, "; ".join(report.reasons)[:300])
         return [], report
