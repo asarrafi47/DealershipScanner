@@ -162,6 +162,8 @@ class EndpointRecipe:
     vehicle_rows: int = 0
     total_count: int | None = None
     provider_hint: str = ""
+    # Last write of this dealer's set (epoch seconds): save_recipes stamps every
+    # row on every save. A value set here before the save is overwritten.
     saved_at: float = 0.0
     last_ok_at: float = 0.0
     stale: bool = False
@@ -282,10 +284,26 @@ def _rows_to_recipes(raw: Any) -> list[EndpointRecipe]:
 def load_recipes(dealer_id: str) -> list[EndpointRecipe]:
     """
     Local file first, reconciled against the shared ``dealer_recipes`` table
-    (see ``backend.scanner.recipe_store``): a newer DB copy (captured on
-    another machine) wins and re-materializes the file; a newer file (written
-    by a scan that predates the DB store) is lazily pushed up. Either side
-    being unavailable degrades to the other.
+    (see ``backend.scanner.recipe_store``) by ``saved_at``.
+
+    ``saved_at`` means "last write of this dealer's set": ``save_recipes``
+    stamps every row with one ``time.time()`` per call, so a stale flag, an
+    un-stale, a last_ok / coverage update and a re-synthesized set (built with
+    ``saved_at=0``) all carry a stamp newer than any copy written before them.
+    It stays a per-write stamp in later phases, because hosts running older
+    code still compare it. A copy's freshness is its max ``saved_at`` (the DB
+    keeps it as ``max_saved_at``).
+
+    - DB newer than the file: another host wrote the set since. The DB copy
+      wins and re-materializes the file with its rows as they are (no
+      re-stamp, so the file gets the DB copy's stamp).
+    - File newer than the DB: a write-through failed, or the file predates the
+      DB store. The file is pushed up as it is (no re-stamp, so the DB copy
+      gets the file's own stamp) and a WARNING names the dealer and the DB
+      copy it replaced.
+    - Equal: the file is returned and nothing is written.
+
+    Either side being unavailable degrades to the other.
     """
     # Read may resolve through _aliases.json (URL-rekeyed dealer); any write
     # below targets the CURRENT slug so the content migrates forward.
@@ -324,19 +342,45 @@ def load_recipes(dealer_id: str) -> list[EndpointRecipe]:
             pass
         return _rows_to_recipes(db_rows)
     if file_rows and file_saved > db_saved:
+        # Push-up: the rows go up exactly as on file. Never re-stamp here, or the
+        # pushed copy would outrank writes other hosts made after this file.
+        pushed = False
         try:
             from backend.scanner.recipe_store import db_save_recipes
 
-            db_save_recipes(_recipe_slug(dealer_id), file_rows)
+            pushed = bool(db_save_recipes(_recipe_slug(dealer_id), file_rows))
         except Exception:  # noqa: BLE001
             pass
+        if pushed:
+            if db_saved < 0:
+                replaced = "no DB copy was read"
+            else:
+                replaced = f"overwrote the DB copy of {len(db_rows)} recipe(s) (max saved_at {db_saved:.3f})"
+            logger.warning(
+                "Recipes [%s]: local cache is newer than dealer_recipes; pushed %d file recipe(s) "
+                "(max saved_at %.3f) up and %s",
+                dealer_id, len(file_rows), file_saved, replaced,
+            )
     return _rows_to_recipes(file_rows or db_rows)
 
 
 def save_recipes(dealer_id: str, recipes: list[EndpointRecipe]) -> None:
+    """Write the dealer's whole recipe set: the cache file, then the
+    best-effort write-through to ``dealer_recipes``.
+
+    Every row's ``saved_at`` is stamped with one ``time.time()`` taken here,
+    before either write, so the file and the DB row carry the same stamp and
+    every write (mark_stale, a replay's last_ok / coverage / un-stale update,
+    promote, ensure_recipe, cascade, synthesize) outranks older copies on other
+    hosts (see ``load_recipes``). The caller's ``EndpointRecipe`` objects are
+    not modified.
+    """
+    now = time.time()
+    rows = [asdict(r) for r in recipes]
+    for row in rows:
+        row["saved_at"] = now
     RECIPES_DIR.mkdir(parents=True, exist_ok=True)
     path = _recipe_path(dealer_id)
-    rows = [asdict(r) for r in recipes]
     _atomic_write_json(path, rows)
     try:
         from backend.scanner.recipe_store import db_save_recipes
