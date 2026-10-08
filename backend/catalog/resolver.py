@@ -17,6 +17,7 @@ listing row (they are a *link*, not facts).
 from __future__ import annotations
 
 import re
+import sqlite3
 from dataclasses import dataclass
 from typing import Any
 
@@ -78,18 +79,38 @@ def _model_variants(make: str, model: str) -> list[str]:
     return epa_model_candidates(make, model, strategy="catalog")
 
 
+class CatalogUnavailableError(RuntimeError):
+    """The epa_master catalog could not be read (lost connection, aborted
+    transaction, missing table, lock or statement timeout, ...).
+
+    This is NOT "no candidates": a caller that treated a failed read as an
+    empty catalog would clear every link it touched. Callers abort the batch
+    without writing anything."""
+
+
+def _is_sqlite_missing_column(exc: BaseException) -> bool:
+    return isinstance(exc, sqlite3.OperationalError) and "no such column" in str(exc).lower()
+
+
 def _query_year_make(cur, year: int, make: str) -> list[dict[str, Any]]:
     cols = ", ".join(_CANDIDATE_COLS)
     try:
+        # ORDER BY id: candidates arrive in a stable order (heap order changes
+        # after VACUUM / reloads), so score ties resolve the same way every run.
         cur.execute(
-            f"SELECT {cols} FROM epa_master WHERE year=? AND lower(make)=lower(?)",
+            f"SELECT {cols} FROM epa_master WHERE year=? AND lower(make)=lower(?) ORDER BY id",
             (year, make.strip()),
         )
-    except Exception:
-        # SQLite dev DBs may lack the extended epa_master columns — a car that
-        # can't be resolved just stays unlinked (dealer data only).
-        return []
-    return [dict(zip(_CANDIDATE_COLS, r)) for r in cur.fetchall()]
+        rows = cur.fetchall()
+    except Exception as exc:
+        if _is_sqlite_missing_column(exc):
+            # SQLite dev/test DBs may lack the extended epa_master columns — a
+            # car that can't be resolved just stays unlinked (dealer data only).
+            return []
+        raise CatalogUnavailableError(
+            f"epa_master read failed for year={year} make={make!r}: {type(exc).__name__}: {exc}"
+        ) from exc
+    return [dict(zip(_CANDIDATE_COLS, r)) for r in rows]
 
 
 def _match_models(rows: list[dict[str, Any]], make: str, model: str) -> list[dict[str, Any]]:
@@ -290,7 +311,11 @@ def score_candidate(car: dict[str, Any], cand: dict[str, Any]) -> tuple[float, s
 
 
 def candidates_for(cur, year: int, make: str, model: str) -> list[dict[str, Any]]:
-    """Public candidate fetch (see ``_candidates``) for callers batching many cars."""
+    """Public candidate fetch (see ``_candidates``) for callers batching many cars.
+
+    Raises :class:`CatalogUnavailableError` when the catalog cannot be read.
+    ``[]`` means the catalog was read and nothing matched (or, on a SQLite
+    dev/test DB only, that its epa_master lacks the extended columns)."""
     return _candidates(cur, year, make, model)
 
 
@@ -332,7 +357,9 @@ def resolve_from_candidates(car: dict[str, Any], cands: list[dict[str, Any]]) ->
         return None
     car = apply_vin_facts(car)
     scored = [(score_candidate(car, c), c) for c in cands]
-    scored.sort(key=lambda item: item[0][0], reverse=True)
+    # Highest score first; on a tie the LOWEST catalog id wins, so identical
+    # twin rows always resolve to the same link whatever order the rows came in.
+    scored.sort(key=lambda item: (-item[0][0], int(item[1]["id"])))
     (best_score, method), best = scored[0]
     if best_score < MIN_CONFIDENCE:
         return None

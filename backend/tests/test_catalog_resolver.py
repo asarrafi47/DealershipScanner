@@ -6,12 +6,20 @@ no epa_master link, ~72% of them MY2026/2027).
 
 from __future__ import annotations
 
+import sqlite3
+
+import pytest
+
 from backend.catalog.resolver import (
+    _CANDIDATE_COLS,
     MIN_CONFIDENCE,
+    CatalogUnavailableError,
     _drive_bucket,
     _electrification,
     _match_models,
     _model_variants,
+    _query_year_make,
+    candidates_for,
     resolve_from_candidates,
     score_candidate,
 )
@@ -301,3 +309,116 @@ def test_drive_bucket_treats_two_wheel_drive_as_no_signal() -> None:
     assert _drive_bucket("2WD") == ""
     assert _drive_bucket("4WD/4-Wheel Drive/4x4") == "4WD"
     assert _drive_bucket("Front-Wheel Drive") == "FWD"
+
+
+# --- deterministic ties + catalog read errors (P1A.3) -------------------------
+
+_TUNDRA_SR5 = {
+    "year": 2026, "make": "Toyota", "model": "TUNDRA", "trim": "SR5",
+    "cylinders": 6, "engine_l": None, "engine_description": "3.4L V6",
+    "drivetrain": "4WD", "fuel_type": "Gasoline", "title": "2026 Toyota Tundra SR5",
+}
+
+
+def test_tie_between_identical_twins_picks_lowest_id() -> None:
+    # Duplicate EPA rows score identically; the link used to follow whichever
+    # twin the heap returned first, so a VACUUM or reload could flip it.
+    hi = _epa(70001, "4WD", 6, 3.4, "Four-Wheel Drive", "Regular Gasoline", None, model="Tundra")
+    lo = _epa(19946, "4WD", 6, 3.4, "Four-Wheel Drive", "Regular Gasoline", None, model="Tundra")
+    mid = _epa(40000, "4WD", 6, 3.4, "Four-Wheel Drive", "Regular Gasoline", None, model="Tundra")
+    assert score_candidate(_TUNDRA_SR5, hi) == score_candidate(_TUNDRA_SR5, lo)
+    for order in ([hi, lo, mid], [lo, hi, mid], [mid, hi, lo], [hi, mid, lo]):
+        match = resolve_from_candidates(_TUNDRA_SR5, order)
+        assert match is not None and match.epa_master_id == 19946, order
+    # The id may arrive as text from some drivers; it still sorts numerically.
+    a = dict(lo, id="19946")
+    b = dict(lo, id="9")
+    match = resolve_from_candidates(_TUNDRA_SR5, [a, b])
+    assert match is not None and match.epa_master_id == 9
+
+
+def test_tie_break_never_beats_a_higher_score() -> None:
+    better = _epa(90000, "4WD", 6, 3.4, "Four-Wheel Drive", "Regular Gasoline", None, model="Tundra")
+    worse = _epa(1, "Hybrid 4WD", 6, 3.4, "Four-Wheel Drive", "Regular Gasoline", "Hybrid", model="Tundra")
+    match = resolve_from_candidates(_TUNDRA_SR5, [worse, better])
+    assert match is not None and match.epa_master_id == 90000
+
+
+def _sqlite_epa(cols: tuple[str, ...], rows: list[tuple]) -> sqlite3.Connection:
+    conn = sqlite3.connect(":memory:")
+    # Plain "id INTEGER" (not the rowid alias) so heap order != id order.
+    conn.execute(f"CREATE TABLE epa_master ({', '.join(cols)})")
+    if rows:
+        conn.executemany(f"INSERT INTO epa_master ({', '.join(cols)}) VALUES ({', '.join('?' * len(cols))})", rows)
+    return conn
+
+
+def _full_row(id_: int, trim: str) -> tuple:
+    return (id_, 2026, "Toyota", "Tundra", trim, 6, 3.4, None, "Four-Wheel Drive",
+            "Regular Gasoline", None, None, None)
+
+
+def test_query_orders_candidates_by_id() -> None:
+    conn = _sqlite_epa(_CANDIDATE_COLS, [_full_row(30, "c"), _full_row(10, "a"), _full_row(20, "b")])
+    rows = _query_year_make(conn.cursor(), 2026, "toyota")
+    assert [r["id"] for r in rows] == [10, 20, 30]
+
+
+class _FailingCursor:
+    """A cursor whose catalog read fails the way a live connection can."""
+
+    def __init__(self, exc: Exception, *, on: str = "execute") -> None:
+        self.exc, self.on = exc, on
+
+    def execute(self, sql, params=()):
+        if self.on == "execute":
+            raise self.exc
+        return self
+
+    def fetchall(self):
+        raise self.exc
+
+
+def _assert_catalog_unavailable(cur: _FailingCursor) -> None:
+    with pytest.raises(CatalogUnavailableError) as ei:
+        _query_year_make(cur, 2026, "Toyota")
+    assert ei.value.__cause__ is cur.exc
+    with pytest.raises(CatalogUnavailableError):
+        candidates_for(cur, 2026, "Toyota", "Tundra")
+
+
+def test_query_error_raises_catalog_unavailable() -> None:
+    for cur in (
+        _FailingCursor(sqlite3.OperationalError("database is locked")),
+        _FailingCursor(sqlite3.OperationalError("disk I/O error"), on="fetchall"),
+        _FailingCursor(RuntimeError("server closed the connection unexpectedly")),
+    ):
+        _assert_catalog_unavailable(cur)
+
+    # A missing epa_master table is a catalog error too (not "no candidates").
+    with pytest.raises(CatalogUnavailableError):
+        _query_year_make(sqlite3.connect(":memory:").cursor(), 2026, "Toyota")
+
+    # The one carve-out: a SQLite dev/test DB without the extended columns.
+    legacy = _sqlite_epa(("id", "year", "make", "model", "cylinders", "displacement"),
+                         [(1, 2026, "Toyota", "Tundra", 6, 3.4)])
+    assert _query_year_make(legacy.cursor(), 2026, "Toyota") == []
+    assert candidates_for(legacy.cursor(), 2026, "Toyota", "Tundra") == []
+
+    # A readable catalog with no match is still an empty list.
+    empty = _sqlite_epa(_CANDIDATE_COLS, [])
+    assert candidates_for(empty.cursor(), 2026, "Toyota", "Tundra") == []
+
+
+def test_postgres_query_errors_raise_catalog_unavailable() -> None:
+    psycopg = pytest.importorskip("psycopg")
+    for cur in (
+        # Postgres schema is migration-owned: a missing column there is an
+        # error, not the SQLite dev-DB carve-out.
+        _FailingCursor(psycopg.errors.UndefinedColumn('column "trim" does not exist')),
+        _FailingCursor(psycopg.errors.UndefinedTable('relation "epa_master" does not exist')),
+        _FailingCursor(psycopg.errors.InFailedSqlTransaction("current transaction is aborted")),
+        _FailingCursor(psycopg.errors.QueryCanceled("canceling statement due to statement timeout")),
+        _FailingCursor(psycopg.OperationalError("server closed the connection unexpectedly")),
+    ):
+        _assert_catalog_unavailable(cur)
