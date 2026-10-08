@@ -1,7 +1,14 @@
 """DELETE routes that change account state require the CSRF header once logged in (2026-09-28)."""
 from __future__ import annotations
 
-from backend.tests.test_hidden_dealers import CSRF, DEALER_ID, _login, env  # noqa: F401  (fixture re-export)
+import pytest
+
+from backend.tests.test_hidden_dealers import CSRF, DEALER_ID, _login, make_account_env
+
+
+@pytest.fixture
+def env(monkeypatch, tmp_path, app_factory):
+    return make_account_env(monkeypatch, tmp_path, app_factory)
 
 
 def test_logged_in_delete_without_token_is_forbidden(env):

@@ -75,13 +75,23 @@ def _insert_car(vin: str, dealer_id: str, dealer_name: str, model: str = "Civic"
         conn.close()
 
 
-@pytest.fixture
-def env(monkeypatch, tmp_path, app_factory):
+def make_account_env(monkeypatch, tmp_path: Path, app_factory) -> dict:
+    """App on a tmp inventory with one car at each of two dealers and one user.
+
+    A plain helper rather than a fixture, so another module (test_csrf_delete_routes)
+    builds the same setup through its own thin ``env`` fixture instead of re-exporting
+    this module's fixture, which ruff reports as F811.
+    """
     app, save_user = _make_app(app_factory, monkeypatch, tmp_path)
     car_id = _insert_car("1HGBH41JXMN109186", DEALER_ID, DEALER_NAME)
     other_id = _insert_car("2HGBH41JXMN109187", OTHER_DEALER_ID, "Other Dealer", model="Accord")
     uid = save_user("hideuser", "hide@example.com", "longpassword123", role="general", org_id=None)
     return {"app": app, "uid": int(uid), "car_id": car_id, "other_id": other_id}
+
+
+@pytest.fixture
+def env(monkeypatch, tmp_path, app_factory):
+    return make_account_env(monkeypatch, tmp_path, app_factory)
 
 
 def _login(client, uid: int) -> None:
