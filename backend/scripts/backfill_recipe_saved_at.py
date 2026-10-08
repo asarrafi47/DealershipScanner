@@ -22,9 +22,23 @@ What it does, for each ``dealer_recipes`` row whose entries have ``saved_at`` 0 
   would make the host discard: a key whose cache ``last_ok_at`` is newer than the
   DB's for that key (or, for a key the DB set lacks, newer than the DB set's latest
   success). ``load_recipes`` would adopt the stamped DB copy over that file, so those
-  dealers are left to the reconcile tool (P1C.4). Only this cache dir is checked;
-  other hosts' caches are P1C.4's. ``--no-cache-check`` turns the check off (a run
-  against a store whose cache lives elsewhere, e.g. prod in P6B.2);
+  dealers are left to the reconcile tool (P1C.4). A cache file that cannot be read,
+  or whose ``last_ok_at`` is not a number, skips its dealer too (``cache_unreadable``);
+- the cache check fails closed. ``--apply`` is refused (exit 2, nothing written, no
+  export) when the default cache dir does not exist or holds no dealer files (a run
+  from a git worktree, which has no ``workspace/recipes``), when the cache dir is tagged for
+  another store (verdict ``mismatch``: its successes say nothing about this store,
+  and this store's own cache is elsewhere), or when this process's store identity
+  cannot be worked out (the export could not be tied to a store for ``--restore``).
+  A dry run prints each of these as a WARNING and says ``--apply`` would be refused.
+  ``--cache-dir`` names the cache explicitly; ``--no-cache-check`` turns the check
+  off on purpose (a run against a store whose cache lives elsewhere, e.g. prod in
+  P6B.2);
+- only this one cache dir is checked. Another host that writes the same store (the
+  mini, over the 15432 tunnel) must not scan between an ``--apply`` here and its own
+  P1C.4 reconcile: its cache files older than the new stamps would adopt the DB sets,
+  and a newer mini-side success (a scottclarkhonda-com shape there) would be lost
+  before P1C.4 could merge it;
 - a row is also skipped when its ``recipes_json`` is unreadable, when no stamp can be
   worked out, or (``--apply``) when it changed after it was read.
 
@@ -90,7 +104,7 @@ SKIP_REASONS = {
     SKIP_UNREADABLE: "recipes_json unreadable",
     SKIP_NO_STAMP: "no last_ok_at and no parseable updated_at",
     SKIP_CACHE_NEWER: "cache has a newer success for a key; left to P1C.4",
-    SKIP_CACHE_UNREADABLE: "cache file unreadable; left to P1C.4",
+    SKIP_CACHE_UNREADABLE: "cache file or its last_ok_at unreadable; left to P1C.4",
     SKIP_CHANGED: "row changed after it was read; not written",
 }
 
@@ -123,6 +137,8 @@ class Plan:
     skipped: dict[str, list[str]] = field(default_factory=dict)
     cache_dir: Path | None = None
     cache_note: str = ""
+    # Why --apply would be refused (a dry run prints these as WARNING lines).
+    warnings: list[str] = field(default_factory=list)
 
     def skip(self, reason: str, dealer_id: str) -> None:
         self.skipped.setdefault(reason, []).append(dealer_id)
@@ -245,8 +261,10 @@ def _cache_has_newer_success(cache_rows: list[dict[str, Any]], db_rows: list[dic
     for r in cache_rows:
         try:
             ok = _num(r.get("last_ok_at"))
-        except (TypeError, ValueError):
-            continue
+        except (TypeError, ValueError) as exc:
+            # Fail closed, as for an unreadable file: a success that cannot be read
+            # cannot be shown to be older than the DB's.
+            raise CacheUnreadable("non-numeric last_ok_at") from exc
         k = _entry_key(r)
         if k is None:
             continue
@@ -309,7 +327,12 @@ def plan_backfill(conn, *, cache_dir: Path | None) -> Plan:
                 plan.skip(SKIP_CACHE_UNREADABLE, did)
                 continue
             if cache_rows is not None:
-                if _cache_has_newer_success(cache_rows, entries):
+                try:
+                    newer = _cache_has_newer_success(cache_rows, entries)
+                except CacheUnreadable:
+                    plan.skip(SKIP_CACHE_UNREADABLE, did)
+                    continue
+                if newer:
                     plan.skip(SKIP_CACHE_NEWER, did)
                     continue
                 cache_saved = _max_saved(cache_rows)
@@ -508,9 +531,12 @@ def restore(conn, export: dict[str, Any], *, apply: bool) -> RestoreResult:
 # ── report ─────────────────────────────────────────────────────────────────────
 
 
-def _ids(ids: list[str]) -> str:
-    shown = ", ".join(ids[:MAX_IDS])
-    more = len(ids) - MAX_IDS
+def _ids(ids: list[str], limit: int | None = MAX_IDS) -> str:
+    """Up to ``limit`` ids (all of them when ``limit`` is None)."""
+    if limit is None:
+        return ", ".join(ids)
+    shown = ", ".join(ids[:limit])
+    more = len(ids) - limit
     return shown + (f" ... (+{more} more)" if more > 0 else "")
 
 
@@ -521,6 +547,8 @@ def _day(epoch: float) -> str:
 def print_plan(plan: Plan, *, header: str) -> None:
     print(header)
     print(f"cache check: {plan.cache_note}")
+    for w in plan.warnings:
+        print(f"WARNING: {w}")
     print(f"dealer_recipes rows read: {plan.rows_read}")
     print(f"rows with saved_at 0/null entries: {plan.rows_with_zero} "
           f"(plus {len(plan.skipped.get(SKIP_UNREADABLE) or [])} unreadable row(s), listed below)")
@@ -552,25 +580,55 @@ def print_plan(plan: Plan, *, header: str) -> None:
                    if c.cache_saved_at is not None and c.cache_saved_at > c.max_saved_at_after]
     print(f"note: cache files still newer than the backfilled stamp (load_recipes keeps pushing "
           f"these up; P1C.4): {len(still_newer)}" + (f": {_ids(still_newer)}" if still_newer else ""))
+    if plan.cache_dir is not None:
+        print("note: only this cache dir is checked; another host writing this store (the mini over "
+              "the tunnel) must not scan between an --apply here and its own P1C.4 reconcile")
+    if plan.warnings:
+        print(f"WARNING: --apply would be refused ({len(plan.warnings)} reason(s) above); "
+              f"this dry run is not the plan --apply would carry out")
 
 
 # ── CLI ────────────────────────────────────────────────────────────────────────
 
 
-def _cache_check(args: argparse.Namespace, ap: argparse.ArgumentParser) -> tuple[Path | None, str]:
+@dataclass
+class CacheCheck:
+    cache_dir: Path | None          # the dir plan_backfill checks (None: no check)
+    note: str
+    refusals: list[str] = field(default_factory=list)  # why --apply is refused
+
+
+def _cache_check(args: argparse.Namespace, ap: argparse.ArgumentParser) -> CacheCheck:
+    """Which cache dir to check. Fails closed: when the check cannot do its job,
+    ``refusals`` says why and ``--apply`` is refused (a dry run warns)."""
     if args.no_cache_check:
-        return None, "off (--no-cache-check)"
-    if args.cache_dir is not None:
+        return CacheCheck(None, "off (--no-cache-check)")
+    explicit = args.cache_dir is not None
+    if explicit:
         d = Path(args.cache_dir).expanduser().absolute()
         if not d.is_dir():
             ap.error(f"--cache-dir {d} is not a directory")
     else:
         d = rec.resolve_recipes_dir()
         if not d.is_dir():
-            return None, f"no cache dir at {d} (nothing to check)"
+            return CacheCheck(None, f"NOT RUN: no cache dir at {d}", [
+                f"the default cache dir {d} does not exist (a git worktree has no workspace/recipes), so the "
+                f"cache check that skips dealers like scottclarkhonda-com did not run; pass --cache-dir "
+                f"<the scanner's cache dir>, or --no-cache-check on purpose",
+            ])
     check = rec.check_cache_store(d)
     files = sum(1 for p in d.glob("*.json") if not p.name.startswith("_"))
-    return d, f"{d} ({files} dealer file(s); store tag verdict: {check.verdict})"
+    out = CacheCheck(d, f"{d} ({files} dealer file(s); store tag verdict: {check.verdict})")
+    if files == 0 and not explicit:
+        out.refusals.append(
+            f"the default cache dir {d} holds no dealer files, so the cache check skips nothing; "
+            f"pass --cache-dir <the scanner's cache dir>, or --no-cache-check on purpose")
+    if check.verdict == "mismatch":
+        out.refusals.append(
+            f"the cache dir {d} is tagged for another store (verdict mismatch): its successes are no "
+            f"evidence about this store, and this store's own cache is not the one checked; pass the "
+            f"cache dir that mirrors this store, or --no-cache-check on purpose")
+    return out
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -585,8 +643,11 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--restore", type=Path, metavar="EXPORT",
                     help="put rows back from an export (dry run unless --apply)")
     ap.add_argument("--cache-dir", help="recipe cache dir to check (default: RECIPES_CACHE_DIR, "
-                                        "else <repo>/workspace/recipes)")
-    ap.add_argument("--no-cache-check", action="store_true", help="do not check any cache dir")
+                                        "else <repo>/workspace/recipes; --apply is refused when the "
+                                        "default is missing or empty)")
+    ap.add_argument("--no-cache-check", action="store_true",
+                    help="do not check any cache dir (on purpose: rows with a newer cache success "
+                         "are then stamped too)")
     args = ap.parse_args(argv)
     if args.restore is not None and (args.cache_dir or args.no_cache_check or args.backup_dir):
         ap.error("--restore takes no --cache-dir, --no-cache-check or --backup-dir")
@@ -610,6 +671,10 @@ def main(argv: list[str] | None = None) -> int:
         except (OSError, ValueError) as exc:
             print(f"restore refused: {type(exc).__name__}: {exc}")
             return 2
+        if store is None:
+            print("restore refused: this process's store identity could not be worked out, so the "
+                  "export cannot be matched to it")
+            return 2
         if export.get("store") != store:
             print(f"restore refused: the export was made against store {export.get('store')!r}, "
                   f"this process uses {store!r}")
@@ -625,16 +690,29 @@ def main(argv: list[str] | None = None) -> int:
         print(f"  restorable (unchanged since the backfill): {len(res.restorable)}")
         if args.apply:
             print(f"  restored: {len(res.restored)}" + (f": {_ids(res.restored)}" if res.restored else ""))
+        limit = None if args.apply else MAX_IDS  # an apply lists every id it did not restore
         print(f"  changed since the backfill (left as they are): {len(res.changed)}"
-              + (f": {_ids(res.changed)}" if res.changed else ""))
-        print(f"  missing: {len(res.missing)}" + (f": {_ids(res.missing)}" if res.missing else ""))
+              + (f": {_ids(res.changed, limit)}" if res.changed else ""))
+        print(f"  missing: {len(res.missing)}" + (f": {_ids(res.missing, limit)}" if res.missing else ""))
         return 0
 
-    cache_dir, note = _cache_check(args, ap)
+    cc = _cache_check(args, ap)
+    refusals = list(cc.refusals)
+    if store is None:
+        refusals.append("this process's store identity could not be worked out, so the export "
+                        "could not be tied to a store for --restore")
+    if args.apply and refusals:
+        print(f"{TOOL}: APPLY refused (nothing written, no export made)")
+        print(f"store: {store}")
+        print(f"cache check: {cc.note}")
+        for r in refusals:
+            print(f"refused: {r}")
+        return 2
     conn = recipe_store._conn()
     try:
-        plan = plan_backfill(conn, cache_dir=cache_dir)
-        plan.cache_note = note
+        plan = plan_backfill(conn, cache_dir=cc.cache_dir)
+        plan.cache_note = cc.note
+        plan.warnings = refusals
         if not args.apply:
             print_plan(plan, header=f"{TOOL}: DRY RUN (nothing written)\nstore: {store}")
             return 0
@@ -650,12 +728,14 @@ def main(argv: list[str] | None = None) -> int:
         conn.close()
     print(f"export written first: {result.export_path} ({len(plan.candidates)} row(s))")
     print(f"  applied: {len(result.applied)}")
+    # Every id (no cap): the export lists every candidate, so these two lists are
+    # what separates the applied rows from the rest.
     print(f"  {SKIP_CHANGED} ({SKIP_REASONS[SKIP_CHANGED]}): {len(result.changed)}"
-          + (f": {_ids(result.changed)}" if result.changed else ""))
+          + (f": {_ids(result.changed, None)}" if result.changed else ""))
     if result.verify_failed:
         print(f"  VERIFY FAILED (row read back differs from what was written; written again since?): "
               f"{len(result.verify_failed)}: "
-              f"{_ids(result.verify_failed)}")
+              f"{_ids(result.verify_failed, None)}")
     print(f"rows with max_saved_at=0 and recipes after the run: {remaining}")
     print(f"rollback: python -m backend.scripts.{TOOL} --restore {result.export_path} --apply")
     return 3 if result.verify_failed else 0

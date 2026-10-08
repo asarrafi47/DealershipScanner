@@ -334,7 +334,24 @@ def test_unreadable_cache_file_is_skipped(store, capsys):
     seed_fleet(store)
     (store.dirs["mbp"] / "synth-dealer-com.json").write_text("{broken", encoding="utf-8")
     _, out = run(capsys, "--cache-dir", str(store.dirs["mbp"]))
-    assert "cache_unreadable (cache file unreadable; left to P1C.4): 1: synth-dealer-com" in out
+    assert "cache_unreadable (cache file or its last_ok_at unreadable; left to P1C.4): 1: synth-dealer-com" in out
+
+
+def test_non_numeric_cache_last_ok_at_is_cache_unreadable(store, capsys):
+    """A cache success that cannot be read cannot be shown older than the DB's: the
+    dealer is skipped (fail closed), never stamped."""
+    seed_fleet(store)
+    cache = entries_of(store, "synth-dealer-com")
+    cache[0]["last_ok_at"] = "yesterday"
+    store.write_file("mbp", "synth-dealer-com", cache)
+    conn = recipe_store._conn()
+    try:
+        plan = bf.plan_backfill(conn, cache_dir=store.dirs["mbp"])
+    finally:
+        conn.close()
+    assert plan.candidates == []
+    assert plan.skipped == {bf.SKIP_CACHE_NEWER: ["scott-shape-com"],
+                            bf.SKIP_CACHE_UNREADABLE: ["synth-dealer-com"]}
 
 
 def test_no_cache_check_backfills_the_scott_shape(store, capsys, tmp_path):
@@ -481,3 +498,125 @@ def test_missing_cache_dir_is_an_error(store, tmp_path):
     with pytest.raises(SystemExit) as exc:
         bf.main(["--cache-dir", str(tmp_path / "nope")])
     assert exc.value.code == 2
+
+
+# ── the cache check fails closed ───────────────────────────────────────────────
+
+
+def _no_default_cache(monkeypatch, path) -> None:
+    """The scanner's default cache dir is ``path`` (a worktree has no workspace/)."""
+    monkeypatch.setattr(rec, "resolve_recipes_dir", lambda *a, **k: path)
+
+
+def test_apply_refused_when_the_default_cache_dir_is_missing(store, capsys, tmp_path, monkeypatch):
+    seed_fleet(store)
+    _no_default_cache(monkeypatch, tmp_path / "worktree" / "workspace" / "recipes")
+    before = snapshot(store)
+    backup = tmp_path / "bk"
+
+    rc, out = run(capsys, "--apply", "--backup-dir", str(backup))
+
+    assert rc == 2, out
+    assert "APPLY refused (nothing written, no export made)" in out
+    assert "refused: the default cache dir" in out and "does not exist" in out
+    assert not backup.exists() or list(backup.iterdir()) == []  # no export
+    assert snapshot(store) == before
+    assert [e["saved_at"] for e in entries_of(store, "scott-shape-com")] == [0.0, 0.0]  # still unstamped
+    assert [e["saved_at"] for e in entries_of(store, "synth-dealer-com")] == [0.0, 0.0]
+
+    # Naming the cache dir runs the check: the scott shape is skipped, the rest is stamped.
+    rc, out = run(capsys, "--apply", "--backup-dir", str(backup), "--cache-dir", str(store.dirs["mbp"]))
+    assert rc == 0, out
+    assert "cache_newer_ok" in out and "scott-shape-com" in out
+    assert [e["saved_at"] for e in entries_of(store, "scott-shape-com")] == [0.0, 0.0]
+    assert [e["saved_at"] for e in entries_of(store, "synth-dealer-com")] == [SEPT, SEPT]
+
+
+def test_dry_run_warns_when_the_default_cache_dir_is_missing(store, capsys, tmp_path, monkeypatch):
+    seed_fleet(store)
+    _no_default_cache(monkeypatch, tmp_path / "worktree" / "workspace" / "recipes")
+    before = snapshot(store)
+
+    rc, out = run(capsys)
+
+    assert rc == 0, out
+    assert "cache check: NOT RUN: no cache dir at" in out
+    assert "WARNING: the default cache dir" in out and "did not run" in out
+    assert "WARNING: --apply would be refused (1 reason(s) above)" in out
+    assert "nothing to check" not in out
+    assert snapshot(store) == before
+
+
+def test_apply_refused_when_the_default_cache_dir_is_empty(store, capsys, tmp_path, monkeypatch):
+    seed_fleet(store)
+    empty = tmp_path / "worktree" / "workspace" / "recipes"
+    empty.mkdir(parents=True)
+    _no_default_cache(monkeypatch, empty)
+    before = snapshot(store)
+    rc, out = run(capsys, "--apply", "--backup-dir", str(tmp_path / "bk"))
+    assert rc == 2, out
+    assert "holds no dealer files" in out
+    assert not (tmp_path / "bk").exists()
+    assert snapshot(store) == before
+
+
+def test_apply_refused_on_a_cache_tagged_for_another_store(store, capsys, tmp_path):
+    seed_fleet(store)
+    rec.write_store_tag("postgres:other-host:5432/other", source="test", cache_dir=store.dirs["mbp"])
+    before = snapshot(store)
+
+    rc, out = run(capsys, "--cache-dir", str(store.dirs["mbp"]))
+    assert rc == 0
+    assert "store tag verdict: mismatch" in out
+    assert "WARNING: the cache dir" in out and "tagged for another store" in out
+    assert "WARNING: --apply would be refused" in out
+
+    rc, out = run(capsys, "--apply", "--backup-dir", str(tmp_path / "bk"), "--cache-dir", str(store.dirs["mbp"]))
+    assert rc == 2, out
+    assert "refused: the cache dir" in out
+    assert not (tmp_path / "bk").exists()
+    assert snapshot(store) == before
+
+
+def test_apply_and_restore_refused_when_the_store_identity_is_unknown(store, capsys, tmp_path, monkeypatch):
+    seed_fleet(store)
+    backup = tmp_path / "bk"
+    rc, _ = run(capsys, "--apply", "--backup-dir", str(backup), "--cache-dir", str(store.dirs["mbp"]))
+    assert rc == 0
+    export = next(backup.glob("*.json"))
+    applied = snapshot(store)
+    put_row(store, "late-synth-com", [_entry("late-synth-com", "https://www.late-synth.com/a.json", last_ok_at=AUG)])
+    with_late = snapshot(store)
+
+    monkeypatch.setattr(rec, "store_identity", lambda: None)
+    rc, out = run(capsys, "--apply", "--backup-dir", str(tmp_path / "bk2"), "--cache-dir", str(store.dirs["mbp"]))
+    assert rc == 2, out
+    assert "store identity could not be worked out" in out
+    assert not (tmp_path / "bk2").exists()
+    rc, out = run(capsys, "--restore", str(export), "--apply")
+    assert rc == 2 and "restore refused" in out
+    assert snapshot(store) == with_late
+    assert {k: v for k, v in with_late.items() if k != "late-synth-com"} == applied
+
+
+def test_apply_lists_every_changed_row(store, capsys, tmp_path, monkeypatch):
+    """More than 20 rows changed between the read and the write: every id is printed
+    (the export lists every candidate, so this list is what tells them apart)."""
+    ids = [f"busy-{i:02d}-com" for i in range(bf.MAX_IDS + 5)]
+    for did in ids:
+        put_row(store, did, [_entry(did, f"https://www.{did}.com/a.json", last_ok_at=SEPT)])
+    real_plan = bf.plan_backfill
+
+    def plan_then_hint_writes(conn, **kw):
+        plan = real_plan(conn, **kw)
+        for c in plan.candidates:  # a hint write lands on every row after the read
+            assert recipe_store.set_scan_hints(c.dealer_id, {"notes": "moved"})
+        return plan
+
+    monkeypatch.setattr(bf, "plan_backfill", plan_then_hint_writes)
+    rc, out = run(capsys, "--apply", "--backup-dir", str(tmp_path / "bk"), "--no-cache-check")
+    assert rc == 0, out
+    assert "applied: 0" in out
+    line = next(ln for ln in out.splitlines() if ln.strip().startswith("changed ("))
+    assert line.endswith(": " + ", ".join(ids))
+    assert "more)" not in line
