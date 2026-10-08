@@ -15,8 +15,10 @@ Sync model (see ``backend.scanner.recipes``):
     pushes to the DB (covers scans that wrote files with pre-DB code).
 
 Every DB touch is best-effort: a scan must never fail because Postgres was
-unreachable, so errors log and fall back to file behavior. Set
-``RECIPES_DB_DISABLED=1`` to opt out entirely.
+unreachable, so errors log and fall back to file behavior. A failed
+write-through (``db_save_recipes``) logs at WARNING the first time each error
+class is seen in a process, then at DEBUG. Set ``RECIPES_DB_DISABLED=1`` to opt
+out entirely.
 """
 from __future__ import annotations
 
@@ -30,6 +32,36 @@ from typing import Any
 logger = logging.getLogger("scanner")
 
 _table_lock = threading.Lock()
+
+# Error classes whose write-through failure was already logged at WARNING in
+# this process (rate limit: one WARNING per class, the rest at DEBUG).
+_save_failure_warned: set[str] = set()
+_save_failure_lock = threading.Lock()
+
+
+def _log_save_failure(dealer_id: str, exc: BaseException) -> None:
+    """Log a failed ``dealer_recipes`` write-through.
+
+    The recipe file was written but the shared store was not, so other hosts
+    will not see this save. That is worth a WARNING, but a dead DB fails every
+    save of a fleet run, so only the first failure of each error class per
+    process logs at WARNING; repeats log at DEBUG.
+    """
+    cls = type(exc)
+    key = f"{cls.__module__}.{cls.__qualname__}"
+    with _save_failure_lock:
+        first = key not in _save_failure_warned
+        _save_failure_warned.add(key)
+    if first:
+        logger.warning(
+            "dealer_recipes write-through failed for %s (%s: %s); the recipe file "
+            "was written but the shared store was not. Further %s failures in "
+            "this process log at DEBUG.",
+            dealer_id, cls.__name__, exc, cls.__name__,
+        )
+    else:
+        logger.debug("dealer_recipes save skipped for %s: %s", dealer_id, exc)
+
 
 _DDL_PG = """
 CREATE TABLE IF NOT EXISTS dealer_recipes (
@@ -158,7 +190,7 @@ def db_save_recipes(dealer_id: str, rows: list[dict[str, Any]]) -> bool:
         finally:
             conn.close()
     except Exception as exc:  # noqa: BLE001 — never let DB issues break a scan
-        logger.debug("dealer_recipes save skipped for %s: %s", dealer_id, exc)
+        _log_save_failure(dealer_id, exc)
         return False
 
 
