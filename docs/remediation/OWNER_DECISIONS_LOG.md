@@ -29,3 +29,5 @@ Answers to the decisions in `docs/REMEDIATION_PLAN_2026_10.md` Section 7, in the
 | 2026-10-08 | D-REL10 scanner-nightly deploys from a tag | (a) yes, with loud ALLOW_UNRELEASED_DEPLOY=1 override | |
 | 2026-10-08 | CLAUDE.md release wording (P2B.1/P2B.7 proposals) | Add both lines (main release guard; RELEASING.md pointer) | |
 | 2026-10-08 | Web GitHub source | Owner disconnects web Source in Railway | removes the 09-11 rebuild-from-main hazard |
+| 2026-10-09 | D-SEC1 Chromium in web | (a) remove from web; WebResearcher HTTP-only by default; operator trim script keeps browser mode | P3.8; based on P0B.3 |
+| 2026-10-09 | D-SEC4 OAuth linking | (a) no auto-link; link only after a password login; email-only lookup | P3.1 |
