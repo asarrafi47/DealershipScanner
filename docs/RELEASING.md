@@ -379,7 +379,8 @@ below stands for its name. `V` is the new version, set in step 3.
   through the current guarded script (steps 1 to 15). [Rollback](#rollback),
   scanner-nightly, has the steps.
 - **scanner-nightly, only if that patch release cannot be cut in time (D-REL10):**
-  `ALLOW_UNRELEASED_DEPLOY=1 deploy/railway/deploy_scanner_nightly.sh`, run in a checkout
+  first run both checks in "Check first" below and stop if either fails. Then run
+  `ALLOW_UNRELEASED_DEPLOY=1 deploy/railway/deploy_scanner_nightly.sh`, in a checkout
   whose HEAD is the fix commit on a branch cut from `main`. This deploys even though the
   guard failed, and prints a loud warning. It ships the committed tree of HEAD
   (`git archive HEAD`, never uncommitted changes) with `BUILD_TAG=unreleased`, or with the
@@ -388,7 +389,7 @@ below stands for its name. `V` is the new version, set in step 3.
   checking out its tag: that runs the old tag's own script, which deploys at once
   ([Rollback](#rollback), scanner-nightly).
 
-  Verify, in this order:
+  Check first, in this order, before the override deploy above:
   `grep -q _guarded_deploy.sh deploy/railway/deploy_scanner_nightly.sh && echo guarded-script`
   prints `guarded-script` (the script in this checkout is the guarded one, which honours
   `--dry-run`), then
