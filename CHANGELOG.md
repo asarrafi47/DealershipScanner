@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [1.5.4] - 2026-10-09
+
 ### Added
 - `requirements-test.txt` pins the test-only dependencies (`pytest==9.1.1`,
   `pytest-timeout==2.4.0`, `pyyaml==6.0.3`); none of them may land in the deploy
@@ -315,7 +317,12 @@
 ### Security
 - CSRF header token now required on the account DELETE routes (saved searches, hidden dealers, search history).
 
-## [0.2.0] — 2026-07-08
+## [1.3.2] - 2026-07-19
+
+No CHANGELOG section was written at the time; this entry is backfilled from the release commit
+(ba79193da): Redesign landing + register pages; fix page-load stalls.
+
+## [0.2.0] - 2026-06-14
 
 ### Added
 - **Delta scans:** scan only changed inventory; heal-pass parallelization; recipe capture fixes; fresh-pg schema (`e612399`).
