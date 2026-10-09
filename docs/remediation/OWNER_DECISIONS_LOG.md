@@ -27,3 +27,5 @@ Answers to the decisions in `docs/REMEDIATION_PLAN_2026_10.md` Section 7, in the
 | 2026-10-08 | D-REL8 first deploy | (b) web on the first release; scanner-nightly at P6B.1 | |
 | 2026-10-08 | D-REL9 first release level | patch | |
 | 2026-10-08 | D-REL10 scanner-nightly deploys from a tag | (a) yes, with loud ALLOW_UNRELEASED_DEPLOY=1 override | |
+| 2026-10-08 | CLAUDE.md release wording (P2B.1/P2B.7 proposals) | Add both lines (main release guard; RELEASING.md pointer) | |
+| 2026-10-08 | Web GitHub source | Owner disconnects web Source in Railway | removes the 09-11 rebuild-from-main hazard |
