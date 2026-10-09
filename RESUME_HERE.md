@@ -1,8 +1,8 @@
 # DealershipScanner — Resume Here
 
-**Version 0.2.0** · _Updated 2026-07-10_
+**Version:** read [`VERSION`](VERSION) (`cat VERSION`); releases are in [`CHANGELOG.md`](CHANGELOG.md) · _Header fixed 2026-10-08; the sections below date from 2026-07-10 and are stale (prod runs on Railway now, not `./start.sh` behind a Cloudflare tunnel); the full rewrite is remediation P18B.1_
 **Master handoff:** [`master-todo.md`](master-todo.md) · [`CHANGELOG.md`](CHANGELOG.md)
-**Branch:** `feature/admin-scanner-ops-hub` (**2026-07 structural rework landed in working tree, uncommitted — see Current state**)
+**Branch:** trunk on `main` ([`docs/RELEASING.md`](docs/RELEASING.md)). Until the first release to `main` (remediation P2B.3), work integrates on `feature/http-only-scans`; after it, each phase works on a short `phase/<id>` branch cut from `main`.
 
 ## Restart
 
