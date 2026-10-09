@@ -36,6 +36,21 @@
   a `git push origin <branch>:main` is judged by the release guard (VERSION must rise,
   CHANGELOG section filled), not by the branch rule. The hook and CLAUDE.md are unchanged
   (P2B.1).
+- `docs/RELEASING.md` documents the release flow (D-REL2 (a) trunk, D-REL3 (a) every push
+  bumps): branching model, bump rule, a 15-step release checklist with a Verify command per
+  step, the D-REL10 hotfix override, web and scanner-nightly rollback, the Railway source
+  policy, the migration pointer and a release log seeded with the pre-flow deployments. No
+  web variable may change while web's `serviceInstance.source.repo` is set; the read-only
+  `web_source_check` prints `web-source-clear` or `WEB-SOURCE-SET <repo>` and fails closed
+  (still set on 2026-10-09; the owner is disconnecting it). No doc checks out an old tag to
+  run its deploy script (1.4.2 to 1.5.3 carry the pre-P2B.2 `deploy_scanner_nightly.sh`,
+  which deploys on `--dry-run`): mid-fleet trouble means `railway down -s scanner-nightly`
+  and a PATCH release from main. `deploy/railway/README.md` drops "connect the GitHub repo
+  and deploy from main" for `deploy_web.sh`, `docs/RAILWAY_SCANNING.md` records the
+  2026-10-08 deletion of `scanner-worker`/`scanner-scheduler`, the `SCAN_FLEET=1` hazard on
+  variable changes and that a Railway rollback restores the target's variables, and
+  RESUME_HERE.md's version and branch lines point at `VERSION` and the trunk model.
+  `backend/tests/test_releasing_doc.py` pins the docs to the tooling (P2B.7).
 
 ### Changed
 - CI (`.github/workflows/ci.yml`) runs on every branch push, on PRs to main and on manual
