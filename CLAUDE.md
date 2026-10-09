@@ -12,7 +12,12 @@
   catalog (EPA) never outranks the dealer's own engine text or the VIN decode.
 - Every push carries a new `VERSION`: run `scripts/bump_version.sh patch|minor|major` before
   pushing (the tracked pre-push hook refuses otherwise; install it once with
-  `git config core.hooksPath scripts/git-hooks`).
+  `git config core.hooksPath scripts/git-hooks`). A push to `main` must also raise VERSION
+  above the remote main and have a filled `## [<VERSION>]` CHANGELOG section
+  (`scripts/release_guard.py`; CI's `release-guard` job checks pushes and PRs to main).
+- Releases follow `docs/RELEASING.md`: `main` moves only by fast-forward to a tagged
+  release, Railway gets code only through `deploy/railway/deploy_web.sh` /
+  `deploy_scanner_nightly.sh` from that tag, and no Railway service ever builds from GitHub.
 - Never commit `.env` or secrets. Do not run heavy local workloads on battery without
   asking. One scanner process per lock file: `workspace/scanner.lock` by default, or the
   file named by `SCANNER_LOCK_PATH` when the fleet runs as several disjoint shards on one

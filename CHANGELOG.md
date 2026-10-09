@@ -28,8 +28,14 @@
   37850535029): the 3 failures and the 5 network-touching tests, each with its class (a)-(f),
   cause, planned fix and owner, plus product finding PF-1: without the gitignored
   `dictionary_catalog.db` (which prod has never had, P0A.3) the EPA file fallback resolves
-  129 YMMs to another model's file (2026 Audi A5 -> 2025 A4 mild hybrid), owned by Phase 9
+  128 YMMs to another model's file (2026 Audi A5 -> 2025 A4 mild hybrid), owned by Phase 9
   (P2A.6).
+- `backend/tests/test_release_tooling.py` pins owner decision D-REL3 (a): the pre-push hook
+  has no branch-name exemption, so `phase/*` and `ci/*` branches need a new VERSION like any
+  other branch (a shakedown re-uses a bump only by pushing to a new `ci/shakedown-<n>`), and
+  a `git push origin <branch>:main` is judged by the release guard (VERSION must rise,
+  CHANGELOG section filled), not by the branch rule. The hook and CLAUDE.md are unchanged
+  (P2B.1).
 
 ### Changed
 - CI (`.github/workflows/ci.yml`) runs on every branch push, on PRs to main and on manual
@@ -45,6 +51,21 @@
   python3 or the script is missing or the remote main is not fetched. Pushes to every other
   ref keep the existing rule (VERSION must differ; bump-only, tag and deletion pushes
   skipped) (P2A.4).
+- Railway deploys come only from a tagged release on main (D-REL10). The new
+  `deploy/railway/deploy_web.sh` and the rewritten `deploy_scanner_nightly.sh` share
+  `deploy/railway/_guarded_deploy.sh`, which refuses (exit 1, nothing staged, railway never
+  called) unless the tracked tree is clean, HEAD is main on origin (read live with
+  `git ls-remote`) and HEAD carries the annotated tag `v<VERSION>` with the same tag object
+  on origin. The stage is `git archive` of the tag plus the P0A.3 must-ship allowlist (empty)
+  plus `BUILD_COMMIT` (full SHA) and `BUILD_TAG`, uploaded with
+  `railway up <stage> --path-as-root --service <service> --detach`; `--dry-run` prints the
+  plan and file count without calling railway, and `--keep-stage DIR` keeps the stage for a
+  local Docker build. `ALLOW_UNRELEASED_DEPLOY=1` (that exact value) overrides with a loud
+  warning and ships the committed tree of HEAD with `BUILD_TAG=unreleased`. The scanner
+  script still swaps in `railway.scanner-nightly.json` and refuses `SERVICE=web`. `/health`
+  and `/api/health` now return `{status, version, commit}`, where `commit` is the stage's
+  `BUILD_COMMIT` or "unknown"; the healthcheck path is unchanged. Covered by the new
+  `backend/tests/test_deploy_guard.py` and an extended `test_health_ready.py` (P2B.2).
 
 ### Fixed
 - `ruff check .` is green again: the hidden-dealers `env` fixture body is now the helper

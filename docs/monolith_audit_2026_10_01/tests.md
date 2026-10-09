@@ -425,6 +425,24 @@ P2A.7 exit check: the changed tests pass both with and without the gitignored in
 fresh worktree simulates "without", and the main checkout provides "with". `TESTS_BLOCK_NETWORK=1`
 on `test_scraper_chain.py` must show 0 refused connects.
 
+### P2A.7 as merged (d8be6049a; Phase 2A exit gate, 2026-10-08)
+
+P2A.7 ran in parallel with this ledger, and two of its fixes differ from the plans above:
+
+- #3: P2A.7 did not pin `_CATALOG_DEPENDENT` or add a gated-skip test. The hermetic golden now
+  builds `dictionary_catalog.db` from the tracked dictionary tree into `tmp_path`, so every
+  golden key, including `live:1239391`, is compared in every checkout. No skip was added, so
+  the asset-gated count stays at 9, not 10. The golden was not re-recorded. The golden no longer
+  runs the no-catalog fallback that prod takes; PF-1 below still owns that path.
+- #4-#8: the fixture is as planned. Only `test_requests_result_accepted_when_sufficient` checks
+  the stub's calls (one per profile, in `ImpersonatingFetcher.PROFILES` order). The other four
+  tests send their attempts through the same stub.
+- Measured in clean worktrees (no gitignored index), with `TESTS_BLOCK_NETWORK=1` and the CI
+  selection on the three files. At `12c56bf49` (pre-phase): 3 failed, 15 refused connects in
+  5 tests. At `e3f5f0aa6` (Phase 2A tip): 51 passed, 0 refused connects, and 1 asset-gated skip
+  (`test_real_catalog_db_is_readable_but_not_writable`, already skipped before P2A.7). With the
+  index present (main checkout), all three files pass too.
+
 ## Product findings (class (e): filed, not fixed)
 
 ### PF-1: without the dictionary catalog DB, the EPA file resolver picks another model's file (Audi S/A5 models, Audi e-tron variants, Toyota Supra)
@@ -458,7 +476,7 @@ on `test_scraper_chain.py` must show 0 refused connects.
   was run for each of the 12,126 sharded EPA files' own (year, make, model), with the catalog
   (a scratch copy of the MBP's DB) and without it.
   - With the catalog, 12,115 resolve to their own file. Without it, 11,987 do.
-  - 130 differ, and 129 of those resolve to a **different model's** file without the catalog:
+  - 130 differ, and 128 of those resolve to a **different model's** file without the catalog:
 
     | Requested | Resolves to | YMMs |
     |---|---|---|
@@ -474,7 +492,7 @@ on `test_scraper_chain.py` must show 0 refused connects.
     | Audi A6 e-tron | A6 | 1 |
     | Audi S6 e-tron | A6 | 1 |
 
-  - The 130th is a J.K. Motors spelling variant.
+  - The other 2 are a J.K. Motors spelling-variant pair (MERC.BENZ.300SE <-> MERC BENZ 300SE, opposite directions).
   - Recent model years are affected: 2024 and 2025 A5/S3/S4/S5/S6/SQ5, and 2026
     A5/S3/S5/SQ5. 2026 A5 and S5 resolve to the **2025 A4** file.
   - The worst cases cross powertrains: 2027 A6 e-tron and S6 e-tron (battery-electric)
@@ -493,14 +511,14 @@ on `test_scraper_chain.py` must show 0 refused connects.
 - **Bearing on the plan:** P9.2 states "The EPA fuzzy fallback is unchanged; it already
   reaches parity, 217/217". That count shows a file resolves in both setups, not that it is
   the same file. P9.2's Accept should add an EPA file-identity parity check (catalog vs no
-  catalog) that covers these 129 YMMs. A likely direction is to search the raw model before
+  catalog) that covers these 128 YMMs. A likely direction is to search the raw model before
   the family label and to glob the sharded tree, but Phase 9 decides.
 
 ## Observed in the same run, not failures (for P14C.3's skip budget)
 
 | Skip | Count | Note | Owner |
 |---|---|---|---|
-| Asset-gated (brochure PDFs, catalog db) | 9 | The P14C.3 baseline. Expected to be 10 after P2A.7 #3. | P14C.3 |
+| Asset-gated (brochure PDFs, catalog db) | 9 | The P14C.3 baseline. P2A.7 #3 added no skip (see "P2A.7 as merged"), so it stays 9. | P14C.3 |
 | `test_car_detail_context_golden.py[shard_0..5]`: "needs PYTHONHASHSEED=0" | 6 | Not asset-gated, so not counted, and it runs nowhere in CI: a silent coverage gap. Options: set `PYTHONHASHSEED=0` for that test in CI, or make the trim-ladder order deterministic. | P14C.3 decides; not a P2A.7 item |
 | `test_search_golden.py::*_postgres`: "SEARCH_GOLDEN_PG=1 not set" | 17 | Postgres tier (F8). | Phase 14A/14B |
 | `test_charger_daytona_specs.py`: "car 3608 absent" | 1 | Already ranked P1 #3 above (vacuous and writing). | existing finding |
@@ -509,5 +527,5 @@ on `test_scraper_chain.py` must show 0 refused connects.
 Reproduce: `gh run view 37850535029 --log-failed` and `gh run download 37850535029` (junit).
 Local: in a fresh worktree, run `TESTS_BLOCK_NETWORK=1 .venv/bin/python -m pytest
 backend/tests/test_dictionary_catalog.py backend/tests/test_merge_verified_specs_golden.py
-backend/tests/test_scraper_chain.py -q -p no:cacheprovider`. Expect 3 failed and 15 refused
-connects in 5 tests.
+backend/tests/test_scraper_chain.py -q -p no:cacheprovider`. At `12c56bf49` (before P2A.7) expect
+3 failed and 15 refused connects in 5 tests; from `e3f5f0aa6` on, 0 failed and 0 refused.
