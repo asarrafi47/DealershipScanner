@@ -280,8 +280,10 @@ below stands for its name. `V` is the new version, set in step 3.
     (`railway whoami`, `railway status`) and rerun this step. Never replace the step 8
     snapshot after the push, because it is the only record of the state before it. A
     `diff` that shows a new id means some service builds from GitHub. For web, roll it
-    back ([Rollback](#rollback), web). For scanner-nightly, never use a Railway rollback:
-    follow Rollback, scanner-nightly, and run step 15's variable check at once. Then fix
+    back ([Rollback](#rollback), web). For scanner-nightly, never use a Railway rollback.
+    The new deployment runs with the current variables, so it is a fleet run if
+    `SCAN_FLEET` is on: the owner stops it at once with `railway down -s scanner-nightly`
+    ([Rollback](#rollback), scanner-nightly), then run step 15's variable check. Then fix
     the source ([Railway source policy](#railway-source-policy)).
 
 12. **Deploy web from the tag.** D-REL8 (b) decided that the first release deploys web and
@@ -357,7 +359,9 @@ below stands for its name. `V` is the new version, set in step 3.
     `railway variable delete` has no `--skip-deploys` in CLI 5.57.2. `--kv` prints raw
     values, and the grep keeps only these two non-secret lines. The script stages the tag
     with the archive's own `deploy/railway/railway.scanner-nightly.json` as the stage's
-    `railway.json` (`Dockerfile.scanner`). It refuses `SERVICE=web`.
+    `railway.json` (`Dockerfile.scanner`). It refuses `SERVICE=web`. Run it only from this
+    release checkout (HEAD == the tag, step 9), never from a checkout of an older tag
+    ([why](#scanner-nightly)).
 
     Verify: the dry run passes as in step 12. Afterwards,
     `railway deployment list -s scanner-nightly --limit 3` shows the new deployment, and
@@ -370,22 +374,33 @@ below stands for its name. `V` is the new version, set in step 3.
 
 ## Hotfixes (D-REL10)
 
-- **scanner-nightly, mid-fleet only:** `ALLOW_UNRELEASED_DEPLOY=1 deploy/railway/deploy_scanner_nightly.sh`.
-  This deploys even though the guard failed, and prints a loud warning. It ships the
-  committed tree of HEAD (`git archive HEAD`, never uncommitted changes) with
-  `BUILD_TAG=unreleased`, or with the tag if HEAD carries one. As soon as the fleet
-  allows, cut a release and redeploy from its tag. Only the exact value `1` overrides.
-  Verify first with
-  `ALLOW_UNRELEASED_DEPLOY=1 deploy/railway/deploy_scanner_nightly.sh --dry-run`. When the
-  guard fails, its plan says `GUARD OVERRIDDEN` and shows the `BUILD_TAG` that will ship.
-  Putting a known-good release back mid-fleet uses the same override from a checkout of
-  that release's tag ([Rollback](#rollback), scanner-nightly).
+- **scanner-nightly, mid-fleet trouble:** the owner stops the fleet with
+  `railway down -s scanner-nightly`, and the fix ships as a PATCH release from `main`
+  through the current guarded script (steps 1 to 15). [Rollback](#rollback),
+  scanner-nightly, has the steps.
+- **scanner-nightly, only if that patch release cannot be cut in time (D-REL10):**
+  `ALLOW_UNRELEASED_DEPLOY=1 deploy/railway/deploy_scanner_nightly.sh`, run in a checkout
+  whose HEAD is the fix commit on a branch cut from `main`. This deploys even though the
+  guard failed, and prints a loud warning. It ships the committed tree of HEAD
+  (`git archive HEAD`, never uncommitted changes) with `BUILD_TAG=unreleased`, or with the
+  tag if HEAD carries one. As soon as the fleet allows, cut a release and redeploy from
+  its tag. Only the exact value `1` overrides. Never point it at an older release by
+  checking out its tag: that runs the old tag's own script, which deploys at once
+  ([Rollback](#rollback), scanner-nightly).
+
+  Verify, in this order:
+  `grep -q _guarded_deploy.sh deploy/railway/deploy_scanner_nightly.sh && echo guarded-script`
+  prints `guarded-script` (the script in this checkout is the guarded one, which honours
+  `--dry-run`), then
+  `ALLOW_UNRELEASED_DEPLOY=1 deploy/railway/deploy_scanner_nightly.sh --dry-run` exits 0
+  and its plan says `GUARD OVERRIDDEN` and shows the `BUILD_TAG` that will ship.
 - **web:** do not use the override. Cut a patch release (steps 1 to 13).
 
 ## Rollback
 
 `main` only moves forward. Never force-push it back. Either fix forward with a new patch
-release, or roll web back to an earlier deployment. Never roll scanner-nightly back
+release, or roll web back to an earlier deployment. Never roll scanner-nightly back, and
+never deploy an older release by checking out its tag and running its scripts
 ([below](#scanner-nightly)).
 
 **A Railway rollback restores the target deployment's variables, not only its image.**
@@ -402,13 +417,20 @@ in the release log may no longer be a target.
 
 ### web
 
-1. Find the last good deployment: `railway deployment list -s web --limit 10`. The
+1. Check web's source first. Step 5 changes web variables, and no web variable may change
+   while web records a GitHub source ([Web's GitHub source](#webs-github-source)). Paste
+   the `web_source_check` definition from that section, then run `web_source_check`. If
+   it prints `WEB-SOURCE-SET`, the owner disconnects the source (Settings → Source →
+   Disconnect) before the rollback, so that step 5 can run straight after it.
+
+   Verify: `web_source_check` prints `web-source-clear`.
+2. Find the last good deployment: `railway deployment list -s web --limit 10`. The
    release log has the id. Then list every web variable changed since that deployment
    (the dated blocks in `docs/SCANNING_OPS_LOG.md` and the release log notes record
    them). Example: a rollback to `c9872e66` would bring back
    `ALLOW_APP_ADMIN_DEV_PASS_THROUGH` and drop `CAR_CHAT_WEB_RESEARCH=0`, the two
    2026-10-08 changes that `d9aaa75e` was redeployed to apply.
-2. Fingerprint the current variables, so you can prove later that they are back. This
+3. Fingerprint the current variables, so you can prove later that they are back. This
    writes only names and a hash, never a value:
 
    ```bash
@@ -418,7 +440,7 @@ in the release log may no longer be a target.
 
    Verify: `cat /tmp/web_var_names_before.txt` lists the variable names you expect
    (names only, no values), and `/tmp/web_vars_before.sha` holds one hash.
-3. Roll back. In the dashboard: web → Deployments → that deployment → ⋯ → Rollback. Or
+4. Roll back. In the dashboard: web → Deployments → that deployment → ⋯ → Rollback. Or
    use GraphQL, since the CLI (5.57.2) has no rollback command:
 
    ```bash
@@ -436,7 +458,9 @@ in the release log may no longer be a target.
    Verify: `railway deployment list -s web --limit 3` shows the rollback deployment as
    SUCCESS, and `curl -fsS https://sarraficars.com/api/health` shows the earlier version
    and commit.
-4. Put today's variables back on the rolled-back image. Compare first:
+5. Put today's variables back on the rolled-back image. Only after step 1's
+   `web_source_check` printed `web-source-clear`; run it again if anything may have
+   changed since. Compare first:
 
    ```bash
    railway variable list -s web --kv | grep -v '^RAILWAY_' | cut -d= -f1 | sort | diff /tmp/web_var_names_before.txt -
@@ -481,24 +505,42 @@ has `SCAN_FLEET=1`: a rollback to it starts a full fleet against prod Postgres o
 verified way to read an older deployment's variable snapshot, so treat every earlier
 scanner-nightly deployment the same way.
 
-Before P6B.1, scanner-nightly is not deployed at all (D-REL8 (b)). From P6B.1 on, put
-known-good code back with a deploy, which uses the current variables:
+**Never run an old tag's deploy script either.** Every release before the first one
+P2B.3 cuts (0.2.0 to 1.5.3, so every retro tag P2B.4 adds, v1.3.2 to v1.5.2) predates
+the guarded scripts of P2B.2. From 1.4.2 to 1.5.3, `deploy/railway/deploy_scanner_nightly.sh`
+is a 24-line script that reads no arguments: it ignores `--dry-run`, `--help` and
+`ALLOW_UNRELEASED_DEPLOY`, and uploads `git archive HEAD` to scanner-nightly the moment it
+runs. Releases up to 1.4.1 have no such script, and no old tag has `deploy_web.sh`. So
+never check out an older tag, or add a worktree at one, to deploy from it: its "dry run"
+is a real deploy, which starts the container with the current variables, so with
+`SCAN_FLEET` on it is a full fleet on the old code. Known-good code comes back as a
+revert, shipped in a new patch release.
 
-- Normally fix forward: revert the bad change on the next phase branch and cut a patch
-  release (steps 1 to 15).
-- Mid-fleet only (D-REL10): run step 15's variable check, then in the main checkout (the
-  directory Railway is linked to) check out the known-good release tag and use the
-  override:
+Before P6B.1, scanner-nightly is not deployed at all (D-REL8 (b)). From P6B.1 on,
+mid-fleet trouble goes like this:
 
-  ```bash
-  git switch --detach v<good version>
-  ALLOW_UNRELEASED_DEPLOY=1 deploy/railway/deploy_scanner_nightly.sh --dry-run
-  ALLOW_UNRELEASED_DEPLOY=1 deploy/railway/deploy_scanner_nightly.sh
-  git switch -
-  ```
+1. **Stop the fleet.** The owner runs `railway down -s scanner-nightly` (it asks for
+   confirmation; `-y` skips that). It removes the service's most recent deployment, which
+   stops the running container. On 2026-10-08 `railway down -s scanner-scheduler -y`
+   removed the running `50ac4514` the same way, and no other deployment started
+   (`docs/SCANNING_OPS_LOG.md`, the owner's 2026-10-08 block). Agents never run it.
 
-  Verify: the dry run's plan says `GUARD OVERRIDDEN` with `BUILD_TAG=v<good version>`,
-  and afterwards the step 15 checks pass. Record the deployment in the release log.
+   Verify: `railway deployment list -s scanner-nightly --limit 3` shows that deployment
+   as REMOVED, with nothing newer.
+2. **Keep it stopped until the fix ships.** Run step 15's variable check
+   (`railway variable list -s scanner-nightly --kv | grep -E '^SCAN_(FLEET|DEALERS)='`).
+   Unless the fixed release should resume the fleet, turn it off without a deploy:
+   `railway variable set SCAN_FLEET=0 -s scanner-nightly --skip-deploys`.
+
+   Verify: the check prints nothing or only `SCAN_FLEET=0`, unless a resumed run is
+   intended.
+3. **Ship a fixed PATCH release from `main`.** On a branch cut from `main`, fix the bad
+   change or `git revert` it, then run the release checklist (steps 1 to 15), which
+   deploys through the current guarded script from the new tag. If that release cannot
+   be cut in time, D-REL10's override ships the fix commit instead
+   ([Hotfixes](#hotfixes-d-rel10)), never an older tag.
+
+   Verify: step 15's checks pass, and the deployment is recorded in the release log.
 
 After anything that touched scanner-nightly, including a rollback someone ran by
 mistake, re-run step 15's check
@@ -517,22 +559,26 @@ No Railway service builds from GitHub. Code reaches Railway only as a CLI upload
 - **Never attach a GitHub source to a service.** Never turn on autodeploy or "Wait for
   CI", and never run `railway redeploy --from-source`. On 2026-09-11 a GitHub build of
   `main` replaced prod with the June 0.2.0 app. A `main` build on a legacy worker would
-  have booted that same app against prod (P0A.1 answer 4).
+  have booted that same app against prod (P0A.1 answer 4). Web still records one; the
+  owner is removing it ([Web's GitHub source](#webs-github-source)).
 - **Never run a bare `railway up` from a checkout.** It uploads the working tree,
   uncommitted files included, to whatever service the directory is linked to. On
   2026-10-08 a bare `railway up` uploaded a checkout to scanner-nightly by accident. The
   upload failed before anything ran.
-- **To apply a variable change**, stage it with
-  `railway variable set NAME=value -s <service> --skip-deploys`, then run
-  `railway redeploy -s <service> -y`. That redeploys the existing latest deployment with
-  the same image and the current variables (`railway redeploy --help`; only
-  `--from-source` pulls new code). The 2026-10-08 `d9aaa75e` redeploy of web did exactly
-  this. On web, do not apply a change with a deploying `railway variable set` (one
-  without `--skip-deploys`) while web still records a GitHub source (open item below):
-  on 2026-09-11 exactly that rebuilt web from GitHub `main`. `--skip-deploys` followed
-  by `railway restart` does not apply the change, because a restart relaunches the same
-  deployment with its old variables. Always pass `-s`. On 2026-10-08 the main checkout
-  was linked to scanner-nightly, so a command without `-s` acted on it.
+- **To apply a variable change**, on web first run `web_source_check`
+  ([below](#webs-github-source)). Unless it prints `web-source-clear`, change no web
+  variable at all, in the dashboard or with the CLI, `--skip-deploys` included. Then
+  stage the change with `railway variable set NAME=value -s <service> --skip-deploys`,
+  and run `railway redeploy -s <service> -y`. That redeploys the existing latest
+  deployment with the same image and the current variables (`railway redeploy --help`;
+  only `--from-source` pulls new code). The 2026-10-08 `d9aaa75e` redeploy of web did
+  exactly this. Once web's source is disconnected, a deploying `railway variable set` on
+  web (one without `--skip-deploys`) also deploys the current image; staging several
+  changes and redeploying once just makes one deployment instead of one per change.
+  `--skip-deploys` followed by `railway restart` does not apply the change, because a
+  restart relaunches the same deployment with its old variables. Always pass `-s`. On
+  2026-10-08 the main checkout was linked to scanner-nightly, so a command without `-s`
+  acted on it.
 
   **On scanner-nightly, a redeploy or a deploying variable change starts the container
   once**, and that runs a full fleet scan against prod Postgres if `SCAN_FLEET=1` or
@@ -547,6 +593,59 @@ No Railway service builds from GitHub. Code reaches Railway only as a CLI upload
   against a Railway rollback, which restores the target deployment's own variables
   ([Rollback](#rollback), scanner-nightly).
 
+### Web's GitHub source
+
+**Never change a web variable, in the dashboard or with the CLI, while web's
+`serviceInstance.source.repo` is set.** That covers sets with or without `--skip-deploys`,
+deletes, the dashboard's Variables tab and step 5 of the web rollback. On 2026-09-11 a
+web variable change rebuilt web from GitHub `main` (`09dfabb7`, `main@70c3dbb57`) and
+replaced prod with the June 0.2.0 app. Check the source first, every time, with
+`web_source_check` below. It is read-only: one GraphQL query, never a `mutation`, and it
+never prints the token.
+
+```bash
+web_source_check() {
+  local token
+  token=$(python3 -c 'import json,os; print(json.load(open(os.path.expanduser("~/.railway/config.json")))["user"]["accessToken"])') || return 1
+  curl -sS https://backboard.railway.com/graphql/v2 \
+    -H "Authorization: Bearer $token" -H "Content-Type: application/json" \
+    -H "User-Agent: railway-cli/$(railway --version | awk '{print $2}')" \
+    --data '{"query":"query($eid: String!, $sid: String!) { serviceInstance(environmentId: $eid, serviceId: $sid) { source { repo image } } }","variables":{"eid":"abe0fc9d-2dd5-4217-b303-12c6c4ac498a","sid":"b711c414-86c3-4b1d-a458-17168d11e439"}}' \
+    | python3 -c 'import json,sys; s=json.load(sys.stdin)["data"]["serviceInstance"]["source"] or {}; r=s.get("repo"); print("web-source-clear" if r is None else "WEB-SOURCE-SET " + r); sys.exit(r is not None)' \
+    || { echo "web_source_check: not clear; change no web variable" >&2; return 1; }
+}
+web_source_check
+```
+
+`eid` is the production environment and `sid` is the web service, both from the P0A.1
+per-service table in `docs/SCANNING_OPS_LOG.md`. The function works in bash and zsh.
+
+- `web-source-clear` (exit 0): web has no GitHub source, so web variable changes are
+  safe. Each one deploys the current image with the new variables, as the 2026-10-08
+  redeploy `d9aaa75e` did (the same 1.5.1 image, with that day's variable changes).
+  Apply them as the variable-change bullet above says.
+- `WEB-SOURCE-SET <repo>` (exit 1): stop. Change no web variable until the owner has
+  disconnected the source and the check prints `web-source-clear`.
+- Anything else (a Python traceback, `Not Authorized`, a Cloudflare error page) is a
+  failed check, also exit 1. Refresh the login (`railway whoami`) and run it again. A
+  failed check never counts as clear.
+
+The rule is about variables. Uploads through `deploy/railway/deploy_web.sh` deploy the
+uploaded stage whether or not the source is recorded: `62f93905` (1.5.0) and `c9872e66`
+(1.5.1) were CLI uploads made while it was.
+
+**Status 2026-10-09: the owner is disconnecting web's source.** The decision is the "Web
+GitHub source" row of `docs/remediation/OWNER_DECISIONS_LOG.md`. A read-only run of the
+query above on 2026-10-09 still returned `source.repo = asarrafi47/DealershipScanner`, so
+until the check prints `web-source-clear`, no web variable may change. The owner
+disconnects it in the dashboard: web → Settings → Source → Disconnect.
+
+Verify the disconnect: `web_source_check` prints `web-source-clear`, and
+`railway deployment list -s web --limit 3` shows the same newest deployment as before the
+disconnect, still SUCCESS. P0A.4 step 6 expects no new deployment and the running one
+unaffected. `curl -fsS https://sarraficars.com/api/health` still answers with the same
+version.
+
 ### State as of the 2026-10-08 ops log (P0A.1 and P0A.4, `docs/SCANNING_OPS_LOG.md`)
 
 - No service, and no environment-level setting, has a deployment trigger. Autodeploy is
@@ -559,10 +658,13 @@ No Railway service builds from GitHub. Code reaches Railway only as a CLI upload
   files are still in the repo; P15B.6 deletes them. docker-compose still uses the
   worker/scheduler entrypoints.
 - **Open owner items** (P0A.4 step 6). Web still records `asarrafi47/DealershipScanner`
-  as its source. If the Railway GitHub App is given access to the repo again, or someone
-  runs `redeploy --from-source`, Railway can build `main` again. The fix is to disconnect
-  web's source (Settings → Source → Disconnect) and to confirm at
-  github.com/settings/installations that the Railway app cannot see this repo.
+  as its source (rechecked read-only on 2026-10-09). If the Railway GitHub App is given
+  access to the repo again, or someone runs `redeploy --from-source`, Railway can build
+  `main` again. The fix is to disconnect web's source (Settings → Source → Disconnect),
+  which the owner is doing as of 2026-10-09 ([Web's GitHub source](#webs-github-source)),
+  and to confirm at github.com/settings/installations that the Railway app cannot see
+  this repo. Until `web_source_check` prints `web-source-clear`, no web variable may
+  change.
 - **`SCAN_FLEET=1` is still set on scanner-nightly** (with `SCAN_SHARDS=8` and
   `SCAN_BATCH=6`; P0A.1). The owner's 2026-10-08 actions did not change it. The deployed
   image is `89c13ad52` (deployment `90a3d2a0`, 2026-09-29), which predates the egress tag
@@ -584,6 +686,8 @@ No Railway service builds from GitHub. Code reaches Railway only as a CLI upload
 ### How to verify (read-only)
 
 - After every push to `main`, run release step 11.
+- Before any web variable change, run `web_source_check`
+  ([Web's GitHub source](#webs-github-source)). It must print `web-source-clear`.
 - To check for triggers, run the trigger query from the P0A.1 block in
   `docs/SCANNING_OPS_LOG.md` ("Reproducing the checks"). The environment-wide form:
 

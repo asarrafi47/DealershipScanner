@@ -132,7 +132,11 @@ new Railway 401/403 (it predates `SCANNER_EGRESS_TAG`), so a scanner-nightly run
 then adds stale flags of its own.
 
 A stopped service exposes no volume (`railway volume files download` fails with an SFTP
-timeout). To read the logs, start an idle container and copy them out while it holds:
+timeout). To read the logs, start an idle container and copy them out while it holds.
+The redeploy starts the container with the current variables, so it is an idle start
+only if `railway variable list -s scanner-nightly --kv | grep -E '^SCAN_(FLEET|DEALERS)='`
+prints nothing or only `SCAN_FLEET=0`. With `SCAN_FLEET=1` (still set per P0A.1) it runs
+the whole fleet (see "How to run it" below):
 
 ```bash
 railway service redeploy --service scanner-nightly -y   # idle start, holds SCAN_IDLE_HOLD_SECONDS
@@ -239,9 +243,15 @@ deploy/railway/deploy_scanner_nightly.sh             # railway up --detach from 
 Until P6B.1, do not deploy scanner-nightly at all: D-REL8 (b) deploys only web on the
 first release (`docs/RELEASING.md`, release step 15). A deploy starts the container
 once, and it scans if `SCAN_FLEET=1` or `SCAN_DEALERS` is set (P0A.1 found `SCAN_FLEET=1`
-still set on 2026-10-07), so check both variables first. Mid-fleet hotfix only (D-REL10):
-`ALLOW_UNRELEASED_DEPLOY=1` ships the committed tree of HEAD with a loud warning and
-`BUILD_TAG=unreleased`. Cut a release afterwards.
+still set on 2026-10-07), so check both variables first.
+
+Mid-fleet trouble: the owner stops the fleet with `railway down -s scanner-nightly`, and
+the fix ships as a PATCH release from `main` through this script (`docs/RELEASING.md`,
+Rollback, scanner-nightly). Only if that release cannot be cut in time (D-REL10),
+`ALLOW_UNRELEASED_DEPLOY=1` ships the committed fix commit at HEAD, on a branch cut from
+`main`, with a loud warning and `BUILD_TAG=unreleased`. Cut a release afterwards. Never
+check out an older tag to deploy from it: releases 1.4.2 to 1.5.3 carry the pre-P2B.2
+script, which ignores `--dry-run` and deploys at once, and older ones have no script.
 
 Run a scan manually:
 
@@ -275,10 +285,12 @@ container runs with that deployment's `SCAN_FLEET` and `SCAN_DEALERS`, whatever 
 service holds now. `90a3d2a0` (2026-09-29) ran the 561-dealer fleet with `SCAN_FLEET=1`:
 rolling back to it starts a full fleet against prod Postgres on the `89c13ad52` image.
 Never roll scanner-nightly back to a deployment whose snapshot had `SCAN_FLEET` on or
-`SCAN_DEALERS` set. Fix forward with a release, or mid-fleet (D-REL10) deploy a
-known-good release tag with `ALLOW_UNRELEASED_DEPLOY=1`, which runs with the current
-variables (`docs/RELEASING.md`, Rollback). After any rollback, re-run the variable check
-above, since the service's values may have been reverted too.
+`SCAN_DEALERS` set. Put known-good code back by fixing forward: stop a running fleet
+first (the owner runs `railway down -s scanner-nightly`), then ship the fix or a
+`git revert` of the bad change as a PATCH release from `main` through the current guarded
+script (`docs/RELEASING.md`, Rollback). Never check out an older release tag and run its
+scripts. After any rollback, re-run the variable check above, since the service's values
+may have been reverted too.
 
 Locally, the same entrypoint (proven 2026-09-28 against local Postgres):
 

@@ -20,12 +20,25 @@ read the doc and the scripts as text (no git, no network, no Railway) and pin:
   deployment's custom variables as well as its image (Railway's
   deployment-actions docs), so SCAN_FLEET=0 cannot make a scanner-nightly
   rollback safe, and no passage in RELEASING.md or RAILWAY_SCANNING.md pairs a
-  rollback with SCAN_FLEET without saying so.
+  rollback with SCAN_FLEET without saying so;
+- no instruction checks out an old release tag and runs its scripts. Every
+  release before P2B.3's carries the pre-P2B.2 deploy_scanner_nightly.sh, which
+  reads no arguments and deploys at once, so its "--dry-run" is a real deploy.
+  Mid-fleet trouble stops the fleet (`railway down -s scanner-nightly`) and
+  ships a fixed PATCH release from main through the current guarded script;
+- web's GitHub source check is documented as a runnable, read-only command
+  (driven here against a fake curl and railway), its ids are the ones the
+  P0A.1 audit recorded, and every passage that changes a web variable runs it
+  first: no web variable changes while serviceInstance.source.repo is set.
 """
 
 from __future__ import annotations
 
+import json
+import os
 import re
+import shutil
+import subprocess
 from pathlib import Path
 
 import pytest
@@ -281,6 +294,8 @@ def test_rollback_section_says_variables_are_restored(doc):
     web = section[section.index("### web") : section.index("### scanner-nightly")]
     assert "--skip-deploys" in web and "railway redeploy -s web -y" in web
     assert "vars-match" in web and "shasum" in web
+    # The source check comes first, before anything changes a web variable.
+    assert web.index("web_source_check") < web.index("railway variable set")
     # The fingerprint never writes a value: only a hash and the names.
     for line in web.splitlines():
         if "railway variable list -s web --kv" in line and "> /tmp/" in line:
@@ -289,7 +304,8 @@ def test_rollback_section_says_variables_are_restored(doc):
     nightly = _one_line(section[section.index("### scanner-nightly") :])
     assert "Do not use a Railway rollback on scanner-nightly" in nightly
     assert "90a3d2a0" in nightly and "SCAN_FLEET=1" in nightly
-    assert "ALLOW_UNRELEASED_DEPLOY=1 deploy/railway/deploy_scanner_nightly.sh" in nightly
+    assert "railway down -s scanner-nightly" in nightly
+    assert "PATCH release from `main`" in nightly
     assert "railway variable list -s scanner-nightly --kv" in nightly
 
 
@@ -305,3 +321,243 @@ def test_no_passage_treats_scan_fleet_off_as_rollback_protection(path):
     assert hits, f"expected {path.name} to warn about scanner-nightly rollbacks"
     for passage in hits:
         assert re.search(r"restor|snapshot|revert", passage), passage[:300]
+
+
+# ---- old release tags never run their own deploy scripts -------------------
+
+DEPLOY_README = REPO_ROOT / "deploy" / "railway" / "README.md"
+NIGHTLY = REPO_ROOT / "deploy" / "railway" / "deploy_scanner_nightly.sh"
+# A git command that puts a release tag in the work tree (or in a new worktree):
+# `git switch --detach v1.5.2`, `git checkout "v$V"`, `git worktree add d v<x>`,
+# `git checkout tags/v1.5.2`.
+_TAG_CHECKOUT = re.compile(
+    r"\bgit\s+(?:switch|checkout|worktree\s+add)\b[^\n`|;&]*?(?:[\s\"'/]v(?:\d|<|\$|\{)|\btags/)"
+)
+# The instructions this rule removed (P2B.7 review): each sent the reader to an
+# old tag's checkout to deploy from it.
+_REMOVED_OLD_TAG_ADVICE = (
+    "checkout of that release's tag",
+    "check out the known-good release tag",
+    "known-good release tag with",
+    "BUILD_TAG=v<good version>",
+)
+GUARDED_SCRIPT_CHECK = "grep -q _guarded_deploy.sh deploy/railway/deploy_scanner_nightly.sh && echo guarded-script"
+
+
+def test_tag_checkout_pattern_catches_the_removed_instruction():
+    for bad in (
+        "git switch --detach v<good version>",
+        "git checkout v1.5.2",
+        'git checkout "v$V"',
+        "git worktree add /tmp/old v1.5.2",
+        "git checkout tags/v1.5.2",
+    ):
+        assert _TAG_CHECKOUT.search(bad), bad
+    for fine in (
+        "git switch -c phase/<id> origin/main",
+        "git checkout main",
+        'git tag -a "v$V" -m "Release $V"',
+        'git push origin "v$V"',
+        "git fetch origin main:main",
+    ):
+        assert not _TAG_CHECKOUT.search(fine), fine
+
+
+@pytest.mark.parametrize("path", REWRITTEN_DOCS, ids=lambda p: p.name)
+def test_no_instruction_runs_an_old_tags_script(path):
+    """Every release before the first one P2B.3 cuts carries the pre-P2B.2
+    deploy_scanner_nightly.sh (from 1.4.2 on), which reads no arguments: its
+    --dry-run is a real deploy. So no doc may check a release tag out to deploy
+    from it, with or without ALLOW_UNRELEASED_DEPLOY."""
+    text = path.read_text(encoding="utf-8")
+    hits = [m.group(0) for m in _TAG_CHECKOUT.finditer(text)]
+    assert not hits, f"{path.name} checks out a release tag: {hits}"
+    flat = _one_line(text)
+    for phrase in _REMOVED_OLD_TAG_ADVICE:
+        assert phrase not in flat, (path.name, phrase)
+
+
+def test_mid_fleet_trouble_stops_the_fleet_and_ships_a_patch_release(doc):
+    rollback = doc[doc.index("## Rollback") : doc.index("## Railway source policy")]
+    nightly = _one_line(rollback[rollback.index("### scanner-nightly") :])
+    # Why an old tag is never deployed from: its script ignores the dry run.
+    assert "Never run an old tag's deploy script" in nightly
+    assert "ignores `--dry-run`" in nightly and "`git archive HEAD`" in nightly
+    assert "git revert" in nightly
+    # Stop the fleet (owner-run), then fix forward through the current script.
+    assert nightly.index("railway down -s scanner-nightly") < nightly.index("PATCH release from `main`")
+    assert "Agents never run it" in nightly
+
+    hotfixes = _one_line(doc[doc.index("## Hotfixes") : doc.index("## Rollback")])
+    assert "railway down -s scanner-nightly" in hotfixes
+    assert "ALLOW_UNRELEASED_DEPLOY=1 deploy/railway/deploy_scanner_nightly.sh" in hotfixes
+    # The override runs only after proving the checkout holds the guarded script.
+    assert GUARDED_SCRIPT_CHECK in hotfixes
+    assert hotfixes.index(GUARDED_SCRIPT_CHECK) < hotfixes.index(
+        "ALLOW_UNRELEASED_DEPLOY=1 deploy/railway/deploy_scanner_nightly.sh --dry-run"
+    )
+    # ... and that check passes on today's script, which honours --dry-run.
+    assert "_guarded_deploy.sh" in NIGHTLY.read_text(encoding="utf-8")
+    assert "--dry-run) dry_run=1 ;;" in GUARD_LIB.read_text(encoding="utf-8")
+
+    # Release step 11: a scanner-nightly build after the push is stopped, not rolled back.
+    checklist = _one_line(doc[doc.index("## Release checklist") : doc.index("## Hotfixes")])
+    assert "railway down -s scanner-nightly" in checklist
+
+    scanning = _one_line(RAILWAY_SCANNING.read_text(encoding="utf-8"))
+    assert "railway down -s scanner-nightly" in scanning
+    assert "PATCH release from `main`" in scanning
+
+
+# ---- web's GitHub source: checked before any web variable change ------------
+
+_UUID = r"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"
+OPS_LOG = REPO_ROOT / "docs" / "SCANNING_OPS_LOG.md"
+_WEB_VAR_CHANGE = re.compile(
+    r"railway (?:variable (?:set|delete)|redeploy)\b[^`\n]*?(?:-s|--service) (?:web\b|<service>)|Variables tab"
+)
+
+
+def _source_check_block(doc: str) -> str:
+    blocks = [b for b in re.findall(r"```bash\n(.*?)```", doc, flags=re.DOTALL) if "web_source_check() {" in b]
+    assert len(blocks) == 1, "expected exactly one web_source_check definition"
+    return blocks[0]
+
+
+def _audited_ids() -> tuple[str, str]:
+    """The production environment id and web's service id, as P0A.1 recorded them."""
+    log = OPS_LOG.read_text(encoding="utf-8")
+    env = re.search(r"environment `production` \(`(" + _UUID + r")`", log)
+    web = re.search(r"^\| service id \| `(" + _UUID + r")`", log, flags=re.MULTILINE)
+    assert env and web, "P0A.1 ids not found in docs/SCANNING_OPS_LOG.md"
+    assert "| | web |" in log  # web is the first column of that table
+    return env.group(1), web.group(1)
+
+
+def test_web_source_rule_and_status_are_documented(doc):
+    policy = _one_line(doc[doc.index("## Railway source policy") : doc.index("## Migrations")])
+    assert "Never change a web variable, in the dashboard or with the CLI, while web's `serviceInstance.source.repo` is set." in policy
+    assert "Status 2026-10-09: the owner is disconnecting web's source." in policy
+    assert "Settings → Source → Disconnect" in policy
+    assert "d9aaa75e" in policy  # what a safe variable change looks like
+    # The verify command for the disconnect.
+    assert "Verify the disconnect: `web_source_check` prints `web-source-clear`" in policy
+    log = _one_line((REPO_ROOT / "docs" / "remediation" / "OWNER_DECISIONS_LOG.md").read_text(encoding="utf-8"))
+    assert "| Web GitHub source | Owner disconnects web Source in Railway |" in log
+
+    readme = _one_line(DEPLOY_README.read_text(encoding="utf-8"))
+    assert "`serviceInstance.source.repo` is set." in readme
+    assert "`web_source_check`" in readme and "`web-source-clear`" in readme
+
+
+def test_every_web_variable_change_runs_the_source_check_first(doc):
+    hits = [p for p in _passages(doc) if _WEB_VAR_CHANGE.search(p)]
+    assert len(hits) >= 3, hits  # the variable-change bullet, the rule, rollback step 5
+    for passage in hits:
+        assert "web_source_check" in passage, passage[:300]
+
+
+def test_web_source_check_is_a_read_only_query_with_the_audited_ids(doc):
+    block = _source_check_block(doc)
+    assert "mutation" not in block.lower()
+    assert block.rstrip().endswith("web_source_check")  # the block runs it, too
+    payload = json.loads(re.search(r"--data '(\{.*?\})'", block).group(1))
+    assert payload["query"].startswith("query(")
+    assert "serviceInstance(environmentId: $eid, serviceId: $sid)" in payload["query"]
+    assert "source { repo" in payload["query"]
+    env_id, web_id = _audited_ids()
+    assert payload["variables"] == {"eid": env_id, "sid": web_id}
+    # The same field the P0A.1 audit read successfully.
+    assert "serviceInstance(environmentId: $eid, serviceId: $sid)" in OPS_LOG.read_text(encoding="utf-8")
+
+
+_SOURCE_SET = {"data": {"serviceInstance": {"source": {"repo": "asarrafi47/DealershipScanner", "image": None}}}}
+_SOURCE_CLEAR = {"data": {"serviceInstance": {"source": {"repo": None, "image": None}}}}
+
+
+@pytest.fixture
+def fake_railway_env(tmp_path):
+    """bin/curl records its argv and prints $FAKE_CURL_BODY; bin/railway only
+    answers --version; HOME holds a fake Railway token."""
+    for tool in ("bash", "python3"):
+        if shutil.which(tool) is None:
+            pytest.skip(f"{tool} not on PATH")
+    bin_dir = tmp_path / "bin"
+    bin_dir.mkdir()
+    (bin_dir / "curl").write_text(
+        "#!/usr/bin/env bash\n"
+        "printf '%s\\0' \"$@\" > \"$FAKE_CURL_ARGS\"\n"
+        "cat \"$FAKE_CURL_BODY\"\n"
+        "exit \"${FAKE_CURL_EXIT:-0}\"\n",
+        encoding="utf-8",
+    )
+    (bin_dir / "railway").write_text(
+        "#!/usr/bin/env bash\n"
+        '[ "$*" = "--version" ] || { echo "unexpected railway call: $*" >&2; exit 99; }\n'
+        "echo 'railway 5.57.2'\n",
+        encoding="utf-8",
+    )
+    for tool in ("curl", "railway"):
+        (bin_dir / tool).chmod(0o755)
+    home = tmp_path / "home"
+    (home / ".railway").mkdir(parents=True)
+    (home / ".railway" / "config.json").write_text(json.dumps({"user": {"accessToken": "fake-token-123"}}))
+    env = {
+        "PATH": f"{bin_dir}{os.pathsep}{os.environ.get('PATH', '')}",
+        "HOME": str(home),
+        "FAKE_CURL_ARGS": str(tmp_path / "curl_args"),
+        "FAKE_CURL_BODY": str(tmp_path / "curl_body"),
+    }
+    return env, tmp_path
+
+
+def _run_source_check(doc: str, env: dict, tmp_path: Path, body: str, curl_exit: int = 0):
+    (tmp_path / "curl_body").write_text(body, encoding="utf-8")
+    run_env = dict(env, FAKE_CURL_EXIT=str(curl_exit))
+    return subprocess.run(
+        ["bash", "-c", _source_check_block(doc)],
+        env=run_env,
+        capture_output=True,
+        text=True,
+        timeout=60,
+    )
+
+
+def test_web_source_check_runs_and_fails_closed(doc, fake_railway_env):
+    env, tmp_path = fake_railway_env
+
+    proc = _run_source_check(doc, env, tmp_path, json.dumps(_SOURCE_SET))
+    assert proc.returncode == 1, proc.stderr
+    assert proc.stdout.strip() == "WEB-SOURCE-SET asarrafi47/DealershipScanner"
+    assert "change no web variable" in proc.stderr
+    # What reached curl: a read-only query to Railway, with the CLI user agent.
+    argv = (tmp_path / "curl_args").read_text(encoding="utf-8").split("\0")
+    assert "https://backboard.railway.com/graphql/v2" in argv
+    assert "Authorization: Bearer fake-token-123" in argv
+    assert "User-Agent: railway-cli/5.57.2" in argv
+    sent = json.loads(argv[argv.index("--data") + 1])
+    assert "mutation" not in sent["query"].lower()
+    assert sent["variables"] == dict(zip(("eid", "sid"), _audited_ids(), strict=True))
+    assert "fake-token-123" not in proc.stdout + proc.stderr
+
+    for clear in (_SOURCE_CLEAR, {"data": {"serviceInstance": {"source": None}}}):
+        proc = _run_source_check(doc, env, tmp_path, json.dumps(clear))
+        assert (proc.returncode, proc.stdout.strip()) == (0, "web-source-clear"), proc.stderr
+
+    # Anything but a clear answer fails, and never prints the clear verdict.
+    for body, curl_exit in (
+        (json.dumps({"errors": [{"message": "Not Authorized"}], "data": None}), 0),
+        (json.dumps({"data": {"serviceInstance": None}}), 0),
+        ("<html>error code: 1010</html>", 0),
+        ("", 7),
+    ):
+        proc = _run_source_check(doc, env, tmp_path, body, curl_exit)
+        assert proc.returncode != 0, body
+        assert "web-source-clear" not in proc.stdout, body
+
+    # No token, no query.
+    (Path(env["HOME"]) / ".railway" / "config.json").unlink()
+    (tmp_path / "curl_args").unlink()
+    proc = _run_source_check(doc, env, tmp_path, json.dumps(_SOURCE_CLEAR))
+    assert proc.returncode != 0 and "web-source-clear" not in proc.stdout
+    assert not (tmp_path / "curl_args").exists()
