@@ -1,0 +1,420 @@
+{
+ "source": {
+  "db": "cars_cleanroom (frozen, read-only)",
+  "first_pass": "rows with first_seen_at < 2026-10-14 (written by the 10-13 first pass)",
+  "re_seen_by_retry": "listing_active = 1 (the retry re-stamped scraped_at); 0 = retired by inventory_reconcile",
+  "retry_new_rows": "rows first seen by the 10-14 lifecycle retry, by condition (VINs synthesized in the test)",
+  "logs": "s5/scanner.log:1973 terry marked_inactive=16; s2:1892 coastline 3; s0:1764 napleton 1; s7:1729 southcountylexus 1",
+  "extracted": "2026-10-16 by N1.4 (extract_shapes.py in this directory, read-only psql)"
+ },
+ "dealers": {
+  "terrylabontechevy-com": {
+   "name": "Terry Labonte Chevrolet",
+   "url": "https://www.terrylabontechevy.com",
+   "provider": "carscommerce",
+   "first_pass": [
+    {
+     "vin": "1C4RJFAG5FC117065",
+     "condition": "Used",
+     "re_seen_by_retry": false,
+     "retired_in_run_at": "2026-10-14T13:29:30+00:00"
+    },
+    {
+     "vin": "1FTEW1CP3JKF33226",
+     "condition": "Used",
+     "re_seen_by_retry": false,
+     "retired_in_run_at": "2026-10-14T13:29:30+00:00"
+    },
+    {
+     "vin": "1G1ZD5ST5SF134253",
+     "condition": "Used",
+     "re_seen_by_retry": false,
+     "retired_in_run_at": "2026-10-14T13:29:30+00:00"
+    },
+    {
+     "vin": "1G1ZD5ST7RF182654",
+     "condition": "Used",
+     "re_seen_by_retry": false,
+     "retired_in_run_at": "2026-10-14T13:29:30+00:00"
+    },
+    {
+     "vin": "1GB4KSEY2SF287495",
+     "condition": "Used",
+     "re_seen_by_retry": false,
+     "retired_in_run_at": "2026-10-14T13:29:30+00:00"
+    },
+    {
+     "vin": "1GD07RF72N1260272",
+     "condition": "Used",
+     "re_seen_by_retry": false,
+     "retired_in_run_at": "2026-10-14T13:29:30+00:00"
+    },
+    {
+     "vin": "1GNERLKS5TJ151868",
+     "condition": "Used",
+     "re_seen_by_retry": false,
+     "retired_in_run_at": "2026-10-14T13:29:30+00:00"
+    },
+    {
+     "vin": "1GNSKDKD4PR387630",
+     "condition": "Used",
+     "re_seen_by_retry": false,
+     "retired_in_run_at": "2026-10-14T13:29:30+00:00"
+    },
+    {
+     "vin": "1GNSKNKD5NR346913",
+     "condition": "Used",
+     "re_seen_by_retry": false,
+     "retired_in_run_at": "2026-10-14T13:29:30+00:00"
+    },
+    {
+     "vin": "1GNSKPKD0NR286356",
+     "condition": "Used",
+     "re_seen_by_retry": false,
+     "retired_in_run_at": "2026-10-14T13:29:30+00:00"
+    },
+    {
+     "vin": "2C4RC1BG9SR531611",
+     "condition": "Used",
+     "re_seen_by_retry": false,
+     "retired_in_run_at": "2026-10-14T13:29:30+00:00"
+    },
+    {
+     "vin": "3GCPDCEK5RG371145",
+     "condition": "Used",
+     "re_seen_by_retry": false,
+     "retired_in_run_at": "2026-10-14T13:29:30+00:00"
+    },
+    {
+     "vin": "3KPF44AC8PE681945",
+     "condition": "Used",
+     "re_seen_by_retry": false,
+     "retired_in_run_at": "2026-10-14T13:29:30+00:00"
+    },
+    {
+     "vin": "5TFSZ5AN9LX223882",
+     "condition": "Used",
+     "re_seen_by_retry": false,
+     "retired_in_run_at": "2026-10-14T13:29:30+00:00"
+    },
+    {
+     "vin": "KL79MPSL0TB074150",
+     "condition": "Used",
+     "re_seen_by_retry": false,
+     "retired_in_run_at": "2026-10-14T13:29:30+00:00"
+    },
+    {
+     "vin": "KL79MRSL5SB036942",
+     "condition": "Used",
+     "re_seen_by_retry": false,
+     "retired_in_run_at": "2026-10-14T13:29:30+00:00"
+    }
+   ],
+   "retry_new_rows": {
+    "New": 451,
+    "Used": 134
+   },
+   "first_pass_at": "2026-10-13T15:31:46.683094Z",
+   "retry_at": "2026-10-14T13:28:46.935446Z"
+  },
+  "coastlinecdjr-com": {
+   "name": "Coastline Chrysler Dodge Jeep Ram",
+   "url": "https://www.coastlinecdjr.com",
+   "provider": "carscommerce",
+   "first_pass": [
+    {
+     "vin": "1C4RJHBRXV8177212",
+     "condition": "New",
+     "re_seen_by_retry": true,
+     "retired_in_run_at": null
+    },
+    {
+     "vin": "1C4RJKAR5V8168707",
+     "condition": "New",
+     "re_seen_by_retry": true,
+     "retired_in_run_at": null
+    },
+    {
+     "vin": "1C4SDJGJ8VC570819",
+     "condition": "New",
+     "re_seen_by_retry": true,
+     "retired_in_run_at": null
+    },
+    {
+     "vin": "1C6SRFKP7VN603220",
+     "condition": "New",
+     "re_seen_by_retry": true,
+     "retired_in_run_at": null
+    },
+    {
+     "vin": "1C6SRFU93VN551440",
+     "condition": "New",
+     "re_seen_by_retry": false,
+     "retired_in_run_at": "2026-10-14T13:45:50+00:00"
+    },
+    {
+     "vin": "1C6SRFU98VN550767",
+     "condition": "New",
+     "re_seen_by_retry": true,
+     "retired_in_run_at": null
+    },
+    {
+     "vin": "1C6SRFUP5TN236652",
+     "condition": "New",
+     "re_seen_by_retry": true,
+     "retired_in_run_at": null
+    },
+    {
+     "vin": "3C63R5CL1TG167870",
+     "condition": "New",
+     "re_seen_by_retry": false,
+     "retired_in_run_at": "2026-10-14T13:45:50+00:00"
+    },
+    {
+     "vin": "3C6MRVJG6VE557419",
+     "condition": "New",
+     "re_seen_by_retry": true,
+     "retired_in_run_at": null
+    },
+    {
+     "vin": "3C6MRVJG7VE555808",
+     "condition": "New",
+     "re_seen_by_retry": true,
+     "retired_in_run_at": null
+    },
+    {
+     "vin": "3C6MRVSG1VE552787",
+     "condition": "New",
+     "re_seen_by_retry": false,
+     "retired_in_run_at": "2026-10-14T13:45:50+00:00"
+    }
+   ],
+   "retry_new_rows": {
+    "New": 186,
+    "Used": 55
+   },
+   "first_pass_at": "2026-10-13T14:22:16.079329Z",
+   "retry_at": "2026-10-14T13:45:33.834610Z"
+  },
+  "napletonhondamortongrove-com": {
+   "name": "Napleton Honda of Morton Grove",
+   "url": "https://www.napletonhondamortongrove.com",
+   "provider": "carscommerce",
+   "first_pass": [
+    {
+     "vin": "1HGCY1F21TA084933",
+     "condition": "New",
+     "re_seen_by_retry": true,
+     "retired_in_run_at": null
+    },
+    {
+     "vin": "1HGCY1F4XTA086553",
+     "condition": "New",
+     "re_seen_by_retry": true,
+     "retired_in_run_at": null
+    },
+    {
+     "vin": "1HGCY2F57TA012893",
+     "condition": "New",
+     "re_seen_by_retry": true,
+     "retired_in_run_at": null
+    },
+    {
+     "vin": "1HGCY2F67TA073072",
+     "condition": "New",
+     "re_seen_by_retry": true,
+     "retired_in_run_at": null
+    },
+    {
+     "vin": "1HGCY2F83TA073300",
+     "condition": "New",
+     "re_seen_by_retry": true,
+     "retired_in_run_at": null
+    },
+    {
+     "vin": "3CZRZ2H36VM751237",
+     "condition": "New",
+     "re_seen_by_retry": true,
+     "retired_in_run_at": null
+    },
+    {
+     "vin": "5FNRL6H60VB014256",
+     "condition": "New",
+     "re_seen_by_retry": true,
+     "retired_in_run_at": null
+    },
+    {
+     "vin": "5FNRL6H68VB014733",
+     "condition": "New",
+     "re_seen_by_retry": true,
+     "retired_in_run_at": null
+    },
+    {
+     "vin": "5FNYF9H81VB002316",
+     "condition": "New",
+     "re_seen_by_retry": true,
+     "retired_in_run_at": null
+    },
+    {
+     "vin": "5FNYF9H82VB002308",
+     "condition": "New",
+     "re_seen_by_retry": true,
+     "retired_in_run_at": null
+    },
+    {
+     "vin": "5FNYG1H42TB077955",
+     "condition": "New",
+     "re_seen_by_retry": true,
+     "retired_in_run_at": null
+    },
+    {
+     "vin": "5FNYG1H91TB070314",
+     "condition": "New",
+     "re_seen_by_retry": false,
+     "retired_in_run_at": "2026-10-14T13:32:25+00:00"
+    },
+    {
+     "vin": "5J6RS4H75VL006175",
+     "condition": "New",
+     "re_seen_by_retry": true,
+     "retired_in_run_at": null
+    },
+    {
+     "vin": "7FARS6H52VE017514",
+     "condition": "New",
+     "re_seen_by_retry": true,
+     "retired_in_run_at": null
+    },
+    {
+     "vin": "7FARS6H5XVE017504",
+     "condition": "New",
+     "re_seen_by_retry": true,
+     "retired_in_run_at": null
+    },
+    {
+     "vin": "7FARS6H87VE016837",
+     "condition": "New",
+     "re_seen_by_retry": true,
+     "retired_in_run_at": null
+    },
+    {
+     "vin": "7FARS6H87VE018281",
+     "condition": "New",
+     "re_seen_by_retry": true,
+     "retired_in_run_at": null
+    }
+   ],
+   "retry_new_rows": {
+    "Certified": 31,
+    "New": 239,
+    "Used": 118
+   },
+   "first_pass_at": "2026-10-13T15:28:01.233678Z",
+   "retry_at": "2026-10-14T13:32:14.624881Z"
+  },
+  "southcountylexus-com": {
+   "name": "Lexus",
+   "url": "https://southcountylexus.com",
+   "provider": "dealer_dot_com",
+   "first_pass": [
+    {
+     "vin": "2T2ADCAZ9SC021313",
+     "condition": "Certified",
+     "re_seen_by_retry": true,
+     "retired_in_run_at": null
+    },
+    {
+     "vin": "2T2ADCAZXRC014932",
+     "condition": "Certified",
+     "re_seen_by_retry": false,
+     "retired_in_run_at": "2026-10-14T13:29:30+00:00"
+    },
+    {
+     "vin": "2T2AGCEZ9RC053030",
+     "condition": "Certified",
+     "re_seen_by_retry": true,
+     "retired_in_run_at": null
+    },
+    {
+     "vin": "2T2BAMBA1SC061218",
+     "condition": "Certified",
+     "re_seen_by_retry": true,
+     "retired_in_run_at": null
+    },
+    {
+     "vin": "2T2BAMCA3PC012978",
+     "condition": "Certified",
+     "re_seen_by_retry": true,
+     "retired_in_run_at": null
+    },
+    {
+     "vin": "2T2BBMCA5PC010209",
+     "condition": "Certified",
+     "re_seen_by_retry": true,
+     "retired_in_run_at": null
+    },
+    {
+     "vin": "2T2BCMEA2TC024329",
+     "condition": "Certified",
+     "re_seen_by_retry": true,
+     "retired_in_run_at": null
+    },
+    {
+     "vin": "58ACZ1B12SU198157",
+     "condition": "Certified",
+     "re_seen_by_retry": true,
+     "retired_in_run_at": null
+    },
+    {
+     "vin": "58ADA1C15SU055214",
+     "condition": "Certified",
+     "re_seen_by_retry": true,
+     "retired_in_run_at": null
+    },
+    {
+     "vin": "58ADA1C16RU039680",
+     "condition": "Certified",
+     "re_seen_by_retry": true,
+     "retired_in_run_at": null
+    },
+    {
+     "vin": "5TDAAAA65SS013630",
+     "condition": "Certified",
+     "re_seen_by_retry": true,
+     "retired_in_run_at": null
+    },
+    {
+     "vin": "5TDABAB6XRS002922",
+     "condition": "Certified",
+     "re_seen_by_retry": true,
+     "retired_in_run_at": null
+    },
+    {
+     "vin": "JTHGZ1B27S5083231",
+     "condition": "Certified",
+     "re_seen_by_retry": true,
+     "retired_in_run_at": null
+    },
+    {
+     "vin": "JTJHKCFZ0R2027590",
+     "condition": "Certified",
+     "re_seen_by_retry": true,
+     "retired_in_run_at": null
+    },
+    {
+     "vin": "JTJKKCFZ5S2042419",
+     "condition": "Certified",
+     "re_seen_by_retry": true,
+     "retired_in_run_at": null
+    }
+   ],
+   "retry_new_rows": {
+    "Certified": 6,
+    "New": 142,
+    "Used": 31
+   },
+   "first_pass_at": "2026-10-13T15:32:19.188845Z",
+   "retry_at": "2026-10-14T13:28:57.169157Z"
+  }
+ }
+}
