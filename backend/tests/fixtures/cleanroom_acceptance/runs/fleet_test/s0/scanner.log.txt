@@ -1,0 +1,6 @@
+2026-10-13 10:08:56 [INFO] scanner: Recipe fetch [Alpha Motors]: 800 unique VIN(s) from 40 page(s) via https://www.alpha.com/api/x
+2026-10-13 10:09:00 [INFO] scanner: Recipe fetch [beta-com]: 3 unique VIN(s) from 1 page(s) via https://www.beta.com/x
+2026-10-13 10:12:07 [WARNING] scanner: ShopperExpress [Alpha Motors]: /wp-json/v1/vehicles returned HTTP 403
+2026-10-13 10:22:54 [WARNING] backend.scanner.scrapers.dealer_eprocess: results_api: https://www.beta.com/resrc/inventory/results/?flag_new=0 → HTTP 429
+2026-10-14 09:29:30 [INFO] backend.scanner.inventory_reconcile: Inventory reconcile beta-com: scraped_candidates=3 marked_inactive=1 skipped_reason=ok
+2026-10-14 09:29:31 [INFO] backend.scanner.inventory_reconcile: Inventory reconcile alpha-com: scraped_candidates=4 marked_inactive=0 skipped_reason=ok

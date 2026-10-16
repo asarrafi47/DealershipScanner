@@ -1,0 +1,26 @@
+[
+ {
+  "dealer_id": "alpha-com",
+  "name": "Alpha Motors",
+  "url": "https://www.alpha.com",
+  "provider": "dealer_dot_com"
+ },
+ {
+  "dealer_id": "beta-com",
+  "name": "Beta Toyota of Springfield",
+  "url": "https://www.beta.com",
+  "provider": "dealer_on"
+ },
+ {
+  "dealer_id": "gamma-com",
+  "name": "Gamma Honda",
+  "url": "https://gamma.com",
+  "provider": "dealer_dot_com"
+ },
+ {
+  "dealer_id": "delta-com",
+  "name": "Delta Ford",
+  "url": "https://www.delta.com",
+  "provider": "dealer_dot_com"
+ }
+]

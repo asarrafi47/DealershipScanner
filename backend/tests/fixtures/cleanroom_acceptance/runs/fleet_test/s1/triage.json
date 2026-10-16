@@ -1,0 +1,55 @@
+{
+ "started": "2026-10-13T14:02:56+00:00",
+ "dealers": [
+  {
+   "dealer_id": "gamma-com",
+   "provider": "dealer_dot_com",
+   "rows": 5,
+   "rows_stamped": 5,
+   "active_after": 5,
+   "vin_owner_conflicts": 0,
+   "rows_new": 3,
+   "rows_used": 2,
+   "verdict": "thin",
+   "reason": "key fields below 90%: price=80%",
+   "http_first": {
+    "candidates": 40,
+    "fetched": 40,
+    "statuses": {
+     "200": 40
+    }
+   },
+   "reconcile": {
+    "retired": 0
+   },
+   "accuracy": {
+    "rows": 0,
+    "hard": {},
+    "hard_rows": 0,
+    "examples": {}
+   }
+  },
+  {
+   "dealer_id": "delta-com",
+   "provider": "dealer_dot_com",
+   "rows": null,
+   "rows_stamped": null,
+   "active_after": 2,
+   "vin_owner_conflicts": null,
+   "rows_new": 0,
+   "rows_used": 0,
+   "verdict": "error",
+   "reason": "no scan_runs row",
+   "http_first": {},
+   "reconcile": {
+    "retired": 0
+   },
+   "accuracy": {
+    "rows": 0,
+    "hard": {},
+    "hard_rows": 0,
+    "examples": {}
+   }
+  }
+ ]
+}
