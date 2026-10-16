@@ -1274,3 +1274,15 @@ Run by the owner from a terminal in this checkout (Railway CLI linked to dealers
   - A bare `railway up` (zsh `!` plus line breaks dropped the arguments) uploaded this checkout to the linked service scanner-nightly and was interrupted with Ctrl-C. Railway recorded deployment 152fb03c as FAILED ("Failed to create code snapshot"); nothing ran, the 09-29 deployment 90a3d2a0 is unchanged, no fleet started. Nothing to revert.
 - `railway redeploy -s web` (same image) applied the variable changes: deployment d9aaa75e SUCCESS (16:54 EDT), c9872e66 REMOVED; https://sarraficars.com/api/health = 200 {"status":"ok","version":"1.5.1"}.
 - Lesson: the Railway CLI targets the project linked to the current directory; run `railway status` first. In a plain terminal there is no `!` prefix; keep a pasted command on one line or end lines with `\`.
+
+## N1.5 hazard pack: scanner-nightly disarmed (2026-10-16)
+
+Run by the owner from a plain terminal in this checkout after `railway status` (dealership-scanner / production, linked service scanner-nightly). Verified read-only afterwards.
+
+- `railway variable set SCAN_FLEET=0 -s scanner-nightly --skip-deploys`. Verified: `railway variables -s scanner-nightly --kv` prints `SCAN_FLEET=0`; the deployment list is unchanged (newest 152fb03c FAILED 10-08, then 90a3d2a0 SUCCESS 09-29). No new deployment, nothing ran.
+- The staged value applies only to the next new deployment. A restart or rollback of 90a3d2a0 still runs with its own `SCAN_FLEET=1` (a full fleet on the 09-29 image). Do not restart, roll back or redeploy scanner-nightly until N12.2 deploys v1.6.0.
+- The 10-08 FAILED deployment 152fb03c is the interrupted accidental bare `railway up` logged above; nothing new.
+- Web GitHub source: the owner disconnected it in the dashboard (web → Settings → Source → Disconnect). Verified: `web_source_check` (RELEASING.md) prints `web-source-clear`; web's newest deployment is still 848895c1 SUCCESS (no new deployment); https://sarraficars.com/api/health = 200 version 1.5.4, commit 486f9012d. Web variable changes are now allowed under RELEASING.md's variable-change rule.
+- Railway notifications: the owner's Notification Rules (screenshot 2026-10-16) already cover All Projects with Email & In-App for Deployment Failed, Deployment Crashed, Deployment OOM Killed, Usage Alert Triggered, Workspace/Service/Domain Restricted. Nothing to change.
+- PG18 client: installed 2026-10-16 (`/opt/homebrew/opt/postgresql@18/bin/pg_dump --version` = 18.6). It is not on PATH (`pg_dump` still resolves to postgresql@17 for the local server), so prod dumps call `/opt/homebrew/opt/postgresql@18/bin/pg_dump` and `pg_restore` by full path.
+- N1.5 owner hazard pack: complete.
