@@ -78,7 +78,7 @@
                     <td>{{ (row.error or '')[:80] }}</td>
                     <td class="dealers-job-actions">
                         <button type="button" class="dealers-job-detail-btn" data-job-id="{{ row.id }}">Details</button>
-                        {% if row.status == 'failed' %}
+                        {% if job_retry_enabled and row.status == 'failed' %}
                         <button type="button" class="dealers-job-smart-retry-btn" data-job-id="{{ row.id }}">Smart restart</button>
                         <button type="button" class="dealers-job-retry-btn" data-job-id="{{ row.id }}">Restart</button>
                         {% endif %}
@@ -113,8 +113,10 @@
         <p class="dealers-job-sidebar__status">Select a job to view details.</p>
     </div>
     <div class="dealers-job-sidebar__foot">
+        {% if job_retry_enabled %}
         <button type="button" id="dealers-job-smart-retry-btn" class="primary-button" hidden>Smart restart</button>
         <button type="button" id="dealers-job-retry-btn" class="primary-button" hidden>Restart job</button>
+        {% endif %}
         <span id="dealers-job-sidebar-msg" class="dealers-job-sidebar__status"></span>
     </div>
 </aside>
@@ -137,6 +139,9 @@
     const sidebarMsg = document.getElementById("dealers-job-sidebar-msg");
     const jobsFlash = document.getElementById("dealers-jobs-flash");
     const csrf = (document.querySelector('meta[name="csrf-token"]') || {}).content || "";
+    // N3.10b: the retry endpoints answer 409 while queue onboarding is paused, so
+    // polled rows draw no Restart buttons (the sidebar ones are not rendered).
+    const retryEnabled = {{ job_retry_enabled | tojson }};
     if (!tbody) return;
     if (liveEl) liveEl.hidden = false;
 
@@ -222,7 +227,7 @@
 
     function actionCellHtml(row) {
         const id = esc(row.id);
-        const retryable = jobCanRetry(row);
+        const retryable = retryEnabled && jobCanRetry(row);
         return (
             '<td class="dealers-job-actions">' +
             '<button type="button" class="dealers-job-detail-btn" data-job-id="' + id + '">Details</button>' +
@@ -490,6 +495,8 @@
                     msg = "A job for this dealer is already queued or running.";
                 } else if (err === "not_failed") {
                     msg = "Only failed or low-confidence jobs can be restarted.";
+                } else if (data.message) {
+                    msg = data.message;
                 } else {
                     msg = "Could not restart job #" + jobId + ": " + err;
                     if (data.diagnosis && data.diagnosis.summary) msg = data.diagnosis.summary;

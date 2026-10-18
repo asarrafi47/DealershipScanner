@@ -58,12 +58,17 @@ def api_nearby_dealers():
 
 
 def find_dealers_page():
+    from backend.dealer.admin import onboarding_paused
     from backend.db.inventory_pg import is_inventory_postgres
 
+    # N3.10b: /api/admin/dealer-onboard answers 409 while queue onboarding is
+    # paused, so "Request scrape" is not drawn; site admins see the paused line.
+    paused = onboarding_paused.QUEUE_ONBOARDING_PAUSED
     return render_template(
         "find_dealers.html",
         site_admin_onboard=paid_access.is_site_admin(),
-        dealer_onboard_enabled=is_inventory_postgres(),
+        dealer_onboard_enabled=not paused and is_inventory_postgres(),
+        onboarding_paused_message=onboarding_paused.ONBOARDING_PAUSED_MESSAGE if paused else "",
     )
 
 

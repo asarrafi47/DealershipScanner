@@ -2,6 +2,10 @@
 
 Endpoint names (``api_admin_dealer_*``) are preserved exactly — the CSRF
 before_request hook in ``backend.main`` matches them by name.
+
+Queue onboarding is paused (N3.10b, ``backend/dealer/admin/onboarding_paused.py``):
+for a site admin the onboard, retry and smart-retry POSTs answer 409 and never
+reach the job queue. The read endpoints and diagnose (which adds no row) stay live.
 """
 
 from __future__ import annotations
@@ -39,9 +43,16 @@ def _current_admin_ok() -> bool:
 
 
 def api_admin_dealer_onboard():
-    """Site admin: queue Smart Import onboard from Find dealers (locator → scrape bridge)."""
+    """Site admin: queue Smart Import onboard from Find dealers (locator → scrape bridge).
+
+    Paused (N3.10b): answers 409 and never calls ``request_dealer_onboard``.
+    """
     if not _current_admin_ok():
         return jsonify({"ok": False, "error": "forbidden"}), 403
+    from backend.dealer.admin import onboarding_paused
+
+    if onboarding_paused.QUEUE_ONBOARDING_PAUSED:
+        return onboarding_paused.onboarding_paused_json()
 
     ip = _client_ip()
     if not allow_request(f"dealer-onboard:{ip}", max_events=30, window_seconds=3600.0):
@@ -143,9 +154,16 @@ def api_admin_dealer_job_detail(job_id: int):
 
 
 def api_admin_dealer_job_retry(job_id: int):
-    """Site admin: re-queue a failed dealer job."""
+    """Site admin: re-queue a failed dealer job.
+
+    Paused (N3.10b): answers 409 and never calls ``retry_failed_job``.
+    """
     if not _current_admin_ok():
         return jsonify({"ok": False, "error": "forbidden"}), 403
+    from backend.dealer.admin import onboarding_paused
+
+    if onboarding_paused.QUEUE_ONBOARDING_PAUSED:
+        return onboarding_paused.onboarding_paused_json()
 
     ip = _client_ip()
     if not allow_request(f"dealer-job-retry:{ip}", max_events=60, window_seconds=3600.0):
@@ -189,9 +207,17 @@ def api_admin_dealer_job_diagnose(job_id: int):
 
 
 def api_admin_dealer_job_smart_retry(job_id: int):
-    """Site admin: diagnose then re-queue a failed job with guided retry hints."""
+    """Site admin: diagnose then re-queue a failed job with guided retry hints.
+
+    Paused (N3.10b): answers 409 before any diagnosis and never calls
+    ``smart_retry_failed_job``.
+    """
     if not _current_admin_ok():
         return jsonify({"ok": False, "error": "forbidden"}), 403
+    from backend.dealer.admin import onboarding_paused
+
+    if onboarding_paused.QUEUE_ONBOARDING_PAUSED:
+        return onboarding_paused.onboarding_paused_json()
 
     ip = _client_ip()
     if not allow_request(f"dealer-job-smart-retry:{ip}", max_events=30, window_seconds=3600.0):
