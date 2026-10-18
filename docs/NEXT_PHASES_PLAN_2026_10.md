@@ -478,7 +478,7 @@ Run every command in a plain terminal from `/Users/asarrafi/Projects/DealershipS
 ### 7.0 Conventions every phase uses
 
 - **Branches.** Phase branch `phase/<NID>` cut from `origin/main`. Unit branches are `unit/<unit id>`, in worktrees under `.claude/worktrees/<unit id>`. Units marked **MAIN** touch `workspace/`, local Postgres, Railway or git refs, and run serially in the main checkout after their code dependencies merge.
-- **Code under a MAIN scan.** `workspace/` is gitignored and exists only in the main checkout, so a worktree cannot replace it, and the main checkout sits on `feature/http-only-scans` (v1.5.4) until told otherwise. Before every MAIN scan unit (N1.3's 2-dealer smoke, N6.2, the N8 mini re-runs, N8.10, N9.14, N11 passes, N11.13, P5A.8, P5B.8), the owner approves `git switch phase/<NID>` in the main checkout (`git switch --detach <RC_SHA>` in N11). The parameterized preflight (N1.3) refuses unless `git rev-parse HEAD` equals that phase HEAD or `RC_SHA`. The SHA is recorded in the run dir and in the unit checkpoint.
+- **Code under a MAIN scan.** `workspace/` is gitignored and exists only in the main checkout, so a worktree cannot replace it, and the main checkout stays on the branch the owner last switched it to (`phase/N1` on 2026-10-18; it held `feature/http-only-scans`, which N4.3 retires, until 1.5.4). Before every MAIN scan unit (N1.3's 2-dealer smoke, N6.2, the N8 mini re-runs, N8.10, N9.14, N11 passes, N11.13, P5A.8, P5B.8), the owner approves `git switch phase/<NID>` in the main checkout (`git switch --detach <RC_SHA>` in N11). The parameterized preflight (N1.3) refuses unless `git rev-parse HEAD` equals that phase HEAD or `RC_SHA`. The SHA is recorded in the run dir and in the unit checkpoint.
 - **Scratch-DB scan runs.** Every re-run uses N1.3's `scripts/cleanroom/build_db.sh`, `run.env.template`, `preflight.sh` and `isolation_snapshot.sh` with `--db <name> --art workspace/cleanroom_runs/<db> --roster <file>`, never the files under `workspace/cleanroom_2026_10/`. After `build_db.sh`, `migrate --apply` runs on the scratch DB (its schema is copied from `cars`, and the run uses `INVENTORY_SCHEMA_CHECK=strict`). Fleet passes run with `fleet_scan --resume` (N9.15) once it has merged. `caffeinate -dims` verified; AC recommended for runs over about 2 h (battery is not a blocker, owner 10-09).
 - **Checkpoints.** `workspace/phase_runs/<NID>/<unit id>.json` per unit, plus `workspace/phase_runs/<NID>/RESUME.md`. The schema and the re-run rule are in Section 10. Before any named wait (an owner step, a ≥20 h gap, nightly runs, a soak), the workflow writes RESUME.md with the earliest restart time and ends; each phase's workflow shape names its waits.
 - **Plan status.** Status edits to this plan (unit states, measured numbers) are committed on `phase/<NID>` and ride that phase's release.
@@ -495,7 +495,7 @@ Run every command in a plain terminal from `/Users/asarrafi/Projects/DealershipS
   1. CHANGELOG `## [<VERSION>]` section;
   2. `scripts/bump_version.sh <level>`;
   3. secrets and large-file scan over `git ls-files -co`;
-  4. rebase on `origin/main`; ruff and the phase's targeted tests; push the rebased `phase/<NID>` and wait for green CI on that exact SHA; open the release PR so `release-guard` runs before main moves (steps 5-7);
+  4. rebase on `origin/main` only if another release moved it since the phase was cut (RELEASING.md step 1 prints no `fast-forward-ok`; a plain rebase rewrites the phase's merge commits even when `main` has not moved, and RELEASING.md "Branching model" says how unit branches are deleted after one); ruff and the phase's targeted tests; push `phase/<NID>` and wait for green CI on that exact SHA; open the release PR so `release-guard` runs before main moves (steps 5-7);
   5. Railway snapshot before the push (step 8: `railway_snapshot` over web, scanner-nightly and Postgres, plus variable **names** only for web and scanner-nightly), then `git push origin phase/<NID>:main` (fast-forward);
   6. annotated tag `v<VERSION>`; CI green on main (steps 9-10);
   7. the same snapshot again within 15 minutes and a diff: no new deployment (step 11);
@@ -2779,9 +2779,13 @@ Rules:
 2. Checkpoints: before starting, read workspace/phase_runs/<NID>/RESUME.md and every
    workspace/phase_runs/<NID>/<unit>.json. Skip units per Section 10.3. Write each
    unit's JSON the moment its state changes, and rewrite RESUME.md after every unit.
-3. Branch: phase/<NID> cut from origin/main (create it only if absent). One git
-   worktree per unit at .claude/worktrees/<unit id> on branch unit/<unit id>. Units
-   marked MAIN run serially in the main checkout after their dependencies merge.
+3. Branch: phase/<NID> cut from origin/main (create it only if absent). If the main
+   checkout is busy, integrate in the worktree .claude/worktrees/phase-<NID>, and
+   remove it before any git switch phase/<NID> in the main checkout. One git worktree
+   per unit at .claude/worktrees/<unit id> on branch unit/<unit id>, cut from the
+   phase tip. Unit branches are never pushed and never named remediation/<id>
+   (docs/RELEASING.md "Branching model"). Units marked MAIN run serially in the main
+   checkout after their dependencies merge.
 4. Fan out by wave. Do not start a unit whose blocking decision or approval is missing:
    mark it BLOCKED with the reason and continue with the rest.
 5. Each implementing agent does exactly its unit: runs only its tests, in chunks under
@@ -2848,7 +2852,7 @@ Rules:
 ### 10.3 Re-run rule
 
 - **DONE** units whose `merged_sha` is an ancestor of `origin/phase/<NID>` (or of the local phase branch) are skipped.
-- **RUNNING or REVIEW** units restart in a fresh worktree. First check the stale worktree for unpushed commits (`git -C <worktree> log @{u}..` or against `base_sha`) and salvage them, then remove it.
+- **RUNNING or REVIEW** units restart in a fresh worktree. First check the stale worktree for work that would be lost: `git -C <worktree> log --oneline <base_sha>..HEAD` lists its commits and `git -C <worktree> status --short` its uncommitted edits. Unit branches are never pushed, so there is no `@{u}` to compare with. Salvage that work, then remove the worktree.
 - **BLOCKED** units re-check their blocker and start if it is cleared.
 - **Investigation units** write one file per group, dealer or platform; a re-run skips files that pass the schema check.
 - **Scan units** resume with `fleet_scan --resume <run_dir>` (N9.15): dealers with a triage entry or a `scan_runs` row started at or after the run start are skipped, and the shard rosters and `triage.json` are reused. The run dir holds `RESUME.md` and per-shard `triage.json`. Before N9.15 merges, only short scans run (N1.3's smoke, N6.2, the N8 mini re-runs); a killed one restarts into a fresh scratch DB.

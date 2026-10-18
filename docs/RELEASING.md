@@ -42,20 +42,50 @@ time. Commands in this document and in every owner command pack follow this rule
 
 - `main` is the only long-lived branch. It moves only by fast-forward, and only to a
   released commit.
-- Each phase works on a short-lived `phase/<id>` branch cut from `main`. Unit branches
-  (`remediation/<unit>`, each in its own `.claude/worktrees/<unit>`) come off the phase
-  branch and merge back into it.
+- Each phase works on a short-lived `phase/<id>` branch cut from `origin/main`. `<id>` is
+  the phase id, for example `phase/N4`; `docs/NEXT_PHASES_PLAN_2026_10.md` writes the
+  same name as `phase/<NID>`.
+- Each unit of a phase works on its own branch `unit/<unit id>` (for example `unit/N4.3`
+  or `unit/P15B.6`), in its own worktree `.claude/worktrees/<unit id>`, cut from the
+  current tip of the phase branch. The unit merges back into the phase branch, and only
+  the phase branch is released. Unit branches stay local: a pushed branch needs a new
+  VERSION ([bump rule](#bump-rule-d-rel3-a)), and units never bump it. The 0A-2B phase
+  runner's unit-branch name, `remediation/<unit>`, is retired (LE-5): new units always
+  use `unit/<unit id>`.
+- When the main checkout is busy (another phase's workflow, a MAIN scan), the phase
+  branch is checked out in an integration worktree, `.claude/worktrees/phase-<id>`, and
+  units merge there. Git checks a branch out in only one worktree at a time. So before
+  `git switch phase/<id>` in the main checkout (for a MAIN unit or the release
+  checklist), remove that worktree with `git worktree remove .claude/worktrees/phase-<id>`.
+  That command refuses a dirty tree.
 - A phase releases with `git push origin phase/<id>:main` (a fast-forward). The phase
-  branch is deleted afterwards.
-- Until the first release to `main` (P2B.3), the integration branch is
-  `feature/http-only-scans`. It is retired after the next release starts from `main`, and
-  only once the mini's clone shows no unpushed work (P2B.8 step 7).
+  branch is deleted afterwards. A phase branch is rebased on `origin/main` only when
+  another release moved `main` after the branch was cut (release checklist step 1 then
+  does not print `fast-forward-ok`). Do not rebase otherwise: a plain
+  `git rebase origin/main` rewrites a phase branch that holds merge commits even when
+  `main` has not moved. It drops the merges and replays the unit commits in a line.
+- After the release, from a checkout of `main` at the release, the phase's unit
+  worktrees are removed (`git worktree remove .claude/worktrees/<unit id>`) and its unit
+  branches deleted with `git branch -d unit/<unit id>`, which refuses a branch that is
+  not merged. If the phase was not rebased, every unit tip is in the release and `-d`
+  succeeds. After a rebase the unit commits were rewritten, so `-d` refuses each unit
+  branch whose commits were replayed. That refusal is expected. For each refused
+  branch, run `git cherry v<VERSION> unit/<unit id>`. A line starting with `-` is a
+  commit whose change is in the release unchanged. A line starting with `+` is one whose
+  change is not (the rebase hit a conflict there, or the commit was lost). Delete the
+  branch with `git branch -D unit/<unit id>` only when no `+` line is left, or after
+  comparing each `+` commit with the release by hand (`git show <sha>`).
+- `feature/http-only-scans` was the integration branch until the first release to `main`
+  (P2B.3, v1.5.4). Its tip on origin is still `486f9012d`, the `v1.5.4` tag commit, which
+  `main` already contains. No new work goes to it. The owner retires it once four gates
+  hold ([Retiring `feature/http-only-scans`](#retiring-featurehttp-only-scans)). No
+  agent deletes it.
 - `ci/shakedown-<n>` branches are throwaway CI shakedowns (see the bump rule). Delete them
   once green.
 - Never force-push, on any branch. Until the P2B.5 ruleset is active, GitHub itself would
   accept a force push to `main`. Only the person pushing prevents it.
 
-Start a phase:
+Start a phase, in the main checkout:
 
 ```bash
 git fetch origin
@@ -64,6 +94,118 @@ git switch -c phase/<id> origin/main
 
 Verify: `git merge-base --is-ancestor origin/main HEAD && echo based-on-main` prints
 `based-on-main`.
+
+Or, when the main checkout is busy, create the phase branch in its integration worktree
+and leave the main checkout where it is:
+
+```bash
+git fetch origin
+git worktree add .claude/worktrees/phase-<id> -b phase/<id> origin/main
+```
+
+If `phase/<id>` already exists (for example after the worktree was removed for a MAIN
+unit), drop `-b`: `git worktree add .claude/worktrees/phase-<id> phase/<id>`.
+
+Verify: `git -C .claude/worktrees/phase-<id> branch --show-current` prints `phase/<id>`,
+and
+`git -C .claude/worktrees/phase-<id> merge-base --is-ancestor origin/main HEAD && echo based-on-main`
+prints `based-on-main`.
+
+Start a unit, from the main checkout:
+
+```bash
+git worktree add .claude/worktrees/<unit id> -b unit/<unit id> phase/<id>
+```
+
+Verify: `git -C .claude/worktrees/<unit id> branch --show-current` prints
+`unit/<unit id>`, and
+`git -C .claude/worktrees/<unit id> merge-base --is-ancestor phase/<id> HEAD && echo based-on-phase`
+prints `based-on-phase`.
+
+### Retiring `feature/http-only-scans`
+
+D-REL2 (a) retires this branch after the first release. P2B.8 step 7 adds two
+conditions: the next release must start from `main`, and the mini's clone must show no
+unpushed work. As for the two D-REL4 (a) branches, ksarrafi hears about it first.
+NEXT_PHASES_PLAN unit N4.3 collects these conditions here. The owner runs every command
+in this section; an agent only prepares them. Do not start until all four gates hold.
+
+Gates 1 and 3 are met by a log row with a fixed decision text, and each Verify greps for
+exactly that text, so it prints nothing while the gate is open. Other rows already name
+ksarrafi (the 2026-10-08 D-REL4 row, about the two D-REL4 branches) or this branch
+(D-REL2, the 1.5.3 push, N4.4's record), so a plain grep for either word proves nothing.
+Do not quote the two texts in any other row of the log.
+
+1. **ksarrafi has been told** that `feature/http-only-scans` will be deleted. Record a
+   dated row in `docs/remediation/OWNER_DECISIONS_LOG.md` whose decision cell reads
+   `N4.3 gate 1: ksarrafi told feature/http-only-scans will be deleted`, or tell the
+   agent, which adds that row.
+
+   Verify: `grep -nF 'N4.3 gate 1: ksarrafi told' docs/remediation/OWNER_DECISIONS_LOG.md`
+   prints that one dated row. It prints nothing until the row exists.
+2. **The first phase release is on `main`.** That means `main` has moved past
+   `486f9012d` to a release cut from a `phase/<id>` branch, and that release's tag is on
+   origin.
+
+   ```bash
+   git fetch origin --tags --prune
+   git merge-base --is-ancestor origin/feature/http-only-scans origin/main && echo merged-into-main
+   git show origin/main:VERSION
+   git ls-remote --tags origin "refs/tags/v$(git show origin/main:VERSION)"
+   ```
+
+   Verify: `merged-into-main` is printed, the VERSION is above `1.5.4`, and `ls-remote`
+   prints one line.
+3. **The mini's clone has been checked, or the owner has waived the check.** P2B.8 step
+   7 asks that `git status` and `git log @{u}..` on the mini show no unpushed work.
+   Under D-N2 (b) the mini has no role and there is no SSH approval, so this check runs
+   only if the owner runs it on the mini (N4.4 (a)). Otherwise the owner waives it: a
+   dated row in `docs/remediation/OWNER_DECISIONS_LOG.md` whose decision cell reads
+   `N4.3 gate 3 waived: retire feature/http-only-scans without the mini check`, or a word
+   to the agent, which adds that row. A waiver loses nothing on origin, because the
+   branch tip is the `v1.5.4` commit, which `main` already contains. Any unpushed commits
+   on the mini stay in the mini's clone.
+
+   Verify: either the mini's `git log @{u}..` printed nothing and `git status` showed a
+   clean tree, or `grep -nF 'N4.3 gate 3 waived' docs/remediation/OWNER_DECISIONS_LOG.md`
+   prints that dated row.
+4. **No checkout or worktree is on the branch.**
+
+   ```bash
+   git worktree list | grep -F '[feature/http-only-scans]'
+   ```
+
+   Verify: it prints nothing. If the main checkout is still on the branch, switch it
+   to `main` or a phase branch first (an owner step while another workflow uses the
+   checkout). Nothing else needs the branch name: CI runs on every branch
+   (`.github/workflows/ci.yml`), and P0A.1 found no Railway deployment trigger at all
+   (the trigger query in [How to verify](#how-to-verify-read-only) returns
+   `"edges":[]`).
+
+Then delete the branch, on origin and locally. The pre-push hook lets branch deletions
+through ([bump rule](#bump-rule-d-rel3-a)). The N1.7 ruleset
+(`workspace/phase_runs/N1/ruleset.json`) targets only `refs/heads/main`, so it does not
+block this delete.
+
+```bash
+git push origin --delete feature/http-only-scans
+git branch -d feature/http-only-scans
+git fetch --prune origin
+```
+
+Verify: `git ls-remote --heads origin feature/http-only-scans` prints nothing.
+`git rev-parse 'v1.5.4^{commit}'` still prints `486f9012d…`. The branch needs no
+`archive/*` tag: unlike the D-REL4 branches it is fully merged, the `v1.5.4` tag already
+names its tip, and the N1.7 ref bundle
+(`workspace/backups/repo_all_refs_20261016T224046Z.bundle`) holds it too. If the owner
+wants an archive tag anyway, create and push an annotated
+`archive/http-only-scans` at `486f9012d` before the delete. That follows N1.7's
+naming, which drops the `feature/` prefix.
+
+If the mini returns (N4.4 (a)), a clone still on the old branch moves to the trunk
+with `git fetch --prune origin` and then `git switch main`. Do this only after its
+unpushed-work check is clean. If it has no local `main` yet, `git switch` creates one
+tracking `origin/main`.
 
 ## Bump rule (D-REL3 (a))
 
@@ -109,7 +251,9 @@ not minutes.
 ## Release checklist
 
 Run these from the branch being released, in the main checkout, with a clean tree. That
-branch is `phase/<id>`, or `feature/http-only-scans` for the first release. `<branch>`
+branch is `phase/<id>` (the first release, 1.5.4, ran from `feature/http-only-scans`).
+If the phase branch is checked out in `.claude/worktrees/phase-<id>`, remove that
+worktree first ([Branching model](#branching-model-d-rel2-a-trunk)). `<branch>`
 below stands for its name. `V` is the new version, set in step 3.
 
 1. **Preconditions.**
