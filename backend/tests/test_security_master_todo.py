@@ -12,7 +12,11 @@ network) and pin:
   (In progress, Blocked or Not started);
 - every row from SEC-104 on (security wave 1 and later) has a Changelog line;
 - SEC-095 no longer claims Playwright runs Chromium with its sandbox by default
-  (Playwright adds --no-sandbox unless chromium_sandbox=True).
+  (Playwright adds --no-sandbox unless chromium_sandbox=True);
+- SEC-110 and the TRUSTED_PROXY_HOPS env row follow the vault-sync script: while
+  the script still has a silent hops default, SEC-110 is open and the env row
+  warns about it; once the P3.7 guard is merged, SEC-110 is Done and the warning
+  and the unmerged-branch note are gone.
 """
 
 from __future__ import annotations
@@ -22,7 +26,9 @@ from pathlib import Path
 
 import pytest
 
-DOC = Path(__file__).resolve().parents[2] / "docs" / "SECURITY_MASTER_TODO.md"
+ROOT = Path(__file__).resolve().parents[2]
+DOC = ROOT / "docs" / "SECURITY_MASTER_TODO.md"
+SYNC_VAULT = ROOT / "deploy" / "railway" / "sync-vault-to-railway.sh"
 
 OPEN_STATUSES = ("In progress", "Blocked", "Not started")
 CLOSED_STATUSES = ("Done", "Won't do", "Retired")
@@ -34,6 +40,9 @@ _ROW_HEADING = re.compile(r"^### (SEC-(\d{3})) — (.+)$")
 _FIELD_LINE = re.compile(r"^\| \*\*([A-Za-z][A-Za-z -]*)\*\* \| (.*) \|$")
 _SEC_ID = re.compile(r"SEC-\d{3}")
 _DATE = re.compile(r"^\d{4}-\d{2}-\d{2}\b")
+# A non-empty shell default such as ${TRUSTED_PROXY_HOPS:-1}: the hazard SEC-110 removes.
+_SILENT_HOPS_DEFAULT = re.compile(r"\$\{TRUSTED_PROXY_HOPS:-[^}]")
+HOPS_QUALIFIER = "Until SEC-110 merges"
 
 
 def _lines() -> list[str]:
@@ -172,3 +181,35 @@ def test_sec_095_states_playwright_sandbox_default() -> None:
     outcome = sec095["fields"]["Outcome"]
     assert "Playwright runs without `--no-sandbox`" not in outcome
     assert "chromium_sandbox=True" in outcome
+
+
+def _env_row(name: str) -> str:
+    """The quick-reference table line for one environment variable."""
+    prefix = f"| `{name}` |"
+    hits = [
+        line for line in _section(_lines(), "## Environment variables (quick reference)") if line.startswith(prefix)
+    ]
+    assert len(hits) == 1, f"expected one env table row for {name}, found {len(hits)}"
+    return hits[0]
+
+
+def test_sec_110_tracks_the_vault_sync_script() -> None:
+    script = SYNC_VAULT.read_text(encoding="utf-8")
+    sec110 = next(r for r in _parse_rows() if r["id"] == "SEC-110")
+    status = sec110["fields"]["Status"]
+    hops_row = _env_row("TRUSTED_PROXY_HOPS")
+    if _SILENT_HOPS_DEFAULT.search(script):
+        assert _status_class(status) == "open", (
+            "sync-vault-to-railway.sh still defaults TRUSTED_PROXY_HOPS, so SEC-110 cannot be closed"
+        )
+        assert HOPS_QUALIFIER in hops_row, (
+            "the TRUSTED_PROXY_HOPS env row must warn that the script still sets 1 when the variable is unset"
+        )
+    else:
+        assert status.startswith("Done"), "the P3.7 guard is in the script: set SEC-110 Status to Done"
+        assert HOPS_QUALIFIER not in hops_row, (
+            "the P3.7 guard is in the script: drop the 'Until SEC-110 merges' qualifier from the env row"
+        )
+        assert "unit/P3.7" not in sec110["fields"]["Scope"], (
+            "the P3.7 guard is in the script: drop the unmerged-branch sentence from SEC-110 Scope"
+        )
