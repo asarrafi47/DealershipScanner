@@ -18,6 +18,12 @@ Test-only packages (pytest, pyyaml, ...) live in requirements-test.txt (P2A.2),
 which CI installs next to requirements.txt and no deploy image installs. A name
 declared only there passes for imports under ``backend/tests/`` and fails
 anywhere else, so runtime code cannot lean on a package the image lacks.
+
+The reverse direction (P15B.1, D-DEP1) is checked too: every distribution that
+requirements.txt or requirements-scanner.txt declares is imported somewhere, or
+listed in ``DECLARED_NOT_IMPORTED`` with a reason. crawl4ai sat in
+requirements.txt with zero importers and pinned lxml below the PYSEC-2026-87
+fix, so an orphan is a security cost, not just image weight.
 """
 
 from __future__ import annotations
@@ -32,7 +38,11 @@ import pytest
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 REQUIREMENTS = REPO_ROOT / "requirements.txt"
+SCANNER_REQUIREMENTS = REPO_ROOT / "requirements-scanner.txt"
 TEST_REQUIREMENTS = REPO_ROOT / "requirements-test.txt"
+RUNTIME_REQUIREMENTS = (REQUIREMENTS, SCANNER_REQUIREMENTS)
+ALL_REQUIREMENTS = (REQUIREMENTS, SCANNER_REQUIREMENTS, TEST_REQUIREMENTS)
+SCANNER_IMPORT_SWEEP = REPO_ROOT / "scripts" / "scanner_import_sweep.py"
 TEST_CODE_PREFIX = "backend/tests/"
 SCAN_DIRS = ("backend", "scripts")
 SKIP_DIR_NAMES = {"__pycache__", "node_modules", ".venv", "venv", "site-packages"}
@@ -42,12 +52,14 @@ SKIP_DIR_NAMES = {"__pycache__", "node_modules", ".venv", "venv", "site-packages
 # declared or no longer imported, so the list only ever shrinks.
 ALLOWED_UNDECLARED: dict[str, str] = {
     # backend/scripts/image_downloader.py (offline script). Hard dependency of
-    # anthropic 0.x (1.x moved to httpx2), huggingface_hub (sentence-transformers)
-    # and crawl4ai. P15B.1 declares it explicitly if the crawl4ai removal needs that.
-    "httpx": "transitive: anthropic<1, sentence-transformers, crawl4ai",
+    # anthropic 0.x (1.x moved to httpx2) and huggingface-hub (sentence-transformers).
+    # P15B.1 removed crawl4ai, its third path; a fresh resolve of requirements.txt
+    # on 2026-10-18 still installs it through those two, so it stays undeclared.
+    "httpx": "transitive: anthropic<1, huggingface-hub (sentence-transformers)",
     # backend/db/geo.py, backend/vision/claude_vision.py. pgeocode pulls
-    # pandas -> numpy; pgvector and sentence-transformers also require it.
-    "numpy": "transitive: pgeocode, pgvector, sentence-transformers",
+    # pandas -> numpy; sentence-transformers also requires it (pgvector 0.5 no
+    # longer does: fresh resolve of requirements.txt, 2026-10-18).
+    "numpy": "transitive: pgeocode (pandas), sentence-transformers",
     # backend/main.py ProxyFix, backend/web/static.py safe_join, error types.
     # Flask hard-requires Werkzeug and its API is part of Flask's.
     "werkzeug": "transitive: flask",
@@ -63,6 +75,35 @@ DIST_IMPORT_NAMES: dict[str, set[str]] = {
     "pymupdf": {"fitz", "pymupdf"},
     "pyyaml": {"yaml"},
 }
+
+# Declared in requirements.txt / requirements-scanner.txt but imported nowhere
+# under backend/ or scripts/. Same rules as ALLOWED_UNDECLARED: every entry has a
+# reason, and test_declared_not_imported_has_no_stale_entries fails once an entry
+# is imported or no longer declared.
+DECLARED_NOT_IMPORTED: dict[str, str] = {
+    "gunicorn": "WSGI server, run as a CLI: scripts/docker-entrypoint-web.sh, Dockerfile.web",
+    "idna": "security floor (SEC-076): requests, httpx, anyio and yarl require it",
+    "pygments": "security floor (SEC-076): rich (transformers -> typer) and pytest require it",
+    "lxml": "requirements-scanner.txt floor >=6.1.0 (PYSEC-2026-87); every BeautifulSoup call names html.parser",
+}
+
+# D-DEP1 orphans that P15B.1 removed (2026-10-18): nothing imports them, and
+# crawl4ai held lxml below the PYSEC-2026-87 fix. patchright was only crawl4ai's
+# browser driver. Re-adding one needs a real importer and a new decision.
+REMOVED_ORPHANS = (
+    "crawl4ai",
+    "langchain-core",
+    "langchain-openai",
+    "langchain-text-splitters",
+    "langsmith",
+    "ollama",
+    "patchright",
+    "pyotp",
+    "segno",
+)
+
+# lxml releases below this carry PYSEC-2026-87 (fixed in 6.1.0).
+LXML_FIXED = "6.1.0"
 
 # The packages P1A.6 declares, with their floors. Pinned here so a later
 # requirements reshuffle (P15B.1 / P15B.2) cannot silently drop one again.
@@ -257,28 +298,43 @@ def _release(text: str) -> tuple[int, ...]:
 _SPEC_CLAUSE = re.compile(r"^\s*(===|==|~=|<=|<)\s*(\d+(?:\.\d+)*)(\.\*)?\s*$")
 
 
-def _caps_below_major_1(requirement: str) -> bool:
-    """True when one specifier clause alone excludes every release >= 1.0.0.
+def _caps_below_major(requirement: str, major: int) -> bool:
+    """True when one specifier clause alone excludes every release >= ``major``.0.0.
 
     Fails closed: a clause it cannot read (pre-release suffixes, ``!=``, lower
     bounds) never counts as a cap."""
     spec = requirement.split(";", 1)[0]  # drop environment markers
     spec = re.sub(r"^[A-Za-z0-9._-]+(\[[^\]]*\])?", "", spec.strip())  # drop name and extras
-    one = (1,)
+    bound = (major,)
     for clause in spec.split(","):
         m = _SPEC_CLAUSE.match(clause)
         if not m:
             continue
         op, release, wildcard = m.group(1), _release(m.group(2)), bool(m.group(3))
-        if op == "<" and release <= one:  # <1, <1.0, <0.200; not <1.0.1 (admits 1.0.0)
+        if op == "<" and release <= bound:  # <1, <1.0, <0.200; not <1.0.1 (admits 1.0.0)
             return True
-        if op == "<=" and release < one:  # <=0.999; not <=1 (admits 1.0.0)
+        if op == "<=" and release < bound:  # <=0.999; not <=1 (admits 1.0.0)
             return True
-        if op in {"==", "==="} and (release[0] == 0 if wildcard else release < one):
+        if op in {"==", "==="} and (release[0] < major if wildcard else release < bound):
             return True
-        if op == "~=" and release[0] == 0:  # ~=0.116 is >=0.116,==0.*
+        if op == "~=" and release[0] < major:  # ~=0.116 is >=0.116,==0.*; ~=5.3 is ==5.*
             return True
     return False
+
+
+def _caps_below_major_1(requirement: str) -> bool:
+    return _caps_below_major(requirement, 1)
+
+
+_LOWER_CLAUSE = re.compile(r"^\s*(>=|==|===|~=)\s*(\d+(?:\.\d+)*)\s*$")
+
+
+def _floor(requirement: str) -> tuple[int, ...] | None:
+    """Highest ``>=`` / ``==`` / ``~=`` release in the specifier, or None."""
+    spec = requirement.split(";", 1)[0]
+    spec = re.sub(r"^[A-Za-z0-9._-]+(\[[^\]]*\])?", "", spec.strip())
+    floors = [_release(m.group(2)) for c in spec.split(",") if (m := _LOWER_CLAUSE.match(c))]
+    return max(floors) if floors else None
 
 
 def _sends_temperature(source: str) -> bool:
@@ -429,3 +485,139 @@ def test_detector_flags_undeclared_and_ignores_local(tmp_path):
     names = declared_import_names(tmp_path / "requirements.txt")
     assert {"declaredpkg", "bs4"} <= names
     assert {n for n in found if n not in names} == {"lazy_one", "optional_two", "dynamic_three"}
+
+
+# --- P15B.1 (D-DEP1): orphans out, lxml past PYSEC-2026-87 --------------------
+
+
+def _declared_anywhere(dist: str) -> list[str]:
+    return [
+        f"{path.relative_to(REPO_ROOT).as_posix()}: {line}"
+        for req in ALL_REQUIREMENTS
+        for path, line in _requirement_lines(req)
+        if (m := _REQ_NAME.match(line)) and _normalise(m.group(1)) == dist
+    ]
+
+
+@pytest.mark.parametrize("dist", REMOVED_ORPHANS)
+def test_removed_orphans_stay_out(dist):
+    found = _declared_anywhere(dist)
+    assert not found, f"{dist} was removed by P15B.1 (D-DEP1, no importer); declared again in: {found}"
+
+
+def test_crawl4ai_not_declared():
+    # Named by the P15B.1 spec: crawl4ai pinned lxml~=5.3 and forced the
+    # PYSEC-2026-87 pip-audit ignore.
+    assert _declared_anywhere("crawl4ai") == []
+
+
+@pytest.mark.parametrize("req", ALL_REQUIREMENTS, ids=lambda p: p.name)
+def test_no_requirement_caps_lxml_below_6(req):
+    for _path, line in _requirement_lines(req):
+        m = _REQ_NAME.match(line)
+        if m and _normalise(m.group(1)) == "lxml":
+            assert not _caps_below_major(line, 6), f"{req.name}: lxml capped below 6 (PYSEC-2026-87): {line!r}"
+            floor = _floor(line)
+            assert floor is not None and floor >= _release(LXML_FIXED), (
+                f"{req.name}: lxml needs a >={LXML_FIXED} floor (PYSEC-2026-87): {line!r}"
+            )
+
+
+def test_scanner_requirements_lift_lxml_to_the_fix():
+    # The scanner image installs requirements-scanner.txt alone; its lxml line
+    # was >=5.3 until P15B.1.
+    line = declared_distributions(SCANNER_REQUIREMENTS).get("lxml")
+    assert line is not None and (_floor(line) or (0,)) >= _release(LXML_FIXED), line
+
+
+def _runtime_declared() -> dict[str, str]:
+    out: dict[str, str] = {}
+    for req in RUNTIME_REQUIREMENTS:
+        out.update(declared_distributions(req))
+    return out
+
+
+def _orphans(declared: dict[str, str], imports: dict[str, list[str]], allowed) -> list[str]:
+    imported = set(imports)
+    return sorted(
+        dist
+        for dist in declared
+        if dist not in allowed and not (DIST_IMPORT_NAMES.get(dist, {dist.replace("-", "_")}) & imported)
+    )
+
+
+def test_every_declared_runtime_distribution_is_imported(imports):
+    orphans = _orphans(_runtime_declared(), imports, DECLARED_NOT_IMPORTED)
+    assert not orphans, (
+        "declared in requirements.txt / requirements-scanner.txt but imported nowhere under "
+        "backend/ or scripts/ (remove it after a consumer audit, or add it to "
+        f"DECLARED_NOT_IMPORTED with a reason): {orphans}"
+    )
+
+
+def test_declared_not_imported_has_no_stale_entries(imports):
+    declared = _runtime_declared()
+    gone = sorted(d for d in DECLARED_NOT_IMPORTED if d not in declared)
+    assert not gone, f"no longer declared, drop from DECLARED_NOT_IMPORTED: {gone}"
+    imported_now = sorted(
+        d for d in DECLARED_NOT_IMPORTED if DIST_IMPORT_NAMES.get(d, {d.replace("-", "_")}) & set(imports)
+    )
+    assert not imported_now, f"imported now, drop from DECLARED_NOT_IMPORTED: {imported_now}"
+
+
+def test_orphan_detector_flags_unimported_declarations():
+    declared = {"flask": "flask>=3", "crawl4ai": "crawl4ai>=0.8", "gunicorn": "gunicorn>=21", "pillow": "pillow>=10"}
+    imports = {"flask": ["backend/main.py:1"], "PIL": ["backend/x.py:2"]}
+    assert _orphans(declared, imports, {"gunicorn": "cli"}) == ["crawl4ai"]
+
+
+def _sweep_allowed_missing() -> set[str]:
+    tree = ast.parse(SCANNER_IMPORT_SWEEP.read_text(encoding="utf-8"))
+    for node in tree.body:
+        if isinstance(node, ast.Assign) and any(getattr(t, "id", None) == "ALLOWED_MISSING" for t in node.targets):
+            return set(ast.literal_eval(node.value))
+    raise AssertionError("ALLOWED_MISSING not found in scripts/scanner_import_sweep.py")
+
+
+def test_scanner_sweep_allowlist_names_only_imported_packages(imports):
+    # A name nothing imports can never be the missing module the sweep reports,
+    # so it only hides a future regression. P15B.1 pruned the crawl4ai-era list.
+    stale = sorted(n for n in _sweep_allowed_missing() if n not in imports)
+    assert not stale, f"scripts/scanner_import_sweep.py ALLOWED_MISSING names packages nothing imports: {stale}"
+
+
+@pytest.mark.parametrize(
+    "requirement,major,capped",
+    [
+        ("lxml~=5.3", 6, True),
+        ("lxml~=5.3.0", 6, True),
+        ("lxml>=5.3,<6", 6, True),
+        ("lxml<6.0", 6, True),
+        ("lxml<=5.9", 6, True),
+        ("lxml==5.4.0", 6, True),
+        ("lxml==5.*", 6, True),
+        ("lxml>=6.1.0", 6, False),
+        ("lxml~=6.1", 6, False),
+        ("lxml==6.*", 6, False),
+        ("lxml<7", 6, False),
+        ("lxml<6.0.1", 6, False),
+        ("lxml>=5.3", 6, False),
+    ],
+)
+def test_caps_below_major_parser(requirement, major, capped):
+    assert _caps_below_major(requirement, major) is capped
+
+
+@pytest.mark.parametrize(
+    "requirement,floor",
+    [
+        ("lxml>=6.1.0", (6, 1)),
+        ("lxml>=5.3", (5, 3)),
+        ("lxml~=6.1", (6, 1)),
+        ("lxml>=5.3,<6", (5, 3)),
+        ("lxml<7", None),
+        ("lxml", None),
+    ],
+)
+def test_floor_parser(requirement, floor):
+    assert _floor(requirement) == floor

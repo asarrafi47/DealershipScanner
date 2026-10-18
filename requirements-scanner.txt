@@ -14,7 +14,9 @@ curl_cffi>=0.7            # TLS-fingerprint impersonation (Cloudflare / Dealer I
 psycopg[binary]>=3.2
 pydantic>=2
 beautifulsoup4>=4.15.0
-lxml>=5.3
+# PYSEC-2026-87 is fixed in 6.1.0. Nothing imports lxml directly today: every
+# BeautifulSoup call names "html.parser" (P15B.1 audit, 2026-10-18).
+lxml>=6.1.0
 aiohttp>=3.9
 pgeocode>=0.5.0           # pulls pandas/numpy (dealerships_db geocode helpers)
 thefuzz>=0.22.1

@@ -18,11 +18,7 @@ psycopg[binary]>=3.2
 pgvector>=0.3
 bcrypt>=4.1
 resend>=2.0.0
-pyotp>=2.9
-segno>=1.6.6
 redis>=8.0.1
-ollama>=0.3
-crawl4ai>=0.8,<0.9
 stripe>=8
 PyJWT[crypto]>=2.8
 pypdf>=4.0
@@ -34,29 +30,22 @@ anthropic>=0.116,<1
 # PDF text with layout: post_scan/window_sticker.py, enrichment/brochure_extract.py.
 pdfplumber>=0.11
 # .br precompression in the Dockerfile.web build (scripts/build_static_compressed.py);
-# it used to arrive only as a crawl4ai dependency.
+# it used to arrive only as a dependency of crawl4ai (removed in P15B.1, D-DEP1).
 brotli>=1.1
 
-# Browser binaries (not installed by pip). After pip install, run ONE of:
+# Browser binary (not installed by pip). After pip install, run ONE of:
 #   ./backend/scripts/install_scraper_browsers.sh
-# Or two lines, with nothing after the browser name on each line:
 #   python3 -m playwright install chromium
-#   python3 -m patchright install chromium
 # Do not append comments on the same line as "playwright install" unless your shell treats # as a comment; otherwise Playwright treats extra words as invalid browser names.
 
 # SQLCipher for at-rest encryption of credential DBs (dev_users.db, users.db).
 # Requires native lib: brew install sqlcipher (macOS) / apt install libsqlcipher-dev (Linux)
 sqlcipher3>=0.5.4
 
-# Transitive dependency security floors (SEC-076; validate with scripts/security_check.sh)
+# Transitive dependency security floors (SEC-076; validate with scripts/security_check.sh).
+# Keep a floor only while something still requires the package: urllib3 (requests),
+# idna (requests, httpx, anyio, yarl), pygments (rich via transformers -> typer; pytest in CI).
 urllib3>=2.7.0
 idna>=3.15
-langchain-core>=1.3.3
-langchain-openai>=1.1.14
-langchain-text-splitters>=1.1.2
-langsmith>=0.8.0
 pygments>=2.20.0
-starlette>=1.0.1
-tornado>=6.5.5
-# lxml: PYSEC-2026-87 fixed in 6.1.0; crawl4ai 0.8.x pins lxml~=5.3 — see SEC-076 until upstream allows 6.x.
 curl_cffi>=0.7  # TLS-fingerprint impersonation: clears the Cloudflare 403 that blocks 112 rooftops
