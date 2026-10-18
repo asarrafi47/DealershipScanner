@@ -855,6 +855,30 @@ Elsewhere:
 | P3.9 | plan | SECURITY_MASTER_TODO wave-1 step. Stale: drop the "prod exception under SEC-083" note | docs | `SECURITY_MASTER_TODO.md` | P3.1-P3.8 | per plan |
 | N3.13 | release | Docker smoke, deploy, owner env follow-ups | prod-owner | `docs/ops_log/N3.13.md` | all | exit gate |
 
+**Unit status (updated 2026-10-18 by the N3 integrator at commit time; checkpoints in `workspace/phase_runs/N3/`, summary in `workspace/phase_runs/N3/RESUME.md`).**
+- P3.1: DONE, merged `53a814913`. Review: 1 round, pass, 5 nits carried. Beyond the plan's file list it also touched `backend/auth/oauth_link.py` (new), `app_registration.py`, `dealer/routes.py` and `users_db/admin.py`. The deviation is recorded in SEC-104: a link is held whenever the matched account's email is unverified.
+- P3.2: DONE, merged `70213f00e`. Review: 2 rounds, pass, 4 nits carried.
+  - Round 1 found that the CIDR walk was unbounded, so a Worker in another Cloudflare zone could forge a client IP. Fix `1ba6d151b` bounds the walk by `TRUSTED_PROXY_HOPS`.
+  - Spec drift for REMEDIATION_PLAN Appendix E: the hop bound. Prod keeps `TRUSTED_PROXY_HOPS=2` next to `TRUSTED_PROXY_CIDRS=cloudflare`.
+- P3.3: DONE, merged `584564810`. Review: 2 rounds, pass, 3 nits carried. Round 1 found percent-encoded and Unicode host spellings that bypassed the check; fixed in `677c7ecd2`. Local `cars` (read-only): 0 stored hosts affected. DNS rebinding and the unguarded enrichment and onboard fetchers are SEC-112, which has no owning unit yet.
+- P3.4: DONE, merged `fa1a6ba67`. Review: 1 round, pass, 3 nits carried. CSRF coverage today: 78 hook, 6 in-view, 2 exempt, 10 MFA stub, 0 unclassified.
+- P3.5: DONE, merged `da7b26592`, plus integration commit `fecd1d54f`, which lets `test_requirements_hygiene` accept the `jinja2`/`markupsafe` imports. Review: 2 rounds, pass, 5 nits carried. Beyond the plan's list: `compare.js`, `dev.js` and `app_surface.json`. P3.3 is merged before P3.5 on purpose.
+- P3.6: DONE, merged `aeddd2553`. Review: 1 round, pass, 5 nits carried.
+- P3.7: BLOCKED on the owner. It merges after the owner confirms the live web `TRUSTED_PROXY_HOPS` (N3.13 pack, Part A step A2, read-only). The code is complete on `unit/P3.7` @ `b8364d6d6`. Review: 1 round; the owner step is the only blocker, plus 3 nits. The merge must also edit SEC-110 in `docs/SECURITY_MASTER_TODO.md` and add a `deploy/railway/README.md` section 7 sentence, or `test_security_master_todo.py` fails. RESUME.md lists the steps.
+- P3.8: DONE, merged `4f74e992e`. Review: 1 round, pass, 4 nits carried. The Docker-build acceptance (no `ms-playwright`, the image-size drop) moves to the N3.13 smoke.
+- P15B.1: DONE, merged `72f039262`. Review: 1 round, pass, 6 nits carried. Owner steps still open: the `Dockerfile.web` / `Dockerfile.discovery` stage builds (with the N3.13 Docker OK), and a rebuild of the MBP and mini dev venvs, which still hold lxml 5.4.0 and crawl4ai.
+- N3.10: DONE, merged `0033182c4`. Review: 1 round, pass, 4 nits carried. Local `dealer_jobs` (read-only): 0 rows. Open orchestrator decision: the Find-dealers "Request scrape" path and the retry endpoints still enqueue. Either a small follow-up unit returns 409 there, or P15A.3 takes them.
+- N3.11: BLOCKED. The dealer and car templates belong to N2.1 until N2 reaches main (Section 3.3). The owner decides whether N3 releases without it.
+- P3.9: DONE, merged `f752fb0fb`. Review: 3 rounds, pass, 4 nits carried. It added SEC-104 to SEC-113. SEC-110 stays Blocked until P3.7 merges. SEC-112 and SEC-113 (origin lock) need owning units.
+- N3.13: BLOCKED on the owner. The pack is `workspace/phase_runs/N3/N3.13.md`: Part A reads, gates G1-G6, Part B (smoke, prod `migrate --dry-run`, deploy, live CSP), then Part C (`TRUSTED_PROXY_CIDRS`, domain removal, origin check, `DEV_IP_ALLOWLIST`). Part C's env and domain steps each need `web-source-clear`. Gate A5 adds a dashboard check that Cloudflare does not point at the generated `*.up.railway.app` domain before it is removed.
+- **Exit gate, local items** (2026-10-18; code at `f752fb0fb`, which this status commit does not change):
+  - Unit tests, `TESTS_BLOCK_NETWORK=1`, 4 chunks: 784 passed, 0 failed (42 + 582 + 77 + 83; the longest chunk took 33 s). CI on `phase/N3` is pending, because the branch is first pushed at release step 6.
+  - `pip-audit -r requirements.txt`, no ignores (pip-audit 2.10.1): `No known vulnerabilities found`, exit 0. The JSON form shows 99 dependencies, 0 vulnerabilities, 0 skipped.
+  - `grep -n esm.sh backend/web/security.py`: empty. No file under `backend/` or `frontend/` outside the tests names esm.sh.
+  - `ruff check . --no-cache` (ruff 0.15.22): clean.
+- **Exit gate, owner items still open:** the prod CSP header without esm.sh (N3.13 B22); the railway.app origin not serving (N3.13 C5/C6), or D-SEC6 records the wait.
+- **Release:** a 1.5.x patch with a web deploy. P3.7 merges first. N3.11 merges first or is waived.
+
 **N-unit specs.**
 
 **N3.10 Onboard stopgap.**
