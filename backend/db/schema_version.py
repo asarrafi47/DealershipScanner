@@ -15,10 +15,16 @@ Behaviour (env):
 * ``INVENTORY_SCHEMA_CHECK=warn`` (default): a database behind the chain logs a
   loud warning naming the operator command, and callers fall back to the legacy
   runtime DDL, so behaviour on a behind-the-chain database is exactly what it was
-  before. Default because production's ``schema_migrations`` was copied from a
-  local database at V018 on 2026-09-28 and has not been baselined past V019 yet.
+  before. Default until strict is switched on for every service (P13A.4). Each
+  new migration leaves every live database behind until an operator applies it:
+  the P0A.2 census (2026-10-08, ``docs/db_layer/SCHEMA_LEDGER_2026_10.md``) found
+  prod and local ``cars`` both recording V001-V025 with no checksum drift, and
+  prod gets each later migration by hand before the deploy that needs it.
 * ``INVENTORY_SCHEMA_CHECK=strict``: a behind-the-chain database raises
   :class:`SchemaNotMigratedError` instead (opt in once every database is migrated).
+  The error propagates: ``schema_repo.init_inventory_db`` (web, scanner and
+  worker start-up) and the scanner's per-upsert ``_ensure_schema`` re-raise it
+  rather than logging it as a failed re-assert.
 * ``INVENTORY_AUTO_MIGRATE=1``: dev convenience -- run
   ``python -m backend.scripts.migrate --apply`` in-process first, then check.
 

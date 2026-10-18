@@ -372,9 +372,12 @@ def init_postgres_inventory(conn: Any) -> None:
 
     * at the expected version -> no DDL at all;
     * behind, ``INVENTORY_SCHEMA_CHECK=warn`` (default) -> loud warning naming the
-      operator command, then the legacy DDL below runs exactly as before (prod's
-      ``schema_migrations`` is still at V018 until an operator baselines V019);
-    * behind, ``INVENTORY_SCHEMA_CHECK=strict`` -> ``SchemaNotMigratedError``;
+      operator command, then the legacy DDL below runs exactly as before (a live
+      database is behind whenever a new migration has merged but not yet been
+      applied to it; the P0A.2 census, 2026-10-08, found prod and local at V025);
+    * behind, ``INVENTORY_SCHEMA_CHECK=strict`` -> ``SchemaNotMigratedError``,
+      which ``schema_repo.init_inventory_db`` and the scanner's ``_ensure_schema``
+      re-raise;
     * ``INVENTORY_AUTO_MIGRATE=1`` -> applies ``migrations/`` first (dev).
 
     Per-process: after the first success it is a no-op.
