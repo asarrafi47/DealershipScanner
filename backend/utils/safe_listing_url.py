@@ -5,12 +5,14 @@ grid JSON; the visitor's browser fetches the images and follows the links. The
 host check is client-side hardening, not SSRF protection: a listing must not make
 a visitor's browser request their router, a tailnet (CGNAT 100.64.0.0/10) node or
 their own machine. It applies the same non-global address rule as the server-side
-guard (``outbound_url.destination_host_blocked``, P3.3), on the literal host only:
-nothing here resolves DNS, so a public name that resolves to a private address
-passes. A server-side fetch needs ``outbound_url.destination_host_blocked_after_dns``;
-two server-side callers still rely on these helpers alone (the enrichment image
-fetch, ``enrichment/service.py`` ``_fetch_image_b64_optimized``, and the admin
-onboard URL in ``dealer/admin/onboard_api.py``).
+guard (``outbound_url.destination_host_blocked``, P3.3), on the literal host only,
+judged the way a browser reads it (percent-escapes decoded, Unicode compatibility
+forms folded: ``https://127.0.0.%31/`` is 127.0.0.1). Nothing here resolves DNS,
+so a public name that resolves to a private address passes. A server-side fetch
+needs ``outbound_url.destination_host_blocked_after_dns``; two server-side callers
+still rely on these helpers alone (the enrichment image fetch,
+``enrichment/service.py`` ``_fetch_image_b64_optimized``, and the admin onboard
+URL in ``dealer/admin/onboard_api.py``).
 """
 
 from __future__ import annotations
@@ -29,12 +31,11 @@ _DEV_LOCALHOST_HOSTS = frozenset({"localhost", "127.0.0.1", "::1"})
 
 
 def _host_is_blocked(hostname: str) -> bool:
-    host = normalize_host(hostname)
-    if not host:
-        return True
-    if host in _DEV_LOCALHOST_HOSTS:
+    # Pass the raw host on: destination_host_blocked normalizes (percent-decodes)
+    # it once itself, and a second pass would judge a different host.
+    if normalize_host(hostname) in _DEV_LOCALHOST_HOSTS:
         return is_production_env()
-    return destination_host_blocked(host)
+    return destination_host_blocked(hostname)
 
 
 def _normalize_http_url(val: Any, *, https_only_in_production: bool) -> str | None:

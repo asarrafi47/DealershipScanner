@@ -33,12 +33,12 @@ def _resolver(table: dict[str, list[tuple[Any, ...]]]) -> Callable[..., list[tup
 
 def test_dev_scanner_url_blocks_hostname_resolving_to_private_ip() -> None:
     def fake_getaddrinfo(host, *args, **kwargs):
-        if host == "metadata.example.internal":
+        if host == "metadata.example-dealer.com":
             return [(socket.AF_INET, socket.SOCK_STREAM, 6, "", ("169.254.169.254", 0))]
         raise socket.gaierror("unexpected host")
 
     with patch("backend.utils.outbound_url.socket.getaddrinfo", side_effect=fake_getaddrinfo):
-        assert validate_dev_scanner_url("https://metadata.example.internal/inventory") == "url_host_blocked"
+        assert validate_dev_scanner_url("https://metadata.example-dealer.com/inventory") == "url_host_blocked"
 
 
 @pytest.mark.parametrize(
@@ -52,6 +52,7 @@ def test_dev_scanner_url_blocks_hostname_resolving_to_private_ip() -> None:
         "198.18.0.1",
         "192.0.0.8",
         "fd7a:115c:a1e0::1",
+        "fec0::1",
     ],
 )
 def test_name_resolving_to_non_global_address_is_blocked(monkeypatch: pytest.MonkeyPatch, resolved: str) -> None:
@@ -106,3 +107,28 @@ def test_literal_non_global_host_is_blocked_before_dns(monkeypatch: pytest.Monke
     assert destination_host_blocked_after_dns("100.64.0.1") is True
     assert destination_host_blocked_after_dns("[::ffff:100.64.0.1]") is True
     assert calls == []
+
+
+def test_private_use_and_encoded_hosts_are_blocked_before_dns(monkeypatch: pytest.MonkeyPatch) -> None:
+    calls: list[str] = []
+
+    def recording(host: str, *args: Any, **kwargs: Any) -> list[tuple[Any, ...]]:
+        calls.append(host)
+        return _answer("8.8.8.8")
+
+    monkeypatch.setattr(socket, "getaddrinfo", recording)
+    for host in ("postgres.railway.internal", "nas.home.arpa", "127.0.0.%31", "100.64.0.%2531", "localhos%74"):
+        assert destination_host_blocked_after_dns(host) is True
+    assert calls == []
+
+
+def test_resolver_gets_the_decoded_name(monkeypatch: pytest.MonkeyPatch) -> None:
+    calls: list[str] = []
+
+    def recording(host: str, *args: Any, **kwargs: Any) -> list[tuple[Any, ...]]:
+        calls.append(host)
+        return _answer("100.64.0.1")
+
+    monkeypatch.setattr(socket, "getaddrinfo", recording)
+    assert destination_host_blocked_after_dns("tailnet%2Dnode.example-dealer.com") is True
+    assert calls == ["tailnet-node.example-dealer.com"]

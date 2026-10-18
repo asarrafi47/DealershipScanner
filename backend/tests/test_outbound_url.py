@@ -3,12 +3,18 @@
 from __future__ import annotations
 
 import ipaddress
+import re
+import sys
+import unicodedata
+from urllib.parse import urlparse
 
 import pytest
 
 from backend.utils.outbound_url import (
+    _IDNA_IGNORED_RANGES,
     destination_host_blocked,
     ip_is_non_global,
+    normalize_host,
     parse_ip_literal,
     unwrap_embedded_ipv4,
     validate_dev_scanner_url,
@@ -58,6 +64,8 @@ NON_GLOBAL_LITERALS = [
     "2001:db8::1",
     "3fff::1",
     "2001::1",  # Teredo
+    "fec0::1",  # deprecated site-local (RFC 3879); is_global is True for it
+    "feff::1",  # top of fec0::/10
     "::6440:1",  # IPv4-compatible (reserved ::/8)
     "64:ff9b::a00:1",  # NAT64 well-known prefix (reserved ::/8)
 ]
@@ -183,3 +191,130 @@ def test_unwrap_embedded_ipv4() -> None:
 
 def test_zone_suffixed_link_local_is_blocked() -> None:
     assert destination_host_blocked("fe80::1%en0") is True
+
+
+# A client connects to the host after percent-decoding it (browsers and requests)
+# and, in a browser, after UTS #46 folding, so these spellings are the addresses
+# and names they turn into (reviewer repro: each passed the literal check).
+ENCODED_NON_GLOBAL_HOSTS = [
+    "127.0.0.%31",
+    "100.64.0.%31",
+    "%31%30%30.64.0.1",
+    "\uff11\uff10\uff10.\uff16\uff14.\uff10.\uff11",  # fullwidth digits: 100.64.0.1
+    "100\u300264\u30020\u30021",  # ideographic full stop
+    "100\uff0e64\uff0e0\uff0e1",  # fullwidth full stop
+    "100\uff6164\uff610\uff611",  # halfwidth ideographic full stop
+    "\uff4c\uff4f\uff43\uff41\uff4c\uff48\uff4f\uff53\uff54",  # fullwidth "localhost"
+    "localhos%74",
+    "LOCALHOS%54",
+    "local\u00adhost",  # soft hyphen: UTS #46 drops it
+    "127.0.0.1\u200b",  # zero width space: UTS #46 drops it
+    "%3a%3a1",  # ::1
+    "[%3A%3Affff%3A100.64.0.1]",
+    "fe80::1%25en0",  # URL-encoded zone on a link-local address
+    "printer.loca%6c",
+    "%E2%91%A0%E2%91%A1%E2%91%A6.0.0.1",  # percent-encoded circled digits fold to 127
+]
+
+# Hosts a browser refuses and requests cannot resolve as written: refused outright,
+# never passed on as a DNS name. One decoding pass only, so %2531 stays %31.
+FORBIDDEN_NAME_HOSTS = [
+    "100.64.0.%2531",
+    "127.0.0.1%20",
+    "127.0.0.1%20x",  # inet_aton reads "127.0.0.1 x" as 127.0.0.1
+    "localhost%00",
+    "dealer%2fexample.com",
+    "dealer.example%3a8080",
+    "100.64.0.\uff05\uff13\uff11",  # fullwidth percent sign folds to "%31"
+    "dealer\u0378.example",  # U+0378 is unassigned
+]
+
+
+@pytest.mark.parametrize("host", ENCODED_NON_GLOBAL_HOSTS)
+def test_encoded_spelling_of_non_global_host_is_blocked(host: str) -> None:
+    assert destination_host_blocked(host) is True
+
+
+@pytest.mark.parametrize("host", FORBIDDEN_NAME_HOSTS)
+def test_host_a_browser_would_not_fetch_is_blocked(host: str) -> None:
+    assert destination_host_blocked(host) is True
+
+
+@pytest.mark.parametrize(
+    "host",
+    ["images.dealer.com", "b\u00fccher.example", "xn--bcher-kva.example", "img%2Ddealer.example", "dealer_cdn.example"],
+)
+def test_encoded_or_unicode_dns_name_is_allowed(host: str) -> None:
+    assert destination_host_blocked(host) is False
+
+
+def test_normalize_host_decodes_once_and_folds_unicode() -> None:
+    assert normalize_host("100.64.0.%31") == "100.64.0.1"
+    assert normalize_host("[%3A%3A1]") == "::1"
+    assert normalize_host("\uff11\uff10\uff10\uff0e\uff16\uff14\u30020\uff611.") == "100.64.0.1"
+    assert normalize_host("LOCAL\u00adHOST.") == "localhost"
+    assert normalize_host("100.64.0.%2531") == "100.64.0.%31"
+    assert parse_ip_literal("100.64.0.%2531") is None
+    assert parse_ip_literal("100.64.0.%31") == ipaddress.IPv4Address("100.64.0.1")
+
+
+def test_outlined_digits_are_blocked_on_every_unicode_version() -> None:
+    # U+1CCF0..U+1CCF9 (Unicode 16) fold to 0-9 in a current browser. Python 3.14
+    # folds them too; Python 3.12 (Unicode 15.0) does not know them and refuses.
+    host = "\U0001ccf1\U0001ccf0\U0001ccf0.64.0.1"
+    assert destination_host_blocked(host) is True
+
+
+def test_requests_decodes_percent_escapes_in_the_host() -> None:
+    # Why the literal check decodes: requests connects to the decoded host.
+    requests = pytest.importorskip("requests")
+    url = "https://100.64.0.%31/x.jpg"
+    prepared = requests.Request("GET", url).prepare().url
+    assert prepared == "https://100.64.0.1/x.jpg"
+    assert normalize_host(urlparse(url).hostname) == urlparse(prepared).hostname
+
+
+@pytest.mark.parametrize(
+    "host",
+    ["postgres.railway.internal", "internal", "INTERNAL.", "nas.home.arpa", "home.arpa", "local", "x.localhost"],
+)
+def test_private_use_names_are_blocked(host: str) -> None:
+    assert destination_host_blocked(host) is True
+
+
+@pytest.mark.parametrize("host", ["internal.example.com", "local.example.com", "home.arpa.example.com", "myhome.arpa"])
+def test_names_merely_containing_private_use_labels_pass(host: str) -> None:
+    assert destination_host_blocked(host) is False
+
+
+def test_idna_folding_matches_uts46() -> None:
+    """
+    Drift alarm against the UTS #46 table the idna package ships: every code point
+    the table drops is in ``_IDNA_IGNORED_RANGES``, and every code point it maps to
+    letters, digits or dots folds the same way here. A code point this
+    interpreter's Unicode database does not know is skipped: the literal check
+    refuses it (``test_host_a_browser_would_not_fetch_is_blocked``).
+    """
+    idna = pytest.importorskip("idna")
+    ignored = {cp for lo, hi in _IDNA_IGNORED_RANGES for cp in range(lo, hi + 1)}
+    relevant = re.compile(r"[0-9a-z.]*")
+    mismatches = []
+    for cp in range(0x80, sys.maxunicode + 1):
+        if 0xD800 <= cp <= 0xDFFF:
+            continue
+        c = chr(cp)
+        try:
+            mapped = idna.uts46_remap(c, std3_rules=False)
+        except ValueError:  # disallowed: a browser refuses the host
+            if cp in ignored:
+                mismatches.append((hex(cp), "in table but disallowed"))
+            continue
+        if (mapped == "") != (cp in ignored) and unicodedata.category(c) != "Cn":
+            mismatches.append((hex(cp), "ignored-table drift"))
+            continue
+        if unicodedata.category(c) == "Cn" or not relevant.fullmatch(mapped):
+            continue
+        folded = normalize_host(f"a{c}b")
+        if folded != f"a{mapped}b":
+            mismatches.append((hex(cp), mapped, folded))
+    assert mismatches == []
