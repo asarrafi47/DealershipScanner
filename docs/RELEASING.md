@@ -166,9 +166,12 @@ Do not quote the two texts in any other row of the log.
    branch tip is the `v1.5.4` commit, which `main` already contains. Any unpushed commits
    on the mini stay in the mini's clone.
 
-   Verify: either the mini's `git log @{u}..` printed nothing and `git status` showed a
-   clean tree, or `grep -nF 'N4.3 gate 3 waived' docs/remediation/OWNER_DECISIONS_LOG.md`
-   prints that dated row.
+   Verify: either a dated block at the end of `docs/ops_log/N4.4.md` holds the owner's
+   output of N4.4's mini command (`git status --short --branch`, `git log --oneline
+   --branches --not --remotes`, `git stash list`), with a clean status and both lists
+   empty, or `grep -nF 'N4.3 gate 3 waived' docs/remediation/OWNER_DECISIONS_LOG.md`
+   prints that dated row. N4.4's command covers every local branch and the stash, not
+   only the checked-out branch that `git log @{u}..` checks.
 4. **No checkout or worktree is on the branch.**
 
    ```bash
