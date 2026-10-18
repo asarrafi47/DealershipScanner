@@ -38,7 +38,7 @@
                         <th scope="col" class="compare-table__car-col" data-car-id="{{ car.id }}">
                             <button type="button" class="compare-table__remove" data-compare-remove="{{ car.id }}" aria-label="Remove from compare">×</button>
                             <a href="/car/{{ car.id }}" class="compare-table__photo-link">
-                                <span class="compare-table__photo" style="background-image:url('{{ (car.compare_image_url or car.image_url or url_for('static', filename='placeholder.svg')) | e }}')"></span>
+                                <span class="compare-table__photo" style="background-image:url('{{ (car.compare_image_url or car.image_url) | css_url }}')"></span>
                             </a>
                             <a href="/car/{{ car.id }}" class="compare-table__title">{{ car.title }}</a>
                             <p class="compare-table__trim">{{ car.trim | fmt_spec }}</p>
