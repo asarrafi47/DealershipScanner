@@ -1,0 +1,105 @@
+{
+ "source": {
+  "db": "cars_cleanroom (frozen, read-only)",
+  "pair": "vin_owner_conflicts owner chapmanfordaz-com (first writer) <- claimant chapmandodge-com",
+  "lot_code_counts": {
+   "CAE": 175,
+   "CAU": 149,
+   "CAV": 58,
+   "CAY": 62
+  },
+  "lot_code_meaning": "photo path photos.chapmanchoice.com/vehicles/<lot>/: CAE = Chapman Dodge (claimant's own code), CAU = Chapman Ford, CAY/CAV = other Chapman stores (conflicts_rca.md section 3)",
+  "claimant_stamp": "the rows carry the store stamp dealer_dot_com.py:_rooftop_from_account builds from accountId; the account key is a placeholder: whether chapmandodge's live payload stamps these cars is cannot_assess until the N1.2 dossier",
+  "extracted": "2026-10-16 by N1.4 (extract_shapes.py in this directory, read-only psql)"
+ },
+ "roster": {
+  "chapmanfordaz-com": {
+   "registry_id": 167,
+   "name": "Chapman Ford",
+   "url": "https://www.chapmanfordaz.com",
+   "street": "3950 N 89th St.",
+   "city": "Scottsdale",
+   "state": "AZ",
+   "zip": "85251",
+   "provider": "chapman"
+  },
+  "chapmandodge-com": {
+   "registry_id": 417,
+   "name": "Chapman Dodge Chrysler Jeep Ram Scottsdale",
+   "url": "https://www.chapmandodge.com",
+   "street": "3800 N 89th St.",
+   "city": "Scottsdale",
+   "state": "AZ",
+   "zip": "85251",
+   "provider": "dealer_dot_com"
+  }
+ },
+ "cars": [
+  {
+   "vin": "1C4BJWDG2JL887990",
+   "condition": "Used",
+   "year": 2018,
+   "make": "Jeep",
+   "model": "Wrangler JK Unlimited",
+   "stock_number": "JC1349",
+   "price": 31433.0,
+   "image": "https://photos.chapmanchoice.com/vehicles/CAE/640/1C4BJWDG2JL887990-2.jpg",
+   "owner_vdp": "https://www.chapmanfordaz.com/used-inventory/vin-1C4BJWDG2JL887990.htm"
+  },
+  {
+   "vin": "1C4HJXDG2JW131557",
+   "condition": "Used",
+   "year": 2018,
+   "make": "Jeep",
+   "model": "Wrangler Unlimited",
+   "stock_number": "P2345A",
+   "price": 18567.0,
+   "image": "https://photos.chapmanchoice.com/vehicles/CAE/640/1C4HJXDG2JW131557-22.jpg",
+   "owner_vdp": "https://www.chapmanfordaz.com/used-inventory/vin-1C4HJXDG2JW131557.htm"
+  },
+  {
+   "vin": "1C4HJXDG4KW527751",
+   "condition": "Used",
+   "year": 2019,
+   "make": "Jeep",
+   "model": "Wrangler Unlimited",
+   "stock_number": "CW020AA",
+   "price": 22459.0,
+   "image": "https://photos.chapmanchoice.com/vehicles/CAE/640/1C4HJXDG4KW527751-35.jpg",
+   "owner_vdp": "https://www.chapmanfordaz.com/used-inventory/vin-1C4HJXDG4KW527751.htm"
+  },
+  {
+   "vin": "1C4HJXEGXNW244970",
+   "condition": "Used",
+   "year": 2022,
+   "make": "Jeep",
+   "model": "Wrangler Unlimited",
+   "stock_number": "P2508A",
+   "price": 32339.0,
+   "image": "https://photos.chapmanchoice.com/vehicles/CAE/640/1C4HJXEGXNW244970-14.jpg",
+   "owner_vdp": "https://www.chapmanfordaz.com/used-inventory/vin-1C4HJXEGXNW244970.htm"
+  },
+  {
+   "vin": "1C4HJXFG5MW538564",
+   "condition": "Used",
+   "year": 2021,
+   "make": "Jeep",
+   "model": "Wrangler Unlimited",
+   "stock_number": "26R339A",
+   "price": 36270.0,
+   "image": "https://photos.chapmanchoice.com/vehicles/CAE/default.jpg",
+   "owner_vdp": "https://www.chapmanfordaz.com/used-inventory/vin-1C4HJXFG5MW538564.htm"
+  },
+  {
+   "vin": "1C4HJXFN7KW503875",
+   "condition": "Used",
+   "year": 2019,
+   "make": "Jeep",
+   "model": "Wrangler Unlimited",
+   "stock_number": "26J597A",
+   "price": 26706.0,
+   "image": "https://photos.chapmanchoice.com/vehicles/CAE/640/1C4HJXFN7KW503875-15.jpg",
+   "owner_vdp": "https://www.chapmanfordaz.com/used-inventory/vin-1C4HJXFN7KW503875.htm"
+  }
+ ]
+}
