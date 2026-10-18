@@ -348,7 +348,9 @@ def test_v026_creates_every_listed_object(chain):
 
 def test_v026_is_guarded_and_additive_and_never_touches_cars():
     sql = _v026_sql()
-    assert re.match(r"\s*SET LOCAL lock_timeout = '5s';", sql), "first statement must cap lock waits"
+    # the runner's per-file SET LOCAL lock_timeout caps lock waits; a setting in the
+    # file would override `migrate --lock-timeout` (P4.3b)
+    assert not re.search(r"lock_timeout", sql, re.I), "V026 must leave lock_timeout to the runner"
     # nothing deletes or rewrites data, and the only DROP is the guarded index rebuild
     assert not re.search(r"\b(DELETE|UPDATE|INSERT|TRUNCATE)\b", sql, re.I)
     assert re.findall(r"\bDROP\s+\w+[^;]*;", sql, re.I) == ["DROP INDEX public.uq_option_rejections_standing;"]

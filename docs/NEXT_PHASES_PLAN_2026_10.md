@@ -1000,7 +1000,7 @@ P4.4 is dropped: P0A.2 found 0 duplicate groups.
 - P4.7: DONE, merged `e6c7c03ac`. Review: 1 round, pass, 5 nits carried.
   - With an apostrophe added to a comment in `UPSERT_CARS_SQL`, the adapted SQL still has 50 placeholders. The old adapter gave 48, and psycopg rejected it.
   - 1,334 DML literals adapt byte-identically.
-- P4.3: DONE, merged `4670b2b7d`. Review: 1 round, pass, 5 nits carried. One of them must be settled before P4.8: V026's in-file `SET LOCAL lock_timeout`.
+- P4.3: DONE, merged `4670b2b7d`. Review: 1 round, pass, 5 nits carried. One of them had to be settled before P4.8: V026's in-file `SET LOCAL lock_timeout` (dropped in P4.3b).
   - Deviation, recorded in the checkpoint: V026 also rebuilds `uq_option_rejections_standing` as NULLS NOT DISTINCT (D-DB7 (a)). The spec said local V026 creates only `review_reports` and `haiku_spec_cache`.
   - On a schema clone of `cars`, V026 created 2 tables, rebuilt 1 index and left option_rejections at 987 rows.
 - P4.5: DONE, merged `55a85b62a`. Review: 1 round, pass, 3 nits carried. 10 of its 14 new tests fail against the pre-fix code.
@@ -1008,10 +1008,14 @@ P4.4 is dropped: P0A.2 found 0 duplicate groups.
   - Two dealership page requests at the current schema ran 0 CREATE/ALTER/DROP statements.
   - After the commit, the scanner connection's lock_timeout is back to the default. Before the fix it stayed at 3s.
 - P4.4: DROPPED (0 duplicate groups, P0A.2).
+- P4.3b (follow-up; the owner took the recommended answers to asks 1 and 3): DONE on `unit/P4.3b`, cut from `8fcc2e5a1`.
+  - V026 no longer sets its own `SET LOCAL lock_timeout`, so `migrate --lock-timeout` governs it. New checksum `sha256:3a037d82…e6f6`. Before the change, read-only: `cars`, `cars_cleanroom`, `cars_cr_rooftops` and `cars_cr_test` were at 25 with no V026 row, and no other local database has `schema_migrations`.
+  - migrate refuses `--apply` on `cars_cleanroom` (exit 2, before any lock or write; every write transaction re-checks `current_database()`). A dry run there still reports, and `cars_cr_*` scratch copies migrate.
+  - Also: the `MIGRATE_LOCK_KEY` comment now says 7883946363647714609, and the RELEASING.md Migrations section describes `--target`, the target log line, the lock flags and the refusal.
 - P4.8 local: BLOCKED on the owner.
   - Done so far: backup `workspace/backups/cars_20261018T191500Z_preV026.dump` (483,553,934 bytes; `pg_restore -l` lists 527 entries and 82/82 tables). The read-only `--dry-run --target 26` lists only V026.
   - Counts to OK: `schema_migrations` 25 → 26; +2 tables (`review_reports`, `haiku_spec_cache`); 1 index rebuilt; 0 rows changed (option_rejections has 987 rows and 0 duplicate groups); public tables 82 → 84.
-  - It waits on two owner steps. First, a decision on V026:44 (`SET LOCAL lock_timeout = '5s'` overrides `migrate --lock-timeout`: drop it, or document it) and the small follow-up unit that carries it out. Second, the owner's OK on the counts.
+  - It waited on two owner steps. The first, the V026:44 lock_timeout decision, is settled (dropped) and carried out by P4.3b; V026 changed, so the read-only `cars` dry run was re-run: still 25 applied, 1 pending, V026 only. The second is the owner's OK on the counts.
 - P4.8 prod: BLOCKED.
   - The pack is written: `workspace/phase_runs/N5/P4.8.md` and `P4.8_check.sql`. All 6 of its `railway run` lines were exercised against a throwaway local DB.
   - It waits on P4.8 local, the N5 release tag, and the owner. The Docker smoke in step 6 is approved per run.
@@ -1019,7 +1023,7 @@ P4.4 is dropped: P0A.2 found 0 duplicate groups.
   - **PASS: the dry run lists only V026.**
     - On a throwaway chain DB built to V025 (V019 recorded), `migrate --dry-run --target 26` printed "26 migration file(s), 25 already applied, 1 pending", listed only `V026__chain_completeness.sql`, and exited 0.
     - `--apply --target 26` applied 1, and a second `--apply` printed `database is up to date`.
-    - The V026 checksum is `sha256:f7003217…2d56`, and `indnullsnotdistinct` is true.
+    - The V026 checksum was `sha256:f7003217…2d56`, and `indnullsnotdistinct` is true. P4.3b re-ran this item after dropping V026's own lock_timeout: the same results, with checksum `sha256:3a037d82…e6f6`.
     - The same dry run, read-only on `cars`, gave the same result.
   - **PASS: a second concurrent migrate waits or exits.**
     - `test_migrate.py -k "live or lock or concurrent"` (local `TEST_PG_ADMIN_DSN`): 12 passed. The whole file: 39 passed.
@@ -1028,7 +1032,7 @@ P4.4 is dropped: P0A.2 found 0 duplicate groups.
   - **PASS: the V018 grep is empty** (`grep -n "V018" backend/db/schema_version.py backend/db/inventory_pg.py`, rc 1).
   - **OPEN: `roq cars "SELECT max(version) FROM schema_migrations"` = 25.** It reaches 26 only after the owner-approved P4.8 local apply.
   - **OPEN: the owner's prod record shows 26.** That is P4.8 prod.
-- **New finding (MAIN step), comment only:** `backend/scripts/migrate.py:89` gives the lock key as 7883954311434658097. The real `MIGRATE_LOCK_KEY` is 7883946363647714609. The follow-up unit fixes the comment.
+- **New finding (MAIN step), comment only:** `backend/scripts/migrate.py:89` gives the lock key as 7883954311434658097. The real `MIGRATE_LOCK_KEY` is 7883946363647714609. Fixed in P4.3b.
 
 **Workflow shape.**
 - Wave A: P4.1, P4.2, P4.7.

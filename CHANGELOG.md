@@ -75,6 +75,22 @@
   - `migrations/README.md` gains a V019 section, the D-DB6 protocol, the rule "a new table
     is a new migration, never runtime DDL", what `MIGRATE_ON_BOOT` implies, and the new
     options and locks.
+- `backend/scripts/migrate.py` never writes to `cars_cleanroom`, the frozen clean-room
+  baseline (P4.3b, D-N1). There, `--apply` (with `--baseline` or `--record-only` too) logs
+  `REFUSE --apply` and exits 2 before any lock or write, and every write transaction
+  re-checks `current_database()` before it takes the advisory lock. A dry run still
+  reports. `cars_cr_*` scratch copies migrate as usual. New fake-connection tests and one
+  live test in `test_migrate.py`.
+- `migrations/V026__chain_completeness.sql` no longer sets its own
+  `SET LOCAL lock_timeout = '5s'`, which overrode `migrate --lock-timeout` (P4.3b). The
+  runner's per-file 5 s still applies, and the flag now governs V026 as well: on a scratch
+  V025 build with `option_rejections` locked for 8 s, `--lock-timeout 1s` failed after 1.3 s
+  and `--lock-timeout 30s` applied V026 after 8.0 s. The checksum is now
+  `sha256:3a037d828db71a4b97e928e22cdb3c0746aff568a1803a0f1392157cc505e6f6`. Only throwaway
+  databases had recorded the old one; local `cars`, `cars_cleanroom` and prod are at V025.
+- `docs/RELEASING.md` "Migrations" now describes the N5 runner (P4.3b): the prod command is
+  `--apply --target N`, the first log line names the host, port and database, the
+  `--lock-timeout` and `--lock-wait` flags, and the `cars_cleanroom` refusal.
 - Hot-path runtime DDL is gated on the migration chain (P4.6): `reviews.store`,
   `scanner.recipe_store` and `scanner.job_queue`.
   - On a Postgres database at the `migrations/` version they issue no DDL at all. A
@@ -120,6 +136,10 @@
 - The live parity test `test_migrations_build_a_superset_of_the_runtime_ddl` was broken: its
   keyword conninfo fell back to the default database. It now builds with
   `migrate.main(['--apply'])`, URL DSNs and `pytest_*` names (P4.3).
+- The comment on `MIGRATE_LOCK_KEY` in `migrate.py` gave the advisory lock key as
+  7883954311434658097. The key is 7883946363647714609 (`0x6d69677261746531`), so a lock
+  held by hand or a `pg_locks` lookup with the old number never matched (P4.3b, comment
+  only; a test pins it).
 
 ### Security
 - migrate's new target log line prints only the host, port and database. It never prints

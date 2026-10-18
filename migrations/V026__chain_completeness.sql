@@ -40,8 +40,9 @@
 -- migration; P0A.2 found 0 groups on prod and local.
 --
 -- cars_cleanroom never receives this file: it is frozen at V025 (D-N1).
-
-SET LOCAL lock_timeout = '5s';
+--
+-- No lock_timeout of its own: the runner's per-file SET LOCAL (5 s by default)
+-- caps every lock wait here, and `migrate --lock-timeout` can change it.
 
 -- ---------------------------------------------------------------------------
 -- V019-only objects
