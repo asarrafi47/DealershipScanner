@@ -146,8 +146,23 @@ created) from being marked current while it lacks them. The check runs again
 under the migration lock right before the row is written. `--record-only 19`
 skips the check; use it only after checking the database by hand.
 
-A fresh build that records V019 lacks its 5 V019-only objects until V026 (P4.3)
-creates them with `IF NOT EXISTS`.
+V026 (P4.3) creates those 5 objects and the index, each step guarded by a catalog
+check, so a fresh build has them too and the databases that already hold them see
+no change.
+
+## V026 is chain completeness
+
+After `V026__chain_completeness.sql` a fresh build has every object prod and local
+`cars` hold, except the backup tables D-DB1 drops later (P13B.4). It adds the
+V019-only objects, `review_reports` and `haiku_spec_cache` (copied exactly from the
+runtime DDL in `backend/reviews/store.py` and `backend/enrichment/service.py`), the
+4 untracked log tables (D-N30), and `uq_option_rejections_standing` as
+`NULLS NOT DISTINCT` (D-DB7). On a database at V025 it creates the two runtime
+tables and rebuilds that index on `option_rejections`, and does nothing else. It
+stops on a duplicate group in `option_rejections`, never deduplicates, and never
+touches `cars`. `backend/tests/fixtures/module_ddl_schema_golden.json` (captured by
+`backend/scripts/capture_module_ddl_golden.py`) records what module and script DDL
+builds, and `test_schema_from_migrations` checks the chain against it.
 
 ## Baselining an existing database
 

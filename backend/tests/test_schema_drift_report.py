@@ -203,7 +203,27 @@ def test_diff_is_pure():
 
 def test_snapshot_json_round_trip():
     s = _add_table(_snap(views={"v": "SELECT 1"}), "probe")
+    s["column_types"] = {("cars", "price"): ("numeric(10,2)", "", "", "")}
     assert sdr.snapshot_from_jsonable(json.loads(json.dumps(sdr.snapshot_to_jsonable(s)))) == s
+    # a snapshot saved before column_types existed still loads
+    old = sdr.snapshot_to_jsonable(s)
+    del old["column_types"]
+    assert sdr.snapshot_from_jsonable(old)["column_types"] == {}
+
+
+def test_column_type_difference_hidden_by_information_schema_is_one_mismatch():
+    chain, live = _snap(), _snap()
+    chain["column_types"] = {("cars", "price"): ("numeric(10,2)", "", "", ""), ("cars", "vin"): ("text", "", "", "")}
+    live["column_types"] = {("cars", "price"): ("numeric", "", "", ""), ("cars", "vin"): ("text", "", "", "")}
+    items = sdr.diff_snapshots(chain, live)
+    assert _kinds(items) == [("mismatch", "column", "cars.price")]
+    assert items[0].detail.startswith("type chain=")
+    # a data_type mismatch is already listed by the information_schema diff: listed once
+    live["columns"] = {**live["columns"], ("cars", "price"): ("numeric", "YES", "")}
+    assert _kinds(sdr.diff_snapshots(chain, live)) == [("mismatch", "column", "cars.price")]
+    # one-sided column types (one-sided columns) add nothing
+    live["column_types"] = {**live["column_types"], ("cars", "zip"): ("text", "", "", "")}
+    assert len(sdr.diff_snapshots(chain, live)) == 1
 
 
 def test_diff_migrations_pending_ahead_and_checksum_drift():
@@ -223,17 +243,43 @@ def test_diff_migrations_pending_ahead_and_checksum_drift():
 
 def test_known_drift_explains_and_unknown_stays_unexplained():
     items = [
-        sdr.Drift("live_only", "table", "make_canon_log"),
-        sdr.Drift("live_only", "index", "uq_option_rejections_standing", "option_rejections"),
+        sdr.Drift("live_only", "table", "cars_epa_link_backup_20260921"),
+        sdr.Drift("mismatch", "index", "uq_option_rejections_standing", "option_rejections"),
         sdr.Drift("live_only", "table", "mystery_table"),
     ]
-    out, stale = sdr.classify(items, "cars")
+    out, stale = sdr.classify(items, "cars", pending=[26])
     assert [c.explained for c in out] == [True, True, False]
-    assert "D-N30" in out[0].explanation and "D-DB7" in out[1].explanation
+    assert "D-DB1" in out[0].explanation and "D-DB7" in out[1].explanation
     stale_names = {k.name for k in stale}
-    assert "car_move_log" in stale_names and "make_canon_log" not in stale_names
+    assert "cars_owner_backup_20260929" in stale_names and "cars_epa_link_backup_20260921" not in stale_names
     # entries scoped to other targets are never "stale" here
     assert "cars_backup_*" not in stale_names
+
+
+def test_v026_adopted_objects_are_no_longer_known_live_only():
+    # V026 (P4.3) creates them, so a live-only one is real drift again.
+    for name in ("car_move_log", "cars_trim_quarantine", "package_values_msrp_quarantine",
+                 "image_summary_restore_log", "make_canon_log", "model_canon_log", "package_value_purge_log"):
+        out, _ = sdr.classify([sdr.Drift("live_only", "table", name)], "cars", pending=[26])
+        assert not out[0].explained, name
+    out, _ = sdr.classify([sdr.Drift("live_only", "index", "uq_option_rejections_standing")], "cars", pending=[26])
+    assert not out[0].explained
+
+
+def test_while_pending_entry_explains_only_while_that_migration_is_pending():
+    item = sdr.Drift("mismatch", "index", "uq_option_rejections_standing", "option_rejections")
+    for db in ("cars", "cars_cleanroom", "railway"):
+        out, stale = sdr.classify([item], db, pending=[26])
+        assert out[0].explained and "NULLS NOT DISTINCT" in out[0].explanation, db
+    # V026 applied: the old index must be gone, so the same mismatch is unexplained ...
+    out, stale = sdr.classify([item], "cars", pending=[])
+    assert not out[0].explained
+    # ... and the entry does not apply to this target, so it is not listed as stale either
+    assert "uq_option_rejections_standing" not in {k.name for k in stale}
+    out, stale = sdr.classify([], "cars", pending=[26])
+    assert "uq_option_rejections_standing" in {k.name for k in stale}
+    k = sdr.Known(sdr.MISMATCH, "index", "x", "why", ("cars",), while_pending=27)
+    assert k.applies_to("cars", [27]) and not k.applies_to("cars", [26]) and not k.applies_to("other", [27])
 
 
 def test_cleanroom_exclusions_apply_only_to_cleanroom_style_targets():
@@ -280,11 +326,11 @@ def test_known_registry_is_well_formed():
     for k in sdr.KNOWN_DRIFT:
         assert k.kind in kinds and k.category in sdr._CATEGORY_ORDER and k.reason.strip()
     names = {k.name for k in sdr.KNOWN_DRIFT}
-    # the two objects the plan's acceptance names, plus every ledger out-of-chain object
-    for name in ("uq_option_rejections_standing", "cars_epa_link_backup_20260921", "cars_owner_backup_20260929",
-                 "image_summary_restore_log", "make_canon_log", "model_canon_log", "package_value_purge_log",
-                 "car_move_log", "cars_trim_quarantine", "package_values_msrp_quarantine"):
+    # the out-of-chain objects V026 does not adopt (D-DB1 backups) and V026's own pending difference
+    for name in ("uq_option_rejections_standing", "cars_epa_link_backup_20260921", "cars_owner_backup_20260929"):
         assert name in names
+    uq = [k for k in sdr.KNOWN_DRIFT if k.name == "uq_option_rejections_standing"]
+    assert [(k.kind, k.while_pending) for k in uq] == [(sdr.MISMATCH, 26)]
 
 
 def test_migration_objects_static_parse(tmp_path):
@@ -603,7 +649,8 @@ def test_snapshot_queries_are_the_parity_tests_queries(monkeypatch):
 
 def test_report_renders_and_serializes():
     items, _ = sdr.classify(
-        [sdr.Drift("live_only", "table", "make_canon_log", "make_canon_log", "2 folded", children=("column id",)),
+        [sdr.Drift("live_only", "table", "cars_epa_link_backup_20260921", "cars_epa_link_backup_20260921",
+                   "2 folded", children=("column id",)),
          sdr.Drift("live_only", "table", "mystery")], "cars")
     rep = sdr.Report(
         generated_at="2026-10-18T00:00:00Z", target="host=/tmp port=5432 db=cars", target_db="cars",
@@ -612,7 +659,7 @@ def test_report_renders_and_serializes():
         counters_before=[0, 0, 0], counters_after=[0, 0, 0],
     )
     text = sdr.render_text(rep)
-    assert "UNEXPLAINED: 1" in text and "[explained] table make_canon_log" in text
+    assert "UNEXPLAINED: 1" in text and "[explained] table cars_epa_link_backup_20260921" in text
     assert "folded: column id" in text and "[UNEXPLAINED] table mystery" in text
     data = json.loads(json.dumps(rep.to_jsonable()))
     assert data["summary"]["unexplained"] == 1 and data["summary"]["live_only"] == 2
@@ -628,7 +675,7 @@ def test_main_exit_codes(monkeypatch, tmp_path, capsys):
     out = tmp_path / "r.json"
     assert sdr.main(["--target-db", "cars", "--json-out", str(out)]) == sdr.EXIT_UNEXPLAINED
     assert json.loads(out.read_text())["summary"]["unexplained"] == 1
-    assert sdr.main(["--target-db", "cars", "--scratch-name", "make_canon_log", "-q"]) == sdr.EXIT_CLEAN
+    assert sdr.main(["--target-db", "cars", "--scratch-name", "cars_epa_link_backup_20260921", "-q"]) == sdr.EXIT_CLEAN
     assert "UNEXPLAINED 0" in capsys.readouterr().out
 
     def refuse(**kw):
@@ -732,7 +779,7 @@ def test_live_report_finds_each_perturbation_and_writes_nothing(tmp_path):
         admin.execute(f'CREATE DATABASE "{tgt}" TEMPLATE template0')
         sdr.build_chain(tgt_dsn, REPO_ROOT / "migrations", "own")
         with psycopg.connect(tgt_dsn, autocommit=True) as c:
-            c.execute("CREATE TABLE make_canon_log (id serial PRIMARY KEY, from_make text)")  # known (D-N30)
+            c.execute("CREATE TABLE cars_epa_link_backup_20260921 (id bigint, epa_master_id bigint)")  # known (D-DB1)
             c.execute("CREATE TABLE drift_probe (id int)")                                     # unexplained
             c.execute("ALTER TABLE dealer_recipes ADD COLUMN probe_col text")                  # live-only column
             c.execute("ALTER TABLE dealer_recipes ALTER COLUMN probe_col SET DEFAULT 'x'")
@@ -741,7 +788,7 @@ def test_live_report_finds_each_perturbation_and_writes_nothing(tmp_path):
 
         rep = sdr.run_report(target_dsn=tgt_dsn, admin_dsn=admin_dsn, builder="own")
         found = {(c.item.kind, c.item.category, c.item.name): c.explained for c in rep.items}
-        assert found.get(("live_only", "table", "make_canon_log")) is True
+        assert found.get(("live_only", "table", "cars_epa_link_backup_20260921")) is True
         assert found.get(("live_only", "table", "drift_probe")) is False
         assert found.get(("live_only", "column", "dealer_recipes.probe_col")) is False
         assert found.get(("chain_only", "index", "idx_cars_active_zip")) is False
