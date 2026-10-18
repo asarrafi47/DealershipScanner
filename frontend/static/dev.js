@@ -107,6 +107,14 @@ document.addEventListener("DOMContentLoaded", () => {
         return /^https?:\/\//i.test(t);
     }
 
+    /**
+     * http(s) URL for the incomplete cards' style="background-image:url('...')",
+     * which is built through innerHTML. Percent-encodes ' " ( ) \ < >,
+     * whitespace and controls, then escapes &: new URL().href keeps a literal
+     * "&#39;", and the HTML parser would decode it back into a quote before CSS
+     * reads the style (same rule as the server's css_url filter and compare.js
+     * safeCssBackgroundUrl). P16.8 replaces this style string with CSSOM.
+     */
     function cssSingleQuotedUrl(url) {
         const raw = String(url || "").trim();
         if (!isHttpUrl(raw)) return "/static/placeholder.svg";
@@ -115,7 +123,14 @@ document.addEventListener("DOMContentLoaded", () => {
             if (abs.protocol !== "http:" && abs.protocol !== "https:") {
                 return "/static/placeholder.svg";
             }
-            return abs.href.replace(/\\/g, "\\\\").replace(/'/g, "\\'");
+            return abs.href
+                .replace(/['"()\\<>\s\u0000-\u001f\u007f-\u009f]/g, (ch) => {
+                    if (ch === "'") return "%27";
+                    if (ch === "(") return "%28";
+                    if (ch === ")") return "%29";
+                    return encodeURIComponent(ch);
+                })
+                .replace(/&/g, "&amp;");
         } catch (_) {
             return "/static/placeholder.svg";
         }

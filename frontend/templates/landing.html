@@ -89,7 +89,7 @@
                 {% for car in featured_cars %}
                 <a class="lps-car" href="/car/{{ car.id }}">
                     {% set img = car.image_url or (car.gallery[0] if car.gallery else '') %}
-                    <div class="lps-car-img" style="background-image:url('{{ img or '/static/placeholder.svg' }}')"></div>
+                    <div class="lps-car-img" style="background-image:url('{{ img | css_url }}')"></div>
                     <div class="lps-car-body">
                         <p class="lps-car-title">{{ car.title }}</p>
                         <p class="lps-car-meta">{% if car.trim and car.trim != '—' %}{{ car.trim }} &middot; {% endif %}{{ "{:,}".format(car.mileage) if car.mileage else '—' }} mi{% if car.dealer_name and car.dealer_name != '—' %} &middot; {{ car.dealer_name }}{% endif %}</p>

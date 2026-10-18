@@ -52,7 +52,7 @@
             {% for v in vehicles[:6] %}
             <a href="{{ url_for('dealer_portal.inventory_listings') }}#vehicle-{{ v.id }}" class="saved-card">
                 {% set hero = v.gallery[0] if v.gallery and v.gallery|length > 0 else '' %}
-                <div class="saved-image" style="background-image: url('{{ hero or url_for('static', filename='placeholder.svg') }}')"></div>
+                <div class="saved-image" style="background-image: url('{{ hero | css_url }}')"></div>
                 <div class="saved-info">
                     <p class="saved-title">{{ v.title or 'Untitled vehicle' }}</p>
                     <p class="saved-trim">{{ (v.year or '') }} {{ (v.make or '') }} {{ (v.model or '') }}</p>
