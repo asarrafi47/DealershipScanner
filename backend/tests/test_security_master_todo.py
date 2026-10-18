@@ -4,9 +4,13 @@ The doc's Summary table once said "0 open" in every phase while SEC-096, SEC-097
 and SEC-099 were In progress. These tests read the doc as text (no app, no
 network) and pin:
 
-- every "### SEC-nnn" row under a "## Phase N" heading has Status, Scope,
-  Outcome, Validation and Last verified fields, Last verified is a date, and the
-  Status starts with a known value;
+- every heading that starts with a SEC id is a "### SEC-nnn — Title" row under
+  a "## Phase N" heading (a row under Future or Changelog, or with a hyphen for
+  the em dash, would be invisible to the summary check);
+- every row has Status, Scope, Outcome, Validation and Last verified fields,
+  Last verified is a date, and the Status starts with a known value;
+- no SEC id names two rows, except the five pre-existing duplicates the doc
+  lists (renumbering them is remediation P18B.5);
 - the Summary table has one line per phase heading, and each line's "Open items"
   count and "Open IDs" list equal the rows in that phase whose Status is open
   (In progress, Blocked or Not started);
@@ -16,7 +20,9 @@ network) and pin:
 - SEC-110 and the TRUSTED_PROXY_HOPS env row follow the vault-sync script: while
   the script still has a silent hops default, SEC-110 is open and the env row
   warns about it; once the P3.7 guard is merged, SEC-110 is Done and the warning
-  and the unmerged-branch note are gone.
+  and the unmerged-branch note are gone; while deploy/railway/README.md says not
+  to run the script as written, the env row says so too (before and after the
+  merge), so the security doc never reads as permission to run it.
 """
 
 from __future__ import annotations
@@ -29,6 +35,8 @@ import pytest
 ROOT = Path(__file__).resolve().parents[2]
 DOC = ROOT / "docs" / "SECURITY_MASTER_TODO.md"
 SYNC_VAULT = ROOT / "deploy" / "railway" / "sync-vault-to-railway.sh"
+RAILWAY_README = ROOT / "deploy" / "railway" / "README.md"
+README_DO_NOT_RUN = "Do not run `sync-vault-to-railway.sh` as written"
 
 OPEN_STATUSES = ("In progress", "Blocked", "Not started")
 CLOSED_STATUSES = ("Done", "Won't do", "Retired")
@@ -37,12 +45,22 @@ FIRST_WAVE_ONE_ID = 104
 
 _PHASE_HEADING = re.compile(r"^## Phase (\d+) — (.+)$")
 _ROW_HEADING = re.compile(r"^### (SEC-(\d{3})) — (.+)$")
+_ANY_SEC_HEADING = re.compile(r"^#+\s*SEC-\d")
 _FIELD_LINE = re.compile(r"^\| \*\*([A-Za-z][A-Za-z -]*)\*\* \| (.*) \|$")
 _SEC_ID = re.compile(r"SEC-\d{3}")
 _DATE = re.compile(r"^\d{4}-\d{2}-\d{2}\b")
 # A non-empty shell default such as ${TRUSTED_PROXY_HOPS:-1}: the hazard SEC-110 removes.
 _SILENT_HOPS_DEFAULT = re.compile(r"\$\{TRUSTED_PROXY_HOPS:-[^}]")
 HOPS_QUALIFIER = "Until SEC-110 merges"
+# Pre-existing duplicates (id -> phases of its two rows). Remediation P18B.5 renumbers
+# them; drop an id here and from the doc's "Duplicated IDs" note when it does.
+KNOWN_DUPLICATE_IDS = {
+    "SEC-061": [2, 3],
+    "SEC-063": [2, 6],
+    "SEC-064": [2, 6],
+    "SEC-066": [4, 6],
+    "SEC-089": [2, 6],
+}
 
 
 def _lines() -> list[str]:
@@ -171,9 +189,32 @@ def test_wave_one_rows_have_changelog_lines() -> None:
     assert not missing, f"no Changelog line names {missing}"
 
 
-def test_wave_one_ids_are_unique() -> None:
-    ids = [r["id"] for r in _parse_rows() if r["num"] >= FIRST_WAVE_ONE_ID]
-    assert len(ids) == len(set(ids)), f"duplicate wave-1 ids: {ids}"
+def test_every_sec_heading_is_a_phase_row() -> None:
+    section = None
+    misplaced = []
+    for number, line in enumerate(_lines(), start=1):
+        if line.startswith("## "):
+            section = line
+            continue
+        if not _ANY_SEC_HEADING.match(line):
+            continue
+        if not _ROW_HEADING.match(line) or not (section and _PHASE_HEADING.match(section)):
+            misplaced.append(f"line {number}: {line!r} (section {section!r})")
+    rule = 'every SEC heading must be "### SEC-nnn — Title" under a "## Phase N" heading'
+    assert not misplaced, f"{rule}: {'; '.join(misplaced)}"
+
+
+def test_ids_are_unique_except_known_duplicates() -> None:
+    phases_by_id: dict[str, list[int]] = {}
+    for row in _parse_rows():
+        phases_by_id.setdefault(row["id"], []).append(row["phase"])
+    duplicates = {i: sorted(p) for i, p in phases_by_id.items() if len(p) > 1}
+    assert duplicates == KNOWN_DUPLICATE_IDS, (
+        f"duplicate SEC ids {duplicates}; expected only {KNOWN_DUPLICATE_IDS}. Use the next unused id for a new "
+        "row; when P18B.5 renumbers one, drop it from KNOWN_DUPLICATE_IDS and the doc's note"
+    )
+    note = next(line for line in _lines() if line.startswith("**Duplicated IDs (history):**"))
+    assert sorted(_SEC_ID.findall(note)) == sorted(KNOWN_DUPLICATE_IDS), "the doc's Duplicated IDs note is stale"
 
 
 def test_sec_095_states_playwright_sandbox_default() -> None:
@@ -198,6 +239,11 @@ def test_sec_110_tracks_the_vault_sync_script() -> None:
     sec110 = next(r for r in _parse_rows() if r["id"] == "SEC-110")
     status = sec110["fields"]["Status"]
     hops_row = _env_row("TRUSTED_PROXY_HOPS")
+    if README_DO_NOT_RUN in RAILWAY_README.read_text(encoding="utf-8"):
+        assert "do not run" in hops_row.lower(), (
+            "deploy/railway/README.md says not to run sync-vault-to-railway.sh as written; "
+            "the TRUSTED_PROXY_HOPS env row must say so too"
+        )
     if _SILENT_HOPS_DEFAULT.search(script):
         assert _status_class(status) == "open", (
             "sync-vault-to-railway.sh still defaults TRUSTED_PROXY_HOPS, so SEC-110 cannot be closed"
