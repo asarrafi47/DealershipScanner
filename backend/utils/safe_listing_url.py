@@ -1,35 +1,41 @@
-"""Safe URL helpers for listing images served to web + mobile clients."""
+"""Safe URL helpers for listing images and dealer links served to web + mobile clients.
+
+Threat model. These URLs come from dealer feeds and are written into pages and
+grid JSON; the visitor's browser fetches the images and follows the links. The
+host check is client-side hardening, not SSRF protection: a listing must not make
+a visitor's browser request their router, a tailnet (CGNAT 100.64.0.0/10) node or
+their own machine. It applies the same non-global address rule as the server-side
+guard (``outbound_url.destination_host_blocked``, P3.3), on the literal host only,
+judged the way a browser reads it (percent-escapes decoded, Unicode compatibility
+forms folded: ``https://127.0.0.%31/`` is 127.0.0.1). Nothing here resolves DNS,
+so a public name that resolves to a private address passes. A server-side fetch
+needs ``outbound_url.destination_host_blocked_after_dns``; two server-side callers
+still rely on these helpers alone (the enrichment image fetch,
+``enrichment/service.py`` ``_fetch_image_b64_optimized``, and the admin onboard
+URL in ``dealer/admin/onboard_api.py``).
+"""
 
 from __future__ import annotations
 
-import ipaddress
 import re
 from typing import Any
 from urllib.parse import urlparse
 
+from backend.utils.outbound_url import destination_host_blocked, normalize_host
 from backend.utils.runtime_env import is_production_env
 
 _BLOCKED_SCHEMES = re.compile(r"^(javascript|data|file|vbscript):", re.I)
 
+# Local development serves images from the dev box; production refuses them.
+_DEV_LOCALHOST_HOSTS = frozenset({"localhost", "127.0.0.1", "::1"})
+
 
 def _host_is_blocked(hostname: str) -> bool:
-    host = (hostname or "").strip().lower()
-    if not host:
-        return True
-    if host in ("localhost", "127.0.0.1", "::1"):
+    # Pass the raw host on: destination_host_blocked normalizes (percent-decodes)
+    # it once itself, and a second pass would judge a different host.
+    if normalize_host(hostname) in _DEV_LOCALHOST_HOSTS:
         return is_production_env()
-    try:
-        ip = ipaddress.ip_address(host.strip("[]"))
-        return bool(
-            ip.is_private
-            or ip.is_loopback
-            or ip.is_link_local
-            or ip.is_reserved
-            or ip.is_multicast
-        )
-    except ValueError:
-        pass
-    return False
+    return destination_host_blocked(hostname)
 
 
 def _normalize_http_url(val: Any, *, https_only_in_production: bool) -> str | None:
@@ -45,10 +51,13 @@ def _normalize_http_url(val: Any, *, https_only_in_production: bool) -> str | No
         return None
     if https_only_in_production and is_production_env() and low.startswith("http://"):
         return None
-    parsed = urlparse(u)
+    try:
+        parsed = urlparse(u)
+        host = (parsed.hostname or "").strip()
+    except ValueError:  # malformed bracketed host, e.g. "https://[::1/x.jpg"
+        return None
     if parsed.username or parsed.password:
         return None
-    host = (parsed.hostname or "").strip()
     if _host_is_blocked(host):
         return None
     return u
@@ -57,7 +66,7 @@ def _normalize_http_url(val: Any, *, https_only_in_production: bool) -> str | No
 def normalize_listing_image_url(val: Any) -> str | None:
     """
     Inventory image URLs for grid JSON: HTTPS in production, allow ``/car-images/``,
-    block script/data URLs and private-network hosts.
+    block script/data URLs and non-global hosts (``outbound_url.ip_is_non_global``).
     """
     if val is None:
         return None
@@ -72,5 +81,5 @@ def normalize_listing_image_url(val: Any) -> str | None:
 
 
 def normalize_safe_http_url(val: Any) -> str | None:
-    """External link URLs (dealer websites): http(s) only, no credentials or private hosts."""
+    """External link URLs (dealer websites): http(s) only, no credentials or non-global hosts."""
     return _normalize_http_url(val, https_only_in_production=False)
