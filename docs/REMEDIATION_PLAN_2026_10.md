@@ -3,6 +3,7 @@
 - Written: 2026-10-07, against VERSION 1.5.2, branch `feature/http-only-scans`, HEAD `1344cbd09`.
 - Sources: 14 cluster specs (release, reconcile, recipes, epa-turbo, epa-rebuild, precedence, db-layer, tests-ci, infra, hygiene, dead-code, owner-decisions, security, scanner-runtime), each with an adversarial reviewer verdict. Every verdict was applied: disputed claim statuses are corrected (Appendix A), unit issues are folded into the units below, missing units are added, and work resting on refuted claims is dropped (Appendix B).
 - Scope: about 305 work units in 39 phases. Each phase is one Claude Code Workflow run.
+- **Status 2026-10-18 (N1.9 upkeep, against `phase/N1` at `078a0c211`):** read `docs/NEXT_PHASES_PLAN_2026_10.md` first. It sets the order of all remaining work (phases N1-N36), specifies the new N-units, and re-scopes P-units where the 2026-10-13/14 clean-room scan showed a wrong premise. Where the two plans disagree, the next-phases plan wins; on release and deploy mechanics `docs/RELEASING.md` wins over both. This document keeps the Change / Tests / Accept specs of every P-unit. Section 5 carries the phase statuses (0A-2B measured, 3-18B mapped to their N-phase), Section 7 the answers logged in `docs/remediation/OWNER_DECISIONS_LOG.md` and the P0B.1 numbers, Section 8 the done and open owner items, Appendix C.1 the renumbered migration registry, and Appendix E the recorded differences and a line-reference drift table. Section 2's conventions are superseded by NEXT_PHASES_PLAN Section 7.0 where they differ (branch names `phase/<NID>` and `unit/<id>`, battery, foreground tests), and the long-run checklist is in Section 2 below.
 
 ## 1. Purpose
 
@@ -36,6 +37,32 @@ Conventions every phase relies on:
 - **Data rules.** vPIC outranks the dealer feed for drivetrain and electrification. The EPA catalog never outranks the dealer's own engine text or the VIN decode. Never write `ON CONFLICT DO NOTHING` where a dropped row would go unnoticed. Grep every consumer before deleting anything ("audit deletions before editing").
 - **Releases.** Never bump `VERSION` inside a unit. Each phase ends with one release step: CHANGELOG `[Unreleased]` lines, `scripts/bump_version.sh <level>`, a secrets scan of the range, then push. The pre-push hook refuses a push whose VERSION is unchanged. Never commit `.env`.
 - **Migrations.** Every migration follows the D-DB6 protocol in Appendix C.1. Apply it to the local Postgres (and the mini's, if live) as part of the merge. Apply it to prod by hand, after a verified backup, before deploying code that contains it. Migration numbers come from the registry in Appendix C.1.
+
+### Long-run hygiene checklist (OPS-11, added 2026-10-18)
+
+For every workflow or scan that can run longer than about an hour: the N-phase scan units (N8.10, N9.14, N11 passes A-D, N11.13, P5A.8, P5B.8, the N12 bridge), multi-wave workflows, and any detached fleet run. It collects OPS-11, NEXT_PHASES_PLAN Section 6 item 16 and Section 7.0. Why it exists: on 2026-10-13/14 a sleep and a 21-hour SIGSTOP pause killed agents and all 8 in-flight scan batches (rc=-9 after 78,209-78,778 s, because the 3,600 s wall-clock timeout at `backend/scanner/pipeline/runner.py:119` counts the pause), which left 21 `error` dealers; and the MBP was on battery at 29% during the 10-15 prod-ops check.
+
+Before starting:
+1. **Power and sleep.** Lid open. AC power for runs over about 2 h (recommended; battery is not a blocker, owner 2026-10-09). `pgrep -fl caffeinate` shows `caffeinate -dims`; if not, start it in its own terminal. Record `pmset -g batt` in the run dir.
+2. **Host.** The MBP is the home and log host (D-N2 (b)). The mini runs nothing until N4.4.
+3. **One scanner per lock file.** `pgrep -fl 'fleet_scan|scanner.py|dealer_pipeline'` shows no other run on the same `SCANNER_LOCK_PATH` (default `workspace/scanner.lock`). Shards never share dealers.
+4. **Code and target.** The main checkout is on the approved phase HEAD (`git rev-parse HEAD` recorded). Scratch-DB runs go through `scripts/cleanroom/preflight.sh --db <cars_cr_*> --art workspace/cleanroom_runs/<db> --roster <file> --sha <HEAD>`, which refuses `cars`, `cars_cleanroom`, a non-`/tmp` host and port 15432.
+5. **Checkpoint first.** `workspace/phase_runs/<NID>/<unit>.json` and `RESUME.md` exist before the run starts, with the run dir, pid, log path and the exact next action.
+
+While it runs:
+6. **Tool calls under 150 s.** Wrap slow commands in `timeout 140`; workflow agents are killed at about 180 s per call. Chunk pytest by file and split heavy SQL (`statement_timeout`).
+7. **Foreground checks, detached scans.** Tests, reviews and checks run in the foreground and wait for their result. Only the scan itself runs detached (`nohup`), with its pid and log path in `RESUME.md`.
+8. **Never pause a fleet.** No SIGSTOP and no lid close mid-run until N9.13 makes the batch timeout pause-safe. To stop, end the run: until `fleet_scan --resume` (N9.15) merges, a killed short scan restarts into a fresh scratch DB (NEXT_PHASES_PLAN Section 10.3).
+9. **Watch blocks, not chatter.** Monitors report anomalies only. Compare each pass's feed-level HTTP 403/429 counts with the clean-room baseline (63 / 9); stop if either rises by more than 50%.
+10. **Append-only logs.** Ops-log blocks are dated and appended, never rewritten; same-wave writers use `docs/ops_log/<unit>.md`.
+
+Before any wait of more than about 1 hour (an owner step, a ≥20 h strike gap, nightly runs): rewrite `RESUME.md` with the earliest restart time and end the workflow.
+
+After it finishes:
+11. `pgrep` shows no leftover scanner process; stop `caffeinate`; record the end time and `pmset -g batt`.
+12. Scratch runs: `scripts/cleanroom/isolation_snapshot.sh` before and after, and `cars_cleanroom` write counters unchanged.
+13. Dealer logs: the five files per touched dealer, and the run-root summaries appended to the canonical `scan_runs.md` and `summary.md` (NEXT_PHASES_PLAN Section 7.0).
+14. The unit checkpoint updated with the run's numbers.
 
 ### Template prompt (paste into a new Claude Code session, edit the brackets)
 
@@ -80,6 +107,7 @@ Rules:
 | IN PROGRESS | Workflow running |
 | IN REVIEW | Integrated; waiting for owner review between phases |
 | DONE | Exit gate passed and released |
+| PARTIAL | Released, but named units or parts are still open; each open part says where it went (added 2026-10-18) |
 | DROPPED | Removed with a reason (Appendix B) |
 | DEFERRED | Kept for later; reason in Appendix B |
 
@@ -92,47 +120,49 @@ Sizes: S is up to about half a day of agent work and at most 4 files of substanc
 
 ## 5. Phase overview
 
+Status column updated 2026-10-18 (N1.9). For 0A-2B it records what was verified on 2026-10-15/16 (NEXT_PHASES_PLAN Section 2.1). For 3-18B, "TODO → N<k>" names the next-phases phase that now carries the work; that plan's phase section, not this table, sets its order, entry gate and any re-scope (Appendix E).
+
 | Phase | Goal | Units | Sizes | Blocking decisions | Needs prod? | Status |
 |---|---|---|---|---|---|---|
-| 0A | Gate facts and operational stops: Railway audit, prod census, retire the stale scanner worker, unload stale launchd jobs, test baseline | 6 | 5S 1M | D-REL1, D-IF7 | Yes (owner-run reads and Railway ops) | TODO |
-| 0B | Decision-input measurements (read-only) | 6 | 2S 4M | none (owner approves network/CPU) | Optional read-only counts | TODO |
-| 1A | Stop retirement and catalog damage; disarm destructive scripts; declare missing SDK | 6 | 5S 1M | none | Optional web hotfix deploy | TODO |
-| 1B | Recipe store Phase 0, test-isolation guard, footgun fixes | 8 | 8S | D-RS5 | No | TODO |
-| 1C | Local repairs after the damage stops (test leak, saved_at backfill, store reconcile) | 6 | 5S 1M | D-SR7 | No | TODO |
-| 2A | CI that actually runs: lint green, all-branch triggers, release guard, shakedown | 7 | 4S 2M 1L | D-REL3, D-TC5 | No (GitHub only) | TODO |
-| 2B | Release flow: guarded deploys, first release, `main` fast-forward, tags, ruleset, prune | 8 | 3S 5M | D-REL2..D-REL10 | Yes (deploy) | TODO |
-| 3 | Security wave 1 (high severity): OAuth takeover, XFF spoofing, SSRF CGNAT, CSRF, CSS injection, Chromium out of web | 9 | 7S 2M | D-SEC1, D-SEC4 | Yes (deploy web) | TODO |
-| 4 | Migration foundation: drift report, `migrate --target`, conditional V019, V026 chain completeness | 8 | 3S 5M | D-DB5, D-DB6, D-DB7, D-PR8 | Yes (V026 apply) | TODO |
-| 5A | Retirement single writer and pure policy, walk report, shadow run | 8 | 3S 4M 1L | D-RC1, D-SR4 | No | TODO |
-| 5B | Walk completeness, retirement provenance, audit tool, local repair | 9 | 3S 6M | D-RC2, D-RC3, D-RC5, D-RC6, D-RC7 | No (local) | TODO |
-| 6A | Scanning-resumption code: advisory locks, run window, VIN-guard gap cover, log pull, recipe hygiene | 7 | 4S 3M | D-IF5, D-IF10 | No | TODO |
-| 6B | Resume Railway scanning: deploy, prod recipe repair, smoke, supervised fleet, prod retirement repair, cron | 8 | 4S 4M | D-IF1 (docs only), D-IF4, D-RC5, D-RC6 | Yes | TODO |
-| 7 | Recipe store authority: rev CAS, DB-authoritative load, mutation API, archive, per-host status | 9 | 2S 7M | D-RS1..D-RS4 | Yes (V029 apply; DB-to-DB reconcile) | TODO |
-| 8A | Precedence foundation: invariants, `precedence.py`, apply helper, vPIC writer, decode refresh, PHEV heal | 7 | 3S 4M | D-PR1, D-PR4, D-PR6, D-PR7 | No | TODO |
-| 8B | Every fact writer goes through precedence | 9 | 2S 7M | D-PR2, D-PR3, D-PR5, D-PR8 | No | TODO |
-| 8C | Precedence close-out: retire duplicate writers, cycle test, docs, local and prod heal | 7 | 4S 3M | none new | Yes (P8C.7) | TODO |
-| 9 | Dictionary Complete_Options lookups work in prod; prune duplicates | 8 | 7S 1M | D-HY1, D-HY9 | Yes (deploy and verify) | TODO |
-| 10A | EPA catalog code foundation: induction mapper, permanent key, flags and provenance migration, importer | 8 | 3S 4M 1L | D-EPA1, D-ET2, D-ET3, D-ET5, D-ER2 | No | TODO |
-| 10B | EPA catalog builder, provenance backfill, legacy-row re-resolve (local) | 8 | 4S 4M | D-ER1, D-ER3 | No (local) | TODO |
-| 10C | Forced-induction resolver, linker reconcile, consumers, invariants, heal tool | 9 | 3S 6M | D-ET2, D-ET4 | No | TODO |
-| 10D | EPA data repairs, prod rollout, constraints, DICTIONARY/ deletion | 9 | 5S 4M | D-EPA1, D-ER4, D-ER5, D-ER6 | Yes | TODO |
-| 11A | Scanner runtime: lock exit codes, cross-host per-dealer lock, upsert telemetry and retries | 8 | 5S 3M | D-SR1, D-SR2 | No | TODO |
-| 11B | Upsert cost: measure, batch post-write, batched writes | 4 | 3S 1M | D-SR6 | No | TODO |
-| 12A | One scanner fetch policy | 6 | 3S 3M | D-OD3, D-OD7, D-OD8, D-OD13 | No | TODO |
-| 12B | One recipe validation rule; under-collection rescans | 10 | 3S 7M | D-OD1, D-OD2, D-OD4, D-OD5, D-OD6 | Yes (canary, rescans) | TODO |
-| 13A | DB layer: loud adapter, DDL guard, strict mode everywhere, side-effect-free import | 8 | 5S 3M | D-DB3, D-DB4, D-DB8 | Yes (strict env) | TODO |
-| 13B | Delete legacy DDL; drop backup tables | 4 | 4M | D-DB1, D-DB3 | Yes | TODO |
-| 14A | Postgres test harness and first PG tests | 9 | 4S 4M 1L | D-TC3, D-TC6, D-TC9 | No | TODO |
-| 14B | PG tests for queue, grid, search parity, stores, admin | 8 | 1S 7M | D-TC4 | No | TODO |
-| 14C | SQL corpus check, boot test, skip budget, coverage map, runtime, TESTING.md | 6 | 5S 1L | D-TC8 | No | TODO |
-| 15A | Home-IP lane and onboarding | 6 | 2S 4M | D-IF1, D-IF3, D-IF6 | Yes | TODO |
-| 15B | Dependencies and images: purge, split, CPU torch, embedding pin, pip-audit | 8 | 3S 5M | D-DEP1, D-SEC7 | Yes (deploys) | TODO |
-| 16 | Security wave 2: session revocation, dead MFA columns, scanner SSRF, non-root, CSP styles | 11 | 4S 7M | D-SEC2, D-SEC3 | Yes | TODO |
-| 17A | Consolidation: shims, facades, dead functions | 11 | 8S 3M | none | No | TODO |
-| 17B | Consolidation: browser path retirement, platform registry, LLM/OEM leftovers | 11 | 4S 6M 1L | D-DC1, D-DC5, D-DC6, D-DC7, D-DC9 | Optional (P17B.8) | TODO |
-| 17C | Consolidation: vPIC getter, brochure CLI and split, comments_db split, env knobs, ScanConfig | 8 | 2S 5M 1L | D-OD9, D-OD10, D-OD11 | No | TODO |
-| 18A | Hygiene: junk, runtime state, workspace scratch, nightly scripts, k8s, ruff | 11 | 7S 4M | D-HY3, D-HY4, D-IF6, D-IF7, D-IF9, D-TC7 | No | TODO |
-| 18B | Docs: entry page, README, banners, security doc re-scope, location contract | 7 | 6S 1M | D-HY6, D-HY7 | No | TODO |
+| 0A | Gate facts and operational stops: Railway audit, prod census, retire the stale scanner worker, unload stale launchd jobs, test baseline | 6 | 5S 1M | D-REL1, D-IF7 | Yes (owner-run reads and Railway ops) | DONE except the mini parts (2026-10-07/08: `SCANNING_OPS_LOG.md` P0A.1 :7, P0A.3 :308, P0A.4 :911, P0A.5 :1111, STOPGAP-D-SEC1 :1250, owner block :1264). Mini parts of P0A.2/P0A.5 BLOCKED → N4.4 (D-N2 (b)). Web GitHub source disconnected 2026-10-16 (N1.5 block :1278) |
+| 0B | Decision-input measurements (read-only) | 6 | 2S 4M | none (owner approves network/CPU) | Optional read-only counts | DONE except P0B.5 (never run → replaced by the N14.1 desk review, D-N28) and the P0B.1 Dealer Inspire burst (→ N18.1). Outputs: `docs/monolith_audit_2026_10_01/measurements/*_2026_10.md` |
+| 1A | Stop retirement and catalog damage; disarm destructive scripts; declare missing SDK | 6 | 5S 1M | none | Optional web hotfix deploy | DONE, released in v1.5.3 (CHANGELOG `[1.5.3]`) |
+| 1B | Recipe store Phase 0, test-isolation guard, footgun fixes | 8 | 8S | D-RS5 | No | DONE, released in v1.5.3; P1B.5 DROPPED (D-RS5 = Yes, 2026-10-08) |
+| 1C | Local repairs after the damage stops (test leak, saved_at backfill, store reconcile) | 6 | 5S 1M | D-SR7 | No | DONE on the MBP (local `cars`: 0 of 687 recipe rows with `max_saved_at=0 AND recipe_count>0`, 10-15), released in v1.5.3. Mini parts of P1C.1/P1C.4 BLOCKED → N4.4 |
+| 2A | CI that actually runs: lint green, all-branch triggers, release guard, shakedown | 7 | 4S 2M 1L | D-REL3, D-TC5 | No (GitHub only) | DONE, released in v1.5.4 (CI runs 37996383815 on main and 37995341168 on the branch, both green on `486f9012d`) |
+| 2B | Release flow: guarded deploys, first release, `main` fast-forward, tags, ruleset, prune | 8 | 3S 5M | D-REL2..D-REL10 | Yes (deploy) | PARTIAL. Done: P2B.1, P2B.2, P2B.7; P2B.3 (main = v1.5.4 = `486f9012d`); P2B.4 (retro tags v1.3.2..v1.5.3 on origin); P2B.6 web deploy `848895c1` (local Docker smoke not recorded). Open: P2B.5 ruleset → N1.7; P2B.8 prune and archive → N1.7; the 1.5.4 release-log row → added by N1.9 (2026-10-18) |
+| 3 | Security wave 1 (high severity): OAuth takeover, XFF spoofing, SSRF CGNAT, CSRF, CSS injection, Chromium out of web | 9 | 7S 2M | D-SEC1, D-SEC4 | Yes (deploy web) | TODO → N3 |
+| 4 | Migration foundation: drift report, `migrate --target`, conditional V019, V026 chain completeness | 8 | 3S 5M | D-DB5, D-DB6, D-DB7, D-PR8 | Yes (V026 apply) | TODO → N5 |
+| 5A | Retirement single writer and pure policy, walk report, shadow run | 8 | 3S 4M 1L | D-RC1, D-SR4 | No | TODO → N9 (P5A.8 → N11) |
+| 5B | Walk completeness, retirement provenance, audit tool, local repair | 9 | 3S 6M | D-RC2, D-RC3, D-RC5, D-RC6, D-RC7 | No (local) | TODO → N9 (P5B.1-P5B.4, P5B.7), N10 (P5B.5, P5B.6), N11 (P5B.8, P5B.9) |
+| 6A | Scanning-resumption code: advisory locks, run window, VIN-guard gap cover, log pull, recipe hygiene | 7 | 4S 3M | D-IF5, D-IF10 | No | TODO → N10 (P6A.3 replaced by P6A.3') |
+| 6B | Resume Railway scanning: deploy, prod recipe repair, smoke, supervised fleet, prod retirement repair, cron | 8 | 4S 4M | D-IF1 (docs only), D-IF4, D-RC5, D-RC6 | Yes | TODO → N12 |
+| 7 | Recipe store authority: rev CAS, DB-authoritative load, mutation API, archive, per-host status | 9 | 2S 7M | D-RS1..D-RS4 | Yes (V029 apply; DB-to-DB reconcile) | TODO → N13 |
+| 8A | Precedence foundation: invariants, `precedence.py`, apply helper, vPIC writer, decode refresh, PHEV heal | 7 | 3S 4M | D-PR1, D-PR4, D-PR6, D-PR7 | No | TODO → N15 (P8A.2, P8A.6 → N6) |
+| 8B | Every fact writer goes through precedence | 9 | 2S 7M | D-PR2, D-PR3, D-PR5, D-PR8 | No | TODO → N16 |
+| 8C | Precedence close-out: retire duplicate writers, cycle test, docs, local and prod heal | 7 | 4S 3M | none new | Yes (P8C.7) | TODO → N17 |
+| 9 | Dictionary Complete_Options lookups work in prod; prune duplicates | 8 | 7S 1M | D-HY1, D-HY9 | Yes (deploy and verify) | TODO → N20 |
+| 10A | EPA catalog code foundation: induction mapper, permanent key, flags and provenance migration, importer | 8 | 3S 4M 1L | D-EPA1, D-ET2, D-ET3, D-ET5, D-ER2 | No | TODO → N22 |
+| 10B | EPA catalog builder, provenance backfill, legacy-row re-resolve (local) | 8 | 4S 4M | D-ER1, D-ER3 | No (local) | TODO → N23 |
+| 10C | Forced-induction resolver, linker reconcile, consumers, invariants, heal tool | 9 | 3S 6M | D-ET2, D-ET4 | No | TODO → N24 |
+| 10D | EPA data repairs, prod rollout, constraints, DICTIONARY/ deletion | 9 | 5S 4M | D-EPA1, D-ER4, D-ER5, D-ER6 | Yes | TODO → N25 |
+| 11A | Scanner runtime: lock exit codes, cross-host per-dealer lock, upsert telemetry and retries | 8 | 5S 3M | D-SR1, D-SR2 | No | TODO → N10 (P11A.1-P11A.4), N26 (rest; P11A.5 conditional, N14) |
+| 11B | Upsert cost: measure, batch post-write, batched writes | 4 | 3S 1M | D-SR6 | No | TODO → N26 (P11B.2-P11B.4 gated) |
+| 12A | One scanner fetch policy | 6 | 3S 3M | D-OD3, D-OD7, D-OD8, D-OD13 | No | TODO → N18 |
+| 12B | One recipe validation rule; under-collection rescans | 10 | 3S 7M | D-OD1, D-OD2, D-OD4, D-OD5, D-OD6 | Yes (canary, rescans) | TODO → N19 |
+| 13A | DB layer: loud adapter, DDL guard, strict mode everywhere, side-effect-free import | 8 | 5S 3M | D-DB3, D-DB4, D-DB8 | Yes (strict env) | TODO → N27 |
+| 13B | Delete legacy DDL; drop backup tables | 4 | 4M | D-DB1, D-DB3 | Yes | TODO → N28 |
+| 14A | Postgres test harness and first PG tests | 9 | 4S 4M 1L | D-TC3, D-TC6, D-TC9 | No | TODO → N7 (core; P14A.9 → N13) |
+| 14B | PG tests for queue, grid, search parity, stores, admin | 8 | 1S 7M | D-TC4 | No | TODO → N31 (time-gated) |
+| 14C | SQL corpus check, boot test, skip budget, coverage map, runtime, TESTING.md | 6 | 5S 1L | D-TC8 | No | TODO → N31 (time-gated) |
+| 15A | Home-IP lane and onboarding | 6 | 2S 4M | D-IF1, D-IF3, D-IF6 | Yes | TODO → N14 |
+| 15B | Dependencies and images: purge, split, CPU torch, embedding pin, pip-audit | 8 | 3S 5M | D-DEP1, D-SEC7 | Yes (deploys) | TODO → N29 (P15B.1 → N3, P15B.6 → N4) |
+| 16 | Security wave 2: session revocation, dead MFA columns, scanner SSRF, non-root, CSP styles | 11 | 4S 7M | D-SEC2, D-SEC3 | Yes | TODO → N30 |
+| 17A | Consolidation: shims, facades, dead functions | 11 | 8S 3M | none | No | TODO → N32 |
+| 17B | Consolidation: browser path retirement, platform registry, LLM/OEM leftovers | 11 | 4S 6M 1L | D-DC1, D-DC5, D-DC6, D-DC7, D-DC9 | Optional (P17B.8) | TODO → N33 |
+| 17C | Consolidation: vPIC getter, brochure CLI and split, comments_db split, env knobs, ScanConfig | 8 | 2S 5M 1L | D-OD9, D-OD10, D-OD11 | No | TODO → N34 |
+| 18A | Hygiene: junk, runtime state, workspace scratch, nightly scripts, k8s, ruff | 11 | 7S 4M | D-HY3, D-HY4, D-IF6, D-IF7, D-IF9, D-TC7 | No | TODO → N35 |
+| 18B | Docs: entry page, README, banners, security doc re-scope, location contract | 7 | 6S 1M | D-HY6, D-HY7 | No | TODO → N36 |
 
 Phase 0B may overlap Phases 1A and 1B, because those use worktrees only and 0B writes only measurement docs and dealer logs. 0B must finish before 1C starts, because both write `workspace/dealer_logs/_learning/`.
 
@@ -151,20 +181,22 @@ Phase 0B may overlap Phases 1A and 1B, because those use worktrees only and 0B w
 
 The Options column is short; each phase repeats the context it needs. "Rec" is the recommendation after the verdicts were applied.
 
+**Answers pasted 2026-10-18 (N1.9).** "ANSWERED <date>" rows are recorded one by one in `docs/remediation/OWNER_DECISIONS_LOG.md`. "By implication" rows follow from D-N2 (b), as that log row states. "NEXT_PHASES_PLAN rec" marks a recommendation the next-phases plan changed; that plan wins (Appendix E). The D-OD1/2/3/7/8 rows carry the P0B.1 numbers from `docs/monolith_audit_2026_10_01/measurements/validation_paths_2026_10.md` §10. The log's 2026-10-16 row reads "go ahead on the rest" (all recommendations accepted except D-N4) for the next-phases gating minimum; only decisions the log lists row by row are marked ANSWERED here. Every unmarked row is open, and NEXT_PHASES_PLAN Section 5 names the phase it blocks.
+
 ### Release, CI, deploy
 
 | ID | Question | Options | Rec | Blocks |
 |---|---|---|---|---|
-| D-REL1 (= infra D2) | What happens to the legacy `scanner-worker` and `scanner-scheduler` services, which run a June image against prod and claim admin-enqueued `dealer_jobs`? | (a) back up variable names, stop, delete; (b) disconnect the GitHub source, turn off autodeploy, and stop the running deployments; (c) leave | (a). If unsure, (b) including `railway down` (disconnecting alone leaves the container running) | P0A.4, P2B.3, P2B.7 (docs state the services' fate) |
-| D-REL2 | Branching model | (a) trunk: short `phase/*` branches fast-forwarded into `main`, retire `feature/http-only-scans` after the first release; (b) a long-lived dev branch | (a) | P2B.7, P2B.8, every later release step |
-| D-REL3 (= tests-ci D2) | Which pushes must carry a new VERSION, and which pushes does the CI `release-guard` job judge? | (a) every push bumps (status quo); (b) only pushes to `main`; (c) pre-release suffix. Sub-question: may throwaway `ci/*` branches push without a bump during the CI shakedown? (A new branch is compared with `origin/main`, which is at 0.2.0, so it passes today.) | (a) for now. `release-guard` runs only on pushes to `main` and on PRs to `main`, as a "releasable?" check, so work-in-progress pushes do not go red. Yes to `ci/*` during P2A.5 only. Approve the rule that a release needs a CHANGELOG section | P2A.4, P2A.5, P2B.1, P2B.7 (RELEASING.md bump rule) |
-| D-REL4 | Unmerged remotes `feat/inventory-consolidation-0.4.0` (15 commits, incl. collaborator work) and `feature/crawler-llm-standardization` | (a) annotated `archive/*` tag, then delete the branch; (b) keep; (c) port first | (a), after telling collaborator ksarrafi | P2B.8 |
-| D-REL5 | Repository visibility. GitHub says PUBLIC; memory says it was made private on 08-02 | (a) public; (b) private on Free (rulesets stop applying, 2,000 Actions minutes); (c) private on Pro/Team | Confirm intent. If private, choose (c). CI on every branch push costs minutes when private | P2B.5 |
-| D-REL6 (+ tests-ci D1) | How strict is the protection on `main`, and what does a red CI block? | (a) ruleset: no deletion, no force-push, the 4 required checks pinned to GitHub Actions (integration_id 15368), no PR requirement, no linear-history rule; (b) (a) plus required PRs; (c) none. Sub-question: an admin bypass, so an Actions outage cannot block a hotfix | (a) with an owner-only bypass. Add "green CI for the release SHA" to the release checklist | P2B.5 |
-| D-REL7 | Tag past releases 1.3.2..1.5.2 retroactively? | (a) yes; (b) no | (a). v1.3.2 uses its commit subject | P2B.4 |
-| D-REL8 | Deploy the first release now? | (a) web and scanner-nightly; (b) web now, scanner-nightly at fleet start; (c) hold | (b). Scanner-nightly ships in P6B.1 | P2B.6 |
-| D-REL9 | Patch or minor for the first release | (a) patch; (b) minor | (a) | P2B.3 |
-| D-REL10 (new) | Must scanner-nightly deploys come from a tag on `main`? | (a) yes, with a loud `ALLOW_UNRELEASED_DEPLOY=1` override for a mid-fleet hotfix; (b) branch HEAD allowed | (a) | P2B.2 |
+| D-REL1 (= infra D2) | What happens to the legacy `scanner-worker` and `scanner-scheduler` services, which run a June image against prod and claim admin-enqueued `dealer_jobs`? | (a) back up variable names, stop, delete; (b) disconnect the GitHub source, turn off autodeploy, and stop the running deployments; (c) leave | **ANSWERED 2026-10-07: (a) stop and delete** (done 2026-10-08, `SCANNING_OPS_LOG.md:1264`). Rec was: (a). If unsure, (b) including `railway down` (disconnecting alone leaves the container running) | P0A.4, P2B.3, P2B.7 (docs state the services' fate) |
+| D-REL2 | Branching model | (a) trunk: short `phase/*` branches fast-forwarded into `main`, retire `feature/http-only-scans` after the first release; (b) a long-lived dev branch | **ANSWERED 2026-10-08: (a) trunk.** Rec was: (a) | P2B.7, P2B.8, every later release step |
+| D-REL3 (= tests-ci D2) | Which pushes must carry a new VERSION, and which pushes does the CI `release-guard` job judge? | (a) every push bumps (status quo); (b) only pushes to `main`; (c) pre-release suffix. Sub-question: may throwaway `ci/*` branches push without a bump during the CI shakedown? (A new branch is compared with `origin/main`, which is at 0.2.0, so it passes today.) | **ANSWERED 2026-10-08: (a)**, as recommended, incl. the `ci/*` exemption during P2A.5 and the CHANGELOG-section rule. Rec was: (a) for now. `release-guard` runs only on pushes to `main` and on PRs to `main`, as a "releasable?" check, so work-in-progress pushes do not go red. Yes to `ci/*` during P2A.5 only. Approve the rule that a release needs a CHANGELOG section | P2A.4, P2A.5, P2B.1, P2B.7 (RELEASING.md bump rule) |
+| D-REL4 | Unmerged remotes `feat/inventory-consolidation-0.4.0` (15 commits, incl. collaborator work) and `feature/crawler-llm-standardization` | (a) annotated `archive/*` tag, then delete the branch; (b) keep; (c) port first | **ANSWERED 2026-10-08: (a)**, after telling ksarrafi (not yet confirmed; N1.7 part D BLOCKED). Rec was: (a), after telling collaborator ksarrafi | P2B.8 |
+| D-REL5 | Repository visibility. GitHub says PUBLIC; memory says it was made private on 08-02 | (a) public; (b) private on Free (rulesets stop applying, 2,000 Actions minutes); (c) private on Pro/Team | **ANSWERED 2026-10-08: (a) keep PUBLIC.** Rec was: Confirm intent. If private, choose (c). CI on every branch push costs minutes when private | P2B.5 |
+| D-REL6 (+ tests-ci D1) | How strict is the protection on `main`, and what does a red CI block? | (a) ruleset: no deletion, no force-push, the 4 required checks pinned to GitHub Actions (integration_id 15368), no PR requirement, no linear-history rule; (b) (a) plus required PRs; (c) none. Sub-question: an admin bypass, so an Actions outage cannot block a hotfix | **ANSWERED 2026-10-08: (a)** with owner bypass (ruleset not yet applied; N1.7). Rec was: (a) with an owner-only bypass. Add "green CI for the release SHA" to the release checklist | P2B.5 |
+| D-REL7 | Tag past releases 1.3.2..1.5.2 retroactively? | (a) yes; (b) no | **ANSWERED 2026-10-08: (a) yes** (tags on origin). Rec was: (a). v1.3.2 uses its commit subject | P2B.4 |
+| D-REL8 | Deploy the first release now? | (a) web and scanner-nightly; (b) web now, scanner-nightly at fleet start; (c) hold | **ANSWERED 2026-10-08: (b).** Rec was: (b). Scanner-nightly ships in P6B.1 | P2B.6 |
+| D-REL9 | Patch or minor for the first release | (a) patch; (b) minor | **ANSWERED 2026-10-08: (a) patch.** Rec was: (a) | P2B.3 |
+| D-REL10 (new) | Must scanner-nightly deploys come from a tag on `main`? | (a) yes, with a loud `ALLOW_UNRELEASED_DEPLOY=1` override for a mid-fleet hotfix; (b) branch HEAD allowed | **ANSWERED 2026-10-08: (a)**, with the loud `ALLOW_UNRELEASED_DEPLOY=1` override. Rec was: (a) | P2B.2 |
 
 ### Tests and CI
 
@@ -172,7 +204,7 @@ The Options column is short; each phase repeats the context it needs. "Rec" is t
 |---|---|---|---|---|
 | D-TC3 | Postgres image for the CI pg job | match prod's major (pgvector/pgvector, pinned 0.8.x) / pg17 / postgres:16 (has no pgvector, so V001 cannot apply) | Match prod. P0A.2 reads `SHOW server_version` and the vector extversion | P14A.3 |
 | D-TC4 | Breadth of the Postgres tier | targeted tier / whole suite on PG / stop at the write path | Targeted, with the SQL corpus check as the breadth net | P14B.6-P14B.8 |
-| D-TC5 | How CI installs dependencies | full requirements plus CPU torch first / as-is / trimmed subset | Full plus CPU torch. Prod installs the default (CUDA) torch, so this is not image parity, and no test imports torch | P2A.2 |
+| D-TC5 | How CI installs dependencies | full requirements plus CPU torch first / as-is / trimmed subset | **ANSWERED 2026-10-08: full requirements plus CPU torch first.** Rec was: Full plus CPU torch. Prod installs the default (CUDA) torch, so this is not image parity, and no test imports torch | P2A.2 |
 | D-TC6 | `integration` marker and job | replace the job with `pytest-pg`; the marker means "needs live data, dev machine only" / keep both / fold | Replace the job, keep the marker | P14A.3, P14A.4 |
 | D-TC7 | How far ruff tightening goes | F811 fix, then F541, facade `__all__`, F401 (consumer-audited), F841, then B023/PLE/E7 without E741/B904 / gate only / plus BLE001, S608, PLW0603 | The first option | P18A.9, P18A.11 |
 | D-TC8 | pytest-xdist in the offline job | yes if measured over 12 min and safe / no | Decide from P14C.5 | P14C.5 |
@@ -182,8 +214,8 @@ The Options column is short; each phase repeats the context it needs. "Rec" is t
 
 | ID | Question | Options | Rec | Blocks |
 |---|---|---|---|---|
-| D-RC1 | Which layer writes retirements | A: the scanner (full and delta) via `plan_retirement`; the pipeline only reports / B: the pipeline writes / C: both | A | P5A.4, P5A.5, P5A.7 |
-| D-RC2 | Retire after one eligible miss, or after two runs at least 20 h apart? | single / two-strike / three | Two-strike, kept in a side table | P5B.4 |
+| D-RC1 | Which layer writes retirements | A: the scanner (full and delta) via `plan_retirement`; the pipeline only reports / B: the pipeline writes / C: both | **ANSWERED 2026-10-16: A** (the scanner writes, the pipeline reports). Rec was: A | P5A.4, P5A.5, P5A.7 |
+| D-RC2 | Retire after one eligible miss, or after two runs at least 20 h apart? | single / two-strike / three | **ANSWERED 2026-10-16: two-strike, ≥20 h apart.** Rec was: Two-strike, kept in a side table | P5B.4 |
 | D-RC3 (= scanner-runtime D3) | How far a replay walk goes | keep 40 pages and only flag / walk to the payload total, hard cap 150 / no cap | Walk to the total with cap 150 (`SCANNER_REPLAY_MAX_PAGES`). Measure the 403 rate on one shard first; the truncation flag is the immediate guard | P5B.2 |
 | D-RC4 | One recipe of a dealer fails: what may still be retired? | nothing / covered buckets only | Nothing (the policy default in P5A.1). Revisit after 2 fleet runs | none |
 | D-RC5 | Wrong-retirement candidates that cannot be verified live | leave retired, log, rescan / reactivate all / reactivate if recent and bucket empty | Rescan first. Restore only verified-live residue; send cannot_assess dealers to dealer-discovery | P5B.8, P6B.6 |
@@ -198,7 +230,7 @@ The Options column is short; each phase repeats the context it needs. "Rec" is t
 | D-RS2 | What re-synthesis does to existing recipes | replace / replace-with-archive / full merge | Replace-with-archive. Archived entries live in a separate `superseded_json` column that old code never reads | P7.5 |
 | D-RS3 | How far the versioning fix goes | stop after Phase 0 / DB-authoritative with rev CAS / DB only | DB-authoritative with CAS | P7.1-P7.4 |
 | D-RS4 | Track "blocked" status and the lifecycle guard per host? | shared / per host | Per host | P7.6 |
-| D-RS5 | Should audit and attribution scripts write recipe state? | yes / no (`persist=False`) | No | P1B.5 |
+| D-RS5 | Should audit and attribution scripts write recipe state? | yes / no (`persist=False`) | **ANSWERED 2026-10-08: Yes, keep writing** (owner overrode the "No" recommendation): geocode, rooftop attribution and coverage audit keep marking stale and updating coverage. P1B.5 DROPPED. Original rec: No | P1B.5 |
 
 ### Vehicle-fact precedence
 
@@ -217,10 +249,10 @@ The Options column is short; each phase repeats the context it needs. "Rec" is t
 
 | ID | Question | Options | Rec | Blocks |
 |---|---|---|---|---|
-| D-DB1 | The 12 backup tables from V001 plus `cars_epa_link_backup_20260921` (about 145 MB locally) | (a) export to dumps, drop via migration / (b) move to a `backups` schema / (c) keep | (a). Not before Phase 10D finishes: `epa_master_dump_id_map` and `epa_extended_specs_bak_*` are EPA recovery sources | P13B.4 |
+| D-DB1 | The 12 backup tables from V001 plus `cars_epa_link_backup_20260921` (about 145 MB locally); **extended 2026-10-18 (`docs/db_layer/SCHEMA_LEDGER_2026_10.md`, Out-of-chain objects):** prod-only `cars_owner_backup_20260929` (6,961 rows, 984 kB; from the 09-29 owner-guard repair, absent locally) and the 4 untracked log tables `image_summary_restore_log` (8 rows), `make_canon_log` (59), `model_canon_log` (0) and `package_value_purge_log` (5), present on prod and local (NEXT_PHASES_PLAN D-N30 recommends adopting them in V026, then export and drop here); NEXT_PHASES_PLAN's D-DB1 row also adds the N12 backup tables | (a) export to dumps, drop via migration / (b) move to a `backups` schema / (c) keep | (a). Not before Phase 10D finishes: `epa_master_dump_id_map` and `epa_extended_specs_bak_*` are EPA recovery sources. NEXT_PHASES_PLAN: after N25 (P13B.4 runs in N28). | P13B.4 |
 | D-DB3 | Once every DB is current and strict | (a) strict only, delete legacy DDL / (b) warn without DDL / (c) keep the fallback | (a), with `INVENTORY_AUTO_MIGRATE=1` kept for dev | P13B.1-P13B.3 |
 | D-DB4 | Where boot-time DB init runs | (a) explicit `backend.web.db_bootstrap` step in every launcher / (b) cheap at import / (c) gunicorn hook | (a). Every launcher must call it (`start.sh`, `scripts/run-web-local.sh`, the launchd/systemd units, the entrypoint) | P13A.5, P13A.6 |
-| D-DB5 | Is the mini's own Postgres a live inventory DB? | (a) live: migrate and enforce strict / (b) retired, tunnel DSN only | (b), if nothing writes to it | P4.8, P13A.4 |
+| D-DB5 | Is the mini's own Postgres a live inventory DB? | (a) live: migrate and enforce strict / (b) retired, tunnel DSN only | **ANSWERED 2026-10-16 by implication: (b)**, from D-N2 (b) (the mini has no role; the MBP is the home host). Rec was: (b), if nothing writes to it | P4.8, P13A.4 |
 | D-DB6 | How migrations reach prod (applies to every migration in this plan) | (a) manually: backup, dry-run, apply before the deploy, so the boot step is a no-op / (b) at web boot | (a) | P4.8 and every phase with a migration |
 | D-DB7 | Out-of-chain objects the code relies on (`uq_option_rejections_standing`; pgvector `*_embeddings` if found in prod) | (a) adopt into the chain, with any dedupe as a separate data repair / (b) drop. Sub-question: `NULLS NOT DISTINCT` (PG 15+) for the option_rejections index | (a). Choose NULLS NOT DISTINCT if prod is 15+ | P4.3 |
 | D-DB8 (new) | `cars.zip_code`: the chain creates and indexes it (V001, V025) while `drop_dead_zip_code_column.py` drops it outside the chain | (a) drop via migration and delete the script, the V025 index and the SQLite copy / (b) keep the column, delete the script | (b) unless the owner wants the column gone. It is cheap and avoids an ACCESS EXCLUSIVE lock on `cars` | P13A.8 |
@@ -239,20 +271,20 @@ The Options column is short; each phase repeats the context it needs. "Rec" is t
 | D-ER3 | The 20,006 legacy rows from root DICTIONARY/ (229,060 links, 136,001 active) | (a) twin repoint (refuted) / (b) label only / (c) re-resolve | Revised: re-resolve every car linked to a legacy row with legacy rows excluded (what future scans do anyway), then archive unreferenced legacy rows | P10B.6, P10B.8 |
 | D-ER4 | FK policy | RESTRICT on the cars FK and the extended-specs FK / SET NULL plus CASCADE / none | RESTRICT, merged only after the local repairs and a prod 0-dangling check | P10D.7 |
 | D-ER5 | Root `DICTIONARY/` folder (10,200 files) | git rm after audit / move / keep frozen | git rm, after the prod provenance backfill (it is the positive signal for legacy rows) | P10D.8 |
-| D-ER6 | How EPA work reaches prod | agent with approval at each step / owner runs it / guards only | Agent with per-step approval, migrations staged (V030 → backfill/relink → V031 → V032 in a later release) | P10D.6 |
+| D-ER6 | How EPA work reaches prod | agent with approval at each step / owner runs it / guards only | **NEXT_PHASES_PLAN rec: an agent prepares each step; the owner approves and runs it.** Original rec: Agent with per-step approval, migrations staged (V030 → backfill/relink → V031 → V032 in a later release) | P10D.6 |
 
 ### Infra and scanning operations
 
 | ID | Question | Options | Rec | Blocks |
 |---|---|---|---|---|
-| D-IF1 | How the about 31 dealers that answer only from a residential IP are scanned | (a) home lane on the mini (prod DSN, dedicated clone) / (b) a paid residential proxy shard / (c) accept the loss | (a), with (b) as fallback. Record it in EXECUTION_PLAN as a narrow exception | P6B.8 (docs), P15A.1, P15A.2, P15A.6 |
-| D-IF3 | Who runs admin "onboard dealer" jobs | (a) retire queue onboarding; hand off to dealer-discovery / (b) onboard-only worker on the mini / (c) a Railway discovery service | (b) if D-IF1=(a), else (a) | P15A.3 |
+| D-IF1 | How the about 31 dealers that answer only from a residential IP are scanned | (a) home lane on the mini (prod DSN, dedicated clone) / (b) a paid residential proxy shard / (c) accept the loss | **Host answered 2026-10-16 by implication: the MBP**, from D-N2 (b); the lane itself is asked in NEXT_PHASES_PLAN (interim owner-run bridge in N12, (a) on the MBP in N14). Original rec: (a), with (b) as fallback. Record it in EXECUTION_PLAN as a narrow exception | P6B.8 (docs), P15A.1, P15A.2, P15A.6 |
+| D-IF3 | Who runs admin "onboard dealer" jobs | (a) retire queue onboarding; hand off to dealer-discovery / (b) onboard-only worker on the mini / (c) a Railway discovery service | **NEXT_PHASES_PLAN rec: (a)** (the mini is not a host), which drops P11A.5. Original rec: (b) if D-IF1=(a), else (a) | P15A.3 |
 | D-IF4 | Nightly run parameters | 8 shards x batch 6 at `0 9 * * *` UTC with a 14 GB alarm under the 16 GB cap / batch 4 / investigate first | 8x6 with a 14 GB alarm | P6B.5, P6B.7 |
-| D-IF5 | How the VIN-owner guard survives scan gaps | (a) auto-extend / (b) manual env / (c) default 72 h / (d) refuse known (owner, claimant) pairs | (a), computed from the OLDEST active `scraped_at` among roster dealers that own contested VINs (p05 fallback), plus (c) 72 h now. (d) deferred | P6A.3, P6B.5 |
+| D-IF5 | How the VIN-owner guard survives scan gaps | (a) auto-extend / (b) manual env / (c) default 72 h / (d) refuse known (owner, claimant) pairs | **Re-scoped by NEXT_PHASES_PLAN (Appendix E):** keep the 48 h default; gap cover only for owners with a persisted strong tier (P6A.3'); known pairs go to D-N3's `group_pools.json`. Original rec: (a), computed from the OLDEST active `scraped_at` among roster dealers that own contested VINs (p05 fallback), plus (c) 72 h now. (d) deferred | P6A.3, P6B.5 |
 | D-IF6 | Capabilities of the retired laptop nightly and the k8s crons | port per step / home lane / drop | Per step, from the P0B.5 numbers | P15A.4, P18A.5 |
-| D-IF7 | The data-quality and rooftop-refusal report jobs | (a) unload on the MBP now, re-home later / (b) against prod read-only / (c) retire | (a) | P0A.5, P18A.6 |
+| D-IF7 | The data-quality and rooftop-refusal report jobs | (a) unload on the MBP now, re-home later / (b) against prod read-only / (c) retire | **ANSWERED 2026-10-07: (a)** (job unloaded 2026-10-07, `SCANNING_OPS_LOG.md:1129`). Rec was: (a) | P0A.5, P18A.6 |
 | D-IF9 (merges hygiene OD-5) | Deploy assets to delete | delete `deploy/k8s`, `deploy/car-scanner`, `deploy/postgres`, the k8s block of `deploy/build.sh`; `deploy/always-on`: delete or keep for disaster recovery; launchd plists: keep until replaced | Delete k8s, car-scanner, postgres and always-on; keep the plists until the Railway cron is proven | P18A.7 |
-| D-IF10 | Canonical `dealer_logs` tree | the mini / the MBP / both | The mini, pulling and merging the Railway volume logs after each night | P6A.5, P15A.6 |
+| D-IF10 | Canonical `dealer_logs` tree | the mini / the MBP / both | **ANSWERED 2026-10-16 by implication: the MBP**, from D-N2 (b). Original rec: The mini, pulling and merging the Railway volume logs after each night | P6A.5, P15A.6 |
 
 ### Hygiene and dictionary
 
@@ -278,14 +310,14 @@ The Options column is short; each phase repeats the context it needs. "Rec" is t
 | D-DC9 | The `requires_browser` scan hint (19 local rows) | (a) relabel / (b) retire the key with a data repair / (c) drop the special skip branch, keep the key, fix the hint-note text | Revised: (c), which is what `HTTP_ONLY_SCANS_PLAN.md:91` asked | P17B.7 |
 | D-DC10 | Facades `recipe_synth.py` and `dealer_pipeline.py` | keep / slim / delete | Keep | none |
 | D-DEP1 (= dead-code D8; security-1; infra-8b) | Remove orphan dependencies (crawl4ai, pyotp, segno, ollama, langchain-core/openai/text-splitters, langsmith, plus starlette/tornado/pygments when nothing requires them) and lift lxml to 6.1 or later, unblocking PYSEC-2026-87 | (a) now, with CI plus local Docker smokes / (b) with the next web deploy / (c) security cluster | (a), in P15B.1 | P15B.1 |
-| D-OD1 (= scanner-runtime D5) | Minimum-VIN rule across capture (3), synth (5), CLI (>0 / 5 total), cascade (5), scan (10 per recipe even in union) | Revised. After recipe hygiene (P6A.6), the scan union admits a recipe under the floor only if it is a condition-pinned side of a paginated inventory shape the set gate judged ok or uncertain. It refuses pagination=none sub-floor recipes outright. First-hit replay accepts at least min(global floor, max(3, 0.5 x recipe.vehicle_rows)). One constant `RECIPE_MIN_VINS=5` | As stated. The original "admit anything above 0" would admit 38 live widget/VIN-list/fragment recipes on 33 dealers | P12B.5, P12B.10 |
-| D-OD2 | Which count decides pass and `vehicle_rows`? | (A) one full walk at save; 2 pages for re-checks / (B) 2 pages / (C) both | (A). It arms the coverage reject more often; the verdict flips are measured in P0B.1 | P12B.2-P12B.4 |
-| D-OD3 | Validation fetches through the scan's own replay? | (A) yes, after porting synth's HTML-edge handling into replay / (B) the scan uses synth.http / (C) two stacks | (A), gated on P0B.1 | P12A.2, P12B.3 |
+| D-OD1 (= scanner-runtime D5) | Minimum-VIN rule across capture (3), synth (5), CLI (>0 / 5 total), cascade (5), scan (10 per recipe even in union) | Revised. After recipe hygiene (P6A.6), the scan union admits a recipe under the floor only if it is a condition-pinned side of a paginated inventory shape the set gate judged ok or uncertain. It refuses pagination=none sub-floor recipes outright. First-hit replay accepts at least min(global floor, max(3, 0.5 x recipe.vehicle_rows)). One constant `RECIPE_MIN_VINS=5` | As stated. The original "admit anything above 0" would admit 38 live widget/VIN-list/fragment recipes on 33 dealers. **P0B.1 numbers (2026-10-08, home IP, 42 dealers / 90 recipes; `docs/monolith_audit_2026_10_01/measurements/validation_paths_2026_10.md` §10):** 8 of 15 sampled sub-10-by-storage recipes replay 10-567 VINs (stored counts are page sizes); the 7 real sub-10 recipes are widgets, VIN lists, `?vin=`, a Gatsby index, a lease special and a location facet, worth 2 union VINs on 1 dealer. The recommended union rule changes 1 dealer offline (mclarennb +8) and 0 in the sample. The first-hit threshold as written admits crownlexus's 6-VIN widget and covertbuickgmc's 4-VIN facet; limit it to recipes the union rule admits. `recipe_condition_filter` misses Algolia `filters` strings (darcarshondatenafly CPO side). | P12B.5, P12B.10 |
+| D-OD2 | Which count decides pass and `vehicle_rows`? | (A) one full walk at save; 2 pages for re-checks / (B) 2 pages / (C) both | (A). It arms the coverage reject more often; the verdict flips are measured in P0B.1. **P0B.1 numbers (§10):** p2 vs p40 verdicts flip on 2 of 42 dealers (hanselbmw ok → coverage reject, a false reject against a group-wide site total; tustinhyundai short_page reject → uncertain). p2 = p40 VIN counts on 34 of 90 recipes. A walk capped at 40 pages never arms the coverage reject (downeyhyundai 480/1,357, hyundaiofcookeville 457/1,080 stay ok). Before (A) ships: compute coverage against kept + sibling-refused VINs, and treat "40 pages, not exhausted" as truncated (D-SR4's `replay_truncated:`). | P12B.2-P12B.4 |
+| D-OD3 | Validation fetches through the scan's own replay? | (A) yes, after porting synth's HTML-edge handling into replay / (B) the scan uses synth.http / (C) two stacks | (A), gated on P0B.1. **P0B.1 numbers (§10):** `validate_recipe` vs the scan-path walk agree on 66 of 90 recipes; the 24 differences are the missing dealer.com page-size learn (15), the stale stored total stop (6), cosmos query stripping (1) and lot drift (2). On 8 of 8 Cloudflare HTML hosts, plain `requests` with synth's navigation headers + same-site Referer gets 200 where replay's headers get a 403 challenge; replay pays 2.66 requests per page on 11 of 42 dealers. Supports (A). | P12A.2, P12B.3 |
 | D-OD4 | `validate_recipe` | thin count wrapper / delete / separate | Thin wrapper | P12B.3 |
 | D-OD5 | Cascade recipes through the set gate and dealer logs? | yes, rejected shapes fall through to the next / no / retire cascade | Yes | P12B.6 |
 | D-OD6 | GET recipe with a non-JSON `post_template` | mirror the scan / error / repair at load | Mirror the scan | P12B.3 |
-| D-OD7 | One scanner fetch policy? | (A) one block set {403,405,429,503}, rotation starting from the per-host winner, the profile sets the UA unless measured worse / (B) block set and rotation only / (C) status quo | (A). Constraints: 429 gets backoff and a retry, never rotation; never rotate inside VDP slow-host serialization; a challenge page is its own outcome, never marked stale | P12A.2-P12A.5 |
-| D-OD8 | Retry transient statuses in feed replay? | one retry with 2 s backoff / none / synth-style | One retry, only if P0B.1 sees transient 429/5xx on replay pages | P12A.2 |
+| D-OD7 | One scanner fetch policy? | (A) one block set {403,405,429,503}, rotation starting from the per-host winner, the profile sets the UA unless measured worse / (B) block set and rotation only / (C) status quo | (A). Constraints: 429 gets backoff and a retry, never rotation; never rotate inside VDP slow-host serialization; a challenge page is its own outcome, never marked stale. **P0B.1 numbers (§10):** block statuses seen: 403 only (628 of 2,195; 0 × 405/429/503). Challenges came as 403 bodies. VDP clear rate: chrome only 30/49, rotation 44/49, rotation with the profile's UA 49/49. The explicit Chrome UA under `safari17_0` lost 5/49 VDPs (audisouthaustin) and gained none, so the profile sets its own UA. Starting from the per-host winner saves one request per page at 7 Cloudflare HTML hosts (`chrome` loses, `chrome124` wins). Dealer Inspire at fleet concurrency not measured (the burst moved to N18.1). | P12A.2-P12A.5 |
+| D-OD8 | Retry transient statuses in feed replay? | one retry with 2 s backoff / none / synth-style | One retry, only if P0B.1 sees transient 429/5xx on replay pages. **P0B.1 numbers (§10):** no transient 429/5xx on 798 replay page fetches; the condition for the retry is not met on the home IP. Re-check on Railway egress (N18.1 or P6B.4) before deciding "none". | P12A.2 |
 | D-OD9 | Brochure CLI | recommended set (probe every --brand; `--user-agent both` outside the probe is an error; document the quarantine sweep; keep strings; no subcommands) / status quo / per item | Recommended set | P17C.2 |
 | D-OD10 | Move the vPIC getter out of its closure to module level? | yes / no | Yes | P17C.1 |
 | D-OD11 | Scanner env knobs (131 names, 101 never set in tracked deploy files) | registry plus lint, retire dead browser-era knobs, ScanConfig later / registry only / all at once / leave | The first option | P17C.6-P17C.8 |
@@ -294,18 +326,18 @@ The Options column is short; each phase repeats the context it needs. "Rec" is t
 | D-SR1 | Worker scan exits 75 (lock held) | (a) fail the job with 'lock_held' / (b) requeue / (c) today (marked ok) | (a) | P11A.5 |
 | D-SR2 (reframed) | Cross-process and cross-host exclusion of a dealer | (a) delta takes the file lock / (b) none / (c) Postgres advisory lock per dealer around replay, write and reconcile in `dealer_run` and `delta_scan`, plus (a) as hygiene | (c). File locks are per shard and per host, so they never exclude a dealer | P11A.3 |
 | D-SR4 | Verdict for a truncated replay | (a) ok becomes thin, with a stable `replay_truncated:` reason token / (b) a new verdict / (c) a note only | (a). Reconcile must also read the flag | P5A.7 |
-| D-SR6 | Where the upsert measurement and parity runs happen | MBP on AC / mini over the tunnel / skip | Either, with the owner's go-ahead | P11B.1, P11B.4 |
-| D-SR7 | Delete the 2026-10-05 test-leak artifacts (3 dirs, `errors_index.md:119-135`) after a backup? | delete / move / leave | Delete after a tarball backup | P1C.1 |
+| D-SR6 | Where the upsert measurement and parity runs happen | MBP on AC / mini over the tunnel / skip | **NEXT_PHASES_PLAN rec: the MBP.** Original rec: Either, with the owner's go-ahead | P11B.1, P11B.4 |
+| D-SR7 | Delete the 2026-10-05 test-leak artifacts (3 dirs, `errors_index.md:119-135`) after a backup? | delete / move / leave | **ANSWERED 2026-10-08: delete after a tarball backup** (done in P1C.1). Rec was: Delete after a tarball backup | P1C.1 |
 
 ### Security
 
 | ID | Question | Options | Rec | Blocks |
 |---|---|---|---|---|
-| D-SEC1 (merges infra D8, dead-code D1) | Headless Chromium in the web image. Car chat launches it as root with `--no-sandbox` (Playwright default) for any logged-in user, for search (Brave) and page fallback | (a) remove from web; WebResearcher HTTP-only by default, the operator script keeps browser mode / (b) keep, hardened (non-root, sandbox, request routing) / (c) move research to a worker | (a), unless P0B.3 shows the browser (fallback plus Brave) produces a large share of answers. Infra preferred keep plus CPU torch; security preferred remove. A stopgap env change happens in Phase 0 either way | P3.8 |
+| D-SEC1 (merges infra D8, dead-code D1) | Headless Chromium in the web image. Car chat launches it as root with `--no-sandbox` (Playwright default) for any logged-in user, for search (Brave) and page fallback | (a) remove from web; WebResearcher HTTP-only by default, the operator script keeps browser mode / (b) keep, hardened (non-root, sandbox, request routing) / (c) move research to a worker | **ANSWERED 2026-10-09: (a)** (stopgap `CAR_CHAT_WEB_RESEARCH=0` set 2026-10-08). Rec was: (a), unless P0B.3 shows the browser (fallback plus Brave) produces a large share of answers. Infra preferred keep plus CPU torch; security preferred remove. A stopgap env change happens in Phase 0 either way | P3.8 |
 | D-SEC2 | Dead TOTP/phone storage (2FA was removed in SEC-014) | (a) drop the columns (`totp_secret`, `mfa_phone`, `mfa_method`; `totp_enabled` kept as always 0 unless its consumers are rewritten) and optionally scrub the data / (b) scrub only / (c) encrypt | (a). The scrub (P16.3) is optional, because SQLCipher protects the data at rest and the copier copies only columns PG has | P16.2, P16.3 |
 | D-SEC3 | How users data is isolated once it moves to Postgres (SEC-088 answer) | (a) a web-only schema/role; scanners get a restricted role / (b) disk encryption plus DSN hygiene, after the TOTP drop / (c) a separate database | (a), sized by P16.10. The implementation belongs to the users cutover (deferred) | none in this plan |
-| D-SEC4 | OAuth sign-in matches an unverified password account | (a) no auto-link; link after a password login / (b) link and kill the password / (c) today | (a). The lookup must also become email-only (username collision) | P3.1 |
-| D-SEC5 | Prod `ALLOW_APP_ADMIN_DEV_PASS_THROUGH=1` departs from SEC-083 | (a) revert, use `DEV_IP_ALLOWLIST` / (b) keep and record | (a), but only after P3.2 is deployed and `TRUSTED_PROXY_CIDRS=cloudflare` is set (until then the allowlist is spoofable) | owner env only |
+| D-SEC4 | OAuth sign-in matches an unverified password account | (a) no auto-link; link after a password login / (b) link and kill the password / (c) today | **ANSWERED 2026-10-09: (a)**, with the email-only lookup. Rec was: (a). The lookup must also become email-only (username collision) | P3.1 |
+| D-SEC5 | Prod `ALLOW_APP_ADMIN_DEV_PASS_THROUGH=1` departs from SEC-083 | (a) revert, use `DEV_IP_ALLOWLIST` / (b) keep and record | **NEXT_PHASES_PLAN rec: applied in effect** (the pass-through was deleted 2026-10-08, `SCANNING_OPS_LOG.md:1264`); `DEV_IP_ALLOWLIST` stays unset until P3.2 ships and the CIDRs are live. Original rec: (a), but only after P3.2 is deployed and `TRUSTED_PROXY_CIDRS=cloudflare` is set (until then the allowlist is spoofable) | owner env only |
 | D-SEC6 | Direct-to-origin X-Forwarded-For spoofing | (a) `TRUSTED_PROXY_CIDRS=cloudflare` / (b) remove the *.up.railway.app domain / (c) both | (c). (b) alone does not close it, because the Railway edge routes by Host | owner env after P3.2 |
 | D-SEC7 | Lock files per image | (a) `uv pip compile` with hashes plus a CI drift check / (b) floors plus pip-audit | (a) | P15B.8 |
 
@@ -313,27 +345,27 @@ The Options column is short; each phase repeats the context it needs. "Rec" is t
 
 | ID | Question | Options | Rec | Blocks |
 |---|---|---|---|---|
-| D-PLAN1 | Pull the Postgres test harness (P14A.1-P14A.3) forward to run right after Phase 4? | yes / keep the stated order | Keep the order, and revisit after Phase 4. Pulling it forward gives Phases 5-12 a pg tier, at the cost of delaying data repair by one phase | Phase 14A placement |
+| D-PLAN1 | Pull the Postgres test harness (P14A.1-P14A.3) forward to run right after Phase 4? | yes / keep the stated order | **NEXT_PHASES_PLAN rec: yes** (the harness core runs as N7, right after N5). Original rec: Keep the order, and revisit after Phase 4. Pulling it forward gives Phases 5-12 a pg tier, at the cost of delaying data repair by one phase | Phase 14A placement |
 
 ## 8. Owner-only actions
 
-Grouped by the phase that needs them. Items marked (any time) do not gate a phase.
+Grouped by the phase that needs them. Items marked (any time) do not gate a phase. Ticked 2026-10-18 (N1.9): [x] done with evidence, [ ] open or blocked. The open items now live in NEXT_PHASES_PLAN Section 6 (owner actions outside workflows), which carries the current commands.
 
 **Before or during Phase 0**
-1. Authorize the read-only Railway and prod queries (P0A.1, P0A.2, P0A.3), or run the prepared command packs yourself. Check github.com/settings/installations for the Railway GitHub App's access to the repo.
-2. Answer D-REL1. Stop and retire `scanner-worker`/`scanner-scheduler` (P0A.4). Turn on Railway failure notifications for every service.
-3. Unload `com.sarraficars.nightly-data-quality` on the MBP (`launchctl unload ~/Library/LaunchAgents/com.sarraficars.nightly-data-quality.plist`) and check the mini's launchd/crontab (P0A.5).
-4. Stopgap for D-SEC1: on Railway web, set `WEB_RESEARCH_ALLOWED_HOSTS` to a short list of auto reference sites, or `CAR_CHAT_WEB_RESEARCH=0`. Reversible, env only.
-5. Check prod logs for car-chat Claude failures. That tells you whether the Phase 1A `anthropic` hotfix is urgent.
-6. (any time) Add DNS for `www.sarraficars.com` (a proxied CNAME to the apex) plus a Cloudflare www→apex redirect. On 2026-10-07 `dig` returns nothing for www.
-7. (any time) Change the admin password in the UI, rotate Railway `ADMIN_PASSWORD`, and confirm `BOOTSTRAP_FORCE_ADMIN_PASSWORD` is absent from web.
-8. (any time) D-HY2: rotate or disable the 7 accounts whose emails and bcrypt hashes are in public git history, or confirm they are dead test accounts. Decide repo visibility (D-REL5).
-9. (any time) Update stale memory entries: "TRUST_PROXY_HEADERS on Railway — OPEN" (resolved 2026-09-30); "repo made private 08-02" (GitHub says PUBLIC); "prod schema at V018" (local is at V025; prod per P0A.2).
-10. Tell collaborator ksarrafi before `main` moves and before the unmerged branches are archived (D-REL4).
+1. Authorize the read-only Railway and prod queries (P0A.1, P0A.2, P0A.3), or run the prepared command packs yourself. Check github.com/settings/installations for the Railway GitHub App's access to the repo. **[x] DONE 2026-10-07** (owner log "Phase 0A prod access"; census in `docs/db_layer/SCHEMA_LEDGER_2026_10.md`). **[ ] OPEN:** the github.com/settings/installations check is not recorded (NEXT_PHASES_PLAN Section 6 item 3).
+2. Answer D-REL1. Stop and retire `scanner-worker`/`scanner-scheduler` (P0A.4). Turn on Railway failure notifications for every service. **[x] DONE:** D-REL1 (a) answered 2026-10-07; scheduler `railway down` and both services deleted 2026-10-08 (`SCANNING_OPS_LOG.md:1264`); failure notifications already on for all projects (N1.5 block, 2026-10-16).
+3. Unload `com.sarraficars.nightly-data-quality` on the MBP (`launchctl unload ~/Library/LaunchAgents/com.sarraficars.nightly-data-quality.plist`) and check the mini's launchd/crontab (P0A.5). **[x] DONE on the MBP 2026-10-07** (bootout + disable, plist kept; `SCANNING_OPS_LOG.md:1129`). **[ ] BLOCKED:** the mini check (no SSH; → N4.4).
+4. Stopgap for D-SEC1: on Railway web, set `WEB_RESEARCH_ALLOWED_HOSTS` to a short list of auto reference sites, or `CAR_CHAT_WEB_RESEARCH=0`. Reversible, env only. **[x] DONE 2026-10-08:** `CAR_CHAT_WEB_RESEARCH=0` on web (`SCANNING_OPS_LOG.md:1264`).
+5. Check prod logs for car-chat Claude failures. That tells you whether the Phase 1A `anthropic` hotfix is urgent. **[x] DONE (P0A.1):** the logs neither confirmed nor refuted a failure (no traffic, `SCANNING_OPS_LOG.md:40`); the SDK was declared anyway (P1A.6, v1.5.3). **[ ] OPEN:** one car-chat check on 1.5.4 (NEXT_PHASES_PLAN Section 6 item 11).
+6. (any time) Add DNS for `www.sarraficars.com` (a proxied CNAME to the apex) plus a Cloudflare www→apex redirect. On 2026-10-07 `dig` returns nothing for www. **[ ] OPEN:** `dig +short www.sarraficars.com` still prints nothing on 2026-10-18 14:39Z (Section 6 item 8).
+7. (any time) Change the admin password in the UI, rotate Railway `ADMIN_PASSWORD`, and confirm `BOOTSTRAP_FORCE_ADMIN_PASSWORD` is absent from web. **[ ] OPEN / unverified** (Section 6 item 10; web variable changes are allowed since `web_source_check` printed `web-source-clear` on 2026-10-16).
+8. (any time) D-HY2: rotate or disable the 7 accounts whose emails and bcrypt hashes are in public git history, or confirm they are dead test accounts. Decide repo visibility (D-REL5). **[ ] OPEN:** D-HY2 not done. **[x]** D-REL5 answered 2026-10-08: keep PUBLIC.
+9. (any time) Update stale memory entries: "TRUST_PROXY_HEADERS on Railway — OPEN" (resolved 2026-09-30); "repo made private 08-02" (GitHub says PUBLIC); "prod schema at V018" (local is at V025; prod per P0A.2). **[ ] OPEN:** the memory refresh is N1.9's memory part (and N1.1 for the clean-room premise), not done in the 2026-10-18 docs pass.
+10. Tell collaborator ksarrafi before `main` moves and before the unmerged branches are archived (D-REL4). **[ ] OPEN:** not confirmed; `main` already moved (v1.5.4); the archive step (N1.7 part D) is BLOCKED until the owner confirms (messages drafted in `workspace/phase_runs/N1/archive_msg_*.txt`).
 
-**Phase 1**: approve the local repairs in 1C; let the mini fetch the 1B and 1C commits straight from the MBP over SSH (Phase 1 is pushed only at the end of 1C; see the 1C entry gate), and `git pull` the pushed Phase 1C commit before any mini scan; verify prod car chat after any hotfix deploy.
+**Phase 1**: approve the local repairs in 1C; let the mini fetch the 1B and 1C commits straight from the MBP over SSH (Phase 1 is pushed only at the end of 1C; see the 1C entry gate), and `git pull` the pushed Phase 1C commit before any mini scan; verify prod car chat after any hotfix deploy. **Status 2026-10-18:** [x] 1C applies approved and done on the MBP (owner log 2026-10-08); [ ] the mini steps BLOCKED (→ N4.4); [ ] car chat after the hotfix not verified (Section 6 item 11).
 
-**Phase 2**: run `git config core.hooksPath scripts/git-hooks` on the mini and every other clone; approve CLAUDE.md wording changes (P2B.1, P2B.7); confirm Actions email notifications for failed runs; approve the Docker build of the release stage on AC power (P2B.6).
+**Phase 2**: run `git config core.hooksPath scripts/git-hooks` on the mini and every other clone; approve CLAUDE.md wording changes (P2B.1, P2B.7); confirm Actions email notifications for failed runs; approve the Docker build of the release stage on AC power (P2B.6). **Status 2026-10-18:** [x] hooksPath set on the MBP; [ ] the mini BLOCKED; [x] CLAUDE.md wording approved 2026-10-08; [ ] Actions failure-email confirmation unverified (Section 6 item 12); [ ] P2B.6 Docker smoke not recorded (RELEASING.md release log, 1.5.4 row).
 
 **Phase 3**: after deploy, set `TRUSTED_PROXY_CIDRS=cloudflare`, then decide D-SEC5 (revert pass-through, set `DEV_IP_ALLOWLIST`); confirm the live `TRUSTED_PROXY_HOPS` before anyone runs `sync-vault-to-railway.sh`.
 
@@ -667,7 +699,7 @@ Each phase has the same parts: Goal, Entry gate, Work units table, Unit detail (
 | P1B.2 | recipes-1 + scanner-runtime-7 + recipes/infra missing (cache override) | Atomic recipe writes; anchored cache dir; RECIPES_CACHE_DIR override | code | backend/scanner/recipes.py, backend/scanner/vdp/vdp_recipes.py, backend/scanner/recipe_synth.py, backend/scanner/recipe_store.py (log level), backend/tests/test_recipe_atomic_write.py, test_recipes_dir_anchor.py (new) | S | A | none |
 | P1B.3 | recipes-2 (+ reviewer), recipes-14a (docstrings) | saved_at becomes the last-write stamp; push-up logged; store harness | code | backend/scanner/recipes.py, backend/scanner/recipe_store.py, backend/tests/recipe_store_harness.py (new), test_recipe_sync_freshness.py (new) | S | B | P1B.2 |
 | P1B.4 | recipes-3 (+ reviewer) | Recipe-store I/O off the event loop, including delta hint writes | code | backend/scanner/recipes.py, phases/dealer_run_steps/feed.py, discovery_capture.py, delta_scan.py, backend/tests/test_recipe_async_io.py (new) | S | C | P1B.3 |
-| P1B.5 | recipes-10 | `persist=False` for geocode, attribution and audit replays | code | backend/scanner/recipes.py, backend/scripts/{geocode_dealers,attribute_feed_rooftops,audit_recipe_coverage}.py, backend/tests/test_recipes.py | S | D | P1B.4 |
+| P1B.5 | recipes-10 | **DROPPED 2026-10-08 (D-RS5 = Yes, keep writing).** `persist=False` for geocode, attribution and audit replays | code | backend/scanner/recipes.py, backend/scripts/{geocode_dealers,attribute_feed_rooftops,audit_recipe_coverage}.py, backend/tests/test_recipes.py | S | D | P1B.4 |
 | P1B.6 | recipes missing (store identity) | Cache tagged with its store; push-ups refused on mismatch | code | backend/scanner/recipes.py, backend/scanner/vdp/vdp_recipes.py, backend/tests/test_recipe_cache_identity.py (new), docs/RAILWAY_SCANNING.md | S | E | P1B.3 |
 | P1B.7 | scanner-runtime-12 + hygiene-19 | platform_candidates: fail closed, census, dated verdicts, no contradictions | code | backend/scripts/platform_candidates.py, backend/tests/test_platform_fingerprint.py | S | B | P1B.2 (reads its anchored RECIPES_DIR) |
 | P1B.8 | owner-decisions-11 | `gate_recipes(record=)`; `synthesize_recipes --dry-run` writes nothing | code | backend/scanner/recipe_validation.py, backend/scripts/synthesize_recipes.py, backend/tests/test_synthesize_recipes_cli.py (new) | S | A | none |
@@ -712,7 +744,7 @@ Each phase has the same parts: Goal, Entry gate, Work units table, Unit detail (
 - Tests: record `threading.current_thread()` in the store calls and prove none runs on the loop thread, for replay, the feed provider hint, the discovery promote (stub browser) and the delta hint notes.
 - Accept: the replay tests pass; test_dealer_run_golden_20261001.py passes with the 31 recorded `load_recipes` events in the same order.
 
-**P1B.5: persist=False.**
+**P1B.5: persist=False.** **DROPPED 2026-10-08:** the owner answered D-RS5 "Yes, keep writing" (`OWNER_DECISIONS_LOG.md`), so this unit was not built; the spec below is kept for reference only.
 - Change: `try_fetch_via_recipes(..., persist: bool = True)`. With False it makes no mark_stale, save_recipes or status writes. geocode_dealers.py:311, attribute_feed_rooftops.py:217 and audit_recipe_coverage.py:59 pass False. heal_from_recipes and unstale_host_blocked_recipes keep persisting.
 - Tests: `persist=False` makes zero store writes (spies on save_recipes, mark_stale, set_scan_hints) and returns the same records.
 - Accept: the test passes; grep shows all 3 scripts pass `persist=False`.
@@ -1197,11 +1229,11 @@ The re-scoping of rows that point at deleted files is P18B.5. Accept: the summar
 | P4.1 | db-layer-2 | Schema drift report: chain-built scratch DB vs a live DB | code | backend/scripts/schema_drift_report.py (new), backend/tests/test_schema_drift_report.py (new) | M | A | none |
 | P4.2 | db-layer-6 + tests-ci-4 + epa-rebuild missing (`--target`) (+ reviewers) | migrate.py: conditional record-only V019, `--record-only`, `--target`, target log, lock_timeout, advisory lock | code | backend/scripts/migrate.py, backend/db/schema_version.py, migrations/README.md, backend/tests/test_migrate.py, backend/tests/test_schema_from_migrations.py (describe_gap test) | M | A | none |
 | P4.3 | db-layer-5 + tests-ci missing V026 (+ reviewers) | V026 chain completeness | code | migrations/V026__chain_completeness.sql (new), backend/scripts/capture_module_ddl_golden.py (new), backend/tests/fixtures/module_ddl_schema_golden.json (new), backend/tests/test_schema_from_migrations.py | M | B | P4.2 |
-| P4.4 | db-layer missing (dedupe) | option_rejections dedupe script and per-DB run (MAIN run) | code + data_repair | backend/scripts/dedupe_option_rejections.py (new), backend/tests/test_dedupe_option_rejections.py (new) | S | A | none |
+| P4.4 | db-layer missing (dedupe) | **NO-OP, dropped 2026-10-15 (0 duplicate groups on prod and local).** option_rejections dedupe script and per-DB run (MAIN run) | code + data_repair | backend/scripts/dedupe_option_rejections.py (new), backend/tests/test_dedupe_option_rejections.py (new) | S | A | none |
 | P4.5 | db-layer-7 (+ reviewer) | Strict schema mode propagates in web init and scanner upserts; docstrings corrected | code | backend/db/repositories/schema_repo.py, backend/scanner/database.py, backend/db/schema_version.py, backend/db/inventory_pg.py (docstring), backend/tests/test_schema_strict_mode.py (new; test_schema_from_migrations.py belongs to P4.3 in this wave) | S | B | P4.2 |
 | P4.6 | db-layer-8, scoped to hot paths (+ reviewer) | Gate the per-request and per-process DDL; scanner session lock_timeout leak | code | backend/db/runtime_ddl.py (new), backend/reviews/store.py, backend/scanner/recipe_store.py, backend/scanner/job_queue.py, backend/db/inventory_pg.py (:338), backend/tests/test_runtime_ddl_gating.py (new) | M | C | P4.3, P4.5 |
 | P4.7 | tests-ci-16a (+ reviewer) | Comment-aware SQLite→Postgres placeholder rewrite (pure) | code | backend/db/inventory_pg.py (:117-161, :252-260), backend/tests/test_inventory_pg_adapter.py (new) | S | A | none |
-| P4.8 | db-layer-9 part 1 (+ reviewer) | Apply V026 everywhere; strict stays off (MAIN, owner for prod) | ops, needs prod | none | M | D | P4.3, P4.4 |
+| P4.8 | db-layer-9 part 1 (+ reviewer) | Apply V026 everywhere; strict stays off (MAIN, owner for prod) | ops, needs prod | none | M | D | P4.3 (~~P4.4~~: no-op) |
 
 **P4.1: Drift report.**
 - Change: a CLI that builds the chain into `schema_drift_<uuid>` on the local server and snapshots both the scratch DB and the target with the same catalog queries `test_schema_from_migrations._snapshot` uses (copied, not edited). It prints live-only objects, chain-only objects and definition mismatches. Until P4.2 merges it records V019 by itself; afterwards it uses `migrate.main(['--apply'])`. The target opens through `connect(read_only=True)`. The scratch DB is dropped in `finally`. The tool refuses when the scratch name equals the target. The diff is a pure function over two snapshot dicts. Building V001 (2,252 lines) costs CPU: run on AC power.
@@ -1241,7 +1273,7 @@ The re-scoping of rows that point at deleted files is P18B.5. Accept: the summar
   - On local, V026 creates only review_reports and haiku_spec_cache and takes no lock on cars.
   - The P4.1 drift report on local shows no live-only or chain-only difference for these objects.
 
-**P4.4: option_rejections dedupe.**
+**P4.4: option_rejections dedupe.** **NO-OP (status 2026-10-18):** P0A.2 found 0 duplicate groups and 0 NULL-key rows on prod and on local, and `uq_option_rejections_standing` already exists on both (`docs/db_layer/SCHEMA_LEDGER_2026_10.md`, "Facts for later units"). The unit is dropped (NEXT_PHASES_PLAN Section 8); V026's RAISE guard (P4.3) still protects against a future duplicate. P4.8 drops its dependency on P4.4 and skips step 2.3.
 - Change: a script, dry run by default. Per DB, count duplicate groups under the `IS NOT DISTINCT FROM` key (NULL-key rows included); `COPY` the rows to be deleted into `workspace/backups/option_rejections_dupes_<db>_<date>.csv`; `DELETE` them in one transaction; verify 0 groups. Local has 0 groups (no-op). On prod it runs before V026 (P4.8) if P0A.2 found groups.
 - Tests: the dry run writes nothing; apply keeps one row per group and the backup holds the rest.
 - Accept: the tests pass; local reports 0 groups.
@@ -1279,7 +1311,7 @@ The re-scoping of rows that point at deleted files is P18B.5. Accept: the summar
   2. Prod (owner):
      1. `pg_dump -Fc` into `workspace/backups/prod_<date>_preV026.dump`.
      2. Verify the dump with `pg_restore -l | grep 'TABLE DATA public cars'` and a size sanity check.
-     3. Run P4.4 on prod if P0A.2 found groups (dry run first, owner approval).
+     3. ~~Run P4.4 on prod if P0A.2 found groups (dry run first, owner approval).~~ Skipped: P0A.2 found 0 groups (P4.4 is a no-op).
      4. `INVENTORY_DATABASE_URL=<prod> python -m backend.scripts.migrate --dry-run`, then `--apply --target 26`.
      5. Re-run the relevant P0A.2 queries.
   3. Deploy the code only after that, so the boot-time `MIGRATE_ON_BOOT` is a no-op.
@@ -1292,7 +1324,7 @@ The re-scoping of rows that point at deleted files is P18B.5. Accept: the summar
 - each `inventory_pg.py` region is edited by exactly one unit (P4.5 docstring, P4.6 :338, P4.7 :117-161 and :252-260);
 - SQLite and Postgres both covered.
 
-**Data repair.** P4.4 per DB: backup CSV, dry run, apply, verify 0 groups.
+**Data repair.** ~~P4.4 per DB: backup CSV, dry run, apply, verify 0 groups.~~ None: P4.4 is a no-op (0 groups on prod and local).
 
 **Exit gate.**
 - pytest, chunked: test_migrate.py, test_schema_from_migrations.py (static), test_schema_strict_mode.py, test_schema_drift_report.py, test_inventory_pg_adapter.py, test_runtime_ddl_gating.py, test_dedupe_option_rejections.py, test_dealer_portal.py, and the reviews / specials / recipe_store / job_queue tests.
@@ -4443,6 +4475,10 @@ The status is the final one, after the reviewer verdicts. A verdict that dispute
 | B-61 | hygiene-18 | Location option (a) without a CLAUDE.md change | CLAUDE.md also requires location.md. Owner edit added |
 | B-62 | hygiene-20 | Track all of `_learning` | Machine-written files dirty every tree. Curated files only |
 | B-63 | dead-code-23 | `updated_at = now()::text` | Mixed timestamp format. Corrected |
+| B-64 | recipes-10 | P1B.5 `persist=False` for audit and attribution scripts (added 2026-10-18) | Owner decision D-RS5 = Yes, keep writing (2026-10-08) |
+| B-65 | db-layer missing (dedupe) | P4.4 option_rejections dedupe and P4.8 step 2.3 (added 2026-10-18) | No-op: P0A.2 found 0 duplicate groups on prod and local; V026 keeps the RAISE guard |
+
+Later drops and re-scopes decided by `docs/NEXT_PHASES_PLAN_2026_10.md` (its Section 8) are summarized in Appendix E.
 
 ### B.2 Deferred (kept for later, outside this plan's phases)
 
@@ -4481,19 +4517,24 @@ The status is the final one, after the reviewer verdicts. A verdict that dispute
 
 Numbers follow merge order. The runner refuses a file numbered below the highest one already applied, and applied files are never edited. If a decision drops a migration (for example D-RC2 rejects two-strike, or D-DB8 keeps `cars.zip_code`), renumber only the later, still-unmerged files.
 
-| Reserved | Content | Unit | Phase | Prod apply |
+**Renumbered 2026-10-18 (N1.9) to the registry in NEXT_PHASES_PLAN Section 7.0.** N8.6 takes V029 for the attribution evidence (rooftop tier), so every later reserved number moves up by one. Numbers still follow merge order, and only unmerged files renumber. Elsewhere in this plan the old numbers remain in the unit text; read them through the "Old" column: Phase 7's V029 is now V030, Phase 10A's V030 is V031, Phase 10D's V031 is V032, and the V032 that "ships with 11A" is V033 (N26). The old V033 (drop `cars.zip_code`) is not reserved: NEXT_PHASES_PLAN recommends D-DB8 (b), keep the column, no migration.
+
+| Number | Old | Content | Unit (N-phase) | Prod apply |
 |---|---|---|---|---|
-| V026 | Chain completeness: V019-only objects (+ car_move_log_pkey), review_reports, haiku_spec_cache, uq_option_rejections_standing (+ pgvector tables per D-DB7) | P4.3 | 4 | P4.8 |
-| V027 | listing_retirements | P5B.3 | 5B | P6B.1 |
-| V028 | listing_miss_strikes (if D-RC2) | P5B.4 | 5B | P6B.1 |
-| V029 | dealer_recipes rev, recipes_written_at, superseded_json | P7.1 | 7 | Phase 7 release |
-| V030 | epa_master t/s flags, provenance, archive tables, idx_epa_master_vehicle_id, idx_cars_epa_master_id | P10A.3 | 10A | 10A release (quiet window) |
-| V031 | Unique (source, natural_key); cars FK and extended-specs FK as RESTRICT NOT VALID | P10D.7 | 10D | 10D second release |
-| V032 | VALIDATE both FKs | P10D.7 | ships with 11A | after a 0-dangling prod check |
-| V033 | Drop cars.zip_code (only if D-DB8 a) | P13A.8 | 13A | quiet window |
-| next | Drop backup tables | P13B.4 | 13B | after verified dumps |
-| next | users.auth_epoch | P16.1 | 16 | 16 release |
-| next | Drop dead MFA columns | P16.2 | 16 | 16 release |
+| V026 | V026 | Chain completeness: V019-only objects (+ car_move_log_pkey), review_reports, haiku_spec_cache, uq_option_rejections_standing (+ pgvector tables per D-DB7; the 4 log tables if D-N30 = adopt) | P4.3 (N5) | P4.8 (N5) |
+| V027 | V027 | listing_retirements | P5B.3 (N9) | N12.1/N12.2 (P6B.1 split) |
+| V028 | V028 | listing_miss_strikes (D-RC2 two-strike, answered 2026-10-16) | P5B.4 (N9) | N12.1/N12.2 |
+| V029 | (new) | Attribution evidence: persisted rooftop tier | N8.6 (N8) | N12.1/N12.2 |
+| V030 | V029 | dealer_recipes rev, recipes_written_at, superseded_json (CAS) | P7.1 (N13) | N13 release |
+| V031 | V030 | epa_master t/s flags, provenance, archive tables, idx_epa_master_vehicle_id, idx_cars_epa_master_id | P10A.3 (N22) | N22 release (quiet window) |
+| V032 | V031 | Unique (source, natural_key); cars FK and extended-specs FK as RESTRICT NOT VALID | P10D.7 (N25) | N25 second release |
+| V033 | V032 | VALIDATE both FKs | P10D.7 / N26 | N26, after a 0-dangling prod check |
+| none | V033 | Drop cars.zip_code | P13A.8 (N27) | not reserved under D-DB8 (b) |
+| next | next | Drop backup tables (D-DB1 list as extended in Section 7) | P13B.4 (N28) | after verified dumps |
+| next | next | users.auth_epoch | P16.1 (N30) | N30 release |
+| next | next | Drop dead MFA columns | P16.2 (N30) | N30 release |
+
+Web boot applies every pending migration (`MIGRATE_ON_BOOT` default 1, `scripts/docker-entrypoint-web.sh:21`), and every web deploy ships all of `main` at its tag, including migrations merged by earlier no-deploy releases. So before every web deploy the owner runs the RELEASING.md "Targeting prod" `migrate --dry-run` and requires `database is up to date`, or runs this protocol first (NEXT_PHASES_PLAN Section 7.0; RELEASING.md release step 1).
 
 Protocol (D-DB6), for every migration:
 1. Apply locally (and to the mini if D-DB5=a) as part of the merge, before any local process runs the new code. Otherwise warn-mode processes fall back to the legacy runtime DDL.
@@ -4506,7 +4547,7 @@ Protocol (D-DB6), for every migration:
 
 | File | Units, in order |
 |---|---|
-| backend/scanner/recipes.py | P1B.2 → P1B.3 → P1B.4 → P1B.5 → P1B.6; P5A.2; P5B.1 → P5B.2; P6A.6; P7.2 → P7.3 → P7.4 → P7.5 → P7.6; P12A.2; P12B.4; P12B.5 |
+| backend/scanner/recipes.py | P1B.2 → P1B.3 → P1B.4 → ~~P1B.5~~ (DROPPED, D-RS5) → P1B.6; P5A.2; P5B.1 → P5B.2; P6A.6; P7.2 → P7.3 → P7.4 → P7.5 → P7.6; P12A.2; P12B.4; P12B.5 |
 | backend/scanner/recipe_store.py | P1B.2 (log level), P1B.3; P4.6; P7.1; P13B.3 |
 | backend/scanner/recipe_validation.py | P1B.8; P5A.3; P5B.2; P7.6; P12B.1 → P12B.2 → P12B.3; P12B.5; P16.4 |
 | backend/scanner/inventory_reconcile.py | P1A.1; P5A.4; P5B.3 → P5B.4 |
@@ -4614,3 +4655,74 @@ Protocol (D-DB6), for every migration:
 | R-31 | The web on-demand listing/sticker fetch loses its browser fallback | Low / Medium | Owner decision D-DC5 with the "leave sticker fetch alone" rule stated; `SCANNER_ALLOW_BROWSER` unset in prod today | P17B.6 |
 | R-32 | Recipe hygiene stales a legitimate small feed | Low / Medium | Dry-run list reviewed by the owner; restore from backup | P6A.6, P12B.7 |
 
+## Appendix E: Differences from NEXT_PHASES_PLAN and line-reference drift (added 2026-10-18, N1.9)
+
+`docs/NEXT_PHASES_PLAN_2026_10.md` (written 2026-10-15 against v1.5.4) wins wherever it differs from this plan. This appendix records those differences so a reader of a P-unit spec here knows to check there. Its Section 8 is the full list, with revival triggers.
+
+### E.1 P-units moved, re-scoped, made conditional or dropped
+
+| Item | NEXT_PHASES_PLAN placement | Reason (short) |
+|---|---|---|
+| P1B.5 | Dropped (B-64) | D-RS5 = Yes, keep writing (2026-10-08) |
+| P4.4 and P4.8 step 2.3 | Dropped (B-65) | 0 duplicate groups on prod and local |
+| P0B.5 multi-GB scratch restore | Replaced by the N14.1 desk review (D-N28) | A restore only for a step the review cannot settle |
+| P0B.1 Dealer Inspire burst | N18.1 | Needed before P12A.2/P12A.5, not before the refresh |
+| Mini parts of P0A.2, P0A.5, P1C.1, P1C.4; mini hooksPath; the mini as home lane or log host | Conditional, N4.4 | D-N2 (b): the MBP is the home and log host |
+| P5A.1-P5A.7 | N9 | Released with V027/V028 after the N9.14 targeted re-run |
+| P5A.8 shadow run | N11 | Runs on a prod-shaped restore of `cars`, rehearsing N12's 16+-day gap |
+| P5B.1, P5B.2 | N9 | The 13 capped walks are a retirement risk for the first prod refresh |
+| P5B.5, P5B.6 | N10 | Needed for the N12 residue repair |
+| P5B.8, P5B.9 | N11 | The local repair rehearsal travels with the rehearsal |
+| P6A.1-P6A.7 | N10 | The N12 cron and bridge need them |
+| P6A.3 as written (72 h default, gap cover from the oldest owner) | Replaced by P6A.3' (N10) | A longer window entrenches first-writer misattribution; gap cover only for owners with a persisted strong tier; default stays 48 h |
+| P6B.1 as one unit | Split: N12.1/N12.2 | Apply V027-V029, deploy v1.6.0 idle |
+| P6B.2-P6B.8 | N12 | Prod refresh after the N11 rehearsal |
+| P8A.2, P8A.6 | N6 | v1.6.0 displays the vPIC drivetrain from fleet #1; the write path and heal stay in N15-N17 |
+| P11A.1-P11A.4 | N10 | Per-dealer locks before a second host writes prod |
+| P11A.5 | Conditional (N14) | No worker service since 2026-10-08; dropped under D-IF3 (a) |
+| P11B.2-P11B.4 | Conditional (N26) | Only if upsert exceeds 40% of dealer wall time or the fleet overruns its window |
+| P14A.1-P14A.8 | N7, right after N5 (D-PLAN1 rec changed to yes) | Real-Postgres tests for the guard and retirement SQL before N8/N9 |
+| P14A.9 recipe CAS PG test | N13 | Needs P7.1 |
+| 14B, 14C | N31, time-gated | After `pytest-pg` is green in CI for 30 days |
+| P15B.1, P15B.6 | N3 and N4 | lxml advisory; dead deploy files |
+| P15B.8 | Conditional (N29) | Only if D-SEC7 (a) is confirmed |
+| P16.3, P17B.8 | Optional (N30, N33) | Owner-only data action; cosmetic cleanup |
+| P18A.9-P18A.11 | Conditional (N35, D-N29) | Lint churn with no correctness payoff; P18A.8 still ships |
+| LE-14 overlap clean-up of 7 dealers "in Phase 7" | N8.9 if D-N34 = yes, else N13 | Before the first prod fleet |
+| C.4 item 11 (attribution side findings go to an "attribution owner"), B.2 F-4 | Merged into N8 | Group-feed VIN ownership is its own phase ahead of any prod fleet (clean-room: 9,638 conflict rows / 92 pairs in one run) |
+| WI-10 interim retirement provenance in `summary_json` | Dropped | V027 reaches prod (N12.2) before any live retirement |
+| Interim prod refresh on today's code; prod DB wipe | Dropped | Today's code re-files about 55% of contested VINs by scan order; the prod DB is never wiped |
+| Railway config-as-code replacement before 2026-12-01 | N4 | Not in this plan; P6B.8 covered only the scanner json |
+| R-09 mitigation (gap cover from the oldest owner, 72 h default) | Replaced by P6A.3' and D-N3 (`backend/config/group_pools.json`) | See P6A.3' above |
+| The "~8,800 in-run retirements" premise | Does not exist | 8,776 = 9,610 guard refusals − 834 error-dealer rows; only 21 rows were retired (N1.3 baseline, `backend/tests/fixtures/cleanroom_baseline_expected.json`) |
+
+### E.2 Decisions whose recommendation NEXT_PHASES_PLAN changed
+
+D-IF5 (superseded: 48 h default, strong-tier gap cover only), D-PLAN1 (yes), D-IF3 ((a)), D-IF1 (interim owner bridge in N12, (a) on the MBP in N14), D-IF10 and D-DB5 (follow D-N2 (b)), D-SR6 (the MBP), D-ER6 (the owner approves and runs each step), D-SEC5 (applied in effect), D-DB8 ((b), no migration), D-DC1 (the HTTP-only plan's D2 now reads "MBP primary"), D-TC7 (waves F401 and later conditional), D-TC9 (the guard also refuses `cars_cleanroom`). Section 7 tags each changed row. The new decisions (D-N1 to D-N34) exist only in NEXT_PHASES_PLAN Section 5.
+
+### E.3 Section 2 conventions superseded by NEXT_PHASES_PLAN Section 7.0
+
+- Branches: `phase/<NID>` from `origin/main`; unit branches `unit/<unit id>` in `.claude/worktrees/<unit id>` (not `remediation/<unit>`).
+- Battery: not a blocker (owner, 2026-10-09); Docker builds stay a per-run owner ask.
+- Long commands: tests and checks run in the foreground in chunks under 120 s (150 s hard limit); only scans run detached. See the Section 2 long-run checklist (OPS-11).
+- Scratch-DB scan runs use `scripts/cleanroom/{build_db.sh,run.env.template,preflight.sh,isolation_snapshot.sh}`; `cars_cleanroom` is a frozen read-only baseline (D-N1).
+- Checkpoints: `workspace/phase_runs/<NID>/<unit>.json` plus `RESUME.md` (NEXT_PHASES_PLAN Section 10).
+
+### E.4 Line-reference drift (verified 2026-10-18 at `078a0c211`)
+
+Code and docs moved after this plan was written at `dbdbf5cba`. `backend/scanner/recipes.py` grew from 1,167 to 1,839 lines and `docs/RAILWAY_SCANNING.md` from 454 to 607. Each "now" value below was read in the working tree with the command shown. Two rows were already off at `dbdbf5cba` (the plan's own reference was wrong, not drift).
+
+| Plan text cites | In unit | Now | Verified with |
+|---|---|---|---|
+| `recipes.py` ~:369-470 `promote_from_ledger` | P6A.6 | def at `:889` (was :370) | `grep -n "def promote_from_ledger" backend/scanner/recipes.py` |
+| `recipes.py:1160-1163` union log line ("recipe replay(s)") | P5A.2 | `:1694-1695` (was :1163) | `grep -n "unique VIN(s) combined" backend/scanner/recipes.py` |
+| `recipes.py:1125` total_count stop | P5B.1 | `:1665` (was :1125) | `grep -n "len(vins) >= recipe.total_count" backend/scanner/recipes.py` |
+| `recipe_store._ensure_table` :83-109 | P4.6 | `:142-170` (was :83) | `grep -n "def _ensure_table" backend/scanner/recipe_store.py` |
+| `RAILWAY_SCANNING.md:175-196` 20-dealer table | P6B.4 | about `:308-345` (section heading :308, result :345) | `grep -n "20 dealers" docs/RAILWAY_SCANNING.md` |
+| `RAILWAY_SCANNING.md` :437 idle-in-transaction prerequisite | P6B.8 | `:396-399` | `grep -n -i "idle.in.transaction" docs/RAILWAY_SCANNING.md` |
+| `web_researcher.py:526-529` Brave call, `:534-572` def | P0B.3, P3.8 | call `:528`, def `:534` (same at `dbdbf5cba`) | `grep -n "_brave_search_links" backend/utils/web_researcher.py` |
+| `web_researcher.py` `_fetch_with_playwright` :583-591 | P3.8 | def `:574`, called at `:667` (def was :574 at `dbdbf5cba` too) | `grep -n "_fetch_with_playwright" backend/utils/web_researcher.py` |
+| `users_db/auth.py:98` `get_user_by_login` | P3.1 | `backend/db/users_db/auth.py:89` (same at `dbdbf5cba`) | `grep -n "def get_user_by_login" backend/db/users_db/auth.py` |
+| `agent.py:890`, `:1226` | P3.8 | unchanged: `backend/intelligence/ai/agent.py:890`, `:1226` | `grep -n "WebResearcher(" backend/intelligence/ai/agent.py` |
+| `database.py:53` guard default 48.0 | P6A.3 | unchanged | `grep -n "_VIN_OWNER_GUARD_DEFAULT_HOURS" backend/scanner/database.py` |
+| `docker-entrypoint-web.sh:21-22` migrate on boot | Section 6, C.1 | unchanged (`:21` tests `MIGRATE_ON_BOOT`, `:22` runs `migrate --apply`) | `sed -n 21,22p scripts/docker-entrypoint-web.sh` |

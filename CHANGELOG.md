@@ -2,6 +2,57 @@
 
 ## [Unreleased]
 
+### Added
+- `backend/scripts/cleanroom_acceptance.py` with the `backend/scripts/cleanroom/` package
+  (N1.3): a read-only acceptance tool that every later phase proves "the counts drop"
+  against. It refuses a writable session (`default_transaction_read_only` off; SQLite opens
+  `mode=ro` + `query_only`) and computes VIN-owner conflicts and the CF-7 class-(b) checks,
+  the triage accounting identity, in-run retirements by writer, dict-repr trims and
+  template-token colors, `vpic_fuel` false positives, AWD/4WD stored where vPIC decodes 2WD,
+  page-cap walks, VDP wanted vs fetched, verdicts, junk prices, VIN quality, placeholder
+  images and the chunked incomplete-listings recompute (ported from the 10-15 scratch
+  scripts). `--expect` compares against the hand-built
+  `backend/tests/fixtures/cleanroom_baseline_expected.json` (67 values; EXPECT OK on
+  `cars_cleanroom`, 11,719 incomplete on `cars`); `--signals` writes the 458-row fleet
+  signal file and flags at most 46 dealers for N11.10.
+- `scripts/cleanroom/{build_db.sh,run.env.template,preflight.sh,isolation_snapshot.sh,make_manifest.sh,check_run_root.sh}`
+  (N1.3): parameterized clean-room re-runs into `cars_cr_*` scratch DBs with run roots at
+  `workspace/cleanroom_runs/<db>`. Preflight refuses `cars` and the frozen `cars_cleanroom`
+  as write targets, non-`/tmp` hosts, port 15432, paths outside the run root and a HEAD
+  other than `--sha`; `check_run_root.sh` refuses the repo root, `workspace/` and the frozen
+  `workspace/cleanroom_2026_10`. `build_db.sh` refuses an existing DB and stamps the HEAD.
+  `backend/tests/test_cleanroom_acceptance.py` covers the metrics on SQLite, the read-only
+  guard and every refusal.
+- `backend/tests/test_cleanroom_shapes_2026_10.py` + `backend/tests/fixtures/cleanroom_shapes/`
+  (N1.4): 8 `xfail(strict=True)` tests cut from the 2026-10-13/14 clean room: the four
+  lifecycle-retry retirements (Terry 0 of 16 re-seen, Coastline 8/11, Napleton 16/17, South
+  County Lexus 14/15), the known=0 lifecycle reconcile, guard scan-order dependence
+  (Chapman), the unstamped Jazel group feed (5 Star Ford, 124 sister cars) and the triage
+  identity replay (`rows_written` = active). Each reason names the unit that must flip it
+  (N9 P5A/P5B, N8.3, N8.6, N9.12).
+- `docs/remediation/CLEANROOM_RCA_2026_10.md` (N1.1): the clean-room root-cause record with
+  every figure re-derived (SQL appendix, run-log lines, acceptance-tool keys). Corrected
+  premise: 21 retirements, all by the scanner's `inventory_reconcile` in lifecycle retries
+  (10 correct, 11 wrong); the "~8.8k" was 9,610 VIN-owner guard refusals minus 834 rows of
+  two pause-killed dealers. Conflicts 9,638 rows / 7,393 VINs / 92 pairs, classified per
+  group from the N1.2 dossiers; six root causes with file:line; pause artifacts; the D-N4
+  missing-rooftop list (60 confirmed, 15 likely); a fix map to N-units.
+- `docs/remediation/DECISION_BRIEF_2026_10.md` (N1.8): the 105 open owner decisions grouped by
+  the phase they block, each with options, recommendation, evidence and needed-by date,
+  answered as "accept all except ...". D-N6's recommendation changes from the plan.
+
+### Changed
+- Plan and repo upkeep (N1.9): `docs/REMEDIATION_PLAN_2026_10.md` statuses for 0A-2B, the
+  10-08/10-16 answers, P0B.1 numbers, the extended D-DB1 list, P1B.5 dropped, P4.4 no-op,
+  the C.1 migration renumbering (V029 = attribution evidence), the OPS-11 long-run hygiene
+  checklist and Appendix E (differences from the next-phases plan, line-reference drift);
+  `docs/RELEASING.md` gains the always-`-s` Railway rule, a step-1 comparison against prod's
+  applied max migration, the PG18 client path, the 10-16 web-source and `SCAN_FLEET=0`
+  status and the 1.5.4 release-log row; `docs/db_layer/SCHEMA_LEDGER_2026_10.md` records
+  `cars_cleanroom` as the frozen V025 baseline and the `cars_cr_*` scratch DBs;
+  `docs/INCOMPLETE_LISTINGS_FINDINGS_2026_10.md` gains a finding-to-N-unit map;
+  `docs/NEXT_PHASES_PLAN_2026_10.md` carries the N1 unit status.
+
 ## [1.5.4] - 2026-10-09
 
 ### Added

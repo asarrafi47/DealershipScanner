@@ -28,6 +28,16 @@ checkout shows project `dealership-scanner`, environment `production`. The CLI a
 whichever project the current directory is linked to, so run `railway status` before any
 Railway command.
 
+**Always pass `-s <service>`** (or `--service <service>`) on every Railway command that
+acts on a service: `variable`, `deployment`, `logs`, `redeploy`, `down`, `run`, `ssh`,
+`up`. The main checkout is linked to **scanner-nightly** (2026-10-08; still so at the
+2026-10-16 N1.5 check), so a command without `-s` acts on the fleet service. On
+2026-10-08 an unflagged bare `railway up` uploaded the checkout to scanner-nightly
+([Railway source policy](#railway-source-policy)). Relinking the checkout to web is not
+the fix: it moves the same hazard onto prod web, where an upload of the working tree
+would replace the site. Keep the link, run `railway status` first, and pass `-s` every
+time. Commands in this document and in every owner command pack follow this rule.
+
 ## Branching model (D-REL2 (a): trunk)
 
 - `main` is the only long-lived branch. It moves only by fast-forward, and only to a
@@ -113,10 +123,33 @@ below stands for its name. `V` is the new version, set in step 3.
 
    Verify: `git status` prints nothing and `fast-forward-ok` prints. The phase's exit gate
    has passed (see the plan). If the last command lists migration files, do
-   [Migrations](#migrations) before the deploy in step 12. For the first release it lists
-   `migrations/README.md` and V001 to V025, because `origin/main` is still the June 0.2.0
-   commit. Prod is already at V025 (P0A.1), so the Migrations dry run should log
-   `database is up to date`.
+   [Migrations](#migrations) before the deploy in step 12. For the first release (P2B.3,
+   done as v1.5.4) it listed `migrations/README.md` and V001 to V025, because
+   `origin/main` was still the June 0.2.0 commit; prod was already at V025 (P0A.1).
+
+   **Then compare the release's migrations with prod's applied max version** (added
+   2026-10-18). The `origin/main..HEAD` diff shows only what this release adds over the
+   last release. Prod can be further behind: a no-deploy release still moves `main`, so
+   migrations it merged (for example N5's V026, N9's V027/V028, N8's V029) reach prod only
+   when a later deploy ships them, and every web boot applies every pending file
+   (`MIGRATE_ON_BOOT`, default `1`, `scripts/docker-entrypoint-web.sh:21`). So whenever
+   this release will deploy (step 12 or step 15), the owner runs the "Targeting prod"
+   `migrate --dry-run` from [Migrations](#migrations) and compares it with the highest
+   file the release carries:
+
+   ```bash
+   git ls-tree --name-only HEAD migrations/ | grep -E '^migrations/V[0-9]+' | sort | tail -1
+   ```
+
+   Verify: run from this release checkout, the prod dry run prints `target: remote`, then
+   "… already applied, 0 pending" and `database is up to date`. Because it reads the
+   release's own `migrations/`, 0 pending means prod has applied every file up to the
+   version the command above prints. If it lists pending files, prod's applied max
+   version is below the release's: run the [Migrations](#migrations) protocol first
+   (PG18 `pg_dump -Fc` by full path, `pg_restore -l`, then `migrate --apply`, with
+   `--target <max>` once P4.2 adds it), or skip the deploy and write "no deploy" in the
+   release-log row. A plain `migrate --dry-run` in a checkout reads the local database
+   and proves nothing about prod.
 
 2. **CHANGELOG.** `## [Unreleased]` lists everything since the last release. Units add
    their lines as they merge.
@@ -560,8 +593,8 @@ No Railway service builds from GitHub. Code reaches Railway only as a CLI upload
 - **Never attach a GitHub source to a service.** Never turn on autodeploy or "Wait for
   CI", and never run `railway redeploy --from-source`. On 2026-09-11 a GitHub build of
   `main` replaced prod with the June 0.2.0 app. A `main` build on a legacy worker would
-  have booted that same app against prod (P0A.1 answer 4). Web still records one; the
-  owner is removing it ([Web's GitHub source](#webs-github-source)).
+  have booted that same app against prod (P0A.1 answer 4). Web recorded one until the
+  owner disconnected it on 2026-10-16 ([Web's GitHub source](#webs-github-source)).
 - **Never run a bare `railway up` from a checkout.** It uploads the working tree,
   uncommitted files included, to whatever service the directory is linked to. On
   2026-10-08 a bare `railway up` uploaded a checkout to scanner-nightly by accident. The
@@ -641,6 +674,13 @@ query above on 2026-10-09 still returned `source.repo = asarrafi47/DealershipSca
 until the check prints `web-source-clear`, no web variable may change. The owner
 disconnects it in the dashboard: web → Settings → Source → Disconnect.
 
+**Status 2026-10-16: disconnected.** The owner disconnected the source in the dashboard;
+`web_source_check` printed `web-source-clear`, `848895c1` was still the newest SUCCESS
+deployment, and `/api/health` still reported 1.5.4 at `486f9012d` (`docs/SCANNING_OPS_LOG.md`,
+N1.5 block). Web variable changes are now allowed under the variable-change bullet; keep
+running `web_source_check` before every one. The github.com/settings/installations check
+is not recorded yet.
+
 Verify the disconnect: `web_source_check` prints `web-source-clear`, and
 `railway deployment list -s web --limit 3` shows the same newest deployment as before the
 disconnect, still SUCCESS. P0A.4 step 6 expects no new deployment and the running one
@@ -666,6 +706,8 @@ version.
   and to confirm at github.com/settings/installations that the Railway app cannot see
   this repo. Until `web_source_check` prints `web-source-clear`, no web variable may
   change.
+  **Update 2026-10-16:** disconnected; `web_source_check` prints `web-source-clear`
+  (N1.5 block in `docs/SCANNING_OPS_LOG.md`). The installations check is still owed.
 - **`SCAN_FLEET=1` is still set on scanner-nightly** (with `SCAN_SHARDS=8` and
   `SCAN_BATCH=6`; P0A.1). The owner's 2026-10-08 actions did not change it. The deployed
   image is `89c13ad52` (deployment `90a3d2a0`, 2026-09-29), which predates the egress tag
@@ -679,6 +721,13 @@ version.
   Never roll scanner-nightly back to it ([Rollback](#rollback)). After any rollback,
   re-run release step 15's variable check, since the service's values may have been
   reverted.
+  **Update 2026-10-16 (N1.5, `docs/SCANNING_OPS_LOG.md`):** the owner ran
+  `railway variable set SCAN_FLEET=0 -s scanner-nightly --skip-deploys`; the variable list
+  shows `SCAN_FLEET=0` and the deployment list is unchanged (newest `152fb03c` FAILED,
+  then `90a3d2a0` SUCCESS). The staged value applies only to the next new deployment: a
+  restart or a rollback of `90a3d2a0` still runs with its own `SCAN_FLEET=1`, a full fleet
+  on the 09-29 image. Never restart, roll back or redeploy scanner-nightly until N12.2
+  deploys v1.6.0; stop trouble with `railway down -s scanner-nightly`.
 - **Config as code is deprecated.** The root `railway.toml` (web) and the staged
   `railway.json` (scanner-nightly) are config-as-code files. Railway says existing files
   keep working until 2026-12-01, so the deploy flow needs a replacement before then
@@ -710,8 +759,13 @@ Every migration follows the D-DB6 protocol in Appendix C.1 of
 
 1. Apply it locally when it merges.
 2. Before any deploy that contains it, the owner takes a prod `pg_dump -Fc` and verifies
-   it (`pg_restore -l`). Then the owner runs `python -m backend.scripts.migrate --dry-run`
-   and `python -m backend.scripts.migrate --apply` against prod, in the form under
+   it (`pg_restore -l`). Prod runs PG 18.6, so use the PG18 client by full path:
+   `/opt/homebrew/opt/postgresql@18/bin/pg_dump` and `.../pg_restore` (18.6, installed
+   2026-10-16, N1.5). It is not on PATH: on the MBP, PATH resolves `pg_dump` to 17.10
+   (`postgresql@17`), or to 16.14 where `/opt/homebrew/bin` comes first, and neither
+   can dump a PG18 server. Then the owner runs
+   `python -m backend.scripts.migrate --dry-run` and
+   `python -m backend.scripts.migrate --apply` against prod, in the form under
    "Targeting prod" below.
 3. Only then deploy (release step 12).
 4. A migration that drops or constrains data merges only after its dumps or prerequisite
@@ -745,16 +799,24 @@ carries V001 to V025, which prod already has, so its dry run must log
 `database is up to date` and nothing needs applying. The first planned migration prod
 does not have is V026 (P4.8, which spells out its prod rollout).
 
-Release step 1 lists the migrations a release carries. Verify: a second
+Release step 1 lists the migrations a release carries and, before any deploy, compares
+them with prod's applied max version through this dry run (no-deploy releases leave prod
+behind `main`). Verify: a second
 `python -m backend.scripts.migrate --dry-run` against prod, in the form above, logs
 `database is up to date`.
 
 ## Release log
 
-Add a row per deployment, on the next phase branch (release step 14).
+Add a row per deployment, on the next phase branch (release step 14). The notes column
+records: the step 8 and step 11 Railway snapshots, the last-known-good web deployment id,
+whether a rollback below this release is schema-safe (additive migrations only: yes/no),
+every web variable changed since the previous row, the web-facing changes the deploy
+carries, and the Docker smoke result (NEXT_PHASES_PLAN Section 7.0, release step 8).
+Write "not recorded" for anything nobody captured.
 
 | version | tag commit | date | web deployment | scanner-nightly deployment | notes |
 |---|---|---|---|---|---|
+| 1.5.4 | `486f9012d` | 2026-10-09 (tag 17:56 EDT; web SUCCESS 18:26 EDT) | `848895c1` | none: stays on `90a3d2a0` (09-29) per D-REL8 (b) | First release through this flow (P2B.3; earlier releases tagged retroactively by P2B.4). **Docker smoke: not recorded** (no P2B.6 local stage smoke appears in any log). Railway snapshots (steps 8 and 11): not recorded. Previous web deployment: `d9aaa75e` (1.5.1 redeploy, 2026-10-08), REMOVED status on 2026-10-15; whether Railway still allows a rollback to it is unverified. Rollback below 1.5.4 schema-safe: yes (no file under `migrations/` changed from v1.5.0 to v1.5.4; prod at V025). Web variables changed since the 1.5.1 row: none recorded (cannot_assess between `d9aaa75e` and `848895c1`; the 2026-10-16 N1.5 pack changed no web variable). Row added 2026-10-18 by N1.9 (LE-6). |
 
 Before this flow existed, deploys were `railway up` uploads of working trees, which may
 have contained uncommitted files (P2B.4 tags these releases retroactively):

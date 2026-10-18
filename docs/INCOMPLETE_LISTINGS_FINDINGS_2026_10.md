@@ -4,6 +4,66 @@ Date: 2026-10-09. Scope: the local Postgres inventory (a mirror of prod as of 20
 
 Related earlier work: `docs/DATA_COMPLETENESS_FINDINGS_2026_09_28.md` and `workspace/data_quality/incomplete_2026_09_28/findings.json` (F01, F02, F07, F08, F12, F13, F17 overlap items below). Remediation phases refer to `docs/REMEDIATION_PLAN_2026_10.md`.
 
+## Finding → N-unit map (added 2026-10-18, N1.9)
+
+Every finding below now has a home in `docs/NEXT_PHASES_PLAN_2026_10.md`. This map is taken from that plan's Appendix A (rows "INCOMPLETE …" and "IL-01" to "IL-25"); rows that Appendix A does not list by section number say so and name the IL work item they were routed through (the IL items are in that plan's Section 2.4 inputs). The "Plan:" and "Plan coverage:" lines inside each finding were written on 2026-10-09 against `docs/REMEDIATION_PLAN_2026_10.md` and are superseded by this map. A P-unit is shown with the N-phase that carries it. Nothing in v1.5.3 or v1.5.4 closes any finding (NEXT_PHASES_PLAN Section 2.4).
+
+| Finding | N-units | Note |
+|---|---|---|
+| 2.1 Price missing | N6.4 (new-arrival window), N6.7, N8.7, P12A.5 (N18), N21.1 | D-N13, D-N18 |
+| 2.2 Trim missing | N8.4, N21.4, N21.8, P8B.6 (N16); residual measured in N21.12 | 4,293 fresh in the clean room |
+| 2.3 Body style holds a category | P8B.6 (N16) | D-N32 (normalize only) |
+| 2.4 No photos; placeholder-only photos | N6.8, N21.6 | D-N15 |
+| 2.5 Exterior color missing | N6.5, N8.7, P12A.5 (N18) | |
+| 2.6 VDP prefetch misses gap rows | N8.7, P12A.5 (N18) | |
+| 2.7 Used cars stored at 0 miles | N6.9 | D-N16 |
+| 2.8 Guessed Dealer.com VDP URLs | N8.5, N18.8 | |
+| 2.9 Gardena Honda | N21.4 | D-N31 |
+| 2.10 Metro Honda order-number rows | N6.9 (prevention), N12.10 (the 410 stale rows) | standalone item merged |
+| 2.11 Stale rows kept by reconcile guards | P5A.1, P5A.4, P5B.4 (N9), N12.8; IL-19 (Old Orchard, Hendrick Lexus Charlotte) N8.9 | |
+| 2.12 Engine residual | P8A.5 (N15), N15.5, P8B.4 (N16) | with 2.13, 2.14, 2.17 |
+| 2.13 Fuel type junk or blank | P8A.5 (N15), N15.5, P8B.4 (N16) | |
+| 2.14 Drivetrain and transmission | P8A.5 (N15), N15.5, P8B.4 (N16) | HD table: IL-20 → P8B.4 |
+| 2.15 No off-scan recovery since 08-05 | P15A.4 (N14) | |
+| 2.16 Auto-heal aims at feed coverage | P15A.4 (N14) | |
+| 2.17 VIN decode coverage | P8A.5 (N15), N15.5, P8B.4 (N16) | |
+| 2.18 Dead recovery script and columns | N21.8 | |
+| 2.19 Recovery writes without provenance | P8B.7, P8B.9 (N16) | acceptance "0 raw fact UPDATEs in recovery scripts" |
+| 2.20 Pre-F02 coverage reported price 100% | N9.12 | log truncation, honest coverage lines |
+| 2.21 Junk prices counted complete | N6.7, N12.10 | D-N14 ($1,000 floor) |
+| 2.22 Interior color blanks | N21.7 | D-N33 (not now) |
+| 2.23 First-scan arrivals | N6.4 | D-N13 (3-day window) |
+| 2.24 Smaller gaps | blank make/model from a clean decode: N21.8; "new" cars over 1,000 mi: N21.3 | not in Appendix A by number; routed through IL-24 (N21.8) and N21.3's row. The 1-9 mi used cars over a year old and the >500,000 mi odometers are named by no unit (cannot_assess placement) |
+| 2.25 High-rate dealers | N21.5 | not in Appendix A by number; routed through IL-17 |
+| F1 Mercedes designation in the model | N21.8 | IL-23 |
+| F2 Spec flags on now-complete cars | N6.1 | see X1 |
+| F3 Non-road vehicles | N21.8 | |
+| F4 MY2026-27 BMWs used at 0 mi | N6.9 | D-N16 |
+| F5 Old used cars without a price | N18.8 | |
+| M1 Trimless check hides trim gaps | N21.8 | |
+| M2 Non-VIN identifiers | N6.9, N21.2 | D-N17, D-N17b |
+| M3 CTP outside the mileage rule | dropped (NEXT_PHASES_PLAN Section 8) | fixed by F14; stale rows heal on the N12 refresh |
+| M4 Body style categories | P8B.6 (N16) | D-N32 |
+| M5 Wrong electrification | P8A.7 | 1,409 PHEV labels; the 32 BEV rows healed or cannot_assess |
+| M6 No photos, placeholders | N6.8, N21.6 | |
+| M7 Junk prices; interior color | N6.7 (prices), N21.7 (interior) | |
+| X1 Index never rebuilt | N6.1, N6.2 | IL-03, IL-04 |
+| X2 Rule changes never reach the index | N6.1, N6.2 | |
+| X3 Index rows of retired cars | N6.1, N6.3, P5A.4 (N9) | IL-05 |
+| X4 Per-car index sync cost | P11B.2 (N26, gated) | conditional |
+| X5 Full-rebuild hazards | N6.1, N6.2 | |
+| 3.3 Angles checked and not driving incompleteness | none (informational) | its mbbeverlyhills/mbontario note is the clean room's cross-wired recipe: N1.2, N8.9 (D-N6) |
+| 5 Quick wins 1-12 | follow the item each cites: 1 → X1/X2; 2 → X3; 3 → F1; 4 → 2.21; 5 → 2.13; 6 → 2.10; 7 → 2.12; 8 → 2.6; 9 → 2.8; 10 → 2.4; 11 → F3 (M3 dropped); 12 resume scanning → N12 | |
+
+Added after this report, from the 2026-10-15 full recompute under today's code (NEXT_PHASES_PLAN Section 2.4):
+
+| Finding | N-units | Note |
+|---|---|---|
+| F12 regression: new or blank-condition cars with NULL mileage flagged `mileage` (21,152 active in the clean room, 10.6%) | N2.1, N2.2; prod census N1.6 | IL-01, IL-02; D-N12 |
+| Stale index flags from one scan (4,581 complete cars flagged in the clean room) | N6.1, N6.2 | IL-03, IL-04 |
+| Motive lifecycle-retry recipe with trim, body and stock at 0% | N1.2, N8.4 | IL-10 |
+| Acceptance re-measure with the new-arrival split | N6 re-baseline, N11.3, P6B.8 (N12), N21.12, N36.8 | IL-25; compared only within one `rules_version` |
+
 ---
 
 ## 1. Summary

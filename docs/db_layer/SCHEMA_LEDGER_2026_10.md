@@ -11,7 +11,7 @@
 
 ## Answers to the Accept items
 
-1. **The ledger has one row per DB.** See "Ledger" below: prod `railway`, local MBP `cars`, and the mini's own Postgres (BLOCKED). The 10-04 dump is listed as the reference snapshot. The MBP's Homebrew server holds 10 other databases. None of them is an inventory DB: none has a `cars`, `schema_migrations` or `dealer_recipes` table.
+1. **The ledger has one row per DB.** See "Ledger" below: prod `railway`, local MBP `cars`, and the mini's own Postgres (BLOCKED). Since 2026-10-13 the MBP server also holds the frozen clean-room baseline `cars_cleanroom` and the `cars_cr_*` scratch DBs; see "Local baseline and scratch DBs" (added 2026-10-18). The 10-04 dump is listed as the reference snapshot. The MBP's Homebrew server holds 10 other databases. None of them is an inventory DB: none has a `cars`, `schema_migrations` or `dealer_recipes` table.
 2. **Prod is at V025.**
    - Prod `schema_migrations` has 25 rows, V001 to V025, with 0 pending, 0 checksum drift and 0 applied versions missing a file. `migrate --dry-run` against prod printed "25 migration file(s), 25 already applied, 0 pending / database is up to date".
    - This **overturns** the "prod at V018" docstrings, which P4.5 corrects:
@@ -28,6 +28,7 @@
    - **local MBP `cars`**: applied in the P4.3 merge (MAIN).
    - **the mini's own Postgres**: only if D-DB5 = (a). Its state is unknown (BLOCKED).
    - Fresh builds (CI, scratch DBs, compose) get V026 from the chain and need no ledger row.
+   - **`cars_cleanroom` never receives V026 or any later migration**: it is the frozen V025 baseline (D-N1, 2026-10-16). The `cars_cr_*` scratch DBs get each migration through `migrate --apply` after `scripts/cleanroom/build_db.sh` (added 2026-10-18).
    - On prod and local, V026 would do the same work:
      - create `review_reports` and `haiku_spec_cache`, which are absent on both;
      - adopt `uq_option_rejections_standing`, which is present on both. The P4.3 RAISE guard passes, because both DBs have 0 duplicate groups.
@@ -70,6 +71,22 @@
 The other databases on the MBP's Homebrew server are `Dealership`, `halfway_test`, `ninermatch`, `postgres`, `roster`, `stocks`, `stocks_test`, `studio`, `studio_test_auth` and `studio_test_core_db`. Each has 0 to 32 public tables, and none has `cars`, `schema_migrations` or `dealer_recipes`. `Dealership` has 1 public table and is not an inventory DB.
 
 A second, separate PostgreSQL 18 server (EDB install, `/Library/PostgreSQL/18`, socket `/tmp/.s.PGSQL.5002`) runs on the MBP. It requires a password, the project's `.env` does not point at it, and it was not probed.
+
+## Local baseline and scratch DBs (added 2026-10-18, N1.9)
+
+Owner decision D-N1 (`docs/remediation/OWNER_DECISIONS_LOG.md`, 2026-10-16): `cars_cleanroom` is frozen at V025 as the read-only baseline; re-runs go into new `cars_cr_*` DBs; `cars` stays the prod-shaped repair rehearsal DB. Every figure below comes from a read-only session (`PGOPTIONS='-c default_transaction_read_only=on'`) on the MBP server (`/tmp`, port 5432, PostgreSQL 17.10 Homebrew) on 2026-10-18.
+
+| | `cars_cleanroom` (baseline) | `cars_cr_*` (scratch) | `cars_cr_test` (exists) |
+|---|---|---|---|
+| role | **Frozen V025 baseline: never migrated, never scanned into again, read-only forever.** The 2026-10-13/14 clean-room scan (458 dealers, home IP, run `workspace/cleanroom_2026_10/runs/fleet_20261013T140256Z`) and the reference for every later "the counts drop" check | One DB per re-run, named in D-N25: `cars_cr_test` (N1.3 smoke), `cars_cr_n6`, `cars_cr_n8_<unit>`, `cars_cr_n8`, `cars_cr_n9`, `cars_cr_rc`, `cars_cr_rc_b`, `cars_cr_conv`, `cars_cr_rooftops` (N1.11). The P5A.8 shadow uses `cars_rehearsal`, a restore of `cars` | N1.3's 2-dealer smoke, kept as its evidence |
+| built | 2026-10-13 by `workspace/cleanroom_2026_10/build_db.sh` (hard-codes the name): empty `cars`; recipes, the VIN-decode cache and the EPA/catalog reference tables copied from `cars` | `scripts/cleanroom/build_db.sh --db <name> --art workspace/cleanroom_runs/<name>` (refuses an existing DB; `--from-template <db>` uses `createdb -T`; stamps `git rev-parse HEAD` in `BUILD_INFO.json`), then `migrate --apply` on the scratch DB; runs use `INVENTORY_SCHEMA_CHECK=strict` | 2026-10-18T14:19:42Z, dump mode from `cars`, at `078a0c211` (`workspace/cleanroom_runs/cars_cr_test/BUILD_INFO.json`) |
+| schema_migrations | 25 rows, V001-V025 (applied_at values copied from `cars`, newest 2026-10-04) | the chain at the phase HEAD; each gets its own row here when built | 25 rows, V001-V025; `migrate --apply` printed 0 pending |
+| receives V026+ | **no** | yes, at build | yes, if reused after V026 merges |
+| contents | 199,478 cars rows (199,457 active, 21 inactive) across 436 dealer_ids; scraped 2026-10-13 14:03Z to 2026-10-14 13:45Z; 9,638 `vin_owner_conflicts` rows; 687 `dealer_recipes` rows | per run | 289 cars rows (2 dealers, all active); 0 `vin_owner_conflicts`; 687 `dealer_recipes` rows |
+| size | 2,031 MB | per run | 1,016 MB |
+| writes allowed | none. `scripts/cleanroom/preflight.sh` refuses it (and `cars`) as a write target; N1.3 recorded its `pg_stat_database` write counters at 0/0/0 before and after the `cars_cr_test` smoke | only the run that owns it, through the N1.3 preflight (write target must be `cars_cr_*` on `/tmp`, run root `workspace/cleanroom_runs/<db>`) | closed after the smoke |
+| baseline files | `backend/tests/fixtures/cleanroom_baseline_expected.json` (hand-built, 67 values) and `workspace/cleanroom_2026_10/analysis/baseline_r1.json` (written by `backend/scripts/cleanroom_acceptance.py` at `078a0c211`, EXPECT OK 67/67) | compared against `baseline_r1` | n/a |
+| retirement | kept; any drop needs the owner's OK | dropped with the owner's OK in N28 (D-N1) | same as scratch |
 
 ## Out-of-chain objects
 
