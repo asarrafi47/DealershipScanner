@@ -273,6 +273,8 @@ How to answer: reply "accept all recommendations except …" for a phase group. 
 
 **Already answered (not re-asked; see `OWNER_DECISIONS_LOG.md`):** D-REL1-D-REL10, D-IF7, D-RS5 (keep writing; P1B.5 dropped), D-SR7, D-TC5, D-SEC1 (a), D-SEC4 (a), "Web GitHub source: owner disconnects", "Mini SSH: not now", "P1C.4 overlapping recipes (7 dealers): keep both now; clean up in Phase 7" (10-08; D-N34 asks whether to move that clean-up earlier). **Answered 2026-10-16 (gating minimum):** D-N25, D-N9 (C+D), D-N1, D-N2 (b), D-N3, D-RC1 (A), D-RC2 (two-strike ≥20 h) as recommended; **D-N4 changed by the owner** (profile and scan missing rooftops; see its row).
 
+**Answered 2026-10-18 (owner reply "okacceptall"):** every decision still open in `docs/remediation/DECISION_BRIEF_2026_10.md` is accepted as recommended there, D-N6 in the brief's changed form (keep mbbeverlyhills-com on CarsCommerce `listings/6074385`; drop fletcherjones-com as a store after N8.9 re-files its rows). Each answer has its own row in `OWNER_DECISIONS_LOG.md`.
+
 **No answer needed:** D-RC4 (policy default "nothing"), D-DC10 (keep facades), D-OD12 (deferred enrichment follow-up), D-HY8 (status quo). D-HY2 is an owner action only (Section 6).
 
 | ID | Question | Options | Recommendation | Needed by |
@@ -282,140 +284,140 @@ How to answer: reply "accept all recommendations except …" for a phase group. 
 | D-N9 | What happens to the 263 dealers with no analysis record | (A) finish all, about 120 agents; (B) non-ok only, about 54; (C) signal-driven; (D) fix first, then analyse the re-run | C+D: group dossiers now (N1.2), mechanical audit of all 458 now (N1.3), the 46 signal dealers on rehearsal data (N11.10); the 8 pause-killed dealers rescanned, not analysed | N1.2 |
 | D-N1 | Which local DBs serve as baseline, rehearsal and repair DBs (NEW-3) | keep or drop `cars_cleanroom`; which DB P5B.8 targets | `cars_cleanroom` frozen at V025 as the read-only baseline (entered in the schema ledger as "frozen, never migrated, never scanned into"); new DBs `cars_cr_<phase>[_x]` for re-runs (built by `build_db.sh` or `createdb -T cars_cleanroom`, then migrated); `cars` stays the prod-shaped repair rehearsal DB (P5B.8, P8A.7, P8C.6, 10B, 10D); scratch DBs dropped with owner OK in N28 | N5, N8 |
 | D-N2 | The mini's role (LE-7) | (a) approve SSH and repair it (P0A.5, P0A.2, P1C.1, P1C.4, hooksPath); (b) no scanning role for now | (b). The MBP is the home host and the canonical log host. This implies D-DB5 (b), D-IF10 = MBP and the D-IF1 host = MBP. The mini returns only through N4.4 after SSH approval and the P1C repairs | N4, N5 |
-| D-N19 | Show "Inventory last checked <date>" while prod is stale? | yes / no | Yes: one plain text line per dealer and car page, hidden once data is under 48 h old; no card or box container | N3 |
-| D-N29 | Accept the conditional tail units (P11B.2-P11B.4, P15B.8, P16.3, 14B/14C, 17C, ruff P18A.9-P18A.11) with revival triggers | accept / keep unconditional | Accept (Section 8 lists each trigger) | N26 |
+| D-N19 | Show "Inventory last checked <date>" while prod is stale? | yes / no | **ANSWERED 2026-10-18 (accept all, as recommended):** Yes: one plain text line per dealer and car page, hidden once data is under 48 h old; no card or box container | N3 |
+| D-N29 | Accept the conditional tail units (P11B.2-P11B.4, P15B.8, P16.3, 14B/14C, 17C, ruff P18A.9-P18A.11) with revival triggers | accept / keep unconditional | **ANSWERED 2026-10-18 (accept all, as recommended):** Accept (Section 8 lists each trigger) | N26 |
 | **N2** | | | | |
-| D-N12 | IL-01: a New, non-CPO car with no odometer value | complete or missing; page wording | Complete. Show no mileage line on New cars; keep "Mileage not listed" for used cars | N2.1 |
+| D-N12 | IL-01: a New, non-CPO car with no odometer value | complete or missing; page wording | **ANSWERED 2026-10-18 (accept all, as recommended):** Complete. Show no mileage line on New cars; keep "Mileage not listed" for used cars | N2.1 |
 | **N3** | | | | |
-| D-SEC6 | Direct-to-origin XFF spoofing | (a) `TRUSTED_PROXY_CIDRS=cloudflare`; (b) remove the `*.up.railway.app` domain; (c) both | (c) | N3.13 |
-| D-SEC5 | Count as applied? | applied / open | Applied in effect (pass-through deleted 10-08). `DEV_IP_ALLOWLIST` stays unset until P3.2 ships and the CIDRs are live | N3.13 |
-| D-DEP1 | Remove orphan dependencies, lxml ≥6.1 | (a) / no | (a) | P15B.1 |
+| D-SEC6 | Direct-to-origin XFF spoofing | (a) `TRUSTED_PROXY_CIDRS=cloudflare`; (b) remove the `*.up.railway.app` domain; (c) both | **ANSWERED 2026-10-18 (accept all, as recommended):** (c) | N3.13 |
+| D-SEC5 | Count as applied? | applied / open | **ANSWERED 2026-10-18 (accept all, as recommended):** Applied in effect (pass-through deleted 10-08). `DEV_IP_ALLOWLIST` stays unset until P3.2 ships and the CIDRs are live | N3.13 |
+| D-DEP1 | Remove orphan dependencies, lxml ≥6.1 | (a) / no | **ANSWERED 2026-10-18 (accept all, as recommended):** (a) | P15B.1 |
 | **N4** | | | | |
-| D-N24 | Replacement for Railway config-as-code | Railway's supported post-12-01 mechanism / service settings via GraphQL | Whichever Railway documents as supported after 12-01; N4.1 verifies before building | N4.1 |
+| D-N24 | Replacement for Railway config-as-code | Railway's supported post-12-01 mechanism / service settings via GraphQL | **ANSWERED 2026-10-18 (accept all, as recommended):** Whichever Railway documents as supported after 12-01; N4.1 verifies before building | N4.1 |
 | **N5** | | | | |
-| D-DB5 | Is the mini's Postgres a live inventory DB? | (a) live / (b) retired | (b) (follows D-N2) | P4.8 |
-| D-DB6 | How migrations reach prod | (a) manual, before the deploy / (b) at web boot | (a) | P4.8 and every migration |
-| D-DB7 | Out-of-chain objects | (a) adopt / (b) drop; NULLS NOT DISTINCT | (a) adopt; NULLS NOT DISTINCT is fine on PG 17/18 | P4.3 |
-| D-PR8 | Haiku fallback and `haiku_spec_cache` | (a)-(d) | (a): never writes fact columns, opt-in, keep the table | P4.3 |
-| D-N30 | The 4 untracked log tables (`image_summary_restore_log`, `make_canon_log`, `model_canon_log`, `package_value_purge_log`) | adopt in V026 / drop now | Adopt in V026; export and drop in P13B.4 | P4.3 |
-| D-PLAN1 | Pull the Postgres harness core forward | yes / keep the order | Yes (N7, right after N5) | N7 |
+| D-DB5 | Is the mini's Postgres a live inventory DB? | (a) live / (b) retired | **SETTLED 2026-10-18 by D-N2 (b):** (b) (follows D-N2) | P4.8 |
+| D-DB6 | How migrations reach prod | (a) manual, before the deploy / (b) at web boot | **ANSWERED 2026-10-18 (accept all, as recommended):** (a) | P4.8 and every migration |
+| D-DB7 | Out-of-chain objects | (a) adopt / (b) drop; NULLS NOT DISTINCT | **ANSWERED 2026-10-18 (accept all, as recommended):** (a) adopt; NULLS NOT DISTINCT is fine on PG 17/18 | P4.3 |
+| D-PR8 | Haiku fallback and `haiku_spec_cache` | (a)-(d) | **ANSWERED 2026-10-18 (accept all, as recommended):** (a): never writes fact columns, opt-in, keep the table | P4.3 |
+| D-N30 | The 4 untracked log tables (`image_summary_restore_log`, `make_canon_log`, `model_canon_log`, `package_value_purge_log`) | adopt in V026 / drop now | **ANSWERED 2026-10-18 (accept all, as recommended):** Adopt in V026; export and drop in P13B.4 | P4.3 |
+| D-PLAN1 | Pull the Postgres harness core forward | yes / keep the order | **ANSWERED 2026-10-18 (accept all, as recommended):** Yes (N7, right after N5) | N7 |
 | **N6** | | | | |
-| D-N13 | New-arrival window | N days; display; hide or show | 3 days, for price and photo gaps only; show a plain "details coming" line; never hide a car inside the window. A car is inside the window when (its latest `scraped_at` − the gap's `first_seen_at`) ≤ N days, measured against the row's latest scrape, not the wall clock | N6.4 |
-| D-N14 | Price floor | value; repeated-value rule | $1,000. A value repeated across ≥5 models at one dealer is withheld (NULL plus a provenance note) | N6.7 |
-| D-N15 | Do placeholder-only images count as photos? | yes / no | No: placeholder-only counts as "no photo". "No photo" counts as incomplete only outside the D-N13 window | N6.8 |
-| D-N16 | F4: MY2026-27 cars filed as used at 0 mi (497 fresh) | exempt / relabel / flag | Report as a data question; do not count as incomplete | N6.9 |
-| D-N17 | Identifier gate at write time | refuse length ≠ 17; what to do with 17-char I/O/Q pre-assignment IDs (1,251 rows) | Refuse length ≠ 17 now (order numbers, the Koons 8-character codes). I/O/Q rows are decided in N21 (D-N17b) | N6.9 |
-| D-PR1 | Sticker vs vPIC | (a) / (b) / (c) | (a) | P8A.2 (N6) |
-| D-PR4 | Drivetrain catalog tiebreak scope | (a) / (b) / (c) | (a) | P8A.2 (N6) |
-| D-PR6 | Several listing signals contradict vPIC on drive | vPIC wins + cannot_assess / silent / dealer wins | vPIC wins, row marked cannot_assess | P8A.2 (N6) |
-| D-PR7 | Write-time vPIC cylinders | only when not contradicting / unconditional / both | Only when not contradicting | P8A.2 (N6) |
+| D-N13 | New-arrival window | N days; display; hide or show | **ANSWERED 2026-10-18 (accept all, as recommended):** 3 days, for price and photo gaps only; show a plain "details coming" line; never hide a car inside the window. A car is inside the window when (its latest `scraped_at` − the gap's `first_seen_at`) ≤ N days, measured against the row's latest scrape, not the wall clock | N6.4 |
+| D-N14 | Price floor | value; repeated-value rule | **ANSWERED 2026-10-18 (accept all, as recommended):** $1,000. A value repeated across ≥5 models at one dealer is withheld (NULL plus a provenance note) | N6.7 |
+| D-N15 | Do placeholder-only images count as photos? | yes / no | **ANSWERED 2026-10-18 (accept all, as recommended):** No: placeholder-only counts as "no photo". "No photo" counts as incomplete only outside the D-N13 window | N6.8 |
+| D-N16 | F4: MY2026-27 cars filed as used at 0 mi (497 fresh) | exempt / relabel / flag | **ANSWERED 2026-10-18 (accept all, as recommended):** Report as a data question; do not count as incomplete | N6.9 |
+| D-N17 | Identifier gate at write time | refuse length ≠ 17; what to do with 17-char I/O/Q pre-assignment IDs (1,251 rows) | **ANSWERED 2026-10-18 (accept all, as recommended):** Refuse length ≠ 17 now (order numbers, the Koons 8-character codes). I/O/Q rows are decided in N21 (D-N17b) | N6.9 |
+| D-PR1 | Sticker vs vPIC | (a) / (b) / (c) | **ANSWERED 2026-10-18 (accept all, as recommended):** (a) | P8A.2 (N6) |
+| D-PR4 | Drivetrain catalog tiebreak scope | (a) / (b) / (c) | **ANSWERED 2026-10-18 (accept all, as recommended):** (a) | P8A.2 (N6) |
+| D-PR6 | Several listing signals contradict vPIC on drive | vPIC wins + cannot_assess / silent / dealer wins | **ANSWERED 2026-10-18 (accept all, as recommended):** vPIC wins, row marked cannot_assess | P8A.2 (N6) |
+| D-PR7 | Write-time vPIC cylinders | only when not contradicting / unconditional / both | **ANSWERED 2026-10-18 (accept all, as recommended):** Only when not contradicting | P8A.2 (N6) |
 | **N7** | | | | |
-| D-TC3 | CI Postgres image | match prod / pg17 / postgres:16 | Match prod: pg18 with pgvector 0.8.x | P14A.3 |
-| D-TC6 | `integration` marker and job | replace with `pytest-pg` / keep / fold | Replace the job, keep the marker | P14A.3 |
-| D-TC9 | May tests create `pytest_*` DBs on the local server that holds `cars`? | guarded / separate instance / CI only | Yes, guarded (refuses `cars`, `cars_cleanroom`, non-local hosts, port 15432) | P14A.1 |
+| D-TC3 | CI Postgres image | match prod / pg17 / postgres:16 | **ANSWERED 2026-10-18 (accept all, as recommended):** Match prod: pg18 with pgvector 0.8.x | P14A.3 |
+| D-TC6 | `integration` marker and job | replace with `pytest-pg` / keep / fold | **ANSWERED 2026-10-18 (accept all, as recommended):** Replace the job, keep the marker | P14A.3 |
+| D-TC9 | May tests create `pytest_*` DBs on the local server that holds `cars`? | guarded / separate instance / CI only | **ANSWERED 2026-10-18 (accept all, as recommended):** Yes, guarded (refuses `cars`, `cars_cleanroom`, non-local hosts, port 15432) | P14A.1 |
 | **N8** | | | | |
 | D-N3 | Ownership of shared group inventory (CF-6, WI-5, W02) | VDP-host store / designated primary / refuse pool writes when an evidenced sister claims / multi-store listing schema | (1) A store whose own feed stamps the car at a strong tier owns it. (2) Otherwise the designated primary in a tracked `backend/config/group_pools.json` owns it, with `dealer_feed_scope='group'` so the site shows "listed by N group stores; location unconfirmed". (3) Pairs not in the file keep their current owner and get flagged for the file. The multi-store schema is deferred | N8.6 |
 | D-N4 | Rooftops missing from the roster (CF-12): Mtn View Dalton/Bristol, Bentley Chevrolet of Florence, Sonic Honda/Mercedes stores, Chapman Hyundai/VW, Sam Pack Carrollton/Lewisville/Grapevine, autosavvy's other rooftops (22 rooftops in 9 states filed under San Antonio), the non-INFINITI makes in infinitiofcharlotte's multi-brand pool | add to roster / refuse their cars | **ANSWERED 2026-10-16, owner override:** "we should build a profile for these and scan them when we see cases like this." Each missing rooftop becomes its own dealer (full NETWORK_SCAN_PROCESS loop, five dealer_logs files, roster entry) so its cars are scanned and filed under it: first batch N1.11, standing detector and queue N8.13. Until a rooftop's profile exists its cars are held (refused at the gate as `third_rooftop`, rooftop recorded), never filed under a sister store | N1.11, N8.1, N8.9, N8.13 |
-| D-N5 | Do Hendrick `RHendrickUsed` cars at Terry Labonte's street address count as Terry's (RET-9)? | yes / no | Yes | N8.8 |
-| D-N6 | Scope of `mbbeverlyhills-com` and `fletcherjones-com` | keep / drop | Keep both: re-discover the real MB Beverly Hills endpoint; scope fletcherjones to its own rooftop (no Henderson cars) | N8.9 |
-| D-N7 | May `vdp_host_other_store` also un-list cars? | refuse the write only / also un-list | Refuse the write only, until N11 proves it | N8.5 |
-| D-N8 | Role of `dealer_feed_scope` (CF-15) | scanner evidence / display only | Display only; refreshed from the `group_feed_unstamped` flag with owner OK | N9.12 |
-| D-N34 | Move the LE-14 clean-up of the 7 overlapping-recipe dealers from Phase 7 (N13, as answered on 10-08) to N8.9, before the first prod fleet, keeping one recipe set per dealer and archiving the other in the repair file? | yes / no | Yes. If declined, the bullet moves back to N13 | N8.9 |
+| D-N5 | Do Hendrick `RHendrickUsed` cars at Terry Labonte's street address count as Terry's (RET-9)? | yes / no | **ANSWERED 2026-10-18 (accept all, as recommended):** Yes | N8.8 |
+| D-N6 | Scope of `mbbeverlyhills-com` and `fletcherjones-com` | keep / drop | **ANSWERED 2026-10-18 (accept all), brief's changed recommendation:** keep mbbeverlyhills-com, recipe pointed at CarsCommerce `listings/6074385` shipped with the parser fix that reads the store label; drop fletcherjones-com as a store: N8.9 first moves its rows to the stores they name (Henderson now, the Las Vegas stores once N1.11 has profiled them), then it leaves the scan roster. Plan's original: Keep both: re-discover the real MB Beverly Hills endpoint; scope fletcherjones to its own rooftop (no Henderson cars) | N8.9 |
+| D-N7 | May `vdp_host_other_store` also un-list cars? | refuse the write only / also un-list | **ANSWERED 2026-10-18 (accept all, as recommended):** Refuse the write only, until N11 proves it | N8.5 |
+| D-N8 | Role of `dealer_feed_scope` (CF-15) | scanner evidence / display only | **ANSWERED 2026-10-18 (accept all, as recommended):** Display only; refreshed from the `group_feed_unstamped` flag with owner OK | N9.12 |
+| D-N34 | Move the LE-14 clean-up of the 7 overlapping-recipe dealers from Phase 7 (N13, as answered on 10-08) to N8.9, before the first prod fleet, keeping one recipe set per dealer and archiving the other in the repair file? | yes / no | **ANSWERED 2026-10-18 (accept all, as recommended):** Yes. If declined, the bullet moves back to N13 | N8.9 |
 | **N9** | | | | |
 | D-RC1 | Which layer writes retirements | A scanner / B pipeline / C both | A | P5A.4 |
 | D-RC2 | One miss or two strikes | single / two-strike / three | Two-strike, ≥20 h apart | P5B.4 |
-| D-RC3 | How far a replay walk goes | 40 and flag / to the payload total, cap 150 / no cap | To the total, cap 150 | P5B.2 |
-| D-RC7 | Add `listing_retirements` | yes / summary_json only | Yes | P5B.3 |
-| D-SR4 | Verdict for a truncated replay | (a) thin with `replay_truncated:` / (b) new verdict / (c) note | (a) | P5A.7 |
-| D-N10 | Does a first pass with verdict `no_rows` write its rows? | write / don't write | Write; the prior-window rule and two-strike protect them | P5A.1 |
-| D-N11 | Accept that failing closed keeps sold cars listed for one or two more runs (Terry's 5 sold cars would have waited) | yes / no | Yes | P5A.1 |
-| D-N21 | Alarm threshold for the first live prod retirement | fixed 10% / gap-aware | Gap-aware for N12.8 (and the N11.7 rehearsal): alarm when a dealer retires more than min(60%, 10% + 1.5% × days) of its prior active rows, where days = run start − the median `scraped_at` of the rows being retired (on prod this equals the days since the dealer's last scrape before fleet #1, 09-29). Nightly runs keep 10% | P5A.7, N11.7, N12.8 |
+| D-RC3 | How far a replay walk goes | 40 and flag / to the payload total, cap 150 / no cap | **ANSWERED 2026-10-18 (accept all, as recommended):** To the total, cap 150 | P5B.2 |
+| D-RC7 | Add `listing_retirements` | yes / summary_json only | **ANSWERED 2026-10-18 (accept all, as recommended):** Yes | P5B.3 |
+| D-SR4 | Verdict for a truncated replay | (a) thin with `replay_truncated:` / (b) new verdict / (c) note | **ANSWERED 2026-10-18 (accept all, as recommended):** (a) | P5A.7 |
+| D-N10 | Does a first pass with verdict `no_rows` write its rows? | write / don't write | **ANSWERED 2026-10-18 (accept all, as recommended):** Write; the prior-window rule and two-strike protect them | P5A.1 |
+| D-N11 | Accept that failing closed keeps sold cars listed for one or two more runs (Terry's 5 sold cars would have waited) | yes / no | **ANSWERED 2026-10-18 (accept all, as recommended):** Yes | P5A.1 |
+| D-N21 | Alarm threshold for the first live prod retirement | fixed 10% / gap-aware | **ANSWERED 2026-10-18 (accept all, as recommended):** Gap-aware for N12.8 (and the N11.7 rehearsal): alarm when a dealer retires more than min(60%, 10% + 1.5% × days) of its prior active rows, where days = run start − the median `scraped_at` of the rows being retired (on prod this equals the days since the dealer's last scrape before fleet #1, 09-29). Nightly runs keep 10% | P5A.7, N11.7, N12.8 |
 | **N10** | | | | |
-| D-IF5 | How the VIN guard survives scan gaps | (a) auto-extend / (b) env / (c) 72 h / (d) refuse known pairs | Superseded: keep the 48 h default; gap cover applies only to owners with a persisted strong tier; no blanket 72 h; known pairs are handled by D-N3's `group_pools.json` | P6A.3' |
-| D-IF10 | Canonical `dealer_logs` tree | mini / MBP / both | MBP (follows D-N2) | P6A.5 |
-| D-SR2 | Cross-host exclusion of a dealer | (a) / (b) / (c) | (c): per-dealer Postgres advisory lock, plus the file lock as hygiene | P11A.3 |
+| D-IF5 | How the VIN guard survives scan gaps | (a) auto-extend / (b) env / (c) 72 h / (d) refuse known pairs | **ANSWERED 2026-10-18 (accept all, as recommended):** Superseded: keep the 48 h default; gap cover applies only to owners with a persisted strong tier; no blanket 72 h; known pairs are handled by D-N3's `group_pools.json` | P6A.3' |
+| D-IF10 | Canonical `dealer_logs` tree | mini / MBP / both | **SETTLED 2026-10-18 by D-N2 (b):** MBP (follows D-N2) | P6A.5 |
+| D-SR2 | Cross-host exclusion of a dealer | (a) / (b) / (c) | **ANSWERED 2026-10-18 (accept all, as recommended):** (c): per-dealer Postgres advisory lock, plus the file lock as hygiene | P11A.3 |
 | **N11** | | | | |
-| D-RC5 | Wrong-retirement candidates that cannot be verified live | leave / reactivate all / rescan first | Rescan first; restore only verified-live residue | P5B.8 |
-| D-RC6 | Repair order | local then prod / prod only / local only | Local, then prod | P5B.8 |
+| D-RC5 | Wrong-retirement candidates that cannot be verified live | leave / reactivate all / rescan first | **ANSWERED 2026-10-18 (accept all, as recommended):** Rescan first; restore only verified-live residue | P5B.8 |
+| D-RC6 | Repair order | local then prod / prod only / local only | **ANSWERED 2026-10-18 (accept all, as recommended):** Local, then prod | P5B.8 |
 | **N12** | | | | |
-| D-IF4 | Nightly parameters | 8×6 at `0 9 * * *`, 14 GB alarm / batch 4 / investigate | 8×6 at `0 9 * * *`, 14 GB alarm | N12.7, N12.11 |
-| D-N22 | Prod ownership before scanning resumes (CF-14) | manual reset of classified pairs / let the evidence rules re-file | Let the rules re-file during fleet #1, with snapshots and `car_move_log`. A manual reset only for pairs verified by DB checks, if any remain after fleet #2 | N12.7 |
-| D-N23 | Guard hours for fleet #1 | default 48 h / extended | Default 48 h. The lapsed guard makes fleet #1 behave like the N11 convergence pass, which is what was proven | N12.7 |
-| D-IF1 | How the 31 dealers that answer only from a home IP are scanned | (a) home lane / (b) paid proxy / (c) accept loss | Interim (N12): the owner runs a bridge from the MBP every ≤3 days. Final (N14): (a), on the MBP | N12.10, N14 |
+| D-IF4 | Nightly parameters | 8×6 at `0 9 * * *`, 14 GB alarm / batch 4 / investigate | **ANSWERED 2026-10-18 (accept all, as recommended):** 8×6 at `0 9 * * *`, 14 GB alarm | N12.7, N12.11 |
+| D-N22 | Prod ownership before scanning resumes (CF-14) | manual reset of classified pairs / let the evidence rules re-file | **ANSWERED 2026-10-18 (accept all, as recommended):** Let the rules re-file during fleet #1, with snapshots and `car_move_log`. A manual reset only for pairs verified by DB checks, if any remain after fleet #2 | N12.7 |
+| D-N23 | Guard hours for fleet #1 | default 48 h / extended | **ANSWERED 2026-10-18 (accept all, as recommended):** Default 48 h. The lapsed guard makes fleet #1 behave like the N11 convergence pass, which is what was proven | N12.7 |
+| D-IF1 | How the 31 dealers that answer only from a home IP are scanned | (a) home lane / (b) paid proxy / (c) accept loss | **ANSWERED 2026-10-18 (accept all, as recommended):** Interim (N12): the owner runs a bridge from the MBP every ≤3 days. Final (N14): (a), on the MBP | N12.10, N14 |
 | **N13** | | | | |
-| D-RS1 | Canonical recipe store | (a) prod for all / (b) two stores plus reconcile / (c) independent | (b) now | P7.9 |
-| D-RS2 | What re-synthesis does to old recipes | replace / replace-with-archive / merge | Replace-with-archive | P7.5 |
-| D-RS3 | How far versioning goes | phase 0 / DB-authoritative CAS / DB only | DB-authoritative with CAS | P7.1 |
-| D-RS4 | Blocked status per host? | shared / per host | Per host | P7.6 |
+| D-RS1 | Canonical recipe store | (a) prod for all / (b) two stores plus reconcile / (c) independent | **ANSWERED 2026-10-18 (accept all, as recommended):** (b) now | P7.9 |
+| D-RS2 | What re-synthesis does to old recipes | replace / replace-with-archive / merge | **ANSWERED 2026-10-18 (accept all, as recommended):** Replace-with-archive | P7.5 |
+| D-RS3 | How far versioning goes | phase 0 / DB-authoritative CAS / DB only | **ANSWERED 2026-10-18 (accept all, as recommended):** DB-authoritative with CAS | P7.1 |
+| D-RS4 | Blocked status per host? | shared / per host | **ANSWERED 2026-10-18 (accept all, as recommended):** Per host | P7.6 |
 | **N14** | | | | |
-| D-IF3 | Who runs admin onboard jobs | (a) retire queue onboarding / (b) onboard-only worker / (c) Railway service | (a): hand off to dealer-discovery (the mini is not a host). P11A.5 is then dropped | P15A.3 |
-| D-IF6 | Capabilities of the retired laptop nightly and k8s crons | port per step / home lane / drop | Per step, from the N14.1 desk review | P15A.4 |
-| D-N28 | Replace P0B.5's multi-GB scratch restore with a desk review of code and git history | yes / no | Yes; a restore only if the review is inconclusive for a step | N14.1 |
-| D-SR1 | Worker exit 75 | (a) / (b) / (c) | Only if D-IF3 = (b); otherwise no answer needed | P11A.5 |
+| D-IF3 | Who runs admin onboard jobs | (a) retire queue onboarding / (b) onboard-only worker / (c) Railway service | **ANSWERED 2026-10-18 (accept all, as recommended):** (a): hand off to dealer-discovery (the mini is not a host). P11A.5 is then dropped | P15A.3 |
+| D-IF6 | Capabilities of the retired laptop nightly and k8s crons | port per step / home lane / drop | **ANSWERED 2026-10-18 (accept all, as recommended):** Per step, from the N14.1 desk review | P15A.4 |
+| D-N28 | Replace P0B.5's multi-GB scratch restore with a desk review of code and git history | yes / no | **ANSWERED 2026-10-18 (accept all, as recommended):** Yes; a restore only if the review is inconclusive for a step | N14.1 |
+| D-SR1 | Worker exit 75 | (a) / (b) / (c) | **MOOT 2026-10-18:** D-IF3 = (a). Only if D-IF3 = (b); otherwise no answer needed | P11A.5 |
 | **N15** | D-PR1, D-PR4, D-PR6, D-PR7 moved to N6 with P8A.2 | | | |
 | **N16** | | | | |
-| D-PR2 | May a rescan overwrite a higher-ranked value? | (a) no / (b) yes / (c) after N days | (a) | P8B.1 |
-| D-PR3 | Dictionary engine correction | (a)-(d) | (b) + (d) | P8B.5 |
-| D-PR5 | How every scan path gets a decode | (a) inline / (b) post-scan / (c) status quo | (a) | P8B.4 |
-| D-N32 | Does a noncanonical body style (24,817 fresh) count as missing? | yes / normalize only | Normalize only | P8B.6 |
+| D-PR2 | May a rescan overwrite a higher-ranked value? | (a) no / (b) yes / (c) after N days | **ANSWERED 2026-10-18 (accept all, as recommended):** (a) | P8B.1 |
+| D-PR3 | Dictionary engine correction | (a)-(d) | **ANSWERED 2026-10-18 (accept all, as recommended):** (b) + (d) | P8B.5 |
+| D-PR5 | How every scan path gets a decode | (a) inline / (b) post-scan / (c) status quo | **ANSWERED 2026-10-18 (accept all, as recommended):** (a) | P8B.4 |
+| D-N32 | Does a noncanonical body style (24,817 fresh) count as missing? | yes / normalize only | **ANSWERED 2026-10-18 (accept all, as recommended):** Normalize only | P8B.6 |
 | **N17** | prod heal window (owner picks a date) | | | P8C.7 |
 | **N18** | | | | |
-| D-OD3 | Validation through the scan's replay | (A) / (B) / (C) | (A) | P12A.2 |
-| D-OD7 | One fetch policy | (A) / (B) / (C) | (A), confirmed by N18.1 | P12A.2 |
-| D-OD8 | Retry transients in replay | one retry / none / synth-style | One retry with 2 s backoff, only if N18.1 or P6B.4 sees transient 429/5xx | P12A.2 |
-| D-OD13 | DDG spec search through the proxy | (a) no / (b) yes | (a) | P12A.3 |
+| D-OD3 | Validation through the scan's replay | (A) / (B) / (C) | **ANSWERED 2026-10-18 (accept all, as recommended):** (A) | P12A.2 |
+| D-OD7 | One fetch policy | (A) / (B) / (C) | **ANSWERED 2026-10-18 (accept all, as recommended):** (A), confirmed by N18.1 | P12A.2 |
+| D-OD8 | Retry transients in replay | one retry / none / synth-style | **ANSWERED 2026-10-18 (accept all, as recommended):** One retry with 2 s backoff, only if N18.1 or P6B.4 sees transient 429/5xx | P12A.2 |
+| D-OD13 | DDG spec search through the proxy | (a) no / (b) yes | **ANSWERED 2026-10-18 (accept all, as recommended):** (a) | P12A.3 |
 | **N19** | | | | |
-| D-OD1 | Minimum-VIN rule | revised / status quo | Revised (plan §7) | P12B.5 |
-| D-OD2 | Which count decides pass | (A) / (B) / (C) | (A) | P12B.2 |
-| D-OD4 | `validate_recipe` | thin wrapper / delete / separate | Thin wrapper | P12B.3 |
-| D-OD5 | Cascade through the gate | yes / no / retire | Yes | P12B.6 |
-| D-OD6 | GET recipe with non-JSON `post_template` | mirror / error / repair | Mirror the scan | P12B.3 |
+| D-OD1 | Minimum-VIN rule | revised / status quo | **ANSWERED 2026-10-18 (accept all, as recommended):** Revised (plan §7) | P12B.5 |
+| D-OD2 | Which count decides pass | (A) / (B) / (C) | **ANSWERED 2026-10-18 (accept all, as recommended):** (A) | P12B.2 |
+| D-OD4 | `validate_recipe` | thin wrapper / delete / separate | **ANSWERED 2026-10-18 (accept all, as recommended):** Thin wrapper | P12B.3 |
+| D-OD5 | Cascade through the gate | yes / no / retire | **ANSWERED 2026-10-18 (accept all, as recommended):** Yes | P12B.6 |
+| D-OD6 | GET recipe with non-JSON `post_template` | mirror / error / repair | **ANSWERED 2026-10-18 (accept all, as recommended):** Mirror the scan | P12B.3 |
 | **N20** | | | | |
-| D-HY1 | Where the dictionary lives | keep tracked / LFS / ... | Keep tracked | P9.7 |
-| D-HY9 | Serve the trim-ladder content in prod | (a) yes after the 20-car diff / (b) no | (a) | P9.8 |
+| D-HY1 | Where the dictionary lives | keep tracked / LFS / ... | **ANSWERED 2026-10-18 (accept all, as recommended):** Keep tracked | P9.7 |
+| D-HY9 | Serve the trim-ladder content in prod | (a) yes after the 20-car diff / (b) no | **ANSWERED 2026-10-18 (accept all, as recommended):** (a) | P9.8 |
 | **N21** | | | | |
-| D-N18 | Which price is "the price" (W08) | advertised final / internet price / fee-inclusive | The advertised price shown to buyers before taxes and government fees; MSRP only in `msrp`; dealer add-on fees not included unless the site includes them in its advertised price | N21.1 |
-| D-N17b | 17-character I/O/Q pre-assignment IDs (1,251 rows at 69 dealers) | refuse / keep flagged | Keep the rows, skip the vPIC decode, mark VIN-derived facts cannot_assess, exclude from the VIN-owner guard | N21.2 |
-| D-N31 | May a single-valued vPIC trim fill feeds that carry no trim (Gardena, about 620 rows)? | yes / no | Yes, with provenance `vpic`, only when vPIC returns exactly one trim | N21.4 |
-| D-N33 | Dealer-relative interior color rule (4,573 blanks at 258 dealers) | adopt / no | Not now; revisit after N21 | N21.7 |
+| D-N18 | Which price is "the price" (W08) | advertised final / internet price / fee-inclusive | **ANSWERED 2026-10-18 (accept all, as recommended):** The advertised price shown to buyers before taxes and government fees; MSRP only in `msrp`; dealer add-on fees not included unless the site includes them in its advertised price | N21.1 |
+| D-N17b | 17-character I/O/Q pre-assignment IDs (1,251 rows at 69 dealers) | refuse / keep flagged | **ANSWERED 2026-10-18 (accept all, as recommended):** Keep the rows, skip the vPIC decode, mark VIN-derived facts cannot_assess, exclude from the VIN-owner guard | N21.2 |
+| D-N31 | May a single-valued vPIC trim fill feeds that carry no trim (Gardena, about 620 rows)? | yes / no | **ANSWERED 2026-10-18 (accept all, as recommended):** Yes, with provenance `vpic`, only when vPIC returns exactly one trim | N21.4 |
+| D-N33 | Dealer-relative interior color rule (4,573 blanks at 258 dealers) | adopt / no | **ANSWERED 2026-10-18 (accept all, as recommended):** Not now; revisit after N21 | N21.7 |
 | **N22-N25** | | | | |
-| D-EPA1 | How the EPA CSVs are corrected | (a) / ... | (a) in-place patch from a pinned `vehicles.csv`; owner approves the pinned file | P10A.5 |
-| D-ET2 | Naturally aspirated representation | (a)-(d) | (a); revisit after the P10C.9 dry run | P10A.1, P10C.6 |
-| D-ET3 | Rows flagged both turbo and supercharged (229) | Turbocharged / combined | Turbocharged | P10A.1 |
-| D-ET4 | Role of the make/model heuristic | last resort / display only / remove | Last resort | P10C.2 |
-| D-ET5 | Twin-turbo labels | keep via one helper / collapse | Keep, one helper | P10A.1 |
-| D-ER1 | One ingestion path | (a) / (b) / (c) | (a) | P10B.3 |
-| D-ER2 | Permanent catalog key | revised | `epaId` when present, else a sticky content key | P10A.2 |
-| D-ER3 | 20,006 legacy rows | (b) / (c) | Re-resolve | P10B.6 |
-| D-ER4 | FK policy | RESTRICT / SET NULL / none | RESTRICT, after the 0-dangling check | P10D.7 |
-| D-ER5 | Root `DICTIONARY/` | git rm after audit / move / keep | git rm after the prod provenance backfill | P10D.8 |
-| D-ER6 | How EPA work reaches prod | agent with per-step approval / owner / guards | Agent prepares each step, owner approves and runs it | P10D.6 |
+| D-EPA1 | How the EPA CSVs are corrected | (a) / ... | **ANSWERED 2026-10-18 (accept all, as recommended):** (a) in-place patch from a pinned `vehicles.csv`; owner approves the pinned file | P10A.5 |
+| D-ET2 | Naturally aspirated representation | (a)-(d) | **ANSWERED 2026-10-18 (accept all, as recommended):** (a); revisit after the P10C.9 dry run | P10A.1, P10C.6 |
+| D-ET3 | Rows flagged both turbo and supercharged (229) | Turbocharged / combined | **ANSWERED 2026-10-18 (accept all, as recommended):** Turbocharged | P10A.1 |
+| D-ET4 | Role of the make/model heuristic | last resort / display only / remove | **ANSWERED 2026-10-18 (accept all, as recommended):** Last resort | P10C.2 |
+| D-ET5 | Twin-turbo labels | keep via one helper / collapse | **ANSWERED 2026-10-18 (accept all, as recommended):** Keep, one helper | P10A.1 |
+| D-ER1 | One ingestion path | (a) / (b) / (c) | **ANSWERED 2026-10-18 (accept all, as recommended):** (a) | P10B.3 |
+| D-ER2 | Permanent catalog key | revised | **ANSWERED 2026-10-18 (accept all, as recommended):** `epaId` when present, else a sticky content key | P10A.2 |
+| D-ER3 | 20,006 legacy rows | (b) / (c) | **ANSWERED 2026-10-18 (accept all, as recommended):** Re-resolve | P10B.6 |
+| D-ER4 | FK policy | RESTRICT / SET NULL / none | **ANSWERED 2026-10-18 (accept all, as recommended):** RESTRICT, after the 0-dangling check | P10D.7 |
+| D-ER5 | Root `DICTIONARY/` | git rm after audit / move / keep | **ANSWERED 2026-10-18 (accept all, as recommended):** git rm after the prod provenance backfill | P10D.8 |
+| D-ER6 | How EPA work reaches prod | agent with per-step approval / owner / guards | **ANSWERED 2026-10-18 (accept all, as recommended):** Agent prepares each step, owner approves and runs it | P10D.6 |
 | **N26-N31** | | | | |
-| D-SR6 | Where the upsert measurement runs | MBP / mini / skip | MBP | P11B.1 |
-| D-DB3 | Once every DB is strict | (a) / (b) / (c) | (a), with `INVENTORY_AUTO_MIGRATE=1` kept for dev | P13B.1 |
-| D-DB4 | Where boot-time DB init runs | (a) / (b) / (c) | (a) | P13A.5 |
-| D-DB8 | `cars.zip_code` | (a) drop / (b) keep | (b) keep; no migration | P13A.8 |
-| D-DB1 | Backup tables | (a) export and drop / (b) backups schema / (c) keep | (a), after N25; list extended with prod `cars_owner_backup_20260929` (6,961 rows), the 4 log tables and the N12 backup tables | P13B.4 |
-| D-SEC7 | Lock files per image | (a) / (b) | (a), run as P15B.8 only if confirmed | P15B.8 |
-| D-SEC2 | Dead TOTP/phone storage | (a) / (b) / (c) | (a) | P16.2 |
-| D-SEC3 | Users data isolation on Postgres | (a) / (b) / (c) | (a), sized by P16.10 | P16.10 |
-| D-TC4 | Breadth of the PG tier | targeted / whole suite / write path only | Targeted | P14B.6 |
-| D-TC8 | pytest-xdist | yes if over 12 min and safe / no | Decide from P14C.5 | P14C.5 |
+| D-SR6 | Where the upsert measurement runs | MBP / mini / skip | **ANSWERED 2026-10-18 (accept all, as recommended):** MBP | P11B.1 |
+| D-DB3 | Once every DB is strict | (a) / (b) / (c) | **ANSWERED 2026-10-18 (accept all, as recommended):** (a), with `INVENTORY_AUTO_MIGRATE=1` kept for dev | P13B.1 |
+| D-DB4 | Where boot-time DB init runs | (a) / (b) / (c) | **ANSWERED 2026-10-18 (accept all, as recommended):** (a) | P13A.5 |
+| D-DB8 | `cars.zip_code` | (a) drop / (b) keep | **ANSWERED 2026-10-18 (accept all, as recommended):** (b) keep; no migration | P13A.8 |
+| D-DB1 | Backup tables | (a) export and drop / (b) backups schema / (c) keep | **ANSWERED 2026-10-18 (accept all, as recommended):** (a), after N25; list extended with prod `cars_owner_backup_20260929` (6,961 rows), the 4 log tables and the N12 backup tables | P13B.4 |
+| D-SEC7 | Lock files per image | (a) / (b) | **ANSWERED 2026-10-18 (accept all, as recommended):** (a), run as P15B.8 only if confirmed | P15B.8 |
+| D-SEC2 | Dead TOTP/phone storage | (a) / (b) / (c) | **ANSWERED 2026-10-18 (accept all, as recommended):** (a) | P16.2 |
+| D-SEC3 | Users data isolation on Postgres | (a) / (b) / (c) | **ANSWERED 2026-10-18 (accept all, as recommended):** (a), sized by P16.10 | P16.10 |
+| D-TC4 | Breadth of the PG tier | targeted / whole suite / write path only | **ANSWERED 2026-10-18 (accept all, as recommended):** Targeted | P14B.6 |
+| D-TC8 | pytest-xdist | yes if over 12 min and safe / no | **ANSWERED 2026-10-18 (accept all, as recommended):** Decide from P14C.5 | P14C.5 |
 | **N33-N36** | | | | |
-| D-DC1 | Confirm the HTTP-only plan decisions | confirm / reopen | Confirm (D2 now reads "MBP primary" per D-N2) | P17B.11 |
-| D-DC5 | Retire `--allow-browser` and the Playwright fallbacks | (a) now / (b) per platform / (c) keep | (a); precondition met (`SCANNER_ALLOW_BROWSER` unset on web and scanner-nightly) | P17B.3 |
-| D-DC6 | Dealer-group LLM adjudication | (a) / (b) / (c) | (b) | P17B.9 |
-| D-DC7 | `backend/oem/vehicle_reference` | (a) / (b) / (c) | (b) | P17B.10 |
-| D-DC9 | `requires_browser` hint | (a) / (b) / (c) | (c) | P17B.7 |
-| D-OD9 | Brochure CLI | recommended set / status quo | Recommended set | P17C.2 |
-| D-OD10 | vPIC getter to module level | yes / no | Yes | P17C.1 |
-| D-OD11 | Env knobs | registry + lint first / ... | The first option | P17C.6 |
-| D-HY3 | `dealer_logs` in git | (a) curated `_learning` only / (b) all / (c) none | (a) | P18A.4 |
-| D-HY4 | The 47 force-added `workspace/` files | (a) / (b) / (c) | (a) | P18A.3 |
-| D-IF9 | Deploy assets to delete | per plan | Delete k8s, car-scanner, postgres manifests and the build.sh k8s block; keep launchd plists until replaced | P18A.7 |
-| D-TC7 | How far ruff goes | the first option / gate only / more | The first option; waves F401 and later conditional (D-N29) | P18A.8 |
-| D-HY6 | Single entry document | (a) / (b) / (c) | (a) | P18B.1 |
-| D-HY7 | Location-logging contract | (a) / (b) | (a); the owner approves the CLAUDE.md wording | P18B.7 |
+| D-DC1 | Confirm the HTTP-only plan decisions | confirm / reopen | **ANSWERED 2026-10-18 (accept all, as recommended):** Confirm (D2 now reads "MBP primary" per D-N2) | P17B.11 |
+| D-DC5 | Retire `--allow-browser` and the Playwright fallbacks | (a) now / (b) per platform / (c) keep | **ANSWERED 2026-10-18 (accept all, as recommended):** (a); precondition met (`SCANNER_ALLOW_BROWSER` unset on web and scanner-nightly) | P17B.3 |
+| D-DC6 | Dealer-group LLM adjudication | (a) / (b) / (c) | **ANSWERED 2026-10-18 (accept all, as recommended):** (b) | P17B.9 |
+| D-DC7 | `backend/oem/vehicle_reference` | (a) / (b) / (c) | **ANSWERED 2026-10-18 (accept all, as recommended):** (b) | P17B.10 |
+| D-DC9 | `requires_browser` hint | (a) / (b) / (c) | **ANSWERED 2026-10-18 (accept all, as recommended):** (c) | P17B.7 |
+| D-OD9 | Brochure CLI | recommended set / status quo | **ANSWERED 2026-10-18 (accept all, as recommended):** Recommended set | P17C.2 |
+| D-OD10 | vPIC getter to module level | yes / no | **ANSWERED 2026-10-18 (accept all, as recommended):** Yes | P17C.1 |
+| D-OD11 | Env knobs | registry + lint first / ... | **ANSWERED 2026-10-18 (accept all, as recommended):** The first option | P17C.6 |
+| D-HY3 | `dealer_logs` in git | (a) curated `_learning` only / (b) all / (c) none | **ANSWERED 2026-10-18 (accept all, as recommended):** (a) | P18A.4 |
+| D-HY4 | The 47 force-added `workspace/` files | (a) / (b) / (c) | **ANSWERED 2026-10-18 (accept all, as recommended):** (a) | P18A.3 |
+| D-IF9 | Deploy assets to delete | per plan | **ANSWERED 2026-10-18 (accept all, as recommended):** Delete k8s, car-scanner, postgres manifests and the build.sh k8s block; keep launchd plists until replaced | P18A.7 |
+| D-TC7 | How far ruff goes | the first option / gate only / more | **ANSWERED 2026-10-18 (accept all, as recommended):** The first option; waves F401 and later conditional (D-N29) | P18A.8 |
+| D-HY6 | Single entry document | (a) / (b) / (c) | **ANSWERED 2026-10-18 (accept all, as recommended):** (a) | P18B.1 |
+| D-HY7 | Location-logging contract | (a) / (b) | **ANSWERED 2026-10-18 (accept all, as recommended):** (a); the owner approves the CLAUDE.md wording | P18B.7 |
 
 ## 6. Owner actions outside workflows
 

@@ -42,6 +42,11 @@
   answered as "accept all except ...". D-N6's recommendation changes from the plan.
 
 ### Changed
+- Owner decisions 2026-10-18: the owner accepted every recommendation in
+  `docs/remediation/DECISION_BRIEF_2026_10.md` (D-N6 in the brief's changed form: keep
+  mbbeverlyhills-com on CarsCommerce `listings/6074385`, drop fletcherjones-com as a store).
+  `docs/remediation/OWNER_DECISIONS_LOG.md` gains one row per decision (105) and
+  `docs/NEXT_PHASES_PLAN_2026_10.md` Section 5 marks each one ANSWERED.
 - Plan and repo upkeep (N1.9): `docs/REMEDIATION_PLAN_2026_10.md` statuses for 0A-2B, the
   10-08/10-16 answers, P0B.1 numbers, the extended D-DB1 list, P1B.5 dropped, P4.4 no-op,
   the C.1 migration renumbering (V029 = attribution evidence), the OPS-11 long-run hygiene
