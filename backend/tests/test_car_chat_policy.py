@@ -134,3 +134,116 @@ def test_car_chat_global_rate_limit(monkeypatch: pytest.MonkeyPatch, tmp_path) -
             assert rv.status_code == 200
         rv = c.post("/api/car/1/chat", json={"message": "price"}, headers=hdr)
         assert rv.status_code == 429
+
+
+# --- P3.8 (D-SEC1 (a)): car-chat research is HTTP-only ----------------------
+
+_CHAT_CAR = {
+    "id": 136451,
+    "year": 2021,
+    "make": "BMW",
+    "model": "3 Series",
+    "trim": "330i xDrive",
+    "price": 31500,
+    "mileage": 22000,
+    "vin": "3MW5R7J00M8B00000",
+    "condition": "Used",
+}
+_RESEARCH_URL = "https://www.jdpower.com/cars/2021/bmw/3-series"
+_RESEARCH_TEXT = " ".join(
+    ["J.D. Power owners rate the 2021 BMW 3 Series above average for quality and reliability."] * 4
+)
+
+
+@pytest.fixture
+def http_only_research(monkeypatch: pytest.MonkeyPatch) -> dict:
+    """Stub the network (one DuckDuckGo candidate, one HTTP page) and the LLM; record
+    every WebResearcher the chat builds and every playwright import (which raises)."""
+    import builtins
+
+    from backend.intelligence.ai import agent
+    from backend.utils import web_researcher as wr
+
+    seen: dict = {"researchers": [], "playwright_imports": [], "fetched": [], "system": []}
+    real_import = builtins.__import__
+
+    def guarded_import(name, globals=None, locals=None, fromlist=(), level=0):
+        if level == 0 and (name == "playwright" or name.startswith("playwright.")):
+            seen["playwright_imports"].append(name)
+            raise ImportError(f"P3.8 test: playwright import blocked ({name})")
+        return real_import(name, globals, locals, fromlist, level)
+
+    monkeypatch.setattr(builtins, "__import__", guarded_import)
+
+    class _Recorded(wr.WebResearcher):
+        def __init__(self, *a, **k):
+            super().__init__(*a, **k)
+            seen["researchers"].append(self)
+
+    def fetch(url: str, *, timeout_sec: int = 20):
+        seen["fetched"].append(url)
+        return "2021 BMW 3 Series quality and reliability", _RESEARCH_TEXT
+
+    monkeypatch.setattr(wr, "WebResearcher", _Recorded)
+    monkeypatch.setattr(wr, "duckduckgo_html_result_links", lambda *a, **k: [_RESEARCH_URL])
+    monkeypatch.setattr(wr, "fetch_page_text_http", fetch)
+
+    monkeypatch.setattr(agent, "prepare_car_detail_context", lambda car: {})
+    monkeypatch.setattr("backend.intelligence.deal_score_cache.public_deal_score", lambda car: None)
+    monkeypatch.setattr("backend.vector.pgvector_service.get_model_knowledge", lambda **k: ("", ""), raising=False)
+    monkeypatch.setattr("backend.vector.pgvector_service.add_model_knowledge", lambda **k: None, raising=False)
+
+    def fake_generate(system, msg, *, max_tokens=1024):
+        seen["system"].append(system)
+        return "Owners rate it above average.\nSource: " + _RESEARCH_URL
+
+    monkeypatch.setattr(agent, "_generate_reply", fake_generate)
+    return seen
+
+
+def test_car_chat_research_answer_is_served_from_http(http_only_research: dict) -> None:
+    from backend.intelligence.ai import agent
+
+    out = agent.run_car_page_chat(dict(_CHAT_CAR), "how reliable is this car long term?", allow_web_research=True)
+    seen = http_only_research
+    assert out["error"] is None
+    assert out["web_research_used"] is True
+    assert out["web_research_url"] == _RESEARCH_URL
+    assert seen["fetched"] == [_RESEARCH_URL]
+    assert any("above average for quality and reliability" in s for s in seen["system"])
+    assert [r.allow_browser for r in seen["researchers"]] == [False]
+    assert seen["playwright_imports"] == []
+
+
+def test_compare_chat_research_answer_is_served_from_http(http_only_research: dict) -> None:
+    from backend.intelligence.ai import agent
+
+    other = dict(_CHAT_CAR, id=136452, make="Audi", model="A4", trim="Premium", vin="WAUENAF40MN000000")
+    out = agent.run_compare_chat([dict(_CHAT_CAR), other], "which of these is more reliable?", allow_web_research=True)
+    seen = http_only_research
+    assert out["error"] is None
+    assert out["web_research_used"] is True
+    assert out["web_research_url"] == _RESEARCH_URL
+    assert [r.allow_browser for r in seen["researchers"]] == [False]
+    assert seen["playwright_imports"] == []
+
+
+def test_car_chat_failed_http_research_does_not_fall_back_to_a_browser(
+    http_only_research: dict, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The case that used to launch Chromium: the only candidate answers 403 over HTTP."""
+    import urllib.error
+
+    from backend.intelligence.ai import agent
+    from backend.utils import web_researcher as wr
+
+    def forbidden(url: str, *, timeout_sec: int = 20):
+        raise urllib.error.HTTPError(url, 403, "Forbidden", hdrs=None, fp=None)
+
+    monkeypatch.setattr(wr, "fetch_page_text_http", forbidden)
+    out = agent.run_car_page_chat(dict(_CHAT_CAR), "how reliable is this car long term?", allow_web_research=True)
+    seen = http_only_research
+    assert out["error"] is None
+    assert out["web_research_used"] is False
+    assert [r.allow_browser for r in seen["researchers"]] == [False]
+    assert seen["playwright_imports"] == []

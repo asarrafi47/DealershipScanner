@@ -3,9 +3,13 @@
 Fill missing trim overlays using web research + Claude.
 
 Claude's API does not browse the internet by itself. This script uses the
-existing ``WebResearcher`` (Brave Search + Playwright) to fetch trim comparison
-pages, then asks Claude to extract ``adds_by_trim`` JSON — same shape as
-``analyze_brochure_with_llm``.
+existing ``WebResearcher`` to fetch trim comparison pages, then asks Claude to
+extract ``adds_by_trim`` JSON — same shape as ``analyze_brochure_with_llm``.
+
+It is the one caller that turns on ``WebResearcher``'s browser mode
+(``allow_browser=True``: the Brave search fallback and the per-page headless
+Chromium fallback), so run it on a host with Playwright's Chromium installed
+(``python -m playwright install chromium``). The web image has none (P3.8).
 
 Usage::
 
@@ -333,7 +337,8 @@ def main() -> int:
             print(f"Error: {e}")
             return 1
 
-    researcher = WebResearcher(max_text_chars=8000, timeout_ms=30_000)
+    # Operator script: browser mode on (car chat stays HTTP-only, D-SEC1 (a)).
+    researcher = WebResearcher(max_text_chars=8000, timeout_ms=30_000, allow_browser=True)
     stats: dict[str, int] = {}
 
     for i, meta in enumerate(targets):
