@@ -18,12 +18,18 @@ from backend.db.users_db import (
     set_user_password_reset_token,
 )
 from backend.config import Config
+from backend.utils.ip_rate_limit import allow_request
 from backend.utils.mfa_delivery import send_transactional_email
 from backend.utils.runtime_env import is_production_env
 
 _log = logging.getLogger(__name__)
 
 _RESET_TTL_SECONDS = 3600
+# Per-account cooldown: at most this many reset emails per account per window.
+# The per-IP limit in backend/auth/pages.py does not stop rotating IPs from mail-bombing
+# one address.
+_RESET_PER_ACCOUNT_MAX = 3
+_RESET_PER_ACCOUNT_WINDOW_SECONDS = 3600.0
 
 
 def password_reset_enabled() -> bool:
@@ -89,6 +95,15 @@ def request_password_reset(*, login_input: str) -> bool:
     uid = int(user["id"])
     email = (user.get("email") or "").strip().lower()
     if not email or "@" not in email:
+        return True
+    # Throttle before issuing a token: a throttled request must not rotate the token and
+    # invalidate the link already emailed. The response stays the same (no enumeration).
+    if not allow_request(
+        f"forgot_pw_user:{uid}",
+        max_events=_RESET_PER_ACCOUNT_MAX,
+        window_seconds=_RESET_PER_ACCOUNT_WINDOW_SECONDS,
+    ):
+        _log.info("password reset throttled user_id=%s", uid)
         return True
     token = secrets.token_urlsafe(32)
     expires_at = int(time.time()) + _RESET_TTL_SECONDS

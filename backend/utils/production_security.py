@@ -23,6 +23,42 @@ def app_admin_dev_pass_through_allowed() -> bool:
     return v in ("1", "true", "yes", "on")
 
 
+def _warn_email_and_link_config() -> None:
+    """Warn on production email/billing flows that cannot build absolute links or send mail."""
+    from backend.auth.email_verification import email_verification_enabled
+    from backend.auth.password_reset import password_reset_enabled
+    from backend.config import Config
+
+    email_flows = [
+        name
+        for name, on in (
+            ("PASSWORD_RESET_ENABLED", password_reset_enabled()),
+            ("EMAIL_VERIFICATION_ENABLED", email_verification_enabled()),
+        )
+        if on
+    ]
+    link_flows = email_flows + (["BILLING_STRIPE_ENABLED"] if Config.billing_stripe_enabled() else [])
+
+    if link_flows and not Config.public_base_url():
+        _log.warning(
+            "%s on in production while PUBLIC_BASE_URL is unset: emailed links fall back to "
+            "MFA_QR_BASE_URL or become relative, and Stripe return URLs use the request host. "
+            "Set PUBLIC_BASE_URL.",
+            ", ".join(link_flows),
+        )
+
+    if (
+        email_flows
+        and not (os.environ.get("RESEND_API_KEY") or "").strip()
+        and not (os.environ.get("SMTP_HOST") or "").strip()
+    ):
+        _log.warning(
+            "%s on in production with neither RESEND_API_KEY nor SMTP_HOST set: no email can be "
+            "sent, and these flows catch the send error and only log it.",
+            ", ".join(email_flows),
+        )
+
+
 def assert_production_security_config() -> None:
     """Fail fast on dangerous production configuration (SEC-081, SEC-088)."""
     if not is_production_env():
@@ -83,6 +119,15 @@ def assert_production_security_config() -> None:
         _log.warning(
             "ALLOW_DEV_PUBLIC_REGISTER=1 allows self-serve /dev/register operator accounts."
         )
+
+    if app_admin_dev_pass_through_allowed():
+        # Guard only: prod deleted this variable on 2026-10-08 (D-SEC5); warn if it returns.
+        _log.warning(
+            "ALLOW_APP_ADMIN_DEV_PASS_THROUGH=1 in production: an app role=admin session opens "
+            "/dev without the separate /dev/login (SEC-083). Unset it."
+        )
+
+    _warn_email_and_link_config()
 
     from backend.utils.client_ip import trust_proxy_headers, trusted_proxy_hops
 
