@@ -12,12 +12,15 @@
 # and <art>/BUILD_INFO.json, and prints the next step (migrate --apply on the new DB).
 #
 # Refuses: an existing DB; a target named cars or cars_cleanroom or anything that is
-# not cars_cr_<name> / cars_rehearsal; a template equal to the target. Only ever talks
-# to the local Homebrew PG at /tmp:5432. Never run it with run.env.template sourced.
+# not cars_cr_<name> / cars_rehearsal; a template equal to the target; an --art that is
+# not workspace/cleanroom_runs/<db> (scripts/cleanroom/check_run_root.sh, checked before
+# any connection or mkdir; CR_ALLOW_ART_OUTSIDE_RUNS=1 admits a dir outside every
+# workspace/ for tests). Only ever talks to the local Homebrew PG at /tmp:5432. Never
+# run it with run.env.template sourced.
 set -euo pipefail
 REPO=$(cd "$(dirname "$0")/../.." && pwd)
 DB= ART= SOURCE=cars TEMPLATE=
-usage() { sed -n '2,16p' "$0" >&2; exit 2; }
+usage() { sed -n '2,19p' "$0" >&2; exit 2; }
 while [ $# -gt 0 ]; do
   case "$1" in
     --db) DB=${2:-}; shift 2;;
@@ -37,6 +40,10 @@ esac
 [ -n "$TEMPLATE" ] && [ "$TEMPLATE" = "$DB" ] && refuse "template and target are the same DB"
 ART=${ART:-$REPO/workspace/cleanroom_runs/$DB}
 case "$ART" in /*) ;; *) ART=$REPO/$ART;; esac
+# Before any connection or mkdir: the run root must be workspace/cleanroom_runs/<db>, so
+# the frozen run's build/, recipes_cache/ and the real workspace are never written.
+rr=$(bash "$REPO/scripts/cleanroom/check_run_root.sh" --art "$ART" --db "$DB") || refuse "${rr#REFUSED }"
+echo "$rr"
 RO="-c default_transaction_read_only=on"
 PSQL=(psql -X -h /tmp -p 5432)
 unset PGOPTIONS PGHOST PGPORT PGDATABASE PGSERVICE

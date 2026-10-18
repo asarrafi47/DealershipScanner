@@ -661,7 +661,10 @@ pytestmark_scripts = pytest.mark.skipif(BASH is None, reason="bash not available
 
 _STRIP = ("INVENTORY_DATABASE_URL", "DATABASE_URL", "PGHOST", "PGPORT", "PGDATABASE", "PGOPTIONS", "PGSERVICE",
           "RECIPES_CACHE_DIR", "DEALER_LOGS_ROOT", "SCAN_OUT_ROOT", "SCANNER_LOCK_PATH", "DEALERS_MANIFEST_PATH",
-          "SCAN_PIPELINE_ARGS", "SCAN_DEALERS")
+          "SCAN_PIPELINE_ARGS", "SCAN_DEALERS", "CR_ALLOW_ART_OUTSIDE_RUNS")
+# Test run roots live under tmp_path, outside every workspace/: the scripts only accept
+# that with this explicit override (check_run_root.sh), which preflight reports.
+ALLOW_TMP_ART = {"CR_ALLOW_ART_OUTSIDE_RUNS": "1"}
 
 
 def _env(**kw):
@@ -676,6 +679,7 @@ def _run(args, env=None, cwd=None):
 
 def _good_env(art: Path, db: str = "cars_cr_test", **over):
     env = _env(
+        **ALLOW_TMP_ART,
         INVENTORY_DATABASE_URL=f"postgresql:///{db}?host=/tmp&port=5432",
         DATABASE_URL=f"postgresql:///{db}?host=/tmp&port=5432",
         RECIPES_CACHE_DIR=str(art / "recipes_cache"), DEALER_LOGS_ROOT=str(art / "dealer_logs"),
@@ -740,7 +744,7 @@ def test_run_env_template_refuses_and_exports_nothing(tmp_path: Path):
     tpl = SCRIPTS / "run.env.template"
     for db in ("cars_cleanroom", "cars", "other_db"):
         p = _run(["-c", f'set -a; . "{tpl}" --db {db} --art "{tmp_path}/art" --roster "{roster}"; '
-                        'echo "rc=$? url=${INVENTORY_DATABASE_URL:-unset}"'])
+                        'echo "rc=$? url=${INVENTORY_DATABASE_URL:-unset}"'], env=_env(**ALLOW_TMP_ART))
         assert "rc=2 url=unset" in p.stdout, (db, p.stdout, p.stderr)
         assert "REFUSED" in p.stderr
 
@@ -751,7 +755,7 @@ def test_run_env_template_puts_every_writer_under_the_run_root(tmp_path: Path):
     roster.write_text("alpha-com\n# comment\nbeta-com\n")
     art = tmp_path / "art"
     p = _run(["-c", f'set -a; . "{SCRIPTS / "run.env.template"}" --db cars_cr_test --art "{art}" --roster "{roster}"; '
-                    'env'])
+                    'env'], env=_env(**ALLOW_TMP_ART))
     env = dict(line.split("=", 1) for line in p.stdout.splitlines() if "=" in line)
     assert env["INVENTORY_DATABASE_URL"] == "postgresql:///cars_cr_test?host=/tmp&port=5432"
     for k in ("RECIPES_CACHE_DIR", "DEALER_LOGS_ROOT", "SCAN_OUT_ROOT", "SCANNER_LOCK_PATH", "DEALERS_MANIFEST_PATH"):
@@ -785,12 +789,230 @@ def test_make_manifest_filters_and_refuses(tmp_path: Path):
     roster.write_text("beta-com\nalpha-com\n")
     art = tmp_path / "art"
     p = _run([str(SCRIPTS / "make_manifest.sh"), "--art", str(art), "--roster", str(roster),
-              "--from", str(FIX / "manifest")])
+              "--from", str(FIX / "manifest")], env=_env(**ALLOW_TMP_ART))
     assert p.returncode == 0, p.stderr
     rows = json.loads((art / "manifest" / "pipeline_dealers.json").read_text())
     assert [r["dealer_id"] for r in rows] == ["beta-com", "alpha-com"]
     assert (art / "roster.txt").read_text().split() == ["beta-com", "alpha-com"]
     roster.write_text("alpha-com\nnew-rooftop-com\n")
     p = _run([str(SCRIPTS / "make_manifest.sh"), "--art", str(art), "--roster", str(roster),
-              "--from", str(FIX / "manifest")])
+              "--from", str(FIX / "manifest")], env=_env(**ALLOW_TMP_ART))
     assert p.returncode == 2 and "new-rooftop-com" in p.stderr
+
+
+# ---------------------------------------------------------------------------
+# run-root isolation: workspace/cleanroom_runs/<db> only (scripts/cleanroom/check_run_root.sh)
+# ---------------------------------------------------------------------------
+
+
+def _main_checkout() -> Path:
+    out = subprocess.run(["git", "-C", str(REPO), "rev-parse", "--path-format=absolute", "--git-common-dir"],
+                         capture_output=True, text=True).stdout.strip()
+    return Path(out).parent if out else REPO
+
+
+MAIN = _main_checkout()
+# Run roots that must always be refused, whatever CR_ALLOW_ART_OUTSIDE_RUNS says: the
+# real workspace (the review case: DEALER_LOGS_ROOT would be the real dealer logs), the
+# frozen 2026-10 run (relative and absolute, this checkout and the main one), the real
+# dealer logs and the checkout root itself.
+_FORBIDDEN_ARTS = list(dict.fromkeys([
+    str(REPO / "workspace"), "workspace", "workspace/cleanroom_2026_10",
+    str(REPO / "workspace" / "cleanroom_2026_10"), str(MAIN / "workspace" / "cleanroom_2026_10"),
+    str(MAIN / "workspace"), str(REPO / "workspace" / "dealer_logs"), str(REPO / "workspace" / "recipes"),
+    str(REPO / "workspace" / "cleanroom_runs"), str(REPO),
+]))
+
+
+@pytestmark_scripts
+@pytest.mark.parametrize("art", _FORBIDDEN_ARTS)
+@pytest.mark.parametrize("allow", [False, True], ids=["strict", "override"])
+def test_check_run_root_refuses_workspace_and_frozen_dirs(art, allow):
+    env = _env(**(ALLOW_TMP_ART if allow else {}))
+    p = _run([str(SCRIPTS / "check_run_root.sh"), "--db", "cars_cr_test", "--art", art], env=env)
+    assert p.returncode == 1 and p.stdout.startswith("REFUSED"), p.stdout + p.stderr
+
+
+@pytestmark_scripts
+def test_check_run_root_accepts_only_this_dbs_run_root(tmp_path: Path):
+    def run(art, db="cars_cr_test", **env):
+        return _run([str(SCRIPTS / "check_run_root.sh"), "--art", str(art), *(["--db", db] if db else [])],
+                    env=_env(**env))
+    for root in {REPO, MAIN}:
+        p = run(root / "workspace" / "cleanroom_runs" / "cars_cr_test")
+        assert p.returncode == 0 and p.stdout.startswith("ok   run root"), p.stdout
+    # no --db: the basename of --art, which must be a scratch name
+    assert run(REPO / "workspace" / "cleanroom_runs" / "cars_cr_abc", db=None).returncode == 0
+    assert run(REPO / "workspace" / "cleanroom_runs" / "foo", db=None).returncode == 1
+    # another DB's run root, a non-scratch --db
+    p = run(REPO / "workspace" / "cleanroom_runs" / "cars_cr_other")
+    assert p.returncode == 1 and "cleanroom_runs/cars_cr_test" in p.stdout
+    assert run(REPO / "workspace" / "cleanroom_runs" / "cars", db="cars").returncode == 1
+    # outside every workspace/: only with the explicit override, which is reported
+    p = run(tmp_path / "art")
+    assert p.returncode == 1 and "CR_ALLOW_ART_OUTSIDE_RUNS" in p.stdout
+    p = run(tmp_path / "art", **ALLOW_TMP_ART)
+    assert p.returncode == 0 and p.stdout.startswith("note") and "CR_ALLOW_ART_OUTSIDE_RUNS=1" in p.stdout
+    assert not (tmp_path / "art").exists()
+
+
+@pytestmark_scripts
+@pytest.mark.parametrize("art", _FORBIDDEN_ARTS)
+def test_preflight_refuses_real_workspace_and_frozen_run_root(art, tmp_path: Path):
+    """The review case: every env var under --art <repo>/workspace used to print 'ok'."""
+    roster = tmp_path / "roster.txt"
+    roster.write_text("alpha-com\n")
+    art_abs = Path(art) if Path(art).is_absolute() else REPO / art
+    p = _run([str(SCRIPTS / "preflight.sh"), "--db", "cars_cr_test", "--art", art, "--roster", str(roster),
+              "--sha", _head()], env=_good_env(art_abs))  # override set: it must not relax these
+    assert p.returncode == 1 and "PREFLIGHT FAIL" in p.stdout, p.stdout
+    fails = [ln for ln in p.stdout.splitlines() if ln.startswith("  FAIL")]
+    assert len(fails) == 1 and "run root" in fails[0], p.stdout
+    assert "== power" not in p.stdout  # stopped at the refusals
+
+
+@pytestmark_scripts
+def test_preflight_run_root_strict_unless_override(tmp_path: Path):
+    roster = tmp_path / "roster.txt"
+    roster.write_text("alpha-com\n")
+    art = tmp_path / "art"
+    args = [str(SCRIPTS / "preflight.sh"), "--db", "cars_cr_test", "--art", str(art), "--roster", str(roster),
+            "--sha", "0000000deadbeef"]  # wrong sha: always stops at the refusals
+    strict = _good_env(art)
+    strict.pop("CR_ALLOW_ART_OUTSIDE_RUNS")
+    p = _run(args, env=strict)
+    assert "  FAIL run root" in p.stdout and "CR_ALLOW_ART_OUTSIDE_RUNS" in p.stdout, p.stdout
+    p = _run(args, env=_good_env(art))
+    assert "  note run root" in p.stdout and "CR_ALLOW_ART_OUTSIDE_RUNS=1" in p.stdout, p.stdout
+    assert "FAIL run root" not in p.stdout
+    good = REPO / "workspace" / "cleanroom_runs" / "cars_cr_test"
+    env = _good_env(good)
+    env.pop("CR_ALLOW_ART_OUTSIDE_RUNS")
+    p = _run([*args[:3], "--art", str(good), *args[5:]], env=env)
+    assert f"  ok   run root {good.resolve()} is workspace/cleanroom_runs/cars_cr_test" in p.stdout, p.stdout
+
+
+@pytestmark_scripts
+@pytest.mark.parametrize("art", [str(REPO / "workspace"), "workspace/cleanroom_2026_10",
+                                 str(REPO / "workspace" / "dealer_logs")])
+@pytest.mark.parametrize("allow", [False, True], ids=["strict", "override"])
+def test_run_env_template_refuses_real_workspace_run_root(art, allow, tmp_path: Path):
+    roster = tmp_path / "roster.txt"
+    roster.write_text("alpha-com\n")
+    p = _run(["-c", f'set -a; . "{SCRIPTS / "run.env.template"}" --db cars_cr_test --art "{art}" --roster "{roster}"; '
+                    'echo "rc=$? logs=${DEALER_LOGS_ROOT:-unset} url=${INVENTORY_DATABASE_URL:-unset}"'],
+             env=_env(**(ALLOW_TMP_ART if allow else {})))
+    assert "rc=2 logs=unset url=unset" in p.stdout, (p.stdout, p.stderr)
+    assert "REFUSED" in p.stderr and "run root" in p.stderr
+
+
+@pytestmark_scripts
+def test_run_env_template_refuses_tmp_run_root_without_override(tmp_path: Path):
+    roster = tmp_path / "roster.txt"
+    roster.write_text("alpha-com\n")
+    p = _run(["-c", f'set -a; . "{SCRIPTS / "run.env.template"}" --db cars_cr_test --art "{tmp_path}/art" '
+                    f'--roster "{roster}"; echo "rc=$? url=${{INVENTORY_DATABASE_URL:-unset}}"'])
+    assert "rc=2 url=unset" in p.stdout and "CR_ALLOW_ART_OUTSIDE_RUNS" in p.stderr, (p.stdout, p.stderr)
+
+
+@pytest.fixture
+def sandbox(tmp_path: Path):
+    """scripts/cleanroom copied into a throwaway repo whose workspace/ holds the files the
+    scripts used to overwrite (the frozen run's build/, recipes_cache/, snapshots/, START;
+    the real dealer logs and recipe cache), with psql/createdb/pg_dump/dropdb on PATH
+    replaced by stubs that log every call. A refusal must leave all of it untouched and
+    make no DB call. Relative --art resolves against the sandbox repo."""
+    repo = tmp_path / "repo"
+    shutil.copytree(SCRIPTS, repo / "scripts" / "cleanroom")
+    ws = repo / "workspace"
+    frozen = ws / "cleanroom_2026_10"
+    for f in (frozen / "build" / "cars_stat_before.txt", frozen / "build" / "cars_stat_after.txt",
+              frozen / "build" / "schema_pre.sql", frozen / "build" / "schema_post.sql",
+              frozen / "recipes_cache" / "_aliases.json", frozen / "snapshots" / "before.txt", frozen / "START",
+              frozen / "manifest" / "pipeline_dealers.json",
+              ws / "dealer_logs" / "alpha-com" / "discovery.md", ws / "recipes" / "_aliases.json"):
+        f.parent.mkdir(parents=True, exist_ok=True)
+        f.write_text(f"sentinel {f.name}\n")
+    bindir = tmp_path / "bin"
+    bindir.mkdir()
+    calls = tmp_path / "db_calls.log"
+    for tool in ("psql", "createdb", "pg_dump", "dropdb"):
+        exe = bindir / tool
+        exe.write_text(f'#!/bin/sh\necho "{tool} $*" >> "{calls}"\necho 0\n')
+        exe.chmod(0o755)
+    roster = tmp_path / "roster.txt"
+    roster.write_text("alpha-com\n")
+    env = _env(PATH=f"{bindir}{os.pathsep}{os.environ.get('PATH', '')}", GIT_CEILING_DIRECTORIES=str(tmp_path))
+    return {"repo": repo, "ws": ws, "calls": calls, "env": env, "roster": roster,
+            "script": lambda name: str(repo / "scripts" / "cleanroom" / name)}
+
+
+def _tree(root: Path) -> dict:
+    return {str(p.relative_to(root)): ((p.stat().st_mtime_ns, p.read_bytes()) if p.is_file() else None)
+            for p in root.rglob("*")}
+
+
+_SANDBOX_FORBIDDEN = ["workspace", "{repo}/workspace", "workspace/cleanroom_2026_10", "{repo}/workspace/cleanroom_2026_10",
+                      "workspace/cleanroom_2026_10/build", "workspace/dealer_logs", "{repo}"]
+
+
+@pytestmark_scripts
+@pytest.mark.parametrize("art", _SANDBOX_FORBIDDEN)
+@pytest.mark.parametrize("allow", [False, True], ids=["strict", "override"])
+def test_build_db_refuses_real_workspace_and_frozen_run_root(sandbox, art, allow):
+    art = art.format(repo=sandbox["repo"])
+    before = _tree(sandbox["repo"])
+    env = dict(sandbox["env"], **(ALLOW_TMP_ART if allow else {}))
+    p = _run([sandbox["script"]("build_db.sh"), "--db", "cars_cr_x", "--art", art], env=env)
+    assert p.returncode == 2 and "REFUSED" in p.stderr and "run root" in p.stderr, p.stdout + p.stderr
+    assert _tree(sandbox["repo"]) == before  # no mkdir, no stat/schema/_aliases overwrite
+    assert not sandbox["calls"].exists()  # refused before any DB call
+
+
+@pytestmark_scripts
+@pytest.mark.parametrize("mode", ["before", "after"])
+@pytest.mark.parametrize("art", _SANDBOX_FORBIDDEN)
+def test_isolation_snapshot_refuses_real_workspace_and_frozen_run_root(sandbox, mode, art):
+    art = art.format(repo=sandbox["repo"])
+    before = _tree(sandbox["repo"])
+    env = dict(sandbox["env"], **ALLOW_TMP_ART)  # the override does not relax these
+    p = _run([sandbox["script"]("isolation_snapshot.sh"), mode, "--db", "cars_cr_x", "--art", art], env=env)
+    assert p.returncode == 2 and "REFUSED" in p.stderr and "run root" in p.stderr, p.stdout + p.stderr
+    assert _tree(sandbox["repo"]) == before  # snapshots/before.txt and START untouched
+    assert not sandbox["calls"].exists()
+
+
+@pytestmark_scripts
+def test_make_manifest_refuses_real_workspace_run_root(sandbox):
+    before = _tree(sandbox["repo"])
+    for art in ("workspace", "workspace/cleanroom_2026_10", str(sandbox["repo"])):
+        p = _run([sandbox["script"]("make_manifest.sh"), "--art", art, "--roster", str(sandbox["roster"]),
+                  "--from", str(FIX / "manifest")], env=dict(sandbox["env"], **ALLOW_TMP_ART))
+        assert p.returncode == 2 and "REFUSED" in p.stderr, (art, p.stderr)
+    assert _tree(sandbox["repo"]) == before
+
+
+@pytestmark_scripts
+def test_build_db_and_snapshot_accept_the_dbs_run_root(sandbox, tmp_path: Path):
+    repo, ws = sandbox["repo"], sandbox["ws"]
+    before = _tree(repo)
+    # strict, outside every workspace/: refused before any DB call
+    p = _run([sandbox["script"]("build_db.sh"), "--db", "cars_cr_x", "--art", str(tmp_path / "art")], env=sandbox["env"])
+    assert p.returncode == 2 and "CR_ALLOW_ART_OUTSIDE_RUNS" in p.stderr and not sandbox["calls"].exists()
+    # the DB's own run root (explicit and default) passes the check and reaches the DB
+    # stubs (which report that the source DB does not exist), still before any mkdir
+    for extra in (["--art", "workspace/cleanroom_runs/cars_cr_x"], []):
+        p = _run([sandbox["script"]("build_db.sh"), "--db", "cars_cr_x", *extra], env=sandbox["env"])
+        assert "ok   run root" in p.stdout and "source cars does not exist" in p.stderr, p.stdout + p.stderr
+    assert sandbox["calls"].exists()
+    assert _tree(repo) == before
+    # isolation_snapshot before: writes only <art>/snapshots/before.txt and <art>/START
+    p = _run([sandbox["script"]("isolation_snapshot.sh"), "before", "--db", "cars_cr_x",
+              "--art", "workspace/cleanroom_runs/cars_cr_x"], env=sandbox["env"])
+    assert p.returncode == 0, p.stdout + p.stderr
+    after = _tree(repo)
+    changed = {k for k in set(before) | set(after) if k not in before or k not in after or before[k] != after[k]}
+    run_root = "workspace/cleanroom_runs/cars_cr_x"
+    assert changed == {"workspace/cleanroom_runs", run_root, f"{run_root}/snapshots",
+                       f"{run_root}/snapshots/before.txt", f"{run_root}/START"}, changed
+    assert (ws / "cleanroom_2026_10" / "snapshots" / "before.txt").read_text() == "sentinel before.txt\n"

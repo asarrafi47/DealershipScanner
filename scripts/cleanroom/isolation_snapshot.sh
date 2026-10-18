@@ -13,6 +13,10 @@
 # whether the real recipe cache got a store tag, and the git tracked-change count.
 # "after" diffs against "before" and lists files newer than <art>/START under the real
 # dirs. Prints ISOLATION OK, or exits 1. Writes only <art>/snapshots/* and <art>/START.
+# Refuses (exit 2, before writing) a protected --db and an --art that is not
+# workspace/cleanroom_runs/<db> (scripts/cleanroom/check_run_root.sh; the frozen
+# workspace/cleanroom_2026_10 and any ancestor of workspace/ always; tests may use a dir
+# outside every workspace/ with CR_ALLOW_ART_OUTSIDE_RUNS=1).
 set -uo pipefail
 REPO=$(cd "$(dirname "$0")/../.." && pwd)
 mode=${1:-}; shift || true
@@ -30,6 +34,10 @@ case "$mode" in before|after) ;; *) echo "usage: $0 before|after --db <name> --a
 [ -n "$DB" ] && [ -n "$ART" ] || { echo "--db and --art are required" >&2; exit 2; }
 case " $PROTECT " in *" $DB "*) echo "REFUSED: $DB is a protected DB, not a scratch target" >&2; exit 2;; esac
 case "$ART" in /*) ;; *) ART=$REPO/$ART;; esac
+# Before the mkdir: never overwrite the frozen run's snapshots/ and START, or write into
+# the real workspace (scripts/cleanroom/check_run_root.sh).
+rr=$(bash "$REPO/scripts/cleanroom/check_run_root.sh" --art "$ART" --db "$DB") || { echo "REFUSED: ${rr#REFUSED }" >&2; exit 2; }
+echo "$rr"
 SNAP=$ART/snapshots; mkdir -p "$SNAP"
 RO="-c default_transaction_read_only=on -c statement_timeout=60000"
 q() { env -u PGAPPNAME PGOPTIONS="$RO" psql -X -h /tmp -p 5432 -At -F'|' "$@"; }

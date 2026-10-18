@@ -10,8 +10,12 @@
 # Refuses (prints FAIL, exits 1, never connects) when the write target is cars or
 # cars_cleanroom or not a cars_cr_* / cars_rehearsal name; when the env DSN is not
 # that DB on host /tmp port 5432 (port 15432, the old SSH tunnel, is named explicitly);
-# when RECIPES_CACHE_DIR, DEALER_LOGS_ROOT, SCAN_OUT_ROOT, SCANNER_LOCK_PATH or the
-# manifests sit outside the run root; or when `git rev-parse HEAD` is not --sha.
+# when --art is not workspace/cleanroom_runs/<db> (scripts/cleanroom/check_run_root.sh:
+# an ancestor of workspace/, the frozen workspace/cleanroom_2026_10 and the real
+# dealer_logs / recipes dirs are always refused; CR_ALLOW_ART_OUTSIDE_RUNS=1 lets tests
+# use a dir outside every workspace/ and is printed); when RECIPES_CACHE_DIR,
+# DEALER_LOGS_ROOT, SCAN_OUT_ROOT, SCANNER_LOCK_PATH or the manifests sit outside the
+# run root; or when `git rev-parse HEAD` is not --sha.
 # Then checks the DB, the app's view of it, the roster, paid keys and auto-heal.
 # Prints PREFLIGHT OK or PREFLIGHT FAIL. Writes nothing (unless --stamp: one JSON
 # file under <art>/runs/ after an OK). --egress makes one HTTPS request to
@@ -52,11 +56,10 @@ esac
 [ -n "$ROSTER" ] && [ -f "$ROSTER" ] && ok "roster $ROSTER exists" || bad "--roster missing or not a file"
 [ -n "$SHA" ] || bad "--sha is required (the expected git HEAD: phase HEAD or RC_SHA)"
 if [ -n "$ART" ]; then
-  case "$(real "$ART")" in
-    "$(real "$REPO/workspace/cleanroom_2026_10")"|"$(real "$REPO/workspace/cleanroom_2026_10")"/*)
-      bad "run root $ART is the frozen 2026-10 clean-room dir";;
-    *) ok "run root $ART";;
-  esac
+  # run root must be workspace/cleanroom_runs/<db> (check_run_root.sh; tests opt out
+  # with CR_ALLOW_ART_OUTSIDE_RUNS=1, reported as a "note" line)
+  if rr=$(bash "$REPO/scripts/cleanroom/check_run_root.sh" --art "$ART" ${DB:+--db "$DB"}); then echo "  $rr"
+  else bad "${rr#REFUSED }"; fi
 fi
 for v in INVENTORY_DATABASE_URL DATABASE_URL; do
   verdict=$(python3 - "${!v:-}" "$DB" <<'PY'

@@ -3,27 +3,30 @@
 # <art>/roster.txt for a scratch re-run, filtered to --roster from a source manifest dir
 # (default: the frozen clean-room manifests, workspace/cleanroom_2026_10/manifest).
 #
-#   scripts/cleanroom/make_manifest.sh --art workspace/cleanroom_runs/cars_cr_x --roster <file> [--from <dir>]
+#   scripts/cleanroom/make_manifest.sh --art workspace/cleanroom_runs/cars_cr_x --roster <file> [--from <dir>] [--db cars_cr_x]
 #
 # Refuses (exit 2) when a roster id is missing from either source manifest (a new
-# rooftop needs its entry in a --from dir first), or when --art is the frozen
-# workspace/cleanroom_2026_10. Writes only under <art>.
+# rooftop needs its entry in a --from dir first), or, before writing anything, when
+# --art is not workspace/cleanroom_runs/<db> (<db> defaults to the basename of --art;
+# scripts/cleanroom/check_run_root.sh: the frozen workspace/cleanroom_2026_10 and any
+# ancestor of workspace/ always; tests may use a dir outside every workspace/ with
+# CR_ALLOW_ART_OUTSIDE_RUNS=1). Writes only under <art>.
 set -euo pipefail
 REPO=$(cd "$(dirname "$0")/../.." && pwd)
-ART= ROSTER= FROM=$REPO/workspace/cleanroom_2026_10/manifest
+ART= ROSTER= DB= FROM=$REPO/workspace/cleanroom_2026_10/manifest
 while [ $# -gt 0 ]; do
   case "$1" in
     --art) ART=${2:-}; shift 2;;
     --roster) ROSTER=${2:-}; shift 2;;
     --from) FROM=${2:-}; shift 2;;
+    --db) DB=${2:-}; shift 2;;
     *) echo "unknown argument $1" >&2; exit 2;;
   esac
 done
-[ -n "$ART" ] && [ -n "$ROSTER" ] || { echo "usage: $0 --art <dir> --roster <file> [--from <dir>]" >&2; exit 2; }
+[ -n "$ART" ] && [ -n "$ROSTER" ] || { echo "usage: $0 --art <dir> --roster <file> [--from <dir>] [--db <name>]" >&2; exit 2; }
 case "$ART" in /*) ;; *) ART=$REPO/$ART;; esac
-case "$(cd "$(dirname "$ART")" 2>/dev/null && pwd)/$(basename "$ART")" in
-  "$REPO/workspace/cleanroom_2026_10"|"$REPO/workspace/cleanroom_2026_10/"*) echo "REFUSED: $ART is the frozen clean-room dir" >&2; exit 2;;
-esac
+rr=$(bash "$REPO/scripts/cleanroom/check_run_root.sh" --art "$ART" ${DB:+--db "$DB"}) || { echo "REFUSED: ${rr#REFUSED }" >&2; exit 2; }
+echo "$rr"
 mkdir -p "$ART/manifest"
 python3 - "$ROSTER" "$FROM" "$ART" <<'PY'
 import json, sys
