@@ -10,24 +10,32 @@
 1. **Before** implementing or reviewing security work: read this file; pick or add the relevant item IDs.
 2. **During** work: keep IDs in commit messages / PR descriptions (e.g. `SEC-012`).
 3. **After** work: update **Status**, **Last verified** (date), **Validation** notes if the procedure changed, and append **Changelog**.
-4. **New** risks or follow-ups: add a row under the right phase; do not rely on chat-only tracking.
+4. **New** risks or follow-ups: add a row under the right phase; do not rely on chat-only tracking. The row is a `### SEC-nnn — Title` heading (em dash) under a `## Phase N` heading, never under Future or Changelog, with the next unused ID and all five fields: **Status**, **Scope**, **Outcome**, **Validation** and **Last verified** (a date). For a `Not started` row, Outcome is the planned fix, Validation the planned check, and Last verified the date the row was written. Update the Summary table in the same change. `backend/tests/test_security_master_todo.py` enforces all of this.
+
+**Duplicated IDs (history):** five IDs each name two different rows: SEC-061 (Phase 2 and Phase 3), SEC-063, SEC-064 and SEC-089 (Phase 2 and Phase 6), and SEC-066 (Phase 4 and Phase 6). Renumbering is left to the re-scoping pass (remediation P18B.5); until then cite them with the phase or the row title, and never reuse an ID. The test fails on any other duplicate.
 
 **Validation runbook (same PR as code):** When you change **auth / sessions**, **CSRF**, **CSP**, **LLM or chat APIs** (e.g. `POST /api/car/<id>/chat`, `POST /api/search/smart`), **rate limits**, **subprocess** (e.g. `scanner.py`, operator CLIs), or **templates/JS** that affect those surfaces, re-run the **Validation** column for every touched **SEC-xxx** row, set **Last verified** to the run date, and add a one-line **Changelog** entry. The document is the contract; chat-only “done” is not enough.
 
-**Status values:** `Done` | `In progress` | `Blocked` | `Not started`
+**Status values:** `Done` | `In progress` | `Blocked` | `Not started`. Closed rows may also read `Won't do` or `Retired`.
+
+**Status tracks the security property in the code on the release branch.** Going live (a deploy, a prod variable, an owner step) is tracked separately, in the row's **Go-live** field where it has one, so a Done row can still be waiting for its release.
 
 ---
 
 ## Summary
 
-| Phase | Theme                        | Open items |
-|-------|------------------------------|------------|
-| 1     | Secrets & environment        | 0          |
-| 2     | Identity, sessions, CSRF     | 0          |
-| 3     | Input validation & stability | 0          |
-| 4     | Frontend XSS & CSP           | 0          |
-| 5     | APIs, abuse, LLM surfaces    | 0          |
-| 6     | Dev / operator tooling       | 0          |
+**Open items** counts the rows in that phase whose Status is `In progress`, `Blocked` or `Not started`; **Open IDs** names them. Update this table in the same change as any row status. `backend/tests/test_security_master_todo.py` fails when the table and the rows disagree.
+
+| Phase | Theme                        | Open items | Open IDs |
+|-------|------------------------------|------------|----------|
+| 1     | Secrets & environment        | 1          | SEC-110 (Blocked) |
+| 2     | Identity, sessions, CSRF     | 0          | none |
+| 3     | Input validation & stability | 0          | none |
+| 4     | Frontend XSS & CSP           | 0          | none |
+| 5     | APIs, abuse, LLM surfaces    | 1          | SEC-113 (Not started) |
+| 6     | Dev / operator tooling       | 3          | SEC-096 (In progress), SEC-097 (In progress), SEC-112 (Not started) |
+
+SEC-096 (email verification) and SEC-097 (password reset) sit in the Phase 6 section for history, although they are identity work. Moving rows between phases is left to the re-scoping pass (remediation P18B.5).
 
 ---
 
@@ -45,12 +53,12 @@
 | `/logout` | N/A | `POST` only; CSRF form; clears Flask session; `GET /logout` → **405** (avoids logout CSRF) (see **SEC-060**). |
 | `/mfa/*` (legacy URLs) | N/A — **2FA removed** | `GET`/`POST` on `/mfa/choose`, `/mfa/setup`, `/mfa/verify`, `/mfa/qr`, `/mfa/qr-wait`, `/mfa/qr-confirm/<token>`, `POST /mfa/qr/complete` → **302** to `/login` (logged out) or `/listings` (logged in). `/dev/mfa/*` → `/dev/` or `/dev/login` (see dev routes). |
 | `/login`, `/register` | N/A | CSRF on POST; bcrypt passwords; per-IP rate limits on POST; **general** accounts (no org) use these; **dealership** sign-up with org uses `/dealer/register` + `/dealer/login` |
-| `/auth/google`, `/auth/google/callback` | N/A | Optional Google OAuth when `GOOGLE_OAUTH_CLIENT_ID` + `GOOGLE_OAUTH_CLIENT_SECRET` set; OAuth `state` validation; per-IP rate limit on callback; auto-link by verified email (see **SEC-075**) |
+| `/auth/google`, `/auth/google/callback`, `/auth/apple`, `/auth/apple/callback` | N/A | Optional Google / Apple OAuth when the provider env is set (Google: `GOOGLE_OAUTH_CLIENT_ID` + `GOOGLE_OAUTH_CLIENT_SECRET`); OAuth `state` validation; per-IP rate limit on callback; provider email must be verified; auto-links an existing account only when that account's email is verified, otherwise the link waits for a password login (see **SEC-075**, **SEC-104**) |
 | `/dev/login`, `/dev/register` | N/A | CSRF on POST; bcrypt; per-IP rate limits; `/dev/register` gated in production; optional `DEV_IP_ALLOWLIST` (comma IPs / CIDRs) restricts all `/dev/*` when set |
 | `/api/search/smart` | No | CSRF header (`X-CSRF-Token`) + per-IP rate limit (see SEC-043); response `search_meta` trimmed to mode/counts only (**SEC-087**) |
 | `POST /api/session/listings-geo` | No | CSRF header; stores last listings ZIP + radius in the Flask session (for dashboard recommendations) |
 | `/car/<id>/window-sticker-preview.png`, `GET /api/cars/<id>/window-sticker-preview` | Same as car chat (SEC-072/073) | `_require_premium_feature`; PNG from stored Monroney PDF |
-| `/api/car/<id>/chat` | **Yes** when `BILLING_STRIPE_ENABLED=1` (premium / org subscription / app admin); open when billing off | CSRF header + **layered** rate limits (see **SEC-041**) + max message/body size; **403** `premium_required` when billing on and unpaid. Playwright web research off for anonymous users in production by default. |
+| `/api/car/<id>/chat` | **Yes** when `BILLING_STRIPE_ENABLED=1` (premium / org subscription / app admin); open when billing off | CSRF header + **layered** rate limits (see **SEC-041**) + max message/body size; **403** `premium_required` when billing on and unpaid. Web research (HTTP fetch only since **SEC-111**; no browser in the web image) runs only for signed-in users in production; prod web has `CAR_CHAT_WEB_RESEARCH=0` since 2026-10-08. |
 | `/api/compare/chat` | Same as car chat | CSRF header + same rate limits as **SEC-041**; up to 4 `car_ids`; **403** when billing on and unpaid. |
 | `/api/nearby-dealers` | Same as car chat (dealership picker) | ZIP + radius; **403** `premium_required` when billing on and unpaid. |
 | `/billing/premium/success` | **Yes** | Grants `is_premium` only after Stripe Checkout Session `payment_status=paid` + metadata match (see **SEC-066**). |
@@ -59,7 +67,7 @@
 | `GET /api/saved-cars` | **Yes** — `session['user_id']` | Saved inventory for native clients |
 | `POST /api/auth/login`, `POST /api/auth/register`, `POST /api/auth/logout` | N/A / session | CSRF header (`X-CSRF-Token`); login/register per-IP rate limits same as HTML `/login` and `/register` (**SEC-077**, **SEC-086**) |
 | `GET /api/cars/<id>` | No | Public aggregate JSON (same data as `/car/<id>` template context; market intel when paid) |
-| `/dev/*` (dashboard, APIs) | **Yes** — `dev_users.db` via `/dev/login` in production (**SEC-083**); app `role=admin` pass-through only if `ALLOW_APP_ADMIN_DEV_PASS_THROUGH=1` | CSRF on forms + `X-CSRF-Token` on API; POST `/dev/logout`; scanner jobs (`POST /dev/api/test-scanner`, smart-import) require `http`/`https` public URLs (**SEC-068**); includes `POST /dev/api/cars/<id>/spec-backfill` (optional Google CSE env for search tier) |
+| `/dev/*` (dashboard, APIs) | **Yes** — `dev_users.db` via `/dev/login` in production (**SEC-083**); app `role=admin` pass-through only if `ALLOW_APP_ADMIN_DEV_PASS_THROUGH=1` (unset on prod web since 2026-10-08; boot warns if it returns, **SEC-109**) | CSRF on forms + `X-CSRF-Token` on API; POST `/dev/logout`; scanner jobs (`POST /dev/api/test-scanner`, smart-import) require `http`/`https` public URLs (**SEC-068**); includes `POST /dev/api/cars/<id>/spec-backfill` (optional Google CSE env for search tier) |
 | `/dev/manifest`, `/api/dev/*` | `DEV_CONSOLE=1` + **`DEV_CONSOLE_SECRET` required in production** (**SEC-081**) | CSRF on mutations; safe `next` under `/dev/manifest` |
 | `GET /api/dealer-locator` | Public by default (registry + Google); optional `DEALER_LOCATOR_REQUIRE_LOGIN=1` gates Google tier in production (**SEC-085**) | Per-IP rate limit (default 30/min) |
 
@@ -86,11 +94,12 @@
 | `RATE_LIMIT_CAR_CHAT_PER_MIN` | Optional | Per **IP + car** window; default **24**/min (sliding) |
 | `RATE_LIMIT_CAR_CHAT_PER_IP_PER_MIN` | Optional | Per-IP cap across all cars; default **48**/min |
 | `RATE_LIMIT_CAR_CHAT_GLOBAL_PER_MIN` | Optional | Default **0** (disabled). When positive, shared cap for all `POST /api/car/*/chat` (e.g. **200** in prod; use with `RATE_LIMIT_SQLITE_PATH` for multi-worker) |
-| `CAR_CHAT_WEB_RESEARCH` | Optional | `auto` (default when unset): dev allows Playwright; **production** allows Playwright only for signed-in users unless `CAR_CHAT_WEB_RESEARCH_PUBLIC=1`. `0`/`1` = force off/on for all. |
-| `CAR_CHAT_WEB_RESEARCH_PUBLIC` | Optional | When `1` and `CAR_CHAT_WEB_RESEARCH` is `auto` in **production**, anonymous users may trigger Playwright (higher cost/abuse risk). |
-| `WEB_RESEARCH_ALLOWED_HOSTS` | Optional | Comma-separated hostnames; when set, Brave result links must match (exact or `*.domain`). Always applies blocklist + private-IP/localhost guard. Unset = blocklist + private guard only. |
-| `TRUST_PROXY_HEADERS` | Required behind a proxy (`1` / `true`) | When set, rate limits read `X-Forwarded-For` `TRUSTED_PROXY_HOPS` entries from the right. Unset behind a proxy collapses every per-IP limit into one shared bucket. |
-| `TRUSTED_PROXY_HOPS` | Optional (default `1`) | Number of trusted proxies in front of the app (Railway edge = 1; Cloudflare → Railway = 2). Only read when `TRUST_PROXY_HEADERS` is truthy. |
+| `CAR_CHAT_WEB_RESEARCH` | Optional | Car-chat live web research. Since **SEC-111** the research itself is HTTP-only for every setting (DuckDuckGo HTML search plus direct page fetches; no browser). `auto` (default when unset): dev allows it; **production** allows it only for signed-in users. `0`/`1` = force off/on for all. Prod web: `0` since 2026-10-08 (D-SEC1 stopgap). The code still names this "Playwright" (`web_research_playwright_allowed`); the rename is a later unit. |
+| `CAR_CHAT_WEB_RESEARCH_PUBLIC` | None (no effect) | Meant to let anonymous users trigger web research under `auto`, but it changes nothing in any environment (`car_chat_policy.py`): non-production `auto` already allows research for everyone, and production ignores the variable (signed-in users only). Production boot still logs a warning when it is set (SEC-081). |
+| `WEB_RESEARCH_ALLOWED_HOSTS` | Optional | Comma-separated hostnames; when set, every candidate URL must match (exact or `*.domain`): the direct guide URLs and DuckDuckGo HTML results the web's HTTP path uses, and Brave result links in browser mode (operator script only since **SEC-111**). Always applies blocklist + private-IP/localhost guard. Unset = blocklist + private guard only. |
+| `TRUST_PROXY_HEADERS` | Required behind a proxy (`1` / `true`) | When set, rate limits read the client from `X-Forwarded-For`: `TRUSTED_PROXY_HOPS` entries from the right, or, with `TRUSTED_PROXY_CIDRS`, the first entry from the right outside those ranges (bounded by the hop count). Unset behind a proxy collapses every per-IP limit into one shared bucket. |
+| `TRUSTED_PROXY_HOPS` | Optional (default `1`) | Number of trusted proxies in front of the app (Railway edge = 1; Cloudflare → Railway = 2, prod web). Only read when `TRUST_PROXY_HEADERS` is truthy. With `TRUSTED_PROXY_CIDRS` set it bounds the walk, so prod keeps `2`. Until SEC-110 merges (unit/P3.7, Blocked), do not run `deploy/railway/sync-vault-to-railway.sh` (plan LE-12; `deploy/railway/README.md` section 2): it silently sets `TRUSTED_PROXY_HOPS=1` when the variable is unset, its `variables delete` calls and `--mirror-secrets` sets ignore `RAILWAY_SERVICE` and land on whichever service the checkout is linked to, and every set runs without `--skip-deploys`. After the merge it refuses to run without explicit `TRUSTED_PROXY_HOPS` and `RAILWAY_SERVICE` values; README section 2 still says not to run it as written. |
+| `TRUSTED_PROXY_CIDRS` | Recommended in prod (`cloudflare`) | Comma-separated CIDRs / IPs and/or the token `cloudflare` (Cloudflare's published ranges, dated constant `CLOUDFLARE_PROXY_CIDRS_AS_OF` in `backend/utils/client_ip.py`, refresh at least quarterly). When set, a request sent straight to the origin can no longer choose its own client IP (**SEC-105**). Not yet set on prod web: N3.13 step 5, after the N3 deploy. |
 | `RATE_LIMIT_LOGIN_PER_MIN` | Optional | Default 30 (`/login` POST) |
 | `RATE_LIMIT_REGISTER_PER_MIN` | Optional | Default 10 (`/register` POST) |
 | `RATE_LIMIT_MFA_VERIFY_PER_MIN` | Optional | Default 20 (`POST /mfa/verify` per IP) |
@@ -105,7 +114,7 @@
 | `MFA_QR_INMEMORY` | Optional | When `1`/`true`, use in-process attempt store in **production** (intended for tests; not for multi-server) |
 | `MFA_QR_ATTEMPT_TTL_SECONDS` / `MFA_QR_APPROVED_TTL_SECONDS` | Optional | Defaults 120; Redis key TTLs for scan + desktop finalize window |
 | `PUBLIC_BASE_URL` or `MFA_QR_BASE_URL` | **Recommended** behind reverse proxy | Base URL used **inside the QR** for `https://…/mfa/qr-confirm/…` so phones hit the public hostname |
-| `DEV_IP_ALLOWLIST` | Optional hardening | Comma-separated client IPs or CIDRs (`10.0.0.0/8`). When set, `/dev/*` allows only those addresses (uses `client_ip`; enable `TRUST_PROXY_HEADERS` behind a trusted proxy). Complements VPN/firewall controls. |
+| `DEV_IP_ALLOWLIST` | Optional hardening | Comma-separated client IPs or CIDRs (`10.0.0.0/8`). When set, `/dev/*` allows only those addresses (uses `client_ip`; enable `TRUST_PROXY_HEADERS` behind a trusted proxy). Complements VPN/firewall controls. Spoofable through a direct-to-origin request until `TRUSTED_PROXY_CIDRS` is set (**SEC-105**). Prod leaves it unset at least until `TRUSTED_PROXY_CIDRS` is live; N3.13 step 8 then decides whether to set it (D-SEC5). Even once set it is defence in depth, not a gate, until an origin lock exists (**SEC-113**). |
 | `DEALER_PORTAL_DB_PATH` | Optional | Default `dealer_portal.db` (dealer-managed inventory) |
 | `DEALER_UPLOAD_ROOT` | Optional | Absolute or cwd-relative root for dealer photo files (default `uploads/dealer`) |
 | `DEALER_UPLOAD_MAX_BYTES` | Optional | Per-file cap (default 8 MiB) |
@@ -137,7 +146,7 @@
 | `STORE_ADMIN_MIN_PHOTOS` | Optional | Merchandising rule threshold for “low photo count” (default 3) |
 | `STORE_ADMIN_STALE_PRICE_DAYS` | Optional | Days without list-price change for stale heuristic (default 45) |
 | `DB_ADMIN_TOKEN` | **Required** for `python -m backend.scripts.db_admin` | Min 16 chars; Bearer / `X-DB-Admin-Token` on API (local `127.0.0.1` only) |
-| `ALLOW_APP_ADMIN_DEV_PASS_THROUGH` | Optional | When `1` in **production**, app `role=admin` may use `/dev` without `/dev/login` (default **off**) |
+| `ALLOW_APP_ADMIN_DEV_PASS_THROUGH` | Optional | When `1` in **production**, app `role=admin` may use `/dev` without `/dev/login` (default **off**). Deleted from prod web on 2026-10-08; production boot logs a warning if it is set (**SEC-083**, **SEC-109**). The local Docker stack (`deploy/docker-compose.yml`, `deploy/load-vault-env.sh`) defaults it to `1` with `FLASK_ENV=development`, where it has no effect on the production check. |
 | `RATE_LIMIT_DEALER_LOCATOR_PER_MIN` | Optional | Default 30 (`GET /api/dealer-locator` per IP) |
 
 ---
@@ -158,11 +167,12 @@
 
 | Field | Content |
 |-------|---------|
-| **Status** | Done (lxml **Blocked** on upstream) |
-| **Scope** | `requirements.txt`, `scripts/security_check.sh` |
-| **Outcome** | Minimum versions pin known CVE fixes for `urllib3`, `idna`, `langchain-*`, `langsmith`, `pygments`, `starlette`, `tornado`. **`lxml` 6.1+** fixes PYSEC-2026-87 but **`crawl4ai` 0.8.x** requires `lxml~=5.3` — remain on 5.4.x until Crawl4AI allows lxml 6 or drops the pin. **`chromadb`** is not an app dependency (pgvector only); `pip-audit` ignores **CVE-2026-45829** for orphan venv installs. Operator script `scripts/security_check.sh` runs security pytest + `pip-audit` (fails only on unmitigated vulns). |
-| **Validation** | `bash scripts/security_check.sh` → pytest green; `pip-audit` reports no vulns except documented `lxml` / ignored orphan `chromadb`. |
-| **Last verified** | 2026-05-30 |
+| **Status** | Done |
+| **Scope** | `requirements.txt`, `requirements-scanner.txt`, `scripts/security_check.sh` |
+| **Outcome** | Minimum versions pin known CVE fixes for `urllib3`, `idna`, `pygments` and the other transitive floors. **2026-10-18 (remediation P15B.1, D-DEP1 (a)):** the orphan dependencies are gone (`crawl4ai`, which had no importers and pinned `lxml~=5.3`, taking its transitive `nltk` with it; `pyotp`, `segno`, `ollama`; and the floors for `langchain-core` / `langchain-openai` / `langchain-text-splitters`, `langsmith`, `starlette` and `tornado`, which nothing requires any more), the patchright browser-install instructions are removed, `requirements-scanner.txt` pins `lxml>=6.1.0` (fixes PYSEC-2026-87) while `requirements.txt` no longer lists lxml at all, because nothing in the web tree requires it any more (the remaining mentions are optional extras of pandas, networkx, beautifulsoup4 and trimesh), so neither image installs a vulnerable lxml, and `scripts/security_check.sh` runs `pip-audit` in requirements mode over both files with **no** `--ignore-vuln` (the lxml and orphan-`chromadb` ignores are removed). |
+| **Go-live** | Ships with the N3 release. The `Dockerfile.web` / `Dockerfile.discovery` stage builds wait for the owner's Docker OK (N3.13 smoke). The MBP and mini dev venvs still hold lxml 5.4.0 and crawl4ai until they are rebuilt (owner). |
+| **Validation** | `pip-audit --desc on -r requirements.txt -r requirements-scanner.txt` → 0 findings, no ignores (or `bash scripts/security_check.sh`); `python -m pytest backend/tests/test_requirements_hygiene.py -q`. Before P15B.1 the same audit found 9 vulnerabilities in 3 packages (crawl4ai x6, lxml 5.4.0 x2, nltk x1). |
+| **Last verified** | 2026-10-18 (pip-audit run by the P15B.1 build on the requirements files merged into `phase/N3`; the dev venv here has no pip-audit) |
 
 ### SEC-002 — No default `admin` / `password` app user
 
@@ -193,6 +203,28 @@
 | **Outcome** | `FLASK_ENV=production` raises at import if `DEV_CONSOLE=1` without `DEV_CONSOLE_SECRET`. Manifest console routes return **404** when console enabled in prod but secret unset (defense in depth). Logs warnings for `BILLING_STRIPE_ENABLED=0`, unset `RATE_LIMIT_SQLITE_PATH`, and `CAR_CHAT_WEB_RESEARCH_PUBLIC=1`. |
 | **Validation** | `python -m pytest backend/tests/test_production_security.py -q`. |
 | **Last verified** | 2026-05-26 |
+
+### SEC-109 — Production config warnings; per-account password reset cooldown (remediation P3.6)
+
+| Field | Content |
+|-------|---------|
+| **Status** | Done |
+| **Scope** | `backend/utils/production_security.py` (`_warn_email_and_link_config`, pass-through guard in `assert_production_security_config`), `backend/auth/password_reset.py` (`request_password_reset`), `backend/tests/test_production_security.py`, `backend/tests/test_password_reset.py` |
+| **Outcome** | In production, boot logs a warning (no refusal) when: (1) `PASSWORD_RESET_ENABLED`, `EMAIL_VERIFICATION_ENABLED` or `BILLING_STRIPE_ENABLED` is on while `PUBLIC_BASE_URL` is unset (emailed links fall back to `MFA_QR_BASE_URL` or become relative; Stripe return URLs come from the request host); (2) an email flow is on with neither `RESEND_API_KEY` nor `SMTP_HOST` set (send errors are caught and only logged); (3) `ALLOW_APP_ADMIN_DEV_PASS_THROUGH` is truthy (a guard only: prod deleted it on 2026-10-08, see SEC-083). `request_password_reset` sends at most 3 reset emails per account per hour (`forgot_pw_user:<uid>`), on top of the per-IP limit. The check runs before a token is issued, so a throttled request neither rotates the token (the link already emailed stays valid) nor changes the response (no account enumeration). Known gaps (review): other no-send setups stay silent (`MFA_DELIVERY_MODE=log` in prod, `RESEND_API_KEY` with no sender address); the attacker and the victim share the per-account bucket; without `RATE_LIMIT_SQLITE_PATH` the counter is per process and resets on redeploy. |
+| **Go-live** | Ships with the N3 release. Owner: confirm `PUBLIC_BASE_URL` is set on prod web (the new warning shows it on the next boot). |
+| **Validation** | `python -m pytest backend/tests/test_production_security.py backend/tests/test_password_reset.py -q` (each warning fires exactly when its condition holds and stays silent outside production; a 4th reset request within the hour sends no email and returns the same page). |
+| **Last verified** | 2026-10-18 |
+
+### SEC-110 — Vault sync refuses an unset `TRUSTED_PROXY_HOPS` (remediation P3.7)
+
+| Field | Content |
+|-------|---------|
+| **Status** | Blocked |
+| **Scope** | `deploy/railway/sync-vault-to-railway.sh`, `deploy/railway/README.md`, `backend/tests/test_sync_vault_guard.py` (new). On branch `unit/P3.7` (b8364d6d6); not merged into `phase/N3` yet. |
+| **Outcome** | The script set `TRUSTED_PROXY_HOPS="${TRUSTED_PROXY_HOPS:-1}"`, so a run without the variable would silently reset prod web (Cloudflare, then Railway's edge: 2 since 1.4.4) to 1, and every per-IP rate limit would key on a Cloudflare address. A guard right after argument parsing, before the CLI check and every `railway` call, exits 1 unless `TRUSTED_PROXY_HOPS` is a positive integer and `RAILWAY_SERVICE` names a service; every call now passes `--service`, so nothing lands on the checkout's linked service. The README lists the current services (web, scanner-nightly, Postgres; scanner-worker and scanner-scheduler deleted 2026-10-08) and the hops rule for the Cloudflare-fronted domain (2). Follow-up nit: the guard accepts any positive integer (3, 22) even for web. |
+| **Blocked on** | Remediation P3.7 acceptance: the owner confirms the live web value before merge (`railway variable list -s web --kv \| grep '^TRUSTED_PROXY_HOPS='`, expect `TRUSTED_PROXY_HOPS=2`); agents do not run `railway`. On merge: set Status Done, remove this field and the "On branch `unit/P3.7`" sentence from Scope, update the Summary (Phase 1 to 0), replace the 'Until SEC-110 merges' sentence in the TRUSTED_PROXY_HOPS env row with "`deploy/railway/sync-vault-to-railway.sh` refuses to run without explicit `TRUSTED_PROXY_HOPS` and `RAILWAY_SERVICE` values (SEC-110); still do not run it as written (`deploy/railway/README.md` section 2)." so the row never reads as permission to run it, add a Changelog line, and add the README sentence that once `TRUSTED_PROXY_CIDRS=cloudflare` is set the hop count only bounds the walk, so it stays 2. `backend/tests/test_security_master_todo.py::test_sec_110_tracks_the_vault_sync_script` fails until the doc follows the script. |
+| **Validation** | `bash -n deploy/railway/sync-vault-to-railway.sh`; `python -m pytest backend/tests/test_sync_vault_guard.py -q` (unset, empty or malformed hops or service refuse with zero `railway` calls, even with no CLI on PATH; the explicit hops value is the one set; every call names the service). |
+| **Last verified** | 2026-10-18 (run in the `unit/P3.7` worktree) |
 
 ---
 
@@ -398,6 +430,28 @@
 | **Validation** | `git ls-files '*.db'` at repo root — no runtime app DBs; `git check-ignore -v backend/data/chroma/` confirms ignore when present locally; `git ls-files | grep -E '^csv_out/|backend/dictionary/csv_out/|csv_out_cleaned_main/|csv_out_rejected_main/'` → empty after excluding listing/options trees. |
 | **Last verified** | 2026-04-29 |
 
+### SEC-104 — OAuth links only verified emails; pending link after a password login (remediation P3.1)
+
+| Field | Content |
+|-------|---------|
+| **Status** | Done |
+| **Scope** | `backend/auth/oauth_link.py` (new), `backend/auth/google_oauth.py`, `backend/auth/apple_oauth.py`, `backend/auth/pages.py` (`login_page`, `api_auth_login`), `backend/auth/app_registration.py`, `backend/dealer/routes.py` (dealer registration), `backend/db/users_db/{auth,accounts,admin,__init__}.py` (`find_users_by_email`, `update_user_profile`), `backend/utils/registration_validation.py` (`username_format_error`), `frontend/templates/login.html`; tests `test_google_oauth.py`, `test_apple_oauth.py`, `test_username_email_collision.py` (new) |
+| **Outcome** | Closes the OAuth pre-registration takeover: someone registers a password account with another person's email (email verification is optional), the owner of that email later signs in with Google or Apple, and lands in the squatter's account. Also closes the variant where a username equals the victim's email. (1) Linking looks the account up by `lower(email)=lower(?)` (`find_users_by_email`), never `get_user_by_login`, which also matches usernames; more than one case-variant match refuses to pick. (2) Google requires `email_verified is True` (a missing claim is now rejected, not only `False`); Apple requires a true `email_verified` claim before the email-match path. (3) An existing account auto-links only when its `email_verified_at` is set. Otherwise the link waits in `session['pending_oauth_link']` (provider, sub, email, 10-minute expiry) and completes only after a password login as that same user in the same browser (`/login` or `POST /api/auth/login`); that links the sub, marks the email verified and clears the key. Accounts created through OAuth are verified at creation and keep auto-linking. (4) Web, mobile and dealer registration and profile update reject a new username that contains `@` or equals an existing email; changing the email clears `email_verified_at` and any pending verify token. **Deviation from the plan:** the plan held the link only when the account had no provider sub, a usable password and no `email_verified_at`. The code holds it whenever the matched email is unverified: an OAuth-created account's random bcrypt hash makes "usable password" unreadable, and a sub from the other provider does not vouch for a later email change. **No data repair:** accounts auto-linked by email, or that changed email and kept the verified flag, before this release cannot be found from the data and stay as they are. An unverified password account must log in with its password once before Google or Apple sign-in works (D-SEC4 (a)). Follow-ups (low; none allows a takeover): `google_oauth.py` / `apple_oauth.py` catch `sqlite3.IntegrityError` but not sqlcipher3's, so two concurrent first callbacks return 500 (fails closed); Apple's synthetic `{sub[:12]}@privaterelay.appleid.com` email can collide (the second user now gets "Could not create your account"); a new email equal to a legacy username containing `@` is still accepted (denial of service only). |
+| **Go-live** | Ships with the N3 release. Then the owner may set `EMAIL_VERIFICATION_ENABLED=1` (remediation Section 8, Phase 16). |
+| **Validation** | `TESTS_BLOCK_NETWORK=1 python -m pytest backend/tests/test_google_oauth.py backend/tests/test_apple_oauth.py backend/tests/test_username_email_collision.py -q` (for both providers: the pre-registration takeover is blocked, a username equal to the victim's email does not match, a missing `email_verified` is rejected, and the link completes after a password login). |
+| **Last verified** | 2026-10-18 |
+
+### SEC-107 — CSRF on operator DELETE routes; url_map coverage test; esm.sh out of CSP (remediation P3.4)
+
+| Field | Content |
+|-------|---------|
+| **Status** | Done |
+| **Scope** | `backend/web/security.py` (`_csrf_mutating_requests`, `_CSRF_HEADER_PREFIXES`, both CSP builders), `backend/tests/test_csrf_coverage.py` (new), `backend/tests/test_csp_policy.py` (new) |
+| **Outcome** | The CSRF hook checked the `api_admin_operator_` prefix on POST only, so a cross-site page could make a signed-in site admin's browser call `api_admin_operator_delete_incomplete_car` or `api_admin_operator_api_delete_dealer`. DELETE on that prefix now requires `X-CSRF-Token` too (dev.js `devFetch` already sends it). `test_csrf_coverage.py` walks `app.url_map` and fails on any POST/PUT/PATCH/DELETE rule that the hook does not cover and that is not classified as: the `dev` / `dev_console` blueprint hooks, an in-view `validate_csrf_header` call (community_api, users_hub, dealers_hub), a signature-verified webhook (`billing.stripe_webhook`, `billing.premium_webhook`), or a redirect-only MFA stub (including `dev.dev_mfa_gone`). Today: 78 hook, 6 in-view, 2 exempt, 10 MFA stubs, 0 unclassified. `https://esm.sh` is removed from `script-src` and `connect-src` in both the enforced and the report-only CSP; nothing loaded from it. Follow-ups (review): the operator prefix is checked on POST and DELETE only, so a future PUT/PATCH operator route relies on the coverage test to be noticed; the in-view classification is a source-text check, not proof that the check runs before the first write. |
+| **Go-live** | Ships with the N3 release; N3.13 step 4 checks the live CSP header for esm.sh. |
+| **Validation** | `python -m pytest backend/tests/test_csrf_coverage.py backend/tests/test_csp_policy.py backend/tests/test_admin_operator_api.py backend/tests/test_app_security_basics.py -q` (DELETE `/api/admin/operator/incomplete-cars/1` without the token returns 403; the coverage test fails when a dummy unclassified POST is registered); `grep -n esm.sh backend/web/security.py` prints nothing. |
+| **Last verified** | 2026-10-18 |
+
 ---
 
 ## Phase 3 — Input validation & stability
@@ -522,9 +576,9 @@
 |-------|---------|
 | **Status** | Done |
 | **Scope** | `backend/auth/google_oauth.py`, `backend/db/users_db.py` (`google_sub`), `backend/main.py`, `frontend/templates/login.html` |
-| **Outcome** | Server-side OAuth code flow when `GOOGLE_OAUTH_CLIENT_ID` + `GOOGLE_OAUTH_CLIENT_SECRET` set; `state` stored in session; callback rate-limited like login; verified Google email auto-links to existing app user by email; new users get `ROLE_GENERAL` + random password hash; UI hidden unless `GOOGLE_OAUTH_SHOW_BUTTON=1`. New Google sign-ups (non-premium) redirect to `/premium` with welcome banner; Stripe checkout uses existing `user_id` session (same account as Google). Optional `GOOGLE_OAUTH_OFFER_PREMIUM_ON_LOGIN=1` for returning users; `/auth/google?intent=premium` preserves upgrade intent through OAuth. |
+| **Outcome** | Server-side OAuth code flow when `GOOGLE_OAUTH_CLIENT_ID` + `GOOGLE_OAUTH_CLIENT_SECRET` set; `state` stored in session; callback rate-limited like login; verified Google email auto-links to existing app user by email (**changed 2026-10-18 by SEC-104:** only when that account's email is verified, otherwise after a password login); new users get `ROLE_GENERAL` + random password hash; UI hidden unless `GOOGLE_OAUTH_SHOW_BUTTON=1`. New Google sign-ups (non-premium) redirect to `/premium` with welcome banner; Stripe checkout uses existing `user_id` session (same account as Google). Optional `GOOGLE_OAUTH_OFFER_PREMIUM_ON_LOGIN=1` for returning users; `/auth/google?intent=premium` preserves upgrade intent through OAuth. |
 | **Validation** | `python -m pytest backend/tests/test_google_oauth.py -q`; unconfigured `/auth/google` → redirect `/login`; callback with bad `state` → login error. |
-| **Last verified** | 2026-05-23 |
+| **Last verified** | 2026-10-18 |
 
 ### SEC-032 — Content-Security-Policy (enforce + report-only)
 
@@ -532,9 +586,9 @@
 |-------|---------|
 | **Status** | Done |
 | **Scope** | `backend/main.py` (`CSP_ENFORCE`, `CSP_REPORT_ONLY`, per-request nonce, `g.csp_nonce`), all app templates with `<script>` (listings, car, dashboard, auth, `dev*`, `dev_manifest`, `_app_logout.html` partial) |
-| **Outcome** | Enforced `Content-Security-Policy` in production by default; per-request `script-src` **nonce** on all script elements (incl. `type="application/json"` blobs). `style-src` includes `unsafe-inline` for existing `style=""` until migrated to classes. `CSP_ENFORCE=0` / `1` overrides env default; if enforcement is off, `CSP_REPORT_ONLY=1` still sends report-only policy. |
-| **Validation** | `CSP_ENFORCE=1` → `GET /login` includes `Content-Security-Policy` with `nonce-`; public pages and `/dev` load. `python -m pytest tests/test_app_security_basics.py`. |
-| **Last verified** | 2026-04-22 |
+| **Outcome** | Enforced `Content-Security-Policy` in production by default; per-request `script-src` **nonce** on all script elements (incl. `type="application/json"` blobs). `style-src` includes `unsafe-inline` for existing `style=""` until migrated to classes. `CSP_ENFORCE=0` / `1` overrides env default; if enforcement is off, `CSP_REPORT_ONLY=1` still sends report-only policy. 2026-10-18: the unused `https://esm.sh` origin is gone from both policies (**SEC-107**). |
+| **Validation** | `CSP_ENFORCE=1` → `GET /login` includes `Content-Security-Policy` with `nonce-`; public pages and `/dev` load. `python -m pytest backend/tests/test_app_security_basics.py backend/tests/test_csp_policy.py -q`. |
+| **Last verified** | 2026-10-18 |
 
 ### SEC-084 — HTTP security response headers
 
@@ -545,6 +599,17 @@
 | **Outcome** | All responses: `X-Content-Type-Options: nosniff`, `X-Frame-Options: DENY`, `Referrer-Policy: strict-origin-when-cross-origin`. When secure session cookies are enabled: `Strict-Transport-Security` (1 year, includeSubDomains). CSP behavior unchanged (SEC-032). |
 | **Validation** | `python -m pytest backend/tests/test_production_security.py::test_security_headers_on_login -q`. |
 | **Last verified** | 2026-05-26 |
+
+### SEC-108 — `css_url` filter for style background-image URLs (remediation P3.5)
+
+| Field | Content |
+|-------|---------|
+| **Status** | Done |
+| **Scope** | `backend/web/templating.py` (`_jinja_css_url`, Jinja filter `css_url`), `frontend/templates/{home,landing,compare}.html`, `frontend/templates/inventory/{dashboard,listings}.html`, `frontend/static/compare.js`, `frontend/static/dev.js`, `backend/tests/test_css_url_filter.py` (new), `backend/tests/fixtures/app_surface.json` |
+| **Outcome** | Autoescape turns `'` into `&#39;`, but the HTML parser decodes it back before the CSS parser reads a `style` attribute, so a dealer image URL containing `');` injected CSS on the home, landing, compare and inventory pages. The `css_url` filter accepts only http(s) URLs that `normalize_listing_image_url` passes (https only in production; no private hosts, credentials or script schemes) and same-origin `/static/`, `/car-images/` and `/dealer-uploads/` paths without dot segments. It percent-encodes `' " ( ) \ < >`, whitespace and control characters, and falls back to `/static/placeholder.svg`. All 10 template sites use it; compare.js and dev.js got entity-safe equivalents. Ordinary CDN URLs pass byte-identical; 402 of 214,675 active local image URLs (parentheses or spaces) change encoding and still serve the same image. Follow-ups (review): `frontend/static/listings/card.js` `cssSingleQuotedUrl` keeps weak escaping (no production caller); `listings_repo.py` `_css_url_safe` still sends those 402 landing photos to the placeholder; the template scan checks only `url(` inside `style` attributes. |
+| **Go-live** | Ships with the N3 release. |
+| **Validation** | `python -m pytest backend/tests/test_css_url_filter.py backend/tests/test_no_inline_style_elements.py backend/tests/test_app_surface_golden.py -q` (the injection payload is neutralized, CDN URLs come back byte-identical, and no template has `url(` in a `style` attribute without `css_url`). |
+| **Last verified** | 2026-10-18 |
 
 ---
 
@@ -566,9 +631,9 @@
 |-------|---------|
 | **Status** | Done |
 | **Scope** | `backend/main.py`, `backend/utils/car_chat_policy.py`, `backend/intelligence/ai/agent.py`, `backend/utils/web_researcher.py`, `frontend/templates/car.html`, `frontend/templates/compare.html`, `frontend/static/car_page.js`, `frontend/static/compare_chat.js` (chat disclosure copy) |
-| **Outcome** | **Layered rate limits:** optional deployment-wide key (`RATE_LIMIT_CAR_CHAT_GLOBAL_PER_MIN`, default off); per-IP (`RATE_LIMIT_CAR_CHAT_PER_IP_PER_MIN`, default 48/min); per IP+car (`RATE_LIMIT_CAR_CHAT_PER_MIN`, default 24/min); compare chat uses per-IP compare key. Max message length and JSON body bytes unchanged. **Playwright web research** (`CAR_CHAT_WEB_RESEARCH`): production + `auto` allows live browser research only for **signed-in** users unless `CAR_CHAT_WEB_RESEARCH_PUBLIC=1`; pgvector model-knowledge cache may still be read when keywords match. **Logging:** car chat no longer `print`s full user text; use DEBUG for operator detail. **Web research URLs:** `WEB_RESEARCH_ALLOWED_HOSTS` optional allowlist; blocklist + private/loopback host guard in `web_researcher.href_is_acceptable_result`. User messages remain **untrusted**; model output is advisory only. Car page states AI may be wrong; signed-out users see a line about signing in for full web research when the server allows it. Compare page includes the same advisory copy for side-by-side AI. |
+| **Outcome** | **Layered rate limits:** optional deployment-wide key (`RATE_LIMIT_CAR_CHAT_GLOBAL_PER_MIN`, default off); per-IP (`RATE_LIMIT_CAR_CHAT_PER_IP_PER_MIN`, default 48/min); per IP+car (`RATE_LIMIT_CAR_CHAT_PER_MIN`, default 24/min); compare chat uses per-IP compare key. Max message length and JSON body bytes unchanged. **Web research** (`CAR_CHAT_WEB_RESEARCH`): production + `auto` allows live research only for **signed-in** users (`CAR_CHAT_WEB_RESEARCH_PUBLIC` has no effect: production ignores it, and non-production `auto` already allows everyone); since 2026-10-18 the research is HTTP-only and the web image has no browser (**SEC-111**); prod web has `CAR_CHAT_WEB_RESEARCH=0` since 2026-10-08; pgvector model-knowledge cache may still be read when keywords match. **Logging:** car chat no longer `print`s full user text; use DEBUG for operator detail. **Web research URLs:** `WEB_RESEARCH_ALLOWED_HOSTS` optional allowlist; blocklist + private/loopback host guard in `web_researcher.href_is_acceptable_result`. User messages remain **untrusted**; model output is advisory only. Car page states AI may be wrong; signed-out users see a line about signing in for full web research when the server allows it. Compare page includes the same advisory copy for side-by-side AI. |
 | **Validation** | `python -m pytest backend/tests/test_app_security_basics.py backend/tests/test_car_chat_policy.py backend/tests/test_compare_specs.py -q` (413/429 paths, global chat limit, policy + URL guard). Set `BILLING_STRIPE_ENABLED=0` in tests before `import backend.main` so `.env` does not re-enable billing. Oversized body → 413; long message → `message_too_long`; flood → 429. |
-| **Last verified** | 2026-06-02 |
+| **Last verified** | 2026-10-18 |
 
 ### SEC-042 — LLM key & data exfiltration review
 
@@ -606,9 +671,9 @@
 |-------|---------|
 | **Status** | Done |
 | **Scope** | `backend/utils/client_ip.py`, `backend/main.py`, `backend/dev_routes.py` |
-| **Outcome** | `X-Forwarded-For` is honored only when `TRUST_PROXY_HEADERS` is truthy; otherwise `request.remote_addr` is used for smart search, car chat, `/login`, `/register`, and `/dev` auth rate limits. Hardened 2026-07-08: the client IP is taken `TRUSTED_PROXY_HOPS` entries from the **right** (not the first hop), so a client-supplied `X-Forwarded-For` can never become the rate-limit key. Entries are validated as IPs and ports stripped; a chain shorter than the hop count falls back to `remote_addr`. |
+| **Outcome** | `X-Forwarded-For` is honored only when `TRUST_PROXY_HEADERS` is truthy; otherwise `request.remote_addr` is used for smart search, car chat, `/login`, `/register`, and `/dev` auth rate limits. Hardened 2026-07-08: the client IP is taken `TRUSTED_PROXY_HOPS` entries from the **right** (not the first hop), so a client-supplied `X-Forwarded-For` can never become the rate-limit key. Entries are validated as IPs and ports stripped; a chain shorter than the hop count falls back to `remote_addr`. 2026-10-18: optional `TRUSTED_PROXY_CIDRS` mode closes the direct-to-origin spoof that hops=2 leaves open (**SEC-105**). |
 | **Validation** | `python -m pytest backend/tests/test_client_ip.py`. |
-| **Last verified** | 2026-07-08 |
+| **Last verified** | 2026-10-18 |
 
 ### SEC-056 — KBB IDWS API key & outbound valuation
 
@@ -619,6 +684,38 @@
 | **Outcome** | KBB IDWS integration removed (no licensed API). Pricing insights use in-database similar-listing averages (`market_intel`) only. Legacy `kbb_*` DB columns may remain but are not populated or exposed in UI/API. |
 | **Validation** | `rg -i "kbb_idws|KBB_API_KEY|kbb-refresh|Kelley Blue" backend frontend/templates docs/SECURITY_MASTER_TODO.md` shows no active product integration (gallery URL junk filters for `kbb.com` / `kbb-widget` remain). |
 | **Last verified** | 2026-05-22 |
+
+### SEC-105 — `client_ip` trusts X-Forwarded-For only from known proxy CIDRs (remediation P3.2)
+
+| Field | Content |
+|-------|---------|
+| **Status** | Done |
+| **Scope** | `backend/utils/client_ip.py` (`TRUSTED_PROXY_CIDRS`, `CLOUDFLARE_PROXY_CIDRS`, `CLOUDFLARE_PROXY_CIDRS_AS_OF`, `client_ip`), `backend/tests/test_client_ip.py` |
+| **Outcome** | With `TRUSTED_PROXY_HOPS=2` (prod: Cloudflare, then Railway's edge), a request sent straight to the origin had only the edge's entry to the right of its own forged X-Forwarded-For entry, so `client_ip` returned the forged value: any per-IP rate limit could be dodged, and `DEV_IP_ALLOWLIST` would accept a spoofed address. New optional `TRUSTED_PROXY_CIDRS`: CIDRs or IPs, and/or the token `cloudflare`, which expands to Cloudflare's published ranges (dated 2026-10-18, with a refresh note). When it is set, X-Forwarded-For is walked from the right and the client is the first entry outside the ranges, but never more than `TRUSTED_PROXY_HOPS` entries from the right. So `client, 172.67.1.1` resolves to the client, the direct-origin spoof `spoof, 203.0.113.9` resolves to `203.0.113.9`, and a cross-zone Cloudflare Worker cannot forge: the hop bound stops at the Worker's Cloudflare address (review round 1 finding, fixed). With the CIDRs unset the hop rule is unchanged (30,000-input differential check). The module logs once when hops >= 2 and no CIDRs are set, and warns on a very broad CIDR. **Residual risk:** a sender with a Cloudflare egress address that reaches Railway's edge directly can still forge, even after the `*.up.railway.app` domain is removed (the edge routes by Host); see SEC-113. Follow-ups: no warning when the CIDRs are set with hops = 1 (the CIDR list then has no effect); `.env.example`, the production boot warning and conftest `app_env_defaults` do not mention `TRUSTED_PROXY_CIDRS` yet. |
+| **Go-live** | Ships with the N3 release. Then N3.13, owner only, after `web-source-clear`: check that live hops is 2, set `TRUSTED_PROXY_CIDRS=cloudflare` on web (step 5), remove the `*.up.railway.app` domain (step 6, D-SEC6 (c)), and only then consider `DEV_IP_ALLOWLIST` (step 8, D-SEC5). |
+| **Validation** | `python -m pytest backend/tests/test_client_ip.py backend/tests/test_dev_ip_allowlist.py -q`, run twice: as is, and with `TRUSTED_PROXY_CIDRS=cloudflare TRUSTED_PROXY_HOPS=2` exported. |
+| **Last verified** | 2026-10-18 |
+
+### SEC-111 — Web research is HTTP-only; Chromium leaves the web image (remediation P3.8, D-SEC1 (a))
+
+| Field | Content |
+|-------|---------|
+| **Status** | Done |
+| **Scope** | `backend/utils/web_researcher.py` (`WebResearcher(allow_browser=False)`, `BrowserModeDisabled`), `backend/scripts/analyze_trim_adds_with_web.py`, `Dockerfile.web`, `backend/tests/test_web_researcher.py`, `backend/tests/test_car_chat_policy.py` |
+| **Outcome** | Car-chat web research used to launch headless Chromium inside the web process, as root and with `--no-sandbox` (see the SEC-095 correction), for any signed-in user. `WebResearcher` now defaults to `allow_browser=False` (keyword-only). Brave search and the Playwright page fallback are both gated, every browser step raises `BrowserModeDisabled` before any Playwright import, and research runs on the HTTP path only (DuckDuckGo HTML search and direct page fetches through `fetch_page_text_http`, behind the SEC-106 host guard). The car-chat and compare-chat callers in `backend/intelligence/ai/agent.py` keep the default. Only the operator script `analyze_trim_adds_with_web.py`, run on a dev host, passes `allow_browser=True`, and an AST test pins that. `Dockerfile.web` no longer runs `playwright install chromium` / `install-deps` and drops the 17 Chromium-only apt libraries; a static test fails if a browser install comes back. The playwright pip package stays until remediation P15B.2 splits the requirements (inert without a browser). Scanner browser paths still need `SCANNER_ALLOW_BROWSER`, which web does not set. |
+| **Go-live** | Ships with the N3 release. The N3.13 Docker smoke (owner OK) must show no `ms-playwright` directory and no chromium binary, the image-size drop against 1.5.6, and a car-chat research answer served from the HTTP path (remediation P3.8 acceptance). The web import sweep (`scripts/scanner_import_sweep.py --profile web`) arrives with remediation P15B.2: on `phase/N3` the script takes no arguments and runs the scanner sweep, which lets the browser, ML and web stacks be missing, so it proves nothing about the web image and is not part of this smoke; the owner confirms `SCANNER_ALLOW_BROWSER` is absent from the web variables. Prod also has `CAR_CHAT_WEB_RESEARCH=0` (D-SEC1 stopgap, 2026-10-08). Follow-ups: DNS rebinding in the HTTP fetcher (SEC-112); the code still says "Playwright" for this policy (`car_chat_policy.web_research_playwright_allowed`, the production warning text, comments in `agent.py`, `allow_playwright` in `routes/cars_pages.py`), to be renamed to `web_research_allowed` by a later unit. |
+| **Validation** | `TESTS_BLOCK_NETWORK=1 python -m pytest backend/tests/test_web_researcher.py backend/tests/test_car_chat_policy.py -q` (with the Playwright imports patched to raise, `WebResearcher()` touches neither Brave nor the fallback; `allow_browser=True` reaches the mocked fallback; `Dockerfile.web` installs no browser). |
+| **Last verified** | 2026-10-18 |
+
+### SEC-113 — Origin lock: only Cloudflare may reach the web origin
+
+| Field | Content |
+|-------|---------|
+| **Status** | Not started |
+| **Scope** | Web ingress (Railway edge for `sarraficars.com`) and the app's request hook. No unit owns it yet: a D-SEC6 follow-up and a candidate for remediation Phase 16. |
+| **Outcome** | Planned. Even with `TRUSTED_PROXY_CIDRS=cloudflare` (SEC-105) and the `*.up.railway.app` domain removed, a sender that egresses from a Cloudflare address (for example a Worker using TCP sockets) can reach Railway's edge directly with `Host: sarraficars.com`. The edge routes by Host, so removing the domain does not stop it (remediation plan Appendix A.13), and the sender's own Cloudflare address is the one hop the walk skips, so it can still choose its client IP. Until an origin lock exists, per-IP rate limits are best effort against such a sender, and `DEV_IP_ALLOWLIST` is defence in depth, not a gate. Candidate fix: Cloudflare adds a secret request header (for example a Transform Rule) and the app refuses any request without it before routing; check whether Railway can do authenticated origin pulls instead. |
+| **Validation** | When built: a request that reaches the origin without the secret header is refused (403) before any view runs; a request with it passes; `backend/tests/test_client_ip.py` is unchanged. |
+| **Last verified** | 2026-10-18 (gap confirmed by the P3.2 review; no code yet) |
 
 ---
 
@@ -759,10 +856,10 @@
 | Field | Content |
 |-------|---------|
 | **Status** | Done |
-| **Scope** | `backend/dev/routes.py` (`_admin_session_ok`), `backend/utils/production_security.py` |
-| **Outcome** | In production, app `role=admin` (from `APP_ADMIN_*` env) does **not** satisfy `/dev` `before_request` unless `ALLOW_APP_ADMIN_DEV_PASS_THROUGH=1`. Operators use `/dev/login` (`dev_users.db`) by default. |
-| **Validation** | `python -m pytest backend/tests/test_production_security.py::test_app_admin_session_does_not_access_dev_api_in_production -q`. |
-| **Last verified** | 2026-05-26 |
+| **Scope** | `backend/dev/routes.py` (`_admin_session_ok`), `backend/utils/production_security.py` (`app_admin_dev_pass_through_allowed`; boot warning since SEC-109) |
+| **Outcome** | In production, app `role=admin` (from `APP_ADMIN_*` env) does **not** satisfy `/dev` `before_request` unless `ALLOW_APP_ADMIN_DEV_PASS_THROUGH=1`. Operators use `/dev/login` (`dev_users.db`) by default. Prod web ran with the pass-through set to `1` (P0A.1 audit, 2026-10-07); the owner deleted the variable on 2026-10-08 (`docs/SCANNING_OPS_LOG.md`, D-SEC5 applied in effect), so prod matches this row and has no exception. Since 2026-10-18 production boot logs a warning if the variable comes back (SEC-109). `DEV_IP_ALLOWLIST` stays unset until `TRUSTED_PROXY_CIDRS` is live (SEC-105), because until then the allowlist can be spoofed. A web rollback to a deployment older than `d9aaa75e` (for example `c9872e66`) would bring the variable back (`docs/RELEASING.md`, Rollback step 2). |
+| **Validation** | `python -m pytest "backend/tests/test_production_security.py::test_app_admin_session_does_not_access_dev_api_in_production" "backend/tests/test_production_security.py::test_app_admin_dev_pass_through_off_in_production" "backend/tests/test_production_security.py::test_pass_through_guard_warns_exactly_when_enabled" -q`. Owner, read-only: the names-only web variable list (the second command in `docs/RELEASING.md`, Rollback → web, step 3) has no `ALLOW_APP_ADMIN_DEV_PASS_THROUGH`. |
+| **Last verified** | 2026-10-18 (tests; the prod variable state comes from the 2026-10-08 ops-log block, not a new read: agents do not read prod) |
 
 ### SEC-089 — DNS-aware dev scanner URL guard
 
@@ -824,15 +921,15 @@
 | **Validation** | `python -m pytest backend/tests/test_car_chat_policy.py backend/tests/test_compare_specs.py -q`. |
 | **Last verified** | 2026-06-02 |
 
-### SEC-095 — Smart search parse rate limit + CSP map tiles + Playwright sandbox default
+### SEC-095 — Smart search parse rate limit + CSP map tiles + Playwright launch flags
 
 | Field | Content |
 |-------|---------|
 | **Status** | Done |
-| **Scope** | `backend/main.py` (`GET /api/search/smart/parse`, CSP `connect-src`, `object-src 'none'`), `backend/utils/web_researcher.py` (`PLAYWRIGHT_NO_SANDBOX`), `frontend/templates/car.html`, `frontend/templates/listings.html`, `frontend/static/listings.js`, `backend/auth/google_oauth.py` (constant-time `state`) |
-| **Outcome** | GET parse endpoint shares POST smart-search per-IP limit; CSP allows OpenStreetMap tiles; Playwright runs without `--no-sandbox` unless `PLAYWRIGHT_NO_SANDBOX=1`; price history uses `\| tojson`; guest banner dismiss is nonce-safe; OAuth `state` uses `compare_digest`. |
-| **Validation** | `python -m pytest backend/tests/test_smart_search.py backend/tests/test_google_oauth.py backend/tests/test_app_security_basics.py -q`. |
-| **Last verified** | 2026-06-02 |
+| **Scope** | `backend/main.py` (`GET /api/search/smart/parse`, CSP `connect-src`, `object-src 'none'`), `backend/utils/web_researcher.py` (`_playwright_launch_args`, `PLAYWRIGHT_NO_SANDBOX`), `frontend/templates/car.html`, `frontend/templates/listings.html`, `frontend/static/listings.js`, `backend/auth/google_oauth.py` (constant-time `state`) |
+| **Outcome** | GET parse endpoint shares POST smart-search per-IP limit; CSP allows OpenStreetMap tiles; price history uses `\| tojson`; guest banner dismiss is nonce-safe; OAuth `state` uses `compare_digest`. **Correction (2026-10-18):** this row used to say Playwright runs Chromium without `--no-sandbox` unless `PLAYWRIGHT_NO_SANDBOX=1`. That was never true. Playwright adds `--no-sandbox` to every Chromium launch unless `chromium_sandbox=True` is passed (Playwright 1.60.0 driver: `if (options.chromiumSandbox !== true) chromeArguments.push("--no-sandbox")`), and `_LAUNCH_ARGS` passes `--disable-setuid-sandbox` as well. `PLAYWRIGHT_NO_SANDBOX` therefore changes nothing, and Chromium in the web image ran as root with no sandbox. The chosen remedy (D-SEC1 (a)) takes the browser out of the web process entirely (SEC-111). Browser mode remains only in the operator script `analyze_trim_adds_with_web.py` on a dev host, still unsandboxed; passing `chromium_sandbox=True` there is optional later hardening. |
+| **Validation** | `python -m pytest backend/tests/test_smart_search.py backend/tests/test_google_oauth.py backend/tests/test_app_security_basics.py backend/tests/test_web_researcher.py -q`. |
+| **Last verified** | 2026-10-18 |
 
 ### SEC-096 — Email verification tokens (B1 scaffold)
 
@@ -850,9 +947,9 @@
 |-------|---------|
 | **Status** | In progress |
 | **Scope** | `backend/auth/password_reset.py`, `backend/db/users_db.py` (`password_reset_token_hash`, `password_reset_expires_at`), `backend/main.py` (`/forgot-password`, `/reset-password`), `frontend/templates/login.html` |
-| **Outcome** | When `PASSWORD_RESET_ENABLED=1`, forgot-password stores **hashed** reset tokens with 1-hour expiry; plain token only in email link; generic success message (no email enumeration); OAuth-only accounts skipped; per-IP rate limit on forgot (10/hour). Feature **off** by default. |
+| **Outcome** | When `PASSWORD_RESET_ENABLED=1`, forgot-password stores **hashed** reset tokens with 1-hour expiry; plain token only in email link; generic success message (no email enumeration); OAuth-only accounts skipped; per-IP rate limit on forgot (10/hour); since 2026-10-18 also at most 3 reset emails per account per hour (**SEC-109**). Feature **off** by default (prod enables it only after remediation P16.1 ships). |
 | **Validation** | `python -m pytest backend/tests/test_password_reset.py -q`; manual: `PASSWORD_RESET_ENABLED=1` + `MFA_DELIVERY_MODE=log` → link in logs; reset updates password. |
-| **Last verified** | 2026-06-11 |
+| **Last verified** | 2026-10-18 |
 
 ### SEC-098 — Site-admin user CRUD (D1)
 
@@ -878,11 +975,12 @@
 
 | Field | Content |
 |-------|---------|
-| **Status** | In progress |
-| **Scope** | `backend/billing/stripe_billing.py` (`create_customer_portal_session`), `backend/main.py` (`/account/billing`, `/account/billing/portal`), `frontend/templates/account_billing.html` |
-| **Outcome** | Signed-in users view plan/features at `/account/billing`; portal redirect only when `BILLING_STRIPE_ENABLED=1` and their own `premium_stripe_customer_id` is set (no cross-user customer ids). |
-| **Validation** | `python -m pytest backend/tests/test_billing_portal.py -q`; manual: grant test user `premium_stripe_customer_id`, open portal link with Stripe keys configured. |
-| **Last verified** | 2026-06-11 |
+| **Status** | Done |
+| **Scope** | `backend/billing/stripe_billing.py` (`create_customer_portal_session`), `backend/routes/account.py` (`account_billing_page`, `account_billing_portal`; moved out of `backend/main.py`), `frontend/templates/account_billing.html` |
+| **Outcome** | Security property (Done): signed-in users view plan and features at `/account/billing`. The portal redirect requires a login, does nothing unless `BILLING_STRIPE_ENABLED=1`, and uses only the session user's own `premium_stripe_customer_id` read from `users.db`: no customer id comes from the request, so no user can open another user's portal. Failures are logged server-side and fall back to `/account/billing`. The return URL uses `PUBLIC_BASE_URL`, or the request host when that is unset (SEC-109 warns about this in production). |
+| **Go-live** | Not live, and not a security item: billing is off on prod web (`BILLING_STRIPE_ENABLED` is not among the web variables in the 2026-10-07 P0A.1 inventory, and it defaults to off). Before billing goes live the owner configures the Stripe Customer Portal in the Stripe dashboard (remediation plan Section 8, Phase 16 owner actions). Also listed under "Future" at the end of this file. |
+| **Validation** | `python -m pytest backend/tests/test_billing_portal.py -q`; manual (when billing goes live): grant a test user `premium_stripe_customer_id`, open the portal link with Stripe keys configured. |
+| **Last verified** | 2026-10-18 |
 
 ### SEC-102 — Postgres-only inventory (no SQLite fallback)
 
@@ -904,12 +1002,43 @@
 | **Validation** | `python -m pytest backend/tests/test_bootstrap_site_admin.py backend/tests/test_init_admin_db.py -q` |
 | **Last verified** | 2026-06-14 |
 
+### SEC-106 — SSRF guards block every non-global address (remediation P3.3)
+
+| Field | Content |
+|-------|---------|
+| **Status** | Done |
+| **Scope** | `backend/utils/outbound_url.py` (`ip_is_non_global`, `unwrap_embedded_ipv4`, `destination_host_blocked`, `destination_host_blocked_after_dns`), `backend/utils/safe_listing_url.py` (`_host_is_blocked`), `backend/tests/test_outbound_url.py`, `backend/tests/test_outbound_url_dns.py`, `backend/tests/test_safe_listing_url.py` |
+| **Outcome** | The guards (SEC-068, and SEC-089 in Phase 6, the DNS-aware dev scanner URL guard) used `is_private`-style flags, so CGNAT and Tailscale addresses (100.64.0.0/10, including 100.100.100.200), benchmarking space (198.18.0.0/15), IETF protocol space (192.0.0.0/24) and IPv4-mapped forms such as `::ffff:100.64.0.1` got through. Both outbound checks now unwrap IPv4-mapped and 6to4 addresses and block when `not is_global or is_multicast or is_reserved` (reserved is kept so `::/8` and NAT64 `64:ff9b::/96` stay refused). Legacy IPv4 spellings (`127.1`, `2130706433`, `0x7f.0.0.1`, `0177.0.0.1`) are parsed as addresses, and an after-DNS answer with no IP or an unparseable IP fails closed. `safe_listing_url._host_is_blocked` applies the same rule (and now refuses `*.local` / `*.localhost`) while keeping its non-production localhost allowance. Its docstring states the threat model: listing image URLs are fetched by the visitor's browser, so that check is client-side hardening, not SSRF protection. Local data impact: 0 of 320,984 image URLs and 0 of 550 dealer websites use an IP literal or a local host. Follow-ups: resolve-then-connect rebinding and two unguarded server-side callers (SEC-112); latent, not exploitable today: the after-DNS check resolves the UTS #46 form of a name while CPython resolves IDNA 2003; `test_idna_folding_matches_uts46` follows the unpinned `idna` release. |
+| **Go-live** | Ships with the N3 release. |
+| **Validation** | `TESTS_BLOCK_NETWORK=1 python -m pytest backend/tests/test_outbound_url.py backend/tests/test_outbound_url_dns.py backend/tests/test_safe_listing_url.py -q` (blocked: 100.64.0.1, 100.127.255.254, 100.100.100.200, ::ffff:100.64.0.1, 198.18.0.1, 192.0.0.8, and a name that a patched `getaddrinfo` resolves to 100.x; allowed: 8.8.8.8 and 2606:4700:4700::1111). The same tests pass on Python 3.12 (CI). |
+| **Last verified** | 2026-10-18 |
+
+### SEC-112 — Pin outbound fetches to the validated address (DNS rebinding); guard the remaining server-side fetchers
+
+| Field | Content |
+|-------|---------|
+| **Status** | Not started |
+| **Scope** | `backend/utils/web_researcher.py` (`fetch_page_text_http`, `_SafeRedirectHandler`), callers of `backend/utils/outbound_url.py` `validate_dev_scanner_url`, `backend/enrichment/service.py` (`_fetch_image_b64_optimized`), `backend/dealer/admin/onboard_api.py` (onboard URL check). No unit owns it yet: extend remediation P16.4's resolver helper, or add a unit. |
+| **Outcome** | Planned. (1) Resolve-then-connect: `destination_host_blocked_after_dns` resolves the host, then urllib resolves it again when it connects. The P3.8 review's probe got 8.8.8.8 on the first lookup and connected to 169.254.169.254:80 on the second. Since SEC-111 this HTTP path is the only car-chat research fetcher. The dev scanner URL check (SEC-089 in Phase 6) validates a URL that a scanner subprocess resolves again later. (2) `enrichment/service.py` `_fetch_image_b64_optimized` fetches server-side with only the literal-host check (`normalize_listing_image_url`, no DNS) and follows redirects without checking them (a 302 to 169.254.169.254 or a 100.x address is followed). (3) `dealer/admin/onboard_api.py` checks only the literal host (`normalize_safe_http_url`). Fix: one shared helper that resolves once, checks every answer with `ip_is_non_global`, connects to the checked address (an HTTP(S) connection that keeps the Host header and SNI), and re-checks every redirect hop; use it in all of these callers and add rebinding tests. Fold in the IDNA 2003 vs UTS #46 mismatch noted in SEC-106. |
+| **Validation** | When built: with a fake resolver that answers a public IP first and 169.254.169.254 second, no connection is made to the second address; each caller refuses a redirect to a non-global host. |
+| **Last verified** | 2026-10-18 (gap confirmed by the P3.3 and P3.8 reviews; no code yet) |
+
 ---
 
 ## Changelog
 
 | Date (UTC) | Change |
 |------------|--------|
+| 2026-10-18 | **Doc step for security wave 1 (remediation P3.9):** the Summary table counted 0 open items in every phase while SEC-096, SEC-097 and SEC-099 were In progress; it now counts and names the open rows, and `backend/tests/test_security_master_todo.py` fails when the table and the rows disagree. **SEC-095** corrected: Playwright adds `--no-sandbox` unless `chromium_sandbox=True`, so `PLAYWRIGHT_NO_SANDBOX` never sandboxed anything. **SEC-099** security property Done (own customer id only); billing go-live tracked separately. **SEC-083** records that prod deleted `ALLOW_APP_ADMIN_DEV_PASS_THROUGH` on 2026-10-08, so there is no prod exception. **SEC-076** Done (remediation P15B.1: crawl4ai and the other orphans removed, `lxml>=6.1.0` in requirements-scanner.txt and no lxml line in requirements.txt, pip-audit with no ignores). Env table: `TRUSTED_PROXY_CIDRS` added; `CAR_CHAT_WEB_RESEARCH*` rows corrected (HTTP-only research; `_PUBLIC` has no effect in any environment); the `TRUSTED_PROXY_HOPS` row says not to run `sync-vault-to-railway.sh` until SEC-110 merges (it silently sets hops to 1, its `variables delete` and `--mirror-secrets` calls ignore `RAILWAY_SERVICE`, and no set passes `--skip-deploys`), and the test fails when SEC-110's status or that warning disagrees with the script. How to use step 4 now names the five required row fields and where a row goes; the five pre-existing duplicate IDs are listed, and the test fails on a SEC heading outside a `## Phase N` section or on any new duplicate ID. Validation: `python -m pytest backend/tests/test_security_master_todo.py -q`. |
+| 2026-10-18 | **SEC-104 (P3.1):** OAuth (Google, Apple) links by strict `lower(email)` only, requires a verified provider email, and auto-links an existing account only when its email is verified; otherwise the link waits for a password login in the same browser. Usernames may not contain `@` or equal another account's email. Validation: `pytest backend/tests/test_google_oauth.py backend/tests/test_apple_oauth.py backend/tests/test_username_email_collision.py -q`. |
+| 2026-10-18 | **SEC-105 (P3.2):** optional `TRUSTED_PROXY_CIDRS` (`cloudflare` token) makes `client_ip` skip only trusted proxy entries, bounded by `TRUSTED_PROXY_HOPS`, closing the direct-to-origin X-Forwarded-For spoof (also used against `DEV_IP_ALLOWLIST`). Live after N3.13 step 5. Validation: `pytest backend/tests/test_client_ip.py backend/tests/test_dev_ip_allowlist.py -q`. |
+| 2026-10-18 | **SEC-106 (P3.3):** SSRF guards unwrap IPv4-mapped / 6to4 addresses and block every non-global address (CGNAT/Tailscale, 198.18/15, 192.0.0/24 included); listing-image host check gets the same rule and a stated threat model. Validation: `pytest backend/tests/test_outbound_url.py backend/tests/test_outbound_url_dns.py backend/tests/test_safe_listing_url.py -q`. |
+| 2026-10-18 | **SEC-107 (P3.4):** CSRF header required on operator DELETE routes (`api_admin_operator_` prefix); url_map coverage test classifies every mutating route; `https://esm.sh` removed from both CSPs. Validation: `pytest backend/tests/test_csrf_coverage.py backend/tests/test_csp_policy.py backend/tests/test_admin_operator_api.py -q`. |
+| 2026-10-18 | **SEC-108 (P3.5):** `css_url` Jinja filter for every `style="background-image:url(...)"` (http(s) or same-origin paths only, breakout characters percent-encoded, placeholder fallback), closing CSS injection from dealer image URLs. Validation: `pytest backend/tests/test_css_url_filter.py -q`. |
+| 2026-10-18 | **SEC-109 (P3.6):** production boot warnings for email/billing flows without `PUBLIC_BASE_URL` or a mail transport, and for `ALLOW_APP_ADMIN_DEV_PASS_THROUGH`; password reset limited to 3 emails per account per hour. Validation: `pytest backend/tests/test_production_security.py backend/tests/test_password_reset.py -q`. |
+| 2026-10-18 | **SEC-110 (P3.7), Blocked:** `sync-vault-to-railway.sh` refuses an unset or malformed `TRUSTED_PROXY_HOPS` (and an unset `RAILWAY_SERVICE`) before any `railway` call; README service list and hops rule. Code on `unit/P3.7`; merge waits for the owner to confirm the live hops value. Validation: `bash -n deploy/railway/sync-vault-to-railway.sh`; `pytest backend/tests/test_sync_vault_guard.py -q`. |
+| 2026-10-18 | **SEC-111 (P3.8, D-SEC1 (a)):** `WebResearcher` is HTTP-only unless `allow_browser=True` (operator script only); `Dockerfile.web` installs no Chromium and none of its libraries. Docker smoke pending (N3.13). Validation: `pytest backend/tests/test_web_researcher.py backend/tests/test_car_chat_policy.py -q`. |
+| 2026-10-18 | **SEC-112, SEC-113 (new, Not started):** follow-ups from the wave-1 reviews. SEC-112: pin outbound fetches to the validated address (DNS rebinding in the research fetcher and dev scanner check) and guard `enrichment/service.py` and `dealer/admin/onboard_api.py`. SEC-113: an origin lock, because a Cloudflare-egress sender that reaches Railway's edge directly can still choose its client IP. Validation: none yet (no code). |
 | 2026-06-14 | **SEC-103:** Startup bootstrap no longer overwrites existing site-admin or `/dev` admin passwords; vault sync only on new admin or `BOOTSTRAP_FORCE_ADMIN_PASSWORD=1`; removed duplicate host bootstrap from `deploy/up.sh`. Validation: `pytest backend/tests/test_bootstrap_site_admin.py backend/tests/test_init_admin_db.py -q`. |
 | 2026-06-14 | **SEC-102:** Postgres-only inventory — fail fast without `INVENTORY_DATABASE_URL`; Docker stack always includes Postgres; pytest uses `INVENTORY_SQLITE_TESTS=1`. Validation: `pytest backend/tests/test_inventory_postgres_required.py -q`. |
 | 2026-06-11 | **SEC-099:** C3 Stripe Customer Portal scaffold — `/account/billing` + portal redirect using session user's `premium_stripe_customer_id` only. Validation: `python -m pytest backend/tests/test_billing_portal.py -q`. |
@@ -995,5 +1124,6 @@
 ## Future: non-security engineering backlog
 
 Security work **must** stay in this file until all Phase 1–6 items are `Done` or explicitly `Won't do` with rationale in Changelog.  
+Go-live items that are not open security work (status is tracked on the row): **SEC-099** Stripe Customer Portal: the owner configures the portal in the Stripe dashboard before billing goes live.  
 CSP: enforced in production (nonces; `CSP_ENFORCE=0` to disable). Use `CSP_REPORT_ONLY=1` when enforcement is off to collect additional violations. Optional follow-up: remove `style-src` `unsafe-inline` by moving inline `style=""` to CSS. For general features, consider `docs/ENGINEERING_MASTER_TODO.md` separately.
 
