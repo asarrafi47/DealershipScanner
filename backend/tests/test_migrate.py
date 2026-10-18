@@ -168,7 +168,9 @@ class _FakeCursor:
         s = " ".join(sql.split())
         db.statements.append((s, params))
         self._rows = []
-        if s == "SELECT to_regclass('public.schema_migrations')":
+        if s == "SELECT current_database()":
+            self._rows = [(db.dbname,)]
+        elif s == "SELECT to_regclass('public.schema_migrations')":
             self._rows = [("schema_migrations" if db.table else None,)]
         elif s.startswith("SELECT version, checksum FROM public.schema_migrations"):
             self._rows = [(v, c) for v, (_n, c) in sorted(db.rows.items())]
@@ -218,7 +220,8 @@ class _FakeCursor:
 class _FakePg:
     """schema_migrations rows, relations to_regclass sees, and transactions."""
 
-    def __init__(self, applied=None, relations=(), table=None):
+    def __init__(self, applied=None, relations=(), table=None, dbname="scratch"):
+        self.dbname = dbname
         self.rows: dict[int, tuple[str, str]] = dict(applied or {})
         self.table = bool(applied) if table is None else table
         self.relations = set(relations)
@@ -527,6 +530,86 @@ def test_target_is_logged_without_credentials(tmp_path, run, caplog, monkeypatch
     assert "sslmode" not in caplog.text
 
 
+# --- cars_cleanroom is never written (P4.3b, D-N1) --------------------------------
+
+
+def test_frozen_database_reason_names_only_cars_cleanroom():
+    assert migrate.FROZEN_DATABASES == frozenset({"cars_cleanroom"})
+    reason = migrate.frozen_database_reason("cars_cleanroom")
+    assert reason and "frozen clean-room baseline" in reason and "cars_cr_*" in reason
+    # exact names: scratch copies, the live DB and look-alikes may migrate
+    for name in ("cars_cr_rooftops", "cars_cr_test", "cars", "cars_cleanroom_copy", "CARS_CLEANROOM", "", None):
+        assert migrate.frozen_database_reason(name) is None, name
+
+
+@pytest.mark.parametrize("argv", [
+    ("--apply",),
+    ("--apply", "--target", "3"),
+    ("--apply", "--baseline", "3"),
+    ("--apply", "--record-only", "3"),
+    ("--apply", "--lock-wait", "0"),
+])
+def test_apply_on_cars_cleanroom_is_refused_before_any_lock(tmp_path, run, caplog, argv):
+    chain = _chain(tmp_path, 3)
+    db = _FakePg(applied=_applied(chain, {1, 2}), relations=_SHARED, dbname="cars_cleanroom")
+    assert run(db, *argv) == 2
+    # one read, then nothing: no plan, no lock_timeout, no advisory lock, no write
+    assert [s for s, _ in db.statements] == ["SELECT current_database()"]
+    assert db.locks == [] and db.lock_settings == [] and db.writes() == []
+    assert sorted(db.rows) == [1, 2]
+    assert "REFUSE --apply: database cars_cleanroom is the frozen clean-room baseline" in caplog.text
+    assert "refused: nothing was written" in caplog.text
+
+
+def test_apply_on_cars_cleanroom_is_refused_even_when_nothing_is_pending(tmp_path, run, caplog):
+    chain = _chain(tmp_path, 2)
+    db = _FakePg(applied=_applied(chain, {1, 2}), dbname="cars_cleanroom")
+    assert run(db, "--apply") == 2
+    assert "database is up to date" not in caplog.text and db.locks == []
+
+
+def test_dry_run_on_cars_cleanroom_still_reports(tmp_path, run, caplog):
+    chain = _chain(tmp_path, 3)
+    db = _FakePg(applied=_applied(chain, {1, 2}), relations=_SHARED, dbname="cars_cleanroom")
+    assert run(db) == 0
+    assert run(db, "--dry-run", "--target", "3") == 0
+    assert "would apply  V003__step3.sql" in caplog.text  # "apply " pads to "record"'s width
+    assert "would apply 1 and record 0 migration(s) through V003" in caplog.text
+    assert "--apply would be refused, this dry run only reports" in caplog.text
+    assert db.locks == [] and db.lock_settings == [] and db.writes() == []
+
+
+def test_cars_cr_scratch_copies_still_migrate(tmp_path, run, caplog):
+    chain = _chain(tmp_path, 3)
+    db = _FakePg(dbname="cars_cr_rooftops")
+    assert run(db, "--apply") == 0
+    assert sorted(db.rows) == [1, 2, 3] and _ran(db, chain[2])
+    assert db.locks == [migrate.MIGRATE_LOCK_KEY] * 4
+    assert "REFUSE" not in caplog.text and "frozen" not in caplog.text
+
+
+def test_every_write_transaction_refuses_a_frozen_database_before_the_lock(tmp_path):
+    """Callers that skip main() (schema_drift_report uses apply_migration) are refused too."""
+    chain = _chain(tmp_path, 3)
+    db = _FakePg(applied=_applied(chain, {1, 2}), dbname="cars_cleanroom")
+    with pytest.raises(migrate.FrozenDatabaseRefused, match="frozen clean-room baseline"):
+        migrate.ensure_migrations_table(db)
+    with pytest.raises(migrate.FrozenDatabaseRefused):
+        migrate.apply_migration(db, chain[2])
+    with pytest.raises(migrate.FrozenDatabaseRefused):
+        migrate.run_one(db, chain[2], record=True)
+    assert db.locks == [] and db.lock_settings == [] and db.writes() == [] and not _ran(db, chain[2])
+    assert {s for s, _ in db.statements} == {"SELECT current_database()"}
+    assert sorted(db.rows) == [1, 2]
+
+
+def test_lock_key_comment_matches_the_constant():
+    """The comment is what an operator copies into pg_locks or a hand-held lock."""
+    assert migrate.MIGRATE_LOCK_KEY == 7883946363647714609 == 0x6D69677261746531
+    src = Path(migrate.__file__).read_text(encoding="utf-8")
+    assert "(7883946363647714609 = 0x6d69677261746531, below 2**63)" in src
+
+
 def test_describe_target_shapes():
     assert migrate.describe_target("postgresql:///cars?host=/tmp&port=5432") == (
         "host=unix-socket:/tmp port=5432 db=cars"
@@ -725,4 +808,27 @@ def test_live_record_only_rule_fresh_and_refused(scratch_pg, tmp_path, monkeypat
         c.execute("DELETE FROM schema_migrations WHERE version >= 2")
         c.execute("DROP TABLE t1")
     assert migrate.main(["--apply", "--dir", str(tmp_path)]) == 1
+    assert _versions(scratch_pg) == [1]
+
+
+@pytest.mark.integration
+def test_live_frozen_database_is_refused_by_its_server_name(scratch_pg, tmp_path, monkeypatch, caplog):
+    """current_database() on a real server; the scratch DB stands in for cars_cleanroom."""
+    import psycopg
+    from psycopg.conninfo import conninfo_to_dict
+
+    name = conninfo_to_dict(scratch_pg)["dbname"]
+    _write(tmp_path, "V001__one.sql", "CREATE TABLE t1 (id int);\n")
+    monkeypatch.setattr(migrate, "FROZEN_DATABASES", frozenset({name}))
+    caplog.set_level(logging.INFO, logger="migrate")
+    assert migrate.main(["--apply", "--dir", str(tmp_path)]) == 2
+    assert migrate.main(["--dir", str(tmp_path)]) == 0  # the dry run still reports
+    assert f"database {name} is the frozen clean-room baseline" in caplog.text
+    with psycopg.connect(scratch_pg) as c, pytest.raises(migrate.FrozenDatabaseRefused):
+        migrate.apply_migration(c, migrate.discover_migrations(tmp_path)[0])
+    with psycopg.connect(scratch_pg) as c:
+        row = c.execute("SELECT to_regclass('public.schema_migrations'), to_regclass('public.t1')").fetchone()
+        assert row == (None, None)  # nothing was written
+    monkeypatch.setattr(migrate, "FROZEN_DATABASES", frozenset({"cars_cleanroom"}))
+    assert migrate.main(["--apply", "--dir", str(tmp_path)]) == 0
     assert _versions(scratch_pg) == [1]

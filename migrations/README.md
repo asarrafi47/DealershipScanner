@@ -90,6 +90,10 @@ the same database, created on first `--apply`.
   wait runs out it exits 1 and writes nothing.
 * A failed file is rolled back with its bookkeeping row and stops the run. Files
   before it stay applied.
+* `cars_cleanroom`, the frozen clean-room baseline (D-N1), is never written. On it,
+  `--apply` (with `--baseline` or `--record-only` too) logs `REFUSE --apply` and
+  exits 2 before any lock or write; a dry run still reports. `cars_cr_*` scratch
+  copies (`scripts/cleanroom/build_db.sh`) migrate as usual.
 
 ## Boot applies every pending file (`MIGRATE_ON_BOOT`)
 

@@ -36,6 +36,12 @@ What else the runner does (P4.2, 2026-10):
   re-reads ``schema_migrations`` under it. Two boots (or a boot and an operator)
   serialize: the second waits up to ``--lock-wait``, then skips whatever the first
   already applied, or exits 1 if the wait runs out. No file runs twice.
+* ``cars_cleanroom`` (``FROZEN_DATABASES``) is never written (P4.3b): it is the
+  frozen clean-room baseline, held at V025 (D-N1). ``--apply`` there exits 2
+  before any lock or write, and every write transaction re-checks
+  ``current_database()`` before it takes the advisory lock. A dry run still
+  reports. Scratch copies (``cars_cr_*``, scripts/cleanroom/build_db.sh) migrate
+  as usual.
 
 Usage:
   python -m backend.scripts.migrate                           # dry run (default), no writes
@@ -86,9 +92,14 @@ DEFAULT_LOCK_TIMEOUT = "5s"
 # How long a second runner waits for the first one's advisory lock.
 DEFAULT_LOCK_WAIT = "10min"
 # pg_advisory_xact_lock key: the ASCII bytes of "migrate1" as a bigint
-# (7883954311434658097, below 2**63). Every transaction that writes
-# schema_migrations takes it.
+# (7883946363647714609 = 0x6d69677261746531, below 2**63). Every transaction
+# that writes schema_migrations takes it.
 MIGRATE_LOCK_KEY = int.from_bytes(b"migrate1", "big")
+
+# Databases migrate never writes to. cars_cleanroom is the frozen clean-room
+# baseline (D-N1): every clean-room comparison assumes it stays at V025.
+# Exact names only, so cars_cr_* scratch copies still migrate.
+FROZEN_DATABASES = frozenset({"cars_cleanroom"})
 
 # Postgres interval-style values accepted for the two timeouts: "5s", "500ms",
 # "10min", "0" (0 = wait forever). Validated here because they reach set_config.
@@ -184,6 +195,10 @@ class ConcurrentChecksumMismatch(RuntimeError):
 
 class RecordRefused(RuntimeError):
     """A conditional record-only file lost its preconditions under the lock."""
+
+
+class FrozenDatabaseRefused(RuntimeError):
+    """The connected database is in ``FROZEN_DATABASES``; migrate never writes to it."""
 
 
 def compute_checksum(sql: str) -> str:
@@ -335,6 +350,31 @@ def describe_target(dsn: str | None) -> str:
     return f"host={host} port={params.get('port') or 5432} db={params.get('dbname') or '(default)'}"
 
 
+def frozen_database_reason(dbname: str | None) -> str | None:
+    """Why migrate must not write to ``dbname``, or None when it may. Pure."""
+    if dbname not in FROZEN_DATABASES:
+        return None
+    return (
+        f"database {dbname} is the frozen clean-room baseline (D-N1, held at V025); "
+        "migrate never writes to it. Migrate a cars_cr_* scratch copy instead "
+        "(scripts/cleanroom/build_db.sh)"
+    )
+
+
+def current_database(cur) -> str | None:
+    """The database this connection is on (the DSN may not name it: PGDATABASE, defaults)."""
+    cur.execute("SELECT current_database()")
+    row = cur.fetchone()
+    return str(row[0]) if row and row[0] is not None else None
+
+
+def refuse_frozen_database(cur) -> None:
+    """Raise FrozenDatabaseRefused on a frozen database. Reads only; takes no lock."""
+    reason = frozen_database_reason(current_database(cur))
+    if reason:
+        raise FrozenDatabaseRefused(reason)
+
+
 def _connect():
     """
     Raw psycopg connection from the repo's own Postgres opener.
@@ -434,7 +474,13 @@ def _is_lock_timeout(exc: BaseException) -> bool:
 
 
 def _take_migration_lock(cur, lock_wait: str) -> None:
-    """Transaction-scoped advisory lock; waits up to ``lock_wait`` for another runner."""
+    """
+    Transaction-scoped advisory lock; waits up to ``lock_wait`` for another runner.
+
+    Every write transaction starts here, so the frozen-database refusal sits in
+    front of the lock: it covers callers that skip main() (apply_migration).
+    """
+    refuse_frozen_database(cur)
     cur.execute("SELECT set_config('lock_timeout', %s, true)", (lock_wait,))
     try:
         cur.execute("SELECT pg_advisory_xact_lock(%s)", (MIGRATE_LOCK_KEY,))
@@ -646,6 +692,17 @@ def main(argv: list[str] | None = None) -> int:
         return 2
     try:
         cur = conn.cursor()
+        frozen = frozen_database_reason(current_database(cur))
+        if frozen and apply:
+            # Before the plan and before any lock: --baseline and --record-only
+            # write too, so every --apply is refused here, not just pending files.
+            cur.close()
+            conn.rollback()
+            log.error("REFUSE --apply: %s", frozen)
+            log.error("refused: nothing was written")
+            return 2
+        if frozen:
+            log.warning("%s; --apply would be refused, this dry run only reports", frozen)
         table_exists = _migrations_table_exists(cur)
         applied = read_applied(cur)
 
