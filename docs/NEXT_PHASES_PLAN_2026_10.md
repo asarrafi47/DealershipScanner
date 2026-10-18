@@ -2779,9 +2779,13 @@ Rules:
 2. Checkpoints: before starting, read workspace/phase_runs/<NID>/RESUME.md and every
    workspace/phase_runs/<NID>/<unit>.json. Skip units per Section 10.3. Write each
    unit's JSON the moment its state changes, and rewrite RESUME.md after every unit.
-3. Branch: phase/<NID> cut from origin/main (create it only if absent). One git
-   worktree per unit at .claude/worktrees/<unit id> on branch unit/<unit id>. Units
-   marked MAIN run serially in the main checkout after their dependencies merge.
+3. Branch: phase/<NID> cut from origin/main (create it only if absent). If the main
+   checkout is busy, integrate in the worktree .claude/worktrees/phase-<NID>, and
+   remove it before any git switch phase/<NID> in the main checkout. One git worktree
+   per unit at .claude/worktrees/<unit id> on branch unit/<unit id>, cut from the
+   phase tip. Unit branches are never pushed and never named remediation/<id>
+   (docs/RELEASING.md "Branching model"). Units marked MAIN run serially in the main
+   checkout after their dependencies merge.
 4. Fan out by wave. Do not start a unit whose blocking decision or approval is missing:
    mark it BLOCKED with the reason and continue with the rest.
 5. Each implementing agent does exactly its unit: runs only its tests, in chunks under
