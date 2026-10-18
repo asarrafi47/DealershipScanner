@@ -138,7 +138,7 @@ below stands for its name. `V` is the new version, set in step 3.
    file the release carries:
 
    ```bash
-   git ls-tree --name-only HEAD migrations/ | grep -E '^migrations/V[0-9]+' | sort | tail -1
+   git ls-tree --name-only HEAD migrations/ | grep -E '/V[0-9]+__' | sort | tail -1
    ```
 
    Verify: run from this release checkout, the prod dry run prints `target: remote`, then

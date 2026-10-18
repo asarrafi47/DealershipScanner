@@ -2,6 +2,15 @@
 
 ## [Unreleased]
 
+### Fixed
+- `backend/tests/test_cleanroom_shapes_2026_10.py`: the `inv` fixture points the
+  incomplete-listings sidecar index at a per-test file and clears the cached snapshot
+  before and after. The session-wide index kept the car ids its scans flagged, so
+  `test_listings_perf::test_warm_make_model_search_is_one_round_trip` hid all 60 of its
+  seeded cars when it ran later in the same session (red `pytest` on the 1.5.5 release PR).
+- `docs/RELEASING.md` step 1: the migration max-version command greps `/V[0-9]+__`, so
+  `test_releasing_doc` no longer reads `migrations/V` as a repo path.
+
 ## [1.5.5] - 2026-10-18
 
 ### Added

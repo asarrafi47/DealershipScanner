@@ -29,12 +29,15 @@ import json
 import re
 import sqlite3
 from collections import Counter
+from collections.abc import Iterator
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 
 import pytest
 
+from backend.db import incomplete_listings_db
+from backend.db.repositories import data_quality_repo
 from backend.scanner import database as sdb
 from backend.tests.pipeline_patch import patch_pipeline
 
@@ -48,18 +51,27 @@ def _load(name: str) -> dict[str, Any]:
 # ── shared helpers ───────────────────────────────────────────────────────────
 
 @pytest.fixture()
-def inv(sqlite_inventory, tmp_path, monkeypatch) -> Path:
+def inv(sqlite_inventory, tmp_path, monkeypatch) -> Iterator[Path]:
     """An isolated SQLite inventory plus the scanner env the clean room ran with
     (workspace/cleanroom_2026_10/cleanroom.env: SCANNER_AUTO_HEAL=0 and no
     reconcile, coverage or guard-window override, so reconcile is on with
-    min coverage 0.5, min rows 8 and the 48 h guard window)."""
+    min coverage 0.5, min rows 8 and the 48 h guard window).
+
+    The scans also write the incomplete-listings sidecar index, whose path is
+    fixed for the whole session (``INCOMPLETE_LISTINGS_DB_PATH``). Point it at a
+    per-test file and drop the cached snapshot on both sides, or the car ids
+    these scans flag stay "incomplete" for every later test that reuses them
+    (``test_listings_perf`` hid all 60 of its seeded cars)."""
     monkeypatch.setattr(sdb, "_vin_owner_table_ready", False)
+    monkeypatch.setattr(incomplete_listings_db, "DB_PATH", str(tmp_path / "incomplete_listings.db"))
+    data_quality_repo.clear_incomplete_snapshot_cache()
     monkeypatch.setenv("SCANNER_RECONCILE", "1")
     monkeypatch.setenv("SCANNER_AUTO_HEAL", "0")
     for name in ("SCANNER_RECONCILE_MIN_COVERAGE", "SCANNER_RECONCILE_MIN_ROWS", "SCANNER_VIN_OWNER_GUARD_HOURS"):
         monkeypatch.setenv(name, "")
     monkeypatch.setenv("DEALER_LOGS_ROOT", str(tmp_path / "dealer_logs"))
-    return Path(sqlite_inventory.path)
+    yield Path(sqlite_inventory.path)
+    data_quality_repo.clear_incomplete_snapshot_cache()
 
 
 _ISO = re.compile(r"^(\d{4}-\d{2}-\d{2})([T ])(\d{2}:\d{2}:\d{2})(\.\d+)?(Z|[+-]\d{2}:?\d{2})?$")
