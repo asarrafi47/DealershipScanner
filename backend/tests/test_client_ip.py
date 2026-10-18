@@ -13,6 +13,9 @@ from backend.utils import client_ip as client_ip_mod
 CF_EDGE = "172.67.1.1"
 CLIENT = "198.51.100.23"
 ATTACKER = "203.0.113.9"
+# Cloudflare's documented client IP for a Worker subrequest into another customer's zone;
+# it lies inside the trusted range 2a06:98c0::/29.
+CF_WORKER = "2a06:98c0:3600::103"
 
 
 class _Req:
@@ -159,12 +162,34 @@ def test_client_forged_entry_before_cloudflare_is_ignored(cloudflare):
     assert client_ip_mod.client_ip(_Req(f"6.6.6.6, {CLIENT}, {CF_EDGE}")) == CLIENT
 
 
-def test_cidr_mode_ignores_hop_count(monkeypatch):
-    """With CIDRs set, hops no longer decide: hops=1 would have returned the Cloudflare edge."""
+def test_cidr_walk_is_bounded_by_hop_count(monkeypatch):
+    """TRUSTED_PROXY_HOPS caps the walk; inside the cap it stops at the first untrusted entry."""
     monkeypatch.setenv("TRUST_PROXY_HEADERS", "1")
-    monkeypatch.setenv("TRUSTED_PROXY_HOPS", "1")
     monkeypatch.setenv("TRUSTED_PROXY_CIDRS", "cloudflare")
-    assert client_ip_mod.client_ip(_Req(f"{CLIENT}, {CF_EDGE}")) == CLIENT
+    # hops=1: nothing may be skipped, so the Cloudflare edge is the client (fails closed).
+    monkeypatch.setenv("TRUSTED_PROXY_HOPS", "1")
+    assert client_ip_mod.client_ip(_Req(f"{CLIENT}, {CF_EDGE}")) == CF_EDGE
+    # hops=3: up to two trusted hops may be skipped, but the walk stops at the client.
+    monkeypatch.setenv("TRUSTED_PROXY_HOPS", "3")
+    assert client_ip_mod.client_ip(_Req(f"spoof, {CLIENT}, {CF_EDGE}")) == CLIENT
+    assert client_ip_mod.client_ip(_Req(f"6.6.6.6, {CLIENT}, {CF_EDGE}")) == CLIENT
+    # hops=2: a second Cloudflare address is not skipped, whatever sits to its left.
+    monkeypatch.setenv("TRUSTED_PROXY_HOPS", "2")
+    assert client_ip_mod.client_ip(_Req(f"{CLIENT}, 172.67.9.9, {CF_EDGE}")) == "172.67.9.9"
+
+
+def test_cross_zone_worker_cannot_forge_through_cloudflare(cloudflare, monkeypatch, dev_routes):
+    """A Worker fetching our site through Cloudflare with a forged X-Forwarded-For.
+
+    Cloudflare appends the Worker client IP (inside its own ranges) after the forged entry and
+    the Railway edge appends the Cloudflare edge, so the app sees 'forged, worker, edge'. An
+    unbounded walk would skip both Cloudflare addresses and return the forgery; hops=2 stops at
+    the Worker IP.
+    """
+    monkeypatch.setenv("DEV_IP_ALLOWLIST", CLIENT)
+    forged = f"{CLIENT}, {CF_WORKER}, {CF_EDGE}"
+    assert client_ip_mod.client_ip(_Req(forged)) == CF_WORKER
+    assert dev_routes._dev_client_ip_allowed(_Req(forged)) is False
 
 
 def test_cloudflare_ipv6_edge_is_skipped(cloudflare):
@@ -189,9 +214,14 @@ def test_cidr_mode_malformed_client_entry_falls_back(cloudflare):
     assert client_ip_mod.client_ip(_Req(f"not-an-ip, {CF_EDGE}")) == "10.0.0.1"
 
 
-def test_cidr_mode_all_trusted_returns_leftmost(cloudflare):
+def test_cidr_mode_all_trusted_returns_leftmost(cloudflare, monkeypatch):
     """Every hop a Cloudflare address: the leftmost one is the best-known client."""
+    # hops=2: the hop bound stops on the second entry.
     assert client_ip_mod.client_ip(_Req(f"172.67.9.9, {CF_EDGE}")) == "172.67.9.9"
+    # hops=3: the chain runs out before the bound; the leftmost trusted entry wins.
+    monkeypatch.setenv("TRUSTED_PROXY_HOPS", "3")
+    assert client_ip_mod.client_ip(_Req(f"172.67.9.9, {CF_EDGE}")) == "172.67.9.9"
+    assert client_ip_mod.client_ip(_Req(CF_EDGE)) == CF_EDGE
 
 
 def test_cidrs_without_trust_switch_never_read_the_header(monkeypatch):
@@ -203,6 +233,7 @@ def test_cidrs_without_trust_switch_never_read_the_header(monkeypatch):
 
 def test_custom_cidrs_and_bare_ips(monkeypatch):
     monkeypatch.setenv("TRUST_PROXY_HEADERS", "1")
+    monkeypatch.setenv("TRUSTED_PROXY_HOPS", "3")  # two trusted proxies in front of the edge
     monkeypatch.setenv("TRUSTED_PROXY_CIDRS", "10.20.0.0/16, 192.0.2.10")
     req = _Req(f"6.6.6.6, {CLIENT}, 192.0.2.10, 10.20.3.4")
     assert client_ip_mod.client_ip(req) == CLIENT
@@ -212,6 +243,7 @@ def test_custom_cidrs_and_bare_ips(monkeypatch):
 
 def test_cloudflare_token_mixes_with_cidrs_case_insensitively(monkeypatch):
     monkeypatch.setenv("TRUST_PROXY_HEADERS", "1")
+    monkeypatch.setenv("TRUSTED_PROXY_HOPS", "3")
     monkeypatch.setenv("TRUSTED_PROXY_CIDRS", " CloudFlare , 10.20.0.0/16 ")
     req = _Req(f"{CLIENT}, {CF_EDGE}, 10.20.3.4")
     assert client_ip_mod.client_ip(req) == CLIENT
@@ -219,6 +251,7 @@ def test_cloudflare_token_mixes_with_cidrs_case_insensitively(monkeypatch):
 
 def test_invalid_cidr_tokens_are_dropped_with_a_warning(monkeypatch, caplog):
     monkeypatch.setenv("TRUST_PROXY_HEADERS", "1")
+    monkeypatch.setenv("TRUSTED_PROXY_HOPS", "2")
     monkeypatch.setenv("TRUSTED_PROXY_CIDRS", "cloudflare, not-a-cidr-p32-test")
     client_ip_mod._parse_trusted_cidrs.cache_clear()
     with caplog.at_level(logging.WARNING, logger=client_ip_mod.__name__):
@@ -226,6 +259,33 @@ def test_invalid_cidr_tokens_are_dropped_with_a_warning(monkeypatch, caplog):
         client_ip_mod.client_ip(_Req(f"{CLIENT}, {CF_EDGE}"))
     invalid_logs = [r for r in caplog.records if "not-a-cidr-p32-test" in r.getMessage()]
     assert len(invalid_logs) == 1
+
+
+@pytest.mark.parametrize("broad", ["0.0.0.0/0", "::/0", "64.0.0.0/2", "2000::/3"])
+def test_very_broad_cidr_warns_and_hop_bound_limits_it(monkeypatch, caplog, broad):
+    """A catch-all range is an operator mistake: logged once, and the hop bound still holds."""
+    monkeypatch.setenv("TRUST_PROXY_HEADERS", "1")
+    monkeypatch.setenv("TRUSTED_PROXY_HOPS", "1")
+    monkeypatch.setenv("TRUSTED_PROXY_CIDRS", f"{broad}, 10.20.0.0/16")
+    client_ip_mod._parse_trusted_cidrs.cache_clear()
+    peer = ATTACKER if ":" not in broad else "2001:db8::9"
+    with caplog.at_level(logging.WARNING, logger=client_ip_mod.__name__):
+        # hops=1: nothing is skipped, so the edge-written entry wins.
+        assert client_ip_mod.client_ip(_Req(f"6.6.6.6, {peer}")) == peer
+        client_ip_mod.client_ip(_Req(f"6.6.6.6, {peer}"))
+    broad_logs = [r for r in caplog.records if "very broad" in r.getMessage()]
+    assert len(broad_logs) == 1
+    assert broad in broad_logs[0].getMessage()
+    assert "10.20.0.0/16" not in broad_logs[0].getMessage()
+
+
+@pytest.mark.parametrize("narrow", ["cloudflare", "10.0.0.0/8", "fd12::/16", "192.0.2.10"])
+def test_ordinary_cidrs_do_not_warn_as_broad(monkeypatch, caplog, narrow):
+    monkeypatch.setenv("TRUSTED_PROXY_CIDRS", narrow)
+    client_ip_mod._parse_trusted_cidrs.cache_clear()
+    with caplog.at_level(logging.WARNING, logger=client_ip_mod.__name__):
+        client_ip_mod.trusted_proxy_cidrs()
+    assert [r for r in caplog.records if "very broad" in r.getMessage()] == []
 
 
 def test_all_invalid_cidrs_fail_closed(monkeypatch):

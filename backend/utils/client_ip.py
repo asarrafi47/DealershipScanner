@@ -5,15 +5,28 @@ Three environment knobs, read on every call:
 * ``TRUST_PROXY_HEADERS`` — master switch. Unset: X-Forwarded-For is ignored and the socket
   peer (``remote_addr``) is the client. Set: the socket peer is a trusted proxy that appends
   the address it saw to X-Forwarded-For (Railway's edge does).
+* ``TRUSTED_PROXY_HOPS`` — how many trusted proxies sit in front of this app (default 1;
+  prod keeps 2: Cloudflare -> Railway edge). Without ``TRUSTED_PROXY_CIDRS`` the client is
+  exactly that many entries from the right. With 2 hops a request sent straight to the origin
+  has only the edge's entry to its right, so its own forged entry is picked; the module logs
+  that once (set ``TRUSTED_PROXY_CIDRS=cloudflare`` to close it).
 * ``TRUSTED_PROXY_CIDRS`` — optional, comma-separated CIDRs or bare IPs, and/or the token
   ``cloudflare`` (Cloudflare's published ranges, :data:`CLOUDFLARE_PROXY_CIDRS`). When set,
-  X-Forwarded-For is walked from the right, entries inside those ranges are skipped, and the
-  first entry outside them is the client. Only a hop a trusted proxy wrote can be skipped,
-  so a request sent straight to the origin (bypassing Cloudflare) cannot choose its own IP.
-* ``TRUSTED_PROXY_HOPS`` — used only when ``TRUSTED_PROXY_CIDRS`` is unset: the client is
-  that many entries from the right. With 2 hops (Cloudflare -> Railway edge) a request sent
-  straight to the origin has only the edge's entry to its right, so its own forged entry is
-  picked; the module logs that once (set ``TRUSTED_PROXY_CIDRS=cloudflare`` to close it).
+  X-Forwarded-For is walked from the right and the client is the first entry outside those
+  ranges, but never more than ``TRUSTED_PROXY_HOPS`` entries from the right: every entry the
+  walk skips must lie inside the ranges, and the walk stops at the ``TRUSTED_PROXY_HOPS``-th
+  entry wherever it lies. A request sent straight to the origin (bypassing Cloudflare) cannot
+  choose its own IP: the edge's entry for it lies outside the ranges and wins.
+
+Why the hop bound: Cloudflare's ranges also carry traffic that merely egresses from
+Cloudflare. A Worker subrequest into another customer's zone arrives with the Worker client IP
+2a06:98c0:3600::103 (inside 2a06:98c0::/29), and Cloudflare appends it after whatever
+X-Forwarded-For the Worker sent. An unbounded walk would skip it and return the Worker's forged
+entry; with 2 hops the walk stops at the Worker IP, so that cross-zone path is closed. No
+X-Forwarded-For rule closes a Cloudflare-egress sender (a Worker, for example) that reaches the
+origin directly, because its own Cloudflare address is the one skipped hop: that needs the
+``*.up.railway.app`` domain removed (N3.13 step 6) plus an origin lock (D-SEC6 follow-up,
+candidate for P16).
 
 ``TRUSTED_PROXY_CIDRS`` does not turn proxy trust on by itself: without
 ``TRUST_PROXY_HEADERS`` the header is never read.
@@ -44,9 +57,12 @@ IPAddress = ipaddress.IPv4Address | ipaddress.IPv6Address
 # change; update this tuple and CLOUDFLARE_PROXY_CIDRS_AS_OF together. A missing range makes
 # visitors routed through it share that Cloudflare node's rate-limit bucket (fails closed); a
 # range Cloudflare has given up would let whoever holds it next forge client IPs.
-# Trust boundary: these ranges also carry traffic that merely egresses from Cloudflare
-# (Workers, WARP), so such a sender can still place a forged entry left of its own hop. Closing
-# that needs an origin lock (Authenticated Origin Pulls or a secret origin header), not CIDRs.
+# Trust boundary: these ranges also carry traffic that merely egresses from Cloudflare, such as
+# Workers. TRUSTED_PROXY_HOPS bounds the CIDR walk, which closes the cross-zone Worker path
+# (2a06:98c0:3600::103 arriving through our own zone; see the module docstring). A
+# Cloudflare-egress sender that reaches the origin directly can still place a forged entry left
+# of its own hop: that needs the *.up.railway.app domain removed (N3.13 step 6) plus an origin
+# lock (for example a secret header Cloudflare adds and the app checks), not CIDRs.
 CLOUDFLARE_PROXY_CIDRS_AS_OF = "2026-10-18"
 CLOUDFLARE_PROXY_CIDRS: tuple[str, ...] = (
     # IPv4
@@ -76,6 +92,11 @@ CLOUDFLARE_PROXY_CIDRS: tuple[str, ...] = (
 )
 _CLOUDFLARE_TOKEN = "cloudflare"
 
+# A configured range shorter than this prefix is broader than any one organisation holds
+# (10.0.0.0/8 and Cloudflare's /13 and /29 pass), so it is almost certainly a mistake such as
+# 0.0.0.0/0: every client-written entry inside it would count as a proxy hop.
+_BROAD_PREFIXLEN = {4: 8, 6: 16}
+
 
 def trust_proxy_headers() -> bool:
     """When True, X-Forwarded-For is used (set only behind a proxy that appends to it)."""
@@ -103,6 +124,7 @@ def _parse_trusted_cidrs(raw: str) -> tuple[IPNetwork, ...]:
     """Parse a TRUSTED_PROXY_CIDRS value. Invalid tokens are dropped with one warning."""
     networks: list[IPNetwork] = []
     invalid: list[str] = []
+    broad: list[str] = []
     for piece in raw.split(","):
         token = piece.strip()
         if not token:
@@ -111,15 +133,30 @@ def _parse_trusted_cidrs(raw: str) -> tuple[IPNetwork, ...]:
             networks.extend(ipaddress.ip_network(cidr) for cidr in CLOUDFLARE_PROXY_CIDRS)
             continue
         try:
-            networks.append(ipaddress.ip_network(token, strict=False))
+            network = ipaddress.ip_network(token, strict=False)
         except ValueError:
             invalid.append(token)
+            continue
+        networks.append(network)
+        if network.prefixlen < _BROAD_PREFIXLEN[network.version]:
+            broad.append(str(network))
     if invalid:
         _log.warning(
             "client_ip: TRUSTED_PROXY_CIDRS ignores %d invalid entr%s: %s",
             len(invalid),
             "y" if len(invalid) == 1 else "ies",
             ", ".join(invalid),
+        )
+    if broad:
+        # Kept, not dropped (the operator asked for it), but loudly: only TRUSTED_PROXY_HOPS
+        # then stops a client-written entry from being taken as a proxy hop.
+        _log.warning(
+            "client_ip: TRUSTED_PROXY_CIDRS trusts very broad range%s %s: client-written "
+            "X-Forwarded-For entries inside %s count as proxy hops, up to TRUSTED_PROXY_HOPS; "
+            "list only your proxies' ranges",
+            "" if len(broad) == 1 else "s",
+            ", ".join(broad),
+            "it" if len(broad) == 1 else "them",
         )
     return tuple(networks)
 
@@ -167,20 +204,25 @@ def _in_networks(ip: str, networks: tuple[IPNetwork, ...]) -> bool:
 
 
 def _client_from_cidrs(parts: list[str], networks: tuple[IPNetwork, ...]) -> str | None:
-    """Walk X-Forwarded-For from the right, skipping trusted proxies; None to fall back.
+    """Walk X-Forwarded-For from the right over trusted proxies; None to fall back.
 
     The rightmost entry was written by the socket peer (trusted by TRUST_PROXY_HEADERS).
     Every entry left of a trusted-proxy entry was written by that proxy, so it is the
-    address that proxy saw. The first entry outside ``networks`` is therefore the client.
-    When every entry is a trusted proxy, the leftmost one is the best-known client.
-    A malformed entry where the client should be means a hop misbehaved: fall back.
+    address that proxy saw. The client is the first entry outside ``networks``, but never
+    more than TRUSTED_PROXY_HOPS entries from the right: an address inside ``networks`` is
+    not proof that it is one of our proxies (a Cloudflare Worker's cross-zone subrequest
+    arrives from 2a06:98c0:3600::103, inside Cloudflare's ranges), so at most the expected
+    hops are skipped, and each of them must lie inside ``networks``.
+    When the chain is shorter than that and every entry is trusted, the leftmost one is
+    the best-known client. A malformed entry on the walk means a hop misbehaved: fall back.
     """
+    hops = trusted_proxy_hops()
     leftmost_trusted: str | None = None
-    for raw in reversed(parts):
+    for position, raw in enumerate(reversed(parts)):
         candidate = _normalize_ip(raw)
         if candidate is None:
             return None
-        if not _in_networks(candidate, networks):
+        if position >= hops - 1 or not _in_networks(candidate, networks):
             return candidate
         leftmost_trusted = candidate
     return leftmost_trusted
@@ -203,7 +245,8 @@ def client_ip(request: Request) -> str:
     its own rate-limit key by sending its own X-Forwarded-For.
 
     With TRUSTED_PROXY_CIDRS set, trusted-proxy entries are skipped from the right and the
-    first other entry wins. Otherwise the entry TRUSTED_PROXY_HOPS from the right wins.
+    first other entry wins, but the walk never goes past TRUSTED_PROXY_HOPS entries from the
+    right. Otherwise the entry TRUSTED_PROXY_HOPS from the right wins.
 
     Falls back to remote_addr — the trusted socket peer, never spoofable — whenever the
     header is missing, malformed, or shorter than the configured hop count.
