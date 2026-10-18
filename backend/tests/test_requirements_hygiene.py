@@ -63,6 +63,12 @@ ALLOWED_UNDECLARED: dict[str, str] = {
     # backend/main.py ProxyFix, backend/web/static.py safe_join, error types.
     # Flask hard-requires Werkzeug and its API is part of Flask's.
     "werkzeug": "transitive: flask",
+    # backend/tests/test_css_url_filter.py (P3.5): jinja2.Undefined and
+    # markupsafe.Markup drive the css_url filter the way templates call it.
+    # Flask hard-requires Jinja2 (which hard-requires MarkupSafe); both are the
+    # template engine Flask renders with.
+    "jinja2": "transitive: flask",
+    "markupsafe": "transitive: flask (jinja2)",
 }
 
 # Distribution name (PEP 503 normalised) -> import names, only where the import
