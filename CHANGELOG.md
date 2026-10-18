@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [1.5.6] - 2026-10-18
+
 ### Fixed
 - `backend/tests/test_cleanroom_shapes_2026_10.py`: the `inv` fixture points the
   incomplete-listings sidecar index at a per-test file and clears the cached snapshot
