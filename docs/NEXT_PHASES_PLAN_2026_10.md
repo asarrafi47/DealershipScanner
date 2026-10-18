@@ -780,6 +780,30 @@ Elsewhere:
 | N2.2 | IL-02 | Targeted prod index repair script | code | `backend/scripts/repair_new_null_mileage_index.py` (new) + test | N2.1 | dry-run count = IL-02 |
 | N2.3 | release | Docker smoke, `deploy_web.sh`, owner runs the repair | prod-owner | `docs/ops_log/N2.3.md` | N2.1, N2.2 | prod count 0 |
 
+**Unit status (updated 2026-10-18 by the N2 integrator at commit time; checkpoints in `workspace/phase_runs/N2/`, summary in `workspace/phase_runs/N2/RESUME.md`).**
+- N2.1: DONE, merged `337313545` (unit head `402bbd87f`). Review: 2 rounds, pass, 5 nits open. Acceptance, run read-only with the N1.3 tool at phase head `042bdc0e1`:
+  - `cars_cleanroom`: the `mileage` code is on 1,795 cars (target ≤1,795; it was 22,947). That is 1,374 used at 0 mi plus 421 used with NULL, and a read-only SQL count gives the same split. Incomplete is 14,345 (target 14,345 ±1%; it was 34,023), with 0 errors.
+  - `cars`: incomplete stays at 11,719 (fixture EXPECT OK), because `cars` has no active cars with a NULL odometer.
+  - Against `cleanroom_baseline_expected.json`, the clean-room run differs in exactly 5 values, all in the F12 group, as expected after the rule change.
+  - The rule forced changes in two files outside the unit's list: `test_cleanroom_acceptance.py:481` and `upsert_vehicles_golden_expected.json:1031`. They are noted here for the N1.3 and N8.6 owners.
+  - Open nits: the `_mileage_blank` docstring says "2 of the 118" blank-condition rows, but all 118 count; fix it in the next unit that touches the file. The rule reads the raw condition, so 118 blank-condition `cars_cleanroom` rows that display as Used count as complete for mileage (0 of them on `cars` and 0 in the prod class). D-N12 reaches only `car.html`.
+- N2.2: DONE, merged `042bdc0e1` (unit head `ab9f7fa97`). Review: 1 round, pass, 4 nits open.
+  - Dry run on `cars_cleanroom`, read-only, at the phase head: `repair_rows` 21,152, equal to the class count (21,152) and to `census_il02_shape` (21,152). The apply would delete 18,965 index rows and update 2,187 that keep other codes; 421 used or CPO rows keep their code. 23 batches; the slowest took 0.035 s.
+  - Apply on two slim copies, both dropped afterwards: `pytest_n22_acc` (builder) and `pytest_n2main_pack` (MAIN pack test). Each time, 18,965 rows were deleted and 2,187 updated, 0 rows remained, and a second dry run found 0. The restore SQL brought the index back byte-identical.
+  - The apply on a full `cars_cleanroom` copy (`cars_cr_n2`) is BLOCKED until the owner approves that scratch DB, which D-N25 does not list.
+  - Accepted spec deviation: the script removes only the `mileage` code instead of recomputing the whole row. Class cars that carry other stored codes stay hidden until N6.1: 2,187 on `cars_cleanroom`, about 1,560 on the 10-04 prod dump.
+- N2.3: BLOCKED (owner).
+  - The 28-step pack is `workspace/phase_runs/N2/N2.3.md`. Its read, apply and undo lines were tested locally: the reads read-only on `cars_cleanroom`, the apply and undo on the throwaway `pytest_n2main_pack`.
+  - Gates G1-G8 must hold first: the N2 release is on main and tagged; the main checkout sits at the tag; the owner says "Docker OK for N2.3"; the N4.1 path check; migration ordering; N1.6 has run, or the owner goes ahead without it; `SCAN_FLEET=0`; the grid-card wording is decided.
+  - Expected on prod, from the 10-04 dump: `repair_rows` 28,983 (27,423 deleted, 1,560 updated), and visible cars go from 228,850 to 256,273.
+  - After the owner's run, the verifier writes `docs/ops_log/N2.3.md` and the RELEASING.md release-log row.
+- Exit gate, checked 2026-10-18 at `042bdc0e1` (the phase head before this status commit):
+  - `pytest backend/tests/test_mileage_zero_f12.py backend/tests/test_repair_new_null_mileage_index.py -q`: 62 passed.
+  - Acceptance `mileage` is 1,795 against a limit of ≤1,795: pass.
+  - Prod health and the owner's read-only count: open until N2.3 runs.
+- Release: the next free 1.5.x patch (1.5.7 if N2 releases first), web deploy only. CHANGELOG `[Unreleased]` holds the N2 lines. The entry condition "N1.6 result known" is still open; pack gate G6 lets the owner release N2 first anyway.
+- Plan gap: Section 3.3 gives no owner to `frontend/static/listings/card.js`, `backend/utils/compare_specs.py` or `backend/utils/mileage_display.py`. After the N2.3 apply, about 27,400 New cars become visible, and their grid card and compare cell still say "Mileage not listed". The owner either accepts this for the N2 release, to be fixed later in N3.11 or N6.4, or a small follow-up unit lands before the release.
+
 **N-unit specs.**
 
 **N2.1.**
