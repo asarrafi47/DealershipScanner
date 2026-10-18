@@ -36,6 +36,8 @@
             </div>
             {% if site_admin_onboard and dealer_onboard_enabled %}
             <p class="find-dealers-hero__admin">Site admin: use <strong>Request scrape</strong> on Google-only dealers to queue onboarding.</p>
+            {% elif site_admin_onboard and onboarding_paused_message %}
+            <p class="find-dealers-hero__admin" id="find-dealers-onboarding-paused">{{ onboarding_paused_message }}</p>
             {% endif %}
         </header>
 
@@ -128,6 +130,7 @@
 <script type="application/json" id="ds-find-dealers-admin" nonce="{{ csp_nonce }}">{{ {
     "site_admin": true,
     "onboard_enabled": dealer_onboard_enabled,
+    "onboard_paused": onboarding_paused_message != "",
 } | tojson }}</script>
 {% endif %}
 

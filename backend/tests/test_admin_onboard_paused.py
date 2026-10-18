@@ -179,3 +179,201 @@ def test_hub_page_shows_paused_line_and_no_onboard_form(monkeypatch, tmp_path, a
     assert 'name="dealer_id"' not in html
     assert "Queue onboard job" not in html
     assert '<form method="post" class="dealers-form"' not in html
+
+
+# --- N3.10b: every other web path that would insert a dealer_jobs row -------------
+#
+# Find dealers "Request scrape" (POST /api/admin/dealer-onboard) and the hub's
+# Restart / Smart restart (POST /api/admin/dealer-jobs/<id>/retry, /smart-retry)
+# answer 409 with the same line and reach nothing in the job queue.
+
+ONBOARD_URL = "/api/admin/dealer-onboard"
+RETRY_URL = "/api/admin/dealer-jobs/5/retry"
+SMART_RETRY_URL = "/api/admin/dealer-jobs/5/smart-retry"
+
+FAILED_JOB = {
+    "id": 5,
+    "dealer_id": "irvine-bmw",
+    "job_type": "onboard",
+    "status": "failed",
+    "worker_id": "worker-1",
+    "created_at": "2026-10-01T00:00:00+00:00",
+    "started_at": "2026-10-01T00:01:00+00:00",
+    "finished_at": "2026-10-01T00:02:00+00:00",
+    "error": "boom",
+    "payload_json": '{"url": "https://www.irvinebmw.example/inventory"}',
+    "result_json": "{}",
+}
+
+
+def _pretend_failed_job(monkeypatch) -> None:
+    """Make every pre-N3.10b queue path reach ``enqueue_job``.
+
+    Postgres on, job 5 is a failed onboard with nothing active for its dealer, and
+    the diagnosis stays rule-only (no LLM, no ``dealer_scan_status`` read). Only
+    the lookups are faked: ``enqueue_job`` itself is real and writes through the
+    recording connection.
+    """
+    import backend.scanner.job_queue as jq
+
+    monkeypatch.setattr("backend.db.inventory_pg.is_inventory_postgres", lambda: True)
+    monkeypatch.setattr(jq, "get_job", lambda jid: dict(FAILED_JOB, id=int(jid)))
+    monkeypatch.setattr(jq, "_has_active_job", lambda **k: False)
+    monkeypatch.setattr(jq, "get_dealer_scan_reason", lambda dealer_id: None)
+    monkeypatch.setattr(jq, "_merge_result_diagnosis", lambda job_id, diagnosis: None)
+
+
+def _json_post(client, url: str, csrf: str | None, body: dict[str, Any]):
+    headers = {"Accept": "application/json"}
+    if csrf:
+        headers["X-CSRF-Token"] = csrf
+    return client.post(url, json=body, headers=headers)
+
+
+_PAUSED_POSTS = [
+    pytest.param(ONBOARD_URL, {"url": "https://www.mtnviewnissan.com/", "name": "Mtn View Nissan"}, id="onboard"),
+    pytest.param(RETRY_URL, {}, id="retry"),
+    pytest.param(SMART_RETRY_URL, {"use_llm": False}, id="smart-retry"),
+]
+
+
+def test_queue_fake_records_the_pre_pause_api_paths(monkeypatch, queue_rows) -> None:
+    """Guard for the fakes: the functions the three endpoints used to call each land one row."""
+    from backend.dealer.admin.onboard_api import request_dealer_onboard
+    from backend.scanner.job_queue import retry_failed_job, smart_retry_failed_job
+
+    _pretend_failed_job(monkeypatch)
+    assert request_dealer_onboard(url="https://www.mtnviewnissan.com/")[0] is True
+    assert retry_failed_job(5)[0] is True
+    assert smart_retry_failed_job(5, use_llm=False)[0] is True
+    assert len(queue_rows) == 3
+
+
+@pytest.mark.parametrize(("url", "body"), _PAUSED_POSTS)
+def test_admin_queue_post_returns_409_and_enqueues_nothing(
+    monkeypatch, tmp_path, app_factory, queue_rows, url, body
+) -> None:
+    app = _make_app(app_factory, monkeypatch, tmp_path)
+    client = app.test_client()
+    with client:
+        csrf = _login(client, email="siteadmin@example.com", role=ROLE_ADMIN)
+        _pretend_failed_job(monkeypatch)
+        rv = _json_post(client, url, csrf, body)
+    assert rv.status_code == 409
+    assert rv.get_json() == {"ok": False, "error": "onboarding_paused", "message": PAUSED_LINE}
+    assert queue_rows == []
+
+
+@pytest.mark.parametrize(("url", "body"), _PAUSED_POSTS)
+def test_admin_queue_post_never_calls_the_queue_functions(
+    monkeypatch, tmp_path, app_factory, queue_rows, url, body
+) -> None:
+    """The 409 comes before validation, rate limiting and diagnosis, not from them."""
+    import backend.dealer.admin.onboard_api as onboard_api
+    import backend.scanner.job_queue as jq
+
+    calls: list[str] = []
+
+    def _forbid(name: str):
+        def _called(*a, **k):
+            calls.append(name)
+            raise AssertionError(f"{name} reached while onboarding is paused")
+
+        return _called
+
+    app = _make_app(app_factory, monkeypatch, tmp_path)
+    client = app.test_client()
+    with client:
+        csrf = _login(client, email="siteadmin@example.com", role=ROLE_ADMIN)
+        _pretend_failed_job(monkeypatch)
+        monkeypatch.setattr(onboard_api, "request_dealer_onboard", _forbid("request_dealer_onboard"))
+        monkeypatch.setattr(jq, "retry_failed_job", _forbid("retry_failed_job"))
+        monkeypatch.setattr(jq, "smart_retry_failed_job", _forbid("smart_retry_failed_job"))
+        monkeypatch.setattr(jq, "diagnose_job_row", _forbid("diagnose_job_row"))
+        monkeypatch.setattr("backend.routes.admin_dealer_api.allow_request", _forbid("allow_request"))
+        rv = _json_post(client, url, csrf, body)
+    assert rv.status_code == 409
+    assert calls == []
+    assert queue_rows == []
+
+
+@pytest.mark.parametrize(("url", "body"), _PAUSED_POSTS)
+def test_non_admin_queue_post_is_forbidden_and_enqueues_nothing(
+    monkeypatch, tmp_path, app_factory, queue_rows, url, body
+) -> None:
+    app = _make_app(app_factory, monkeypatch, tmp_path)
+    client = app.test_client()
+    with client:
+        csrf = _login(client, email="member@example.com", role="general_user")
+        _pretend_failed_job(monkeypatch)
+        rv = _json_post(client, url, csrf, body)
+    assert rv.status_code == 403
+    assert queue_rows == []
+
+
+@pytest.mark.parametrize(("url", "body"), _PAUSED_POSTS)
+def test_admin_queue_post_without_csrf_is_refused(
+    monkeypatch, tmp_path, app_factory, queue_rows, url, body
+) -> None:
+    app = _make_app(app_factory, monkeypatch, tmp_path)
+    client = app.test_client()
+    with client:
+        _login(client, email="siteadmin@example.com", role=ROLE_ADMIN)
+        _pretend_failed_job(monkeypatch)
+        rv = _json_post(client, url, None, body)
+    assert rv.status_code == 403
+    assert queue_rows == []
+
+
+def test_hub_page_draws_no_restart_buttons_for_a_failed_job(monkeypatch, tmp_path, app_factory) -> None:
+    app = _make_app(app_factory, monkeypatch, tmp_path)
+    client = app.test_client()
+    with client:
+        _login(client, email="siteadmin@example.com", role=ROLE_ADMIN)
+        _pretend_postgres(monkeypatch)
+        monkeypatch.setattr(
+            "backend.dealer.admin.dealers_hub.list_recent_jobs",
+            lambda limit=30: [dict(FAILED_JOB)],
+        )
+        rv = client.get("/admin/dealers")
+    assert rv.status_code == 200
+    html = rv.get_data(as_text=True)
+    assert 'class="dealers-job-row" data-job-id="5"' in html
+    assert 'class="dealers-job-detail-btn" data-job-id="5"' in html
+    assert 'class="dealers-job-retry-btn" data-job-id="5"' not in html
+    assert 'class="dealers-job-smart-retry-btn" data-job-id="5"' not in html
+    assert 'id="dealers-job-retry-btn"' not in html
+    assert 'id="dealers-job-smart-retry-btn"' not in html
+    assert "const retryEnabled = false;" in html
+
+
+def test_find_dealers_shows_paused_line_and_no_request_scrape(monkeypatch, tmp_path, app_factory) -> None:
+    import json
+    import re
+
+    app = _make_app(app_factory, monkeypatch, tmp_path)
+    client = app.test_client()
+    with client:
+        _login(client, email="siteadmin@example.com", role=ROLE_ADMIN)
+        monkeypatch.setattr("backend.db.inventory_pg.is_inventory_postgres", lambda: True)
+        rv = client.get("/find-dealers")
+    assert rv.status_code == 200
+    html = rv.get_data(as_text=True)
+    assert f'<p class="find-dealers-hero__admin" id="find-dealers-onboarding-paused">{PAUSED_LINE}</p>' in html
+    assert "Request scrape" not in html
+    m = re.search(r'<script type="application/json" id="ds-find-dealers-admin"[^>]*>(.*?)</script>', html, re.S)
+    assert m, "site-admin config block missing"
+    assert json.loads(m.group(1)) == {"site_admin": True, "onboard_enabled": False, "onboard_paused": True}
+
+
+def test_find_dealers_has_no_paused_line_for_a_member(monkeypatch, tmp_path, app_factory) -> None:
+    app = _make_app(app_factory, monkeypatch, tmp_path)
+    client = app.test_client()
+    with client:
+        _login(client, email="member@example.com", role="general_user")
+        monkeypatch.setattr("backend.db.inventory_pg.is_inventory_postgres", lambda: True)
+        rv = client.get("/find-dealers")
+    assert rv.status_code == 200
+    html = rv.get_data(as_text=True)
+    assert PAUSED_LINE not in html
+    assert 'id="ds-find-dealers-admin"' not in html

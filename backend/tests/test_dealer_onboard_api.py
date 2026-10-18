@@ -62,7 +62,8 @@ def test_api_admin_dealer_onboard_forbidden_without_admin(monkeypatch) -> None:
     assert rv.status_code == 403
 
 
-def test_api_admin_dealer_onboard_ok(monkeypatch, tmp_path) -> None:
+def test_api_admin_dealer_onboard_paused(monkeypatch, tmp_path) -> None:
+    """N3.10b: queue onboarding is paused, so a site admin gets 409 and nothing is enqueued."""
     db_path = tmp_path / "users.db"
     monkeypatch.setenv("USERS_DB_PATH", str(db_path))
     monkeypatch.delenv("INVENTORY_DATABASE_URL", raising=False)
@@ -72,9 +73,10 @@ def test_api_admin_dealer_onboard_ok(monkeypatch, tmp_path) -> None:
         "backend.db.inventory_pg.is_inventory_postgres",
         lambda: True,
     )
+    enqueued: list[dict] = []
     monkeypatch.setattr(
         "backend.dealer.admin.onboard_api.enqueue_job",
-        lambda **kwargs: 99,
+        lambda **kwargs: enqueued.append(kwargs) or 99,
     )
 
     client = app.test_client()
@@ -90,10 +92,12 @@ def test_api_admin_dealer_onboard_ok(monkeypatch, tmp_path) -> None:
         content_type="application/json",
         headers={"X-CSRF-Token": "test-csrf-token-for-onboard-api-32chars"},
     )
-    assert rv.status_code == 200
+    assert rv.status_code == 409
     data = rv.get_json()
-    assert data["ok"] is True
-    assert data["job_id"] == 99
+    assert data["ok"] is False
+    assert data["error"] == "onboarding_paused"
+    assert data["message"] == "Onboarding is paused; use dealer-discovery (see P15A.3)"
+    assert enqueued == []
 
 
 def test_api_admin_dealer_jobs_forbidden_without_admin(monkeypatch) -> None:
@@ -172,14 +176,17 @@ def test_api_admin_dealer_job_detail_ok(monkeypatch, tmp_path) -> None:
     assert data["job"]["result"]["log_tail"] == "MODULE_NOT_FOUND"
 
 
-def test_api_admin_dealer_job_retry_ok(monkeypatch, tmp_path) -> None:
+def test_api_admin_dealer_job_retry_paused(monkeypatch, tmp_path) -> None:
+    """N3.10b: a retry would re-enqueue the job, so it answers 409 and never calls the queue."""
     db_path = tmp_path / "users.db"
     monkeypatch.setenv("USERS_DB_PATH", str(db_path))
     init_users_db()
     uid = save_user("admin1", "admin1@example.com", "password123", role="admin")
+    retried: list[int] = []
     monkeypatch.setattr(
         "backend.scanner.job_queue.retry_failed_job",
-        lambda jid: (True, "", {"job_id": 99, "source_job_id": jid, "dealer_id": "test-dealer"}),
+        lambda jid: retried.append(jid)
+        or (True, "", {"job_id": 99, "source_job_id": jid, "dealer_id": "test-dealer"}),
     )
 
     client = app.test_client()
@@ -194,8 +201,8 @@ def test_api_admin_dealer_job_retry_ok(monkeypatch, tmp_path) -> None:
         content_type="application/json",
         headers={"X-CSRF-Token": "test-csrf-token-for-onboard-api-32chars"},
     )
-    assert rv.status_code == 200
+    assert rv.status_code == 409
     data = rv.get_json()
-    assert data["ok"] is True
-    assert data["job_id"] == 99
-    assert data["source_job_id"] == 5
+    assert data["ok"] is False
+    assert data["error"] == "onboarding_paused"
+    assert retried == []
