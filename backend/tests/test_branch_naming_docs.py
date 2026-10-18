@@ -11,8 +11,15 @@ These tests read the docs as text (no git, no network) and pin:
 - Section 7.0's branch convention says the same;
 - retiring ``feature/http-only-scans`` is an owner step behind four gates
   (ksarrafi told, the first phase release on main, the mini check or a logged
-  waiver, no checkout on the branch). The delete command appears once, after
-  the gates, and no other doc tells anyone to delete the branch;
+  waiver, no checkout on the branch). Gates 1 and 3 name a fixed log-row text
+  and verify with a grep for exactly that text (a bare grep for ``ksarrafi`` or
+  ``http-only-scans`` already matches open-gate rows), and at most one dated
+  log row quotes each text. The delete command appears once, after the gates,
+  and no other doc tells anyone to delete the branch;
+- RELEASING.md gives a create command for the integration worktree and says
+  how unit branches are deleted after a rebased release; the plan's 7.0 step 4
+  rebases only when ``main`` moved, and 10.3 checks a stale worktree against
+  ``base_sha`` (unit branches have no upstream);
 - the tip SHA the retirement section quotes is the 1.5.4 release-log commit;
 - every in-page link in RELEASING.md resolves to a heading.
 """
@@ -27,8 +34,26 @@ import pytest
 REPO_ROOT = Path(__file__).resolve().parents[2]
 RELEASING = REPO_ROOT / "docs" / "RELEASING.md"
 PLAN = REPO_ROOT / "docs" / "NEXT_PHASES_PLAN_2026_10.md"
+DECISIONS_LOG = REPO_ROOT / "docs" / "remediation" / "OWNER_DECISIONS_LOG.md"
 RETIRE_HEADING = "### Retiring `feature/http-only-scans`"
 DELETE_CMD = "git push origin --delete feature/http-only-scans"
+# Gates 1 and 3 are met by a log row with a fixed decision text; each Verify
+# greps for exactly that text, so it prints nothing while the gate is open.
+GATE_ROWS = {
+    1: (
+        "N4.3 gate 1: ksarrafi told feature/http-only-scans will be deleted",
+        "grep -nF 'N4.3 gate 1: ksarrafi told' docs/remediation/OWNER_DECISIONS_LOG.md",
+    ),
+    3: (
+        "N4.3 gate 3 waived: retire feature/http-only-scans without the mini check",
+        "grep -nF 'N4.3 gate 3 waived' docs/remediation/OWNER_DECISIONS_LOG.md",
+    ),
+}
+# Each of these already matches open-gate rows (D-REL4, D-REL2, the 1.5.3 push).
+BARE_GREPS = (
+    "grep -n ksarrafi docs/remediation/OWNER_DECISIONS_LOG.md",
+    "grep -n http-only-scans docs/remediation/OWNER_DECISIONS_LOG.md",
+)
 
 _BRANCH = re.compile(r"\b(phase|unit)/<([^>]+)>")
 _WORKTREE = re.compile(r"\.claude/worktrees/((?:phase-)?<[^>]+>)")
@@ -133,11 +158,53 @@ def test_http_only_scans_retirement_is_owner_gated(releasing):
         end = gates[i + 1] if i + 1 < len(gates) else section.index(DELETE_CMD)
         gate = section[start:end]
         assert "Verify" in gate and "`" in gate[gate.index("Verify") :], f"gate {i + 1} has no Verify command"
+    for number, (row_text, verify) in GATE_ROWS.items():
+        gate = section[gates[number - 1] : gates[number]]
+        assert f"`{row_text}`" in re.sub(r"\s+", " ", gate), f"gate {number} names no fixed row text"
+        assert f"`{verify}`" in gate, f"gate {number} Verify is not the fixed-text grep"
+        needle = verify.split("'")[1]
+        assert needle in row_text, f"gate {number} grep would not match its own row text"
+    for bare in BARE_GREPS:
+        assert bare not in flat, f"{bare!r} already matches rows while the gate is open"
     assert "merge-base --is-ancestor origin/feature/http-only-scans origin/main" in section
     assert "git worktree list | grep -F '[feature/http-only-scans]'" in section
     # The delete comes after every gate, and only here.
     assert section.index(DELETE_CMD) > gates[-1]
     assert releasing.count(DELETE_CMD) == 1
+
+
+def test_gate_row_texts_are_quoted_by_at_most_one_log_row():
+    # A second row quoting a gate text (a note, a record) would satisfy the grep
+    # without the owner acting. Zero rows = gate open; one row = gate met.
+    log = DECISIONS_LOG.read_text(encoding="utf-8")
+    for number, (_row_text, verify) in GATE_ROWS.items():
+        needle = verify.split("'")[1]
+        rows = [line for line in log.splitlines() if needle in line]
+        assert len(rows) <= 1, f"gate {number}: {len(rows)} log rows match {needle!r}"
+        assert all(re.match(r"^\| \d{4}-\d{2}-\d{2} \| ", row) for row in rows), rows
+
+
+def test_integration_worktree_has_a_create_command(releasing):
+    section = _branching_model(releasing)
+    assert "git worktree add .claude/worktrees/phase-<id> -b phase/<id> origin/main" in section
+    assert "git -C .claude/worktrees/phase-<id> branch --show-current" in section
+
+
+def test_unit_branch_cleanup_covers_a_rebased_phase(releasing, plan):
+    flat = re.sub(r"\s+", " ", _branching_model(releasing))
+    assert "git cherry v<VERSION> unit/<unit id>" in flat
+    assert "fast-forward-ok" in flat
+    conventions = _section(plan, "### 7.0 Conventions every phase uses", level="### ")
+    step4 = next(line for line in conventions.splitlines() if line.startswith("  4. rebase"))
+    assert "only if" in step4 and "fast-forward-ok" in step4
+
+
+def test_plan_names_no_stale_checkout_or_upstream_check(plan):
+    flat = re.sub(r"\s+", " ", plan)
+    assert "sits on `feature/http-only-scans`" not in flat
+    rerun = _section(plan, "### 10.3 Re-run rule", level="### ")
+    assert "log @{u}" not in rerun
+    assert "<base_sha>..HEAD" in rerun
 
 
 def test_branching_model_points_at_the_gated_retirement(releasing):

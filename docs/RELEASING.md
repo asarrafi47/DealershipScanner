@@ -59,9 +59,22 @@ time. Commands in this document and in every owner command pack follow this rule
   checklist), remove that worktree with `git worktree remove .claude/worktrees/phase-<id>`.
   That command refuses a dirty tree.
 - A phase releases with `git push origin phase/<id>:main` (a fast-forward). The phase
-  branch is deleted afterwards. After the release, its unit worktrees are removed and
-  its unit branches deleted with `git branch -d`, which refuses a branch that is not
-  merged.
+  branch is deleted afterwards. A phase branch is rebased on `origin/main` only when
+  another release moved `main` after the branch was cut (release checklist step 1 then
+  does not print `fast-forward-ok`). Do not rebase otherwise: a plain
+  `git rebase origin/main` rewrites a phase branch that holds merge commits even when
+  `main` has not moved. It drops the merges and replays the unit commits in a line.
+- After the release, from a checkout of `main` at the release, the phase's unit
+  worktrees are removed (`git worktree remove .claude/worktrees/<unit id>`) and its unit
+  branches deleted with `git branch -d unit/<unit id>`, which refuses a branch that is
+  not merged. If the phase was not rebased, every unit tip is in the release and `-d`
+  succeeds. After a rebase the unit commits were rewritten, so `-d` refuses each unit
+  branch whose commits were replayed. That refusal is expected. For each refused
+  branch, run `git cherry v<VERSION> unit/<unit id>`. A line starting with `-` is a
+  commit whose change is in the release unchanged. A line starting with `+` is one whose
+  change is not (the rebase hit a conflict there, or the commit was lost). Delete the
+  branch with `git branch -D unit/<unit id>` only when no `+` line is left, or after
+  comparing each `+` commit with the release by hand (`git show <sha>`).
 - `feature/http-only-scans` was the integration branch until the first release to `main`
   (P2B.3, v1.5.4). Its tip on origin is still `486f9012d`, the `v1.5.4` tag commit, which
   `main` already contains. No new work goes to it. The owner retires it once four gates
@@ -72,7 +85,7 @@ time. Commands in this document and in every owner command pack follow this rule
 - Never force-push, on any branch. Until the P2B.5 ruleset is active, GitHub itself would
   accept a force push to `main`. Only the person pushing prevents it.
 
-Start a phase:
+Start a phase, in the main checkout:
 
 ```bash
 git fetch origin
@@ -81,6 +94,22 @@ git switch -c phase/<id> origin/main
 
 Verify: `git merge-base --is-ancestor origin/main HEAD && echo based-on-main` prints
 `based-on-main`.
+
+Or, when the main checkout is busy, create the phase branch in its integration worktree
+and leave the main checkout where it is:
+
+```bash
+git fetch origin
+git worktree add .claude/worktrees/phase-<id> -b phase/<id> origin/main
+```
+
+If `phase/<id>` already exists (for example after the worktree was removed for a MAIN
+unit), drop `-b`: `git worktree add .claude/worktrees/phase-<id> phase/<id>`.
+
+Verify: `git -C .claude/worktrees/phase-<id> branch --show-current` prints `phase/<id>`,
+and
+`git -C .claude/worktrees/phase-<id> merge-base --is-ancestor origin/main HEAD && echo based-on-main`
+prints `based-on-main`.
 
 Start a unit, from the main checkout:
 
@@ -101,11 +130,19 @@ unpushed work. As for the two D-REL4 (a) branches, ksarrafi hears about it first
 NEXT_PHASES_PLAN unit N4.3 collects these conditions here. The owner runs every command
 in this section; an agent only prepares them. Do not start until all four gates hold.
 
-1. **ksarrafi has been told** that `feature/http-only-scans` will be deleted. Record it
-   in `docs/remediation/OWNER_DECISIONS_LOG.md`, or tell the agent preparing the step.
+Gates 1 and 3 are met by a log row with a fixed decision text, and each Verify greps for
+exactly that text, so it prints nothing while the gate is open. Other rows already name
+ksarrafi (the 2026-10-08 D-REL4 row, about the two D-REL4 branches) or this branch
+(D-REL2, the 1.5.3 push, N4.4's record), so a plain grep for either word proves nothing.
+Do not quote the two texts in any other row of the log.
 
-   Verify: `grep -n ksarrafi docs/remediation/OWNER_DECISIONS_LOG.md` shows a dated row
-   saying ksarrafi was told about this branch.
+1. **ksarrafi has been told** that `feature/http-only-scans` will be deleted. Record a
+   dated row in `docs/remediation/OWNER_DECISIONS_LOG.md` whose decision cell reads
+   `N4.3 gate 1: ksarrafi told feature/http-only-scans will be deleted`, or tell the
+   agent, which adds that row.
+
+   Verify: `grep -nF 'N4.3 gate 1: ksarrafi told' docs/remediation/OWNER_DECISIONS_LOG.md`
+   prints that one dated row. It prints nothing until the row exists.
 2. **The first phase release is on `main`.** That means `main` has moved past
    `486f9012d` to a release cut from a `phase/<id>` branch, and that release's tag is on
    origin.
@@ -122,14 +159,16 @@ in this section; an agent only prepares them. Do not start until all four gates 
 3. **The mini's clone has been checked, or the owner has waived the check.** P2B.8 step
    7 asks that `git status` and `git log @{u}..` on the mini show no unpushed work.
    Under D-N2 (b) the mini has no role and there is no SSH approval, so this check runs
-   only if the owner runs it on the mini (N4.4 (a)). Otherwise the owner logs a waiver
-   in `docs/remediation/OWNER_DECISIONS_LOG.md`. A waiver loses nothing on origin,
-   because the branch tip is the `v1.5.4` commit, which `main` already contains. Any
-   unpushed commits on the mini stay in the mini's clone.
+   only if the owner runs it on the mini (N4.4 (a)). Otherwise the owner waives it: a
+   dated row in `docs/remediation/OWNER_DECISIONS_LOG.md` whose decision cell reads
+   `N4.3 gate 3 waived: retire feature/http-only-scans without the mini check`, or a word
+   to the agent, which adds that row. A waiver loses nothing on origin, because the
+   branch tip is the `v1.5.4` commit, which `main` already contains. Any unpushed commits
+   on the mini stay in the mini's clone.
 
    Verify: either the mini's `git log @{u}..` printed nothing and `git status` showed a
-   clean tree, or `grep -n http-only-scans docs/remediation/OWNER_DECISIONS_LOG.md` shows
-   the dated waiver row.
+   clean tree, or `grep -nF 'N4.3 gate 3 waived' docs/remediation/OWNER_DECISIONS_LOG.md`
+   prints that dated row.
 4. **No checkout or worktree is on the branch.**
 
    ```bash
