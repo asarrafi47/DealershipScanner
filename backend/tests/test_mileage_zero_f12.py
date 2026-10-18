@@ -114,6 +114,7 @@ def test_il01_blank_condition_null_mileage_flags_condition_not_mileage(_prep):
     codes = listing_missing_field_codes(_complete_row(condition=None, title="2026 Honda Accord"),
                                         for_public_filter=True)
     assert "mileage" not in codes
+    assert "condition" in codes  # year 2026 + plain title: no derived display condition
 
 
 def _row(vin, mileage, condition="Used"):

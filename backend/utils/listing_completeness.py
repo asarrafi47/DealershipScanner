@@ -129,12 +129,23 @@ def _mileage_blank(car_raw: dict[str, Any]) -> bool:
     * Used / certified (``_is_used_or_certified``): NULL, empty and 0 are all
       missing. The parsers used to default an absent odometer to 0 and 1,307 used
       rows read as "0 mi" (F12 2026-09-28).
-    * Anything else (New, blank or another condition, not CPO): a NULL / empty
-      odometer is not a gap (IL-01, owner decision D-N12 2026-10-18). New-car
-      feeds routinely omit it; flagging it marked 21,152 active new or
-      blank-condition cars incomplete in the 10-13 clean-room scan, and
-      production hides indexed incomplete cars. A blank condition is still
-      flagged under ``condition``. 0 stays valid (car.html shows 0 mi).
+    * Anything else (not CPO, and a raw condition with no used / certified
+      token: New, blank, or another value such as GM's ``ctp`` courtesy
+      transport or ``demo``): a NULL / empty odometer is not a gap (IL-01,
+      owner decision D-N12 2026-10-18). New-car feeds routinely omit it;
+      flagging it marked 21,152 active new or blank-condition cars incomplete
+      in the 10-13 clean-room scan, and production hides indexed incomplete
+      cars. 0 is not a gap here either (it was not before IL-01).
+
+    The rule reads the RAW condition. A blank raw condition is normally flagged
+    under ``condition`` instead, but the serializer can derive a display
+    condition for it from the title, source URL or model year (e.g. "Used" from
+    a title starting "Used ...", "Pre-Owned" when year < 2024); a derived used /
+    pre-owned condition means neither code fires and the page shows a pre-owned
+    car with "Mileage not listed" (2 of the 118 blank-condition NULL-odometer
+    rows in cars_cleanroom; the N2.1 acceptance keys on the raw condition). Display: car.html hides the mileage line on a New, non-CPO
+    car whenever ``mileage_not_listed`` is set (NULL, or 0 on a model year older
+    than last year); a current New car at 0 still shows "0 mi".
 
     A value that is present but unparseable stays missing on every row."""
     m = car_raw.get("mileage")
