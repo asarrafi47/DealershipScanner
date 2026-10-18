@@ -18,22 +18,39 @@
 #    It is reserved for a mid-fleet scanner hotfix (D-REL10). Even then only
 #    committed content ships: the stage is `git archive HEAD`, never the work
 #    tree, and BUILD_TAG reads "unreleased" unless HEAD carries the tag.
-# 2. Stage. `git archive refs/tags/v<VERSION>` into an empty directory, plus
+# 2. Settings (N4.1, D-N24). Railway stops reading config-as-code files
+#    (railway.toml / railway.json) on 2026-12-01, so the build and deploy
+#    settings live on the service instance, and the release must not carry a
+#    root railway.toml or railway.json (before the cutoff it would override
+#    them). The expected values are deploy/railway/service_settings.json at the
+#    deployed ref; deploy/railway/service_settings.py reads the live values
+#    with ONE read-only `railway api` query and the deploy is refused on any
+#    difference, or if they cannot be read. ALLOW_UNRELEASED_DEPLOY=1 never
+#    overrides either refusal.
+# 3. Stage. `git archive refs/tags/v<VERSION>` into an empty directory, plus
 #    MUST_SHIP_ALLOWLIST (below), plus BUILD_COMMIT (the full SHA) and
 #    BUILD_TAG at the stage root, next to VERSION. /health and /api/health
 #    report BUILD_COMMIT as "commit" (backend/routes/site_misc.py).
-# 3. Upload. `railway up <stage> --path-as-root --service <service> --detach`,
+# 4. Upload. `railway up <stage> --path-as-root --service <service> --detach`,
 #    run from the repo directory, where the Railway project link lives.
 #
 # Options (both scripts):
-#   --dry-run          run the guard, build the stage, print the plan and the
-#                      file count; railway is never called
-#   --keep-stage DIR   stage into DIR (new, or an empty directory) and leave
-#                      it there, e.g. for `docker build -f Dockerfile.web DIR`
-#   -h, --help         print the usage
+#   --dry-run            run the guard and the settings check, build the
+#                        stage, print the plan and the file count; nothing is
+#                        uploaded (railway runs only the read-only query)
+#   --no-settings-check  dry run only: skip the settings query, so railway is
+#                        never called (e.g. a Docker smoke of the stage before
+#                        the settings pack); a real deploy always checks
+#   --keep-stage DIR     stage into DIR (new, or an empty directory) and leave
+#                        it there, e.g. for `docker build -f Dockerfile.web DIR`
+#   -h, --help           print the usage
 #
-# Exit codes: 0 deployed, or dry run passed; 1 refused by the guard (nothing
-# staged, railway not called); 2 usage or staging error.
+# DEPLOY_PYTHON names the Python 3 that runs the settings check (default
+# python3 on PATH; stdlib only, run with -I).
+#
+# Exit codes: 0 deployed, or dry run passed; 1 refused (by the release guard:
+# nothing staged, railway not called; or by the settings check: nothing
+# staged, railway ran at most the read-only query); 2 usage or staging error.
 
 if [ "${BASH_SOURCE[0]}" = "$0" ]; then
   echo "deploy/railway/_guarded_deploy.sh is sourced by deploy_web.sh and deploy_scanner_nightly.sh; run one of those." >&2
@@ -67,15 +84,18 @@ _gd_die() {  # _gd_die <exit code> <message...>
 
 _gd_usage() {  # _gd_usage <script> <service>
   cat <<EOF
-usage: deploy/railway/$1 [--dry-run] [--keep-stage DIR]
+usage: deploy/railway/$1 [--dry-run [--no-settings-check]] [--keep-stage DIR]
 
 Deploys the release tagged v\$(cat VERSION) at HEAD to the Railway service
 '$2' from a clean \`git archive\` stage that also carries BUILD_COMMIT and
 BUILD_TAG. Refuses unless the tracked tree is clean, HEAD == main on origin
-and HEAD carries the annotated tag (also on origin).
+and HEAD carries the annotated tag (also on origin), and unless the service's
+live settings equal deploy/railway/service_settings.json (one read-only
+\`railway api\` query).
 
-  --dry-run          guard, stage and print the plan; never calls railway
-  --keep-stage DIR   stage into DIR (new or empty) and keep it afterwards
+  --dry-run            guard, settings check, stage and plan; uploads nothing
+  --no-settings-check  with --dry-run only: skip the query; never calls railway
+  --keep-stage DIR     stage into DIR (new or empty) and keep it afterwards
 
 ALLOW_UNRELEASED_DEPLOY=1 overrides a failed guard with a loud warning
 (mid-fleet hotfix only, D-REL10). Exit: 0 ok, 1 refused, 2 usage/staging error.
@@ -86,15 +106,18 @@ EOF
 #
 # <stage hook> is a function name called as `hook <stage dir>` after the
 # archive and the allowlist are in place and before BUILD_COMMIT/BUILD_TAG are
-# written; it may only rearrange files that came from the archive.
+# written; it may only rearrange files that came from the archive, and it may
+# never leave a root railway.toml or railway.json (checked after it runs).
+# Neither script uses a hook since N4.1.
 guarded_deploy() {
   local script="$1" service="$2" hook="$3" hint="$4"
   shift 4
 
-  local dry_run=0 keep_stage=""
+  local dry_run=0 keep_stage="" settings_check=1
   while [ $# -gt 0 ]; do
     case "$1" in
       --dry-run) dry_run=1 ;;
+      --no-settings-check) settings_check=0 ;;
       --keep-stage)
         if [ $# -lt 2 ] || [ -z "$2" ]; then
           _gd_usage "$script" "$service" >&2
@@ -120,6 +143,10 @@ guarded_deploy() {
     esac
     shift
   done
+  if [ "$settings_check" = 0 ] && [ "$dry_run" = 0 ]; then
+    _gd_usage "$script" "$service" >&2
+    _gd_die 2 "$script: --no-settings-check is for dry runs only; a deploy always checks the service settings"
+  fi
 
   local repo
   repo="$(git -C "$_GD_HERE/../.." rev-parse --show-toplevel 2>/dev/null)" ||
@@ -252,13 +279,86 @@ $(printf '%s\n' "$dirty" | sed -n '1,20s/^/      /p')
     exit 1
   fi
 
-  if [ "$dry_run" = 0 ] && ! command -v railway >/dev/null 2>&1; then
+  if { [ "$dry_run" = 0 ] || [ "$settings_check" = 1 ]; } && ! command -v railway >/dev/null 2>&1; then
     _gd_die 2 "$script: the railway CLI is not on PATH"
   fi
 
-  # ---- 2. stage --------------------------------------------------------------
+  # Local staging inputs are validated before Railway is contacted.
+  if [ -n "$keep_stage" ]; then
+    if [ -e "$keep_stage" ] && [ ! -d "$keep_stage" ]; then
+      _gd_die 2 "$script: --keep-stage $keep_stage exists and is not a directory"
+    fi
+    if [ -d "$keep_stage" ] && [ -n "$(ls -A "$keep_stage")" ]; then
+      _gd_die 2 "$script: --keep-stage $keep_stage is not empty"
+    fi
+  fi
+  local rel
+  for rel in ${MUST_SHIP_ALLOWLIST[@]+"${MUST_SHIP_ALLOWLIST[@]}"}; do
+    case "$rel" in
+      "" | /* | .. | ../* | */.. | */../*)
+        _gd_die 2 "$script: allowlist entries must be repo-relative paths: '$rel'"
+        ;;
+    esac
+    if [ ! -e "$repo/$rel" ]; then
+      _gd_die 2 "$script: allowlisted path is missing from the work tree: $rel"
+    fi
+    if git -C "$repo" cat-file -e "$ref:$rel" 2>/dev/null; then
+      _gd_die 2 "$script: allowlisted path is tracked at $ref and already ships: $rel"
+    fi
+  done
+
+  # ---- 2. settings -----------------------------------------------------------
+  # A root config-as-code file in the release would override the service
+  # settings until Railway stops reading it (2026-12-01).
+  local cac="" f
+  for f in railway.toml railway.json; do
+    if git -C "$repo" cat-file -e "$ref:$f" 2>/dev/null; then
+      cac="${cac}  - $f is in the release ($ref); Railway would read it instead of the service settings
+"
+    fi
+  done
+  if [ -n "$cac" ]; then
+    {
+      echo "$script: REFUSED. The release carries a config-as-code file (N4.1, D-N24):"
+      printf '%s' "$cac"
+      echo "Build and deploy settings live on the service (deploy/railway/service_settings.json)."
+      echo "Nothing was staged and railway was not called. ALLOW_UNRELEASED_DEPLOY=1 does not override this."
+    } >&2
+    exit 1
+  fi
+
+  local settings_report="" settings_line
+  if [ "$settings_check" = 1 ]; then
+    local py="${DEPLOY_PYTHON:-python3}" settings_rc=0
+    if ! command -v "$py" >/dev/null 2>&1; then
+      _gd_die 2 "$script: no Python 3 for the settings check ('$py'; set DEPLOY_PYTHON)"
+    fi
+    # Expected values come from the deployed ref, never the work tree. A ref
+    # without the file feeds an empty document, which the check refuses.
+    settings_report="$(
+      cd "$repo" &&
+        { git show "$ref:deploy/railway/service_settings.json" 2>/dev/null || true; } |
+        "$py" -I "$_GD_HERE/service_settings.py" check "$service" --settings-file -
+    )" || settings_rc=$?
+    if [ "$settings_rc" != 0 ]; then
+      {
+        echo "$script: REFUSED. The Railway service settings of '$service' are not the expected ones (N4.1):"
+        printf '%s\n' "$settings_report" | sed 's/^/  /'
+        echo "Expected: deploy/railway/service_settings.json at $ref. Apply the owner settings pack"
+        echo "(docs/RELEASING.md, Service settings), then run this again."
+        echo "Nothing was staged; railway ran at most the read-only settings query. ALLOW_UNRELEASED_DEPLOY=1 does not override this."
+      } >&2
+      exit 1
+    fi
+    settings_line="match deploy/railway/service_settings.json at $ref (read-only railway api query)"
+  else
+    settings_line="NOT CHECKED (--no-settings-check, dry run only; a deploy always checks)"
+  fi
+
+  # ---- 3. stage --------------------------------------------------------------
   local stage stage_fate="removed on exit"
   if [ -n "$keep_stage" ]; then
+    # Checked again: the settings query ran since the first check.
     if [ -e "$keep_stage" ] && [ ! -d "$keep_stage" ]; then
       _gd_die 2 "$script: --keep-stage $keep_stage exists and is not a directory"
     fi
@@ -279,19 +379,9 @@ $(printf '%s\n' "$dirty" | sed -n '1,20s/^/      /p')
   local archived
   archived="$(git -C "$repo" ls-tree -r --name-only "$ref" | wc -l | tr -d ' ')"
 
-  local rel allowlisted=0
+  local allowlisted=0
   for rel in ${MUST_SHIP_ALLOWLIST[@]+"${MUST_SHIP_ALLOWLIST[@]}"}; do
-    case "$rel" in
-      "" | /* | .. | ../* | */.. | */../*)
-        _gd_die 2 "$script: allowlist entries must be repo-relative paths: '$rel'"
-        ;;
-    esac
-    if [ ! -e "$repo/$rel" ]; then
-      _gd_die 2 "$script: allowlisted path is missing from the work tree: $rel"
-    fi
-    if git -C "$repo" cat-file -e "$ref:$rel" 2>/dev/null; then
-      _gd_die 2 "$script: allowlisted path is tracked at $ref and already ships: $rel"
-    fi
+    # Validated above, before the settings query.
     mkdir -p "$stage/$(dirname "$rel")"
     cp -Rp "$repo/$rel" "$stage/$rel"
     allowlisted=$((allowlisted + 1))
@@ -299,6 +389,11 @@ $(printf '%s\n' "$dirty" | sed -n '1,20s/^/      /p')
 
   if [ -n "$hook" ]; then
     "$hook" "$stage"
+    for f in railway.toml railway.json; do
+      if [ -e "$stage/$f" ] || [ -L "$stage/$f" ]; then
+        _gd_die 2 "$script: the stage hook left a config-as-code file in the stage: $f"
+      fi
+    done
   fi
 
   printf '%s\n' "$head" >"$stage/BUILD_COMMIT"
@@ -307,10 +402,14 @@ $(printf '%s\n' "$dirty" | sed -n '1,20s/^/      /p')
   local total
   total="$(find "$stage" \( -type f -o -type l \) | wc -l | tr -d ' ')"
 
-  # ---- 3. plan, then upload --------------------------------------------------
+  # ---- 4. plan, then upload --------------------------------------------------
   echo "guarded deploy: $script"
   echo "  service   $service"
   echo "  commit    $head"
+  echo "  settings  $settings_line"
+  if [ -n "$settings_report" ]; then
+    printf '%s\n' "$settings_report" | sed 's/^/            /'
+  fi
   if [ "$released" = 1 ]; then
     echo "  release   $tag (annotated, on origin; HEAD == origin main)"
   else
@@ -326,7 +425,11 @@ $(printf '%s\n' "$dirty" | sed -n '1,20s/^/      /p')
   echo "  command   (cd $repo && railway up $stage --path-as-root --service $service --detach)"
 
   if [ "$dry_run" = 1 ]; then
-    echo "dry run: railway was not called."
+    if [ "$settings_check" = 1 ]; then
+      echo "dry run: nothing was uploaded; railway ran only the read-only settings query."
+    else
+      echo "dry run: railway was not called."
+    fi
     if [ -n "$keep_stage" ]; then
       echo "stage kept at $stage"
     fi

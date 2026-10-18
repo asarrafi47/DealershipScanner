@@ -330,16 +330,27 @@ below stands for its name. `V` is the new version, set in step 3.
     ```
 
     Verify the dry run before the real deploy. It exits 0, and its plan shows
+    `settings  match deploy/railway/service_settings.json at refs/tags/v$V`,
     `release   v$V (annotated, on origin; HEAD == origin main)` and
-    `dry run: railway was not called.` Exit 1 means the guard refused: the reasons are
-    listed, nothing was staged, and railway was not called. Exit 2 is a usage or staging
-    error. The real run uploads with
+    `dry run: nothing was uploaded; railway ran only the read-only settings query.` It
+    must show no `warning   the railway CLI printed a deprecation notice` line (N4.1
+    acceptance; if one appears, record it in the release-log row). Exit 1 means a refusal,
+    with the reasons listed and nothing staged: either the release guard refused (railway
+    was not called) or web's live service settings differ from
+    `deploy/railway/service_settings.json` (the table marks each `MISMATCH`; apply the
+    settings pack, [Service settings](#service-settings-n41-d-n24)). `ALLOW_UNRELEASED_DEPLOY=1`
+    never overrides the settings check. Exit 2 is a usage or staging error. The real run
+    checks the settings again and uploads with
     `railway up <stage> --path-as-root --service web --detach`. The stage is
-    `git archive` of the tag plus `BUILD_COMMIT` (the full SHA) and `BUILD_TAG`. The root
-    `railway.toml` builds it with `Dockerfile.web`.
+    `git archive` of the tag plus `BUILD_COMMIT` (the full SHA) and `BUILD_TAG`, with no
+    config-as-code file (a release that carries a root `railway.toml` or `railway.json` is
+    refused). Railway builds it with web's own service settings: `Dockerfile.web`,
+    healthcheck `/health` within 300 s, restart `ON_FAILURE` up to 5 times, 1 replica.
 
     Optional local check of the exact stage before the real deploy. It is a Docker build,
     so only with the owner's OK and on AC power. P2B.6 lists the full local smoke test.
+    Add `--no-settings-check` to stage it without asking Railway (dry runs only; the real
+    deploy always checks).
 
     ```bash
     deploy/railway/deploy_web.sh --dry-run --keep-stage /tmp/web-stage-$V
@@ -361,8 +372,8 @@ below stands for its name. `V` is the new version, set in step 3.
     ```
 
     Verify: exit 0. The printed version is `$V` and the commit is the tag's full SHA.
-    `/health` returns the same body. It is Railway's healthcheck path (`railway.toml`), and
-    the healthcheck only needs a 200. If the deployment ends FAILED instead, the old one
+    `/health` returns the same body. It is Railway's healthcheck path (web's
+    `healthcheckPath` service setting), and the healthcheck only needs a 200. If the deployment ends FAILED instead, the old one
     keeps serving. Read its logs by id (without an id, `railway logs` shows the last
     successful deployment): `railway logs -s web --build --lines 200 <deployment id>`, or
     `--deployment` for the runtime log. Then fix forward.
@@ -391,10 +402,14 @@ below stands for its name. `V` is the new version, set in step 3.
     `railway variable set SCAN_FLEET=0 -s scanner-nightly --skip-deploys`.
     `railway variable delete` has no `--skip-deploys` in CLI 5.57.2. `--kv` prints raw
     values, and the grep keeps only these two non-secret lines. The script stages the tag
-    with the archive's own `deploy/railway/railway.scanner-nightly.json` as the stage's
-    `railway.json` (`Dockerfile.scanner`). It refuses `SERVICE=web`. Run it only from this
-    release checkout (HEAD == the tag, step 9), never from a checkout of an older tag
-    ([why](#scanner-nightly)).
+    with no config-as-code file; Railway builds it with scanner-nightly's own service
+    settings (`Dockerfile.scanner`, no healthcheck, restart `NEVER`, 1 replica,
+    16 vCPU / 16 GB, no cron). Like step 12 it refuses unless those live settings equal
+    `deploy/railway/service_settings.json`; before the first scanner-nightly deploy (N12.2)
+    the owner applies the scanner-nightly settings pack
+    ([Service settings](#service-settings-n41-d-n24)). It refuses `SERVICE=web`. Run it only
+    from this release checkout (HEAD == the tag, step 9), never from a checkout of an older
+    tag ([why](#scanner-nightly)).
 
     Verify: the dry run passes as in step 12. Afterwards,
     `railway deployment list -s scanner-nightly --limit 3` shows the new deployment, and
@@ -729,9 +744,9 @@ version.
   on the 09-29 image. Never restart, roll back or redeploy scanner-nightly until N12.2
   deploys v1.6.0; stop trouble with `railway down -s scanner-nightly`.
 - **Config as code is deprecated.** The root `railway.toml` (web) and the staged
-  `railway.json` (scanner-nightly) are config-as-code files. Railway says existing files
-  keep working until 2026-12-01, so the deploy flow needs a replacement before then
-  (P0A.1).
+  `railway.json` (scanner-nightly) were config-as-code files. Railway stops reading them
+  on 2026-12-01 (P0A.1). N4.1 deleted both and moved their settings onto the services:
+  [Service settings](#service-settings-n41-d-n24).
 
 ### How to verify (read-only)
 
@@ -751,6 +766,125 @@ version.
 
   Expect `"edges":[]`. The per-service query in the ops log also shows autodeploy status
   and the recorded `source.repo`. Never send a `mutation` while checking.
+
+### Service settings (N4.1, D-N24)
+
+**Mechanism.** D-N24 says: use whatever Railway documents as supported after
+2026-12-01. N4.1 checked Railway's official docs on 2026-10-18:
+
+- [Config as Code](https://docs.railway.com/config-as-code) is deprecated. Existing
+  `railway.json` / `railway.toml` files keep working only until **2026-12-01 (hard
+  cutoff)**. While they are read, they override the dashboard settings.
+- The replacement Railway names is
+  [Infrastructure as Code](https://docs.railway.com/infrastructure-as-code)
+  (`.railway/railway.ts`, applied with `railway config plan` / `railway config apply`;
+  Railway does not read `.railway/` during deploys). Its
+  [reference](https://docs.railway.com/infrastructure-as-code/reference) has `build`
+  (a build command), `start`, `healthcheck`, `healthcheckTimeout`, `replicas`, variables,
+  domains and volumes. It has **no** field for the builder or the Dockerfile path, the
+  restart policy, a cron schedule or CPU/memory limits, and it manages the whole project
+  (Postgres and variables included). The
+  [10-16 changelog](https://railway.com/changelog/2026-10-16-activity-feed-filters) says
+  `railway config migrate cutover` warns about redeployments. So IaC cannot hold these
+  settings today, and the repo does not adopt it.
+- The settings stay on the **service instance**. The
+  [Manage Services guide](https://docs.railway.com/integrations/api/manage-services)
+  documents a `serviceInstance` query, `serviceInstanceLimits`, and `serviceInstanceUpdate`
+  inputs `dockerfilePath`, `healthcheckPath`, `healthcheckTimeout`, `restartPolicyType`,
+  `restartPolicyMaxRetries`, `numReplicas` and `cronSchedule`.
+  [`railway api`](https://docs.railway.com/cli/api) runs GraphQL with the CLI's own login.
+  Dashboard edits become [staged changes](https://docs.railway.com/deployments/staged-changes)
+  that redeploy the affected services when deployed, unless you hold Alt while clicking
+  Deploy.
+- Not settled by the docs, so not relied on until the owner read pack
+  (`workspace/phase_runs/N4/N4.1_read.md`) shows them: whether `serviceInstanceUpdate`
+  creates a deployment; the JSON shape of `serviceInstanceLimits` (the check accepts the
+  old `limitOverride` shape and `vCPUs`/`memoryGB`, and refuses anything else); the limits
+  mutation. `serviceInstanceLimitsUpdate(input: {serviceId, environmentId, vCPUs, memoryGB})`
+  is not in the docs, but it set scanner-nightly's 16 vCPU / 16 GB on 2026-09-28
+  (`docs/RAILWAY_SCANNING.md`, Service configuration).
+- The old files' `builder = "DOCKERFILE"` is not a checked setting. The instance `builder`
+  field reads `RAILPACK` on services that built from a Dockerfile through the toml (P0A.3,
+  `docs/SCANNING_OPS_LOG.md`). On 2026-09-28, setting `dockerfilePath` through the API is
+  what made scanner-nightly build its Dockerfile after a Railpack build failed
+  (`docs/RAILWAY_SCANNING.md`). So the check compares `dockerfilePath`, and the first
+  deploy without a `railway.toml` (N4.5) confirms the build used `Dockerfile.web`
+  (deployment `meta`, or the build log). A Railpack build of the web stage fails its
+  healthcheck, and the old deployment keeps serving.
+
+**The expected values** live in `deploy/railway/service_settings.json`. Each key is a
+`ServiceInstance` field name, `null` means the setting must be unset, and `limits` is
+compared with `serviceInstanceLimits`. The values are those of the two deleted files,
+plus explicit "unset" for the cron schedule and the config-file path on both services,
+and for the healthcheck on scanner-nightly (`backend/tests/test_railway_service_settings.py`
+pins the equality):
+
+| Setting | web (was root `railway.toml`) | scanner-nightly (was `railway.scanner-nightly.json`) |
+|---|---|---|
+| `dockerfilePath` (the Dockerfile build) | `Dockerfile.web` | `Dockerfile.scanner` |
+| `healthcheckPath` / `healthcheckTimeout` | `/health` / 300 | unset / not checked |
+| `restartPolicyType` / `restartPolicyMaxRetries` | `ON_FAILURE` / 5 | `NEVER` / not checked |
+| `numReplicas` | 1 | 1 |
+| `cronSchedule`, `railwayConfigFile` | unset | unset |
+| limits | not checked | 16 vCPU, 17179869184 bytes (16 GB) |
+
+**The check.** Before every deploy and every dry run, both deploy scripts take the file
+from the deployed ref (never the work tree) and run
+`python3 -I deploy/railway/service_settings.py check <service> --settings-file -`. That
+sends one read-only `railway api` query (the helper refuses to send anything other than a
+plain `query`). Any difference, a field Railway does not return, or an answer it cannot
+read (not logged in, a GraphQL error, a CLI without `railway api`) refuses the deploy with
+exit 1, and nothing is staged. `ALLOW_UNRELEASED_DEPLOY=1` never overrides it.
+`DEPLOY_PYTHON` picks the interpreter (default `python3`). Run the check on its own,
+read-only:
+
+```bash
+python3 -I deploy/railway/service_settings.py check web
+python3 -I deploy/railway/service_settings.py check scanner-nightly
+python3 -I deploy/railway/service_settings.py print-query web   # the exact railway api command
+```
+
+Verify: exit 0 and `all N checked settings match`. Exit 1 lists each `MISMATCH`. Exit 2 is
+`CANNOT CHECK` with the reason.
+
+**Writing the settings** is an owner step from a prepared pack. Never write them from a
+script, and never with a dashboard Deploy click that redeploys.
+
+- web: `workspace/phase_runs/N4/N4.1_web_settings.md`. Gated on `web_source_check`
+  printing `web-source-clear` ([Web's GitHub source](#webs-github-source)), because a web
+  settings change may create a deployment. It records `railway deployment list -s web
+  --limit 3` before and after. The settings take effect on web's next deployment that
+  ships no `railway.toml`: the first `deploy_web.sh` run from a release that contains N4.1
+  (N4.5).
+- scanner-nightly: `workspace/phase_runs/N4/N4.1_scanner_settings.md`. **No
+  scanner-nightly deployment before N12.2** (D-REL8 (b)). The pack is applied either
+  (a) only through a mechanism that the web pack first proved creates no deployment, with
+  the owner's explicit OK, or (b) inside N12.2, immediately before
+  `deploy_scanner_nightly.sh --dry-run`. If a new scanner-nightly deployment appears
+  anyway, stop it at once with `railway down -s scanner-nightly`.
+- `print-update <service>` prints the `serviceInstanceUpdate` command for the documented
+  inputs and runs nothing. Its stderr names what it leaves out (`railwayConfigFile`, and
+  limits, which take the separate `serviceInstanceLimitsUpdate`). `--with-undocumented`
+  adds `railwayConfigFile`, for use only after
+  `railway api describe ServiceInstanceUpdateInput` shows it.
+- When a setting changes on purpose, change `service_settings.json` in the same release
+  as the pack that applies it. Otherwise the next deploy refuses.
+
+**Cron path for P6B.7 (N12.11).** The nightly schedule is the scanner-nightly service
+setting `cronSchedule`, not a config file (IaC has no cron field). Per
+[Cron Jobs](https://docs.railway.com/cron-jobs), it is a crontab expression in UTC. Runs
+must be at least 5 minutes apart. A run is skipped while the previous one still runs. The
+service must exit when done, which `fleet_scan.py` does. N12.11 does three things in one
+step: it sets `"cronSchedule": "0 9 * * *"` in `service_settings.json` in its release; it
+applies the same value with `serviceInstanceUpdate` (`input.cronSchedule`, through
+`railway api`, with `railway deployment list -s scanner-nightly --limit 3` before and
+after); and it runs `python3 -I deploy/railway/service_settings.py check scanner-nightly`.
+Read the runs with `railway cron list --service scanner-nightly`. Each scheduled run
+starts the latest deployment again. Railway's docs do not say whether a run uses that
+deployment's variables or the service's current ones, so treat it like a restart (the
+deployment's own variables, [scanner-nightly](#scanner-nightly)). Set the schedule only
+when the latest deployment carries the intended `SCAN_FLEET` and `SCAN_FLEET_WINDOW_UTC`.
+Remove the schedule by setting `cronSchedule` to `null` the same way, then revert the file.
 
 ## Migrations
 

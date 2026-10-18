@@ -1,0 +1,36 @@
+{
+  "_doc": "Expected Railway service-instance settings (N4.1, D-N24). They replace the config-as-code files (root railway.toml for web, deploy/railway/railway.scanner-nightly.json for scanner-nightly), which Railway stops reading on 2026-12-01. deploy_web.sh and deploy_scanner_nightly.sh read the live settings with one read-only `railway api` query (deploy/railway/service_settings.py) and refuse to deploy on any difference. Keys under serviceInstance are ServiceInstance field names; null means the setting must be unset. limits is compared with the serviceInstanceLimits query. The old files' build.builder = DOCKERFILE is carried by dockerfilePath: the instance builder field reads RAILPACK on services that built from a Dockerfile (P0A.3, docs/SCANNING_OPS_LOG.md), and on 2026-09-28 setting dockerfilePath through the API is what made scanner-nightly build its Dockerfile (docs/RAILWAY_SCANNING.md). Change a value only together with the owner settings pack that applies it (docs/RELEASING.md, Service settings).",
+  "environmentId": "abe0fc9d-2dd5-4217-b303-12c6c4ac498a",
+  "services": {
+    "web": {
+      "serviceId": "b711c414-86c3-4b1d-a458-17168d11e439",
+      "replaces": "railway.toml",
+      "serviceInstance": {
+        "dockerfilePath": "Dockerfile.web",
+        "healthcheckPath": "/health",
+        "healthcheckTimeout": 300,
+        "restartPolicyType": "ON_FAILURE",
+        "restartPolicyMaxRetries": 5,
+        "numReplicas": 1,
+        "cronSchedule": null,
+        "railwayConfigFile": null
+      }
+    },
+    "scanner-nightly": {
+      "serviceId": "5fe67db1-b87e-46dc-a7db-42d4e1834f39",
+      "replaces": "deploy/railway/railway.scanner-nightly.json",
+      "serviceInstance": {
+        "dockerfilePath": "Dockerfile.scanner",
+        "healthcheckPath": null,
+        "restartPolicyType": "NEVER",
+        "numReplicas": 1,
+        "cronSchedule": null,
+        "railwayConfigFile": null
+      },
+      "limits": {
+        "cpu": 16,
+        "memoryBytes": 17179869184
+      }
+    }
+  }
+}
