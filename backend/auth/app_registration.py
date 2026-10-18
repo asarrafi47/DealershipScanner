@@ -9,6 +9,7 @@ from backend.utils.registration_validation import (
     normalize_registration_email,
     normalize_registration_username,
     registration_form_error,
+    username_format_error,
 )
 from backend.utils.roles import (
     REGISTRATION_ADMIN_BLOCKED_MSG,
@@ -35,7 +36,7 @@ def register_general_app_user(
     """
     err = registration_form_error(
         username, email, password, min_password_len=min_password_len
-    )
+    ) or username_format_error(username)
     if err:
         return None, "validation_error", err, False
 

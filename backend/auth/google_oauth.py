@@ -13,10 +13,9 @@ from urllib.parse import urlencode
 import requests
 from flask import Blueprint, redirect, request, session, url_for
 
+from backend.auth.oauth_link import Resolution, resolve_by_email
 from backend.db.users_db import (
     get_user_by_google_sub,
-    get_user_by_login,
-    link_user_google_sub,
     save_oauth_user,
     sync_env_admin_user_row,
     user_exists_by_username,
@@ -132,44 +131,44 @@ def _fetch_userinfo(access_token: str) -> dict | None:
         return None
 
 
-def _resolve_or_create_user(info: dict) -> tuple[int | None, str | None, bool]:
+def _resolve_or_create_user(info: dict) -> Resolution:
+    """Map Google userinfo to an app user. Call only after ``email_verified is True``.
+
+    An existing account with this email is linked only when its email is verified;
+    otherwise the link waits for a password login (``backend.auth.oauth_link``).
+    """
     google_sub = (info.get("sub") or "").strip()
     email = normalize_registration_email(str(info.get("email") or ""))
     if not google_sub:
-        return None, "Google sign-in did not return a user id.", False
+        return Resolution(error="Google sign-in did not return a user id.")
     if not email or "@" not in email:
-        return None, "Google sign-in did not return a valid email.", False
+        return Resolution(error="Google sign-in did not return a valid email.")
 
     existing = get_user_by_google_sub(google_sub)
     if existing:
-        return int(existing["id"]), None, False
+        return Resolution(user_id=int(existing["id"]))
 
-    by_email = get_user_by_login(email)
-    if by_email:
-        stored_sub = (by_email.get("google_sub") or "").strip()
-        if stored_sub and stored_sub != google_sub:
-            return None, "This email is linked to a different Google account.", False
-        if not link_user_google_sub(int(by_email["id"]), google_sub):
-            return None, "Could not link Google to your account.", False
-        from backend.db.users_db import mark_user_email_verified
-
-        mark_user_email_verified(int(by_email["id"]))
-        return int(by_email["id"]), None, False
+    by_email = resolve_by_email("google", google_sub, email)
+    if by_email is not None:
+        return by_email
 
     username = _pick_username(email)
     if registration_blocked_by_env_admin(email, username):
-        return None, REGISTRATION_ADMIN_BLOCKED_MSG, False
+        return Resolution(error=REGISTRATION_ADMIN_BLOCKED_MSG)
     try:
         uid = save_oauth_user(username, email, google_sub, role=ROLE_GENERAL)
     except sqlite3.IntegrityError:
-        retry = get_user_by_google_sub(google_sub) or get_user_by_login(email)
+        # A concurrent callback for the same sub may have created the row. Never
+        # fall back to an email or username match here: that would log in to an
+        # account without the verified-email check above.
+        retry = get_user_by_google_sub(google_sub)
         if retry:
-            return int(retry["id"]), None, False
-        return None, "Could not create your account.", False
+            return Resolution(user_id=int(retry["id"]))
+        return Resolution(error="Could not create your account. Try again.")
     from backend.db.users_db import mark_user_email_verified
 
     mark_user_email_verified(int(uid))
-    return uid, None, True
+    return Resolution(user_id=int(uid), is_new_user=True)
 
 
 def _should_offer_premium_after_google_login(*, is_new_user: bool) -> bool:
@@ -264,13 +263,18 @@ def callback():
     if not info:
         return _oauth_login_error("Google sign-in failed. Try again.")
 
-    if info.get("email_verified") is False:
+    # Only an explicit true counts: a missing or non-boolean claim is not proof
+    # that the Google account owns this mailbox.
+    if info.get("email_verified") is not True:
         return _oauth_login_error("Google account email is not verified.")
 
-    user_id, user_err, is_new_user = _resolve_or_create_user(info)
-    if user_err:
-        return _oauth_login_error(user_err)
-    if not user_id:
+    resolved = _resolve_or_create_user(info)
+    if resolved.error:
+        return _oauth_login_error(resolved.error)
+    if resolved.deferred:
+        # The login page shows the pending-link notice from the session.
+        return redirect(url_for("login_page"))
+    if not resolved.user_id:
         return _oauth_login_error("Google sign-in failed. Try again.")
 
-    return _complete_login(user_id, is_new_user=is_new_user)
+    return _complete_login(resolved.user_id, is_new_user=resolved.is_new_user)

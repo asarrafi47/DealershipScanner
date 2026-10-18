@@ -9,6 +9,7 @@ from __future__ import annotations
 
 from flask import jsonify, redirect, render_template, request, session, url_for
 
+from backend.auth import oauth_link
 from backend.auth.session import finalize_app_session as _finalize_app_session
 from backend.auth.session import post_login_redirect as _post_login_redirect
 from backend.billing import access as paid_access
@@ -26,30 +27,35 @@ from backend.utils.roles import normalize_role
 
 
 def login_page():
+    # A Google/Apple sign-in whose email matched an unverified account waits here
+    # for this account's password (backend.auth.oauth_link); the notice says so.
+    notice = oauth_link.pending_link_notice()
     if request.method == "GET":
         err = request.args.get("_error", "")
         if err == "session_expired":
-            return render_template("login.html", error="Your session expired — please log in again.")
+            return render_template("login.html", error="Your session expired — please log in again.", notice=notice)
         oauth_err = session.pop("oauth_error", None)
         if oauth_err:
-            return render_template("login.html", error=oauth_err)
+            return render_template("login.html", error=oauth_err, notice=notice)
     if request.method == "POST":
         ip = _client_ip()
         if not allow_request(f"login:{ip}", max_events=Config.RATE_LIMIT_LOGIN_PER_MIN, window_seconds=60.0):
-            return render_template("login.html", error="Too many login attempts. Try again in a minute."), 429
+            return render_template("login.html", error="Too many login attempts. Try again in a minute.", notice=notice), 429
         login_input = (request.form.get("login") or "").strip()
         attempts = submitted_password_attempts(request.form.get("password"))
         if not login_input or not attempts:
-            return render_template("login.html", error="Enter username/email and password.")
+            return render_template("login.html", error="Enter username/email and password.", notice=notice)
         u = next((x for x in (authenticate_app_user(login_input, pw) for pw in attempts) if x), None)
         if u:
             sync_env_admin_user_row(int(u["id"]))
+            pending_link = oauth_link.pop_pending_link()
             session.clear()
             if not _finalize_app_session(int(u["id"])):
                 return render_template("login.html", error="Login failed. Try again.")
+            oauth_link.complete_pending_link(pending_link, int(u["id"]))
             return _post_login_redirect()
-        return render_template("login.html", error="Invalid username/email or password.")
-    return render_template("login.html")
+        return render_template("login.html", error="Invalid username/email or password.", notice=notice)
+    return render_template("login.html", notice=notice)
 
 
 def register_page():
@@ -215,9 +221,11 @@ def api_auth_login():
     if not u:
         return jsonify({"ok": False, "error": "invalid_credentials"}), 401
     sync_env_admin_user_row(int(u["id"]))
+    pending_link = oauth_link.pop_pending_link()
     session.clear()
     if not _finalize_app_session(int(u["id"])):
         return jsonify({"ok": False, "error": "login_failed"}), 500
+    oauth_link.complete_pending_link(pending_link, int(u["id"]))
     return jsonify({"ok": True, "user": _auth_user_payload(u)})
 
 

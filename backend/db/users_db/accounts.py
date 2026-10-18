@@ -240,13 +240,18 @@ def link_user_apple_sub(user_id: int, apple_sub: str) -> bool:
 
 
 def user_exists_by_username(username: str) -> bool:
+    """True when ``username`` is taken: by another username, or by an account's email.
+
+    Login matches username OR email, so a new username equal to an existing email
+    would answer to that account's login (P3.1); registration treats it as taken.
+    """
     u = (username or "").strip()
     if not u:
         return False
     conn = get_conn()
     row = conn.execute(
-        "SELECT 1 FROM users WHERE lower(username) = lower(?) LIMIT 1",
-        (u,),
+        "SELECT 1 FROM users WHERE lower(username) = lower(?) OR lower(email) = lower(?) LIMIT 1",
+        (u, u),
     ).fetchone()
     conn.close()
     return row is not None

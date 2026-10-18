@@ -24,6 +24,10 @@
                 <div class="error-box">{{ error }}</div>
                 {% endif %}
 
+                {% if notice %}
+                <div class="success-box" role="status" id="oauth-link-notice">{{ notice }}</div>
+                {% endif %}
+
                 <form method="POST" action="/login" class="auth-form">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
                     <div class="field-group">

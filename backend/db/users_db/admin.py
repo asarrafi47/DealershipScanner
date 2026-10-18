@@ -1,5 +1,5 @@
 from ._common import _users_select_columns, get_conn
-from .accounts import delete_user_by_email, save_user
+from .accounts import delete_user_by_email, save_user, user_exists_by_username
 from .auth import clear_user_password_reset_token, reset_user_password
 from .schema import sync_env_admin_user_row
 
@@ -244,14 +244,18 @@ def admin_create_user(
     dealership_registry_id: int | None = None,
     min_password_len: int = 8,
 ) -> tuple[int | None, str | None]:
-    from backend.utils.registration_validation import registration_form_error
+    from backend.utils.registration_validation import registration_form_error, username_format_error
     from backend.utils.roles import REGISTRATION_ADMIN_BLOCKED_MSG, registration_blocked_by_env_admin
 
-    err = registration_form_error(username, email, password, min_password_len=min_password_len)
+    err = registration_form_error(
+        username, email, password, min_password_len=min_password_len
+    ) or username_format_error(username)
     if err:
         return None, err
     if registration_blocked_by_env_admin(email, username):
         return None, REGISTRATION_ADMIN_BLOCKED_MSG
+    if user_exists_by_username(username):
+        return None, "That username is already taken."
     role_val = (role or "general_user").strip().lower()
     if not admin_role_is_assignable(role_val):
         return None, "Invalid role."
@@ -326,11 +330,18 @@ def admin_update_user(
     dealership_registry_id: int | None = None,
     actor_user_id: int,
 ) -> str | None:
+    """Admin edit of a user's identity, role and scope. Returns an error message or None.
+
+    Same identity rules as ``update_user_profile`` (P3.1): a changed username may not
+    contain '@' or equal another account's email, and a changed email clears the
+    verification state.
+    """
     from backend.utils.registration_validation import (
         MAX_EMAIL_LEN,
         MAX_USERNAME_LEN,
         normalize_registration_email,
         normalize_registration_username,
+        username_format_error,
     )
     from backend.utils.roles import ROLE_ADMIN, registration_blocked_by_env_admin
 
@@ -365,6 +376,18 @@ def admin_update_user(
 
     conn = get_conn()
     cursor = conn.cursor()
+    cursor.execute("SELECT username, email FROM users WHERE id = ?", (uid,))
+    current = cursor.fetchone()
+    if not current:
+        conn.close()
+        return "User not found."
+    username_changed = uname.lower() != str(current[0] or "").strip().lower()
+    email_changed = em.lower() != str(current[1] or "").strip().lower()
+    if username_changed:
+        fmt_err = username_format_error(uname)
+        if fmt_err:
+            conn.close()
+            return fmt_err
     cursor.execute(
         "SELECT id FROM users WHERE lower(username) = lower(?) AND id != ?",
         (uname, uid),
@@ -372,6 +395,14 @@ def admin_update_user(
     if cursor.fetchone():
         conn.close()
         return "That username is already taken."
+    if username_changed:
+        cursor.execute(
+            "SELECT id FROM users WHERE lower(email) = lower(?) AND id != ?",
+            (uname, uid),
+        )
+        if cursor.fetchone():
+            conn.close()
+            return "That username is already taken."
     cursor.execute(
         "SELECT id FROM users WHERE lower(email) = lower(?) AND id != ?",
         (em, uid),
@@ -384,6 +415,10 @@ def admin_update_user(
     cols = {r[1] for r in cursor.fetchall()}
     sets = ["username = ?", "email = ?"]
     params: list[object] = [uname, em]
+    if email_changed:
+        for col in ("email_verified_at", "email_verify_token_hash", "email_verify_expires_at"):
+            if col in cols:
+                sets.append(f"{col} = NULL")
     if "role" in cols:
         sets.append("role = ?")
         params.append(role_val)
