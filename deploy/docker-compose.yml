@@ -1,8 +1,12 @@
 name: dealership-scanner
 
-# Local Docker stack (Postgres inventory required). Secrets: kmac vault (host.docker.internal:9999).
+# Local Docker stack: Postgres (with pgvector) + web. Secrets: kmac vault (host.docker.internal:9999).
 #
 #   ./deploy/up.sh
+#
+# No scanner containers: scans run through backend/scripts/dealer_pipeline.py on a host, or on
+# Railway scanner-nightly (Dockerfile.scanner). The dealer_jobs worker and scheduler services were
+# removed in P15B.6 (D-REL1 deleted their Railway services on 2026-10-08).
 
 x-scanner-env: &scanner-env
   ALLOW_UNENCRYPTED_USER_DB: "1"
@@ -19,14 +23,20 @@ x-scanner-env: &scanner-env
 
 services:
   postgres:
-    image: postgres:16-alpine
+    # Prod's major and pgvector release (PG 18.6, vector 0.8.6; D-TC3). migrations/V001 runs
+    # CREATE EXTENSION vector, which plain postgres images cannot satisfy.
+    image: pgvector/pgvector:0.8.6-pg18
     container_name: dealership-scanner-postgres
     environment:
       POSTGRES_USER: dealership
       POSTGRES_PASSWORD: dealership
       POSTGRES_DB: dealership
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      # PG 18+ images keep data under /var/lib/postgresql/18/docker and refuse to start when
+      # anything is mounted at /var/lib/postgresql/data. A new volume name, so the old PG16
+      # `postgres_data` volume is never handed to PG18 (left untouched; pg_upgrade or a dump
+      # moves its data if anyone needs it).
+      - postgres18_data:/var/lib/postgresql
     ports:
       - "${POSTGRES_PORT:-5432}:5432"
     healthcheck:
@@ -78,54 +88,5 @@ services:
         condition: service_healthy
     restart: unless-stopped
 
-  scanner-worker:
-    build:
-      context: ..
-      dockerfile: Dockerfile.scanner
-    image: dealership-scanner:dev
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    volumes:
-      - ../data/runtime:/data
-      - ..:/app
-      - scanner_node_modules:/app/backend/scanner/node_modules
-      - ${HOME}/.config/kmac/docker-vault-token:/run/secrets/kmac-vault-token:ro
-    environment:
-      <<: *scanner-env
-      INVENTORY_DATABASE_URL: postgresql://dealership:dealership@postgres:5432/dealership
-      SCANNER_PARALLEL_UPSERT: "1"
-      SCANNER_MAX_DEALER_CONCURRENCY: "3"
-      SCANNER_WORKER_POLL_SEC: "10"
-      SCANNER_BROWSER_PROFILE_DIR: /data/browser-profiles
-      GOOGLE_MAPS_API_KEY: ${GOOGLE_MAPS_API_KEY:-}
-      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
-    entrypoint: ["/app/scripts/docker-entrypoint-scanner-worker.sh"]
-    depends_on:
-      postgres:
-        condition: service_healthy
-    restart: unless-stopped
-
-  scanner-scheduler:
-    build:
-      context: ..
-      dockerfile: Dockerfile.scanner
-    image: dealership-scanner:dev
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    volumes:
-      - ../data/runtime:/data
-      - ..:/app
-      - ${HOME}/.config/kmac/docker-vault-token:/run/secrets/kmac-vault-token:ro
-    environment:
-      <<: *scanner-env
-      INVENTORY_DATABASE_URL: postgresql://dealership:dealership@postgres:5432/dealership
-      SCANNER_SCHEDULER_INTERVAL_SEC: "60"
-    entrypoint: ["/app/scripts/docker-entrypoint-scanner-scheduler.sh"]
-    depends_on:
-      postgres:
-        condition: service_healthy
-    restart: unless-stopped
-
 volumes:
-  postgres_data:
-  scanner_node_modules:
+  postgres18_data:

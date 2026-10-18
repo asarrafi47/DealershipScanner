@@ -695,9 +695,9 @@ version.
 - **The legacy services are gone.** scanner-worker and scanner-scheduler were deleted on
   2026-10-08 (D-REL1 (a)). First, `railway down` removed scanner-scheduler's running June
   deployment `50ac4514`. Neither service had a volume. The project now holds Postgres,
-  scanner-nightly and web. Their Dockerfiles and `deploy/railway/railway.scanner-*.toml`
-  files are still in the repo; P15B.6 deletes them. docker-compose still uses the
-  worker/scheduler entrypoints.
+  scanner-nightly and web. Their Dockerfiles and per-service Railway tomls stayed in the
+  repo until P15B.6 (N4) deleted them, together with the docker-compose worker and
+  scheduler services.
 - **Open owner items** (P0A.4 step 6). Web still records `asarrafi47/DealershipScanner`
   as its source (rechecked read-only on 2026-10-09). If the Railway GitHub App is given
   access to the repo again, or someone runs `redeploy --from-source`, Railway can build
