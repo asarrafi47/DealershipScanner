@@ -148,12 +148,26 @@ _SQL_VIEWS = (
     "UNION ALL SELECT matviewname, definition FROM pg_matviews WHERE schemaname = 'public'"
 )
 _SQL_EXTENSIONS = "SELECT extname FROM pg_extension"
+# Extra (P4.3): what information_schema.data_type hides -- typmod (varchar(n),
+# numeric(p,s), vector(dim)), identity, generated columns and a non-default collation.
+_SQL_COLUMN_TYPES = (
+    "SELECT c.relname, a.attname, format_type(a.atttypid, a.atttypmod), "
+    "a.attidentity::text, a.attgenerated::text, "
+    "CASE WHEN a.attcollation = t.typcollation THEN '' ELSE COALESCE(co.collname, '') END "
+    "FROM pg_attribute a "
+    "JOIN pg_class c ON c.oid = a.attrelid "
+    "JOIN pg_namespace n ON n.oid = c.relnamespace "
+    "JOIN pg_type t ON t.oid = a.atttypid "
+    "LEFT JOIN pg_collation co ON co.oid = a.attcollation "
+    "WHERE n.nspname = 'public' AND c.relkind IN ('r', 'p') AND a.attnum > 0 AND NOT a.attisdropped"
+)
 
 
 def empty_snapshot() -> dict[str, Any]:
     return {
         "tables": set(),
         "columns": {},      # (table, column) -> (data_type, is_nullable, default)
+        "column_types": {},  # (table, column) -> (format_type, identity, generated, collation)
         "indexes": {},      # name -> (table, definition without the name, unique)
         "constraints": {},  # (table, name) -> (contype, definition)
         "sequences": {},    # name -> (owned by "table.column" or "", data type)
@@ -173,6 +187,8 @@ def snapshot(conn: Any) -> dict[str, Any]:
         snap["tables"] = {r[0] for r in cur.fetchall()}
         cur.execute(_SQL_COLUMNS)
         snap["columns"] = {(r[0], r[1]): (r[2], r[3], r[4]) for r in cur.fetchall()}
+        cur.execute(_SQL_COLUMN_TYPES)
+        snap["column_types"] = {(r[0], r[1]): (r[2], r[3], r[4], r[5]) for r in cur.fetchall()}
         cur.execute(_SQL_INDEXES)
         snap["indexes"] = {r[3]: (r[0], r[1], bool(r[2])) for r in cur.fetchall()}
         cur.execute(_SQL_CONSTRAINTS)
@@ -205,6 +221,7 @@ def snapshot_to_jsonable(snap: dict[str, Any]) -> dict[str, Any]:
     return {
         "tables": sorted(snap["tables"]),
         "columns": [[t, c, *v] for (t, c), v in sorted(snap["columns"].items())],
+        "column_types": [[t, c, *v] for (t, c), v in sorted(snap.get("column_types", {}).items())],
         "indexes": [[n, *v] for n, v in sorted(snap["indexes"].items())],
         "constraints": [[t, n, *v] for (t, n), v in sorted(snap["constraints"].items())],
         "sequences": [[n, *v] for n, v in sorted(snap["sequences"].items())],
@@ -219,6 +236,7 @@ def snapshot_from_jsonable(data: dict[str, Any]) -> dict[str, Any]:
     snap = empty_snapshot()
     snap["tables"] = set(data.get("tables", ()))
     snap["columns"] = {(r[0], r[1]): tuple(r[2:5]) for r in data.get("columns", ())}
+    snap["column_types"] = {(r[0], r[1]): tuple(r[2:6]) for r in data.get("column_types", ())}
     snap["indexes"] = {r[0]: (r[1], r[2], bool(r[3])) for r in data.get("indexes", ())}
     snap["constraints"] = {(r[0], r[1]): (r[2], r[3]) for r in data.get("constraints", ())}
     snap["sequences"] = {r[0]: (r[1], r[2]) for r in data.get("sequences", ())}
@@ -307,6 +325,16 @@ def diff_snapshots(chain: dict[str, Any], live: dict[str, Any]) -> list[Drift]:
         elif lv != cv:
             out.append(Drift(MISMATCH, "column", f"{table}.{col}", table,
                              f"chain={_fmt(cv)} live={_fmt(lv)}", chain=cv, live=lv))
+
+    # column types: only columns on both sides whose information_schema triple
+    # matched above (a one-sided column or a data_type mismatch is already listed)
+    live_types, chain_types = live.get("column_types", {}), chain.get("column_types", {})
+    for key in sorted(set(live_types) & set(chain_types)):
+        lv, cv = live_types[key], chain_types[key]
+        if lv != cv and live["columns"].get(key) == chain["columns"].get(key):
+            table, col = key
+            out.append(Drift(MISMATCH, "column", f"{table}.{col}", table,
+                             f"type chain={_fmt(cv)} live={_fmt(lv)}", chain=cv, live=lv))
 
     # constraints, keyed (table, name); then pair renames by (table, type, def)
     out += _diff_named(
@@ -458,25 +486,24 @@ class Known:
     name: str
     reason: str
     targets: tuple[str, ...] = ()  # target database names; () = every target
+    # Explains the item only while this migration is pending on the target: the
+    # difference is that migration's work, so once it is applied it must be gone.
+    while_pending: int | None = None
 
-    def matches(self, item: Drift, target_db: str) -> bool:
+    def applies_to(self, target_db: str, pending: Iterable[int] = ()) -> bool:
+        if self.targets and not any(fnmatch.fnmatchcase(target_db, t) for t in self.targets):
+            return False
+        return self.while_pending is None or self.while_pending in set(pending)
+
+    def matches(self, item: Drift, target_db: str, pending: Iterable[int] = ()) -> bool:
+        if not self.applies_to(target_db, pending):
+            return False
         if item.kind != self.kind or item.category != self.category:
             return False
-        if not fnmatch.fnmatchcase(item.name, self.name):
-            return False
-        return not self.targets or any(fnmatch.fnmatchcase(target_db, t) for t in self.targets)
+        return fnmatch.fnmatchcase(item.name, self.name)
 
 
 _LEDGER = "docs/db_layer/SCHEMA_LEDGER_2026_10.md"
-_V019_ONLY = (
-    "V019-only object: a fresh chain build records V019 without running it, so the chain "
-    f"does not create it; present on prod and local ({_LEDGER}, 'Objects the chain names only "
-    "in V019'). V026 adopts it (P4.3)."
-)
-_LOG_TABLE = (
-    f"untracked log table, no creator in git history ({_LEDGER}, out-of-chain objects); "
-    "D-N30: adopted in V026 (P4.3), exported and dropped later in P13B.4."
-)
 _CLEANROOM_EXCLUDED = (
     "V001 backup table left out of the scratch build on purpose: workspace/cleanroom_2026_10/"
     "build_db.sh and scripts/cleanroom/build_db.sh (dump mode) run pg_dump -T 'public.cars_backup_*' "
@@ -484,23 +511,23 @@ _CLEANROOM_EXCLUDED = (
 )
 _FROZEN_TARGETS = ("cars_cleanroom",)
 
+# V026 (P4.3) adopted the V019-only objects, the 4 untracked log tables (D-N30) and
+# uq_option_rejections_standing (D-DB7), so their live-only entries are gone: the
+# chain creates them now. What V026 still leaves different on a database that has
+# not applied it is explained below only while V026 is pending there.
 KNOWN_DRIFT: tuple[Known, ...] = (
-    Known(LIVE_ONLY, "table", "car_move_log", _V019_ONLY),
-    Known(LIVE_ONLY, "table", "cars_trim_quarantine", _V019_ONLY),
-    Known(LIVE_ONLY, "table", "package_values_msrp_quarantine", _V019_ONLY),
-    Known(LIVE_ONLY, "index", "uq_option_rejections_standing",
-          "out-of-chain UNIQUE index from runtime DDL (backend/scripts/feed_package_registry_from_vision.py); "
-          f"D-DB7 (a): adopted in V026 (P4.3); 0 duplicate groups on prod and local ({_LEDGER})."),
+    Known(MISMATCH, "index", "uq_option_rejections_standing",
+          "runtime-DDL index (backend/scripts/feed_package_registry_from_vision.py) is NULLS DISTINCT; "
+          "V026 (P4.3) rebuilds it as NULLS NOT DISTINCT (D-DB7 (a)). Explained only while V026 is "
+          "pending on the target: cars_cleanroom keeps the old index (frozen at V025, D-N1); on cars and "
+          "prod it goes when V026 is applied (P4.8).",
+          while_pending=26),
     Known(LIVE_ONLY, "table", "cars_epa_link_backup_20260921",
           "one-off backup table, no creator in git history; EPA recovery source until P10D, "
           f"then dropped with D-DB1 (P13B.4) ({_LEDGER})."),
     Known(LIVE_ONLY, "table", "cars_owner_backup_20260929",
           "prod-only backup from the 2026-09-29 owner-guard repair; added to the D-DB1 drop list "
           f"(P13B.4) ({_LEDGER})."),
-    Known(LIVE_ONLY, "table", "image_summary_restore_log", _LOG_TABLE),
-    Known(LIVE_ONLY, "table", "make_canon_log", _LOG_TABLE),
-    Known(LIVE_ONLY, "table", "model_canon_log", _LOG_TABLE),
-    Known(LIVE_ONLY, "table", "package_value_purge_log", _LOG_TABLE),
     Known(CHAIN_ONLY, "table", "cars_backup_*", _CLEANROOM_EXCLUDED, ("cars_cleanroom", "cars_cr_*")),
     Known(CHAIN_ONLY, "table", "*_bak_*", _CLEANROOM_EXCLUDED, ("cars_cleanroom", "cars_cr_*")),
 )
@@ -577,6 +604,8 @@ def classify(
 
     Returns the classified items and the :class:`Known` entries that matched
     nothing on this target (stale: prune them once the object is gone or in the chain).
+    An entry scoped to other targets, or tied to a migration this target has
+    already applied (``while_pending``), does not apply here and is never stale.
     """
     known = tuple(known)
     pending = set(pending)
@@ -587,7 +616,7 @@ def classify(
     for item in items:
         why = None
         for i, k in enumerate(known):
-            if k.matches(item, target_db):
+            if k.matches(item, target_db, pending):
                 why = k.reason
                 used.add(i)
                 break
@@ -603,8 +632,7 @@ def classify(
                        + (" (frozen at V025 by D-N1: it never receives a migration)" if frozen
                           else " (pending: migrate --dry-run, then --apply per D-DB6)"))
         out.append(Classified(item, why))
-    stale = [k for i, k in enumerate(known) if i not in used and (
-        not k.targets or any(fnmatch.fnmatchcase(target_db, t) for t in k.targets))]
+    stale = [k for i, k in enumerate(known) if i not in used and k.applies_to(target_db, pending)]
     return out, stale
 
 
