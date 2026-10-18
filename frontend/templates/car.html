@@ -313,10 +313,11 @@
                                 {% endif %}
                             {% endif %}
                         </p>
-                        {# IL-01 / D-N12 (2026-10-18): a New, non-CPO car with no odometer figure shows no
-                           mileage line at all (hero, At a glance, spec sheet); used and CPO cars keep
-                           "Mileage not listed". #}
-                        {% set _mileage_line_hidden = car.mileage_not_listed and ((car.condition or '') | string | trim | lower) == 'new' and car.is_cpo not in (1, true, '1') %}
+                        {# IL-01 / D-N12 (2026-10-18): a New, non-CPO car with no odometer value shows no
+                           mileage line at all (hero, At a glance, spec sheet); used and CPO cars, and a "new"
+                           car older than last model year, keep "Mileage not listed". The serializer decides
+                           (mileage_display.mileage_line_hidden, the predicate the incomplete index uses). #}
+                        {% set _mileage_line_hidden = car.mileage_line_hidden is sameas true %}
                         {% if _mileage_line_hidden %}{# no mileage line #}
                         {% elif car.mileage_not_listed %}
                         {# 0/NULL on a used or older car is the feed's "not listed" sentinel (DC-6 / IH-03). #}

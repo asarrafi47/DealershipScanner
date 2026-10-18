@@ -57,10 +57,21 @@ def _fmt_price(car: dict[str, Any]) -> str:
 
 
 def _fmt_mileage(car: dict[str, Any]) -> str:
-    """Odometer, or "Mileage not listed" where 0/NULL is the feed's sentinel (DC-6)."""
-    from backend.utils.mileage_display import mileage_not_listed
+    """Odometer, or "Mileage not listed" where 0/NULL is the feed's sentinel (DC-6).
+
+    A New car with no odometer value gets the table's empty-cell dash instead: it
+    has no mileage line anywhere else either (D-N12).
+    """
+    from backend.utils.mileage_display import mileage_line_hidden, mileage_not_listed
 
     m = car.get("mileage")
+    hidden = car.get("mileage_line_hidden")
+    if not isinstance(hidden, bool):
+        hidden = mileage_line_hidden(
+            m, condition=car.get("condition"), is_cpo=car.get("is_cpo"), year=car.get("year")
+        )
+    if hidden:
+        return "—"
     not_listed = car.get("mileage_not_listed")
     if not isinstance(not_listed, bool):
         not_listed = mileage_not_listed(

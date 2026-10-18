@@ -6,6 +6,7 @@ used row is blank."""
 from __future__ import annotations
 
 import sqlite3
+from datetime import date
 from unittest.mock import patch
 
 import pytest
@@ -159,8 +160,11 @@ def _render_car_page(monkeypatch, tmp_path, app_factory, **overrides):
     from backend.routes import cars_pages
 
     main = app_factory(ALLOW_DEFAULT_APP_USER="0", RATE_LIMIT_SQLITE_PATH=str(tmp_path / "rate_limits.db"))
-    car = {"id": 77, "vin": "1HGCM82633A004352", "year": 2026, "make": "Honda", "model": "Accord",
-           "title": "2026 Honda Accord EX", "trim": "EX", "price": 30000, "mileage": None, "condition": "New",
+    # Current model year: since N2.4 a "new" car older than last model year keeps
+    # "Mileage not listed", so a fixed year would flip these cases in 2028.
+    year = date.today().year
+    car = {"id": 77, "vin": "1HGCM82633A004352", "year": year, "make": "Honda", "model": "Accord",
+           "title": f"{year} Honda Accord EX", "trim": "EX", "price": 30000, "mileage": None, "condition": "New",
            "dealer_id": "demo", "inactive": 0, "gallery": [], "history_highlights": []}
     car.update(overrides)
     monkeypatch.setattr(cars_pages, "get_car_by_id", lambda *_a, **_k: dict(car))
