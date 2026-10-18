@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [1.5.5] - 2026-10-18
+
 ### Added
 - `backend/scripts/cleanroom_acceptance.py` with the `backend/scripts/cleanroom/` package
   (N1.3): a read-only acceptance tool that every later phase proves "the counts drop"
