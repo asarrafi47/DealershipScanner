@@ -478,7 +478,9 @@ def test_real_codes_inprocess_on_sqlite_inventory(sqlite_inventory):
     conn.close()
     out = recompute.run_inprocess(cars, recompute.real_codes)
     assert out[0]["err"] is None
-    assert "mileage" in out[0]["codes"]  # F12: NULL odometer on a new car is flagged today
+    # IL-01 / D-N12 (N2.1): a NULL odometer on a new car is no longer flagged; the
+    # record still carries the F12 shape so the with/without split stays computable.
+    assert "mileage" not in out[0]["codes"]
     assert recompute.is_new_null_mileage(out[0])
 
 

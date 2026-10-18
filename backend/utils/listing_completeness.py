@@ -124,14 +124,22 @@ def _is_used_or_certified(car_raw: dict[str, Any]) -> bool:
 
 
 def _mileage_blank(car_raw: dict[str, Any]) -> bool:
-    """Missing when NULL / empty, and on used / certified rows also when 0: the
-    parsers used to default an absent odometer to 0 and 1,307 used rows read as
-    "0 mi" (F12 2026-09-28). 0 stays valid on New rows (car.html shows 0 mi)."""
+    """Missing mileage is a used / certified problem only.
+
+    * Used / certified (``_is_used_or_certified``): NULL, empty and 0 are all
+      missing. The parsers used to default an absent odometer to 0 and 1,307 used
+      rows read as "0 mi" (F12 2026-09-28).
+    * Anything else (New, blank or another condition, not CPO): a NULL / empty
+      odometer is not a gap (IL-01, owner decision D-N12 2026-10-18). New-car
+      feeds routinely omit it; flagging it marked 21,152 active new or
+      blank-condition cars incomplete in the 10-13 clean-room scan, and
+      production hides indexed incomplete cars. A blank condition is still
+      flagged under ``condition``. 0 stays valid (car.html shows 0 mi).
+
+    A value that is present but unparseable stays missing on every row."""
     m = car_raw.get("mileage")
-    if m is None:
-        return True
-    if isinstance(m, str) and not str(m).strip():
-        return True
+    if m is None or (isinstance(m, str) and not m.strip()):
+        return _is_used_or_certified(car_raw)
     try:
         n = int(float(str(m).replace(",", "")))
     except (TypeError, ValueError):
