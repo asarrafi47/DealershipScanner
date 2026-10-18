@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+### Changed
+- `docs/NEXT_PHASES_PLAN_2026_10.md`: N1.11 marked DONE. All 75 queued missing rooftops are profiled (63 DONE, 2 REPAIR_EXISTING, 10 BLOCKED_SCANNER) and staged for N8.9; nothing was written to `cars`.
+
 ## [1.5.6] - 2026-10-18
 
 ### Fixed
