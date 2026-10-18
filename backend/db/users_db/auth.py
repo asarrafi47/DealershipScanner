@@ -105,13 +105,53 @@ def get_user_by_login(login_input: str) -> dict | None:
     return _user_dict_from_row(row, want)
 
 
+def find_users_by_email(email: str, *, limit: int = 2) -> list[dict]:
+    """Users whose email equals ``email`` case-insensitively (at most ``limit``).
+
+    OAuth account linking uses this, never ``get_user_by_login``: that one also
+    matches usernames, and a username may equal another account's email (P3.1).
+    Legacy sqlite rows may hold case-variant duplicates, so callers get a list and
+    refuse to pick when more than one row matches. Each row carries
+    ``email_verified_at`` ('' when unset or the column is missing).
+    """
+    em = (email or "").strip()
+    if not em:
+        return []
+    want = _users_select_columns()
+    conn = get_conn()
+    cursor = conn.cursor()
+    cursor.execute("PRAGMA table_info(users)")
+    has_verified = any(r[1] == "email_verified_at" for r in cursor.fetchall())
+    extra = ", email_verified_at" if has_verified else ""
+    cursor.execute(
+        f"SELECT {', '.join(want)}{extra} FROM users WHERE lower(email) = lower(?) ORDER BY id LIMIT ?",
+        (em, max(1, int(limit))),
+    )
+    rows = cursor.fetchall()
+    conn.close()
+    out: list[dict] = []
+    for row in rows:
+        user = _user_dict_from_row(row[: len(want)], want)
+        user["email_verified_at"] = (str(row[len(want)] or "").strip()) if has_verified else ""
+        out.append(user)
+    return out
+
+
 def update_user_profile(user_id: int, username: str, email: str) -> str | None:
-    """Update username and email for a signed-in user. Returns an error message or None."""
+    """Update username and email for a signed-in user. Returns an error message or None.
+
+    A new username may not contain '@' or equal another account's email (P3.1); a
+    legacy username that already does is left alone when it is not being changed.
+    Changing the email clears ``email_verified_at`` and any pending verify token:
+    verification belonged to the old address, and OAuth auto-links only to
+    verified emails.
+    """
     from backend.utils.registration_validation import (
         MAX_EMAIL_LEN,
         MAX_USERNAME_LEN,
         normalize_registration_email,
         normalize_registration_username,
+        username_format_error,
     )
 
     try:
@@ -134,6 +174,18 @@ def update_user_profile(user_id: int, username: str, email: str) -> str | None:
 
     conn = get_conn()
     cursor = conn.cursor()
+    cursor.execute("SELECT username, email FROM users WHERE id = ?", (uid,))
+    current = cursor.fetchone()
+    if not current:
+        conn.close()
+        return "Account not found."
+    username_changed = uname.lower() != str(current[0] or "").strip().lower()
+    email_changed = em.lower() != str(current[1] or "").strip().lower()
+    if username_changed:
+        fmt_err = username_format_error(uname)
+        if fmt_err:
+            conn.close()
+            return fmt_err
     cursor.execute(
         "SELECT id FROM users WHERE lower(username) = lower(?) AND id != ?",
         (uname, uid),
@@ -141,6 +193,14 @@ def update_user_profile(user_id: int, username: str, email: str) -> str | None:
     if cursor.fetchone():
         conn.close()
         return "That username is already taken."
+    if username_changed:
+        cursor.execute(
+            "SELECT id FROM users WHERE lower(email) = lower(?) AND id != ?",
+            (uname, uid),
+        )
+        if cursor.fetchone():
+            conn.close()
+            return "That username is already taken."
     cursor.execute(
         "SELECT id FROM users WHERE lower(email) = lower(?) AND id != ?",
         (em, uid),
@@ -148,8 +208,15 @@ def update_user_profile(user_id: int, username: str, email: str) -> str | None:
     if cursor.fetchone():
         conn.close()
         return "That email is already registered."
+    sets = ["username = ?", "email = ?"]
+    if email_changed:
+        cursor.execute("PRAGMA table_info(users)")
+        cols = {r[1] for r in cursor.fetchall()}
+        for col in ("email_verified_at", "email_verify_token_hash", "email_verify_expires_at"):
+            if col in cols:
+                sets.append(f"{col} = NULL")
     cursor.execute(
-        "UPDATE users SET username = ?, email = ? WHERE id = ?",
+        f"UPDATE users SET {', '.join(sets)} WHERE id = ?",
         (uname, em, uid),
     )
     if cursor.rowcount == 0:

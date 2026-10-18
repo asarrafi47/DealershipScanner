@@ -44,6 +44,7 @@ from backend.utils.registration_validation import (
     normalize_registration_email,
     normalize_registration_username,
     registration_form_error,
+    username_format_error,
 )
 from backend.utils.roles import (
     ROLE_DEALERSHIP_OWNER,
@@ -116,7 +117,9 @@ def dealer_register():
         email = normalize_registration_email(request.form.get("email") or "")
         password = (request.form.get("password") or "")
         org_name = (request.form.get("org_name") or "").strip()
-        err = registration_form_error(username, email, password, min_password_len=_MIN_DEALER_PASSWORD)
+        err = registration_form_error(
+            username, email, password, min_password_len=_MIN_DEALER_PASSWORD
+        ) or username_format_error(username)
         if err:
             return render_template("dealer_register.html", error=err)
         if registration_blocked_by_env_admin(email, username):
