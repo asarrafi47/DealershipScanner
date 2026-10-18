@@ -1,22 +1,30 @@
 """
 backend/utils/web_researcher.py
 ────────────────────────────────
-Web research helper for the car-page chatbot.
+Web research helper for the car-page chatbot (and one operator script).
 
-Uses Playwright's *synchronous* API so it integrates cleanly into Flask's
-sync request lifecycle — no asyncio.run() gymnastics required.
+HTTP-only by default (D-SEC1 (a), P3.8). The web image carries no Chromium, and
+``WebResearcher()`` never imports Playwright or launches a browser. Browser mode is
+opt-in per instance (``WebResearcher(allow_browser=True)``), used only by the
+operator script ``backend/scripts/analyze_trim_adds_with_web.py``.
 
 Strategy
 ────────
-1. Search DuckDuckGo HTML (``html.duckduckgo.com``) via plain HTTP — no CAPTCHA for
-   batch/headless use. Fall back to Brave Search + Playwright when DDG returns nothing.
-2. For each organic result URL, fetch page text via HTTP first (fast). If too short,
-   open with headless Chromium and extract semantic main content.
-3. Apply host blocklist + optional ``WEB_RESEARCH_ALLOWED_HOSTS`` on every URL.
-4. Return the first result with ≥ 80 chars of cleaned editorial text.
+1. With year/make/model, try known guide URLs first (no search engine).
+2. Search DuckDuckGo HTML (``html.duckduckgo.com``) via plain HTTP.
+   Browser mode only: fall back to Brave Search in headless Chromium when fewer than
+   two candidates came back.
+3. For each candidate URL, fetch page text via HTTP. Browser mode only: if the HTTP
+   fetch fails or the text is too short, open the page in headless Chromium and
+   extract semantic main content.
+4. Apply host blocklist + optional ``WEB_RESEARCH_ALLOWED_HOSTS`` on every URL.
+5. Return the first result with ≥ 80 chars of cleaned editorial text.
 
-Brave Search alone often shows a bot-verification page to headless Chromium; DDG HTML
-is the primary path as of 2026.
+Why the browser is off by default: measured on 30 car-chat questions (P0B.3,
+docs/monolith_audit_2026_10_01/measurements/web_research_paths_2026_10.md), no
+answer depended on it. Brave bot-paged headless Chromium 7/7 times, the page
+fallback hit the same 403 as HTTP 15/16 times, and 4 of its 5 "answers" were
+Edmunds "Access Denied" pages.
 """
 
 from __future__ import annotations
@@ -38,13 +46,15 @@ from backend.utils.outbound_url import (
 
 logger = logging.getLogger(__name__)
 
-# ── Browser / stealth config ──────────────────────────────────────────────
+# ── User agent (HTTP and browser) ─────────────────────────────────────────
 
 _USER_AGENT = (
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
     "AppleWebKit/537.36 (KHTML, like Gecko) "
     "Chrome/122.0.0.0 Safari/537.36"
 )
+
+# ── Browser / stealth config (browser mode only, allow_browser=True) ──────
 
 _LAUNCH_ARGS = [
     "--disable-setuid-sandbox",
@@ -82,10 +92,10 @@ _CONTEXT_HEADERS = {
 
 # ── Search engine ─────────────────────────────────────────────────────────
 #
-# Brave Search is significantly more lenient with headless Playwright than
-# DuckDuckGo (which shows CAPTCHAs) or Google (which blocks outright).
-# Results are rendered client-side; we wait for 'networkidle' to ensure
-# they are fully present before we scan for links.
+# DuckDuckGo's static HTML page over urllib is the search path. Brave Search
+# (rendered client-side, so it needs headless Chromium and a 'networkidle'
+# wait) is the browser-mode fallback only; it bot-paged headless Chromium 7/7
+# times in the P0B.3 measurement.
 
 _SEARCH_URL = "https://search.brave.com/search?q={query}&source=web"
 _DDG_HTML_URL = "https://html.duckduckgo.com/html/?q={query}"
@@ -337,10 +347,21 @@ class ResearchResult(NamedTuple):
 
 # ── WebResearcher ─────────────────────────────────────────────────────────
 
+class BrowserModeDisabled(RuntimeError):
+    """A browser step was reached on a ``WebResearcher`` built without ``allow_browser``."""
+
+
 class WebResearcher:
     """
-    Headless Playwright researcher.  Create one instance per request
-    (or reuse across a request scope); do NOT share across threads.
+    Web researcher: HTTP-only unless ``allow_browser=True``.
+
+    ``allow_browser=False`` (the default, and every web-process caller) gates both
+    browser steps, the Brave search fallback and the per-page Chromium fallback, and
+    neither imports Playwright. ``allow_browser=True`` is for operator scripts run
+    on a host that has Playwright's Chromium installed.
+
+    Create one instance per request (or reuse across a request scope); do NOT
+    share across threads.
     """
 
     def __init__(
@@ -349,16 +370,28 @@ class WebResearcher:
         max_text_chars: int = 2_000,
         *,
         allowed_result_hosts: frozenset[str] | None = None,
+        allow_browser: bool = False,
     ) -> None:
         self.timeout_ms = timeout_ms
         self.max_text_chars = max_text_chars
         # None → use ``WEB_RESEARCH_ALLOWED_HOSTS`` (and built-in filters) per request
         self._allowed_result_hosts = allowed_result_hosts
+        self.allow_browser = bool(allow_browser)
+
+    def _require_browser(self, step: str) -> None:
+        """Refuse a browser step unless this instance was built with ``allow_browser=True``.
+
+        Runs before any Playwright import, so an HTTP-only instance cannot reach the
+        browser even through a direct call to a private method.
+        """
+        if not self.allow_browser:
+            raise BrowserModeDisabled(f"WebResearcher {step}: browser mode is off (allow_browser=False)")
 
     # ── Browser setup ─────────────────────────────────────────────────────
 
     def _make_context(self, playwright):
         """Return (browser, context) with stealth configuration."""
+        self._require_browser("chromium launch")
         try:
             browser = playwright.chromium.launch(
                 headless=True,
@@ -525,13 +558,21 @@ class WebResearcher:
                 logger.info("[WebResearcher] duckduckgo candidates=%d", len(candidates))
 
         if len(candidates) < 2:
-            for url in self._brave_search_links(query, max_results=max_results):
-                if url not in candidates:
-                    candidates.append(url)
+            if self.allow_browser:
+                for url in self._brave_search_links(query, max_results=max_results):
+                    if url not in candidates:
+                        candidates.append(url)
+            else:
+                logger.debug(
+                    "[WebResearcher] Brave fallback skipped (HTTP-only) candidates=%d",
+                    len(candidates),
+                )
 
         return candidates[:max_results]
 
     def _brave_search_links(self, query: str, *, max_results: int = 5) -> list[str]:
+        """Browser mode only: Brave Search in headless Chromium."""
+        self._require_browser("Brave search")
         try:
             from playwright.sync_api import sync_playwright
         except ImportError:
@@ -572,6 +613,8 @@ class WebResearcher:
         return []
 
     def _fetch_with_playwright(self, result_url: str) -> tuple[str, str]:
+        """Browser mode only: render *result_url* in headless Chromium."""
+        self._require_browser("page fallback")
         from playwright.sync_api import sync_playwright
 
         with sync_playwright() as pw:
@@ -637,12 +680,15 @@ class WebResearcher:
 
         When *year*, *make*, and *model* are provided, tries direct automotive guide
         URLs before search engines (avoids CAPTCHA on Brave/DuckDuckGo).
+
+        HTTP-only unless the instance was built with ``allow_browser=True``.
         """
         logger.info(
-            "[WebResearcher] starting | query_len=%d ymm=%s allowed_hosts=%s",
+            "[WebResearcher] starting | query_len=%d ymm=%s allowed_hosts=%s browser=%s",
             len(query),
             f"{year} {make} {model}".strip() if year else "",
             "env" if self._allowed_result_hosts is None else "override",
+            "on" if self.allow_browser else "off",
         )
 
         candidates = self._collect_search_candidates(
@@ -663,6 +709,8 @@ class WebResearcher:
             except (urllib.error.URLError, OSError, TimeoutError) as exc:
                 logger.debug("[WebResearcher] HTTP fetch failed for %s: %s", result_url, exc)
 
+            if not self.allow_browser:
+                continue
             try:
                 title, raw_text = self._fetch_with_playwright(result_url)
                 out = self._result_from_page(result_url, title, raw_text)
