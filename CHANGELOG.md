@@ -2,6 +2,95 @@
 
 ## [Unreleased]
 
+### Added
+- `deploy/railway/service_settings.json` and `deploy/railway/service_settings.py` (N4.1,
+  D-N24): web's and scanner-nightly's Railway settings now live on the service instance,
+  because Railway stops reading `railway.toml` / `railway.json` on 2026-12-01. The JSON
+  holds the expected values. Web: `Dockerfile.web`, healthcheck `/health` within 300 s,
+  restart `ON_FAILURE` up to 5 times, 1 replica. scanner-nightly: `Dockerfile.scanner`, no
+  healthcheck, restart `NEVER`, 1 replica, 16 vCPU / 16 GB. Cron and the config-file path
+  are unset on both. The stdlib helper reads the live settings with one read-only
+  `railway api` query and compares them field by field. It refuses to send anything but a
+  plain query. It prints the owner-pack query and the `serviceInstanceUpdate` command, and
+  never runs a mutation. `docs/RELEASING.md` gains "Service settings (N4.1, D-N24)": the
+  mechanism, the expected values, the check, the owner packs and the cron path for N12.11.
+  The web pack runs only after `web-source-clear`. The scanner-nightly pack runs only
+  under option (a) or inside N12.2.
+- `backend/tests/test_railway_service_settings.py` (N4.1) checks that the settings equal
+  the deleted files, the audited service ids, the read-only query guard, the pack commands
+  and the check's exit codes. `backend/tests/test_deploy_guard.py` gains stubbed-railway
+  tests of the settings check.
+- `backend/tests/test_deploy_references.py` (P15B.6) checks that:
+  - the deleted worker/scheduler files stay deleted;
+  - their names appear only in `docs/` and CHANGELOG.md;
+  - the N4 exit-gate grep matches only the allowlisted k8s manifest;
+  - compose runs only `postgres` + `web`, on a pinned pgvector image at prod's major
+    version 18;
+  - every Dockerfile named by a Railway config or by `service_settings.json` exists. The
+    test fails if it found nothing to check.
+- `backend/tests/test_branch_naming_docs.py` (N4.3) checks that RELEASING.md, plan
+  Section 7.0 and the Section 10.1 runner template agree on `phase/<NID>` /
+  `unit/<unit id>`. It also checks that the `feature/http-only-scans` retirement stays
+  owner-gated with fixed-text gate greps, and that every in-page link in RELEASING.md
+  resolves.
+- `docs/ops_log/N4.4.md` (N4.4) records the mini as excluded under D-N2 (b). It lists the
+  re-planned units: D-DB5 (b), D-IF10 = MBP, D-IF1 host = MBP, P6A.7 with two hosts,
+  P15A.6 on the MBP, and the Phase 7 rollout without the mini. It also holds read-only MBP
+  evidence that the mini does not scan, and the revival steps for D-N2 (a).
+  `docs/remediation/OWNER_DECISIONS_LOG.md` gains one row for this record. It is not a new
+  owner answer.
+
+### Changed
+- `deploy/railway/deploy_web.sh`, `deploy_scanner_nightly.sh` and `_guarded_deploy.sh`
+  (N4.1) check the live service settings before every deploy and dry run. They compare
+  them with `service_settings.json` at the deployed ref. On any difference, or an
+  unreadable answer, they refuse with exit 1 and nothing staged.
+  - `ALLOW_UNRELEASED_DEPLOY=1` never overrides the check.
+  - `--no-settings-check` is accepted for dry runs only.
+  - A release that carries a root `railway.toml` or `railway.json` is refused.
+  - `deploy_scanner_nightly.sh` no longer copies a `railway.json` into the stage.
+  - RELEASING.md steps 12, 13 and 15 describe the new path.
+- `deploy/docker-compose.yml` (P15B.6): the stack is now `postgres` + `web`.
+  - Postgres moves from `postgres:16-alpine` to `pgvector/pgvector:0.8.6-pg18` (prod runs
+    PG 18.6 with vector 0.8.6).
+  - Its data volume, `postgres18_data`, mounts at `/var/lib/postgresql` (the PG18 image
+    layout). The old PG16 `postgres_data` volume is never handed to PG18.
+  - `deploy/up.sh` builds and starts web only.
+  - `scripts/docker-entrypoint-scanner-worker.sh` is renamed to
+    `docker-entrypoint-jobs-worker.sh`, and `Dockerfile.discovery` points at the new name.
+    `Dockerfile.scanner` no longer chmods the worker/scheduler entrypoints.
+- `docs/RELEASING.md` "Branching model" (N4.3, LE-5):
+  - Phase branches are `phase/<id>`. Unit branches are `unit/<unit id>`, in
+    `.claude/worktrees/<unit id>`.
+  - A `.claude/worktrees/phase-<id>` integration worktree is described, with its create
+    command. It must be removed before `git switch phase/<id>`.
+  - A phase branch is rebased only when another release moved `main`. After a rebase,
+    unit branches are checked with `git cherry` before `-D`.
+  - New section "Retiring `feature/http-only-scans`": an owner-only step behind four
+    gates. The gates are: ksarrafi told, the first phase release on main, the mini check
+    or a logged waiver, and no checkout on the branch.
+  - The release checklist no longer offers that branch.
+  - `docs/NEXT_PHASES_PLAN_2026_10.md` Sections 7.0 and 10.3 now match. Release step 4
+    rebases only when needed. A stale worktree is checked against `base_sha`, because unit
+    branches have no upstream.
+- `docs/RELEASING.md`, `RESUME_HERE.md` and `deploy/AUTONOMOUS_DEV.md` no longer describe
+  the worker/scheduler stack (P15B.6). `docs/NEXT_PHASES_PLAN_2026_10.md` carries the N4
+  unit status.
+
+### Removed
+- The root `railway.toml` and `deploy/railway/railway.scanner-nightly.json` (N4.1). Their
+  values moved to `deploy/railway/service_settings.json`.
+- `Dockerfile.scanner-worker`, `Dockerfile.scanner-scheduler`,
+  `deploy/railway/railway.scanner-{worker,scheduler}.toml` and the compose
+  `scanner-worker` / `scanner-scheduler` services, with the `scanner_node_modules` volume
+  and `SCANNER_BROWSER_PROFILE_DIR` (P15B.6). Their Railway services were deleted on
+  2026-10-08 (D-REL1 (a)).
+
+### Fixed
+- A fresh local compose stack failed migration V001 (`CREATE EXTENSION vector`), because
+  `postgres:16-alpine` has no pgvector. The compose Postgres now uses the pgvector image
+  (P15B.6, D-TC3).
+
 ## [1.5.6] - 2026-10-18
 
 ### Fixed

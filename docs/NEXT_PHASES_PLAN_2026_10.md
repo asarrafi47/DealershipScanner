@@ -921,6 +921,31 @@ Elsewhere:
 | N4.4 | LE-7, OPS-6 | Mini per D-N2: repair pack if SSH approved, else a re-plan note | prod-owner / docs | `docs/ops_log/N4.4.md`, `OWNER_DECISIONS_LOG.md` | D-N2 | either repaired and on the release commit, or recorded as excluded |
 | N4.5 | release | Prove the new web deploy path: owner-approved Docker smoke of the exact stage, migration check (Section 7.0; before N9's release reaches main), then `deploy_web.sh` | prod-owner | ops log | N4.1 | health shows the tag; no config-as-code warning; prod `migrate --dry-run` printed `database is up to date` before the deploy |
 
+**Unit status (updated 2026-10-18 by the N4 integrator at commit time; checkpoints in `workspace/phase_runs/N4/`, summary in `workspace/phase_runs/N4/RESUME.md`).**
+- N4.1: DONE (code), merged `f12a0776e`. Review: 1 round, pass, 7 nits carried.
+  - The root `railway.toml` and `deploy/railway/railway.scanner-nightly.json` are deleted. `deploy/railway/service_settings.json` holds the settings and `service_settings.py` checks them. Both deploy scripts refuse on any mismatch.
+  - Owner packs are prepared but not applied: `N4.1_read.md`; `N4.1_web_settings.md` (only after `web-source-clear`); `N4.1_scanner_settings.md` (only under option (a) or in N12.2).
+  - Acceptance rows still open, both for the owner: the read-only query equals the old files, and a plain `--dry-run` shows no deprecation warning.
+- P15B.6: DONE, merged `5095bac3f`. Review: 1 round, pass, 6 nits carried.
+  - N4.1 deleted the files that `test_railway_configs_name_existing_dockerfiles` looped over, so the test passed without checking anything. Integration commit `2bb1e54bc` makes it also read `service_settings.json` and fail when it checks nothing.
+  - `docker compose config` (parse only) validates, and lists 2 services: `postgres` and `web`.
+- N4.3: DONE (docs), merged `69b1b85a9`. Review: 2 rounds, pass. Nit 1 was fixed in integration commit `d99b4d00c`; nits 2-6 are carried.
+  - Retiring `feature/http-only-scans` is owner-gated. Gates 2 and 4 are met; gates 1 and 3 are open. No branch was deleted.
+  - The "archived or deleted per owner" acceptance stays open until the owner acts.
+- N4.4: DONE, merged `e37ff4b7f`. Review: 1 round, pass, 4 nits carried. Option (b): the mini is recorded as excluded, in `docs/ops_log/N4.4.md` and one OWNER_DECISIONS_LOG record row.
+- N4.5: BLOCKED on the owner, in this order: the N4 release on main, `N4.1_read.md`, `N4.1_web_settings.md`, "Docker OK for N4.5", then `workspace/phase_runs/N4/N4.5.md`.
+- **Exit gate, local items** (2026-10-18, at `d99b4d00c`):
+  - `bash -n` exits 0 on `deploy_web.sh`, `deploy_scanner_nightly.sh` and `_guarded_deploy.sh`, under bash 3.2.57 and under bash 5.3.15. shellcheck finds nothing.
+  - Stubbed settings tests (`test_deploy_guard.py -k "settings or limits or deprecation or config_as_code or bash_n or never_calls_railway"`): 50 passed. `test_railway_service_settings.py` plus `test_deploy_references.py`: 59 passed.
+  - The worker/scheduler grep returns 2 hits, both in `deploy/car-scanner/cronjob.yaml` (lines 32 and 61). They are a k8s node label in the dead manifest. This is an exception until P18A.7 deletes `deploy/car-scanner/` (D-IF9). The root `docker-compose.yml` the grep names does not exist; compose lives under `deploy/`, which the grep covers.
+  - 0 tracked `railway.toml` or `railway*.json` files remain.
+  - The scanner-nightly pack is prepared and not applied. No agent ran a railway command except one local `railway --version`, and there are 0 owner done-files.
+- **Exit gate, owner items still open:**
+  - dry runs with no deprecation warning;
+  - a healthy web deploy through the new path;
+  - `railway deployment list -s scanner-nightly` unchanged (N4.5 step 13).
+- If N4.1 is not proven by 2026-11-20, N4 releases alone.
+
 **N-unit specs.**
 
 **N4.1.**
