@@ -262,20 +262,26 @@ def ensure_car_attribution_tables(cursor: sqlite3.Cursor) -> None:
 def init_inventory_db():
     if is_inventory_postgres():
         from backend.db.inventory_pg import init_postgres_inventory, pg_connect
+        from backend.db.schema_version import SchemaNotMigratedError
 
         conn = pg_connect()
         try:
             init_postgres_inventory(conn)
+        except SchemaNotMigratedError:
+            # INVENTORY_SCHEMA_CHECK=strict and the database is behind migrations/:
+            # refuse here, at init, instead of booting and failing later in
+            # init_dealer_portal_db or on the first scanner upsert.
+            raise
         except Exception:
             # The authoritative schema is the versioned migration chain; this pass
-            # only re-asserts it. It is expected to fail when a scanner holds long
-            # transactions on `cars` (init_postgres_inventory sets a lock_timeout so
-            # it aborts rather than parking every later reader behind a queued
-            # CREATE INDEX). Booting the web app is worth more than the re-assert,
-            # and the per-process flag stays unset so a later boot retries.
+            # only re-asserts it. In warn mode a behind database falls back to the
+            # legacy runtime DDL, which is expected to fail when a scanner holds long
+            # transactions on `cars` (it sets a lock_timeout so it aborts rather than
+            # parking every later reader behind a queued CREATE INDEX). Booting the
+            # web app is worth more than the re-assert, and the per-process flag
+            # stays unset so a later boot retries.
             _log.warning(
-                "inventory schema re-assert skipped (table busy); "
-                "relying on the migration chain",
+                "inventory schema re-assert failed; relying on the migration chain",
                 exc_info=True,
             )
         finally:
