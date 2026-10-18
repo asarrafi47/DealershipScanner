@@ -140,36 +140,69 @@ def _conn():
 
 
 def _ensure_table(conn) -> None:
+    """Make sure ``dealer_recipes`` (with ``scan_hints``) exists; once per process.
+
+    Postgres (P4.6): ``migrations/`` owns the table (V001, ``scan_hints``
+    included). At the expected migration version this issues no statement. Behind
+    the chain (warn mode) the table is created only when ``to_regclass`` cannot find
+    it, after ``SET LOCAL lock_timeout`` (``backend.db.runtime_ddl``), and the
+    ``scan_hints`` column is checked in ``information_schema`` but never added here:
+    ``ALTER TABLE ... ADD COLUMN`` takes ACCESS EXCLUSIVE on ``dealer_recipes`` even
+    with IF NOT EXISTS, and a missing column is a migration's job. Strict mode on a
+    behind database raises ``SchemaNotMigratedError`` (every caller is best-effort).
+
+    SQLite (pytest): unchanged, create the table and add ``scan_hints`` when a
+    probe shows it missing.
+    """
     global _table_ready
     if _table_ready:
         return
-    # Serialize first-use DDL: concurrent CREATEs from parallel scan threads
-    # would abort each other's transactions on Postgres.
+    # Serialize first use: concurrent CREATEs from parallel scan threads would
+    # abort each other's transactions on Postgres.
     with _table_lock:
         if _table_ready:
             return
-        cur = conn.cursor()
-        try:
-            cur.execute(_DDL_PG)
-        except Exception:
-            try:
-                conn.rollback()
-            except Exception:
-                pass
-            cur.execute(_DDL_SQLITE)
-        try:
-            cur.execute("ALTER TABLE dealer_recipes ADD COLUMN IF NOT EXISTS scan_hints TEXT")
-        except Exception:
-            try:
-                conn.rollback()
-            except Exception:
-                pass
-            try:
-                cur.execute("SELECT scan_hints FROM dealer_recipes LIMIT 1")
-            except Exception:
-                cur.execute("ALTER TABLE dealer_recipes ADD COLUMN scan_hints TEXT")
-        conn.commit()
+        from backend.db import runtime_ddl
+
+        if runtime_ddl.is_sqlite_connection(conn):
+            _ensure_table_sqlite(conn)
+        else:
+            _ensure_table_pg(conn)
         _table_ready = True
+
+
+def _ensure_table_sqlite(conn) -> None:
+    cur = conn.cursor()
+    cur.execute(_DDL_SQLITE)
+    try:
+        cur.execute("SELECT scan_hints FROM dealer_recipes LIMIT 1")
+    except Exception:
+        cur.execute("ALTER TABLE dealer_recipes ADD COLUMN scan_hints TEXT")
+    conn.commit()
+
+
+def _ensure_table_pg(conn) -> None:
+    from backend.db import runtime_ddl
+
+    if not runtime_ddl.pg_legacy_ddl_needed():
+        return
+    cur = conn.cursor()
+    try:
+        if runtime_ddl.pg_missing_relations(cur, ["dealer_recipes"]):
+            runtime_ddl.run_pg_legacy_ddl(cur, [_DDL_PG])
+        elif not runtime_ddl.pg_column_exists(cur, "dealer_recipes", "scan_hints"):
+            logger.warning(
+                "dealer_recipes has no scan_hints column; scan hints will not load or "
+                "save until the database is migrated (python -m backend.scripts.migrate "
+                "--apply). Not adding it at runtime: ALTER TABLE takes ACCESS EXCLUSIVE."
+            )
+        conn.commit()
+    except Exception:
+        try:
+            conn.rollback()
+        except Exception:
+            pass
+        raise
 
 
 def _derive_meta(rows: list[dict[str, Any]]) -> dict[str, Any]:

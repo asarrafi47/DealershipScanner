@@ -405,14 +405,19 @@ def _legacy_postgres_inventory_ddl(conn: Any) -> None:
     Lock behaviour: ``CREATE INDEX`` takes a SHARE lock, so while a scanner holds open
     transactions on ``cars`` the statement queues -- and in PostgreSQL a waiting
     strong lock parks every later reader and writer behind it (2026-07-30 incident).
-    A short ``lock_timeout`` turns that from an outage into a no-op.
+    A short ``lock_timeout`` turns that from an outage into a no-op. It is
+    ``SET LOCAL``: it ends with this function's commit (or a rollback), so the
+    caller's connection (the scanner reuses its raw connection for every upsert)
+    does not keep a 3 s lock_timeout for the rest of its life.
     """
     global _PG_INV_SCHEMA_OK
     if _PG_INV_SCHEMA_OK:
         return
     cur = conn.cursor()
     try:
-        cur.execute("SET lock_timeout = '3s'")
+        # One transaction from here to the commit below (psycopg opens it on this
+        # first statement), so SET LOCAL covers every DDL statement.
+        cur.execute("SET LOCAL lock_timeout = '3s'")
     except Exception:
         # Non-PostgreSQL/compat cursors simply do not support it; the DDL below is
         # still correct, it just keeps the old blocking behaviour.

@@ -15,7 +15,7 @@ import sqlite3
 from datetime import datetime, timedelta, timezone
 from typing import Any
 
-from backend.db import inventory_pg
+from backend.db import inventory_pg, runtime_ddl
 
 # Threshold at which a review auto-flips from ``published`` to ``flagged``.
 REPORT_FLAG_THRESHOLD = 3
@@ -85,28 +85,85 @@ CREATE TABLE IF NOT EXISTS review_reports (
 """
 
 
+_IDX_REVIEWS_DEALER = (
+    "CREATE INDEX IF NOT EXISTS idx_dealer_reviews_dealer "
+    "ON dealer_reviews(dealer_id, status)"
+)
+_IDX_REVIEWS_USER = (
+    "CREATE INDEX IF NOT EXISTS idx_dealer_reviews_user "
+    "ON dealer_reviews(user_id, created_at)"
+)
+
+# Postgres objects, each with the statement that creates it. migrations/ owns
+# all of them (V001: dealer_reviews and both indexes; V026: review_reports).
+_REVIEWS_PG_OBJECTS = (
+    ("dealer_reviews", _DDL_PG),
+    ("idx_dealer_reviews_dealer", _IDX_REVIEWS_DEALER),
+    ("idx_dealer_reviews_user", _IDX_REVIEWS_USER),
+)
+_REVIEW_REPORTS_PG_OBJECTS = (("review_reports", _DDL_REPORTS_PG),)
+
+# Per-process "these objects are known to exist" flags, Postgres only. Set when the
+# database records every migration, or when the catalog showed every object present
+# before this call created anything (never on the strength of uncommitted DDL: the
+# caller owns the transaction and may roll it back). SQLite is pytest-only, a fresh
+# file per test, so that path keeps creating its tables on every call.
+_REVIEWS_TABLE_OK = False
+_REVIEW_REPORTS_TABLE_OK = False
+
+
+def _ensure_pg_objects(cur: Any, objects: tuple[tuple[str, str], ...]) -> bool:
+    """Postgres: create only the missing ``objects``, behind the migration gate.
+
+    Returns True when every object is known to exist without any DDL from this
+    call (the caller may cache that). No statement at all when the schema is
+    current; strict mode on a behind database raises ``SchemaNotMigratedError``.
+    """
+    if not runtime_ddl.pg_legacy_ddl_needed():
+        return True
+    missing = runtime_ddl.pg_missing_relations(cur, [name for name, _sql in objects])
+    if not missing:
+        return True
+    runtime_ddl.run_pg_legacy_ddl(cur, [sql for name, sql in objects if name in missing])
+    return False
+
+
 def ensure_reviews_table(cur: Any) -> None:
-    """Create the ``dealer_reviews`` table + index if absent (idempotent).
+    """Make sure the ``dealer_reviews`` table and its indexes exist.
 
     Accepts a cursor (matching the ``ensure_*_table(cur)`` signature requested);
     it does not commit — the caller owns the transaction.
+
+    Postgres (P4.6): no statement at all once the database is at the
+    ``migrations/`` version or the objects were seen in the catalog (cached per
+    process). The dealership page calls this on every request, and ``CREATE INDEX
+    IF NOT EXISTS`` takes a SHARE lock even when the index exists. A database behind
+    the chain gets only its missing objects, after ``SET LOCAL lock_timeout``
+    (``backend.db.runtime_ddl``). SQLite: unchanged.
     """
-    ddl = _DDL_PG if inventory_pg.is_inventory_postgres() else _DDL_SQLITE
-    cur.execute(ddl)
-    cur.execute(
-        "CREATE INDEX IF NOT EXISTS idx_dealer_reviews_dealer "
-        "ON dealer_reviews(dealer_id, status)"
-    )
-    cur.execute(
-        "CREATE INDEX IF NOT EXISTS idx_dealer_reviews_user "
-        "ON dealer_reviews(user_id, created_at)"
-    )
+    global _REVIEWS_TABLE_OK
+    if not inventory_pg.is_inventory_postgres():
+        cur.execute(_DDL_SQLITE)
+        cur.execute(_IDX_REVIEWS_DEALER)
+        cur.execute(_IDX_REVIEWS_USER)
+        return
+    if _REVIEWS_TABLE_OK:
+        return
+    if _ensure_pg_objects(cur, _REVIEWS_PG_OBJECTS):
+        _REVIEWS_TABLE_OK = True
 
 
 def ensure_review_reports_table(cur: Any) -> None:
-    """Create the ``review_reports`` dedup table if absent (idempotent)."""
-    ddl = _DDL_REPORTS_PG if inventory_pg.is_inventory_postgres() else _DDL_REPORTS_SQLITE
-    cur.execute(ddl)
+    """Make sure the ``review_reports`` dedup table exists (same gate as
+    :func:`ensure_reviews_table`; V026 owns it on Postgres)."""
+    global _REVIEW_REPORTS_TABLE_OK
+    if not inventory_pg.is_inventory_postgres():
+        cur.execute(_DDL_REPORTS_SQLITE)
+        return
+    if _REVIEW_REPORTS_TABLE_OK:
+        return
+    if _ensure_pg_objects(cur, _REVIEW_REPORTS_PG_OBJECTS):
+        _REVIEW_REPORTS_TABLE_OK = True
 
 
 def _now_iso() -> str:
