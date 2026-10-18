@@ -41,10 +41,14 @@ MIGRATIONS_DIR = Path(__file__).resolve().parents[2] / "migrations"
 _FILENAME_RE = re.compile(r"^V(\d+)__.+\.sql$")
 
 MIGRATE_COMMAND = "python -m backend.scripts.migrate --apply"
-# Databases whose V019 objects already exist (every DB built from V001, incl. the
-# local and production databases): V019 re-creates objects V001 already has, so
-# it must be recorded, not run. See migrations/README.md.
-BASELINE_V019_COMMAND = "python -m backend.scripts.migrate --baseline 19 --apply"
+# A populated database that predates the chain (it has ``cars`` but no
+# ``schema_migrations``): record V001 without running it, then apply the rest.
+BASELINE_V001_COMMAND = "python -m backend.scripts.migrate --baseline 1 --apply"
+# Kept as an alias. V019 re-creates objects V001 already has; since P4.2 a plain
+# ``migrate --apply`` records it without running it when that is safe (a fresh
+# build, or all 48 shared objects present) and refuses otherwise, so the old
+# unconditional ``--baseline 19`` hint is gone. See migrations/README.md.
+BASELINE_V019_COMMAND = MIGRATE_COMMAND
 
 _state_lock = threading.Lock()
 _current: bool | None = None  # None = not checked yet in this process
@@ -95,20 +99,51 @@ def applied_schema_versions(cur: Any) -> set[int] | None:
     return out
 
 
-def describe_gap(applied: set[int] | None, expected: int) -> str | None:
-    """None when ``applied`` covers 1..expected; else a one-line operator message."""
+def inventory_tables_present(cur: Any) -> bool:
+    """True when ``public.cars`` exists: a populated database, not an empty one."""
+    cur.execute("SELECT to_regclass('public.cars')")
+    row = cur.fetchone()
+    val = row[0] if row is not None and not isinstance(row, dict) else (row or {}).get("to_regclass")
+    return bool(val)
+
+
+def describe_gap(
+    applied: set[int] | None, expected: int, *, has_cars: bool | None = None
+) -> str | None:
+    """
+    None when ``applied`` covers 1..expected; else a one-line operator message.
+
+    ``has_cars`` (``to_regclass('public.cars')``, read only when there is no
+    ``schema_migrations``) picks the hint: an empty database gets the fresh
+    build (``migrate --apply``, which records V019 itself), a populated legacy
+    database gets ``--baseline 1``. None means it was not looked up.
+    """
     if applied is None:
+        if has_cars is None:
+            return (
+                "inventory Postgres has no schema_migrations table (never migrated). "
+                f"Run: {MIGRATE_COMMAND} on an empty database, or "
+                f"{BASELINE_V001_COMMAND} on a populated one"
+            )
+        if has_cars:
+            return (
+                "inventory Postgres has tables but no schema_migrations table (a legacy "
+                f"database never baselined). Run: {BASELINE_V001_COMMAND}  (records V001 "
+                "without running it, then applies V002+)"
+            )
         return (
-            "inventory Postgres has no schema_migrations table (never migrated). "
-            f"Run: {MIGRATE_COMMAND}"
+            "inventory Postgres has no schema_migrations table and no cars table (an empty "
+            f"database). Run: {MIGRATE_COMMAND}  (fresh build: V001 runs, V019 is recorded)"
         )
     missing = sorted(set(range(1, expected + 1)) - applied)
     if not missing:
         return None
     hint = MIGRATE_COMMAND
-    if 19 in missing and 18 in applied:
-        # Every existing DB built from V001 already has V019's objects.
-        hint = f"{BASELINE_V019_COMMAND}  (V019 duplicates V001; record it, then V020+ apply)"
+    if 19 in missing and 1 in applied:
+        hint = (
+            f"{MIGRATE_COMMAND}  (it records V019 without running it when the 48 objects "
+            "V019 shares with V001 exist, and refuses and names them otherwise)"
+        )
     shown = ", ".join(f"V{v:03d}" for v in missing[:8]) + (" ..." if len(missing) > 8 else "")
     return (
         f"inventory Postgres schema is behind migrations/ (at V{max(applied, default=0):03d}, "
@@ -119,6 +154,8 @@ def describe_gap(applied: set[int] | None, expected: int) -> str | None:
 def _run_auto_migrate() -> None:
     from backend.scripts import migrate
 
+    # Plain --apply is also the fresh path: on an empty database V001 runs and
+    # V019 is recorded, not run (migrate.RECORD_ONLY).
     _log.info("INVENTORY_AUTO_MIGRATE=1: applying migrations/ before the schema check")
     rc = migrate.main(["--apply"])
     if rc != 0:
@@ -144,8 +181,11 @@ def ensure_schema_current(conn: Any) -> bool:
             _run_auto_migrate()
         expected = expected_schema_version()
         cur = conn.cursor()
+        has_cars: bool | None = None
         try:
             applied = applied_schema_versions(cur)
+            if applied is None:
+                has_cars = inventory_tables_present(cur)
         finally:
             try:
                 conn.rollback()
@@ -155,7 +195,7 @@ def ensure_schema_current(conn: Any) -> bool:
                 cur.close()
             except Exception:
                 pass
-        gap = describe_gap(applied, expected)
+        gap = describe_gap(applied, expected, has_cars=has_cars)
         if gap is None:
             _current = True
             return True

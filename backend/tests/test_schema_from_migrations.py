@@ -206,7 +206,9 @@ class _FakeCursor:
 
     def execute(self, sql: str, params: Any = None) -> None:
         self.db.queries.append(sql)
-        if "to_regclass" in sql:
+        if "to_regclass('public.cars')" in sql:
+            self._rows = [("cars" if self.db.has_cars else None,)]
+        elif "to_regclass" in sql:
             self._rows = [("schema_migrations" if self.db.versions is not None else None,)]
         elif "FROM public.schema_migrations" in sql:
             self._rows = [(v,) for v in sorted(self.db.versions or ())]
@@ -224,8 +226,9 @@ class _FakeCursor:
 
 
 class _FakeConn:
-    def __init__(self, versions: set[int] | None):
+    def __init__(self, versions: set[int] | None, has_cars: bool = False):
         self.versions = versions
+        self.has_cars = has_cars
         self.queries: list[str] = []
         self.rollbacks = 0
 
@@ -284,6 +287,21 @@ def test_warn_mode_never_migrated_database(mig_dir, caplog):
     with caplog.at_level(logging.WARNING, logger=sv.__name__):
         assert sv.ensure_schema_current(_FakeConn(None)) is False
     assert "no schema_migrations table" in caplog.text
+    assert sv.MIGRATE_COMMAND in caplog.text and "--baseline" not in caplog.text
+
+
+def test_never_migrated_populated_database_gets_the_baseline_hint(mig_dir, caplog):
+    conn = _FakeConn(None, has_cars=True)
+    with caplog.at_level(logging.WARNING, logger=sv.__name__):
+        assert sv.ensure_schema_current(conn) is False
+    assert sv.BASELINE_V001_COMMAND in caplog.text
+    assert any("public.cars" in q for q in conn.queries)
+
+
+def test_cars_is_not_probed_when_schema_migrations_exists(mig_dir):
+    conn = _FakeConn({1, 2})
+    sv.ensure_schema_current(conn)
+    assert not any("public.cars" in q for q in conn.queries)
 
 
 def test_unknown_mode_reads_as_warn(mig_dir, monkeypatch):
@@ -332,11 +350,24 @@ def test_auto_migrate_failure_still_falls_back_in_warn_mode(mig_dir, monkeypatch
 def test_describe_gap_messages():
     assert sv.describe_gap({1, 2, 3}, 3) is None
     assert sv.describe_gap({1, 2, 3, 4}, 3) is None
-    assert sv.MIGRATE_COMMAND in sv.describe_gap(None, 3)
+
+    # No schema_migrations: the hint follows to_regclass('public.cars').
+    empty = sv.describe_gap(None, 3, has_cars=False)
+    assert sv.MIGRATE_COMMAND in empty and "fresh build" in empty and "--baseline" not in empty
+    legacy = sv.describe_gap(None, 3, has_cars=True)
+    assert sv.BASELINE_V001_COMMAND in legacy and "legacy" in legacy
+    unknown = sv.describe_gap(None, 3)
+    assert sv.MIGRATE_COMMAND in unknown and sv.BASELINE_V001_COMMAND in unknown
+
+    # Behind V019: plain migrate --apply records V019 itself when that is safe.
     behind_v018 = sv.describe_gap(set(range(1, 19)), 25)
-    assert sv.BASELINE_V019_COMMAND in behind_v018
+    assert sv.MIGRATE_COMMAND in behind_v018 and "records V019" in behind_v018
     assert "at V018" in behind_v018 and "expected V025" in behind_v018
-    assert sv.BASELINE_V019_COMMAND not in sv.describe_gap(set(range(1, 20)), 25)
+    assert "--baseline 19" not in behind_v018
+    past_v019 = sv.describe_gap(set(range(1, 20)), 25)
+    assert sv.MIGRATE_COMMAND in past_v019 and "V019" not in past_v019.split("Run:")[1]
+    # The old name survives as an alias of the plain command.
+    assert sv.BASELINE_V019_COMMAND == sv.MIGRATE_COMMAND
 
 
 def _fresh_init(monkeypatch, conn):
