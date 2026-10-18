@@ -1,0 +1,18 @@
+{
+ "started": "2026-10-13T14:02:56+00:00",
+ "dealers": 4,
+ "rows": 14,
+ "vin_owner_conflicts": 2,
+ "verdicts": {
+  "inaccurate": 1,
+  "ok": 1,
+  "thin": 1,
+  "error": 1
+ },
+ "http_403_429": {
+  "by_status": {
+   "403": 3,
+   "429": 1
+  }
+ }
+}

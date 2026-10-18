@@ -1,0 +1,70 @@
+{
+ "started": "2026-10-13T14:02:56+00:00",
+ "dealers": [
+  {
+   "dealer_id": "alpha-com",
+   "provider": "dealer_dot_com",
+   "rows": 6,
+   "rows_stamped": 4,
+   "active_after": 4,
+   "vin_owner_conflicts": 2,
+   "rows_new": 4,
+   "rows_used": 0,
+   "verdict": "inaccurate",
+   "reason": "discrepancies 1/4: vpic_fuel; only one condition captured (new 4, used 0)",
+   "http_first": {
+    "candidates": 100,
+    "fetched": 5,
+    "statuses": {}
+   },
+   "reconcile": {
+    "retired": 0
+   },
+   "accuracy": {
+    "rows": 4,
+    "hard": {
+     "vpic_fuel": 1
+    },
+    "hard_rows": 1,
+    "examples": {
+     "vpic_fuel": [
+      {
+       "vin": "X",
+       "why": "dealer='Plug-In Hybrid' vpic='Electric'/'PHEV (Plug-in Hybrid Electric Vehicle)'"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "dealer_id": "beta-com",
+   "provider": "dealer_on",
+   "rows": 3,
+   "rows_stamped": 3,
+   "active_after": 3,
+   "vin_owner_conflicts": 0,
+   "rows_new": 2,
+   "rows_used": 1,
+   "verdict": "ok",
+   "reason": "complete and verified",
+   "http_first": {
+    "candidates": 12,
+    "fetched": 0,
+    "statuses": {
+     "404": 12
+    }
+   },
+   "reconcile": {
+    "retired": 0
+   },
+   "accuracy": {
+    "rows": 3,
+    "hard": {
+     "vpic_model": 1
+    },
+    "hard_rows": 1,
+    "examples": {}
+   }
+  }
+ ]
+}

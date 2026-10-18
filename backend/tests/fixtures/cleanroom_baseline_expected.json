@@ -1,0 +1,143 @@
+{
+ "_meta": {
+  "what": "Hand-built expected baseline for backend/scripts/cleanroom_acceptance.py (N1.3). Every value is typed in from docs/NEXT_PHASES_PLAN_2026_10.md; none was written by the tool.",
+  "compare": "every leaf under runs.<key>.expected must equal the tool output at the same path (backend/scripts/cleanroom/expect.py); keys starting with _ are ignored",
+  "sources": {
+   "acceptance": "plan, N1.3 Acceptance list (conflicts 9,638/7,393/92; mbbeverlyhills 1,284/1,278; identity 208,233/9,610/198,623/199,457/21; dict trim 1,228/52; token color 882/60; vpic_fuel 3,585/262; AWD-vs-2WD 5,306/142; 13 page-cap walks; VDP 92,282/188,597; incomplete 34,023 and 14,345; stale index flags 4,581; cars 11,719)",
+   "plan_2_3": "plan Section 2.3 clean-room facts table (rows 199,478; 60 owners / 65 claimants; 834 error-dealer rows; the 21 retirements by dealer; verdicts; HTTP 403 63 / 429 9; vpic_fuel 261 all-PHEV dealers; VDP 140 blocked dealers, 59,523 wanted, 365 fetched, 65 statuses={})",
+   "plan_2_4": "plan Section 2.4 incomplete-listings facts (17.06% / 7.19%; local cars 214,675 active, 5.46%; F12 21,152 new or blank-condition NULL mileage, 20,613 only-gap; stale flags by code body 3,501, fuel 1,584, engine 765, trans 592, drive 202, cyl 47; 234 junk prices $10-$999)"
+  },
+  "definitions": {
+   "identity.written": "sum of triage rows_stamped (each dealer's latest run)",
+   "vdp.blocked_dealers": "fetched < 10% of candidates and >= 20 candidates; without the floor the run has 141 (oldorchardnissan-com: 12 candidates, all 404)",
+   "incomplete.mileage_split.mileage_only_gap": "cars whose only actionable code is mileage, any mileage kind (22,947 cars carry the code). Plan 2.4 attaches 20,613 to the 21,152 new-NULL cars; for those alone the only-gap count is 19,678 (= 34,023 - 14,345)",
+   "stale_index_flags.stale_codes": "index codes that no longer hold, counted over every active index row (as idxcmp.py did)"
+  }
+ },
+ "runs": {
+  "cars_cleanroom": {
+   "args": {
+    "db": "cars_cleanroom",
+    "run_dir": "workspace/cleanroom_2026_10/runs/fleet_20261013T140256Z",
+    "ref_db": "cars"
+   },
+   "expected": {
+    "conflicts": {
+     "rows": 9638,
+     "vins": 7393,
+     "pairs": 92,
+     "owners": 60,
+     "claimants": 65
+    },
+    "cf7_class_b": {
+     "mbbeverlyhills_mbontario_host": {
+      "dealer_id": "mbbeverlyhills-com",
+      "host": "www.mbontario.com",
+      "total": 1284,
+      "conflict_rows_claimant_mbontario": 1278
+     }
+    },
+    "identity": {
+     "captured": 208233,
+     "refused": 9610,
+     "written": 198623,
+     "active": 199457,
+     "inactive": 21,
+     "total_rows": 199478,
+     "rows_null_dealers_active": 834,
+     "captured_minus_refused_eq_written": true,
+     "written_plus_rows_null_active_eq_active": true
+    },
+    "retirements": {
+     "inactive_rows": 21,
+     "by_writer": {
+      "scanner.inventory_reconcile": 21,
+      "pipeline.reconcile_dealer": 0,
+      "unattributed": 0
+     },
+     "by_dealer": {
+      "terrylabontechevy-com": {"inactive_rows": 16},
+      "coastlinecdjr-com": {"inactive_rows": 3},
+      "napletonhondamortongrove-com": {"inactive_rows": 1},
+      "southcountylexus-com": {"inactive_rows": 1}
+     }
+    },
+    "parser_junk": {
+     "dict_trim": {"rows": 1228, "dealers": 52},
+     "token_color": {"rows": 882, "dealers": 60}
+    },
+    "vpic_fuel": {
+     "rows": 3585,
+     "dealers": 262,
+     "dealers_all_examples_phev": 261
+    },
+    "drivetrain_vs_vpic": {
+     "rows": 5306,
+     "dealers": 142
+    },
+    "page_cap": {
+     "cap": 40,
+     "walks": 13
+    },
+    "vdp": {
+     "fetched": 92282,
+     "wanted": 188597,
+     "fetched_pct": 48.9,
+     "blocked_dealers": 140,
+     "blocked_wanted": 59523,
+     "blocked_fetched": 365,
+     "blocked_statuses_empty": 65
+    },
+    "verdicts": {
+     "ok": 240,
+     "inaccurate": 139,
+     "thin": 51,
+     "error": 21,
+     "no_rows": 7
+    },
+    "http_403_429": {
+     "by_status": {"403": 63, "429": 9}
+    },
+    "junk_prices": {
+     "price_10_999": 234
+    },
+    "incomplete": {
+     "active": 199457,
+     "errors": 0,
+     "incomplete": 34023,
+     "incomplete_pct": 17.06,
+     "incomplete_excl_new_null_mileage": 14345,
+     "incomplete_excl_new_null_mileage_pct": 7.19,
+     "mileage_split": {
+      "new_or_blank_condition_null": 21152,
+      "mileage_only_gap": 20613
+     }
+    },
+    "stale_index_flags": {
+     "stale_cars": 4581,
+     "stale_codes": {
+      "body_style": 3501,
+      "fuel_type": 1584,
+      "engine": 765,
+      "transmission": 592,
+      "drivetrain": 202,
+      "cylinders": 47
+     }
+    }
+   }
+  },
+  "cars": {
+   "args": {
+    "db": "cars"
+   },
+   "expected": {
+    "incomplete": {
+     "active": 214675,
+     "errors": 0,
+     "incomplete": 11719,
+     "incomplete_pct": 5.46
+    }
+   }
+  }
+ }
+}

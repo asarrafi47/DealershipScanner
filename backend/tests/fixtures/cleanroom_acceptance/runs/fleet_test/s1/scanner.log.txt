@@ -1,0 +1,2 @@
+2026-10-13 11:01:11 [INFO] scanner: Recipe fetch [Gamma Honda]: 452 unique VIN(s) from 40 page(s) via https://gamma.com/search/
+2026-10-13 11:02:11 [WARNING] scanner: fetch https://unknown-host.example/x returned HTTP 403
