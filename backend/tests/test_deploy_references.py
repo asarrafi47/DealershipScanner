@@ -18,6 +18,7 @@ deletes the k8s-era manifests (D-IF9).
 
 from __future__ import annotations
 
+import json
 import re
 import shlex
 import shutil
@@ -231,9 +232,19 @@ def test_dockerfile_scripts_exist(dockerfile):
 
 
 def test_railway_configs_name_existing_dockerfiles():
+    # Since N4.1 the expected Railway settings live in deploy/railway/service_settings.json
+    # (config-as-code files are gone); any railway.* file that comes back is checked too.
+    settings = json.loads((REPO_ROOT / "deploy" / "railway" / "service_settings.json").read_text())
+    builds = [
+        (f"service_settings.json:{name}", entry["serviceInstance"]["dockerfilePath"])
+        for name, entry in settings["services"].items()
+    ]
     configs = [REPO_ROOT / "railway.toml", *sorted((REPO_ROOT / "deploy" / "railway").glob("railway.*"))]
     for config in configs:
         if not config.is_file():
             continue
         for path in re.findall(r"""dockerfilePath["']?\s*[=:]\s*["']([^"']+)["']""", config.read_text()):
-            assert (REPO_ROOT / path).is_file(), f"{config.name} builds missing {path}"
+            builds.append((config.name, path))
+    assert builds, "expected at least one Railway service build to check"
+    for source, path in builds:
+        assert (REPO_ROOT / path).is_file(), f"{source} builds missing {path}"
