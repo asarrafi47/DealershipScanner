@@ -1008,7 +1008,7 @@ P4.4 is dropped: P0A.2 found 0 duplicate groups.
   - Two dealership page requests at the current schema ran 0 CREATE/ALTER/DROP statements.
   - After the commit, the scanner connection's lock_timeout is back to the default. Before the fix it stayed at 3s.
 - P4.4: DROPPED (0 duplicate groups, P0A.2).
-- P4.3b (follow-up; the owner took the recommended answers to asks 1 and 3): DONE on `unit/P4.3b`, cut from `8fcc2e5a1`.
+- P4.3b (follow-up; the owner took the recommended answers to asks 1 and 3): DONE, merged `fb28834cd`. Review: 1 round, approve, 5 nits carried: four doc and hint wordings, plus the workspace packs' old V026 checksum, which the integrator updated.
   - V026 no longer sets its own `SET LOCAL lock_timeout`, so `migrate --lock-timeout` governs it. New checksum `sha256:3a037d82…e6f6`. Before the change, read-only: `cars`, `cars_cleanroom`, `cars_cr_rooftops` and `cars_cr_test` were at 25 with no V026 row, and no other local database has `schema_migrations`.
   - migrate refuses `--apply` on `cars_cleanroom` (exit 2, before any lock or write; every write transaction re-checks `current_database()`). A dry run there still reports, and `cars_cr_*` scratch copies migrate.
   - Also: the `MIGRATE_LOCK_KEY` comment now says 7883946363647714609, and the RELEASING.md Migrations section describes `--target`, the target log line, the lock flags and the refusal.
