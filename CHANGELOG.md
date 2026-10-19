@@ -40,15 +40,18 @@
   - `test_css_url_filter.py` (P3.5): injection payloads, byte-identical CDN URLs, the
     template scan, and node-backed checks of the two JS helpers;
   - `test_username_email_collision.py` (P3.1);
-  - `test_admin_onboard_paused.py` (N3.10);
+  - `test_admin_onboard_paused.py` (N3.10, N3.10b): every paused endpoint answers 409 and
+    records zero `dealer_jobs` INSERTs through the real `enqueue_job`; no paused control
+    is drawn;
   - `test_security_master_todo.py` (P3.9): the Summary table must match the row
     statuses, and every row needs its required fields.
 - Existing tests extended: `test_client_ip`, `test_outbound_url`,
   `test_outbound_url_dns`, `test_safe_listing_url`, `test_google_oauth`,
   `test_apple_oauth`, `test_password_reset`, `test_production_security`,
   `test_web_researcher`, `test_car_chat_policy` and `test_requirements_hygiene`.
+  `test_dealer_onboard_api`'s two route tests now expect 409 (N3.10b).
 - `docs/ops_log/N3.10.md` (N3.10): the local `dealer_jobs` count, read-only (0 rows on
-  `cars`). Prod was not read.
+  `cars`). Prod was not read. N3.10b adds its notes there.
 
 ### Changed
 - `WebResearcher` is HTTP-only by default (P3.8, D-SEC1 (a)). `allow_browser=False`
@@ -64,8 +67,18 @@
   "Onboarding is paused; use dealer-discovery (see P15A.3)" and enqueues nothing (N3.10).
   No worker has consumed `dealer_jobs` since the worker and scheduler were deleted on
   2026-10-08. The template shows that line as plain text in place of the "Add & scan"
-  form. Existing jobs are left alone. The Find-dealers "Request scrape" path and the
-  retry endpoints still enqueue (a review follow-up, recorded for the orchestrator).
+  form. Existing jobs are left alone.
+- The other web paths that queued `dealer_jobs` are paused too (N3.10b, D-IF3 (a)). Find
+  dealers "Request scrape" (`POST /api/admin/dealer-onboard`) and the hub's Restart and
+  Smart restart (`POST /api/admin/dealer-jobs/<id>/retry` and `.../smart-retry`) answer a
+  site admin with 409 `{"ok": false, "error": "onboarding_paused", "message": "Onboarding
+  is paused; use dealer-discovery (see P15A.3)"}`. The check runs before rate limiting,
+  URL validation and diagnosis, and nothing is enqueued. Non-admins still get 403.
+  - Find dealers draws no "Request scrape" button and shows site admins the paused line
+    once in its header. The hub draws no Restart buttons.
+  - The line and a `QUEUE_ONBOARDING_PAUSED` constant (not an env knob) live in the new
+    `backend/dealer/admin/onboarding_paused.py`. The queue functions and the handler
+    bodies stay for P15A.3.
 - `scripts/security_check.sh` (P15B.1) runs
   `pip-audit -r requirements.txt -r requirements-scanner.txt` with no `--ignore-vuln`. It
   accepts `PIP_AUDIT=<path>` and also runs `test_requirements_hygiene.py`.
