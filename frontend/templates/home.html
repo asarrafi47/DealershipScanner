@@ -96,7 +96,8 @@
                                 <p class="reco-card-title">{{ car.title }}</p>
                                 {% if car.trim %}<p class="reco-card-trim">{{ car.trim }}</p>{% endif %}
                                 <p class="reco-card-price">{% if car.price %}${{ "{:,.0f}".format(car.price) }}{% else %}Call for Price{% endif %}</p>
-                                <p class="reco-card-meta">{{ "{:,}".format(car.mileage) if car.mileage else '—' }} mi &middot; {{ car.fuel_type or '' }}</p>
+                                {# D-N12: no mileage text on a New car with no odometer value (here and on the saved / history cards). #}
+                                <p class="reco-card-meta">{% if not car.mileage_line_hidden %}{{ "{:,}".format(car.mileage) if car.mileage else '—' }} mi &middot; {% endif %}{{ car.fuel_type or '' }}</p>
                             </div>
                         </a>
                         {% endfor %}
@@ -126,7 +127,7 @@
                         <p class="saved-title">{{ car.title }}</p>
                         {% if car.trim %}<p class="saved-trim">{{ car.trim }}</p>{% endif %}
                         <p class="saved-price">{% if car.price %}${{ "{:,.0f}".format(car.price) }}{% else %}Call for Price{% endif %}</p>
-                        <p class="saved-meta">{{ "{:,}".format(car.mileage) if car.mileage else '—' }} mi{% if car.fuel_type %} &middot; {{ car.fuel_type }}{% endif %}</p>
+                        <p class="saved-meta">{% if car.mileage_line_hidden %}{{ car.fuel_type or '' }}{% else %}{{ "{:,}".format(car.mileage) if car.mileage else '—' }} mi{% if car.fuel_type %} &middot; {{ car.fuel_type }}{% endif %}{% endif %}</p>
                     </div>
                 </a>
                 {% endfor %}
@@ -154,7 +155,7 @@
                         <p class="saved-title">{{ car.title }}</p>
                         {% if car.trim %}<p class="saved-trim">{{ car.trim }}</p>{% endif %}
                         <p class="saved-price">{% if car.price %}${{ "{:,.0f}".format(car.price) }}{% else %}Call for Price{% endif %}</p>
-                        <p class="saved-meta">{{ "{:,}".format(car.mileage) if car.mileage else '—' }} mi{% if car.fuel_type %} &middot; {{ car.fuel_type }}{% endif %}</p>
+                        <p class="saved-meta">{% if car.mileage_line_hidden %}{{ car.fuel_type or '' }}{% else %}{{ "{:,}".format(car.mileage) if car.mileage else '—' }} mi{% if car.fuel_type %} &middot; {{ car.fuel_type }}{% endif %}{% endif %}</p>
                     </div>
                 </a>
                 {% endfor %}
@@ -184,7 +185,7 @@
                         <p class="saved-title">{{ car.title }}</p>
                         {% if car.trim %}<p class="saved-trim">{{ car.trim }}</p>{% endif %}
                         <p class="saved-price">{% if car.price %}${{ "{:,.0f}".format(car.price) }}{% else %}Call for Price{% endif %}</p>
-                        <p class="saved-meta">{{ "{:,}".format(car.mileage) if car.mileage else '—' }} mi{% if car.fuel_type %} &middot; {{ car.fuel_type }}{% endif %}</p>
+                        <p class="saved-meta">{% if car.mileage_line_hidden %}{{ car.fuel_type or '' }}{% else %}{{ "{:,}".format(car.mileage) if car.mileage else '—' }} mi{% if car.fuel_type %} &middot; {{ car.fuel_type }}{% endif %}{% endif %}</p>
                     </div>
                 </a>
                 {% endfor %}

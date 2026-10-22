@@ -106,8 +106,12 @@ def apply_display_names(
 
 
 def apply_mileage_not_listed(out: dict[str, Any], c: dict[str, Any]) -> None:
-    from backend.utils.mileage_display import mileage_not_listed
+    """DC-6 "Mileage not listed" vs a figure, and D-N12 no mileage line at all."""
+    from backend.utils.mileage_display import mileage_line_hidden, mileage_not_listed
 
     out["mileage_not_listed"] = mileage_not_listed(
+        c.get("mileage"), condition=out.get("condition"), is_cpo=c.get("is_cpo"), year=c.get("year")
+    )
+    out["mileage_line_hidden"] = mileage_line_hidden(
         c.get("mileage"), condition=out.get("condition"), is_cpo=c.get("is_cpo"), year=c.get("year")
     )

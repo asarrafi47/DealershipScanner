@@ -73,6 +73,7 @@ ORACLES: tuple[tuple[str, str], ...] = (
     ("backend.utils.field_clean", "normalize_body_style_for_car"),
     ("backend.utils.market_price", "is_payment_shaped_price"),
     ("backend.utils.mileage_display", "mileage_not_listed"),
+    ("backend.utils.mileage_display", "mileage_line_hidden"),
     ("backend.enrichment.knowledge_engine", "lookup_epa_master_by_id"),
     ("backend.enrichment.knowledge_engine", "lookup_vpic_from_cache"),
     ("backend.intelligence.deal_score_cache", "public_deal_score"),

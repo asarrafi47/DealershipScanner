@@ -92,7 +92,8 @@
                     <div class="lps-car-img" style="background-image:url('{{ img or '/static/placeholder.svg' }}')"></div>
                     <div class="lps-car-body">
                         <p class="lps-car-title">{{ car.title }}</p>
-                        <p class="lps-car-meta">{% if car.trim and car.trim != '—' %}{{ car.trim }} &middot; {% endif %}{{ "{:,}".format(car.mileage) if car.mileage else '—' }} mi{% if car.dealer_name and car.dealer_name != '—' %} &middot; {{ car.dealer_name }}{% endif %}</p>
+                        {# D-N12: no mileage text on a New car with no odometer value. #}
+                        <p class="lps-car-meta">{% set _sep = joiner(' &middot; ' | safe) %}{% if car.trim and car.trim != '—' %}{{ _sep() }}{{ car.trim }}{% endif %}{% if not car.mileage_line_hidden %}{{ _sep() }}{{ "{:,}".format(car.mileage) if car.mileage else '—' }} mi{% endif %}{% if car.dealer_name and car.dealer_name != '—' %}{{ _sep() }}{{ car.dealer_name }}{% endif %}</p>
                         <p class="lps-car-price">{% if car.price %}${{ "{:,.0f}".format(car.price) }}{% else %}Call for Price{% endif %}</p>
                     </div>
                 </a>
