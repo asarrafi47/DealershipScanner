@@ -1028,7 +1028,7 @@
    "vin": "1FTFW1E50NFA00012"
   },
   {
-   "missing_fields_json": "[\"price\", \"year\", \"make\", \"model\", \"trim\", \"mileage\", \"engine\", \"transmission\", \"drivetrain\", \"body_style\", \"fuel_type\", \"condition\", \"cylinders\", \"exterior_color\"]",
+   "missing_fields_json": "[\"price\", \"year\", \"make\", \"model\", \"trim\", \"engine\", \"transmission\", \"drivetrain\", \"body_style\", \"fuel_type\", \"condition\", \"cylinders\", \"exterior_color\"]",
    "vin": "1FTFW1E50NFA00013"
   },
   {

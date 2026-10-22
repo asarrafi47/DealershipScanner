@@ -46,7 +46,9 @@ def test_compare_mileage_cell():
     assert _fmt_mileage({"mileage": 0, "condition": "Used", "year": 2011}) == "Mileage not listed"
     assert _fmt_mileage({"mileage": 0, "mileage_not_listed": False}) == "0 mi"
     assert _fmt_mileage({"mileage": 12000, "condition": "Used", "year": 2020}) == "12,000 mi"
-    assert _fmt_mileage({"mileage": None}) == "Mileage not listed"
+    # D-N12 (N2.4): a NULL odometer reads "not listed" only on a used / CPO car;
+    # with no condition at all the cell is the empty dash (test_mileage_line_d_n12).
+    assert _fmt_mileage({"mileage": None, "condition": "Used"}) == "Mileage not listed"
 
 
 def test_hero_location_line(monkeypatch):

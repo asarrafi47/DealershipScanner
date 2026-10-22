@@ -16,6 +16,7 @@ from typing import Any
 from backend.enrichment.knowledge_engine import prepare_car_detail_context
 from backend.utils.car_serialize import DISPLAY_DASH, serialize_car_for_api
 from backend.utils.in_transit import vehicle_is_in_transit
+from backend.utils.mileage_display import is_used_or_certified, odometer_absent
 
 # Human labels for ``listing_missing_field_codes`` / ``incomplete_missing_fields`` (dev UI + summaries).
 INCOMPLETE_FIELD_LABELS: dict[str, str] = {
@@ -117,21 +118,43 @@ def _cylinders_display_missing(car: dict[str, Any], verified_specs: dict[str, An
 
 
 def _is_used_or_certified(car_raw: dict[str, Any]) -> bool:
-    cond = str(car_raw.get("condition") or "").strip().lower()
-    if car_raw.get("is_cpo") in (1, True, "1"):
-        return True
-    return any(tok in cond for tok in ("used", "certif", "pre-owned", "preowned", "pre owned", "cpo", "carbravo"))
+    # One definition for the index and the page (D-N12): mileage_display owns it.
+    return is_used_or_certified(car_raw.get("condition"), car_raw.get("is_cpo"))
 
 
 def _mileage_blank(car_raw: dict[str, Any]) -> bool:
-    """Missing when NULL / empty, and on used / certified rows also when 0: the
-    parsers used to default an absent odometer to 0 and 1,307 used rows read as
-    "0 mi" (F12 2026-09-28). 0 stays valid on New rows (car.html shows 0 mi)."""
+    """Missing mileage is a used / certified problem only.
+
+    * Used / certified (``_is_used_or_certified``): NULL, empty and 0 are all
+      missing. The parsers used to default an absent odometer to 0 and 1,307 used
+      rows read as "0 mi" (F12 2026-09-28).
+    * Anything else (not CPO, and a raw condition with no used / certified
+      token: New, blank, or another value such as GM's ``ctp`` courtesy
+      transport or ``demo``): a NULL / empty odometer is not a gap (IL-01,
+      owner decision D-N12 2026-10-18). New-car feeds routinely omit it;
+      flagging it marked 21,152 active new or blank-condition cars incomplete
+      in the 10-13 clean-room scan, and production hides indexed incomplete
+      cars. 0 is not a gap here either (it was not before IL-01).
+
+    The rule reads the RAW condition. A blank raw condition is normally flagged
+    under ``condition`` instead, but the serializer can derive a display
+    condition for it from the title, source URL or model year (e.g. "Used" from
+    a title starting "Used ...", "Pre-Owned" when year < 2024); a derived used /
+    pre-owned condition means neither code fires and the page shows a pre-owned
+    car with "Mileage not listed" (all 118 blank-condition NULL-odometer rows in
+    cars_cleanroom on 2026-10-18: 116 derive "Used", 2 "Pre-Owned"; the N2.1
+    acceptance keys on the raw condition).
+
+    Display: ``mileage_display.mileage_line_hidden`` (same predicate, fed the
+    condition the page shows) drops the mileage line on the grid card, the car
+    page and the compare cell when the odometer is absent on a car that is not
+    used / certified and not older than last model year; a current New car at
+    0 still shows "0 mi".
+
+    A value that is present but unparseable stays missing on every row."""
     m = car_raw.get("mileage")
-    if m is None:
-        return True
-    if isinstance(m, str) and not str(m).strip():
-        return True
+    if odometer_absent(m):
+        return _is_used_or_certified(car_raw)
     try:
         n = int(float(str(m).replace(",", "")))
     except (TypeError, ValueError):

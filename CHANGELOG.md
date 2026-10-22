@@ -181,6 +181,74 @@
   gone, `pip-audit -r requirements.txt` with no ignores reports 0 vulnerabilities across
   99 dependencies (it found 9 in 3 packages before).
 
+## [1.5.7] - 2026-10-22
+
+### Added
+- `backend/scripts/repair_new_null_mileage_index.py` (N2.2, IL-02): a targeted repair of
+  the incomplete-listings index for the F12 class, so the owner can fix prod's index
+  without a full rebuild. It takes the `mileage` code off the index rows of active,
+  non-used cars with a NULL or empty odometer. Rows are selected through the N2.1 rule
+  itself (`_mileage_blank`, imported, not copied), in keyset batches of 1,000. Every other
+  stored code is kept. A row left with no codes is deleted, so its car shows on the grid
+  again. `--dry-run` is the default: it opens a read-only session and prints
+  `repair_rows`, plus `census_il02_shape`, which counts the same rows the way the N1.6
+  census does. `--apply` needs a new `--backup-file`, which gets each batch's original
+  rows as CSV, fsynced before the batch is written. On Postgres it also needs
+  `--expect-db` equal to `current_database()`. Writes are compare-and-set on the text that
+  was read, so a row another writer changed in the meantime is left alone and counted.
+  Results on a `cars_cleanroom` copy: the dry run found 21,152 rows, equal to the class
+  count. The apply deleted 18,965 rows and updated 2,187, leaving 0 to repair. The
+  slowest batch took 0.06 s. `backend/tests/test_repair_new_null_mileage_index.py`
+  (SQLite) covers selection through the imported rule, batching, the read-only dry run,
+  every refusal (no backup file, an existing one, a missing directory, and the target
+  check), the apply, a byte-exact restore and the concurrent-change case.
+
+### Changed
+- `frontend/templates/car.html` (owner decision D-N12): a New, non-CPO car with no
+  odometer figure now shows no mileage line in the headline, "At a glance" and the spec
+  sheet. Used and CPO cars still show "Mileage not listed", and a current New car at 0
+  still shows "0 mi". N2.4 (below) carries the rule to the other surfaces.
+- D-N12 on every surface (N2.4): `backend/utils/mileage_display.py` gains
+  `mileage_line_hidden`, true for a car with no odometer value (NULL or empty) that is
+  not used or certified, unless its model year is older than last year.
+  `serialize_car_for_api` and `serialize_car_for_listings_grid` send it as
+  `mileage_line_hidden`. The grid card (`frontend/static/listings/card.js`), the car page,
+  the home and landing cards (`frontend/templates/home.html`, `landing.html`) print no
+  mileage for such a car, and the compare cell (`backend/utils/compare_specs.py`) prints
+  the empty-cell dash. `is_used_or_certified` moved from `listing_completeness.py` into
+  `mileage_display.py`, so the index and the page share one predicate (the index passes
+  the raw condition, the page the displayed one). Change from N2.1's car page: a "new"
+  car older than last model year at 0 or NULL keeps "Mileage not listed", because the
+  New label is the doubtful part (on `cars_cleanroom` 59 at NULL and 543 at 0; on `cars`
+  46 at 0). New tests: `backend/tests/test_mileage_line_d_n12.py` and
+  `backend/tests/js/listings_card_mileage.test.js`.
+  `backend/tests/fixtures/serialize_car_for_api_golden.json.gz` is re-recorded for the
+  new key: of 8,000 outputs, none differs beyond it.
+- `backend/tests/test_mileage_zero_f12.py`: new cases for New/NULL, CPO/NULL, Used/0,
+  Used/NULL and blank-condition/NULL, at the rule, listing-code and car-page levels. The
+  rule change forced two expectations to change: one assertion in
+  `backend/tests/test_cleanroom_acceptance.py` (a NULL odometer on a New car is no longer
+  coded) and one line in `backend/tests/fixtures/upsert_vehicles_golden_expected.json`
+  (VIN `...00013` drops `mileage`).
+- `docs/NEXT_PHASES_PLAN_2026_10.md`: N2 unit status and measured numbers.
+- `docs/NEXT_PHASES_PLAN_2026_10.md`: N1.11 batches 2 and 3 done (resumed 2026-10-22 after the 10-19 pause). 58 more missing rooftops are profiled and staged for N8.9 (133/133 profiles valid), including 14 outside the 22 roster states under the owner's 2026-10-18 D-N4 answer; nothing was written to `cars` or `cars_cleanroom`. New unit N8.14 owns shared-host dealer identity (the 22 AutoSavvy stores on one host, Ted Russell Ford Parkside), and N8.9 must not apply a `shared_host` roster entry before it.
+- `docs/NEXT_PHASES_PLAN_2026_10.md`: N1.11 marked DONE. All 75 queued missing rooftops are profiled (63 DONE, 2 REPAIR_EXISTING, 10 BLOCKED_SCANNER) and staged for N8.9; nothing was written to `cars`.
+
+### Fixed
+- `backend/utils/listing_completeness.py` `_mileage_blank` (N2.1, IL-01, owner decision
+  D-N12): a NULL or empty odometer now counts as missing only on a used or certified car
+  (a used/certified token in the raw condition, or `is_cpo`). New, blank-condition and
+  other non-used cars (`ctp`, `demo`) with no odometer value no longer get the `mileage`
+  code. Used cars at 0 or NULL keep it. Production hides cars that the index marks
+  incomplete, so the old rule kept New cars with no odometer value off the grid. The
+  stale code sits on 21,152 active cars in the 10-13 clean-room scan and on 28,983 in the
+  10-04 prod dump; it is the only code on 18,965 and 27,423 of them. On `cars_cleanroom`
+  the `mileage` code drops from 22,947 cars to 1,795 (1,374 used at 0 mi plus 421 used
+  with NULL), and the incomplete count drops from 34,023 to 14,345. `cars` stays at 11,719,
+  because it has no active cars with a NULL odometer. The rule reads the raw condition:
+  118 blank-condition `cars_cleanroom` rows that the page displays as Used now count as
+  complete for mileage. None of these are in the prod class.
+
 ## [1.5.6] - 2026-10-18
 
 ### Fixed

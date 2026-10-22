@@ -36,6 +36,16 @@
     }
 
     /**
+     * D-N12: a New, non-CPO card with no odometer value prints no mileage at all.
+     * The server decides (backend/utils/mileage_display.mileage_line_hidden, the
+     * predicate the incomplete-listings index uses); there is no JS copy of the
+     * rule, so a row without the flag keeps the "Mileage not listed" wording.
+     */
+    function cardMileageLineHidden(car) {
+        return !!car && car.mileage_line_hidden === true;
+    }
+
+    /**
      * One result card's markup.
      *
      * @param c          car row (API shape)
@@ -59,11 +69,14 @@
             return !s || s === "—" || s === "-" || s === "--";
         };
         // Condition leads the meta line (IH-02); a 0/blank odometer on a used or
-        // older car is "Mileage not listed", never "0 mi" (DC-6 / IH-03).
+        // older car is "Mileage not listed", never "0 mi" (DC-6 / IH-03), and a
+        // New car with no odometer value has no mileage bit at all (D-N12).
         const metaBits = [
             `<span class="result-condition">${SC.escapeHtml(cardConditionToken(c))}</span>`,
-            cardMileageNotListed(c) ? "Mileage not listed" : `${SC.fmt(c.mileage)} mi`,
         ];
+        if (!cardMileageLineHidden(c)) {
+            metaBits.push(cardMileageNotListed(c) ? "Mileage not listed" : `${SC.fmt(c.mileage)} mi`);
+        }
         if (!dashLike(c.fuel_type)) metaBits.push(SC.escapeHtml(c.fuel_type));
         if (!dashLike(c.drivetrain)) metaBits.push(SC.escapeHtml(c.drivetrain));
         const specBits = [];
@@ -188,6 +201,7 @@
 
     DSL.cardConditionToken = cardConditionToken;
     DSL.cardMileageNotListed = cardMileageNotListed;
+    DSL.cardMileageLineHidden = cardMileageLineHidden;
     DSL.renderCardHtml = renderCardHtml;
     DSL.cssSingleQuotedUrl = cssSingleQuotedUrl;
 })(window);

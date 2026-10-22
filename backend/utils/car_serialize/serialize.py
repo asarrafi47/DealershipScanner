@@ -489,9 +489,13 @@ def serialize_car_for_listings_grid(
     # NOT derived from out["condition"], which can read "Certified" (no "Pre-Owned") for some
     # rows even when is_cpo=1, which would disagree with the SQL-side filter.
     out["is_cpo"] = c.get("is_cpo") in (1, True, "1")
-    from backend.utils.mileage_display import mileage_not_listed
+    from backend.utils.mileage_display import mileage_line_hidden, mileage_not_listed
 
     out["mileage_not_listed"] = mileage_not_listed(
+        c.get("mileage"), condition=out.get("condition"), is_cpo=out["is_cpo"], year=c.get("year")
+    )
+    # D-N12: the card prints no mileage at all (card.js reads this flag).
+    out["mileage_line_hidden"] = mileage_line_hidden(
         c.get("mileage"), condition=out.get("condition"), is_cpo=out["is_cpo"], year=c.get("year")
     )
     # Whether this listing has a vehicle-history (Carfax/AutoCheck) report linked.
