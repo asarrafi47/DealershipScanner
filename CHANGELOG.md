@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [1.5.7] - 2026-10-22
+
 ### Added
 - `backend/scripts/repair_new_null_mileage_index.py` (N2.2, IL-02): a targeted repair of
   the incomplete-listings index for the F12 class, so the owner can fix prod's index
