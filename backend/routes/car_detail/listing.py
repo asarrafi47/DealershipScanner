@@ -44,6 +44,17 @@ def registry_dealer_info(car_raw: dict) -> dict | None:
     return dealer_info
 
 
+def inventory_last_checked(car_raw: dict) -> str | None:
+    """The dealer's "Inventory last checked <date>" (N3.11), or ``None`` to hide it.
+
+    The dealer's newest scrape, not this row's: the line is about the rooftop's
+    inventory, and it reads the same on the dealer page.
+    """
+    from backend.utils.inventory_last_checked import dealer_last_checked_label
+
+    return dealer_last_checked_label(car_raw.get("dealer_id"))
+
+
 def apply_attribution_overlay(car_id: int, car: dict):
     """What this listing's own photographs say about where the car actually is.
 

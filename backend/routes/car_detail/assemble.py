@@ -18,6 +18,7 @@ def assemble_view_context(
     car_is_saved: bool,
     listing_incomplete_fields: list,
     dealer_info: dict | None,
+    inventory_last_checked: str | None,
     attribution_fields: dict,
     dealer_map,
     market_intel,
@@ -91,4 +92,7 @@ def assemble_view_context(
         "dealer_info": dealer_info,
         "dealer_map": dealer_map,
         "location_attribution": attribution_fields or None,
+        # "Inventory last checked <date>" (N3.11; None hides the line). Last so the
+        # historical key order above is unchanged; same key on dealership.html.
+        "inventory_last_checked": inventory_last_checked,
     }
