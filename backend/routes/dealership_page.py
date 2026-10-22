@@ -804,6 +804,7 @@ def dealership_research_page(dealer_key: str):
                 is_hidden = False
 
     from backend.listings.routes import pack_car_rows
+    from backend.utils.inventory_last_checked import dealer_last_checked_label
 
     facets = (inventory or {}).get("facets") or {}
 
@@ -833,6 +834,8 @@ def dealership_research_page(dealer_key: str):
         nav_waze_url=waze_url,
         inventory=inventory
         or {"total": 0, "new_count": 0, "used_count": 0, "unconfirmed_count": 0, "cars": []},
+        # "Inventory last checked <date>" (N3.11): None hides the line. Same key on car.html.
+        inventory_last_checked=dealer_last_checked_label(dealer_id),
         specials=specials,
         review_summary=reviews_data["summary"],
         reviews=reviews_data["reviews"],

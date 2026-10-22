@@ -6,7 +6,7 @@ import sys
 from typing import Any
 from urllib.parse import urlparse
 
-from backend.db.repositories.base_repo import db_conn
+from backend.db.repositories.base_repo import _placeholders, db_conn
 from backend.db.repositories.schema_repo import ensure_scan_runs_table
 
 _log = logging.getLogger(__name__)
@@ -115,6 +115,38 @@ def list_scan_runs(*, dealer_id: str | None = None, limit: int = 50) -> list[dic
             )
         rows = [dict(r) for r in cur.fetchall()]
     return rows
+
+
+def dealer_last_scraped_at(dealer_id: str | None) -> str | None:
+    """Newest ``cars.scraped_at`` over one dealer's rows (active or not), or ``None``.
+
+    The "Inventory last checked" line on the dealer and car pages (N3.11). One
+    read per page, served by ``idx_cars_dealer_listing`` (``dealer_id`` leads it,
+    on both backends). ``scraped_at`` is TEXT on both backends and the scanner
+    writes it as ``isoformat() + "Z"``, so MAX over the strings is MAX over time.
+    The key and its lower-case form both match, as in ``cards_for_dealer``, so a
+    dealer page opened with a mixed-case key finds the same rows as its grid.
+    """
+    did = str(dealer_id or "").strip()
+    if not did:
+        return None
+    variants = tuple(sorted({did, did.lower()}))
+    try:
+        with db_conn() as conn:
+            cur = conn.cursor()
+            cur.execute(
+                f"SELECT MAX(scraped_at) FROM cars WHERE dealer_id IN ({_placeholders(variants)})",
+                variants,
+            )
+            row = cur.fetchone()
+    except sqlite3.OperationalError as ex:
+        # Same carve-out as get_car_by_id: an uninitialised SQLite file has no
+        # cars table, so it has no scan date either. Anything else is a real error.
+        if "no such table" not in str(ex).lower():
+            raise
+        return None
+    value = row[0] if row else None
+    return str(value) if value else None
 
 
 def link_cars_to_dealership_registry(

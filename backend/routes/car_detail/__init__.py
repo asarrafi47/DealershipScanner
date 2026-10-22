@@ -7,6 +7,7 @@ short orchestrator that calls these steps in the original order:
 * :mod:`.viewer`          — record the view, saved-car flag
 * :mod:`.sticker`         — window-sticker eligibility / URLs / rendered status
 * :mod:`.listing`         — serialize the car, incomplete fields, registry dealer,
+                             the dealer's "inventory last checked" date,
                              attribution + sticker-fact (MSRP / color) overlays
 * :mod:`.insights`        — market price + deal score (paid), trim ladder, rarity
 * :mod:`.location`        — dealer map, hero location line
