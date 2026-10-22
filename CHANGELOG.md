@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 ### Changed
+- `docs/NEXT_PHASES_PLAN_2026_10.md`: N1.11 batches 2 and 3 done (resumed 2026-10-22 after the 10-19 pause). 58 more missing rooftops are profiled and staged for N8.9 (133/133 profiles valid), including 14 outside the 22 roster states under the owner's 2026-10-18 D-N4 answer; nothing was written to `cars` or `cars_cleanroom`. New unit N8.14 owns shared-host dealer identity (the 22 AutoSavvy stores on one host, Ted Russell Ford Parkside), and N8.9 must not apply a `shared_host` roster entry before it.
 - `docs/NEXT_PHASES_PLAN_2026_10.md`: N1.11 marked DONE. All 75 queued missing rooftops are profiled (63 DONE, 2 REPAIR_EXISTING, 10 BLOCKED_SCANNER) and staged for N8.9; nothing was written to `cars`.
 
 ## [1.5.6] - 2026-10-18
