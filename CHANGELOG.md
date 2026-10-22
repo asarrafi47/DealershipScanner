@@ -31,6 +31,22 @@
   shows a plain notice line. A password login as that same account, on the web form or
   `api_auth_login`, links the sub, marks the email verified and clears the key. Another
   account, an expired entry or a changed email links nothing.
+- "Inventory last checked <date>" line on the dealer page and the car page (N3.11, D-N19).
+  - `<date>` is the newest `cars.scraped_at` over the dealer's rows, printed in UTC in
+    the first-seen line's shape ("Sep 28, 2026"). The car page shows its dealer's date,
+    not its own row's.
+  - The line is hidden when that date is under 48 hours old against the current UTC
+    time, and when no date is on file. A failed read hides the line and logs a warning;
+    it never fails the page.
+  - One query per page view: `dealers_repo.dealer_last_scraped_at` (re-exported from
+    `inventory_db`), `SELECT MAX(scraped_at)` over the key and its lower-case form,
+    served by `idx_cars_dealer_listing` on both backends. The rule is in the new
+    `backend/utils/inventory_last_checked.py`.
+  - Context key `inventory_last_checked` on both pages. On the car page it is the last
+    key of `assemble_view_context`, so `GET /api/cars/<id>` carries it too.
+  - Markup: one `<p>` with an existing muted-text class (`dealer-inventory__unconfirmed`
+    under the dealer page's inventory counts, `car-detail-location-note` under the car
+    page's dealer name). No new CSS, no container, no inline style.
 - New tests:
   - `test_csp_policy.py` (P3.4): exact script and connect sources, the headers on a real
     response, and no frontend file loading a cross-origin script;
@@ -44,7 +60,10 @@
     records zero `dealer_jobs` INSERTs through the real `enqueue_job`; no paused control
     is drawn;
   - `test_security_master_todo.py` (P3.9): the Summary table must match the row
-    statuses, and every row needs its required fields.
+    statuses, and every row needs its required fields;
+  - `test_last_checked_line.py` (N3.11, 25 tests): the 48 h rule, the repo read and its
+    SQLite query plan, both states on both pages, the markup (no container element), and
+    a Postgres check on a throwaway `pytest_*` database gated on `LAST_CHECKED_PG_DSN`.
 - Existing tests extended: `test_client_ip`, `test_outbound_url`,
   `test_outbound_url_dns`, `test_safe_listing_url`, `test_google_oauth`,
   `test_apple_oauth`, `test_password_reset`, `test_production_security`,
