@@ -26,10 +26,23 @@
 - `frontend/templates/car.html` (owner decision D-N12): a New, non-CPO car with no
   odometer figure now shows no mileage line in the headline, "At a glance" and the spec
   sheet. Used and CPO cars still show "Mileage not listed", and a current New car at 0
-  still shows "0 mi". The grid card (`frontend/static/listings/card.js` via
-  `backend/utils/mileage_display.py`) and the compare cell
-  (`backend/utils/compare_specs.py`) still print "Mileage not listed" for these cars. No
-  unit owns those files yet.
+  still shows "0 mi". N2.4 (below) carries the rule to the other surfaces.
+- D-N12 on every surface (N2.4): `backend/utils/mileage_display.py` gains
+  `mileage_line_hidden`, true for a car with no odometer value (NULL or empty) that is
+  not used or certified, unless its model year is older than last year.
+  `serialize_car_for_api` and `serialize_car_for_listings_grid` send it as
+  `mileage_line_hidden`. The grid card (`frontend/static/listings/card.js`), the car page,
+  the home and landing cards (`frontend/templates/home.html`, `landing.html`) print no
+  mileage for such a car, and the compare cell (`backend/utils/compare_specs.py`) prints
+  the empty-cell dash. `is_used_or_certified` moved from `listing_completeness.py` into
+  `mileage_display.py`, so the index and the page share one predicate (the index passes
+  the raw condition, the page the displayed one). Change from N2.1's car page: a "new"
+  car older than last model year at 0 or NULL keeps "Mileage not listed", because the
+  New label is the doubtful part (on `cars_cleanroom` 59 at NULL and 543 at 0; on `cars`
+  46 at 0). New tests: `backend/tests/test_mileage_line_d_n12.py` and
+  `backend/tests/js/listings_card_mileage.test.js`.
+  `backend/tests/fixtures/serialize_car_for_api_golden.json.gz` is re-recorded for the
+  new key: of 8,000 outputs, none differs beyond it.
 - `backend/tests/test_mileage_zero_f12.py`: new cases for New/NULL, CPO/NULL, Used/0,
   Used/NULL and blank-condition/NULL, at the rule, listing-code and car-page levels. The
   rule change forced two expectations to change: one assertion in
