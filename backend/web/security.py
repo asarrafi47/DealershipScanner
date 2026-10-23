@@ -3,6 +3,9 @@
 Moved out of ``backend/main.py`` (monolith audit 2026-10-01, W1). The CSRF hook
 matches bare endpoint names; a new state-changing route must be added to one of
 the lists below (or match a prefix rule) to be protected.
+``backend/tests/test_csrf_coverage.py`` fails on any POST/PUT/PATCH/DELETE rule
+that is neither covered here nor classified there (own blueprint hook, in-view
+check, signature-verified webhook, or redirect-only MFA stub).
 """
 
 from __future__ import annotations
@@ -83,29 +86,33 @@ _CSRF_HEADER_POST_ENDPOINTS = (
 )
 
 
+# Endpoint-name prefixes whose POST forms carry the csrf_token field.
+_CSRF_FORM_POST_PREFIXES = ("dealer_portal.", "store_admin.")
+
+# Site-admin operator JSON API (backend/dealer/admin/operator_api.py). dev.js
+# ``devFetch`` sends X-CSRF-Token on every non-GET call, so the header is
+# required on its POST routes and on its DELETE routes
+# (``api_admin_operator_delete_incomplete_car``,
+# ``api_admin_operator_api_delete_dealer``; P3.4, 2026-10-18).
+_CSRF_HEADER_PREFIXES = ("api_admin_operator_",)
+
+
 def _csrf_mutating_requests():
+    ep = request.endpoint or ""
     if request.method == "DELETE":
         # Only a logged-in session can be forged cross-site; anonymous callers
-        # get the view's own 401 rather than a 403 about a token they lack.
-        if (request.endpoint or "") in _CSRF_HEADER_DELETE_ENDPOINTS and session.get("user_id"):
+        # get the view's own 401/403 rather than a 403 about a token they lack.
+        header_protected = ep in _CSRF_HEADER_DELETE_ENDPOINTS or ep.startswith(_CSRF_HEADER_PREFIXES)
+        if header_protected and session.get("user_id"):
             validate_csrf_header()
-        return
+        return None
     if request.method != "POST":
-        return
-    ep = request.endpoint or ""
-    if ep in _CSRF_FORM_POST_ENDPOINTS:
+        return None
+    if ep in _CSRF_FORM_POST_ENDPOINTS or ep.startswith(_CSRF_FORM_POST_PREFIXES):
         csrf_resp = validate_csrf_form()
         if csrf_resp is not None:
             return csrf_resp
-    elif ep and str(ep).startswith("dealer_portal."):
-        csrf_resp = validate_csrf_form()
-        if csrf_resp is not None:
-            return csrf_resp
-    elif ep and str(ep).startswith("store_admin."):
-        csrf_resp = validate_csrf_form()
-        if csrf_resp is not None:
-            return csrf_resp
-    elif ep in _CSRF_HEADER_POST_ENDPOINTS or (ep and str(ep).startswith("api_admin_operator_")):
+    elif ep in _CSRF_HEADER_POST_ENDPOINTS or ep.startswith(_CSRF_HEADER_PREFIXES):
         validate_csrf_header()
     return None
 
@@ -158,8 +165,8 @@ def _csp_header_value_enforced(nonce: str) -> str:
         "font-src 'self' data:; "
         "style-src 'self' 'unsafe-inline'; "
         "style-src-elem 'self'; "
-        f"script-src 'self' 'nonce-{nonce}' https://esm.sh; "
-        "connect-src 'self' https://esm.sh https://tile.openstreetmap.org; "
+        f"script-src 'self' 'nonce-{nonce}'; "
+        "connect-src 'self' https://tile.openstreetmap.org; "
         "worker-src 'self'; "
     )
 
@@ -175,8 +182,8 @@ _CSP_REPORT_ONLY = (
     "font-src 'self' data:; "
     "style-src 'self' 'unsafe-inline'; "
     "style-src-elem 'self'; "
-    "script-src 'self' https://esm.sh; "
-    "connect-src 'self' https://esm.sh https://tile.openstreetmap.org; "
+    "script-src 'self'; "
+    "connect-src 'self' https://tile.openstreetmap.org; "
     "worker-src 'self'; "
 )
 

@@ -92,6 +92,7 @@ from backend.db.repositories.search_repo import (
 )
 from backend.db.repositories.dealers_repo import (
     backfill_dealership_registry_ids,
+    dealer_last_scraped_at,
     ensure_dealership_registry_backfill,
     link_cars_to_dealership_registry,
     list_scan_runs,

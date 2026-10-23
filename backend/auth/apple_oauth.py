@@ -14,10 +14,9 @@ from urllib.parse import urlencode
 import requests
 from flask import Blueprint, redirect, request, session, url_for
 
+from backend.auth.oauth_link import Resolution, resolve_by_email
 from backend.db.users_db import (
     get_user_by_apple_sub,
-    get_user_by_login,
-    link_user_apple_sub,
     save_apple_oauth_user,
     sync_env_admin_user_row,
     user_exists_by_username,
@@ -171,28 +170,37 @@ def _decode_id_token(id_token: str) -> dict | None:
         return None
 
 
-def _resolve_or_create_user(info: dict) -> tuple[int | None, str | None, bool]:
+def _apple_email_verified(info: dict) -> bool:
+    """Apple sends ``email_verified`` as a JSON boolean or the string "true"/"false"."""
+    claim = info.get("email_verified")
+    if claim is True:
+        return True
+    return isinstance(claim, str) and claim.strip().lower() == "true"
+
+
+def _resolve_or_create_user(info: dict) -> Resolution:
+    """Map verified Apple id_token claims to an app user.
+
+    A returning sub signs in directly. An email is used (to match an account or to
+    create one) only when ``email_verified`` is true; an existing account with
+    that email is linked only when its email is verified, otherwise the link waits
+    for a password login (``backend.auth.oauth_link``).
+    """
     apple_sub = (info.get("sub") or "").strip()
     email = normalize_registration_email(str(info.get("email") or ""))
     if not apple_sub:
-        return None, "Apple sign-in did not return a user id.", False
+        return Resolution(error="Apple sign-in did not return a user id.")
 
     existing = get_user_by_apple_sub(apple_sub)
     if existing:
-        return int(existing["id"]), None, False
+        return Resolution(user_id=int(existing["id"]))
 
     if email and "@" in email:
-        by_email = get_user_by_login(email)
-        if by_email:
-            stored_sub = (by_email.get("apple_sub") or "").strip()
-            if stored_sub and stored_sub != apple_sub:
-                return None, "This email is linked to a different Apple account.", False
-            if not link_user_apple_sub(int(by_email["id"]), apple_sub):
-                return None, "Could not link Apple to your account.", False
-            from backend.db.users_db import mark_user_email_verified
-
-            mark_user_email_verified(int(by_email["id"]))
-            return int(by_email["id"]), None, False
+        if not _apple_email_verified(info):
+            return Resolution(error="Apple account email is not verified.")
+        by_email = resolve_by_email("apple", apple_sub, email)
+        if by_email is not None:
+            return by_email
 
     if not email or "@" not in email:
         # Apple may hide email on subsequent logins; username from sub suffix
@@ -200,18 +208,21 @@ def _resolve_or_create_user(info: dict) -> tuple[int | None, str | None, bool]:
 
     username = _pick_username(email)
     if registration_blocked_by_env_admin(email, username):
-        return None, REGISTRATION_ADMIN_BLOCKED_MSG, False
+        return Resolution(error=REGISTRATION_ADMIN_BLOCKED_MSG)
     try:
         uid = save_apple_oauth_user(username, email, apple_sub, role=ROLE_GENERAL)
     except sqlite3.IntegrityError:
-        retry = get_user_by_apple_sub(apple_sub) or get_user_by_login(email)
+        # A concurrent callback for the same sub may have created the row. Never
+        # fall back to an email or username match here: that would log in to an
+        # account without the verified-email check above.
+        retry = get_user_by_apple_sub(apple_sub)
         if retry:
-            return int(retry["id"]), None, False
-        return None, "Could not create your account.", False
+            return Resolution(user_id=int(retry["id"]))
+        return Resolution(error="Could not create your account. Try again.")
     from backend.db.users_db import mark_user_email_verified
 
     mark_user_email_verified(int(uid))
-    return uid, None, True
+    return Resolution(user_id=int(uid), is_new_user=True)
 
 
 def _complete_login(user_id: int, *, is_new_user: bool = False):
@@ -289,10 +300,13 @@ def callback():
     if not info:
         return _oauth_login_error("Apple sign-in failed. Try again.")
 
-    user_id, user_err, is_new_user = _resolve_or_create_user(info)
-    if user_err:
-        return _oauth_login_error(user_err)
-    if not user_id:
+    resolved = _resolve_or_create_user(info)
+    if resolved.error:
+        return _oauth_login_error(resolved.error)
+    if resolved.deferred:
+        # The login page shows the pending-link notice from the session.
+        return redirect(url_for("login_page"))
+    if not resolved.user_id:
         return _oauth_login_error("Apple sign-in failed. Try again.")
 
-    return _complete_login(user_id, is_new_user=is_new_user)
+    return _complete_login(resolved.user_id, is_new_user=resolved.is_new_user)

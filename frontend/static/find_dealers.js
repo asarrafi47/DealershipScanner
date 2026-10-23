@@ -37,6 +37,9 @@
     }
 
     function adminScrapeButtonHtml(d) {
+        // N3.10b: queue onboarding is paused (the API answers 409). The page shows the
+        // paused line once in the header, so the popups draw no button and no hint.
+        if (adminCfg && adminCfg.onboard_paused) return "";
         if (!adminCfg || !adminCfg.onboard_enabled) {
             if (adminCfg && !adminCfg.onboard_enabled) {
                 return '<p class="find-dealers-admin-hint">Scrape queue needs Postgres (<code>./deploy/up.sh --full</code>).</p>';
@@ -76,7 +79,7 @@
             });
             const data = await resp.json().catch(() => ({}));
             if (!resp.ok || !data.ok) {
-                const err = data.error || "Could not queue scrape.";
+                const err = data.message || data.error || "Could not queue scrape.";
                 throw new Error(err === "postgres_required" ? "Postgres job queue not configured." : err);
             }
             setStatus(

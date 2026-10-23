@@ -1,12 +1,9 @@
 FROM python:3.12-slim
 
-# System deps for Playwright (Chromium) and build tools
+# System packages: fetch/TLS tools and build deps. No browser and none of
+# Chromium's system libraries (P3.8, D-SEC1 (a)).
 RUN apt-get update && apt-get install -y --no-install-recommends \
     curl wget ca-certificates gnupg git \
-    # Chromium system deps (Playwright installs its own binary but needs these libs)
-    libnss3 libatk1.0-0 libatk-bridge2.0-0 libcups2 libdrm2 libxkbcommon0 \
-    libxcomposite1 libxdamage1 libxfixes3 libxrandr2 libgbm1 libasound2 \
-    libpango-1.0-0 libpangocairo-1.0-0 libgtk-3-0 libx11-xcb1 libxcb-dri3-0 \
     # Build deps for some Python packages
     gcc g++ libffi-dev \
     && rm -rf /var/lib/apt/lists/*
@@ -17,17 +14,22 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir gunicorn[gthread] -r requirements.txt
 
-# Browser binary: Playwright Chromium only.
+# No browser binary (P3.8, D-SEC1 (a), 2026-10-18).
 #
-# Car-chat web research launches it in-process (backend/utils/web_researcher.py:363,
-# gated by CAR_CHAT_WEB_RESEARCH), so the web image genuinely needs this one.
+# The web image used to run `playwright install chromium && playwright
+# install-deps chromium` because car-chat web research launched headless
+# Chromium in-process, as root and with --no-sandbox, for any signed-in user.
+# Car chat is now HTTP-only: WebResearcher defaults to allow_browser=False and
+# never imports Playwright (backend/utils/web_researcher.py). Browser mode is
+# opt-in for the operator script backend/scripts/analyze_trim_adds_with_web.py,
+# which runs on a dev host, not here. Scanner browser paths need
+# SCANNER_ALLOW_BROWSER (backend/scanner/browser_gate.py), which web does not
+# set; with no browser in the image they could not launch here anyway.
 #
-# Patchright's Chromium is NOT installed here: its only consumer was
-# backend/oem/scraper/crawl4ai_discovery.py, whose sole caller (scanner.js) was
-# deleted with the Node scanner; the module itself was deleted 2026-10-01
-# (docs/monolith_audit_2026_10_01/enrich.md #12). Dropping the second full
-# browser download here saves ~400MB of image and its build time.
-RUN playwright install chromium && playwright install-deps chromium
+# The playwright pip package still installs from requirements.txt until P15B.2
+# splits the web requirements; without the browser download it is inert.
+# Do not add a Playwright or Patchright browser install here; a static test
+# (backend/tests/test_web_researcher.py) fails if this file gains one.
 
 # Copy application code
 COPY . .

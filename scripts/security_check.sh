@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 # Security validation runbook (SEC-076). Run from repo root after pip install -r requirements.txt
+# (plus requirements-test.txt for pytest). The pip-audit step resolves requirements.txt and
+# requirements-scanner.txt afresh, so it needs network access to PyPI and the advisory DB.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -33,6 +35,7 @@ python -m pytest \
   backend/tests/test_db_admin_security.py \
   backend/tests/test_production_security.py \
   backend/tests/test_password_hash.py \
+  backend/tests/test_requirements_hygiene.py \
   -q --tb=short
 
 echo "== Production import guards (SEC-001, SEC-003) =="
@@ -48,17 +51,20 @@ FLASK_ENV=production SECRET_KEY=test-secret ADMIN_PASSWORD=test-admin \
   python -c "import backend.main" >/dev/null
 echo "OK: production import with secrets"
 
-echo "== pip-audit (SEC-076) =="
-if ! command -v pip-audit >/dev/null 2>&1; then
-  echo "WARN: pip-audit not installed; run: pip install pip-audit"
+echo "== pip-audit (SEC-076, D-DEP1) =="
+PIP_AUDIT="${PIP_AUDIT:-pip-audit}"
+if ! command -v "$PIP_AUDIT" >/dev/null 2>&1; then
+  echo "WARN: pip-audit not installed; run: pip install pip-audit (or set PIP_AUDIT=/path/to/pip-audit)"
   exit 0
 fi
-# lxml 5.x: blocked until crawl4ai allows lxml 6 (PYSEC-2026-87)
-# chromadb: not in requirements.txt / app code (pgvector only); ignore orphan venv installs (CVE-2026-45829)
-if ! pip-audit --desc on --ignore-vuln PYSEC-2026-87 --ignore-vuln CVE-2026-45829; then
+# Requirements mode, not environment mode: it audits what the images install (a
+# fresh resolve of both files), so a stale dev venv can neither fail nor pass it.
+# No --ignore-vuln (P15B.1): crawl4ai, whose lxml~=5.3 pin forced the PYSEC-2026-87
+# ignore, is gone, and the orphan-chromadb ignore only ever applied to venv installs.
+if ! "$PIP_AUDIT" --desc on -r requirements.txt -r requirements-scanner.txt; then
   echo "FAIL: pip-audit reported vulnerabilities (see above)"
   exit 1
 fi
-echo "OK: dependency audit passed (lxml PYSEC-2026-87; chromadb CVE-2026-45829 ignored when not a dependency)"
+echo "OK: dependency audit passed (requirements.txt + requirements-scanner.txt, no ignores)"
 
 echo "== All security checks passed =="

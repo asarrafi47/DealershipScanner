@@ -235,14 +235,29 @@
             .replace(/"/g, "&quot;");
     }
 
-    /** http(s) only for CSS background-image (mitigates javascript: / data: in compare tray). */
+    /**
+     * http(s) only for the compare tray's style="background-image:url('...')",
+     * which syncTray builds through innerHTML (no javascript: / data:).
+     * Percent-encodes ' " ( ) \ < >, whitespace and controls, then escapes &:
+     * new URL().href keeps a literal "&#39;" or "&#41;", and the HTML parser
+     * would decode it back into a quote or paren before CSS reads the style
+     * (same rule as the server's css_url filter). P16.8 replaces this style
+     * string with CSSOM.
+     */
     function safeCssBackgroundUrl(url) {
         const raw = String(url || "").trim();
         if (!raw) return "";
         try {
             const abs = new URL(raw, window.location.origin);
             if (abs.protocol !== "http:" && abs.protocol !== "https:") return "";
-            return abs.href.replace(/'/g, "%27");
+            return abs.href
+                .replace(/['"()\\<>\s\u0000-\u001f\u007f-\u009f]/g, function (ch) {
+                    if (ch === "'") return "%27";
+                    if (ch === "(") return "%28";
+                    if (ch === ")") return "%29";
+                    return encodeURIComponent(ch);
+                })
+                .replace(/&/g, "&amp;");
         } catch (_) {
             return "";
         }

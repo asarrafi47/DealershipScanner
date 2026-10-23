@@ -242,6 +242,12 @@
                     {% if location_attribution %}
                     <p class="car-detail-location-note">{{ location_attribution.location_note }}</p>
                     {% endif %}
+                    {# N3.11 (D-N19): the dealer's newest scrape, shown once it is 48 h old or
+                       more. One muted line under the dealer name (the note style above),
+                       never a card, box or pill. Same key as dealership.html. #}
+                    {% if inventory_last_checked %}
+                    <p class="car-detail-location-note">Inventory last checked {{ inventory_last_checked }}</p>
+                    {% endif %}
                     {% if not dealer_map and dealer_rating %}
                     {{ dealer_reputation(dealer_rating) }}
                     {% endif %}

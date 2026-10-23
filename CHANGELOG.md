@@ -2,6 +2,207 @@
 
 ## [Unreleased]
 
+## [1.5.8] - 2026-10-23
+
+### Added
+- `TRUSTED_PROXY_CIDRS` (P3.2, `backend/utils/client_ip.py`): a comma-separated list of
+  CIDRs or bare IPs, and/or the token `cloudflare`. The token expands to Cloudflare's
+  published ranges as of 2026-10-18: 22 networks, 15 IPv4 and 7 IPv6.
+  - When it is set, `client_ip()` walks X-Forwarded-For from the right and skips entries
+    inside the CIDRs. It never walks more than `TRUSTED_PROXY_HOPS` entries, and every
+    skipped hop must lie inside the CIDRs. Prod keeps `TRUSTED_PROXY_HOPS=2` next to it.
+  - A value with no valid entry fails closed: nothing past the socket peer is trusted.
+    Invalid tokens are dropped with one warning. A very broad range (IPv4 shorter than /8,
+    IPv6 shorter than /16) is kept but logged once.
+  - Unset, the hop rule is unchanged: a 30,000-input differential found 0 differences. A
+    one-time log line fires when `TRUSTED_PROXY_HOPS` is 2 or more and no CIDRs are set.
+  - `TRUST_PROXY_HEADERS` stays the master switch. Prod sets the variable in N3.13 Part C
+    (owner, after `web-source-clear`).
+- `css_url` Jinja filter (P3.5, `backend/web/templating.py`) for
+  `style="background-image:url(...)"`.
+  - It accepts http(s) URLs that `normalize_listing_image_url` passes, and same-origin
+    `/static/`, `/car-images/` and `/dealer-uploads/` paths without dot segments.
+  - It percent-encodes `' " ( ) \ < >`, Unicode whitespace and control characters. Other
+    characters, `%` included, are left alone, so ordinary CDN URLs come back byte-identical.
+  - Anything rejected falls back to `/static/placeholder.svg`.
+  - Applied at 10 template sites: `home.html` (4), `landing.html`, `compare.html`,
+    `inventory/dashboard.html` and `inventory/listings.html` (3).
+- `backend/auth/oauth_link.py` (P3.1): the pending OAuth link. When Google or Apple
+  matches an account whose email is unverified, the session holds
+  `pending_oauth_link` (provider, sub, email, user id, 10-minute expiry) and `/login`
+  shows a plain notice line. A password login as that same account, on the web form or
+  `api_auth_login`, links the sub, marks the email verified and clears the key. Another
+  account, an expired entry or a changed email links nothing.
+- "Inventory last checked <date>" line on the dealer page and the car page (N3.11, D-N19).
+  - `<date>` is the newest `cars.scraped_at` over the dealer's rows, printed in UTC in
+    the first-seen line's shape ("Sep 28, 2026"). The car page shows its dealer's date,
+    not its own row's.
+  - The line is hidden when that date is under 48 hours old against the current UTC
+    time, and when no date is on file. A failed read hides the line and logs a warning;
+    it never fails the page.
+  - One query per page view: `dealers_repo.dealer_last_scraped_at` (re-exported from
+    `inventory_db`), `SELECT MAX(scraped_at)` over the key and its lower-case form,
+    served by `idx_cars_dealer_listing` on both backends. The rule is in the new
+    `backend/utils/inventory_last_checked.py`.
+  - Context key `inventory_last_checked` on both pages. On the car page it is the last
+    key of `assemble_view_context`, so `GET /api/cars/<id>` carries it too.
+  - Markup: one `<p>` with an existing muted-text class (`dealer-inventory__unconfirmed`
+    under the dealer page's inventory counts, `car-detail-location-note` under the car
+    page's dealer name). No new CSS, no container, no inline style.
+- New tests:
+  - `test_csp_policy.py` (P3.4): exact script and connect sources, the headers on a real
+    response, and no frontend file loading a cross-origin script;
+  - `test_csrf_coverage.py` (P3.4): walks `app.url_map`, and every POST, PUT, PATCH and
+    DELETE rule must reach a CSRF validator or be classified. Today: 78 hook, 6 in-view,
+    2 exempt (signed Stripe webhooks), 10 redirect-only MFA stubs, 0 unclassified;
+  - `test_css_url_filter.py` (P3.5): injection payloads, byte-identical CDN URLs, the
+    template scan, and node-backed checks of the two JS helpers;
+  - `test_username_email_collision.py` (P3.1);
+  - `test_admin_onboard_paused.py` (N3.10, N3.10b): every paused endpoint answers 409 and
+    records zero `dealer_jobs` INSERTs through the real `enqueue_job`; no paused control
+    is drawn;
+  - `test_security_master_todo.py` (P3.9): the Summary table must match the row
+    statuses, and every row needs its required fields;
+  - `test_last_checked_line.py` (N3.11, 25 tests): the 48 h rule, the repo read and its
+    SQLite query plan, both states on both pages, the markup (no container element), and
+    a Postgres check on a throwaway `pytest_*` database gated on `LAST_CHECKED_PG_DSN`.
+- Existing tests extended: `test_client_ip`, `test_outbound_url`,
+  `test_outbound_url_dns`, `test_safe_listing_url`, `test_google_oauth`,
+  `test_apple_oauth`, `test_password_reset`, `test_production_security`,
+  `test_web_researcher`, `test_car_chat_policy` and `test_requirements_hygiene`.
+  `test_dealer_onboard_api`'s two route tests now expect 409 (N3.10b).
+- `docs/ops_log/N3.10.md` (N3.10): the local `dealer_jobs` count, read-only (0 rows on
+  `cars`). Prod was not read. N3.10b adds its notes there.
+
+### Changed
+- `WebResearcher` is HTTP-only by default (P3.8, D-SEC1 (a)). `allow_browser=False`
+  gates the Brave search fallback and the per-page Chromium fallback.
+  - An HTTP-only instance never imports Playwright. A direct call to a browser step, or
+    to `_make_context`, raises `BrowserModeDisabled` before any import.
+  - Car chat and compare chat (`agent.py`) keep the default, so both are now HTTP-only.
+  - The operator script `backend/scripts/analyze_trim_adds_with_web.py` passes
+    `allow_browser=True`. An AST test fails if any other caller does.
+  - The `playwright` pip package stays in `requirements.txt` until P15B.2. With no browser
+    download it is inert.
+- The admin dealer hub's onboard POST (`/admin/dealers`) now answers 409 with
+  "Onboarding is paused; use dealer-discovery (see P15A.3)" and enqueues nothing (N3.10).
+  No worker has consumed `dealer_jobs` since the worker and scheduler were deleted on
+  2026-10-08. The template shows that line as plain text in place of the "Add & scan"
+  form. Existing jobs are left alone.
+- The other web paths that queued `dealer_jobs` are paused too (N3.10b, D-IF3 (a)). Find
+  dealers "Request scrape" (`POST /api/admin/dealer-onboard`) and the hub's Restart and
+  Smart restart (`POST /api/admin/dealer-jobs/<id>/retry` and `.../smart-retry`) answer a
+  site admin with 409 `{"ok": false, "error": "onboarding_paused", "message": "Onboarding
+  is paused; use dealer-discovery (see P15A.3)"}`. The check runs before rate limiting,
+  URL validation and diagnosis, and nothing is enqueued. Non-admins still get 403.
+  - Find dealers draws no "Request scrape" button and shows site admins the paused line
+    once in its header. The hub draws no Restart buttons.
+  - The line and a `QUEUE_ONBOARDING_PAUSED` constant (not an env knob) live in the new
+    `backend/dealer/admin/onboarding_paused.py`. The queue functions and the handler
+    bodies stay for P15A.3.
+- `scripts/security_check.sh` (P15B.1) runs
+  `pip-audit -r requirements.txt -r requirements-scanner.txt` with no `--ignore-vuln`. It
+  accepts `PIP_AUDIT=<path>` and also runs `test_requirements_hygiene.py`.
+  `scripts/scanner_import_sweep.py` `ALLOWED_MISSING` drops every name nothing imports.
+- Profile and admin edits that change an account's email now clear `email_verified_at`
+  and any pending verify token (P3.1). A username may no longer contain `@` or equal
+  another account's email. Web, API and dealer registration and admin create refuse `@`
+  usernames.
+- `docs/SECURITY_MASTER_TODO.md` (P3.9):
+  - new rows SEC-104 to SEC-111 for P3.1 to P3.8. SEC-110 (P3.7) is Blocked on the
+    owner's live `TRUSTED_PROXY_HOPS` confirmation;
+  - new Not started rows from the wave-1 reviews: SEC-112 (DNS rebinding and a pinned
+    resolver; the enrichment image fetch and the onboard URL check) and SEC-113 (origin
+    lock);
+  - SEC-076 is Done (P15B.1). SEC-083 drops the stale prod-exception note. SEC-099's
+    security property is Done, and billing go-live is tracked separately;
+  - the environment table gains `TRUSTED_PROXY_CIDRS`.
+- `docs/NEXT_PHASES_PLAN_2026_10.md` carries the N3 unit status.
+
+### Removed
+- Orphan dependencies from `requirements.txt` (P15B.1, D-DEP1 (a)): `crawl4ai`, `pyotp`,
+  `segno`, `ollama`, `langchain-core`, `langchain-openai`, `langchain-text-splitters`
+  and `langsmith`, plus the `starlette` and `tornado` floors. None has a Python importer.
+  Ollama is reached over HTTP with `requests`. The `urllib3`, `idna` and `pygments`
+  floors stay, because something still requires each of them.
+- Chromium from the web image (P3.8): `Dockerfile.web` no longer runs
+  `playwright install chromium && playwright install-deps chromium`, and drops the 17
+  Chromium-only apt libraries. A static test fails if a browser install comes back.
+- The Patchright Chromium install from `backend/scripts/install_scraper_browsers.sh`
+  (P15B.1). Its only consumer was crawl4ai.
+- The "Add & scan" form on the admin dealer hub (N3.10).
+
+### Fixed
+- `docs/SECURITY_MASTER_TODO.md` Summary counted 0 open items in every phase while
+  SEC-096, SEC-097 and SEC-099 were In progress. It now counts and names the open rows,
+  and states the counting rule. SEC-095 no longer claims that Playwright sandboxes
+  Chromium by default: Playwright adds `--no-sandbox` unless `chromium_sandbox=True`
+  (P3.9).
+- `safe_listing_url` returns None for a malformed bracketed host instead of raising
+  `ValueError` (P3.3).
+- `test_requirements_hygiene` failed on P3.5's direct `jinja2` and `markupsafe` imports.
+  Both are allowed as Flask transitives, like `werkzeug` (N3 integration).
+
+### Security
+- `deploy/railway/sync-vault-to-railway.sh` refuses to run without explicit `TRUSTED_PROXY_HOPS` (a positive integer; prod web uses 2) and `RAILWAY_SERVICE` values. It checks both before any railway call, so the old silent hops default of 1 is gone (P3.7, SEC-110; merged after the owner confirmed the live value 2 on 2026-10-23). `deploy/railway/README.md` lists the live services (web, scanner-nightly, Postgres) and the hops rule in section 7. New `backend/tests/test_sync_vault_guard.py`.
+- OAuth pre-registration takeover closed (P3.1, security-4, D-SEC4 (a)).
+  - Google and Apple find an existing account by a strict lower-case email lookup, never
+    by username. When more than one case variant matches, they refuse to pick one.
+  - The provider's email must be verified: Google `email_verified` true, Apple
+    `email_verified` true or `"true"`.
+  - An email-matched account is linked automatically only when its own email is verified.
+    Otherwise the link waits for a password login (see Added).
+  - The retry after an IntegrityError looks up by sub only. The old email/username
+    fallback logged the caller in without any check.
+- Client IP spoofing through the Railway origin (P3.2). With `TRUSTED_PROXY_CIDRS` set, a
+  request sent straight to the origin can no longer choose its own client IP. A Worker in
+  another Cloudflare zone cannot forge one through Cloudflare either. `DEV_IP_ALLOWLIST`
+  goes through `client_ip()`, so the allowlist spoof is refused once the CIDRs are live.
+- SSRF guards block every non-global address (P3.3, `backend/utils/outbound_url.py`).
+  - One rule, `ip_is_non_global()`, serves both the literal check and the after-DNS check.
+    IPv4-mapped and 6to4 addresses are judged by the IPv4 they carry.
+  - Newly blocked: CGNAT/Tailscale `100.64.0.0/10`, which the old `is_private` rule let
+    through, and the deprecated site-local `fec0::/10`. `192.0.0.0/24` and `3fff::/20`
+    sit in an explicit table, so the verdict no longer depends on the Python patch level.
+    The private-use names `.internal` and `.home.arpa` join `localhost` and `.local`, and
+    `safe_listing_url` now refuses `.local` and `.localhost` names too.
+  - Hosts are judged as clients decode them. Legacy IPv4 spellings (`127.1`,
+    `2130706433`, `0x7f.0.0.1`) are parsed as addresses. Percent-encoded and Unicode
+    spellings are decoded once and folded (NFKC plus UTS #46). A name that still holds a
+    forbidden code point is refused.
+  - After DNS, an answer with no usable address fails closed.
+  - The same rule backs `safe_listing_url`. Local `cars` (read-only): 0 stored hosts
+    affected.
+- `https://esm.sh` is gone from `script-src` and `connect-src` in the enforced and the
+  report-only CSP (P3.4). Nothing in `frontend/` loads from it.
+- The operator DELETE routes (`api_admin_operator_delete_incomplete_car`,
+  `api_admin_operator_api_delete_dealer`) now require `X-CSRF-Token` for logged-in
+  sessions, through the `api_admin_operator_` prefix rule (P3.4).
+- CSS injection through `style` `url()` closed (P3.5, security-7). Autoescape turns `'`
+  into `&#39;`, but the HTML parser decodes it back before CSS reads the attribute. So
+  before this release, a dealer image URL containing `');` injected CSS into every card
+  that showed it.
+  - Templates now go through `css_url`.
+  - The JS helpers `compare.js` `safeCssBackgroundUrl` and `dev.js` `cssSingleQuotedUrl`
+    use the same encoding rule and then escape `&`.
+  - 402 of 214,675 active local image URLs (containing `(`, `)` or a space) are now
+    percent-encoded. The encoded forms still serve the image.
+- Password reset now allows at most 3 emails per account per hour (P3.6). A throttled
+  request sends no mail, leaves the link already emailed valid, and shows the same page
+  as an unknown account. The per-IP limit alone did not stop mail-bombing one address
+  from rotating IPs.
+- Production boot warnings (P3.6) fire in three cases:
+  - an email or billing flow is on while `PUBLIC_BASE_URL` is unset;
+  - an email flow is on with neither `RESEND_API_KEY` nor `SMTP_HOST` set;
+  - `ALLOW_APP_ADMIN_DEV_PASS_THROUGH` comes back. This is a guard only: prod deleted the
+    variable on 2026-10-08.
+- The web process no longer launches headless Chromium (P3.8). Before this release it ran
+  as root with `--no-sandbox`, for any signed-in user's car-chat question. P0B.3 measured
+  0 of 30 answers depending on it.
+- `lxml>=6.1.0` in `requirements-scanner.txt` (PYSEC-2026-87; P15B.1). With the orphans
+  gone, `pip-audit -r requirements.txt` with no ignores reports 0 vulnerabilities across
+  99 dependencies (it found 9 in 3 packages before).
+
 ## [1.5.7] - 2026-10-22
 
 ### Added

@@ -2,11 +2,12 @@
 
 from __future__ import annotations
 
-from flask import flash, redirect, render_template, request, url_for
+from flask import Response, flash, redirect, render_template, request, url_for
 
+from backend.dealer.admin.onboarding_paused import ONBOARDING_PAUSED_MESSAGE, QUEUE_ONBOARDING_PAUSED
 from backend.dealer.admin.routes import _session_profile, store_admin_bp
 from backend.db import inventory_pg
-from backend.scanner.job_queue import enqueue_job, list_dealer_catalog, list_recent_jobs
+from backend.scanner.job_queue import list_dealer_catalog, list_recent_jobs
 from backend.scanner.scrape_confidence import job_display_status
 from backend.utils.csrf import validate_csrf_form
 from backend.utils.roles import is_admin_role
@@ -21,33 +22,21 @@ def _require_site_admin():
 
 @store_admin_bp.route("/dealers", methods=["GET", "POST"])
 def admin_dealers_hub():
-    """Discover dealers, view catalog/jobs, enqueue onboard scans (site admin only)."""
+    """View the dealer catalog and job history (site admin only).
+
+    Onboarding is paused (N3.10, ``onboarding_paused.py``): a POST answers 409
+    with ``ONBOARDING_PAUSED_MESSAGE`` and enqueues nothing. The job retry
+    endpoints answer 409 too (N3.10b), so the page draws no Restart buttons.
+    """
     if not _require_site_admin():
         flash("Dealer onboarding hub requires a site admin account.", "error")
         return redirect(url_for("store_admin.admin_site_hub"))
 
-    postgres_ok = inventory_pg.is_inventory_postgres()
     if request.method == "POST":
         validate_csrf_form()
-        if not postgres_ok:
-            flash("Postgres inventory (INVENTORY_DATABASE_URL) is required for job queue.", "error")
-        else:
-            dealer_id = (request.form.get("dealer_id") or "").strip()
-            url = (request.form.get("url") or "").strip()
-            if not dealer_id or not url:
-                flash("dealer_id and url are required.", "error")
-            else:
-                job_id = enqueue_job(
-                    dealer_id=dealer_id,
-                    job_type="onboard",
-                    payload={"url": url},
-                )
-                if job_id:
-                    flash(f"Queued onboard job #{job_id} for {dealer_id}.", "success")
-                else:
-                    flash("Failed to enqueue job.", "error")
-        return redirect(url_for("store_admin.admin_dealers_hub"))
+        return Response(ONBOARDING_PAUSED_MESSAGE + "\n", status=409, mimetype="text/plain")
 
+    postgres_ok = inventory_pg.is_inventory_postgres()
     catalog = list_dealer_catalog(limit=50) if postgres_ok else []
     jobs = []
     if postgres_ok:
@@ -77,4 +66,6 @@ def admin_dealers_hub():
         catalog=catalog,
         jobs=jobs,
         find_dealers_url=url_for("find_dealers_page"),
+        onboarding_paused_message=ONBOARDING_PAUSED_MESSAGE,
+        job_retry_enabled=not QUEUE_ONBOARDING_PAUSED,
     )

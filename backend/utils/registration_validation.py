@@ -15,6 +15,20 @@ def normalize_registration_username(username: str) -> str:
     return (username or "").strip()
 
 
+def username_format_error(username: str) -> str | None:
+    """Reject a new username that contains '@' (P3.1).
+
+    Login and password reset match username OR email, so an email-shaped username
+    can collide with another account's email. Kept out of
+    ``registration_form_error`` because the password-change and password-reset
+    paths call that with the account's existing username, and legacy usernames
+    that contain '@' must still be able to change their password.
+    """
+    if "@" in normalize_registration_username(username):
+        return "Username cannot contain @. Use the email field for your email address."
+    return None
+
+
 def registration_form_error(
     username: str,
     email: str,

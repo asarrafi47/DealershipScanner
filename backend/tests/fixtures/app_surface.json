@@ -1491,6 +1491,7 @@
   }
  },
  "filters": [
+  "css_url",
   "fmt_spec",
   "http_url"
  ],

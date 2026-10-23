@@ -38,12 +38,15 @@ ENTRY = [
 ]
 SWEEP = ["backend.scanner", "backend.db", "backend.enrichment", "backend.utils"]
 # Packages the scan path must never need (browser, ML, web, LLM stacks).
+# Every entry is still imported somewhere under backend/ or scripts/
+# (backend/tests/test_requirements_hygiene.py checks it). P15B.1 (D-DEP1) dropped the
+# names nothing imports any more: crawl4ai, patchright, ollama, pyotp, segno,
+# langchain_core, langchain_openai, openai, torch, transformers, cv2, pytesseract.
 ALLOWED_MISSING = {
-    "playwright", "playwright_stealth", "patchright", "crawl4ai", "sentence_transformers",
-    "torch", "transformers", "flask", "werkzeug", "anthropic", "openai", "ollama",
+    "playwright", "playwright_stealth", "sentence_transformers",
+    "flask", "werkzeug", "anthropic",
     "pdfplumber", "fitz", "pypdf", "PIL", "pgvector", "sqlcipher3", "redis", "stripe",
-    "resend", "bcrypt", "jwt", "pyotp", "segno", "duckdb", "langchain_core",
-    "langchain_openai", "httpx", "pytest", "cv2", "pytesseract",
+    "resend", "bcrypt", "jwt", "duckdb", "httpx", "pytest",
 }
 
 

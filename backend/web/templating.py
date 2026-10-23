@@ -6,6 +6,8 @@ Moved out of ``backend/main.py`` (monolith audit 2026-10-01, W1).
 from __future__ import annotations
 
 import gzip
+import unicodedata
+from urllib.parse import unquote
 
 from flask import Flask, g, jsonify, render_template, request, session, url_for
 
@@ -112,6 +114,75 @@ def _jinja_http_url(value):
     return u if u and u.lower().startswith(("http://", "https://")) else ""
 
 
+# The css_url filter: image URLs inside style="background-image:url('...')".
+CSS_URL_PLACEHOLDER = "/static/placeholder.svg"
+# Same-origin image paths this app serves: static assets, images the downloader
+# saved (routes/site_misc.py /car-images/) and dealer-portal uploads
+# (dealer/routes.py /dealer-uploads/, the photos on inventory/{dashboard,listings}).
+_CSS_URL_LOCAL_PREFIXES = ("/static/", "/car-images/", "/dealer-uploads/")
+# Characters that can end a CSS string or url() token, or an HTML attribute.
+_CSS_URL_ENCODE_ASCII = frozenset("'\"()\\<>")
+
+
+def _css_url_local_path_ok(path: str) -> bool:
+    """A same-origin image path with no dot segments (``..`` or ``%2e%2e``).
+
+    Browsers resolve dot segments before the request, so ``/car-images/../x``
+    would fetch ``/x`` with the visitor's cookies. Real image paths never
+    carry one."""
+    if not path.startswith(_CSS_URL_LOCAL_PREFIXES):
+        return False
+    bare = path.split("#", 1)[0].split("?", 1)[0]
+    return all(unquote(seg) not in (".", "..") for seg in bare.split("/"))
+
+
+def _css_url_percent_encode(url: str) -> str | None:
+    """Percent-encode every character that could break out of ``url('...')``.
+
+    Encodes ``' " ( ) \\ < >``, whitespace (any Unicode space) and control
+    characters (C0, DEL, C1). Everything else, ``%`` included, is left alone,
+    so an ordinary CDN URL comes back byte-identical. Returns None for a lone
+    surrogate, which cannot be encoded."""
+    out = []
+    for ch in url:
+        cat = unicodedata.category(ch)
+        if cat == "Cs":
+            return None
+        if ch in _CSS_URL_ENCODE_ASCII or ch.isspace() or cat == "Cc":
+            out.append("".join(f"%{b:02X}" for b in ch.encode("utf-8")))
+        else:
+            out.append(ch)
+    return "".join(out)
+
+
+def _jinja_css_url(value) -> str:
+    """Make a stored image URL safe inside ``style="background-image:url('...')"``.
+
+    Autoescape turns ``'`` into ``&#39;``, but the HTML parser decodes that back
+    to a quote before the CSS parser sees the attribute, so a dealer image URL
+    containing ``');`` used to inject CSS. This filter accepts only:
+
+    * http(s) URLs that ``normalize_listing_image_url`` passes (no script/data
+      schemes, credentials or private hosts; https only in production);
+    * same-origin ``/static/``, ``/car-images/`` and ``/dealer-uploads/`` paths
+      without dot segments;
+
+    percent-encodes the characters that can end the CSS string, and returns the
+    placeholder for anything else. The result is a plain ``str``: autoescape
+    still escapes ``&`` to ``&amp;``, so a literal ``&#39;`` in a URL reaches CSS
+    as text, never as a quote. Keep this filter in autoescaped templates."""
+    from backend.utils.safe_listing_url import normalize_listing_image_url
+
+    raw = value.strip() if isinstance(value, str) else ""
+    if raw.startswith("/"):
+        safe = raw if _css_url_local_path_ok(raw) else None
+    else:
+        safe = normalize_listing_image_url(raw) if raw else None
+    if not safe:
+        return CSS_URL_PLACEHOLDER
+    return _css_url_percent_encode(safe) or CSS_URL_PLACEHOLDER
+
+
 def page_not_found(_exc):
     if request.path.startswith("/api/") or (
         request.accept_mimetypes.best_match(["application/json", "text/html"]) == "application/json"
@@ -127,4 +198,5 @@ def register_templating(app: Flask) -> None:
     app.context_processor(inject_csrf_and_flags)
     app.add_template_filter(_jinja_fmt_spec, "fmt_spec")
     app.add_template_filter(_jinja_http_url, "http_url")
+    app.add_template_filter(_jinja_css_url, "css_url")
     app.register_error_handler(404, page_not_found)

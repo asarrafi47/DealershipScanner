@@ -91,7 +91,7 @@
                         {% for car in recommendations %}
                         <a href="/car/{{ car.id }}" class="reco-card">
                             {% set img = car.gallery[0] if car.gallery else (car.image_url or '') %}
-                            <div class="reco-card-image" style="background-image:url('{{ img or '/static/placeholder.svg' }}')"></div>
+                            <div class="reco-card-image" style="background-image:url('{{ img | css_url }}')"></div>
                             <div class="reco-card-body">
                                 <p class="reco-card-title">{{ car.title }}</p>
                                 {% if car.trim %}<p class="reco-card-trim">{{ car.trim }}</p>{% endif %}
@@ -121,7 +121,7 @@
                 {% for car in recently_viewed %}
                 <a href="/car/{{ car.id }}" class="saved-card">
                     <div class="saved-image-wrap">
-                        <div class="saved-image" style="background-image: url('{{ car.gallery[0] if car.gallery else (car.image_url or "/static/placeholder.svg") }}')"></div>
+                        <div class="saved-image" style="background-image: url('{{ (car.gallery[0] if car.gallery else car.image_url) | css_url }}')"></div>
                     </div>
                     <div class="saved-info">
                         <p class="saved-title">{{ car.title }}</p>
@@ -149,7 +149,7 @@
                 {% for car in recently_compared %}
                 <a href="/car/{{ car.id }}" class="saved-card">
                     <div class="saved-image-wrap">
-                        <div class="saved-image" style="background-image: url('{{ car.gallery[0] if car.gallery else (car.image_url or "/static/placeholder.svg") }}')"></div>
+                        <div class="saved-image" style="background-image: url('{{ (car.gallery[0] if car.gallery else car.image_url) | css_url }}')"></div>
                     </div>
                     <div class="saved-info">
                         <p class="saved-title">{{ car.title }}</p>
@@ -179,7 +179,7 @@
                 {% for car in saved_cars %}
                 <a href="/car/{{ car.id }}" class="saved-card">
                     <div class="saved-image-wrap">
-                        <div class="saved-image" style="background-image: url('{{ car.image_url or "/static/placeholder.svg" }}')"></div>
+                        <div class="saved-image" style="background-image: url('{{ car.image_url | css_url }}')"></div>
                     </div>
                     <div class="saved-info">
                         <p class="saved-title">{{ car.title }}</p>
