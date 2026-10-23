@@ -4,6 +4,11 @@
 #
 # Optional: ./sync-vault-to-railway.sh --mirror-secrets
 #   copies vault values into Railway Variables as a fallback (not recommended).
+#
+# Required in the environment (P3.7): TRUSTED_PROXY_HOPS (2 for prod web: Cloudflare, then
+# Railway's edge) and RAILWAY_SERVICE (the service every call targets, e.g. web). The script
+# refuses before any railway call when either is missing or malformed. Read
+# deploy/railway/README.md section 2 before running this at all.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
@@ -18,14 +23,57 @@ while [[ $# -gt 0 ]]; do
       shift 2
       ;;
     -h|--help)
-      echo "Usage: $0 [--vault-addr URL] [--mirror-secrets]"
+      echo "Usage: TRUSTED_PROXY_HOPS=<n> RAILWAY_SERVICE=<service> $0 [--vault-addr URL] [--mirror-secrets]"
       echo "  Default: set KMAC_VAULT_AUTO, VAULT_ADDR, VAULT_TOKEN, paths, admin config."
       echo "  --mirror-secrets: also copy Dealer:* values into Railway Variables."
+      echo "  TRUSTED_PROXY_HOPS is required (no default): prod web, behind Cloudflare"
+      echo "  and Railway's edge, uses 2. RAILWAY_SERVICE is required too: every call"
+      echo "  passes --service, never the checkout's linked service. See deploy/railway/README.md."
       exit 0
       ;;
     *) echo "Unknown option: $1" >&2; exit 1 ;;
   esac
 done
+
+# P3.7 guard. TRUSTED_PROXY_HOPS has no default: it must equal the number of proxies in
+# front of the app. Prod web is reached through Cloudflare and then Railway's edge, so it
+# needs 2 (set since 1.4.4). The old silent default of 1 made client_ip pick Cloudflare's
+# address, so every per-IP rate limit shared a few buckets. This check runs before the
+# first railway call, so a refusal changes nothing on Railway.
+hops="${TRUSTED_PROXY_HOPS:-}"
+case "$hops" in
+  "")
+    echo "ERROR: TRUSTED_PROXY_HOPS is not set. Nothing was changed on Railway." >&2
+    echo "  Set it to the number of proxies in front of the app. Prod web" >&2
+    echo "  (sarraficars.com: Cloudflare, then Railway's edge) uses 2." >&2
+    echo "  Read the live value first (prints that one line only):" >&2
+    echo "    railway variable list -s web --kv | grep '^TRUSTED_PROXY_HOPS='" >&2
+    echo "  See deploy/railway/README.md, \"Client IP and proxy hops\"." >&2
+    exit 1
+    ;;
+  0*|*[!0-9]*)
+    echo "ERROR: TRUSTED_PROXY_HOPS must be a positive integer, got '${hops}'." >&2
+    echo "  Nothing was changed on Railway. Prod web uses 2." >&2
+    exit 1
+    ;;
+esac
+
+# RAILWAY_SERVICE is required as well: without it every call would act on whichever
+# service the checkout is linked to (the main checkout is linked to scanner-nightly, where
+# a deploying variable change is a deployment before P6B.1). docs/RELEASING.md: always pass
+# -s on a command that acts on a service.
+case "${RAILWAY_SERVICE:-}" in
+  "")
+    echo "ERROR: RAILWAY_SERVICE is not set. Nothing was changed on Railway." >&2
+    echo "  Name the service every call targets, e.g. RAILWAY_SERVICE=web." >&2
+    exit 1
+    ;;
+  -*|*[!A-Za-z0-9_-]*)
+    echo "ERROR: RAILWAY_SERVICE must be a service name, got '${RAILWAY_SERVICE}'." >&2
+    echo "  Nothing was changed on Railway." >&2
+    exit 1
+    ;;
+esac
 
 if ! command -v railway >/dev/null 2>&1; then
   echo "Install Railway CLI: https://docs.railway.com/guides/cli" >&2
@@ -89,25 +137,28 @@ railway variables set DEV_USERS_DB_PATH=/data/dev_users.db ${SVC_ARGS}
 railway variables set DEALER_PORTAL_DB_PATH=/data/dealer_portal.db ${SVC_ARGS}
 # shellcheck disable=SC2086
 railway variables set SCANNER_VDP_DOWNLOAD_IMAGES=0 ${SVC_ARGS}
-# Behind the Railway edge proxy the client IP arrives in X-Forwarded-For; without these
-# every per-IP rate limit shares one bucket. Hops: 1 = Railway edge only; set
-# TRUSTED_PROXY_HOPS=2 before running if Cloudflare fronts the Railway domain.
+# Behind proxies the client IP arrives in X-Forwarded-For; without these every per-IP
+# rate limit shares one bucket. Hops = proxies in front of the app: 2 for prod web
+# (Cloudflare, then Railway's edge). $hops was checked by the guard above (no default).
 # shellcheck disable=SC2086
 railway variables set TRUST_PROXY_HEADERS=1 ${SVC_ARGS}
 # shellcheck disable=SC2086
-railway variables set TRUSTED_PROXY_HOPS="${TRUSTED_PROXY_HOPS:-1}" ${SVC_ARGS}
-echo "  set FLASK_ENV, KMAC_VAULT_AUTO, proxy trust, paths, admin usernames"
+railway variables set TRUSTED_PROXY_HOPS="${hops}" ${SVC_ARGS}
+echo "  set FLASK_ENV, KMAC_VAULT_AUTO, proxy trust (TRUSTED_PROXY_HOPS=${hops}), paths, admin usernames"
 
 # Retired: inventory SQLite on the volume (Postgres-only now, SEC-102).
-railway variables delete INVENTORY_DB_PATH 2>/dev/null || true
+# shellcheck disable=SC2086
+railway variables delete INVENTORY_DB_PATH ${SVC_ARGS} 2>/dev/null || true
 
 # Remove legacy disable flag if present (vault is used on Railway now).
-railway variables delete KMAC_VAULT_DISABLE 2>/dev/null || true
+# shellcheck disable=SC2086
+railway variables delete KMAC_VAULT_DISABLE ${SVC_ARGS} 2>/dev/null || true
 
 # Serving reads the dealer's remote URLs from cars.gallery; nothing ever read the downloaded
 # bytes, so the download is off and the volume path it wrote to is retired. Delete the variable
 # so a stale value can't redirect a future opt-in back onto the volume.
-railway variables delete SCANNER_VDP_IMAGE_DOWNLOAD_DIR 2>/dev/null || true
+# shellcheck disable=SC2086
+railway variables delete SCANNER_VDP_IMAGE_DOWNLOAD_DIR ${SVC_ARGS} 2>/dev/null || true
 
 token="$(_read_railway_vault_token || true)"
 if [[ -z "$token" ]]; then
@@ -131,7 +182,8 @@ if [[ "$MIRROR_SECRETS" -eq 1 ]]; then
       echo "  skip $name (not in vault)"
       return 0
     fi
-    railway variables --set "${name}=${value}"
+    # shellcheck disable=SC2086
+    railway variables --set "${name}=${value}" ${SVC_ARGS}
     echo "  set $name"
   }
 
@@ -164,5 +216,7 @@ echo "    1. Central kmac-vault is a separate Railway project (public URL above)
 echo "    2. Provision Railway Postgres and set INVENTORY_DATABASE_URL (SEC-102 refuses"
 echo "       to boot without it): railway variables --set 'INVENTORY_DATABASE_URL=\${{Postgres.DATABASE_URL}}'"
 echo "    3. Attach a /data volume on the web service (users/dev_users/dealer_portal SQLite)."
-echo "    4. Set PUBLIC_BASE_URL to your Railway domain."
-echo "    5. Deploy: railway up"
+echo "    4. Set PUBLIC_BASE_URL to the public domain (prod: https://sarraficars.com),"
+echo "       never the *.up.railway.app domain."
+echo "    5. Code reaches Railway only through deploy/railway/deploy_web.sh from a release"
+echo "       tag (docs/RELEASING.md). Never run a bare 'railway up'."
