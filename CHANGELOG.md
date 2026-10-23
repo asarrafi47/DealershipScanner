@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [1.5.8] - 2026-10-23
+
 ### Added
 - `TRUSTED_PROXY_CIDRS` (P3.2, `backend/utils/client_ip.py`): a comma-separated list of
   CIDRs or bare IPs, and/or the token `cloudflare`. The token expands to Cloudflare's
