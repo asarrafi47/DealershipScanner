@@ -889,7 +889,7 @@ Elsewhere:
 - P3.4: DONE, merged `fa1a6ba67`. Review: 1 round, pass, 3 nits carried. CSRF coverage today: 78 hook, 6 in-view, 2 exempt, 10 MFA stub, 0 unclassified.
 - P3.5: DONE, merged `da7b26592`, plus integration commit `fecd1d54f`, which lets `test_requirements_hygiene` accept the `jinja2`/`markupsafe` imports. Review: 2 rounds, pass, 5 nits carried. Beyond the plan's list: `compare.js`, `dev.js` and `app_surface.json`. P3.3 is merged before P3.5 on purpose.
 - P3.6: DONE, merged `aeddd2553`. Review: 1 round, pass, 5 nits carried.
-- P3.7: BLOCKED on the owner. It merges after the owner confirms the live web `TRUSTED_PROXY_HOPS` (N3.13 pack, Part A step A2, read-only). The code is complete on `unit/P3.7` @ `b8364d6d6`. Review: 1 round; the owner step is the only blocker, plus 3 nits. The merge must also edit SEC-110 in `docs/SECURITY_MASTER_TODO.md` and add a `deploy/railway/README.md` section 7 sentence, or `test_security_master_todo.py` fails. RESUME.md lists the steps.
+- P3.7: DONE, merged `aad034340` on 2026-10-23 after the owner confirmed the live web `TRUSTED_PROXY_HOPS=2` (N3.13 Part A2, read 2026-10-22). Unit head `b8364d6d6`. Review: 1 round, 3 nits carried. SEC-110 is Done in SECURITY_MASTER_TODO (Summary Phase 1 at 0). The merge must also edit SEC-110 in `docs/SECURITY_MASTER_TODO.md` and add a `deploy/railway/README.md` section 7 sentence, or `test_security_master_todo.py` fails. RESUME.md lists the steps.
 - P3.8: DONE, merged `4f74e992e`. Review: 1 round, pass, 4 nits carried. The Docker-build acceptance (no `ms-playwright`, the image-size drop) moves to the N3.13 smoke.
 - P15B.1: DONE, merged `72f039262`. Review: 1 round, pass, 6 nits carried. Owner steps still open: the `Dockerfile.web` / `Dockerfile.discovery` stage builds (with the N3.13 Docker OK), and a rebuild of the MBP and mini dev venvs, which still hold lxml 5.4.0 and crawl4ai.
 - N3.10: DONE, merged `0033182c4`. Review: 1 round, pass, 4 nits carried. Local `dealer_jobs` (read-only): 0 rows. The follow-up decision (the Find-dealers "Request scrape" path and the retry endpoints still enqueued) is answered: D-IF3 (a), done by N3.10b.
@@ -909,7 +909,7 @@ Elsewhere:
   - `ruff check . --no-cache` (ruff 0.15.22): clean.
   - Re-run after the N3.10b merge (`b03358f86`): the security chunk now has 598 passed (582 plus N3.10b's tests) and the consumer chunk 83. The unit's own chunks: 51 + 116 + 85 passed. Ruff is clean. `git diff --check` flags only CR-at-EOL in `dealers_hub.py` and `test_dealer_onboard_api.py`, which were CRLF at the base too.
 - **Exit gate, owner items still open:** the prod CSP header without esm.sh (N3.13 B22); the railway.app origin not serving (N3.13 C5/C6), or D-SEC6 records the wait.
-- **Release:** a 1.5.x patch with a web deploy. P3.7 merges first. N3.11 is merged (`47aa8c79d`).
+- **Release:** a 1.5.x patch with a web deploy. P3.7 is merged (`aad034340`). N3.11 is merged (`47aa8c79d`).
 
 **N-unit specs.**
 

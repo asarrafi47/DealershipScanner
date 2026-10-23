@@ -142,6 +142,7 @@
   Both are allowed as Flask transitives, like `werkzeug` (N3 integration).
 
 ### Security
+- `deploy/railway/sync-vault-to-railway.sh` refuses to run without explicit `TRUSTED_PROXY_HOPS` (a positive integer; prod web uses 2) and `RAILWAY_SERVICE` values. It checks both before any railway call, so the old silent hops default of 1 is gone (P3.7, SEC-110; merged after the owner confirmed the live value 2 on 2026-10-23). `deploy/railway/README.md` lists the live services (web, scanner-nightly, Postgres) and the hops rule in section 7. New `backend/tests/test_sync_vault_guard.py`.
 - OAuth pre-registration takeover closed (P3.1, security-4, D-SEC4 (a)).
   - Google and Apple find an existing account by a strict lower-case email lookup, never
     by username. When more than one case variant matches, they refuse to pick one.

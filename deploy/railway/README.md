@@ -230,7 +230,8 @@ D-SEC6 (c) closes this with two N3 steps, both after `web-source-clear`:
 - `TRUSTED_PROXY_CIDRS=cloudflare` (added by P3.2, same release). `client_ip()` then skips
   Cloudflare addresses from the right and returns the first other entry, so a direct
   request resolves to the sender's own address. The owner sets it after the N3 deploy
-  (N3.13 step 5).
+  (N3.13 step 5). Once it is set, `client_ip()` uses `TRUSTED_PROXY_HOPS` only to bound
+  the walk and as the fallback, so keep it at `2`.
 - Removing the `web-production-26b11.up.railway.app` domain (N3.13 step 6). Alone it is
   not enough: Railway's edge routes by Host header, so a direct request can still name
   `sarraficars.com` (remediation plan D-SEC6).
