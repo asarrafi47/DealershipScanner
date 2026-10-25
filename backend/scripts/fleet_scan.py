@@ -360,6 +360,16 @@ def main() -> int:
         env["FLASK_ENV"] = "production"  # card key includes listings_include_incomplete_cars()
         rc, secs = run_step("cards", [py, "-m", "backend.scripts.build_listings_grid_cards"], env, run_dir / "post.out")
         post["build_listings_grid_cards"] = {"rc": rc, "seconds": secs}
+        # Once per fleet, after every shard's vPIC heal and reconcile; per-car syncs run
+        # before backfill and leave complete cars flagged (N6.1). Forced: shards changed data.
+        env = dict(os.environ)
+        rc, secs = run_step(
+            "index",
+            [py, "-c", "from backend.db.incomplete_listings_db import rebuild_index_chunked as r;"
+                       "import json;res=r(force=True);print(json.dumps(res));"
+                       "raise SystemExit(0 if res['status'] in ('rebuilt','locked') else 1)"],
+            env, run_dir / "post.out")
+        post["rebuild_incomplete_index"] = {"rc": rc, "seconds": secs}
     sampler.stop.set()
 
     results: list[dict[str, Any]] = []
