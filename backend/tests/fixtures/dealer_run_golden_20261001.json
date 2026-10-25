@@ -235,7 +235,10 @@
        "price": 1.0,
        "stock_number": 1.0,
        "transmission": 1.0,
-       "trim": 1.0
+       "trim": 1.0,
+       "used_n": 0,
+       "used_zero_mi": 0,
+       "used_zero_mi_my2026": 0
       },
       "coverage": {
        "count": 3,
@@ -473,7 +476,10 @@
     "price": 1.0,
     "stock_number": 1.0,
     "transmission": 1.0,
-    "trim": 1.0
+    "trim": 1.0,
+    "used_n": 0,
+    "used_zero_mi": 0,
+    "used_zero_mi_my2026": 0
    },
    "coverage": {
     "count": 3,
@@ -1024,7 +1030,10 @@
        "price": 1.0,
        "stock_number": 1.0,
        "transmission": 1.0,
-       "trim": 1.0
+       "trim": 1.0,
+       "used_n": 0,
+       "used_zero_mi": 0,
+       "used_zero_mi_my2026": 0
       },
       "coverage": {
        "count": 3,
@@ -1259,7 +1268,10 @@
     "price": 1.0,
     "stock_number": 1.0,
     "transmission": 1.0,
-    "trim": 1.0
+    "trim": 1.0,
+    "used_n": 0,
+    "used_zero_mi": 0,
+    "used_zero_mi_my2026": 0
    },
    "coverage": {
     "count": 3,
@@ -1880,7 +1892,11 @@
        "price": 1.0,
        "stock_number": 1.0,
        "transmission": 0.0,
-       "trim": 1.0
+       "trim": 1.0,
+       "used_mileage": 1.0,
+       "used_n": 3,
+       "used_zero_mi": 0,
+       "used_zero_mi_my2026": 0
       },
       "coverage": {
        "count": 5,
@@ -2148,7 +2164,11 @@
     "price": 1.0,
     "stock_number": 1.0,
     "transmission": 0.0,
-    "trim": 1.0
+    "trim": 1.0,
+    "used_mileage": 1.0,
+    "used_n": 3,
+    "used_zero_mi": 0,
+    "used_zero_mi_my2026": 0
    },
    "coverage": {
     "count": 5,
@@ -2878,7 +2898,11 @@
        "price": 1.0,
        "stock_number": 1.0,
        "transmission": 0.0,
-       "trim": 1.0
+       "trim": 1.0,
+       "used_mileage": 1.0,
+       "used_n": 2,
+       "used_zero_mi": 0,
+       "used_zero_mi_my2026": 0
       },
       "coverage": {
        "count": 4,
@@ -3159,7 +3183,11 @@
     "price": 1.0,
     "stock_number": 1.0,
     "transmission": 0.0,
-    "trim": 1.0
+    "trim": 1.0,
+    "used_mileage": 1.0,
+    "used_n": 2,
+    "used_zero_mi": 0,
+    "used_zero_mi_my2026": 0
    },
    "coverage": {
     "count": 4,
@@ -3872,7 +3900,11 @@
        "price": 1.0,
        "stock_number": 1.0,
        "transmission": 0.0,
-       "trim": 1.0
+       "trim": 1.0,
+       "used_mileage": 1.0,
+       "used_n": 2,
+       "used_zero_mi": 0,
+       "used_zero_mi_my2026": 0
       },
       "coverage": {
        "count": 4,
@@ -4150,7 +4182,11 @@
     "price": 1.0,
     "stock_number": 1.0,
     "transmission": 0.0,
-    "trim": 1.0
+    "trim": 1.0,
+    "used_mileage": 1.0,
+    "used_n": 2,
+    "used_zero_mi": 0,
+    "used_zero_mi_my2026": 0
    },
    "coverage": {
     "count": 4,
@@ -4898,7 +4934,11 @@
        "price": 1.0,
        "stock_number": 1.0,
        "transmission": 0.0,
-       "trim": 1.0
+       "trim": 1.0,
+       "used_mileage": 1.0,
+       "used_n": 3,
+       "used_zero_mi": 0,
+       "used_zero_mi_my2026": 0
       },
       "coverage": {
        "count": 6,
@@ -5183,7 +5223,11 @@
     "price": 1.0,
     "stock_number": 1.0,
     "transmission": 0.0,
-    "trim": 1.0
+    "trim": 1.0,
+    "used_mileage": 1.0,
+    "used_n": 3,
+    "used_zero_mi": 0,
+    "used_zero_mi_my2026": 0
    },
    "coverage": {
     "count": 6,
@@ -6094,7 +6138,11 @@
        "price": 1.0,
        "stock_number": 1.0,
        "transmission": 0.0,
-       "trim": 1.0
+       "trim": 1.0,
+       "used_mileage": 1.0,
+       "used_n": 7,
+       "used_zero_mi": 0,
+       "used_zero_mi_my2026": 0
       },
       "coverage": {
        "count": 11,
@@ -6383,7 +6431,11 @@
     "price": 1.0,
     "stock_number": 1.0,
     "transmission": 0.0,
-    "trim": 1.0
+    "trim": 1.0,
+    "used_mileage": 1.0,
+    "used_n": 7,
+    "used_zero_mi": 0,
+    "used_zero_mi_my2026": 0
    },
    "coverage": {
     "count": 11,
@@ -7585,7 +7637,11 @@
        "price": 1.0,
        "stock_number": 1.0,
        "transmission": 0.0,
-       "trim": 1.0
+       "trim": 1.0,
+       "used_mileage": 1.0,
+       "used_n": 2,
+       "used_zero_mi": 0,
+       "used_zero_mi_my2026": 0
       },
       "coverage": {
        "count": 5,
@@ -7873,7 +7929,11 @@
     "price": 1.0,
     "stock_number": 1.0,
     "transmission": 0.0,
-    "trim": 1.0
+    "trim": 1.0,
+    "used_mileage": 1.0,
+    "used_n": 2,
+    "used_zero_mi": 0,
+    "used_zero_mi_my2026": 0
    },
    "coverage": {
     "count": 5,
@@ -8884,7 +8944,11 @@
        "price": 1.0,
        "stock_number": 1.0,
        "transmission": 0.0,
-       "trim": 1.0
+       "trim": 1.0,
+       "used_mileage": 1.0,
+       "used_n": 3,
+       "used_zero_mi": 0,
+       "used_zero_mi_my2026": 0
       },
       "coverage": {
        "count": 7,
@@ -9170,7 +9234,11 @@
     "price": 1.0,
     "stock_number": 1.0,
     "transmission": 0.0,
-    "trim": 1.0
+    "trim": 1.0,
+    "used_mileage": 1.0,
+    "used_n": 3,
+    "used_zero_mi": 0,
+    "used_zero_mi_my2026": 0
    },
    "coverage": {
     "count": 7,
@@ -10084,7 +10152,11 @@
        "price": 1.0,
        "stock_number": 1.0,
        "transmission": 0.0,
-       "trim": 1.0
+       "trim": 1.0,
+       "used_mileage": 1.0,
+       "used_n": 2,
+       "used_zero_mi": 0,
+       "used_zero_mi_my2026": 0
       },
       "coverage": {
        "count": 4,
@@ -10367,7 +10439,11 @@
     "price": 1.0,
     "stock_number": 1.0,
     "transmission": 0.0,
-    "trim": 1.0
+    "trim": 1.0,
+    "used_mileage": 1.0,
+    "used_n": 2,
+    "used_zero_mi": 0,
+    "used_zero_mi_my2026": 0
    },
    "coverage": {
     "count": 4,
@@ -11115,7 +11191,11 @@
        "price": 1.0,
        "stock_number": 1.0,
        "transmission": 0.0,
-       "trim": 1.0
+       "trim": 1.0,
+       "used_mileage": 1.0,
+       "used_n": 2,
+       "used_zero_mi": 0,
+       "used_zero_mi_my2026": 0
       },
       "coverage": {
        "count": 5,
@@ -11398,7 +11478,11 @@
     "price": 1.0,
     "stock_number": 1.0,
     "transmission": 0.0,
-    "trim": 1.0
+    "trim": 1.0,
+    "used_mileage": 1.0,
+    "used_n": 2,
+    "used_zero_mi": 0,
+    "used_zero_mi_my2026": 0
    },
    "coverage": {
     "count": 5,
@@ -12215,7 +12299,11 @@
        "price": 1.0,
        "stock_number": 1.0,
        "transmission": 0.0,
-       "trim": 1.0
+       "trim": 1.0,
+       "used_mileage": 1.0,
+       "used_n": 2,
+       "used_zero_mi": 0,
+       "used_zero_mi_my2026": 0
       },
       "coverage": {
        "count": 4,
@@ -12502,7 +12590,11 @@
     "price": 1.0,
     "stock_number": 1.0,
     "transmission": 0.0,
-    "trim": 1.0
+    "trim": 1.0,
+    "used_mileage": 1.0,
+    "used_n": 2,
+    "used_zero_mi": 0,
+    "used_zero_mi_my2026": 0
    },
    "coverage": {
     "count": 4,
@@ -13237,7 +13329,10 @@
        "price": 1.0,
        "stock_number": 0.0,
        "transmission": 0.0,
-       "trim": 0.0
+       "trim": 0.0,
+       "used_n": 0,
+       "used_zero_mi": 0,
+       "used_zero_mi_my2026": 0
       },
       "coverage": {
        "count": 4,
@@ -13508,7 +13603,10 @@
     "price": 1.0,
     "stock_number": 0.0,
     "transmission": 0.0,
-    "trim": 0.0
+    "trim": 0.0,
+    "used_n": 0,
+    "used_zero_mi": 0,
+    "used_zero_mi_my2026": 0
    },
    "coverage": {
     "count": 4,
@@ -14232,7 +14330,11 @@
        "price": 1.0,
        "stock_number": 1.0,
        "transmission": 0.0,
-       "trim": 1.0
+       "trim": 1.0,
+       "used_mileage": 1.0,
+       "used_n": 4,
+       "used_zero_mi": 0,
+       "used_zero_mi_my2026": 0
       },
       "coverage": {
        "count": 5,
@@ -14520,7 +14622,11 @@
     "price": 1.0,
     "stock_number": 1.0,
     "transmission": 0.0,
-    "trim": 1.0
+    "trim": 1.0,
+    "used_mileage": 1.0,
+    "used_n": 4,
+    "used_zero_mi": 0,
+    "used_zero_mi_my2026": 0
    },
    "coverage": {
     "count": 5,
@@ -15345,7 +15451,11 @@
        "price": 1.0,
        "stock_number": 1.0,
        "transmission": 0.0,
-       "trim": 1.0
+       "trim": 1.0,
+       "used_mileage": 1.0,
+       "used_n": 2,
+       "used_zero_mi": 0,
+       "used_zero_mi_my2026": 0
       },
       "coverage": {
        "count": 6,
@@ -15634,7 +15744,11 @@
     "price": 1.0,
     "stock_number": 1.0,
     "transmission": 0.0,
-    "trim": 1.0
+    "trim": 1.0,
+    "used_mileage": 1.0,
+    "used_n": 2,
+    "used_zero_mi": 0,
+    "used_zero_mi_my2026": 0
    },
    "coverage": {
     "count": 6,
@@ -16498,7 +16612,11 @@
        "price": 1.0,
        "stock_number": 1.0,
        "transmission": 0.0,
-       "trim": 1.0
+       "trim": 1.0,
+       "used_mileage": 1.0,
+       "used_n": 3,
+       "used_zero_mi": 0,
+       "used_zero_mi_my2026": 0
       },
       "coverage": {
        "count": 5,
@@ -16766,7 +16884,11 @@
     "price": 1.0,
     "stock_number": 1.0,
     "transmission": 0.0,
-    "trim": 1.0
+    "trim": 1.0,
+    "used_mileage": 1.0,
+    "used_n": 3,
+    "used_zero_mi": 0,
+    "used_zero_mi_my2026": 0
    },
    "coverage": {
     "count": 5,
@@ -17506,7 +17628,11 @@
        "price": 1.0,
        "stock_number": 1.0,
        "transmission": 0.0,
-       "trim": 1.0
+       "trim": 1.0,
+       "used_mileage": 1.0,
+       "used_n": 2,
+       "used_zero_mi": 0,
+       "used_zero_mi_my2026": 0
       },
       "coverage": {
        "count": 4,
@@ -17787,7 +17913,11 @@
     "price": 1.0,
     "stock_number": 1.0,
     "transmission": 0.0,
-    "trim": 1.0
+    "trim": 1.0,
+    "used_mileage": 1.0,
+    "used_n": 2,
+    "used_zero_mi": 0,
+    "used_zero_mi_my2026": 0
    },
    "coverage": {
     "count": 4,
@@ -18500,7 +18630,11 @@
        "price": 1.0,
        "stock_number": 1.0,
        "transmission": 0.0,
-       "trim": 1.0
+       "trim": 1.0,
+       "used_mileage": 1.0,
+       "used_n": 2,
+       "used_zero_mi": 0,
+       "used_zero_mi_my2026": 0
       },
       "coverage": {
        "count": 4,
@@ -18778,7 +18912,11 @@
     "price": 1.0,
     "stock_number": 1.0,
     "transmission": 0.0,
-    "trim": 1.0
+    "trim": 1.0,
+    "used_mileage": 1.0,
+    "used_n": 2,
+    "used_zero_mi": 0,
+    "used_zero_mi_my2026": 0
    },
    "coverage": {
     "count": 4,
@@ -19526,7 +19664,11 @@
        "price": 1.0,
        "stock_number": 1.0,
        "transmission": 0.0,
-       "trim": 1.0
+       "trim": 1.0,
+       "used_mileage": 1.0,
+       "used_n": 3,
+       "used_zero_mi": 0,
+       "used_zero_mi_my2026": 0
       },
       "coverage": {
        "count": 6,
@@ -19811,7 +19953,11 @@
     "price": 1.0,
     "stock_number": 1.0,
     "transmission": 0.0,
-    "trim": 1.0
+    "trim": 1.0,
+    "used_mileage": 1.0,
+    "used_n": 3,
+    "used_zero_mi": 0,
+    "used_zero_mi_my2026": 0
    },
    "coverage": {
     "count": 6,
@@ -20726,7 +20872,11 @@
        "price": 1.0,
        "stock_number": 1.0,
        "transmission": 0.0,
-       "trim": 1.0
+       "trim": 1.0,
+       "used_mileage": 1.0,
+       "used_n": 7,
+       "used_zero_mi": 0,
+       "used_zero_mi_my2026": 0
       },
       "coverage": {
        "count": 11,
@@ -21015,7 +21165,11 @@
     "price": 1.0,
     "stock_number": 1.0,
     "transmission": 0.0,
-    "trim": 1.0
+    "trim": 1.0,
+    "used_mileage": 1.0,
+    "used_n": 7,
+    "used_zero_mi": 0,
+    "used_zero_mi_my2026": 0
    },
    "coverage": {
     "count": 11,
@@ -22223,7 +22377,11 @@
        "price": 1.0,
        "stock_number": 1.0,
        "transmission": 0.0,
-       "trim": 1.0
+       "trim": 1.0,
+       "used_mileage": 1.0,
+       "used_n": 2,
+       "used_zero_mi": 0,
+       "used_zero_mi_my2026": 0
       },
       "coverage": {
        "count": 5,
@@ -22511,7 +22669,11 @@
     "price": 1.0,
     "stock_number": 1.0,
     "transmission": 0.0,
-    "trim": 1.0
+    "trim": 1.0,
+    "used_mileage": 1.0,
+    "used_n": 2,
+    "used_zero_mi": 0,
+    "used_zero_mi_my2026": 0
    },
    "coverage": {
     "count": 5,
@@ -23524,7 +23686,11 @@
        "price": 1.0,
        "stock_number": 1.0,
        "transmission": 0.0,
-       "trim": 1.0
+       "trim": 1.0,
+       "used_mileage": 1.0,
+       "used_n": 3,
+       "used_zero_mi": 0,
+       "used_zero_mi_my2026": 0
       },
       "coverage": {
        "count": 7,
@@ -23810,7 +23976,11 @@
     "price": 1.0,
     "stock_number": 1.0,
     "transmission": 0.0,
-    "trim": 1.0
+    "trim": 1.0,
+    "used_mileage": 1.0,
+    "used_n": 3,
+    "used_zero_mi": 0,
+    "used_zero_mi_my2026": 0
    },
    "coverage": {
     "count": 7,
@@ -24738,7 +24908,11 @@
        "price": 1.0,
        "stock_number": 1.0,
        "transmission": 0.0,
-       "trim": 1.0
+       "trim": 1.0,
+       "used_mileage": 1.0,
+       "used_n": 2,
+       "used_zero_mi": 0,
+       "used_zero_mi_my2026": 0
       },
       "coverage": {
        "count": 4,
@@ -25021,7 +25195,11 @@
     "price": 1.0,
     "stock_number": 1.0,
     "transmission": 0.0,
-    "trim": 1.0
+    "trim": 1.0,
+    "used_mileage": 1.0,
+    "used_n": 2,
+    "used_zero_mi": 0,
+    "used_zero_mi_my2026": 0
    },
    "coverage": {
     "count": 4,
@@ -25769,7 +25947,11 @@
        "price": 1.0,
        "stock_number": 1.0,
        "transmission": 0.0,
-       "trim": 1.0
+       "trim": 1.0,
+       "used_mileage": 1.0,
+       "used_n": 2,
+       "used_zero_mi": 0,
+       "used_zero_mi_my2026": 0
       },
       "coverage": {
        "count": 5,
@@ -26052,7 +26234,11 @@
     "price": 1.0,
     "stock_number": 1.0,
     "transmission": 0.0,
-    "trim": 1.0
+    "trim": 1.0,
+    "used_mileage": 1.0,
+    "used_n": 2,
+    "used_zero_mi": 0,
+    "used_zero_mi_my2026": 0
    },
    "coverage": {
     "count": 5,
@@ -26869,7 +27055,11 @@
        "price": 1.0,
        "stock_number": 1.0,
        "transmission": 0.0,
-       "trim": 1.0
+       "trim": 1.0,
+       "used_mileage": 1.0,
+       "used_n": 2,
+       "used_zero_mi": 0,
+       "used_zero_mi_my2026": 0
       },
       "coverage": {
        "count": 4,
@@ -27156,7 +27346,11 @@
     "price": 1.0,
     "stock_number": 1.0,
     "transmission": 0.0,
-    "trim": 1.0
+    "trim": 1.0,
+    "used_mileage": 1.0,
+    "used_n": 2,
+    "used_zero_mi": 0,
+    "used_zero_mi_my2026": 0
    },
    "coverage": {
     "count": 4,
@@ -27891,7 +28085,10 @@
        "price": 1.0,
        "stock_number": 0.0,
        "transmission": 0.0,
-       "trim": 0.0
+       "trim": 0.0,
+       "used_n": 0,
+       "used_zero_mi": 0,
+       "used_zero_mi_my2026": 0
       },
       "coverage": {
        "count": 4,
@@ -28162,7 +28359,10 @@
     "price": 1.0,
     "stock_number": 0.0,
     "transmission": 0.0,
-    "trim": 0.0
+    "trim": 0.0,
+    "used_n": 0,
+    "used_zero_mi": 0,
+    "used_zero_mi_my2026": 0
    },
    "coverage": {
     "count": 4,
@@ -28894,7 +29094,11 @@
        "price": 1.0,
        "stock_number": 1.0,
        "transmission": 0.0,
-       "trim": 1.0
+       "trim": 1.0,
+       "used_mileage": 1.0,
+       "used_n": 4,
+       "used_zero_mi": 0,
+       "used_zero_mi_my2026": 0
       },
       "coverage": {
        "count": 5,
@@ -29182,7 +29386,11 @@
     "price": 1.0,
     "stock_number": 1.0,
     "transmission": 0.0,
-    "trim": 1.0
+    "trim": 1.0,
+    "used_mileage": 1.0,
+    "used_n": 4,
+    "used_zero_mi": 0,
+    "used_zero_mi_my2026": 0
    },
    "coverage": {
     "count": 5,
@@ -30009,7 +30217,11 @@
        "price": 1.0,
        "stock_number": 1.0,
        "transmission": 0.0,
-       "trim": 1.0
+       "trim": 1.0,
+       "used_mileage": 1.0,
+       "used_n": 2,
+       "used_zero_mi": 0,
+       "used_zero_mi_my2026": 0
       },
       "coverage": {
        "count": 6,
@@ -30298,7 +30510,11 @@
     "price": 1.0,
     "stock_number": 1.0,
     "transmission": 0.0,
-    "trim": 1.0
+    "trim": 1.0,
+    "used_mileage": 1.0,
+    "used_n": 2,
+    "used_zero_mi": 0,
+    "used_zero_mi_my2026": 0
    },
    "coverage": {
     "count": 6,
@@ -31326,7 +31542,10 @@
        "price": 1.0,
        "stock_number": 1.0,
        "transmission": 1.0,
-       "trim": 1.0
+       "trim": 1.0,
+       "used_n": 0,
+       "used_zero_mi": 0,
+       "used_zero_mi_my2026": 0
       },
       "coverage": {
        "count": 7,
@@ -31585,7 +31804,10 @@
     "price": 1.0,
     "stock_number": 1.0,
     "transmission": 1.0,
-    "trim": 1.0
+    "trim": 1.0,
+    "used_n": 0,
+    "used_zero_mi": 0,
+    "used_zero_mi_my2026": 0
    },
    "coverage": {
     "count": 7,
@@ -32443,7 +32665,10 @@
        "price": 1.0,
        "stock_number": 1.0,
        "transmission": 1.0,
-       "trim": 1.0
+       "trim": 1.0,
+       "used_n": 0,
+       "used_zero_mi": 0,
+       "used_zero_mi_my2026": 0
       },
       "coverage": {
        "count": 11,
@@ -32731,7 +32956,10 @@
     "price": 1.0,
     "stock_number": 1.0,
     "transmission": 1.0,
-    "trim": 1.0
+    "trim": 1.0,
+    "used_n": 0,
+    "used_zero_mi": 0,
+    "used_zero_mi_my2026": 0
    },
    "coverage": {
     "count": 11,
@@ -33886,7 +34114,10 @@
        "price": 1.0,
        "stock_number": 1.0,
        "transmission": 1.0,
-       "trim": 1.0
+       "trim": 1.0,
+       "used_n": 0,
+       "used_zero_mi": 0,
+       "used_zero_mi_my2026": 0
       },
       "coverage": {
        "count": 13,
@@ -34140,7 +34371,10 @@
     "price": 1.0,
     "stock_number": 1.0,
     "transmission": 1.0,
-    "trim": 1.0
+    "trim": 1.0,
+    "used_n": 0,
+    "used_zero_mi": 0,
+    "used_zero_mi_my2026": 0
    },
    "coverage": {
     "count": 13,
@@ -35968,7 +36202,11 @@
        "price": 1.0,
        "stock_number": 1.0,
        "transmission": 0.0,
-       "trim": 1.0
+       "trim": 1.0,
+       "used_mileage": 1.0,
+       "used_n": 2,
+       "used_zero_mi": 0,
+       "used_zero_mi_my2026": 0
       },
       "coverage": {
        "count": 5,
@@ -36275,7 +36513,11 @@
     "price": 1.0,
     "stock_number": 1.0,
     "transmission": 0.0,
-    "trim": 1.0
+    "trim": 1.0,
+    "used_mileage": 1.0,
+    "used_n": 2,
+    "used_zero_mi": 0,
+    "used_zero_mi_my2026": 0
    },
    "coverage": {
     "count": 5,
@@ -37057,7 +37299,10 @@
     "price": 1.0,
     "stock_number": 1.0,
     "transmission": 1.0,
-    "trim": 1.0
+    "trim": 1.0,
+    "used_n": 0,
+    "used_zero_mi": 0,
+    "used_zero_mi_my2026": 0
    },
    "dealer_id": "lexusofknoxville-com",
    "dealer_name": "Lexus of Knoxville",

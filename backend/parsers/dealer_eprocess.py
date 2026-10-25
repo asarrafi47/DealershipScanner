@@ -169,7 +169,8 @@ def _detail_url(obj: dict, offer: dict, dealer_url: str, base_url: str) -> str:
 
 def _map(obj: dict, base_url: str, dealer_id: str, dealer_name: str, dealer_url: str) -> dict | None:
     vin = norm_str(obj.get("vehicleIdentificationNumber") or obj.get("mpn") or "")
-    if not vin or len(vin) < 11:
+    vin = vin.upper()
+    if len(vin) != 17:  # N6.9: order numbers and short dealer codes are not VINs
         return None
     offer = _offer(obj)
     vdp = _detail_url(obj, offer, dealer_url, base_url)

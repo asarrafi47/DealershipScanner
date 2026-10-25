@@ -26,6 +26,9 @@ KEY_FIELDS = ("price", "trim", "exterior_color")
 SECONDARY_FIELDS = ("interior_color", "engine_description", "transmission", "drivetrain", "fuel_type",
                     "body_style", "description", "stock_number", "msrp", "gallery_8plus")
 
+# N6.9: used-row mileage coverage (gated at FIELD_FLOOR) and its report-only counters.
+MILEAGE_COVERAGE_KEYS = ("used_mileage", "used_n", "used_zero_mi", "used_zero_mi_my2026")
+
 # Scans are HTTP-only by policy (backend/scanner/browser_gate.py): no cap juggling
 # needed any more — without SCANNER_ALLOW_BROWSER the scanner never launches
 # Chromium, opens no page and the browser VDP pool does not exist.

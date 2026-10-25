@@ -332,6 +332,9 @@ def _ensure_schema(conn):
     conn.commit()
 
 
+from backend.scanner.identifier_gate import drop_ungated_vehicles  # noqa: E402
+
+
 def drop_unattributable_vehicles(vehicles: list[dict]) -> tuple[list[dict], int]:
     """Remove rows the rooftop-attribution gate refused.
 
@@ -374,6 +377,11 @@ def upsert_vehicles(vehicles: list[dict], stats: dict | None = None) -> int:
     if not vehicles:
         return 0
     vehicles, _refused = drop_unattributable_vehicles(vehicles)
+    if not vehicles:
+        return 0
+    vehicles, gate_refused = drop_ungated_vehicles(vehicles)
+    if stats is not None:
+        stats["identifier_gate_refused"] = gate_refused
     if not vehicles:
         return 0
     # Sorted by VIN so concurrent writers (fleet shards) lock rows in one order.
