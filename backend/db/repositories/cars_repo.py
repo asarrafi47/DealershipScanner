@@ -152,8 +152,10 @@ def get_car_by_id(car_id, *, include_inactive: bool = True):
     return car
 
 
-def get_cars_by_ids(car_ids: list[int]) -> list[dict]:
-    """Fetch full car rows by primary key; order matches ``car_ids`` (skips missing)."""
+def get_cars_by_ids(car_ids: list[int], *, active_only: bool = False) -> list[dict]:
+    """Fetch full car rows by primary key; order matches ``car_ids`` (skips missing).
+
+    ``active_only`` also skips delisted rows (``listing_active = 0``); admin counts use it."""
     if not car_ids:
         return []
     ordered_unique: list[int] = []
@@ -172,7 +174,8 @@ def get_cars_by_ids(car_ids: list[int]) -> list[dict]:
     with db_conn(row_factory=sqlite3.Row) as conn:
         cursor = conn.cursor()
         ph = _placeholders(ordered_unique)
-        cursor.execute(f"SELECT * FROM cars WHERE id IN ({ph})", ordered_unique)
+        active_sql = " AND COALESCE(listing_active, 1) = 1" if active_only else ""
+        cursor.execute(f"SELECT * FROM cars WHERE id IN ({ph}){active_sql}", ordered_unique)
         by_id = {dict(row)["id"]: dict(row) for row in cursor.fetchall()}
     out: list[dict] = []
     for cid in ordered_unique:

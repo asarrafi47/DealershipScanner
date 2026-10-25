@@ -163,6 +163,7 @@ def get_dealership_issue_stats(limit: int = 10) -> list[dict[str, Any]]:
             FROM cars c
             LEFT JOIN {inc_table} il ON il.car_id = c.id
             WHERE c.dealer_name IS NOT NULL AND TRIM(c.dealer_name) != ''
+              AND COALESCE(c.listing_active, 1) = 1
             GROUP BY c.dealer_id, c.dealer_name
             HAVING SUM(CASE WHEN il.car_id IS NOT NULL THEN 1 ELSE 0 END) > 0
                 OR SUM(CASE WHEN c.marked_for_review = 1 THEN 1 ELSE 0 END) > 0

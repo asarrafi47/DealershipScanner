@@ -111,7 +111,8 @@ def test_dealership_issue_stats_uses_incomplete_index(
             dealer_id TEXT,
             marked_for_review INTEGER,
             data_quality_score REAL,
-            price REAL
+            price REAL,
+            listing_active INTEGER DEFAULT 1
         )
         """
     )
@@ -350,3 +351,60 @@ def test_rehash_does_not_overwrite_newer_password(monkeypatch: pytest.MonkeyPatc
         time.sleep(0.05)
     assert row[0] == new_hash
     assert verify_password("Replacement1!", row[0]) is True
+
+
+def test_admin_incomplete_counts_are_active_only(
+    monkeypatch: pytest.MonkeyPatch, tmp_path
+) -> None:
+    """N6.3: delisted cars still in the index do not count in admin totals."""
+    inv_path = tmp_path / "inventory.db"
+    inc_path = tmp_path / "incomplete_listings.db"
+    monkeypatch.setattr(ild, "DB_PATH", str(inc_path))
+    monkeypatch.setattr(ild, "ensure_incomplete_index_built", lambda: None)
+
+    conn = sqlite3.connect(inv_path)
+    conn.execute(
+        "CREATE TABLE cars (id INTEGER PRIMARY KEY, dealer_name TEXT, dealer_id TEXT, "
+        "marked_for_review INTEGER, data_quality_score REAL, price REAL, listing_active INTEGER)"
+    )
+    for cid, active in ((1, 1), (2, 0), (3, 1)):
+        conn.execute(
+            "INSERT INTO cars VALUES (?,?,?,?,?,?,?)", (cid, "Alpha", "alpha", 0, 0.5, 1000, active)
+        )
+    conn.commit()
+    conn.close()
+    inc = sqlite3.connect(inc_path)
+    inc.execute(
+        "CREATE TABLE incomplete_listings (car_id INTEGER PRIMARY KEY, vin TEXT, "
+        "missing_fields_json TEXT, updated_at TEXT)"
+    )
+    for cid in (1, 2):
+        inc.execute(
+            "INSERT INTO incomplete_listings VALUES (?,?,?,?)",
+            (cid, f"V{cid}", '["transmission"]', "2026-01-01T00:00:00+00:00"),
+        )
+    inc.commit()
+    inc.close()
+
+    @contextmanager
+    def fake_db_conn(*, row_factory=None):
+        c = sqlite3.connect(inv_path)
+        if row_factory is not None:
+            c.row_factory = row_factory
+        try:
+            yield c
+        finally:
+            c.close()
+
+    monkeypatch.setattr(inv_db, "db_conn", fake_db_conn)
+    monkeypatch.setattr("backend.db.repositories.base_repo.db_conn", fake_db_conn)
+    monkeypatch.setattr("backend.db.repositories.cars_repo.db_conn", fake_db_conn)
+
+    assert ild.get_incomplete_listings_count() == 1
+    stats = inv_db.get_dealership_issue_stats(limit=5)
+    assert stats[0]["total_cars"] == 2
+    assert stats[0]["incomplete_count"] == 1
+    from backend.db.repositories.cars_repo import get_cars_by_ids
+
+    assert [c["id"] for c in get_cars_by_ids([1, 2, 3], active_only=True)] == [1, 3]
+    assert [c["id"] for c in get_cars_by_ids([1, 2, 3])] == [1, 2, 3]
