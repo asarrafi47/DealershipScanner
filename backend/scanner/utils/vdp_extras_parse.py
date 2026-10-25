@@ -91,9 +91,36 @@ def _money(v: Any) -> float | None:
     return f if 500 <= f <= 2_000_000 else None
 
 
-def _clean(v: Any, limit: int = 120) -> str | None:
+# Placeholder tokens a dealer.com widget leaves in a field it never filled:
+# ``[[...]]`` and single-bracket ``[extra_cost_color]`` templates, ``null``.
+_TOKEN_RE = re.compile(r"^\[.*\]$|^(?:null|none|undefined)$", re.I | re.S)
+# Option codes in a colour field ("X9", "21"): <= 3 alphanumerics with a digit.
+# Colour fields only; letters-only strings stay ("Red" is a real colour).
+_OPTION_CODE_RE = re.compile(r"^(?=[A-Za-z0-9]{1,3}$)[A-Za-z]*\d[A-Za-z0-9]*$")
+
+
+def junk_text_value(v: Any, *, color: bool = False) -> bool:
+    """True for a stored/parsed text that is a parser artifact, not a value (N6.5):
+    a dict repr, a ``[...]`` token, ``null``, and for colours an option code."""
+    s = str(v if v is not None else "").strip()
+    if not s:
+        return False
+    if s.startswith("{") or _TOKEN_RE.match(s):
+        return True
+    return bool(color and _OPTION_CODE_RE.match(s))
+
+
+def _clean(v: Any, limit: int = 120, *, color: bool = False) -> str | None:
+    """Text field or None. Unwraps the localized ``{'_type':..,'en_US':..}`` object;
+    junk tokens (see :func:`junk_text_value`) count as missing."""
+    if isinstance(v, dict):
+        v = v.get("en_US")
+    elif isinstance(v, list):
+        return None
     s = str(v or "").strip()
-    return s[:limit] if s else None
+    if not s or junk_text_value(s, color=color):
+        return None
+    return s[:limit]
 
 
 def _vin_ok(blob: dict[str, Any], page_vin: str | None) -> bool:
@@ -113,8 +140,8 @@ def _dealer_inspire(html: str, page_vin: str | None) -> dict[str, Any]:
                 continue
             out.setdefault("msrp", _money(blob.get("msrp")))
             out.setdefault("stock_number", _clean(blob.get("stock"), 40))
-            out.setdefault("exterior_color", _clean(blob.get("ext_color")))
-            out.setdefault("interior_color", _clean(blob.get("int_color")))
+            out.setdefault("exterior_color", _clean(blob.get("ext_color"), color=True))
+            out.setdefault("interior_color", _clean(blob.get("int_color"), color=True))
             out.setdefault("drivetrain", _clean(blob.get("drivetrain"), 40))
             out.setdefault("trim", _clean(blob.get("trim"), 80))
             out.setdefault("engine_description", _clean(blob.get("engine_description"), 200))
@@ -140,8 +167,8 @@ def _ddc_vehicle_fields(blob: dict[str, Any]) -> dict[str, Any]:
     out = {
         "msrp": msrp if msrp and msrp <= _MSRP_CEILING else None,
         "stock_number": _clean(blob.get("stockNumber"), 40),
-        "exterior_color": _clean(blob.get("exteriorColor")),
-        "interior_color": _clean(blob.get("interiorColor")),
+        "exterior_color": _clean(blob.get("exteriorColor"), color=True),
+        "interior_color": _clean(blob.get("interiorColor"), color=True),
         "drivetrain": _clean(blob.get("drivetrain") or blob.get("driveLine") or blob.get("normalDriveLine"), 40),
         "trim": _clean(blob.get("trim"), 80),
         "fuel_type": _clean(blob.get("fuelType") or blob.get("normalFuelType"), 40),
@@ -182,8 +209,8 @@ def _dealer_com_quick_specs(html: str, page_vin: str | None) -> dict[str, Any]:
             "engine_description": _clean(qs.get("engine"), 200),
             "drivetrain": _clean(qs.get("driveLine"), 40),
             "transmission": _clean(qs.get("transmission"), 120),
-            "exterior_color": _clean(qs.get("exteriorColor")),
-            "interior_color": _clean(qs.get("interiorColor")),
+            "exterior_color": _clean(qs.get("exteriorColor"), color=True),
+            "interior_color": _clean(qs.get("interiorColor"), color=True),
             "stock_number": _clean(qs.get("stockNumber"), 40),
         }
         for k, v in cand.items():
@@ -292,7 +319,7 @@ def _jsonld_vehicle(html: str, page_vin: str | None) -> dict[str, Any]:
             cand = {
                 "make": _clean(brand, 40), "model": _clean(node.get("model"), 80), "trim": _clean(node.get("vehicleConfiguration"), 80),
                 "price": _money((offers or {}).get("price")) if isinstance(offers, dict) else None,
-                "exterior_color": _clean(node.get("color")), "interior_color": _clean(node.get("vehicleInteriorColor")),
+                "exterior_color": _clean(node.get("color"), color=True), "interior_color": _clean(node.get("vehicleInteriorColor"), color=True),
                 "stock_number": _clean((offers or {}).get("sku") if isinstance(offers, dict) else None, 40) or _clean(node.get("sku"), 40),
                 "engine_description": _clean(_jsonld_engine_text(node.get("vehicleEngine")), 200),
                 "transmission": _clean(node.get("vehicleTransmission"), 120),
