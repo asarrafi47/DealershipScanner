@@ -315,9 +315,28 @@ def heal_rows(conn, *, vins: Iterable[str] | None = None, dealers: Iterable[str]
                             if not str(r.get("engine_description") or "").strip() or not str(r.get("body_style") or "").strip()})
         flats = _vpic_flat_rows(conn, need_flat)
         _heal_chunk(cur, chunk, flats, stats, dry_run, lookup_vpic_from_cache, merge_spec_source_json)
+    touched = stats.pop("_touched", [])
     if not dry_run:
         conn.commit()
+        stats["resynced"] = _resync_incomplete_index(touched)
     return stats
+
+
+def _resync_incomplete_index(car_ids: list[int]) -> int:
+    """Refresh the incomplete-listings index row of each healed car (N6.2): the
+    heal changes fuel / drive after the per-car sync ran, so without this the
+    flags stay stale until the next fleet rebuild. Never fails the heal."""
+    done = 0
+    try:
+        from backend.db import incomplete_listings_db as ild
+
+        for cid in car_ids:
+            ild.sync_incomplete_listing_for_car_id(int(cid))
+            done += 1
+    except Exception:
+        import logging
+        logging.getLogger(__name__).exception("incomplete index re-sync after vPIC heal failed")
+    return done
 
 
 def _heal_chunk(cur, rows: list[dict[str, Any]], flats: dict[str, dict[str, str]], stats: dict[str, Any],
@@ -355,6 +374,7 @@ def _heal_chunk(cur, rows: list[dict[str, Any]], flats: dict[str, dict[str, str]
         new_src = merge_spec_source_json(r["spec_source_json"] if isinstance(r["spec_source_json"], str) else None, prov)
         sets = ", ".join(f"{k} = ?" for k in ch) + ", spec_source_json = ?"
         cur.execute(f"UPDATE cars SET {sets} WHERE id = ?", tuple(n for (_o, n) in ch.values()) + (new_src, r["id"]))
+        stats.setdefault("_touched", []).append(r["id"])
 
 
 def post_scan_vpic(vins: list[str]) -> dict[str, Any]:
