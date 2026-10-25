@@ -64,3 +64,39 @@ def test_repair_dry_run_writes_nothing(tmp_path, monkeypatch, capsys):
     assert main([]) == 0
     conn = inventory_db.get_conn()
     assert conn.execute("SELECT price FROM cars WHERE id=1").fetchone()[0] == 699
+
+
+def _seed_db(tmp_path, monkeypatch):
+    from backend.db import inventory_db
+
+    monkeypatch.setattr(inventory_db, "DB_PATH", str(tmp_path / "c.db"))
+    monkeypatch.delenv("INVENTORY_DATABASE_URL", raising=False)
+    conn = inventory_db.get_conn()
+    conn.execute("CREATE TABLE cars (id INTEGER PRIMARY KEY, vin TEXT, dealer_id TEXT, "
+                 "model TEXT, price INTEGER, listing_active INTEGER)")
+    conn.execute("INSERT INTO cars VALUES (1,'V1','d','m',699,1)")
+    conn.execute("INSERT INTO cars VALUES (2,'V2','d','m',31990,1)")
+    conn.execute("INSERT INTO cars VALUES (3,'V3','d','m',6001323,1)")
+    conn.execute("INSERT INTO cars VALUES (4,'V4','d','m',500,0)")  # inactive: untouched
+    conn.commit()
+    conn.close()
+    return inventory_db
+
+
+def test_repair_apply_writes_backup_and_nulls_only_junk(tmp_path, monkeypatch):
+    inventory_db = _seed_db(tmp_path, monkeypatch)
+    backup = tmp_path / "backup.csv"
+    assert main(["--apply", "--backup-file", str(backup)]) == 0
+    lines = backup.read_text().splitlines()
+    assert lines[0] == "id,vin,dealer_id,price,reason"
+    assert sorted(l.split(",")[0] for l in lines[1:]) == ["1", "3"]
+    conn = inventory_db.get_conn()
+    got = dict(conn.execute("SELECT id, price FROM cars").fetchall())
+    assert got == {1: None, 2: 31990, 3: None, 4: 500}
+
+
+def test_repair_apply_without_backup_is_refused(tmp_path, monkeypatch):
+    inventory_db = _seed_db(tmp_path, monkeypatch)
+    assert main(["--apply"]) == 2
+    conn = inventory_db.get_conn()
+    assert conn.execute("SELECT price FROM cars WHERE id=1").fetchone()[0] == 699
