@@ -15,6 +15,7 @@ from typing import Any
 
 from backend.enrichment.knowledge_engine import prepare_car_detail_context
 from backend.utils.car_serialize import DISPLAY_DASH, serialize_car_for_api
+from backend.scanner.utils.vdp_extras_parse import junk_text_value
 from backend.utils.in_transit import vehicle_is_in_transit
 from backend.utils.mileage_display import is_used_or_certified, odometer_absent
 
@@ -221,7 +222,7 @@ def listing_missing_field_codes(
         missing.append("make")
     if _dash(car.get("model")):
         missing.append("model")
-    if _dash(car.get("trim")):
+    if _dash(car.get("trim")) or junk_text_value(car_raw.get("trim")) or junk_text_value(car.get("trim")):
         # A blank trim is only "missing" when the model actually has trim
         # variants. Standalone models (BMW XM/M6/i8, base F-250) have no trim —
         # the catalog shows a single trim equal to the model name — so a blank
@@ -252,9 +253,14 @@ def listing_missing_field_codes(
         missing.append("condition")
     if _cylinders_display_missing(car, vs):
         missing.append("cylinders")
-    if _dash(car.get("exterior_color")):
+    # A stored parser artifact (dict repr, "[token]", option code) is a gap, not a fill (N6.5).
+    if _dash(car.get("exterior_color")) or any(
+        junk_text_value(x, color=True) for x in (car_raw.get("exterior_color"), car.get("exterior_color"))
+    ):
         missing.append("exterior_color")
-    if _dash(car.get("interior_color")):
+    if _dash(car.get("interior_color")) or any(
+        junk_text_value(x, color=True) for x in (car_raw.get("interior_color"), car.get("interior_color"))
+    ):
         missing.append("interior_color")
 
     vin_raw = (car_raw.get("vin") or "").strip()

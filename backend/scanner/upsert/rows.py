@@ -9,6 +9,7 @@ from typing import Any
 
 from backend.utils.analytics_ep import apply_ep_from_scanner_dict
 from backend.utils.car_serialize import infer_engine_l_for_db
+from backend.scanner.utils.vdp_extras_parse import junk_text_value
 from backend.utils.field_clean import clean_car_row_dict, is_effectively_empty
 from backend.utils.fuel_label_plausibility import cylinders_override_for_electric_claim
 from backend.utils.fuel_type_normalize import normalize_fuel_type_for_storage
@@ -74,6 +75,11 @@ def normalize_vehicle_row(raw: dict) -> dict:
         )
         if _tt:
             v["transmission_type"] = _tt
+    # Parser artifacts (dict repr, "[extra_cost_color]", option-code colours)
+    # are gaps, never values: they must not overwrite a stored real one (N6.5).
+    for _f in ("trim", "exterior_color", "interior_color"):
+        if junk_text_value(v.get(_f), color=_f != "trim"):
+            v[_f] = None
     if is_effectively_empty(v.get("engine_l")):
         _eng = infer_engine_l_for_db(v)
         if _eng is not None:
