@@ -360,9 +360,11 @@ def market_bands_generation() -> str:
     return gen
 
 
-def _aux_key(ctx: "_Ctx", pub_incomplete: bool, state: dict[str, Any] | None) -> str:
+def _aux_key(
+    ctx: "_Ctx", pub_incomplete: bool, state: dict[str, Any] | None, pending: bool = False
+) -> str:
     raw = (
-        f"{CARD_REV}|{1 if pub_incomplete else 0}|{_attr_key(state)}"
+        f"{CARD_REV}|{1 if pub_incomplete else 0}{'p' if pending else ''}|{_attr_key(state)}"
         f"|inc{1 if ctx.include_incomplete else 0}|mkt{ctx.market_gen}"
     )
     return hashlib.blake2b(raw.encode("utf-8", "surrogatepass"), digest_size=8).hexdigest()
@@ -465,7 +467,7 @@ def _serialize_rows(
             (
                 cid,
                 ckey,
-                _aux_key(ctx, pub_inc, state),
+                _aux_key(ctx, pub_inc, state, cid in ctx.snapshot.pending_ids),
                 1 if card.get("price_drop_days_ago") is not None else 0,
                 bucket,
                 float(price),

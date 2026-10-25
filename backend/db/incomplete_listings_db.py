@@ -16,7 +16,11 @@ from datetime import datetime, timezone
 
 from backend.db.inventory_db import DB_PATH as _INVENTORY_DB_PATH
 from backend.db import inventory_pg
-from backend.utils.listing_completeness import listing_missing_field_codes
+from backend.utils.listing_completeness import (
+    PENDING_WINDOW_DAYS,
+    is_pending_arrival,
+    listing_missing_field_codes,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -96,10 +100,15 @@ def _ensure_schema(conn) -> None:
             car_id INTEGER PRIMARY KEY NOT NULL,
             vin TEXT NOT NULL,
             missing_fields_json TEXT NOT NULL,
-            updated_at TEXT NOT NULL
+            updated_at TEXT NOT NULL,
+            first_seen_at TEXT,
+            last_scraped_at TEXT,
+            scans_survived INTEGER NOT NULL DEFAULT 1,
+            pending INTEGER NOT NULL DEFAULT 0
         )
         """
     )
+    _ensure_window_columns(cur, is_pg)
     cur.execute(
         """
         CREATE TABLE IF NOT EXISTS incomplete_listings_meta (
@@ -114,6 +123,28 @@ def _ensure_schema(conn) -> None:
     conn.commit()
     if is_pg:
         _PG_INC_SCHEMA_OK = True
+
+
+# N6.4: per-row new-arrival state (V026 owns these on Postgres).
+_WINDOW_COLUMNS = (
+    ("first_seen_at", "TEXT"),
+    ("last_scraped_at", "TEXT"),
+    ("scans_survived", "INTEGER NOT NULL DEFAULT 1"),
+    ("pending", "INTEGER NOT NULL DEFAULT 0"),
+)
+
+
+def _ensure_window_columns(cur, is_pg: bool) -> None:
+    """Add the N6.4 columns to an index table created before them (idempotent)."""
+    if is_pg:
+        for name, decl in _WINDOW_COLUMNS:
+            cur.execute(f"ALTER TABLE incomplete_listings ADD COLUMN IF NOT EXISTS {name} {decl}")
+        return
+    cur.execute("PRAGMA table_info(incomplete_listings)")
+    have = {r[1] for r in cur.fetchall()}
+    for name, decl in _WINDOW_COLUMNS:
+        if name not in have:
+            cur.execute(f"ALTER TABLE incomplete_listings ADD COLUMN {name} {decl}")
 
 
 def _clear_listings_caches_after_index_write() -> None:
@@ -138,17 +169,34 @@ def get_missing_field_codes_for_car_id(car_id: int) -> list[str]:
     conn = get_conn()
     _ensure_schema(conn)
     row = conn.execute(
-        "SELECT missing_fields_json FROM incomplete_listings WHERE car_id = ?",
+        "SELECT missing_fields_json, COALESCE(pending, 0) FROM incomplete_listings WHERE car_id = ?",
         (int(car_id),),
     ).fetchone()
     conn.close()
-    if not row:
+    # A pending new arrival is waiting on the dealer, not incomplete (N6.4).
+    if not row or row[1]:
         return []
     try:
         raw = json.loads(row[0])
     except (TypeError, ValueError, json.JSONDecodeError):
         return []
     return [str(c) for c in raw if c] if isinstance(raw, list) else []
+
+
+def _ts_text(value) -> str | None:
+    """A timestamp column as text for the index (``None`` stays ``None``)."""
+    if value is None:
+        return None
+    s = value.isoformat() if hasattr(value, "isoformat") else str(value)
+    return s.strip() or None
+
+
+def _next_scans(prev, scraped: str | None) -> int:
+    """Scans a gap has survived: +1 when the car was scraped again since the stored row."""
+    if not prev:
+        return 1
+    n = int(prev[0] or 1)
+    return n + 1 if scraped and scraped != prev[1] else n
 
 
 def sync_incomplete_listing_for_car_id(car_id: int) -> None:
@@ -170,15 +218,28 @@ def sync_incomplete_listing_for_car_id(car_id: int) -> None:
     now = datetime.now(timezone.utc).replace(microsecond=0).isoformat()
     if missing:
         cur.execute(
+            "SELECT scans_survived, last_scraped_at FROM incomplete_listings WHERE car_id = ?",
+            (car_id,),
+        )
+        prev = cur.fetchone()
+        first_seen, scraped = _ts_text(car.get("first_seen_at")), _ts_text(car.get("scraped_at"))
+        scans = _next_scans(prev, scraped)
+        pending = 1 if is_pending_arrival(missing, first_seen, scraped, PENDING_WINDOW_DAYS) else 0
+        cur.execute(
             """
-            INSERT INTO incomplete_listings (car_id, vin, missing_fields_json, updated_at)
-            VALUES (?, ?, ?, ?)
+            INSERT INTO incomplete_listings (car_id, vin, missing_fields_json, updated_at,
+                                             first_seen_at, last_scraped_at, scans_survived, pending)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
             ON CONFLICT(car_id) DO UPDATE SET
                 vin = excluded.vin,
                 missing_fields_json = excluded.missing_fields_json,
-                updated_at = excluded.updated_at
+                updated_at = excluded.updated_at,
+                first_seen_at = excluded.first_seen_at,
+                last_scraped_at = excluded.last_scraped_at,
+                scans_survived = excluded.scans_survived,
+                pending = excluded.pending
             """,
-            (car_id, vin, json.dumps(missing), now),
+            (car_id, vin, json.dumps(missing), now, first_seen, scraped, scans, pending),
         )
     else:
         cur.execute("DELETE FROM incomplete_listings WHERE car_id = ?", (car_id,))
@@ -193,7 +254,7 @@ def rebuild_incomplete_listings_index() -> int:
 
 # Bump when listing_completeness / merge_verified_specs rules change: the fleet post step
 # rebuilds the index whenever the stored value differs (N6.1).
-INDEX_RULES_VERSION = "2026-10-n6.1"
+INDEX_RULES_VERSION = "2026-10-n6.4"
 _META_RULES_KEY = "rules_version"
 _META_REBUILT_KEY = "last_rebuilt_at"
 REBUILD_CHUNK = 20000
@@ -240,7 +301,7 @@ def _release_rebuild_lock(conn) -> None:
         conn.cursor().execute("SELECT pg_advisory_unlock(?)", (_REBUILD_LOCK_KEY,))
 
 
-def _missing_rows(cars: list[dict], now: str) -> list[tuple]:
+def _missing_rows(cars: list[dict], now: str, prior: dict[int, tuple] | None = None) -> list[tuple]:
     from backend.enrichment.knowledge_engine import merge_verified_specs, prime_vpic_cache
 
     rows = []
@@ -255,7 +316,11 @@ def _missing_rows(cars: list[dict], now: str) -> list[tuple]:
             detail_ctx = {"verified_specs": merge_verified_specs(car, include_extended_specs=False)}
             missing = listing_missing_field_codes(car, for_public_filter=False, detail_ctx=detail_ctx)
             if missing:
-                rows.append((car["id"], str(car.get("vin") or "?").strip(), json.dumps(missing), now))
+                first_seen, scraped = _ts_text(car.get("first_seen_at")), _ts_text(car.get("scraped_at"))
+                scans = _next_scans((prior or {}).get(int(car["id"])), scraped)
+                pending = 1 if is_pending_arrival(missing, first_seen, scraped, PENDING_WINDOW_DAYS) else 0
+                rows.append((car["id"], str(car.get("vin") or "?").strip(), json.dumps(missing), now,
+                             first_seen, scraped, scans, pending))
     return rows
 
 
@@ -280,10 +345,15 @@ def rebuild_index_chunked(chunk: int = REBUILD_CHUNK, *, force: bool = False) ->
             return {"status": "locked", "rows": 0, "chunks": 0}
         try:
             cur = conn_inc.cursor()
-            cur.execute(f"CREATE TABLE IF NOT EXISTS {_STAGING} (LIKE incomplete_listings)"
+            # Dropped and recreated so a staging table left by an older code version
+            # (4 columns) cannot be reused.
+            cur.execute(f"DROP TABLE IF EXISTS {_STAGING}")
+            cur.execute(f"CREATE TABLE {_STAGING} (LIKE incomplete_listings)"
                         if inventory_pg.is_inventory_postgres() else
-                        f"CREATE TABLE IF NOT EXISTS {_STAGING} (car_id INTEGER PRIMARY KEY NOT NULL, "
-                        "vin TEXT NOT NULL, missing_fields_json TEXT NOT NULL, updated_at TEXT NOT NULL)")
+                        f"CREATE TABLE {_STAGING} (car_id INTEGER PRIMARY KEY NOT NULL, "
+                        "vin TEXT NOT NULL, missing_fields_json TEXT NOT NULL, updated_at TEXT NOT NULL, "
+                        "first_seen_at TEXT, last_scraped_at TEXT, "
+                        "scans_survived INTEGER NOT NULL DEFAULT 1, pending INTEGER NOT NULL DEFAULT 0)")
             cur.execute(f"DELETE FROM {_STAGING}")
             conn_inc.commit()
             now = datetime.now(timezone.utc).replace(microsecond=0).isoformat()
@@ -303,11 +373,22 @@ def rebuild_index_chunked(chunk: int = REBUILD_CHUNK, *, force: bool = False) ->
                 inv.close()
                 if not cars:
                     break
-                rows = _missing_rows(cars, now)
+                ids = [int(c["id"]) for c in cars]
+                prior: dict[int, tuple] = {}
+                for i in range(0, len(ids), 500):
+                    part = ids[i : i + 500]
+                    cur.execute(
+                        "SELECT car_id, scans_survived, last_scraped_at FROM incomplete_listings "
+                        f"WHERE car_id IN ({','.join('?' * len(part))})",
+                        part,
+                    )
+                    prior.update({int(r[0]): (r[1], r[2]) for r in cur.fetchall()})
+                rows = _missing_rows(cars, now, prior)
                 if rows:
                     cur.executemany(
-                        f"INSERT INTO {_STAGING} (car_id, vin, missing_fields_json, updated_at) "
-                        "VALUES (?,?,?,?)",
+                        f"INSERT INTO {_STAGING} (car_id, vin, missing_fields_json, updated_at, "
+                        "first_seen_at, last_scraped_at, scans_survived, pending) "
+                        "VALUES (?,?,?,?,?,?,?,?)",
                         rows,
                     )
                 conn_inc.commit()
@@ -324,8 +405,10 @@ def rebuild_index_chunked(chunk: int = REBUILD_CHUNK, *, force: bool = False) ->
                 "DELETE FROM incomplete_listings"
             )
             cur.execute(
-                "INSERT INTO incomplete_listings (car_id, vin, missing_fields_json, updated_at) "
-                f"SELECT car_id, vin, missing_fields_json, updated_at FROM {_STAGING}"
+                "INSERT INTO incomplete_listings (car_id, vin, missing_fields_json, updated_at, "
+                "first_seen_at, last_scraped_at, scans_survived, pending) "
+                "SELECT car_id, vin, missing_fields_json, updated_at, "
+                f"first_seen_at, last_scraped_at, scans_survived, pending FROM {_STAGING}"
             )
             _set_meta(cur, _META_RULES_KEY, INDEX_RULES_VERSION)
             _set_meta(cur, _META_REBUILT_KEY, now)
@@ -410,11 +493,12 @@ def get_incomplete_listings_count() -> int:
         if inventory_pg.is_inventory_postgres():
             cur.execute(
                 "SELECT COUNT(*) FROM incomplete_listings il "
-                "JOIN cars c ON c.id = il.car_id WHERE COALESCE(c.listing_active, 1) = 1"
+                "JOIN cars c ON c.id = il.car_id WHERE COALESCE(c.listing_active, 1) = 1 "
+                "AND COALESCE(il.pending, 0) = 0"
             )
             row = cur.fetchone()
             return max(0, int(row[0] if row else 0))
-        cur.execute("SELECT car_id FROM incomplete_listings")
+        cur.execute("SELECT car_id FROM incomplete_listings WHERE COALESCE(pending, 0) = 0")
         ids = [int(r[0]) for r in cur.fetchall() if r and r[0] is not None]
     except (TypeError, ValueError, IndexError):
         return 0
@@ -443,10 +527,39 @@ def get_incomplete_car_id_set() -> set[int]:
     conn = get_conn()
     _ensure_schema(conn)
     cur = conn.cursor()
-    cur.execute("SELECT car_id FROM incomplete_listings")
+    cur.execute("SELECT car_id FROM incomplete_listings WHERE COALESCE(pending, 0) = 0")
     out = {int(r[0]) for r in cur.fetchall() if r and r[0] is not None}
     conn.close()
     return out
+
+
+def get_pending_car_id_set() -> set[int]:
+    """Car ids in the new-arrival window whose only gap is price/photos (N6.4, D-N13).
+
+    Not incomplete: the grid shows them with a plain "details coming" line.
+    """
+    ensure_incomplete_index_built()
+    conn = get_conn()
+    try:
+        _ensure_schema(conn)
+        cur = conn.cursor()
+        cur.execute("SELECT car_id FROM incomplete_listings WHERE COALESCE(pending, 0) = 1")
+        return {int(r[0]) for r in cur.fetchall() if r and r[0] is not None}
+    finally:
+        conn.close()
+
+
+def is_car_pending(car_id: int) -> bool:
+    """One-row read of the pending flag (car page)."""
+    conn = get_conn()
+    try:
+        _ensure_schema(conn)
+        row = conn.execute(
+            "SELECT pending FROM incomplete_listings WHERE car_id = ?", (int(car_id),)
+        ).fetchone()
+        return bool(row and row[0])
+    finally:
+        conn.close()
 
 
 def get_incomplete_cars_for_dev() -> list[dict]:
@@ -459,7 +572,8 @@ def get_incomplete_cars_for_dev() -> list[dict]:
     conn.row_factory = sqlite3.Row
     cur = conn.cursor()
     cur.execute(
-        "SELECT car_id, missing_fields_json FROM incomplete_listings ORDER BY datetime(updated_at) DESC"
+        "SELECT car_id, missing_fields_json FROM incomplete_listings "
+        "WHERE COALESCE(pending, 0) = 0 ORDER BY datetime(updated_at) DESC"
     )
     rows = cur.fetchall()
     conn.close()

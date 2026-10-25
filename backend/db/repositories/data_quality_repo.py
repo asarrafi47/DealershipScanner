@@ -38,6 +38,8 @@ class _IncompleteIndexSnapshot:
 
     ids: frozenset[int]
     per_row_fallback: bool = False
+    # N6.4: new arrivals shown with a "details coming" line (not in ``ids``, never hidden).
+    pending_ids: frozenset[int] = frozenset()
 
 
 def _car_id_int(car: dict) -> int:
@@ -64,9 +66,15 @@ def _incomplete_index_snapshot_for_listings() -> _IncompleteIndexSnapshot:
     if _incomplete_index_snapshot_cache is not None and _incomplete_index_snapshot_cache[0] == token:
         return _incomplete_index_snapshot_cache[1]
     try:
-        from backend.db.incomplete_listings_db import get_incomplete_car_id_set
+        from backend.db.incomplete_listings_db import (
+            get_incomplete_car_id_set,
+            get_pending_car_id_set,
+        )
 
-        snap = _IncompleteIndexSnapshot(ids=frozenset(get_incomplete_car_id_set()))
+        snap = _IncompleteIndexSnapshot(
+            ids=frozenset(get_incomplete_car_id_set()),
+            pending_ids=frozenset(get_pending_car_id_set()),
+        )
     except Exception:
         _log.exception("incomplete_listings index unavailable; using per-row completeness fallback")
         snap = _IncompleteIndexSnapshot(ids=frozenset(), per_row_fallback=True)

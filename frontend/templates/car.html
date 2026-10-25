@@ -248,6 +248,11 @@
                     {% if inventory_last_checked %}
                     <p class="car-detail-location-note">Inventory last checked {{ inventory_last_checked }}</p>
                     {% endif %}
+                    {# N6.4 (D-N13): new arrival still waiting on price or photos. Plain text in
+                       the same muted note style; never a card, box or pill. #}
+                    {% if details_pending %}
+                    <p class="car-detail-location-note">Details coming</p>
+                    {% endif %}
                     {% if not dealer_map and dealer_rating %}
                     {{ dealer_reputation(dealer_rating) }}
                     {% endif %}

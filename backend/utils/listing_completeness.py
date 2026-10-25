@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import json
 from collections import Counter
+from datetime import datetime, timedelta, timezone
 from typing import Any
 
 from backend.enrichment.knowledge_engine import prepare_car_detail_context
@@ -312,6 +313,57 @@ def listing_missing_field_codes(
     if for_public_filter:
         missing = [m for m in missing if m in _PUBLIC_INCOMPLETE_KEYS]
     return missing
+
+
+# N6.4 (D-N13): a new arrival whose only gaps are price (photo gaps never queue a car,
+# see ``_NON_ACTIONABLE``) is "pending", not incomplete, for ``PENDING_WINDOW_DAYS``.
+PENDING_WINDOW_DAYS = 3
+PENDING_ELIGIBLE_CODES = frozenset({"price", "images"})
+
+
+def parse_scrape_ts(value: Any) -> datetime | None:
+    """A ``first_seen_at`` / ``scraped_at`` value (ISO text, optional ``Z``, or datetime) as aware UTC."""
+    if value is None:
+        return None
+    if isinstance(value, datetime):
+        dt = value
+    else:
+        s = str(value).strip()
+        if not s:
+            return None
+        if s.endswith("Z"):
+            s = s[:-1] + "+00:00"
+        try:
+            dt = datetime.fromisoformat(s.replace(" ", "T", 1) if " " in s and "T" not in s else s)
+        except ValueError:
+            return None
+    return dt.replace(tzinfo=timezone.utc) if dt.tzinfo is None else dt.astimezone(timezone.utc)
+
+
+def inside_new_arrival_window(
+    first_seen_at: Any, latest_scraped_at: Any, window_days: int = PENDING_WINDOW_DAYS
+) -> bool:
+    """D-N13: (the row's latest ``scraped_at`` - the gap's ``first_seen_at``) <= N days.
+
+    Measured against the row's own latest scrape, never the wall clock. Either
+    timestamp missing or unparseable is outside the window (fail toward "incomplete").
+    """
+    first, last = parse_scrape_ts(first_seen_at), parse_scrape_ts(latest_scraped_at)
+    if first is None or last is None:
+        return False
+    return timedelta(0) <= (last - first) <= timedelta(days=int(window_days))
+
+
+def is_pending_arrival(
+    missing: list[str],
+    first_seen_at: Any,
+    latest_scraped_at: Any,
+    window_days: int = PENDING_WINDOW_DAYS,
+) -> bool:
+    """True when every gap is price or photos and the car is inside the window."""
+    if not missing or not set(missing) <= PENDING_ELIGIBLE_CODES:
+        return False
+    return inside_new_arrival_window(first_seen_at, latest_scraped_at, window_days)
 
 
 def is_car_incomplete_for_public_listings(car: dict[str, Any]) -> bool:

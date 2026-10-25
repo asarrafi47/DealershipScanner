@@ -28,12 +28,15 @@ def dbs(monkeypatch: pytest.MonkeyPatch, tmp_path):
     # stale row the rebuild must clear
     inc = sqlite3.connect(inc_path)
     ild._ensure_schema(inc)
-    inc.execute("INSERT INTO incomplete_listings VALUES (99, 'OLD', '[\"trim\"]', 'x')")
+    inc.execute(
+        "INSERT INTO incomplete_listings (car_id, vin, missing_fields_json, updated_at) "
+        "VALUES (99, 'OLD', '[\"trim\"]', 'x')"
+    )
     inc.commit()
     inc.close()
 
-    def fake_rows(cars, now):
-        return [(c["id"], c["vin"], '["trim"]', now) for c in cars if c["id"] % 2]
+    def fake_rows(cars, now, prior=None):
+        return [(c["id"], c["vin"], '["trim"]', now, None, None, 1, 0) for c in cars if c["id"] % 2]
 
     monkeypatch.setattr(ild, "_missing_rows", fake_rows)
     return inc_path
@@ -51,9 +54,9 @@ def test_chunking_covers_every_active_car_once(dbs) -> None:
     seen: list[list[int]] = []
     real = ild._missing_rows
 
-    def spy(cars, now):
+    def spy(cars, now, prior=None):
         seen.append([c["id"] for c in cars])
-        return real(cars, now)
+        return real(cars, now, prior)
 
     with patch.object(ild, "_missing_rows", spy):
         res = ild.rebuild_index_chunked(chunk=4, force=True)
@@ -65,11 +68,11 @@ def test_chunking_covers_every_active_car_once(dbs) -> None:
 def test_failure_mid_chunk_leaves_live_index_untouched(dbs) -> None:
     calls = {"n": 0}
 
-    def boom(cars, now):
+    def boom(cars, now, prior=None):
         calls["n"] += 1
         if calls["n"] == 2:
             raise RuntimeError("boom")
-        return [(c["id"], c["vin"], "[]", now) for c in cars]
+        return [(c["id"], c["vin"], "[]", now, None, None, 1, 0) for c in cars]
 
     with patch.object(ild, "_missing_rows", boom):
         with pytest.raises(RuntimeError):
