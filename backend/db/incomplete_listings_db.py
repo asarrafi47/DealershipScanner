@@ -266,7 +266,8 @@ def rebuild_index_chunked(chunk: int = REBUILD_CHUNK, *, force: bool = False) ->
     one final transaction swaps staging into ``incomplete_listings`` so readers never see
     a half-built index (X5). A Postgres advisory lock keeps two rebuilds from running at
     once: the loser returns ``{"status": "locked"}`` without touching anything.
-    With ``force=False`` the rebuild is skipped when ``rules_version`` already matches.
+    Per-car syncs that write the live index during a rebuild are overwritten by the swap
+    (the next rebuild or sync restores them). With ``force=False`` the rebuild is skipped when ``rules_version`` already matches.
     """
     from backend.db.inventory_db import get_conn as inv_get_conn
 
@@ -288,6 +289,7 @@ def rebuild_index_chunked(chunk: int = REBUILD_CHUNK, *, force: bool = False) ->
             now = datetime.now(timezone.utc).replace(microsecond=0).isoformat()
             last_id, n_chunks, n_rows, n_cars = 0, 0, 0, 0
             while True:
+                t_chunk = time.time()
                 inv = inv_get_conn()
                 inv.row_factory = sqlite3.Row
                 icur = inv.cursor()
@@ -313,6 +315,8 @@ def rebuild_index_chunked(chunk: int = REBUILD_CHUNK, *, force: bool = False) ->
                 n_chunks += 1
                 n_rows += len(rows)
                 n_cars += len(cars)
+                logger.info("rebuild_index_chunked: chunk %d (%d cars) in %.1fs",
+                            n_chunks, len(cars), time.time() - t_chunk)
                 if len(cars) < chunk:
                     break
             # One transaction: the swap.
