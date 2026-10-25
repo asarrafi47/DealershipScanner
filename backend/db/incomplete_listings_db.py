@@ -300,18 +300,45 @@ def ensure_incomplete_index_built() -> None:
 
 
 def get_incomplete_listings_count() -> int:
-    """Count of rows in the incomplete index (cheap query for dev SSR)."""
+    """Count of ACTIVE cars in the incomplete index (cheap query for dev SSR).
+
+    The index can still hold rows for delisted cars until the retirement-time
+    delete lands (P5A.4), so a bare ``COUNT(*)`` over-counts; join to ``cars``
+    and keep ``listing_active`` rows only.
+    """
     ensure_incomplete_index_built()
     conn = get_conn()
     _ensure_schema(conn)
     cur = conn.cursor()
-    cur.execute("SELECT COUNT(*) FROM incomplete_listings")
-    row = cur.fetchone()
-    conn.close()
     try:
-        return max(0, int(row[0] if row else 0))
+        if inventory_pg.is_inventory_postgres():
+            cur.execute(
+                "SELECT COUNT(*) FROM incomplete_listings il "
+                "JOIN cars c ON c.id = il.car_id WHERE COALESCE(c.listing_active, 1) = 1"
+            )
+            row = cur.fetchone()
+            return max(0, int(row[0] if row else 0))
+        cur.execute("SELECT car_id FROM incomplete_listings")
+        ids = [int(r[0]) for r in cur.fetchall() if r and r[0] is not None]
     except (TypeError, ValueError, IndexError):
         return 0
+    finally:
+        conn.close()
+    if not ids:
+        return 0
+    from backend.db.repositories.base_repo import db_conn
+
+    total = 0
+    with db_conn() as inv:
+        for i in range(0, len(ids), 500):
+            chunk = ids[i : i + 500]
+            ph = ",".join("?" * len(chunk))
+            r = inv.execute(
+                f"SELECT COUNT(*) FROM cars WHERE id IN ({ph}) AND COALESCE(listing_active, 1) = 1",
+                chunk,
+            ).fetchone()
+            total += int(r[0] if r else 0)
+    return max(0, total)
 
 
 def get_incomplete_car_id_set() -> set[int]:
@@ -344,7 +371,7 @@ def get_incomplete_cars_for_dev() -> list[dict]:
         return []
     ids = [int(r["car_id"]) for r in rows]
     fields_by_id = {int(r["car_id"]): json.loads(r["missing_fields_json"]) for r in rows}
-    cars = get_cars_by_ids(ids)
+    cars = get_cars_by_ids(ids, active_only=True)
     for c in cars:
         c["incomplete_missing_fields"] = fields_by_id.get(int(c["id"]), [])
     return cars
