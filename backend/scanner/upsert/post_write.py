@@ -60,11 +60,12 @@ def sync_incomplete_and_backfill_specs(vins: list[str], get_conn: Callable[[], A
         )
 
         for cid in resolve_car_ids(get_conn, vins):
-            ild.sync_incomplete_listing_for_car_id(cid)
             car = get_car_by_id(cid, include_inactive=True)
-            if not car or not car_needs_transmission_or_cylinders_backfill(car):
-                continue
-            apply_structured_spec_backfill_for_car(cid, use_vpic_cache=True)
+            if car and car_needs_transmission_or_cylinders_backfill(car):
+                apply_structured_spec_backfill_for_car(cid, use_vpic_cache=True)
+            # Sync after the backfill (N6.2), not before: the backfill fills the
+            # fields the index flags, so a sync first left complete cars flagged.
+            ild.sync_incomplete_listing_for_car_id(cid)
     except Exception:
         logger.exception("incomplete_listings / spec backfill after upsert failed")
 
@@ -88,6 +89,18 @@ def link_catalog(vins: list[str]) -> None:
         logger.exception("catalog linking after upsert failed")
 
 
+def resync_after_late_writers(vins: list[str], get_conn: Callable[[], Any]) -> None:
+    """Step 4 (N6.2): model_specs corrections and the catalog link write after
+    step 1's sync; refresh the index rows once more so no flag goes stale."""
+    try:
+        from backend.db import incomplete_listings_db as ild
+
+        for cid in resolve_car_ids(get_conn, vins):
+            ild.sync_incomplete_listing_for_car_id(cid)
+    except Exception:
+        logger.exception("incomplete_listings re-sync after late writers failed")
+
+
 def run_post_write_enrichment(
     vins: list[str],
     *,
@@ -97,3 +110,4 @@ def run_post_write_enrichment(
     sync_incomplete_and_backfill_specs(list(vins), get_conn)
     correct_from_model_specs(list(vins), apply_model_specs_corrections)
     link_catalog(list(vins))
+    resync_after_late_writers(list(vins), get_conn)
