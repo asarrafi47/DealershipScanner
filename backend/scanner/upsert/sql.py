@@ -24,8 +24,11 @@ logger = logging.getLogger("backend.scanner.database")
 
 def _stored_junk_sql(col: str, *, color: bool = False) -> str:
     """SQL twin of ``vdp_extras_parse.junk_text_value`` for a stored column (N6.5)."""
+    # No negative SUBSTR start: Postgres returns '' for substr(s, -1, 1), SQLite the last char.
+    # The option-code arm is looser than _OPTION_CODE_RE (any <=3 char value with a digit, so
+    # '1-2' counts here); the difference is negligible and LIKE has no portable char class.
     t = f"TRIM({col})"
-    parts = [f"SUBSTR({t}, 1, 1) = '{{'", f"(SUBSTR({t}, 1, 1) = '[' AND SUBSTR({t}, -1, 1) = ']')", f"LOWER({t}) IN ('null', 'none', 'undefined')"]
+    parts = [f"SUBSTR({t}, 1, 1) = '{{'", f"(SUBSTR({t}, 1, 1) = '[' AND {t} LIKE '%]')", f"LOWER({t}) IN ('null', 'none', 'undefined')"]
     if color:
         digits = " OR ".join(f"{t} LIKE '%{d}%'" for d in "0123456789")
         parts.append(f"(LENGTH({t}) <= 3 AND ({digits}))")

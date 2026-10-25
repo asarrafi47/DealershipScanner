@@ -160,3 +160,9 @@ def test_heal_selection_categories():
     assert junk_columns({"trim": "[extra_cost_color]", "exterior_color": "[extra_cost_color]"}) == {
         "trim": "trim_token", "exterior_color": "color_single"}
     assert junk_columns({"trim": "SR5", "exterior_color": "Red", "interior_color": None}) == {}
+
+
+def test_stored_junk_sql_avoids_negative_substr():
+    from backend.scanner.upsert.sql import _stored_junk_sql
+    for color in (False, True):
+        assert "-1" not in _stored_junk_sql("cars.trim", color=color)
