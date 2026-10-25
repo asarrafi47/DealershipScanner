@@ -13,6 +13,7 @@ from backend.scanner.utils.vdp_extras_parse import junk_text_value
 from backend.utils.field_clean import clean_car_row_dict, is_effectively_empty
 from backend.utils.fuel_label_plausibility import cylinders_override_for_electric_claim
 from backend.utils.fuel_type_normalize import normalize_fuel_type_for_storage
+from backend.utils.price_floor import classify_price
 
 PLACEHOLDER_IMAGE_URL = "/static/placeholder.svg"
 
@@ -96,13 +97,9 @@ def row_title(v: dict) -> str:
 
 
 def coerce_price(value: Any) -> int | None:
-    """Price as a positive int; NULL for missing, unparseable or <= 0."""
-    try:
-        price = int(round(float(value))) if value is not None and str(value).strip() != "" else None
-    except (TypeError, ValueError):
-        price = None
-    if price is not None and price <= 0:
-        price = None
+    """Price as a positive int; NULL for missing, unparseable, <= 0, under the
+    D-N14 floor ($1,000) or over $1M (N6.7; see ``backend.utils.price_floor``)."""
+    price, _note = classify_price(value)
     return price
 
 

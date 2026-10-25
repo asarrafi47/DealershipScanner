@@ -17,6 +17,7 @@ from backend.enrichment.knowledge_engine import prepare_car_detail_context
 from backend.utils.car_serialize import DISPLAY_DASH, serialize_car_for_api
 from backend.scanner.utils.vdp_extras_parse import junk_text_value
 from backend.utils.in_transit import vehicle_is_in_transit
+from backend.utils.price_floor import classify_price
 from backend.utils.mileage_display import is_used_or_certified, odometer_absent
 
 # Human labels for ``listing_missing_field_codes`` / ``incomplete_missing_fields`` (dev UI + summaries).
@@ -212,6 +213,18 @@ def listing_missing_field_codes(
 
     # Use raw row so list/MSRP ``0`` is not confused with "missing" after serialization.
     p_blank = _row_field_blank(car_raw.get("price"))
+    if not p_blank:
+        # N6.7: judge the price that is displayed. A stored positive value that is
+        # junk (under the D-N14 floor, over the cap) or that the read-time guard
+        # withheld (``car["price"]`` is None) shows no price, so it is a gap.
+        # Zero stays a stored value (the TBD rule above).
+        try:
+            _raw_p = float(car_raw.get("price"))
+        except (TypeError, ValueError):
+            _raw_p = None
+        if _raw_p is not None and _raw_p > 0:
+            if classify_price(_raw_p)[0] is None or car.get("price") is None:
+                p_blank = True
     m_blank = _row_field_blank(car_raw.get("msrp"))
     if p_blank and m_blank:
         missing.append("price")

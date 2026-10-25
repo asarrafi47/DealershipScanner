@@ -14,6 +14,7 @@ from typing import Any
 from backend.utils.field_clean import compute_data_quality_score
 from backend.utils.forced_induction import classify_forced_induction_from_car_row
 from backend.utils.interior_color_buckets import interior_color_buckets_json
+from backend.utils.price_floor import classify_price
 
 from backend.scanner.upsert import rows as _rows
 from backend.scanner.upsert import serialize as _ser
@@ -213,6 +214,14 @@ def prepare_row(v: dict, prior_spec_src: str | None) -> PreparedRow | None:
         return None
     title = _rows.row_title(v)
     price = _rows.coerce_price(v.get("price"))
+    if price is None:
+        _note = classify_price(v.get("price"))[1]
+        if _note:
+            # Provenance note for a withheld price (N6.7, D-N14): the feed value is
+            # kept on the in-memory row and the info log only (no notes column exists); the
+            # column stays NULL. The repeated-value rule is repair-only (repair_junk_prices).
+            v["price_withheld_note"] = _note
+            logger.info("price withheld vin=%s %s", vin, _note)
     mileage = _rows.coerce_mileage(v.get("mileage"))
     msrp = _rows.coerce_msrp(v.get("msrp"))
     gallery_json = _ser.gallery_json(v.get("gallery"))
