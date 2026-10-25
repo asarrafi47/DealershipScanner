@@ -126,6 +126,7 @@ def _vpic_raw(vins: list[str]) -> dict[str, dict[str, Any]]:
     keep = (
         "Make", "Model", "ModelYear", "Trim", "EngineCylinders", "DisplacementL",
         "FuelTypePrimary", "FuelTypeSecondary", "DriveType", "BodyClass", "ElectrificationLevel",
+        "ErrorCode",
     )
     out: dict[str, dict[str, Any]] = {}
     todo = [v for v in vins if v]
@@ -187,7 +188,7 @@ def _vpic_fuel_bucket(v: dict[str, Any]) -> str:
     el = (v.get("ElectrificationLevel") or "").upper()
     ft = _fuel_bucket(v.get("FuelTypePrimary"))
     if "PHEV" in el:
-        return "hybrid"  # plug-in: vPIC lists FuelTypePrimary "Electric" for these
+        return "phev"  # plug-in: vPIC lists FuelTypePrimary "Electric" for these; own bucket like _fuel_bucket
     if "BEV" in el or (ft == "ev" and not el):
         return "ev"
     if "MILD" in el:
@@ -208,9 +209,27 @@ def _catalog_fuel_bucket(row: dict[str, Any]) -> str:
     # EPA leaves atv_type blank on some hybrid rows (2026 Tacoma "Hybrid 4WD");
     # the trim text is the tie-breaker, not a mismatch.
     fuel = str(row.get("fuel_type") or "").lower()
-    if "hybrid" in atv or "hybrid" in trim or "phev" in trim or "/ electricity" in fuel:
-        return "hybrid"  # "Regular Gasoline / Electricity" = plug-in hybrid, EPA flags it EV
+    if "plug" in atv or "phev" in trim or "plug-in" in trim or "/ electricity" in fuel:
+        return "phev"  # "Regular Gasoline / Electricity" = plug-in hybrid, EPA flags it EV
+    if "hybrid" in atv or "hybrid" in trim:
+        return "hybrid"
     return _fuel_bucket(row.get("fuel_type"))
+
+
+_MINI_DOOR_ONLY_RE = re.compile(r"^\s*\d\s*-?\s*door\s*$", re.IGNORECASE)
+
+
+def _vpic_decode_failed(v: dict[str, Any]) -> bool:
+    """True when vPIC reported a decode error (ErrorCode other than 0): its fields
+    are then partial or guessed, and a mismatch against them proves nothing about
+    the dealer. A blank/absent code is treated as clean (old cache rows)."""
+    codes = [c.strip() for c in str(v.get("ErrorCode") or "").split(",") if c.strip()]
+    return any(c != "0" for c in codes)
+
+
+def _vpic_model_uninformative(make: Any, vpic_model: Any) -> bool:
+    """MINI's vPIC Model is just "2 Door" / "4 Door" (the body, not the line)."""
+    return str(make or "").strip().upper() == "MINI" and bool(_MINI_DOOR_ONLY_RE.match(str(vpic_model or "")))
 
 
 def _drive_same(a: str, b: str) -> bool:
@@ -249,11 +268,15 @@ def evaluate_car(car: dict[str, Any], vpic: dict[str, Any] | None, quarantined: 
     dealer_fuel = _fuel_bucket(car.get("fuel_type"))
     dealer_drive = _drive_bucket(car.get("drivetrain"))
 
+    if vpic and _vpic_decode_failed(vpic):
+        vpic = None
     if vpic:
         vm, cm = _norm(vpic.get("Make")), _norm(car.get("make"))
         if vm and cm and vm != cm and vm not in cm and cm not in vm and not makes_equivalent(car.get("make"), vpic.get("Make")):
             d["vpic_make"] = f"dealer={car.get('make')!r} vpic={vpic.get('Make')!r}"
-        if vpic.get("Model") and car.get("model") and not models_equivalent(
+        if vpic.get("Model") and car.get("model") and not _vpic_model_uninformative(
+            car.get("make"), vpic.get("Model")
+        ) and not models_equivalent(
             car.get("make"), car.get("model"), car.get("trim"), vpic.get("Model")
         ):
             d["vpic_model"] = f"dealer={car.get('model')!r} vpic={vpic.get('Model')!r}"
