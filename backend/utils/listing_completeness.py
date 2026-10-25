@@ -18,6 +18,7 @@ from backend.utils.car_serialize import DISPLAY_DASH, serialize_car_for_api
 from backend.scanner.utils.vdp_extras_parse import junk_text_value
 from backend.utils.in_transit import vehicle_is_in_transit
 from backend.utils.price_floor import classify_price
+from backend.utils.placeholder_images import is_placeholder_image
 from backend.utils.mileage_display import is_used_or_certified, odometer_absent
 
 # Human labels for ``listing_missing_field_codes`` / ``incomplete_missing_fields`` (dev UI + summaries).
@@ -70,9 +71,14 @@ _PUBLIC_INCOMPLETE_KEYS = frozenset(
 
 
 def _is_valid_image_url(u: str) -> bool:
-    """True for HTTP(S) URLs and local /car-images/ paths (served by Flask)."""
+    """True for HTTP(S) URLs and local /car-images/ paths (served by Flask).
+
+    A placeholder (N6.8, D-N15) is not a photo: a placeholder-only car has no photo.
+    """
     s = u.strip()
-    return s.startswith("http") or s.startswith("/car-images/")
+    if not (s.startswith("http") or s.startswith("/car-images/")):
+        return False
+    return not is_placeholder_image(s)
 
 
 def _has_http_image(car: dict[str, Any]) -> bool:
