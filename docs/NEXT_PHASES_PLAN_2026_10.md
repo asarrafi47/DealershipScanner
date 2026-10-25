@@ -1218,6 +1218,20 @@ P4.4 is dropped: P0A.2 found 0 duplicate groups.
 
 **Owner decisions / actions.** D-N13-D-N17, D-PR1, D-PR4, D-PR6, D-PR7; OK on the local rebuild.
 
+**N6 unit status (integrated on phase/N6; no copy-based acceptance run).**
+- N6.1: DONE, merged `58bd6f7e0` (unit head `daa8ba420`). Rebuild runs first in the fleet post block, chunked, staged, advisory-locked. Deferred: needs copy (stale flags 4,581 to 0; 199k-car rebuild timing; Postgres lock and staging DDL). Retired index rows 8,738 to 0 on `cars` needs owner OK.
+- N6.2: DONE in code, merged `3557db5ff` (head `bdc686f28`). Deferred: the 3-dealer `cars_cr_n6` scratch scan (MAIN, D-N25). Possible extra cost: final re-sync doubles per-VIN sync calls; restrict if scan timing shows it.
+- N6.3: DONE, merged `a2a662fda` (head `1e94059a0`). Deferred: needs copy (admin count equals active-only recompute on `cars`).
+- N6.4: DONE in code, merged `fdddafbed` (head `6dbccb2d0`). V026 and `INDEX_RULES_VERSION` 2026-10-n6.4. Deferred: needs copy (about 1,280 cars reclassified with N=3). V026 not run on Postgres. Pending is price-only in practice.
+- N6.5: DONE, merged `de006140b` (head `ff13a43c4`). Heal script dry run only; local apply needs owner OK, prod apply is N12.10. SQL option-code arm is looser than the Python regex (documented).
+- N6.6: DONE in code, merged `780d9ddab` (head `d855e7c5f`). Deferred: needs copy (re-grade of stored clean-room data).
+- N6.7: PARTIAL, merged `ad4c08ae8` (head `0c072fff1`). Floor, cap, displayed-price completeness and repair script (dry run and tested `--apply`) done. The repeated-value rule is repair-only: a follow-up unit is needed to wire it at write or read time. Deferred: cleanroom dry-run counts (234 + 205 + 1) and 100-car sample. No persisted withheld-price note column: owner/design decision.
+- N6.8: DONE, merged `02ebe3805` (head `028d16f93`). Read-only count on `cars_cleanroom`: 22,877 placeholder-only active cars across 22 dealers alarmed (the plan's about 2,970 was not reproduced; the figure includes 9,270 `/static/placeholder.svg` cars and the shared-image heuristic at `SHARED_IMAGE_MIN_CARS=4`). nelsonmazdamurfreesboro alarms. Deferred: 50-image hand sample and review of the threshold; alarm not wired into a scan report.
+- N6.9: DONE in code, merged `7bed5efd6` (head `e2223549c`). Golden `dealer_run_golden_20261001.json` re-recorded (additive coverage keys). Deferred: `cars_cleanroom` measurement of 1,374 used-at-0 (497 MY2026+) and 1,019 year-0/NULL. Risk: an active row with year 0 and an unrecoverable VIN stops refreshing.
+- P8A.2: DONE, merged `9347e6a29` (head `c7033de26`). Pure module, not wired (N15). Deferred: restating `test_vpic_facts.py` as precedence cases (P8A.4).
+- P8A.6: DONE, merged `51ba6d475` (head `be288d577`). Merge-specs golden re-recorded, drivetrain-only (66 cars). Deferred: the 15 live-confirmed cars check (needs read of `cars` or a copy).
+- Open on phase/N6: `backend/tests/test_upsert_vehicles_golden.py` fails on the phases assertion (it failed on phase/N6 before N6.2 and N6.4; N6.7 adds a "price withheld" log line to the batch3 phase, and N6.4 adds four index columns the golden must carry). Regenerate once, review the diff. Full suite was not run after all merges.
+
 ---
 
 ### N7 Postgres harness core and failure shapes on Postgres (14A core, D-PLAN1)
