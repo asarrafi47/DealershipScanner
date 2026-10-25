@@ -168,6 +168,7 @@ def _build_car_detail_view_context(car_id: int, car_raw: dict) -> dict:
     listing_incomplete_fields = _cd_listing.listing_incomplete_fields(car_id)
     dealer_info = _cd_listing.registry_dealer_info(car_raw)
     inventory_last_checked = _cd_listing.inventory_last_checked(car_raw)
+    details_pending = _cd_listing.details_pending(car_id)
     attribution, attribution_fields = _cd_listing.apply_attribution_overlay(car_id, car)
     _cd_listing.apply_sticker_fact_overlays(car_id, car, car_raw)
     dealer_map = _cd_location.dealer_map_for_car(car_raw, dealer_info, attribution)
@@ -195,6 +196,7 @@ def _build_car_detail_view_context(car_id: int, car_raw: dict) -> dict:
         listing_incomplete_fields=listing_incomplete_fields,
         dealer_info=dealer_info,
         inventory_last_checked=inventory_last_checked,
+        details_pending=details_pending,
         attribution_fields=attribution_fields,
         dealer_map=dealer_map,
         market_intel=market_intel,

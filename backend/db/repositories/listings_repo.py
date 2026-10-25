@@ -63,6 +63,9 @@ def serialize_car_for_listings_grid(
     Lightweight grid JSON for listings (see ``car_serialize.serialize_car_for_listings_grid``).
     """
     out = _serialize_car_for_listings_grid(car, attribution=attribution)
+    # N6.4 (D-N13): a new arrival waiting on price/photos stays visible with a plain line.
+    if incomplete_snapshot is not None and _car_id_int(car) in incomplete_snapshot.pending_ids:
+        out["details_pending"] = True
     if listings_include_incomplete_cars():
         if incomplete_snapshot is not None:
             if _car_is_publicly_incomplete(car, incomplete_snapshot):
