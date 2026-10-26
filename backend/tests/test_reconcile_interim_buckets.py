@@ -220,7 +220,7 @@ def test_row_refreshed_between_select_and_update_is_not_retired():
 def _scanner_lot(new: int, used: int, blank: int = 0) -> sqlite3.Connection:
     c = sqlite3.connect(":memory:")
     c.execute("CREATE TABLE cars (id INTEGER PRIMARY KEY, dealer_id TEXT, dealer_url TEXT, vin TEXT, condition TEXT, "
-              "listing_active INTEGER, listing_removed_at TEXT)")
+              "listing_active INTEGER, listing_removed_at TEXT, make TEXT, scraped_at TEXT)")
     i = 0
     for cond, n in (("New", new), ("Used", used), ("", blank)):
         for _ in range(n):
@@ -255,7 +255,7 @@ def test_scanner_keeps_used_when_run_returns_a_handful(_no_ddl):
 
 @pytest.mark.parametrize("seen, conditions, marked, kept_missing, kept_low", [
     (490, {"new", "used"}, 30, None, None),        # used 190/200: 10 used + 20 blank retire
-    (305, {"new", "used"}, 0, None, 215),          # used 5/200: 195 used + 20 blank kept
+    (305, {"new", "used"}, 0, 20, 195),          # used 5/200: 195 used kept low; the 20 blank (none re-seen) are condition_missing since P5A.4
     (300, {"new"}, 0, 220, None),                  # no used rows: 200 used + 20 blank kept
 ])
 def test_scanner_blank_rows_retire_only_when_both_buckets_qualify(_no_ddl, seen, conditions, marked, kept_missing, kept_low):

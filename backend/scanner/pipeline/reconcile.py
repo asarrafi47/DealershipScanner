@@ -9,7 +9,7 @@ from __future__ import annotations
 from datetime import datetime, timedelta, timezone
 from typing import Any
 
-from backend.scanner.inventory_reconcile import BUCKET_UNKNOWN, CONDITION_BUCKETS, condition_bucket
+from backend.scanner.inventory_reconcile import BUCKET_UNKNOWN, CONDITION_BUCKETS, condition_bucket, no_retire_switch
 from backend.scanner.pipeline.constants import MIN_ROWS_UNKNOWN, RECONCILE_MIN_SHARE
 from backend.scanner.pipeline.db import _rows
 
@@ -63,6 +63,8 @@ def reconcile_dealer(conn, dealer_id: str, since_iso: str, baseline: int, rows_t
     behaviour of 2026-09-26 for callers that predate condition buckets.
     """
     out = {"eligible": False, "stale": 0, "retired": 0, "reason": ""}
+    # the one no-retire switch (P5A.4) turns this writer into a report
+    dry_run = dry_run or no_retire_switch()
     if verdict not in ("ok", "thin", "inaccurate"):
         out["reason"] = f"verdict {verdict}"
         return out

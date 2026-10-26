@@ -12,7 +12,7 @@ def _vin(i: int) -> str:
 
 def _db(new_rows: int, used_rows: int) -> sqlite3.Connection:
     conn = sqlite3.connect(":memory:")
-    conn.execute("CREATE TABLE cars (id INTEGER PRIMARY KEY, dealer_id TEXT, dealer_url TEXT, vin TEXT, condition TEXT, listing_active INTEGER, listing_removed_at TEXT)")
+    conn.execute("CREATE TABLE cars (id INTEGER PRIMARY KEY, dealer_id TEXT, dealer_url TEXT, vin TEXT, condition TEXT, listing_active INTEGER, listing_removed_at TEXT, make TEXT, scraped_at TEXT)")
     i = 0
     for _ in range(new_rows):
         conn.execute("INSERT INTO cars (dealer_id, dealer_url, vin, condition, listing_active) VALUES ('parksidekia-com','https://www.parksidekia.com',?, 'New', 1)", (_vin(i),)); i += 1

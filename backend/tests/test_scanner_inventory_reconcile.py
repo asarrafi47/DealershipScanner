@@ -47,7 +47,9 @@ def _memory_cars_conn() -> sqlite3.Connection:
             dealer_id TEXT,
             dealer_url TEXT,
             listing_active INTEGER,
-            listing_removed_at TEXT
+            listing_removed_at TEXT,
+            make TEXT,
+            scraped_at TEXT
         )
         """
     )
@@ -57,24 +59,23 @@ def _memory_cars_conn() -> sqlite3.Connection:
 
 
 def test_reconcile_marks_stale_vins_for_dealer() -> None:
+    # P5A.4: min_rows is 20 and a bucket needs 60% of its prior rows re-seen, so the fixture is
+    # a 10-car lot where 9 are re-seen (it was a 2-car lot with 1 re-seen).
     conn = _memory_cars_conn()
     cur = conn.cursor()
-    cur.execute(
-        "INSERT INTO cars (vin, dealer_id, dealer_url, listing_active) VALUES (?, ?, ?, ?)",
-        ("11111111111111111", "dealer-a", "https://dealer-a.com/", 1),
-    )
-    cur.execute(
-        "INSERT INTO cars (vin, dealer_id, dealer_url, listing_active) VALUES (?, ?, ?, ?)",
-        ("22222222222222222", "dealer-a", "https://dealer-a.com/", 1),
-    )
+    vins = [f"1111111111111111{i}" for i in range(10)]
+    for v in vins:
+        cur.execute(
+            "INSERT INTO cars (vin, dealer_id, dealer_url, listing_active, condition) VALUES (?, ?, ?, ?, 'Used')",
+            (v, "dealer-a", "https://dealer-a.com/", 1),
+        )
     conn.commit()
 
     stats: dict = {"deduped_rows": 20, "error": None}
-    scraped = {"11111111111111111"}
     out = reconcile_dealer_inventory_after_scan(
         "dealer-a",
         "https://dealer-a.com/",
-        scraped,
+        set(vins[:9]),
         stats,
         _conn=conn,
     )
@@ -82,9 +83,9 @@ def test_reconcile_marks_stale_vins_for_dealer() -> None:
     assert out["marked_inactive"] == 1
     assert out["skipped_reason"] == "ok"
 
-    cur.execute("SELECT listing_active FROM cars WHERE vin = ?", ("22222222222222222",))
+    cur.execute("SELECT listing_active FROM cars WHERE vin = ?", (vins[9],))
     assert int(cur.fetchone()[0]) == 0
-    cur.execute("SELECT listing_active FROM cars WHERE vin = ?", ("11111111111111111",))
+    cur.execute("SELECT listing_active FROM cars WHERE vin = ?", (vins[0],))
     assert int(cur.fetchone()[0]) == 1
     conn.close()
 
@@ -300,7 +301,7 @@ def _seed(conn: sqlite3.Connection, dealer: str, n: int) -> list[str]:
     cur = conn.cursor()
     for v in vins:
         cur.execute(
-            "INSERT INTO cars (vin, dealer_id, dealer_url, listing_active) VALUES (?, ?, ?, 1)",
+            "INSERT INTO cars (vin, dealer_id, dealer_url, listing_active, condition) VALUES (?, ?, ?, 1, 'Used')",
             (v, dealer, f"https://{dealer}"),
         )
     conn.commit()
@@ -318,7 +319,9 @@ def test_reconcile_refuses_partial_capture(monkeypatch: pytest.MonkeyPatch) -> N
         "gardenahonda-com", "https://gardenahonda-com", seen, stats, _conn=conn
     )
     assert out["ran"] is False
-    assert out["skipped_reason"].startswith("low_coverage(matched=30,active=100")
+    # the lot-wide low_coverage skip became the per-bucket plan (P5A.4)
+    assert out["skipped_reason"] == "no_retirable_bucket"
+    assert out["buckets"]["used"]["matched"] == 30 and out["buckets"]["used"]["prior"] == 100
     n_active = conn.execute("SELECT COUNT(*) FROM cars WHERE listing_active = 1").fetchone()[0]
     assert n_active == 100
 
@@ -336,5 +339,6 @@ def test_reconcile_coverage_gate_can_be_disabled(monkeypatch: pytest.MonkeyPatch
     monkeypatch.setenv("SCANNER_RECONCILE_MIN_COVERAGE", "0")
     conn = _memory_cars_conn()
     vins = _seed(conn, "d-off", 100)
-    out = reconcile_dealer_inventory_after_scan("d-off", "https://d-off", set(vins[:10]), {"deduped_rows": 10}, _conn=conn)
-    assert out["ran"] is True and out["marked_inactive"] == 90
+    # "0 disables" now means a bucket needs one re-seen VIN; min_rows is 20, so 20 are re-seen
+    out = reconcile_dealer_inventory_after_scan("d-off", "https://d-off", set(vins[:20]), {"deduped_rows": 20}, _conn=conn)
+    assert out["ran"] is True and out["marked_inactive"] == 80

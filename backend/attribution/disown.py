@@ -52,6 +52,8 @@ def disown_foreign_rooftop_vins(dealer_id: str, vins: set[str]) -> int:
     storefront for these exact VINs in this very run. Scoped to *dealer_id*, so
     if the true rooftop is also scanned its own upsert re-lists the VIN there.
 
+    ``SCANNER_NO_RETIRE`` (the one no-retire switch) makes this a no-op that returns 0.
+
     Callers must pass ONLY VINs whose refusal reason is in
     :data:`EVIDENCE_BACKED_REJECTS`.
     """
@@ -60,9 +62,15 @@ def disown_foreign_rooftop_vins(dealer_id: str, vins: set[str]) -> int:
     from datetime import datetime, timezone
 
     from backend.db.inventory_db import db_conn
+    from backend.scanner.inventory_reconcile import no_retire_switch
+
+    if no_retire_switch():
+        logger.warning("disown %s: SCANNER_NO_RETIRE is set; leaving %d VIN(s) listed", dealer_id, len(vins))
+        return 0
 
     now = datetime.now(timezone.utc).replace(microsecond=0).isoformat()
     changed = 0
+    retired_ids: list[int] = []
     ordered = sorted(vins)
     with db_conn() as conn:
         cur = conn.cursor()
@@ -76,11 +84,21 @@ def disown_foreign_rooftop_vins(dealer_id: str, vins: set[str]) -> int:
                  WHERE TRIM(IFNULL(dealer_id, '')) = ?
                    AND COALESCE(listing_active, 1) = 1
                    AND UPPER(TRIM(vin)) IN ({placeholders})
+             RETURNING id
                 """,
                 tuple([now, dealer_id] + chunk),
             )
-            changed += int(cur.rowcount or 0)
+            ids = [int(r[0]) for r in cur.fetchall()]
+            retired_ids.extend(ids)
+            changed += len(ids)
         conn.commit()
+    if retired_ids:  # the incomplete-listings index drops cars that left the active set (IL-05)
+        try:
+            from backend.db.incomplete_listings_db import delete_incomplete_records
+
+            delete_incomplete_records(retired_ids)
+        except Exception:  # noqa: BLE001 - the unlist is committed
+            logger.warning("disown %s: could not delete incomplete-index rows", dealer_id, exc_info=True)
     return changed
 
 

@@ -625,6 +625,10 @@ backend/tests/test_recipe_cache_identity.py  sqlite3_attr  3
 backend/tests/test_recipe_lifecycle.py  import_sqlite3  1
 backend/tests/test_recipe_lifecycle.py  qmark_placeholder  2
 backend/tests/test_recipe_lifecycle.py  sqlite3_attr  1
+backend/tests/test_recipe_replay_stop_reason.py  db_path_literal  1
+backend/tests/test_recipe_replay_stop_reason.py  env_db_path  1
+backend/tests/test_recipe_replay_stop_reason.py  import_sqlite3  1
+backend/tests/test_recipe_replay_stop_reason.py  sqlite3_attr  1
 backend/tests/test_recipe_sync_freshness.py  import_sqlite3  1
 backend/tests/test_recipe_sync_freshness.py  qmark_placeholder  1
 backend/tests/test_recipe_sync_freshness.py  sqlite3_attr  3
@@ -639,6 +643,11 @@ backend/tests/test_reconcile_recipe_store.py  db_path_literal  9
 backend/tests/test_reconcile_recipe_store.py  import_sqlite3  1
 backend/tests/test_reconcile_recipe_store.py  qmark_placeholder  1
 backend/tests/test_reconcile_recipe_store.py  sqlite3_attr  3
+backend/tests/test_reconcile_switch_matrix.py  db_path_literal  2
+backend/tests/test_reconcile_switch_matrix.py  import_sqlite3  1
+backend/tests/test_reconcile_switch_matrix.py  pragma  1
+backend/tests/test_reconcile_switch_matrix.py  qmark_placeholder  4
+backend/tests/test_reconcile_switch_matrix.py  sqlite3_attr  6
 backend/tests/test_registry_backfill_startup.py  db_path_literal  1
 backend/tests/test_releasing_doc.py  qmark_placeholder  1
 backend/tests/test_repair_new_null_mileage_index.py  db_path_literal  4
@@ -647,6 +656,7 @@ backend/tests/test_repair_new_null_mileage_index.py  qmark_placeholder  5
 backend/tests/test_repair_new_null_mileage_index.py  sqlite3_attr  7
 backend/tests/test_resync_after_late_writers.py  import_sqlite3  1
 backend/tests/test_resync_after_late_writers.py  sqlite3_attr  1
+backend/tests/test_retirement_policy.py  db_path_literal  1
 backend/tests/test_rooftop_address_provenance.py  db_path_literal  1
 backend/tests/test_rooftop_refusals_report.py  autoincrement  1
 backend/tests/test_rooftop_refusals_report.py  db_path_literal  2
@@ -666,7 +676,7 @@ backend/tests/test_scan_timing.py  sqlite3_attr  1
 backend/tests/test_scanner_inventory_reconcile.py  autoincrement  1
 backend/tests/test_scanner_inventory_reconcile.py  db_path_literal  1
 backend/tests/test_scanner_inventory_reconcile.py  import_sqlite3  1
-backend/tests/test_scanner_inventory_reconcile.py  qmark_placeholder  18
+backend/tests/test_scanner_inventory_reconcile.py  qmark_placeholder  17
 backend/tests/test_scanner_inventory_reconcile.py  sqlite3_attr  4
 backend/tests/test_schema_from_migrations.py  env_db_path  1
 backend/tests/test_scrub_dead_mfa_secrets.py  db_path_literal  8
