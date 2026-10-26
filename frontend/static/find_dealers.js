@@ -181,8 +181,8 @@
         });
     }
 
-    function markerColor(dealer) {
-        return dealer.in_database ? "#1a5f4a" : "#6b7280";
+    function markerClass(dealer) {
+        return dealer.in_database ? "find-dealers-marker-pin--db" : "find-dealers-marker-pin--other";
     }
 
     function buildPopupHtml(d) {
@@ -357,7 +357,7 @@
 
             const icon = L.divIcon({
                 className: "find-dealers-marker",
-                html: '<span class="find-dealers-marker-pin" style="background:' + markerColor(d) + '"></span>',
+                html: '<span class="find-dealers-marker-pin ' + markerClass(d) + '"></span>',
                 iconSize: [14, 14],
                 iconAnchor: [7, 7],
             });

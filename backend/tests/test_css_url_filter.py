@@ -290,6 +290,11 @@ def test_every_style_url_goes_through_css_url() -> None:
             for expr in used:
                 if not _CSS_URL_EXPR.search(expr):
                     offenders.append(f"{rel} ({expr.strip()} lacks a final | css_url)")
+        # P16.8: the same URLs now ride in data-bg="..." (style_data.js applies them).
+        for m in re.finditer(r'\sdata-bg="([^"]*)"', text):
+            total += 1
+            if not _CSS_URL_EXPR.search(m.group(1).strip()):
+                offenders.append(f"{path.relative_to(REPO_ROOT)} (data-bg lacks a final | css_url)")
     # home x4, landing, compare, inventory/dashboard, inventory/listings x3.
     assert total >= 10, f"scan found only {total} style url() sites; the regex is broken"
     assert not offenders, "style url() must use the css_url filter: " + ", ".join(offenders)

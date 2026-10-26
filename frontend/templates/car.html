@@ -31,7 +31,7 @@
    with the stars filled to the fraction; no emoji badge. #}
 {% macro dealer_reputation(r, extra_cls='') -%}
 <div class="dealer-reputation-block {{ extra_cls }}">
-    <span class="reputation-stars" aria-hidden="true"><span class="reputation-stars__track">&#9733;&#9733;&#9733;&#9733;&#9733;</span><span class="reputation-stars__fill" style="width: {{ r.fill_pct }}%">&#9733;&#9733;&#9733;&#9733;&#9733;</span></span>
+    <span class="reputation-stars" aria-hidden="true"><span class="reputation-stars__track">&#9733;&#9733;&#9733;&#9733;&#9733;</span><span class="reputation-stars__fill" data-w="{{ r.fill_pct }}">&#9733;&#9733;&#9733;&#9733;&#9733;</span></span>
     <span class="dealer-review-count"><strong class="dealer-review-rating">{{ r.rating }}</strong> &middot; {{ r.reviews }}{% if r.as_of %} &middot; as of {{ r.as_of }}{% endif %}</span>
 </div>
 {%- endmacro %}

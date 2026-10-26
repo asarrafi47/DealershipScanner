@@ -201,7 +201,7 @@
             .map(function (id) {
                 const meta = carMetaById(id);
                 const safeImg = meta && meta.image ? safeCssBackgroundUrl(meta.image) : "";
-                const img = safeImg ? ' style="background-image:url(\'' + safeImg + "')" : "";
+                const img = safeImg ? ' data-bg="' + safeImg + '"' : "";
                 const title = meta ? meta.title : "#" + id;
                 return (
                     '<span class="compare-tray__slot" data-car-id="' +
@@ -236,7 +236,7 @@
     }
 
     /**
-     * http(s) only for the compare tray's style="background-image:url('...')",
+     * http(s) only for the compare tray's data-bg attribute (style_data.js sets the background),
      * which syncTray builds through innerHTML (no javascript: / data:).
      * Percent-encodes ' " ( ) \ < >, whitespace and controls, then escapes &:
      * new URL().href keeps a literal "&#39;" or "&#41;", and the HTML parser
@@ -274,11 +274,7 @@
             el = document.createElement("div");
             el.id = "compare-evict-notice";
             el.setAttribute("role", "status");
-            el.style.cssText =
-                "position:fixed;left:50%;bottom:96px;transform:translateX(-50%);" +
-                "z-index:1200;max-width:min(420px,90vw);padding:10px 16px;border-radius:10px;" +
-                "background:#1c3552;color:#faf8f5;font:600 13px/1.4 inherit;text-align:center;" +
-                "box-shadow:0 8px 24px rgba(20,36,54,0.25);opacity:0;transition:opacity .15s ease;";
+            el.className = "compare-evict-notice";
             document.body.appendChild(el);
         }
         el.textContent = "Compare is full (max " + MAX_COMPARE + ") — removed " + (evictedTitle || "the oldest vehicle") + ".";

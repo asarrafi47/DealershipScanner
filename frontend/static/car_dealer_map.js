@@ -41,7 +41,7 @@
 
     const pin = L.divIcon({
         className: "find-dealers-marker",
-        html: '<span class="find-dealers-marker-pin" style="background:#1a5f4a"></span>',
+        html: '<span class="find-dealers-marker-pin find-dealers-marker-pin--db"></span>',
         iconSize: [14, 14],
         iconAnchor: [7, 7],
     });

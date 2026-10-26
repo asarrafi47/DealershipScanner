@@ -189,6 +189,11 @@ _CSP_REPORT_ONLY = (
 )
 
 
+# P16.8: the P16.9 flip, as a second report-only policy next to the enforced one. Opt in with
+# CSP_STYLE_ATTR_REPORT_ONLY=1; a >=7-day soak with no violations gates P16.9.
+_CSP_STYLE_ATTR_REPORT_ONLY = "style-src-attr 'none'; "
+
+
 def _csp_headers(response):
     response.headers.setdefault("X-Content-Type-Options", "nosniff")
     response.headers.setdefault("X-Frame-Options", "DENY")
@@ -202,6 +207,8 @@ def _csp_headers(response):
         nonce = (getattr(g, "csp_nonce", None) or "") or ""
         if nonce and not response.headers.get("Content-Security-Policy"):
             response.headers["Content-Security-Policy"] = _csp_header_value_enforced(nonce)
+        if Config.csp_style_attr_report_only_enabled():
+            response.headers.setdefault("Content-Security-Policy-Report-Only", _CSP_STYLE_ATTR_REPORT_ONLY)
         return response
     if Config.csp_report_only_enabled():
         if not response.headers.get("Content-Security-Policy-Report-Only"):
