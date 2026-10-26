@@ -88,7 +88,6 @@ def list_users_for_admin(*, search: str = "", limit: int = 100) -> list[dict]:
         "google_sub",
         "apple_sub",
         "totp_enabled",
-        "mfa_method",
         "premium_stripe_customer_id",
         "premium_stripe_subscription_id",
         "created_at",
@@ -148,13 +147,7 @@ def list_users_for_admin(*, search: str = "", limit: int = 100) -> list[dict]:
         )
         item["saved_count"] = int(saved_counts.get(uid, 0))
         item["scope_label"] = _admin_scope_label(item, org_names)
-        mfa_method = (item.get("mfa_method") or "").strip().lower()
-        if item.get("totp_enabled"):
-            item["mfa_label"] = (mfa_method or "totp").upper()
-        elif mfa_method:
-            item["mfa_label"] = mfa_method.upper()
-        else:
-            item["mfa_label"] = "—"
+        item["mfa_label"] = "—"  # TOTP/SMS MFA retired (D-SEC2); kept for API shape
         # Drop OAuth subject ids from API surface (login_methods is enough).
         item.pop("google_sub", None)
         item.pop("apple_sub", None)

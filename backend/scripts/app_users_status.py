@@ -52,7 +52,7 @@ def main() -> int:
         cur.execute("PRAGMA table_info(users)")
         cols = {r[1] for r in cur.fetchall()}
         want = ["id", "username", "email"]
-        for c in ("role", "totp_enabled"):
+        for c in ("role",):
             if c in cols:
                 want.append(c)
         cur.execute(f"SELECT {', '.join(want)} FROM users ORDER BY id")
@@ -64,7 +64,7 @@ def main() -> int:
         print("users table is empty — create an account at /register (app login), not only /dev/login.")
         return 0
 
-    print(f"{'id':>4}  {'username':<24}  {'email':<36}  {'role':<18}  totp_on")
+    print(f"{'id':>4}  {'username':<24}  {'email':<36}  {'role':<18}")
     print("-" * 110)
     for r in rows:
         d = dict(r)
@@ -72,9 +72,7 @@ def main() -> int:
         un = (d.get("username") or "")[:24]
         em = (d.get("email") or "")[:36]
         role = (d.get("role") or "")[:18]
-        te = d.get("totp_enabled")
-        totp = "?" if te is None else ("yes" if int(te) else "no")
-        print(f"{rid!s:>4}  {un:<24}  {em:<36}  {role:<18}  {totp}")
+        print(f"{rid!s:>4}  {un:<24}  {em:<36}  {role:<18}")
     print()
     print(
         "Tip: Main app login uses users.db. /dev/login uses dev_users.db — different accounts.\n"
