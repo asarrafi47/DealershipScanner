@@ -469,6 +469,9 @@ def delete_user_by_email(email: str) -> bool:
     uid = int(row[0])
     org_id = int(row[1]) if len(row) > 1 and row[1] is not None else None
     ddb.delete_vehicles_for_user(uid)
+    from backend.dealer.portal_sync import retire_portal_listings_for_user
+
+    retire_portal_listings_for_user(uid)
     try:
         cursor.execute("DELETE FROM org_invites WHERE used_by_user_id = ?", (uid,))
     except sqlite3.Error:
