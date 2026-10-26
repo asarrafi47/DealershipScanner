@@ -2,6 +2,19 @@
 
 ## [Unreleased]
 
+### Efficiency quick wins (N6b)
+- Tests: bcrypt work factor drops to 4 under pytest only (BCRYPT_TEST_LOW_COST=1 set in root conftest.py); production floor 12 and default 13 unchanged; test_paid_access_parity 34s -> 4s.
+- Perf: memoize adapt_sql_for_postgres_execute with lru_cache(maxsize=512); repeated upsert statements no longer re-run the SQL adapter per row.
+- Facet options: background rebuilds are throttled to one per FACET_REBUILD_MIN_INTERVAL_S (default 300, 0 disables). The first build and clear_inventory_listings_cache() still rebuild immediately.
+- Paint-family facets: color inference is memoized per distinct color string within a rebuild.
+- Performance: the dealership registry backfill now runs in a background thread at process startup instead of inside the first /api/listings/geo-coords request (~210 s stall removed).
+- pg_connect now bounds connection setup with connect_timeout (env PG_CONNECT_TIMEOUT, default 10 s); a connect_timeout already present in the DSN is left alone.
+- Corrected stale worker-count and memory comments in docker-entrypoint-web.sh and gunicorn.conf.py (prod runs GUNICORN_WORKERS=1, ~3.3 GB warm).
+- Fleet runner: the batch scan timeout (--scan-timeout) now counts active time only, so a Mac sleep no longer kills batches and leaves dealers with a false error verdict (pipeline/active_time.py, run_http_only_scan polls a Popen).
+- Logs: scan batch lines print wall and active time; dealer_run_summary and the scan log carry wall_seconds beside seconds (active).
+- Ops: docs/NETWORK_SCAN_PROCESS.md says to launch fleets under caffeinate -dims; scripts/cleanroom/preflight.sh warns on macOS when it is not running.
+- Web image now bakes the pgeocode US postal cache at build time (PGEOCODE_DATA_DIR=/opt/pgeocode), removing the 5.6 MB GeoNames download on first import of geo.
+
 ### N6.1 Index rebuild
 - Incomplete-listings index is rebuilt once per fleet scan, after every shard's vPIC heal and reconcile and before market stats and the grid cards, so the persisted cards match the final index.
 - Index rebuild runs in chunks of at most 20k cars into a staging table, swaps into `incomplete_listings` in one transaction (fixes the DELETE+INSERT race), logs per-chunk seconds, and takes a Postgres advisory lock so concurrent rebuilds skip.
