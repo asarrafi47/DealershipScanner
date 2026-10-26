@@ -37,11 +37,8 @@ from backend.tests.test_cleanroom_shapes_2026_10 import (
     _COND_CODE,
     _FIVE,
     _IDENT,
-    _IDENTITY_REASON,
-    _LIFECYCLE_REASON,
     _RET,
     _STRIKE_REASON,
-    _TERRY_REASON,
     _chapman_scans,
     _dealer,
     _first_pass_rows,
@@ -157,7 +154,7 @@ def _reset_to(env, baseline: dict[str, int]) -> None:
 @pytest.mark.parametrize(
     "dealer_id",
     [
-        pytest.param("terrylabontechevy-com", marks=pytest.mark.xfail(strict=True, reason=_TERRY_REASON)),
+        "terrylabontechevy-com",
         pytest.param("coastlinecdjr-com", marks=pytest.mark.xfail(strict=True, reason=_STRIKE_REASON)),
         pytest.param("napletonhondamortongrove-com", marks=pytest.mark.xfail(strict=True, reason=_STRIKE_REASON)),
         pytest.param("southcountylexus-com", marks=pytest.mark.xfail(strict=True, reason=_STRIKE_REASON)),
@@ -194,7 +191,6 @@ def test_retry_retirement_shape(inv, dealer_id):
 
 # -- 5. the pipeline's lifecycle retry reconcile with a known=0 baseline --------
 
-@pytest.mark.xfail(strict=True, reason=_LIFECYCLE_REASON)
 def test_lifecycle_retry_with_known_zero_baseline_retires_nothing(inv, log_root, tmp_path, monkeypatch):
     """Postgres twin: the pipeline's lifecycle retry reconcile writes no retirement (D-RC1 A)."""
     from backend.db.repositories.dealers_repo import record_scan_outcomes
@@ -337,7 +333,6 @@ def _seed_identity(env) -> dict[str, int]:
     return active
 
 
-@pytest.mark.xfail(strict=True, reason=_IDENTITY_REASON)
 def test_triage_identity_replay_rows_written_equals_active(inv, monkeypatch):
     """Postgres twin: per dealer, rows_written equals its active rows; fleet captured - refused = written."""
     from backend.scanner.pipeline.assess import assess

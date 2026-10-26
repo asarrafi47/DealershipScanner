@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 import json
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 
@@ -322,7 +322,9 @@ def run_lifecycle_pass(results: list[dict[str, Any]], dealers: dict[str, dict[st
     if not retry:
         return summary
     # The retry's scan_runs rows are the ones finished from here on.
-    retry_since = datetime.now(timezone.utc).replace(microsecond=0)
+    # One second of margin: cars.scraped_at is TEXT ('...12.345Z') and since is '...12+00:00'; under a
+    # Postgres locale collation a same-second row sorts below since and would not count as this run's.
+    retry_since = datetime.now(timezone.utc).replace(microsecond=0) - timedelta(seconds=1)
     print(f"retry   {len(retry)} dealer(s) with a validated recipe: {', '.join(retry)[:200]}", flush=True)
     scanned = scan_retry_batch(retry, out_dir=out_dir, batch=batch, scan_timeout=scan_timeout, lock_wait=lock_wait)
     summary["chromium_leaks"] = scanned["chromium_leaks"]
