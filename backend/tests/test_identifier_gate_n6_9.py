@@ -97,12 +97,12 @@ def test_assess_gate_marks_thin_on_used_mileage():
     import json
 
     from backend.scripts import dealer_pipeline as dp
-    from backend.tests.test_assess_stamped_rows import SINCE, _db
+    from backend.tests.test_assess_stamped_rows import SINCE, WALK, _db
 
     for used_mileage, verdict_thin in ((0.4, True), (0.95, False)):
         conn = _db(stamped_rows=40, old_rows=40, feed_rows=40)
         cc = {"n": 40, "price": 1.0, "trim": 1.0, "exterior_color": 1.0, "used_mileage": used_mileage}
-        conn.execute("UPDATE scan_runs SET summary_json = ?", (json.dumps({"capture_coverage": cc}),))
+        conn.execute("UPDATE scan_runs SET summary_json = ?", (json.dumps({"capture_coverage": cc, "recipe_replay": WALK}),))
         out = dp.assess(conn, "mb-com", SINCE, known_before=40, recipe_info={"had_recipes": 1})
         assert (out["verdict"] == "thin") is verdict_thin
         if verdict_thin:

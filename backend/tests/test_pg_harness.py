@@ -205,7 +205,7 @@ def test_every_module_level_ready_flag_is_reset_or_reviewed():
 
 def test_the_sweep_sees_the_known_flags():
     found = pgh.sweep_cache_flags()
-    for name in ("backend.db.inventory_pg._PG_INV_SCHEMA_OK", "backend.db.comments_db._COMMENT_TABLES_OK",
+    for name in ("backend.db.inventory_pg._PG_INV_SCHEMA_OK",
                  "backend.scanner.database._vin_owner_table_ready", "backend.utils.msrp_trust._BAND_LOADED",
                  "backend.enrichment.trim_ladder.evidence._active_make_spellings"):
         assert name in found, name
@@ -228,14 +228,13 @@ def test_every_listed_reset_target_exists():
 
 
 def test_reset_pg_process_caches_clears_flags_and_the_shared_connection():
-    from backend.db import comments_db, inventory_pg
+    from backend.db import inventory_pg
     from backend.scanner import database as scanner_database
     from backend.utils import msrp_trust
 
     closed = []
     inventory_pg._shared_read.raw = SimpleNamespace(close=lambda: closed.append(True))
     inventory_pg._PG_INV_SCHEMA_OK = True
-    comments_db._COMMENT_TABLES_OK = True
     scanner_database._vin_owner_table_ready = True
     msrp_trust._BAND_LOADED = True
     msrp_trust._BAND_CACHE[("x",)] = (1, 2, 3)
@@ -243,7 +242,6 @@ def test_reset_pg_process_caches_clears_flags_and_the_shared_connection():
         pgh.reset_pg_process_caches()
         assert closed == [True] and inventory_pg.current_shared_read_raw() is None
         assert inventory_pg._PG_INV_SCHEMA_OK is False
-        assert comments_db._COMMENT_TABLES_OK is False
         assert scanner_database._vin_owner_table_ready is False
         assert msrp_trust._BAND_LOADED is False and not msrp_trust._BAND_CACHE
     finally:
