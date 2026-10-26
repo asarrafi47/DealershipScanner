@@ -56,9 +56,9 @@ def pgvector_configured() -> bool:
 def _encode_model():
     global _st_model
     if _st_model is None:
-        from sentence_transformers import SentenceTransformer
+        from backend.vector.embedding_model import load_sentence_transformer
 
-        _st_model = SentenceTransformer(_model_name())
+        _st_model = load_sentence_transformer()
     return _st_model
 
 

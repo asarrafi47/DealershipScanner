@@ -26,6 +26,17 @@ ENV PGEOCODE_DATA_DIR=/opt/pgeocode
 RUN python -c "import pgeocode; pgeocode.Nominatim('us')" \
     || echo "pgeocode cache bake failed; runtime will fetch on first geocode"
 
+# Bake the embedding model (P15B.3) at the pinned revision, so web never fetches from
+# huggingface.co at start. backend/vector/embedding_model.py is stdlib-only and is loaded by
+# path here (the app is not copied yet) so the id and revision live in one place. HF_HOME is
+# world-readable for whatever user the entrypoint runs as. The offline flags are set after
+# the bake: from then on the cache is the only source, and a missing file fails loudly.
+ENV HF_HOME=/app/models
+COPY backend/vector/embedding_model.py /tmp/embedding_model.py
+RUN python -c "import importlib.util as u; s = u.spec_from_file_location('embedding_model', '/tmp/embedding_model.py'); m = u.module_from_spec(s); s.loader.exec_module(m); from huggingface_hub import snapshot_download; snapshot_download(m.model_id(), revision=m.model_revision())" \
+    && chmod -R a+rX /app/models && rm /tmp/embedding_model.py
+ENV HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1
+
 # No browser binary (P3.8, D-SEC1 (a), 2026-10-18).
 #
 # The web image used to run `playwright install chromium && playwright
