@@ -5,7 +5,9 @@ under ``tmp_path`` with a bare "origin" reached over ``file://``. No network,
 no real remote, no real Railway:
 
 - ``railway`` on PATH is a fake that records its argv, its working directory
-  and the stage it was handed. PATH holds only that fake directory plus
+  and the stage it was handed, and answers ``railway api`` (the read-only
+  settings query, N4.1) from per-service JSON files: by default the expected
+  settings, so the check passes. PATH holds only that fake directory plus
   ``/usr/bin:/bin:/usr/sbin:/sbin`` (git is linked into the fake directory),
   so a real ``railway`` CLI (Homebrew, npm) can never be reached, and HOME is
   a fresh directory, so even a real CLI would find no Railway login;
@@ -16,19 +18,24 @@ no real remote, no real Railway:
 
 Covered: a tagged main passes ``--dry-run`` and the stage equals the tag's
 tracked files (names, bytes, modes) plus the must-ship allowlist plus
-BUILD_COMMIT/BUILD_TAG; every refusal (dirty tree, HEAD != main on origin,
-missing, lightweight, misplaced or unpushed tag) exits 1 without staging or
-calling railway, with and without ``--dry-run``; the ALLOW_UNRELEASED_DEPLOY=1
-override; a real (fake-railway) deploy's exact argv; the allowlist rules; the
-build files surviving every ignore file.
+BUILD_COMMIT/BUILD_TAG, with no config-as-code file; every refusal (dirty
+tree, HEAD != main on origin, missing, lightweight, misplaced or unpushed tag)
+exits 1 without staging or calling railway, with and without ``--dry-run``; the
+ALLOW_UNRELEASED_DEPLOY=1 override; a real (fake-railway) deploy's exact argv;
+the allowlist rules; the build files surviving every ignore file; and the N4.1
+service-settings check (read-only query, refusal on any difference or unreadable
+answer, no override, ``--no-settings-check`` for dry runs only, config-as-code
+files refused).
 """
 
 from __future__ import annotations
 
+import json
 import os
 import shutil
 import stat
 import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -43,19 +50,33 @@ SERVICE = {WEB: "web", NIGHTLY: "scanner-nightly"}
 VERSION = "1.6.0"
 TAG = f"v{VERSION}"
 BUILD_FILES = {"BUILD_COMMIT", "BUILD_TAG"}
+SETTINGS_JSON = DEPLOY_DIR / "service_settings.json"
+SETTINGS_PY = DEPLOY_DIR / "service_settings.py"
 
 FAKE_RAILWAY = """#!/bin/sh
-# Fake railway CLI for test_deploy_guard.py: record argv, cwd and the stage.
+# Fake railway CLI for test_deploy_guard.py: record argv (newlines folded), cwd
+# and the stage; answer `railway api` from $FAKE_RAILWAY_API_DIR/<serviceId>.*
 log="$FAKE_RAILWAY_LOG"
 {
   printf 'CALL'
-  for a in "$@"; do printf '\\t%s' "$a"; done
+  for a in "$@"; do printf '\\t%s' "$(printf '%s' "$a" | tr '\\n' ' ')"; done
   printf '\\n'
   printf 'CWD\\t%s\\n' "$(pwd -P)"
 } >> "$log"
 if [ "$1" = "up" ] && [ -d "$2" ]; then
   (cd "$2" && find . \\( -type f -o -type l \\) | sed 's|^\\./||' | LC_ALL=C sort) > "$log.files"
   cp "$2/BUILD_COMMIT" "$log.build_commit"
+fi
+if [ "$1" = "api" ]; then
+  sid=""
+  for a in "$@"; do
+    case "$a" in *serviceId*) sid=$(printf '%s' "$a" | sed -n 's/.*"serviceId": *"\\([^"]*\\)".*/\\1/p') ;; esac
+  done
+  base="$FAKE_RAILWAY_API_DIR/$sid"
+  [ -f "$base.stderr" ] && cat "$base.stderr" >&2
+  [ -f "$base.json" ] && cat "$base.json"
+  [ -f "$base.exit" ] && exit "$(cat "$base.exit")"
+  [ -f "$base.json" ] || { echo "fake railway: no answer for service '$sid'" >&2; exit 1; }
 fi
 exit 0
 """
@@ -135,6 +156,60 @@ def railway_calls(log: Path) -> list[list[str]]:
     return [line.split("\t")[1:] for line in log.read_text(encoding="utf-8").splitlines() if line.startswith("CALL")]
 
 
+def api_calls(log: Path) -> list[list[str]]:
+    return [c for c in railway_calls(log) if c and c[0] == "api"]
+
+
+def up_calls(log: Path) -> list[list[str]]:
+    return [c for c in railway_calls(log) if c and c[0] != "api"]
+
+
+def assert_only_the_settings_query(log: Path, service: str) -> None:
+    """Exactly one railway call: the read-only `railway api` query for *service*."""
+    calls = railway_calls(log)
+    assert len(calls) == 1 and calls[0][0] == "api", calls
+    doc = calls[0][1]
+    assert doc.startswith("query ") and "mutation" not in doc.lower(), doc
+    assert "serviceInstance(environmentId: $environmentId, serviceId: $serviceId)" in doc
+    variables = json.loads(calls[0][calls[0].index("--variables") + 1])
+    settings = json.loads(SETTINGS_JSON.read_text(encoding="utf-8"))
+    assert variables["environmentId"] == settings["environmentId"]
+    assert variables["serviceId"] == settings["services"][service]["serviceId"]
+
+
+def live_answer(service: str, settings: dict | None = None, **overrides) -> dict:
+    """A `railway api` body whose settings equal the expected ones (plus *overrides*)."""
+    settings = settings or json.loads(SETTINGS_JSON.read_text(encoding="utf-8"))
+    entry = settings["services"][service]
+    instance = {"serviceName": service, **entry["serviceInstance"]}
+    data = {"serviceInstance": instance}
+    if entry.get("limits"):
+        data["serviceInstanceLimits"] = {"containers": dict(entry["limits"])}
+    for key, value in overrides.items():
+        if key == "limits":
+            data["serviceInstanceLimits"] = value
+        else:
+            instance[key] = value
+    return {"data": data}
+
+
+def set_answer(env: dict, service: str, body: dict | str | None = None, *, stderr: str = "",
+               exit_code: int | None = None, settings: dict | None = None) -> None:
+    """Make the fake `railway api` answer *body* for *service* (default: matching settings)."""
+    settings = settings or json.loads(SETTINGS_JSON.read_text(encoding="utf-8"))
+    sid = settings["services"][service]["serviceId"]
+    base = Path(env["FAKE_RAILWAY_API_DIR"]) / sid
+    if body is None:
+        body = live_answer(service, settings)
+    base.with_suffix(".json").write_text(body if isinstance(body, str) else json.dumps(body), encoding="utf-8")
+    for suffix, value in ((".stderr", stderr), (".exit", None if exit_code is None else str(exit_code))):
+        target = Path(f"{base}{suffix}")
+        if value:
+            target.write_text(value, encoding="utf-8")
+        elif target.exists():
+            target.unlink()
+
+
 def lib_allowlist() -> list[str]:
     """MUST_SHIP_ALLOWLIST as bash sees it (sourcing the lib only defines things)."""
     proc = subprocess.run(
@@ -174,10 +249,15 @@ def env(tmp_path: Path) -> dict:
         GIT_CONFIG_GLOBAL=os.devnull,
         GIT_TERMINAL_PROMPT="0",
         FAKE_RAILWAY_LOG=str(tmp_path / "railway.log"),
+        FAKE_RAILWAY_API_DIR=str(tmp_path / "api"),
+        DEPLOY_PYTHON=sys.executable,
         LC_ALL="C",
         LANG="C",
     )
     (tmp_path / "tmp").mkdir()
+    (tmp_path / "api").mkdir()
+    for service in json.loads(SETTINGS_JSON.read_text(encoding="utf-8"))["services"]:
+        set_answer(env, service)
     return env
 
 
@@ -205,7 +285,7 @@ def make_repo(tmp_path: Path, env: dict, allowlist: tuple[str, ...] = ()) -> Rep
 
     dest = work / "deploy" / "railway"
     dest.mkdir(parents=True)
-    for name in (WEB, NIGHTLY, "railway.scanner-nightly.json"):
+    for name in (WEB, NIGHTLY, SETTINGS_JSON.name, SETTINGS_PY.name):
         shutil.copy2(DEPLOY_DIR / name, dest / name)
     lib = LIB.read_text(encoding="utf-8")
     if allowlist:
@@ -213,7 +293,6 @@ def make_repo(tmp_path: Path, env: dict, allowlist: tuple[str, ...] = ()) -> Rep
         assert lib.count("MUST_SHIP_ALLOWLIST=()") == 1
         lib = lib.replace("MUST_SHIP_ALLOWLIST=()", f"MUST_SHIP_ALLOWLIST=({entries})")
     (dest / LIB.name).write_text(lib, encoding="utf-8")
-    shutil.copy2(REPO_ROOT / "railway.toml", work / "railway.toml")
 
     repo.write("scripts/run.sh", "#!/bin/sh\necho run\n")
     (work / "scripts" / "run.sh").chmod(0o755)
@@ -235,10 +314,8 @@ def make_repo(tmp_path: Path, env: dict, allowlist: tuple[str, ...] = ()) -> Rep
 
 
 def expected_stage(repo: Repo, script: str, ref: str, extra: tuple[str, ...] = ()) -> set[str]:
-    names = set(repo.tracked(ref)) | set(extra) | BUILD_FILES
-    if script == NIGHTLY:
-        names = (names - {"railway.toml"}) | {"railway.json"}
-    return names
+    """The tag's tracked files plus *extra* plus BUILD_*; the same for both scripts since N4.1."""
+    return set(repo.tracked(ref)) | set(extra) | BUILD_FILES
 
 
 @pytest.fixture
@@ -247,12 +324,28 @@ def repo(tmp_path: Path, env: dict) -> Repo:
 
 
 def assert_refused(proc: subprocess.CompletedProcess, log: Path, stage: Path | None, *needles: str) -> None:
+    """A release-guard refusal: exit 1, nothing staged, railway never called."""
     assert proc.returncode == 1, proc.stdout + proc.stderr
     assert "REFUSED" in proc.stderr
     assert "railway was not called" in proc.stderr
     for needle in needles:
         assert needle in proc.stderr, proc.stderr
     assert railway_calls(log) == []
+    if stage is not None:
+        assert not stage.exists()
+
+
+def assert_settings_refused(proc: subprocess.CompletedProcess, log: Path, stage: Path | None, service: str,
+                            *needles: str) -> None:
+    """A settings refusal: exit 1, nothing staged, railway ran only the read-only query."""
+    assert proc.returncode == 1, proc.stdout + proc.stderr
+    assert f"REFUSED. The Railway service settings of '{service}' are not the expected ones" in proc.stderr
+    assert "railway ran at most the read-only settings query" in proc.stderr
+    assert "ALLOW_UNRELEASED_DEPLOY=1 does not override this" in proc.stderr
+    for needle in needles:
+        assert needle in proc.stderr, proc.stderr
+    assert_only_the_settings_query(log, service)
+    assert up_calls(log) == []
     if stage is not None:
         assert not stage.exists()
 
@@ -270,16 +363,16 @@ def test_dry_run_tagged_main_stages_exactly_the_tag(repo: Repo, tmp_path: Path, 
     stage = tmp_path / "stage"
     proc = repo.deploy(script, "--dry-run", "--keep-stage", str(stage))
     assert proc.returncode == 0, proc.stdout + proc.stderr
-    assert railway_calls(Path(repo.env["FAKE_RAILWAY_LOG"])) == []
-    assert "dry run: railway was not called." in proc.stdout
+    assert_only_the_settings_query(Path(repo.env["FAKE_RAILWAY_LOG"]), SERVICE[script])
+    assert "dry run: nothing was uploaded; railway ran only the read-only settings query." in proc.stdout
+    assert f"settings  match deploy/railway/service_settings.json at refs/tags/{TAG}" in proc.stdout
+    assert "MISMATCH" not in proc.stdout and "warning" not in proc.stdout
     assert "DEPLOYING UNRELEASED" not in proc.stderr
 
     files = stage_files(stage)
     assert set(files) == expected_stage(repo, script, f"refs/tags/{TAG}", tuple(lib_allowlist()))
     tracked = repo.tracked(f"refs/tags/{TAG}")
     for name, blob in tracked.items():
-        if script == NIGHTLY and name == "railway.toml":
-            continue
         assert files[name] == blob, name
     assert files["BUILD_COMMIT"] == (repo.sha() + "\n").encode()
     assert len(repo.sha()) == 40
@@ -288,10 +381,8 @@ def test_dry_run_tagged_main_stages_exactly_the_tag(repo: Repo, tmp_path: Path, 
     assert (stage / "link_to_app").is_symlink()
     assert ".env" not in files and "local_only/cache.bin" not in files
 
-    if script == NIGHTLY:
-        assert files["railway.json"] == tracked["deploy/railway/railway.scanner-nightly.json"]
-    else:
-        assert files["railway.toml"] == (REPO_ROOT / "railway.toml").read_bytes()
+    # No config-as-code file: Railway builds with the service settings (N4.1).
+    assert "railway.toml" not in files and "railway.json" not in files
 
     # The plan: service, commit, release, file count, the exact railway command.
     assert f"service   {SERVICE[script]}" in proc.stdout
@@ -308,7 +399,7 @@ def test_dry_run_without_keep_stage_removes_its_stage(repo: Repo, script: str) -
     proc = repo.deploy(script, "--dry-run")
     assert proc.returncode == 0, proc.stdout + proc.stderr
     assert list(tmpdir.iterdir()) == []
-    assert railway_calls(Path(repo.env["FAKE_RAILWAY_LOG"])) == []
+    assert up_calls(Path(repo.env["FAKE_RAILWAY_LOG"])) == []
 
 
 def test_untracked_file_is_noted_and_never_staged(repo: Repo, tmp_path: Path) -> None:
@@ -326,12 +417,12 @@ def test_deploy_calls_railway_once_with_the_stage(repo: Repo, script: str) -> No
     proc = repo.deploy(script)
     assert proc.returncode == 0, proc.stdout + proc.stderr
     calls = railway_calls(log)
-    assert len(calls) == 1
-    argv = calls[0]
+    assert [c[0] for c in calls] == ["api", "up"]  # the settings query first, then the upload
+    argv = calls[1]
     assert argv[0] == "up" and argv[2:] == ["--path-as-root", "--service", SERVICE[script], "--detach"]
     stage = Path(argv[1])
     cwd = [line.split("\t", 1)[1] for line in log.read_text(encoding="utf-8").splitlines() if line.startswith("CWD")]
-    assert [Path(c).resolve() for c in cwd] == [repo.path.resolve()]  # where the Railway link lives
+    assert [Path(c).resolve() for c in cwd] == [repo.path.resolve()] * 2  # where the Railway link lives
     uploaded = set(Path(f"{log}.files").read_text(encoding="utf-8").splitlines())
     assert uploaded == expected_stage(repo, script, f"refs/tags/{TAG}")
     assert Path(f"{log}.build_commit").read_text(encoding="utf-8") == repo.sha() + "\n"
@@ -343,7 +434,7 @@ def test_deploy_with_keep_stage_leaves_the_uploaded_stage(repo: Repo, tmp_path: 
     stage = tmp_path / "kept"
     proc = repo.deploy(WEB, "--keep-stage", str(stage))
     assert proc.returncode == 0, proc.stdout + proc.stderr
-    calls = railway_calls(Path(repo.env["FAKE_RAILWAY_LOG"]))
+    calls = up_calls(Path(repo.env["FAKE_RAILWAY_LOG"]))
     assert [Path(c[1]).resolve() for c in calls] == [stage.resolve()]
     assert (stage / "BUILD_COMMIT").read_text(encoding="utf-8") == repo.sha() + "\n"
 
@@ -466,7 +557,7 @@ def test_override_ships_committed_head_with_a_loud_warning(repo: Repo, tmp_path:
     assert files["app.py"] == b"x = 5\n"  # the commit, never the work tree
     assert files["BUILD_COMMIT"] == (hotfix + "\n").encode()
     assert files["BUILD_TAG"] == b"unreleased\n"
-    assert railway_calls(Path(repo.env["FAKE_RAILWAY_LOG"])) == []
+    assert_only_the_settings_query(Path(repo.env["FAKE_RAILWAY_LOG"]), SERVICE[script])
 
 
 def test_override_keeps_build_tag_when_head_carries_the_tag(repo: Repo, tmp_path: Path) -> None:
@@ -494,7 +585,7 @@ def test_override_real_deploy_calls_railway(repo: Repo) -> None:
     proc = repo.deploy(NIGHTLY, extra_env={"ALLOW_UNRELEASED_DEPLOY": "1"})
     assert proc.returncode == 0, proc.stdout + proc.stderr
     assert "DEPLOYING UNRELEASED CODE TO 'scanner-nightly'" in proc.stderr
-    assert len(railway_calls(log)) == 1
+    assert len(up_calls(log)) == 1
     assert Path(f"{log}.build_commit").read_text(encoding="utf-8") == hotfix + "\n"
 
 
@@ -534,10 +625,29 @@ def test_nightly_refuses_service_web(repo: Repo) -> None:
 
 
 def test_nightly_honours_service_override(repo: Repo) -> None:
+    """SERVICE works for any service that has an entry in service_settings.json."""
+    settings = json.loads((repo.path / "deploy/railway/service_settings.json").read_text(encoding="utf-8"))
+    canary = dict(settings["services"]["scanner-nightly"], serviceId="00000000-0000-4000-8000-00000000c0de")
+    settings["services"]["scanner-nightly-canary"] = canary
+    repo.commit("canary settings", {"deploy/railway/service_settings.json": json.dumps(settings, indent=2) + "\n"})
+    repo.git("tag", "-d", TAG)
+    repo.git("push", "-q", "origin", f":refs/tags/{TAG}")
+    repo.release(VERSION)
+    set_answer(repo.env, "scanner-nightly-canary", settings=settings)
     proc = repo.deploy(NIGHTLY, extra_env={"SERVICE": "scanner-nightly-canary"})
     assert proc.returncode == 0, proc.stdout + proc.stderr
-    (argv,) = railway_calls(Path(repo.env["FAKE_RAILWAY_LOG"]))
+    (argv,) = up_calls(Path(repo.env["FAKE_RAILWAY_LOG"]))
     assert argv[2:] == ["--path-as-root", "--service", "scanner-nightly-canary", "--detach"]
+
+
+def test_nightly_service_override_without_settings_is_refused(repo: Repo, tmp_path: Path) -> None:
+    stage = tmp_path / "stage"
+    proc = repo.deploy(NIGHTLY, "--dry-run", "--keep-stage", str(stage),
+                       extra_env={"SERVICE": "scanner-nightly-canary"})
+    assert proc.returncode == 1, proc.stdout + proc.stderr
+    assert "no expected settings for service 'scanner-nightly-canary'" in proc.stderr
+    assert railway_calls(Path(repo.env["FAKE_RAILWAY_LOG"])) == []
+    assert not stage.exists()
 
 
 @pytest.mark.parametrize("script", SCRIPTS)
@@ -607,3 +717,210 @@ def test_script_modes() -> None:
     for name in SCRIPTS:
         assert (DEPLOY_DIR / name).stat().st_mode & stat.S_IXUSR, name
     assert not LIB.stat().st_mode & stat.S_IXUSR  # sourced, never run
+
+
+# --- service settings (N4.1, D-N24) ---------------------------------------------
+
+
+def test_scripts_and_lib_parse_with_bash_n() -> None:
+    for path in (DEPLOY_DIR / WEB, DEPLOY_DIR / NIGHTLY, LIB):
+        proc = subprocess.run(["bash", "-n", str(path)], capture_output=True, text=True, timeout=30)
+        assert proc.returncode == 0, (path.name, proc.stderr)
+
+
+def test_no_config_as_code_file_is_left_in_the_repo() -> None:
+    """Railway stops reading these on 2026-12-01; the settings live on the services."""
+    for rel in ("railway.toml", "railway.json", "deploy/railway/railway.scanner-nightly.json"):
+        assert not (REPO_ROOT / rel).exists(), rel
+
+
+@pytest.mark.parametrize(
+    ("script", "field", "live"),
+    [
+        (WEB, "restartPolicyMaxRetries", 10),  # web's instance value in the P0A.1 audit
+        (WEB, "healthcheckPath", None),
+        (WEB, "dockerfilePath", None),
+        (WEB, "numReplicas", None),
+        (WEB, "railwayConfigFile", "/railway.toml"),
+        (WEB, "cronSchedule", "0 9 * * *"),
+        (WEB, "healthcheckTimeout", "300"),  # right digits, wrong type
+        (NIGHTLY, "healthcheckPath", "/health"),
+        (NIGHTLY, "restartPolicyType", "ON_FAILURE"),
+        (NIGHTLY, "dockerfilePath", "Dockerfile.web"),
+        (NIGHTLY, "cronSchedule", "0 9 * * *"),
+        (NIGHTLY, "limits", {"containers": {"cpu": 8, "memoryBytes": 17179869184}}),
+    ],
+)
+def test_settings_mismatch_refuses_dry_run(repo: Repo, tmp_path: Path, script: str, field: str, live) -> None:
+    service = SERVICE[script]
+    set_answer(repo.env, service, live_answer(service, **{field: live}))
+    stage = tmp_path / "stage"
+    proc = repo.deploy(script, "--dry-run", "--keep-stage", str(stage))
+    assert_settings_refused(proc, Path(repo.env["FAKE_RAILWAY_LOG"]), stage, service, field, "MISMATCH")
+    mismatched = [line for line in proc.stderr.splitlines() if "MISMATCH" in line]
+    assert len(mismatched) == 1 and f" {field} " in mismatched[0], mismatched
+
+
+@pytest.mark.parametrize("script", SCRIPTS)
+def test_settings_mismatch_refuses_real_deploy(repo: Repo, script: str) -> None:
+    service = SERVICE[script]
+    set_answer(repo.env, service, live_answer(service, numReplicas=2))
+    proc = repo.deploy(script)
+    assert_settings_refused(proc, Path(repo.env["FAKE_RAILWAY_LOG"]), None, service, "numReplicas")
+    assert list(Path(repo.env["TMPDIR"]).iterdir()) == []
+
+
+def test_settings_field_not_returned_is_a_mismatch(repo: Repo) -> None:
+    body = live_answer("web")
+    del body["data"]["serviceInstance"]["healthcheckTimeout"]
+    set_answer(repo.env, "web", body)
+    proc = repo.deploy(WEB, "--dry-run")
+    assert_settings_refused(proc, Path(repo.env["FAKE_RAILWAY_LOG"]), None, "web", "healthcheckTimeout", "(not returned)")
+
+
+def test_settings_wrong_service_name_is_refused(repo: Repo) -> None:
+    """The id in service_settings.json must belong to the service being deployed."""
+    set_answer(repo.env, "web", live_answer("web", serviceName="scanner-nightly"))
+    proc = repo.deploy(WEB, "--dry-run")
+    assert_settings_refused(proc, Path(repo.env["FAKE_RAILWAY_LOG"]), None, "web", "serviceName")
+
+
+@pytest.mark.parametrize(
+    "limits",
+    [
+        {"containers": {"cpu": 16, "memoryBytes": 17179869184}},
+        {"cpu": 16, "memoryBytes": 17179869184},
+        {"vCPUs": 16, "memoryGB": 16},
+        {"containers": {"vCPUs": 16.0, "memoryGB": 16}},
+        json.dumps({"vCPUs": 16, "memoryGB": 16}),  # a JSON scalar delivered as a string
+    ],
+)
+def test_nightly_limits_shapes_that_match(repo: Repo, limits) -> None:
+    set_answer(repo.env, "scanner-nightly", live_answer("scanner-nightly", limits=limits))
+    proc = repo.deploy(NIGHTLY, "--dry-run")
+    assert proc.returncode == 0, proc.stdout + proc.stderr
+    assert "limits" in proc.stdout and "MISMATCH" not in proc.stdout
+
+
+@pytest.mark.parametrize(
+    "limits",
+    [None, {}, {"vCPUs": 16}, {"cpu": "16", "memoryBytes": 17179869184}, {"memory": "16Gi", "cpu": 16}, [16, 16]],
+)
+def test_nightly_limits_unknown_or_unset_shapes_are_refused(repo: Repo, limits) -> None:
+    set_answer(repo.env, "scanner-nightly", live_answer("scanner-nightly", limits=limits))
+    proc = repo.deploy(NIGHTLY, "--dry-run")
+    assert_settings_refused(proc, Path(repo.env["FAKE_RAILWAY_LOG"]), None, "scanner-nightly", "limits")
+
+
+def test_web_does_not_query_limits(repo: Repo) -> None:
+    """web's old railway.toml set no limits, so none are compared or queried."""
+    proc = repo.deploy(WEB, "--dry-run")
+    assert proc.returncode == 0, proc.stdout + proc.stderr
+    (call,) = api_calls(Path(repo.env["FAKE_RAILWAY_LOG"]))
+    assert "serviceInstanceLimits" not in call[1]
+
+
+@pytest.mark.parametrize(
+    ("body", "exit_code", "stderr", "needle"),
+    [
+        ("", 1, "Unauthorized. Please login with `railway login`\n", "railway api exited 1"),
+        ({"errors": [{"message": "Cannot query field \"builder\" on type \"ServiceInstance\"."}]}, 1, "",
+         "railway api exited 1"),
+        ({"errors": [{"message": "Problem processing request"}], "data": None}, None, "", "GraphQL errors"),
+        ("Not JSON at all", None, "", "printed no JSON"),
+        ({"data": {"serviceInstance": None}}, None, "", "returned no serviceInstance"),
+    ],
+)
+def test_unreadable_settings_fail_closed(repo: Repo, tmp_path: Path, body, exit_code, stderr, needle) -> None:
+    set_answer(repo.env, "web", body, exit_code=exit_code, stderr=stderr)
+    stage = tmp_path / "stage"
+    proc = repo.deploy(WEB, "--dry-run", "--keep-stage", str(stage))
+    assert_settings_refused(proc, Path(repo.env["FAKE_RAILWAY_LOG"]), stage, "web", "CANNOT CHECK", needle)
+
+
+def test_deprecation_notice_is_surfaced_but_does_not_refuse(repo: Repo) -> None:
+    """N4.1 acceptance wants no such notice; the dry run shows it if Railway still prints one."""
+    notice = "Config as Code (railway.json / railway.toml) is deprecated. Existing files keep working until 2026-12-01."
+    set_answer(repo.env, "web", live_answer("web"), stderr=notice + "\n")
+    proc = repo.deploy(WEB, "--dry-run")
+    assert proc.returncode == 0, proc.stdout + proc.stderr
+    assert f"warning   the railway CLI printed a deprecation notice: {notice}" in proc.stdout
+
+
+@pytest.mark.parametrize("script", SCRIPTS)
+def test_override_never_skips_the_settings_check(repo: Repo, tmp_path: Path, script: str) -> None:
+    service = SERVICE[script]
+    repo.commit("mid-fleet hotfix", {"app.py": "x = 9\n"})
+    set_answer(repo.env, service, live_answer(service, restartPolicyType="ALWAYS"))
+    stage = tmp_path / "stage"
+    proc = repo.deploy(script, "--keep-stage", str(stage), extra_env={"ALLOW_UNRELEASED_DEPLOY": "1"})
+    assert "DEPLOYING UNRELEASED CODE" in proc.stderr
+    assert_settings_refused(proc, Path(repo.env["FAKE_RAILWAY_LOG"]), stage, service, "restartPolicyType")
+
+
+def test_expected_settings_come_from_the_deployed_ref_not_the_work_tree(repo: Repo) -> None:
+    """A dirty edit of service_settings.json cannot make wrong live settings pass."""
+    set_answer(repo.env, "web", live_answer("web", restartPolicyMaxRetries=10))
+    path = repo.path / "deploy/railway/service_settings.json"
+    edited = json.loads(path.read_text(encoding="utf-8"))
+    edited["services"]["web"]["serviceInstance"]["restartPolicyMaxRetries"] = 10
+    path.write_text(json.dumps(edited), encoding="utf-8")  # uncommitted
+    proc = repo.deploy(WEB, "--dry-run", extra_env={"ALLOW_UNRELEASED_DEPLOY": "1"})
+    assert_settings_refused(proc, Path(repo.env["FAKE_RAILWAY_LOG"]), None, "web", "restartPolicyMaxRetries")
+
+
+def test_release_without_settings_file_is_refused(repo: Repo) -> None:
+    repo.git("rm", "-q", "deploy/railway/service_settings.json")
+    repo.git("commit", "-q", "-m", "drop settings")
+    proc = repo.deploy(WEB, "--dry-run", extra_env={"ALLOW_UNRELEASED_DEPLOY": "1"})
+    assert proc.returncode == 1, proc.stdout + proc.stderr
+    assert "CANNOT CHECK" in proc.stderr and "cannot read the expected settings" in proc.stderr
+    assert railway_calls(Path(repo.env["FAKE_RAILWAY_LOG"])) == []
+
+
+@pytest.mark.parametrize("script", SCRIPTS)
+@pytest.mark.parametrize("cac", ["railway.toml", "railway.json"])
+def test_config_as_code_file_in_the_release_is_refused(repo: Repo, tmp_path: Path, script: str, cac: str) -> None:
+    repo.commit("re-add config as code", {cac: "[build]\n"})
+    repo.git("push", "-q", "origin", "main")
+    stage = tmp_path / "stage"
+    proc = repo.deploy(script, "--dry-run", "--keep-stage", str(stage), extra_env={"ALLOW_UNRELEASED_DEPLOY": "1"})
+    assert proc.returncode == 1, proc.stdout + proc.stderr
+    assert "REFUSED. The release carries a config-as-code file" in proc.stderr
+    assert f"{cac} is in the release" in proc.stderr
+    assert "ALLOW_UNRELEASED_DEPLOY=1 does not override this" in proc.stderr
+    assert railway_calls(Path(repo.env["FAKE_RAILWAY_LOG"])) == []
+    assert not stage.exists()
+
+
+@pytest.mark.parametrize("script", SCRIPTS)
+def test_no_settings_check_dry_run_never_calls_railway(repo: Repo, tmp_path: Path, script: str) -> None:
+    (Path(repo.env["PATH"].split(os.pathsep)[0]) / "railway").unlink()  # no railway at all
+    stage = tmp_path / "stage"
+    proc = repo.deploy(script, "--dry-run", "--no-settings-check", "--keep-stage", str(stage))
+    assert proc.returncode == 0, proc.stdout + proc.stderr
+    assert "settings  NOT CHECKED (--no-settings-check, dry run only; a deploy always checks)" in proc.stdout
+    assert "dry run: railway was not called." in proc.stdout
+    assert set(stage_files(stage)) == expected_stage(repo, script, f"refs/tags/{TAG}")
+
+
+@pytest.mark.parametrize("script", SCRIPTS)
+def test_no_settings_check_needs_dry_run(repo: Repo, script: str) -> None:
+    proc = repo.deploy(script, "--no-settings-check")
+    assert proc.returncode == 2
+    assert "--no-settings-check is for dry runs only" in proc.stderr
+    assert railway_calls(Path(repo.env["FAKE_RAILWAY_LOG"])) == []
+
+
+def test_dry_run_with_settings_check_needs_railway(repo: Repo) -> None:
+    (Path(repo.env["PATH"].split(os.pathsep)[0]) / "railway").unlink()
+    proc = repo.deploy(WEB, "--dry-run")
+    assert proc.returncode == 2
+    assert "the railway CLI is not on PATH" in proc.stderr
+
+
+def test_missing_python_is_a_usage_error(repo: Repo) -> None:
+    proc = repo.deploy(WEB, "--dry-run", extra_env={"DEPLOY_PYTHON": "/nonexistent/python3"})
+    assert proc.returncode == 2
+    assert "no Python 3 for the settings check" in proc.stderr
+    assert railway_calls(Path(repo.env["FAKE_RAILWAY_LOG"])) == []

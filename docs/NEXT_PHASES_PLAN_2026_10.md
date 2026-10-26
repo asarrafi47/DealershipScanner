@@ -478,7 +478,7 @@ Run every command in a plain terminal from `/Users/asarrafi/Projects/DealershipS
 ### 7.0 Conventions every phase uses
 
 - **Branches.** Phase branch `phase/<NID>` cut from `origin/main`. Unit branches are `unit/<unit id>`, in worktrees under `.claude/worktrees/<unit id>`. Units marked **MAIN** touch `workspace/`, local Postgres, Railway or git refs, and run serially in the main checkout after their code dependencies merge.
-- **Code under a MAIN scan.** `workspace/` is gitignored and exists only in the main checkout, so a worktree cannot replace it, and the main checkout sits on `feature/http-only-scans` (v1.5.4) until told otherwise. Before every MAIN scan unit (N1.3's 2-dealer smoke, N6.2, the N8 mini re-runs, N8.10, N9.14, N11 passes, N11.13, P5A.8, P5B.8), the owner approves `git switch phase/<NID>` in the main checkout (`git switch --detach <RC_SHA>` in N11). The parameterized preflight (N1.3) refuses unless `git rev-parse HEAD` equals that phase HEAD or `RC_SHA`. The SHA is recorded in the run dir and in the unit checkpoint.
+- **Code under a MAIN scan.** `workspace/` is gitignored and exists only in the main checkout, so a worktree cannot replace it, and the main checkout stays on the branch the owner last switched it to (`phase/N1` on 2026-10-18; it held `feature/http-only-scans`, which N4.3 retires, until 1.5.4). Before every MAIN scan unit (N1.3's 2-dealer smoke, N6.2, the N8 mini re-runs, N8.10, N9.14, N11 passes, N11.13, P5A.8, P5B.8), the owner approves `git switch phase/<NID>` in the main checkout (`git switch --detach <RC_SHA>` in N11). The parameterized preflight (N1.3) refuses unless `git rev-parse HEAD` equals that phase HEAD or `RC_SHA`. The SHA is recorded in the run dir and in the unit checkpoint.
 - **Scratch-DB scan runs.** Every re-run uses N1.3's `scripts/cleanroom/build_db.sh`, `run.env.template`, `preflight.sh` and `isolation_snapshot.sh` with `--db <name> --art workspace/cleanroom_runs/<db> --roster <file>`, never the files under `workspace/cleanroom_2026_10/`. After `build_db.sh`, `migrate --apply` runs on the scratch DB (its schema is copied from `cars`, and the run uses `INVENTORY_SCHEMA_CHECK=strict`). Fleet passes run with `fleet_scan --resume` (N9.15) once it has merged. `caffeinate -dims` verified; AC recommended for runs over about 2 h (battery is not a blocker, owner 10-09).
 - **Checkpoints.** `workspace/phase_runs/<NID>/<unit id>.json` per unit, plus `workspace/phase_runs/<NID>/RESUME.md`. The schema and the re-run rule are in Section 10. Before any named wait (an owner step, a ≥20 h gap, nightly runs, a soak), the workflow writes RESUME.md with the earliest restart time and ends; each phase's workflow shape names its waits.
 - **Plan status.** Status edits to this plan (unit states, measured numbers) are committed on `phase/<NID>` and ride that phase's release.
@@ -495,7 +495,7 @@ Run every command in a plain terminal from `/Users/asarrafi/Projects/DealershipS
   1. CHANGELOG `## [<VERSION>]` section;
   2. `scripts/bump_version.sh <level>`;
   3. secrets and large-file scan over `git ls-files -co`;
-  4. rebase on `origin/main`; ruff and the phase's targeted tests; push the rebased `phase/<NID>` and wait for green CI on that exact SHA; open the release PR so `release-guard` runs before main moves (steps 5-7);
+  4. rebase on `origin/main` only if another release moved it since the phase was cut (RELEASING.md step 1 prints no `fast-forward-ok`; a plain rebase rewrites the phase's merge commits even when `main` has not moved, and RELEASING.md "Branching model" says how unit branches are deleted after one); ruff and the phase's targeted tests; push `phase/<NID>` and wait for green CI on that exact SHA; open the release PR so `release-guard` runs before main moves (steps 5-7);
   5. Railway snapshot before the push (step 8: `railway_snapshot` over web, scanner-nightly and Postgres, plus variable **names** only for web and scanner-nightly), then `git push origin phase/<NID>:main` (fast-forward);
   6. annotated tag `v<VERSION>`; CI green on main (steps 9-10);
   7. the same snapshot again within 15 minutes and a diff: no new deployment (step 11);
@@ -976,6 +976,31 @@ Elsewhere:
 | N4.3 | LE-5, D-REL2 | Runner template and RELEASING.md agree on `phase/<NID>` / `unit/<id>`; retire `feature/http-only-scans` after the first phase release (and after N4.4's mini check or waiver) | docs + MAIN | RELEASING.md, Section 10 template | N1.10 | branch archived or deleted per owner |
 | N4.4 | LE-7, OPS-6 | Mini per D-N2: repair pack if SSH approved, else a re-plan note | prod-owner / docs | `docs/ops_log/N4.4.md`, `OWNER_DECISIONS_LOG.md` | D-N2 | either repaired and on the release commit, or recorded as excluded |
 | N4.5 | release | Prove the new web deploy path: owner-approved Docker smoke of the exact stage, migration check (Section 7.0; before N9's release reaches main), then `deploy_web.sh` | prod-owner | ops log | N4.1 | health shows the tag; no config-as-code warning; prod `migrate --dry-run` printed `database is up to date` before the deploy |
+
+**Unit status (updated 2026-10-18 by the N4 integrator at commit time; checkpoints in `workspace/phase_runs/N4/`, summary in `workspace/phase_runs/N4/RESUME.md`).**
+- N4.1: DONE (code), merged `f12a0776e`. Review: 1 round, pass, 7 nits carried.
+  - The root `railway.toml` and `deploy/railway/railway.scanner-nightly.json` are deleted. `deploy/railway/service_settings.json` holds the settings and `service_settings.py` checks them. Both deploy scripts refuse on any mismatch.
+  - Owner packs are prepared but not applied: `N4.1_read.md`; `N4.1_web_settings.md` (only after `web-source-clear`); `N4.1_scanner_settings.md` (only under option (a) or in N12.2).
+  - Acceptance rows still open, both for the owner: the read-only query equals the old files, and a plain `--dry-run` shows no deprecation warning.
+- P15B.6: DONE, merged `5095bac3f`. Review: 1 round, pass, 6 nits carried.
+  - N4.1 deleted the files that `test_railway_configs_name_existing_dockerfiles` looped over, so the test passed without checking anything. Integration commit `2bb1e54bc` makes it also read `service_settings.json` and fail when it checks nothing.
+  - `docker compose config` (parse only) validates, and lists 2 services: `postgres` and `web`.
+- N4.3: DONE (docs), merged `69b1b85a9`. Review: 2 rounds, pass. Nit 1 was fixed in integration commit `d99b4d00c`; nits 2-6 are carried.
+  - Retiring `feature/http-only-scans` is owner-gated. Gates 2 and 4 are met; gates 1 and 3 are open. No branch was deleted.
+  - The "archived or deleted per owner" acceptance stays open until the owner acts.
+- N4.4: DONE, merged `e37ff4b7f`. Review: 1 round, pass, 4 nits carried. Option (b): the mini is recorded as excluded, in `docs/ops_log/N4.4.md` and one OWNER_DECISIONS_LOG record row.
+- N4.5: BLOCKED on the owner, in this order: the N4 release on main, `N4.1_read.md`, `N4.1_web_settings.md`, "Docker OK for N4.5", then `workspace/phase_runs/N4/N4.5.md`.
+- **Exit gate, local items** (2026-10-18, at `d99b4d00c`):
+  - `bash -n` exits 0 on `deploy_web.sh`, `deploy_scanner_nightly.sh` and `_guarded_deploy.sh`, under bash 3.2.57 and under bash 5.3.15. shellcheck finds nothing.
+  - Stubbed settings tests (`test_deploy_guard.py -k "settings or limits or deprecation or config_as_code or bash_n or never_calls_railway"`): 50 passed. `test_railway_service_settings.py` plus `test_deploy_references.py`: 59 passed.
+  - The worker/scheduler grep returns 2 hits, both in `deploy/car-scanner/cronjob.yaml` (lines 32 and 61). They are a k8s node label in the dead manifest. This is an exception until P18A.7 deletes `deploy/car-scanner/` (D-IF9). The root `docker-compose.yml` the grep names does not exist; compose lives under `deploy/`, which the grep covers.
+  - 0 tracked `railway.toml` or `railway*.json` files remain.
+  - The scanner-nightly pack is prepared and not applied. No agent ran a railway command except one local `railway --version`, and there are 0 owner done-files.
+- **Exit gate, owner items still open:**
+  - dry runs with no deprecation warning;
+  - a healthy web deploy through the new path;
+  - `railway deployment list -s scanner-nightly` unchanged (N4.5 step 13).
+- If N4.1 is not proven by 2026-11-20, N4 releases alone.
 
 **N-unit specs.**
 
@@ -2896,9 +2921,13 @@ Rules:
 2. Checkpoints: before starting, read workspace/phase_runs/<NID>/RESUME.md and every
    workspace/phase_runs/<NID>/<unit>.json. Skip units per Section 10.3. Write each
    unit's JSON the moment its state changes, and rewrite RESUME.md after every unit.
-3. Branch: phase/<NID> cut from origin/main (create it only if absent). One git
-   worktree per unit at .claude/worktrees/<unit id> on branch unit/<unit id>. Units
-   marked MAIN run serially in the main checkout after their dependencies merge.
+3. Branch: phase/<NID> cut from origin/main (create it only if absent). If the main
+   checkout is busy, integrate in the worktree .claude/worktrees/phase-<NID>, and
+   remove it before any git switch phase/<NID> in the main checkout. One git worktree
+   per unit at .claude/worktrees/<unit id> on branch unit/<unit id>, cut from the
+   phase tip. Unit branches are never pushed and never named remediation/<id>
+   (docs/RELEASING.md "Branching model"). Units marked MAIN run serially in the main
+   checkout after their dependencies merge.
 4. Fan out by wave. Do not start a unit whose blocking decision or approval is missing:
    mark it BLOCKED with the reason and continue with the rest.
 5. Each implementing agent does exactly its unit: runs only its tests, in chunks under
@@ -2965,7 +2994,7 @@ Rules:
 ### 10.3 Re-run rule
 
 - **DONE** units whose `merged_sha` is an ancestor of `origin/phase/<NID>` (or of the local phase branch) are skipped.
-- **RUNNING or REVIEW** units restart in a fresh worktree. First check the stale worktree for unpushed commits (`git -C <worktree> log @{u}..` or against `base_sha`) and salvage them, then remove it.
+- **RUNNING or REVIEW** units restart in a fresh worktree. First check the stale worktree for work that would be lost: `git -C <worktree> log --oneline <base_sha>..HEAD` lists its commits and `git -C <worktree> status --short` its uncommitted edits. Unit branches are never pushed, so there is no `@{u}` to compare with. Salvage that work, then remove the worktree.
 - **BLOCKED** units re-check their blocker and start if it is cleared.
 - **Investigation units** write one file per group, dealer or platform; a re-run skips files that pass the schema check.
 - **Scan units** resume with `fleet_scan --resume <run_dir>` (N9.15): dealers with a triage entry or a `scan_runs` row started at or after the run start are skipped, and the shard rosters and `triage.json` are reused. The run dir holds `RESUME.md` and per-shard `triage.json`. Before N9.15 merges, only short scans run (N1.3's smoke, N6.2, the N8 mini re-runs); a killed one restarts into a fresh scratch DB.

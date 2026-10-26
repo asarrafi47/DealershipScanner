@@ -24,8 +24,6 @@ RUN pip install --no-cache-dir -r requirements-scanner.txt
 
 COPY . .
 
-RUN chmod +x /app/scripts/railway_scan_fleet.sh \
-    /app/scripts/docker-entrypoint-scanner-worker.sh \
-    /app/scripts/docker-entrypoint-scanner-scheduler.sh
+RUN chmod +x /app/scripts/railway_scan_fleet.sh
 
 CMD ["/app/scripts/railway_scan_fleet.sh"]

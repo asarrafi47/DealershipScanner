@@ -122,14 +122,19 @@ def test_app_version_and_build_commit_read_the_repo_root() -> None:
 
 
 def test_railway_healthcheck_path_unchanged() -> None:
-    """Railway's web healthcheck still probes /health, which still answers 200."""
-    import tomllib
+    """Railway's web healthcheck still probes /health, which still answers 200.
+
+    The path is web's service setting since N4.1 (the root railway.toml is gone);
+    deploy_web.sh refuses to deploy unless the live setting equals this file.
+    """
+    import json
     from pathlib import Path
 
     from backend import main
 
-    cfg = tomllib.loads((Path(__file__).resolve().parents[2] / "railway.toml").read_text(encoding="utf-8"))
-    assert cfg["deploy"]["healthcheckPath"] == "/health"
+    settings = Path(__file__).resolve().parents[2] / "deploy" / "railway" / "service_settings.json"
+    cfg = json.loads(settings.read_text(encoding="utf-8"))
+    assert cfg["services"]["web"]["serviceInstance"]["healthcheckPath"] == "/health"
     with main.app.test_client() as c:
         assert c.get("/health").status_code == 200
 

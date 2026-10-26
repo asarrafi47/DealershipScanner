@@ -18,7 +18,7 @@ curl -sf http://localhost:5001/api/ready   # failure = app not up or a dependenc
 ## Docker stack (Postgres inventory)
 
 ```bash
-./deploy/up.sh                         # postgres + web + 2 scanner-workers + scheduler; web on :18000
+./deploy/up.sh                         # postgres (pgvector) + web; web on :18000
 WEB_PORT=8000 ./deploy/up.sh           # custom port
 curl -sf http://127.0.0.1:18000/health    # failure => docker logs dealership-scanner-web
 ```

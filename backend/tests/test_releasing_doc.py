@@ -109,9 +109,11 @@ def test_every_repo_path_in_the_doc_exists(doc):
         for rel in sorted(paths)
         if not (list(REPO_ROOT.glob(rel)) if "*" in rel else (REPO_ROOT / rel).exists())
     ]
-    for root_file in ("railway.toml", "Dockerfile.web", "Dockerfile.scanner", "VERSION", "CHANGELOG.md"):
+    for root_file in ("Dockerfile.web", "Dockerfile.scanner", "VERSION", "CHANGELOG.md"):
         assert root_file in doc
         assert (REPO_ROOT / root_file).is_file(), root_file
+    # N4.1: the config-as-code file is gone; the doc names it only as history.
+    assert not (REPO_ROOT / "railway.toml").exists()
     assert not missing, f"RELEASING.md names paths that do not exist: {missing}"
 
 
@@ -136,19 +138,26 @@ def test_quoted_guard_output_and_override_match_the_script(doc):
     lib = GUARD_LIB.read_text(encoding="utf-8")
     for printed in (
         "(annotated, on origin; HEAD == origin main)",
-        "dry run: railway was not called.",
+        "dry run: nothing was uploaded; railway ran only the read-only settings query.",
+        "match deploy/railway/service_settings.json at ",
         "GUARD OVERRIDDEN",
         "--path-as-root --service",
     ):
         assert printed in doc, printed
         assert printed in lib, printed
+    helper = (REPO_ROOT / "deploy" / "railway" / "service_settings.py").read_text(encoding="utf-8")
+    for printed in ("warning   the railway CLI printed a deprecation notice", "MISMATCH", "CANNOT CHECK",
+                    "checked settings match"):
+        assert printed in doc and printed in helper, printed
     assert 'railway up "$stage" --path-as-root --service "$service" --detach' in lib
     assert "railway up <stage> --path-as-root --service web --detach" in doc
     assert '"${ALLOW_UNRELEASED_DEPLOY:-}" = "1"' in lib
     assert "ALLOW_UNRELEASED_DEPLOY=1 deploy/railway/deploy_scanner_nightly.sh" in doc
     nightly = (REPO_ROOT / "deploy" / "railway" / "deploy_scanner_nightly.sh").read_text(encoding="utf-8")
     assert 'if [ "$SERVICE" = "web" ]; then' in nightly
-    assert "railway.scanner-nightly.json" in nightly and "deploy/railway/railway.scanner-nightly.json" in doc
+    # N4.1: no config file is copied into the stage; the settings live on the service.
+    assert "railway.json" not in nightly.split("set -euo pipefail", 1)[1] and "cp " not in nightly
+    assert "deploy/railway/service_settings.json" in doc and "service_settings.json" in nightly
 
 
 def test_bump_guard_and_migrate_arguments_exist(doc):

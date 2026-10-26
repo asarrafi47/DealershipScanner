@@ -42,7 +42,7 @@ def _build_commit() -> str:
 
 
 def health():
-    # Railway's healthcheck (railway.toml healthcheckPath) only needs the 200.
+    # Railway's healthcheck (web's healthcheckPath setting, deploy/railway/service_settings.json) only needs the 200.
     return jsonify({"status": "ok", "version": _app_version(), "commit": _build_commit()}), 200
 
 
