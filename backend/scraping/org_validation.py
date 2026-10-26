@@ -220,7 +220,7 @@ def normalize_group_name(raw: str) -> str:
 
 def canonicalize_group_name(normalized: str) -> str:
     """Map known variants to a canonical display string (delegates to alias table)."""
-    from scraping.canonical_groups import canonical_group_display
+    from backend.scraping.canonical_groups import canonical_group_display
 
     return canonical_group_display(normalized)
 

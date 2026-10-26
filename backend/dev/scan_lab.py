@@ -447,6 +447,27 @@ def _append_scan_lab_log(job_id: str, text: str) -> None:
         job["log"] = (job.get("log") or "") + text
 
 
+def _scan_lab_subprocess_env(resolved_manifest: Path) -> dict[str, str]:
+    """Env for the lab scanner subprocess.
+
+    The inherited Postgres DSN is stripped: the lab must never write to the
+    real inventory. Point the lab at a scratch Postgres with
+    ``SCAN_LAB_DATABASE_URL``; without it the scanner refuses to start.
+    """
+    env = os.environ.copy()
+    lab_dsn = (env.pop("SCAN_LAB_DATABASE_URL", "") or "").strip()
+    env.pop("DATABASE_URL", None)
+    env.pop("INVENTORY_DATABASE_URL", None)
+    if lab_dsn:
+        env["INVENTORY_DATABASE_URL"] = lab_dsn
+    env["DEALERS_MANIFEST_PATH"] = str(resolved_manifest)
+    env["INVENTORY_DB_PATH"] = str(scan_lab_inventory_db_path())
+    env.update({"SCANNER_SCAN_ONLY": "1", "SCANNER_MAX_DEALER_CONCURRENCY": "1", "SCANNER_VDP_DOWNLOAD_IMAGES": "0"})
+    env.pop("SCANNER_ALLOW_BROWSER", None)
+    env.pop("ANTHROPIC_API_KEY", None)
+    return env
+
+
 def _run_manifest_scan_job(job_id: str, manifest_path: Path) -> None:
     log_parts: list[str] = []
 
@@ -461,12 +482,7 @@ def _run_manifest_scan_job(job_id: str, manifest_path: Path) -> None:
     resolved_manifest = manifest_path.resolve()
     # HTTP-only scan with a small footprint (the old Mac-mini-lite preset ran a
     # browser; scans never do now — docs/HTTP_ONLY_SCANS_PLAN.md)
-    env = os.environ.copy()
-    env["DEALERS_MANIFEST_PATH"] = str(resolved_manifest)
-    env["INVENTORY_DB_PATH"] = str(scan_lab_inventory_db_path())
-    env.update({"SCANNER_SCAN_ONLY": "1", "SCANNER_MAX_DEALER_CONCURRENCY": "1", "SCANNER_VDP_DOWNLOAD_IMAGES": "0"})
-    env.pop("SCANNER_ALLOW_BROWSER", None)
-    env.pop("ANTHROPIC_API_KEY", None)
+    env = _scan_lab_subprocess_env(resolved_manifest)
 
     cmd = [
         sys.executable,
