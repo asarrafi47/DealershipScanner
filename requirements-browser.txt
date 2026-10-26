@@ -1,0 +1,8 @@
+# Headless-browser stack (P15B.2). Installed by Dockerfile.discovery (via requirements.txt)
+# and on dev hosts; the web and scanner images never carry it (D-SEC1 (a), P3.8).
+playwright>=1.60.0
+playwright-stealth>=2.0.3
+# Browser binary (not installed by pip). After pip install, run ONE of:
+#   ./backend/scripts/install_scraper_browsers.sh
+#   python3 -m playwright install chromium
+# Do not append comments on the same line as "playwright install" unless your shell treats # as a comment; otherwise Playwright treats extra words as invalid browser names.

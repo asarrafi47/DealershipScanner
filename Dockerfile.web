@@ -11,8 +11,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 WORKDIR /app
 
 # Install Python deps first (layer cache)
-COPY requirements.txt .
-RUN pip install --no-cache-dir gunicorn[gthread] -r requirements.txt
+COPY requirements*.txt ./
+RUN pip install --no-cache-dir gunicorn[gthread] -r requirements-web.txt
 
 # Bake the pgeocode US postal table (~5.6 MB from GeoNames) into the image.
 # backend/db/geo.py builds pgeocode.Nominatim("us") at import, and pgeocode
@@ -38,8 +38,8 @@ RUN python -c "import pgeocode; pgeocode.Nominatim('us')" \
 # SCANNER_ALLOW_BROWSER (backend/scanner/browser_gate.py), which web does not
 # set; with no browser in the image they could not launch here anyway.
 #
-# The playwright pip package still installs from requirements.txt until P15B.2
-# splits the web requirements; without the browser download it is inert.
+# The playwright pip package is not installed here either: it lives in
+# requirements-browser.txt (P15B.2), which this image never reads.
 # Do not add a Playwright or Patchright browser install here; a static test
 # (backend/tests/test_web_researcher.py) fails if this file gains one.
 

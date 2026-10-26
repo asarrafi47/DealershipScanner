@@ -17,7 +17,9 @@ WORKDIR /app
 
 ENV PYTHONUNBUFFERED=1 PYTHONDONTWRITEBYTECODE=1 SCANNER_ALLOW_BROWSER=1
 
-COPY requirements.txt .
+# requirements.txt includes requirements-web.txt and requirements-browser.txt, so
+# every requirements*.txt is copied (P15B.2).
+COPY requirements*.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 
 RUN playwright install chromium && playwright install-deps chromium
