@@ -52,15 +52,18 @@ def test_smart_search_payload_too_large() -> None:
         assert rv.status_code == 413
 
 
-def test_ip_rate_limit_sqlite_shared(tmp_path, monkeypatch) -> None:
+def test_ip_rate_limit_memory_window(monkeypatch) -> None:
     from backend.utils import ip_rate_limit as m
 
-    dbf = tmp_path / "rl.db"
-    monkeypatch.setenv("RATE_LIMIT_SQLITE_PATH", str(dbf))
+    m.clear_rate_limit_state()
+    monkeypatch.setenv("RATE_LIMIT_SQLITE_PATH", "/nonexistent/ignored.db")  # N37.11: no longer read
     assert m.allow_request("k1", max_events=2, window_seconds=60.0)
     assert m.allow_request("k1", max_events=2, window_seconds=60.0)
     assert not m.allow_request("k1", max_events=2, window_seconds=60.0)
     assert m.allow_request("k2", max_events=2, window_seconds=60.0)
+    m.refund_event("k1")
+    assert m.allow_request("k1", max_events=2, window_seconds=60.0)
+    m.clear_rate_limit_state()
 
 
 def test_csp_enforce_header_when_enabled(monkeypatch) -> None:

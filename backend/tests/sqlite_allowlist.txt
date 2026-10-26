@@ -160,10 +160,8 @@ backend/dealer/portal_sync.py  qmark_placeholder  2
 backend/dealer/routes.py  import_sqlite3  1
 backend/dealer/routes.py  sqlite3_attr  3
 backend/dev/routes.py  import_sqlite3  1
-backend/dev/routes.py  pragma  2
-backend/dev/routes.py  qmark_placeholder  7
 backend/dev/routes.py  row_factory  1
-backend/dev/routes.py  sqlite3_attr  17
+backend/dev/routes.py  sqlite3_attr  3
 backend/dev/scan_lab.py  db_path_literal  1
 backend/dev/scan_lab.py  env_db_path  2
 backend/dev/scan_lab.py  ifnull  1
@@ -396,7 +394,6 @@ backend/tests/test_assess_stamped_rows.py  import_sqlite3  1
 backend/tests/test_assess_stamped_rows.py  qmark_placeholder  3
 backend/tests/test_assess_stamped_rows.py  row_factory  1
 backend/tests/test_assess_stamped_rows.py  sqlite3_attr  3
-backend/tests/test_audit_fixes.py  db_path_literal  1
 backend/tests/test_backfill_recipe_saved_at.py  import_sqlite3  1
 backend/tests/test_backfill_recipe_saved_at.py  insert_or  1
 backend/tests/test_backfill_recipe_saved_at.py  qmark_placeholder  1
@@ -412,8 +409,6 @@ backend/tests/test_car_attribution_overlay.py  executescript  1
 backend/tests/test_car_attribution_overlay.py  import_sqlite3  1
 backend/tests/test_car_attribution_overlay.py  qmark_placeholder  3
 backend/tests/test_car_attribution_overlay.py  sqlite3_attr  1
-backend/tests/test_car_chat_policy.py  db_path_literal  1
-backend/tests/test_car_chat_policy.py  env_db_path  1
 backend/tests/test_car_detail_api.py  db_path_literal  1
 backend/tests/test_catalog_linker.py  import_sqlite3  1
 backend/tests/test_catalog_linker.py  sqlite3_attr  3
@@ -560,7 +555,7 @@ backend/tests/test_knowledge_engine_specs.py  import_sqlite3  1
 backend/tests/test_knowledge_engine_specs.py  pragma  1
 backend/tests/test_knowledge_engine_specs.py  qmark_placeholder  1
 backend/tests/test_knowledge_engine_specs.py  sqlite3_attr  1
-backend/tests/test_last_checked_line.py  db_path_literal  3
+backend/tests/test_last_checked_line.py  db_path_literal  1
 backend/tests/test_last_checked_line.py  env_db_path  1
 backend/tests/test_last_checked_line.py  import_sqlite3  1
 backend/tests/test_last_checked_line.py  sqlite3_attr  2
@@ -584,8 +579,7 @@ backend/tests/test_login_session_fixes.py  env_db_path  3
 backend/tests/test_market_price.py  db_path_literal  1
 backend/tests/test_merge_verified_specs_golden.py  db_path_literal  1
 backend/tests/test_merge_verified_specs_golden.py  env_db_path  2
-backend/tests/test_mileage_line_d_n12.py  db_path_literal  2
-backend/tests/test_mileage_zero_f12.py  db_path_literal  2
+backend/tests/test_mileage_zero_f12.py  db_path_literal  1
 backend/tests/test_mileage_zero_f12.py  env_db_path  1
 backend/tests/test_mileage_zero_f12.py  import_sqlite3  1
 backend/tests/test_mileage_zero_f12.py  sqlite3_attr  3
@@ -609,7 +603,7 @@ backend/tests/test_password_hash.py  db_path_literal  1
 backend/tests/test_password_hash.py  env_db_path  1
 backend/tests/test_password_hash.py  qmark_placeholder  2
 backend/tests/test_password_reset.py  db_path_literal  1
-backend/tests/test_password_reset.py  env_db_path  2
+backend/tests/test_password_reset.py  env_db_path  1
 backend/tests/test_pg_harness.py  db_path_literal  2
 backend/tests/test_pg_harness.py  env_db_path  1
 backend/tests/test_pipeline_no_reconcile_env.py  import_sqlite3  1
@@ -753,7 +747,7 @@ backend/tests/test_upsert_vin_owner_guard.py  import_sqlite3  1
 backend/tests/test_upsert_vin_owner_guard.py  qmark_placeholder  6
 backend/tests/test_upsert_vin_owner_guard.py  row_factory  1
 backend/tests/test_upsert_vin_owner_guard.py  sqlite3_attr  6
-backend/tests/test_ux_premium_gates.py  db_path_literal  4
+backend/tests/test_ux_premium_gates.py  db_path_literal  3
 backend/tests/test_vdp_junk_values_n65.py  db_path_literal  1
 backend/tests/test_vdp_junk_values_n65.py  env_db_path  1
 backend/tests/test_vdp_junk_values_n65.py  import_sqlite3  1
@@ -786,15 +780,9 @@ backend/tests/trim_ladder/test_rung_name_gate.py  qmark_placeholder  1
 backend/utils/credential_db_encryption.py  db_path_literal  1
 backend/utils/credential_db_encryption.py  import_sqlite3  1
 backend/utils/hybrid_search.py  qmark_placeholder  1
-backend/utils/ip_rate_limit.py  env_db_path  2
-backend/utils/ip_rate_limit.py  import_sqlite3  1
-backend/utils/ip_rate_limit.py  pragma  2
-backend/utils/ip_rate_limit.py  qmark_placeholder  4
-backend/utils/ip_rate_limit.py  sqlite3_attr  10
 backend/utils/market_price.py  ifnull  2
 backend/utils/market_price.py  import_sqlite3  1
 backend/utils/market_price.py  sqlite3_attr  1
-backend/utils/production_security.py  env_db_path  2
 backend/utils/query_parser.py  env_db_path  1
 backend/utils/query_parser.py  import_sqlite3  1
 backend/utils/query_parser.py  sqlite3_attr  1
@@ -833,8 +821,6 @@ scripts/create_demo_free_user.py  import_sqlite3  1
 scripts/create_demo_free_user.py  pragma  1
 scripts/create_demo_free_user.py  qmark_placeholder  1
 scripts/create_demo_free_user.py  sqlite3_attr  1
-scripts/docker-entrypoint-web.sh  db_path_literal  1
-scripts/docker-entrypoint-web.sh  env_db_path  4
 scripts/refresh_lease_matches.py  import_sqlite3  1
 scripts/refresh_lease_matches.py  row_factory  1
 scripts/refresh_lease_matches.py  sqlite3_attr  1
