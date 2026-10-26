@@ -680,7 +680,9 @@ def _resolve(
         pub_inc = ctx.pub_incomplete(cid)
         if pub_inc and not ctx.include_incomplete:
             continue
-        aux = _aux_key(ctx, pub_inc, ctx.attribution.get(cid))
+        aux = _aux_key(
+            ctx, pub_inc, ctx.attribution.get(cid), cid in ctx.snapshot.pending_ids
+        )
         cand["_aux"] = aux
         ver = str(cand.get("ver") or "")
         if (
@@ -706,7 +708,9 @@ def _resolve(
                 pub_inc = ctx.pub_incomplete(cid, row)
                 if pub_inc and not ctx.include_incomplete:
                     continue
-                cand["_aux"] = _aux_key(ctx, pub_inc, ctx.attribution.get(cid))
+                cand["_aux"] = _aux_key(
+                    ctx, pub_inc, ctx.attribution.get(cid), cid in ctx.snapshot.pending_ids
+                )
             if (
                 cand.get("card_json")
                 and cand.get("content_key") == _content_key(row)
