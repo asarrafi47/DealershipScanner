@@ -27,6 +27,8 @@ from urllib.parse import urljoin
 
 import aiohttp
 
+from backend.scanner.net import ssrf
+
 logger = logging.getLogger("scanner")
 
 # ── API-first scraper (aiohttp, no Playwright needed) ──────────────────────────
@@ -236,6 +238,7 @@ async def _fetch_vdp_page(
 ) -> dict[str, Any] | None:
     async with sem:
         try:
+            await ssrf.acheck_url(vdp_url)
             async with session.get(vdp_url, timeout=aiohttp.ClientTimeout(total=_VDP_TIMEOUT_SEC)) as resp:
                 if resp.status != 200:
                     logger.debug("ShopperExpress VDP %s: HTTP %d", vdp_url, resp.status)
@@ -282,6 +285,7 @@ async def fetch_shopperexpress_inventory(
 
     async with aiohttp.ClientSession(headers=headers, connector=connector) as session:
         try:
+            await ssrf.acheck_url(list_url)
             async with session.get(list_url, timeout=aiohttp.ClientTimeout(total=30)) as resp:
                 if resp.status != 200:
                     logger.warning(

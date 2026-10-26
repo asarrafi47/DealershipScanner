@@ -37,6 +37,23 @@ def _host_to_dealer_id(url: str) -> str:
     return re.sub(r"^https?://(www\.)?", "", (url or "").strip(), flags=re.I).split("/")[0].replace(".", "-")
 
 
+def _registry_url_blocked(url: str) -> bool:
+    """Literal SSRF check (no DNS: the roster is thousands of rows; the request
+    paths resolve and re-check) on a registry URL. Honors the escape hatch."""
+    from urllib.parse import urlparse
+
+    from backend.scanner.net import ssrf
+    from backend.utils.outbound_url import destination_host_blocked
+
+    if not ssrf.guard_enabled():
+        return False
+    try:
+        host = urlparse(url if "//" in url else f"//{url}").hostname or ""
+    except ValueError:
+        return True
+    return destination_host_blocked(host)
+
+
 def _load_dealers_from_db() -> list[dict]:
     from backend.db.dealerships_db import ensure_dealerships_table, get_conn
 
@@ -72,6 +89,8 @@ def _load_dealers_from_db() -> list[dict]:
         dealer_id = _host_to_dealer_id(url)
         if not dealer_id:
             continue
+        if _registry_url_blocked(url):
+            continue  # private/loopback/CGNAT host: never a dealer to scan (P16.4)
         out.append({
             "name": r_name or "",
             "url": url,

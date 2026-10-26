@@ -379,6 +379,7 @@ _FLAG_RESETS: tuple[tuple[str, str, str], ...] = (
     ("backend.reviews.store", "_REVIEW_REPORTS_TABLE_OK", "false"),
     ("backend.utils.msrp_trust", "_BAND_LOADED", "false"),
     ("backend.utils.msrp_trust", "_BAND_CACHE", "clear"),
+    ("backend.utils.outbound_url", "_verdict_cache", "clear"),
     ("backend.utils.price_plausibility", "_trim_year_medians", "none"),
     ("backend.utils.price_plausibility", "_model_medians", "none"),
     ("backend.utils.price_plausibility", "_loaded_at", "zero"),

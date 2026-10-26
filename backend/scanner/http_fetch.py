@@ -88,8 +88,12 @@ def open_url(req_or_url: Any, timeout: float | None = None):
 
     Drop-in for ``urllib.request.urlopen(req, timeout=...)``. Raises the same
     exceptions on connection/proxy failure, so existing try/except handlers keep
-    working unchanged.
+    working unchanged. A destination that is not globally reachable raises
+    ``ssrf.BlockedDestination`` (a ``URLError``) before any connection (P16.4).
     """
+    from backend.scanner.net import ssrf
+
+    ssrf.check_url(req_or_url.full_url if hasattr(req_or_url, "full_url") else req_or_url)
     opener = proxied_opener()
     if timeout is None:
         return opener.open(req_or_url)

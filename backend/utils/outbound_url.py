@@ -23,6 +23,8 @@ from __future__ import annotations
 import ipaddress
 import re
 import socket
+import threading
+import time
 import unicodedata
 from urllib.parse import unquote, urlparse
 
@@ -218,6 +220,49 @@ def destination_host_blocked_after_dns(hostname: str) -> bool:
         if ip_is_non_global(ip):
             return True
     return not checked
+
+
+# ── Cached verdicts for the scanner's request paths (P16.4) ──────────────────
+#
+# The scanner makes thousands of requests to a few hundred hosts, so the DNS
+# half of ``destination_host_blocked_after_dns`` is memoized for a short TTL
+# (a dealer host that moves from a public to a private address mid-scan is not a
+# case worth a lookup per request). ``_blocked_uncached`` is the one function
+# tests stub; it is looked up by name at call time.
+RESOLVER_CACHE_TTL_SEC = 600.0
+RESOLVER_CACHE_MAX = 4096
+_verdict_cache: dict[str, tuple[float, bool]] = {}
+_verdict_lock = threading.Lock()
+
+
+def _blocked_uncached(hostname: str) -> bool:
+    return destination_host_blocked_after_dns(hostname)
+
+
+def clear_destination_cache() -> None:
+    with _verdict_lock:
+        _verdict_cache.clear()
+
+
+def destination_host_blocked_cached(hostname: str, *, ttl: float = RESOLVER_CACHE_TTL_SEC) -> bool:
+    """``destination_host_blocked_after_dns`` with a TTL cache keyed on the
+    normalized host. Literal verdicts are never cached (they cost no lookup)."""
+    if destination_host_blocked(hostname):
+        return True
+    key = normalize_host(hostname)
+    now = time.monotonic()
+    with _verdict_lock:
+        hit = _verdict_cache.get(key)
+        if hit is not None and now - hit[0] < ttl:
+            _verdict_cache[key] = (hit[0], hit[1])  # keep dict order roughly LRU
+            return hit[1]
+    blocked = _blocked_uncached(hostname)
+    with _verdict_lock:
+        _verdict_cache.pop(key, None)
+        _verdict_cache[key] = (now, blocked)
+        while len(_verdict_cache) > RESOLVER_CACHE_MAX:
+            _verdict_cache.pop(next(iter(_verdict_cache)))
+    return blocked
 
 
 def validate_dev_scanner_url(url: str) -> str | None:
