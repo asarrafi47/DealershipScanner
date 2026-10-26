@@ -2,6 +2,28 @@
 
 ## [Unreleased]
 
+### N7 (draft)
+- Test infrastructure: Postgres test tier (pg marker, backend/tests/pg_harness.py). Each pg test gets a throwaway database cloned (STRATEGY WAL_LOG) from a template built by the migration chain; TEST_PG_ADMIN_DSN is the only input and the harness refuses cars, cars_cleanroom, Railway hosts, non-local hosts and port 15432 (P14A.1).
+- pytest.ini registers the pg marker and enables --strict-markers (P14A.1).
+- conftest: pg_template (session) and pg_db (function) fixtures; the no-DSN skip is counted and REQUIRE_PG=1 turns it into a failure (P14A.1).
+- CI: the `pytest-pg` job replaces `pytest-integration`. It runs `-m pg` against a pgvector 0.8.1 / Postgres 18 service container with REQUIRE_PG=1, fails if nothing is collected, and uploads reports/pg.xml. The `integration` marker stays but no CI job runs it. The required-check context on main changes to `pytest-pg` (P14A.3).
+- Tests: pg_harness seed helpers add_dealerships, add_dealer_geopoints, add_dealer_catalog, add_jobs and add_recipes (P14A.2).
+- Tests: the live-Postgres schema parity, migrate lock and record-only tests and the seeded data-quality regression now run on the pg harness; new pg tests prove migrate --apply reaches the chain head, reruns are idempotent, edited applied files exit 1 with CHECKSUM DRIFT, and V001's search_path reset does not break later files (P14A.4).
+- Tests: Postgres tier executes the adapted UPSERT_CARS_SQL and one statement per adapter rule on a migration-built database (P14A.5).
+- Tests: upsert_vehicles golden replays on Postgres with zero divergences from the SQLite golden, plus test_upsert_pg.py write-path cases (P14A.6).
+- Tests: Postgres concurrency tests for InventoryWriteCoordinator (real deadlock and lock_timeout retries, VIN-owner backstop single owner) in test_inventory_write_pg.py (P14A.7).
+
+### N29 (draft)
+- Requirements split per image: requirements-web.txt (web image, no Playwright), requirements-browser.txt (Playwright, discovery/dev), requirements.txt now includes both; every Dockerfile copies requirements*.txt (P15B.2).
+- scripts/scanner_import_sweep.py gains --profile scanner|web|discovery (P15B.2).
+- Embedding model id and Hugging Face revision now live in backend/vector/embedding_model.py; all three SentenceTransformer call sites load through it with revision= (P15B.3).
+- A production LISTING_EMBEDDING_MODEL override without LISTING_EMBEDDING_REVISION is refused (P15B.3).
+- Dockerfile.web bakes the embedding model into /app/models (HF_HOME) and sets HF_HUB_OFFLINE=1 and TRANSFORMERS_OFFLINE=1 (P15B.3).
+- Dockerfile.web installs CPU-only torch (pinned ARG TORCH_VERSION=2.12.1, pytorch cpu index) before requirements-web.txt (P15B.4).
+- Dockerfile.discovery installs requirements-scanner.txt + requirements-browser.txt instead of the full superset; scanner_import_sweep --profile discovery allows the web/ML packages to be absent (P15B.5).
+- New backend/tests/test_dockerfiles.py static checks for the web and discovery images (P15B.4, P15B.5).
+- CI: the pytest job now runs pip-audit on the installed environment and on requirements-scanner.txt, with no ignores (P15B.7).
+
 ### Audit fixes 2026-10-26
 
 #### Bugs

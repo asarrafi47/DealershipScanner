@@ -1345,6 +1345,22 @@ P14A.9 (recipe CAS) moves to N13, because it needs P7.1.
 - About 14 agents.
 - Checkpoints: `workspace/phase_runs/N7/`; before the owner's ruleset-context PUT the workflow writes RESUME.md with the earliest restart time and ends.
 
+**Draft status (integ/draft, merge 0037f5518).**
+
+| Unit | sha | Acceptance met | Deferred |
+|---|---|---|---|
+| P14A.1 | 733f11c32 | harness, guards, no-DSN counted skip, REQUIRE_PG, isolation; clone+drop 0.314 s | none |
+| P14A.2 | 53cb18036 | seed helpers | none |
+| P14A.3 | 53cb18036 | ci.yml `pytest-pg` job in code | CI green / 8 min / broken migration red need a push; owner ruleset context PUT |
+| P14A.4 | 3366fb507 | parity, migrate and DQ tests on pg harness | none |
+| P14A.5 | 63f37e5ac | adapted SQL plans and executes | none |
+| P14A.6 | 63f37e5ac | golden parity, zero divergences | P8B.1 NULL binding only sparse (N16) |
+| P14A.7 | 2b9740fbf | real 40P01/55P03, one VIN owner, 20/20 | CI repeat job (owner approval) |
+| P14A.8 | none | BLOCKED, builder returned nothing | whole unit |
+| N7.9 | none | BLOCKED, builder returned nothing | whole unit |
+
+After merge two tests fail on integ/draft (pass on phase/N7): test_pg_harness.py::test_every_module_level_ready_flag_is_reset_or_reviewed (6 new unreviewed flags) and test_upsert_vehicles_golden.py::test_upsert_vehicles_golden (phase sequence differs from golden). Not fixed.
+
 **Exit gate.**
 - CI `pytest-pg` green on `phase/N7`.
 - `gh api repos/asarrafi47/DealershipScanner/rules/branches/main` lists `pytest-pg`.
@@ -2582,6 +2598,19 @@ The body-style and HD-table additions are specified in the table: what, files, a
 | P15B.8 | Lock files with hashes plus a drift check, **only if** D-SEC7 = (a) is confirmed | P15B.4, P15B.5, P15B.7 | drift check fails on an unlocked change |
 
 **Workflow shape.** Serial along the `Dockerfile.web` chain; P15B.7 in parallel. About 8 agents. Checkpoints: `workspace/phase_runs/N29/`; before each Docker OK the workflow writes RESUME.md with the earliest restart time and ends.
+
+**Draft status (integ/draft, merge acef236ca).**
+
+| Unit | sha | Acceptance met | Deferred |
+|---|---|---|---|
+| P15B.2 | 86723b2e2 | split files, COPY glob, --profile, tests | each image builds (Docker OK) |
+| P15B.3 | 40c8b47a8 | revision= at 3 call sites, prod override guard, static Dockerfile check | DEFAULT_MODEL_REVISION empty (owner op P15B.3o); offline serve check needs docker build |
+| P15B.4 | 77928917f | static test | size drop (P15B.4m) |
+| P15B.5 | 77928917f | static test | image smoke (P15B.5s) |
+| P15B.7 | 235e50c0d | pip-audit steps and static test | red on vulnerable floor needs CI run |
+| P15B.8 | none | not drafted (needs D-SEC7 = a, final requirements, heavy resolve) | whole unit |
+
+ci.yml was edited by both N7 and N29; merged without conflict.
 
 **Exit gate.** Images build and smoke; pip-audit required in CI.
 
