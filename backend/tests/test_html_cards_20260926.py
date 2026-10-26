@@ -132,3 +132,31 @@ def test_pixelmotion_envelope_objects_fill_trim_colour_engine_and_images():
     # the one-card html is below the fragment threshold, so the object alone feeds the row
     assert r["price"] == 28996.0 and r["msrp"] == 33805.0 and r["condition"] == "New" and r["stock_number"] == "T0147" and r["cylinders"] == 4
     assert r["image_url"] == "https://images.x/800x600/a.jpg" and r["body_style"] == "SUV" and r["description"] == "One owner."
+
+
+def _same_vin_page(card_attrs: str, obj_fields: str) -> str:
+    vin = "3VWY57AU5KM500001"
+    card = f'<div data-vin="{vin}" data-make="Volkswagen" data-model="Golf" data-year="2019" data-sales-price="14995" {card_attrs}>x</div>'
+    rsc = ('self.__next_f.push([1,"{\\"vehicles\\":[{\\"vin\\":\\"%s\\",\\"year\\":2019,\\"make\\":\\"VOLKSWAGEN\\",\\"model\\":\\"GOLF\\",%s'
+           '\\"stockNo\\":\\"1\\"}]}"])') % (vin, obj_fields)
+    return "<html><body>" + card + "<script>" + rsc + "</script></body></html>"
+
+
+def _parse_one(html):
+    rows = parse("html_cards", html, base_url="https://www.q.com", dealer_id="q", dealer_name="Q", dealer_url="https://www.q.com", rejected_out=[])
+    assert len(rows) == 1
+    return rows[0]
+
+
+def test_hydration_condition_replaces_defaulted_card_condition():
+    """A card without data-condition gets a placeholder Used; the object's New must win."""
+    assert _parse_one(_same_vin_page("", '\\"condition\\":\\"New\\",'))["condition"] == "New"
+    assert _parse_one(_same_vin_page("", '\\"isNew\\":true,'))["condition"] == "New"
+
+
+def test_card_data_condition_still_outranks_hydration_object():
+    assert _parse_one(_same_vin_page('data-condition="used"', '\\"condition\\":\\"New\\",'))["condition"] == "Used"
+
+
+def test_defaulted_condition_stays_used_when_object_is_silent():
+    assert _parse_one(_same_vin_page("", ""))["condition"] == "Used"

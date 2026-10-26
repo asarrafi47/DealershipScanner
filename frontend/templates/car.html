@@ -953,8 +953,10 @@
                             <p class="tco-disclaimer"><span class="tco-disclaimer-text">Estimates calculate 12,000 mi/yr over 5 years based on <span id="tco-dynamic-state-label">analyzing market costs...</span>.</span> Brand maintenance averages; not a dealer quote.</p>
                         </div>
 
+                        {# No forecast without a real price: call-for-price and payment-only listings have none to depreciate. #}
+                        {% if car.price and car.price > 0 and not car.payment_listed %}
                         <div id="depreciation-forecast-card"
-                            data-car-price="{{ car.price if car.price else 20000 }}"
+                            data-car-price="{{ car.price }}"
                             data-car-year="{{ car.year if car.year else 2020 }}"
                             data-car-mileage="{{ car.mileage if car.mileage is not none and car.mileage != '' else 0 }}"
                             data-car-trim="{{ (car.trim if car.trim and car.trim != '—' else '') | lower }}"
@@ -973,6 +975,7 @@
                                 <li>Year 1 (<span id="dep-y1-mi">--</span>): <span id="dep-y1">$--</span> · Year 5 (<span id="dep-y5-mi">--</span>): <span id="dep-y5">$--</span></li>
                             </ul>
                         </div>
+                        {% endif %}
                         </div>
 
                         <aside class="car-specs-split__col car-specs-split__col--ladder" aria-label="Trim lineup"{% if not show_trim_ladder %} hidden{% endif %}>
