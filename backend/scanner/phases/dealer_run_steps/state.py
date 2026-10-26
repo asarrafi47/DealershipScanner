@@ -40,9 +40,19 @@ class DealerRun:
     rooftop_refused: list[dict[str, Any]] = field(default_factory=list)
     all_vehicles: list[dict[str, Any]] = field(default_factory=list)
     reg_id: Any = None
+    # Wall-clock start beside the monotonic ``t0``: on macOS perf_counter stops
+    # while the Mac sleeps, so wall_seconds - active_seconds is the paused time.
+    wall_t0: float = field(default_factory=time.time)
 
     def elapsed(self) -> float:
         return time.perf_counter() - self.t0
+
+    def stamp_seconds(self) -> None:
+        """result["seconds"] stays the monotonic (active) time; wall time rides beside it."""
+        active = self.elapsed()
+        self.result["seconds"] = active
+        self.result["active_seconds"] = active
+        self.result["wall_seconds"] = time.time() - self.wall_t0
 
 
 def new_result(dealer_id: str, name: str, provider: str) -> dict[str, Any]:

@@ -145,6 +145,7 @@ def log_dealer_summary(result: dict[str, Any], provider: str) -> None:
         "vdps_visited": result.get("vdps_visited"),
         "vehicles_vdp_enriched": result.get("vehicles_vdp_enriched"),
         "seconds": round(float(result.get("seconds") or 0.0), 2),
+        "wall_seconds": round(float(result["wall_seconds"]), 2) if result.get("wall_seconds") is not None else None,
         "error": str(err)[:400] if err else None,
         "recovery_strategy": (result.get("inventory_recovery") or {}).get("winning_strategy"),
         "phase_secs": result.get("phase_secs"),

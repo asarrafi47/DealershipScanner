@@ -139,7 +139,8 @@ def _run(args) -> int:
                 log_path = out_dir / "scanner.log"
                 mark = log_path.stat().st_size if log_path.exists() else 0
                 chrome_before = chromium_process_count()
-                rc = run_http_only_scan(batch, concurrency=len(batch), log_path=log_path, timeout_sec=args.scan_timeout)
+                scan_stats: dict[str, Any] = {}
+                rc = run_http_only_scan(batch, concurrency=len(batch), log_path=log_path, timeout_sec=args.scan_timeout, stats=scan_stats)
                 chrome_after = chromium_process_count()
                 if chrome_after > max(chrome_before, 0):
                     print(f"scan    BROWSER LEAK: chromium processes {chrome_before} -> {chrome_after} during batch {', '.join(batch)[:80]}", flush=True)
@@ -159,7 +160,7 @@ def _run(args) -> int:
                 print("scan    gave up after 6 lock races", flush=True)
             if rc == -1:
                 break
-            print(f"scan    batch {i // args.batch + 1}: {', '.join(batch)[:120]} rc={rc} in {time.time() - t0:.0f}s", flush=True)
+            print(f"scan    batch {i // args.batch + 1}: {', '.join(batch)[:120]} rc={rc} in {time.time() - t0:.0f}s (active {scan_stats.get('active_seconds', 0):.0f}s)", flush=True)
         if not args.no_vpic and scannable:
             try:
                 vp = vpic_for_dealers(scannable)
