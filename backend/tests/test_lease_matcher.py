@@ -200,3 +200,46 @@ def test_match_cache_roundtrip(sqlite_inventory):
         assert idx["hash-1"]["match_count"] == 0
     finally:
         conn.close()
+
+
+# ── Cache freshness (B-035) ──────────────────────────────────────────────────
+
+
+def test_refresh_recomputes_when_cached_car_sold_or_ttl_expired(sqlite_inventory, monkeypatch):
+    from datetime import datetime, timedelta, timezone
+
+    from backend.scanner.specials import store as specials_store
+
+    conn = sqlite_inventory.get_conn()
+    try:
+        _seed_cars(conn, [
+            {"vin": "V1", "year": 2026, "make": "Mercedes-Benz", "model": "GLE", "dealer_id": "fj"},
+        ])
+        offer = {"offer_hash": "h1", "id": 1, "type": "lease"}
+        monkeypatch.setattr(specials_store, "get_specials_for_dealer", lambda c, d: [offer])
+        calls = []
+        monkeypatch.setattr(
+            lm, "compute_offer_matches",
+            lambda c, d, o: calls.append(1) or {
+                "extracted": {}, "matches": [{"car_id": 1, "confidence": 0.5}],
+                "summary": "s", "confidence": 0.5,
+            },
+        )
+        assert lm.refresh_dealer_lease_matches(conn, "fj")["computed"] == 1
+        assert lm.refresh_dealer_lease_matches(conn, "fj")["skipped"] == 1
+
+        # sold car invalidates the cache
+        conn.execute("UPDATE cars SET listing_active = 0 WHERE id = 1")
+        conn.commit()
+        assert lm.refresh_dealer_lease_matches(conn, "fj")["computed"] == 1
+        conn.execute("UPDATE cars SET listing_active = 1 WHERE id = 1")
+        conn.commit()
+        assert lm.refresh_dealer_lease_matches(conn, "fj")["skipped"] == 1
+
+        # an old computed_at expires the cache
+        old = (datetime.now(timezone.utc) - timedelta(hours=48)).isoformat()
+        conn.execute("UPDATE lease_offer_matches SET computed_at = ?", (old,))
+        conn.commit()
+        assert lm.refresh_dealer_lease_matches(conn, "fj")["computed"] == 1
+    finally:
+        conn.close()
