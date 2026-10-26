@@ -44,6 +44,12 @@ So this file provides, in order:
 * ``app_factory`` - the one way a test gets a freshly reloaded ``backend.main``
   with every user database in its own tmp dir (21 hand-rolled ``_fresh_app``
   copies used to drift on which keys they set).
+* ``pg_template`` (session) and ``pg_db`` (function) - the Postgres tier
+  (``@pytest.mark.pg``, backend/tests/pg_harness.py): one migration-built template
+  per session, one cloned throwaway database per test. Needs
+  ``TEST_PG_ADMIN_DSN`` (a LOCAL server; never read from the inventory env vars);
+  without it the tests skip with a counted reason and ``REQUIRE_PG=1`` turns that
+  into a failure.
 * asset-gated skip accounting - the brochure PDFs are gitignored and parts of
   ``backend/dictionary`` exist only on dev machines, so a class of tests skips
   silently on CI and a regression in what they cover has no failing test
@@ -636,9 +642,13 @@ _ASSET_GATE_SKIP_REASONS: tuple[str, ...] = (
 
 _ENV_GATE_SKIP_REASONS: tuple[str, ...] = (
     "DQ_INVARIANTS_LIVE_DB",    # needs a real Postgres, not a file on disk
+    "TEST_PG_ADMIN_DSN not set (pg tier)",   # pg_harness.SKIP_REASON_NO_DSN
+    "pg tier unavailable:",     # server cannot host the tier (pg_harness.PgUnavailable)
 )
+_PG_GATE_SKIP_REASONS: tuple[str, ...] = _ENV_GATE_SKIP_REASONS[1:]
 
 REQUIRE_LOCAL_ASSETS_ENV = "REQUIRE_LOCAL_ASSETS"
+REQUIRE_PG_ENV = "REQUIRE_PG"
 
 
 def _skip_reason_of(report: Any) -> str:
@@ -661,6 +671,15 @@ def pytest_runtest_makereport(item: Any, call: Any):  # noqa: ANN201 - pytest ho
     if report.when not in ("setup", "call") or not report.skipped:
         return
     reason = _skip_reason_of(report)
+    if _matches(reason, _PG_GATE_SKIP_REASONS):
+        if (os.environ.get(REQUIRE_PG_ENV) or "").strip() == "1":
+            report.outcome = "failed"
+            report.longrepr = (
+                f"{item.nodeid}: pg-tier skip ({reason!r}) with {REQUIRE_PG_ENV}=1.\n"
+                "CI runs the pg tier against a service container; a skip there means "
+                "the tier silently stopped running."
+            )
+        return
     if not _matches(reason, _ASSET_GATE_SKIP_REASONS):
         return
     if (os.environ.get(REQUIRE_LOCAL_ASSETS_ENV) or "").strip() == "1":
@@ -1144,6 +1163,57 @@ def sqlite_inventory(tmp_path: Path) -> Iterator[SqliteInventory]:
     finally:
         mp.undo()
         _clear_inventory_derived_caches()
+
+
+# ---------------------------------------------------------------------------
+# 3b. A throwaway Postgres database per test (the ``pg`` tier)
+# ---------------------------------------------------------------------------
+
+
+@pytest.fixture(scope="session")
+def pg_template() -> Iterator[Any]:
+    """The migration-built template database of this session (backend/tests/pg_harness.py)."""
+    from backend.tests import pg_harness as pgh
+
+    dsn = pgh.admin_dsn()
+    if dsn is None:
+        pytest.skip(pgh.SKIP_REASON_NO_DSN)
+    pytest.importorskip("psycopg")
+    try:
+        pgh.assert_safe_admin_dsn(dsn)
+    except pgh.HarnessRefused as exc:
+        pytest.fail(f"TEST_PG_ADMIN_DSN refused: {exc}", pytrace=False)
+    try:
+        pgh.janitor(dsn)
+        template = pgh.build_template(dsn)
+    except pgh.PgUnavailable as exc:
+        pytest.skip(f"pg tier unavailable: {exc}")
+    try:
+        yield template
+    finally:
+        pgh.drop(dsn, template.name)
+
+
+@pytest.fixture
+def pg_db(pg_template: Any, monkeypatch: pytest.MonkeyPatch) -> Iterator[Any]:
+    """A fresh clone of the template, wired in as the inventory database.
+
+    Named ``pg_db``, not ``pg_inventory``: test_search_golden.py defines that.
+    """
+    from backend.tests import pg_harness as pgh
+
+    name, dsn = pgh.clone(pg_template)
+    monkeypatch.setenv("INVENTORY_DATABASE_URL", dsn)
+    monkeypatch.setenv("DATABASE_URL", "")
+    monkeypatch.setenv("INVENTORY_SQLITE_TESTS", "")
+    monkeypatch.setenv("INVENTORY_SCHEMA_CHECK", "strict")
+    monkeypatch.setenv("INVENTORY_AUTO_MIGRATE", "")
+    pgh.reset_pg_process_caches()
+    try:
+        yield pgh.PgInventory(dsn, name)
+    finally:
+        pgh.reset_pg_process_caches()
+        pgh.drop(pg_template.admin, name)
 
 
 # ---------------------------------------------------------------------------
