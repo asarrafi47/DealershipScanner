@@ -103,6 +103,34 @@ def _vin_owned_elsewhere(
     return ts is not None and ts >= cutoff
 
 
+def vins_refused_by_owner_guard(vehicles: list[dict]) -> dict[str, str]:
+    """Read-only ownership pre-check (N8.7): ``vin -> reason`` for the VINs the
+    write-time guard would refuse for these rows. Same decision as
+    ``upsert_vehicles`` (it calls ``prefetch_existing``), but writes nothing, so the
+    prefetch can skip VDP fetches for cars that will never be stored. Empty when the
+    guard is off or the database cannot be read."""
+    window = guard_window(vin_owner_guard_hours())
+    if not window.on or not vehicles:
+        return {}
+    by_vin = {str(v.get("vin") or "").strip(): v for v in vehicles if str(v.get("vin") or "").strip()}
+    conn = None
+    try:
+        conn = get_conn()
+        reasons: dict[str, str] = {}
+        _, conflicts = prefetch_existing(conn.cursor(), by_vin, window, _vin_owned_elsewhere, reasons=reasons)
+        return {vin: reasons.get(vin, "backstop") for vin in conflicts}
+    except Exception:
+        logger.debug("ownership pre-check failed (continuing)", exc_info=True)
+        return {}
+    finally:
+        if conn is not None:
+            try:
+                conn.rollback()
+                conn.close()
+            except Exception:
+                pass
+
+
 _VIN_OWNER_CONFLICTS_DDL = """
     CREATE TABLE IF NOT EXISTS vin_owner_conflicts (
         vin                 TEXT NOT NULL,

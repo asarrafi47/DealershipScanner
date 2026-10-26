@@ -79,4 +79,21 @@ def settle_attribution(run: DealerRun, vehicles: list[dict[str, Any]]) -> None:
     run.rooftop_refused = attribution.refused
     if run.rooftop_refused:
         run.result["rooftop_refused_rows"] = len(run.rooftop_refused)
+        _note_unrostered(run)
     run.result["inventory_rows"] = len(run.all_vehicles)
+
+
+def _note_unrostered(run: DealerRun) -> None:
+    """N8.13: refusals that name a rooftop not on the roster become profiling candidates
+    (``workspace/rooftop_candidates.json`` when the process opted in). Report only."""
+    try:
+        from backend.attribution import candidates
+
+        found = candidates.note_refusals(run.rooftop_refused, run.dealer_id)
+        if found:
+            logger.debug(
+                "Rooftop [%s]: %d unrostered rooftop(s) named by refused rows: %s",
+                run.name, len(found), ", ".join(f"{c['name'] or c['id']} ({c['car_count']})" for c in found[:5]),
+            )
+    except Exception as exc:  # noqa: BLE001 - the detector never blocks a scan
+        logger.debug("rooftop candidates failed for %s: %s", run.name, exc)
