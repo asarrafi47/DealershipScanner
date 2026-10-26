@@ -15,6 +15,16 @@ MAKE_TO_COUNTRY = {
     "Ferrari": "Italy", "Lamborghini": "Italy", "Fiat": "Italy", "Maserati": "Italy",
     "Renault": "France", "Peugeot": "France", "Citroën": "France",
     "Volvo": "Sweden", "Alfa Romeo": "Italy",
+    # Marques the facet make check (labels._facet_make_valid) gates on this dict, so a
+    # make missing here vanishes from the global Make facet.
+    "Rivian": "USA", "Lucid": "USA", "Fisker": "USA", "Karma": "USA", "VinFast": "Vietnam",
+    "Saturn": "USA", "Pontiac": "USA", "Mercury": "USA", "Oldsmobile": "USA",
+    "Plymouth": "USA", "Hummer": "USA", "Wagoneer": "USA",
+    "Polestar": "Sweden", "Saab": "Sweden", "Koenigsegg": "Sweden",
+    "McLaren": "UK", "Aston Martin": "UK", "Rolls-Royce": "UK", "Lotus": "UK", "INEOS": "UK",
+    "Scion": "Japan", "Suzuki": "Japan", "Isuzu": "Japan",
+    "Smart": "Germany", "Maybach": "Germany",
+    "Bugatti": "France", "Alpine": "France", "Pagani": "Italy",
 }
 
 

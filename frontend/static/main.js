@@ -1276,8 +1276,12 @@ document.addEventListener("DOMContentLoaded", () => {
         return listingsSortEl ? listingsSortEl.value : "relevance";
     }
 
+    // Set by the boot path when ?page=N was deep-linked: the first render keeps that page.
+    let _bootKeepPage = false;
+
     function resetListingsPage() {
         _listingsPage = 1;
+        _bootKeepPage = false;
     }
     window.__DS_resetListingsPage = resetListingsPage;
 
@@ -1737,13 +1741,17 @@ document.addEventListener("DOMContentLoaded", () => {
         const prompt = document.getElementById("listings-start-prompt");
         if (prompt) prompt.hidden = true;
 
-        resetListingsPage();
+        // keepPage: background refreshes (inventory poll) and the ?page=N boot render must
+        // not bounce the shopper back to page 1; filter changes still reset it.
+        const keepPage = !!((opts && opts.keepPage) || _bootKeepPage);
+        _bootKeepPage = false;
+        if (!keepPage) resetListingsPage();
         invalidateCheckedCache();
 
         const facetState = collectFacetFilterState();
         const dealerFilterSet = buildDealerFilterIdSet();
         const cars = window.ALL_CARS.filter(c => carMatchesFacetFilters(c, facetState, dealerFilterSet));
-        renderCarGrid(cars, { resetPage: true });
+        renderCarGrid(cars, keepPage ? { keepPage: true } : { resetPage: true });
     }
 
     let _filterRenderFrame = null;
@@ -1782,6 +1790,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     window.__DS_renderCarGrid = renderCarGrid;
     window.__DS_runFilterRender = renderResults;
+    window.__DS_runFilterRenderKeepPage = function renderResultsKeepPage() {
+        // A render already queued (a filter change) wins and resets the page itself.
+        if (_filterRenderFrame) return;
+        scheduleFilterRender({ keepPage: true });
+    };
     window.__DS_runFilterRenderInstant = renderResultsNow;
 
     // Every client-side render path (token preview, parse preview) draws from this
@@ -2053,8 +2066,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     const smartIn = document.getElementById("smart-search-input");
                     if (smartIn && (smartIn.value || "").trim()) return;
                     if (typeof runCascade === "function") runCascade();
-                    if (typeof window.__DS_runFilterRender === "function") {
-                        window.__DS_runFilterRender();
+                    if (typeof window.__DS_runFilterRenderKeepPage === "function") {
+                        window.__DS_runFilterRenderKeepPage();
                     }
                 })
                 .catch(() => {});
@@ -2143,6 +2156,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function bootApplyListingsFilters() {
         _listingsPage = readListingsPageFromUrl();
+        _bootKeepPage = _listingsPage > 1;
         refreshRadiusAndRender();
     }
 
@@ -2737,8 +2751,9 @@ document.addEventListener("DOMContentLoaded", () => {
                     const smartIn = document.getElementById("smart-search-input");
                     if (smartIn && (smartIn.value || "").trim()) return;
                     if (typeof runCascade === "function") runCascade();
-                    if (typeof window.__DS_runFilterRender === "function") {
-                        window.__DS_runFilterRender();
+                    // Background refresh: stay on the page the shopper is viewing.
+                    if (typeof window.__DS_runFilterRenderKeepPage === "function") {
+                        window.__DS_runFilterRenderKeepPage();
                     }
                 })
                 .catch(() => {});
