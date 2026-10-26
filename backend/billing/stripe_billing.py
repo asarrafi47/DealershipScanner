@@ -144,6 +144,24 @@ def construct_webhook_event(payload: bytes, sig_header: str) -> dict[str, Any]:
     return dict(evt)
 
 
+def checkout_session_subscription_active(cs: dict[str, Any]) -> bool:
+    """True when the (expanded) Checkout Session's subscription is active or trialing.
+
+    A completed session outlives its subscription, so a cancelled user could replay
+    an old success URL; fail closed unless the subscription object was expanded
+    and is still live (SEC-A-003 / B-032).
+    """
+    sub = cs.get("subscription")
+    if not isinstance(sub, dict):
+        try:
+            sub = dict(sub) if sub is not None and not isinstance(sub, str) else None
+        except (TypeError, ValueError):
+            sub = None
+    if not sub:
+        return False
+    return stripe_subscription_active(sub.get("status"))
+
+
 def verify_premium_checkout_session(*, session_id: str, user_id: int) -> bool:
     """
     Confirm a Stripe Checkout Session completed for consumer premium (recurring subscription).
@@ -162,7 +180,7 @@ def verify_premium_checkout_session(*, session_id: str, user_id: int) -> bool:
     import stripe  # type: ignore
 
     stripe.api_key = stripe_secret_key()
-    cs = stripe.checkout.Session.retrieve(sid)
+    cs = stripe.checkout.Session.retrieve(sid, expand=["subscription"])
     if not isinstance(cs, dict):
         cs = dict(cs)
     if (cs.get("status") or "").strip().lower() != "complete":
@@ -178,7 +196,14 @@ def verify_premium_checkout_session(*, session_id: str, user_id: int) -> bool:
         return False
     if str(md.get("premium") or "").strip() != "1":
         return False
-    return True
+    # This legacy route grants the Complete bundle; a Research/Assistant plan
+    # session must not unlock it (B-032).
+    from backend.billing.catalog import LEGACY_PREMIUM_PLAN_ID
+
+    md_plan = str(md.get("plan_id") or "").strip().lower()
+    if md_plan and md_plan != LEGACY_PREMIUM_PLAN_ID:
+        return False
+    return checkout_session_subscription_active(cs)
 
 
 def construct_premium_webhook_event(payload: bytes, sig_header: str) -> dict[str, Any]:
