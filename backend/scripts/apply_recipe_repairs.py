@@ -147,6 +147,20 @@ def _by_host(rows: list[dict[str, Any]], host: str) -> list[dict[str, Any]]:
     return [r for r in rows if host in _hosts(r)]
 
 
+def _url_key(url: Any) -> str:
+    """A store-page URL with scheme, ``www.`` and trailing slash dropped: the path is what
+    tells stores on a shared host apart (``autosavvy.com/dealers/lindon-utah``)."""
+    return re.sub(r"^https?://(www\.)?", "", str(url or "").strip().lower()).rstrip("/")
+
+
+def _same_store(row: dict[str, Any], street: str, page: str) -> bool:
+    """A registry row is this store when it has the same street, or (no street known)
+    the same store-page URL with a path. Never by host alone (N8.14)."""
+    if street and norm_street(row.get("street_address")) == street:
+        return True
+    return bool(page and "/" in page and page in {_url_key(row.get(k)) for k in ("website_url", "dealer_website_url")})
+
+
 def _has_table(conn, table: str) -> bool:
     cur = conn.cursor()
     try:
@@ -272,12 +286,19 @@ def _plan_roster_add(rep: Repair, registry: list[dict[str, Any]], has_geo: bool)
     host = normalize_dealer_host(row["website_url"])
     street = norm_street(row.get("street_address"))
     hits = _by_host(registry, host)
+    shared = bool(data.get("shared_host"))
     street_hits = [h for h in hits if street and norm_street(h.get("street_address")) == street]
+    if shared:
+        # stores on one host (AutoSavvy, Ted Russell Parkside) are told apart by street or
+        # store page, and a registry row on that host is a sister, not this store
+        street_hits = [h for h in hits if _same_store(h, street, _url_key(row["website_url"]))]
     action = data["action"]
     if action == "add":
         if street_hits:
             return Plan(rep, "noop", [f"registry already has {host} at this street (id {street_hits[0]['id']})"])
-        if hits:
+        if shared and not street and "/" not in _url_key(row["website_url"]):
+            return Plan(rep, "conflict", [f"shared host {host}: the row needs a street_address or a store-page path in website_url to be told from its sister stores"])
+        if hits and not shared:
             seen = ", ".join(f"id {h['id']} '{h.get('street_address') or '-'}'" for h in hits)
             return Plan(rep, "conflict", [f"host {host} is in the registry at another or unknown street ({seen}); "
                                           "a repair/complete_registry_row action, or a registry_fix, must settle it"])
@@ -296,7 +317,7 @@ def _plan_roster_add(rep: Repair, registry: list[dict[str, Any]], has_geo: bool)
             return Plan(rep, "conflict", [f"registry id {rid} is missing or is not on host {host}"])
     elif len(street_hits) == 1:
         target = street_hits
-    elif len(hits) == 1 and not norm_street(hits[0].get("street_address")):
+    elif len(hits) == 1 and not norm_street(hits[0].get("street_address")) and not shared:
         target = hits      # the streetless row of this host: the one complete_registry_row fills
     else:
         return Plan(rep, "conflict", [f"{len(hits)} registry row(s) on {host}; name the row with existing_dealerships_id"])
@@ -318,6 +339,9 @@ def _plan_registry_fix(rep: Repair, registry: list[dict[str, Any]]) -> Plan:
         hits = [h for h in hits if str(h.get("name") or "").strip().lower() == str(m["name"]).strip().lower()]
     if len(hits) != 1:
         return Plan(rep, "conflict", [f"match {m} selects {len(hits)} registry row(s); need exactly 1"])
+    if (rep.data.get("shared_host") or len(_by_host(registry, normalize_dealer_host(m["host"]) or str(m["host"]).lower().removeprefix("www."))) > 1) \
+            and m.get("id") is None and not m.get("street_address"):
+        return Plan(rep, "conflict", [f"host {m['host']} is shared by several stores: match.id or match.street_address must name the store"])
     row = hits[0]
     for col, exp in (rep.data.get("expect") or {}).items():
         if not _same(col, row.get(col), exp) and not _same(col, row.get(col), want.get(col)):

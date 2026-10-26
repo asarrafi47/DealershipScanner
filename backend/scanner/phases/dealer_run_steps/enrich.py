@@ -283,7 +283,12 @@ async def run_monroney_vision(run: DealerRun, monroney_vision: bool) -> None:
 
 def stamp_registry_and_source_urls(run: DealerRun) -> None:
     """The manifest's dealership_registry_id (else resolved from the URL) onto
-    every row that lacks one, then each row's canonical source URL."""
+    every row that lacks one, then each row's canonical source URL.
+
+    The URL fallback names a store only when ONE registry row sits on the host; for a
+    shared host (all AutoSavvy stores on www.autosavvy.com) it returns nothing, so a
+    manifest row without its own registry id stamps none and the upsert keeps the id
+    already stored (N8.14)."""
     reg_id = run.dealer.get("dealership_registry_id")
     if not reg_id:
         try:

@@ -13,6 +13,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
+from backend.db.dealer_geo import normalize_dealer_host
 from backend.scanner.constants import MANIFEST_PATH, OEM_MANUFACTURER_DOMAINS
 
 logger = logging.getLogger(__name__)
@@ -37,8 +38,42 @@ def _host_to_dealer_id(url: str) -> str:
     return re.sub(r"^https?://(www\.)?", "", (url or "").strip(), flags=re.I).split("/")[0].replace(".", "-")
 
 
+def _shared_host_identity(conn) -> tuple[set[str], dict[int, str]]:
+    """``(shared hosts, registry id -> dealer_id its scanned cars carry)``.
+
+    Stores that share one website host (all AutoSavvy stores on www.autosavvy.com) are told
+    apart by ``dealer_id`` and their own registry id, never by the host. An id is taken from
+    the cars only when the pairing is mutual (that dealer_id's stamped cars mostly name this
+    row AND this row's cars mostly carry that dealer_id): a legacy bulk stamp of one row on
+    every sister's cars must not hand the row to a second dealer_id.
+    """
+    from backend.listings.dealer_registry_match import registry_dealer_ids, registry_ids_by_host
+
+    shared = {h for h, ids in registry_ids_by_host(conn).items() if len(ids) > 1}
+    if not shared:
+        return shared, {}
+    by_rid = registry_dealer_ids(conn)
+    cur = conn.cursor()
+    cur.execute(
+        """
+        SELECT dealer_id, dealership_registry_id, COUNT(*) AS n
+        FROM cars
+        WHERE dealership_registry_id IS NOT NULL AND dealer_id IS NOT NULL
+          AND COALESCE(listing_active, 1) = 1
+        GROUP BY dealer_id, dealership_registry_id
+        """
+    )
+    best_rid: dict[str, tuple[int, int]] = {}
+    for r in cur.fetchall():
+        did, rid, n = str(r[0]), int(r[1]), int(r[2])
+        if n > best_rid.get(did, (0, 0))[0]:
+            best_rid[did] = (n, rid)
+    return shared, {rid: did for rid, did in by_rid.items() if best_rid.get(did, (0, 0))[1] == rid}
+
+
 def _load_dealers_from_db() -> list[dict]:
     from backend.db.dealerships_db import ensure_dealerships_table, get_conn
+    from backend.listings.dealer_registry_match import shared_host_dealer_id
 
     # NB: don't set ``conn.row_factory = sqlite3.Row`` here — the inventory conn
     # is a Postgres compat wrapper whose rows are positionally indexable, and the
@@ -60,8 +95,13 @@ def _load_dealers_from_db() -> list[dict]:
         """
     )
     rows = cur.fetchall()
+    try:
+        shared_hosts, rid_dealer_ids = _shared_host_identity(conn)
+    except Exception:  # noqa: BLE001 - identity help must never empty the roster
+        shared_hosts, rid_dealer_ids = set(), {}
     conn.close()
     out: list[dict] = []
+    legacy_taken: set[str] = set()
     for r in rows:
         r_id, r_name, r_dealer_url, r_site_url, r_city, r_state, _r_zip = (
             r[0], r[1], r[2], r[3], r[4], r[5], r[6]
@@ -72,15 +112,67 @@ def _load_dealers_from_db() -> list[dict]:
         dealer_id = _host_to_dealer_id(url)
         if not dealer_id:
             continue
-        out.append({
+        entry = {
             "name": r_name or "",
             "url": url,
             "dealer_id": dealer_id,
             "dealership_registry_id": r_id,
             "city": r_city or "",
             "state": r_state or "",
-        })
+        }
+        if normalize_dealer_host(url) in shared_hosts:
+            # One of several stores on this host: its dealer_id is the one its scanned
+            # cars carry; unscanned, the lowest registry id keeps the plain host id (the
+            # id the cars table already uses) and the rest get host + town + state.
+            known = rid_dealer_ids.get(int(r_id))
+            if known:
+                dealer_id = known
+            elif dealer_id in legacy_taken or dealer_id in rid_dealer_ids.values():
+                dealer_id = shared_host_dealer_id(dealer_id, r_city or "", r_state or "", int(r_id))
+            entry["dealer_id"] = dealer_id
+            entry["shared_host"] = normalize_dealer_host(url)
+            legacy_taken.add(dealer_id)
+        out.append(entry)
     return out
+
+
+def _attach_shared_host_identity(entries: list[dict]) -> list[dict]:
+    """Give each shared-host store in a cars-derived roster its own registry row.
+
+    ``dealer_id`` slugs are rebuilt into a URL from the host, which for a store on a shared
+    host (``autosavvy-com-woods-cross-ut``) is the bare group host: the scan then has no
+    store page and no registry row to stamp or to place the gate by. For an entry whose
+    cars name a registry row that sits on a shared host, set ``dealership_registry_id``,
+    ``shared_host`` and the row's own store-page URL. Everything else is left untouched.
+    """
+    if not entries:
+        return entries
+    from backend.db.inventory_db import get_conn
+
+    conn = get_conn()
+    try:
+        shared_hosts, rid_dealer_ids = _shared_host_identity(conn)
+        if not shared_hosts:
+            return entries
+        cur = conn.cursor()
+        cur.execute(
+            "SELECT id, dealer_website_url, website_url FROM dealerships "
+            "WHERE is_active = 1 AND duplicate_of_id IS NULL"
+        )
+        urls = {int(r[0]): str(r[1] or r[2] or "").strip() for r in cur.fetchall()}
+    except Exception:  # noqa: BLE001 - identity help must never empty the roster
+        return entries
+    finally:
+        conn.close()
+    rid_by_dealer = {did: rid for rid, did in rid_dealer_ids.items()}
+    for e in entries:
+        rid = rid_by_dealer.get(e["dealer_id"])
+        url = urls.get(rid or 0, "")
+        if rid and normalize_dealer_host(url) in shared_hosts:
+            e["dealership_registry_id"] = rid
+            e["shared_host"] = normalize_dealer_host(url)
+            e["url"] = url
+    return entries
 
 
 def _load_active_inventory_dealers() -> list[dict]:
@@ -125,7 +217,7 @@ def _load_active_inventory_dealers() -> list[dict]:
         u = urlparse(any_url)
         base = f"{u.scheme}://{u.netloc}" if u.scheme and u.netloc else ""
         out.append({"dealer_id": did, "url": base, "name": name or did})
-    return out
+    return _attach_shared_host_identity(out)
 
 
 def _load_scannable_dealers() -> list[dict]:
@@ -210,7 +302,7 @@ def _load_scannable_dealers() -> list[dict]:
         # apply_scannable_roster_rule; defaults to True when the column is absent.
         entry["_has_active_inventory"] = bool(r[5]) if len(r) > 5 else True
         out.append(entry)
-    return out
+    return _attach_shared_host_identity(out)
 
 
 # --------------------------------------------------------------------------

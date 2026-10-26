@@ -23,9 +23,13 @@ def build_dealer_geo_index(
     """
     Build a lookup dict keyed by full ``dealer_url`` and by normalized host.
 
-    Host keys use the ``host:`` prefix so they cannot collide with URL strings.
+    Host keys use the ``host:`` prefix so they cannot collide with URL strings. A host
+    whose rows disagree on coordinates is a shared host (22 AutoSavvy stores on one
+    domain): it gets NO ``host:`` key, since "last row wins" put every store of the
+    host at one arbitrary point. Those stores resolve by exact URL or registry id.
     """
     out: dict[str, tuple[float, float]] = {}
+    shared: set[str] = set()
     for dealer_url, lat, lon in rows:
         if not dealer_url:
             continue
@@ -39,7 +43,12 @@ def build_dealer_geo_index(
         out[url_key] = coords
         host = normalize_dealer_host(url_key)
         if host:
-            out[f"host:{host}"] = coords
+            hk = f"host:{host}"
+            if hk in out and out[hk] != coords:
+                shared.add(hk)
+            out[hk] = coords
+    for hk in shared:
+        out.pop(hk, None)
     return out
 
 
@@ -58,6 +67,27 @@ def lookup_dealer_coords(
     if host:
         return dealer_geo.get(f"host:{host}")
     return None
+
+
+def lookup_car_coords(
+    car: dict[str, Any],
+    dealer_geo: dict[str, tuple[float, float]],
+    registry_coords: dict[str, list[float]] | None = None,
+) -> tuple[float, float] | None:
+    """A car's dealer coordinates: its own registry row first, then ``dealer_url``.
+
+    The registry id is the store; the URL host is only the store's website, which several
+    stores can share. Same order as ``grid_cards_repo`` (registry coordinates first).
+    """
+    if registry_coords:
+        try:
+            rid = int(car.get("dealership_registry_id") or 0)
+        except (TypeError, ValueError):
+            rid = 0
+        hit = registry_coords.get(str(rid)) if rid > 0 else None
+        if hit:
+            return (float(hit[0]), float(hit[1]))
+    return lookup_dealer_coords(str(car.get("dealer_url") or ""), dealer_geo)
 
 
 def dealer_coords_client_map(

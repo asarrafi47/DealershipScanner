@@ -34,7 +34,8 @@ async def fetch_recipe_feed(run: DealerRun) -> None:
         # cleared 70% of a stale 176-row lot and skipped the browser without
         # ever pulling the 623-row new feed (pilot, 2026-09-22).
         _recipe_hit = await try_fetch_via_recipes(
-            dealer_id, run.provider, run.url, name, union=True, coverage_out=_recipe_cov
+            dealer_id, run.provider, run.url, name, union=True, coverage_out=_recipe_cov,
+            **({"registry_id": _rid} if (_rid := run.dealer.get("dealership_registry_id")) else {}),
         )
         if _recipe_hit:
             recipe_records, _recipe_vins = _recipe_hit

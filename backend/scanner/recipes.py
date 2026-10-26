@@ -1500,9 +1500,13 @@ async def try_fetch_via_recipes(
     *,
     union: bool = False,
     coverage_out: dict[str, float] | None = None,
+    registry_id: int | None = None,
 ) -> tuple[list[tuple[str, Any]], int] | None:
     """
     Replay this dealer's stored recipes over plain HTTP (pre-Playwright).
+
+    ``registry_id`` is the manifest's roster row for this store; it picks the gate's
+    own-store place for a store that shares its website host with sister stores.
 
     When ``coverage_out`` is a dict it is filled (in place) with
     :func:`recipe_field_coverage` over the parsed vehicles behind the returned
@@ -1545,7 +1549,7 @@ async def try_fetch_via_recipes(
     # The store place (backend.attribution.store_place: registry + page-learned
     # street) hits the DB — keep it off the event loop, and don't pay for it at
     # all when recipe fetch is disabled. Never raises (falls back to no place).
-    attr_ctx = await asyncio.to_thread(DealerCtx.for_store, dealer_id, dealer_name, base_url)
+    attr_ctx = await asyncio.to_thread(DealerCtx.for_store, dealer_id, dealer_name, base_url, registry_id)
     # load_recipes may consult Postgres (recipe_store sync) — keep that
     # blocking I/O off the event loop this coroutine runs on.
     loaded = await asyncio.to_thread(load_recipes, dealer_id)

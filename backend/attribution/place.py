@@ -34,8 +34,14 @@ logger = logging.getLogger("scanner")
 GATE_PLACE_KEYS = ("dealer_address", "dealer_city", "dealer_state", "dealer_zip", "dealer_address_source")
 
 
-def registry_place(dealer_url: str) -> dict[str, str]:
+def registry_place(dealer_url: str, registry_id: int | None = None) -> dict[str, str]:
     """This store's postal address from the dealership registry, or empty dict.
+
+    ``registry_id`` is the roster row of the store being scanned (the manifest's
+    ``dealership_registry_id``); with it the row is read directly. Without it the row
+    comes from the URL host, and a host that more than one registry row sits on (all
+    AutoSavvy stores share ``www.autosavvy.com``) names no store, so the place stays
+    empty rather than being an arbitrary sister's street.
 
     Group feeds whose rooftops are address blocks rather than store names can
     only be told apart by address, so without this the rooftop gate cannot
@@ -43,13 +49,18 @@ def registry_place(dealer_url: str) -> dict[str, str]:
     by design: a dealer missing from the registry just falls back to the name
     and host tiers, which is where it was before.
     """
-    if not dealer_url:
+    try:
+        reg_id = int(registry_id or 0)
+    except (TypeError, ValueError):
+        reg_id = 0
+    if not dealer_url and not reg_id:
         return {}
     try:
         from backend.db.inventory_db import db_conn
         from backend.listings.dealer_registry_match import resolve_car_dealership_registry_id
 
-        reg_id = resolve_car_dealership_registry_id({"dealer_url": dealer_url})
+        if not reg_id:
+            reg_id = resolve_car_dealership_registry_id({"dealer_url": dealer_url})
         if not reg_id:
             return {}
         with db_conn() as conn:
@@ -76,15 +87,19 @@ def registry_place(dealer_url: str) -> dict[str, str]:
         return {}
 
 
-def _registry_lookup(dealer_url: str) -> dict[str, str]:
+def _registry_lookup(dealer_url: str, registry_id: int | None = None) -> dict[str, str]:
     # Through ``backend.scanner.rooftop_disown.roster_place`` when that module is
     # loaded: it is the long-standing name callers and tests stub the registry by.
     mod = sys.modules.get("backend.scanner.rooftop_disown")
     fn = getattr(mod, "roster_place", None) if mod is not None else None
+    if registry_id:
+        # keyword only when a registry id is in hand, so a stub of the old one-argument
+        # ``roster_place`` keeps working for every host-keyed caller
+        return (fn or registry_place)(dealer_url, registry_id=registry_id)
     return (fn or registry_place)(dealer_url)
 
 
-def store_place(dealer_url: str, dealer_id: str) -> dict[str, Any]:
+def store_place(dealer_url: str, dealer_id: str, registry_id: int | None = None) -> dict[str, Any]:
     """The registry place, completed with the page-learned street from scan hints
     when the roster has the town but no street (the gate matches street-block
     stamps only against a known street; Honda of Huntersville 2026-09-26).
@@ -92,7 +107,7 @@ def store_place(dealer_url: str, dealer_id: str) -> dict[str, Any]:
     A dealer missing from the registry (no town) gets the hinted place alone.
     """
     try:
-        place = dict(_registry_lookup(dealer_url) or {})
+        place = dict(_registry_lookup(dealer_url, registry_id) or {})
     except Exception:  # noqa: BLE001
         place = {}
     try:

@@ -169,3 +169,14 @@ def test_post_write_syncs_incomplete_listings_in_the_same_database(upsert_env):
     complete = _car(engine_description="2.5L 4-Cyl", body_style="Sedan", cylinders=4)
     assert upsert_vehicles([complete], {}) == 1
     assert _select(upsert_env, "SELECT vin FROM incomplete_listings") == []
+
+
+def test_unstamped_bare_host_rescan_keeps_a_shared_host_stores_page_and_registry_id(upsert_env):
+    """N8.14: the dealer_url guard's ``RTRIM(...) || '/_%'`` LIKE and the id COALESCE on Postgres."""
+    page = "https://www.autosavvy.com/dealers/lindon-utah/"
+    assert upsert_vehicles([_car("autosavvy-com-lindon-ut", dealer_url=page, dealership_registry_id=None)], {}) == 1
+    with upsert_env.connect() as conn:
+        conn.execute("UPDATE cars SET dealership_registry_id = 301 WHERE vin = %s", (VIN,))
+        conn.commit()
+    assert upsert_vehicles([_car("autosavvy-com-lindon-ut", dealer_url="https://www.autosavvy.com")], {}) == 1
+    assert _select(upsert_env, "SELECT dealer_url, dealership_registry_id FROM cars WHERE vin = %s", (VIN,)) == [(page, 301)]

@@ -203,3 +203,63 @@ def test_real_staged_repair_files_all_classify(monkeypatch):
         pytest.skip("workspace repair set not in this checkout")
     reps = arr.load_repairs(d)
     assert reps and not [r for r in reps if r.kind == "invalid"]
+
+
+# -- N8.14: stores on one website host are told apart by street / store page, never host alone --
+
+def _autosavvy(street, city, state, path):
+    url = f"https://www.autosavvy.com/dealers/{path}/"
+    return _row(name=f"AutoSavvy {city}", website_url=url, dealer_website_url=url, street_address=street,
+                city=city, state=state, zip_code="00000", platform="carscommerce")
+
+
+def test_shared_host_add_inserts_beside_sisters_and_is_idempotent(store, repairs, tmp_path):
+    with closing(sqlite3.connect(store.db_path)) as c:
+        c.execute("INSERT INTO dealerships (name, website_url, city, state, street_address) VALUES "
+                  "('AutoSavvy San Antonio', 'https://www.autosavvy.com/dealers/san-antonio-texas', 'San Antonio', 'TX', "
+                  "'15447 Interstate Highway 10 W')")
+        c.commit()
+    sid = "autosavvy-com-lindon-ut"
+    _roster(repairs, dealer=sid, row=_autosavvy("1 Main St", "Lindon", "UT", "lindon-utah"), shared_host="www.autosavvy.com")
+    rc, out = _run(repairs, tmp_path, apply=True, allow_gated={sid})
+    assert rc == 0 and [r[1] for r in _reg(store)] == ["AutoSavvy San Antonio", "AutoSavvy Lindon"]
+    # second run: same street -> noop, no third row
+    assert "[noop] roster_add" in _run(repairs, tmp_path, apply=True, allow_gated={sid})[1]
+    assert len(_reg(store)) == 2
+    # a second sister on the same host is a new row, not a conflict with Lindon
+    sid2 = "autosavvy-com-draper-ut"
+    _roster(repairs, dealer=sid2, row=_autosavvy("2 Side St", "Draper", "UT", "draper-utah"), shared_host="www.autosavvy.com")
+    assert _run(repairs, tmp_path, apply=True, allow_gated={sid, sid2})[0] == 0
+    assert len(_reg(store)) == 3
+
+
+def test_shared_host_add_without_street_matches_by_store_page_path(store, repairs, tmp_path):
+    with closing(sqlite3.connect(store.db_path)) as c:
+        c.execute("INSERT INTO dealerships (name, website_url, city, state) VALUES "
+                  "('AutoSavvy Reno', 'https://autosavvy.com/dealers/reno-nevada', 'Reno', 'NV')")
+        c.commit()
+    sid = "autosavvy-com-reno-nv"
+    reno = _autosavvy(None, "Reno", "NV", "reno-nevada")
+    _roster(repairs, dealer=sid, row=reno, shared_host="www.autosavvy.com")
+    assert "[noop] roster_add" in _run(repairs, tmp_path, allow_gated={sid})[1]
+    # no street and no path: cannot be told from a sister, so no insert
+    bare = _autosavvy(None, "Austin", "TX", "x")
+    bare["website_url"] = bare["dealer_website_url"] = "https://www.autosavvy.com"
+    _roster(repairs, dealer="autosavvy-com-austin-tx", row=bare, shared_host="www.autosavvy.com")
+    rc, out = _run(repairs, tmp_path, apply=True, allow_gated={"autosavvy-com-austin-tx"})
+    assert rc == 1 and "told from its sister stores" in out and len(_reg(store)) == 1
+
+
+def test_shared_host_registry_fix_needs_id_or_street(store, repairs, tmp_path):
+    with closing(sqlite3.connect(store.db_path)) as c:
+        c.execute("INSERT INTO dealerships (name, website_url, city, state, street_address) VALUES "
+                  "('AutoSavvy Reno', 'https://www.autosavvy.com/dealers/reno-nevada', 'Reno', 'NV', '5 A St')")
+        c.commit()
+    fix = {"schema": arr.SCHEMA_REGISTRY_FIX, "dealer_id": "autosavvy-com-reno-nv", "shared_host": "www.autosavvy.com",
+           "match": {"host": "autosavvy.com"}, "set": {"phone": "775-555-0100"}}
+    (repairs / "registry_fix_reno.json").write_text(json.dumps(fix))
+    rc, out = _run(repairs, tmp_path)
+    assert rc == 1 and "match.id or match.street_address" in out
+    fix["match"] = {"host": "autosavvy.com", "id": 1}
+    (repairs / "registry_fix_reno.json").write_text(json.dumps(fix))
+    assert _run(repairs, tmp_path, apply=True)[0] == 0

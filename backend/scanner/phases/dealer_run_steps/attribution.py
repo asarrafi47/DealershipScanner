@@ -23,7 +23,7 @@ async def lookup_store_place(run: DealerRun) -> None:
     all-rows pass. A group feed whose rooftops are address blocks carrying
     no store name can only be told apart by address; omit it and the gate
     refuses every page of such a feed."""
-    run.attr_ctx = await asyncio.to_thread(DealerCtx.for_store, run.dealer_id, run.name, run.url)
+    run.attr_ctx = await asyncio.to_thread(DealerCtx.for_store, run.dealer_id, run.name, run.url, run.dealer.get("dealership_registry_id"))
     run.roster_place = run.attr_ctx.place
 
 

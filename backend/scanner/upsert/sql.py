@@ -81,7 +81,17 @@ UPSERT_CARS_SQL = """
                         WHEN cars.image_url LIKE 'http%' THEN cars.image_url
                         ELSE excluded.image_url
                     END,
-                    dealer_name=excluded.dealer_name, dealer_url=excluded.dealer_url,
+                    dealer_name=excluded.dealer_name,
+                    -- An unstamped write (no registry id: the bare-host URL a roster rebuilt
+                    -- from a dealer_id slug) must not replace the store page URL of a store
+                    -- on a shared host (www.autosavvy.com/dealers/lindon-utah/ ->
+                    -- www.autosavvy.com): the bare host names no store (N8.14).
+                    dealer_url=CASE
+                        WHEN excluded.dealership_registry_id IS NULL
+                         AND cars.dealer_url LIKE RTRIM(excluded.dealer_url, '/') || '/_%'
+                        THEN cars.dealer_url
+                        ELSE excluded.dealer_url
+                    END,
                     dealer_id=excluded.dealer_id, scraped_at=excluded.scraped_at,
                     fuel_type=COALESCE(excluded.fuel_type, cars.fuel_type),
                     cylinders=COALESCE(excluded.cylinders, cars.cylinders),
