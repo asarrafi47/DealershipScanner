@@ -66,6 +66,11 @@ def assess(conn, dealer_id: str, since_iso: str, known_before: int, recipe_info:
         top = ", ".join(f"{o} {c}" for o, c in sorted(owners.items(), key=lambda kv: -kv[1])[:3])
         note = f"VIN owner guard: {n} VINs owned by other dealers not written" + (f" ({top})" if top else "")
         out["reason"] = f"{out['reason']}; {note}" if out.get("reason") else note
+    gap = out.get("replay_persist_gap")
+    if gap:
+        by = ", ".join(f"{k} {v}" for k, v in (gap.get("dropped_by") or {}).items())
+        note = f"replay->persist gap: {gap.get('persisted')} written of {gap.get('kept')} VINs the replay kept" + (f" ({by})" if by else "")
+        out["reason"] = f"{out['reason']}; {note}" if out.get("reason") else note
     return out
 
 
@@ -111,6 +116,8 @@ def _assess(conn, dealer_id: str, since_iso: str, known_before: int, recipe_info
         "vin_owner_conflicts": int(s.get("vin_owner_conflicts") or 0),
         "vin_owner_conflict_owners": s.get("vin_owner_conflict_owners") or {},
     })
+    if s.get("replay_persist_gap"):
+        out["replay_persist_gap"] = s["replay_persist_gap"]
     out["timing"] = record_timing(dealer_id, r)
     if r.get("error"):
         out["verdict"], out["reason"] = "error", str(r["error"])[:200]

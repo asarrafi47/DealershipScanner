@@ -197,6 +197,7 @@ def reconcile_dealer_inventory_after_scan(
     protected_vins: set[str] | None = None,
     run_started_iso: str | None = None,
     source: str = "recipe",
+    bucket_share: float | None = None,
     _conn: Any | None = None,
 ) -> dict[str, Any]:
     """
@@ -206,7 +207,8 @@ def reconcile_dealer_inventory_after_scan(
     *replay* is the walk report (``result['recipe_replay']``: a ``walks`` list), *protected_vins*
     the VINs refused without evidence (never retired), *run_started_iso* the wall-clock start of
     the run (rows refreshed since then are neither baseline nor candidates; without it the
-    call time stands in), *source* ``recipe`` or ``recovery:<strategy>``. *scraped_conditions*
+    call time stands in), *source* ``recipe`` or ``recovery:<strategy>``, *bucket_share* a
+    caller's own per-bucket share (the delta scan's 0.8) in place of the env default. *scraped_conditions*
     is kept for callers that pass it: per-bucket coverage by VIN already covers a condition the
     run returned nothing for.
 
@@ -306,7 +308,7 @@ def reconcile_dealer_inventory_after_scan(
         )
         policy = Policy(
             min_rows=min_rows,
-            bucket_share=_reconcile_bucket_share(),
+            bucket_share=_reconcile_bucket_share() if bucket_share is None else bucket_share,
             one_condition_ok=(dealer_id or "").strip() in one_condition_ok_ids(),
         )
         plan = plan_retirement(rows, evidence, policy, datetime.now(timezone.utc))

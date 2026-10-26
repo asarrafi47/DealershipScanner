@@ -46,6 +46,8 @@ def record_scan_outcomes(outcomes: list[Any], *, finished_at: str) -> int:
                 "recipe_coverage": o.get("recipe_coverage"),
                 # replay walk report: per-recipe stop reason, completeness, scope hash
                 "recipe_replay": o.get("recipe_replay"),
+                # replay-kept VINs vs rows written, when the write kept under half (P5B.7)
+                "replay_persist_gap": o.get("replay_persist_gap"),
                 "vdp_phase_timed_out": bool(o.get("vdp_phase_timed_out")),
                 "description_probe": o.get("description_probe"),
                 "vdp_prefetch": o.get("vdp_prefetch"),

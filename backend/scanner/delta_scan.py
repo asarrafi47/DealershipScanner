@@ -10,8 +10,9 @@ between full browser scans. Accuracy contract:
 - A dealer is skipped outright when the replay yield fails the quality gate
   (VIN coverage vs. the dealer's known active inventory, and price coverage) —
   a thin or junk feed can neither pollute rows nor mark cars sold.
-- Reconcile (mark-inactive) additionally requires near-full VIN coverage on
-  top of its own built-in safety gates.
+- Reconcile (mark-inactive) runs the same retirement policy as the full scan
+  (``plan_retirement``: walk report, protected VINs, per-condition VIN coverage),
+  with a stricter 0.8 per-bucket share.
 
 Run: ``python scanner.py --manifest X --delta`` (dealers without usable
 recipes are skipped and should be covered by the regular full scan).
@@ -22,6 +23,7 @@ import asyncio
 import logging
 import os
 import time
+from datetime import datetime, timezone
 from typing import Any
 
 # The rooftop reconcile policy is shared with the full (browser) scan path so the
@@ -40,7 +42,7 @@ logger = logging.getLogger("scanner")
 
 # Below these, the replay is treated as a partial/junk feed and the dealer skipped.
 _MIN_VIN_COVERAGE = 0.5      # of known active inventory — gate for upserting at all
-_RECONCILE_VIN_COVERAGE = 0.8  # gate for allowing mark-inactive
+_RECONCILE_VIN_COVERAGE = 0.8  # per-bucket share a delta run must re-see before a bucket retires
 _MIN_PRICE_COVERAGE = 0.5
 # Priceless feeds up to this size get per-car VDP price completion over HTTP
 # (cosmos SRP teaser feeds return 12-24 VINs, so this stays cheap).
@@ -157,6 +159,7 @@ async def delta_scan_dealer(dealer: dict[str, Any]) -> dict[str, Any]:
         return out
 
     t0 = time.perf_counter()
+    run_started_iso = datetime.now(timezone.utc).isoformat()
     registry_id = dealer.get("dealership_registry_id")
     # keyword only when set: a single-store dealer calls exactly as before
     _rid_kw = {"registry_id": registry_id} if registry_id else {}
@@ -341,34 +344,35 @@ async def delta_scan_dealer(dealer: dict[str, Any]) -> dict[str, Any]:
         logger.warning("Delta [%s]: TV image completion failed: %s", name, e)
 
     scraped_norm = normalized_vin_set_from_vehicles(vehicles)
-    # Retirement compares VALID normalized VINs, so its authorization gate must
-    # too — raw row count includes placeholder/unknown VINs that would let a
-    # junk-heavy feed retire real inventory it never actually covered.
-    valid_cov = (len(scraped_norm) / known) if known else 1.0
-    if valid_cov >= _RECONCILE_VIN_COVERAGE:
-        try:
-            from backend.scanner.inventory_reconcile import (
-                condition_buckets_from_vehicles,
-                reconcile_dealer_inventory_after_scan,
-            )
+    try:
+        from backend.attribution.disown import protected_refusal_vins
+        from backend.scanner.inventory_reconcile import (
+            condition_buckets_from_vehicles,
+            reconcile_dealer_inventory_after_scan,
+        )
 
-            # Reconcile's safety gate reads stats["deduped_rows"]; the delta
-            # path never set it, so every dealer failed below_min_rows and no
-            # car was EVER marked inactive (found 2026-07-19: listing_removed_at
-            # was NULL on all 58k rows). Unique scraped VINs is the deduped
-            # row count for a delta run.
-            out["deduped_rows"] = len(scraped_norm)
-            # The same per-condition guards as the full scan (P1A.1): without the
-            # run's buckets a new-only replay that clears 80% of the lot retires
-            # every used car it never asked for.
-            out["reconcile"] = await asyncio.to_thread(
-                reconcile_dealer_inventory_after_scan, dealer_id, url, scraped_norm, out,
-                scraped_conditions=condition_buckets_from_vehicles(vehicles),
-            )
-        except Exception as e:
-            logger.warning("Delta reconcile failed for %s: %s", name, e)
-    else:
-        out["reconcile"] = {"ran": False, "skipped_reason": f"valid_vin_coverage {valid_cov:.0%} < 80%"}
+        # Reconcile's safety gate reads stats["deduped_rows"]; the delta
+        # path never set it, so every dealer failed below_min_rows and no
+        # car was EVER marked inactive (found 2026-07-19: listing_removed_at
+        # was NULL on all 58k rows). Unique scraped VINs is the deduped
+        # row count for a delta run.
+        out["deduped_rows"] = len(scraped_norm)
+        # The same policy and evidence as the full scan (P5A.6): the walk report, the
+        # VINs refused without evidence (protected), the run start. A delta replay of
+        # only new cars keeps the used rows, a truncated walk retires nothing; the
+        # share is the delta's own 0.8 (a lot-wide gate over valid VINs, ghosts
+        # included, stood here before).
+        out["reconcile"] = await asyncio.to_thread(
+            reconcile_dealer_inventory_after_scan, dealer_id, url, scraped_norm, out,
+            scraped_conditions=condition_buckets_from_vehicles(vehicles),
+            replay=_replay or None,
+            protected_vins=protected_refusal_vins(refused),
+            run_started_iso=run_started_iso,
+            source="recipe",
+            bucket_share=_RECONCILE_VIN_COVERAGE,
+        )
+    except Exception as e:
+        logger.warning("Delta reconcile failed for %s: %s", name, e)
 
     # Autostart post-scan enrichment for the VINs this dealer just refreshed:
     # EPA/vPIC structured backfill + listing-page (VDP) recovery for still-missing
