@@ -11,8 +11,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 WORKDIR /app
 
 # Install Python deps first (layer cache)
-COPY requirements.txt .
-RUN pip install --no-cache-dir gunicorn[gthread] -r requirements.txt
+COPY requirements*.txt ./
+# CPU-only torch first (P15B.4, D-TC5): web only embeds with sentence-transformers on CPU, and
+# the default PyPI linux wheel drags in the multi-GB nvidia-* CUDA stack. With torch already
+# satisfied from the CPU index, the next install skips it. Pinned to the version the dev venv
+# and sentence-transformers>=2.2 are exercised against; bump it together with CI's torch step.
+ARG TORCH_VERSION=2.12.1
+RUN pip install --no-cache-dir "torch==${TORCH_VERSION}" --index-url https://download.pytorch.org/whl/cpu
+RUN pip install --no-cache-dir gunicorn[gthread] -r requirements-web.txt
 
 # Bake the pgeocode US postal table (~5.6 MB from GeoNames) into the image.
 # backend/db/geo.py builds pgeocode.Nominatim("us") at import, and pgeocode
@@ -26,6 +32,17 @@ ENV PGEOCODE_DATA_DIR=/opt/pgeocode
 RUN python -c "import pgeocode; pgeocode.Nominatim('us')" \
     || echo "pgeocode cache bake failed; runtime will fetch on first geocode"
 
+# Bake the embedding model (P15B.3) at the pinned revision, so web never fetches from
+# huggingface.co at start. backend/vector/embedding_model.py is stdlib-only and is loaded by
+# path here (the app is not copied yet) so the id and revision live in one place. HF_HOME is
+# world-readable for whatever user the entrypoint runs as. The offline flags are set after
+# the bake: from then on the cache is the only source, and a missing file fails loudly.
+ENV HF_HOME=/app/models
+COPY backend/vector/embedding_model.py /tmp/embedding_model.py
+RUN python -c "import importlib.util as u; s = u.spec_from_file_location('embedding_model', '/tmp/embedding_model.py'); m = u.module_from_spec(s); s.loader.exec_module(m); from huggingface_hub import snapshot_download; snapshot_download(m.model_id(), revision=m.model_revision())" \
+    && chmod -R a+rX /app/models && rm /tmp/embedding_model.py
+ENV HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1
+
 # No browser binary (P3.8, D-SEC1 (a), 2026-10-18).
 #
 # The web image used to run `playwright install chromium && playwright
@@ -38,8 +55,8 @@ RUN python -c "import pgeocode; pgeocode.Nominatim('us')" \
 # SCANNER_ALLOW_BROWSER (backend/scanner/browser_gate.py), which web does not
 # set; with no browser in the image they could not launch here anyway.
 #
-# The playwright pip package still installs from requirements.txt until P15B.2
-# splits the web requirements; without the browser download it is inert.
+# The playwright pip package is not installed here either: it lives in
+# requirements-browser.txt (P15B.2), which this image never reads.
 # Do not add a Playwright or Patchright browser install here; a static test
 # (backend/tests/test_web_researcher.py) fails if this file gains one.
 

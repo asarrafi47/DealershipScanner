@@ -314,14 +314,13 @@ def ingest(
             print(build_canonical_description(sample, pl))
         return len(deduped)
 
-    from sentence_transformers import SentenceTransformer
-
+    from backend.vector.embedding_model import load_sentence_transformer
     from backend.vector.pgvector_service import master_spec_truncate, master_spec_upsert_batch
 
     if reindex:
         master_spec_truncate()
 
-    model = SentenceTransformer(MODEL_NAME)
+    model = load_sentence_transformer()
     n_indexed = 0
     batch_ids: list[str] = []
     batch_docs: list[str] = []

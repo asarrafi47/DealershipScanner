@@ -79,6 +79,23 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt -r requirements-test.txt
 
+      # P15B.7 (security-17): known-vulnerable pins fail the build. No ignore
+      # flags: a finding is fixed by raising the floor, not waved through.
+      # The environment audit covers what the job just installed (web side);
+      # the scanner file is a light -r audit, because a separate job would
+      # rebuild torch for nothing. pip-audit is installed AFTER the project
+      # requirements and pinned here, not in any requirements file, so it
+      # cannot move a project pin or reach a deploy image.
+      # backend/tests/test_requirements_hygiene.py pins this step.
+      - name: Install pip-audit
+        run: pip install pip-audit==2.9.0
+
+      - name: Audit installed packages
+        run: pip-audit
+
+      - name: Audit scanner requirements
+        run: pip-audit -r requirements-scanner.txt
+
       # backend/tests/test_js_unit.py runs the frontend helper tests under node
       # and skips when node is missing; pin the version so it really runs.
       - uses: actions/setup-node@v4
