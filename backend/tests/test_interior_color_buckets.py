@@ -156,3 +156,12 @@ def test_search_cars_interior_color_bucket_filters(
         interior_color_bucket_filters=["black", "tan"],
     )
     assert {r["vin"] for r in either} == {"AAAAAAAAAAAAAAAAA", "BBBBBBBBBBBBBBBBB"}
+
+
+def test_bucket_lexicon_matches_whole_words_only() -> None:
+    """B-023: 'Titanium' is not tan, 'Preferred Suede' is not red."""
+    assert "tan" not in infer_interior_color_buckets("Titanium")
+    assert "red" not in infer_interior_color_buckets("Preferred Suede")
+    assert infer_interior_color_buckets("Black/Tan") == ["black", "tan"] or set(
+        infer_interior_color_buckets("Black/Tan")
+    ) == {"black", "tan"}

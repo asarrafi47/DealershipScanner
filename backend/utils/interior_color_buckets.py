@@ -124,7 +124,7 @@ def infer_interior_color_buckets(raw: str | None, make: str | None = None) -> li
     seen: set[str] = set()
     _, phrases = _load_lexicon()
     for phrase, buckets in phrases:
-        if phrase in s:
+        if re.search(rf"(?<![a-z0-9]){re.escape(phrase)}(?![a-z0-9])", s):
             for b in buckets:
                 if b not in seen:
                     seen.add(b)

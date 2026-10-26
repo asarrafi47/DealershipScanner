@@ -180,3 +180,11 @@ def test_process_listing_description_skips_unchanged() -> None:
     assert r2["applied"] is True
     assert "packages" in (r2.get("updates") or {})
 
+
+
+def test_interior_hint_needs_colour_in_candidate_not_whole_description() -> None:
+    """B-022: a colour elsewhere in the text must not validate a junk 'X interior' phrase."""
+    junk = extract_listing_description("Spacious roomy interior. Exterior painted Red with alloy wheels.")
+    assert "interior_color" not in json.dumps(junk) or "roomy" not in json.dumps(junk).lower()
+    ok = extract_listing_description("Black interior with heated seats.")
+    assert "black" in json.dumps(ok).lower()

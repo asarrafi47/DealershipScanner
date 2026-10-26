@@ -617,7 +617,7 @@ _CYLINDER_RE = re.compile(
     r"\b(?:"
     r"v\s*(\d{1,2})"                       # v6, v8, v12
     r"|(\d{1,2})\s*[-\s]?cyl(?:inder)?s?"  # 6-cyl, 8cylinder, 6 cylinders
-    r"|(?:inline|straight|i)\s*[-\s]?(\d{1,2})"  # inline-4, i6
+    r"|(?:inline|straight)\s*[-\s]?(\d{1,2})"  # inline-4 (bare "i4" is a BMW model)
     r"|(?:four|4)[-\s]?cyl"               # four-cyl → 4
     r"|(?:six|6)[-\s]?cyl"               # six-cyl → 6
     r"|(?:eight|8)[-\s]?cyl"             # eight-cyl → 8
