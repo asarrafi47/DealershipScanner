@@ -108,10 +108,29 @@ def assert_inventory_backend_configured() -> None:
     raise RuntimeError(_INVENTORY_POSTGRES_REQUIRED_MSG)
 
 
+_PG_CONNECT_TIMEOUT_DEFAULT_S = 10
+
+
+def _pg_connect_timeout_s() -> int:
+    """``PG_CONNECT_TIMEOUT`` seconds (default 10); bad/<=0 values fall back to the default."""
+    try:
+        v = int(float((os.environ.get("PG_CONNECT_TIMEOUT") or "").strip()))
+    except ValueError:
+        return _PG_CONNECT_TIMEOUT_DEFAULT_S
+    return v if v > 0 else _PG_CONNECT_TIMEOUT_DEFAULT_S
+
+
 def pg_connect():
     import psycopg
 
-    return psycopg.connect(inventory_postgres_dsn() or "", autocommit=False)
+    dsn = inventory_postgres_dsn() or ""
+    kwargs: dict = {"autocommit": False}
+    # Without a bound a dead host hangs the caller at libpq's wait-forever
+    # default. A connect_timeout already in the DSN is the operator's choice
+    # and a kwarg would silently override it, so only add ours when absent.
+    if "connect_timeout" not in dsn.lower():
+        kwargs["connect_timeout"] = _pg_connect_timeout_s()
+    return psycopg.connect(dsn, **kwargs)
 
 
 def qmarks_to_percent_s(sql: str) -> str:
