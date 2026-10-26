@@ -129,6 +129,19 @@ def request_password_reset(*, login_input: str) -> bool:
     return True
 
 
+def _refinalize_actor(uid: int) -> None:
+    """The reset bumped auth_epoch; a browser already signed in as this user stays so."""
+    try:
+        from flask import has_request_context, session
+
+        if has_request_context() and session.get("user_id") == uid:
+            from backend.auth.session import finalize_app_session
+
+            finalize_app_session(uid)
+    except Exception:  # noqa: BLE001
+        _log.warning("password reset: session re-finalize failed user_id=%s", uid)
+
+
 def complete_password_reset(*, token: str, new_password: str) -> tuple[bool, str]:
     raw = (token or "").strip()
     if not raw or len(raw) > 256:
@@ -151,4 +164,5 @@ def complete_password_reset(*, token: str, new_password: str) -> tuple[bool, str
     if err:
         return False, err
     clear_user_password_reset_token(uid)
+    _refinalize_actor(uid)
     return True, "Your password has been updated. You can log in now."

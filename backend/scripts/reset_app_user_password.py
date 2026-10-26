@@ -91,7 +91,7 @@ def main() -> int:
     cur = conn.cursor()
     cur.execute(
         """
-        UPDATE users SET password = ?
+        UPDATE users SET password = ?, auth_epoch = COALESCE(auth_epoch, 0) + 1
         WHERE lower(username) = lower(?) OR lower(email) = lower(?)
         """,
         (h, li, li),

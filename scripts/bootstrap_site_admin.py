@@ -97,7 +97,8 @@ def _reset_passwords(pw_plain: str) -> list[str]:
     updated: list[str] = []
     for uname in sorted(targets):
         cur.execute(
-            "UPDATE users SET password = ? WHERE lower(username) = lower(?)",
+            "UPDATE users SET password = ?, auth_epoch = COALESCE(auth_epoch, 0) + 1 "
+            "WHERE lower(username) = lower(?)",
             (pw_hash, uname),
         )
         if cur.rowcount:

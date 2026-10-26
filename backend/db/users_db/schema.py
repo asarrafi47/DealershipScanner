@@ -173,6 +173,12 @@ def init_users_db():
             "is_active",
             "ALTER TABLE users ADD COLUMN is_active INTEGER NOT NULL DEFAULT 1",
         ),
+        # Session revocation (P16.1): bumped on a password change/reset, compared
+        # with session["ae"] on every request. Never bumped by the rehash path.
+        (
+            "auth_epoch",
+            "ALTER TABLE users ADD COLUMN auth_epoch INTEGER NOT NULL DEFAULT 0",
+        ),
     ):
         if col not in ucols:
             cursor.execute(ddl)

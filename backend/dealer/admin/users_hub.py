@@ -193,6 +193,10 @@ def admin_users_edit(user_id: int):
                 if err:
                     flash(err, "error")
                 else:
+                    if user_id == self_id:  # the bump ended every session, keep this one
+                        from backend.auth.session import finalize_app_session
+
+                        finalize_app_session(user_id)
                     flash(f"Password updated for user #{user_id}.", "success")
             return redirect(url_for("store_admin.admin_users_edit", user_id=user_id))
 

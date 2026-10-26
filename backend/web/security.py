@@ -18,6 +18,7 @@ from flask import Flask, g, redirect, request, session, url_for
 from backend.auth.session import (
     billing_enabled as _billing_enabled,
     require_paid_org_session as _require_paid_org_session,
+    revoked_session_gate as _revoked_session_gate,
     session_belongs_to_paid_org as _session_belongs_to_paid_org,
 )
 from backend.billing import access as paid_access
@@ -209,8 +210,9 @@ def _csp_headers(response):
 
 
 def register_security(app: Flask) -> None:
-    """Install, in this order: CSP nonce, CSRF, billing gate (before); CSP headers (after)."""
+    """Install, in this order: CSP nonce, CSRF, session revocation, billing gate (before); CSP headers (after)."""
     app.before_request(_per_request_csp_nonce)
     app.before_request(_csrf_mutating_requests)
+    app.before_request(_revoked_session_gate)
     app.before_request(_billing_gate_paid_routes)
     app.after_request(_csp_headers)

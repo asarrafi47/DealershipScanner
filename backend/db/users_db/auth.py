@@ -1,6 +1,7 @@
 from backend.db.password_hash import hash_password, password_needs_rehash, verify_or_legacy
 
 from ._common import (
+    AUTH_EPOCH_BUMP,
     _schedule_password_rehash,
     _user_dict_from_row,
     _user_row_is_active,
@@ -265,7 +266,7 @@ def change_user_password(user_id: int, current_password: str, new_password: str)
         conn.close()
         return "Current password is incorrect."
     cursor.execute(
-        "UPDATE users SET password = ? WHERE id = ?",
+        f"UPDATE users SET password = ?, {AUTH_EPOCH_BUMP} WHERE id = ?",
         (hash_password(new_pw), uid),
     )
     conn.commit()
@@ -296,7 +297,7 @@ def reset_user_password(user_id: int, new_password: str) -> str | None:
         conn.close()
         return "Account not found."
     cursor.execute(
-        "UPDATE users SET password = ? WHERE id = ?",
+        f"UPDATE users SET password = ?, {AUTH_EPOCH_BUMP} WHERE id = ?",
         (hash_password(new_pw), uid),
     )
     conn.commit()
@@ -376,7 +377,7 @@ def get_user_profile(user_id: int) -> dict | None:
     cursor.execute("PRAGMA table_info(users)")
     cols = [r[1] for r in cursor.fetchall()]
     want = ["id", "username", "email"]
-    for extra in ("role", "dealer_id", "dealership_registry_id", "org_id", "mfa_phone", "is_premium", "subscription_plan_id", "is_active"):
+    for extra in ("role", "dealer_id", "dealership_registry_id", "org_id", "mfa_phone", "is_premium", "subscription_plan_id", "is_active", "auth_epoch"):
         if extra in cols:
             want.append(extra)
     cursor.execute(f"SELECT {', '.join(want)} FROM users WHERE id = ?", (uid,))
@@ -397,6 +398,8 @@ def get_user_profile(user_id: int) -> dict | None:
         out["role"] = "dealer_staff"
     if "mfa_phone" in out and out["mfa_phone"] is None:
         out["mfa_phone"] = ""
+    if "auth_epoch" in out:
+        out["auth_epoch"] = int(out["auth_epoch"] or 0)
     return out
 
 

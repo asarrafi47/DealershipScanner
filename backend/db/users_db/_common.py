@@ -14,7 +14,13 @@ __all__ = [
     "_user_dict_from_row",
     "_user_row_is_active",
     "_schedule_password_rehash",
+    "AUTH_EPOCH_BUMP",
 ]
+
+# SET fragment that revokes every other session of a user (P16.1). Used ONLY by
+# the password-change/reset writes and the bootstrap force-sync; the rehash
+# below rewrites the hash without it so a login never signs the user out.
+AUTH_EPOCH_BUMP = "auth_epoch = COALESCE(auth_epoch, 0) + 1"
 
 
 def get_conn():
