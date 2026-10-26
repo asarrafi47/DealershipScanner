@@ -24,6 +24,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import sys
 from collections import Counter, defaultdict
@@ -824,7 +825,18 @@ def main() -> int:
     ap.add_argument("--out", required=True, help="output directory")
     ap.add_argument("--since", help="post: ISO timestamp the scan started (UTC)")
     ap.add_argument("--log", help="post: scanner log file")
+    ap.add_argument("--lab", action="store_true",
+                    help="read the scratch lab database (SCAN_LAB_DATABASE_URL) instead of the inventory DSN")
     args = ap.parse_args()
+    if args.lab:
+        from backend.dev.scan_lab import ScanLabRefused, scan_lab_dsn
+
+        try:
+            os.environ["INVENTORY_DATABASE_URL"] = scan_lab_dsn()
+        except ScanLabRefused as e:
+            ap.error(f"--lab refused: {e}")
+        os.environ.pop("DATABASE_URL", None)
+        inventory_pg.reset_postgres_inventory_schema_cache()
 
     dealers = [d.strip() for d in args.dealers.split(",") if d.strip()]
     out = Path(args.out)

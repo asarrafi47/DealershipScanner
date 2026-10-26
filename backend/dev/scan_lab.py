@@ -20,20 +20,21 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from urllib.parse import unquote, urlparse
+
 from backend.db.inventory_db import (
     _UPDATABLE_CAR_COLUMNS,
     _parse_car_gallery,
     _parse_car_history_highlights,
-    list_scan_runs,
 )
 from backend.db.inventory_db import _placeholders as sql_placeholders
+from backend.db.inventory_pg import qmarks_to_percent_s
 
 logger = logging.getLogger(__name__)
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
 DEFAULT_MANIFEST_REL = "workspace/manifest_92694_25mi.json"
-DEFAULT_SCAN_LAB_INVENTORY_DB_REL = "workspace/inventory_92694.db"
 DEFAULT_ZIP = "92694"
 DEFAULT_RADIUS_MI = 25
 
@@ -74,27 +75,58 @@ def default_manifest_path() -> Path:
     return p
 
 
-def scan_lab_inventory_db_path() -> Path:
-    """92694 / scan-lab inventory is isolated from production ``inventory.db``."""
-    raw = (
-        os.environ.get("SCAN_LAB_INVENTORY_DB_PATH") or DEFAULT_SCAN_LAB_INVENTORY_DB_REL
-    ).strip()
-    p = Path(raw)
-    if not p.is_absolute():
-        p = PROJECT_ROOT / p
-    return p
+class ScanLabRefused(RuntimeError):
+    """The lab DSN is missing or could be a real inventory database."""
+
+
+# Databases a lab scan must never point at (D-PG7: the lab lives in its own
+# scratch database, ``cars_lab``).
+_PROTECTED_LAB_DBS = frozenset({"cars", "cars_cleanroom", "postgres", "template0", "template1"})
+
+
+def _dsn_target(dsn: str) -> tuple[str, str, str]:
+    u = urlparse(dsn)
+    return (u.hostname or "", str(u.port or ""), unquote(u.path.lstrip("/")))
+
+
+def scan_lab_dsn() -> str:
+    """The scratch Postgres DSN (``SCAN_LAB_DATABASE_URL``), validated.
+
+    Refused when unset, when it is not a ``postgresql://`` URL, when its
+    database is a protected one (``cars``, ``cars_cleanroom``, ``cars_cr_*``),
+    or when it names the same host/port/database as the inventory DSN in the
+    environment, so a lab scan or edit cannot reach production ``cars``.
+    """
+    dsn = (os.environ.get("SCAN_LAB_DATABASE_URL") or "").strip()
+    if not dsn:
+        raise ScanLabRefused("set SCAN_LAB_DATABASE_URL to a scratch Postgres (e.g. .../cars_lab)")
+    if not dsn.startswith(("postgresql://", "postgres://")):
+        raise ScanLabRefused("SCAN_LAB_DATABASE_URL must be a postgresql:// URL")
+    host, port, dbname = _dsn_target(dsn)
+    if not dbname or dbname in _PROTECTED_LAB_DBS or dbname.startswith("cars_cr_"):
+        raise ScanLabRefused(f"database {dbname!r} is protected; the lab uses its own scratch database")
+    for key in ("INVENTORY_DATABASE_URL", "DATABASE_URL"):
+        other = (os.environ.get(key) or "").strip()
+        if other and _dsn_target(other) == (host, port, dbname):
+            raise ScanLabRefused(f"SCAN_LAB_DATABASE_URL is the same database as {key}")
+    return dsn
+
+
+def scan_lab_database_name() -> str:
+    """Database name for display; empty when the lab DSN is unset or refused."""
+    try:
+        return _dsn_target(scan_lab_dsn())[2]
+    except ScanLabRefused:
+        return ""
 
 
 @contextmanager
 def scan_lab_db_conn():
-    """SQLite connection to the scan-lab inventory file (not production)."""
-    import sqlite3
+    """Postgres connection to the scratch lab database (never production)."""
+    import psycopg
 
-    path = scan_lab_inventory_db_path()
-    path.parent.mkdir(parents=True, exist_ok=True)
-    conn = sqlite3.connect(str(path), timeout=60.0)
+    conn = psycopg.connect(scan_lab_dsn(), connect_timeout=10)
     try:
-        conn.execute("PRAGMA busy_timeout = 60000")
         yield conn
         conn.commit()
     except Exception:
@@ -102,6 +134,11 @@ def scan_lab_db_conn():
         raise
     finally:
         conn.close()
+
+
+def _lab_exec(cur, sql: str, params: tuple | list = ()):
+    cur.execute(qmarks_to_percent_s(sql), tuple(params))
+    return cur
 
 
 def load_manifest(path: Path | None = None) -> list[dict[str, Any]]:
@@ -143,15 +180,17 @@ def manifest_lab_config() -> dict[str, Any]:
         "dealer_ids": manifest_dealer_ids(manifest),
         "zip_code": (os.environ.get("SCAN_LAB_ZIP") or DEFAULT_ZIP).strip(),
         "radius_miles": int(os.environ.get("SCAN_LAB_RADIUS_MI") or DEFAULT_RADIUS_MI),
-        "inventory_db_path": str(scan_lab_inventory_db_path()),
+        "lab_database": scan_lab_database_name(),
     }
 
 
 def _incomplete_id_set() -> set[int]:
+    # Car ids are per database, so the flags come from the lab's own table, not production's.
     try:
-        from backend.db.incomplete_listings_db import get_incomplete_car_id_set
-
-        return get_incomplete_car_id_set()
+        with scan_lab_db_conn() as conn:
+            cur = conn.cursor()
+            cur.execute("SELECT car_id FROM incomplete_listings WHERE COALESCE(pending, 0) = 0")
+            return {int(r[0]) for r in cur.fetchall() if r and r[0] is not None}
     except Exception:
         return set()
 
@@ -183,9 +222,9 @@ def inventory_summary_for_manifest(
 
     if dealer_ids:
         with scan_lab_db_conn() as conn:
-            conn.row_factory = None
             cur = conn.cursor()
-            cur.execute(
+            _lab_exec(
+                cur,
                 f"""
                 SELECT dealer_id, MAX(dealer_name) AS dealer_name, COUNT(*) AS car_count
                 FROM cars
@@ -201,7 +240,8 @@ def inventory_summary_for_manifest(
             if incomplete_ids:
                 inc_list = [int(x) for x in incomplete_ids if int(x) > 0]
                 if inc_list:
-                    cur.execute(
+                    _lab_exec(
+                        cur,
                         f"""
                         SELECT dealer_id, COUNT(*) AS incomplete_count
                         FROM cars
@@ -249,6 +289,19 @@ def inventory_summary_for_manifest(
     return dict(result)
 
 
+def _lab_scan_runs(*, limit: int) -> list[dict[str, Any]]:
+    """Newest scan_runs rows of the lab database (a fresh lab has none)."""
+    from psycopg.rows import dict_row
+
+    try:
+        with scan_lab_db_conn() as conn:
+            cur = conn.cursor(row_factory=dict_row)
+            cur.execute("SELECT * FROM scan_runs ORDER BY finished_at DESC NULLS LAST, id DESC LIMIT %s", (limit,))
+            return [dict(r) for r in cur.fetchall()]
+    except Exception:
+        return []
+
+
 def list_scan_runs_for_manifest(
     *,
     manifest_path: Path | None = None,
@@ -259,7 +312,7 @@ def list_scan_runs_for_manifest(
     if not dealer_ids:
         return []
     lim = max(1, min(int(limit), 200))
-    all_runs = list_scan_runs(limit=max(lim * 2, 80))
+    all_runs = _lab_scan_runs(limit=max(lim * 2, 80))
     out: list[dict[str, Any]] = []
     for row in all_runs:
         did = str(row.get("dealer_id") or "").strip()
@@ -348,22 +401,22 @@ def list_scan_lab_cars(
     if q_norm:
         like = f"%{q_norm.lower()}%"
         where += (
-            " AND (LOWER(IFNULL(vin,'')) LIKE ?"
-            " OR LOWER(IFNULL(stock_number,'')) LIKE ?"
-            " OR LOWER(IFNULL(make,'') || ' ' || IFNULL(model,'')) LIKE ?)"
+            " AND (LOWER(COALESCE(vin,'')) LIKE ?"
+            " OR LOWER(COALESCE(stock_number,'')) LIKE ?"
+            " OR LOWER(COALESCE(make,'') || ' ' || COALESCE(model,'')) LIKE ?)"
         )
         params.extend([like, like, like])
 
     with scan_lab_db_conn() as conn:
-        conn.row_factory = None
         cur = conn.cursor()
-        cur.execute(f"SELECT COUNT(*) FROM cars WHERE {where}", tuple(params))
+        _lab_exec(cur, f"SELECT COUNT(*) FROM cars WHERE {where}", tuple(params))
         total = int(cur.fetchone()[0] or 0)
-        cur.execute(
+        _lab_exec(
+            cur,
             f"""
             SELECT {cols} FROM cars
             WHERE {where}
-            ORDER BY datetime(COALESCE(scraped_at, first_seen_at)) DESC, id DESC
+            ORDER BY COALESCE(scraped_at, first_seen_at) DESC NULLS LAST, id DESC
             LIMIT ? OFFSET ?
             """,
             tuple(params) + (lim, off),
@@ -385,16 +438,16 @@ def car_in_manifest_scope(car: dict[str, Any]) -> bool:
 
 
 def get_scan_lab_car_by_id(car_id: int, *, include_inactive: bool = True) -> dict[str, Any] | None:
-    """Load a full car row from the scan-lab inventory file (not production ``inventory.db``)."""
-    import sqlite3
+    """Load a full car row from the scratch lab database (never production ``cars``)."""
+    from psycopg.rows import dict_row
 
     with scan_lab_db_conn() as conn:
-        conn.row_factory = sqlite3.Row
-        cur = conn.cursor()
+        cur = conn.cursor(row_factory=dict_row)
         if include_inactive:
-            cur.execute("SELECT * FROM cars WHERE id = ?", (car_id,))
+            _lab_exec(cur, "SELECT * FROM cars WHERE id = ?", (car_id,))
         else:
-            cur.execute(
+            _lab_exec(
+                cur,
                 "SELECT * FROM cars WHERE id = ? AND (COALESCE(listing_active, 1) = 1)",
                 (car_id,),
             )
@@ -434,7 +487,7 @@ def patch_scan_lab_car(car_id: int, fields: dict[str, Any]) -> bool:
         return False
     vals.append(car_id)
     with scan_lab_db_conn() as conn:
-        conn.execute(f"UPDATE cars SET {', '.join(sets)} WHERE id = ?", vals)
+        _lab_exec(conn.cursor(), f"UPDATE cars SET {', '.join(sets)} WHERE id = ?", vals)
     invalidate_scan_lab_summary_cache()
     return True
 
@@ -457,14 +510,17 @@ def _scan_lab_subprocess_env(resolved_manifest: Path) -> dict[str, str]:
     ``load_project_dotenv()`` from refilling the stripped DSN from ``.env``.
     """
     env = os.environ.copy()
-    lab_dsn = (env.pop("SCAN_LAB_DATABASE_URL", "") or "").strip()
+    try:
+        lab_dsn = scan_lab_dsn()
+    except ScanLabRefused:
+        lab_dsn = ""
+    env.pop("SCAN_LAB_DATABASE_URL", None)
     env.pop("DATABASE_URL", None)
     env.pop("INVENTORY_DATABASE_URL", None)
     if lab_dsn:
         env["INVENTORY_DATABASE_URL"] = lab_dsn
     env["PROJECT_DOTENV_DISABLE"] = "1"
     env["DEALERS_MANIFEST_PATH"] = str(resolved_manifest)
-    env["INVENTORY_DB_PATH"] = str(scan_lab_inventory_db_path())
     env.update({"SCANNER_SCAN_ONLY": "1", "SCANNER_MAX_DEALER_CONCURRENCY": "1", "SCANNER_VDP_DOWNLOAD_IMAGES": "0"})
     env.pop("SCANNER_ALLOW_BROWSER", None)
     env.pop("ANTHROPIC_API_KEY", None)
@@ -501,7 +557,12 @@ def _run_manifest_scan_job(job_id: str, manifest_path: Path) -> None:
     # browser; scans never do now — docs/HTTP_ONLY_SCANS_PLAN.md)
     env = _scan_lab_subprocess_env(resolved_manifest)
     if not (env.get("INVENTORY_DATABASE_URL") or "").strip():
-        append("[scan-lab] Refused: set SCAN_LAB_DATABASE_URL to a scratch Postgres; the lab never writes to the real inventory.\n")
+        try:
+            scan_lab_dsn()
+            why = ""
+        except ScanLabRefused as e:
+            why = f" ({e})"
+        append(f"[scan-lab] Refused: set SCAN_LAB_DATABASE_URL to a scratch Postgres; the lab never writes to the real inventory{why}.\n")
         _finish_scan_lab_job(job_id, log_parts, started, 2)
         return
 
@@ -586,8 +647,9 @@ def db_table_counts() -> dict[str, int]:
         cur = conn.cursor()
         for table in ("cars", "dealerships", "scan_runs", "dealer_scan_profile"):
             try:
-                n = cur.execute(f"SELECT COUNT(*) FROM {table}").fetchone()[0]
-                counts[table] = int(n)
+                cur.execute(f"SELECT COUNT(*) FROM {table}")
+                counts[table] = int(cur.fetchone()[0])
             except Exception:
+                conn.rollback()  # a missing table aborts the transaction
                 counts[table] = -1
     return counts

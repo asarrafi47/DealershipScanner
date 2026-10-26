@@ -30,6 +30,5 @@ data:
   APP_ADMIN_USERNAMES: "asarrafi"
 
   # Car chat cost / web research (optional; defaults are safe — see docs/SECURITY_MASTER_TODO.md SEC-041)
-  # RATE_LIMIT_SQLITE_PATH: "/data/rate_limit.sqlite"
   # RATE_LIMIT_CAR_CHAT_GLOBAL_PER_MIN: "200"
   # WEB_RESEARCH_ALLOWED_HOSTS: "edmunds.com,kbb.com"
