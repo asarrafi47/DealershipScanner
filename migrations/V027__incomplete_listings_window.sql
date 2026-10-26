@@ -1,4 +1,4 @@
--- V026__incomplete_listings_window.sql
+-- V027__incomplete_listings_window.sql
 --
 -- N6.4 (D-N13): the incomplete index carries the car's first-seen date, its latest
 -- scrape, how many scans the gap has survived, and a `pending` flag for a new

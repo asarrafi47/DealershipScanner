@@ -125,7 +125,7 @@ The DB started empty: recipes, the VIN-decode cache and the EPA/catalog referenc
 2. **N1 finishes the interrupted root-cause work cheaply.** The gather reports already agree, so N1 writes them up instead of redoing them. It analyses per conflict group and per platform, because those are the units the fixes act on. One read-only tool measures all 458 dealers instead of about 120 more per-dealer agents. N1 also removes the two live prod hazards (SCAN_FLEET=1 with the guard lapsed; web variable changes while the GitHub source is set) and collects the owner decisions up front.
 3. **N2 is a narrow hotfix.** IL-01 plus a targeted prod index repair, and nothing else. It ships first if the N1.6 census shows prod hiding new cars.
 4. **N3 (security wave 1) and N4 (config-as-code) run in parallel from the start.** Their files are disjoint from the scanner work. The XFF spoofing and CSS injection holes are live today, and config-as-code has a hard date.
-5. **N5 (Phase 4 migrations) moves onto the critical path.** The judges showed that ownership evidence must be a persisted rooftop tier, not the stored `source_url`. Live prod retirement also needs per-VIN provenance (V027) and two-strike (V028). Those three migrations need `migrate --target` and V026. N5 is 3S 5M and sits on the critical path: N7, N8 and N9 start after it merges (P4.2 `--target`, P4.5 strict mode in `database.py`). N2, N3, N4 and N6 run in parallel with it.
+5. **N5 (Phase 4 migrations) moves onto the critical path.** The judges showed that ownership evidence must be a persisted rooftop tier, not the stored `source_url`. Live prod retirement also needs per-VIN provenance (V028) and two-strike (V029). Those three migrations need `migrate --target` and V026. N5 is 3S 5M and sits on the critical path: N7, N8 and N9 start after it merges (P4.2 `--target`, P4.5 strict mode in `database.py`). N2, N3, N4 and N6 run in parallel with it.
 6. **N6 lands the write-path quick wins before any rehearsal.** The verifier PHEV bug distorts every verdict-based metric. The dict-repr trims, the index rebuild and the new-arrival "pending" class change what the first prod fleet shows. N6 also pulls P8A.2 (pure precedence module) and P8A.6 (read-time drivetrain follows vPIC) forward, so v1.6.0 displays the vPIC drivetrain from fleet #1 on (owner rule 4); the write path and the heal stay in N15-N17.
 7. **N7 pulls the Postgres harness core forward** (D-PLAN1). Every retirement and guard test is SQLite-only today (`backend/tests/conftest.py:82-92`), and N8/N9 rewrite exactly the Postgres-specific SQL: the guard backstop at `upsert/sql.py:150-155` compares `scraped_at` as text.
 8. **N10 lands the scan controls a cron and a second host need:** run window, fleet lock, leases, per-dealer locks (P11A.1-P11A.4 pulled forward), kill switches, recipe hygiene, the pre-fleet check and the audit tool.
@@ -136,7 +136,7 @@ The DB started empty: recipes, the VIN-decode cache and the EPA/catalog referenc
    - a fourth pass at least 20 h later, so two-strike retirement really retires and can be live-checked.
    Then v1.6.0 is tagged.
 10. **N12 refreshes prod without wiping it:**
-    - migrate V027-V029 and deploy idle;
+    - migrate V028-V030 and deploy idle;
     - repair prod recipes from the home IP;
     - run a home verification scan and a 20-dealer smoke;
     - fleet #1 writes first strikes only, and the strike list is live-checked;
@@ -162,7 +162,7 @@ N11                                                 █████████�
 N12                                                           ████████████████ (fleet #1, #2, 3 nights)
 ```
 
-**Critical path:** N1 → N5 (P4.2 `--target`, P4.5) → N9 (release with V027/V028, after the N9.14 targeted re-run) → N8.6 (V029, evidence-aware guard; also needs N7's P14A.2 and N7.9) → N8 release → N10 wave 3 (P11A.3, P6A.3', N10.8) → N11 → N12.
+**Critical path:** N1 → N5 (P4.2 `--target`, P4.5) → N9 (release with V028/V029, after the N9.14 targeted re-run) → N8.6 (V030, evidence-aware guard; also needs N7's P14A.2 and N7.9) → N8 release → N10 wave 3 (P11A.3, P6A.3', N10.8) → N11 → N12.
 
 **Rough estimate:** prod fleet #1 around day 29-31; the cron watched for three nights around day 33-35. This is an estimate, not a commitment. Owner availability for decisions and prod steps is the main variable.
 
@@ -195,7 +195,7 @@ A unit that touches a file owned by a concurrent phase waits until that phase's 
 | `backend/attribution/disown.py` | P5A.4 (switch only, N9) → N8.6 (`:33`, only if `third_rooftop` joins `EVIDENCE_BACKED_REJECTS`) |
 | `backend/db/incomplete_listings_db.py`, `backend/db/repositories/data_quality_repo.py` | N6.1 → N6.4 → P5A.4 (index delete on retire) |
 | `backend/db/repositories/dealers_repo.py` (summary whitelist) | P5A.2 → N9.12 |
-| `migrations/`, `backend/scripts/migrate.py`, `backend/db/{schema_version,inventory_pg}.py`, `backend/scanner/recipe_store.py`, `backend/db/repositories/schema_repo.py` | N5 → P5B.3/P5B.4 (V027/V028) → N8.6 (V029) |
+| `migrations/`, `backend/scripts/migrate.py`, `backend/db/{schema_version,inventory_pg}.py`, `backend/scanner/recipe_store.py`, `backend/db/repositories/schema_repo.py` | N5 → P5B.3/P5B.4 (V028/V029) → N8.6 (V030) |
 | `backend/tests/conftest.py`, `.github/workflows/ci.yml` | N7 |
 | `backend/web/*`, `users_db`, OAuth modules, `client_ip.py`, `outbound_url.py`, templates, `Dockerfile.web`, `requirements.txt`, `backend/dealer/admin/dealers_hub.py`, `deploy/railway/sync-vault-to-railway.sh`, `deploy/railway/README.md` | N3 |
 | root `railway.toml`, `deploy/railway/deploy_*.sh`, `railway.scanner-nightly.json`, RELEASING.md deploy sections, worker/scheduler Dockerfiles, `docker-compose.yml` | N4 |
@@ -204,11 +204,11 @@ A unit that touches a file owned by a concurrent phase waits until that phase's 
 
 | Flaw | Handling here |
 |---|---|
-| Ownership judged from the stored `source_url` host (value-first guard v1) | Ownership evidence is a persisted rooftop tier (V029, N8.6), set only from stamped per-car rooftop data. The VDP host is used only to **refuse** a row whose host belongs to another roster store (`vdp_host_other_store`, N8.5) |
+| Ownership judged from the stored `source_url` host (value-first guard v1) | Ownership evidence is a persisted rooftop tier (V030, N8.6), set only from stamped per-car rooftop data. The VDP host is used only to **refuse** a row whose host belongs to another roster store (`vdp_host_other_store`, N8.5) |
 | Tie-break "VDP host = dealer host" favours the wrong owner | Not used. Evidence-less contests follow the owner's pool policy (D-N3, a tracked `group_pools.json`) |
 | Two-strike makes the pass-2 retirement proof vacuous | N11 runs four passes, so pass D on the populated copy produces real second-strike retirements; the pass-C strike list is live-checked too. In prod, P6B.3 and P6B.4 run with `SCANNER_RECONCILE=dry`, so no strike predates fleet #1, and fleet #1's strike list is live-checked before fleet #2 retires |
 | 32% turnover used as an expected retirement count; 10% per-dealer alarm vs legitimate turnover after a long gap | The 32% is labelled an upper bound and never a target. The first live prod retirement uses a gap-aware alarm (D-N21); nightly runs keep 10% |
-| Live prod retirement without per-VIN provenance | V027 `listing_retirements` and V028 two-strike are applied to prod (N12.2) before fleet #1. No retirement reaches prod without a provenance row |
+| Live prod retirement without per-VIN provenance | V028 `listing_retirements` and V029 two-strike are applied to prod (N12.2) before fleet #1. No retirement reaches prod without a provenance row |
 | "Web source blocks every push to main" | Corrected. The gate applies only to web variable changes; pushes and `deploy_web.sh` uploads are not gated |
 | Home lane before P11A.3 per-dealer locks | P11A.1-P11A.4 land in N10, before the first prod write and before the N12 home-IP bridge; the permanent lane (N14) comes after |
 | Determinism checked across code versions, or before the evidence guard exists | N11.4 runs forward and reversed passes (`SCAN_SHARD_ORDER=reverse`, N10.8) on the same commit, after N8.6 has merged. N8.10 reports determinism as information only |
@@ -235,12 +235,12 @@ Sizes: S = up to half a day of agent work, M = 1-3 days, L = 3-5 days. "Touches 
 | N5 | Migration foundation (Phase 4) | `migrate --target`, advisory lock, V026, strict mode | N1 | N2-N4, N6 (N7, N8 and N9 start after it merges) | D-DB5/6/7, D-PR8, prod V026 apply | Yes (V026, web deploy) | M |
 | N6 | Listing write-path and completeness fixes | Index rebuild, new-arrival "pending", verifier PHEV, dict/token junk, price floor, placeholders, VIN length gate, read-time vPIC drivetrain (P8A.2, P8A.6) | N1, N2.1 | N5, N7, N8, N9 | D-N13..D-N17, D-PR1/4/6/7 | No (its web-facing changes ship with the next web deploy from a later tag, Section 7.0) | M |
 | N7 | Postgres harness core | Real-Postgres tests for guard, retirement and concurrency SQL | N5 | N6, N8, N9 | D-TC3/6/9, D-PLAN1, ruleset contexts | No | M |
-| N8 | Attribution fix wave | Per-car rooftop identity, persisted evidence tier (V029), evidence-aware VIN ownership, recipe identity, repair set | N1, N5; N9 release and N7 (P14A.2, N7.9) before N8.6 | N6, N7, N9, N10 wave 1 | D-N3..D-N8, D-N34, repair-set OK | No | L |
-| N9 | Retirement single writer, provenance, two-strike, accounting, pause safety | One fail-closed policy; V027/V028; triage counts captured/refused/written; pause-proof batches; fleet resume; targeted retirement re-run | N1, N5, N6.9 | N6, N7, N8, N10 wave 1 | D-RC1/2/3/7, D-SR4, D-N10/11/21 | No | L |
+| N8 | Attribution fix wave | Per-car rooftop identity, persisted evidence tier (V030), evidence-aware VIN ownership, recipe identity, repair set | N1, N5; N9 release and N7 (P14A.2, N7.9) before N8.6 | N6, N7, N9, N10 wave 1 | D-N3..D-N8, D-N34, repair-set OK | No | L |
+| N9 | Retirement single writer, provenance, two-strike, accounting, pause safety | One fail-closed policy; V028/V029; triage counts captured/refused/written; pause-proof batches; fleet resume; targeted retirement re-run | N1, N5, N6.9 | N6, N7, N8, N10 wave 1 | D-RC1/2/3/7, D-SR4, D-N10/11/21 | No | L |
 | N10 | Scan controls and pre-fleet tooling | Run window, leases, per-dealer locks, kill switches, recipe hygiene, gap cover, shard-order knob, pre-fleet check, audit tool | N5; N8, N9 for wave 3 | N8, N9 (wave 1) | D-IF5, D-IF10, D-SR2 | No | M |
 | N11 | Release-candidate rehearsal, v1.6.0 | Prove counts, determinism, convergence and retirement on the exact candidate | N6, N8, N9, N10 | none on the scanner | Fleet runs, restore, live checks, sign-off | No | M |
-| N12 | Prod refresh (6B) | Fresh prod: V027-V029, idle deploy, recipe repair, smoke, fleet #1 (strikes), fleet #2 (retire), residue repair, cron | N11, N4, N5 | N3 release, N13 code | Every prod step, go/no-go gates | Yes | L |
-| N13 | Recipe store authority (Phase 7) | CAS so the home lane and Railway cannot clobber recipes | N12 | N15, N17-N20 code | D-RS1..D-RS4, V030 | Yes | L |
+| N12 | Prod refresh (6B) | Fresh prod: V028-V030, idle deploy, recipe repair, smoke, fleet #1 (strikes), fleet #2 (retire), residue repair, cron | N11, N4, N5 | N3 release, N13 code | Every prod step, go/no-go gates | Yes | L |
+| N13 | Recipe store authority (Phase 7) | CAS so the home lane and Railway cannot clobber recipes | N12 | N15, N17-N20 code | D-RS1..D-RS4, V031 | Yes | L |
 | N14 | Home-IP lane (Phase 15A) | Permanent nightly lane for the Railway-blocked dealers; D-IF6 by desk review | N12, N13 | N15-N18 | D-IF1/3/6, `home_lane.env` | Yes | M |
 | N15 | Fact precedence foundation (8A) | vPIC decides drivetrain and electrification on every write (read-time display shipped in N6); Gasoline fill | N12, N6 (P8A.2, P8A.6) | N13, N14, N18, N20 | none new (D-PR1/4/6/7 answered for N6) | Yes (deploy) | M |
 | N16 | Every fact writer through precedence (8B) | No writer reverts a higher-ranked fact; body style and HD tables | N15 | N13, N14, N18 | D-PR2/3/5, D-N32 | Yes (deploy) | L |
@@ -249,11 +249,11 @@ Sizes: S = up to half a day of agent work, M = 1-3 days, L = 3-5 days. "Touches 
 | N19 | One recipe validation rule (12B) | Recipes judged by the replay walker; rescan under-collected dealers | N18, N10 | N21-N25 | D-OD1/2/4/5/6 | Yes | L |
 | N20 | Dictionary lookups in prod (Phase 9) | 54 of 300 groups and 128 wrong-model YMMs fixed | N5 | any phase not deploying web the same day | D-HY1, D-HY9 | Yes (web deploy) | M |
 | N21 | Incomplete-listings remainder and discovery batch | Price meaning, pseudo-VINs, condition labels, galleries, Gardena, outliers | N16, N18 | N22-N25 | D-N17b, D-N18, D-N31, D-N33 | Yes | L |
-| N22 | EPA catalog code (10A) | Induction vocabulary, permanent key, V031, importer | N9 release, N17 | N21 | D-EPA1, D-ET2/3/5, D-ER2 | Yes (V031) | L |
+| N22 | EPA catalog code (10A) | Induction vocabulary, permanent key, V032, importer | N9 release, N17 | N21 | D-EPA1, D-ET2/3/5, D-ER2 | Yes (V032) | L |
 | N23 | EPA builder, backfill, re-resolve, local (10B) | Clean local catalog with provenance | N22 | N21 | D-ER1, D-ER3 | No | M |
 | N24 | Forced-induction resolution (10C) | FI labels from evidence through precedence | N23, N16 | N21 | D-ET2, D-ET4 | Yes (deploy) | L |
-| N25 | EPA data repairs and prod rollout (10D) | Patched CSVs; staged prod rollout; V032 | N24 | N26-N28 | D-ER4/5/6 | Yes | L |
-| N26 | Scanner runtime remainder and upsert cost (11A rest, 11B gated) | Upsert telemetry, retries; 11B only if the trigger fires; V033 | N25 | N27, N31 | D-SR6 | Yes (deploy, V033) | M |
+| N25 | EPA data repairs and prod rollout (10D) | Patched CSVs; staged prod rollout; V033 | N24 | N26-N28 | D-ER4/5/6 | Yes | L |
+| N26 | Scanner runtime remainder and upsert cost (11A rest, 11B gated) | Upsert telemetry, retries; 11B only if the trigger fires; V034 | N25 | N27, N31 | D-SR6 | Yes (deploy, V034) | M |
 | N27 | DB layer (13A) | Loud adapter, DDL guard, strict mode everywhere | N12 | N26, N31 | D-DB3/4/8 | Yes (env) | M |
 | N28 | Legacy DDL deletion, backup drops, scratch DB retirement (13B) | Chain is the only DDL source | N25, N27 (strict ≥7 days) | N31, N32 | D-DB1 | Yes | M |
 | N29 | Dependencies and images (15B rest) | Per-image requirements, CPU torch, pip-audit in CI | N3 | N26-N28 | D-SEC7, Docker OK | Yes (deploy) | M |
@@ -501,20 +501,21 @@ Run every command in a plain terminal from `/Users/asarrafi/Projects/DealershipS
   7. the same snapshot again within 15 minutes and a diff: no new deployment (step 11);
   8. RELEASING.md release-log row with: both snapshots, the deployment ids, the last-known-good web deployment id, whether rolling back below this release is schema-safe (additive migrations only: yes/no), every web variable changed since the previous row, and the Docker smoke result.
   Every release before N11 is a 1.5.x patch; N11 cuts v1.6.0, the tag N12 deploys. After that, a phase that deploys scanner or schema changes uses minor; docs-only and test-only phases use patch. Deploys happen only through `deploy/railway/deploy_web.sh` or `deploy_scanner_nightly.sh`, from the tag, `--dry-run` first, after an owner-approved Docker smoke of the exact stage, asked per run (web: `deploy_web.sh --dry-run --keep-stage <dir>`, `Dockerfile.web`; scanner-nightly: `deploy_scanner_nightly.sh --dry-run --keep-stage <dir>`, `Dockerfile.scanner`, run against local PG; with `SCAN_FLEET` unset it must print idle). The web-source gate applies only to web **variable** changes; pushes and uploads are not gated.
-- **Migration check before every web deploy.** Every web deploy ships all of main at its tag: code and migrations merged by earlier no-deploy releases (N5 V026, N9 V027/V028, N8 V029) and the web-facing changes of N6/N8/N9 (pending class, completeness rules), even before v1.6.0. Web boot applies every pending migration (`scripts/docker-entrypoint-web.sh:21`, `MIGRATE_ON_BOOT` default 1), and RELEASING.md step 1 compares only against `origin/main`. So before every `deploy_web.sh`, the owner runs the RELEASING.md "Targeting prod" `migrate --dry-run` and requires `database is up to date`. If anything is pending, the D-DB6 protocol runs first (PG18 `pg_dump -Fc`, `pg_restore -l`, `migrate --apply --target <max>`), or the web deploy is postponed. The N2, N3 and N4.5 web deploys are sequenced before N9's release reaches main; a later web deploy before N12.2 either applies V027-V029 to prod first as owner steps with a dump (they are additive), or waits. The release-log row lists the web-facing changes a deploy carries. N1.9 changes RELEASING.md step 1 to compare against prod's applied max version.
+- **Migration check before every web deploy.** Every web deploy ships all of main at its tag: code and migrations merged by earlier no-deploy releases (N5 V026, N9 V028/V029, N8 V030) and the web-facing changes of N6/N8/N9 (pending class, completeness rules), even before v1.6.0. Web boot applies every pending migration (`scripts/docker-entrypoint-web.sh:21`, `MIGRATE_ON_BOOT` default 1), and RELEASING.md step 1 compares only against `origin/main`. So before every `deploy_web.sh`, the owner runs the RELEASING.md "Targeting prod" `migrate --dry-run` and requires `database is up to date`. If anything is pending, the D-DB6 protocol runs first (PG18 `pg_dump -Fc`, `pg_restore -l`, `migrate --apply --target <max>`), or the web deploy is postponed. The N2, N3 and N4.5 web deploys are sequenced before N9's release reaches main; a later web deploy before N12.2 either applies V028-V030 to prod first as owner steps with a dump (they are additive), or waits. The release-log row lists the web-facing changes a deploy carries. N1.9 changes RELEASING.md step 1 to compare against prod's applied max version.
 - **Web rollback.** RELEASING.md "Rollback → web" steps 1-5: `web_source_check` clear; GraphQL `deploymentRollback` with `User-Agent: railway-cli/<ver>` (the CLI has no rollback command); re-apply every web variable changed since the target deployment (each release-log row lists them) with `--skip-deploys`; `railway redeploy -s web -y`; check `/api/health`. A rollback never undoes a migration: roll back below a release only when its release-log row says schema-safe; otherwise fix forward or restore the pre-deploy dump. scanner-nightly is never rolled back.
 - **Migration numbers** (registry update, recorded by N1.9; numbers follow merge order, and only unmerged files renumber):
 
   | Number | Content | Unit |
   |---|---|---|
   | V026 | chain completeness | P4.3 (N5) |
-  | V027 | `listing_retirements` | P5B.3 (N9) |
-  | V028 | `listing_miss_strikes` | P5B.4 (N9) |
-  | V029 | attribution evidence (rooftop tier) | N8.6 |
-  | V030 | dealer_recipes rev / CAS (plan's V029) | P7.1 (N13) |
-  | V031 | epa_master flags (plan's V030) | P10A.3 (N22) |
-  | V032 | unique key + RESTRICT NOT VALID | P10D.7 (N25) |
-  | V033 | VALIDATE | N26 |
+  | V027 | incomplete_listings window columns (first_seen_at, last_scraped_at, scans_survived, pending) | N6.4 (renumbered from V026 at integration, 2026-10-26; every later number below moved up by one) |
+  | V028 | `listing_retirements` | P5B.3 (N9) |
+  | V029 | `listing_miss_strikes` | P5B.4 (N9) |
+  | V030 | attribution evidence (rooftop tier) | N8.6 |
+  | V031 | dealer_recipes rev / CAS (plan's V030) | P7.1 (N13) |
+  | V032 | epa_master flags (plan's V031) | P10A.3 (N22) |
+  | V033 | unique key + RESTRICT NOT VALID | P10D.7 (N25) |
+  | V034 | VALIDATE | N26 |
   | next | backup-table drops, `users.auth_epoch`, dead MFA columns | N28, N30 |
 
 ---
@@ -1048,7 +1049,7 @@ Elsewhere:
 
 ### N5 Migration foundation (Phase 4)
 
-**Goal.** A migrator that can target, record-only, lock and time out; a complete V026 chain; strict mode that propagates. This unblocks V027-V029 (N8, N9) before the first prod fleet.
+**Goal.** A migrator that can target, record-only, lock and time out; a complete V026 chain; strict mode that propagates. This unblocks V028-V030 (N8, N9) before the first prod fleet.
 
 **Entry conditions.**
 - N1 merged.
@@ -1139,7 +1140,7 @@ P4.4 is dropped: P0A.2 found 0 duplicate groups.
 2. `pg_restore -l` TOC check.
 3. `migrate --dry-run`.
 4. `migrate --apply --target 26`.
-5. A second prod `migrate --dry-run` prints `database is up to date` (Section 7.0 migration check; if N9 has released by then, V027/V028 are pending: apply them under the same protocol or postpone the web deploy).
+5. A second prod `migrate --dry-run` prints `database is up to date` (Section 7.0 migration check; if N9 has released by then, V028/V029 are pending: apply them under the same protocol or postpone the web deploy).
 6. Owner-approved Docker smoke of the exact web stage.
 7. `deploy_web.sh` from the tag.
 
@@ -1370,7 +1371,7 @@ P14A.9 (recipe CAS) moves to N13, because it needs P7.1.
 **Entry conditions.**
 - N1 exit (dossiers and maps; D-N3-D-N8).
 - N5 merged (`migrate --target`; P4.5 done in `database.py`).
-- N8.6 also waits until N9 is on main (V027/V028 for migration order; P5A.5 in `database.py`) and until N7's P14A.2 and N7.9 have merged (its PG acceptance runs on the harness).
+- N8.6 also waits until N9 is on main (V028/V029 for migration order; P5A.5 in `database.py`) and until N7's P14A.2 and N7.9 have merged (its PG acceptance runs on the harness).
 
 **Units.**
 
@@ -1381,14 +1382,14 @@ P14A.9 (recipe CAS) moves to N13, because it needs P7.1.
 | N8.3 | CF-5a, W16 | Jazel accountName before manifest name (`jazel.py:183`) and ext/int color swap fix (`:172-173`); Chapman lot code → `_rooftop` (`chapman.py:175-216`); OneAudi dealer field (`oneaudi.py:92-138`) | code | those parsers | N1.2 | fixture checks |
 | N8.4 | CF-5b, IL-10 | Motive: filter on the primary `dealer_id` (`synth/platforms/motive.py:64`) or gate on the hit's `dealer_id`; fix retry mapping (`motive_ridemotive.py:147-158`); find why the primary dealer.com recipe returned 0 rows | code | Motive files | N1.2 | Lexus split within 5% of live; trim ≥95% at 4 dealers |
 | N8.5 | WI-2, CF-3, CF-8, IL-18 (part) | `vdp_host_other_store` refusal (write only); `recipe_identity_check.py`; guessed-URL flag; no KEEP on a weak tier without a roster street | code | `attribution/{match,rooftop,place}.py`, `backend/scripts/recipe_identity_check.py` (new), `vdp_urls.py:17-70` | N1.2 | 12 shared endpoints listed; corpus parity green |
-| N8.6 | CF-4, WI-6, WI-12, WI-13, CF-12 (comment) | V029 persisted rooftop tier; evidence-aware guard and backstop; pool policy; evidence-backed refusals struck; moves logged; manual moves honoured | code + migration | `migrations/V029__*.sql`, `database.py:43-46,83-101`, `upsert/{guard,sql,write}.py`, `attribution/rooftop.py:967-968`, `attribution/disown.py:33` (only if `third_rooftop` joins the set), `backend/config/group_pools.json` (new), `apply_attribution_moves.py:376`, `resolve_photo_attribution.py:317` | N8.1-N8.5, N8.11 (or its cannot_assess record), N9 on main, N7 (P14A.2, N7.9), D-N3 | flips N1.4/N7.9 scan-order and unstamped-feed shapes |
+| N8.6 | CF-4, WI-6, WI-12, WI-13, CF-12 (comment) | V030 persisted rooftop tier; evidence-aware guard and backstop; pool policy; evidence-backed refusals struck; moves logged; manual moves honoured | code + migration | `migrations/V030__*.sql`, `database.py:43-46,83-101`, `upsert/{guard,sql,write}.py`, `attribution/rooftop.py:967-968`, `attribution/disown.py:33` (only if `third_rooftop` joins the set), `backend/config/group_pools.json` (new), `apply_attribution_moves.py:376`, `resolve_photo_attribution.py:317` | N8.1-N8.5, N8.11 (or its cannot_assess record), N9 on main, N7 (P14A.2, N7.9), D-N3 | flips N1.4/N7.9 scan-order and unstamped-feed shapes |
 | N8.7 | CF-9, W05a, IL-12 (part) | Ownership pre-check before prefetch; exhausted re-check inside the per-host lock; 403/429 counted; gap-first candidate order | code | `phases/dealer_run.py:112`, `vdp/prefetch.py:600,628-636` | N8.6 | 0 VDP fetches on refused VINs |
 | N8.8 | RET-9, CF-11, FP01 | CarsCommerce store scope unions a replay-verified Location/`dealer.location` filter over the group pool; fix the silent gate on 2309549 per N1.2; the FP01 group-feed dealers with no conflict rows | code | `synth/platforms/carscommerce_scope.py:182`, `parsers/carscommerce.py` | N1.2, D-N5 | Terry captures the 13 Greensboro cars; gate line appears; FP01 targets in the spec |
 | N8.9 | CF-3, CF-12, W19, IL-19, LE-14, D-N4, D-N6, D-N34 | Recipe and roster repair set with one dry-run/apply tool | data-local, MAIN | `workspace/recipes/repairs_2026_10/*.json`, `backend/scripts/apply_recipe_repairs.py` (new), dealer_logs | N1.2; N8.14 for every roster_add with `shared_host` (the 22 AutoSavvy stores) | owner-approved diff; idempotent apply; all five log files per dealer |
 | N8.10 | CF-7 | Targeted clean-room re-run of the affected dealers | scan, MAIN | `cars_cr_n8` via the N1.3 scripts | N8.1-N8.9, N8.11, N9.15 | counts in the spec |
 | N8.11 | WI-4 (DEP), CF-1 | Conditional: DealerEProcess rooftop stamping, if the N1.2 DEP map finds a per-car store or lot field; otherwise a cannot_assess record and every DEP pair in `group_pools.json` | code (conditional) | `backend/parsers/dealer_eprocess.py:170-195`, `backend/config/group_pools.json` | N1.2, N6.9 | DEP checks in N8.10, or every DEP pair listed before N8.6 starts |
-| N8.12 | rule 5 (local applies) | Local V029 apply on `cars`: `pg_dump`, `migrate --dry-run`, owner OK, `--apply --target 29`, verify | data-local, MAIN | `cars`, `workspace/backups/` | N8.6 | `roq cars "SELECT max(version) FROM schema_migrations"` returns 29 |
-| N8.13 | D-N4 (owner 10-16) | Unrostered-rooftop detector and profiling queue: every gate refusal that names a rooftop not on the roster is recorded as a candidate; fleet summary and `prefleet_check` list new candidates; the dealer-discovery workflow consumes the queue | code | `backend/attribution/rooftop.py`/`match.py` (refusal record), `backend/scripts/rooftop_candidates.py` (new), `workspace/rooftop_candidates.json` or a table in V029, fleet summary | N8.6 | a fixture feed with an unknown rooftop yields one candidate row (name, address, store id, host, car count, first/last seen) and 0 rows filed under the sister; the candidate list appears in the fleet summary |
+| N8.12 | rule 5 (local applies) | Local V030 apply on `cars`: `pg_dump`, `migrate --dry-run`, owner OK, `--apply --target 30`, verify | data-local, MAIN | `cars`, `workspace/backups/` | N8.6 | `roq cars "SELECT max(version) FROM schema_migrations"` returns 29 |
+| N8.13 | D-N4 (owner 10-16) | Unrostered-rooftop detector and profiling queue: every gate refusal that names a rooftop not on the roster is recorded as a candidate; fleet summary and `prefleet_check` list new candidates; the dealer-discovery workflow consumes the queue | code | `backend/attribution/rooftop.py`/`match.py` (refusal record), `backend/scripts/rooftop_candidates.py` (new), `workspace/rooftop_candidates.json` or a table in V030, fleet summary | N8.6 | a fixture feed with an unknown rooftop yields one candidate row (name, address, store id, host, car count, first/last seen) and 0 rows filed under the sister; the candidate list appears in the fleet summary |
 | N8.14 | D-N4; N1.11 readiness audit findings 1-4 and N1-N4 (`workspace/phase_runs/N1/N1.11/new_states_readiness.md`), assigned 2026-10-22 | Shared-host dealer identity: stores that share one website host (all 22 AutoSavvy stores on `www.autosavvy.com`; Ted Russell Ford Parkside, `tedrussellford-net-parkside`, on `www.tedrussellford.net`) are told apart by `dealer_id` and their own `dealership_registry_id`, never by URL host. The manifest/roster row carries the registry id and `shared_host`; the scanner uses it and never resolves a registry id from a shared host; the gate's own-store place comes from that registry row; the upsert never replaces a registry id or dealer_url with a host-derived value; the text-search radius and market-price comps place a car by its registry row before its dealer_url host; `/dealership/<id>` resolves per store; host-to-dealer_id helpers skip or refuse shared hosts; the N8.9 apply tool matches registry rows by host plus store id/street, never host alone | code | `backend/scanner/phases/dealer_run_steps/enrich.py:248-263`, `backend/listings/dealer_registry_match.py:13-45`, `backend/scanner/manifest.py:131-205`, `backend/attribution/place.py:36-75`, `backend/scanner/upsert/sql.py:60-61,91`, `backend/scanner/delta_scan.py:181,197-199`, `backend/db/repositories/search/ranking.py:28-70`, `backend/utils/market_price.py:215-232`, `backend/routes/dealership_page.py:66-122`, `backend/scripts/apply_attribution_moves.py:66-71`, N8.9's `apply_recipe_repairs.py` | N8.6 (shares `upsert/sql.py`) | a fixture with 3 stores on one host gives 3 registry rows; each store's scan stamps its own registry id and keeps it on re-scan; the gate place is each store's own street; a ZIP search near store B ranks B's cars by B's coordinates; each `/dealership/<id>` shows its own address and inventory; in N8.10 the 22 AutoSavvy dealer_ids sit on 22 registry rows with 0 cars on a sister's row. N8.9 must not apply any `shared_host` roster_add before N8.14 is merged |
 
 **N-unit specs.**
@@ -1449,7 +1450,7 @@ P14A.9 (recipe CAS) moves to N13, because it needs P7.1.
 
 **N8.6 Persisted evidence tier and evidence-aware ownership.**
 - **What:**
-  - **V029** persists the rooftop tier and a short evidence record per car. These are computed at `rooftop.py:967-968` and discarded today. The column shape is decided in the unit; a side table is acceptable only if the `sql.py:150-155` backstop can read it in the same statement. Legacy rows count as tier `none`.
+  - **V030** persists the rooftop tier and a short evidence record per car. These are computed at `rooftop.py:967-968` and discarded today. The column shape is decided in the unit; a side table is acceptable only if the `sql.py:150-155` backstop can read it in the same statement. Legacy rows count as tier `none`.
   - **Guard rule** (prefetch `guard.py:36-67` and backstop `sql.py:150-155`):
     - (1) a claimant with strong in-run stamped evidence (store-scoped feed, rooftop name or site-id match) takes a VIN from an owner whose stored tier is none or weak, whatever the window;
     - (2) a claimant without strong evidence never takes from an owner with stored strong evidence;
@@ -1528,7 +1529,7 @@ P14A.9 (recipe CAS) moves to N13, because it needs P7.1.
 - **Acceptance:** either the fixture from a saved DEP payload keeps only the dealer's own cars and N8.10's DEP pairs fall ≥75%, or the cannot_assess record and the `group_pools.json` entries exist.
 - **Tests:** parser fixture (stamping case) or a JSON check that every DEP pair is listed (fallback).
 
-**N8.12 Local V029 apply.** MAIN, after N8.6 merges: `pg_dump -Fc` of `cars` to `workspace/backups/`, `migrate --dry-run`, owner OK on the output, `migrate --apply --target 29`, then `roq` verifies 29.
+**N8.12 Local V030 apply.** MAIN, after N8.6 merges: `pg_dump -Fc` of `cars` to `workspace/backups/`, `migrate --dry-run`, owner OK on the output, `migrate --apply --target 30`, then `roq` verifies 29.
 
 **Workflow shape.**
 - Wave A (parallel worktrees): N8.1, N8.2, N8.3, N8.4, N8.8, N8.11, and N8.9 (dealer-discovery with paced fetches, MAIN).
@@ -1558,7 +1559,7 @@ P14A.9 (recipe CAS) moves to N13, because it needs P7.1.
 
 **Goal.**
 - One fail-closed retirement policy, written by the scanner only. It measures prior rows by VIN, never retires on an incomplete walk, and never retires on a first miss.
-- Every retirement leaves a provenance row (V027).
+- Every retirement leaves a provenance row (V028).
 - Triage and logs tell captured, refused and written apart.
 - Batches survive a pause.
 
@@ -1580,16 +1581,16 @@ P14A.9 (recipe CAS) moves to N13, because it needs P7.1.
 | P5A.5 | plan + RET-3, WI-8 | Evidence wiring: `run_started_iso` into `after_write.py:124-136`; protected VINs; `drop_unattributable_vehicles` (`database.py:335`) returns the VINs it dropped (moved from N8.6); evidence-backed refusals (`third_rooftop`, `sibling_rooftop`) excluded from protected VINs; recovery source | code | `after_write.py`, `database.py`, `enrich.py` | P5A.2, P5A.4, P4.5 | Terry/Coastline shapes flip; a VIN dropped by `drop_unattributable_vehicles` is protected; a `third_rooftop` VIN is not |
 | P5A.6 | plan | Delta scan applies the same policy | code | `delta_scan.py` | P5A.5 | parity test |
 | P5A.7 | plan + RET-4, FP02 | Pipeline and lifecycle reconcile report only (`pipeline/reconcile.py:94,153`; `lifecycle.py:335-338`); valid-VIN baselines in the report; `replay_truncated:` verdict; triage alarm per D-N21 | code | `pipeline/{reconcile,lifecycle,assess,triage}.py`, `constants.py` | P5A.5, N6.9 | no UPDATE under `pipeline/`; invalid-VIN and backlog rows (W2's job today) still retire through P5A.1 rule 8 (test); downeyhyundai `replay_truncated` test: after a mid-walk 403 (about 130 new cars missing) the verdict is not ok |
-| P5B.3 | plan (V027) | `listing_retirements`, written by every writer, including the admin delete paths | code + migration | `migrations/V027__*.sql`, writers, `schema_repo.py`, `backend/dealer/admin/incomplete_listings_api.py:182`, `backend/db/repositories/cars_repo.py:73` | P5A.4 | rows = UPDATE rowcount per writer; the admin delete paths write `writer='admin_delete'` rows, or are documented as exempt |
-| P5B.4 | plan (V028) | Two-strike in `listing_miss_strikes`, ≥20 h apart | code + migration | `migrations/V028__*.sql`, reconcile | P5B.3 | first miss retires 0; `SCANNER_RECONCILE=dry` writes 0 strikes and 0 retirements (would-strike list only) |
+| P5B.3 | plan (V028) | `listing_retirements`, written by every writer, including the admin delete paths | code + migration | `migrations/V028__*.sql`, writers, `schema_repo.py`, `backend/dealer/admin/incomplete_listings_api.py:182`, `backend/db/repositories/cars_repo.py:73` | P5A.4 | rows = UPDATE rowcount per writer; the admin delete paths write `writer='admin_delete'` rows, or are documented as exempt |
+| P5B.4 | plan (V029) | Two-strike in `listing_miss_strikes`, ≥20 h apart | code + migration | `migrations/V029__*.sql`, reconcile | P5B.3 | first miss retires 0; `SCANNER_RECONCILE=dry` writes 0 strikes and 0 retirements (would-strike list only) |
 | P5B.7 | plan | Replay→persist gap telemetry and parity pin | code + test | per plan | P5A.5 | captured − refused − dropped = written |
 | N9.12 | CF-10, RET-1, W01, W14, IL-22, WI-3, CF-15, IL-13 (summary), B4 | Honest accounting, verdicts and logs; `handover_pending` report | code | `pipeline/{assess,triage,dealer_logs}.py`, `fleet_scan.py:383`, `dealers_repo.py` | P5A.2 | identity replay exact; all five log files written |
 | N9.13 | RET-8, W07 | Pause-safe batch timeout; killed dealers re-queued; `no scan_runs row` → retry; scan_run for every upsert | code | `pipeline/runner.py:119-122`, `lifecycle.py:73-117` | none | injected SIGSTOP leaves 0 error dealers |
 | N9.14 | owner rule 1, RET-1, P5A.8 (shape part, moved here) | Targeted retirement re-run in the clean room | scan, MAIN | `cars_cr_n9` via the N1.3 scripts | P5A.1-P5A.7, P5B.1-P5B.4 | counts in the spec |
 | N9.15 | owner rule 7, RET-8 | Fleet resume: `fleet_scan --resume <run_dir>` / `SCAN_RESUME_DIR` | code | `fleet_scan.py`, `dealer_pipeline.py` / `pipeline/run.py` (roster filter) | N9.12 | killed 3-shard run resumes only the remaining dealers |
-| N9.16 | rule 5 (local applies) | Local V027/V028 apply on `cars`: `pg_dump`, `migrate --dry-run`, owner OK, `--apply --target 28`, verify | data-local, MAIN | `cars`, `workspace/backups/` | P5B.3, P5B.4 | `roq cars "SELECT max(version) FROM schema_migrations"` returns 28 |
+| N9.16 | rule 5 (local applies) | Local V028/V029 apply on `cars`: `pg_dump`, `migrate --dry-run`, owner OK, `--apply --target 29`, verify | data-local, MAIN | `cars`, `workspace/backups/` | P5B.3, P5B.4 | `roq cars "SELECT max(version) FROM schema_migrations"` returns 28 |
 
-WI-10 (interim provenance in `summary_json`) is dropped: V027 lands in this phase and reaches prod before any live retirement.
+WI-10 (interim provenance in `summary_json`) is dropped: V028 lands in this phase and reaches prod before any live retirement.
 
 **N-unit specs.**
 
@@ -1646,7 +1647,7 @@ WI-10 (interim provenance in `summary_json`) is dropped: V027 lands in this phas
 - **Acceptance:** a test kills a 3-shard run midway; the resume scans only the remaining dealers and the merged triage has one entry per dealer.
 - **Tests:** `backend/tests/test_fleet_scan_resume.py` (new). N8.10 and the N11 passes depend on this unit.
 
-**N9.16 Local V027/V028 apply.** MAIN, after P5B.3 and P5B.4 merge: `pg_dump -Fc` of `cars` to `workspace/backups/`, `migrate --dry-run`, owner OK on the output, `migrate --apply --target 28`, then `roq` verifies 28.
+**N9.16 Local V028/V029 apply.** MAIN, after P5B.3 and P5B.4 merge: `pg_dump -Fc` of `cars` to `workspace/backups/`, `migrate --dry-run`, owner OK on the output, `migrate --apply --target 29`, then `roq` verifies 28.
 
 **Alarm (P5A.7, D-N21).** Nightly runs alarm when a dealer retires more than 10% of its prior active rows. The first live prod retirement (N12.8) and its rehearsal (N11.7 pass D) use min(60%, 10% + 1.5% × days), where days = run start − the median `scraped_at` of the rows being retired. A P5A.7 test: rows last scraped 35 days ago, struck in run 1 and retired in run 2, give a threshold of min(60%, 62.5%) = 60%.
 
@@ -1668,9 +1669,9 @@ WI-10 (interim provenance in `summary_json`) is dropped: V027 lands in this phas
 - The identity replay is exact.
 - N9.14 targets met (21 → 0 in-run retirements; 3/1/1/0 strikes, then 3/1/1/0 retirements).
 
-**Release step.** Patch, tagged; no deploy. This must be on main before N8.6 starts. From this release on, a web deploy before N12.2 first applies V027/V028 to prod with a dump, or waits (Section 7.0).
+**Release step.** Patch, tagged; no deploy. This must be on main before N8.6 starts. From this release on, a web deploy before N12.2 first applies V028/V029 to prod with a dump, or waits (Section 7.0).
 
-**Prod steps.** None (V027/V028 go to prod in N12.2).
+**Prod steps.** None (V028/V029 go to prod in N12.2).
 
 **Owner decisions / actions.** D-RC1, D-RC2, D-RC3, D-RC7, D-SR4, D-N10, D-N11, D-N21; the N9.16 apply OK; the `git switch` and `cars_cr_n9` for N9.14.
 
@@ -1877,7 +1878,7 @@ Rehearse the prod first run and the local repair. Then tag v1.6.0.
 ### N12 Prod refresh (Phase 6B): fresh, correct data without wiping prod
 
 **Goal.**
-- Deploy the rehearsed tag idle, and apply V027-V029.
+- Deploy the rehearsed tag idle, and apply V028-V030.
 - Repair prod recipes.
 - Verify from home, smoke on Railway.
 - Fleet #1 writes first strikes only; its strike list is live-checked.
@@ -1896,7 +1897,7 @@ Rehearse the prod first run and the local repair. Then tag v1.6.0.
 | ID | Source | What | Kind | Depends | Acceptance |
 |---|---|---|---|---|---|
 | N12.1 | P6B.1 (part) | PG18 `pg_dump -Fc` of prod, verified with `pg_restore -l`; `\copy` ownership snapshot; re-run the N1.6 census | prod-owner | entry | dump size and TOC count logged; snapshot rows = prod `cars` count |
-| N12.2 | P6B.1 | Step 0: owner-approved Docker smoke of both v1.6.0 stages; `migrate --dry-run`, then `--apply --target 29`; the N4.1 scanner-nightly settings pack if not applied earlier; `deploy_scanner_nightly.sh --dry-run`, then the real deploy from v1.6.0; then `deploy_web.sh` v1.6.0 | prod-owner | N12.1 | smoke passed; top = 29; scanner logs print idle; health 1.6.0 |
+| N12.2 | P6B.1 | Step 0: owner-approved Docker smoke of both v1.6.0 stages; `migrate --dry-run`, then `--apply --target 30`; the N4.1 scanner-nightly settings pack if not applied earlier; `deploy_scanner_nightly.sh --dry-run`, then the real deploy from v1.6.0; then `deploy_web.sh` v1.6.0 | prod-owner | N12.1 | smoke passed; top = 29; scanner logs print idle; health 1.6.0 |
 | N12.3 | P6A.7 | `prefleet_check.sh --target prod`, plus one verification that a redeploy with `SCAN_FLEET=1` outside the window idles | prod-owner | N12.2 | PREFLEET OK; "outside run window" verified (LE-1 class closed) |
 | P6B.2 | plan + N8.9 | Home-IP prod recipe repairs: `saved_at` backfill (235 rows), un-stale the 31, stale the 13 hygiene recipes, apply the N8.9 repair set, coastline account check, after a `dealer_recipes` backup | prod-owner | N12.3 | backup file named; 0 rows with `max_saved_at=0`; repair-set re-apply is a no-op |
 | P6B.3 | plan | Home verification scan of the un-staled dealers, the 6 contested VIN owners first, after a `\copy` backup, with `SCANNER_RECONCILE=dry` exported in the command | scan (owner) | P6B.2 | every dealer has a verdict and logs; strikes written = 0 |
@@ -1911,8 +1912,8 @@ Rehearse the prod first run and the local repair. Then tag v1.6.0.
 **N-unit specs.**
 
 **N12.1 / N12.2 / N12.3 (ordered).**
-- Backups go to `workspace/backups/prod_<stamp>_preV029.dump` and `ownership_prod_before_<stamp>.csv`.
-- **Step 0 (N12.2), owner-approved Docker smoke of both stages from v1.6.0.** This is the first scanner image deployed since 1.4.1. `deploy_scanner_nightly.sh --dry-run --keep-stage <dir>` (`Dockerfile.scanner`), built and run against local PG at V029: with `SCAN_FLEET` unset it prints idle; with `SCAN_FLEET=1` and a closed window it prints "outside run window"; with `SCAN_DEALERS=<1 dealer>` against a scratch DB it completes. `deploy_web.sh --dry-run --keep-stage <dir>`: health 200 with the tag.
+- Backups go to `workspace/backups/prod_<stamp>_preV030.dump` and `ownership_prod_before_<stamp>.csv`.
+- **Step 0 (N12.2), owner-approved Docker smoke of both stages from v1.6.0.** This is the first scanner image deployed since 1.4.1. `deploy_scanner_nightly.sh --dry-run --keep-stage <dir>` (`Dockerfile.scanner`), built and run against local PG at V030: with `SCAN_FLEET` unset it prints idle; with `SCAN_FLEET=1` and a closed window it prints "outside run window"; with `SCAN_DEALERS=<1 dealer>` against a scratch DB it completes. `deploy_web.sh --dry-run --keep-stage <dir>`: health 200 with the tag.
 - Set `SCAN_FLEET_WINDOW_UTC`, `SCANNER_RECONCILE=dry` and `SCANNER_EGRESS_TAG=railway` on scanner-nightly with `--skip-deploys` (dry until N12.7, so the P6B.4 smoke writes no strike), apply the N4.1 scanner-nightly settings pack if it was not applied earlier, confirm `SCAN_FLEET=0` and no `SCAN_DEALERS`, then run `deploy_scanner_nightly.sh` (dry run, then real). `INVENTORY_DATABASE_URL` stays on the private network.
 - Confirm `BUILD_COMMIT` in the idle hold (`railway ssh`), or from the build log if SSH is blocked.
 - **N12.3 redeploy test.** Stage `SCAN_FLEET=1` and `SCAN_FLEET_WINDOW_UTC` at least 2 h from now, both with `--skip-deploys`. The owner stands ready with `railway down -s scanner-nightly -y` (a misconfigured window would start a full fleet before the P6B.2 recipe repairs). `railway redeploy -s scanner-nightly -y`, then expect "fleet outside run window" in the log within 2 min. Afterwards `SCAN_FLEET=0` with `--skip-deploys`. (With `SCAN_FLEET=0` a redeploy idles whatever the window, so that would prove nothing.)
@@ -1989,7 +1990,7 @@ Rehearse the prod first run and the local repair. Then tag v1.6.0.
 
 | ID | Source | What | Kind | Files / area | Depends | Acceptance |
 |---|---|---|---|---|---|---|
-| P7.1 | plan | V030 (renumbered from V029): rev, `recipes_written_at`, `superseded_json`; CAS primitives; `mutate_scan_hints` | code + migration | `recipe_store.py`, `migrations/V030__*.sql` | none | CAS conflict test |
+| P7.1 | plan | V031 (renumbered from V030): rev, `recipes_written_at`, `superseded_json`; CAS primitives; `mutate_scan_hints` | code + migration | `recipe_store.py`, `migrations/V031__*.sql` | none | CAS conflict test |
 | P7.2 | plan | Store-authoritative load; refresh only on change | code | per plan | P7.1 | per plan |
 | P7.3 | plan | Key-scoped mutation API with an offline op-log | code | per plan | P7.2 | per plan |
 | P7.4 | plan | Replay and promotion use the API | code | `recipes.py` | P7.3 | grep: no direct writes |
@@ -1999,7 +2000,7 @@ Rehearse the prod first run and the local repair. Then tag v1.6.0.
 | P7.8 | plan | Authority docs, CHANGELOG | docs | per plan | P7.6, P7.7 | per plan |
 | P14A.9 | plan Phase 14A | recipe_store CAS PG test | test | harness | P7.1, N7 | green in `pytest-pg` |
 | P7.9 | plan | DB-to-DB reconcile local vs prod plus the Railway volume cache | prod-owner | per plan | P7.6 | 0 unexplained diffs |
-| N13.11 | rule 5 (local applies) | Local V030 apply on `cars`: `pg_dump`, `migrate --dry-run`, owner OK, `--apply --target 30`, verify | data-local, MAIN | `cars`, `workspace/backups/` | P7.1 | `roq cars "SELECT max(version) FROM schema_migrations"` returns 30 |
+| N13.11 | rule 5 (local applies) | Local V031 apply on `cars`: `pg_dump`, `migrate --dry-run`, owner OK, `--apply --target 31`, verify | data-local, MAIN | `cars`, `workspace/backups/` | P7.1 | `roq cars "SELECT max(version) FROM schema_migrations"` returns 30 |
 
 If D-N34 = no, the LE-14 overlap clean-up (7 dealers) runs here, through the P7.3 mutation API.
 
@@ -2016,7 +2017,7 @@ If D-N34 = no, the LE-14 overlap clean-up (7 dealers) runs here, through the P7.
 - The P7.9 report shows 0 unexplained diffs.
 - 3 nightly runs with 0 recipe clobbers (op-log conflicts reported, none lost).
 
-**Release step.** Minor. Prod order: dump, `migrate --target 30`, an owner-approved Docker smoke of the scanner-nightly and web stages, coordinated deploy of scanner-nightly (outside the window) and web.
+**Release step.** Minor. Prod order: dump, `migrate --target 31`, an owner-approved Docker smoke of the scanner-nightly and web stages, coordinated deploy of scanner-nightly (outside the window) and web.
 
 **Prod steps.** Owner: dump, migrate, deploys, P7.9.
 
@@ -2274,7 +2275,7 @@ The body-style and HD-table additions are specified in the table: what, files, a
 
 **Entry conditions.**
 - N5 merged (no shared files with N6-N19).
-- The default start is after N12, earlier if capacity allows. An earlier P9.8 deploy runs the Section 7.0 migration check first (V027-V029 applied to prod with a dump, or the deploy waits), and it may not land on main between `RC_SHA` and v1.6.0 (N11 freeze).
+- The default start is after N12, earlier if capacity allows. An earlier P9.8 deploy runs the Section 7.0 migration check first (V028-V030 applied to prod with a dump, or the deploy waits), and it may not land on main between `RC_SHA` and v1.6.0 (N11 freeze).
 - No other web deploy on the same day.
 - D-HY1, D-HY9 answered (D-HY9 after the 20-car diff).
 
@@ -2358,7 +2359,7 @@ The body-style and HD-table additions are specified in the table: what, files, a
 
 ### N22 EPA catalog code foundation (10A)
 
-**Goal.** Induction vocabulary, a permanent catalog key, V031 (renumbered from V030), and the importer.
+**Goal.** Induction vocabulary, a permanent catalog key, V032 (renumbered from V031), and the importer.
 
 **Entry conditions.**
 - N17 released (precedence exists).
@@ -2371,16 +2372,16 @@ The body-style and HD-table additions are specified in the table: what, files, a
 |---|---|---|---|---|
 | P10A.1 | Induction vocabulary, EPA-flag mapper, shared twin helper | code | none | per plan |
 | P10A.2 | Permanent catalog key (`epaId`, else a sticky content key) | code | none | key stable across two imports |
-| P10A.3 | V031: epa_master flags, provenance, archive tables, indexes | code + migration | none | chain builds; drift report clean |
+| P10A.3 | V032: epa_master flags, provenance, archive tables, indexes | code + migration | none | chain builds; drift report clean |
 | P10A.4 | epa_engine honours the catalog row's label | code | P10A.1 | per plan |
 | P10A.5 | Importer: flags, new columns, `--years`, `--patch-induction-only`, `--verify` (L) | code | P10A.1, P10A.4 | `--verify` clean on the pinned file |
 | P10A.6 | Provenance backfill script with positive legacy classification | code | P10A.2, P10A.3 | dry run classifies 100% of rows |
 | P10A.7 | Relink modes | code | none | each mode tested |
 | P10A.8 | `--refresh-induction`, `--restore` | code | P10A.1, P10A.3 | restore round trip checksum-equal |
 
-**Workflow shape.** Wave A: P10A.1, P10A.2, P10A.3, P10A.7. Wave B: P10A.4, P10A.6, P10A.8. Wave C: P10A.5. About 14 agents. Checkpoints: `workspace/phase_runs/N22/`; before the quiet-window V031 apply the workflow writes RESUME.md with the earliest restart time and ends.
+**Workflow shape.** Wave A: P10A.1, P10A.2, P10A.3, P10A.7. Wave B: P10A.4, P10A.6, P10A.8. Wave C: P10A.5. About 14 agents. Checkpoints: `workspace/phase_runs/N22/`; before the quiet-window V032 apply the workflow writes RESUME.md with the earliest restart time and ends.
 
-**Exit gate.** V031 applied locally and on prod (owner, quiet window); `--verify` clean.
+**Exit gate.** V032 applied locally and on prod (owner, quiet window); `--verify` clean.
 
 **Release step.** Minor. Owner: dump, `migrate --target 31` outside the cron window.
 
@@ -2463,13 +2464,13 @@ The body-style and HD-table additions are specified in the table: what, files, a
 | P10D.4 | epa_master label refresh, local | data-local | P10D.1 | owner OK |
 | P10D.5 | Cars label heal from evidence, local | data-local | P10D.4 | owner OK |
 | P10D.6 | Staged prod rollout (agent prepares each step, owner approves and runs) | prod-owner | P10D.5 | each stage verified |
-| P10D.7 | V032: unique key and RESTRICT FKs NOT VALID; V033 VALIDATE ships in N26 after a 0-dangling prod check | code + migration | P10D.6 | 0 dangling on prod |
+| P10D.7 | V033: unique key and RESTRICT FKs NOT VALID; V034 VALIDATE ships in N26 after a 0-dangling prod check | code + migration | P10D.6 | 0 dangling on prod |
 | P10D.8 | Delete root `DICTIONARY/` after the content audit | deletion | P10D.6 | 0 unique content lost |
 | P10D.9 | Docs: induction precedence, catalog id contract, importer usage | docs | P10D.6, P10D.8 | done |
 
 **Workflow shape.** Wave A: P10D.1, P10D.2, P10D.7 code. Wave B (MAIN): P10D.3-P10D.5. Wave C (owner): P10D.6. Wave D: P10D.8, P10D.9. About 14 agents. Checkpoints: `workspace/phase_runs/N25/`; before each P10D.6 stage approval the workflow writes RESUME.md with the earliest restart time and ends.
 
-**Exit gate.** Prod catalog invariants match local; V032 applied; `DICTIONARY/` removed.
+**Exit gate.** Prod catalog invariants match local; V033 applied; `DICTIONARY/` removed.
 
 **Release step.** Minor; deploys.
 
@@ -2479,9 +2480,9 @@ The body-style and HD-table additions are specified in the table: what, files, a
 
 ### N26 Scanner runtime remainder and upsert cost (11A rest, 11B gated)
 
-**Goal.** Upsert telemetry and transient retries; V033 VALIDATE; upsert cost work only if measured as a bottleneck.
+**Goal.** Upsert telemetry and transient retries; V034 VALIDATE; upsert cost work only if measured as a bottleneck.
 
-**Entry conditions.** N25 released (V033 rides along); D-SR6 answered.
+**Entry conditions.** N25 released (V034 rides along); D-SR6 answered.
 
 **Units.** P-unit specs: REMEDIATION_PLAN "Phase 11A" (line 2814), "Phase 11B" (line 2899). P11A.1-P11A.4 already shipped in N10.
 
@@ -2494,11 +2495,11 @@ The body-style and HD-table additions are specified in the table: what, files, a
 | P11B.2 | **Only if** upsert is >40% of dealer wall time, or the fleet exceeds its window: post-write enrichment borrows one read connection (covers X4) | code | P11B.1 | upsert time down ≥30% on the 3 dealers |
 | P11B.3 | Same trigger: previous-price read moves into the prefetch | code | P11B.1 | same |
 | P11B.4 | Same trigger: batched upsert behind a parity gate | code | P11B.2, P11B.3 | parity green on a clean-room subset |
-| N26.8 | V033 VALIDATE on prod after the 0-dangling check | prod-owner | P10D.7 | validated |
+| N26.8 | V034 VALIDATE on prod after the 0-dangling check | prod-owner | P10D.7 | validated |
 
 **Workflow shape.** Wave A: P11A.6 → P11A.7 → P11A.8. Then P11B.1 (MAIN). The trigger decision is written into the checkpoint, then P11B.2-P11B.4 run or are marked SKIPPED. About 10-16 agents. Checkpoints: `workspace/phase_runs/N26/`; before the owner's migrate and deploy the workflow writes RESUME.md with the earliest restart time and ends.
 
-**Exit gate.** Telemetry in `summary_json`; V033 validated; the P11B trigger outcome recorded.
+**Exit gate.** Telemetry in `summary_json`; V034 validated; the P11B trigger outcome recorded.
 
 **Release step.** Minor; owner migrates, approves the Docker smoke of the scanner-nightly stage, and deploys outside the window.
 
@@ -2826,7 +2827,7 @@ Every remaining remediation unit not placed unconditionally in a phase is listed
 | P5B.8, P5B.9 | Moved to N11 | Local repair rehearsal and docs travel with the rehearsal |
 | P6A.1-P6A.7 (6A as a phase) | Moved to N10 | The N12 cron and bridge need them |
 | P6A.3 as written (default 72 h, gap cover from the oldest owner) | Replaced by P6A.3' | A longer window entrenches first-writer misattribution under nightly rescans. Gap cover applies only to owners with a persisted strong tier; the default stays 48 h |
-| P6B.1 as one unit | Split | N12.1/N12.2 apply V027-V029 and deploy v1.6.0 idle |
+| P6B.1 as one unit | Split | N12.1/N12.2 apply V028-V030 and deploy v1.6.0 idle |
 | P11A.1-P11A.4 placement in 11A | Moved to N10 | Per-dealer locks must exist before a second host writes prod (Phase 15A gate; N12 bridge) |
 | P14A.9 recipe CAS PG test | Moved to N13 | Needs P7.1 |
 | P15B.1, P15B.6 | Moved to N3 and N4 | Security advisory (lxml PYSEC-2026-87); dead deploy files |
@@ -2838,7 +2839,7 @@ Every remaining remediation unit not placed unconditionally in a phase is listed
 | Resuming the 8 shard analysis workflows and `wf_ef900653-f48` | Dropped | Workflow resume cannot cross sessions; their tool results were salvaged and re-verified by the 10-15 gather reports |
 | Analysis of the 8 pause-killed error dealers | Merged | A pause artifact; rescanned in N11 pass A; N9.13 stops the class |
 | The "~8,800 in-run retirements" fix track | Merged | It does not exist (21 retirements). The work moves to N8 (conflicts) and N9 (the in-run mechanism) |
-| WI-10 interim retirement provenance in `summary_json` | Dropped | V027 lands in N9 and reaches prod (N12.2) before any live retirement |
+| WI-10 interim retirement provenance in `summary_json` | Dropped | V028 lands in N9 and reaches prod (N12.2) before any live retirement |
 | F-4 / C.4.11 attribution "owner" deferral | Merged | Group-feed ownership is its own phase (N8), ahead of any prod fleet |
 | Multi-store listing schema (one car under several stores) | Deferred | Schema is one row per VIN (`upsert/sql.py:38`). D-N3 (primary + caveat) covers the about 1,995 pool rows. Revive if the owner rejects D-N3 or residual pool conflicts exceed about 2,600 after N12 |
 | Interim prod refresh on today's code | Dropped | Today's code would re-file about 55% of contested VINs by scan order. Replaced by the "last checked" line (N3.11) and the N2 hotfix |
@@ -2857,7 +2858,7 @@ Every remaining remediation unit not placed unconditionally in a phase is listed
 
 | Risk | Mitigation |
 |---|---|
-| Live prod retirement before the policy has run at scale. In the clean room, 11 of 21 in-run retirements were wrong | Two-strike (V028) and `listing_retirements` (V027) are on prod before fleet #1. N11 pass D proves retirement with a live check. Fleet #1 only strikes, and its strike list is live-checked. A single no-retire switch exists (P5A.4) |
+| Live prod retirement before the policy has run at scale. In the clean room, 11 of 21 in-run retirements were wrong | Two-strike (V029) and `listing_retirements` (V028) are on prod before fleet #1. N11 pass D proves retirement with a live check. Fleet #1 only strikes, and its strike list is live-checked. A single no-retire switch exists (P5A.4) |
 | The first prod fleet re-files many VINs at once (the guard has lapsed since 09-29) | N11.5 rehearses exactly this on a copy of the populated clean room. Snapshots before and after, every move in `car_move_log`, N11.4 determinism ≥99%, no manual bulk reset |
 | Cosmos stamping without a learned own-site id refuses a whole feed (`rooftop.py:836-844`) and empties a dealer | Hints come from the N1.2 maps; a missing hint falls back to keep plus a log line; acceptance floor of 80% of expected own rows per dealer |
 | The pool policy (D-N3) is a business rule, not a fact: about 1,995 pool rows stay single-owner | The site shows "listed by N group stores; location unconfirmed"; the multi-store schema has a revival trigger |
@@ -2865,8 +2866,8 @@ Every remaining remediation unit not placed unconditionally in a phase is listed
 | `SCAN_FLEET=0` staged with `--skip-deploys` applies only to the next new deployment; a rollback restores `SCAN_FLEET=1`; a restart relaunches the same deployment with its old variables (`RELEASING.md:579-580`), so a restart is a full fleet on 1.4.1 | Never roll back, restart or redeploy scanner-nightly until N12.2; no N4 settings change creates a deployment; stop trouble with `railway down -s scanner-nightly` |
 | Web's GitHub source may still be connected | It blocks only web variable steps (`TRUSTED_PROXY_CIDRS`, `ADMIN_PASSWORD`, strict env, Resend). Those steps wait; nothing else does |
 | Config-as-code ends 2026-12-01; the replacement mechanism is unverified | N4 runs in parallel from the start, with a carve-out release by 2026-11-20 |
-| Merge contention across parallel phases; N8.6 waits on N9's release (critical-path coupling) | The Section 3.3 file-ownership table; serialized releases. The only migration order is V027/V028 = N9, V029 = N8.6 (P5A.5 in N9 supplies the `drop_unattributable_vehicles` VIN return N8.6 relies on) |
-| No-deploy releases carry migrations and web-facing code that the next web deploy ships, and web boot applies pending migrations | Section 7.0 migration check before every web deploy; N2, N3 and N4.5 web deploys sequenced before N9's release; later ones apply V027-V029 with a dump first or wait |
+| Merge contention across parallel phases; N8.6 waits on N9's release (critical-path coupling) | The Section 3.3 file-ownership table; serialized releases. The only migration order is V028/V029 = N9, V030 = N8.6 (P5A.5 in N9 supplies the `drop_unattributable_vehicles` VIN return N8.6 relies on) |
+| No-deploy releases carry migrations and web-facing code that the next web deploy ships, and web boot applies pending migrations | Section 7.0 migration check before every web deploy; N2, N3 and N4.5 web deploys sequenced before N9's release; later ones apply V028-V030 with a dump first or wait |
 | Mac sleep or SIGSTOP killed agents three times and 8 batches once | Per-unit checkpoints in `workspace/phase_runs/`; `fleet_scan --resume` (N9.15); N9.13 pause-safe timeout; lid open, caffeinate checked (AC recommended for runs over about 2 h); commands under 150 s |
 | Home-IP rehearsal vs Railway egress (63 HTTP 403 even from home; 31 auth-staled dealers on prod) | P6B.4 measures Railway first; the blocked dealers stay on the bridge, then on the N14 lane |
 | Home-IP reputation: about 6 full or partial local fleets (N8.10, N9.14, N11 passes A-D, N11.13, P5B.8) plus the N1.2/N8.9 live fetches all come from the home IP, which N12 then relies on for the 31 Railway-blocked dealers (bridge, P6B.2/P6B.3) | Space the passes; keep pass B to the 109 dealers; compare each pass's 403/429 counts against the clean-room 63/9 baseline and stop if either rises by more than 50%; live fetches stay paced (≥2 s, ≤3 pages per dealer) |
