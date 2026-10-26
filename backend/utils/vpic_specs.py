@@ -238,7 +238,9 @@ def vpic_transmission_label(specs: dict[str, Any]) -> str | None:
         return f"{prefix}Automated Manual"
     if "direct drive" in s:
         return "Single-Speed (Direct Drive)"
-    if "automatic" in s:  # "Automatic with manual shift mode" is still automatic
+    # "Automatic with manual shift mode" is still automatic, but a gearbox that
+    # names manual first ("Manual with automatic rev-matching") stays manual.
+    if "automatic" in s and not re.search(r"manual.*automatic", s):
         return f"{prefix}Automatic"
     if "manual" in s or "standard" in s:
         return f"{prefix}Manual"
@@ -261,10 +263,14 @@ def transmission_family(text: Any) -> str | None:
         return "direct"
     if "automated manual" in s:
         return "automatic"
-    if re.search(r"\bauto(?:matic)?\b|dual[-\s]clutch|\bdct\b", s):
-        return "automatic"  # before manual: "automatic with manual shift mode"
+    # Automatic first only for "automatic with manual shift mode"; bare "auto" in
+    # a manual description ("Manual w/ Auto Rev Match") must not flip it.
+    if re.search(r"\bautomatic\b|dual[-\s]clutch|\bdct\b", s) and not re.search(r"manual.*automatic", s):
+        return "automatic"
     if re.search(r"\bmanual\b|\bstandard\b", s):
         return "manual"
+    if re.search(r"\bauto\b", s):
+        return "automatic"
     if re.search(r"\d+[-\s]?speed", s):
         return "automatic"
     return None
