@@ -100,7 +100,8 @@ def assert_production_security_config() -> None:
             "BILLING_STRIPE_ENABLED is off in production; paid features use login gates only."
         )
 
-    if (os.environ.get("GUNICORN_WORKERS") or "1").strip() != "1":
+    # unset means the entrypoint default (3 workers), so it warns too
+    if (os.environ.get("GUNICORN_WORKERS") or "3").strip() != "1":
         _log.warning(
             "GUNICORN_WORKERS>1 in production; per-IP rate limits are per worker process."
         )

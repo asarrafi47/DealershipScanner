@@ -27,5 +27,5 @@ def test_queue_item_patch(monkeypatch) -> None:
 
 
 def test_no_sqlite_store_option(monkeypatch) -> None:
-    monkeypatch.setenv("DEV_JOB_STORE_SQLITE_PATH", "/nonexistent/x.db")
+    monkeypatch.setenv("DEV_JOB_STORE_SQLITE_PATH", "/nonexistent/x.store")
     assert not hasattr(routes, "_dev_job_store_enabled")
