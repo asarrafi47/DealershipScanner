@@ -119,6 +119,14 @@ workspace/dealer_logs/
   in the triage). One attempt per dealer per day. Each step is a dated block in
   `discovery.md`, each failure a line in `_learning/errors_index.md`, and the dealers still
   failing are listed in `<out>/needs_discovery.txt` for the dealer-discovery workflow.
+- Launching a fleet on a Mac (any `dealer_pipeline` / `fleet_scan` / shard run): prefix it
+  with `caffeinate -dims` (e.g. `caffeinate -dims .venv/bin/python -m backend.scripts.dealer_pipeline ...`),
+  lid open. A Mac sleep froze the 2026-10-13 fleet for 21.7 h. The batch timeout
+  (`--scan-timeout`) now counts active time only (`pipeline/active_time.py`: a gap between
+  1 s polls is booked as paused, whatever the clock does in sleep), and each `scan  batch`
+  line prints `in <wall>s (active <n>s)`; `dealer_run_summary` and the scan log carry
+  `wall_seconds` beside `seconds` (= active) per dealer. A wall/active gap is a pause, not a
+  slow dealer.
 - `backend/scripts/discovery_probe.py` — the verbose discovery record for one dealership:
   redirect chain, status, size, title, challenge markers, every template's detect result,
   script hosts and API hints in the page, inventory-path probes, each synthesized

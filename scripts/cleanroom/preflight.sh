@@ -110,6 +110,12 @@ PY=${PY:-$REPO/.venv/bin/python}
 
 echo "== power"
 pmset -g batt 2>/dev/null | grep -q "AC Power" && ok "on AC power" || echo "  WARN on battery (AC recommended for runs over about 2 h)"
+# A sleeping Mac froze the 2026-10-13 fleet for 21.7 h; the runner timeout is now pause-safe
+# (active time, pipeline/active_time.py) but the scan still stalls while asleep.
+if [ "$(uname)" = "Darwin" ]; then
+  pgrep -fl 'caffeinate.*-dims' >/dev/null \
+    && ok "caffeinate -dims running" || echo "  WARN no caffeinate -dims; start the fleet as: caffeinate -dims <fleet command>"
+fi
 
 echo "== no other scanner"
 pgrep -fl 'backend[./]scripts[./](fleet_scan|dealer_pipeline)|backend/scanner/scanner\.py' >/dev/null \

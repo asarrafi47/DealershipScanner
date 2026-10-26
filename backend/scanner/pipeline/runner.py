@@ -10,6 +10,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from backend.scanner.pipeline.active_time import ActiveTimer
 from backend.scanner.pipeline.constants import HTTP_ONLY_ENV, LOG_ROOT, ROOT
 from backend.scanner.pipeline.db import chromium_process_count, wait_for_db
 
@@ -102,7 +103,12 @@ def wait_for_scanner_lock(max_wait_sec: int, poll_sec: int = 20) -> bool:
     return _lock_holder_alive() is None
 
 
-def run_http_only_scan(dealer_ids: list[str], *, concurrency: int, log_path: Path, timeout_sec: int) -> int:
+def run_http_only_scan(dealer_ids: list[str], *, concurrency: int, log_path: Path, timeout_sec: int,
+                      stats: dict[str, Any] | None = None, poll_sec: float = 1.0) -> int:
+    """Run the scanner subprocess; kill it (rc -9) after timeout_sec of ACTIVE time.
+
+    Active time skips a Mac sleep (see ActiveTimer); ``stats``, when given, receives
+    wall_seconds / active_seconds so a pause is visible beside the wall time."""
     env = dict(os.environ)
     env.update(HTTP_ONLY_ENV)
     # scanner.py rosters from dealers.json by default and exits 1 on an id it
@@ -115,11 +121,27 @@ def run_http_only_scan(dealer_ids: list[str], *, concurrency: int, log_path: Pat
     cmd = [py, "scanner.py", "--dealer-id", ",".join(dealer_ids), "--dealer-concurrency", str(concurrency), "--scan-only"]
     log_path.parent.mkdir(parents=True, exist_ok=True)
     with log_path.open("ab") as fh:
+        timer = ActiveTimer()
+        proc = subprocess.Popen(cmd, cwd=str(ROOT), env=env, stdout=fh, stderr=subprocess.STDOUT)
         try:
-            proc = subprocess.run(cmd, cwd=str(ROOT), env=env, stdout=fh, stderr=subprocess.STDOUT, timeout=timeout_sec)
-            return proc.returncode
-        except subprocess.TimeoutExpired:
-            return -9
+            while True:
+                try:
+                    rc = proc.wait(timeout=poll_sec)
+                    break
+                except subprocess.TimeoutExpired:
+                    if timer.tick() >= timeout_sec:
+                        proc.kill()
+                        proc.wait()
+                        rc = -9
+                        break
+        except BaseException:
+            proc.kill()
+            raise
+        finally:
+            timer.tick()
+            if stats is not None:
+                stats.update(timer.stats())
+        return rc
 
 
 def scan_retry_batch(dealer_ids: list[str], *, out_dir: Path, batch: int, scan_timeout: int, lock_wait: int) -> dict[str, Any]:
@@ -139,11 +161,12 @@ def scan_retry_batch(dealer_ids: list[str], *, out_dir: Path, batch: int, scan_t
             break
         before = chromium_process_count()
         t0 = time.time()
-        rc = run_http_only_scan(chunk, concurrency=len(chunk), log_path=out_dir / "scanner.log", timeout_sec=scan_timeout)
+        st: dict[str, Any] = {}
+        rc = run_http_only_scan(chunk, concurrency=len(chunk), log_path=out_dir / "scanner.log", timeout_sec=scan_timeout, stats=st)
         after = chromium_process_count()
         if after > max(before, 0):
             print(f"retry   BROWSER LEAK: chromium processes {before} -> {after} during retry {', '.join(chunk)[:80]}", flush=True)
             leaks.append({"batch": chunk, "before": before, "after": after, "retry": True})
-        print(f"retry   batch: {', '.join(chunk)[:120]} rc={rc} in {time.time() - t0:.0f}s", flush=True)
+        print(f"retry   batch: {', '.join(chunk)[:120]} rc={rc} in {time.time() - t0:.0f}s (active {st.get('active_seconds', 0):.0f}s)", flush=True)
         rcs.append(rc)
     return {"rc": rcs, "chromium_leaks": leaks}

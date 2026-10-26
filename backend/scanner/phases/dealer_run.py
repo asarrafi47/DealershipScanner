@@ -80,7 +80,7 @@ async def run_dealer(
     result, name = run.result, run.name
     if not run.url or not run.dealer_id:
         logger.warning("Skipping dealer missing url or dealer_id: %s", dealer)
-        result["seconds"] = run.elapsed()
+        run.stamp_seconds()
         emit_dealer_run_summary(result)
         return result
 
@@ -103,7 +103,7 @@ async def run_dealer(
 
         if not run.all_vehicles:
             logger.warning("Parsing: %s — no vehicles from any inventory path", name)
-            result["seconds"] = run.elapsed()
+            run.stamp_seconds()
             log_dealer_complete(name, result)
             return result
 
@@ -119,7 +119,7 @@ async def run_dealer(
         await _persist(run)
         await _after_write.after_write(run)
 
-        result["seconds"] = run.elapsed()
+        run.stamp_seconds()
         logger.info(
             "Parsing: %s — extracted %d vehicles (deduped by VIN), upserted %d",
             name,
@@ -132,7 +132,7 @@ async def run_dealer(
         raise
     except Exception as e:
         result["error"] = str(e)
-        result["seconds"] = run.elapsed()
+        run.stamp_seconds()
         if is_playwright_shutdown_error(e):
             return result
         logger.exception("Dealer %s failed: %s", run.dealer_id, e)
@@ -145,7 +145,7 @@ async def run_dealer(
         result["filtered_count"] = 0
         if result.get("gallery_bins") is None:
             result["gallery_bins"] = {}
-        result["seconds"] = run.elapsed()
+        run.stamp_seconds()
         emit_dealer_run_summary(result)
         await safe_close_context(run.context)
 
