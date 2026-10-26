@@ -1441,6 +1441,7 @@
    "None": [
     "_per_request_csp_nonce",
     "_csrf_mutating_requests",
+    "revoked_session_gate",
     "_billing_gate_paid_routes"
    ]
   },
