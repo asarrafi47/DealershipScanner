@@ -6,7 +6,7 @@ module pins the parts later phases rely on:
 
 - triggers: every branch push, PRs to main, manual dispatch, no tag runs;
 - ``permissions: contents: read`` and the per-ref concurrency group;
-- the job ids ``lint``, ``pytest`` and ``pytest-integration`` (required checks
+- the job ids ``lint``, ``pytest`` and ``pytest-pg`` (required checks
   on main from P2B.5), ``needs: lint``, the timeouts, and no job-level ``if:``
   on them (a skipped job reports success and would mask a red run);
 - the exact ruff pin;
@@ -34,10 +34,10 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 CI_YML = REPO_ROOT / ".github" / "workflows" / "ci.yml"
 TEST_REQUIREMENTS = REPO_ROOT / "requirements-test.txt"
 
-REQUIRED_JOBS = ("lint", "pytest", "pytest-integration")
+REQUIRED_JOBS = ("lint", "pytest", "pytest-pg")
 RUFF_VERSION = "0.15.22"
 PYTEST_VERSION = "9.1.1"
-TIMEOUT_MINUTES = {"lint": 5, "pytest": 30, "pytest-integration": 15}
+TIMEOUT_MINUTES = {"lint": 5, "pytest": 30, "pytest-pg": 15}
 OFFLINE_SELECTION = "not integration and not slow and not pg"
 CPU_TORCH_INDEX = "https://download.pytorch.org/whl/cpu"
 JUNIT_PATH = "reports/offline.xml"
@@ -152,7 +152,7 @@ def test_required_jobs_are_never_skipped_by_an_if(jobs, job_id):
     assert "if" not in jobs[job_id], f"{job_id} has a job-level if: {jobs[job_id]['if']!r}"
 
 
-@pytest.mark.parametrize("job_id", ["pytest", "pytest-integration"])
+@pytest.mark.parametrize("job_id", ["pytest", "pytest-pg"])
 def test_test_jobs_need_lint(jobs, job_id):
     assert _needs(jobs[job_id]) == ["lint"]
 
@@ -178,7 +178,7 @@ def test_ruff_is_pinned_exactly(jobs):
 # --- install (D-TC5) --------------------------------------------------------
 
 
-@pytest.mark.parametrize("job_id", ["pytest", "pytest-integration"])
+@pytest.mark.parametrize("job_id", ["pytest", "pytest-pg"])
 def test_cpu_torch_installs_before_the_requirements(jobs, job_id):
     job = jobs[job_id]
     torch_i = _run_index(job, "pip install torch")
@@ -194,7 +194,7 @@ def test_cpu_torch_installs_before_the_requirements(jobs, job_id):
     assert torch_i < req_i
 
 
-@pytest.mark.parametrize("job_id", ["pytest", "pytest-integration"])
+@pytest.mark.parametrize("job_id", ["pytest", "pytest-pg"])
 def test_pip_cache_covers_every_requirements_file(jobs, job_id):
     job = jobs[job_id]
     cfg = _steps(job)[_uses_index(job, "actions/setup-python")]["with"]
@@ -252,7 +252,42 @@ def test_junit_report_is_uploaded_even_when_tests_fail(jobs):
     assert up_i > _run_index(job, "-m pytest")
 
 
-def test_integration_tier_runs_by_marker_and_lists_skips(jobs):
-    argv = _pytest_args(jobs["pytest-integration"])
-    assert _opt(argv, "-m") == "integration"
+def test_pg_tier_runs_by_marker_and_lists_skips(jobs):
+    argv = _pytest_args(jobs["pytest-pg"])
+    assert _opt(argv, "-m") == "pg"
+    assert _opt(argv, "--timeout") == "300"
     assert "-rs" in argv
+    assert _opt(argv, "-p") == "no:cacheprovider"
+
+
+def test_no_job_runs_the_integration_marker(jobs):
+    # D-TC6: the marker stays (live data, dev machine) but no CI job runs it.
+    for job in jobs.values():
+        for run in _runs(job):
+            assert "-m integration" not in run
+
+
+def test_pg_job_uses_a_pgvector_service_at_prods_major(jobs):
+    job = jobs["pytest-pg"]
+    svc = job["services"]["postgres"]
+    # D-TC3: prod's major (18) with a pinned pgvector 0.8.x; a plain postgres image has no vector.
+    assert re.fullmatch(r"pgvector/pgvector:0\.8\.\d+-pg18", svc["image"]), svc["image"]
+    assert svc["env"]["POSTGRES_PASSWORD"] == "postgres"
+    assert "pg_isready" in svc["options"]
+    assert "5432:5432" in [str(p) for p in svc["ports"]]
+
+
+def test_pg_job_env_points_the_harness_at_the_service(jobs):
+    env = jobs["pytest-pg"]["env"]
+    dsn = "postgresql://postgres:postgres@localhost:5432/postgres"
+    assert env["TEST_PG_ADMIN_DSN"] == dsn
+    assert env["SCHEMA_PARITY_PG_DSN"] == env["TEST_PG_ADMIN_DSN"]
+    assert str(env["REQUIRE_PG"]) == "1"
+
+
+def test_pg_job_uploads_its_junit_report_even_when_tests_fail(jobs):
+    job = jobs["pytest-pg"]
+    step = _steps(job)[_uses_index(job, "actions/upload-artifact")]
+    assert step.get("if") == "always()"
+    assert step["with"]["path"] == "reports/pg.xml"
+    assert _opt(_pytest_args(job), "--junitxml") == "reports/pg.xml"

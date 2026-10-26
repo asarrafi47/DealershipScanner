@@ -563,3 +563,126 @@ def test_every_dml_string_literal_adapts_identically(parsed_sources, caplog):
                     changed.append(f"{rel}:{node.lineno}")
     assert compared >= 500
     assert changed == []
+
+
+# ---------------------------------------------------------------------------
+# P14A.5: the adapted statements execute on a real Postgres (pg tier)
+# ---------------------------------------------------------------------------
+#
+# The tests above prove the rewrite text. These run the rewritten text on the
+# migration-built schema (``pg_db``), each inside a transaction that is rolled
+# back, so a statement the adapter breaks fails here and not in the first scan.
+
+
+def _upsert_bind(vin: str = "1HGCM82633A004352", *, dealer_id: str = "d-adapter", guard_on: bool = False, **fields):
+    """Bind values for UPSERT_CARS_SQL through the product's own row preparation."""
+    from backend.scanner.upsert.rows import normalize_vehicle_row
+    from backend.scanner.upsert.sql import prepare_row, upsert_params
+
+    base = {
+        "vin": vin,
+        "title": "2020 Honda Accord EX",
+        "year": 2020,
+        "make": "Honda",
+        "model": "Accord",
+        "trim": "EX",
+        "price": 21000,
+        "mileage": 31000,
+        "image_url": "https://img.example.test/a.jpg",
+        "dealer_name": "Adapter Honda",
+        "dealer_url": "https://adapter.example.test",
+        "dealer_id": dealer_id,
+    }
+    base.update(fields)
+    row = prepare_row(normalize_vehicle_row(base), None)
+    assert row is not None
+    return upsert_params(
+        row,
+        now="2026-10-20T10:00:00.000001Z",
+        price_history_json=None,
+        guard_on=guard_on,
+        guard_cutoff_iso="2026-10-20T08:00:00Z",
+    )
+
+
+@pytest.mark.pg
+def test_adapted_upsert_cars_sql_plans_on_postgres(pg_db):
+    adapted = adapt_sql_for_postgres_execute(UPSERT_CARS_SQL)
+    params = _upsert_bind()
+    assert adapted.count("%s") == len(params) == 50
+    with pg_db.connect() as conn:
+        plan = conn.execute("EXPLAIN " + adapted, params).fetchall()
+        conn.rollback()
+    assert plan and "Insert on cars" in plan[0][0]
+
+
+@pytest.mark.pg
+def test_adapted_upsert_cars_sql_inserts_then_updates_on_postgres(pg_db):
+    conn = pg_db.get_conn()  # InventoryCursor: the adapter is in the path, as in write_rows
+    try:
+        cur = conn.cursor()
+        cur.execute(UPSERT_CARS_SQL, _upsert_bind(price=21000))
+        assert cur.rowcount == 1
+        # a rescan with a missing price keeps the stored one; keep-if-nonempty on trim
+        cur.execute(UPSERT_CARS_SQL, _upsert_bind(price=None, trim="", mileage=None))
+        assert cur.rowcount == 1
+        cur.execute("SELECT price, trim, listing_active, dealer_id FROM cars WHERE vin = ?", ("1HGCM82633A004352",))
+        price, trim, active, dealer = cur.fetchone()
+        assert (price, trim, int(active), dealer) == (21000, "EX", 1, "d-adapter")
+        cur.execute("SELECT count(*) FROM cars")
+        assert cur.fetchone()[0] == 1
+    finally:
+        conn.rollback()
+        conn.close()
+
+
+@pytest.mark.pg
+def test_adapted_upsert_backstop_where_refuses_a_fresh_foreign_owner_on_postgres(pg_db):
+    conn = pg_db.get_conn()
+    try:
+        cur = conn.cursor()
+        cur.execute(UPSERT_CARS_SQL, _upsert_bind(dealer_id="owner"))
+        # guard on, cutoff older than the owner's scraped_at: the WHERE refuses the move
+        cur.execute(UPSERT_CARS_SQL, _upsert_bind(dealer_id="claimant", guard_on=True))
+        assert cur.rowcount == 0
+        cur.execute("SELECT dealer_id FROM cars WHERE vin = ?", ("1HGCM82633A004352",))
+        assert cur.fetchone()[0] == "owner"
+        # guard off: the same claim goes through
+        cur.execute(UPSERT_CARS_SQL, _upsert_bind(dealer_id="claimant", guard_on=False))
+        assert cur.rowcount == 1
+    finally:
+        conn.rollback()
+        conn.close()
+
+
+@pytest.mark.pg
+def test_representative_adapted_statements_execute_on_postgres(pg_db):
+    """One statement per adapter rule, run against real tables and rolled back."""
+    conn = pg_db.get_conn()
+    try:
+        cur = conn.cursor()
+        # OR IGNORE (cars special case) twice: the second is a silent no-op, not an error
+        ins = "INSERT OR IGNORE INTO cars (vin, title, dealer_id) VALUES (?, ?, ?)"
+        cur.execute(ins, ("ADAPTVIN0000000001", "t", "d1"))
+        assert cur.rowcount == 1
+        cur.execute(ins, ("ADAPTVIN0000000001", "t2", "d2"))
+        assert cur.rowcount == 0
+        # OR REPLACE (model_specs special case): second run updates
+        rep = "INSERT OR REPLACE INTO model_specs (make, model, cylinders) VALUES (?, ?, ?)"
+        cur.execute(rep, ("Adapt", "One", 4))
+        cur.execute(rep, ("Adapt", "One", 6))
+        cur.execute("SELECT cylinders FROM model_specs WHERE make = ? AND model = ?", ("Adapt", "One"))
+        assert cur.fetchone()[0] == 6
+        # IFNULL / GROUP_CONCAT / INSTR / datetime('now'), with a literal % and a '?' in a comment
+        cur.execute(
+            "SELECT IFNULL(NULL, 'x'), INSTR('abc', 'b'), datetime('now') IS NOT NULL, "
+            "(SELECT GROUP_CONCAT(DISTINCT dealer_id) FROM cars), "
+            "'50%' LIKE '50%' -- it's a ? in a comment\n"
+        )
+        row = cur.fetchone()
+        assert row[0] == "x" and row[1] == 2 and row[2] is True and row[3] == "d1" and row[4] is True
+        # PRAGMA is skipped instead of reaching the server
+        cur.execute("PRAGMA foreign_keys = ON")
+    finally:
+        conn.rollback()
+        conn.close()

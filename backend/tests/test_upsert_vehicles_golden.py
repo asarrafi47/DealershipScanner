@@ -35,6 +35,7 @@ import logging
 import os
 import re
 import sqlite3
+from decimal import Decimal
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
@@ -47,11 +48,28 @@ EXPECTED = FIXTURES / "upsert_vehicles_golden_expected.json"
 _TS_RE = re.compile(r"\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d(?:\.\d+)?(?:Z|\+00:00)?")
 
 
-def _rows(db_path: Path, sql: str) -> list[dict]:
-    conn = sqlite3.connect(str(db_path))
-    conn.row_factory = sqlite3.Row
+def _rows(sql: str, get_conn=None) -> list[dict]:
+    """Dict rows through the product's connection (``inventory_db.get_conn``), so the
+    same reader serves the SQLite golden and its Postgres variant (P14A.6)."""
+    if get_conn is None:
+        from backend.db import inventory_db
+
+        get_conn = inventory_db.get_conn
+    conn = get_conn()
+    conn.row_factory = sqlite3.Row  # any truthy factory: the wrapper maps it to dict_row on Postgres
     try:
         return [dict(r) for r in conn.execute(sql).fetchall()]
+    finally:
+        conn.close()
+
+
+def _exec(sql: str, params: tuple = ()) -> None:
+    from backend.db import inventory_db
+
+    conn = inventory_db.get_conn()
+    try:
+        conn.execute(sql, params)
+        conn.commit()
     finally:
         conn.close()
 
@@ -76,15 +94,29 @@ def _mask_timestamps(obj, started: datetime):
     return json.loads(_TS_RE.sub(lambda m: repl.get(m.group(0), m.group(0)), text))
 
 
-@pytest.fixture()
-def golden_env(sqlite_inventory, monkeypatch):
+def _pg_normalize(obj):
+    """Postgres row values in the SQLite golden's shapes (the documented normalization):
+    ``Decimal`` -> int when integral else float; ``bool`` -> 0/1; ``datetime`` -> ISO text.
+    Timestamp columns are TEXT on both backends, so the run's stamps reach
+    ``_mask_timestamps`` as the same rank tokens."""
+    if isinstance(obj, dict):
+        return {k: _pg_normalize(v) for k, v in obj.items()}
+    if isinstance(obj, list):
+        return [_pg_normalize(v) for v in obj]
+    if isinstance(obj, Decimal):
+        return int(obj) if obj == obj.to_integral_value() else float(obj)
+    if isinstance(obj, bool):
+        return int(obj)
+    if isinstance(obj, datetime):
+        return obj.isoformat()
+    return obj
+
+
+def _stub_post_write(monkeypatch):
+    """Stub the network post-write steps and record the calls; shared by both backends."""
     from backend.scanner import database as sdb
 
-    import backend.db.incomplete_listings_db as ild
-
     monkeypatch.setattr("backend.utils.project_env.load_project_dotenv", lambda *a, **k: None)
-    il_path = sqlite_inventory.path.parent / "incomplete_listings.db"
-    monkeypatch.setattr(ild, "DB_PATH", str(il_path))
     monkeypatch.setattr(sdb, "_vin_owner_table_ready", False)
     monkeypatch.delenv("SCANNER_VIN_OWNER_GUARD_HOURS", raising=False)
     monkeypatch.delenv("SCANNER_IDLE_IN_TXN_TIMEOUT_MS", raising=False)
@@ -92,7 +124,7 @@ def golden_env(sqlite_inventory, monkeypatch):
     calls: list = []
 
     def fake_backfill(car_id, **kw):
-        calls.append(["spec_backfill", _vin_of(sqlite_inventory.path, car_id), kw])
+        calls.append(["spec_backfill", _vin_of(car_id), kw])
         return {}
 
     def fake_link(vins):
@@ -111,11 +143,22 @@ def golden_env(sqlite_inventory, monkeypatch):
     )
     monkeypatch.setattr("backend.catalog.linker.link_cars_by_vins", fake_link)
     monkeypatch.setattr(sdb, "apply_model_specs_corrections", recording_corrections)
-    return sqlite_inventory.path, il_path, calls
+    return calls
 
 
-def _vin_of(db_path, car_id):
-    conn = sqlite3.connect(str(db_path))
+@pytest.fixture()
+def golden_env(sqlite_inventory, monkeypatch):
+    import backend.db.incomplete_listings_db as ild
+
+    il_path = sqlite_inventory.path.parent / "incomplete_listings.db"
+    monkeypatch.setattr(ild, "DB_PATH", str(il_path))
+    return _stub_post_write(monkeypatch)
+
+
+def _vin_of(car_id):
+    from backend.db import inventory_db
+
+    conn = inventory_db.get_conn()
     try:
         r = conn.execute("SELECT vin FROM cars WHERE id=?", (car_id,)).fetchone()
         return r[0] if r else None
@@ -123,7 +166,8 @@ def _vin_of(db_path, car_id):
         conn.close()
 
 
-def _run(db_path: Path, il_path: Path, calls: list, monkeypatch, caplog) -> dict:
+def _run(calls: list, monkeypatch, caplog, *, pg: bool = False) -> dict:
+    from backend.db import incomplete_listings_db as ild
     from backend.scanner import database as sdb
     from backend.scanner.database import upsert_vehicles
 
@@ -133,29 +177,22 @@ def _run(db_path: Path, il_path: Path, calls: list, monkeypatch, caplog) -> dict
     caplog.set_level(logging.DEBUG, logger="backend.scanner.database")
 
     # model_specs dictionary rows so the post-write correction has work to do.
-    conn = sqlite3.connect(str(db_path))
-    conn.execute(
-        "CREATE TABLE IF NOT EXISTS model_specs (make TEXT NOT NULL, model TEXT NOT NULL, "
-        "cylinders INTEGER, gears INTEGER, transmission TEXT, drivetrain TEXT, body_style TEXT, "
-        "fuel_type TEXT, PRIMARY KEY (make, model))"
+    if not pg:  # the migration chain already created it on Postgres
+        _exec(
+            "CREATE TABLE IF NOT EXISTS model_specs (make TEXT NOT NULL, model TEXT NOT NULL, "
+            "cylinders INTEGER, gears INTEGER, transmission TEXT, drivetrain TEXT, body_style TEXT, "
+            "fuel_type TEXT, PRIMARY KEY (make, model))"
+        )
+    _exec(
+        "INSERT OR REPLACE INTO model_specs (make, model, cylinders, gears, transmission, drivetrain, "
+        "body_style, fuel_type) VALUES ('Dodge','Charger',8,8,'8-Speed Automatic','RWD','Sedan','Gasoline')"
     )
-    conn.execute(
-        "INSERT OR REPLACE INTO model_specs VALUES ('Dodge','Charger',8,8,'8-Speed Automatic','RWD','Sedan','Gasoline')"
-    )
-    conn.commit()
-    conn.close()
 
     out: dict = {"phases": []}
     for name in ("batch1", "batch2", "batch3"):
         if name == "batch2":
             # Make the stale-owner VIN old enough for the guard to let it move.
-            c = sqlite3.connect(str(db_path))
-            c.execute(
-                "UPDATE cars SET scraped_at='2020-01-01T00:00:00Z' WHERE vin=?",
-                (data["stale_vin"],),
-            )
-            c.commit()
-            c.close()
+            _exec("UPDATE cars SET scraped_at='2020-01-01T00:00:00Z' WHERE vin=?", (data["stale_vin"],))
         if name == "batch3":
             monkeypatch.setattr(sdb, "_vin_owned_elsewhere", lambda *a, **k: False)
         calls.clear()
@@ -172,25 +209,50 @@ def _run(db_path: Path, il_path: Path, calls: list, monkeypatch, caplog) -> dict
         )
     out["cars"] = [
         {k: v for k, v in r.items() if k != "id"}
-        for r in _rows(db_path, "SELECT * FROM cars ORDER BY vin")
+        for r in _rows("SELECT * FROM cars ORDER BY vin")
     ]
     out["vin_owner_conflicts"] = _rows(
-        db_path, "SELECT * FROM vin_owner_conflicts ORDER BY vin, owner_dealer_id, claimant_dealer_id"
+        "SELECT * FROM vin_owner_conflicts ORDER BY vin, owner_dealer_id, claimant_dealer_id"
     )
     out["incomplete_listings"] = [
         {k: v for k, v in r.items() if k not in ("car_id", "id", "updated_at")}
-        for r in _rows(il_path, "SELECT * FROM incomplete_listings ORDER BY vin")
+        for r in _rows("SELECT * FROM incomplete_listings ORDER BY vin", ild.get_conn)
     ]
     out["empty_call"] = upsert_vehicles([], {})
+    if pg:
+        out = _pg_normalize(out)
     return _mask_timestamps(out, started)
 
 
 def test_upsert_vehicles_golden(golden_env, monkeypatch, caplog):
-    db_path, il_path, calls = golden_env
-    got = _run(db_path, il_path, calls, monkeypatch, caplog)
+    got = _run(golden_env, monkeypatch, caplog)
     if os.environ.get("UPSERT_GOLDEN_REGEN") == "1":
         EXPECTED.write_text(json.dumps(got, indent=1, sort_keys=True) + "\n", encoding="utf-8")
         pytest.skip("golden regenerated")
+    expected = json.loads(EXPECTED.read_text(encoding="utf-8"))
+    for key in ("phases", "vin_owner_conflicts", "incomplete_listings", "empty_call"):
+        assert got[key] == expected[key], key
+    assert [r["vin"] for r in got["cars"]] == [r["vin"] for r in expected["cars"]]
+    for g, e in zip(got["cars"], expected["cars"]):
+        assert g == e, g["vin"]
+
+
+@pytest.fixture()
+def golden_env_pg(pg_db, monkeypatch):
+    import backend.db.incomplete_listings_db as ild
+
+    ild.reset_incomplete_listings_schema_cache()
+    return _stub_post_write(monkeypatch)
+
+
+@pytest.mark.pg
+def test_upsert_vehicles_golden_on_postgres(golden_env_pg, monkeypatch, caplog):
+    """The same three batches on a migration-built Postgres (P14A.6); the expected
+    JSON is read, never written."""
+    from backend.db import inventory_pg
+
+    assert inventory_pg.is_inventory_postgres()  # the run below must not fall back to SQLite
+    got = _run(golden_env_pg, monkeypatch, caplog, pg=True)
     expected = json.loads(EXPECTED.read_text(encoding="utf-8"))
     for key in ("phases", "vin_owner_conflicts", "incomplete_listings", "empty_call"):
         assert got[key] == expected[key], key

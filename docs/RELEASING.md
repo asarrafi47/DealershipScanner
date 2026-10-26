@@ -225,7 +225,7 @@ tracking `origin/main`.
   refuses it.
 - **The CI `release-guard` job** runs only on pushes to `main` and on PRs to `main`. It
   answers "is this releasable?". On any other branch it shows as skipped, by design.
-  `lint`, `pytest` and `pytest-integration` run on every branch push.
+  `lint`, `pytest` and `pytest-pg` run on every branch push.
 - **To bump**, run `scripts/bump_version.sh patch` (or `minor`, `major`, or an explicit
   `x.y.z`). It writes VERSION, renames `## [Unreleased]` to `## [X.Y.Z] - <today>`, opens
   a new empty `[Unreleased]` above it, and stages both files. It does not commit.
@@ -356,7 +356,7 @@ below stands for its name. `V` is the new version, set in step 3.
    gh run view <databaseId> --json jobs --jq '.jobs[] | [.name, .conclusion] | @tsv'
    ```
 
-   Verify: in the push run, `lint`, `pytest` and `pytest-integration` show `success`, and
+   Verify: in the push run, `lint`, `pytest` and `pytest-pg` show `success`, and
    `release-guard` shows `skipped`, as designed on a branch push. If the run is red, fix
    forward, never force-push. Commit the fix with a line for it under `## [Unreleased]`
    in CHANGELOG.md, then repeat step 3 (bump, `V=$(cat VERSION)`, commit) and push again.
@@ -370,7 +370,7 @@ below stands for its name. `V` is the new version, set in step 3.
    gh pr checks <branch> --watch
    ```
 
-   Verify: `gh pr checks <branch>` exits 0, with `lint`, `pytest`, `pytest-integration` and
+   Verify: `gh pr checks <branch>` exits 0, with `lint`, `pytest`, `pytest-pg` and
    `release-guard` passing. The skipped `release-guard` entry from the push run is
    expected. Leave the PR open. GitHub marks it merged by itself once `main` reaches its
    head in step 8.

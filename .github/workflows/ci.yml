@@ -31,7 +31,7 @@ concurrency:
   group: ci-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
-# Job ids `lint`, `pytest` and `pytest-integration` become required checks on
+# Job ids `lint`, `pytest` and `pytest-pg` become required checks on
 # main (remediation P2B.5). Do not rename them.
 jobs:
   lint:
@@ -112,32 +112,46 @@ jobs:
           if-no-files-found: warn
           retention-days: 30
 
-  # The offline job above excludes -m integration, so without this job a test
-  # tagged @pytest.mark.integration would silently leave CI coverage entirely.
+  # The Postgres tier (remediation P14A.3, D-TC6). The offline job above
+  # excludes -m pg, so without this job the pg tests would leave CI entirely.
+  # It replaces `pytest-integration`: the `integration` marker stays, but it
+  # means "needs live data, dev machine only" and no CI job runs it.
   #
-  # The tier holds THREE tests today (2026-10-08), each gated on a live
-  # Postgres this runner does not have, so all three skip here:
-  #   - test_data_quality_invariants.py::test_live_seeded_regression_in_a_temp_table
-  #     (DQ_INVARIANTS_LIVE_DB=1 plus an inventory DB holding epa_extended_specs)
-  #   - test_merge_verified_specs_golden.py::test_merge_verified_specs_golden_live_db
-  #     (MERGE_SPECS_GOLDEN_LIVE_DB=1 plus the local inventory DB, read-only)
-  #   - test_schema_from_migrations.py::test_migrations_build_a_superset_of_the_runtime_ddl
-  #     (SCHEMA_PARITY_PG_DSN: a server where scratch databases may be created)
-  # The job therefore proves the tier collects and skips cleanly; it does NOT
-  # exercise Postgres. The Postgres tier replaces it in remediation P14A
-  # (D-TC6).
-  #
-  # Asset-gated tests (brochure PDFs, catalog DB) are deliberately NOT tagged
-  # integration: they need local files, not a live stack, and are accounted for
-  # by the ASSET-GATED SKIPS summary in backend/tests/conftest.py
-  # (REQUIRE_LOCAL_ASSETS=1 turns those skips into failures).
+  # The service is pgvector/pgvector at prod's major version (D-TC3: pg18,
+  # pgvector 0.8.x; V001 needs the extension, so a plain postgres image
+  # cannot apply the chain). The job runs on the runner, so the service is
+  # reached through the published port on localhost. backend/tests/pg_harness.py
+  # builds a template database from the migration chain and clones one per
+  # test; TEST_PG_ADMIN_DSN is the only DSN it reads. SCHEMA_PARITY_PG_DSN is
+  # the same server for the schema-parity test. REQUIRE_PG=1 turns "no server"
+  # into a failure instead of a skip.
   #
   # Exit code 5 (nothing collected) is NOT tolerated: if the tier ever empties
-  # again this job fails instead of passing on zero tests.
-  pytest-integration:
+  # this job fails instead of passing on zero tests. -rs lists every skip.
+  #
+  # backend/tests/test_ci_workflow.py pins this job. The required-check context
+  # on main (ruleset P2B.5) changes from `pytest-integration` to `pytest-pg` in
+  # the same release; the owner updates it.
+  pytest-pg:
     runs-on: ubuntu-latest
     needs: lint
     timeout-minutes: 15
+    services:
+      postgres:
+        image: pgvector/pgvector:0.8.1-pg18
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      TEST_PG_ADMIN_DSN: postgresql://postgres:postgres@localhost:5432/postgres
+      SCHEMA_PARITY_PG_DSN: postgresql://postgres:postgres@localhost:5432/postgres
+      REQUIRE_PG: "1"
     steps:
       - uses: actions/checkout@v4
 
@@ -154,8 +168,22 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt -r requirements-test.txt
 
-      - name: Run integration tier (skips without a live Postgres; fails if empty)
-        run: python -m pytest backend/tests -m integration -q -p no:cacheprovider -rs
+      - name: Run Postgres tier
+        run: >-
+          python -m pytest backend/tests
+          -m pg
+          -q -p no:cacheprovider
+          --timeout=300 -rs
+          --junitxml=reports/pg.xml
+
+      - name: Upload junit report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: junit-pg
+          path: reports/pg.xml
+          if-no-files-found: warn
+          retention-days: 30
 
   # "Releasable?" (remediation P2A.4, D-REL3): VERSION must rise above main's
   # (semver, 1.5.10 > 1.5.9) and CHANGELOG.md must have a filled section for it.
