@@ -9,7 +9,7 @@ Definitions (each one reproduces a number in the N1.3 spec on the 10-13 run):
   * VDP       = sum of triage ``http_first.candidates`` (wanted) / ``fetched``
   * vpic_fuel = sum of triage ``accuracy.hard.vpic_fuel`` and the dealers with > 0
   * page-cap walks = ``Recipe fetch [<label>]: N unique VIN(s) from <cap> page(s)``
-                lines in ``s*/scanner.log`` (cap = ``_MAX_REPLAY_PAGES``)
+                lines in ``s*/scanner.log`` (cap = ``_REPLAY_PAGES_HARD_CAP``)
   * HTTP 403/429 = the ``fleet_scan.tally_http`` rule over ``s*/scanner.log`` and
                 ``s*.out`` (the same regexes, copied below; a test pins them)
   * scanner retirements = ``Inventory reconcile <dealer>: ... marked_inactive=N``
@@ -45,13 +45,13 @@ BLOCKED_MIN_CANDIDATES = 20
 
 
 def max_replay_pages(code_root: Path) -> int:
-    """``_MAX_REPLAY_PAGES`` read from ``backend/scanner/recipes.py`` without importing it."""
+    """``_REPLAY_PAGES_HARD_CAP`` read from ``backend/scanner/recipes.py`` without importing it."""
     try:
         tree = ast.parse((code_root / "backend" / "scanner" / "recipes.py").read_text())
     except (OSError, SyntaxError):
         return DEFAULT_PAGE_CAP
     for node in tree.body:
-        if isinstance(node, ast.Assign) and any(getattr(t, "id", "") == "_MAX_REPLAY_PAGES" for t in node.targets):
+        if isinstance(node, ast.Assign) and any(getattr(t, "id", "") in ("_REPLAY_PAGES_HARD_CAP", "_MAX_REPLAY_PAGES") for t in node.targets):
             if isinstance(node.value, ast.Constant) and isinstance(node.value.value, int):
                 return node.value.value
     return DEFAULT_PAGE_CAP

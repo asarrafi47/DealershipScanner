@@ -1032,7 +1032,33 @@ def recipe_min_vehicles() -> int:
         return 10
 
 
-_MAX_REPLAY_PAGES = 40
+# How far a replay walk goes (D-RC3): to the site's own total, capped. The cap is
+# SCANNER_REPLAY_MAX_PAGES (default 150); a walk with no usable total keeps the old 40.
+_REPLAY_PAGES_HARD_CAP = 150
+_REPLAY_PAGES_NO_TOTAL = 40
+
+
+def replay_max_pages() -> int:
+    try:
+        return max(1, int(os.environ.get("SCANNER_REPLAY_MAX_PAGES") or _REPLAY_PAGES_HARD_CAP))
+    except ValueError:
+        return _REPLAY_PAGES_HARD_CAP
+
+
+def _is_html_walk(recipe: "EndpointRecipe") -> bool:
+    """Server-rendered pagination: the total frozen into the recipe at synth time says
+    nothing about today's lot, so only an on-page count may stop such a walk."""
+    return recipe.pagination in (PAGINATION_DEP_SRP, PAGINATION_HTML_PAGE, PAGINATION_JAZEL_SRP) or (
+        recipe.provider_hint == "html_cards"
+    )
+
+
+def _walk_pages(total: int | None, page_size: int, hard_cap: int) -> int:
+    """Pages to walk once page 1 is read: ``min(hard_cap, ceil(total / page_size) + 1)``
+    when both are known, else the no-total default (never above the hard cap)."""
+    if total and page_size > 0:
+        return min(hard_cap, -(-int(total) // page_size) + 1)
+    return min(hard_cap, _REPLAY_PAGES_NO_TOTAL)
 _REPLAY_TIMEOUT_S = 20.0
 
 
@@ -1493,7 +1519,7 @@ def _persist_replay_success(dealer_id: str, recipe: EndpointRecipe, retrying_sta
 
 
 # Walk-report ends that mean the recipe saw the whole of what it asked for.
-_COMPLETE_ENDS = frozenset({"single_page", "total_reached", "exhausted", "short_page"})
+_COMPLETE_ENDS = frozenset({"single_page", "total_reached", "exhausted", "no_new_rows", "short_page"})
 _COMPLETE_TOTAL_FRACTION = 0.98
 
 
@@ -1531,9 +1557,12 @@ def _walk_complete(end: str, raw_vins: int, total_count: int | None) -> bool:
 
 
 def _walk_entry(
-    recipe: EndpointRecipe, dealer_name: str, stale_retry: bool, end: str, pages: int, raw: int, kept: int
+    recipe: EndpointRecipe, dealer_name: str, stale_retry: bool, end: str, pages: int, raw: int, kept: int,
+    total: Any = ...,
 ) -> dict:
     method, path = recipe.key()
+    if total is ...:
+        total = recipe.total_count
     return {
         "key": f"{method} {path}",
         "url": recipe.url,
@@ -1542,9 +1571,9 @@ def _walk_entry(
         "pages": pages,
         "raw_vins": raw,
         "kept_vins": kept,
-        "total_count": recipe.total_count,
+        "total_count": total,
         "end": end,
-        "complete": _walk_complete(end, raw, recipe.total_count),
+        "complete": _walk_complete(end, raw, total),
         "in_union": False,
     }
 
@@ -1606,7 +1635,7 @@ async def try_fetch_via_recipes(
     one entry per tried recipe under ``recipes``: ``{key, url, stale_retry,
     scope_hash, pages, raw_vins, kept_vins, total_count, end, complete, in_union}``.
     ``raw_vins`` counts unique VINs the pages carried, kept plus refused by the
-    rooftop gate. ``end`` is one of single_page, total_reached, exhausted,
+    rooftop gate. ``end`` is one of single_page, total_reached, no_new_rows,
     page_cap, http_<code>, fetch_failed, auth_dead, unparsed_mid, unreplayable;
     ``complete`` is :func:`_walk_complete`. ``in_union`` is separate from ``end``:
     a complete walk dropped for low yield is ``in_union=False`` and its kept VINs
@@ -1697,10 +1726,16 @@ async def try_fetch_via_recipes(
         vins: set[str] = set()
         vehicles: list[dict] = []
         raw_vins: set[str] = set()
-        pages = 1 if recipe.pagination == PAGINATION_NONE else _MAX_REPLAY_PAGES
+        hard_cap = replay_max_pages()
+        pages = 1 if recipe.pagination == PAGINATION_NONE else hard_cap
+        # The total this walk stops on. A JSON walk falls back to the recipe's stored one;
+        # an HTML walk does not (the file's value was frozen at synth time).
+        walk_total: int | None = None if _is_html_walk(recipe) else recipe.total_count
         auth_dead = False
         end: str | None = None
-        for page_i in range(pages):
+        page_i = -1
+        while page_i + 1 < pages:
+            page_i += 1
             body = _mutate_for_page(recipe, template, page_i) if template is not None else None
             page_url = _url_for_page(recipe, page_i)
             status, parsed = await asyncio.to_thread(_replay_request, recipe, body, base_url, page_url)
@@ -1763,7 +1798,10 @@ async def try_fetch_via_recipes(
                 trust_feed_scope=store_scoped,
             )
             new = _unique_vins(page_vehicles) - vins
-            raw_vins |= _unique_vins(page_vehicles) | _unique_vins(_refused)
+            # The stop condition reads RAW rows: a page of nothing but refused siblings
+            # (a group feed's other rooftops) holds no kept VIN yet is not the end.
+            new_raw = (_unique_vins(page_vehicles) | _unique_vins(_refused)) - raw_vins
+            raw_vins |= new_raw
             records.append((recipe.url, parsed))
             if page_i == 0 and recipe.pagination == PAGINATION_DEALER_COM:
                 _learn_dealer_com_page_size(template, parsed, dealer_name)
@@ -1771,24 +1809,28 @@ async def try_fetch_via_recipes(
                 # The payload's own total wins over the file's: a stale total_count
                 # (95 saved in August, lot now 106) stopped the walk after page 1.
                 try:
-                    from backend.parsers.base import get_total_count as _gtc
+                    from backend.scanner.recipe_totals import replay_site_total
 
-                    _t = _gtc(parsed)
+                    _t = replay_site_total(recipe, parsed)
                     if _t and _t > 0:
-                        recipe.total_count = int(_t)
+                        recipe.total_count = walk_total = int(_t)
                 except Exception:  # noqa: BLE001
                     pass
+                if recipe.pagination != PAGINATION_NONE:
+                    pages = _walk_pages(walk_total, len(raw_vins), hard_cap)
             vehicles.extend(v for v in page_vehicles if (v.get("vin") or "").strip().upper() in new)
-            if not new:
-                end = "single_page" if recipe.pagination == PAGINATION_NONE else "exhausted"
-                break
             vins |= new
-            if recipe.total_count and len(vins) >= recipe.total_count:
+            if not new_raw:
+                end = "single_page" if recipe.pagination == PAGINATION_NONE else "no_new_rows"
+                break
+            if walk_total and len(raw_vins) >= walk_total:
                 end = "total_reached"
                 break
         if end is None:
             end = "single_page" if recipe.pagination == PAGINATION_NONE else "page_cap"
-        walk = _walk_entry(recipe, dealer_name, retrying_stale, end, len(records), len(raw_vins), len(vins))
+        walk = _walk_entry(
+            recipe, dealer_name, retrying_stale, end, len(records), len(raw_vins), len(vins), walk_total
+        )
         walks.append(walk)
         if end == "page_cap" or (end.startswith(("http_", "unparsed", "fetch_failed")) and vins):
             logger.warning(

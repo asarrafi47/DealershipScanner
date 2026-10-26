@@ -57,13 +57,14 @@ def _paged(per_page, last_page=None, fail_at=None):
 
 def test_page_cap_is_incomplete_and_logged(monkeypatch, caplog):
     _recipe("c1", total=100000)
+    monkeypatch.setenv("SCANNER_REPLAY_MAX_PAGES", "40")
     monkeypatch.setattr(rec, "_replay_request", _paged(5))
     with caplog.at_level("WARNING", logger="scanner"):
         hit, out = _walk("c1")
-    assert hit is not None and len(hit[0]) == rec._MAX_REPLAY_PAGES  # return value as before
+    assert hit is not None and len(hit[0]) == rec.replay_max_pages()  # return value as before
     (w,) = out["recipes"]
     assert w["end"] == "page_cap" and not w["complete"] and w["in_union"]
-    assert w["pages"] == rec._MAX_REPLAY_PAGES and w["kept_vins"] == 5 * rec._MAX_REPLAY_PAGES
+    assert w["pages"] == rec.replay_max_pages() and w["kept_vins"] == 5 * rec.replay_max_pages()
     assert out["truncated"] is True and out["capped_recipes"] == 1 and out["source"] == "recipe"
     assert any("page_cap" in r.getMessage() for r in caplog.records)
 
@@ -100,7 +101,7 @@ def test_all_duplicate_page_is_exhausted_and_complete_without_total(monkeypatch)
     hit, out = _walk("c4")
     assert hit[1] == 24
     (w,) = out["recipes"]
-    assert w["end"] == "exhausted" and w["complete"] and not out["truncated"]
+    assert w["end"] == "no_new_rows" and w["complete"] and not out["truncated"]
 
 
 def test_401_on_page_one_is_auth_dead(monkeypatch):
@@ -145,7 +146,7 @@ def test_exhausted_far_short_of_total_and_single_page_of_large_total_are_incompl
     monkeypatch.setattr(rec, "_replay_request", fake)
     _, out = _walk("c9")
     w = out["recipes"][0]
-    assert w["end"] == "exhausted" and w["raw_vins"] == 48 and not w["complete"]
+    assert w["end"] == "no_new_rows" and w["raw_vins"] == 48 and not w["complete"]
 
     # PAGINATION_NONE: one page of 100 against a site total of 500
     ep = CapturedEndpoint(url="https://dealer.example/api/inv", method="GET", content_type="application/json",
@@ -176,7 +177,7 @@ def test_refused_rows_count_toward_raw_vins(monkeypatch):
     monkeypatch.setattr(attribution, "parse_page", fake_parse)
     _, out = _walk("c11", union=True)
     w = out["recipes"][0]
-    assert w["raw_vins"] == 45 and w["kept_vins"] == 30 and w["end"] == "total_reached"
+    assert w["raw_vins"] == 30 and w["kept_vins"] == 20 and w["end"] == "total_reached"
 
 
 def test_scope_hash_is_stable_across_pages_and_differs_by_section():

@@ -21,7 +21,7 @@ DEFINITIONS = {
     "drop_over_30pct": "db active < 0.7 x reference active (dealer had reference rows; error verdicts excluded)",
     "gain_over_30pct": "db active > 1.3 x reference active",
     "claimant": "triage vin_owner_conflicts > 0 (VINs refused to this dealer by the VIN-owner guard)",
-    "page_cap": "a recipe walk stopped at exactly _MAX_REPLAY_PAGES pages",
+    "page_cap": "a recipe walk stopped at exactly _REPLAY_PAGES_HARD_CAP pages",
     "unsampled_platform": "triage provider in " + ", ".join(UNSAMPLED_PLATFORMS),
     "no_rows": "triage verdict no_rows",
     "http_403_429": "feed-level HTTP 403/429 lines (fleet_scan.tally_http rule) attributed to the dealer",
