@@ -198,7 +198,7 @@ def _res(verdict, reason="", synth="saved_1", had=1):
     (_res("no_recipe", "no_template_for_wordpress", synth="no_template_for_wordpress", had=0), "", "lifecycle"),
     (_res("no_recipe", "validated_zero", synth="validated_zero", had=0), "", "lifecycle"),
     (_res("error", "recipe replay HTTP 403 (auth rotated?)"), "", "lifecycle"),
-    (_res("error", "no scan_runs row"), "", "none"),
+    (_res("error", "no scan_runs row"), "", "retry"),  # N9.13: rescan, no re-synth
     (_res("ok", "complete and verified"), "stale:403:2026-09-28T10:00:00+00:00", "lifecycle"),
     (_res("no_recipe", "rejected:one_condition", synth="rejected:one_condition", had=0), "rejected:one_condition", "lifecycle"),
     (_res("no_rows", "recipe replay yielded 0 rows"), "rejected:section_scoped", "lifecycle"),

@@ -80,6 +80,10 @@ def log_scan_run(r: dict[str, Any], stamp: str) -> None:
          f"pages_needed={(r.get('timing') or {}).get('pages_needed')} (fingerprint scan_hints.timing)"]
     for code, exs in (acc.get("examples") or {}).items():
         L.append(f"  - `{code}`: " + "; ".join(f"{e.get('car')} `{e.get('vin')}` {e.get('why', '')}"[:160] for e in exs[:3]))
+    if r.get("scan_run_backfilled"):
+        L.append(f"- scan_runs row backfilled by the pipeline: {r['scan_run_backfilled']} row(s) were upserted but the scanner wrote no run row (killed or paused)")
+    if r.get("requeued"):
+        L.append(f"- requeued once: {r['requeued']}")
     if r.get("handover_pending"):
         hp = r["handover_pending"]
         L.append(f"- handover_pending: {hp.get('vins')} retired VIN(s) freshly claimed by {json.dumps(hp.get('claimants'))}; e.g. {', '.join(hp.get('examples') or [])}")

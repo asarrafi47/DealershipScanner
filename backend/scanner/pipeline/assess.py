@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+from datetime import datetime, timezone
 from typing import Any
 
 from backend.scanner.pipeline.constants import (
@@ -232,13 +233,40 @@ def _thin(conn, out: dict[str, Any], dealer_id: str, since_iso: str, reason: str
     return out
 
 
+_RUNS_SQL = ("SELECT id, provider, finished_at, duration_seconds, inventory_rows, upserted, error, summary_json "
+             "FROM scan_runs WHERE dealer_id = ? AND finished_at >= ? ORDER BY id DESC LIMIT 1")
+
+
+def backfill_scan_run(conn, dealer_id: str, since_iso: str) -> int:
+    """N9.13: a dealer whose rows were upserted this run but whose scan_runs row never landed
+    (a killed or paused scanner; righthonda / selmanchevy shape) gets one, so the verdict reads
+    the rows instead of reporting ``error / no scan_runs row``. Returns the rows it vouches for
+    (0 = nothing upserted, no row written)."""
+    try:
+        n = int(_rows(conn, "SELECT COUNT(*) AS n FROM cars WHERE dealer_id = ? AND scraped_at >= ?", (dealer_id, since_iso))[0]["n"] or 0)
+        if n <= 0:
+            return 0
+        summary = {"backfilled_by": "pipeline", "reason": "rows upserted this run, scanner wrote no scan_runs row (killed or paused)",
+                   "capture_coverage": {"n": n}}
+        conn.execute("INSERT INTO scan_runs (dealer_id, provider, finished_at, duration_seconds, inventory_rows, upserted, error, summary_json) "
+                     "VALUES (?,?,?,?,?,?,?,?)",
+                     (dealer_id, "pipeline_backfill", datetime.now(timezone.utc).isoformat(), 0.0, n, n, None, json.dumps(summary)))
+        try:
+            conn.commit()
+        except Exception:  # noqa: BLE001 - autocommit connection
+            pass
+        return n
+    except Exception:  # noqa: BLE001
+        return 0
+
+
 def _assess(conn, dealer_id: str, since_iso: str, known_before: int, recipe_info: dict[str, Any]) -> dict[str, Any]:
-    runs = _rows(
-        conn,
-        "SELECT id, provider, finished_at, duration_seconds, inventory_rows, upserted, error, summary_json "
-        "FROM scan_runs WHERE dealer_id = ? AND finished_at >= ? ORDER BY id DESC LIMIT 1",
-        (dealer_id, since_iso),
-    )
+    runs = _rows(conn, _RUNS_SQL, (dealer_id, since_iso))
+    backfilled = 0
+    if not runs:
+        backfilled = backfill_scan_run(conn, dealer_id, since_iso)
+        if backfilled:
+            runs = _rows(conn, _RUNS_SQL, (dealer_id, since_iso))
     active = _rows(conn, "SELECT COUNT(*) AS n FROM cars WHERE dealer_id = ? AND COALESCE(listing_active,1)=1", (dealer_id,))[0]["n"]
     inactive = _rows(conn, "SELECT COUNT(*) AS n FROM cars WHERE dealer_id = ? AND COALESCE(listing_active,1)=0", (dealer_id,))[0]["n"]
     out: dict[str, Any] = {
@@ -247,6 +275,8 @@ def _assess(conn, dealer_id: str, since_iso: str, known_before: int, recipe_info
         # no scan_runs row: counted as zeros, not null (an error dealer still has active rows)
         "rows": 0, "rows_captured": 0, "rows_refused_vin_owner": 0, "rows_refused_rooftop": 0, "rows_written": 0,
     }
+    if backfilled:
+        out["scan_run_backfilled"] = backfilled
     mix = _rows(
         conn,
         "SELECT COUNT(*) FILTER (WHERE lower(COALESCE(condition,'')) LIKE 'new%') AS n_new, "

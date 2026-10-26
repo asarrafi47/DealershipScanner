@@ -18,7 +18,7 @@ from backend.scanner.pipeline.lifecycle import run_lifecycle_pass
 from backend.scanner.pipeline.reconcile import bucket_counts, reconcile_dealer, valid_vin_count
 from backend.scanner.pipeline.recipes import ensure_recipe
 from backend.scanner.pipeline.roster import dealer_from_manifest, dealers_from_db, load_manifest_dealers
-from backend.scanner.pipeline.runner import run_discovery_capture, run_http_only_scan, wait_for_scanner_lock
+from backend.scanner.pipeline.runner import REQUEUE_REASON, requeue_killed, run_discovery_capture, run_http_only_scan, wait_for_scanner_lock
 from backend.scanner.pipeline.triage import (accounting_line, group_feed_lines, group_feed_unstamped, handover_pending_lines, platform_cluster_lines,
                                             retirement_alarm_lines, triage_table, write_needs_discovery, write_slow_dealers)
 from backend.scanner.pipeline.vpic import vpic_for_dealers
@@ -115,12 +115,14 @@ def _run(args) -> int:
         except Exception as exc:  # noqa: BLE001
             print(f"log     discovery {did}: {str(exc)[:100]}", flush=True)
 
+    requeued: set[str] = set()
     if not args.skip_scan:
         scannable = [did for did in ids if recipe_info[did].get("had_recipes") or str(recipe_info[did].get("synth", "")).startswith("saved")]
         skipped = [did for did in ids if did not in scannable]
         if skipped:
             print(f"scan    skipping {len(skipped)} dealer(s) with no recipe: {', '.join(skipped)[:200]}", flush=True)
         chromium_leaks: list[dict[str, Any]] = []
+        killed: list[str] = []
         for i in range(0, len(scannable), args.batch):
             batch = scannable[i:i + args.batch]
             t0 = time.time()
@@ -161,7 +163,18 @@ def _run(args) -> int:
                 print("scan    gave up after 6 lock races", flush=True)
             if rc == -1:
                 break
+            if rc == -9:
+                killed.extend(batch)
             print(f"scan    batch {i // args.batch + 1}: {', '.join(batch)[:120]} rc={rc} in {time.time() - t0:.0f}s (active {scan_stats.get('active_seconds', 0):.0f}s)", flush=True)
+        if killed:
+            # N9.13: once, with the reason on the record; the dealers' rows say how it ended
+            try:
+                rq = requeue_killed(killed, since_iso=since_iso, out_dir=out_dir, batch=args.batch,
+                                    scan_timeout=args.scan_timeout, lock_wait=args.lock_wait)
+                requeued = set(rq["requeued"])
+                chromium_leaks.extend(rq.get("chromium_leaks") or [])
+            except Exception as exc:  # noqa: BLE001
+                print(f"scan    requeue failed: {str(exc)[:120]}", flush=True)
         if not args.no_vpic and scannable:
             try:
                 vp = vpic_for_dealers(scannable)
@@ -178,6 +191,8 @@ def _run(args) -> int:
                 print("assess  database connection dropped; reconnecting", flush=True)
                 conn = _assess_conn()
             r = assess(conn, did, since_iso, known[did], recipe_info[did])
+            if did in requeued:
+                r["requeued"] = REQUEUE_REASON
             try:
                 # Retire against the rows stamped to THIS store, never the raw feed
                 # count: a group feed's 1,521 rows with 2 kept retired 158 real

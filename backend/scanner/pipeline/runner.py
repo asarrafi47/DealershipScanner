@@ -170,3 +170,28 @@ def scan_retry_batch(dealer_ids: list[str], *, out_dir: Path, batch: int, scan_t
         print(f"retry   batch: {', '.join(chunk)[:120]} rc={rc} in {time.time() - t0:.0f}s (active {st.get('active_seconds', 0):.0f}s)", flush=True)
         rcs.append(rc)
     return {"rc": rcs, "chromium_leaks": leaks}
+
+
+REQUEUE_REASON = "killed_by_timeout"
+
+
+def requeue_killed(killed: list[str], *, since_iso: str, out_dir: Path, batch: int, scan_timeout: int, lock_wait: int) -> dict[str, Any]:
+    """N9.13: dealers of a batch the active-time timeout killed (rc -9) and that left no
+    scan_runs row get ONE more scan, in batches of --batch. A dealer that did finish before
+    the kill is not rescanned. Returns {"requeued": [ids], "reason": REQUEUE_REASON, "rc": [...]}."""
+    from backend.scanner.pipeline.db import _assess_conn, _rows
+
+    pending: list[str] = []
+    conn = _assess_conn()
+    try:
+        for did in killed:
+            have = _rows(conn, "SELECT COUNT(*) AS n FROM scan_runs WHERE dealer_id = ? AND finished_at >= ?", (did, since_iso))[0]["n"]
+            if not have:
+                pending.append(did)
+    finally:
+        conn.close()
+    if not pending:
+        return {"requeued": [], "reason": REQUEUE_REASON, "rc": []}
+    print(f"scan    requeue {len(pending)} dealer(s) killed by the timeout ({REQUEUE_REASON}): {', '.join(pending)[:200]}", flush=True)
+    res = scan_retry_batch(pending, out_dir=out_dir, batch=batch, scan_timeout=scan_timeout, lock_wait=lock_wait)
+    return {"requeued": pending, "reason": REQUEUE_REASON, "rc": res["rc"], "chromium_leaks": res["chromium_leaks"]}

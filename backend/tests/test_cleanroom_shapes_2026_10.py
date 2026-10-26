@@ -453,13 +453,6 @@ def test_unstamped_group_feed_files_no_sister_or_offroster_cars_under_the_store(
 
 # ── 8. triage accounting: the identity replayed from the 10-13 triage ────────
 
-_IDENT = _load("triage_identity_20261013.json")
-_IDENTITY_REASON = (
-    "defect: assess.py:104-108 reports rows = capture_coverage.n, taken at persist.py:18 before the VIN-owner "
-    "guard drops refused VINs (persist.py:25-35), there is no rows_written, and a dealer written without a "
-    "scan_runs row (pause-killed batch) reports nothing: triage 'rows' sums to 208,233 against 199,457 active; "
-    "fixed by N9.12 (rows_captured / rows_refused_vin_owner / rows_refused_rooftop / rows_written, error "
-    "dealers counted, not null)"
 )
 
 
@@ -511,7 +504,6 @@ def _seed_identity(db: Path) -> dict[str, int]:
     return active
 
 
-@pytest.mark.xfail(strict=True, reason=_IDENTITY_REASON)
 def test_triage_identity_replay_rows_written_equals_active(inv, monkeypatch):
     """Replay of the 458-dealer 10-13 triage on the clean room's end state.
     The DB started empty, so every active row was written by its dealer's

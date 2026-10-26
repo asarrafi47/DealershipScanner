@@ -37,6 +37,7 @@ LIFECYCLE_VERDICTS = ("no_recipe", "no_rows")
 # that lost to the working recipe, not a dealer without one.
 SCANNED_VERDICTS = ("ok", "thin", "inaccurate")
 FAILING_VERDICTS = ("no_recipe", "no_rows", "error")
+NO_SCAN_RUN_REASON = "no scan_runs row"  # assess.py's reason when the scanner left no run row
 LIFECYCLE_OK = ("resynth_ok", "capture_ok")
 _AUTH_ERROR_MARKERS = ("401", "403", "auth", "forbidden", "unauthori")
 _NO_URL_SYNTHS = ("not_in_manifest_or_db",)
@@ -73,7 +74,9 @@ def _learning_append(name: str, line: str) -> None:
 def route_verdict(dealer: dict[str, Any], result: dict[str, Any], recipe_status: str | None = None) -> dict[str, Any]:
     """Decide whether an assessed dealer enters the recipe lifecycle.
 
-    ``{"action": "lifecycle" | "none", "trigger": <why>}``. Enters on the verdicts
+    ``{"action": "lifecycle" | "retry" | "none", "trigger": <why>}``. ``retry`` (N9.13): the
+    scanner left no scan_runs row (killed, paused), so the recipe was never judged; the dealer
+    is scanned once more in the retry batch with no re-synthesis. Enters the lifecycle on the verdicts
     ``no_recipe`` / ``no_rows``, a ``validated_zero`` synthesis, an ``error``
     whose reason smells of auth (401/403/forbidden), any dealer whose
     ``scan_hints.recipe_status`` starts with ``stale:`` (a replay answered
@@ -100,6 +103,8 @@ def route_verdict(dealer: dict[str, Any], result: dict[str, Any], recipe_status:
         # would only 403 again and a browser capture is not available. A home
         # scanner still owns the dealer.
         return {"action": "none", "trigger": f"blocked_on_this_host ({recipe_status})", "verdict": verdict}
+    if verdict == "error" and reason == NO_SCAN_RUN_REASON:
+        return {"action": "retry", "trigger": "no_scan_run_row", "verdict": verdict}
     if recipe_status.startswith("stale:"):
         return {"action": "lifecycle", "trigger": f"recipe_status {recipe_status}", "verdict": verdict}
     if recipe_status.startswith("rejected:"):
@@ -293,6 +298,12 @@ def run_lifecycle_pass(results: list[dict[str, Any]], dealers: dict[str, dict[st
         d = dealers.get(did) or {"dealer_id": did, "url": ""}
         route = route_verdict(d, r)
         r["lifecycle_route"] = route
+        if route["action"] == "retry":
+            r["lifecycle"] = "retry_no_scan_run"
+            summary["retry_no_scan_run"] = summary.get("retry_no_scan_run", 0) + 1
+            retry.append(did)
+            print(f"lifecyc {did:36s} {route['trigger'][:40]:40s} -> retry scan", flush=True)
+            continue
         if route["action"] != "lifecycle":
             continue
         summary["routed"] += 1
