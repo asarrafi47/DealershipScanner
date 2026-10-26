@@ -399,6 +399,10 @@ _FLAG_RESETS: tuple[tuple[str, str, str], ...] = (
 # helper functions below. The sweep fails on anything not in _FLAG_RESETS and
 # not here, so a new "table ready" flag cannot slip through.
 _SWEEP_REVIEWED: dict[str, str] = {
+    "backend.listings.dealer_locator._GOOGLE_CACHE_MAX": "constant (audit F04, SEC-A-008)",
+    "backend.listings.dealer_locator._GOOGLE_CACHE_TTL_SECONDS": "constant",
+    "backend.listings.dealer_locator._google_cache": "Google Places responses, no DB",
+    "backend.listings.dealer_locator._google_cache_lock": "lock",
     "backend.parsers.rooftop_aliases._hint_cache": "dealer-name hints, no DB",
     "backend.web.static._static_cache_ver_memo": "static asset hash",
     "backend.utils.market_price._DEFAULT_CACHE_TTL_SEC": "constant",
@@ -521,6 +525,8 @@ _LRU_RESETS: tuple[tuple[str, str], ...] = (
     ("backend.enrichment.trim_ladder.evidence", "_active_make_spellings"),
     ("backend.enrichment.trim_ladder.evidence", "_active_trims_by_make_year"),
     ("backend.utils.hybrid_search", "_expand_inventory_models_cached"),
+    ("backend.utils.vpic_specs", "_cached_hit"),  # nhtsa_vpic_cache rows (audit F07, B-033)
+    ("backend.vehicle_facts.extended_specs", "family_trim_count"),  # epa_extended_specs counts
 )
 
 # Helper functions that reset several attributes at once.
