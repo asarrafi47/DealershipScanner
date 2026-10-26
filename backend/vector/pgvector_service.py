@@ -1,5 +1,5 @@
 """
-Postgres + pgvector for all semantic indexes (listings, dealers, BMW OEM, car knowledge, EPA master catalog).
+Postgres + pgvector for all semantic indexes (listings, dealers, car knowledge, EPA master catalog).
 
 Requires ``PGVECTOR_URL`` or ``DATABASE_URL`` and PostgreSQL with the ``vector`` extension
 (``CREATE EXTENSION vector;`` once per database).
@@ -20,9 +20,6 @@ from typing import Any
 from backend.db.inventory_db import get_conn as inventory_get_conn
 from backend.utils.field_clean import is_effectively_empty
 from backend.vector.listings_semantic import build_semantic_listing_document
-from backend.vector.bmw_store import BMW_DB_PATH
-from backend.vector.bmw_store import connect as bmw_connect
-from backend.vector.bmw_store import init_schema as bmw_init_schema
 
 logger = logging.getLogger(__name__)
 
@@ -30,8 +27,6 @@ _DEFAULT_MODEL = "all-MiniLM-L6-v2"
 
 T_LISTINGS = "listing_semantic_embeddings"
 T_DEALERS = "dealer_semantic_embeddings"
-T_BMW_NORM = "bmw_normalized_embeddings"
-T_BMW_PARTIAL = "bmw_partial_embeddings"
 T_CAR_KNOWLEDGE = "car_knowledge_embeddings"
 T_MASTER_SPEC = "master_spec_embeddings"
 
@@ -132,24 +127,6 @@ def ensure_schema(conn) -> None:
             )
             """,
             f"""
-            CREATE TABLE IF NOT EXISTS {T_BMW_NORM} (
-                bmw_id INTEGER PRIMARY KEY,
-                document_text TEXT NOT NULL,
-                embedding vector({dim}) NOT NULL,
-                meta JSONB,
-                updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-            )
-            """,
-            f"""
-            CREATE TABLE IF NOT EXISTS {T_BMW_PARTIAL} (
-                doc_key TEXT PRIMARY KEY,
-                document_text TEXT NOT NULL,
-                embedding vector({dim}) NOT NULL,
-                meta JSONB,
-                updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-            )
-            """,
-            f"""
             CREATE TABLE IF NOT EXISTS {T_CAR_KNOWLEDGE} (
                 doc_id TEXT PRIMARY KEY,
                 year TEXT NOT NULL,
@@ -176,8 +153,6 @@ def ensure_schema(conn) -> None:
         for ix in (
             f"CREATE INDEX IF NOT EXISTS ix_{T_LISTINGS}_hnsw ON {T_LISTINGS} USING hnsw (embedding vector_cosine_ops)",
             f"CREATE INDEX IF NOT EXISTS ix_{T_DEALERS}_hnsw ON {T_DEALERS} USING hnsw (embedding vector_cosine_ops)",
-            f"CREATE INDEX IF NOT EXISTS ix_{T_BMW_NORM}_hnsw ON {T_BMW_NORM} USING hnsw (embedding vector_cosine_ops)",
-            f"CREATE INDEX IF NOT EXISTS ix_{T_BMW_PARTIAL}_hnsw ON {T_BMW_PARTIAL} USING hnsw (embedding vector_cosine_ops)",
             f"CREATE INDEX IF NOT EXISTS ix_{T_CAR_KNOWLEDGE}_hnsw ON {T_CAR_KNOWLEDGE} USING hnsw (embedding vector_cosine_ops)",
             f"CREATE INDEX IF NOT EXISTS ix_{T_MASTER_SPEC}_hnsw ON {T_MASTER_SPEC} USING hnsw (embedding vector_cosine_ops)",
         ):
@@ -371,147 +346,21 @@ def _reindex_dealers(conn) -> int:
     return n
 
 
-def _reindex_bmw_norm(conn) -> int:
-    if not BMW_DB_PATH.is_file():
-        with conn.cursor() as cur:
-            cur.execute(f"TRUNCATE {T_BMW_NORM}")
-        conn.commit()
-        return 0
-    bconn = bmw_connect()
-    bmw_init_schema(bconn)
-    cur = bconn.cursor()
-    cur.execute(
-        """
-        SELECT id, dealer_name, street, city, state, zip, phone, root_website,
-               normalized_root_domain, row_quality
-        FROM bmw_normalized_dealer
-        ORDER BY id
-        """
-    )
-    rows = cur.fetchall()
-    bconn.close()
-
-    with conn.cursor() as cur:
-        cur.execute(f"TRUNCATE {T_BMW_NORM}")
-    conn.commit()
-    if not rows:
-        return 0
-
-    from psycopg.types.json import Json
-
-    n = 0
-    for batch in _chunked(rows, 300):
-        docs, metas, ids = [], [], []
-        for r in batch:
-            parts = [str(x) for x in r[1:] if x is not None and str(x).strip()]
-            docs.append(" ".join(parts)[:8000])
-            metas.append(
-                Json(
-                    {
-                        "bmw_id": int(r[0]),
-                        "row_quality": (r[9] or "")[:32],
-                        "domain": (r[8] or "")[:128],
-                    }
-                )
-            )
-            ids.append(int(r[0]))
-        vecs = _embed_texts(docs)
-        with conn.cursor() as cur:
-            for bid, doc, emb, meta in zip(ids, docs, vecs, metas, strict=True):
-                cur.execute(
-                    f"""
-                    INSERT INTO {T_BMW_NORM} (bmw_id, document_text, embedding, meta)
-                    VALUES (%s, %s, %s, %s)
-                    ON CONFLICT (bmw_id) DO UPDATE SET
-                      document_text = EXCLUDED.document_text,
-                      embedding = EXCLUDED.embedding,
-                      meta = EXCLUDED.meta,
-                      updated_at = NOW()
-                    """,
-                    (bid, doc, emb, meta),
-                )
-        n += len(batch)
-        conn.commit()
-    return n
-
-
-def _reindex_bmw_partial(conn) -> int:
-    if not BMW_DB_PATH.is_file():
-        with conn.cursor() as cur:
-            cur.execute(f"TRUNCATE {T_BMW_PARTIAL}")
-        conn.commit()
-        return 0
-    bconn = bmw_connect()
-    bmw_init_schema(bconn)
-    cur = bconn.cursor()
-    try:
-        cur.execute(
-            """
-            SELECT partial_group_key, dealer_name, street, city, state, zip, phone,
-                   root_website, row_quality
-            FROM bmw_partial_staging
-            """
-        )
-        rows = cur.fetchall()
-    except sqlite3.Error:
-        rows = []
-    bconn.close()
-
-    with conn.cursor() as cur:
-        cur.execute(f"TRUNCATE {T_BMW_PARTIAL}")
-    conn.commit()
-    if not rows:
-        return 0
-
-    from psycopg.types.json import Json
-
-    n = 0
-    for batch in _chunked(rows, 300):
-        keys, docs, metas = [], [], []
-        for r in batch:
-            key = (r[0] or "unknown")[:500]
-            key_hash = hashlib.sha256(key.encode("utf-8")).hexdigest()[:40]
-            keys.append(key_hash)
-            parts = [str(x) for x in r[1:] if x is not None and str(x).strip()]
-            docs.append(" ".join(parts)[:8000])
-            metas.append(Json({"partial_group_key": key[:120], "row_quality": (r[8] or "")[:32]}))
-        vecs = _embed_texts(docs)
-        with conn.cursor() as cur:
-            for dk, doc, emb, meta in zip(keys, docs, vecs, metas, strict=True):
-                cur.execute(
-                    f"""
-                    INSERT INTO {T_BMW_PARTIAL} (doc_key, document_text, embedding, meta)
-                    VALUES (%s, %s, %s, %s)
-                    ON CONFLICT (doc_key) DO UPDATE SET
-                      document_text = EXCLUDED.document_text,
-                      embedding = EXCLUDED.embedding,
-                      meta = EXCLUDED.meta,
-                      updated_at = NOW()
-                    """,
-                    (dk, doc, emb, meta),
-                )
-        n += len(batch)
-        conn.commit()
-    return n
-
-
 def reindex_all() -> dict[str, int]:
-    """Rebuild all pgvector tables from SQLite / BMW sources."""
+    """Rebuild the listing and dealer pgvector tables."""
     conn = _connect()
     try:
         ensure_schema(conn)
         return {
             "inventory_cars": _reindex_listings(conn),
             "inventory_dealers": _reindex_dealers(conn),
-            "bmw_normalized": _reindex_bmw_norm(conn),
-            "bmw_partial": _reindex_bmw_partial(conn),
         }
     finally:
         conn.close()
 
 
 def reindex_inventory_only() -> dict[str, int]:
-    """Rebuild listing + dealer embeddings only (skip BMW OEM tables)."""
+    """Rebuild listing + dealer embeddings only ."""
     conn = _connect()
     try:
         ensure_schema(conn)
