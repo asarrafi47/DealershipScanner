@@ -104,6 +104,6 @@ def test_delta_carries_the_manifest_registry_id_to_the_gate_and_the_rows(monkeyp
     monkeypatch.setattr("backend.scanner.inventory_reconcile.reconcile_dealer_inventory_after_scan", lambda *a, **k: {"ran": True})
     d = dict(_dealer(), dealership_registry_id=302)
     asyncio.run(ds.delta_scan_dealer(d))
-    assert seen["fetch"] == {"union": True, "registry_id": 302}
+    assert seen["fetch"] == {"union": True, "registry_id": 302, "replay_out": {}}
     assert seen["ctx"][-1] == 302
     assert upserts and all(v["dealership_registry_id"] == 302 for v in upserts[0])

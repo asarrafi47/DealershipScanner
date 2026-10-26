@@ -44,6 +44,8 @@ def record_scan_outcomes(outcomes: list[Any], *, finished_at: str) -> int:
                 "vins_count": len(o.get("vins") or []) if isinstance(o.get("vins"), list) else None,
                 "recovery_winning_strategy": inv_recovery.get("winning_strategy"),
                 "recipe_coverage": o.get("recipe_coverage"),
+                # replay walk report: per-recipe stop reason, completeness, scope hash
+                "recipe_replay": o.get("recipe_replay"),
                 "vdp_phase_timed_out": bool(o.get("vdp_phase_timed_out")),
                 "description_probe": o.get("description_probe"),
                 "vdp_prefetch": o.get("vdp_prefetch"),

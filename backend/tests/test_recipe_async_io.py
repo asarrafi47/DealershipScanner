@@ -229,7 +229,7 @@ def test_feed_provider_hint_runs_off_the_loop(monkeypatch):
     monkeypatch.setenv("SCANNER_ALLOW_BROWSER", "")  # HTTP-only: the hint is read
     spy = ThreadSpy(monkeypatch)
 
-    async def _fetch(dealer_id, provider, base_url, dealer_name, *, union=False, coverage_out=None):
+    async def _fetch(dealer_id, provider, base_url, dealer_name, *, union=False, coverage_out=None, **_kw):
         if coverage_out is not None:
             coverage_out.update({"price": 1.0, "trim": 1.0, "exterior_color": 1.0, "n": 10})
         return [("https://dealer.example/api", {"inventory": []})], 10

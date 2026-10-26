@@ -160,7 +160,10 @@ async def delta_scan_dealer(dealer: dict[str, Any]) -> dict[str, Any]:
     registry_id = dealer.get("dealership_registry_id")
     # keyword only when set: a single-store dealer calls exactly as before
     _rid_kw = {"registry_id": registry_id} if registry_id else {}
-    fetched = await try_fetch_via_recipes(dealer_id, provider, url, name, union=True, **_rid_kw)
+    _replay: dict[str, Any] = {}
+    fetched = await try_fetch_via_recipes(dealer_id, provider, url, name, union=True, replay_out=_replay, **_rid_kw)
+    if _replay:
+        out["recipe_replay"] = _replay
     if not fetched:
         if hints.get("requires_browser"):
             out["skipped"] = "no_recipe (requires_browser hinted)"

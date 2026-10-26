@@ -21,6 +21,7 @@ async def fetch_recipe_feed(run: DealerRun) -> None:
     downstream)."""
     result, name, dealer_id = run.result, run.name, run.dealer_id
     recipe_records: list[tuple[str, Any]] | None = None
+    _replay: dict[str, Any] = {}
     try:
         from backend.scanner.recipes import (
             last_known_vin_count,
@@ -35,8 +36,12 @@ async def fetch_recipe_feed(run: DealerRun) -> None:
         # ever pulling the 623-row new feed (pilot, 2026-09-22).
         _recipe_hit = await try_fetch_via_recipes(
             dealer_id, run.provider, run.url, name, union=True, coverage_out=_recipe_cov,
+            replay_out=_replay,
             **({"registry_id": _rid} if (_rid := run.dealer.get("dealership_registry_id")) else {}),
         )
+        if _replay:
+            # the walk report (stop reason, completeness, scope) for retirement and triage
+            result["recipe_replay"] = _replay
         if _recipe_hit:
             recipe_records, _recipe_vins = _recipe_hit
             if _http_only():
@@ -65,7 +70,10 @@ async def fetch_recipe_feed(run: DealerRun) -> None:
                     name, _recipe_vins, _known, _why,
                 )
     except Exception as _rec_e:
-        logger.debug("Recipe fetch skipped [%s]: %s", name, str(_rec_e)[:200])
+        # A replay that dies mid-walk must not read as "no recipe" downstream: say so
+        # in the result, with whatever walks finished before it.
+        logger.warning("Recipe fetch failed [%s]: %s", name, str(_rec_e)[:200])
+        result["recipe_replay"] = {**_replay, "error": str(_rec_e)[:200], "truncated": True}
 
     if _http_only():
         result["recipe_fetch"] = f"{result.get('recipe_fetch') or 'none'}+http_only"
