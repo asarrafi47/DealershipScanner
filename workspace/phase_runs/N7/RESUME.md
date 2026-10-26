@@ -11,10 +11,11 @@ Branch phase/N7, merged into integ/draft at 0037f5518 (no conflicts). Draft only
 | P14A.5 | 63f37e5ac | DONE |
 | P14A.6 | 63f37e5ac | DONE |
 | P14A.7 | 2b9740fbf | DONE |
-| P14A.8 | - | BLOCKED, builder returned nothing; redo (pin W1-W3, portal retire path) |
-| N7.9 | - | BLOCKED, builder returned nothing; redo (needs N1.4 shapes) |
+| P14A.8 | 8573c1a56 | DONE (14 passed on local PG; merged at 53a4eee5a) |
+| N7.9 | 8573c1a56 | DONE on branch (9 strict xfail); collection fails on integ/draft |
 
 ## Open after merge
+- test_cleanroom_shapes_pg_2026_10.py: ImportError _FEED_REASON (removed from test_cleanroom_shapes_2026_10.py by N8.6b). Drop the import and the xfail near line 272, or define the reason locally.
 - test_pg_harness.py::test_every_module_level_ready_flag_is_reset_or_reviewed fails on integ/draft: 6 module-level flags added by integ code (first: backend.listings.dealer_locator._GOOGLE_CACHE_MAX, likely a cap) must be reset or added to _SWEEP_REVIEWED.
 - test_upsert_vehicles_golden.py::test_upsert_vehicles_golden fails: phase sequence differs from the golden after integ changes; regenerate golden or fix.
 - PG tier tests were skipped at merge (no TEST_PG_ADMIN_DSN); run with TEST_PG_ADMIN_DSN='postgresql:///postgres?host=/tmp'.

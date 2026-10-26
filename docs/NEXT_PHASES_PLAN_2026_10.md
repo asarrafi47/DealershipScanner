@@ -1356,10 +1356,10 @@ P14A.9 (recipe CAS) moves to N13, because it needs P7.1.
 | P14A.5 | 63f37e5ac | adapted SQL plans and executes | none |
 | P14A.6 | 63f37e5ac | golden parity, zero divergences | P8B.1 NULL binding only sparse (N16) |
 | P14A.7 | 2b9740fbf | real 40P01/55P03, one VIN owner, 20/20 | CI repeat job (owner approval) |
-| P14A.8 | none | BLOCKED, builder returned nothing | whole unit |
-| N7.9 | none | BLOCKED, builder returned nothing | whole unit |
+| P14A.8 | 8573c1a56 | W1-W3 and portal retire path pinned, rowcounts asserted; 14 passed on local PG | none |
+| N7.9 | 8573c1a56 | N1.4 shapes on PG, 9 strict xfail on the branch | collection fails on integ/draft (see below) |
 
-After merge two tests fail on integ/draft (pass on phase/N7): test_pg_harness.py::test_every_module_level_ready_flag_is_reset_or_reviewed (6 new unreviewed flags) and test_upsert_vehicles_golden.py::test_upsert_vehicles_golden (phase sequence differs from golden). Not fixed.
+After merge (second merge 53a4eee5a added P14A.8 and N7.9) three problems on integ/draft: test_cleanroom_shapes_pg_2026_10.py fails to collect (ImportError: _FEED_REASON, removed from test_cleanroom_shapes_2026_10.py by N8.6b; drop the import and the xfail at line ~272 or define it locally). Earlier, two tests fail on integ/draft (pass on phase/N7): test_pg_harness.py::test_every_module_level_ready_flag_is_reset_or_reviewed (6 new unreviewed flags) and test_upsert_vehicles_golden.py::test_upsert_vehicles_golden (phase sequence differs from golden). Not fixed.
 
 **Exit gate.**
 - CI `pytest-pg` green on `phase/N7`.
@@ -1556,6 +1556,29 @@ After merge two tests fail on integ/draft (pass on phase/N7): test_pg_harness.py
 - Each code unit also runs a mini re-run of 3-10 dealers into `cars_cr_n8_<unit>` (MAIN, through the N1.3 scripts, on the unit's merged code) and records the numbers in its checkpoint.
 - About 30 agents.
 - Checkpoints: `workspace/phase_runs/N8/`; re-run state in its run dir (`fleet_scan --resume`, N9.15). Before the wait for N9's release, before the owner's repair-set and N8.12 OKs, and before N8.10 if the owner has not approved the `git switch`, the workflow writes RESUME.md with the earliest restart time and ends.
+
+**Draft status (integ/draft, merge 0b3058214; branch phase/N8 head 6ad8d71c9).**
+
+| Unit | sha | Acceptance met | Deferred |
+|---|---|---|---|
+| N8.1 | e5b39584d | DealerOn per-car rooftop stamp; cleveland-nissan keeps 4 of 16, bentleycadillac 0 of 24 (fixtures) | N8.10 re-run counts |
+| N8.2 | e5b39584d | ws-inv-data routes to dealer_dot_com; 24/24 rows stamped (synthetic fixture); retag at load | N8.10 re-run counts |
+| N8.3 | 73971577b | Jazel accountName/_rooftop/colour swap, Chapman lot stamp, OneAudi cannot_assess | live re-run; Chapman store map (CAE/CAW) unconfirmed; Jazel swap unverified on a saved payload |
+| N8.4 | 48d9f3744 | Motive per-car stamp, shape routing, body mapping (fixtures) | Lexus split within 5%, trim >=95% (N8.10) |
+| N8.5 | f61d64bd3 | vdp_host_other_store, guessed-URL flag, weak-tier rule (with street-or-town deviation), identity-check tool | 12 shared endpoints listing, re-run counts; HOST_ALIASES empty |
+| N8.6a | 2b9d5a62d | V030 (rooftop_tier, rooftop_evidence) and SQLite copy | PG apply of V030; merge waits for N9 V028/V029 |
+| N8.6b | a16ebd032 | evidence-aware guard and backstop, car_move_log, manual hold (SQLite); N1.4 scan-order shape passes | PG acceptance and race test (needs V028/V029); strike of third_rooftop/sibling refusals (P5A.5, with N9); group_pools.json pool entries |
+| N8.7 | b578a3d1a | ownership pre-check before prefetch, 403/429 per attempt, gap-first order (unit level) | N8.10 live check |
+| N8.8 | 73971577b | rooftop_of label chain, _feed_ccid, Location-facet union | 2309549 gate line, terrylabontechevy 13 cars, 5 FP01 dealers (saved payloads or live replay) |
+| N8.9a | 48d9f3744 | apply_recipe_repairs tool: dry run, backup, apply, verify, idempotent | repair content files; owner approves dry-run diff; no --restore; run import_recipes_to_db after apply |
+| N8.9b | none | SKIPPED, data_op (paced live fetches, owner approval) | whole unit |
+| N8.10 | none | SKIPPED, MAIN scan needing owner approval and N9.15 | whole unit |
+| N8.11 | 6326e2048 | DEP per-car _rooftop from location_id (parksidekia fixture: 8 of 48 kept) | N8.10 DEP pair drop; results-API path unstamped; feed_self_location tier in match.py/rooftop.py not applied |
+| N8.12 | none | SKIPPED, data_op (local DB apply needing owner OK after N8.6 merges) | whole unit |
+| N8.13 | b578a3d1a | unrostered-rooftop queue, CLI, fleet summary section | prefleet_check hook (P6A.7) |
+| N8.14 | 6ad8d71c9 | shared-host identity by dealer_id and registry id across roster, gate, upsert, search, dealership page, apply tool | N8.10 check of 22 AutoSavvy rows; PG case not run (V028/V029 absent) |
+
+Open after merge: test_pg_harness.py::test_every_module_level_ready_flag_is_reset_or_reviewed names backend.attribution.place._host_index_cache (N8.5), add it to the harness reset list (conflicts with the rule that pg_harness.py is not edited by later units; owner call). The N8.3 change makes the Jazel group-feed xfail pass at N8.3, not N8.6.
 
 **Exit gate.**
 - N8.10 targets met; reviewers passed.
@@ -2880,6 +2903,24 @@ Every remaining remediation unit not placed unconditionally in a phase is listed
 | D-HY8 live EIA gas prices | Deferred | Status quo fallback anchors |
 | D-OD12 brochure grid "P" marker | Deferred | Belongs to an enrichment follow-up |
 | `docker image prune` | Owner action | Section 6 item 14 |
+
+### N37 Postgres-only cleanup (draft status only; no spec section in this plan)
+
+**Draft status (integ/draft, merge 518ebd4ce; branch phase/N37 head 850c530a0).**
+
+| Unit | sha | Acceptance met | Deferred |
+|---|---|---|---|
+| N37.0 | a64c7d405 | test_no_sqlite guard plus shrink-only allowlist (843 entries) | none |
+| N37.1 | a64c7d405 | scripts/pg_test_up.sh ephemeral cluster, refuses prod names | clone-median measurement, pg_harness.py edit |
+| N37.9 | 850c530a0 | V035 admin_users, pg backend behind DEV_USERS_DB_BACKEND, break-glass admin | cutover (N37.21), dev_users.db copier |
+| N37.11 | 6c2e4597b | in-process rate limiter, RATE_LIMIT_SQLITE_PATH removed | set GUNICORN_WORKERS=1 on Railway |
+| N37.12 | 6c2e4597b | dev job store process-local | none |
+| N37.13 | b8b8cab90 | scan lab on scratch PG cars_lab with DSN refusal | create and migrate cars_lab; rescan per D-PG7 |
+| N37.15 | ce9f0b5b6 | dead BMW/oem stores deleted | optional drop of existing bmw_*_embeddings tables |
+
+Not started: N37.2-N37.8, N37.10, N37.14, N37.16-N37.25.
+
+Open after merge: test_no_sqlite.py::test_no_new_sqlite_beyond_allowlist fails on integ/draft, because the allowlist predates SQLite constructs added by N8 (routes/dealership_page.py, scanner/upsert/ownership.py, scripts/apply_recipe_repairs.py, tests/test_apply_recipe_repairs.py, tests/test_prefetch_n8_7.py, tests/test_shared_host_identity.py, possibly more). Regenerate with `python backend/tests/test_no_sqlite.py --write` or move those files to PG. V035 is also used provisionally by phase/N30 (users auth_epoch) and N37.9 (admin_users): renumber at merge.
 
 ## 9. Risks and open questions
 
