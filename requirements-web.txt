@@ -17,6 +17,7 @@ thefuzz>=0.22.1
 sentence-transformers>=2.2
 # Postgres + pgvector (semantic search, master catalog, BMW OEM embeddings)
 psycopg[binary]>=3.2
+psycopg-pool>=3.2
 pgvector>=0.3
 bcrypt>=4.1
 resend>=2.0.0
