@@ -144,6 +144,32 @@ def _allow_request_sqlite(key: str, *, max_events: int, window_seconds: float) -
         return True
 
 
+def refund_event(key: str) -> None:
+    """Drop the most recent event for ``key`` (undo an ``allow_request`` reservation)."""
+    if _sqlite_path_configured():
+        try:
+            p = _prepare_sqlite_path()
+            with _sqlite_lock:
+                conn = sqlite3.connect(p, check_same_thread=False, timeout=5.0)
+                try:
+                    _sqlite_init_conn(conn)
+                    conn.execute(
+                        "DELETE FROM _rate_hits WHERE rowid = "
+                        "(SELECT rowid FROM _rate_hits WHERE k = ? ORDER BY t DESC LIMIT 1)",
+                        (key,),
+                    )
+                    conn.commit()
+                    return
+                finally:
+                    conn.close()
+        except (RuntimeError, sqlite3.Error):
+            pass
+    with _lock:
+        buf = _events.get(key)
+        if buf:
+            buf.pop()
+
+
 def count_events(key: str, *, window_seconds: float) -> int:
     """Events recorded for ``key`` inside the window, without recording one."""
     if _sqlite_path_configured():

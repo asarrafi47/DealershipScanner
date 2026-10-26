@@ -54,3 +54,49 @@ def test_success_not_counted_and_other_account_unaffected(app_factory):
     for i in range(10):
         _login(c, "someoneelse", "x%d" % i, f"198.51.100.{i + 1}")
     assert _login(c, "okuser", pw).status_code == 200
+
+
+def test_username_and_email_share_one_bucket(app_factory):
+    main = app_factory()
+    c = main.app.test_client()
+    _user("aliasv")
+    codes = []
+    for i in range(12):
+        ident = "aliasv" if i % 2 == 0 else "aliasv@example.com"
+        codes.append(_login(c, ident, "wrong-%d" % i, f"198.51.100.{i + 1}").status_code)
+    assert codes[:10] == [401] * 10
+    assert codes[10:] == [429, 429]
+
+
+def test_success_refunds_slot(app_factory):
+    main = app_factory()
+    c = main.app.test_client()
+    pw = "long-enough-password"
+    _user("refunder")
+    for i in range(9):
+        assert _login(c, "refunder", "bad%d" % i, f"198.51.100.{i + 1}").status_code == 401
+    for _ in range(5):
+        assert _login(c, "refunder", pw).status_code == 200
+    # 9 failures + successes must not have consumed the last slot
+    assert _login(c, "refunder", "bad-last").status_code == 401
+    assert _login(c, "refunder", "bad-after").status_code == 429
+
+
+def test_slot_reserved_before_verification(app_factory, monkeypatch):
+    """Failures are counted even when many guesses are in flight: the slot is taken
+    before authenticate runs, so a guess seeing the lock never reaches the hash."""
+    import backend.auth.pages as pages
+
+    main = app_factory()
+    c = main.app.test_client()
+    _user("racer")
+    seen = []
+
+    def spy(login, pw):
+        seen.append(pw)
+        return None
+
+    monkeypatch.setattr(pages, "authenticate_app_user", spy)
+    for i in range(12):
+        _login(c, "racer", "g%d" % i, f"198.51.100.{i + 1}")
+    assert len(seen) == 10
