@@ -1,7 +1,6 @@
 """Store round-trip + guard tests for user-submitted dealership reviews.
 
-SQLite isolation mirrors ``test_dealer_specials_store.py`` — never touches prod
-Postgres.
+Runs on a throwaway Postgres clone (``pg_db``) — never touches prod.
 """
 from __future__ import annotations
 
@@ -21,8 +20,9 @@ from backend.reviews.store import (
 # Store
 # ---------------------------------------------------------------------------
 
-def test_upsert_and_read_roundtrip(sqlite_inventory):
-    conn = sqlite_inventory.get_conn()
+@pytest.mark.pg
+def test_upsert_and_read_roundtrip(pg_db):
+    conn = pg_db.get_conn()
     try:
         upsert_review(
             conn, "longotoyota-com", 1,
@@ -50,8 +50,9 @@ def test_upsert_and_read_roundtrip(sqlite_inventory):
         conn.close()
 
 
-def test_one_review_per_user_edits_in_place(sqlite_inventory):
-    conn = sqlite_inventory.get_conn()
+@pytest.mark.pg
+def test_one_review_per_user_edits_in_place(pg_db):
+    conn = pg_db.get_conn()
     try:
         upsert_review(conn, "d-com", 7, rating=1, body="First take was awful.")
         upsert_review(conn, "d-com", 7, rating=4, body="Updated: they fixed it well.")
@@ -66,8 +67,9 @@ def test_one_review_per_user_edits_in_place(sqlite_inventory):
         conn.close()
 
 
-def test_review_summary_aggregation(sqlite_inventory):
-    conn = sqlite_inventory.get_conn()
+@pytest.mark.pg
+def test_review_summary_aggregation(pg_db):
+    conn = pg_db.get_conn()
     try:
         upsert_review(conn, "d-com", 1, rating=5, body="Loved it here.")
         upsert_review(conn, "d-com", 2, rating=3, body="It was fine overall.")
@@ -88,8 +90,9 @@ def test_review_summary_aggregation(sqlite_inventory):
         conn.close()
 
 
-def test_report_increment_and_auto_flag(sqlite_inventory):
-    conn = sqlite_inventory.get_conn()
+@pytest.mark.pg
+def test_report_increment_and_auto_flag(pg_db):
+    conn = pg_db.get_conn()
     try:
         upsert_review(conn, "d-com", 1, rating=5, body="Suspiciously glowing review.")
         rid = get_reviews_for_dealer(conn, "d-com")[0]["id"]
@@ -111,9 +114,10 @@ def test_report_increment_and_auto_flag(sqlite_inventory):
         conn.close()
 
 
-def test_report_dedup_by_reporter_hash(sqlite_inventory):
+@pytest.mark.pg
+def test_report_dedup_by_reporter_hash(pg_db):
     """A single reporter (IP hash) counts once — cannot flag a review alone."""
-    conn = sqlite_inventory.get_conn()
+    conn = pg_db.get_conn()
     try:
         upsert_review(conn, "d-com", 1, rating=5, body="Suspiciously glowing review.")
         rid = get_reviews_for_dealer(conn, "d-com")[0]["id"]

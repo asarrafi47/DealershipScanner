@@ -1,10 +1,9 @@
-"""Round-trip test for the dealer_specials store (SQLite backend)."""
+"""Round-trip test for the dealer_specials store (Postgres, migration-built schema)."""
 from __future__ import annotations
 
 import pytest
 
 from backend.scanner.specials.store import (
-    ensure_dealer_specials_table,
     get_specials_for_dealer,
     upsert_specials,
 )
@@ -23,10 +22,10 @@ def _offer(**kw):
     return base
 
 
-def test_store_roundtrip_and_replace(sqlite_inventory):
-    conn = sqlite_inventory.get_conn()
+@pytest.mark.pg
+def test_store_roundtrip_and_replace(pg_db):
+    conn = pg_db.get_conn()
     try:
-        ensure_dealer_specials_table(conn)
         n = upsert_specials(conn, "ggkia-com", [_offer(), _offer(offer_hash="hash-b", type="finance", payment=None)])
         assert n == 2
         rows = get_specials_for_dealer(conn, "ggkia-com")

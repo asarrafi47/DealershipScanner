@@ -11,6 +11,51 @@ from backend.db.repositories.base_repo import get_conn
 
 _log = logging.getLogger(__name__)
 
+# The pytest-only SQLite tier's ``dealerships`` table (V001 + V003 + V020 columns).
+# Moved here from ``dealerships_db`` (N37.8) so the store itself carries no SQLite;
+# deleted with this module at N37.23.
+_DEALERSHIPS_SQLITE_DDL = (
+    """
+    CREATE TABLE IF NOT EXISTS dealerships (
+        id                INTEGER PRIMARY KEY,
+        name              TEXT NOT NULL,
+        website_url       TEXT NOT NULL,
+        city              TEXT NOT NULL,
+        state             TEXT NOT NULL,
+        latitude          REAL,
+        longitude         REAL,
+        created_at        TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        duplicate_of_id   INTEGER REFERENCES dealerships(id),
+        duplicate_score   REAL,
+        is_active         INTEGER NOT NULL DEFAULT 1,
+        street_address    TEXT,
+        zip_code          TEXT,
+        dealer_website_url TEXT,
+        source_dmv        INTEGER NOT NULL DEFAULT 0,
+        source_osm        INTEGER NOT NULL DEFAULT 0,
+        source_web        INTEGER NOT NULL DEFAULT 0,
+        osm_id            TEXT,
+        sticker_provider  TEXT NOT NULL DEFAULT 'unknown',
+        sticker_ipacket_fail_count INTEGER NOT NULL DEFAULT 0,
+        sticker_provider_updated_at TEXT,
+        google_place_id   TEXT,
+        google_rating     REAL,
+        google_review_count INTEGER,
+        google_rating_fetched_at TEXT,
+        street_address_source TEXT,
+        oem_brand         TEXT,
+        business_status   TEXT,
+        google_primary_type TEXT,
+        phone             TEXT,
+        platform          TEXT,
+        strategy          TEXT
+    )
+    """,
+    "CREATE INDEX IF NOT EXISTS idx_dealerships_created ON dealerships(created_at DESC)",
+    "CREATE INDEX IF NOT EXISTS idx_dealerships_zip ON dealerships(zip_code)",
+    "CREATE INDEX IF NOT EXISTS idx_dealerships_google_place ON dealerships(google_place_id)",
+)
+
 
 def ensure_cars_table_columns(cursor) -> None:
     """Add optional listing / quality columns (idempotent ALTERs)."""
@@ -443,9 +488,8 @@ def init_inventory_db():
         "ON user_search_history(user_id, created_at DESC, id DESC)"
     )
     conn.commit()
-    from backend.db.dealerships_db import ensure_dealerships_table
-
-    ensure_dealerships_table(cursor)
+    for stmt in _DEALERSHIPS_SQLITE_DDL:
+        cursor.execute(stmt)
     conn.commit()
     conn.close()
     seed_cars()

@@ -14,7 +14,6 @@ import pytest
 
 from backend.db import dealer_geo
 from backend.db import inventory_db as inv
-from backend.db.dealerships_db import ensure_dealerships_table
 from backend.listings import dealer_registry_match as drm
 from backend.scanner import database as sdb
 from backend.scanner import manifest as mf
@@ -39,7 +38,6 @@ def db(tmp_path, monkeypatch):
     monkeypatch.setattr(inv, "_registry_backfill_ran", True, raising=False)
     inv.init_inventory_db()
     with closing(sqlite3.connect(path)) as c:
-        ensure_dealerships_table(c.cursor())
         for rid, name, url, street, city, state, lat, lon in STORES:
             c.execute(
                 "INSERT INTO dealerships (id, name, website_url, dealer_website_url, street_address, city, state, "

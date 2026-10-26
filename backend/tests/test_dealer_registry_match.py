@@ -8,7 +8,6 @@ from pathlib import Path
 import pytest
 
 import backend.db.inventory_db as inventory_db
-from backend.db.dealerships_db import ensure_dealerships_table
 from backend.db.inventory_db import init_inventory_db, search_cars
 from backend.listings.dealer_registry_match import (
     collect_registry_ids_from_cars,
@@ -63,7 +62,6 @@ def test_search_cars_dealer_filter_matches_host_only(
     init_inventory_db()
     conn = sqlite3.connect(str(dbp))
     cur = conn.cursor()
-    ensure_dealerships_table(cur)
     cur.execute(
         """
         INSERT INTO dealerships (id, name, website_url, city, state, is_active)
@@ -124,7 +122,6 @@ def test_registry_id_by_dealer_host_reads_dealerships_table(
     init_inventory_db()
     conn = sqlite3.connect(str(dbp))
     cur = conn.cursor()
-    ensure_dealerships_table(cur)
     cur.execute(
         """
         INSERT INTO dealerships (id, name, website_url, city, state, is_active)

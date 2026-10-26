@@ -681,11 +681,7 @@ def _dealer_specials(dealer_id: str) -> dict:
 def _dealer_reviews(dealer_id: str) -> dict:
     """Read published reviews + aggregate summary for a dealer (defensive)."""
     from backend.db.inventory_db import get_conn
-    from backend.reviews.store import (
-        ensure_reviews_table,
-        get_reviews_for_dealer,
-        review_summary,
-    )
+    from backend.reviews.store import get_reviews_for_dealer, review_summary
 
     empty = {
         "summary": {"count": 0, "avg_rating": None, "addon_fee_count": 0, "addon_fees": []},
@@ -693,14 +689,6 @@ def _dealer_reviews(dealer_id: str) -> dict:
     }
     conn = get_conn()
     try:
-        # Idempotent + additive; guarantees reads run against an existing table
-        # (no scanner creates it) and avoids an aborted-transaction cascade.
-        try:
-            cur = conn.cursor()
-            ensure_reviews_table(cur)
-            conn.commit()
-        except Exception:
-            conn.rollback()
         summary = review_summary(conn, dealer_id)
         reviews = get_reviews_for_dealer(conn, dealer_id, limit=100)
         return {"summary": summary, "reviews": reviews}

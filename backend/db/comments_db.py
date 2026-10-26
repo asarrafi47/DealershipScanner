@@ -1,15 +1,14 @@
 """Persistence for user-authored comments (``car_comments``, ``dealer_comments``)
 and the per-dealership Google rating cache (``dealer_ratings``).
 
-Schema of record is ``migrations/V002__community.sql``. The ``ensure_*`` calls
-here are the same DDL expressed idempotently, so a database that has not run
-the migration yet (a fresh dev box, a SQLite test) still works -- exactly the
-arrangement ``backend/reviews/store.py`` uses for ``dealer_reviews``.
+Schema of record is ``migrations/V002__community.sql`` (``comment_flags`` V004,
+``comment_attachments`` V005). The tables are never created at runtime: a database
+that has not run the migration chain fails loudly instead of growing its own
+copy, the arrangement ``backend/reviews/store.py`` uses for ``dealer_reviews``.
 
-Writes go through the shared inventory connection
+Reads and writes go through the shared inventory connection
 (:func:`backend.db.inventory_db.get_conn`), so ``?`` placeholders are adapted to
-``%s`` on Postgres by the compat cursor and the module reads the same on both
-backends. Production is Postgres; SQLite exists only for pytest isolation.
+``%s`` by the compat cursor. Rows come back as dicts (``psycopg`` ``dict_row``).
 
 Two things this module deliberately owns rather than leaving to callers:
 
@@ -27,11 +26,11 @@ from __future__ import annotations
 
 import html
 import re
-import sqlite3
 from datetime import datetime, timedelta, timezone
 from typing import Any
 
-from backend.db import inventory_pg
+from psycopg.rows import dict_row
+
 from backend.db.inventory_db import get_conn
 
 # Free text, not an essay: long enough for "this dealership adds bogus packages,
@@ -70,302 +69,6 @@ class CommentError(ValueError):
         super().__init__(message)
         self.code = code
         self.message = message
-
-
-# Parent table each scope's subject id points at, so the runtime DDL declares the
-# same foreign key the migration does.
-_SUBJECT_PARENT: dict[str, str] = {"car_id": "cars", "dealership_id": "dealerships"}
-
-
-# Index name -> (columns, partial predicate). Shared by the runtime DDL below and
-# asserted equal to migrations/V002__community.sql by test_comments_db.py, because
-# whichever of the two runs first wins: an index created here without V002's partial
-# predicate would leave a database that passes ``migrate`` yet reads differently.
-_VISIBLE_ROWS = "deleted_at IS NULL AND is_hidden = false"
-_FLAGGED_ROWS = "flag_count > 0"
-
-
-def _comment_indexes(table: str, subject_col: str) -> list[tuple[str, str, str]]:
-    """``(name, columns, where)`` for one comment table, matching V002 exactly."""
-    return [
-        # The read path: visible comments for one subject, newest first.
-        (f"idx_{table}_thread", f"{subject_col}, created_at DESC", _VISIBLE_ROWS),
-        # Ownership checks on delete, and the per-user posting-volume cap.
-        (f"idx_{table}_user_recent", "user_id, created_at DESC", ""),
-        (f"idx_{table}_moderation", "flag_count DESC, created_at DESC", _FLAGGED_ROWS),
-    ]
-
-
-# One reporter counts once per comment. Schema of record is
-# migrations/V004__comment_flag_dedupe.sql; this is the same DDL expressed
-# idempotently, the arrangement described in the module docstring. Deliberately
-# NOT created by ``ensure_comment_tables`` -- that function's output is compared
-# statement-for-statement against V002 by test_comments_db.py.
-_DDL_COMMENT_FLAGS_PG = """
-CREATE TABLE IF NOT EXISTS comment_flags (
-    scope TEXT NOT NULL,
-    comment_id BIGINT NOT NULL,
-    ip_hash TEXT NOT NULL,
-    created_at TEXT,
-    UNIQUE (scope, comment_id, ip_hash)
-)
-"""
-
-_DDL_COMMENT_FLAGS_SQLITE = """
-CREATE TABLE IF NOT EXISTS comment_flags (
-    scope TEXT NOT NULL,
-    comment_id INTEGER NOT NULL,
-    ip_hash TEXT NOT NULL,
-    created_at TEXT,
-    UNIQUE (scope, comment_id, ip_hash)
-)
-"""
-
-
-# Photo attachments. Schema of record is
-# migrations/V005__comment_attachments.sql; as with comment_flags this is the
-# same DDL expressed idempotently and is deliberately NOT created by
-# ``ensure_comment_tables``, whose output is compared statement-for-statement
-# against V002 by test_comments_db.py.
-#
-# Scope-polymorphic like comment_flags, and for the same reason: car_comments.id
-# and dealer_comments.id are independent sequences, so no single foreign key can
-# point at both parents. ``storage_key`` is the opaque server-minted name from
-# backend/utils/comment_images.py -- never a user-supplied filename -- and it is
-# UNIQUE so a collision fails the INSERT instead of quietly re-pointing one
-# comment's photo at another's file.
-_DDL_COMMENT_ATTACHMENTS_PG = """
-CREATE TABLE IF NOT EXISTS comment_attachments (
-    id BIGSERIAL PRIMARY KEY,
-    scope TEXT NOT NULL,
-    comment_id BIGINT NOT NULL,
-    user_id BIGINT NOT NULL,
-    storage_key TEXT NOT NULL UNIQUE,
-    mime_type TEXT NOT NULL,
-    width INTEGER NOT NULL,
-    height INTEGER NOT NULL,
-    byte_size INTEGER NOT NULL,
-    sort_order INTEGER NOT NULL DEFAULT 0,
-    created_at TEXT,
-    deleted_at TEXT,
-    CONSTRAINT comment_attachments_scope_known CHECK (scope IN ('car', 'dealer')),
-    CONSTRAINT comment_attachments_mime_allowed
-        CHECK (mime_type IN ('image/jpeg', 'image/png', 'image/webp')),
-    CONSTRAINT comment_attachments_dims_positive CHECK (width > 0 AND height > 0),
-    CONSTRAINT comment_attachments_size_positive CHECK (byte_size > 0),
-    CONSTRAINT comment_attachments_sort_order_nonneg CHECK (sort_order >= 0)
-)
-"""
-
-_DDL_COMMENT_ATTACHMENTS_SQLITE = """
-CREATE TABLE IF NOT EXISTS comment_attachments (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    scope TEXT NOT NULL,
-    comment_id INTEGER NOT NULL,
-    user_id INTEGER NOT NULL,
-    storage_key TEXT NOT NULL UNIQUE,
-    mime_type TEXT NOT NULL,
-    width INTEGER NOT NULL,
-    height INTEGER NOT NULL,
-    byte_size INTEGER NOT NULL,
-    sort_order INTEGER NOT NULL DEFAULT 0,
-    created_at TEXT,
-    deleted_at TEXT,
-    CONSTRAINT comment_attachments_scope_known CHECK (scope IN ('car', 'dealer')),
-    CONSTRAINT comment_attachments_mime_allowed
-        CHECK (mime_type IN ('image/jpeg', 'image/png', 'image/webp')),
-    CONSTRAINT comment_attachments_dims_positive CHECK (width > 0 AND height > 0),
-    CONSTRAINT comment_attachments_size_positive CHECK (byte_size > 0),
-    CONSTRAINT comment_attachments_sort_order_nonneg CHECK (sort_order >= 0)
-)
-"""
-
-_ATTACHMENT_INDEXES: list[tuple[str, str, str]] = [
-    ("idx_comment_attachments_comment", "scope, comment_id, sort_order", "deleted_at IS NULL"),
-    ("idx_comment_attachments_user", "user_id, created_at DESC", ""),
-]
-
-
-# Same shape for dealer_ratings.
-_RATING_INDEXES: list[tuple[str, str, str]] = [
-    ("idx_dealer_ratings_place", "google_place_id", ""),
-    ("idx_dealer_ratings_fetched", "fetched_at", ""),
-]
-
-
-def _create_index_sql(name: str, table: str, columns: str, where: str) -> str:
-    stmt = f"CREATE INDEX IF NOT EXISTS {name} ON {table} ({columns})"
-    return f"{stmt} WHERE ({where})" if where else stmt
-
-
-def _ddl_comments(table: str, subject_col: str, *, postgres: bool) -> str:
-    """DDL kept semantically identical to migrations/V002__community.sql.
-
-    Not "close enough": whichever of the two runs first wins, and a table created
-    here without V002's foreign key and CHECK constraints would leave a database
-    that passes ``migrate`` while silently accepting orphan rows and blank
-    comments. The two are not byte-for-byte — V002 is Postgres-only and written
-    in pg_dump's spelling (``public.`` schema, ``bigserial``, ``::text`` casts),
-    while this has to emit a SQLite variant for pytest as well. What must match,
-    and what ``test_ddl_matches_v002_migration`` checks, is the column set, the
-    constraint names, and the index definitions including their partial
-    predicates.
-    """
-    parent = _SUBJECT_PARENT[subject_col]
-    if postgres:
-        return f"""
-        CREATE TABLE IF NOT EXISTS {table} (
-            id BIGSERIAL PRIMARY KEY,
-            {subject_col} BIGINT NOT NULL REFERENCES {parent}(id) ON DELETE CASCADE,
-            user_id BIGINT NOT NULL,
-            body TEXT NOT NULL,
-            ip_hash TEXT,
-            is_hidden BOOLEAN NOT NULL DEFAULT FALSE,
-            flag_count INTEGER NOT NULL DEFAULT 0,
-            created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-            updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-            deleted_at TIMESTAMPTZ,
-            CONSTRAINT {table}_body_not_blank CHECK (btrim(body) <> ''),
-            CONSTRAINT {table}_body_length CHECK (char_length(body) <= {MAX_BODY_CHARS}),
-            CONSTRAINT {table}_flag_count_nonneg CHECK (flag_count >= 0)
-        )
-        """
-    return f"""
-    CREATE TABLE IF NOT EXISTS {table} (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        {subject_col} INTEGER NOT NULL REFERENCES {parent}(id) ON DELETE CASCADE,
-        user_id INTEGER NOT NULL,
-        body TEXT NOT NULL,
-        ip_hash TEXT,
-        is_hidden INTEGER NOT NULL DEFAULT 0,
-        flag_count INTEGER NOT NULL DEFAULT 0,
-        created_at TEXT NOT NULL,
-        updated_at TEXT NOT NULL,
-        deleted_at TEXT,
-        CONSTRAINT {table}_body_not_blank CHECK (trim(body) <> ''),
-        CONSTRAINT {table}_body_length CHECK (length(body) <= {MAX_BODY_CHARS}),
-        CONSTRAINT {table}_flag_count_nonneg CHECK (flag_count >= 0)
-    )
-    """
-
-
-_DDL_RATINGS_PG = """
-CREATE TABLE IF NOT EXISTS dealer_ratings (
-    dealership_id BIGINT PRIMARY KEY REFERENCES dealerships(id) ON DELETE CASCADE,
-    google_place_id TEXT,
-    google_rating NUMERIC(2,1),
-    google_review_count INTEGER,
-    fetched_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-    source TEXT NOT NULL DEFAULT 'google_places',
-    CONSTRAINT dealer_ratings_rating_range
-        CHECK (google_rating IS NULL OR (google_rating >= 0 AND google_rating <= 5)),
-    CONSTRAINT dealer_ratings_review_count_nonneg
-        CHECK (google_review_count IS NULL OR google_review_count >= 0)
-)
-"""
-
-_DDL_RATINGS_SQLITE = """
-CREATE TABLE IF NOT EXISTS dealer_ratings (
-    dealership_id INTEGER PRIMARY KEY REFERENCES dealerships(id) ON DELETE CASCADE,
-    google_place_id TEXT,
-    google_rating REAL,
-    google_review_count INTEGER,
-    fetched_at TEXT NOT NULL,
-    source TEXT NOT NULL DEFAULT 'google_places',
-    CONSTRAINT dealer_ratings_rating_range
-        CHECK (google_rating IS NULL OR (google_rating >= 0 AND google_rating <= 5)),
-    CONSTRAINT dealer_ratings_review_count_nonneg
-        CHECK (google_review_count IS NULL OR google_review_count >= 0)
-)
-"""
-
-
-# Per-process "already ensured" flags, the same guard
-# ``inventory_pg.init_postgres_inventory`` uses for ``_PG_INV_SCHEMA_OK``.
-# Without them, every comment post/delete/flag/attach and every dealer-rating
-# write re-issues `CREATE TABLE IF NOT EXISTS` + `CREATE INDEX IF NOT EXISTS`
-# against the shared Postgres inventory connection -- and `CREATE INDEX IF NOT
-# EXISTS` still takes a lock even when the index already exists, so a long
-# transaction elsewhere on these tables queues every later comment write
-# behind it. Gated on Postgres specifically: SQLite is pytest-only, a fresh
-# empty file per test, so that path must keep creating its tables every call.
-_COMMENT_TABLES_OK = False
-_COMMENT_FLAGS_TABLE_OK = False
-_COMMENT_ATTACHMENTS_TABLE_OK = False
-_DEALER_RATINGS_TABLE_OK = False
-
-
-def _migrated() -> bool:
-    """Postgres at the migrations/ version (V002/V004/V005 own these tables)."""
-    from backend.db.schema_version import schema_is_current
-
-    return schema_is_current()
-
-
-def ensure_comment_tables(cur: Any) -> None:
-    """Create both comment tables + indexes if absent (idempotent, no commit)."""
-    global _COMMENT_TABLES_OK
-    postgres = inventory_pg.is_inventory_postgres()
-    if postgres and _COMMENT_TABLES_OK:
-        return
-    if postgres and _migrated():
-        _COMMENT_TABLES_OK = True
-        return
-    for table, subject_col in _SCOPES.values():
-        cur.execute(_ddl_comments(table, subject_col, postgres=postgres))
-        for name, columns, where in _comment_indexes(table, subject_col):
-            cur.execute(_create_index_sql(name, table, columns, where))
-    if postgres:
-        _COMMENT_TABLES_OK = True
-
-
-def ensure_comment_flags_table(cur: Any) -> None:
-    """Create the ``comment_flags`` dedup table if absent (idempotent, no commit)."""
-    global _COMMENT_FLAGS_TABLE_OK
-    postgres = inventory_pg.is_inventory_postgres()
-    if postgres and _COMMENT_FLAGS_TABLE_OK:
-        return
-    if postgres and _migrated():
-        _COMMENT_FLAGS_TABLE_OK = True
-        return
-    cur.execute(_DDL_COMMENT_FLAGS_PG if postgres else _DDL_COMMENT_FLAGS_SQLITE)
-    cur.execute(
-        "CREATE INDEX IF NOT EXISTS idx_comment_flags_comment ON comment_flags (scope, comment_id)"
-    )
-    if postgres:
-        _COMMENT_FLAGS_TABLE_OK = True
-
-
-def ensure_comment_attachments_table(cur: Any) -> None:
-    """Create ``comment_attachments`` if absent (idempotent, no commit)."""
-    global _COMMENT_ATTACHMENTS_TABLE_OK
-    postgres = inventory_pg.is_inventory_postgres()
-    if postgres and _COMMENT_ATTACHMENTS_TABLE_OK:
-        return
-    if postgres and _migrated():
-        _COMMENT_ATTACHMENTS_TABLE_OK = True
-        return
-    cur.execute(_DDL_COMMENT_ATTACHMENTS_PG if postgres else _DDL_COMMENT_ATTACHMENTS_SQLITE)
-    for name, columns, where in _ATTACHMENT_INDEXES:
-        cur.execute(_create_index_sql(name, "comment_attachments", columns, where))
-    if postgres:
-        _COMMENT_ATTACHMENTS_TABLE_OK = True
-
-
-def ensure_dealer_ratings_table(cur: Any) -> None:
-    """Create ``dealer_ratings`` if absent (idempotent, no commit)."""
-    global _DEALER_RATINGS_TABLE_OK
-    postgres = inventory_pg.is_inventory_postgres()
-    if postgres and _DEALER_RATINGS_TABLE_OK:
-        return
-    if postgres and _migrated():
-        _DEALER_RATINGS_TABLE_OK = True
-        return
-    cur.execute(_DDL_RATINGS_PG if postgres else _DDL_RATINGS_SQLITE)
-    for name, columns, where in _RATING_INDEXES:
-        cur.execute(_create_index_sql(name, "dealer_ratings", columns, where))
-    if postgres:
-        _DEALER_RATINGS_TABLE_OK = True
 
 
 def _now_iso() -> str:
@@ -409,7 +112,7 @@ def body_to_html(body: str) -> str:
 
 
 def _iso(value: Any) -> str | None:
-    """Timestamps read back as ``datetime`` on Postgres, ``str`` on SQLite."""
+    """Timestamps read back as ``datetime`` (``timestamptz``) or ``str`` (TEXT columns)."""
     if value is None:
         return None
     if isinstance(value, datetime):
@@ -466,9 +169,8 @@ def list_comments(
     skip = max(0, int(offset))
     hidden_clause = "" if include_hidden else " AND is_hidden = FALSE"
     conn = get_conn()
-    conn.row_factory = sqlite3.Row
     try:
-        cur = conn.cursor()
+        cur = conn.cursor(row_factory=dict_row)
         cur.execute(
             f"""
             SELECT {_SELECT_COLUMNS.format(subject=subject_col)}
@@ -513,9 +215,8 @@ def get_comment(scope: str, comment_id: int) -> dict[str, Any] | None:
     """One comment by id, including soft-deleted and hidden rows."""
     table, subject_col = _scope_spec(scope)
     conn = get_conn()
-    conn.row_factory = sqlite3.Row
     try:
-        cur = conn.cursor()
+        cur = conn.cursor(row_factory=dict_row)
         cur.execute(
             f"SELECT {_SELECT_COLUMNS.format(subject=subject_col)} FROM {table} WHERE id = ?",
             (int(comment_id),),
@@ -576,10 +277,8 @@ def create_comment(
     clean = sanitize_body(body)
     now = _now_iso()
     conn = get_conn()
-    conn.row_factory = sqlite3.Row
     try:
-        cur = conn.cursor()
-        ensure_comment_tables(cur)
+        cur = conn.cursor(row_factory=dict_row)
         cur.execute(
             f"""
             INSERT INTO {table} (
@@ -610,7 +309,6 @@ def delete_own_comment(scope: str, comment_id: int, user_id: int) -> str:
     conn = get_conn()
     try:
         cur = conn.cursor()
-        ensure_comment_tables(cur)
         cur.execute(
             f"""
             UPDATE {table}
@@ -655,12 +353,9 @@ def flag_comment(scope: str, comment_id: int, *, reporter_hash: str | None = Non
     table, subject_col = _scope_spec(scope)
     now = _now_iso()
     conn = get_conn()
-    conn.row_factory = sqlite3.Row
     try:
-        cur = conn.cursor()
-        ensure_comment_tables(cur)
+        cur = conn.cursor(row_factory=dict_row)
         if reporter_hash:
-            ensure_comment_flags_table(cur)
             # Confirm the comment exists first: a flag on a missing/deleted row is a
             # 404, not a silent no-op that would still burn this reporter's one slot.
             cur.execute(
@@ -672,7 +367,7 @@ def flag_comment(scope: str, comment_id: int, *, reporter_hash: str | None = Non
             if current is None:
                 conn.commit()
                 return None
-            cur = conn.cursor()
+            cur = conn.cursor(row_factory=dict_row)
             cur.execute(
                 "INSERT INTO comment_flags (scope, comment_id, ip_hash, created_at) "
                 "VALUES (?, ?, ?, ?) ON CONFLICT (scope, comment_id, ip_hash) DO NOTHING",
@@ -682,7 +377,7 @@ def flag_comment(scope: str, comment_id: int, *, reporter_hash: str | None = Non
                 # Already reported by this actor — current state, no bump.
                 conn.commit()
                 return _row_to_comment(current, scope)
-            cur = conn.cursor()
+            cur = conn.cursor(row_factory=dict_row)
         cur.execute(
             f"""
             UPDATE {table}
@@ -749,9 +444,8 @@ def list_attachments(scope: str, comment_ids: list[int]) -> dict[int, list[dict[
     placeholders = ", ".join("?" for _ in ids)
     out: dict[int, list[dict[str, Any]]] = {}
     conn = get_conn()
-    conn.row_factory = sqlite3.Row
     try:
-        cur = conn.cursor()
+        cur = conn.cursor(row_factory=dict_row)
         cur.execute(
             f"""
             SELECT {_ATTACHMENT_COLUMNS}
@@ -786,9 +480,8 @@ def get_attachment(attachment_id: int) -> dict[str, Any] | None:
     reachable by anyone who kept the URL.
     """
     conn = get_conn()
-    conn.row_factory = sqlite3.Row
     try:
-        cur = conn.cursor()
+        cur = conn.cursor(row_factory=dict_row)
         cur.execute(
             f"SELECT {_ATTACHMENT_COLUMNS} FROM comment_attachments "
             "WHERE id = ? AND deleted_at IS NULL",
@@ -817,11 +510,9 @@ def add_attachments(
         return []
     now = _now_iso()
     conn = get_conn()
-    conn.row_factory = sqlite3.Row
     out: list[dict[str, Any]] = []
     try:
-        cur = conn.cursor()
-        ensure_comment_attachments_table(cur)
+        cur = conn.cursor(row_factory=dict_row)
         for order, item in enumerate(items):
             cur.execute(
                 f"""
@@ -867,7 +558,6 @@ def delete_attachments_for_comment(scope: str, comment_id: int) -> list[str]:
     conn = get_conn()
     try:
         cur = conn.cursor()
-        ensure_comment_attachments_table(cur)
         cur.execute(
             """
             UPDATE comment_attachments SET deleted_at = ?
@@ -939,7 +629,6 @@ def upsert_dealer_rating(
     conn = get_conn()
     try:
         cur = conn.cursor()
-        ensure_dealer_ratings_table(cur)
         cur.execute(
             """
             INSERT INTO dealer_ratings (
@@ -970,9 +659,8 @@ def upsert_dealer_rating(
 def get_dealer_rating(dealership_id: int) -> dict[str, Any] | None:
     """Cached Google rating for one dealership, or ``None`` if never fetched."""
     conn = get_conn()
-    conn.row_factory = sqlite3.Row
     try:
-        cur = conn.cursor()
+        cur = conn.cursor(row_factory=dict_row)
         cur.execute(
             """
             SELECT dealership_id, google_place_id, google_rating, google_review_count,
@@ -1012,9 +700,8 @@ def list_active_dealership_websites() -> list[dict[str, Any]]:
     run, not once per dealer — it is a few hundred short rows.
     """
     conn = get_conn()
-    conn.row_factory = sqlite3.Row
     try:
-        cur = conn.cursor()
+        cur = conn.cursor(row_factory=dict_row)
         cur.execute(
             """
             SELECT id, website_url, dealer_website_url, latitude, longitude
@@ -1040,10 +727,8 @@ def list_dealerships_needing_rating(
     """
     cap = max(1, int(limit))
     conn = get_conn()
-    conn.row_factory = sqlite3.Row
     try:
-        cur = conn.cursor()
-        ensure_dealer_ratings_table(cur)
+        cur = conn.cursor(row_factory=dict_row)
         params: list[Any] = []
         if refresh_after_days is None:
             freshness = "r.dealership_id IS NULL"

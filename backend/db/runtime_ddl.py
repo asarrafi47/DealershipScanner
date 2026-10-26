@@ -30,8 +30,8 @@ The rules for those helpers on Postgres:
 
 SQLite (pytest only) is unchanged: callers keep running their SQLite DDL.
 
-Wired into ``reviews.store``, ``scanner.recipe_store`` and
-``scanner.job_queue``; the remaining per-module helpers wait for P13B.3.
+Wired into ``scanner.recipe_store`` and ``scanner.job_queue``
+(``reviews.store`` dropped its runtime DDL in N37.8); the remaining per-module helpers wait for P13B.3.
 """
 from __future__ import annotations
 

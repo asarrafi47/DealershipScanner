@@ -261,83 +261,6 @@
     ""
    ]
   },
-  "dealer_reviews": {
-   "addon_fee_amount": [
-    "double precision",
-    "YES",
-    ""
-   ],
-   "addon_fee_desc": [
-    "text",
-    "YES",
-    ""
-   ],
-   "addon_fee_reported": [
-    "integer",
-    "NO",
-    "0"
-   ],
-   "body": [
-    "text",
-    "NO",
-    ""
-   ],
-   "created_at": [
-    "text",
-    "YES",
-    ""
-   ],
-   "dealer_id": [
-    "text",
-    "NO",
-    ""
-   ],
-   "display_name": [
-    "text",
-    "YES",
-    ""
-   ],
-   "id": [
-    "bigint",
-    "NO",
-    "nextval('dealer_reviews_id_seq'::regclass)"
-   ],
-   "ip_hash": [
-    "text",
-    "YES",
-    ""
-   ],
-   "is_anonymous": [
-    "integer",
-    "NO",
-    "0"
-   ],
-   "rating": [
-    "integer",
-    "NO",
-    ""
-   ],
-   "report_count": [
-    "integer",
-    "NO",
-    "0"
-   ],
-   "status": [
-    "text",
-    "NO",
-    "'published'::text"
-   ],
-   "updated_at": [
-    "text",
-    "YES",
-    ""
-   ],
-   "user_id": [
-    "integer",
-    "NO",
-    ""
-   ]
-  },
   "dealer_scan_profile": {
    "dealer_id": [
     "text",
@@ -357,103 +280,6 @@
    "updated_at": [
     "text",
     "NO",
-    ""
-   ]
-  },
-  "dealer_specials": {
-   "dealer_id": [
-    "text",
-    "NO",
-    ""
-   ],
-   "due_at_signing": [
-    "double precision",
-    "YES",
-    ""
-   ],
-   "expires": [
-    "text",
-    "YES",
-    ""
-   ],
-   "fine_print": [
-    "text",
-    "YES",
-    ""
-   ],
-   "id": [
-    "bigint",
-    "NO",
-    "nextval('dealer_specials_id_seq'::regclass)"
-   ],
-   "mileage_per_year": [
-    "integer",
-    "YES",
-    ""
-   ],
-   "msrp": [
-    "double precision",
-    "YES",
-    ""
-   ],
-   "offer_hash": [
-    "text",
-    "YES",
-    ""
-   ],
-   "payment": [
-    "double precision",
-    "YES",
-    ""
-   ],
-   "raw_html_snippet": [
-    "text",
-    "YES",
-    ""
-   ],
-   "scraped_at": [
-    "text",
-    "NO",
-    ""
-   ],
-   "source_url": [
-    "text",
-    "YES",
-    ""
-   ],
-   "term_months": [
-    "integer",
-    "YES",
-    ""
-   ],
-   "title": [
-    "text",
-    "YES",
-    ""
-   ],
-   "type": [
-    "text",
-    "YES",
-    ""
-   ],
-   "vehicle_make": [
-    "text",
-    "YES",
-    ""
-   ],
-   "vehicle_model": [
-    "text",
-    "YES",
-    ""
-   ],
-   "vehicle_trim": [
-    "text",
-    "YES",
-    ""
-   ],
-   "vehicle_year": [
-    "integer",
-    "YES",
     ""
    ]
   },
@@ -520,58 +346,6 @@
    ],
    "year": [
     "integer",
-    "YES",
-    ""
-   ]
-  },
-  "lease_offer_matches": {
-   "computed_at": [
-    "text",
-    "NO",
-    ""
-   ],
-   "confidence": [
-    "double precision",
-    "YES",
-    ""
-   ],
-   "dealer_id": [
-    "text",
-    "NO",
-    ""
-   ],
-   "extracted_json": [
-    "text",
-    "YES",
-    ""
-   ],
-   "id": [
-    "bigint",
-    "NO",
-    "nextval('lease_offer_matches_id_seq'::regclass)"
-   ],
-   "match_count": [
-    "integer",
-    "YES",
-    "0"
-   ],
-   "matches_json": [
-    "text",
-    "YES",
-    ""
-   ],
-   "offer_hash": [
-    "text",
-    "NO",
-    ""
-   ],
-   "offer_id": [
-    "bigint",
-    "YES",
-    ""
-   ],
-   "summary": [
-    "text",
     "YES",
     ""
    ]
@@ -797,23 +571,6 @@
     ""
    ]
   },
-  "review_reports": {
-   "created_at": [
-    "text",
-    "YES",
-    ""
-   ],
-   "ip_hash": [
-    "text",
-    "NO",
-    ""
-   ],
-   "review_id": [
-    "bigint",
-    "NO",
-    ""
-   ]
-  },
   "vin_owner_conflicts": {
    "claimant_dealer_id": [
     "text",
@@ -874,64 +631,14 @@
    "def": "public.dealer_recipes USING btree (dealer_id)"
   },
   {
-   "name": "dealer_reviews_dealer_id_user_id_key",
-   "table": "dealer_reviews",
-   "def": "public.dealer_reviews USING btree (dealer_id, user_id)"
-  },
-  {
-   "name": "dealer_reviews_pkey",
-   "table": "dealer_reviews",
-   "def": "public.dealer_reviews USING btree (id)"
-  },
-  {
-   "name": "idx_dealer_reviews_dealer",
-   "table": "dealer_reviews",
-   "def": "public.dealer_reviews USING btree (dealer_id, status)"
-  },
-  {
-   "name": "idx_dealer_reviews_user",
-   "table": "dealer_reviews",
-   "def": "public.dealer_reviews USING btree (user_id, created_at)"
-  },
-  {
    "name": "dealer_scan_profile_pkey",
    "table": "dealer_scan_profile",
    "def": "public.dealer_scan_profile USING btree (dealer_id)"
   },
   {
-   "name": "dealer_specials_dealer_id_offer_hash_key",
-   "table": "dealer_specials",
-   "def": "public.dealer_specials USING btree (dealer_id, offer_hash)"
-  },
-  {
-   "name": "dealer_specials_pkey",
-   "table": "dealer_specials",
-   "def": "public.dealer_specials USING btree (id)"
-  },
-  {
-   "name": "idx_dealer_specials_dealer",
-   "table": "dealer_specials",
-   "def": "public.dealer_specials USING btree (dealer_id)"
-  },
-  {
    "name": "haiku_spec_cache_pkey",
    "table": "haiku_spec_cache",
    "def": "public.haiku_spec_cache USING btree (cache_key)"
-  },
-  {
-   "name": "idx_lease_matches_dealer",
-   "table": "lease_offer_matches",
-   "def": "public.lease_offer_matches USING btree (dealer_id)"
-  },
-  {
-   "name": "lease_offer_matches_dealer_id_offer_hash_key",
-   "table": "lease_offer_matches",
-   "def": "public.lease_offer_matches USING btree (dealer_id, offer_hash)"
-  },
-  {
-   "name": "lease_offer_matches_pkey",
-   "table": "lease_offer_matches",
-   "def": "public.lease_offer_matches USING btree (id)"
   },
   {
    "name": "market_price_stats_pkey",
@@ -952,11 +659,6 @@
    "name": "uq_option_rejections_standing",
    "table": "option_rejections",
    "def": "public.option_rejections USING btree (car_id, option_name, price, reason)"
-  },
-  {
-   "name": "review_reports_review_id_ip_hash_key",
-   "table": "review_reports",
-   "def": "public.review_reports USING btree (review_id, ip_hash)"
   },
   {
    "name": "vin_owner_conflicts_pkey",
@@ -990,52 +692,16 @@
    "def": "PRIMARY KEY (dealer_id)"
   },
   {
-   "name": "dealer_reviews_dealer_id_user_id_key",
-   "table": "dealer_reviews",
-   "type": "u",
-   "def": "UNIQUE (dealer_id, user_id)"
-  },
-  {
-   "name": "dealer_reviews_pkey",
-   "table": "dealer_reviews",
-   "type": "p",
-   "def": "PRIMARY KEY (id)"
-  },
-  {
    "name": "dealer_scan_profile_pkey",
    "table": "dealer_scan_profile",
    "type": "p",
    "def": "PRIMARY KEY (dealer_id)"
   },
   {
-   "name": "dealer_specials_dealer_id_offer_hash_key",
-   "table": "dealer_specials",
-   "type": "u",
-   "def": "UNIQUE (dealer_id, offer_hash)"
-  },
-  {
-   "name": "dealer_specials_pkey",
-   "table": "dealer_specials",
-   "type": "p",
-   "def": "PRIMARY KEY (id)"
-  },
-  {
    "name": "haiku_spec_cache_pkey",
    "table": "haiku_spec_cache",
    "type": "p",
    "def": "PRIMARY KEY (cache_key)"
-  },
-  {
-   "name": "lease_offer_matches_dealer_id_offer_hash_key",
-   "table": "lease_offer_matches",
-   "type": "u",
-   "def": "UNIQUE (dealer_id, offer_hash)"
-  },
-  {
-   "name": "lease_offer_matches_pkey",
-   "table": "lease_offer_matches",
-   "type": "p",
-   "def": "PRIMARY KEY (id)"
   },
   {
    "name": "market_price_stats_pkey",
@@ -1056,12 +722,6 @@
    "def": "PRIMARY KEY (id)"
   },
   {
-   "name": "review_reports_review_id_ip_hash_key",
-   "table": "review_reports",
-   "type": "u",
-   "def": "UNIQUE (review_id, ip_hash)"
-  },
-  {
    "name": "vin_owner_conflicts_pkey",
    "table": "vin_owner_conflicts",
    "type": "p",
@@ -1078,47 +738,11 @@
    "owned_by": "dealer_jobs.id"
   },
   {
-   "name": "dealer_reviews_id_seq",
-   "owned_by": "dealer_reviews.id"
-  },
-  {
-   "name": "dealer_specials_id_seq",
-   "owned_by": "dealer_specials.id"
-  },
-  {
-   "name": "lease_offer_matches_id_seq",
-   "owned_by": "lease_offer_matches.id"
-  },
-  {
    "name": "model_generations_id_seq",
    "owned_by": "model_generations.id"
   }
  ],
  "sources": [
-  {
-   "source": "backend/reviews/store.py",
-   "call": "ensure_reviews_table + ensure_review_reports_table",
-   "db": "empty",
-   "tables": [
-    "dealer_reviews",
-    "review_reports"
-   ],
-   "indexes": [
-    "dealer_reviews_dealer_id_user_id_key",
-    "dealer_reviews_pkey",
-    "idx_dealer_reviews_dealer",
-    "idx_dealer_reviews_user",
-    "review_reports_review_id_ip_hash_key"
-   ],
-   "constraints": [
-    "dealer_reviews_dealer_id_user_id_key",
-    "dealer_reviews_pkey",
-    "review_reports_review_id_ip_hash_key"
-   ],
-   "sequences": [
-    "dealer_reviews_id_seq"
-   ]
-  },
   {
    "source": "backend/enrichment/service.py",
    "call": "ensure_enrichment_columns (Postgres: haiku_spec_cache)",
@@ -1170,46 +794,6 @@
     "dealer_recipes_pkey"
    ],
    "sequences": []
-  },
-  {
-   "source": "backend/scanner/specials/store.py",
-   "call": "ensure_dealer_specials_table",
-   "db": "empty",
-   "tables": [
-    "dealer_specials"
-   ],
-   "indexes": [
-    "dealer_specials_dealer_id_offer_hash_key",
-    "dealer_specials_pkey",
-    "idx_dealer_specials_dealer"
-   ],
-   "constraints": [
-    "dealer_specials_dealer_id_offer_hash_key",
-    "dealer_specials_pkey"
-   ],
-   "sequences": [
-    "dealer_specials_id_seq"
-   ]
-  },
-  {
-   "source": "backend/scanner/specials/lease_matches_store.py",
-   "call": "ensure_lease_matches_table",
-   "db": "empty",
-   "tables": [
-    "lease_offer_matches"
-   ],
-   "indexes": [
-    "idx_lease_matches_dealer",
-    "lease_offer_matches_dealer_id_offer_hash_key",
-    "lease_offer_matches_pkey"
-   ],
-   "constraints": [
-    "lease_offer_matches_dealer_id_offer_hash_key",
-    "lease_offer_matches_pkey"
-   ],
-   "sequences": [
-    "lease_offer_matches_id_seq"
-   ]
   },
   {
    "source": "backend/scanner/dealer/profile.py",
