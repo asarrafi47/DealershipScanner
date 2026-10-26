@@ -15,6 +15,7 @@ entry point (``gate_page`` for one payload, ``decide`` for the all-rows pass).
 """
 from __future__ import annotations
 
+import json
 import logging
 import re
 import sys
@@ -438,9 +439,27 @@ def _unique(matches: list[_Rooftop]) -> _Rooftop | None:
     return matches[0] if len(matches) == 1 else None
 
 
+def weak_name_hit(hit: "_Rooftop | None", place: tuple[str, str, str, str], city: str = "") -> "_Rooftop | None":
+    """A weak-name-tier winner (``_WEAK_NAME_TIERS``) stands only if the roster row has a
+    street, or the roster's town (zip, city+state or the city inside the rooftop's name) is
+    on the rooftop too. No KEEP on a loose name match the roster cannot back with a place
+    (N8.5; fletcherjones kept 106 Henderson cars that way)."""
+    if hit is None or place[0] or place[1]:
+        return hit
+    city_nrm = _nrm(city)
+    if (place[2] and place[2] in hit.locales) or (place[3] and place[3] in hit.zips):
+        return hit
+    if len(city_nrm) >= 3 and any(city_nrm in _nrm(n) for n in hit.names):
+        return hit
+    return None
+
+
+_weak_name_hit = weak_name_hit
+
+
 def _pick_target(
     rooftops: list[_Rooftop], dealer_name: str, dealer_id: str, dealer_url: str,
-    place: tuple[str, str, str, str] = ("", "", "", ""),
+    place: tuple[str, str, str, str] = ("", "", "", ""), city: str = "",
 ) -> tuple[_Rooftop | None, str]:
     """The one rooftop in this group payload that IS the store being scanned.
 
@@ -471,7 +490,8 @@ def _pick_target(
             # Feeds spell a store out more fully than the roster does
             # ("Welborn Chevrolet of Rome" vs "Welborn Chevrolet GMC of Rome").
             # Every roster word must appear, and only one rooftop may qualify.
-            hit = _unique([rt for rt in rooftops if any(target_tokens < _tokens(n) for n in rt.names)])
+            hit = _weak_name_hit(
+                _unique([rt for rt in rooftops if any(target_tokens < _tokens(n) for n in rt.names)]), place, city)
             if hit is not None:
                 return hit, "name_token_subset"
 
@@ -498,6 +518,7 @@ def _pick_target(
                     rt for rt in rooftops
                     if any(target_brand < _brand_canonical_tokens(n) for n in rt.names)
                 ])
+                hit = _weak_name_hit(hit, place, city)
                 if hit is not None:
                     return hit, "name_brand_alias_subset"
 
@@ -668,6 +689,8 @@ def resolve_rooftop_attribution(
         dealer_state=dealer_state, dealer_zip=dealer_zip,
         dealer_address_source=dealer_address_source,
     )
+    for row in kept:
+        stamp_evidence_tier(row)
     if rejected and dealer_id:
         try:
             from backend.scanner.rooftop_ledger import note_refusal
@@ -699,6 +722,60 @@ def resolve_rooftop_attribution(
         except Exception:  # noqa: BLE001 - never break a scan for bookkeeping
             pass
     return kept, rejected
+
+
+# Evidence tiers persisted on ``cars.rooftop_tier`` (V030, N8.6). strong = this store's
+# own feed positively stamped the car (rooftop name / site-id match, or a page-level
+# store identity) at a tier that proves identity; weak = the stamp matched only on a
+# locality, subset-name or scraped-street tier; none = nothing per car (single-store
+# feeds, unstamped group feeds, rows kept only because they sit under the store's own
+# feed account). The VIN ownership guard (backend/scanner/upsert) reads it.
+EVIDENCE_STRONG, EVIDENCE_WEAK, EVIDENCE_NONE = "strong", "weak", "none"
+_IDENTITY_SIGNAL_TIERS = frozenset({"identity_feed", "page_oem_code", "location_facet_value"})
+_UNSTAMPED_KEEP_TIERS = frozenset({"same_source_feed", "own_street_block", "unstamped_under_own_source"})
+
+
+def _mark_legacy_strength(rows: list[dict], tier: str, dealer_address_source: str = "") -> None:
+    """Legacy-ladder twin of the scorer's per-row ``strong`` flag for the rows of the target rooftop."""
+    weak_street = (
+        tier in _STREET_TIERS and str(dealer_address_source or "").strip().lower() in _WEAK_STREET_SOURCES
+    )
+    strong = tier not in _LOCALITY_ONLY_TIERS and tier not in _WEAK_NAME_TIERS and not weak_street
+    for row in rows:
+        row.setdefault("_rooftop_gate_tier", tier)  # not _rooftop_tier: that key is the scorer's and is golden-pinned
+        row.setdefault("_rooftop_strong", strong)
+
+
+def stamp_evidence_tier(row: dict) -> str:
+    """Set ``_rooftop_evidence_tier`` / ``_rooftop_evidence`` on a row the gate KEPT and return the tier.
+
+    Strong needs a per-car stamp (a ``_rooftop`` dict, or an identity signal such as the
+    page's store code) AND a gate tier that proves identity. A row kept for want of
+    evidence, or only because it is filed under the store's own feed account, is ``none``.
+    """
+    gate_tier = str(row.get("_rooftop_tier") or row.get("_rooftop_gate_tier") or "")
+    stamp = _rooftop_of(row) if isinstance(row.get("_rooftop"), dict) else None
+    stamped = bool(stamp and _rooftop_identity(stamp))
+    if gate_tier in _UNSTAMPED_KEEP_TIERS or not (stamped or gate_tier in _IDENTITY_SIGNAL_TIERS):
+        tier = EVIDENCE_NONE
+    elif row.get("_rooftop_strong"):
+        tier = EVIDENCE_STRONG
+    else:
+        tier = EVIDENCE_WEAK
+    row["_rooftop_evidence_tier"] = tier
+    if tier == EVIDENCE_NONE:
+        row["_rooftop_evidence"] = None
+    else:
+        row["_rooftop_evidence"] = json.dumps(
+            {
+                "tier": gate_tier,
+                "rooftop": (_rooftop_name(stamp) if stamped else "") or "",
+                "source": str(row.get("_feed_source") or ""),
+            },
+            separators=(",", ":"),
+            ensure_ascii=False,
+        )
+    return tier
 
 
 def _department_base(name: str) -> str:
@@ -748,6 +825,29 @@ def _merge_department_rooftops(rooftops: list) -> list:
             sorted(rt.names)[0], len(rt.rows), sorted(host.names)[0],
         )
     return merged
+
+
+def _refuse_other_store_hosts(kept: list[dict], rejected: list[dict], dealer_id: str) -> tuple[list[dict], list[dict]]:
+    """Legacy-ladder twin of the scorer's ``vdp_host_other_store`` check (N8.5): rows kept for
+    want of store evidence whose non-guessed detail page is on another roster store's host are
+    refused (write only, never un-listed)."""
+    if not dealer_id or not kept:
+        return kept, rejected
+    from backend.attribution.match import REJECT_VDP_HOST
+    from backend.attribution.place import host_owner_index, vdp_host_owned_elsewhere
+
+    index = host_owner_index()
+    if not index:
+        return kept, rejected
+    keep: list[dict] = []
+    refuse = list(rejected)
+    for row in kept:
+        if vdp_host_owned_elsewhere(row, dealer_id, index):
+            row["_rooftop_reject"] = REJECT_VDP_HOST
+            refuse.append(row)
+        else:
+            keep.append(row)
+    return keep, refuse
 
 
 def _resolve_rooftop_attribution_inner(
@@ -802,7 +902,7 @@ def _resolve_rooftop_attribution_inner(
         groups[identity].add(rooftop, row)
 
     if not groups:
-        return rows, []
+        return _refuse_other_store_hosts(rows, [], dealer_id)
 
     rooftops = _merge_department_rooftops([groups[i] for i in order])
     place = (
@@ -811,7 +911,7 @@ def _resolve_rooftop_attribution_inner(
         (_nrm(dealer_city) + _nrm(dealer_state)) if dealer_city and dealer_state else "",
         re.sub(r"\D", "", str(dealer_zip or ""))[:5],
     )
-    target, tier = _pick_target(rooftops, dealer_name, dealer_id, dealer_url, place)
+    target, tier = _pick_target(rooftops, dealer_name, dealer_id, dealer_url, place, dealer_city)
     label = dealer_id or dealer_name or "?"
 
     # after the department fold: "Acme Chevrolet" + "Acme Chevrolet Service" is one rooftop
@@ -822,7 +922,10 @@ def _resolve_rooftop_attribution_inner(
         # NAMES a store and that name is not ours — an unnamed one (address only)
         # is no evidence either way and must not cost a dealer its inventory.
         if target is not None or not rooftops[0].names:
-            return rows, []
+            if target is not None:
+                _mark_legacy_strength(rows, tier, dealer_address_source)
+                return rows, []
+            return _refuse_other_store_hosts(rows, [], dealer_id)
         _log.warning(
             "rooftop attribution [%s]: payload holds only %s, which is not this store — "
             "refusing all %d row(s)",
@@ -845,6 +948,7 @@ def _resolve_rooftop_attribution_inner(
         return [], list(rows)
 
     kept: list[dict] = list(target.rows)
+    _mark_legacy_strength(kept, tier, dealer_address_source)
     rejected: list[dict] = []
     # A sibling refusal normally un-lists the car (it is positive evidence the
     # feed sells it elsewhere). That is only sound when the tier that picked the
@@ -966,6 +1070,7 @@ def _resolve_via_scorer(
     for row, res in zip(rows, results):
         row["_rooftop_tier"] = res["tier"]
         row["_rooftop_score"] = res["score"]
+        row["_rooftop_strong"] = bool(res.get("strong"))
         tiers[res["tier"]] = tiers.get(res["tier"], 0) + 1
         if res["decision"] == "keep":
             row.pop("_rooftop_reject", None)
@@ -977,6 +1082,13 @@ def _resolve_via_scorer(
             rejected.append(row)
 
     label = dealer_id or dealer_name or "?"
+    host_refused = tiers.get("vdp_host_other_store", 0)
+    if host_refused:
+        _log.warning("rooftop attribution [%s]: refused %d row(s) with no store evidence whose detail page is on another roster store's host",
+                     label, host_refused)
+        rejected_other = [r for r in rejected if r.get("_rooftop_reject") != "vdp_host_other_store"]
+        if len(rejected_other) == 0:
+            return kept, rejected
     if not rejected:
         if corroborated:
             _log.info("rooftop attribution [%s]: kept %d unnamed/unstamped row(s) filed under this store's feed source(s) or at its street",

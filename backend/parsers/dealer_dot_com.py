@@ -10,7 +10,7 @@ import re
 from typing import Any
 from urllib.parse import urljoin
 
-from backend.parsers.vdp_urls import dealer_style_vdp_url_candidates, suggest_dealer_style_vdp_url
+from backend.parsers.vdp_urls import dealer_style_vdp_url_candidates, mark_guessed, suggest_dealer_style_vdp_url
 from backend.parsers.inventory_carfax import extract_carfax_url
 from backend.utils.listing_description_extract import strip_dealer_description_intro
 from backend.parsers.base import (
@@ -578,6 +578,29 @@ def _extract_body_style(obj: dict) -> str | None:
     )
 
 
+def detect_ws_inventory(raw_data: Any) -> bool:
+    """True for a Dealer.com ``/api/widget/ws-inv-data/`` body.
+
+    Its vehicles sit under ``inventory`` and each carries the ``accountId`` of the
+    rooftop holding it, usually beside a sibling ``accounts`` map. The shape is
+    what routes a payload here whatever the recipe's ``provider_hint`` says:
+    recipes tagged ``unknown`` fell to the generic parser, which drops
+    ``accountId`` (bmwofmonrovia-net, camelbacksubaru, camelbacktoyota,
+    crownlexus, showcasehonda, toyotacarlsbad).
+    """
+    if not isinstance(raw_data, dict):
+        return False
+    items = raw_data.get("inventory")
+    if not isinstance(items, list) or not items:
+        return False
+    dicts = [x for x in items[:20] if isinstance(x, dict)]
+    if not dicts:
+        return False
+    if isinstance(raw_data.get("accounts"), dict) and any(d.get("vin") for d in dicts):
+        return True
+    return any(d.get("accountId") or d.get("accountID") for d in dicts)
+
+
 def _accounts_index(data: Any) -> dict[str, dict]:
     """The payload's ``accounts`` map: DDC rooftop id → that rooftop's identity.
 
@@ -700,8 +723,10 @@ def _map_vehicle(
             cyl = norm_int(c2)
 
     detail_url = _pick_vehicle_detail_url(obj, base_url)
+    detail_guessed = False
     if not detail_url and vin and not str(vin).lower().startswith("unknown"):
         detail_url = suggest_dealer_style_vdp_url(base_url, vin, obj)
+        detail_guessed = bool(detail_url)
     detail_alternates: list[str] = []
     if vin and not str(vin).lower().startswith("unknown"):
         detail_alternates = [
@@ -766,6 +791,8 @@ def _map_vehicle(
     if detail_url:
         out["_detail_url"] = detail_url
         out["source_url"] = detail_url
+        if detail_guessed:
+            mark_guessed(out)
     if detail_alternates:
         out["_detail_url_alternates"] = detail_alternates[:12]
     if lot_location:

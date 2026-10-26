@@ -249,6 +249,34 @@ def test_two_dealers_claiming_one_vin_at_once_leave_one_owner(write_env, monkeyp
     ) == [(VIN_A, owner, f"dealer-{loser}")]
 
 
+def test_strong_and_unstamped_claimants_racing_leave_the_strong_one_owner(write_env, monkeypatch):
+    """N8.6: both prefetches see no owner; whichever INSERT lands first, the SQL backstop
+    applies the evidence rules, so the store whose feed stamped the car owns it."""
+    barrier = threading.Barrier(2, timeout=STEP)
+    real_prefetch = sdb.prefetch_existing
+
+    def prefetch_then_meet(*args, **kwargs):
+        result = real_prefetch(*args, **kwargs)
+        barrier.wait()
+        return result
+
+    monkeypatch.setattr(sdb, "prefetch_existing", prefetch_then_meet)
+    strong = _car("dealer-strong", VIN_A, price=1111)
+    strong["_rooftop_evidence_tier"] = "strong"
+
+    async def run():
+        co = iw.InventoryWriteCoordinator()
+        return await asyncio.gather(
+            co.upsert_vehicles([_car("dealer-plain", VIN_A, price=2222)]),
+            co.upsert_vehicles([strong]),
+        )
+
+    asyncio.run(asyncio.wait_for(run(), timeout=STEP * 2))
+    assert _select(write_env, "SELECT dealer_id, rooftop_tier FROM cars WHERE vin = %s", (VIN_A,)) == [
+        ("dealer-strong", "strong")
+    ]
+
+
 @pytest.mark.parametrize(
     ("age_hours", "moves"),
     [(1, False), (47, False), (49, True)],

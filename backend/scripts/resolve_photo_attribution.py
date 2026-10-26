@@ -34,6 +34,7 @@ import json
 import logging
 import sys
 from collections import Counter
+from datetime import datetime
 from pathlib import Path
 from typing import Any
 from urllib.parse import urlparse
@@ -254,6 +255,9 @@ def main() -> int:
         )
         moved = cur.rowcount
         cur.execute("UPDATE car_photo_attribution SET applied_at = NULL WHERE applied_at IS NOT NULL")
+        cur.execute(
+            "UPDATE car_move_log SET reverted_at = NOW() WHERE reverted_at IS NULL AND evidence = 'photo attribution'"
+        )
         _log.info("reverted %d car(s) to their original dealer", moved)
         return 0
 
@@ -314,10 +318,15 @@ def main() -> int:
     applied = 0
     for c in movable:
         cur.execute(
-            "UPDATE cars SET dealer_id = %s WHERE id = %s AND dealer_id = %s",
-            (c["resolved_dealer_id"], c["car_id"], c["original_dealer_id"]),
+            "UPDATE cars SET dealer_id = %s, scraped_at = %s WHERE id = %s AND dealer_id = %s",
+            (c["resolved_dealer_id"], datetime.utcnow().isoformat() + "Z", c["car_id"], c["original_dealer_id"]),
         )
         if cur.rowcount:
+            # A person-approved move: logged (not a scanner_guard row) so the VIN guard honours it.
+            cur.execute(
+                "INSERT INTO car_move_log (car_id, from_dealer_id, to_dealer_id, evidence) VALUES (%s, %s, %s, %s)",
+                (c["car_id"], c["original_dealer_id"], c["resolved_dealer_id"], "photo attribution"),
+            )
             cur.execute(
                 "UPDATE car_photo_attribution SET applied_at = NOW() WHERE car_id = %s", (c["car_id"],)
             )

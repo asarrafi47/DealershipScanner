@@ -298,7 +298,12 @@ def rooftop_of(listing: dict) -> dict | None:
     ``dealer.id`` is per-LISTING, not per-store.
     """
     dealer = listing.get("dealer") if isinstance(listing.get("dealer"), dict) else {}
-    label = _s(dealer.get("location")) or _s(dealer.get("name")) or ""
+    extra = listing.get("extra_fields") if isinstance(listing.get("extra_fields"), dict) else {}
+    chain = _extra_label(extra)
+    # N8.8 / CF-11: when ``dealer`` names no store (Fletcher Jones listing 2309549,
+    # East Tennessee Dodge 150600) the store label sits in extra_fields; without it
+    # the gate saw no rooftop at all and stayed silent.
+    label = _s(dealer.get("location")) or _s(dealer.get("name")) or chain or ""
     if not label:
         return None
     site = _s(dealer.get("website")) or _s(dealer.get("url")) or _s(dealer.get("domain")) or ""
@@ -338,8 +343,9 @@ def rooftop_of(listing: dict) -> dict | None:
     # identity zeroed four working dealers (2026-09-25). It is passed as an
     # ALTERNATE name only: the gate may match this store by it, but never
     # refuses a payload because of it and never groups rows by it.
-    extra = listing.get("extra_fields") if isinstance(listing.get("extra_fields"), dict) else {}
     alt = _s(extra.get("custom_location")) or ""
+    if not alt and chain and chain != label:
+        alt = chain
     alt_name = alt if (alt and " " in alt and "<" not in alt and not _CITY_STATE_ZIP.fullmatch(alt.strip())) else ""
     return {
         "key": label,
@@ -352,6 +358,20 @@ def rooftop_of(listing: dict) -> dict | None:
         "alt_name": alt_name,
         "source": _feed_source(listing),
     }
+
+
+# Store labels the group accounts write into extra_fields, best first (N1.2
+# carscommerce field map: Fletcher Jones location_name 'Audi Beverly Hills',
+# basswoodcdjr used_location_oct2026).
+_EXTRA_LABEL_KEYS = ("location_name", "meta_location", "location_filter", "location_sm", "used_location_oct2026")
+
+
+def _extra_label(extra: dict) -> str:
+    for key in _EXTRA_LABEL_KEYS:
+        v = _s(extra.get(key))
+        if v:
+            return v
+    return ""
 
 
 def _feed_source(listing: dict) -> str:
@@ -382,6 +402,9 @@ def parse(raw_data, base_url: str, dealer_id: str, dealer_name: str = "", dealer
         if src:
             mapped["_feed_source"] = src
         extra = listing.get("extra_fields") if isinstance(listing.get("extra_fields"), dict) else {}
+        ccid = _s(extra.get("feed_ccid"))
+        if ccid:
+            mapped["_feed_ccid"] = ccid
         facets = {k: v for k, v in extra.items() if str(k).startswith("custom_text_") and isinstance(v, str) and v.strip()}
         if facets:
             # the site's Location-mapped facets (custom_text_N) — evidence for the

@@ -1,6 +1,7 @@
 """The per-vehicle write loop of :func:`backend.scanner.database.upsert_vehicles`."""
 from __future__ import annotations
 
+from backend.scanner.upsert import ownership as _own
 from backend.scanner.upsert.guard import GuardWindow, backstop_owner
 from backend.scanner.upsert.rows import normalize_vehicle_row
 from backend.scanner.upsert.serialize import price_history_json
@@ -31,12 +32,15 @@ def write_rows(
     ``conflicts`` in place and not counted. Returns the number of rows written.
     """
     count = 0
+    pools = _own.load_pools()
     for raw in vehicles:
         v = normalize_vehicle_row(raw)
         row = prepare_row(v, existing_spec_src.get((v.get("vin") or "").strip()))
         if row is None:
             continue
         vin = row.vin
+        _claimant = str(v.get("dealer_id") or "").strip()
+        _evidence = raw.get("_rooftop_evidence")
         _prev_row = fetch_prev_price_row(cursor, vin)
         history_json = price_history_json(
             _prev_row[1] if _prev_row else None,
@@ -52,11 +56,14 @@ def write_rows(
                 price_history_json=history_json,
                 guard_on=window.on,
                 guard_cutoff_iso=window.cutoff_iso,
+                rooftop_tier=_own.norm_tier(raw.get("_rooftop_evidence_tier")),
+                rooftop_evidence=_evidence if isinstance(_evidence, str) and _evidence else None,
+                pool_lists=_own.backstop_lists(pools, _claimant),
             ),
         )
         if window.on and getattr(cursor, "rowcount", 1) == 0:
             # Backstop fired: another writer owns this VIN (fresh, active).
-            conflicts[vin] = (backstop_owner(cursor, vin), str(v.get("dealer_id") or "").strip())
+            conflicts[vin] = (backstop_owner(cursor, vin), _claimant)
             continue
         count += 1
         if count % commit_every == 0:

@@ -428,7 +428,7 @@ _UPSERT_ANCHOR = "ON CONFLICT(vin) DO UPDATE SET\n"
 def test_upsert_cars_sql_adapts_to_its_placeholder_count():
     adapted = adapt_sql_for_postgres_execute(UPSERT_CARS_SQL)
     assert "?" not in adapted
-    assert adapted.count("%s") == UPSERT_CARS_SQL.count("?") == 50
+    assert adapted.count("%s") == UPSERT_CARS_SQL.count("?") == 59
     assert "LIKE 'http%%'" in adapted
     assert adapted == _legacy_adapt(UPSERT_CARS_SQL)
 
@@ -445,11 +445,11 @@ def test_apostrophe_in_an_upsert_comment_keeps_the_placeholder_count(comment):
     assert UPSERT_CARS_SQL.count(_UPSERT_ANCHOR) == 1
     edited = UPSERT_CARS_SQL.replace(_UPSERT_ANCHOR, _UPSERT_ANCHOR + "                    " + comment)
     adapted = adapt_sql_for_postgres_execute(edited)
-    assert adapted.count("%s") == 50
-    assert adapted.replace("%%", "").count("%") == 50  # every bare % is a placeholder
+    assert adapted.count("%s") == 59
+    assert adapted.replace("%%", "").count("%") == 59  # every bare % is a placeholder
     # the pre-P4.7 adapter miscounted the same statement
     legacy = _legacy_adapt(edited)
-    assert legacy.count("%s") != 50 or legacy.replace("%%", "").count("%") != 50
+    assert legacy.count("%s") != 59 or legacy.replace("%%", "").count("%") != 59
 
 
 # ---------------------------------------------------------------------------
@@ -609,7 +609,7 @@ def _upsert_bind(vin: str = "1HGCM82633A004352", *, dealer_id: str = "d-adapter"
 def test_adapted_upsert_cars_sql_plans_on_postgres(pg_db):
     adapted = adapt_sql_for_postgres_execute(UPSERT_CARS_SQL)
     params = _upsert_bind()
-    assert adapted.count("%s") == len(params) == 50
+    assert adapted.count("%s") == len(params) == 59
     with pg_db.connect() as conn:
         plan = conn.execute("EXPLAIN " + adapted, params).fetchall()
         conn.rollback()

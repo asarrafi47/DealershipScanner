@@ -251,6 +251,21 @@ def tally_http(log_paths: list[Path]) -> dict[str, Any]:
             "carscommerce_api": carscommerce, "cloudflare_marked_lines": challenge}
 
 
+def rooftop_candidate_report(since: datetime) -> dict[str, Any]:
+    """Unrostered rooftops (N8.13): the whole open queue, and the ones this run saw."""
+    try:
+        from backend.attribution import candidates
+
+        new = candidates.new_candidates()
+        cutoff = since.replace(tzinfo=None).isoformat()
+        fresh = [c for c in new if str(c.get("last_seen") or "") >= cutoff]
+        keys = ("id", "name", "address", "store_id", "host", "car_count", "first_seen", "last_seen")
+        return {"open": len(new), "seen_this_run": len(fresh),
+                "new_this_run": [{k: c.get(k) for k in keys} for c in fresh[:50]]}
+    except Exception as exc:  # noqa: BLE001 - reporting only
+        return {"error": str(exc)[:120]}
+
+
 def http_first_statuses(results: list[dict[str, Any]]) -> dict[str, int]:
     c: Counter[str] = Counter()
     for r in results:
@@ -334,6 +349,7 @@ def main() -> int:
         (run_dir / f"{tag}.txt").write_text("\n".join(ids) + "\n")
         env = dict(os.environ)
         env["SCANNER_LOCK_PATH"] = str(run_dir / f"{tag}.lock")
+        env.setdefault("SCANNER_ROOFTOP_CANDIDATES", "1")  # N8.13: unrostered rooftops -> profiling queue
         cmd = [py, "-m", "backend.scripts.dealer_pipeline", "--dealers", ",".join(ids),
                "--out", str(run_dir / tag), "--batch", str(batch), *extra]
 
@@ -394,6 +410,7 @@ def main() -> int:
         "verdicts": dict(verdicts),
         "rows": sum(int(r.get("rows") or 0) for r in results),
         "vin_owner_conflicts": sum(int(r.get("vin_owner_conflicts") or 0) for r in results),
+        "rooftop_candidates": rooftop_candidate_report(started),
         "http_403_429": tally_http(logs),
         "http_first_statuses": http_first_statuses(results),
         "scan_seconds": scan_secs,

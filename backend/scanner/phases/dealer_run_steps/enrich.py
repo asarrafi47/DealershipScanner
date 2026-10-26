@@ -161,7 +161,20 @@ async def prefetch_details(run: DealerRun) -> None:
     try:
         from backend.scanner.vdp.prefetch import prefetch_before_vdp
 
-        _pf = await prefetch_before_vdp(run.all_vehicles, run.dealer_id, name)
+        from backend.scanner import database as _db
+
+        # Cars the write-time guard will refuse never get a VDP fetch (they stay in
+        # all_vehicles; the persist step refuses them as before).
+        _claim = [
+            v if str(v.get("dealer_id") or "").strip() else {**v, "dealer_id": run.dealer_id}
+            for v in run.all_vehicles
+        ]
+        _refused = await asyncio.to_thread(_db.vins_refused_by_owner_guard, _claim)
+        _fetchable = [v for v in run.all_vehicles if str(v.get("vin") or "").strip() not in _refused]
+        if _refused:
+            result["vdp_prefetch_ownership_skipped"] = len(_refused)
+            logger.info("VDP prefetch [%s]: %d guard-refused VIN(s) skipped", name, len(_refused))
+        _pf = await prefetch_before_vdp(_fetchable, run.dealer_id, name)
         if _pf:
             result["vdp_prefetch"] = _pf
     except Exception as _pf_e:
@@ -270,7 +283,12 @@ async def run_monroney_vision(run: DealerRun, monroney_vision: bool) -> None:
 
 def stamp_registry_and_source_urls(run: DealerRun) -> None:
     """The manifest's dealership_registry_id (else resolved from the URL) onto
-    every row that lacks one, then each row's canonical source URL."""
+    every row that lacks one, then each row's canonical source URL.
+
+    The URL fallback names a store only when ONE registry row sits on the host; for a
+    shared host (all AutoSavvy stores on www.autosavvy.com) it returns nothing, so a
+    manifest row without its own registry id stamps none and the upsert keeps the id
+    already stored (N8.14)."""
     reg_id = run.dealer.get("dealership_registry_id")
     if not reg_id:
         try:

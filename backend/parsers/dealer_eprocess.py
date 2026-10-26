@@ -260,6 +260,94 @@ def inline_vehicle_data(raw_html: str) -> dict[str, dict]:
     return out
 
 
+# Live DEP SRPs emit the per-car map as a QUOTED key inside
+# depEventPublisher.setPageData({..., "filter_vehicle_data":{"<vehicle_id>":{...}}}),
+# which _INLINE_DATA_RE never matches (18/18 SRPs sampled 2026-10-16, N1.2
+# dep_typesense_pools). Read separately so rooftop stamping does not switch on
+# _apply_inline's body/msrp/condition fills (a separate decision).
+_FVD_RE = re.compile(r'"?filter_vehicle_data"?\s*[:=]\s*\{')
+_SITE_LOCATIONS_RE = re.compile(r'"site_locations"\s*:\s*\{')
+_VDP_ID_RE = re.compile(r"/(\d{6,})/?$")
+
+
+def _json_object_after(raw_html, pattern: re.Pattern) -> dict:
+    if not isinstance(raw_html, str):
+        return {}
+    m = pattern.search(raw_html)
+    blob = _brace_object(raw_html, m.end() - 1) if m else None
+    try:
+        data = json.loads(blob) if blob else {}
+    except ValueError:
+        return {}
+    return data if isinstance(data, dict) else {}
+
+
+def inline_records_by_id(raw_html) -> dict[str, dict]:
+    """vehicle_id -> filter_vehicle_data record. One VIN can carry two records on
+    one page (its own lot plus a group-pool twin: 4 of 48 cards on parksidekia's
+    used SRP), so cards are matched by the vehicle id in their VDP url."""
+    return {str(k): v for k, v in _json_object_after(raw_html, _FVD_RE).items() if isinstance(v, dict)}
+
+
+def site_locations(raw_html) -> dict[str, dict]:
+    """location_id -> {title, address1, city, state, zip, ...}: the site's OWN
+    rooftop (one key on every page the N1.2 map fetched)."""
+    return {str(k): v for k, v in _json_object_after(raw_html, _SITE_LOCATIONS_RE).items() if isinstance(v, dict)}
+
+
+_warned_unknown_location: set[str] = set()
+
+
+def _own_location_id(sites: dict[str, dict], by_id: dict[str, dict], dealer_id: str) -> str:
+    """The location id of the store this site serves: the page's single
+    ``site_locations`` key, else the learned hint, else the location of the cards
+    that carry a ``location_name`` (non-empty exactly on own-site cards, 0
+    exceptions in 716 sampled)."""
+    if len(sites) == 1:
+        return next(iter(sites))
+    from backend.attribution.place import own_location_id
+
+    hinted = own_location_id(dealer_id)
+    if hinted:
+        return hinted
+    named = [str(r.get("location_id") or "").strip() for r in by_id.values() if str(r.get("location_name") or "").strip()]
+    return max(set(named), key=named.count) if named else ""
+
+
+def _dep_rooftop(rec: dict, sites: dict[str, dict], own_id: str, dealer_name: str) -> dict | None:
+    """The location this card sits at, verbatim from the page (N1.2 DEP map).
+
+    ``location_id`` is on every card (716 of 716) and on a group site names the
+    sister lot holding the car (parksidekia: 40 of its first 48 used cards sit at
+    other lots). The site's own location is the one ``site_locations`` names; its
+    rooftop is named by the roster ``dealer_name`` so the gate picks it as the
+    target, as for cosmos (N8.1). A sibling keeps the page's label for its id.
+    ``dealer_uuid`` is the GROUP account (3958 on all 41 AMSI locations), never
+    the rooftop, so it is not carried as a source.
+    """
+    loc_id = str(rec.get("location_id") or "").strip()
+    if not loc_id or not own_id:
+        return None
+    site = sites.get(loc_id) or {}
+    title = norm_str(site.get("title") or rec.get("location_name") or "")
+    rooftop: dict = {
+        "key": "deploc" + loc_id,  # slug-shaped (>= 6 letters) so rooftop._rooftop_slug keys on it
+        "name": title,
+        "lot_id": loc_id,
+        "address": norm_str(site.get("address1") or ""),
+        "city": norm_str(site.get("city") or ""),
+        "state": norm_str(site.get("state") or ""),
+        "zip": norm_str(site.get("zip") or ""),
+    }
+    if loc_id == own_id:
+        rooftop["own_site"] = True
+        if dealer_name:
+            rooftop["name"] = dealer_name
+            if title and title != dealer_name:
+                rooftop["alt_name"] = title
+    return rooftop
+
+
 def _apply_inline(row: dict, rec: dict) -> None:
     body = norm_str(rec.get("body") or rec.get("body_style") or rec.get("bodystyle"))
     if body and not row.get("body_style"):
@@ -289,14 +377,34 @@ def parse(raw_data, *, base_url: str = "", dealer_id: str = "", dealer_name: str
     safe in the shared auto-detect fallback (JSON API payloads never match).
     """
     out: list[dict] = []
-    seen: set[str] = set()
+    pos: dict[str, int] = {}
     inline = inline_vehicle_data(raw_data)
+    by_id = inline_records_by_id(raw_data)
+    sites = site_locations(raw_data) if by_id else {}
+    own_id = _own_location_id(sites, by_id, dealer_id) if by_id else ""
+    if by_id and not own_id and dealer_id not in _warned_unknown_location:
+        _warned_unknown_location.add(dealer_id)
+        logger.info("DealerEProcess: %s - no site_locations key and no own-location hint; rooftop not stamped (rows kept)", dealer_id)
     for obj in _iter_vehicle_ld(raw_data):
         mapped = _map(obj, base_url, dealer_id, dealer_name, dealer_url)
-        if mapped and mapped["vin"].upper() not in seen:
-            seen.add(mapped["vin"].upper())
-            rec = inline.get(mapped["vin"].upper())
-            if rec:
-                _apply_inline(mapped, rec)
-            out.append(clean_car_row_dict(mapped))
+        if not mapped:
+            continue
+        vin = mapped["vin"].upper()
+        rec = inline.get(vin)
+        if rec:
+            _apply_inline(mapped, rec)
+        m = _VDP_ID_RE.search(str(obj.get("url") or _offer(obj).get("url") or "").split("?")[0])
+        loc_rec = by_id.get(m.group(1)) if m else None
+        rooftop = _dep_rooftop(loc_rec, sites, own_id, dealer_name) if loc_rec else None
+        if rooftop:
+            mapped["_rooftop"] = rooftop
+        row = clean_car_row_dict(mapped)
+        if vin in pos:
+            # Same VIN twice on one page: keep the record on the site's own lot.
+            prev = out[pos[vin]]
+            if (row.get("_rooftop") or {}).get("own_site") and not (prev.get("_rooftop") or {}).get("own_site"):
+                out[pos[vin]] = row
+            continue
+        pos[vin] = len(out)
+        out.append(row)
     return out

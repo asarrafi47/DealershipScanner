@@ -1,0 +1,1035 @@
+{
+ "pageInfo": {
+  "totalCount": 24
+ },
+ "inventory": [
+  {
+   "vin": "WBA5R1C50LFH10000",
+   "stockNumber": "S00000",
+   "accountId": "sonicbmwmonrovia",
+   "year": 2025,
+   "make": "BMW",
+   "model": "X5",
+   "trim": "xDrive40i",
+   "bodyStyle": "SUV",
+   "condition": "New",
+   "type": "new",
+   "status": "live",
+   "title": [
+    "2025 BMW",
+    "X5 xDrive40i"
+   ],
+   "link": "/new/BMW/2025-BMW-X5-WBA5R1C50LFH10000.htm",
+   "trackingPricing": {
+    "internetPrice": "$69,995",
+    "salePrice": "69995",
+    "askingPrice": "$69,995",
+    "msrp": "72495"
+   },
+   "trackingAttributes": [
+    {
+     "name": "odometer",
+     "value": "12"
+    },
+    {
+     "name": "exteriorColor",
+     "value": "Black Sapphire",
+     "normalizedValue": "Black"
+    }
+   ],
+   "images": [
+    {
+     "uri": "https://pictures.dealer.com/s/sonicbmwmonrovia/0275/x0.jpg",
+     "provider": "STOCK_PHOTO"
+    }
+   ]
+  },
+  {
+   "vin": "WBA5R1C51LFH10001",
+   "stockNumber": "S00001",
+   "accountId": "sonicbmwmonrovia",
+   "year": 2025,
+   "make": "BMW",
+   "model": "X5",
+   "trim": "xDrive40i",
+   "bodyStyle": "SUV",
+   "condition": "New",
+   "type": "new",
+   "status": "live",
+   "title": [
+    "2025 BMW",
+    "X5 xDrive40i"
+   ],
+   "link": "/new/BMW/2025-BMW-X5-WBA5R1C51LFH10001.htm",
+   "trackingPricing": {
+    "internetPrice": "$69,995",
+    "salePrice": "69995",
+    "askingPrice": "$69,995",
+    "msrp": "72495"
+   },
+   "trackingAttributes": [
+    {
+     "name": "odometer",
+     "value": "12"
+    },
+    {
+     "name": "exteriorColor",
+     "value": "Black Sapphire",
+     "normalizedValue": "Black"
+    }
+   ],
+   "images": [
+    {
+     "uri": "https://pictures.dealer.com/s/sonicbmwmonrovia/0275/x1.jpg",
+     "provider": "STOCK_PHOTO"
+    }
+   ]
+  },
+  {
+   "vin": "WBA5R1C52LFH10002",
+   "stockNumber": "S00002",
+   "accountId": "sonicbmwmonrovia",
+   "year": 2025,
+   "make": "BMW",
+   "model": "X5",
+   "trim": "xDrive40i",
+   "bodyStyle": "SUV",
+   "condition": "New",
+   "type": "new",
+   "status": "live",
+   "title": [
+    "2025 BMW",
+    "X5 xDrive40i"
+   ],
+   "link": "/new/BMW/2025-BMW-X5-WBA5R1C52LFH10002.htm",
+   "trackingPricing": {
+    "internetPrice": "$69,995",
+    "salePrice": "69995",
+    "askingPrice": "$69,995",
+    "msrp": "72495"
+   },
+   "trackingAttributes": [
+    {
+     "name": "odometer",
+     "value": "12"
+    },
+    {
+     "name": "exteriorColor",
+     "value": "Black Sapphire",
+     "normalizedValue": "Black"
+    }
+   ],
+   "images": [
+    {
+     "uri": "https://pictures.dealer.com/s/sonicbmwmonrovia/0275/x2.jpg",
+     "provider": "STOCK_PHOTO"
+    }
+   ]
+  },
+  {
+   "vin": "WBA5R1C53LFH10003",
+   "stockNumber": "S00003",
+   "accountId": "sonicbmwmonrovia",
+   "year": 2025,
+   "make": "BMW",
+   "model": "X5",
+   "trim": "xDrive40i",
+   "bodyStyle": "SUV",
+   "condition": "New",
+   "type": "new",
+   "status": "live",
+   "title": [
+    "2025 BMW",
+    "X5 xDrive40i"
+   ],
+   "link": "/new/BMW/2025-BMW-X5-WBA5R1C53LFH10003.htm",
+   "trackingPricing": {
+    "internetPrice": "$69,995",
+    "salePrice": "69995",
+    "askingPrice": "$69,995",
+    "msrp": "72495"
+   },
+   "trackingAttributes": [
+    {
+     "name": "odometer",
+     "value": "12"
+    },
+    {
+     "name": "exteriorColor",
+     "value": "Black Sapphire",
+     "normalizedValue": "Black"
+    }
+   ],
+   "images": [
+    {
+     "uri": "https://pictures.dealer.com/s/sonicbmwmonrovia/0275/x3.jpg",
+     "provider": "STOCK_PHOTO"
+    }
+   ]
+  },
+  {
+   "vin": "WBA5R1C54LFH10004",
+   "stockNumber": "S00004",
+   "accountId": "sonicbmwmonrovia",
+   "year": 2025,
+   "make": "BMW",
+   "model": "X5",
+   "trim": "xDrive40i",
+   "bodyStyle": "SUV",
+   "condition": "New",
+   "type": "new",
+   "status": "live",
+   "title": [
+    "2025 BMW",
+    "X5 xDrive40i"
+   ],
+   "link": "/new/BMW/2025-BMW-X5-WBA5R1C54LFH10004.htm",
+   "trackingPricing": {
+    "internetPrice": "$69,995",
+    "salePrice": "69995",
+    "askingPrice": "$69,995",
+    "msrp": "72495"
+   },
+   "trackingAttributes": [
+    {
+     "name": "odometer",
+     "value": "12"
+    },
+    {
+     "name": "exteriorColor",
+     "value": "Black Sapphire",
+     "normalizedValue": "Black"
+    }
+   ],
+   "images": [
+    {
+     "uri": "https://pictures.dealer.com/s/sonicbmwmonrovia/0275/x4.jpg",
+     "provider": "STOCK_PHOTO"
+    }
+   ]
+  },
+  {
+   "vin": "WBA5R1C55LFH10005",
+   "stockNumber": "S00005",
+   "accountId": "sonicbmwmonrovia",
+   "year": 2025,
+   "make": "BMW",
+   "model": "X5",
+   "trim": "xDrive40i",
+   "bodyStyle": "SUV",
+   "condition": "New",
+   "type": "new",
+   "status": "live",
+   "title": [
+    "2025 BMW",
+    "X5 xDrive40i"
+   ],
+   "link": "/new/BMW/2025-BMW-X5-WBA5R1C55LFH10005.htm",
+   "trackingPricing": {
+    "internetPrice": "$69,995",
+    "salePrice": "69995",
+    "askingPrice": "$69,995",
+    "msrp": "72495"
+   },
+   "trackingAttributes": [
+    {
+     "name": "odometer",
+     "value": "12"
+    },
+    {
+     "name": "exteriorColor",
+     "value": "Black Sapphire",
+     "normalizedValue": "Black"
+    }
+   ],
+   "images": [
+    {
+     "uri": "https://pictures.dealer.com/s/sonicbmwmonrovia/0275/x5.jpg",
+     "provider": "STOCK_PHOTO"
+    }
+   ]
+  },
+  {
+   "vin": "WBA5R1C56LFH10006",
+   "stockNumber": "S00006",
+   "accountId": "sonicbmwmonrovia",
+   "year": 2025,
+   "make": "BMW",
+   "model": "X5",
+   "trim": "xDrive40i",
+   "bodyStyle": "SUV",
+   "condition": "New",
+   "type": "new",
+   "status": "live",
+   "title": [
+    "2025 BMW",
+    "X5 xDrive40i"
+   ],
+   "link": "/new/BMW/2025-BMW-X5-WBA5R1C56LFH10006.htm",
+   "trackingPricing": {
+    "internetPrice": "$69,995",
+    "salePrice": "69995",
+    "askingPrice": "$69,995",
+    "msrp": "72495"
+   },
+   "trackingAttributes": [
+    {
+     "name": "odometer",
+     "value": "12"
+    },
+    {
+     "name": "exteriorColor",
+     "value": "Black Sapphire",
+     "normalizedValue": "Black"
+    }
+   ],
+   "images": [
+    {
+     "uri": "https://pictures.dealer.com/s/sonicbmwmonrovia/0275/x6.jpg",
+     "provider": "STOCK_PHOTO"
+    }
+   ]
+  },
+  {
+   "vin": "WBA5R1C57LFH10007",
+   "stockNumber": "S00007",
+   "accountId": "sonicbmwmonrovia",
+   "year": 2025,
+   "make": "BMW",
+   "model": "X5",
+   "trim": "xDrive40i",
+   "bodyStyle": "SUV",
+   "condition": "New",
+   "type": "new",
+   "status": "live",
+   "title": [
+    "2025 BMW",
+    "X5 xDrive40i"
+   ],
+   "link": "/new/BMW/2025-BMW-X5-WBA5R1C57LFH10007.htm",
+   "trackingPricing": {
+    "internetPrice": "$69,995",
+    "salePrice": "69995",
+    "askingPrice": "$69,995",
+    "msrp": "72495"
+   },
+   "trackingAttributes": [
+    {
+     "name": "odometer",
+     "value": "12"
+    },
+    {
+     "name": "exteriorColor",
+     "value": "Black Sapphire",
+     "normalizedValue": "Black"
+    }
+   ],
+   "images": [
+    {
+     "uri": "https://pictures.dealer.com/s/sonicbmwmonrovia/0275/x7.jpg",
+     "provider": "STOCK_PHOTO"
+    }
+   ]
+  },
+  {
+   "vin": "WBA5R1C58LFH10008",
+   "stockNumber": "S00008",
+   "accountId": "sonicbmwmonrovia",
+   "year": 2025,
+   "make": "BMW",
+   "model": "X5",
+   "trim": "xDrive40i",
+   "bodyStyle": "SUV",
+   "condition": "New",
+   "type": "new",
+   "status": "live",
+   "title": [
+    "2025 BMW",
+    "X5 xDrive40i"
+   ],
+   "link": "/new/BMW/2025-BMW-X5-WBA5R1C58LFH10008.htm",
+   "trackingPricing": {
+    "internetPrice": "$69,995",
+    "salePrice": "69995",
+    "askingPrice": "$69,995",
+    "msrp": "72495"
+   },
+   "trackingAttributes": [
+    {
+     "name": "odometer",
+     "value": "12"
+    },
+    {
+     "name": "exteriorColor",
+     "value": "Black Sapphire",
+     "normalizedValue": "Black"
+    }
+   ],
+   "images": [
+    {
+     "uri": "https://pictures.dealer.com/s/sonicbmwmonrovia/0275/x8.jpg",
+     "provider": "STOCK_PHOTO"
+    }
+   ]
+  },
+  {
+   "vin": "WBA5R1C59LFH10009",
+   "stockNumber": "S00009",
+   "accountId": "sonicbeverlyhillsbmw",
+   "year": 2025,
+   "make": "BMW",
+   "model": "X5",
+   "trim": "xDrive40i",
+   "bodyStyle": "SUV",
+   "condition": "New",
+   "type": "new",
+   "status": "live",
+   "title": [
+    "2025 BMW",
+    "X5 xDrive40i"
+   ],
+   "link": "/new/BMW/2025-BMW-X5-WBA5R1C59LFH10009.htm",
+   "trackingPricing": {
+    "internetPrice": "$69,995",
+    "salePrice": "69995",
+    "askingPrice": "$69,995",
+    "msrp": "72495"
+   },
+   "trackingAttributes": [
+    {
+     "name": "odometer",
+     "value": "12"
+    },
+    {
+     "name": "exteriorColor",
+     "value": "Black Sapphire",
+     "normalizedValue": "Black"
+    }
+   ],
+   "images": [
+    {
+     "uri": "https://pictures.dealer.com/s/sonicbeverlyhillsbmw/0275/x9.jpg",
+     "provider": "STOCK_PHOTO"
+    }
+   ]
+  },
+  {
+   "vin": "WBA5R1C50LFH10010",
+   "stockNumber": "S00010",
+   "accountId": "sonicbeverlyhillsbmw",
+   "year": 2025,
+   "make": "BMW",
+   "model": "X5",
+   "trim": "xDrive40i",
+   "bodyStyle": "SUV",
+   "condition": "New",
+   "type": "new",
+   "status": "live",
+   "title": [
+    "2025 BMW",
+    "X5 xDrive40i"
+   ],
+   "link": "/new/BMW/2025-BMW-X5-WBA5R1C50LFH10010.htm",
+   "trackingPricing": {
+    "internetPrice": "$69,995",
+    "salePrice": "69995",
+    "askingPrice": "$69,995",
+    "msrp": "72495"
+   },
+   "trackingAttributes": [
+    {
+     "name": "odometer",
+     "value": "12"
+    },
+    {
+     "name": "exteriorColor",
+     "value": "Black Sapphire",
+     "normalizedValue": "Black"
+    }
+   ],
+   "images": [
+    {
+     "uri": "https://pictures.dealer.com/s/sonicbeverlyhillsbmw/0275/x10.jpg",
+     "provider": "STOCK_PHOTO"
+    }
+   ]
+  },
+  {
+   "vin": "WBA5R1C51LFH10011",
+   "stockNumber": "S00011",
+   "accountId": "sonicbeverlyhillsbmw",
+   "year": 2025,
+   "make": "BMW",
+   "model": "X5",
+   "trim": "xDrive40i",
+   "bodyStyle": "SUV",
+   "condition": "New",
+   "type": "new",
+   "status": "live",
+   "title": [
+    "2025 BMW",
+    "X5 xDrive40i"
+   ],
+   "link": "/new/BMW/2025-BMW-X5-WBA5R1C51LFH10011.htm",
+   "trackingPricing": {
+    "internetPrice": "$69,995",
+    "salePrice": "69995",
+    "askingPrice": "$69,995",
+    "msrp": "72495"
+   },
+   "trackingAttributes": [
+    {
+     "name": "odometer",
+     "value": "12"
+    },
+    {
+     "name": "exteriorColor",
+     "value": "Black Sapphire",
+     "normalizedValue": "Black"
+    }
+   ],
+   "images": [
+    {
+     "uri": "https://pictures.dealer.com/s/sonicbeverlyhillsbmw/0275/x11.jpg",
+     "provider": "STOCK_PHOTO"
+    }
+   ]
+  },
+  {
+   "vin": "WBA5R1C52LFH10012",
+   "stockNumber": "S00012",
+   "accountId": "sonicbeverlyhillsbmw",
+   "year": 2025,
+   "make": "BMW",
+   "model": "X5",
+   "trim": "xDrive40i",
+   "bodyStyle": "SUV",
+   "condition": "New",
+   "type": "new",
+   "status": "live",
+   "title": [
+    "2025 BMW",
+    "X5 xDrive40i"
+   ],
+   "link": "/new/BMW/2025-BMW-X5-WBA5R1C52LFH10012.htm",
+   "trackingPricing": {
+    "internetPrice": "$69,995",
+    "salePrice": "69995",
+    "askingPrice": "$69,995",
+    "msrp": "72495"
+   },
+   "trackingAttributes": [
+    {
+     "name": "odometer",
+     "value": "12"
+    },
+    {
+     "name": "exteriorColor",
+     "value": "Black Sapphire",
+     "normalizedValue": "Black"
+    }
+   ],
+   "images": [
+    {
+     "uri": "https://pictures.dealer.com/s/sonicbeverlyhillsbmw/0275/x12.jpg",
+     "provider": "STOCK_PHOTO"
+    }
+   ]
+  },
+  {
+   "vin": "WBA5R1C53LFH10013",
+   "stockNumber": "S00013",
+   "accountId": "sonicbeverlyhillsbmw",
+   "year": 2025,
+   "make": "BMW",
+   "model": "X5",
+   "trim": "xDrive40i",
+   "bodyStyle": "SUV",
+   "condition": "New",
+   "type": "new",
+   "status": "live",
+   "title": [
+    "2025 BMW",
+    "X5 xDrive40i"
+   ],
+   "link": "/new/BMW/2025-BMW-X5-WBA5R1C53LFH10013.htm",
+   "trackingPricing": {
+    "internetPrice": "$69,995",
+    "salePrice": "69995",
+    "askingPrice": "$69,995",
+    "msrp": "72495"
+   },
+   "trackingAttributes": [
+    {
+     "name": "odometer",
+     "value": "12"
+    },
+    {
+     "name": "exteriorColor",
+     "value": "Black Sapphire",
+     "normalizedValue": "Black"
+    }
+   ],
+   "images": [
+    {
+     "uri": "https://pictures.dealer.com/s/sonicbeverlyhillsbmw/0275/x13.jpg",
+     "provider": "STOCK_PHOTO"
+    }
+   ]
+  },
+  {
+   "vin": "WBA5R1C54LFH10014",
+   "stockNumber": "S00014",
+   "accountId": "sonicbeverlyhillsbmw",
+   "year": 2025,
+   "make": "BMW",
+   "model": "X5",
+   "trim": "xDrive40i",
+   "bodyStyle": "SUV",
+   "condition": "New",
+   "type": "new",
+   "status": "live",
+   "title": [
+    "2025 BMW",
+    "X5 xDrive40i"
+   ],
+   "link": "/new/BMW/2025-BMW-X5-WBA5R1C54LFH10014.htm",
+   "trackingPricing": {
+    "internetPrice": "$69,995",
+    "salePrice": "69995",
+    "askingPrice": "$69,995",
+    "msrp": "72495"
+   },
+   "trackingAttributes": [
+    {
+     "name": "odometer",
+     "value": "12"
+    },
+    {
+     "name": "exteriorColor",
+     "value": "Black Sapphire",
+     "normalizedValue": "Black"
+    }
+   ],
+   "images": [
+    {
+     "uri": "https://pictures.dealer.com/s/sonicbeverlyhillsbmw/0275/x14.jpg",
+     "provider": "STOCK_PHOTO"
+    }
+   ]
+  },
+  {
+   "vin": "WBA5R1C55LFH10015",
+   "stockNumber": "S00015",
+   "accountId": "sonicbeverlyhillsbmw",
+   "year": 2025,
+   "make": "BMW",
+   "model": "X5",
+   "trim": "xDrive40i",
+   "bodyStyle": "SUV",
+   "condition": "New",
+   "type": "new",
+   "status": "live",
+   "title": [
+    "2025 BMW",
+    "X5 xDrive40i"
+   ],
+   "link": "/new/BMW/2025-BMW-X5-WBA5R1C55LFH10015.htm",
+   "trackingPricing": {
+    "internetPrice": "$69,995",
+    "salePrice": "69995",
+    "askingPrice": "$69,995",
+    "msrp": "72495"
+   },
+   "trackingAttributes": [
+    {
+     "name": "odometer",
+     "value": "12"
+    },
+    {
+     "name": "exteriorColor",
+     "value": "Black Sapphire",
+     "normalizedValue": "Black"
+    }
+   ],
+   "images": [
+    {
+     "uri": "https://pictures.dealer.com/s/sonicbeverlyhillsbmw/0275/x15.jpg",
+     "provider": "STOCK_PHOTO"
+    }
+   ]
+  },
+  {
+   "vin": "WBA5R1C56LFH10016",
+   "stockNumber": "S00016",
+   "accountId": "sonicbeverlyhillsbmw",
+   "year": 2025,
+   "make": "BMW",
+   "model": "X5",
+   "trim": "xDrive40i",
+   "bodyStyle": "SUV",
+   "condition": "New",
+   "type": "new",
+   "status": "live",
+   "title": [
+    "2025 BMW",
+    "X5 xDrive40i"
+   ],
+   "link": "/new/BMW/2025-BMW-X5-WBA5R1C56LFH10016.htm",
+   "trackingPricing": {
+    "internetPrice": "$69,995",
+    "salePrice": "69995",
+    "askingPrice": "$69,995",
+    "msrp": "72495"
+   },
+   "trackingAttributes": [
+    {
+     "name": "odometer",
+     "value": "12"
+    },
+    {
+     "name": "exteriorColor",
+     "value": "Black Sapphire",
+     "normalizedValue": "Black"
+    }
+   ],
+   "images": [
+    {
+     "uri": "https://pictures.dealer.com/s/sonicbeverlyhillsbmw/0275/x16.jpg",
+     "provider": "STOCK_PHOTO"
+    }
+   ]
+  },
+  {
+   "vin": "WBA5R1C57LFH10017",
+   "stockNumber": "S00017",
+   "accountId": "soniccrownlexus",
+   "year": 2025,
+   "make": "BMW",
+   "model": "X5",
+   "trim": "xDrive40i",
+   "bodyStyle": "SUV",
+   "condition": "New",
+   "type": "new",
+   "status": "live",
+   "title": [
+    "2025 BMW",
+    "X5 xDrive40i"
+   ],
+   "link": "/new/BMW/2025-BMW-X5-WBA5R1C57LFH10017.htm",
+   "trackingPricing": {
+    "internetPrice": "$69,995",
+    "salePrice": "69995",
+    "askingPrice": "$69,995",
+    "msrp": "72495"
+   },
+   "trackingAttributes": [
+    {
+     "name": "odometer",
+     "value": "12"
+    },
+    {
+     "name": "exteriorColor",
+     "value": "Black Sapphire",
+     "normalizedValue": "Black"
+    }
+   ],
+   "images": [
+    {
+     "uri": "https://pictures.dealer.com/s/soniccrownlexus/0275/x17.jpg",
+     "provider": "STOCK_PHOTO"
+    }
+   ]
+  },
+  {
+   "vin": "WBA5R1C58LFH10018",
+   "stockNumber": "S00018",
+   "accountId": "soniccrownlexus",
+   "year": 2025,
+   "make": "BMW",
+   "model": "X5",
+   "trim": "xDrive40i",
+   "bodyStyle": "SUV",
+   "condition": "New",
+   "type": "new",
+   "status": "live",
+   "title": [
+    "2025 BMW",
+    "X5 xDrive40i"
+   ],
+   "link": "/new/BMW/2025-BMW-X5-WBA5R1C58LFH10018.htm",
+   "trackingPricing": {
+    "internetPrice": "$69,995",
+    "salePrice": "69995",
+    "askingPrice": "$69,995",
+    "msrp": "72495"
+   },
+   "trackingAttributes": [
+    {
+     "name": "odometer",
+     "value": "12"
+    },
+    {
+     "name": "exteriorColor",
+     "value": "Black Sapphire",
+     "normalizedValue": "Black"
+    }
+   ],
+   "images": [
+    {
+     "uri": "https://pictures.dealer.com/s/soniccrownlexus/0275/x18.jpg",
+     "provider": "STOCK_PHOTO"
+    }
+   ]
+  },
+  {
+   "vin": "WBA5R1C59LFH10019",
+   "stockNumber": "S00019",
+   "accountId": "soniccrownlexus",
+   "year": 2025,
+   "make": "BMW",
+   "model": "X5",
+   "trim": "xDrive40i",
+   "bodyStyle": "SUV",
+   "condition": "New",
+   "type": "new",
+   "status": "live",
+   "title": [
+    "2025 BMW",
+    "X5 xDrive40i"
+   ],
+   "link": "/new/BMW/2025-BMW-X5-WBA5R1C59LFH10019.htm",
+   "trackingPricing": {
+    "internetPrice": "$69,995",
+    "salePrice": "69995",
+    "askingPrice": "$69,995",
+    "msrp": "72495"
+   },
+   "trackingAttributes": [
+    {
+     "name": "odometer",
+     "value": "12"
+    },
+    {
+     "name": "exteriorColor",
+     "value": "Black Sapphire",
+     "normalizedValue": "Black"
+    }
+   ],
+   "images": [
+    {
+     "uri": "https://pictures.dealer.com/s/soniccrownlexus/0275/x19.jpg",
+     "provider": "STOCK_PHOTO"
+    }
+   ]
+  },
+  {
+   "vin": "WBA5R1C50LFH10020",
+   "stockNumber": "S00020",
+   "accountId": "soniccrownlexus",
+   "year": 2025,
+   "make": "BMW",
+   "model": "X5",
+   "trim": "xDrive40i",
+   "bodyStyle": "SUV",
+   "condition": "New",
+   "type": "new",
+   "status": "live",
+   "title": [
+    "2025 BMW",
+    "X5 xDrive40i"
+   ],
+   "link": "/new/BMW/2025-BMW-X5-WBA5R1C50LFH10020.htm",
+   "trackingPricing": {
+    "internetPrice": "$69,995",
+    "salePrice": "69995",
+    "askingPrice": "$69,995",
+    "msrp": "72495"
+   },
+   "trackingAttributes": [
+    {
+     "name": "odometer",
+     "value": "12"
+    },
+    {
+     "name": "exteriorColor",
+     "value": "Black Sapphire",
+     "normalizedValue": "Black"
+    }
+   ],
+   "images": [
+    {
+     "uri": "https://pictures.dealer.com/s/soniccrownlexus/0275/x20.jpg",
+     "provider": "STOCK_PHOTO"
+    }
+   ]
+  },
+  {
+   "vin": "WBA5R1C51LFH10021",
+   "stockNumber": "S00021",
+   "accountId": "soniccrownlexus",
+   "year": 2025,
+   "make": "BMW",
+   "model": "X5",
+   "trim": "xDrive40i",
+   "bodyStyle": "SUV",
+   "condition": "New",
+   "type": "new",
+   "status": "live",
+   "title": [
+    "2025 BMW",
+    "X5 xDrive40i"
+   ],
+   "link": "/new/BMW/2025-BMW-X5-WBA5R1C51LFH10021.htm",
+   "trackingPricing": {
+    "internetPrice": "$69,995",
+    "salePrice": "69995",
+    "askingPrice": "$69,995",
+    "msrp": "72495"
+   },
+   "trackingAttributes": [
+    {
+     "name": "odometer",
+     "value": "12"
+    },
+    {
+     "name": "exteriorColor",
+     "value": "Black Sapphire",
+     "normalizedValue": "Black"
+    }
+   ],
+   "images": [
+    {
+     "uri": "https://pictures.dealer.com/s/soniccrownlexus/0275/x21.jpg",
+     "provider": "STOCK_PHOTO"
+    }
+   ]
+  },
+  {
+   "vin": "WBA5R1C52LFH10022",
+   "stockNumber": "S00022",
+   "accountId": "soniccrownlexus",
+   "year": 2025,
+   "make": "BMW",
+   "model": "X5",
+   "trim": "xDrive40i",
+   "bodyStyle": "SUV",
+   "condition": "New",
+   "type": "new",
+   "status": "live",
+   "title": [
+    "2025 BMW",
+    "X5 xDrive40i"
+   ],
+   "link": "/new/BMW/2025-BMW-X5-WBA5R1C52LFH10022.htm",
+   "trackingPricing": {
+    "internetPrice": "$69,995",
+    "salePrice": "69995",
+    "askingPrice": "$69,995",
+    "msrp": "72495"
+   },
+   "trackingAttributes": [
+    {
+     "name": "odometer",
+     "value": "12"
+    },
+    {
+     "name": "exteriorColor",
+     "value": "Black Sapphire",
+     "normalizedValue": "Black"
+    }
+   ],
+   "images": [
+    {
+     "uri": "https://pictures.dealer.com/s/soniccrownlexus/0275/x22.jpg",
+     "provider": "STOCK_PHOTO"
+    }
+   ]
+  },
+  {
+   "vin": "WBA5R1C53LFH10023",
+   "stockNumber": "S00023",
+   "accountId": "soniccrownlexus",
+   "year": 2025,
+   "make": "BMW",
+   "model": "X5",
+   "trim": "xDrive40i",
+   "bodyStyle": "SUV",
+   "condition": "New",
+   "type": "new",
+   "status": "live",
+   "title": [
+    "2025 BMW",
+    "X5 xDrive40i"
+   ],
+   "link": "/new/BMW/2025-BMW-X5-WBA5R1C53LFH10023.htm",
+   "trackingPricing": {
+    "internetPrice": "$69,995",
+    "salePrice": "69995",
+    "askingPrice": "$69,995",
+    "msrp": "72495"
+   },
+   "trackingAttributes": [
+    {
+     "name": "odometer",
+     "value": "12"
+    },
+    {
+     "name": "exteriorColor",
+     "value": "Black Sapphire",
+     "normalizedValue": "Black"
+    }
+   ],
+   "images": [
+    {
+     "uri": "https://pictures.dealer.com/s/soniccrownlexus/0275/x23.jpg",
+     "provider": "STOCK_PHOTO"
+    }
+   ]
+  }
+ ],
+ "accounts": {
+  "sonicbmwmonrovia": {
+   "name": "BMW of Monrovia",
+   "url": "www.bmwofmonrovia.net",
+   "address": {
+    "accountName": "BMW of Monrovia",
+    "city": "Monrovia",
+    "country": "US",
+    "firstLineAddress": "1425 South Mountain Avenue",
+    "secondLineAddress": "",
+    "postalCode": "91016",
+    "state": "CA"
+   }
+  },
+  "sonicbeverlyhillsbmw": {
+   "name": "Beverly Hills BMW",
+   "url": "www.bmwofbeverlyhills.com",
+   "address": {
+    "accountName": "Beverly Hills BMW",
+    "city": "Los Angeles",
+    "country": "US",
+    "firstLineAddress": "5070 Wilshire Blvd",
+    "secondLineAddress": "",
+    "postalCode": "90036",
+    "state": "CA"
+   }
+  },
+  "soniccrownlexus": {
+   "name": "Crown Lexus",
+   "url": "www.crownlexus.com",
+   "address": {
+    "accountName": "Crown Lexus",
+    "city": "Ontario",
+    "country": "US",
+    "firstLineAddress": "1125 South Kettering Drive",
+    "secondLineAddress": "",
+    "postalCode": "91761",
+    "state": "CA"
+   }
+  }
+ },
+ "facets": [],
+ "filters": [],
+ "_note": "Shaped after the 2026-08-03 bmwofmonrovia.net replay (page of 24, 3 rooftops); synthetic VINs"
+}
