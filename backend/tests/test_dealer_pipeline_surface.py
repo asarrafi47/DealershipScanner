@@ -78,6 +78,10 @@ ARGS = [
      "do not run the discovery browser capture for dealers whose recipe synthesis failed (default: run it once per dealer per day, in its own process)"),
     (("--no-lifecycle",), "no_lifecycle", False, None, "_StoreTrueAction", False,
      "skip the recipe lifecycle after the main batches (force re-synth -> discovery capture -> retry batch for no_recipe / no_rows / stale / rejected dealers; once per dealer per day)"),
+    (("--resume",), "resume", False, None, "_StoreTrueAction", False,
+     "N9.15: skip dealers already in <out>/triage.json or with a scan_runs row finished at or after --resume-since; keep their entries in the triage"),
+    (("--resume-since",), "resume_since", "", None, "_StoreAction", False,
+     "with --resume: ISO start of the pass being resumed (fleet_scan passes it)"),
 ]
 
 

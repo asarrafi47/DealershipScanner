@@ -159,6 +159,9 @@ def main() -> int:
                     help="do not run the discovery browser capture for dealers whose recipe synthesis failed (default: run it once per dealer per day, in its own process)")
     ap.add_argument("--no-lifecycle", action="store_true",
                     help="skip the recipe lifecycle after the main batches (force re-synth -> discovery capture -> retry batch for no_recipe / no_rows / stale / rejected dealers; once per dealer per day)")
+    ap.add_argument("--resume", action="store_true",
+                    help="N9.15: skip dealers already in <out>/triage.json or with a scan_runs row finished at or after --resume-since; keep their entries in the triage")
+    ap.add_argument("--resume-since", default="", help="with --resume: ISO start of the pass being resumed (fleet_scan passes it)")
     args = ap.parse_args()
     return run(args)
 

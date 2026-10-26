@@ -36,9 +36,13 @@ Env:
   SCAN_OUT_ROOT           run directory parent (default workspace/pipeline)
   SCAN_KEEP_DAYS=14       prune run dirs / scan logs older than this
   SCAN_IDLE_HOLD_SECONDS  when idle, stay up this long so the /data volume can be read
+  SCAN_RESUME_DIR         resume this run dir (same as `--resume <run_dir>`, N9.15): reuse its
+                          shard rosters, skip dealers with a triage entry or a scan_runs row
+                          finished since the run start, append to each shard's triage.json
 
 Usage:
   SCAN_DEALERS=a,b SCAN_SHARDS=2 python -m backend.scripts.fleet_scan
+  python -m backend.scripts.fleet_scan --resume workspace/pipeline/fleet_<stamp>
   SCAN_FLEET=1 python -m backend.scripts.fleet_scan
 """
 from __future__ import annotations
@@ -294,23 +298,68 @@ def run_step(tag: str, cmd: list[str], env: dict[str, str], sink: Path) -> tuple
     return rc, round(time.time() - t0, 1)
 
 
-def prune(out_root: Path, keep_days: int) -> None:
+def prune(out_root: Path, keep_days: int, keep: Path | None = None) -> None:
     cutoff = time.time() - keep_days * 86400
     for parent, pattern in ((out_root, "fleet_*"), (ROOT / "workspace" / "scanlogs", "scan_*.jsonl")):
         if not parent.is_dir():
             continue
         for p in parent.glob(pattern):
             try:
+                if keep is not None and p.resolve() == keep.resolve():
+                    continue
                 if p.stat().st_mtime < cutoff:
                     shutil.rmtree(p) if p.is_dir() else p.unlink()
             except OSError:
                 pass
 
 
+def resume_dir_arg(argv: list[str]) -> Path | None:
+    """``--resume <run_dir>`` / ``--resume=<run_dir>``, else SCAN_RESUME_DIR (N9.15)."""
+    for i, a in enumerate(argv):
+        if a == "--resume":
+            if i + 1 >= len(argv):
+                raise SystemExit("fleet   --resume needs a run dir")
+            return Path(argv[i + 1])
+        if a.startswith("--resume="):
+            return Path(a.split("=", 1)[1])
+    env = (os.environ.get("SCAN_RESUME_DIR") or "").strip()
+    return Path(env) if env else None
+
+
+def load_resume_state(run_dir: Path) -> tuple[datetime, list[list[str]]]:
+    """The run start and the shard rosters (s0.txt, s1.txt, ...) of a run dir to resume.
+    The start comes from run_state.json, else from the directory name, else its mtime."""
+    shards: list[list[str]] = []
+    i = 0
+    while (run_dir / f"s{i}.txt").is_file():
+        shards.append([d.strip() for d in (run_dir / f"s{i}.txt").read_text().splitlines() if d.strip()])
+        i += 1
+    if not shards:
+        raise SystemExit(f"fleet   cannot resume {run_dir}: no shard roster files (s0.txt ...)")
+    try:
+        return datetime.fromisoformat(json.loads((run_dir / "run_state.json").read_text())["started"]), shards
+    except (OSError, ValueError, KeyError):
+        pass
+    m = re.search(r"fleet_(\d{8}T\d{6})Z", run_dir.name)
+    if m:
+        return datetime.strptime(m.group(1), "%Y%m%dT%H%M%S").replace(tzinfo=timezone.utc), shards
+    return datetime.fromtimestamp((run_dir / "s0.txt").stat().st_mtime, timezone.utc).replace(microsecond=0), shards
+
+
 def main() -> int:
     started = datetime.now(timezone.utc).replace(microsecond=0)
     t_start = time.time()
-    roster = load_roster()
+    resume_dir = resume_dir_arg(sys.argv[1:])
+    resumed_shards: list[list[str]] | None = None
+    if resume_dir is not None:
+        started, resumed_shards = load_resume_state(resume_dir)
+        roster = sorted({d for ids in resumed_shards for d in ids})
+        try:
+            ROSTER_REPORT.update(json.loads((resume_dir / "roster_rule.json").read_text()))
+        except (OSError, ValueError):
+            pass
+    else:
+        roster = load_roster()
     if not roster:
         print("fleet   idle: set SCAN_FLEET=1 (whole roster) or SCAN_DEALERS=a,b,c to scan", flush=True)
         hold = _env_int("SCAN_IDLE_HOLD_SECONDS", 0)
@@ -325,18 +374,20 @@ def main() -> int:
     out_root = Path(os.environ.get("SCAN_OUT_ROOT") or (ROOT / "workspace" / "pipeline"))
     keep_days = _env_int("SCAN_KEEP_DAYS", 14)
     prune(out_root, keep_days)
-    run_dir = out_root / f"fleet_{started.strftime('%Y%m%dT%H%M%SZ')}"
-    run_dir.mkdir(parents=True, exist_ok=True)
-    if ROSTER_REPORT:
-        (run_dir / "roster_rule.json").write_text(json.dumps(ROSTER_REPORT, indent=1))
-
-    n_shards = _env_int("SCAN_SHARDS", 8)
+    if resume_dir is not None:
+        run_dir = resume_dir  # never pruned or recreated: it holds the pass being resumed
+        shards = resumed_shards or []
+    else:
+        run_dir = out_root / f"fleet_{started.strftime('%Y%m%dT%H%M%SZ')}"
+        run_dir.mkdir(parents=True, exist_ok=True)
+        (run_dir / "run_state.json").write_text(json.dumps({"started": started.isoformat()}))
+        if ROSTER_REPORT:
+            (run_dir / "roster_rule.json").write_text(json.dumps(ROSTER_REPORT, indent=1))
+        shards = make_shards(roster, _env_int("SCAN_SHARDS", 8), active_rows(roster))
     batch = _env_int("SCAN_BATCH", 6)
-    weights = active_rows(roster)
-    shards = make_shards(roster, n_shards, weights)
     extra = (os.environ.get("SCAN_PIPELINE_ARGS") or "").split()
     py = sys.executable
-    print(f"fleet   {len(roster)} dealers in {len(shards)} shard(s), batch {batch}, run {run_dir}", flush=True)
+    print(f"fleet   {'RESUME ' if resume_dir is not None else ''}{len(roster)} dealers in {len(shards)} shard(s), batch {batch}, run {run_dir}", flush=True)
 
     sampler = ResourceSampler()
     sampler.start()
@@ -346,12 +397,15 @@ def main() -> int:
     shard_secs: dict[str, float] = {}
     for i, ids in enumerate(shards):
         tag = f"s{i}"
-        (run_dir / f"{tag}.txt").write_text("\n".join(ids) + "\n")
+        if resume_dir is None:
+            (run_dir / f"{tag}.txt").write_text("\n".join(ids) + "\n")
         env = dict(os.environ)
         env["SCANNER_LOCK_PATH"] = str(run_dir / f"{tag}.lock")
         env.setdefault("SCANNER_ROOFTOP_CANDIDATES", "1")  # N8.13: unrostered rooftops -> profiling queue
         cmd = [py, "-m", "backend.scripts.dealer_pipeline", "--dealers", ",".join(ids),
                "--out", str(run_dir / tag), "--batch", str(batch), *extra]
+        if resume_dir is not None:
+            cmd += ["--resume", "--resume-since", started.isoformat()]
 
         def _run(tag: str = tag, cmd: list[str] = cmd, env: dict[str, str] = env) -> None:
             rc, secs = run_step(tag, cmd, env, run_dir / f"{tag}.out")

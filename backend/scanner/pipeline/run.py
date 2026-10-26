@@ -17,6 +17,7 @@ from backend.scanner.pipeline.dealer_logs import log_discovery, log_run_files
 from backend.scanner.pipeline.lifecycle import run_lifecycle_pass
 from backend.scanner.pipeline.reconcile import bucket_counts, reconcile_dealer, valid_vin_count
 from backend.scanner.pipeline.recipes import ensure_recipe
+from backend.scanner.pipeline.resume import plan_resume
 from backend.scanner.pipeline.roster import dealer_from_manifest, dealers_from_db, load_manifest_dealers
 from backend.scanner.pipeline.runner import REQUEUE_REASON, requeue_killed, run_discovery_capture, run_http_only_scan, wait_for_scanner_lock
 from backend.scanner.pipeline.triage import (accounting_line, group_feed_lines, group_feed_unstamped, handover_pending_lines, platform_cluster_lines,
@@ -55,7 +56,23 @@ def _run(args) -> int:
     out_dir.mkdir(parents=True, exist_ok=True)
     started = datetime.now(timezone.utc).replace(microsecond=0)
     baseline_since = (started - timedelta(days=BASELINE_DAYS)).isoformat()
-    since_iso = args.since or started.isoformat()
+    resume_since = getattr(args, "resume_since", "") or ""
+    since_iso = args.since or (resume_since if getattr(args, "resume", False) and resume_since else started.isoformat())
+
+    prior_results: list[dict[str, Any]] = []
+    assess_only: set[str] = set()
+    if getattr(args, "resume", False):
+        # N9.15: dealers already in this shard's triage.json, or with a scan_runs row since the
+        # run start, are not scanned again (docs in backend/scanner/pipeline/resume.py)
+        conn = get_conn()
+        try:
+            plan = plan_resume(ids, out_dir, conn, since_iso)
+        finally:
+            conn.close()
+        prior_results, assess_only = plan["prior"], set(plan["assess_only"])
+        ids = [d for d in ids if d in set(plan["todo"]) | assess_only]
+        print(f"resume  {len(prior_results)} dealer(s) already in triage, {len(assess_only)} assessed without a rescan, "
+              f"{len(plan['todo'])} to scan (run start {since_iso})", flush=True)
 
     conn = get_conn()
     known: dict[str, int] = {}
@@ -117,7 +134,7 @@ def _run(args) -> int:
 
     requeued: set[str] = set()
     if not args.skip_scan:
-        scannable = [did for did in ids if recipe_info[did].get("had_recipes") or str(recipe_info[did].get("synth", "")).startswith("saved")]
+        scannable = [did for did in ids if did not in assess_only and recipe_info[did].get("had_recipes") or str(recipe_info[did].get("synth", "")).startswith("saved")]
         skipped = [did for did in ids if did not in scannable]
         if skipped:
             print(f"scan    skipping {len(skipped)} dealer(s) with no recipe: {', '.join(skipped)[:200]}", flush=True)
@@ -226,6 +243,9 @@ def _run(args) -> int:
 
             lifecycle_summary = {"enabled": True, "error": str(exc)[:200], "traceback": _tb.format_exc()[-1200:]}
             print(f"lifecyc pass failed: {str(exc)[:160]}", flush=True)
+    if prior_results:
+        have = {r["dealer_id"] for r in results}
+        results = [r for r in prior_results if r["dealer_id"] not in have] + results
     needs = write_needs_discovery(results, out_dir)
 
     live_recipes = sum(1 for r in results if (r.get("recipe") or {}).get("had_recipes") or str((r.get("recipe") or {}).get("synth", "")).startswith(("saved", "browser_capture")))
