@@ -1829,29 +1829,27 @@ def _vin_token_in_url(url: str) -> str | None:
     )
     if m:
         return m.group(1).upper()
-    m2 = re.search(r"([A-HJ-NPR-Z0-9]{17})", url.upper())
-    return m2.group(1) if m2 else None
+    # Fallback: a 17-char run counts only when it is a whole token with VIN shape
+    # (not a slice of a longer hash/id, and mixing letters with digits).
+    for m2 in re.finditer(r"(?<![A-Z0-9])([A-HJ-NPR-Z0-9]{17})(?![A-Z0-9])", url.upper()):
+        cand = m2.group(1)
+        if re.search(r"[A-Z]", cand) and re.search(r"[0-9]", cand):
+            return cand
+    return None
 
 
 _TRUSTED_IPACKET_HOSTS = frozenset({
     "djapi.autoipacket.com",
     "document-viewer.autoipacket.com",
     "webicon.autoipacket.com",
+    "autoipacket.com",
+    "ipacket.us",
 })
 
 
 def _is_trusted_ipacket_host(host: str) -> bool:
-    h = (host or "").lower()
-    if not h:
-        return False
-    if h in _TRUSTED_IPACKET_HOSTS:
-        return True
-    return (
-        h == "autoipacket.com"
-        or h.endswith(".autoipacket.com")
-        or h == "ipacket.us"
-        or h.endswith(".ipacket.us")
-    )
+    # Exact-match allowlist: a stray subdomain is not trusted.
+    return (host or "").strip().lower().rstrip(".") in _TRUSTED_IPACKET_HOSTS
 
 
 def _has_dealer_cdn_host_hint(host: str) -> bool:
@@ -1873,7 +1871,9 @@ def is_listing_sticker_url(url: str) -> bool:
     # Known iPacket API/document hosts are trusted outright.
     if _is_trusted_ipacket_host(host):
         return True
-    if _IPACKET_STICKER_URL_RE.search(url or ""):
+    # Anchored: the pattern must cover the whole URL, so an iPacket-looking string in
+    # another host's path or query cannot pass.
+    if _IPACKET_STICKER_URL_RE.fullmatch((url or "").strip()):
         return True
     # For everything else, a path/query token alone is not sufficient — the host must
     # also look like a dealer site or inventory/photo CDN, so an attacker-controlled
@@ -2151,6 +2151,63 @@ def pick_best_listing_sticker_url(urls: list[str], *, vin: str | None = None) ->
     return good[0]
 
 
+_STICKER_MAX_BYTES = 15 * 1024 * 1024
+_STICKER_MAX_REDIRECTS = 3
+_STICKER_UA = (
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+    "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36"
+)
+
+
+def _guarded_sticker_get(url: str, *, timeout: float, accept: str):
+    """
+    GET a dealer-supplied sticker URL without trusting it: every hop (the first
+    and each redirect, followed by hand) must be http(s) with a globally routable
+    host (``destination_host_blocked_after_dns``), and the body is read through a
+    byte cap. Returns the response with its content filled; raises ``ValueError``
+    for a blocked hop or an oversized body.
+    """
+    import requests
+    from urllib.parse import urljoin
+
+    from backend.utils.outbound_url import destination_host_blocked_after_dns
+
+    cur = url
+    for _ in range(_STICKER_MAX_REDIRECTS + 1):
+        parts = urlsplit(cur)
+        if parts.scheme not in ("http", "https") or parts.username or parts.password:
+            raise ValueError("sticker fetch blocked: scheme or credentials")
+        if not parts.hostname or destination_host_blocked_after_dns(parts.hostname):
+            raise ValueError("sticker fetch blocked: destination host")
+        r = requests.get(
+            cur,
+            timeout=timeout,
+            headers={"User-Agent": _STICKER_UA, "Accept": accept},
+            allow_redirects=False,
+            stream=True,
+        )
+        if r.status_code in (301, 302, 303, 307, 308) and r.headers.get("location"):
+            nxt = urljoin(cur, r.headers["location"])
+            r.close()
+            cur = nxt
+            continue
+        r.raise_for_status()
+        declared = r.headers.get("content-length")
+        if declared and declared.isdigit() and int(declared) > _STICKER_MAX_BYTES:
+            r.close()
+            raise ValueError("sticker fetch blocked: body too large")
+        buf = bytearray()
+        for chunk in r.iter_content(chunk_size=65536):
+            buf.extend(chunk)
+            if len(buf) > _STICKER_MAX_BYTES:
+                r.close()
+                raise ValueError("sticker fetch blocked: body too large")
+        r._content = bytes(buf)
+        r._content_consumed = True
+        return r
+    raise ValueError("sticker fetch blocked: too many redirects")
+
+
 def fetch_listing_sticker(
     url: str,
     vin: str,
@@ -2177,21 +2234,7 @@ def fetch_listing_sticker(
         )
         return None
 
-    import requests
-
-    r = requests.get(
-        u,
-        timeout=timeout,
-        headers={
-            "User-Agent": (
-                "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
-                "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36"
-            ),
-            "Accept": "application/pdf,text/plain,text/html,*/*;q=0.8",
-        },
-        allow_redirects=True,
-    )
-    r.raise_for_status()
+    r = _guarded_sticker_get(u, timeout=timeout, accept="application/pdf,text/plain,text/html,*/*;q=0.8")
     ct = (r.headers.get("content-type") or "").lower()
     content = r.content
     raw_text = ""
