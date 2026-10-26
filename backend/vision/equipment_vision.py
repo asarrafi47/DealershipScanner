@@ -331,6 +331,28 @@ def packages_lacks_photo_equipment(packages_raw: Any) -> bool:
     return True
 
 
+def _cap_packages_json(text: str, limit: int) -> str:
+    """Fit packages JSON under *limit* chars by trimming list values, never by
+    slicing the string (a mid-token cut stores unparseable JSON)."""
+    if len(text) <= limit:
+        return text
+    try:
+        pj = json.loads(text)
+    except (TypeError, ValueError):
+        return text[:limit]
+    if not isinstance(pj, dict):
+        return text[:limit]
+    out = json.dumps(pj, ensure_ascii=False)
+    while len(out) > limit:
+        lists = [k for k, v in pj.items() if isinstance(v, list) and v]
+        if not lists:
+            break
+        k = max(lists, key=lambda kk: len(json.dumps(pj[kk], ensure_ascii=False)))
+        pj[k] = pj[k][: len(pj[k]) // 2]
+        out = json.dumps(pj, ensure_ascii=False)
+    return out if len(out) <= limit else text[:limit]
+
+
 def analyze_car_equipment_from_gallery(
     row: dict[str, Any],
     *,
@@ -427,7 +449,7 @@ def analyze_car_equipment_from_gallery(
     except (TypeError, ValueError, json.JSONDecodeError):
         pass
 
-    return merged_json[:8000], stats
+    return _cap_packages_json(merged_json, 8000), stats
 
 
 _ADAS_LABELS: dict[str, str] = {
