@@ -81,7 +81,7 @@ def test_paint_facets_infer_each_distinct_color_once(monkeypatch):
 
     def _infer(raw, make=None):
         calls.append(raw)
-        return ["black"] if "black" in raw else ["other"]
+        return ["black"] if "black" in raw.lower() else ["other"]
 
     class _Cur:
         def execute(self, *_a):
