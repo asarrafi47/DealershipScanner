@@ -14,6 +14,12 @@ import pytest
 # Dev/test may use plain SQLite for users.db; production forbids this (SEC-088).
 os.environ.setdefault("ALLOW_UNENCRYPTED_USER_DB", "1")
 
+# bcrypt cost 13 is ~586 ms/hash; tests hash dozens of passwords. Lower the cost
+# floor and default to 4 (~1 ms) for the suite only; tests that care about the
+# production default delenv BCRYPT_ROUNDS and BCRYPT_TEST_LOW_COST themselves.
+os.environ["BCRYPT_TEST_LOW_COST"] = "1"
+os.environ.setdefault("BCRYPT_ROUNDS", "4")
+
 # --- Hermetic databases ------------------------------------------------------------
 #
 # This runs at conftest import, i.e. before collection imports any test module.
