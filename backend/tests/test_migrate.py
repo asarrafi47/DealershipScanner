@@ -1,16 +1,15 @@
 """The migration chain is only trustworthy if order and immutability hold."""
 
 import logging
-import os
 import re
 import threading
 import time
-import uuid
 from pathlib import Path
 
 import pytest
 
 from backend.scripts import migrate
+from backend.tests import pg_harness as pgh
 
 
 def _write(directory: Path, filename: str, sql: str = "SELECT 1;\n") -> Path:
@@ -688,49 +687,13 @@ def test_real_chain_dry_run_on_an_empty_database_records_v019(run, caplog, monke
 # never a remote host, never the mini tunnel (port 15432).
 # ---------------------------------------------------------------------------
 
-_ADMIN_DSN_ENV = "TEST_PG_ADMIN_DSN"
-_LOCAL_HOSTS = {"", "localhost", "127.0.0.1", "::1"}
-
-
-def _guarded_admin_dsn() -> str:
-    dsn = (os.environ.get(_ADMIN_DSN_ENV) or "").strip()
-    if not dsn:
-        pytest.skip(f"{_ADMIN_DSN_ENV} not set (a local server where pytest_* DBs may be created)")
-    psycopg = pytest.importorskip("psycopg")
-    params = psycopg.conninfo.conninfo_to_dict(dsn)
-    host = str(params.get("host") or "")
-    if not (host in _LOCAL_HOSTS or host.startswith("/")):
-        pytest.fail(f"{_ADMIN_DSN_ENV} must name a local server, not {host!r}")
-    if str(params.get("port") or "5432") == "15432":
-        pytest.fail(f"{_ADMIN_DSN_ENV} points at the mini tunnel (port 15432)")
-    if params.get("dbname") in ("cars", "cars_cleanroom"):
-        pytest.fail(f"{_ADMIN_DSN_ENV} must not name an inventory database")
-    return dsn
-
-
 @pytest.fixture
 def scratch_pg(monkeypatch):
-    from urllib.parse import urlencode
-
-    import psycopg
-    from psycopg.conninfo import conninfo_to_dict
-
-    admin_dsn = _guarded_admin_dsn()
-    name = f"pytest_migrate_{uuid.uuid4().hex[:10]}"
-    assert name.startswith("pytest_") and name not in ("cars", "cars_cleanroom")
-    admin = psycopg.connect(admin_dsn, autocommit=True)
-    try:
-        admin.execute(f'CREATE DATABASE "{name}"')
-        params = conninfo_to_dict(admin_dsn)
-        params["dbname"] = name
-        # URI form (migrate only accepts postgresql:// DSNs), every keyword in the query.
-        dsn = "postgresql://?" + urlencode({k: str(v) for k, v in params.items()})
+    """An empty throwaway database, wired in as the inventory database (pg_harness guards)."""
+    admin_dsn = pgh.admin_dsn_or_skip()
+    with pgh.scratch_db(admin_dsn) as dsn:
         monkeypatch.setenv("INVENTORY_DATABASE_URL", dsn)
         yield dsn
-    finally:
-        admin.execute(f'DROP DATABASE IF EXISTS "{name}" WITH (FORCE)')
-        admin.close()
-
 
 
 def _versions(dsn: str) -> list[int]:
@@ -742,7 +705,7 @@ def _versions(dsn: str) -> list[int]:
         return [r[0] for r in c.execute("SELECT version FROM schema_migrations ORDER BY 1")]
 
 
-@pytest.mark.integration
+@pytest.mark.pg
 def test_live_second_migrate_waits_for_the_lock_then_skips(scratch_pg, tmp_path):
     import psycopg
 
@@ -773,7 +736,7 @@ def test_live_second_migrate_waits_for_the_lock_then_skips(scratch_pg, tmp_path)
     assert _versions(scratch_pg) == [1, 2]
 
 
-@pytest.mark.integration
+@pytest.mark.pg
 def test_live_lock_timeout_aborts_a_blocked_file(scratch_pg, tmp_path):
     import psycopg
 
@@ -792,7 +755,7 @@ def test_live_lock_timeout_aborts_a_blocked_file(scratch_pg, tmp_path):
     assert _versions(scratch_pg) == [1, 2]
 
 
-@pytest.mark.integration
+@pytest.mark.pg
 def test_live_record_only_rule_fresh_and_refused(scratch_pg, tmp_path, monkeypatch):
     import psycopg
 
@@ -811,7 +774,7 @@ def test_live_record_only_rule_fresh_and_refused(scratch_pg, tmp_path, monkeypat
     assert _versions(scratch_pg) == [1]
 
 
-@pytest.mark.integration
+@pytest.mark.pg
 def test_live_frozen_database_is_refused_by_its_server_name(scratch_pg, tmp_path, monkeypatch, caplog):
     """current_database() on a real server; the scratch DB stands in for cars_cleanroom."""
     import psycopg
@@ -832,3 +795,68 @@ def test_live_frozen_database_is_refused_by_its_server_name(scratch_pg, tmp_path
     monkeypatch.setattr(migrate, "FROZEN_DATABASES", frozenset({"cars_cleanroom"}))
     assert migrate.main(["--apply", "--dir", str(tmp_path)]) == 0
     assert _versions(scratch_pg) == [1]
+
+
+# --- the real chain on a real server (P14A.4) ----------------------------------
+
+
+def _row_count(dsn: str) -> int:
+    import psycopg
+
+    with psycopg.connect(dsn) as c:
+        return c.execute("SELECT count(*) FROM public.schema_migrations").fetchone()[0]
+
+
+@pytest.mark.pg
+def test_the_session_template_is_the_chain_head(pg_template):
+    from backend.db.schema_version import expected_schema_version
+
+    assert pg_template.version == expected_schema_version() >= 26
+
+
+@pytest.mark.pg
+def test_live_apply_reaches_the_chain_head_in_one_call_and_rerun_adds_nothing(scratch_pg, caplog):
+    from backend.db.schema_version import expected_schema_version
+
+    assert migrate.main(["--apply"]) == 0
+    head = expected_schema_version()
+    versions = _versions(scratch_pg)
+    assert versions[-1] == head and head >= 26
+    assert versions == sorted(set(versions))
+    rows = _row_count(scratch_pg)
+
+    caplog.set_level(logging.INFO, logger="migrate")
+    assert migrate.main(["--apply"]) == 0
+    assert "database is up to date" in caplog.text
+    assert _row_count(scratch_pg) == rows
+
+
+@pytest.mark.pg
+def test_live_edited_applied_file_exits_1_with_checksum_drift(scratch_pg, tmp_path, caplog):
+    _write(tmp_path, "V001__one.sql", "CREATE TABLE t1 (id int);\n")
+    _write(tmp_path, "V002__two.sql", "CREATE TABLE t2 (id int);\n")
+    assert migrate.main(["--apply", "--dir", str(tmp_path)]) == 0
+    _write(tmp_path, "V001__one.sql", "CREATE TABLE t1 (id bigint);\n")  # an applied file edited
+    caplog.set_level(logging.INFO, logger="migrate")
+    assert migrate.main(["--apply", "--dir", str(tmp_path)]) == 1
+    assert "CHECKSUM DRIFT V001__one.sql" in caplog.text
+    assert _versions(scratch_pg) == [1, 2]
+
+
+@pytest.mark.pg
+def test_live_v001_search_path_reset_does_not_break_later_files(scratch_pg, tmp_path):
+    """V001 (pg_dump) runs set_config('search_path', '', false); without the per-file
+    ``SET search_path TO DEFAULT`` the bookkeeping INSERT and every later unqualified
+    file fail. Pin it with a pg_dump-shaped file followed by an unqualified one."""
+    _write(
+        tmp_path, "V001__dump.sql",
+        "SELECT pg_catalog.set_config('search_path', '', false);\n"
+        "CREATE TABLE public.t1 (id int);\n",
+    )
+    _write(tmp_path, "V002__unqualified.sql", "CREATE TABLE t2 (id int);\n")
+    assert migrate.main(["--apply", "--dir", str(tmp_path)]) == 0
+    assert _versions(scratch_pg) == [1, 2]
+    import psycopg
+
+    with psycopg.connect(scratch_pg) as c:
+        assert c.execute("SELECT to_regclass('public.t2')").fetchone()[0] is not None
