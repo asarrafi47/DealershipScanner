@@ -1,4 +1,4 @@
-"""N37.9: /dev operator accounts on Postgres (public.admin_users, V035), ``pg`` tier.
+"""N37.9: /dev operator accounts on Postgres (public.admin_users, V029), ``pg`` tier.
 
 DEV_USERS_DB_BACKEND=pg routes admin_users_db to Postgres; the SQLite default is
 covered by test_init_admin_db.py. The env-seeded break-glass admin must log in

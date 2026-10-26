@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Read-only pre-flight for migrations/V036 (drop dead TOTP/phone columns).
+"""Read-only pre-flight for migrations/V031 (drop dead TOTP/phone columns).
 
 Prints the users row count and how many rows still hold a non-empty totp_secret,
 mfa_phone or mfa_method, for the SQLite users DB and, when INVENTORY_DATABASE_URL /

@@ -1,4 +1,4 @@
--- V035__users_auth_epoch.sql
+-- V030__users_auth_epoch.sql
 --
 -- P16.1 (N30): session revocation. session["ae"] is compared with this counter on
 -- every request; it is bumped only by a password change/reset and the bootstrap

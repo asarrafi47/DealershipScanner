@@ -17,7 +17,7 @@ volume, in a stated maintenance window):
 Then verify admin and user logins by hand. The backup still holds the seeds: delete it after
 verification with ``--purge-backup <dir>`` on the dated step the owner writes down.
 
-Columns already dropped by V036 / P16.2 are skipped (reported "column absent").
+Columns already dropped by V031 / P16.2 are skipped (reported "column absent").
 """
 from __future__ import annotations
 

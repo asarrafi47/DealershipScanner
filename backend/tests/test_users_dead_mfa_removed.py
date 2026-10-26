@@ -80,7 +80,7 @@ def test_legacy_columns_in_old_db_are_ignored(app_factory):
 
 
 def test_v036_drops_exactly_the_dead_columns():
-    sql = (_ROOT / "migrations" / "V036__users_drop_dead_mfa_columns.sql").read_text()
+    sql = (_ROOT / "migrations" / "V031__users_drop_dead_mfa_columns.sql").read_text()
     body = "\n".join(l for l in sql.splitlines() if not l.lstrip().startswith("--"))
     drops = re.findall(r"DROP COLUMN IF EXISTS (\w+)", body)
     assert drops == ["totp_secret", "mfa_phone", "mfa_method"]

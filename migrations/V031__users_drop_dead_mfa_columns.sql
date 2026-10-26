@@ -1,4 +1,4 @@
--- V036__users_drop_dead_mfa_columns.sql
+-- V031__users_drop_dead_mfa_columns.sql
 --
 -- P16.2m (N30), D-SEC2 (a): TOTP and SMS MFA were removed from the app; the columns were
 -- never read or written by any live path. SEC-088 (V013 header: plaintext TOTP seed on a

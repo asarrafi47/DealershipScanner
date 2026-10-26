@@ -724,7 +724,7 @@ def resolve_rooftop_attribution(
     return kept, rejected
 
 
-# Evidence tiers persisted on ``cars.rooftop_tier`` (V030, N8.6). strong = this store's
+# Evidence tiers persisted on ``cars.rooftop_tier`` (V028, N8.6). strong = this store's
 # own feed positively stamped the car (rooftop name / site-id match, or a page-level
 # store identity) at a tier that proves identity; weak = the stamp matched only on a
 # locality, subset-name or scraped-street tier; none = nothing per car (single-store

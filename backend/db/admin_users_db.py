@@ -23,7 +23,7 @@ class AdminUserExists(Exception):
 
 
 def dev_users_backend() -> str:
-    """``sqlite`` (SQLCipher dev_users.db, the default) or ``pg`` (public.admin_users, V035).
+    """``sqlite`` (SQLCipher dev_users.db, the default) or ``pg`` (public.admin_users, V029).
 
     N37.9: the flag stays off until the dev_users cutover (plan section 5); anything
     other than ``pg`` keeps the SQLite path untouched.
