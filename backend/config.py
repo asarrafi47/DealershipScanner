@@ -56,6 +56,9 @@ class Config:
     RATE_LIMIT_LOGIN_PER_MIN = _int("RATE_LIMIT_LOGIN_PER_MIN", 30)
     RATE_LIMIT_REGISTER_PER_MIN = _int("RATE_LIMIT_REGISTER_PER_MIN", 10)
     RATE_LIMIT_DEALER_LOCATOR_PER_MIN = _int("RATE_LIMIT_DEALER_LOCATOR_PER_MIN", 30)
+    # SEC-A-005: cache-miss builds of /api/listings/cars and coords-to-zip lookups.
+    RATE_LIMIT_LISTINGS_BUILD_PER_MIN = _int("RATE_LIMIT_LISTINGS_BUILD_PER_MIN", 20)
+    RATE_LIMIT_COORDS_TO_ZIP_PER_MIN = _int("RATE_LIMIT_COORDS_TO_ZIP_PER_MIN", 30)
     RATE_LIMIT_NHTSA_RECALLS_PER_MIN = _int("RATE_LIMIT_NHTSA_RECALLS_PER_MIN", 30)
 
     # ------------------------------------------------------------------
