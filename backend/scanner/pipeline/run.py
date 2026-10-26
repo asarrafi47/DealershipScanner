@@ -10,16 +10,17 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 
-from backend.scanner.pipeline.assess import assess
+from backend.scanner.pipeline.assess import assess, fleet_accounting
 from backend.scanner.pipeline.constants import BASELINE_DAYS
 from backend.scanner.pipeline.db import _assess_conn, _conn_alive, chromium_process_count, get_conn, wait_for_db
-from backend.scanner.pipeline.dealer_logs import log_discovery, log_scan_run, write_instructions_if_first_success
+from backend.scanner.pipeline.dealer_logs import log_discovery, log_run_files
 from backend.scanner.pipeline.lifecycle import run_lifecycle_pass
 from backend.scanner.pipeline.reconcile import bucket_counts, reconcile_dealer, valid_vin_count
 from backend.scanner.pipeline.recipes import ensure_recipe
 from backend.scanner.pipeline.roster import dealer_from_manifest, dealers_from_db, load_manifest_dealers
 from backend.scanner.pipeline.runner import run_discovery_capture, run_http_only_scan, wait_for_scanner_lock
-from backend.scanner.pipeline.triage import platform_cluster_lines, retirement_alarm_lines, triage_table, write_needs_discovery, write_slow_dealers
+from backend.scanner.pipeline.triage import (accounting_line, group_feed_lines, group_feed_unstamped, handover_pending_lines, platform_cluster_lines,
+                                            retirement_alarm_lines, triage_table, write_needs_discovery, write_slow_dealers)
 from backend.scanner.pipeline.vpic import vpic_for_dealers
 
 
@@ -189,8 +190,7 @@ def _run(args) -> int:
                 r["reconcile"] = {"error": str(exc)[:120]}
             results.append(r)
             try:
-                log_scan_run(r, stamp)
-                write_instructions_if_first_success(r, stamp)
+                log_run_files(r, stamp)
             except Exception as exc:  # noqa: BLE001
                 print(f"log     scan_runs {did}: {str(exc)[:80]}", flush=True)
     finally:
@@ -230,15 +230,23 @@ def _run(args) -> int:
     triage["platform_clusters"] = platform_cluster_lines(triage["needs_discovery"])
     # 7. the scanner's retirements this run, alarmed per D-N21 (P5A.7)
     triage["retirement_alarms"] = retirement_alarm_lines(results)
+    # 8. honest accounting (N9.12): captured / refused by each guard / written, unstamped group
+    #    feeds and half-finished VIN handovers
+    triage["accounting"] = fleet_accounting(results)
+    flags = group_feed_unstamped(results)
+    triage["group_feed_unstamped"] = flags
+    triage["handover_pending"] = {r["dealer_id"]: r["handover_pending"] for r in results if r.get("handover_pending")}
+    report_lines = ([accounting_line(results)] + group_feed_lines(flags) + handover_pending_lines(results)
+                    + triage["platform_clusters"] + triage["retirement_alarms"])
     (out_dir / "triage.json").write_text(json.dumps(triage, indent=1, default=str), encoding="utf-8")
     lines = triage_table(results)
-    (out_dir / "triage.md").write_text("\n".join(lines + [""] + triage["platform_clusters"] + triage["retirement_alarms"]) + "\n", encoding="utf-8")
+    (out_dir / "triage.md").write_text("\n".join(lines + [""] + report_lines) + "\n", encoding="utf-8")
     try:
         write_slow_dealers(results, out_dir, started)
     except Exception as exc:  # noqa: BLE001
         print(f"log     slow_dealers: {str(exc)[:100]}", flush=True)
     print("\n".join(lines))
-    for line in triage["platform_clusters"] + triage["retirement_alarms"]:
+    for line in report_lines:
         print(line, flush=True)
     print(json.dumps(triage["counts"]))
     return 0

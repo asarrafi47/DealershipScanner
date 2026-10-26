@@ -398,6 +398,10 @@ def main() -> int:
         except (OSError, ValueError):
             print(f"fleet   shard s{i}: no triage.json", flush=True)
     verdicts = Counter(str(r.get("verdict")) for r in results)
+    from backend.scanner.pipeline.assess import fleet_accounting
+    from backend.scanner.pipeline.triage import group_feed_unstamped
+
+    acct = fleet_accounting(results)
     logs = sorted(run_dir.glob("s*/scanner.log")) + sorted(run_dir.glob("s*.out"))
     summary = {
         "started": started.isoformat(),
@@ -408,8 +412,14 @@ def main() -> int:
         "shards": len(shards),
         "batch": batch,
         "verdicts": dict(verdicts),
-        "rows": sum(int(r.get("rows") or 0) for r in results),
-        "vin_owner_conflicts": sum(int(r.get("vin_owner_conflicts") or 0) for r in results),
+        # N9.12: the old "rows" summed the feed BEFORE the VIN-owner guard and read as rows
+        # written (208,233 vs 198,623 written on 10-13). Kept as rows_captured; error dealers
+        # without a scan_run count as zeros.
+        "rows": acct["rows_captured"],
+        **acct,
+        "vin_owner_conflicts": acct["rows_refused_vin_owner"],
+        "group_feed_unstamped": group_feed_unstamped(results),
+        "handover_pending": {r["dealer_id"]: r["handover_pending"] for r in results if r.get("handover_pending")},
         "rooftop_candidates": rooftop_candidate_report(started),
         "http_403_429": tally_http(logs),
         "http_first_statuses": http_first_statuses(results),

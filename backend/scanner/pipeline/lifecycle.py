@@ -9,7 +9,7 @@ from typing import Any
 from backend.scanner.pipeline.assess import assess
 from backend.scanner.pipeline.constants import LOG_ROOT
 from backend.scanner.pipeline.db import _assess_conn, _conn_alive
-from backend.scanner.pipeline.dealer_logs import _log_append, log_scan_run, write_instructions_if_first_success
+from backend.scanner.pipeline.dealer_logs import _log_append, log_run_files, log_scan_run, write_instructions_if_first_success
 from backend.scanner.pipeline.reconcile import bucket_counts, reconcile_dealer
 from backend.scanner.pipeline.recipes import ensure_recipe
 from backend.scanner.pipeline.runner import run_discovery_capture, scan_retry_batch
@@ -108,6 +108,10 @@ def route_verdict(dealer: dict[str, Any], result: dict[str, Any], recipe_status:
         if verdict in SCANNED_VERDICTS:
             return {"action": "none", "trigger": f"{verdict} (recipe_status {recipe_status} ignored: the recipe on file replays)",
                     "verdict": verdict}
+    if verdict == "no_rows" and result.get("guard_only"):
+        # N9.12: the feed was read in full and the VIN-owner guard refused it (mtnviewnissan:
+        # 848 of 862 VINs are cleveland-nissan's). A re-synthesized recipe would read the same feed.
+        return {"action": "none", "trigger": "vin_owner_guard_only", "verdict": verdict}
     if verdict in LIFECYCLE_VERDICTS:
         return {"action": "lifecycle", "trigger": verdict, "verdict": verdict}
     if synth.startswith("validated_zero"):
@@ -346,8 +350,7 @@ def run_lifecycle_pass(results: list[dict[str, Any]], dealers: dict[str, dict[st
             summary["retried"][did] = r2["retried"]
             results[idx] = r2
             try:
-                log_scan_run(r2, stamp + " (lifecycle retry)")
-                write_instructions_if_first_success(r2, stamp)
+                log_run_files(r2, stamp + " (lifecycle retry)")
                 _log_append(did, "discovery.md", _lifecycle_block(stamp, "step 3 — retry scan", str(r.get("lifecycle_route", {}).get("trigger") or old),
                                                                   [f"rows: {r2.get('rows', '-')} (new {r2.get('rows_new', '-')}, used {r2.get('rows_used', '-')}); before: {r2.get('known_before')}",
                                                                    f"reason: {str(r2.get('reason') or '')[:160]}"],

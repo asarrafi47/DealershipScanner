@@ -91,6 +91,8 @@ from backend.scanner.pipeline.dealer_logs import (  # noqa: E402,F401
     _pct,
     _timing_text,
     log_discovery,
+    log_location,
+    log_run_files,
     log_scan_run,
     write_instructions_if_first_success,
 )
