@@ -453,7 +453,7 @@ def test_unstamped_group_feed_files_no_sister_or_offroster_cars_under_the_store(
 
 # ── 8. triage accounting: the identity replayed from the 10-13 triage ────────
 
-)
+_IDENT = _load("triage_identity_20261013.json")
 
 
 def _seed_identity(db: Path) -> dict[str, int]:
