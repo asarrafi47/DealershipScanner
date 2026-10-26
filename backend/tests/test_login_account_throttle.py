@@ -1,0 +1,56 @@
+"""SEC-A-010: per-account login failure counter and IPv6 /64 keying."""
+from __future__ import annotations
+
+from backend.auth.pages import _login_ip_key
+
+
+def _login(c, login, password, ip=None):
+    tok = c.get("/api/auth/csrf").get_json()["csrf_token"]
+    kw = {"environ_overrides": {"REMOTE_ADDR": ip}} if ip else {}
+    return c.post("/api/auth/login", json={"login": login, "password": password},
+                  headers={"X-CSRF-Token": tok}, **kw)
+
+
+def _user(name):
+    from backend.db.users_db import save_user
+    from backend.utils.roles import ROLE_GENERAL
+
+    save_user(name, f"{name}@example.com", "long-enough-password", role=ROLE_GENERAL)
+
+
+def test_ipv6_collapses_to_slash64():
+    a = _login_ip_key("2001:db8:1:2:aaaa::1")
+    b = _login_ip_key("2001:db8:1:2:bbbb::9")
+    assert a == b == "2001:db8:1:2::/64"
+    assert _login_ip_key("2001:db8:1:3::1") != a
+    assert _login_ip_key("203.0.113.5") == "203.0.113.5"
+    assert _login_ip_key("::ffff:203.0.113.5") == "203.0.113.5"
+    assert _login_ip_key("garbage:x") == "garbage:x"
+
+
+def test_account_lockout_across_ips(app_factory):
+    main = app_factory()
+    c = main.app.test_client()
+    pw = "long-enough-password"
+    _user("victim1")
+    codes = []
+    for i in range(12):
+        rv = _login(c, "Victim1", "wrong-pass-%d" % i, f"198.51.100.{i + 1}")
+        codes.append(rv.status_code)
+    assert codes[:10] == [401] * 10
+    assert codes[10:] == [429, 429]
+    # even the right password is refused while locked
+    rv = _login(c, "victim1", pw, "198.51.100.200")
+    assert rv.status_code == 429
+
+
+def test_success_not_counted_and_other_account_unaffected(app_factory):
+    main = app_factory()
+    c = main.app.test_client()
+    pw = "long-enough-password"
+    _user("okuser")
+    for _ in range(3):
+        assert _login(c, "okuser", pw).status_code == 200
+    for i in range(10):
+        _login(c, "someoneelse", "x%d" % i, f"198.51.100.{i + 1}")
+    assert _login(c, "okuser", pw).status_code == 200

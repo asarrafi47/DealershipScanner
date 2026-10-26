@@ -142,3 +142,26 @@ def _allow_request_sqlite(key: str, *, max_events: int, window_seconds: float) -
             except sqlite3.Error:
                 pass
         return True
+
+
+def count_events(key: str, *, window_seconds: float) -> int:
+    """Events recorded for ``key`` inside the window, without recording one."""
+    if _sqlite_path_configured():
+        try:
+            p = _prepare_sqlite_path()
+            with _sqlite_lock:
+                conn = sqlite3.connect(p, check_same_thread=False, timeout=5.0)
+                try:
+                    _sqlite_init_conn(conn)
+                    cur = conn.execute(
+                        "SELECT COUNT(1) FROM _rate_hits WHERE k = ? AND t >= ?",
+                        (key, time.time() - window_seconds),
+                    )
+                    return int(cur.fetchone()[0] or 0)
+                finally:
+                    conn.close()
+        except (RuntimeError, sqlite3.Error):
+            pass
+    cutoff = time.monotonic() - window_seconds
+    with _lock:
+        return sum(1 for t in _events.get(key, ()) if t >= cutoff)
