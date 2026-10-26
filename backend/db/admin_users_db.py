@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hmac
 import logging
 import os
 import sqlite3
@@ -15,6 +16,123 @@ from backend.utils.bootstrap_policy import bootstrap_force_admin_password
 from backend.utils.runtime_env import is_production_env
 
 logger = logging.getLogger(__name__)
+
+
+class AdminUserExists(Exception):
+    """The username or email is already an operator account (both backends)."""
+
+
+def dev_users_backend() -> str:
+    """``sqlite`` (SQLCipher dev_users.db, the default) or ``pg`` (public.admin_users, V035).
+
+    N37.9: the flag stays off until the dev_users cutover (plan section 5); anything
+    other than ``pg`` keeps the SQLite path untouched.
+    """
+    v = (os.environ.get("DEV_USERS_DB_BACKEND") or "").strip().lower()
+    return "pg" if v == "pg" else "sqlite"
+
+
+def _use_pg() -> bool:
+    return dev_users_backend() == "pg"
+
+
+def _pg_conn():
+    from backend.db.connect import connect
+
+    return connect()
+
+
+def _env_admin() -> tuple[str, str, str]:
+    user = (os.environ.get("ADMIN_USERNAME") or "admin").strip() or "admin"
+    email = (os.environ.get("ADMIN_EMAIL") or "admin@localhost").strip() or "admin@localhost"
+    return user, email, (os.environ.get("ADMIN_PASSWORD") or "").strip()
+
+
+def _pg_seed_env_admin(cur, *, force_password: bool) -> None:
+    """Insert the env admin (ADMIN_*) when absent; same rules as the SQLite bootstrap."""
+    user, email, plain = _env_admin()
+    if not plain:
+        if is_production_env():
+            raise RuntimeError(
+                "FLASK_ENV=production requires ADMIN_PASSWORD to be set for /dev admin bootstrap."
+            )
+        plain = "changeme"
+    cur.execute("SELECT 1 FROM admin_users WHERE lower(username) = lower(%s)", (user,))
+    existing = cur.fetchone()
+    cur.execute(
+        "INSERT INTO admin_users (username, email, password) VALUES (%s, %s, %s) ON CONFLICT DO NOTHING",
+        (user, email, hash_password(plain)),
+    )
+    if existing and os.environ.get("ADMIN_PASSWORD") and force_password:
+        cur.execute(
+            "UPDATE admin_users SET password = %s WHERE lower(username) = lower(%s)",
+            (hash_password(plain), user),
+        )
+
+
+def _pg_init_admin_db() -> None:
+    conn = _pg_conn()
+    try:
+        with conn.cursor() as cur:
+            _pg_seed_env_admin(cur, force_password=bootstrap_force_admin_password())
+        conn.commit()
+    finally:
+        conn.close()
+
+
+def _pg_break_glass(cur, login: str, password: str) -> bool:
+    """Env-seeded break-glass admin: ADMIN_USERNAME/ADMIN_PASSWORD log in even when the
+    table has no row for that user (empty table, lost row). The row is created on the
+    spot so the session has a real id for TOTP. Only the env admin, only the exact
+    ADMIN_PASSWORD (constant-time compare); a row that already exists is never touched
+    here, so a changed password in the table still wins."""
+    user, email, plain = _env_admin()
+    if not plain or login.lower() not in (user.lower(), email.lower()):
+        return False
+    if not hmac.compare_digest(password.encode(), plain.encode()):
+        return False
+    cur.execute("SELECT 1 FROM admin_users WHERE lower(username) = lower(%s)", (user,))
+    if cur.fetchone():
+        return False
+    cur.execute(
+        "INSERT INTO admin_users (username, email, password) VALUES (%s, %s, %s) ON CONFLICT DO NOTHING",
+        (user, email, hash_password(plain)),
+    )
+    return True
+
+
+def _pg_authenticate(li: str, password: str) -> tuple[int, str] | None:
+    conn = _pg_conn()
+    try:
+        with conn.cursor() as cur:
+            def lookup():
+                cur.execute(
+                    "SELECT id, username, password FROM admin_users "
+                    "WHERE lower(username) = lower(%s) OR lower(email) = lower(%s) ORDER BY id LIMIT 1",
+                    (li, li),
+                )
+                return cur.fetchone()
+
+            row = lookup()
+            if not row:
+                if _pg_break_glass(cur, li, password):
+                    conn.commit()
+                    logger.warning("break-glass env admin seeded on login for %r", li)
+                    row = lookup()
+                if not row:
+                    conn.rollback()
+                    return None
+            uid, uname, stored = row
+            ok = verify_or_legacy(password, stored)
+            if ok and password_needs_rehash(stored):
+                cur.execute(
+                    "UPDATE admin_users SET password = %s WHERE id = %s AND password = %s",
+                    (hash_password(password), uid, stored),
+                )
+            conn.commit()
+    finally:
+        conn.close()
+    return (int(uid), str(uname)) if ok else None
 
 
 def dev_public_registration_allowed() -> bool:
@@ -69,6 +187,9 @@ def _migrate_legacy_admin_users_if_empty(conn: sqlite3.Connection) -> None:
 
 
 def init_admin_db() -> None:
+    if _use_pg():
+        _pg_init_admin_db()
+        return
     conn = get_dev_users_conn()
     cursor = conn.cursor()
     cursor.execute(
@@ -134,14 +255,40 @@ def init_admin_db() -> None:
 
 
 def save_dev_admin_user(username: str, email: str, password: str) -> None:
+    """Raises AdminUserExists when the username or email is taken."""
+    if _use_pg():
+        import psycopg
+
+        conn = _pg_conn()
+        try:
+            with conn.cursor() as cur:
+                cur.execute(
+                    "INSERT INTO admin_users (username, email, password) VALUES (%s, %s, %s)",
+                    (username.strip(), email.strip(), hash_password(password)),
+                )
+            conn.commit()
+        except psycopg.errors.UniqueViolation as e:
+            conn.rollback()
+            raise AdminUserExists(str(e)) from e
+        finally:
+            conn.close()
+        return
     conn = get_dev_users_conn()
     cursor = conn.cursor()
-    cursor.execute(
-        "INSERT INTO admin_users (username, email, password) VALUES (?, ?, ?)",
-        (username.strip(), email.strip(), hash_password(password)),
-    )
-    conn.commit()
-    conn.close()
+    try:
+        cursor.execute(
+            "INSERT INTO admin_users (username, email, password) VALUES (?, ?, ?)",
+            (username.strip(), email.strip(), hash_password(password)),
+        )
+        conn.commit()
+    except Exception as e:
+        # By name, not sqlite3.IntegrityError: SQLCipher raises its own class, and the
+        # no-SQLite allowlist only shrinks.
+        if type(e).__name__ != "IntegrityError":
+            raise
+        raise AdminUserExists(str(e)) from e
+    finally:
+        conn.close()
 
 
 def check_admin(login_input: str, password: str) -> bool:
@@ -152,6 +299,8 @@ def authenticate_admin(login_input: str, password: str) -> tuple[int, str] | Non
     li = (login_input or "").strip()
     if not li:
         return None
+    if _use_pg():
+        return _pg_authenticate(li, password)
     conn = get_dev_users_conn()
     cursor = conn.cursor()
     cursor.execute(
@@ -186,6 +335,15 @@ def get_admin_totp(user_id: int) -> dict | None:
         return None
     if uid <= 0:
         return None
+    if _use_pg():
+        conn = _pg_conn()
+        try:
+            with conn.cursor() as cur:
+                cur.execute("SELECT totp_secret, totp_enabled FROM admin_users WHERE id = %s", (uid,))
+                row = cur.fetchone()
+        finally:
+            conn.close()
+        return {"enabled": bool(row[1]), "secret": row[0] or ""} if row else None
     conn = get_dev_users_conn()
     cursor = conn.cursor()
     cursor.execute("PRAGMA table_info(admin_users)")
@@ -209,6 +367,20 @@ def set_admin_totp(user_id: int, *, secret: str, enabled: bool) -> bool:
         return False
     if uid <= 0:
         return False
+    if _use_pg():
+        sec = (secret or "").strip().upper().replace(" ", "")
+        conn = _pg_conn()
+        try:
+            with conn.cursor() as cur:
+                cur.execute(
+                    "UPDATE admin_users SET totp_secret = %s, totp_enabled = %s WHERE id = %s",
+                    (sec or None, 1 if enabled else 0, uid),
+                )
+                ok = cur.rowcount > 0
+            conn.commit()
+        finally:
+            conn.close()
+        return bool(ok)
     conn = get_dev_users_conn()
     cursor = conn.cursor()
     cursor.execute("PRAGMA table_info(admin_users)")

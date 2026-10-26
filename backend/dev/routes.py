@@ -28,6 +28,7 @@ from flask import Blueprint, jsonify, redirect, render_template, request, sessio
 from pydantic import ValidationError
 
 from backend.db.admin_users_db import (
+    AdminUserExists,
     authenticate_admin,
     dev_public_registration_allowed,
     dev_users_db_path,
@@ -664,7 +665,7 @@ def admin_register():
             return render_template("dev_register.html", error=err, registration_allowed=True)
         try:
             save_dev_admin_user(username, email, password)
-        except sqlite3.IntegrityError:
+        except AdminUserExists:
             return render_template(
                 "dev_register.html",
                 error="That username or email is already registered for dev access.",
