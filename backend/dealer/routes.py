@@ -74,9 +74,13 @@ _MIN_DEALER_PASSWORD = Config.MIN_PASSWORD_LENGTH
 @bp.route("/dealer/login", methods=["GET", "POST"])
 def dealer_login():
     if request.method == "POST":
+        from backend.auth.pages import (  # noqa: PLC0415
+            _LOCKED_MSG, _login_ip_key, _refund_login_slot, _reserve_login_slot,
+        )
+
         ip = _client_ip(request)
         if not allow_request(
-            f"dealer_app_login:{ip}", max_events=_DEALER_AUTH_RPM, window_seconds=60.0
+            f"dealer_app_login:{_login_ip_key(ip)}", max_events=_DEALER_AUTH_RPM, window_seconds=60.0
         ):
             return (
                 render_template("dealer_login.html", error="Too many sign-in attempts. Try again in a minute."),
@@ -86,7 +90,12 @@ def dealer_login():
         attempts = submitted_password_attempts(request.form.get("password"))
         if not login_input or not attempts:
             return render_template("dealer_login.html", error="Enter username/email and password.")
+        # Same per-account lockout as /login and /api/auth/login (SEC-A-010).
+        slot = _reserve_login_slot(login_input)
+        if slot is None:
+            return render_template("dealer_login.html", error=_LOCKED_MSG), 429
         if any(check_user(login_input, pw) for pw in attempts):
+            _refund_login_slot(slot)
             u = get_user_by_login(login_input)
             if not u:
                 return render_template("dealer_login.html", error="Invalid username or password.")

@@ -145,7 +145,9 @@ def _allow_request_sqlite(key: str, *, max_events: int, window_seconds: float) -
 
 
 def refund_event(key: str) -> None:
-    """Drop the most recent event for ``key`` (undo an ``allow_request`` reservation)."""
+    """Drop the most recent event for ``key`` (undo an ``allow_request`` reservation).
+    Not tied to the caller's own slot: under concurrency it may free a parallel caller's
+    slot instead (at most one extra guess per success, and only after a valid password)."""
     if _sqlite_path_configured():
         try:
             p = _prepare_sqlite_path()
@@ -168,26 +170,3 @@ def refund_event(key: str) -> None:
         buf = _events.get(key)
         if buf:
             buf.pop()
-
-
-def count_events(key: str, *, window_seconds: float) -> int:
-    """Events recorded for ``key`` inside the window, without recording one."""
-    if _sqlite_path_configured():
-        try:
-            p = _prepare_sqlite_path()
-            with _sqlite_lock:
-                conn = sqlite3.connect(p, check_same_thread=False, timeout=5.0)
-                try:
-                    _sqlite_init_conn(conn)
-                    cur = conn.execute(
-                        "SELECT COUNT(1) FROM _rate_hits WHERE k = ? AND t >= ?",
-                        (key, time.time() - window_seconds),
-                    )
-                    return int(cur.fetchone()[0] or 0)
-                finally:
-                    conn.close()
-        except (RuntimeError, sqlite3.Error):
-            pass
-    cutoff = time.monotonic() - window_seconds
-    with _lock:
-        return sum(1 for t in _events.get(key, ()) if t >= cutoff)

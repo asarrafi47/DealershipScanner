@@ -100,3 +100,19 @@ def test_slot_reserved_before_verification(app_factory, monkeypatch):
     for i in range(12):
         _login(c, "racer", "g%d" % i, f"198.51.100.{i + 1}")
     assert len(seen) == 10
+
+
+def test_dealer_login_shares_account_lockout(app_factory):
+    main = app_factory()
+    c = main.app.test_client()
+    _user("dvictim")
+    tok = c.get("/api/auth/csrf").get_json()["csrf_token"]
+    codes = []
+    for i in range(12):
+        rv = c.post("/dealer/login", data={"login": "dvictim", "password": "bad-%d" % i, "csrf_token": tok},
+                    headers={"X-CSRF-Token": tok},
+                    environ_overrides={"REMOTE_ADDR": f"198.51.100.{i + 1}"})
+        codes.append(rv.status_code)
+    assert 429 in codes[10:], codes
+    # the shared counter also locks the main login for the same account
+    assert _login(c, "dvictim", "long-enough-password", "198.51.100.220").status_code == 429
