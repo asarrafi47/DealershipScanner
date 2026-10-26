@@ -219,8 +219,10 @@ backend/scanner/inventory_reconcile.py  qmark_placeholder  1
 backend/scanner/job_queue.py  qmark_placeholder  16
 backend/scanner/manifest.py  import_sqlite3  1
 backend/scanner/orchestrator.py  db_path_literal  1
-backend/scanner/pipeline/assess.py  qmark_placeholder  9
+backend/scanner/pipeline/assess.py  qmark_placeholder  11
 backend/scanner/pipeline/reconcile.py  qmark_placeholder  6
+backend/scanner/pipeline/resume.py  qmark_placeholder  1
+backend/scanner/pipeline/runner.py  qmark_placeholder  1
 backend/scanner/post_scan/job.py  import_sqlite3  1
 backend/scanner/post_scan/job.py  qmark_placeholder  1
 backend/scanner/post_scan/job.py  sqlite3_attr  1
@@ -453,6 +455,8 @@ backend/tests/test_epa_catalog_destructive_guards.py  import_sqlite3  1
 backend/tests/test_epa_catalog_destructive_guards.py  qmark_placeholder  1
 backend/tests/test_epa_catalog_destructive_guards.py  sqlite3_attr  4
 backend/tests/test_facet_rebuild_interval.py  db_path_literal  1
+backend/tests/test_fleet_scan_resume.py  import_sqlite3  1
+backend/tests/test_fleet_scan_resume.py  sqlite3_attr  1
 backend/tests/test_fuel_label_plausibility.py  db_path_literal  2
 backend/tests/test_fuel_label_plausibility.py  env_db_path  1
 backend/tests/test_fuel_label_plausibility.py  import_sqlite3  2
@@ -642,6 +646,11 @@ backend/tests/test_rooftop_refusals_report.py  db_path_literal  2
 backend/tests/test_rooftop_refusals_report.py  executescript  1
 backend/tests/test_rooftop_refusals_report.py  import_sqlite3  1
 backend/tests/test_rooftop_refusals_report.py  sqlite3_attr  3
+backend/tests/test_runner_pause_safe.py  db_path_literal  2
+backend/tests/test_runner_pause_safe.py  import_sqlite3  1
+backend/tests/test_runner_pause_safe.py  qmark_placeholder  1
+backend/tests/test_runner_pause_safe.py  row_factory  1
+backend/tests/test_runner_pause_safe.py  sqlite3_attr  2
 backend/tests/test_runtime_ddl_gating.py  db_path_literal  4
 backend/tests/test_runtime_ddl_gating.py  import_sqlite3  1
 backend/tests/test_runtime_ddl_gating.py  pragma  3
@@ -696,6 +705,10 @@ backend/tests/test_synthesize_recipes_cli.py  db_path_literal  1
 backend/tests/test_synthesize_recipes_cli.py  import_sqlite3  1
 backend/tests/test_synthesize_recipes_cli.py  qmark_placeholder  1
 backend/tests/test_synthesize_recipes_cli.py  sqlite3_attr  3
+backend/tests/test_triage_group_feed_flag.py  import_sqlite3  1
+backend/tests/test_triage_group_feed_flag.py  qmark_placeholder  2
+backend/tests/test_triage_group_feed_flag.py  row_factory  2
+backend/tests/test_triage_group_feed_flag.py  sqlite3_attr  4
 backend/tests/test_trim_ladder_inventory_pg_sql.py  db_path_literal  1
 backend/tests/test_trim_ladder_inventory_pg_sql.py  import_sqlite3  1
 backend/tests/test_trim_ladder_inventory_pg_sql.py  qmark_placeholder  2

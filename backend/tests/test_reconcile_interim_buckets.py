@@ -343,7 +343,8 @@ def _fake_scan_new_only(db: Path, n_new: int):
         c = sqlite3.connect(str(db))
         try:
             c.execute("UPDATE cars SET scraped_at = ? WHERE dealer_id = ? AND condition = 'New'", (now, D))
-            summary = {"capture_coverage": {"n": n_new, "price": 1.0, "trim": 1.0, "exterior_color": 1.0}, "recipe_fetch": "hit"}
+            summary = {"capture_coverage": {"n": n_new, "price": 1.0, "trim": 1.0, "exterior_color": 1.0}, "recipe_fetch": "hit",
+                       "recipe_replay": {"recipes": [{"complete": True, "total_count": n_new, "raw_vins": n_new, "end": "no_new_rows"}]}}
             c.execute("INSERT INTO scan_runs (dealer_id, finished_at, duration_seconds, upserted, inventory_rows, error, provider, summary_json) "
                       "VALUES (?,?,?,?,?,?,?,?)", (D, now, 30, n_new, n_new, None, "carscommerce", json.dumps(summary)))
             c.commit()
