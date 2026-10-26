@@ -53,7 +53,7 @@
                 <div class="dev-status-card">
                     <p class="dev-status-label">Database</p>
                     <p class="dev-status-value dev-ok">{{ db_counts.cars }} total cars</p>
-                    <p class="dev-status-meta"><code>{{ lab.inventory_db_path }}</code></p>
+                    <p class="dev-status-meta">Postgres <code>{{ lab.lab_database or "SCAN_LAB_DATABASE_URL not set" }}</code></p>
                 </div>
                 <div class="dev-status-card">
                     <p class="dev-status-label">Last scan</p>

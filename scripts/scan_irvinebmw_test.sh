@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Irvine BMW test scan — isolated 92694 manifest + test DB (never production inventory.db).
+# Irvine BMW test scan — isolated 92694 manifest + scratch Postgres cars_lab (never the real inventory).
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
@@ -7,15 +7,19 @@ cd "$(dirname "$0")/.."
 # inherited DSN would upsert into the real database. Drop it; scanner.py loads
 # .env itself, so refuse unless a scratch DSN is given explicitly.
 unset DATABASE_URL INVENTORY_DATABASE_URL
-if [ -n "${SCAN_TEST_DATABASE_URL:-}" ]; then
-  export INVENTORY_DATABASE_URL="$SCAN_TEST_DATABASE_URL"
-else
-  echo "Refusing to run: set SCAN_TEST_DATABASE_URL to a scratch Postgres (never the real inventory)." >&2
+LAB_DSN="${SCAN_LAB_DATABASE_URL:-${SCAN_TEST_DATABASE_URL:-}}"
+if [ -z "$LAB_DSN" ]; then
+  echo "Refusing to run: set SCAN_LAB_DATABASE_URL to the scratch Postgres cars_lab (never the real inventory)." >&2
   exit 2
 fi
+case "$LAB_DSN" in
+  */cars|*/cars\?*|*/cars_cleanroom|*/cars_cleanroom\?*|*/cars_cr_*)
+    echo "Refusing to run: $LAB_DSN names a real inventory database." >&2
+    exit 2 ;;
+esac
+export INVENTORY_DATABASE_URL="$LAB_DSN"
 
 # Force test-isolation values (do not inherit shell caps from partial scans).
-export INVENTORY_DB_PATH="workspace/inventory_92694.db"
 export DEALERS_MANIFEST_PATH="workspace/manifest_92694_25mi.json"
 export SCANNER_DEALER_COM_BULK_FETCH=1
 export SCANNER_VDP_COMPLETENESS_PASS=1
@@ -32,7 +36,7 @@ LOG_DIR="workspace/scan_lab_logs"
 mkdir -p "$LOG_DIR"
 LOG="$LOG_DIR/irvinebmw_92694_$(date +%Y%m%d_%H%M%S).log"
 
-echo "INVENTORY_DB_PATH=$INVENTORY_DB_PATH"
+echo "Lab database: ${LAB_DSN##*/}"
 echo "Log: $LOG"
 
 exec python3 scanner.py --dealer-id irvinebmw-com --scan-only 2>&1 | tee "$LOG"

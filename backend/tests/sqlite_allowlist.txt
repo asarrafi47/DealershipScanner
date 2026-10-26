@@ -162,14 +162,7 @@ backend/dealer/routes.py  sqlite3_attr  3
 backend/dev/routes.py  import_sqlite3  1
 backend/dev/routes.py  row_factory  1
 backend/dev/routes.py  sqlite3_attr  3
-backend/dev/scan_lab.py  db_path_literal  1
-backend/dev/scan_lab.py  env_db_path  2
-backend/dev/scan_lab.py  ifnull  1
-backend/dev/scan_lab.py  import_sqlite3  2
-backend/dev/scan_lab.py  pragma  1
 backend/dev/scan_lab.py  qmark_placeholder  3
-backend/dev/scan_lab.py  row_factory  3
-backend/dev/scan_lab.py  sqlite3_attr  2
 backend/dictionary/derived/dictionary_catalog.sqlite3  tracked_db_file  1
 backend/dictionary/enrich_from_dictionary.py  db_path_literal  2
 backend/dictionary/enrich_from_dictionary.py  env_db_path  2
@@ -646,8 +639,6 @@ backend/tests/test_runtime_ddl_gating.py  import_sqlite3  1
 backend/tests/test_runtime_ddl_gating.py  pragma  3
 backend/tests/test_runtime_ddl_gating.py  row_factory  1
 backend/tests/test_runtime_ddl_gating.py  sqlite3_attr  5
-backend/tests/test_scan_lab.py  db_path_literal  2
-backend/tests/test_scan_lab.py  env_db_path  2
 backend/tests/test_scan_lab_provider_hint.py  import_sqlite3  1
 backend/tests/test_scan_lab_provider_hint.py  sqlite3_attr  2
 backend/tests/test_scan_timing.py  import_sqlite3  1
@@ -796,8 +787,6 @@ scripts/refresh_lease_matches.py  row_factory  1
 scripts/refresh_lease_matches.py  sqlite3_attr  1
 scripts/run-web-local.sh  db_path_literal  2
 scripts/run-web-local.sh  env_db_path  2
-scripts/scan_irvinebmw_test.sh  db_path_literal  1
-scripts/scan_irvinebmw_test.sh  env_db_path  2
 scripts/scanner_import_sweep.py  db_path_literal  3
 scripts/security_check.sh  env_db_path  2
 scripts/seed_dealer_catalog.py  qmark_placeholder  3
