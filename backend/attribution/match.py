@@ -114,6 +114,11 @@ REJECT_SIBLING_WEAK = "sibling_rooftop_weak_tier"
 REJECT_SINGLE = "single_rooftop_is_not_this_store"
 REJECT_UNSTAMPED = "unstamped_row_in_group_feed"
 REJECT_UNIDENTIFIED = "target_rooftop_unidentified"
+# A row with no store evidence whose detail page is on another roster store's host (N8.5).
+# A write refusal only: not in disown.EVIDENCE_BACKED_REJECTS, so it never un-lists (D-N7).
+REJECT_VDP_HOST = "vdp_host_other_store"
+# Keep labels that mean "kept for lack of evidence", the only ones the host check may overturn.
+_NO_EVIDENCE_KEEPS = frozenset({"no_rooftop_evidence", "single_rooftop"})
 
 
 def scorer_enabled() -> bool:
@@ -155,6 +160,16 @@ def _result(decision: str, tier: str, signals: list[dict[str, Any]], *, strong: 
 
 # ── the tier ladder, as a table ──────────────────────────────────────────────
 
+def _weak(matches: list, place: tuple[str, str, str, str], roster: dict[str, Any]) -> list:
+    """A weak-name tier's unique winner is dropped when the roster has no street and no town
+    backs the name (:func:`backend.attribution.rooftop.weak_name_hit`); several matches stay
+    several (the tier then fails on uniqueness as before)."""
+    if len(matches) != 1:
+        return matches
+    kept = _parsers().weak_name_hit(matches[0], place, str(roster.get("city") or ""))
+    return [] if kept is None else matches
+
+
 def tier_table(rooftops: list, roster: dict[str, Any], place: tuple[str, str, str, str], aliases: tuple[str, ...]) -> list[tuple[str, list]]:
     """Every tier of ``backend.attribution.rooftop._pick_target`` in order, with the rooftops it
     matches. The target is the first tier with exactly one match. Guards, order and
@@ -175,11 +190,13 @@ def tier_table(rooftops: list, roster: dict[str, Any], place: tuple[str, str, st
         table.append(("name_exact", [rt for rt in rooftops if any(p._nrm(n) == target_nrm for n in rt.names)]))
         if target_tokens:
             table.append(("name_tokens", [rt for rt in rooftops if any(p._tokens(n) == target_tokens for n in rt.names)]))
-            table.append(("name_token_subset", [rt for rt in rooftops if any(target_tokens < p._tokens(n) for n in rt.names)]))
+            table.append(("name_token_subset", _weak(
+                [rt for rt in rooftops if any(target_tokens < p._tokens(n) for n in rt.names)], place, roster)))
             target_brand = p._brand_canonical_tokens(dealer_name)
             if target_brand != target_tokens:
                 table.append(("name_brand_alias", [rt for rt in rooftops if any(p._brand_canonical_tokens(n) == target_brand for n in rt.names)]))
-                table.append(("name_brand_alias_subset", [rt for rt in rooftops if any(target_brand < p._brand_canonical_tokens(n) for n in rt.names)]))
+                table.append(("name_brand_alias_subset", _weak(
+                    [rt for rt in rooftops if any(target_brand < p._brand_canonical_tokens(n) for n in rt.names)], place, roster)))
         table.append(("name_contains", [
             rt for rt in rooftops
             if any(p._nrm(n) and (p._nrm(n) in target_nrm or target_nrm in p._nrm(n)) for n in rt.names)
@@ -290,6 +307,28 @@ def _evidence_extras(row: dict, rooftop_sources: set[str], evidence: dict[str, A
 
 
 def score_rows(rows: list[dict], roster_store: dict[str, Any], evidence: dict[str, Any] | None = None) -> list[dict[str, Any]]:
+    """:func:`_score_rows_core`, then the VDP-host check (N8.5) on rows kept without store evidence."""
+    results = _score_rows_core(rows, roster_store, evidence)
+    dealer_id = str(roster_store.get("dealer_id") or "")
+    if not dealer_id or (evidence or {}).get("trust_feed_scope"):
+        return results
+    from backend.attribution.place import host_owner_index, vdp_host_owned_elsewhere
+
+    index = None
+    for i, (row, res) in enumerate(zip(rows, results)):
+        if res["decision"] != "keep" or res["tier"] not in _NO_EVIDENCE_KEEPS:
+            continue
+        if index is None:
+            index = host_owner_index()
+            if not index:
+                break
+        host = vdp_host_owned_elsewhere(row, dealer_id, index)
+        if host:
+            results[i] = _result("refuse", REJECT_VDP_HOST, res["signals"] + [_signal(REJECT_VDP_HOST, host)], strong=False)
+    return results
+
+
+def _score_rows_core(rows: list[dict], roster_store: dict[str, Any], evidence: dict[str, Any] | None = None) -> list[dict[str, Any]]:
     """Score every row of one payload. Returns a list parallel to ``rows``.
 
     ``roster_store``: ``dealer_id``, ``name``, ``url``, ``street``, ``city``, ``state``,

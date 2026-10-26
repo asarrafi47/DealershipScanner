@@ -438,9 +438,27 @@ def _unique(matches: list[_Rooftop]) -> _Rooftop | None:
     return matches[0] if len(matches) == 1 else None
 
 
+def weak_name_hit(hit: "_Rooftop | None", place: tuple[str, str, str, str], city: str = "") -> "_Rooftop | None":
+    """A weak-name-tier winner (``_WEAK_NAME_TIERS``) stands only if the roster row has a
+    street, or the roster's town (zip, city+state or the city inside the rooftop's name) is
+    on the rooftop too. No KEEP on a loose name match the roster cannot back with a place
+    (N8.5; fletcherjones kept 106 Henderson cars that way)."""
+    if hit is None or place[0] or place[1]:
+        return hit
+    city_nrm = _nrm(city)
+    if (place[2] and place[2] in hit.locales) or (place[3] and place[3] in hit.zips):
+        return hit
+    if len(city_nrm) >= 3 and any(city_nrm in _nrm(n) for n in hit.names):
+        return hit
+    return None
+
+
+_weak_name_hit = weak_name_hit
+
+
 def _pick_target(
     rooftops: list[_Rooftop], dealer_name: str, dealer_id: str, dealer_url: str,
-    place: tuple[str, str, str, str] = ("", "", "", ""),
+    place: tuple[str, str, str, str] = ("", "", "", ""), city: str = "",
 ) -> tuple[_Rooftop | None, str]:
     """The one rooftop in this group payload that IS the store being scanned.
 
@@ -471,7 +489,8 @@ def _pick_target(
             # Feeds spell a store out more fully than the roster does
             # ("Welborn Chevrolet of Rome" vs "Welborn Chevrolet GMC of Rome").
             # Every roster word must appear, and only one rooftop may qualify.
-            hit = _unique([rt for rt in rooftops if any(target_tokens < _tokens(n) for n in rt.names)])
+            hit = _weak_name_hit(
+                _unique([rt for rt in rooftops if any(target_tokens < _tokens(n) for n in rt.names)]), place, city)
             if hit is not None:
                 return hit, "name_token_subset"
 
@@ -498,6 +517,7 @@ def _pick_target(
                     rt for rt in rooftops
                     if any(target_brand < _brand_canonical_tokens(n) for n in rt.names)
                 ])
+                hit = _weak_name_hit(hit, place, city)
                 if hit is not None:
                     return hit, "name_brand_alias_subset"
 
@@ -750,6 +770,29 @@ def _merge_department_rooftops(rooftops: list) -> list:
     return merged
 
 
+def _refuse_other_store_hosts(kept: list[dict], rejected: list[dict], dealer_id: str) -> tuple[list[dict], list[dict]]:
+    """Legacy-ladder twin of the scorer's ``vdp_host_other_store`` check (N8.5): rows kept for
+    want of store evidence whose non-guessed detail page is on another roster store's host are
+    refused (write only, never un-listed)."""
+    if not dealer_id or not kept:
+        return kept, rejected
+    from backend.attribution.match import REJECT_VDP_HOST
+    from backend.attribution.place import host_owner_index, vdp_host_owned_elsewhere
+
+    index = host_owner_index()
+    if not index:
+        return kept, rejected
+    keep: list[dict] = []
+    refuse = list(rejected)
+    for row in kept:
+        if vdp_host_owned_elsewhere(row, dealer_id, index):
+            row["_rooftop_reject"] = REJECT_VDP_HOST
+            refuse.append(row)
+        else:
+            keep.append(row)
+    return keep, refuse
+
+
 def _resolve_rooftop_attribution_inner(
     rows: list[dict], *, dealer_id: str = "", dealer_name: str = "", dealer_url: str = "",
     dealer_address: str = "", dealer_city: str = "", dealer_state: str = "", dealer_zip: str = "",
@@ -802,7 +845,7 @@ def _resolve_rooftop_attribution_inner(
         groups[identity].add(rooftop, row)
 
     if not groups:
-        return rows, []
+        return _refuse_other_store_hosts(rows, [], dealer_id)
 
     rooftops = _merge_department_rooftops([groups[i] for i in order])
     place = (
@@ -811,7 +854,7 @@ def _resolve_rooftop_attribution_inner(
         (_nrm(dealer_city) + _nrm(dealer_state)) if dealer_city and dealer_state else "",
         re.sub(r"\D", "", str(dealer_zip or ""))[:5],
     )
-    target, tier = _pick_target(rooftops, dealer_name, dealer_id, dealer_url, place)
+    target, tier = _pick_target(rooftops, dealer_name, dealer_id, dealer_url, place, dealer_city)
     label = dealer_id or dealer_name or "?"
 
     # after the department fold: "Acme Chevrolet" + "Acme Chevrolet Service" is one rooftop
@@ -822,7 +865,7 @@ def _resolve_rooftop_attribution_inner(
         # NAMES a store and that name is not ours — an unnamed one (address only)
         # is no evidence either way and must not cost a dealer its inventory.
         if target is not None or not rooftops[0].names:
-            return rows, []
+            return (rows, []) if target is not None else _refuse_other_store_hosts(rows, [], dealer_id)
         _log.warning(
             "rooftop attribution [%s]: payload holds only %s, which is not this store — "
             "refusing all %d row(s)",
@@ -977,6 +1020,13 @@ def _resolve_via_scorer(
             rejected.append(row)
 
     label = dealer_id or dealer_name or "?"
+    host_refused = tiers.get("vdp_host_other_store", 0)
+    if host_refused:
+        _log.warning("rooftop attribution [%s]: refused %d row(s) with no store evidence whose detail page is on another roster store's host",
+                     label, host_refused)
+        rejected_other = [r for r in rejected if r.get("_rooftop_reject") != "vdp_host_other_store"]
+        if len(rejected_other) == 0:
+            return kept, rejected
     if not rejected:
         if corroborated:
             _log.info("rooftop attribution [%s]: kept %d unnamed/unstamped row(s) filed under this store's feed source(s) or at its street",

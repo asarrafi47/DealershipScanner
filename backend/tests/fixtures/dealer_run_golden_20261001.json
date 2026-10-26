@@ -2424,6 +2424,7 @@
      {
       "_detail_url": "https://www.claremontcdjr.com/new-inventory/vin-00KCN000000000001.htm",
       "_feed_source": "27302",
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "New",
@@ -2461,6 +2462,7 @@
      {
       "_detail_url": "https://www.claremontcdjr.com/new-inventory/vin-00KCN000000000002.htm",
       "_feed_source": "27302",
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "New",
@@ -2498,6 +2500,7 @@
      {
       "_detail_url": "https://www.claremontcdjr.com/used-inventory/vin-00KCU000000000001.htm",
       "_feed_source": "MP15994",
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "Used",
@@ -2535,6 +2538,7 @@
      {
       "_detail_url": "https://www.claremontcdjr.com/used-inventory/vin-00KCU000000000002.htm",
       "_feed_source": "MP15994",
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "Used",
@@ -2572,6 +2576,7 @@
      {
       "_detail_url": "https://www.claremontcdjr.com/used-inventory/vin-00KCU000000000003.htm",
       "_feed_source": "MP15994",
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "Used",
@@ -3430,6 +3435,7 @@
       "_detail_url": "https://www.grandhyundaicanton.com/new-inventory/vin-00GHC000000000001.htm",
       "_feed_scoped": true,
       "_feed_source": "GH1",
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "New",
@@ -3471,6 +3477,7 @@
       "_detail_url": "https://www.grandhyundaicanton.com/new-inventory/vin-00GHC000000000002.htm",
       "_feed_scoped": true,
       "_feed_source": "GH1",
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "New",
@@ -3512,6 +3519,7 @@
       "_detail_url": "https://www.grandhyundaicanton.com/used-inventory/vin-00GHC000000000003.htm",
       "_feed_scoped": true,
       "_feed_source": "GH1",
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "Used",
@@ -3553,6 +3561,7 @@
       "_detail_url": "https://www.grandhyundaicanton.com/used-inventory/vin-00GHC000000000004.htm",
       "_feed_scoped": true,
       "_feed_source": "GH1",
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "Used",
@@ -4438,6 +4447,7 @@
        "state": "GA",
        "zip": "30161"
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "New",
@@ -4487,6 +4497,7 @@
        "state": "GA",
        "zip": "30161"
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "New",
@@ -4536,6 +4547,7 @@
        "state": "GA",
        "zip": "30161"
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "Used",
@@ -4585,6 +4597,7 @@
        "state": "GA",
        "zip": "30161"
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "Used",
@@ -5521,6 +5534,7 @@
        "state": "",
        "zip": ""
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "New",
@@ -5573,6 +5587,7 @@
        "state": "",
        "zip": ""
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "Used",
@@ -5625,6 +5640,7 @@
        "state": "",
        "zip": ""
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "Used",
@@ -5666,6 +5682,7 @@
       "_detail_url": "https://www.group1fordofsouthaustin.com/used-inventory/vin-00GFU000000000003.htm",
       "_feed_scoped": true,
       "_feed_source": "GROUPGPI39",
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "Used",
@@ -5717,6 +5734,7 @@
        "state": "",
        "zip": ""
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "New",
@@ -5768,6 +5786,7 @@
        "state": "",
        "zip": ""
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "New",
@@ -6809,6 +6828,7 @@
       "_detail_url": "https://www.group1toyotanorthaustin.com/new-inventory/vin-00GTN000000000001.htm",
       "_feed_scoped": true,
       "_feed_source": "42409",
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "New",
@@ -6847,6 +6867,7 @@
       "_detail_url": "https://www.group1toyotanorthaustin.com/new-inventory/vin-00GTN000000000002.htm",
       "_feed_scoped": true,
       "_feed_source": "42409",
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "New",
@@ -6885,6 +6906,7 @@
       "_detail_url": "https://www.group1toyotanorthaustin.com/new-inventory/vin-00GTN000000000003.htm",
       "_feed_scoped": true,
       "_feed_source": "42409",
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "New",
@@ -6923,6 +6945,7 @@
       "_detail_url": "https://www.group1toyotanorthaustin.com/new-inventory/vin-00GTN000000000004.htm",
       "_feed_scoped": true,
       "_feed_source": "42409",
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "New",
@@ -6975,6 +6998,7 @@
        "state": "",
        "zip": ""
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "Used",
@@ -7027,6 +7051,7 @@
        "state": "",
        "zip": ""
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "Used",
@@ -7079,6 +7104,7 @@
        "state": "",
        "zip": ""
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "Used",
@@ -7131,6 +7157,7 @@
        "state": "",
        "zip": ""
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "Used",
@@ -7179,6 +7206,7 @@
        "state": "TX",
        "zip": ""
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "Used",
@@ -7227,6 +7255,7 @@
        "state": "TX",
        "zip": ""
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "Used",
@@ -7275,6 +7304,7 @@
        "state": "TX",
        "zip": ""
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "Used",
@@ -8205,6 +8235,7 @@
        "state": "NC",
        "zip": ""
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "New",
@@ -8254,6 +8285,7 @@
        "state": "NC",
        "zip": ""
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "New",
@@ -8303,6 +8335,7 @@
        "state": "NC",
        "zip": ""
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "Used",
@@ -8341,6 +8374,7 @@
       "_detail_url": "https://www.hendrickbuickgmccary.com/used-inventory/vin-00HBC000000000004.htm",
       "_feed_scoped": true,
       "_feed_source": "178465",
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "Used",
@@ -8389,6 +8423,7 @@
        "state": "NC",
        "zip": ""
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "New",
@@ -9547,6 +9582,7 @@
        "state": "",
        "zip": ""
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "New",
@@ -9595,6 +9631,7 @@
        "state": "",
        "zip": ""
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "New",
@@ -9643,6 +9680,7 @@
        "state": "",
        "zip": ""
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "Used",
@@ -9691,6 +9729,7 @@
        "state": "NC",
        "zip": "28078"
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "New",
@@ -9739,6 +9778,7 @@
        "state": "NC",
        "zip": "28078"
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "New",
@@ -9776,6 +9816,7 @@
      {
       "_detail_url": "https://www.hondahuntersville.com/used-inventory/vin-00HHU000000000001.htm",
       "_feed_source": "MP23253",
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "Used",
@@ -9813,6 +9854,7 @@
      {
       "_detail_url": "https://www.hondahuntersville.com/certified-inventory/vin-00HHU000000000002.htm",
       "_feed_source": "MP23253",
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "Certified",
@@ -10696,6 +10738,7 @@
        "state": "",
        "zip": ""
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "New",
@@ -10745,6 +10788,7 @@
        "state": "",
        "zip": ""
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "New",
@@ -10794,6 +10838,7 @@
        "state": "",
        "zip": ""
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "Used",
@@ -10843,6 +10888,7 @@
        "state": "",
        "zip": ""
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "Used",
@@ -11753,6 +11799,7 @@
        "state": "GA",
        "zip": "30519"
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "New",
@@ -11802,6 +11849,7 @@
        "state": "GA",
        "zip": "30519"
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "New",
@@ -11851,6 +11899,7 @@
        "state": "GA",
        "zip": "30519"
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "New",
@@ -11900,6 +11949,7 @@
        "state": "GA",
        "zip": ""
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "Used",
@@ -11949,6 +11999,7 @@
        "state": "GA",
        "zip": ""
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "Used",
@@ -12847,6 +12898,7 @@
        "state": "FL",
        "zip": ""
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "New",
@@ -12896,6 +12948,7 @@
        "state": "FL",
        "zip": ""
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "New",
@@ -12945,6 +12998,7 @@
        "state": "FL",
        "zip": ""
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "Used",
@@ -12994,6 +13048,7 @@
        "state": "FL",
        "zip": ""
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "Used",
@@ -13854,6 +13909,7 @@
        "state": "",
        "zip": ""
       },
+      "_source_url_guessed": true,
       "body_style": "SUV",
       "condition": null,
       "cylinders": null,
@@ -13895,6 +13951,7 @@
        "state": "",
        "zip": ""
       },
+      "_source_url_guessed": true,
       "body_style": "SUV",
       "condition": null,
       "cylinders": null,
@@ -13936,6 +13993,7 @@
        "state": "",
        "zip": ""
       },
+      "_source_url_guessed": true,
       "body_style": "SUV",
       "condition": null,
       "cylinders": null,
@@ -13977,6 +14035,7 @@
        "state": "",
        "zip": ""
       },
+      "_source_url_guessed": true,
       "body_style": "SUV",
       "condition": null,
       "cylinders": null,
@@ -14898,6 +14957,7 @@
        "state": "NC",
        "zip": "28405"
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "New",
@@ -14947,6 +15007,7 @@
        "state": "NC",
        "zip": "28405"
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "Used",
@@ -14996,6 +15057,7 @@
        "state": "NC",
        "zip": "28405"
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "Used",
@@ -15045,6 +15107,7 @@
        "state": "NC",
        "zip": "28405"
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "Used",
@@ -15093,6 +15156,7 @@
        "state": "NC",
        "zip": "28405"
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "Used",
@@ -16039,6 +16103,7 @@
        "state": "",
        "zip": ""
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "New",
@@ -16088,6 +16153,7 @@
        "state": "",
        "zip": ""
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "New",
@@ -16137,6 +16203,7 @@
        "state": "",
        "zip": ""
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "New",
@@ -16186,6 +16253,7 @@
        "state": "",
        "zip": ""
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "Used",
@@ -16235,6 +16303,7 @@
        "state": "",
        "zip": ""
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "Used",
@@ -16283,6 +16352,7 @@
        "state": "",
        "zip": ""
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "New",
@@ -17146,6 +17216,7 @@
       "_feed_source": "27302",
       "_rooftop_score": 0.0,
       "_rooftop_tier": "no_rooftop_evidence",
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "New",
@@ -17185,6 +17256,7 @@
       "_feed_source": "27302",
       "_rooftop_score": 0.0,
       "_rooftop_tier": "no_rooftop_evidence",
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "New",
@@ -17224,6 +17296,7 @@
       "_feed_source": "MP15994",
       "_rooftop_score": 0.0,
       "_rooftop_tier": "no_rooftop_evidence",
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "Used",
@@ -17263,6 +17336,7 @@
       "_feed_source": "MP15994",
       "_rooftop_score": 0.0,
       "_rooftop_tier": "no_rooftop_evidence",
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "Used",
@@ -17302,6 +17376,7 @@
       "_feed_source": "MP15994",
       "_rooftop_score": 0.0,
       "_rooftop_tier": "no_rooftop_evidence",
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "Used",
@@ -18160,6 +18235,7 @@
       "_detail_url": "https://www.grandhyundaicanton.com/new-inventory/vin-00GHC000000000001.htm",
       "_feed_scoped": true,
       "_feed_source": "GH1",
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "New",
@@ -18201,6 +18277,7 @@
       "_detail_url": "https://www.grandhyundaicanton.com/new-inventory/vin-00GHC000000000002.htm",
       "_feed_scoped": true,
       "_feed_source": "GH1",
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "New",
@@ -18242,6 +18319,7 @@
       "_detail_url": "https://www.grandhyundaicanton.com/used-inventory/vin-00GHC000000000003.htm",
       "_feed_scoped": true,
       "_feed_source": "GH1",
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "Used",
@@ -18283,6 +18361,7 @@
       "_detail_url": "https://www.grandhyundaicanton.com/used-inventory/vin-00GHC000000000004.htm",
       "_feed_scoped": true,
       "_feed_source": "GH1",
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "Used",
@@ -19168,6 +19247,7 @@
        "state": "GA",
        "zip": "30161"
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "New",
@@ -19217,6 +19297,7 @@
        "state": "GA",
        "zip": "30161"
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "New",
@@ -19266,6 +19347,7 @@
        "state": "GA",
        "zip": "30161"
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "Used",
@@ -19315,6 +19397,7 @@
        "state": "GA",
        "zip": "30161"
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "Used",
@@ -20251,6 +20334,7 @@
        "state": "",
        "zip": ""
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "New",
@@ -20303,6 +20387,7 @@
        "state": "",
        "zip": ""
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "Used",
@@ -20355,6 +20440,7 @@
        "state": "",
        "zip": ""
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "Used",
@@ -20396,6 +20482,7 @@
       "_detail_url": "https://www.group1fordofsouthaustin.com/used-inventory/vin-00GFU000000000003.htm",
       "_feed_scoped": true,
       "_feed_source": "GROUPGPI39",
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "Used",
@@ -20449,6 +20536,7 @@
       },
       "_rooftop_score": 10.25,
       "_rooftop_tier": "name_exact",
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "New",
@@ -20502,6 +20590,7 @@
       },
       "_rooftop_score": 4.0,
       "_rooftop_tier": "unstamped_under_own_source",
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "New",
@@ -21543,6 +21632,7 @@
       "_detail_url": "https://www.group1toyotanorthaustin.com/new-inventory/vin-00GTN000000000001.htm",
       "_feed_scoped": true,
       "_feed_source": "42409",
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "New",
@@ -21581,6 +21671,7 @@
       "_detail_url": "https://www.group1toyotanorthaustin.com/new-inventory/vin-00GTN000000000002.htm",
       "_feed_scoped": true,
       "_feed_source": "42409",
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "New",
@@ -21619,6 +21710,7 @@
       "_detail_url": "https://www.group1toyotanorthaustin.com/new-inventory/vin-00GTN000000000003.htm",
       "_feed_scoped": true,
       "_feed_source": "42409",
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "New",
@@ -21657,6 +21749,7 @@
       "_detail_url": "https://www.group1toyotanorthaustin.com/new-inventory/vin-00GTN000000000004.htm",
       "_feed_scoped": true,
       "_feed_source": "42409",
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "New",
@@ -21709,6 +21802,7 @@
        "state": "",
        "zip": ""
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "Used",
@@ -21761,6 +21855,7 @@
        "state": "",
        "zip": ""
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "Used",
@@ -21813,6 +21908,7 @@
        "state": "",
        "zip": ""
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "Used",
@@ -21865,6 +21961,7 @@
        "state": "",
        "zip": ""
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "Used",
@@ -21915,6 +22012,7 @@
       },
       "_rooftop_score": 2.0,
       "_rooftop_tier": "city_state",
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "Used",
@@ -21965,6 +22063,7 @@
       },
       "_rooftop_score": 2.0,
       "_rooftop_tier": "city_state",
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "Used",
@@ -22015,6 +22114,7 @@
       },
       "_rooftop_score": 2.0,
       "_rooftop_tier": "city_state",
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "Used",
@@ -22945,6 +23045,7 @@
        "state": "NC",
        "zip": ""
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "New",
@@ -22994,6 +23095,7 @@
        "state": "NC",
        "zip": ""
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "New",
@@ -23043,6 +23145,7 @@
        "state": "NC",
        "zip": ""
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "Used",
@@ -23081,6 +23184,7 @@
       "_detail_url": "https://www.hendrickbuickgmccary.com/used-inventory/vin-00HBC000000000004.htm",
       "_feed_scoped": true,
       "_feed_source": "178465",
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "Used",
@@ -23131,6 +23235,7 @@
       },
       "_rooftop_score": 7.7,
       "_rooftop_tier": "store_label_token_subset",
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "New",
@@ -24291,6 +24396,7 @@
       },
       "_rooftop_score": 10.0,
       "_rooftop_tier": "name_exact",
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "New",
@@ -24341,6 +24447,7 @@
       },
       "_rooftop_score": 10.0,
       "_rooftop_tier": "name_exact",
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "New",
@@ -24391,6 +24498,7 @@
       },
       "_rooftop_score": 6.0,
       "_rooftop_tier": "own_street_block",
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "New",
@@ -24441,6 +24549,7 @@
       },
       "_rooftop_score": 6.0,
       "_rooftop_tier": "own_street_block",
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "New",
@@ -24480,6 +24589,7 @@
       "_feed_source": "MP23253",
       "_rooftop_score": 4.0,
       "_rooftop_tier": "unstamped_under_own_source",
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "Used",
@@ -24519,6 +24629,7 @@
       "_feed_source": "MP23253",
       "_rooftop_score": 4.0,
       "_rooftop_tier": "unstamped_under_own_source",
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "Certified",
@@ -24569,6 +24680,7 @@
       },
       "_rooftop_score": 10.0,
       "_rooftop_tier": "name_exact",
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "Used",
@@ -25452,6 +25564,7 @@
        "state": "",
        "zip": ""
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "New",
@@ -25501,6 +25614,7 @@
        "state": "",
        "zip": ""
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "New",
@@ -25550,6 +25664,7 @@
        "state": "",
        "zip": ""
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "Used",
@@ -25599,6 +25714,7 @@
        "state": "",
        "zip": ""
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "Used",
@@ -26509,6 +26625,7 @@
        "state": "GA",
        "zip": "30519"
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "New",
@@ -26558,6 +26675,7 @@
        "state": "GA",
        "zip": "30519"
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "New",
@@ -26607,6 +26725,7 @@
        "state": "GA",
        "zip": "30519"
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "New",
@@ -26656,6 +26775,7 @@
        "state": "GA",
        "zip": ""
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "Used",
@@ -26705,6 +26825,7 @@
        "state": "GA",
        "zip": ""
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "Used",
@@ -27603,6 +27724,7 @@
        "state": "FL",
        "zip": ""
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "New",
@@ -27652,6 +27774,7 @@
        "state": "FL",
        "zip": ""
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "New",
@@ -27701,6 +27824,7 @@
        "state": "FL",
        "zip": ""
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "Used",
@@ -27750,6 +27874,7 @@
        "state": "FL",
        "zip": ""
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "Used",
@@ -28612,6 +28737,7 @@
       },
       "_rooftop_score": 2.25,
       "_rooftop_tier": "city_state",
+      "_source_url_guessed": true,
       "body_style": "SUV",
       "condition": null,
       "cylinders": null,
@@ -28655,6 +28781,7 @@
       },
       "_rooftop_score": 2.25,
       "_rooftop_tier": "city_state",
+      "_source_url_guessed": true,
       "body_style": "SUV",
       "condition": null,
       "cylinders": null,
@@ -28698,6 +28825,7 @@
       },
       "_rooftop_score": 2.25,
       "_rooftop_tier": "city_state",
+      "_source_url_guessed": true,
       "body_style": "SUV",
       "condition": null,
       "cylinders": null,
@@ -28741,6 +28869,7 @@
       },
       "_rooftop_score": 2.25,
       "_rooftop_tier": "city_state",
+      "_source_url_guessed": true,
       "body_style": "SUV",
       "condition": null,
       "cylinders": null,
@@ -29662,6 +29791,7 @@
        "state": "NC",
        "zip": "28405"
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "New",
@@ -29711,6 +29841,7 @@
        "state": "NC",
        "zip": "28405"
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "Used",
@@ -29760,6 +29891,7 @@
        "state": "NC",
        "zip": "28405"
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "Used",
@@ -29809,6 +29941,7 @@
        "state": "NC",
        "zip": "28405"
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "Used",
@@ -29859,6 +29992,7 @@
       },
       "_rooftop_score": 7.0,
       "_rooftop_tier": "street_address",
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "Used",
@@ -30805,6 +30939,7 @@
        "state": "",
        "zip": ""
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "New",
@@ -30854,6 +30989,7 @@
        "state": "",
        "zip": ""
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "New",
@@ -30903,6 +31039,7 @@
        "state": "",
        "zip": ""
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "New",
@@ -30952,6 +31089,7 @@
        "state": "",
        "zip": ""
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "Used",
@@ -31001,6 +31139,7 @@
        "state": "",
        "zip": ""
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "Used",
@@ -31051,6 +31190,7 @@
       },
       "_rooftop_score": 8.8,
       "_rooftop_tier": "name_brand_alias",
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "New",
@@ -36826,6 +36966,7 @@
        "state": "",
        "zip": ""
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "New",
@@ -36881,6 +37022,7 @@
        "state": "",
        "zip": ""
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "New",
@@ -36931,6 +37073,7 @@
        "state": "",
        "zip": ""
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "New",
@@ -36981,6 +37124,7 @@
        "state": "",
        "zip": ""
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "Used",
@@ -37036,6 +37180,7 @@
        "state": "",
        "zip": ""
       },
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "Used",
@@ -37087,6 +37232,7 @@
       },
       "_rooftop_score": 8.8,
       "_rooftop_tier": "name_brand_alias",
+      "_source_url_guessed": true,
       "body_style": null,
       "carfax_url": null,
       "condition": "New",

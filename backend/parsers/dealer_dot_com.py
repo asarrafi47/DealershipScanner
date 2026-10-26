@@ -10,7 +10,7 @@ import re
 from typing import Any
 from urllib.parse import urljoin
 
-from backend.parsers.vdp_urls import dealer_style_vdp_url_candidates, suggest_dealer_style_vdp_url
+from backend.parsers.vdp_urls import dealer_style_vdp_url_candidates, mark_guessed, suggest_dealer_style_vdp_url
 from backend.parsers.inventory_carfax import extract_carfax_url
 from backend.utils.listing_description_extract import strip_dealer_description_intro
 from backend.parsers.base import (
@@ -723,8 +723,10 @@ def _map_vehicle(
             cyl = norm_int(c2)
 
     detail_url = _pick_vehicle_detail_url(obj, base_url)
+    detail_guessed = False
     if not detail_url and vin and not str(vin).lower().startswith("unknown"):
         detail_url = suggest_dealer_style_vdp_url(base_url, vin, obj)
+        detail_guessed = bool(detail_url)
     detail_alternates: list[str] = []
     if vin and not str(vin).lower().startswith("unknown"):
         detail_alternates = [
@@ -789,6 +791,8 @@ def _map_vehicle(
     if detail_url:
         out["_detail_url"] = detail_url
         out["source_url"] = detail_url
+        if detail_guessed:
+            mark_guessed(out)
     if detail_alternates:
         out["_detail_url_alternates"] = detail_alternates[:12]
     if lot_location:
