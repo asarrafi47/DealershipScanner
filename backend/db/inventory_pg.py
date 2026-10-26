@@ -7,6 +7,7 @@ Scanner + Flask share this connection via :func:`backend.db.inventory_db.get_con
 from __future__ import annotations
 
 import contextlib
+import functools
 import logging
 import os
 import re
@@ -237,9 +238,14 @@ def adapt_insert_or_replace_pg(sql: str) -> str | None:
     return None
 
 
+@functools.lru_cache(maxsize=512)
 def adapt_sql_for_postgres_execute(sql: str) -> str | None:
     """
     Return SQL suitable for psycopg3, or None if the statement should be skipped (no-op).
+
+    Pure function of ``sql`` (str in, str/None out), so results are memoized: the
+    scanner re-adapts the same few ~10 KB upsert statements per row (~0.8 ms each).
+    The "no Postgres mapping" warning below therefore logs once per distinct statement.
     """
     stripped = sql.strip()
     if stripped.upper().startswith("PRAGMA"):
