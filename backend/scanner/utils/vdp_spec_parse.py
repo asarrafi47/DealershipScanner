@@ -29,8 +29,6 @@ def _cylinders_from_engine_blob(blob: str) -> int | None:
         except ValueError:
             return None
     u = blob.upper()
-    if re.search(r"\bEV\b|ELECTRIC|BEV\b|KWH", u):
-        return 0
     v = _V6_V8.search(blob)
     if v:
         tok = v.group(1).upper()
@@ -45,6 +43,9 @@ def _cylinders_from_engine_blob(blob: str) -> int | None:
                 return int(tok[1:])
             except ValueError:
                 return None
+    # EV words only after combustion tokens: "3.5L V6 Hybrid Electric" is a V6.
+    if re.search(r"\bEV\b|ELECTRIC|BEV\b|KWH", u):
+        return 0
     return None
 
 
@@ -367,6 +368,9 @@ def _valid_color(val: str | None) -> str | None:
         return None
     # Bare numeric codes (e.g. Tesla "46") are not human colors.
     if v.replace(" ", "").isdigit():
+        return None
+    # CSS hex swatch values ("#ffffff", "FFFFFF") are not color names.
+    if re.fullmatch(r"#[0-9a-f]{3,8}", low) or re.fullmatch(r"(?=.*\d)[0-9a-f]{6}|(?=.*\d)[0-9a-f]{8}", low):
         return None
     # Must contain at least one letter to be a color name.
     if not any(c.isalpha() for c in v):

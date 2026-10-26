@@ -145,21 +145,29 @@ def specs_from_decode(response_json: Any) -> dict[str, Any]:
 
 
 @lru_cache(maxsize=8192)
-def _cached_specs_for_vin(vin: str) -> frozenset:
-    """``frozenset`` of items so the LRU cache holds a hashable value."""
-    try:
-        from backend.db.repositories.base_repo import db_conn
+def _cached_hit(vin: str) -> frozenset:
+    """Memoized decode of a VIN that HAS a stored decode (``frozenset`` is hashable)."""
+    from backend.db.repositories.base_repo import db_conn
 
-        with db_conn() as conn:
-            row = conn.execute(
-                "SELECT response_json FROM nhtsa_vpic_cache WHERE vin = ?", (vin,)
-            ).fetchone()
+    with db_conn() as conn:
+        row = conn.execute(
+            "SELECT response_json FROM nhtsa_vpic_cache WHERE vin = ?", (vin,)
+        ).fetchone()
+    if not row:
+        raise LookupError(vin)  # lru_cache never stores a raised call
+    return frozenset(specs_from_decode(row[0]).items())
+
+
+def _cached_specs_for_vin(vin: str) -> frozenset:
+    """Misses and DB errors are NOT memoized: a VIN decoded after its first view
+    must show up without a restart (B-033)."""
+    try:
+        return _cached_hit(vin)
+    except LookupError:
+        return frozenset()
     except Exception as exc:  # a decode is an enrichment, never a page blocker
         _log.debug("vpic cache lookup failed for %s: %s", vin, exc)
         return frozenset()
-    if not row:
-        return frozenset()
-    return frozenset(specs_from_decode(row[0]).items())
 
 
 def vpic_specs_for_vin(vin: str | None) -> dict[str, Any]:
@@ -203,7 +211,7 @@ def vpic_is_hybrid(specs: dict[str, Any]) -> bool:
 
 def reset_cache() -> None:
     """Tests / tooling: drop the in-process memo."""
-    _cached_specs_for_vin.cache_clear()
+    _cached_hit.cache_clear()
 
 
 def vpic_transmission_label(specs: dict[str, Any]) -> str | None:
@@ -230,10 +238,10 @@ def vpic_transmission_label(specs: dict[str, Any]) -> str | None:
         return f"{prefix}Automated Manual"
     if "direct drive" in s:
         return "Single-Speed (Direct Drive)"
+    if "automatic" in s:  # "Automatic with manual shift mode" is still automatic
+        return f"{prefix}Automatic"
     if "manual" in s or "standard" in s:
         return f"{prefix}Manual"
-    if "automatic" in s:
-        return f"{prefix}Automatic"
     return None
 
 
@@ -253,8 +261,10 @@ def transmission_family(text: Any) -> str | None:
         return "direct"
     if "automated manual" in s:
         return "automatic"
+    if re.search(r"\bauto(?:matic)?\b|dual[-\s]clutch|\bdct\b", s):
+        return "automatic"  # before manual: "automatic with manual shift mode"
     if re.search(r"\bmanual\b|\bstandard\b", s):
         return "manual"
-    if re.search(r"\bauto(?:matic)?\b|dual[-\s]clutch|\bdct\b|\d+[-\s]?speed", s):
+    if re.search(r"\d+[-\s]?speed", s):
         return "automatic"
     return None

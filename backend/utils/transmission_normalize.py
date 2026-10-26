@@ -92,7 +92,11 @@ def normalize_transmission_standard(
     # Manual before CVT so mixed phrases resolve to Manual when the word appears.
     if re.fullmatch(r"m\.?", s.strip(), re.I):
         return "Manual", False
-    if _MANUAL_TOKENS.search(u):
+    # "Automatic with manual shift mode" is an automatic/CVT with paddle modes.
+    manual_mode = re.search(r"\bmanual\s+(?:shift|shifting|mode)|\bw(?:ith|/)\s*manual\b|\bmanual[-\s]?shift(?:able)?\b", u, re.I)
+    if _MANUAL_TOKENS.search(u) and not (
+        manual_mode and (_STRICT_AUTO_TOKENS.search(u) or _CVT_TOKENS.search(u))
+    ):
         return "Manual", False
 
     # CVT phrases / keywords (before speed-based automatic and EV fixed-ratio rules).
