@@ -60,6 +60,8 @@ from playwright.async_api import Error as PlaywrightError
 from playwright.async_api import TimeoutError as PlaywrightTimeoutError
 from playwright.async_api import async_playwright
 
+from backend.scanner.browser_gate import require_browser
+
 
 logging.basicConfig(
     level=logging.INFO,
@@ -693,6 +695,7 @@ async def run_scrape(
     """Single vehicle: launch browser, scrape, exit."""
 
     async def _body(p):
+        require_browser("car_data_scraper.scrape_one")
         browser = await p.chromium.launch(headless=headless)
         context = await browser.new_context(
             user_agent=(
@@ -753,6 +756,7 @@ async def run_nhtsa_batch_scrape(
     )
 
     async def _body(p):
+        require_browser("car_data_scraper.batch")
         browser = await p.chromium.launch(headless=headless)
 
         async def run_one(i: int, year: int, make: str, model: str) -> str | None:

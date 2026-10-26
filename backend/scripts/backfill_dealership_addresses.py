@@ -432,6 +432,9 @@ class BrowserFetcher:
         self._context = None
 
     async def __aenter__(self):
+        from backend.scanner.browser_gate import require_browser
+
+        require_browser("backfill_dealership_addresses")
         try:
             from playwright_stealth import Stealth
             from playwright.async_api import async_playwright

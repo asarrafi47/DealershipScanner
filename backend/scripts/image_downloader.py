@@ -742,6 +742,11 @@ async def main(
         len(cars), concurrency, settle_ms, overwrite,
     )
 
+    # Operator-only: this writes cars.image_url from a live browser, so it never
+    # runs under the HTTP-only policy (SCANNER_ALLOW_BROWSER=1 names it deliberately).
+    from backend.scanner.browser_gate import require_browser
+    require_browser("image_downloader")
+
     try:
         from playwright_stealth import Stealth
         from playwright.async_api import async_playwright

@@ -129,6 +129,9 @@ def _run_adjudicate_mode(args: argparse.Namespace) -> int:
             try:
                 from playwright.sync_api import sync_playwright
 
+                from backend.scanner.browser_gate import require_browser
+
+                require_browser("scraping.cli adjudicate")
                 playwright = sync_playwright().start()
                 browser = playwright.chromium.launch(headless=True)
                 logger.info("Playwright ready for adjudicated crawl")
@@ -331,6 +334,9 @@ def main() -> int:
             try:
                 from playwright.sync_api import sync_playwright
 
+                from backend.scanner.browser_gate import require_browser
+
+                require_browser("scraping.cli crawl")
                 playwright = sync_playwright().start()
                 browser = playwright.chromium.launch(headless=True)
                 logger.info("Playwright Chromium ready (preferred mode)")
