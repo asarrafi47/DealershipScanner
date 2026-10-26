@@ -31,8 +31,9 @@ import re
 import secrets
 import sys
 import time
+from contextlib import contextmanager
 from pathlib import Path
-from typing import Any
+from typing import Any, Iterator
 
 ADMIN_DSN_ENV = "TEST_PG_ADMIN_DSN"
 REQUIRE_PG_ENV = "REQUIRE_PG"
@@ -279,6 +280,68 @@ def janitor(admin: str, *, max_age_s: float = JANITOR_MAX_AGE_S, now: float | No
     finally:
         conn.close()
     return dropped
+
+
+@contextmanager
+def scratch_db(admin: str, *, template: str = "template0") -> Iterator[str]:
+    """An empty (``template0``) throwaway database, dropped afterwards. Yields its URL DSN.
+
+    For tests that build their own schema (the chain, a V025 build, a runtime-DDL
+    build); tests that want the finished chain use the ``pg_db`` fixture instead.
+    """
+    name = new_name()
+    conn = connect_admin(admin)
+    try:
+        conn.execute(f'CREATE DATABASE "{name}" TEMPLATE "{template}"')
+    finally:
+        conn.close()
+    try:
+        yield dsn_for(admin, name)
+    finally:
+        drop(admin, name)
+
+
+def with_dbname(dsn: str, dbname: str) -> str:
+    """The same server and credentials, another database (what ``dsn_for`` does for an admin DSN)."""
+    return dsn_for(dsn, dbname)
+
+
+def build_from_migrations(dsn: str, directory: Path | None = None) -> tuple[str, dict[int, str]]:
+    """Build the migration chain into the empty database *dsn* the way a fresh one is built.
+
+    Returns ``(builder used, {version: checksum})`` (schema_drift_report.build_chain).
+    """
+    from backend.scripts import schema_drift_report as sdr
+
+    return sdr.build_chain(dsn, directory or (_backend_root().parent / "migrations"), "runner")
+
+
+def migrate_main(dsn: str, *argv: str) -> int:
+    """``migrate.main(argv)`` against *dsn* only (the resolver must return exactly it)."""
+    from backend.scripts import capture_module_ddl_golden as cmdg
+    from backend.scripts import migrate
+
+    with cmdg.inventory_env(dsn):
+        return migrate.main(list(argv))
+
+
+def admin_dsn_or_skip() -> str:
+    """The guarded admin DSN for a test that builds its own databases.
+
+    Skips with the counted pg-tier reason when ``TEST_PG_ADMIN_DSN`` is unset
+    (``REQUIRE_PG=1`` makes conftest fail that skip); fails on a refused DSN.
+    """
+    import pytest
+
+    dsn = admin_dsn()
+    if dsn is None:
+        pytest.skip(SKIP_REASON_NO_DSN)
+    pytest.importorskip("psycopg")
+    try:
+        assert_safe_admin_dsn(dsn)
+    except HarnessRefused as exc:
+        pytest.fail(f"TEST_PG_ADMIN_DSN refused: {exc}", pytrace=False)
+    return dsn
 
 
 def leftover_databases(admin: str) -> list[str]:

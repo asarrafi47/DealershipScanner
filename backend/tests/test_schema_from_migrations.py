@@ -20,7 +20,7 @@ Proof that retiring the runtime DDL (``inventory_pg`` and the per-module
     exactly from the code that creates them.
 (b) unit: :mod:`backend.db.schema_version` (version discovery, warn / strict /
     auto-migrate) against a fake connection -- no database.
-(c) live, ``@pytest.mark.integration``: when ``SCHEMA_PARITY_PG_DSN`` names a LOCAL
+(c) live, ``@pytest.mark.pg``: when ``TEST_PG_ADMIN_DSN`` names a LOCAL
     Postgres server where ``pytest_*`` databases may be created (D-TC9; never the
     inventory database, never port 15432), build the chain with
     ``migrate.main(['--apply'])`` and require: every relation and named constraint
@@ -44,8 +44,6 @@ import json
 import logging
 import os
 import re
-import uuid
-from contextlib import contextmanager
 from pathlib import Path
 from typing import Any, Iterator
 
@@ -55,6 +53,7 @@ from backend.db import schema_version as sv
 from backend.scripts import capture_module_ddl_golden as cmdg
 from backend.scripts import migrate
 from backend.scripts import schema_drift_report as sdr
+from backend.tests import pg_harness as pgh
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 MIGRATIONS_DIR = REPO_ROOT / "migrations"
@@ -697,52 +696,24 @@ def test_init_postgres_inventory_strict_mode_refuses(mig_dir, monkeypatch):
 # (c) live: a fresh chain on a scratch Postgres server (opt-in, D-TC9)
 # ---------------------------------------------------------------------------
 
-_PARITY_DSN_ENV = "SCHEMA_PARITY_PG_DSN"
-_SCRATCH_RE = re.compile(r"^pytest_schema_[a-z0-9_]{1,40}$")
-
-
 @pytest.fixture(scope="module")
 def pg_admin() -> str:
-    """The guarded admin DSN: a LOCAL server only (never via the 15432 tunnel)."""
-    admin_dsn = (os.environ.get(_PARITY_DSN_ENV) or "").strip()
-    if not admin_dsn:
-        pytest.skip(f"{_PARITY_DSN_ENV} not set (needs a LOCAL server where pytest_* DBs may be created)")
-    pytest.importorskip("psycopg")
+    """The guarded admin DSN (``TEST_PG_ADMIN_DSN``): a LOCAL server only (never via the 15432 tunnel)."""
+    admin_dsn = pgh.admin_dsn_or_skip()
     try:
         sdr.check_scratch_server(admin_dsn)
     except sdr.Refused as exc:
-        pytest.skip(f"{_PARITY_DSN_ENV} is not a local scratch server: {exc}")
+        pytest.fail(f"TEST_PG_ADMIN_DSN is not a local scratch server: {exc}", pytrace=False)
     return admin_dsn
 
 
-@contextmanager
-def _scratch_db(admin_dsn: str, label: str) -> Iterator[str]:
-    """A fresh ``pytest_schema_<label>_<hex>`` database (URL DSN), dropped afterwards."""
-    import psycopg
-
-    name = f"pytest_schema_{label}_{uuid.uuid4().hex[:8]}"
-    assert _SCRATCH_RE.match(name) and name not in sdr.PROTECTED_DBS
-    try:
-        admin = psycopg.connect(admin_dsn, autocommit=True)
-    except Exception as exc:  # pragma: no cover - environment
-        pytest.skip(f"cannot reach {_PARITY_DSN_ENV}: {exc}")
-    try:
-        try:
-            admin.execute(f'CREATE DATABASE "{name}" TEMPLATE template0')
-        except psycopg.errors.InsufficientPrivilege as exc:
-            pytest.skip(f"{_PARITY_DSN_ENV} may not create databases: {exc}")
-        yield sdr.with_dbname(admin_dsn, name)
-    finally:
-        try:
-            admin.execute(f'DROP DATABASE IF EXISTS "{name}" WITH (FORCE)')
-        finally:
-            admin.close()
+def _scratch_db(admin_dsn: str, label: str):
+    """A fresh empty throwaway database (URL DSN), dropped afterwards (pg_harness.scratch_db)."""
+    return pgh.scratch_db(admin_dsn)
 
 
 def _migrate(dsn: str, *argv: str) -> int:
-    """``migrate.main`` against ``dsn`` only (the resolver must return exactly it)."""
-    with cmdg.inventory_env(dsn):
-        return migrate.main(list(argv))
+    return pgh.migrate_main(dsn, *argv)
 
 
 def _live(dsn: str) -> dict[str, Any]:
@@ -768,7 +739,7 @@ def fresh_chain(pg_admin) -> Iterator[dict[str, Any]]:
         yield {"dsn": dsn, "snap": _live(dsn)}
 
 
-@pytest.mark.integration
+@pytest.mark.pg
 def test_fresh_chain_has_every_migration_relation(fresh_chain):
     # Every CREATE TABLE | SEQUENCE | INDEX and named CONSTRAINT any file spells,
     # V019's included: a fresh build records V019, so V001 and V026 must cover it.
@@ -791,7 +762,7 @@ def test_fresh_chain_has_every_migration_relation(fresh_chain):
 _NULLS_NOT_DISTINCT_BY_DESIGN = {"uq_option_rejections_standing"}
 
 
-@pytest.mark.integration
+@pytest.mark.pg
 def test_fresh_chain_builds_the_module_golden_with_the_same_definitions(fresh_chain, module_golden):
     snap = fresh_chain["snap"]
     problems: list[str] = []
@@ -820,7 +791,7 @@ def test_fresh_chain_builds_the_module_golden_with_the_same_definitions(fresh_ch
     assert not problems, "\n".join(problems)
 
 
-@pytest.mark.integration
+@pytest.mark.pg
 def test_module_golden_matches_a_fresh_capture(pg_admin):
     # A hand-edited golden proves nothing: it must be what the capture builds today.
     assert cmdg.render(cmdg.capture(pg_admin)) == MODULE_GOLDEN.read_text(encoding="utf-8")
@@ -835,7 +806,7 @@ _V026_ON_V025 = {("chain_only", "table", t) for t in _V026_TABLES} | {
 }
 
 
-@pytest.mark.integration
+@pytest.mark.pg
 def test_v026_on_a_v025_build_creates_exactly_its_objects_and_is_idempotent(pg_admin, caplog):
     import psycopg
 
@@ -867,7 +838,7 @@ def test_v026_on_a_v025_build_creates_exactly_its_objects_and_is_idempotent(pg_a
         assert _live(dsn) == after
 
 
-@pytest.mark.integration
+@pytest.mark.pg
 def test_v026_rebuilds_the_runtime_index_and_refuses_duplicates(pg_admin):
     import psycopg
 
@@ -984,7 +955,7 @@ def _build_from_runtime_ddl(dsn: str, monkeypatch) -> None:
         grid_cards_repo.reset_grid_cards_state()
 
 
-@pytest.mark.integration
+@pytest.mark.pg
 def test_migrations_build_a_superset_of_the_runtime_ddl(fresh_chain, pg_admin, monkeypatch):
     mig_dsn = fresh_chain["dsn"]
     with _scratch_db(pg_admin, "runtime") as rt_dsn:
