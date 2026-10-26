@@ -172,6 +172,58 @@ def _detail_url(doc: dict, base_url: str) -> str | None:
     return None
 
 
+# The lot code is the path segment after /vehicles/ in the photo URL (Q23:
+# chapmanfordaz CAU 663, CA5 246, CAE 175, CAY 62, CAV 58).
+_LOT_RE = re.compile(r"/vehicles/([A-Z0-9]{2,4})/")
+
+# Store behind each lot code (CLEANROOM_RCA_2026_10 Section 4.5 / N1.2 chapman map).
+_LOT_STORES = {
+    "CAU": {"name": "Chapman Ford", "city": "Scottsdale", "state": "AZ"},
+    "CA5": {"name": "Chapman Ford Pro Elite", "address": "3400 N 89th St", "city": "Scottsdale", "state": "AZ", "zip": "85251"},
+    "CAY": {"name": "Chapman Hyundai Scottsdale", "address": "3600 N 89th St", "city": "Scottsdale", "state": "AZ", "zip": "85251"},
+    "CAV": {"name": "Chapman Volkswagen Scottsdale", "address": "3700 N 89th St", "city": "Scottsdale", "state": "AZ", "zip": "85251"},
+    "CAE": {"name": "Chapman Dodge Chrysler Jeep Ram"},
+    "CYD": {"name": "Chapman Dodge Chrysler Jeep Ram Yuma", "address": "349 E 32nd St", "city": "Yuma", "state": "AZ", "zip": "85364"},
+    "CAC": {"name": "Chapman BMW on Camelback", "address": "830 E Camelback Rd", "city": "Phoenix", "state": "AZ", "zip": "85014"},
+    "CAW": {"name": "Chapman BMW Chandler"},
+}
+# The lot(s) that ARE the scanned store. A dealer not listed here has no known
+# own lot, so nothing is stamped (rows kept, as before) rather than naming a
+# target the gate would then refuse the whole feed against.
+_OWN_LOTS = {
+    "chapmanfordaz-com": {"CAU"},
+    "chapmandodge-com": {"CAE"},
+    "chapmanbmwchandler-com": {"CAW"},
+}
+
+
+def _lot_code(doc: dict, gallery: list[str]) -> str:
+    for u in gallery:
+        m = _LOT_RE.search(u)
+        if m:
+            return m.group(1)
+    return ""
+
+
+def _rooftop(doc: dict, gallery: list[str], dealer_id: str, dealer_name: str) -> dict | None:
+    """The lot this car's photos live under, verbatim (N8.3, CF-5a).
+
+    The feed's apiv2 items carry no store field; the photo path's lot code is the
+    only per-car store signal. Own lot -> the roster name (``own_site``); a known
+    sibling lot -> its store label; an unknown lot -> not stamped.
+    """
+    own = _OWN_LOTS.get(dealer_id)
+    lot = _lot_code(doc, gallery)
+    if not own or not lot:
+        return None
+    if lot in own:
+        return {"key": lot, "lot_id": lot, "name": dealer_name or dealer_id, "own_site": "1"}
+    store = _LOT_STORES.get(lot)
+    if not store:
+        return None
+    return {"key": lot, "lot_id": lot, **store}
+
+
 def _map(doc: dict, base_url: str, dealer_id: str, dealer_name: str, dealer_url: str) -> dict | None:
     vin = norm_str(doc.get("vin") or doc.get("VIN") or "")
     if not vin or len(vin) != 17:
@@ -205,6 +257,9 @@ def _map(doc: dict, base_url: str, dealer_id: str, dealer_name: str, dealer_url:
         "mpg_highway": norm_int(doc.get("mpgHwy")) or None,
         "engine_l": _engine_liters(engine),
     }
+    rooftop = _rooftop(doc, gallery, dealer_id, dealer_name)
+    if rooftop:
+        row["_rooftop"] = rooftop
     msrp = _msrp(doc)
     if msrp is not None:
         row["msrp"] = msrp

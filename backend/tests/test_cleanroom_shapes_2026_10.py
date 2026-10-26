@@ -410,16 +410,9 @@ def test_guard_scan_order_gives_the_same_owner(inv):
     assert set(owners["ford_first"].values()) == {"chapmandodge-com"}, owners["ford_first"]
 
 
-# ── 7. an unstamped group feed files sister and off-roster cars under the store
+# ── 7. a Jazel group feed files sister and off-roster cars under the store (fixed by N8.3: the parser now stamps the card's account)
 
 _FIVE = _load("fivestar_jazel_group_srp_20261013.json")
-_FEED_REASON = (
-    "defect: the Jazel parser drops each card's accountId / accountName / accountAddress (parsers/jazel.py:156-194 "
-    "_map; :183 even prefers the manifest name), so no row carries a rooftop and the gate keeps the whole Sam Pack "
-    "group SRP (match.py:338-342 no_rooftop_evidence): 124 cars of other rooftops filed under 5starford-com, and "
-    "the guard then refuses Dallas's own cars to fivestarforddallas-com; fixed by N8.3 (Jazel account -> _rooftop) "
-    "with N8.6 (D-N4: off-roster rooftops held; the plan records the flip under N8.6)"
-)
 
 
 def _jazel_srp(cards: list[dict[str, Any]]) -> str:
@@ -442,7 +435,6 @@ def _jazel_srp(cards: list[dict[str, Any]]) -> str:
     return "\n".join(parts)
 
 
-@pytest.mark.xfail(strict=True, reason=_FEED_REASON)
 def test_unstamped_group_feed_files_no_sister_or_offroster_cars_under_the_store(inv):
     """5starford-com (Five Star Ford North Richland Hills) replays the group-wide
     /inventory/all-vehicles/ SRP: 934 cards, 810 at North Richland Hills, 59

@@ -153,6 +153,35 @@ def _engine_liters(engine: str | None) -> float | None:
         return None
 
 
+# vdpLink ends "...--North_Richland_Hills--TX/": the city slug the site renders.
+_VDP_CITY_RE = re.compile(r"--([A-Za-z_]+)--([A-Z]{2})/?(?:[?#].*)?$")
+_ADDR_TAIL_RE = re.compile(r"\b([A-Z]{2})\s+(\d{5})(?:-\d{4})?\s*$")
+
+
+def _rooftop(doc: dict, detail_url: str | None) -> dict | None:
+    """The store this card sits at, verbatim from the feed (N1.2 jazel map).
+
+    ``accountId`` / ``accountName`` / ``accountAddress`` are per card; the VDP
+    city slug is the fallback when a card carries no account. No decision is made
+    here: the shared gate picks the scanned store.
+    """
+    key = _first(doc, "accountId")
+    name = _first(doc, "accountName") or ""
+    address = _first(doc, "accountAddress") or ""
+    city = state = zipc = ""
+    m = _ADDR_TAIL_RE.search(address)
+    if m:
+        state, zipc = m.group(1), m.group(2)
+    v = _VDP_CITY_RE.search(detail_url or "")
+    if v:
+        city = v.group(1).replace("_", " ")
+        state = state or v.group(2)
+    if not (key or name or city):
+        return None
+    out = {"key": key or "", "name": name, "address": address, "city": city, "state": state, "zip": zipc}
+    return {k: v for k, v in out.items() if v}
+
+
 def _map(doc: dict, base_url: str, dealer_id: str, dealer_name: str, dealer_url: str) -> dict | None:
     vin = norm_str(doc.get("vin") or "")
     if not vin or len(vin) != 17:
@@ -169,8 +198,10 @@ def _map(doc: dict, base_url: str, dealer_id: str, dealer_name: str, dealer_url:
         "price": _pick_price(doc),
         "mileage": norm_int(doc.get("mileage")),
         "condition": _condition(doc),
-        "exterior_color": _first(doc, "extColor", "exteriorColor") or "",
-        "interior_color": _first(doc, "intColor", "interiorColor") or "",
+        # W16: the Jazel card's extColor / intColor arrive crossed (paint words in
+        # interior_color on 1,613 rows at 33 dealers), so read them back swapped.
+        "exterior_color": _first(doc, "intColor", "exteriorColor") or "",
+        "interior_color": _first(doc, "extColor", "interiorColor") or "",
         "body_style": _first(doc, "bodyStyle", "body") or "",
         "drivetrain": _first(doc, "drivetrain") or "",
         "fuel_type": _first(doc, "fuelType", "fuel") or "",
@@ -180,7 +211,9 @@ def _map(doc: dict, base_url: str, dealer_id: str, dealer_name: str, dealer_url:
         "image_url": hero,
         "gallery": gallery,
         "dealer_id": dealer_id,
-        "dealer_name": dealer_name or _first(doc, "accountName") or dealer_id,
+        # CF-5a: the card's own accountName names the store holding the car; the
+        # manifest name is the store being scanned, not necessarily this car's.
+        "dealer_name": _first(doc, "accountName") or dealer_name or dealer_id,
         "dealer_url": dealer_url or base_url,
         "title": _first(doc, "name") or "",
         "mpg_city": norm_int(doc.get("mpgCity")) or None,
@@ -191,6 +224,9 @@ def _map(doc: dict, base_url: str, dealer_id: str, dealer_name: str, dealer_url:
     if du:
         row["source_url"] = du
         row["_detail_url"] = du
+    rooftop = _rooftop(doc, du)
+    if rooftop:
+        row["_rooftop"] = rooftop
     return row
 
 
