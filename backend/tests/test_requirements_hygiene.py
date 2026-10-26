@@ -627,3 +627,34 @@ def test_caps_below_major_parser(requirement, major, capped):
 )
 def test_floor_parser(requirement, floor):
     assert _floor(requirement) == floor
+
+
+# --- pip-audit in CI (P15B.7, security-17) ---------------------------------
+
+
+def _ci_pytest_runs() -> list[str]:
+    import yaml
+
+    wf = yaml.safe_load((REPO_ROOT / ".github" / "workflows" / "ci.yml").read_text("utf-8"))
+    return [s["run"] for s in wf["jobs"]["pytest"]["steps"] if "run" in s]
+
+
+def test_ci_pytest_job_runs_pip_audit_after_install_without_ignores():
+    runs = _ci_pytest_runs()
+    install = next(i for i, r in enumerate(runs) if "-r requirements.txt" in r)
+    env_audit = [i for i, r in enumerate(runs) if r.split() == ["pip-audit"]]
+    scanner_audit = [
+        i for i, r in enumerate(runs) if r.split() == ["pip-audit", "-r", "requirements-scanner.txt"]
+    ]
+    assert env_audit and scanner_audit, runs
+    assert min(env_audit + scanner_audit) > install
+    for r in runs:
+        if "pip-audit" in r and "pip install" not in r:
+            assert "--ignore-vuln" not in r and "--ignore" not in r, r
+
+
+def test_pip_audit_is_pinned_in_ci_and_not_in_any_requirements_file():
+    runs = _ci_pytest_runs()
+    assert any(re.search(r"pip install pip-audit==\d+\.\d+\.\d+\s*$", r.strip()) for r in runs), runs
+    for path in ALL_REQUIREMENTS + (REPO_ROOT / "requirements-web.txt", REPO_ROOT / "requirements-browser.txt"):
+        assert "pip-audit" not in path.read_text("utf-8").lower(), path.name
