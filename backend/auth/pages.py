@@ -17,13 +17,65 @@ from backend.config import Config
 from backend.db.users_db import (
     authenticate_app_user,
     get_user_profile,
+    resolve_login_account_id,
     submitted_password_attempts,
     sync_env_admin_user_row,
 )
 from backend.routes._shared import _client_ip
 from backend.utils.csrf import ensure_csrf_token
-from backend.utils.ip_rate_limit import allow_request
+from backend.utils.ip_rate_limit import allow_request, refund_event
 from backend.utils.roles import normalize_role
+
+
+# Per-account lockout (SEC-A-010): failed logins per normalised login name, across IPs.
+_ACCT_FAIL_MAX = 10
+_ACCT_FAIL_WINDOW = 900.0
+
+
+def _login_ip_key(ip: str) -> str:
+    """Rate-limit key for a client IP; IPv6 collapses to its /64 so one host rotating
+    addresses inside its prefix shares a bucket."""
+    raw = (ip or "").strip()
+    if ":" not in raw:
+        return raw
+    try:
+        import ipaddress
+
+        addr = ipaddress.ip_address(raw.split("%", 1)[0])
+        if addr.version == 6:
+            if addr.ipv4_mapped is not None:
+                return str(addr.ipv4_mapped)
+            return str(ipaddress.ip_network(f"{addr}/64", strict=False))
+    except ValueError:
+        pass
+    return raw
+
+
+def _acct_key(login_input: str) -> str:
+    """Counter key: the resolved account id (so username and email share one bucket),
+    else the normalised login string for unknown logins."""
+    uid = resolve_login_account_id(login_input)
+    if uid:
+        return f"login_acct_fail:uid:{uid}"
+    return f"login_acct_fail:{(login_input or '').strip().lower()[:254]}"
+
+
+def _reserve_login_slot(login_input: str) -> str | None:
+    """Claim one of the account's failure slots BEFORE the slow password check, so a burst
+    of parallel guesses cannot all pass a stale count. Returns the key, or None when the
+    account is locked. A successful login refunds the slot (``_refund_login_slot``).
+    The memory store is per process: set RATE_LIMIT_SQLITE_PATH for multi-worker hosts."""
+    key = _acct_key(login_input)
+    if not allow_request(key, max_events=_ACCT_FAIL_MAX, window_seconds=_ACCT_FAIL_WINDOW):
+        return None
+    return key
+
+
+def _refund_login_slot(key: str) -> None:
+    refund_event(key)
+
+
+_LOCKED_MSG = "Too many failed attempts. Try again in 15 minutes."
 
 
 def login_page():
@@ -39,14 +91,18 @@ def login_page():
             return render_template("login.html", error=oauth_err, notice=notice)
     if request.method == "POST":
         ip = _client_ip()
-        if not allow_request(f"login:{ip}", max_events=Config.RATE_LIMIT_LOGIN_PER_MIN, window_seconds=60.0):
+        if not allow_request(f"login:{_login_ip_key(ip)}", max_events=Config.RATE_LIMIT_LOGIN_PER_MIN, window_seconds=60.0):
             return render_template("login.html", error="Too many login attempts. Try again in a minute.", notice=notice), 429
         login_input = (request.form.get("login") or "").strip()
         attempts = submitted_password_attempts(request.form.get("password"))
         if not login_input or not attempts:
             return render_template("login.html", error="Enter username/email and password.", notice=notice)
+        slot = _reserve_login_slot(login_input)
+        if slot is None:
+            return render_template("login.html", error=_LOCKED_MSG, notice=notice), 429
         u = next((x for x in (authenticate_app_user(login_input, pw) for pw in attempts) if x), None)
         if u:
+            _refund_login_slot(slot)
             sync_env_admin_user_row(int(u["id"]))
             pending_link = oauth_link.pop_pending_link()
             session.clear()
@@ -210,16 +266,20 @@ def api_auth_me():
 
 def api_auth_login():
     ip = _client_ip()
-    if not allow_request(f"login:{ip}", max_events=Config.RATE_LIMIT_LOGIN_PER_MIN, window_seconds=60.0):
+    if not allow_request(f"login:{_login_ip_key(ip)}", max_events=Config.RATE_LIMIT_LOGIN_PER_MIN, window_seconds=60.0):
         return jsonify({"ok": False, "error": "rate_limited"}), 429
     data = request.get_json(silent=True) or {}
     login_input = (data.get("login") or "").strip()
     attempts = submitted_password_attempts(data.get("password"))
     if not login_input or not attempts:
         return jsonify({"ok": False, "error": "missing_credentials"}), 400
+    slot = _reserve_login_slot(login_input)
+    if slot is None:
+        return jsonify({"ok": False, "error": "rate_limited", "message": _LOCKED_MSG}), 429
     u = next((x for x in (authenticate_app_user(login_input, pw) for pw in attempts) if x), None)
     if not u:
         return jsonify({"ok": False, "error": "invalid_credentials"}), 401
+    _refund_login_slot(slot)
     sync_env_admin_user_row(int(u["id"]))
     pending_link = oauth_link.pop_pending_link()
     session.clear()

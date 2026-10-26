@@ -317,6 +317,24 @@ def submitted_password_attempts(raw_password: str | None) -> list[str]:
     return [stripped] if raw == stripped else [stripped, raw]
 
 
+def resolve_login_account_id(login_input: str) -> int | None:
+    """Id of the account a login string (username or email) names, or None. No password check."""
+    li = (login_input or "").strip()
+    if not li:
+        return None
+    conn = get_conn()
+    try:
+        cursor = conn.cursor()
+        cursor.execute(
+            "SELECT id FROM users WHERE lower(username) = lower(?) OR lower(email) = lower(?)",
+            (li, li),
+        )
+        row = cursor.fetchone()
+    finally:
+        conn.close()
+    return int(row[0]) if row else None
+
+
 def authenticate_app_user(login_input: str, password: str) -> dict | None:
     """Verify credentials and return the user row, or None."""
     li = (login_input or "").strip()
