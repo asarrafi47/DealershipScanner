@@ -218,7 +218,7 @@
                                 </a>
                             </td>
                             <td class="dev-mono">{{ stat.total_cars }}</td>
-                            <td class="dev-mono" style="color: {% if stat.incomplete_count > 0 %}#d32f2f{% else %}#4caf50{% endif %}">
+                            <td class="dev-mono {% if stat.incomplete_count > 0 %}u-stat-bad{% else %}u-stat-ok{% endif %}">
                                 {{ stat.incomplete_count }}
                             </td>
                             <td class="dev-mono">{{ "%.2f"|format(stat.avg_quality_score or 0) }}</td>

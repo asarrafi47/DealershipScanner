@@ -17,13 +17,13 @@
             <div class="auth-card">
                 <p class="eyebrow">Billing</p>
                 <h1>Subscription Required</h1>
-                <p style="margin-top: 8px; color: #5a5a5a;">
+                <p class="u-mt-8-muted">
                     Your organization{% if org and org.name %} (<strong>{{ org.name }}</strong>){% endif %} needs an active subscription to access the dealer portal.
                 </p>
-                <div style="margin-top: 18px;">
+                <div class="u-mt-18">
                     <a class="primary-button full-width" href="{{ url_for('billing.billing_checkout') }}">Start subscription</a>
                 </div>
-                <p class="auth-footer" style="margin-top: 14px;">
+                <p class="auth-footer u-mt-14">
                     If you already subscribed, refresh this page after a few seconds.
                 </p>
                 <p class="auth-footer">

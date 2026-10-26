@@ -90,7 +90,7 @@
                             <span class="sr-only">Reset password</span>
                         </a>
                         {% if u.is_active and u.id != self_user_id %}
-                        <form method="post" style="display:inline">
+                        <form class="u-inline" method="post">
                             <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
                             <input type="hidden" name="user_id" value="{{ u.id }}">
                             <input type="hidden" name="q" value="{{ search }}">
@@ -101,7 +101,7 @@
                             </button>
                         </form>
                         {% elif not u.is_active %}
-                        <form method="post" style="display:inline">
+                        <form class="u-inline" method="post">
                             <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
                             <input type="hidden" name="user_id" value="{{ u.id }}">
                             <input type="hidden" name="q" value="{{ search }}">
@@ -113,7 +113,7 @@
                         </form>
                         {% endif %}
                         {% if u.id != self_user_id %}
-                        <form method="post" style="display:inline"
+                        <form class="u-inline" method="post"
                             onsubmit="return confirm('Delete user #{{ u.id }} ({{ u.username }})?');">
                             <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
                             <input type="hidden" name="user_id" value="{{ u.id }}">

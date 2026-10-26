@@ -22,11 +22,11 @@
                     {{ message }}
                 </div>
 
-                <p style="margin-top:1.5rem;">
+                <p class="u-mt-1-5rem">
                     <a href="{{ url_for('login_page') }}">Back to login</a>
                     {% if session.get('user_id') %}
                     &nbsp;·&nbsp;
-                    <form method="POST" action="{{ url_for('resend_verification') }}" style="display:inline;">
+                    <form class="u-inline" method="POST" action="{{ url_for('resend_verification') }}">
                         <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
                         <button type="submit" class="link-button">Resend verification email</button>
                     </form>
