@@ -119,7 +119,7 @@ def _extract_interior_exterior(norm: str) -> tuple[dict[str, Any], dict[str, Any
         )
         if m2:
             candidate = " ".join(m2.group(1).split()).strip()
-            colors = color_phrase_candidates(candidate + " " + norm)
+            colors = color_phrase_candidates(candidate)
             if colors or re.search(r"(?i)\b(leather|cloth|vinyl|suede|alcantara)\b", candidate):
                 interior_evidence = _clip_evidence(m2.group(0))
                 interior_hint = candidate[:120]
