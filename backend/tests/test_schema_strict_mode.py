@@ -243,7 +243,7 @@ def test_upsert_vehicles_strict_refuses_before_any_write(pg, monkeypatch):
     _strict(monkeypatch)
     conn = pg["conn"]
     monkeypatch.setattr(scanner_db, "get_conn", lambda: conn)
-    monkeypatch.setattr(scanner_db, "drop_unattributable_vehicles", lambda v: (v, 0))
+    monkeypatch.setattr(scanner_db, "drop_unattributable_vehicles", lambda v: (v, 0, {}))
 
     def no_write(*a, **k):
         raise AssertionError("write_rows reached on a refused schema")

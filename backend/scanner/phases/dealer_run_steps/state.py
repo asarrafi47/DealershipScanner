@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import logging
 import time
+from datetime import datetime, timezone
 from dataclasses import dataclass, field
 from typing import Any
 
@@ -43,6 +44,12 @@ class DealerRun:
     # Wall-clock start beside the monotonic ``t0``: on macOS perf_counter stops
     # while the Mac sleeps, so wall_seconds - active_seconds is the paused time.
     wall_t0: float = field(default_factory=time.time)
+    # {vin: reason} the upsert boundary dropped as unattributable (P5A.5): protected from reconcile.
+    unattributable_vins: dict[str, str] = field(default_factory=dict)
+
+    def started_iso(self) -> str:
+        """Wall-clock start of the run, ISO-8601 UTC: rows scraped since then are this run's own."""
+        return datetime.fromtimestamp(self.wall_t0, timezone.utc).isoformat()
 
     def elapsed(self) -> float:
         return time.perf_counter() - self.t0

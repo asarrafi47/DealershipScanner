@@ -21,6 +21,7 @@ async def persist(run: DealerRun) -> None:
     count = await upsert_vehicles_for_dealer(run.write_coordinator, run.all_vehicles, _upsert_stats)
     result["phase_secs"]["upsert"] = round(time.perf_counter() - t_up0, 2)
     result["upserted"] = count
+    run.unattributable_vins = dict(_upsert_stats.get("unattributable_vins") or {})
     scan_log.log_vehicles(run.dealer_id, name, result.get("provider", run.provider), run.all_vehicles)
     _conflicted = set(_upsert_stats.get("vin_owner_conflict_vins") or ())
     result["vin_owner_conflicts"] = len(_conflicted)

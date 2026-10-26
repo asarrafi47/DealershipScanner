@@ -291,7 +291,7 @@ class Harness:
 
         _patch_bound(mp, "disown_foreign_rooftop_vins", _disown)
 
-        def _reconcile(dealer_id, url, scraped_norm, result, scraped_conditions=None):
+        def _reconcile(dealer_id, url, scraped_norm, result, scraped_conditions=None, **_evidence):
             h.ev("reconcile", [dealer_id, url, sorted(scraped_norm), _mask_result(result), scraped_conditions])
             if isinstance(reconcile, BaseException):
                 raise reconcile

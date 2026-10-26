@@ -374,7 +374,7 @@ def _ensure_schema(conn):
 from backend.scanner.identifier_gate import drop_ungated_vehicles  # noqa: E402
 
 
-def drop_unattributable_vehicles(vehicles: list[dict]) -> tuple[list[dict], int]:
+def drop_unattributable_vehicles(vehicles: list[dict]) -> tuple[list[dict], int, dict[str, str]]:
     """Remove rows the rooftop-attribution gate refused.
 
     Every row written here is stamped with the dealer whose site was queried,
@@ -383,21 +383,31 @@ def drop_unattributable_vehicles(vehicles: list[dict]) -> tuple[list[dict], int]
     ``_rooftop_reject``; this is the write-side enforcement of that decision, so
     a caller that forwards the rejects anyway still cannot store a wrong
     storefront.
+
+    Returns ``(kept, refused_count, dropped)`` where *dropped* maps each dropped
+    row's normalized VIN to its refusal reason: the reconcile pass must not
+    retire a VIN this boundary refused without evidence (P5A.5).
     """
     kept = [v for v in vehicles if not v.get("_rooftop_reject")]
     refused = len(vehicles) - len(kept)
+    dropped: dict[str, str] = {}
     if refused:
+        from backend.scanner.inventory_reconcile import normalize_scanner_vin
+
         reasons: dict[str, int] = {}
         for v in vehicles:
             reason = v.get("_rooftop_reject")
             if reason:
                 reasons[str(reason)] = reasons.get(str(reason), 0) + 1
+                vin = normalize_scanner_vin(v.get("vin"))
+                if vin:
+                    dropped.setdefault(vin, str(reason))
         logger.warning(
             "upsert_vehicles: refused %d row(s) not attributable to the scanned rooftop (%s)",
             refused,
             ", ".join(f"{k}={n}" for k, n in sorted(reasons.items())),
         )
-    return kept, refused
+    return kept, refused, dropped
 
 
 def _log_owner_moves(conn, cursor, moves: list) -> int:
@@ -432,7 +442,9 @@ def upsert_vehicles(vehicles: list[dict], stats: dict | None = None) -> int:
     reset_stats(stats)
     if not vehicles:
         return 0
-    vehicles, _refused = drop_unattributable_vehicles(vehicles)
+    vehicles, _refused, _dropped = drop_unattributable_vehicles(vehicles)
+    if stats is not None:
+        stats["unattributable_vins"] = _dropped
     if not vehicles:
         return 0
     vehicles, gate_refused = drop_ungated_vehicles(vehicles)

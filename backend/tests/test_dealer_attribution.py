@@ -284,13 +284,13 @@ def test_caller_without_rejected_out_gets_marked_rows_that_storage_refuses():
                  "audifletcherjones-com", "Audi Fletcher Jones",
                  "https://www.audifletcherjones.com")
     assert sorted(r["vin"] for r in rows) == [_vin(70), _vin(71)]
-    kept, dropped = drop_unattributable_vehicles(rows)
+    kept, dropped, _ = drop_unattributable_vehicles(rows)
     assert [r["vin"] for r in kept] == [_vin(70)]
     assert dropped == 1
 
 
 def test_upsert_boundary_drops_rows_marked_by_the_gate():
-    kept, dropped = drop_unattributable_vehicles([
+    kept, dropped, _ = drop_unattributable_vehicles([
         {"vin": _vin(80)},
         {"vin": _vin(81), "_rooftop_reject": "sibling_rooftop"},
         {"vin": _vin(82), "_rooftop_reject": "target_rooftop_unidentified"},
@@ -617,7 +617,7 @@ def test_a_ddc_group_feed_never_reaches_storage_unfiltered():
         _ddc_payload([(_vin(370), "soniccrownlexus"), (_vin(371), "sonicbeverlyhillsbmw"),
                       (_vin(372), "sonicbmwmonrovia")]),
         "crownlexus-com", "Crown Lexus", "https://www.crownlexus.com")
-    stored, dropped = drop_unattributable_vehicles(kept)
+    stored, dropped, _ = drop_unattributable_vehicles(kept)
     assert [r["vin"] for r in stored] == [_vin(370)]
     assert dropped == 2
     assert rejected == []

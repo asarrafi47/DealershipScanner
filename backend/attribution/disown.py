@@ -32,6 +32,33 @@ logger = logging.getLogger("scanner")
 # separate them. Refuse to WRITE on those, never to un-list.
 EVIDENCE_BACKED_REJECTS = frozenset({"sibling_rooftop", "single_rooftop_is_not_this_store"})
 
+# Refusals that leave a VIN OUT of the reconcile pass's protected set (P5A.5): the feed
+# positively assigned the car elsewhere, so a row already stored here is struck under the
+# two-strike policy instead of being held listed. ``third_rooftop`` (a class-(d) row stored
+# under a sibling) is struck the same way. ``vdp_host_other_store`` is in neither set.
+UNPROTECTED_REFUSALS = EVIDENCE_BACKED_REJECTS | {"third_rooftop"}
+
+
+def protected_refusal_vins(*vehicle_lists: list[dict[str, Any]], dropped: dict[str, str] | None = None) -> set[str]:
+    """Normalized VINs refused WITHOUT evidence about the car: reconcile must never retire them.
+
+    *vehicle_lists* are refused rows (``_rooftop_reject`` set); *dropped* is the
+    ``{vin: reason}`` map ``drop_unattributable_vehicles`` returns.
+    """
+    from backend.scanner.inventory_reconcile import normalize_scanner_vin
+
+    out: set[str] = set()
+    for rows in vehicle_lists:
+        for v in rows or ():
+            if v.get("_rooftop_reject") and v.get("_rooftop_reject") not in UNPROTECTED_REFUSALS:
+                vin = normalize_scanner_vin(v.get("vin"))
+                if vin:
+                    out.add(vin)
+    for vin, reason in (dropped or {}).items():
+        if reason not in UNPROTECTED_REFUSALS and vin:
+            out.add(vin)
+    return out
+
 
 def split_refusals(refused: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], int]:
     """``(rows that may be un-listed, count of rows that may not)``."""
@@ -102,4 +129,4 @@ def disown_foreign_rooftop_vins(dealer_id: str, vins: set[str]) -> int:
     return changed
 
 
-__all__ = ["EVIDENCE_BACKED_REJECTS", "disown_foreign_rooftop_vins", "split_refusals"]
+__all__ = ["EVIDENCE_BACKED_REJECTS", "UNPROTECTED_REFUSALS", "protected_refusal_vins", "disown_foreign_rooftop_vins", "split_refusals"]
