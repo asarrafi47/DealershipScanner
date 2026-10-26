@@ -157,10 +157,10 @@ class Harness:
         mp.setattr("backend.scanner.rooftop_ledger.note_refusal", lambda *a, **k: None, raising=False)
         mp.setattr("backend.scanner.rooftop_ledger.flush", lambda *a, **k: None, raising=False)
         mp.setattr("backend.parsers.team_velocity.is_team_velocity_dealer", lambda d: False, raising=False)
-        mp.setattr("backend.attribution.gate.store_place", lambda u, d: (h.ev("store_place", [u, d]), dict(place or {}))[1])
+        mp.setattr("backend.attribution.gate.store_place", lambda u, d, registry_id=None: (h.ev("store_place", [u, d]), dict(place or {}))[1])
 
         # recipes
-        async def _fetch(dealer_id, provider, base_url, dealer_name, *, union=False, coverage_out=None):
+        async def _fetch(dealer_id, provider, base_url, dealer_name, *, union=False, coverage_out=None, registry_id=None):
             h.ev("try_fetch_via_recipes", [dealer_id, provider, base_url, dealer_name, union])
             if isinstance(recipe, BaseException):
                 raise recipe

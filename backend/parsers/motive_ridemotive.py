@@ -95,6 +95,12 @@ def _pick_price(doc: dict) -> float:
     return extract_price(doc)
 
 
+def _category(doc: dict) -> str:
+    """Hits carry no body key; ``category`` is the feed's class ('Other' is no class)."""
+    cat = _first(doc, "category")
+    return "" if not cat or cat.lower() == "other" else cat
+
+
 def _condition(doc: dict) -> str:
     cond = _first(doc, "car_condition", "condition")
     return cond or ""
@@ -132,6 +138,42 @@ def _engine_liters(engine: str | None) -> float | None:
         return None
 
 
+def _rooftop(doc: dict) -> dict | None:
+    """The store that holds this car, verbatim (N8.4, CF-5b).
+
+    ``dealer_id`` is the owning store's Motive id and ``dealership`` its name
+    (6,135/6,135 hits, 12 dealers, N1.2 motive map). ``dealer_ids`` is every store
+    the car is SHARED to, not ownership: 603 of Lexus Escondido's 651 pool cars
+    list both it and Lexus Carlsbad, so it is never read here. No decision is
+    made: the shared gate picks the scanned store.
+    """
+    name = _opt_str(doc.get("dealership")) or ""
+    sid = doc.get("dealer_id")
+    sid = str(sid).strip() if sid not in (None, "") else ""
+    if not (name or sid):
+        return None
+    out = {"key": f"motive-{sid}" if sid else name, "name": name, "store_id": sid}
+    return {k: v for k, v in out.items() if v}
+
+
+def detect(raw_data) -> bool:
+    """True for a Motive Algolia hit list, whatever provider the recipe declares.
+
+    Browser-captured recipes of Motive sites are tagged ``dealer_dot_com``, whose
+    parser reads none of ``make_year`` / ``car_trim`` / ``stock_number`` / opaque
+    image keys (trim, body, stock and gallery came out 0%). A Motive hit pairs the
+    list ``dealer_ids`` with ``dealership`` and ``make_year`` or ``car_trim``.
+    Only the first hit is checked, like the other detectors.
+    """
+    for doc in _iter_hits(raw_data):
+        return (
+            isinstance(doc.get("dealer_ids"), list)
+            and "dealership" in doc
+            and ("make_year" in doc or "car_trim" in doc)
+        )
+    return False
+
+
 def _map(doc: dict, base_url: str, dealer_id: str, dealer_name: str, dealer_url: str) -> dict | None:
     vin = norm_str(doc.get("vin") or doc.get("VIN") or "")
     if not vin or len(vin) != 17:
@@ -150,7 +192,7 @@ def _map(doc: dict, base_url: str, dealer_id: str, dealer_name: str, dealer_url:
         "condition": _condition(doc),
         "exterior_color": _first(doc, "exterior_color", "generic_exterior_color") or "",
         "interior_color": _first(doc, "interior_color", "generic_interior_color") or "",
-        "body_style": _first(doc, "body", "body_style", "car_body") or "",
+        "body_style": _first(doc, "body", "body_style", "car_body") or _category(doc),
         "drivetrain": norm_str(doc.get("drivetrain")),
         "fuel_type": _first(doc, "fuel_type", "fuel") or "",
         "engine_description": engine or "",
@@ -184,5 +226,9 @@ def parse(raw_data, *, base_url: str = "", dealer_id: str = "", dealer_name: str
         mapped = _map(doc, base_url, dealer_id, dealer_name, dealer_url)
         if mapped and mapped["vin"].upper() not in seen:
             seen.add(mapped["vin"].upper())
-            out.append(clean_car_row_dict(mapped))
+            row = clean_car_row_dict(mapped)
+            rooftop = _rooftop(doc)
+            if rooftop:
+                row["_rooftop"] = rooftop
+            out.append(row)
     return out

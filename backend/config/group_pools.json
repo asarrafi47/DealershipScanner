@@ -1,0 +1,7 @@
+{
+  "_comment": "D-N3 (accepted 2026-10-18): designated primary store per group-feed pool. A car that no store's own feed stamps at a strong tier is filed under the pool's primary (dealer_feed_scope='group'). Pairs of stores not listed here keep their current owner and are reported as group_feed_unstamped. 'aliases' are dealer_ids of ONE store (they never conflict). Pools are added only after DB checks verify the pair; N8.11 and N1.11 supply the DEP and profiled pairs.",
+  "pools": [],
+  "aliases": [
+    ["hughwhitehonda-com", "hughwhitehonda-net"]
+  ]
+}

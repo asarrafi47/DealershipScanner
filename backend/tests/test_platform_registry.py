@@ -305,3 +305,21 @@ def test_http_probe_thin_beacon_shell_is_challenge(monkeypatch):
     probe = pr._http_probe("https://x.com")
     assert probe.challenge is True
     assert probe.html is None
+
+
+# ── recipes tagged "unknown" with a ws-inv-data URL are retagged at load (N8.2) ──
+
+def test_unknown_ws_inv_data_recipe_is_retagged_at_load(caplog):
+    from backend.scanner.recipes import _rows_to_recipes
+
+    base = {"dealer_id": "bmwofmonrovia-net", "method": "POST", "content_type": "application/json", "post_template": "{}"}
+    rows = [
+        dict(base, url="https://www.bmwofmonrovia.net/api/widget/ws-inv-data/getInventoryAndFacets", provider_hint="unknown"),
+        dict(base, url="https://www.bmwofmonrovia.net/api/widget/ws-inv-data/getInventory", provider_hint=""),
+        dict(base, url="https://www.bmwofmonrovia.net/api/widget/ws-rec-vehicles/vehicles-recommendations/x", provider_hint="unknown"),
+        dict(base, url="https://www.x.com/api/widget/ws-inv-data/getInventory", provider_hint="carscommerce"),
+    ]
+    caplog.set_level("INFO", logger="scanner")
+    recs = _rows_to_recipes(rows)
+    assert [r.provider_hint for r in recs] == ["dealer_dot_com", "dealer_dot_com", "unknown", "carscommerce"]
+    assert sum("retagged dealer_dot_com" in m.getMessage() for m in caplog.records) == 2

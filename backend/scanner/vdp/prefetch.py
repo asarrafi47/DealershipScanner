@@ -315,6 +315,21 @@ def _vehicle_wants_http_prefetch(v: dict[str, Any]) -> bool:
     return _description_short(v) or _gallery_thin(v) or _extras_missing(v)
 
 
+def _gap_rank(v: dict[str, Any]) -> int:
+    """Gap-first order (N8.7): price, exterior colour, trim, photos, then the rest."""
+    from backend.scanner.utils.vdp_price_merge import listing_price_is_empty
+
+    if listing_price_is_empty(v):
+        return 0
+    if _empty(v.get("exterior_color")):
+        return 1
+    if _empty(v.get("trim")):
+        return 2
+    if _gallery_thin(v):
+        return 3
+    return 4
+
+
 _LAST_STATUS: dict[str, int] = {}  # url -> last HTTP status, for the prefetch stats
 
 
@@ -597,7 +612,7 @@ async def http_prefetch_missing_fields(
             candidates.append(v)
     cap = _http_first_max(dealer_id, timing)
     skipped_cap = max(0, len(candidates) - cap)
-    candidates = candidates[:cap]
+    candidates = sorted(candidates, key=_gap_rank)[:cap]  # stable: feed order inside a rank
     stats = {
         "candidates": len(candidates), "fetched": 0, "fields_filled": 0, "skipped_cap": skipped_cap,
         "descriptions_filled": 0, "galleries_extended": 0, "statuses": {},
@@ -634,6 +649,9 @@ async def http_prefetch_missing_fields(
                 if host in dead:  # decided while this task queued on the lock
                     stats["dead_host_skipped"] = stats.get("dead_host_skipped", 0) + 1
                     return None, None
+                if host in exhausted:  # exhausted while this task queued on the lock
+                    stats["slow_host_skipped"] = stats.get("slow_host_skipped", 0) + 1
+                    return None, None
                 wait = _HOST_COOLDOWN_UNTIL.get(host, 0.0) - _time.monotonic()
                 if wait > 0:
                     await asyncio.sleep(wait)
@@ -661,6 +679,9 @@ async def http_prefetch_missing_fields(
         elif html is not None:
             fetched_ok[host] = fetched_ok.get(host, 0) + 1
         if st in (403, 429):
+            # every blocked response is counted, not only the last one of a retry chain
+            _k = str(st)
+            stats["statuses"][_k] = stats["statuses"].get(_k, 0) + 1
             was_slow = host in _SLOW_HOSTS
             if not was_slow:
                 _SLOW_HOSTS.add(host)
@@ -682,7 +703,7 @@ async def http_prefetch_missing_fields(
             attempts += 1
             html, st = await _fetch_paced(url)  # serialized, after the host cool-down
             stats["retried"] = stats.get("retried", 0) + 1
-        if st is not None:
+        if st is not None and st not in (403, 429):  # those were counted per attempt
             key = str(st)
             stats["statuses"][key] = stats["statuses"].get(key, 0) + 1
         err = _LAST_ERROR.pop(url, None)

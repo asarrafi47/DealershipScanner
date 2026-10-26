@@ -8,7 +8,7 @@ import logging
 import re
 from urllib.parse import urljoin
 
-from backend.parsers.vdp_urls import suggest_dealer_style_vdp_url
+from backend.parsers.vdp_urls import mark_guessed, suggest_dealer_style_vdp_url
 from backend.parsers.base import (
     extract_gallery_urls,
     extract_image_url,
@@ -376,10 +376,14 @@ def _map_vehicle(obj: dict, base_url: str, dealer_id: str, dealer_name: str, dea
         "engine_l": eng_l,
     }
     du = _pick_detail_url_dealer_on(obj, base_url)
+    guessed = False
     if not du and vin and not str(vin).lower().startswith("unknown"):
         du = suggest_dealer_style_vdp_url(dealer_url or base_url, vin, obj)
+        guessed = bool(du)
     if du:
         row["_detail_url"] = du
+        if guessed:
+            mark_guessed(row)
     return row
 
 

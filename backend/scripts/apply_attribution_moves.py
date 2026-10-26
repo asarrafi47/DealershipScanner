@@ -36,6 +36,7 @@ import re
 import sys
 from pathlib import Path
 from urllib.parse import urlparse
+from datetime import datetime
 
 _REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(_REPO_ROOT) not in sys.path:
@@ -69,6 +70,19 @@ def _dealer_slug(website: str) -> str:
     if host.startswith("www."):
         host = host[4:]
     return host.replace(".", "-")
+
+
+def destination_dealer_id(site: str, rid: int, shared_hosts: set[str], rid_dealer_ids: dict[int, str]) -> str:
+    """``cars.dealer_id`` a moved car takes at registry row *rid*.
+
+    The website host's slug, except for a store on a host shared with sister stores
+    (www.autosavvy.com): the host names no store there, so the id is the one that row's
+    cars already carry, and a row with none yields "" (the move is skipped, never filed
+    under a sister's id).
+    """
+    if _dealer_slug(site) and (urlparse(site or "").hostname or "").lower().removeprefix("www.") in shared_hosts:
+        return rid_dealer_ids.get(int(rid), "")
+    return _dealer_slug(site)
 
 
 # ---------------------------------------------------------------------------
@@ -314,6 +328,24 @@ def main() -> int:
     )
     dealers = cur.fetchall()
     group_tokens = group_vocabulary(d[1] or "" for d in dealers)
+    host_rows: dict[str, set[int]] = {}
+    for d in dealers:
+        h = (urlparse(d[2] or "").hostname or "").lower().removeprefix("www.")
+        if h:
+            host_rows.setdefault(h, set()).add(d[0])
+    shared_hosts = {h for h, ids in host_rows.items() if len(ids) > 1}
+    rid_dealer_ids: dict[int, str] = {}
+    if shared_hosts:
+        cur.execute(
+            "SELECT dealership_registry_id, dealer_id, COUNT(*) FROM cars "
+            "WHERE dealership_registry_id IS NOT NULL AND dealer_id IS NOT NULL "
+            "AND listing_removed_at IS NULL GROUP BY dealership_registry_id, dealer_id"
+        )
+        best: dict[int, tuple[int, str]] = {}
+        for r_rid, r_did, n in cur.fetchall():
+            if n > best.get(int(r_rid), (0, ""))[0]:
+                best[int(r_rid)] = (n, r_did)
+        rid_dealer_ids = {k: v[1] for k, v in best.items()}
 
     cur.execute(
         """
@@ -343,7 +375,7 @@ def main() -> int:
         if lat is None:
             ungeocoded += 1
             continue
-        to_did = _dealer_slug(site)
+        to_did = destination_dealer_id(site, rid, shared_hosts, rid_dealer_ids)
         if not to_did or to_did == from_did:
             continue
         moves.append((car_id, from_did, from_name, from_rid, to_did, dname, rid, evidence))
@@ -373,13 +405,19 @@ def main() -> int:
             (car_id, from_did, from_name, from_rid, to_did, to_name, to_rid, evidence),
         )
         cur.execute(
-            "UPDATE cars SET dealer_id = %s, dealer_name = %s, dealership_registry_id = %s "
-            "WHERE id = %s",
-            (to_did, to_name, to_rid, car_id),
+            "UPDATE cars SET dealer_id = %s, dealer_name = %s, dealership_registry_id = %s, "
+            "scraped_at = %s WHERE id = %s",
+            (to_did, to_name, to_rid, _now_iso(), car_id),
         )
     _log.info("moved %d car(s); undo with --revert", len(moves))
     conn.close()
     return 0
+
+
+def _now_iso() -> str:
+    """``scraped_at`` text shape of the scanner (utc isoformat + Z): a manual move refreshes it so
+    the owner is fresh and the car_move_log row is what the VIN guard honours (N8.6)."""
+    return datetime.utcnow().isoformat() + "Z"
 
 
 if __name__ == "__main__":
