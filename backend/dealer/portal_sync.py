@@ -206,3 +206,27 @@ def remove_portal_vehicle_from_public_listings(vin: str, user_id: int) -> None:
             conn.commit()
     except Exception:
         _log.exception("dealer-portal sync: failed to retire vin=%s from cars", v)
+
+
+def retire_portal_listings_for_user(user_id: int) -> None:
+    """Retire every public ``cars`` row stamped with this portal user's dealer_id.
+
+    Used when the account is deleted (their ``dealer_vehicles`` rows are gone,
+    so nothing else would ever retire the mirrored listings). Never raises.
+    """
+    try:
+        from datetime import datetime, timezone
+
+        from backend.db.repositories.base_repo import db_conn
+
+        now = datetime.now(timezone.utc).replace(microsecond=0).isoformat()
+        with db_conn() as conn:
+            cur = conn.cursor()
+            cur.execute(
+                "UPDATE cars SET listing_active = 0, listing_removed_at = ? "
+                "WHERE dealer_id = ? AND listing_active = 1",
+                (now, dealer_portal_dealer_id(user_id)),
+            )
+            conn.commit()
+    except Exception:
+        _log.exception("dealer-portal sync: failed to retire cars for user=%s", user_id)

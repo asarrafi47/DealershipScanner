@@ -40,6 +40,14 @@ def _pick_zip(a: str, b: str) -> str:
     return za or zb or ""
 
 
+def _pick_status(a: str, b: str) -> str:
+    # CLOSED_PERMANENTLY from either side must not be masked by a stale OPERATIONAL.
+    for s in (a, b):
+        if s == "CLOSED_PERMANENTLY":
+            return s
+    return a or b or ""
+
+
 def _merge_two(a: DealerCandidate, b: DealerCandidate) -> DealerCandidate:
     """Prefer DMV address parts; OSM coordinates + osm_id; best HTTPS URL."""
     dmv_first = b if b.source_dmv and not a.source_dmv else (a if a.source_dmv else None)
@@ -98,6 +106,18 @@ def _merge_two(a: DealerCandidate, b: DealerCandidate) -> DealerCandidate:
         source_dmv=a.source_dmv or b.source_dmv,
         source_osm=a.source_osm or b.source_osm,
         source_web=a.source_web or b.source_web,
+        google_place_id=a.google_place_id or b.google_place_id,
+        google_rating=a.google_rating if a.google_rating is not None else b.google_rating,
+        google_review_count=(
+            a.google_review_count if a.google_review_count is not None else b.google_review_count
+        ),
+        # A non-dealer verdict (restaurant etc.) from either side must survive.
+        is_dealer=bool(a.is_dealer and b.is_dealer),
+        google_primary_type=a.google_primary_type or b.google_primary_type,
+        google_types=a.google_types or b.google_types,
+        business_status=_pick_status(a.business_status, b.business_status),
+        oem_brand=a.oem_brand or b.oem_brand,
+        phone=a.phone or b.phone,
     )
 
 

@@ -3,6 +3,17 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
+# The inventory layer is Postgres-only (INVENTORY_DB_PATH is ignored), so an
+# inherited DSN would upsert into the real database. Drop it; scanner.py loads
+# .env itself, so refuse unless a scratch DSN is given explicitly.
+unset DATABASE_URL INVENTORY_DATABASE_URL
+if [ -n "${SCAN_TEST_DATABASE_URL:-}" ]; then
+  export INVENTORY_DATABASE_URL="$SCAN_TEST_DATABASE_URL"
+else
+  echo "Refusing to run: set SCAN_TEST_DATABASE_URL to a scratch Postgres (never the real inventory)." >&2
+  exit 2
+fi
+
 # Force test-isolation values (do not inherit shell caps from partial scans).
 export INVENTORY_DB_PATH="workspace/inventory_92694.db"
 export DEALERS_MANIFEST_PATH="workspace/manifest_92694_25mi.json"
