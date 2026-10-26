@@ -1,51 +1,7 @@
-flask>=3.1.3
-gunicorn[gthread]>=21
-python-dotenv>=1.0
-pydantic>=2
-requests>=2.34.2
-aiohttp>=3.9
-duckdb>=1.1
-pillow>=10
-beautifulsoup4>=4.15.0
-pgeocode>=0.5.0
-playwright>=1.60.0
-playwright-stealth>=2.0.3
-fake-useragent>=1.5
-thefuzz>=0.22.1
-sentence-transformers>=2.2
-# Postgres + pgvector (semantic search, master catalog, BMW OEM embeddings)
-psycopg[binary]>=3.2
-pgvector>=0.3
-bcrypt>=4.1
-resend>=2.0.0
-redis>=8.0.1
-stripe>=8
-PyJWT[crypto]>=2.8
-pypdf>=4.0
-pymupdf>=1.24
-# Claude SDK: backend/llm/client.py is the only Claude transport (car chat, enrichment).
-# Capped below 1: anthropic 1.x removed temperature from Messages.create (1.12.0 raises
-# TypeError), and the car-chat path always sends one. Lift the cap with that migration.
-anthropic>=0.116,<1
-# PDF text with layout: post_scan/window_sticker.py, enrichment/brochure_extract.py.
-pdfplumber>=0.11
-# .br precompression in the Dockerfile.web build (scripts/build_static_compressed.py);
-# it used to arrive only as a dependency of crawl4ai (removed in P15B.1, D-DEP1).
-brotli>=1.1
-
-# Browser binary (not installed by pip). After pip install, run ONE of:
-#   ./backend/scripts/install_scraper_browsers.sh
-#   python3 -m playwright install chromium
-# Do not append comments on the same line as "playwright install" unless your shell treats # as a comment; otherwise Playwright treats extra words as invalid browser names.
-
-# SQLCipher for at-rest encryption of credential DBs (dev_users.db, users.db).
-# Requires native lib: brew install sqlcipher (macOS) / apt install libsqlcipher-dev (Linux)
-sqlcipher3>=0.5.4
-
-# Transitive dependency security floors (SEC-076; validate with scripts/security_check.sh).
-# Keep a floor only while something still requires the package: urllib3 (requests),
-# idna (requests, httpx, anyio, yarl), pygments (rich via transformers -> typer; pytest in CI).
-urllib3>=2.7.0
-idna>=3.15
-pygments>=2.20.0
-curl_cffi>=0.7  # TLS-fingerprint impersonation: clears the Cloudflare 403 that blocks 112 rooftops
+# Dev / CI / discovery superset: every runtime package, split per image (P15B.2).
+#   requirements-web.txt      web image (Dockerfile.web)
+#   requirements-browser.txt  Playwright, discovery worker + dev only
+#   requirements-scanner.txt  scanner image (Dockerfile.scanner), standalone
+# Add a package to the file of the image that imports it, not here.
+-r requirements-web.txt
+-r requirements-browser.txt

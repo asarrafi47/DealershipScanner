@@ -28,9 +28,9 @@ class MasterCatalog:
 
     def _model(self):
         if self._st_model is None:
-            from sentence_transformers import SentenceTransformer
+            from backend.vector.embedding_model import load_sentence_transformer
 
-            self._st_model = SentenceTransformer(_MODEL_NAME)
+            self._st_model = load_sentence_transformer()
         return self._st_model
 
     def collection_exists(self) -> bool:
