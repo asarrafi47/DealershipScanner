@@ -452,7 +452,9 @@ def _scan_lab_subprocess_env(resolved_manifest: Path) -> dict[str, str]:
 
     The inherited Postgres DSN is stripped: the lab must never write to the
     real inventory. Point the lab at a scratch Postgres with
-    ``SCAN_LAB_DATABASE_URL``; without it the scanner refuses to start.
+    ``SCAN_LAB_DATABASE_URL``; ``_run_manifest_scan_job`` refuses to spawn the
+    scanner without it. ``PROJECT_DOTENV_DISABLE=1`` keeps the child's own
+    ``load_project_dotenv()`` from refilling the stripped DSN from ``.env``.
     """
     env = os.environ.copy()
     lab_dsn = (env.pop("SCAN_LAB_DATABASE_URL", "") or "").strip()
@@ -460,12 +462,27 @@ def _scan_lab_subprocess_env(resolved_manifest: Path) -> dict[str, str]:
     env.pop("INVENTORY_DATABASE_URL", None)
     if lab_dsn:
         env["INVENTORY_DATABASE_URL"] = lab_dsn
+    env["PROJECT_DOTENV_DISABLE"] = "1"
     env["DEALERS_MANIFEST_PATH"] = str(resolved_manifest)
     env["INVENTORY_DB_PATH"] = str(scan_lab_inventory_db_path())
     env.update({"SCANNER_SCAN_ONLY": "1", "SCANNER_MAX_DEALER_CONCURRENCY": "1", "SCANNER_VDP_DOWNLOAD_IMAGES": "0"})
     env.pop("SCANNER_ALLOW_BROWSER", None)
     env.pop("ANTHROPIC_API_KEY", None)
     return env
+
+
+def _finish_scan_lab_job(job_id: str, log_parts: list[str], started: str, code: int) -> None:
+    finished = datetime.now(timezone.utc).isoformat()
+    _append_scan_lab_log(job_id, f"\n[scan-lab] Finished {finished} exit_code={code}\n")
+    log_parts.append(f"\n[scan-lab] Finished {finished} exit_code={code}\n")
+    invalidate_scan_lab_summary_cache()
+
+    with scan_lab_lock:
+        if job_id in scan_lab_jobs:
+            scan_lab_jobs[job_id]["done"] = True
+            scan_lab_jobs[job_id]["exit_code"] = code
+            scan_lab_jobs[job_id]["log"] = "".join(log_parts)
+            scan_lab_jobs[job_id]["finished_at"] = finished
 
 
 def _run_manifest_scan_job(job_id: str, manifest_path: Path) -> None:
@@ -483,6 +500,10 @@ def _run_manifest_scan_job(job_id: str, manifest_path: Path) -> None:
     # HTTP-only scan with a small footprint (the old Mac-mini-lite preset ran a
     # browser; scans never do now — docs/HTTP_ONLY_SCANS_PLAN.md)
     env = _scan_lab_subprocess_env(resolved_manifest)
+    if not (env.get("INVENTORY_DATABASE_URL") or "").strip():
+        append("[scan-lab] Refused: set SCAN_LAB_DATABASE_URL to a scratch Postgres; the lab never writes to the real inventory.\n")
+        _finish_scan_lab_job(job_id, log_parts, started, 2)
+        return
 
     cmd = [
         sys.executable,
@@ -514,16 +535,7 @@ def _run_manifest_scan_job(job_id: str, manifest_path: Path) -> None:
         append(f"\n[scan-lab] Failed to start scanner: {e}\n")
         logger.exception("scan-lab manifest scan failed to start")
 
-    finished = datetime.now(timezone.utc).isoformat()
-    append(f"\n[scan-lab] Finished {finished} exit_code={code}\n")
-    invalidate_scan_lab_summary_cache()
-
-    with scan_lab_lock:
-        if job_id in scan_lab_jobs:
-            scan_lab_jobs[job_id]["done"] = True
-            scan_lab_jobs[job_id]["exit_code"] = code
-            scan_lab_jobs[job_id]["log"] = "".join(log_parts)
-            scan_lab_jobs[job_id]["finished_at"] = finished
+    _finish_scan_lab_job(job_id, log_parts, started, code)
 
 
 def start_manifest_scan(*, manifest_path: Path | None = None) -> tuple[str | None, str | None]:
