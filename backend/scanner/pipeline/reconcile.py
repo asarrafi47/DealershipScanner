@@ -6,14 +6,30 @@ bucket (P1A.1), the same share of that bucket's own baseline. Moved verbatim fro
 backend/scripts/dealer_pipeline.py (audit F11)."""
 from __future__ import annotations
 
+import logging
 from datetime import datetime, timedelta, timezone
 from typing import Any
 
+from backend.db.retirement_log import record_retirements
 from backend.scanner.inventory_reconcile import BUCKET_UNKNOWN, CONDITION_BUCKETS, condition_bucket, no_retire_switch
 from backend.scanner.pipeline.constants import MIN_ROWS_UNKNOWN, RECONCILE_MIN_SHARE
 from backend.scanner.pipeline.db import _rows
 
 _UPDATE_CHUNK = 400
+_log = logging.getLogger(__name__)
+
+
+def _log_retirements(conn, got, dealer_id: str, since_iso: str) -> None:
+    """One ``listing_retirements`` row per car this writer un-listed (P5B.3). The pipeline
+    connection is autocommit, so a failure here cannot undo the UPDATE: it is logged loudly
+    and the caller still reports what it retired."""
+    try:
+        record_retirements(
+            conn, [(int(r[0]), r[1], dealer_id) for r in got],
+            writer="pipeline_w2", reason="not_in_run", evidence={"since": since_iso},
+        )
+    except Exception:  # noqa: BLE001
+        _log.warning("pipeline reconcile %s: listing_retirements write failed for %d car(s)", dealer_id, len(got), exc_info=True)
 
 
 def _days_before(iso: str, days: int) -> str:
@@ -93,10 +109,12 @@ def reconcile_dealer(conn, dealer_id: str, since_iso: str, baseline: int, rows_t
         return _retire_by_bucket(conn, dealer_id, since_iso, out, baseline_buckets or {}, rows_buckets, dry_run=dry_run)
     if out["stale"] and not dry_run:
         now = datetime.now(timezone.utc).replace(microsecond=0).isoformat()
-        conn.execute("UPDATE cars SET listing_active = 0, listing_removed_at = ? WHERE dealer_id = ? AND COALESCE(listing_active,1)=1 AND scraped_at < ?",
-                     (now, dealer_id, since_iso))
+        cur = conn.execute("UPDATE cars SET listing_active = 0, listing_removed_at = ? WHERE dealer_id = ? AND COALESCE(listing_active,1)=1 AND scraped_at < ? RETURNING id, vin",
+                           (now, dealer_id, since_iso))
+        got = cur.fetchall()
+        _log_retirements(conn, got, dealer_id, since_iso)
         conn.commit()
-        out["retired"] = out["stale"]
+        out["retired"] = len(got)
     return out
 
 
@@ -153,10 +171,11 @@ def _retire_by_bucket(conn, dealer_id: str, since_iso: str, out: dict[str, Any],
             chunk = retire[i:i + _UPDATE_CHUNK]
             cur = conn.execute(
                 f"UPDATE cars SET listing_active = 0, listing_removed_at = ? WHERE id IN ({','.join('?' * len(chunk))}) "
-                "AND dealer_id = ? AND COALESCE(listing_active,1)=1 AND scraped_at < ?",
+                "AND dealer_id = ? AND COALESCE(listing_active,1)=1 AND scraped_at < ? RETURNING id, vin",
                 (now, *chunk, dealer_id, since_iso))
-            rc = getattr(cur, "rowcount", -1)
-            retired += len(chunk) if rc is None or rc < 0 else int(rc)
+            got = cur.fetchall()
+            _log_retirements(conn, got, dealer_id, since_iso)
+            retired += len(got)
         conn.commit()
         out["retired"] = retired
     return out

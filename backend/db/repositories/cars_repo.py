@@ -7,6 +7,7 @@ from typing import Any, Iterable
 
 from backend.db.repositories.base_repo import _placeholders, db_conn, get_conn
 from backend.db.repositories.schema_repo import ensure_nhtsa_vpic_cache_table
+from backend.db.retirement_log import record_retirements
 
 _log = logging.getLogger(__name__)
 
@@ -70,7 +71,12 @@ def delete_cars_with_dummy_placeholder_vins() -> dict[str, Any]:
             cur.execute(f"DELETE FROM saved_cars WHERE car_id IN ({ph})", ids)
         except Exception:
             _log.debug("saved_cars delete for dummy VINs skipped (table missing?)")
+        cur.execute(f"SELECT id, vin, dealer_id FROM cars WHERE id IN ({ph})", ids)
+        gone = [(int(r[0]), r[1], r[2]) for r in cur.fetchall()]
         cur.execute(f"DELETE FROM cars WHERE id IN ({ph})", ids)
+        record_retirements(
+            cur, gone, writer="admin_delete", reason="dummy_placeholder_vin", strict=False,
+        )
         conn.commit()
         return {"deleted": len(ids), "vins": vins, "nhtsa_cache_deleted": n_cache}
     finally:

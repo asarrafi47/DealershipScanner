@@ -29,6 +29,13 @@ from backend.scanner.pipeline import reconcile as rc
 from backend.scripts import dealer_pipeline as dp
 from backend.tests.pipeline_patch import patch_pipeline
 
+
+@pytest.fixture(autouse=True)
+def _single_miss(monkeypatch):
+    """These tests pin the retirement POLICY (which ids); the two-strike layer (P5B.4) has its own
+    file, test_two_strike_retirement.py. One miss retires here."""
+    monkeypatch.setenv("SCANNER_RETIRE_STRIKES", "1")
+
 REPO = Path(__file__).resolve().parents[2]
 
 SINCE = "2026-09-26T00:00:00+00:00"           # this run started
@@ -296,7 +303,8 @@ def test_delta_scan_passes_the_run_buckets(monkeypatch):
     monkeypatch.setenv("SCANNER_VDP_DB_MERGE", "0")
     monkeypatch.setenv("SCANNER_POST_LISTING_GAP_FILL", "0")
     asyncio.run(ds.delta_scan_dealer({"dealer_id": "d-com", "url": "https://d.example", "name": "D", "provider": "dealer_dot_com"}))
-    assert calls == [{"scraped_conditions": {"new"}}]
+    assert [c["scraped_conditions"] for c in calls] == [{"new"}]
+    assert calls[0]["retirement_writer"] == "delta_scan"
 
 
 # ── wiring: every writer gets its bucket evidence ────────────────────────────

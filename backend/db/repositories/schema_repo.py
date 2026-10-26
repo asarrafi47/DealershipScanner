@@ -261,6 +261,17 @@ def ensure_car_attribution_tables(cursor: sqlite3.Cursor) -> None:
     )
 
 
+def ensure_retirement_tables(cursor) -> None:
+    """Dev/test-parity SQLite copies of ``listing_retirements`` / ``listing_miss_strikes``
+    (migrations/V032, V033); Postgres gets them from the chain. The DDL lives in
+    ``backend.db.retirement_log`` so the lazy runtime create and this call cannot drift."""
+    if is_inventory_postgres():
+        return
+    from backend.db.retirement_log import ensure_retirement_tables as _ensure
+
+    _ensure(cursor)
+
+
 def init_inventory_db():
     if is_inventory_postgres():
         from backend.db.inventory_pg import init_postgres_inventory, pg_connect
@@ -377,6 +388,7 @@ def init_inventory_db():
     ensure_nhtsa_vpic_cache_table(conn)
     ensure_scan_runs_table(cursor)
     ensure_car_attribution_tables(cursor)
+    ensure_retirement_tables(cursor)
     try:
         cursor.execute(
             """

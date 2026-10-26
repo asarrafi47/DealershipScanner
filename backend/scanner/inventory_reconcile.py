@@ -15,6 +15,16 @@ from typing import Any
 from urllib.parse import urlparse
 
 from backend.db.inventory_db import ensure_cars_table_columns, get_conn
+from backend.db.retirement_log import (
+    clear_strikes,
+    ensure_retirement_tables,
+    read_strikes,
+    record_retirements,
+    record_strikes,
+    retire_strikes,
+    split_by_strikes,
+    strike_gap_hours,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -198,6 +208,7 @@ def reconcile_dealer_inventory_after_scan(
     run_started_iso: str | None = None,
     source: str = "recipe",
     bucket_share: float | None = None,
+    retirement_writer: str = "scanner_reconcile",
     _conn: Any | None = None,
 ) -> dict[str, Any]:
     """
@@ -208,7 +219,11 @@ def reconcile_dealer_inventory_after_scan(
     the VINs refused without evidence (never retired), *run_started_iso* the wall-clock start of
     the run (rows refreshed since then are neither baseline nor candidates; without it the
     call time stands in), *source* ``recipe`` or ``recovery:<strategy>``, *bucket_share* a
-    caller's own per-bucket share (the delta scan's 0.8) in place of the env default. *scraped_conditions*
+    caller's own per-bucket share (the delta scan's 0.8) in place of the env default,
+    *retirement_writer* the ``listing_retirements.writer`` it logs under (``delta_scan`` for the
+    delta scan). The plan's ids are strikes first (P5B.4): a first miss retires 0, a miss
+    ``SCANNER_STRIKE_GAP_HOURS`` (20) after it retires, every retirement leaves a
+    ``listing_retirements`` row (P5B.3), and ``SCANNER_RETIRE_STRIKES=1`` is single-miss. *scraped_conditions*
     is kept for callers that pass it: per-bucket coverage by VIN already covers a condition the
     run returned nothing for.
 
@@ -348,26 +363,61 @@ def reconcile_dealer_inventory_after_scan(
                 out["kept"]["condition_missing"] += len(vetoed)
                 plan.kept["condition_missing"] += len(vetoed)
                 out["kept_missing_condition"] = plan.kept["condition_missing"]
-        out["would_retire"] = len(stale_ids)
+        out["candidates"] = len(stale_ids)
         if not plan.eligible:
+            out["would_retire"] = len(stale_ids)
             out["skipped_reason"] = plan.reason
             return _finish()
-        if mode == "dry" or no_retire_switch():
+
+        # Two-strike (P5B.4, D-RC2): the plan's ids are misses, not yet retirements. A car with no
+        # strike gets its first; one whose first miss is >= SCANNER_STRIKE_GAP_HOURS old retires.
+        dry = mode == "dry" or no_retire_switch()
+        needed = retire_strikes()
+        gap_hours = strike_gap_hours()
+        now_dt = datetime.now(timezone.utc)
+        strikes = read_strikes(cur, stale_ids) if needed > 1 else {}
+        retire_ids, first_ids, waiting_ids = split_by_strikes(
+            stale_ids, strikes, now_dt, needed=needed, gap_hours=gap_hours
+        )
+        out["strikes_needed"] = needed
+        out["would_retire"] = len(retire_ids)
+        out["would_strike"] = len(first_ids)
+        out["strike_waiting"] = len(waiting_ids)
+        if dry:
             out["dry_run"] = True
             out["skipped_reason"] = "dry_run" if mode == "dry" else "no_retire_switch"
             return _finish()
+
+        info = {int(r.id): r for r in rows}
+        dealer_key = (dealer_id or "").strip()
+        raw_vin: dict[int, Any] = {}
+        if stale_ids:
+            cur.execute(
+                f"SELECT id, vin FROM cars WHERE id IN ({','.join('?' * len(stale_ids))})", tuple(stale_ids)
+            )
+            raw_vin = {int(r[0]): r[1] for r in cur.fetchall()}
+        ensure_retirement_tables(cur)
+        if first_ids:
+            record_strikes(
+                cur, [(i, raw_vin.get(i) or info[i].vin_norm, dealer_key) for i in first_ids], source=source or "recipe"
+            )
+            out["struck"] = len(first_ids)
+        # Cars this run saw again lose any strike (a miss must be consecutive).
+        seen_ids = [int(r.id) for r in rows if r.vin_norm and r.vin_norm in scraped_vins]
+        if seen_ids:
+            clear_strikes(cur, seen_ids)
 
         marked = 0
         retired_ids: list[int] = []
         batch_size = 400
         guard_ts = _scraped_at_text(started)
-        for i in range(0, len(stale_ids), batch_size):
-            chunk = stale_ids[i : i + batch_size]
+        for i in range(0, len(retire_ids), batch_size):
+            chunk = retire_ids[i : i + batch_size]
             if not chunk:
                 continue
             ph = ",".join("?" * len(chunk))
             # A row re-upserted since the plan was made (scraped_at moved past the run start)
-            # is alive: the guard leaves it, and the rowcount says how many really retired.
+            # is alive: the guard leaves it, and the ids returned say which really retired.
             cur.execute(
                 f"""
                 UPDATE cars
@@ -376,14 +426,25 @@ def reconcile_dealer_inventory_after_scan(
                   AND ({scope_sql})
                   AND COALESCE(listing_active, 1) = 1
                   AND (scraped_at IS NULL OR scraped_at < ?)
+                RETURNING id
                 """,
                 (now, *chunk, *scope_params, guard_ts),
             )
-            rc = cur.rowcount
-            n = len(chunk) if rc is None or rc < 0 else int(rc)
-            marked += n
-            if n == len(chunk):
-                retired_ids.extend(chunk)
+            done = [int(r[0]) for r in cur.fetchall()]
+            marked += len(done)
+            retired_ids.extend(done)
+        if retired_ids:
+            record_retirements(
+                cur,
+                [(i, raw_vin.get(i) or info[i].vin_norm, dealer_key,
+                  {"bucket": info[i].bucket, "first_missed_at": (strikes.get(i) or {}).get("first_missed_at")})
+                 for i in retired_ids],
+                writer=retirement_writer,
+                reason=plan.reason or "not_in_run",
+                strikes=needed,
+                evidence={"source": source or "recipe", "rows": deduped, "gap_hours": gap_hours},
+            )
+            clear_strikes(cur, retired_ids)
 
         conn.commit()
         out["ran"] = True

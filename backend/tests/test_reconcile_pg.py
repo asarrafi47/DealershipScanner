@@ -15,8 +15,8 @@ the row counts they report equal the rows that changed:
 The tests pin today's behaviour (N9 changes W1/W2 to the single writer with
 provenance, two-strike and dry mode; the cases here are the baseline it must keep
 or consciously change). Retired rows keep their id and gain ``listing_removed_at``;
-other dealers are never touched. The ``listing_retirements`` table and two-strike state do
-not exist yet; N9 adds their cases to this file.
+other dealers are never touched. P5B.3 / P5B.4 add the ``listing_retirements`` (V032) and ``listing_miss_strikes`` (V033)
+cases at the end of this file.
 """
 
 from __future__ import annotations
@@ -40,6 +40,9 @@ def env(pg_db, monkeypatch):
     monkeypatch.setattr(sdb, "_vin_owner_table_ready", False)
     for name in ("SCANNER_RECONCILE", "SCANNER_RECONCILE_MIN_COVERAGE", "SCANNER_RECONCILE_MIN_ROWS"):
         monkeypatch.delenv(name, raising=False)
+    # the baseline cases below pin the policy's ids; the two-strike cases at the end set 2
+    monkeypatch.setenv("SCANNER_RETIRE_STRIKES", "1")
+    monkeypatch.setenv("SCANNER_RECONCILE_MIN_ROWS", "8")  # these lots are 10-20 cars; the default is 20
     return pg_db
 
 
@@ -84,7 +87,7 @@ def test_w1_retires_only_the_unseen_rows_of_its_dealer(env):
     out = reconcile_dealer_inventory_after_scan(
         "dealer-a", "", seen, {"deduped_rows": 9}, scraped_conditions={"used"})
 
-    assert out["ran"] is True and out["skipped_reason"] == "ok"
+    assert out["ran"] is True and out["skipped_reason"] == "ok", out
     assert out["marked_inactive"] == 1 == len(_inactive(env, "dealer-a"))
     assert _inactive(env, "dealer-a") == {vins[9]}
     state = _state(env, "dealer-a")
@@ -101,7 +104,7 @@ def test_w1_floor_and_coverage_gates_retire_nothing(env):
     assert below["ran"] is False and below["skipped_reason"].startswith("below_min_rows")
 
     low = reconcile_dealer_inventory_after_scan("dealer-a", "", set(vins[:4]), {"deduped_rows": 9})
-    assert low["ran"] is False and low["skipped_reason"].startswith("low_coverage(matched=4,active=10")
+    assert low["ran"] is False and low["skipped_reason"] == "no_retirable_bucket"
     assert low["marked_inactive"] == 0
 
     assert _inactive(env, "dealer-a") == set()
@@ -132,8 +135,9 @@ def test_w1_ignores_rows_without_a_valid_vin(env):
     ])
     out = reconcile_dealer_inventory_after_scan("dealer-a", "", set(vins[:8]), {"deduped_rows": 8},
                                                 scraped_conditions={"used"})
-    assert out["marked_inactive"] == 1
-    assert _inactive(env, "dealer-a") == {vins[8]}  # the two odd rows stay active (W2 owns those today)
+    # P5A.1 rule 8: rows without a valid VIN retire only through a retirable bucket, and this one is
+    assert out["marked_inactive"] == 3
+    assert _inactive(env, "dealer-a") == {vins[8], "UNKNOWN-0001", "SHORT123"}
 
 
 # ── W2: the pipeline's reconcile ──────────────────────────────────────────────
@@ -324,3 +328,97 @@ def test_portal_delete_retires_only_the_callers_own_row(env):
     assert _ids(env, mine) == ids_before
     assert _state(env, mine)["1PORTAL0000000007"][2]
     assert _inactive(env, other_user) == set() and _inactive(env, "dealer-a") == set()
+
+
+# ── P5B.3 provenance (V032) and P5B.4 two-strike (V033) ──────────────────────
+
+def _retirements(env, writer: str | None = None) -> list[tuple]:
+    q = "SELECT car_id, vin, dealer_id, writer, strikes FROM listing_retirements"
+    args: tuple = ()
+    if writer:
+        q += " WHERE writer = %s"
+        args = (writer,)
+    with env.connect() as conn:
+        return sorted(conn.execute(q + " ORDER BY car_id", args).fetchall())
+
+
+def _strikes(env, dealer: str) -> dict[int, int]:
+    with env.connect() as conn:
+        return {r[0]: r[1] for r in conn.execute(
+            "SELECT car_id, strikes FROM listing_miss_strikes WHERE dealer_id = %s", (dealer,)).fetchall()}
+
+
+def test_every_writer_leaves_one_provenance_row_per_retired_car(env):
+    # W1
+    a = _seed(env, "dealer-a", "A", 10)
+    reconcile_dealer_inventory_after_scan("dealer-a", "", set(a[:9]), {"deduped_rows": 9}, scraped_conditions={"used"})
+    w1 = _retirements(env, "scanner_reconcile")
+    assert [(r[1], r[2], r[4]) for r in w1] == [(a[9], "dealer-a", 1)]
+    assert w1[0][0] == _ids(env, "dealer-a")[a[9]]
+    # W2
+    _seed(env, "dealer-b", "S", 4, scraped_at="2026-10-13T23:59:59Z")
+    _seed(env, "dealer-b", "F", 24, scraped_at="2026-10-14T06:00:00Z")
+    from backend.db.inventory_db import get_conn
+    conn = get_conn()
+    try:
+        out = reconcile_dealer(conn, "dealer-b", SINCE, baseline=28, rows_this_run=24, verdict="ok")
+    finally:
+        conn.close()
+    assert out["retired"] == 4 == len(_retirements(env, "pipeline_w2"))
+    # W3
+    c = _seed(env, "dealer-c", "C", 5)
+    assert disown_foreign_rooftop_vins("dealer-c", set(c[:3])) == 3
+    assert [r[1] for r in _retirements(env, "disown")] == sorted(c[:3])
+    # W4
+    mine = dealer_portal_dealer_id(7)
+    env.add_cars([{"vin": "1PORTAL0000000007", "dealer_id": mine, "scraped_at": OLD}])
+    remove_portal_vehicle_from_public_listings("1PORTAL0000000007", 7)
+    assert [(r[1], r[2]) for r in _retirements(env, "portal_sync")] == [("1PORTAL0000000007", mine)]
+
+
+def test_admin_delete_paths_write_admin_delete_rows(env):
+    from backend.dealer.admin.incomplete_listings_api import delete_incomplete_car
+    from backend.db.repositories.cars_repo import delete_cars_with_dummy_placeholder_vins
+
+    vins = _seed(env, "dealer-a", "A", 2)
+    cid = _ids(env, "dealer-a")[vins[0]]
+    from flask import Flask
+    with Flask(__name__).app_context():
+        delete_incomplete_car(cid)
+    assert [(r[0], r[1], r[2]) for r in _retirements(env, "admin_delete")] == [(cid, vins[0], "dealer-a")]
+    env.add_cars([{"vin": "VIN001", "dealer_id": "dealer-a", "scraped_at": OLD}])
+    out = delete_cars_with_dummy_placeholder_vins()
+    assert out["deleted"] >= 1
+    assert len(_retirements(env, "admin_delete")) == 1 + out["deleted"]
+
+
+def test_first_miss_strikes_second_miss_retires(env, monkeypatch):
+    monkeypatch.setenv("SCANNER_RETIRE_STRIKES", "2")
+    vins = _seed(env, "dealer-a", "A", 10)
+    gone = _ids(env, "dealer-a")[vins[9]]
+    args = ("dealer-a", "", set(vins[:9]), {"deduped_rows": 9})
+
+    first = reconcile_dealer_inventory_after_scan(*args, scraped_conditions={"used"})
+    assert first["retired"] == 0 and first["struck"] == 1 and _inactive(env, "dealer-a") == set()
+    assert _strikes(env, "dealer-a") == {gone: 1} and _retirements(env) == []
+
+    again = reconcile_dealer_inventory_after_scan(*args, scraped_conditions={"used"})  # same day: waits
+    assert again["retired"] == 0 and again["strike_waiting"] == 1 and _inactive(env, "dealer-a") == set()
+
+    with env.connect() as conn:  # age the first miss by 21 h
+        conn.execute("UPDATE listing_miss_strikes SET first_missed_at = %s", ("2020-01-01T00:00:00+00:00",))
+        conn.commit()
+    second = reconcile_dealer_inventory_after_scan(*args, scraped_conditions={"used"})
+    assert second["retired"] == 1 and _inactive(env, "dealer-a") == {vins[9]}
+    assert _strikes(env, "dealer-a") == {}
+    assert [(r[0], r[4]) for r in _retirements(env, "scanner_reconcile")] == [(gone, 2)]
+
+
+def test_dry_mode_writes_no_strikes_and_no_retirements(env, monkeypatch):
+    monkeypatch.setenv("SCANNER_RETIRE_STRIKES", "2")
+    monkeypatch.setenv("SCANNER_RECONCILE", "dry")
+    vins = _seed(env, "dealer-a", "A", 10)
+    out = reconcile_dealer_inventory_after_scan(
+        "dealer-a", "", set(vins[:9]), {"deduped_rows": 9}, scraped_conditions={"used"})
+    assert out["dry_run"] and out["would_strike"] == 1 and out["would_retire"] == 0
+    assert _strikes(env, "dealer-a") == {} and _retirements(env) == [] and _inactive(env, "dealer-a") == set()

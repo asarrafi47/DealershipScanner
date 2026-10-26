@@ -89,6 +89,7 @@ def disown_foreign_rooftop_vins(dealer_id: str, vins: set[str]) -> int:
     from datetime import datetime, timezone
 
     from backend.db.inventory_db import db_conn
+    from backend.db.retirement_log import record_retirements
     from backend.scanner.inventory_reconcile import no_retire_switch
 
     if no_retire_switch():
@@ -111,13 +112,18 @@ def disown_foreign_rooftop_vins(dealer_id: str, vins: set[str]) -> int:
                  WHERE TRIM(IFNULL(dealer_id, '')) = ?
                    AND COALESCE(listing_active, 1) = 1
                    AND UPPER(TRIM(vin)) IN ({placeholders})
-             RETURNING id
+             RETURNING id, vin
                 """,
                 tuple([now, dealer_id] + chunk),
             )
-            ids = [int(r[0]) for r in cur.fetchall()]
+            got = cur.fetchall()
+            ids = [int(r[0]) for r in got]
             retired_ids.extend(ids)
             changed += len(ids)
+            record_retirements(
+                cur, [(int(r[0]), r[1], dealer_id) for r in got],
+                writer="disown", reason="foreign_rooftop_evidence",
+            )
         conn.commit()
     if retired_ids:  # the incomplete-listings index drops cars that left the active set (IL-05)
         try:

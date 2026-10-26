@@ -370,6 +370,7 @@ async def delta_scan_dealer(dealer: dict[str, Any]) -> dict[str, Any]:
             run_started_iso=run_started_iso,
             source="recipe",
             bucket_share=_RECONCILE_VIN_COVERAGE,
+            retirement_writer="delta_scan",
         )
     except Exception as e:
         logger.warning("Delta reconcile failed for %s: %s", name, e)

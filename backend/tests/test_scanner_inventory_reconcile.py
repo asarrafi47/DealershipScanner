@@ -16,6 +16,13 @@ from backend.scanner.inventory_reconcile import (
 )
 
 
+@pytest.fixture(autouse=True)
+def _single_miss(monkeypatch):
+    """These tests pin the retirement POLICY (which ids); the two-strike layer (P5B.4) has its own
+    file, test_two_strike_retirement.py. One miss retires here."""
+    monkeypatch.setenv("SCANNER_RETIRE_STRIKES", "1")
+
+
 def test_normalize_scanner_vin_basic() -> None:
     assert normalize_scanner_vin("  1hgbh41jxmn109186  ") == "1HGBH41JXMN109186"
     assert normalize_scanner_vin("short") is None

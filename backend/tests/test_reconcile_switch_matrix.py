@@ -13,6 +13,14 @@ from backend.scanner import inventory_reconcile as ir
 from backend.scanner import retirement_policy
 from backend.scanner.pipeline.reconcile import reconcile_dealer
 
+
+@pytest.fixture(autouse=True)
+def _single_miss(monkeypatch):
+    """These tests pin the retirement POLICY (which ids); the two-strike layer (P5B.4) has its own
+    file, test_two_strike_retirement.py. One miss retires here."""
+    monkeypatch.setenv("SCANNER_RETIRE_STRIKES", "1")
+
+
 DEALER = "d-matrix"
 URL = "https://d-matrix.com"
 RUN_START = "2026-10-26T12:00:00+00:00"
