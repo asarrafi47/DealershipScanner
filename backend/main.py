@@ -13,6 +13,7 @@ from backend.config import Config
 
 import logging
 import os
+import sys
 import time
 from datetime import timedelta
 
@@ -128,6 +129,41 @@ def _prewarm_listings_inventory_cache() -> None:
             _logger.exception("EPA dictionary index prewarm failed")
 
     threading.Thread(target=_run, name="listings-prewarm", daemon=True).start()
+    _start_registry_backfill()
+
+
+def _start_registry_backfill() -> None:
+    """
+    Run ``ensure_dealership_registry_backfill`` off the request path.
+
+    It used to run inside the first GET /api/listings/geo-coords (~621 hosts x 0.34 s
+    of seq scan, ~210 s once per process). The call is idempotent (process flag plus an
+    UPDATE that only touches rows still unstamped) and the endpoint works without it.
+    Skipped under pytest so importing the app never writes to a developer DB; set
+    DS_SKIP_REGISTRY_BACKFILL=1 to opt out elsewhere.
+    """
+    import threading
+
+    if "pytest" in sys.modules or os.environ.get("DS_SKIP_REGISTRY_BACKFILL"):
+        return
+
+    def _run() -> None:
+        try:
+            from backend.db.repositories.dealers_repo import (
+                ensure_dealership_registry_backfill,
+            )
+
+            t0 = time.perf_counter()
+            n = ensure_dealership_registry_backfill()
+            _logger.info(
+                "dealership_registry backfill done (%d rows, %.1fs)",
+                n,
+                time.perf_counter() - t0,
+            )
+        except Exception:
+            _logger.exception("dealership_registry backfill failed")
+
+    threading.Thread(target=_run, name="registry-backfill", daemon=True).start()
 
 
 # Under gunicorn this runs in the ARBITER (--preload imports the app there), which

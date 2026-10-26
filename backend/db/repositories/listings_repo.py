@@ -26,7 +26,6 @@ from backend.db.repositories.data_quality_repo import (
     is_car_incomplete,
     listings_include_incomplete_cars,
 )
-from backend.db.repositories.dealers_repo import ensure_dealership_registry_backfill
 from backend.db.repositories.facets.labels import (  # noqa: F401 - re-exported
     _canonical_facet_label,
     _facet_make_valid,
@@ -567,7 +566,9 @@ def listings_geo_coords_maps() -> dict[str, Any]:
     if _geo_coords_cache_value is not None and _geo_coords_cache_token == token:
         return _geo_coords_cache_value
 
-    ensure_dealership_registry_backfill()
+    # The host->registry backfill (~210 s of seq scans) no longer runs here: it starts
+    # in the background at process startup (backend.main._start_registry_backfill).
+    # This endpoint is correct without it, so it never waits on it.
 
     from backend.db.dealer_geo import (
         dealer_coords_client_map,
