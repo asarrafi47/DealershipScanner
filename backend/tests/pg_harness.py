@@ -520,6 +520,10 @@ def reset_pg_process_caches() -> None:
 # ---------------------------------------------------------------------------
 
 
+def _now_iso() -> str:
+    return time.strftime("%Y-%m-%dT%H:%M:%S", time.gmtime())
+
+
 class PgInventory:
     """An isolated Postgres ``cars`` database, the counterpart of ``SqliteInventory``."""
 
@@ -538,6 +542,75 @@ class PgInventory:
         from backend.db import inventory_db as inv_db
 
         return inv_db.get_conn()
+
+    def _insert(self, table: str, rows: list[dict[str, Any]], defaults) -> int:
+        """Insert *rows* into *table*; ``defaults(i, row)`` returns the values a row may omit.
+
+        Unknown columns raise KeyError (a typo must not pass as "seeded"); dict/list
+        values for ``*_json`` columns are serialised.
+        """
+        import json
+
+        inserted = 0
+        with self.connect() as conn:
+            existing = {r[0] for r in conn.execute(
+                "SELECT column_name FROM information_schema.columns "
+                "WHERE table_schema = 'public' AND table_name = %s",
+                (table,),
+            ).fetchall()}
+            for i, row in enumerate(rows):
+                data = {**defaults(i, row), **row}
+                unknown = set(data) - existing
+                if unknown:
+                    raise KeyError(f"{table} has no column(s): {sorted(unknown)}")
+                for col, val in data.items():
+                    if col.endswith("_json") and isinstance(val, (dict, list)):
+                        data[col] = json.dumps(val)
+                cols = ",".join(f'"{c}"' for c in data)
+                marks = ",".join("%s" for _ in data)
+                conn.execute(f"INSERT INTO {table} ({cols}) VALUES ({marks})", tuple(data.values()))
+                inserted += 1
+            conn.commit()
+        return inserted
+
+    def add_dealerships(self, rows: list[dict[str, Any]]) -> int:
+        """Insert ``dealerships`` rows (name, website_url, city, state auto-filled; id from its sequence)."""
+        tag = f"{os.getpid():06d}{id(self) % 10000:04d}"
+        return self._insert("dealerships", rows, lambda i, r: {
+            "name": f"Test Dealer {i}",
+            "website_url": f"https://dealer{tag}{i}.example.com",
+            "city": "Charlotte",
+            "state": "NC",
+        })
+
+    def add_dealer_geopoints(self, rows: list[dict[str, Any]]) -> int:
+        """Insert ``dealer_geopoints`` rows (``dealer_url`` is the key; auto-filled)."""
+        tag = f"{os.getpid():06d}{id(self) % 10000:04d}"
+        return self._insert("dealer_geopoints", rows, lambda i, r: {
+            "dealer_url": f"https://dealer{tag}{i}.example.com",
+        })
+
+    def add_dealer_catalog(self, rows: list[dict[str, Any]]) -> int:
+        """Insert ``dealer_catalog`` rows (``dealer_id`` is the key; ``updated_at`` auto-filled)."""
+        return self._insert("dealer_catalog", rows, lambda i, r: {
+            "dealer_id": f"test-dealer-{i}",
+            "updated_at": _now_iso(),
+        })
+
+    def add_jobs(self, rows: list[dict[str, Any]]) -> int:
+        """Insert ``dealer_jobs`` rows (queued ``scan`` jobs; ``id`` from its sequence)."""
+        return self._insert("dealer_jobs", rows, lambda i, r: {
+            "dealer_id": f"test-dealer-{i}",
+            "job_type": "scan",
+            "created_at": _now_iso(),
+        })
+
+    def add_recipes(self, rows: list[dict[str, Any]]) -> int:
+        """Insert ``dealer_recipes`` rows (``recipes_json`` defaults to an empty list)."""
+        return self._insert("dealer_recipes", rows, lambda i, r: {
+            "dealer_id": f"test-dealer-{i}",
+            "recipes_json": "[]",
+        })
 
     def add_cars(self, rows: list[dict[str, Any]]) -> int:
         """Insert *rows* (any subset of ``cars`` columns; ``vin`` auto-filled, active by default)."""

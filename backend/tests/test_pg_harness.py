@@ -311,6 +311,33 @@ def test_add_cars_fills_vin_and_activity_and_rejects_unknown_columns(pg_db):
 
 
 @pytest.mark.pg
+def test_seed_helpers_fill_required_columns_and_serialise_json(pg_db):
+    assert pg_db.add_dealerships([{}, {"name": "Named", "city": "Raleigh"}]) == 2
+    assert pg_db.add_dealer_geopoints([{"lat": 35.2, "lon": -80.8}, {}]) == 2
+    assert pg_db.add_dealer_catalog([{"dealer_id": "d-1", "provider": "p"}, {}]) == 2
+    assert pg_db.add_jobs([{"dealer_id": "d-1"}, {"job_type": "discover"}]) == 2
+    assert pg_db.add_recipes([{"dealer_id": "d-1", "recipes_json": [{"a": 1}]}, {}]) == 2
+    with pg_db.connect() as conn:
+        names = [r[0] for r in conn.execute("SELECT name FROM dealerships ORDER BY id").fetchall()]
+        assert names == ["Test Dealer 0", "Named"]
+        assert conn.execute("SELECT count(DISTINCT website_url) FROM dealerships").fetchone()[0] == 2
+        assert conn.execute("SELECT count(DISTINCT dealer_url) FROM dealer_geopoints").fetchone()[0] == 2
+        assert conn.execute("SELECT updated_at FROM dealer_catalog WHERE dealer_id = 'd-1'").fetchone()[0]
+        jobs = conn.execute("SELECT job_type, status FROM dealer_jobs ORDER BY id").fetchall()
+        assert jobs == [("scan", "queued"), ("discover", "queued")]
+        assert conn.execute(
+            "SELECT recipes_json FROM dealer_recipes WHERE dealer_id = 'd-1'"
+        ).fetchone()[0] == '[{"a": 1}]'
+
+
+@pytest.mark.pg
+@pytest.mark.parametrize("method", ["add_dealerships", "add_dealer_geopoints", "add_dealer_catalog", "add_jobs", "add_recipes"])
+def test_seed_helpers_reject_unknown_columns(pg_db, method):
+    with pytest.raises(KeyError):
+        getattr(pg_db, method)([{"no_such_column": 1}])
+
+
+@pytest.mark.pg
 def test_a_stale_ready_flag_does_not_leak_into_the_next_test(pg_db):
     from backend.db import inventory_pg
 
