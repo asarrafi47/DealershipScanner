@@ -1700,6 +1700,25 @@ WI-10 (interim provenance in `summary_json`) is dropped: V028 lands in this phas
 - About 30 agents.
 - Checkpoints: `workspace/phase_runs/N9/`; before the owner's N9.16 OK and before N9.14's `git switch` the workflow writes RESUME.md and ends.
 
+**Draft status (integ/draft, merge 0dd5b4739; branch phase/N9 head 4cb2f367c).**
+
+| Unit | sha | Acceptance met | Deferred |
+|---|---|---|---|
+| P5A.1, P5A.3 | 6b5c76393 | pure plan_retirement (32 tests, Terry/Coastline/Napleton/SCL shapes nominate 0/3/1/1); tracked allow-list (2 ids, not 3) with one loader | strike layer (P5B.4); xfails flip at P5A.5/P5B.4 |
+| P5A.2 | ef014e54b | walk report (end, completeness, in_union, scope hash, low_yield_vins), WARNINGs, summary_json whitelist | "13 cap walks tagged page_cap" on real run artifacts; short_page never emitted |
+| P5B.1, P5B.2 | 24b0e5695 | raw-VIN walk end (end=no_new_rows), one total reader, cap min(env, ceil(total/page)+1) default 150 (fixtures for 5starford/autosavvy) | scratch-DB re-run of FP02 dealers and live 5starford/autosavvy (N9.14); cleanroom fixture logs moved 40 to 150 pages |
+| P5A.4 | 915311f2a | scanner reconcile on the policy, guarded UPDATE, dry mode, SCANNER_NO_RETIRE, index delete; switch matrix 12 tests | PG twins not run |
+| P5A.5 | 3dadac888 | evidence reaches reconcile; Terry shape flips; protected/unprotected refusals | Coastline/Napleton/SCL xfails stay until P5B.4 shapes are wired in the cleanroom tests |
+| P5A.6, P5B.7 | bc3892ddc | delta uses the policy at 0.8 share, parity tests; persist-gap telemetry and assess note; parity pin passes (no xfail) | pg tests none |
+| P5B.3, P5B.4 | 88c882840 | V032/V033 (not V028/V029), provenance rows from every writer, two-strike with 20 h gap, dry writes none; PG tier ran (test_reconcile_pg 18 passed) | pipeline W2 does not strike (report-only per P5A.7) |
+| P5A.7 | 0ab266184 | pipeline/lifecycle report-only (no UPDATE under pipeline/), valid-VIN baselines, replay_truncated verdict, D-N21 alarm | none |
+| N9.12 | 9fa3e45b3 | accounting, guard-only no_rows not re-synthed, ok gates, five log files, group_feed_unstamped, handover_pending; offline replay of the 10-13 triage | groovetoyota/mymetrohonda placeholder gate and kearnymesasubaru drop on live rows |
+| N9.13 | 0aeea7f01 | killed_by_timeout requeue, no-scan_runs-row retry, scan_runs backfill (simulated) | real SIGSTOP of a 3-dealer run |
+| N9.15 | 4cb2f367c | fleet_scan --resume, assess-only resumed dealers (review fixes) | kill/resume on a real run |
+| N9.14, N9.16 | none | SKIPPED, data ops needing owner approval | whole units |
+
+Renumbering needed: the migrations are V032/V033, so N9.16 applies with `--target 33` and the exit gate expects max(version) 33 (the plan text says 29 and 28). Open after merge: test_reconcile_interim_buckets.py::test_pipeline_main_pass_retires_no_used_rows and test_lifecycle_retry_uses_its_own_bucket_counts fail ('thin', reason no_site_total_check, expected 'inaccurate'): N9.12's missing-walk-report gate; seed a replay walk report in those tests as test_recipe_lifecycle already does. test_no_sqlite allowlist lacks entries for N9 files.
+
 **Exit gate.**
 - `pytest backend/tests/test_cleanroom_shapes_2026_10.py -k "retire or retry or identity" -q`: retirement and identity shapes pass.
 - The PG versions pass in CI `pytest-pg` once N7 is merged.
@@ -2919,6 +2938,15 @@ Every remaining remediation unit not placed unconditionally in a phase is listed
 | N37.15 | ce9f0b5b6 | dead BMW/oem stores deleted | optional drop of existing bmw_*_embeddings tables |
 
 Not started: N37.2-N37.8, N37.10, N37.14, N37.16-N37.25.
+
+N37b batch (merge 67082578c; branch phase/N37b head ec3d1981b):
+
+| Unit | sha | Acceptance met | Deferred |
+|---|---|---|---|
+| N37.4 | 97b22ad2a | backend/db/pg.py pool, dict_row, scalar/one/all, in_list; 13 tests (10 pg tier, run) | call-site migration of fetchone()[0] reads (78 files), inventory_pg/compat/base_repo |
+| N37.8 | ec3d1981b | five stores (comments_db, reviews/store, specials store, lease_matches_store, dealerships_db) import no sqlite3; tests on pg_db; allowlist shrinks | manifest.py (ensure_dealerships_table no-op shim kept), generations, recipe_store, scan_lab, users_db, upsert path |
+
+Still not started: N37.2, N37.3, N37.5-N37.7, N37.10, N37.14, N37.16-N37.25. Merge conflict in sqlite_allowlist.txt resolved by keeping integ lines.
 
 Open after merge: test_no_sqlite.py::test_no_new_sqlite_beyond_allowlist fails on integ/draft, because the allowlist predates SQLite constructs added by N8 (routes/dealership_page.py, scanner/upsert/ownership.py, scripts/apply_recipe_repairs.py, tests/test_apply_recipe_repairs.py, tests/test_prefetch_n8_7.py, tests/test_shared_host_identity.py, possibly more). Regenerate with `python backend/tests/test_no_sqlite.py --write` or move those files to PG. V035 is also used provisionally by phase/N30 (users auth_epoch) and N37.9 (admin_users): renumber at merge.
 
