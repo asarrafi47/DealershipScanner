@@ -103,6 +103,11 @@ def _has(text: str, *keywords: str) -> bool:
     return any(k in text for k in keywords)
 
 
+def _ford_st(trim: str) -> bool:
+    """Ford ``ST`` trim as a whole word (not ``XL STX`` / ``ST-Line`` NA trims)."""
+    return bool(re.search(r"\bst\b(?!\s*-?\s*line)", trim))
+
+
 def _classify_by_make_model(
     make: str,
     model: str,
@@ -182,7 +187,15 @@ def _classify_by_make_model(
     if _has(m, "volkswagen") or m == "vw":
         if re.search(r"\bid\.\d|\bid\s\d", mo):
             return None
-        return "Turbocharged"
+        # VR6 / 5-cyl / V8 / big-displacement engines (Atlas 3.6, Touareg 3.6, Passat 2.5)
+        # are NA; turbo only on known small-displacement engines or turbo-only nameplates.
+        if cyl >= 5 or el >= 2.1:
+            return None
+        if cyl in (3, 4) and el and el <= 2.0:
+            return "Turbocharged"
+        if not cyl and not el and _has(mo, "gti", "golf r", "arteon", "tiguan", "taos"):
+            return "Turbocharged"
+        return None
 
     # ── Porsche ───────────────────────────────────────────────────────────────
     if m == "porsche":
@@ -214,21 +227,31 @@ def _classify_by_make_model(
             if cyl == 8 or el >= 5.0:
                 return "Supercharged"  # Raptor R
             return "Twin Turbocharged"  # 3.5L V6 EcoBoost
-        # 2.7L or 3.5L EcoBoost V6 = twin turbo
-        if cyl == 6 and el >= 2.5:
+        # 2.7L V6 only exists as the EcoBoost twin turbo; 3.0 ST = twin turbo
+        if cyl == 6 and (2.6 <= el <= 2.8 or (_ford_st(tr) and 2.9 <= el <= 3.1)):
             return "Twin Turbocharged"
-        # 4-cyl EcoBoost = single turbo
-        if _has(tr, "ecoboost") or (cyl == 4 and el and el <= 2.4):
+        # Other V6s (3.3 / 3.5 / 3.7) and 4-cyls are NA unless the trim says EcoBoost/ST
+        # (F-150 3.3, Focus 2.0, Escape 2.5 are NA); raw engine text is handled upstream.
+        if _has(tr, "ecoboost"):
+            return "Twin Turbocharged" if cyl == 6 else "Turbocharged"
+        if _ford_st(tr):
             return "Turbocharged"
-        if _has(tr, " st", "st "):
+        # 1.0L / 1.5L small-displacement Ford engines are the turbo EcoBoost ones
+        if cyl == 3 or (cyl == 4 and el and el <= 1.5):
             return "Turbocharged"
         return None
 
     # ── Lincoln ───────────────────────────────────────────────────────────────
     if m == "lincoln":
-        if cyl == 6 and el >= 2.9:
-            return "Twin Turbocharged"  # 3.0T V6
-        return "Turbocharged"
+        if cyl == 6 and 2.9 <= el <= 3.6:
+            return "Twin Turbocharged"  # 3.0T / 3.5T V6
+        if cyl >= 6 or el >= 3.6:
+            return None  # 3.7 V6 (MKZ/MKX/Continental) and V8 are NA
+        if _has(ft, "hybrid") and "plug" not in ft:
+            return None  # Atkinson-cycle hybrid 4-cyl
+        if cyl in (3, 4) or _has(mo, "navigator", "aviator", "corsair", "nautilus", "mkc"):
+            return "Turbocharged"
+        return None
 
     # ── Chevrolet / GMC ───────────────────────────────────────────────────────
     if _has(m, "chevrolet", "chevy", "gmc"):
@@ -308,14 +331,14 @@ def _classify_by_make_model(
     if m in ("honda", "acura"):
         if _has(mo, "nsx"):
             return "Twin Turbocharged"
-        if _has(tr, "type r", "type-r", "si") or _has(mo, "type r"):
+        if _has(tr, "type r", "type-r") or re.search(r"\bsi\b", tr) or _has(mo, "type r"):
             return "Turbocharged"
         if m == "acura" and _has(mo, "rdx", "tlx", "integra"):
             return "Turbocharged"
         if _has(tr, "1.5t", "2.0t", "turbo"):
             return "Turbocharged"
         # Explicit small-displacement turbo: CR-V 1.5T, Civic 1.5T (not hybrids)
-        if cyl == 4 and el and el <= 1.6 and yr >= 2016 and not _has(ft, "hybrid"):
+        if cyl == 4 and el and el <= 1.6 and yr >= 2016 and not _has(ft, "hybrid") and not _has(mo, "fit"):
             return "Turbocharged"
         # 2.0L non-hybrid = could be turbo (Accord 2.0T Sport) or NA
         # Only flag if trim explicitly says turbo-related OR NOT a hybrid
@@ -334,7 +357,7 @@ def _classify_by_make_model(
             return "Turbocharged"
         if _has(mo, "corolla") and _has(tr, "gr"):
             return "Turbocharged"
-        if m == "lexus" and cyl == 4 and el and el <= 2.1:
+        if m == "lexus" and cyl == 4 and el and el <= 2.1 and not _has(ft, "hybrid") and not re.search(r"\bux\b|\bct\b|\d{3}h\b", full):
             return "Turbocharged"
         if m == "lexus" and re.search(r"\bnx\s*(?:200t|300)\b|200t\b", full):
             return "Turbocharged"
@@ -344,17 +367,28 @@ def _classify_by_make_model(
     if m in ("hyundai", "kia"):
         if re.search(r"\bioniq\b|\bev6\b|\bev9\b|\bniro\s*ev\b|\bkona\s*electric\b", mo):
             return None
-        if _has(tr, "n line", " n ", "n ", "gt-line", "turbo", "1.6t", "2.0t", "2.5t") or _has(mo, " n ", "n-line"):
+        # whole-word N badge ("Elantra N", "Kona N"); a bare "n " substring matched
+        # "Nightfall Edition" / "Premium " style trims
+        if _has(tr, "n line", "gt-line", "turbo", "1.6t", "2.0t", "2.5t") or _has(mo, "n-line") \
+                or re.search(r"\bn\b(?!\s*line)", f"{mo} {tr}"):
             return "Turbocharged"
-        if el and el <= 1.7 and cyl == 4:
+        # 1.6L: Kona/Veloster/Seltos are turbo, but Accent/Rio/Venue/Soul and every hybrid
+        # 1.6 are NA, so only the turbo-only nameplates count without engine text.
+        if el and el <= 1.7 and cyl == 4 and not _has(ft, "hybrid") and _has(mo, "kona", "veloster", "seltos"):
             return "Turbocharged"
         return None
 
     # ── Genesis ───────────────────────────────────────────────────────────────
     if m == "genesis":
+        if _has(mo, "electrified") or _has(ft, "electric") or re.search(r"\bgv60\b", mo):
+            return None
+        if cyl == 8 or el >= 3.7:
+            return None  # 3.8 V6 / 5.0 V8 are NA
         if cyl == 6 and el >= 3.0:
-            return "Twin Turbocharged"
-        return "Turbocharged"
+            return "Twin Turbocharged"  # 3.3T / 3.5T
+        if cyl == 4 and el:
+            return "Turbocharged"  # 2.0T / 2.5T
+        return None
 
     # ── INFINITI ──────────────────────────────────────────────────────────────
     if m in ("infiniti",):
