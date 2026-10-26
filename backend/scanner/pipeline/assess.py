@@ -74,6 +74,18 @@ def assess(conn, dealer_id: str, since_iso: str, known_before: int, recipe_info:
     return out
 
 
+def _truncation_text(replay: dict[str, Any]) -> str:
+    """Why the walk report calls the replay truncated: the first live walk that did not finish
+    (its stop reason and what it had read of the site total), else the error that killed it."""
+    for w in replay.get("recipes") or replay.get("walks") or []:
+        if w.get("complete") or (w.get("stale_retry") and not w.get("raw_vins")):
+            continue
+        total = w.get("total_count")
+        return (f"{w.get('end') or 'unknown'} after {w.get('pages', '?')} page(s), "
+                f"{w.get('raw_vins', '?')}" + (f" of {total}" if total else "") + " VINs")
+    return str(replay.get("error") or "walk did not finish")[:120]
+
+
 def _assess(conn, dealer_id: str, since_iso: str, known_before: int, recipe_info: dict[str, Any]) -> dict[str, Any]:
     runs = _rows(
         conn,
@@ -116,6 +128,8 @@ def _assess(conn, dealer_id: str, since_iso: str, known_before: int, recipe_info
         "vin_owner_conflicts": int(s.get("vin_owner_conflicts") or 0),
         "vin_owner_conflict_owners": s.get("vin_owner_conflict_owners") or {},
     })
+    replay = s.get("recipe_replay") or {}
+    out["replay_truncated"] = bool(replay.get("truncated"))
     if s.get("replay_persist_gap"):
         out["replay_persist_gap"] = s["replay_persist_gap"]
     out["timing"] = record_timing(dealer_id, r)
@@ -137,6 +151,12 @@ def _assess(conn, dealer_id: str, since_iso: str, known_before: int, recipe_info
         return out
     if n < floor:
         out["verdict"], out["reason"] = "no_rows", f"{n} rows vs {known_before} listed before (floor {floor:.0f})"
+        return out
+    # P5A.7 (D-SR4 a): a replay that stopped before the site's own total (downeyhyundai: a
+    # mid-walk 403 left about 130 new cars out) is thin, whatever the row floor says: the
+    # run cannot vouch for the lot it did not finish reading.
+    if replay.get("truncated"):
+        out["verdict"], out["reason"] = "thin", "replay_truncated: " + _truncation_text(replay)
         return out
     weak = [k for k in KEY_FIELDS if float(cc.get(k) or 0) < FIELD_FLOOR]
     weak2 = [k for k in SECONDARY_FIELDS if k in cc and float(cc.get(k) or 0) < FIELD_FLOOR]

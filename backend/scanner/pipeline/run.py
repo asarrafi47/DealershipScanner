@@ -12,14 +12,14 @@ from typing import Any
 
 from backend.scanner.pipeline.assess import assess
 from backend.scanner.pipeline.constants import BASELINE_DAYS
-from backend.scanner.pipeline.db import _assess_conn, _conn_alive, _rows, chromium_process_count, get_conn, wait_for_db
+from backend.scanner.pipeline.db import _assess_conn, _conn_alive, chromium_process_count, get_conn, wait_for_db
 from backend.scanner.pipeline.dealer_logs import log_discovery, log_scan_run, write_instructions_if_first_success
 from backend.scanner.pipeline.lifecycle import run_lifecycle_pass
-from backend.scanner.pipeline.reconcile import bucket_counts, reconcile_dealer
+from backend.scanner.pipeline.reconcile import bucket_counts, reconcile_dealer, valid_vin_count
 from backend.scanner.pipeline.recipes import ensure_recipe
 from backend.scanner.pipeline.roster import dealer_from_manifest, dealers_from_db, load_manifest_dealers
 from backend.scanner.pipeline.runner import run_discovery_capture, run_http_only_scan, wait_for_scanner_lock
-from backend.scanner.pipeline.triage import platform_cluster_lines, triage_table, write_needs_discovery, write_slow_dealers
+from backend.scanner.pipeline.triage import platform_cluster_lines, retirement_alarm_lines, triage_table, write_needs_discovery, write_slow_dealers
 from backend.scanner.pipeline.vpic import vpic_for_dealers
 
 
@@ -63,8 +63,8 @@ def _run(args) -> int:
         # Rows seen in the 30 days before this run. Every active row would count
         # cars nobody has seen since July (Right Toyota: 3,034 "active", 1,367 seen
         # in September) and the floor then calls a full 1,273-car replay no_rows.
-        known[did] = int(_rows(conn, "SELECT COUNT(*) AS n FROM cars WHERE dealer_id = ? AND COALESCE(listing_active,1)=1 AND scraped_at >= ?",
-                                (did, baseline_since))[0]["n"])
+        # Valid 17-character VINs only (P5A.7): a placeholder-VIN row is not a car the run can re-see.
+        known[did] = valid_vin_count(conn, did, since_iso=baseline_since)
         # The same window per condition bucket: reconcile retires a bucket only
         # when this run returned enough of it (P1A.1).
         known_buckets[did] = bucket_counts(conn, did, since_iso=baseline_since)
@@ -228,15 +228,17 @@ def _run(args) -> int:
     # 6. platform clustering: which of this run's failing dealers share a platform
     #    nobody has a template for (item 3 of the plan; the code notices, not a human)
     triage["platform_clusters"] = platform_cluster_lines(triage["needs_discovery"])
+    # 7. the scanner's retirements this run, alarmed per D-N21 (P5A.7)
+    triage["retirement_alarms"] = retirement_alarm_lines(results)
     (out_dir / "triage.json").write_text(json.dumps(triage, indent=1, default=str), encoding="utf-8")
     lines = triage_table(results)
-    (out_dir / "triage.md").write_text("\n".join(lines + [""] + triage["platform_clusters"]) + "\n", encoding="utf-8")
+    (out_dir / "triage.md").write_text("\n".join(lines + [""] + triage["platform_clusters"] + triage["retirement_alarms"]) + "\n", encoding="utf-8")
     try:
         write_slow_dealers(results, out_dir, started)
     except Exception as exc:  # noqa: BLE001
         print(f"log     slow_dealers: {str(exc)[:100]}", flush=True)
     print("\n".join(lines))
-    for line in triage["platform_clusters"]:
+    for line in triage["platform_clusters"] + triage["retirement_alarms"]:
         print(line, flush=True)
     print(json.dumps(triage["counts"]))
     return 0

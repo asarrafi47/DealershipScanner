@@ -235,8 +235,7 @@ backend/scanner/job_queue.py  qmark_placeholder  16
 backend/scanner/manifest.py  import_sqlite3  1
 backend/scanner/orchestrator.py  db_path_literal  1
 backend/scanner/pipeline/assess.py  qmark_placeholder  3
-backend/scanner/pipeline/reconcile.py  qmark_placeholder  7
-backend/scanner/pipeline/run.py  qmark_placeholder  1
+backend/scanner/pipeline/reconcile.py  qmark_placeholder  6
 backend/scanner/post_scan/job.py  import_sqlite3  1
 backend/scanner/post_scan/job.py  qmark_placeholder  1
 backend/scanner/post_scan/job.py  sqlite3_attr  1
@@ -642,8 +641,8 @@ backend/tests/test_reconcile_condition_guard.py  import_sqlite3  1
 backend/tests/test_reconcile_condition_guard.py  qmark_placeholder  2
 backend/tests/test_reconcile_condition_guard.py  sqlite3_attr  2
 backend/tests/test_reconcile_interim_buckets.py  import_sqlite3  1
-backend/tests/test_reconcile_interim_buckets.py  qmark_placeholder  12
-backend/tests/test_reconcile_interim_buckets.py  sqlite3_attr  11
+backend/tests/test_reconcile_interim_buckets.py  qmark_placeholder  9
+backend/tests/test_reconcile_interim_buckets.py  sqlite3_attr  10
 backend/tests/test_reconcile_recipe_store.py  db_path_literal  9
 backend/tests/test_reconcile_recipe_store.py  import_sqlite3  1
 backend/tests/test_reconcile_recipe_store.py  qmark_placeholder  1

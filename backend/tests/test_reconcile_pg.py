@@ -6,9 +6,9 @@ the row counts they report equal the rows that changed:
 
 * W1  ``inventory_reconcile.reconcile_dealer_inventory_after_scan`` (the scanner's
       reconcile, ``UPDATE ... WHERE id IN``);
-* W2  ``pipeline.reconcile.reconcile_dealer`` (whole-lot and per-bucket UPDATE; the
-      ``scraped_at < since`` comparison is TEXT on Postgres, ``'...Z'`` stored
-      against ``'+00:00'`` passed);
+* W2  ``pipeline.reconcile.reconcile_dealer``, REPORT ONLY since P5A.7 (whole-lot and
+      per-bucket counts; the ``scraped_at < since`` comparison is TEXT on Postgres,
+      ``'...Z'`` stored against ``'+00:00'`` passed; it writes nothing to ``cars``);
 * W3  ``attribution.disown.disown_foreign_rooftop_vins``;
 * W4  ``dealer.portal_sync.remove_portal_vehicle_from_public_listings``.
 
@@ -142,7 +142,7 @@ def test_w1_ignores_rows_without_a_valid_vin(env):
 
 # ── W2: the pipeline's reconcile ──────────────────────────────────────────────
 
-def test_w2_whole_lot_retires_rows_scraped_before_since(env):
+def test_w2_whole_lot_reports_rows_scraped_before_since_and_writes_nothing(env):
     stale = _seed(env, "dealer-a", "S", 4, scraped_at="2026-10-13T23:59:59Z")
     fresh = _seed(env, "dealer-a", "F", 24, scraped_at="2026-10-14T06:00:00Z")
     other = _seed(env, "dealer-b", "B", 4, scraped_at="2026-10-13T23:59:59Z")
@@ -155,11 +155,12 @@ def test_w2_whole_lot_retires_rows_scraped_before_since(env):
     finally:
         conn.close()
 
-    assert out["eligible"] is True and out["stale"] == 4 == out["retired"]
-    assert _inactive(env, "dealer-a") == set(stale)
+    assert out["eligible"] is True and out["stale"] == 4 == out["retirable"] and out["retired"] == 0
+    assert _inactive(env, "dealer-a") == set()
     state = _state(env, "dealer-a")
     assert {v: s[0] for v, s in state.items()} == ids_before
-    assert all(state[v][2] for v in stale) and all(state[v][2] is None for v in fresh)
+    assert all(state[v][2] is None for v in list(stale) + list(fresh))
+    assert _retirements(env, "pipeline_w2") == []
     assert _inactive(env, "dealer-b") == set() and set(_state(env, "dealer-b")) == set(other)
 
 
@@ -196,9 +197,8 @@ def test_w2_text_comparison_of_z_against_plus_zero(env):
         out = reconcile_dealer(conn, "dealer-a", SINCE, baseline=26, rows_this_run=24, verdict="ok")
     finally:
         conn.close()
-    assert out["stale"] == 1 == out["retired"]
-    assert _inactive(env, "dealer-a") == set(before)
-    assert not (set(at_start) & _inactive(env, "dealer-a"))
+    assert out["stale"] == 1 == out["retirable"] and out["retired"] == 0
+    assert _inactive(env, "dealer-a") == set()
 
 
 def test_w2_floor_share_and_verdict_gates(env):
@@ -229,7 +229,7 @@ def test_w2_baseline_falls_back_to_the_prior_rows(env):
     finally:
         conn.close()
     assert out["baseline_fallback"] == 16
-    assert out["retired"] == 16 and len(_inactive(env, "dealer-a")) == 16
+    assert out["retirable"] == 16 and out["retired"] == 0 and _inactive(env, "dealer-a") == set()
 
 
 def test_w2_per_bucket_guard_keeps_the_condition_the_run_missed(env):
@@ -246,40 +246,9 @@ def test_w2_per_bucket_guard_keeps_the_condition_the_run_missed(env):
             rows_buckets={"new": 24, "used": 0, "unknown": 0})
     finally:
         conn.close()
-    assert out["kept_missing_condition"] == 6 and out["retired"] == 6 == out["retirable"]
-    assert _inactive(env, "dealer-a") == set(new)
-    assert not (set(used) & _inactive(env, "dealer-a"))
+    assert out["kept_missing_condition"] == 6 and out["retirable"] == 6 and out["retired"] == 0
+    assert _inactive(env, "dealer-a") == set()
     assert _inactive(env, "dealer-b") == set()
-
-
-def test_w2_per_bucket_update_rechecks_the_stale_predicate(env):
-    """A row another process refreshed after the ids were read is not retired (rowcount 0)."""
-    stale = _seed(env, "dealer-a", "S", 3, scraped_at="2026-10-13T23:00:00Z")
-    _seed(env, "dealer-a", "R", 24, scraped_at="2026-10-14T06:00:00Z")
-    import backend.scanner.pipeline.reconcile as rec
-
-    real_rows = rec._rows
-
-    def refresh_after_read(conn, sql, params=()):
-        out = real_rows(conn, sql, params)
-        if "SELECT id, condition FROM cars" in sql:
-            with env.connect() as other:
-                other.execute("UPDATE cars SET scraped_at = %s WHERE vin = %s", ("2026-10-14T07:00:00Z", stale[0]))
-                other.commit()
-        return out
-
-    from backend.db.inventory_db import get_conn
-    conn = get_conn()
-    try:
-        rec._rows = refresh_after_read
-        out = reconcile_dealer(conn, "dealer-a", SINCE, 27, 24, "ok",
-                               baseline_buckets={"new": 0, "used": 27, "unknown": 0},
-                               rows_buckets={"new": 0, "used": 24, "unknown": 0})
-    finally:
-        rec._rows = real_rows
-        conn.close()
-    assert out["retired"] == 2
-    assert _inactive(env, "dealer-a") == set(stale[1:])
 
 
 # ── W3: rooftop disown ────────────────────────────────────────────────────────
@@ -355,7 +324,7 @@ def test_every_writer_leaves_one_provenance_row_per_retired_car(env):
     w1 = _retirements(env, "scanner_reconcile")
     assert [(r[1], r[2], r[4]) for r in w1] == [(a[9], "dealer-a", 1)]
     assert w1[0][0] == _ids(env, "dealer-a")[a[9]]
-    # W2
+    # W2 (report only since P5A.7: no row, no UPDATE)
     _seed(env, "dealer-b", "S", 4, scraped_at="2026-10-13T23:59:59Z")
     _seed(env, "dealer-b", "F", 24, scraped_at="2026-10-14T06:00:00Z")
     from backend.db.inventory_db import get_conn
@@ -364,7 +333,7 @@ def test_every_writer_leaves_one_provenance_row_per_retired_car(env):
         out = reconcile_dealer(conn, "dealer-b", SINCE, baseline=28, rows_this_run=24, verdict="ok")
     finally:
         conn.close()
-    assert out["retired"] == 4 == len(_retirements(env, "pipeline_w2"))
+    assert out["retired"] == 0 and out["retirable"] == 4 and _retirements(env, "pipeline_w2") == []  # P5A.7: report only
     # W3
     c = _seed(env, "dealer-c", "C", 5)
     assert disown_foreign_rooftop_vins("dealer-c", set(c[:3])) == 3

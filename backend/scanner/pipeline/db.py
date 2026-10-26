@@ -57,7 +57,7 @@ def wait_for_db(max_wait: int, poll: int = 30) -> bool:
 def _assess_conn():
     """Connection for the assess/reconcile loops, in autocommit.
 
-    Those loops only read, plus single-statement UPDATEs in reconcile_dealer, but
+    Those loops only read (reconcile_dealer reports; the scanner is the one retirement writer), but
     between queries they do slow non-DB work (catalog load in verify_accuracy,
     log writes). With autocommit off every SELECT opened a transaction that sat
     idle through that work; production's idle_in_transaction_session_timeout

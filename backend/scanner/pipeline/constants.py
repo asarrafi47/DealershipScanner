@@ -20,6 +20,13 @@ DISCREPANCY_FLOOR = 0.05  # share of rows with a hard dictionary-vs-dealer discr
 FIELD_FLOOR = 0.90
 BASELINE_DAYS = 30            # "listed before" = rows seen this many days before the run
 RECONCILE_MIN_SHARE = 0.60    # a run that returned fewer rows than this share of the baseline is partial: never retire on it
+# P5A.7 / D-N21: alarm when one run's retirements exceed this share of the dealer's prior active
+# rows. Nightly keeps 10%; the first live retirement and its rehearsal use
+# min(60%, 10% + 1.5% x days since the retired rows were last scraped).
+RETIRE_ALARM_NIGHTLY = 0.10
+RETIRE_ALARM_GAP_BASE = 0.10
+RETIRE_ALARM_GAP_PER_DAY = 0.015
+RETIRE_ALARM_GAP_CAP = 0.60
 ROW_FLOOR = 0.50
 MIN_ROWS_UNKNOWN = 20
 KEY_FIELDS = ("price", "trim", "exterior_color")

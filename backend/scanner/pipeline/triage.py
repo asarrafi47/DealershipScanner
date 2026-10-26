@@ -21,6 +21,22 @@ def triage_table(results: list[dict[str, Any]]) -> list[str]:
     return lines
 
 
+def retirement_alarm_lines(results: list[dict[str, Any]]) -> list[str]:
+    """One ``retirement alarm`` line per dealer whose scanner retirements this run exceeded the
+    D-N21 threshold of its prior active rows (``reconcile.scanner_retirements``: 10% nightly,
+    ``min(60%, 10% + 1.5% x days)`` under ``PIPELINE_RETIRE_ALARM_GAP_AWARE``). The pipeline
+    itself retires nothing (P5A.7); this reads what the scanner wrote to ``listing_retirements``."""
+    lines = []
+    for r in results:
+        sr = (r.get("reconcile") or {}).get("scanner_retired") or {}
+        if sr.get("alarm"):
+            lines.append(
+                f"retirement alarm: {r['dealer_id']} retired {sr['retired']} of {sr['prior_active']} prior active rows "
+                f"({sr['share']:.1%} > {sr['threshold']:.1%}; {sr['days']} days since the retired rows were last scraped"
+                f"{', gap-aware' if sr.get('gap_aware') else ''})")
+    return lines
+
+
 def platform_cluster_lines(needs_discovery: list[str]) -> list[str]:
     """End-of-run platform clustering (backend/scripts/platform_candidates.py):
     fingerprints every dealer under LOG_ROOT without a live recipe, rewrites

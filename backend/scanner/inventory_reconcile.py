@@ -314,7 +314,7 @@ def reconcile_dealer_inventory_after_scan(
         evidence = RunEvidence(
             seen_vins=frozenset(scraped_vins),
             matched_makes=seen_makes,
-            walks=tuple((replay or {}).get("walks") or ()),
+            walks=tuple((replay or {}).get("walks") or (replay or {}).get("recipes") or ()),
             protected_vins=frozenset(protected_vins or ()),
             run_started_iso=started.isoformat(),
             source=source or "recipe",

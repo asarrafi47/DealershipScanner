@@ -157,7 +157,7 @@ def test_no_retire_switch_matrix(monkeypatch):
     assert c2.execute("SELECT COUNT(*) FROM cars WHERE listing_active = 0").fetchone()[0] == 0
 
 
-def test_switch_off_lets_pipeline_and_disown_write(monkeypatch):
+def test_switch_off_leaves_pipeline_report_only(monkeypatch):
     monkeypatch.setenv("SCANNER_NO_RETIRE", "0")
     assert not ir.no_retire_switch()
     c2 = sqlite3.connect(":memory:")
@@ -165,7 +165,10 @@ def test_switch_off_lets_pipeline_and_disown_write(monkeypatch):
     c2.executemany("INSERT INTO cars (dealer_id, vin, scraped_at) VALUES ('d', ?, ?)",
                    [(f"V{i:016d}", "2026-07-10T00:00:00Z") for i in range(6)] + [(f"W{i:016d}", "2026-09-26T01:00:00Z") for i in range(10)])
     c2.commit()
-    assert reconcile_dealer(c2, "d", "2026-09-26T00:00:00Z", baseline=12, rows_this_run=25, verdict="ok")["retired"] == 6
+    # P5A.7: the pipeline never writes; with the switch off it still reports what the guards allow
+    out = reconcile_dealer(c2, "d", "2026-09-26T00:00:00Z", baseline=12, rows_this_run=25, verdict="ok")
+    assert out["retired"] == 0 and out["retirable"] == 6 and not out["no_retire_switch"]
+    assert c2.execute("SELECT COUNT(*) FROM cars WHERE listing_active = 1").fetchone()[0] == 16
 
 
 def test_retired_ids_leave_the_incomplete_index(monkeypatch, tmp_path):

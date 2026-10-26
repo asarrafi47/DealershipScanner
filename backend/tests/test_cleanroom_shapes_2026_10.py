@@ -265,14 +265,6 @@ def test_retry_retirement_shape(inv, dealer_id):
 
 # ── 5. the pipeline's lifecycle retry reconcile with a known=0 baseline ──────
 
-_LIFECYCLE_REASON = (
-    "defect: the lifecycle retry reconcile (pipeline/lifecycle.py:331-338 -> pipeline/reconcile.py:73-78, "
-    ":152-155) gets known_before=0 for a dealer that was empty before the run, falls back to the first pass's "
-    "rows as its baseline (used 16; 134 >= 0.6 x 16) and retires them: a second writer on the scanner's "
-    "decision; fixed by N9 P5A.7 (pipeline and lifecycle reconcile report only, D-RC1 A)"
-)
-
-
 @pytest.fixture()
 def log_root(tmp_path, monkeypatch) -> Path:
     root = tmp_path / "dealer_logs"
@@ -281,7 +273,6 @@ def log_root(tmp_path, monkeypatch) -> Path:
     return root
 
 
-@pytest.mark.xfail(strict=True, reason=_LIFECYCLE_REASON)
 def test_lifecycle_retry_with_known_zero_baseline_retires_nothing(inv, log_root, tmp_path, monkeypatch):
     """Terry's run, pipeline side: the dealer had no rows when the pipeline
     started (known 0, empty buckets), the first pass wrote 16 used rows and
