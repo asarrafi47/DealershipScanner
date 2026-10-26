@@ -4,6 +4,8 @@ Public dealer locator: merge registry dealerships with Google Places car dealers
 from __future__ import annotations
 
 import os
+import threading
+import time
 from typing import Any
 from urllib.parse import urlparse
 
@@ -133,6 +135,36 @@ def _google_candidate_to_row(candidate: Any, center_lat: float, center_lon: floa
     }
 
 
+# SEC-A-008: Places results cached by rounded centre (~0.7 mi) so varying lat/lon
+# jitter or repeat searches do not each pay for Places calls.
+_GOOGLE_CACHE_TTL_SECONDS = 6 * 3600.0
+_GOOGLE_CACHE_MAX = 256
+_google_cache: dict[tuple, tuple[float, list]] = {}
+_google_cache_lock = threading.Lock()
+
+
+def clear_google_cache() -> None:
+    with _google_cache_lock:
+        _google_cache.clear()
+
+
+def _google_candidates_cached(lat: float, lon: float, radius_miles: float) -> list:
+    from backend.discovery.google_places import fetch_google_places_dealerships
+
+    key = (round(lat, 2), round(lon, 2), round(radius_miles))
+    now = time.monotonic()
+    with _google_cache_lock:
+        hit = _google_cache.get(key)
+        if hit is not None and now - hit[0] < _GOOGLE_CACHE_TTL_SECONDS:
+            return hit[1]
+    candidates = fetch_google_places_dealerships(lat, lon, radius_miles)
+    with _google_cache_lock:
+        if len(_google_cache) >= _GOOGLE_CACHE_MAX:
+            _google_cache.pop(min(_google_cache, key=lambda k: _google_cache[k][0]), None)
+        _google_cache[key] = (now, candidates)
+    return candidates
+
+
 def find_nearby_dealers(
     *,
     lat: float | None = None,
@@ -142,6 +174,7 @@ def find_nearby_dealers(
     state: str | None = None,
     radius_miles: float = 25.0,
     include_google: bool = True,
+    google_radius_cap_miles: float | None = None,
 ) -> dict[str, Any]:
     """
     Dealers within radius from our registry plus optional Google Places results.
@@ -178,11 +211,10 @@ def find_nearby_dealers(
 
     google_available = bool((os.environ.get("GOOGLE_MAPS_API_KEY") or "").strip())
     if include_google and google_available:
-        from backend.discovery.google_places import fetch_google_places_dealerships
-
-        google_candidates = fetch_google_places_dealerships(
-            center_lat, center_lon, radius_miles
-        )
+        g_radius = radius_miles
+        if google_radius_cap_miles is not None:
+            g_radius = min(g_radius, float(google_radius_cap_miles))
+        google_candidates = _google_candidates_cached(center_lat, center_lon, g_radius)
         for idx, candidate in enumerate(google_candidates):
             g_row = _google_candidate_to_row(candidate, center_lat, center_lon)
             match_id: int | None = None

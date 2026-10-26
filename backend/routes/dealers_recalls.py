@@ -105,6 +105,10 @@ def nhtsa_recalls_lookup():
     )
 
 
+# One Places circle covers ~31 mi; wider radii tile into 9 calls (SEC-A-008).
+ANON_GOOGLE_RADIUS_MILES = 25.0
+
+
 def api_dealer_locator():
     """Nearby car dealers: registry + optional Google Places (server-side)."""
     ip = _client_ip()
@@ -162,6 +166,8 @@ def api_dealer_locator():
         state=state or None,
         radius_miles=radius,
         include_google=include_google,
+        # SEC-A-008: anonymous callers get one Places tile, not the 9-circle fan-out.
+        google_radius_cap_miles=None if session.get("user_id") else ANON_GOOGLE_RADIUS_MILES,
     )
     status = 200 if payload.get("ok") else 400
     return jsonify(payload), status

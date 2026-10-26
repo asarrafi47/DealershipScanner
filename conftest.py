@@ -261,11 +261,15 @@ def _clear_query_parser_caches() -> None:
     from backend.utils.query_parser import clear_query_parser_caches
     from backend.utils.ip_rate_limit import clear_rate_limit_state
 
+    from backend.listings.dealer_locator import clear_google_cache
+
     clear_query_parser_caches()
     clear_rate_limit_state()
+    clear_google_cache()
     yield
     clear_query_parser_caches()
     clear_rate_limit_state()
+    clear_google_cache()
 
 
 # --- Recipe caches: one tmp dir per test --------------------------------------------
