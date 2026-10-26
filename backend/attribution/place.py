@@ -141,9 +141,52 @@ def learn_own_site_id(dealer_id: str, site_id: str) -> bool:
         return False
 
 
+# The scan-hints key holding a Dealer eProcess store's own location id (N8.11).
+OWN_LOCATION_ID_HINT = "dep_location_id"
+
+
+def own_location_id(dealer_id: str) -> str:
+    """This store's own DEP ``location_id`` from its scan hints, or "".
+
+    A DEP SRP names its own location in ``site_locations``; the hint covers a page
+    without it. "" means unknown and the parser then keeps rows unstamped (logged).
+    """
+    try:
+        from backend.scanner.recipe_store import get_scan_hints
+
+        return str((get_scan_hints(dealer_id) or {}).get(OWN_LOCATION_ID_HINT) or "").strip()
+    except Exception:  # noqa: BLE001
+        return ""
+
+
+def learn_own_location_id(dealer_id: str, location_id: str) -> bool:
+    """Save a DEP store's own location id to its scan hints (profiling tools call this)."""
+    location_id = str(location_id or "").strip()
+    if not dealer_id or not location_id:
+        return False
+    try:
+        from backend.scanner.recipe_store import set_scan_hints
+
+        return bool(set_scan_hints(dealer_id, {OWN_LOCATION_ID_HINT: location_id}, merge=True))
+    except Exception as exc:  # noqa: BLE001
+        logger.debug("own location id hint save failed [%s]: %s", dealer_id, exc)
+        return False
+
+
 def gate_place(place: dict[str, Any] | None) -> dict[str, str]:
     """Only the keys ``parse`` / ``resolve_rooftop_attribution`` accept."""
     return {k: str(v) for k, v in (place or {}).items() if k in GATE_PLACE_KEYS and v is not None}
 
 
-__all__ = ["GATE_PLACE_KEYS", "OWN_SITE_ID_HINT", "gate_place", "learn_own_site_id", "own_site_id", "registry_place", "store_place"]
+__all__ = [
+    "GATE_PLACE_KEYS",
+    "OWN_LOCATION_ID_HINT",
+    "OWN_SITE_ID_HINT",
+    "gate_place",
+    "learn_own_location_id",
+    "learn_own_site_id",
+    "own_location_id",
+    "own_site_id",
+    "registry_place",
+    "store_place",
+]
