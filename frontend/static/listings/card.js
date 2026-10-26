@@ -169,8 +169,7 @@
                         ${dealBadge ? `<p class="result-deal-line">${dealBadge}</p>` : ""}
                         ${marketLine}
                         <p class="result-meta">${metaBits.join(" &middot; ")}</p>
-                        ${specLine}
-                        ${pendingLine}
+                        ${specLine}${pendingLine}
                     </div>
                 </a>
                 <p class="result-dealer-row">
