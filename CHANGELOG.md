@@ -2,6 +2,48 @@
 
 ## [Unreleased]
 
+### Audit fixes 2026-10-26
+
+#### Bugs
+- Billing: Stripe success URLs now require an active or trialing subscription, and the legacy premium route rejects non-Complete plan sessions (B-032). A subscription.deleted event for an old subscription no longer revokes current premium (B-041).
+- Fixed: the VIN-in-URL fallback for listing stickers requires a whole-token, VIN-shaped match, so hashed sticker URLs are no longer dropped (B-066).
+- Fixed: inventory trim ladder query is valid on Postgres (MIN(trim) under GROUP BY) (B-003).
+- Fixed: pgvector dealer reindex took state from latitude and crashed after TRUNCATE; it now reads the state column (B-034).
+- Fixed: grid card resolve includes the pending flag in aux_key, so pending cars are no longer rebuilt on every request (B-029).
+- Fixed: discovery upsert fuzzy dedupe no longer merges rooftops that differ by city or osm_id (B-028).
+- Fixed: vPIC per-VIN lookups no longer cache misses or DB errors (B-033).
+- Fixed: 'Automatic with manual shift mode' and CVT with manual mode are no longer classed Manual; manual gearboxes that mention 'auto' (rev match, blip) stay Manual (B-025).
+- Fixed: 'V6 Hybrid Electric' engine text parses as 6 cylinders rather than 0; a range-extender blob such as '1.5L I3' now parses as 3 (B-018).
+- Fixed: hex colour values such as '#ffffff' are rejected as exterior_color (B-068).
+- Fixed: forced-induction fallback no longer labels NA Ford/VW/Genesis/Lincoln/Hyundai/Kia/Honda Fit/Lexus UX engines turbo, and 'si'/'n' trim tokens are word-bounded (B-019, B-020, B-021).
+- Fixed: static model-spec fallbacks no longer hard-code a drivetrain for mixed-layout nameplates, so VIN-decoded values are not overridden by a guess (B-014).
+- Fixed: interior colour hint from descriptions requires the colour inside the candidate phrase (B-022); the interior colour lexicon uses word boundaries, so Titanium is not tan and Preferred Suede is not red (B-023).
+- Fixed: BMW i3/i4/i7 in search queries are no longer read as inline-N cylinder counts (B-024).
+- Fixed: trim spec extraction matches trim names as whole words, so SE no longer matches SEL and LT no longer matches LTZ (B-026); the Honda/Acura brochure trim filter no longer drops Touring (B-027).
+- Fixed: a Dealer.com listing with no odometer reading is no longer labelled New (B-017).
+- Fixed: oversized equipment-vision packages JSON is trimmed by shortening its lists instead of being cut mid-token (B-010).
+- Fixed: scraping adjudicate_crawl and org_validation use package imports (B-007).
+- Fixed: discovery merge keeps Google place/rating/status/oem/phone fields and the non-dealer verdict (B-009).
+- Fixed: deleting a dealer user retires their mirrored public cars rows (B-008).
+- Fixed: scan lab refuses to start without SCAN_LAB_DATABASE_URL and its scanner subprocess runs with PROJECT_DOTENV_DISABLE=1 (B-030); scan_irvinebmw_test.sh refuses to run without SCAN_TEST_DATABASE_URL (B-031).
+- Fixed: a failed window-sticker image no longer hides the parsed options and packages block (B-038).
+- Fixed: the inventory poll and a ?page=N deep link keep the current results page instead of resetting to page 1 (B-039).
+- Fixed: the depreciation forecast card no longer appears, with an invented $20,000 price, on call-for-price or payment-listed cars (B-040).
+- Fixed: Rivian, Lucid, Polestar, McLaren, Aston Martin, Rolls-Royce, Scion, Saturn, Pontiac and similar marques are no longer dropped from the global Make facet.
+- Fixed: html_cards no longer lets a defaulted card condition of Used block the hydration object's New/Used condition or isNew flag.
+- Fixed: the generated spec sheet no longer prints a sibling trim's horsepower or torque when the car has no catalog link and no exact trim row.
+- Fixed: cached lease-offer matches refresh after 6 hours and immediately when a matched car is no longer active (B-035).
+
+#### Security
+- Profile edits can no longer move an account onto an APP_ADMIN_EMAILS / APP_ADMIN_USERNAMES identity (SEC-A-001).
+- Stripe checkout success URLs fail closed unless the subscription is active or trialing (SEC-A-003); a renewal needs premium=1 subscription metadata (SEC-A-040, partial: a late 'active' event after 'deleted' can still re-grant).
+- Resubmitting a review no longer republishes one an admin removed, and an edit clears its old report-dedup rows (SEC-A-007).
+- Review add-on fee description capped at 300 characters, checked for URLs and profanity, and NaN/inf fee amounts rejected (SEC-A-038).
+- Dealer-supplied listing sticker fetch anchors the iPacket URL pattern, trusts only exact iPacket hosts, refuses non-global destinations on every hop, follows redirects manually (max 3), and caps the body at 15MB (SEC-A-002, SEC-A-018; PDF render-size clamp not done).
+- Per-IP limit on /api/listings cache-miss builds and /api/coords-to-zip (SEC-A-005).
+- Dealer locator caches Google Places results by rounded centre and caps anonymous callers to a single Places tile (SEC-A-008, partial).
+- Login locks an account for 15 minutes after 10 failed attempts (counted across IPs, shared across username/email, slot reserved before the password check) on /login, /api/auth/login and /dealer/login; IPv6 clients are rate-limited per /64 (SEC-A-010, partial). Known tradeoff: an attacker can lock a known account for 15 minutes; the per-process counter needs RATE_LIMIT_SQLITE_PATH or a single worker in prod.
+
 ### Efficiency quick wins (N6b)
 - Tests: bcrypt work factor drops to 4 under pytest only (BCRYPT_TEST_LOW_COST=1 set in root conftest.py); production floor 12 and default 13 unchanged; test_paid_access_parity 34s -> 4s.
 - Perf: memoize adapt_sql_for_postgres_execute with lru_cache(maxsize=512); repeated upsert statements no longer re-run the SQL adapter per row.
