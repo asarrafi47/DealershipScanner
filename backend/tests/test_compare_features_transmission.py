@@ -117,3 +117,12 @@ def test_ecvt_vs_cvt_does_not_differ_but_rows_carry_features_and_warranty():
 def test_compare_template_has_text_differs_tag():
     src = (Path(__file__).resolve().parents[2] / "frontend" / "templates" / "compare.html").read_text()
     assert '<span class="compare-diff-tag">differs</span>' in src
+
+
+def test_manual_with_auto_words_stays_manual_b025():
+    for txt in ("6-Speed Manual w/ Auto Rev Match", "6-Speed Manual with Auto Stop/Start",
+                "Manual, auto-blip downshift", "Manual with automatic rev-matching"):
+        assert transmission_family(txt) == "manual", txt
+    assert vpic_transmission_label({"transmission_style": "Manual with automatic rev-matching"}) == "Manual"
+    assert transmission_family("Automatic with manual shift mode") == "automatic"
+    assert transmission_family("Auto") == "automatic"
