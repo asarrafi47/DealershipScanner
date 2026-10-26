@@ -8,6 +8,8 @@ from datetime import datetime, timezone
 from typing import Any
 
 from backend.db.inventory_db import ensure_cars_table_columns
+from backend.db.repositories.schema_repo import ensure_car_attribution_tables
+from backend.scanner.upsert.ownership import log_moves
 from backend.utils.fuel_label_plausibility import is_known_bev_nameplate
 from backend.utils.fuel_type_normalize import normalize_fuel_type_for_storage
 
@@ -287,6 +289,7 @@ def _ensure_schema(conn):
             cursor.execute(f"ALTER TABLE cars ADD COLUMN {col} {ctype}")
             conn.commit()
     ensure_cars_table_columns(cursor)
+    ensure_car_attribution_tables(cursor)  # car_move_log for the ownership guard (N8.6)
     conn.commit()
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS model_specs (
@@ -369,6 +372,23 @@ def drop_unattributable_vehicles(vehicles: list[dict]) -> tuple[list[dict], int]
     return kept, refused
 
 
+def _log_owner_moves(conn, cursor, moves: list) -> int:
+    """One ``car_move_log`` row per VIN the guard let change owner (N8.6); never fails a write."""
+    if not moves:
+        return 0
+    try:
+        n = log_moves(cursor, moves)
+        conn.commit()
+        return n
+    except Exception:
+        logger.warning("car_move_log: could not record %d move(s)", len(moves), exc_info=True)
+        try:
+            conn.rollback()
+        except Exception:
+            pass
+        return 0
+
+
 def upsert_vehicles(vehicles: list[dict], stats: dict | None = None) -> int:
     """
     Insert or replace vehicles by vin. Strict de-duplication: one row per VIN
@@ -396,12 +416,17 @@ def upsert_vehicles(vehicles: list[dict], stats: dict | None = None) -> int:
     by_vin, vehicles = dedupe_sorted_by_vin(vehicles)
     conn = get_conn()
     count = 0
+    moves_logged = 0
     try:
         _ensure_schema(conn)
         cursor = conn.cursor()
         now = datetime.utcnow().isoformat() + "Z"
         window = guard_window(vin_owner_guard_hours())
-        existing_spec_src, conflicts = prefetch_existing(cursor, by_vin, window, _vin_owned_elsewhere)
+        moves: list = []
+        reasons: dict[str, str] = {}
+        existing_spec_src, conflicts = prefetch_existing(
+            cursor, by_vin, window, _vin_owned_elsewhere, moves=moves, reasons=reasons
+        )
         if conflicts:
             vehicles = [v for v in vehicles if (v.get("vin") or "").strip() not in conflicts]
         # The prefetch opened a read transaction; it is fully materialized in
@@ -418,11 +443,14 @@ def upsert_vehicles(vehicles: list[dict], stats: dict | None = None) -> int:
             commit_every=_UPSERT_COMMIT_BATCH,
         )
         conn.commit()
+        moves_logged = _log_owner_moves(conn, cursor, [m for m in moves if m.vin not in conflicts])
     finally:
         conn.close()
     logger.info("Upserted %d vehicles", count)
+    if stats is not None:
+        stats["car_moves_logged"] = moves_logged
     if conflicts:
-        report_conflicts(conflicts, by_vin, window.hours, stats, record_vin_owner_conflicts)
+        report_conflicts(conflicts, by_vin, window.hours, stats, record_vin_owner_conflicts, reasons)
     if count > 0:
         run_post_write_enrichment(
             list(by_vin.keys()),

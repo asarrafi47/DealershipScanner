@@ -15,6 +15,7 @@ entry point (``gate_page`` for one payload, ``decide`` for the all-rows pass).
 """
 from __future__ import annotations
 
+import json
 import logging
 import re
 import sys
@@ -688,6 +689,8 @@ def resolve_rooftop_attribution(
         dealer_state=dealer_state, dealer_zip=dealer_zip,
         dealer_address_source=dealer_address_source,
     )
+    for row in kept:
+        stamp_evidence_tier(row)
     if rejected and dealer_id:
         try:
             from backend.scanner.rooftop_ledger import note_refusal
@@ -719,6 +722,60 @@ def resolve_rooftop_attribution(
         except Exception:  # noqa: BLE001 - never break a scan for bookkeeping
             pass
     return kept, rejected
+
+
+# Evidence tiers persisted on ``cars.rooftop_tier`` (V030, N8.6). strong = this store's
+# own feed positively stamped the car (rooftop name / site-id match, or a page-level
+# store identity) at a tier that proves identity; weak = the stamp matched only on a
+# locality, subset-name or scraped-street tier; none = nothing per car (single-store
+# feeds, unstamped group feeds, rows kept only because they sit under the store's own
+# feed account). The VIN ownership guard (backend/scanner/upsert) reads it.
+EVIDENCE_STRONG, EVIDENCE_WEAK, EVIDENCE_NONE = "strong", "weak", "none"
+_IDENTITY_SIGNAL_TIERS = frozenset({"identity_feed", "page_oem_code", "location_facet_value"})
+_UNSTAMPED_KEEP_TIERS = frozenset({"same_source_feed", "own_street_block", "unstamped_under_own_source"})
+
+
+def _mark_legacy_strength(rows: list[dict], tier: str, dealer_address_source: str = "") -> None:
+    """Legacy-ladder twin of the scorer's per-row ``strong`` flag for the rows of the target rooftop."""
+    weak_street = (
+        tier in _STREET_TIERS and str(dealer_address_source or "").strip().lower() in _WEAK_STREET_SOURCES
+    )
+    strong = tier not in _LOCALITY_ONLY_TIERS and tier not in _WEAK_NAME_TIERS and not weak_street
+    for row in rows:
+        row.setdefault("_rooftop_gate_tier", tier)  # not _rooftop_tier: that key is the scorer's and is golden-pinned
+        row.setdefault("_rooftop_strong", strong)
+
+
+def stamp_evidence_tier(row: dict) -> str:
+    """Set ``_rooftop_evidence_tier`` / ``_rooftop_evidence`` on a row the gate KEPT and return the tier.
+
+    Strong needs a per-car stamp (a ``_rooftop`` dict, or an identity signal such as the
+    page's store code) AND a gate tier that proves identity. A row kept for want of
+    evidence, or only because it is filed under the store's own feed account, is ``none``.
+    """
+    gate_tier = str(row.get("_rooftop_tier") or row.get("_rooftop_gate_tier") or "")
+    stamp = _rooftop_of(row) if isinstance(row.get("_rooftop"), dict) else None
+    stamped = bool(stamp and _rooftop_identity(stamp))
+    if gate_tier in _UNSTAMPED_KEEP_TIERS or not (stamped or gate_tier in _IDENTITY_SIGNAL_TIERS):
+        tier = EVIDENCE_NONE
+    elif row.get("_rooftop_strong"):
+        tier = EVIDENCE_STRONG
+    else:
+        tier = EVIDENCE_WEAK
+    row["_rooftop_evidence_tier"] = tier
+    if tier == EVIDENCE_NONE:
+        row["_rooftop_evidence"] = None
+    else:
+        row["_rooftop_evidence"] = json.dumps(
+            {
+                "tier": gate_tier,
+                "rooftop": (_rooftop_name(stamp) if stamped else "") or "",
+                "source": str(row.get("_feed_source") or ""),
+            },
+            separators=(",", ":"),
+            ensure_ascii=False,
+        )
+    return tier
 
 
 def _department_base(name: str) -> str:
@@ -865,7 +922,10 @@ def _resolve_rooftop_attribution_inner(
         # NAMES a store and that name is not ours — an unnamed one (address only)
         # is no evidence either way and must not cost a dealer its inventory.
         if target is not None or not rooftops[0].names:
-            return (rows, []) if target is not None else _refuse_other_store_hosts(rows, [], dealer_id)
+            if target is not None:
+                _mark_legacy_strength(rows, tier, dealer_address_source)
+                return rows, []
+            return _refuse_other_store_hosts(rows, [], dealer_id)
         _log.warning(
             "rooftop attribution [%s]: payload holds only %s, which is not this store — "
             "refusing all %d row(s)",
@@ -888,6 +948,7 @@ def _resolve_rooftop_attribution_inner(
         return [], list(rows)
 
     kept: list[dict] = list(target.rows)
+    _mark_legacy_strength(kept, tier, dealer_address_source)
     rejected: list[dict] = []
     # A sibling refusal normally un-lists the car (it is positive evidence the
     # feed sells it elsewhere). That is only sound when the tier that picked the
@@ -1009,6 +1070,7 @@ def _resolve_via_scorer(
     for row, res in zip(rows, results):
         row["_rooftop_tier"] = res["tier"]
         row["_rooftop_score"] = res["score"]
+        row["_rooftop_strong"] = bool(res.get("strong"))
         tiers[res["tier"]] = tiers.get(res["tier"], 0) + 1
         if res["decision"] == "keep":
             row.pop("_rooftop_reject", None)

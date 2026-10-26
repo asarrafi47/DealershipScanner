@@ -49,6 +49,8 @@
    "recovery_notes": null,
    "recovery_source": null,
    "recovery_status": null,
+   "rooftop_evidence": null,
+   "rooftop_tier": "none",
    "scraped_at": "<TS1>",
    "source_url": "https://www.lexusofhuntsville.com/used-inventory/vin-19UDE2F30JA000920.htm",
    "spec_source_json": "{\"cylinders\": {\"detail\": \"clean_car_row_dict + merge_verified_specs (spec_structured_backfill tier 1)\", \"fetched_at\": \"2026-09-25T22:23:09+00:00\", \"source\": \"inventory_repair\"}, \"drivetrain\": {\"detail\": \"clean_car_row_dict + merge_verified_specs (spec_structured_backfill tier 1)\", \"fetched_at\": \"2026-09-25T22:23:09+00:00\", \"source\": \"inventory_repair\"}, \"engine_description\": {\"detail\": \"clean_car_row_dict + merge_verified_specs (spec_structured_backfill tier 1)\", \"fetched_at\": \"2026-09-25T22:23:09+00:00\", \"source\": \"inventory_repair\"}, \"price\": {\"source\": \"srp\", \"fetched_at\": \"<NOW_S>\"}}",
@@ -112,6 +114,8 @@
    "recovery_notes": null,
    "recovery_source": null,
    "recovery_status": null,
+   "rooftop_evidence": null,
+   "rooftop_tier": "none",
    "scraped_at": "<TS0>",
    "source_url": "https://www.drivedirectcars.com/used-Columbus-2016-Acura-ILX-24L-19UDE2F37GA021224",
    "spec_source_json": null,
@@ -175,6 +179,8 @@
    "recovery_notes": null,
    "recovery_source": null,
    "recovery_status": null,
+   "rooftop_evidence": null,
+   "rooftop_tier": "none",
    "scraped_at": "<TS1>",
    "source_url": "https://www.hondaofcartersville.com/used-inventory/vin-19UDE2F74KA013786.htm",
    "spec_source_json": "{\"cylinders\": {\"source\": \"inventory_repair\", \"detail\": \"clean_car_row_dict + merge_verified_specs (spec_structured_backfill tier 1)\", \"fetched_at\": \"2026-07-20T02:06:18+00:00\"}, \"engine_description\": {\"source\": \"inventory_repair\", \"detail\": \"clean_car_row_dict + merge_verified_specs (spec_structured_backfill tier 1)\", \"fetched_at\": \"2026-07-20T02:06:18+00:00\"}, \"price\": {\"source\": \"srp\", \"fetched_at\": \"<NOW_S>\"}}",
@@ -238,6 +244,8 @@
    "recovery_notes": null,
    "recovery_source": null,
    "recovery_status": null,
+   "rooftop_evidence": null,
+   "rooftop_tier": "none",
    "scraped_at": "<TS1>",
    "source_url": "https://www.shottenkirkacurahuntsville.com/used-inventory/vin-19UDE2F7XNA003820.htm",
    "spec_source_json": "{\"cylinders\": {\"detail\": \"clean_car_row_dict + merge_verified_specs (spec_structured_backfill tier 1)\", \"fetched_at\": \"2026-07-31T14:16:02+00:00\", \"source\": \"inventory_repair\"}, \"engine_description\": {\"detail\": \"clean_car_row_dict + merge_verified_specs (spec_structured_backfill tier 1)\", \"fetched_at\": \"2026-07-31T14:16:02+00:00\", \"source\": \"inventory_repair\"}, \"price\": {\"source\": \"srp\", \"fetched_at\": \"<NOW_S>\"}}",
@@ -301,6 +309,8 @@
    "recovery_notes": null,
    "recovery_source": null,
    "recovery_status": null,
+   "rooftop_evidence": null,
+   "rooftop_tier": "none",
    "scraped_at": "<TS0>",
    "source_url": "https://www.hendricklexuscharlotte.com/used/Acura/2023-Acura-Integra-charlotte-nc-86c70be4ac18221a7f70d51ecd7457d0.htm",
    "spec_source_json": "{\"inventory_lot_location\": {\"source\": \"inventory\", \"value\": \"hendricklexus\", \"fetched_at\": \"2026-09-26T11:57:30+00:00\"}, \"cylinders\": {\"source\": \"inventory_repair\", \"detail\": \"clean_car_row_dict + merge_verified_specs (spec_structured_backfill tier 1)\", \"fetched_at\": \"2026-09-26T12:02:18+00:00\"}, \"drivetrain\": {\"source\": \"inventory_repair\", \"detail\": \"clean_car_row_dict + merge_verified_specs (spec_structured_backfill tier 1)\", \"fetched_at\": \"2026-09-26T12:02:18+00:00\"}, \"transmission\": {\"source\": \"inventory_repair\", \"detail\": \"clean_car_row_dict + merge_verified_specs (spec_structured_backfill tier 1)\", \"fetched_at\": \"2026-09-26T12:02:18+00:00\"}, \"transmission_type\": {\"source\": \"inventory_repair\", \"detail\": \"clean_car_row_dict + merge_verified_specs (spec_structured_backfill tier 1)\", \"fetched_at\": \"2026-09-26T12:02:18+00:00\"}, \"engine_description\": {\"source\": \"nhtsa_vpic\", \"detail\": \"DecodeVinValuesExtended\", \"url\": \"https://vpic.nhtsa.dot.gov/api/vehicles/decodevinvaluesextended/\", \"fetched_at\": \"2026-09-26T12:02:18+00:00\"}}",
@@ -364,6 +374,8 @@
    "recovery_notes": null,
    "recovery_source": null,
    "recovery_status": null,
+   "rooftop_evidence": null,
+   "rooftop_tier": "none",
    "scraped_at": "<TS1>",
    "source_url": "https://www.lexusofchattanooga.com/used-inventory/vin-1C4HJXEN4LW132354.htm",
    "spec_source_json": "{\"cylinders\": {\"source\": \"nhtsa_vpic\", \"detail\": \"DecodeVINValuesBatch; feed said 0\", \"fetched_at\": \"2026-09-26T15:07:44+00:00\"}, \"price\": {\"source\": \"srp\", \"fetched_at\": \"<NOW_S>\"}}",
@@ -427,6 +439,8 @@
    "recovery_notes": null,
    "recovery_source": null,
    "recovery_status": null,
+   "rooftop_evidence": null,
+   "rooftop_tier": "none",
    "scraped_at": "<TS0>",
    "source_url": "https://www.capitaltoyota.com/used-inventory/vin-1C6RR7KG5ES363543.htm",
    "spec_source_json": "{\"drivetrain\": {\"source\": \"nhtsa_vpic\", \"detail\": \"DecodeVINValuesBatch; feed said 'RWD'\", \"fetched_at\": \"2026-09-26T13:06:59+00:00\"}}",
@@ -490,6 +504,8 @@
    "recovery_notes": null,
    "recovery_source": null,
    "recovery_status": null,
+   "rooftop_evidence": null,
+   "rooftop_tier": "none",
    "scraped_at": "<TS1>",
    "source_url": "https://www.lexusofchattanooga.com/used-inventory/vin-1C6SRFFT0MN573743.htm",
    "spec_source_json": "{\"cylinders\": {\"detail\": \"DecodeVINValuesBatch; feed said 6\", \"fetched_at\": \"2026-09-26T15:07:44+00:00\", \"source\": \"nhtsa_vpic\"}, \"price\": {\"source\": \"srp\", \"fetched_at\": \"<NOW_S>\"}}",
@@ -553,6 +569,8 @@
    "recovery_notes": null,
    "recovery_source": null,
    "recovery_status": null,
+   "rooftop_evidence": null,
+   "rooftop_tier": "none",
    "scraped_at": "<TS1>",
    "source_url": "https://ford.example.com/used-inventory/vin-1FTFW1E50NFA00011.htm",
    "spec_source_json": "{\"drivetrain\": {\"source\": \"feed\"}, \"inventory_lot_location\": {\"source\": \"srp-card\", \"value\": \"North Lot\", \"fetched_at\": \"<NOW_S>\"}}",
@@ -616,6 +634,8 @@
    "recovery_notes": null,
    "recovery_source": null,
    "recovery_status": null,
+   "rooftop_evidence": null,
+   "rooftop_tier": "none",
    "scraped_at": "<TS1>",
    "source_url": "https://ford.example.com/used-inventory/vin-1FTFW1E50NFA00012.htm",
    "spec_source_json": "{\"msrp\": {\"source\": \"sticker\"}, \"inventory_lot_location\": {\"source\": \"inventory\", \"value\": \"Overflow\", \"fetched_at\": \"<NOW_S>\"}}",
@@ -679,6 +699,8 @@
    "recovery_notes": null,
    "recovery_source": null,
    "recovery_status": null,
+   "rooftop_evidence": null,
+   "rooftop_tier": "none",
    "scraped_at": "<TS0>",
    "source_url": null,
    "spec_source_json": "12",
@@ -742,6 +764,8 @@
    "recovery_notes": null,
    "recovery_source": null,
    "recovery_status": null,
+   "rooftop_evidence": null,
+   "rooftop_tier": "none",
    "scraped_at": "<TS3>",
    "source_url": "https://ford.example.com/used-inventory/vin-2C3CDXCT0LH000015.htm",
    "spec_source_json": null,
@@ -805,6 +829,8 @@
    "recovery_notes": null,
    "recovery_source": null,
    "recovery_status": null,
+   "rooftop_evidence": null,
+   "rooftop_tier": "none",
    "scraped_at": "<TS0>",
    "source_url": "https://owner.example.com/used-inventory/vin-5YJ3E1EA7KF000001.htm",
    "spec_source_json": null,
@@ -868,6 +894,8 @@
    "recovery_notes": null,
    "recovery_source": null,
    "recovery_status": null,
+   "rooftop_evidence": null,
+   "rooftop_tier": "none",
    "scraped_at": "<TS1>",
    "source_url": "https://claim.example.com/used-inventory/vin-5YJ3E1EA7KF000002.htm",
    "spec_source_json": null,
@@ -931,6 +959,8 @@
    "recovery_notes": null,
    "recovery_source": null,
    "recovery_status": null,
+   "rooftop_evidence": null,
+   "rooftop_tier": "none",
    "scraped_at": "<TS0>",
    "source_url": "https://owner.example.com/used-inventory/vin-5YJ3E1EA7KF000003.htm",
    "spec_source_json": null,
@@ -1127,11 +1157,14 @@
    ],
    "name": "batch1",
    "stats": {
+    "car_moves_logged": 0,
+    "group_feed_unstamped": {},
     "identifier_gate_refused": {
      "vin_length_not_17": 3
     },
     "stale_key": "reset?",
     "vin_owner_conflict_owners": {},
+    "vin_owner_conflict_reasons": {},
     "vin_owner_conflict_vins": [],
     "vin_owner_conflicts": 0
    }
@@ -1203,10 +1236,17 @@
    ],
    "name": "batch2",
    "stats": {
+    "car_moves_logged": 1,
+    "group_feed_unstamped": {
+     "owner-com>claimant-com": 1
+    },
     "identifier_gate_refused": {},
     "stale_key": "reset?",
     "vin_owner_conflict_owners": {
      "owner-com": 1
+    },
+    "vin_owner_conflict_reasons": {
+     "group_feed_unstamped": 1
     },
     "vin_owner_conflict_vins": [
      "5YJ3E1EA7KF000001"
@@ -1253,11 +1293,14 @@
    ],
    "name": "batch3",
    "stats": {
+    "car_moves_logged": 0,
+    "group_feed_unstamped": {},
     "identifier_gate_refused": {},
     "stale_key": "reset?",
     "vin_owner_conflict_owners": {
      "owner-com": 1
     },
+    "vin_owner_conflict_reasons": {},
     "vin_owner_conflict_vins": [
      "5YJ3E1EA7KF000003"
     ],

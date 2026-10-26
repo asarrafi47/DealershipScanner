@@ -1,8 +1,8 @@
 """The ``INSERT ... ON CONFLICT(vin) DO UPDATE`` that writes one ``cars`` row.
 
 ``UPSERT_CARS_SQL`` is the statement; :func:`upsert_params` binds a prepared
-row (:func:`prepare_row`) in column order. The two trailing parameters drive
-the VIN ownership guard's atomic backstop (the ``WHERE`` on the DO UPDATE).
+row (:func:`prepare_row`) in column order. The trailing parameters (guard flag, claim rank, pool lists, cutoff)
+drive the VIN ownership guard's atomic backstop (the ``WHERE`` on the DO UPDATE).
 """
 from __future__ import annotations
 
@@ -57,8 +57,8 @@ UPSERT_CARS_SQL = """
                     packages,
                     listing_active, listing_removed_at, spec_source_json,
                     first_seen_at, last_price_change_at, forced_induction, price_provenance_json,
-                    spin_frames, interior_pano
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    spin_frames, interior_pano, rooftop_tier, rooftop_evidence
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 ON CONFLICT(vin) DO UPDATE SET
                     title=CASE
                         WHEN NULLIF(TRIM(excluded.title),'') IS NOT NULL AND excluded.title != 'Unknown vehicle'
@@ -167,19 +167,46 @@ UPSERT_CARS_SQL = """
                     forced_induction=COALESCE(excluded.forced_induction, cars.forced_induction),
                     price_provenance_json=COALESCE(excluded.price_provenance_json, cars.price_provenance_json),
                     spin_frames=COALESCE(NULLIF(NULLIF(TRIM(excluded.spin_frames), ''), '[]'), cars.spin_frames),
-                    interior_pano=COALESCE(NULLIF(TRIM(excluded.interior_pano), ''), cars.interior_pano)
+                    interior_pano=COALESCE(NULLIF(TRIM(excluded.interior_pano), ''), cars.interior_pano),
+                    -- Evidence persisted for the ownership guard (V030, N8.6). Under the
+                    -- same dealer the stronger of stored and incoming stands (a rescan of
+                    -- an unstamped page must not forget an earlier stamp); a new owner
+                    -- carries only its own evidence.
+                    rooftop_tier=CASE
+                        WHEN cars.dealer_id = excluded.dealer_id AND __RANK_CARS__ > __RANK_EXC__
+                        THEN cars.rooftop_tier ELSE excluded.rooftop_tier
+                    END,
+                    rooftop_evidence=CASE
+                        WHEN cars.dealer_id = excluded.dealer_id AND __RANK_CARS__ > __RANK_EXC__
+                        THEN cars.rooftop_evidence ELSE excluded.rooftop_evidence
+                    END
                 -- VIN ownership guard, atomic backstop for the prefetch check above
-                -- (a concurrent shard may have claimed the VIN since): never move an
-                -- active, fresh row to a different dealer_id.
+                -- (a concurrent shard may have claimed the VIN since). The same rules as
+                -- ownership.decide, whatever the window, bound as: claim rank (2 strong,
+                -- 1 weak, 0 none), ids that alias the claimant, ids the claimant may take
+                -- as primary of its pool, every id sharing a pool with the claimant (each
+                -- list as ',a,b,' and passed twice for the replace() membership test).
+                -- Only an evidence-less contest outside every pool falls to the window.
                 WHERE ? = 0
                    OR COALESCE(cars.dealer_id, '') = ''
                    OR cars.dealer_id = excluded.dealer_id
                    OR COALESCE(cars.listing_active, 1) != 1
-                   OR cars.scraped_at IS NULL
-                   OR cars.scraped_at < ?
+                   OR replace(?, ',' || cars.dealer_id || ',', '') != ?
+                   OR (? = 2 AND __RANK_CARS__ < 2)
+                   OR (__RANK_CARS__ < 2
+                       AND replace(?, ',' || cars.dealer_id || ',', '') != ?)
+                   OR (__RANK_CARS__ < 2
+                       AND replace(?, ',' || cars.dealer_id || ',', '') = ?
+                       AND (cars.scraped_at IS NULL OR cars.scraped_at < ?))
                 """
+def _tier_rank_sql(col: str) -> str:
+    return f"(CASE {col} WHEN 'strong' THEN 2 WHEN 'weak' THEN 1 ELSE 0 END)"
+
+
 UPSERT_CARS_SQL = (
-    UPSERT_CARS_SQL.replace("__TRIM__", _overwritable("trim"))
+    UPSERT_CARS_SQL.replace("__RANK_CARS__", _tier_rank_sql("cars.rooftop_tier"))
+    .replace("__RANK_EXC__", _tier_rank_sql("excluded.rooftop_tier"))
+    .replace("__TRIM__", _overwritable("trim"))
     .replace("__EXT__", _overwritable("exterior_color", color=True))
     .replace("__INT__", _overwritable("interior_color", color=True))
 )
@@ -279,9 +306,13 @@ def upsert_params(
     price_history_json: str | None,
     guard_on: bool,
     guard_cutoff_iso: str,
+    rooftop_tier: str = "none",
+    rooftop_evidence: str | None = None,
+    pool_lists: tuple[str, str, str] = ("", "", ""),
 ) -> tuple:
     """Bind parameters for :data:`UPSERT_CARS_SQL`, in column order."""
     v = row.v
+    alias_csv, takes_csv, covered_csv = pool_lists
     return (
         row.vin,
         row.title,
@@ -331,7 +362,16 @@ def upsert_params(
         price_history_json,
         row.spin_frames_json,
         row.interior_pano,
+        rooftop_tier,
+        rooftop_evidence,
         1 if guard_on else 0,
+        alias_csv,
+        alias_csv,
+        {"strong": 2, "weak": 1}.get(rooftop_tier, 0),
+        takes_csv,
+        takes_csv,
+        covered_csv,
+        covered_csv,
         guard_cutoff_iso,
     )
 

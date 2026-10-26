@@ -8,6 +8,7 @@ a different dealer_id.
 """
 from __future__ import annotations
 
+import json
 import sqlite3
 from datetime import datetime, timedelta
 
@@ -172,3 +173,237 @@ def test_record_scan_outcomes_writes_conflict_count(tmp_path, monkeypatch):
     s = json.loads(conn.execute("SELECT summary_json FROM scan_runs").fetchone()[0])
     conn.close()
     assert s["vin_owner_conflicts"] == 12 and s["vin_owner_conflict_owners"] == {"a-com": 12}
+
+
+# ── N8.6: evidence-aware ownership (persisted rooftop tier, pools, aliases, manual moves) ──
+
+from backend.scanner.upsert import ownership as own  # noqa: E402
+
+
+def _ev(dealer_id: str, tier: str, **kw) -> dict:
+    row = _car(dealer_id, **kw)
+    row["_rooftop_evidence_tier"] = tier
+    return row
+
+
+def _tier(db_path: str, vin: str = VIN):
+    conn = sqlite3.connect(db_path)
+    try:
+        return conn.execute("SELECT rooftop_tier FROM cars WHERE vin=?", (vin,)).fetchone()[0]
+    finally:
+        conn.close()
+
+
+def _age(db_path: str, hours: int = 100):
+    old = (datetime.utcnow() - timedelta(hours=hours)).isoformat() + "Z"
+    _set(db_path, "UPDATE cars SET scraped_at=? WHERE vin=?", (old, VIN))
+
+
+@pytest.fixture()
+def pools(tmp_path, monkeypatch):
+    """A one-pool, one-alias group_pools.json (primary-co owns pool contests)."""
+    path = tmp_path / "group_pools.json"
+    path.write_text(json.dumps({
+        "pools": [{"primary": "primary-co", "members": ["primary-co", "sister-co"]}],
+        "aliases": [["alias-a", "alias-b"]],
+    }))
+    monkeypatch.setenv("GROUP_POOLS_PATH", str(path))
+    return path
+
+
+def test_legacy_rows_and_unstamped_writes_are_tier_none(db):
+    upsert_vehicles([_car("a-com")])
+    assert _tier(db) == "none"
+
+
+def test_strong_claimant_beats_a_fresh_none_owner(db):
+    upsert_vehicles([_car("a-com")])
+    assert upsert_vehicles([_ev("b-com", "strong")]) == 1
+    assert _row(db)[0] == "b-com" and _tier(db) == "strong"
+
+
+def test_strong_claimant_beats_a_weak_owner(db):
+    upsert_vehicles([_ev("a-com", "weak")])
+    assert upsert_vehicles([_ev("b-com", "strong")]) == 1
+    assert _row(db)[0] == "b-com"
+
+
+def test_weak_or_unstamped_claimant_never_beats_a_strong_owner_even_when_stale(db):
+    upsert_vehicles([_ev("a-com", "strong")])
+    _age(db)  # far past the 48 h window: the window must not decide
+    stats: dict = {}
+    assert upsert_vehicles([_ev("b-com", "weak", price=1)], stats) == 0
+    assert upsert_vehicles([_car("c-com", price=1)]) == 0
+    assert _row(db) == ("a-com", 30000, 1)
+    assert stats["vin_owner_conflict_reasons"] == {"owner_strong": 1}
+
+
+def test_two_strong_claims_leave_the_stored_owner(db):
+    upsert_vehicles([_ev("a-com", "strong")])
+    assert upsert_vehicles([_ev("b-com", "strong", price=1)]) == 0
+    assert _row(db)[0] == "a-com"
+
+
+@pytest.mark.parametrize("order", [("x-com", "y-com"), ("y-com", "x-com")])
+def test_two_scan_orders_give_one_owner(db, order):
+    """x-com's feed stamps the car, y-com's names no store: x-com owns it either way."""
+    feeds = {"x-com": _ev("x-com", "strong"), "y-com": _car("y-com")}
+    for did in order:
+        upsert_vehicles([feeds[did]])
+    assert _row(db)[0] == "x-com"
+
+
+def test_stale_owner_is_decided_by_rules_not_scan_order(db):
+    upsert_vehicles([_ev("a-com", "strong")])
+    _age(db)
+    assert upsert_vehicles([_car("b-com")]) == 0  # rule 2
+    _set(db, "UPDATE cars SET rooftop_tier='none' WHERE vin=?", (VIN,))
+    assert upsert_vehicles([_ev("c-com", "strong")]) == 1  # rule 1, whatever the window
+    assert _row(db)[0] == "c-com"
+
+
+def test_pool_primary_takes_an_evidence_less_contest_and_the_other_member_does_not(db, pools):
+    upsert_vehicles([_car("sister-co")])
+    assert upsert_vehicles([_car("primary-co")]) == 1  # primary beats a fresh sister
+    assert _row(db)[0] == "primary-co"
+    assert upsert_vehicles([_car("sister-co", price=1)]) == 0  # sister never takes it back
+    _age(db)
+    assert upsert_vehicles([_car("sister-co", price=2)]) == 0  # not even past the window
+    assert _row(db)[0] == "primary-co"
+
+
+def test_pool_primary_does_not_take_from_a_strong_sister(db, pools):
+    upsert_vehicles([_ev("sister-co", "strong")])
+    assert upsert_vehicles([_car("primary-co", price=1)]) == 0
+    assert _row(db)[0] == "sister-co"
+
+
+def test_alias_ids_of_one_store_never_conflict(db, pools):
+    upsert_vehicles([_ev("alias-a", "strong")])
+    stats: dict = {}
+    assert upsert_vehicles([_car("alias-b", price=1)], stats) == 1
+    assert _row(db)[0] == "alias-b" and stats["vin_owner_conflicts"] == 0
+
+
+def test_uncovered_pair_keeps_the_owner_and_is_reported_group_feed_unstamped(db, pools):
+    upsert_vehicles([_car("a-com")])
+    stats: dict = {}
+    assert upsert_vehicles([_car("b-com", price=1)], stats) == 0
+    assert stats["group_feed_unstamped"] == {"a-com>b-com": 1}
+    _age(db)
+    assert upsert_vehicles([_car("b-com", price=2)]) == 1  # window governs only this case
+
+
+def test_same_dealer_rescan_keeps_the_stronger_stored_tier(db):
+    upsert_vehicles([_ev("a-com", "strong")])
+    upsert_vehicles([_car("a-com", price=31000)])
+    assert _tier(db) == "strong"
+    upsert_vehicles([_ev("a-com", "weak")])
+    assert _tier(db) == "strong"
+
+
+def test_sql_backstop_applies_the_tier_rules_when_the_prefetch_misses(db, monkeypatch):
+    """The prefetch is blinded; the ON CONFLICT WHERE alone must give the same answers."""
+    from backend.scanner.upsert import guard
+
+    real = guard.prefetch_existing
+
+    def blind(cursor, by_vin, window, owned, **kw):
+        spec, _ = real(cursor, by_vin, window, owned, **kw)
+        return spec, {}
+
+    monkeypatch.setattr(sdb, "prefetch_existing", blind)
+    upsert_vehicles([_ev("a-com", "strong")])
+    _age(db)
+    assert upsert_vehicles([_car("b-com", price=1)]) == 0  # stale but strong owner
+    assert upsert_vehicles([_ev("c-com", "strong", price=2)]) == 0
+    _set(db, "UPDATE cars SET rooftop_tier='weak' WHERE vin=?", (VIN,))
+    assert upsert_vehicles([_ev("c-com", "strong", price=2)]) == 1
+    assert _row(db)[0] == "c-com"
+    _set(db, "UPDATE cars SET rooftop_tier='none' WHERE vin=?", (VIN,))
+    assert upsert_vehicles([_car("d-com", price=3)]) == 0  # fresh, evidence-less, uncovered
+
+
+def _moves(db_path: str):
+    conn = sqlite3.connect(db_path)
+    try:
+        return conn.execute(
+            "SELECT from_dealer_id, to_dealer_id, evidence, reverted_at FROM car_move_log ORDER BY id"
+        ).fetchall()
+    finally:
+        conn.close()
+
+
+def test_every_allowed_move_writes_a_car_move_log_row_and_refusals_write_none(db):
+    stats: dict = {}
+    upsert_vehicles([_car("a-com")])
+    assert _moves(db) == []  # a first write is not a move
+    upsert_vehicles([_car("b-com", price=1)])  # refused
+    assert _moves(db) == []
+    upsert_vehicles([_ev("c-com", "strong")], stats)  # allowed
+    rows = _moves(db)
+    assert len(rows) == 1 == stats["car_moves_logged"]
+    assert rows[0][:2] == ("a-com", "c-com") and rows[0][2].startswith(own.SCANNER_MOVE_PREFIX + "strong_claimant")
+
+
+def test_manual_move_is_honoured_even_against_a_strong_claimant_until_reverted(db):
+    upsert_vehicles([_car("a-com")])
+    # a person moved the car to m-com (apply_attribution_moves.py shape) and refreshed scraped_at
+    _set(db, "UPDATE cars SET dealer_id='m-com' WHERE vin=?", (VIN,))
+    _set(db, "INSERT INTO car_move_log (car_id, from_dealer_id, to_dealer_id, evidence) "
+             "SELECT id, 'a-com', 'm-com', 'photo evidence' FROM cars WHERE vin=?", (VIN,))
+    _age(db)
+    stats: dict = {}
+    assert upsert_vehicles([_ev("b-com", "strong")], stats) == 0
+    assert stats["vin_owner_conflict_reasons"] == {"manual_move": 1}
+    _set(db, "UPDATE car_move_log SET reverted_at=datetime('now')")
+    assert upsert_vehicles([_ev("b-com", "strong")]) == 1
+
+
+def test_a_scanner_made_move_is_not_a_manual_hold(db):
+    upsert_vehicles([_car("a-com")])
+    upsert_vehicles([_ev("b-com", "strong")])  # logged as scanner_guard:...
+    assert upsert_vehicles([_ev("c-com", "strong", price=1)]) == 0  # two strong claims
+    _set(db, "UPDATE cars SET rooftop_tier='none' WHERE vin=?", (VIN,))
+    assert upsert_vehicles([_ev("c-com", "strong", price=1)]) == 1  # not held by its own log row
+
+
+# decide() and the SQL lists agree on every case (the backstop is the same policy)
+
+def test_decide_table():
+    P = own.Pools((("p", ("p", "s")),), (frozenset({"a1", "a2"}),))
+    d = lambda o, ot, c, ct, fresh=True, active=True: own.decide(o, ot, active, fresh, c, ct, P)  # noqa: E731
+    assert d("a1", "strong", "a2", "none").reason == "alias"
+    assert d("x", "none", "y", "strong").allow
+    assert not d("x", "strong", "y", "strong").allow
+    assert not d("x", "strong", "y", "none", fresh=False).allow
+    assert d("s", "none", "p", "none").allow and not d("p", "none", "s", "none", fresh=False).allow
+    assert d("x", "none", "y", "none", fresh=False).reason == "window_lapsed"
+    assert d("x", "none", "y", "none").reason == "group_feed_unstamped"
+    assert d("x", "strong", "y", "none", active=False).allow
+    assert own.backstop_lists(P, "p") == ("", ",s,", ",s,")
+    assert own.backstop_lists(P, "s") == ("", "", ",p,")
+    assert own.backstop_lists(P, "a1") == (",a2,", "", "")
+
+
+@pytest.mark.parametrize("scorer", ["1", "0"])
+def test_gate_stamps_the_evidence_tier_on_kept_rows(monkeypatch, scorer):
+    """Both gate paths: a stamped, name-matched row is strong; an unstamped row kept
+    for want of evidence is none; the stamp is a short JSON record."""
+    from backend.attribution.rooftop import resolve_rooftop_attribution
+
+    monkeypatch.setenv("SCANNER_ROOFTOP_SCORER", scorer)
+    rt = {"key": "Alpha Ford", "name": "Alpha Ford"}
+    stamped = {"vin": "V1", "_rooftop": dict(rt), "_feed_source": "S1"}
+    sister = {"vin": "V2", "_rooftop": {"key": "Beta Ford", "name": "Beta Ford"}}
+    kept, rejected = resolve_rooftop_attribution([stamped, sister], dealer_id="alpha-ford", dealer_name="Alpha Ford",
+                                                 dealer_url="https://alpha.example")
+    assert kept == [stamped] and rejected == [sister]
+    assert stamped["_rooftop_evidence_tier"] == "strong"
+    ev = json.loads(stamped["_rooftop_evidence"])
+    assert ev["rooftop"] == "Alpha Ford" and ev["source"] == "S1"
+
+    plain = {"vin": "V3"}
+    kept, _ = resolve_rooftop_attribution([plain], dealer_id="alpha-ford", dealer_name="Alpha Ford",
+                                          dealer_url="https://alpha.example")
+    assert kept == [plain] and plain["_rooftop_evidence_tier"] == "none" and plain["_rooftop_evidence"] is None

@@ -6,8 +6,7 @@ fixture's ``source`` block) and asserts the CORRECT behaviour. Each one is
 ``xfail(strict=True)`` with the defect and the N-unit that fixes it in its
 reason, so the unit that lands the fix sees it XPASS and removes the marker
 (docs/NEXT_PHASES_PLAN_2026_10.md, N1.4; N9's exit gate runs
-``-k "retire or retry or identity"``, N8.6 flips the scan-order and
-unstamped-feed shapes).
+``-k "retire or retry or identity"``, N8.6 flipped the scan-order shape, now a plain test).
 
 Facts come from the N1 gather reports (workspace/phase_runs/N1/gather/):
 retirements_rca.txt (the 21 in-run retirements, first-pass rows re-seen by the
@@ -348,12 +347,6 @@ def test_lifecycle_retry_with_known_zero_baseline_retires_nothing(inv, log_root,
 # ── 6. VIN-owner guard: the owner depends on which store wrote first ─────────
 
 _CHAP = _load("chapman_scan_order_20261013.json")
-_GUARD_REASON = (
-    "defect: first-writer-wins VIN-owner guard (scanner/database.py:83-101, upsert/guard.py:36-67, backstop "
-    "upsert/sql.py:150-155) compares no evidence, so the store scanned first keeps a car whose own store's "
-    "feed names it (clean room: chapmanfordaz-com wrote first and owns 175 CAE Chapman Dodge cars); fixed by "
-    "N8.6 (V029 persisted rooftop tier, evidence-aware guard and backstop, D-N3)"
-)
 
 
 def _wipe(db: Path) -> None:
@@ -388,7 +381,6 @@ def _chapman_scans() -> dict[str, tuple[dict[str, Any], list[dict[str, Any]], di
     return out
 
 
-@pytest.mark.xfail(strict=True, reason=_GUARD_REASON)
 def test_guard_scan_order_gives_the_same_owner(inv):
     """Two stores' feeds carry the same Chapman Dodge cars (lot code CAE in the
     photo path): Chapman Ford's feed names no store, Chapman Dodge's own feed

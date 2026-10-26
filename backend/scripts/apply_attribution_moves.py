@@ -36,6 +36,7 @@ import re
 import sys
 from pathlib import Path
 from urllib.parse import urlparse
+from datetime import datetime
 
 _REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(_REPO_ROOT) not in sys.path:
@@ -373,13 +374,19 @@ def main() -> int:
             (car_id, from_did, from_name, from_rid, to_did, to_name, to_rid, evidence),
         )
         cur.execute(
-            "UPDATE cars SET dealer_id = %s, dealer_name = %s, dealership_registry_id = %s "
-            "WHERE id = %s",
-            (to_did, to_name, to_rid, car_id),
+            "UPDATE cars SET dealer_id = %s, dealer_name = %s, dealership_registry_id = %s, "
+            "scraped_at = %s WHERE id = %s",
+            (to_did, to_name, to_rid, _now_iso(), car_id),
         )
     _log.info("moved %d car(s); undo with --revert", len(moves))
     conn.close()
     return 0
+
+
+def _now_iso() -> str:
+    """``scraped_at`` text shape of the scanner (utc isoformat + Z): a manual move refreshes it so
+    the owner is fresh and the car_move_log row is what the VIN guard honours (N8.6)."""
+    return datetime.utcnow().isoformat() + "Z"
 
 
 if __name__ == "__main__":
