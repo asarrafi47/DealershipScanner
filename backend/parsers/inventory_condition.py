@@ -50,10 +50,22 @@ def normalize_inventory_condition(
     if any(x in blobs for x in ("used", "pre-owned", "preowned", "pre owned")):
         return "Used"
 
-    try:
-        odo = mileage if mileage is not None else int(obj.get("odometer") or obj.get("mileage") or 0)
-    except (TypeError, ValueError):
-        odo = None
+    # A missing odometer is unknown, not 0: never infer New from it.
+    odo: int | None = None
+    if mileage is not None:
+        try:
+            odo = int(mileage)
+        except (TypeError, ValueError):
+            odo = None
+    else:
+        raw = obj.get("odometer")
+        if raw in (None, "", 0, "0"):
+            raw = obj.get("mileage")
+        if raw not in (None, ""):
+            try:
+                odo = int(raw)
+            except (TypeError, ValueError):
+                odo = None
 
     if odo is not None:
         if odo < 500:
