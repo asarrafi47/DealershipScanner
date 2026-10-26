@@ -11,7 +11,6 @@ from backend.scanner.pipeline.constants import (
     KEY_FIELDS,
     MILEAGE_COVERAGE_KEYS,
     MIN_ROWS_UNKNOWN,
-    ROOT,
     ROW_FLOOR,
     SECONDARY_FIELDS,
 )
@@ -20,12 +19,10 @@ from backend.scanner.pipeline.db import _rows
 
 def _one_condition_ok() -> set[str]:
     """Dealer ids whose lot legitimately carries a single condition (used-only
-    independents, new-only fleet/RV sellers). One id per line, `#` comments."""
-    try:
-        text = (ROOT / "workspace" / "pipeline" / "one_condition_ok.txt").read_text()
-    except OSError:
-        return set()
-    return {ln.split("#", 1)[0].strip() for ln in text.splitlines() if ln.split("#", 1)[0].strip()}
+    independents, new-only fleet/RV sellers). Thin wrapper over the one loader,
+    ``recipe_validation.one_condition_ok_ids`` (tracked list plus the workspace file)."""
+    from backend.scanner.recipe_validation import one_condition_ok_ids
+    return one_condition_ok_ids()
 
 
 # --------------------------------------------------------------------------
@@ -157,7 +154,7 @@ def _assess(conn, dealer_id: str, since_iso: str, known_before: int, recipe_info
         if dealer_id in _one_condition_ok():
             # independent used-only (or new-only) lots: one condition IS the lot
             # (quantumautosales-com 209/0 used, 2026-09-26); listed in
-            # workspace/pipeline/one_condition_ok.txt after a human check of the site
+            # backend/config/one_condition_ok.txt after a human check of the site
             weak2 = list(weak2) + [f"one condition by design (new {out['rows_new']}, used {out['rows_used']})"]
         else:
             problems.append(f"only one condition captured (new {out['rows_new']}, used {out['rows_used']})")

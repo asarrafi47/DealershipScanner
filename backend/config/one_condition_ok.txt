@@ -1,0 +1,5 @@
+# dealers whose lot is a single condition by design (checked on the site, not inferred from the feed)
+# one id per line, `#` comments; tracked so Railway and the scanner image see it (workspace/ is dockerignored).
+# recipe_validation.one_condition_ok_ids() merges this file with the local workspace/pipeline/one_condition_ok.txt.
+quantumautosales-com   # Quantum Auto Sales, Garden Grove CA: used-only independent (209 used, 0 new on 2026-09-26)
+honestcardeal-com      # Trinity Motorcar Company, Rome GA: "Used Cars in Rome, GA" title, used-only independent

@@ -79,6 +79,8 @@ logger = logging.getLogger("scanner")
 ROOT = Path(__file__).resolve().parents[2]
 LOG_ROOT = Path(os.environ.get("DEALER_LOGS_ROOT") or (ROOT / "workspace" / "dealer_logs"))
 ONE_CONDITION_OK_PATH = ROOT / "workspace" / "pipeline" / "one_condition_ok.txt"
+# The tracked list ships in the image; the workspace file is a local, gitignored addition.
+ONE_CONDITION_OK_TRACKED_PATH = ROOT / "backend" / "config" / "one_condition_ok.txt"
 
 # fetch(recipe, body, base_url, url) -> (status, parsed_json_or_html_or_None):
 # the signature of recipes._replay_request, which both the synth's validate walk
@@ -403,14 +405,22 @@ def other_side_recipe(recipe: EndpointRecipe, only: str) -> EndpointRecipe | Non
     return replace(recipe, url=url, vehicle_rows=0, total_count=None)
 
 
-def one_condition_ok_ids(path: Path | None = None) -> set[str]:
-    """Dealers whose lot legitimately carries a single condition (the pipeline's
-    workspace/pipeline/one_condition_ok.txt: one id per line, ``#`` comments)."""
+def _read_id_list(path: Path) -> set[str]:
     try:
-        text = (path or ONE_CONDITION_OK_PATH).read_text(encoding="utf-8")
+        text = path.read_text(encoding="utf-8")
     except OSError:
         return set()
     return {ln.split("#", 1)[0].strip() for ln in text.splitlines() if ln.split("#", 1)[0].strip()}
+
+
+def one_condition_ok_ids(path: Path | None = None) -> set[str]:
+    """Dealers whose lot legitimately carries a single condition: one id per line,
+    ``#`` comments. The one loader (recipe validation, assess and the retirement
+    policy): without *path* it is the union of the tracked backend/config/one_condition_ok.txt
+    and the local workspace/pipeline/one_condition_ok.txt; with *path*, that file alone."""
+    if path is not None:
+        return _read_id_list(path)
+    return _read_id_list(ONE_CONDITION_OK_TRACKED_PATH) | _read_id_list(ONE_CONDITION_OK_PATH)
 
 
 # ── the site's own condition census (carscommerce only, today) ─────────────────
