@@ -75,8 +75,8 @@ def _installed_file(name: str) -> str:
 def test_images_install_their_own_file():
     assert _installed_file("Dockerfile.web") == "requirements-web.txt"
     assert _installed_file("Dockerfile.scanner") == "requirements-scanner.txt"
-    # Discovery needs Playwright: the superset until P15B.5 slims it.
-    assert _installed_file("Dockerfile.discovery") == "requirements.txt"
+    # Discovery installs scanner + browser (P15B.5); see test_dockerfiles.py.
+    assert _installed_file("Dockerfile.discovery") == "requirements-scanner.txt"
 
 
 def test_dockerignore_does_not_exclude_requirements():

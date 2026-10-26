@@ -17,10 +17,11 @@ WORKDIR /app
 
 ENV PYTHONUNBUFFERED=1 PYTHONDONTWRITEBYTECODE=1 SCANNER_ALLOW_BROWSER=1
 
-# requirements.txt includes requirements-web.txt and requirements-browser.txt, so
-# every requirements*.txt is copied (P15B.2).
+# Slim set (P15B.5): the scanner's HTTP stack plus Playwright. No torch, Flask or ML stack:
+# the onboard job (discovery_probe --browser-capture) imports none of them
+# (scripts/scanner_import_sweep.py --profile discovery). Every requirements*.txt is copied (P15B.2).
 COPY requirements*.txt ./
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r requirements-scanner.txt -r requirements-browser.txt
 
 RUN playwright install chromium && playwright install-deps chromium
 

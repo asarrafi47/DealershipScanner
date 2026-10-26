@@ -7,8 +7,8 @@ requirements-scanner.txt:
     python scripts/scanner_import_sweep.py
 
 ``--profile web`` sweeps the web entry point against the web image's packages
-(requirements-web.txt: no Playwright); ``--profile discovery`` expects the full
-set (requirements.txt). The default profile is ``scanner`` (P15B.2).
+(requirements-web.txt: no Playwright); ``--profile discovery`` expects the scanner
+set plus Playwright (requirements-scanner.txt + requirements-browser.txt). The default profile is ``scanner`` (P15B.2).
 
 Exit 1 when an entry module fails to import, or when any module under the swept
 packages fails on a package that is not in the allowed-missing set (the browser /
@@ -67,7 +67,9 @@ PROFILES = {
     "discovery": {
         "entry": ENTRY + ["backend.scanner.discovery_capture"],
         "sweep": SWEEP,
-        "allowed": {"pytest"},
+        # Slim image (P15B.5): scanner + browser files, so only Playwright is present
+        # beyond what the scanner profile has; the rest stays allowed-missing.
+        "allowed": ALLOWED_MISSING - {"playwright", "playwright_stealth"},
     },
 }
 
