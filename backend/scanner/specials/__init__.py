@@ -14,8 +14,7 @@ Public API
 ----------
 * :func:`extract_offers_from_html` — parse one page's HTML into offer dicts.
 * :func:`fetch_specials_pages` — fetch a dealer's likely specials URLs.
-* :func:`ensure_dealer_specials_table` / :func:`upsert_specials` /
-  :func:`get_specials_for_dealer` — persistence.
+* :func:`upsert_specials` / :func:`get_specials_for_dealer` — persistence.
 * :func:`scan_dealer_specials` — end-to-end: fetch + extract + store for one dealer.
 """
 from __future__ import annotations
@@ -24,7 +23,6 @@ from backend.scanner.specials.extract import Offer, extract_offers_from_html
 from backend.scanner.specials.fetch import SPECIALS_PATHS, fetch_specials_pages
 from backend.scanner.specials.scan import scan_dealer_specials
 from backend.scanner.specials.store import (
-    ensure_dealer_specials_table,
     get_specials_for_dealer,
     upsert_specials,
 )
@@ -35,7 +33,6 @@ __all__ = [
     "SPECIALS_PATHS",
     "fetch_specials_pages",
     "scan_dealer_specials",
-    "ensure_dealer_specials_table",
     "get_specials_for_dealer",
     "upsert_specials",
 ]

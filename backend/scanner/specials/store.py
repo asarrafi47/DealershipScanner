@@ -1,17 +1,17 @@
-"""Persistence for ``dealer_specials`` (Postgres in prod/dev, SQLite for tests).
+"""Persistence for ``dealer_specials`` (Postgres; the table is owned by ``migrations/``).
 
 The table is keyed by ``dealer_id`` (the hostname-derived ``cars.dealer_id``,
 e.g. ``tustintoyota-com``) — the safest key for coverage since almost no cars
 carry a ``dealership_registry_id`` yet. Writes go through the shared inventory
 connection (:func:`backend.db.inventory_db.get_conn`), so ``?`` placeholders are
-auto-adapted to ``%s`` on Postgres by the compat cursor.
+auto-adapted to ``%s`` by the compat cursor.
 """
 from __future__ import annotations
 
 from datetime import datetime, timezone
 from typing import Any, Iterable
 
-from backend.db import inventory_pg
+from psycopg.rows import dict_row
 
 # Column order used by INSERT (id / scraped_at handled separately).
 _OFFER_COLS = [
@@ -20,69 +20,6 @@ _OFFER_COLS = [
     "due_at_signing", "mileage_per_year", "msrp", "expires", "fine_print",
     "source_url", "raw_html_snippet", "offer_hash",
 ]
-
-_DDL_PG = """
-CREATE TABLE IF NOT EXISTS dealer_specials (
-    id BIGSERIAL PRIMARY KEY,
-    dealer_id TEXT NOT NULL,
-    title TEXT,
-    type TEXT,
-    vehicle_year INTEGER,
-    vehicle_make TEXT,
-    vehicle_model TEXT,
-    vehicle_trim TEXT,
-    payment DOUBLE PRECISION,
-    term_months INTEGER,
-    due_at_signing DOUBLE PRECISION,
-    mileage_per_year INTEGER,
-    msrp DOUBLE PRECISION,
-    expires TEXT,
-    fine_print TEXT,
-    source_url TEXT,
-    raw_html_snippet TEXT,
-    offer_hash TEXT,
-    scraped_at TEXT NOT NULL,
-    UNIQUE (dealer_id, offer_hash)
-)
-"""
-
-_DDL_SQLITE = """
-CREATE TABLE IF NOT EXISTS dealer_specials (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    dealer_id TEXT NOT NULL,
-    title TEXT,
-    type TEXT,
-    vehicle_year INTEGER,
-    vehicle_make TEXT,
-    vehicle_model TEXT,
-    vehicle_trim TEXT,
-    payment REAL,
-    term_months INTEGER,
-    due_at_signing REAL,
-    mileage_per_year INTEGER,
-    msrp REAL,
-    expires TEXT,
-    fine_print TEXT,
-    source_url TEXT,
-    raw_html_snippet TEXT,
-    offer_hash TEXT,
-    scraped_at TEXT NOT NULL,
-    UNIQUE (dealer_id, offer_hash)
-)
-"""
-
-
-def ensure_dealer_specials_table(conn: Any) -> None:
-    """Create the ``dealer_specials`` table + index if absent (idempotent)."""
-    ddl = _DDL_PG if inventory_pg.is_inventory_postgres() else _DDL_SQLITE
-    cur = conn.cursor()
-    cur.execute(ddl)
-    cur.execute(
-        "CREATE INDEX IF NOT EXISTS idx_dealer_specials_dealer "
-        "ON dealer_specials(dealer_id)"
-    )
-    conn.commit()
-
 
 def _now_iso() -> str:
     return datetime.now(timezone.utc).isoformat()
@@ -100,7 +37,6 @@ def upsert_specials(
     expire and rotate, so a fresh scan is the source of truth. Returns the
     number of offers written.
     """
-    ensure_dealer_specials_table(conn)
     offers = list(offers)
     cur = conn.cursor()
     if replace:
@@ -138,10 +74,7 @@ def get_specials_for_dealer(conn: Any, dealer_id: str) -> list[dict]:
 
     Excludes the (large) ``raw_html_snippet`` from the read used for rendering.
     """
-    import sqlite3
-
-    conn.row_factory = sqlite3.Row
-    cur = conn.cursor()
+    cur = conn.cursor(row_factory=dict_row)
     try:
         cur.execute(
             """

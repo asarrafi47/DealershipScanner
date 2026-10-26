@@ -12,21 +12,22 @@ made on the client, because the client is the attacker in each of these cases:
   ride along into a URL the whole internet can fetch,
 * and the serving route must not be steerable at all.
 
-SQLite isolation mirrors ``test_community_api_routes.py`` — never touches prod
-Postgres — and ``COMMENT_UPLOAD_DIR`` is redirected at ``tmp_path``, so a test
+A throwaway Postgres clone (``pg_db``) mirrors ``test_community_api_routes.py`` —
+never touches prod — and ``COMMENT_UPLOAD_DIR`` is redirected at ``tmp_path``, so a test
 run never writes into the real ``comment_uploads/``.
 """
 from __future__ import annotations
 
 import io
 import json
-import os
 import struct
 import zlib
 from pathlib import Path
 
 import pytest
 from PIL import Image
+
+pytestmark = pytest.mark.pg
 
 from backend.db import comments_db
 from backend.db.comments_db import SCOPE_CAR, list_comments
@@ -51,25 +52,11 @@ def uploads(tmp_path, monkeypatch):
 
 
 @pytest.fixture()
-def seeded(tmp_path, monkeypatch, uploads):
-    monkeypatch.setenv("INVENTORY_SQLITE_TESTS", "1")
-    monkeypatch.setenv("INVENTORY_DATABASE_URL", "")
-    monkeypatch.setenv("DATABASE_URL", "")
+def seeded(pg_db, monkeypatch, uploads):
     monkeypatch.setenv("COMMENT_POST_RPM", "500")
     monkeypatch.setenv("COMMENT_FLAG_RPM", "500")
-    from backend.db import inventory_db
-
-    monkeypatch.setattr(inventory_db, "DB_PATH", os.path.join(str(tmp_path), "inv.db"))
-    conn = inventory_db.get_conn()
-    try:
-        cur = conn.cursor()
-        cur.execute("CREATE TABLE IF NOT EXISTS cars (id INTEGER PRIMARY KEY, vin TEXT)")
-        cur.execute("CREATE TABLE IF NOT EXISTS dealerships (id INTEGER PRIMARY KEY, name TEXT)")
-        cur.execute(f"INSERT INTO cars (id, vin) VALUES ({CAR_ID}, 'TESTVIN0000000002')")
-        conn.commit()
-    finally:
-        conn.close()
-    return inventory_db
+    pg_db.add_cars([{"id": CAR_ID, "vin": "TESTVIN0000000002"}])
+    return pg_db
 
 
 def _client(user_id: int | None = USER_ID, ip: str = "203.0.113.44"):

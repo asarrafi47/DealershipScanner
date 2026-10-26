@@ -1,169 +1,25 @@
-"""Persistence for ``dealer_reviews`` (Postgres in prod/dev, SQLite for tests).
+"""Persistence for ``dealer_reviews`` and ``review_reports`` (Postgres).
 
 Keyed by ``dealer_id`` (the hostname-derived ``cars.dealer_id``, e.g.
 ``longotoyota-com``) — the same key the dealership research page resolves. A
 user may hold at most ONE review per dealer (``UNIQUE(dealer_id, user_id)``); a
 re-submit edits the existing row. Writes go through the shared inventory
 connection (:func:`backend.db.inventory_db.get_conn`), so ``?`` placeholders are
-auto-adapted to ``%s`` on Postgres by the compat cursor.
+auto-adapted to ``%s`` by the compat cursor. The tables belong to ``migrations/``
+(V001: ``dealer_reviews`` and its indexes; V026: ``review_reports``); nothing here
+creates them.
 
 Modeled on ``backend.scanner.specials.store``.
 """
 from __future__ import annotations
 
-import sqlite3
 from datetime import datetime, timedelta, timezone
 from typing import Any
 
-from backend.db import inventory_pg, runtime_ddl
+from psycopg.rows import dict_row
 
 # Threshold at which a review auto-flips from ``published`` to ``flagged``.
 REPORT_FLAG_THRESHOLD = 3
-
-_DDL_PG = """
-CREATE TABLE IF NOT EXISTS dealer_reviews (
-    id BIGSERIAL PRIMARY KEY,
-    dealer_id TEXT NOT NULL,
-    user_id INTEGER NOT NULL,
-    display_name TEXT,
-    is_anonymous INTEGER NOT NULL DEFAULT 0,
-    rating INTEGER NOT NULL,
-    body TEXT NOT NULL,
-    addon_fee_reported INTEGER NOT NULL DEFAULT 0,
-    addon_fee_amount DOUBLE PRECISION,
-    addon_fee_desc TEXT,
-    status TEXT NOT NULL DEFAULT 'published',
-    report_count INTEGER NOT NULL DEFAULT 0,
-    ip_hash TEXT,
-    created_at TEXT,
-    updated_at TEXT,
-    UNIQUE (dealer_id, user_id)
-)
-"""
-
-_DDL_SQLITE = """
-CREATE TABLE IF NOT EXISTS dealer_reviews (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    dealer_id TEXT NOT NULL,
-    user_id INTEGER NOT NULL,
-    display_name TEXT,
-    is_anonymous INTEGER NOT NULL DEFAULT 0,
-    rating INTEGER NOT NULL,
-    body TEXT NOT NULL,
-    addon_fee_reported INTEGER NOT NULL DEFAULT 0,
-    addon_fee_amount REAL,
-    addon_fee_desc TEXT,
-    status TEXT NOT NULL DEFAULT 'published',
-    report_count INTEGER NOT NULL DEFAULT 0,
-    ip_hash TEXT,
-    created_at TEXT,
-    updated_at TEXT,
-    UNIQUE (dealer_id, user_id)
-)
-"""
-
-
-# One row per (review, reporter) so a single actor's repeated reports count
-# once — three reports flip a review to 'flagged', so without this dedup one
-# unauthenticated client could hide any review by itself.
-_DDL_REPORTS_PG = """
-CREATE TABLE IF NOT EXISTS review_reports (
-    review_id BIGINT NOT NULL,
-    ip_hash TEXT NOT NULL,
-    created_at TEXT,
-    UNIQUE (review_id, ip_hash)
-)
-"""
-
-_DDL_REPORTS_SQLITE = """
-CREATE TABLE IF NOT EXISTS review_reports (
-    review_id INTEGER NOT NULL,
-    ip_hash TEXT NOT NULL,
-    created_at TEXT,
-    UNIQUE (review_id, ip_hash)
-)
-"""
-
-
-_IDX_REVIEWS_DEALER = (
-    "CREATE INDEX IF NOT EXISTS idx_dealer_reviews_dealer "
-    "ON dealer_reviews(dealer_id, status)"
-)
-_IDX_REVIEWS_USER = (
-    "CREATE INDEX IF NOT EXISTS idx_dealer_reviews_user "
-    "ON dealer_reviews(user_id, created_at)"
-)
-
-# Postgres objects, each with the statement that creates it. migrations/ owns
-# all of them (V001: dealer_reviews and both indexes; V026: review_reports).
-_REVIEWS_PG_OBJECTS = (
-    ("dealer_reviews", _DDL_PG),
-    ("idx_dealer_reviews_dealer", _IDX_REVIEWS_DEALER),
-    ("idx_dealer_reviews_user", _IDX_REVIEWS_USER),
-)
-_REVIEW_REPORTS_PG_OBJECTS = (("review_reports", _DDL_REPORTS_PG),)
-
-# Per-process "these objects are known to exist" flags, Postgres only. Set when the
-# database records every migration, or when the catalog showed every object present
-# before this call created anything (never on the strength of uncommitted DDL: the
-# caller owns the transaction and may roll it back). SQLite is pytest-only, a fresh
-# file per test, so that path keeps creating its tables on every call.
-_REVIEWS_TABLE_OK = False
-_REVIEW_REPORTS_TABLE_OK = False
-
-
-def _ensure_pg_objects(cur: Any, objects: tuple[tuple[str, str], ...]) -> bool:
-    """Postgres: create only the missing ``objects``, behind the migration gate.
-
-    Returns True when every object is known to exist without any DDL from this
-    call (the caller may cache that). No statement at all when the schema is
-    current; strict mode on a behind database raises ``SchemaNotMigratedError``.
-    """
-    if not runtime_ddl.pg_legacy_ddl_needed():
-        return True
-    missing = runtime_ddl.pg_missing_relations(cur, [name for name, _sql in objects])
-    if not missing:
-        return True
-    runtime_ddl.run_pg_legacy_ddl(cur, [sql for name, sql in objects if name in missing])
-    return False
-
-
-def ensure_reviews_table(cur: Any) -> None:
-    """Make sure the ``dealer_reviews`` table and its indexes exist.
-
-    Accepts a cursor (matching the ``ensure_*_table(cur)`` signature requested);
-    it does not commit — the caller owns the transaction.
-
-    Postgres (P4.6): no statement at all once the database is at the
-    ``migrations/`` version or the objects were seen in the catalog (cached per
-    process). The dealership page calls this on every request, and ``CREATE INDEX
-    IF NOT EXISTS`` takes a SHARE lock even when the index exists. A database behind
-    the chain gets only its missing objects, after ``SET LOCAL lock_timeout``
-    (``backend.db.runtime_ddl``). SQLite: unchanged.
-    """
-    global _REVIEWS_TABLE_OK
-    if not inventory_pg.is_inventory_postgres():
-        cur.execute(_DDL_SQLITE)
-        cur.execute(_IDX_REVIEWS_DEALER)
-        cur.execute(_IDX_REVIEWS_USER)
-        return
-    if _REVIEWS_TABLE_OK:
-        return
-    if _ensure_pg_objects(cur, _REVIEWS_PG_OBJECTS):
-        _REVIEWS_TABLE_OK = True
-
-
-def ensure_review_reports_table(cur: Any) -> None:
-    """Make sure the ``review_reports`` dedup table exists (same gate as
-    :func:`ensure_reviews_table`; V026 owns it on Postgres)."""
-    global _REVIEW_REPORTS_TABLE_OK
-    if not inventory_pg.is_inventory_postgres():
-        cur.execute(_DDL_REPORTS_SQLITE)
-        return
-    if _REVIEW_REPORTS_TABLE_OK:
-        return
-    if _ensure_pg_objects(cur, _REVIEW_REPORTS_PG_OBJECTS):
-        _REVIEW_REPORTS_TABLE_OK = True
 
 
 def _now_iso() -> str:
@@ -193,7 +49,6 @@ def upsert_review(
     the review's reporter dedup rows so earlier reporters can flag the edit anew.
     """
     cur = conn.cursor()
-    ensure_reviews_table(cur)
     now = _now_iso()
     anon = 1 if is_anonymous else 0
     fee_reported = 1 if addon_fee_reported else 0
@@ -225,7 +80,6 @@ def upsert_review(
             ip_hash, now, now,
         ),
     )
-    ensure_review_reports_table(cur)
     cur.execute(
         "DELETE FROM review_reports WHERE review_id IN ("
         "SELECT id FROM dealer_reviews "
@@ -237,8 +91,7 @@ def upsert_review(
 
 def get_user_review(conn: Any, dealer_id: str, user_id: int) -> dict | None:
     """Return the user's own review for this dealer (any status), or ``None``."""
-    conn.row_factory = sqlite3.Row
-    cur = conn.cursor()
+    cur = conn.cursor(row_factory=dict_row)
     try:
         cur.execute(
             "SELECT * FROM dealer_reviews WHERE dealer_id = ? AND user_id = ?",
@@ -252,8 +105,7 @@ def get_user_review(conn: Any, dealer_id: str, user_id: int) -> dict | None:
 
 def get_reviews_for_dealer(conn: Any, dealer_id: str, limit: int = 100) -> list[dict]:
     """Published reviews for a dealer, newest first (capped by *limit*)."""
-    conn.row_factory = sqlite3.Row
-    cur = conn.cursor()
+    cur = conn.cursor(row_factory=dict_row)
     try:
         cur.execute(
             """
@@ -280,8 +132,7 @@ def review_summary(conn: Any, dealer_id: str) -> dict:
     ``addon_fees`` lists the reported (amount, description) pairs so the page can
     surface the mandatory-fee warning prominently.
     """
-    conn.row_factory = sqlite3.Row
-    cur = conn.cursor()
+    cur = conn.cursor(row_factory=dict_row)
     empty = {"count": 0, "avg_rating": None, "addon_fee_count": 0, "addon_fees": []}
     try:
         cur.execute(
@@ -329,8 +180,7 @@ def review_summary(conn: Any, dealer_id: str) -> dict:
 
 
 def _review_state(conn: Any, review_id: int) -> dict | None:
-    conn.row_factory = sqlite3.Row
-    cur = conn.cursor()
+    cur = conn.cursor(row_factory=dict_row)
     cur.execute(
         "SELECT id, report_count, status FROM dealer_reviews WHERE id = ?",
         (int(review_id),),
@@ -350,18 +200,16 @@ def increment_report(conn: Any, review_id: int, reporter_hash: str | None = None
     can reach ``REPORT_FLAG_THRESHOLD`` alone. Returns ``{report_count, status}``
     for the row, or ``None`` if it is absent.
     """
-    cur = conn.cursor()
-    ensure_reviews_table(cur)
+    cur = conn.cursor(row_factory=dict_row)
 
     if reporter_hash:
-        ensure_review_reports_table(cur)
         # First confirm the review exists (a report for a missing review is a 404,
         # not a silent no-op that would still record a dedup row).
         state = _review_state(conn, int(review_id))
         if state is None:
             conn.commit()
             return None
-        cur = conn.cursor()
+        cur = conn.cursor(row_factory=dict_row)
         cur.execute(
             "INSERT INTO review_reports (review_id, ip_hash, created_at) "
             "VALUES (?, ?, ?) ON CONFLICT (review_id, ip_hash) DO NOTHING",
@@ -377,7 +225,6 @@ def increment_report(conn: Any, review_id: int, reporter_hash: str | None = None
         "WHERE id = ?",
         (_now_iso(), int(review_id)),
     )
-    conn.row_factory = sqlite3.Row
     cur.execute(
         "SELECT id, report_count, status FROM dealer_reviews WHERE id = ?",
         (int(review_id),),
@@ -403,10 +250,7 @@ def list_flagged_reviews(conn: Any, limit: int = 200) -> list[dict]:
     threshold), newest-reported first — the moderation queue with no other
     surface to view or reverse it from.
     """
-    conn.row_factory = sqlite3.Row
-    cur = conn.cursor()
-    ensure_reviews_table(cur)
-    conn.commit()
+    cur = conn.cursor(row_factory=dict_row)
     try:
         cur.execute(
             """
@@ -433,7 +277,6 @@ def set_review_status(conn: Any, review_id: int, status: str) -> bool:
     if status not in ("published", "removed"):
         raise ValueError(f"unsupported review status: {status!r}")
     cur = conn.cursor()
-    ensure_reviews_table(cur)
     if status == "published":
         cur.execute(
             "UPDATE dealer_reviews SET status = ?, report_count = 0, updated_at = ? WHERE id = ?",
@@ -451,8 +294,7 @@ def set_review_status(conn: Any, review_id: int, status: str) -> bool:
 
 def count_recent_reviews_by_user(conn: Any, user_id: int, within_hours: int = 1) -> int:
     """Number of reviews this user submitted within the rolling window (rate limit)."""
-    conn.row_factory = sqlite3.Row
-    cur = conn.cursor()
+    cur = conn.cursor(row_factory=dict_row)
     since = (datetime.now(timezone.utc) - timedelta(hours=within_hours)).isoformat()
     try:
         cur.execute(

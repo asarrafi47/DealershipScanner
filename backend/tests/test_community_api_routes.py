@@ -5,7 +5,8 @@ surface, which is where the authorization decisions actually live: who may post,
 who may delete, what a reader is allowed to learn about an author, and how many
 times one actor's report may count.
 
-SQLite isolation mirrors ``test_comments_db.py`` — never touches prod Postgres.
+A throwaway Postgres clone (``pg_db``), as in ``test_comments_db.py`` — never touches
+prod.
 """
 from __future__ import annotations
 
@@ -21,23 +22,17 @@ from backend.main import app
 CSRF = "community-api-test-csrf-token-32-chars-long"
 CAR_ID = 101
 
+pytestmark = pytest.mark.pg
+
 
 @pytest.fixture()
-def seeded(sqlite_inventory, monkeypatch):
+def seeded(pg_db, monkeypatch):
     # Volume limits are not what these tests are about, and the in-process
     # limiter is shared across the whole session.
     monkeypatch.setenv("COMMENT_FLAG_RPM", "500")
     monkeypatch.setenv("COMMENT_POST_RPM", "500")
-    conn = sqlite_inventory.get_conn()
-    try:
-        cur = conn.cursor()
-        cur.execute("CREATE TABLE IF NOT EXISTS cars (id INTEGER PRIMARY KEY, vin TEXT)")
-        cur.execute("CREATE TABLE IF NOT EXISTS dealerships (id INTEGER PRIMARY KEY, name TEXT)")
-        cur.execute(f"INSERT INTO cars (id, vin) VALUES ({CAR_ID}, 'TESTVIN0000000001')")
-        conn.commit()
-    finally:
-        conn.close()
-    return sqlite_inventory
+    pg_db.add_cars([{"id": CAR_ID, "vin": "TESTVIN0000000001"}])
+    return pg_db
 
 
 def _client(user_id: int | None = None, ip: str = "203.0.113.10"):

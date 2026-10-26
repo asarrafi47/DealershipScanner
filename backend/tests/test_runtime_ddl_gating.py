@@ -1,9 +1,9 @@
 """Hot-path runtime DDL is gated on the migration chain (REMEDIATION_PLAN P4.6).
 
-Three helpers still carry their own DDL and run on hot paths:
+Two helpers still carry their own DDL and run on hot paths (``reviews.store``
+dropped its runtime DDL in N37.8; a dealership page request must still issue no
+CREATE, pinned below):
 
-* ``reviews.store.ensure_reviews_table`` (every dealership page request) and
-  ``ensure_review_reports_table``;
 * ``scanner.recipe_store._ensure_table`` (first recipe-store touch per process;
   its ``ALTER TABLE ... ADD COLUMN IF NOT EXISTS`` took ACCESS EXCLUSIVE);
 * ``scanner.job_queue.ensure_job_tables`` (every web, worker and scheduler start).
@@ -34,7 +34,6 @@ import pytest
 from backend.db import inventory_pg, runtime_ddl, schema_version
 from backend.db.inventory_compat import InventoryConnection
 from backend.db.schema_version import SchemaNotMigratedError
-from backend.reviews import store as reviews
 from backend.scanner import job_queue, recipe_store
 
 _REPO = Path(__file__).resolve().parents[2]
@@ -154,8 +153,6 @@ def _assert_lock_timeout_precedes_ddl(raw: FakePg) -> None:
 @pytest.fixture(autouse=True)
 def _fresh_state(monkeypatch):
     """Per-process flags start clean; the schema answer is set per test."""
-    monkeypatch.setattr(reviews, "_REVIEWS_TABLE_OK", False)
-    monkeypatch.setattr(reviews, "_REVIEW_REPORTS_TABLE_OK", False)
     monkeypatch.setattr(recipe_store, "_table_ready", False)
     monkeypatch.setattr(inventory_pg, "_PG_INV_SCHEMA_OK", False)
     monkeypatch.setattr(schema_version, "_current", None)
@@ -192,9 +189,6 @@ def pg_strict_behind(monkeypatch):
     monkeypatch.setattr(inventory_pg, "pg_connect", lambda: checker)
     monkeypatch.setenv("INVENTORY_SCHEMA_CHECK", "strict")
     return checker
-
-
-_REVIEW_OBJECTS = {"dealer_reviews", "idx_dealer_reviews_dealer", "idx_dealer_reviews_user"}
 
 
 # ---------------------------------------------------------------------------
@@ -277,105 +271,6 @@ def test_sqlite_connection_detection(tmp_path):
         conn.close()
     assert not runtime_ddl.is_sqlite_connection(_compat(FakePg()))
     assert not runtime_ddl.is_sqlite_connection(FakePg())
-
-
-# ---------------------------------------------------------------------------
-# reviews.store
-# ---------------------------------------------------------------------------
-
-
-def test_reviews_issue_no_statement_when_the_schema_is_current(pg_current):
-    raw = FakePg()
-    cur = _compat(raw).cursor()
-    for _ in range(3):
-        reviews.ensure_reviews_table(cur)
-        reviews.ensure_review_reports_table(cur)
-    assert raw.events == []
-
-
-def test_reviews_behind_but_present_probe_once_then_go_quiet(pg_behind):
-    raw = FakePg(present=_REVIEW_OBJECTS | {"review_reports"})
-    cur = _compat(raw).cursor()
-    reviews.ensure_reviews_table(cur)
-    reviews.ensure_review_reports_table(cur)
-    assert raw.ddl == []
-    assert len(raw.statements) == 2 and all(s.startswith("SELECT to_regclass(") for s in raw.statements)
-    raw.events.clear()
-    reviews.ensure_reviews_table(cur)
-    reviews.ensure_review_reports_table(cur)
-    assert raw.events == []
-
-
-def test_reviews_behind_and_missing_create_under_lock_timeout(pg_behind):
-    raw = FakePg()
-    cur = _compat(raw).cursor()
-    reviews.ensure_reviews_table(cur)
-    assert raw.statements[0].startswith("SELECT to_regclass('public.dealer_reviews')")
-    _assert_lock_timeout_precedes_ddl(raw)
-    assert [s.split("(")[0].strip() for s in raw.ddl] == [
-        "CREATE TABLE IF NOT EXISTS dealer_reviews",
-        "CREATE INDEX IF NOT EXISTS idx_dealer_reviews_dealer ON dealer_reviews",
-        "CREATE INDEX IF NOT EXISTS idx_dealer_reviews_user ON dealer_reviews",
-    ]
-    assert ("commit",) not in raw.events, "the caller owns the transaction"
-    # Uncommitted DDL proves nothing: the next call looks again.
-    assert reviews._REVIEWS_TABLE_OK is False
-    raw.events.clear()
-    reviews.ensure_review_reports_table(cur)
-    _assert_lock_timeout_precedes_ddl(raw)
-    assert raw.ddl == [_norm(reviews._DDL_REPORTS_PG)]
-
-
-def test_reviews_behind_create_only_the_missing_objects(pg_behind):
-    raw = FakePg(present={"dealer_reviews", "idx_dealer_reviews_dealer"})
-    reviews.ensure_reviews_table(_compat(raw).cursor())
-    assert raw.ddl == [_norm(reviews._IDX_REVIEWS_USER)]
-    _assert_lock_timeout_precedes_ddl(raw)
-
-
-def test_reviews_probe_works_on_a_dict_row_cursor(pg_behind):
-    """list_flagged_reviews sets row_factory before taking its cursor."""
-    raw = FakePg(present=_REVIEW_OBJECTS)
-    conn = _compat(raw)
-    conn.row_factory = sqlite3.Row
-    reviews.ensure_reviews_table(conn.cursor())
-    assert raw.ddl == [] and reviews._REVIEWS_TABLE_OK is True
-
-
-def test_reviews_refuse_in_strict_mode_without_ddl(pg_strict_behind):
-    raw = FakePg()
-    with pytest.raises(SchemaNotMigratedError):
-        reviews.ensure_reviews_table(_compat(raw).cursor())
-    assert raw.events == []
-
-
-class _RecordingSqliteCursor:
-    def __init__(self, cur) -> None:
-        self._cur = cur
-        self.statements: list[str] = []
-
-    def execute(self, sql, params=()):
-        self.statements.append(_norm(sql))
-        return self._cur.execute(sql, params)
-
-
-def test_reviews_sqlite_path_is_unchanged(sqlite_inventory, monkeypatch):
-    monkeypatch.setattr(schema_version, "schema_is_current", lambda: pytest.fail("asked on SQLite"))
-    conn = sqlite_inventory.get_conn()
-    try:
-        for _ in range(2):
-            cur = _RecordingSqliteCursor(conn.cursor())
-            reviews.ensure_reviews_table(cur)
-            reviews.ensure_review_reports_table(cur)
-            assert cur.statements == [
-                _norm(reviews._DDL_SQLITE), _norm(reviews._IDX_REVIEWS_DEALER),
-                _norm(reviews._IDX_REVIEWS_USER), _norm(reviews._DDL_REPORTS_SQLITE),
-            ]
-        reviews.upsert_review(conn, "d-com", 1, rating=4, body="Fine, no pressure at all.")
-        assert reviews.review_summary(conn, "d-com")["count"] == 1
-        assert reviews.increment_report(conn, 1, reporter_hash="h1") == {"report_count": 1, "status": "published"}
-    finally:
-        conn.close()
 
 
 # ---------------------------------------------------------------------------
@@ -548,7 +443,7 @@ def test_legacy_inventory_ddl_uses_set_local_inside_its_transaction():
 
 def test_no_session_level_lock_timeout_left_in_the_hot_path_modules():
     session_set = re.compile(r"""SET\s+(SESSION\s+)?lock_timeout""", re.IGNORECASE)
-    for rel in ("backend/db/inventory_pg.py", "backend/db/runtime_ddl.py", "backend/reviews/store.py",
+    for rel in ("backend/db/inventory_pg.py", "backend/db/runtime_ddl.py",
                 "backend/scanner/recipe_store.py", "backend/scanner/job_queue.py"):
         text = (_REPO / rel).read_text(encoding="utf-8")
         assert not session_set.search(text), rel
@@ -603,7 +498,7 @@ def test_dealership_page_request_issues_no_create_on_a_current_postgres(flask_ap
     monkeypatch.setattr(dp, "_known_catalog_makes", lambda: frozenset())
     monkeypatch.setattr(dp, "_find_dealership_by_dealer_id", lambda _id: None)
     monkeypatch.setattr(dp, "_dealer_specials", lambda _id: {"total": 0, "groups": [], "scraped_at": None})
-    # _dealer_reviews is NOT stubbed: it is the per-request DDL this unit removes.
+    # _dealer_reviews is NOT stubbed: its reads must run without any DDL.
     with flask_app.test_client() as client:
         for _ in range(2):
             r = client.get("/dealership/beamancdjr-com")
@@ -685,16 +580,11 @@ def test_live_lock_timeout_ends_with_the_transaction_and_behind_creates_only_mis
         raw.rollback()
 
         conn = InventoryConnection(raw, backend="postgres")
-        cur = conn.cursor()
-        reviews.ensure_reviews_table(cur)
-        reviews.ensure_review_reports_table(cur)
-        conn.commit()
         recipe_store._ensure_table(conn)
         assert raw.execute("SHOW lock_timeout").fetchone()[0] == before
         raw.rollback()
         present = raw.execute(
-            "SELECT to_regclass('public.dealer_reviews'), to_regclass('public.idx_dealer_reviews_user'), "
-            "to_regclass('public.review_reports'), to_regclass('public.dealer_recipes'), "
+            "SELECT to_regclass('public.dealer_recipes'), "
             "to_regclass('public.dealer_jobs'), to_regclass('public.idx_dealer_catalog_next_scan')"
         ).fetchone()
         raw.rollback()
@@ -703,8 +593,6 @@ def test_live_lock_timeout_ends_with_the_transaction_and_behind_creates_only_mis
         raw.close()
 
     # Second pass in a "new process": the catalog shows everything, so no DDL.
-    monkeypatch.setattr(reviews, "_REVIEWS_TABLE_OK", False)
-    monkeypatch.setattr(reviews, "_REVIEW_REPORTS_TABLE_OK", False)
     monkeypatch.setattr(recipe_store, "_table_ready", False)
     seen: list[str] = []
     raw = psycopg.connect(scratch_pg)
@@ -725,10 +613,6 @@ def test_live_lock_timeout_ends_with_the_transaction_and_behind_creates_only_mis
     try:
         job_queue.ensure_job_tables(raw)
         conn = InventoryConnection(raw, backend="postgres")
-        cur = conn.cursor()
-        reviews.ensure_reviews_table(cur)
-        reviews.ensure_review_reports_table(cur)
-        conn.commit()
         recipe_store._ensure_table(conn)
     finally:
         raw.close()

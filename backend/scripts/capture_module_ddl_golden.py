@@ -4,7 +4,7 @@ Capture the schema that module-level runtime DDL builds on Postgres (P4.3).
 
 ``backend/tests/fixtures/runtime_ddl_schema_golden.json`` (2026-10-01) covers the
 runtime DDL in ``backend/db``. Outside it, modules and scripts still create tables
-on first use: review_reports and haiku_spec_cache existed only that way, and the
+on first use: haiku_spec_cache existed only that way, and the
 V019-only tables and ``uq_option_rejections_standing`` came from scripts. This tool
 runs that DDL against throwaway databases and writes what it built to
 ``backend/tests/fixtures/module_ddl_schema_golden.json``, which
@@ -154,14 +154,6 @@ def _run_statements(statements: list[str]) -> Callable[[Any], None]:
     return run
 
 
-def _reviews(conn: Any) -> None:
-    from backend.reviews import store
-
-    cur = conn.cursor()
-    store.ensure_reviews_table(cur)
-    store.ensure_review_reports_table(cur)
-
-
 def _haiku(conn: Any) -> None:
     from backend.enrichment import service
 
@@ -183,18 +175,6 @@ def _recipe_store(conn: Any) -> None:
         recipe_store._ensure_table(conn)
     finally:
         recipe_store._table_ready = saved
-
-
-def _specials(conn: Any) -> None:
-    from backend.scanner.specials import store
-
-    store.ensure_dealer_specials_table(conn)
-
-
-def _lease_matches(conn: Any) -> None:
-    from backend.scanner.specials import lease_matches_store
-
-    lease_matches_store.ensure_lease_matches_table(conn)
 
 
 def _scan_profile(conn: Any) -> None:
@@ -224,12 +204,9 @@ def _vin_owner_conflicts(conn: Any) -> None:
 def build_steps() -> list[Step]:
     """Every captured DDL source, in run order (pure apart from reading source files)."""
     modules = [
-        Step("backend/reviews/store.py", "ensure_reviews_table + ensure_review_reports_table", "empty", _reviews),
         Step("backend/enrichment/service.py", "ensure_enrichment_columns (Postgres: haiku_spec_cache)", "empty", _haiku),
         Step("backend/scanner/job_queue.py", "ensure_job_tables", "empty", _job_queue),
         Step("backend/scanner/recipe_store.py", "_ensure_table", "empty", _recipe_store),
-        Step("backend/scanner/specials/store.py", "ensure_dealer_specials_table", "empty", _specials),
-        Step("backend/scanner/specials/lease_matches_store.py", "ensure_lease_matches_table", "empty", _lease_matches),
         Step("backend/scanner/dealer/profile.py", "ensure_dealer_scan_profile_table", "empty", _scan_profile),
         Step("backend/catalog/generations.py", "ensure_model_generations_table", "empty", _generations),
         Step("backend/intelligence/market_pricing.py", "ensure_schema", "empty", _market_pricing),

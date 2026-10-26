@@ -1,6 +1,8 @@
 """SEC-A-007: a resubmit must not resurrect an admin-removed review."""
 from __future__ import annotations
 
+import pytest
+
 from backend.reviews.store import (
     get_reviews_for_dealer,
     get_user_review,
@@ -10,8 +12,9 @@ from backend.reviews.store import (
 )
 
 
-def test_resubmit_keeps_removed_review_removed(sqlite_inventory):
-    conn = sqlite_inventory.get_conn()
+@pytest.mark.pg
+def test_resubmit_keeps_removed_review_removed(pg_db):
+    conn = pg_db.get_conn()
     try:
         upsert_review(conn, "d-com", 7, rating=1, body="Terrible, avoid this place.")
         rid = get_user_review(conn, "d-com", 7)["id"]
@@ -23,8 +26,9 @@ def test_resubmit_keeps_removed_review_removed(sqlite_inventory):
         conn.close()
 
 
-def test_edit_clears_reporter_dedup_so_reporters_can_reflag(sqlite_inventory):
-    conn = sqlite_inventory.get_conn()
+@pytest.mark.pg
+def test_edit_clears_reporter_dedup_so_reporters_can_reflag(pg_db):
+    conn = pg_db.get_conn()
     try:
         upsert_review(conn, "d-com", 8, rating=2, body="Pushy sales staff overall.")
         rid = get_user_review(conn, "d-com", 8)["id"]

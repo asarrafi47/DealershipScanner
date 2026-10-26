@@ -1,108 +1,31 @@
 """
-Dealership registry table (developer dashboard) in inventory.db.
+Dealership registry table (developer dashboard) in the inventory Postgres database.
+
+The table belongs to ``migrations/`` (V001, with the discovery columns from V020);
+nothing here creates or alters it.
 """
 
 from __future__ import annotations
 
 import math
 import re
-import sqlite3
 from datetime import datetime, timezone
 from typing import Any
 
 import pgeocode
+from psycopg.rows import dict_row
 from thefuzz import fuzz
 
-from backend.db.inventory_db import DB_PATH, get_conn
+from backend.db.inventory_db import DB_PATH, get_conn  # noqa: F401  (dev/routes imports DB_PATH from here)
 
 _DEDUPE_THRESHOLD = 88
 
 
-# New discovery/classification columns collected by the Google Places tier and
-# the platform classifier. Kept in one list so the sqlite and Postgres schema
-# paths stay in sync.
-_DISCOVERY_EXTRA_COLUMNS: list[tuple[str, str]] = [
-    ("oem_brand", "TEXT"),
-    ("business_status", "TEXT"),
-    ("google_primary_type", "TEXT"),
-    ("phone", "TEXT"),
-    ("platform", "TEXT"),
-    ("strategy", "TEXT"),
-]
-
-
-def ensure_dealerships_table(cursor: sqlite3.Cursor) -> None:
-    from backend.db.inventory_pg import is_inventory_postgres, pg_add_columns
-
-    if is_inventory_postgres():
-        from backend.db.schema_version import schema_is_current
-
-        # migrations/ owns the table (V001 + V020 add these columns). Only a
-        # database behind the chain still gets the legacy additive pass.
-        if schema_is_current():
-            return
-        pg_add_columns(cursor, "dealerships", _DISCOVERY_EXTRA_COLUMNS)
-        return
-    cursor.execute(
-        """
-        CREATE TABLE IF NOT EXISTS dealerships (
-            id                INTEGER PRIMARY KEY AUTOINCREMENT,
-            name              TEXT NOT NULL,
-            website_url       TEXT NOT NULL,
-            city              TEXT NOT NULL,
-            state             TEXT NOT NULL,
-            latitude          REAL,
-            longitude         REAL,
-            created_at        TEXT NOT NULL DEFAULT (datetime('now')),
-            duplicate_of_id   INTEGER,
-            duplicate_score   REAL,
-            is_active         INTEGER NOT NULL DEFAULT 1,
-            street_address    TEXT,
-            zip_code          TEXT,
-            dealer_website_url TEXT,
-            source_dmv        INTEGER NOT NULL DEFAULT 0,
-            source_osm        INTEGER NOT NULL DEFAULT 0,
-            source_web        INTEGER NOT NULL DEFAULT 0,
-            osm_id            TEXT,
-            FOREIGN KEY (duplicate_of_id) REFERENCES dealerships(id)
-        )
-        """
-    )
-    cursor.execute("PRAGMA table_info(dealerships)")
-    dcols = [row[1] for row in cursor.fetchall()]
-    additive = [
-        ("is_active",         "INTEGER NOT NULL DEFAULT 1"),
-        ("street_address",    "TEXT"),
-        ("zip_code",          "TEXT"),
-        ("dealer_website_url","TEXT"),
-        ("source_dmv",        "INTEGER NOT NULL DEFAULT 0"),
-        ("source_osm",        "INTEGER NOT NULL DEFAULT 0"),
-        ("source_web",        "INTEGER NOT NULL DEFAULT 0"),
-        ("osm_id",            "TEXT"),
-        ("sticker_provider",  "TEXT NOT NULL DEFAULT 'unknown'"),
-        ("sticker_ipacket_fail_count", "INTEGER NOT NULL DEFAULT 0"),
-        ("sticker_provider_updated_at", "TEXT"),
-        ("google_place_id",       "TEXT"),
-        ("google_rating",         "REAL"),
-        ("google_review_count",   "INTEGER"),
-        ("google_rating_fetched_at", "TEXT"),
-        # V003 provenance column; rooftop_disown.roster_place SELECTs it, so the
-        # SQLite fallback schema must carry it too.
-        ("street_address_source", "TEXT"),
-        *_DISCOVERY_EXTRA_COLUMNS,
-    ]
-    for col, coltype in additive:
-        if col not in dcols:
-            cursor.execute(f"ALTER TABLE dealerships ADD COLUMN {col} {coltype}")
-    cursor.execute(
-        "CREATE INDEX IF NOT EXISTS idx_dealerships_created ON dealerships(created_at DESC)"
-    )
-    cursor.execute(
-        "CREATE INDEX IF NOT EXISTS idx_dealerships_zip ON dealerships(zip_code)"
-    )
-    cursor.execute(
-        "CREATE INDEX IF NOT EXISTS idx_dealerships_google_place ON dealerships(google_place_id)"
-    )
+def ensure_dealerships_table(cursor: Any) -> None:
+    """No-op, kept only for ``backend/scanner/manifest.py``, whose call is removed
+    with that module's own N37 unit (it is outside N37.8). The table is created by
+    ``migrations/`` and never at runtime.
+    """
 
 
 def _normalize_dedupe_key(name: str, url: str, city: str, state: str) -> str:
@@ -153,24 +76,20 @@ def upsert_discovery_row(row: dict[str, Any]) -> int:
     Provenance booleans (source_dmv / source_osm / source_web) are ORed so a row
     that was first found by OSM and later confirmed by DDG accumulates both flags.
     """
-    from backend.db.inventory_pg import is_inventory_postgres
-
     conn = get_conn()
     cursor = conn.cursor()
-    ensure_dealerships_table(cursor)
 
     now = datetime.now(timezone.utc).isoformat()
     osm_id = (row.get("osm_id") or "").strip() or None
 
-    if is_inventory_postgres():
-        # Serialize concurrent upserts that could target the same dealer so two
-        # overlapping discovery-pipeline calls can't both miss the existing-row
-        # check below and both INSERT, producing duplicate registry rows.
-        # Transaction-scoped: released automatically on commit/rollback below.
-        # Keyed on osm_id when we have an exact identifier; otherwise on state,
-        # matching the scope of the fuzzy name+city+state scan further down.
-        lock_key = osm_id or (row.get("state") or "").strip().upper() or "unknown"
-        cursor.execute("SELECT pg_advisory_xact_lock(hashtext(?))", (lock_key,))
+    # Serialize concurrent upserts that could target the same dealer so two
+    # overlapping discovery-pipeline calls can't both miss the existing-row
+    # check below and both INSERT, producing duplicate registry rows.
+    # Transaction-scoped: released automatically on commit/rollback below.
+    # Keyed on osm_id when we have an exact identifier; otherwise on state,
+    # matching the scope of the fuzzy name+city+state scan further down.
+    lock_key = osm_id or (row.get("state") or "").strip().upper() or "unknown"
+    cursor.execute("SELECT pg_advisory_xact_lock(hashtext(?))", (lock_key,))
 
     existing_id: int | None = None
     if osm_id:
@@ -299,38 +218,23 @@ def upsert_discovery_row(row: dict[str, Any]) -> int:
         (row.get("strategy") or "").strip() or None,
     )
 
-    if is_inventory_postgres():
-        cursor.execute(
-            """
-            INSERT INTO dealerships
-                (name, website_url, city, state, latitude, longitude, created_at,
-                 street_address, zip_code, dealer_website_url,
-                 source_dmv, source_osm, source_web, osm_id, is_active,
-                 google_place_id, google_rating, google_review_count, google_rating_fetched_at,
-                 oem_brand, business_status, google_primary_type, phone, platform, strategy)
-            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,1,?,?,?,?,?,?,?,?,?,?)
-            RETURNING id
-            """,
-            insert_params,
-        )
-        inserted = cursor.fetchone()
-        if not inserted:
-            raise RuntimeError("INSERT INTO dealerships did not return id")
-        new_id = int(inserted[0])
-    else:
-        cursor.execute(
-            """
-            INSERT INTO dealerships
-                (name, website_url, city, state, latitude, longitude, created_at,
-                 street_address, zip_code, dealer_website_url,
-                 source_dmv, source_osm, source_web, osm_id, is_active,
-                 google_place_id, google_rating, google_review_count, google_rating_fetched_at,
-                 oem_brand, business_status, google_primary_type, phone, platform, strategy)
-            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,1,?,?,?,?,?,?,?,?,?,?)
-            """,
-            insert_params,
-        )
-        new_id = int(cursor.lastrowid)
+    cursor.execute(
+        """
+        INSERT INTO dealerships
+            (name, website_url, city, state, latitude, longitude, created_at,
+             street_address, zip_code, dealer_website_url,
+             source_dmv, source_osm, source_web, osm_id, is_active,
+             google_place_id, google_rating, google_review_count, google_rating_fetched_at,
+             oem_brand, business_status, google_primary_type, phone, platform, strategy)
+        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,1,?,?,?,?,?,?,?,?,?,?)
+        RETURNING id
+        """,
+        insert_params,
+    )
+    inserted = cursor.fetchone()
+    if not inserted:
+        raise RuntimeError("INSERT INTO dealerships did not return id")
+    new_id = int(inserted[0])
     conn.commit()
     conn.close()
     return new_id
@@ -343,9 +247,7 @@ def search_dealerships_by_radius(
     from backend.db.geo import haversine
 
     conn = get_conn()
-    conn.row_factory = sqlite3.Row
-    cursor = conn.cursor()
-    ensure_dealerships_table(cursor)
+    cursor = conn.cursor(row_factory=dict_row)
     cursor.execute(
         """
         SELECT id, name, website_url, city, state, latitude, longitude, created_at,
@@ -372,9 +274,7 @@ def search_dealerships_by_radius(
 def get_dealership_by_id(dealer_id: int) -> dict[str, Any] | None:
     """Return a single dealership row by primary key, or None."""
     conn = get_conn()
-    conn.row_factory = sqlite3.Row
-    cursor = conn.cursor()
-    ensure_dealerships_table(cursor)
+    cursor = conn.cursor(row_factory=dict_row)
     cursor.execute(
         """
         SELECT id, name, website_url, city, state, latitude, longitude,
@@ -393,9 +293,7 @@ def list_dealers_needing_google_rating(*, limit: int = 25) -> list[dict[str, Any
     """Active registry rows that have never had a Google rating lookup."""
     cap = max(1, int(limit))
     conn = get_conn()
-    conn.row_factory = sqlite3.Row
-    cursor = conn.cursor()
-    ensure_dealerships_table(cursor)
+    cursor = conn.cursor(row_factory=dict_row)
     cursor.execute(
         """
         SELECT id, name, city, state, latitude, longitude, google_place_id
@@ -423,7 +321,6 @@ def save_dealer_google_rating(
     """Persist Google rating cache fields on a registry dealership row."""
     conn = get_conn()
     cursor = conn.cursor()
-    ensure_dealerships_table(cursor)
     now = datetime.now(timezone.utc).isoformat()
     cursor.execute(
         """
@@ -448,9 +345,7 @@ def save_dealer_google_rating(
 
 def get_dealer_sticker_provider_row(dealer_id: int) -> dict[str, Any] | None:
     conn = get_conn()
-    conn.row_factory = sqlite3.Row
-    cursor = conn.cursor()
-    ensure_dealerships_table(cursor)
+    cursor = conn.cursor(row_factory=dict_row)
     cursor.execute(
         """
         SELECT id, sticker_provider, sticker_ipacket_fail_count, sticker_provider_updated_at
@@ -472,7 +367,6 @@ def update_dealer_sticker_provider(
 ) -> None:
     conn = get_conn()
     cursor = conn.cursor()
-    ensure_dealerships_table(cursor)
     now = datetime.now(timezone.utc).isoformat()
     if reset_fail_count:
         cursor.execute(
@@ -502,7 +396,6 @@ def update_dealer_sticker_provider(
 def bump_dealer_ipacket_fail_count(dealer_id: int) -> int:
     conn = get_conn()
     cursor = conn.cursor()
-    ensure_dealerships_table(cursor)
     cursor.execute(
         """
         UPDATE dealerships
@@ -525,8 +418,6 @@ def bump_dealer_ipacket_fail_count(dealer_id: int) -> int:
 
 
 def insert_dealership(row: dict[str, Any]) -> int:
-    from backend.db.inventory_pg import is_inventory_postgres
-
     conn = get_conn()
     cursor = conn.cursor()
     now = datetime.now(timezone.utc).isoformat()
@@ -537,29 +428,19 @@ def insert_dealership(row: dict[str, Any]) -> int:
         row["state"],
         now,
     )
-    if is_inventory_postgres():
-        # psycopg has no lastrowid; use RETURNING id like upsert_discovery_row does.
-        cursor.execute(
-            """
-            INSERT INTO dealerships (name, website_url, city, state, created_at, is_active)
-            VALUES (?, ?, ?, ?, ?, 1)
-            RETURNING id
-            """,
-            insert_params,
-        )
-        inserted = cursor.fetchone()
-        if not inserted:
-            raise RuntimeError("INSERT INTO dealerships did not return id")
-        new_id = int(inserted[0])
-    else:
-        cursor.execute(
-            """
-            INSERT INTO dealerships (name, website_url, city, state, created_at, is_active)
-            VALUES (?, ?, ?, ?, ?, 1)
-            """,
-            insert_params,
-        )
-        new_id = int(cursor.lastrowid)
+    # psycopg has no lastrowid; use RETURNING id like upsert_discovery_row does.
+    cursor.execute(
+        """
+        INSERT INTO dealerships (name, website_url, city, state, created_at, is_active)
+        VALUES (?, ?, ?, ?, ?, 1)
+        RETURNING id
+        """,
+        insert_params,
+    )
+    inserted = cursor.fetchone()
+    if not inserted:
+        raise RuntimeError("INSERT INTO dealerships did not return id")
+    new_id = int(inserted[0])
     conn.commit()
     conn.close()
     return new_id
@@ -567,14 +448,13 @@ def insert_dealership(row: dict[str, Any]) -> int:
 
 def list_recent_dealerships(limit: int = 10) -> list[dict[str, Any]]:
     conn = get_conn()
-    conn.row_factory = sqlite3.Row
-    cursor = conn.cursor()
+    cursor = conn.cursor(row_factory=dict_row)
     cursor.execute(
         """
         SELECT id, name, website_url, city, state, latitude, longitude, created_at,
                duplicate_of_id, duplicate_score, is_active
         FROM dealerships
-        ORDER BY datetime(created_at) DESC
+        ORDER BY created_at DESC
         LIMIT ?
         """,
         (limit,),
@@ -597,8 +477,7 @@ def delete_dealership(dealer_id: int) -> bool:
 def geocode_missing_dealerships() -> dict[str, int]:
     """Fill latitude/longitude where null, using city + state."""
     conn = get_conn()
-    conn.row_factory = sqlite3.Row
-    cursor = conn.cursor()
+    cursor = conn.cursor(row_factory=dict_row)
     cursor.execute(
         """
         SELECT id, city, state FROM dealerships
@@ -628,8 +507,7 @@ def deduplicate_dealerships() -> dict[str, Any]:
     Uses token_set_ratio on a normalized key.
     """
     conn = get_conn()
-    conn.row_factory = sqlite3.Row
-    cursor = conn.cursor()
+    cursor = conn.cursor(row_factory=dict_row)
     cursor.execute(
         """
         SELECT id, name, website_url, city, state, duplicate_of_id

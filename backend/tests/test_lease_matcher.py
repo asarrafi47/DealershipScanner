@@ -8,23 +8,8 @@ import pytest
 from backend.intelligence import lease_matcher as lm
 
 
-def _seed_cars(conn, rows):
-    cur = conn.cursor()
-    cur.execute(
-        """
-        CREATE TABLE IF NOT EXISTS cars (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            vin TEXT, stock_number TEXT, year INTEGER, make TEXT, model TEXT,
-            trim TEXT, price REAL, msrp REAL, condition TEXT, image_url TEXT,
-            dealer_id TEXT, listing_active INTEGER DEFAULT 1
-        )
-        """
-    )
-    for r in rows:
-        cols = ", ".join(r.keys())
-        ph = ", ".join("?" for _ in r)
-        cur.execute(f"INSERT INTO cars ({cols}) VALUES ({ph})", tuple(r.values()))
-    conn.commit()
+def _seed_cars(pg_db, rows):
+    pg_db.add_cars(rows)
 
 
 # ── Deterministic term parsing (pure regex, no model) ────────────────────────
@@ -89,11 +74,12 @@ def test_stock_vin_tail_match():
 # ── Matching against inventory ───────────────────────────────────────────────
 
 
-def test_match_narrows_to_stock_specific_vin(sqlite_inventory):
-    conn = sqlite_inventory.get_conn()
+@pytest.mark.pg
+def test_match_narrows_to_stock_specific_vin(pg_db):
+    conn = pg_db.get_conn()
     try:
         _seed_cars(
-            conn,
+            pg_db,
             [
                 {"vin": "4JGFB4FB5TB497846", "year": 2026, "make": "Mercedes-Benz",
                  "model": "GLE", "trim": "GLE 350 4MATIC® SUV", "price": 69965,
@@ -117,11 +103,12 @@ def test_match_narrows_to_stock_specific_vin(sqlite_inventory):
         conn.close()
 
 
-def test_match_trim_fallback_when_no_stock(sqlite_inventory):
-    conn = sqlite_inventory.get_conn()
+@pytest.mark.pg
+def test_match_trim_fallback_when_no_stock(pg_db):
+    conn = pg_db.get_conn()
     try:
         _seed_cars(
-            conn,
+            pg_db,
             [
                 {"vin": "A", "year": 2024, "make": "Toyota", "model": "Camry",
                  "trim": "LE", "price": 27000, "dealer_id": "t"},
@@ -141,11 +128,12 @@ def test_match_trim_fallback_when_no_stock(sqlite_inventory):
         conn.close()
 
 
-def test_match_make_alias(sqlite_inventory):
-    conn = sqlite_inventory.get_conn()
+@pytest.mark.pg
+def test_match_make_alias(pg_db):
+    conn = pg_db.get_conn()
     try:
         _seed_cars(
-            conn,
+            pg_db,
             [{"vin": "A", "year": 2026, "make": "Mercedes-Benz", "model": "GLE",
               "trim": "GLE 350", "price": 60000, "dealer_id": "fj"}],
         )
@@ -170,14 +158,15 @@ def test_summary_dedupes_model_in_trim():
 # ── Cache store round-trip ───────────────────────────────────────────────────
 
 
-def test_match_cache_roundtrip(sqlite_inventory):
+@pytest.mark.pg
+def test_match_cache_roundtrip(pg_db):
     from backend.scanner.specials.lease_matches_store import (
         get_matches_for_dealer,
         get_offer_match,
         upsert_offer_match,
     )
 
-    conn = sqlite_inventory.get_conn()
+    conn = pg_db.get_conn()
     try:
         upsert_offer_match(
             conn, "fj", "hash-1", offer_id=5,
@@ -205,14 +194,15 @@ def test_match_cache_roundtrip(sqlite_inventory):
 # ── Cache freshness (B-035) ──────────────────────────────────────────────────
 
 
-def test_refresh_recomputes_when_cached_car_sold_or_ttl_expired(sqlite_inventory, monkeypatch):
+@pytest.mark.pg
+def test_refresh_recomputes_when_cached_car_sold_or_ttl_expired(pg_db, monkeypatch):
     from datetime import datetime, timedelta, timezone
 
     from backend.scanner.specials import store as specials_store
 
-    conn = sqlite_inventory.get_conn()
+    conn = pg_db.get_conn()
     try:
-        _seed_cars(conn, [
+        _seed_cars(pg_db, [
             {"vin": "V1", "year": 2026, "make": "Mercedes-Benz", "model": "GLE", "dealer_id": "fj"},
         ])
         offer = {"offer_hash": "h1", "id": 1, "type": "lease"}

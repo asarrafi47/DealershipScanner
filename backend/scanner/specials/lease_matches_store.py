@@ -1,5 +1,5 @@
 """Persistence for ``lease_offer_matches`` — cached LLM extractions + inventory
-matches for lease specials (Postgres in prod/dev, SQLite for tests).
+matches for lease specials (Postgres; the table is owned by ``migrations/``).
 
 Keyed by ``(dealer_id, offer_hash)``. ``offer_hash`` is content-derived
 (:func:`backend.scanner.specials.extract._offer_hash`), so when a dealer's offer
@@ -13,52 +13,7 @@ import json
 from datetime import datetime, timezone
 from typing import Any
 
-from backend.db import inventory_pg
-
-_DDL_PG = """
-CREATE TABLE IF NOT EXISTS lease_offer_matches (
-    id BIGSERIAL PRIMARY KEY,
-    dealer_id TEXT NOT NULL,
-    offer_hash TEXT NOT NULL,
-    offer_id BIGINT,
-    extracted_json TEXT,
-    summary TEXT,
-    matches_json TEXT,
-    match_count INTEGER DEFAULT 0,
-    confidence DOUBLE PRECISION,
-    computed_at TEXT NOT NULL,
-    UNIQUE (dealer_id, offer_hash)
-)
-"""
-
-_DDL_SQLITE = """
-CREATE TABLE IF NOT EXISTS lease_offer_matches (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    dealer_id TEXT NOT NULL,
-    offer_hash TEXT NOT NULL,
-    offer_id INTEGER,
-    extracted_json TEXT,
-    summary TEXT,
-    matches_json TEXT,
-    match_count INTEGER DEFAULT 0,
-    confidence REAL,
-    computed_at TEXT NOT NULL,
-    UNIQUE (dealer_id, offer_hash)
-)
-"""
-
-
-def ensure_lease_matches_table(conn: Any) -> None:
-    """Create the ``lease_offer_matches`` table + index if absent (idempotent)."""
-    ddl = _DDL_PG if inventory_pg.is_inventory_postgres() else _DDL_SQLITE
-    cur = conn.cursor()
-    cur.execute(ddl)
-    cur.execute(
-        "CREATE INDEX IF NOT EXISTS idx_lease_matches_dealer "
-        "ON lease_offer_matches(dealer_id)"
-    )
-    conn.commit()
-
+from psycopg.rows import dict_row
 
 def _now_iso() -> str:
     return datetime.now(timezone.utc).isoformat()
@@ -76,7 +31,6 @@ def upsert_offer_match(
     confidence: float | None,
 ) -> None:
     """Store (or refresh) the cached extraction + matches for one lease offer."""
-    ensure_lease_matches_table(conn)
     cur = conn.cursor()
     cols = [
         "dealer_id", "offer_hash", "offer_id", "extracted_json", "summary",
@@ -112,10 +66,7 @@ def get_offer_match(conn: Any, dealer_id: str, offer_hash: str) -> dict | None:
     """Return the cached match row for one offer, or None if not computed yet."""
     if not offer_hash:
         return None
-    import sqlite3
-
-    conn.row_factory = sqlite3.Row
-    cur = conn.cursor()
+    cur = conn.cursor(row_factory=dict_row)
     try:
         cur.execute(
             "SELECT dealer_id, offer_hash, offer_id, extracted_json, summary, "
@@ -136,10 +87,7 @@ def get_offer_match(conn: Any, dealer_id: str, offer_hash: str) -> dict | None:
 
 def get_matches_for_dealer(conn: Any, dealer_id: str) -> dict[str, dict]:
     """All cached match rows for a dealer, indexed by ``offer_hash``."""
-    import sqlite3
-
-    conn.row_factory = sqlite3.Row
-    cur = conn.cursor()
+    cur = conn.cursor(row_factory=dict_row)
     try:
         cur.execute(
             "SELECT dealer_id, offer_hash, offer_id, extracted_json, summary, "

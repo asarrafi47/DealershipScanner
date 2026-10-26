@@ -1,6 +1,7 @@
 """Round-trip + guard tests for the community backend (comments, dealer ratings).
 
-SQLite isolation mirrors ``test_dealer_reviews.py`` — never touches prod Postgres.
+Runs on a throwaway Postgres clone (``pg_db``), the schema ``migrations/`` builds —
+never touches prod.
 """
 from __future__ import annotations
 
@@ -31,38 +32,16 @@ from backend.enrichment.dealer_ratings import classify_places_error
 
 
 @pytest.fixture()
-def seeded(sqlite_inventory):
+def seeded(pg_db):
     """A car row and two dealership rows so subject-existence checks are real."""
-    conn = sqlite_inventory.get_conn()
-    try:
-        cur = conn.cursor()
-        cur.execute("CREATE TABLE IF NOT EXISTS cars (id INTEGER PRIMARY KEY, vin TEXT)")
-        cur.execute(
-            """
-            CREATE TABLE IF NOT EXISTS dealerships (
-                id INTEGER PRIMARY KEY,
-                name TEXT, city TEXT, state TEXT,
-                latitude REAL, longitude REAL,
-                website_url TEXT, dealer_website_url TEXT,
-                is_active INTEGER NOT NULL DEFAULT 1,
-                duplicate_of_id INTEGER,
-                google_place_id TEXT
-            )
-            """
-        )
-        cur.execute("INSERT INTO cars (id, vin) VALUES (101, 'TESTVIN0000000001')")
-        cur.execute(
-            "INSERT INTO dealerships (id, name, city, state, website_url, is_active) "
-            "VALUES (7, 'Bogus Motors', 'Las Vegas', 'NV', 'https://bogusmotors.com', 1)"
-        )
-        cur.execute(
-            "INSERT INTO dealerships (id, name, city, state, website_url, is_active) "
-            "VALUES (8, 'Smoky Auto Group', 'Henderson', 'NV', 'https://smokyauto.com', 1)"
-        )
-        conn.commit()
-    finally:
-        conn.close()
-    return sqlite_inventory
+    pg_db.add_cars([{"id": 101, "vin": "TESTVIN0000000001"}])
+    pg_db.add_dealerships([
+        {"id": 7, "name": "Bogus Motors", "city": "Las Vegas", "state": "NV",
+         "website_url": "https://bogusmotors.com"},
+        {"id": 8, "name": "Smoky Auto Group", "city": "Henderson", "state": "NV",
+         "website_url": "https://smokyauto.com"},
+    ])
+    return pg_db
 
 
 # ---------------------------------------------------------------------------
@@ -87,6 +66,7 @@ def test_sanitize_body_rejects_overlong():
     assert exc.value.code == "body_too_long"
 
 
+@pytest.mark.pg
 def test_markup_is_stored_verbatim_but_escaped_on_the_way_out(seeded):
     """The raw text stays intact; ``body_html`` is what the UI may render."""
     payload = "<script>alert('x')</script> & 5 < 6"
@@ -105,6 +85,7 @@ def test_body_to_html_turns_newlines_into_breaks():
 # Comment CRUD
 # ---------------------------------------------------------------------------
 
+@pytest.mark.pg
 def test_car_and_dealer_threads_are_independent(seeded):
     create_comment(SCOPE_CAR, 101, 1, "Priced well for the mileage.")
     create_comment(SCOPE_DEALER, 7, 1, "this dealership adds bogus packages, avoid")
@@ -125,7 +106,8 @@ def test_car_and_dealer_threads_are_independent(seeded):
     assert count_comments(SCOPE_DEALER, 8) == 0
 
 
-def test_list_comments_on_empty_database_returns_empty(sqlite_inventory):
+@pytest.mark.pg
+def test_list_comments_on_empty_database_returns_empty(pg_db):
     """A car page viewed before anyone has commented must not raise."""
     assert list_comments(SCOPE_CAR, 999) == []
     assert count_comments(SCOPE_CAR, 999) == 0
@@ -137,6 +119,7 @@ def test_unknown_scope_is_rejected():
     assert exc.value.code == "bad_scope"
 
 
+@pytest.mark.pg
 def test_delete_is_soft_and_owner_only(seeded):
     mine = create_comment(SCOPE_DEALER, 7, 1, "They quoted one price and charged another.")
     theirs = create_comment(SCOPE_DEALER, 7, 2, "Friendly staff, no games.")
@@ -153,6 +136,7 @@ def test_delete_is_soft_and_owner_only(seeded):
     assert delete_own_comment(SCOPE_DEALER, mine["id"], 1) == "not_found"
 
 
+@pytest.mark.pg
 def test_flagging_hides_a_comment_at_the_threshold(seeded):
     c = create_comment(SCOPE_CAR, 101, 3, "Spam spam spam buy my thing")
     for expected in range(1, comments_db.FLAG_HIDE_THRESHOLD):
@@ -168,10 +152,12 @@ def test_flagging_hides_a_comment_at_the_threshold(seeded):
     assert len(list_comments(SCOPE_CAR, 101, include_hidden=True)) == 1
 
 
+@pytest.mark.pg
 def test_flagging_a_missing_comment_returns_none(seeded):
     assert flag_comment(SCOPE_CAR, 424242) is None
 
 
+@pytest.mark.pg
 def test_pagination(seeded):
     for i in range(5):
         create_comment(SCOPE_CAR, 101, 1, f"comment number {i}")
@@ -180,6 +166,7 @@ def test_pagination(seeded):
     assert count_comments(SCOPE_CAR, 101) == 5
 
 
+@pytest.mark.pg
 def test_recent_post_count_spans_both_surfaces_and_counts_deleted(seeded):
     """Post-then-delete must not reset the per-user cap, or spam is unbounded."""
     create_comment(SCOPE_CAR, 101, 42, "one")
@@ -196,7 +183,7 @@ def test_recent_post_count_spans_both_surfaces_and_counts_deleted(seeded):
         cur = conn.cursor()
         cur.execute(
             "INSERT INTO car_comments (car_id, user_id, body, is_hidden, flag_count, "
-            "created_at, updated_at) VALUES (?, ?, ?, 0, 0, ?, ?)",
+            "created_at, updated_at) VALUES (?, ?, ?, FALSE, 0, ?, ?)",
             (101, 42, "ancient history", old, old),
         )
         conn.commit()
@@ -205,6 +192,7 @@ def test_recent_post_count_spans_both_surfaces_and_counts_deleted(seeded):
     assert count_recent_comments_by_user(42) == 2
 
 
+@pytest.mark.pg
 def test_subject_existence_gates_writes(seeded):
     assert subject_exists(SCOPE_CAR, 101) is True
     assert subject_exists(SCOPE_CAR, 999) is False
@@ -216,6 +204,7 @@ def test_subject_existence_gates_writes(seeded):
 # Dealer ratings
 # ---------------------------------------------------------------------------
 
+@pytest.mark.pg
 def test_rating_upsert_is_idempotent(seeded):
     upsert_dealer_rating(7, place_id="ChIJabc", rating=4.7, review_count=27557)
     upsert_dealer_rating(7, place_id="ChIJabc", rating=4.6, review_count=27600)
@@ -236,10 +225,12 @@ def test_rating_upsert_is_idempotent(seeded):
         conn.close()
 
 
+@pytest.mark.pg
 def test_missing_rating_reads_as_none(seeded):
     assert get_dealer_rating(8) is None
 
 
+@pytest.mark.pg
 def test_work_queue_skips_dealers_already_rated(seeded):
     queue = list_dealerships_needing_rating(limit=10)
     assert {d["id"] for d in queue} == {7, 8}
@@ -249,6 +240,7 @@ def test_work_queue_skips_dealers_already_rated(seeded):
     assert {d["id"] for d in queue} == {8}
 
 
+@pytest.mark.pg
 def test_work_queue_refresh_window_reclaims_stale_rows(seeded):
     stale = (datetime.now(timezone.utc) - timedelta(days=60)).isoformat()
     upsert_dealer_rating(
@@ -261,6 +253,7 @@ def test_work_queue_refresh_window_reclaims_stale_rows(seeded):
     assert stale_ids == {7}
 
 
+@pytest.mark.pg
 def test_recording_a_miss_stops_the_importer_re_asking(seeded):
     """A NULL rating with a fetched_at is 'we asked and Google had nothing'."""
     upsert_dealer_rating(7, place_id=None, rating=None, review_count=None)
@@ -271,71 +264,25 @@ def test_recording_a_miss_stops_the_importer_re_asking(seeded):
 
 
 # ---------------------------------------------------------------------------
-# Runtime DDL vs migrations/V002__community.sql
+# Schema of record is migrations/V002 (nothing creates the tables at runtime)
 # ---------------------------------------------------------------------------
 
-class _RecordingCursor:
-    """Collects DDL instead of running it, so the Postgres branch is inspectable."""
+@pytest.mark.pg
+def test_migrated_tables_enforce_the_comment_constraints(seeded):
+    """The CHECK constraints live in V002 only; a blank or negative-flag row is refused."""
+    import psycopg
 
-    def __init__(self):
-        self.statements: list[str] = []
-
-    def execute(self, sql, params=None):
-        self.statements.append(" ".join(str(sql).split()))
-
-
-def _index_defs(statements):
-    """``{name: (table, columns, predicate)}`` from CREATE INDEX statements."""
-    import re as _re
-
-    out = {}
-    for stmt in statements:
-        m = _re.match(
-            r"CREATE INDEX IF NOT EXISTS (\S+) ON (?:public\.)?(\S+?)\s*"
-            r"(?:USING btree\s*)?\((.+?)\)\s*(?:WHERE\s*(.+?))?;?$",
-            stmt, _re.I,
-        )
-        if not m:
-            continue
-        name, table, cols, where = m.groups()
-        norm = lambda s: _re.sub(r"[()\s]+", " ", (s or "")).strip().lower()  # noqa: E731
-        out[name] = (table.lower(), norm(cols), norm(where))
-    return out
-
-
-def test_ddl_matches_v002_migration(monkeypatch):
-    """The runtime tables must be the migration's tables, indexes included.
-
-    Whichever runs first wins, so a runtime index without V002's partial
-    predicate would silently produce a differently-shaped database.
-    """
-    from pathlib import Path
-
-    from backend.db import inventory_pg
-
-    monkeypatch.setattr(inventory_pg, "is_inventory_postgres", lambda: True)
-    cur = _RecordingCursor()
-    comments_db.ensure_comment_tables(cur)
-    comments_db.ensure_dealer_ratings_table(cur)
-    runtime = _index_defs(cur.statements)
-
-    sql_path = Path(__file__).resolve().parents[2] / "migrations" / "V002__community.sql"
-    migration_stmts = [
-        " ".join(s.split())
-        for s in sql_path.read_text().splitlines()
-        if s.strip().upper().startswith("CREATE INDEX")
-    ]
-    migration = _index_defs(migration_stmts)
-
-    assert set(runtime) == set(migration), "runtime and V002 create different indexes"
-    for name, spec in migration.items():
-        assert runtime[name] == spec, f"{name} differs from V002"
-
-    # And the constraints the migration relies on are declared at runtime too.
-    ddl = " ".join(cur.statements)
-    for table in ("car_comments", "dealer_comments"):
-        for suffix in ("body_not_blank", "body_length", "flag_count_nonneg"):
-            assert f"{table}_{suffix}" in ddl
+    conn = seeded.connect()
+    try:
+        for body, flags in (("   ", 0), ("fine", -1)):
+            with pytest.raises(psycopg.errors.CheckViolation):
+                conn.execute(
+                    "INSERT INTO car_comments (car_id, user_id, body, flag_count) VALUES (101, 1, %s, %s)",
+                    (body, flags),
+                )
+            conn.rollback()
+    finally:
+        conn.close()
 
 
 # ---------------------------------------------------------------------------
@@ -395,6 +342,7 @@ def test_hosts_match_allows_subdomains_but_not_unrelated_sites():
     assert hosts_match("", "longotoyota.com") is False
 
 
+@pytest.mark.pg
 def test_unmatched_candidates_are_rejected_rather_than_guessed(seeded):
     """Google's top hit is only accepted when its website confirms the dealer."""
     from backend.enrichment.dealer_ratings import _pick_verified_place
@@ -517,6 +465,7 @@ def test_nearby_same_domain_rooftops_are_split_by_nearest_not_radius():
     ) == (None, False, "ambiguous_domain")
 
 
+@pytest.mark.pg
 def test_group_domain_rooftops_finds_shared_registry_domains(seeded):
     """Two rooftops on echopark.com are grouped; a one-rooftop domain is not."""
     from backend.enrichment.dealer_ratings import _sibling_coords, group_domain_rooftops
@@ -550,6 +499,7 @@ def test_group_domain_rooftops_finds_shared_registry_domains(seeded):
     ]
 
 
+@pytest.mark.pg
 def test_group_domain_rooftop_without_coords_is_refused_before_any_request(seeded):
     """The refusal happens without spending a Places call."""
     import backend.enrichment.dealer_ratings as dr
@@ -643,6 +593,7 @@ def test_miss_sources_distinguish_refusal_from_no_listing():
     assert _MISS_SOURCES["ambiguous_domain"] == SOURCE_UNMATCHED
 
 
+@pytest.mark.pg
 def test_unverified_matches_get_their_own_source_string(seeded):
     from backend.enrichment.dealer_ratings import SOURCE, SOURCE_UNVERIFIED, FetchResult
     from backend.discovery.google_place_rating import GooglePlaceRating

@@ -266,9 +266,9 @@ _V026_TABLES = (
 
 def test_module_golden_fixture_is_not_empty_and_was_captured(module_golden):
     # Guards the guard, and ties the fixture to the capture script's current step list.
-    assert len(module_golden["tables"]) >= 15
-    for t in ("review_reports", "haiku_spec_cache", "car_move_log", "cars_trim_quarantine",
-              "package_values_msrp_quarantine", "dealer_reviews", "vin_owner_conflicts"):
+    assert len(module_golden["tables"]) >= 10
+    for t in ("haiku_spec_cache", "car_move_log", "cars_trim_quarantine",
+              "package_values_msrp_quarantine", "vin_owner_conflicts"):
         assert module_golden["tables"].get(t), t
     assert any(ix["name"] == "uq_option_rejections_standing" for ix in module_golden["indexes"])
     steps = cmdg.build_steps()
@@ -303,7 +303,7 @@ def test_without_v026_the_fresh_chain_misses_what_v026_adopts(module_golden):
     without = _migration_inventory(RECORD_ONLY_VERSIONS | {26})
     missing_tables, _ = _missing_tables_and_columns(module_golden, without)
     assert set(missing_tables) == {
-        "car_move_log", "cars_trim_quarantine", "package_values_msrp_quarantine", "review_reports", "haiku_spec_cache",
+        "car_move_log", "cars_trim_quarantine", "package_values_msrp_quarantine", "haiku_spec_cache",
     }
     assert "option_rejections.uq_option_rejections_standing" in _missing_indexes(module_golden, without)
 
@@ -367,14 +367,6 @@ def test_v026_is_guarded_and_additive_and_never_touches_cars():
         before = sql[: m.start()]
         opened = before.rfind("IF NOT EXISTS (")
         assert opened >= 0 and "END IF" not in before[opened:], m.group(0)
-
-
-def test_v026_review_reports_is_exactly_the_reviews_store_ddl():
-    from backend.reviews import store
-
-    assert _norm_ddl(_v026_statement("CREATE TABLE IF NOT EXISTS public.review_reports")) == _norm_ddl(
-        store._DDL_REPORTS_PG
-    )
 
 
 def test_v026_haiku_spec_cache_is_exactly_the_enrichment_ddl():
@@ -917,9 +909,8 @@ def _snapshot(dsn: str) -> dict[str, Any]:
 
 
 def _build_from_runtime_ddl(dsn: str, monkeypatch) -> None:
-    from backend.db import comments_db, dictionary_schema, incomplete_listings_db, inventory_pg
+    from backend.db import dictionary_schema, incomplete_listings_db, inventory_pg
     from backend.db.dealer_portal_db import init_dealer_portal_db
-    from backend.db.dealerships_db import ensure_dealerships_table
     from backend.db.repositories import grid_cards_repo
 
     monkeypatch.setenv("INVENTORY_DATABASE_URL", dsn)
@@ -936,11 +927,6 @@ def _build_from_runtime_ddl(dsn: str, monkeypatch) -> None:
             inventory_pg.init_postgres_inventory(conn)  # no schema_migrations -> legacy DDL
             conn.commit()
             cur = conn.cursor()
-            ensure_dealerships_table(cur)
-            comments_db.ensure_comment_tables(cur)
-            comments_db.ensure_comment_flags_table(cur)
-            comments_db.ensure_comment_attachments_table(cur)
-            comments_db.ensure_dealer_ratings_table(cur)
             dictionary_schema.ensure_dictionary_tables(cur, postgres=True)
             conn.commit()
             incomplete_listings_db._ensure_schema(conn)
