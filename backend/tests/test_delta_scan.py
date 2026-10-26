@@ -49,20 +49,20 @@ def test_delta_skips_priceless_feed(monkeypatch):
     assert upserts == []
 
 
-def test_delta_upserts_good_feed_but_gates_reconcile(monkeypatch):
+def test_delta_upserts_good_feed_and_leaves_the_retire_decision_to_the_policy(monkeypatch):
     upserts = []
     reconciles = []
     _patch_pipeline(monkeypatch, replay_rows=_rows(60), known_active=100, upserts=upserts)
     monkeypatch.setattr(
         "backend.scanner.inventory_reconcile.reconcile_dealer_inventory_after_scan",
-        lambda *a, **k: reconciles.append(a) or {"ran": True},
+        lambda *a, **k: reconciles.append(k) or {"ran": False},
     )
     out = asyncio.run(ds.delta_scan_dealer(_dealer()))
-    # 60% coverage: good enough to refresh rows, NOT good enough to mark cars sold.
+    # 60% coverage refreshes rows; whether cars are marked sold is plan_retirement's call (P5A.6),
+    # at the delta's 0.8 per-bucket share, not a lot-wide gate here.
     assert out["skipped"] is None
     assert out["upserted"] == 60
-    assert reconciles == []
-    assert "vin_coverage" in out["reconcile"]["skipped_reason"]
+    assert len(reconciles) == 1 and reconciles[0]["bucket_share"] == 0.8
 
 
 def test_delta_full_feed_reconciles(monkeypatch):
@@ -104,6 +104,6 @@ def test_delta_carries_the_manifest_registry_id_to_the_gate_and_the_rows(monkeyp
     monkeypatch.setattr("backend.scanner.inventory_reconcile.reconcile_dealer_inventory_after_scan", lambda *a, **k: {"ran": True})
     d = dict(_dealer(), dealership_registry_id=302)
     asyncio.run(ds.delta_scan_dealer(d))
-    assert seen["fetch"] == {"union": True, "registry_id": 302}
+    assert seen["fetch"] == {"union": True, "registry_id": 302, "replay_out": {}}
     assert seen["ctx"][-1] == 302
     assert upserts and all(v["dealership_registry_id"] == 302 for v in upserts[0])

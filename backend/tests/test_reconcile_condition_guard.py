@@ -5,6 +5,14 @@ import sqlite3
 
 from backend.scanner import inventory_reconcile as ir
 
+import pytest
+
+@pytest.fixture(autouse=True)
+def _single_miss(monkeypatch):
+    """These tests pin the retirement POLICY (which ids); the two-strike layer (P5B.4) has its own
+    file, test_two_strike_retirement.py. One miss retires here."""
+    monkeypatch.setenv("SCANNER_RETIRE_STRIKES", "1")
+
 
 def _vin(i: int) -> str:
     return f"5NPE34AF{i:09d}"[:17].ljust(17, "0")
@@ -12,7 +20,7 @@ def _vin(i: int) -> str:
 
 def _db(new_rows: int, used_rows: int) -> sqlite3.Connection:
     conn = sqlite3.connect(":memory:")
-    conn.execute("CREATE TABLE cars (id INTEGER PRIMARY KEY, dealer_id TEXT, dealer_url TEXT, vin TEXT, condition TEXT, listing_active INTEGER, listing_removed_at TEXT)")
+    conn.execute("CREATE TABLE cars (id INTEGER PRIMARY KEY, dealer_id TEXT, dealer_url TEXT, vin TEXT, condition TEXT, listing_active INTEGER, listing_removed_at TEXT, make TEXT, scraped_at TEXT)")
     i = 0
     for _ in range(new_rows):
         conn.execute("INSERT INTO cars (dealer_id, dealer_url, vin, condition, listing_active) VALUES ('parksidekia-com','https://www.parksidekia.com',?, 'New', 1)", (_vin(i),)); i += 1

@@ -44,6 +44,10 @@ def record_scan_outcomes(outcomes: list[Any], *, finished_at: str) -> int:
                 "vins_count": len(o.get("vins") or []) if isinstance(o.get("vins"), list) else None,
                 "recovery_winning_strategy": inv_recovery.get("winning_strategy"),
                 "recipe_coverage": o.get("recipe_coverage"),
+                # replay walk report: per-recipe stop reason, completeness, scope hash
+                "recipe_replay": o.get("recipe_replay"),
+                # replay-kept VINs vs rows written, when the write kept under half (P5B.7)
+                "replay_persist_gap": o.get("replay_persist_gap"),
                 "vdp_phase_timed_out": bool(o.get("vdp_phase_timed_out")),
                 "description_probe": o.get("description_probe"),
                 "vdp_prefetch": o.get("vdp_prefetch"),
@@ -58,6 +62,13 @@ def record_scan_outcomes(outcomes: list[Any], *, finished_at: str) -> int:
                 "vin_owner_conflicts": int(o.get("vin_owner_conflicts") or 0),
                 "vin_owner_conflict_owners": o.get("vin_owner_conflict_owners") or {},
             }
+            # N9.12 honest accounting: captured (before the guards), refused by each guard, written
+            _cap = o.get("capture_coverage") if isinstance(o.get("capture_coverage"), dict) else {}
+            _captured = int(_cap.get("n") or o.get("inventory_rows") or 0)
+            summary["rows_captured"] = _captured
+            summary["rows_refused_vin_owner"] = summary["vin_owner_conflicts"]
+            summary["rows_refused_rooftop"] = int(o.get("filtered_count") or 0)
+            summary["rows_written"] = int(o.get("upserted") or 0)
             err = o.get("error")
             err_s = str(err)[:2000] if err else None
             cur.execute(

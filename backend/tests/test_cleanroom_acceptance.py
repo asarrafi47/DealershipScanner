@@ -526,7 +526,7 @@ def test_regexes_match_fleet_scan():
 def test_max_replay_pages_reads_recipes_constant():
     from backend.scanner import recipes
 
-    assert run_artifacts.max_replay_pages(REPO) == recipes._MAX_REPLAY_PAGES
+    assert run_artifacts.max_replay_pages(REPO) == recipes._REPLAY_PAGES_HARD_CAP
 
 
 def test_identity_and_verdicts(run_dir: Path):
@@ -553,7 +553,7 @@ def test_vdp_blocked_floor_and_accuracy(run_dir: Path):
 
 def test_page_cap_http_and_retirements(run_dir: Path):
     triage, names, hosts = _maps(run_dir)
-    pc = run_artifacts.page_cap_walks(run_dir, 40, names, hosts)
+    pc = run_artifacts.page_cap_walks(run_dir, 150, names, hosts)
     assert pc["walks"] == 2 and pc["dealers"] == ["alpha-com", "gamma-com"]
     h = run_artifacts.http_403_429(run_dir, names, hosts)
     assert h["by_status"] == {"403": 3, "429": 1}  # same as fleet_summary.json

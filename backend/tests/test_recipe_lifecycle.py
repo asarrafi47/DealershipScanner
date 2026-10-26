@@ -198,7 +198,7 @@ def _res(verdict, reason="", synth="saved_1", had=1):
     (_res("no_recipe", "no_template_for_wordpress", synth="no_template_for_wordpress", had=0), "", "lifecycle"),
     (_res("no_recipe", "validated_zero", synth="validated_zero", had=0), "", "lifecycle"),
     (_res("error", "recipe replay HTTP 403 (auth rotated?)"), "", "lifecycle"),
-    (_res("error", "no scan_runs row"), "", "none"),
+    (_res("error", "no scan_runs row"), "", "retry"),  # N9.13: rescan, no re-synth
     (_res("ok", "complete and verified"), "stale:403:2026-09-28T10:00:00+00:00", "lifecycle"),
     (_res("no_recipe", "rejected:one_condition", synth="rejected:one_condition", had=0), "rejected:one_condition", "lifecycle"),
     (_res("no_rows", "recipe replay yielded 0 rows"), "rejected:section_scoped", "lifecycle"),
@@ -359,7 +359,9 @@ def _seed_retry_rows(db_path: Path, dealer_id: str, n_new: int, n_used: int) -> 
             cond = "New" if i < n_new else "Used"
             rows.append((dealer_id, f"RT{dealer_id[:3].upper()}{i:011d}", (now + timedelta(seconds=1)).isoformat(), 1, cond, "Retry Store", "78701"))
         c.executemany("INSERT INTO cars (dealer_id, vin, scraped_at, listing_active, condition, dealer_name, zip_code) VALUES (?,?,?,?,?,?,?)", rows)
-        summary = {"capture_coverage": {"n": n_new + n_used, "price": 1.0, "trim": 1.0, "exterior_color": 1.0}, "recipe_fetch": "hit"}
+        summary = {"capture_coverage": {"n": n_new + n_used, "price": 1.0, "trim": 1.0, "exterior_color": 1.0}, "recipe_fetch": "hit",
+                   # every recipe scan carries its walk report since P5A.2; "ok" needs the site-total check (N9.12)
+                   "recipe_replay": {"recipes": [{"complete": True, "total_count": n_new + n_used, "raw_vins": n_new + n_used}]}}
         c.execute("INSERT INTO scan_runs (dealer_id, finished_at, duration_seconds, upserted, inventory_rows, error, provider, summary_json) VALUES (?,?,?,?,?,?,?,?)",
                   (dealer_id, (now + timedelta(seconds=1)).isoformat(), 30, n_new + n_used, n_new + n_used, None, "carscommerce", json.dumps(summary)))
         c.commit()

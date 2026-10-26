@@ -29,6 +29,13 @@ from backend.scanner.pipeline import reconcile as rc
 from backend.scripts import dealer_pipeline as dp
 from backend.tests.pipeline_patch import patch_pipeline
 
+
+@pytest.fixture(autouse=True)
+def _single_miss(monkeypatch):
+    """These tests pin the retirement POLICY (which ids); the two-strike layer (P5B.4) has its own
+    file, test_two_strike_retirement.py. One miss retires here."""
+    monkeypatch.setenv("SCANNER_RETIRE_STRIKES", "1")
+
 REPO = Path(__file__).resolve().parents[2]
 
 SINCE = "2026-09-26T00:00:00+00:00"           # this run started
@@ -105,7 +112,9 @@ def test_new_only_rerun_retires_no_used_rows():
     lot-wide guard passes and the old code retired all 200 used cars."""
     legacy = _lot(new=300, used=200)
     out = _pipeline_run(legacy, {"new": 300}, buckets=False)
-    assert out["eligible"] and out["retired"] == 200, "the hole this unit closes"
+    # P5A.7: the pipeline reports; what the legacy whole-lot guard would have un-listed is "retirable"
+    assert out["eligible"] and out["retirable"] == 200 and out["retired"] == 0, "the hole this unit closes"
+    assert _active(legacy, "used") == 200
 
     c = _lot(new=300, used=200)
     out = _pipeline_run(c, {"new": 300})
@@ -128,10 +137,11 @@ def test_handful_of_used_keeps_the_used_rows():
 def test_both_buckets_covered_still_retires_sold_cars():
     c = _lot(new=300, used=200)
     out = _pipeline_run(c, {"new": 300, "used": 180})
-    assert out["retired"] == 20 and out["kept_missing_condition"] == 0 and out["kept_low_bucket"] == 0
-    assert _active(c, "used") == 180 and _active(c, "new") == 300
-    removed = c.execute("SELECT COUNT(*) FROM cars WHERE listing_active=0 AND listing_removed_at IS NOT NULL").fetchone()[0]
-    assert removed == 20
+    assert out["retirable"] == 20 and out["retired"] == 0 and out["kept_missing_condition"] == 0 and out["kept_low_bucket"] == 0
+    # report only (P5A.7): nothing is un-listed here, the scanner's reconcile is the writer
+    assert _active(c, "used") == 200 and _active(c, "new") == 300
+    removed = c.execute("SELECT COUNT(*) FROM cars WHERE listing_active=0 OR listing_removed_at IS NOT NULL").fetchone()[0]
+    assert removed == 0
     assert c.execute("SELECT listing_active FROM cars WHERE dealer_id='other'").fetchone()[0] == 1
 
 
@@ -145,8 +155,8 @@ def test_blank_condition_rows_retire_only_when_both_buckets_qualify(seen, retire
     c = _lot(new=320, used=200, blank=10)
     out = _pipeline_run(c, seen)
     assert out["eligible"]
-    assert (out["retired"], out["kept_missing_condition"], out["kept_low_bucket"]) == (retired, kept_missing, kept_low)
-    assert _active(c, "blank") == blank_left
+    assert (out["retirable"], out["kept_missing_condition"], out["kept_low_bucket"]) == (retired, kept_missing, kept_low)
+    assert out["retired"] == 0 and _active(c, "blank") == 10  # report only: nothing is un-listed
 
 
 def test_new_bucket_missing_keeps_blank_rows():
@@ -166,7 +176,7 @@ def test_empty_bucket_baseline_falls_back_like_the_lot_baseline():
     # a full used run against the same ghosts retires the ones it did not return
     c = _lot(new=300, used=(200, JULY))
     out = _pipeline_run(c, {"new": 300, "used": 150})
-    assert out["bucket_baseline_fallback"] == {"used": 50} and out["retired"] == 50
+    assert out["bucket_baseline_fallback"] == {"used": 50} and out["retirable"] == 50 and out["retired"] == 0
 
 
 def test_dry_run_reports_what_would_retire():
@@ -184,43 +194,12 @@ def test_existing_guards_still_refuse_before_buckets():
     assert not out["eligible"] and "60%" in out["reason"] and _active(c) == 500
 
 
-class _RacingConn:
-    """sqlite3 connection whose stale-id SELECT is followed by another process
-    re-stamping one of those rows before the UPDATE."""
-
-    def __init__(self, c: sqlite3.Connection, refresh_id: int):
-        self._c, self._rid = c, refresh_id
-
-    def execute(self, sql, params=()):
-        cur = self._c.execute(sql, params)
-        if sql.startswith("SELECT id, condition"):
-            rows, desc = cur.fetchall(), cur.description
-            self._c.execute("UPDATE cars SET scraped_at = ? WHERE id = ?", (RUN, self._rid))
-            return type("Cur", (), {"description": desc, "fetchall": lambda _self: rows})()
-        return cur
-
-    def commit(self):
-        self._c.commit()
-
-
-def test_row_refreshed_between_select_and_update_is_not_retired():
-    c = _lot(new=300, used=200)
-    base = rc.bucket_counts(c, "d", since_iso=BASELINE_SINCE)
-    _see(c, "new", 300)
-    _see(c, "used", 180)
-    rows = rc.bucket_counts(c, "d", since_iso=SINCE)
-    racer_id = c.execute("SELECT id FROM cars WHERE dealer_id='d' AND scraped_at < ? ORDER BY id LIMIT 1", (SINCE,)).fetchone()[0]
-    out = dp.reconcile_dealer(_RacingConn(c, racer_id), "d", SINCE, 500, 480, "ok", baseline_buckets=base, rows_buckets=rows)
-    assert out["retirable"] == 20 and out["retired"] == 19
-    assert c.execute("SELECT listing_active FROM cars WHERE id = ?", (racer_id,)).fetchone()[0] == 1
-
-
 # ── scanner reconcile_dealer_inventory_after_scan ────────────────────────────
 
 def _scanner_lot(new: int, used: int, blank: int = 0) -> sqlite3.Connection:
     c = sqlite3.connect(":memory:")
     c.execute("CREATE TABLE cars (id INTEGER PRIMARY KEY, dealer_id TEXT, dealer_url TEXT, vin TEXT, condition TEXT, "
-              "listing_active INTEGER, listing_removed_at TEXT)")
+              "listing_active INTEGER, listing_removed_at TEXT, make TEXT, scraped_at TEXT)")
     i = 0
     for cond, n in (("New", new), ("Used", used), ("", blank)):
         for _ in range(n):
@@ -255,7 +234,7 @@ def test_scanner_keeps_used_when_run_returns_a_handful(_no_ddl):
 
 @pytest.mark.parametrize("seen, conditions, marked, kept_missing, kept_low", [
     (490, {"new", "used"}, 30, None, None),        # used 190/200: 10 used + 20 blank retire
-    (305, {"new", "used"}, 0, None, 215),          # used 5/200: 195 used + 20 blank kept
+    (305, {"new", "used"}, 0, 20, 195),          # used 5/200: 195 used kept low; the 20 blank (none re-seen) are condition_missing since P5A.4
     (300, {"new"}, 0, 220, None),                  # no used rows: 200 used + 20 blank kept
 ])
 def test_scanner_blank_rows_retire_only_when_both_buckets_qualify(_no_ddl, seen, conditions, marked, kept_missing, kept_low):
@@ -296,7 +275,8 @@ def test_delta_scan_passes_the_run_buckets(monkeypatch):
     monkeypatch.setenv("SCANNER_VDP_DB_MERGE", "0")
     monkeypatch.setenv("SCANNER_POST_LISTING_GAP_FILL", "0")
     asyncio.run(ds.delta_scan_dealer({"dealer_id": "d-com", "url": "https://d.example", "name": "D", "provider": "dealer_dot_com"}))
-    assert calls == [{"scraped_conditions": {"new"}}]
+    assert [c["scraped_conditions"] for c in calls] == [{"new"}]
+    assert calls[0]["retirement_writer"] == "delta_scan"
 
 
 # ── wiring: every writer gets its bucket evidence ────────────────────────────

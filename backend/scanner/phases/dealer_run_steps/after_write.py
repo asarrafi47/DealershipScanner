@@ -9,6 +9,7 @@ from backend.scanner.rooftop_disown import (
     disown_foreign_rooftop_vins,
     split_refusals,
 )
+from backend.attribution.disown import protected_refusal_vins
 from backend.scanner.phases.dealer_run_steps.state import DealerRun
 from backend.scanner.post_scan.coverage_report import compute_dealer_coverage, format_coverage_log
 
@@ -96,6 +97,21 @@ async def disown_sibling_rooftop_cars(run: DealerRun, scraped_norm: set[str]) ->
         logger.warning("Rooftop disown failed for %s (continuing): %s", name, e)
 
 
+def reconcile_evidence(run: DealerRun) -> dict:
+    """What this run proves, for the retirement policy: its walk report, the VINs it refused
+    without evidence (protected), when it started, and where its rows came from."""
+    recovery = run.result.get("inventory_recovery") or {}
+    source = "recipe"
+    if recovery.get("replaced") and recovery.get("winning_strategy"):
+        source = f"recovery:{recovery['winning_strategy']}"
+    return {
+        "replay": run.result.get("recipe_replay"),
+        "protected_vins": protected_refusal_vins(run.rooftop_refused, dropped=run.unattributable_vins),
+        "run_started_iso": run.started_iso(),
+        "source": source,
+    }
+
+
 async def reconcile(run: DealerRun, scraped_norm: set[str], scraped_conditions, reconcile_fn) -> None:
     try:
         run.result["reconcile"] = await asyncio.to_thread(
@@ -105,6 +121,7 @@ async def reconcile(run: DealerRun, scraped_norm: set[str], scraped_conditions, 
             scraped_norm,
             run.result,
             scraped_conditions=scraped_conditions,
+            **reconcile_evidence(run),
         )
     except Exception as e:
         logger.warning(

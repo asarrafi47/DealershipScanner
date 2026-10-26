@@ -10,16 +10,18 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 
-from backend.scanner.pipeline.assess import assess
+from backend.scanner.pipeline.assess import assess, fleet_accounting
 from backend.scanner.pipeline.constants import BASELINE_DAYS
-from backend.scanner.pipeline.db import _assess_conn, _conn_alive, _rows, chromium_process_count, get_conn, wait_for_db
-from backend.scanner.pipeline.dealer_logs import log_discovery, log_scan_run, write_instructions_if_first_success
+from backend.scanner.pipeline.db import _assess_conn, _conn_alive, chromium_process_count, get_conn, wait_for_db
+from backend.scanner.pipeline.dealer_logs import log_discovery, log_run_files
 from backend.scanner.pipeline.lifecycle import run_lifecycle_pass
-from backend.scanner.pipeline.reconcile import bucket_counts, reconcile_dealer
+from backend.scanner.pipeline.reconcile import bucket_counts, reconcile_dealer, valid_vin_count
 from backend.scanner.pipeline.recipes import ensure_recipe
+from backend.scanner.pipeline.resume import plan_resume
 from backend.scanner.pipeline.roster import dealer_from_manifest, dealers_from_db, load_manifest_dealers
-from backend.scanner.pipeline.runner import run_discovery_capture, run_http_only_scan, wait_for_scanner_lock
-from backend.scanner.pipeline.triage import platform_cluster_lines, triage_table, write_needs_discovery, write_slow_dealers
+from backend.scanner.pipeline.runner import REQUEUE_REASON, requeue_killed, run_discovery_capture, run_http_only_scan, wait_for_scanner_lock
+from backend.scanner.pipeline.triage import (accounting_line, group_feed_lines, group_feed_unstamped, handover_pending_lines, platform_cluster_lines,
+                                            retirement_alarm_lines, triage_table, write_needs_discovery, write_slow_dealers)
 from backend.scanner.pipeline.vpic import vpic_for_dealers
 
 
@@ -54,7 +56,23 @@ def _run(args) -> int:
     out_dir.mkdir(parents=True, exist_ok=True)
     started = datetime.now(timezone.utc).replace(microsecond=0)
     baseline_since = (started - timedelta(days=BASELINE_DAYS)).isoformat()
-    since_iso = args.since or started.isoformat()
+    resume_since = getattr(args, "resume_since", "") or ""
+    since_iso = args.since or (resume_since if getattr(args, "resume", False) and resume_since else started.isoformat())
+
+    prior_results: list[dict[str, Any]] = []
+    assess_only: set[str] = set()
+    if getattr(args, "resume", False):
+        # N9.15: dealers already in this shard's triage.json, or with a scan_runs row since the
+        # run start, are not scanned again (docs in backend/scanner/pipeline/resume.py)
+        conn = get_conn()
+        try:
+            plan = plan_resume(ids, out_dir, conn, since_iso)
+        finally:
+            conn.close()
+        prior_results, assess_only = plan["prior"], set(plan["assess_only"])
+        ids = [d for d in ids if d in set(plan["todo"]) | assess_only]
+        print(f"resume  {len(prior_results)} dealer(s) already in triage, {len(assess_only)} assessed without a rescan, "
+              f"{len(plan['todo'])} to scan (run start {since_iso})", flush=True)
 
     conn = get_conn()
     known: dict[str, int] = {}
@@ -63,8 +81,8 @@ def _run(args) -> int:
         # Rows seen in the 30 days before this run. Every active row would count
         # cars nobody has seen since July (Right Toyota: 3,034 "active", 1,367 seen
         # in September) and the floor then calls a full 1,273-car replay no_rows.
-        known[did] = int(_rows(conn, "SELECT COUNT(*) AS n FROM cars WHERE dealer_id = ? AND COALESCE(listing_active,1)=1 AND scraped_at >= ?",
-                                (did, baseline_since))[0]["n"])
+        # Valid 17-character VINs only (P5A.7): a placeholder-VIN row is not a car the run can re-see.
+        known[did] = valid_vin_count(conn, did, since_iso=baseline_since)
         # The same window per condition bucket: reconcile retires a bucket only
         # when this run returned enough of it (P1A.1).
         known_buckets[did] = bucket_counts(conn, did, since_iso=baseline_since)
@@ -80,6 +98,11 @@ def _run(args) -> int:
         # convenience, never the source of truth for a dealer we already sell.
         d = dealer_from_manifest(did, manifest) or db_dealers.get(did) or {"dealer_id": did, "url": ""}
         dealers_by_id[did] = d
+        if did in assess_only:
+            # Already scanned before the kill: assess it from what is stored, no synthesis,
+            # discovery capture or discovery.md rewrite.
+            recipe_info[did] = {"had_recipes": 1, "synth": "resume_assess_only"}
+            continue
         if not d.get("url"):
             recipe_info[did] = {"had_recipes": 0, "synth": "not_in_manifest_or_db"}
             continue
@@ -114,12 +137,15 @@ def _run(args) -> int:
         except Exception as exc:  # noqa: BLE001
             print(f"log     discovery {did}: {str(exc)[:100]}", flush=True)
 
+    requeued: set[str] = set()
     if not args.skip_scan:
-        scannable = [did for did in ids if recipe_info[did].get("had_recipes") or str(recipe_info[did].get("synth", "")).startswith("saved")]
-        skipped = [did for did in ids if did not in scannable]
+        scannable = [did for did in ids if did not in assess_only
+                    and (recipe_info[did].get("had_recipes") or str(recipe_info[did].get("synth", "")).startswith("saved"))]
+        skipped = [did for did in ids if did not in scannable and did not in assess_only]
         if skipped:
             print(f"scan    skipping {len(skipped)} dealer(s) with no recipe: {', '.join(skipped)[:200]}", flush=True)
         chromium_leaks: list[dict[str, Any]] = []
+        killed: list[str] = []
         for i in range(0, len(scannable), args.batch):
             batch = scannable[i:i + args.batch]
             t0 = time.time()
@@ -160,7 +186,18 @@ def _run(args) -> int:
                 print("scan    gave up after 6 lock races", flush=True)
             if rc == -1:
                 break
+            if rc == -9:
+                killed.extend(batch)
             print(f"scan    batch {i // args.batch + 1}: {', '.join(batch)[:120]} rc={rc} in {time.time() - t0:.0f}s (active {scan_stats.get('active_seconds', 0):.0f}s)", flush=True)
+        if killed:
+            # N9.13: once, with the reason on the record; the dealers' rows say how it ended
+            try:
+                rq = requeue_killed(killed, since_iso=since_iso, out_dir=out_dir, batch=args.batch,
+                                    scan_timeout=args.scan_timeout, lock_wait=args.lock_wait)
+                requeued = set(rq["requeued"])
+                chromium_leaks.extend(rq.get("chromium_leaks") or [])
+            except Exception as exc:  # noqa: BLE001
+                print(f"scan    requeue failed: {str(exc)[:120]}", flush=True)
         if not args.no_vpic and scannable:
             try:
                 vp = vpic_for_dealers(scannable)
@@ -177,6 +214,8 @@ def _run(args) -> int:
                 print("assess  database connection dropped; reconnecting", flush=True)
                 conn = _assess_conn()
             r = assess(conn, did, since_iso, known[did], recipe_info[did])
+            if did in requeued:
+                r["requeued"] = REQUEUE_REASON
             try:
                 # Retire against the rows stamped to THIS store, never the raw feed
                 # count: a group feed's 1,521 rows with 2 kept retired 158 real
@@ -189,8 +228,7 @@ def _run(args) -> int:
                 r["reconcile"] = {"error": str(exc)[:120]}
             results.append(r)
             try:
-                log_scan_run(r, stamp)
-                write_instructions_if_first_success(r, stamp)
+                log_run_files(r, stamp)
             except Exception as exc:  # noqa: BLE001
                 print(f"log     scan_runs {did}: {str(exc)[:80]}", flush=True)
     finally:
@@ -211,6 +249,9 @@ def _run(args) -> int:
 
             lifecycle_summary = {"enabled": True, "error": str(exc)[:200], "traceback": _tb.format_exc()[-1200:]}
             print(f"lifecyc pass failed: {str(exc)[:160]}", flush=True)
+    if prior_results:
+        have = {r["dealer_id"] for r in results}
+        results = [r for r in prior_results if r["dealer_id"] not in have] + results
     needs = write_needs_discovery(results, out_dir)
 
     live_recipes = sum(1 for r in results if (r.get("recipe") or {}).get("had_recipes") or str((r.get("recipe") or {}).get("synth", "")).startswith(("saved", "browser_capture")))
@@ -228,15 +269,25 @@ def _run(args) -> int:
     # 6. platform clustering: which of this run's failing dealers share a platform
     #    nobody has a template for (item 3 of the plan; the code notices, not a human)
     triage["platform_clusters"] = platform_cluster_lines(triage["needs_discovery"])
+    # 7. the scanner's retirements this run, alarmed per D-N21 (P5A.7)
+    triage["retirement_alarms"] = retirement_alarm_lines(results)
+    # 8. honest accounting (N9.12): captured / refused by each guard / written, unstamped group
+    #    feeds and half-finished VIN handovers
+    triage["accounting"] = fleet_accounting(results)
+    flags = group_feed_unstamped(results)
+    triage["group_feed_unstamped"] = flags
+    triage["handover_pending"] = {r["dealer_id"]: r["handover_pending"] for r in results if r.get("handover_pending")}
+    report_lines = ([accounting_line(results)] + group_feed_lines(flags) + handover_pending_lines(results)
+                    + triage["platform_clusters"] + triage["retirement_alarms"])
     (out_dir / "triage.json").write_text(json.dumps(triage, indent=1, default=str), encoding="utf-8")
     lines = triage_table(results)
-    (out_dir / "triage.md").write_text("\n".join(lines + [""] + triage["platform_clusters"]) + "\n", encoding="utf-8")
+    (out_dir / "triage.md").write_text("\n".join(lines + [""] + report_lines) + "\n", encoding="utf-8")
     try:
         write_slow_dealers(results, out_dir, started)
     except Exception as exc:  # noqa: BLE001
         print(f"log     slow_dealers: {str(exc)[:100]}", flush=True)
     print("\n".join(lines))
-    for line in triage["platform_clusters"]:
+    for line in report_lines:
         print(line, flush=True)
     print(json.dumps(triage["counts"]))
     return 0

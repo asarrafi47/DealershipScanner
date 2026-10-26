@@ -96,6 +96,8 @@ def _mask_result(res: dict) -> dict:
     out = _jsonable(res)
     out.pop("active_seconds", None)
     out.pop("wall_seconds", None)
+    # P5A.2 added the replay walk report after the golden was recorded
+    out.pop("recipe_replay", None)
     if "seconds" in out:
         out["seconds"] = "<t>"
     if isinstance(out.get("phase_secs"), dict):
@@ -160,7 +162,7 @@ class Harness:
         mp.setattr("backend.attribution.gate.store_place", lambda u, d, registry_id=None: (h.ev("store_place", [u, d]), dict(place or {}))[1])
 
         # recipes
-        async def _fetch(dealer_id, provider, base_url, dealer_name, *, union=False, coverage_out=None, registry_id=None):
+        async def _fetch(dealer_id, provider, base_url, dealer_name, *, union=False, coverage_out=None, registry_id=None, **_kw):
             h.ev("try_fetch_via_recipes", [dealer_id, provider, base_url, dealer_name, union])
             if isinstance(recipe, BaseException):
                 raise recipe
@@ -289,7 +291,7 @@ class Harness:
 
         _patch_bound(mp, "disown_foreign_rooftop_vins", _disown)
 
-        def _reconcile(dealer_id, url, scraped_norm, result, scraped_conditions=None):
+        def _reconcile(dealer_id, url, scraped_norm, result, scraped_conditions=None, **_evidence):
             h.ev("reconcile", [dealer_id, url, sorted(scraped_norm), _mask_result(result), scraped_conditions])
             if isinstance(reconcile, BaseException):
                 raise reconcile
@@ -308,7 +310,8 @@ class Harness:
             result = asyncio.run(run_dealer(browser, dealer, self.coord, **kw))
         except BaseException as e:  # noqa: BLE001 - CancelledError is part of the contract
             error = type(e).__name__
-        logs = [[r.levelname, _mask(r.getMessage())] for r in self.caplog.records if r.name == "scanner" and r.levelno >= logging.INFO]
+        logs = [[r.levelname, _mask(r.getMessage())] for r in self.caplog.records if r.name == "scanner" and r.levelno >= logging.INFO
+                and not r.getMessage().startswith("Recipe fetch failed")]  # P5A.2: was a DEBUG line
         return {
             "result": _mask_result(result) if result is not None else None,
             "raised": error,

@@ -194,14 +194,20 @@ def remove_portal_vehicle_from_public_listings(vin: str, user_id: int) -> None:
         from datetime import datetime, timezone
 
         from backend.db.repositories.base_repo import db_conn
+        from backend.db.retirement_log import record_retirements
 
         now = datetime.now(timezone.utc).replace(microsecond=0).isoformat()
         with db_conn() as conn:
             cur = conn.cursor()
+            pid = dealer_portal_dealer_id(user_id)
             cur.execute(
                 "UPDATE cars SET listing_active = 0, listing_removed_at = ? "
-                "WHERE UPPER(TRIM(vin)) = ? AND dealer_id = ?",
-                (now, v.upper(), dealer_portal_dealer_id(user_id)),
+                "WHERE UPPER(TRIM(vin)) = ? AND dealer_id = ? RETURNING id, vin",
+                (now, v.upper(), pid),
+            )
+            record_retirements(
+                cur, [(int(r[0]), r[1], pid) for r in cur.fetchall()],
+                writer="portal_sync", reason="portal_vehicle_deleted", strict=False,
             )
             conn.commit()
     except Exception:
@@ -218,14 +224,20 @@ def retire_portal_listings_for_user(user_id: int) -> None:
         from datetime import datetime, timezone
 
         from backend.db.repositories.base_repo import db_conn
+        from backend.db.retirement_log import record_retirements
 
         now = datetime.now(timezone.utc).replace(microsecond=0).isoformat()
         with db_conn() as conn:
             cur = conn.cursor()
+            pid = dealer_portal_dealer_id(user_id)
             cur.execute(
                 "UPDATE cars SET listing_active = 0, listing_removed_at = ? "
-                "WHERE dealer_id = ? AND listing_active = 1",
-                (now, dealer_portal_dealer_id(user_id)),
+                "WHERE dealer_id = ? AND listing_active = 1 RETURNING id, vin",
+                (now, pid),
+            )
+            record_retirements(
+                cur, [(int(r[0]), r[1], pid) for r in cur.fetchall()],
+                writer="portal_sync", reason="portal_account_deleted", strict=False,
             )
             conn.commit()
     except Exception:

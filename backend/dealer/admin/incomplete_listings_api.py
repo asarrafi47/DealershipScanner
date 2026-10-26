@@ -16,6 +16,7 @@ from flask import jsonify
 
 from backend.db.incomplete_listings_db import get_incomplete_listings_count
 from backend.db.inventory_db import get_conn, get_incomplete_cars
+from backend.db.retirement_log import record_retirements
 from backend.utils.listing_completeness import INCOMPLETE_FIELD_LABELS, summarize_incomplete_missing_fields
 
 _log = logging.getLogger(__name__)
@@ -179,8 +180,16 @@ def delete_incomplete_car(car_id: int):
         cursor.execute("DELETE FROM saved_cars WHERE car_id = ?", (car_id,))
     except sqlite3.Error:
         _log.debug("saved_cars cleanup skipped for car_id=%s", car_id)
+    # The car row is about to go; the proof of who removed it and what it was stays (P5B.3).
+    cursor.execute("SELECT id, vin, dealer_id FROM cars WHERE id = ?", (car_id,))
+    gone = cursor.fetchall()
     cursor.execute("DELETE FROM cars WHERE id = ?", (car_id,))
     deleted = cursor.rowcount
+    if deleted:
+        record_retirements(
+            cursor, [(int(r[0]), r[1], r[2]) for r in gone],
+            writer="admin_delete", reason="incomplete_listing_delete", strict=False,
+        )
     conn.commit()
     conn.close()
     if deleted:

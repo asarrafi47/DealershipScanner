@@ -1,5 +1,5 @@
-"""Per-dealer markdown logs (workspace/dealer_logs/<dealer_id>/: discovery.md, scan_runs.md,
-scan_instructions.md, summary.md). CLAUDE.md: a scan without its logs is not finished. Moved verbatim from backend/scripts/dealer_pipeline.py (audit F11)."""
+"""Per-dealer markdown logs (workspace/dealer_logs/<dealer_id>/: discovery.md, location.md,
+scan_runs.md, scan_instructions.md, summary.md). CLAUDE.md: a scan without its logs is not finished. Moved verbatim from backend/scripts/dealer_pipeline.py (audit F11)."""
 from __future__ import annotations
 
 import json
@@ -63,12 +63,16 @@ def log_scan_run(r: dict[str, Any], stamp: str) -> None:
     acc = r.get("accuracy") or {}
     cov = r.get("coverage") or {}
     L = [f"## {stamp} scan — verdict **{r.get('verdict')}** ({r.get('reason')})",
-         f"- rows written: {r.get('rows', '-')} (new {r.get('rows_new', '-')}, used {r.get('rows_used', '-')}); listed before: {r.get('known_before')}; active after: {r.get('active_after')}",
+         f"- rows: captured {r.get('rows_captured', r.get('rows', '-'))}, refused by the VIN-owner guard {r.get('rows_refused_vin_owner', r.get('vin_owner_conflicts', '-'))}, "
+         f"refused as other rooftops {r.get('rows_refused_rooftop', r.get('filtered_count', '-'))}, written {r.get('rows_written', '-')} "
+         f"(new {r.get('rows_new', '-')}, used {r.get('rows_used', '-')}); listed before: {r.get('known_before')}; active after: {r.get('active_after')}; "
+         f"inactive: {r.get('inactive_after', '-')}; run finished {r.get('run_finished_at') or '-'}, logged {stamp}",
          f"- recipe: {r.get('recipe_fetch')} coverage {json.dumps(r.get('recipe_coverage'))}; provider {r.get('provider')}; {r.get('minutes', '-')} min",
-         f"- location: {r.get('filtered_count', '-')} row(s) refused as other rooftops; dealer names on rows: {r.get('dealer_names')}; zip codes: {r.get('zip_codes')}",
+         f"- location: {r.get('rows_refused_rooftop', r.get('filtered_count', '-'))} row(s) refused as other rooftops, "
+         f"{r.get('rows_refused_vin_owner', r.get('vin_owner_conflicts', '-'))} by the VIN-owner guard; dealer names on rows: {r.get('dealer_names')}; zip codes: {r.get('zip_codes')}",
          "- coverage before upsert: " + ", ".join(f"{k} {_pct(v, 1)}" for k, v in cov.items()),
-         f"- http_first: {json.dumps(r.get('http_first'))[:300]}",
-         f"- NHTSA: decode cached for {acc.get('vpic_cached', '-')}/{acc.get('rows', '-')} rows; heal this batch: {json.dumps(r.get('vpic_heal'))[:200]}",
+         f"- http_first: {json.dumps(r.get('http_first'))}",
+         f"- NHTSA: decode cached for {acc.get('vpic_cached', '-')}/{acc.get('rows', '-')} rows; heal this batch: {json.dumps(r.get('vpic_heal'))}",
          f"- incomplete after fill: {acc.get('incomplete_rows', '-')}/{acc.get('rows', '-')} ({_pct(acc.get('incomplete_rows'), acc.get('rows'))}); fields: {json.dumps(acc.get('missing'))}",
          f"- hard discrepancies: {acc.get('hard_rows', '-')} rows ({_pct(acc.get('hard_rows'), acc.get('rows'))}); by code: {json.dumps(acc.get('hard'))}",
          f"- reconcile: {json.dumps(r.get('reconcile'))}",
@@ -76,15 +80,69 @@ def log_scan_run(r: dict[str, Any], stamp: str) -> None:
          f"pages_needed={(r.get('timing') or {}).get('pages_needed')} (fingerprint scan_hints.timing)"]
     for code, exs in (acc.get("examples") or {}).items():
         L.append(f"  - `{code}`: " + "; ".join(f"{e.get('car')} `{e.get('vin')}` {e.get('why', '')}"[:160] for e in exs[:3]))
+    if r.get("scan_run_backfilled"):
+        L.append(f"- scan_runs row backfilled by the pipeline: {r['scan_run_backfilled']} row(s) were upserted but the scanner wrote no run row (killed or paused)")
+    if r.get("requeued"):
+        L.append(f"- requeued once: {r['requeued']}")
+    if r.get("handover_pending"):
+        hp = r["handover_pending"]
+        L.append(f"- handover_pending: {hp.get('vins')} retired VIN(s) freshly claimed by {json.dumps(hp.get('claimants'))}; e.g. {', '.join(hp.get('examples') or [])}")
+    if r.get("new_arrival_incomplete"):
+        na = r["new_arrival_incomplete"]
+        L.append(f"- new arrivals: {na.get('incomplete')}/{na.get('rows')} incomplete ({na.get('rate', 0):.1%})")
     if r.get("error"):
         L.append(f"- error: {r['error']}")
     _log_append(did, "scan_runs.md", "\n".join(L))
+
+
+def log_location(r: dict[str, Any], stamp: str) -> None:
+    """location.md: what the rooftop gate and the VIN-owner guard did to this run's feed."""
+    owners = r.get("vin_owner_conflict_owners") or {}
+    L = [f"## {stamp} location — verdict {r.get('verdict')}",
+         f"- feed rows captured: {r.get('rows_captured', r.get('rows', '-'))}; stamped to this store: {r.get('rows_stamped', '-')}",
+         f"- refused as other rooftops: {r.get('rows_refused_rooftop', r.get('filtered_count', '-'))}",
+         f"- refused by the VIN-owner guard: {r.get('rows_refused_vin_owner', r.get('vin_owner_conflicts', '-'))}"
+         + (f" (owners: {json.dumps(owners)})" if owners else ""),
+         f"- dealer names on rows: {r.get('dealer_names')}; zip codes: {r.get('zip_codes')}"]
+    from backend.scanner.pipeline.assess import group_feed_flag
+
+    flag = r.get("group_feed_unstamped") or group_feed_flag(r)
+    if flag:
+        L.append(f"- group_feed_unstamped: {json.dumps(flag)} (dealer_feed_scope stays as is until the owner approves)")
+    _log_append(r["dealer_id"], "location.md", "\n".join(L))
+
+
+def log_run_files(r: dict[str, Any], stamp: str) -> None:
+    """Every run, whatever the verdict, leaves all five files (CLAUDE.md: a scan without its logs
+    is not finished): scan_runs.md and location.md are appended; scan_instructions.md and
+    summary.md exist after the first run, provisional until a verified (ok) run replaces them."""
+    did = r["dealer_id"]
+    log_scan_run(r, stamp)
+    log_location(r, stamp)
+    write_instructions_if_first_success(r, stamp)
+    if not (LOG_ROOT / did / "discovery.md").exists():
+        _log_append(did, "discovery.md", f"## {stamp} discovery\n- no discovery entry before this scan; recipes on file: {(r.get('recipe') or {}).get('had_recipes')}")
+    _log_write_once(did, "summary.md", f"# {did} — summary\n\nProcess: {PROCESS_DOC}\n\n## Issues faced and how they were fixed\n\n")
+    if r.get("verdict") != "ok":
+        _log_write_once(did, "scan_instructions.md",
+                        f"# {did} — scan instructions\n\nProcess: {PROCESS_DOC}\n\n{PROVISIONAL_MARK}: no verified run yet. "
+                        f"First run {stamp}: verdict {r.get('verdict')} ({r.get('reason')}). Rewritten after the first ok run.\n")
+        _log_append(did, "summary.md", f"- {stamp}: verdict {r.get('verdict')} — {r.get('reason')} (see scan_runs.md; record the fix here when found)")
+
+
+PROVISIONAL_MARK = "PROVISIONAL"
 
 
 def write_instructions_if_first_success(r: dict[str, Any], stamp: str) -> None:
     if r.get("verdict") != "ok":
         return
     did = r["dealer_id"]
+    _prov = LOG_ROOT / did / "scan_instructions.md"
+    try:
+        if _prov.exists() and PROVISIONAL_MARK in _prov.read_text(encoding="utf-8")[:400]:
+            _prov.unlink()  # a thin / inaccurate first run left a placeholder; this ok run writes the real one
+    except OSError:
+        pass
     try:
         from backend.scanner.recipes import load_recipes
 

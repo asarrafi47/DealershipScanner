@@ -1032,7 +1032,33 @@ def recipe_min_vehicles() -> int:
         return 10
 
 
-_MAX_REPLAY_PAGES = 40
+# How far a replay walk goes (D-RC3): to the site's own total, capped. The cap is
+# SCANNER_REPLAY_MAX_PAGES (default 150); a walk with no usable total keeps the old 40.
+_REPLAY_PAGES_HARD_CAP = 150
+_REPLAY_PAGES_NO_TOTAL = 40
+
+
+def replay_max_pages() -> int:
+    try:
+        return max(1, int(os.environ.get("SCANNER_REPLAY_MAX_PAGES") or _REPLAY_PAGES_HARD_CAP))
+    except ValueError:
+        return _REPLAY_PAGES_HARD_CAP
+
+
+def _is_html_walk(recipe: "EndpointRecipe") -> bool:
+    """Server-rendered pagination: the total frozen into the recipe at synth time says
+    nothing about today's lot, so only an on-page count may stop such a walk."""
+    return recipe.pagination in (PAGINATION_DEP_SRP, PAGINATION_HTML_PAGE, PAGINATION_JAZEL_SRP) or (
+        recipe.provider_hint == "html_cards"
+    )
+
+
+def _walk_pages(total: int | None, page_size: int, hard_cap: int) -> int:
+    """Pages to walk once page 1 is read: ``min(hard_cap, ceil(total / page_size) + 1)``
+    when both are known, else the no-total default (never above the hard cap)."""
+    if total and page_size > 0:
+        return min(hard_cap, -(-int(total) // page_size) + 1)
+    return min(hard_cap, _REPLAY_PAGES_NO_TOTAL)
 _REPLAY_TIMEOUT_S = 20.0
 
 
@@ -1492,6 +1518,84 @@ def _persist_replay_success(dealer_id: str, recipe: EndpointRecipe, retrying_sta
     save_recipes(dealer_id, all_r)
 
 
+# Walk-report ends that mean the recipe saw the whole of what it asked for.
+_COMPLETE_ENDS = frozenset({"single_page", "total_reached", "exhausted", "no_new_rows", "short_page"})
+_COMPLETE_TOTAL_FRACTION = 0.98
+
+
+def recipe_scope_hash(recipe: EndpointRecipe, dealer_name: str = "") -> str:
+    """Short hash of what a recipe's request selects (endpoint, section, store scope,
+    CarsCommerce facets), never the per-page cursor. Two scans whose walks carry the
+    same hash asked the site for the same slice of the lot, so their VIN sets are
+    comparable; a changed hash means the slice changed under the dealer."""
+    facets = ""
+    if recipe.post_template:
+        try:
+            body = json.loads(recipe.post_template)
+        except ValueError:
+            body = None
+        ff = body.get("facetFilters") if isinstance(body, dict) else None
+        if isinstance(ff, dict):
+            facets = json.dumps(ff, sort_keys=True, default=str)
+    method, path = recipe.key()
+    raw = "|".join((
+        method, path, recipe.pagination, facets,
+        "store" if recipe_is_store_scoped(recipe, dealer_name) else "",
+        "section" if recipe_is_section_scoped(recipe) else "",
+    ))
+    return hashlib.sha256(raw.encode("utf-8")).hexdigest()[:12]
+
+
+def _walk_complete(end: str, raw_vins: int, total_count: int | None) -> bool:
+    """With a known site total, a walk is complete when it saw >= 98% of it,
+    whatever stopped it (an 'exhausted' 48 of 500 is not complete, and a
+    'page_cap' walk that reached the total is). Without one, only a walk that
+    ended by running out of rows, or by being one page, is."""
+    if total_count and total_count > 0:
+        return raw_vins >= _COMPLETE_TOTAL_FRACTION * total_count
+    return end in _COMPLETE_ENDS
+
+
+def _walk_entry(
+    recipe: EndpointRecipe, dealer_name: str, stale_retry: bool, end: str, pages: int, raw: int, kept: int,
+    total: Any = ...,
+) -> dict:
+    method, path = recipe.key()
+    if total is ...:
+        total = recipe.total_count
+    return {
+        "key": f"{method} {path}",
+        "url": recipe.url,
+        "stale_retry": bool(stale_retry),
+        "scope_hash": recipe_scope_hash(recipe, dealer_name),
+        "pages": pages,
+        "raw_vins": raw,
+        "kept_vins": kept,
+        "total_count": total,
+        "end": end,
+        "complete": _walk_complete(end, raw, total),
+        "in_union": False,
+    }
+
+
+def _finalize_replay(replay_out: dict | None, *, union_recipes: int | None = None) -> None:
+    """Fold the per-recipe walk entries into the summary the run result carries:
+    ``truncated`` (a walk the scan was meant to rely on stopped before the site's
+    total), ``capped_recipes`` (walks cut by the page cap) and ``source``."""
+    if replay_out is None:
+        return
+    walks = replay_out.get("recipes") or []
+    # A retried stale recipe that never answered is not part of the lot this scan
+    # was expected to deliver, so its silence does not make the lot incomplete.
+    replay_out["truncated"] = any(
+        not w["complete"] and not (w["stale_retry"] and w["raw_vins"] == 0) for w in walks
+    )
+    replay_out["capped_recipes"] = sum(1 for w in walks if w["end"] == "page_cap")
+    replay_out["source"] = "recipe"
+    if union_recipes is not None:
+        replay_out["union_recipes"] = union_recipes
+
+
 async def try_fetch_via_recipes(
     dealer_id: str,
     provider: str,
@@ -1501,6 +1605,7 @@ async def try_fetch_via_recipes(
     union: bool = False,
     coverage_out: dict[str, float] | None = None,
     registry_id: int | None = None,
+    replay_out: dict | None = None,
 ) -> tuple[list[tuple[str, Any]], int] | None:
     """
     Replay this dealer's stored recipes over plain HTTP (pre-Playwright).
@@ -1525,6 +1630,18 @@ async def try_fetch_via_recipes(
     pages), so the first passing recipe alone can cover only part of the lot.
     Delta scans want the union; the pre-browser scan fast path keeps the
     cheaper first-hit behavior.
+
+    When ``replay_out`` is a dict it is filled (in place) with the walk report,
+    one entry per tried recipe under ``recipes``: ``{key, url, stale_retry,
+    scope_hash, pages, raw_vins, kept_vins, total_count, end, complete, in_union}``.
+    ``raw_vins`` counts unique VINs the pages carried, kept plus refused by the
+    rooftop gate. ``end`` is one of single_page, total_reached, no_new_rows,
+    page_cap, http_<code>, fetch_failed, auth_dead, unparsed_mid, unreplayable;
+    ``complete`` is :func:`_walk_complete`. ``in_union`` is separate from ``end``:
+    a complete walk dropped for low yield is ``in_union=False`` and its kept VINs
+    go to ``low_yield_vins``, so a caller can protect them. Beside the entries:
+    ``truncated``, ``capped_recipes`` and ``source``. Reporting only; what the
+    walk fetches and returns is the same with or without it.
     """
     # This store's postal address, for the rooftop gate.
     #
@@ -1562,6 +1679,13 @@ async def try_fetch_via_recipes(
     if not live and not stale_retry:
         return None
 
+    walks: list[dict] = []
+    low_yield_vins: list[str] = []
+    if replay_out is not None:
+        replay_out["recipes"] = walks
+        replay_out["low_yield_vins"] = low_yield_vins
+    union_recipe_n = 0
+
     min_vehicles = recipe_min_vehicles()
     union_records: list[tuple[str, Any]] = []
     union_vins: set[str] = set()
@@ -1591,6 +1715,7 @@ async def try_fetch_via_recipes(
             # stale so the next browser scan re-captures a full body instead of
             # this recipe silently never working.
             await asyncio.to_thread(mark_stale, dealer_id, recipe, "unreplayable_post_template")
+            walks.append(_walk_entry(recipe, dealer_name, retrying_stale, "unreplayable", 0, 0, 0))
             logger.info(
                 "Recipe stale [%s] %s — POST template unparseable (truncated capture?); "
                 "browser scan will re-capture",
@@ -1600,9 +1725,17 @@ async def try_fetch_via_recipes(
         records: list[tuple[str, Any]] = []
         vins: set[str] = set()
         vehicles: list[dict] = []
-        pages = 1 if recipe.pagination == PAGINATION_NONE else _MAX_REPLAY_PAGES
+        raw_vins: set[str] = set()
+        hard_cap = replay_max_pages()
+        pages = 1 if recipe.pagination == PAGINATION_NONE else hard_cap
+        # The total this walk stops on. A JSON walk falls back to the recipe's stored one;
+        # an HTML walk does not (the file's value was frozen at synth time).
+        walk_total: int | None = None if _is_html_walk(recipe) else recipe.total_count
         auth_dead = False
-        for page_i in range(pages):
+        end: str | None = None
+        page_i = -1
+        while page_i + 1 < pages:
+            page_i += 1
             body = _mutate_for_page(recipe, template, page_i) if template is not None else None
             page_url = _url_for_page(recipe, page_i)
             status, parsed = await asyncio.to_thread(_replay_request, recipe, body, base_url, page_url)
@@ -1620,7 +1753,9 @@ async def try_fetch_via_recipes(
                         "still dead on retry" if retrying_stale else "auth rotated?",
                     )
                     auth_dead = True
+                    end = "auth_dead"
                 else:
+                    end = f"http_{int(status)}"
                     # Mid-pagination — likely a rate limit / page boundary, not dead
                     # auth. Keep the VINs already collected instead of discarding them.
                     logger.info(
@@ -1629,6 +1764,12 @@ async def try_fetch_via_recipes(
                     )
                 break
             if parsed is None:
+                if not isinstance(status, int) or status <= 0:
+                    end = "fetch_failed"
+                elif status == 200:
+                    end = "unparsed_mid"
+                else:
+                    end = f"http_{status}"
                 break
             store_scoped = recipe_is_store_scoped(recipe, dealer_name)
             if store_scoped:
@@ -1657,6 +1798,10 @@ async def try_fetch_via_recipes(
                 trust_feed_scope=store_scoped,
             )
             new = _unique_vins(page_vehicles) - vins
+            # The stop condition reads RAW rows: a page of nothing but refused siblings
+            # (a group feed's other rooftops) holds no kept VIN yet is not the end.
+            new_raw = (_unique_vins(page_vehicles) | _unique_vins(_refused)) - raw_vins
+            raw_vins |= new_raw
             records.append((recipe.url, parsed))
             if page_i == 0 and recipe.pagination == PAGINATION_DEALER_COM:
                 _learn_dealer_com_page_size(template, parsed, dealer_name)
@@ -1664,22 +1809,40 @@ async def try_fetch_via_recipes(
                 # The payload's own total wins over the file's: a stale total_count
                 # (95 saved in August, lot now 106) stopped the walk after page 1.
                 try:
-                    from backend.parsers.base import get_total_count as _gtc
+                    from backend.scanner.recipe_totals import replay_site_total
 
-                    _t = _gtc(parsed)
+                    _t = replay_site_total(recipe, parsed)
                     if _t and _t > 0:
-                        recipe.total_count = int(_t)
+                        recipe.total_count = walk_total = int(_t)
                 except Exception:  # noqa: BLE001
                     pass
+                if recipe.pagination != PAGINATION_NONE:
+                    pages = _walk_pages(walk_total, len(raw_vins), hard_cap)
             vehicles.extend(v for v in page_vehicles if (v.get("vin") or "").strip().upper() in new)
-            if not new:
-                break
             vins |= new
-            if recipe.total_count and len(vins) >= recipe.total_count:
+            if not new_raw:
+                end = "single_page" if recipe.pagination == PAGINATION_NONE else "no_new_rows"
                 break
+            if walk_total and len(raw_vins) >= walk_total:
+                end = "total_reached"
+                break
+        if end is None:
+            end = "single_page" if recipe.pagination == PAGINATION_NONE else "page_cap"
+        walk = _walk_entry(
+            recipe, dealer_name, retrying_stale, end, len(records), len(raw_vins), len(vins), walk_total
+        )
+        walks.append(walk)
+        if end == "page_cap" or (end.startswith(("http_", "unparsed", "fetch_failed")) and vins):
+            logger.warning(
+                "Recipe walk [%s] %s stopped at %s after %d page(s): %d raw / %d kept VIN(s), site total %s "
+                "-- the lot is %s",
+                dealer_name, recipe.url[:80], end, len(records), len(raw_vins), len(vins),
+                walk["total_count"] or "unknown", "complete" if walk["complete"] else "NOT fully collected",
+            )
         if auth_dead:
             continue
         if len(vins) >= min_vehicles:
+            walk["in_union"] = True
             succeeded_any = True
             recipe.last_ok_at = time.time()
             recipe.field_coverage = {
@@ -1696,17 +1859,24 @@ async def try_fetch_via_recipes(
                 if coverage_out is not None:
                     coverage_out.update(recipe_field_coverage(vehicles))
                 await asyncio.to_thread(_finish_status)
+                _finalize_replay(replay_out)
                 return records, len(vins)
+            union_recipe_n += 1
             union_records.extend(records)
             union_vehicles.extend(v for v in vehicles if (v.get("vin") or "").strip().upper() not in union_vins)
             union_vins |= vins
+        elif walk["complete"]:
+            # A whole walk the yield floor drops: its VINs are real listings the
+            # caller must not read as missing (RET-5).
+            low_yield_vins.extend(sorted(vins))
     await asyncio.to_thread(_finish_status)
+    _finalize_replay(replay_out, union_recipes=union_recipe_n)
     if union and len(union_vins) >= min_vehicles:
         if coverage_out is not None:
             coverage_out.update(recipe_field_coverage(union_vehicles))
         logger.info(
-            "Recipe fetch [%s]: %d unique VIN(s) combined across %d recipe replay(s)",
-            dealer_name, len(union_vins), len(union_records),
+            "Recipe fetch [%s]: %d unique VIN(s) combined across %d recipe replay(s), %d page(s)",
+            dealer_name, len(union_vins), union_recipe_n, len(union_records),
         )
         return union_records, len(union_vins)
     return None

@@ -15,6 +15,16 @@ from typing import Any
 from urllib.parse import urlparse
 
 from backend.db.inventory_db import ensure_cars_table_columns, get_conn
+from backend.db.retirement_log import (
+    clear_strikes,
+    ensure_retirement_tables,
+    read_strikes,
+    record_retirements,
+    record_strikes,
+    retire_strikes,
+    split_by_strikes,
+    strike_gap_hours,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -83,31 +93,62 @@ def _dealer_scope_sql(dealer_id: str, dealer_url: str) -> tuple[str, list[Any]]:
     )
 
 
+def no_retire_switch() -> bool:
+    """The one no-retire switch (``SCANNER_NO_RETIRE=1``, P5A.4).
+
+    Every writer that can un-list a car honours it: this reconcile (full scans and the delta
+    scan, which calls it), ``attribution.disown`` and the dealer pipeline's ``reconcile_dealer``
+    (W2 and the lifecycle retry). With it set the plan is still computed and reported, nothing
+    is written. Unlike ``SCANNER_RECONCILE`` it is not about this module's gates: it is the
+    owner's stop button for a fleet whose retirements are in doubt.
+    """
+    return os.environ.get("SCANNER_NO_RETIRE", "").strip().lower() in ("1", "true", "yes", "on")
+
+
+def _reconcile_mode() -> str:
+    """``SCANNER_RECONCILE``: ``on`` (default), ``off`` (``0``) or ``dry`` (plan, write nothing)."""
+    raw = os.environ.get("SCANNER_RECONCILE", "1").strip().lower()
+    if raw == "dry":
+        return "dry"
+    return "off" if raw in ("0", "false", "no", "off") else "on"
+
+
 def _reconcile_enabled() -> bool:
-    return os.environ.get("SCANNER_RECONCILE", "1").strip().lower() not in ("0", "false", "no", "off")
+    return _reconcile_mode() != "off"
 
 
 def _reconcile_min_rows() -> int:
-    raw = (os.environ.get("SCANNER_RECONCILE_MIN_ROWS") or "8").strip()
+    raw = (os.environ.get("SCANNER_RECONCILE_MIN_ROWS") or "20").strip()
     try:
         return max(1, int(raw))
     except ValueError:
-        return 8
+        return 20
 
 
-def _reconcile_min_coverage() -> float:
-    """Share of the dealer's ACTIVE rows the scrape must re-see before unlisting.
+def _reconcile_bucket_share() -> float:
+    """Share of a condition bucket's prior rows the run must re-see before that bucket retires.
 
-    A partial capture (thin recipe replay, --scan-only on a JS-paginated SRP,
-    a feed that answered one section) must not delist the rest of the lot:
-    on 2026-09-09 a 443-row Garden Grove Honda capture marked 803 cars inactive.
-    ``SCANNER_RECONCILE_MIN_COVERAGE`` (default 0.5); 0 disables the gate.
+    ``SCANNER_RECONCILE_BUCKET_SHARE`` (default 0.6). The old ``SCANNER_RECONCILE_MIN_COVERAGE``
+    was a lot-wide share over ALL active rows, ghosts included; it never becomes this one. Its
+    "0 disables the gate" meaning is kept (a bucket then needs only one re-seen VIN); any other
+    value is ignored with a warning.
     """
-    raw = (os.environ.get("SCANNER_RECONCILE_MIN_COVERAGE") or "0.5").strip()
+    legacy = (os.environ.get("SCANNER_RECONCILE_MIN_COVERAGE") or "").strip()
+    if legacy:
+        try:
+            if float(legacy) <= 0:
+                return 0.0
+        except ValueError:
+            pass
+        logger.warning(
+            "SCANNER_RECONCILE_MIN_COVERAGE=%s is deprecated and ignored (only 0 still disables the "
+            "gate); the per-bucket share is SCANNER_RECONCILE_BUCKET_SHARE", legacy,
+        )
+    raw = (os.environ.get("SCANNER_RECONCILE_BUCKET_SHARE") or "0.6").strip()
     try:
         return min(1.0, max(0.0, float(raw)))
     except ValueError:
-        return 0.5
+        return 0.6
 
 
 BUCKET_UNKNOWN = "unknown"
@@ -135,40 +176,24 @@ def condition_buckets_from_vehicles(vehicles: list[dict[str, Any]]) -> set[str]:
     return {b for b in (condition_bucket(v.get("condition")) for v in vehicles) if b != BUCKET_UNKNOWN}
 
 
-def _bucket_keep_reasons(
-    active_by: dict[str, int],
-    matched_by: dict[str, int],
-    scraped_conditions: set[str] | None,
-    min_cov: float,
-) -> dict[str, str]:
-    """Why each bucket's unseen rows stay listed (``""`` = the bucket may retire).
 
-    * ``missing_condition``: the run returned no row of that condition (the
-      zero-only guard of 2026-09-28).
-    * ``low_bucket``: the run re-saw under *min_cov* of that bucket's active rows.
-      A lot-wide share hides a one-sided run: 300 new + 5 used re-seen of 300 new
-      + 200 used is 61% of the lot and 2.5% of the used cars.
-    * Blank-condition rows retire only when both new and used qualify, since
-      nothing says which side of the lot they belong to. A caller that passes no
-      *scraped_conditions* (legacy, no condition evidence at all) keeps the old
-      rule: blank rows are their own bucket under the coverage share.
-    """
-    def _low(b: str) -> bool:
-        return min_cov > 0 and active_by[b] > 0 and matched_by[b] < min_cov * active_by[b]
 
-    why: dict[str, str] = {}
-    for b in ("new", "used"):
-        if scraped_conditions is not None and b not in scraped_conditions:
-            why[b] = "missing_condition"
-        elif _low(b):
-            why[b] = "low_bucket"
-        else:
-            why[b] = ""
-    if scraped_conditions is None:
-        why[BUCKET_UNKNOWN] = "low_bucket" if _low(BUCKET_UNKNOWN) else ""
-    else:
-        why[BUCKET_UNKNOWN] = why["new"] or why["used"]
-    return why
+def _scraped_at_text(dt: datetime) -> str:
+    """*dt* in the text shape of ``cars.scraped_at`` (naive UTC isoformat + ``Z``), so the
+    guarded UPDATE compares like with like on SQLite and Postgres."""
+    return dt.astimezone(timezone.utc).replace(tzinfo=None).isoformat() + "Z"
+
+
+def _delete_index_rows(car_ids: list[int]) -> None:
+    """Drop retired cars from the incomplete-listings index (IL-05); never raises."""
+    if not car_ids:
+        return
+    try:
+        from backend.db.incomplete_listings_db import delete_incomplete_records
+
+        delete_incomplete_records(car_ids)
+    except Exception:  # noqa: BLE001 - the retirement is already committed
+        logger.warning("Inventory reconcile: could not delete %d incomplete-index row(s)", len(car_ids), exc_info=True)
 
 
 def reconcile_dealer_inventory_after_scan(
@@ -178,21 +203,43 @@ def reconcile_dealer_inventory_after_scan(
     stats: dict[str, Any],
     *,
     scraped_conditions: set[str] | None = None,
+    replay: dict[str, Any] | None = None,
+    protected_vins: set[str] | None = None,
+    run_started_iso: str | None = None,
+    source: str = "recipe",
+    bucket_share: float | None = None,
+    retirement_writer: str = "scanner_reconcile",
     _conn: Any | None = None,
 ) -> dict[str, Any]:
     """
-    Mark active DB rows for this dealer whose VIN is not in *scraped_vins* as inactive.
+    Retire active DB rows for this dealer that the run proves are gone (``plan_retirement``).
 
     *scraped_vins* must already be normalized (``normalize_scanner_vin`` per vehicle).
+    *replay* is the walk report (``result['recipe_replay']``: a ``walks`` list), *protected_vins*
+    the VINs refused without evidence (never retired), *run_started_iso* the wall-clock start of
+    the run (rows refreshed since then are neither baseline nor candidates; without it the
+    call time stands in), *source* ``recipe`` or ``recovery:<strategy>``, *bucket_share* a
+    caller's own per-bucket share (the delta scan's 0.8) in place of the env default,
+    *retirement_writer* the ``listing_retirements.writer`` it logs under (``delta_scan`` for the
+    delta scan). The plan's ids are strikes first (P5B.4): a first miss retires 0, a miss
+    ``SCANNER_STRIKE_GAP_HOURS`` (20) after it retires, every retirement leaves a
+    ``listing_retirements`` row (P5B.3), and ``SCANNER_RETIRE_STRIKES=1`` is single-miss. *scraped_conditions*
+    is kept for callers that pass it: per-bucket coverage by VIN already covers a condition the
+    run returned nothing for.
 
-    Mutates *stats* with ``reconcile`` key for downstream logging (optional).
-
-    Returns a small result dict; skips work when safety gates fail (see logs).
+    Mutates *stats* with the ``reconcile`` key. ``SCANNER_RECONCILE=dry`` and the no-retire
+    switch compute and record the plan and write nothing. Returns a small result dict; the
+    legacy keys (``ran``, ``marked_inactive``, ``skipped_reason``) stay, the plan adds
+    ``eligible``, ``reason``, ``retired``, ``kept`` and ``buckets``.
     """
+    from backend.scanner.recipe_validation import one_condition_ok_ids
+    from backend.scanner.retirement_policy import ActiveRow, Policy, RunEvidence, plan_retirement
+
     out: dict[str, Any] = {
         "ran": False,
         "scraped_candidates": len(scraped_vins),
         "marked_inactive": 0,
+        "retired": 0,
         "skipped_reason": None,
     }
 
@@ -207,7 +254,8 @@ def reconcile_dealer_inventory_after_scan(
         )
         return out
 
-    if not _reconcile_enabled():
+    mode = _reconcile_mode()
+    if mode == "off":
         out["skipped_reason"] = "disabled"
         return _finish()
 
@@ -235,106 +283,176 @@ def reconcile_dealer_inventory_after_scan(
         conn.commit()
 
         scope_sql, scope_params = _dealer_scope_sql(dealer_id, dealer_url)
+        started = None
+        if run_started_iso:
+            try:
+                started = datetime.fromisoformat(str(run_started_iso).strip().replace("Z", "+00:00"))
+                if started.tzinfo is None:
+                    started = started.replace(tzinfo=timezone.utc)
+            except ValueError:
+                started = None
+        started = started or datetime.now(timezone.utc)
         now = datetime.now(timezone.utc).replace(microsecond=0).isoformat()
 
+        # Every active row, valid VIN or not: the policy counts baselines by valid VIN only and
+        # retires a VIN-less row only through a retirable bucket (rule 8).
         cur.execute(
             f"""
-            SELECT id, vin, condition FROM cars
+            SELECT id, vin, condition, make, scraped_at FROM cars
             WHERE ({scope_sql})
               AND (COALESCE(listing_active, 1) = 1)
-              AND LENGTH(TRIM(vin)) = 17
-              AND UPPER(TRIM(vin)) NOT LIKE 'UNKNOWN%%'
             """,
             tuple(scope_params),
         )
-        rows = cur.fetchall()
-        # Active rows (valid VIN) per condition bucket, and how many of them this
-        # run re-saw. A one-condition replay (a "new" recipe section, a used-only
-        # capture) re-sees half the lot and, at 50% coverage, passes the lot-wide
-        # gate below and retires the other half: parksidekia-com 2026-09-28
-        # returned 306 new / 0 used and un-listed 206 used cars; covertbuickgmc-com
-        # 811 of 2,160. A run that returns a handful of one condition does the
-        # same, so every bucket must clear the coverage share on its own (P1A.1).
-        active_by: dict[str, int] = dict.fromkeys(CONDITION_BUCKETS, 0)
-        matched_by: dict[str, int] = dict.fromkeys(CONDITION_BUCKETS, 0)
-        unseen: list[tuple[int, str]] = []
-        for row in rows:
-            vnorm = normalize_scanner_vin(row[1])
-            if not vnorm:
-                continue
-            bucket = condition_bucket(row[2] if len(row) > 2 else "")
-            active_by[bucket] += 1
-            if vnorm in scraped_vins:
-                matched_by[bucket] += 1
-            else:
-                unseen.append((int(row[0]), bucket))
-        active_known = sum(active_by.values())
-        matched = sum(matched_by.values())
-
-        min_cov = _reconcile_min_coverage()
-        keep_why = _bucket_keep_reasons(active_by, matched_by, scraped_conditions, min_cov)
-        stale_ids: list[int] = []
-        kept_condition = 0
-        kept_low = 0
-        for rid, bucket in unseen:
-            why = keep_why[bucket]
-            if why == "missing_condition":
-                kept_condition += 1
-            elif why == "low_bucket":
-                kept_low += 1
-            else:
-                stale_ids.append(rid)
-        if kept_condition:
-            out["kept_missing_condition"] = kept_condition
+        rows = [
+            ActiveRow(int(r[0]), normalize_scanner_vin(r[1]), condition_bucket(r[2]), r[3], r[4])
+            for r in cur.fetchall()
+        ]
+        seen_makes = {
+            " ".join(str(r.make).lower().split()) for r in rows if r.vin_norm in scraped_vins and r.make
+        }
+        evidence = RunEvidence(
+            seen_vins=frozenset(scraped_vins),
+            matched_makes=seen_makes,
+            walks=tuple((replay or {}).get("walks") or (replay or {}).get("recipes") or ()),
+            protected_vins=frozenset(protected_vins or ()),
+            run_started_iso=started.isoformat(),
+            source=source or "recipe",
+            error=str(stats["error"]) if stats.get("error") else None,
+            rows=deduped,
+        )
+        policy = Policy(
+            min_rows=min_rows,
+            bucket_share=_reconcile_bucket_share() if bucket_share is None else bucket_share,
+            one_condition_ok=(dealer_id or "").strip() in one_condition_ok_ids(),
+        )
+        plan = plan_retirement(rows, evidence, policy, datetime.now(timezone.utc))
+        out.update(
+            eligible=plan.eligible,
+            reason=plan.reason,
+            kept=dict(plan.kept),
+            buckets={b: dict(v) for b, v in plan.buckets.items()},
+            walks=dict(plan.walks_summary),
+        )
+        if plan.kept["condition_missing"]:
+            out["kept_missing_condition"] = plan.kept["condition_missing"]
             logger.warning(
-                "Inventory reconcile %s: run returned no %s rows; keeping %d active row(s) of that condition",
+                "Inventory reconcile %s: run returned no rows of a condition; keeping %d active row(s) of it",
+                (dealer_id or "").strip() or "?", plan.kept["condition_missing"],
+            )
+        if plan.kept["bucket_low_coverage"]:
+            out["kept_low_bucket"] = plan.kept["bucket_low_coverage"]
+            logger.warning(
+                "Inventory reconcile %s: %s; keeping %d active row(s)",
                 (dealer_id or "").strip() or "?",
-                "/".join(sorted({"new", "used"} - set(scraped_conditions or ()))) or "?",
-                kept_condition,
+                ", ".join(
+                    f"{b} {v['matched']}/{v['prior']}" for b, v in plan.buckets.items() if not v["retirable"] and v["matched"]
+                ) or "buckets under the coverage share",
+                plan.kept["bucket_low_coverage"],
             )
-        if kept_low:
-            out["kept_low_bucket"] = kept_low
-            logger.warning(
-                "Inventory reconcile %s: %s re-seen under %.0f%% of its active rows; keeping %d active row(s)",
-                (dealer_id or "").strip() or "?",
-                ", ".join(f"{b} {matched_by[b]}/{active_by[b]}" for b in CONDITION_BUCKETS if keep_why[b] == "low_bucket"),
-                min_cov * 100,
-                kept_low,
-            )
-
-        if min_cov > 0 and active_known >= min_rows and matched < min_cov * active_known:
-            out["skipped_reason"] = (
-                f"low_coverage(matched={matched},active={active_known},min={min_cov:.0%})"
-            )
-            logger.warning(
-                "Inventory reconcile %s: scrape re-saw only %d of %d active VIN(s); "
-                "refusing to unlist %d row(s) on a partial capture",
-                (dealer_id or "").strip() or "?", matched, active_known, len(stale_ids),
-            )
+        stale_ids = [int(i) for i in plan.retire_ids]
+        if scraped_conditions is not None and stale_ids:
+            # The caller's condition evidence stays a veto: a run whose rows carry no "used" (or no
+            # condition at all) is no evidence about the used cars even if a VIN matched across
+            # buckets; blank-condition rows need both sides.
+            absent = {"new", "used"} - set(scraped_conditions)
+            by_id = {int(r.id): r.bucket for r in rows}
+            vetoed = [i for i in stale_ids if by_id[i] in absent or (by_id[i] == BUCKET_UNKNOWN and absent)]
+            if vetoed:
+                stale_ids = [i for i in stale_ids if i not in set(vetoed)]
+                out["kept"]["condition_missing"] += len(vetoed)
+                plan.kept["condition_missing"] += len(vetoed)
+                out["kept_missing_condition"] = plan.kept["condition_missing"]
+        out["candidates"] = len(stale_ids)
+        if not plan.eligible:
+            out["would_retire"] = len(stale_ids)
+            out["skipped_reason"] = plan.reason
             return _finish()
 
+        # Two-strike (P5B.4, D-RC2): the plan's ids are misses, not yet retirements. A car with no
+        # strike gets its first; one whose first miss is >= SCANNER_STRIKE_GAP_HOURS old retires.
+        dry = mode == "dry" or no_retire_switch()
+        needed = retire_strikes()
+        gap_hours = strike_gap_hours()
+        now_dt = datetime.now(timezone.utc)
+        strikes = read_strikes(cur, stale_ids) if needed > 1 else {}
+        retire_ids, first_ids, waiting_ids = split_by_strikes(
+            stale_ids, strikes, now_dt, needed=needed, gap_hours=gap_hours
+        )
+        out["strikes_needed"] = needed
+        out["would_retire"] = len(retire_ids)
+        out["would_strike"] = len(first_ids)
+        out["strike_waiting"] = len(waiting_ids)
+        if dry:
+            out["dry_run"] = True
+            out["skipped_reason"] = "dry_run" if mode == "dry" else "no_retire_switch"
+            return _finish()
+
+        info = {int(r.id): r for r in rows}
+        dealer_key = (dealer_id or "").strip()
+        raw_vin: dict[int, Any] = {}
+        if stale_ids:
+            cur.execute(
+                f"SELECT id, vin FROM cars WHERE id IN ({','.join('?' * len(stale_ids))})", tuple(stale_ids)
+            )
+            raw_vin = {int(r[0]): r[1] for r in cur.fetchall()}
+        ensure_retirement_tables(cur)
+        if first_ids:
+            record_strikes(
+                cur, [(i, raw_vin.get(i) or info[i].vin_norm, dealer_key) for i in first_ids], source=source or "recipe"
+            )
+            out["struck"] = len(first_ids)
+        # Cars this run saw again lose any strike (a miss must be consecutive).
+        seen_ids = [int(r.id) for r in rows if r.vin_norm and r.vin_norm in scraped_vins]
+        if seen_ids:
+            clear_strikes(cur, seen_ids)
+
         marked = 0
+        retired_ids: list[int] = []
         batch_size = 400
-        for i in range(0, len(stale_ids), batch_size):
-            chunk = stale_ids[i : i + batch_size]
+        guard_ts = _scraped_at_text(started)
+        for i in range(0, len(retire_ids), batch_size):
+            chunk = retire_ids[i : i + batch_size]
             if not chunk:
                 continue
             ph = ",".join("?" * len(chunk))
+            # A row re-upserted since the plan was made (scraped_at moved past the run start)
+            # is alive: the guard leaves it, and the ids returned say which really retired.
             cur.execute(
                 f"""
                 UPDATE cars
                 SET listing_active = 0, listing_removed_at = ?
                 WHERE id IN ({ph})
+                  AND ({scope_sql})
+                  AND COALESCE(listing_active, 1) = 1
+                  AND (scraped_at IS NULL OR scraped_at < ?)
+                RETURNING id
                 """,
-                (now, *chunk),
+                (now, *chunk, *scope_params, guard_ts),
             )
-            rc = cur.rowcount
-            marked += len(chunk) if rc is None or rc < 0 else int(rc)
+            done = [int(r[0]) for r in cur.fetchall()]
+            marked += len(done)
+            retired_ids.extend(done)
+        if retired_ids:
+            record_retirements(
+                cur,
+                [(i, raw_vin.get(i) or info[i].vin_norm, dealer_key,
+                  {"bucket": info[i].bucket, "first_missed_at": (strikes.get(i) or {}).get("first_missed_at")})
+                 for i in retired_ids],
+                writer=retirement_writer,
+                reason=plan.reason or "not_in_run",
+                strikes=needed,
+                evidence={"source": source or "recipe", "rows": deduped, "gap_hours": gap_hours},
+            )
+            clear_strikes(cur, retired_ids)
 
         conn.commit()
         out["ran"] = True
         out["marked_inactive"] = marked
+        out["retired"] = marked
         out["skipped_reason"] = "ok"
+        if own_close:
+            _delete_index_rows(retired_ids)
         return _finish()
     finally:
         if own_close:

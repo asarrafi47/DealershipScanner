@@ -180,3 +180,4 @@ def reset_stats(stats: dict | None) -> None:
         stats["group_feed_unstamped"] = {}
         stats["vin_owner_conflict_reasons"] = {}
         stats["car_moves_logged"] = 0
+        stats["unattributable_vins"] = {}

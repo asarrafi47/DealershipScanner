@@ -38,6 +38,7 @@ ENTRY = [
     "backend.scripts.discovery_probe",
     "backend.scripts.platform_candidates",
     "backend.scanner.recipe_validation",
+    "backend.scanner.recipe_totals",
     "backend.scanner.recipe_synth",
     "backend.scripts.heal_from_vpic",
 ]

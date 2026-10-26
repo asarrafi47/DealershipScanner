@@ -32,6 +32,33 @@ logger = logging.getLogger("scanner")
 # separate them. Refuse to WRITE on those, never to un-list.
 EVIDENCE_BACKED_REJECTS = frozenset({"sibling_rooftop", "single_rooftop_is_not_this_store"})
 
+# Refusals that leave a VIN OUT of the reconcile pass's protected set (P5A.5): the feed
+# positively assigned the car elsewhere, so a row already stored here is struck under the
+# two-strike policy instead of being held listed. ``third_rooftop`` (a class-(d) row stored
+# under a sibling) is struck the same way. ``vdp_host_other_store`` is in neither set.
+UNPROTECTED_REFUSALS = EVIDENCE_BACKED_REJECTS | {"third_rooftop"}
+
+
+def protected_refusal_vins(*vehicle_lists: list[dict[str, Any]], dropped: dict[str, str] | None = None) -> set[str]:
+    """Normalized VINs refused WITHOUT evidence about the car: reconcile must never retire them.
+
+    *vehicle_lists* are refused rows (``_rooftop_reject`` set); *dropped* is the
+    ``{vin: reason}`` map ``drop_unattributable_vehicles`` returns.
+    """
+    from backend.scanner.inventory_reconcile import normalize_scanner_vin
+
+    out: set[str] = set()
+    for rows in vehicle_lists:
+        for v in rows or ():
+            if v.get("_rooftop_reject") and v.get("_rooftop_reject") not in UNPROTECTED_REFUSALS:
+                vin = normalize_scanner_vin(v.get("vin"))
+                if vin:
+                    out.add(vin)
+    for vin, reason in (dropped or {}).items():
+        if reason not in UNPROTECTED_REFUSALS and vin:
+            out.add(vin)
+    return out
+
 
 def split_refusals(refused: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], int]:
     """``(rows that may be un-listed, count of rows that may not)``."""
@@ -52,6 +79,8 @@ def disown_foreign_rooftop_vins(dealer_id: str, vins: set[str]) -> int:
     storefront for these exact VINs in this very run. Scoped to *dealer_id*, so
     if the true rooftop is also scanned its own upsert re-lists the VIN there.
 
+    ``SCANNER_NO_RETIRE`` (the one no-retire switch) makes this a no-op that returns 0.
+
     Callers must pass ONLY VINs whose refusal reason is in
     :data:`EVIDENCE_BACKED_REJECTS`.
     """
@@ -60,9 +89,16 @@ def disown_foreign_rooftop_vins(dealer_id: str, vins: set[str]) -> int:
     from datetime import datetime, timezone
 
     from backend.db.inventory_db import db_conn
+    from backend.db.retirement_log import record_retirements
+    from backend.scanner.inventory_reconcile import no_retire_switch
+
+    if no_retire_switch():
+        logger.warning("disown %s: SCANNER_NO_RETIRE is set; leaving %d VIN(s) listed", dealer_id, len(vins))
+        return 0
 
     now = datetime.now(timezone.utc).replace(microsecond=0).isoformat()
     changed = 0
+    retired_ids: list[int] = []
     ordered = sorted(vins)
     with db_conn() as conn:
         cur = conn.cursor()
@@ -76,12 +112,27 @@ def disown_foreign_rooftop_vins(dealer_id: str, vins: set[str]) -> int:
                  WHERE TRIM(IFNULL(dealer_id, '')) = ?
                    AND COALESCE(listing_active, 1) = 1
                    AND UPPER(TRIM(vin)) IN ({placeholders})
+             RETURNING id, vin
                 """,
                 tuple([now, dealer_id] + chunk),
             )
-            changed += int(cur.rowcount or 0)
+            got = cur.fetchall()
+            ids = [int(r[0]) for r in got]
+            retired_ids.extend(ids)
+            changed += len(ids)
+            record_retirements(
+                cur, [(int(r[0]), r[1], dealer_id) for r in got],
+                writer="disown", reason="foreign_rooftop_evidence",
+            )
         conn.commit()
+    if retired_ids:  # the incomplete-listings index drops cars that left the active set (IL-05)
+        try:
+            from backend.db.incomplete_listings_db import delete_incomplete_records
+
+            delete_incomplete_records(retired_ids)
+        except Exception:  # noqa: BLE001 - the unlist is committed
+            logger.warning("disown %s: could not delete incomplete-index rows", dealer_id, exc_info=True)
     return changed
 
 
-__all__ = ["EVIDENCE_BACKED_REJECTS", "disown_foreign_rooftop_vins", "split_refusals"]
+__all__ = ["EVIDENCE_BACKED_REJECTS", "UNPROTECTED_REFUSALS", "protected_refusal_vins", "disown_foreign_rooftop_vins", "split_refusals"]

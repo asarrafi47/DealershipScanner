@@ -1,5 +1,5 @@
-"""dealer_pipeline reconcile: retire rows a full, accepted run did not return —
-never on a partial run. 2026-09-26: 194,811 active rows, 0 ever retired, 45,265
+"""dealer_pipeline reconcile: REPORT the rows a full, accepted run did not return (P5A.7: the
+pipeline never writes to cars; the scanner's reconcile retires) — nothing on a partial run. 2026-09-26: 194,811 active rows, 0 ever retired, 45,265
 last seen before September."""
 from __future__ import annotations
 
@@ -26,12 +26,13 @@ def _active(conn, dealer="d"):
     return conn.execute("SELECT COUNT(*) FROM cars WHERE dealer_id=? AND COALESCE(listing_active,1)=1", (dealer,)).fetchone()[0]
 
 
-def test_full_accepted_run_retires_unseen_rows(conn):
+def test_full_accepted_run_reports_unseen_rows_and_retires_none(conn):
     out = dp.reconcile_dealer(conn, "d", "2026-09-26T00:00:00Z", baseline=12, rows_this_run=25, verdict="inaccurate")
-    assert out["eligible"] and out["stale"] == 6 and out["retired"] == 6
-    assert _active(conn) == 10 and _active(conn, "other") == 1
-    removed = conn.execute("SELECT COUNT(*) FROM cars WHERE dealer_id='d' AND listing_active=0 AND listing_removed_at IS NOT NULL").fetchone()[0]
-    assert removed == 6
+    assert out["eligible"] and out["stale"] == 6 and out["retirable"] == 6 and out["retired"] == 0
+    assert out["report_only"] and out["scanner_retired"]["retired"] == 0
+    assert _active(conn) == 16 and _active(conn, "other") == 1
+    removed = conn.execute("SELECT COUNT(*) FROM cars WHERE dealer_id='d' AND (listing_active=0 OR listing_removed_at IS NOT NULL)").fetchone()[0]
+    assert removed == 0
 
 
 def test_partial_run_never_retires(conn):
@@ -54,4 +55,4 @@ def test_zero_baseline_falls_back_and_small_runs_never_retire(conn):
     assert not out["eligible"] and "absolute floor" in out["reason"] and _active(conn) == 16
     # 25 rows against 6 July ghosts (90-day window empty -> all active rows = 6): eligible
     out = dp.reconcile_dealer(conn, "d", "2026-09-26T00:00:00Z", baseline=0, rows_this_run=25, verdict="ok")
-    assert out["eligible"] and out["baseline_fallback"] == 6 and out["retired"] == 6
+    assert out["eligible"] and out["baseline_fallback"] == 6 and out["retirable"] == 6 and out["retired"] == 0

@@ -212,12 +212,6 @@ def _dealer(dealer_id: str) -> dict[str, Any]:
     return {"dealer_id": dealer_id, "name": d["name"], "url": d["url"], "provider": d["provider"]}
 
 
-_TERRY_REASON = (
-    "defect: inventory_reconcile.py:242 measures coverage AFTER the retry's upsert, so a store-scoped lifecycle "
-    "retry counts its own 585 rows (used 134/150, lot 585/601) and retires the 16 first-pass rows it never "
-    "re-saw (0/16 prior rows matched; 11 of them still listed in Hendrick's pool at Terry's address); fixed by "
-    "N9 P5A.1/P5A.4/P5A.5 (prior-window coverage by VIN with matched > 0, run_started_iso) and P5B.4 two-strike"
-)
 _STRIKE_REASON = (
     "defect: inventory_reconcile.py:323-330 retires on the first miss, inside the run that wrote the rows "
     "(no two-strike, D-RC2); fixed by N9 P5B.4 (listing_miss_strikes, second miss >= 20 h later) on P5A.1/P5A.5"
@@ -227,7 +221,7 @@ _STRIKE_REASON = (
 @pytest.mark.parametrize(
     "dealer_id",
     [
-        pytest.param("terrylabontechevy-com", marks=pytest.mark.xfail(strict=True, reason=_TERRY_REASON)),
+        "terrylabontechevy-com",
         pytest.param("coastlinecdjr-com", marks=pytest.mark.xfail(strict=True, reason=_STRIKE_REASON)),
         pytest.param("napletonhondamortongrove-com", marks=pytest.mark.xfail(strict=True, reason=_STRIKE_REASON)),
         pytest.param("southcountylexus-com", marks=pytest.mark.xfail(strict=True, reason=_STRIKE_REASON)),
@@ -271,14 +265,6 @@ def test_retry_retirement_shape(inv, dealer_id):
 
 # ── 5. the pipeline's lifecycle retry reconcile with a known=0 baseline ──────
 
-_LIFECYCLE_REASON = (
-    "defect: the lifecycle retry reconcile (pipeline/lifecycle.py:331-338 -> pipeline/reconcile.py:73-78, "
-    ":152-155) gets known_before=0 for a dealer that was empty before the run, falls back to the first pass's "
-    "rows as its baseline (used 16; 134 >= 0.6 x 16) and retires them: a second writer on the scanner's "
-    "decision; fixed by N9 P5A.7 (pipeline and lifecycle reconcile report only, D-RC1 A)"
-)
-
-
 @pytest.fixture()
 def log_root(tmp_path, monkeypatch) -> Path:
     root = tmp_path / "dealer_logs"
@@ -287,7 +273,6 @@ def log_root(tmp_path, monkeypatch) -> Path:
     return root
 
 
-@pytest.mark.xfail(strict=True, reason=_LIFECYCLE_REASON)
 def test_lifecycle_retry_with_known_zero_baseline_retires_nothing(inv, log_root, tmp_path, monkeypatch):
     """Terry's run, pipeline side: the dealer had no rows when the pipeline
     started (known 0, empty buckets), the first pass wrote 16 used rows and
@@ -469,13 +454,6 @@ def test_unstamped_group_feed_files_no_sister_or_offroster_cars_under_the_store(
 # ── 8. triage accounting: the identity replayed from the 10-13 triage ────────
 
 _IDENT = _load("triage_identity_20261013.json")
-_IDENTITY_REASON = (
-    "defect: assess.py:104-108 reports rows = capture_coverage.n, taken at persist.py:18 before the VIN-owner "
-    "guard drops refused VINs (persist.py:25-35), there is no rows_written, and a dealer written without a "
-    "scan_runs row (pause-killed batch) reports nothing: triage 'rows' sums to 208,233 against 199,457 active; "
-    "fixed by N9.12 (rows_captured / rows_refused_vin_owner / rows_refused_rooftop / rows_written, error "
-    "dealers counted, not null)"
-)
 
 
 def _seed_identity(db: Path) -> dict[str, int]:
@@ -526,7 +504,6 @@ def _seed_identity(db: Path) -> dict[str, int]:
     return active
 
 
-@pytest.mark.xfail(strict=True, reason=_IDENTITY_REASON)
 def test_triage_identity_replay_rows_written_equals_active(inv, monkeypatch):
     """Replay of the 458-dealer 10-13 triage on the clean room's end state.
     The DB started empty, so every active row was written by its dealer's

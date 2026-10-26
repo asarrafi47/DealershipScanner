@@ -164,6 +164,25 @@ def delete_incomplete_record(car_id: int) -> None:
     conn.close()
 
 
+def delete_incomplete_records(car_ids) -> None:
+    """Drop the index rows of cars that left the active set (retirement, P5A.4); idempotent."""
+    ids = sorted({int(i) for i in car_ids or ()})
+    if not ids:
+        return
+    conn = get_conn()
+    try:
+        _ensure_schema(conn)
+        for i in range(0, len(ids), 500):
+            chunk = ids[i : i + 500]
+            conn.execute(
+                f"DELETE FROM incomplete_listings WHERE car_id IN ({','.join('?' * len(chunk))})", tuple(chunk)
+            )
+        conn.commit()
+    finally:
+        conn.close()
+    _clear_listings_caches_after_index_write()
+
+
 def get_missing_field_codes_for_car_id(car_id: int) -> list[str]:
     """Fast read from incomplete index; empty list when the listing is complete."""
     conn = get_conn()
