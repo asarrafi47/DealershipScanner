@@ -26,6 +26,7 @@ from backend.parsers.oneaudi import parse as parse_oneaudi
 from backend.parsers.wp_vehicles_index import parse as parse_wp_vehicles_index
 from backend.parsers.dealer_on import parse as parse_dealer_on
 from backend.parsers.jazel import parse as parse_jazel
+from backend.parsers.motive_ridemotive import detect as detect_motive
 from backend.parsers.motive_ridemotive import parse as parse_motive_ridemotive
 from backend.parsers.overfuel import parse as parse_overfuel
 from backend.parsers.rooftop_aliases import roster_name_aliases  # noqa: F401 - re-export; the gate resolves aliases through this name
@@ -174,6 +175,14 @@ def _parse_rows(provider: str, raw_data, _kwargs: dict, dealer_id: str) -> list[
         chapman_rows = list(parse_chapman(raw_data, **_kwargs))
         if chapman_rows:
             return chapman_rows
+
+    # Motive (ridemotive) Algolia hits: browser-captured recipes of Motive sites are
+    # tagged "dealer_dot_com", whose parser reads none of the Motive field names
+    # (trim/body/stock/gallery 0%) and drops the per-car store the gate reads.
+    if provider != "motive_ridemotive" and detect_motive(raw_data):
+        motive_rows = list(parse_motive_ridemotive(raw_data, **_kwargs))
+        if motive_rows:
+            return motive_rows
 
     # Dealer.com ws-inv-data bodies belong to the dealer.com parser whatever the
     # recipe is tagged: tagged "unknown" they went to the generic parser below,
