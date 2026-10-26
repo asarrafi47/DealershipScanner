@@ -6,6 +6,7 @@ and is reset via :func:`clear_incomplete_snapshot_cache`.
 """
 import hashlib
 import logging
+import os
 import sqlite3
 import threading
 import time
@@ -101,6 +102,21 @@ def serialize_cars_for_listings_grid(cars: list[dict]) -> list[dict[str, Any]]:
 
 _facet_options_cache_token: Any = None
 _facet_options_cache_value: dict[str, Any] | None = None
+_facet_options_built_at: float = 0.0
+# Minimum seconds between background facet rebuilds (2.3 s of DISTINCT/paint/package
+# scans each, re-triggered by every scan write while a fleet runs). 0 disables.
+_FACET_REBUILD_MIN_INTERVAL_ENV = "FACET_REBUILD_MIN_INTERVAL_S"
+_FACET_REBUILD_MIN_INTERVAL_DEFAULT = 300.0
+_facet_clock = time.monotonic  # tests swap in a fake clock
+
+
+def _facet_rebuild_min_interval() -> float:
+    try:
+        return max(0.0, float(os.environ.get(_FACET_REBUILD_MIN_INTERVAL_ENV, "")))
+    except (ValueError, TypeError):
+        return _FACET_REBUILD_MIN_INTERVAL_DEFAULT
+
+
 _geo_coords_cache_token: tuple[float, float] | None = None
 _geo_coords_cache_value: dict[str, Any] | None = None
 _grid_cars_cache_token: Any = None
@@ -189,11 +205,12 @@ def _grid_cache_token() -> Any:
 
 def clear_inventory_listings_cache() -> None:
     """Drop facet/grid caches (tests or admin tools after bulk inventory writes)."""
-    global _facet_options_cache_token, _facet_options_cache_value
+    global _facet_options_cache_token, _facet_options_cache_value, _facet_options_built_at
     global _geo_coords_cache_token, _geo_coords_cache_value
     global _grid_cars_cache_token, _grid_cars_cache_value, _grid_cars_cache_built_at
     _facet_options_cache_token = None
     _facet_options_cache_value = None
+    _facet_options_built_at = 0.0
     _geo_coords_cache_token = None
     _geo_coords_cache_value = None
     _grid_cars_cache_token = None
@@ -596,13 +613,14 @@ def _spawn_facet_options_rebuild(token: Any) -> None:
             return
 
         def _run() -> None:
-            global _facet_options_cache_token, _facet_options_cache_value
+            global _facet_options_cache_token, _facet_options_cache_value, _facet_options_built_at
             try:
                 facets = _build_filter_options_uncached()
             except Exception:
                 return
             _facet_options_cache_token = token
             _facet_options_cache_value = facets
+            _facet_options_built_at = _facet_clock()
 
         t = threading.Thread(target=_run, name="facet-options-refresh", daemon=True)
         _facet_options_rebuild_thread = t
@@ -627,7 +645,7 @@ def get_filter_options() -> dict[str, Any]:
     lands here, so only the true cold start builds inline (~0.9s of DISTINCT scans,
     measured 2026-07-29).
     """
-    global _facet_options_cache_token, _facet_options_cache_value
+    global _facet_options_cache_token, _facet_options_cache_value, _facet_options_built_at
     from backend.db.repositories.grid_cards_repo import grid_scope_token
 
     token = grid_scope_token()
@@ -635,8 +653,13 @@ def get_filter_options() -> dict[str, Any]:
         facets = _build_filter_options_uncached()
         _facet_options_cache_token = token
         _facet_options_cache_value = facets
+        _facet_options_built_at = _facet_clock()
     elif _facet_options_cache_token != token:
-        _spawn_facet_options_rebuild(token)
+        # Facets are filter choices, not live data: during a scan the token moves on
+        # every write, so rebuild at most once per interval (the cold start above and
+        # clear_inventory_listings_cache() always rebuild).
+        if _facet_clock() - _facet_options_built_at >= _facet_rebuild_min_interval():
+            _spawn_facet_options_rebuild(token)
 
     return dict(_facet_options_cache_value or {})
 
