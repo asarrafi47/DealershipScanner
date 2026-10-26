@@ -417,6 +417,17 @@ def api_listings_cars():
         with _cars_scope_build_lock(key):
             entry = _cars_scope_get(key)
             if not _cars_scope_entry_valid(entry, token):
+                # SEC-A-005: only cache misses cost SQL + gzip; cap them per IP so
+                # distinct zip/radius loops cannot starve the one-worker server.
+                if not allow_request(
+                    f"listings-build:{_client_ip()}",
+                    max_events=Config.RATE_LIMIT_LISTINGS_BUILD_PER_MIN,
+                    window_seconds=60.0,
+                ):
+                    resp = jsonify({"ok": False, "error": "rate_limited"})
+                    resp.status_code = 429
+                    resp.headers["Retry-After"] = "30"
+                    return resp
                 entry = _build_cars_scope_entry(
                     zip_code, (float(origin[0]), float(origin[1])), radius, hidden, token
                 )
@@ -478,6 +489,12 @@ def api_coords_to_zip():
         return jsonify({"error": "lat and lon required"}), 400
     if not (-90.0 <= lat <= 90.0 and -180.0 <= lon <= 180.0):
         return jsonify({"error": "invalid coordinates"}), 400
+    if not allow_request(
+        f"coords-to-zip:{_client_ip()}",
+        max_events=Config.RATE_LIMIT_COORDS_TO_ZIP_PER_MIN,
+        window_seconds=60.0,
+    ):
+        return jsonify({"error": "rate_limited"}), 429
     try:
         from backend.db.geo import nearest_us_postal_meta
 
