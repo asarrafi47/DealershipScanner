@@ -98,6 +98,11 @@ def _run(args) -> int:
         # convenience, never the source of truth for a dealer we already sell.
         d = dealer_from_manifest(did, manifest) or db_dealers.get(did) or {"dealer_id": did, "url": ""}
         dealers_by_id[did] = d
+        if did in assess_only:
+            # Already scanned before the kill: assess it from what is stored, no synthesis,
+            # discovery capture or discovery.md rewrite.
+            recipe_info[did] = {"had_recipes": 1, "synth": "resume_assess_only"}
+            continue
         if not d.get("url"):
             recipe_info[did] = {"had_recipes": 0, "synth": "not_in_manifest_or_db"}
             continue
@@ -134,8 +139,9 @@ def _run(args) -> int:
 
     requeued: set[str] = set()
     if not args.skip_scan:
-        scannable = [did for did in ids if did not in assess_only and recipe_info[did].get("had_recipes") or str(recipe_info[did].get("synth", "")).startswith("saved")]
-        skipped = [did for did in ids if did not in scannable]
+        scannable = [did for did in ids if did not in assess_only
+                    and (recipe_info[did].get("had_recipes") or str(recipe_info[did].get("synth", "")).startswith("saved"))]
+        skipped = [did for did in ids if did not in scannable and did not in assess_only]
         if skipped:
             print(f"scan    skipping {len(skipped)} dealer(s) with no recipe: {', '.join(skipped)[:200]}", flush=True)
         chromium_leaks: list[dict[str, Any]] = []

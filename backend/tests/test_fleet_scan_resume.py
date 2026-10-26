@@ -115,3 +115,48 @@ def test_start_falls_back_to_directory_name(tmp_path):
     (run / "s0.txt").write_text("a-com\n")
     started, shards = fleet_scan.load_resume_state(run)
     assert started == START and shards == [["a-com"]]
+
+
+def test_pipeline_resume_never_synthesizes_or_scans_assess_only_dealers(tmp_path, monkeypatch):
+    """An assess-only dealer (scan_runs row since the run start) skips ensure_recipe, discovery
+    capture and discovery.md, and is never scanned, whatever its recipe state says."""
+    import types
+
+    from backend.scanner.pipeline import run as prun
+
+    calls = {"ensure": [], "capture": [], "log": [], "scan": []}
+    monkeypatch.setattr(prun, "load_manifest_dealers", lambda p: [])
+    monkeypatch.setattr(prun, "plan_resume", lambda *a, **k: {"prior": [], "assess_only": ["done-com"], "todo": ["todo-com"]})
+    monkeypatch.setattr(prun, "get_conn", lambda: types.SimpleNamespace(close=lambda: None))
+    monkeypatch.setattr(prun, "valid_vin_count", lambda *a, **k: 0)
+    monkeypatch.setattr(prun, "bucket_counts", lambda *a, **k: {})
+    monkeypatch.setattr(prun, "dealer_from_manifest", lambda did, m: {"dealer_id": did, "url": f"https://{did}"})
+    monkeypatch.setattr(prun, "dealers_from_db", lambda ids: {})
+
+    def _ensure(d, force=False):
+        calls["ensure"].append(d["dealer_id"])
+        return {"had_recipes": 1, "synth": "saved_x"}
+
+    monkeypatch.setattr(prun, "ensure_recipe", _ensure)
+    monkeypatch.setattr(prun, "run_discovery_capture", lambda did: calls["capture"].append(did) or {})
+    monkeypatch.setattr(prun, "log_discovery", lambda d, info, stamp: calls["log"].append(d["dealer_id"]))
+    monkeypatch.setattr(prun, "wait_for_db", lambda s: True)
+    monkeypatch.setattr(prun, "wait_for_scanner_lock", lambda s: True)
+    monkeypatch.setattr(prun, "chromium_process_count", lambda: 0)
+    monkeypatch.setattr(prun, "run_http_only_scan", lambda batch, **k: calls["scan"].extend(batch) or 0)
+    monkeypatch.setattr(prun, "vpic_for_dealers", lambda ids: {})
+    monkeypatch.setattr(prun, "_assess_conn", lambda: types.SimpleNamespace(close=lambda: None))
+    monkeypatch.setattr(prun, "_conn_alive", lambda c: True)
+    monkeypatch.setattr(prun, "assess", lambda conn, did, since, known, rec: {"dealer_id": did, "verdict": "ok", "rows": 1, "recipe": rec})
+    monkeypatch.setattr(prun, "reconcile_dealer", lambda *a, **k: {})
+    monkeypatch.setattr(prun, "log_run_files", lambda r, stamp: None)
+    monkeypatch.setattr(prun, "run_lifecycle_pass", lambda *a, **k: {})
+    args = types.SimpleNamespace(
+        manifest="", dealers="done-com,todo-com", shard_count=1, shard_index=0, limit=0, out=str(tmp_path), since="",
+        resume=True, resume_since=START.isoformat(), force_synth=True, no_discover=False, skip_scan=False, batch=5,
+        lock_wait=1, scan_timeout=1, no_vpic=True, no_reconcile=True, no_lifecycle=True)
+    assert prun._run(args) == 0
+    assert calls["ensure"] == ["todo-com"] and calls["capture"] == [] and calls["log"] == ["todo-com"]
+    assert calls["scan"] == ["todo-com"]
+    done = {r["dealer_id"]: r for r in json.loads((tmp_path / "triage.json").read_text())["dealers"]}
+    assert set(done) == {"done-com", "todo-com"}
