@@ -12,6 +12,8 @@ Dealer-key resolution reuses ``dealership_page._resolve_dealer`` so the hostname
 """
 from __future__ import annotations
 
+import math
+
 from flask import jsonify, redirect, request, session, url_for
 
 from backend.routes.dealership_page import _resolve_dealer
@@ -59,7 +61,9 @@ def submit_review(dealer_key: str):
     if not dealer_id:
         return _back_to_reviews(dealer_key, "We couldn't find that dealership.")
 
-    from backend.reviews.guards import _truthy, check_rate_limit, validate_review
+    from backend.reviews.guards import (
+        ADDON_DESC_MAX, _truthy, check_rate_limit, validate_review,
+    )
 
     is_anonymous = _truthy(request.form.get("is_anonymous"))
     addon_fee_reported = _truthy(request.form.get("addon_fee_reported"))
@@ -92,6 +96,8 @@ def submit_review(dealer_key: str):
                     amount = float(raw)
                 except ValueError:
                     amount = None
+                if amount is not None and not math.isfinite(amount):
+                    amount = None
 
         upsert_review(
             conn,
@@ -103,7 +109,10 @@ def submit_review(dealer_key: str):
             is_anonymous=is_anonymous,
             addon_fee_reported=addon_fee_reported,
             addon_fee_amount=amount,
-            addon_fee_desc=(request.form.get("addon_fee_desc") or "").strip() or None,
+            addon_fee_desc=(
+                ((request.form.get("addon_fee_desc") or "").strip()[:ADDON_DESC_MAX] or None)
+                if addon_fee_reported else None
+            ),
             ip_hash=_client_ip_hash(),
         )
     except Exception:
