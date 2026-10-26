@@ -212,12 +212,6 @@ def _dealer(dealer_id: str) -> dict[str, Any]:
     return {"dealer_id": dealer_id, "name": d["name"], "url": d["url"], "provider": d["provider"]}
 
 
-_TERRY_REASON = (
-    "defect: inventory_reconcile.py:242 measures coverage AFTER the retry's upsert, so a store-scoped lifecycle "
-    "retry counts its own 585 rows (used 134/150, lot 585/601) and retires the 16 first-pass rows it never "
-    "re-saw (0/16 prior rows matched; 11 of them still listed in Hendrick's pool at Terry's address); fixed by "
-    "N9 P5A.1/P5A.4/P5A.5 (prior-window coverage by VIN with matched > 0, run_started_iso) and P5B.4 two-strike"
-)
 _STRIKE_REASON = (
     "defect: inventory_reconcile.py:323-330 retires on the first miss, inside the run that wrote the rows "
     "(no two-strike, D-RC2); fixed by N9 P5B.4 (listing_miss_strikes, second miss >= 20 h later) on P5A.1/P5A.5"
@@ -227,7 +221,7 @@ _STRIKE_REASON = (
 @pytest.mark.parametrize(
     "dealer_id",
     [
-        pytest.param("terrylabontechevy-com", marks=pytest.mark.xfail(strict=True, reason=_TERRY_REASON)),
+        "terrylabontechevy-com",
         pytest.param("coastlinecdjr-com", marks=pytest.mark.xfail(strict=True, reason=_STRIKE_REASON)),
         pytest.param("napletonhondamortongrove-com", marks=pytest.mark.xfail(strict=True, reason=_STRIKE_REASON)),
         pytest.param("southcountylexus-com", marks=pytest.mark.xfail(strict=True, reason=_STRIKE_REASON)),
