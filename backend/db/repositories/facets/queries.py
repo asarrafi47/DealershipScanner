@@ -65,14 +65,26 @@ def paint_family_facets(cursor: Any) -> tuple[list[str], list[str]]:
     )
     ext_facet_ids: set[str] = set()
     int_facet_ids: set[str] = set()
+    # Tens of thousands of rows, a few hundred distinct color strings: infer once each.
+    memo: dict[Any, list[str]] = {}
+
+    def _buckets(raw: Any) -> list[str]:
+        try:
+            hit = memo.get(raw)
+        except TypeError:
+            return infer_paint_color_buckets(raw, None)
+        if hit is None:
+            hit = memo[raw] = infer_paint_color_buckets(raw, None)
+        return hit
+
     for ext_raw, int_raw, int_bucks in cursor.fetchall():
         if not is_effectively_empty(ext_raw):
-            ext_facet_ids.update(infer_paint_color_buckets(ext_raw, None))
+            ext_facet_ids.update(_buckets(ext_raw))
         ib = parse_stored_buckets(int_bucks)
         if ib:
             int_facet_ids.update(ib)
         elif not is_effectively_empty(int_raw):
-            int_facet_ids.update(infer_paint_color_buckets(int_raw, None))
+            int_facet_ids.update(_buckets(int_raw))
     return sort_paint_family_ids(ext_facet_ids), sort_paint_family_ids(int_facet_ids)
 
 
