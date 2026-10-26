@@ -153,6 +153,7 @@ def update_user_profile(user_id: int, username: str, email: str) -> str | None:
         normalize_registration_username,
         username_format_error,
     )
+    from backend.utils.roles import REGISTRATION_ADMIN_BLOCKED_MSG
 
     try:
         uid = int(user_id)
@@ -186,6 +187,14 @@ def update_user_profile(user_id: int, username: str, email: str) -> str | None:
         if fmt_err:
             conn.close()
             return fmt_err
+    # Env-admin identities (APP_ADMIN_*) are reserved: moving onto one would make
+    # sync_env_admin_user_row grant admin and clear TOTP (SEC-A-001). An identity
+    # the account already holds is left alone.
+    from backend.utils.roles import email_is_admin, username_is_admin
+
+    if (username_changed and username_is_admin(uname)) or (email_changed and email_is_admin(em)):
+        conn.close()
+        return REGISTRATION_ADMIN_BLOCKED_MSG
     cursor.execute(
         "SELECT id FROM users WHERE lower(username) = lower(?) AND id != ?",
         (uname, uid),
