@@ -12,7 +12,6 @@ CREATE TABLE IF NOT EXISTS public.admin_users (
     username     TEXT NOT NULL,
     email        TEXT NOT NULL,
     password     TEXT NOT NULL,
-    totp_secret  TEXT,
     totp_enabled INTEGER NOT NULL DEFAULT 0
 );
 

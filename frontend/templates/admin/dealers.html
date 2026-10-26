@@ -350,7 +350,7 @@
             metaRow("Created", esc(fmtTs(job.created_at))) +
             metaRow("Started", esc(fmtTs(job.started_at))) +
             metaRow("Finished", esc(fmtTs(job.finished_at))) +
-            (job.error ? metaRow("Error", '<span style="color:#b91c1c">' + esc(job.error) + "</span>") : "") +
+            (job.error ? metaRow("Error", '<span class="u-text-danger">' + esc(job.error) + "</span>") : "") +
             (url ? metaRow("URL", '<a href="' + esc(url) + '" target="_blank" rel="noopener">' + esc(url) + "</a>") : "") +
             (payload.name ? metaRow("Name", esc(payload.name)) : "") +
             "</div>" +

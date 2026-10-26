@@ -40,7 +40,7 @@
             {% endif %}
 
             {% if has_portal %}
-            <p style="margin-top:1rem;">
+            <p class="u-mt-1rem">
                 <a href="{{ url_for('account_billing_portal') }}" class="primary-button">Manage subscription in Stripe</a>
             </p>
             {% elif billing_enabled and is_premium %}

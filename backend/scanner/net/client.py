@@ -34,6 +34,7 @@ from types import ModuleType
 from typing import Any
 
 from backend.scanner import http_fetch
+from backend.scanner.net import ssrf
 
 # Browser signatures to rotate, ordered by observed hit rate. Edges run different
 # rule sets: over a 30-dealer sample "chrome" alone cleared about half, while
@@ -152,8 +153,10 @@ def send(lib: Any, method: str, url: str, *, via_get: bool, **kwargs: Any) -> An
 
     *via_get* calls ``lib.get(url, ...)``; otherwise ``lib.request(method, url, ...)``.
     *kwargs* go through untouched, so a call site sends exactly the keyword set it
-    names (no defaults are added here).
+    names (no defaults are added here). The URL goes through the SSRF guard first
+    (:mod:`backend.scanner.net.ssrf`); a refused one raises ``BlockedDestination``.
     """
+    ssrf.check_url(url)
     if via_get:
         return lib.get(url, **kwargs)
     return lib.request(method, url, **kwargs)

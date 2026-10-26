@@ -88,6 +88,11 @@ class Config:
         return (os.getenv("CSP_REPORT_ONLY") or "").strip().lower() in _TRUTHY
 
     @staticmethod
+    def csp_style_attr_report_only_enabled() -> bool:
+        """P16.8/P16.9: report (do not block) inline style="" attributes while enforcing."""
+        return (os.getenv("CSP_STYLE_ATTR_REPORT_ONLY") or "").strip().lower() in _TRUTHY
+
+    @staticmethod
     def public_base_url() -> str:
         return (os.getenv("PUBLIC_BASE_URL") or "").strip()
 

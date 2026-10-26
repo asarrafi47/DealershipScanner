@@ -108,7 +108,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     /**
-     * http(s) URL for the incomplete cards' style="background-image:url('...')",
+     * http(s) URL for the incomplete cards' data-bg attribute (style_data.js sets the background),
      * which is built through innerHTML. Percent-encodes ' " ( ) \ < >,
      * whitespace and controls, then escapes &: new URL().href keeps a literal
      * "&#39;", and the HTML parser would decode it back into a quote before CSS
@@ -870,7 +870,7 @@ document.addEventListener("DOMContentLoaded", () => {
             return `
             <div class="result-card dev-incomplete-card" data-car-id="${idAttr}" data-incomplete-codes="${codesAttr}">
                 <div class="result-image-wrap">
-                    <div class="result-image" style="background-image:url('${imgQuoted}')"></div>
+                    <div class="result-image" data-bg="${imgQuoted}"></div>
                     <span class="dev-incomplete-badge">Incomplete</span>
                 </div>
                 <div class="result-content">

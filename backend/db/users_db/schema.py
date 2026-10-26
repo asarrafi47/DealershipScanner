@@ -13,10 +13,6 @@ def _env_admin_set_clause(cursor: sqlite3.Cursor) -> str:
     cursor.execute("PRAGMA table_info(users)")
     cols = {r[1] for r in cursor.fetchall()}
     parts = ["role = ?", "totp_enabled = 0"]
-    if "totp_secret" in cols:
-        parts.append("totp_secret = NULL")
-    if "mfa_method" in cols:
-        parts.append("mfa_method = NULL")
     return ", ".join(parts)
 
 
@@ -132,10 +128,7 @@ def init_users_db():
         ("dealer_id", "ALTER TABLE users ADD COLUMN dealer_id TEXT"),
         ("dealership_registry_id", "ALTER TABLE users ADD COLUMN dealership_registry_id INTEGER"),
         ("org_id", "ALTER TABLE users ADD COLUMN org_id INTEGER"),
-        ("totp_secret", "ALTER TABLE users ADD COLUMN totp_secret TEXT"),
         ("totp_enabled", "ALTER TABLE users ADD COLUMN totp_enabled INTEGER NOT NULL DEFAULT 0"),
-        ("mfa_method", "ALTER TABLE users ADD COLUMN mfa_method TEXT"),
-        ("mfa_phone", "ALTER TABLE users ADD COLUMN mfa_phone TEXT"),
         ("is_premium", "ALTER TABLE users ADD COLUMN is_premium INTEGER NOT NULL DEFAULT 0"),
         ("premium_stripe_customer_id", "ALTER TABLE users ADD COLUMN premium_stripe_customer_id TEXT"),
         ("premium_stripe_session_id", "ALTER TABLE users ADD COLUMN premium_stripe_session_id TEXT"),
@@ -172,6 +165,12 @@ def init_users_db():
         (
             "is_active",
             "ALTER TABLE users ADD COLUMN is_active INTEGER NOT NULL DEFAULT 1",
+        ),
+        # Session revocation (P16.1): bumped on a password change/reset, compared
+        # with session["ae"] on every request. Never bumped by the rehash path.
+        (
+            "auth_epoch",
+            "ALTER TABLE users ADD COLUMN auth_epoch INTEGER NOT NULL DEFAULT 0",
         ),
     ):
         if col not in ucols:

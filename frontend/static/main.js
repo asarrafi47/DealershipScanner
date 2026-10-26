@@ -317,6 +317,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (pillCount) {
             if (visibleChecked > 0) {
                 pillCount.textContent = visibleChecked;
+                pillCount.classList.remove("u-start-hidden");
                 pillCount.style.display = "inline";
                 if (pillTrigger && !pillTrigger.classList.contains("electric-mode"))
                     pillTrigger.classList.add("has-selection");
@@ -333,6 +334,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (accCount) {
             if (visibleChecked > 0) {
                 accCount.textContent = visibleChecked;
+                accCount.classList.remove("u-start-hidden");
                 accCount.style.display = "inline";
                 if (accTrigger && !accTrigger.classList.contains("electric-mode"))
                     accTrigger.classList.add("has-selection");
@@ -651,6 +653,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (grid) grid.innerHTML = "";
         if (count) count.textContent = "";
         if (!empty) return;
+        empty.classList.remove("u-start-hidden");
         empty.style.display = "";
         const msg = empty.querySelector(".no-results");
         const sub = empty.querySelector(".no-results-sub");
@@ -1438,6 +1441,7 @@ document.addEventListener("DOMContentLoaded", () => {
             } else if (customEmpty) {
                 setListingsGeoHint("");
                 if (emptyState) {
+                    emptyState.classList.remove("u-start-hidden");
                     emptyState.style.display = "";
                     if (noResultsEl) noResultsEl.textContent = customEmpty;
                     if (noResultsSubEl) {

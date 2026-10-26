@@ -64,6 +64,34 @@ def post_login_redirect():
     return redirect(url_for("app_home"))
 
 
+def revoked_session_gate():
+    """before_request: drop a session whose ``ae`` stamp is behind ``users.auth_epoch``.
+
+    A session from before the column existed carries no stamp and gets one on its
+    first request (no mass logout). A DB error, a missing or inactive row fail open
+    (``AccessContext.profile`` is None then), as the rest of access.py does.
+    """
+    uid = session.get("user_id")
+    if not uid:
+        return None
+    ctx = paid_access.current_access()
+    profile = ctx.profile
+    if not profile or "auth_epoch" not in profile:
+        return None
+    db_epoch = int(profile.get("auth_epoch") or 0)
+    stamp = session.get("ae")
+    if stamp is None:
+        session["ae"] = db_epoch
+        return None
+    try:
+        stale = int(stamp) != db_epoch
+    except (TypeError, ValueError):
+        stale = True
+    if stale:
+        session.clear()
+    return None
+
+
 def finalize_app_session(user_id: int) -> bool:
     from backend.db.users_db import get_org
 
@@ -108,6 +136,9 @@ def finalize_app_session(user_id: int) -> bool:
     ):
         session.pop(_stale, None)
     session["mfa_ok"] = True
+    # Revocation stamp (P16.1): the request gate drops the session when the
+    # row's auth_epoch moves past this value.
+    session["ae"] = int(u.get("auth_epoch") or 0)
     session["org_subscription_status"] = None
     if session.get("org_id"):
         try:

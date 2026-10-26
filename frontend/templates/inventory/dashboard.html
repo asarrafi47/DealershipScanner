@@ -52,7 +52,7 @@
             {% for v in vehicles[:6] %}
             <a href="{{ url_for('dealer_portal.inventory_listings') }}#vehicle-{{ v.id }}" class="saved-card">
                 {% set hero = v.gallery[0] if v.gallery and v.gallery|length > 0 else '' %}
-                <div class="saved-image" style="background-image: url('{{ hero | css_url }}')"></div>
+                <div class="saved-image" data-bg="{{ hero | css_url }}"></div>
                 <div class="saved-info">
                     <p class="saved-title">{{ v.title or 'Untitled vehicle' }}</p>
                     <p class="saved-trim">{{ (v.year or '') }} {{ (v.make or '') }} {{ (v.model or '') }}</p>
@@ -66,7 +66,7 @@
         <div class="saved-empty">
             <p class="saved-empty-title">No vehicles yet.</p>
             <p class="saved-empty-sub">Add your first VIN to start building your inventory listings.</p>
-            <a href="{{ url_for('dealer_portal.inventory_listings') }}#add-by-vin" class="primary-button" style="margin-top: 20px; display: inline-block;">Add a VIN</a>
+            <a href="{{ url_for('dealer_portal.inventory_listings') }}#add-by-vin" class="primary-button u-mt-20-inline-block">Add a VIN</a>
         </div>
         {% endif %}
     </section>

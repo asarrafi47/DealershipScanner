@@ -44,7 +44,7 @@ from dataclasses import asdict, dataclass, field, replace
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Callable
-from urllib.parse import parse_qsl, urlencode, urlparse, urlunparse
+from urllib.parse import parse_qsl, urljoin, urlencode, urlparse, urlunparse
 
 from backend.scanner.recipes import (
     PAGINATION_ALGOLIA,
@@ -69,6 +69,7 @@ from backend.scanner.recipes import (
     recipe_is_store_scoped,
 )
 # Single-recipe yield probe (moved from synth/validate.py, audit F-6 follow-up).
+from backend.scanner.net import ssrf
 from backend.scanner.synth.http import _cosmos_get_json, _dep_fetch_html
 from backend.scanner.synth.platforms.dealeron_cosmos import _COSMOS_PAGE_SIZE, _COSMOS_PATH
 from backend.scanner.synth.platforms.team_velocity import _TEAM_VELOCITY_FEED
@@ -614,6 +615,9 @@ def _check_recipe(recipe: EndpointRecipe, *, fetch: Fetch, base_url: str, dealer
         url = _url_for_page(recipe, i)
         rec: dict[str, Any] = {"page": i + 1}
         try:
+            # A recipe is data from outside: its endpoint host must be globally
+            # reachable before any fetch (P16.4). Relative URLs resolve on base_url.
+            ssrf.check_url(urljoin(base_url, url))
             status, parsed = fetch(recipe, body, base_url, url)
         except Exception as exc:  # noqa: BLE001
             status, parsed = 0, None

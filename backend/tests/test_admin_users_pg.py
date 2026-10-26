@@ -58,7 +58,6 @@ def test_break_glass_admin_logs_in_with_empty_table(pg_admin) -> None:
     got = adb.authenticate_admin("admin", "env-admin-password")
     assert got is not None
     assert _count(pg_admin) == 1
-    assert adb.get_admin_totp(got[0]) == {"enabled": False, "secret": ""}
     # Wrong password and other users never seed anything.
     assert adb.authenticate_admin("admin", "nope") is None
     assert adb.authenticate_admin("someone", "env-admin-password") is None
@@ -80,14 +79,6 @@ def test_save_duplicate_raises_admin_user_exists_case_insensitive(pg_admin) -> N
     with pytest.raises(adb.AdminUserExists):
         adb.save_dev_admin_user("op2", "OP@example.com", "pw")
     assert adb.authenticate_admin("op@example.com", "pw-one-two") is not None
-
-
-def test_totp_round_trip(pg_admin) -> None:
-    uid, _ = adb.authenticate_admin("admin", "env-admin-password")
-    assert adb.set_admin_totp(uid, secret="ab cd", enabled=True)
-    assert adb.get_admin_totp(uid) == {"enabled": True, "secret": "ABCD"}
-    assert adb.set_admin_totp(999999, secret="X", enabled=True) is False
-    assert adb.get_admin_totp(999999) is None
 
 
 def test_production_without_admin_password_refuses_seed(pg_admin, monkeypatch) -> None:

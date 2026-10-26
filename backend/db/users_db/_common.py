@@ -14,7 +14,13 @@ __all__ = [
     "_user_dict_from_row",
     "_user_row_is_active",
     "_schedule_password_rehash",
+    "AUTH_EPOCH_BUMP",
 ]
+
+# SET fragment that revokes every other session of a user (P16.1). Used ONLY by
+# the password-change/reset writes and the bootstrap force-sync; the rehash
+# below rewrites the hash without it so a login never signs the user out.
+AUTH_EPOCH_BUMP = "auth_epoch = COALESCE(auth_epoch, 0) + 1"
 
 
 def get_conn():
@@ -35,7 +41,6 @@ def _users_select_columns() -> tuple[str, ...]:
         "dealership_registry_id",
         "org_id",
         "totp_enabled",
-        "mfa_phone",
         "is_premium",
         "google_sub",
         "apple_sub",
@@ -60,10 +65,6 @@ def _user_dict_from_row(row: tuple, want: tuple[str, ...]) -> dict:
         out["role"] = "dealer_staff"
     if "totp_enabled" in out:
         out["totp_enabled"] = bool(out["totp_enabled"])
-    if "totp_secret" in out and out["totp_secret"] is None:
-        out["totp_secret"] = ""
-    if "mfa_phone" in out and out["mfa_phone"] is None:
-        out["mfa_phone"] = ""
     if "is_premium" in out:
         out["is_premium"] = bool(out["is_premium"])
     if "is_active" in out:

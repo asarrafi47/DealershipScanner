@@ -1,6 +1,7 @@
 from backend.db.password_hash import hash_password, password_needs_rehash, verify_or_legacy
 
 from ._common import (
+    AUTH_EPOCH_BUMP,
     _schedule_password_rehash,
     _user_dict_from_row,
     _user_row_is_active,
@@ -24,66 +25,6 @@ def _timing_safe_dummy_hash() -> str:
     return _DUMMY_HASH_CACHE
 
 
-def get_user_totp(user_id: int) -> dict | None:
-    try:
-        uid = int(user_id)
-    except (TypeError, ValueError):
-        return None
-    if uid <= 0:
-        return None
-    conn = get_conn()
-    cursor = conn.cursor()
-    cursor.execute("PRAGMA table_info(users)")
-    cols = {r[1] for r in cursor.fetchall()}
-    if "totp_secret" not in cols:
-        conn.close()
-        return {"enabled": False, "secret": ""}
-    if "totp_enabled" in cols:
-        cursor.execute("SELECT totp_secret, totp_enabled FROM users WHERE id = ?", (uid,))
-        row = cursor.fetchone()
-        conn.close()
-        if not row:
-            return None
-        sec, en = row
-        return {"enabled": bool(en), "secret": sec or ""}
-    cursor.execute("SELECT totp_secret FROM users WHERE id = ?", (uid,))
-    row = cursor.fetchone()
-    conn.close()
-    if not row:
-        return None
-    sec = row[0]
-    return {"enabled": bool(sec), "secret": sec or ""}
-
-
-def set_user_totp(user_id: int, *, secret: str, enabled: bool) -> bool:
-    try:
-        uid = int(user_id)
-    except (TypeError, ValueError):
-        return False
-    if uid <= 0:
-        return False
-    conn = get_conn()
-    cursor = conn.cursor()
-    cursor.execute("PRAGMA table_info(users)")
-    cols = {r[1] for r in cursor.fetchall()}
-    if "totp_secret" not in cols:
-        conn.close()
-        return False
-    sec = (secret or "").strip().upper().replace(" ", "")
-    if "totp_enabled" in cols:
-        cursor.execute(
-            "UPDATE users SET totp_secret = ?, totp_enabled = ? WHERE id = ?",
-            (sec or None, 1 if enabled else 0, uid),
-        )
-    else:
-        cursor.execute(
-            "UPDATE users SET totp_secret = ? WHERE id = ?",
-            (sec or None, uid),
-        )
-    ok = cursor.rowcount > 0
-    conn.commit()
-    conn.close()
-    return bool(ok)
 
 
 def get_user_by_login(login_input: str) -> dict | None:
@@ -265,7 +206,7 @@ def change_user_password(user_id: int, current_password: str, new_password: str)
         conn.close()
         return "Current password is incorrect."
     cursor.execute(
-        "UPDATE users SET password = ? WHERE id = ?",
+        f"UPDATE users SET password = ?, {AUTH_EPOCH_BUMP} WHERE id = ?",
         (hash_password(new_pw), uid),
     )
     conn.commit()
@@ -296,7 +237,7 @@ def reset_user_password(user_id: int, new_password: str) -> str | None:
         conn.close()
         return "Account not found."
     cursor.execute(
-        "UPDATE users SET password = ? WHERE id = ?",
+        f"UPDATE users SET password = ?, {AUTH_EPOCH_BUMP} WHERE id = ?",
         (hash_password(new_pw), uid),
     )
     conn.commit()
@@ -376,7 +317,7 @@ def get_user_profile(user_id: int) -> dict | None:
     cursor.execute("PRAGMA table_info(users)")
     cols = [r[1] for r in cursor.fetchall()]
     want = ["id", "username", "email"]
-    for extra in ("role", "dealer_id", "dealership_registry_id", "org_id", "mfa_phone", "is_premium", "subscription_plan_id", "is_active"):
+    for extra in ("role", "dealer_id", "dealership_registry_id", "org_id", "is_premium", "subscription_plan_id", "is_active", "auth_epoch"):
         if extra in cols:
             want.append(extra)
     cursor.execute(f"SELECT {', '.join(want)} FROM users WHERE id = ?", (uid,))
@@ -395,8 +336,8 @@ def get_user_profile(user_id: int) -> dict | None:
             out["dealership_registry_id"] = None
     if "role" not in out or out["role"] is None:
         out["role"] = "dealer_staff"
-    if "mfa_phone" in out and out["mfa_phone"] is None:
-        out["mfa_phone"] = ""
+    if "auth_epoch" in out:
+        out["auth_epoch"] = int(out["auth_epoch"] or 0)
     return out
 
 
@@ -622,28 +563,6 @@ def get_user_id_by_password_reset_token_hash(token_hash: str) -> int | None:
         return None
     return uid
 
-
-def set_user_mfa_phone(user_id: int, phone: str | None) -> bool:
-    """Optional column; legacy (SMS MFA removed)."""
-    try:
-        uid = int(user_id)
-    except (TypeError, ValueError):
-        return False
-    if uid <= 0:
-        return False
-    conn = get_conn()
-    cursor = conn.cursor()
-    cursor.execute("PRAGMA table_info(users)")
-    cols = {r[1] for r in cursor.fetchall()}
-    if "mfa_phone" not in cols:
-        conn.close()
-        return False
-    p = (phone or "").strip() or None
-    cursor.execute("UPDATE users SET mfa_phone = ? WHERE id = ?", (p, uid))
-    ok = cursor.rowcount > 0
-    conn.commit()
-    conn.close()
-    return bool(ok)
 
 
 def check_user(login_input, password):

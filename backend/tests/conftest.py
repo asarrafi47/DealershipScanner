@@ -158,6 +158,18 @@ def _vpic_offline(request: pytest.FixtureRequest, monkeypatch: pytest.MonkeyPatc
     monkeypatch.setattr(vpic_facts, "fetch_vpic_batch", _vpic_offline_batch)
 
 
+@pytest.fixture(autouse=True)
+def _scanner_ssrf_literal_only(monkeypatch: pytest.MonkeyPatch) -> None:
+    """The scanner SSRF guard (P16.4) resolves every request host; scanner tests use
+    made-up names that do not resolve, which the guard fails closed on. Judge by the
+    literal rule only (private IPs and names stay refused, no DNS); the guard's own
+    tests (test_scanner_net_ssrf.py) stub the resolver themselves."""
+    from backend.utils import outbound_url
+
+    outbound_url.clear_destination_cache()
+    monkeypatch.setattr(outbound_url, "_blocked_uncached", outbound_url.destination_host_blocked)
+
+
 # ---------------------------------------------------------------------------
 # Fake DNS for the SSRF host guards
 # ---------------------------------------------------------------------------

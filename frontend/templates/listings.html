@@ -98,12 +98,12 @@
                                 {% endfor %}
                             </select>
                         </div>
-                        <div class="listings-dealer-picker" id="dealer-filter-group" style="display:none">
+                        <div class="listings-dealer-picker u-start-hidden" id="dealer-filter-group">
                             <label class="pill-select-label" id="label-dealer_registry_id">Dealerships</label>
                             <button type="button" class="listings-dealer-picker-btn" id="trigger-dealer_registry_id"
                                 aria-expanded="false" aria-controls="dropdown-dealer_registry_id">
                                 <span class="listings-dealer-picker-btn-label">All nearby dealers</span>
-                                <span class="pill-count listings-dealer-picker-count" id="count-dealer_registry_id" style="display:none"></span>
+                                <span class="pill-count listings-dealer-picker-count u-start-hidden" id="count-dealer_registry_id"></span>
                                 <svg class="pill-chevron" viewBox="0 0 10 6" width="8" aria-hidden="true">
                                     <path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/>
                                 </svg>
@@ -166,7 +166,7 @@
                     <button type="button" class="acc-trigger listings-acc-trigger" id="acc-trigger-{{ param }}">
                         <span class="acc-label" id="acc-label-{{ param }}">{{ label }}</span>
                         <div class="acc-right">
-                            <span class="acc-count" id="acc-count-{{ param }}" style="display:none"></span>
+                            <span class="acc-count u-start-hidden" id="acc-count-{{ param }}"></span>
                             <svg class="acc-chevron" viewBox="0 0 10 6" width="9" aria-hidden="true">
                                 <path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/>
                             </svg>
@@ -460,7 +460,7 @@
                             <button type="button" class="listings-page-btn listings-page-btn--next" id="listings-page-next" disabled>Next</button>
                         </div>
                     </nav>
-                    <div class="empty-state" id="empty-state" style="display:none" role="status">
+                    <div class="empty-state u-start-hidden" id="empty-state" role="status">
                         <div class="listings-empty-card">
                             <div class="listings-empty-icon" aria-hidden="true">
                                 <svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
@@ -628,6 +628,7 @@
         if (countEl) {
             if (narrowed) {
                 countEl.textContent = String(checked);
+                countEl.classList.remove("u-start-hidden");
                 countEl.style.display = "inline";
             } else {
                 countEl.style.display = "none";
@@ -691,14 +692,14 @@
         // premiumHint.hidden = true and return here, which made the "show the
         // hint" branch below unreachable dead code.
         if (!loggedIn || !hasPaid) {
-            if (picker) picker.style.display = "";
+            if (picker) { picker.classList.remove("u-start-hidden"); picker.style.display = ""; }
             listEl.innerHTML = "";
             if (premiumHint) premiumHint.hidden = false;
             updateDealerPillUi();
             return;
         }
 
-        if (picker) picker.style.display = "";
+        if (picker) { picker.classList.remove("u-start-hidden"); picker.style.display = ""; }
         if (premiumHint) premiumHint.hidden = true;
         listEl.innerHTML = '<p class="dealer-filter-loading">Loading dealerships…</p>';
 

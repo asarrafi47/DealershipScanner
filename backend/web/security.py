@@ -18,6 +18,7 @@ from flask import Flask, g, redirect, request, session, url_for
 from backend.auth.session import (
     billing_enabled as _billing_enabled,
     require_paid_org_session as _require_paid_org_session,
+    revoked_session_gate as _revoked_session_gate,
     session_belongs_to_paid_org as _session_belongs_to_paid_org,
 )
 from backend.billing import access as paid_access
@@ -188,6 +189,11 @@ _CSP_REPORT_ONLY = (
 )
 
 
+# P16.8: the P16.9 flip, as a second report-only policy next to the enforced one. Opt in with
+# CSP_STYLE_ATTR_REPORT_ONLY=1; a >=7-day soak with no violations gates P16.9.
+_CSP_STYLE_ATTR_REPORT_ONLY = "style-src-attr 'none'; "
+
+
 def _csp_headers(response):
     response.headers.setdefault("X-Content-Type-Options", "nosniff")
     response.headers.setdefault("X-Frame-Options", "DENY")
@@ -201,6 +207,8 @@ def _csp_headers(response):
         nonce = (getattr(g, "csp_nonce", None) or "") or ""
         if nonce and not response.headers.get("Content-Security-Policy"):
             response.headers["Content-Security-Policy"] = _csp_header_value_enforced(nonce)
+        if Config.csp_style_attr_report_only_enabled():
+            response.headers.setdefault("Content-Security-Policy-Report-Only", _CSP_STYLE_ATTR_REPORT_ONLY)
         return response
     if Config.csp_report_only_enabled():
         if not response.headers.get("Content-Security-Policy-Report-Only"):
@@ -209,8 +217,9 @@ def _csp_headers(response):
 
 
 def register_security(app: Flask) -> None:
-    """Install, in this order: CSP nonce, CSRF, billing gate (before); CSP headers (after)."""
+    """Install, in this order: CSP nonce, CSRF, session revocation, billing gate (before); CSP headers (after)."""
     app.before_request(_per_request_csp_nonce)
     app.before_request(_csrf_mutating_requests)
+    app.before_request(_revoked_session_gate)
     app.before_request(_billing_gate_paid_routes)
     app.after_request(_csp_headers)

@@ -1,0 +1,29 @@
+/* Static inline style="" attributes from the templates, as classes (P16.7). Last in
+   _head_css.html and !important so each class wins exactly where the attribute did. */
+.u-start-hidden{display:none !important}
+.u-mt-1-5rem{margin-top:1.5rem !important}
+.u-inline{display:inline !important}
+.u-mt-20{margin-top:20px !important}
+.u-lead-narrow{max-width:32rem !important;margin:0 0 1.25rem !important}
+.u-mt-8-muted{margin-top:8px !important;color:#5a5a5a !important}
+.u-mt-18{margin-top:18px !important}
+.u-mt-14{margin-top:14px !important}
+.u-link-navy{color:var(--navy) !important;text-decoration:underline !important}
+.u-mt-0-75rem{margin-top:0.75rem !important}
+.u-mt-1rem{margin-top:1rem !important}
+.u-text-center{text-align:center !important}
+.u-h1-compact{font-size:28px !important;margin:8px 0 12px !important}
+.u-body-secondary{color:var(--text-secondary) !important;margin:0 0 28px !important;line-height:1.6 !important}
+.u-inline-block{display:inline-block !important}
+.u-inline-block-ml-8{display:inline-block !important;margin-left:8px !important}
+.u-mt-16{margin-top:16px !important}
+.u-mt-20-inline-block{margin-top:20px !important;display:inline-block !important}
+.u-stat-bad{color:#d32f2f !important}
+.u-stat-ok{color:#4caf50 !important}
+.u-text-danger{color:#b91c1c !important}
+
+/* Dynamic styles (P16.8): map pins by state, and the compare eviction notice that
+   compare.js used to style with cssText. Widths and images come from data-* via style_data.js. */
+.find-dealers-marker-pin--db{background:#1a5f4a}
+.find-dealers-marker-pin--other{background:#6b7280}
+.compare-evict-notice{position:fixed;left:50%;bottom:96px;transform:translateX(-50%);z-index:1200;max-width:min(420px,90vw);padding:10px 16px;border-radius:10px;background:#1c3552;color:#faf8f5;font:600 13px/1.4 inherit;text-align:center;box-shadow:0 8px 24px rgba(20,36,54,0.25);opacity:0;transition:opacity .15s ease}

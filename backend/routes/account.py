@@ -134,6 +134,10 @@ def account_profile_page():
                     "account_profile.html",
                     **_account_profile_context(uid, password_error=err),
                 )
+            # The change bumped auth_epoch (every other session ends); keep this one.
+            from backend.auth.session import finalize_app_session
+
+            finalize_app_session(uid)
             return render_template(
                 "account_profile.html",
                 **_account_profile_context(uid, password_success=True),

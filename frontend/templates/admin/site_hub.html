@@ -167,7 +167,7 @@
                         <span class="platform-rank__label">{{ item.query }}</span>
                         <span class="platform-rank__count">{{ item.count }}</span>
                         <span class="platform-rank__bar-wrap" aria-hidden="true">
-                            <span class="platform-rank__bar" style="width: {{ (100 * item.count / max_q) | round | int }}%;"></span>
+                            <span class="platform-rank__bar" data-w="{{ (100 * item.count / max_q) | round | int }}"></span>
                         </span>
                     </li>
                     {% endfor %}
@@ -186,7 +186,7 @@
                         <span class="platform-rank__label">{{ item.make }}</span>
                         <span class="platform-rank__count">{{ item.count }}</span>
                         <span class="platform-rank__bar-wrap" aria-hidden="true">
-                            <span class="platform-rank__bar" style="width: {{ (100 * item.count / max_m) | round | int }}%;"></span>
+                            <span class="platform-rank__bar" data-w="{{ (100 * item.count / max_m) | round | int }}"></span>
                         </span>
                     </li>
                     {% endfor %}
@@ -205,7 +205,7 @@
                         <span class="platform-rank__label">{{ item.state }}</span>
                         <span class="platform-rank__count">{{ item.count }}</span>
                         <span class="platform-rank__bar-wrap" aria-hidden="true">
-                            <span class="platform-rank__bar" style="width: {{ (100 * item.count / max_s) | round | int }}%;"></span>
+                            <span class="platform-rank__bar" data-w="{{ (100 * item.count / max_s) | round | int }}"></span>
                         </span>
                     </li>
                     {% endfor %}
@@ -224,7 +224,7 @@
                         <span class="platform-rank__label">{{ src }}</span>
                         <span class="platform-rank__count">{{ n }}</span>
                         <span class="platform-rank__bar-wrap" aria-hidden="true">
-                            <span class="platform-rank__bar" style="width: {{ (100 * n / max_src) | round | int }}%;"></span>
+                            <span class="platform-rank__bar" data-w="{{ (100 * n / max_src) | round | int }}"></span>
                         </span>
                     </li>
                     {% endfor %}

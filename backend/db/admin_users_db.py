@@ -199,7 +199,6 @@ def init_admin_db() -> None:
             username TEXT UNIQUE NOT NULL,
             email TEXT UNIQUE NOT NULL,
             password TEXT NOT NULL,
-            totp_secret TEXT,
             totp_enabled INTEGER NOT NULL DEFAULT 0
         )
         """
@@ -209,10 +208,7 @@ def init_admin_db() -> None:
         cursor.execute("PRAGMA table_info(admin_users)")
         cols = {r[1] for r in cursor.fetchall()}
         for col, ddl in (
-            ("totp_secret", "ALTER TABLE admin_users ADD COLUMN totp_secret TEXT"),
             ("totp_enabled", "ALTER TABLE admin_users ADD COLUMN totp_enabled INTEGER NOT NULL DEFAULT 0"),
-            ("mfa_method", "ALTER TABLE admin_users ADD COLUMN mfa_method TEXT"),
-            ("mfa_phone", "ALTER TABLE admin_users ADD COLUMN mfa_phone TEXT"),
         ):
             if col not in cols:
                 cursor.execute(ddl)
@@ -328,75 +324,6 @@ def authenticate_admin(login_input: str, password: str) -> tuple[int, str] | Non
     return int(uid), str(uname)
 
 
-def get_admin_totp(user_id: int) -> dict | None:
-    try:
-        uid = int(user_id)
-    except (TypeError, ValueError):
-        return None
-    if uid <= 0:
-        return None
-    if _use_pg():
-        conn = _pg_conn()
-        try:
-            with conn.cursor() as cur:
-                cur.execute("SELECT totp_secret, totp_enabled FROM admin_users WHERE id = %s", (uid,))
-                row = cur.fetchone()
-        finally:
-            conn.close()
-        return {"enabled": bool(row[1]), "secret": row[0] or ""} if row else None
-    conn = get_dev_users_conn()
-    cursor = conn.cursor()
-    cursor.execute("PRAGMA table_info(admin_users)")
-    cols = {r[1] for r in cursor.fetchall()}
-    if "totp_secret" not in cols:
-        conn.close()
-        return {"enabled": False, "secret": ""}
-    cursor.execute("SELECT totp_secret, totp_enabled FROM admin_users WHERE id = ?", (uid,))
-    row = cursor.fetchone()
-    conn.close()
-    if not row:
-        return None
-    sec, en = row
-    return {"enabled": bool(en), "secret": sec or ""}
-
-
-def set_admin_totp(user_id: int, *, secret: str, enabled: bool) -> bool:
-    try:
-        uid = int(user_id)
-    except (TypeError, ValueError):
-        return False
-    if uid <= 0:
-        return False
-    if _use_pg():
-        sec = (secret or "").strip().upper().replace(" ", "")
-        conn = _pg_conn()
-        try:
-            with conn.cursor() as cur:
-                cur.execute(
-                    "UPDATE admin_users SET totp_secret = %s, totp_enabled = %s WHERE id = %s",
-                    (sec or None, 1 if enabled else 0, uid),
-                )
-                ok = cur.rowcount > 0
-            conn.commit()
-        finally:
-            conn.close()
-        return bool(ok)
-    conn = get_dev_users_conn()
-    cursor = conn.cursor()
-    cursor.execute("PRAGMA table_info(admin_users)")
-    cols = {r[1] for r in cursor.fetchall()}
-    if "totp_secret" not in cols:
-        conn.close()
-        return False
-    sec = (secret or "").strip().upper().replace(" ", "")
-    cursor.execute(
-        "UPDATE admin_users SET totp_secret = ?, totp_enabled = ? WHERE id = ?",
-        (sec or None, 1 if enabled else 0, uid),
-    )
-    ok = cursor.rowcount > 0
-    conn.commit()
-    conn.close()
-    return bool(ok)
 
 
 def dev_users_db_path() -> str:
