@@ -507,6 +507,9 @@ def _tag_untagged_cache(check: CacheStoreCheck) -> None:
     )
 
 
+_WS_INV_DATA_PATH = "/api/widget/ws-inv-data/"
+
+
 def _rows_to_recipes(raw: Any) -> list[EndpointRecipe]:
     out: list[EndpointRecipe] = []
     for row in raw if isinstance(raw, list) else []:
@@ -519,6 +522,12 @@ def _rows_to_recipes(raw: Any) -> list[EndpointRecipe]:
             # Files written before a pagination shape was known stay single-shot
             # forever otherwise (cosmos recipes replayed page 1 of 2+ for months).
             rec.pagination = infer_pagination(rec.url, rec.post_template)
+        if (rec.provider_hint or "unknown") == "unknown" and _WS_INV_DATA_PATH in urlparse(rec.url).path:
+            # captured before the URL shape named the platform: route it to the
+            # dealer.com parser (a generic parse drops the per-car accountId)
+            logger.info("Recipe %s: provider_hint %r retagged dealer_dot_com (ws-inv-data URL)",
+                        rec.dealer_id, rec.provider_hint or "unknown")
+            rec.provider_hint = "dealer_dot_com"
         out.append(rec)
     return out
 

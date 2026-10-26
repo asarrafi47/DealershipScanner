@@ -578,6 +578,29 @@ def _extract_body_style(obj: dict) -> str | None:
     )
 
 
+def detect_ws_inventory(raw_data: Any) -> bool:
+    """True for a Dealer.com ``/api/widget/ws-inv-data/`` body.
+
+    Its vehicles sit under ``inventory`` and each carries the ``accountId`` of the
+    rooftop holding it, usually beside a sibling ``accounts`` map. The shape is
+    what routes a payload here whatever the recipe's ``provider_hint`` says:
+    recipes tagged ``unknown`` fell to the generic parser, which drops
+    ``accountId`` (bmwofmonrovia-net, camelbacksubaru, camelbacktoyota,
+    crownlexus, showcasehonda, toyotacarlsbad).
+    """
+    if not isinstance(raw_data, dict):
+        return False
+    items = raw_data.get("inventory")
+    if not isinstance(items, list) or not items:
+        return False
+    dicts = [x for x in items[:20] if isinstance(x, dict)]
+    if not dicts:
+        return False
+    if isinstance(raw_data.get("accounts"), dict) and any(d.get("vin") for d in dicts):
+        return True
+    return any(d.get("accountId") or d.get("accountID") for d in dicts)
+
+
 def _accounts_index(data: Any) -> dict[str, dict]:
     """The payload's ``accounts`` map: DDC rooftop id → that rooftop's identity.
 

@@ -16,6 +16,7 @@ from backend.parsers.carscommerce import detect as detect_carscommerce
 from backend.parsers.carscommerce import parse as parse_carscommerce
 from backend.parsers.chapman import detect as detect_chapman
 from backend.parsers.chapman import parse as parse_chapman
+from backend.parsers.dealer_dot_com import detect_ws_inventory as detect_dealer_dot_com_ws
 from backend.parsers.dealer_dot_com import parse as parse_dealer_dot_com
 from backend.parsers.dealer_eprocess import parse as parse_dealer_eprocess
 from backend.parsers.dealermasters import parse as parse_dealermasters
@@ -173,6 +174,16 @@ def _parse_rows(provider: str, raw_data, _kwargs: dict, dealer_id: str) -> list[
         chapman_rows = list(parse_chapman(raw_data, **_kwargs))
         if chapman_rows:
             return chapman_rows
+
+    # Dealer.com ws-inv-data bodies belong to the dealer.com parser whatever the
+    # recipe is tagged: tagged "unknown" they went to the generic parser below,
+    # which drops the per-car ``accountId`` the rooftop gate reads (6 recipes lost
+    # it, 1,082 owner rows and 874 claimant rows). A shape that also matches by
+    # accident but yields no rows falls through to the usual order.
+    if provider != "dealer_dot_com" and detect_dealer_dot_com_ws(raw_data):
+        ddc_rows = list(parse_dealer_dot_com(raw_data, **_kwargs))
+        if ddc_rows:
+            return ddc_rows
 
     fn = PARSERS.get(provider)
     if fn:
