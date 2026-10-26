@@ -24,6 +24,7 @@ from backend.billing.entitlements import (
 )
 from backend.db.users_db import (
     get_org,
+    get_user_billing_snapshot,
     grant_user_premium,
     revoke_user_premium,
     update_org_stripe_subscription,
@@ -278,9 +279,18 @@ def premium_webhook():
         subscription_id = obj.get("id")
         status = obj.get("status")
         if etype == "customer.subscription.deleted" or not stripe_subscription_active(status):
+            # An old, replaced subscription ending must not revoke the newer one (B-041).
+            held = str((get_user_billing_snapshot(user_id) or {}).get("premium_stripe_subscription_id") or "").strip()
+            if held and subscription_id and held != str(subscription_id):
+                _log.info("premium revoke skipped for user_id=%d: sub %s is not the held sub", user_id, subscription_id)
+                return jsonify({"ok": True})
             revoke_user_premium(user_id)
             invalidate_billing_cache(user_id)
             _log.info("premium revoked for user_id=%d (status=%s)", user_id, status)
+        elif str((obj.get("metadata") or {}).get("premium") or "").strip() != "1":
+            _log.info("premium renew ignored for user_id=%d: subscription metadata lacks premium=1", user_id)
+        elif str((obj.get("metadata") or {}).get("premium") or "").strip() != "1":
+            _log.info("premium renew ignored for user_id=%d: subscription metadata lacks premium=1", user_id)
         else:
             md = obj.get("metadata") or {}
             plan_id = (md.get("plan_id") or "").strip().lower() or None
