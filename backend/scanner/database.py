@@ -209,22 +209,30 @@ def get_conn():
 
 def _ensure_schema(conn):
     from backend.db.inventory_pg import init_postgres_inventory, is_inventory_postgres
+    from backend.db.schema_version import SchemaNotMigratedError
 
     if is_inventory_postgres():
         raw = getattr(conn, "_raw", conn)
         try:
             init_postgres_inventory(raw)
+        except SchemaNotMigratedError:
+            # INVENTORY_SCHEMA_CHECK=strict and the database is behind migrations/.
+            # That is a refusal, not a busy table: let it end the upsert (the caller's
+            # ``finally`` closes the connection; the check already rolled back) so a
+            # strict scanner never writes into a schema it was told to refuse.
+            raise
         except Exception:
-            # init_postgres_inventory re-asserts the schema with a short lock_timeout so a
-            # queued CREATE INDEX cannot park every other reader behind it (see the docstring
-            # there). That makes it *expected* to fail when another session holds a long
-            # transaction on `cars` -- which is precisely the situation a second scanner
-            # starting mid-run hits. The authoritative schema is the migration chain, so an
-            # aborted re-assert must not take the whole scan down with it. The per-process
-            # flag stays unset, so a later connection retries.
+            # In warn mode a behind database falls back to the legacy runtime DDL, which
+            # runs with a short lock_timeout so a queued CREATE INDEX cannot park every
+            # other reader behind it (see init_postgres_inventory). That makes it
+            # *expected* to fail when another session holds a long transaction on `cars`
+            # -- which is precisely the situation a second scanner starting mid-run hits.
+            # The authoritative schema is the migration chain, so an aborted re-assert
+            # must not take the whole scan down with it. The per-process flag stays
+            # unset, so a later connection retries.
             logger.warning(
-                "inventory schema re-assert skipped (table busy); continuing with the "
-                "schema owned by migrations/",
+                "inventory schema re-assert failed; continuing with the schema owned "
+                "by migrations/",
                 exc_info=True,
             )
             try:

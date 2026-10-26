@@ -62,6 +62,149 @@
 ### P8A.6 Read-time drivetrain
 - The displayed drivetrain follows NHTSA vPIC whenever vPIC states an end (FWD/RWD/AWD/4WD) that disagrees with the trim decoder, EPA or dealer value. 4x2/2WD never overrides and is never mapped to an end. Merge-specs golden re-recorded (drivetrain-only diff).
 
+### N5 Added
+- `migrations/V026__chain_completeness.sql` (P4.3; D-DB7 (a), D-PR8 (a), D-N30). After it, a
+  fresh `migrate --apply` builds every object that prod and local `cars` hold, except the
+  D-DB1 backup tables. It adds:
+  - the V019-only objects: `car_move_log` (with its sequence, pkey and index),
+    `cars_trim_quarantine` and `package_values_msrp_quarantine`;
+  - `review_reports` and `haiku_spec_cache`, exactly as the runtime DDL creates them;
+  - the 4 untracked log tables `image_summary_restore_log`, `make_canon_log`,
+    `model_canon_log` and `package_value_purge_log`;
+  - `uq_option_rejections_standing` as NULLS NOT DISTINCT.
+
+  Every step reads the catalog first and is additive. It writes no row and never touches
+  `cars`. On a V025 database (prod and local `cars`) it only creates `review_reports` and
+  `haiku_spec_cache` and rebuilds the uq index, which locks `option_rejections` alone for
+  milliseconds. A duplicate group RAISEs and rolls the file back. The spec's pgvector
+  `*_embeddings` part is dropped, because no such table exists. **Not applied yet:** local
+  `cars` and prod record 25 until P4.8 (owner steps). `cars_cleanroom` never gets it (D-N1).
+- `migrate.py` options (P4.2):
+  - `--target N` applies pending files up to VN only. Later files stay pending and are
+    listed, and `database is up to date` is never printed while files are held back.
+  - `--record-only N[,M]` records versions without running them.
+  - `--lock-timeout` (default `5s`) and `--lock-wait` (default `10min`); see Changed.
+- `backend/scripts/schema_drift_report.py` (P4.1). It builds `migrations/` into a
+  throwaway `pytest_chain_<hex>` database on the local server, then snapshots that
+  database and a live target with the catalog queries of `test_schema_from_migrations`.
+  It lists live-only objects, chain-only objects and definition mismatches.
+  - Each difference is explained by the `KNOWN_DRIFT` registry (schema ledger and owner
+    decisions) or by a migration the target has not applied. Anything else is UNEXPLAINED
+    and the exit code is 1.
+  - The target session must report `default_transaction_read_only` and
+    `transaction_read_only` on, and runs only SELECT, SHOW and `SET statement_timeout`.
+  - The scratch builder refuses `cars`, `cars_cleanroom`, non-local hosts, port 15432, an
+    existing database name and the target's own name. It drops the scratch DB in `finally`.
+  - P4.3 added `Known.while_pending` (a difference explained only while V026 is pending)
+    and a `column_types` snapshot key (typmod, identity, generated, collation).
+  - Run on 2026-10-18: 0 unexplained differences on `cars` and on `cars_cleanroom`, and 0
+    rows written to either. The owner pack for a read-only prod run is prepared but has
+    not been run.
+- `backend/scripts/capture_module_ddl_golden.py` and
+  `backend/tests/fixtures/module_ddl_schema_golden.json` (P4.3). The script runs each
+  module's `ensure_*` helper and the script DDL on empty scratch databases and records
+  what they create. `--check` captures again and compares.
+  - `test_schema_from_migrations.py` checks statically that the files a fresh build runs
+    cover both goldens, and checks V026's guarantees.
+  - Opt-in live tests (`SCHEMA_PARITY_PG_DSN`) check V026 on a V025 build: the dry run
+    lists only V026, the exact objects are created, a second run is a no-op, a duplicate
+    group is refused and the index is rebuilt.
+- `backend/db/runtime_ddl.py` (P4.6): `pg_legacy_ddl_needed()`, `pg_missing_relations()`
+  (a `to_regclass` probe that takes no lock) and `run_pg_legacy_ddl()`. Runtime DDL now
+  runs only when the database is behind the migration chain (see Changed).
+- New tests: `backend/tests/test_schema_drift_report.py` (P4.1),
+  `test_inventory_pg_adapter.py` (P4.7), `test_schema_strict_mode.py` (P4.5) and
+  `test_runtime_ddl_gating.py` (P4.6). `test_migrate.py` (P4.2) gains fake-connection and
+  opt-in live tests (`TEST_PG_ADMIN_DSN`, guarded `pytest_*` databases) of the V019 rule,
+  `--target`, `--record-only` and the locks.
+
+### N5 Changed
+- `backend/scripts/migrate.py` (P4.2):
+  - V019 is recorded without being run in two cases only: V001 runs earlier in the same
+    invocation (a fresh build), or all 48 objects V019 shares with V001 already exist.
+    Otherwise migrate refuses before writing anything and names the missing objects. The
+    check runs again under the lock before the row is written.
+  - Its first log line is the target host, port and database.
+  - Each file runs under `SET LOCAL lock_timeout` (5 s by default), on the
+    `MIGRATE_ON_BOOT` path too.
+  - Every write transaction takes `pg_advisory_xact_lock` and re-reads `schema_migrations`
+    under it, so concurrent runs, such as two web boots, run one at a time. A second
+    runner waits up to `--lock-wait`, then skips what the first one applied, or exits 1.
+  - `schema_version.describe_gap` picks its hint by whether `public.cars` exists: an empty
+    database gets `migrate --apply`, a populated legacy one gets `--baseline 1`.
+  - `migrations/README.md` gains a V019 section, the D-DB6 protocol, the rule "a new table
+    is a new migration, never runtime DDL", what `MIGRATE_ON_BOOT` implies, and the new
+    options and locks.
+- `backend/scripts/migrate.py` never writes to `cars_cleanroom`, the frozen clean-room
+  baseline (P4.3b, D-N1). There, `--apply` (with `--baseline` or `--record-only` too) logs
+  `REFUSE --apply` and exits 2 before any lock or write, and every write transaction
+  re-checks `current_database()` before it takes the advisory lock. A dry run still
+  reports. `cars_cr_*` scratch copies migrate as usual. New fake-connection tests and one
+  live test in `test_migrate.py`.
+- `migrations/V026__chain_completeness.sql` no longer sets its own
+  `SET LOCAL lock_timeout = '5s'`, which overrode `migrate --lock-timeout` (P4.3b). The
+  runner's per-file 5 s still applies, and the flag now governs V026 as well: on a scratch
+  V025 build with `option_rejections` locked for 8 s, `--lock-timeout 1s` failed after 1.3 s
+  and `--lock-timeout 30s` applied V026 after 8.0 s. The checksum is now
+  `sha256:3a037d828db71a4b97e928e22cdb3c0746aff568a1803a0f1392157cc505e6f6`. Only throwaway
+  databases had recorded the old one; local `cars`, `cars_cleanroom` and prod are at V025.
+- `docs/RELEASING.md` "Migrations" now describes the N5 runner (P4.3b): the prod command is
+  `--apply --target N`, the first log line names the host, port and database, the
+  `--lock-timeout` and `--lock-wait` flags, and the `cars_cleanroom` refusal.
+- Hot-path runtime DDL is gated on the migration chain (P4.6): `reviews.store`,
+  `scanner.recipe_store` and `scanner.job_queue`.
+  - On a Postgres database at the `migrations/` version they issue no DDL at all. A
+    dealership page request used to run CREATE TABLE plus two CREATE INDEX IF NOT EXISTS
+    statements, which take a SHARE lock even when the index exists.
+  - On a database behind the chain, only the missing objects are created, after
+    `SET LOCAL lock_timeout = '3s'`.
+  - `recipe_store` never runs ALTER on Postgres. A missing `scan_hints` column logs a
+    WARNING that names migrate.
+  - The SQLite paths are unchanged. `job_queue` is Postgres-only, and it has no SQLite
+    caller.
+- The repo chain now ends at V026, so `expected_schema_version()` returns 26 (P4.3). Until
+  P4.8 applies V026 to local `cars` and prod (both at 25):
+  - the default `INVENTORY_SCHEMA_CHECK=warn` only logs the gap;
+  - `strict` makes processes from this release refuse those databases.
+- The strict-mode fallback warnings say "re-assert failed" instead of "skipped (table
+  busy)", because a busy table is not always the cause (P4.5).
+
+### N5 Fixed
+- `INVENTORY_SCHEMA_CHECK=strict` did not propagate (P4.5).
+  `schema_repo.init_inventory_db` and the scanner's `database._ensure_schema` caught
+  `SchemaNotMigratedError` in a broad `except Exception` and logged it as a busy
+  re-assert. As a result, the web failed late in `init_dealer_portal_db` and the scanner
+  kept writing on every upsert. Strict mode now refuses at init and before any upsert
+  write. Warn mode and the busy-table fallback are unchanged.
+- `schema_version.py` and `inventory_pg.py` no longer say prod is at V018. The P0A.2
+  census (2026-10-08) found prod and local `cars` both at V001-V025 (P4.5).
+- `inventory_pg`'s legacy DDL ran a session-level `SET lock_timeout = '3s'`, so the
+  scanner's raw connection kept a 3 s lock_timeout on every later upsert. It is now
+  `SET LOCAL`, which was verified live (P4.6).
+- The SQLite-to-Postgres placeholder rewrite (`qmarks_to_percent_s`) understood only `'`
+  literals, so one apostrophe in an SQL comment flipped every later `?` (P4.7).
+  - `UPSERT_CARS_SQL` adapted correctly only because the 4 apostrophes in its comments
+    happened to balance. With an odd number, psycopg rejected the output.
+  - The rewrite now reads `'` literals, `"` identifiers, `--` comments and nested `/* */`
+    comments the way Postgres does, and doubles a `%` anywhere outside code.
+  - The output is byte-identical for all 1,334 DML literals in `backend/` and `scripts/`.
+    It is about 6x faster on `UPSERT_CARS_SQL` (0.28 ms to 0.05 ms).
+  - The INSERT OR IGNORE fallback drops a trailing `;` and trailing comments before it
+    appends ON CONFLICT DO NOTHING.
+- A fresh `migrate --apply` could not get past V019, which re-creates 18 tables without IF
+  NOT EXISTS. It now records V019 under the rule above (P4.2).
+- The live parity test `test_migrations_build_a_superset_of_the_runtime_ddl` was broken: its
+  keyword conninfo fell back to the default database. It now builds with
+  `migrate.main(['--apply'])`, URL DSNs and `pytest_*` names (P4.3).
+- The comment on `MIGRATE_LOCK_KEY` in `migrate.py` gave the advisory lock key as
+  7883954311434658097. The key is 7883946363647714609 (`0x6d69677261746531`), so a lock
+  held by hand or a `pg_locks` lookup with the old number never matched (P4.3b, comment
+  only; a test pins it).
+
+### N5 Security
+- migrate's new target log line prints only the host, port and database. It never prints
+  the DSN's user, password or options (`test_target_is_logged_without_credentials`, P4.2).
+
 ## [1.5.8] - 2026-10-23
 
 ### Added

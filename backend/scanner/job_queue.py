@@ -12,7 +12,7 @@ import uuid
 from datetime import datetime, timedelta, timezone
 from typing import Any
 
-from backend.db import inventory_pg
+from backend.db import inventory_pg, runtime_ddl
 from backend.db.inventory_pg import pg_connect, qmarks_to_percent_s
 
 _log = logging.getLogger(__name__)
@@ -22,51 +22,76 @@ def _worker_id() -> str:
     return (os.environ.get("SCANNER_WORKER_ID") or "").strip() or f"worker-{uuid.uuid4().hex[:8]}"
 
 
+_DDL_DEALER_CATALOG = """
+CREATE TABLE IF NOT EXISTS dealer_catalog (
+    dealer_id TEXT PRIMARY KEY,
+    registry_id BIGINT,
+    provider TEXT,
+    inventory_mode TEXT,
+    inventory_endpoint TEXT,
+    site_config_json TEXT NOT NULL DEFAULT '{}',
+    last_vin_fingerprint TEXT,
+    scan_interval_hours INTEGER NOT NULL DEFAULT 24,
+    next_scan_at TEXT,
+    onboarded_at TEXT,
+    last_scan_at TEXT,
+    updated_at TEXT NOT NULL
+)
+"""
+
+_DDL_DEALER_JOBS = """
+CREATE TABLE IF NOT EXISTS dealer_jobs (
+    id BIGSERIAL PRIMARY KEY,
+    dealer_id TEXT NOT NULL,
+    job_type TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'queued',
+    payload_json TEXT NOT NULL DEFAULT '{}',
+    worker_id TEXT,
+    created_at TEXT NOT NULL,
+    started_at TEXT,
+    finished_at TEXT,
+    error TEXT,
+    result_json TEXT NOT NULL DEFAULT '{}'
+)
+"""
+
+# Each object with the statement that creates it; migrations/V001 owns all four.
+_JOB_TABLES_PG = (
+    ("dealer_catalog", _DDL_DEALER_CATALOG),
+    ("dealer_jobs", _DDL_DEALER_JOBS),
+    ("idx_dealer_jobs_status",
+     "CREATE INDEX IF NOT EXISTS idx_dealer_jobs_status ON dealer_jobs(status, created_at)"),
+    ("idx_dealer_catalog_next_scan",
+     "CREATE INDEX IF NOT EXISTS idx_dealer_catalog_next_scan ON dealer_catalog(next_scan_at)"),
+)
+
+
 def ensure_job_tables(conn) -> None:
+    """Make sure the job-queue tables exist (Postgres; ``migrations/`` owns them).
+
+    Runs at every web, worker and scheduler start (``init_job_queue_schema``).
+    P4.6: no statement at all when the database is at the ``migrations/`` version.
+    Behind the chain (warn mode) only the objects ``to_regclass`` cannot find are
+    created, after ``SET LOCAL lock_timeout`` (``backend.db.runtime_ddl``), so a
+    ``CREATE INDEX`` never queues behind a long transaction on ``dealer_jobs``.
+    Strict mode on a behind database raises ``SchemaNotMigratedError``. A failed
+    create rolls back and raises.
+    """
+    if not runtime_ddl.pg_legacy_ddl_needed():
+        return
     cur = conn.cursor()
-    cur.execute(
-        """
-        CREATE TABLE IF NOT EXISTS dealer_catalog (
-            dealer_id TEXT PRIMARY KEY,
-            registry_id BIGINT,
-            provider TEXT,
-            inventory_mode TEXT,
-            inventory_endpoint TEXT,
-            site_config_json TEXT NOT NULL DEFAULT '{}',
-            last_vin_fingerprint TEXT,
-            scan_interval_hours INTEGER NOT NULL DEFAULT 24,
-            next_scan_at TEXT,
-            onboarded_at TEXT,
-            last_scan_at TEXT,
-            updated_at TEXT NOT NULL
-        )
-        """
-    )
-    cur.execute(
-        """
-        CREATE TABLE IF NOT EXISTS dealer_jobs (
-            id BIGSERIAL PRIMARY KEY,
-            dealer_id TEXT NOT NULL,
-            job_type TEXT NOT NULL,
-            status TEXT NOT NULL DEFAULT 'queued',
-            payload_json TEXT NOT NULL DEFAULT '{}',
-            worker_id TEXT,
-            created_at TEXT NOT NULL,
-            started_at TEXT,
-            finished_at TEXT,
-            error TEXT,
-            result_json TEXT NOT NULL DEFAULT '{}'
-        )
-        """
-    )
-    cur.execute(
-        "CREATE INDEX IF NOT EXISTS idx_dealer_jobs_status ON dealer_jobs(status, created_at)"
-    )
-    cur.execute(
-        "CREATE INDEX IF NOT EXISTS idx_dealer_catalog_next_scan ON dealer_catalog(next_scan_at)"
-    )
-    conn.commit()
-    cur.close()
+    try:
+        missing = runtime_ddl.pg_missing_relations(cur, [name for name, _sql in _JOB_TABLES_PG])
+        runtime_ddl.run_pg_legacy_ddl(cur, [sql for name, sql in _JOB_TABLES_PG if name in missing])
+        conn.commit()
+    except Exception:
+        try:
+            conn.rollback()
+        except Exception:
+            pass
+        raise
+    finally:
+        cur.close()
 
 
 def init_job_queue_schema() -> None:
