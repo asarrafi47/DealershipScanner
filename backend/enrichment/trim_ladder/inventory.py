@@ -56,7 +56,7 @@ def _inventory_trim_rows(
         cur = conn.cursor()
         cur.execute(
             """
-            SELECT trim, AVG(price) AS avg_price, COUNT(*) AS n
+            SELECT MIN(trim) AS trim, AVG(price) AS avg_price, COUNT(*) AS n
             FROM cars
             WHERE (COALESCE(listing_active, 1) = 1)
               AND LOWER(TRIM(make)) = LOWER(?)

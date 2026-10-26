@@ -347,7 +347,7 @@ def _reindex_dealers(conn) -> int:
         for r in batch:
             parts = [str(x) for x in r[1:] if x is not None and str(x).strip()]
             docs.append(" ".join(parts)[:8000])
-            metas.append({"dealer_id": int(r[0]), "state": (r[5] or "")[:8]})
+            metas.append({"dealer_id": int(r[0]), "state": str(r[4] or "")[:8]})
             ids.append(int(r[0]))
         vecs = _embed_texts(docs)
         from psycopg.types.json import Json
