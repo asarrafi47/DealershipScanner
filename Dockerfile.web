@@ -14,6 +14,18 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir gunicorn[gthread] -r requirements.txt
 
+# Bake the pgeocode US postal table (~5.6 MB from GeoNames) into the image.
+# backend/db/geo.py builds pgeocode.Nominatim("us") at import, and pgeocode
+# downloads US.txt on first use when its cache is empty, so without this the
+# first web worker to import geo pays a network fetch (and fails if GeoNames is
+# unreachable). Constructing Nominatim also writes the US-index.txt sibling.
+# PGEOCODE_DATA_DIR pins the cache outside $HOME so build and runtime agree.
+# Best effort: a failed fetch at build only logs; runtime then behaves as
+# before (downloads on first geocode, errors if the cache dir is read-only).
+ENV PGEOCODE_DATA_DIR=/opt/pgeocode
+RUN python -c "import pgeocode; pgeocode.Nominatim('us')" \
+    || echo "pgeocode cache bake failed; runtime will fetch on first geocode"
+
 # No browser binary (P3.8, D-SEC1 (a), 2026-10-18).
 #
 # The web image used to run `playwright install chromium && playwright
