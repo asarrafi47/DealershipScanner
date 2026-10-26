@@ -101,7 +101,6 @@ def test_car_chat_global_rate_limit(monkeypatch: pytest.MonkeyPatch, tmp_path) -
     monkeypatch.setenv("RATE_LIMIT_CAR_CHAT_GLOBAL_PER_MIN", "2")
     monkeypatch.setenv("RATE_LIMIT_CAR_CHAT_PER_IP_PER_MIN", "500")
     monkeypatch.setenv("RATE_LIMIT_CAR_CHAT_PER_MIN", "500")
-    monkeypatch.setenv("RATE_LIMIT_SQLITE_PATH", str(tmp_path / "rate_limits.db"))
 
     import backend.main as main
 

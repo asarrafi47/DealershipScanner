@@ -159,7 +159,7 @@ def test_upsert_stores_null_not_zero_and_keeps_real_readings(tmp_path, monkeypat
 def _render_car_page(monkeypatch, tmp_path, app_factory, **overrides):
     from backend.routes import cars_pages
 
-    main = app_factory(ALLOW_DEFAULT_APP_USER="0", RATE_LIMIT_SQLITE_PATH=str(tmp_path / "rate_limits.db"))
+    main = app_factory(ALLOW_DEFAULT_APP_USER="0")
     # Current model year: since N2.4 a "new" car older than last model year keeps
     # "Mileage not listed", so a fixed year would flip these cases in 2028.
     year = date.today().year

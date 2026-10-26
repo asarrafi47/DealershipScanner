@@ -1,14 +1,11 @@
 """Sliding-window rate limiting by string key (e.g. IP + route).
 
-* In-process memory (default): not shared across gunicorn/uwsgi workers.
-* Optional shared SQLite: set env ``RATE_LIMIT_SQLITE_PATH`` to a path on a filesystem
-  all workers can read/write (WAL) so limits apply per deployment host.
+In-process memory only (N37.11, D-PG5): state is not shared across gunicorn/uwsgi
+workers, so the effective ceiling is the configured limit times the worker count.
 """
 
 from __future__ import annotations
 
-import os
-import sqlite3
 import threading
 import time
 from collections import defaultdict
@@ -20,46 +17,6 @@ _events: dict[str, list[float]] = defaultdict(list)
 _SWEEP_INTERVAL_SECONDS = 60.0
 _max_window: float = 0.0
 _last_sweep: float = 0.0
-
-_sqlite_lock = threading.Lock()
-
-
-def _sqlite_path_configured() -> str | None:
-    raw = (os.environ.get("RATE_LIMIT_SQLITE_PATH") or "").strip()
-    return raw or None
-
-
-def _prepare_sqlite_path() -> str:
-    p = _sqlite_path_configured() or ""
-    if not p:
-        raise RuntimeError("RATE_LIMIT_SQLITE_PATH is not set")
-    d = os.path.dirname(p)
-    if d:
-        try:
-            os.makedirs(d, exist_ok=True)
-        except OSError:
-            pass
-    return p
-
-
-def _sqlite_init_conn(conn: sqlite3.Connection) -> None:
-    try:
-        conn.execute("PRAGMA journal_mode=WAL")
-    except sqlite3.OperationalError:
-        pass
-    try:
-        conn.execute("PRAGMA busy_timeout=2000")
-    except sqlite3.OperationalError:
-        pass
-    conn.execute(
-        """
-        CREATE TABLE IF NOT EXISTS _rate_hits (
-            k TEXT NOT NULL,
-            t REAL NOT NULL
-        )
-        """
-    )
-    conn.execute("CREATE INDEX IF NOT EXISTS _rate_hits_kt ON _rate_hits (k, t)")
 
 
 def clear_rate_limit_state() -> None:
@@ -79,12 +36,7 @@ def _sweep_stale_locked(now: float) -> None:
 
 
 def allow_request(key: str, *, max_events: int, window_seconds: float) -> bool:
-    """
-    Record one event for ``key``. Return True if under limit, False if rate limited.
-    When ``RATE_LIMIT_SQLITE_PATH`` is set, state is shared across processes on the same host.
-    """
-    if _sqlite_path_configured():
-        return _allow_request_sqlite(key, max_events=max_events, window_seconds=window_seconds)
+    """Record one event for ``key``. Return True if under limit, False if rate limited."""
     return _allow_request_memory(key, max_events=max_events, window_seconds=window_seconds)
 
 
@@ -107,65 +59,10 @@ def _allow_request_memory(key: str, *, max_events: int, window_seconds: float) -
         return True
 
 
-def _allow_request_sqlite(key: str, *, max_events: int, window_seconds: float) -> bool:
-    t_wall = time.time()
-    cutoff = t_wall - window_seconds
-    try:
-        p = _prepare_sqlite_path()
-    except RuntimeError:
-        return _allow_request_memory(key, max_events=max_events, window_seconds=window_seconds)
-    with _sqlite_lock:
-        try:
-            conn = sqlite3.connect(p, check_same_thread=False, timeout=5.0)
-        except sqlite3.Error:
-            return _allow_request_memory(key, max_events=max_events, window_seconds=window_seconds)
-        try:
-            _sqlite_init_conn(conn)
-            cur = conn.cursor()
-            cur.execute("DELETE FROM _rate_hits WHERE k = ? AND t < ?", (key, cutoff))
-            cur.execute("SELECT COUNT(1) FROM _rate_hits WHERE k = ?", (key,))
-            n = int(cur.fetchone()[0] or 0)
-            if n >= max_events:
-                conn.commit()
-                return False
-            cur.execute("INSERT INTO _rate_hits (k, t) VALUES (?, ?)", (key, t_wall))
-            conn.commit()
-        except sqlite3.Error:
-            try:
-                conn.rollback()
-            except sqlite3.Error:
-                pass
-            return _allow_request_memory(key, max_events=max_events, window_seconds=window_seconds)
-        finally:
-            try:
-                conn.close()
-            except sqlite3.Error:
-                pass
-        return True
-
-
 def refund_event(key: str) -> None:
     """Drop the most recent event for ``key`` (undo an ``allow_request`` reservation).
     Not tied to the caller's own slot: under concurrency it may free a parallel caller's
     slot instead (at most one extra guess per success, and only after a valid password)."""
-    if _sqlite_path_configured():
-        try:
-            p = _prepare_sqlite_path()
-            with _sqlite_lock:
-                conn = sqlite3.connect(p, check_same_thread=False, timeout=5.0)
-                try:
-                    _sqlite_init_conn(conn)
-                    conn.execute(
-                        "DELETE FROM _rate_hits WHERE rowid = "
-                        "(SELECT rowid FROM _rate_hits WHERE k = ? ORDER BY t DESC LIMIT 1)",
-                        (key,),
-                    )
-                    conn.commit()
-                    return
-                finally:
-                    conn.close()
-        except (RuntimeError, sqlite3.Error):
-            pass
     with _lock:
         buf = _events.get(key)
         if buf:

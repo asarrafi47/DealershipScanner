@@ -64,7 +64,7 @@ def _reserve_login_slot(login_input: str) -> str | None:
     """Claim one of the account's failure slots BEFORE the slow password check, so a burst
     of parallel guesses cannot all pass a stale count. Returns the key, or None when the
     account is locked. A successful login refunds the slot (``_refund_login_slot``).
-    The memory store is per process: set RATE_LIMIT_SQLITE_PATH for multi-worker hosts."""
+    The memory store is per process."""
     key = _acct_key(login_input)
     if not allow_request(key, max_events=_ACCT_FAIL_MAX, window_seconds=_ACCT_FAIL_WINDOW):
         return None

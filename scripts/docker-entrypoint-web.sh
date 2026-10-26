@@ -47,16 +47,9 @@ fi
 GUNICORN_WORKERS="${GUNICORN_WORKERS:-3}"
 
 # Multi-worker fallout #1: the in-memory IP rate limiter (backend/utils/ip_rate_limit.py)
-# keeps its sliding-window state per-process, so with >1 worker the effective
-# ceiling on login/register/smart-search/recalls is silently multiplied by
-# GUNICORN_WORKERS unless RATE_LIMIT_SQLITE_PATH points every worker at the
-# same file. Default one in whenever it isn't already set so the documented
-# per-deployment limit actually holds.
-if [ -z "${RATE_LIMIT_SQLITE_PATH:-}" ] && [ "${GUNICORN_WORKERS}" != "1" ]; then
-  RATE_LIMIT_SQLITE_PATH="/app/data/rate_limits.db"
-  mkdir -p "$(dirname "${RATE_LIMIT_SQLITE_PATH}")"
-  export RATE_LIMIT_SQLITE_PATH
-fi
+# keeps its sliding-window state per-process (N37.11: the shared SQLite file option is
+# gone), so with >1 worker the effective ceiling on login/register/smart-search/recalls
+# is the configured limit times GUNICORN_WORKERS. Set GUNICORN_WORKERS=1 for exact limits.
 
 # Multi-worker fallout #2: --max-requests recycles a worker mid-run with no
 # awareness of the daemon threads it owns (bulk import queue, vector reindex,

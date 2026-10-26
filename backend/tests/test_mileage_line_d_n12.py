@@ -196,7 +196,7 @@ def test_compare_new_null_cell_is_the_empty_dash_not_a_difference():
 def _car_page_client(monkeypatch, tmp_path, app_factory, overrides):
     from backend.routes import cars_pages
 
-    main = app_factory(ALLOW_DEFAULT_APP_USER="0", RATE_LIMIT_SQLITE_PATH=str(tmp_path / "rate_limits.db"))
+    main = app_factory(ALLOW_DEFAULT_APP_USER="0")
     car = _row(**overrides)
     monkeypatch.setattr(cars_pages, "get_car_by_id", lambda *_a, **_k: dict(car))
     monkeypatch.setattr(cars_pages, "prepare_car_detail_context",
@@ -239,7 +239,7 @@ def test_car_page_and_api_per_case(monkeypatch, tmp_path, app_factory, case, ove
 def _render_template(app_factory, tmp_path, template, **ctx):
     from flask import render_template
 
-    main = app_factory(ALLOW_DEFAULT_APP_USER="0", RATE_LIMIT_SQLITE_PATH=str(tmp_path / "rate_limits.db"))
+    main = app_factory(ALLOW_DEFAULT_APP_USER="0")
     with main.app.test_request_context("/"):
         return render_template(template, **ctx)
 

@@ -12,7 +12,6 @@ def _make_app(app_factory, tmp_path, **env):
     return app_factory(
         production=production,
         ALLOW_DEFAULT_APP_USER="0",
-        RATE_LIMIT_SQLITE_PATH=str(tmp_path / "rate_limits.db"),
         **env,
     )
 

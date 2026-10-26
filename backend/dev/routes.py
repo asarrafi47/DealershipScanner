@@ -28,6 +28,7 @@ from flask import Blueprint, jsonify, redirect, render_template, request, sessio
 from pydantic import ValidationError
 
 from backend.db.admin_users_db import (
+    AdminUserExists,
     authenticate_admin,
     dev_public_registration_allowed,
     dev_users_db_path,
@@ -80,28 +81,22 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
 dev_bp = Blueprint("dev", __name__)
 
-# Process-local fallback store for scanner jobs / bulk-import queues, used when
-# DEV_JOB_STORE_SQLITE_PATH (below) is not set. NOTE: with GUNICORN_WORKERS>1
-# (see scripts/docker-entrypoint-web.sh) these dicts are NOT shared across worker
+# Process-local store for scanner jobs / bulk-import queues (N37.12, D-PG5: the shared
+# SQLite option is gone). NOTE: with GUNICORN_WORKERS>1 (see
+# scripts/docker-entrypoint-web.sh) these dicts are NOT shared across worker
 # processes, so a status poll that lands on a different worker than the one that
 # started the job sees no record of it and gets back job_expired/queue_expired
-# even though the job is still running fine on its own worker. Set
-# DEV_JOB_STORE_SQLITE_PATH to a path all workers can read/write (WAL-mode
-# SQLite) to make job/queue state visible to every worker, the same way
-# RATE_LIMIT_SQLITE_PATH shares rate-limit state (backend/utils/ip_rate_limit.py).
+# even though the job is still running fine on its own worker. Production runs
+# GUNICORN_WORKERS=1; a dev_job_store table is the route if workers ever rise.
 scanner_jobs: dict[str, dict[str, Any]] = {}
 scanner_lock = threading.Lock()
 
 import_queues: dict[str, dict[str, Any]] = {}
 
-# Cap the job/queue stores so full scan logs don't grow worker RSS (or the
-# shared SQLite file) without bound. Oldest entries are evicted first (dicts
-# preserve insert order; the SQLite path orders by last-write time).
+# Cap the job/queue stores so full scan logs don't grow worker RSS without bound.
+# Oldest entries are evicted first (dicts preserve insert order).
 _MAX_SCANNER_JOBS = max(1, int(os.environ.get("DEV_MAX_SCANNER_JOBS", "500")))
 _MAX_IMPORT_QUEUES = max(1, int(os.environ.get("DEV_MAX_IMPORT_QUEUES", "100")))
-
-_DEV_JOB_STORE_SQLITE_PATH = (os.environ.get("DEV_JOB_STORE_SQLITE_PATH") or "").strip() or None
-_dev_job_store_sqlite_lock = threading.Lock()
 
 
 def _evict_old_entries(store: dict[str, Any], max_entries: int) -> None:
@@ -113,187 +108,47 @@ def _evict_old_entries(store: dict[str, Any], max_entries: int) -> None:
         del store[next(iter(store))]
 
 
-def _dev_job_store_enabled() -> bool:
-    return _DEV_JOB_STORE_SQLITE_PATH is not None
-
-
-def _dev_job_store_conn() -> sqlite3.Connection:
-    path = _DEV_JOB_STORE_SQLITE_PATH
-    assert path
-    d = os.path.dirname(path)
-    if d:
-        try:
-            os.makedirs(d, exist_ok=True)
-        except OSError:
-            pass
-    conn = sqlite3.connect(path, check_same_thread=False, timeout=5.0)
-    try:
-        conn.execute("PRAGMA journal_mode=WAL")
-    except sqlite3.OperationalError:
-        pass
-    try:
-        conn.execute("PRAGMA busy_timeout=5000")
-    except sqlite3.OperationalError:
-        pass
-    conn.execute(
-        "CREATE TABLE IF NOT EXISTS dev_job_store ("
-        "store TEXT NOT NULL, id TEXT NOT NULL, data TEXT NOT NULL, updated_at REAL NOT NULL, "
-        "PRIMARY KEY (store, id))"
-    )
-    return conn
-
-
 def _dev_local_store(store: str) -> dict[str, dict[str, Any]]:
     return scanner_jobs if store == "jobs" else import_queues
 
 
 def _dev_store_get(store: str, item_id: str) -> dict[str, Any] | None:
-    """Read one job/queue record: from the shared SQLite store when configured,
-    otherwise from the process-local dict named by ``store`` ("jobs" or "queues")."""
-    if not _dev_job_store_enabled():
-        with scanner_lock:
-            item = _dev_local_store(store).get(item_id)
-            return dict(item) if item is not None else None
-    with _dev_job_store_sqlite_lock:
-        try:
-            conn = _dev_job_store_conn()
-        except sqlite3.Error:
-            return None
-        try:
-            row = conn.execute(
-                "SELECT data FROM dev_job_store WHERE store = ? AND id = ?", (store, item_id)
-            ).fetchone()
-        finally:
-            conn.close()
-    if not row:
-        return None
-    try:
-        return json.loads(row[0])
-    except (json.JSONDecodeError, TypeError):
-        return None
+    """Read one job/queue record from the process-local dict named by ``store``
+    ("jobs" or "queues")."""
+    with scanner_lock:
+        item = _dev_local_store(store).get(item_id)
+        return dict(item) if item is not None else None
 
 
 def _dev_store_put(store: str, item_id: str, data: dict[str, Any]) -> None:
     """Create/replace one job/queue record, then evict the oldest past the cap."""
     max_entries = _MAX_SCANNER_JOBS if store == "jobs" else _MAX_IMPORT_QUEUES
-    if not _dev_job_store_enabled():
-        with scanner_lock:
-            local = _dev_local_store(store)
-            local[item_id] = data
-            _evict_old_entries(local, max_entries)
-        return
-    now = time.time()
-    payload = json.dumps(data, default=str)
-    with _dev_job_store_sqlite_lock:
-        try:
-            conn = _dev_job_store_conn()
-        except sqlite3.Error:
-            return
-        try:
-            conn.execute(
-                "INSERT INTO dev_job_store (store, id, data, updated_at) VALUES (?, ?, ?, ?) "
-                "ON CONFLICT(store, id) DO UPDATE SET data = excluded.data, updated_at = excluded.updated_at",
-                (store, item_id, payload, now),
-            )
-            conn.execute(
-                "DELETE FROM dev_job_store WHERE store = ? AND id NOT IN ("
-                "SELECT id FROM dev_job_store WHERE store = ? ORDER BY updated_at DESC LIMIT ?)",
-                (store, store, max_entries),
-            )
-            conn.commit()
-        except sqlite3.Error:
-            try:
-                conn.rollback()
-            except sqlite3.Error:
-                pass
-        finally:
-            conn.close()
+    with scanner_lock:
+        local = _dev_local_store(store)
+        local[item_id] = data
+        _evict_old_entries(local, max_entries)
 
 
 def _dev_store_patch(store: str, item_id: str, fields: dict[str, Any]) -> bool:
     """Merge ``fields`` into an existing job/queue record. Returns False if it's gone."""
-    if not _dev_job_store_enabled():
-        with scanner_lock:
-            local = _dev_local_store(store)
-            if item_id not in local:
-                return False
-            local[item_id].update(fields)
-            return True
-    with _dev_job_store_sqlite_lock:
-        try:
-            conn = _dev_job_store_conn()
-        except sqlite3.Error:
+    with scanner_lock:
+        local = _dev_local_store(store)
+        if item_id not in local:
             return False
-        try:
-            row = conn.execute(
-                "SELECT data FROM dev_job_store WHERE store = ? AND id = ?", (store, item_id)
-            ).fetchone()
-            if not row:
-                return False
-            try:
-                data = json.loads(row[0])
-            except (json.JSONDecodeError, TypeError):
-                data = {}
-            data.update(fields)
-            conn.execute(
-                "UPDATE dev_job_store SET data = ?, updated_at = ? WHERE store = ? AND id = ?",
-                (json.dumps(data, default=str), time.time(), store, item_id),
-            )
-            conn.commit()
-            return True
-        except sqlite3.Error:
-            try:
-                conn.rollback()
-            except sqlite3.Error:
-                pass
-            return False
-        finally:
-            conn.close()
+        local[item_id].update(fields)
+        return True
 
 
 def _dev_queue_patch_item(queue_id: str, job_id: str, **fields: Any) -> None:
     """Merge ``fields`` into one item of a queue's ``items`` list (matched by job_id)."""
-    if not _dev_job_store_enabled():
-        with scanner_lock:
-            q = import_queues.get(queue_id)
-            if not q:
-                return
-            for it in q.get("items", []):
-                if it.get("job_id") == job_id:
-                    it.update(fields)
-                    break
-        return
-    with _dev_job_store_sqlite_lock:
-        try:
-            conn = _dev_job_store_conn()
-        except sqlite3.Error:
+    with scanner_lock:
+        q = import_queues.get(queue_id)
+        if not q:
             return
-        try:
-            row = conn.execute(
-                "SELECT data FROM dev_job_store WHERE store = 'queues' AND id = ?", (queue_id,)
-            ).fetchone()
-            if not row:
-                return
-            try:
-                data = json.loads(row[0])
-            except (json.JSONDecodeError, TypeError):
-                return
-            for it in data.get("items", []):
-                if it.get("job_id") == job_id:
-                    it.update(fields)
-                    break
-            conn.execute(
-                "UPDATE dev_job_store SET data = ?, updated_at = ? WHERE store = 'queues' AND id = ?",
-                (json.dumps(data, default=str), time.time(), queue_id),
-            )
-            conn.commit()
-        except sqlite3.Error:
-            try:
-                conn.rollback()
-            except sqlite3.Error:
-                pass
-        finally:
-            conn.close()
+        for it in q.get("items", []):
+            if it.get("job_id") == job_id:
+                it.update(fields)
+                break
 
 
 LAST_SCRAPE_SAMPLES_PATH = PROJECT_ROOT / "debug" / "last_scrape_samples.json"
@@ -810,7 +665,7 @@ def admin_register():
             return render_template("dev_register.html", error=err, registration_allowed=True)
         try:
             save_dev_admin_user(username, email, password)
-        except sqlite3.IntegrityError:
+        except AdminUserExists:
             return render_template(
                 "dev_register.html",
                 error="That username or email is already registered for dev access.",
