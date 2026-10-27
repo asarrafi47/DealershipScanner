@@ -214,3 +214,42 @@ def storage_derived_columns(raw: dict[str, Any], columns: dict[str, Any]) -> dic
     if "interior_color" not in columns:
         return {}
     return {"interior_color_buckets": interior_color_buckets_json(columns.get("interior_color"), raw.get("make"))}
+
+
+def apply_row_storage_repair(raw: dict[str, Any], *, vpic: dict[str, Any] | None = None, dry_run: bool = False):
+    """Tier-1 storage repair of one row through fact precedence (P8B.7).
+
+    Builds ``collect_row_storage_proposals``, lets ``apply_fact_proposals`` decide the fact
+    columns against the stored row and its provenance, and writes the winners, the plain
+    columns and a provenance entry for every one of them in ONE ``update_car_row_partial``
+    call. Returns the ``ApplyResult``; ``applied`` holds every column written (or, dry run,
+    that would be). The caller refreshes the data-quality score."""
+    from backend.vehicle_facts.apply import apply_fact_proposals
+
+    tp = collect_row_storage_proposals(raw)
+    res = apply_fact_proposals(None, raw, tp.proposals, vpic=vpic, dry_run=True)
+    columns: dict[str, Any] = {**tp.plain, **res.applied}
+    prov: dict[str, dict[str, Any]] = dict(res.provenance)
+    for k, v in tp.plain.items():
+        if k in res.applied or v is None or k == "interior_color_buckets":
+            continue
+        prov[k] = {"source": tp.sources.get(k, prec.DEALER_NORMALIZED), "value": str(v)[:160],
+                   "detail": "inventory_repair"}
+    columns.pop("interior_color_buckets", None)
+    columns.update(storage_derived_columns(raw, columns))
+    out = type(res)(applied=dict(columns), kept=res.kept, discrepancies=res.discrepancies,
+                    provenance=prov, dry_run=dry_run)
+    if dry_run or not columns or raw.get("id") is None:
+        return out
+
+    import json
+
+    from backend.db.repositories.cars_repo import update_car_row_partial
+    from backend.utils.spec_provenance import merge_spec_source_json
+
+    existing = raw.get("spec_source_json")
+    if isinstance(existing, dict):
+        existing = json.dumps(existing)
+    update_car_row_partial(int(raw["id"]), {**columns, "spec_source_json": merge_spec_source_json(existing, prov)})
+    out.written = True
+    return out

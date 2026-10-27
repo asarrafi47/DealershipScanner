@@ -99,3 +99,48 @@ def apply_fact_proposals(conn: Any, row: Mapping[str, Any] | int, proposals: Ite
     update_car_row_partial(int(car_id), {**changes, "spec_source_json": merged})
     res.written = True
     return res
+
+
+def apply_labeled_patch(row: Mapping[str, Any], updates: Mapping[str, Any], source: str, *,
+                        detail: str | None = None, meta: Mapping[str, Any] | None = None,
+                        sources: Mapping[str, str] | None = None, vpic: Mapping[str, Any] | None = None, dry_run: bool = False) -> ApplyResult:
+    """Repair/recovery scripts' write path (P8B.7): a ``{column: value}`` patch from one source.
+
+    Columns under fact precedence are decided by :func:`apply_fact_proposals` (a lower rank
+    never replaces a higher one). Every other column in *updates* (price, mileage, trim,
+    photos, ...) has no rank: it goes out as given, and its provenance entry records
+    *source*, so no script write is untraceable. *meta* columns (run bookkeeping) carry no
+    provenance. Columns, ranked values and provenance leave in ONE ``update_car_row_partial``
+    call. *sources* overrides *source* per column. ``ApplyResult.applied`` holds every column that was (or, dry run, would be) written.
+    """
+    from backend.utils.spec_provenance import merge_spec_source_json
+
+    src = dict(sources or {})
+    ranked = [(k, v, src.get(k, source)) for k, v in updates.items() if k in prec.FIELDS and v is not None]
+    plain = {k: v for k, v in updates.items() if not (k in prec.FIELDS and v is not None)}
+    res = apply_fact_proposals(None, row, ranked, vpic=vpic, dry_run=True)
+    columns: dict[str, Any] = {**plain, **res.applied}
+    prov: dict[str, dict] = dict(res.provenance)
+    for k, v in plain.items():
+        entry: dict[str, Any] = {"source": src.get(k, source), "value": None if v is None else str(v)[:160]}
+        if detail:
+            entry["detail"] = detail
+        prov[k] = entry
+    if detail:
+        for k in res.applied:
+            if k in prov:
+                prov[k] = {**prov[k], "detail": detail}
+    out = ApplyResult(applied=dict(columns), kept=res.kept, discrepancies=res.discrepancies,
+                      provenance=prov, dry_run=dry_run)
+    if dry_run or not columns or row.get("id") is None:
+        return out
+
+    from backend.db.repositories.cars_repo import update_car_row_partial
+
+    existing = row.get("spec_source_json")
+    if isinstance(existing, dict):
+        existing = json.dumps(existing)
+    write = {**columns, **(meta or {}), "spec_source_json": merge_spec_source_json(existing, prov)}
+    update_car_row_partial(int(row["id"]), write)
+    out.written = True
+    return out

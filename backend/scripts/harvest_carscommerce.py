@@ -66,7 +66,9 @@ def _carscommerce_dealer_ids() -> list[str]:
 
 def patch_dealer(dealer_id: str, *, dry_run: bool, include_new: bool) -> dict:
     from backend.db.incomplete_listings_db import sync_incomplete_listing_for_car_id
-    from backend.db.inventory_db import db_conn
+    from backend.db.inventory_db import db_conn, get_car_by_id
+    from backend.vehicle_facts import precedence as prec
+    from backend.vehicle_facts.apply import apply_labeled_patch
 
     by_vin = harvest_dealer(dealer_id, include_new=include_new)
     stats = {"harvested": len(by_vin), "rows_patched": 0, "fields": {}}
@@ -74,6 +76,7 @@ def patch_dealer(dealer_id: str, *, dry_run: bool, include_new: bool) -> dict:
         return stats
 
     patched_ids: list[int] = []
+    pending: list[tuple[int, dict]] = []
     with db_conn() as conn:
         cur = conn.cursor()
         for vin, fields in by_vin.items():
@@ -91,16 +94,21 @@ def patch_dealer(dealer_id: str, *, dry_run: bool, include_new: bool) -> dict:
                 }
                 if not updates:
                     continue
-                stats["rows_patched"] += 1
-                for f in updates:
-                    stats["fields"][f] = stats["fields"].get(f, 0) + 1
-                if dry_run:
-                    continue
-                set_sql = ", ".join(f"{f} = ?" for f in updates)
-                cur.execute(f"UPDATE cars SET {set_sql} WHERE id = ?", (*updates.values(), car_id))
-                patched_ids.append(car_id)
-        if not dry_run:
-            conn.commit()
+                pending.append((car_id, updates))
+
+    # Writes go through fact precedence with provenance (P8B.7).
+    for car_id, updates in pending:
+        row = get_car_by_id(car_id)
+        if not row:
+            continue
+        res = apply_labeled_patch(row, updates, prec.RECIPE_HEAL, detail="harvest_carscommerce", dry_run=dry_run)
+        if not res.applied:
+            continue
+        stats["rows_patched"] += 1
+        for f in res.applied:
+            stats["fields"][f] = stats["fields"].get(f, 0) + 1
+        if res.written:
+            patched_ids.append(car_id)
 
     for car_id in patched_ids:
         try:
