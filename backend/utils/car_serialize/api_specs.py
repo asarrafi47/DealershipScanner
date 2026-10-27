@@ -25,15 +25,18 @@ from .engine import _effective_fuel_type_for_display
 
 
 def apply_forced_induction(out: dict[str, Any], c: dict[str, Any]) -> None:
-    """Forced induction: use stored value or compute on the fly."""
-    _fi = c.get("forced_induction") or ""
+    """Forced induction: the stored label, 'Naturally Aspirated' included (D-ET2 a).
+
+    Only a blank label is computed on the fly; a stored value is never re-guessed.
+    """
+    _fi = str(c.get("forced_induction") or "")
     if not _fi.strip():
         try:
             from backend.utils.forced_induction import classify_forced_induction_from_car_row
             _fi = classify_forced_induction_from_car_row(c) or ""
         except Exception:
             _fi = ""
-    out["forced_induction"] = _fi or None
+    out["forced_induction"] = _fi.strip() or None
 
 
 def apply_fuel_type_override(out: dict[str, Any], c: dict[str, Any], engine_disp: Any) -> None:

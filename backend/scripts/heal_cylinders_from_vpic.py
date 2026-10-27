@@ -11,18 +11,19 @@ Phase B — forced induction: re-run the (year-guarded) classifier for rows
 with a stored label and year < 2016; blanket make-era guesses are cleared,
 explicit-marker labels (turbo in trim/description) survive.
 
-Phase B is OFF by default and runs only with an explicit ``--phase-b``. The
-classifier only reads listing text, so it also clears or rewrites labels that
-came from the EPA catalog or the VIN decode (sources that outrank it). Remediation
-plan P1A.5 gates it; P10C.6 makes it skip NA and EPA/vPIC-backed labels (or
-retires it) and removes the flag. Phase A (cylinders) is unchanged.
+The classifier only reads listing text, so Phase B touches only labels whose
+recorded source is the make/model heuristic itself. It skips 'Naturally
+Aspirated', labels backed by the EPA catalog, the VIN decode, the sticker or the
+dealer, and labels with no provenance (P10C.6; this replaced the P1A.5
+``--phase-b`` opt-in). ``--skip-fi`` still turns it off. Phase A (cylinders) is
+unchanged.
 
 Usage::
 
   PYTHONPATH=. python backend/scripts/heal_cylinders_from_vpic.py --dry-run
   PYTHONPATH=. python backend/scripts/heal_cylinders_from_vpic.py
   PYTHONPATH=. python backend/scripts/heal_cylinders_from_vpic.py --limit 500
-  PYTHONPATH=. python backend/scripts/heal_cylinders_from_vpic.py --phase-b --dry-run
+  PYTHONPATH=. python backend/scripts/heal_cylinders_from_vpic.py --skip-fi
 """
 from __future__ import annotations
 
@@ -43,6 +44,7 @@ import requests  # noqa: E402
 from backend.db.inventory_db import get_conn  # noqa: E402
 from backend.utils.forced_induction import classify_forced_induction_from_car_row  # noqa: E402
 from backend.utils.spec_provenance import merge_spec_source_json  # noqa: E402
+from backend.vehicle_facts.precedence import TRIM_HEURISTIC, field_source  # noqa: E402
 
 _VPIC_BATCH_URL = "https://vpic.nhtsa.dot.gov/api/vehicles/DecodeVinValuesBatch/"
 _BATCH_SIZE = 50
@@ -129,18 +131,23 @@ def heal_forced_induction(*, dry_run: bool) -> dict[str, int]:
     cur = conn.cursor()
     cur.execute(
         "SELECT id, vin, make, model, trim, year, cylinders, engine_l, engine_description, "
-        "fuel_type, description, title, forced_induction FROM cars "
+        "fuel_type, description, title, forced_induction, spec_source_json FROM cars "
         "WHERE COALESCE(listing_active,1)=1 AND forced_induction IS NOT NULL "
-        "AND forced_induction <> '' AND year IS NOT NULL AND year < 2016"
+        "AND forced_induction <> '' AND year IS NOT NULL AND year < 2016 "
+        "AND LOWER(forced_induction) <> 'naturally aspirated'"
     )
     cols = (
         "id", "vin", "make", "model", "trim", "year", "cylinders", "engine_l",
         "engine_description", "fuel_type", "description", "title", "forced_induction",
+        "spec_source_json",
     )
     rows = [dict(zip(cols, r)) for r in cur.fetchall()]
-    stats = {"rows": len(rows), "kept": 0, "cleared": 0, "changed": 0}
+    stats = {"rows": len(rows), "kept": 0, "cleared": 0, "changed": 0, "backed": 0}
 
     for car in rows:
+        if field_source("forced_induction", car.get("forced_induction"), car.get("spec_source_json")) != TRIM_HEURISTIC:
+            stats["backed"] += 1  # NA, evidence-backed or unprovenanced: not this phase's to rewrite
+            continue
         new_fi = classify_forced_induction_from_car_row(car)
         old_fi = (car.get("forced_induction") or "").strip()
         if (new_fi or "") == old_fi:
@@ -157,22 +164,13 @@ def heal_forced_induction(*, dry_run: bool) -> dict[str, int]:
 
 
 def main() -> None:
-    ap = argparse.ArgumentParser(description="Heal cylinders (and, opt-in, forced_induction) against NHTSA vPIC")
+    ap = argparse.ArgumentParser(description="Heal cylinders (and heuristic forced_induction labels) against NHTSA vPIC")
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--limit", type=int, default=None, help="Only process the first N rows (testing)")
-    phase_b = ap.add_mutually_exclusive_group()
-    phase_b.add_argument(
-        "--phase-b",
-        action="store_true",
-        help=(
-            "Also run Phase B, the forced_induction recompute for year<2016. Off by default: "
-            "it clears EPA- and VIN-backed labels (remediation plan P1A.5, fixed in P10C.6)"
-        ),
-    )
-    phase_b.add_argument(
+    ap.add_argument(
         "--skip-fi",
         action="store_true",
-        help="Skip the forced-induction recompute phase (now the default; kept for old command lines)",
+        help="Skip Phase B, the forced-induction recompute for heuristic-labelled year<2016 rows",
     )
     args = ap.parse_args()
 
@@ -180,16 +178,12 @@ def main() -> None:
     a = heal_cylinders(dry_run=args.dry_run, limit=args.limit)
     print(f"Phase A done: {a}", flush=True)
 
-    if args.phase_b and not args.skip_fi:
+    if not args.skip_fi:
         print(f"Phase B — forced_induction recompute, year<2016 ({'DRY RUN' if args.dry_run else 'live'})", flush=True)
         b = heal_forced_induction(dry_run=args.dry_run)
         print(f"Phase B done: {b}", flush=True)
     else:
-        print(
-            "Phase B — forced_induction recompute skipped (opt-in with --phase-b; it clears "
-            "EPA- and VIN-backed labels until P10C.6)",
-            flush=True,
-        )
+        print("Phase B — forced_induction recompute skipped (--skip-fi)", flush=True)
 
 
 if __name__ == "__main__":

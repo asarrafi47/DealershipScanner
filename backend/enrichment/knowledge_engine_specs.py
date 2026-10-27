@@ -268,10 +268,16 @@ def _is_naturally_quick_nameplate(car: dict[str, Any]) -> bool:
 
 
 def _has_forced_induction(car: dict[str, Any]) -> bool:
-    """True when the engine is turbocharged / supercharged."""
+    """True when the engine is turbocharged / supercharged.
+
+    A stored 'Naturally Aspirated' is an explicit label (D-ET2), not a missing one:
+    it answers False without falling through to the badge text.
+    """
     fi = car.get("forced_induction")
     if fi not in (None, "") and str(fi).strip().lower() not in ("0", "false", "none", "na"):
-        return True
+        from backend.utils.forced_induction import has_forced_induction
+
+        return has_forced_induction(str(fi))
     text = " ".join(
         str(car.get(k) or "")
         for k in ("engine_description", "engine_display", "trim", "title")
