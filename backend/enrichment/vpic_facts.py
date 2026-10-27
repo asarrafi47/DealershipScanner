@@ -432,11 +432,9 @@ def _heal_chunk(cur, rows: list[dict[str, Any]], flats: dict[str, dict[str, str]
         if not any(vp.get(k) for k in ("drivetrain", "electrification", "fuel_type")) and not flat:
             continue
         stats["decoded"] += 1
-        decisions = _vin_decisions(r, vp)
-        ch = {f: (r.get(f) if f != "fuel_type" else (str(r.get(f) or "").strip() or None), d.value)
-              for f, d in decisions.items()}
+        ch = dict(vin_overrides(r, vp))
         sources = {f: "nhtsa_vpic" for f in ch}
-        cannot = {f for f, d in decisions.items() if d.cannot_assess}
+        cannot = {f for f, d in _vin_decisions(r, vp).items() if d.cannot_assess and f in ch}
         for field, (old, text) in derived_fills(r, vp, flat).items():
             if field == "engine_description":
                 d = prec.decide(field, r.get(field), r.get("spec_source_json"), text, prec.NHTSA_VPIC)
