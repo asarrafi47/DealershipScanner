@@ -93,8 +93,8 @@ def test_rowcount_zero_is_never_success(pg, monkeypatch) -> None:
 
     real = rs._snapshot
 
-    def stale_read(cur, dealer_id):
-        out = real(cur, dealer_id)
+    def stale_read(cur, dealer_id, *args, **kwargs):
+        out = real(cur, dealer_id, *args, **kwargs)
         return out if out is None else type(out)(**{**out.__dict__, "rev": out.rev - 1})
 
     monkeypatch.setattr(rs, "_snapshot", stale_read)

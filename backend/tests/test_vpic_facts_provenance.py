@@ -166,7 +166,7 @@ def test_tiebreak_never_fires_on_dealer_awd_or_4wd(conn, decode):
 
 @pg
 def test_tiebreak_fills_blank_and_records_its_source(conn, decode):
-    vin = "1FTFW1E500000001"
+    vin = "1FTFW1E5X00000001"
     decode[vin] = {"drivetrain": None, "fuel_type": "Gasoline"}
     _car(conn, 1, vin, None, engine="3.5L", epa=_epa(conn, "Rear-Wheel Drive"))
     stats = vf.heal_rows(conn)
@@ -177,7 +177,7 @@ def test_tiebreak_fills_blank_and_records_its_source(conn, decode):
 
 @pg
 def test_tiebreak_does_not_swap_an_explicit_dealer_end(conn, decode):
-    vin = "1FTFW1E500000002"
+    vin = "1FTFW1E5X00000002"
     decode[vin] = {"drivetrain": None, "fuel_type": "Gasoline"}
     _car(conn, 1, vin, "FWD", engine="3.5L", epa=_epa(conn, "Rear-Wheel Drive"))
     vf.heal_rows(conn)
@@ -257,6 +257,8 @@ def test_refresh_replaces_partial_but_never_a_full_decode(conn, monkeypatch):
     assert st["refreshed"] == 1
     raw = conn.execute("SELECT response_json FROM nhtsa_vpic_cache WHERE vin=?", ("W1NKM4GB9VU154744",)).fetchone()[0]
     assert json.loads(raw)["Results"][0]["ErrorCode"] == "0"
+    conn.execute("UPDATE nhtsa_vpic_cache SET fetched_at = '2026-07-18T00:00:00Z' WHERE vin = 'W1NKM4GB9VU154744'")
+    conn.commit()
     # the full decode now cached is old enough to select by age, but a partial answer must not replace it
     bad = {"Results": [{"VIN": "W1NKM4GB9VU154744", "ErrorCode": "5", "ModelYear": "2027"}]}
     monkeypatch.setattr(vf, "fetch_vpic_batch", lambda v: {"W1NKM4GB9VU154744": bad})

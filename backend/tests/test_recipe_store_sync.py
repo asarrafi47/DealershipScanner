@@ -469,11 +469,11 @@ def test_a_recipe_another_host_adds_during_a_merge_survives(env, monkeypatch) ->
     real = rs._cas_write
     fired: list[int] = []
 
-    def racing(cur, dealer_id, current, cols):
+    def racing(cur, dealer_id, current, cols, *args, **kwargs):
         if not fired:
             fired.append(1)
             rs.db_mutate(D, lambda c: c.rows + [asdict(_rec("https://a.example/theirs", saved_at=9.0))])
-        return real(cur, dealer_id, current, cols)
+        return real(cur, dealer_id, current, cols, *args, **kwargs)
 
     monkeypatch.setattr(rs, "_cas_write", racing)
     rec.merge_recipes(D, [_rec("https://a.example/mine", vehicle_rows=4)])

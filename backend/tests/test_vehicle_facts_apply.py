@@ -34,7 +34,7 @@ def test_only_accepted_fields_written_with_value_provenance(pg_db):
     res = apply_fact_proposals(None, cid, [("drivetrain", "AWD"), ("fuel_type", "Gasoline")],
                                prec.NHTSA_VPIC, vpic={"drivetrain": "AWD"})
     d, f, _, prov = _row(pg_db, cid)
-    assert res.written and d == "AWD" and f is None  # plain gasoline from vPIC stays unwritten (N15.5)
+    assert res.written and d == "AWD" and f == "Gasoline"  # N15.5: vPIC plain Gasoline fills a blank fuel
     assert prov["drivetrain"]["source"] == prec.NHTSA_VPIC
     assert prov["drivetrain"]["value"] == "AWD"
     assert "fetched_at" in prov["drivetrain"]
