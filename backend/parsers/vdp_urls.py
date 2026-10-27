@@ -13,11 +13,28 @@ from urllib.parse import urlparse
 # feed. An invented URL says nothing about whose car it is, so the attribution gate
 # never treats its host as evidence (N8.5).
 GUESSED_KEY = "_source_url_guessed"
+# Platform whose URL scheme the guess followed. Only a dealer.com guess is worth fetching:
+# on DealerOn / Motive and unknown platforms the pattern 404s (2,728 fetches, N18.8).
+GUESS_PLATFORM_KEY = "_source_url_guess_platform"
+GUESS_FETCHABLE_PLATFORMS = frozenset({"dealer_dot_com"})
+# Row keys that carry a link the feed itself gave us, best first. ``_source_url`` is the
+# JSON-LD / payload URL (N18.8).
+EXPLICIT_URL_KEYS = ("_source_url", "source_url", "_detail_url", "detail_url")
 
 
-def mark_guessed(row: dict) -> None:
-    """Flag *row*'s detail URL as invented (see :data:`GUESSED_KEY`)."""
+def mark_guessed(row: dict, platform: str | None = None) -> None:
+    """Flag *row*'s detail URL as invented (see :data:`GUESSED_KEY`); *platform* names the
+    URL scheme the guess followed."""
     row[GUESSED_KEY] = True
+    if platform:
+        row[GUESS_PLATFORM_KEY] = platform
+
+
+def guessed_url_fetchable(row: dict) -> bool:
+    """False for a row whose detail URL was invented for a platform that does not serve it."""
+    if not row.get(GUESSED_KEY):
+        return True
+    return row.get(GUESS_PLATFORM_KEY) in GUESS_FETCHABLE_PLATFORMS
 
 
 def looks_like_real_vin(vin: str) -> bool:
@@ -191,7 +208,7 @@ def resolve_vehicle_source_url(vehicle: dict) -> str | None:
     if not vehicle:
         return None
     dealer_url = _normalize_http_url(vehicle.get("dealer_url"))
-    for key in ("source_url", "_detail_url", "detail_url"):
+    for key in EXPLICIT_URL_KEYS:
         u = _normalize_http_url(vehicle.get(key))
         if u and not is_dealer_site_homepage(u, dealer_url):
             return u
@@ -211,10 +228,14 @@ def apply_vehicle_source_url(vehicle: dict) -> None:
     if resolved:
         # an explicit link was resolved as-is; anything else was constructed
         explicit = {
-            u for u in (_normalize_http_url(vehicle.get(k)) for k in ("source_url", "_detail_url", "detail_url")) if u
+            u for u in (_normalize_http_url(vehicle.get(k)) for k in EXPLICIT_URL_KEYS) if u
         }
         if resolved not in explicit:
             mark_guessed(vehicle)
+        elif resolved == _normalize_http_url(vehicle.get("_source_url")):
+            # the payload's own link outranks an earlier guess on the same row
+            vehicle.pop(GUESSED_KEY, None)
+            vehicle.pop(GUESS_PLATFORM_KEY, None)
         vehicle["source_url"] = resolved
         if not vehicle.get("_detail_url"):
             vehicle["_detail_url"] = resolved

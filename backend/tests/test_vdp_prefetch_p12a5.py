@@ -251,7 +251,7 @@ def test_pass_success_clears_the_row(monkeypatch):
 
     def _ok(url):
         pf._LAST_STATUS[url] = 200
-        return BIG
+        return BIG + car[0]["vin"]  # the page names the car (N18.8)
 
     monkeypatch.setattr(pf, "_fetch_html", _ok)
     asyncio.run(pf.http_prefetch_missing_fields(car, d))

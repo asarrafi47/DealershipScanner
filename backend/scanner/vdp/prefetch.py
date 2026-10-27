@@ -302,6 +302,53 @@ def _extras_missing(v: dict[str, Any]) -> bool:
     return _empty(v.get("stock_number")) or (not is_new and _empty(v.get("carfax_url")))
 
 
+def _vdp_url(v: dict[str, Any]) -> str:
+    """The page to fetch for *v*: the feed's own link (``_source_url`` first), else the
+    detail URL, else ``source_url`` (N18.8)."""
+    for k in ("_source_url", "_detail_url", "source_url"):
+        u = str(v.get(k) or "").strip()
+        if u.startswith("http"):
+            return u
+    return ""
+
+
+def _vdp_url_fetchable(v: dict[str, Any]) -> bool:
+    """False when the only link is a URL invented for a platform that does not serve it.
+    An explicit ``_source_url`` always counts: the feed gave it."""
+    from backend.parsers.vdp_urls import guessed_url_fetchable
+
+    if str(v.get("_source_url") or "").strip().startswith("http"):
+        return True
+    return guessed_url_fetchable(v)
+
+
+def _vin_on_page(vin: Any, html: str) -> bool:
+    """True when *vin* appears in the page text. Fields from a page that does not name the
+    car (a redirect to search results, another car's page) must not be applied (N18.8)."""
+    v = str(vin or "").strip().upper()
+    return bool(v) and v in (html or "").upper()
+
+
+def _f5_old_unpriced(v: dict[str, Any]) -> bool:
+    """F5: an old or high-mileage used car still without a price. After a VIN-matched page
+    fetch that left it unpriced it is counted, not retried (IL-F5; verdict needs 2 scans)."""
+    from backend.scanner.utils.vdp_price_merge import listing_price_is_empty
+
+    if not listing_price_is_empty(v):
+        return False
+    if str(v.get("condition") or "").strip().lower().startswith("new"):
+        return False
+    try:
+        year = int(v.get("year") or 0)
+    except (TypeError, ValueError):
+        year = 0
+    try:
+        miles = int(v.get("mileage") or 0)
+    except (TypeError, ValueError):
+        miles = 0
+    return bool((0 < year < 2016) or miles >= 125000)
+
+
 def _vehicle_wants_http_prefetch(v: dict[str, Any]) -> bool:
     """Every gap the browser queue would otherwise visit for: price, spec fields,
     colours, and (since 2026-09-22) description and a thin gallery. Those last two
@@ -630,9 +677,15 @@ async def http_prefetch_missing_fields(
     if timing is None:
         timing = await asyncio.to_thread(_dealer_timing, dealer_id) if dealer_id else {}
     candidates: list[dict[str, Any]] = []
+    guessed_skipped = 0
     for v in vehicles:
-        url = str(v.get("_detail_url") or v.get("source_url") or "").strip()
-        if url.startswith("http") and _vehicle_wants_http_prefetch(v):
+        url = _vdp_url(v)
+        if not url.startswith("http"):
+            continue
+        if not _vdp_url_fetchable(v):
+            guessed_skipped += 1
+            continue
+        if _vehicle_wants_http_prefetch(v):
             candidates.append(v)
     # Cars with a real data gap (price, colour, trim, photos) as opposed to extras only (P12A.5).
     with_gap = sum(1 for v in candidates if _gap_rank(v) < _GAP_RANK_NONE)
@@ -667,6 +720,8 @@ async def http_prefetch_missing_fields(
     }
     if ledger_skipped:
         stats["ledger_skipped"] = ledger_skipped
+    if guessed_skipped:
+        stats["guessed_url_skipped"] = guessed_skipped
     if not candidates:
         return stats
 
@@ -746,7 +801,7 @@ async def http_prefetch_missing_fields(
         return html, st
 
     async def _one(v: dict[str, Any]) -> None:
-        url = str(v.get("_detail_url") or v.get("source_url") or "").strip()
+        url = _vdp_url(v)
         html, st = await _fetch_paced(url)
         attempts = 0
         while not html and st in _BLOCK_STATUSES and attempts < 2:
@@ -762,7 +817,14 @@ async def http_prefetch_missing_fields(
             wins = stats.setdefault("profile_wins", {})
             wins[won] = wins.get(won, 0) + 1
         vin = str(v.get("vin") or "").strip().upper()
-        if html:
+        if html and not _vin_on_page(vin, html):
+            # a 200 that does not name the car: nothing from it may be applied, and it
+            # counts as a failed attempt so the ledger backs the car off
+            stats["vin_not_on_page"] = stats.get("vin_not_on_page", 0) + 1
+            if vin:
+                failed_vins.append((vin, st, "vin_not_on_page"))
+            html = None
+        elif html:
             ok_vins.append(vin)
         elif st is not None and vin:  # None = a skipped host: no request was made, nothing to count
             failed_vins.append((vin, st, "blocked" if st in _BLOCK_STATUSES else ("error" if st == 0 else f"http_{st}")))
@@ -778,6 +840,8 @@ async def http_prefetch_missing_fields(
         stats["fields_filled"] += _apply_page_fields(v, html, url)
         if not had_desc and not _description_short(v):
             stats["descriptions_filled"] += 1
+        if _f5_old_unpriced(v):
+            stats["f5_unpriced_after_vdp"] = stats.get("f5_unpriced_after_vdp", 0) + 1
         if v.pop("_gallery_http_prefetch_added", 0):
             stats["galleries_extended"] += 1
 
@@ -814,7 +878,7 @@ def _premark_slow_hosts(vehicles: list[dict[str, Any]], dealer_id: str) -> None:
         if not any("carscommerce" in (urlparse(r.url).hostname or "") for r in load_recipes(dealer_id)):
             return
         for v in vehicles:
-            u = str(v.get("_detail_url") or v.get("source_url") or "")
+            u = _vdp_url(v)
             host = (urlparse(u).hostname or "").lower()
             if host:
                 _SLOW_HOSTS.add(host)
