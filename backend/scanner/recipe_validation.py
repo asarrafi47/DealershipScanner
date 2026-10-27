@@ -420,20 +420,37 @@ class RecipeValidationReport:
 # ── the check ──────────────────────────────────────────────────────────────────
 
 def _parse_rows(recipe: EndpointRecipe, parsed: Any, *, base_url: str, dealer_id: str, dealer_name: str,
-                place: dict[str, str] | None) -> tuple[list[dict], int]:
-    """This store's rows for one page and how many the rooftop gate refused."""
-    from backend.parsers import _cached_roster_place_items, parse
+                place: dict[str, str] | None) -> tuple[list[dict], set[str]]:
+    """This store's rows for one page and the VINs the rooftop gate refused.
 
-    kw = dict(_cached_roster_place_items(base_url))
-    kw.update({k: v for k, v in (place or {}).items()
-               if k in ("dealer_address", "dealer_city", "dealer_state", "dealer_zip") and v})
-    rejected: list[dict] = []
-    rows = parse(
-        recipe.provider_hint or "", parsed,
-        base_url=base_url, dealer_id=dealer_id, dealer_name=dealer_name, dealer_url=base_url,
-        rejected_out=rejected, trust_feed_scope=recipe_is_store_scoped(recipe, dealer_name), **kw,
-    )
-    return list(rows or []), len(rejected)
+    Parsed through ``attribution.parse_page`` with a ``DealerCtx`` over *place*, the
+    call the scan makes (recipes.py). *place* is already complete: the caller-side
+    lookup is :func:`_store_place_for`, once per validation call."""
+    from backend.attribution import DealerCtx, gate_place, parse_page
+
+    ctx = DealerCtx(dealer_id, dealer_name, base_url, gate_place(place))
+    refused: list[dict] = []
+    rows = parse_page(recipe.provider_hint or "", parsed, ctx, refused,
+                      trust_feed_scope=recipe_is_store_scoped(recipe, dealer_name))
+    return list(rows or []), _unique_vins(refused)
+
+
+def _store_place_for(base_url: str, dealer_id: str, place: dict[str, str] | None) -> dict[str, str]:
+    """The place the scan would gate this store with: ``attribution.store_place``
+    (registry plus the hinted street), merged key by key UNDER the caller's *place*
+    (the caller wins). Read once per validation call, never per page. Any lookup
+    failure (no DB) falls back silently to the caller's place, or ``{}``."""
+    from backend.attribution import gate_place
+
+    caller = gate_place(place)
+    try:
+        import backend.attribution as attribution
+
+        found = gate_place(attribution.store_place(base_url, dealer_id))
+    except Exception as exc:  # noqa: BLE001 - attribution help must never break a validation
+        logger.debug("store place lookup skipped [%s]: %s", dealer_id, exc)
+        found = {}
+    return {**found, **{k: v for k, v in caller.items() if v}}
 
 
 def _check_recipe(recipe: EndpointRecipe, *, fetch: Fetch, base_url: str, dealer_id: str, dealer_name: str,
@@ -455,7 +472,8 @@ def _check_recipe(recipe: EndpointRecipe, *, fetch: Fetch, base_url: str, dealer
     by_cond: dict[str, set[str]] = {}
     n_pages = 1 if recipe.pagination == PAGINATION_NONE else max(1, pages)
     page1_parsed: Any = None
-    page1_vins = 0
+    raw_vins: set[str] = set()
+    page1_raw = 0
     for i in range(n_pages):
         body = _mutate_for_page(recipe, template, i) if template is not None else None
         url = _url_for_page(recipe, i)
@@ -487,35 +505,86 @@ def _check_recipe(recipe: EndpointRecipe, *, fetch: Fetch, base_url: str, dealer
                 # the server's real page size, or page 2 starts past the end (recipes.py)
                 _learn_dealer_com_page_size(template, parsed, dealer_name)
         rows, refused = _parse_rows(recipe, parsed, base_url=base_url, dealer_id=dealer_id, dealer_name=dealer_name, place=place)
-        chk.gate_rejected += refused
+        chk.gate_rejected += len(refused)
         page_vins = _unique_vins(rows)
         new = page_vins - vins
+        # Termination reads RAW rows (kept plus refused), as the scan's walk does: a page
+        # of nothing but a group feed's sibling rooftops holds no kept VIN yet is not the end.
+        new_raw = (page_vins | refused) - raw_vins
         rec["rows"] = len(rows)
         rec["new_vins"] = len(new)
+        rec["raw_new_vins"] = len(new_raw)
         chk.pages.append(rec)
         for r in rows:
             v = str(r.get("vin") or "").strip().upper()
             if v and v in new:
                 by_cond.setdefault(normalize_condition(r.get("condition")), set()).add(v)
         vins |= new
+        raw_vins |= new_raw
         if i == 0:
-            page1_vins = len(new)
-        if not new:
+            page1_raw = len(new_raw)
+        if not new_raw:
             chk.exhausted = True
             break
-        if chk.site_total is not None and len(vins) >= chk.site_total:
+        if chk.site_total is not None and len(raw_vins) >= chk.site_total:
             chk.exhausted = True
             break
     if recipe.pagination == PAGINATION_NONE:
         chk.exhausted = True  # single-shot: there is no further page to read
     chk.vins = len(vins)
     chk.per_condition = {c: len(s) for c, s in sorted(by_cond.items())}
-    # A short page is a 200 that adds nothing while the site says more exists;
-    # a 401/403/5xx on page 2 is an auth or edge problem, reported as such.
-    if (n_pages > 1 and len(chk.pages) >= 2 and chk.pages[1].get("status") == 200 and chk.pages[1].get("new_vins", 0) == 0
-            and chk.site_total and page1_vins < chk.site_total * SHORT_PAGE_TOLERANCE):
+    # A short page is a 200 that adds nothing (not even a refused sibling row) while the
+    # site says more exists; a 401/403/5xx on page 2 is an auth or edge problem, reported as such.
+    if (n_pages > 1 and len(chk.pages) >= 2 and chk.pages[1].get("status") == 200 and chk.pages[1].get("raw_new_vins", 0) == 0
+            and chk.site_total and page1_raw < chk.site_total * SHORT_PAGE_TOLERANCE):
         chk.short_page = True
     return chk, vins, by_cond, template, page1_parsed
+
+
+@dataclass
+class RecipeChecks:
+    """What :func:`check_all` read: one walk per recipe plus the context
+    :func:`judge` needs (its census and other-side probes fetch again)."""
+
+    dealer_id: str
+    base_url: str
+    dealer_name: str
+    place: dict[str, str]
+    pages: int
+    fetch: Fetch
+    walks: list[tuple[EndpointRecipe, RecipeCheck, set[str], dict[str, set[str]], Any]] = field(default_factory=list)
+
+
+def check_all(
+    dealer_id: str,
+    recipes: list[EndpointRecipe],
+    fetch: Fetch | None = None,
+    *,
+    base_url: str = "",
+    dealer_name: str = "",
+    place: dict[str, str] | None = None,
+    pages: int = PAGES_REPLAYED,
+) -> RecipeChecks:
+    """Walk every recipe once (*pages* each) and keep what was read. No verdict:
+    :func:`judge` decides from these, so a save path can walk once and judge the
+    cached checks against whatever floors apply.
+
+    *fetch* defaults to ``recipes._replay_request`` (the scan's own request
+    function). *place* is the store's postal place for the rooftop gate; the scan's
+    own store place (:func:`_store_place_for`) is read once here and the caller's
+    keys win."""
+    fetch = fetch or _replay_request
+    if not base_url:
+        first = next((r.url for r in recipes if r.url), "")
+        p = urlparse(first)
+        base_url = f"{p.scheme}://{p.netloc}" if p.netloc else ""
+    dealer_name = dealer_name or dealer_id
+    place = _store_place_for(base_url, dealer_id, place) if recipes else dict(place or {})  # once per call, not per page
+    out = RecipeChecks(dealer_id, base_url, dealer_name, place, pages, fetch)
+    for r in recipes:
+        out.walks.append((r, *_check_recipe(
+            r, fetch=fetch, base_url=base_url, dealer_id=dealer_id, dealer_name=dealer_name, place=place, pages=pages)))
+    return out
 
 
 def validate_recipe_set(
@@ -528,24 +597,25 @@ def validate_recipe_set(
     place: dict[str, str] | None = None,
     pages: int = PAGES_REPLAYED,
     one_condition_ok: set[str] | None = None,
+    checks: RecipeChecks | None = None,
 ) -> RecipeValidationReport:
-    """Judge *recipes* as the set the scan will replay for *dealer_id*.
+    """Judge *recipes* as the set the scan will replay for *dealer_id*:
+    :func:`check_all` then :func:`judge`. Pass *checks* (a prior ``check_all``) to
+    judge a walk already read instead of walking again."""
+    if checks is None:
+        checks = check_all(dealer_id, recipes, fetch, base_url=base_url, dealer_name=dealer_name, place=place, pages=pages)
+    return judge(checks, one_condition_ok=one_condition_ok)
 
-    *fetch* defaults to ``recipes._replay_request`` (the scan's own request
-    function). *place* is the store's postal place for the rooftop gate
-    (``dealer_city`` / ``dealer_state`` / ``dealer_zip`` / ``dealer_address``).
-    """
-    fetch = fetch or _replay_request
-    if not base_url:
-        first = next((r.url for r in recipes if r.url), "")
-        p = urlparse(first)
-        base_url = f"{p.scheme}://{p.netloc}" if p.netloc else ""
-    dealer_name = dealer_name or dealer_id
+
+def judge(checks: RecipeChecks, *, one_condition_ok: set[str] | None = None) -> RecipeValidationReport:
+    """The verdict over walks :func:`check_all` read."""
+    dealer_id, fetch, base_url, dealer_name, place, pages = (
+        checks.dealer_id, checks.fetch, checks.base_url, checks.dealer_name, checks.place, checks.pages)
     ok_ids = one_condition_ok if one_condition_ok is not None else one_condition_ok_ids()
     rep = RecipeValidationReport(dealer_id=dealer_id, pages_replayed=pages,
                                  stamp=datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC"))
     flags = {"one_condition": False, "section_scoped": False, "short_page": False, "auth_needed": False, "zero_rows": False}
-    if not recipes:
+    if not checks.walks:
         flags["zero_rows"] = True
         rep.flags = flags
         rep.verdict, rep.reasons = "reject", ["zero_rows: no recipe to validate"]
@@ -554,14 +624,12 @@ def validate_recipe_set(
     all_vins: set[str] = set()
     by_cond: dict[str, set[str]] = {}
     checked: list[tuple[EndpointRecipe, RecipeCheck, Any]] = []
-    for r in recipes:
-        chk, vins, conds, template, _page1 = _check_recipe(
-            r, fetch=fetch, base_url=base_url, dealer_id=dealer_id, dealer_name=dealer_name, place=place, pages=pages)
+    for r, chk, vins, conds, template, _page1 in checks.walks:
         rep.recipes.append(chk)
         checked.append((r, chk, template))
         all_vins |= vins
-        for c, s in conds.items():
-            by_cond.setdefault(c, set()).update(s)
+        for c, s_ in conds.items():
+            by_cond.setdefault(c, set()).update(s_)
     rep.vins_total = len(all_vins)
     rep.per_condition = {c: len(s) for c, s in sorted(by_cond.items())}
     sides_seen = {_side(c) for c, n in rep.per_condition.items() if n and c != "unknown"}
@@ -779,6 +847,8 @@ def gate_recipes(
     context: str = "synth",
     log_root: Path | None = None,
     record: bool = True,
+    pages: int | None = None,
+    checks: RecipeChecks | None = None,
 ) -> tuple[list[EndpointRecipe], RecipeValidationReport]:
     """Validate the set and apply the verdict: ``reject`` returns ``[]`` (nothing
     to save) and logs the report; ``uncertain`` and ``ok`` return the recipes.
@@ -788,8 +858,17 @@ def gate_recipes(
     ``record=False`` is for a caller that will not save the set (a dry run, or a
     dealer that keeps its healthy recipe): the same verdict comes back and
     nothing is written, so a status that describes no saved set never reaches
-    the store."""
-    report = validate_recipe_set(dealer_id, recipes, fetch, base_url=base_url, dealer_name=dealer_name, place=place)
+    the store.
+
+    *pages* is how many pages each recipe is read for (default
+    :data:`PAGES_REPLAYED`); *checks* is a walk already read by :func:`check_all`,
+    judged as it is instead of fetching again."""
+    kw: dict[str, Any] = {}
+    if pages is not None:
+        kw["pages"] = pages
+    if checks is not None:
+        kw["checks"] = checks
+    report = validate_recipe_set(dealer_id, recipes, fetch, base_url=base_url, dealer_name=dealer_name, place=place, **kw)
     if record:
         write_discovery_log(dealer_id, report, context, log_root)
         record_recipe_status(dealer_id, report, context)
@@ -805,10 +884,13 @@ def gate_recipes(
 
 __all__ = [
     "RecipeCheck",
+    "RecipeChecks",
     "RecipeValidationReport",
     "SITE_TOTAL_EXTRACTORS",
     "extract_site_total",
+    "check_all",
     "gate_recipes",
+    "judge",
     "normalize_condition",
     "one_condition_ok_ids",
     "other_side_recipe",

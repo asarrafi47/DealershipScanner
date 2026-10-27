@@ -39,7 +39,10 @@ def _no_registry_or_db(monkeypatch):
     import backend.parsers as parsers
     from backend.scanner import recipe_store
 
+    import backend.attribution as attribution
+
     monkeypatch.setattr(parsers, "_cached_roster_place_items", lambda url: ())
+    monkeypatch.setattr(attribution, "store_place", lambda *a, **k: {})
     monkeypatch.setattr(recipe_store, "set_scan_hints", lambda *a, **k: True)
     monkeypatch.setattr(recipe_store, "db_load_recipes", lambda *a, **k: [])
     monkeypatch.setattr(recipe_store, "db_read", lambda *a, **k: None)
@@ -578,3 +581,69 @@ def test_hinted_street_is_what_keeps_the_captured_rows(monkeypatch, _no_ledger):
     rep = rv.validate_recipe_set(HH, [cc], _hh_feed(), base_url=HH_ORIGIN, dealer_name="Honda Of Huntersville", place=place, one_condition_ok=set())
     assert rep.vins_total == 6 and rep.recipes[0].gate_rejected == 1  # the Hoover sibling, and only it
     assert rep.verdict in ("ok", "uncertain") and not rep.flags["zero_rows"]
+
+
+# ── P12B.1: validation gates with the scan's store place ───────────────────────
+
+def _hh_cc():
+    return EndpointRecipe(dealer_id=HH, url=CC_URL, method="POST", content_type="application/json",
+                          post_template=json.dumps({"page": 1, "perPage": 100, "filters": {"status": ["publish"]}}),
+                          pagination=PAGINATION_CARSCOMMERCE, provider_hint="carscommerce", auth_headers={"x-api-key": "k"})
+
+
+_HH_TOWN = {"dealer_city": "Huntersville", "dealer_state": "NC", "dealer_zip": "28078"}
+
+
+def test_store_place_completes_a_caller_with_no_place(monkeypatch):
+    """Honda of Huntersville: registry town only, the street in scan hints. The validator
+    asks attribution.store_place itself, so the caller need pass no place."""
+    import backend.attribution as attribution
+
+    monkeypatch.setattr(attribution, "store_place", lambda url, did, *a: dict(_HH_TOWN, dealer_address=HH_STREET))
+    rep = rv.validate_recipe_set(HH, [_hh_cc()], _hh_feed(), base_url=HH_ORIGIN, dealer_name="Honda Of Huntersville",
+                                 place=None, one_condition_ok=set())
+    assert rep.vins_total == 6 and rep.recipes[0].gate_rejected == 1
+    assert not rep.flags["zero_rows"]
+
+
+def test_caller_place_wins_over_the_store_place(monkeypatch):
+    import backend.attribution as attribution
+
+    monkeypatch.setattr(attribution, "store_place", lambda url, did, *a: dict(_HH_TOWN, dealer_address="1 Wrong St"))
+    seen = {}
+    real = rv._parse_rows
+
+    def spy(recipe, parsed, **kw):
+        seen.update(kw["place"])
+        return real(recipe, parsed, **kw)
+
+    monkeypatch.setattr(rv, "_parse_rows", spy)
+    rv.validate_recipe_set(HH, [_hh_cc()], _hh_feed(), base_url=HH_ORIGIN, dealer_name="Honda Of Huntersville",
+                           place={"dealer_address": HH_STREET}, one_condition_ok=set())
+    assert seen["dealer_address"] == HH_STREET and seen["dealer_city"] == "Huntersville"
+
+
+def test_store_place_is_read_once_per_call(monkeypatch):
+    import backend.attribution as attribution
+
+    calls = []
+    monkeypatch.setattr(attribution, "store_place", lambda *a, **k: calls.append(a) or dict(_HH_TOWN))
+    rv.validate_recipe_set(HH, [_hh_cc(), _hh_cc()], _hh_feed(), base_url=HH_ORIGIN, dealer_name="Honda Of Huntersville",
+                           pages=3, one_condition_ok=set())
+    assert len(calls) == 1
+
+
+def test_store_place_failure_falls_back_to_the_caller_place(monkeypatch):
+    import backend.attribution as attribution
+
+    def down(*a, **k):
+        raise RuntimeError("db down")
+
+    monkeypatch.setattr(attribution, "store_place", down)
+    full = dict(_HH_TOWN, dealer_address=HH_STREET)
+    rep = rv.validate_recipe_set(HH, [_hh_cc()], _hh_feed(), base_url=HH_ORIGIN, dealer_name="Honda Of Huntersville",
+                                 place=full, one_condition_ok=set())
+    assert rep.vins_total == 6
+    rep = rv.validate_recipe_set(HH, [_hh_cc()], _hh_feed(), base_url=HH_ORIGIN, dealer_name="Honda Of Huntersville",
+                                 place=None, one_condition_ok=set())
+    assert rep.verdict == "reject" and rep.recipes[0].gate_rejected == 7  # no place anywhere: today's refusal
