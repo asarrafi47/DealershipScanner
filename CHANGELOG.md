@@ -2,6 +2,39 @@
 
 ## [Unreleased]
 
+### N11 (draft)
+- Added the clean-room conversion DB prep script (prep_conv_db.sh; leaves schema_migrations alone because it runs after migrate --apply), a pass-A gate fixture with bound operators and a determinism compare (N11.1a, N11.3a, N11.4a). Only these three units are drafted; the clean-room run, Docker and prod steps are owner-gated.
+
+### N13 (draft)
+- Added migration V034 on dealer_recipes (rev, recipes_written_at, superseded_json) with compare-and-set db_read/db_mutate/mutate_scan_hints (P7.1, P14A.9).
+- load_recipes is store-authoritative; recipe_cache.py writes atomically under flock with a guard backup; hints-only rows no longer hide alias recipes (P7.2).
+- Key-scoped recipe mutation API (mark_stale, record_replay_ok, merge_recipes, replace_recipes) with an offline op-log under _pending/ replayed on the next reachable load; a recipe save whose store write-through fails no longer wins on next load, the op-log retains it (P7.3).
+- Replay and promotion use the mutation API; reconcile_recipe_store applies through CAS and gains --compare-cache (P7.4, P7.9a).
+- replace_recipes archives the old recipes into superseded_json (30-day prune, restore command) (P7.5).
+- Per-host blocked status in scan_hints.recipe_blocked[tag] and per-host lifecycle_last_attempt; legacy blocked: is still honoured (P7.6).
+- Phase-0 reader backcompat test, rollback runbook and authority-model docs (P7.7, P7.8). The recipe_store SQLite ladder stays for six legacy test files; full conversion is deferred.
+
+### N15 (draft)
+- Read-only precedence invariants for vPIC fuel, drive, cylinders and displacement, stale drivetrain provenance and sticker-vs-vPIC, plus an informational tiebreak report (P8A.1).
+- apply_fact_proposals: the one DB-aware apply path over vehicle_facts.precedence (P8A.3).
+- Heal reads vpic_facts through precedence with per-field provenance (value at scan time), chunked commits, a fields= filter, explicit tiebreak grouping (D-PR4), vin_overrides, and cannot_assess from decisions (P8A.4).
+- N15.5: vPIC fills plain Gasoline through precedence and F maps to Gasoline; injection-fuel repair script (dry run by default) (N15.5, N15.5b).
+- Decode refresh by ErrorCode, age and model year; the dry run decodes and writes nothing (P8A.5).
+- Heal driver script (backup count check, preflight, owner-gated apply, guarded rollback, dealer summary appender); never run with --apply (P8A.7a).
+
+### N20 (draft)
+- Merged the 97 root-only [Brochure Summary] rows into options/raw copies (merge_root_summary_rows.py, dry run default) (P9.1).
+- In-memory options index is the sole Complete_Options resolver; EPA exact-model step runs before the family-label glob (P9.2).
+- 20-car before/after resolve_trim_ladder diff script for owner sign-off; in-image catalog decision recorded as closed (P9.2b, P9.6).
+- Deleted the 614 root Complete_Options duplicates after a content pre-flight and dropped the legacy-root importer branch (P9.3).
+- Deleted the 2,004 header-only options/stubs files after a pre-flight (options_stub=0, options_rich unchanged at 7889) (P9.4).
+- Script-only dictionary trees are fenced out of Docker and Railway uploads; brochure_text gate test and logged fallback (P9.7).
+
+### N27 (draft)
+- Static runtime-DDL guard test; deleted drop_dead_zip_code_column.py and fixed the zip_code comment (D-DB8 keep) (P13A.3, P13A.8).
+- db_snapshot helper: four repair/backfill scripts snapshot into the backups schema with timestamps and refuse to overwrite (P13A.7).
+- backend.web.db_bootstrap wired into every launcher; assert_production_security_config now checks ADMIN_PASSWORD (P13A.5). Units for SQLite/Postgres portability were skipped (superseded by N37).
+
 ### N10 (draft)
 - Scanner lock: a refused scan now raises ScanLockHeld and the CLI exits 75 (EX_TEMPFAIL) instead of exiting 0; the refusal log line is unchanged.
 - Scanner lock is now an fcntl.flock held for the life of the process; a SIGKILLed holder or a recycled PID can no longer wedge the lock. SCANNER_LOCK_PATH is resolved at use time, and the pipeline's lock probe uses the same liveness rule.

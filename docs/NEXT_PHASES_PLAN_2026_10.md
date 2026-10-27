@@ -1938,6 +1938,15 @@ Rehearse the prod first run and the local repair. Then tag v1.6.0.
 
 **Owner decisions / actions.** D-N25 (runs, restore, live checks), D-RC5, D-RC6; the `git switch --detach <RC_SHA>`; sign P5A.8 and the RC report; caffeinate verified (AC recommended).
 
+**Draft status (integ/draft, merge 857eef0c7; branch phase/N11 head 511febb43).**
+
+| Unit | sha | Acceptance met | Deferred |
+|---|---|---|---|
+| N11.1a, N11.3a, N11.4a | 9ae54ca39, 511febb43 | conv DB prep script (prep_conv_db.sh; follow-up leaves schema_migrations alone since it runs after migrate --apply), pass-A gate fixture with bound operators, determinism compare; tests test_cleanroom_prep_conv, test_cleanroom_acceptance, test_cleanroom_determinism_compare (pass status not verified here) | none for the drafted units |
+| N11.1b and later (clean-room run, release candidate, tag, v1.6.0) | none | not drafted | clean-room run, Docker and prod steps are owner-gated |
+
+Owner asks: approve the clean-room run on the conv DB, Docker use, and any prod step.
+
 ---
 
 ### N12 Prod refresh (Phase 6B): fresh, correct data without wiping prod
@@ -2088,6 +2097,20 @@ If D-N34 = no, the LE-14 overlap clean-up (7 dealers) runs here, through the P7.
 
 **Owner decisions / actions.** D-RS1-D-RS4.
 
+**Draft status (integ/draft, merge c4a8bf165; branch phase/N13 head 5161fb802).**
+
+| Unit | sha | Acceptance met | Deferred |
+|---|---|---|---|
+| P7.1, P14A.9 | 632aa2c64, 31e608054 | dealer_recipes compare-and-set (V034: rev, recipes_written_at, superseded_json); db_read/db_mutate/mutate_scan_hints; PG CAS tests (test_recipe_store_cas_pg); qmark literals allowlisted | PG tier needs a TEST_PG_ADMIN_DSN server: not verified here |
+| P7.2 | 426baf3ee | store-authoritative load_recipes, recipe_cache.py (atomic write, flock, guard backup), hints-only rows no longer hide alias recipes, store seeded from cache | none known |
+| P7.3 | 43a5aafd4 | key-scoped mutation API (mark_stale observed_at, record_replay_ok, merge_recipes, replace_recipes stub), mutated_at stamp, offline op-log under _pending/<store fingerprint> replayed on next reachable load | a recipe save whose store write-through fails no longer wins on next load; the op-log retains it |
+| P7.4, P7.9a | cc084f6f9 | replay and promotion on the mutation API; reconcile_recipe_store applies through db_mutate_on (CAS), adds --compare-cache sampler | live sampler run: not verified |
+| P7.5 | 96d179a5e | replace_recipes archives into superseded_json (30d prune, restore command), ensure_recipe reasons, cascade/synth via merge_recipes | none known |
+| P7.6 | b16f2daf6 | per-host blocked status (scan_hints.recipe_blocked[tag]), per-host lifecycle_last_attempt, legacy blocked: honoured, unstale script reads both | none known |
+| P7.7, P7.8 | 5161fb802 | Phase-0 reader backcompat test, rollback runbook, authority-model docs | none known |
+
+Deviation: the recipe_store SQLite ladder is kept for six legacy test files; full conversion is deferred. Migration V034 added. Owner asks: apply V034 to the target DB; decide when to finish the SQLite-ladder conversion.
+
 ---
 
 ### N14 Home-IP lane (Phase 15A) and the D-IF6 desk review
@@ -2178,6 +2201,19 @@ P11A.5 (worker loop) runs only if D-IF3 = (b); otherwise it is dropped (Section 
 **Release step.** Minor. The owner approves the Docker smoke of the scanner-nightly and web stages, then deploys scanner-nightly outside the window, and web. The prod heal is in N17.
 
 **Owner decisions / actions.** P8A.7 apply OK; the 142-dealer re-run (D-PR1, D-PR4, D-PR6, D-PR7 were answered for N6).
+
+**Draft status (integ/draft, merge c18d3f3c7; branch phase/N15 head d46ae8dc2).**
+
+| Unit | sha | Acceptance met | Deferred |
+|---|---|---|---|
+| P8A.1 | d29089c4a | read-only precedence invariants (vPIC fuel/drive/cylinders/displacement, stale drivetrain provenance, sticker vs vPIC, informational tiebreak report); baselines hand-added with history line | none known |
+| P8A.3 | 440c7c79d | apply_fact_proposals, the one DB-aware apply path over vehicle_facts.precedence; PG tests | PG tier run: not verified here |
+| P8A.4 | e00909f0f, d93168eab | vpic_facts through precedence; per-field provenance with value at scan time; chunked heal commits, fields= filter, explicit tiebreak grouping (D-PR4); heal consumes vin_overrides; cannot_assess from decisions | none known |
+| N15.5, N15.5b | 5c52dc9d5 | vPIC fills plain Gasoline through precedence, F maps to Gasoline; injection-fuel repair script (dry run by default); test_n15_5_vpic_gasoline_fuel | repair script apply: owner-gated, not run |
+| P8A.5 | 216e0cf67 | decode refresh by ErrorCode/age/model year; dry run decodes and writes nothing | live decode refresh: not verified |
+| P8A.7a | d46ae8dc2 | heal driver script (backup count check, preflight, owner-gated apply, guarded rollback, dealer summary appender); test_heal_p8a7_driver | never run with --apply |
+
+Owner asks: approve the heal apply (P8A.7) and the N15.5b repair apply after reviewing dry-run output.
 
 ---
 
@@ -2364,6 +2400,19 @@ The body-style and HD-table additions are specified in the table: what, files, a
 **Release step.** Patch or minor; web deploy.
 
 **Owner decisions / actions.** D-HY1, D-HY9; sign the diff.
+
+**Draft status (integ/draft, merge ce2a59ada; branch phase/N20 head 932e649bd).**
+
+| Unit | sha | Acceptance met | Deferred |
+|---|---|---|---|
+| P9.1 | 5006518b9 | 97 root-only [Brochure Summary] rows merged into options/raw copies; merge_root_summary_rows.py (dry run default); test_dictionary_layout | none known |
+| P9.2 | 27ad5f918 | in-memory options index as the sole Complete_Options resolver; EPA exact-model step before the family-label glob (PF-1); tests | none known |
+| P9.2b, P9.6 | b3d4fb9e4 | 20-car before/after resolve_trim_ladder diff script for owner sign-off; in-image catalog decision recorded (closed, not needed) with latency numbers | owner sign-off on the 20-car diff |
+| P9.3 | 5d5b03daf | 614 root Complete_Options duplicates deleted after a content pre-flight; legacy-root importer branch dropped | none known |
+| P9.4 | e72d1c176, 28a2d1794 | 2,004 header-only options/stubs files deleted after pre-flight (options_stub=0, options_rich unchanged at 7889); README records it | none known |
+| P9.7 | 932e649bd | script-only dictionary trees fenced out of Docker and Railway uploads; brochure_text gate test and logged fallback | image build and prod upload check: not verified |
+
+Owner asks: sign off the 20-car before/after diff; confirm the deletions before any release.
 
 ---
 
@@ -2598,6 +2647,17 @@ The body-style and HD-table additions are specified in the table: what, files, a
 **Release step.** Patch; deploys.
 
 **Owner decisions / actions.** D-DB3, D-DB4, D-DB8; the strict env.
+
+**Draft status (integ/draft, merge 7768287b0; branch phase/N27 head 2c139371b).**
+
+| Unit | sha | Acceptance met | Deferred |
+|---|---|---|---|
+| P13A.3, P13A.8 | 1890b524c | static runtime-DDL guard test (test_no_runtime_pg_ddl); drop_dead_zip_code_column.py deleted, zip_code comment fixed (D-DB8 keep) | none known |
+| P13A.7 | 1c6395ea9 | db_snapshot helper; four repair/backfill scripts snapshot into the backups schema with timestamps and refuse to overwrite; test_db_snapshot | none known |
+| P13A.5 | 2c139371b | backend.web.db_bootstrap wired into every launcher; ADMIN_PASSWORD check added to assert_production_security_config; test_db_bootstrap, test_production_security | launcher behavior on Railway/Docker: not verified |
+| Units whose purpose was SQLite/Postgres portability | none | skipped, superseded by N37 | n/a |
+
+Owner asks: set ADMIN_PASSWORD wherever production security config is asserted before release.
 
 ---
 
