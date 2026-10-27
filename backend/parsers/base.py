@@ -5,6 +5,18 @@ from typing import Any
 from urllib.parse import parse_qsl, urlencode, urljoin, urlparse, urlunparse
 
 
+_PREASSIGNMENT_VIN_RE = re.compile(r"^(?=[A-Z0-9]*[IOQ])[A-Z0-9]{17}$")
+
+
+def is_preassignment_vin(vin: Any) -> bool:
+    """True for a 17-character identifier that holds an I, O or Q (D-N17b).
+
+    A real VIN never carries those letters; dealers list pre-assignment / stock IDs
+    in that shape. The rows are kept, but the vPIC decode is skipped, VIN-derived
+    facts are cannot_assess, and the VIN-owner guard leaves them alone."""
+    return bool(_PREASSIGNMENT_VIN_RE.match(str(vin or "").strip().upper()))
+
+
 def _has_vin(d: dict) -> bool:
     if not isinstance(d, dict):
         return False
