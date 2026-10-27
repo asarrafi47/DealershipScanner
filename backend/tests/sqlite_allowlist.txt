@@ -136,6 +136,7 @@ backend/db/users_sqlite.py  import_sqlite3  2
 backend/db/users_sqlite.py  pragma  5
 backend/db/users_sqlite.py  sqlite3_attr  4
 backend/db/users_sqlite.py  sqlite_master  1
+backend/db/vdp_attempts.py  qmark_placeholder  3
 backend/dealer/admin/incomplete_listings_api.py  import_sqlite3  1
 backend/dealer/admin/incomplete_listings_api.py  qmark_placeholder  3
 backend/dealer/admin/incomplete_listings_api.py  row_factory  1
@@ -317,6 +318,7 @@ backend/scripts/reconcile_recipe_store.py  sqlite3_attr  1
 backend/scripts/recover_incomplete_listings.py  import_sqlite3  1
 backend/scripts/recover_incomplete_listings.py  row_factory  1
 backend/scripts/recover_incomplete_listings.py  sqlite3_attr  1
+backend/scripts/relabel_spec_provenance.py  qmark_placeholder  1
 backend/scripts/repair_injection_fuel.py  qmark_placeholder  1
 backend/scripts/repair_new_null_mileage_index.py  pragma  1
 backend/scripts/repair_new_null_mileage_index.py  qmark_placeholder  3
@@ -644,6 +646,7 @@ backend/tests/test_reconcile_switch_matrix.py  pragma  1
 backend/tests/test_reconcile_switch_matrix.py  qmark_placeholder  4
 backend/tests/test_reconcile_switch_matrix.py  sqlite3_attr  6
 backend/tests/test_registry_backfill_startup.py  db_path_literal  1
+backend/tests/test_relabel_spec_provenance.py  qmark_placeholder  2
 backend/tests/test_releasing_doc.py  qmark_placeholder  1
 backend/tests/test_repair_new_null_mileage_index.py  db_path_literal  4
 backend/tests/test_repair_new_null_mileage_index.py  import_sqlite3  1

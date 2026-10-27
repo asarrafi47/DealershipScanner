@@ -50,6 +50,7 @@ SNAPSHOT_AND_REPAIR_SCRIPTS = {
     "backend/scripts/link_cars_to_catalog.py",
     "backend/scripts/migrate.py",
     "backend/scripts/quarantine_package_value_msrps.py",
+    "backend/scripts/relabel_spec_provenance.py",
     "backend/utils/db_snapshot.py",
 }
 

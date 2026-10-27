@@ -4,9 +4,7 @@
 could not be fetched. The prefetch skips a car that has failed ``attempt_max()`` times until
 a back-off has passed (``backoff_hours`` doubles with every further failure, capped), so a
 blocked or dead URL stops eating the dealer's wall clock on every run. A fetched page
-deletes the row. The table is created lazily here (``CREATE TABLE IF NOT EXISTS``) so a
-database behind the migration chain and the SQLite test schema behave the same; the DDL
-mirrors the migration file.
+deletes the row. The table comes from the migration chain only (no runtime DDL).
 
 Every function is best-effort: a ledger that cannot be read or written never blocks a scan.
 """
@@ -21,18 +19,6 @@ logger = logging.getLogger(__name__)
 
 _CHUNK = 400
 _MAX_BACKOFF_HOURS = 14 * 24.0
-
-_DDL = """CREATE TABLE IF NOT EXISTS vdp_fetch_attempts (
-    dealer_id TEXT NOT NULL,
-    vin TEXT NOT NULL,
-    attempts INTEGER NOT NULL DEFAULT 1,
-    last_status INTEGER,
-    last_outcome TEXT,
-    first_attempt_at TEXT NOT NULL,
-    last_attempt_at TEXT NOT NULL,
-    PRIMARY KEY (dealer_id, vin)
-)"""
-
 
 def ledger_enabled() -> bool:
     """``SCANNER_VDP_ATTEMPT_LEDGER`` (default on)."""
@@ -87,12 +73,6 @@ def is_deferred(attempts: int, last_attempt_at: Any, now: datetime | None = None
     return (now or _now()) < last + timedelta(hours=wait)
 
 
-def _ensure(conn: Any) -> None:
-    # IF NOT EXISTS on a migrated table is a catalog lookup; no cache, so a fresh test DB works.
-    conn.cursor().execute(_DDL)
-    conn.commit()
-
-
 def load(dealer_id: str, vins: Iterable[str]) -> dict[str, tuple[int, str]]:
     """``{vin: (attempts, last_attempt_at)}`` for the dealer's VINs that have a row; ``{}`` on
     any failure."""
@@ -104,7 +84,6 @@ def load(dealer_id: str, vins: Iterable[str]) -> dict[str, tuple[int, str]]:
         from backend.db.inventory_db import db_conn
 
         with db_conn() as conn:
-            _ensure(conn)
             cur = conn.cursor()
             for i in range(0, len(vin_list), _CHUNK):
                 chunk = vin_list[i:i + _CHUNK]
@@ -138,7 +117,6 @@ def record(
         from backend.db.inventory_db import db_conn
 
         with db_conn() as conn:
-            _ensure(conn)
             cur = conn.cursor()
             for vin, status, outcome in failed:
                 vin = str(vin or "").strip().upper()

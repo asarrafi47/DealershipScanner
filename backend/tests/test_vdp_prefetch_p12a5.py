@@ -193,7 +193,8 @@ def test_is_deferred_window(monkeypatch):
 
 # ── ledger (SQLite harness) and the prefetch pass ───────────────────────────
 
-def test_ledger_roundtrip_and_clears_on_success():
+@pytest.mark.pg
+def test_ledger_roundtrip_and_clears_on_success(pg_db):
     d = "ledger-p12a5-com"
     v1, v2 = "1HGBH41JXMN100001", "1HGBH41JXMN100002"
     assert va.record(d, [(v1, 403, "blocked"), (v2, 404, "http_404")]) == 2
@@ -218,7 +219,8 @@ def _fast(monkeypatch):
     monkeypatch.setattr(pf, "_http_first_max", lambda *a, **k: 100)
 
 
-def test_pass_records_failures_and_skips_deferred_cars(monkeypatch):
+@pytest.mark.pg
+def test_pass_records_failures_and_skips_deferred_cars(pg_db, monkeypatch):
     _fast(monkeypatch)
     d = "pass-p12a5-com"
     fetched: list[str] = []
@@ -266,7 +268,8 @@ def test_skipped_host_is_not_counted_as_an_attempt(monkeypatch):
     assert va.load(d, [c["vin"] for c in _cars(2)]) == {}
 
 
-def test_untried_cars_go_before_retries_inside_a_gap_rank(monkeypatch):
+@pytest.mark.pg
+def test_untried_cars_go_before_retries_inside_a_gap_rank(pg_db, monkeypatch):
     _fast(monkeypatch)
     monkeypatch.setattr(pf, "_HTTP_CONCURRENCY", 1)
     d = "order-p12a5-com"
