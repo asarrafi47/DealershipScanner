@@ -24,7 +24,9 @@ way on any machine:
               exited 0, else 1.
 
 With neither SCAN_DEALERS nor SCAN_FLEET=1 it prints `idle` and exits 0, so a
-deploy of the scanner service never starts a fleet scan by itself.
+deploy of the scanner service never starts a fleet scan by itself. The same holds
+for a whole-fleet run outside SCAN_FLEET_WINDOW_UTC (P6A.2): a redeploy at 08:35
+must not start the 09:00 run's worth of scanning, so it idles instead.
 
 Env:
   SCAN_FLEET=1            scan the fleet roster (active inventory, see step 1)
@@ -35,7 +37,19 @@ Env:
   SCAN_PIPELINE_ARGS=...  extra dealer_pipeline flags (e.g. "--no-lifecycle")
   SCAN_OUT_ROOT           run directory parent (default workspace/pipeline)
   SCAN_KEEP_DAYS=14       prune run dirs / scan logs older than this
-  SCAN_IDLE_HOLD_SECONDS  when idle, stay up this long so the /data volume can be read
+  SCAN_FLEET_WINDOW_UTC='HH:MM-HH:MM'
+                          with SCAN_FLEET=1, scan only inside this UTC window (wraps past
+                          midnight); outside it, or with an invalid value (WARN), idle.
+                          Unset: no window. SCAN_DEALERS and --resume ignore the window
+                          (SCAN_DEALERS left set during a window run is a WARN in the summary).
+  SCAN_FLEET_LOCK=1       0 turns the whole-fleet lease off. A whole-fleet run takes the
+                          Postgres advisory lease of SCAN_FLEET_LANE (default "fleet") and
+                          exits 3, naming the holder, before spawning a shard if it is held
+  SCAN_IDLE_HOLD_SECONDS  when idle, stay up this long so the /data volume can be read; with a
+                          valid window the hold ends 5 minutes before the window opens
+  SCAN_POST_RUN_HOLD_SECONDS
+                          after a run, stay up this long (same cap) so the volume logs can be
+                          pulled even if a cron-scheduled service does not start on a redeploy
   SCAN_RESUME_DIR         resume this run dir (same as `--resume <run_dir>`, N9.15): reuse its
                           shard rosters, skip dealers with a triage entry or a scan_runs row
                           finished since the run start, append to each shard's triage.json
@@ -60,6 +74,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from backend.scanner import scan_leases
 from backend.utils.project_env import load_project_dotenv
 
 load_project_dotenv()
@@ -79,6 +94,80 @@ def _env_int(name: str, default: int) -> int:
         return int((os.environ.get(name) or "").strip() or default)
     except ValueError:
         return default
+
+
+# --------------------------------------------------------------------------
+# run window + fleet lease (P6A.2)
+# --------------------------------------------------------------------------
+
+EXIT_FLEET_LOCK_HELD = 3
+HOLD_MARGIN_SECONDS = 300  # a hold must end this long before the window opens
+_WINDOW_RE = re.compile(r"^\s*(\d{1,2}):(\d{2})\s*-\s*(\d{1,2}):(\d{2})\s*$")
+
+# What this run decided (lane, window, lock, warnings); written into fleet_summary.json.
+RUN_META: dict[str, Any] = {}
+
+
+def parse_window(raw: str) -> tuple[int, int]:
+    """``'HH:MM-HH:MM'`` -> (start, end) in minutes of the UTC day. start > end wraps midnight.
+    Raises ValueError for anything else, including an empty window (start == end)."""
+    m = _WINDOW_RE.match(raw or "")
+    if not m:
+        raise ValueError(f"expected HH:MM-HH:MM, got {raw!r}")
+    h1, m1, h2, m2 = (int(x) for x in m.groups())
+    if h1 > 23 or h2 > 23 or m1 > 59 or m2 > 59:
+        raise ValueError(f"time out of range in {raw!r}")
+    start, end = h1 * 60 + m1, h2 * 60 + m2
+    if start == end:
+        raise ValueError(f"empty window {raw!r}")
+    return start, end
+
+
+def in_window(now: datetime, window: tuple[int, int]) -> bool:
+    minute = now.hour * 60 + now.minute
+    start, end = window
+    return start <= minute < end if start < end else (minute >= start or minute < end)
+
+
+def seconds_until_open(now: datetime, window: tuple[int, int]) -> float:
+    """Seconds from *now* to the next time the window opens (a full day if it opens right now)."""
+    since_midnight = now.hour * 3600 + now.minute * 60 + now.second + now.microsecond / 1e6
+    delta = (window[0] * 60 - since_midnight) % 86400
+    return delta if delta > 0 else 86400.0
+
+
+def capped_hold(hold: int, now: datetime, window: tuple[int, int] | None) -> int:
+    """Shorten an idle/post-run hold so it ends HOLD_MARGIN_SECONDS before the window opens.
+    Railway skips a cron fire while the previous run is still up, so a hold that spans the
+    fire would swallow the whole run. No valid window: the hold is unchanged."""
+    if window is None or hold <= 0:
+        return max(0, hold)
+    return max(0, min(hold, int(seconds_until_open(now, window) - HOLD_MARGIN_SECONDS)))
+
+
+def _utcnow() -> datetime:
+    return datetime.now(timezone.utc)
+
+
+def _hold(kind: str, env_name: str, window: tuple[int, int] | None) -> None:
+    hold = _env_int(env_name, 0)
+    if hold <= 0:
+        return
+    capped = capped_hold(hold, _utcnow(), window)
+    if capped <= 0:
+        print(f"fleet   not holding ({env_name}={hold}): the run window opens within "
+              f"{HOLD_MARGIN_SECONDS // 60} minutes", flush=True)
+        return
+    # Keep the container (and its /data volume) up so `railway ssh` /
+    # `railway volume files download` can read the logs; a stopped
+    # Railway service exposes no volume.
+    capped_note = f" (capped from {hold}s to end before the window opens)" if capped < hold else ""
+    print(f"fleet   holding {capped}s for log retrieval, {kind} ({env_name}){capped_note}", flush=True)
+    time.sleep(capped)
+
+
+def _truthy(name: str) -> bool:
+    return (os.environ.get(name) or "").strip().lower() in ("1", "true", "yes")
 
 
 # --------------------------------------------------------------------------
@@ -347,6 +436,55 @@ def load_resume_state(run_dir: Path) -> tuple[datetime, list[list[str]]]:
 
 
 def main() -> int:
+    """Gate (window), lease, run, hold. The scan itself is run_fleet()."""
+    RUN_META.clear()
+    explicit = bool((os.environ.get("SCAN_DEALERS") or "").strip())
+    resuming = resume_dir_arg(sys.argv[1:]) is not None
+    fleet_run = _truthy("SCAN_FLEET") and not explicit
+    window: tuple[int, int] | None = None
+    raw_window = (os.environ.get("SCAN_FLEET_WINDOW_UTC") or "").strip()
+    warnings: list[str] = []
+    if raw_window:
+        try:
+            window = parse_window(raw_window)
+        except ValueError as exc:
+            warnings.append(f"SCAN_FLEET_WINDOW_UTC invalid ({exc}); idling")
+            print(f"fleet   WARN {warnings[-1]}", flush=True)
+            if fleet_run and not resuming:
+                _hold("idle", "SCAN_IDLE_HOLD_SECONDS", None)
+                return 0
+    lane = (os.environ.get("SCAN_FLEET_LANE") or "fleet").strip() or "fleet"
+    RUN_META.update({"lane": lane, "window": raw_window or None, "warnings": warnings,
+                     "reason": "SCAN_DEALERS" if explicit else ("resume" if resuming else "SCAN_FLEET")})
+    if window is not None:
+        if explicit and _truthy("SCAN_FLEET"):
+            warnings.append("SCAN_DEALERS is set during a window run: this is a partial run, "
+                            "not the fleet (a leftover value silently narrows the cron run)")
+            print(f"fleet   WARN {warnings[-1]}", flush=True)
+        elif fleet_run and not resuming and not in_window(_utcnow(), window):
+            print(f"fleet   outside run window ({raw_window} UTC); idling", flush=True)
+            RUN_META["reason"] = "outside run window"
+            _hold("idle", "SCAN_IDLE_HOLD_SECONDS", window)
+            return 0
+
+    if (fleet_run or resuming) and (os.environ.get("SCAN_FLEET_LOCK") or "1").strip() != "0":
+        with scan_leases.fleet_lock(lane) as lease:
+            RUN_META["lock"] = {"acquired": lease.acquired, "holder": lease.holder, "degraded": lease.degraded}
+            if not lease.acquired:
+                print(f"fleet   lane {lane!r} is already running on {lease.holder}; "
+                      f"exiting {EXIT_FLEET_LOCK_HELD} before spawning any shard", flush=True)
+                return EXIT_FLEET_LOCK_HELD
+            rc = run_fleet()
+    else:
+        rc = run_fleet()
+    if RUN_META.get("idle"):
+        _hold("idle", "SCAN_IDLE_HOLD_SECONDS", window)
+    elif RUN_META.get("ran"):
+        _hold("post-run", "SCAN_POST_RUN_HOLD_SECONDS", window)
+    return rc
+
+
+def run_fleet() -> int:
     started = datetime.now(timezone.utc).replace(microsecond=0)
     t_start = time.time()
     resume_dir = resume_dir_arg(sys.argv[1:])
@@ -362,15 +500,10 @@ def main() -> int:
         roster = load_roster()
     if not roster:
         print("fleet   idle: set SCAN_FLEET=1 (whole roster) or SCAN_DEALERS=a,b,c to scan", flush=True)
-        hold = _env_int("SCAN_IDLE_HOLD_SECONDS", 0)
-        if hold > 0:
-            # Keep the container (and its /data volume) up so `railway ssh` /
-            # `railway volume files download` can read the logs; a stopped
-            # Railway service exposes no volume.
-            print(f"fleet   holding {hold}s for log retrieval (SCAN_IDLE_HOLD_SECONDS)", flush=True)
-            time.sleep(hold)
+        RUN_META["idle"] = True  # main() holds after the lease is released
         return 0
 
+    RUN_META["ran"] = True
     out_root = Path(os.environ.get("SCAN_OUT_ROOT") or (ROOT / "workspace" / "pipeline"))
     keep_days = _env_int("SCAN_KEEP_DAYS", 14)
     prune(out_root, keep_days)
@@ -459,6 +592,11 @@ def main() -> int:
     logs = sorted(run_dir.glob("s*/scanner.log")) + sorted(run_dir.glob("s*.out"))
     summary = {
         "started": started.isoformat(),
+        "lane": RUN_META.get("lane"),
+        "window": RUN_META.get("window"),
+        "lock": RUN_META.get("lock"),
+        "reason": RUN_META.get("reason"),
+        "warnings": list(RUN_META.get("warnings") or []),
         "run_dir": str(run_dir),
         "dealers": len(roster),
         "roster_rule": {k: (len(v) if isinstance(v, list) else v) for k, v in ROSTER_REPORT.items()},

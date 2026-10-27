@@ -4,6 +4,14 @@
 # Logs and every other workspace/ file (dealer_logs, recipe file cache, pipeline
 # run dirs, scan logs) live on the service volume: /app/workspace -> $SCAN_DATA_DIR/workspace
 # (default /data, the volume mount). Idle unless SCAN_FLEET=1 or SCAN_DEALERS is set.
+#
+# Run controls (P6A.2, all read by backend.scripts.fleet_scan; unset keeps the old behavior):
+#   SCAN_FLEET_WINDOW_UTC=HH:MM-HH:MM  with SCAN_FLEET=1 scan only inside the window, else idle,
+#                                      so a redeploy or variable change outside it starts nothing
+#   SCAN_IDLE_HOLD_SECONDS             idle hold, capped to end 5 min before the window opens
+#                                      (Railway skips a cron fire while the previous run is up)
+#   SCAN_POST_RUN_HOLD_SECONDS         stay up after a run so the volume logs can be pulled
+#   SCAN_FLEET_LOCK=0                  turn the cross-host fleet lease off; exit 3 = lease held
 set -eu
 export PYTHONPATH="${PYTHONPATH:-/app}"
 DATA="${SCAN_DATA_DIR:-/data}"
@@ -24,5 +32,8 @@ fi
 # IP gets through. The tag keeps its 401/403s out of the shared recipe store:
 # recipes stay live, scan_hints.recipe_status = blocked:railway:... (recipes.egress_tag).
 export SCANNER_EGRESS_TAG="${SCANNER_EGRESS_TAG:-railway}"
+if [ "${SCAN_FLEET:-}" = "1" ] && [ -z "${SCAN_FLEET_WINDOW_UTC:-}" ]; then
+  echo "WARN: SCAN_FLEET=1 without SCAN_FLEET_WINDOW_UTC: every redeploy starts a full fleet scan" >&2
+fi
 cd /app
 exec python3 -m backend.scripts.fleet_scan
