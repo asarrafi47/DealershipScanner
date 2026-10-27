@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from backend.scanner.post_pipeline import (
+from backend.scanner.post_scan.pipeline import (
     post_window_sticker_env_enabled,
     run_window_sticker_for_vins,
 )

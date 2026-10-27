@@ -66,7 +66,7 @@ def _load_corpus() -> list[dict]:
 CORPUS = _load_corpus()
 SCENARIOS = [(fx, sc) for fx in CORPUS for sc in fx["scenarios"]]
 IDS = [f"{fx['dealer_id']}::{sc['name']}" for fx, sc in SCENARIOS]
-# The gate runs through backend/scanner/rooftop_match.py when SCANNER_ROOFTOP_SCORER is on
+# The gate runs through backend/attribution/match.py when SCANNER_ROOFTOP_SCORER is on
 # (the default) and through the legacy ladder when it is 0. Both must decide every case alike.
 MODES = ("legacy", "scorer")
 
