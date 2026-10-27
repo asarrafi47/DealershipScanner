@@ -37,7 +37,7 @@ def conn(monkeypatch):
     c = sqlite3.connect(":memory:")
     c.executescript(
         "CREATE TABLE cars (id INTEGER PRIMARY KEY, vin TEXT, dealer_id TEXT, listing_active INTEGER, drivetrain TEXT,"
-        " fuel_type TEXT, cylinders INTEGER, engine_description TEXT, body_style TEXT, spec_source_json TEXT, epa_master_id INTEGER);"
+        " fuel_type TEXT, cylinders INTEGER, engine_description TEXT, body_style TEXT, transmission TEXT, spec_source_json TEXT, epa_master_id INTEGER);"
         "CREATE TABLE epa_master (id INTEGER PRIMARY KEY, drive TEXT);"
         "CREATE TABLE nhtsa_vpic_cache (vin TEXT PRIMARY KEY, response_json TEXT, fetched_at TEXT);"
     )
@@ -58,7 +58,7 @@ def _row(conn, vin):
 
 
 def test_engine_and_body_filled_from_decode_with_provenance(conn):
-    conn.execute("INSERT INTO cars VALUES (1,?, 'd1', 1, 'RWD', 'Gasoline', NULL, NULL, NULL, NULL, NULL)", (TACOMA["VIN"],))
+    conn.execute("INSERT INTO cars (id, vin, dealer_id, listing_active, drivetrain, fuel_type, cylinders, engine_description, body_style, spec_source_json, epa_master_id) VALUES (1,?, 'd1', 1, 'RWD', 'Gasoline', NULL, NULL, NULL, NULL, NULL)", (TACOMA["VIN"],))
     stats = vf.heal_rows(conn)
     row = _row(conn, TACOMA["VIN"])
     assert row["engine_description"] == "2.4L I4 T24A-FTS Turbo"
@@ -70,7 +70,7 @@ def test_engine_and_body_filled_from_decode_with_provenance(conn):
 
 
 def test_dealer_engine_text_and_body_are_never_overwritten(conn):
-    conn.execute("INSERT INTO cars VALUES (1,?, 'd1', 1, '4WD', 'Gasoline', 4, 'i-FORCE 2.4L 4-Cyl Turbo', 'Crew Cab', NULL, NULL)",
+    conn.execute("INSERT INTO cars (id, vin, dealer_id, listing_active, drivetrain, fuel_type, cylinders, engine_description, body_style, spec_source_json, epa_master_id) VALUES (1,?, 'd1', 1, '4WD', 'Gasoline', 4, 'i-FORCE 2.4L 4-Cyl Turbo', 'Crew Cab', NULL, NULL)",
                  (TACOMA["VIN"],))
     stats = vf.heal_rows(conn)
     row = _row(conn, TACOMA["VIN"])
@@ -79,7 +79,7 @@ def test_dealer_engine_text_and_body_are_never_overwritten(conn):
 
 
 def test_ev_gets_motor_line_not_a_cylinder_engine(conn):
-    conn.execute("INSERT INTO cars VALUES (1,?, 'd1', 1, 'AWD', 'Electric', 0, '', NULL, NULL, NULL)", (LYRIQ["VIN"],))
+    conn.execute("INSERT INTO cars (id, vin, dealer_id, listing_active, drivetrain, fuel_type, cylinders, engine_description, body_style, spec_source_json, epa_master_id) VALUES (1,?, 'd1', 1, 'AWD', 'Electric', 0, '', NULL, NULL, NULL)", (LYRIQ["VIN"],))
     vf.heal_rows(conn)
     row = _row(conn, LYRIQ["VIN"])
     assert row["engine_description"] == "Electric motor, Dual Motor, 500 hp / 373 kW"
@@ -87,7 +87,7 @@ def test_ev_gets_motor_line_not_a_cylinder_engine(conn):
 
 
 def test_blank_decode_changes_nothing(conn):
-    conn.execute("INSERT INTO cars VALUES (1,?, 'd1', 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL)", (BLANK["VIN"],))
+    conn.execute("INSERT INTO cars (id, vin, dealer_id, listing_active, drivetrain, fuel_type, cylinders, engine_description, body_style, spec_source_json, epa_master_id) VALUES (1,?, 'd1', 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL)", (BLANK["VIN"],))
     stats = vf.heal_rows(conn)
     row = _row(conn, BLANK["VIN"])
     assert row["engine_description"] is None and row["body_style"] is None
@@ -95,7 +95,7 @@ def test_blank_decode_changes_nothing(conn):
 
 
 def test_dry_run_writes_nothing(conn):
-    conn.execute("INSERT INTO cars VALUES (1,?, 'd1', 1, 'RWD', 'Gasoline', NULL, NULL, NULL, NULL, NULL)", (TACOMA["VIN"],))
+    conn.execute("INSERT INTO cars (id, vin, dealer_id, listing_active, drivetrain, fuel_type, cylinders, engine_description, body_style, spec_source_json, epa_master_id) VALUES (1,?, 'd1', 1, 'RWD', 'Gasoline', NULL, NULL, NULL, NULL, NULL)", (TACOMA["VIN"],))
     stats = vf.heal_rows(conn, dry_run=True)
     assert stats["engine_description"] == 1
     assert _row(conn, TACOMA["VIN"])["engine_description"] is None
@@ -122,9 +122,9 @@ def test_raw_decodes_are_fetched_per_chunk_not_all_at_once(conn, monkeypatch):
     monkeypatch.setattr(vf, "_HEAL_FLAT_CHUNK", 2)
     vins = [TACOMA["VIN"], LYRIQ["VIN"], BLANK["VIN"], "1FTFW1E50MFA00001", "5YJ3E1EA0MF000002"]
     for i, vin in enumerate(vins, start=1):
-        conn.execute("INSERT INTO cars VALUES (?,?, 'd1', 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL)", (i, vin))
-    # one row with both fields present needs no raw decode at all
-    conn.execute("INSERT INTO cars VALUES (6, '3TYLB5JNXRT022196', 'd1', 1, NULL, NULL, NULL, '2.4L I4', 'Truck', NULL, NULL)")
+        conn.execute("INSERT INTO cars (id, vin, dealer_id, listing_active, drivetrain, fuel_type, cylinders, engine_description, body_style, spec_source_json, epa_master_id) VALUES (?,?, 'd1', 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL)", (i, vin))
+    # one row with every raw-decode-derived field present needs no raw decode at all
+    conn.execute("INSERT INTO cars (id, vin, dealer_id, listing_active, drivetrain, fuel_type, cylinders, engine_description, body_style, spec_source_json, epa_master_id, transmission) VALUES (6, '3TYLB5JNXRT022196', 'd1', 1, 'RWD', NULL, NULL, '2.4L I4', 'Truck', NULL, NULL, 'Automatic')")
     stats = vf.heal_rows(conn)
     assert stats["rows"] == 6
     assert len(calls) == 3 and all(len(c) <= 2 for c in calls)

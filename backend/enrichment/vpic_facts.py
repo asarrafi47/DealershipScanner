@@ -530,7 +530,88 @@ def derived_fills(row: dict[str, Any], vp: dict[str, Any] | None, flat: dict[str
 _HEAL_FLAT_CHUNK = 500  # rows whose raw vPIC decodes are held at once in heal_rows
 
 
-HEAL_FIELDS = ("drivetrain", "fuel_type", "cylinders", "engine_description", "body_style")
+HEAL_FIELDS = ("drivetrain", "fuel_type", "cylinders", "engine_description", "body_style", "transmission")
+
+# P8B.4b (IL-20): heavy-duty / commercial families whose drive and gearbox the
+# decode often leaves blank or at "4x2" and the EPA catalog never covers (it
+# stops at 8,500 lb GVWR). (make, model) -> (end the 2WD configuration drives,
+# transmission). The end applies only to a 2WD configuration (vPIC "4x2" or
+# blank) and only past the GVWR gate; "4x2" is never mapped for light vehicles.
+_HD_FAMILIES: tuple[tuple[re.Pattern[str], re.Pattern[str], str, str], ...] = tuple(
+    (re.compile(mk, re.I), re.compile(md, re.I), end, tr) for mk, md, end, tr in (
+        (r"^(chevrolet|gmc)$", r"silverado\s*(2500|3500|4500|5500|6500)|sierra\s*(2500|3500|4500|5500)", "RWD", "Automatic"),
+        (r"^(chevrolet|gmc)$", r"express|savana", "RWD", "Automatic"),
+        (r"^ford$", r"f-?\s*(250|350|450|550|600|650|750)|e-?\s*(350|450)|e-series|econoline", "RWD", "Automatic"),
+        (r"^ram$", r"^(2500|3500|4500|5500)", "RWD", "Automatic"),
+        (r"^ram$", r"promaster", "FWD", "Automatic"),
+    ))
+_GVWR_CLASS_RE = re.compile(r"class\s*(\d+)([a-z]?)", re.I)
+_GVWR_LB_RE = re.compile(r"([\d,]{4,7})\s*lb", re.I)
+_HD_BODY_RE = re.compile(r"pickup|truck|van|cutaway|incomplete|chassis|bus", re.I)
+
+
+def _gvwr_over_8500(gvwr: str) -> bool:
+    """True when the decode's GVWR text is Class 2H or above (over 8,500 lb)."""
+    m = _GVWR_CLASS_RE.search(gvwr or "")
+    if m:
+        n = int(m.group(1))
+        return n >= 3 or (n == 2 and m.group(2).upper() == "H")
+    lbs = [int(x.replace(",", "")) for x in _GVWR_LB_RE.findall(gvwr or "") if x.replace(",", "").isdigit()]
+    return bool(lbs) and min(lbs) > 8500
+
+
+def hd_family_facts(flat: dict[str, str] | None) -> tuple[str, str] | None:
+    """(drive end for a 2WD configuration, transmission) for a heavy-duty or
+    commercial decode, else None. Gated on GVWR over 8,500 lb (the ProMaster
+    only on a van / cutaway body class) so a light Silverado or Mazda3 never
+    matches; the family comes from the decode's own Make and Model."""
+    flat = flat or {}
+    make = (flat.get("Make") or "").strip()
+    model = (flat.get("Model") or "").strip()
+    if not make or not model:
+        return None
+    for mk, md, end, tr in _HD_FAMILIES:
+        if not (mk.search(make) and md.search(model)):
+            continue
+        if "promaster" in md.pattern:
+            if not _HD_BODY_RE.search(flat.get("BodyClass") or ""):
+                return None
+        elif not _gvwr_over_8500(flat.get("GVWR") or ""):
+            return None
+        return end, tr
+    return None
+
+
+def hd_fills(row: dict[str, Any], vp: dict[str, Any] | None, flat: dict[str, str] | None) -> dict[str, tuple[Any, Any, str]]:
+    """{field: (old, new, source)} the HD table fills. Drivetrain only into a
+    blank / 2WD column when the decode says 4x2 or nothing about the drive (a
+    stated end, FWD/RWD/AWD/4WD, always wins); transmission only into a blank
+    column, the decode's own value first. Both decided by precedence."""
+    from backend.vehicle_facts import precedence as prec
+    from backend.vehicle_facts.drivetrain import is_two_wheel_unknown
+
+    vp = vp or {}
+    fam = hd_family_facts(flat)
+    if not fam:
+        return {}
+    end, tr = fam
+    out: dict[str, tuple[Any, Any, str]] = {}
+    prov = row.get("spec_source_json")
+    drive_raw = vp.get("drive_type_raw") or vp.get("drivetrain_raw") or (flat or {}).get("DriveType") or ""
+    two = bool(str(drive_raw).strip()) and is_two_wheel_unknown(drive_raw)
+    if not vp.get("drivetrain") and (two or not str(drive_raw).strip()) and not _drive_bucket(row.get("drivetrain")):
+        d = prec.decide("drivetrain", row.get("drivetrain"), prov, end, prec.TRIM_HEURISTIC,
+                        {"vpic_drive": drive_raw or None})
+        if d.write:
+            out["drivetrain"] = (row.get("drivetrain"), d.value, prec.TRIM_HEURISTIC)
+    if vp.get("transmission"):
+        cand, src = vp["transmission"], prec.NHTSA_VPIC
+    else:
+        cand, src = tr, prec.TRIM_HEURISTIC
+    d = prec.decide("transmission", row.get("transmission"), prov, cand, src)
+    if d.write:
+        out["transmission"] = (row.get("transmission"), d.value, src)
+    return out
 
 
 def heal_rows(conn, *, vins: Iterable[str] | None = None, dealers: Iterable[str] | None = None,
@@ -560,12 +641,12 @@ def heal_rows(conn, *, vins: Iterable[str] | None = None, dealers: Iterable[str]
         where += " AND dealer_id IN (" + ",".join("?" * len(dealer_list)) + ")"
         params += dealer_list
     cur.execute(f"SELECT c.id, c.vin, c.drivetrain, c.fuel_type, c.cylinders, c.spec_source_json, e.drive, "
-                f"c.engine_description, c.body_style FROM cars c "
+                f"c.engine_description, c.body_style, c.transmission FROM cars c "
                 f"LEFT JOIN epa_master e ON e.id = c.epa_master_id WHERE {where.replace('listing_active', 'c.listing_active').replace(' vin', ' c.vin').replace('dealer_id', 'c.dealer_id')}", tuple(params))
     rows = [dict(zip(("id", "vin", "drivetrain", "fuel_type", "cylinders", "spec_source_json", "catalog_drive",
-                      "engine_description", "body_style"), r)) for r in cur.fetchall()]
+                      "engine_description", "body_style", "transmission"), r)) for r in cur.fetchall()]
     stats: dict[str, Any] = {"rows": len(rows), "decoded": 0, "drivetrain": 0, "fuel_type": 0, "cylinders": 0,
-                             "engine_description": 0, "body_style": 0, "examples": []}
+                             "engine_description": 0, "body_style": 0, "transmission": 0, "examples": []}
     clear_vpic_lookup_cache()
     prime_vpic_cache([r["vin"] for r in rows])
     for start in range(0, len(rows), _HEAL_FLAT_CHUNK):
@@ -574,7 +655,8 @@ def heal_rows(conn, *, vins: Iterable[str] | None = None, dealers: Iterable[str]
         # that have something to derive, fetched per chunk so a whole-fleet heal
         # never holds every decode at once.
         need_flat = sorted({r["vin"] for r in chunk
-                            if not str(r.get("engine_description") or "").strip() or not str(r.get("body_style") or "").strip()})
+                            if not str(r.get("engine_description") or "").strip() or not str(r.get("body_style") or "").strip()
+                            or not str(r.get("transmission") or "").strip() or not _drive_bucket(r.get("drivetrain"))})
         flats = _vpic_flat_rows(conn, need_flat)
         _heal_chunk(cur, chunk, flats, stats, dry_run, lookup_vpic_from_cache, merge_spec_source_json, only)
         if not dry_run:
@@ -646,6 +728,12 @@ def _heal_chunk(cur, rows: list[dict[str, Any]], flats: dict[str, dict[str, str]
                     ch["drivetrain"] = (r.get("drivetrain"), d.value)
                     sources["drivetrain"] = prec.EPA_TIEBREAK
                     stats["drivetrain_catalog_tiebreak"] = stats.get("drivetrain_catalog_tiebreak", 0) + 1
+        for field, (old, new, src) in hd_fills(r, vp, flat).items():
+            # The decode and the catalog tiebreak decide first; only the decode's
+            # bare 2WD constraint yields to the family's end.
+            if field not in ch or (field == "drivetrain" and _drive_bucket(ch[field][1]) == ""):
+                ch[field] = (old, new)
+                sources[field] = src
         if only is not None:
             ch = {k: v for k, v in ch.items() if k in only}
         if not ch:

@@ -12,7 +12,7 @@ def test_heal_rows_resyncs_cars_whose_fuel_and_drive_changed(monkeypatch):
     conn.execute("CREATE TABLE epa_master (id INTEGER PRIMARY KEY, drive TEXT)")
     conn.execute("CREATE TABLE cars (id INTEGER PRIMARY KEY, vin TEXT, dealer_id TEXT, listing_active INT, "
                  "drivetrain TEXT, fuel_type TEXT, cylinders TEXT, spec_source_json TEXT, epa_master_id INT, "
-                 "engine_description TEXT, body_style TEXT)")
+                 "engine_description TEXT, body_style TEXT, transmission TEXT)")
     conn.execute("INSERT INTO cars (id, vin, dealer_id, listing_active, drivetrain, fuel_type, engine_description, body_style) "
                  "VALUES (7, '1HGCM82633A004352', 'd1', 1, 'FWD', 'Gasoline', 'x', 'y')")
     conn.execute("INSERT INTO cars (id, vin, dealer_id, listing_active, drivetrain, fuel_type, engine_description, body_style) "
