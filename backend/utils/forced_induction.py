@@ -236,7 +236,7 @@ def _classify_by_make_model(
                     r"\bs\b|gts|e-hybrid|diesel|turbo|4s|\b4\b", tr + " " + ft):
             return None
         # GT3, GT3 RS = naturally aspirated
-        if re.search(r"\bgt3\b", tr) and "gt2" not in tr:
+        if re.search(r"\bgt3\b", full) and "gt2" not in full:
             return None
         if re.search(r"\bgt2\b", tr):
             return "Twin Turbocharged"
@@ -416,9 +416,15 @@ def _classify_by_make_model(
         # Tacoma / Land Cruiser 2024+; hybrid versions share the same turbo engines.
         if m == "toyota" and _has(mo, "tundra", "sequoia") and yr >= (2022 if "tundra" in mo else 2023):
             return "Twin Turbocharged"
-        if m == "toyota" and _has(mo, "tacoma", "land cruiser", "grand highlander") and yr >= 2024 \
+        # Grand Highlander Hybrid (non-Max) is the 2.5 Atkinson NA engine; Hybrid Max is 2.4T
+        if m == "toyota" and _has(mo, "grand highlander") and yr >= 2024 \
+                and not (_is_hybrid(ft, full) and el and el > 2.4):
+            return "Turbocharged"
+        if m == "toyota" and _has(mo, "tacoma", "land cruiser") and yr >= 2024 \
                 and not (_has(mo, "tacoma") and el and el > 2.5):
             return "Turbocharged"
+        if m == "lexus" and re.search(r"\btx\b", mo) and "350" in full and yr >= 2024:
+            return "Turbocharged"  # TX 350 is the 2.4T
         if m == "lexus" and re.search(r"\bgx\b|\blx\b|\btx\b", mo) and yr >= 2022 \
                 and re.search(r"550|600|\btx\b", full) and "350" not in full:
             return "Twin Turbocharged"
@@ -436,7 +442,8 @@ def _classify_by_make_model(
             return None
         # whole-word N badge ("Elantra N", "Kona N"); a bare "n " substring matched
         # "Nightfall Edition" / "Premium " style trims
-        if _has(tr, "gt-line") and not _has(tr, "turbo", "1.6t", "2.0t", "2.5t") and el >= 1.9:
+        if _has(tr, "gt-line") and not _has(tr, "turbo", "1.6t", "2.0t", "2.5t") and el >= 1.9 \
+                and "stinger" not in mo:
             return None  # 2.0 / 2.5 NA GT-Line (Soul, Forte, K5 FWD); the 1.6T GT-Line is el < 1.9
         if _has(tr, "n line", "gt-line", "turbo", "1.6t", "2.0t", "2.5t") or _has(mo, "n-line") \
                 or re.search(r"\bn\b(?!\s*line)", f"{mo} {tr}"):
@@ -484,7 +491,7 @@ def _classify_by_make_model(
 
     # ── Mazda ─────────────────────────────────────────────────────────────────
     if m == "mazda":
-        if _has(mo, "cx-9", "cx9"):
+        if re.search(r"cx-?9\b", mo):
             return "Turbocharged"  # 2.5T was the only CX-9 engine from 2016
         if _has(mo, "cx-90", "cx-70") and not _is_hybrid(ft, full):
             return "Turbocharged"  # 3.3T / 3.3 Turbo S inline six
