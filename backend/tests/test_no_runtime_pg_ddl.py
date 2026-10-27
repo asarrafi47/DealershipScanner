@@ -42,17 +42,15 @@ SQLITE_ONLY = {
 
 SNAPSHOT_AND_REPAIR_SCRIPTS = {
     "backend/scripts/apply_attribution_moves.py",
-    "backend/scripts/backfill_extended_specs.py",
     "backend/scripts/dump_baseline_schema.py",
     "backend/scripts/feed_package_registry_from_vision.py",
-    "backend/scripts/fix_extended_spec_outliers.py",
     "backend/scripts/heal_matcher_trims.py",
-    "backend/scripts/heal_stock_code_contamination.py",
+    "backend/scripts/heal_p8a7_driver.py",
     "backend/scripts/heal_vdp_junk_values.py",
     "backend/scripts/link_cars_to_catalog.py",
     "backend/scripts/migrate.py",
     "backend/scripts/quarantine_package_value_msrps.py",
-    "backend/scripts/repair_vin_make_model.py",
+    "backend/utils/db_snapshot.py",
 }
 
 # Remove an entry when P13B.2 / P13B.3 (or another unit) deletes its DDL.
