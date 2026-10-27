@@ -96,13 +96,15 @@ def route_verdict(dealer: dict[str, Any], result: dict[str, Any], recipe_status:
     if recipe_status is None:
         recipe_status = str(_scan_hints(did).get("recipe_status") or "")
     recipe_status = str(recipe_status or "")
-    from backend.scanner.recipes import blocked_on_this_host
+    from backend.scanner.recipes import blocked_on_this_host, egress_tag
 
-    if blocked_on_this_host(recipe_status):
+    # Per-host block (P7.6) lives in scan_hints.recipe_blocked[tag]; only a tagged host reads it.
+    blocked_hints = _scan_hints(did) if egress_tag() else None
+    if blocked_on_this_host(recipe_status, blocked_hints):
         # This host's IP is refused (SCANNER_EGRESS_TAG); re-synthesis from here
         # would only 403 again and a browser capture is not available. A home
         # scanner still owns the dealer.
-        return {"action": "none", "trigger": f"blocked_on_this_host ({recipe_status})", "verdict": verdict}
+        return {"action": "none", "trigger": f"blocked_on_this_host ({recipe_status or 'recipe_blocked'})", "verdict": verdict}
     if verdict == "error" and reason == NO_SCAN_RUN_REASON:
         return {"action": "retry", "trigger": "no_scan_run_row", "verdict": verdict}
     if recipe_status.startswith("stale:"):
@@ -126,10 +128,19 @@ def route_verdict(dealer: dict[str, Any], result: dict[str, Any], recipe_status:
     return {"action": "none", "trigger": verdict or "unassessed", "verdict": verdict}
 
 
+def lifecycle_attempt_key() -> str:
+    """``lifecycle_last_attempt`` on a home scanner, ``lifecycle_last_attempt@<tag>`` on a
+    tagged host, so one host class's attempt does not spend the other's UTC day (P7.6)."""
+    from backend.scanner.recipes import egress_tag
+
+    tag = egress_tag()
+    return f"lifecycle_last_attempt@{tag}" if tag else "lifecycle_last_attempt"
+
+
 def lifecycle_attempted_today(dealer_id: str, hints: dict[str, Any] | None = None, now: datetime | None = None) -> bool:
     """The once-per-day guard: ``scan_hints.lifecycle_last_attempt`` on today's UTC date."""
     hints = hints if hints is not None else _scan_hints(dealer_id)
-    last = str(hints.get("lifecycle_last_attempt") or "")
+    last = str(hints.get(lifecycle_attempt_key()) or "")
     if not last:
         return False
     try:
@@ -187,14 +198,14 @@ def run_lifecycle(dealer: dict[str, Any], result: dict[str, Any], *, trigger: st
     hints = _scan_hints(did)
     if lifecycle_attempted_today(did, hints, now):
         out["lifecycle"] = "failed:attempted_today"
-        out["last_attempt"] = hints.get("lifecycle_last_attempt")
+        out["last_attempt"] = hints.get(lifecycle_attempt_key())
         _log_append(did, "discovery.md", _lifecycle_block(
             stamp, "skipped", trigger,
-            [f"last attempt: {hints.get('lifecycle_last_attempt')} (one lifecycle attempt per dealer per UTC day)",
+            [f"last attempt: {hints.get(lifecycle_attempt_key())} (one lifecycle attempt per dealer per UTC day)",
              f"last verdict: {result.get('verdict')} ({str(result.get('reason') or '')[:120]})"],
             "not retried today; still needs discovery"))
         return out
-    _set_scan_hints(did, {"lifecycle_last_attempt": now.replace(microsecond=0).isoformat()})
+    _set_scan_hints(did, {lifecycle_attempt_key(): now.replace(microsecond=0).isoformat()})
 
     # step 1 — force re-synth through the platform templates + the validator gate
     try:

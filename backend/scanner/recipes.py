@@ -1302,11 +1302,38 @@ def blocked_status_value(status: int | str) -> str:
             f"{datetime.now(timezone.utc).replace(microsecond=0).isoformat()}")
 
 
-def blocked_on_this_host(recipe_status: str | None) -> bool:
-    """True when *recipe_status* is a ``blocked:`` written by a host with this
-    host's egress tag. Other hosts ignore it."""
+HINT_RECIPE_BLOCKED = "recipe_blocked"
+
+
+def blocked_on_this_host(recipe_status: str | None, hints: dict[str, Any] | None = None) -> bool:
+    """True when this tagged host is blocked for the dealer: ``hints['recipe_blocked'][tag]``
+    (per host, P7.6) or a legacy ``recipe_status = blocked:<tag>:...`` written before
+    that. Other hosts ignore both."""
     tag = egress_tag()
-    return bool(tag) and str(recipe_status or "").startswith(f"{RECIPE_STATUS_BLOCKED_PREFIX}{tag}:")
+    if not tag:
+        return False
+    if str(((hints or {}).get(HINT_RECIPE_BLOCKED) or {}).get(tag) or ""):
+        return True
+    return str(recipe_status or "").startswith(f"{RECIPE_STATUS_BLOCKED_PREFIX}{tag}:")
+
+
+def record_blocked(dealer_id: str, value: str, extra: dict[str, Any] | None = None) -> bool:
+    """Record this host's block as ``scan_hints.recipe_blocked[<tag>] = value`` and leave
+    ``recipe_status`` alone (D-RS4: blocked status is per host, so Railway's 403 cannot
+    overwrite a home verdict). *extra* hint keys ride in the same compare-and-set."""
+    tag = egress_tag()
+    if not tag:
+        return False
+    from backend.scanner.recipe_store import mutate_scan_hints
+
+    def apply(h: dict[str, Any]) -> dict[str, Any]:
+        blocked = dict(h.get(HINT_RECIPE_BLOCKED) or {})
+        blocked[tag] = value
+        h[HINT_RECIPE_BLOCKED] = blocked
+        h.update(extra or {})
+        return h
+
+    return mutate_scan_hints(dealer_id, apply)
 
 
 def _parses_json(text: str | None) -> bool:
@@ -1330,7 +1357,10 @@ def record_stale_status(dealer_id: str, status: int) -> str | None:
     try:
         from backend.scanner.recipe_store import set_scan_hints
 
-        set_scan_hints(dealer_id, {"recipe_status": value})
+        if egress_tag():
+            record_blocked(dealer_id, value)
+        else:
+            set_scan_hints(dealer_id, {"recipe_status": value})
     except Exception as exc:  # noqa: BLE001
         logger.debug("recipe_status stale hint skipped [%s]: %s", dealer_id, exc)
     return value
@@ -1344,12 +1374,29 @@ def clear_stale_status(dealer_id: str) -> bool:
     ``uncertain:`` is left alone: it describes the recipes now replaying.
     Best-effort."""
     try:
-        from backend.scanner.recipe_store import get_scan_hints, set_scan_hints
+        from backend.scanner.recipe_store import mutate_scan_hints
 
-        cur = str((get_scan_hints(dealer_id) or {}).get("recipe_status") or "")
-        if not cur.startswith((RECIPE_STATUS_STALE_PREFIX, "rejected:", RECIPE_STATUS_BLOCKED_PREFIX)):
-            return False
-        return bool(set_scan_hints(dealer_id, {"recipe_status": "ok"}))
+        tag = egress_tag()
+        changed = {"v": False}
+
+        def apply(h: dict[str, Any]) -> dict[str, Any] | None:
+            changed["v"] = False
+            cur = str(h.get("recipe_status") or "")
+            if cur.startswith((RECIPE_STATUS_STALE_PREFIX, "rejected:", RECIPE_STATUS_BLOCKED_PREFIX)):
+                h["recipe_status"] = "ok"
+                changed["v"] = True
+            blocked = h.get(HINT_RECIPE_BLOCKED)
+            if tag and isinstance(blocked, dict) and tag in blocked:
+                # Only this host's entry; another host's block stays.
+                blocked = {k: v for k, v in blocked.items() if k != tag}
+                if blocked:
+                    h[HINT_RECIPE_BLOCKED] = blocked
+                else:
+                    h.pop(HINT_RECIPE_BLOCKED, None)
+                changed["v"] = True
+            return h if changed["v"] else None
+
+        return bool(mutate_scan_hints(dealer_id, apply)) and changed["v"]
     except Exception as exc:  # noqa: BLE001
         logger.debug("recipe_status clear skipped [%s]: %s", dealer_id, exc)
         return False

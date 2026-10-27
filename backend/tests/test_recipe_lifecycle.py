@@ -59,7 +59,14 @@ def hints(monkeypatch):
         store[dealer_id] = base
         return True
 
+    def _mutate(dealer_id, fn, **kw):
+        new = fn(json.loads(json.dumps(store.get(dealer_id) or {})))
+        if new is not None:
+            store[dealer_id] = new
+        return True
+
     monkeypatch.setattr(recipe_store, "get_scan_hints", _get)
+    monkeypatch.setattr(recipe_store, "mutate_scan_hints", _mutate)
     monkeypatch.setattr(recipe_store, "set_scan_hints", _set)
     monkeypatch.setattr(recipe_store, "db_load_recipes", lambda *a, **k: [])
     monkeypatch.setattr(recipe_store, "db_read", lambda *a, **k: None)
@@ -123,7 +130,8 @@ def test_403_on_a_tagged_host_keeps_the_shared_recipe_live(monkeypatch, hints):
     assert _replay() is None
     (r,) = load_recipes(D)
     assert not r.stale
-    assert hints[D]["recipe_status"].startswith("blocked:railway:403:")
+    assert hints[D]["recipe_blocked"]["railway"].startswith("blocked:railway:403:")
+    assert "recipe_status" not in hints[D]
 
 
 def test_stale_recipe_is_tried_once_and_unstaled_on_success(monkeypatch, hints):
