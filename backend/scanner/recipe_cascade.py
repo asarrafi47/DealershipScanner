@@ -15,7 +15,8 @@ regardless of whether we can name the platform it belongs to.
     for shape in known working shapes, best first:
         adapt shape to this dealer
         replay it and count unique VINs
-        first shape over the threshold wins and is saved
+        the gate (when given) judges it; a reject falls through to the next shape
+        first shape over the threshold the gate accepts wins and is saved
 
 Why this works at all: on most dealer platforms the inventory endpoint lives on the
 dealer's own hostname with a path that is identical across every tenant. The only
@@ -39,7 +40,7 @@ from __future__ import annotations
 import logging
 import re
 from dataclasses import replace
-from typing import Any, Iterable
+from typing import Any, Callable, Iterable
 from urllib.parse import urlparse
 
 from backend.scanner.recipe_totals import RECIPE_MIN_VINS
@@ -216,6 +217,7 @@ def cascade_for_dealer(
     *,
     min_vins: int = DEFAULT_MIN_VINS,
     max_shapes: int = _MAX_SHAPES_PER_DEALER,
+    accept: Callable[[Any, int], bool] | None = None,
 ) -> tuple[Any | None, int, int]:
     """
     Try borrowed shapes against one dealer.
@@ -223,6 +225,11 @@ def cascade_for_dealer(
     Returns ``(winning_recipe_or_None, vin_count, shapes_tried)``. The recipe is NOT
     saved here; the caller decides, so a dry run can report exactly what a real run
     would write.
+
+    *accept* ``(adapted_recipe, vins) -> bool`` is the set gate (P12B.6): a shape over
+    the VIN floor that it refuses is not the winner, and the loop goes on to the next
+    shape instead of ending on the first count. An exception from it counts as a
+    refusal. Without it the first shape over the floor wins, as before.
     """
     from backend.scanner.recipe_synth import validate_recipe
 
@@ -244,6 +251,16 @@ def cascade_for_dealer(
             logger.debug("cascade %s: %s failed: %s", dealer_id, adapted.url[:70], str(exc)[:90])
             continue
         if vins >= min_vins:
+            if accept is not None:
+                try:
+                    ok = accept(adapted, vins)
+                except Exception as exc:
+                    logger.debug("cascade %s: gate failed on %s: %s", dealer_id, adapted.url[:70], str(exc)[:90])
+                    ok = False
+                if not ok:
+                    logger.info("cascade %s: gate refused %s (%d VINs); trying the next shape",
+                                dealer_id, adapted.url[:70], vins)
+                    continue
             adapted.vehicle_rows = vins
             logger.info(
                 "cascade %s: borrowed shape from %s -> %d VINs (%d shape(s) tried)",
