@@ -24,6 +24,7 @@ from backend.enrichment.dictionary_paths import (
     INDEX_DIR,
     MAKE_ALIASES_PATH,
     MANIFEST_PATH,
+    OPTIONS_RAW_DIR,
     iter_search_roots,
 )
 
@@ -411,6 +412,100 @@ def _catalog_lookup_candidates(
     return [p for _, p in paths]
 
 
+# --- Complete_Options: one in-memory index, the sole options resolver ----------
+#
+# Options lookups used to prefer the SQLite catalog (absent on prod, so prod,
+# CI and local resolved differently) and then glob the roots by filename. The
+# index below is built from the CSV filenames themselves, so every environment
+# that has the files resolves the same way and a stale catalog row can no
+# longer point a lookup at another year. Matching keeps the catalog's LIKE
+# semantics: a file model matches when it equals, extends or is extended by the
+# listing model after normalization (hyphens and spaces vanish, so CR-V ==
+# "CR V" == crv), and ``options_csv_is_for_model`` still vets the winner.
+
+_OPTIONS_RANK_RAW = 0
+_OPTIONS_RANK_OTHER = 1
+
+
+def _is_stub_file(path: Path) -> bool:
+    """Cheap ``options_status(path) == 'stub'``: only small files are counted."""
+    try:
+        if path.stat().st_size > _STUB_MAX_BYTES:
+            return False
+    except OSError:
+        return True
+    return options_status(path) in ("stub", "missing")
+
+
+def _options_filename_splits(path: Path) -> list[tuple[int, str, str]]:
+    """``[(year, make_norm, model_norm)]`` for a Complete_Options filename.
+
+    The make/model boundary of ``2021_Land_Rover_Defender`` is ambiguous, so
+    every underscore position is offered; the Model-column vet settles it.
+    """
+    name = path.name
+    if not name.endswith(_OPTIONS_SUFFIX) or name.endswith(_DT_OPTIONS_SUFFIX):
+        return []
+    m = re.match(r"^(\d{4})_(.+)$", name[: -len(_OPTIONS_SUFFIX)])
+    if not m:
+        return []
+    year, parts = int(m.group(1)), m.group(2).split("_")
+    out: list[tuple[int, str, str]] = []
+    for i in range(1, len(parts)):
+        make_norm = _norm_token(canonical_make(" ".join(parts[:i])))
+        model_norm = _norm_token(" ".join(parts[i:]))
+        if make_norm and model_norm:
+            out.append((year, make_norm, model_norm))
+    return out
+
+
+@lru_cache(maxsize=1)
+def _options_index() -> dict[str, list[tuple[int, str, int, str, Path]]]:
+    """make_norm -> [(year, model_norm, rank, filename, path)], stubs skipped."""
+    out: dict[str, list[tuple[int, str, int, str, Path]]] = defaultdict(list)
+    raw_root = OPTIONS_RAW_DIR.resolve()
+    for path in iter_dictionary_csv_paths("options"):
+        splits = _options_filename_splits(path)
+        if not splits or _is_stub_file(path):
+            continue
+        try:
+            path.resolve().relative_to(raw_root)
+            rank = _OPTIONS_RANK_RAW
+        except ValueError:
+            rank = _OPTIONS_RANK_OTHER
+        for year, make_norm, model_norm in splits:
+            out[make_norm].append((year, model_norm, rank, path.name, path))
+    return dict(out)
+
+
+def _options_index_candidates(make: str, model: str, year: Any) -> list[Path]:
+    """Candidate files, nearest year first, then options/raw before root, then name."""
+    make_norm = _norm_token(canonical_make(make))
+    model_norm = _norm_token(model)
+    if not make_norm or not model_norm:
+        return []
+    try:
+        target_year = int(year)
+    except (TypeError, ValueError):
+        target_year = None
+    hits: list[tuple[int, int, str, Path]] = []
+    seen: set[Path] = set()
+    for file_year, file_model, rank, name, path in _options_index().get(make_norm, ()):
+        if not (
+            file_model == model_norm
+            or file_model.startswith(model_norm)
+            or model_norm.startswith(file_model)
+        ):
+            continue
+        if path in seen:
+            continue
+        seen.add(path)
+        dist = abs(file_year - target_year) if target_year is not None else 0
+        hits.append((dist, rank, name, path))
+    hits.sort(key=lambda h: h[:3])
+    return [h[3] for h in hits]
+
+
 @lru_cache(maxsize=1)
 def _epa_paths_by_make_norm() -> dict[str, list[tuple[int, str, Path]]]:
     """One-time scan: make_norm -> [(year, model_norm, path)]."""
@@ -600,6 +695,26 @@ def options_csv_is_for_model(path: Path, make: str, model: str) -> bool:
     return wanted in _options_csv_model_keys(str(path))
 
 
+def _epa_exact_model_candidates(make: str, model: str, year: int) -> list[Path]:
+    """EPA files whose filename model IS the listing model, nearest year first.
+
+    Runs before the legacy glob, which searches under the trim-ladder family
+    label ("A5" -> "A4") and so can hand a model another model's file when no
+    catalog DB is present (PF-1).
+    """
+    model_norm = _norm_token(model)
+    if not model_norm:
+        return []
+    make_norm = _norm_token(canonical_make(make))
+    hits = [
+        (abs(file_year - year), path.name, path)
+        for file_year, file_model, path in _epa_paths_by_make_norm().get(make_norm, ())
+        if file_model == model_norm
+    ]
+    hits.sort(key=lambda h: h[:2])
+    return [h[2] for h in hits]
+
+
 def _find_epa_csv_uncached(make: str, model: str, year: int) -> Path | None:
     from backend.enrichment.trim_ladder_knowledge import epa_model_search_name
 
@@ -607,6 +722,10 @@ def _find_epa_csv_uncached(make: str, model: str, year: int) -> Path | None:
         return epa_csv_is_for_model(path, make, model)
 
     for path in _catalog_lookup_candidates(make, model, year, kind="epa"):
+        if accept(path):
+            return path
+    exact = _epa_exact_model_candidates(make, model, year)
+    for path in exact:
         if accept(path):
             return path
     return _legacy_glob_find(
@@ -637,25 +756,15 @@ def find_epa_csv(make: str, model: str, year: Any) -> Path | None:
 
 
 def find_complete_options_csv(make: str, model: str, year: Any) -> Path | None:
-    from backend.enrichment.trim_ladder_knowledge import epa_model_search_name
+    """The Complete_Options CSV for this vehicle, from the in-memory file index.
 
-    def accept(path: Path) -> bool:
-        return options_csv_is_for_model(path, make, model)
-
-    for path in _catalog_lookup_candidates(make, model, year, kind="options"):
-        if accept(path):
+    The SQLite catalog is not consulted: prod ships no catalog DB, and a stale
+    catalog row used to win over the files on disk.
+    """
+    for path in _options_index_candidates(make, model, year):
+        if options_csv_is_for_model(path, make, model):
             return path
-    path = _legacy_glob_find(
-        make,
-        model,
-        year,
-        kind="options",
-        epa_model_search_name_fn=epa_model_search_name,
-        accept=accept,
-    )
-    if path and options_status(path) == "stub":
-        return None
-    return path
+    return None
 
 
 def normalize_csv_columns(path: Path, *, dry_run: bool = False) -> bool:
@@ -704,6 +813,7 @@ def invalidate_catalog_cache() -> None:
     load_make_aliases.cache_clear()
     _find_epa_csv_cached.cache_clear()
     _epa_paths_by_make_norm.cache_clear()
+    _options_index.cache_clear()
     _epa_csv_model_keys.cache_clear()
     _options_csv_model_keys.cache_clear()
     from backend.enrichment.knowledge_engine import clear_epa_trim_lookup_cache
