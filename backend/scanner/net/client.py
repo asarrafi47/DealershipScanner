@@ -19,16 +19,20 @@ and ``vdp.vdp_recipes._fetch_json``. This module holds the primitives they share
 * :func:`looks_like_challenge` and the status sets -- challenge detection and
   status classification.
 
-It is a refactor, not a policy: every option is a parameter, and each call site
-passes the options that reproduce what it did before (replay sends no proxy,
-VDP prefetch does no challenge detection, timeouts differ per site). Those
-differences are pinned by ``backend/tests/test_scanner_http_characterization.py``.
+The named :class:`FetchPolicy` values below record, per site, the options each
+call site passes (timeouts differ per site, VDP prefetch rejects challenge pages,
+replay routes through :func:`scanner_proxies`). They are data only until a site
+adopts one; the differences are pinned by
+``backend/tests/test_scanner_http_characterization.py`` and
+``backend/tests/test_net_client_policy.py``. :class:`HostProfileMemory` is the
+process-wide "which signature worked for this host" table.
 The proxy plumbing for urllib (``open_url``) stays in
 :mod:`backend.scanner.http_fetch`.
 """
 from __future__ import annotations
 
 from collections.abc import Callable, Iterable
+import threading
 from dataclasses import dataclass
 from types import ModuleType
 from typing import Any
@@ -59,6 +63,95 @@ RETRYABLE_STATUSES = frozenset({429, 500, 502, 503, 504})
 def is_fingerprint_block(status: int, statuses: Iterable[int] = TLS_FINGERPRINT_STATUSES) -> bool:
     """True when *status* is one the caller treats as a TLS-fingerprint rejection."""
     return status in statuses
+
+
+# The one block set the decided policy (D-OD7) will use. Defined here, used by no site yet.
+FINGERPRINT_BLOCK_STATUSES = frozenset({403, 405, 429, 503})
+
+
+# ── Fetch policy ─────────────────────────────────────────────────────────────
+
+
+@dataclass(frozen=True)
+class FetchPolicy:
+    """What one kind of scanner fetch does: how long it waits, which statuses it reads as a
+    fingerprint block, which signatures it rotates, and whether a challenge body or a thin
+    body counts as a failure. *ua_when_impersonating* is True where the site sends its own
+    User-Agent on top of the impersonated profile's. *retry_statuses* / *retries* /
+    *backoff_s* describe a transient retry (sleep ``backoff_s * (attempt + 1)``)."""
+
+    timeout: float
+    block_statuses: tuple[int, ...] = ()
+    profiles: tuple[str, ...] = ()
+    check_challenge: bool = False
+    min_bytes: int = 0
+    ua_when_impersonating: bool = False
+    retry_statuses: frozenset[int] = frozenset()
+    retries: int = 0
+    backoff_s: float = 0.0
+
+
+# Each value holds what its site does today (no behaviour change).
+FEED_REPLAY = FetchPolicy(
+    timeout=20.0, block_statuses=TLS_FINGERPRINT_STATUSES, profiles=IMPERSONATE_PROFILES,
+    ua_when_impersonating=True,
+)
+SYNTH_HTML = FetchPolicy(
+    timeout=25.0, block_statuses=TLS_FINGERPRINT_STATUSES, profiles=IMPERSONATE_PROFILES,
+    check_challenge=True, min_bytes=2000, ua_when_impersonating=True,
+    retry_statuses=RETRYABLE_STATUSES, retries=2, backoff_s=2.0,
+)
+SYNTH_JSON = FetchPolicy(
+    timeout=25.0, block_statuses=TLS_FINGERPRINT_STATUSES, profiles=IMPERSONATE_PROFILES,
+    ua_when_impersonating=True,
+)
+VDP_HTML = FetchPolicy(
+    timeout=15.0, block_statuses=VDP_FINGERPRINT_BLOCK_STATUSES, profiles=("chrome",),
+    check_challenge=True, ua_when_impersonating=True,
+)
+VDP_JSON = FetchPolicy(timeout=15.0, profiles=("chrome",), ua_when_impersonating=True)
+CHAIN_IMPERSONATE = FetchPolicy(timeout=25.0, profiles=IMPERSONATE_PROFILES)
+CHAIN_REQUESTS = FetchPolicy(timeout=20.0)
+STATUS_PROBE = FetchPolicy(timeout=20.0, check_challenge=True)
+
+
+class HostProfileMemory:
+    """Thread-safe host -> impersonation profile that last cleared it.
+
+    Process-wide (see :data:`HOST_PROFILES`): a fetcher built per call (gap_fill) now
+    shares what an earlier one learned. Keys are compared as given; callers lower-case.
+    """
+
+    def __init__(self) -> None:
+        self._lock = threading.Lock()
+        self._winning: dict[str, str] = {}
+
+    def get(self, host: str, default: str | None = None) -> str | None:
+        with self._lock:
+            return self._winning.get(host, default)
+
+    def remember(self, host: str, profile: str) -> None:
+        with self._lock:
+            self._winning[host] = profile
+
+    __setitem__ = remember
+
+    def order(self, host: str, profiles: Iterable[str] = IMPERSONATE_PROFILES) -> list[str]:
+        """*profiles* with the host's remembered winner first."""
+        known = self.get(host)
+        profiles = list(profiles)
+        return ([known] + [p for p in profiles if p != known]) if known else profiles
+
+    def clear(self) -> None:
+        with self._lock:
+            self._winning.clear()
+
+    def __len__(self) -> int:
+        with self._lock:
+            return len(self._winning)
+
+
+HOST_PROFILES = HostProfileMemory()
 
 
 # ── Challenge detection ──────────────────────────────────────────────────────
