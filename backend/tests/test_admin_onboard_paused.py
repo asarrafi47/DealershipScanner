@@ -377,3 +377,12 @@ def test_find_dealers_has_no_paused_line_for_a_member(monkeypatch, tmp_path, app
     html = rv.get_data(as_text=True)
     assert PAUSED_LINE not in html
     assert 'id="ds-find-dealers-admin"' not in html
+
+
+def test_no_template_or_script_hints_at_missing_up_sh_full_flag():
+    """P15A.3: ``deploy/up.sh`` has no ``--full`` flag (it sets COMPOSE_PROFILES itself)."""
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[2]
+    for rel in ("frontend/static/find_dealers.js", "frontend/templates/admin/dealers.html"):
+        assert "up.sh --full" not in (root / rel).read_text(encoding="utf-8"), rel

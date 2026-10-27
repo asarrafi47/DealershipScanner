@@ -42,7 +42,7 @@
         if (adminCfg && adminCfg.onboard_paused) return "";
         if (!adminCfg || !adminCfg.onboard_enabled) {
             if (adminCfg && !adminCfg.onboard_enabled) {
-                return '<p class="find-dealers-admin-hint">Scrape queue needs Postgres (<code>./deploy/up.sh --full</code>).</p>';
+                return '<p class="find-dealers-admin-hint">Scrape queue needs Postgres (set <code>INVENTORY_DATABASE_URL</code>; <code>./deploy/up.sh</code> starts the local stack).</p>';
             }
             return "";
         }

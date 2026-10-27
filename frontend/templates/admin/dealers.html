@@ -11,7 +11,7 @@
     <p id="dealers-onboarding-paused">{{ onboarding_paused_message }}</p>
 
     {% if not postgres_ok %}
-    <p class="error-box">Postgres job queue not configured. Run <code>./deploy/up.sh --full</code> with <code>INVENTORY_DATABASE_URL</code>.</p>
+    <p class="error-box">Postgres job queue not configured. Set <code>INVENTORY_DATABASE_URL</code>; <code>./deploy/up.sh</code> starts the local stack.</p>
     {% else %}
 
     <section>
