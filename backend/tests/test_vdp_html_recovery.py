@@ -1,7 +1,7 @@
 """Tests for VDP HTML gallery recovery."""
 from __future__ import annotations
 
-from backend.scanner import vdp_html_recovery as rec
+from backend.scanner.vdp import html_recovery as rec
 
 
 SAMPLE_HTML = """

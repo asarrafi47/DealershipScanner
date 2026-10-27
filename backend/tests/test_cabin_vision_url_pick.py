@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from backend.scanner.post_pipeline import _url_suggests_interior_cabin_image
+from backend.scanner.post_scan.pipeline import _url_suggests_interior_cabin_image
 
 
 def test_url_heuristic_interior_needles() -> None:
@@ -13,7 +13,7 @@ def test_url_heuristic_interior_needles() -> None:
 
 
 def test_select_cabin_stops_on_first_path_hint() -> None:
-    from backend.scanner.post_pipeline import select_url_for_cabin_vision
+    from backend.scanner.post_scan.pipeline import select_url_for_cabin_vision
 
     urls = [
         "https://a/exterior-01.jpg",

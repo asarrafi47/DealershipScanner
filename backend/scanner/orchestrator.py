@@ -30,7 +30,7 @@ from backend.scanner.scan_lock import (
     release_scan_lock,
 )
 from backend.scanner.scan_efficiency import post_vpic_env_enabled
-from backend.scanner.post_pipeline import (
+from backend.scanner.post_scan.pipeline import (
     aggregate_vins_from_dealer_results,
     post_dealer_google_ratings_env_enabled,
     post_dict_enrich_env_enabled,
@@ -71,7 +71,7 @@ def on_scanner_shutdown_signal() -> None:
 
 
 def _max_vdp_concurrency() -> int:
-    from backend.scanner.vdp import _max_vdp_concurrency as vdp_conc
+    from backend.scanner.vdp.config import _max_vdp_concurrency as vdp_conc
 
     return vdp_conc()
 

@@ -148,7 +148,7 @@ def _try_fetch_and_store_oem_pdf(
     out: dict[str, Any] | None = None,
 ) -> Path | None:
     """Fetch Stellantis/Ford OEM PDF and store under ``car_window_stickers/``."""
-    from backend.scanner.window_sticker import fetch_window_sticker_pdf, get_window_sticker_url
+    from backend.scanner.post_scan.window_sticker import fetch_window_sticker_pdf, get_window_sticker_url
 
     fetched = fetch_window_sticker_pdf(vnorm)
     if not fetched:
@@ -292,13 +292,13 @@ def _packages_have_priced_sticker_options(parsed: dict[str, Any]) -> bool:
             if isinstance(raw, dict) and raw.get("price") is not None:
                 return True
             if isinstance(raw, str):
-                from backend.scanner.window_sticker import _parse_dollar_amount
+                from backend.scanner.post_scan.window_sticker import _parse_dollar_amount
 
                 if _parse_dollar_amount(raw) is not None:
                     return True
     opts = parsed.get("sticker_options")
     if isinstance(opts, list):
-        from backend.scanner.window_sticker import _parse_dollar_amount
+        from backend.scanner.post_scan.window_sticker import _parse_dollar_amount
 
         for raw in opts:
             if isinstance(raw, dict) and raw.get("price") is not None:
@@ -330,7 +330,7 @@ def car_sticker_packages_need_analysis(car: dict[str, Any]) -> bool:
         return True
     disp = parsed.get("sticker_engine_display")
     if isinstance(disp, str) and disp.strip():
-        from backend.scanner.window_sticker import sticker_engine_display_is_valid
+        from backend.scanner.post_scan.window_sticker import sticker_engine_display_is_valid
 
         if not sticker_engine_display_is_valid(disp):
             return True
@@ -338,7 +338,7 @@ def car_sticker_packages_need_analysis(car: dict[str, Any]) -> bool:
         if "etorque" in pkg_blob and "mild hybrid" not in disp.lower():
             return True
         if "mild hybrid" not in disp.lower():
-            from backend.scanner.window_sticker import car_has_etorque_signal
+            from backend.scanner.post_scan.window_sticker import car_has_etorque_signal
 
             if car_has_etorque_signal(car):
                 return True
@@ -439,7 +439,7 @@ def _car_fields_from_parsed_sticker(
     (and discrepancy) entries for the caller to merge into ``spec_source_json``
     in the same UPDATE as the columns.
     """
-    from backend.scanner.window_sticker import (
+    from backend.scanner.post_scan.window_sticker import (
         known_oem_engine_from_car,
         oem_sticker_parsing_skip_claude,
         sticker_engine_display_is_valid,
@@ -524,7 +524,7 @@ def _analyze_local_sticker_pdf(
     sticker_url: str = "",
 ) -> bool:
     """Parse stored PDF or text sticker and merge options/colors into the car row."""
-    from backend.scanner.window_sticker import (
+    from backend.scanner.post_scan.window_sticker import (
         _extract_pdf_text,
         _parse_msrp_from_sticker_text,
         known_oem_engine_from_car,
@@ -566,7 +566,7 @@ def _analyze_sticker_text_and_merge(
     source_label: str = "oem_window_sticker",
 ) -> bool:
     """Parse sticker text (PDF extract or iPacket MSRP doc) and merge into packages."""
-    from backend.scanner.window_sticker import (
+    from backend.scanner.post_scan.window_sticker import (
         _parse_msrp_from_sticker_text,
         known_oem_engine_from_car,
         oem_sticker_parsing_skip_claude,
@@ -690,7 +690,7 @@ def _analyze_sticker_text_and_merge(
 
 
 def _listing_sticker_urls_for_car(car: dict[str, Any]) -> list[str]:
-    from backend.scanner.window_sticker import (
+    from backend.scanner.post_scan.window_sticker import (
         extract_listing_sticker_urls_from_html,
         listing_sticker_url_candidates,
     )
@@ -705,7 +705,7 @@ def _listing_sticker_urls_for_car(car: dict[str, Any]) -> list[str]:
     if not listing_url.lower().startswith("http"):
         return []
     try:
-        from backend.scanner.listing_gap_fill import fetch_listing_html
+        from backend.scanner.post_scan.gap_fill import fetch_listing_html
 
         html = fetch_listing_html(listing_url)
     except Exception as e:
@@ -717,11 +717,11 @@ def _listing_sticker_urls_for_car(car: dict[str, Any]) -> list[str]:
     if not discovered:
         vnorm = re.sub(r"\s+", "", str(car.get("vin") or "").strip().upper())
         if len(vnorm) == 17:
-            from backend.scanner.dealer_sticker_provider import (
+            from backend.scanner.dealer.sticker_provider import (
                 record_ipacket_probe_result,
                 should_try_ipacket_website_plugin,
             )
-            from backend.scanner.window_sticker import _ipacket_sticker_urls_from_website_plugin
+            from backend.scanner.post_scan.window_sticker import _ipacket_sticker_urls_from_website_plugin
 
             if should_try_ipacket_website_plugin(car, html):
                 discovered = _ipacket_sticker_urls_from_website_plugin(vnorm)
@@ -791,7 +791,7 @@ def _try_fetch_listing_sticker_for_car(
     out: dict[str, Any],
 ) -> bool:
     """Fetch iPacket / dealer Monroney URL from the listing when OEM PDF is unavailable."""
-    from backend.scanner.window_sticker import (
+    from backend.scanner.post_scan.window_sticker import (
         _is_valid_listing_sticker_payload,
         fetch_listing_sticker,
     )
@@ -854,7 +854,7 @@ def _try_fetch_listing_sticker_for_car(
     out["listing_sticker"] = True
 
     if "autoipacket.com" in (sticker_url or "").lower():
-        from backend.scanner.dealer_sticker_provider import note_dealer_sticker_provider
+        from backend.scanner.dealer.sticker_provider import note_dealer_sticker_provider
 
         note_dealer_sticker_provider(
             car.get("dealership_registry_id"),
@@ -862,7 +862,7 @@ def _try_fetch_listing_sticker_for_car(
             source="listing_sticker_fetch",
         )
     elif sticker_url:
-        from backend.scanner.dealer_sticker_provider import note_dealer_sticker_provider
+        from backend.scanner.dealer.sticker_provider import note_dealer_sticker_provider
 
         note_dealer_sticker_provider(
             car.get("dealership_registry_id"),
@@ -942,7 +942,7 @@ def _merge_packages(existing_raw: str | None, patch: dict[str, Any]) -> str:
 
 
 def _apply_claude_sticker_options(pkg_patch: dict[str, Any], claude_opts: Any) -> None:
-    from backend.scanner.window_sticker import coerce_sticker_option_item
+    from backend.scanner.post_scan.window_sticker import coerce_sticker_option_item
 
     if not isinstance(claude_opts, list):
         return
@@ -1108,7 +1108,7 @@ def ensure_window_sticker_for_car(car_id: int, *, allow_vision_fallback: bool = 
         "window_sticker_available": False,
     }
 
-    from backend.scanner.window_sticker import (
+    from backend.scanner.post_scan.window_sticker import (
         get_window_sticker_url,
         should_auto_fetch_oem_window_sticker,
     )
@@ -1158,7 +1158,7 @@ def ensure_window_sticker_for_car(car_id: int, *, allow_vision_fallback: bool = 
             _apply_vision_fallback_merged(int(car_id), car, out)
         return out
 
-    from backend.scanner.window_sticker import (
+    from backend.scanner.post_scan.window_sticker import (
         fetch_window_sticker_pdf,
         get_window_sticker_url,
         known_oem_engine_from_car,

@@ -54,7 +54,7 @@ def resolve_electric_drive(src: SpecSources) -> tuple[bool, dict[str, Any]]:
 
     is_bev = _feed_and_catalog_say_electric(src)
     try:
-        from backend.scanner.window_sticker import dodge_charger_daytona_is_bev
+        from backend.scanner.post_scan.window_sticker import dodge_charger_daytona_is_bev
 
         if dodge_charger_daytona_is_bev(src.car):
             is_bev = True

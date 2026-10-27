@@ -7,7 +7,6 @@ from __future__ import annotations
 
 import asyncio
 import logging
-import os
 from typing import Any
 
 from backend.scanner.inventory_write import InventoryWriteCoordinator
@@ -40,34 +39,6 @@ from backend.scanner.rooftop_disown import (  # noqa: F401 - re-exported
 logger = logging.getLogger("scanner")
 
 
-def _warmup_phase_timeout_sec() -> float:
-    """Hard cap on the whole warmup phase (goto → settle → cookie banner); 0 disables."""
-    raw = (os.environ.get("SCANNER_WARMUP_PHASE_TIMEOUT_SEC") or "240").strip()
-    try:
-        val = float(raw)
-    except ValueError:
-        return 240.0
-    return val if val > 0 else 86400.0
-
-
-def _vdp_phase_timeout_sec(n_vehicles: int) -> float:
-    """
-    Hard cap on the whole VDP enrichment phase, so a wedged renderer can't block the
-    dealer's inventory upsert. Scales with lot size (VDP visits N pages) around a base
-    budget; ``SCANNER_VDP_PHASE_TIMEOUT_SEC`` overrides the base, 0 disables.
-    """
-    raw = (os.environ.get("SCANNER_VDP_PHASE_TIMEOUT_SEC") or "").strip()
-    if raw:
-        try:
-            v = float(raw)
-            return v if v > 0 else 86400.0
-        except ValueError:
-            pass
-    # ~4s/vehicle budget over a 300s floor, capped at 2h — generous for real VDP,
-    # far below the 3h dealer timeout so a wedge is caught at the phase, not the dealer.
-    return max(300.0, min(7200.0, 300.0 + 4.0 * max(0, n_vehicles)))
-
-
 async def run_dealer(
     browser: Any,
     dealer: dict,
@@ -85,7 +56,6 @@ async def run_dealer(
         return result
 
     logger.info("Dealer start: %s", name)
-    logger.info("Warmup: %s — navigating to base URL", name)
     try:
         await open_session(run, browser)
         await _feed.fetch_recipe_feed(run)

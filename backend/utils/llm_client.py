@@ -105,14 +105,6 @@ def active_provider() -> str:
     return "claude" if anthropic_key() else "local"
 
 
-def _claude_model() -> str:
-    # One table for every Anthropic call (backend/llm/client.py, role "chat");
-    # LLM_CLAUDE_MODEL still overrides it, as before.
-    from backend.llm.client import model_for
-
-    return model_for("chat")
-
-
 def _claude_max_tokens() -> int:
     try:
         return int(os.environ.get("LLM_CLAUDE_MAX_TOKENS") or 1024)

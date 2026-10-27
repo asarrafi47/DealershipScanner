@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 """
-Manifest-driven dealership inventory scanner. Uses playwright + stealth,
-session warmup to avoid 403, network interception for JSON, HTML fallback, and
-optional ``__NEXT_DATA__`` (Next.js) extraction when the raw HTML shell has no rows.
+Manifest-driven dealership inventory scanner. HTTP-only (docs/HTTP_ONLY_SCANS_PLAN.md):
+each dealer's inventory comes from its replayed network recipe, with HTML-card and
+detail-page recovery for rows the feed leaves thin; no page is rendered.
 
 Implementation is split across:
 
-- ``orchestrator`` — browser pool, concurrency, post-scan delegation
-- ``phases/dealer_run`` — per-dealer warmup → inventory → recovery → VDP → upsert
-- ``phases/inventory_scrape`` — single inventory path JSON intercept
-- ``phases/nav`` — Playwright navigation helpers
+- ``orchestrator`` — dealer concurrency, shared write coordinator, post-scan delegation
+- ``phases/dealer_run`` — per-dealer recipe feed → attribution → recovery → enrichment → upsert
+- ``phases/inventory_scrape`` — inventory parsing helpers
+- ``phases/nav`` — session/navigation helpers
 - ``manifest`` — dealers.json loading and filters
 - ``post_scan/job`` — standalone repair/enrichment (``python post_scan.py``)
 
@@ -56,7 +56,7 @@ from backend.scanner.phases.dealer_run import (
     apply_monroney_vision_to_vehicles as _apply_monroney_vision_to_vehicles,
     run_dealer,
 )
-from backend.scanner.post_pipeline import (
+from backend.scanner.post_scan.pipeline import (
     apply_gallery_vision_filter_to_vehicles as _apply_gallery_vision_filter_to_vehicles,
     gallery_vision_filter_env_enabled,
     monroney_vision_env_enabled,

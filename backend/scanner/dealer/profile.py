@@ -14,15 +14,21 @@ from backend.db.inventory_db import db_conn
 
 logger = logging.getLogger(__name__)
 
-# Keep in sync with inventory_recovery.RECOVERY_STRATEGY_ORDER
-_VALID_STRATEGIES = frozenset({
+# Full recovery chain order (platform-specific strategies before HTML fallback).
+# Single source: inventory_recovery re-imports this, and _VALID_STRATEGIES derives from it.
+RECOVERY_STRATEGY_ORDER: tuple[str, ...] = (
+    "shopperexpress_api",
     "dealer_inspire_algolia",
     "dealer_venom_typesense",
     "pixel_motion_html",
     "dealer_on_cosmos",
     "dealer_eprocess_json",
     "html_next_data",
-})
+    "jsonld_listing_html",
+)
+# Strategies that never need a browser page (docs/HTTP_ONLY_SCANS_PLAN.md).
+HTTP_SAFE_STRATEGIES = frozenset({"shopperexpress_api", "dealer_eprocess_json", "html_next_data", "jsonld_listing_html"})
+_VALID_STRATEGIES = frozenset(RECOVERY_STRATEGY_ORDER)
 
 
 def ensure_dealer_scan_profile_table(cursor: Any) -> None:

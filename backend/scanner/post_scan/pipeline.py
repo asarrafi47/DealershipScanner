@@ -698,26 +698,6 @@ def _url_suggests_interior_cabin_image(url: str) -> bool:
     return False
 
 
-def _classify_category_is_cabin(classify_out: dict[str, Any] | None) -> bool:
-    if not isinstance(classify_out, dict):
-        return False
-    c = str(classify_out.get("category") or "").strip().lower().replace(" ", "_").replace("-", "_")
-    return c in {
-        "interior",
-        "cabin",
-        "cabinview",
-        "cabin_view",
-    }
-
-
-def _interior_vision_max_gallery_classify() -> int:
-    try:
-        v = int((os.environ.get("INTERIOR_VISION_MAX_GALLERY_CLASSIFY") or "12").strip())
-    except (TypeError, ValueError):
-        return 12
-    return max(0, min(48, v))
-
-
 def select_url_for_cabin_vision(urls: list[str]) -> str | None:
     """
     Choose one HTTPS URL that is likely a cabin photo before running interior color vision.

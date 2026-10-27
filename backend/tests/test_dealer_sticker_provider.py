@@ -2,14 +2,14 @@
 
 from __future__ import annotations
 
-from backend.scanner.dealer_sticker_provider import (
+from backend.scanner.dealer.sticker_provider import (
     PROVIDER_IPACKET,
     PROVIDER_NONE,
     detect_sticker_provider_from_html,
     detect_sticker_provider_from_urls,
     should_try_ipacket_website_plugin,
 )
-from backend.scanner.window_sticker import (
+from backend.scanner.post_scan.window_sticker import (
     _repair_sticker_credit_name,
     is_cdjr_stellantis_car,
     organize_sticker_option_sections,
@@ -34,7 +34,7 @@ def test_should_not_try_ipacket_for_cdjr() -> None:
 
 def test_should_skip_ipacket_when_dealer_none(monkeypatch) -> None:
     monkeypatch.setattr(
-        "backend.scanner.dealer_sticker_provider.get_car_dealer_sticker_provider",
+        "backend.scanner.dealer.sticker_provider.get_car_dealer_sticker_provider",
         lambda _car: PROVIDER_NONE,
     )
     car = {"make": "Mercedes-Benz", "vin": "W1K6G7GB6NA126084", "dealership_registry_id": 99}

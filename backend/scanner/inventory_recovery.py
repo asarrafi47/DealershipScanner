@@ -20,7 +20,9 @@ from backend.scanner.scrapers.scanner_intercept_filter import (
     max_algolia_nb_hits_from_intercepts,
     max_vehicle_list_len_from_intercepts,
 )
-from backend.scanner.dealer_profile import (
+from backend.scanner.dealer.profile import (
+    HTTP_SAFE_STRATEGIES,
+    RECOVERY_STRATEGY_ORDER,
     get_cached_winning_strategy,
     manifest_recovery_strategies,
     manifest_skip_recovery,
@@ -79,20 +81,6 @@ def _recovery_hint_filter_enabled() -> bool:
     raw = (os.environ.get("SCANNER_RECOVERY_HINT_FILTER") or "1").strip().lower()
     return raw not in ("0", "false", "no", "off")
 
-
-# Full recovery chain order (platform-specific strategies before HTML fallback).
-RECOVERY_STRATEGY_ORDER: tuple[str, ...] = (
-    "shopperexpress_api",
-    "dealer_inspire_algolia",
-    "dealer_venom_typesense",
-    "pixel_motion_html",
-    "dealer_on_cosmos",
-    "dealer_eprocess_json",
-    "html_next_data",
-    "jsonld_listing_html",
-)
-# Strategies that never need a browser page (docs/HTTP_ONLY_SCANS_PLAN.md).
-HTTP_SAFE_STRATEGIES = frozenset({"shopperexpress_api", "dealer_eprocess_json", "html_next_data", "jsonld_listing_html"})
 
 _STRATEGY_PLATFORM_HINTS: dict[str, frozenset[str]] = {
     "shopperexpress_api": frozenset({"shopperexpress"}),

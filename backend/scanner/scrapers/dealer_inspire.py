@@ -18,8 +18,6 @@ import re
 import urllib.parse
 from typing import Any
 
-import requests
-
 from backend.scanner.scrapers.algolia_scope import (
     encode_algolia_filter_param,
     infer_algolia_filters,
@@ -129,63 +127,6 @@ def _extract_algolia_config_from_html(html: str) -> dict[str, str] | None:
                 "indexName": index_m.group(1),
             }
     return None
-
-
-def _query_algolia_inventory(
-    app_id: str,
-    api_key: str,
-    index_name: str,
-    *,
-    filters: str = "",
-    page_size: int = _ALGOLIA_BATCH_SIZE,
-) -> list[dict[str, Any]]:
-    """
-    Query Algolia for all vehicles in the index (paginated).
-    Returns list of raw Algolia hit dicts.
-    """
-    url = _build_algolia_url(app_id)
-    if url is None:
-        logger.warning("DealerInspire Algolia: rejecting invalid app_id %r", app_id)
-        return []
-    headers = {
-        "X-Algolia-Application-Id": app_id,
-        "X-Algolia-API-Key": api_key,
-        "Content-Type": "application/json",
-    }
-    all_hits: list[dict[str, Any]] = []
-    page = 0
-    filt_param = encode_algolia_filter_param(filters)
-    while True:
-        payload = {
-            "requests": [
-                {
-                    "indexName": index_name,
-                    "params": f"hitsPerPage={page_size}&page={page}&filters={filt_param}",
-                }
-            ]
-        }
-        try:
-            r = requests.post(url, headers=headers, json=payload, timeout=20)
-            if r.status_code in (401, 403):
-                logger.warning("DealerInspire Algolia: auth error %d for app=%s", r.status_code, app_id)
-                break
-            r.raise_for_status()
-            data = r.json()
-        except Exception as e:
-            logger.debug("DealerInspire Algolia query failed: %s", e)
-            break
-        results = data.get("results", [{}])
-        hits = results[0].get("hits", []) if results else []
-        if not hits:
-            break
-        all_hits.extend(hits)
-        nb_pages = int(results[0].get("nbPages", 1))
-        if page >= nb_pages - 1:
-            break
-        page += 1
-        if len(all_hits) >= 10000:
-            break
-    return all_hits
 
 
 async def _browser_algolia_fetch(page: Any, url: str, app_id: str, api_key: str, payload: dict) -> dict:
@@ -354,7 +295,7 @@ def _map_algolia_hit(hit: dict[str, Any], base_url: str, dealer_id: str, dealer_
 
     lot_location = ""
     try:
-        from backend.scanner.dealer_location import extract_location_from_inventory_object
+        from backend.scanner.dealer.location import extract_location_from_inventory_object
 
         lot_location = extract_location_from_inventory_object(hit)
     except ImportError:

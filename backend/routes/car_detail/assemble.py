@@ -31,7 +31,7 @@ def assemble_view_context(
     generated_spec_sheet,
     unified_options_list: list,
 ) -> dict:
-    from backend.scanner.window_sticker import is_cdjr_stellantis_car
+    from backend.scanner.post_scan.window_sticker import is_cdjr_stellantis_car
     from backend.utils.dealer_rating_display import dealer_rating_display
 
     return {

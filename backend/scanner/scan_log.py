@@ -32,10 +32,6 @@ def init_scan_log(log_path: Path) -> None:
     _write({"type": "scan_start", "scan_ts": ts, "log_file": str(log_path)})
 
 
-def active_log_path() -> Path | None:
-    return _log_file
-
-
 def _write(record: dict[str, Any]) -> None:
     if _log_file is None:
         return

@@ -37,7 +37,7 @@ def resolve_window_sticker_view(car_id: int, car_raw: dict, ctx: dict) -> Window
         window_sticker_available,
         window_sticker_has_visual,
     )
-    from backend.scanner.window_sticker import (
+    from backend.scanner.post_scan.window_sticker import (
         car_listing_may_have_sticker,
         car_listing_sticker_urls,
         cdjr_oem_window_sticker_eligible,

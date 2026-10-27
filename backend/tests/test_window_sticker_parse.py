@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from backend.scanner.window_sticker import (
+from backend.scanner.post_scan.window_sticker import (
     oem_sticker_parsing_skip_claude,
     parse_sticker_from_text,
 )
@@ -138,7 +138,7 @@ def test_parse_charger_daytona_ev_from_motor_not_country_of_origin() -> None:
 
 
 def test_dodge_charger_daytona_is_bev() -> None:
-    from backend.scanner.window_sticker import dodge_charger_daytona_is_bev
+    from backend.scanner.post_scan.window_sticker import dodge_charger_daytona_is_bev
 
     assert dodge_charger_daytona_is_bev(
         {"make": "Dodge", "model": "Charger Daytona", "trim": "Scat Pack", "year": 2024}
@@ -187,7 +187,7 @@ def test_oem_skip_claude_for_cdjr_and_ford() -> None:
 
 
 def test_oem_hide_photo_analysis() -> None:
-    from backend.scanner.window_sticker import oem_hide_photo_analysis
+    from backend.scanner.post_scan.window_sticker import oem_hide_photo_analysis
 
     assert oem_hide_photo_analysis("1C4JJXSJ5MW755034", "Jeep") is True
     assert oem_hide_photo_analysis("1FAFP45F62F123456", "Ford") is True
@@ -196,7 +196,7 @@ def test_oem_hide_photo_analysis() -> None:
 
 
 def test_sticker_boilerplate_lines_filtered_from_display() -> None:
-    from backend.scanner.window_sticker import is_sticker_boilerplate_line, sticker_options_for_display
+    from backend.scanner.post_scan.window_sticker import is_sticker_boilerplate_line, sticker_options_for_display
 
     junk = [
         "MODEL YEAR COMPASS LATITUDE 4X4",
@@ -220,7 +220,7 @@ def test_sticker_boilerplate_lines_filtered_from_display() -> None:
 
 
 def test_sticker_factory_code_ur019_filtered() -> None:
-    from backend.scanner.window_sticker import (
+    from backend.scanner.post_scan.window_sticker import (
         _is_sticker_factory_code_noise,
         parse_sticker_option_items,
         sticker_options_for_display,

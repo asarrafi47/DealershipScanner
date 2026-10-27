@@ -103,25 +103,6 @@ def note_dealer_sticker_provider(
         logger.debug("note_dealer_sticker_provider failed id=%s: %s", dealership_registry_id, e)
 
 
-def note_sticker_signals_from_vdp(
-    car: dict[str, Any],
-    *,
-    sticker_urls: list[str] | None = None,
-    html: str | None = None,
-) -> None:
-    """Update dealer sticker capability from VDP scrape signals."""
-    rid = _registry_id_for_car(car)
-    if not rid:
-        return
-    from_urls = detect_sticker_provider_from_urls(list(sticker_urls or []))
-    if from_urls:
-        note_dealer_sticker_provider(rid, from_urls, source="vdp_url")
-        return
-    from_html = detect_sticker_provider_from_html(html or "")
-    if from_html:
-        note_dealer_sticker_provider(rid, from_html, source="vdp_html")
-
-
 def record_ipacket_probe_result(car: dict[str, Any], *, success: bool) -> None:
     """Track iPacket website-plugin probe outcomes per dealership."""
     rid = _registry_id_for_car(car)

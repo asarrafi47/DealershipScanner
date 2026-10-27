@@ -1,7 +1,7 @@
 """Rooftop attribution as a scored matcher.
 
-Moved from ``backend/scanner/rooftop_match.py`` (2026-10-01); that path is now an
-alias of this module. Still behind ``SCANNER_ROOFTOP_SCORER`` (default on).
+Moved from ``backend/scanner/rooftop_match.py`` (2026-10-01); the alias
+at that path has been removed. Still behind ``SCANNER_ROOFTOP_SCORER`` (default on).
 
 The gate in ``backend.attribution.rooftop`` (re-exported by ``backend.parsers``) decides, for every row of a group-feed payload, whether the
 car belongs to the store being scanned. It does so by a ladder of unique-winner tiers

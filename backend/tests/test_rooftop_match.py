@@ -1,4 +1,4 @@
-"""The rooftop scorer (backend/scanner/rooftop_match.py): signal weights, the
+"""The rooftop scorer (backend/attribution/match.py): signal weights, the
 never-sufficient rules, the evidence-only signals, and flag parity with the legacy gate.
 The regression corpus (test_rooftop_corpus.py) proves the decisions; this file pins the
 scorer's own contract."""
@@ -8,7 +8,7 @@ import pytest
 
 import backend.parsers as parsers_mod
 from backend.parsers import parse
-from backend.scanner import rooftop_match as rm
+from backend.attribution import match as rm
 
 
 @pytest.fixture(autouse=True)

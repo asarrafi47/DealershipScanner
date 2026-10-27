@@ -239,39 +239,6 @@ def extract_location_from_vehicle_row(v: dict[str, Any]) -> str:
     return ""
 
 
-def extract_location_from_vdp_bundle(bundle: dict[str, Any]) -> str:
-    """Merge DOM / spec snippets from ``PAGE_EXTRACT_JS`` capture."""
-    if not isinstance(bundle, dict):
-        return ""
-    parts: list[str] = []
-    for sn in bundle.get("domLocationSnippets") or []:
-        if isinstance(sn, str) and sn.strip():
-            parts.append(sn.strip())
-    specs = bundle.get("domSpecs")
-    if isinstance(specs, dict):
-        for k, val in specs.items():
-            if not isinstance(k, str) or not isinstance(val, str):
-                continue
-            if _LOCATION_KEY_RE.search(k) or _LOCATION_KEY_RE.search(val):
-                parts.append(f"{k}: {val}".strip())
-    for badge in bundle.get("domBadges") or []:
-        if isinstance(badge, str) and _LOCATION_KEY_RE.search(badge):
-            parts.append(badge.strip())
-    body = _pick_str(bundle.get("pageTextSample"))
-    if body:
-        for m in _LOCATED_AT_RE.finditer(body):
-            parts.append(m.group(1).strip())
-    seen: set[str] = set()
-    out: list[str] = []
-    for p in parts:
-        k = p.lower()
-        if k in seen:
-            continue
-        seen.add(k)
-        out.append(p)
-    return " | ".join(out)[:500]
-
-
 def classify_vehicle_location(
     location_text: str,
     profile: DealerSiteProfile,
@@ -433,24 +400,3 @@ def filter_sister_store_vehicles(
             stats["samples_excluded"],
         )
     return kept, stats
-
-
-def apply_vdp_location_verdict(
-    vehicle: dict[str, Any],
-    bundle: dict[str, Any],
-    profile: DealerSiteProfile,
-) -> str:
-    """
-    If VDP capture shows an off-lot location, mark ``vehicle`` for exclusion.
-
-    Returns verdict string (``match`` / ``mismatch`` / ``unknown``).
-    """
-    if not sister_store_filter_enabled():
-        return "unknown"
-    loc = extract_location_from_vdp_bundle(bundle)
-    if loc:
-        vehicle["_lot_location"] = loc
-    verdict = classify_vehicle_location(loc, profile)
-    if verdict == "mismatch":
-        vehicle["_sister_store_exclude"] = True
-    return verdict

@@ -1,6 +1,6 @@
 """iPacket / dealer listing MSRP sticker URL discovery and parsing."""
 
-from backend.scanner.window_sticker import (
+from backend.scanner.post_scan.window_sticker import (
     _parse_msrp_from_sticker_text,
     _parse_options_from_sticker_text,
     extract_listing_sticker_urls_from_html,
@@ -23,7 +23,7 @@ def test_is_listing_sticker_url_ipacket() -> None:
 
 
 def test_ipacket_website_plugin_sticker_urls(monkeypatch) -> None:
-    from backend.scanner import window_sticker as ws
+    from backend.scanner.post_scan import window_sticker as ws
 
     payload = {
         "modules": [
@@ -54,7 +54,7 @@ def test_ipacket_website_plugin_sticker_urls(monkeypatch) -> None:
 
 
 def test_resolve_listing_sticker_fetch_url_document_viewer() -> None:
-    from backend.scanner.window_sticker import resolve_listing_sticker_fetch_url
+    from backend.scanner.post_scan.window_sticker import resolve_listing_sticker_fetch_url
 
     viewer = (
         "https://document-viewer.autoipacket.com/sticker/W1K6G7GB6NA126084"
@@ -129,7 +129,7 @@ TOTAL SUGGESTED PRICE: $129,075
 
 
 def test_organize_sticker_option_sections_packages_and_options() -> None:
-    from backend.scanner.window_sticker import organize_sticker_option_sections
+    from backend.scanner.post_scan.window_sticker import organize_sticker_option_sections
 
     items = [
         {"name": "Base", "price": 117700, "code": None},
@@ -150,7 +150,7 @@ def test_organize_sticker_option_sections_packages_and_options() -> None:
 
 
 def test_parse_ram_monroney_optional_equipment() -> None:
-    from backend.scanner.window_sticker import (
+    from backend.scanner.post_scan.window_sticker import (
         organize_sticker_option_sections,
         parse_sticker_option_items,
     )
@@ -182,7 +182,7 @@ def test_parse_ram_monroney_optional_equipment() -> None:
 
 
 def test_group_sticker_options_mercedes_packages() -> None:
-    from backend.scanner.window_sticker import group_sticker_options_for_display
+    from backend.scanner.post_scan.window_sticker import group_sticker_options_for_display
 
     items = [
         {"name": "Base", "price": 117700, "code": None},
@@ -208,7 +208,7 @@ def test_group_sticker_options_mercedes_packages() -> None:
 
 
 def test_car_listing_may_have_sticker_with_source_url() -> None:
-    from backend.scanner.window_sticker import car_listing_may_have_sticker, show_window_sticker_ui
+    from backend.scanner.post_scan.window_sticker import car_listing_may_have_sticker, show_window_sticker_ui
 
     car = {
         "vin": "W1K6G7GB6NA126084",

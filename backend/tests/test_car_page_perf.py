@@ -395,7 +395,7 @@ def ensure_client(monkeypatch, drain_ensure_workers):
     )
 
     import backend.enrichment.window_sticker_service as wss
-    import backend.scanner.window_sticker as ws
+    import backend.scanner.post_scan.window_sticker as ws
 
     monkeypatch.setattr(wss, "sticker_panel_payload", lambda ctx, car=None: {})
     # ``_stored`` stands in for "a sticker file exists on disk for this VIN" —

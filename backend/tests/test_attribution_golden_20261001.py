@@ -227,9 +227,9 @@ def test_old_import_paths_are_the_package_objects():
     import backend.attribution.match as match
     import backend.attribution.rooftop as rooftop
     import backend.parsers as parsers
-    from backend.scanner import dealer_place, rooftop_disown, rooftop_match
+    from backend.scanner import dealer_place, rooftop_disown
 
-    assert rooftop_match is match
+    assert A.match is match
     assert parsers.resolve_rooftop_attribution is rooftop.resolve_rooftop_attribution is A.resolve_rooftop_attribution
     for name in ("_pick_target", "_Rooftop", "_nrm", "_street_key", "_rooftop_slug", "_expand_brand_initials",
                  "_looks_like_address", "_looks_like_store_name", "_merge_department_rooftops", "_scorer_enabled"):

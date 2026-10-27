@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from backend.scanner.post_pipeline import (
+from backend.scanner.post_scan.pipeline import (
     post_window_sticker_env_enabled,
     run_window_sticker_for_vins,
 )
@@ -42,7 +42,7 @@ def test_run_window_sticker_for_vins(monkeypatch) -> None:
         fake_ensure,
     )
     monkeypatch.setattr(
-        "backend.scanner.window_sticker.get_window_sticker_url",
+        "backend.scanner.post_scan.window_sticker.get_window_sticker_url",
         lambda vin: f"https://example.com/{vin}" if len(vin) == 17 else None,
     )
 

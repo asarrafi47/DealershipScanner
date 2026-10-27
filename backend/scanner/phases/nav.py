@@ -2,12 +2,10 @@
 from __future__ import annotations
 
 import asyncio
-import contextlib
 import logging
 import os
 import random
 import re
-import time
 from typing import Any
 
 from backend.scanner.constants import (
@@ -16,10 +14,8 @@ from backend.scanner.constants import (
     MAX_PAGINATION_CLICKS,
     NEXT_SELECTORS,
     SCANNER_HYDRATION_SELECTORS,
-    WORKSPACE_DEBUG_DIR,
 )
 from backend.scanner.scan_efficiency import (
-    INVENTORY_PATHS_EXTENDED,
     inventory_idle_loop_sec,
     inventory_json_wait_ms,
 )
@@ -63,15 +59,6 @@ def hydration_timeout_ms() -> int:
         return 30000
 
 
-def _failure_har_enabled() -> bool:
-    return (os.environ.get("SCANNER_FAILURE_HAR") or "0").strip().lower() in (
-        "1",
-        "true",
-        "yes",
-        "on",
-    )
-
-
 def _infinite_scroll_max_rounds() -> int:
     raw = (os.environ.get("SCANNER_INFINITE_SCROLL_MAX_ROUNDS") or "18").strip()
     try:
@@ -94,26 +81,6 @@ def pagination_response_wait_ms() -> int:
         return max(300, min(inventory_wait_ms(), int(raw)))
     except ValueError:
         return min(inventory_wait_ms(), 8000)
-
-
-def warmup_delays() -> tuple[float, float]:
-    try:
-        post = float((os.environ.get("SCANNER_WARMUP_POST_GOTO_SEC") or "2").strip())
-    except ValueError:
-        post = 2.0
-    try:
-        scroll = float((os.environ.get("SCANNER_WARMUP_SCROLL_SEC") or "1").strip())
-    except ValueError:
-        scroll = 1.0
-    return max(0.0, post), max(0.0, scroll)
-
-
-def _warmup_signal_timeout_ms() -> int:
-    raw = (os.environ.get("SCANNER_WARMUP_SIGNAL_TIMEOUT_MS") or "12000").strip()
-    try:
-        return max(0, int(raw))
-    except ValueError:
-        return 12000
 
 
 def _goto_403_extra_attempts() -> int:
@@ -284,151 +251,6 @@ async def infinite_scroll_lazy_batches(
         rounds_ran,
         stable >= 4,
     )
-
-
-async def capture_scanner_failure_har(browser: Any, base_url: str, dealer_id: str, dealer_name: str) -> str | None:
-    """Second-pass browser context with HAR recording for operator diagnosis (treat file as sensitive)."""
-    if not _failure_har_enabled():
-        return None
-    WORKSPACE_DEBUG_DIR.mkdir(parents=True, exist_ok=True)
-    har_path = WORKSPACE_DEBUG_DIR / f"fail_{dealer_id}_{int(time.time())}.har"
-    ctx_opts: dict[str, Any] = {
-        "viewport": {"width": 1920, "height": 1080},
-        "record_har_path": str(har_path),
-        "record_har_url_filter": "**/*",
-    }
-    _ua = (os.environ.get("SCANNER_USER_AGENT") or "").strip() or get_rotating_ua()
-    ctx_opts["user_agent"] = _ua
-    ctx = await browser.new_context(**ctx_opts)
-    try:
-        page = await ctx.new_page()
-        warm_pred = playwright_inventory_json_predicate(base_url)
-        await goto_with_retries(page, base_url, log_label=f"HAR-warmup:{dealer_name}", timeout_ms=30000)
-        w_post, w_scroll = warmup_delays()
-        await warmup_settle_after_base_goto(
-            page,
-            warm_pred,
-            dealer_name=dealer_name,
-            max_idle_sec=w_post,
-            scroll_sec=w_scroll,
-        )
-        full_inv = base_url + INVENTORY_PATHS_EXTENDED[0]
-        await goto_with_retries(page, full_inv, log_label=f"HAR-inv:{dealer_name}", timeout_ms=25000)
-        pred = playwright_inventory_json_predicate(base_url)
-        await await_inventory_hydration(
-            page,
-            dealer_name,
-            f" HAR({INVENTORY_PATHS_EXTENDED[0]})",
-            timeout_ms=hydration_timeout_ms(),
-            json_pred=pred,
-        )
-        try:
-            await page.wait_for_event("response", pred, timeout=inventory_wait_ms())
-        except BaseException:
-            pass
-        await asyncio.sleep(6.0)
-        if not await any_next_control_visible(page):
-            await infinite_scroll_lazy_batches(
-                page,
-                dealer_name,
-                " HAR-scroll",
-                pred,
-                pag_wait_ms=pagination_response_wait_ms(),
-            )
-    except BaseException as e:
-        logger.warning("HAR capture failed [%s]: %s", dealer_name, e)
-        return None
-    finally:
-        try:
-            await ctx.close()
-        except BaseException:
-            pass
-    try:
-        if har_path.is_file() and har_path.stat().st_size > 0:
-            logger.info("Debug: saved HAR trace to %s", har_path)
-            return str(har_path)
-    except OSError:
-        pass
-    return None
-
-
-async def warmup_settle_after_base_goto(
-    page: Any,
-    pred: Any,
-    *,
-    dealer_name: str,
-    max_idle_sec: float,
-    scroll_sec: float,
-) -> None:
-    """
-    Race inventory-shaped JSON ``response`` vs a max idle cap, then best-effort DOM signals,
-    mid-page scroll, and optional scroll sleep.
-
-    SPA hydration (``SCANNER_HYDRATION_TIMEOUT_MS``) runs on inventory paths only — not here —
-    so the homepage load stays bounded when it has no listing shell.
-    """
-    signal_ms = _warmup_signal_timeout_ms()
-    max_idle_sec = max(0.0, max_idle_sec)
-    scroll_sec = max(0.0, scroll_sec)
-
-    async def arm_response() -> None:
-        if signal_ms <= 0:
-            return
-        try:
-            await page.wait_for_event("response", pred, timeout=signal_ms)
-        except BaseException:
-            pass
-
-    async def arm_cap() -> None:
-        if max_idle_sec > 0:
-            await asyncio.sleep(max_idle_sec)
-
-    if max_idle_sec > 0 and signal_ms > 0:
-        t1 = asyncio.create_task(arm_response())
-        t2 = asyncio.create_task(arm_cap())
-        done, pending = await asyncio.wait({t1, t2}, return_when=asyncio.FIRST_COMPLETED)
-        for p in pending:
-            p.cancel()
-            with contextlib.suppress(asyncio.CancelledError):
-                await p
-        for d in done:
-            with contextlib.suppress(asyncio.CancelledError):
-                await d
-    elif signal_ms > 0:
-        await arm_response()
-    elif max_idle_sec > 0:
-        await arm_cap()
-
-    dom_csv = (os.environ.get("SCANNER_WARMUP_DOM_SELECTORS") or "").strip()
-    default_dom = (
-        "[data-vehicle],[data-vin],[data-vehicle-id],.vehicle-card,.inventory-vehicle,"
-        "a[href*='/inventory/']"
-    )
-    selectors = [s.strip() for s in (dom_csv or default_dom).split(",") if s.strip()][:8]
-    for sel in selectors:
-        try:
-            await page.locator(sel).first.wait_for(state="attached", timeout=1200)
-            logger.info("Warmup: %s — DOM signal matched selector %s", dealer_name, sel[:72])
-            break
-        except BaseException:
-            continue
-
-    # Bounded: page.evaluate has no timeout of its own, and a wedged renderer
-    # (anti-bot JS loop) would otherwise hang the dealer's warmup forever.
-    with contextlib.suppress(BaseException):
-        await asyncio.wait_for(
-            page.evaluate("window.scrollTo(0, document.body.scrollHeight / 2)"),
-            timeout=10.0,
-        )
-    if scroll_sec:
-        await asyncio.sleep(scroll_sec)
-
-
-def truncate_url(u: str, max_len: int = 120) -> str:
-    s = (u or "").strip()
-    if len(s) <= max_len:
-        return s
-    return s[: max_len - 3] + "..."
 
 
 class DealerResponseErrorBudget:

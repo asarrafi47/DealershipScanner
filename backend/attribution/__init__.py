@@ -6,7 +6,7 @@ places deciding it. This package holds the scan-time ones:
 * :mod:`.rooftop` — the per-payload gate (``resolve_rooftop_attribution``,
   ``_pick_target`` and its tiers), moved out of ``backend/parsers/__init__.py``
 * :mod:`.match`   — the same decision as a scored matcher, behind
-  ``SCANNER_ROOFTOP_SCORER`` (moved from ``backend/scanner/rooftop_match.py``)
+  ``SCANNER_ROOFTOP_SCORER`` (moved from the former ``backend/scanner/rooftop_match.py``)
 * :mod:`.gate`    — the entry points: ``gate_page`` (one payload),
   ``parse_page`` (parse + gate one payload for a store), ``decide`` (the ONE
   all-rows pass), the store-scope (``_feed_scoped``) rule, ``DealerCtx`` and
@@ -23,7 +23,7 @@ Typical scan path::
     decision = decide(rows + refused, ctx)               # kept / refused / reasons
 
 Old import paths keep working: ``backend.parsers`` re-exports the gate's names,
-``backend.scanner.rooftop_match`` is an alias of :mod:`.match`,
+the former ``backend.scanner.rooftop_match`` alias is gone (use :mod:`.match`),
 ``backend.scanner.rooftop_disown`` and ``backend.scanner.dealer_place``
 re-export the policy and place functions.
 
