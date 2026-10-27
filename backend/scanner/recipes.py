@@ -1478,12 +1478,15 @@ def promote_from_ledger(
     keep = _merge_rank(load_recipes(dealer_id), candidates, max_recipes)
     validated: list[EndpointRecipe] = []
     if validate:
-        from backend.scanner.recipe_validation import gate_recipes
+        from backend.scanner.recipe_validation import gate_recipes, walk_candidates
 
         live = [r for r in keep if not r.stale]
+        # One full walk of the live set, judged from the cached reads (P12B.4).
+        walked = walk_candidates(dealer_id, live, base_url=base_url, dealer_name=dealer_name or dealer_id,
+                                 place=place, fetch=fetch)
         kept_live, report = gate_recipes(
             dealer_id, live, base_url=base_url, dealer_name=dealer_name or dealer_id,
-            place=place, fetch=fetch, context="discovery capture", log_root=log_root,
+            place=place, fetch=fetch, context="discovery capture", log_root=log_root, checks=walked,
         )
         if validation_out is not None:
             validation_out.update(report.summary())

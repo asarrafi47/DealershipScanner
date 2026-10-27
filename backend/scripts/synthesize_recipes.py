@@ -227,8 +227,11 @@ def _process_dealer(
     # is the combined total across kept recipes (feeds are disjoint by condition).
     kept: list[EndpointRecipe] = []
     total_vins = 0
-    for recipe in recipes:
-        n = validate_recipe(recipe, dealer_url.rstrip("/"), dealer_id, dealer_name or dealer_id)
+    from backend.scanner.recipe_validation import walk_candidates
+
+    walked = walk_candidates(dealer_id, recipes, base_url=dealer_url.rstrip("/"), dealer_name=dealer_name or dealer_id)
+    for recipe, chk, *_ in walked.walks:
+        n = chk.vins
         if n <= 0:
             continue
         recipe.vehicle_rows = n
@@ -259,7 +262,7 @@ def _process_dealer(
     keeps_healthy = not force and _healthy_recipe_exists(dealer_id)
     will_save = not dry_run and not keeps_healthy
     kept, report = gate_recipes(dealer_id, kept, base_url=dealer_url.rstrip("/"), dealer_name=dealer_name or dealer_id,
-                                context="synthesize_recipes", record=will_save)
+                                context="synthesize_recipes", record=will_save, checks=walked.keep(kept))
     row["validation"] = report.status
     if not kept:
         row["strategy"] = ""

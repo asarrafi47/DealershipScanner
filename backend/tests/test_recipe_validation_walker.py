@@ -119,3 +119,31 @@ def test_one_condition_rejection_is_preserved():
     checks = rv.check_all(DEALER, [_tv_recipe("used")], site, base_url=ORIGIN, dealer_name=NAME, place=PLACE)
     rep = rv.judge(checks, one_condition_ok=set())
     assert rep.status == "rejected:one_condition" and rep.other_side_probe["other_vins"] == 40
+
+
+def test_save_path_walks_once_and_judges_the_cached_checks():
+    """P12B.4: walk_candidates reads each candidate to the full cap once; gate_recipes
+    given keep(kept) judges those reads and makes no request of its own."""
+    calls: list[int] = []
+    feed = _Feed(_lot(60, 40), per_page=48)
+
+    def counting(recipe, body, base_url, url=None):
+        calls.append(1)
+        return feed(recipe, body, base_url, url)
+
+    walked = rv.walk_candidates(DEALER, [_cc_recipe()], base_url=ORIGIN, dealer_name=NAME, place=PLACE, fetch=counting)
+    assert walked.pages == rv._VALIDATE_MAX_PAGES
+    after_walk = len(calls)
+    chk = walked.walks[0][1]
+    assert chk.vins == 100 and after_walk >= 2
+    kept, rep = rv.gate_recipes(DEALER, [walked.walks[0][0]], base_url=ORIGIN, dealer_name=NAME, place=PLACE,
+                                record=False, checks=walked.keep([walked.walks[0][0]]))
+    assert len(calls) == after_walk, "judging cached checks fetches nothing"
+    assert rep.recipes[0].vins == 100 and rep.pages_replayed == rv._VALIDATE_MAX_PAGES
+
+
+def test_keep_drops_walks_the_floor_refused():
+    a, b = _cc_recipe(), _cc_recipe(filters={"status": ["publish"], "type": ["Used"]})
+    walked = rv.walk_candidates(DEALER, [a, b], base_url=ORIGIN, dealer_name=NAME, place=PLACE,
+                                fetch=_Feed(_lot(10, 0), per_page=48))
+    assert [w[0] for w in walked.keep([b]).walks] == [b]

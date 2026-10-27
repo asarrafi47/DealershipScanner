@@ -558,6 +558,14 @@ class RecipeChecks:
     fetch: Fetch
     walks: list[tuple[EndpointRecipe, RecipeCheck, set[str], dict[str, set[str]], Any]] = field(default_factory=list)
 
+    def keep(self, recipes: list[EndpointRecipe]) -> "RecipeChecks":
+        """The same read restricted to *recipes* (by identity): a save path that
+        filters candidates by its floors judges only the ones it keeps, from the
+        walk it already paid for."""
+        ids = {id(r) for r in recipes}
+        return RecipeChecks(self.dealer_id, self.base_url, self.dealer_name, self.place, self.pages, self.fetch,
+                            [w for w in self.walks if id(w[0]) in ids])
+
 
 def check_all(
     dealer_id: str,
@@ -843,6 +851,25 @@ def record_recipe_status(dealer_id: str, report: RecipeValidationReport, context
         return False
 
 
+def walk_candidates(
+    dealer_id: str,
+    candidates: list[EndpointRecipe],
+    *,
+    base_url: str,
+    dealer_name: str = "",
+    place: dict[str, str] | None = None,
+    fetch: Fetch | None = None,
+    pages: int | None = None,
+) -> RecipeChecks:
+    """The one full walk a save path pays for (P12B.4): every candidate read to
+    :data:`_VALIDATE_MAX_PAGES` through the scan's replay request behind synth's
+    fetch clock. The caller counts ``chk.vins`` per walk (that is ``vehicle_rows``),
+    filters with its floors, then hands ``checks.keep(kept)`` to :func:`gate_recipes`
+    so the verdict is judged from these reads instead of a second 2-page walk."""
+    return check_all(dealer_id, candidates, fetch or _paced_replay, base_url=base_url, dealer_name=dealer_name,
+                     place=place, pages=pages or _VALIDATE_MAX_PAGES)
+
+
 def gate_recipes(
     dealer_id: str,
     recipes: list[EndpointRecipe],
@@ -905,6 +932,7 @@ __all__ = [
     "recipe_condition_filter",
     "record_recipe_status",
     "validate_recipe_set",
+    "walk_candidates",
     "write_discovery_log",
 ]
 

@@ -88,13 +88,22 @@ def test_save_recipes_stays_a_plain_replace_without_an_archive(env) -> None:
     assert rs.db_read(D).superseded == []
 
 
+def _fake_walk(n):
+    """A walk_candidates stand-in: every candidate read as *n* VINs (no fetch)."""
+    def walk(dealer_id, cands, **kw):
+        w = SimpleNamespace(walks=[(c, SimpleNamespace(vins=n), set(), {}, None) for c in cands])
+        w.keep = lambda recipes: w
+        return w
+    return walk
+
+
 def _fake_synth(monkeypatch, cands, *, platform="carscommerce"):
     from backend.scanner import dealer_place, recipe_synth, recipe_validation
 
     monkeypatch.setattr(recipe_synth, "fetch_dealer_html", lambda url: "<html/>")
     monkeypatch.setattr(recipe_synth, "fingerprint_platform", lambda html, url: platform)
     monkeypatch.setattr(recipe_synth, "synthesize_recipes", lambda did, url, html, p: list(cands))
-    monkeypatch.setattr(recipe_synth, "validate_recipe", lambda *a, **k: 50)
+    monkeypatch.setattr(recipe_validation, "walk_candidates", _fake_walk(50))
     monkeypatch.setattr(dealer_place, "learn_place", lambda *a, **k: {})
     report = SimpleNamespace(status="ok", summary=lambda: "ok")
     monkeypatch.setattr(recipe_validation, "gate_recipes", lambda did, kept, **k: (kept, report))

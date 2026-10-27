@@ -14,6 +14,7 @@ its discovery.md writer, ``record_recipe_status`` and the store are real.
 """
 from __future__ import annotations
 
+from types import SimpleNamespace
 import importlib
 import json
 import signal
@@ -105,8 +106,17 @@ def world(tmp_path, monkeypatch, sr):
     monkeypatch.setattr(sr, "_gather_html", lambda url: ("<html>carscommerce</html>", "carscommerce"))
     monkeypatch.setattr(sr, "is_synthesizable", lambda platform: True)
     monkeypatch.setattr(sr, "synthesize_recipes", lambda did, url, html, platform: [_cc_recipe()])
-    monkeypatch.setattr(sr, "validate_recipe", lambda *a, **k: 50)
+    monkeypatch.setattr(rv, "walk_candidates", _fake_walk(50))
     return W
+
+
+def _fake_walk(n):
+    """A walk_candidates stand-in: every candidate read as *n* VINs (no fetch)."""
+    def walk(dealer_id, cands, **kw):
+        w = SimpleNamespace(walks=[(c, SimpleNamespace(vins=n), set(), {}, None) for c in cands])
+        w.keep = lambda recipes: w
+        return w
+    return walk
 
 
 def _run(sr, *extra: str) -> int:
