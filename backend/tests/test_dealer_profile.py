@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import sqlite3
 
-from backend.scanner.dealer_profile import (
+from backend.scanner.dealer.profile import (
     get_cached_winning_strategy,
     manifest_recovery_strategies,
     manifest_skip_recovery,

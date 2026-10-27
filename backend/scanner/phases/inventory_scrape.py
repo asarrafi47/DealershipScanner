@@ -174,7 +174,7 @@ async def scrape_inventory_path(
 
         # Attempt to apply the Location filter on pooled-inventory sites so only this
         # dealer's cars are returned (avoids pulling sister-store inventory in bulk).
-        from backend.scanner.dealer_location import sister_store_filter_enabled as _sse
+        from backend.scanner.dealer.location import sister_store_filter_enabled as _sse
         if _sse():
             loc_applied = await try_apply_location_filter(
                 page,

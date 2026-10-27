@@ -65,7 +65,7 @@ def apply_inventory_db_defaults(explicit_db: str | None = None) -> str:
 
 def pick_image_for_interior_vision(urls: list[str]) -> tuple[str | None, str]:
     """Prefer cabin URL; else hero + ``through_windows`` when fallback env allows."""
-    from backend.scanner.post_pipeline import pick_listing_image_for_interior_vision
+    from backend.scanner.post_scan.pipeline import pick_listing_image_for_interior_vision
 
     return pick_listing_image_for_interior_vision(urls)
 
@@ -76,7 +76,7 @@ def run_interior_vision_for_inventory_vins(
     skip_if_interior_present: bool = False,
 ) -> dict[str, Any]:
     """Persist interior inference for VINs (same as post-scan interior pass)."""
-    from backend.scanner.post_pipeline import run_interior_vision_for_vins
+    from backend.scanner.post_scan.pipeline import run_interior_vision_for_vins
 
     return run_interior_vision_for_vins(vins, skip_if_interior_present=skip_if_interior_present)
 
@@ -87,7 +87,7 @@ def collect_vins_missing_interior_with_images(
     offset: int,
 ) -> tuple[list[str], dict[str, int]]:
     from backend.db.inventory_db import get_conn
-    from backend.scanner.post_pipeline import http_listing_image_urls_for_row
+    from backend.scanner.post_scan.pipeline import http_listing_image_urls_for_row
     from backend.utils.field_clean import is_effectively_empty
 
     conn = get_conn()

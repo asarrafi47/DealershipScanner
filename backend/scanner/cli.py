@@ -56,7 +56,7 @@ from backend.scanner.phases.dealer_run import (
     apply_monroney_vision_to_vehicles as _apply_monroney_vision_to_vehicles,
     run_dealer,
 )
-from backend.scanner.post_pipeline import (
+from backend.scanner.post_scan.pipeline import (
     apply_gallery_vision_filter_to_vehicles as _apply_gallery_vision_filter_to_vehicles,
     gallery_vision_filter_env_enabled,
     monroney_vision_env_enabled,

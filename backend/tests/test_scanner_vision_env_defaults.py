@@ -4,8 +4,8 @@ from __future__ import annotations
 
 import pytest
 
-import backend.scanner.post_pipeline as scanner_post_pipeline
-from backend.scanner.post_pipeline import (
+import backend.scanner.post_scan.pipeline as scanner_post_pipeline
+from backend.scanner.post_scan.pipeline import (
     candidate_urls_for_interior_vision,
     gallery_vision_filter_env_enabled,
     monroney_vision_env_enabled,

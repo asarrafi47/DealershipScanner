@@ -7,7 +7,7 @@ from datetime import datetime, timezone
 from dataclasses import dataclass, field
 from typing import Any
 
-from backend.scanner.dealer_site_url import dealer_inventory_base_url
+from backend.scanner.dealer.site_url import dealer_inventory_base_url
 
 logger = logging.getLogger("scanner")
 

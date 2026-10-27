@@ -354,7 +354,7 @@ def _map_algolia_hit(hit: dict[str, Any], base_url: str, dealer_id: str, dealer_
 
     lot_location = ""
     try:
-        from backend.scanner.dealer_location import extract_location_from_inventory_object
+        from backend.scanner.dealer.location import extract_location_from_inventory_object
 
         lot_location = extract_location_from_inventory_object(hit)
     except ImportError:

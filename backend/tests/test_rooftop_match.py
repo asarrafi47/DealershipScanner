@@ -8,7 +8,7 @@ import pytest
 
 import backend.parsers as parsers_mod
 from backend.parsers import parse
-from backend.scanner import rooftop_match as rm
+from backend.attribution import match as rm
 
 
 @pytest.fixture(autouse=True)

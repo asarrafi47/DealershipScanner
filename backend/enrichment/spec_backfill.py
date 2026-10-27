@@ -229,7 +229,7 @@ def _pick_detail_url(car: dict[str, Any]) -> str | None:
 
 
 def tier_b_vdp(car: dict[str, Any]) -> tuple[dict[str, Any], dict[str, dict[str, Any]]]:
-    from backend.scanner.vdp_spec_extract import extract_specs_from_vdp_url
+    from backend.scanner.vdp.spec_fetch import extract_specs_from_vdp_url
 
     url = _pick_detail_url(car)
     if not url:

@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from backend.scanner.dealer_site_url import dealer_inventory_base_url
+from backend.scanner.dealer.site_url import dealer_inventory_base_url
 
 
 def test_document_url_collapses_to_origin() -> None:

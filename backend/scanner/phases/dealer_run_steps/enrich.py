@@ -10,7 +10,7 @@ from typing import Any
 
 from backend.parsers.vdp_urls import apply_vehicle_source_url
 from backend.scanner.phases.dealer_run_steps.state import DealerRun
-from backend.scanner.post_pipeline import apply_gallery_vision_filter_to_vehicles
+from backend.scanner.post_scan.pipeline import apply_gallery_vision_filter_to_vehicles
 from backend.scanner.scan_efficiency import gallery_vision_inline_enabled
 from backend.scanner.scrapers.inventory_vin_merge import merge_inventory_rows_same_vin
 from backend.utils.gallery_merge import gallery_https_bin_histogram
@@ -130,7 +130,7 @@ def filter_sister_stores(run: DealerRun) -> None:
     """Drop rows whose lot location names a sister store (rows the rooftop gate
     already ruled on are deferred to it), then stamp ``result["vins"]``."""
     try:
-        from backend.scanner.dealer_location import (
+        from backend.scanner.dealer.location import (
             build_dealer_site_profile,
             filter_sister_store_vehicles,
             sister_store_filter_enabled,

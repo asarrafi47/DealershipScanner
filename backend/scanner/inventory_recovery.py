@@ -20,7 +20,7 @@ from backend.scanner.scrapers.scanner_intercept_filter import (
     max_algolia_nb_hits_from_intercepts,
     max_vehicle_list_len_from_intercepts,
 )
-from backend.scanner.dealer_profile import (
+from backend.scanner.dealer.profile import (
     get_cached_winning_strategy,
     manifest_recovery_strategies,
     manifest_skip_recovery,

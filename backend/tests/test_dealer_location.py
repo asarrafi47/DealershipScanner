@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from backend.scanner.dealer_location import (
+from backend.scanner.dealer.location import (
     DealerSiteProfile,
     build_dealer_site_profile,
     classify_vehicle_location,

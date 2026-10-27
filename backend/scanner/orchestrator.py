@@ -30,7 +30,7 @@ from backend.scanner.scan_lock import (
     release_scan_lock,
 )
 from backend.scanner.scan_efficiency import post_vpic_env_enabled
-from backend.scanner.post_pipeline import (
+from backend.scanner.post_scan.pipeline import (
     aggregate_vins_from_dealer_results,
     post_dealer_google_ratings_env_enabled,
     post_dict_enrich_env_enabled,

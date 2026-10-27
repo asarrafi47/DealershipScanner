@@ -760,7 +760,7 @@ def _map_vehicle(
 
     lot_location = ""
     try:
-        from backend.scanner.dealer_location import extract_location_from_inventory_object
+        from backend.scanner.dealer.location import extract_location_from_inventory_object
 
         lot_location = extract_location_from_inventory_object(obj)
     except ImportError:
