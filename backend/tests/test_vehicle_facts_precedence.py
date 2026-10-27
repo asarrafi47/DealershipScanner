@@ -237,3 +237,26 @@ def test_no_db_or_network_imports():
     out = subprocess.run([sys.executable, "-c", code], capture_output=True, text=True, timeout=60,
                          cwd=Path(__file__).resolve().parents[2])
     assert out.stdout.strip() == "[]", out.stdout + out.stderr
+
+
+def _doc_rank_table():
+    doc = Path(__file__).resolve().parents[2] / "docs" / "VEHICLE_FACT_PRECEDENCE.md"
+    rows = [l for l in doc.read_text().splitlines() if l.startswith("| `")]
+    header = next(l for l in doc.read_text().splitlines() if l.startswith("| source |"))
+    fields = [c.strip() for c in header.strip("|").split("|")][1:]
+    table = {}
+    for l in rows:
+        cells = [c.strip() for c in l.strip("|").split("|")]
+        table[cells[0].strip("`")] = dict(zip(fields, cells[1:]))
+    return fields, table
+
+
+def test_precedence_doc_matches_code():
+    fields, table = _doc_rank_table()
+    assert tuple(fields) == P.FIELDS
+    assert set(table) == set(P.SOURCES)  # every source id is listed, none invented
+    for src in P.SOURCES:
+        for f in P.FIELDS:
+            rank = P.RANKS[f].get(src)
+            want = "-" if rank is None else f"{rank}{'f' if src in P.FILL_ONLY[f] else ''}"
+            assert table[src][f] == want, (src, f)

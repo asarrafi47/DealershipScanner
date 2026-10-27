@@ -99,8 +99,13 @@ workspace/dealer_logs/
    fuel, body, description, stock, MSRP, gallery.
 4. NHTSA decode present for every VIN; drivetrain / electrification / cylinders /
    displacement stored from the decode where the feed disagreed; year/make/model agree.
+   Precedence per field and source: `docs/VEHICLE_FACT_PRECEDENCE.md`; the read-only
+   invariants `vpic_electrification_fuel_conflict`, `vpic_drive_wheels_conflict`,
+   `vpic_cylinders_conflict` and `provenance_stale_drivetrain` must not grow.
 5. Catalog link (EPA) present and consistent with the decode; missing model years pulled
    from the internet.
+   The catalog never outranks the dealer's engine text or the VIN decode
+   (`docs/VEHICLE_FACT_PRECEDENCE.md`); `catalog_tiebreak_over_explicit_end` lists exceptions.
 6. Discrepancies left, listed with examples, each classified: dealer error, our parser,
    dictionary gap, or genuine (e.g. "Call for price").
 7. Logs written: discovery.md updated, scan_runs.md appended, summary.md and
