@@ -226,7 +226,7 @@ backend/scanner/pipeline/runner.py  qmark_placeholder  1
 backend/scanner/post_scan/job.py  import_sqlite3  1
 backend/scanner/post_scan/job.py  qmark_placeholder  1
 backend/scanner/post_scan/job.py  sqlite3_attr  1
-backend/scanner/recipe_store.py  qmark_placeholder  9
+backend/scanner/recipe_store.py  qmark_placeholder  5
 backend/scanner/specials/lease_matches_store.py  qmark_placeholder  2
 backend/scanner/specials/store.py  qmark_placeholder  2
 backend/scanner/synth/platforms/dealer_eprocess.py  qmark_placeholder  1
