@@ -2,6 +2,28 @@
 
 ## [Unreleased]
 
+### N14 (draft)
+- Docs: docs/NIGHTLY_CAPABILITIES_2026_10.md, a desk-review capability table of the retired laptop nightly (7 steps), the k8s CronJobs and the report jobs, with a per-step recommendation for D-IF6 (N14.1).
+- Admin: Find dealers and the dealer hub no longer tell the user to run './deploy/up.sh --full', which has no such flag (P15A.3).
+- Egress lanes (P15A.1): new deploy/railway/home_lane_dealers.txt (starts empty). SCAN_LANE=all|railway|home defaults to railway when SCANNER_EGRESS_TAG is set, else all. The railway lane drops home ids (excluded_home_lane). The home lane scans only them, minus do-not-scan, with SCAN_POST_STEPS defaulting to 0. SCAN_LANE=all is the kill switch.
+- fleet_summary gains egress_lane and alarms: blocked_unassigned and home_lane_stale (P15A.1).
+- Home-IP lane runner (deploy/home_lane/run_home_lane.sh): runs only from a marked prod-lane clone, refuses a local or tunnel DSN and a group/world-readable DSN file, exports the egress tag, proxy and browser switch empty, SCAN_LANE=home, no post steps, --no-discover; --dry-run prints the roster. launchd template and install_launchd.sh (02:00 local, renders only unless --load) (P15A.2).
+- Fleet scan: SCAN_POST_STEPS takes 0, 1 or a comma list of index,market,recover,harvest,cards; cards always last; a bad step name exits 2 before any scan; per-step rc and seconds in fleet_summary post. New optional recover step (heal_from_recipes) and home-lane-only harvest step (harvest_html_jsonld), aimed at roster dealers with open incomplete-index codes (P15A.4).
+
+### N16 (draft)
+- Scan upsert no longer reverts higher-ranked stored facts (P8B.1, D-PR2): drivetrain, fuel_type, cylinders, engine text, transmission and colors whose non-stale provenance outranks the dealer feed keep the stored value, and the feed's claim is recorded as feed_said / feed_seen_at in spec_source_json.
+- Window-sticker column writes now go through fact precedence: authoritative OEM stickers write as oem_window_sticker, others fill-only, title/trim engine heuristics fill-only as trim_heuristic; a sticker 'Hybrid' no longer downgrades a vPIC PHEV (P8B.2).
+- Listing gap-fill writes fact columns through precedence: page values tagged dealer_vdp, DuckDuckGo values web_search; the listing_gap_fill label is retired for new writes (P8B.9).
+- Post-scan decodes VINs first and heals from the decode last, in both the scanner tail and the post_scan job; the fleet-wide model_specs correction call is removed from post-scan; dealer_pipeline decodes and heals each batch (P8B.3). Job summary keys change from "vpic" to "vpic_decode"/"vpic_heal".
+- Scan write path decodes uncached VINs with vPIC inline (SCANNER_VIN_DECODE_INLINE default on; SCANNER_VIN_DECODE_INLINE_BUDGET_S default 20), off the event loop, fails open (P8B.4a).
+- vPIC heal fills drivetrain and transmission for heavy-duty and commercial families when GVWR is over 8,500 lb and the decode says 4x2 or nothing; light vehicles keep 4x2 unmapped (P8B.4b).
+- Structured spec backfill decodes the VIN first and decides both tiers through apply_fact_proposals; tier-1 provenance carries honest labels; new collect_row_storage_proposals / collect_merge_spec_storage_proposals (P8B.6a).
+- Noncanonical body styles are normalized to the canonical presets from the vPIC BodyClass, then the catalog; the body-style filter expansion includes every spelling folded into a preset (P8B.6b).
+- The EPA dictionary writer (post-scan stage and enrich_from_dictionary CLI) goes through fact precedence; engine corrections need vPIC or dealer title/trim corroboration; --all no longer needs ALLOW_DICTIONARY_OVERWRITE=1 and refills only lower-ranked labeled values; no EPA exterior colors or CSV forced induction (P8B.5).
+- Storage repair, repair_inventory_fields, backfill_specs, heal_from_recipes, harvest_carscommerce, harvest_html_jsonld and recover_incomplete_listings write through precedence with provenance; new apply_labeled_patch and apply_row_storage_repair. backfill_specs now fills blanks too (P8B.7).
+- model_specs and InventoryEnricher write at the lowest rank through precedence; new apply_model_specs.py (--all / --vin, dry run unless --apply); the Haiku fallback is opt-in (ENRICHMENT_HAIKU_FALLBACK) and mpg-only (P8B.8).
+- Tests: N16 exit gate, a grep test for raw fact UPDATEs and invariants for no Hybrid on MHEV, no cylinders on BEV, and the vPIC > dealer > catalog order (N16.X1).
+
 ### N11 (draft)
 - Added the clean-room conversion DB prep script (prep_conv_db.sh; leaves schema_migrations alone because it runs after migrate --apply), a pass-A gate fixture with bound operators and a determinism compare (N11.1a, N11.3a, N11.4a). Only these three units are drafted; the clean-room run, Docker and prod steps are owner-gated.
 

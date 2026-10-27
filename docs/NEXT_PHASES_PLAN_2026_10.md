@@ -2161,6 +2161,20 @@ P11A.5 (worker loop) runs only if D-IF3 = (b); otherwise it is dropped (Section 
 
 **Owner decisions / actions.** D-IF1, D-IF3, D-IF6, D-N28.
 
+**Draft status (integ/draft, merge 28e50131e; branch phase/N14 head d5ba08cea).**
+
+| Unit | sha | Acceptance met | Deferred |
+|---|---|---|---|
+| N14.1 | c294657e6 | docs/NIGHTLY_CAPABILITIES_2026_10.md: every laptop step (7), k8s CronJob (6) and report job has evidence and a keep/replace/drop recommendation; D-IF6 answer drafted | enrich_from_dictionary yield unmeasured; owner still logs D-IF6 |
+| P15A.3 | c294657e6 | D-IF3 (a): the nonexistent up.sh --full hints are gone from find_dealers.js and admin/dealers.html, with a regression test; queue code and onboarding_paused kept | none known |
+| P15A.1 | 7bb5e0a04 | SCAN_LANE=all/railway/home; home_lane_dealers.txt; excluded_home_lane; blocked_unassigned and home_lane_stale alarms, fixture-tested | not run against a live DB; home_lane_stale read as plain 36h threshold |
+| P15A.2 | 7832f38d1 | home-lane runner with clone-marker, DSN and env-file guards, launchd template and installer, 14 tests | real fleet_scan launch, active-row count, launchctl load (owner, P15A.6) |
+| P15A.4 | d5ba08cea | SCAN_POST_STEPS 0/1/list (index,market,recover,harvest,cards), cards last, validation before scan, per-step rc and seconds | open_code_dealers SQL not run on Postgres; heal_from_recipes heals all NULL columns of the given dealers |
+| P15A.5 | - | SKIPPED: needs P11A.3 (SCANNER_DEALER_LOCKS) from N10, not in integ/draft | whole unit |
+| P15A.6a-c | - | SKIPPED: owner/prod operations | whole unit |
+
+Owner asks: log D-IF6 from the desk review; touch .prod_lane_clone and create ~/.config/sarraficars/home_lane.env at P15A.6; re-run the fleet_scan test set after N10 lands.
+
 ---
 
 ### N15 Fact precedence foundation (8A), with the drivetrain and fuel fixes
@@ -2254,6 +2268,25 @@ The body-style and HD-table additions are specified in the table: what, files, a
 **Release step.** Minor; the owner approves the Docker smoke of the scanner-nightly and web stages, then deploys outside the window.
 
 **Owner decisions / actions.** D-PR2, D-PR3, D-PR5, D-N32.
+
+**Draft status (integ/draft, merge 83e738cb0; branch phase/N16 head d76cb0b51).**
+
+| Unit | sha | Acceptance met | Deferred |
+|---|---|---|---|
+| P8B.1 | e92e8c297 | upsert keeps higher-ranked stored facts, records feed_said; UPSERT_CARS_SQL unchanged; golden unchanged | vPIC context not available at scan time (rank via stored provenance only) |
+| P8B.2 | cf390c342 | sticker column writes through precedence; trim_heuristic rank added; pg entry-point test | none known |
+| P8B.9 | f26af0a7f | gap_fill through precedence (dealer_vdp, web_search) | none known |
+| P8B.3 | e310d8a16 | decode first, heal last in both entry points; fleet model_specs call removed | D-PR5 (b) scan_only move not applied |
+| P8B.4a | 157099318 | inline vPIC decode, budgeted, fails open, off the event loop | coverage and gap-halving re-measure |
+| P8B.4b | d7bb57277 | HD/commercial drivetrain and transmission table, GVWR-gated | re-measure (393 drivetrain, 713 transmission gaps) after a real heal; pg heal tests not run |
+| P8B.6a | dc39c9fe4 | structured backfill decides decode first, both tiers via apply helper | private _vpic_cache_get/_put replacement |
+| P8B.6b | 03e32b856 | canonical body style from vPIC BodyClass or catalog; filter shares the map | noncanonical <=1% of active needs prod re-measure |
+| P8B.5 | ddad8033c | dictionary writer through precedence; engine corrections need corroboration | provenance stored as epa_catalog, not epa_dictionary |
+| P8B.7 | 38b19835f | storage repair and recovery scripts write via precedence with provenance | other raw-UPDATE heal_* scripts (see N16.X1 exceptions) |
+| P8B.8 | 6cb64dbfa | model_specs and InventoryEnricher at lowest rank; IN lists chunked by 900; apply_model_specs.py | PG golden not run; test_no_sqlite allowlist needs reconciling |
+| N16.X1 | d76cb0b51 | grep test (6 recovery scripts at zero, 12 audited exceptions), MHEV/BEV/rank invariants | fact-precedence cycle test (N17 P8C.3); X2 rescan re-measure and X3 deploy are owner ops |
+
+Owner asks: review the 12 KNOWN_RAW_WRITERS exceptions (vpic_facts and enrichment/service first); decide a precedence-level EV engine_l/engine_description veto and the Hybrid-vs-vPIC MHEV gap; run PG tier with TEST_PG_ADMIN_DSN.
 
 ---
 
