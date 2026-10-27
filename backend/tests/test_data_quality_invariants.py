@@ -529,7 +529,10 @@ def test_every_sql_invariant_has_a_baseline_entry() -> None:
     """The nightly gate fails closed on an id with no baseline: shipping one without
     its entry would turn the next nightly run red."""
     baseline = dq.load_baseline(dq.DEFAULT_BASELINE_PATH)
-    missing = [s.id for s in dq.SQL_INVARIANTS if s.id not in baseline]
+    # The catalog invariants wait for the P10B.4 provenance run: a baseline of 0 written before
+    # the backfill would be a false clean. Remove each id from the exemption as its baseline lands.
+    missing = [s.id for s in dq.SQL_INVARIANTS
+               if s.id not in baseline and s.id not in dq.CATALOG_INVARIANT_IDS]
     assert missing == []
     assert set(_PRECEDENCE_IDS) <= {s.id for s in dq.SQL_INVARIANTS}
 
@@ -646,3 +649,54 @@ def test_precedence_invariants_count_seeded_rows(pg_db) -> None:
     }
     assert by_id["vpic_cylinders_conflict"].examples[0]["engine_text_split"] == "agrees_with_vpic"
     assert by_id["catalog_tiebreak_over_explicit_end"].informational is True
+
+
+def test_catalog_invariants_are_registered_read_only_and_awaiting_baseline() -> None:
+    import re
+
+    specs = {s.id: s for s in dq.SQL_INVARIANTS}
+    assert set(dq.CATALOG_INVARIANT_IDS) <= set(specs)
+    baseline = dq.load_baseline(dq.DEFAULT_BASELINE_PATH)
+    for iid in dq.CATALOG_INVARIANT_IDS:
+        spec = specs[iid]
+        assert not spec.informational, iid
+        assert spec.example_sql and spec.denominator_sql and "LIMIT 20" in spec.example_sql, iid
+        for sql in (spec.count_sql, spec.example_sql, spec.denominator_sql):
+            assert not re.search(r"\b(INSERT|UPDATE|DELETE|DROP|ALTER|TRUNCATE|CREATE)\b", sql, re.I), iid
+        # never recorded as 0 before the P10B.4 run; a recorded value is a reviewed edit
+        assert iid not in baseline or baseline[iid]["count"] >= 0
+
+
+def test_catalog_invariant_without_baseline_fails_closed() -> None:
+    v = dq.compare([_result("epa_master_missing_provenance", 0)], {})[0]
+    assert v["status"] == "NO_BASELINE"
+    assert v["status"] in dq._FAIL_STATUSES
+
+
+def test_catalog_invariant_regression_through_the_monkeypatched_runner(wired, tmp_path: Path) -> None:
+    # same harness as the seeded-regression tests: an increase over a recorded baseline exits 1
+    base = [_result(i, 0) for i in dq.CATALOG_INVARIANT_IDS]
+    bp = tmp_path / "b.json"
+    dq.write_baseline(bp, base, note="test", approver="test")
+    verdicts = dq.compare([_result("epa_master_cross_source_twin", 3)] + base[:3], dq.load_baseline(bp))
+    assert [v["status"] for v in verdicts][0] in ("REGRESSION", "NEW_DEFECT_CLASS")
+
+
+@pytest.mark.pg
+def test_catalog_invariants_count_seeded_defects(pg_db) -> None:
+    import psycopg
+
+    with pg_db.connect() as c:
+        c.execute("INSERT INTO public.epa_master (id, year, make, model, source, natural_key) "
+                  "VALUES (1, 2023, 'Honda', 'Accord', 'dictionary_epa', 'vid:1'), "
+                  "(2, 2023, 'Honda', 'Accord', 'epa_vehicles_csv', 'vid:2'), "
+                  "(3, 2023, 'Honda', 'Civic', NULL, NULL)")
+    conn = psycopg.connect(dq._inventory_url())
+    try:
+        got = {r.id: r.count for r in dq.run_stored_tier(conn) if r.id in dq.CATALOG_INVARIANT_IDS}
+    finally:
+        conn.close()
+    assert got["epa_master_missing_provenance"] == 1
+    assert got["epa_master_cross_source_twin"] == 1
+    assert got["epa_extended_specs_orphan"] == 0
+    assert got["epa_link_dangling_all_listings"] == 0

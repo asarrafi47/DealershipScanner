@@ -883,6 +883,117 @@ def _precedence_invariants() -> tuple[SqlInvariant, ...]:
 SQL_INVARIANTS = SQL_INVARIANTS + _precedence_invariants()
 
 
+#: Catalog invariants (N23 P10B.7). Their baselines are recorded only after the P10B.4 local
+#: provenance run (a 0 written before the backfill would be a false clean), by reviewed JSON
+#: edit plus a history line. Until then compare() reports them NO_BASELINE (fail closed).
+CATALOG_INVARIANT_IDS = (
+    "epa_master_missing_provenance",
+    "epa_extended_specs_orphan",
+    "epa_link_dangling_all_listings",
+    "epa_master_cross_source_twin",
+)
+
+_TWIN_KEY = (
+    "year, lower(make), lower(model), lower(coalesce(\"trim\", '')), cylinders, displacement, "
+    "lower(coalesce(drive, '')), lower(coalesce(trany, '')), lower(coalesce(fuel_type, ''))"
+)
+
+
+def _catalog_invariants() -> tuple[SqlInvariant, ...]:
+    twin_groups = f"""
+        SELECT {_TWIN_KEY} FROM epa_master
+        WHERE source IS NOT NULL
+        GROUP BY {_TWIN_KEY}
+        HAVING COUNT(DISTINCT source) > 1
+    """
+    return (
+        SqlInvariant(
+            id="epa_master_missing_provenance",
+            title="an epa_master row with no source or natural key",
+            detects="a catalog row inserted or restored outside the single ingestion path, or a provenance backfill that was never run",
+            impossible_because=(
+                "every row is stamped with where it came from and its permanent key when it is "
+                "loaded; an unstamped row cannot be refreshed, archived or told apart from its twin"
+            ),
+            count_sql="""
+                SELECT COUNT(*) FROM epa_master
+                WHERE source IS NULL OR natural_key IS NULL OR natural_key = ''
+            """,
+            example_sql="""
+                SELECT id, epa_vehicle_id, year, make, model, "trim", source, natural_key
+                FROM epa_master
+                WHERE source IS NULL OR natural_key IS NULL OR natural_key = ''
+                ORDER BY id LIMIT 20
+            """,
+            denominator_sql="SELECT COUNT(*) FROM epa_master",
+        ),
+        SqlInvariant(
+            id="epa_extended_specs_orphan",
+            title="an epa_extended_specs row whose epa_master row does not exist",
+            detects="a catalog row deleted or renumbered without its extended specs following",
+            impossible_because=(
+                "extended specs are keyed by epa_master_id; an orphan is read by nothing and "
+                "hides that the catalog row it described is gone"
+            ),
+            count_sql="""
+                SELECT COUNT(*) FROM epa_extended_specs x
+                LEFT JOIN epa_master e ON e.id = x.epa_master_id
+                WHERE e.id IS NULL
+            """,
+            example_sql="""
+                SELECT x.epa_master_id, x.year, x.make, x.model, x."trim"
+                FROM epa_extended_specs x LEFT JOIN epa_master e ON e.id = x.epa_master_id
+                WHERE e.id IS NULL
+                ORDER BY x.epa_master_id LIMIT 20
+            """,
+            denominator_sql="SELECT COUNT(*) FROM epa_extended_specs",
+        ),
+        SqlInvariant(
+            id="epa_link_dangling_all_listings",
+            title="cars.epa_master_id (active or not) points at a row that no longer exists",
+            detects="an archive or rebuild that removed catalog rows still referenced by a retired listing",
+            impossible_because=(
+                "a retired listing that is relisted or restored resurfaces its old link; the "
+                "active-only check cannot see the ones waiting"
+            ),
+            count_sql="""
+                SELECT COUNT(*) FROM cars c LEFT JOIN epa_master e ON e.id = c.epa_master_id
+                WHERE c.epa_master_id IS NOT NULL AND e.id IS NULL
+            """,
+            example_sql="""
+                SELECT c.id, c.year, c.make, c.model, c.epa_master_id, c.listing_active
+                FROM cars c LEFT JOIN epa_master e ON e.id = c.epa_master_id
+                WHERE c.epa_master_id IS NOT NULL AND e.id IS NULL
+                ORDER BY c.id LIMIT 20
+            """,
+            denominator_sql="SELECT COUNT(*) FROM cars WHERE epa_master_id IS NOT NULL",
+        ),
+        SqlInvariant(
+            id="epa_master_cross_source_twin",
+            title="the same catalog vehicle present under two different sources",
+            detects="a legacy or appended row that survived beside the dictionary row describing the same vehicle",
+            impossible_because=(
+                "one vehicle has one catalog row; a twin lets a car link to the lower-quality "
+                "copy depending on lookup order"
+            ),
+            count_sql=f"SELECT COUNT(*) FROM ({twin_groups}) g",
+            example_sql=f"""
+                SELECT year, lower(make) AS make, lower(model) AS model,
+                       lower(coalesce("trim", '')) AS "trim", cylinders, displacement
+                FROM epa_master
+                WHERE source IS NOT NULL
+                GROUP BY {_TWIN_KEY}
+                HAVING COUNT(DISTINCT source) > 1
+                ORDER BY 1, 2, 3 LIMIT 20
+            """,
+            denominator_sql="SELECT COUNT(*) FROM epa_master WHERE source IS NOT NULL",
+        ),
+    )
+
+
+SQL_INVARIANTS = SQL_INVARIANTS + _catalog_invariants()
+
+
 # --------------------------------------------------------------------------
 # Read-only connection
 # --------------------------------------------------------------------------
