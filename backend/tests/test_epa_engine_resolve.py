@@ -119,3 +119,53 @@ def test_resolve_bronco_keeps_dealer_2_7_over_raptor_3_0() -> None:
         "engine_l": 2.7, "cylinders": 6, "engine_description": "2.7L V6 EcoBoost", "fuel_type": "Gasoline",
     }
     assert build_engine_display(car, {}).startswith("2.7L V6")
+
+
+# --- P10A.4: the catalog row's label is honoured ---------------------------------------------
+
+def _row(**kw):
+    base = {"Make": "Acura", "Model": "Integra", "Trim": "Integra", "Year": "2000",
+            "engineOptions": "1.8L I4", "cylinders": "4", "displacement": "1.8", "fuelType": "Regular Gasoline"}
+    base.update(kw)
+    return base
+
+
+def test_explicit_na_label_never_reaches_the_classifier(monkeypatch) -> None:
+    from backend.dictionary.epa_engine import catalog_engine_fields
+    from backend.utils import forced_induction as fi
+
+    def boom(_car):
+        raise AssertionError("classifier must not run for an explicit label")
+
+    monkeypatch.setattr(fi, "classify_forced_induction_from_car_row", boom)
+    out = catalog_engine_fields(_row(forcedInduction="Naturally Aspirated"))
+    assert out == {"engineDisplay": "1.8L I4", "forcedInduction": "Naturally Aspirated"}
+
+
+def test_row_label_drives_display_and_blank_row_still_classifies() -> None:
+    from backend.dictionary.epa_engine import catalog_engine_fields
+
+    out = catalog_engine_fields(_row(Make="BMW", Model="3 Series", Trim="330i", Year="2017",
+                                     engineOptions="2.0L I4", displacement="2.0", forcedInduction="Turbocharged"))
+    assert out["engineDisplay"] == "2.0L I4 Turbo"
+    blank = catalog_engine_fields(_row(Make="BMW", Model="3 Series", Trim="330i", Year="2017",
+                                       engineOptions="2.0L I4", displacement="2.0"))
+    assert blank["forcedInduction"] == "Turbocharged"
+
+
+def test_row_label_written_only_to_an_empty_car_without_a_marker() -> None:
+    from backend.dictionary.epa_engine import engine_updates_from_dictionary_row
+
+    row = _row(forcedInduction="Naturally Aspirated")
+    assert engine_updates_from_dictionary_row({"forced_induction": None}, row)["forced_induction"] == "Naturally Aspirated"
+    # overwrite does not let the catalog replace a car's own value
+    assert "forced_induction" not in engine_updates_from_dictionary_row(
+        {"forced_induction": "Turbocharged"}, row, overwrite=True)
+    # nor contradict a marker in the car's own strong text
+    assert "forced_induction" not in engine_updates_from_dictionary_row(
+        {"forced_induction": None, "trim": "Type S Turbo"}, row)
+    assert "forced_induction" not in engine_updates_from_dictionary_row(
+        {"forced_induction": None, "engine_description": "1.8L I4 Turbocharged"}, row)
+    # the free-text description is not strong text
+    assert engine_updates_from_dictionary_row(
+        {"forced_induction": None, "description": "turbo charged fun"}, row)["forced_induction"] == "Naturally Aspirated"

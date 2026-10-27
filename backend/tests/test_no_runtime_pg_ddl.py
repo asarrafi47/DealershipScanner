@@ -47,6 +47,7 @@ SNAPSHOT_AND_REPAIR_SCRIPTS = {
     "backend/scripts/heal_matcher_trims.py",
     "backend/scripts/heal_p8a7_driver.py",
     "backend/scripts/heal_vdp_junk_values.py",
+    "backend/scripts/import_epa_master.py",  # P10A.8 CREATE TEMP TABLE for the set-based refresh
     "backend/scripts/link_cars_to_catalog.py",
     "backend/scripts/migrate.py",
     "backend/scripts/quarantine_package_value_msrps.py",

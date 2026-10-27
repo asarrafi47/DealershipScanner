@@ -71,6 +71,12 @@ CANONICAL_CSV_COLUMNS = (
     "optionDetails",
 )
 
+# EPA dictionary CSVs (``*_EPA.csv``) carry four extra columns from vehicles.csv
+# (P10A.5, D-EPA1): the EPA vehicle id, its atvType, and the cityE/highwayE
+# electric consumption. Complete_Options CSVs keep CANONICAL_CSV_COLUMNS.
+EPA_EXTRA_CSV_COLUMNS = ("epaId", "atvType", "cityE", "highwayE")
+EPA_CSV_COLUMNS = CANONICAL_CSV_COLUMNS + EPA_EXTRA_CSV_COLUMNS
+
 
 def trim_ladders_curated_path() -> Path:
     p = CURATED_DIR / "trim_ladders.json"

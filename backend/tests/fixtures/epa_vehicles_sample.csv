@@ -1,0 +1,15 @@
+id,year,make,model,baseModel,trany,drive,fuelType1,fuelType2,VClass,cylinders,displ,eng_dscr,atvType,tCharger,sCharger,city08,highway08,comb08,cityE,highwayE
+1001,2000,Acura,Integra,Integra,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,,Subcompact Cars,4,1.8,(FFS),,,,25,31,28,0,0
+1002,2019,Acura,RDX FWD,RDX,Automatic (S10),Front-Wheel Drive,Premium Gasoline,,Small Sport Utility Vehicle 2WD,4,2.0,(SIDI),,T,,22,28,24,0,0
+1003,2016,Audi,A6 3.0 TFSI quattro,A6,Automatic (S7),All-Wheel Drive,Premium Gasoline,,Midsize Cars,6,3.0,(FFS),,,S,18,28,22,0,0
+1004,2019,Volvo,XC90 T8 AWD,XC90,Automatic (S8),All-Wheel Drive,Premium Gasoline,Electricity,Standard Sport Utility Vehicle 4WD,4,2.0,(FFS),Plug-in Hybrid,T,S,27,30,28,0,0
+1005,2017,Chevrolet,Bolt EV,Bolt EV,Automatic (A1),Front-Wheel Drive,Electricity,,Small Station Wagons,0,,,EV,,,128,110,119,28.0,33.0
+1006,1984,Volkswagen,Jetta Diesel,Jetta,Manual 5-spd,Front-Wheel Drive,Diesel,,Compact Cars,4,1.6,"(DSL,TRBO)",,,,31,44,36,0,0
+1007,2003,Mercedes-Benz,C230 Kompressor,C230 Kompressor,Automatic 5-spd,Rear-Wheel Drive,Premium Gasoline,,Compact Cars,4,1.8,(FFS),,,,20,28,23,0,0
+1008,1984,Volvo,240 DL/GL/Turbo,240 DL/GL/Turbo,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,,Midsize Cars,4,2.3,(FFS),,,,17,22,19,0,0
+1009,2013,Ford,F150 Pickup 2WD,F150 Pickup 2WD,Automatic 6-spd,Rear-Wheel Drive,Regular Gasoline,,Standard Pickup Trucks 2WD,6,3.5,"(FFS,TRBO)",,T,,16,22,18,0,0
+1010,2021,Porsche,Taycan Turbo,Taycan Turbo,Automatic (A2),All-Wheel Drive,Electricity,,Subcompact Cars,0,,,EV,,,69,71,70,48.0,46.0
+1011,2018,Testmake,Flagged,Flagged,Automatic 6-spd,Front-Wheel Drive,Regular Gasoline,,Compact Cars,4,2.0,(FFS),,T,,22,30,25,0,0
+1012,2018,Testmake,Flagged,Flagged,Automatic 6-spd,Front-Wheel Drive,Regular Gasoline,,Compact Cars,4,2.0,(FFS),,,,22,30,25,0,0
+1013,2018,Testmake,Doubled,Doubled,Automatic 6-spd,Front-Wheel Drive,Regular Gasoline,,Compact Cars,4,2.0,(FFS),,,,22,30,25,0,0
+1014,2018,Testmake,Doubled,Doubled,Automatic 6-spd,Front-Wheel Drive,Regular Gasoline,,Compact Cars,4,2.0,(FFS),,,,22,30,25,0,0

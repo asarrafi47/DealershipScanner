@@ -517,6 +517,102 @@ def classify_forced_induction(
     )
 
 
+# ── EPA catalog labels (Phase 10A) ───────────────────────────────────────────
+# Canonical vocabulary for catalog rows. NA_LABEL is an explicit label, not a
+# missing one: a non-empty value skips the classifier, and the suffix helpers
+# above add nothing for it (D-ET2).
+TURBO = "Turbocharged"
+TWIN_TURBO = "Twin Turbocharged"
+SUPERCHARGED = "Supercharged"
+NA_LABEL = "Naturally Aspirated"
+
+_EPA_FLAG_TRUE = {"T", "S", "Y", "1", "TRUE"}
+_EPA_EV_ATV = ("ev", "electric", "fcv", "fuel cell")
+_EPA_DSCR_TURBO_RE = re.compile(r"TRBO|TURBO|(?<![A-Z])T/C(?![A-Z])", re.I)
+_EPA_DSCR_SC_RE = re.compile(r"S-CHARGE|SUPERCHARG|(?<![A-Z])S/C(?![A-Z])|\bSC\b", re.I)
+_EPA_MODEL_BADGE_RE = re.compile(
+    r"\b(biturbo|turbo|kompressor|supercharged)\b", re.I
+)
+
+
+def _epa_flag(value: Any) -> bool:
+    return str(value or "").strip().upper() in _EPA_FLAG_TRUE
+
+
+def has_forced_induction(label: str | None) -> bool:
+    """True for a real boost label; False for NA_LABEL, '' and None."""
+    s = (label or "").strip()
+    return bool(s) and s.lower() != NA_LABEL.lower()
+
+
+def epa_twin_hint(
+    classifier_label: str | None,
+    existing_label: str | None = None,
+) -> bool:
+    """Shared twin decision for the CSV importer and the epa_master refresh (D-ET5).
+
+    EPA only says "turbo". It becomes twin when the make/model classifier says
+    twin; where the classifier is silent (pre-2016 rows) the label already on
+    the row decides, so the CSV and ``epa_master`` cannot disagree.
+    """
+    if classifier_label:
+        return classifier_label.strip().lower() == TWIN_TURBO.lower()
+    return (existing_label or "").strip().lower() == TWIN_TURBO.lower()
+
+
+def _model_badge_label(model: str | None, twin_hint: bool) -> str | None:
+    text = (model or "").strip()
+    if not text:
+        return None
+    m = _EPA_MODEL_BADGE_RE.search(text)
+    if not m:
+        return None
+    # '240 DL/GL/Turbo' lists trims; the badge there is not this car's engine.
+    if "/" in text:
+        return None
+    word = m.group(1).lower()
+    if word == "biturbo":
+        return TWIN_TURBO
+    if word == "turbo":
+        return TWIN_TURBO if twin_hint else TURBO
+    return SUPERCHARGED
+
+
+def forced_induction_from_epa(
+    t_charger: Any,
+    s_charger: Any,
+    eng_dscr: str | None,
+    model: str | None,
+    atv_type: str | None,
+    *,
+    twin_hint: bool | None = None,
+) -> str:
+    """Label forced induction from EPA's own per-row fields, rules in order.
+
+    1. EV / fuel cell -> ''.  2. tCharger/sCharger flags (both -> turbo, D-ET3).
+    3. eng_dscr markers.  4. Model badge outside a slash list.  5. NA_LABEL.
+    ``twin_hint`` upgrades a turbo result to twin (see ``epa_twin_hint``).
+    """
+    atv = (atv_type or "").strip().lower()
+    if atv and any(atv == k or atv.startswith(k + " ") for k in _EPA_EV_ATV):
+        return ""
+    turbo = TWIN_TURBO if twin_hint else TURBO
+    t, s = _epa_flag(t_charger), _epa_flag(s_charger)
+    if t:
+        return turbo
+    if s:
+        return SUPERCHARGED
+    dscr = eng_dscr or ""
+    if _EPA_DSCR_TURBO_RE.search(dscr):
+        return turbo
+    if _EPA_DSCR_SC_RE.search(dscr):
+        return SUPERCHARGED
+    badge = _model_badge_label(model, bool(twin_hint))
+    if badge:
+        return badge
+    return NA_LABEL
+
+
 def classify_forced_induction_from_car_row(car: dict[str, Any]) -> str | None:
     """Convenience wrapper for a car dict row."""
     el = None

@@ -19,6 +19,7 @@ from typing import Any, Iterator
 
 from backend.enrichment.dictionary_paths import (
     CANONICAL_CSV_COLUMNS,
+    EPA_CSV_COLUMNS,
     CATALOG_DB_PATH,
     DICTIONARY_ROOT,
     INDEX_DIR,
@@ -768,10 +769,14 @@ def find_complete_options_csv(make: str, model: str, year: Any) -> Path | None:
 
 
 def normalize_csv_columns(path: Path, *, dry_run: bool = False) -> bool:
-    """Ensure Complete_Options / EPA CSV has canonical column order (non-destructive)."""
+    """Ensure Complete_Options / EPA CSV has canonical column order (non-destructive).
+
+    ``*_EPA.csv`` files use EPA_CSV_COLUMNS, so epaId/atvType/cityE/highwayE survive.
+    """
     if not path.name.endswith((".csv",)):
         return False
-    canonical = list(CANONICAL_CSV_COLUMNS)
+    is_epa = path.name.endswith("_EPA.csv")
+    canonical = list(EPA_CSV_COLUMNS if is_epa else CANONICAL_CSV_COLUMNS)
     try:
         with path.open(encoding="utf-8", newline="", errors="replace") as fh:
             header_line = fh.readline().rstrip("\r\n")
@@ -783,6 +788,10 @@ def normalize_csv_columns(path: Path, *, dry_run: bool = False) -> bool:
 
     old_fields = header_line.split(",")
     if old_fields == canonical:
+        return False
+    # an EPA file still on the 21-column set is current, not stale; the four
+    # EPA columns arrive with the importer's patch, never from this pass
+    if is_epa and old_fields == list(CANONICAL_CSV_COLUMNS):
         return False
 
     try:
