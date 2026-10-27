@@ -89,14 +89,16 @@ def catalog_engine_fields(row: dict[str, Any]) -> dict[str, str]:
     base = _format_epa_engine_base(row)
     ctx = _epa_row_car_context(row)
     display = format_epa_engine_display(row, ctx) if base else ""
-    try:
-        from backend.utils.forced_induction import classify_forced_induction_from_car_row
+    # An explicit row label (NA included) is the catalog's answer: the make/model
+    # classifier only runs for a row that holds none (P10A.4).
+    fi = (row.get("forcedInduction") or "").strip()
+    if not fi:
+        try:
+            from backend.utils.forced_induction import classify_forced_induction_from_car_row
 
-        fi = (row.get("forcedInduction") or "").strip()
-        if not fi:
             fi = classify_forced_induction_from_car_row(ctx) or ""
-    except Exception:
-        fi = (row.get("forcedInduction") or "").strip()
+        except Exception:
+            fi = ""
     out: dict[str, str] = {}
     if display:
         out["engineDisplay"] = display
@@ -127,6 +129,21 @@ def best_engine_row_for_car(car: dict[str, Any], epa_rows: list[dict[str, Any]])
     return _best_row(epa_rows, str(car.get("trim") or ""))
 
 
+def _car_strong_text_has_fi_marker(car: dict[str, Any]) -> bool:
+    """A boost marker in the car's own engine_description, trim or title (never the free-text description)."""
+    from backend.utils.forced_induction import (
+        display_has_forced_induction_marker,
+        extract_forced_induction_from_text,
+    )
+
+    for key in ("engine_description", "trim", "title"):
+        raw = car.get(key)
+        if isinstance(raw, str) and raw.strip():
+            if extract_forced_induction_from_text(raw) or display_has_forced_induction_marker(raw):
+                return True
+    return False
+
+
 def engine_updates_from_dictionary_row(
     car: dict[str, Any],
     row: dict[str, Any],
@@ -151,6 +168,10 @@ def engine_updates_from_dictionary_row(
             continue
         if not overwrite and not _is_empty(car.get(db_col)):
             continue
+        if db_col == "forced_induction" and (
+            not _is_empty(car.get(db_col)) or _car_strong_text_has_fi_marker(car)
+        ):
+            continue  # the catalog label fills an empty value and never contradicts the car's own text (P10A.4)
         if db_col == "engine_l":
             try:
                 val = float(raw)
@@ -241,6 +262,10 @@ def _epa_row_car_context(row: dict[str, Any], car: dict[str, Any] | None = None)
     ctx.setdefault("engine_l", row.get("displacement"))
     ctx.setdefault("engine_description", row.get("engineOptions"))
     ctx.setdefault("fuel_type", row.get("fuelType"))
+    # the catalog row's label stands in when the car holds none
+    row_fi = str(row.get("forcedInduction") or "").strip()
+    if row_fi and not str(ctx.get("forced_induction") or "").strip():
+        ctx["forced_induction"] = row_fi
     return ctx
 
 
