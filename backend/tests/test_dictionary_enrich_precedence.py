@@ -137,7 +137,9 @@ def test_no_exterior_color_and_no_forced_induction_from_the_catalog(monkeypatch)
     car = _a6(exterior_color=None, forced_induction=None, engine_l=None, cylinders=None, engine_description=None,
               description="Exterior Color: Glacier White Metallic")
     up = efd.enrich_car(car, use_vpic=False)
-    assert "exterior_color" not in up and "forced_induction" not in up
+    assert "exterior_color" not in up
+    # The CSV label never fills; at most the resolver's last-resort heuristic does (P10C.4).
+    assert up.provenance.get("forced_induction", {}).get("source") != "epa_dictionary"
     assert "exterior_color" not in efd.FILLABLE_FIELDS and "forced_induction" not in efd.FILLABLE_FIELDS
     assert up["cylinders"] == 4  # the rest of the catalog still fills blanks
 
@@ -146,7 +148,8 @@ def test_text_transmission_keeps_its_honest_source(monkeypatch):
     monkeypatch.setattr(efd, "_load_epa_csv", lambda *a: [])
     car = _a6(transmission=None, description="Engine with 8-Speed Automatic transmission")
     up = efd.enrich_car(car, use_vpic=False)
-    assert up.proposals == [("transmission", up["transmission"], prec.DEALER_TEXT)]
+    assert [p for p in up.proposals if p[0] != "forced_induction"] == [
+        ("transmission", up["transmission"], prec.DEALER_TEXT)]
 
 
 # --- persistence ----------------------------------------------------------------
