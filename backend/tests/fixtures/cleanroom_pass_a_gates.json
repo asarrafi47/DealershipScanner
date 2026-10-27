@@ -1,0 +1,40 @@
+{
+ "_meta": {
+  "what": "N11.3 pass-A gates for backend/scripts/cleanroom_acceptance.py --expect, run key cars_cr_rc. Limits use the $lte/$gte bounds of backend/scripts/cleanroom/expect.py; every number is typed in from docs/NEXT_PHASES_PLAN_2026_10.md (N11.3 Pass A acceptance).",
+  "use": "cleanroom_acceptance.py --db cars_cr_rc --run-dir <pass A run dir> --ref-db cars --json <out> --expect backend/tests/fixtures/cleanroom_pass_a_gates.json",
+  "encoded": "conflicts <= 2,100; every CF-7 class-(b) check 0; mbontario active >= 1,200; mtnviewnissan CH >= 300; identity (captured - refused = written; written + null-dealer rows = active); dict-trim, token-color, junk prices, non-17 VINs 0; vpic_fuel rows 0; inaccurate verdicts <= 114 (139 - 25); stale index flags 0; retirements 0 (empty DB)",
+  "not_encoded": "gates the tool cannot yet state as a fixed bound and the owner checks from the pass A report: residual conflict pairs only in group_pools.json or n=1; 0 error dealers without a logged site cause; the 15 drivetrain cars (P8A.6); each remaining inaccurate verdict has a cause code; toyotacarlsbad scan_runs row and no page_cap stop; 0 VDP fetches on refused VINs; incomplete per code <= baseline_r1_rules_<rules_version> and trim code down by about 1,133; strike counts 0 (no strike table in the tool yet); all five dealer log files; cars_cleanroom writes unchanged",
+  "vpic_fuel": "rows is the count of hard vpic_fuel mismatches; the plan gate is PHEV false positives 0, and the clean-room examples were all PHEV, so 0 rows is the gate"
+ },
+ "runs": {
+  "cars_cr_rc": {
+   "args": {"db": "cars_cr_rc", "ref_db": "cars"},
+   "expected": {
+    "conflicts": {"rows": {"$lte": 2100}},
+    "cf7_class_b": {
+     "mbbeverlyhills_mbontario_host": {"total": 0},
+     "mbontario_active": {"$gte": 1200},
+     "cleveland_nissan_ch_da_br": {"rows": 0},
+     "mtnviewnissan_ch": {"rows": {"$gte": 300}},
+     "chapmanfordaz_cae_cay_cav": {"rows": 0},
+     "bentleycadillac_don_18411_21776_19779": {"rows": 0},
+     "landers": {"rows": 0},
+     "bmwofmonrovia_non_sonicbmwmonrovia": {"rows": 0},
+     "5starford_non_nrh_city": {"rows": 0},
+     "fletcherjones_henderson": {"rows": 0}
+    },
+    "identity": {
+     "captured_minus_refused_eq_written": true,
+     "written_plus_rows_null_active_eq_active": true
+    },
+    "parser_junk": {"dict_trim": {"rows": 0}, "token_color": {"rows": 0}},
+    "junk_prices": {"price_10_999": 0},
+    "vin_quality": {"not_17_chars": 0},
+    "vpic_fuel": {"rows": 0},
+    "verdicts": {"inaccurate": {"$lte": 114}},
+    "stale_index_flags": {"stale_cars": 0},
+    "retirements": {"inactive_rows": 0}
+   }
+  }
+ }
+}

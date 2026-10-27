@@ -1018,3 +1018,73 @@ def test_build_db_and_snapshot_accept_the_dbs_run_root(sandbox, tmp_path: Path):
     assert changed == {"workspace/cleanroom_runs", run_root, f"{run_root}/snapshots",
                        f"{run_root}/snapshots/before.txt", f"{run_root}/START"}, changed
     assert (ws / "cleanroom_2026_10" / "snapshots" / "before.txt").read_text() == "sentinel before.txt\n"
+
+
+# ---------------------------------------------------------------------------
+# N11.3a: bound operators in expect fixtures, pass-A gate fixture
+# ---------------------------------------------------------------------------
+
+PASS_A = REPO / "backend" / "tests" / "fixtures" / "cleanroom_pass_a_gates.json"
+
+
+def _passing_pass_a_output() -> dict:
+    e = expect.load_expected(PASS_A, "cars_cr_rc")
+    out: dict = {}
+    for path, want in expect.leaves(e):
+        if expect.is_bound(want):
+            want = want.get("$lte", want.get("$gte"))
+        cur = out
+        for p in path[:-1]:
+            cur = cur.setdefault(p, {})
+        cur[path[-1]] = want
+    return out
+
+
+def test_expect_bounds():
+    out = {"a": {"n": 5, "s": "x", "t": True}}
+    assert expect.compare(out, {"a": {"n": {"$lte": 5, "$gte": 5}}}) == []
+    assert expect.leaves({"a": {"n": {"$lte": 5, "$gte": 1}}}) == [(("a", "n"), {"$lte": 5, "$gte": 1})]
+    assert [m["path"] for m in expect.compare(out, {"a": {"n": {"$lt": 5}}})] == ["a.n"]
+    assert [m["path"] for m in expect.compare(out, {"a": {"n": {"$gte": 1, "$lte": 4}}})] == ["a.n"]
+    assert expect.compare(out, {"a": {"n": {"$ne": 4}}}) == []
+    # missing, string and bool values never satisfy an ordering bound
+    assert len(expect.compare(out, {"a": {"zz": {"$lte": 1}, "s": {"$lte": 1}, "t": {"$gte": 1}}})) == 3
+    with pytest.raises(ValueError):
+        expect.compare(out, {"a": {"n": {"$bogus": 1}}})
+    # a plain dict is still descended, not read as a bound
+    assert expect.compare(out, {"a": {"n": 5}}) == []
+
+
+def test_pass_a_gate_fixture():
+    out = _passing_pass_a_output()
+    assert expect.compare(out, expect.load_expected(PASS_A, "cars_cr_rc")) == []
+    e = expect.load_expected(PASS_A, "cars_cr_rc")
+    assert e["conflicts"]["rows"] == {"$lte": 2100}
+    assert e["cf7_class_b"]["mbontario_active"] == {"$gte": 1200}
+    assert e["cf7_class_b"]["mtnviewnissan_ch"]["rows"] == {"$gte": 300}
+    assert e["verdicts"]["inaccurate"] == {"$lte": 139 - 25}
+    # each gate fails when pushed over its limit
+    for path, val in (("conflicts.rows", 2101), ("cf7_class_b.mbontario_active", 1199),
+                      ("cf7_class_b.mtnviewnissan_ch.rows", 299), ("cf7_class_b.landers.rows", 1),
+                      ("cf7_class_b.mbbeverlyhills_mbontario_host.total", 1), ("vin_quality.not_17_chars", 1),
+                      ("verdicts.inaccurate", 115), ("stale_index_flags.stale_cars", 1),
+                      ("retirements.inactive_rows", 1), ("identity.captured_minus_refused_eq_written", False)):
+        bad = _passing_pass_a_output()
+        cur = bad
+        keys = path.split(".")
+        for k in keys[:-1]:
+            cur = cur[k]
+        cur[keys[-1]] = val
+        assert [m["path"] for m in expect.compare(bad, e)] == [path], path
+
+
+def test_pass_a_gates_through_cli(cr_sqlite: Path, tmp_path: Path):
+    """The small SQLite fixture DB has 5 conflict rows, so the <= 2,100 bound holds and the
+    exact-zero CF-7 gates are met or the run fails on a path the fixture names."""
+    out = tmp_path / "o.json"
+    rc = cli.main(["--db", str(cr_sqlite), "--json", str(out), "--sections", "conflicts",
+                   "--expect", str(PASS_A), "--expect-key", "cars_cr_rc"])
+    data = json.loads(out.read_text())
+    assert rc == cli.EXIT_MISMATCH  # sections=conflicts only: the other gate paths are missing
+    paths = {m["path"] for m in data["expect"]["mismatches"]}
+    assert "conflicts.rows" not in paths and "identity.captured_minus_refused_eq_written" in paths
