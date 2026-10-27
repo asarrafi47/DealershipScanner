@@ -2318,6 +2318,12 @@ Owner asks: review the 12 KNOWN_RAW_WRITERS exceptions (vpic_facts and enrichmen
 
 **Owner decisions / actions.** The prod window.
 
+**Draft status (integ/draft, merge 758ba8a50; branch phase/N17 head 598b2f8ef).**
+- P8C.1a (598b2f8ef): met. persist_enrichment.py deleted, no importers.
+- P8C.5a (598b2f8ef): met on unit side (dry run default, backup verified before write, --owner-ok gate); 3 PG tests written, not run.
+- P8C.4 (7d42de72d): met. Precedence doc plus doc-vs-code test; errors_index.md line is a post-merge MAIN step.
+- Deferred: P8C.1b (needs N16 apply helper), P8C.2 (needs N15 decode_vins refresh API), P8C.3 (cycle test, after N16), P8C.5b, P8C.6, P8C.7 (owner-gated data/prod ops).
+
 ---
 
 ### N18 One fetch policy and VDP prefetch coverage (12A extended), guessed URLs
@@ -2369,6 +2375,14 @@ Owner asks: review the 12 KNOWN_RAW_WRITERS exceptions (vpic_facts and enrichmen
 **Release step.** Minor; the owner approves the Docker smoke of the scanner-nightly stage, then deploys scanner-nightly outside the window.
 
 **Owner decisions / actions.** D-OD3, D-OD7, D-OD8, D-OD13; approve the burst.
+
+**Draft status (integ/draft, merge 9bca4fc20; branch phase/N18).**
+- P12A.1 (0d6dccb90): met. FetchPolicy, HostProfileMemory.
+- P12A.3, P12A.6 (075b8ec17): met for listed sites; direct-requests grep not yet clean.
+- P12A.4 (53bb0e15d): met.
+- P12A.5 (50d3579eb): code and tests met (V035 assigned by the draft, plan gave none); acceptance sample (fetched share >=30%, 25% drop in price gaps) deferred to a home-IP run.
+- N18.8, N18.exit-grep (5646fcbfb): code and tests met; exit grep is a shrink-only debt table of 14 files, not literally clean; live numbers (guessed-URL 404s <100, F5 verdict) deferred.
+- Deferred: P12A.2 (needs N18.1 numbers and N13), N18.1 burst, P12A.5-measure, N18.8-f5, N18.release.
 
 ---
 

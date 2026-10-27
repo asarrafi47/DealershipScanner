@@ -2,6 +2,24 @@
 
 ## [Unreleased]
 
+### N18 (draft)
+- Scanner: net/client gains frozen FetchPolicy with named per-site policies (FEED_REPLAY, SYNTH_HTML, SYNTH_JSON, VDP_HTML, VDP_JSON, CHAIN_IMPERSONATE, CHAIN_REQUESTS, STATUS_PROBE), FINGERPRINT_BLOCK_STATUSES and a process-wide thread-safe HostProfileMemory (P12A.1).
+- Scanner: ImpersonatingFetcher's winning-profile memory is process-wide, so gap_fill keeps what an earlier fetch learned about a host (P12A.1).
+- Scanner: the pipeline homepage status probe, the wp_vehicles index fetch (rotates profiles, paced, remembers the winner), gap_fill's requests fetch (proxied, rejects 200 challenge pages), the autoWALL HTTP sessions and the Dealer eProcess results API go through the scanner proxy and net/client (P12A.3).
+- Scripts: discovery_probe and audit_unscannable_dealers use net/client for curl_cffi and the scanner proxy; the probe record gains a profile field (P12A.6).
+- Chain fetch: the requests fetcher goes through the scanner proxy; the impersonating fetcher rejects anti-bot challenge pages, keeps rotating TLS profiles and raises FetchError when every profile fails (P12A.4).
+- VDP prefetch and VDP JSON replay follow the fetch policy: the host's last winning TLS profile goes first; other profiles only on a host's first non-slow attempt after a 403 or 405; 429 and 503 never rotate (P12A.5).
+- 405 joins the VDP block set; the profile sets its own User-Agent except chrome; VDP JSON replay falls back to plain requests on a curl_cffi error (P12A.5).
+- New per-VIN attempt ledger vdp_fetch_attempts (migration V035): 3 failures skip a car for 72 h, doubling to 14 days; a fetched page clears the row; untried cars come before retries. Env: SCANNER_VDP_ATTEMPT_LEDGER, SCANNER_VDP_ATTEMPT_MAX, SCANNER_VDP_ATTEMPT_BACKOFF_H (P12A.5).
+- New cars no longer need a Carfax link to qualify for a detail-page fetch; summary_json.vdp_prefetch.http_first gains candidates_with_gap, ledger_skipped, ledger_failed, profile_wins (P12A.5).
+- N18.8: VDP resolver prefers the payload's _source_url; guessed detail URLs are fetched only for dealer.com; page fields apply only when the VIN is on the page (vin_not_on_page, ledger back-off); counters guessed_url_skipped and f5_unpriced_after_vdp.
+- N18 exit gate: test_no_raw_http_in_scanner_grep pins direct requests/curl_cffi/urllib/aiohttp use in backend/scanner outside net/, with a shrink-only debt table (14 files).
+
+### N17 (draft)
+- Removed: backend/enrichment/persist_enrichment.py (orphan spec writer with no callers; P8C.1a).
+- Added: backend/scripts/relabel_spec_provenance.py, dry-run-default tool relabeling legacy inventory_repair / listing_gap_fill provenance sources to unknown (old label kept as legacy_source), with backup table and owner gate on --apply (P8C.5a).
+- Docs: docs/VEHICLE_FACT_PRECEDENCE.md documents the per-field, per-source rank table, guards, stale-provenance rule and discrepancy sink; a test keeps it in step with precedence.py (P8C.4).
+
 ### N14 (draft)
 - Docs: docs/NIGHTLY_CAPABILITIES_2026_10.md, a desk-review capability table of the retired laptop nightly (7 steps), the k8s CronJobs and the report jobs, with a per-step recommendation for D-IF6 (N14.1).
 - Admin: Find dealers and the dealer hub no longer tell the user to run './deploy/up.sh --full', which has no such flag (P15A.3).
