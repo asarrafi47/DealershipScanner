@@ -38,21 +38,23 @@ Evidence: `backend/scanner/node_modules/` is empty; no Python imports Node code;
 
 | File | Change |
 |---|---|
-| `backend/scanner/scanner.js`, `backend/scanner/vdp_framework.js`, `backend/scanner/scanner_intercept.js`, `backend/scanner/package.json`, `backend/scanner/package-lock.json`, `backend/scanner/node_modules/` | Delete |
-| `backend/artifacts/scanner_backups/scanner.js.bak`, `scanner.js.backup`, `backend/artifacts/scanner_backups/README.md`, `backend/artifacts/README.md:6,9` | Delete backups; drop the two README lines |
-| `backend/scanner/config/scanner_intercept_policy.json:16` and `backend/config/scanner_intercept_policy.json:16` | Remove the "consumed by scanner_intercept.js" note (both copies must stay in sync, see memory note on intercept policy) |
-| `scripts/scanner_worker_loop.py:39-58` (`_run_dealer_scan`) | Delete the `node scanner.js --url ... --smart-import` branch (:44-51). `onboard` jobs run `scanner.py --dealer-id <id> --scan-only` after Phase 2.2 gives `scanner.py` a `--url` onboarding path |
-| `scripts/scanner_worker_loop.py:29-32` | Delete `PUPPETEER_EXECUTABLE_PATH` discovery (Puppeteer goes with Node) |
-| `backend/dev/routes.py:440-537` (`_node_version_string`, `_probe_node_binary`, `_node_binary_cache`, `clear_node_binary_cache`, `_resolve_node_binary`, `_node_for_scanner`) | Delete. `GET /dev/api/status` (:975-980) and `_dev_status` (:572,:586) stop reporting a Node binary |
-| `backend/dev/routes.py:604-648` (`_run_scanner_job`), `:650-848` (`_run_smart_import_job`), `:1092-1121` (`api_test_scanner`), `:1124-1155` (`api_smart_import`), `:1185-1256` (bulk queue), `:1290-1318` (skip-item) | Replaced in Phase 2.2, not merely deleted. Routes and JSON shapes stay |
-| `backend/dev/routes.py:1069` | Rewrite the "Run node scanner.js to refresh debug/last_scrape_samples.json" instruction |
-| `frontend/templates/dev.html:86`, `frontend/templates/admin/scanner_ops.html:63` | Replace `node scanner.js --url … --smart-import` copy with the Phase 2.2 job UI text |
-| `Dockerfile.scanner:4-7` (NodeSource + nodejs), `:29-33` (`npm ci`, puppeteer smoke check) | Delete |
-| `deploy/docker-compose.yml:88-92` (`scanner_node_modules` mount), `:129-131` (volume) | Delete |
-| `scripts/docker-entrypoint-scanner-worker.sh:12-16` | Delete the `npm ci` bind-mount workaround |
+| `backend/scanner/scanner.js`, `backend/scanner/vdp_framework.js`, `backend/scanner/scanner_intercept.js`, `backend/scanner/package.json`, `backend/scanner/package-lock.json`, `backend/scanner/node_modules/` | **Done (verified 2026-10-27).** Delete |
+| `backend/artifacts/scanner_backups/scanner.js.bak`, `scanner.js.backup`, `backend/artifacts/scanner_backups/README.md`, `backend/artifacts/README.md:6,9` | **Done (verified 2026-10-27).** Delete backups; drop the two README lines |
+| `backend/scanner/config/scanner_intercept_policy.json:16` and `backend/config/scanner_intercept_policy.json:16` | **Done (verified 2026-10-27).** Remove the "consumed by scanner_intercept.js" note (both copies must stay in sync, see memory note on intercept policy) |
+| `scripts/scanner_worker_loop.py:39-58` (`_run_dealer_scan`) | **Done (verified 2026-10-27).** Delete the `node scanner.js --url ... --smart-import` branch (:44-51). `onboard` jobs run `scanner.py --dealer-id <id> --scan-only` after Phase 2.2 gives `scanner.py` a `--url` onboarding path |
+| `scripts/scanner_worker_loop.py:29-32` | **Done (verified 2026-10-27).** Delete `PUPPETEER_EXECUTABLE_PATH` discovery (Puppeteer goes with Node) |
+| `backend/dev/routes.py:440-537` (`_node_version_string`, `_probe_node_binary`, `_node_binary_cache`, `clear_node_binary_cache`, `_resolve_node_binary`, `_node_for_scanner`) | **Done (verified 2026-10-27).** Delete. `GET /dev/api/status` (:975-980) and `_dev_status` (:572,:586) stop reporting a Node binary |
+| `backend/dev/routes.py:604-648` (`_run_scanner_job`), `:650-848` (`_run_smart_import_job`), `:1092-1121` (`api_test_scanner`), `:1124-1155` (`api_smart_import`), `:1185-1256` (bulk queue), `:1290-1318` (skip-item) | **Done (verified 2026-10-27).** Replaced in Phase 2.2, not merely deleted. Routes and JSON shapes stay |
+| `backend/dev/routes.py:1069` | **Done (verified 2026-10-27).** Rewrite the "Run node scanner.js to refresh debug/last_scrape_samples.json" instruction |
+| `frontend/templates/dev.html:86`, `frontend/templates/admin/scanner_ops.html:63` | **Done (verified 2026-10-27).** Replace `node scanner.js --url … --smart-import` copy with the Phase 2.2 job UI text |
+| `Dockerfile.scanner:4-7` (NodeSource + nodejs), `:29-33` (`npm ci`, puppeteer smoke check) | **Done (verified 2026-10-27).** Delete |
+| `deploy/docker-compose.yml:88-92` (`scanner_node_modules` mount), `:129-131` (volume) | **Done (verified 2026-10-27).** Delete |
+| `scripts/docker-entrypoint-scanner-worker.sh:12-16` | **Done (verified 2026-10-27).** Delete the `npm ci` bind-mount workaround |
 | `README.md:101-108` ("8. Optional: Node"), `docs/SCANNER_NODE.md` | Delete section and file |
 | `docs/DATA_QUALITY_ROLLOUT.md:15,29,61,77`, `master-todo.md:34` (C1) | Update references; mark C1 done |
 | Docstring-only mentions (`backend/oem/scraper/crawl4ai_*` deleted 2026-10-01, `backend/dev/dealers.py:29,74,249`, `backend/db/repositories/dealers_repo.py:116`, `backend/intelligence/dealer_score.py:426`, `backend/scanner/vdp/config.py:26`, `backend/scanner/scrape_confidence.py:14`, `backend/scanner/job_diagnosis.py:67,76`, `run_nationwide_discovery.py:8`) | Reword "parity with scanner.js" comments; no logic change |
+
+Rows above marked done were verified against the tree on 2026-10-27 (P17B.1). Still open: the README "Optional: Node" section and `docs/SCANNER_NODE.md` (P18B.2), the `master-todo.md` C1 row (P18B.2), and the docstring-only mentions in the last row. `job_diagnosis` no longer carries the Puppeteer action, the npm rule or `use_python_scanner` (P17B.1).
 
 ### 0.2 Remove Flask-SocketIO
 

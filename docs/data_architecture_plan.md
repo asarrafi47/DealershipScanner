@@ -46,7 +46,7 @@ Recognized keys (see `SCAN_HINT_KEYS`): `needs_http_proxy`, `price_source`
 `hint_source`. Scanner integration points (for the scan-side session):
 consult hints at dealer-run start — `needs_http_proxy` → set proxy before
 synth; `price_source=vdp` → route the price-heal/VDP path after capture;
-`requires_browser` → skip HTTP fingerprinting; `skip_reason` → skip dealer.
+`skip_reason` → skip dealer. `requires_browser` is informational only (no code routes on it).
 
 All stores are **tables in the one Postgres**, not separate databases — the
 value is in the joins.

@@ -120,7 +120,9 @@ CREATE TABLE IF NOT EXISTS dealer_recipes (
 #                                SCANNER_HTTP_PROXY for browser-free capture
 #   price_source        str    — "list" (default) | "vdp" | "second_endpoint":
 #                                where prices actually live on this dealer
-#   requires_browser    bool   — no HTTP fingerprint; go straight to Playwright
+#   requires_browser    bool   — informational (no HTTP fingerprint seen); no code
+#                                routes on it, a dealer without a recipe takes the
+#                                normal no-recipe path
 #   skip_reason         str    — why this dealer is out of scope (e.g. not a
 #                                car dealer) — scanner may skip entirely
 #   notes               str    — freeform operator note shown in ops views
