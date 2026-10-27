@@ -416,6 +416,11 @@ def init_inventory_db():
         ("city_e", "REAL"),
         ("highway_e", "REAL"),
         ("atv_type", "TEXT"),
+        ("t_charger", "TEXT"),
+        ("s_charger", "TEXT"),
+        ("source", "TEXT"),
+        ("natural_key", "TEXT"),
+        ("loaded_at", "TEXT"),
     ]:
         if col not in epa_cols:
             cursor.execute(f"ALTER TABLE epa_master ADD COLUMN {col} {ctype}")

@@ -573,6 +573,11 @@ def _legacy_postgres_inventory_ddl(conn: Any) -> None:
             ("engine_description", "TEXT"),
             ("engine_display", "TEXT"),
             ("forced_induction", "TEXT"),
+            ("t_charger", "TEXT"),
+            ("s_charger", "TEXT"),
+            ("source", "TEXT"),
+            ("natural_key", "TEXT"),
+            ("loaded_at", "TIMESTAMPTZ"),
         ],
     )
     cur.execute(

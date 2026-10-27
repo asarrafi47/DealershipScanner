@@ -55,6 +55,11 @@ def ensure_dictionary_tables(cur: Any, *, postgres: bool = False) -> None:
                 ("city_e", "DOUBLE PRECISION"),
                 ("highway_e", "DOUBLE PRECISION"),
                 ("atv_type", "TEXT"),
+                ("t_charger", "TEXT"),
+                ("s_charger", "TEXT"),
+                ("source", "TEXT"),
+                ("natural_key", "TEXT"),
+                ("loaded_at", "TIMESTAMPTZ"),
             ],
         )
         cur.execute(
@@ -108,6 +113,11 @@ def ensure_dictionary_tables(cur: Any, *, postgres: bool = False) -> None:
         ("city_e", "REAL"),
         ("highway_e", "REAL"),
         ("atv_type", "TEXT"),
+        ("t_charger", "TEXT"),
+        ("s_charger", "TEXT"),
+        ("source", "TEXT"),
+        ("natural_key", "TEXT"),
+        ("loaded_at", "TEXT"),
     ]:
         if col not in epa_cols:
             try:
