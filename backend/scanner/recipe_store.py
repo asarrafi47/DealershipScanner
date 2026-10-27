@@ -366,7 +366,8 @@ def _written(current: StoreRow | None, cols: dict[str, Any], cas: bool | None = 
         updated_at=cols.get("updated_at"),
         max_saved_at=cols.get("max_saved_at", current.max_saved_at if current else 0.0),
         recipes_written_at=cols.get("recipes_written_at", current.recipes_written_at if current else 0.0),
-        superseded=current.superseded if current else [],
+        superseded=json.loads(cols["superseded_json"]) if "superseded_json" in cols
+        else (current.superseded if current else []),
     )
 
 
@@ -466,7 +467,7 @@ def _db_read_exact(dealer_id: str) -> StoreRow | None:
 
 def db_mutate(
     dealer_id: str,
-    fn: Callable[[StoreRow | None], list[dict[str, Any]] | None],
+    fn: Callable[[StoreRow | None], list[dict[str, Any]] | tuple[list[dict[str, Any]], list[dict[str, Any]]] | None],
     *,
     create: bool = True,
     retries: int = 8,
@@ -485,11 +486,16 @@ def db_mutate(
 
 def _recipes_plan(fn, has_cas) -> Callable[[StoreRow | None], dict[str, Any] | None]:
     """The column plan of a recipe-list write: ``fn(current)``'s rows and the metadata
-    derived from them (plus ``recipes_written_at`` when ``has_cas()``)."""
+    derived from them (plus ``recipes_written_at`` when ``has_cas()``). ``fn`` may return
+    ``(rows, superseded)`` to rewrite the archive (``superseded_json``) in the same
+    compare-and-set; a plain list leaves the archive as it is."""
     def plan(current: StoreRow | None) -> dict[str, Any] | None:
         rows = fn(current)
         if rows is None:
             return None
+        archive = None
+        if isinstance(rows, tuple):
+            rows, archive = rows
         meta = _derive_meta(rows)
         cols = {
             "recipes_json": json.dumps(rows, ensure_ascii=False),
@@ -500,6 +506,8 @@ def _recipes_plan(fn, has_cas) -> Callable[[StoreRow | None], dict[str, Any] | N
         }
         if has_cas():
             cols["recipes_written_at"] = time.time()
+            if archive is not None:
+                cols["superseded_json"] = json.dumps(archive, ensure_ascii=False)
         return cols
 
     return plan

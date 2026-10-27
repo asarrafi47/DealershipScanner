@@ -838,6 +838,47 @@ OP_MARK_STALE = "mark_stale"
 OP_REPLAY_OK = "record_replay_ok"
 OP_MERGE = "merge_recipes"
 OP_REPLACE = "replace_recipes"
+OP_RESTORE = "restore_superseded"
+
+# Replaced recipes are archived in ``superseded_json`` (never in ``recipes_json``: a
+# re-synthesized recipe usually has the same key() as the one it replaces, hosts on
+# older code would replay and un-stale an archived entry, and promotion's cap would
+# drop it) and pruned once this old.
+SUPERSEDED_KEEP_DAYS = 30
+
+
+class _Archived(list):
+    """The rows an op leaves live, carrying the archive (``superseded_json``) it leaves
+    with them; ``db_mutate`` writes both in one compare-and-set."""
+
+    superseded: list[dict]
+
+
+def _with_archive(rows: list[dict], superseded: list[dict]) -> "_Archived":
+    out = _Archived(rows)
+    out.superseded = superseded
+    return out
+
+
+def _plan_result(new: list[dict] | None) -> Any:
+    """What ``db_mutate``'s fn returns for ``_apply_op``'s result."""
+    if isinstance(new, _Archived):
+        return list(new), new.superseded
+    return new
+
+
+def _prune_archive(entries: list[dict], now: float) -> list[dict]:
+    cutoff = now - SUPERSEDED_KEEP_DAYS * 86400
+    return [e for e in entries if float(e.get("superseded_at") or 0.0) >= cutoff]
+
+
+_STAMP_FIELDS = ("saved_at", "mutated_at")
+
+
+def _same_recipe(a: dict, b: dict) -> bool:
+    """Two rows that differ only in their write stamps."""
+    return ({k: v for k, v in a.items() if k not in _STAMP_FIELDS}
+            == {k: v for k, v in b.items() if k not in _STAMP_FIELDS})
 
 
 def _row_key(row: dict) -> tuple[str, str] | None:
@@ -859,7 +900,8 @@ def _merge_rank(
         cur = merged.get(c.key())
         # A fresh capture always wins: newer auth headers, un-stales the entry.
         if cur is None or not cur.last_ok_at or cur.stale or c.vehicle_rows >= cur.vehicle_rows:
-            c.last_ok_at = cur.last_ok_at if cur else 0.0
+            if cur is not None:
+                c.last_ok_at = cur.last_ok_at
             if cur is not None and not c.field_coverage and cur.field_coverage:
                 c.field_coverage = dict(cur.field_coverage)
             merged[c.key()] = c
@@ -957,7 +999,38 @@ def _apply_op(
             base_rev = entry.get("base_rev")
             if base_rev is None or cur.rev > base_rev:
                 return None  # the store moved on: a snapshot is never merged over it
-        return list(payload.get("rows") or [])
+        new_rows = list(payload.get("rows") or [])
+        if not payload.get("archive"):
+            return new_rows
+        # Replace with archive: every live recipe the new set does not carry over
+        # unchanged moves to the archive, keyed (key, superseded_at).
+        archive = _prune_archive(list(getattr(cur, "superseded", None) or []), stamp)
+        reason = str(payload.get("reason") or "")[:200]
+        for r in rows:
+            if any(_same_recipe(r, n) for n in new_rows):
+                continue
+            k = _row_key(r)
+            if k:
+                archive.append({"key": list(k), "recipe": r, "superseded_at": stamp, "reason": reason})
+        return _with_archive(new_rows, archive)
+
+    if op == OP_RESTORE:
+        archive = _prune_archive(list(getattr(cur, "superseded", None) or []), stamp)
+        want = float(payload["superseded_at"]) if payload.get("superseded_at") is not None else None
+        picks = [e for e in archive if tuple(e.get("key") or ()) == key
+                 and (want is None or float(e.get("superseded_at") or 0.0) == want)]
+        if not picks:
+            return None
+        pick = max(picks, key=lambda e: float(e.get("superseded_at") or 0.0))
+        archive.remove(pick)
+        live = []
+        for r in rows:
+            if _row_key(r) == key:  # the live copy of the same key is archived in its turn
+                archive.append({"key": list(key), "recipe": r, "superseded_at": stamp, "reason": "restore"})
+            else:
+                live.append(r)
+        restored = dict(pick["recipe"], stale=False, stale_reason="", mutated_at=stamp, saved_at=now)
+        return _with_archive(live + [restored], archive)
 
     raise ValueError(f"unknown recipe op {op!r}")
 
@@ -981,7 +1054,7 @@ def _store_op(dealer_id: str, entry: dict, *, foreign: bool = False) -> tuple[bo
         seen["cur"] = cur
         new = _apply_op(entry, cur.rows if cur else [], now=now, cur=cur)
         seen["noop"] = new is None
-        return new
+        return _plan_result(new)
 
     if not recipe_store._enabled():
         return False, None, None
@@ -1054,7 +1127,7 @@ def _replay_pending(dealer_id: str) -> None:
                                        dealer_id, entry.get("op"), exc)
                         new = None
                     seen["noop"] = new is None
-                    return new
+                    return _plan_result(new)
 
                 written = recipe_store.db_mutate(slug, fn)
                 if not (written is not None or (seen.get("ran") and seen.get("noop"))):
@@ -1169,10 +1242,41 @@ def merge_recipes(
     return _rows_to_recipes(rows)
 
 
-def replace_recipes(dealer_id: str, recipes: list[EndpointRecipe], *, reason: str = "") -> None:
-    """Make ``recipes`` the dealer's whole live set. A stub for ``save_recipes`` until
-    P7.5 archives the replaced recipes into ``superseded_json`` (``reason`` is for that)."""
-    save_recipes(dealer_id, recipes)
+def replace_recipes(dealer_id: str, recipes: list[EndpointRecipe], *, reason: str) -> list[EndpointRecipe]:
+    """Make ``recipes`` the dealer's whole live set and archive every recipe it replaces
+    (one the new set does not carry over unchanged) into ``superseded_json`` as
+    ``{key, recipe, superseded_at, reason}``, in the same compare-and-set. Archived
+    entries are pruned after ``SUPERSEDED_KEEP_DAYS`` and come back through
+    ``restore_superseded``. Returns the live set after the write.
+
+    Stamps like ``save_recipes`` (one ``time.time()`` for ``saved_at`` and ``mutated_at``).
+    The archive lives in the store only: a cache file holds live recipes alone."""
+    now = time.time()
+    rows = [asdict(r) for r in recipes]
+    for row in rows:
+        row["saved_at"] = now
+        row["mutated_at"] = now
+    out = _mutate(dealer_id, {"op": OP_REPLACE, "key": None, "observed_at": None,
+                              "payload": {"rows": rows, "archive": True, "reason": reason}})
+    return _rows_to_recipes(out)
+
+
+def restore_superseded(dealer_id: str, key: tuple[str, str], *, superseded_at: float | None = None) -> bool:
+    """Bring the archived recipe ``key`` (the newest archived copy, or the one archived at
+    ``superseded_at``) back into the live set, un-stale. A live recipe with the same key
+    goes to the archive in its place. True when something was restored."""
+    from backend.scanner import recipe_store
+
+    cur = recipe_store.db_read(_recipe_slug(dealer_id))
+    if cur is None or not any(
+        tuple(e.get("key") or ()) == tuple(key)
+        and (superseded_at is None or float(e.get("superseded_at") or 0.0) == superseded_at)
+        for e in cur.superseded
+    ):
+        return False
+    _mutate(dealer_id, {"op": OP_RESTORE, "key": list(key), "observed_at": None,
+                        "payload": {"superseded_at": superseded_at}})
+    return True
 
 
 RECIPE_STATUS_STALE_PREFIX = "stale:"
