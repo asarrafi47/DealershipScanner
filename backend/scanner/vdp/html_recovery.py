@@ -34,7 +34,7 @@ logger = logging.getLogger(__name__)
 # next URL: ",http(s)://" or ", http(s)://".
 _URL_CHAR = r"(?:(?!,\s*https?://)[^\s\"'<>])"
 # Dealer eProcess serves every photo extension-less from /resrc/images/ (N21.6, F07).
-_DEP_URL_RE = r"https?://cloudflareimages\.dealereprocess\.com/resrc/images/(?:(?!,\s*https?://)[^\s\"'<>()\\])+"
+_DEP_URL_RE = r"https?://cloudflareimages\.dealereprocess\.com/resrc/images/(?:(?!,\s*https?://)[^\s\"'<>\\])+"
 _IMG_URL_RE = re.compile(
     _DEP_URL_RE + r"|https?://" + _URL_CHAR + r"+?\.(?:jpe?g|png|webp|gif|avif)(?:\?" + _URL_CHAR + r"*)?",
     re.I,

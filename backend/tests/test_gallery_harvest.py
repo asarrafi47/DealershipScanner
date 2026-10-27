@@ -152,6 +152,27 @@ def test_malformed_css_urls_are_cleaned_or_rejected():
     assert not is_junk_vdp_gallery_url("https://cdn.x.com/cars/a.jpg")
 
 
+_DEP_REAL = (
+    "https://cloudflareimages.dealereprocess.com/resrc/images/w_1024/dvp/2596/53090514873/"
+    "New-2026-Toyota-RAV4Plug-inHybrid-SE(Natl)-ID53090514873-aHR0cHM6Ly9leGFtcGxlLmNvbS9hLmpwZw=="
+)
+
+
+def test_real_dep_url_with_parens_and_base64_tail_survives():
+    assert clean_gallery_url(_DEP_REAL) == _DEP_REAL
+    assert clean_gallery_url(f"url({_DEP_REAL});") == _DEP_REAL
+    assert not is_malformed_image_url(_DEP_REAL)
+    assert not is_junk_vdp_gallery_url(_DEP_REAL)
+    assert not is_malformed_image_url("https://cdn.x.com/cars/photo(1).jpg")
+    assert not is_malformed_image_url("https://cdn.x.com/cars/a.jpg;v=2")
+    assert not is_malformed_image_url("https://cdn.x.com/cars/o'neil.jpg")
+    html = f"<div style=\"background-image:url({_DEP_REAL})\"></div>" + "x" * 600
+    assert harvest_gallery_urls_from_html(html, "https://www.example-dep.com/vdp/1") == [_DEP_REAL]
+    veh = {"image_url": "", "images": []}
+    res = merge_vdp_gallery_into_vehicle(veh, [_DEP_REAL])
+    assert res["added"] == 1 and _DEP_REAL in str(veh)
+
+
 def test_gallery_urls_from_value_shapes():
     joined = "https://a.com/1.jpg,https://a.com/2.jpg, https://a.com/3.jpg"
     assert gallery_urls_from_value(joined) == ["https://a.com/1.jpg", "https://a.com/2.jpg", "https://a.com/3.jpg"]

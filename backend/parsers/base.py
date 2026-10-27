@@ -330,17 +330,28 @@ _KNOWN_PHOTO_CDN_HOSTS: frozenset[str] = frozenset(
 
 # Dealer eProcess gallery photo (extension-less); id part is the dedupe key.
 _DEP_PHOTO_RE = re.compile(
-    r"^https?://cloudflareimages\.dealereprocess\.com/resrc/images/[^\s\"'<>()]+$", re.I
+    r"^https?://cloudflareimages\.dealereprocess\.com/resrc/images/[^\s\"'<>]+$", re.I
 )
 _DEP_DVP_RE = re.compile(r"(dvp/[^/?#]+/[^/?#]+)", re.I)
 
 # A CSS ``url(...)`` wrapper or a quote/paren/semicolon tail that rode along
 # when a style attribute or inline CSS was scraped for photo URLs (N21.6, W15).
 _CSS_URL_WRAP_RE = re.compile(r"""^\s*url\(\s*(['"]?)(.*?)\1\s*\)?\s*;?\s*$""", re.I | re.S)
-_URL_TAIL_JUNK = "\"'\\);,}"
+_URL_TAIL_JUNK = "\"'\\;,}"
 
 
-_BAD_URL_RE = re.compile(r"""[\s<>"'\\{}|^`();]|\burl\(""", re.I)
+# Real debris only: whitespace, quotes, angle brackets, backslash, a ``url(`` wrapper,
+# or a trailing ; ' ) that closes nothing. Balanced parens/apostrophes/semicolons inside
+# a path are legal (Dealer eProcess slugs carry "(Natl)").
+_BAD_URL_RE = re.compile(r"""[\s<>"\\`]|\burl\(""", re.I)
+
+
+def _has_url_debris(u: str) -> bool:
+    if _BAD_URL_RE.search(u):
+        return True
+    if u[-1:] in ";'" or u.startswith("'"):
+        return True
+    return u.count(")") > u.count("(")
 
 
 def clean_gallery_url(raw: str) -> str:
@@ -354,19 +365,26 @@ def clean_gallery_url(raw: str) -> str:
     m = _CSS_URL_WRAP_RE.match(u)
     if m and "url(" in u.lower():
         u = m.group(2)
-    u = u.strip().rstrip(_URL_TAIL_JUNK).lstrip("'\"(")
+    u = u.strip().lstrip("'\"(")
+    while u:
+        t = u.rstrip(_URL_TAIL_JUNK)
+        if t.endswith(")") and t.count(")") > t.count("("):
+            t = t[:-1]
+        if t == u:
+            break
+        u = t
     if u.startswith("//"):
         u = "https:" + u
     if not re.match(r"^https?://[^\s/]+", u, re.I):
         return ""
-    return "" if _BAD_URL_RE.search(u) else u
+    return "" if _has_url_debris(u) else u
 
 
 def is_malformed_image_url(url: str) -> bool:
     """True when *url* is not exactly one clean http(s) URL (CSS fragments,
     unbalanced quotes/parens, embedded whitespace)."""
     u = (url or "").strip() if isinstance(url, str) else ""
-    return not re.match(r"^https?://[^\s/]+", u, re.I) or bool(_BAD_URL_RE.search(u))
+    return not re.match(r"^https?://[^\s/]+", u, re.I) or _has_url_debris(u)
 
 
 def gallery_urls_from_value(v: Any) -> list[str]:
