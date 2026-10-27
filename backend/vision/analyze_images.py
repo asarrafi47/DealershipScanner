@@ -63,13 +63,6 @@ def apply_inventory_db_defaults(explicit_db: str | None = None) -> str:
     return path
 
 
-def pick_image_for_interior_vision(urls: list[str]) -> tuple[str | None, str]:
-    """Prefer cabin URL; else hero + ``through_windows`` when fallback env allows."""
-    from backend.scanner.post_scan.pipeline import pick_listing_image_for_interior_vision
-
-    return pick_listing_image_for_interior_vision(urls)
-
-
 def run_interior_vision_for_inventory_vins(
     vins: list[str],
     *,

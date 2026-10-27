@@ -537,13 +537,3 @@ async def scrape_autowall_via_playwright(
         logger.info("autoWALL: %s — %d vehicle(s) via Playwright", dealer_name, len(by_vin))
     return list(by_vin.values())
 
-
-async def scrape_autowall_from_page(
-    page: Any,
-    base_url: str,
-    dealer_id: str,
-    dealer_name: str,
-    dealer_url: str,
-) -> list[dict[str, Any]]:
-    """Playwright-based autoWALL scraper (delegates to scrape_autowall_via_playwright)."""
-    return await scrape_autowall_via_playwright(page, base_url, dealer_id, dealer_name)

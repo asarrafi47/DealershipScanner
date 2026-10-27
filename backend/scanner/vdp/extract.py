@@ -95,47 +95,6 @@ def _merge_vdp_vehicle_history_url(vehicle: dict[str, Any], dom_urls: list[Any])
     return False
 
 
-def _pick_best_sticker_url(dom_urls: list[Any], vin: str | None = None) -> str | None:
-    from backend.scanner.post_scan.window_sticker import _vin_token_in_url, pick_best_listing_sticker_url
-
-    vnorm = re.sub(r"\s+", "", (vin or "").strip().upper())
-    urls: list[str] = []
-    for u in dom_urls:
-        if not isinstance(u, str):
-            continue
-        s = u.strip()
-        if not s.startswith("http"):
-            continue
-        if vnorm:
-            url_vin = _vin_token_in_url(s)
-            if url_vin and url_vin != vnorm:
-                # URL is stamped with a different vehicle's VIN (e.g. a "similar
-                # vehicles" widget) -- never attach it to this vehicle.
-                continue
-        urls.append(s)
-    return pick_best_listing_sticker_url(urls, vin=vin)
-
-
-def _merge_vdp_sticker_url(vehicle: dict[str, Any], dom_urls: list[Any]) -> bool:
-    """Set ``window_sticker_url`` from VDP iPacket / Monroney links when missing or improved."""
-    picked = _pick_best_sticker_url(dom_urls, str(vehicle.get("vin") or ""))
-    if not picked:
-        return False
-    cur = str(vehicle.get("window_sticker_url") or "").strip()
-    if not cur.lower().startswith("http"):
-        vehicle["window_sticker_url"] = picked
-        return True
-    cur_low = cur.lower()
-    picked_low = picked.lower()
-    if "sticker-puller" in picked_low and "sticker-puller" not in cur_low:
-        vehicle["window_sticker_url"] = picked
-        return True
-    if "token=" in picked_low and "token=" not in cur_low:
-        vehicle["window_sticker_url"] = picked
-        return True
-    return False
-
-
 VEHICLE_SIGNAL_KEYS = frozenset(
     {
         "vin",
@@ -190,70 +149,6 @@ PRIORITY = {
     "inline_json": 28,
     "dom": 18,
 }
-
-
-def _response_maybe_gallery_image_url(url: str, content_type: str) -> bool:
-    """
-    True when a response is likely a vehicle-gallery image. Prefer ``Content-Type`` (many CDNs
-    serve ``?fmt=webp`` and similar with no file extension in the path).
-    """
-    u = (url or "").strip()
-    if not u.lower().startswith("https://"):
-        return False
-    ct = (content_type or "").lower().split(";")[0].strip()
-    if ct in (
-        "image/jpeg",
-        "image/jpg",
-        "image/pjpeg",
-        "image/png",
-        "image/webp",
-        "image/avif",
-        "image/gif",
-    ):
-        return True
-    if ct.startswith("image/") and "svg" not in ct and "x-icon" not in ct and "vnd" not in ct:
-        return True
-    low = u.lower()
-    if re.search(r"\.(jpe?g|png|webp|gif|avif)(\?|#|$)", low):
-        return True
-    for frag in (
-        "/image/",
-        "/images/",
-        "/photos/",
-        "/media/",
-        "/inventory/",
-        "cloudinary",
-        "dealerinspire",
-        "dealer.com",
-        "carsforsale",
-        "inventoryphoto",
-        "vehiclephoto",
-    ):
-        if frag in low:
-            return True
-    return False
-
-
-def _vdp_wants_json_network_capture(content_type: str) -> bool:
-    """True when a response body may be JSON (including GraphQL with ``text/plain``)."""
-    c = (content_type or "").strip().lower()
-    if not c:
-        return False
-    if c.startswith("image/") or c.startswith("video/") or c.startswith("audio/"):
-        return False
-    if c.startswith("text/css"):
-        return False
-    if c.startswith("text/html") and "json" not in c:
-        return False
-    if c.startswith("text/javascript") or "text/javascript" in c:
-        return False
-    if c == "application/javascript" or c.startswith("application/x-javascript"):
-        return False
-    if c.startswith("text/plain"):
-        return True
-    if "json" in c or "+json" in c:
-        return True
-    return False
 
 
 def _response_origin(url: str) -> str:
@@ -550,15 +445,3 @@ def _build_fragments_from_vdp_capture(
 
     return fragments, list(dict.fromkeys(extractor_hits)), bundle_err
 
-
-def _vdp_count_gallery_signals(
-    network_rows: list[dict[str, Any]],
-    bundle: dict[str, Any] | None,
-) -> int:
-    n = 0
-    for row in network_rows:
-        n += len(row.get("image_urls") or [])
-    if isinstance(bundle, dict):
-        n += len(bundle.get("domGalleryUrls") or [])
-        n += len(bundle.get("jsonGalleryUrls") or [])
-    return n

@@ -233,22 +233,6 @@ def _is_valid_sticker_payload(result: dict[str, Any]) -> bool:
     return "pdf" in ct
 
 
-def fetch_window_sticker_text(vin: str, *, timeout: float = 20.0) -> dict[str, Any] | None:
-    """
-    Fetch the OEM window sticker PDF for this VIN and extract text.
-    Returns dict with keys: url, raw_text, options (list[str]), msrp (int|None)
-    """
-    fetched = fetch_window_sticker_pdf(vin, timeout=timeout)
-    if not fetched:
-        return None
-    return {
-        "url": fetched.get("url"),
-        "raw_text": fetched.get("raw_text") or "",
-        "options": fetched.get("options") or [],
-        "msrp": fetched.get("msrp"),
-    }
-
-
 def _extract_pdf_text(raw: bytes) -> str:
     if not raw or raw[:4] != b"%PDF":
         return ""
@@ -1073,11 +1057,6 @@ def sticker_options_for_display(packages: dict[str, Any] | None) -> list[dict[st
     return _filter_sticker_display_items(out)[:80]
 
 
-def sticker_option_groups_for_display(packages: dict[str, Any] | None) -> list[dict[str, Any]]:
-    """Return grouped sticker options (lines + packages with nested features)."""
-    return group_sticker_options_for_display(sticker_options_for_display(packages))
-
-
 def _parse_options_from_sticker_text(text: str) -> list[str]:
     return [item["label"] for item in parse_sticker_option_items(text)]
 
@@ -1334,10 +1313,6 @@ def _sticker_turbo_descriptor(blob: str, engine_raw: str = "") -> str:
     return ""
 
 
-def _sticker_has_turbo(blob: str, engine_raw: str = "") -> bool:
-    return bool(_sticker_turbo_descriptor(blob, engine_raw))
-
-
 def _apply_turbo_to_engine_out(out: dict[str, Any], blob: str) -> None:
     if str(out.get("fuel_type") or "").strip().lower() == "electric":
         return
@@ -1349,22 +1324,6 @@ def _apply_turbo_to_engine_out(out: dict[str, Any], blob: str) -> None:
     if not desc:
         return
     out["engine_display"] = f"{display} {desc}"
-
-
-def car_has_turbo_signal(car: dict[str, Any]) -> bool:
-    """True when a CDJR row or stored packages mention turbo / twin-turbo engine."""
-    if not is_cdjr_stellantis_car(car):
-        return False
-    parts: list[str] = []
-    ed = car.get("engine_description")
-    if isinstance(ed, str) and ed.strip():
-        parts.append(ed)
-    raw = car.get("packages")
-    if raw:
-        parts.append(str(raw))
-    hay = "\n".join(parts)
-    engine_raw = ed if isinstance(ed, str) else ""
-    return _sticker_has_turbo(hay, engine_raw)
 
 
 def upgrade_engine_display_for_turbo(display: str, car: dict[str, Any] | None = None) -> str:

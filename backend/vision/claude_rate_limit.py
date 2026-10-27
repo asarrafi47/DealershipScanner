@@ -12,11 +12,9 @@ import os
 import random
 import threading
 import time
-from typing import Any, Callable, TypeVar
+from typing import Any
 
 logger = logging.getLogger(__name__)
-
-_T = TypeVar("_T")
 
 _lock = threading.Lock()
 _tokens: float = 0.0
@@ -28,13 +26,6 @@ def _rpm_cap() -> float:
         return max(5.0, min(120.0, float((os.environ.get("ANTHROPIC_VISION_RPM") or "42").strip())))
     except (TypeError, ValueError):
         return 42.0
-
-
-def _max_retries() -> int:
-    try:
-        return max(1, min(8, int((os.environ.get("ANTHROPIC_VISION_MAX_RETRIES") or "5").strip())))
-    except (TypeError, ValueError):
-        return 5
 
 
 def acquire_vision_slot(*, cost: float = 1.0) -> None:
@@ -72,9 +63,3 @@ def anthropic_messages_create(client: Any, **kwargs: Any) -> Any:
 
     value, _attempts = call_with_retry(lambda: client.messages.create(**kwargs))
     return value
-
-
-def run_with_vision_limit(fn: Callable[[], _T]) -> _T:
-    """Acquire one slot then run *fn* (for raw HTTP vision paths)."""
-    acquire_vision_slot()
-    return fn()

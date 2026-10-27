@@ -435,11 +435,6 @@ def _finalize_kept_gallery_urls(
     return []
 
 
-def _equipment_batch_enabled() -> bool:
-    raw = (os.environ.get("CLAUDE_VISION_UNIFIED_EQUIPMENT") or "1").strip().lower()
-    return raw not in ("0", "false", "no", "off")
-
-
 def analyze_equipment_from_image_urls(
     urls: list[str],
     *,
