@@ -52,7 +52,7 @@ from collections.abc import Callable
 from dataclasses import dataclass, field
 from typing import Any
 
-from backend.scanner.net.client import IMPERSONATE_PROFILES
+from backend.scanner.net.client import HOST_PROFILES, IMPERSONATE_PROFILES
 
 logger = logging.getLogger(__name__)
 
@@ -218,12 +218,24 @@ class ImpersonatingFetcher(Fetcher):
 
     def __init__(self, timeout_s: float = 25.0):
         self.timeout_s = timeout_s
-        self._winning: dict[str, str] = {}
+        # Process-wide memory (net.client.HOST_PROFILES); ``_winning`` kept as the alias.
+        self._winning = HOST_PROFILES
 
     def available(self) -> bool:
         from backend.scanner.net.client import curl_cffi_available
 
         return curl_cffi_available()
+
+    @staticmethod
+    def accept(resp: Any) -> bool:
+        """A 200 with real HTML. An anti-bot interstitial is rejected so rotation
+        continues to the next signature instead of handing the challenge to the
+        extractors."""
+        from backend.scanner.net.client import looks_like_challenge
+
+        if resp.status_code != 200 or not resp.text or not resp.text.strip():
+            return False
+        return not looks_like_challenge(resp.text)
 
     @staticmethod
     def _host(url: str) -> str:
@@ -239,8 +251,7 @@ class ImpersonatingFetcher(Fetcher):
 
         host = self._host(url)
         # Try the signature that already worked for this host first.
-        known = self._winning.get(host)
-        order = ([known] + [p for p in self.PROFILES if p != known]) if known else list(self.PROFILES)
+        order = self._winning.order(host, self.PROFILES)
 
         def _failed(profile: str, exc: Exception) -> None:
             logger.debug("impersonate %s failed for %s: %s", profile, host, exc)
@@ -249,14 +260,14 @@ class ImpersonatingFetcher(Fetcher):
             cffi_requests,
             url,
             profiles=order,
-            accept=lambda resp: bool(resp.status_code == 200 and resp.text and resp.text.strip()),
+            accept=self.accept,
             on_error=_failed,
             timeout=self.timeout_s,
             proxies=proxies,
             allow_redirects=True,
         )
         if got.response is not None:
-            self._winning[host] = got.profile
+            self._winning.remember(host, got.profile)
             return got.response.text
 
         raise FetchError(f"impersonation exhausted for {host} (last status {got.last_status})")
@@ -279,6 +290,7 @@ class RequestsFetcher(Fetcher):
             via_get=True,
             timeout=self.timeout_s,
             headers={"User-Agent": self.user_agent},
+            proxies=client.scanner_proxies(),
             allow_redirects=True,
         )
         resp.raise_for_status()

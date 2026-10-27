@@ -12,6 +12,9 @@ from backend.db import inventory_db
 from backend.db.inventory_db import init_inventory_db
 from backend.scanner.vdp import prefetch as pf
 
+# N18.8: page fields apply only when the page names the car; fixture pages carry this.
+_VIN_TAG = "<!-- 1HGBH41JXMN109186 -->"
+
 
 @pytest.fixture()
 def seeded_db(monkeypatch, tmp_path: Path):
@@ -72,7 +75,7 @@ def test_http_prefetch_fills_from_structured_page(monkeypatch):
         f'<script type="application/ld+json">{json.dumps(ld)}</script>'
         "<li>Exterior Color: Deep Blue</li><li>Interior Color: Gray</li>"
     )
-    monkeypatch.setattr(pf, "_fetch_html", lambda url: html)
+    monkeypatch.setattr(pf, "_fetch_html", lambda url: html + _VIN_TAG)
     v = {"vin": "1HGBH41JXMN109186", "_detail_url": "https://d.example/car", "price": None,
          "exterior_color": "", "interior_color": ""}
     stats = asyncio.run(pf.http_prefetch_missing_fields([v]))
@@ -124,7 +127,7 @@ def test_http_prefetch_fills_description_and_gallery_from_html(monkeypatch):
         "a clean history report and a full set of service records from our shop.</p>"
         f"<div class='gallery'>{imgs}</div></body></html>"
     )
-    monkeypatch.setattr(pf, "_fetch_html", lambda url: html)
+    monkeypatch.setattr(pf, "_fetch_html", lambda url: html + _VIN_TAG)
     v = _complete_but_thin()
     stats = asyncio.run(pf.http_prefetch_missing_fields([v]))
     assert stats["candidates"] == 1 and stats["fetched"] == 1
@@ -137,7 +140,7 @@ def test_http_prefetch_fills_description_and_gallery_from_html(monkeypatch):
 def test_http_prefetch_gallery_only_grows(monkeypatch):
     html = ('<img src="https://cdn.example/a.jpg"><img src="https://cdn.example/b.jpg">'
             + "<!-- " + "pad " * 120 + "-->")  # the harvester ignores pages under 400 bytes
-    monkeypatch.setattr(pf, "_fetch_html", lambda url: html)
+    monkeypatch.setattr(pf, "_fetch_html", lambda url: html + _VIN_TAG)
     v = _complete_but_thin(description="x" * 60, gallery=["https://cdn.example/a.jpg", "https://cdn.example/z.jpg"])
     asyncio.run(pf.http_prefetch_missing_fields([v]))
     assert v["gallery"][:2] == ["https://cdn.example/a.jpg", "https://cdn.example/z.jpg"]
@@ -202,11 +205,11 @@ def test_http_prefetch_does_not_kill_a_host_that_answers(monkeypatch):
 
     def _flaky(url):
         seen["n"] += 1
-        return None if seen["n"] % 2 else "<html>" + "x" * 500 + "</html>"
+        return None if seen["n"] % 2 else "<html>" + "x" * 500 + url + "</html>"
 
     monkeypatch.setattr(pf, "_fetch_html", _flaky)
     monkeypatch.setattr(pf, "_HTTP_CONCURRENCY", 1)
-    vs = [{"vin": f"1HGBH41JXMN10{i:04d}", "_detail_url": f"https://ok.example/car{i}", "price": None} for i in range(10)]
+    vs = [{"vin": f"1HGBH41JXMN10{i:04d}", "_detail_url": f"https://ok.example/car{i}?v=1HGBH41JXMN10{i:04d}", "price": None} for i in range(10)]
     stats = asyncio.run(pf.http_prefetch_missing_fields(vs))
     assert "dead_host" not in stats
     assert stats["fetched"] >= 4
@@ -302,7 +305,7 @@ def test_gallery_added_counts_real_photos_not_list_length(monkeypatch):
 def test_galleries_extended_stat_from_placeholder_and_logo_rows(monkeypatch):
     monkeypatch.setenv("SCANNER_VDP_HTTP_FIRST_GALLERY_MIN", "8")
     photo = "https://cdn.example/photos/1.jpg"
-    monkeypatch.setattr(pf, "_fetch_html", lambda url: _photo_page(photo))
+    monkeypatch.setattr(pf, "_fetch_html", lambda url: _photo_page(photo) + _VIN_TAG)
     a = _complete_but_thin(description="x" * 60, gallery=["/static/placeholder.svg", LOGO], image_url="/static/placeholder.svg")
     b = _complete_but_thin(description="x" * 60, gallery=["/static/placeholder.svg", photo], image_url=photo)
     stats = asyncio.run(pf.http_prefetch_missing_fields([a, b]))

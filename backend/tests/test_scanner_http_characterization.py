@@ -129,9 +129,17 @@ def wire(monkeypatch):
         monkeypatch.setenv(name, "")
     pf._LAST_STATUS.clear()
     pf._LAST_ERROR.clear()
+    pf._LAST_PROFILE.clear()
+    pf._SLOW_HOSTS.discard("dealer.test")
+    from backend.scanner.net.client import HOST_PROFILES
+
+    HOST_PROFILES.clear()  # process-wide since P12A.1: one test's winner must not start the next
     yield w
     pf._LAST_STATUS.clear()
     pf._LAST_ERROR.clear()
+    pf._LAST_PROFILE.clear()
+    pf._SLOW_HOSTS.discard("dealer.test")
+    HOST_PROFILES.clear()
 
 
 @pytest.fixture
@@ -172,9 +180,16 @@ def test_chain_impersonating_403_rotates_all_profiles_then_raises(wire):
     assert wire.events == [_chain_call(p) for p in PROFILES]
 
 
-def test_chain_impersonating_returns_challenge_page_unchecked(wire):
-    wire.queue("curl_cffi", FakeResp(200, CHALLENGE))
-    assert chain.ImpersonatingFetcher().fetch(URL) == CHALLENGE
+def test_chain_impersonating_rotates_past_challenge_then_raises(wire):
+    wire.queue("curl_cffi", FakeResp(200, CHALLENGE), FakeResp(200, CHALLENGE), FakeResp(200, CHALLENGE))
+    with pytest.raises(chain.FetchError, match=r"impersonation exhausted for dealer.test \(last status 200\)"):
+        chain.ImpersonatingFetcher().fetch(URL)
+    assert wire.events == [_chain_call(p) for p in PROFILES]
+
+
+def test_chain_impersonating_challenge_then_real_page_wins(wire):
+    wire.queue("curl_cffi", FakeResp(200, CHALLENGE), FakeResp(200, BIG))
+    assert chain.ImpersonatingFetcher().fetch(URL) == BIG
 
 
 def test_chain_impersonating_timeouts_and_errors(wire):
@@ -221,9 +236,10 @@ def test_chain_impersonating_unavailable_without_curl_cffi(no_cffi):
 # chain.RequestsFetcher
 # ════════════════════════════════════════════════════════════════════════════
 
-def _requests_chain_call() -> dict[str, Any]:
+def _requests_chain_call(proxies: Any = None) -> dict[str, Any]:
     return {"lib": "requests", "fn": "get", "method": "GET", "url": URL,
-            "kwargs": {"timeout": 20.0, "headers": {"User-Agent": chain._UA}, "allow_redirects": True}}
+            "kwargs": {"timeout": 20.0, "headers": {"User-Agent": chain._UA}, "proxies": proxies,
+                       "allow_redirects": True}}
 
 
 def test_chain_requests_200(wire):
@@ -249,10 +265,10 @@ def test_chain_requests_timeout_propagates(wire):
         chain.RequestsFetcher().fetch(URL)
 
 
-def test_chain_requests_passes_no_proxy_even_with_scanner_proxy(proxied):
+def test_chain_requests_uses_scanner_proxy(proxied):
     proxied.queue("requests", FakeResp(200, BIG))
     chain.RequestsFetcher().fetch(URL)
-    assert proxied.events == [_requests_chain_call()]
+    assert proxied.events == [_requests_chain_call({"http": PROXY, "https": PROXY})]
 
 
 # ════════════════════════════════════════════════════════════════════════════
@@ -588,11 +604,21 @@ def test_prefetch_rejects_challenge_page_on_requests_fallback(wire):
     assert pf._LAST_STATUS[VDP] == 403
 
 
-@pytest.mark.parametrize("status", [403, 429, 503])
+@pytest.mark.parametrize("status", [429, 503])
 def test_prefetch_fingerprint_block_no_fallback(wire, status):
     wire.queue("curl_cffi", FakeResp(status))
     assert pf._fetch_html(VDP) is None
     assert wire.events == [_pf_cffi()]
+    assert pf._LAST_STATUS[VDP] == status
+
+
+@pytest.mark.parametrize("status", [403, 405])
+def test_prefetch_rotation_blocked_on_every_profile_no_fallback(wire, status):
+    # P12A.5 (D-OD7): a host's first, non-slow attempt rotates on 403/405 (405 joined the block
+    # set); when every signature is refused the plain-requests fallback is still skipped.
+    wire.queue("curl_cffi", FakeResp(status), FakeResp(status), FakeResp(status))
+    assert pf._fetch_html(VDP) is None
+    assert [e["kwargs"]["impersonate"] for e in wire.events] == ["chrome", "chrome124", "safari17_0"]
     assert pf._LAST_STATUS[VDP] == status
 
 
@@ -677,10 +703,12 @@ def test_vdp_json_200(wire):
     assert wire.events == [_vr_call("curl_cffi")]
 
 
-def test_vdp_json_403_no_fallback(wire):
-    wire.queue("curl_cffi", FakeResp(403, JSON_BODY))
+def test_vdp_json_403_rotates_then_no_fallback(wire):
+    # P12A.5: first, non-slow attempt on the host rotates signatures on 403; no requests fallback.
+    wire.queue("curl_cffi", FakeResp(403, JSON_BODY), FakeResp(403, JSON_BODY), FakeResp(403, JSON_BODY))
     assert vr._fetch_json(_vrecipe(), API + "/V1", None, BASE) == (403, None)
-    assert len(wire.events) == 1
+    assert [e["kwargs"]["impersonate"] for e in wire.events] == ["chrome", "chrome124", "safari17_0"]
+    assert wire.calls("requests") == []
 
 
 def test_vdp_json_challenge_page(wire):
@@ -694,10 +722,12 @@ def test_vdp_json_empty_200(wire):
 
 
 @pytest.mark.parametrize("exc", [CurlTimeout("t"), RuntimeError("x")])
-def test_vdp_json_cffi_error_no_fallback(wire, exc):
+def test_vdp_json_cffi_error_falls_back_to_requests(wire, exc):
+    # P12A.5: a curl_cffi error falls back to plain requests (it used to give up).
     wire.queue("curl_cffi", exc)
-    assert vr._fetch_json(_vrecipe(), API + "/V1", None, BASE) == (0, None)
-    assert wire.calls("requests") == []
+    wire.queue("requests", FakeResp(200, JSON_BODY))
+    assert vr._fetch_json(_vrecipe(), API + "/V1", None, BASE) == (200, {"inventory": [{"vin": "1"}]})
+    assert len(wire.calls("requests")) == 1
 
 
 def test_vdp_json_post(proxied):

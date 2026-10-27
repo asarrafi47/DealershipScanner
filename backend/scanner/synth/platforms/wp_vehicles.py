@@ -23,14 +23,22 @@ def _detect_wp_vehicles_index(html: str, dealer_url: str) -> bool:
 
 
 def _fetch_wp_vehicles(origin: str) -> list[dict] | None:
-    try:
-        from curl_cffi import requests as cr
+    from backend.scanner.net import client as net_client
+    from backend.scanner.synth.http import _pace
 
-        r = cr.get(origin + _WP_VEHICLES_PATH, impersonate="chrome", timeout=30,
-                   headers={"Accept": "application/json", "Referer": origin + "/"})
-        if r.status_code != 200:
+    try:
+        cffi = net_client.import_curl_cffi()
+        rot = net_client.rotate_impersonation(
+            cffi, origin + _WP_VEHICLES_PATH,
+            accept=lambda resp: resp.status_code == 200,
+            profiles=net_client.HOST_PROFILES.order(origin.lower()),
+            before_attempt=_pace, timeout=30, proxies=net_client.scanner_proxies(),
+            headers={"Accept": "application/json", "Referer": origin + "/"},
+        )
+        if rot.response is None:
             return None
-        js = r.json()
+        net_client.HOST_PROFILES.remember(origin.lower(), rot.profile)
+        js = rot.response.json()
     except Exception:  # noqa: BLE001
         return None
     v = js.get("vehicles") if isinstance(js, dict) else None

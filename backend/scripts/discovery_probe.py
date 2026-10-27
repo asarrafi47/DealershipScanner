@@ -53,17 +53,24 @@ _INV_PATHS = ("/inventory/", "/new-vehicles/", "/used-vehicles/", "/searchnew.as
               "/vehicles/", "/all-inventory/", "/inventory.json", "/search/used/")
 
 
+_PROBE_PROFILE = "chrome"
+
+
 def _get(url: str, referer: str | None = None, timeout: float = 25.0) -> dict[str, Any]:
     """One impersonated GET with the redirect chain and headers we care about."""
-    from curl_cffi import requests as cr
+    from backend.scanner.net import client as net_client
 
+    cr = net_client.import_curl_cffi()
     hdr = {"User-Agent": _UA, "Accept": "text/html,application/xhtml+xml,application/json;q=0.9,*/*;q=0.8"}
     if referer:
         hdr["Referer"] = referer
         hdr["Sec-Fetch-Site"] = "same-origin"
     t0 = time.time()
     try:
-        r = cr.get(url, headers=hdr, impersonate="chrome", timeout=timeout, allow_redirects=True)
+        # One fixed 'chrome' probe (not a rotation): the record reports what the default
+        # signature sees, and the classification reads that status.
+        r = net_client.send(cr, "GET", url, via_get=True, headers=hdr, impersonate=_PROBE_PROFILE,
+                            timeout=timeout, allow_redirects=True, proxies=net_client.scanner_proxies())
     except Exception as exc:  # noqa: BLE001
         return {"url": url, "error": f"{type(exc).__name__}: {str(exc)[:200]}", "secs": round(time.time() - t0, 2)}
     text = r.text or ""
@@ -74,7 +81,7 @@ def _get(url: str, referer: str | None = None, timeout: float = 25.0) -> dict[st
     except Exception:  # noqa: BLE001
         pass
     return {
-        "url": url, "final_url": str(r.url), "status": r.status_code, "bytes": len(text), "secs": round(time.time() - t0, 2),
+        "url": url, "final_url": str(r.url), "profile": _PROBE_PROFILE, "status": r.status_code, "bytes": len(text), "secs": round(time.time() - t0, 2),
         "title": (title.group(1).strip()[:120] if title else None),
         "server": r.headers.get("server"), "cf_ray": bool(r.headers.get("cf-ray")), "content_type": (r.headers.get("content-type") or "")[:60],
         "redirects": chain, "text": text,

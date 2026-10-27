@@ -383,7 +383,7 @@ def _map_vehicle(obj: dict, base_url: str, dealer_id: str, dealer_name: str, dea
     if du:
         row["_detail_url"] = du
         if guessed:
-            mark_guessed(row)
+            mark_guessed(row, "dealer_on")
     return row
 
 

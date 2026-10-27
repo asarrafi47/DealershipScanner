@@ -65,6 +65,7 @@ if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
 
 from backend.db.connect import connect as db_connect  # noqa: E402
+from backend.scanner.net import client as net_client  # noqa: E402
 
 _log = logging.getLogger("dealer_audit")
 
@@ -113,35 +114,43 @@ def _dealer_key(url: str) -> str:
 # Rotating profiles matters: over 30 dealers from the 403 cohort, "chrome" alone cleared
 # about half, while chrome + chrome124 + safari17_0 cleared 29 of 30. Different edges run
 # different rule sets, so one signature is not enough.
-_IMPERSONATE_PROFILES = ("chrome", "chrome124", "safari17_0")
+_IMPERSONATE_PROFILES = net_client.IMPERSONATE_PROFILES
 
 
 def _probe_impersonated(url: str) -> dict[str, Any] | None:
     """Try each browser signature; first 200 wins. None if curl_cffi is unavailable."""
-    try:
-        from curl_cffi import requests as cffi_requests
-    except ImportError:
+    cffi_requests = net_client.curl_cffi_requests()
+    if cffi_requests is None:
         return None
 
     last: dict[str, Any] | None = None
-    for profile in _IMPERSONATE_PROFILES:
-        try:
-            resp = cffi_requests.get(url, impersonate=profile, timeout=25)
-        except Exception as exc:  # curl_cffi raises its own error hierarchy
-            last = {"status": None, "final_url": None, "platform": None, "error": str(exc)[:120]}
-            continue
+
+    def _accept(resp: Any) -> bool:
+        # Every answer is recorded (the last one is the fallback); only a 200 ends the rotation.
+        nonlocal last
         body = (resp.text or "")[:300_000].lower()
-        platform = next((p for m, p in _PLATFORM_MARKERS if m in body), None)
-        result = {
+        last = {
             "status": resp.status_code,
             "final_url": str(resp.url),
-            "platform": platform,
+            "platform": next((p for m, p in _PLATFORM_MARKERS if m in body), None),
             "error": None,
-            "impersonate": profile,
+            "impersonate": current[0],
         }
-        if resp.status_code == 200:
-            return result
-        last = result
+        return resp.status_code == 200
+
+    def _on_error(_profile: str, exc: Exception) -> None:
+        nonlocal last
+        last = {"status": None, "final_url": None, "platform": None, "error": str(exc)[:120]}
+
+    current = [None]
+    for profile in _IMPERSONATE_PROFILES:
+        current[0] = profile
+        rot = net_client.rotate_impersonation(
+            cffi_requests, url, accept=_accept, profiles=(profile,), on_error=_on_error,
+            timeout=25, proxies=net_client.scanner_proxies(),
+        )
+        if rot.response is not None:
+            return last
     return last
 
 

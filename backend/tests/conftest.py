@@ -1309,3 +1309,13 @@ def app_factory(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Callable[...
         return main
 
     return _make
+
+
+@pytest.fixture(autouse=True)
+def _reset_host_profile_memory():
+    """HostProfileMemory is process-wide; start every test with no remembered winners."""
+    from backend.scanner.net.client import HOST_PROFILES
+
+    HOST_PROFILES.clear()
+    yield
+    HOST_PROFILES.clear()
