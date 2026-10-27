@@ -68,13 +68,17 @@ dictionary-vs-dealer discrepancies with example VINs; decide per code whether th
 Playbook (how this project learns a dealer site over HTTP, from workspace/scan_lab/lab_20260923_http/NOTES.md):
 1. Fetch the homepage and an inventory page with curl_cffi (impersonate="chrome"); plain requests gets 403 on Dealer Inspire.
    Use: from backend.scanner.recipe_synth import fetch_dealer_html, fingerprint_platform, synthesize_recipes, validate_recipe
+   and, for the verdict: from backend.scanner.recipe_validation import gate_recipes, validate_recipe_set
 2. fingerprint_platform(html, url) names the platform. Existing templates: dealer_dot_com (ws-inv-data), carscommerce
    (Dealer Inspire search API, POST with x-api-key, page/perPage, drop boolean facetFilters), dealer_on_cosmos
    (/api/vhcliaa/vehicle-pages/cosmos/srp/vehicles/{dealerId}/{pageId}?pt=N&pn=96, one pageId per SRP section found
    in /searchnew.aspx and /searchused.aspx page config), typesense (multi_search, host+key+collection in page JS),
    team_velocity (/inventory-new.json, /inventory-used.json ?page=N), dealer_eprocess, motive, overfuel, nabthat,
    chapman, jazel, dealermasters. Read backend/scanner/synth/platforms/<module>.py for each template's markers (registry order in synth/registry.py); module names differ from fingerprint names for dealer_dot_com (dealer_com.py), dealer_on_cosmos (dealeron_cosmos.py), motive_ridemotive (motive.py), wp_vehicles_index (wp_vehicles.py).
-3. If synthesize_recipes returns candidates, validate_recipe(candidate, url, dealer_id, name) counts VINs over HTTP.
+3. If synthesize_recipes returns candidates, judge them as a set with gate_recipes(dealer_id, candidates, base_url=url,
+   dealer_name=name, record=False) (from backend.scanner.recipe_validation; it returns the kept recipes and a report whose
+   verdict is ok | uncertain | reject). validate_recipe(candidate, url, dealer_id, name) is only the VIN count over HTTP; it
+   does not decide pass or fail.
 4. If nothing synthesizes: look in the HTML for JSON-LD Vehicle blocks, inline JSON (window.*, data-* attributes),
    script src hosts that look like inventory APIs (algolia, typesense, carscommerce, dealeron, /api/), and try
    obvious inventory paths (/inventory/, /new-vehicles/, /used-vehicles/, /searchused.aspx). Probe pagination by

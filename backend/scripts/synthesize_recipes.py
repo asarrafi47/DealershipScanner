@@ -73,6 +73,7 @@ from backend.scanner.recipe_synth import (
     synthesize_recipes,
     validate_recipe,
 )
+from backend.scanner.recipe_totals import RECIPE_MIN_VINS
 from backend.scanner.recipes import EndpointRecipe, load_recipes, merge_recipes, replace_recipes
 
 logging.basicConfig(level=logging.WARNING, format="%(asctime)s [%(levelname)s] %(message)s")
@@ -227,8 +228,11 @@ def _process_dealer(
     # is the combined total across kept recipes (feeds are disjoint by condition).
     kept: list[EndpointRecipe] = []
     total_vins = 0
-    for recipe in recipes:
-        n = validate_recipe(recipe, dealer_url.rstrip("/"), dealer_id, dealer_name or dealer_id)
+    from backend.scanner.recipe_validation import walk_candidates
+
+    walked = walk_candidates(dealer_id, recipes, base_url=dealer_url.rstrip("/"), dealer_name=dealer_name or dealer_id)
+    for recipe, chk, *_ in walked.walks:
+        n = chk.vins
         if n <= 0:
             continue
         recipe.vehicle_rows = n
@@ -259,7 +263,7 @@ def _process_dealer(
     keeps_healthy = not force and _healthy_recipe_exists(dealer_id)
     will_save = not dry_run and not keeps_healthy
     kept, report = gate_recipes(dealer_id, kept, base_url=dealer_url.rstrip("/"), dealer_name=dealer_name or dealer_id,
-                                context="synthesize_recipes", record=will_save)
+                                context="synthesize_recipes", record=will_save, checks=walked.keep(kept))
     row["validation"] = report.status
     if not kept:
         row["strategy"] = ""
@@ -316,7 +320,8 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--dealer-id", help="one-off: dealer id (with --url)")
     ap.add_argument("--url", help="one-off: dealer homepage URL")
     ap.add_argument("--name", help="one-off: dealer display name")
-    ap.add_argument("--min-vins", type=int, default=5, help="min unique VINs to accept (default 5)")
+    ap.add_argument("--min-vins", type=int, default=RECIPE_MIN_VINS,
+                    help=f"min unique VINs across the kept set (default {RECIPE_MIN_VINS}, the one rule)")
     ap.add_argument("--dry-run", action="store_true",
                     help="fingerprint/synthesize/validate/gate, but write no recipe, discovery.md entry or recipe_status")
     ap.add_argument("--force", action="store_true", help="save even if a healthy recipe already exists")

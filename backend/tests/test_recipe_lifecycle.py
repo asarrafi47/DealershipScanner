@@ -581,6 +581,7 @@ def test_promote_keeps_a_recipe_another_host_adds_during_validation(monkeypatch,
         return live, rep
 
     monkeypatch.setattr(rv, "gate_recipes", gate)
+    monkeypatch.setattr(rv, "walk_candidates", lambda *a, **k: None)  # the gate is stubbed; no walk
     n = promote_from_ledger(D, "dealer_dot_com", [_ep(URL_B)], validate=True)
     urls = {r.url for r in load_recipes(D)}
     assert "https://other.example/api/inv" in urls and URL_B in urls and n == len(urls) == 3

@@ -1,7 +1,7 @@
 """Recipe-set validation against the site's own count (HTTP_ONLY_SCANS_PLAN Phase 3).
 
 ``validate_recipe`` (bottom of this module; re-exported by recipe_synth) answers one question — how many VINs does
-this recipe yield — and every save path accepted anything with >= 5. That is
+this recipe yield — and every save path accepted anything with >= 5 (now :data:`RECIPE_MIN_VINS`). That is
 how one-condition, section-scoped and short-page recipes reached the fleet and
 were only caught by the assess step a scan later (the 09-24 / 09-26 censuses:
 16 section-scoped carscommerce captures, 14 dealer.com recipes stopped at 48
@@ -40,6 +40,7 @@ import json
 import os
 import logging
 import re
+import time
 from dataclasses import asdict, dataclass, field, replace
 from datetime import datetime, timezone
 from pathlib import Path
@@ -71,6 +72,8 @@ from backend.scanner.recipes import (
 # Single-recipe yield probe (moved from synth/validate.py, audit F-6 follow-up).
 from backend.scanner.net import ssrf
 from backend.scanner.recipe_totals import (  # noqa: F401  (moved; re-exported for its callers and tests)
+    RECIPE_MIN_VINS,
+    request_signature,
     SITE_TOTAL_EXTRACTORS,
     _int_or_none,
     _total_carscommerce,
@@ -81,9 +84,9 @@ from backend.scanner.recipe_totals import (  # noqa: F401  (moved; re-exported f
     extract_site_total,
     platform_of,
 )
-from backend.scanner.synth.http import _cosmos_get_json, _dep_fetch_html
-from backend.scanner.synth.platforms.dealeron_cosmos import _COSMOS_PAGE_SIZE, _COSMOS_PATH
-from backend.scanner.synth.platforms.team_velocity import _TEAM_VELOCITY_FEED
+from backend.scanner.synth.http import _cosmos_get_json, _dep_fetch_html  # noqa: F401  (re-exported via the synth/validate shim)
+from backend.scanner.synth.platforms.dealeron_cosmos import _COSMOS_PAGE_SIZE, _COSMOS_PATH  # noqa: F401  (re-exported via the synth/validate shim)
+from backend.scanner.synth.platforms.team_velocity import _TEAM_VELOCITY_FEED  # noqa: F401  (re-exported via the synth/validate shim)
 
 logger = logging.getLogger("scanner")
 
@@ -112,10 +115,11 @@ WHOLE_LOT_SEEN = 0.90
 # HTML /used-inventory/ walk) is one-condition only when the OTHER side is known
 # to exist. The validator asks the other side's own URL: this many VINs there
 # means the site sells both and the set misses a side. Below it the synth would
-# have dropped that recipe anyway (dealer_pipeline.ensure_recipe keeps >= 5), so
+# have dropped that recipe anyway (ensure_recipe keeps a set of at least RECIPE_MIN_VINS), so
 # the lot is used-only (or new-only) as far as the site says, and the set saves
 # as ``uncertain:one_condition_unverified`` for the post-scan assess to judge.
-OTHER_SIDE_MIN_VINS = 5
+# D-OD1 keeps the probe at the same number as the save floor, by decision rather than by echo.
+OTHER_SIDE_MIN_VINS = RECIPE_MIN_VINS
 
 _TS_CONDITION_RE = re.compile(r"condition\s*:=?\s*\[?\s*`?\"?'?([A-Za-z -]+)", re.I)
 
@@ -326,6 +330,7 @@ class RecipeCheck:
     short_page: bool = False
     exhausted: bool = False
     error: str = ""
+    note: str = ""
 
 
 @dataclass
@@ -420,20 +425,37 @@ class RecipeValidationReport:
 # ── the check ──────────────────────────────────────────────────────────────────
 
 def _parse_rows(recipe: EndpointRecipe, parsed: Any, *, base_url: str, dealer_id: str, dealer_name: str,
-                place: dict[str, str] | None) -> tuple[list[dict], int]:
-    """This store's rows for one page and how many the rooftop gate refused."""
-    from backend.parsers import _cached_roster_place_items, parse
+                place: dict[str, str] | None) -> tuple[list[dict], set[str]]:
+    """This store's rows for one page and the VINs the rooftop gate refused.
 
-    kw = dict(_cached_roster_place_items(base_url))
-    kw.update({k: v for k, v in (place or {}).items()
-               if k in ("dealer_address", "dealer_city", "dealer_state", "dealer_zip") and v})
-    rejected: list[dict] = []
-    rows = parse(
-        recipe.provider_hint or "", parsed,
-        base_url=base_url, dealer_id=dealer_id, dealer_name=dealer_name, dealer_url=base_url,
-        rejected_out=rejected, trust_feed_scope=recipe_is_store_scoped(recipe, dealer_name), **kw,
-    )
-    return list(rows or []), len(rejected)
+    Parsed through ``attribution.parse_page`` with a ``DealerCtx`` over *place*, the
+    call the scan makes (recipes.py). *place* is already complete: the caller-side
+    lookup is :func:`_store_place_for`, once per validation call."""
+    from backend.attribution import DealerCtx, gate_place, parse_page
+
+    ctx = DealerCtx(dealer_id, dealer_name, base_url, gate_place(place))
+    refused: list[dict] = []
+    rows = parse_page(recipe.provider_hint or "", parsed, ctx, refused,
+                      trust_feed_scope=recipe_is_store_scoped(recipe, dealer_name))
+    return list(rows or []), _unique_vins(refused)
+
+
+def _store_place_for(base_url: str, dealer_id: str, place: dict[str, str] | None) -> dict[str, str]:
+    """The place the scan would gate this store with: ``attribution.store_place``
+    (registry plus the hinted street), merged key by key UNDER the caller's *place*
+    (the caller wins). Read once per validation call, never per page. Any lookup
+    failure (no DB) falls back silently to the caller's place, or ``{}``."""
+    from backend.attribution import gate_place
+
+    caller = gate_place(place)
+    try:
+        import backend.attribution as attribution
+
+        found = gate_place(attribution.store_place(base_url, dealer_id))
+    except Exception as exc:  # noqa: BLE001 - attribution help must never break a validation
+        logger.debug("store place lookup skipped [%s]: %s", dealer_id, exc)
+        found = {}
+    return {**found, **{k: v for k, v in caller.items() if v}}
 
 
 def _check_recipe(recipe: EndpointRecipe, *, fetch: Fetch, base_url: str, dealer_id: str, dealer_name: str,
@@ -446,8 +468,11 @@ def _check_recipe(recipe: EndpointRecipe, *, fetch: Fetch, base_url: str, dealer
         try:
             template = json.loads(recipe.post_template)
         except ValueError:
-            chk.error = "post_template is not JSON"
-            return chk, set(), {}, None, None
+            if recipe.method != "GET":
+                chk.error = "post_template is not JSON"
+                return chk, set(), {}, None, None
+            # D-OD6: a GET replays without a body, as the scan does (recipes.py)
+            chk.note = "post_template is not JSON; replayed without a body"
     if recipe.method != "GET" and template is None:
         chk.error = "POST recipe without a body"
         return chk, set(), {}, None, None
@@ -455,7 +480,8 @@ def _check_recipe(recipe: EndpointRecipe, *, fetch: Fetch, base_url: str, dealer
     by_cond: dict[str, set[str]] = {}
     n_pages = 1 if recipe.pagination == PAGINATION_NONE else max(1, pages)
     page1_parsed: Any = None
-    page1_vins = 0
+    raw_vins: set[str] = set()
+    page1_raw = 0
     for i in range(n_pages):
         body = _mutate_for_page(recipe, template, i) if template is not None else None
         url = _url_for_page(recipe, i)
@@ -487,35 +513,94 @@ def _check_recipe(recipe: EndpointRecipe, *, fetch: Fetch, base_url: str, dealer
                 # the server's real page size, or page 2 starts past the end (recipes.py)
                 _learn_dealer_com_page_size(template, parsed, dealer_name)
         rows, refused = _parse_rows(recipe, parsed, base_url=base_url, dealer_id=dealer_id, dealer_name=dealer_name, place=place)
-        chk.gate_rejected += refused
+        chk.gate_rejected += len(refused)
         page_vins = _unique_vins(rows)
         new = page_vins - vins
+        # Termination reads RAW rows (kept plus refused), as the scan's walk does: a page
+        # of nothing but a group feed's sibling rooftops holds no kept VIN yet is not the end.
+        new_raw = (page_vins | refused) - raw_vins
         rec["rows"] = len(rows)
         rec["new_vins"] = len(new)
+        rec["raw_new_vins"] = len(new_raw)
         chk.pages.append(rec)
         for r in rows:
             v = str(r.get("vin") or "").strip().upper()
             if v and v in new:
                 by_cond.setdefault(normalize_condition(r.get("condition")), set()).add(v)
         vins |= new
+        raw_vins |= new_raw
         if i == 0:
-            page1_vins = len(new)
-        if not new:
+            page1_raw = len(new_raw)
+        if not new_raw:
             chk.exhausted = True
             break
-        if chk.site_total is not None and len(vins) >= chk.site_total:
+        if chk.site_total is not None and len(raw_vins) >= chk.site_total:
             chk.exhausted = True
             break
     if recipe.pagination == PAGINATION_NONE:
         chk.exhausted = True  # single-shot: there is no further page to read
     chk.vins = len(vins)
     chk.per_condition = {c: len(s) for c, s in sorted(by_cond.items())}
-    # A short page is a 200 that adds nothing while the site says more exists;
-    # a 401/403/5xx on page 2 is an auth or edge problem, reported as such.
-    if (n_pages > 1 and len(chk.pages) >= 2 and chk.pages[1].get("status") == 200 and chk.pages[1].get("new_vins", 0) == 0
-            and chk.site_total and page1_vins < chk.site_total * SHORT_PAGE_TOLERANCE):
+    # A short page is a 200 that adds nothing (not even a refused sibling row) while the
+    # site says more exists; a 401/403/5xx on page 2 is an auth or edge problem, reported as such.
+    if (n_pages > 1 and len(chk.pages) >= 2 and chk.pages[1].get("status") == 200 and chk.pages[1].get("raw_new_vins", 0) == 0
+            and chk.site_total and page1_raw < chk.site_total * SHORT_PAGE_TOLERANCE):
         chk.short_page = True
     return chk, vins, by_cond, template, page1_parsed
+
+
+@dataclass
+class RecipeChecks:
+    """What :func:`check_all` read: one walk per recipe plus the context
+    :func:`judge` needs (its census and other-side probes fetch again)."""
+
+    dealer_id: str
+    base_url: str
+    dealer_name: str
+    place: dict[str, str]
+    pages: int
+    fetch: Fetch
+    walks: list[tuple[EndpointRecipe, RecipeCheck, set[str], dict[str, set[str]], Any]] = field(default_factory=list)
+
+    def keep(self, recipes: list[EndpointRecipe]) -> "RecipeChecks":
+        """The same read restricted to *recipes* (by identity): a save path that
+        filters candidates by its floors judges only the ones it keeps, from the
+        walk it already paid for."""
+        ids = {id(r) for r in recipes}
+        return RecipeChecks(self.dealer_id, self.base_url, self.dealer_name, self.place, self.pages, self.fetch,
+                            [w for w in self.walks if id(w[0]) in ids])
+
+
+def check_all(
+    dealer_id: str,
+    recipes: list[EndpointRecipe],
+    fetch: Fetch | None = None,
+    *,
+    base_url: str = "",
+    dealer_name: str = "",
+    place: dict[str, str] | None = None,
+    pages: int = PAGES_REPLAYED,
+) -> RecipeChecks:
+    """Walk every recipe once (*pages* each) and keep what was read. No verdict:
+    :func:`judge` decides from these, so a save path can walk once and judge the
+    cached checks against whatever floors apply.
+
+    *fetch* defaults to ``recipes._replay_request`` (the scan's own request
+    function). *place* is the store's postal place for the rooftop gate; the scan's
+    own store place (:func:`_store_place_for`) is read once here and the caller's
+    keys win."""
+    fetch = fetch or _replay_request
+    if not base_url:
+        first = next((r.url for r in recipes if r.url), "")
+        p = urlparse(first)
+        base_url = f"{p.scheme}://{p.netloc}" if p.netloc else ""
+    dealer_name = dealer_name or dealer_id
+    place = _store_place_for(base_url, dealer_id, place) if recipes else dict(place or {})  # once per call, not per page
+    out = RecipeChecks(dealer_id, base_url, dealer_name, place, pages, fetch)
+    for r in recipes:
+        out.walks.append((r, *_check_recipe(
+            r, fetch=fetch, base_url=base_url, dealer_id=dealer_id, dealer_name=dealer_name, place=place, pages=pages)))
+    return out
 
 
 def validate_recipe_set(
@@ -528,24 +613,25 @@ def validate_recipe_set(
     place: dict[str, str] | None = None,
     pages: int = PAGES_REPLAYED,
     one_condition_ok: set[str] | None = None,
+    checks: RecipeChecks | None = None,
 ) -> RecipeValidationReport:
-    """Judge *recipes* as the set the scan will replay for *dealer_id*.
+    """Judge *recipes* as the set the scan will replay for *dealer_id*:
+    :func:`check_all` then :func:`judge`. Pass *checks* (a prior ``check_all``) to
+    judge a walk already read instead of walking again."""
+    if checks is None:
+        checks = check_all(dealer_id, recipes, fetch, base_url=base_url, dealer_name=dealer_name, place=place, pages=pages)
+    return judge(checks, one_condition_ok=one_condition_ok)
 
-    *fetch* defaults to ``recipes._replay_request`` (the scan's own request
-    function). *place* is the store's postal place for the rooftop gate
-    (``dealer_city`` / ``dealer_state`` / ``dealer_zip`` / ``dealer_address``).
-    """
-    fetch = fetch or _replay_request
-    if not base_url:
-        first = next((r.url for r in recipes if r.url), "")
-        p = urlparse(first)
-        base_url = f"{p.scheme}://{p.netloc}" if p.netloc else ""
-    dealer_name = dealer_name or dealer_id
+
+def judge(checks: RecipeChecks, *, one_condition_ok: set[str] | None = None) -> RecipeValidationReport:
+    """The verdict over walks :func:`check_all` read."""
+    dealer_id, fetch, base_url, dealer_name, place, pages = (
+        checks.dealer_id, checks.fetch, checks.base_url, checks.dealer_name, checks.place, checks.pages)
     ok_ids = one_condition_ok if one_condition_ok is not None else one_condition_ok_ids()
     rep = RecipeValidationReport(dealer_id=dealer_id, pages_replayed=pages,
                                  stamp=datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC"))
     flags = {"one_condition": False, "section_scoped": False, "short_page": False, "auth_needed": False, "zero_rows": False}
-    if not recipes:
+    if not checks.walks:
         flags["zero_rows"] = True
         rep.flags = flags
         rep.verdict, rep.reasons = "reject", ["zero_rows: no recipe to validate"]
@@ -554,14 +640,12 @@ def validate_recipe_set(
     all_vins: set[str] = set()
     by_cond: dict[str, set[str]] = {}
     checked: list[tuple[EndpointRecipe, RecipeCheck, Any]] = []
-    for r in recipes:
-        chk, vins, conds, template, _page1 = _check_recipe(
-            r, fetch=fetch, base_url=base_url, dealer_id=dealer_id, dealer_name=dealer_name, place=place, pages=pages)
+    for r, chk, vins, conds, template, _page1 in checks.walks:
         rep.recipes.append(chk)
         checked.append((r, chk, template))
         all_vins |= vins
-        for c, s in conds.items():
-            by_cond.setdefault(c, set()).update(s)
+        for c, s_ in conds.items():
+            by_cond.setdefault(c, set()).update(s_)
     rep.vins_total = len(all_vins)
     rep.per_condition = {c: len(s) for c, s in sorted(by_cond.items())}
     sides_seen = {_side(c) for c, n in rep.per_condition.items() if n and c != "unknown"}
@@ -684,6 +768,9 @@ def validate_recipe_set(
     errors = [c for c in rep.recipes if c.error]
     for c in errors:
         notes.append(f"{c.url[:60]}: {c.error}")
+    for c in rep.recipes:
+        if c.note:
+            notes.append(f"{c.url[:60]}: {c.note}")
 
     uncertain: list[str] = []
     if rep.site_total is None:
@@ -768,6 +855,44 @@ def record_recipe_status(dealer_id: str, report: RecipeValidationReport, context
         return False
 
 
+def walk_candidates(
+    dealer_id: str,
+    candidates: list[EndpointRecipe],
+    *,
+    base_url: str,
+    dealer_name: str = "",
+    place: dict[str, str] | None = None,
+    fetch: Fetch | None = None,
+    pages: int | None = None,
+) -> RecipeChecks:
+    """The one full walk a save path pays for (P12B.4): every candidate read to
+    :data:`_VALIDATE_MAX_PAGES` through the scan's replay request behind synth's
+    fetch clock. The caller counts ``chk.vins`` per walk (that is ``vehicle_rows``),
+    filters with its floors, then hands ``checks.keep(kept)`` to :func:`gate_recipes`
+    so the verdict is judged from these reads instead of a second 2-page walk."""
+    return check_all(dealer_id, candidates, fetch or _paced_replay, base_url=base_url, dealer_name=dealer_name,
+                     place=place, pages=pages or _VALIDATE_MAX_PAGES)
+
+
+def shared_with_other_dealers(dealer_id: str, recipes: list[EndpointRecipe]) -> dict[str, str]:
+    """``{other dealer_id: url}`` for each other dealer whose live stored recipe is the
+    same request (method, host+path+query, body) as one of *recipes*. Empty when the
+    recipe store cannot be read."""
+    from backend.scanner import recipe_store
+
+    out: dict[str, str] = {}
+    for r in recipes:
+        sig = request_signature(r.method, r.url, r.post_template)
+        for other, rows in recipe_store.db_other_dealers_with_url(dealer_id, r.url):
+            if other in out:
+                continue
+            for row in rows:
+                if not row.get("stale") and request_signature(row.get("method"), row.get("url"), row.get("post_template")) == sig:
+                    out[other] = r.url
+                    break
+    return out
+
+
 def gate_recipes(
     dealer_id: str,
     recipes: list[EndpointRecipe],
@@ -779,6 +904,9 @@ def gate_recipes(
     context: str = "synth",
     log_root: Path | None = None,
     record: bool = True,
+    pages: int | None = None,
+    checks: RecipeChecks | None = None,
+    allow_shared: bool = False,
 ) -> tuple[list[EndpointRecipe], RecipeValidationReport]:
     """Validate the set and apply the verdict: ``reject`` returns ``[]`` (nothing
     to save) and logs the report; ``uncertain`` and ``ok`` return the recipes.
@@ -788,8 +916,33 @@ def gate_recipes(
     ``record=False`` is for a caller that will not save the set (a dry run, or a
     dealer that keeps its healthy recipe): the same verdict comes back and
     nothing is written, so a status that describes no saved set never reaches
-    the store."""
-    report = validate_recipe_set(dealer_id, recipes, fetch, base_url=base_url, dealer_name=dealer_name, place=place)
+    the store.
+
+    *pages* is how many pages each recipe is read for (default
+    :data:`PAGES_REPLAYED`); *checks* is a walk already read by :func:`check_all`,
+    judged as it is instead of fetching again.
+
+    A set holding a request (method, URL, body) that another dealer's stored recipes
+    already hold is refused as ``duplicate_endpoint`` (CF-3: a byte copy of another store's
+    recipe served 1,284 rows from the wrong site). *allow_shared* skips that check for a
+    group feed a person has confirmed is shared."""
+    kw: dict[str, Any] = {}
+    if pages is not None:
+        kw["pages"] = pages
+    if checks is not None:
+        kw["checks"] = checks
+    report = validate_recipe_set(dealer_id, recipes, fetch, base_url=base_url, dealer_name=dealer_name, place=place, **kw)
+    shared = {} if allow_shared or report.verdict == "reject" else shared_with_other_dealers(dealer_id, recipes)
+    if shared:
+        report.verdict = "reject"
+        report.flags["duplicate_endpoint"] = True
+        report.reasons.insert(0, "duplicate_endpoint: same request stored for " + ", ".join(
+            f"{d} ({u[:60]})" for d, u in sorted(shared.items())[:5]))
+    if report.verdict in ("ok", "uncertain"):
+        # Gate provenance: the scan admits a sub-floor pinned side only under these.
+        stamp = time.time()
+        for r in recipes:
+            r.gate_verdict, r.gate_at = report.verdict, stamp
     if record:
         write_discovery_log(dealer_id, report, context, log_root)
         record_recipe_status(dealer_id, report, context)
@@ -805,17 +958,22 @@ def gate_recipes(
 
 __all__ = [
     "RecipeCheck",
+    "RecipeChecks",
     "RecipeValidationReport",
     "SITE_TOTAL_EXTRACTORS",
     "extract_site_total",
+    "check_all",
     "gate_recipes",
+    "judge",
     "normalize_condition",
     "one_condition_ok_ids",
     "other_side_recipe",
     "platform_of",
     "recipe_condition_filter",
     "record_recipe_status",
+    "shared_with_other_dealers",
     "validate_recipe_set",
+    "walk_candidates",
     "write_discovery_log",
 ]
 
@@ -823,6 +981,16 @@ __all__ = [
 # ── Validation (replay over HTTP, count real VINs) ────────────────────────────
 
 _VALIDATE_MAX_PAGES = 40
+
+
+def _paced_replay(recipe: EndpointRecipe, body: Any, base_url: str, url: str | None = None) -> tuple[int, Any | None]:
+    """The scan's own ``_replay_request`` behind synth's fetch clock, so a sweep
+    that sets ``SCANNER_SYNTH_FETCH_DELAY`` (4 s in national_scan.py) spaces its
+    validation requests exactly as the old synth walkers did. No delay set: no wait."""
+    from backend.scanner.synth.http import _pace
+
+    _pace()
+    return _replay_request(recipe, body, base_url, url)
 
 
 def validate_recipe(
@@ -836,184 +1004,31 @@ def validate_recipe(
 ) -> int:
     """Replay *recipe* over plain HTTP and return the unique VIN count.
 
-    *place* (dealer_city / dealer_state / dealer_zip / dealer_address) is passed to
-    the rooftop attribution gate: without it a group feed that names its rooftops
-    by city refuses every row and the recipe validates to zero.
-
-    Walks the recipe's pagination shape (single-shot for ``PAGINATION_NONE``),
-    parses each page with the provider parser, and counts distinct VINs. No
-    browser, no DB writes, no recipe-file mutation — a pure yield probe.
+    A thin count over the one replay walker (:func:`_check_recipe`): the scan's
+    own request function (paced), the scan's pagination shapes, and the same
+    rooftop gate over the store's place (*place* wins key by key). A GET whose
+    ``post_template`` is not JSON replays without a body; a POST without a
+    parseable body counts zero. No browser, no DB writes, no recipe-file mutation.
     """
-    from backend.parsers import parse_kept
-
-    # DealerOn cosmos GETs paginate session-free via ?pt=N&pn=96 (not a POST-body
-    # shape), so they need their own walk — same mechanism as heal's _cosmos_pages.
-    if _COSMOS_PATH.split("/api")[-1] in recipe.url or "cosmos/srp/vehicles" in recipe.url:
-        return _validate_cosmos(recipe, base_url, dealer_id, dealer_name, max_pages, place)
-    # Team Velocity same-origin JSON feed paginates via ?page=N (nextPage/totalPages).
-    if (
-        recipe.pagination == PAGINATION_PAGE_QUERY
-        or _TEAM_VELOCITY_FEED in recipe.url
-        or recipe.url.endswith(("-used.json", "-cpo.json", "-new.json"))
-    ):
-        return _validate_json_feed(recipe, base_url, dealer_id, dealer_name, max_pages, place)
-    # Dealer eProcess SRP: HTML page-walk (?p=N) with JSON-LD vehicles.
-    if recipe.pagination == PAGINATION_DEP_SRP:
-        return _validate_dep(recipe, base_url, dealer_id, dealer_name, max_pages, place)
-    # Server-rendered HTML page-walks reached with browser-navigation headers:
-    #   PAGINATION_HTML_PAGE  — GET ?page=N (Overfuel __NEXT_DATA__, nabthat JSON-LD)
-    #   PAGINATION_JAZEL_SRP  — GET path .../srp-page-N/ (Jazel inline JS objects)
-    if recipe.pagination in (PAGINATION_HTML_PAGE, PAGINATION_JAZEL_SRP):
-        return _validate_html_walk(recipe, base_url, dealer_id, dealer_name, max_pages, place)
-
-    template: Any = None
-    if recipe.post_template:
-        try:
-            template = json.loads(recipe.post_template)
-        except ValueError:
-            template = None
-    if recipe.method != "GET" and template is None:
-        return 0
-
-    pages = 1 if recipe.pagination == PAGINATION_NONE else max_pages
-    vins: set[str] = set()
-    for page_i in range(pages):
-        body = _mutate_for_page(recipe, template, page_i) if template is not None else None
-        status, parsed = _replay_request(recipe, body, base_url, _url_for_page(recipe, page_i))
-        if status != 200 or parsed is None:
-            break
-        page_vehicles = list(parse_kept(
-            recipe.provider_hint or "", parsed,
-            base_url=base_url, dealer_id=dealer_id,
-            dealer_name=dealer_name, dealer_url=base_url,
-            trust_feed_scope=recipe_is_store_scoped(recipe, dealer_name),
-            **(place or {}),
-        ))
-        new = _unique_vins(page_vehicles) - vins
-        if not new:
-            break
-        vins |= new
-        if recipe.total_count and len(vins) >= recipe.total_count:
-            break
-    return len(vins)
+    place = _store_place_for(base_url, dealer_id, place)
+    chk = _check_recipe(recipe, fetch=_paced_replay, base_url=base_url, dealer_id=dealer_id,
+                        dealer_name=dealer_name, place=place, pages=max_pages)[0]
+    return chk.vins
 
 
+# One release of one-line delegates: recipe_synth's re-exports, the synth/validate
+# shim and .claude/workflows/dealer-discovery.js still name these walkers.
 def _validate_json_feed(recipe: EndpointRecipe, base_url: str, dealer_id: str, dealer_name: str, max_pages: int, place: dict[str, str] | None = None) -> int:
-    """Walk a same-origin ``?page=N`` JSON inventory feed and count unique VINs.
-
-    Team Velocity's ``/inventory-used.json`` feed carries ``totalPages`` /
-    ``nextPage``; we page until those run out (or a page adds no new VINs).
-    """
-    from backend.parsers import parse_kept
-
-    clean = urlunparse(urlparse(recipe.url)._replace(query="", fragment=""))
-    vins: set[str] = set()
-    for pg in range(1, max_pages + 1):
-        body = _cosmos_get_json(f"{clean}?page={pg}")
-        if not isinstance(body, dict) or not body.get("vehicles"):
-            break
-        page_vehicles = list(parse_kept(
-            recipe.provider_hint or "dealer_dot_com", body,
-            base_url=base_url, dealer_id=dealer_id,
-            dealer_name=dealer_name, dealer_url=base_url,
-            trust_feed_scope=recipe_is_store_scoped(recipe, dealer_name),
-            **(place or {}),
-        ))
-        new = _unique_vins(page_vehicles) - vins
-        if not new:
-            break
-        vins |= new
-        try:
-            total_pages = int(body.get("totalPages") or 0)
-        except (TypeError, ValueError):
-            total_pages = 0
-        if not body.get("nextPage") or (total_pages and pg >= total_pages):
-            break
-    return len(vins)
+    return validate_recipe(recipe, base_url, dealer_id, dealer_name, max_pages=max_pages, place=place)
 
 
 def _validate_dep(recipe: EndpointRecipe, base_url: str, dealer_id: str, dealer_name: str, max_pages: int, place: dict[str, str] | None = None) -> int:
-    """Walk a Dealer eProcess SRP via ``?p=N`` and count unique JSON-LD VINs."""
-    from backend.parsers import parse_kept
-
-    vins: set[str] = set()
-    for pg in range(max_pages):
-        # _url_for_page keeps the recipe's own query (``tp=used``, ``ct=48``) and
-        # sets ``p=N``; stripping the query used to drop the condition filter and
-        # the page size the synthesizer had just chosen.
-        html = _dep_fetch_html(_url_for_page(recipe, pg))
-        if not html:
-            break
-        page_vehicles = list(parse_kept(
-            recipe.provider_hint or "dealer_eprocess", html,
-            base_url=base_url, dealer_id=dealer_id,
-            dealer_name=dealer_name, dealer_url=base_url,
-            trust_feed_scope=recipe_is_store_scoped(recipe, dealer_name),
-            **(place or {}),
-        ))
-        new = _unique_vins(page_vehicles) - vins
-        if not new:
-            break
-        vins |= new
-        if recipe.total_count and len(vins) >= recipe.total_count:
-            break
-    return len(vins)
+    return validate_recipe(recipe, base_url, dealer_id, dealer_name, max_pages=max_pages, place=place)
 
 
 def _validate_html_walk(recipe: EndpointRecipe, base_url: str, dealer_id: str, dealer_name: str, max_pages: int, place: dict[str, str] | None = None) -> int:
-    """Walk a server-rendered HTML page-walk recipe and count unique VINs.
-
-    Uses the proxy-aware, browser-navigation-header fetch (:func:`_dep_fetch_html`)
-    so paced requests get real HTML rather than a Cloudflare challenge, and the
-    per-page URL from :func:`_url_for_page` (``?page=N`` for ``PAGINATION_HTML_PAGE``,
-    ``.../srp-page-N/`` for ``PAGINATION_JAZEL_SRP``). Each page's HTML is handed
-    to the provider parser (which accepts the raw HTML string).
-    """
-    from backend.parsers import parse_kept
-
-    vins: set[str] = set()
-    for page_i in range(max_pages):
-        html = _dep_fetch_html(_url_for_page(recipe, page_i))
-        if not html:
-            break
-        page_vehicles = list(parse_kept(
-            recipe.provider_hint or "", html,
-            base_url=base_url, dealer_id=dealer_id,
-            dealer_name=dealer_name, dealer_url=base_url,
-            trust_feed_scope=recipe_is_store_scoped(recipe, dealer_name),
-            **(place or {}),
-        ))
-        new = _unique_vins(page_vehicles) - vins
-        if not new:
-            break
-        vins |= new
-        if recipe.total_count and len(vins) >= recipe.total_count:
-            break
-    return len(vins)
+    return validate_recipe(recipe, base_url, dealer_id, dealer_name, max_pages=max_pages, place=place)
 
 
 def _validate_cosmos(recipe: EndpointRecipe, base_url: str, dealer_id: str, dealer_name: str, max_pages: int, place: dict[str, str] | None = None) -> int:
-    """Walk a cosmos SRP endpoint via ``?pt=N&pn=96`` and count unique VINs."""
-    from backend.parsers import parse_kept
-
-    clean = urlunparse(urlparse(recipe.url)._replace(query="", fragment=""))
-    vins: set[str] = set()
-    for pg in range(1, max_pages + 1):
-        body = _cosmos_get_json(f"{clean}?pt={pg}&pn={_COSMOS_PAGE_SIZE}")
-        if not isinstance(body, dict) or not body.get("DisplayCards"):
-            break
-        page_vehicles = list(parse_kept(
-            recipe.provider_hint or "dealer_on_cosmos", body,
-            base_url=base_url, dealer_id=dealer_id,
-            dealer_name=dealer_name, dealer_url=base_url,
-            trust_feed_scope=recipe_is_store_scoped(recipe, dealer_name),
-            **(place or {}),
-        ))
-        new = _unique_vins(page_vehicles) - vins
-        if not new:
-            break
-        vins |= new
-        total = int(((body.get("Paging") or {}).get("PaginationDataModel") or {}).get("TotalCount") or 0)
-        if total and len(vins) >= total:
-            break
-    return len(vins)
+    return validate_recipe(recipe, base_url, dealer_id, dealer_name, max_pages=max_pages, place=place)

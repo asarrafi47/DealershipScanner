@@ -4,6 +4,8 @@ from __future__ import annotations
 import time
 from typing import Any
 
+from backend.scanner.recipe_totals import RECIPE_MIN_VINS
+
 
 # --------------------------------------------------------------------------
 # 1. recipe
@@ -65,17 +67,27 @@ def ensure_recipe(dealer: dict[str, Any], *, force: bool = False) -> dict[str, A
     if not cands:
         info["synth"] = f"no_template_for_{platform or 'unknown'}"
         return info
+    # One full walk per candidate (recipe_validation.walk_candidates); the gate below
+    # judges those cached reads, and vehicle_rows is that walk's count.
+    from backend.scanner.recipe_validation import walk_candidates
+
+    base = dealer["url"].rstrip("/")
+    try:
+        walked = walk_candidates(did, cands, base_url=base, dealer_name=dealer.get("name") or did, place=place or None)
+    except Exception as exc:  # noqa: BLE001
+        info["synth"] = f"validate_error:{str(exc)[:80]}"
+        return info
+    # D-OD1: any candidate with store VINs is kept, and the kept set must reach
+    # RECIPE_MIN_VINS between them (3+3 is a dealer; one 4-VIN widget is not).
     kept = []
-    for c in cands:
-        try:
-            n = validate_recipe(c, dealer["url"], did, dealer.get("name") or did, place=place or None)
-        except Exception as exc:  # noqa: BLE001
-            info["synth"] = f"validate_error:{str(exc)[:80]}"
-            continue
-        if n and n >= 5:
+    for c, chk, *_ in walked.walks:
+        n = chk.vins
+        if n > 0:
             c.vehicle_rows = int(n)
             c.last_ok_at = time.time()
             kept.append(c)
+    if sum(c.vehicle_rows for c in kept) < RECIPE_MIN_VINS:
+        kept = []
     if not kept:
         info["synth"] = info.get("synth") or "validated_zero"
         return info
@@ -86,8 +98,8 @@ def ensure_recipe(dealer: dict[str, Any], *, force: bool = False) -> dict[str, A
     # with scan_hints.recipe_status = "uncertain:<reason>".
     from backend.scanner.recipe_validation import gate_recipes
 
-    kept, report = gate_recipes(did, kept, base_url=dealer["url"].rstrip("/"), dealer_name=dealer.get("name") or did,
-                                place=place or None, context="synth")
+    kept, report = gate_recipes(did, kept, base_url=base, dealer_name=dealer.get("name") or did,
+                                place=place or None, context="synth", checks=walked.keep(kept))
     info["recipe_status"] = report.status
     info["validation"] = report.summary()
     if not kept:

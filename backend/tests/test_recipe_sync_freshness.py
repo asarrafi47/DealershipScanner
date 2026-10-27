@@ -193,6 +193,15 @@ def _seed_old_set_everywhere(store) -> list[dict]:
     return old
 
 
+def _fake_walk(n):
+    """A walk_candidates stand-in: every candidate read as *n* VINs (no fetch)."""
+    def walk(dealer_id, cands, **kw):
+        w = SimpleNamespace(walks=[(c, SimpleNamespace(vins=n), set(), {}, None) for c in cands])
+        w.keep = lambda recipes: w
+        return w
+    return walk
+
+
 def _stub_synthesis(monkeypatch, recipes: list[EndpointRecipe]) -> None:
     """ensure_recipe's network half: homepage, fingerprint, synthesis, validation, gate."""
     from backend.scanner import dealer_place, recipe_synth, recipe_validation
@@ -200,7 +209,7 @@ def _stub_synthesis(monkeypatch, recipes: list[EndpointRecipe]) -> None:
     monkeypatch.setattr(recipe_synth, "fetch_dealer_html", lambda url: "<html>carscommerce</html>")
     monkeypatch.setattr(recipe_synth, "fingerprint_platform", lambda html, url: "carscommerce")
     monkeypatch.setattr(recipe_synth, "synthesize_recipes", lambda did, url, html, platform: list(recipes))
-    monkeypatch.setattr(recipe_synth, "validate_recipe", lambda *a, **k: 45)
+    monkeypatch.setattr(recipe_validation, "walk_candidates", _fake_walk(45))
 
     def no_place(*a, **k):
         raise RuntimeError("no place lookup in this test")

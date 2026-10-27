@@ -13,6 +13,66 @@ from typing import TYPE_CHECKING, Any, Callable
 if TYPE_CHECKING:  # pragma: no cover
     from backend.scanner.recipes import EndpointRecipe
 
+# The one minimum-VIN rule (P12B.5, D-OD1). Save paths keep any candidate that answers
+# with more than 0 store VINs and require the kept set to reach RECIPE_MIN_VINS between
+# them; the scan's union succeeds at the same number. "Above 0" alone would admit widget
+# and fragment recipes (38 on 33 dealers), so a sub-floor recipe takes part in a scan only
+# as a condition-pinned side of a paginated shape the gate judged ok/uncertain.
+RECIPE_MIN_VINS = 5
+# promote_from_ledger's capture prefilter: a ledgered endpoint with fewer parsed rows and
+# no site total is not worth a replay. It is a candidate filter, not a floor on the lot.
+PROMOTE_PREFILTER_ROWS = 3
+# First-hit replay never demands fewer than this many VINs of a recipe that once held more.
+FIRST_HIT_MIN_VINS = 3
+# gate_verdict values under which a sub-floor side may join the scan union.
+GATE_ADMITTING = ("ok", "uncertain")
+
+
+def request_signature(method: Any, url: Any, post_template: Any) -> tuple[str, str, str]:
+    """``(method, host+path+query, body digest)``: identical signatures are the same
+    request. One definition for the identity report and the save-time duplicate refusal."""
+    import hashlib
+    from urllib.parse import urlparse
+
+    p = urlparse(str(url or ""))
+    where = f"{(p.hostname or '').lower()}{p.path}" + (f"?{p.query}" if p.query else "")
+    body = str(post_template or "")
+    digest = hashlib.sha1(body.encode("utf-8")).hexdigest()[:12] if body else ""
+    return (str(method or "GET").upper(), where, digest)
+
+
+def first_hit_floor(global_floor: int, vehicle_rows: int) -> int:
+    """VINs a first-hit replay must return: ``min(global floor, max(3, ceil(0.5 x
+    vehicle_rows)))``. A recipe saved with 6 rows replays 6 and is kept; a 1-VIN replay
+    of a 40-row recipe is refused. A recipe with no saved row count keeps the global floor."""
+    rows = int(vehicle_rows or 0)
+    if rows <= 0:
+        return global_floor
+    return min(global_floor, max(FIRST_HIT_MIN_VINS, -(-rows // 2)))
+
+
+def union_floor(global_floor: int) -> int:
+    """VINs the scan union must reach: :data:`RECIPE_MIN_VINS`, or the operator's lower
+    ``SCANNER_RECIPE_MIN_VEHICLES`` override."""
+    return min(global_floor, RECIPE_MIN_VINS)
+
+
+def sub_floor_admitted(recipe: "EndpointRecipe") -> bool:
+    """May a replay under the global floor still join the union? Only a condition-pinned
+    side of a paginated inventory shape whose recorded gate verdict is ok or uncertain.
+    ``pagination=none`` (a widget or one-page fragment) and a recipe the gate never
+    judged are refused."""
+    from backend.scanner import recipes as _r
+
+    if recipe.pagination == _r.PAGINATION_NONE:
+        return False
+    if (getattr(recipe, "gate_verdict", "") or "") not in GATE_ADMITTING:
+        return False
+    from backend.scanner.recipe_validation import recipe_condition_filter
+
+    return bool(recipe_condition_filter(recipe))
+
+
 _AUTOWALL_TOTAL_RE = re.compile(r"<title>\s*(\d{1,5})\s+Vehicles for Sale", re.I)
 _DEP_COUNT_RE = re.compile(r'data-vehicle_count="(\d+)"')
 

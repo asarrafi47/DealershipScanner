@@ -58,6 +58,13 @@ from urllib.parse import parse_qsl, unquote, urlencode, urlparse, urlsplit, urlu
 
 from backend.scanner import recipe_cache
 from backend.scanner.net import client as net_client
+from backend.scanner.recipe_totals import (
+    PROMOTE_PREFILTER_ROWS,
+    RECIPE_MIN_VINS,
+    first_hit_floor,
+    sub_floor_admitted,
+    union_floor,
+)
 
 logger = logging.getLogger("scanner")
 
@@ -170,6 +177,10 @@ class EndpointRecipe:
     # price / trim / exterior_color fractions: from the network ledger at capture,
     # refreshed from parsed rows on every successful replay.
     field_coverage: dict[str, float] = field(default_factory=dict)
+    # Gate provenance (P12B.5): the set verdict (ok / uncertain) the recipe was saved
+    # under and when. The scan reads it to admit a sub-floor condition-pinned side.
+    gate_verdict: str = ""
+    gate_at: float = 0.0
 
     def key(self) -> tuple[str, str]:
         p = urlparse(self.url)
@@ -1407,7 +1418,7 @@ def promote_from_ledger(
     provider: str,
     ledger_endpoints: list[Any],
     *,
-    min_vehicle_rows: int = 3,
+    min_vehicle_rows: int = PROMOTE_PREFILTER_ROWS,
     max_recipes: int = 8,
     validate: bool = False,
     base_url: str = "",
@@ -1478,12 +1489,15 @@ def promote_from_ledger(
     keep = _merge_rank(load_recipes(dealer_id), candidates, max_recipes)
     validated: list[EndpointRecipe] = []
     if validate:
-        from backend.scanner.recipe_validation import gate_recipes
+        from backend.scanner.recipe_validation import gate_recipes, walk_candidates
 
         live = [r for r in keep if not r.stale]
+        # One full walk of the live set, judged from the cached reads (P12B.4).
+        walked = walk_candidates(dealer_id, live, base_url=base_url, dealer_name=dealer_name or dealer_id,
+                                 place=place, fetch=fetch)
         kept_live, report = gate_recipes(
             dealer_id, live, base_url=base_url, dealer_name=dealer_name or dealer_id,
-            place=place, fetch=fetch, context="discovery capture", log_root=log_root,
+            place=place, fetch=fetch, context="discovery capture", log_root=log_root, checks=walked,
         )
         if validation_out is not None:
             validation_out.update(report.summary())
@@ -1492,6 +1506,10 @@ def promote_from_ledger(
         if not kept_live:
             logger.warning("Recipes [%s]: capture refused by validation (%s); recipe file left as it was",
                            dealer_id, "; ".join(report.reasons)[:200])
+            return 0
+        if sum(c.vins for c in report.recipes) < RECIPE_MIN_VINS:
+            logger.warning("Recipes [%s]: capture refused, %d VIN(s) across the set (under %d); recipe file left as it was",
+                           dealer_id, sum(c.vins for c in report.recipes), RECIPE_MIN_VINS)
             return 0
         for r, chk in zip(live, report.recipes):
             if chk.vins:
@@ -2343,7 +2361,11 @@ async def try_fetch_via_recipes(
             )
         if auth_dead:
             continue
-        if len(vins) >= min_vehicles:
+        # First hit: the recipe's own saved size sets the floor (first_hit_floor). Union:
+        # the global floor, or a sub-floor side the gate admitted (sub_floor_admitted).
+        if len(vins) >= (min_vehicles if union else first_hit_floor(min_vehicles, recipe.vehicle_rows)) or (
+            union and vins and sub_floor_admitted(recipe)
+        ):
             walk["in_union"] = True
             succeeded_any = True
             recipe.last_ok_at = time.time()
@@ -2373,7 +2395,7 @@ async def try_fetch_via_recipes(
             low_yield_vins.extend(sorted(vins))
     await asyncio.to_thread(_finish_status)
     _finalize_replay(replay_out, union_recipes=union_recipe_n)
-    if union and len(union_vins) >= min_vehicles:
+    if union and len(union_vins) >= union_floor(min_vehicles):
         if coverage_out is not None:
             coverage_out.update(recipe_field_coverage(union_vehicles))
         logger.info(

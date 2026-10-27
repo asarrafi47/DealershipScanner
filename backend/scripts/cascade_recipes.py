@@ -26,6 +26,7 @@ if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
 
 from backend.db.connect import connect as db_connect  # noqa: E402
+from backend.scanner.recipe_totals import RECIPE_MIN_VINS  # noqa: E402
 
 _log = logging.getLogger("cascade")
 
@@ -33,7 +34,7 @@ _log = logging.getLogger("cascade")
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--dry-run", action="store_true", help="report winners, save nothing")
-    ap.add_argument("--min-vins", type=int, default=5)
+    ap.add_argument("--min-vins", type=int, default=RECIPE_MIN_VINS)
     ap.add_argument("--max-shapes", type=int, default=40, help="shapes to try per dealer")
     ap.add_argument("--limit", type=int, help="only this many target dealers")
     ap.add_argument("--dealer", help="one dealer_key")
@@ -82,12 +83,23 @@ def main() -> int:
         _log.error("no donor shapes available; run a successful scan first")
         return 2
 
+    from backend.scanner.recipe_validation import gate_recipes
+
     won = 0
     results: list[tuple[str, int, int]] = []
     for key, name, url in targets:
+        def _gate(adapted, vins, *, _key=key, _name=name, _url=url) -> bool:
+            # The set gate judges each borrowed shape; a reject saves nothing and the
+            # cascade tries the next one. record=False on a dry run writes no
+            # discovery.md entry and no recipe_status.
+            kept, _report = gate_recipes(_key, [adapted], base_url=(_url or "").rstrip("/"),
+                                         dealer_name=_name or _key, context="cascade",
+                                         record=not args.dry_run)
+            return bool(kept)
+
         recipe, vins, tried = cascade_for_dealer(
             key, url, name or key, shapes,
-            min_vins=args.min_vins, max_shapes=args.max_shapes,
+            min_vins=args.min_vins, max_shapes=args.max_shapes, accept=_gate,
         )
         results.append((key, vins, tried))
         if not recipe:

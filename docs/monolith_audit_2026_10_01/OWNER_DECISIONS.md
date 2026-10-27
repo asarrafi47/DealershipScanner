@@ -8,6 +8,8 @@ These came out of workflow wf_c6536bac-5aa. Every step was a no-behavior-change 
 
 Commit: `787546e21`.
 
+**RESOLVED 2026-10-18 (owner accepted all recommendations; N19 draft commits `0ee10f00b`, `87191620a`, `c457f0d24`, `f63fd0ca9`, `c8d66f88d`; ids change if the phase is rebased at merge).** `validate_recipe_set` / `gate_recipes` is the single gate. `validate_recipe` is a paced VIN count over the same replay walker and decides nothing. The scan's store place and `_replay_request` are the one place and fetcher. The save paths walk once at the full page cap and judge that walk; `vehicle_rows` is its count. One minimum-VIN rule (`RECIPE_MIN_VINS`, 5), cascade recipes go through the set gate, a GET with a junk `post_template` replays without a body and says so, and a POST without a parseable body errors. The bullets below describe the state before this change.
+
 Recommendation: make `validate_recipe_set` (verdict ok/reject/uncertain, replayed through the scan's own `_replay_request`) the single gate, and reduce `validate_recipe` to a VIN counter that feeds it, because the set check matches what the scan will actually see. Line numbers below predate 4 added import lines and may be off by 4-21 lines (verifier note).
 
 - How the minimum VIN count is applied differs by caller. pipeline/recipes.py:68 keeps a recipe only if it alone yields 5 or more VINs (n >= 5). scripts/synthesize_recipes.py:223-235 keeps any recipe with more than 0 VINs and then applies --min-vins (default 5) to the total across all kept recipes. Example: a used feed with 3 VINs and a new feed with 3 VINs is dropped by the pipeline but saved by the CLI. recipe_cascade.py:240 uses vins >= min_vins (DEFAULT_MIN_VINS=5, line 51) per adapted recipe, and that module never calls gate_recipes. Which rule should apply everywhere, and should cascade results go through the set gate?
@@ -21,6 +23,8 @@ Recommendation: make `validate_recipe_set` (verdict ok/reject/uncertain, replaye
 ## 2. Scanner HTTP behavior that differs per fetcher
 
 Commit: `5986b498b`.
+
+**RESOLVED 2026-10-18 (owner accepted all recommendations; N18 draft commits `0d6dccb90` FetchPolicy and host profile memory, `075b8ec17` stray HTTP sites, `53bb0e15d` chain proxy, `50d3579eb` VDP prefetch).** The fetchers share one `FetchPolicy` in `backend/scanner/net/client.py` for the sites N18 moved; the remaining direct-requests call sites are a shrink-only debt table, and the replay pacing hook (P12A.2) is deferred. Sections 3 and 4 stay pending P17C. The bullets below describe the state before this change.
 
 Recommendation, in order of payoff: (a) send replay through `scanner_proxies()` so SCANNER_HTTP_PROXY covers the main feed path (the 09-29 Railway 403s); (b) add challenge detection to VDP prefetch so a Cloudflare page is never parsed as a vehicle; (c) one fingerprint-block status set and one profile rotation for every curl_cffi path. Each is now an option change at its call site into `backend/scanner/net/client.py`, and `test_scanner_http_characterization.py` pins today's behavior, so a change shows up as an intended test edit.
 

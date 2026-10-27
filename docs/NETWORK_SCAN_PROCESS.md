@@ -126,7 +126,11 @@ workspace/dealer_logs/
   process (never for a dealer whose scan came back `ok` / `thin` / `inaccurate`) and the
   captured recipes are validated; a dealer whose recipe now validates is
   rescanned in one final HTTP-only retry batch and assessed again (`retried: <old> → <new>`
-  in the triage). One attempt per dealer per day. Each step is a dated block in
+  in the triage). One attempt per dealer per day. "Validates" always means the set gate
+  (`validate_recipe_set` / `gate_recipes`: the verdict `ok | uncertain | reject`, judged on the
+  scan's own replay walker and store place); `validate_recipe` is only the VIN count that
+  feeds `vehicle_rows`, and recipes borrowed by `cascade_recipes.py` pass the same gate
+  (`context='cascade'`) before they are saved. Each step is a dated block in
   `discovery.md`, each failure a line in `_learning/errors_index.md`, and the dealers still
   failing are listed in `<out>/needs_discovery.txt` for the dealer-discovery workflow.
 - Launching a fleet on a Mac (any `dealer_pipeline` / `fleet_scan` / shard run): prefix it

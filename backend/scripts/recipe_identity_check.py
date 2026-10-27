@@ -23,7 +23,6 @@ Reads recipe files (``RECIPES_DIR/<dealer>.json``) and, with ``--cars``, SELECTs
 from __future__ import annotations
 
 import argparse
-import hashlib
 import json
 import sys
 from collections import Counter, defaultdict
@@ -32,15 +31,12 @@ from typing import Any, Iterable
 from urllib.parse import urlparse
 
 from backend.attribution.place import host_aliases, host_key
+from backend.scanner.recipe_totals import request_signature
 
 
 def recipe_signature(recipe: dict[str, Any]) -> tuple[str, str, str]:
     """``(method, host+path+query, body digest)``: identical signatures are the same request."""
-    p = urlparse(str(recipe.get("url") or ""))
-    where = f"{(p.hostname or '').lower()}{p.path}" + (f"?{p.query}" if p.query else "")
-    body = str(recipe.get("post_template") or "")
-    digest = hashlib.sha1(body.encode("utf-8")).hexdigest()[:12] if body else ""
-    return (str(recipe.get("method") or "GET").upper(), where, digest)
+    return request_signature(recipe.get("method"), recipe.get("url"), recipe.get("post_template"))
 
 
 def load_recipe_sets(recipes_dir: Path) -> dict[str, list[dict[str, Any]]]:

@@ -2,7 +2,8 @@
 Compatibility shim. :func:`validate_recipe` and its per-shape replay walkers
 (``_validate_json_feed`` / ``_validate_dep`` / ``_validate_html_walk`` /
 ``_validate_cosmos``) moved verbatim into :mod:`backend.scanner.recipe_validation`
-so there is one validation module. Patch names there (where the code looks them
+so there is one validation module. Since P12B.3 ``validate_recipe`` is a paced count over the
+replay walker and the four ``_validate_*`` names are one-line delegates to it. Patch names there (where the code looks them
 up), not here.
 """
 from __future__ import annotations

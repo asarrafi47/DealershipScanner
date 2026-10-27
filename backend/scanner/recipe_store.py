@@ -667,6 +667,35 @@ def _db_load_recipes_exact(
     return rows, max_saved
 
 
+def db_other_dealers_with_url(dealer_id: str, url: str) -> list[tuple[str, list[dict[str, Any]]]]:
+    """``(dealer_id, recipe rows)`` for every OTHER dealer whose stored recipes mention
+    *url* (a substring match; the caller compares the full request). Best-effort: a
+    disabled or unreachable store answers ``[]``."""
+    if not _enabled() or not url:
+        return []
+    try:
+        conn = _conn()
+        try:
+            _ensure_table(conn)
+            cur = conn.cursor()
+            cur.execute(
+                "SELECT dealer_id, recipes_json FROM dealer_recipes WHERE dealer_id <> ? AND recipes_json LIKE ?",
+                (dealer_id, f"%{url}%"),
+            )
+            found = cur.fetchall()
+        finally:
+            conn.close()
+    except Exception as exc:  # noqa: BLE001
+        logger.debug("dealer_recipes duplicate lookup skipped for %s: %s", dealer_id, exc)
+        return []
+    out: list[tuple[str, list[dict[str, Any]]]] = []
+    for did, blob in found:
+        rows = _parse_json(blob, list)
+        if rows:
+            out.append((str(did), [r for r in rows if isinstance(r, dict)]))
+    return out
+
+
 def get_scan_hints(dealer_id: str) -> dict[str, Any]:
     """Per-dealer scan instructions ({} when none / DB unavailable).
 
