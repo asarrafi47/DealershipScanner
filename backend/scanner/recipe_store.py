@@ -267,6 +267,14 @@ class StoreRow:
     def authoritative(self) -> bool:
         return self.recipes_written_at > 0
 
+    @property
+    def has_recipes(self) -> bool:
+        """The row is the store's copy of the dealer's recipes: stamped by a recipe
+        write, or (a row written before V034 whose ``max_saved_at`` was 0, so the
+        migration could not stamp it) simply holding recipes. Only a hints-only row
+        (``'[]'``, never stamped) is not."""
+        return self.authoritative or bool(self.rows)
+
 
 def store_stats() -> dict[str, int]:
     """Copy of the CAS counters: ``writes``, ``conflicts`` (lost races, retried),
@@ -411,10 +419,16 @@ def db_read(dealer_id: str, *, strict: bool = False) -> StoreRow | None:
     Unlike ``db_load_recipes`` a hints-only row is returned (``authoritative`` False).
     ``strict`` is not supported here; use ``db_load_recipes(strict=True)``."""
     found = _db_read_exact(dealer_id)
-    if found is not None:
+    if found is not None and found.has_recipes:
         return found
+    # No row, or a hints-only row (``'[]'``, not authoritative): a rekeyed dealer's
+    # recipes may still sit under the retired slug, and the hints-only row must not
+    # hide them.
     old_slug = _alias_read_slug(dealer_id)
-    return _db_read_exact(old_slug) if old_slug else None
+    aliased = _db_read_exact(old_slug) if old_slug else None
+    if aliased is not None and (found is None or aliased.has_recipes):
+        return aliased
+    return found
 
 
 def _db_read_exact(dealer_id: str) -> StoreRow | None:
@@ -533,12 +547,15 @@ def db_load_recipes(
     ``recipes_json`` is not a JSON list) raises ``RecipeStoreReadError``.
     """
     found = _db_load_recipes_exact(dealer_id, strict=strict)
-    if found is not None:
+    if found is not None and found[0]:
         return found
+    # No row, or a hints-only row holding ``[]``: it must not hide the retired
+    # slug's recipes.
     old_slug = _alias_read_slug(dealer_id)
-    if old_slug:
-        return _db_load_recipes_exact(old_slug, strict=strict)
-    return None
+    aliased = _db_load_recipes_exact(old_slug, strict=strict) if old_slug else None
+    if aliased is not None and (found is None or aliased[0]):
+        return aliased
+    return found
 
 
 def _db_load_recipes_exact(

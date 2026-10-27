@@ -56,6 +56,7 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import parse_qsl, unquote, urlencode, urlparse, urlsplit, urlunparse
 
+from backend.scanner import recipe_cache
 from backend.scanner.net import client as net_client
 
 logger = logging.getLogger("scanner")
@@ -91,29 +92,9 @@ RECIPES_DIR = resolve_recipes_dir()
 
 
 def _atomic_write_json(path: Path, obj: Any) -> None:
-    """Write ``obj`` as JSON (``indent=1``, as before) to ``path`` atomically.
-
-    The bytes go to ``<name>.tmp.<pid>.<thread>`` in the same directory, are
-    flushed and fsynced, then ``os.replace``d over ``path``. Readers see the old
-    file or the new one, never a torn one. On any failure the temp file is
-    removed and the previous ``path`` is left byte-identical. Temp names end in
-    ``.tmp.<pid>.<thread>``, so the ``*.json`` globs over the cache dir never
-    match them.
-    """
-    payload = json.dumps(obj, indent=1)
-    tmp = path.with_name(f"{path.name}.tmp.{os.getpid()}.{threading.get_ident()}")
-    try:
-        with open(tmp, "w", encoding="utf-8") as fh:
-            fh.write(payload)
-            fh.flush()
-            os.fsync(fh.fileno())
-        os.replace(tmp, path)
-    except BaseException:
-        try:
-            os.unlink(tmp)
-        except OSError:
-            pass
-        raise
+    """Atomic JSON write of a cache file (``recipe_cache.atomic_write_json``); the
+    name stays here because scripts and tests import and patch it."""
+    recipe_cache.atomic_write_json(path, obj)
 
 
 # Pagination shapes we know how to walk during replay.
@@ -534,25 +515,24 @@ def _rows_to_recipes(raw: Any) -> list[EndpointRecipe]:
 
 def load_recipes(dealer_id: str) -> list[EndpointRecipe]:
     """
-    Local file first, reconciled against the shared ``dealer_recipes`` table
-    (see ``backend.scanner.recipe_store``) by ``saved_at``.
+    The dealer's recipes: the ``dealer_recipes`` row is the authority
+    (``backend.scanner.recipe_store``), the cache file a mirror of it (N13 P7.2).
 
-    ``saved_at`` means "last write of this dealer's set": ``save_recipes``
-    stamps every row with one ``time.time()`` per call, so a stale flag, an
-    un-stale, a last_ok / coverage update and a re-synthesized set (built with
-    ``saved_at=0``) all carry a stamp newer than any copy written before them.
-    It stays a per-write stamp in later phases, because hosts running older
-    code still compare it. A copy's freshness is its max ``saved_at`` (the DB
-    keeps it as ``max_saved_at``).
+    - Row holding the dealer's recipes (``StoreRow.has_recipes``: ``recipes_written_at``
+      set, or a pre-V034 row that has recipes): its rows are returned and the
+      cache file is rewritten, atomically and under its ``flock``, only when its
+      content differs (a missing, corrupt or truncated file differs). Until
+      ``<cache>/_reconciled`` names this store, a differing file that exists is first
+      copied to ``workspace/backups/recipe_cache_differing``; when that copy fails the
+      file is left alone. The file's age does not matter: a newer file never
+      overwrites the store (the old ``saved_at`` push-up is gone).
+    - No row, or a hints-only row (not authoritative), and a cache file with rows: the
+      file seeds the store through ``db_mutate`` (only while the row still holds no
+      recipes) and is returned as it is.
+    - The store unreachable (or disabled): the file rows, as before.
 
-    - DB newer than the file: another host wrote the set since. The DB copy
-      wins and re-materializes the file with its rows as they are (no
-      re-stamp, so the file gets the DB copy's stamp).
-    - File newer than the DB: a write-through failed, or the file predates the
-      DB store. The file is pushed up as it is (no re-stamp, so the DB copy
-      gets the file's own stamp) and a WARNING names the dealer and the DB
-      copy it replaced.
-    - Equal: the file is returned and nothing is written.
+    ``saved_at`` stays the per-write stamp (``save_recipes``) because hosts running
+    older code still compare it; the store keeps its max as ``max_saved_at``.
 
     Store identity (``_store.json``, see ``check_cache_store``): when the cache
     dir is tagged for another store than this process's, the cache is
@@ -565,10 +545,8 @@ def load_recipes(dealer_id: str) -> list[EndpointRecipe]:
     store read showed the store has no copy, or when the store could not be
     read; in the second case ``save_recipes`` refuses that dealer until a store
     read shows there is no copy. An untagged cache is tagged for this process's
-    store on the first load that reached the store (a DB copy came back, or a
-    push-up landed).
-
-    Otherwise either side being unavailable degrades to the other.
+    store on the first load that reached the store (a row came back, or a seed
+    landed).
     """
     store_check = check_cache_store()
     # Read may resolve through _aliases.json (URL-rekeyed dealer); any write
@@ -584,57 +562,76 @@ def load_recipes(dealer_id: str) -> list[EndpointRecipe]:
     if store_check.foreign:
         return _load_foreign(dealer_id, store_check, file_rows)
 
-    db_rows: list[dict] = []
-    db_saved = -1.0
-    store_copy = False
+    slug = _recipe_slug(dealer_id)
+    row = None
     try:
-        from backend.scanner.recipe_store import db_load_recipes
+        from backend.scanner.recipe_store import db_read
 
-        found = db_load_recipes(_recipe_slug(dealer_id))
-        if found is not None:
-            db_rows, db_saved = found
-            store_copy = True
+        row = db_read(slug)
     except Exception:  # noqa: BLE001 — DB is optional here
         pass
 
-    def _max_saved(rows: list[dict]) -> float:
-        vals = [float(r.get("saved_at") or 0) for r in rows if isinstance(r, dict)]
-        return max(vals) if vals else 0.0
-
-    file_saved = _max_saved(file_rows) if file_rows else -1.0
-    if db_rows and db_saved > file_saved:
-        # Another machine captured fresher recipes — adopt and cache locally
-        # (under the current slug, even when the read came from an alias).
-        try:
-            RECIPES_DIR.mkdir(parents=True, exist_ok=True)
-            _atomic_write_json(_recipe_path(dealer_id), db_rows)
-        except OSError:
-            pass
+    if row is not None and row.has_recipes:
+        _refresh_cache(dealer_id, row.rows, store_check)
         _tag_untagged_cache(store_check)
-        return _rows_to_recipes(db_rows)
-    pushed = False
-    if file_rows and file_saved > db_saved:
-        # Push-up: the rows go up exactly as on file. Never re-stamp here, or the
-        # pushed copy would outrank writes other hosts made after this file.
-        try:
-            from backend.scanner.recipe_store import db_save_recipes
+        return _rows_to_recipes(row.rows)
 
-            pushed = bool(db_save_recipes(_recipe_slug(dealer_id), file_rows))
-        except Exception:  # noqa: BLE001
-            pass
-        if pushed:
-            if db_saved < 0:
-                replaced = "no DB copy was read"
-            else:
-                replaced = f"overwrote the DB copy of {len(db_rows)} recipe(s) (max saved_at {db_saved:.3f})"
-            logger.warning(
-                "Recipes [%s]: local cache is newer than dealer_recipes; pushed %d file recipe(s) "
-                "(max saved_at %.3f) up and %s",
-                dealer_id, len(file_rows), file_saved, replaced,
-            )
-    if store_copy or pushed:
+    seeded = False
+    if file_rows:
+        seeded = _seed_store(dealer_id, file_rows)
+    if row is not None or seeded:
         _tag_untagged_cache(store_check)
-    return _rows_to_recipes(file_rows or db_rows)
+    return _rows_to_recipes(file_rows)
+
+
+def _seed_store(dealer_id: str, file_rows: list[dict]) -> bool:
+    """Seed the store with the cache file's rows, exactly as on file (no re-stamp:
+    the seeded copy keeps the file's own ``saved_at``). Skipped when another host made
+    the row authoritative since this process read it."""
+    try:
+        from backend.scanner.recipe_store import db_mutate
+
+        landed = db_mutate(
+            _recipe_slug(dealer_id),
+            lambda cur: file_rows if cur is None or not cur.has_recipes else None,
+        )
+    except Exception:  # noqa: BLE001
+        return False
+    if landed is None or landed.rows != file_rows:
+        return False
+    logger.warning(
+        "Recipes [%s]: dealer_recipes had no recipes for this dealer; seeded it with the "
+        "%d recipe(s) of the local cache file", dealer_id, len(file_rows),
+    )
+    return True
+
+
+def _refresh_cache(dealer_id: str, db_rows: list[dict], check: CacheStoreCheck) -> bool:
+    """Make the cache file hold ``db_rows``; True when it was rewritten.
+
+    Compare-then-write runs under the file's ``flock`` and touches nothing when the
+    content is already equal. A differing file that exists is backed up first while
+    the cache is not yet reconciled with this store; a failed backup or write leaves
+    the file as it was (the caller still returns the store's rows).
+    """
+    path = _recipe_path(dealer_id)
+    try:
+        RECIPES_DIR.mkdir(parents=True, exist_ok=True)
+        with recipe_cache.cache_lock(path):
+            if recipe_cache.read_rows(path) == db_rows:
+                return False
+            if path.exists() and not recipe_cache.is_reconciled(check.cache_dir, check.fingerprint):
+                saved = recipe_cache.backup_cache_file(path)
+                logger.warning(
+                    "Recipes [%s]: the cache file differs from the store and the cache is not "
+                    "reconciled with it; backed it up to %s before the store's copy replaces it",
+                    dealer_id, saved,
+                )
+            _atomic_write_json(path, db_rows)
+            return True
+    except OSError as exc:
+        logger.debug("Recipes [%s]: cache refresh skipped: %s", dealer_id, exc)
+        return False
 
 
 # Dealers for which a load on a foreign cache (one tagged for another store) could
@@ -751,7 +748,8 @@ def save_recipes(dealer_id: str, recipes: list[EndpointRecipe]) -> None:
         return
     RECIPES_DIR.mkdir(parents=True, exist_ok=True)
     path = _recipe_path(dealer_id)
-    _atomic_write_json(path, rows)
+    with recipe_cache.cache_lock(path):
+        _atomic_write_json(path, rows)
     try:
         from backend.scanner.recipe_store import db_save_recipes
 

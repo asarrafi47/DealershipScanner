@@ -150,7 +150,7 @@ def test_no_store_means_no_fingerprint_and_sqlite_is_named_by_its_file(store, mo
 
 # ── a matching fingerprint behaves as before ──────────────────────────────────
 
-def test_matching_fingerprint_pushes_up_and_adopts_as_before(store, monkeypatch, caplog):
+def test_matching_fingerprint_serves_the_store_and_refreshes_the_cache(store, monkeypatch, caplog):
     cache = store.dirs["mbp"]
     _tag_for(cache, LOCAL_DSN, monkeypatch)
     store.write_db(D, [_row(PROD_URL, OLD)])
@@ -162,10 +162,14 @@ def test_matching_fingerprint_pushes_up_and_adopts_as_before(store, monkeypatch,
         (r,) = load_recipes(D)
         (r2,) = load_recipes(D2)
 
-    assert r.url == LOCAL_URL
-    assert [x["url"] for x in store.db_row(D)["rows"]] == [LOCAL_URL], "the newer file was pushed up"
-    assert len(_push_up_warnings(caplog)) == 1
+    # P7.2: the store is the authority whichever copy is newer; the file is never pushed up
+    assert r.url == PROD_URL
+    assert [x["url"] for x in store.db_row(D)["rows"]] == [PROD_URL]
+    assert store.file_rows("mbp", D)[0]["url"] == PROD_URL, "the cache is refreshed from the store"
+    assert _push_up_warnings(caplog) == []
     assert r2.url == PROD_URL and store.file_rows("mbp", D2)[0]["url"] == PROD_URL, "the newer DB copy wins"
+    assert len(list((cache.parent / "backups" / "recipe_cache_differing").glob("*.json"))) == 2, \
+        "an unreconciled cache is backed up before it is overwritten"
     assert _mismatch_warnings(caplog) == []
     assert rec.check_cache_store().verdict == "match"
 
@@ -245,7 +249,8 @@ def _wire(monkeypatch, harness: TwoHostRecipeStore, dsn: str) -> None:
 
 
 def _snapshot(cache: Path) -> dict[str, bytes]:
-    return {str(p.relative_to(cache)): p.read_bytes() for p in sorted(cache.rglob("*")) if p.is_file()}
+    return {str(p.relative_to(cache)): p.read_bytes() for p in sorted(cache.rglob("*"))
+            if p.is_file() and p.suffix != ".lock"}  # the flock files are not cache content
 
 
 def test_a_mismatched_run_leaves_the_cache_byte_identical_and_never_reverts_its_store(
@@ -588,12 +593,12 @@ def test_a_missing_tag_is_created_on_the_first_successful_load(store, monkeypatc
         "the tag is not a dealer file"
 
 
-def test_an_untagged_cache_pushes_up_on_its_first_load_and_is_tagged_for_that_store(store, caplog):
+def test_an_untagged_cache_seeds_the_store_on_its_first_load_and_is_tagged_for_that_store(store, caplog):
     store.write_file("mbp", D, [_row(LOCAL_URL, NEW)])
     with caplog.at_level(logging.WARNING, logger="scanner"):
         (r,) = load_recipes(D)
     assert r.url == LOCAL_URL and [x["url"] for x in store.db_row(D)["rows"]] == [LOCAL_URL]
-    assert len(_push_up_warnings(caplog)) == 1
+    assert len([m for m in caplog.records if "seeded it" in m.getMessage()]) == 1
     assert _tag(store.dirs["mbp"])["fingerprint"] == rec.store_fingerprint()
 
 
@@ -614,8 +619,7 @@ def test_another_cache_dir_mirrors_the_new_store(store, monkeypatch, caplog):
     _tag_for(store.dirs["mbp"], LOCAL_DSN, monkeypatch)
     _on_store(monkeypatch, PROD_DSN)
     store.use("mini")
-    store.write_db(D, [_row(PROD_URL, OLD)])
-    store.write_file("mini", D, [_row(LOCAL_URL, NEW)])
+    store.write_file("mini", D, [_row(LOCAL_URL, NEW)])  # no row in the store: the file seeds it
     with caplog.at_level(logging.WARNING, logger="scanner"):
         (r,) = load_recipes(D)
     assert r.url == LOCAL_URL and [x["url"] for x in store.db_row(D)["rows"]] == [LOCAL_URL]

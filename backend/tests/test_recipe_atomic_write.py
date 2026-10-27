@@ -25,6 +25,7 @@ from pathlib import Path
 
 import pytest
 
+import backend.scanner.recipe_cache as rcache
 import backend.scanner.recipe_store as rstore
 import backend.scanner.recipes as rec
 from backend.scanner.recipes import EndpointRecipe, load_recipes, save_recipes
@@ -102,8 +103,8 @@ def _fail_mid_write(monkeypatch):
         fh = real_open(path, mode, *a, **kw)
         return _TornFile(fh) if "w" in mode else fh
 
-    # _atomic_write_json resolves ``open`` from the recipes module globals first.
-    monkeypatch.setattr(rec, "open", torn_open, raising=False)
+    # atomic_write_json resolves ``open`` from the recipe_cache module globals first.
+    monkeypatch.setattr(rcache, "open", torn_open, raising=False)
 
 
 FAILURES = {
@@ -135,7 +136,8 @@ def test_failed_first_save_leaves_nothing_behind(monkeypatch):
     _fail_fsync(monkeypatch)
     with pytest.raises(_Boom):
         save_recipes("fresh", [_recipe("fresh", "https://a.example/x")])
-    assert sorted(p.name for p in rec.RECIPES_DIR.iterdir()) == []
+    # only the flock file (P7.2) may remain: no cache file, no temp file
+    assert sorted(p.name for p in rec.RECIPES_DIR.iterdir()) in ([], ["fresh.json.lock"])
 
 
 def test_unserializable_rows_never_create_a_temp_file():
@@ -218,7 +220,9 @@ def test_concurrent_saves_never_expose_a_torn_file():
 
 
 def _db_newer(monkeypatch, rows: list[dict], saved: float) -> None:
-    monkeypatch.setattr(rstore, "db_load_recipes", lambda dealer_id: (rows, saved))
+    row = rstore.StoreRow(rows=rows, rev=1, hints={}, updated_at=None, max_saved_at=saved,
+                          recipes_written_at=saved)
+    monkeypatch.setattr(rstore, "db_read", lambda dealer_id, **kw: row)
 
 
 def test_db_adoption_write_is_atomic(monkeypatch):

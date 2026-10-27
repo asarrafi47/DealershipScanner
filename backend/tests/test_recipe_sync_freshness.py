@@ -15,6 +15,7 @@ Replays go through the real ``try_fetch_via_recipes`` with ``_replay_request`` s
 from __future__ import annotations
 
 import asyncio
+import json
 import logging
 import sqlite3
 from contextlib import closing
@@ -255,36 +256,31 @@ def test_a_cascaded_recipe_with_zero_saved_at_is_not_reverted_by_an_older_cache(
 
 # ── reconcile directions: neither re-stamps; only the push-up warns ─────────────
 
-def test_push_up_logs_a_warning_and_keeps_the_file_stamp(store, caplog):
+def test_a_newer_file_never_overwrites_an_authoritative_row(store, caplog):
+    """P7.2: the push-up is gone. The store wins whichever copy is newer; the file is
+    refreshed from it and nothing is stamped."""
     db_copy = [
         asdict(_recipe(url=OLD_URL, saved_at=1000.0)),
         asdict(_recipe(url=OLD_URL, post_template='{"page":1,"type":"used"}', saved_at=900.0)),
     ]
     store.write_db(D, db_copy)
-    file_copy = [asdict(_recipe(saved_at=2000.0))]
-    path = store.write_file("mbp", D, file_copy)
-    before = path.read_bytes()
+    path = store.write_file("mbp", D, [asdict(_recipe(saved_at=2000.0))])
     clock = store.freeze_clock(T0)
 
     with caplog.at_level(logging.WARNING, logger="scanner"):
-        (loaded,) = load_recipes(D)
+        loaded = load_recipes(D)
 
-    assert loaded.url == CC_URL
-    (warning,) = _push_up_warnings(caplog)
-    msg = warning.getMessage()
-    assert D in msg
-    assert "overwrote the DB copy of 2 recipe(s)" in msg
-    assert "pushed 1 file recipe(s)" in msg
-    assert clock.calls == 0, "a push-up never stamps"
-    assert path.read_bytes() == before, "the file is not rewritten"
-    row = store.db_row(D)
-    assert row["rows"] == file_copy
-    assert row["max_saved_at"] == 2000.0
+    assert [r.url for r in loaded] == [OLD_URL, OLD_URL]
+    assert not _push_up_warnings(caplog)
+    assert clock.calls == 0, "a load never stamps"
+    assert store.db_row(D)["rows"] == db_copy and store.db_row(D)["max_saved_at"] == 1000.0
+    assert json.loads(path.read_text(encoding="utf-8")) == db_copy, "the cache mirrors the store"
 
 
-def test_a_failed_write_through_is_pushed_up_on_the_next_load(store, monkeypatch, caplog):
-    """The realistic push-up: a save whose write-through failed leaves the file newer
-    than the DB; the next load pushes it, and the other host then sees the write."""
+def test_a_failed_write_through_is_not_pushed_up_on_the_next_load(store, monkeypatch):
+    """A save whose write-through failed leaves the file newer than the store. The store
+    stays the authority, so the next load serves the store's copy (P7.3's op-log is what
+    keeps such a write)."""
     clock = store.freeze_clock(T0)
     save_recipes(D, [_recipe()])
     (r,) = load_recipes(D)
@@ -299,24 +295,19 @@ def test_a_failed_write_through_is_pushed_up_on_the_next_load(store, monkeypatch
     mark_stale(D, r, "http_403")
     monkeypatch.setattr(recipe_store, "_conn", store._connect)
     assert store.db_row(D)["stale_count"] == 0, "the write-through failed"
+    assert store.file_rows("mbp", D)[0]["stale"], "the file took the write"
 
-    with caplog.at_level(logging.WARNING, logger="scanner"):
-        assert load_recipes(D)[0].stale
-    (warning,) = _push_up_warnings(caplog)
-    assert D in warning.getMessage() and "overwrote the DB copy of 1 recipe(s)" in warning.getMessage()
-    row = store.db_row(D)
-    assert row["stale_count"] == 1 and row["max_saved_at"] == T0 + 60
-
-    with store.on("mini"):
-        assert load_recipes(D)[0].stale
+    assert not load_recipes(D)[0].stale
+    assert store.db_row(D)["stale_count"] == 0
+    assert not store.file_rows("mbp", D)[0]["stale"], "the cache is back to the store's copy"
 
 
-def test_push_up_of_a_dealer_with_no_db_row_says_so(store, caplog):
+def test_a_dealer_with_no_db_row_seeds_the_store_from_its_cache_file(store, caplog):
     store.write_file("mbp", D, [asdict(_recipe(saved_at=2000.0))])
     with caplog.at_level(logging.WARNING, logger="scanner"):
         load_recipes(D)
-    (warning,) = _push_up_warnings(caplog)
-    assert D in warning.getMessage() and "no DB copy was read" in warning.getMessage()
+    (warning,) = [m for m in caplog.records if "seeded it" in m.getMessage()]
+    assert D in warning.getMessage()
     assert store.db_row(D)["max_saved_at"] == 2000.0
 
 

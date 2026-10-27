@@ -62,6 +62,8 @@ def hints(monkeypatch):
     monkeypatch.setattr(recipe_store, "get_scan_hints", _get)
     monkeypatch.setattr(recipe_store, "set_scan_hints", _set)
     monkeypatch.setattr(recipe_store, "db_load_recipes", lambda *a, **k: [])
+    monkeypatch.setattr(recipe_store, "db_read", lambda *a, **k: None)
+    monkeypatch.setattr(recipe_store, "db_mutate", lambda *a, **k: None)
     monkeypatch.setattr(recipe_store, "db_save_recipes", lambda *a, **k: None)
     return store
 

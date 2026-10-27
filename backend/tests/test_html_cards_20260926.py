@@ -17,6 +17,10 @@ def _no_recipe_db(monkeypatch):
     from backend.scanner import recipe_store
 
     monkeypatch.setattr(recipe_store, "db_load_recipes", lambda *a, **k: [])
+
+    monkeypatch.setattr(recipe_store, "db_read", lambda *a, **k: None)
+
+    monkeypatch.setattr(recipe_store, "db_mutate", lambda *a, **k: None)
     monkeypatch.setattr(recipe_store, "db_save_recipes", lambda *a, **k: None)
 
 _CARD = '<div class="inventory-image-wrapper" data-vin="{vin}"><a href="/inventory/used-cars-ACURA-TLX-2021-{tail}-X"><img src="https://cdn.x/{vin}.jpg"></a><button data-sales-price="31123.25" data-vin="{vin}">Explore</button></div>'
