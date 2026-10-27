@@ -72,8 +72,8 @@ def _parse_mileage(raw: str | None) -> int | None:
     return None
 
 
-def _parse_price(ip: Any, msrp: Any) -> int | None:
-    for pv in (ip, msrp):
+def _parse_price(*candidates: Any) -> int | None:
+    for pv in candidates:
         try:
             p = float(pv or 0)
             if p > 0:
@@ -255,7 +255,9 @@ def _map_vehicle_card(
     if not vin:
         return None
 
-    price = _parse_price(vc.get("VehicleInternetPrice"), vc.get("VehicleMsrp"))
+    # D-N18: the advertised price only. A card with no internet price is unpriced
+    # (the VDP prefetch fills it); VehicleMsrp goes to ``msrp`` and never to price.
+    price = _parse_price(vc.get("VehicleInternetPrice"))
     mileage = _parse_mileage(str(vc.get("Mileage") or ""))
     condition = _parse_condition(vc)
     gallery = _build_gallery(vc, base_url, vin)
@@ -300,9 +302,9 @@ def _map_vehicle_card(
         row["packages"] = packages
     if description:
         row["description"] = description
-    msrp = _parse_price(vc.get("VehicleMsrp"), None)
+    msrp = _parse_price(vc.get("VehicleMsrp"))
     if msrp:
-        row["msrp"] = msrp  # every new-car card carries it (Cherokee County 96/96); feed price falls back to it
+        row["msrp"] = msrp  # every new-car card carries it (Cherokee County 96/96); never used as the price (D-N18)
     return row
 
 

@@ -101,10 +101,35 @@ def _first_price(*vals, floor: float = 0.0, ceiling: float = float("inf")) -> fl
     return 0.0
 
 
+def _final_price_entry(pricing: dict | None) -> object:
+    """Value of the ``pricing.dprice[]`` / ``eprice[]`` row the site itself flags
+    ``isFinalPrice`` (its "Advertised Price" line). It is the number a buyer sees
+    before tax and government fees, so D-N18 ranks it above the tracking and
+    ``internetPrice`` fields, which on some accounts are the pre-offer price."""
+    if not isinstance(pricing, dict):
+        return None
+    for key in ("dprice", "eprice"):
+        arr = pricing.get(key)
+        if not isinstance(arr, list):
+            continue
+        for entry in arr:
+            if isinstance(entry, dict) and entry.get("isFinalPrice") is True:
+                if str(entry.get("typeClass") or "").strip().lower() == "msrp":
+                    continue
+                return entry.get("value")
+    return None
+
+
 def _extract_price_dealer_com(obj: dict) -> int:
     """
-    Priority: trackingPricing.internetPrice → pricing.internetPrice → pricing.finalPrice
-    → pricing.salePrice → pricing.msrp → price → trackingAttributes price/msrp.
+    D-N18: the advertised price before taxes and government fees. MSRP never
+    becomes the price (it goes to ``msrp`` only); a row with no advertised price
+    returns 0 so the VDP prefetch can supply it.
+
+    Priority: the site's ``isFinalPrice`` dprice/eprice row → trackingPricing.internetPrice
+    → pricing.internetPrice → pricing.finalPrice → pricing.salePrice → price →
+    retailPrice (used rows only; on New / Certified it is the MSRP) →
+    trackingAttributes price.
 
     Candidates at or below ``_MASKED_PRICE_FLOOR`` are skipped, not accepted —
     a masked placeholder is indistinguishable from a real price by shape alone,
@@ -114,7 +139,8 @@ def _extract_price_dealer_com(obj: dict) -> int:
     tracking = obj.get("trackingPricing") or obj.get("tracking_pricing")
     pricing = obj.get("pricing") if isinstance(obj.get("pricing"), dict) else None
 
-    raw = _first_price(
+    candidates = [
+        _final_price_entry(pricing),
         isinstance(tracking, dict) and tracking.get("internetPrice"),
         isinstance(tracking, dict) and tracking.get("internet_price"),
         pricing and pricing.get("internetPrice"),
@@ -126,18 +152,17 @@ def _extract_price_dealer_com(obj: dict) -> int:
         obj.get("sellingPrice"),
         obj.get("internet_Price"),
         obj.get("internet_price"),
-        pricing and pricing.get("msrp"),
-        pricing and pricing.get("MSRP"),
         obj.get("price"),
         obj.get("internetPrice"),
-        pricing and pricing.get("retailPrice"),
-        pricing and pricing.get("retail_price"),
-        floor=_MASKED_PRICE_FLOOR,
-    )
+    ]
+    if not _is_new_or_certified(obj):
+        candidates.append(pricing and pricing.get("retailPrice"))
+        candidates.append(pricing and pricing.get("retail_price"))
+    raw = _first_price(*candidates, floor=_MASKED_PRICE_FLOOR)
     if raw == 0:
         arr = obj.get("trackingAttributes") or obj.get("tracking_attributes") or obj.get("attributes")
         if isinstance(arr, list):
-            v2 = find_tracking_attr(arr, "price", "value") or find_tracking_attr(arr, "msrp", "value")
+            v2 = find_tracking_attr(arr, "price", "value")
             if v2 is not None and str(v2).strip() and norm_float(v2) > _MASKED_PRICE_FLOOR:
                 raw = norm_float(v2)
     return int(round(raw))
