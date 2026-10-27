@@ -343,6 +343,10 @@ DO_NOT_SCAN_PATHS = (
     _REPO_ROOT / "deploy" / "railway" / "do_not_scan.txt",
 )
 REVIVED_DEALERS_PATH = _REPO_ROOT / "deploy" / "railway" / "revived_dealers.txt"
+# Dealers whose edge refuses the Railway IP and accepts a home IP (P15A.1). Same format as
+# do_not_scan.txt, one dated evidence comment per id. Railway drops them; the home lane scans them.
+HOME_LANE_DEALERS_PATH = _REPO_ROOT / "deploy" / "railway" / "home_lane_dealers.txt"
+SCAN_LANES = ("all", "railway", "home")
 
 
 def _read_id_list(path: Path) -> set[str]:
@@ -370,6 +374,22 @@ def load_revived_dealer_ids(path: Path | None = None) -> set[str]:
     return _read_id_list(path or REVIVED_DEALERS_PATH)
 
 
+def load_home_lane_ids(path: Path | None = None) -> set[str]:
+    return _read_id_list(path or HOME_LANE_DEALERS_PATH)
+
+
+def scan_lane() -> str:
+    """SCAN_LANE: all | railway | home. Unset: railway when SCANNER_EGRESS_TAG is set (a
+    datacenter host), else all (every dealer, today's behaviour). SCAN_LANE=all is the kill
+    switch. Anything else fails loudly."""
+    raw = (os.environ.get("SCAN_LANE") or "").strip().lower()
+    if not raw:
+        return "railway" if (os.environ.get("SCANNER_EGRESS_TAG") or "").strip() else "all"
+    if raw not in SCAN_LANES:
+        raise ValueError(f"SCAN_LANE must be one of {', '.join(SCAN_LANES)}, got {raw!r}")
+    return raw
+
+
 def scannable_roster_rule_enabled() -> bool:
     """SCANNABLE_ROSTER_RULE=0 restores the raw active ∪ recipes union."""
     return (os.environ.get("SCANNABLE_ROSTER_RULE") or "1").strip().lower() not in (
@@ -382,12 +402,25 @@ def apply_scannable_roster_rule(
     *,
     do_not_scan: set[str] | None = None,
     revived: set[str] | None = None,
+    lane: str | None = None,
+    home_lane: set[str] | None = None,
 ) -> tuple[list[dict], dict[str, Any]]:
     """Keep dealers with active inventory (plus revived recipe-only ones), minus
     do-not-scan. Returns (kept, report) where report counts and lists what was
-    excluded and why."""
+    excluded and why.
+
+    ``lane`` (P15A.1): None or ``all`` filters nothing more; ``railway`` drops the
+    home-lane ids (``excluded_home_lane``); ``home`` keeps only them (the others are
+    counted in ``excluded_not_home_lane``). do-not-scan and the recipe-only rule apply
+    in every lane."""
     dns = load_do_not_scan_ids() if do_not_scan is None else set(do_not_scan)
     rev = load_revived_dealer_ids() if revived is None else set(revived)
+    lane = (lane or "all").strip().lower()
+    if lane not in SCAN_LANES:
+        raise ValueError(f"unknown lane {lane!r}")
+    home = (load_home_lane_ids() if home_lane is None else set(home_lane)) if lane != "all" else set()
+    excl_home: list[str] = []
+    not_home = 0
     kept: list[dict] = []
     excl_dns: list[str] = []
     excl_recipe_only: list[str] = []
@@ -398,6 +431,12 @@ def apply_scannable_roster_rule(
             continue
         if did in dns:
             excl_dns.append(did)
+            continue
+        if lane == "railway" and did in home:
+            excl_home.append(did)
+            continue
+        if lane == "home" and did not in home:
+            not_home += 1
             continue
         if not d.get("_has_active_inventory", True):
             if did in rev:
@@ -411,6 +450,9 @@ def apply_scannable_roster_rule(
         "excluded_do_not_scan": sorted(excl_dns),
         "excluded_recipe_only": sorted(excl_recipe_only),
         "revived_recipe_only": sorted(revived_in),
+        "excluded_home_lane": sorted(excl_home),
+        "excluded_not_home_lane": not_home,
+        "lane": lane,
     }
     return kept, report
 
@@ -427,6 +469,9 @@ def log_roster_rule_report(report: dict[str, Any], *, source: str) -> None:
     )
     if report["excluded_do_not_scan"]:
         logger.info("Roster rule [%s]: do-not-scan: %s", source, ", ".join(report["excluded_do_not_scan"]))
+    if report.get("excluded_home_lane"):
+        logger.info("Roster rule [%s]: home lane (excluded_home_lane): %s", source,
+                    ", ".join(report["excluded_home_lane"]))
     if report["revived_recipe_only"]:
         logger.info("Roster rule [%s]: revived: %s", source, ", ".join(report["revived_recipe_only"]))
 
@@ -450,7 +495,7 @@ def load_manifest(*, explicit_dealer_ids: bool = False) -> list[dict]:
             len(dealers),
         )
         if not explicit_dealer_ids and scannable_roster_rule_enabled():
-            dealers, report = apply_scannable_roster_rule(dealers)
+            dealers, report = apply_scannable_roster_rule(dealers, lane=scan_lane())
             log_roster_rule_report(report, source="DEALERS_FROM_SCANNABLE")
         return dealers
     if (os.environ.get("DEALERS_FROM_ACTIVE_INVENTORY") or "").strip().lower() in (

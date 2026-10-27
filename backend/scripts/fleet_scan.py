@@ -35,6 +35,11 @@ Env:
   SCAN_SHARD_ORDER        reverse | seed:<n>  (determinism passes; recorded in the summary)
   SCAN_BATCH=6            dealers per scanner process inside a shard
   SCAN_POST_STEPS=1       0 skips compute_market_stats + build_listings_grid_cards
+                          (default 0 when SCAN_LANE=home)
+  SCAN_LANE               all | railway | home (P15A.1). Default railway when SCANNER_EGRESS_TAG
+                          is set, else all. railway drops the ids in deploy/railway/
+                          home_lane_dealers.txt (excluded_home_lane); home scans only them
+                          (minus do-not-scan); all is today's roster (the kill switch)
   SCAN_PIPELINE_ARGS=...  extra dealer_pipeline flags (e.g. "--no-lifecycle")
   SCAN_OUT_ROOT           run directory parent (default workspace/pipeline)
   SCAN_KEEP_DAYS=14       prune run dirs / scan logs older than this
@@ -195,24 +200,128 @@ def load_roster() -> list[str]:
     if raw:
         return [d.strip() for d in raw.split(",") if d.strip()]
     if (os.environ.get("SCAN_FLEET") or "").strip().lower() in ("1", "true", "yes"):
-        from backend.scanner.manifest import _load_scannable_dealers, apply_scannable_roster_rule
+        from backend.scanner.manifest import _load_scannable_dealers, apply_scannable_roster_rule, scan_lane
 
         skip = ("carmax.com", "carmax-com")
         dealers = [d for d in _load_scannable_dealers()
                    if d.get("dealer_id") and not any(s in d["dealer_id"] for s in skip)]
-        kept, report = apply_scannable_roster_rule(dealers)
+        try:
+            lane = scan_lane()
+        except ValueError as exc:
+            raise SystemExit(f"fleet   {exc}")
+        kept, report = apply_scannable_roster_rule(dealers, lane=lane)
         ROSTER_REPORT.update(report)
         print(f"fleet   roster: {report['kept']} dealers kept; excluded "
               f"{len(report['excluded_do_not_scan'])} do-not-scan, "
               f"{len(report['excluded_recipe_only'])} recipe-only (no active cars, not in "
               f"deploy/railway/revived_dealers.txt); {len(report['revived_recipe_only'])} revived",
               flush=True)
+        if lane != "all":
+            print(f"fleet   lane {lane}: {len(report['excluded_home_lane'])} home-lane dealers dropped "
+                  f"(excluded_home_lane), {report['excluded_not_home_lane']} not in the home list dropped",
+                  flush=True)
         if report["excluded_do_not_scan"]:
             print("fleet   do-not-scan: " + ", ".join(report["excluded_do_not_scan"]), flush=True)
         if report["revived_recipe_only"]:
             print("fleet   revived: " + ", ".join(report["revived_recipe_only"]), flush=True)
         return sorted({d["dealer_id"] for d in kept})
     return []
+
+
+# --------------------------------------------------------------------------
+# egress-lane alarms (P15A.1)
+# --------------------------------------------------------------------------
+
+HOME_LANE_STALE_HOURS = 36
+
+
+def blocked_railway_ids(rows: list[tuple[str, str | None]]) -> set[str]:
+    """Dealers blocked from Railway: ``scan_hints.recipe_blocked['railway']`` (P7.6) or the
+    legacy ``recipe_status = blocked:railway:...``. *rows* are (dealer_id, scan_hints JSON)."""
+    out: set[str] = set()
+    for did, raw in rows:
+        try:
+            hints = json.loads(raw or "{}") or {}
+        except (TypeError, ValueError):
+            continue
+        if not isinstance(hints, dict):
+            continue
+        if (hints.get("recipe_blocked") or {}).get("railway") or \
+                str(hints.get("recipe_status") or "").startswith("blocked:railway:"):
+            out.add(str(did))
+    return out
+
+
+def blocked_unassigned(blocked: set[str], home: set[str], do_not_scan: set[str]) -> list[str]:
+    """Blocked from Railway, in no lane's hands: not on the home list, not do-not-scan."""
+    return sorted(blocked - home - do_not_scan)
+
+
+def _as_utc(value: Any) -> datetime | None:
+    if isinstance(value, datetime):
+        dt = value
+    else:
+        try:
+            dt = datetime.fromisoformat(str(value).strip().replace("Z", "+00:00"))
+        except ValueError:
+            return None
+    return dt if dt.tzinfo else dt.replace(tzinfo=timezone.utc)
+
+
+def home_lane_stale(home: set[str], newest: dict[str, Any], now: datetime,
+                    hours: int = HOME_LANE_STALE_HOURS) -> list[str]:
+    """Home-lane dealers whose newest active ``scraped_at`` is older than *hours*, or that have
+    no active row or no readable stamp (nothing fresh is on the site for them)."""
+    out = []
+    for did in sorted(home):
+        dt = _as_utc(newest.get(did)) if newest.get(did) is not None else None
+        if dt is None or (now - dt).total_seconds() > hours * 3600:
+            out.append(did)
+    return out
+
+
+def lane_alarms(now: datetime | None = None) -> dict[str, Any]:
+    """fleet_summary ``alarms``: blocked_unassigned and home_lane_stale. A failed read reports
+    ``error`` instead of failing the run."""
+    from backend.scanner.manifest import load_do_not_scan_ids, load_home_lane_ids
+
+    home = load_home_lane_ids()
+    out: dict[str, Any] = {"blocked_unassigned": [], "home_lane_stale": []}
+    try:
+        from backend.db.inventory_db import get_conn
+
+        conn = get_conn()
+        try:
+            cur = conn.cursor()
+            cur.execute("SELECT dealer_id, scan_hints FROM dealer_recipes WHERE scan_hints IS NOT NULL")
+            blocked = blocked_railway_ids([(r[0], r[1]) for r in cur.fetchall()])
+            out["blocked_unassigned"] = blocked_unassigned(blocked, home, load_do_not_scan_ids())
+            newest: dict[str, Any] = {}
+            if home:
+                ids = sorted(home)
+                cur.execute(
+                    "SELECT dealer_id, MAX(scraped_at) FROM cars WHERE COALESCE(listing_active,1)=1 "
+                    "AND dealer_id IN (" + ",".join("?" * len(ids)) + ") GROUP BY dealer_id",
+                    tuple(ids),
+                )
+                newest = {str(r[0]): r[1] for r in cur.fetchall()}
+            out["home_lane_stale"] = home_lane_stale(home, newest, now or datetime.now(timezone.utc))
+        finally:
+            conn.close()
+    except Exception as exc:  # noqa: BLE001 - an alarm read must not fail a finished scan
+        out["error"] = f"{type(exc).__name__}: {exc}"[:300]
+    return out
+
+
+def egress_lane() -> str:
+    """The SCAN_LANE this run resolves to (an invalid value reads as 'all' here; load_roster
+    already refused it for a fleet run)."""
+    from backend.scanner.manifest import scan_lane
+
+    try:
+        return scan_lane()
+    except ValueError:
+        return "all"
 
 
 def active_rows(dealer_ids: list[str]) -> dict[str, int]:
@@ -575,7 +684,7 @@ def run_fleet() -> int:
     scan_resources = sampler.summary()
 
     post: dict[str, dict[str, Any]] = {}
-    if (os.environ.get("SCAN_POST_STEPS") or "1").strip() != "0":
+    if (os.environ.get("SCAN_POST_STEPS") or ("0" if egress_lane() == "home" else "1")).strip() != "0":
         env = dict(os.environ)
         # Before market stats and the grid cards: cards are keyed on each car's
         # public-incomplete flag, so the index must be final first.
@@ -616,6 +725,8 @@ def run_fleet() -> int:
         "window": RUN_META.get("window"),
         "lock": RUN_META.get("lock"),
         "reason": RUN_META.get("reason"),
+        "egress_lane": egress_lane(),
+        "alarms": lane_alarms(),
         "warnings": list(RUN_META.get("warnings") or []),
         "run_dir": str(run_dir),
         "dealers": len(roster),

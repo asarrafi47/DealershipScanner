@@ -125,3 +125,9 @@ def test_scannable_query_carries_active_flag(monkeypatch):
     by = {d["dealer_id"]: d for d in m._load_scannable_dealers()}
     assert by["a-com"]["_has_active_inventory"] is True
     assert by["b-com"]["_has_active_inventory"] is False
+
+
+def test_report_carries_lane_keys_and_unchanged_without_lane():
+    kept, rep = m.apply_scannable_roster_rule(ROSTER, do_not_scan={"normreeves-com"}, revived=set(), home_lane={"owner-com"})
+    assert "owner-com" in [d["dealer_id"] for d in kept]  # no lane: the home list is not consulted
+    assert rep["excluded_home_lane"] == [] and rep["lane"] == "all"
