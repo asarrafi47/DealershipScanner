@@ -6,7 +6,7 @@ was split (``Land Rover`` -> make ``Land`` / model ``Rover``) or truncated
 (``Grand Cherokee`` -> ``Grand``). Every such row still carries a valid 17-char VIN,
 which decodes to the correct make + model.
 
-Safe: --dry-run default; --apply snapshots to cars_backup_vinrepair_<ts> + JSON first,
+Safe: --dry-run default; --apply snapshots to backups.cars_vinrepair_<ts> + JSON first,
 then UPDATEs only make/model on the matched rows. Reusable as a periodic safety net.
 """
 from __future__ import annotations
@@ -67,18 +67,24 @@ def main(argv=None) -> int:
         print("nothing to apply."); return 0
 
     ids = [p[0] for p in plans]
-    cur.execute("CREATE TABLE IF NOT EXISTS cars_backup_vinrepair_20260713 AS SELECT id, make, model, vin FROM cars WHERE id = ANY(%s)", (ids,))
+    from backend.utils.db_snapshot import create_snapshot_table, snapshot_ts, write_json_snapshot
+    ts = snapshot_ts()
+    table = create_snapshot_table(
+        conn, "cars_vinrepair", "SELECT id, make, model, vin FROM cars WHERE id = ANY(%s)",
+        (ids,), ts=ts, expected_rows=len(ids),
+    )
     bkp = os.environ.get("DB_BACKUP_DIR") or os.path.join(
         os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "workspace", "db-backups"
     )
-    os.makedirs(bkp, exist_ok=True)
-    json.dump([{"id": p[0], "old_make": p[1], "old_model": p[2], "new": p[3]} for p in plans],
-              open(f"{bkp}/vinrepair_20260713.json", "w"), indent=0)
+    write_json_snapshot(
+        bkp, "vinrepair",
+        [{"id": p[0], "old_make": p[1], "old_model": p[2], "new": p[3]} for p in plans], ts=ts,
+    )
     for pid, _om, _omd, chg in plans:
         sets = ", ".join(f"{k}=%s" for k in chg)
         cur.execute(f"UPDATE cars SET {sets} WHERE id=%s", (*chg.values(), pid))
     conn.commit()
-    print(f"\nAPPLIED: repaired {len(plans)} rows (backup cars_backup_vinrepair_20260713).")
+    print(f"\nAPPLIED: repaired {len(plans)} rows (backup {table}).")
     return 0
 
 
