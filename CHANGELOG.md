@@ -2,6 +2,40 @@
 
 ## [Unreleased]
 
+### N19 (draft)
+- Recipe validation now gates with the scan's own store place (attribution.store_place, read once per call, caller place wins) and parses through attribution.parse_page (P12B.1).
+- Recipe validation splits into check_all and judge; gate_recipes accepts pages= and checks=. The walk terminates and judges short_page on raw VINs, so a page of sibling-rooftop rows no longer reads as a short page (P12B.2).
+- validate_recipe is now a paced count over the scan's own replay walker instead of five separate synth-HTTP walkers; SCANNER_SYNTH_FETCH_DELAY still paces every request (P12B.3).
+- A GET recipe with a non-JSON post_template replays without a body and the report notes it; a POST without a parseable body is an error (P12B.3).
+- Recipe save paths (ensure_recipe, synthesize_recipes, discovery capture promote) walk each candidate once to the full page cap and judge those cached reads; vehicle_rows is the full walk's count (P12B.4).
+- One minimum-VIN rule, RECIPE_MIN_VINS=5 (recipe_totals). The scan union succeeds at 5 and admits a sub-floor side only when condition-pinned, paginated and gate verdict ok or uncertain. First-hit replay accepts min(floor, max(3, ceil(0.5 x saved rows))) (P12B.5).
+- Recipes record gate_verdict and gate_at. The gate refuses a set whose request another dealer's live recipe already stores (duplicate_endpoint); gate_recipes(allow_shared=True) overrides for a confirmed group feed (P12B.5).
+- Cascade recipes go through the recipe set gate (context cascade): a rejected shape saves nothing and falls through to the next, results are logged to discovery.md, --dry-run writes nothing (P12B.6).
+- Added backend/scripts/rejudge_live_recipes.py: --all re-judges every live recipe and writes only a report and JSON; --apply is owner-gated with approved-ids file, sha256 manifest and psql \copy backup, and marks recipes stale as rejudge:<verdict> (P12B.7a).
+- Docs and the dealer-discovery workflow say the set gate decides and validate_recipe is only the count; OWNER_DECISIONS sections 1 and 2 resolved (P12B.8).
+
+### N21 (draft)
+- N21.1: the stored price is the advertised price before taxes and fees (D-N18). DealerOn cosmos and dealer.com no longer fall back to MSRP as price (an unpriced card stays unpriced for the VDP prefetch; MSRP goes only to msrp); dealer.com reads isFinalPrice ahead of internetPrice, and retailPrice is no longer a price source on New and Certified rows.
+- N21.2: 17-character IDs holding I, O or Q are kept (D-N17b): never sent to vPIC, VIN-derived facts marked cannot_assess, and the VIN-owner guard no longer contests them.
+- N21.4a: a blank trim is filled from the vPIC decode for dealers whose feed carries no trim (Gardena Honda, Dealer Masters), only when vPIC names exactly one trim (D-N31), provenance nhtsa_vpic.
+- N21.3: inventory condition matches whole words ('New Arrival' no longer makes a used car New); odometer inference reads New below 100 mi and Used from 500 mi; a blank-condition car on a new-inventory URL with 1,000 mi or less reads New; New cars over 1,000 mi with no program tag are reported by new_car_high_mileage as a data question.
+- N21.9: write-time text normalization: canonical make spelling, trailing trim stripped from a model, HTML entities decoded, short SEO-boilerplate meta descriptions stored as NULL. merge_verified_specs, upsert and serialize goldens re-recorded.
+- N21.5: triage prints an 'incomplete alarm' line (and triage.json incomplete_alarms) for any dealer above 25% incomplete rows (20+ rows) with no entry in backend/config/incomplete_open_items.json.
+- N21.7: interior-color dealer-relative completeness rule declined per D-N33; note in docs/remediation/N21_7_INTERIOR_COLOR_RULE_DECLINED.md.
+- N21.6: Dealer eProcess extension-less photo URLs recognised, FordDirect/Team Velocity photoUrls read through one shared cleaner (gallery_urls_from_value), malformed CSS url(...) photo URLs repaired or rejected while parentheses, apostrophes and semicolons inside paths are kept.
+- N21.8: completeness: Mercedes designation counts as trim, blank trim exempt only for an explicit single-trim model list, non-road classes (trailer, motorcycle, cart, boat) judged on their own fields; vPIC heal fills blank make/model from a clean single-valued decode; removed dead recover_incomplete_listings.py and utils/incomplete_recovery.py.
+- N21.10: backend/scripts/backfill_cosmos_registry_ids.py fills cars.dealership_registry_id for DealerOn cosmos dealers; shared hosts, unmatched hosts, ambiguous and inactive registry rows are reported, never guessed. Dry run by default.
+
+### N22 (draft)
+- Added EPA induction vocabulary and forced_induction_from_epa, has_forced_induction and epa_twin_hint in backend/utils/forced_induction.py (P10A.1).
+- Added backend/catalog/epa_key.py: permanent epa_master key (vid:<epaId>, else sticky base key plus #ordinal) and value-based CSV-to-DB row matching (P10A.2).
+- Migration V036 adds epa_master t_charger, s_charger, source, natural_key, loaded_at, the epa_master_archive and epa_extended_specs_archive tables, idx_epa_master_vehicle_id and partial idx_cars_epa_master_id (SHARE lock on cars; apply in a quiet window) (P10A.3a).
+- link_cars_to_catalog.py: relink modes --dangling, --include-inactive, --clear-unresolved, --vins-file, --exclude-source; relink_cars() library entry; only changed links are written (P10A.7).
+- epa_engine honours the catalog row's forced-induction label instead of re-running the make/model classifier, filling only an empty car value and never contradicting a boost marker in the car's own text (P10A.4).
+- New backend/scripts/backfill_epa_master_provenance.py: dry-run-default provenance and permanent-key backfill for epa_master, refusing on unmatched rows, key collisions, a thin DICTIONARY/ tree or another active session (P10A.6).
+- EPA importer labels forced induction from tCharger/sCharger/eng_dscr, adds epaId, atvType, cityE, highwayE to EPA_CSV_COLUMNS, and gains --years, --patch-induction-only and --verify (P10A.5).
+- import_epa_master: --refresh-induction (dry run default; --apply needs --backup) and --restore; new rows store t/s charger, label, source and natural key (P10A.8).
+
 ### N18 (draft)
 - Scanner: net/client gains frozen FetchPolicy with named per-site policies (FEED_REPLAY, SYNTH_HTML, SYNTH_JSON, VDP_HTML, VDP_JSON, CHAIN_IMPERSONATE, CHAIN_REQUESTS, STATUS_PROBE), FINGERPRINT_BLOCK_STATUSES and a process-wide thread-safe HostProfileMemory (P12A.1).
 - Scanner: ImpersonatingFetcher's winning-profile memory is process-wide, so gap_fill keeps what an earlier fetch learned about a host (P12A.1).

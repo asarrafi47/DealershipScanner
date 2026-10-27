@@ -2415,6 +2415,17 @@ Owner asks: review the 12 KNOWN_RAW_WRITERS exceptions (vpic_facts and enrichmen
 
 **Owner decisions / actions.** D-OD1, D-OD2, D-OD4, D-OD5, D-OD6; the canary and prod re-judge.
 
+**Draft status (integ/draft, merge d4bac2b5d; branch phase/N19 head 0c1d46914).**
+- P12B.1 (0ee10f00b): DONE. store place via attribution.store_place; parse_page with trust_feed_scope.
+- P12B.2 (0ee10f00b): DONE. check_all/judge split; raw-VIN termination; verdict golden unchanged.
+- P12B.3 (87191620a): DONE. validate_recipe = paced count over the replay walker.
+- P12B.4 (c457f0d24): DONE. single full walk on save paths; judge cached checks.
+- P12B.5 (f63fd0ca9): DONE. RECIPE_MIN_VINS=5, gate_verdict/gate_at, duplicate_endpoint refusal.
+- P12B.6 (c8d66f88d): DONE. cascade through the gate.
+- P12B.7a (0c1d46914): DONE code. rejudge_live_recipes.py (--all write-nothing; --apply owner-gated).
+- P12B.8 (0c1d46914): MOSTLY. docs and workflow updated; platform_playbook.md (MAIN) and fetch-policy table deferred.
+- Deferred: P12B.7b rejudge data run, local and prod (owner approval); P12B.9 canary/deploy (prod-owner); P12B.10 fleet rescans (owner-run); P0B.1 per-dealer union diff and the "only listed verdicts flip" comparison (needs P0B.1 offline data); PG tier skipped (TEST_PG_ADMIN_DSN unset in merge run): test_recipe_replace_archive, test_rejudge_live_recipes; workspace/dealer_logs/_learning/platform_playbook.md entry (MAIN only).
+
 ---
 
 ### N20 Dictionary Complete_Options lookups in prod (Phase 9)
@@ -2516,6 +2527,16 @@ Owner asks: sign off the 20-car before/after diff; confirm the deletions before 
 
 **Owner decisions / actions.** D-N18, D-N17b, D-N31, D-N33; N21.5 fetches; repair OKs.
 
+**Draft status (integ/draft, merge d81f4f900; branch phase/N21 head da76fc3a5).**
+- N21.1 (1341bb41f): DONE code. advertised price, no MSRP fallback; isFinalPrice first.
+- N21.2, N21.4a (d4df1df7a): DONE code. I/O/Q ids kept, cannot_assess; vPIC single-trim fill (nhtsa_vpic).
+- N21.3, N21.9 (ca2366fc1): DONE. condition labels; text normalization; goldens re-recorded.
+- N21.5a, N21.7 (2f8eea7e6): DONE. incomplete alarm in triage; N21.7 declined (D-N33) with note.
+- N21.6 (50626745f): DONE code. DEP/TV gallery harvest, URL cleaning.
+- N21.8 (4ba5997ed): DONE code. Mercedes designation, single-trim list, non-road classes, make/model fill; recover_incomplete_listings deleted.
+- N21.10 (da76fc3a5): DONE code. backfill_cosmos_registry_ids.py (dry run default).
+- Deferred: N21.4b, N21.5b, N21.11, N21.12 (blocked: live scan, owner fetches, N11.10 findings, prod read); Live checks: 100-car price sample (N21.1), condition re-check (N21.3), 200-row text sample (N21.9), photo-less drop >=30% (N21.6), I/O/Q 1,251-row re-measure (N21.2), Gardena incomplete rate (N21.4a); Drop of six recovery_* columns: separate DDL unit; test_dealer_run_golden_20261001: 6 failures at HEAD, golden needs re-record; PG tier skipped in merge run; merge deleted two modules and no repo-wide grep for consumers was run; sqlite_allowlist regenerated, records earlier-chunk qmark debt.
+
 ---
 
 ### N22 EPA catalog code foundation (10A)
@@ -2547,6 +2568,15 @@ Owner asks: sign off the 20-car before/after diff; confirm the deletions before 
 **Release step.** Minor. Owner: dump, `migrate --target 31` outside the cron window.
 
 **Owner decisions / actions.** D-EPA1, D-ET2, D-ET3, D-ET5, D-ER2; the pinned zip.
+
+**Draft status (integ/draft, merge fa2c19a8f; branch phase/N22 head da42873ad).**
+- P10A.1, P10A.2 (f9b2a9e62): DONE. forced_induction_from_epa vocabulary; epa_key natural key.
+- P10A.3a (e1b029b16): DONE. migration V036 (not V032: V032-V035 taken); mirrors updated.
+- P10A.7 (940b9d88f): DONE. link_cars_to_catalog relink modes; relink_cars.
+- P10A.4, P10A.6 (b051be686): DONE. epa_engine honours catalog label; backfill_epa_master_provenance (dry run default; classified 70,496 rows, 0 unmatched, read-only).
+- P10A.5 (d4995a331): DONE code. importer flags, --patch-induction-only, --verify.
+- P10A.8 (da42873ad): DONE code. --refresh-induction / --restore; PG tests not run.
+- Deferred: P10A.3b apply V036 locally/prod (owner, quiet window, SHARE lock on cars); P10A.5b real-data patch/verify on pinned vehicles.csv.zip (D-EPA1); PG tests not run in merge: P10A.8 apply/restore round trip; test_no_sqlite fails on 2 entries: link_cars_to_catalog.py qmark count (P10A.7), test_backfill_epa_master_provenance.py db_path_literal (P10A.6); regenerate allowlist or fix; Run the provenance backfill on the real DB BEFORE P10D.8 deletes DICTIONARY/.
 
 ---
 
