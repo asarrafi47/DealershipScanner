@@ -67,6 +67,8 @@ class FakePgCursor:
         text = _norm(sql)
         self._conn.events.append(("sql", text))
         self._one, self._all = None, []
+        # A write changes one row (the CAS statements of recipe_store count on it).
+        self.rowcount = 1 if text.startswith(("INSERT INTO", "UPDATE ")) else 0
         if self._conn.fail_on and _DDL_RE.match(text) and self._conn.fail_on in text:
             raise _LockNotAvailable("canceling statement due to lock timeout")
         if text.startswith("SELECT to_regclass("):

@@ -714,6 +714,15 @@ def validate_recipe_set(
 
 # ── side effects the save paths share ──────────────────────────────────────────
 
+_URL_QUERY = re.compile(r"(https?://[^\s?#)\]>\"'`]+)\?[^\s)\]>\"'`]*")
+
+
+def strip_url_queries(text: str) -> str:
+    """``text`` with every ``?query`` removed from the URLs in it: a recipe URL's query can
+    carry an API key, and a log is not the place for one."""
+    return _URL_QUERY.sub(r"\1", text)
+
+
 def write_discovery_log(dealer_id: str, report: RecipeValidationReport, context: str = "", log_root: Path | None = None) -> Path | None:
     """Append the report to workspace/dealer_logs/<dealer_id>/discovery.md; a
     reject also gets its line in _learning/errors_index.md (the process doc)."""
@@ -724,7 +733,7 @@ def write_discovery_log(dealer_id: str, report: RecipeValidationReport, context:
         p = d / "discovery.md"
         head = "" if p.exists() else f"# {dealer_id} — discovery\n\nProcess: docs/NETWORK_SCAN_PROCESS.md\n\n"
         with p.open("a", encoding="utf-8") as fh:
-            fh.write(head + report.to_markdown(context).rstrip() + "\n\n")
+            fh.write(head + strip_url_queries(report.to_markdown(context)).rstrip() + "\n\n")
         if report.verdict == "reject":
             idx = root / "_learning" / "errors_index.md"
             idx.parent.mkdir(parents=True, exist_ok=True)
@@ -743,19 +752,17 @@ def record_recipe_status(dealer_id: str, report: RecipeValidationReport, context
     try:
         from backend.scanner.recipe_store import set_scan_hints
 
-        from backend.scanner.recipes import blocked_status_value, egress_tag
+        from backend.scanner.recipes import blocked_status_value, egress_tag, record_blocked
 
         status = report.status
         flags = report.flags or {}
+        validation = {**report.summary(), "stamp": report.stamp, "context": context}
         if egress_tag() and report.verdict == "reject" and flags.get("auth_needed") and flags.get("zero_rows"):
             # Every recipe answered 401/403 from a tagged (datacenter) host: that
-            # is this host's IP, not a dead recipe. Home scanners read the same
-            # hints, so record the block instead of a reject.
-            status = blocked_status_value("auth_needed")
-        return bool(set_scan_hints(dealer_id, {
-            "recipe_status": status,
-            "recipe_validation": {**report.summary(), "stamp": report.stamp, "context": context},
-        }))
+            # is this host's IP, not a dead recipe. Record the block under this
+            # host's tag (P7.6) and leave recipe_status to the home verdict.
+            return record_blocked(dealer_id, blocked_status_value("auth_needed"), {"recipe_validation": validation})
+        return bool(set_scan_hints(dealer_id, {"recipe_status": status, "recipe_validation": validation}))
     except Exception as exc:  # noqa: BLE001
         logger.debug("recipe_status hint skipped [%s]: %s", dealer_id, exc)
         return False

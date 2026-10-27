@@ -73,7 +73,7 @@ from backend.scanner.recipe_synth import (
     synthesize_recipes,
     validate_recipe,
 )
-from backend.scanner.recipes import EndpointRecipe, load_recipes, save_recipes
+from backend.scanner.recipes import EndpointRecipe, load_recipes, merge_recipes, replace_recipes
 
 logging.basicConfig(level=logging.WARNING, format="%(asctime)s [%(levelname)s] %(message)s")
 log = logging.getLogger("synthesize_recipes")
@@ -101,15 +101,20 @@ def _healthy_recipe_exists(dealer_id: str) -> bool:
     )
 
 
-def _upsert_recipe(dealer_id: str, recipe: EndpointRecipe) -> None:
-    """Merge *recipe* into the dealer's recipe file by (method, host+path) key.
+def _upsert_recipe(dealer_id: str, recipe: EndpointRecipe, *, force: bool = False) -> None:
+    """Add *recipe* to the dealer's recipe set by (method, host+path) key.
 
-    Preserves other recipes for the dealer; only replaces the same endpoint.
+    Preserves the dealer's other recipes. Goes through ``merge_recipes`` (promotion's rank
+    and cap rules, inside the store's compare-and-set), so another host's edit made
+    meanwhile survives. ``--force`` means the new capture wins its key even over a healthy
+    recipe with more rows: that key is replaced with archive (the old one lands in
+    ``superseded_json``), the other recipes stay live.
     """
-    existing = load_recipes(dealer_id)
-    merged: dict = {r.key(): r for r in existing}
-    merged[recipe.key()] = recipe
-    save_recipes(dealer_id, list(merged.values()))
+    if force and any(r.key() == recipe.key() for r in load_recipes(dealer_id)):
+        others = [r for r in load_recipes(dealer_id) if r.key() != recipe.key()]
+        replace_recipes(dealer_id, others + [recipe], reason="synth:force")
+        return
+    merge_recipes(dealer_id, [recipe])
 
 
 def _gather_html(dealer_url: str) -> tuple[str | None, str | None]:
@@ -268,7 +273,7 @@ def _process_dealer(
         row["note"] = f"dry-run (would save {len(kept)} recipe(s))"
         return row
     for recipe in kept:
-        _upsert_recipe(dealer_id, recipe)
+        _upsert_recipe(dealer_id, recipe, force=force)
     row["saved"] = True
     row["note"] = f"browser-free ({len(kept)} recipe(s))" if len(kept) > 1 else "browser-free"
     return row

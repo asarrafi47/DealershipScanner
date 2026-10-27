@@ -97,9 +97,9 @@ def main() -> int:
         if args.dry_run:
             _log.info("  %-38s WOULD SAVE: %d VINs via %s", key[:38], vins, recipe.url[:60])
             continue
-        from backend.scanner.recipes import save_recipes
+        from backend.scanner.recipes import merge_recipes
 
-        save_recipes(key, [recipe])
+        merge_recipes(key, [recipe])  # the dealer's existing recipes stay
         _log.info("  %-38s SAVED: %d VINs via %s", key[:38], vins, recipe.url[:60])
 
     _log.info(

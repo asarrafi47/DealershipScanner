@@ -17,6 +17,8 @@ Modes
                                    DATABASE_URL). After the DB writes, every cache file that
                                    differs from the merged set is rewritten from the DB
                                    atomically, so the cache mirrors the store.
+  --compare-cache DIR --target-dsn T   read only (P7.9): 10 sampled dealers of a cache dir
+                                   (the Railway volume's) against store T, one line each
   --source-dsn S --target-dsn T    DB -> DB (P7.9): store S plays the cache's part below and
                                    is never written; only T is.
 
@@ -65,7 +67,9 @@ Every write is logged to ``applied.jsonl``. A second --apply finds nothing to do
 --cache-dir mode it refuses a cache tagged for another store (``_store.json``, see
 ``backend.scanner.recipes.check_cache_store``), and after a run with no hold, skip or
 failure it writes ``<cache>/_reconciled`` with the store's fingerprint (P7.2 reads it).
-The writes switch to ``db_mutate`` once P7.1 lands.
+The writes go through ``recipe_store.db_mutate_on`` (the store's compare-and-set: ``rev`` bumps,
+``recipes_written_at`` is stamped); the guard on ``updated_at`` is kept inside it, so a row that
+changed since the read is skipped, never merged over.
 
 --restore RUN_DIR undoes an --apply from its run dir: each DB row it wrote goes back to the
 exported copy (an inserted row is deleted) and each cache file it rewrote comes back from
@@ -702,53 +706,31 @@ class AppliedLog:
 # ── apply ─────────────────────────────────────────────────────────────────────
 
 
-def _is_conflict(exc: BaseException) -> bool:
-    return any(c.__name__ in ("IntegrityError", "UniqueViolation") for c in type(exc).__mro__)
+def _write_row(conn: Any, plan: DealerPlan) -> str | None:
+    """The merged set written through ``recipe_store.db_mutate_on`` (the store's
+    compare-and-set: it bumps ``rev`` and stamps ``recipes_written_at``, so a scanner
+    mid-write loses cleanly instead of being overwritten). Returns the written row's
+    ``updated_at``, or None when the row changed since the read (a changed or appeared
+    row is skipped and reported, never merged over)."""
+    seen = {"landed": False}
 
+    def fn(current: Any) -> list[dict] | None:
+        if plan.db_write == "insert":
+            if current is not None:
+                return None
+        elif current is None or current.updated_at != plan.db.updated_at:
+            return None
+        seen["landed"] = True
+        return plan.merged
 
-def _now_iso() -> str:
-    return datetime.now(timezone.utc).isoformat()
-
-
-def _guard(updated_at: Any) -> tuple[str, tuple]:
-    if updated_at is None:
-        return "updated_at IS NULL", ()
-    return "updated_at = ?", (updated_at,)
-
-
-def _write_row(conn: Any, plan: DealerPlan, now: str) -> bool:
-    """One guarded write of the merged set; False when the row changed since the read."""
-    meta = recipe_store._derive_meta(plan.merged or [])
-    payload = json.dumps(plan.merged, ensure_ascii=False)
-    values = (payload, meta["recipe_count"], meta["provider_hint"], meta["max_saved_at"],
-              meta["last_ok_at"], meta["stale_count"], now)
-    cur = conn.cursor()
     try:
-        if plan.db_write == "update":
-            guard, guard_params = _guard(plan.db.updated_at)
-            cur.execute(
-                "UPDATE dealer_recipes SET recipes_json=?, recipe_count=?, provider_hint=?, max_saved_at=?, "
-                f"last_ok_at=?, stale_count=?, updated_at=? WHERE dealer_id=? AND {guard}",
-                values + (plan.dealer_id,) + guard_params,
-            )
-            done = cur.rowcount == 1
-        else:
-            cur.execute(
-                "INSERT INTO dealer_recipes (recipes_json, recipe_count, provider_hint, max_saved_at, "
-                "last_ok_at, stale_count, updated_at, dealer_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-                values + (plan.dealer_id,),
-            )
-            done = True
-    except Exception as exc:  # noqa: BLE001
+        written = recipe_store.db_mutate_on(conn, plan.dealer_id, fn, create=plan.db_write == "insert")
+    except Exception:
         conn.rollback()
-        if _is_conflict(exc):
-            return False
         raise
-    if done:
-        conn.commit()
-    else:
-        conn.rollback()
-    return done
+    if not seen["landed"] or written is None:
+        return None
+    return written.updated_at
 
 
 def _read_file_rows(path: Path) -> Any:
@@ -769,13 +751,12 @@ def apply_plans(plans: list[DealerPlan], conn: Any, *, cache_dir: Path | None, l
     for p in plans:
         if p.hold or not p.db_write:
             continue
-        now = _now_iso()
         try:
-            done = _write_row(conn, p, now)
+            now = _write_row(conn, p)
         except Exception as exc:  # noqa: BLE001 — the class only (the text can quote the URL)
             p.outcome = f"failed:{type(exc).__name__}"
             continue
-        if not done:
+        if now is None:
             p.outcome = "skipped:db_row_changed_since_read"
             continue
         p.outcome = {"update": "db_updated", "insert": "db_inserted"}[p.db_write]
@@ -803,6 +784,47 @@ def apply_plans(plans: list[DealerPlan], conn: Any, *, cache_dir: Path | None, l
             rec._atomic_write_json(path, current.rows)
             log.add({"kind": "cache", "dealer_id": p.dealer_id, "file": path.name, "sha256": _sha256(path)})
         p.outcome = _join(p.outcome, "cache_rewritten")
+
+
+def sample_cache_vs_store(cache: CacheRead, store: dict[str, StoreRow], *, n: int = 10,
+                          seed: int = 0) -> list[dict[str, str]]:
+    """Compare ``n`` dealers of a cache dir (the Railway volume's, tarred out of
+    ``railway ssh``) with the store they should mirror (P7.9 step 3). The sample is
+    deterministic for a seed: dealers sorted, then drawn with ``random.Random(seed)``.
+    Read only. ``status`` is ``identical`` or the plan class (``differs``,
+    ``cache_only``) with ``relation`` for a differing pair."""
+    import random
+
+    ids = sorted(cache.rows)
+    picked = sorted(random.Random(seed).sample(ids, min(n, len(ids))))
+    out = []
+    for did in picked:
+        plan = plan_dealer(did, cache, store.get(did), rewrite_cache=True)
+        out.append({"dealer_id": did, "status": plan.cls, "relation": plan.relation,
+                    "hold": plan.hold})
+    return out
+
+
+def _main_compare(args: argparse.Namespace) -> int:
+    cache_dir = Path(args.compare_cache).expanduser().absolute()
+    if not cache_dir.is_dir():
+        raise Refused(f"no cache dir at {cache_dir}")
+    cache = read_cache_dir(cache_dir)
+    identity = dsn_identity(args.target_dsn)
+    conn = _open(lambda: connect_dsn(args.target_dsn), identity)
+    try:
+        store = read_store(conn)
+        conn.rollback()
+    finally:
+        conn.close()
+    rows = sample_cache_vs_store(cache, store, n=args.sample)
+    print(f"compare: cache dir {cache_dir} ({len(cache.rows)} dealer files) vs store {identity} "
+          f"({len(store)} rows); sample of {len(rows)}")
+    for r in rows:
+        print("  " + "\t".join(v for v in (r["dealer_id"], r["status"], r["relation"], r["hold"]) if v))
+    bad = [r for r in rows if r["status"] != "identical"]
+    print(f"compare: {len(rows) - len(bad)} identical, {len(bad)} not")
+    return 1 if bad else 0
 
 
 def _join(a: str, b: str) -> str:
@@ -840,25 +862,32 @@ def restore_run(run_dir: Path, conn: Any, *, fingerprint: str, cache_dir: Path |
     for e in (e for e in entries if e.get("kind") == "db"):
         did = e["dealer_id"]
         prior = before.get(did)
-        cur = conn.cursor()
         if e["op"] == "insert":
+            cur = conn.cursor()
             cur.execute("DELETE FROM dealer_recipes WHERE dealer_id=? AND updated_at=?", (did, e["updated_at"]))
+            restored = cur.rowcount == 1
+            if restored:
+                conn.commit()
+            else:
+                conn.rollback()
         elif prior is not None and prior.get("columns"):
-            cols = prior["columns"]
-            cur.execute(
-                "UPDATE dealer_recipes SET recipes_json=?, recipe_count=?, provider_hint=?, max_saved_at=?, "
-                "last_ok_at=?, stale_count=?, updated_at=? WHERE dealer_id=? AND updated_at=?",
-                (cols["recipes_json"], cols["recipe_count"], cols["provider_hint"], cols["max_saved_at"],
-                 cols["last_ok_at"], cols["stale_count"], _now_iso(), did, e["updated_at"]),
-            )
+            old_rows = json.loads(prior["columns"]["recipes_json"])
+            hit = {"ok": False}
+
+            def fn(current: Any, did=did, e=e, old_rows=old_rows, hit=hit) -> list[dict] | None:
+                if current is None or current.updated_at != e["updated_at"]:
+                    return None
+                hit["ok"] = True
+                return old_rows
+
+            recipe_store.db_mutate_on(conn, did, fn, create=False)
+            restored = hit["ok"]
         else:
             out["db_skipped_no_export"] += 1
             continue
-        if cur.rowcount == 1:
-            conn.commit()
+        if restored:
             out["db_restored"] += 1
         else:
-            conn.rollback()
             out["db_skipped_changed_since_apply"] += 1
             print(f"  restore skipped {did}: the row changed since the apply")
     cache_entries = [e for e in entries if e.get("kind") == "cache"]
@@ -933,12 +962,19 @@ def _parse_args(argv: list[str] | None) -> argparse.Namespace:
     ap.add_argument("--cache-dir", help="file -> DB: this cache dir against this process's store")
     ap.add_argument("--source-dsn", help="DB -> DB: the store merged in (never written)")
     ap.add_argument("--target-dsn", help="DB -> DB: the store written")
+    ap.add_argument("--compare-cache", metavar="DIR",
+                    help="read only: sample dealers of this cache dir (the volume's) against --target-dsn")
+    ap.add_argument("--sample", type=int, default=10, help="dealers --compare-cache samples (default 10)")
     ap.add_argument("--backup-dir",
                     help=f"parent of the run dir (default {DEFAULT_BACKUP_PARENT}); required with --apply")
     ap.add_argument("--apply", action="store_true", help="write: backups first, then guarded writes")
     ap.add_argument("--restore", metavar="RUN_DIR", help="undo an --apply from its run dir")
     ap.add_argument("--show", type=int, default=60, help="dealer lines to print (default 60)")
     args = ap.parse_args(argv)
+    if args.compare_cache:
+        if not args.target_dsn or args.cache_dir or args.source_dsn or args.apply or args.restore:
+            ap.error("--compare-cache goes with --target-dsn only (read only)")
+        return args
     if bool(args.cache_dir) == bool(args.source_dsn or args.target_dsn):
         ap.error("give --cache-dir, or --source-dsn with --target-dsn")
     if not args.cache_dir and not (args.source_dsn and args.target_dsn):
@@ -953,6 +989,8 @@ def _parse_args(argv: list[str] | None) -> argparse.Namespace:
 def main(argv: list[str] | None = None) -> int:
     args = _parse_args(argv)
     try:
+        if args.compare_cache:
+            return _main_compare(args)
         target = _resolve_target(args)
         if args.restore:
             return _main_restore(args, target)

@@ -18,6 +18,10 @@ def _log_append(dealer_id: str, name: str, block: str) -> None:
     d.mkdir(parents=True, exist_ok=True)
     p = d / name
     head = "" if p.exists() else f"# {dealer_id} — {name[:-3]}\n\nProcess: {PROCESS_DOC}\n\n"
+    if name == "discovery.md":
+        from backend.scanner.recipe_validation import strip_url_queries
+
+        block = strip_url_queries(block)  # a recipe URL's query can carry an API key
     with p.open("a", encoding="utf-8") as fh:
         fh.write(head + block.rstrip() + "\n\n")
 

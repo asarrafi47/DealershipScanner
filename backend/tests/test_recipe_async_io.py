@@ -146,7 +146,7 @@ def _serve(monkeypatch, status: int = 200) -> None:
 
 def _store_spy(store: TwoHostRecipeStore, monkeypatch) -> ThreadSpy:
     spy = ThreadSpy(monkeypatch)
-    for attr in ("load_recipes", "save_recipes", "mark_stale", "_atomic_write_json",
+    for attr in ("load_recipes", "save_recipes", "mark_stale", "record_replay_ok", "_atomic_write_json",
                  "record_stale_status", "clear_stale_status"):
         spy.wrap(rec, attr)
     # Every dealer_recipes / scan_hints round trip opens a connection here.
@@ -156,20 +156,25 @@ def _store_spy(store: TwoHostRecipeStore, monkeypatch) -> ThreadSpy:
 
 _WRITE_BACK = {"recipes.load_recipes", "recipes.save_recipes", "recipes._atomic_write_json", "recipe_store._conn"}
 
+# mark_stale is key-scoped (P7.3): one compare-and-set on the store, no save of the whole set.
+_MARK_STALE = _WRITE_BACK - {"recipes.save_recipes"}
+# A replay success is key-scoped too (P7.4): record_replay_ok, no whole-set save.
+_REPLAY_OK = _MARK_STALE | {"recipes.record_replay_ok", "recipes.clear_stale_status"}
+
 REPLAY_CASES = {
     # name: (seeded recipe kwargs, replay status, union, store calls that must happen,
     #        "hit" or the stale_reason the replay leaves on file)
-    "first_hit_success": ({}, 200, False, _WRITE_BACK | {"recipes.clear_stale_status"}, "hit"),
-    "union_success": ({}, 200, True, _WRITE_BACK | {"recipes.clear_stale_status"}, "hit"),
+    "first_hit_success": ({}, 200, False, _REPLAY_OK, "hit"),
+    "union_success": ({}, 200, True, _REPLAY_OK, "hit"),
     "stale_recipe_answers_again": (
         {"stale": True, "stale_reason": "http_401"}, 200, False,
-        _WRITE_BACK | {"recipes.clear_stale_status"}, "hit",
+        _REPLAY_OK, "hit",
     ),
     "auth_dead_marks_stale": (
-        {}, 401, False, _WRITE_BACK | {"recipes.mark_stale", "recipes.record_stale_status"}, "http_401",
+        {}, 401, False, _MARK_STALE | {"recipes.mark_stale", "recipes.record_stale_status"}, "http_401",
     ),
     "unparseable_post_template": (
-        {"post_template": '{"page":1,"perPage":'}, 200, False, _WRITE_BACK | {"recipes.mark_stale"},
+        {"post_template": '{"page":1,"perPage":'}, 200, False, _MARK_STALE | {"recipes.mark_stale"},
         "unreplayable_post_template",
     ),
 }

@@ -54,7 +54,10 @@ def candidates(only: list[str] | None = None) -> list[dict[str, Any]]:
             hints = json.loads(r.get("scan_hints") or "{}") or {}
         except ValueError:
             hints = {}
-        out.append({"dealer_id": did, "recipes": len(recipes), "recipe_status": str(hints.get("recipe_status") or "")})
+        # Both the legacy status (blocked:<tag>:...) and the per-host recipe_blocked map (P7.6).
+        blocked = sorted((hints.get("recipe_blocked") or {}))
+        out.append({"dealer_id": did, "recipes": len(recipes), "recipe_status": str(hints.get("recipe_status") or ""),
+                    "blocked_hosts": blocked})
     return out
 
 
@@ -71,7 +74,7 @@ def main(argv: list[str] | None = None) -> int:
     print(f"{len(cands)} dealer(s) with only auth-staled recipes")
     if not args.apply:
         for c in cands:
-            print(f"  {c['dealer_id']:40s} recipes={c['recipes']} status={c['recipe_status']}")
+            print(f"  {c['dealer_id']:40s} recipes={c['recipes']} status={c['recipe_status']} blocked={','.join(c['blocked_hosts'])}")
         return 0
 
     from backend.scanner.recipes import load_recipes, try_fetch_via_recipes

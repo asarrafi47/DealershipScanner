@@ -28,7 +28,7 @@ dealer-observed engine text (`backend/utils/engine_consistency.py`).
 | 5 | Safety & recalls cache | (yr/make/model) ratings; VIN campaigns | future — cache the live NHTSA calls |
 | 6 | Options/packages catalog | trim → option codes / MSRP | future — hardest to keep clean, last |
 | 7 | Dealer registry + quality metrics | dealership | exists (`dealership_registry`, reviews) |
-| 8 | **Scan recipes + per-dealer scan hints** — `dealer_recipes` (HTTP replay shortcuts, stale/health state, `scan_hints` instructions) | dealer_id | **built 2026-07-19**; `workspace/recipes/` files stay the local hot cache, and `load_recipes` / `save_recipes` (`backend/scanner/recipes.py`) keep each dealer's set in step with its row by a last-write stamp, so recipes follow the dealer to any machine (see "Recipe cache and store sync" below) |
+| 8 | **Scan recipes + per-dealer scan hints** — `dealer_recipes` (HTTP replay shortcuts, stale/health state, `scan_hints` instructions) | dealer_id | **built 2026-07-19**; `workspace/recipes/` files stay the local hot cache, and `load_recipes` / `save_recipes` (`backend/scanner/recipes.py`) keep the cache in step with the row, which is the authority since N13 (P7), so recipes follow the dealer to any machine (see "Recipe cache and store sync" below) |
 
 ### Per-dealer scan hints (`dealer_recipes.scan_hints`)
 
@@ -57,11 +57,13 @@ value is in the joins.
 docs/REMEDIATION_PLAN_2026_10.md Phase 1B (units P1B.2, P1B.3 and P1B.6), not a
 phase of the catalog plan below.*
 
-Each dealer's recipe set lives twice: as its `dealer_recipes` row (the store)
-and as a file in each scanning host's cache. `load_recipes` and `save_recipes`
-in `backend/scanner/recipes.py` keep the two in step.
-`backend/scanner/recipe_store.py` reads and writes rows exactly as given and
-never stamps them.
+Each dealer's recipe set lives twice: as its `dealer_recipes` row (the store, the
+authority since N13 Phase 7) and as a file in each scanning host's cache. `load_recipes`
+and the write API in `backend/scanner/recipes.py` keep the file a mirror of the row.
+`backend/scanner/recipe_store.py` reads and writes rows exactly as given and never
+stamps them. The sections below are written in the order the code changed: the cache
+mechanics and the Phase 0 stamp history first, then the authority model that replaced the
+Phase 0 sync rule, then the rollback runbook.
 
 - **Cache dir.** `<repo>/workspace/recipes/<dealer_id>.json`, anchored at the
   repo root, never the process cwd (`/app/workspace/recipes` on Railway, where
@@ -78,7 +80,8 @@ never stamps them.
   cascade and synthesize. A copy's freshness is its max `saved_at`. The stamp
   stays a per-write stamp in later phases, because hosts that run older code
   still compare it.
-- **The sync rule** (`load_recipes`) compares the file's max `saved_at` with
+- **The Phase 0 sync rule (replaced by the authority model below; kept for hosts still
+  running that code)** (`load_recipes`) compared the file's max `saved_at` with
   the row's `max_saved_at`:
   - the row is newer: another host wrote the set since. The row wins and is
     written into the cache as it is;
@@ -108,7 +111,7 @@ never stamps them.
   its store, until the row is backfilled from its `last_ok_at` (remediation
   plan P1C.3 locally, P6B.2 on prod). Run that backfill against a store only
   once every host that writes the store runs Phase 0 code.
-- **The push-up warning.** A push-up logs one WARNING:
+- **The push-up warning (Phase 0 code only; the authority model has no push-up).** A push-up logged one WARNING:
   `Recipes [<dealer>]: local cache is newer than dealer_recipes; pushed N file
   recipe(s) (max saved_at S) up and overwrote the DB copy of M recipe(s) (max
   saved_at D)`, or `... up and no DB copy was read`. Under Phase 0 code it
@@ -136,6 +139,89 @@ never stamps them.
   refuse to apply unless the verdict is `match` or `untagged`. The full
   rules are in docs/RAILWAY_SCANNING.md, "The recipe cache is tagged with its
   store".
+
+#### Authority model (N13 Phase 7, P7.1 to P7.8)
+
+The `dealer_recipes` row is the authority for a dealer's recipes; the cache file is a
+mirror. Migration V034 (the plan said V031; V034 was the next free number) adds three
+columns; the rest is code in `recipe_store.py`, `recipe_cache.py` and `recipes.py`.
+
+- **`rev` and compare-and-set.** Every write (recipes or `scan_hints`) goes through
+  `db_mutate` / `mutate_scan_hints`: read the row, compute the change, then
+  `UPDATE ... SET ..., rev = rev + 1 WHERE dealer_id = ? AND rev = <rev read>`. A write that
+  changed no row lost a race; it re-reads and recomputes (bounded retries, counted by
+  `store_stats()`). Two hosts can no longer overwrite each other's recipes silently, and a
+  first-insert race has exactly one winner.
+- **`recipes_written_at`.** Stamped by recipe writes only (a hint write bumps `rev` and
+  leaves it). 0 means the row holds no recipes of its own: a hints-only row holds `[]` and
+  is not authoritative, so it no longer hides an alias (renamed-slug) dealer's recipes.
+  Migration V034 stamped existing rows that held recipes from their own `max_saved_at`.
+- **Cache semantics.** `load_recipes` returns the row's recipes when the row is
+  authoritative and rewrites the cache file only if its content differs (atomic write, per-file
+  `flock` on `<slug>.json.lock`). A newer file never overwrites the row. With no
+  authoritative row, a cache file that has recipes seeds the store (only while the row still
+  holds none) and is returned. With the store unreachable the file is served as before.
+  Until `<cache>/_reconciled` names the current store (written by
+  `reconcile_recipe_store`), a differing cache file is copied to
+  `workspace/backups/recipe_cache_differing` before the row's copy replaces it. A cache
+  tagged for another store stays read-only, as described above.
+- **Key-scoped mutations.** `mark_stale` (with `observed_at`, taken before the request, so
+  another host's later success outranks the failure), `record_replay_ok`, `merge_recipes`
+  (promotion's merge/rank/cap rules, applied to the row as it is when the write lands) and
+  `replace_recipes` each touch one recipe key inside the compare-and-set, and stamp that
+  recipe's `mutated_at` and the per-write `saved_at`. No code loads a set and saves it back.
+- **Offline op-log.** An op the store cannot take is appended to
+  `workspace/recipes/_pending/<store fingerprint>/<slug>` (one JSON object per line) and
+  applied to the cache file; the next load that reaches the same store replays the ops, not a
+  snapshot, so another host's newer edits survive. The fingerprint directory keeps an entry
+  from being replayed against a different store.
+- **Archive.** `replace_recipes(reason)` (`synth:force`, `synth:cc_section_scoped`,
+  `synth:cosmos_single_section`) moves each recipe it replaces into `superseded_json` as
+  `{key, recipe, superseded_at, reason}` in the same compare-and-set. Entries are pruned
+  after 30 days. `python -m backend.scripts.restore_superseded_recipes <dealer_id>` lists
+  them (dry run) and `--index N --apply` restores one. The archive is never in `recipes_json`;
+  consumers read `recipes_json` only. `cascade_recipes` and `synthesize_recipes` merge through
+  `merge_recipes` instead of overwriting.
+- **Per-host blocked status (D-RS4).** A tagged host (`SCANNER_EGRESS_TAG`, e.g. Railway)
+  writes `scan_hints.recipe_blocked[<tag>]` and leaves `recipe_status` alone;
+  `clear_stale_status` clears only its own tag's entry; `route_verdict` reads
+  `recipe_blocked[egress_tag()]` and still honours a legacy `blocked:<tag>:` status;
+  `lifecycle_last_attempt@<tag>` keys the daily attempt per host class. A Railway 403 never
+  stales the home lane's recipe.
+- **Reconcile tool.** `backend/scripts/reconcile_recipe_store.py` settles drift per recipe
+  rather than per set: `--cache-dir` (file to DB), `--source-dsn S --target-dsn T` (DB to
+  DB), `--compare-cache DIR --target-dsn T` (read-only sample of 10 dealers), dry run by
+  default, `--apply` writes through `db_mutate` after backups, `--restore RUN_DIR` undoes an
+  apply. It writes `_reconciled` for the store once a cache has been reconciled.
+
+Still true from Phase 0: `saved_at` stays a per-write stamp and `max_saved_at` its max
+(hosts on older code compare them; the backcompat test
+`backend/tests/test_recipe_store_backcompat.py` pins this), the `recipes_json` row schema only
+gains the optional `mutated_at` key, and `updated_at` is never a freshness stamp.
+
+#### Rollback (recipe store authority)
+
+Use this if the N13 code must come out after a release. V034 is additive and stays.
+
+1. **Stop the fleets.** Pause every writer of the store (home lane, Railway scanner-nightly,
+   the mini) so no host writes mid-rollback. No scan or pipeline may run until step 4.
+2. **Revert to the previous tag** on each host (`deploy/railway/deploy_scanner_nightly.sh`
+   from that tag for Railway). The older code reads `recipes_json` and `max_saved_at` only,
+   which this phase keeps current on every write, and ignores `rev`, `recipes_written_at`,
+   `superseded_json` and the extra `mutated_at` key. Its writes do not bump `rev`; that is
+   harmless, because the next N13 write reads the row fresh.
+3. **Keep V034.** Do not drop the columns: they are additive, defaulted, and rolling forward
+   again needs them. Archived entries stay in `superseded_json`, invisible to older code.
+4. **Replay or archive every `_pending` dir before deleting it.** Each
+   `workspace/recipes/_pending/<store fingerprint>/<slug>` holds ops the store never took. With
+   the N13 code still importable (a scratch checkout of the N13 tag), run one `load_recipes`
+   per dealer with the pending file, against the store whose fingerprint names the directory,
+   to replay it; otherwise move the directory to `workspace/backups/` with its date. Never
+   delete one unread, and never replay it against a different store.
+5. **Check, then resume.** Run `python -m backend.scanner.recipes --status` on each cache
+   (expect `match`), compare the volume cache with prod via
+   `reconcile_recipe_store --compare-cache <dir> --target-dsn <prod>` (read only), and restart
+   one host before the rest.
 
 ## Phase 1 (this change)
 
