@@ -48,15 +48,12 @@ async def recover(
 
     return await recover_inventory(
         RecoveryContext(
-            page=run.page,
             base_url=run.url,
             dealer_id=run.dealer_id,
             dealer_name=run.name,
             dealer_url=run.url,
             provider=run.provider,
             intercept_records=run.intercept_records,
-            # No HTML pages are captured on any scan path (the SRP scrape is gone).
-            path_htmls=[],
             vehicles=feed_rows,
             parse_fn=parse_fn,
             dealer=run.dealer,

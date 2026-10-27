@@ -66,14 +66,26 @@ def test_fetch_chains_have_no_browser_stage_by_default(monkeypatch):
     assert chain.default_fetchers()[-1].name == chain.PlaywrightFetcher().name
 
 
-def test_recovery_runs_only_http_safe_strategies_without_a_page(monkeypatch):
+def test_recovery_chain_runs_http_strategies_without_playwright(monkeypatch):
     from backend.scanner import inventory_recovery as ir
 
     monkeypatch.delenv("SCANNER_ALLOW_BROWSER", raising=False)
-    assert ir.HTTP_SAFE_STRATEGIES <= set(ir.RECOVERY_STRATEGY_ORDER)
-    ctx = ir.RecoveryContext(page=None, base_url="https://x.example", dealer_id="x-example", dealer_name="X", dealer_url="https://x.example",
-                             provider="dealer_dot_com", intercept_records=[], path_htmls=[], vehicles=[], parse_fn=lambda raw: [], dealer={})
-    assert asyncio.run(ir._html_and_next_data(ctx)) == []
+    calls: list[str] = []
+
+    async def fake_results(base_url, dealer_id, dealer_name, dealer_url):
+        calls.append(base_url)
+        return [{"vin": f"1HGBH41JXMN{i:06d}", "price": 20000} for i in range(10)]
+
+    from backend.scanner.scrapers import dealer_eprocess as dep
+
+    monkeypatch.setattr(dep, "_fetch_results_api", fake_results)
+    monkeypatch.setattr(ir, "get_cached_winning_strategy", lambda dealer_id: None)
+    monkeypatch.setattr(ir, "record_winning_strategy", lambda *a, **k: None)
+    ctx = ir.RecoveryContext(base_url="https://x.example", dealer_id="x-example", dealer_name="X", dealer_url="https://x.example",
+                             provider="dealer_eprocess", intercept_records=[], vehicles=[], parse_fn=lambda raw: [], dealer={})
+    res = asyncio.run(ir.recover_inventory(ctx))
+    assert calls == ["https://x.example"]
+    assert res.winning_strategy == "dealer_eprocess_json" and len(res.vehicles) == 10
 
 
 def test_eprocess_without_page_uses_results_api_only(monkeypatch):

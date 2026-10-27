@@ -43,8 +43,6 @@
       "https://www.claremontcdjr.com/api/unstamped_account",
       "https://www.claremontcdjr.com/api/dup"
      ],
-     "page": null,
-     "path_htmls": [],
      "provider": "carscommerce",
      "vins": [
       "00KCN000000000001",
@@ -1064,8 +1062,6 @@
       "https://www.grandhyundaicanton.com/api/store_scoped_location_facet",
       "https://www.grandhyundaicanton.com/api/dup"
      ],
-     "page": null,
-     "path_htmls": [],
      "provider": "carscommerce",
      "vins": [
       "00GHC000000000001",
@@ -2046,8 +2042,6 @@
       "https://www.greenwaycdjrofrome.com/api/store_scoped_recipe",
       "https://www.greenwaycdjrofrome.com/api/dup"
      ],
-     "page": null,
-     "path_htmls": [],
      "provider": "carscommerce",
      "vins": [
       "00GWR000000000001",
@@ -3077,8 +3071,6 @@
       "https://www.group1fordofsouthaustin.com/api/store_scoped_location_facet",
       "https://www.group1fordofsouthaustin.com/api/dup"
      ],
-     "page": null,
-     "path_htmls": [],
      "provider": "carscommerce",
      "vins": [
       "00GFS000000000001",
@@ -4270,8 +4262,6 @@
       "https://www.group1toyotanorthaustin.com/api/store_scoped_location_facet",
       "https://www.group1toyotanorthaustin.com/api/dup"
      ],
-     "page": null,
-     "path_htmls": [],
      "provider": "carscommerce",
      "vins": [
       "00GTJ000000000001",
@@ -5795,8 +5785,6 @@
       "https://www.hendrickbuickgmccary.com/api/store_scoped_recipe",
       "https://www.hendrickbuickgmccary.com/api/dup"
      ],
-     "page": null,
-     "path_htmls": [],
      "provider": "carscommerce",
      "vins": [
       "00HBC000000000001",
@@ -6915,8 +6903,6 @@
       "https://www.hendrickhonda.com/api/union_pass_with_street",
       "https://www.hendrickhonda.com/api/dup"
      ],
-     "page": null,
-     "path_htmls": [],
      "provider": "carscommerce",
      "vins": [
       "00HHC000000000001",
@@ -7094,8 +7080,6 @@
       "https://www.hondahuntersville.com/api/group_wide_source_never_vouches",
       "https://www.hondahuntersville.com/api/dup"
      ],
-     "page": null,
-     "path_htmls": [],
      "provider": "carscommerce",
      "vins": [
       "00HHN000000000001",
@@ -8356,8 +8340,6 @@
       "https://www.machaikchevy.com/api/open_group_page_named",
       "https://www.machaikchevy.com/api/dup"
      ],
-     "page": null,
-     "path_htmls": [],
      "provider": "carscommerce",
      "vins": [
       "00MHC000000000001",
@@ -9388,8 +9370,6 @@
       "https://www.mallofgamazda.com/api/store_scoped_recipe",
       "https://www.mallofgamazda.com/api/dup"
      ],
-     "page": null,
-     "path_htmls": [],
      "provider": "carscommerce",
      "vins": [
       "00MZA000000000001",
@@ -10494,8 +10474,6 @@
       "https://www.rickhendrickchevynaples.com/api/store_scoped_recipe",
       "https://www.rickhendrickchevynaples.com/api/dup"
      ],
-     "page": null,
-     "path_htmls": [],
      "provider": "carscommerce",
      "vins": [
       "00NAP000000000001",
@@ -11539,8 +11517,6 @@
       "https://www.shottenkirkchrysler.com/api/sibling_with_locale",
       "https://www.shottenkirkchrysler.com/api/dup"
      ],
-     "page": null,
-     "path_htmls": [],
      "provider": "typesense",
      "vins": [
       "00SCC000000000001",
@@ -12534,8 +12510,6 @@
       "https://www.stevensonhendrickhonda.com/api/store_scoped_recipe",
       "https://www.stevensonhendrickhonda.com/api/dup"
      ],
-     "page": null,
-     "path_htmls": [],
      "provider": "carscommerce",
      "vins": [
       "00SHA000000000001",
@@ -13659,8 +13633,6 @@
       "https://www.tuttoncdjr.com/api/store_scoped_recipe",
       "https://www.tuttoncdjr.com/api/dup"
      ],
-     "page": null,
-     "path_htmls": [],
      "provider": "carscommerce",
      "vins": [
       "00TCA000000000001",
@@ -14853,8 +14825,6 @@
       "https://www.claremontcdjr.com/api/unstamped_account",
       "https://www.claremontcdjr.com/api/dup"
      ],
-     "page": null,
-     "path_htmls": [],
      "provider": "carscommerce",
      "vins": [
       "00KCN000000000001",
@@ -15889,8 +15859,6 @@
       "https://www.grandhyundaicanton.com/api/store_scoped_location_facet",
       "https://www.grandhyundaicanton.com/api/dup"
      ],
-     "page": null,
-     "path_htmls": [],
      "provider": "carscommerce",
      "vins": [
       "00GHC000000000001",
@@ -16871,8 +16839,6 @@
       "https://www.greenwaycdjrofrome.com/api/store_scoped_recipe",
       "https://www.greenwaycdjrofrome.com/api/dup"
      ],
-     "page": null,
-     "path_htmls": [],
      "provider": "carscommerce",
      "vins": [
       "00GWR000000000001",
@@ -17902,8 +17868,6 @@
       "https://www.group1fordofsouthaustin.com/api/store_scoped_location_facet",
       "https://www.group1fordofsouthaustin.com/api/dup"
      ],
-     "page": null,
-     "path_htmls": [],
      "provider": "carscommerce",
      "vins": [
       "00GFS000000000001",
@@ -19099,8 +19063,6 @@
       "https://www.group1toyotanorthaustin.com/api/store_scoped_location_facet",
       "https://www.group1toyotanorthaustin.com/api/dup"
      ],
-     "page": null,
-     "path_htmls": [],
      "provider": "carscommerce",
      "vins": [
       "00GTJ000000000001",
@@ -20627,8 +20589,6 @@
       "https://www.hendrickbuickgmccary.com/api/store_scoped_recipe",
       "https://www.hendrickbuickgmccary.com/api/dup"
      ],
-     "page": null,
-     "path_htmls": [],
      "provider": "carscommerce",
      "vins": [
       "00HBC000000000001",
@@ -21748,8 +21708,6 @@
       "https://www.hendrickhonda.com/api/union_pass_with_street",
       "https://www.hendrickhonda.com/api/dup"
      ],
-     "page": null,
-     "path_htmls": [],
      "provider": "carscommerce",
      "vins": [
       "00HHC000000000001",
@@ -21927,8 +21885,6 @@
       "https://www.hondahuntersville.com/api/group_wide_source_never_vouches",
       "https://www.hondahuntersville.com/api/dup"
      ],
-     "page": null,
-     "path_htmls": [],
      "provider": "carscommerce",
      "vins": [
       "00HHN000000000001",
@@ -23204,8 +23160,6 @@
       "https://www.machaikchevy.com/api/open_group_page_named",
       "https://www.machaikchevy.com/api/dup"
      ],
-     "page": null,
-     "path_htmls": [],
      "provider": "carscommerce",
      "vins": [
       "00MHC000000000001",
@@ -24236,8 +24190,6 @@
       "https://www.mallofgamazda.com/api/store_scoped_recipe",
       "https://www.mallofgamazda.com/api/dup"
      ],
-     "page": null,
-     "path_htmls": [],
      "provider": "carscommerce",
      "vins": [
       "00MZA000000000001",
@@ -25342,8 +25294,6 @@
       "https://www.rickhendrickchevynaples.com/api/store_scoped_recipe",
       "https://www.rickhendrickchevynaples.com/api/dup"
      ],
-     "page": null,
-     "path_htmls": [],
      "provider": "carscommerce",
      "vins": [
       "00NAP000000000001",
@@ -26387,8 +26337,6 @@
       "https://www.shottenkirkchrysler.com/api/sibling_with_locale",
       "https://www.shottenkirkchrysler.com/api/dup"
      ],
-     "page": null,
-     "path_htmls": [],
      "provider": "typesense",
      "vins": [
       "00SCC000000000001",
@@ -27386,8 +27334,6 @@
       "https://www.stevensonhendrickhonda.com/api/store_scoped_recipe",
       "https://www.stevensonhendrickhonda.com/api/dup"
      ],
-     "page": null,
-     "path_htmls": [],
      "provider": "carscommerce",
      "vins": [
       "00SHA000000000001",
@@ -28512,8 +28458,6 @@
       "https://www.tuttoncdjr.com/api/store_scoped_recipe",
       "https://www.tuttoncdjr.com/api/dup"
      ],
-     "page": null,
-     "path_htmls": [],
      "provider": "carscommerce",
      "vins": [
       "00TCA000000000001",
@@ -29751,8 +29695,6 @@
      "dealer_name": "Empty",
      "dealer_url": "https://www.empty.com",
      "intercepts": [],
-     "page": null,
-     "path_htmls": [],
      "provider": "dealer_dot_com",
      "vins": []
     }
@@ -29887,8 +29829,6 @@
      "intercepts": [
       "https://t/api"
      ],
-     "page": null,
-     "path_htmls": [],
      "provider": "dealer_eprocess",
      "vins": [
       "00TCA000000000001",
@@ -30997,8 +30937,6 @@
      "intercepts": [
       "https://www.lexusofknoxville.com/api/inv"
      ],
-     "page": null,
-     "path_htmls": [],
      "provider": "dealer_eprocess",
      "vins": []
     }
@@ -32492,8 +32430,6 @@
      "dealer_name": "Lexus of Knoxville",
      "dealer_url": "https://www.lexusofknoxville.com",
      "intercepts": [],
-     "page": null,
-     "path_htmls": [],
      "provider": "dealer_eprocess",
      "vins": []
     }
@@ -34012,8 +33948,6 @@
      "dealer_name": "Lexus of Knoxville",
      "dealer_url": "https://www.lexusofknoxville.com",
      "intercepts": [],
-     "page": null,
-     "path_htmls": [],
      "provider": "dealer_eprocess",
      "vins": []
     }
@@ -34348,8 +34282,6 @@
      "dealer_name": "Empty",
      "dealer_url": "https://www.empty.com",
      "intercepts": [],
-     "page": null,
-     "path_htmls": [],
      "provider": "dealer_dot_com",
      "vins": []
     }
@@ -34475,8 +34407,6 @@
      "dealer_name": "Lexus of Knoxville",
      "dealer_url": "https://www.lexusofknoxville.com",
      "intercepts": [],
-     "page": null,
-     "path_htmls": [],
      "provider": "dealer_eprocess",
      "vins": []
     }
@@ -34574,8 +34504,6 @@
       "https://www.tuttoncdjr.com/api/open_page_with_jsonld_street",
       "https://www.tuttoncdjr.com/api/store_scoped_recipe"
      ],
-     "page": null,
-     "path_htmls": [],
      "provider": "carscommerce",
      "vins": [
       "00TCA000000000001",
@@ -35812,8 +35740,6 @@
      "dealer_name": "Lexus of Knoxville",
      "dealer_url": "https://www.lexusofknoxville.com",
      "intercepts": [],
-     "page": null,
-     "path_htmls": [],
      "provider": "dealer_eprocess",
      "vins": []
     }

@@ -191,10 +191,9 @@ class Harness:
 
         async def _recover(ctx):
             h.ev("recover_inventory.ctx", {
-                "page": None if ctx.page is None else type(ctx.page).__name__,
                 "base_url": ctx.base_url, "dealer_id": ctx.dealer_id, "dealer_name": ctx.dealer_name,
                 "dealer_url": ctx.dealer_url, "provider": ctx.provider,
-                "intercepts": [u for u, _ in ctx.intercept_records], "path_htmls": ctx.path_htmls,
+                "intercepts": [u for u, _ in ctx.intercept_records],
                 "vins": [v.get("vin") for v in ctx.vehicles],
                 "dealer_keys": sorted((ctx.dealer or {}).keys()),
             })
