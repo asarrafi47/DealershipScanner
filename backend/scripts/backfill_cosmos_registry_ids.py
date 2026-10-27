@@ -9,7 +9,7 @@ the active cars with no registry id get one from, in order:
 2. the registry row whose website host equals the cars' ``dealer_url`` host, only when
    that host names ONE store (``registry_id_by_dealer_host``).
 
-A shared host with no stamped sibling, a host with no registry row, and a dealer whose
+A shared host with no stamped sibling, a host with no registry row, a registry row that is not an active dealership, and a dealer whose
 cars resolve to more than one id are reported and left alone: never a host guess.
 
 DRY RUN BY DEFAULT. ``--apply`` writes and needs an owner-approved diff and a backup.
@@ -43,7 +43,7 @@ class DealerPlan:
     unlinked: int
     registry_id: int | None = None
     source: str = ""        # "stamped_siblings" | "host"
-    skipped: str = ""       # "shared_host" | "no_registry_row" | "ambiguous" | "no_url"
+    skipped: str = ""       # "shared_host" | "no_registry_row" | "ambiguous" | "no_url" | "inactive_registry"
 
 
 @dataclass
@@ -71,13 +71,22 @@ def cosmos_dealer_ids(conn: Any) -> list[str]:
     return [str(_cell(r, 0, "dealer_id")) for r in cur.fetchall() if _cell(r, 0, "dealer_id")]
 
 
+def active_registry_ids(conn: Any) -> set[int]:
+    cur = conn.cursor()
+    cur.execute("SELECT id FROM dealerships WHERE COALESCE(is_active, 1) = 1")
+    return {int(_cell(r, 0, "id")) for r in cur.fetchall() if _cell(r, 0, "id") is not None}
+
+
 def build_plan(conn: Any) -> Plan:
     plan = Plan()
     dealer_ids = cosmos_dealer_ids(conn)
     plan.cosmos_dealers = len(dealer_ids)
     if not dealer_ids:
         return plan
-    stamped = {did: rid for rid, did in registry_dealer_ids(conn).items()}
+    stamped: dict[str, set[int]] = {}
+    for rid, sdid in registry_dealer_ids(conn).items():
+        stamped.setdefault(sdid, set()).add(rid)
+    active = active_registry_ids(conn)
     by_host = registry_id_by_dealer_host(conn)
     shared = shared_registry_hosts(conn)
     cur = conn.cursor()
@@ -95,7 +104,13 @@ def build_plan(conn: Any) -> Plan:
         d = DealerPlan(dealer_id=did, unlinked=n)
         plan.dealers.append(d)
         if did in stamped:
-            d.registry_id, d.source = stamped[did], "stamped_siblings"
+            ids = stamped[did]
+            if len(ids) > 1:
+                d.skipped = "ambiguous"  # its cars map to several registry ids: no guess
+            elif not ids <= active:
+                d.skipped = "inactive_registry"
+            else:
+                d.registry_id, d.source = next(iter(ids)), "stamped_siblings"
             continue
         hosts = {normalize_dealer_host(u) for u, _ in rows if u}
         hosts.discard("")
@@ -106,7 +121,10 @@ def build_plan(conn: Any) -> Plan:
         else:
             ids = {by_host[h] for h in hosts if h in by_host}
             if len(ids) == 1 and all(h in by_host for h in hosts):
-                d.registry_id, d.source = ids.pop(), "host"
+                if ids <= active:
+                    d.registry_id, d.source = ids.pop(), "host"
+                else:
+                    d.skipped = "inactive_registry"
             else:
                 d.skipped = "ambiguous" if ids else "no_registry_row"
     return plan
