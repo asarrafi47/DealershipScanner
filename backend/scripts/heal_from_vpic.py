@@ -31,6 +31,7 @@ def main() -> int:
     g.add_argument("--all", action="store_true", help="every active row")
     ap.add_argument("--decode", action="store_true", help="decode VINs missing from nhtsa_vpic_cache first (network)")
     ap.add_argument("--dry-run", action="store_true")
+    ap.add_argument("--fields", help="comma-separated columns to heal (drivetrain,fuel_type,cylinders,engine_description,body_style)")
     args = ap.parse_args()
     dealers = [d.strip() for d in (args.dealers or "").split(",") if d.strip()]
     conn = get_conn()
@@ -45,7 +46,8 @@ def main() -> int:
             cur.execute(f"SELECT vin FROM cars WHERE {where}", params)
             vins = [r[0] for r in cur.fetchall()]
             print("decode:", json.dumps(decode_missing_vins(conn, vins)))
-        stats = heal_rows(conn, dealers=dealers or None, dry_run=args.dry_run)
+        fields = [f.strip() for f in (args.fields or "").split(",") if f.strip()] or None
+        stats = heal_rows(conn, dealers=dealers or None, dry_run=args.dry_run, fields=fields)
         ex = stats.pop("examples", [])
         print(("DRY RUN " if args.dry_run else "") + json.dumps(stats))
         for e in ex:

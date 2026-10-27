@@ -14,7 +14,11 @@ Three call sites share this module:
     their rows;
   * fleet heal       (``backend/scripts/heal_from_vpic.py``).
 
-Provenance goes into ``spec_source_json`` under source ``nhtsa_vpic``.
+Provenance goes into ``spec_source_json`` under source ``nhtsa_vpic``, one entry
+per field with the written ``value`` (the stale-provenance rule in
+``backend/vehicle_facts/precedence.py`` needs it). Every accept / refuse decision
+below is made by that module (P8A.4): this file gathers the decode's candidates
+and persists the winners, it holds no rank rules of its own.
 
 Deliberately NOT overridden:
   * AWD vs 4WD: vPIC says "4WD" for Toyota's AWD crossovers; both mean all four
@@ -62,32 +66,55 @@ def _drive_same(a: str, b: str) -> bool:
     return same_drive_wheels(a, b)
 
 
-def vin_overrides(row: dict[str, Any], vpic: dict[str, Any] | None) -> dict[str, tuple[Any, str]]:
-    """{field: (old, new)} the decode would change on *row*. Empty when vPIC is
-    silent or agrees. Pure: does not mutate."""
+def _vin_decisions(row: dict[str, Any], vpic: dict[str, Any] | None) -> dict[str, Any]:
+    """{field: precedence.Decision} for every decode value that wins on *row*.
+
+    The candidates are the decode's stated drivetrain / electrification (or
+    diesel) / cylinders; whether each may replace the stored value is decided by
+    ``precedence.decide`` against the row's provenance (D-PR1/4/6/7)."""
     if not vpic:
         return {}
-    out: dict[str, tuple[Any, str]] = {}
+    from backend.vehicle_facts import precedence as prec
+    from backend.vehicle_facts.drivetrain import is_two_wheel_unknown
+
+    prov = row.get("spec_source_json")
+    ctx: dict[str, Any] = {"vpic": vpic, "engine_description": row.get("engine_description"),
+                           "fuel_type": row.get("fuel_type")}
+    out: dict[str, Any] = {}
+
+    def _take(field: str, candidate: Any) -> None:
+        d = prec.decide(field, row.get(field), prov, candidate, prec.NHTSA_VPIC, ctx)
+        if d.write:
+            out[field] = d
+
     vd = vpic.get("drivetrain")
+    raw = vpic.get("drive_type_raw") or vpic.get("drivetrain_raw")
+    if raw:
+        ctx["vpic_drive"] = raw
+    elif vd:
+        ctx["vpic_drive"] = vd
     if vd:
         cur_d = _drive_bucket(row.get("drivetrain"))
         if not cur_d or not _drive_same(cur_d, _drive_bucket(vd)):
-            out["drivetrain"] = (row.get("drivetrain"), vd)  # fill a blank, or fix a contradiction
+            _take("drivetrain", vd)  # fill a blank, or fix a contradiction
+    elif raw and is_two_wheel_unknown(raw):
+        _take("drivetrain", raw)  # "4x2": a constraint, never an end (D-PR1)
     el = vpic.get("electrification")
     if el in VPIC_FUEL_LABEL:
         want = VPIC_FUEL_LABEL[el]
         cur = str(row.get("fuel_type") or "").strip()
         if _fuel_bucket(cur) != _fuel_bucket(want):
-            out["fuel_type"] = (cur or None, want)
+            _take("fuel_type", want)
     elif el is None and str(vpic.get("fuel_type") or "") == "Diesel":
         cur = str(row.get("fuel_type") or "").strip()
         if _fuel_bucket(cur) in ("gas", ""):
-            out["fuel_type"] = (cur or None, "Diesel")
+            _take("fuel_type", "Diesel")
     # EngineCylinders: the stored column is the weakest fact on the row (a 2027
     # Buick Enclave 2.5T carried 6, a 2026 Sierra 2.7L I4 carried 8 — both from a
     # model-level backfill; verified 2026-09-25 on hendrickbuickgmccary-com /
     # longofathens-com). The decode is per VIN. EVs have no cylinders: skip when
-    # vPIC says it is an EV (electrification 'ev').
+    # vPIC says it is an EV (electrification 'ev'). The decode counts only while
+    # it does not contradict the engine text (D-PR7; precedence enforces it).
     try:
         vc = int(str(vpic.get("cylinders") or "").strip() or 0)
     except ValueError:
@@ -98,7 +125,21 @@ def vin_overrides(row: dict[str, Any], vpic: dict[str, Any] | None) -> dict[str,
         except (TypeError, ValueError):
             cur_c = 0
         if cur_c != vc:
-            out["cylinders"] = (row.get("cylinders"), vc)
+            if "fuel_type" in out:
+                ctx["fuel_type"] = out["fuel_type"].value
+            _take("cylinders", vc)
+    return out
+
+
+def vin_overrides(row: dict[str, Any], vpic: dict[str, Any] | None) -> dict[str, tuple[Any, str]]:
+    """{field: (old, new)} the decode would change on *row*. Empty when vPIC is
+    silent, agrees, or loses to a higher-ranked stored fact. Pure: does not mutate."""
+    out: dict[str, tuple[Any, Any]] = {}
+    for field, d in _vin_decisions(row, vpic).items():
+        old = row.get(field)
+        if field == "fuel_type":
+            old = str(old or "").strip() or None
+        out[field] = (old, d.value)
     return out
 
 
@@ -132,9 +173,34 @@ def override_vehicles(vehicles: list[dict[str, Any]]) -> dict[str, int]:
         if not vp or not any(vp.get(k) for k in ("drivetrain", "electrification", "fuel_type", "cylinders")):
             continue
         stats["cached"] += 1
-        for field in apply_vin_facts_to_row(v, vp):
+        decisions = _vin_decisions(v, vp)
+        changed = apply_vin_facts_to_row(v, vp)
+        for field in changed:
             stats[field] = stats.get(field, 0) + 1
+        if changed:
+            _stamp_provenance(v, changed, decisions)
     return stats
+
+
+def _stamp_provenance(v: dict[str, Any], changed: dict[str, tuple[Any, Any]], decisions: dict[str, Any]) -> None:
+    """Merge one ``nhtsa_vpic`` provenance entry per overridden field into
+    ``v['spec_source_json']`` so the upsert stores it, ``value`` included (the
+    stale-provenance rule reads it back)."""
+    from backend.utils.spec_provenance import merge_spec_source_json
+
+    existing = v.get("spec_source_json")
+    if isinstance(existing, dict):
+        existing = json.dumps(existing)
+    patch: dict[str, dict[str, Any]] = {}
+    for field, (old, new) in changed.items():
+        entry: dict[str, Any] = {"source": "nhtsa_vpic", "detail": "scan-time cached decode",
+                                 "previous": old, "value": new,
+                                 "fetched_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())}
+        d = decisions.get(field)
+        if d is not None and d.cannot_assess:
+            entry["cannot_assess"] = True
+        patch[field] = entry
+    v["spec_source_json"] = merge_spec_source_json(existing if isinstance(existing, str) else None, patch)
 
 
 # --------------------------------------------------------------------------
@@ -190,7 +256,8 @@ def decode_missing_vins(conn, vins: Iterable[str]) -> dict[str, int]:
                     "ON CONFLICT (vin) DO NOTHING",
                     (vin, json.dumps(payload), time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())),
                 )
-                stats["stored"] += 1
+                if cur.rowcount != 0:  # DO NOTHING on a concurrent insert reports 0
+                    stats["stored"] += 1
             except Exception as exc:  # noqa: BLE001
                 logger.debug("vPIC store %s failed: %s", vin, exc)
         conn.commit()
@@ -279,13 +346,24 @@ def derived_fills(row: dict[str, Any], vp: dict[str, Any] | None, flat: dict[str
 _HEAL_FLAT_CHUNK = 500  # rows whose raw vPIC decodes are held at once in heal_rows
 
 
+HEAL_FIELDS = ("drivetrain", "fuel_type", "cylinders", "engine_description", "body_style")
+
+
 def heal_rows(conn, *, vins: Iterable[str] | None = None, dealers: Iterable[str] | None = None,
-              dry_run: bool = False) -> dict[str, Any]:
+              dry_run: bool = False, fields: Iterable[str] | None = None) -> dict[str, Any]:
     """Store the decode's drivetrain / fuel / cylinders on active rows where it
-    differs, and fill empty engine_description / body_style from the decode."""
+    differs, and fill empty engine_description / body_style from the decode.
+
+    Commits after every ``_HEAL_FLAT_CHUNK`` rows (a long heal keeps its progress
+    and never holds one giant transaction). *fields* limits the heal to those
+    columns (a subset of ``HEAL_FIELDS``); every write is decided by
+    ``backend/vehicle_facts/precedence.py``."""
     from backend.enrichment.knowledge_engine import clear_vpic_lookup_cache, lookup_vpic_from_cache, prime_vpic_cache
     from backend.utils.spec_provenance import merge_spec_source_json
 
+    only = frozenset(fields) if fields is not None else None
+    if only is not None and not only <= set(HEAL_FIELDS):
+        raise ValueError(f"unknown heal fields: {sorted(only - set(HEAL_FIELDS))}")
     cur = conn.cursor()
     where = "COALESCE(listing_active,1)=1 AND vin IS NOT NULL AND length(vin)=17"
     params: list[Any] = []
@@ -314,7 +392,10 @@ def heal_rows(conn, *, vins: Iterable[str] | None = None, dealers: Iterable[str]
         need_flat = sorted({r["vin"] for r in chunk
                             if not str(r.get("engine_description") or "").strip() or not str(r.get("body_style") or "").strip()})
         flats = _vpic_flat_rows(conn, need_flat)
-        _heal_chunk(cur, chunk, flats, stats, dry_run, lookup_vpic_from_cache, merge_spec_source_json)
+        _heal_chunk(cur, chunk, flats, stats, dry_run, lookup_vpic_from_cache, merge_spec_source_json, only)
+        if not dry_run:
+            conn.commit()
+            stats["commits"] = stats.get("commits", 0) + 1
     touched = stats.pop("_touched", [])
     if not dry_run:
         conn.commit()
@@ -340,27 +421,51 @@ def _resync_incomplete_index(car_ids: list[int]) -> int:
 
 
 def _heal_chunk(cur, rows: list[dict[str, Any]], flats: dict[str, dict[str, str]], stats: dict[str, Any],
-                dry_run: bool, lookup_vpic_from_cache, merge_spec_source_json) -> None:
+                dry_run: bool, lookup_vpic_from_cache, merge_spec_source_json,
+                only: frozenset[str] | None = None) -> None:
     """heal_rows' per-row work for one chunk; ``flats`` holds only this chunk's raw decodes."""
+    from backend.vehicle_facts import precedence as prec
+
     for r in rows:
         vp = lookup_vpic_from_cache(r["vin"]) or {}
         flat = flats.get(r["vin"])
         if not any(vp.get(k) for k in ("drivetrain", "electrification", "fuel_type")) and not flat:
             continue
         stats["decoded"] += 1
-        ch = vin_overrides(r, vp)
-        ch.update(derived_fills(r, vp, flat))
+        decisions = _vin_decisions(r, vp)
+        ch = {f: (r.get(f) if f != "fuel_type" else (str(r.get(f) or "").strip() or None), d.value)
+              for f, d in decisions.items()}
+        sources = {f: "nhtsa_vpic" for f in ch}
+        cannot = {f for f, d in decisions.items() if d.cannot_assess}
+        for field, (old, text) in derived_fills(r, vp, flat).items():
+            if field == "engine_description":
+                d = prec.decide(field, r.get(field), r.get("spec_source_json"), text, prec.NHTSA_VPIC)
+                if not d.write:
+                    continue
+            ch[field] = (old, text)
+            sources[field] = "nhtsa_vpic"
         # A "4x2" decode says two driven wheels and nothing about the end; the
         # feed's "4x2"/"2WD" used to be written as FWD (468 Tacomas / Grand
         # Cherokees on RWD catalog rows, 2026-09-26). When the decode is silent on
         # the end, the linked catalog row's drive is the best evidence there is.
-        if "drivetrain" not in ch and str(vp.get("drive_type_raw") or vp.get("drivetrain_raw") or "").lower() in ("4x2", "2wd") or (
-            not vp.get("drivetrain") and str(r.get("drivetrain") or "").upper() in ("2WD", "FWD", "RWD", "")):
+        # Precedence (D-PR4) lets the tiebreak fill a 2WD / blank end only: it never
+        # touches an explicit dealer end or an all-wheel claim.
+        drive_raw = str(vp.get("drive_type_raw") or vp.get("drivetrain_raw") or "").lower()
+        if "drivetrain" not in ch and (
+            drive_raw in ("4x2", "2wd")
+            or (not vp.get("drivetrain") and str(r.get("drivetrain") or "").upper() in ("2WD", "FWD", "RWD", ""))
+        ):
             cat = _drive_bucket(r.get("catalog_drive"))
             cur_d = _drive_bucket(r.get("drivetrain"))
             if cat in ("FWD", "RWD") and cur_d != cat and cur_d not in ("AWD", "4WD"):
-                ch["drivetrain"] = (r.get("drivetrain"), cat)
-                stats["drivetrain_catalog_tiebreak"] = stats.get("drivetrain_catalog_tiebreak", 0) + 1
+                d = prec.decide("drivetrain", r.get("drivetrain"), r.get("spec_source_json"), cat,
+                                prec.EPA_TIEBREAK, {"vpic_drive": drive_raw or vp.get("drivetrain")})
+                if d.write:
+                    ch["drivetrain"] = (r.get("drivetrain"), d.value)
+                    sources["drivetrain"] = prec.EPA_TIEBREAK
+                    stats["drivetrain_catalog_tiebreak"] = stats.get("drivetrain_catalog_tiebreak", 0) + 1
+        if only is not None:
+            ch = {k: v for k, v in ch.items() if k in only}
         if not ch:
             continue
         for field in ch:
@@ -369,8 +474,11 @@ def _heal_chunk(cur, rows: list[dict[str, Any]], flats: dict[str, dict[str, str]
             stats["examples"].append({"vin": r["vin"], **{k: f"{o} -> {n}" for k, (o, n) in ch.items()}})
         if dry_run:
             continue
-        prov = {k: {"source": ("epa_catalog_tiebreak" if (k == "drivetrain" and n == _drive_bucket(r.get("catalog_drive")) and not vp.get("drivetrain")) else "nhtsa_vpic"),
-                    "detail": f"DecodeVINValuesBatch; feed said {o!r}"} for k, (o, n) in ch.items()}
+        now = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+        prov = {k: {"source": sources[k], "detail": f"DecodeVINValuesBatch; feed said {o!r}",
+                    "previous": o, "value": n, "fetched_at": now,
+                    **({"cannot_assess": True} if k in cannot else {})}
+                for k, (o, n) in ch.items()}
         new_src = merge_spec_source_json(r["spec_source_json"] if isinstance(r["spec_source_json"], str) else None, prov)
         sets = ", ".join(f"{k} = ?" for k in ch) + ", spec_source_json = ?"
         cur.execute(f"UPDATE cars SET {sets} WHERE id = ?", tuple(n for (_o, n) in ch.values()) + (new_src, r["id"]))
