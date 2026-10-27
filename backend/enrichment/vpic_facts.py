@@ -236,8 +236,10 @@ def fetch_vpic_batch(vins: list[str]) -> dict[str, dict]:
     return out
 
 
-def decode_missing_vins(conn, vins: Iterable[str]) -> dict[str, int]:
-    """Decode VINs absent from ``nhtsa_vpic_cache``. Idempotent."""
+def decode_missing_vins(conn, vins: Iterable[str], *, dry_run: bool = False) -> dict[str, int]:
+    """Decode VINs absent from ``nhtsa_vpic_cache``. Idempotent. A dry run only
+    counts: no network call and no cache write (``would_store`` = the VINs a real
+    run would decode)."""
     todo = sorted({str(v or "").strip().upper() for v in vins if _VIN_RE.match(str(v or "").strip().upper())})
     stats = {"requested": len(todo), "already_cached": 0, "stored": 0, "failed": 0}
     if not todo:
@@ -252,6 +254,9 @@ def decode_missing_vins(conn, vins: Iterable[str]) -> dict[str, int]:
         have.update(r[0] for r in cur.fetchall())
     stats["already_cached"] = len(have)
     missing = [v for v in todo if v not in have]
+    if dry_run:
+        stats["would_store"] = len(missing)
+        return stats
     for i in range(0, len(missing), _BATCH):
         chunk = missing[i:i + _BATCH]
         try:
@@ -274,6 +279,108 @@ def decode_missing_vins(conn, vins: Iterable[str]) -> dict[str, int]:
                 logger.debug("vPIC store %s failed: %s", vin, exc)
         conn.commit()
         time.sleep(_PAUSE_S)
+    return stats
+
+
+# ErrorCode values the decode may carry and still be a full decode: 0 clean,
+# 1 check digit off, 400 invalid character in the serial. Anything else (5, 14,
+# ...) is a partial decode, fetched early for a pre-release VIN (INCOMPLETE 2.12).
+_FULL_DECODE_CODES = frozenset({"0", "1", "400"})
+
+
+def _cache_text_time(raw: Any) -> float | None:
+    """Epoch seconds of a ``fetched_at`` value; the column mixes ``...Z`` and
+    ``YYYY-MM-DD HH:MM:SS+00`` text (and psycopg may hand back a datetime)."""
+    import calendar
+    from datetime import datetime
+
+    if isinstance(raw, datetime):
+        return raw.timestamp() if raw.tzinfo else calendar.timegm(raw.timetuple())
+    t = str(raw or "").strip().replace("Z", "+00:00").replace(" ", "T")
+    if not t:
+        return None
+    try:
+        dt = datetime.fromisoformat(t)
+    except ValueError:
+        return None
+    return dt.timestamp() if dt.tzinfo else calendar.timegm(dt.timetuple())
+
+
+def _is_partial_decode(row0: dict[str, Any]) -> bool:
+    codes = {c.strip() for c in str(row0.get("ErrorCode") or "").split(",") if c.strip()}
+    return bool(codes - _FULL_DECODE_CODES)
+
+
+def stale_decode_vins(conn, vins: Iterable[str], *, max_age_days: float | None = None, partial: bool = True,
+                      min_year: int | None = None, now: float | None = None) -> list[str]:
+    """Cached VINs worth decoding again: a partial decode (ErrorCode outside
+    0 / 1 / 400) and/or one fetched more than *max_age_days* ago, limited to model
+    years ``>= min_year`` when given (the decode of an old model year does not
+    change). Read-only."""
+    todo = sorted({str(v or "").strip().upper() for v in vins if _VIN_RE.match(str(v or "").strip().upper())})
+    now = time.time() if now is None else now
+    cur = conn.cursor()
+    out: list[str] = []
+    for i in range(0, len(todo), 900):
+        chunk = todo[i:i + 900]
+        cur.execute("SELECT vin, response_json, fetched_at FROM nhtsa_vpic_cache WHERE vin IN ("
+                    + ",".join("?" * len(chunk)) + ")", tuple(chunk))
+        for vin, raw, fetched in cur.fetchall():
+            try:
+                payload = json.loads(raw) if isinstance(raw, str) else (raw or {})
+                row0 = (payload.get("Results") or [{}])[0]
+            except (ValueError, AttributeError, IndexError, TypeError):
+                continue
+            if not isinstance(row0, dict):
+                continue
+            if min_year is not None:
+                try:
+                    if int(str(row0.get("ModelYear") or "0")) < min_year:
+                        continue
+                except ValueError:
+                    continue
+            if partial and _is_partial_decode(row0):
+                out.append(str(vin).upper())
+                continue
+            ts = _cache_text_time(fetched)
+            if max_age_days is not None and (ts is None or now - ts > max_age_days * 86400):
+                out.append(str(vin).upper())
+    return sorted(set(out))
+
+
+def refresh_decodes(conn, vins: Iterable[str], *, max_age_days: float | None = None, partial: bool = True,
+                    min_year: int | None = None, dry_run: bool = False) -> dict[str, int]:
+    """Decode again the cached VINs ``stale_decode_vins`` selects and replace their
+    cache row. A full decode is never replaced by a partial one. A dry run selects
+    and counts only: no network call, no cache write."""
+    from backend.enrichment.knowledge_engine import clear_vpic_lookup_cache
+
+    todo = stale_decode_vins(conn, vins, max_age_days=max_age_days, partial=partial, min_year=min_year)
+    stats = {"selected": len(todo), "refreshed": 0, "kept_full": 0, "failed": 0}
+    if dry_run or not todo:
+        return stats
+    cur = conn.cursor()
+    for i in range(0, len(todo), _BATCH):
+        chunk = todo[i:i + _BATCH]
+        try:
+            decoded = fetch_vpic_batch(chunk)
+        except Exception as exc:  # noqa: BLE001 - one bad batch must not stop the rest
+            stats["failed"] += len(chunk)
+            logger.warning("vPIC refresh batch %d failed: %s", i // _BATCH, str(exc)[:120])
+            time.sleep(_PAUSE_S)
+            continue
+        old = _vpic_flat_rows(conn, chunk)
+        for vin, payload in decoded.items():
+            new0 = (payload.get("Results") or [{}])[0]
+            if _is_partial_decode(new0) and vin in old and not _is_partial_decode(old[vin]):
+                stats["kept_full"] += 1
+                continue
+            cur.execute("UPDATE nhtsa_vpic_cache SET response_json = ?, fetched_at = ? WHERE vin = ?",
+                        (json.dumps(payload), time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()), vin))
+            stats["refreshed"] += 1
+        conn.commit()
+        time.sleep(_PAUSE_S)
+    clear_vpic_lookup_cache()  # the lookup memoises an empty decode for the process (INCOMPLETE 2.17)
     return stats
 
 

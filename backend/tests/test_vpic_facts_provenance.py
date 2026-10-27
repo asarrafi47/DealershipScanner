@@ -198,3 +198,67 @@ def test_decode_missing_vins_counts_real_inserts(conn, monkeypatch):
     monkeypatch.setattr(vf, "_PAUSE_S", 0)
     stats = vf.decode_missing_vins(conn, vins)
     assert stats["requested"] == 2 and stats["stored"] == 1
+
+
+# --- P8A.5: decode refresh; dry run writes nothing --------------------------
+
+def _cache(conn, vin, code, year="2027", fetched="2026-07-18T00:00:00Z", disp="2"):
+    payload = {"Results": [{"VIN": vin, "ErrorCode": code, "ModelYear": year, "DisplacementL": disp}]}
+    conn.execute("INSERT INTO nhtsa_vpic_cache (vin, response_json, fetched_at) VALUES (?, ?, ?)",
+                 (vin, json.dumps(payload), fetched))
+    conn.commit()
+
+
+def test_partial_decode_and_mixed_fetched_at_formats():
+    assert vf._is_partial_decode({"ErrorCode": "5,14"})
+    assert not vf._is_partial_decode({"ErrorCode": "1,400"})
+    assert not vf._is_partial_decode({"ErrorCode": "0"})
+    a = vf._cache_text_time("2026-07-18T00:00:00Z")
+    b = vf._cache_text_time("2026-07-18 00:00:00+00")
+    assert a == b and a is not None
+    assert vf._cache_text_time("") is None
+
+
+@pg
+def test_stale_selection_by_error_code_year_and_age(conn):
+    _cache(conn, "W1NKM4GB9VU154744", "5,14")                       # partial, MY2027
+    _cache(conn, "W1NKM4GB9VU154745", "0")                          # full, old
+    _cache(conn, "W1NKM4GB9VU154746", "0", fetched="2026-10-20T00:00:00Z")  # full, fresh
+    _cache(conn, "W1NKM4GB9TU154747", "5", year="2024")             # partial but old model year
+    vins = ["W1NKM4GB9VU154744", "W1NKM4GB9VU154745", "W1NKM4GB9VU154746", "W1NKM4GB9TU154747"]
+    now = vf._cache_text_time("2026-10-26T00:00:00Z")
+    assert vf.stale_decode_vins(conn, vins, min_year=2026, now=now) == ["W1NKM4GB9VU154744"]
+    assert vf.stale_decode_vins(conn, vins, partial=False, max_age_days=30, min_year=2026, now=now) == [
+        "W1NKM4GB9VU154744", "W1NKM4GB9VU154745"]
+
+
+@pg
+def test_dry_run_decode_and_refresh_write_nothing(conn, monkeypatch):
+    calls = []
+    monkeypatch.setattr(vf, "fetch_vpic_batch", lambda v: calls.append(v) or {})
+    _cache(conn, "W1NKM4GB9VU154744", "5,14")
+    before = conn.execute("SELECT count(*), max(fetched_at) FROM nhtsa_vpic_cache").fetchone()
+    miss = vf.decode_missing_vins(conn, ["W1NKM4GB9VU154744", "W1NKM4GB9VU154799"], dry_run=True)
+    assert miss["would_store"] == 1 and miss["stored"] == 0
+    ref = vf.refresh_decodes(conn, ["W1NKM4GB9VU154744"], dry_run=True)
+    assert ref["selected"] == 1 and ref["refreshed"] == 0
+    assert calls == []
+    assert conn.execute("SELECT count(*), max(fetched_at) FROM nhtsa_vpic_cache").fetchone() == before
+
+
+@pg
+def test_refresh_replaces_partial_but_never_a_full_decode(conn, monkeypatch):
+    monkeypatch.setattr(vf, "_PAUSE_S", 0)
+    monkeypatch.setattr("backend.enrichment.knowledge_engine.clear_vpic_lookup_cache", lambda: None)
+    _cache(conn, "W1NKM4GB9VU154744", "5,14", disp="")
+    good = {"Results": [{"VIN": "W1NKM4GB9VU154744", "ErrorCode": "0", "ModelYear": "2027", "DisplacementL": "2"}]}
+    monkeypatch.setattr(vf, "fetch_vpic_batch", lambda v: {"W1NKM4GB9VU154744": good})
+    st = vf.refresh_decodes(conn, ["W1NKM4GB9VU154744"], min_year=2026)
+    assert st["refreshed"] == 1
+    raw = conn.execute("SELECT response_json FROM nhtsa_vpic_cache WHERE vin=?", ("W1NKM4GB9VU154744",)).fetchone()[0]
+    assert json.loads(raw)["Results"][0]["ErrorCode"] == "0"
+    # the full decode now cached is old enough to select by age, but a partial answer must not replace it
+    bad = {"Results": [{"VIN": "W1NKM4GB9VU154744", "ErrorCode": "5", "ModelYear": "2027"}]}
+    monkeypatch.setattr(vf, "fetch_vpic_batch", lambda v: {"W1NKM4GB9VU154744": bad})
+    st = vf.refresh_decodes(conn, ["W1NKM4GB9VU154744"], partial=False, max_age_days=0.0001, min_year=2026)
+    assert st["kept_full"] == 1 and st["refreshed"] == 0
