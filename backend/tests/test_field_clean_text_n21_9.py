@@ -77,6 +77,12 @@ def test_real_description_kept():
     assert not is_seo_meta_description("One owner, clean history. Visit our inventory page for more." * 10)
 
 
+def test_real_description_with_trailing_cta_kept():
+    real = "2021 Honda Civic one owner, clean Carfax. View our inventory at example.com for more."
+    assert not is_seo_meta_description(real)
+    assert clean_car_row_dict({"description": real})["description"] == real
+
+
 def test_clean_row_end_to_end():
     r = clean_car_row_dict({
         "make": "LEXUS", "model": "RX 350h", "trim": "350H",

@@ -767,7 +767,7 @@ def unescape_entities(val: Any) -> Any:
 _SEO_META_RES: tuple[re.Pattern[str], ...] = (
     re.compile(r"(?i)^\s*(?:looking for|trying to find|searching for|shopping for|in the market for)\b"),
     re.compile(r"(?i)^\s*(?:new|used|certified(?: pre-owned)?|pre-owned)\b[^.]{0,80}\bfor sale in\b"),
-    re.compile(r"(?i)\b(?:view|browse|check out|shop|see|explore) (?:our|the)\b[^.]{0,80}\b(?:inventory|selection)\b"),
+    re.compile(r"(?i)^\s*(?:view|browse|check out|shop|see|explore) (?:our|the)\b[^.]{0,80}\b(?:inventory|selection)\b"),
 )
 _SEO_META_MAX_LEN = 300
 
