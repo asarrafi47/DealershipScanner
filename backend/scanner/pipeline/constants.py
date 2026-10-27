@@ -16,6 +16,9 @@ ROOT = Path(__file__).resolve().parents[3]  # backend/scanner/pipeline/ -> repo 
 LOG_ROOT = Path(os.environ.get("DEALER_LOGS_ROOT") or (ROOT / "workspace" / "dealer_logs"))
 PROCESS_DOC = "docs/NETWORK_SCAN_PROCESS.md"
 INCOMPLETE_FLOOR = 0.05   # share of rows with a missing spec-sheet field after the NHTSA fill
+# N21.5: a dealer above this share of incomplete rows with no open item is alarmed in the triage.
+INCOMPLETE_ALARM_SHARE = 0.25
+INCOMPLETE_ALARM_MIN_ROWS = 20
 DISCREPANCY_FLOOR = 0.05  # share of rows with a hard dictionary-vs-dealer discrepancy
 FIELD_FLOOR = 0.90
 BASELINE_DAYS = 30            # "listed before" = rows seen this many days before the run
