@@ -299,7 +299,7 @@ class Harness:
 
         mp.setattr("backend.scanner.inventory_reconcile.reconcile_dealer_inventory_after_scan", _reconcile)
 
-    def run(self, dealer: dict, browser: Any = None, **kw) -> dict:
+    def run(self, dealer: dict, **kw) -> dict:
         from backend.scanner.phases.dealer_run import run_dealer
 
         self.caplog.set_level(logging.INFO, logger="scanner")
@@ -307,7 +307,7 @@ class Harness:
         error = None
         result = None
         try:
-            result = asyncio.run(run_dealer(browser, dealer, self.coord, **kw))
+            result = asyncio.run(run_dealer(dealer, self.coord, **kw))
         except BaseException as e:  # noqa: BLE001 - CancelledError is part of the contract
             error = type(e).__name__
         logs = [[r.levelname, _mask(r.getMessage())] for r in self.caplog.records if r.name == "scanner" and r.levelno >= logging.INFO
@@ -531,42 +531,6 @@ def s_recovery_cancelled(h):
     return h.run(dict(LEXUS))
 
 
-def s_browser_allowed(h):
-    h.base_env()
-    h.mp.setenv("SCANNER_ALLOW_BROWSER", "1")
-
-    class FakePage:
-        pass
-
-    class FakeContext:
-        async def new_page(self):
-            h.ev("context.new_page", None)
-            return FakePage()
-
-        async def close(self):
-            h.ev("context.close", None)
-
-    class FakeBrowser:
-        async def new_context(self, **opts):
-            h.ev("browser.new_context", opts)
-            return FakeContext()
-
-    h.stubs(place=LEXUS_PLACE, recipe=None, recover=_replacing_recovery(lambda: _rows(3)))
-    return h.run(dict(LEXUS), browser=FakeBrowser())
-
-
-def s_browser_given_but_http_only(h):
-    h.base_env()
-
-    class FakeBrowser:
-        async def new_context(self, **opts):
-            h.ev("browser.new_context", opts)
-            raise AssertionError("must not open a context under HTTP-only")
-
-    h.stubs(place=LEXUS_PLACE, recipe=None, recover=_replacing_recovery(lambda: _rows(3)))
-    return h.run(dict(LEXUS), browser=FakeBrowser())
-
-
 SCENARIOS: dict[str, Any] = {
     "missing_url": s_missing_url,
     "no_recipe_hit": s_no_recipe_hit,
@@ -578,8 +542,6 @@ SCENARIOS: dict[str, Any] = {
     "tutton_feed_with_conflict_and_disown": s_tutton_feed_with_conflict_and_disown,
     "upsert_raises": s_upsert_raises,
     "recovery_cancelled": s_recovery_cancelled,
-    "browser_allowed": s_browser_allowed,
-    "browser_given_but_http_only": s_browser_given_but_http_only,
 }
 for _fx in C.CORPUS:
     if _fx["platform"] in ("carscommerce", "typesense"):

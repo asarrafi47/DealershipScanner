@@ -5,7 +5,6 @@ import asyncio
 import logging
 from typing import Any
 
-from backend.scanner.phases.dealer_run_steps.session import _http_only
 from backend.scanner.phases.dealer_run_steps.state import DealerRun
 
 logger = logging.getLogger("scanner")
@@ -44,9 +43,8 @@ async def fetch_recipe_feed(run: DealerRun) -> None:
             result["recipe_replay"] = _replay
         if _recipe_hit:
             recipe_records, _recipe_vins = _recipe_hit
-            if _http_only():
-                # load_recipes reads the cache file and syncs with dealer_recipes.
-                await asyncio.to_thread(_apply_recipe_provider_hint, run)
+            # load_recipes reads the cache file and syncs with dealer_recipes.
+            await asyncio.to_thread(_apply_recipe_provider_hint, run)
             _known = await asyncio.to_thread(last_known_vin_count, dealer_id)
             result["recipe_coverage"] = {
                 k: round(float(v), 3) for k, v in _recipe_cov.items() if k != "n"
@@ -75,10 +73,9 @@ async def fetch_recipe_feed(run: DealerRun) -> None:
         logger.warning("Recipe fetch failed [%s]: %s", name, str(_rec_e)[:200])
         result["recipe_replay"] = {**_replay, "error": str(_rec_e)[:200], "truncated": True}
 
-    if _http_only():
-        result["recipe_fetch"] = f"{result.get('recipe_fetch') or 'none'}+http_only"
-        if not recipe_records:
-            logger.info("HTTP-only [%s]: NO RECIPE HIT: zero rows this run", name)
+    result["recipe_fetch"] = f"{result.get('recipe_fetch') or 'none'}+http_only"
+    if not recipe_records:
+        logger.info("HTTP-only [%s]: NO RECIPE HIT: zero rows this run", name)
     # No browser SRP scrape: the recipe replay above is the inventory feed.
     if recipe_records:
         run.intercept_records.extend(recipe_records)

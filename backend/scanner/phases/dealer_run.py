@@ -24,7 +24,7 @@ from backend.scanner.phases.dealer_run_steps.enrich import (  # noqa: F401 - re-
     log_gallery_bins,
 )
 from backend.scanner.phases.dealer_run_steps.persist import persist as _persist
-from backend.scanner.phases.dealer_run_steps.session import _http_only, open_session  # noqa: F401 - _http_only re-exported
+from backend.scanner.phases.dealer_run_steps.session import open_session
 from backend.scanner.phases.dealer_run_steps.state import start_run
 from backend.scanner.phases.dealer_run_steps.summary import emit_dealer_run_summary, log_dealer_complete
 from backend.scanner.phases.nav import is_playwright_shutdown_error, safe_close_context
@@ -40,7 +40,6 @@ logger = logging.getLogger("scanner")
 
 
 async def run_dealer(
-    browser: Any,
     dealer: dict,
     write_coordinator: InventoryWriteCoordinator,
     *,
@@ -57,7 +56,7 @@ async def run_dealer(
 
     logger.info("Dealer start: %s", name)
     try:
-        await open_session(run, browser)
+        await open_session(run)
         await _feed.fetch_recipe_feed(run)
 
         # Parse the feed (per-page rooftop gate), recover, then the all-rows pass.

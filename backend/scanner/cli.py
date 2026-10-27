@@ -244,12 +244,7 @@ def run_cli_entry() -> None:
     ap.add_argument(
         "--http-only",
         action="store_true",
-        help="(default) No headless browser: recipe replay + HTTP detail pages only. Equivalent to leaving SCANNER_ALLOW_BROWSER unset.",
-    )
-    ap.add_argument(
-        "--allow-browser",
-        action="store_true",
-        help="Discovery only: permit Chromium (SCANNER_ALLOW_BROWSER=1). Never for fleet scans — docs/HTTP_ONLY_SCANS_PLAN.md.",
+        help="Accepted no-op for old command lines: scans are always HTTP-only (recipe replay + HTTP detail pages). Browsers run only in discovery_probe --browser-capture.",
     )
     ap.add_argument(
         "--no-post-repair",
@@ -347,13 +342,6 @@ def run_cli_entry() -> None:
         logger.error("Manifest not found: %s", MANIFEST_PATH.resolve())
         sys.exit(1)
 
-    if args.allow_browser:
-        os.environ["SCANNER_ALLOW_BROWSER"] = "1"
-    if args.http_only:
-        os.environ.pop("SCANNER_ALLOW_BROWSER", None)
-    from backend.scanner.browser_gate import describe as _browser_describe
-
-    logger.info("Scanner: %s", _browser_describe())
     if args.scan_only:
         os.environ["SCANNER_SCAN_ONLY"] = "1"
     apply_fast_mode_env_defaults()

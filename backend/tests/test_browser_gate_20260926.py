@@ -27,13 +27,32 @@ def test_gate_opens_only_for_discovery(monkeypatch):
     assert "allowed" in bg.describe()
 
 
-def test_dealer_run_http_only_follows_the_gate(monkeypatch):
-    from backend.scanner.phases import dealer_run
+def test_run_dealer_opens_no_context_even_with_allow(monkeypatch):
+    """P17B.3: the scan has no browser path; SCANNER_ALLOW_BROWSER=1 (discovery) changes nothing."""
+    import inspect
 
-    monkeypatch.delenv("SCANNER_ALLOW_BROWSER", raising=False)
-    assert dealer_run._http_only()
+    from backend.scanner.phases import dealer_run
+    from backend.scanner.phases.dealer_run_steps import session
+    from backend.scanner.phases.dealer_run_steps.state import start_run
+
+    assert "browser" not in inspect.signature(dealer_run.run_dealer).parameters
+    assert list(inspect.signature(session.open_session).parameters) == ["run"]
     monkeypatch.setenv("SCANNER_ALLOW_BROWSER", "1")
-    assert not dealer_run._http_only()
+    run = start_run({"dealer_id": "x-example", "name": "X", "url": "https://x.example"}, None)
+    run.page = object()
+    asyncio.run(session.open_session(run))
+    assert run.page is None and getattr(run, "context", None) is None
+    assert run.result["http_only"] is True
+
+
+def test_cli_drops_allow_browser_but_keeps_http_only():
+    import inspect
+
+    from backend.scanner import cli
+
+    src = inspect.getsource(cli)
+    assert "--allow-browser" not in src
+    assert '"--http-only"' in src
 
 
 def test_fetch_chains_have_no_browser_stage_by_default(monkeypatch):
