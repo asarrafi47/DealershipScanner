@@ -25,7 +25,7 @@ def test_policy_values_match_site_constants():
     assert nc.SYNTH_HTML.retries == 2 and nc.SYNTH_HTML.backoff_s == 2.0
     assert nc.VDP_HTML.timeout == prefetch._HTTP_FETCH_TIMEOUT_S
     assert nc.VDP_HTML.block_statuses == nc.VDP_FINGERPRINT_BLOCK_STATUSES
-    assert nc.VDP_HTML.check_challenge and nc.VDP_HTML.profiles == ("chrome",)
+    assert nc.VDP_HTML.check_challenge and nc.VDP_HTML.profiles == nc.IMPERSONATE_PROFILES  # P12A.5
     assert nc.VDP_JSON.timeout == vdp_recipes._REPLAY_TIMEOUT_S
     assert nc.CHAIN_IMPERSONATE.timeout == 25.0
     assert nc.CHAIN_IMPERSONATE.profiles == chain.ImpersonatingFetcher.PROFILES

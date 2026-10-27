@@ -269,30 +269,50 @@ def _fetch_json(recipe: VdpRecipe, url: str, payload: str | None, base_url: str)
     }
     if recipe.method != "GET":
         headers["Content-Type"] = "application/json"
+    from urllib.parse import urlparse
+
     from backend.scanner.net import client as net_client
+    from backend.scanner.vdp.prefetch import _SLOW_HOSTS
 
     proxies = net_client.scanner_proxies()
+    host = (urlparse(url).hostname or "").lower()
+    status: int | None = None
+    text = ""
     try:
         cffi_requests = net_client.import_curl_cffi()
-
-        resp = net_client.send(
-            cffi_requests, recipe.method, url, via_get=False, headers=headers, data=payload,
-            impersonate="chrome", timeout=_REPLAY_TIMEOUT_S, proxies=proxies,
-        )
-        status, text = resp.status_code, resp.text
     except ImportError:
+        cffi_requests = None
+    if cffi_requests is not None:
+        # P12A.5 (D-OD7, VDP_JSON): the host's remembered winner first; the other signatures only
+        # on a host's first, non-slow attempt and only after a 403/405.
+        may_rotate = host not in _SLOW_HOSTS and net_client.HOST_PROFILES.get(host) is None
+        profiles = net_client.vdp_profile_order(host, may_rotate=may_rotate, profiles=net_client.VDP_JSON.profiles)
+        try:
+            for i, profile in enumerate(profiles):
+                resp = net_client.send(
+                    cffi_requests, recipe.method, url, via_get=False,
+                    headers=net_client.headers_for_profile(headers, profile), data=payload,
+                    impersonate=profile, timeout=net_client.VDP_JSON.timeout, proxies=proxies,
+                )
+                status, text = resp.status_code, resp.text
+                if status in net_client.VDP_ROTATE_STATUSES and i + 1 < len(profiles):
+                    continue
+                if status == 200:
+                    net_client.HOST_PROFILES.remember(host, profile)
+                break
+        except Exception:  # noqa: BLE001 - a curl_cffi error falls back to plain requests (P12A.5)
+            status = None
+    if status is None:
         requests = net_client.import_requests()
 
         try:
             resp = net_client.send(
                 requests, recipe.method, url, via_get=False,
-                headers=headers, data=payload, timeout=_REPLAY_TIMEOUT_S, proxies=proxies,
+                headers=headers, data=payload, timeout=net_client.VDP_JSON.timeout, proxies=proxies,
             )
             status, text = resp.status_code, resp.text
         except Exception:  # noqa: BLE001
             return 0, None
-    except Exception:  # noqa: BLE001
-        return 0, None
     if status != 200 or not text:
         return status, None
     try:

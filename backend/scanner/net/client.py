@@ -51,9 +51,13 @@ IMPERSONATE_PROFILES = ("chrome", "chrome124", "safari17_0")
 # Cloudflare and Akamai use 403; DataDome and some Akamai configs use 405/429.
 TLS_FINGERPRINT_STATUSES = (403, 405, 429)
 
-# What VDP prefetch treats as a fingerprint block that plain requests will not
-# clear (it differs from TLS_FINGERPRINT_STATUSES: 503 in, 405 out).
-VDP_FINGERPRINT_BLOCK_STATUSES = (403, 429, 503)
+# What VDP prefetch treats as a fingerprint block that plain requests will not clear.
+# P12A.5 (D-OD7): 405 joined; 503 stays (it is not a rotation trigger, see VDP_ROTATE_STATUSES).
+VDP_FINGERPRINT_BLOCK_STATUSES = (403, 405, 429, 503)
+
+# The only statuses that make a VDP fetch try the next browser signature. 429 is a rate
+# limit (a different handshake does not help) and 503 is a gateway: neither rotates.
+VDP_ROTATE_STATUSES = (403, 405)
 
 # HTTP statuses worth a short retry -- transient rate limits / gateway blips, not
 # a hard "this needs a browser" signal.
@@ -105,11 +109,17 @@ SYNTH_JSON = FetchPolicy(
     timeout=25.0, block_statuses=TLS_FINGERPRINT_STATUSES, profiles=IMPERSONATE_PROFILES,
     ua_when_impersonating=True,
 )
+# P12A.5: the VDP policies rotate (starting from the host's remembered winner), but only on a
+# host's first, non-slow attempt and only on VDP_ROTATE_STATUSES; the profile sets its own UA
+# except "chrome", which keeps the explicit one.
 VDP_HTML = FetchPolicy(
-    timeout=15.0, block_statuses=VDP_FINGERPRINT_BLOCK_STATUSES, profiles=("chrome",),
+    timeout=15.0, block_statuses=VDP_FINGERPRINT_BLOCK_STATUSES, profiles=IMPERSONATE_PROFILES,
     check_challenge=True, ua_when_impersonating=True,
 )
-VDP_JSON = FetchPolicy(timeout=15.0, profiles=("chrome",), ua_when_impersonating=True)
+VDP_JSON = FetchPolicy(
+    timeout=15.0, block_statuses=VDP_ROTATE_STATUSES, profiles=IMPERSONATE_PROFILES,
+    ua_when_impersonating=True,
+)
 CHAIN_IMPERSONATE = FetchPolicy(timeout=25.0, profiles=IMPERSONATE_PROFILES)
 CHAIN_REQUESTS = FetchPolicy(timeout=20.0)
 STATUS_PROBE = FetchPolicy(timeout=20.0, check_challenge=True)
@@ -152,6 +162,24 @@ class HostProfileMemory:
 
 
 HOST_PROFILES = HostProfileMemory()
+
+
+def vdp_profile_order(host: str, *, may_rotate: bool,
+                      profiles: Iterable[str] = IMPERSONATE_PROFILES) -> list[str]:
+    """Signatures a VDP fetch tries, in order: the host's remembered winner first, then the
+    rest when *may_rotate* (a host's first, non-slow attempt). Otherwise only the first, so a
+    healthy host costs one request per VDP and a slow host exactly one per attempt."""
+    order = HOST_PROFILES.order(host, profiles)
+    return order if may_rotate else order[:1]
+
+
+def headers_for_profile(headers: dict[str, str], profile: str) -> dict[str, str]:
+    """*headers* for an impersonated request: the profile sets its own User-Agent, except
+    "chrome", which keeps the explicit one (D-OD7; an explicit Chrome UA under safari17_0 lost
+    5 of 49 VDPs in the P0B.1 sample and gained none)."""
+    if profile == "chrome":
+        return headers
+    return {k: v for k, v in headers.items() if k.lower() != "user-agent"}
 
 
 # ── Challenge detection ──────────────────────────────────────────────────────

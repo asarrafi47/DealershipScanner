@@ -46,7 +46,9 @@ _DB_MERGE_TEXT_FIELDS: tuple[str, ...] = (
 )
 _DB_MERGE_INT_FIELDS: tuple[str, ...] = ("cylinders", "mpg_city", "mpg_highway")
 
-_HTTP_FETCH_TIMEOUT_S = 15.0
+from backend.scanner.net.client import VDP_HTML as _VDP_HTML_POLICY
+
+_HTTP_FETCH_TIMEOUT_S = _VDP_HTML_POLICY.timeout  # 15 s (P12A.5: from the VDP_HTML policy)
 _HTTP_CONCURRENCY = 6
 _HTTP_POLITE_DELAY_S = 0.15  # per worker, between fetches; sustained bursts soft-block Team Velocity
 # Hosts that answered 403 in this process get one worker and a longer gap; Dealer
@@ -56,6 +58,7 @@ _SLOW_HOST_COOLDOWN_S = 15.0  # a tripped WAF keeps refusing for a while; wait b
 _SLOW_HOSTS: set[str] = set()
 _HOST_LOCKS: dict[str, asyncio.Lock] = {}
 _HOST_COOLDOWN_UNTIL: dict[str, float] = {}
+_BLOCK_STATUSES = (403, 405, 429)  # statuses that slow a host and earn a serialized retry (405 joined in P12A.5)
 _DEAD_HOST_SILENT_MAX = 3  # attempts that return neither a status nor a body before the host is skipped for this run
 _SLOW_HOST_MAX_FAILS = 3  # serialized 403s in one run (not consecutive: a hot host answers at random) -> stop for this run
 
@@ -289,12 +292,14 @@ def _description_short(v: dict[str, Any]) -> bool:
 
 
 def _extras_missing(v: dict[str, Any]) -> bool:
-    """MSRP (new cars), stock number, history link: only the detail page has them
-    on Dealer Inspire and dealer.com templates."""
+    """MSRP (new cars), stock number, history link (used and CPO cars only): only the
+    detail page has them on Dealer Inspire and dealer.com templates. A new car has no
+    history report, so a missing link never sends it to the detail page (P12A.5, IL-12)."""
     cond = str(v.get("condition") or "").strip().lower()
-    if cond.startswith("new") and _empty(v.get("msrp")):
+    is_new = cond.startswith("new")
+    if is_new and _empty(v.get("msrp")):
         return True
-    return _empty(v.get("stock_number")) or _empty(v.get("carfax_url"))
+    return _empty(v.get("stock_number")) or (not is_new and _empty(v.get("carfax_url")))
 
 
 def _vehicle_wants_http_prefetch(v: dict[str, Any]) -> bool:
@@ -330,7 +335,10 @@ def _gap_rank(v: dict[str, Any]) -> int:
     return 4
 
 
+_GAP_RANK_NONE = 4  # _gap_rank value of a car that only wants extras (description, MSRP, stock, ...)
+
 _LAST_STATUS: dict[str, int] = {}  # url -> last HTTP status, for the prefetch stats
+_LAST_PROFILE: dict[str, str] = {}  # url -> impersonation profile that cleared it
 
 
 _LAST_ERROR: dict[str, str] = {}  # url -> exception class + head of message, for the stats
@@ -363,6 +371,12 @@ def _fetch_html(url: str) -> str | None:
     Cloudflare returns 403 to plain requests on every rooftop. Falls back to
     requests when curl_cffi is missing or errors.
 
+    Policy (P12A.5, D-OD7, VDP_HTML): the host's remembered winning signature goes first,
+    so a healthy host costs one request per VDP. The rest of ``IMPERSONATE_PROFILES`` are
+    tried only on a host's first, non-slow attempt (no remembered winner, not in
+    ``_SLOW_HOSTS``) and only after a 403/405; 429 and 503 never rotate, and a slow host
+    gets exactly one request per attempt. The signature that clears a host is remembered.
+
     A 200 HTML anti-bot interstitial ("Just a moment...") is not a VDP: it is
     recorded as a 403 (so the host gets the WAF cool-down) plus a ``Challenge``
     error, and None is returned without the plain-requests fallback (audit F-18,
@@ -373,6 +387,7 @@ def _fetch_html(url: str) -> str | None:
 
     _p = _up(url)
     _origin = f"{_p.scheme}://{_p.netloc}/" if _p.netloc else ""
+    host = (_p.hostname or "").lower()
     # Same-site Referer: Cloudflare rules on Dealer eProcess / Dealer Inspire sites serve a
     # managed challenge to detail-page requests that arrive without one (Honda of El
     # Cajon: 0/4 without, 7/7 with).
@@ -382,17 +397,26 @@ def _fetch_html(url: str) -> str | None:
     try:
         cffi_requests = net_client.import_curl_cffi()
 
-        resp = net_client.send(
-            cffi_requests, "GET", url, via_get=True,
-            headers=headers, impersonate="chrome", timeout=_HTTP_FETCH_TIMEOUT_S, proxies=proxies,
-        )
-        _note_status(url, int(resp.status_code))
-        if resp.status_code == 200 and "html" in (resp.headers.get("content-type") or ""):
-            if net_client.looks_like_challenge(resp.text or ""):
-                return _challenge(url)
-            return resp.text
-        if net_client.is_fingerprint_block(resp.status_code, net_client.VDP_FINGERPRINT_BLOCK_STATUSES):
-            return None  # a fingerprint block; plain requests will not do better
+        may_rotate = host not in _SLOW_HOSTS and net_client.HOST_PROFILES.get(host) is None
+        profiles = net_client.vdp_profile_order(host, may_rotate=may_rotate, profiles=_VDP_HTML_POLICY.profiles)
+        for i, profile in enumerate(profiles):
+            resp = net_client.send(
+                cffi_requests, "GET", url, via_get=True,
+                headers=net_client.headers_for_profile(headers, profile), impersonate=profile,
+                timeout=_VDP_HTML_POLICY.timeout, proxies=proxies,
+            )
+            _note_status(url, int(resp.status_code))
+            if resp.status_code == 200 and "html" in (resp.headers.get("content-type") or ""):
+                if net_client.looks_like_challenge(resp.text or ""):
+                    return _challenge(url)
+                net_client.HOST_PROFILES.remember(host, profile)
+                _LAST_PROFILE[url] = profile
+                return resp.text
+            if resp.status_code in net_client.VDP_ROTATE_STATUSES and i + 1 < len(profiles):
+                continue  # the edge refused this handshake; the next signature may pass
+            if net_client.is_fingerprint_block(resp.status_code, _VDP_HTML_POLICY.block_statuses):
+                return None  # a fingerprint block; plain requests will not do better
+            break
     except ImportError:
         pass
     except Exception as exc:  # noqa: BLE001 - fall through to plain requests, but remember why
@@ -402,7 +426,7 @@ def _fetch_html(url: str) -> str | None:
     try:
         resp = net_client.send(
             requests, "GET", url, via_get=True,
-            headers=headers, timeout=_HTTP_FETCH_TIMEOUT_S, proxies=proxies,
+            headers=headers, timeout=_VDP_HTML_POLICY.timeout, proxies=proxies,
         )
         _note_status(url, int(resp.status_code))
         if resp.status_code != 200 or "html" not in (resp.headers.get("content-type") or ""):
@@ -610,13 +634,39 @@ async def http_prefetch_missing_fields(
         url = str(v.get("_detail_url") or v.get("source_url") or "").strip()
         if url.startswith("http") and _vehicle_wants_http_prefetch(v):
             candidates.append(v)
+    # Cars with a real data gap (price, colour, trim, photos) as opposed to extras only (P12A.5).
+    with_gap = sum(1 for v in candidates if _gap_rank(v) < _GAP_RANK_NONE)
+    # Per-VIN attempt ledger: a car whose page failed repeatedly sits out its back-off window,
+    # so the wall clock goes to cars never tried (P12A.5, W05b).
+    ledger: dict[str, tuple[int, str]] = {}
+    ledger_skipped = 0
+    if dealer_id and candidates:
+        from backend.db import vdp_attempts
+
+        if vdp_attempts.ledger_enabled():
+            ledger = await asyncio.to_thread(vdp_attempts.load, dealer_id, [v.get("vin") or "" for v in candidates])
+            if ledger:
+                kept = [
+                    v for v in candidates
+                    if not vdp_attempts.is_deferred(*ledger.get(str(v.get("vin") or "").strip().upper(), (0, "")))
+                ]
+                ledger_skipped = len(candidates) - len(kept)
+                candidates = kept
+
+    def _attempts(v: dict[str, Any]) -> int:
+        return ledger.get(str(v.get("vin") or "").strip().upper(), (0, ""))[0]
+
     cap = _http_first_max(dealer_id, timing)
     skipped_cap = max(0, len(candidates) - cap)
-    candidates = sorted(candidates, key=_gap_rank)[:cap]  # stable: feed order inside a rank
+    # gap rank first, then cars never tried before retries; stable: feed order inside a key
+    candidates = sorted(candidates, key=lambda v: (_gap_rank(v), _attempts(v)))[:cap]
     stats = {
         "candidates": len(candidates), "fetched": 0, "fields_filled": 0, "skipped_cap": skipped_cap,
         "descriptions_filled": 0, "galleries_extended": 0, "statuses": {},
+        "candidates_with_gap": with_gap,
     }
+    if ledger_skipped:
+        stats["ledger_skipped"] = ledger_skipped
     if not candidates:
         return stats
 
@@ -678,7 +728,7 @@ async def http_prefetch_missing_fields(
                     stats["dead_host"] = host
         elif html is not None:
             fetched_ok[host] = fetched_ok.get(host, 0) + 1
-        if st in (403, 429):
+        if st in _BLOCK_STATUSES:
             # every blocked response is counted, not only the last one of a retry chain
             _k = str(st)
             stats["statuses"][_k] = stats["statuses"].get(_k, 0) + 1
@@ -699,14 +749,23 @@ async def http_prefetch_missing_fields(
         url = str(v.get("_detail_url") or v.get("source_url") or "").strip()
         html, st = await _fetch_paced(url)
         attempts = 0
-        while not html and st in (403, 429) and attempts < 2:
+        while not html and st in _BLOCK_STATUSES and attempts < 2:
             attempts += 1
             html, st = await _fetch_paced(url)  # serialized, after the host cool-down
             stats["retried"] = stats.get("retried", 0) + 1
-        if st is not None and st not in (403, 429):  # those were counted per attempt
+        if st is not None and st not in _BLOCK_STATUSES:  # those were counted per attempt
             key = str(st)
             stats["statuses"][key] = stats["statuses"].get(key, 0) + 1
         err = _LAST_ERROR.pop(url, None)
+        won = _LAST_PROFILE.pop(url, None)
+        if won:
+            wins = stats.setdefault("profile_wins", {})
+            wins[won] = wins.get(won, 0) + 1
+        vin = str(v.get("vin") or "").strip().upper()
+        if html:
+            ok_vins.append(vin)
+        elif st is not None and vin:  # None = a skipped host: no request was made, nothing to count
+            failed_vins.append((vin, st, "blocked" if st in _BLOCK_STATUSES else ("error" if st == 0 else f"http_{st}")))
         if err and not html:
             errs = stats.setdefault("errors", {})
             k = err.split(":")[0]
@@ -722,6 +781,8 @@ async def http_prefetch_missing_fields(
         if v.pop("_gallery_http_prefetch_added", 0):
             stats["galleries_extended"] += 1
 
+    ok_vins: list[str] = []
+    failed_vins: list[tuple[str, int | None, str]] = []
     wall_clock = _http_first_wall_clock_sec(dealer_id, timing)
     stats["wall_clock_sec"] = int(wall_clock)
     try:
@@ -732,6 +793,11 @@ async def http_prefetch_missing_fields(
             "http_first: wall clock %.0fs reached after %d/%d page(s); keeping what was filled",
             wall_clock, stats["fetched"], stats["candidates"],
         )
+    if dealer_id and (ok_vins or failed_vins):
+        from backend.db import vdp_attempts
+
+        if vdp_attempts.ledger_enabled():
+            stats["ledger_failed"] = await asyncio.to_thread(vdp_attempts.record, dealer_id, failed_vins, ok_vins)
     return stats
 
 
