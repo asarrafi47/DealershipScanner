@@ -173,6 +173,20 @@ def _mileage_blank(car_raw: dict[str, Any]) -> bool:
     return False
 
 
+def new_car_high_mileage(car_raw: dict[str, Any]) -> bool:
+    """Data-question flag (not an incomplete code): untagged New car over 1,000 mi.
+
+    A used car filed as new or an unlabelled demo; the car is not incomplete, so
+    this never enters ``listing_missing_field_codes`` (W18, N21.3)."""
+    from backend.utils.field_clean import canonicalize_condition, new_car_over_mileage
+
+    probe = {"condition": car_raw.get("condition"), "is_cpo": car_raw.get("is_cpo")}
+    canonicalize_condition(probe)
+    return new_car_over_mileage(
+        probe.get("condition"), car_raw.get("mileage"), probe.get("_condition_program")
+    )
+
+
 def listing_missing_field_codes(
     car_raw: dict[str, Any],
     *,

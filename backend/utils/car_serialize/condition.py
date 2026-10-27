@@ -16,6 +16,10 @@ from ._common import DISPLAY_DASH, format_display_value
 from .bmw import _bmw_resolve_condition_for_display
 
 
+# Miles a car on a new-inventory URL may carry and still read New when no label exists.
+_NEW_URL_MAX_MILES = 1000
+
+
 def listings_inventory_is_new(condition: Any) -> bool:
     """True when derived display condition is new retail inventory."""
     return str(condition or "").strip().lower() == "new"
@@ -102,7 +106,16 @@ def _fill_condition_from_signals(c: dict[str, Any], out: dict[str, Any]) -> None
                         _mi = int(float(str(raw_m).replace(",", "")))
                 except (TypeError, ValueError):
                     _mi = None
-                if _mi is not None and _mi > 0:
+                _url_new = (
+                    "/new-inventory" in _su
+                    or "/new/" in _su
+                    or "newinventory" in _su.replace("-", "").replace("_", "")
+                )
+                if _mi is not None and 0 < _mi <= _NEW_URL_MAX_MILES and _url_new:
+                    # A new-inventory URL with delivery-range miles is a new car,
+                    # not a used one (N21.3).
+                    out["condition"] = "New"
+                elif _mi is not None and _mi > 0:
                     out["condition"] = "Used"
                 elif _mi == 0:
                     _ttl = (c.get("title") or "").lower()

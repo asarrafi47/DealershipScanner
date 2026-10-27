@@ -695,10 +695,29 @@ _CONDITION_PROGRAMS: dict[str, tuple[str, str]] = {
 }
 
 
+# A New car with more than this many miles on it is a data question (a used car
+# filed new, or an unlabelled demo / loaner), not an error to fix silently (W18).
+NEW_HIGH_MILEAGE = 1000
+
+
+def new_car_over_mileage(condition: Any, mileage: Any, program: Any = None) -> bool:
+    """True for a New car past ``NEW_HIGH_MILEAGE`` miles with no program tag.
+
+    CTP / Demo / Loaner cars carry their miles legitimately and are not flagged."""
+    if program or str(condition or "").strip().lower() != "new":
+        return False
+    try:
+        return int(float(str(mileage).replace(",", ""))) > NEW_HIGH_MILEAGE
+    except (TypeError, ValueError):
+        return False
+
+
 def canonicalize_condition(row: dict[str, Any]) -> None:
     """Canonicalise ``row['condition']`` to New / Used / Certified in place and
     set ``is_cpo`` from it (1 for Certified, 0 for New / Used when unset). A
-    program spelling (CTP, Demo, CarBravo) is kept in ``_condition_program``."""
+    program spelling (CTP, Demo, CarBravo) is kept in ``_condition_program``. A New
+    car over ``NEW_HIGH_MILEAGE`` miles keeps its label; ``new_car_over_mileage``
+    is the flag (it is not written into the row: the row is an oracle key)."""
     raw = row.get("condition")
     if raw is None:
         return
