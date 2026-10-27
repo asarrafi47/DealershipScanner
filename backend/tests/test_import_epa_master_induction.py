@@ -109,7 +109,9 @@ def test_backup_roundtrips_null_vs_blank(tmp_path):
 
 
 def test_cli_refuses_without_csv_or_database(monkeypatch, tmp_path):
-    monkeypatch.setattr("backend.db.inventory_pg.inventory_postgres_dsn", lambda: "")
+    from backend.db import inventory_pg
+
+    monkeypatch.setattr(inventory_pg, "inventory_postgres_dsn", lambda: "")
     assert imp.main(["--refresh-induction"]) == imp.EXIT_USAGE
     assert imp.main(["--refresh-induction", "--csv", str(tmp_path / "v.csv")]) == imp.EXIT_USAGE
     assert imp.main(["--restore", str(tmp_path / "b.csv")]) == imp.EXIT_USAGE
