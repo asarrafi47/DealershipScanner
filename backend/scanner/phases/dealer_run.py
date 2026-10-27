@@ -115,7 +115,7 @@ async def run_dealer(
         await _enrich.run_gallery_vision(run, gallery_vision_filter)
         await _enrich.run_monroney_vision(run, monroney_vision)
         _enrich.stamp_registry_and_source_urls(run)
-        _enrich.apply_vin_facts(run)
+        await _enrich.apply_vin_facts(run)
         await _persist(run)
         await _after_write.after_write(run)
 

@@ -42,6 +42,20 @@ _VPIC_BATCH_URL = "https://vpic.nhtsa.dot.gov/api/vehicles/DecodeVINValuesBatch/
 _VIN_RE = re.compile(r"^[A-HJ-NPR-Z0-9]{17}$")
 _BATCH = 50
 _PAUSE_S = 0.6
+_INLINE_REQUEST_CAP_S = 15.0
+
+
+def vin_decode_inline_enabled() -> bool:
+    """SCANNER_VIN_DECODE_INLINE (default on, D-PR5 a): decode uncached VINs on the
+    scan write path. tests/conftest.py sets it to 0."""
+    return (os.environ.get("SCANNER_VIN_DECODE_INLINE") or "1").strip().lower() not in ("0", "false", "no", "off")
+
+
+def vin_decode_inline_budget_s() -> float:
+    try:
+        return max(0.0, float(os.environ.get("SCANNER_VIN_DECODE_INLINE_BUDGET_S") or 20))
+    except ValueError:
+        return 20.0
 
 
 def vin_facts_enabled() -> bool:
@@ -177,6 +191,11 @@ def override_vehicles(vehicles: list[dict[str, Any]]) -> dict[str, int]:
     from backend.enrichment.knowledge_engine import lookup_vpic_from_cache, prime_vpic_cache
 
     vins = [str(v.get("vin") or "").strip().upper() for v in vehicles]
+    if vin_decode_inline_enabled():
+        dec = decode_inline(v for v in vins if _VIN_RE.match(v))
+        stats["decoded_inline"] = dec.get("stored", 0)
+        stats["decode_failed"] = dec.get("failed", 0)
+        stats["decode_skipped_budget"] = dec.get("skipped_budget", 0)
     prime_vpic_cache([v for v in vins if _VIN_RE.match(v)])
     for v, vin in zip(vehicles, vins):
         if not _VIN_RE.match(vin):
@@ -219,12 +238,12 @@ def _stamp_provenance(v: dict[str, Any], changed: dict[str, tuple[Any, Any]], de
 # decode + heal (post-scan and fleet)
 # --------------------------------------------------------------------------
 
-def fetch_vpic_batch(vins: list[str]) -> dict[str, dict]:
+def fetch_vpic_batch(vins: list[str], timeout: float = 90) -> dict[str, dict]:
     """``{vin: {"Results": [row]}}`` shaped like a single-VIN decode so the cache
     stays byte-compatible with ``vpic_specs``."""
     import requests
 
-    resp = requests.post(_VPIC_BATCH_URL, data={"format": "json", "data": ";".join(vins)}, timeout=90)
+    resp = requests.post(_VPIC_BATCH_URL, data={"format": "json", "data": ";".join(vins)}, timeout=timeout)
     resp.raise_for_status()
     out: dict[str, dict] = {}
     for row in (resp.json() or {}).get("Results") or []:
@@ -236,10 +255,17 @@ def fetch_vpic_batch(vins: list[str]) -> dict[str, dict]:
     return out
 
 
-def decode_missing_vins(conn, vins: Iterable[str], *, dry_run: bool = False) -> dict[str, int]:
+def decode_missing_vins(conn, vins: Iterable[str], *, dry_run: bool = False,
+                        budget_s: float | None = None) -> dict[str, int]:
     """Decode VINs absent from ``nhtsa_vpic_cache``. Idempotent. A dry run only
     counts: no network call and no cache write (``would_store`` = the VINs a real
-    run would decode)."""
+    run would decode).
+
+    With *budget_s* (the inline scan path, P8B.4) each request times out at
+    ``min(remaining budget, 15 s)``, no batch starts once the budget is spent
+    (``skipped_budget`` counts those VINs) and the pause between batches is skipped
+    when over budget. Decoded VINs are popped from the lookup memo so the next
+    ``lookup_vpic_from_cache`` sees them (never ``clear_vpic_lookup_cache()``)."""
     todo = sorted({str(v or "").strip().upper() for v in vins if _VIN_RE.match(str(v or "").strip().upper())})
     stats = {"requested": len(todo), "already_cached": 0, "stored": 0, "failed": 0}
     if not todo:
@@ -257,14 +283,23 @@ def decode_missing_vins(conn, vins: Iterable[str], *, dry_run: bool = False) -> 
     if dry_run:
         stats["would_store"] = len(missing)
         return stats
+    deadline = None if budget_s is None else time.monotonic() + budget_s
     for i in range(0, len(missing), _BATCH):
         chunk = missing[i:i + _BATCH]
+        remaining = None if deadline is None else deadline - time.monotonic()
+        if remaining is not None and remaining <= 0:
+            stats["skipped_budget"] = stats.get("skipped_budget", 0) + len(missing) - i
+            break
         try:
-            decoded = fetch_vpic_batch(chunk)
+            if remaining is None:
+                decoded = fetch_vpic_batch(chunk)
+            else:
+                decoded = fetch_vpic_batch(chunk, timeout=min(remaining, _INLINE_REQUEST_CAP_S))
         except Exception as exc:  # noqa: BLE001 - one bad batch must not stop the rest
             stats["failed"] += len(chunk)
             logger.warning("vPIC batch %d failed: %s", i // _BATCH, str(exc)[:120])
-            time.sleep(_PAUSE_S)
+            if deadline is None or time.monotonic() < deadline:
+                time.sleep(_PAUSE_S)
             continue
         for vin, payload in decoded.items():
             try:
@@ -278,8 +313,38 @@ def decode_missing_vins(conn, vins: Iterable[str], *, dry_run: bool = False) -> 
             except Exception as exc:  # noqa: BLE001
                 logger.debug("vPIC store %s failed: %s", vin, exc)
         conn.commit()
-        time.sleep(_PAUSE_S)
+        if decoded:
+            from backend.enrichment.knowledge_engine import _VPIC_MEMO
+
+            for vin in decoded:
+                _VPIC_MEMO.pop(vin, None)
+        if deadline is None or time.monotonic() < deadline:
+            time.sleep(_PAUSE_S)
     return stats
+
+
+def decode_inline(vins: Iterable[str]) -> dict[str, int]:
+    """Scan write path (P8B.4): decode this run's uncached VINs within
+    ``SCANNER_VIN_DECODE_INLINE_BUDGET_S``. Blocking: callers off the event loop.
+    Fails open: any error returns the counts so far and the scan carries on."""
+    zero = {"requested": 0, "already_cached": 0, "stored": 0, "failed": 0}
+    if not vin_decode_inline_enabled():
+        return zero
+    conn = None
+    try:
+        from backend.enrichment.knowledge_engine import _conn
+
+        conn = _conn()
+        return decode_missing_vins(conn, vins, budget_s=vin_decode_inline_budget_s())
+    except Exception as exc:  # noqa: BLE001
+        logger.warning("inline vPIC decode failed (continuing): %s", str(exc)[:120])
+        return {**zero, "error": 1}
+    finally:
+        if conn is not None:
+            try:
+                conn.close()
+            except Exception:  # noqa: BLE001
+                pass
 
 
 # ErrorCode values the decode may carry and still be a full decode: 0 clean,

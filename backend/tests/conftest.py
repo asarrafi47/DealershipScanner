@@ -131,7 +131,7 @@ def _vpic_offline_urlopen(*_args: Any, **_kwargs: Any) -> Any:
     raise VpicOffline("vPIC is stubbed offline in tests (mark real_vpic_client to opt out)")
 
 
-def _vpic_offline_batch(vins: Any) -> Any:
+def _vpic_offline_batch(vins: Any, timeout: Any = None) -> Any:
     import requests
 
     raise requests.exceptions.ConnectionError(
@@ -150,6 +150,9 @@ _VPIC_OFFLINE_URLLIB = types.SimpleNamespace(
 
 @pytest.fixture(autouse=True)
 def _vpic_offline(request: pytest.FixtureRequest, monkeypatch: pytest.MonkeyPatch) -> None:
+    # P8B.4: the inline scan-path decode is off by default under test (its own
+    # tests set it to 1 with a stubbed fetch).
+    monkeypatch.setenv("SCANNER_VIN_DECODE_INLINE", "0")
     if request.node.get_closest_marker(VPIC_OFFLINE_MARKER):
         return
     from backend.enrichment import nhtsa_vpic, vpic_facts
