@@ -251,7 +251,8 @@ def decide(field: str, stored: Any, provenance: Any, candidate: Any, source: str
     the decode: ``vpic_drive`` (raw vPIC drive text), ``vpic`` (a vPIC dict for
     electrification), ``engine_description``, ``fuel_type``, ``trim_drive``
     (canonical drive read from the trim text), ``corroborated`` (catalog
-    engine correction, D-PR3).
+    engine correction, D-PR3), ``catalog_engine_correction`` (the catalog's cylinder
+    count then needs ``corroborated`` to replace a stored one).
     """
     ctx = ctx or {}
     src = canonical_source(source)
@@ -281,6 +282,13 @@ def decide(field: str, stored: Any, provenance: Any, candidate: Any, source: str
     if (field in ("engine_description", "engine_l") and src == EPA_CATALOG
             and ctx.get("corroborated")):
         return _yes(field, cand, src, "catalog correction with corroboration (D-PR3)")
+    if field == "cylinders" and src == EPA_CATALOG and ctx.get("catalog_engine_correction"):
+        # The dictionary writer (P8B.5) marks a catalog engine correction: the
+        # count changes only with vPIC / dealer-title corroboration, whatever the
+        # (possibly unlabeled) stored value ranks.
+        if ctx.get("corroborated") and field_source(field, stored, provenance) not in (NHTSA_VPIC, STICKER):
+            return _yes(field, cand, src, "catalog correction with corroboration (D-PR3)")
+        return _no(field, src, "catalog engine correction without corroboration", stored, cand)
     if src in FILL_ONLY.get(field, ()):
         return _no(field, src, "fill-only source, column already set", stored, cand)
     stored_src = field_source(field, stored, provenance)

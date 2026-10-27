@@ -3,10 +3,10 @@
 1. ``backend/scripts/backfill_forced_induction_pg.py`` is deleted. One run re-guessed
    ``forced_induction`` from listing text for every NULL row (~125k active cars locally),
    and nothing executable may still point at it.
-2. ``enrich_from_dictionary.py --all`` overwrites filled values (vPIC drivetrain and
-   cylinders, the dealer's engine text) with the EPA CSV pick. It refuses unless
-   ``ALLOW_DICTIONARY_OVERWRITE=1`` is exported, and it refuses before ``.env`` is loaded
-   and before any DB connection. The gap-filling default is unchanged.
+2. ``enrich_from_dictionary.py --all`` used to overwrite filled values (vPIC drivetrain and
+   cylinders, the dealer's engine text) with the EPA CSV pick, and sat behind an
+   ``ALLOW_DICTIONARY_OVERWRITE=1`` guard. P8B.5 replaced that guard with fact precedence
+   (tests/test_dictionary_enrich_precedence.py); only the CLI plumbing is checked here.
 3. ``heal_cylinders_from_vpic.py`` Phase B (forced_induction recompute) clears EPA- and
    VIN-backed labels. It runs only with ``--phase-b``; Phase A (cylinders) is unchanged.
 """
@@ -69,7 +69,7 @@ def test_no_executable_reference_to_deleted_backfill_script():
 
 
 # ---------------------------------------------------------------------------
-# 2. enrich_from_dictionary --all needs ALLOW_DICTIONARY_OVERWRITE=1
+# 2. enrich_from_dictionary --all runs through fact precedence (P8B.5; was an env guard)
 # ---------------------------------------------------------------------------
 
 
@@ -96,66 +96,13 @@ def _one_car_conn() -> sqlite3.Connection:
     return conn
 
 
-@pytest.fixture
-def no_db_no_dotenv(monkeypatch):
-    """Fail the test if main() loads .env / chdirs or opens an inventory connection."""
-    import backend.db.inventory_db as inv_db
-
-    calls: list[str] = []
-
-    def _no_configure():
-        calls.append("configure")
-        raise AssertionError("_configure_cli_process ran before the --all guard")
-
-    def _no_conn(*_a, **_k):
-        calls.append("get_conn")
-        raise AssertionError("an inventory connection was opened before the --all guard")
-
-    monkeypatch.setattr(efd, "_configure_cli_process", _no_configure)
-    monkeypatch.setattr(inv_db, "get_conn", _no_conn)
-    return calls
-
-
-@pytest.mark.parametrize(
-    "argv",
-    [["--all"], ["--all", "--dry-run"], ["--all", "--no-vpic"], ["--dry-run", "--all", "--no-vpic"]],
-)
-def test_enrich_all_refuses_without_env(monkeypatch, capsys, no_db_no_dotenv, argv):
-    monkeypatch.setenv(efd.ALLOW_OVERWRITE_ENV, "")
-    monkeypatch.setattr(sys, "argv", ["enrich_from_dictionary.py", *argv])
-    cwd = os.getcwd()
-
-    with pytest.raises(SystemExit) as exc:
-        efd.main()
-
-    assert exc.value.code == 2
-    err = capsys.readouterr().err
-    assert "--all is disabled" in err
-    assert "ALLOW_DICTIONARY_OVERWRITE=1" in err
-    assert no_db_no_dotenv == []
-    assert os.getcwd() == cwd
-
-
-@pytest.mark.parametrize("value", ["0", "true", "yes", "on", "2", "11", "1 x"])
-def test_enrich_all_refuses_unless_env_is_exactly_one(monkeypatch, capsys, no_db_no_dotenv, value):
-    monkeypatch.setenv(efd.ALLOW_OVERWRITE_ENV, value)
-    monkeypatch.setattr(sys, "argv", ["enrich_from_dictionary.py", "--all"])
-
-    with pytest.raises(SystemExit) as exc:
-        efd.main()
-
-    assert exc.value.code == 2
-    assert "--all is disabled" in capsys.readouterr().err
-    assert no_db_no_dotenv == []
-
-
 def _record_enrich_runs(monkeypatch) -> list[bool]:
     """Stub get_conn (in-memory cars) and enrich_car (records fill_all, no EPA/vPIC I/O)."""
     import backend.db.inventory_db as inv_db
 
     seen: list[bool] = []
 
-    def _fake_enrich_car(car, dry_run=False, fill_all=False, *, use_vpic=True):
+    def _fake_enrich_car(car, dry_run=False, fill_all=False, *, use_vpic=True, vpic_ctx=None):
         seen.append(bool(fill_all))
         return {}
 
@@ -165,8 +112,8 @@ def _record_enrich_runs(monkeypatch) -> list[bool]:
     return seen
 
 
-def test_enrich_all_runs_with_env_opt_in(monkeypatch):
-    monkeypatch.setenv(efd.ALLOW_OVERWRITE_ENV, "1")
+def test_enrich_all_runs_without_env_opt_in(monkeypatch):
+    """P8B.5: the P1A.5 env guard is gone; per-field precedence decides what --all may refill."""
     monkeypatch.setattr(sys, "argv", ["enrich_from_dictionary.py", "--all", "--dry-run", "--no-vpic"])
     seen = _record_enrich_runs(monkeypatch)
 
@@ -175,9 +122,8 @@ def test_enrich_all_runs_with_env_opt_in(monkeypatch):
     assert seen == [True]
 
 
-def test_enrich_default_gap_fill_unchanged_without_env(monkeypatch):
-    """The non-destructive default (no --all) needs no opt-in and never sets fill_all."""
-    monkeypatch.setenv(efd.ALLOW_OVERWRITE_ENV, "")
+def test_enrich_default_gap_fill_never_sets_fill_all(monkeypatch):
+    """The default (no --all) never sets fill_all."""
     monkeypatch.setattr(sys, "argv", ["enrich_from_dictionary.py", "--dry-run", "--no-vpic"])
     seen = _record_enrich_runs(monkeypatch)
 
