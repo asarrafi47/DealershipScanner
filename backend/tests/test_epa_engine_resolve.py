@@ -39,7 +39,9 @@ def test_resolve_audi_a6_v6_when_title_signals_v6() -> None:
         "cylinders": 6,
         "fuel_type": "Gasoline",
     }
-    assert build_engine_display(car, {}) == "3.0L V6 Turbo"
+    # P10C.5: the 2017 A6 3.0 TFSI V6 is supercharged (EPA sCharger='S'); the old
+    # "Turbo" came from the era rule that called every 2016+ Audi turbocharged.
+    assert build_engine_display(car, {}) == "3.0L V6 Supercharged"
 
 
 def test_pick_epa_engine_row_prefers_four_cylinder_title() -> None:
