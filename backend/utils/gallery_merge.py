@@ -18,6 +18,7 @@ from typing import Any
 from backend.parsers.base import (
     dedupe_urls_order_prefer_large,
     inventory_gallery_max,
+    is_malformed_image_url,
     normalize_image_url_https,
 )
 
@@ -40,7 +41,7 @@ def _https_urls_in_vehicle(vehicle: dict[str, Any]) -> list[str]:
             if not isinstance(u, str):
                 continue
             nu = normalize_image_url_https(u.strip())
-            if not nu.startswith("https://"):
+            if not nu.startswith("https://") or is_malformed_image_url(nu):
                 continue
             if nu in seen:
                 continue

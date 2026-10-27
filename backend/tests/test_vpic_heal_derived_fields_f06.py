@@ -37,7 +37,7 @@ def conn(monkeypatch):
     c = sqlite3.connect(":memory:")
     c.executescript(
         "CREATE TABLE cars (id INTEGER PRIMARY KEY, vin TEXT, dealer_id TEXT, listing_active INTEGER, drivetrain TEXT,"
-        " fuel_type TEXT, cylinders INTEGER, engine_description TEXT, body_style TEXT, transmission TEXT, spec_source_json TEXT, epa_master_id INTEGER);"
+        " fuel_type TEXT, cylinders INTEGER, engine_description TEXT, body_style TEXT, transmission TEXT, spec_source_json TEXT, epa_master_id INTEGER, make TEXT, model TEXT);"
         "CREATE TABLE epa_master (id INTEGER PRIMARY KEY, drive TEXT);"
         "CREATE TABLE nhtsa_vpic_cache (vin TEXT PRIMARY KEY, response_json TEXT, fetched_at TEXT);"
     )
@@ -124,7 +124,7 @@ def test_raw_decodes_are_fetched_per_chunk_not_all_at_once(conn, monkeypatch):
     for i, vin in enumerate(vins, start=1):
         conn.execute("INSERT INTO cars (id, vin, dealer_id, listing_active, drivetrain, fuel_type, cylinders, engine_description, body_style, spec_source_json, epa_master_id) VALUES (?,?, 'd1', 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL)", (i, vin))
     # one row with every raw-decode-derived field present needs no raw decode at all
-    conn.execute("INSERT INTO cars (id, vin, dealer_id, listing_active, drivetrain, fuel_type, cylinders, engine_description, body_style, spec_source_json, epa_master_id, transmission) VALUES (6, '3TYLB5JNXRT022196', 'd1', 1, 'RWD', NULL, NULL, '2.4L I4', 'Truck', NULL, NULL, 'Automatic')")
+    conn.execute("INSERT INTO cars (id, vin, dealer_id, listing_active, drivetrain, fuel_type, cylinders, engine_description, body_style, spec_source_json, epa_master_id, transmission, make, model) VALUES (6, '3TYLB5JNXRT022196', 'd1', 1, 'RWD', NULL, NULL, '2.4L I4', 'Truck', NULL, NULL, 'Automatic', 'Toyota', 'Tacoma')")
     stats = vf.heal_rows(conn)
     assert stats["rows"] == 6
     assert len(calls) == 3 and all(len(c) <= 2 for c in calls)

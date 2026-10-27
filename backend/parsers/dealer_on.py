@@ -14,6 +14,7 @@ from backend.parsers.base import (
     extract_image_url,
     extract_mileage,
     extract_price,
+    norm_float,
     find_tracking_attr,
     find_vehicle_list,
     norm_int,
@@ -316,6 +317,25 @@ def _pick_detail_url_dealer_on(obj: dict, base_url: str) -> str | None:
     return None
 
 
+def _advertised_price(obj: dict) -> float:
+    """D-N18: the advertised price. ``extract_price`` falls back to MSRP when no
+    price field is set; here MSRP is dropped first so it can only reach ``msrp``."""
+    pricing = obj.get("pricing")
+    trimmed = {k: v for k, v in obj.items() if k not in ("msrp", "MSRP")}
+    if isinstance(pricing, dict):
+        trimmed["pricing"] = {k: v for k, v in pricing.items() if k not in ("msrp", "MSRP")}
+    return extract_price(trimmed)
+
+
+def _msrp_value(obj: dict) -> int:
+    pricing = obj.get("pricing") if isinstance(obj.get("pricing"), dict) else {}
+    for v in (pricing.get("msrp"), pricing.get("MSRP"), obj.get("msrp"), obj.get("MSRP")):
+        n = norm_float(v)
+        if 1000 < n <= 400_000:
+            return int(round(n))
+    return 0
+
+
 def _map_vehicle(obj: dict, base_url: str, dealer_id: str, dealer_name: str, dealer_url: str) -> dict | None:
     vin = norm_str(obj.get("vin") or obj.get("VIN") or obj.get("item_id") or obj.get("stockNumber") or obj.get("stock_number") or "")
     if not vin:
@@ -352,7 +372,7 @@ def _map_vehicle(obj: dict, base_url: str, dealer_id: str, dealer_name: str, dea
         "make": norm_str(obj.get("make") or obj.get("Make") or obj.get("manufacturer")),
         "model": norm_str(obj.get("model") or obj.get("Model") or obj.get("modelName") or obj.get("model_name")),
         "trim": norm_str(obj.get("trim") or obj.get("Trim") or obj.get("trimName") or obj.get("trim_name")),
-        "price": extract_price(obj),
+        "price": _advertised_price(obj),
         "mileage": extract_mileage(obj),
         "image_url": hero,
         "gallery": gallery,
@@ -375,6 +395,9 @@ def _map_vehicle(obj: dict, base_url: str, dealer_id: str, dealer_name: str, dea
         "mpg_highway": mpg_h,
         "engine_l": eng_l,
     }
+    msrp = _msrp_value(obj)
+    if msrp:
+        row["msrp"] = msrp
     du = _pick_detail_url_dealer_on(obj, base_url)
     guessed = False
     if not du and vin and not str(vin).lower().startswith("unknown"):

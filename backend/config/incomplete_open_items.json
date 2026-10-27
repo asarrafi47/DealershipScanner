@@ -1,0 +1,14 @@
+{
+  "_doc": "N21.5 / IL-17: dealers whose high incomplete rate (above INCOMPLETE_ALARM_SHARE) already has an open item. The triage alarm stays quiet for these and fires for every other dealer. Value = where the item lives. Remove an entry when its item closes.",
+  "gardenahonda-com": "N21.4",
+  "autocollectionofmurfreesboro-com": "INCOMPLETE 2.8",
+  "bmwofbloomfield-com": "INCOMPLETE 2.8",
+  "oldorchardnissan-com": "INCOMPLETE 2.11",
+  "hendricklexuscharlotte-com": "INCOMPLETE 2.5",
+  "mymetrohonda-com": "INCOMPLETE 2.10",
+  "kingfordsales-com": "N21.5 owner VDP check",
+  "koonstoyotaarlington-com": "N21.5 owner VDP check",
+  "raypearman-com": "N21.5 owner VDP check",
+  "centurybmwhuntsville-com": "N21.5 owner VDP check",
+  "audihuntsville-com": "INCOMPLETE 2.25 (OneAudi, unpriced new cars)"
+}

@@ -5,6 +5,18 @@ from typing import Any
 from urllib.parse import parse_qsl, urlencode, urljoin, urlparse, urlunparse
 
 
+_PREASSIGNMENT_VIN_RE = re.compile(r"^(?=[A-Z0-9]*[IOQ])[A-Z0-9]{17}$")
+
+
+def is_preassignment_vin(vin: Any) -> bool:
+    """True for a 17-character identifier that holds an I, O or Q (D-N17b).
+
+    A real VIN never carries those letters; dealers list pre-assignment / stock IDs
+    in that shape. The rows are kept, but the vPIC decode is skipped, VIN-derived
+    facts are cannot_assess, and the VIN-owner guard leaves them alone."""
+    return bool(_PREASSIGNMENT_VIN_RE.match(str(vin or "").strip().upper()))
+
+
 def _has_vin(d: dict) -> bool:
     if not isinstance(d, dict):
         return False
@@ -311,8 +323,93 @@ _KNOWN_PHOTO_CDN_HOSTS: frozenset[str] = frozenset(
         "media.spyneai.com",
         "cdn.impel.io",
         "consumer-assets.impel.io",
+        # Dealer eProcess: every photo is /resrc/images/... with no extension (N21.6, F07).
+        "cloudflareimages.dealereprocess.com",
     }
 )
+
+# Dealer eProcess gallery photo (extension-less); id part is the dedupe key.
+_DEP_PHOTO_RE = re.compile(
+    r"^https?://cloudflareimages\.dealereprocess\.com/resrc/images/[^\s\"'<>]+$", re.I
+)
+_DEP_DVP_RE = re.compile(r"(dvp/[^/?#]+/[^/?#]+)", re.I)
+
+# A CSS ``url(...)`` wrapper or a quote/paren/semicolon tail that rode along
+# when a style attribute or inline CSS was scraped for photo URLs (N21.6, W15).
+_CSS_URL_WRAP_RE = re.compile(r"""^\s*url\(\s*(['"]?)(.*?)\1\s*\)?\s*;?\s*$""", re.I | re.S)
+_URL_TAIL_JUNK = "\"'\\;,}"
+
+
+# Real debris only: whitespace, quotes, angle brackets, backslash, a ``url(`` wrapper,
+# or a trailing ; ' ) that closes nothing. Balanced parens/apostrophes/semicolons inside
+# a path are legal (Dealer eProcess slugs carry "(Natl)").
+_BAD_URL_RE = re.compile(r"""[\s<>"\\`]|\burl\(""", re.I)
+
+
+def _has_url_debris(u: str) -> bool:
+    if _BAD_URL_RE.search(u):
+        return True
+    if u[-1:] in ";'" or u.startswith("'"):
+        return True
+    return u.count(")") > u.count("(")
+
+
+def clean_gallery_url(raw: str) -> str:
+    """A scraped photo URL with CSS ``url(...)`` wrapping, HTML-entity quotes and
+    trailing quote/paren/semicolon debris removed; '' when what is left is not a
+    single well-formed http(s) URL (whitespace, brackets or CSS inside it)."""
+    u = (raw or "").strip() if isinstance(raw, str) else ""
+    if not u:
+        return ""
+    u = u.replace("&quot;", '"').replace("&#39;", "'").replace("&amp;", "&").replace("\\/", "/")
+    m = _CSS_URL_WRAP_RE.match(u)
+    if m and "url(" in u.lower():
+        u = m.group(2)
+    u = u.strip().lstrip("'\"(")
+    while u:
+        t = u.rstrip(_URL_TAIL_JUNK)
+        if t.endswith(")") and t.count(")") > t.count("("):
+            t = t[:-1]
+        if t == u:
+            break
+        u = t
+    if u.startswith("//"):
+        u = "https:" + u
+    if not re.match(r"^https?://[^\s/]+", u, re.I):
+        return ""
+    return "" if _has_url_debris(u) else u
+
+
+def is_malformed_image_url(url: str) -> bool:
+    """True when *url* is not exactly one clean http(s) URL (CSS fragments,
+    unbalanced quotes/parens, embedded whitespace)."""
+    u = (url or "").strip() if isinstance(url, str) else ""
+    return not re.match(r"^https?://[^\s/]+", u, re.I) or _has_url_debris(u)
+
+
+def gallery_urls_from_value(v: Any) -> list[str]:
+    """Ordered, de-duplicated, well-formed https photo URLs from a feed value: a
+    list of strings or ``{url|large|src}`` dicts, or one comma-joined string
+    (FordDirect / Team Velocity ``photoUrls``). Malformed entries are dropped."""
+    if isinstance(v, str):
+        items: list[Any] = split_joined_image_urls(v)
+    elif isinstance(v, (list, tuple)):
+        items = []
+        for x in v:
+            if isinstance(x, dict):
+                x = x.get("url") or x.get("large") or x.get("src") or x.get("uri") or ""
+            if isinstance(x, str):
+                items.extend(split_joined_image_urls(x))
+    else:
+        return []
+    out: list[str] = []
+    seen: set[str] = set()
+    for raw in items:
+        u = normalize_image_url_https(clean_gallery_url(raw))
+        if u.startswith("https://") and u not in seen:
+            seen.add(u)
+            out.append(u)
+    return out
 
 # Spyne AI CDN hosts — serve 3 variants per angle (bg-removed, 3d-render, original)
 _SPYNE_CDN_HOSTS: frozenset[str] = frozenset(
@@ -384,6 +481,8 @@ def _is_placeholder_url(url: str) -> bool:
         return True
     u = url.lower()
     if "coming-soon" in u or "placeholder" in u or "no-image" in u:
+        return True
+    if url.strip().lower().startswith(("http", "url(")) and is_malformed_image_url(url):
         return True
     # Shared token list (N6.8, D-N15): same test completeness and the photo alarm use.
     from backend.utils.placeholder_images import has_placeholder_token
@@ -498,6 +597,9 @@ def _canonical_image_dedupe_key(url: str) -> str:
     """Group thumb vs large variants for dedupe_prefer_large."""
     nu = normalize_image_url_https(url.strip()).lower()
     nu = strip_obvious_resize_query_params(nu).lower()
+    dep = _DEP_PHOTO_RE.match(nu) and _DEP_DVP_RE.search(nu)
+    if dep:
+        return dep.group(1)  # one photo, many resize prefixes
     try:
         p = urlparse(nu)
         return f"{p.netloc}{p.path}"
@@ -561,6 +663,8 @@ def _looks_like_media_url(s: str) -> bool:
     t = s.strip()
     if not t.startswith(("http://", "https://", "//", "/")):
         return False
+    if _DEP_PHOTO_RE.match(t):
+        return True
     low = t.lower().split("?", 1)[0]
     return bool(re.search(r"\.(jpe?g|png|webp|gif|avif)(\s*$)", low, re.I))
 

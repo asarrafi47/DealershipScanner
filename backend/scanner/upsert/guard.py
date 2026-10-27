@@ -12,6 +12,7 @@ import logging
 from datetime import datetime, timedelta, timezone
 from typing import Any, Callable, NamedTuple
 
+from backend.parsers.base import is_preassignment_vin
 from backend.scanner.upsert import ownership as _own
 from backend.vehicle_facts import precedence as _prec
 
@@ -92,7 +93,9 @@ def prefetch_existing(
                 _vin = str(row[0])
                 _claimant = str((by_vin.get(_vin) or {}).get("dealer_id") or "").strip()
                 _owner = str(row[2] or "").strip()
-                if _owner and _claimant and _owner != _claimant:
+                # D-N17b: an I/O/Q pre-assignment ID is not a VIN; two stores may list the
+                # same one, so it is never contested.
+                if _owner and _claimant and _owner != _claimant and not is_preassignment_vin(_vin):
                     contested.append((_vin, _owner, _claimant, row[3], row[4],
                                       row[5] if len(row) > 5 else None,
                                       row[6] if len(row) > 6 else "", row[7] if len(row) > 7 else None))

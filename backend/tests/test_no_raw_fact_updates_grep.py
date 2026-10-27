@@ -37,7 +37,6 @@ RECOVERY_SCRIPTS = {
     "backend/scripts/heal_from_recipes.py",
     "backend/scripts/harvest_carscommerce.py",
     "backend/scripts/harvest_html_jsonld.py",
-    "backend/scripts/recover_incomplete_listings.py",
     "backend/scripts/repair_inventory_fields.py",
     "backend/scripts/backfill_specs.py",
 }

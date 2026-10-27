@@ -17,7 +17,9 @@ Per-vehicle fields are PascalCase and split across sub-objects:
   ListOfPhotos[].{Order,PhotoUrl}
 
 The feed carries no trim / mileage / color / stock number — those are VDP /
-gap-fill heals downstream. Price, however, is fully present here (the generic
+gap-fill heals downstream. Trim is also filled from the vPIC decode when it names
+exactly one (D-N31, ``vpic_facts.heal_rows(trim_dealers=...)``); the parser leaves it
+blank so that fill, not a guess, is the only writer. Price, however, is fully present here (the generic
 JSON walker missed it because it never descended into the nested ``Pricing``
 object — the exact gap this parser closes).
 """

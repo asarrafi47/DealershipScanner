@@ -28,6 +28,10 @@ def catalog_model_is_trimless(year: int, make: str, model: str) -> bool:
     ``epa_master`` trim is the model name or where there is a single trim. Such
     a car with a blank dealer trim is NOT missing data; the model has no trim to
     capture. Returns False when the model isn't in the catalog (can't tell).
+
+    N21.8 (M1): the completeness rule no longer uses this (it hid about 201 real trim
+    gaps); it reads the explicit list in ``vehicle_facts/listing_classes.py``. Kept as
+    a catalog probe for tools.
     """
     if not year or not make or not model:
         return False

@@ -48,7 +48,7 @@ def test_parse_merges_cards_and_hydration_objects():
     assert card["price"] == 31123.25 and card["make"] == "Acura" and card["model"] == "TLX" and card["year"] == 2021
     assert card["_detail_url"].startswith("https://www.q.com/inventory/used-cars-ACURA")
     rsc = next(r for r in rows if r["vin"].startswith("3VWY"))
-    assert (rsc["year"], rsc["make"], rsc["model"], rsc["trim"]) == (2019, "VOLKSWAGEN", "GOLF", "TSI S WAGON 4D")
+    assert (rsc["year"], rsc["make"], rsc["model"], rsc["trim"]) == (2019, "Volkswagen", "GOLF", "TSI S WAGON 4D")
     assert rsc["price"] == 14995.0 and rsc["mileage"] == 85933 and rsc["stock_number"] == "31247" and rsc["cylinders"] == 4
     assert rsc["image_url"].startswith("https://cdn.gma.to/") and rsc["_detail_url"].endswith("510761-R")
     assert rsc["condition"] == "Used"

@@ -20,7 +20,7 @@ from backend.scanner.pipeline.recipes import ensure_recipe
 from backend.scanner.pipeline.resume import plan_resume
 from backend.scanner.pipeline.roster import dealer_from_manifest, dealers_from_db, load_manifest_dealers
 from backend.scanner.pipeline.runner import REQUEUE_REASON, requeue_killed, run_discovery_capture, run_http_only_scan, wait_for_scanner_lock
-from backend.scanner.pipeline.triage import (accounting_line, group_feed_lines, group_feed_unstamped, handover_pending_lines, platform_cluster_lines,
+from backend.scanner.pipeline.triage import (accounting_line, group_feed_lines, group_feed_unstamped, handover_pending_lines, incomplete_alarm_lines, platform_cluster_lines,
                                             retirement_alarm_lines, triage_table, write_needs_discovery, write_slow_dealers)
 from backend.scanner.pipeline.vpic import vpic_for_dealers
 
@@ -279,6 +279,7 @@ def _run(args) -> int:
     triage["platform_clusters"] = platform_cluster_lines(triage["needs_discovery"])
     # 7. the scanner's retirements this run, alarmed per D-N21 (P5A.7)
     triage["retirement_alarms"] = retirement_alarm_lines(results)
+    triage["incomplete_alarms"] = incomplete_alarm_lines(results)
     # 8. honest accounting (N9.12): captured / refused by each guard / written, unstamped group
     #    feeds and half-finished VIN handovers
     triage["accounting"] = fleet_accounting(results)
@@ -286,7 +287,7 @@ def _run(args) -> int:
     triage["group_feed_unstamped"] = flags
     triage["handover_pending"] = {r["dealer_id"]: r["handover_pending"] for r in results if r.get("handover_pending")}
     report_lines = ([accounting_line(results)] + group_feed_lines(flags) + handover_pending_lines(results)
-                    + triage["platform_clusters"] + triage["retirement_alarms"])
+                    + triage["platform_clusters"] + triage["retirement_alarms"] + triage["incomplete_alarms"])
     (out_dir / "triage.json").write_text(json.dumps(triage, indent=1, default=str), encoding="utf-8")
     lines = triage_table(results)
     (out_dir / "triage.md").write_text("\n".join(lines + [""] + report_lines) + "\n", encoding="utf-8")

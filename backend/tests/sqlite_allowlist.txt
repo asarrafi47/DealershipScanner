@@ -190,7 +190,7 @@ backend/enrichment/spec_structured_backfill.py  datetime_now  1
 backend/enrichment/spec_structured_backfill.py  qmark_placeholder  3
 backend/enrichment/spec_structured_backfill.py  row_factory  1
 backend/enrichment/trim_ladder/inventory.py  qmark_placeholder  1
-backend/enrichment/vpic_facts.py  qmark_placeholder  3
+backend/enrichment/vpic_facts.py  qmark_placeholder  4
 backend/intelligence/lease_matcher.py  import_sqlite3  1
 backend/intelligence/lease_matcher.py  qmark_placeholder  2
 backend/intelligence/lease_matcher.py  row_factory  1
@@ -315,9 +315,6 @@ backend/scripts/preflight_drop_dead_mfa.py  sqlite3_attr  1
 backend/scripts/reconcile_recipe_store.py  import_sqlite3  1
 backend/scripts/reconcile_recipe_store.py  qmark_placeholder  2
 backend/scripts/reconcile_recipe_store.py  sqlite3_attr  1
-backend/scripts/recover_incomplete_listings.py  import_sqlite3  1
-backend/scripts/recover_incomplete_listings.py  row_factory  1
-backend/scripts/recover_incomplete_listings.py  sqlite3_attr  1
 backend/scripts/relabel_spec_provenance.py  qmark_placeholder  1
 backend/scripts/repair_injection_fuel.py  qmark_placeholder  1
 backend/scripts/repair_new_null_mileage_index.py  pragma  1
@@ -566,6 +563,8 @@ backend/tests/test_msrp_trust.py  import_sqlite3  1
 backend/tests/test_msrp_trust.py  qmark_placeholder  1
 backend/tests/test_msrp_trust.py  sqlite3_attr  1
 backend/tests/test_n15_5_vpic_gasoline_fuel.py  qmark_placeholder  2
+backend/tests/test_n21_2_preassignment_vin.py  qmark_placeholder  2
+backend/tests/test_n21_4a_vpic_single_trim.py  qmark_placeholder  2
 backend/tests/test_nearby_dealers_listings.py  db_path_literal  10
 backend/tests/test_new_arrival_pending.py  db_path_literal  2
 backend/tests/test_new_arrival_pending.py  import_sqlite3  1

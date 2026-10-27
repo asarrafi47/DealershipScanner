@@ -117,7 +117,7 @@ def _clean(v: Any, limit: int = 120, *, color: bool = False) -> str | None:
         v = v.get("en_US")
     elif isinstance(v, list):
         return None
-    s = str(v or "").strip()
+    s = _html.unescape(str(v or "")).strip()
     if not s or junk_text_value(s, color=color):
         return None
     return s[:limit]

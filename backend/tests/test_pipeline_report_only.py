@@ -52,3 +52,19 @@ def test_triage_alarm_lines():
                {"dealer_id": "c", "reconcile": {"error": "x"}}]
     lines = retirement_alarm_lines(results)
     assert len(lines) == 1 and lines[0].startswith("retirement alarm: a retired 12 of 100")
+
+
+def test_incomplete_alarm_lines():
+    from backend.scanner.pipeline.triage import incomplete_alarm_lines, incomplete_open_items
+
+    def res(d, n, inc):
+        return {"dealer_id": d, "accuracy": {"rows": n, "incomplete_rows": inc, "missing": {"price": inc}}}
+
+    results = [res("hot-com", 100, 40), res("edge-com", 100, 25), res("tiny-com", 10, 9),
+               res("known-com", 100, 90), res("fine-com", 100, 3), {"dealer_id": "noacc-com"}]
+    lines = incomplete_alarm_lines(results, {"known-com": "N21.4"})
+    assert lines == ["incomplete alarm: hot-com 40 of 100 rows incomplete (40% > 25%), no open item; missing price"]
+    # the shipped list excuses the dealers the findings already name, and only those
+    shipped = incomplete_open_items()
+    assert "gardenahonda-com" in shipped and "hot-com" not in shipped
+    assert incomplete_alarm_lines([res("gardenahonda-com", 646, 646)]) == []

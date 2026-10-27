@@ -1,11 +1,12 @@
 """End-of-run outputs: triage table, needs_discovery.txt, slow_dealers.txt, platform clusters. Moved verbatim from backend/scripts/dealer_pipeline.py (audit F11)."""
 from __future__ import annotations
 
+import json
 from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-from backend.scanner.pipeline.constants import LOG_ROOT
+from backend.scanner.pipeline.constants import INCOMPLETE_ALARM_MIN_ROWS, INCOMPLETE_ALARM_SHARE, LOG_ROOT, ROOT
 from backend.scanner.pipeline.dealer_logs import _pct, _timing_text
 
 
@@ -34,6 +35,37 @@ def retirement_alarm_lines(results: list[dict[str, Any]]) -> list[str]:
                 f"retirement alarm: {r['dealer_id']} retired {sr['retired']} of {sr['prior_active']} prior active rows "
                 f"({sr['share']:.1%} > {sr['threshold']:.1%}; {sr['days']} days since the retired rows were last scraped"
                 f"{', gap-aware' if sr.get('gap_aware') else ''})")
+    return lines
+
+
+OPEN_ITEMS_PATH = ROOT / "backend" / "config" / "incomplete_open_items.json"
+
+
+def incomplete_open_items(path: Path | None = None) -> dict[str, str]:
+    """Dealers whose high incomplete rate already has an open item (N21.5): ``{dealer_id: where}``.
+    A missing or unreadable file means no dealer is excused."""
+    try:
+        data = json.loads((path or OPEN_ITEMS_PATH).read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return {}
+    return {k: str(v) for k, v in data.items() if not k.startswith("_")} if isinstance(data, dict) else {}
+
+
+def incomplete_alarm_lines(results: list[dict[str, Any]], open_items: dict[str, str] | None = None) -> list[str]:
+    """N21.5 / IL-17: one ``incomplete alarm`` line per dealer above ``INCOMPLETE_ALARM_SHARE``
+    incomplete rows (after the NHTSA fill, ``accuracy``) that no open item explains
+    (``backend/config/incomplete_open_items.json``). Tiny runs (under
+    ``INCOMPLETE_ALARM_MIN_ROWS`` rows) are skipped. Reported only."""
+    excused = incomplete_open_items() if open_items is None else open_items
+    lines = []
+    for r in results:
+        acc = r.get("accuracy") or {}
+        n, inc = int(acc.get("rows") or 0), int(acc.get("incomplete_rows") or 0)
+        if n < INCOMPLETE_ALARM_MIN_ROWS or inc / n <= INCOMPLETE_ALARM_SHARE or r["dealer_id"] in excused:
+            continue
+        missing = ", ".join(list(acc.get("missing") or [])[:4])
+        lines.append(f"incomplete alarm: {r['dealer_id']} {inc} of {n} rows incomplete ({inc / n:.0%} > "
+                     f"{INCOMPLETE_ALARM_SHARE:.0%}), no open item{f'; missing {missing}' if missing else ''}")
     return lines
 
 

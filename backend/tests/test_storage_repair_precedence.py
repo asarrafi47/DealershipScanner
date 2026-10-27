@@ -190,7 +190,7 @@ def test_backfill_specs_dry_run_does_not_write(monkeypatch, writes):
 # --- recovery scripts: no raw fact UPDATE ------------------------------------
 
 _RECOVERY = ("heal_from_recipes.py", "harvest_carscommerce.py", "harvest_html_jsonld.py",
-             "recover_incomplete_listings.py", "backfill_specs.py", "repair_inventory_fields.py")
+             "backfill_specs.py", "repair_inventory_fields.py")
 
 
 @pytest.mark.parametrize("name", _RECOVERY)

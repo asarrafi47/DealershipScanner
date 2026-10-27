@@ -35,6 +35,8 @@ import re
 import time
 from typing import Any, Iterable
 
+from backend.parsers.base import is_preassignment_vin
+
 logger = logging.getLogger("scanner")
 
 VPIC_FUEL_LABEL = {"ev": "Electric", "phev": "Plug-In Hybrid", "hybrid": "Hybrid"}
@@ -43,6 +45,75 @@ _VIN_RE = re.compile(r"^[A-HJ-NPR-Z0-9]{17}$")
 _BATCH = 50
 _PAUSE_S = 0.6
 _INLINE_REQUEST_CAP_S = 15.0
+
+
+# D-N17b: a 17-character ID with I, O or Q is not a VIN. The row stays, the decode is
+# never requested (``_VIN_RE`` already excludes those letters), and the VIN-derived
+# facts are recorded under this key in ``spec_source_json`` so nothing reads the gap
+# as "not yet decoded". The key is not a car column, so ``field_source`` ignores it.
+PREASSIGNMENT_KEY = "vin_decode"
+PREASSIGNMENT_FIELDS = ("drivetrain", "fuel_type", "cylinders", "engine_description", "body_style", "transmission")
+
+
+def preassignment_marker() -> dict[str, Any]:
+    return {"source": "vin_preassignment", "cannot_assess": True, "fields": list(PREASSIGNMENT_FIELDS),
+            "detail": "17-character ID holds I/O/Q: not a VIN, vPIC decode skipped (D-N17b)",
+            "fetched_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())}
+
+
+def _mark_preassignment(v: dict[str, Any]) -> bool:
+    """Stamp the cannot_assess marker into ``v['spec_source_json']``; False when already there."""
+    from backend.utils.spec_provenance import merge_spec_source_json
+
+    existing = v.get("spec_source_json")
+    if isinstance(existing, dict):
+        existing = json.dumps(existing)
+    existing = existing if isinstance(existing, str) else None
+    if existing and PREASSIGNMENT_KEY in existing:
+        try:
+            if (json.loads(existing).get(PREASSIGNMENT_KEY) or {}).get("cannot_assess"):
+                return False
+        except (ValueError, AttributeError):
+            pass
+    v["spec_source_json"] = merge_spec_source_json(existing, {PREASSIGNMENT_KEY: preassignment_marker()})
+    return True
+
+
+def single_vpic_trim(vp: dict[str, Any] | None, flat: dict[str, str] | None = None) -> str | None:
+    """The decode's trim when it names exactly one (D-N31), else None.
+
+    Several trims in one field ("EX / EX-L", "Sport, Touring") or a second trim field
+    (``Trim2``) mean vPIC could not pick one: no fill."""
+    text = str((vp or {}).get("trim") or "").strip()
+    if not text or text.lower() in ("not applicable", "n/a", "none"):
+        return None
+    if re.search(r"[,;/|]|\band\b|\bor\b", text, re.I):
+        return None
+    if str((flat or {}).get("Trim2") or "").strip():
+        return None
+    return text[:80]
+
+
+def clean_vpic_make_model(flat: dict[str, str] | None) -> dict[str, str]:
+    """``{"make": ..., "model": ...}`` from a decode that is clean (ErrorCode exactly 0)
+    and names exactly one value (N21.8, 2.24). vPIC answers a list for some VINs
+    ("750i, Alpina B7") and a partial decode carries error codes; neither fills.
+    The listing cannot name a model it does not carry, so no trim-style corroboration
+    applies; the fill is blank-only (the caller checks)."""
+    flat = flat or {}
+    if str(flat.get("ErrorCode") or "").strip() != "0":
+        return {}
+    from backend.utils.field_clean import canonical_make
+
+    out: dict[str, str] = {}
+    for key, col in (("Make", "make"), ("Model", "model")):
+        text = re.sub(r"\s+", " ", str(flat.get(key) or "")).strip()
+        if not text or text.lower() in ("not applicable", "n/a", "none", "null", "0"):
+            continue
+        if re.search(r"[,;/|]", text):
+            continue
+        out[col] = canonical_make(text.title() if text.isupper() else text) if col == "make" else text[:80]
+    return out
 
 
 def vin_decode_inline_enabled() -> bool:
@@ -198,6 +269,10 @@ def override_vehicles(vehicles: list[dict[str, Any]]) -> dict[str, int]:
         stats["decode_skipped_budget"] = dec.get("skipped_budget", 0)
     prime_vpic_cache([v for v in vins if _VIN_RE.match(v)])
     for v, vin in zip(vehicles, vins):
+        if is_preassignment_vin(vin):
+            if _mark_preassignment(v):
+                stats["preassignment"] = stats.get("preassignment", 0) + 1
+            continue
         if not _VIN_RE.match(vin):
             continue
         vp = lookup_vpic_from_cache(vin)
@@ -266,8 +341,12 @@ def decode_missing_vins(conn, vins: Iterable[str], *, dry_run: bool = False,
     (``skipped_budget`` counts those VINs) and the pause between batches is skipped
     when over budget. Decoded VINs are popped from the lookup memo so the next
     ``lookup_vpic_from_cache`` sees them (never ``clear_vpic_lookup_cache()``)."""
+    vins = list(vins)
     todo = sorted({str(v or "").strip().upper() for v in vins if _VIN_RE.match(str(v or "").strip().upper())})
     stats = {"requested": len(todo), "already_cached": 0, "stored": 0, "failed": 0}
+    skipped = len({str(v).strip().upper() for v in vins if is_preassignment_vin(v)})
+    if skipped:
+        stats["preassignment_skipped"] = skipped  # D-N17b: never sent to vPIC
     if not todo:
         return stats
     cur = conn.cursor()
@@ -530,7 +609,8 @@ def derived_fills(row: dict[str, Any], vp: dict[str, Any] | None, flat: dict[str
 _HEAL_FLAT_CHUNK = 500  # rows whose raw vPIC decodes are held at once in heal_rows
 
 
-HEAL_FIELDS = ("drivetrain", "fuel_type", "cylinders", "engine_description", "body_style", "transmission")
+HEAL_FIELDS = ("drivetrain", "fuel_type", "cylinders", "engine_description", "body_style", "transmission", "trim",
+               "make", "model")
 
 # P8B.4b (IL-20): heavy-duty / commercial families whose drive and gearbox the
 # decode often leaves blank or at "4x2" and the EPA catalog never covers (it
@@ -615,20 +695,28 @@ def hd_fills(row: dict[str, Any], vp: dict[str, Any] | None, flat: dict[str, str
 
 
 def heal_rows(conn, *, vins: Iterable[str] | None = None, dealers: Iterable[str] | None = None,
-              dry_run: bool = False, fields: Iterable[str] | None = None) -> dict[str, Any]:
+              dry_run: bool = False, fields: Iterable[str] | None = None,
+              trim_dealers: Iterable[str] | None = None) -> dict[str, Any]:
     """Store the decode's drivetrain / fuel / cylinders on active rows where it
     differs, and fill empty engine_description / body_style from the decode.
 
     Commits after every ``_HEAL_FLAT_CHUNK`` rows (a long heal keeps its progress
     and never holds one giant transaction). *fields* limits the heal to those
     columns (a subset of ``HEAL_FIELDS``); every write is decided by
-    ``backend/vehicle_facts/precedence.py``."""
+    ``backend/vehicle_facts/precedence.py``.
+
+    *trim_dealers* (D-N31, N21.4): dealer ids whose feed carries no trim. Only their
+    rows get a blank ``trim`` filled, and only from a decode that names exactly one
+    trim (:func:`single_vpic_trim`); everyone else's trim is never touched here.
+    I/O/Q pre-assignment IDs (D-N17b) are never decoded: they are counted in
+    ``preassignment`` and marked cannot_assess."""
     from backend.enrichment.knowledge_engine import clear_vpic_lookup_cache, lookup_vpic_from_cache, prime_vpic_cache
     from backend.utils.spec_provenance import merge_spec_source_json
 
     only = frozenset(fields) if fields is not None else None
     if only is not None and not only <= set(HEAL_FIELDS):
         raise ValueError(f"unknown heal fields: {sorted(only - set(HEAL_FIELDS))}")
+    trim_set = frozenset(str(d) for d in (trim_dealers or []))
     cur = conn.cursor()
     where = "COALESCE(listing_active,1)=1 AND vin IS NOT NULL AND length(vin)=17"
     params: list[Any] = []
@@ -641,12 +729,21 @@ def heal_rows(conn, *, vins: Iterable[str] | None = None, dealers: Iterable[str]
         where += " AND dealer_id IN (" + ",".join("?" * len(dealer_list)) + ")"
         params += dealer_list
     cur.execute(f"SELECT c.id, c.vin, c.drivetrain, c.fuel_type, c.cylinders, c.spec_source_json, e.drive, "
-                f"c.engine_description, c.body_style, c.transmission FROM cars c "
+                f"c.engine_description, c.body_style, c.transmission, {'c.trim' if trim_set else 'NULL'}, c.dealer_id, c.make, c.model FROM cars c "
                 f"LEFT JOIN epa_master e ON e.id = c.epa_master_id WHERE {where.replace('listing_active', 'c.listing_active').replace(' vin', ' c.vin').replace('dealer_id', 'c.dealer_id')}", tuple(params))
     rows = [dict(zip(("id", "vin", "drivetrain", "fuel_type", "cylinders", "spec_source_json", "catalog_drive",
-                      "engine_description", "body_style", "transmission"), r)) for r in cur.fetchall()]
+                      "engine_description", "body_style", "transmission", "trim", "dealer_id", "make", "model"), r)) for r in cur.fetchall()]
     stats: dict[str, Any] = {"rows": len(rows), "decoded": 0, "drivetrain": 0, "fuel_type": 0, "cylinders": 0,
-                             "engine_description": 0, "body_style": 0, "transmission": 0, "examples": []}
+                             "engine_description": 0, "body_style": 0, "transmission": 0, "trim": 0, "make": 0, "model": 0,
+                             "examples": []}
+    pre = [r for r in rows if is_preassignment_vin(r["vin"])]
+    if pre:
+        rows = [r for r in rows if not is_preassignment_vin(r["vin"])]
+        stats["preassignment"] = len(pre)
+        stats["rows"] = len(rows)
+        stats["preassignment_marked"] = _mark_preassignment_rows(cur, pre, dry_run)
+        if not dry_run:
+            conn.commit()
     clear_vpic_lookup_cache()
     prime_vpic_cache([r["vin"] for r in rows])
     for start in range(0, len(rows), _HEAL_FLAT_CHUNK):
@@ -656,9 +753,11 @@ def heal_rows(conn, *, vins: Iterable[str] | None = None, dealers: Iterable[str]
         # never holds every decode at once.
         need_flat = sorted({r["vin"] for r in chunk
                             if not str(r.get("engine_description") or "").strip() or not str(r.get("body_style") or "").strip()
-                            or not str(r.get("transmission") or "").strip() or not _drive_bucket(r.get("drivetrain"))})
+                            or not str(r.get("transmission") or "").strip() or not _drive_bucket(r.get("drivetrain"))
+                            or (r.get("dealer_id") in trim_set and not str(r.get("trim") or "").strip())
+                            or not str(r.get("make") or "").strip() or not str(r.get("model") or "").strip()})
         flats = _vpic_flat_rows(conn, need_flat)
-        _heal_chunk(cur, chunk, flats, stats, dry_run, lookup_vpic_from_cache, merge_spec_source_json, only)
+        _heal_chunk(cur, chunk, flats, stats, dry_run, lookup_vpic_from_cache, merge_spec_source_json, only, trim_set)
         if not dry_run:
             conn.commit()
             stats["commits"] = stats.get("commits", 0) + 1
@@ -686,9 +785,22 @@ def _resync_incomplete_index(car_ids: list[int]) -> int:
     return done
 
 
+def _mark_preassignment_rows(cur, rows: list[dict[str, Any]], dry_run: bool) -> int:
+    """Write the cannot_assess marker on pre-assignment rows that lack it; returns the count marked."""
+    marked = 0
+    for r in rows:
+        v = {"spec_source_json": r.get("spec_source_json")}
+        if not _mark_preassignment(v):
+            continue
+        marked += 1
+        if not dry_run:
+            cur.execute("UPDATE cars SET spec_source_json = ? WHERE id = ?", (v["spec_source_json"], r["id"]))
+    return marked
+
+
 def _heal_chunk(cur, rows: list[dict[str, Any]], flats: dict[str, dict[str, str]], stats: dict[str, Any],
                 dry_run: bool, lookup_vpic_from_cache, merge_spec_source_json,
-                only: frozenset[str] | None = None) -> None:
+                only: frozenset[str] | None = None, trim_dealers: frozenset[str] = frozenset()) -> None:
     """heal_rows' per-row work for one chunk; ``flats`` holds only this chunk's raw decodes."""
     from backend.vehicle_facts import precedence as prec
 
@@ -701,6 +813,15 @@ def _heal_chunk(cur, rows: list[dict[str, Any]], flats: dict[str, dict[str, str]
         ch = dict(vin_overrides(r, vp))
         sources = {f: "nhtsa_vpic" for f in ch}
         cannot = {f for f, d in _vin_decisions(r, vp).items() if d.cannot_assess and f in ch}
+        if r.get("dealer_id") in trim_dealers and not str(r.get("trim") or "").strip():
+            one = single_vpic_trim(vp, flat)
+            if one:
+                ch["trim"] = (r.get("trim"), one)
+                sources["trim"] = "nhtsa_vpic"
+        for field, text in clean_vpic_make_model(flat).items():
+            if not str(r.get(field) or "").strip():
+                ch[field] = (r.get(field), text)
+                sources[field] = "nhtsa_vpic"
         for field, (old, text) in derived_fills(r, vp, flat).items():
             if field == "engine_description":
                 d = prec.decide(field, r.get(field), r.get("spec_source_json"), text, prec.NHTSA_VPIC)
