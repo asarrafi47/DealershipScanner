@@ -1,4 +1,4 @@
-"""Hybrid crawl → rules → optional LLM adjudication → review queue → summary."""
+"""Hybrid crawl → rules → review queue → summary (rules-only; the LLM adjudication branch was removed, D-DC6)."""
 from __future__ import annotations
 
 import json
@@ -9,13 +9,10 @@ from pathlib import Path
 from typing import Any, Callable
 
 from backend.scraping.canonical_groups import apply_sibling_canonical_reinforcement, canonical_group_display
-from backend.intelligence.llm.client import LLMClient
 from backend.intelligence.pipeline.adjudication import (
     compute_adjudication_skip_reason,
     compute_manual_review_reason,
     merge_rule_and_ai,
-    run_llm_adjudication,
-    should_invoke_adjudicator,
 )
 from backend.intelligence.pipeline.evidence_builder import site_result_to_evidence_package
 from backend.intelligence.pipeline.review_queue import ReviewQueue, ReviewQueueEntry
@@ -65,9 +62,6 @@ def run_hybrid_batch(
     crawl_fn: Callable[..., Any],
     urls_with_meta: list[dict[str, Any]],
     *,
-    use_adjudicator: bool,
-    llm_client: LLMClient | None,
-    llm_model: str | None,
     review_queue: ReviewQueue | None = None,
 ) -> OrchestratorResult:
     """
@@ -111,14 +105,8 @@ def run_hybrid_batch(
 
         ai_res: AdjudicationResult | None = None
         skip_reason: str | None = None
-        if use_adjudicator and llm_client and should_invoke_adjudicator(sr):
-            summary.adjudication_invoked += 1
-            ai_res = run_llm_adjudication(pkg, llm_client, model=llm_model)
-            if ai_res is None:
-                summary.adjudication_errors += 1
-        if ai_res is None:
-            skip_reason = compute_adjudication_skip_reason(sr)
-            sr.adjudication_skip_reason = skip_reason
+        skip_reason = compute_adjudication_skip_reason(sr)
+        sr.adjudication_skip_reason = skip_reason
 
         merged_best, merged_conf, merged_st, source = merge_rule_and_ai(sr, ai_res)
         rule_disagrees = bool(
@@ -250,13 +238,6 @@ def run_hybrid_batch(
     patterns = build_assigned_evidence_patterns(out)
 
     return OrchestratorResult(sites=out, summary=summary, assigned_evidence_patterns=patterns)
-
-
-def default_llm_client() -> "LLMClient":
-    raise NotImplementedError(
-        "default_llm_client: Ollama/OpenAICompatibleClient has been removed. "
-        "Provide an LLMClient instance explicitly."
-    )
 
 
 def save_hybrid_run(result: OrchestratorResult, path: str | Path) -> None:
