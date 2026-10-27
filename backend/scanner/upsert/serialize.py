@@ -57,13 +57,18 @@ def _as_json_text(spec_src: Any) -> str | None:
     return spec_src if isinstance(spec_src, str) else (json.dumps(spec_src) if isinstance(spec_src, dict) else None)
 
 
-def spec_source_json(v: dict, prior_spec_src: str | None) -> Any:
+def spec_source_json(v: dict, prior_spec_src: str | None, feed_said: dict[str, dict] | None = None) -> Any:
     """Incoming provenance + availability / lot-location patches, merged into the
     stored provenance (``prior_spec_src``).
 
     The ON CONFLICT clause keeps column values via COALESCE but would replace
     spec_source_json wholesale, orphaning the provenance of every surviving
     enriched value; merging here keeps it.
+
+    ``feed_said`` (P8B.1) maps each fact column the stored row kept over the feed to
+    ``{"value", "seen_at"}``: the stored provenance entry survives untouched (an
+    incoming entry for that column is dropped) and gains ``feed_said`` /
+    ``feed_seen_at``.
     """
     spec_src = v.get("spec_source_json")
     avail_patch = availability_spec_source_patch(v)
@@ -91,6 +96,18 @@ def spec_source_json(v: dict, prior_spec_src: str | None) -> Any:
             _new_prov = None
         if isinstance(_new_prov, dict):
             spec_src = merge_spec_source_json(prior_spec_src, _new_prov)
+    if feed_said and prior_spec_src:
+        try:
+            _base = json.loads(spec_src) if spec_src and str(spec_src).strip() else json.loads(prior_spec_src)
+            _prior = json.loads(prior_spec_src)
+        except (json.JSONDecodeError, TypeError):
+            return spec_src
+        if isinstance(_base, dict) and isinstance(_prior, dict):
+            for _f, _said in feed_said.items():
+                _entry = _prior.get(_f)
+                if isinstance(_entry, dict):
+                    _base[_f] = {**_entry, "feed_said": _said["value"], "feed_seen_at": _said["seen_at"]}
+            spec_src = json.dumps(_base, ensure_ascii=False)
     return spec_src
 
 

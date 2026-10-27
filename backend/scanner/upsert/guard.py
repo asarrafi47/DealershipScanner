@@ -13,11 +13,20 @@ from datetime import datetime, timedelta, timezone
 from typing import Any, Callable, NamedTuple
 
 from backend.scanner.upsert import ownership as _own
+from backend.vehicle_facts import precedence as _prec
 
 # Same logger name as before the split so log routing and captures are unchanged.
 logger = logging.getLogger("backend.scanner.database")
 
 _PREFETCH_CHUNK = 500
+
+# Fact columns the feed may not revert (P8B.1). forced_induction is derived from the
+# bound values, not arbitrated, and is prefetched only so the stored row is complete.
+FACT_COLUMNS: tuple[str, ...] = (
+    "drivetrain", "fuel_type", "cylinders", "engine_description", "engine_l",
+    "transmission", "exterior_color", "interior_color", "forced_induction",
+)
+_ARBITRATED: tuple[str, ...] = tuple(f for f in FACT_COLUMNS if f != "forced_induction")
 
 
 class GuardWindow(NamedTuple):
@@ -43,6 +52,7 @@ def prefetch_existing(
     *,
     moves: list[_own.Move] | None = None,
     reasons: dict[str, str] | None = None,
+    stored_facts: dict[str, dict] | None = None,
 ) -> tuple[dict[str, str], dict[str, tuple[str, str]]]:
     """Read stored provenance + ownership for every VIN, 500 at a time.
 
@@ -54,7 +64,9 @@ def prefetch_existing(
     group pools, aliases; the window only settles evidence-less contests outside a
     pool) plus a hold for VINs a person moved by hand. ``reasons`` receives the
     refusal reason per VIN; ``moves`` receives every allowed owner change, for the
-    caller to write to ``car_move_log`` once the rows have landed.
+    caller to write to ``car_move_log`` once the rows have landed. ``stored_facts``
+    receives, per VIN that has stored provenance, the stored fact columns
+    (:data:`FACT_COLUMNS`) read by the same query, for :func:`arbitrate_feed_facts`.
     """
     existing_spec_src: dict[str, str] = {}
     conflicts: dict[str, tuple[str, str]] = {}
@@ -65,14 +77,17 @@ def prefetch_existing(
         placeholders = ",".join("?" * len(chunk))
         cursor.execute(
             "SELECT vin, spec_source_json, dealer_id, listing_active, scraped_at, "
-            "rooftop_tier, dealer_name, dealership_registry_id "
-            f"FROM cars WHERE vin IN ({placeholders})",
+            "rooftop_tier, dealer_name, dealership_registry_id, "
+            + ", ".join(FACT_COLUMNS)
+            + f" FROM cars WHERE vin IN ({placeholders})",
             chunk,
         )
         contested: list[tuple[str, str, str, Any, Any, Any, Any, Any]] = []
         for row in cursor.fetchall():
             if row[1] is not None and str(row[1]).strip():
                 existing_spec_src[str(row[0])] = str(row[1])
+                if stored_facts is not None and len(row) >= 8 + len(FACT_COLUMNS):
+                    stored_facts[str(row[0])] = dict(zip(FACT_COLUMNS, row[8:8 + len(FACT_COLUMNS)]))
             if len(row) >= 5:
                 _vin = str(row[0])
                 _claimant = str((by_vin.get(_vin) or {}).get("dealer_id") or "").strip()
@@ -105,6 +120,43 @@ def prefetch_existing(
                                separators=(",", ":")),
                 ))
     return existing_spec_src, conflicts
+
+
+def arbitrate_feed_facts(
+    v: dict, stored: dict | None, prior_spec_src: str | None,
+) -> dict[str, dict]:
+    """Fact columns the stored row keeps over this feed row (P8B.1, D-PR2 (a)).
+
+    Returns ``field -> {"value": <feed value>, "seen_at": <iso>}`` for every column
+    where the stored value's NON-STALE provenance outranks ``dealer_feed``
+    (:func:`backend.vehicle_facts.precedence.decide`); the caller binds NULL for those
+    so ``COALESCE(excluded.x, cars.x)`` keeps the stored value, and records the feed's
+    claim as ``feed_said``. A row without provenance, with stale provenance, or whose
+    stored source ranks at or below the feed behaves as before: the feed is bound.
+    """
+    kept: dict[str, dict] = {}
+    if not stored or not prior_spec_src:
+        return kept
+    ctx = {
+        "engine_description": v.get("engine_description") or stored.get("engine_description"),
+        "fuel_type": v.get("fuel_type") or stored.get("fuel_type"),
+    }
+    for field in _ARBITRATED:
+        feed = v.get(field)
+        if feed is None or str(feed).strip() == "":
+            continue
+        stored_val = stored.get(field)
+        d = _prec.decide(field, stored_val, prior_spec_src, feed, _prec.DEALER_FEED, ctx)
+        if d.write or _prec.is_blank(field, stored_val) or _prec._same(field, stored_val, feed):
+            continue
+        stored_src = _prec.field_source(field, stored_val, prior_spec_src)
+        if stored_src == _prec.UNKNOWN:
+            continue  # stale or absent provenance: the feed wins, as before
+        if (d.reason.startswith("dealer_feed does not outrank")
+                and (_prec.rank_of(field, stored_src) or 0) <= (_prec.rank_of(field, _prec.DEALER_FEED) or 0)):
+            continue  # the same source (or lower) refreshing itself is not a downgrade
+        kept[field] = {"value": feed, "seen_at": _prec._now()}
+    return kept
 
 
 def backstop_owner(cursor, vin: str) -> str:

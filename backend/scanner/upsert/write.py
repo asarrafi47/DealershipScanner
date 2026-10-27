@@ -24,18 +24,21 @@ def write_rows(
     window: GuardWindow,
     conflicts: dict[str, tuple[str, str]],
     commit_every: int,
+    stored_facts: dict[str, dict] | None = None,
 ) -> int:
     """Normalize and upsert each vehicle in the given (sorted-VIN) order.
 
     Commits every ``commit_every`` written rows (the caller commits the tail).
     A row the SQL backstop refuses (rowcount 0 with the guard on) is added to
-    ``conflicts`` in place and not counted. Returns the number of rows written.
+    ``conflicts`` in place and not counted. ``stored_facts`` (from the prefetch) lets a
+    higher-ranked stored fact survive the feed (P8B.1). Returns the number of rows written.
     """
     count = 0
     pools = _own.load_pools()
     for raw in vehicles:
         v = normalize_vehicle_row(raw)
-        row = prepare_row(v, existing_spec_src.get((v.get("vin") or "").strip()))
+        _vin_key = (v.get("vin") or "").strip()
+        row = prepare_row(v, existing_spec_src.get(_vin_key), (stored_facts or {}).get(_vin_key))
         if row is None:
             continue
         vin = row.vin

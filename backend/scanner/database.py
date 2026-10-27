@@ -464,8 +464,10 @@ def upsert_vehicles(vehicles: list[dict], stats: dict | None = None) -> int:
         window = guard_window(vin_owner_guard_hours())
         moves: list = []
         reasons: dict[str, str] = {}
+        stored_facts: dict[str, dict] = {}
         existing_spec_src, conflicts = prefetch_existing(
-            cursor, by_vin, window, _vin_owned_elsewhere, moves=moves, reasons=reasons
+            cursor, by_vin, window, _vin_owned_elsewhere, moves=moves, reasons=reasons,
+            stored_facts=stored_facts,
         )
         if conflicts:
             vehicles = [v for v in vehicles if (v.get("vin") or "").strip() not in conflicts]
@@ -478,6 +480,7 @@ def upsert_vehicles(vehicles: list[dict], stats: dict | None = None) -> int:
             vehicles,
             now=now,
             existing_spec_src=existing_spec_src,
+            stored_facts=stored_facts,
             window=window,
             conflicts=conflicts,
             commit_every=_UPSERT_COMMIT_BATCH,
