@@ -8,19 +8,20 @@ laptop, a fresh checkout) instead of living only on whichever box ran the
 discovery scan. One row per dealer mirroring the file exactly, plus derived
 health columns for the scanner-ops views.
 
-Sync model (see ``backend.scanner.recipes``):
-  - ``saved_at`` on a recipe row means "last write of this dealer's set".
-    ``save_recipes`` stamps every row with one ``time.time()`` per call, before
-    it writes the file and then writes through here, so the file and the DB row
-    carry the same stamp and ``max_saved_at`` is that stamp. It stays a
-    per-write stamp in later phases: hosts running older code still compare it.
-    This module stores rows as given and never stamps them.
-  - ``load_recipes`` compares file vs DB freshness (max ``saved_at``): a newer
-    DB row materializes the local file (another host wrote the set since); a
-    newer file is pushed up as it is (a write-through that failed, or a file
-    written by pre-DB code), with a WARNING naming the dealer and the DB copy it
-    replaced. Neither direction re-stamps.
+Authority model (N13 Phase 7; the details are in docs/data_architecture_plan.md,
+"Recipe cache and store sync"): the ``dealer_recipes`` row is the authority for a dealer's
+recipes and ``workspace/recipes/<slug>.json`` is a cache of it, refreshed atomically only
+when its content differs. A newer cache file never overwrites the row; it seeds the store
+only while the row holds no recipes (``recipes_written_at`` = 0).
+  - ``saved_at`` on a recipe row is still the per-write stamp (``save_recipes`` and every
+    key-scoped op stamp it with one ``time.time()`` per write) and ``max_saved_at`` its max,
+    because hosts on older code compare them. This module stores rows as given and never
+    stamps them. ``mutated_at`` on a row is that recipe's own last-mutation stamp.
+  - ``recipes_written_at`` says "a recipe write happened"; ``rev`` counts every write.
+    ``superseded_json`` archives recipes a re-synthesis replaced (30 days); consumers read
+    only ``recipes_json``.
   - ``updated_at`` is not a recipe-write stamp: every ``set_scan_hints`` bumps it.
+  - Blocked status is per host and lives in ``scan_hints.recipe_blocked[<tag>]``.
 
 Writes are compare-and-set (V034, N13 P7.1): ``db_mutate`` / ``mutate_scan_hints`` read
 the row, compute the change, and write ``WHERE rev = <rev read>``, retrying when another

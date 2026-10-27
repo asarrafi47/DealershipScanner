@@ -109,12 +109,20 @@ inventory database. The volume keeps the tree exactly as on a laptop:
 `/data/workspace/dealer_logs/<dealer_id>/…`, `/data/workspace/pipeline/fleet_<UTC stamp>/`
 (`s<i>.txt` roster, `s<i>.out` pipeline output, `s<i>/scanner.log`, `s<i>/triage.json`,
 `fleet_summary.json`). Recipes themselves are in `dealer_recipes` (Postgres). The volume
-keeps a file cache of them (`/data/workspace/recipes`), filled from the store on first use
-and compared with it by `saved_at` after that, so it is not a plain copy of the store (see
-the next paragraph). The stdout summary lines stay in Railway's log retention.
+keeps a file cache of them (`/data/workspace/recipes`). The store is the authority (N13):
+`load_recipes` rewrites a cache file from the row, atomically under a per-file `flock`,
+whenever the content differs, and a newer cache file never overwrites the row. So the
+volume cache follows the store on the next load of each dealer; a dealer nobody loads keeps
+its old file until then. A recipe change the store could not take (a dead link) waits in
+`/data/workspace/recipes/_pending/<store fingerprint>/` and is replayed on the next load
+that reaches that same store. P7.9 compares the volume cache with prod
+(`reconcile_recipe_store --compare-cache`). The stdout summary lines stay in Railway's log retention.
 
-**The volume cache keeps the 2026-09-29 stale flags until Phase 0 recipe code is deployed**
-(corrected 2026-10-08, remediation plan P1C.6; deploy in P6B.1, prod un-stale in P6B.2).
+**Historical (Phase 0, before the N13 store-authority code): the volume cache kept the
+2026-09-29 stale flags until Phase 0 recipe code was deployed** (corrected 2026-10-08,
+remediation plan P1C.6; deploy in P6B.1, prod un-stale in P6B.2). With store authority the
+cache no longer decides by `saved_at`, so the equal-stamp trap described next cannot recur
+on a host running that code; it still describes images older than Phase 0.
 The 09-29 fleet flagged recipes stale on Railway 403s (see "Bug found: Railway 403s staled
 shared recipes" below), and each flag went into the store and into this cache in one save,
 so both copies carry the same max `saved_at`. Code from before Phase 0 (VERSION 1.5.2 and
@@ -150,8 +158,9 @@ the learning logs stay in one place — done for the 2026-09-28 test runs (block
 ### The recipe cache is tagged with its store
 
 A recipe file cache (`workspace/recipes`, or the dir `RECIPES_CACHE_DIR` names) mirrors one
-`dealer_recipes` store, and `load_recipes` pushes a cache file up into the store whenever the
-file is newer than the store's copy. A cache filled from one store must therefore never be
+`dealer_recipes` store. Before N13, `load_recipes` pushed a cache file up into the store whenever
+the file was newer than the store's copy; now a cache file only seeds a dealer whose row holds no
+recipes, and a store holding a copy always wins. A cache filled from one store must therefore never be
 used against another: the MBP cache mirrors the local Postgres, and a home-IP run against
 prod with it would push every newer local set into prod. Since P1B.6 each cache dir carries
 `_store.json`, the fingerprint of the store it mirrors: a sha256 of the host, port and

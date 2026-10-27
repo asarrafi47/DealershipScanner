@@ -60,7 +60,12 @@ Once a successful run has been run, create:
   and what the detail page adds, known quirks;
 - the recipe file for that dealership (`workspace/recipes/<dealer_id>.json`, and
   `workspace/recipes/vdp/<dealer_id>.json` when a per-car endpoint was learned) so the
-  scanner scans it properly without discovery.
+  scanner scans it properly without discovery. Since N13 the `dealer_recipes` row is the
+  authority and this file is its cache, refreshed atomically from the row on load: edit
+  recipes through `backend/scanner/recipes.py` (save, merge, replace, mark_stale), never by
+  hand-editing the file, because a hand edit is overwritten by the next load that reaches
+  the store. A recipe a re-synthesis replaced is archived in the row for 30 days
+  (`backend.scripts.restore_superseded_recipes`).
 
 ## Why the logs matter
 
