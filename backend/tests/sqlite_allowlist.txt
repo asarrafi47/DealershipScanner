@@ -211,7 +211,7 @@ backend/routes/dealership_page.py  sqlite3_attr  2
 backend/routes/listings_api.py  qmark_placeholder  1
 backend/scanner/database.py  autoincrement  2
 backend/scanner/database.py  pragma  3
-backend/scanner/database.py  qmark_placeholder  2
+backend/scanner/database.py  qmark_placeholder  1
 backend/scanner/dealer/profile.py  qmark_placeholder  2
 backend/scanner/delta_scan.py  qmark_placeholder  1
 backend/scanner/inventory_reconcile.py  ifnull  2
