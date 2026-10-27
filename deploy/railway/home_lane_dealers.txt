@@ -1,0 +1,6 @@
+# Dealers the home-IP lane scans and Railway skips (excluded_home_lane). Same format as
+# do_not_scan.txt: one dealer_id per line, '#' starts a comment. Starts empty.
+# Add an id only with dated evidence on its line, for example:
+#   exampledealer-com  # 403 from Railway 2026-11-02, ok from home 2026-11-03
+# Evidence comes from the Railway scan logs / recipe_blocked['railway'] and a home-IP probe.
+# An explicit dealer list (SCAN_DEALERS, --dealers, --dealer-id) is never filtered by this file.

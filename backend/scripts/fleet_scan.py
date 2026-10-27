@@ -34,7 +34,16 @@ Env:
   SCAN_SHARDS=8           parallel pipeline processes
   SCAN_SHARD_ORDER        reverse | seed:<n>  (determinism passes; recorded in the summary)
   SCAN_BATCH=6            dealers per scanner process inside a shard
-  SCAN_POST_STEPS=1       0 skips compute_market_stats + build_listings_grid_cards
+  SCAN_POST_STEPS=1       0 skips the post steps; 1 (default) = index,market,cards; or a comma
+                          list of index,market,recover,harvest,cards (run in that order, cards
+                          last). recover = heal_from_recipes and harvest = harvest_html_jsonld,
+                          both aimed at roster dealers with open index codes (cap
+                          SCAN_RECOVER_MAX_DEALERS=25); harvest needs SCAN_LANE=home. An unknown
+                          step exits 2 before any scan. Default 0 when SCAN_LANE=home.
+  SCAN_LANE               all | railway | home (P15A.1). Default railway when SCANNER_EGRESS_TAG
+                          is set, else all. railway drops the ids in deploy/railway/
+                          home_lane_dealers.txt (excluded_home_lane); home scans only them
+                          (minus do-not-scan); all is today's roster (the kill switch)
   SCAN_PIPELINE_ARGS=...  extra dealer_pipeline flags (e.g. "--no-lifecycle")
   SCAN_OUT_ROOT           run directory parent (default workspace/pipeline)
   SCAN_KEEP_DAYS=14       prune run dirs / scan logs older than this
@@ -195,24 +204,201 @@ def load_roster() -> list[str]:
     if raw:
         return [d.strip() for d in raw.split(",") if d.strip()]
     if (os.environ.get("SCAN_FLEET") or "").strip().lower() in ("1", "true", "yes"):
-        from backend.scanner.manifest import _load_scannable_dealers, apply_scannable_roster_rule
+        from backend.scanner.manifest import _load_scannable_dealers, apply_scannable_roster_rule, scan_lane
 
         skip = ("carmax.com", "carmax-com")
         dealers = [d for d in _load_scannable_dealers()
                    if d.get("dealer_id") and not any(s in d["dealer_id"] for s in skip)]
-        kept, report = apply_scannable_roster_rule(dealers)
+        try:
+            lane = scan_lane()
+        except ValueError as exc:
+            raise SystemExit(f"fleet   {exc}")
+        kept, report = apply_scannable_roster_rule(dealers, lane=lane)
         ROSTER_REPORT.update(report)
         print(f"fleet   roster: {report['kept']} dealers kept; excluded "
               f"{len(report['excluded_do_not_scan'])} do-not-scan, "
               f"{len(report['excluded_recipe_only'])} recipe-only (no active cars, not in "
               f"deploy/railway/revived_dealers.txt); {len(report['revived_recipe_only'])} revived",
               flush=True)
+        if lane != "all":
+            print(f"fleet   lane {lane}: {len(report['excluded_home_lane'])} home-lane dealers dropped "
+                  f"(excluded_home_lane), {report['excluded_not_home_lane']} not in the home list dropped",
+                  flush=True)
         if report["excluded_do_not_scan"]:
             print("fleet   do-not-scan: " + ", ".join(report["excluded_do_not_scan"]), flush=True)
         if report["revived_recipe_only"]:
             print("fleet   revived: " + ", ".join(report["revived_recipe_only"]), flush=True)
         return sorted({d["dealer_id"] for d in kept})
     return []
+
+
+# --------------------------------------------------------------------------
+# egress-lane alarms (P15A.1)
+# --------------------------------------------------------------------------
+
+HOME_LANE_STALE_HOURS = 36
+
+
+def blocked_railway_ids(rows: list[tuple[str, str | None]]) -> set[str]:
+    """Dealers blocked from Railway: ``scan_hints.recipe_blocked['railway']`` (P7.6) or the
+    legacy ``recipe_status = blocked:railway:...``. *rows* are (dealer_id, scan_hints JSON)."""
+    out: set[str] = set()
+    for did, raw in rows:
+        try:
+            hints = json.loads(raw or "{}") or {}
+        except (TypeError, ValueError):
+            continue
+        if not isinstance(hints, dict):
+            continue
+        if (hints.get("recipe_blocked") or {}).get("railway") or \
+                str(hints.get("recipe_status") or "").startswith("blocked:railway:"):
+            out.add(str(did))
+    return out
+
+
+def blocked_unassigned(blocked: set[str], home: set[str], do_not_scan: set[str]) -> list[str]:
+    """Blocked from Railway, in no lane's hands: not on the home list, not do-not-scan."""
+    return sorted(blocked - home - do_not_scan)
+
+
+def _as_utc(value: Any) -> datetime | None:
+    if isinstance(value, datetime):
+        dt = value
+    else:
+        try:
+            dt = datetime.fromisoformat(str(value).strip().replace("Z", "+00:00"))
+        except ValueError:
+            return None
+    return dt if dt.tzinfo else dt.replace(tzinfo=timezone.utc)
+
+
+def home_lane_stale(home: set[str], newest: dict[str, Any], now: datetime,
+                    hours: int = HOME_LANE_STALE_HOURS) -> list[str]:
+    """Home-lane dealers whose newest active ``scraped_at`` is older than *hours*, or that have
+    no active row or no readable stamp (nothing fresh is on the site for them)."""
+    out = []
+    for did in sorted(home):
+        dt = _as_utc(newest.get(did)) if newest.get(did) is not None else None
+        if dt is None or (now - dt).total_seconds() > hours * 3600:
+            out.append(did)
+    return out
+
+
+def lane_alarms(now: datetime | None = None) -> dict[str, Any]:
+    """fleet_summary ``alarms``: blocked_unassigned and home_lane_stale. A failed read reports
+    ``error`` instead of failing the run."""
+    from backend.scanner.manifest import load_do_not_scan_ids, load_home_lane_ids
+
+    home = load_home_lane_ids()
+    out: dict[str, Any] = {"blocked_unassigned": [], "home_lane_stale": []}
+    try:
+        from backend.db.inventory_db import get_conn
+
+        conn = get_conn()
+        try:
+            cur = conn.cursor()
+            cur.execute("SELECT dealer_id, scan_hints FROM dealer_recipes WHERE scan_hints IS NOT NULL")
+            blocked = blocked_railway_ids([(r[0], r[1]) for r in cur.fetchall()])
+            out["blocked_unassigned"] = blocked_unassigned(blocked, home, load_do_not_scan_ids())
+            newest: dict[str, Any] = {}
+            if home:
+                ids = sorted(home)
+                cur.execute(
+                    "SELECT dealer_id, MAX(scraped_at) FROM cars WHERE COALESCE(listing_active,1)=1 "
+                    "AND dealer_id IN (" + ",".join("?" * len(ids)) + ") GROUP BY dealer_id",
+                    tuple(ids),
+                )
+                newest = {str(r[0]): r[1] for r in cur.fetchall()}
+            out["home_lane_stale"] = home_lane_stale(home, newest, now or datetime.now(timezone.utc))
+        finally:
+            conn.close()
+    except Exception as exc:  # noqa: BLE001 - an alarm read must not fail a finished scan
+        out["error"] = f"{type(exc).__name__}: {exc}"[:300]
+    return out
+
+
+def egress_lane() -> str:
+    """The SCAN_LANE this run resolves to (an invalid value reads as 'all' here; load_roster
+    already refused it for a fleet run)."""
+    from backend.scanner.manifest import scan_lane
+
+    try:
+        return scan_lane()
+    except ValueError:
+        return "all"
+
+
+# P15A.4: the post steps, in the order they run. Cards are last: they are keyed on each car's
+# public-incomplete flag, so everything that writes data runs before them. Names come from the
+# N14.1 table (docs/NIGHTLY_CAPABILITIES_2026_10.md): index/market/cards are the kept steps,
+# recover is the targeted heal_from_recipes port, harvest is harvest_html_jsonld (home lane only).
+POST_STEP_ORDER = ("index", "market", "recover", "harvest", "cards")
+DEFAULT_POST_STEPS = ("index", "market", "cards")
+HOME_ONLY_POST_STEPS = frozenset({"harvest"})
+POST_STEP_KEYS = {
+    "index": "rebuild_incomplete_index",
+    "market": "compute_market_stats",
+    "recover": "heal_from_recipes",
+    "harvest": "harvest_html_jsonld",
+    "cards": "build_listings_grid_cards",
+}
+
+
+def post_steps(raw: str | None = None, lane: str | None = None) -> list[str]:
+    """Resolve SCAN_POST_STEPS to the ordered step names to run. '0' -> none, '1' or unset -> the
+    default (unset on the home lane -> none), else a comma list in any order (run in POST_STEP_ORDER,
+    cards last). An unknown step, or a home-only step off the home lane, raises ValueError."""
+    lane = lane or egress_lane()
+    raw = (os.environ.get("SCAN_POST_STEPS") if raw is None else raw) or ""
+    raw = raw.strip().lower()
+    if not raw:
+        raw = "0" if lane == "home" else "1"
+    if raw == "0":
+        return []
+    if raw == "1":
+        return list(DEFAULT_POST_STEPS)
+    wanted = [t.strip() for t in raw.split(",") if t.strip()]
+    bad = [t for t in wanted if t not in POST_STEP_ORDER]
+    if bad or not wanted:
+        raise ValueError(f"SCAN_POST_STEPS has unknown step(s) {bad or [raw]}; "
+                         f"use 0, 1 or a comma list of {','.join(POST_STEP_ORDER)}")
+    off_lane = sorted(t for t in set(wanted) & HOME_ONLY_POST_STEPS if lane != "home")
+    if off_lane:
+        raise ValueError(f"SCAN_POST_STEPS step(s) {off_lane} run on SCAN_LANE=home only "
+                         f"(the target hosts are walled off Railway)")
+    return [t for t in POST_STEP_ORDER if t in wanted]
+
+
+def open_code_dealers(dealer_ids: list[str]) -> list[str]:
+    """Roster dealers with at least one active car carrying open (non-pending) index codes: the only
+    dealers the recover and harvest steps are aimed at."""
+    if not dealer_ids:
+        return []
+    from backend.db.inventory_db import get_conn
+
+    conn = get_conn()
+    try:
+        cur = conn.cursor()
+        cur.execute(
+            "SELECT DISTINCT c.dealer_id FROM incomplete_listings il JOIN cars c ON c.id = il.car_id "
+            "WHERE COALESCE(il.pending, 0) = 0 AND COALESCE(c.listing_active, 1) = 1 AND c.dealer_id IN ("
+            + ",".join("?" * len(dealer_ids)) + ") ORDER BY c.dealer_id",
+            tuple(dealer_ids),
+        )
+        return [str(r[0]) for r in cur.fetchall()]
+    finally:
+        conn.close()
+
+
+def _targeted_cmd(py: str, module: str, roster: list[str], cap: int) -> list[str] | None:
+    """`-m module --dealer-id a --dealer-id b ...` for the capped open-code dealers; None when none."""
+    ids = open_code_dealers(roster)[:cap]
+    if not ids:
+        return None
+    cmd = [py, "-m", module]
+    for d in ids:
+        cmd += ["--dealer-id", d]
+    return cmd
 
 
 def active_rows(dealer_ids: list[str]) -> dict[str, int]:
@@ -523,6 +709,11 @@ def run_fleet() -> int:
         RUN_META["idle"] = True  # main() holds after the lease is released
         return 0
 
+    try:
+        steps = post_steps()
+    except ValueError as exc:  # P15A.4: a typo must not be found after a 2 h scan
+        print(f"fleet   {exc}", flush=True)
+        raise SystemExit(2) from exc
     RUN_META["ran"] = True
     out_root = Path(os.environ.get("SCAN_OUT_ROOT") or (ROOT / "workspace" / "pipeline"))
     keep_days = _env_int("SCAN_KEEP_DAYS", 14)
@@ -575,26 +766,31 @@ def run_fleet() -> int:
     scan_resources = sampler.summary()
 
     post: dict[str, dict[str, Any]] = {}
-    if (os.environ.get("SCAN_POST_STEPS") or "1").strip() != "0":
+    for step in steps:
         env = dict(os.environ)
-        # Before market stats and the grid cards: cards are keyed on each car's
-        # public-incomplete flag, so the index must be final first.
-        # Once per fleet, after every shard's vPIC heal and reconcile; per-car syncs run
-        # before backfill and leave complete cars flagged (N6.1). Forced: shards changed data.
-        env = dict(os.environ)
-        rc, secs = run_step(
-            "index",
-            [py, "-c", "from backend.db.incomplete_listings_db import rebuild_index_chunked as r;"
-                       "import json;res=r(force=True);print(json.dumps(res));"
-                       "raise SystemExit(0 if res['status'] in ('rebuilt','locked') else 1)"],
-            env, run_dir / "post.out")
-        post["rebuild_incomplete_index"] = {"rc": rc, "seconds": secs}
-        rc, secs = run_step("market", [py, "-m", "backend.scripts.compute_market_stats"], env, run_dir / "post.out")
-        post["compute_market_stats"] = {"rc": rc, "seconds": secs}
-        env = dict(os.environ)
-        env["FLASK_ENV"] = "production"  # card key includes listings_include_incomplete_cars()
-        rc, secs = run_step("cards", [py, "-m", "backend.scripts.build_listings_grid_cards"], env, run_dir / "post.out")
-        post["build_listings_grid_cards"] = {"rc": rc, "seconds": secs}
+        key = POST_STEP_KEYS[step]
+        if step == "index":
+            # Before market stats and the grid cards: cards are keyed on each car's
+            # public-incomplete flag, so the index must be final first.
+            # Once per fleet, after every shard's vPIC heal and reconcile; per-car syncs run
+            # before backfill and leave complete cars flagged (N6.1). Forced: shards changed data.
+            cmd = [py, "-c", "from backend.db.incomplete_listings_db import rebuild_index_chunked as r;"
+                             "import json;res=r(force=True);print(json.dumps(res));"
+                             "raise SystemExit(0 if res['status'] in ('rebuilt','locked') else 1)"]
+        elif step == "market":
+            cmd = [py, "-m", "backend.scripts.compute_market_stats"]
+        elif step in ("recover", "harvest"):
+            module = ("backend.scripts.heal_from_recipes" if step == "recover"
+                      else "backend.scripts.harvest_html_jsonld")
+            cmd = _targeted_cmd(py, module, roster, _env_int("SCAN_RECOVER_MAX_DEALERS", 25))
+            if cmd is None:  # nothing carries an open code: act on no rows
+                post[key] = {"rc": 0, "seconds": 0.0, "skipped": "no open index codes"}
+                continue
+        else:
+            env["FLASK_ENV"] = "production"  # card key includes listings_include_incomplete_cars()
+            cmd = [py, "-m", "backend.scripts.build_listings_grid_cards"]
+        rc, secs = run_step(step, cmd, env, run_dir / "post.out")
+        post[key] = {"rc": rc, "seconds": secs}
     sampler.stop.set()
 
     results: list[dict[str, Any]] = []
@@ -616,6 +812,8 @@ def run_fleet() -> int:
         "window": RUN_META.get("window"),
         "lock": RUN_META.get("lock"),
         "reason": RUN_META.get("reason"),
+        "egress_lane": egress_lane(),
+        "alarms": lane_alarms(),
         "warnings": list(RUN_META.get("warnings") or []),
         "run_dir": str(run_dir),
         "dealers": len(roster),
