@@ -58,3 +58,52 @@ def test_record_and_read_winning_strategy(tmp_path, monkeypatch):
     record_winning_strategy("test-dealer", "dealer_inspire_algolia", platform_hints={"algolia"})
     assert get_cached_winning_strategy("test-dealer") == "dealer_inspire_algolia"
     assert get_cached_winning_strategy("missing") is None
+
+
+def test_strategy_names_have_one_source():
+    import backend.scanner.dealer.profile as prof
+    import backend.scanner.inventory_recovery as ir
+
+    assert ir.RECOVERY_STRATEGY_ORDER is prof.RECOVERY_STRATEGY_ORDER
+    assert ir.HTTP_SAFE_STRATEGIES is prof.HTTP_SAFE_STRATEGIES
+    assert prof._VALID_STRATEGIES == frozenset(prof.RECOVERY_STRATEGY_ORDER)
+
+
+def test_cached_shopperexpress_api_moves_first_and_nothing_else_reorders():
+    from backend.scanner.dealer.profile import RECOVERY_STRATEGY_ORDER
+
+    base = list(RECOVERY_STRATEGY_ORDER)
+    chain = ["dealer_inspire_algolia", "html_next_data", "shopperexpress_api", "dealer_on_cosmos"]
+    out = prioritize_recovery_chain(chain, cached_strategy="shopperexpress_api")
+    assert out == ["shopperexpress_api", "dealer_inspire_algolia", "html_next_data", "dealer_on_cosmos"]
+    assert recovery_strategy_names(set(), cached_strategy="shopperexpress_api")[0] == "shopperexpress_api"
+    assert recovery_strategy_names(set(), cached_strategy="shopperexpress_api")[1:] == base[1:]
+    assert recovery_strategy_names(set()) == base
+
+
+def test_shopperexpress_api_winner_is_cached(monkeypatch):
+    import backend.scanner.dealer.profile as prof
+
+    writes = []
+
+    class _Cur:
+        def execute(self, sql, params=()):
+            if "INSERT" in sql:
+                writes.append(params)
+
+    class _Conn:
+        def cursor(self):
+            return _Cur()
+
+        def commit(self):
+            pass
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *a):
+            return False
+
+    monkeypatch.setattr(prof, "db_conn", lambda: _Conn())
+    prof.record_winning_strategy("d1", "shopperexpress_api", platform_hints={"shopperexpress"})
+    assert writes and writes[0][1] == "shopperexpress_api"
