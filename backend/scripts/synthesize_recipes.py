@@ -73,6 +73,7 @@ from backend.scanner.recipe_synth import (
     synthesize_recipes,
     validate_recipe,
 )
+from backend.scanner.recipe_totals import RECIPE_MIN_VINS
 from backend.scanner.recipes import EndpointRecipe, load_recipes, merge_recipes, replace_recipes
 
 logging.basicConfig(level=logging.WARNING, format="%(asctime)s [%(levelname)s] %(message)s")
@@ -319,7 +320,8 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--dealer-id", help="one-off: dealer id (with --url)")
     ap.add_argument("--url", help="one-off: dealer homepage URL")
     ap.add_argument("--name", help="one-off: dealer display name")
-    ap.add_argument("--min-vins", type=int, default=5, help="min unique VINs to accept (default 5)")
+    ap.add_argument("--min-vins", type=int, default=RECIPE_MIN_VINS,
+                    help=f"min unique VINs across the kept set (default {RECIPE_MIN_VINS}, the one rule)")
     ap.add_argument("--dry-run", action="store_true",
                     help="fingerprint/synthesize/validate/gate, but write no recipe, discovery.md entry or recipe_status")
     ap.add_argument("--force", action="store_true", help="save even if a healthy recipe already exists")

@@ -26,6 +26,7 @@ if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
 
 from backend.db.connect import connect as db_connect  # noqa: E402
+from backend.scanner.recipe_totals import RECIPE_MIN_VINS  # noqa: E402
 
 _log = logging.getLogger("cascade")
 
@@ -33,7 +34,7 @@ _log = logging.getLogger("cascade")
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--dry-run", action="store_true", help="report winners, save nothing")
-    ap.add_argument("--min-vins", type=int, default=5)
+    ap.add_argument("--min-vins", type=int, default=RECIPE_MIN_VINS)
     ap.add_argument("--max-shapes", type=int, default=40, help="shapes to try per dealer")
     ap.add_argument("--limit", type=int, help="only this many target dealers")
     ap.add_argument("--dealer", help="one dealer_key")

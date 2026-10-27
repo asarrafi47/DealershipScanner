@@ -42,13 +42,15 @@ from dataclasses import replace
 from typing import Any, Iterable
 from urllib.parse import urlparse
 
+from backend.scanner.recipe_totals import RECIPE_MIN_VINS
+
 logger = logging.getLogger(__name__)
 
 # A shape must have produced this many rows for its donor to be worth borrowing.
 _MIN_DONOR_ROWS = 15
 
 # Accept an adapted recipe once it yields this many unique VINs.
-DEFAULT_MIN_VINS = 5
+DEFAULT_MIN_VINS = RECIPE_MIN_VINS
 
 # Cap the work per dealer: shapes are tried best-first and the tail is mostly
 # near-duplicates, so an exhaustive sweep costs time without adding coverage.

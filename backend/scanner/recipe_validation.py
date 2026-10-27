@@ -1,7 +1,7 @@
 """Recipe-set validation against the site's own count (HTTP_ONLY_SCANS_PLAN Phase 3).
 
 ``validate_recipe`` (bottom of this module; re-exported by recipe_synth) answers one question — how many VINs does
-this recipe yield — and every save path accepted anything with >= 5. That is
+this recipe yield — and every save path accepted anything with >= 5 (now :data:`RECIPE_MIN_VINS`). That is
 how one-condition, section-scoped and short-page recipes reached the fleet and
 were only caught by the assess step a scan later (the 09-24 / 09-26 censuses:
 16 section-scoped carscommerce captures, 14 dealer.com recipes stopped at 48
@@ -40,6 +40,7 @@ import json
 import os
 import logging
 import re
+import time
 from dataclasses import asdict, dataclass, field, replace
 from datetime import datetime, timezone
 from pathlib import Path
@@ -71,6 +72,8 @@ from backend.scanner.recipes import (
 # Single-recipe yield probe (moved from synth/validate.py, audit F-6 follow-up).
 from backend.scanner.net import ssrf
 from backend.scanner.recipe_totals import (  # noqa: F401  (moved; re-exported for its callers and tests)
+    RECIPE_MIN_VINS,
+    request_signature,
     SITE_TOTAL_EXTRACTORS,
     _int_or_none,
     _total_carscommerce,
@@ -112,10 +115,11 @@ WHOLE_LOT_SEEN = 0.90
 # HTML /used-inventory/ walk) is one-condition only when the OTHER side is known
 # to exist. The validator asks the other side's own URL: this many VINs there
 # means the site sells both and the set misses a side. Below it the synth would
-# have dropped that recipe anyway (dealer_pipeline.ensure_recipe keeps >= 5), so
+# have dropped that recipe anyway (ensure_recipe keeps a set of at least RECIPE_MIN_VINS), so
 # the lot is used-only (or new-only) as far as the site says, and the set saves
 # as ``uncertain:one_condition_unverified`` for the post-scan assess to judge.
-OTHER_SIDE_MIN_VINS = 5
+# D-OD1 keeps the probe at the same number as the save floor, by decision rather than by echo.
+OTHER_SIDE_MIN_VINS = RECIPE_MIN_VINS
 
 _TS_CONDITION_RE = re.compile(r"condition\s*:=?\s*\[?\s*`?\"?'?([A-Za-z -]+)", re.I)
 
@@ -870,6 +874,25 @@ def walk_candidates(
                      place=place, pages=pages or _VALIDATE_MAX_PAGES)
 
 
+def shared_with_other_dealers(dealer_id: str, recipes: list[EndpointRecipe]) -> dict[str, str]:
+    """``{other dealer_id: url}`` for each other dealer whose live stored recipe is the
+    same request (method, host+path+query, body) as one of *recipes*. Empty when the
+    recipe store cannot be read."""
+    from backend.scanner import recipe_store
+
+    out: dict[str, str] = {}
+    for r in recipes:
+        sig = request_signature(r.method, r.url, r.post_template)
+        for other, rows in recipe_store.db_other_dealers_with_url(dealer_id, r.url):
+            if other in out:
+                continue
+            for row in rows:
+                if not row.get("stale") and request_signature(row.get("method"), row.get("url"), row.get("post_template")) == sig:
+                    out[other] = r.url
+                    break
+    return out
+
+
 def gate_recipes(
     dealer_id: str,
     recipes: list[EndpointRecipe],
@@ -883,6 +906,7 @@ def gate_recipes(
     record: bool = True,
     pages: int | None = None,
     checks: RecipeChecks | None = None,
+    allow_shared: bool = False,
 ) -> tuple[list[EndpointRecipe], RecipeValidationReport]:
     """Validate the set and apply the verdict: ``reject`` returns ``[]`` (nothing
     to save) and logs the report; ``uncertain`` and ``ok`` return the recipes.
@@ -896,13 +920,29 @@ def gate_recipes(
 
     *pages* is how many pages each recipe is read for (default
     :data:`PAGES_REPLAYED`); *checks* is a walk already read by :func:`check_all`,
-    judged as it is instead of fetching again."""
+    judged as it is instead of fetching again.
+
+    A set holding a request (method, URL, body) that another dealer's stored recipes
+    already hold is refused as ``duplicate_endpoint`` (CF-3: a byte copy of another store's
+    recipe served 1,284 rows from the wrong site). *allow_shared* skips that check for a
+    group feed a person has confirmed is shared."""
     kw: dict[str, Any] = {}
     if pages is not None:
         kw["pages"] = pages
     if checks is not None:
         kw["checks"] = checks
     report = validate_recipe_set(dealer_id, recipes, fetch, base_url=base_url, dealer_name=dealer_name, place=place, **kw)
+    shared = {} if allow_shared or report.verdict == "reject" else shared_with_other_dealers(dealer_id, recipes)
+    if shared:
+        report.verdict = "reject"
+        report.flags["duplicate_endpoint"] = True
+        report.reasons.insert(0, "duplicate_endpoint: same request stored for " + ", ".join(
+            f"{d} ({u[:60]})" for d, u in sorted(shared.items())[:5]))
+    if report.verdict in ("ok", "uncertain"):
+        # Gate provenance: the scan admits a sub-floor pinned side only under these.
+        stamp = time.time()
+        for r in recipes:
+            r.gate_verdict, r.gate_at = report.verdict, stamp
     if record:
         write_discovery_log(dealer_id, report, context, log_root)
         record_recipe_status(dealer_id, report, context)
@@ -931,6 +971,7 @@ __all__ = [
     "platform_of",
     "recipe_condition_filter",
     "record_recipe_status",
+    "shared_with_other_dealers",
     "validate_recipe_set",
     "walk_candidates",
     "write_discovery_log",
