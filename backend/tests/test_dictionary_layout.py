@@ -104,3 +104,8 @@ def test_stub_preflight_flags_stubs_with_rows(tmp_path: Path) -> None:
 def test_root_copies_are_gone() -> None:
     """P9.3 acceptance: no root-level Complete_Options CSV remains."""
     assert not list(_DICT.glob(f"*{SUFFIX}"))
+
+
+def test_stub_directory_is_gone() -> None:
+    """P9.4 acceptance: no header-only stub files are tracked."""
+    assert not list((_DICT / "options" / "stubs").glob(f"*/*{SUFFIX}"))
