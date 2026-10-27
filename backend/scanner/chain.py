@@ -3,7 +3,7 @@
 Two-stage pipeline, each stage a chain of strategies tried in order until one
 works:
 
-  1. Fetch    — get raw HTML for a listings/VDP URL (requests -> Playwright)
+  1. Fetch    — get raw HTML for a listings/VDP URL (impersonated HTTP -> requests)
   2. Extract  — turn HTML into structured vehicles (caller-supplied extractors,
                 e.g. platform API probes -> LLM -> BeautifulSoup heuristic)
 
@@ -40,10 +40,8 @@ now: existing extraction machinery (``vdp_spec_extract``,
 ``backend/scanner/scrapers/``) can opt in later by wrapping
 itself in ``Extractor`` subclasses; nothing existing depends on it.
 
-Sync-context caveat: ``PlaywrightFetcher.fetch`` uses sync Playwright, which
-raises if called from inside a running asyncio event loop — call it from a
-worker thread in async code paths (same constraint as the rest of the sync
-Playwright helpers in this repo).
+Sync-context caveat: the fetchers are synchronous (blocking HTTP); call them from a
+worker thread in async code paths.
 """
 from __future__ import annotations
 
@@ -183,7 +181,7 @@ class ScraperChain:
 
 
 # ---------------------------------------------------------------------------
-# Concrete fetchers, ordered cheapest -> heaviest (plain HTTP -> browser).
+# Concrete fetchers, ordered cheapest -> heaviest (impersonated HTTP -> plain HTTP).
 # Heavy deps are imported inside methods so this module imports with zero side
 # effects even when optional deps are missing; available() guards actual use.
 # ---------------------------------------------------------------------------
@@ -197,13 +195,13 @@ class ImpersonatingFetcher(Fetcher):
     handshake rather than on headers: bare curl and curl carrying a complete browser
     header set receive the same 403 from the same host. ``RequestsFetcher`` therefore
     fails on those sites no matter what headers it sends, and because it fails the chain
-    falls through to ``PlaywrightFetcher`` -- which is where a browser-free scan quietly
-    turns into 1,656 browser fetches.
+    used to fall through to a browser stage (removed in P17B.6) -- which is where a
+    browser-free scan quietly turned into 1,656 browser fetches.
 
     ``curl_cffi`` reproduces a browser's handshake, so the edge answers normally. Of 182
     rooftops that yielded no inventory, 112 were returning 403 to a stock HTTP client;
     with impersonation that fell to 1. This fetcher runs ahead of both others so those
-    sites resolve over HTTP and never reach the browser stage.
+    sites resolve over HTTP.
 
     Signature rotation is required, not belt-and-braces: over a 30-dealer sample
     ``chrome`` alone cleared roughly half, while chrome/chrome124/safari17_0 together
@@ -297,76 +295,6 @@ class RequestsFetcher(Fetcher):
         return resp.text
 
 
-class PlaywrightFetcher(Fetcher):
-    """Headless-Chromium fetch (renders JS), with playwright-stealth applied.
-
-    Browser construction mirrors ``backend.scanner.orchestrator`` (which wraps
-    playwright in ``Stealth().use_async(...)``), using the sync counterpart
-    ``Stealth().use_sync(...)`` and falling back to plain playwright when
-    playwright_stealth is not installed. For fully custom browser setups a
-    ``page_factory`` context-manager callable may be injected: it must accept
-    a user-agent string and yield a ready Playwright page.
-
-    Must be called from sync context (or a worker thread) — sync Playwright
-    raises inside a running asyncio event loop.
-    """
-
-    name = "playwright"
-
-    def __init__(
-        self,
-        timeout_ms: int = 30000,
-        wait_until: str = "networkidle",
-        user_agent: str = _UA,
-        page_factory: Callable[[str], Any] | None = None,
-    ):
-        self.timeout_ms = timeout_ms
-        self.wait_until = wait_until
-        self.user_agent = user_agent
-        self.page_factory = page_factory
-
-    def available(self) -> bool:
-        try:
-            import playwright  # noqa: F401
-
-            return True
-        except ImportError:
-            return False
-
-    def fetch(self, url: str) -> str:
-        if self.page_factory is not None:
-            with self.page_factory(self.user_agent) as page:
-                page.goto(url, wait_until=self.wait_until, timeout=self.timeout_ms)
-                return page.content()
-
-        from backend.scanner.http_fetch import playwright_proxy_kwargs
-
-        with self._playwright_context() as p:
-            from backend.scanner.browser_gate import require_browser
-
-            require_browser("chain.PlaywrightFetcher")
-            browser = p.chromium.launch(headless=True, **playwright_proxy_kwargs())
-            try:
-                page = browser.new_page(user_agent=self.user_agent)
-                page.goto(url, wait_until=self.wait_until, timeout=self.timeout_ms)
-                return page.content()
-            finally:
-                browser.close()
-
-    @staticmethod
-    def _playwright_context():
-        """Stealth-wrapped sync playwright, mirroring orchestrator.py's pattern."""
-        from playwright.sync_api import sync_playwright
-
-        try:
-            from playwright_stealth import Stealth
-
-            return Stealth().use_sync(sync_playwright())
-        except ImportError:
-            logger.warning("playwright_stealth not found, using plain playwright")
-            return sync_playwright()
-
-
 # ---------------------------------------------------------------------------
 # Extractors: framework-only. One thin no-LLM fallback is provided; existing
 # extraction machinery can be wrapped as Extractor subclasses by callers.
@@ -431,22 +359,16 @@ class HeuristicVehicleLinkExtractor(Extractor):
 
 
 # Impersonation first: it clears the Cloudflare TLS-fingerprint 403 that would
-# otherwise fail RequestsFetcher and escalate the chain to a browser.
+# otherwise fail RequestsFetcher.
 DEFAULT_FETCHERS: list[Fetcher] = [
     ImpersonatingFetcher(),
     RequestsFetcher(),
-    PlaywrightFetcher(),
 ]
 
 
 def default_fetchers() -> list[Fetcher]:
-    """Cheap→heavy fetchers; the browser stage only when the policy allows it."""
-    from backend.scanner.browser_gate import browser_allowed
-
-    out: list[Fetcher] = [ImpersonatingFetcher(), RequestsFetcher()]
-    if browser_allowed():
-        out.append(PlaywrightFetcher())
-    return out
+    """Cheap→heavy HTTP fetchers (no browser stage)."""
+    return [ImpersonatingFetcher(), RequestsFetcher()]
 
 
 def default_chain(
@@ -472,7 +394,6 @@ __all__ = [
     "FetchError",
     "Fetcher",
     "HeuristicVehicleLinkExtractor",
-    "PlaywrightFetcher",
     "RequestsFetcher",
     "ScrapeResult",
     "ScrapedVehicle",

@@ -1,5 +1,5 @@
 """
-Post-scan listing gap fill: dictionary/vPIC first, then listing-page HTML (Playwright),
+Post-scan listing gap fill: dictionary/vPIC first, then listing-page HTML (HTTP),
 optional DuckDuckGo Instant Answer for residual mechanical fields.
 
 **Condition** is only taken from listing/VDP HTML (never invented from DDG). DDG is used only
@@ -69,48 +69,6 @@ def _requests_fetch_html(url: str, timeout_s: float = 22.0) -> str | None:
         return None
 
 
-def _playwright_fetch_html(url: str, timeout_ms: int = 65000) -> str | None:
-    from backend.scanner.browser_gate import browser_allowed
-
-    if not browser_allowed():
-        # Auto-heal / gap fill launched a sync Chromium per VIN batch inside
-        # "HTTP-only" fleet runs (1,656 launches in one nightly, deploy/NIGHTLY_REFRESH.md).
-        logger.info("gap_fill: browser fetch skipped for %s (HTTP-only policy)", url[:80])
-        return None
-    try:
-        from playwright.sync_api import sync_playwright
-    except ImportError:
-        logger.warning("playwright not installed; skipping JS listing fetch for %s", url[:80])
-        return None
-    ua = (
-        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
-        "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
-    )
-    from backend.scanner.http_fetch import playwright_proxy_kwargs
-
-    try:
-        with sync_playwright() as p:
-            browser = p.chromium.launch(headless=True, **playwright_proxy_kwargs())
-            try:
-                page = browser.new_page(user_agent=ua)
-                page.goto(url, timeout=timeout_ms, wait_until="domcontentloaded")
-                for _ in range(15):
-                    title = (page.title() or "").lower()
-                    body_head = (page.inner_text("body") or "")[:240].lower()
-                    if "just a moment" not in title and "just a moment" not in body_head:
-                        break
-                    page.wait_for_timeout(2000)
-                page.wait_for_timeout(
-                    int(os.environ.get("LISTING_GAP_FILL_POST_GOTO_MS") or "5000")
-                )
-                return page.content()
-            finally:
-                browser.close()
-    except Exception as e:
-        logger.warning("Playwright listing fetch failed %s: %s", url[:80], e)
-        return None
-
-
 def _listing_html_is_sufficient(raw: str) -> bool:
     """Acceptance heuristic for the lightweight HTTP fetch (thin-SPA-shell guard)."""
     low = raw.lower()
@@ -124,11 +82,11 @@ def _listing_html_is_sufficient(raw: str) -> bool:
 
 
 def _fetch_listing_html_via_chain(url: str) -> str | None:
-    """ScraperChain-backed fetch: requests (with acceptance heuristic) -> Playwright.
+    """ScraperChain-backed fetch: impersonated HTTP -> requests (with acceptance heuristic).
 
-    Delegates to the module-level ``_requests_fetch_html`` / ``_playwright_fetch_html``
-    helpers (looked up at call time so monkeypatching stays effective) and preserves
-    the legacy return-None-on-total-failure contract.
+    Delegates to the module-level ``_requests_fetch_html`` helper (looked up at call
+    time so monkeypatching stays effective) and preserves the legacy
+    return-None-on-total-failure contract.
     """
     from backend.scanner.chain import Fetcher, FetchError, ScraperChain
 
@@ -139,26 +97,13 @@ def _fetch_listing_html_via_chain(url: str) -> str | None:
             raw = _requests_fetch_html(u)
             if raw and _listing_html_is_sufficient(raw):
                 return raw
-            # Empty string -> chain records "requests: empty" and falls through
-            # to Playwright, matching the legacy inline behavior.
+            # Empty string -> chain records "requests: empty" and raises FetchError.
             return ""
 
-    class _PlaywrightListingFetcher(Fetcher):
-        name = "playwright"
-
-        def fetch(self, u: str) -> str:
-            return _playwright_fetch_html(u) or ""
-
-    # ImpersonatingFetcher leads: a Cloudflare 403 here used to fail the requests
-    # stage and pull in Playwright, which is how a browser-free run logged 1,656
-    # browser fetches.
+    # ImpersonatingFetcher leads: a Cloudflare 403 here fails the plain requests stage.
     from backend.scanner.chain import ImpersonatingFetcher
 
-    from backend.scanner.browser_gate import browser_allowed
-
     fetchers = [ImpersonatingFetcher(), _RequestsListingFetcher()]
-    if browser_allowed():
-        fetchers.append(_PlaywrightListingFetcher())
     chain = ScraperChain(fetchers=fetchers, extractors=[])
     try:
         html, _strategy = chain.fetch(url)
@@ -168,17 +113,18 @@ def _fetch_listing_html_via_chain(url: str) -> str | None:
 
 
 def _fetch_listing_html_legacy(url: str) -> str | None:
-    """Pre-ScraperChain inline fallback chain (kept as a safety net)."""
+    """Pre-ScraperChain inline path (kept as a safety net); HTTP-only, None when the
+    requests result is insufficient."""
     raw = _requests_fetch_html(url)
     if raw and _listing_html_is_sufficient(raw):
         return raw
-    return _playwright_fetch_html(url)
+    return None
 
 
 def fetch_listing_html(url: str) -> str | None:
     """
-    Prefer lightweight HTTP GET; use Playwright when the body looks like a thin SPA shell
-    or condition/spec signals are missing.
+    Lightweight HTTP GET (TLS-impersonated, then plain requests); None when the body
+    looks like a thin SPA shell or condition/spec signals are missing.
 
     Backed by ``backend.scanner.chain.ScraperChain`` (set
     ``SCANNER_LISTING_FETCH_CHAIN=0`` to force the legacy inline path); on any
@@ -211,7 +157,7 @@ def fetch_listing_html(url: str) -> str | None:
         asyncio.get_running_loop()
     except RuntimeError:
         return _run()
-    # Post-scan runs inside scanner's asyncio loop — sync Playwright must run in a thread.
+    # Post-scan runs inside scanner's asyncio loop — the sync fetchers run in a worker thread.
     import concurrent.futures
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=1) as pool:

@@ -61,9 +61,9 @@ def test_fetch_chains_have_no_browser_stage_by_default(monkeypatch):
     from backend.scanner.post_scan import gap_fill
 
     assert [f.name for f in chain.default_fetchers()] == [chain.ImpersonatingFetcher().name, chain.RequestsFetcher().name]
-    assert gap_fill._playwright_fetch_html("https://example.com/x") is None
-    monkeypatch.setenv("SCANNER_ALLOW_BROWSER", "1")
-    assert chain.default_fetchers()[-1].name == chain.PlaywrightFetcher().name
+    monkeypatch.setenv("SCANNER_ALLOW_BROWSER", "1")  # discovery flag; no scan fetch chain grows a browser stage
+    assert [f.name for f in chain.default_fetchers()] == [chain.ImpersonatingFetcher().name, chain.RequestsFetcher().name]
+    assert not hasattr(chain, "PlaywrightFetcher") and not hasattr(gap_fill, "_playwright_fetch_html")
 
 
 def test_recovery_chain_runs_http_strategies_without_playwright(monkeypatch):
@@ -102,9 +102,8 @@ def test_eprocess_without_page_uses_results_api_only(monkeypatch):
     assert rows and calls == ["https://d.example"]
 
 
-def test_launch_sites_refuse_without_the_gate(monkeypatch):
+def test_launch_site_refuses_without_the_gate(monkeypatch):
+    # chain/gap_fill no longer launch a browser (P17B.6); discovery_capture is the only launcher.
     monkeypatch.delenv("SCANNER_ALLOW_BROWSER", raising=False)
-    from backend.scanner import chain
-
     with pytest.raises(bg.BrowserForbidden):
-        chain.PlaywrightFetcher().fetch("https://example.com/")
+        bg.require_browser("test")
