@@ -2264,6 +2264,10 @@ def attach_rung_order(overlay: dict[str, Any]) -> dict[str, Any]:
         return overlay
     if not ck or not year:
         return overlay
+    # Fallback branch: the overlay lost its order_basis. The image fences
+    # derived/brochure_text/ out (P9.7), so flag it loudly; the gate test in
+    # test_brochure_text_runtime_gate.py keeps this from firing for shipped data.
+    logger.warning("overlay %s has no order_basis; re-deriving from brochure_text", ck)
     order, basis_json = _rung_order_from_brochure_text(
         ck, str(overlay.get("make") or ""), str(overlay.get("model") or ""), year
     )
