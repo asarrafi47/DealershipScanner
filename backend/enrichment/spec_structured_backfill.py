@@ -4,15 +4,22 @@ Structured spec backfill: inventory_repair (EPA/trim) first, then NHTSA vPIC for
 Provenance for every inferred column is merged into ``cars.spec_source_json`` (same mechanism as
 ``backend.enrichment.spec_backfill``); no separate ``spec_inference_*`` columns — keeps one JSON audit trail.
 
-Tier order (mandatory):
-  1) ``collect_row_storage_repairs`` / ``merge_verified_specs`` — do not reimplement cylinder/trans
-     logic here; it lives in ``backend.enrichment.knowledge_engine`` / ``backend.utils.inventory_repair``.
-  2) NHTSA ``DecodeVinValuesExtended`` — only for slots still NULL/placeholder after tier 1;
-     only when ``looks_like_decode_vin(vin)``. Optional SQLite ``nhtsa_vpic_cache`` avoids repeat HTTP.
+Evaluation order (mandatory, P8B.6a):
+  1) NHTSA ``DecodeVinValuesExtended`` for the vPIC-covered fields (drivetrain, fuel_type,
+     cylinders, transmission, engine_description, body_style) — only when
+     ``looks_like_decode_vin(vin)``. Optional ``nhtsa_vpic_cache`` avoids repeat HTTP.
+  2) Tier 1, ``collect_row_storage_proposals`` / ``merge_verified_specs`` — do not reimplement
+     cylinder/trans logic here; it lives in ``backend.enrichment.knowledge_engine`` /
+     ``backend.utils.inventory_repair``. Labels: ``epa_catalog``, ``dealer_normalized``,
+     ``dealer_text_heuristic``.
+  Both tiers are decided together by ``apply_fact_proposals``: a lower rank never replaces a
+  higher one, and a vPIC two-wheel drive is never filled AWD/4WD by tier 1.
 
 Environment:
-  SPEC_STRUCTURED_VPIC_OVERWRITE_DEALER — when truthy, vPIC may replace non-placeholder dealer text
-  (default: off — never overwrite real dealer values).
+  SPEC_STRUCTURED_VPIC_OVERWRITE_DEALER — when truthy, vPIC may propose a value for a slot that
+  already holds dealer text, but only where precedence allows (the rank rules in
+  ``backend.vehicle_facts.precedence`` still refuse it for engine text and transmission, where
+  the dealer outranks the decode). Default: off — never overwrite real dealer values.
 """
 from __future__ import annotations
 
@@ -31,9 +38,11 @@ from backend.enrichment.nhtsa_vpic import (
     looks_like_decode_vin,
 )
 from backend.utils.field_clean import is_effectively_empty
-from backend.utils.inventory_repair import collect_row_storage_repairs
+from backend.utils.inventory_repair import collect_row_storage_proposals, storage_derived_columns
 from backend.utils.spec_field_normalize import split_trim_components, trim_named_in_listing
 from backend.utils.spec_provenance import merge_spec_source_json
+from backend.vehicle_facts import precedence as prec
+from backend.vehicle_facts.apply import apply_fact_proposals
 
 log = logging.getLogger(__name__)
 
@@ -219,6 +228,22 @@ class StructuredSpecBackfillResult:
     has_pending_patch: bool = False
 
 
+# Columns judged on the stored row (before tier 1): the vPIC-covered ones.
+_VPIC_FIRST_KEYS = frozenset(prec.FIELDS) | {"body_style"}
+_VPIC_URL = "https://vpic.nhtsa.dot.gov/api/vehicles/decodevinvaluesextended/"
+_TIER1_DETAIL = "clean_car_row_dict + merge_verified_specs (spec_structured_backfill tier 1)"
+
+
+def _vpic_ctx(flat: dict[str, str] | None) -> dict[str, Any]:
+    """Precedence ctx from a decode row (electrification and two-wheel-drive guards)."""
+    if not flat:
+        return {}
+    ctx: dict[str, Any] = {"vpic": flat}
+    if (flat.get("DriveType") or "").strip():
+        ctx["vpic_drive"] = flat["DriveType"].strip()
+    return ctx
+
+
 def apply_structured_spec_backfill_for_car(
     car_id: int,
     *,
@@ -227,8 +252,10 @@ def apply_structured_spec_backfill_for_car(
     use_vpic_cache: bool = True,
 ) -> StructuredSpecBackfillResult:
     """
-    Tier-1 inventory_repair patch, then tier-2 vPIC for remaining fillable slots.
-    Merges provenance into ``spec_source_json``. Idempotent when DB already matches.
+    The VIN decode first for the vPIC-covered fields, then tier-1 inventory_repair values,
+    all fact columns decided together by ``apply_fact_proposals`` (a lower rank never
+    replaces a higher one, and an EPA value never fills a slot the decode owns). Columns
+    and ``spec_source_json`` go out in one UPDATE. Idempotent when DB already matches.
     """
     raw = get_car_by_id(car_id)
     if not raw:
@@ -237,23 +264,28 @@ def apply_structured_spec_backfill_for_car(
     if not row_candidate_for_structured_spec_backfill(raw):
         return StructuredSpecBackfillResult(car_id=car_id, applied=False, skip_reason="already_complete", has_pending_patch=False)
 
-    tier1 = collect_row_storage_repairs(raw)
-    merged: dict[str, Any] = dict(raw)
-    for k, v in tier1.items():
-        merged[k] = v
-
-    tier1_keys = sorted(tier1.keys())
+    tier1 = collect_row_storage_proposals(raw)
+    # The row as tier 1 would leave it: the view for the slots the decode does not own first.
+    merged_view: dict[str, Any] = {**raw, **tier1.plain}
+    for k, v, _src in tier1.proposals:
+        merged_view[k] = v
+    tier1_keys = sorted({k for k, _v, _s in tier1.proposals} | set(tier1.plain))
     allow_ow = _vpic_overwrite_dealer_enabled()
 
-    tier2: dict[str, Any] = {}
+    def _view(k: str) -> dict[str, Any]:
+        return raw if k in _VPIC_FIRST_KEYS else merged_view
+
+    vpic_props: list[tuple[str, Any, str]] = []   # fact columns, source nhtsa_vpic
+    vpic_plain: dict[str, Any] = {}               # columns without a rank (body_style, trim, ...)
     trim_rejection: dict[str, Any] | None = None
     vpic_err: str | None = None
-    vin = (merged.get("vin") or "").strip().upper()
-    needs_vpic = looks_like_decode_vin(vin) and any(
-        slot_fillable_for_vpic(merged, k, allow_overwrite_dealer=allow_ow) for k in _VPIC_TARGET_KEYS
+    flat: dict[str, str] | None = None
+    vin = (merged_view.get("vin") or "").strip().upper()
+    needs_vpic = looks_like_decode_vin(vin) and (
+        bool(tier1.proposals)
+        or any(slot_fillable_for_vpic(_view(k), k, allow_overwrite_dealer=allow_ow) for k in _VPIC_TARGET_KEYS)
     )
     if needs_vpic:
-        flat: dict[str, str] | None = None
         body: dict[str, Any] | None = None
         if use_vpic_cache:
             conn = inventory_db.get_conn()
@@ -278,11 +310,10 @@ def apply_structured_spec_backfill_for_car(
             vpic_err = None if flat else "cache_decode_failed"
 
         if flat:
-            vpic_patch = flat_vpic_result_to_car_patch(flat)
-            for k, v in vpic_patch.items():
+            for k, v in flat_vpic_result_to_car_patch(flat).items():
                 if k not in _VPIC_TARGET_KEYS:
                     continue
-                if not slot_fillable_for_vpic(merged, k, allow_overwrite_dealer=allow_ow):
+                if not slot_fillable_for_vpic(_view(k), k, allow_overwrite_dealer=allow_ow):
                     continue
                 if v is None or (isinstance(v, str) and not str(v).strip()):
                     continue
@@ -290,7 +321,7 @@ def apply_structured_spec_backfill_for_car(
                     # Corroboration guard — intentionally NOT bypassed by
                     # SPEC_STRUCTURED_VPIC_OVERWRITE_DEALER: an uncorroborated
                     # decoder trim never lands on cars.trim, only in provenance.
-                    reason = vpic_trim_rejection_reason(merged, v)
+                    reason = vpic_trim_rejection_reason(merged_view, v)
                     if reason is not None:
                         trim_rejection = {
                             "source": "nhtsa_vpic",
@@ -299,7 +330,45 @@ def apply_structured_spec_backfill_for_car(
                             "reason": reason,
                         }
                         continue
-                tier2[k] = v
+                if k in prec.FIELDS:
+                    vpic_props.append((k, v, prec.NHTSA_VPIC))
+                else:
+                    vpic_plain[k] = v
+
+    # One ordered plan, the decode first (later proposals see earlier winners). dry_run: the
+    # columns and provenance below go out in a single UPDATE.
+    res = apply_fact_proposals(None, raw, vpic_props + list(tier1.proposals), dry_run=True, ctx=_vpic_ctx(flat))
+
+    columns: dict[str, Any] = {}
+    prov: dict[str, dict[str, Any]] = {}
+    tier2_keys: set[str] = set()
+    for k, v in res.applied.items():
+        columns[k] = v
+        entry = dict(res.provenance.get(k) or {})
+        if entry.get("source") == prec.NHTSA_VPIC:
+            entry.update(detail="DecodeVinValuesExtended", url=_VPIC_URL)
+            tier2_keys.add(k)
+        else:
+            entry["detail"] = _TIER1_DETAIL
+        prov[k] = entry
+    for k, entry in res.provenance.items():
+        if k not in res.applied:
+            prov[k] = entry  # a refused signal, recorded as a discrepancy
+    for k, v in vpic_plain.items():
+        columns[k] = v
+        prov[k] = {"source": "nhtsa_vpic", "detail": "DecodeVinValuesExtended", "url": _VPIC_URL}
+        tier2_keys.add(k)
+    for k, v in tier1.plain.items():
+        if k in columns:
+            continue  # the decode owns this slot
+        columns[k] = v
+        if k in tier1.sources:
+            prov[k] = {"source": tier1.sources[k], "detail": _TIER1_DETAIL}
+    if "interior_color_buckets" not in columns:
+        columns.update(storage_derived_columns(raw, columns))
+    if trim_rejection is not None:
+        # Non-column provenance key: refused value recorded WITHOUT writing cars.trim.
+        prov["trim_rejected"] = trim_rejection
 
     existing_spec = raw.get("spec_source_json")
     if isinstance(existing_spec, dict):
@@ -308,16 +377,14 @@ def apply_structured_spec_backfill_for_car(
         existing_str = existing_spec
     else:
         existing_str = None
+    tier2_fields = sorted(tier2_keys)
+    tier1_fields = [k for k in tier1_keys if k not in tier2_keys]
 
-    combined = {**tier1, **tier2}
-    if not combined:
-        # Nothing writable — but a refused vPIC trim must still be observable
-        # in provenance, or the rejection is invisible to the audit trail.
-        if trim_rejection is not None and not dry_run:
-            update_car_row_partial(
-                car_id,
-                {"spec_source_json": merge_spec_source_json(existing_str, {"trim_rejected": trim_rejection})},
-            )
+    if not columns:
+        # Nothing writable — but a refused vPIC trim (or a recorded discrepancy) must
+        # still be observable in provenance, or the refusal is invisible to the audit trail.
+        if prov and not dry_run:
+            update_car_row_partial(car_id, {"spec_source_json": merge_spec_source_json(existing_str, prov)})
         return StructuredSpecBackfillResult(
             car_id=car_id,
             applied=False,
@@ -327,44 +394,26 @@ def apply_structured_spec_backfill_for_car(
             has_pending_patch=False,
         )
 
-    prov: dict[str, dict[str, Any]] = {}
-    for k in tier1_keys:
-        prov[k] = {
-            "source": "inventory_repair",
-            "detail": "clean_car_row_dict + merge_verified_specs (spec_structured_backfill tier 1)",
-        }
-    for k in tier2:
-        prov[k] = {
-            "source": "nhtsa_vpic",
-            "detail": "DecodeVinValuesExtended",
-            "url": "https://vpic.nhtsa.dot.gov/api/vehicles/decodevinvaluesextended/",
-        }
-    if trim_rejection is not None:
-        # Non-column provenance key: refused value recorded WITHOUT writing cars.trim.
-        prov["trim_rejected"] = trim_rejection
-
-    spec_json = merge_spec_source_json(existing_str, prov)
-
-    combined["spec_source_json"] = spec_json
+    columns["spec_source_json"] = merge_spec_source_json(existing_str, prov)
 
     if dry_run:
         return StructuredSpecBackfillResult(
             car_id=car_id,
             applied=False,
             skip_reason="dry_run",
-            tier1_fields=tier1_keys,
-            tier2_fields=sorted(tier2.keys()),
+            tier1_fields=tier1_fields,
+            tier2_fields=tier2_fields,
             vpic_error=vpic_err,
             has_pending_patch=True,
         )
 
-    update_car_row_partial(car_id, combined)
+    update_car_row_partial(car_id, columns)
     refresh_car_data_quality_score(car_id)
     return StructuredSpecBackfillResult(
         car_id=car_id,
         applied=True,
-        tier1_fields=tier1_keys,
-        tier2_fields=sorted(tier2.keys()),
+        tier1_fields=tier1_fields,
+        tier2_fields=tier2_fields,
         vpic_error=vpic_err,
         has_pending_patch=True,
     )

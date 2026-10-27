@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 
 from backend.enrichment import spec_structured_backfill as ssb
+from backend.utils.inventory_repair import StorageProposals
 
 
 def _completeish_car(**overrides):
@@ -132,7 +133,7 @@ def _wire(monkeypatch, car: dict, captured: list) -> None:
     monkeypatch.setattr(ssb, "update_car_row_partial", lambda c, fields: captured.append((c, fields)))
     monkeypatch.setattr(ssb, "refresh_car_data_quality_score", lambda _cid: None)
     # Isolate tier 2: tier 1 touches EPA/catalog lookups.
-    monkeypatch.setattr(ssb, "collect_row_storage_repairs", lambda _raw: {})
+    monkeypatch.setattr(ssb, "collect_row_storage_proposals", lambda _raw: StorageProposals([], {}, {}))
 
 
 def _vpic_response(**fields) -> dict:
@@ -257,3 +258,82 @@ def test_skip_already_complete(monkeypatch) -> None:
     monkeypatch.setattr(ssb, "get_car_by_id", lambda cid: dict(car) if cid == 9903 else None)
     r = ssb.apply_structured_spec_backfill_for_car(9903, dry_run=False, get_json=lambda _u: {}, use_vpic_cache=False)
     assert r.skip_reason == "already_complete"
+
+
+# --------------------------------------------------------------------------
+# P8B.6a: the decode is evaluated before tier 1; both tiers go through precedence.
+# --------------------------------------------------------------------------
+
+
+def _wire_tier1(monkeypatch, car: dict, captured: list, proposals, plain=None, sources=None) -> None:
+    _wire(monkeypatch, car, captured)
+    monkeypatch.setattr(
+        ssb, "collect_row_storage_proposals",
+        lambda _raw: StorageProposals(list(proposals), dict(plain or {}), dict(sources or {})),
+    )
+
+
+def _drive_car(cid: int, **kw):
+    kw.setdefault("drivetrain", None)
+    return _vpic_car(cid, transmission="Automatic", title="2020 Honda Accord LX", **kw)
+
+
+def test_blank_drivetrain_vpic_4wd_beats_epa_rwd(monkeypatch) -> None:
+    captured: list = []
+    _wire_tier1(monkeypatch, _drive_car(9920), captured, [("drivetrain", "RWD", "epa_catalog")])
+    r = ssb.apply_structured_spec_backfill_for_car(
+        9920, get_json=lambda _u: _vpic_response(DriveType="4WD/4-Wheel Drive/4x4"), use_vpic_cache=False
+    )
+    assert r.applied is True
+    _cid, fields = captured[0]
+    assert fields["drivetrain"] == "4WD"
+    prov = json.loads(fields["spec_source_json"])
+    assert prov["drivetrain"]["source"] == "nhtsa_vpic"
+    assert prov["drivetrain"]["value"] == "4WD"
+    assert "drivetrain" in r.tier2_fields and "drivetrain" not in r.tier1_fields
+
+
+def test_vpic_4x2_blocks_epa_awd_fill(monkeypatch) -> None:
+    captured: list = []
+    _wire_tier1(monkeypatch, _drive_car(9921), captured, [("drivetrain", "AWD", "epa_catalog")])
+    r = ssb.apply_structured_spec_backfill_for_car(
+        9921, get_json=lambda _u: _vpic_response(DriveType="4x2", BodyClass="Sedan/Saloon"), use_vpic_cache=False
+    )
+    assert r.applied is False
+    for _cid, fields in captured:
+        assert "drivetrain" not in fields
+
+
+def test_tier1_fills_when_no_decode_owns_the_slot(monkeypatch) -> None:
+    captured: list = []
+    _wire_tier1(monkeypatch, _drive_car(9922), captured, [("drivetrain", "FWD", "epa_catalog")])
+    r = ssb.apply_structured_spec_backfill_for_car(
+        9922, get_json=lambda _u: _vpic_response(), use_vpic_cache=False
+    )
+    assert r.applied is True
+    _cid, fields = captured[0]
+    assert fields["drivetrain"] == "FWD"
+    prov = json.loads(fields["spec_source_json"])
+    assert prov["drivetrain"]["source"] == "epa_catalog"
+    assert r.tier1_fields == ["drivetrain"]
+
+
+def test_plain_tier1_column_keeps_its_honest_label(monkeypatch) -> None:
+    captured: list = []
+    _wire_tier1(monkeypatch, _drive_car(9923, drivetrain="FWD"), captured, [],
+                plain={"condition": "Used"}, sources={"condition": "dealer_normalized"})
+    ssb.apply_structured_spec_backfill_for_car(9923, get_json=lambda _u: _vpic_response(), use_vpic_cache=False)
+    prov = json.loads(captured[0][1]["spec_source_json"])
+    assert prov["condition"]["source"] == "dealer_normalized"
+    assert captured[0][1]["condition"] == "Used"
+
+
+def test_vpic_body_style_beats_tier1_body_style(monkeypatch) -> None:
+    captured: list = []
+    car = _drive_car(9924, drivetrain="FWD", body_style=None)
+    _wire_tier1(monkeypatch, car, captured, [], plain={"body_style": "Coupe"}, sources={"body_style": "epa_catalog"})
+    r = ssb.apply_structured_spec_backfill_for_car(
+        9924, get_json=lambda _u: _vpic_response(BodyClass="Sedan/Saloon"), use_vpic_cache=False
+    )
+    assert captured[0][1]["body_style"] == "Sedan/Saloon"
+    assert "body_style" in r.tier2_fields

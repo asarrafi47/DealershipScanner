@@ -5,13 +5,14 @@ Used by ``scripts/repair_inventory_fields.py`` (not imported on normal app reque
 """
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, NamedTuple
 
 from backend.enrichment.knowledge_engine import merge_verified_specs
 from backend.utils.car_serialize import DISPLAY_DASH, _dealer_spec_wins, infer_condition_for_storage, normalize_condition_for_storage
 from backend.utils.field_clean import clean_car_row_dict, is_effectively_empty
 from backend.utils.spec_field_normalize import collect_raw_spec_heuristic_updates
 from backend.utils.interior_color_buckets import interior_color_buckets_json
+from backend.vehicle_facts import precedence as prec
 
 _CLEANABLE_FOR_SQL = frozenset(
     {
@@ -134,3 +135,71 @@ def collect_row_storage_repairs(raw: dict[str, Any]) -> dict[str, Any]:
             updates.get("interior_color"), raw.get("make")
         )
     return updates
+
+
+class StorageProposals(NamedTuple):
+    """Tier-1 repairs split by how they may be written (P8B.6a).
+
+    ``proposals``: ``(field, value, source)`` for columns under fact precedence
+    (``precedence.FIELDS``); the caller decides them with ``apply_fact_proposals``.
+    ``plain``: columns with no precedence rank (condition, trim, body_style, ...)
+    plus housekeeping on a fact column that is not a new fact (a junk value cleared
+    to NULL, a re-spelling of the stored value such as "All-Wheel Drive" -> "AWD").
+    ``sources``: provenance label for each ``plain`` column that has one."""
+
+    proposals: list[tuple[str, Any, str]]
+    plain: dict[str, Any]
+    sources: dict[str, str]
+
+
+def _split_proposals(raw: dict[str, Any], tagged: list[tuple[str, dict[str, Any]]]) -> StorageProposals:
+    """Route each ``(source, updates)`` group: fact columns become proposals unless the
+    change is a clear or a re-spelling of the stored value, which stays plain."""
+    proposals: list[tuple[str, Any, str]] = []
+    plain: dict[str, Any] = {}
+    sources: dict[str, str] = {}
+    for src, updates in tagged:
+        for k, v in updates.items():
+            if k in prec.FIELDS and v is not None:
+                if prec.is_blank(k, raw.get(k)) or not prec._same(k, raw.get(k), v):
+                    proposals.append((k, v, src))
+                    continue
+            plain[k] = v
+            sources[k] = prec.DEALER_NORMALIZED if k in prec.FIELDS else src
+    return StorageProposals(proposals, plain, sources)
+
+
+def collect_merge_spec_storage_proposals(raw: dict[str, Any]) -> StorageProposals:
+    """``collect_merge_spec_storage_updates`` as proposals: EPA catalog / trim decoder
+    values, labelled ``epa_catalog`` (they rank below the VIN decode and dealer text)."""
+    return _split_proposals(dict(raw), [(prec.EPA_CATALOG, collect_merge_spec_storage_updates(raw))])
+
+
+def collect_row_storage_proposals(raw: dict[str, Any]) -> StorageProposals:
+    """``collect_row_storage_repairs`` as proposals with honest tier-1 labels:
+    ``dealer_normalized`` (clean_car_row_dict), ``epa_catalog`` (merge_verified_specs),
+    ``dealer_text_heuristic`` (spec_field_normalize heuristics). Same inputs and
+    order as the patch builder; the ranks decide instead of the last writer."""
+    cleaned = collect_cleaned_field_updates(raw)
+    merged = collect_merge_spec_storage_updates(raw)
+    heur = collect_raw_spec_heuristic_updates({**raw, **cleaned, **merged})
+    out = _split_proposals(dict(raw), [
+        (prec.DEALER_NORMALIZED, cleaned), (prec.EPA_CATALOG, merged), (prec.DEALER_TEXT, heur),
+    ])
+    plain, sources = out.plain, out.sources
+    cond = infer_condition_for_storage(raw)
+    if cond:
+        plain["condition"] = cond
+    norm = normalize_condition_for_storage({**raw, **cleaned, **merged, **heur, **plain})
+    if norm:
+        plain["condition"] = norm
+    plain.update(storage_derived_columns(raw, plain))
+    return StorageProposals(out.proposals, plain, sources)
+
+
+def storage_derived_columns(raw: dict[str, Any], columns: dict[str, Any]) -> dict[str, Any]:
+    """Columns derived from the final *columns* patch (interior colour buckets), computed
+    after precedence has decided which values land."""
+    if "interior_color" not in columns:
+        return {}
+    return {"interior_color_buckets": interior_color_buckets_json(columns.get("interior_color"), raw.get("make"))}
