@@ -498,3 +498,97 @@ def test_lifecycle_runs_by_default_after_the_batches(monkeypatch, tmp_path, hint
     assert triage["lifecycle"]["enabled"] is True and triage["lifecycle"]["failed"] == 1
     assert triage["lifecycle"]["by_dealer"] == {D: "failed:capture_skipped_today"}
     assert "| failed:capture_skipped_today |" in (out / "triage.md").read_text(encoding="utf-8")
+
+
+# ── replay and promotion on the key-scoped mutation API (N13 P7.4) ──────────────
+
+URL_B = "https://websites-search.api.carscommerce.inc/api/v1/listings/2/search"
+
+
+def _two_recipes():
+    promote_from_ledger(D, "dealer_dot_com", [
+        _ep("https://websites-search.api.carscommerce.inc/api/v1/listings/1/search", total=45),
+        _ep(URL_B, total=45),
+    ])
+    return sorted(load_recipes(D), key=lambda r: r.url)
+
+
+def _pages_ok(monkeypatch, rec, total=None):
+    pages = {1: [_vehicle(i) for i in range(20)], 2: [_vehicle(20 + i) for i in range(20)],
+             3: [_vehicle(40 + i) for i in range(5)]}
+    monkeypatch.setattr(rec, "_replay_request", lambda recipe, body, base_url, url=None: (
+        200, {"inventory": pages.get(body["page"], [])}))
+
+
+def test_stale_mark_from_a_replay_that_began_before_another_hosts_success_is_ignored(monkeypatch, hints):
+    import time
+
+    import backend.scanner.recipes as rec
+
+    r = _recipe()
+
+    def dead(recipe, body, base_url, url=None):
+        # Another host answers on this key while our page-1 request is in flight.
+        rec.record_replay_ok(D, recipe.key(), last_ok_at=time.time() + 5, field_coverage={}, unstale=False)
+        return 403, None
+
+    monkeypatch.setattr(rec, "_replay_request", dead)
+    assert _replay() is None
+    (after,) = load_recipes(D)
+    assert not after.stale and after.last_ok_at > r.last_ok_at
+
+
+def test_replay_success_persists_the_learned_total_for_its_own_key_only(monkeypatch, hints):
+    import backend.scanner.recipes as rec
+    from backend.scanner import recipe_totals
+
+    a, b = _two_recipes()
+    _pages_ok(monkeypatch, rec)
+    seen = []
+
+    def total(recipe, parsed):
+        seen.append(recipe.url)
+        return 33 if recipe.url == a.url else None
+
+    monkeypatch.setattr(recipe_totals, "replay_site_total", total)
+    assert _replay() is not None
+    by_url = {r.url: r for r in load_recipes(D)}
+    assert by_url[a.url].total_count == 33 and by_url[a.url].last_ok_at > 0
+    assert by_url[b.url].total_count == b.total_count, "a section total never shortens another key's walk"
+
+
+def test_promote_keeps_a_recipe_another_host_adds_during_validation(monkeypatch, hints):
+    import backend.scanner.recipe_validation as rv
+    import backend.scanner.recipes as rec
+    from types import SimpleNamespace
+
+    promote_from_ledger(D, "dealer_dot_com", [_ep("https://websites-search.api.carscommerce.inc/api/v1/listings/1/search")])
+    other = rec.EndpointRecipe(dealer_id=D, url="https://other.example/api/inv", method="GET",
+                               content_type="application/json", post_template=None, saved_at=1.0)
+
+    def gate(dealer_id, live, **kw):
+        rec.merge_recipes(dealer_id, [other])  # a second host promotes while this one validates
+        rep = SimpleNamespace(recipes=[SimpleNamespace(vins=30, site_total=45) for _ in live], status="ok",
+                              reasons=[], summary=lambda: {})
+        return live, rep
+
+    monkeypatch.setattr(rv, "gate_recipes", gate)
+    n = promote_from_ledger(D, "dealer_dot_com", [_ep(URL_B)], validate=True)
+    urls = {r.url for r in load_recipes(D)}
+    assert "https://other.example/api/inv" in urls and URL_B in urls and n == len(urls) == 3
+    assert {r.url: r for r in load_recipes(D)}[URL_B].last_ok_at > 0, "the validation's success is recorded"
+
+
+def test_recipes_module_has_no_load_then_save_pair():
+    """P7.4 grep gate: no function in recipes.py reads the set and writes it back whole
+    outside save_recipes/replace_recipes themselves."""
+    import re
+
+    import backend.scanner.recipes as rec
+
+    src = Path(rec.__file__).read_text()
+    for body in re.split(r"\n(?=(?:async )?def )", src):
+        head = body.split("(", 1)[0]
+        if head.endswith(("save_recipes", "replace_recipes", "_seed_store", "_refresh_cache")):
+            continue
+        assert not (re.search(r"[^_.]load_recipes\(", body) and re.search(r"[^_.]save_recipes\(", body)), head

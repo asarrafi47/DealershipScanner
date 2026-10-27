@@ -1117,6 +1117,11 @@ def _mutate(dealer_id: str, entry: dict) -> list[dict]:
         if written is not None:
             if not check.foreign:
                 _cache_follow(dealer_id, written.rows, prev, check)
+            else:
+                logger.debug(
+                    "Recipes [%s]: %s applied to this process's store only; the recipe cache is tagged "
+                    "for another store, so the cache file was left as it is", dealer_id, entry["op"],
+                )
             return written.rows
         if prev is None or not prev.has_recipes:
             # The store holds no recipes for the dealer (a cache file waiting to be seeded
@@ -1316,7 +1321,11 @@ def promote_from_ledger(
     if not candidates:
         return 0
 
+    # Validate on a snapshot, then apply through the key-scoped merge: it re-runs the
+    # same rules inside the compare-and-set against the row as it is when the write
+    # lands, so a recipe another host adds during validation survives (N13 P7.4).
     keep = _merge_rank(load_recipes(dealer_id), candidates, max_recipes)
+    validated: list[EndpointRecipe] = []
     if validate:
         from backend.scanner.recipe_validation import gate_recipes
 
@@ -1339,13 +1348,21 @@ def promote_from_ledger(
                 r.last_ok_at = now
                 if chk.site_total and not r.total_count:
                     r.total_count = int(chk.site_total)
-    save_recipes(dealer_id, keep)
-    thin = sum(1 for r in keep if r.field_coverage and not recipe_coverage_is_rich(r.field_coverage))
+                validated.append(r)
+    merged = merge_recipes(dealer_id, candidates, max_recipes=max_recipes)
+    for r in validated:
+        # The merge carries last_ok_at over from the stored recipe; the validation's
+        # success is recorded on its own key afterwards.
+        record_replay_ok(
+            dealer_id, r.key(), last_ok_at=now, field_coverage=dict(r.field_coverage or {}),
+            unstale=False, total_count=r.total_count,
+        )
+    thin = sum(1 for r in merged if r.field_coverage and not recipe_coverage_is_rich(r.field_coverage))
     logger.info(
         "Recipes [%s]: %d endpoint(s) promoted (%d candidate(s) this scan, %d thin: VINs without price/trim/colour)",
-        dealer_id, len(keep), len(candidates), thin,
+        dealer_id, len(merged), len(candidates), thin,
     )
-    return len(keep)
+    return len(merged)
 
 
 # ── Replay ───────────────────────────────────────────────────────────────────
@@ -1829,24 +1846,20 @@ def last_known_vin_count(dealer_id: str) -> int:
 
 
 def _persist_replay_success(dealer_id: str, recipe: EndpointRecipe, retrying_stale: bool) -> None:
-    """Write a successful replay back to the dealer's stored set: the recipe's
-    ``last_ok_at`` and measured ``field_coverage``, and, when a stale recipe
-    answered again, its un-stale.
+    """Write a successful replay back to the dealer's stored set through
+    ``record_replay_ok``: the recipe's ``last_ok_at``, measured ``field_coverage`` and
+    learned ``total_count`` (on its own key only), and, when a stale recipe answered
+    again, its un-stale.
 
-    Blocking store I/O (the cache file read and write, and the ``dealer_recipes``
-    sync inside ``load_recipes`` / ``save_recipes``), so ``try_fetch_via_recipes``
-    runs it with ``asyncio.to_thread``; it never runs on the event loop.
+    Blocking store I/O (the compare-and-set write and the cache file), so
+    ``try_fetch_via_recipes`` runs it with ``asyncio.to_thread``; it never runs on the
+    event loop.
     """
-    all_r = load_recipes(dealer_id)
-    for r in all_r:
-        if r.key() == recipe.key():
-            r.last_ok_at = recipe.last_ok_at
-            r.field_coverage = dict(recipe.field_coverage)
-            if retrying_stale:
-                # The key rotated back (or the WAF let us through): live again.
-                r.stale = False
-                r.stale_reason = ""
-    save_recipes(dealer_id, all_r)
+    record_replay_ok(
+        dealer_id, recipe.key(), last_ok_at=float(recipe.last_ok_at or time.time()),
+        field_coverage=dict(recipe.field_coverage or {}), unstale=bool(retrying_stale),
+        total_count=recipe.total_count,
+    )
 
 
 # Walk-report ends that mean the recipe saw the whole of what it asked for.
@@ -2035,6 +2048,9 @@ async def try_fetch_via_recipes(
 
     for recipe in live + stale_retry:
         retrying_stale = recipe.stale
+        # Taken before page 1: a stale mark from this walk yields to a success another
+        # host records on the key after this instant (mark_stale's observed_at).
+        observed_at = time.time()
         template: Any = None
         if recipe.post_template:
             try:
@@ -2045,7 +2061,9 @@ async def try_fetch_via_recipes(
             # Truncated/unparseable POST sample — can't replay safely. Mark it
             # stale so the next browser scan re-captures a full body instead of
             # this recipe silently never working.
-            await asyncio.to_thread(mark_stale, dealer_id, recipe, "unreplayable_post_template")
+            await asyncio.to_thread(
+                mark_stale, dealer_id, recipe, "unreplayable_post_template", observed_at=observed_at,
+            )
             walks.append(_walk_entry(recipe, dealer_name, retrying_stale, "unreplayable", 0, 0, 0))
             logger.info(
                 "Recipe stale [%s] %s — POST template unparseable (truncated capture?); "
@@ -2076,7 +2094,9 @@ async def try_fetch_via_recipes(
                     if not egress_tag():
                         # A tagged (datacenter) host records blocked:<tag> in
                         # _finish_status instead; the shared recipe stays live.
-                        await asyncio.to_thread(mark_stale, dealer_id, recipe, f"http_{status}")
+                        await asyncio.to_thread(
+                            mark_stale, dealer_id, recipe, f"http_{status}", observed_at=observed_at,
+                        )
                     auth_dead_status = int(status)
                     logger.info(
                         "Recipe stale [%s] %s — HTTP %d (%s); discovery capture will re-learn it",

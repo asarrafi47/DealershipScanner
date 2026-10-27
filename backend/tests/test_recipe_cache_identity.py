@@ -452,9 +452,11 @@ def test_a_failed_store_read_never_lets_a_replay_success_drop_the_store_set(stor
     with caplog.at_level(logging.WARNING, logger="scanner"):
         rec._persist_replay_success(D, answered, retrying_stale=False)
 
+    # The replay success is a key-scoped op (P7.4): it writes no set it did not read, so with
+    # the store unreadable it writes nothing (no whole-set save to refuse).
     assert store.db_row(D) == row_before, "the store row is byte-identical"
     assert path.read_bytes() == file_before
-    assert len(_unread_warnings(caplog)) == 1 and len(_refused_warnings(caplog)) == 1
+    assert _unread_warnings(caplog) == []
 
 
 def test_a_corrupt_store_row_is_not_proof_of_absence(store, monkeypatch, caplog):

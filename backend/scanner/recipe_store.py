@@ -301,10 +301,12 @@ def _parse_json(text: Any, kind: type) -> Any:
     return out if isinstance(out, kind) else None
 
 
-def _snapshot(cur, dealer_id: str) -> StoreRow | None:
-    """The row as stored (unreadable JSON reads as empty), or None when absent."""
+def _snapshot(cur, dealer_id: str, cas: bool | None = None) -> StoreRow | None:
+    """The row as stored (unreadable JSON reads as empty), or None when absent.
+    ``cas`` says the table has the V034 columns (default: this process's store)."""
+    cas = _cas_columns if cas is None else cas
     cols = "recipes_json, max_saved_at, scan_hints, updated_at"
-    if _cas_columns:
+    if cas:
         cols += ", rev, recipes_written_at, superseded_json"
     cur.execute(f"SELECT {cols} FROM dealer_recipes WHERE dealer_id = ?", (dealer_id,))
     row = cur.fetchone()
@@ -312,16 +314,18 @@ def _snapshot(cur, dealer_id: str) -> StoreRow | None:
         return None
     return StoreRow(
         rows=_parse_json(row[0], list) or [],
-        rev=int(row[4] or 0) if _cas_columns else 0,
+        rev=int(row[4] or 0) if cas else 0,
         hints=_parse_json(row[2], dict) or {},
         updated_at=row[3],
         max_saved_at=float(row[1] or 0.0),
-        recipes_written_at=float(row[5] or 0.0) if _cas_columns else 0.0,
-        superseded=(_parse_json(row[6], list) or []) if _cas_columns else [],
+        recipes_written_at=float(row[5] or 0.0) if cas else 0.0,
+        superseded=(_parse_json(row[6], list) or []) if cas else [],
     )
 
 
-def _cas_write(cur, dealer_id: str, current: StoreRow | None, cols: dict[str, Any]) -> bool:
+def _cas_write(
+    cur, dealer_id: str, current: StoreRow | None, cols: dict[str, Any], cas: bool | None = None,
+) -> bool:
     """One compare-and-set write of ``cols`` (column -> value) against ``current``.
 
     No row: INSERT ... ON CONFLICT DO NOTHING, which counts as written only when
@@ -330,10 +334,11 @@ def _cas_write(cur, dealer_id: str, current: StoreRow | None, cols: dict[str, An
     other than 1 is a lost race, never a success. A database behind the chain has no
     ``rev``: the UPDATE is then keyed on ``dealer_id`` alone.
     """
+    cas = _cas_columns if cas is None else cas
     names = list(cols)
     vals = [cols[n] for n in names]
     if current is None:
-        extra, extra_v = (["rev"], [1]) if _cas_columns else ([], [])
+        extra, extra_v = (["rev"], [1]) if cas else ([], [])
         allc = names + extra
         cur.execute(
             f"INSERT INTO dealer_recipes (dealer_id, {', '.join(allc)}) "
@@ -342,7 +347,7 @@ def _cas_write(cur, dealer_id: str, current: StoreRow | None, cols: dict[str, An
         )
         return cur.rowcount == 1
     sets = ", ".join(f"{n}=?" for n in names)
-    if _cas_columns:
+    if cas:
         cur.execute(
             f"UPDATE dealer_recipes SET {sets}, rev=rev+1 WHERE dealer_id=? AND rev=?",
             (*vals, dealer_id, current.rev),
@@ -352,11 +357,11 @@ def _cas_write(cur, dealer_id: str, current: StoreRow | None, cols: dict[str, An
     return cur.rowcount == 1
 
 
-def _written(current: StoreRow | None, cols: dict[str, Any]) -> StoreRow:
+def _written(current: StoreRow | None, cols: dict[str, Any], cas: bool | None = None) -> StoreRow:
     """The row as ``_cas_write`` left it, built from what was read and what was written."""
     return StoreRow(
         rows=json.loads(cols["recipes_json"]) if "recipes_json" in cols else (current.rows if current else []),
-        rev=(current.rev if current else 0) + 1 if _cas_columns else 0,
+        rev=(current.rev if current else 0) + 1 if (_cas_columns if cas is None else cas) else 0,
         hints=json.loads(cols["scan_hints"]) if "scan_hints" in cols else (current.hints if current else {}),
         updated_at=cols.get("updated_at"),
         max_saved_at=cols.get("max_saved_at", current.max_saved_at if current else 0.0),
@@ -386,34 +391,43 @@ def _cas_loop(
         conn = _conn()
         try:
             _ensure_table(conn)
-            cur = conn.cursor()
-            for _ in range(max(1, retries)):
-                current = _snapshot(cur, dealer_id)
-                if current is None and not create:
-                    conn.rollback()
-                    return None
-                cols = plan(current)
-                if cols is None:
-                    conn.rollback()
-                    return current
-                if _cas_write(cur, dealer_id, current, cols):
-                    conn.commit()
-                    _bump("writes")
-                    return _written(current, cols)
-                conn.rollback()
-                _bump("conflicts")
-            _bump("exhausted")
-            logger.warning(
-                "dealer_recipes write for %s lost the compare-and-set race %d times; not written",
-                dealer_id, max(1, retries),
-            )
-            return None
+            return _cas_attempts(conn, dealer_id, plan, create=create, retries=retries)
         finally:
             conn.close()
     except Exception as exc:  # noqa: BLE001 — never let DB issues break a scan
         _bump("failures")
         _log_save_failure(dealer_id, exc, file_written=file_written)
         return None
+
+
+def _cas_attempts(
+    conn, dealer_id: str, plan: Callable[[StoreRow | None], dict[str, Any] | None],
+    *, create: bool, retries: int, cas: bool | None = None,
+) -> StoreRow | None:
+    """The read / plan / compare-and-set / retry loop of ``_cas_loop`` on an open
+    connection (it commits or rolls back, and leaves closing to the caller)."""
+    cur = conn.cursor()
+    for _ in range(max(1, retries)):
+        current = _snapshot(cur, dealer_id, cas)
+        if current is None and not create:
+            conn.rollback()
+            return None
+        cols = plan(current)
+        if cols is None:
+            conn.rollback()
+            return current
+        if _cas_write(cur, dealer_id, current, cols, cas):
+            conn.commit()
+            _bump("writes")
+            return _written(current, cols, cas)
+        conn.rollback()
+        _bump("conflicts")
+    _bump("exhausted")
+    logger.warning(
+        "dealer_recipes write for %s lost the compare-and-set race %d times; not written",
+        dealer_id, max(1, retries),
+    )
+    return None
 
 
 def db_read(dealer_id: str, *, strict: bool = False) -> StoreRow | None:
@@ -465,6 +479,13 @@ def db_mutate(
     again on the fresh row, so it must be re-runnable). Stamps ``recipes_written_at``
     and bumps ``rev``; the rows themselves are stored as given (``saved_at`` is the
     caller's). Returns the row as written, or None (see ``_cas_loop``)."""
+    return _cas_loop(dealer_id, _recipes_plan(fn, lambda: _cas_columns), create=create, retries=retries,
+                     file_written=file_written)
+
+
+def _recipes_plan(fn, has_cas) -> Callable[[StoreRow | None], dict[str, Any] | None]:
+    """The column plan of a recipe-list write: ``fn(current)``'s rows and the metadata
+    derived from them (plus ``recipes_written_at`` when ``has_cas()``)."""
     def plan(current: StoreRow | None) -> dict[str, Any] | None:
         rows = fn(current)
         if rows is None:
@@ -477,11 +498,37 @@ def db_mutate(
             "stale_count": meta["stale_count"],
             "updated_at": datetime.now(timezone.utc).isoformat(),
         }
-        if _cas_columns:
+        if has_cas():
             cols["recipes_written_at"] = time.time()
         return cols
 
-    return _cas_loop(dealer_id, plan, create=create, retries=retries, file_written=file_written)
+    return plan
+
+
+def db_mutate_on(
+    conn,
+    dealer_id: str,
+    fn: Callable[[StoreRow | None], list[dict[str, Any]] | None],
+    *,
+    create: bool = True,
+    retries: int = 8,
+) -> StoreRow | None:
+    """``db_mutate`` on a connection the caller opened (a store other than this
+    process's: ``reconcile_recipe_store --target-dsn``). The caller closes ``conn``.
+
+    The table must carry the V034 columns (rev, recipes_written_at, superseded_json);
+    raises when it does not, since an unversioned write would defeat the compare-and-set.
+    Unlike ``db_mutate`` it raises on a database error and returns None only when the
+    retries are used up (or ``create`` is False and the dealer has no row)."""
+    cur = conn.cursor()
+    try:
+        cur.execute("SELECT rev, recipes_written_at, superseded_json FROM dealer_recipes LIMIT 0")
+    except Exception:
+        conn.rollback()
+        raise RuntimeError("dealer_recipes has no V034 columns; migrate the store first") from None
+    conn.rollback()
+    return _cas_attempts(conn, dealer_id, _recipes_plan(fn, lambda: True), create=create, retries=retries,
+                         cas=True)
 
 
 def db_save_recipes(dealer_id: str, rows: list[dict[str, Any]], *, file_written: bool = True) -> bool:

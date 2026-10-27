@@ -463,6 +463,7 @@ def test_restore_undoes_an_apply(store, tmp_path):
 def _sqlite_store(path: Path, rows: dict[str, list[dict]]) -> str:
     with closing(sqlite3.connect(path)) as conn:
         conn.execute(recipe_store._DDL_SQLITE)
+        recipe_store._ensure_table_sqlite(conn)  # the V034 columns the apply's compare-and-set needs
         for did, recipes in rows.items():
             meta = recipe_store._derive_meta(recipes)
             conn.execute(
@@ -524,3 +525,70 @@ def test_a_connection_failure_names_the_store_not_the_url(tmp_path, capsys):
     assert rc == 2
     assert "cannot connect to postgres:localhost:1/cars" in out.out
     assert SECRET not in out.out and SECRET not in out.err and "scanner" not in out.out
+
+
+def _cas_cols(path: Path) -> dict[str, tuple]:
+    with closing(sqlite3.connect(path)) as conn:
+        return {r[0]: r[1:] for r in conn.execute(
+            "SELECT dealer_id, rev, recipes_written_at FROM dealer_recipes")}
+
+
+def test_db_to_db_apply_goes_through_the_compare_and_set(tmp_path):
+    """The apply bumps ``rev`` and stamps ``recipes_written_at`` (P7.9a), so a scanner that
+    read the row before the apply loses its own compare-and-set instead of overwriting it."""
+    src = _sqlite_store(tmp_path / "local.db", {D: [_row(saved=AUG, ok=SEP, total_count=70)]})
+    tgt = _sqlite_store(tmp_path / "prod.db", {D: [_row(saved=AUG, ok=AUG)], "tgtonly-com": [_row(dealer="tgtonly-com")]})
+    before = _cas_cols(tmp_path / "prod.db")
+    args = ["--source-dsn", src, "--target-dsn", tgt, "--backup-dir", str(tmp_path / "backups")]
+    assert rrs.main(args + ["--apply"]) == 0
+    after = _cas_cols(tmp_path / "prod.db")
+    assert after[D][0] == before[D][0] + 1 and after[D][1] > 0
+    assert after["tgtonly-com"] == before["tgtonly-com"], "an identical or db-only row is not touched"
+
+
+def test_db_to_db_row_changed_between_read_and_write_is_skipped(tmp_path, monkeypatch):
+    src = _sqlite_store(tmp_path / "local.db", {D: [_row(saved=AUG, ok=SEP)]})
+    tgt = _sqlite_store(tmp_path / "prod.db", {D: [_row(saved=AUG, ok=AUG)]})
+    real = rrs.apply_plans
+
+    def racing(plans, conn, **kw):
+        with closing(sqlite3.connect(tmp_path / "prod.db")) as other:  # a scanner lands first
+            other.execute("UPDATE dealer_recipes SET updated_at='2026-10-02T00:00:00+00:00', rev=rev+1")
+            other.commit()
+        return real(plans, conn, **kw)
+
+    monkeypatch.setattr(rrs, "apply_plans", racing)
+    rc = rrs.main(["--source-dsn", src, "--target-dsn", tgt, "--backup-dir", str(tmp_path / "backups"), "--apply"])
+    assert rc == 1
+    run_dir = sorted((tmp_path / "backups").iterdir())[-1]
+    assert _by_dealer(run_dir)[D]["outcome"] == "skipped:db_row_changed_since_read"
+    assert json.loads(_dump(tmp_path / "prod.db")[0][1])[0]["last_ok_at"] == AUG
+
+
+def test_db_to_db_restore_goes_back_through_the_compare_and_set(tmp_path):
+    src = _sqlite_store(tmp_path / "local.db", {D: [_row(saved=AUG, ok=SEP)]})
+    tgt = _sqlite_store(tmp_path / "prod.db", {D: [_row(saved=AUG, ok=AUG)]})
+    args = ["--source-dsn", src, "--target-dsn", tgt, "--backup-dir", str(tmp_path / "backups")]
+    assert rrs.main(args + ["--apply"]) == 0
+    run_dir = sorted((tmp_path / "backups").iterdir())[-1]
+    assert rrs.main(["--source-dsn", src, "--target-dsn", tgt, "--restore", str(run_dir)]) == 0
+    assert json.loads(_dump(tmp_path / "prod.db")[0][1])[0]["last_ok_at"] == AUG
+    assert _cas_cols(tmp_path / "prod.db")[D][0] == 2
+
+
+def test_compare_cache_samples_ten_dealers_read_only(tmp_path, capsys):
+    cache = tmp_path / "volume"
+    cache.mkdir()
+    rows = {f"d{i:02d}-com": [_row(dealer=f"d{i:02d}-com", saved=AUG, ok=AUG)] for i in range(14)}
+    tgt = _sqlite_store(tmp_path / "prod.db", rows)
+    for did, r in rows.items():
+        (cache / f"{did}.json").write_text(json.dumps(r), encoding="utf-8")
+    before = _dump(tmp_path / "prod.db")
+    assert rrs.main(["--compare-cache", str(cache), "--target-dsn", tgt]) == 0
+    out = capsys.readouterr().out
+    assert "sample of 10" in out and "10 identical, 0 not" in out
+    (cache / "d03-com.json").write_text(json.dumps([_row(dealer="d03-com", saved=SEP, ok=SEP)]), encoding="utf-8")
+    capsys.readouterr()
+    assert rrs.main(["--compare-cache", str(cache), "--target-dsn", tgt, "--sample", "14"]) == 1
+    assert "d03-com\tdiffers" in capsys.readouterr().out
+    assert _dump(tmp_path / "prod.db") == before
