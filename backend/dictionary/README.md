@@ -15,7 +15,7 @@ Reference data for trim ladders, EPA specs, and Wikipedia/NHTSA option prose.
 | `index/dictionary_catalog.db` | SQLite lookup index (same data as manifest); not consulted for Complete_Options and not baked into the images |
 | `index/make_aliases.json` | Make name normalization |
 
-Legacy flat CSVs at the dictionary root remain supported until migrated.
+The legacy flat `*_Complete_Options.csv` files at the dictionary root were removed (P9.3); nothing writes there.
 
 ### In-image catalog: not needed (P9.6)
 

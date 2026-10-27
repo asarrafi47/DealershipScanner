@@ -71,3 +71,36 @@ def test_every_root_row_exists_in_sharded_copy() -> None:
     plan = plan_merge()
     assert plan["merges"] == []
     assert plan["ambiguous"] == []
+
+
+def test_root_preflight_flags_content_that_would_be_lost(tmp_path: Path) -> None:
+    from backend.scripts.delete_dictionary_duplicates import preflight_root
+
+    raw = tmp_path / "options" / "raw" / "Kia"
+    base = ["2021", "Kia", "Telluride", "LX", "a", "b"]
+    _write(tmp_path / f"covered{SUFFIX}", [_HEADER, base])
+    _write(raw / f"covered{SUFFIX}", [_HEADER, base])
+    _write(tmp_path / f"stub{SUFFIX}", [_HEADER])
+    _write(tmp_path / f"lost{SUFFIX}", [_HEADER, base, _SUMMARY])
+    _write(raw / f"lost{SUFFIX}", [_HEADER, base])
+    _write(tmp_path / f"orphan{SUFFIX}", [_HEADER, base])
+    plan = preflight_root(tmp_path)
+    assert plan["delete"] == [f"covered{SUFFIX}", f"stub{SUFFIX}"]
+    assert plan["lost"] == {f"lost{SUFFIX}": [_SUMMARY]}
+    assert plan["unsharded"] == [f"orphan{SUFFIX}"]
+
+
+def test_stub_preflight_flags_stubs_with_rows(tmp_path: Path) -> None:
+    from backend.scripts.delete_dictionary_duplicates import preflight_stubs
+
+    stubs = tmp_path / "options" / "stubs" / "Kia"
+    _write(stubs / f"a{SUFFIX}", [_HEADER])
+    _write(stubs / f"b{SUFFIX}", [_HEADER, _SUMMARY])
+    plan = preflight_stubs(tmp_path)
+    assert plan["delete"] == [f"options/stubs/Kia/a{SUFFIX}"]
+    assert plan["with_rows"] == [f"options/stubs/Kia/b{SUFFIX}"]
+
+
+def test_root_copies_are_gone() -> None:
+    """P9.3 acceptance: no root-level Complete_Options CSV remains."""
+    assert not list(_DICT.glob(f"*{SUFFIX}"))
