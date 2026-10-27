@@ -129,6 +129,17 @@ async def _run_post_scan_tail(
     # finishes (see _record_single_outcome in one_dealer()), not batched here.
     scanned_vins = aggregate_vins_from_dealer_results(outcomes)
 
+    if post_vpic_env_enabled() and scanned_vins:
+        # P8B.3: decode first, so the repair, dictionary and model_specs stages see a decode;
+        # the heal runs last (below), so vPIC still writes last.
+        try:
+            from backend.enrichment.vpic_facts import post_scan_decode
+
+            dec_summary = await asyncio.to_thread(post_scan_decode, scanned_vins)
+            logger.info("Post-scan vPIC decode: %s", json.dumps(dec_summary, default=str)[:800])
+        except Exception:
+            logger.exception("Post-scan vPIC decode failed (inventory already saved)")
+
     if (
         post_repair
         or post_listing_description
@@ -153,15 +164,6 @@ async def _run_post_scan_tail(
             logger.info("Post-scan summary: %s", json.dumps(post_summary, default=str)[:1800])
         except Exception:
             logger.exception("Post-scan pipeline failed (inventory already saved)")
-    if post_vpic_env_enabled() and scanned_vins:
-        try:
-            from backend.enrichment.vpic_facts import post_scan_vpic
-
-            vp_summary = await asyncio.to_thread(post_scan_vpic, scanned_vins)
-            logger.info("Post-scan vPIC: %s", json.dumps(vp_summary, default=str)[:800])
-        except Exception:
-            logger.exception("Post-scan vPIC step failed (inventory already saved)")
-
     if post_listing_gap_fill and scanned_vins:
         try:
             gap_summary = await asyncio.to_thread(run_listing_gap_fill_stage, scanned_vins)
@@ -171,15 +173,6 @@ async def _run_post_scan_tail(
             )
         except Exception:
             logger.exception("Listing gap fill failed (inventory already saved)")
-
-    try:
-        from backend.scanner.database import apply_model_specs_corrections
-
-        corrected = await asyncio.to_thread(apply_model_specs_corrections)
-        if corrected:
-            logger.info("model_specs final pass: %d rows corrected", corrected)
-    except Exception:
-        logger.exception("model_specs final correction pass failed")
 
     if scanned_vins and post_dict_enrich_env_enabled():
         try:
@@ -192,6 +185,15 @@ async def _run_post_scan_tail(
                 )
         except Exception:
             logger.exception("EPA dictionary enrichment failed (inventory already saved)")
+
+    if post_vpic_env_enabled() and scanned_vins:
+        try:
+            from backend.enrichment.vpic_facts import post_scan_heal
+
+            heal_summary = await asyncio.to_thread(post_scan_heal, scanned_vins)
+            logger.info("Post-scan vPIC heal: %s", json.dumps(heal_summary, default=str)[:800])
+        except Exception:
+            logger.exception("Post-scan vPIC heal failed (inventory already saved)")
 
     try:
         from backend.db.incomplete_listings_db import fast_rebuild_incomplete_listings_index

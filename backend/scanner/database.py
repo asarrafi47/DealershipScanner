@@ -11,6 +11,7 @@ from backend.db.inventory_db import ensure_cars_table_columns
 from backend.db.repositories.schema_repo import ensure_car_attribution_tables
 from backend.scanner.upsert.ownership import log_moves
 from backend.utils.fuel_label_plausibility import is_known_bev_nameplate
+from backend.vehicle_facts.apply import apply_labeled_patch
 from backend.utils.fuel_type_normalize import normalize_fuel_type_for_storage
 
 # ``upsert_vehicles`` is an orchestrator over the named steps in
@@ -464,8 +465,10 @@ def upsert_vehicles(vehicles: list[dict], stats: dict | None = None) -> int:
         window = guard_window(vin_owner_guard_hours())
         moves: list = []
         reasons: dict[str, str] = {}
+        stored_facts: dict[str, dict] = {}
         existing_spec_src, conflicts = prefetch_existing(
-            cursor, by_vin, window, _vin_owned_elsewhere, moves=moves, reasons=reasons
+            cursor, by_vin, window, _vin_owned_elsewhere, moves=moves, reasons=reasons,
+            stored_facts=stored_facts,
         )
         if conflicts:
             vehicles = [v for v in vehicles if (v.get("vin") or "").strip() not in conflicts]
@@ -478,6 +481,7 @@ def upsert_vehicles(vehicles: list[dict], stats: dict | None = None) -> int:
             vehicles,
             now=now,
             existing_spec_src=existing_spec_src,
+            stored_facts=stored_facts,
             window=window,
             conflicts=conflicts,
             commit_every=_UPSERT_COMMIT_BATCH,
@@ -582,6 +586,38 @@ def _infer_drivetrain_from_trim(trim: str | None, title: str | None) -> str | No
     return normalize_drivetrain(f"{trim or ''} {title or ''}", "text")
 
 
+_MODEL_SPECS_IN_CHUNK = 900  # binds per IN list (Postgres allows 65,535 per statement)
+
+
+def _vpic_for_apply(flat: dict | None) -> dict | None:
+    """The decode in the shape ``apply_labeled_patch`` reads (raw drive text on ``drive_type_raw``)."""
+    if not flat:
+        return None
+    return {**flat, "drive_type_raw": str(flat.get("DriveType") or "").strip() or None}
+
+
+def _vpic_cylinders_differ(flat: dict | None, cyl: Any) -> bool:
+    """True when the stored decode states a cylinder count other than *cyl*."""
+    if not flat:
+        return False
+    try:
+        return int(float(str(flat.get("EngineCylinders") or "").strip())) != int(cyl)
+    except (TypeError, ValueError):
+        return False
+
+
+def _vpic_contexts_for_model_specs(vins: list[str]) -> dict[str, dict]:
+    """``{VIN: vpic ctx}`` for the VINs being filled; empty on any failure (no decode = fill tagged model_specs)."""
+    if not vins:
+        return {}
+    try:
+        from backend.dictionary.enrich_from_dictionary import vpic_contexts_for_vins
+
+        return vpic_contexts_for_vins(vins)
+    except Exception:
+        return {}
+
+
 def apply_model_specs_corrections(
     vins: list[str] | None = None,
     conn: Any | None = None,
@@ -596,8 +632,15 @@ def apply_model_specs_corrections(
     4MATIC → AWD, Quattro → AWD) which take precedence over the model default.
 
     Called after every upsert (for the just-inserted VINs) and by the backfill
-    script (vins=None to scan all rows). Never overwrites a value the dealer
-    already provided.
+    script (``backend/scripts/apply_model_specs.py --all``; ``vins=None`` scans all
+    rows). Never overwrites a value the dealer already provided.
+
+    Every fill is a ``model_specs`` proposal (rank 10, the lowest) decided by the
+    fact-precedence apply helper (P8B.8): a stored higher-ranked value stays, the
+    vPIC two-wheel constraint (``4x2``) vetoes an all-wheel fill, a cylinder count
+    never contradicts the engine text or the decode, and provenance is written per
+    field. With no decode the fill goes through tagged ``model_specs`` so a later
+    decode overrides it. The VIN list is read in chunks of ``_MODEL_SPECS_IN_CHUNK``.
 
     When *dry_run* is True, no UPDATE is executed; returns how many rows would be updated.
 
@@ -608,29 +651,32 @@ def apply_model_specs_corrections(
         conn = get_conn()
     cur = conn.cursor()
 
+    cols = (
+        "id, vin, make, model, trim, title, cylinders, transmission, drivetrain, body_style, "
+        "fuel_type, year, engine_description, spec_source_json"
+    )
     if vins is not None:
-        placeholders = ",".join("?" * len(vins))
-        cur.execute(
-            f"SELECT vin, make, model, trim, title, cylinders, transmission, drivetrain, body_style, fuel_type, year, engine_description "
-            f"FROM cars WHERE vin IN ({placeholders})",
-            vins,
-        )
+        rows = []
+        for i in range(0, len(vins), _MODEL_SPECS_IN_CHUNK):
+            chunk = list(vins[i:i + _MODEL_SPECS_IN_CHUNK])
+            cur.execute(
+                f"SELECT {cols} FROM cars WHERE vin IN ({','.join('?' * len(chunk))})",
+                chunk,
+            )
+            rows.extend(cur.fetchall())
     else:
-        cur.execute(
-            "SELECT vin, make, model, trim, title, cylinders, transmission, drivetrain, body_style, fuel_type, year, engine_description "
-            "FROM cars"
-        )
-
-    rows = cur.fetchall()
+        cur.execute(f"SELECT {cols} FROM cars")
+        rows = cur.fetchall()
     # The SELECT above (``vins=None`` reads the whole fleet) opened a snapshot that
     # the dictionary-lookup loop below would otherwise hold open to the end. The
     # rows are materialized here, so close the read transaction now.
     conn.commit()
     updated = 0
+    pending: list[tuple[dict, dict]] = []
 
     for (
-        vin, raw_make, raw_model, trim, title, cylinders, transmission,
-        drivetrain, body_style, fuel_type, year, engine_description,
+        car_id, vin, raw_make, raw_model, trim, title, cylinders, transmission,
+        drivetrain, body_style, fuel_type, year, engine_description, spec_source_json,
     ) in rows:
         needs_cyl = cylinders is None or (
             isinstance(cylinders, (int, float)) and int(cylinders) == 0
@@ -700,16 +746,33 @@ def apply_model_specs_corrections(
             )
             patch["fuel_type"] = _fuel
 
-        if patch:
-            updated += 1
-            if not dry_run:
-                sets = ", ".join(f"{k}=?" for k in patch)
-                cur.execute(
-                    f"UPDATE cars SET {sets} WHERE vin=?",
-                    (*patch.values(), vin),
-                )
-                if updated % _UPSERT_COMMIT_BATCH == 0:
-                    conn.commit()
+        if not patch:
+            continue
+        pending.append((
+            {
+                "id": car_id, "vin": vin, "year": year, "make": raw_make, "model": raw_model,
+                "trim": trim, "title": title, "cylinders": cylinders, "transmission": transmission,
+                "drivetrain": drivetrain, "body_style": body_style, "fuel_type": fuel_type,
+                "engine_description": engine_description, "spec_source_json": spec_source_json,
+            },
+            patch,
+        ))
+
+    # The decode is read per chunk of VINs (a fleet backfill must not hold every flat row).
+    for i in range(0, len(pending), _MODEL_SPECS_IN_CHUNK):
+        chunk = pending[i:i + _MODEL_SPECS_IN_CHUNK]
+        ctxs = _vpic_contexts_for_model_specs([r["vin"] for r, _ in chunk if r["vin"]])
+        for row, patch in chunk:
+            flat = (ctxs.get(str(row["vin"]).strip().upper()) or {}).get("vpic")
+            if "cylinders" in patch and _vpic_cylinders_differ(flat, patch["cylinders"]):
+                del patch["cylinders"]
+                if not patch:
+                    continue
+            res = apply_labeled_patch(
+                row, patch, "model_specs", vpic=_vpic_for_apply(flat), dry_run=dry_run,
+            )
+            if res.applied:
+                updated += 1
 
     if not dry_run:
         conn.commit()

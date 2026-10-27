@@ -41,7 +41,7 @@ try:
 except ImportError:
     pass
 
-from backend.db.inventory_db import get_conn, get_car_by_id, update_car_row_partial
+from backend.db.inventory_db import get_conn, get_car_by_id
 from backend.enrichment.knowledge_engine import decode_trim_logic, lookup_epa_aggregate
 from backend.enrichment.nhtsa_vpic import (
     fetch_decode_vin_values_extended,
@@ -49,7 +49,8 @@ from backend.enrichment.nhtsa_vpic import (
     flat_vpic_result_to_car_patch,
 )
 from backend.utils.field_clean import is_effectively_empty
-from backend.utils.inventory_repair import collect_row_storage_repairs
+from backend.vehicle_facts import precedence as prec
+from backend.vehicle_facts.apply import apply_labeled_patch
 
 logging.basicConfig(
     level=logging.INFO,
@@ -129,6 +130,18 @@ def get_cars_to_backfill(
     ]
 
 
+def _propose(result: dict[str, Any], field: str, value: Any, source: str) -> None:
+    """Record one candidate value; for a fact column the higher-ranked source's candidate
+    stands (the stored row is weighed against it later, by ``apply_labeled_patch``)."""
+    rank = prec.RANKS.get(field)
+    prev = result["sources_by_field"].get(field)
+    if rank and prev and rank.get(prev, 0) >= rank.get(source, 0):
+        return
+    result["updates"][field] = value
+    result["sources_by_field"][field] = source
+    result["sources"].append(f"{source}:{field}")
+
+
 def backfill_single_car(
     car: dict[str, Any],
     db_path: str,
@@ -141,6 +154,7 @@ def backfill_single_car(
         "updated": False,
         "updates": {},
         "sources": [],
+        "sources_by_field": {},
         "errors": [],
     }
 
@@ -151,9 +165,8 @@ def backfill_single_car(
             title_hints = _extract_specs_from_title(car["title"])
             if title_hints:
                 for k, v in title_hints.items():
-                    if v and not is_effectively_empty(car.get(k)):
-                        result["updates"][k] = v
-                        result["sources"].append(f"title:{k}")
+                    if v:
+                        _propose(result, k, v, prec.DEALER_TEXT)
                 logger.debug(f"[{vin}] Title hints: {title_hints}")
 
         # 2. Knowledge engine (trim decoder)
@@ -168,9 +181,7 @@ def backfill_single_car(
             if ke_result:
                 for k, v in ke_result.items():
                     if k in ("cylinders", "transmission", "drivetrain") and v:
-                        if not is_effectively_empty(car.get(k)):
-                            result["updates"][k] = v
-                            result["sources"].append(f"knowledge_engine:{k}")
+                        _propose(result, k, v, prec.EPA_CATALOG)
                 logger.debug(f"[{vin}] Knowledge engine: {ke_result}")
 
         # 3. NHTSA vPIC (if still missing)
@@ -188,9 +199,8 @@ def backfill_single_car(
                         if patch:
                             for k, v in patch.items():
                                 if k in ("cylinders", "transmission", "drivetrain", "fuel_type", "body_style", "engine_description"):
-                                    if v and is_effectively_empty(car.get(k)):
-                                        result["updates"][k] = v
-                                        result["sources"].append(f"vpic:{k}")
+                                    if v:
+                                        _propose(result, k, v, prec.NHTSA_VPIC)
                             logger.debug(f"[{vin}] vPIC: {patch}")
                         else:
                             logger.debug(f"[{vin}] vPIC: no patch generated")
@@ -211,9 +221,8 @@ def backfill_single_car(
                 )
                 if epa:
                     for k in ("cylinders", "fuel_type", "drivetrain"):
-                        if epa.get(k) and is_effectively_empty(car.get(k)):
-                            result["updates"][k] = epa[k]
-                            result["sources"].append(f"epa:{k}")
+                        if epa.get(k):
+                            _propose(result, k, epa[k], prec.EPA_CATALOG)
                     logger.debug(f"[{vin}] EPA: {epa}")
             except Exception as e:
                 logger.debug(f"[{vin}] EPA lookup: {e}")
@@ -222,18 +231,24 @@ def backfill_single_car(
         result["errors"].append(str(e))
         logger.error(f"[{vin}] Backfill failed: {e}")
 
-    # Update database
+    # Every write goes through fact precedence and records its source (P8B.7); a dry run
+    # shows what precedence would let through.
     if result["updates"]:
-        if dry_run:
-            logger.info(f"[{vin}] DRY-RUN would update: {result['updates']}")
-        else:
-            try:
-                update_car_row_partial(car["id"], result["updates"])
+        try:
+            row = get_car_by_id(car["id"]) or dict(car)
+            res = apply_labeled_patch(
+                row, result["updates"], prec.UNKNOWN,
+                sources=result["sources_by_field"], detail="backfill_specs", dry_run=dry_run,
+            )
+            result["updates"] = dict(res.applied)
+            if dry_run:
+                logger.info(f"[{vin}] DRY-RUN would update: {result['updates']}")
+            elif res.written:
                 result["updated"] = True
                 logger.info(f"[{vin}] ✅ Updated: {list(result['updates'].keys())}")
-            except Exception as e:
-                result["errors"].append(f"DB update failed: {e}")
-                logger.error(f"[{vin}] DB update failed: {e}")
+        except Exception as e:
+            result["errors"].append(f"DB update failed: {e}")
+            logger.error(f"[{vin}] DB update failed: {e}")
 
     return result
 

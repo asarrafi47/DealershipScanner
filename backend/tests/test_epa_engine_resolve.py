@@ -70,9 +70,11 @@ def test_enrich_car_corrects_conflicting_audi_engine_fields() -> None:
         "engine_description": "3.0L",
         "transmission": "8-Speed Automatic",
     }
+    # P8B.5: the correction applies because the dealer's own title states "four-cylinder"
+    # (D-PR3 d); an uncorroborated copy is covered in test_dictionary_enrich_precedence.py.
     updates = enrich_car(car, use_vpic=False)
     assert updates.get("engine_l") == 2.0
-    assert updates.get("cylinders") == 4
+    assert updates.get("cylinders", 4) == 4  # already 4: nothing to change
     assert "2.0L I4" in (updates.get("engine_description") or "")
 
 

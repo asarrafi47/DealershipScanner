@@ -768,7 +768,7 @@
    "rooftop_tier": "none",
    "scraped_at": "<TS3>",
    "source_url": "https://ford.example.com/used-inventory/vin-2C3CDXCT0LH000015.htm",
-   "spec_source_json": null,
+   "spec_source_json": "{\"cylinders\": {\"source\": \"model_specs\", \"value\": 8, \"fetched_at\": \"<NOW_S>\"}, \"drivetrain\": {\"source\": \"model_specs\", \"value\": \"RWD\", \"fetched_at\": \"<NOW_S>\"}, \"body_style\": {\"source\": \"model_specs\", \"value\": \"Sedan\", \"fetched_at\": \"<NOW_S>\"}}",
    "spin_frames": null,
    "stock_number": "",
    "title": "2020 Dodge Charger R/T",

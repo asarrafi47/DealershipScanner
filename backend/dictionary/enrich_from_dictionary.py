@@ -18,18 +18,23 @@ Listing **title** and **trim** are merged with **description** for text extracti
 omit specs from the body). When transmission is still blank after EPA + text heuristics, optional
 NHTSA ``DecodeVinValuesExtended`` is used (disable with ``--no-vpic`` or offline workflows).
 
+Every value goes through fact precedence (``backend.vehicle_facts``): the writer proposes
+``(field, value, source)`` and the rank rules decide. The EPA catalog fills blanks and never
+outranks the dealer's own engine text or the VIN decode (NHTSA vPIC). An engine correction
+(displacement / cylinders / engine text) is applied only when vPIC or the dealer's own title
+or trim corroborates the catalog row (D-PR3 b+d); otherwise the disagreement is recorded as a
+discrepancy and the stored value stays. EPA exterior colors and the CSV ``forcedInduction``
+label are not written (the labels are about half wrong; P10C.4 wires the resolver).
+
+``--all`` refills only fields whose current, labeled source ranks at or below the catalog
+(P8B.5 replaces the P1A.5 env guard). Unlabeled filled values are left alone until the
+legacy provenance is relabeled (P8C.5).
+
 Usage:
   python enrich_from_dictionary.py             # fill only gaps
-  python enrich_from_dictionary.py --dry-run   # show changes without writing
+  python enrich_from_dictionary.py --dry-run   # show changes (and the skip count) without writing
   python enrich_from_dictionary.py --no-vpic   # no NHTSA HTTP (EPA + text only)
-  ALLOW_DICTIONARY_OVERWRITE=1 python enrich_from_dictionary.py --all   # overwrite (see below)
-
-``--all`` is disarmed: it refuses (exit 2, before any DB connection) unless
-``ALLOW_DICTIONARY_OVERWRITE=1`` is exported for that command. ``--all`` overwrites
-filled values with the EPA CSV pick, including VIN-decoded (vPIC) drivetrain and
-cylinders and the dealer's own engine text, which outrank the catalog. The opt-in is
-read from the shell before ``.env`` is loaded, so a ``.env`` line cannot leave it
-disarmed. Remediation plan P1A.5; P8B.5 replaces this guard with per-field precedence.
+  python enrich_from_dictionary.py --all       # also refill fields at or below the catalog's rank
 """
 from __future__ import annotations
 
@@ -109,9 +114,9 @@ FILLABLE_FIELDS = {
     "mpg_highway":    "mpg_highway",
     "body_style":     "bodyStyle",
     "engine_description": "engineOptions",
-    "forced_induction": "forcedInduction",
-    "exterior_color": "exteriorColors",
 }
+# Columns that are not precedence fields: the catalog is their only writer here.
+_PLAIN_COLUMNS = ("mpg_city", "mpg_highway", "body_style")
 
 _epa_cache: dict[str, list[dict]] = {}
 
@@ -242,7 +247,20 @@ def _load_epa_csv(year: int, make: str, model: str) -> list[dict]:
     return rows
 
 
-def _best_row(epa_rows: list[dict], trim: str) -> dict | None:
+def _all_wheel_row(row: dict) -> bool:
+    from backend.vehicle_facts.drivetrain import normalize_drivetrain
+
+    return normalize_drivetrain(row.get("drivetrainOptions"), "dealer") in ("AWD", "4WD")
+
+
+def _best_row(epa_rows: list[dict], trim: str, *, two_wheel: bool = False) -> dict | None:
+    """Trim match, else the most common transmission's row.
+
+    *two_wheel*: the VIN decode says 4x2 (a {FWD, RWD, 2WD} constraint). The
+    most-common-row fallback is a guess about "the base trim", so it skips rows
+    that are all-wheel when any other row exists; a trim match is still trusted
+    (the precedence rules refuse an all-wheel fill against 4x2 either way).
+    """
     if not epa_rows:
         return None
 
@@ -259,6 +277,9 @@ def _best_row(epa_rows: list[dict], trim: str) -> dict | None:
             epa_t = _normalize(row.get("Trim", ""))
             if norm_trim in epa_t or epa_t in norm_trim:
                 return row
+
+    if two_wheel:
+        epa_rows = [r for r in epa_rows if not _all_wheel_row(r)] or epa_rows
 
     # Fallback: most common transmission (proxy for "base/most popular trim")
     trans_counter: Counter = Counter()
@@ -409,160 +430,399 @@ def _spec_json_trans_and_color(spec_raw: str | None) -> tuple[str, str]:
     return trans_out, color_out
 
 
-def enrich_car(car: dict, dry_run: bool = False, fill_all: bool = False, *, use_vpic: bool = True) -> dict:
+class DictionaryUpdates(dict):
+    """Decided column updates from :func:`enrich_car`, plus what a writer needs.
+
+    The dict itself is the accepted ``{column: value}`` (precedence fields that won,
+    plus the plain mpg / body columns). ``proposals`` and ``ctx`` replay the same
+    decisions through ``apply_fact_proposals`` (the one persistence path), ``skipped``
+    counts candidates the rank rules or the ``--all`` filter refused.
+    """
+
+    def __init__(self) -> None:
+        super().__init__()
+        self.proposals: list[tuple[str, Any, str]] = []
+        self.ctx: dict[str, Any] = {}
+        self.extras: dict[str, Any] = {}
+        self.provenance: dict[str, dict] = {}
+        self.decisions: list[Any] = []
+        self.skipped = 0
+
+
+_NOT_A_REFUSAL = ("unchanged", "blank candidate", "junk candidate")
+
+_TITLE_LITERS_RE = re.compile(r"\b(\d{1,2}\.\d)\s*(?:L|-?liter|litre)s?\b", re.I)
+
+
+def vpic_context_for(flat: dict | None) -> dict[str, Any]:
+    """Precedence ctx (``vpic`` / ``vpic_drive``) from a raw vPIC ``Results[0]`` row."""
+    if not flat:
+        return {}
+    ctx: dict[str, Any] = {"vpic": flat}
+    drive = str(flat.get("DriveType") or "").strip()
+    if drive:
+        ctx["vpic_drive"] = drive
+    return ctx
+
+
+def vpic_contexts_for_vins(vins: list[str]) -> dict[str, dict[str, Any]]:
+    """``{VIN: vpic ctx}`` read fresh from ``nhtsa_vpic_cache`` in one connection.
+
+    Empty when there is no decode or the cache cannot be read: the catalog then
+    fills blanks only and cannot correct an engine on a VIN-less ground truth.
+    """
+    wanted = sorted({str(v).strip().upper() for v in vins if v})
+    if not wanted:
+        return {}
+    conn = None
+    try:
+        from backend.enrichment.knowledge_engine import _conn
+        from backend.enrichment.vpic_facts import _vpic_flat_rows
+
+        conn = _conn()
+        flats = _vpic_flat_rows(conn, wanted)
+    except Exception:
+        return {}
+    finally:
+        if conn is not None:
+            try:
+                conn.close()
+            except Exception:
+                pass
+    return {vin: vpic_context_for(flat) for vin, flat in flats.items()}
+
+
+def _title_engine_signal(car: dict) -> tuple[float | None, int | None]:
+    """Displacement and cylinder count the dealer's own title / trim state.
+
+    Description and the stored engine columns are deliberately not read: the
+    columns are what is being corrected, and the description is long marketing
+    copy. Each value is returned only when the text names exactly one.
+    """
+    from backend.dictionary.epa_engine import (
+        _EIGHT_CYL_V8_RE,
+        _FOUR_CYL_RE,
+        _INLINE_SIX_RE,
+        _SIX_CYL_V6_RE,
+    )
+
+    text = " ".join(str(car.get(k) or "") for k in ("title", "trim"))
+    lits = {float(m) for m in _TITLE_LITERS_RE.findall(text)}
+    cyls: set[int] = set()
+    if _FOUR_CYL_RE.search(text):
+        cyls.add(4)
+    if _SIX_CYL_V6_RE.search(text) or _INLINE_SIX_RE.search(text):
+        cyls.add(6)
+    if _EIGHT_CYL_V8_RE.search(text):
+        cyls.add(8)
+    return (next(iter(lits)) if len(lits) == 1 else None,
+            next(iter(cyls)) if len(cyls) == 1 else None)
+
+
+def engine_correction_corroborated(car: dict, epa_row: dict, vpic_flat: dict | None) -> str | None:
+    """Who backs a catalog engine correction: ``'vpic'``, ``'dealer_title'`` or ``None``.
+
+    D-PR3 (b)+(d). vPIC corroborates when its displacement is within 0.15 L of the
+    catalog row and the cylinder count is the same; a decode that names a different
+    engine vetoes the correction whatever the title says. The dealer's title or trim
+    corroborates when it states the catalog row's displacement (within 0.15 L) or
+    cylinder count and states nothing that contradicts it.
+    """
+    epa_lit = None
+    epa_cyl = None
+    try:
+        epa_lit = float(epa_row.get("displacement")) or None
+    except (TypeError, ValueError):
+        pass
+    try:
+        epa_cyl = int(float(epa_row.get("cylinders"))) or None
+    except (TypeError, ValueError):
+        pass
+    if epa_lit is None and epa_cyl is None:
+        return None
+
+    if vpic_flat:
+        try:
+            v_lit = float(str(vpic_flat.get("DisplacementL") or "").strip())
+        except ValueError:
+            v_lit = None
+        try:
+            v_cyl = int(float(str(vpic_flat.get("EngineCylinders") or "").strip()))
+        except ValueError:
+            v_cyl = None
+        if v_lit is not None and v_cyl is not None and epa_lit is not None and epa_cyl is not None:
+            if abs(v_lit - epa_lit) <= 0.15 and v_cyl == epa_cyl:
+                return "vpic"
+            return None
+
+    t_lit, t_cyl = _title_engine_signal(car)
+    backed = False
+    if t_lit is not None and epa_lit is not None:
+        if abs(t_lit - epa_lit) > 0.15:
+            return None
+        backed = True
+    if t_cyl is not None and epa_cyl is not None:
+        if t_cyl != epa_cyl:
+            return None
+        backed = True
+    return "dealer_title" if backed else None
+
+
+def _vpic_engine_row(epa_rows: list[dict], flat: dict | None, trim: str) -> dict | None:
+    """The catalog row that matches the VIN decode's engine (0.15 L, same cylinders)."""
+    if not flat:
+        return None
+    try:
+        v_lit = float(str(flat.get("DisplacementL") or "").strip())
+        v_cyl = int(float(str(flat.get("EngineCylinders") or "").strip()))
+    except ValueError:
+        return None
+    matching = []
+    for r in epa_rows:
+        try:
+            if abs(float(r.get("displacement")) - v_lit) <= 0.15 and int(float(r.get("cylinders"))) == v_cyl:
+                matching.append(r)
+        except (TypeError, ValueError):
+            continue
+    return _best_row(matching, trim) if matching else None
+
+
+def _refillable(field: str, car: dict) -> bool:
+    """``--all``: may the catalog refill this filled value?
+
+    Only when the value's labeled source ranks at or below the catalog. An unlabeled
+    value could be the dealer's own, so it stays until the legacy provenance is
+    relabeled (P8C.5).
+    """
+    from backend.vehicle_facts import precedence as prec
+
+    src = prec.field_source(field, car.get(field), car.get("spec_source_json"))
+    if src == prec.UNKNOWN:
+        return False
+    stored_rank = prec.rank_of(field, src)
+    catalog_rank = prec.rank_of(field, prec.EPA_CATALOG)
+    return stored_rank is not None and catalog_rank is not None and stored_rank <= catalog_rank
+
+
+def enrich_car(
+    car: dict,
+    dry_run: bool = False,
+    fill_all: bool = False,
+    *,
+    use_vpic: bool = True,
+    vpic_ctx: dict | None = None,
+) -> DictionaryUpdates:
+    """Decide what the EPA dictionary may write to *car*; nothing is persisted here.
+
+    *vpic_ctx* is the stored VIN decode (:func:`vpic_context_for`); without it the
+    catalog can fill blanks but only the dealer's title / trim can back an engine
+    correction. Persist with :func:`apply_dictionary_updates`.
+    """
+    from backend.vehicle_facts import precedence as prec
+    from backend.vehicle_facts.drivetrain import is_two_wheel_unknown
+    from backend.vehicle_facts.electrification import BEV, electrification
+
     year = car.get("year")
     make = (car.get("make") or "").strip()
     model = (car.get("model") or "").strip()
     trim = car.get("trim") or ""
 
-    updates: dict[str, Any] = {}
-
+    result = DictionaryUpdates()
     if not year or not make or not model:
-        return updates
+        return result
+
+    vctx = dict(vpic_ctx or {})
+    flat = vctx.get("vpic") if isinstance(vctx.get("vpic"), dict) else None
+    vpic_drive = vctx.get("vpic_drive")
+    vpic_two = bool(vpic_drive) and is_two_wheel_unknown(vpic_drive)
+
+    # field -> (value, source). EPA values carry 'epa_dictionary' (an alias of the
+    # catalog rank); transmission text found elsewhere keeps its honest label.
+    cands: dict[str, tuple[Any, str]] = {}
+    corr_fields: set[str] = set()
+    corroborated = False
 
     combo = _combined_listing_text(car)
-    spec_trans, spec_color = _spec_json_trans_and_color(car.get("spec_source_json"))
+    spec_trans, _spec_color = _spec_json_trans_and_color(car.get("spec_source_json"))
+
+    def _text_transmission() -> tuple[str, str]:
+        if spec_trans:
+            return spec_trans, prec.DEALER_NORMALIZED
+        v = _extract_transmission_from_description(combo)
+        if v:
+            return v, prec.DEALER_TEXT
+        if use_vpic:
+            v = _vpic_transmission_fallback(car)
+            if v:
+                return v, prec.NHTSA_VPIC
+        return "", ""
 
     epa_rows = _load_epa_csv(int(year), make, model)
     if not epa_rows:
-        # No DICTIONARY EPA file — still fill transmission / color from capture JSON or listing text.
+        # No DICTIONARY EPA file: transmission can still come from capture JSON or listing text.
         if fill_all or _is_empty(car.get("transmission")):
-            v = spec_trans or _extract_transmission_from_description(combo)
-            if not v and use_vpic:
-                v = _vpic_transmission_fallback(car)
+            v, src = _text_transmission()
             if v:
-                updates["transmission"] = v
-        if fill_all or _is_empty(car.get("exterior_color")):
-            c = spec_color
-            if not c and extract_color_from_description is not None:
-                c = extract_color_from_description(combo) or ""
-            if c:
-                updates["exterior_color"] = c
-        try:
-            from backend.utils.forced_induction import classify_forced_induction_from_car_row
+                cands["transmission"] = (v, src)
+        best = None
+    else:
+        best = _best_row(epa_rows, trim, two_wheel=vpic_two)
+        if not best:
+            return result
 
-            fi = classify_forced_induction_from_car_row({**car, **updates})
-            if fi and (fill_all or _is_empty(car.get("forced_induction"))):
-                updates["forced_induction"] = fi
+        eng_corr: dict[str, Any] = {}
+        try:
+            from backend.dictionary.epa_engine import (
+                engine_fields_need_correction,
+                format_epa_engine_display,
+                pick_epa_engine_row,
+            )
+            from backend.utils.car_serialize import (
+                _effective_cylinder_count,
+                parse_engine_displacement_liters,
+            )
+
+            car_lit = parse_engine_displacement_liters(car)
+            car_cyl = _effective_cylinder_count(car, {})
+            engine_row = _vpic_engine_row(epa_rows, flat, trim) or pick_epa_engine_row(
+                epa_rows, car, car_lit=car_lit, car_cyl=car_cyl
+            )
+            if engine_row and engine_fields_need_correction(
+                car, engine_row, car_lit=car_lit, car_cyl=car_cyl
+            ):
+                epa_lit = engine_row.get("displacement")
+                epa_cyl = engine_row.get("cylinders")
+                epa_eng = (engine_row.get("engineOptions") or "").strip()
+                if epa_eng:
+                    eng_corr["engine_description"] = epa_eng
+                try:
+                    lit_f = float(epa_lit)
+                    if lit_f > 0:
+                        eng_corr["engine_l"] = lit_f
+                except (TypeError, ValueError):
+                    pass
+                try:
+                    cyl_i = int(float(epa_cyl))
+                    if cyl_i > 0:
+                        eng_corr["cylinders"] = cyl_i
+                except (TypeError, ValueError):
+                    pass
+                if format_epa_engine_display(engine_row, car):
+                    best = engine_row
+                # D-PR3 (b)+(d): the correction is proposed either way; the rank rules
+                # accept it only when vPIC or the dealer's own title / trim backs it,
+                # otherwise it is recorded as a discrepancy.
+                if engine_correction_corroborated(car, engine_row, flat):
+                    corroborated = True
+                    corr_fields = set(eng_corr)
         except Exception:
             pass
-        return updates
+        for k, v in eng_corr.items():
+            cands[k] = (v, "epa_dictionary")
 
-    best = _best_row(epa_rows, trim)
-    if not best:
-        return updates
+        try:
+            from backend.dictionary.epa_engine import enrich_car_engine_from_dictionary
 
-    try:
-        from backend.dictionary.epa_engine import (
-            engine_fields_need_correction,
-            format_epa_engine_display,
-            pick_epa_engine_row,
-        )
-        from backend.utils.car_serialize import (
-            _effective_cylinder_count,
-            parse_engine_displacement_liters,
-        )
-
-        car_lit = parse_engine_displacement_liters(car)
-        car_cyl = _effective_cylinder_count(car, {})
-        engine_row = pick_epa_engine_row(epa_rows, car, car_lit=car_lit, car_cyl=car_cyl)
-        if engine_row and engine_fields_need_correction(
-            car, engine_row, car_lit=car_lit, car_cyl=car_cyl
-        ):
-            epa_lit = engine_row.get("displacement")
-            epa_cyl = engine_row.get("cylinders")
-            epa_eng = (engine_row.get("engineOptions") or "").strip()
-            if epa_eng:
-                updates["engine_description"] = epa_eng
-            try:
-                lit_f = float(epa_lit)
-                if lit_f > 0:
-                    updates["engine_l"] = lit_f
-            except (TypeError, ValueError):
-                pass
-            try:
-                cyl_i = int(float(epa_cyl))
-                if cyl_i > 0:
-                    updates["cylinders"] = cyl_i
-            except (TypeError, ValueError):
-                pass
-            if format_epa_engine_display(engine_row, car):
-                best = engine_row
-    except Exception:
-        pass
-
-    try:
-        from backend.utils.forced_induction import classify_forced_induction_from_car_row
-
-        merged = {**car, **updates}
-        fi = classify_forced_induction_from_car_row(merged)
-        if fi and (fill_all or _is_empty(car.get("forced_induction"))):
-            updates["forced_induction"] = fi
-    except Exception:
-        pass
-
-    try:
-        from backend.dictionary.epa_engine import enrich_car_engine_from_dictionary
-
-        dict_engine = enrich_car_engine_from_dictionary({**car, **updates}, overwrite=fill_all)
-        if dict_engine:
-            for k, v in dict_engine.items():
+            dict_engine = enrich_car_engine_from_dictionary({**car, **eng_corr}, overwrite=fill_all)
+            for k, v in (dict_engine or {}).items():
+                if k == "forced_induction":
+                    continue  # CSV labels are ~51% wrong; P10C.4 wires the resolver
                 if fill_all or _is_empty(car.get(k)):
-                    updates[k] = v
-    except Exception:
-        pass
+                    cands[k] = (v, "epa_dictionary")
+        except Exception:
+            pass
 
-    for db_col, csv_col in FILLABLE_FIELDS.items():
-        current = car.get(db_col)
-        if not fill_all and not _is_empty(current):
-            continue
+        for db_col, csv_col in FILLABLE_FIELDS.items():
+            current = car.get(db_col)
+            if not fill_all and not _is_empty(current):
+                continue
 
-        epa_val = (best.get(csv_col) or "").strip()
-
-        if db_col == "transmission":
-            if not epa_val:
-                epa_val = _first_nonempty_transmission(epa_rows)
-            if not epa_val and spec_trans:
-                epa_val = spec_trans
-            if not epa_val:
-                epa_val = _extract_transmission_from_description(combo)
-            if not epa_val and use_vpic:
-                epa_val = _vpic_transmission_fallback(car)
-        elif db_col == "exterior_color":
-            if not epa_val and spec_color:
-                epa_val = spec_color
-            if not epa_val and extract_color_from_description is not None:
-                epa_val = extract_color_from_description(combo) or ""
-        else:
+            src = "epa_dictionary"
             epa_val = (best.get(csv_col) or "").strip()
 
-        if not epa_val or epa_val in ("0", "0.0"):
-            continue
-        # Type coercions
-        if db_col == "cylinders":
-            try:
-                epa_val = int(float(epa_val))
-                if epa_val == 0:
-                    continue
-            except (ValueError, TypeError):
-                continue
-        elif db_col in ("mpg_city", "mpg_highway"):
-            try:
-                epa_val = int(float(epa_val))
-                if epa_val <= 0:
-                    continue
-            except (ValueError, TypeError):
-                continue
-        elif db_col == "engine_l":
-            try:
-                epa_val = float(epa_val)
-                if epa_val <= 0:
-                    continue
-            except (ValueError, TypeError):
-                continue
-        updates[db_col] = epa_val
+            if db_col == "transmission":
+                if not epa_val:
+                    epa_val = _first_nonempty_transmission(epa_rows)
+                if not epa_val:
+                    epa_val, src = _text_transmission()
+            else:
+                epa_val = (best.get(csv_col) or "").strip()
 
-    return updates
+            if not epa_val or epa_val in ("0", "0.0"):
+                continue
+            # Type coercions
+            if db_col == "cylinders":
+                try:
+                    epa_val = int(float(epa_val))
+                    if epa_val == 0:
+                        continue
+                except (ValueError, TypeError):
+                    continue
+            elif db_col in ("mpg_city", "mpg_highway"):
+                try:
+                    epa_val = int(float(epa_val))
+                    if epa_val <= 0:
+                        continue
+                except (ValueError, TypeError):
+                    continue
+            elif db_col == "engine_l":
+                try:
+                    epa_val = float(epa_val)
+                    if epa_val <= 0:
+                        continue
+                except (ValueError, TypeError):
+                    continue
+            cands[db_col] = (epa_val, src)
+
+    # A battery-electric vehicle has no engine displacement or cylinders to fill.
+    if cands and electrification(car, flat) == BEV:
+        for k in ("engine_l", "cylinders", "engine_description"):
+            cands.pop(k, None)
+
+    proposals: list[tuple[str, Any, str]] = []
+    for field, (value, src) in cands.items():
+        if field in prec.FIELDS:
+            if (fill_all and field not in corr_fields
+                    and not prec.is_blank(field, car.get(field)) and not _refillable(field, car)):
+                result.skipped += 1
+                continue
+            proposals.append((field, value, src))
+        elif field in _PLAIN_COLUMNS:
+            filled = not _is_empty(car.get(field))
+            if filled and (field == "body_style" or car.get(field) == value):
+                continue
+            result.extras[field] = value
+
+    ctx = dict(vctx)
+    ctx["catalog_engine_correction"] = True
+    if corroborated:
+        ctx["corroborated"] = True
+    changes, patch, decisions = prec.plan_updates(car, proposals, ctx)
+    result.proposals = proposals
+    result.ctx = ctx
+    result.provenance = patch
+    result.decisions = decisions
+    result.skipped += sum(1 for d in decisions if not d.write and d.reason not in _NOT_A_REFUSAL)
+    result.update(changes)
+    result.update(result.extras)
+    return result
+
+
+def apply_dictionary_updates(car: dict, updates: DictionaryUpdates, *, dry_run: bool = False) -> dict[str, Any]:
+    """Persist :func:`enrich_car` output through the fact-precedence apply helper.
+
+    The precedence fields and their ``spec_source_json`` provenance (including
+    discrepancies for refused corrections) go out in one UPDATE; the plain
+    mpg / body columns follow in their own partial update. A dry run writes nothing.
+    """
+    from backend.vehicle_facts.apply import apply_fact_proposals
+
+    res = apply_fact_proposals(None, car, updates.proposals, ctx=updates.ctx, dry_run=dry_run)
+    if updates.extras and not dry_run and car.get("id") is not None:
+        from backend.db.repositories.cars_repo import update_car_row_partial
+
+        update_car_row_partial(int(car["id"]), dict(updates.extras))
+    return {"applied": {**res.applied, **updates.extras}, "kept": res.kept, "written": res.written}
 
 
 # SQL: common DMS placeholder strings — align with _is_empty()
@@ -571,49 +831,20 @@ _SQL_JUNK_TEXT_IN = (
 )
 
 
-ALLOW_OVERWRITE_ENV = "ALLOW_DICTIONARY_OVERWRITE"
-
-_OVERWRITE_REFUSAL = (
-    "enrich_from_dictionary: --all is disabled.\n"
-    "  --all re-applies the EPA CSV pick to every car and overwrites values that are\n"
-    "  already filled, including VIN-decoded (NHTSA vPIC) drivetrain and cylinders and\n"
-    "  the dealer's own engine text. Those sources outrank the EPA catalog, so a run\n"
-    "  replaces better data with worse.\n"
-    "  The default mode (no --all) fills only empty fields and is unaffected.\n"
-    "  To overwrite anyway, export the opt-in for this one command (add --dry-run first\n"
-    "  to preview what would change):\n"
-    f"    {ALLOW_OVERWRITE_ENV}=1 python -m backend.dictionary.enrich_from_dictionary --all\n"
-    "  (remediation plan P1A.5; P8B.5 replaces this guard with per-field precedence)"
-)
-
-
-def _overwrite_allowed() -> bool:
-    """True only when the shell exported ``ALLOW_DICTIONARY_OVERWRITE=1`` exactly."""
-    return (os.environ.get(ALLOW_OVERWRITE_ENV) or "").strip() == "1"
-
-
 def main():
     ap = argparse.ArgumentParser(description="Enrich cars from DICTIONARY EPA data")
     ap.add_argument(
         "--all",
         action="store_true",
-        help=(
-            "Reapply to all cars, overwriting filled values (refused unless "
-            f"{ALLOW_OVERWRITE_ENV}=1 is exported)"
-        ),
+        help="Also refill filled values whose labeled source ranks at or below the EPA catalog",
     )
-    ap.add_argument("--dry-run", action="store_true", help="Show what would be filled without writing")
+    ap.add_argument("--dry-run", action="store_true", help="Show what would be filled (and skipped) without writing")
     ap.add_argument(
         "--no-vpic",
         action="store_true",
         help="Do not call NHTSA vPIC when transmission is still missing (EPA + listing text only)",
     )
     args = ap.parse_args()
-    # Checked before _configure_cli_process() loads .env and before any DB connection:
-    # the opt-in has to come from the invoking shell, never from a file left behind.
-    if args.all and not _overwrite_allowed():
-        print(_OVERWRITE_REFUSAL, file=sys.stderr)
-        raise SystemExit(2)
     _configure_cli_process()
 
     from backend.db.inventory_db import get_conn
@@ -646,8 +877,6 @@ def main():
             f" OR LOWER(TRIM(IFNULL(body_style,''))) IN ({junk})"
             " OR engine_description IS NULL OR TRIM(IFNULL(engine_description,''))='' "
             f" OR LOWER(TRIM(IFNULL(engine_description,''))) IN ({junk})"
-            " OR exterior_color IS NULL OR TRIM(IFNULL(exterior_color,''))='' "
-            f" OR LOWER(TRIM(IFNULL(exterior_color,''))) IN ({junk})"
             ") ORDER BY id"
         )
 
@@ -656,7 +885,7 @@ def main():
     if args.dry_run:
         logger.info("DRY-RUN mode — no DB writes")
 
-    stats = {"total": len(cars), "updated": 0, "no_epa": 0}
+    stats = {"total": len(cars), "updated": 0, "no_epa": 0, "skipped": 0}
     updated_ids: list[int] = []
 
     from backend.db.inventory_pg import is_inventory_postgres
@@ -668,24 +897,27 @@ def main():
         else os.path.abspath(os.environ.get("INVENTORY_DB_PATH") or _default_db_path()),
     )
 
-    for car in cars:
-        updates = enrich_car(car, dry_run=args.dry_run, fill_all=args.all, use_vpic=not args.no_vpic)
+    vpic_by_vin: dict[str, dict] = {}
+    for i, car in enumerate(cars):
+        if i % 500 == 0:
+            vpic_by_vin = vpic_contexts_for_vins([c.get("vin") for c in cars[i:i + 500]])
+        updates = enrich_car(
+            car, dry_run=args.dry_run, fill_all=args.all, use_vpic=not args.no_vpic,
+            vpic_ctx=vpic_by_vin.get(str(car.get("vin") or "").strip().upper()),
+        )
+        stats["skipped"] += getattr(updates, "skipped", 0)
         if not updates:
             stats["no_epa"] += 1
             continue
 
         if not args.dry_run:
-            set_clause = ", ".join(f"{k}=?" for k in updates)
-            vals = list(updates.values()) + [car["id"]]
-            conn.execute(f"UPDATE cars SET {set_clause} WHERE id=?", vals)
+            apply_dictionary_updates(car, updates)
             updated_ids.append(int(car["id"]))
 
         stats["updated"] += 1
         fields_str = ", ".join(f"{k}={v}" for k, v in updates.items())
         logger.info("[%s] %s %s %s → %s", car["vin"], car["year"], car["make"], car["model"], fields_str)
 
-    if not args.dry_run:
-        conn.commit()
     conn.close()
 
     # Dev incomplete listings read incomplete_listings.db — refresh rows we touched or counts stay stale.
@@ -705,7 +937,10 @@ def main():
             )
 
     logger.info("=" * 55)
-    logger.info("Complete: total=%d updated=%d no_epa_match=%d", stats["total"], stats["updated"], stats["no_epa"])
+    logger.info(
+        "Complete: total=%d updated=%d no_epa_match=%d skipped_by_precedence=%d",
+        stats["total"], stats["updated"], stats["no_epa"], stats["skipped"],
+    )
     if stats["updated"]:
         logger.info("Optional: python rebuild_listings_index.py --fast (full resync if sync step failed)")
 

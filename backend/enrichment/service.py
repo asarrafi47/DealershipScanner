@@ -217,6 +217,16 @@ def _ensure_haiku_cache_table(conn: Any) -> None:
 
 _haiku_cache_lock = threading.Lock()
 
+# Source label of the catalog's proposals; the precedence module ranks it (rank 30).
+_CATALOG_SOURCE = "epa_catalog"
+# Reserved key in a buffered update: the per-field provenance patch merged by _do_batch_write.
+_PROVENANCE_KEY = "spec_provenance"
+
+
+def _haiku_fallback_enabled() -> bool:
+    """The Haiku spec guess is opt-in (D-PR8): ``ENRICHMENT_HAIKU_FALLBACK=1``; default off."""
+    return os.environ.get("ENRICHMENT_HAIKU_FALLBACK", "").strip().lower() in ("1", "true", "yes", "on")
+
 
 def _haiku_cache_key(make: str, model: str, year: Any, trim: str | None) -> str:
     return f"{(make or '').strip().lower()}|{(model or '').strip().lower()}|{str(year or '').strip()}|{(trim or '').strip().lower()}"
@@ -1040,6 +1050,7 @@ class InventoryEnricher:
             "exterior_color",
             "interior_color",
             "packages",
+            _PROVENANCE_KEY,
         }
         updates = {k: v for k, v in data.items() if k in allowed and v is not None}
         if not updates:
@@ -1057,7 +1068,7 @@ class InventoryEnricher:
                 updates["packages"] = ps
             else:
                 del updates["packages"]
-        if not updates:
+        if set(updates) <= {_PROVENANCE_KEY}:
             return []
 
         # EV/PHEV identity: a vehicle with 0 cylinders is electric or plug-in hybrid —
@@ -1079,13 +1090,24 @@ class InventoryEnricher:
 
         if flush_batch is not None:
             self._do_batch_write(flush_batch)
-        return list(updates.keys())
+        return [k for k in updates if k != _PROVENANCE_KEY]
 
     def _do_batch_write(self, batch: list[tuple[int, dict[str, Any]]]) -> None:
         for attempt in range(1, _DB_RETRY_ATTEMPTS + 1):
             conn = get_conn()
             try:
                 for vehicle_id, updates in batch:
+                    updates = dict(updates)
+                    prov = updates.pop(_PROVENANCE_KEY, None)
+                    if prov:
+                        # Provenance is merged into the stored object (not replaced) in the
+                        # same UPDATE as the values it describes.
+                        from backend.utils.spec_provenance import merge_spec_source_json
+
+                        existing = (get_car_by_id(vehicle_id) or {}).get("spec_source_json")
+                        if isinstance(existing, dict):
+                            existing = json.dumps(existing)
+                        updates["spec_source_json"] = merge_spec_source_json(existing, prov)
                     cols = ", ".join(f"{k} = ?" for k in updates)
                     vals = list(updates.values()) + [vehicle_id]
                     conn.execute(f"UPDATE cars SET {cols} WHERE id = ?", vals)
@@ -1133,8 +1155,12 @@ class InventoryEnricher:
                 },
                 n_results=5,
             )
+        from_haiku = False
         if not lk.get("ok"):
-            # Catalog miss — fall back to Haiku for this make/model/year/trim
+            # Catalog miss. The Haiku guess is opt-in (default off) and, per D-PR8, never
+            # reaches a fact column: only the unranked MPG figures are taken from it.
+            if not _haiku_fallback_enabled():
+                return out, heal
             haiku = _ask_haiku_specs(
                 row.get("make") or "",
                 row.get("model") or "",
@@ -1144,40 +1170,69 @@ class InventoryEnricher:
             if not haiku:
                 return out, heal
             best = haiku
-            logger.info("Haiku fallback for id=%s %s %s %s", row.get("id"), year, row.get("make"), row.get("model"))
+            from_haiku = True
+            logger.info("Haiku fallback (mpg only) for id=%s %s %s %s", row.get("id"), year, row.get("make"), row.get("model"))
         else:
             best = lk.get("best") or {}
 
-        if best.get("cylinders") is not None and (row.get("cylinders") is None or row.get("cylinders") == 0):
-            if not _is_ev_label(row.get("engine_l")):
-                out["cylinders"] = int(best["cylinders"])
-                heal.append(f"{best['cylinders']} cyl")
-        if _is_ev_label(row.get("engine_l")):
-            pass  # never overwrite a resolved EV/PHEV label with a numeric displacement
-        elif best.get("engine_l") is not None and _safe_float(row.get("engine_l")) <= 0:
-            _best_eng = best["engine_l"]
-            if _is_ev_label(_best_eng):
-                out["engine_l"] = str(_best_eng).strip().title()
-                heal.append(f"{_best_eng} engine")
-            else:
-                out["engine_l"] = _safe_float(_best_eng, default=0.1)
-                heal.append(f"{_best_eng}L engine")
-        if best.get("transmission") and _is_missing(row.get("transmission")):
-            out["transmission"] = str(best["transmission"])[:200]
-            heal.append("transmission")
-        if best.get("drivetrain") and _is_missing(row.get("drivetrain")):
-            out["drivetrain"] = str(best["drivetrain"])[:120]
-            heal.append("drivetrain")
-        if best.get("mpg_city") is not None and row.get("mpg_city") is None:
-            out["mpg_city"] = int(best["mpg_city"])
-            heal.append(f"{best['mpg_city']} MPG city")
-        if best.get("mpg_highway") is not None and row.get("mpg_highway") is None:
-            out["mpg_highway"] = int(best["mpg_highway"])
-            heal.append(f"{best['mpg_highway']} MPG hwy")
-        if best.get("fuel_type") and _is_missing(row.get("fuel_type")):
-            out["fuel_type"] = str(best["fuel_type"])[:80]
-            heal.append("fuel type")
+        # Fact columns are proposals from the catalog (epa_catalog, rank 30) decided against the
+        # stored row and the VIN decode; the dealer's own text and vPIC stay ahead of them.
+        proposals: list[tuple[str, Any, str]] = []
+        labels: dict[str, str] = {}
+        if not from_haiku:
+            if best.get("cylinders") is not None and (row.get("cylinders") is None or row.get("cylinders") == 0):
+                if not _is_ev_label(row.get("engine_l")):
+                    proposals.append(("cylinders", int(best["cylinders"]), _CATALOG_SOURCE))
+                    labels["cylinders"] = f"{best['cylinders']} cyl"
+            if _is_ev_label(row.get("engine_l")):
+                pass  # never overwrite a resolved EV/PHEV label with a numeric displacement
+            elif best.get("engine_l") is not None and _safe_float(row.get("engine_l")) <= 0:
+                _best_eng = best["engine_l"]
+                if _is_ev_label(_best_eng):
+                    proposals.append(("engine_l", str(_best_eng).strip().title(), _CATALOG_SOURCE))
+                    labels["engine_l"] = f"{_best_eng} engine"
+                else:
+                    proposals.append(("engine_l", _safe_float(_best_eng, default=0.1), _CATALOG_SOURCE))
+                    labels["engine_l"] = f"{_best_eng}L engine"
+            if best.get("transmission") and _is_missing(row.get("transmission")):
+                proposals.append(("transmission", str(best["transmission"])[:200], _CATALOG_SOURCE))
+                labels["transmission"] = "transmission"
+            if best.get("drivetrain") and _is_missing(row.get("drivetrain")):
+                proposals.append(("drivetrain", str(best["drivetrain"])[:120], _CATALOG_SOURCE))
+                labels["drivetrain"] = "drivetrain"
+            if best.get("fuel_type") and _is_missing(row.get("fuel_type")):
+                proposals.append(("fuel_type", str(best["fuel_type"])[:80], _CATALOG_SOURCE))
+                labels["fuel_type"] = "fuel type"
+        prov: dict[str, dict[str, Any]] = {}
+        if proposals:
+            from backend.vehicle_facts import precedence as prec
+
+            ctx = self._vpic_ctx_for_row(row)
+            changes, prov, _decisions = prec.plan_updates(row, proposals, ctx)
+            out.update(changes)
+            heal.extend(labels[f] for f, _v, _s in proposals if f in changes)
+        mpg_src = "llm" if from_haiku else _CATALOG_SOURCE
+        for key, label in (("mpg_city", "MPG city"), ("mpg_highway", "MPG hwy")):
+            if best.get(key) is not None and row.get(key) is None:
+                out[key] = int(best[key])
+                heal.append(f"{best[key]} {label}")
+                prov[key] = {"source": mpg_src, "value": str(out[key])}
+        if prov:
+            out[_PROVENANCE_KEY] = prov
         return out, heal
+
+    @staticmethod
+    def _vpic_ctx_for_row(row: dict[str, Any]) -> dict[str, Any]:
+        """The stored VIN decode as precedence ctx; empty when there is none (fails open)."""
+        vin = str(row.get("vin") or "").strip().upper()
+        if not vin:
+            return {}
+        try:
+            from backend.dictionary.enrich_from_dictionary import vpic_contexts_for_vins
+
+            return dict(vpic_contexts_for_vins([vin]).get(vin) or {})
+        except Exception:
+            return {}
 
     def apply_vision(self, row: dict[str, Any]) -> tuple[dict[str, Any], list[str], dict[str, Any]]:
         """Returns (updates, heal_labels, vision_stats).

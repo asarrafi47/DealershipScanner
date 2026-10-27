@@ -17,6 +17,7 @@ from backend.utils.interior_color_buckets import interior_color_buckets_json
 from backend.utils.price_floor import classify_price
 
 from backend.scanner.upsert import rows as _rows
+from backend.scanner.upsert.guard import arbitrate_feed_facts
 from backend.scanner.upsert import serialize as _ser
 
 # Same logger name as before the split so log routing and captures are unchanged.
@@ -242,10 +243,17 @@ class PreparedRow:
     spec_source_json: Any
     packages_json: str | None
     forced_induction: Any
+    # ``v`` after fact arbitration (P8B.1): the columns a higher-ranked stored value keeps
+    # are None here. ``v`` itself is never mutated, so the score sees the feed's values.
+    bound: dict | None = None
 
 
-def prepare_row(v: dict, prior_spec_src: str | None) -> PreparedRow | None:
-    """Derive the bound values from a normalized row; None when it has no VIN."""
+def prepare_row(v: dict, prior_spec_src: str | None, stored: dict | None = None) -> PreparedRow | None:
+    """Derive the bound values from a normalized row; None when it has no VIN.
+
+    *stored* is the prefetched fact columns of the existing row (P8B.1); with the
+    stored provenance (*prior_spec_src*) it decides which feed facts bind NULL.
+    """
     vin = (v.get("vin") or "").strip()
     if not vin:
         return None
@@ -275,10 +283,16 @@ def prepare_row(v: dict, prior_spec_src: str | None) -> PreparedRow | None:
         "image_url": img,
     }
     dq = compute_data_quality_score(preview)
-    interior_buckets_json = interior_color_buckets_json(v.get("interior_color"), v.get("make"))
-    spec_src = _ser.spec_source_json(v, prior_spec_src)
+    kept = arbitrate_feed_facts(v, stored, prior_spec_src)
+    bound = dict(v)
+    for _f in kept:
+        bound[_f] = None
+    if "transmission" in kept:
+        bound["transmission_type"] = None
+    interior_buckets_json = interior_color_buckets_json(bound.get("interior_color"), v.get("make"))
+    spec_src = _ser.spec_source_json(v, prior_spec_src, kept)
     packages_json = _ser.packages_json(v.get("packages"))
-    fi = v.get("forced_induction") or classify_forced_induction_from_car_row(v)
+    fi = v.get("forced_induction") or classify_forced_induction_from_car_row(bound)
     return PreparedRow(
         v=v,
         vin=vin,
@@ -296,6 +310,7 @@ def prepare_row(v: dict, prior_spec_src: str | None) -> PreparedRow | None:
         spec_source_json=spec_src,
         packages_json=packages_json,
         forced_induction=fi,
+        bound=bound,
     )
 
 
@@ -321,7 +336,7 @@ def upsert_params(
     pool_lists: tuple[str, str, str] = ("", "", ""),
 ) -> tuple:
     """Bind parameters for :data:`UPSERT_CARS_SQL`, in column order."""
-    v = row.v
+    v = row.bound if row.bound is not None else row.v
     alias_csv, takes_csv, covered_csv = pool_lists
     return (
         row.vin,

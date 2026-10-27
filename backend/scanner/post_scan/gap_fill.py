@@ -350,6 +350,42 @@ def _merge_provenance(
     return merge_spec_source_json(existing_json, patch)
 
 
+def _route_through_precedence(
+    raw: dict[str, Any],
+    diff: dict[str, Any],
+    sources: dict[str, str],
+    *,
+    url: str | None,
+) -> tuple[dict[str, Any], str | None]:
+    """Columns to write and the merged ``spec_source_json`` for a gap-fill *diff*
+    (None when there is nothing to record).
+
+    Fact columns (``precedence.FIELDS``) are proposals decided against the stored
+    row and the uncached VIN decode, each under its own source: ``dealer_vdp`` for
+    values parsed from the listing page, ``web_search`` for DuckDuckGo snippets
+    (below the catalog, so a snippet never replaces a stated value or contradicts
+    a vPIC 4x2). Other columns keep a plain provenance entry with the same source
+    labels; nothing new is labelled ``listing_gap_fill``."""
+    from backend.enrichment.window_sticker_service import _uncached_vpic_context
+    from backend.vehicle_facts import precedence as prec
+    from backend.vehicle_facts.apply import apply_fact_proposals
+
+    cols = {k: v for k, v in diff.items() if k not in prec.FIELDS}
+    patch: dict[str, Any] = {
+        k: {"source": sources.get(k, prec.DEALER_VDP), "detail": "listing_gap_fill", "url": url or ""}
+        for k in cols
+    }
+    proposals = [(k, diff[k], sources.get(k, prec.DEALER_VDP)) for k in diff if k in prec.FIELDS]
+    if proposals:
+        # dry_run: the caller folds columns and provenance into its single UPDATE.
+        res = apply_fact_proposals(None, raw, proposals, dry_run=True,
+                                   ctx=_uncached_vpic_context(str(raw.get("vin") or "")))
+        cols.update(res.applied)
+        for k, entry in res.provenance.items():
+            patch[k] = {**entry, "url": url or ""} if k in res.applied else entry
+    return cols, (merge_spec_source_json(raw.get("spec_source_json"), patch) if patch else None)
+
+
 def _try_window_sticker_enrich(vin: str, raw: dict[str, Any], proposed: dict[str, Any]) -> None:
     """
     Gap-fill fallback when post-scan sticker stage did not run or was capped.
@@ -549,6 +585,7 @@ def run_listing_gap_fill_for_vins(vins: list[str]) -> dict[str, Any]:
                 except (TypeError, ValueError):
                     pass
 
+        sources: dict[str, str] = {k: "dealer_vdp" for k in proposed}
         raw = get_car_by_id(cid, include_inactive=True)
         if not raw:
             return
@@ -570,10 +607,13 @@ def run_listing_gap_fill_for_vins(vins: list[str]) -> dict[str, Any]:
                 ):
                     continue
                 proposed[k] = v
+                sources[k] = "web_search"
                 _bump("ddg_patch_fields")
 
         # OEM window sticker: store URL + parse options into packages if not already present
         _try_window_sticker_enrich(vin, dict(raw), proposed)
+        for k in proposed:
+            sources.setdefault(k, "oem_window_sticker")
 
         if not proposed:
             return
@@ -586,15 +626,13 @@ def run_listing_gap_fill_for_vins(vins: list[str]) -> dict[str, Any]:
         if not diff:
             return
 
-        diff["spec_source_json"] = _merge_provenance(
-            raw.get("spec_source_json"),
-            diff,
-            source="listing_gap_fill",
-            url=url or None,
-        )
-        update_car_row_partial(cid, diff)
+        cols, prov_json = _route_through_precedence(dict(raw), diff, sources, url=url or None)
+        if not prov_json:
+            return
+        update_car_row_partial(cid, {**cols, "spec_source_json": prov_json})
         refresh_car_data_quality_score(cid)
-        _bump("rows_patched")
+        if cols:
+            _bump("rows_patched")
 
     if work:
         with ThreadPoolExecutor(max_workers=min(_heal_workers(), len(work))) as pool:

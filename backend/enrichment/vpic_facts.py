@@ -42,6 +42,20 @@ _VPIC_BATCH_URL = "https://vpic.nhtsa.dot.gov/api/vehicles/DecodeVINValuesBatch/
 _VIN_RE = re.compile(r"^[A-HJ-NPR-Z0-9]{17}$")
 _BATCH = 50
 _PAUSE_S = 0.6
+_INLINE_REQUEST_CAP_S = 15.0
+
+
+def vin_decode_inline_enabled() -> bool:
+    """SCANNER_VIN_DECODE_INLINE (default on, D-PR5 a): decode uncached VINs on the
+    scan write path. tests/conftest.py sets it to 0."""
+    return (os.environ.get("SCANNER_VIN_DECODE_INLINE") or "1").strip().lower() not in ("0", "false", "no", "off")
+
+
+def vin_decode_inline_budget_s() -> float:
+    try:
+        return max(0.0, float(os.environ.get("SCANNER_VIN_DECODE_INLINE_BUDGET_S") or 20))
+    except ValueError:
+        return 20.0
 
 
 def vin_facts_enabled() -> bool:
@@ -177,6 +191,11 @@ def override_vehicles(vehicles: list[dict[str, Any]]) -> dict[str, int]:
     from backend.enrichment.knowledge_engine import lookup_vpic_from_cache, prime_vpic_cache
 
     vins = [str(v.get("vin") or "").strip().upper() for v in vehicles]
+    if vin_decode_inline_enabled():
+        dec = decode_inline(v for v in vins if _VIN_RE.match(v))
+        stats["decoded_inline"] = dec.get("stored", 0)
+        stats["decode_failed"] = dec.get("failed", 0)
+        stats["decode_skipped_budget"] = dec.get("skipped_budget", 0)
     prime_vpic_cache([v for v in vins if _VIN_RE.match(v)])
     for v, vin in zip(vehicles, vins):
         if not _VIN_RE.match(vin):
@@ -219,12 +238,12 @@ def _stamp_provenance(v: dict[str, Any], changed: dict[str, tuple[Any, Any]], de
 # decode + heal (post-scan and fleet)
 # --------------------------------------------------------------------------
 
-def fetch_vpic_batch(vins: list[str]) -> dict[str, dict]:
+def fetch_vpic_batch(vins: list[str], timeout: float = 90) -> dict[str, dict]:
     """``{vin: {"Results": [row]}}`` shaped like a single-VIN decode so the cache
     stays byte-compatible with ``vpic_specs``."""
     import requests
 
-    resp = requests.post(_VPIC_BATCH_URL, data={"format": "json", "data": ";".join(vins)}, timeout=90)
+    resp = requests.post(_VPIC_BATCH_URL, data={"format": "json", "data": ";".join(vins)}, timeout=timeout)
     resp.raise_for_status()
     out: dict[str, dict] = {}
     for row in (resp.json() or {}).get("Results") or []:
@@ -236,10 +255,17 @@ def fetch_vpic_batch(vins: list[str]) -> dict[str, dict]:
     return out
 
 
-def decode_missing_vins(conn, vins: Iterable[str], *, dry_run: bool = False) -> dict[str, int]:
+def decode_missing_vins(conn, vins: Iterable[str], *, dry_run: bool = False,
+                        budget_s: float | None = None) -> dict[str, int]:
     """Decode VINs absent from ``nhtsa_vpic_cache``. Idempotent. A dry run only
     counts: no network call and no cache write (``would_store`` = the VINs a real
-    run would decode)."""
+    run would decode).
+
+    With *budget_s* (the inline scan path, P8B.4) each request times out at
+    ``min(remaining budget, 15 s)``, no batch starts once the budget is spent
+    (``skipped_budget`` counts those VINs) and the pause between batches is skipped
+    when over budget. Decoded VINs are popped from the lookup memo so the next
+    ``lookup_vpic_from_cache`` sees them (never ``clear_vpic_lookup_cache()``)."""
     todo = sorted({str(v or "").strip().upper() for v in vins if _VIN_RE.match(str(v or "").strip().upper())})
     stats = {"requested": len(todo), "already_cached": 0, "stored": 0, "failed": 0}
     if not todo:
@@ -257,14 +283,23 @@ def decode_missing_vins(conn, vins: Iterable[str], *, dry_run: bool = False) -> 
     if dry_run:
         stats["would_store"] = len(missing)
         return stats
+    deadline = None if budget_s is None else time.monotonic() + budget_s
     for i in range(0, len(missing), _BATCH):
         chunk = missing[i:i + _BATCH]
+        remaining = None if deadline is None else deadline - time.monotonic()
+        if remaining is not None and remaining <= 0:
+            stats["skipped_budget"] = stats.get("skipped_budget", 0) + len(missing) - i
+            break
         try:
-            decoded = fetch_vpic_batch(chunk)
+            if remaining is None:
+                decoded = fetch_vpic_batch(chunk)
+            else:
+                decoded = fetch_vpic_batch(chunk, timeout=min(remaining, _INLINE_REQUEST_CAP_S))
         except Exception as exc:  # noqa: BLE001 - one bad batch must not stop the rest
             stats["failed"] += len(chunk)
             logger.warning("vPIC batch %d failed: %s", i // _BATCH, str(exc)[:120])
-            time.sleep(_PAUSE_S)
+            if deadline is None or time.monotonic() < deadline:
+                time.sleep(_PAUSE_S)
             continue
         for vin, payload in decoded.items():
             try:
@@ -278,8 +313,38 @@ def decode_missing_vins(conn, vins: Iterable[str], *, dry_run: bool = False) -> 
             except Exception as exc:  # noqa: BLE001
                 logger.debug("vPIC store %s failed: %s", vin, exc)
         conn.commit()
-        time.sleep(_PAUSE_S)
+        if decoded:
+            from backend.enrichment.knowledge_engine import _VPIC_MEMO
+
+            for vin in decoded:
+                _VPIC_MEMO.pop(vin, None)
+        if deadline is None or time.monotonic() < deadline:
+            time.sleep(_PAUSE_S)
     return stats
+
+
+def decode_inline(vins: Iterable[str]) -> dict[str, int]:
+    """Scan write path (P8B.4): decode this run's uncached VINs within
+    ``SCANNER_VIN_DECODE_INLINE_BUDGET_S``. Blocking: callers off the event loop.
+    Fails open: any error returns the counts so far and the scan carries on."""
+    zero = {"requested": 0, "already_cached": 0, "stored": 0, "failed": 0}
+    if not vin_decode_inline_enabled():
+        return zero
+    conn = None
+    try:
+        from backend.enrichment.knowledge_engine import _conn
+
+        conn = _conn()
+        return decode_missing_vins(conn, vins, budget_s=vin_decode_inline_budget_s())
+    except Exception as exc:  # noqa: BLE001
+        logger.warning("inline vPIC decode failed (continuing): %s", str(exc)[:120])
+        return {**zero, "error": 1}
+    finally:
+        if conn is not None:
+            try:
+                conn.close()
+            except Exception:  # noqa: BLE001
+                pass
 
 
 # ErrorCode values the decode may carry and still be a full decode: 0 clean,
@@ -465,7 +530,88 @@ def derived_fills(row: dict[str, Any], vp: dict[str, Any] | None, flat: dict[str
 _HEAL_FLAT_CHUNK = 500  # rows whose raw vPIC decodes are held at once in heal_rows
 
 
-HEAL_FIELDS = ("drivetrain", "fuel_type", "cylinders", "engine_description", "body_style")
+HEAL_FIELDS = ("drivetrain", "fuel_type", "cylinders", "engine_description", "body_style", "transmission")
+
+# P8B.4b (IL-20): heavy-duty / commercial families whose drive and gearbox the
+# decode often leaves blank or at "4x2" and the EPA catalog never covers (it
+# stops at 8,500 lb GVWR). (make, model) -> (end the 2WD configuration drives,
+# transmission). The end applies only to a 2WD configuration (vPIC "4x2" or
+# blank) and only past the GVWR gate; "4x2" is never mapped for light vehicles.
+_HD_FAMILIES: tuple[tuple[re.Pattern[str], re.Pattern[str], str, str], ...] = tuple(
+    (re.compile(mk, re.I), re.compile(md, re.I), end, tr) for mk, md, end, tr in (
+        (r"^(chevrolet|gmc)$", r"silverado\s*(2500|3500|4500|5500|6500)|sierra\s*(2500|3500|4500|5500)", "RWD", "Automatic"),
+        (r"^(chevrolet|gmc)$", r"express|savana", "RWD", "Automatic"),
+        (r"^ford$", r"f-?\s*(250|350|450|550|600|650|750)|e-?\s*(350|450)|e-series|econoline", "RWD", "Automatic"),
+        (r"^ram$", r"^(2500|3500|4500|5500)", "RWD", "Automatic"),
+        (r"^ram$", r"promaster", "FWD", "Automatic"),
+    ))
+_GVWR_CLASS_RE = re.compile(r"class\s*(\d+)([a-z]?)", re.I)
+_GVWR_LB_RE = re.compile(r"([\d,]{4,7})\s*lb", re.I)
+_HD_BODY_RE = re.compile(r"pickup|truck|van|cutaway|incomplete|chassis|bus", re.I)
+
+
+def _gvwr_over_8500(gvwr: str) -> bool:
+    """True when the decode's GVWR text is Class 2H or above (over 8,500 lb)."""
+    m = _GVWR_CLASS_RE.search(gvwr or "")
+    if m:
+        n = int(m.group(1))
+        return n >= 3 or (n == 2 and m.group(2).upper() == "H")
+    lbs = [int(x.replace(",", "")) for x in _GVWR_LB_RE.findall(gvwr or "") if x.replace(",", "").isdigit()]
+    return bool(lbs) and min(lbs) > 8500
+
+
+def hd_family_facts(flat: dict[str, str] | None) -> tuple[str, str] | None:
+    """(drive end for a 2WD configuration, transmission) for a heavy-duty or
+    commercial decode, else None. Gated on GVWR over 8,500 lb (the ProMaster
+    only on a van / cutaway body class) so a light Silverado or Mazda3 never
+    matches; the family comes from the decode's own Make and Model."""
+    flat = flat or {}
+    make = (flat.get("Make") or "").strip()
+    model = (flat.get("Model") or "").strip()
+    if not make or not model:
+        return None
+    for mk, md, end, tr in _HD_FAMILIES:
+        if not (mk.search(make) and md.search(model)):
+            continue
+        if "promaster" in md.pattern:
+            if not _HD_BODY_RE.search(flat.get("BodyClass") or ""):
+                return None
+        elif not _gvwr_over_8500(flat.get("GVWR") or ""):
+            return None
+        return end, tr
+    return None
+
+
+def hd_fills(row: dict[str, Any], vp: dict[str, Any] | None, flat: dict[str, str] | None) -> dict[str, tuple[Any, Any, str]]:
+    """{field: (old, new, source)} the HD table fills. Drivetrain only into a
+    blank / 2WD column when the decode says 4x2 or nothing about the drive (a
+    stated end, FWD/RWD/AWD/4WD, always wins); transmission only into a blank
+    column, the decode's own value first. Both decided by precedence."""
+    from backend.vehicle_facts import precedence as prec
+    from backend.vehicle_facts.drivetrain import is_two_wheel_unknown
+
+    vp = vp or {}
+    fam = hd_family_facts(flat)
+    if not fam:
+        return {}
+    end, tr = fam
+    out: dict[str, tuple[Any, Any, str]] = {}
+    prov = row.get("spec_source_json")
+    drive_raw = vp.get("drive_type_raw") or vp.get("drivetrain_raw") or (flat or {}).get("DriveType") or ""
+    two = bool(str(drive_raw).strip()) and is_two_wheel_unknown(drive_raw)
+    if not vp.get("drivetrain") and (two or not str(drive_raw).strip()) and not _drive_bucket(row.get("drivetrain")):
+        d = prec.decide("drivetrain", row.get("drivetrain"), prov, end, prec.TRIM_HEURISTIC,
+                        {"vpic_drive": drive_raw or None})
+        if d.write:
+            out["drivetrain"] = (row.get("drivetrain"), d.value, prec.TRIM_HEURISTIC)
+    if vp.get("transmission"):
+        cand, src = vp["transmission"], prec.NHTSA_VPIC
+    else:
+        cand, src = tr, prec.TRIM_HEURISTIC
+    d = prec.decide("transmission", row.get("transmission"), prov, cand, src)
+    if d.write:
+        out["transmission"] = (row.get("transmission"), d.value, src)
+    return out
 
 
 def heal_rows(conn, *, vins: Iterable[str] | None = None, dealers: Iterable[str] | None = None,
@@ -495,12 +641,12 @@ def heal_rows(conn, *, vins: Iterable[str] | None = None, dealers: Iterable[str]
         where += " AND dealer_id IN (" + ",".join("?" * len(dealer_list)) + ")"
         params += dealer_list
     cur.execute(f"SELECT c.id, c.vin, c.drivetrain, c.fuel_type, c.cylinders, c.spec_source_json, e.drive, "
-                f"c.engine_description, c.body_style FROM cars c "
+                f"c.engine_description, c.body_style, c.transmission FROM cars c "
                 f"LEFT JOIN epa_master e ON e.id = c.epa_master_id WHERE {where.replace('listing_active', 'c.listing_active').replace(' vin', ' c.vin').replace('dealer_id', 'c.dealer_id')}", tuple(params))
     rows = [dict(zip(("id", "vin", "drivetrain", "fuel_type", "cylinders", "spec_source_json", "catalog_drive",
-                      "engine_description", "body_style"), r)) for r in cur.fetchall()]
+                      "engine_description", "body_style", "transmission"), r)) for r in cur.fetchall()]
     stats: dict[str, Any] = {"rows": len(rows), "decoded": 0, "drivetrain": 0, "fuel_type": 0, "cylinders": 0,
-                             "engine_description": 0, "body_style": 0, "examples": []}
+                             "engine_description": 0, "body_style": 0, "transmission": 0, "examples": []}
     clear_vpic_lookup_cache()
     prime_vpic_cache([r["vin"] for r in rows])
     for start in range(0, len(rows), _HEAL_FLAT_CHUNK):
@@ -509,7 +655,8 @@ def heal_rows(conn, *, vins: Iterable[str] | None = None, dealers: Iterable[str]
         # that have something to derive, fetched per chunk so a whole-fleet heal
         # never holds every decode at once.
         need_flat = sorted({r["vin"] for r in chunk
-                            if not str(r.get("engine_description") or "").strip() or not str(r.get("body_style") or "").strip()})
+                            if not str(r.get("engine_description") or "").strip() or not str(r.get("body_style") or "").strip()
+                            or not str(r.get("transmission") or "").strip() or not _drive_bucket(r.get("drivetrain"))})
         flats = _vpic_flat_rows(conn, need_flat)
         _heal_chunk(cur, chunk, flats, stats, dry_run, lookup_vpic_from_cache, merge_spec_source_json, only)
         if not dry_run:
@@ -581,6 +728,12 @@ def _heal_chunk(cur, rows: list[dict[str, Any]], flats: dict[str, dict[str, str]
                     ch["drivetrain"] = (r.get("drivetrain"), d.value)
                     sources["drivetrain"] = prec.EPA_TIEBREAK
                     stats["drivetrain_catalog_tiebreak"] = stats.get("drivetrain_catalog_tiebreak", 0) + 1
+        for field, (old, new, src) in hd_fills(r, vp, flat).items():
+            # The decode and the catalog tiebreak decide first; only the decode's
+            # bare 2WD constraint yields to the family's end.
+            if field not in ch or (field == "drivetrain" and _drive_bucket(ch[field][1]) == ""):
+                ch[field] = (old, new)
+                sources[field] = src
         if only is not None:
             ch = {k: v for k, v in ch.items() if k in only}
         if not ch:
@@ -602,15 +755,30 @@ def _heal_chunk(cur, rows: list[dict[str, Any]], flats: dict[str, dict[str, str]
         stats.setdefault("_touched", []).append(r["id"])
 
 
-def post_scan_vpic(vins: list[str]) -> dict[str, Any]:
-    """Post-scan step: decode the run's new VINs, then heal their rows."""
+def post_scan_decode(vins: list[str]) -> dict[str, Any]:
+    """Post-scan step 1 (P8B.3): decode the run's new VINs, before the dictionary and model_specs stages read them."""
     from backend.db.inventory_db import get_conn
 
     conn = get_conn()
     try:
-        out: dict[str, Any] = {"decode": decode_missing_vins(conn, vins)}
-        out["heal"] = heal_rows(conn, vins=vins)
-        out["heal"].pop("examples", None)
+        return decode_missing_vins(conn, vins)
+    finally:
+        conn.close()
+
+
+def post_scan_heal(vins: list[str]) -> dict[str, Any]:
+    """Post-scan last step (P8B.3): heal the run's rows from the decode, after every other fact writer, so vPIC writes last."""
+    from backend.db.inventory_db import get_conn
+
+    conn = get_conn()
+    try:
+        out = heal_rows(conn, vins=vins)
+        out.pop("examples", None)
         return out
     finally:
         conn.close()
+
+
+def post_scan_vpic(vins: list[str]) -> dict[str, Any]:
+    """Decode then heal in one call (callers that do not interleave other stages)."""
+    return {"decode": post_scan_decode(vins), "heal": post_scan_heal(vins)}

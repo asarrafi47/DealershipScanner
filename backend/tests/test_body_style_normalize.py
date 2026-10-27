@@ -90,3 +90,43 @@ def test_merge_verified_specs_wrangler_body_suv() -> None:
     }
     vs = merge_verified_specs(car)
     assert vs.get("body_style_display") == "SUV"
+
+
+def test_vpic_bodyclass_vocabulary_folds_to_presets() -> None:
+    from backend.utils.field_clean import BODY_STYLE_PRESETS, canonical_body_style_or_none
+
+    cases = {
+        "Sedan/Saloon": "Sedan",
+        "Hatchback/Liftback/Notchback": "Hatchback",
+        "Convertible/Cabriolet": "Convertible",
+        "Sport Utility Vehicle (SUV)/Multi-Purpose Vehicle (MPV)": "SUV",
+        "Crossover Utility Vehicle (CUV)": "Crossover",
+        "Pickup": "Truck",
+        "Extended Cab": "Truck",
+        "Cargo Van": "Van",
+        "Sportback": "Hatchback",
+        "Estate": "Wagon",
+    }
+    for raw, want in cases.items():
+        assert canonical_body_style_or_none(raw) == want, raw
+        assert want in BODY_STYLE_PRESETS
+    assert canonical_body_style_or_none("Bus") is None
+    assert canonical_body_style_or_none(None) is None
+
+
+def test_is_canonical_body_style() -> None:
+    from backend.utils.field_clean import is_canonical_body_style
+
+    assert is_canonical_body_style("SUV")
+    assert not is_canonical_body_style("Sport Utility")
+    assert not is_canonical_body_style("")
+
+
+def test_inventory_repair_catalog_respells_noncanonical_body(monkeypatch) -> None:
+    from backend.utils import inventory_repair as ir
+
+    monkeypatch.setattr(ir, "merge_verified_specs", lambda raw: {"body_style_display": "Wagon"})
+    out = ir.collect_merge_spec_storage_updates({"id": 1, "body_style": "Mid-Size Estate Thing"})
+    assert out["body_style"] == "Wagon"
+    monkeypatch.setattr(ir, "merge_verified_specs", lambda raw: {"body_style_display": "Free Text"})
+    assert "body_style" not in ir.collect_merge_spec_storage_updates({"id": 1, "body_style": "Mid-Size Estate Thing"})

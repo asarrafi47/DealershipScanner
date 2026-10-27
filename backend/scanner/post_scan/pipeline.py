@@ -238,32 +238,49 @@ def post_dict_enrich_env_enabled() -> bool:
 
 def run_dictionary_enrich_for_vins(vins: list[str]) -> dict[str, Any]:
     """
-    Fill mechanical spec gaps from epa_master for each scanned VIN.
+    Fill mechanical spec gaps from the DICTIONARY EPA CSVs for each scanned VIN.
 
-    Only writes fields that are currently empty/placeholder — never overwrites existing data.
+    Reads the CSVs (``backend/dictionary``), not ``epa_master``. Every value goes through fact
+    precedence (``apply_fact_proposals``): the catalog fills blanks and never outranks the dealer's
+    engine text or the VIN decode, an engine correction needs vPIC or the dealer's own title / trim
+    to back it, and refused corrections are recorded as discrepancies in ``spec_source_json``.
+    EPA exterior colors and forced-induction labels are not written.
     Set ``SCANNER_POST_DICT_ENRICH=0`` to skip this stage.
     """
-    from backend.db.inventory_db import get_car_by_vin, update_car_row_partial
+    from backend.db.inventory_db import get_car_by_vin
 
     try:
-        from backend.dictionary.enrich_from_dictionary import enrich_car
+        from backend.dictionary.enrich_from_dictionary import (
+            apply_dictionary_updates,
+            enrich_car,
+            vpic_contexts_for_vins,
+        )
     except ImportError:
         logger.warning(
             "backend.dictionary.enrich_from_dictionary not importable; dictionary enrichment skipped."
         )
         return {"vins": len(vins), "updated": 0, "skipped": True}
 
-    stats: dict[str, Any] = {"vins": len(vins), "updated": 0, "no_match": 0}
+    stats: dict[str, Any] = {"vins": len(vins), "updated": 0, "no_match": 0, "refused": 0}
+    vpic_by_vin = vpic_contexts_for_vins(vins)
     for vin in vins:
         row = get_car_by_vin(vin)
         if not row:
             continue
-        updates = enrich_car(dict(row), fill_all=False, use_vpic=False)
-        if not updates:
+        car = dict(row)
+        updates = enrich_car(
+            car, fill_all=False, use_vpic=False,
+            vpic_ctx=vpic_by_vin.get(str(vin).strip().upper()),
+        )
+        stats["refused"] += getattr(updates, "skipped", 0)
+        if not updates and not updates.provenance:
             stats["no_match"] += 1
             continue
-        update_car_row_partial(int(row["id"]), updates)
-        stats["updated"] += 1
+        apply_dictionary_updates(car, updates)
+        if updates:
+            stats["updated"] += 1
+        else:
+            stats["no_match"] += 1
     return stats
 
 
@@ -516,12 +533,12 @@ def run_storage_repair_for_vins(vins: list[str]) -> dict[str, Any]:
     For each VIN: placeholder cleanup + EPA/trim backfill, then NHTSA vPIC for any remaining
     spec gaps (transmission, cylinders, and other slots handled by structured backfill).
     """
-    from backend.db.inventory_db import get_car_by_id, get_car_by_vin, refresh_car_data_quality_score, update_car_row_partial
+    from backend.db.inventory_db import get_car_by_id, get_car_by_vin, refresh_car_data_quality_score
     from backend.enrichment.spec_structured_backfill import (
         apply_structured_spec_backfill_for_car,
         car_needs_transmission_or_cylinders_backfill,
     )
-    from backend.utils.inventory_repair import collect_row_storage_repairs
+    from backend.utils.inventory_repair import apply_row_storage_repair
 
     stats: dict[str, Any] = {
         "vins": len(vins),
@@ -538,12 +555,12 @@ def run_storage_repair_for_vins(vins: list[str]) -> dict[str, Any]:
             continue
         stats["rows_found"] += 1
         cid = int(raw["id"])
-        patch = collect_row_storage_repairs(raw)
-        if patch:
+        # Fact columns are decided by precedence and every write records its source (P8B.7).
+        res = apply_row_storage_repair(raw)
+        if res.applied:
             stats["rows_patched"] += 1
-            for k in patch:
+            for k in res.applied:
                 fields[k] = fields.get(k, 0) + 1
-            update_car_row_partial(cid, patch)
             refresh_car_data_quality_score(cid)
 
         car = get_car_by_id(cid, include_inactive=True)

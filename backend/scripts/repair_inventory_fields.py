@@ -117,9 +117,8 @@ def main() -> int:
         get_car_by_id,
         get_conn,
         refresh_car_data_quality_score,
-        update_car_row_partial,
     )
-    from backend.utils.inventory_repair import collect_row_storage_repairs
+    from backend.utils.inventory_repair import apply_row_storage_repair
 
     ap = argparse.ArgumentParser()
     ap.add_argument("--dry-run", action="store_true", help="Print counts only; no writes.")
@@ -178,15 +177,15 @@ def main() -> int:
         raw = get_car_by_id(cid)
         if not raw:
             continue
-        patch = collect_row_storage_repairs(raw)
-        if not patch:
+        # Precedence decides the fact columns; the write records provenance (P8B.7).
+        res = apply_row_storage_repair(raw, dry_run=args.dry_run)
+        if not res.applied:
             continue
         would_update += 1
-        for k in patch:
+        for k in res.applied:
             fields_touched[k] = fields_touched.get(k, 0) + 1
         if args.dry_run:
             continue
-        update_car_row_partial(cid, patch)
         refresh_car_data_quality_score(cid)
 
     print(f"cars_scanned={len(ids)} rows_with_patch={would_update} dry_run={args.dry_run}")

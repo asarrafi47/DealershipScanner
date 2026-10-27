@@ -38,6 +38,8 @@ from backend.db.inventory_db import (  # noqa: E402
     _parse_car_history_highlights,
 )
 from backend.utils.field_clean import clean_car_row_dict  # noqa: E402
+from backend.vehicle_facts import precedence as prec  # noqa: E402
+from backend.vehicle_facts.apply import apply_labeled_patch  # noqa: E402
 from backend.utils.incomplete_recovery import (  # noqa: E402
     RECOVERY_VALUE_FIELDS,
     apply_patches_to_dict,
@@ -58,6 +60,18 @@ def _json_safe(val: Any) -> Any:
     if isinstance(val, (dict, list, str, int, float, bool)) or val is None:
         return val
     return str(val)
+
+
+def _recovery_fact_source(sources: list[str]) -> str:
+    """Precedence label for a recovery write: the detail page, the dealer's inventory feed,
+    or the Mazda title rules (a text heuristic)."""
+    if "vdp" in sources:
+        return prec.DEALER_VDP
+    if "inventory" in sources:
+        return prec.DEALER_FEED
+    if "mazda_rules" in sources:
+        return prec.DEALER_TEXT
+    return prec.DEALER_NORMALIZED
 
 
 def _diff_updates(before: dict[str, Any], after: dict[str, Any]) -> dict[str, Any]:
@@ -247,7 +261,15 @@ def main() -> int:
                     )
 
                 if not args.dry_run and raw_updates:
-                    update_car_row_partial(cid, {k: v for k, v in raw_updates.items() if k != "id"})
+                    # Fact columns go through precedence with a source label (P8B.7);
+                    # the recovery bookkeeping (meta_keys) carries no provenance.
+                    apply_labeled_patch(
+                        before_row,
+                        {k: v for k, v in vehicle_only.items() if k not in ("id", "spec_source_json")},
+                        _recovery_fact_source(sources),
+                        detail="recover_incomplete_listings",
+                        meta=meta_keys,
+                    )
                     refresh_car_data_quality_score(cid)
 
         # Detail pages are read over HTTP (recover_vehicle_vdp_async); no browser.

@@ -306,17 +306,23 @@ def stamp_registry_and_source_urls(run: DealerRun) -> None:
         apply_vehicle_source_url(v)
 
 
-def apply_vin_facts(run: DealerRun) -> None:
-    """NHTSA vPIC drivetrain / fuel outrank the dealer feed (cached decodes only)."""
+async def apply_vin_facts(run: DealerRun) -> None:
+    """NHTSA vPIC drivetrain / fuel outrank the dealer feed. Uncached VINs are
+    decoded first (budgeted, P8B.4); the whole pass runs in a worker thread so a
+    slow decode never stalls the other dealer coroutines."""
     try:
         from backend.enrichment.vpic_facts import override_vehicles
 
-        _vf = override_vehicles(run.all_vehicles)
+        _vf = await asyncio.to_thread(override_vehicles, run.all_vehicles)
         run.result["vin_facts"] = _vf
         if _vf.get("drivetrain") or _vf.get("fuel_type"):
+            _inline = ""
+            if _vf.get("decoded_inline") or _vf.get("decode_failed") or _vf.get("decode_skipped_budget"):
+                _inline = " (%d decoded inline, %d failed, %d over budget)" % (
+                    _vf.get("decoded_inline", 0), _vf.get("decode_failed", 0), _vf.get("decode_skipped_budget", 0))
             logger.info(
-                "VIN facts [%s]: %d cached decode(s); drivetrain overridden on %d, fuel on %d",
-                run.name, _vf["cached"], _vf["drivetrain"], _vf["fuel_type"],
+                "VIN facts [%s]: %d cached decode(s)%s; drivetrain overridden on %d, fuel on %d",
+                run.name, _vf["cached"], _inline, _vf["drivetrain"], _vf["fuel_type"],
             )
     except Exception as _vf_e:
         logger.warning("VIN facts failed [%s] (continuing): %s", run.name, _vf_e)
