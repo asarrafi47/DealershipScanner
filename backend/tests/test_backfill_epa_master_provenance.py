@@ -61,6 +61,30 @@ def test_cli_without_a_database_url_is_refused(monkeypatch, tmp_path):
     assert bf.main(["--dictionary-dir", str(tmp_path), "--min-files", "1"]) == bf.EXIT_REFUSED
 
 
+def test_check_quiescent_flag_only_checks(monkeypatch, capsys):
+    from backend.db import inventory_pg
+
+    class Conn:
+        read_only = False
+
+        def close(self):
+            pass
+
+    monkeypatch.setattr(inventory_pg, "inventory_postgres_dsn", lambda: "postgresql://x/y")
+    monkeypatch.setattr(inventory_pg, "pg_connect", lambda: Conn())
+    monkeypatch.setattr("backend.utils.project_env.load_project_dotenv", lambda *a, **k: None)
+    monkeypatch.setattr(bf, "check_quiescent", lambda conn: None)
+    monkeypatch.setattr(bf, "backfill", lambda *a, **k: pytest.fail("backfill ran"))
+    assert bf.main(["--check-quiescent"]) == 0
+    assert "quiescent" in capsys.readouterr().out
+
+    def busy(conn):
+        raise bf.Refused("1 other session(s)")
+
+    monkeypatch.setattr(bf, "check_quiescent", busy)
+    assert bf.main(["--check-quiescent"]) == bf.EXIT_REFUSED
+
+
 # --- Postgres --------------------------------------------------------------------------------
 
 def _seed(conn, rows, live_ids=()):

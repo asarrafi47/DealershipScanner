@@ -4,8 +4,9 @@ Two scripts could replace the catalog with fresh ids:
 
 * ``build_epa_master_pg.py --rebuild`` ran ``DELETE FROM epa_master`` (cascading to
   ``epa_extended_specs``) and re-inserted from the stale root ``DICTIONARY/`` copy.
-  Every write mode now exits 2 during argument handling, before any connection,
-  and the source is ``dictionary_paths.EPA_DIR`` read recursively.
+  ``--rebuild`` (and a contradictory flag mix) still exits 2 during argument handling,
+  before any connection; the source is ``dictionary_paths.EPA_DIR`` read recursively.
+  P10B.2 lifts the refusal for the id-preserving ``--apply`` only.
 * ``import_epa_master.py --yes`` / ``import_csv(append=False)`` deletes and reloads
   from vehicles.csv. It now refuses while any car is linked or any extended-specs
   row exists, and still works on an empty, unlinked catalog.
@@ -61,18 +62,24 @@ def _write_epa_csv(path: Path, rows: list[tuple[int, str, str, str]]) -> None:
 
 @pytest.mark.parametrize(
     "argv",
-    [["--rebuild"], ["--rebuild", "--dry-run"], []],
-    ids=["rebuild", "rebuild-with-dry-run", "default-mode"],
+    [["--rebuild"], ["--rebuild", "--dry-run"], ["--rebuild", "--apply"], ["--archive-missing"],
+     ["--allow-large-update"], ["--apply", "--dry-run"]],
+    ids=["rebuild", "rebuild-with-dry-run", "rebuild-with-apply", "archive-without-apply",
+         "large-update-without-apply", "apply-with-dry-run"],
 )
-def test_builder_write_modes_refuse_before_connecting(argv, no_db_connection, capsys):
+def test_builder_refused_modes_exit_2_before_connecting(argv, no_db_connection, capsys):
     assert builder.main(argv) == 2
     assert no_db_connection == []
-    assert "writes disabled until the id-preserving builder lands (P10B.2)" in capsys.readouterr().err
+    assert capsys.readouterr().err.startswith("build_epa_master_pg: ")
 
 
-@pytest.mark.parametrize("kwargs", [{}, {"rebuild": True}, {"dry_run": True, "rebuild": True}])
-def test_builder_library_entry_refuses_writes_before_connecting(kwargs, no_db_connection):
-    with pytest.raises(builder.BuildRefused, match="P10B.2"):
+@pytest.mark.parametrize(
+    "kwargs",
+    [{"rebuild": True}, {"dry_run": True, "rebuild": True}, {"archive_missing": True},
+     {"apply": True, "dry_run": True}],
+)
+def test_builder_library_entry_refuses_before_connecting(kwargs, no_db_connection):
+    with pytest.raises(builder.BuildRefused):
         builder.build_epa_master(**kwargs)
     assert no_db_connection == []
 
@@ -99,7 +106,7 @@ def test_builder_rebuild_cli_exits_2_without_connecting(tmp_path: Path):
         timeout=60,
     )
     assert proc.returncode == 2, proc.stderr
-    assert "writes disabled until the id-preserving builder lands (P10B.2)" in proc.stderr
+    assert "--rebuild refused" in proc.stderr
     assert "OperationalError" not in proc.stderr
 
 
@@ -125,10 +132,11 @@ def test_builder_never_reads_root_dictionary_folder():
     assert "dictionary_paths" in src
 
 
-def test_builder_has_no_write_sql():
-    """No reachable write: no string the builder executes holds DELETE/INSERT/UPDATE/TRUNCATE.
+def test_builder_writes_are_id_preserving():
+    """P10B.2: the only writes are INSERT, UPDATE by id and an archive-then-delete by id list.
 
-    Docstrings are skipped (the module docstring explains what ``--rebuild`` used to do).
+    No TRUNCATE, no ``ON CONFLICT`` (a silent drop), and every DELETE names ``id = ANY``.
+    Docstrings are skipped.
     """
     tree = ast.parse(BUILDER_PATH.read_text(encoding="utf-8"))
     docstrings = {
@@ -144,9 +152,13 @@ def test_builder_has_no_write_sql():
         for node in ast.walk(tree)
         if isinstance(node, ast.Constant) and isinstance(node.value, str) and id(node) not in docstrings
     ]
-    assert any("SELECT" in s for s in strings)  # the dry-run read is still there
-    for verb in ("DELETE FROM", "INSERT INTO", "UPDATE ", "TRUNCATE"):
+    assert any("SELECT" in s for s in strings)
+    for verb in ("TRUNCATE", "ON CONFLICT", "DO NOTHING"):
         assert not [s for s in strings if verb in s], verb
+    deletes = [s for s in strings if "DELETE FROM" in s]
+    assert deletes and all("WHERE ID = ANY" in s for s in deletes)
+    updates = [s for s in strings if "UPDATE PUBLIC" in s]
+    assert updates and any("WHERE ID = %S" in s for s in strings)   # f-string: SET list, then the id
 
 
 def test_builder_short_source_dir_refused(tmp_path: Path, no_db_connection, capsys):
@@ -181,32 +193,18 @@ def test_builder_missing_source_dir_refused(tmp_path: Path):
 
 
 class _ReadOnlyPgConn:
-    """A psycopg-shaped connection that records statements and rejects writes."""
+    """A psycopg-shaped connection that records read_only and rejects any write or commit."""
 
-    def __init__(self, existing: list[tuple]):
-        self.existing = existing
+    def __init__(self):
         self.read_only = False
-        self.statements: list[str] = []
         self.closed = False
+        self.rolled_back = 0
 
     def cursor(self):
-        conn = self
-
-        class _Cur:
-            def execute(self, sql, params=None):
-                conn.statements.append(sql)
-                if not conn.read_only:
-                    raise AssertionError("dry run queried before setting read_only")
-                if not sql.lstrip().upper().startswith("SELECT"):
-                    raise AssertionError(f"dry run issued a non-SELECT: {sql}")
-
-            def fetchall(self):
-                return list(conn.existing)
-
-        return _Cur()
+        raise AssertionError("the dry run reached the cursor outside read_db_rows")
 
     def rollback(self):
-        pass
+        self.rolled_back += 1
 
     def commit(self):
         raise AssertionError("dry run committed")
@@ -221,18 +219,29 @@ def test_builder_dry_run_counts_on_a_read_only_connection(tmp_path: Path, monkey
         [(2019, "Kia", "Soul", "LX"), (2019, "Kia", "Soul", "GT-Line"), (2019, "Kia", "Soul", "LX")],
     )
     _write_epa_csv(tmp_path / "Kia" / "2020_Kia_Rio_EPA.csv", [(2020, "Kia", "Rio", ""), (0, "", "", "")])
-    fake = _ReadOnlyPgConn(existing=[(2019, "kia", "soul", "lx")])
+    fake = _ReadOnlyPgConn()
+    seen = {}
+
+    def _rows(conn, **kw):
+        seen["read_only"] = conn.read_only
+        return [{"id": 1, "epa_vehicle_id": None, "year": 2019, "make": "Kia", "model": "Soul",
+                 "trim": "LX", "engine_description": "2.0L I4", "trany": None, "drive": None,
+                 "fuel_type": None, "body_style": None, "cylinders": None, "displacement": None,
+                 "city08": 25.0, "highway08": 33.0, "engine_display": None, "forced_induction": None,
+                 "city_e": None, "highway_e": None, "atv_type": None, "natural_key": "k"}]
 
     from backend.db import inventory_pg
 
     monkeypatch.setenv("INVENTORY_DATABASE_URL", FAKE_DSN)
     monkeypatch.setattr(inventory_pg, "pg_connect", lambda: fake)
+    monkeypatch.setattr(builder, "read_db_rows", _rows)
 
     stats = builder.build_epa_master(dry_run=True, source_dir=tmp_path, min_files=2)
-    assert stats == {"files": 2, "would_insert": 2, "skipped_existing": 2, "skipped_bad_row": 1}
-    assert fake.read_only is True
+    assert (stats["files"], stats["skipped_bad_row"], stats["mode"]) == (2, 1, "dry_run")
+    assert stats["csv_rows"] == 4 and stats["db_rows"] == 1
+    assert stats["insert"] + stats["update"] + stats["unchanged"] == 4
+    assert seen["read_only"] is True
     assert fake.closed is True
-    assert len(fake.statements) == 1
 
 
 # ---------------------------------------------------------------------------

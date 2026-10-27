@@ -213,6 +213,8 @@ def main(argv: Sequence[str] | None = None) -> int:
     ap.add_argument("--dictionary-dir", default=str(_REPO_ROOT / "DICTIONARY"),
                     help="The root DICTIONARY/ folder used to classify legacy rows.")
     ap.add_argument("--min-files", type=int, default=DEFAULT_MIN_FILES)
+    ap.add_argument("--check-quiescent", action="store_true",
+                    help="Only run the pg_stat_activity check (exit 0 quiet, 2 busy); reads nothing else.")
     args = ap.parse_args(argv)
 
     from backend.utils.project_env import load_project_dotenv
@@ -226,6 +228,12 @@ def main(argv: Sequence[str] | None = None) -> int:
         return EXIT_REFUSED
     conn = None
     try:
+        if args.check_quiescent:
+            conn = pg_connect()
+            conn.read_only = True
+            check_quiescent(conn)
+            print("quiescent: no other session is active or idle in transaction")
+            return 0
         keys = dictionary_base_keys(args.dictionary_dir, min_files=args.min_files)
         conn = pg_connect()
         if not args.apply:

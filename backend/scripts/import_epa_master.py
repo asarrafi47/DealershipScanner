@@ -3,8 +3,9 @@
 Download EPA fueleconomy.gov vehicles.csv and import it into the inventory `epa_master`.
 
 Usage (from repo root):
-  PYTHONPATH=. python backend/scripts/import_epa_master.py --append-years 2027
-  PYTHONPATH=. python backend/scripts/import_epa_master.py --yes   # full replace, guarded
+  PYTHONPATH=. python backend/scripts/import_epa_master.py --append-years 2027 --csv vehicles.csv
+  PYTHONPATH=. python backend/scripts/import_epa_master.py --append-years 2027 --csv vehicles.csv --apply
+  PYTHONPATH=. python backend/scripts/import_epa_master.py --yes   # empty-catalog bootstrap only
   PYTHONPATH=. python backend/scripts/import_epa_master.py --refresh-induction --csv vehicles.csv
   PYTHONPATH=. python backend/scripts/import_epa_master.py --refresh-induction --csv vehicles.csv \
       --apply --backup induction_backup.csv
@@ -13,9 +14,16 @@ Usage (from repo root):
 Runs on the inventory backend (Postgres via INVENTORY_DATABASE_URL; SQLite only under
 pytest). Creates `epa_master` if missing.
 
-``--append-years`` only inserts rows whose epa_vehicle_id is new; it never deletes.
+``--append-years`` (P10B.3, D-ER1 a) is the one ingestion path: vehicles.csv -> dictionary
+CSVs (``import_epa_to_dictionary`` for those years) -> ``build_epa_master_pg --apply``.
+Rows reach ``epa_master`` through the builder, so they carry ``source='dictionary_epa'``
+and an ``epa_key`` natural key, and a re-run inserts nothing. It never deletes and never
+archives. Without ``--apply`` it writes nothing (the dictionary step goes to a scratch
+folder and the builder runs as a dry run). ``import_csv(append=True)`` remains for
+callers that pass a connection but is no longer reachable from the CLI.
 
-The full replace (``--yes``, or ``import_csv(append=False)``) runs ``DELETE FROM
+``--yes`` (``import_csv(append=False)``) is the empty-catalog bootstrap only: the CLI
+refuses it (exit 2) once epa_master holds any row. The underlying replace runs ``DELETE FROM
 epa_master`` and reloads with fresh ids. That deletion cascades to
 ``epa_extended_specs`` and leaves every ``cars.epa_master_id`` dangling, so it is
 refused (RuntimeError; exit 2 from the CLI, with the counts printed) while any car is
@@ -34,6 +42,7 @@ from __future__ import annotations
 
 import csv
 import hashlib
+import json
 import os
 import sqlite3
 import sys
@@ -174,6 +183,10 @@ class FullReplaceRefused(RuntimeError):
         )
 
 
+class BootstrapRefused(RuntimeError):
+    """The CLI refused: the request is outside the single ingestion path."""
+
+
 def _is_missing_table_error(exc: BaseException) -> bool:
     """True only for "table does not exist" (SQLite OperationalError / Postgres 42P01)."""
     if getattr(exc, "sqlstate", None) == "42P01":
@@ -219,6 +232,59 @@ def assert_full_replace_allowed(conn: Any) -> None:
     if linked or xspecs:
         catalog = _scalar_count(conn, "SELECT COUNT(*) FROM epa_master")
         raise FullReplaceRefused(linked_cars=linked, extended_specs=xspecs, catalog_rows=catalog)
+
+
+def assert_catalog_empty(conn: Any) -> None:
+    """Raise :class:`FullReplaceRefused`-style refusal unless epa_master has no rows."""
+    n = _scalar_count(conn, "SELECT COUNT(*) FROM epa_master")
+    if n:
+        raise BootstrapRefused(
+            f"epa_master already holds {n} row(s); --yes is the empty-catalog bootstrap only. "
+            "Use --append-years (vehicles.csv -> dictionary CSVs -> build_epa_master_pg --apply)."
+        )
+
+
+def append_years(years: set[int], csv_path: str, *, apply: bool = False,
+                 dictionary_dir: Path | str | None = None) -> dict:
+    """P10B.3: add model years through the single ingestion path.
+
+    Dictionary CSVs for *years* are regenerated from *csv_path*, then the builder loads
+    them (``--apply`` only; the builder never archives here). A dry run overlays the new
+    dictionary files on a scratch copy of the real dictionary and runs the builder dry run on it.
+    """
+    import tempfile
+    from collections import Counter
+
+    from backend.enrichment import dictionary_paths
+    from backend.scripts import build_epa_master_pg as builder
+    from backend.scripts import import_epa_to_dictionary as to_dict
+
+    stats: Counter = Counter()
+    root = Path(dictionary_dir) if dictionary_dir else Path(dictionary_paths.DICTIONARY_ROOT)
+    # process_epa_csv nests under epa/<make>/ only for the real dictionary root.
+    epa_dir = root / "epa" if root.resolve() == Path(dictionary_paths.DICTIONARY_ROOT).resolve() else root
+    if not apply:
+        # Preview against a scratch copy of the real dictionary with the new-year files
+        # overlaid, so the builder diff counts the rows --apply would insert.
+        import shutil
+
+        with tempfile.TemporaryDirectory(prefix="epa_append_dry_") as scratch:
+            scratch_root = Path(scratch) / "dictionary"
+            if root.is_dir():
+                shutil.copytree(root, scratch_root)
+            else:
+                scratch_root.mkdir()
+            written = to_dict.process_epa_csv(Path(csv_path), 1950, scratch_root, years=set(years), stats=stats)
+            scratch_epa = scratch_root / "epa" if epa_dir != root else scratch_root
+            report = builder.build_epa_master(dry_run=True, source_dir=scratch_epa)
+        return {"mode": "dry_run", "years": sorted(years), "dictionary_files": written,
+                "failed_rows": stats["failed"], "builder": report}
+    written = to_dict.process_epa_csv(Path(csv_path), 1950, root, years=set(years), stats=stats)
+    if stats["failed"]:
+        raise BootstrapRefused(f"{stats['failed']} vehicles.csv row(s) failed to convert; builder not run")
+    report = builder.build_epa_master(apply=True, source_dir=epa_dir)
+    return {"mode": "apply", "years": sorted(years), "dictionary_files": written,
+            "failed_rows": 0, "builder": report}
 
 
 def import_csv(path: str, conn: Any, *, years: set[int] | None = None, append: bool = False) -> int:
@@ -581,7 +647,7 @@ def main(argv: list[str] | None = None) -> int:
                     help="Re-label forced induction on existing epa_master rows from --csv (set-based, never deletes).")
     ap.add_argument("--restore", default="", metavar="BACKUP_CSV",
                     help="Put the induction columns back to a --backup file's values.")
-    ap.add_argument("--apply", action="store_true", help="With --refresh-induction/--restore: write (default is a dry run).")
+    ap.add_argument("--apply", action="store_true", help="With --append-years/--refresh-induction/--restore: write (default is a dry run).")
     ap.add_argument("--backup", default="", help="With --refresh-induction --apply: where to save the previous values.")
     args = ap.parse_args(argv)
 
@@ -600,12 +666,16 @@ def main(argv: list[str] | None = None) -> int:
             path = tmp.name
             print(f"Downloading {EPA_URL} ...")
             urllib.request.urlretrieve(EPA_URL, path)
-        conn = get_conn()
+        from backend.scripts.build_epa_master_pg import BuildRefused
+
         try:
-            n = import_csv(path, conn, years=years, append=True)
-        finally:
-            conn.close()
-        print(f"Appended {n} EPA row(s) for {sorted(years)} into epa_master (existing rows untouched).")
+            result = append_years(years, path, apply=args.apply)
+        except (BootstrapRefused, BuildRefused) as exc:
+            print(f"import_epa_master: refused: {exc}", file=sys.stderr)
+            return EXIT_REFUSED
+        print(json.dumps(result, indent=2, sort_keys=True, default=str))
+        if not args.apply:
+            print("Dry run: nothing written. Re-run with --apply (owner-gated) to load these years.")
         return 0
 
     if not args.yes:
@@ -630,7 +700,8 @@ def main(argv: list[str] | None = None) -> int:
     try:
         ensure_table(conn)
         assert_full_replace_allowed(conn)
-    except FullReplaceRefused as exc:
+        assert_catalog_empty(conn)
+    except (FullReplaceRefused, BootstrapRefused) as exc:
         print(str(exc), file=sys.stderr)
         return EXIT_REFUSED
     finally:

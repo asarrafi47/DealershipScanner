@@ -505,16 +505,22 @@ def lookup_epa_by_trim(
     make: str | None,
     model: str | None,
     trim: str | None,
+    exclude_sources: tuple[str, ...] = (),
 ) -> dict[str, Any]:
     """
     Exact per-trim row from epa_master (populated by build_epa_master.py).
 
     Returns the best-matching trim row, or an empty dict when no match found.
     Falls back to partial trim substring match when no exact match exists.
+
+    ``exclude_sources`` (P10B.6 dry run: what the LIMIT-1 lookup returns once those catalog
+    rows are gone) skips ``epa_master.source`` values and bypasses the cache.
     """
     key = _epa_trim_lookup_key(year, make, model, trim)
     if key is None:
         return {}
+    if exclude_sources:
+        return dict(_lookup_epa_by_trim_uncached(*key, exclude_sources=tuple(exclude_sources)))
     return dict(_lookup_epa_by_trim_cached(key))
 
 
@@ -641,7 +647,15 @@ def _lookup_epa_by_trim_uncached(
     make: str,
     model: str,
     trim_clean: str,
+    exclude_sources: tuple[str, ...] = (),
 ) -> dict[str, Any]:
+    # exclude_sources (P10B.6): catalog rows with these ``epa_master.source`` values are
+    # not candidates; a NULL source stays eligible. Empty = the query is unchanged.
+    skip_sql = ""
+    skip_params: tuple = ()
+    if exclude_sources:
+        skip_sql = " AND (source IS NULL OR source NOT IN (%s))" % ",".join("?" * len(exclude_sources))
+        skip_params = tuple(exclude_sources)
     conn = None
     try:
         conn = _conn()
@@ -653,9 +667,10 @@ def _lookup_epa_by_trim_uncached(
                    city08, highway08, fuel_type, atv_type, body_style, engine_description
             FROM epa_master
             WHERE year=? AND lower(make)=lower(?) AND lower(model)=lower(?) AND lower(trim)=lower(?)
+            """ + skip_sql + """
             LIMIT 1
             """,
-            (year, make.strip(), model.strip(), trim_clean),
+            (year, make.strip(), model.strip(), trim_clean) + skip_params,
         )
         row = cur.fetchone()
         if not row:
@@ -668,9 +683,10 @@ def _lookup_epa_by_trim_uncached(
                 WHERE year=? AND lower(make)=lower(?) AND lower(model)=lower(?)
                   AND (lower(?) LIKE '%' || lower(trim) || '%'
                        OR lower(trim) LIKE '%' || lower(?) || '%')
+                """ + skip_sql + """
                 LIMIT 1
                 """,
-                (year, make.strip(), model.strip(), trim_clean, trim_clean),
+                (year, make.strip(), model.strip(), trim_clean, trim_clean) + skip_params,
             )
             row = cur.fetchone()
         # Try normalized model names (e.g. "Silverado 1500" → "Silverado")
@@ -682,9 +698,10 @@ def _lookup_epa_by_trim_uncached(
                            city08, highway08, fuel_type, atv_type, body_style, engine_description
                     FROM epa_master
                     WHERE year=? AND lower(make)=lower(?) AND lower(model)=lower(?) AND lower(trim)=lower(?)
+                    """ + skip_sql + """
                     LIMIT 1
                     """,
-                    (year, make.strip(), fallback_model, trim_clean),
+                    (year, make.strip(), fallback_model, trim_clean) + skip_params,
                 )
                 row = cur.fetchone()
                 if not row:
@@ -696,9 +713,10 @@ def _lookup_epa_by_trim_uncached(
                         WHERE year=? AND lower(make)=lower(?) AND lower(model)=lower(?)
                           AND (lower(?) LIKE '%' || lower(trim) || '%'
                                OR lower(trim) LIKE '%' || lower(?) || '%')
+                        """ + skip_sql + """
                         LIMIT 1
                         """,
-                        (year, make.strip(), fallback_model, trim_clean, trim_clean),
+                        (year, make.strip(), fallback_model, trim_clean, trim_clean) + skip_params,
                     )
                     row = cur.fetchone()
                 if row:
