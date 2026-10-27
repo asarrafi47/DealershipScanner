@@ -585,6 +585,15 @@ def _classify_by_make_model(
     return None
 
 
+def _is_pure_ev_fuel(fuel_type: str | None) -> bool:
+    ft = _norm(fuel_type)
+    # 'Premium Gasoline / Electricity' is a plug-in hybrid, not an EV: only a fuel
+    # string with no combustion fuel in it is a pure EV.
+    return _has(ft, "electric") and not re.search(
+        r"plug|hybrid|gasoline|diesel|petrol|premium|regular|e85|flex", ft
+    )
+
+
 def classify_forced_induction(
     make: str | None,
     model: str | None,
@@ -603,12 +612,7 @@ def classify_forced_induction(
     Checks raw text first (most reliable), falls back to make/model lookup.
     Electric vehicles always return None.
     """
-    ft = _norm(fuel_type)
-    # 'Premium Gasoline / Electricity' is a plug-in hybrid, not an EV: only a fuel
-    # string with no combustion fuel in it is a pure EV.
-    if _has(ft, "electric") and not re.search(
-        r"plug|hybrid|gasoline|diesel|petrol|premium|regular|e85|flex", ft
-    ):
+    if _is_pure_ev_fuel(fuel_type):
         return None
 
     identity_blob = " ".join(
@@ -773,3 +777,95 @@ def classify_forced_induction_from_car_row(car: dict[str, Any]) -> str | None:
         description=car.get("description"),
         title=car.get("title"),
     )
+
+
+# -- Evidence-ranked resolution (P10C.2) -------------------------------------
+# Source ids match backend.vehicle_facts.precedence (kept as literals: that module
+# stays free of imports from here, and this one from it).
+_SRC_DEALER_FEED = "dealer_feed"
+_SRC_VPIC = "nhtsa_vpic"
+_SRC_CATALOG = "epa_catalog"
+_SRC_DESCRIPTION = "dealer_text_heuristic"
+_SRC_HEURISTIC = "trim_heuristic"
+_SRC_NONE = "unknown"
+
+
+def _family_unanimous_label(family_flags: Any) -> str | None:
+    """The one label every non-blank catalog family row agrees on, else None.
+
+    *family_flags* is the forced-induction labels of the epa_master rows in the
+    car's (year, make, model, displacement, cylinders) family. NA_LABEL mixed
+    with a boost label, or two different boost labels, is not unanimous.
+    """
+    if not family_flags:
+        return None
+    labels = {str(x).strip() for x in family_flags if x is not None and str(x).strip()}
+    if len(labels) != 1:
+        return None
+    return next(iter(labels))
+
+
+def resolve_car_forced_induction(
+    car: dict[str, Any],
+    *,
+    vpic_boosted: bool | None = None,
+    family_flags: Any = None,
+) -> tuple[str | None, str]:
+    """Best forced-induction label for a car and the source that decided it.
+
+    Order (the precedence rank table mirrors it; the catalog never outranks the
+    dealer's own engine text or the VIN decode):
+
+    1. the dealer's engine text, trim or title (``dealer_feed``);
+    2. the vPIC Turbo flag (``nhtsa_vpic``): True is typed from the catalog
+       family or the heuristic and defaults to Turbocharged, False is
+       Naturally Aspirated;
+    3. a family-unanimous catalog label, NA included (``epa_catalog``);
+    4. boost markers in the description body (``dealer_text_heuristic``);
+    5. the make/model heuristic, last resort (``trim_heuristic``, D-ET4).
+
+    ``(None, "unknown")`` when nothing speaks, and for a pure EV.
+    """
+    if _is_pure_ev_fuel(car.get("fuel_type")):
+        return None, _SRC_NONE
+
+    identity = " ".join(
+        str(car.get(k)) for k in ("title", "model", "trim", "engine_description")
+        if car.get(k) and str(car.get(k)).strip()
+    )
+    text = (
+        _classify_from_trim_t_displacement(identity)
+        or extract_forced_induction_from_text(car.get("engine_description"))
+    )
+    if text:
+        return text, _SRC_DEALER_FEED
+
+    family = _family_unanimous_label(family_flags)
+    heuristic = None
+    heuristic_done = False
+
+    def _heuristic() -> str | None:
+        nonlocal heuristic, heuristic_done
+        if not heuristic_done:
+            heuristic = classify_forced_induction_from_car_row(car)
+            heuristic_done = True
+        return heuristic
+
+    if vpic_boosted is True:
+        if family and has_forced_induction(family):
+            return family, _SRC_VPIC
+        return (_heuristic() if has_forced_induction(_heuristic()) else TURBO), _SRC_VPIC
+    if vpic_boosted is False:
+        return NA_LABEL, _SRC_VPIC
+
+    if family:
+        return family, _SRC_CATALOG
+
+    from_desc = extract_forced_induction_from_text(car.get("description"))
+    if from_desc:
+        return from_desc, _SRC_DESCRIPTION
+
+    guess = _heuristic()
+    if guess:
+        return guess, _SRC_HEURISTIC
+    return None, _SRC_NONE

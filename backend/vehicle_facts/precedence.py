@@ -114,9 +114,11 @@ _R = {
                        HTML_JSONLD: 70, RECIPE_HEAL: 60, UNKNOWN: 1},
     "interior_color": {STICKER: 90, DEALER_FEED: 80, DEALER_VDP: 80, DEALER_NORMALIZED: 70,
                        HTML_JSONLD: 70, RECIPE_HEAL: 60, UNKNOWN: 1},
-    # Placeholder until forced_induction.resolve_car_forced_induction (P10C.2).
-    "forced_induction": {STICKER: 90, DEALER_FEED: 80, DEALER_VDP: 80, DEALER_TEXT: 50,
-                         NHTSA_VPIC: 40, EPA_CATALOG: 30, TRIM_HEURISTIC: 10, UNKNOWN: 1},
+    # Mirrors forced_induction.resolve_car_forced_induction (P10C.2): dealer engine
+    # text, then the VIN decode, then family-unanimous catalog flags, then
+    # description markers; the make/model heuristic only fills a blank (D-ET4).
+    "forced_induction": {STICKER: 90, DEALER_FEED: 80, DEALER_VDP: 80, NHTSA_VPIC: 70,
+                         EPA_CATALOG: 60, DEALER_TEXT: 50, TRIM_HEURISTIC: 10, UNKNOWN: 1},
 }
 for _t in _R.values():
     _t[STICKER_UNVERIFIED] = 5  # fill-only: ranks last, never overwrites
@@ -139,7 +141,7 @@ FILL_ONLY: dict[str, frozenset[str]] = {
     "body_type": frozenset(SOURCES),  # body is fill-only for every source
     "exterior_color": _FILL_ONLY_COMMON,
     "interior_color": _FILL_ONLY_COMMON,
-    "forced_induction": frozenset(SOURCES),  # fill-only until P10C.2
+    "forced_induction": _FILL_ONLY_HEUR,
 }
 
 _JUNK = frozenset({"", "other", "n/a", "na", "none", "null", "unknown", "-", "--", "tbd", "0"})

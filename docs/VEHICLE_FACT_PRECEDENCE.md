@@ -24,28 +24,31 @@ fill-only: the source writes only into a blank or junk column, whatever its rank
 
 | source | drivetrain | fuel_type | cylinders | engine_description | engine_l | transmission | body_type | exterior_color | interior_color | forced_induction |
 |---|---|---|---|---|---|---|---|---|---|---|
-| `nhtsa_vpic` | 100 | 100 | 100 | 20f | 20f | 20f | 20f | - | - | 40f |
-| `oem_window_sticker` | 80 | 80 | 80 | 90 | 90 | 90 | 90f | 90 | 90 | 90f |
+| `nhtsa_vpic` | 100 | 100 | 100 | 20f | 20f | 20f | 20f | - | - | 70 |
+| `oem_window_sticker` | 80 | 80 | 80 | 90 | 90 | 90 | 90f | 90 | 90 | 90 |
 | `oem_window_sticker_unverified` | 5f | 5f | 5f | 5f | 5f | 5f | 5f | 5f | 5f | 5f |
-| `dealer_feed` | 60 | 60 | 60 | 80 | 80 | 80 | 80f | 80 | 80 | 80f |
-| `dealer_vdp` | 60 | 60 | 60 | 80 | 80 | 80 | 80f | 80 | 80 | 80f |
+| `dealer_feed` | 60 | 60 | 60 | 80 | 80 | 80 | 80f | 80 | 80 | 80 |
+| `dealer_vdp` | 60 | 60 | 60 | 80 | 80 | 80 | 80f | 80 | 80 | 80 |
 | `dealer_normalized` | 55 | 55 | 55 | 70 | 70 | 70 | 70f | 70 | 70 | - |
-| `dealer_text_heuristic` | 40 | 40 | 40 | 50 | 50 | 50 | - | - | - | 50f |
+| `dealer_text_heuristic` | 40 | 40 | 40 | 50 | 50 | 50 | - | - | - | 50 |
 | `html_jsonld` | 55 | 55 | 55 | 70 | 70 | 70 | 70f | 70 | 70 | - |
 | `recipe_heal` | 45 | 45 | 45 | 60 | 60 | 60 | 60f | 60 | 60 | - |
-| `epa_catalog` | 30 | 30 | 30 | 15f | 15f | 15f | 15f | - | - | 30f |
+| `epa_catalog` | 30 | 30 | 30 | 15f | 15f | 15f | 15f | - | - | 60 |
 | `epa_catalog_tiebreak` | 35 | - | - | - | - | - | - | - | - | - |
 | `web_search` | 5 | 5 | 5 | 5f | 5f | 5f | - | - | - | - |
 | `model_specs` | 10 | 10 | 10 | 10f | 10f | 10f | 10f | - | - | - |
 | `trim_heuristic` | 20 | 5f | 5f | 5f | 5f | 5f | - | - | - | 10f |
 | `llm` | - | - | - | - | - | - | - | - | - | - |
-| `unknown` | 1 | 1 | 1 | 1 | 1 | 1 | 1f | 1 | 1 | 1f |
+| `unknown` | 1 | 1 | 1 | 1 | 1 | 1 | 1f | 1 | 1 | 1 |
 
 Legacy provenance labels map to a source: `nhtsa_vpic_heal` and `ev_cylinders_heal`
 to `nhtsa_vpic`; `epa_master` and `epa_dictionary` to `epa_catalog`;
 `inventory_repair` and `listing_gap_fill` to `unknown` (mixed-source tags).
-`body_type` and `forced_induction` are fill-only for every source until the
-forced-induction resolver lands.
+`body_type` is fill-only for every source. `forced_induction` follows
+`forced_induction.resolve_car_forced_induction` (P10C.2): dealer engine text and the
+sticker, then the VIN decode (vPIC Turbo, typed by the catalog family), then
+family-unanimous catalog flags, then description markers; the make/model heuristic
+(`trim_heuristic`) only fills a blank column (D-ET4).
 
 ## Decision order (`decide`)
 
