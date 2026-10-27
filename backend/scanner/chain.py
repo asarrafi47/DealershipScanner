@@ -227,6 +227,17 @@ class ImpersonatingFetcher(Fetcher):
         return curl_cffi_available()
 
     @staticmethod
+    def accept(resp: Any) -> bool:
+        """A 200 with real HTML. An anti-bot interstitial is rejected so rotation
+        continues to the next signature instead of handing the challenge to the
+        extractors."""
+        from backend.scanner.net.client import looks_like_challenge
+
+        if resp.status_code != 200 or not resp.text or not resp.text.strip():
+            return False
+        return not looks_like_challenge(resp.text)
+
+    @staticmethod
     def _host(url: str) -> str:
         from urllib.parse import urlparse
 
@@ -249,7 +260,7 @@ class ImpersonatingFetcher(Fetcher):
             cffi_requests,
             url,
             profiles=order,
-            accept=lambda resp: bool(resp.status_code == 200 and resp.text and resp.text.strip()),
+            accept=self.accept,
             on_error=_failed,
             timeout=self.timeout_s,
             proxies=proxies,
@@ -279,6 +290,7 @@ class RequestsFetcher(Fetcher):
             via_get=True,
             timeout=self.timeout_s,
             headers={"User-Agent": self.user_agent},
+            proxies=client.scanner_proxies(),
             allow_redirects=True,
         )
         resp.raise_for_status()

@@ -172,9 +172,16 @@ def test_chain_impersonating_403_rotates_all_profiles_then_raises(wire):
     assert wire.events == [_chain_call(p) for p in PROFILES]
 
 
-def test_chain_impersonating_returns_challenge_page_unchecked(wire):
-    wire.queue("curl_cffi", FakeResp(200, CHALLENGE))
-    assert chain.ImpersonatingFetcher().fetch(URL) == CHALLENGE
+def test_chain_impersonating_rotates_past_challenge_then_raises(wire):
+    wire.queue("curl_cffi", FakeResp(200, CHALLENGE), FakeResp(200, CHALLENGE), FakeResp(200, CHALLENGE))
+    with pytest.raises(chain.FetchError, match=r"impersonation exhausted for dealer.test \(last status 200\)"):
+        chain.ImpersonatingFetcher().fetch(URL)
+    assert wire.events == [_chain_call(p) for p in PROFILES]
+
+
+def test_chain_impersonating_challenge_then_real_page_wins(wire):
+    wire.queue("curl_cffi", FakeResp(200, CHALLENGE), FakeResp(200, BIG))
+    assert chain.ImpersonatingFetcher().fetch(URL) == BIG
 
 
 def test_chain_impersonating_timeouts_and_errors(wire):
@@ -221,9 +228,10 @@ def test_chain_impersonating_unavailable_without_curl_cffi(no_cffi):
 # chain.RequestsFetcher
 # ════════════════════════════════════════════════════════════════════════════
 
-def _requests_chain_call() -> dict[str, Any]:
+def _requests_chain_call(proxies: Any = None) -> dict[str, Any]:
     return {"lib": "requests", "fn": "get", "method": "GET", "url": URL,
-            "kwargs": {"timeout": 20.0, "headers": {"User-Agent": chain._UA}, "allow_redirects": True}}
+            "kwargs": {"timeout": 20.0, "headers": {"User-Agent": chain._UA}, "proxies": proxies,
+                       "allow_redirects": True}}
 
 
 def test_chain_requests_200(wire):
@@ -249,10 +257,10 @@ def test_chain_requests_timeout_propagates(wire):
         chain.RequestsFetcher().fetch(URL)
 
 
-def test_chain_requests_passes_no_proxy_even_with_scanner_proxy(proxied):
+def test_chain_requests_uses_scanner_proxy(proxied):
     proxied.queue("requests", FakeResp(200, BIG))
     chain.RequestsFetcher().fetch(URL)
-    assert proxied.events == [_requests_chain_call()]
+    assert proxied.events == [_requests_chain_call({"http": PROXY, "https": PROXY})]
 
 
 # ════════════════════════════════════════════════════════════════════════════
