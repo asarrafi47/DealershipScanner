@@ -140,7 +140,7 @@ def _sticker_msrp_from_file(path: str, mtime_ns: int, size: int) -> int | None:
         text = content.decode("utf-8", errors="replace")
     elif len(content) >= 500 and content[:4] == b"%PDF":
         try:
-            from backend.scanner.window_sticker import _extract_pdf_text
+            from backend.scanner.post_scan.window_sticker import _extract_pdf_text
 
             text = _extract_pdf_text(content)
         except Exception:
@@ -150,7 +150,7 @@ def _sticker_msrp_from_file(path: str, mtime_ns: int, size: int) -> int | None:
     if not text.strip():
         return None
     try:
-        from backend.scanner.window_sticker import _parse_msrp_from_sticker_text
+        from backend.scanner.post_scan.window_sticker import _parse_msrp_from_sticker_text
 
         return _in_band(_num(_parse_msrp_from_sticker_text(text)))
     except Exception:

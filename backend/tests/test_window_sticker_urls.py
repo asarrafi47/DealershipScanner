@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pytest
 
-from backend.scanner.window_sticker import (
+from backend.scanner.post_scan.window_sticker import (
     get_window_sticker_candidate_urls,
     get_window_sticker_url,
     window_sticker_oem_family,
@@ -62,7 +62,7 @@ def test_bmw_not_supported() -> None:
 
 
 def test_fetch_blocks_url_not_in_oem_candidates(monkeypatch) -> None:
-    from backend.scanner import window_sticker as ws
+    from backend.scanner.post_scan import window_sticker as ws
 
     called: list[str] = []
 

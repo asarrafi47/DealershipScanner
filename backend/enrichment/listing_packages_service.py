@@ -110,7 +110,7 @@ def ensure_listing_description_for_car(
         url = _listing_vdp_url(row)
         if url.lower().startswith("http"):
             try:
-                from backend.scanner.listing_gap_fill import fetch_listing_html
+                from backend.scanner.post_scan.gap_fill import fetch_listing_html
 
                 html = fetch_listing_html(url)
             except Exception as e:

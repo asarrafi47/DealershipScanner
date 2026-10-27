@@ -11,7 +11,7 @@ from backend.enrichment.window_sticker_service import (
     window_sticker_local_path,
     window_sticker_visual_local_path,
 )
-from backend.scanner.window_sticker import get_window_sticker_url
+from backend.scanner.post_scan.window_sticker import get_window_sticker_url
 
 
 def test_merge_packages_sticker_options() -> None:

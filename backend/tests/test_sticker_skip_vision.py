@@ -8,7 +8,7 @@ from backend.enrichment.window_sticker_service import (
     should_skip_photo_package_analysis,
     window_sticker_available,
 )
-from backend.scanner.window_sticker import (
+from backend.scanner.post_scan.window_sticker import (
     build_sticker_option_dedupe_keys,
     normalize_option_dedupe_key,
     option_name_overlaps_sticker,

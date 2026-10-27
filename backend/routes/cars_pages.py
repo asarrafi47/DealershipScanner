@@ -331,7 +331,7 @@ def _packages_ensure_payload(car_id: int, base: dict | None = None, car: dict | 
         window_sticker_available,
         window_sticker_has_visual,
     )
-    from backend.scanner.window_sticker import (
+    from backend.scanner.post_scan.window_sticker import (
         car_listing_sticker_urls,
         cdjr_oem_window_sticker_eligible,
         get_window_sticker_url,

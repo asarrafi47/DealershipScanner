@@ -42,7 +42,7 @@ def test_run_window_sticker_for_vins(monkeypatch) -> None:
         fake_ensure,
     )
     monkeypatch.setattr(
-        "backend.scanner.window_sticker.get_window_sticker_url",
+        "backend.scanner.post_scan.window_sticker.get_window_sticker_url",
         lambda vin: f"https://example.com/{vin}" if len(vin) == 17 else None,
     )
 

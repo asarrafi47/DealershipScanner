@@ -18,12 +18,12 @@ VIN = "1C4RJFAG5NC100001"
 
 @pytest.fixture
 def authoritative(monkeypatch):
-    monkeypatch.setattr("backend.scanner.window_sticker.oem_sticker_parsing_skip_claude", lambda v: True)
+    monkeypatch.setattr("backend.scanner.post_scan.window_sticker.oem_sticker_parsing_skip_claude", lambda v: True)
 
 
 @pytest.fixture
 def unverified(monkeypatch):
-    monkeypatch.setattr("backend.scanner.window_sticker.oem_sticker_parsing_skip_claude", lambda v: False)
+    monkeypatch.setattr("backend.scanner.post_scan.window_sticker.oem_sticker_parsing_skip_claude", lambda v: False)
 
 
 def _vpic(monkeypatch, drive=None, fuel=None, hybrid=False):
@@ -96,7 +96,7 @@ def test_non_authoritative_oem_is_fill_only(unverified, monkeypatch):
 
 
 def test_trim_heuristic_engine_is_fill_only_and_tagged(authoritative, monkeypatch):
-    from backend.scanner.window_sticker import known_oem_engine_from_car
+    from backend.scanner.post_scan.window_sticker import known_oem_engine_from_car
 
     _vpic(monkeypatch)
     base = dict(model="Wrangler", trim="Rubicon 392", title="2023 Jeep Wrangler Rubicon 392")
@@ -136,10 +136,10 @@ def test_cars_pages_entry_point_keeps_phev_and_writes_transmission(pg_db, tmp_pa
     monkeypatch.setattr(wss, "_ROOT", tmp_path)
     monkeypatch.setattr(wss, "window_sticker_local_path", lambda *a, **k: txt)
     monkeypatch.setattr(wss, "car_sticker_packages_need_analysis", lambda c: True)
-    monkeypatch.setattr("backend.scanner.window_sticker.parse_sticker_from_text",
+    monkeypatch.setattr("backend.scanner.post_scan.window_sticker.parse_sticker_from_text",
                         lambda t: {"fuel_type": "hybrid", "transmission": "8-Speed Automatic",
                                    "sticker_specs": {"Transmission": "8-Speed Automatic"}})
-    monkeypatch.setattr("backend.scanner.window_sticker.should_auto_fetch_oem_window_sticker", lambda c: False)
+    monkeypatch.setattr("backend.scanner.post_scan.window_sticker.should_auto_fetch_oem_window_sticker", lambda c: False)
     out = wss.ensure_window_sticker_for_car(cid, allow_vision_fallback=False)
     assert out["analyzed"]
     with pg_db.connect() as c:

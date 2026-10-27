@@ -27,11 +27,11 @@ def _sticker_specs_from_packages(car: dict[str, Any]) -> dict[str, Any]:
     if not isinstance(parsed, dict):
         return out
 
-    from backend.scanner.window_sticker import sticker_engine_display_is_valid
+    from backend.scanner.post_scan.window_sticker import sticker_engine_display_is_valid
 
     disp = parsed.get("sticker_engine_display")
     if isinstance(disp, str) and sticker_engine_display_is_valid(disp):
-        from backend.scanner.window_sticker import upgrade_engine_display_for_etorque
+        from backend.scanner.post_scan.window_sticker import upgrade_engine_display_for_etorque
 
         out["engine_display"] = upgrade_engine_display_for_etorque(disp.strip(), car)
     ft = parsed.get("sticker_fuel_type")
@@ -739,7 +739,7 @@ def prepare_car_detail_context(car: dict[str, Any]) -> dict[str, Any]:
         hide_photo_analysis = False
     if not hide_photo_analysis:
         try:
-            from backend.scanner.window_sticker import oem_hide_photo_analysis
+            from backend.scanner.post_scan.window_sticker import oem_hide_photo_analysis
 
             hide_photo_analysis = oem_hide_photo_analysis(
                 str(car.get("vin") or ""),
@@ -794,7 +794,7 @@ def prepare_car_detail_context(car: dict[str, Any]) -> dict[str, Any]:
         mo = pj.get("monroney_options")
         if isinstance(mo, list):
             try:
-                from backend.scanner.window_sticker import is_sticker_boilerplate_line
+                from backend.scanner.post_scan.window_sticker import is_sticker_boilerplate_line
             except ImportError:
                 is_sticker_boilerplate_line = None
             for x in mo:
@@ -804,7 +804,7 @@ def prepare_car_detail_context(car: dict[str, Any]) -> dict[str, Any]:
                 if is_sticker_boilerplate_line and is_sticker_boilerplate_line(s):
                     continue
                 try:
-                    from backend.scanner.window_sticker import _is_sticker_factory_code_noise
+                    from backend.scanner.post_scan.window_sticker import _is_sticker_factory_code_noise
                 except ImportError:
                     _is_sticker_factory_code_noise = None
                 if _is_sticker_factory_code_noise and _is_sticker_factory_code_noise(s):
@@ -815,7 +815,7 @@ def prepare_car_detail_context(car: dict[str, Any]) -> dict[str, Any]:
         mstd = pj.get("monroney_standard_highlights")
         if isinstance(mstd, list):
             try:
-                from backend.scanner.window_sticker import is_sticker_boilerplate_line as _is_boilerplate
+                from backend.scanner.post_scan.window_sticker import is_sticker_boilerplate_line as _is_boilerplate
             except ImportError:
                 _is_boilerplate = None
             for x in mstd:
@@ -831,7 +831,7 @@ def prepare_car_detail_context(car: dict[str, Any]) -> dict[str, Any]:
         listing_sticker_option_groups: list[dict[str, Any]] = []
         listing_sticker_option_sections: dict[str, Any] = {}
         try:
-            from backend.scanner.window_sticker import (
+            from backend.scanner.post_scan.window_sticker import (
                 group_sticker_options_for_display,
                 sticker_option_sections_for_display,
                 sticker_options_for_display,
@@ -925,7 +925,7 @@ def prepare_car_detail_context(car: dict[str, Any]) -> dict[str, Any]:
 
         if listing_sticker_options:
             try:
-                from backend.scanner.window_sticker import (
+                from backend.scanner.post_scan.window_sticker import (
                     build_sticker_option_dedupe_keys,
                     normalize_option_dedupe_key,
                     option_name_overlaps_sticker,

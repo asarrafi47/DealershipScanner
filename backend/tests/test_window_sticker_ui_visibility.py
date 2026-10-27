@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from backend.scanner.window_sticker import (
+from backend.scanner.post_scan.window_sticker import (
     car_has_listing_sticker_signal,
     car_listing_sticker_urls,
     is_cdjr_stellantis_car,
@@ -90,7 +90,7 @@ def test_show_window_sticker_ui_hidden_for_unreadable_vision_only() -> None:
 
 
 def test_listing_sticker_direct_image_url_rejects_html_landing_pages() -> None:
-    from backend.scanner.window_sticker import (
+    from backend.scanner.post_scan.window_sticker import (
         listing_sticker_direct_image_url,
         sticker_embed_preview_url,
     )

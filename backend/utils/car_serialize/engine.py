@@ -570,7 +570,7 @@ def build_engine_display(car: dict[str, Any], verified_specs: dict[str, Any] | N
         if not display or display == dash:
             return dash
         try:
-            from backend.scanner.window_sticker import (
+            from backend.scanner.post_scan.window_sticker import (
                 upgrade_engine_display_for_etorque,
                 upgrade_engine_display_for_turbo,
             )
@@ -670,7 +670,7 @@ def build_engine_display(car: dict[str, Any], verified_specs: dict[str, Any] | N
 
 def _known_trim_engine_display(car: dict[str, Any]) -> str:
     try:
-        from backend.scanner.window_sticker import known_oem_engine_from_car
+        from backend.scanner.post_scan.window_sticker import known_oem_engine_from_car
 
         hit = known_oem_engine_from_car(car)
         disp = hit.get("engine_display")
@@ -693,7 +693,7 @@ def _sticker_engine_display_from_packages(car: dict[str, Any]) -> str:
         return ""
     disp = parsed.get("sticker_engine_display")
     if isinstance(disp, str) and disp.strip():
-        from backend.scanner.window_sticker import (
+        from backend.scanner.post_scan.window_sticker import (
             sticker_engine_display_is_valid,
             upgrade_engine_display_for_etorque,
             upgrade_engine_display_for_turbo,
@@ -706,7 +706,7 @@ def _sticker_engine_display_from_packages(car: dict[str, Any]) -> str:
     if isinstance(specs, dict):
         eng = specs.get("Engine")
         if isinstance(eng, str) and eng.strip():
-            from backend.scanner.window_sticker import (
+            from backend.scanner.post_scan.window_sticker import (
                 upgrade_engine_display_for_etorque,
                 upgrade_engine_display_for_turbo,
             )

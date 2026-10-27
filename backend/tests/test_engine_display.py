@@ -168,7 +168,7 @@ def test_build_engine_display_jeep_wrangler_392() -> None:
 
 
 def test_known_oem_engine_jeep_392() -> None:
-    from backend.scanner.window_sticker import known_oem_engine_from_car
+    from backend.scanner.post_scan.window_sticker import known_oem_engine_from_car
 
     hit = known_oem_engine_from_car(
         {"make": "Jeep", "model": "Wrangler", "trim": "Rubicon 392"}
