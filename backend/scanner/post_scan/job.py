@@ -140,6 +140,19 @@ async def run_post_scan_job(
 
     logger.info("Post-scan job: %d VIN(s) (lookback=%dh)", len(scanned_vins), lookback)
 
+    from backend.scanner.scan_efficiency import post_vpic_env_enabled
+
+    # P8B.3: decode first (the repair, dictionary and model_specs stages then see a decode);
+    # the heal runs last, so vPIC still writes last.
+    if post_vpic_env_enabled():
+        try:
+            from backend.enrichment.vpic_facts import post_scan_decode
+
+            summary["vpic_decode"] = await asyncio.to_thread(post_scan_decode, scanned_vins)
+            logger.info("Post-scan vPIC decode: %s", json.dumps(summary["vpic_decode"], default=str)[:800])
+        except Exception:
+            logger.exception("Post-scan vPIC decode failed")
+
     if (
         post_repair
         or post_listing_description
@@ -165,17 +178,6 @@ async def run_post_scan_job(
             logger.info("Post-scan summary: %s", json.dumps(post_summary, default=str)[:1800])
         except Exception:
             logger.exception("Post-scan pipeline failed")
-    from backend.scanner.scan_efficiency import post_vpic_env_enabled
-
-    if post_vpic_env_enabled():
-        try:
-            from backend.enrichment.vpic_facts import post_scan_vpic
-
-            summary["vpic"] = await asyncio.to_thread(post_scan_vpic, scanned_vins)
-            logger.info("Post-scan vPIC: %s", json.dumps(summary["vpic"], default=str)[:800])
-        except Exception:
-            logger.exception("Post-scan vPIC step failed")
-
     if post_listing_gap_fill and scanned_vins:
         try:
             gap_summary = await asyncio.to_thread(run_listing_gap_fill_stage, scanned_vins)
@@ -183,16 +185,6 @@ async def run_post_scan_job(
             logger.info("Listing gap fill: %s", json.dumps(gap_summary, default=str)[:1600])
         except Exception:
             logger.exception("Listing gap fill failed")
-
-    try:
-        from backend.scanner.database import apply_model_specs_corrections
-
-        corrected = await asyncio.to_thread(apply_model_specs_corrections)
-        if corrected:
-            summary["model_specs_corrected"] = corrected
-            logger.info("model_specs final pass: %d rows corrected", corrected)
-    except Exception:
-        logger.exception("model_specs correction pass failed")
 
     if scanned_vins and post_dict_enrich_env_enabled():
         try:
@@ -206,6 +198,15 @@ async def run_post_scan_job(
                 )
         except Exception:
             logger.exception("EPA dictionary enrichment failed")
+
+    if post_vpic_env_enabled():
+        try:
+            from backend.enrichment.vpic_facts import post_scan_heal
+
+            summary["vpic_heal"] = await asyncio.to_thread(post_scan_heal, scanned_vins)
+            logger.info("Post-scan vPIC heal: %s", json.dumps(summary["vpic_heal"], default=str)[:800])
+        except Exception:
+            logger.exception("Post-scan vPIC heal failed")
 
     try:
         from backend.db.incomplete_listings_db import fast_rebuild_incomplete_listings_index

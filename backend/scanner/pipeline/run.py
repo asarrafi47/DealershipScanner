@@ -190,6 +190,13 @@ def _run(args) -> int:
             if rc == -9:
                 killed.extend(batch)
             print(f"scan    batch {i // args.batch + 1}: {', '.join(batch)[:120]} rc={rc} in {time.time() - t0:.0f}s (active {scan_stats.get('active_seconds', 0):.0f}s)", flush=True)
+            if not args.no_vpic:
+                # P8B.3: decode and heal each batch as it lands; the call after the loop is a backstop.
+                try:
+                    vp = vpic_for_dealers(batch)
+                    print(f"vpic    batch {i // args.batch + 1}: {json.dumps(vp)[:200]}", flush=True)
+                except Exception as exc:  # noqa: BLE001
+                    print(f"vpic    batch {i // args.batch + 1} failed: {str(exc)[:120]}", flush=True)
         if killed:
             # N9.13: once, with the reason on the record; the dealers' rows say how it ended
             try:

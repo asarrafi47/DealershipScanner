@@ -602,15 +602,30 @@ def _heal_chunk(cur, rows: list[dict[str, Any]], flats: dict[str, dict[str, str]
         stats.setdefault("_touched", []).append(r["id"])
 
 
-def post_scan_vpic(vins: list[str]) -> dict[str, Any]:
-    """Post-scan step: decode the run's new VINs, then heal their rows."""
+def post_scan_decode(vins: list[str]) -> dict[str, Any]:
+    """Post-scan step 1 (P8B.3): decode the run's new VINs, before the dictionary and model_specs stages read them."""
     from backend.db.inventory_db import get_conn
 
     conn = get_conn()
     try:
-        out: dict[str, Any] = {"decode": decode_missing_vins(conn, vins)}
-        out["heal"] = heal_rows(conn, vins=vins)
-        out["heal"].pop("examples", None)
+        return decode_missing_vins(conn, vins)
+    finally:
+        conn.close()
+
+
+def post_scan_heal(vins: list[str]) -> dict[str, Any]:
+    """Post-scan last step (P8B.3): heal the run's rows from the decode, after every other fact writer, so vPIC writes last."""
+    from backend.db.inventory_db import get_conn
+
+    conn = get_conn()
+    try:
+        out = heal_rows(conn, vins=vins)
+        out.pop("examples", None)
         return out
     finally:
         conn.close()
+
+
+def post_scan_vpic(vins: list[str]) -> dict[str, Any]:
+    """Decode then heal in one call (callers that do not interleave other stages)."""
+    return {"decode": post_scan_decode(vins), "heal": post_scan_heal(vins)}
