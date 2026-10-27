@@ -133,14 +133,22 @@ def test_appended_rows_carry_provenance_and_rerun_inserts_nothing(pg_db, tmp_pat
     monkeypatch.setattr(bld, "DEFAULT_MIN_FILES", 1)
     d = tmp_path / "dict"
     to_dict.process_epa_csv(FIXTURE, 1950, d, years={2019})
+    from backend.tests.test_build_epa_master_pg import _db, _seed
+
     with pg_db.connect() as conn:
         conn.execute("DELETE FROM public.epa_master")
         conn.commit()
+        # the builder refuses to diff without provenance-stamped rows (P10B.1): one row the CSV lacks
+        _seed(conn, [{k: v for k, v in _db(id=1, trim="Seed").items() if k != "id"}
+                     | {"id": 1, "source": "dictionary_epa", "natural_key": "seed-row"}])
     first = bld.build_epa_master(apply=True, source_dir=d, min_files=1, allow_large_update=True)
     assert first["applied"]["inserted"] > 0
     with pg_db.connect() as conn:
         bad = conn.execute("SELECT COUNT(*) FROM public.epa_master WHERE source IS DISTINCT FROM "
                            "'dictionary_epa' OR natural_key IS NULL").fetchone()[0]
     assert bad == 0
+    with pg_db.connect() as conn:  # the seed row only unlocked the first diff; the 90% guard compares CSV to DB rows
+        conn.execute("DELETE FROM public.epa_master WHERE natural_key = 'seed-row'")
+        conn.commit()
     again = bld.build_epa_master(apply=True, source_dir=d, min_files=1)
     assert again["insert"] == 0 and again["applied"]["inserted"] == 0

@@ -32,7 +32,6 @@ KNOWN_DEBT: dict[str, tuple[int, str]] = {
     "backend/scanner/recipes.py": (1, "function-level requests import in the replay path (P12A.2 follow-up)"),
     "backend/scanner/scrapers/autowall.py": (1, "requests Session alias for cookie-persisting pagination"),
     "backend/scanner/scrapers/dealer_eprocess.py": (1, "urllib request alias"),
-    "backend/scanner/scrapers/dealer_inspire.py": (1, "requests import for the search API POST"),
     "backend/scanner/scrapers/dealer_venom.py": (1, "requests import for the feed GET"),
     "backend/scanner/scrapers/shopperexpress.py": (1, "aiohttp import for the async feed"),
 }
