@@ -50,6 +50,7 @@ from backend.scanner.manifest import (
     resolve_shard_cli_and_env,
 )
 from backend.scanner.orchestrator import _dealer_timeout_sec, main, on_scanner_shutdown_signal
+from backend.scanner.scan_lock import EXIT_LOCK_HELD, ScanLockHeld
 from backend.scanner.scan_efficiency import effective_vdp_concurrency
 from backend.scanner.phases.dealer_run import (
     apply_monroney_vision_to_vehicles as _apply_monroney_vision_to_vehicles,
@@ -476,6 +477,9 @@ def run_cli_entry() -> None:
                 monroney_vision=do_monroney,
             )
         )
+    except ScanLockHeld:
+        # Already logged by main(); callers (pipeline, worker loop) key on 75.
+        sys.exit(EXIT_LOCK_HELD)
     except KeyboardInterrupt:
         logger.info("Scanner gracefully stopped by user.")
         sys.exit(0)
