@@ -2,6 +2,17 @@
 
 ## [Unreleased]
 
+### N10 (draft)
+- Scanner lock: a refused scan now raises ScanLockHeld and the CLI exits 75 (EX_TEMPFAIL) instead of exiting 0; the refusal log line is unchanged.
+- Scanner lock is now an fcntl.flock held for the life of the process; a SIGKILLed holder or a recycled PID can no longer wedge the lock. SCANNER_LOCK_PATH is resolved at use time, and the pipeline's lock probe uses the same liveness rule.
+- Added backend/scanner/scan_leases.py: Postgres advisory scan leases (fleet_lock(lane), try_lock_dealers/release_dealers) on a dedicated autocommit connection that reports the holder; no-op without a Postgres DSN, fail-open with a WARN if the lock connection cannot open.
+- fleet_scan: SCAN_FLEET_WINDOW_UTC run window (wraps midnight; outside or invalid means idle), whole-fleet lease per SCAN_FLEET_LANE (exit 3 naming the holder before any shard; SCAN_FLEET_LOCK=0 turns it off), idle hold capped to end 5 minutes before the window opens, SCAN_POST_RUN_HOLD_SECONDS, and lane/window/lock/reason/warnings in fleet_summary.json. Unset variables keep today's behaviour.
+- Fleet scan: SCAN_SHARD_ORDER=reverse|seed:<n> reorders shard assignment and per-shard dealer order for determinism passes; the value is recorded in fleet_summary.json as shard_order (N10.8).
+- audit_retirements.py (read-only by default): classifies retired batches since a date as one_condition, bucket_now_empty, large_share or truncation_suspect, and writes batches.csv, candidates.csv and report.md under workspace/data_quality/. Disown, portal and admin batches and the seeded lexusofknoxville-com 2026-09-27 hand retirement are excluded.
+- audit_retirements --verify replay|vdp, --apply and --rollback: live check by union recipe replay or a paced VDP GET (host must match the dealer's, otherwise cannot_assess). Apply writes a backup first, restores only verified-live rows still in the audited state, records writer='restore' rows in listing_retirements, and appends to the dealer logs and _learning. Rollback re-retires them.
+- Added backend/scripts/merge_dealer_logs.py and scripts/pull_railway_logs.sh: pull the Railway volume's dealer_logs and merge them idempotently into the MBP canonical tree (dry run by default, never deletes).
+- Added scripts/ownership_snapshot.sh (read-only psql \copy of cars, car_move_log, vin_owner_conflicts and a pair census) and backend/scripts/ownership_diff.py (moves per from/to pair cross-referenced with car_move_log, and a conflict census against a snapshot).
+
 ### N9 (draft)
 - Added backend/scanner/retirement_policy.py: pure, fail-closed plan_retirement() (per-bucket valid-VIN baselines with a 30/90-day window, run-error/min-rows/recovery/incomplete-walk gates, make guard, protected VINs, one-condition handling) (P5A.1).
 - The one-condition allow-list is now tracked in backend/config/one_condition_ok.txt, so the scanner image sees it. recipe_validation.one_condition_ok_ids merges it with the local workspace file, and pipeline.assess._one_condition_ok wraps that loader (P5A.3).

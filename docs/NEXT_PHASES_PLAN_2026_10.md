@@ -1814,6 +1814,13 @@ Renumbering needed: the migrations are V032/V033, so N9.16 applies with `--targe
 
 **Owner decisions / actions.** D-IF5, D-IF10, D-SR2; OK on the recipe-hygiene local apply counts.
 
+**Draft status (integ/draft, merge 3fd48b1ba; branch phase/N10 head d25ea634d).**
+- Wave 1 and 2 drafted: P11A.1 and P11A.4 (b8b875639), P6A.1 and P6A.2 (8102f5329), N10.8 (7e5cd453b), P5B.5 and P5B.6 (e18fe87aa), P6A.5 and N10.7 (d25ea634d). Acceptance met on tests (PG tier of scan_leases and audit_retirements ran on the local server).
+- Deviation: listing_retirements has `writer` and `created_at` (V032), not `path`; P5B.5 reads the latest writer per car, and `restore` and `restore_rollback` were added to WRITERS.
+- Deferred: N10.7 real-data census (09-28 vs cleanroom) and the live snapshot path; pull_railway_logs.sh railway CLI syntax untested; P5B.6 real replay/VDP fetch (fakes only); P5B.6 apply (owner review of candidates.csv).
+- Not started (waiting on N8/N9 on main or later waves): P11A.2, P11A.3, P6A.3', P6A.6, P6A.4, P6A.7.
+- Mixed rollout note: an old-style PID-file scanner holds no flock and is invisible to the new lock probe.
+
 ---
 
 ### N11 Release-candidate rehearsal in the clean room, then v1.6.0
