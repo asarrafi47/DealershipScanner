@@ -188,7 +188,7 @@
       "title": "the car page shows a sub-4.0s 0-60 on an unbadged car"
     },
     "zero_to_60_sub_four_no_badge": {
-      "count": 2818,
+      "count": 2742,
       "denominator": 22763,
       "tier": "stored",
       "title": "sub-4.0s 0-60 with no performance badge in the trim"

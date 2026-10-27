@@ -1296,6 +1296,10 @@ def _empty_vpic() -> dict[str, Any]:
         "engine_l": None, "fuel_type": None, "body_style": None, "trim": None,
         # 'ev' | 'phev' | 'hybrid' | None (None = vPIC did not say; NOT "not a hybrid")
         "electrification": None,
+        # vPIC Turbo flag: True/False, None = vPIC did not say. Named "boosted", not
+        # "turbo": Turbo=Yes also rides on superchargers and twin-charged engines
+        # (2018-19 Range Rover 5.0 S/C, Volvo T6), so the EPA family types it.
+        "boosted": None,
     }
 
 
@@ -1423,6 +1427,8 @@ def _normalize_vpic_response(r: dict[str, Any]) -> dict[str, Any]:
     # (48V assist: EPA and dealers disagree on the label) is no override -> None.
     _el = vpic_electrification(r)
     out["electrification"] = LEGACY_CODE.get(_el) if _el else None
+    _turbo = str(r.get("Turbo") or "").strip().lower()
+    out["boosted"] = True if _turbo == "yes" else False if _turbo == "no" else None
     bc = (r.get("BodyClass") or "").strip()
     out["body_style"] = _VPIC_BODY_MAP.get(bc.lower())
 
