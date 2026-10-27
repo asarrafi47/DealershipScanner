@@ -206,3 +206,59 @@ def test_relink_library_is_what_the_run_calls(env, monkeypatch) -> None:
     monkeypatch.setattr(script, "relink_cars", spy)
     _run(env)
     assert seen["calls"] and all(c == ((SRC,), True) for c in seen["calls"])
+
+
+# --- P10B.5: --source epa_vehicles_csv ---------------------------------------------------------
+
+CSV_SRC = "epa_vehicles_csv"
+CSV_ROW, CSV_FREE, DICT_TWIN = 600, 601, 1002
+
+
+@pytest.fixture()
+def csv_env(env):
+    with env.connect() as conn:
+        conn.execute("DELETE FROM epa_master WHERE source=%s", (SRC,))
+        conn.execute("UPDATE cars SET epa_master_id=NULL, epa_match_confidence=NULL, epa_match_method=NULL")
+        cols = "id, year, make, model, trim, cylinders, displacement, drive, fuel_type, source"
+        for id_, src, trim in ((CSV_ROW, CSV_SRC, "4WD"), (CSV_FREE, CSV_SRC, "Unreferenced"),
+                               (DICT_TWIN, "dictionary_epa", "4WD")):
+            conn.execute(f"INSERT INTO epa_master ({cols}) VALUES (%s,2026,'Toyota','Tundra',%s,6,3.4,"
+                         "'Four-Wheel Drive','Regular Gasoline',%s)", (id_, trim, src))
+        conn.execute("UPDATE cars SET epa_master_id=%s, epa_match_confidence=0.5, epa_match_method='m5' "
+                     "WHERE vin IN ('VIN-A','VIN-B-INACTIVE')", (CSV_ROW,))
+        conn.commit()
+    return env
+
+
+def _csv_run(env, **kw):
+    return script.run(apply=kw.pop("apply", False), source=CSV_SRC, run_id=kw.pop("run_id", "c1"), **kw)
+
+
+def test_csv_source_relinks_to_dictionary_twin_and_archives(csv_env) -> None:
+    rep = _csv_run(csv_env)
+    assert rep["totals"]["relinked"] == 2 and rep["totals"]["to_archive"] == 2
+    _csv_run(csv_env, apply=True)
+    links = _links(csv_env)
+    assert links["VIN-A"][0] in (GOOD, DICT_TWIN) and links["VIN-B-INACTIVE"][0] in (GOOD, DICT_TWIN)
+    with csv_env.connect() as conn:
+        assert conn.execute("SELECT id, archive_reason FROM epa_master_archive ORDER BY id").fetchall() == [
+            (CSV_ROW, CSV_SRC), (CSV_FREE, CSV_SRC)]
+
+
+def test_csv_source_refuses_without_dictionary_year_coverage(csv_env) -> None:
+    with csv_env.connect() as conn:
+        conn.execute("UPDATE epa_master SET year=2027 WHERE source=%s", (CSV_SRC,))
+        conn.commit()
+    before = _state(csv_env)
+    with pytest.raises(script.Refused, match="2027"):
+        _csv_run(csv_env, apply=True)
+    assert _state(csv_env) == before
+
+
+def test_csv_source_undo_round_trips(csv_env) -> None:
+    before = _state(csv_env)
+    _csv_run(csv_env, apply=True)
+    assert _state(csv_env) != before
+    out = script.undo("c1", apply=True)
+    assert out["rows_restored"] == 2 and out["cars_restored"] == 2
+    assert _state(csv_env) == before

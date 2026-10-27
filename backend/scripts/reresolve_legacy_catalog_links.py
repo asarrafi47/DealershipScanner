@@ -32,6 +32,15 @@ transitions (Hybrid, FFV, Diesel, FCV ...), rows archived vs kept (and why).
   PYTHONPATH=. .venv/bin/python backend/scripts/reresolve_legacy_catalog_links.py --apply --run-id legacy-1
   PYTHONPATH=. .venv/bin/python backend/scripts/reresolve_legacy_catalog_links.py --undo legacy-1 --apply
 
+P10B.5 (D-ER1 a): ``--source epa_vehicles_csv`` runs the same machinery for the cars linked
+to the vehicles.csv-appended rows (``exclude_sources={'epa_vehicles_csv'}``, unreferenced rows
+archived under their ids, same snapshot tables and ``--undo``). It refuses unless
+``dictionary_epa`` rows already exist for every model year of those rows (run a ``--years``
+import and a builder ``--apply`` first); otherwise every car would simply be cleared. The run
+itself waits for the 10D steps (local P10D.4 step 6, prod P10D.6 step 8).
+
+  PYTHONPATH=. .venv/bin/python backend/scripts/reresolve_legacy_catalog_links.py --source epa_vehicles_csv
+
 Exit status 2: refused (nothing written).
 """
 from __future__ import annotations
@@ -60,6 +69,8 @@ EXIT_REFUSED = 2
 # (P10A.6) stamps them ``legacy``. Without --source the one that exists in epa_master is used.
 LEGACY_SOURCE_LABELS = ("dictionary_legacy_root", "legacy")
 LEGACY_ARCHIVE_REASON = "legacy_root"
+VEHICLES_CSV_SOURCE = "epa_vehicles_csv"
+DICTIONARY_SOURCE = "dictionary_epa"
 _CHUNK = 1000
 _SAMPLE = 20
 # every epa_master column except the sequence default: what an archive copy keeps and undo returns
@@ -118,6 +129,14 @@ def check_preconditions(conn, source: str) -> None:
         raise Refused(f"no epa_master rows with source={source!r}: nothing to re-resolve")
     if not _count(cur, "SELECT count(*) FROM epa_master WHERE source IS DISTINCT FROM CAST(? AS TEXT)", (source,)):
         raise Refused(f"every catalog row has source={source!r}: excluding them would clear every car")
+    if source == VEHICLES_CSV_SOURCE:
+        cur.execute("SELECT DISTINCT year FROM epa_master WHERE source=? AND year IS NOT NULL "
+                    "AND year NOT IN (SELECT year FROM epa_master WHERE source=? AND year IS NOT NULL) "
+                    "ORDER BY 1", (source, DICTIONARY_SOURCE))
+        uncovered = [r[0] for r in cur.fetchall()]
+        if uncovered:
+            raise Refused(f"no {DICTIONARY_SOURCE} rows for model year(s) {uncovered} of the {source} rows: "
+                          "import those years into the dictionary path and run the builder --apply first")
     for table in ("epa_relink_snapshot", "epa_relink_archived", "epa_master_archive"):
         try:
             cur.execute(f"SELECT 1 FROM {table} LIMIT 1")
