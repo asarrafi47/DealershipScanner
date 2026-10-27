@@ -6,6 +6,7 @@ context do not propagate N/A poison.
 """
 from __future__ import annotations
 
+import html as _html
 import json
 import re
 from typing import Any
@@ -695,6 +696,93 @@ _CONDITION_PROGRAMS: dict[str, tuple[str, str]] = {
 }
 
 
+# ── text normalization (N21.9, FP18) ──────────────────────────────────────────
+# Canonical make spellings. The same make arrived in several cases (Lexus 5,452 /
+# LEXUS 3,403, Land Rover / Land rover, Mercedes-Benz / Mercedes-benz), splitting
+# every make filter and group-by. Only makes listed here are touched; an unknown make
+# keeps the feed's spelling.
+_CANONICAL_MAKES: dict[str, str] = {m.lower(): m for m in (
+    "Acura", "Alfa Romeo", "Aston Martin", "Audi", "Bentley", "BMW", "BrightDrop",
+    "Buick", "Cadillac", "Chevrolet", "Chrysler", "Dodge", "Ferrari", "Fiat", "Fisker",
+    "Ford", "Genesis", "GMC", "Honda", "Hyundai", "INEOS", "INFINITI", "Jaguar", "Jeep",
+    "Kia", "Lamborghini", "Land Rover", "Lexus", "Lincoln", "Lotus", "Lucid",
+    "Maserati", "Mazda", "McLaren", "Mercedes-Benz", "MINI", "Mitsubishi", "Nissan",
+    "Polestar", "Pontiac", "Porsche", "Ram", "Rivian", "Rolls-Royce", "Saturn", "Scion",
+    "Scout", "smart", "Subaru", "Suzuki", "Tesla", "Toyota", "VinFast", "Volkswagen",
+    "Volvo",
+)}
+
+
+def canonical_make(val: Any) -> Any:
+    """Known make in its one canonical spelling; anything else comes back unchanged."""
+    if not isinstance(val, str):
+        return val
+    key = re.sub(r"\s+", " ", val.strip()).lower()
+    return _CANONICAL_MAKES.get(key, val)
+
+
+# Words that follow a model name as part of the model or its body, never a grade.
+_NOT_A_GRADE = frozenset({
+    "van", "cargo van", "sedan", "coupe", "hatchback", "wagon", "truck", "suv", "cab",
+    "crew cab", "hybrid", "ev", "electric", "plug-in hybrid", "convertible", "crossover",
+    "passenger van", "chassis cab", "limited edition",
+    # Trailing words that are part of a model name ("Mustang Mach-E", "Wrangler Unlimited").
+    "mach-e", "unlimited", "lightning", "cross country", "sportback", "gran coupe",
+})
+
+
+def strip_trim_from_model(model: Any, trim: Any) -> Any:
+    """Drop a trailing grade the feed repeated in ``model`` ("CR-V EX-L" with trim
+    "EX-L" is model "CR-V"). Conservative: the trim must already be stored, sit at a
+    word boundary at the very end of the model, not start with a digit (a model
+    designation such as "GLC 300" or "RX 350h" is the model), not be a body word, and
+    leave a non-empty model."""
+    m = str(model or "").strip()
+    t = str(trim or "").strip()
+    if not m or not t or len(t) < 2 or t[0].isdigit() or t.lower() in _NOT_A_GRADE:
+        return model
+    if len(m) <= len(t) or m[-len(t):].lower() != t.lower() or not m[-len(t) - 1].isspace():
+        return model
+    rest = m[: -len(t)].strip()
+    return rest if len(rest) >= 2 else model
+
+
+_HTML_ENTITY_RE = re.compile(r"&(?:#\d+|#x[0-9a-fA-F]+|[A-Za-z][A-Za-z0-9]{1,7});")
+
+
+def unescape_entities(val: Any) -> Any:
+    """Decode HTML entities in a text value (``Town &#038; Country``, ``&amp;``).
+    Two passes undo a double-escaped ``&amp;amp;``."""
+    if not isinstance(val, str) or "&" not in val:
+        return val
+    for _ in range(2):
+        if not _HTML_ENTITY_RE.search(val):
+            break
+        val = _html.unescape(val)
+    return val
+
+
+# A page <meta name=description> stored as the car's description: short marketing
+# copy about the dealer's inventory, not the dealer's words about this car.
+_SEO_META_RES: tuple[re.Pattern[str], ...] = (
+    re.compile(r"(?i)^\s*(?:looking for|trying to find|searching for|shopping for|in the market for)\b"),
+    re.compile(r"(?i)^\s*(?:new|used|certified(?: pre-owned)?|pre-owned)\b[^.]{0,80}\bfor sale in\b"),
+    re.compile(r"(?i)\b(?:view|browse|check out|shop|see|explore) (?:our|the)\b[^.]{0,80}\b(?:inventory|selection)\b"),
+)
+_SEO_META_MAX_LEN = 300
+
+
+def is_seo_meta_description(val: Any) -> bool:
+    if not isinstance(val, str):
+        return False
+    t = val.strip()
+    if not t or len(t) > _SEO_META_MAX_LEN:
+        return False
+    if not re.search(r"(?i)\binventory\b|\bfor sale\b", t):
+        return False
+    return any(rx.search(t) for rx in _SEO_META_RES)
+
+
 # A New car with more than this many miles on it is a data question (a used car
 # filed new, or an unlabelled demo / loaner), not an error to fix silently (W18).
 NEW_HIGH_MILEAGE = 1000
@@ -752,6 +840,9 @@ def canonicalize_condition(row: dict[str, Any]) -> None:
         row["is_cpo"] = 0
 
 
+_URL_COLS = frozenset({"dealer_url", "carfax_url", "image_url", "source_url"})
+
+
 def clean_car_row_dict(d: dict[str, Any]) -> dict[str, Any]:
     """
     Apply normalization to typical cars.* string columns in-place copy.
@@ -786,6 +877,8 @@ def clean_car_row_dict(d: dict[str, Any]) -> dict[str, Any]:
     for k in string_cols:
         if k not in out:
             continue
+        if k not in _URL_COLS:
+            out[k] = unescape_entities(out.get(k))
         if k in ("dealer_url", "carfax_url", "image_url", "source_url"):
             out[k] = normalize_optional_url(out.get(k))
         elif k == "drivetrain":
@@ -809,6 +902,13 @@ def clean_car_row_dict(d: dict[str, Any]) -> dict[str, Any]:
 
     # Split known compound models where the feed packed the grade into `model`.
     split_bz_woodland_model_trim(out)
+
+    if "make" in out:
+        out["make"] = canonical_make(out.get("make"))
+    if out.get("model") and out.get("trim"):
+        out["model"] = strip_trim_from_model(out.get("model"), out.get("trim"))
+    if is_seo_meta_description(out.get("description")):
+        out["description"] = None
 
     # Reject leaked stock codes in spec fields (and recover stock_number).
     _apply_stock_code_guard(out)
