@@ -38,9 +38,14 @@ def ensure_recipe(dealer: dict[str, Any], *, force: bool = False) -> dict[str, A
     if not html:
         status = None
         try:
-            from curl_cffi import requests as cr
+            from backend.scanner.net import client as net_client
 
-            status = cr.get(dealer["url"], impersonate="chrome", timeout=20).status_code
+            # STATUS_PROBE: one 'chrome' GET through the scanner proxy; only the status is read.
+            status = net_client.send(
+                net_client.import_curl_cffi(), "GET", dealer["url"], via_get=True,
+                impersonate="chrome", timeout=net_client.STATUS_PROBE.timeout,
+                proxies=net_client.scanner_proxies(),
+            ).status_code
         except Exception:  # noqa: BLE001
             pass
         info["synth"] = f"homepage_unreachable_{status or 'exc'}"

@@ -46,6 +46,7 @@ import urllib.error as _urllib_error
 import urllib.request as _urllib_request
 from typing import Any
 
+from backend.scanner import http_fetch as _http_fetch
 from backend.scanner.net import ssrf as _ssrf
 
 logger = logging.getLogger(__name__)
@@ -830,7 +831,8 @@ async def _fetch_results_api(
     def _do_get(url: str) -> dict:
         _ssrf.check_url(url)
         req = _urllib_request.Request(url, headers=headers)
-        with _urllib_request.urlopen(req, timeout=20) as resp:
+        # open_url adds the scanner proxy (P12A.3).
+        with _http_fetch.open_url(req, timeout=20) as resp:
             return _json.loads(resp.read())
 
     for params, label in condition_params:

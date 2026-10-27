@@ -18,6 +18,7 @@ from typing import Any
 
 import requests
 
+from backend.scanner.net.client import looks_like_challenge, scanner_proxies
 from backend.db.inventory_db import get_car_by_id, get_car_by_vin, refresh_car_data_quality_score, update_car_row_partial
 from backend.enrichment.spec_structured_backfill import apply_structured_spec_backfill_for_car
 from backend.utils.field_clean import clean_car_row_dict, is_effectively_empty
@@ -54,9 +55,14 @@ def _requests_fetch_html(url: str, timeout_s: float = 22.0) -> str | None:
             url,
             headers={"User-Agent": USER_AGENT, "Accept": "text/html,application/xhtml+xml"},
             timeout=timeout_s,
+            proxies=scanner_proxies(),
         )
         r.raise_for_status()
         text = r.text
+        if looks_like_challenge(text):
+            # A 200 interstitial is not the listing page (P12A.3; chain.RequestsFetcher relies on this).
+            logger.debug("requests fetch got a challenge page %s", url[:80])
+            return None
         return text if len(text) > 500 else None
     except requests.RequestException as e:
         logger.debug("requests fetch failed %s: %s", url[:80], e)
@@ -232,6 +238,7 @@ def _ddg_html_search_specs(car: dict[str, Any]) -> dict[str, Any]:
     parts = [str(year) if year else None, make, model, trim or None, "specifications"]
     q = " ".join(p for p in parts if p)
     try:
+        # D-OD13: a third-party search engine, not a dealer site, so no proxies= here.
         r = requests.get(
             DDG_HTML_URL,
             params={"q": q},

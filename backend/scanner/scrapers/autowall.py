@@ -15,6 +15,8 @@ from urllib.parse import urljoin
 
 import requests as _requests
 
+from backend.scanner.net.client import scanner_proxies
+
 logger = logging.getLogger("scanner")
 
 _VIN_RE = re.compile(r"^[A-HJ-NPR-Z0-9]{17}$", re.I)
@@ -320,6 +322,7 @@ async def fetch_autowall_inventory_http(
     def _fetch_all() -> list[str]:
         session = _requests.Session()
         session.headers.update(_HTTP_HEADERS)
+        session.proxies = scanner_proxies() or {}
         # Establish session cookie via homepage
         try:
             session.get(inv_base + "/", timeout=15)
@@ -372,6 +375,7 @@ async def fetch_autowall_inventory_http(
     def _run_vdp_enrich() -> int:
         session2 = _requests.Session()
         session2.headers.update(_HTTP_HEADERS)
+        session2.proxies = scanner_proxies() or {}
         try:
             session2.get(inv_base + "/", timeout=10)
         except Exception:
@@ -512,6 +516,7 @@ async def scrape_autowall_via_playwright(
             def _run_pw_vdp_enrich(cookies: list[dict]) -> int:
                 sess = _requests.Session()
                 sess.headers.update(_HTTP_HEADERS)
+                sess.proxies = scanner_proxies() or {}
                 for c in cookies:
                     try:
                         sess.cookies.set(c["name"], c["value"], domain=c.get("domain", ""))
