@@ -508,3 +508,141 @@ def test_live_seeded_regression_in_a_temp_table(pg_db) -> None:
             assert cur.fetchone()[0] == 0
     finally:
         conn.close()
+
+
+# ---------------------------------------------------------------------------
+# 4. Precedence invariants (P8A.1)
+# ---------------------------------------------------------------------------
+
+_PRECEDENCE_IDS = (
+    "vpic_electrification_fuel_conflict",
+    "vpic_drive_wheels_conflict",
+    "vpic_cylinders_conflict",
+    "provenance_stale_drivetrain",
+    "sticker_vs_vpic_conflict",
+    "engine_text_vs_vpic_displacement",
+    "catalog_tiebreak_over_explicit_end",
+)
+
+
+def test_every_sql_invariant_has_a_baseline_entry() -> None:
+    """The nightly gate fails closed on an id with no baseline: shipping one without
+    its entry would turn the next nightly run red."""
+    baseline = dq.load_baseline(dq.DEFAULT_BASELINE_PATH)
+    missing = [s.id for s in dq.SQL_INVARIANTS if s.id not in baseline]
+    assert missing == []
+    assert set(_PRECEDENCE_IDS) <= {s.id for s in dq.SQL_INVARIANTS}
+
+
+def test_precedence_invariants_are_read_only_and_use_postgres_word_boundaries() -> None:
+    import re
+
+    specs = {s.id: s for s in dq.SQL_INVARIANTS}
+    for iid in _PRECEDENCE_IDS:
+        spec = specs[iid]
+        assert spec.example_sql and spec.denominator_sql, iid
+        for sql in (spec.count_sql, spec.example_sql, spec.denominator_sql):
+            assert not re.search(r"\b(INSERT|UPDATE|DELETE|DROP|ALTER|TRUNCATE|CREATE)\b", sql, re.I), iid
+            assert "\\b" not in sql, f"{iid}: \\b is a backspace in Postgres; use \\y, \\m, \\M"
+        assert "LIMIT 20" in spec.example_sql, iid
+
+
+def test_only_the_tiebreak_report_is_informational() -> None:
+    info = [s.id for s in dq.SQL_INVARIANTS if s.informational]
+    assert info == ["catalog_tiebreak_over_explicit_end"]
+
+
+def test_informational_invariant_never_fails_the_gate() -> None:
+    def info(count: int) -> dq.InvariantResult:
+        r = _result("report", count)
+        r.informational = True
+        return r
+
+    for baseline in ({}, {"report": {"count": 1}}):
+        v = dq.compare([info(500)], baseline)[0]
+        assert v["status"] == "INFO"
+        assert v["status"] not in dq._FAIL_STATUSES
+    assert dq.compare([info(500)], {"report": {"count": 1}})[0]["delta"] == 499
+    # a broken informational check is still an ERROR: it must not hide
+    broken = info(-1)
+    broken.error = "boom"
+    assert dq.compare([broken], {})[0]["status"] == "ERROR"
+
+
+@pytest.mark.pg
+def test_precedence_invariants_count_seeded_rows(pg_db) -> None:
+    import json as _json
+
+    def decode(**kw) -> str:
+        row = {"ElectrificationLevel": "", "DriveType": "", "FuelTypePrimary": "Gasoline",
+               "FuelTypeSecondary": "", "EngineCylinders": "", "DisplacementL": ""}
+        row.update(kw)
+        return _json.dumps({"Results": [row]})
+
+    def prov(**fields) -> str:
+        return _json.dumps({k: {"source": s, **({"detail": d} if d else {})} for k, (s, d) in fields.items()})
+
+    cars = [
+        # id, vin, fuel, drive, cyl, engine text, provenance, catalog id
+        # (a) PHEV decode on a plain Hybrid label; a BEV decode on a matching label is fine
+        (1, "1" * 17, "Hybrid", "AWD", None, None, None, None),
+        (2, "2" * 17, "Electric", "AWD", None, None, None, None),
+        # (b) FWD against a RWD decode; AWD against a 4x2 decode; AWD 4MATIC against 4WD is the same wheels
+        (3, "3" * 17, "Gasoline", "FWD", None, None, None, None),
+        (4, "4" * 17, "Gasoline", "AWD", None, None, None, None),
+        (5, "5" * 17, "Gasoline", "AWD 4MATIC", None, None, None, None),
+        # (c) 8 stored vs 6 decoded; 6 vs 6 agrees
+        (6, "6" * 17, "Gasoline", "RWD", 8, "3.0L I6", None, None),
+        (7, "7" * 17, "Gasoline", "RWD", 6, "3.0L I6", None, None),
+        # (d) tiebreak label on a column the feed reverted to 2WD, catalog says rear-wheel
+        (8, "8" * 17, "Gasoline", "2WD", None, None,
+         prov(drivetrain=("epa_catalog_tiebreak", "DecodeVINValuesBatch; feed said '2WD'")), 1),
+        # (e) a sticker-sourced end the decode contradicts
+        (9, "9" * 17, "Gasoline", "FWD", None, None, prov(drivetrain=("oem_window_sticker", None)), None),
+        # (f) 4.0L text against a 5.5L decode; 2.0L against 2.05L is rounding
+        (10, "A" * 17, "Gasoline", "RWD", None, "4.0L V8", None, None),
+        (11, "B" * 17, "Gasoline", "RWD", None, "2.0L", None, None),
+        # (g) an explicit dealer FWD replaced by the catalog's RWD
+        (12, "C" * 17, "Gasoline", "RWD", None, None,
+         prov(drivetrain=("epa_catalog_tiebreak", "DecodeVINValuesBatch; feed said 'FWD'")), 1),
+    ]
+    decodes = {
+        1: decode(ElectrificationLevel="PHEV (Plug-in Hybrid Electric Vehicle)", DriveType="AWD/All-Wheel Drive"),
+        2: decode(ElectrificationLevel="BEV (Battery Electric Vehicle)", DriveType="AWD/All-Wheel Drive",
+                  FuelTypePrimary="Electric"),
+        3: decode(DriveType="RWD/Rear-Wheel Drive"),
+        4: decode(DriveType="4x2"),
+        5: decode(DriveType="4WD/4-Wheel Drive/4x4"),
+        6: decode(DriveType="RWD/Rear-Wheel Drive", EngineCylinders="6", DisplacementL="3.0"),
+        7: decode(DriveType="RWD/Rear-Wheel Drive", EngineCylinders="6", DisplacementL="3.0"),
+        8: decode(),
+        9: decode(DriveType="RWD/Rear-Wheel Drive"),
+        10: decode(DriveType="RWD/Rear-Wheel Drive", DisplacementL="5.5"),
+        11: decode(DriveType="RWD/Rear-Wheel Drive", DisplacementL="2.05"),
+        12: decode(),
+    }
+    with pg_db.connect() as seed:
+        seed.execute("INSERT INTO epa_master (id, year, make, model, drive) VALUES (1, 2023, 'BMW', 'X5', 'Rear-Wheel Drive')")
+        for cid, vin, fuel, drive, cyl, text, pv, cat in cars:
+            seed.execute(
+                "INSERT INTO cars (id, vin, listing_active, fuel_type, drivetrain, cylinders, engine_description, "
+                "spec_source_json, epa_master_id) VALUES (%s, %s, 1, %s, %s, %s, %s, %s, %s)",
+                (cid, vin, fuel, drive, cyl, text, pv, cat),
+            )
+            seed.execute("INSERT INTO nhtsa_vpic_cache (vin, response_json) VALUES (%s, %s)", (vin, decodes[cid]))
+    conn = dq.open_readonly_connection()
+    try:
+        by_id = {r.id: r for r in dq.run_stored_tier(conn) if r.id in _PRECEDENCE_IDS}
+    finally:
+        conn.close()
+    assert {k: (r.error, r.count) for k, r in by_id.items()} == {
+        "vpic_electrification_fuel_conflict": (None, 1),
+        "vpic_drive_wheels_conflict": (None, 3),   # cars 3, 4 and 9 (the sticker row is also a drive conflict)
+        "vpic_cylinders_conflict": (None, 1),
+        "provenance_stale_drivetrain": (None, 1),
+        "sticker_vs_vpic_conflict": (None, 1),
+        "engine_text_vs_vpic_displacement": (None, 1),
+        "catalog_tiebreak_over_explicit_end": (None, 1),
+    }
+    assert by_id["vpic_cylinders_conflict"].examples[0]["engine_text_split"] == "agrees_with_vpic"
+    assert by_id["catalog_tiebreak_over_explicit_end"].informational is True

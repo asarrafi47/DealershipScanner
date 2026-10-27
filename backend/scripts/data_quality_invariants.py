@@ -146,6 +146,7 @@ class InvariantResult:
     examples: list[Any] = field(default_factory=list)
     elapsed_sec: float = 0.0
     error: str | None = None
+    informational: bool = False
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -159,6 +160,7 @@ class InvariantResult:
             "examples": self.examples[:20],
             "elapsed_sec": round(self.elapsed_sec, 3),
             "error": self.error,
+            "informational": self.informational,
         }
 
 
@@ -171,6 +173,8 @@ class SqlInvariant:
     count_sql: str
     example_sql: str | None = None
     denominator_sql: str | None = None
+    # A report line, not a gate: compare() reports it as INFO and it never fails the run.
+    informational: bool = False
 
 
 # --------------------------------------------------------------------------
@@ -580,6 +584,306 @@ SQL_INVARIANTS: tuple[SqlInvariant, ...] = (
 
 
 # --------------------------------------------------------------------------
+# Precedence invariants (P8A.1): what the stored vehicle facts say against the
+# stored VIN decode. Read only; each is pre-filtered to active rows with a cached
+# decode so it finishes inside a 20 s statement timeout (an unfiltered JSON join
+# over every row timed out at 60 s). Regexes use Postgres word boundaries
+# (\y, \m, \M); \b is a backspace there.
+# --------------------------------------------------------------------------
+
+
+def _drive_group(col: str) -> str:
+    """SQL: a drivetrain string -> AWD4 / FWD / RWD, NULL when it names no end
+    (2WD, Other, blank, or two answers at once). AWD and 4WD are one group (the same
+    wheels driven)."""
+    return (
+        f"(CASE WHEN {col} IS NULL OR {col} ~* '(2wd|2-wheel|two.wheel)' THEN NULL "
+        f"WHEN {col} ~* '(awd|4matic|all4|xdrive|all.wheel|4wd|4x4|4-wheel|four.wheel)' "
+        f"THEN (CASE WHEN {col} ~* '(fwd|rwd|front|rear)' THEN NULL ELSE 'AWD4' END) "
+        f"WHEN {col} ~* '(fwd|front)' THEN (CASE WHEN {col} ~* '(rwd|rear)' THEN NULL ELSE 'FWD' END) "
+        f"WHEN {col} ~* '(rwd|rear)' THEN 'RWD' END)"
+    )
+
+
+def _fuel_group(col: str) -> str:
+    return (
+        f"(CASE WHEN {col} IS NULL OR btrim({col}) = '' THEN 'blank' "
+        f"WHEN {col} ~* '(plug|phev)' THEN 'phev' "
+        f"WHEN {col} ~* '^(electric|electricity|ev|bev)$' THEN 'ev' "
+        f"WHEN {col} ~* '(hybrid|hev)' THEN 'hybrid' "
+        f"WHEN {col} ~* 'diesel' THEN 'diesel' "
+        f"WHEN {col} ~* '(gas|unl|regular|premium)' OR {col} ~* '^g$' THEN 'gas' "
+        f"ELSE 'other' END)"
+    )
+
+
+# The decoded row of every active car whose VIN has a cached decode. OFFSET 0 keeps the
+# JSON parse to once per row (inlined, each v.* reference re-parsed it and timed out).
+_VPIC_BASE = """
+            FROM cars c
+            JOIN nhtsa_vpic_cache n ON n.vin = c.vin
+"""
+_VPIC_WHERE = "WHERE c.listing_active = 1 AND length(c.vin) = 17"
+_VPIC_FROM = _VPIC_BASE + """            CROSS JOIN LATERAL (
+                SELECT j.r ->> 'ElectrificationLevel' AS lvl, j.r ->> 'DriveType' AS drive,
+                       j.r ->> 'FuelTypePrimary' AS fuel1, j.r ->> 'FuelTypeSecondary' AS fuel2,
+                       j.r ->> 'EngineCylinders' AS cyl, j.r ->> 'DisplacementL' AS disp
+                FROM (SELECT n.response_json::jsonb -> 'Results' -> 0 AS r) j OFFSET 0
+            ) v
+            """ + _VPIC_WHERE + """
+"""
+_VPIC_DENOM = "SELECT COUNT(*)" + _VPIC_BASE + _VPIC_WHERE
+
+_V_LEVEL = "COALESCE(v.lvl, '')"
+_V_DRIVE = (
+    "(CASE WHEN v.drive ~* '4x2' THEN 'TWO' ELSE "
+    + _drive_group("(v.drive)") + " END)"
+)
+# What the decode says the fuel label is: ev / phev / hybrid / diesel, NULL when silent,
+# mild or fuel cell (no override). Mirrors vpic_facts.vin_overrides.
+_V_FUEL = (
+    f"(CASE WHEN {_V_LEVEL} ~* 'fcev|fuel cell' THEN NULL "
+    f"WHEN {_V_LEVEL} ~* 'bev' THEN 'ev' "
+    f"WHEN {_V_LEVEL} ~* '(phev|plug)' THEN 'phev' "
+    f"WHEN {_V_LEVEL} ~* 'mild' THEN NULL "
+    f"WHEN {_V_LEVEL} ~* 'hev' THEN 'hybrid' "
+    f"WHEN COALESCE(v.fuel1, '') ~* 'diesel' "
+    f"AND COALESCE(v.fuel2, '') !~* 'electric' THEN 'diesel' END)"
+)
+_V_CYL = "(CASE WHEN (v.cyl) ~ '^[0-9]+$' THEN (v.cyl)::int END)"
+_V_DISP = "(CASE WHEN (v.disp) ~ '^[0-9]+(\\.[0-9]+)?$' THEN (v.disp)::numeric END)"
+_IS_BEV = f"{_V_LEVEL} ~* 'bev'"
+
+# Cheap text tests on the stored response (and the car), pushed below the JSON parse.
+_PRE_FUEL = (
+    "(n.response_json LIKE '%\"ElectrificationLevel\": \"BEV%' OR n.response_json LIKE '%\"ElectrificationLevel\": \"PHEV%' "
+    "OR n.response_json LIKE '%\"ElectrificationLevel\": \"HEV%' OR n.response_json LIKE '%\"ElectrificationLevel\": \"Strong%' "
+    "OR n.response_json LIKE '%\"FuelTypePrimary\": \"Diesel%')"
+)
+_PRE_CYL = "c.cylinders > 0 AND n.response_json ~ '\"EngineCylinders\": \"[0-9]'"
+_PRE_DISP = (
+    "c.engine_description ~ '[0-9]\\.[0-9]' AND n.response_json ~ '\"DisplacementL\": \"[0-9]'"
+)
+_FUEL_CONFLICT = (
+    f"{_PRE_FUEL} AND {_V_FUEL} IS NOT NULL AND (CASE WHEN {_V_FUEL} = 'diesel' "
+    f"THEN {_fuel_group('c.fuel_type')} IN ('gas', 'blank') "
+    f"ELSE {_fuel_group('c.fuel_type')} <> {_V_FUEL} END)"
+)
+_DRIVE_CONFLICT = (
+    f"{_drive_group('c.drivetrain')} IS NOT NULL AND {_V_DRIVE} IS NOT NULL "
+    f"AND (CASE WHEN {_V_DRIVE} = 'TWO' THEN {_drive_group('c.drivetrain')} = 'AWD4' "
+    f"ELSE {_drive_group('c.drivetrain')} <> {_V_DRIVE} END)"
+)
+_CYL_CONFLICT = (
+    f"{_PRE_CYL} AND NOT ({_IS_BEV}) AND {_V_CYL} BETWEEN 2 AND 16 AND c.cylinders > 0 AND c.cylinders <> {_V_CYL}"
+)
+# Cylinders and displacement a dealer's own engine text states.
+_TEXT_CYL = (
+    "COALESCE(substring(c.engine_description from '(?i)\\m[VIHW]-?([0-9]{1,2})\\M')::int, "
+    "substring(c.engine_description from '(?i)\\m([0-9]{1,2})[- ]?cyl')::int)"
+)
+_TEXT_DISP = "substring(c.engine_description from '(?i)\\m([0-9]{1,2}\\.[0-9])\\s*-?(?:l|liter)\\M')::numeric"
+_DISP_CONFLICT = (
+    f"{_PRE_DISP} AND NOT ({_IS_BEV}) AND {_V_DISP} IS NOT NULL AND {_TEXT_DISP} IS NOT NULL "
+    f"AND ABS({_V_DISP} - {_TEXT_DISP}) >= 0.15"
+)
+
+_PROV = "(c.spec_source_json::jsonb)"
+_STICKER_SOURCES = "('oem_window_sticker', 'oem_window_sticker_unverified', 'listing_window_sticker')"
+
+_STALE_DRIVE_FROM = """
+            FROM cars c
+            LEFT JOIN epa_master em ON em.id = c.epa_master_id
+            LEFT JOIN nhtsa_vpic_cache n ON n.vin = c.vin
+            LEFT JOIN LATERAL (
+                SELECT j.r ->> 'ElectrificationLevel' AS lvl, j.r ->> 'DriveType' AS drive,
+                       j.r ->> 'FuelTypePrimary' AS fuel1, j.r ->> 'FuelTypeSecondary' AS fuel2,
+                       j.r ->> 'EngineCylinders' AS cyl, j.r ->> 'DisplacementL' AS disp
+                FROM (SELECT n.response_json::jsonb -> 'Results' -> 0 AS r) j OFFSET 0
+            ) v ON TRUE
+            WHERE c.listing_active = 1 AND c.spec_source_json LIKE '{%'
+              AND (c.spec_source_json LIKE '%"epa_catalog_tiebreak"%' OR c.spec_source_json LIKE '%"nhtsa_vpic"%')
+"""
+_P_DRIVE_SRC = f"{_PROV} -> 'drivetrain' ->> 'source'"
+_P_VDRIVE = _drive_group("(v.drive)")
+_P_DRIVE_VAL = f"{_PROV} -> 'drivetrain' ->> 'value'"
+# A stored label counts only while the column still holds what it recorded. Entries
+# that carry a value are checked against it; older entries are checked against what
+# the named source would produce today (the linked catalog row's drive, the decode's).
+_TIEBREAK_FROM = f"""
+            FROM cars c
+            WHERE c.listing_active = 1 AND c.spec_source_json LIKE '{{%'
+              AND c.spec_source_json LIKE '%"epa_catalog_tiebreak"%'
+              AND ({_P_DRIVE_SRC}) = 'epa_catalog_tiebreak'
+"""
+# The tiebreak's detail records the feed value it replaced: "... feed said 'FWD'".
+_FEED_END = f"upper(substring({_PROV} -> 'drivetrain' ->> 'detail' from 'feed said .([A-Za-z]+).'))"
+_EXPLICIT_END = (
+    f"{_FEED_END} IN ('FWD', 'RWD') AND {_drive_group('c.drivetrain')} IN ('FWD', 'RWD') "
+    f"AND {_drive_group('c.drivetrain')} <> {_drive_group(_FEED_END)}"
+)
+_STALE_DRIVE = (
+    f"((({_P_DRIVE_SRC}) = 'epa_catalog_tiebreak' AND "
+    f"(CASE WHEN {_P_DRIVE_VAL} IS NOT NULL "
+    f"THEN {_drive_group('c.drivetrain')} IS DISTINCT FROM {_drive_group(_P_DRIVE_VAL)} "
+    f"ELSE {_drive_group('em.drive')} IS NOT NULL "
+    f"AND {_drive_group('c.drivetrain')} IS DISTINCT FROM {_drive_group('em.drive')} END)) "
+    f"OR (({_P_DRIVE_SRC}) = 'nhtsa_vpic' AND "
+    f"(c.drivetrain ~* '^other' "
+    f"OR (CASE WHEN {_P_DRIVE_VAL} IS NOT NULL "
+    f"THEN {_drive_group('c.drivetrain')} IS DISTINCT FROM {_drive_group(_P_DRIVE_VAL)} "
+    f"ELSE {_P_VDRIVE} IS NOT NULL "
+    f"AND {_drive_group('c.drivetrain')} IS DISTINCT FROM "
+    f"{_P_VDRIVE} END))))"
+)
+
+
+def _precedence_invariants() -> tuple[SqlInvariant, ...]:
+    sticker_conflict = f"""
+        c.spec_source_json LIKE '{{%' AND c.spec_source_json LIKE '%sticker%' AND (
+          (({_PROV} -> 'drivetrain' ->> 'source') IN {_STICKER_SOURCES} AND ({_DRIVE_CONFLICT}))
+          OR (({_PROV} -> 'fuel_type' ->> 'source') IN {_STICKER_SOURCES} AND ({_FUEL_CONFLICT}))
+          OR (({_PROV} -> 'cylinders' ->> 'source') IN {_STICKER_SOURCES} AND ({_CYL_CONFLICT})))
+    """
+    return (
+        SqlInvariant(
+            id="vpic_electrification_fuel_conflict",
+            title="a fuel label that disagrees with the VIN decode's electrification",
+            detects=(
+                "cars.fuel_type says Gasoline, Hybrid or blank where the decode states BEV, PHEV, "
+                "a strong hybrid or Diesel"
+            ),
+            impossible_because=(
+                "the decode is per VIN and outranks the dealer feed on electrification "
+                "(policy 2026-09-23); a plug-in sold as a plain Hybrid or a BEV labelled Gasoline "
+                "is the feed's label surviving over the VIN's"
+            ),
+            count_sql=f"SELECT COUNT(*){_VPIC_FROM} AND ({_FUEL_CONFLICT})",
+            example_sql=f"""
+                SELECT c.id, c.vin, c.year, c.make, c.model, c.fuel_type, {_V_FUEL} AS vpic_fuel,
+                       {_V_LEVEL} AS vpic_level
+                {_VPIC_FROM} AND ({_FUEL_CONFLICT}) LIMIT 20
+            """,
+            denominator_sql=_VPIC_DENOM,
+        ),
+        SqlInvariant(
+            id="vpic_drive_wheels_conflict",
+            title="a stored drivetrain that contradicts the VIN decode's driven wheels",
+            detects=(
+                "cars.drivetrain names a different driven-wheel set than the decode (FWD vs RWD, "
+                "AWD/4WD against a two-wheel end, AWD/4WD on a 4x2 decode)"
+            ),
+            impossible_because=(
+                "a VIN has one drivetrain; AWD and 4WD are the same wheels and a 4x2 decode is a "
+                "two-wheel constraint, never AWD"
+            ),
+            count_sql=f"SELECT COUNT(*){_VPIC_FROM} AND ({_DRIVE_CONFLICT})",
+            example_sql=f"""
+                SELECT c.id, c.vin, c.year, c.make, c.model, c.drivetrain, v.drive AS vpic_drive
+                {_VPIC_FROM} AND ({_DRIVE_CONFLICT}) LIMIT 20
+            """,
+            denominator_sql=_VPIC_DENOM,
+        ),
+        SqlInvariant(
+            id="vpic_cylinders_conflict",
+            title="a stored cylinder count that differs from the VIN decode",
+            detects=(
+                "cars.cylinders disagrees with the decode on a non-electric car; the examples carry "
+                "engine_text_split (agrees_with_stored / agrees_with_vpic / neither / silent) because "
+                "the decode wins only when the engine text does not contradict it (D-PR7)"
+            ),
+            impossible_because="one engine has one cylinder count; a model-level backfill is the usual author",
+            count_sql=f"SELECT COUNT(*){_VPIC_FROM} AND ({_CYL_CONFLICT})",
+            example_sql=f"""
+                SELECT c.id, c.vin, c.year, c.make, c.model, c.cylinders, {_V_CYL} AS vpic_cylinders,
+                       c.engine_description, {_TEXT_CYL} AS engine_text_cylinders,
+                       (CASE WHEN {_TEXT_CYL} IS NULL THEN 'silent'
+                             WHEN {_TEXT_CYL} = c.cylinders THEN 'agrees_with_stored'
+                             WHEN {_TEXT_CYL} = {_V_CYL} THEN 'agrees_with_vpic'
+                             ELSE 'neither' END) AS engine_text_split
+                {_VPIC_FROM} AND ({_CYL_CONFLICT}) LIMIT 20
+            """,
+            denominator_sql=_VPIC_DENOM + " AND c.cylinders > 0",
+        ),
+        SqlInvariant(
+            id="provenance_stale_drivetrain",
+            title="a drivetrain whose provenance label no longer describes its value",
+            detects=(
+                "provenance says epa_catalog_tiebreak or nhtsa_vpic but the column holds something "
+                "else (a feed rescan reverted the tiebreak; a decode label sits on 'Other')"
+            ),
+            impossible_because=(
+                "a source label counts only while the column still holds the value it wrote; "
+                "otherwise the label freezes a junk value against later corrections"
+            ),
+            count_sql=f"SELECT COUNT(*){_STALE_DRIVE_FROM} AND {_STALE_DRIVE}",
+            example_sql=f"""
+                SELECT c.id, c.vin, c.year, c.make, c.model, c.drivetrain, {_P_DRIVE_SRC} AS provenance_source,
+                       em.drive AS catalog_drive, v.drive AS vpic_drive
+                {_STALE_DRIVE_FROM} AND {_STALE_DRIVE} LIMIT 20
+            """,
+            denominator_sql=f"SELECT COUNT(*){_STALE_DRIVE_FROM}",
+        ),
+        SqlInvariant(
+            id="sticker_vs_vpic_conflict",
+            title="a sticker-sourced fact that contradicts the VIN decode",
+            detects="drivetrain, fuel or cylinders tagged as read from a window sticker disagree with the decode",
+            impossible_because=(
+                "the sticker wins engine text, transmission and colors, but vPIC wins driven wheels, "
+                "electrification and cylinders (D-PR1 (a)); a sticker value standing against the decode "
+                "on those is a precedence break (or a sticker mis-parse)"
+            ),
+            count_sql=f"SELECT COUNT(*){_VPIC_FROM} AND {sticker_conflict}",
+            example_sql=f"""
+                SELECT c.id, c.vin, c.year, c.make, c.model, c.drivetrain, c.fuel_type, c.cylinders,
+                       v.drive AS vpic_drive, {_V_FUEL} AS vpic_fuel, {_V_CYL} AS vpic_cylinders
+                {_VPIC_FROM} AND {sticker_conflict} LIMIT 20
+            """,
+            denominator_sql=f"SELECT COUNT(*){_VPIC_FROM} AND c.spec_source_json LIKE '%sticker%'",
+        ),
+        SqlInvariant(
+            id="engine_text_vs_vpic_displacement",
+            title="engine text displacement more than 0.15 L from the VIN decode",
+            detects=(
+                "engine_description states a displacement the decode does not (a model-level text on "
+                "the wrong engine)"
+            ),
+            impossible_because="one VIN has one engine; a gap this wide is not rounding",
+            count_sql=f"SELECT COUNT(*){_VPIC_FROM} AND ({_DISP_CONFLICT})",
+            example_sql=f"""
+                SELECT c.id, c.vin, c.year, c.make, c.model, c.engine_description,
+                       {_TEXT_DISP} AS text_l, {_V_DISP} AS vpic_l
+                {_VPIC_FROM} AND ({_DISP_CONFLICT}) LIMIT 20
+            """,
+            denominator_sql=_VPIC_DENOM + " AND c.engine_description IS NOT NULL",
+        ),
+        SqlInvariant(
+            id="catalog_tiebreak_over_explicit_end",
+            title="the catalog tiebreak replaced a dealer's explicit FWD or RWD",
+            detects=(
+                "drivetrain provenance epa_catalog_tiebreak whose recorded feed value was FWD or RWD "
+                "and the column now holds the other end (a feed reverted to 2WD is the stale-label invariant)"
+            ),
+            impossible_because=(
+                "informational: D-PR4 allows this only when the decode is 4x2 or silent and the trim "
+                "decoder agrees; the count tracks how often an explicit dealer end lost, it is not a gate"
+            ),
+            count_sql=f"SELECT COUNT(*){_TIEBREAK_FROM} AND {_EXPLICIT_END}",
+            example_sql=f"""
+                SELECT c.id, c.vin, c.year, c.make, c.model, c.drivetrain,
+                       {_PROV} -> 'drivetrain' ->> 'detail' AS provenance_detail
+                {_TIEBREAK_FROM} AND {_EXPLICIT_END} LIMIT 20
+            """,
+            denominator_sql=f"SELECT COUNT(*){_TIEBREAK_FROM}",
+            informational=True,
+        ),
+    )
+
+
+SQL_INVARIANTS = SQL_INVARIANTS + _precedence_invariants()
+
+
+# --------------------------------------------------------------------------
 # Read-only connection
 # --------------------------------------------------------------------------
 
@@ -769,6 +1073,7 @@ def run_stored_tier(conn) -> list[InvariantResult]:
                     examples=[_jsonable(e) for e in examples],
                     elapsed_sec=time.time() - t0,
                     error=err,
+                    informational=spec.informational,
                 )
             )
         results.extend(_invariant_nameplate_constant(cur))
@@ -1151,6 +1456,8 @@ def compare(results: list[InvariantResult], baseline: dict[str, dict[str, Any]],
         base = base_entry.get("count") if isinstance(base_entry, dict) else None
         if r.error:
             status = "ERROR"
+        elif r.informational:
+            status = "INFO"  # reported with its delta, never gates
         elif base is None:
             status = "NO_BASELINE"
         elif r.count > base + slack:
@@ -1171,6 +1478,7 @@ def compare(results: list[InvariantResult], baseline: dict[str, dict[str, Any]],
             "status": status, "denominator": r.denominator,
             "detects": r.detects, "impossible_because": r.impossible_because,
             "examples": r.examples[:20], "error": r.error,
+            "informational": r.informational,
         })
     return verdicts
 
@@ -1199,7 +1507,8 @@ def print_summary(verdicts: list[dict[str, Any]], *, elapsed: float, rendered: b
             delta = "" if v["delta"] is None else f" ({v['delta']:+d})"
             denom = f" / {v['denominator']}" if v["denominator"] else ""
             mark = {"OK": "ok  ", "IMPROVED": "down", "REGRESSION": "WORSE",
-                    "NEW_DEFECT_CLASS": "NEW!!", "NO_BASELINE": "NEW ", "ERROR": "ERR "}[v["status"]]
+                    "NEW_DEFECT_CLASS": "NEW!!", "NO_BASELINE": "NEW ", "ERROR": "ERR ",
+                    "INFO": "info"}[v["status"]]
             print(f"  {mark} {v['id']:<{width}}  {v['count']}{denom:<12}  base={base}{delta}")
             if v["status"] == "NEW_DEFECT_CLASS":
                 print("        NEW DEFECT CLASS: baseline was 0 -- this mechanism did not "
