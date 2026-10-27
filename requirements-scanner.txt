@@ -14,7 +14,7 @@ curl_cffi>=0.7            # TLS-fingerprint impersonation (Cloudflare / Dealer I
 psycopg[binary]>=3.2
 psycopg-pool>=3.2
 pydantic>=2
-beautifulsoup4>=4.15.0
+beautifulsoup4>=4.15.0   # also html_jsonld_harvest (SCAN_POST_STEPS harvest, P15A.4 import audit: no new packages)
 # PYSEC-2026-87 is fixed in 6.1.0. Nothing imports lxml directly today: every
 # BeautifulSoup call names "html.parser" (P15B.1 audit, 2026-10-18).
 lxml>=6.1.0
