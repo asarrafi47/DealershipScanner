@@ -12,7 +12,7 @@ from __future__ import annotations
 import re
 from typing import Any
 
-from backend.parsers.base import find_vehicle_list, norm_float, norm_int, norm_str
+from backend.parsers.base import clean_gallery_url, find_vehicle_list, gallery_urls_from_value, norm_float, norm_int, norm_str
 
 _VIN_RE = re.compile(r"^[A-HJ-NPR-Z0-9]{17}$")
 
@@ -60,17 +60,6 @@ def _condition(d: dict) -> str:
     return "Used"  # a flat used-car feed (independents) never says so
 
 
-def _urls(v: Any) -> list[str]:
-    if isinstance(v, str):
-        return [v] if v.startswith("http") else []
-    out: list[str] = []
-    for x in v or []:
-        u = x if isinstance(x, str) else (x.get("url") or x.get("large") or x.get("src") if isinstance(x, dict) else "")
-        if isinstance(u, str) and u.startswith("http"):
-            out.append(u)
-    return out
-
-
 def detect(raw_data: Any) -> list[dict] | None:
     # A platform shape wins: the generic parser would drop what that platform's own
     # parser reads (dealer.com ws-inv-data's per-car ``accountId``).
@@ -105,7 +94,7 @@ def parse(raw_data: Any, base_url: str = "", dealer_id: str = "", dealer_name: s
             "vin": vin, "dealer_id": dealer_id, "dealer_name": dealer_name or dealer_id, "dealer_url": dealer_url or base_url,
             "year": norm_int(d.get("year")), "make": norm_str(d.get("make")), "model": norm_str(d.get("model")),
             "price": norm_float(_first(d, _PRICE_KEYS)), "msrp": norm_float(_first(d, _MSRP_KEYS)) or None,
-            "condition": _condition(d), "gallery": _urls(_first(d, _GALLERY_KEYS)), "image_url": "",
+            "condition": _condition(d), "gallery": gallery_urls_from_value(_first(d, _GALLERY_KEYS)), "image_url": "",
         }
         for field, keys in _FIELDS.items():
             v = _first(d, keys)
@@ -114,7 +103,8 @@ def parse(raw_data: Any, base_url: str = "", dealer_id: str = "", dealer_name: s
             elif v is not None and not isinstance(v, (dict, list)):
                 row[field] = norm_str(v)
         img = _first(d, _IMAGE_KEYS)
-        row["image_url"] = img if isinstance(img, str) and img.startswith("http") else (row["gallery"][0] if row["gallery"] else "")
+        img = clean_gallery_url(img) if isinstance(img, str) else ""
+        row["image_url"] = img or (row["gallery"][0] if row["gallery"] else "")
         link = _first(d, _DETAIL_KEYS)
         if isinstance(link, str) and link:
             row["_detail_url"] = link if link.startswith("http") else (base_url.rstrip("/") + "/" + link.lstrip("/"))

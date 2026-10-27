@@ -15,6 +15,7 @@ from typing import Any
 from urllib.parse import urlparse
 
 from backend.parsers.base import (
+    clean_gallery_url,
     dedupe_urls_order_prefer_large,
     harvest_image_urls_from_json,
     inventory_gallery_max,
@@ -32,8 +33,10 @@ logger = logging.getLogger(__name__)
 # list into one URL, F03 2026-09-28) is cut only at a comma that starts the
 # next URL: ",http(s)://" or ", http(s)://".
 _URL_CHAR = r"(?:(?!,\s*https?://)[^\s\"'<>])"
+# Dealer eProcess serves every photo extension-less from /resrc/images/ (N21.6, F07).
+_DEP_URL_RE = r"https?://cloudflareimages\.dealereprocess\.com/resrc/images/(?:(?!,\s*https?://)[^\s\"'<>()\\])+"
 _IMG_URL_RE = re.compile(
-    r"https?://" + _URL_CHAR + r"+?\.(?:jpe?g|png|webp|gif|avif)(?:\?" + _URL_CHAR + r"*)?",
+    _DEP_URL_RE + r"|https?://" + _URL_CHAR + r"+?\.(?:jpe?g|png|webp|gif|avif)(?:\?" + _URL_CHAR + r"*)?",
     re.I,
 )
 
@@ -147,7 +150,7 @@ def harvest_gallery_urls_from_html(html: str, page_url: str, *, max_urls: int | 
 
     def _add(raw: str) -> None:
         for part in split_joined_image_urls(raw):
-            nu = normalize_image_url_https(part.strip())
+            nu = normalize_image_url_https(clean_gallery_url(part))
             if not nu.startswith("https://") or nu in seen:
                 continue
             low = nu.lower()

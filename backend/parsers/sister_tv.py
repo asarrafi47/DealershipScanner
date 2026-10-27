@@ -22,6 +22,7 @@ from urllib.parse import urljoin, urlsplit
 
 from backend.parsers.base import (
     extract_mileage,
+    gallery_urls_from_value,
     extract_price,
     norm_int,
     norm_str,
@@ -79,19 +80,11 @@ def _gallery(src: dict) -> list[str]:
     out: list[str] = []
     seen: set[str] = set()
     for field in ("display_pics", "detail_pics", "third_party_pics", "stock_pics"):
-        urls = src.get(field)
-        if not isinstance(urls, list):
-            continue
-        for u in urls:
-            if not isinstance(u, str):
-                continue
-            s = u.strip()
-            if s.startswith("//"):
-                s = "https:" + s
-            if not s.lower().startswith("https://") or s in seen:
-                continue
-            seen.add(s)
-            out.append(s)
+        # Shared cleaner: scheme-relative fixed, CSS url() debris and joined lists handled.
+        for u in gallery_urls_from_value(src.get(field)):
+            if u not in seen:
+                seen.add(u)
+                out.append(u)
     return out
 
 

@@ -59,10 +59,12 @@ from typing import Any, Iterable
 
 from backend.parsers.base import (
     dedupe_urls_order_prefer_large,
+    gallery_urls_from_value,
     norm_float,
     norm_int,
     norm_label_str,
     norm_str,
+    split_joined_image_urls,
 )
 from backend.utils.field_clean import clean_car_row_dict, normalize_optional_str
 
@@ -198,8 +200,10 @@ def _map_vehicle(
     make = norm_str(v.get("make"))
     model = norm_str(v.get("model"))
 
-    # The feed carries imageUrls:null; seed a placeholder until the completion
-    # step fills real photos from the VDP.
+    # The feed usually carries imageUrls:null; seed a placeholder until the completion
+    # step fills real photos from the VDP. A feed that does carry the list (FordDirect
+    # ``photoUrls``, N21.6) supplies the gallery itself, comma-joined or as an array.
+    photos = gallery_urls_from_value(v.get("photoUrls") or v.get("imageUrls") or v.get("photo_urls"))
     row: dict[str, Any] = {
         "vin": vin,
         "stock_number": _opt_str(v.get("stockNumber") or v.get("stock_number")) or "",
@@ -211,8 +215,8 @@ def _map_vehicle(
         "price": _price(v),
         "msrp": norm_float(v.get("msrp")) or None,
         "mileage": norm_int(v.get("miles") or v.get("mileage") or v.get("odometer")),
-        "image_url": FALLBACK_IMAGE_URL,
-        "gallery": [FALLBACK_IMAGE_URL],
+        "image_url": photos[0] if photos else FALLBACK_IMAGE_URL,
+        "gallery": photos or [FALLBACK_IMAGE_URL],
         "dealer_id": dealer_id,
         "dealer_name": dealer_name or norm_str(v.get("dealerName")) or dealer_id,
         "dealer_url": dealer_url or norm_str(v.get("dealerDomain")) or base_url,
@@ -303,9 +307,12 @@ def extract_gallery(html: str) -> list[str]:
         return []
     seen: set[str] = set()
     out: list[str] = []
-    for raw in m.group(1).split(","):
-        u = raw.strip()
-        if u.startswith("http") and u not in seen:
+    # Joined list: cut only at a comma that starts the next URL (commas live in
+    # URLs); CSS/quote debris is stripped, malformed entries dropped (N21.6).
+    # A trailing non-URL token ("…/a.jpg,not-a-url") is cut off the last URL.
+    parts = [re.sub(r",[^/=.?&]*$", "", p) for p in split_joined_image_urls(m.group(1))]
+    for u in gallery_urls_from_value(parts):
+        if u not in seen:
             seen.add(u)
             out.append(u)
     return out

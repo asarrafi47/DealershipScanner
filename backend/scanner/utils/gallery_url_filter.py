@@ -4,6 +4,8 @@ from __future__ import annotations
 import re
 from urllib.parse import parse_qs, urlparse
 
+from backend.parsers.base import is_malformed_image_url
+
 _JUNK_PATH_FRAGMENTS = (
     "logo",
     "icon",
@@ -113,6 +115,9 @@ def is_junk_vdp_gallery_url(url: str) -> bool:
     """
     u = (url or "").strip()
     if not u.lower().startswith("https://"):
+        return True
+    # CSS url(...) fragments, quote/paren debris, embedded whitespace (N21.6, W15).
+    if is_malformed_image_url(u):
         return True
     try:
         _host = urlparse(u).netloc.lower().removeprefix("www.")
