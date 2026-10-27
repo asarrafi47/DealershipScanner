@@ -54,7 +54,9 @@ def test_dictionary_base_keys_reads_old_schema_headers(tmp_path: Path):
 
 
 def test_cli_without_a_database_url_is_refused(monkeypatch, tmp_path):
-    monkeypatch.setattr("backend.db.inventory_pg.inventory_postgres_dsn", lambda: "")
+    from backend.db import inventory_pg  # imported, not named in a dotted string (sqlite path scan)
+
+    monkeypatch.setattr(inventory_pg, "inventory_postgres_dsn", lambda: "")
     monkeypatch.setattr("backend.utils.project_env.load_project_dotenv", lambda *a, **k: None)
     assert bf.main(["--dictionary-dir", str(tmp_path), "--min-files", "1"]) == bf.EXIT_REFUSED
 

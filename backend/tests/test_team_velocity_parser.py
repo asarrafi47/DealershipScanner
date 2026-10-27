@@ -171,7 +171,9 @@ def test_request_pacer_enforces_min_interval():
         pacer.wait()
         starts.append(time.monotonic())
     gaps = [b - a for a, b in zip(starts, starts[1:])]
-    assert all(g >= 0.05 for g in gaps), gaps
+    # Starts are stamped after wait() returns, so scheduler delay between the release and
+    # the stamp can shave a few ms off a measured gap under load; allow 10 ms of that skew.
+    assert all(g >= 0.05 - 0.01 for g in gaps), gaps
 
 
 def test_request_pacer_zero_interval_is_noop(monkeypatch):

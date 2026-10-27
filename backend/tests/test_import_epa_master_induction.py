@@ -177,9 +177,12 @@ def test_restore_round_trip_is_checksum_equal(pg_db, tmp_path):
 @pytest.mark.pg
 def test_import_csv_stores_flags_label_source_and_key_on_new_rows(pg_db, tmp_path):
     v = _write_csv(tmp_path / "v.csv")
-    with pg_db.get_conn() as conn:
+    conn = pg_db.get_conn()  # InventoryConnection is not a context manager
+    try:
         assert imp.import_csv(str(v), conn, years={2019}, append=True) == 1
         row = conn.execute(
             "SELECT forced_induction, t_charger, s_charger, source, natural_key FROM epa_master "
             "WHERE epa_vehicle_id = 1002").fetchone()
         assert tuple(row) == ("Turbocharged", "T", "", "epa_vehicles_csv", "vid:1002")
+    finally:
+        conn.close()

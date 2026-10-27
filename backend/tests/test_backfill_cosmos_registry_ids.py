@@ -12,7 +12,8 @@ COSMOS = json.dumps([{"url": "https://x.example/api/vhcliaa/vehicle-pages/cosmos
 
 def _reg(conn, rid, url):
     conn.execute(
-        "INSERT INTO dealerships (id, name, website_url, is_active) VALUES (%s, %s, %s, 1)",
+        "INSERT INTO dealerships (id, name, city, state, website_url, is_active) "
+        "VALUES (%s, %s, 'Testville', 'NC', %s, 1)",
         (rid, f"R{rid}", url),
     )
 

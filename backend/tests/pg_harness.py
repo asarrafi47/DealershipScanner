@@ -523,6 +523,7 @@ _LRU_RESETS: tuple[tuple[str, str], ...] = (
     ("backend.utils.hybrid_search", "_expand_inventory_models_cached"),
     ("backend.utils.vpic_specs", "_cached_hit"),  # nhtsa_vpic_cache rows (audit F07, B-033)
     ("backend.vehicle_facts.extended_specs", "family_trim_count"),  # epa_extended_specs counts
+    ("backend.vehicle_facts.listing_classes", "vpic_vehicle_type"),  # nhtsa_vpic_cache VehicleType per VIN (N21.8)
 )
 
 # Helper functions that reset several attributes at once.
