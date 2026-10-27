@@ -21,7 +21,7 @@ _BANNED = {"requests", "curl_cffi", "httpx", "aiohttp", "urllib3"}
 
 # file -> (sites still allowed, why it is not on net/client yet)
 KNOWN_DEBT: dict[str, tuple[int, str]] = {
-    "backend/scanner/http_fetch.py": (2, "urllib wrapper kept for callers that patch urlopen; moves to net/client with its callers"),
+    "backend/scanner/http_fetch.py": (1, "urllib wrapper kept for callers that patch urlopen; moves to net/client with its callers"),
     "backend/scanner/carscommerce_harvest.py": (1, "urllib JSON harvest against the carscommerce search API"),
     "backend/scanner/platform_registry.py": (1, "urllib platform probe"),
     "backend/scanner/specials/fetch.py": (1, "urllib specials page fetch"),
