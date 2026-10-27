@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from backend.vision import monroney_merge as mm
-from backend.scanner.vdp import (
+from backend.scanner.vdp.extract import (
     _is_generic_vhr_vin_only_url,
     _merge_vdp_vehicle_history_url,
     _pick_best_vehicle_history_url,

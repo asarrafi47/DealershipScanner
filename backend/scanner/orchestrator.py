@@ -71,7 +71,7 @@ def on_scanner_shutdown_signal() -> None:
 
 
 def _max_vdp_concurrency() -> int:
-    from backend.scanner.vdp import _max_vdp_concurrency as vdp_conc
+    from backend.scanner.vdp.config import _max_vdp_concurrency as vdp_conc
 
     return vdp_conc()
 

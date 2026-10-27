@@ -356,7 +356,7 @@ def _vehicle_wants_http_prefetch(v: dict[str, Any]) -> bool:
     dealer.com / DealerOn templates. Since 2026-09-23 also MSRP / stock / history
     link, which the same inline JSON carries."""
     from backend.scanner.utils.vdp_price_merge import listing_price_is_empty
-    from backend.scanner.vdp.core import _vehicle_needs_spec_gap_vdp
+    from backend.scanner.vdp.queue import _vehicle_needs_spec_gap_vdp
 
     if listing_price_is_empty(v):
         return True

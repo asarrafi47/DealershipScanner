@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from backend.scanner.vdp import _vehicle_needs_spec_gap_vdp
+from backend.scanner.vdp.queue import _vehicle_needs_spec_gap_vdp
 
 
 def test_vehicle_needs_spec_gap_when_engine_missing():

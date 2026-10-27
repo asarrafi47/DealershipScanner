@@ -392,10 +392,6 @@
    ],
    [
     "INFO",
-    "Warmup: Lexus of Knoxville — navigating to base URL"
-   ],
-   [
-    "INFO",
     "Warmup UA [Lexus of Knoxville]: golden-UA/1.0"
    ],
    [
@@ -1191,10 +1187,6 @@
    [
     "INFO",
     "Dealer start: Lexus of Knoxville"
-   ],
-   [
-    "INFO",
-    "Warmup: Lexus of Knoxville — navigating to base URL"
    ],
    [
     "INFO",
@@ -2061,10 +2053,6 @@
    [
     "INFO",
     "Dealer start: Knight Claremont Chrysler Dodge Jeep RAM"
-   ],
-   [
-    "INFO",
-    "Warmup: Knight Claremont Chrysler Dodge Jeep RAM — navigating to base URL"
    ],
    [
     "INFO",
@@ -3086,10 +3074,6 @@
    ],
    [
     "INFO",
-    "Warmup: Grand Hyundai of Canton — navigating to base URL"
-   ],
-   [
-    "INFO",
     "Recipe fetch [Grand Hyundai of Canton]: 2 VIN(s) vs 10 known — vins 2/10 < 70%; merging and still scraping"
    ],
    [
@@ -4090,10 +4074,6 @@
    [
     "INFO",
     "Dealer start: Greenway Chrysler Dodge Jeep Ram of Rome"
-   ],
-   [
-    "INFO",
-    "Warmup: Greenway Chrysler Dodge Jeep Ram of Rome — navigating to base URL"
    ],
    [
     "INFO",
@@ -5131,10 +5111,6 @@
    [
     "INFO",
     "Dealer start: Group 1 Ford of South Austin"
-   ],
-   [
-    "INFO",
-    "Warmup: Group 1 Ford of South Austin — navigating to base URL"
    ],
    [
     "INFO",
@@ -6351,10 +6327,6 @@
    [
     "INFO",
     "Dealer start: Group 1 Toyota North Austin"
-   ],
-   [
-    "INFO",
-    "Warmup: Group 1 Toyota North Austin — navigating to base URL"
    ],
    [
     "INFO",
@@ -7871,10 +7843,6 @@
    ],
    [
     "INFO",
-    "Warmup: Hendrick Buick GMC Cary — navigating to base URL"
-   ],
-   [
-    "INFO",
     "Recipe fetch [Hendrick Buick GMC Cary]: 3 VIN(s) vs 16 known — vins 3/16 < 70%; merging and still scraping"
    ],
    [
@@ -8624,10 +8592,6 @@
    ],
    [
     "INFO",
-    "Warmup: Hendrick Honda — navigating to base URL"
-   ],
-   [
-    "INFO",
     "Recipe fetch [Hendrick Honda]: 4 VIN(s) vs 19 known — vins 4/19 < 70%; merging and still scraping"
    ],
    [
@@ -9186,10 +9150,6 @@
    [
     "INFO",
     "Dealer start: Honda Of Huntersville"
-   ],
-   [
-    "INFO",
-    "Warmup: Honda Of Huntersville — navigating to base URL"
    ],
    [
     "INFO",
@@ -10421,10 +10381,6 @@
    ],
    [
     "INFO",
-    "Warmup: Mac Haik Chevrolet — navigating to base URL"
-   ],
-   [
-    "INFO",
     "Recipe fetch [Mac Haik Chevrolet]: 2 VIN(s) vs 8 known — vins 2/8 < 70%; merging and still scraping"
    ],
    [
@@ -11461,10 +11417,6 @@
    [
     "INFO",
     "Dealer start: Mall of Georgia Mazda"
-   ],
-   [
-    "INFO",
-    "Warmup: Mall of Georgia Mazda — navigating to base URL"
    ],
    [
     "INFO",
@@ -12577,10 +12529,6 @@
    ],
    [
     "INFO",
-    "Warmup: Rick Hendrick Chevrolet Naples — navigating to base URL"
-   ],
-   [
-    "INFO",
     "Recipe fetch [Rick Hendrick Chevrolet Naples]: 3 VIN(s) vs 13 known — vins 3/13 < 70%; merging and still scraping"
    ],
    [
@@ -13606,10 +13554,6 @@
    ],
    [
     "INFO",
-    "Warmup: Shottenkirk Chrysler Dodge Jeep Ram — navigating to base URL"
-   ],
-   [
-    "INFO",
     "Recipe fetch [Shottenkirk Chrysler Dodge Jeep Ram]: 3 VIN(s) vs 10 known — vins 3/10 < 70%; merging and still scraping"
    ],
    [
@@ -14630,10 +14574,6 @@
    [
     "INFO",
     "Dealer start: Stevenson Hendrick Honda Wilmington"
-   ],
-   [
-    "INFO",
-    "Warmup: Stevenson Hendrick Honda Wilmington — navigating to base URL"
    ],
    [
     "INFO",
@@ -15761,10 +15701,6 @@
    [
     "INFO",
     "Dealer start: Tutton CDJR of Jasper"
-   ],
-   [
-    "INFO",
-    "Warmup: Tutton CDJR of Jasper — navigating to base URL"
    ],
    [
     "INFO",
@@ -16930,10 +16866,6 @@
    ],
    [
     "INFO",
-    "Warmup: Knight Claremont Chrysler Dodge Jeep RAM — navigating to base URL"
-   ],
-   [
-    "INFO",
     "Recipe fetch [Knight Claremont Chrysler Dodge Jeep RAM]: 1 VIN(s) vs 5 known — vins 1/5 < 70%; merging and still scraping"
    ],
    [
@@ -17967,10 +17899,6 @@
    ],
    [
     "INFO",
-    "Warmup: Grand Hyundai of Canton — navigating to base URL"
-   ],
-   [
-    "INFO",
     "Recipe fetch [Grand Hyundai of Canton]: 2 VIN(s) vs 10 known — vins 2/10 < 70%; merging and still scraping"
    ],
    [
@@ -18971,10 +18899,6 @@
    [
     "INFO",
     "Dealer start: Greenway Chrysler Dodge Jeep Ram of Rome"
-   ],
-   [
-    "INFO",
-    "Warmup: Greenway Chrysler Dodge Jeep Ram of Rome — navigating to base URL"
    ],
    [
     "INFO",
@@ -20012,10 +19936,6 @@
    [
     "INFO",
     "Dealer start: Group 1 Ford of South Austin"
-   ],
-   [
-    "INFO",
-    "Warmup: Group 1 Ford of South Austin — navigating to base URL"
    ],
    [
     "INFO",
@@ -21236,10 +21156,6 @@
    [
     "INFO",
     "Dealer start: Group 1 Toyota North Austin"
-   ],
-   [
-    "INFO",
-    "Warmup: Group 1 Toyota North Austin — navigating to base URL"
    ],
    [
     "INFO",
@@ -22759,10 +22675,6 @@
    ],
    [
     "INFO",
-    "Warmup: Hendrick Buick GMC Cary — navigating to base URL"
-   ],
-   [
-    "INFO",
     "Recipe fetch [Hendrick Buick GMC Cary]: 3 VIN(s) vs 16 known — vins 3/16 < 70%; merging and still scraping"
    ],
    [
@@ -23513,10 +23425,6 @@
    ],
    [
     "INFO",
-    "Warmup: Hendrick Honda — navigating to base URL"
-   ],
-   [
-    "INFO",
     "Recipe fetch [Hendrick Honda]: 4 VIN(s) vs 19 known — vins 4/19 < 70%; merging and still scraping"
    ],
    [
@@ -24075,10 +23983,6 @@
    [
     "INFO",
     "Dealer start: Honda Of Huntersville"
-   ],
-   [
-    "INFO",
-    "Warmup: Honda Of Huntersville — navigating to base URL"
    ],
    [
     "INFO",
@@ -25325,10 +25229,6 @@
    ],
    [
     "INFO",
-    "Warmup: Mac Haik Chevrolet — navigating to base URL"
-   ],
-   [
-    "INFO",
     "Recipe fetch [Mac Haik Chevrolet]: 2 VIN(s) vs 8 known — vins 2/8 < 70%; merging and still scraping"
    ],
    [
@@ -26365,10 +26265,6 @@
    [
     "INFO",
     "Dealer start: Mall of Georgia Mazda"
-   ],
-   [
-    "INFO",
-    "Warmup: Mall of Georgia Mazda — navigating to base URL"
    ],
    [
     "INFO",
@@ -27481,10 +27377,6 @@
    ],
    [
     "INFO",
-    "Warmup: Rick Hendrick Chevrolet Naples — navigating to base URL"
-   ],
-   [
-    "INFO",
     "Recipe fetch [Rick Hendrick Chevrolet Naples]: 3 VIN(s) vs 13 known — vins 3/13 < 70%; merging and still scraping"
    ],
    [
@@ -28507,10 +28399,6 @@
    [
     "INFO",
     "Dealer start: Shottenkirk Chrysler Dodge Jeep Ram"
-   ],
-   [
-    "INFO",
-    "Warmup: Shottenkirk Chrysler Dodge Jeep Ram — navigating to base URL"
    ],
    [
     "INFO",
@@ -29538,10 +29426,6 @@
    [
     "INFO",
     "Dealer start: Stevenson Hendrick Honda Wilmington"
-   ],
-   [
-    "INFO",
-    "Warmup: Stevenson Hendrick Honda Wilmington — navigating to base URL"
    ],
    [
     "INFO",
@@ -30673,10 +30557,6 @@
    ],
    [
     "INFO",
-    "Warmup: Tutton CDJR of Jasper — navigating to base URL"
-   ],
-   [
-    "INFO",
     "Recipe fetch [Tutton CDJR of Jasper]: 3 VIN(s) vs 15 known — vins 3/15 < 70%; merging and still scraping"
    ],
    [
@@ -31508,10 +31388,6 @@
    ],
    [
     "INFO",
-    "Warmup: Empty — navigating to base URL"
-   ],
-   [
-    "INFO",
     "HTTP-only [Empty]: NO RECIPE HIT: zero rows this run"
    ],
    [
@@ -32009,10 +31885,6 @@
    [
     "INFO",
     "Dealer start: Lexus of Knoxville"
-   ],
-   [
-    "INFO",
-    "Warmup: Lexus of Knoxville — navigating to base URL"
    ],
    [
     "INFO",
@@ -33180,10 +33052,6 @@
    [
     "INFO",
     "Dealer start: Lexus of Knoxville"
-   ],
-   [
-    "INFO",
-    "Warmup: Lexus of Knoxville — navigating to base URL"
    ],
    [
     "INFO",
@@ -34658,10 +34526,6 @@
    ],
    [
     "INFO",
-    "Warmup: Lexus of Knoxville — navigating to base URL"
-   ],
-   [
-    "INFO",
     "HTTP-only [Lexus of Knoxville]: NO RECIPE HIT: zero rows this run"
    ],
    [
@@ -35921,10 +35785,6 @@
    ],
    [
     "INFO",
-    "Warmup: Lexus of Knoxville — navigating to base URL"
-   ],
-   [
-    "INFO",
     "HTTP-only [Lexus of Knoxville]: NO RECIPE HIT: zero rows this run"
    ],
    [
@@ -36125,10 +35985,6 @@
    ],
    [
     "INFO",
-    "Warmup: Empty — navigating to base URL"
-   ],
-   [
-    "INFO",
     "HTTP-only [Empty]: NO RECIPE HIT: zero rows this run"
    ],
    [
@@ -36248,10 +36104,6 @@
    [
     "INFO",
     "Dealer start: Lexus of Knoxville"
-   ],
-   [
-    "INFO",
-    "Warmup: Lexus of Knoxville — navigating to base URL"
    ],
    [
     "INFO",
@@ -36781,10 +36633,6 @@
    [
     "INFO",
     "Dealer start: Tutton CDJR of Jasper"
-   ],
-   [
-    "INFO",
-    "Warmup: Tutton CDJR of Jasper — navigating to base URL"
    ],
    [
     "INFO",
@@ -37632,10 +37480,6 @@
    [
     "INFO",
     "Dealer start: Lexus of Knoxville"
-   ],
-   [
-    "INFO",
-    "Warmup: Lexus of Knoxville — navigating to base URL"
    ],
    [
     "INFO",

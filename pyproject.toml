@@ -36,7 +36,7 @@ ignore = [
 
 [tool.ruff.lint.per-file-ignores]
 # F821 (undefined name) stays enabled everywhere. The three latent NameErrors
-# that once lived here (phases/nav.py, oem/bmw.py, vdp/core.py) are fixed;
+# that once lived here (phases/nav.py, oem/bmw.py, the former vdp/core.py) are fixed;
 # do not re-add a file to silence a new one -- fix the import.
 
 # Duplicate dict-key literals in lookup tables. Both duplicates currently map to
