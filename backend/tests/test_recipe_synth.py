@@ -1052,7 +1052,9 @@ def test_validate_dep_keeps_recipe_query_and_sets_p(monkeypatch):
         m = __import__("re").search(r"[?&]p=(\d+)", url)
         return pages.get(int(m.group(1)), "<html>dealereprocess</html>")
 
-    monkeypatch.setattr(synth_validate, "_dep_fetch_html", fake)
+    # P12B.3: validation walks the scan's replay function, so the stub is its fetch
+    monkeypatch.setattr(synth_validate, "_replay_request", lambda recipe, body, base_url, url=None: (200, fake(url)))
+    monkeypatch.setattr(synth_validate, "_store_place_for", lambda base_url, dealer_id, place: dict(place or {}))
     recipe = EndpointRecipe(
         dealer_id="hondaofelcajon-com", url=origin + "/search/used/?tp=used&ct=48",
         method="GET", content_type="text/html", post_template=None, auth_headers={},
