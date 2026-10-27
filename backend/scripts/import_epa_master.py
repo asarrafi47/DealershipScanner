@@ -5,6 +5,10 @@ Download EPA fueleconomy.gov vehicles.csv and import it into the inventory `epa_
 Usage (from repo root):
   PYTHONPATH=. python backend/scripts/import_epa_master.py --append-years 2027
   PYTHONPATH=. python backend/scripts/import_epa_master.py --yes   # full replace, guarded
+  PYTHONPATH=. python backend/scripts/import_epa_master.py --refresh-induction --csv vehicles.csv
+  PYTHONPATH=. python backend/scripts/import_epa_master.py --refresh-induction --csv vehicles.csv \
+      --apply --backup induction_backup.csv
+  PYTHONPATH=. python backend/scripts/import_epa_master.py --restore induction_backup.csv --apply
 
 Runs on the inventory backend (Postgres via INVENTORY_DATABASE_URL; SQLite only under
 pytest). Creates `epa_master` if missing.
@@ -17,15 +21,24 @@ epa_master`` and reloads with fresh ids. That deletion cascades to
 refused (RuntimeError; exit 2 from the CLI, with the counts printed) while any car is
 linked or any extended-specs row exists. It still works on an empty, unlinked catalog.
 
+``--refresh-induction`` (P10A.8) re-labels forced induction on the rows already in
+``epa_master`` from EPA's own tCharger/sCharger/eng_dscr fields, set-based (one COPY into a
+temp table, one UPDATE FROM). It never deletes, never creates a NULL ``engine_display``,
+rewrites only the induction suffix of an existing display, and leaves every other column
+alone. Dry run by default; ``--apply`` needs ``--backup`` (a CSV of the touched rows'
+previous values) and ``--restore`` puts them back. Postgres only.
+
 Data: https://www.fueleconomy.gov/feg/epadata/vehicles.csv
 """
 from __future__ import annotations
 
 import csv
+import hashlib
 import os
 import sqlite3
 import sys
 import urllib.request
+from collections import Counter
 from pathlib import Path
 from typing import Any
 
@@ -73,8 +86,64 @@ def norm_int(s: str) -> int | None:
 
 _INSERT_SQL = (
     "INSERT INTO epa_master (epa_vehicle_id, year, make, model, cylinders, displacement, trany, drive, "
-    "fuel_type, city08, highway08, city_e, highway_e, atv_type) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+    "fuel_type, city08, highway08, city_e, highway_e, atv_type, forced_induction, t_charger, s_charger, "
+    "source, natural_key) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
 )
+
+SOURCE_CSV = "epa_vehicles_csv"
+
+_DISPLAY_SUFFIXES = (" Twin Supercharged", " Twin Turbo", " Supercharged", " Turbo")
+
+
+def _text(value: Any) -> str:
+    return "" if value is None else str(value).strip()
+
+
+def induction_label(
+    *, t_charger: Any, s_charger: Any, eng_dscr: Any, year: Any, make: Any, model: Any, trim: Any = None,
+    cylinders: Any = None, displacement: Any = None, atv_type: Any = None, fuel_type: Any = None,
+    existing_label: str | None = None,
+) -> str:
+    """EPA-flag label for one catalog row; the twin decision is the one shared with the
+    dictionary CSV importer (``epa_twin_hint``, D-ET5)."""
+    from backend.dictionary.epa_engine import _epa_row_car_context
+    from backend.utils.forced_induction import (
+        classify_forced_induction_from_car_row,
+        epa_twin_hint,
+        forced_induction_from_epa,
+    )
+
+    ctx = _epa_row_car_context({
+        "Make": make, "Model": model, "Trim": trim, "Year": year, "cylinders": cylinders,
+        "displacement": displacement, "engineOptions": eng_dscr, "fuelType": fuel_type,
+    })
+    try:
+        classifier = classify_forced_induction_from_car_row(ctx)
+    except Exception:
+        classifier = None
+    return forced_induction_from_epa(
+        t_charger, s_charger, _text(eng_dscr), _text(model), _text(atv_type),
+        twin_hint=epa_twin_hint(classifier, existing_label),
+    )
+
+
+def rewrite_display_suffix(display: str | None, label: str) -> str | None:
+    """``display`` with only its induction suffix replaced by the one ``label`` implies.
+
+    A NULL or empty display stays as it is: the 461 id-only rows must not get a layout
+    guessed from the cylinder count.
+    """
+    if display is None or not str(display).strip():
+        return display
+    from backend.utils.forced_induction import forced_induction_short_suffix
+
+    base = str(display).strip()
+    for suf in _DISPLAY_SUFFIXES:
+        if base.endswith(suf):
+            base = base[: -len(suf)]
+            break
+    suffix = forced_induction_short_suffix(label)
+    return f"{base} {suffix}" if suffix else base
 
 
 def _insert_batch(conn: Any, batch: list[tuple]) -> None:
@@ -214,6 +283,9 @@ def import_csv(path: str, conn: Any, *, years: set[int] | None = None, append: b
         c_hwy = col("highway08")
         c_citye = col("cityE")
         c_hwye = col("highwayE")
+        c_tch = col("tCharger")
+        c_sch = col("sCharger")
+        c_dscr = col("eng_dscr")
         # fueleconomy.gov uses atvType; some exports differ slightly
         c_atv = col("atvType", "ATVType", "atv_type", "vehicleType", "VehType")
         if not c_atv:
@@ -261,6 +333,11 @@ def import_csv(path: str, conn: Any, *, years: set[int] | None = None, append: b
             city_e = norm_float(get(c_citye)) if c_citye else None
             highway_e = norm_float(get(c_hwye)) if c_hwye else None
             atv_type = (get(c_atv) or None) if c_atv else None
+            t_ch, s_ch = get(c_tch), get(c_sch)
+            label = induction_label(
+                t_charger=t_ch, s_charger=s_ch, eng_dscr=get(c_dscr), year=y, make=mk, model=md,
+                cylinders=cyl, displacement=displ, atv_type=atv_type, fuel_type=fuel,
+            )
             batch.append(
                 (
                     vid,
@@ -277,6 +354,11 @@ def import_csv(path: str, conn: Any, *, years: set[int] | None = None, append: b
                     city_e,
                     highway_e,
                     atv_type,
+                    label,
+                    t_ch,
+                    s_ch,
+                    SOURCE_CSV,
+                    f"vid:{vid}" if vid is not None else None,
                 )
             )
             rows += 1
@@ -295,6 +377,191 @@ def import_csv(path: str, conn: Any, *, years: set[int] | None = None, append: b
     return rows
 
 
+# --- P10A.8: induction refresh and restore (Postgres, set-based) -------------------------------
+
+EXIT_USAGE = 2
+_REFRESH_COLS = ("forced_induction", "engine_display", "t_charger", "s_charger")
+_NULL = "\\N"  # how the backup CSV spells NULL, so '' (refreshed, blank flag) survives a round trip
+
+
+class RefreshRefused(RuntimeError):
+    """The refresh or restore cannot run safely; nothing was written."""
+
+
+def sha256_of(path: str | Path) -> str:
+    h = hashlib.sha256()
+    with open(path, "rb") as f:
+        for chunk in iter(lambda: f.read(1 << 20), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def load_csv_flags(path: str | Path) -> dict[int, dict[str, str]]:
+    """vehicles.csv as ``{epa id: {t, s, dscr}}`` (only what the label rules read)."""
+    out: dict[int, dict[str, str]] = {}
+    with open(path, "r", encoding="utf-8", errors="replace", newline="") as f:
+        for raw in csv.DictReader(f):
+            row = {(k or "").strip().lstrip("\ufeff"): (v or "").strip() for k, v in raw.items()}
+            vid = norm_int(row.get("id", ""))
+            if vid is None:
+                continue
+            out[vid] = {"t": row.get("tCharger", ""), "s": row.get("sCharger", ""), "dscr": row.get("eng_dscr", "")}
+    return out
+
+
+def plan_refresh(rows: list[dict], flags: dict[int, dict[str, str]]) -> tuple[list[tuple], dict]:
+    """Pure planner. ``rows`` are epa_master rows as dicts; returns ``(computed, stats)``.
+
+    ``computed`` holds ``(id, old, new)`` for every row whose epa id is in the CSV, with
+    ``old``/``new`` tuples over ``_REFRESH_COLS``. Rows without an id, or whose id the CSV
+    lacks, are counted and left alone.
+    """
+    stats: dict[str, Any] = {"rows": len(rows), "no_epa_id": 0, "not_in_csv": 0, "matched": 0}
+    transitions: Counter = Counter()
+    computed: list[tuple] = []
+    for r in rows:
+        vid = r.get("epa_vehicle_id")
+        if vid is None:
+            stats["no_epa_id"] += 1
+            continue
+        src = flags.get(int(vid))
+        if src is None:
+            stats["not_in_csv"] += 1
+            continue
+        stats["matched"] += 1
+        old = tuple(r.get(c) for c in _REFRESH_COLS)
+        label = induction_label(
+            t_charger=src["t"], s_charger=src["s"], eng_dscr=src["dscr"], year=r.get("year"),
+            make=r.get("make"), model=r.get("model"), trim=r.get("trim"), cylinders=r.get("cylinders"),
+            displacement=r.get("displacement"), atv_type=r.get("atv_type"), fuel_type=r.get("fuel_type"),
+            existing_label=r.get("forced_induction"),
+        )
+        # a refreshed row stores '' for a blank flag, never NULL
+        new = (label, rewrite_display_suffix(r.get("engine_display"), label), src["t"], src["s"])
+        computed.append((int(r["id"]), old, new))
+        if old != new:
+            transitions[(old[0] if old[0] is not None else "NULL", new[0] or "(blank)")] += 1
+    stats["changed"] = sum(1 for _, o, n in computed if o != n)
+    stats["unchanged"] = stats["matched"] - stats["changed"]
+    stats["transitions"] = {f"{a} -> {b}": n for (a, b), n in sorted(transitions.items())}
+    return computed, stats
+
+
+def _require_columns(conn: Any) -> None:
+    have = {r[0] for r in conn.execute(
+        "SELECT column_name FROM information_schema.columns "
+        "WHERE table_schema = 'public' AND table_name = 'epa_master'").fetchall()}
+    missing = [c for c in _REFRESH_COLS if c not in have]
+    if missing:
+        raise RefreshRefused(f"epa_master lacks {missing}: apply migration V036 first")
+
+
+def _write_backup(path: str | Path, computed: list[tuple]) -> str:
+    p = Path(path)
+    if p.exists():
+        raise RefreshRefused(f"backup {p} already exists; refusing to overwrite it")
+    with open(p, "w", encoding="utf-8", newline="") as f:
+        w = csv.writer(f)
+        w.writerow(("id", *_REFRESH_COLS))
+        for rid, old, new in computed:
+            if old != new:
+                w.writerow((rid, *[_NULL if v is None else v for v in old]))
+    return sha256_of(p)
+
+
+def _update_from_temp(conn: Any, rows: list[tuple]) -> int:
+    """COPY ``(id, *_REFRESH_COLS)`` rows into a temp table, then one guarded UPDATE FROM."""
+    cur = conn.cursor()
+    cur.execute(
+        "CREATE TEMP TABLE tmp_induction (id bigint PRIMARY KEY, forced_induction text, "
+        "engine_display text, t_charger text, s_charger text) ON COMMIT DROP"
+    )
+    with cur.copy("COPY tmp_induction (id, forced_induction, engine_display, t_charger, s_charger) FROM STDIN") as cp:
+        for row in rows:
+            cp.write_row(row)
+    cur.execute(
+        "UPDATE epa_master m SET forced_induction = t.forced_induction, engine_display = t.engine_display, "
+        "t_charger = t.t_charger, s_charger = t.s_charger FROM tmp_induction t WHERE m.id = t.id AND "
+        "(m.forced_induction, m.engine_display, m.t_charger, m.s_charger) IS DISTINCT FROM "
+        "(t.forced_induction, t.engine_display, t.t_charger, t.s_charger)"
+    )
+    return cur.rowcount
+
+
+def refresh_induction(
+    conn: Any, csv_path: str | Path, *, apply: bool = False, backup_path: str | Path | None = None,
+    progress: Any = None,
+) -> dict:
+    """Re-label forced induction on every ``epa_master`` row from the pinned vehicles.csv.
+
+    Dry run by default. With ``apply`` a backup path is required; the backup is written
+    first, the UPDATE count must equal the planned change count or the transaction is
+    rolled back. Every duplicate of an epa id is updated (the key is the surrogate id).
+    """
+    say = progress or (lambda msg: None)
+    _require_columns(conn)
+    if apply and not backup_path:
+        raise RefreshRefused("--apply needs --backup <file> so --restore can undo it")
+    cur = conn.cursor()
+    cur.execute(
+        "SELECT id, epa_vehicle_id, year, make, model, \"trim\", cylinders, displacement, fuel_type, atv_type, "
+        "forced_induction, engine_display, t_charger, s_charger FROM epa_master ORDER BY id"
+    )
+    names = [d[0] for d in cur.description]
+    rows = [dict(zip(names, r)) for r in cur.fetchall()]
+    flags = load_csv_flags(csv_path)
+    say(f"read {len(rows)} epa_master rows and {len(flags)} csv rows")
+    computed, stats = plan_refresh(rows, flags)
+    stats["csv_sha256"] = sha256_of(csv_path)
+    stats["dry_run"] = not apply
+    if not apply:
+        conn.rollback()
+        return stats
+    try:
+        stats["backup_sha256"] = _write_backup(backup_path, computed)
+        say(f"backup written: {backup_path}")
+        updated = _update_from_temp(conn, [(rid, *new) for rid, _, new in computed])
+        if updated != stats["changed"]:
+            raise RefreshRefused(f"UPDATE touched {updated} row(s), the plan said {stats['changed']}; rolled back")
+        conn.commit()
+    except BaseException:
+        conn.rollback()
+        raise
+    stats["applied"] = updated
+    say(f"applied {updated} row(s)")
+    return stats
+
+
+def restore_induction(conn: Any, backup_csv: str | Path, *, apply: bool = False) -> dict:
+    """Put the ``_REFRESH_COLS`` back to a ``--backup`` file's values (temp table plus UPDATE FROM)."""
+    _require_columns(conn)
+    rows: list[tuple] = []
+    with open(backup_csv, "r", encoding="utf-8", newline="") as f:
+        reader = csv.reader(f)
+        header = next(reader, None)
+        if tuple(header or ()) != ("id", *_REFRESH_COLS):
+            raise RefreshRefused(f"{backup_csv} is not an induction backup (header {header})")
+        for rec in reader:
+            rows.append((int(rec[0]), *[None if v == _NULL else v for v in rec[1:]]))
+    stats: dict[str, Any] = {"backup_rows": len(rows), "backup_sha256": sha256_of(backup_csv), "dry_run": not apply}
+    cur = conn.cursor()
+    try:
+        if not apply:
+            cur.execute("SELECT id, forced_induction, engine_display, t_charger, s_charger FROM epa_master "
+                        "WHERE id = ANY(%s)", ([r[0] for r in rows],))
+            now = {r[0]: tuple(r[1:]) for r in cur.fetchall()}
+            stats["missing_ids"] = sum(1 for r in rows if r[0] not in now)
+            stats["would_change"] = sum(1 for r in rows if r[0] in now and now[r[0]] != tuple(r[1:]))
+            conn.rollback()
+            return stats
+        stats["applied"] = _update_from_temp(conn, rows)
+        conn.commit()
+    except BaseException:
+        conn.rollback()
+        raise
+    return stats
+
+
 def main(argv: list[str] | None = None) -> int:
     import argparse
     import tempfile
@@ -310,7 +577,16 @@ def main(argv: list[str] | None = None) -> int:
         "rows built by build_epa_master_pg.py and the 2026-07-06 dump import. Refused (exit 2) "
         "while any cars.epa_master_id is set or epa_extended_specs has rows.",
     )
+    ap.add_argument("--refresh-induction", action="store_true",
+                    help="Re-label forced induction on existing epa_master rows from --csv (set-based, never deletes).")
+    ap.add_argument("--restore", default="", metavar="BACKUP_CSV",
+                    help="Put the induction columns back to a --backup file's values.")
+    ap.add_argument("--apply", action="store_true", help="With --refresh-induction/--restore: write (default is a dry run).")
+    ap.add_argument("--backup", default="", help="With --refresh-induction --apply: where to save the previous values.")
     args = ap.parse_args(argv)
+
+    if args.refresh_induction or args.restore:
+        return _main_induction(args)
 
     from backend.db.inventory_db import get_conn
     from backend.db.inventory_pg import is_inventory_postgres
@@ -381,6 +657,38 @@ def main(argv: list[str] | None = None) -> int:
             os.unlink(path)
         except OSError:
             pass
+
+
+def _main_induction(args: Any) -> int:
+    import json
+
+    from backend.db.inventory_pg import inventory_postgres_dsn, pg_connect
+
+    if args.refresh_induction and args.restore:
+        print("choose --refresh-induction or --restore, not both", file=sys.stderr)
+        return EXIT_USAGE
+    if args.refresh_induction and not args.csv:
+        print("--refresh-induction needs --csv <the pinned vehicles.csv>", file=sys.stderr)
+        return EXIT_USAGE
+    if not inventory_postgres_dsn():
+        print("set INVENTORY_DATABASE_URL to a postgresql:// DSN (the refresh is Postgres only)", file=sys.stderr)
+        return EXIT_USAGE
+    conn = pg_connect()
+    try:
+        if args.refresh_induction:
+            stats = refresh_induction(
+                conn, args.csv, apply=args.apply, backup_path=args.backup or None,
+                progress=lambda m: print(m, file=sys.stderr, flush=True),
+            )
+        else:
+            stats = restore_induction(conn, args.restore, apply=args.apply)
+    except RefreshRefused as exc:
+        print(f"refused: {exc}", file=sys.stderr)
+        return EXIT_REFUSED
+    finally:
+        conn.close()
+    print(json.dumps(stats, indent=2, sort_keys=True))
+    return 0
 
 
 if __name__ == "__main__":

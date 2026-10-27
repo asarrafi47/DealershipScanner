@@ -365,6 +365,7 @@ def _ensure_schema(conn):
         ("city_e", "REAL"),
         ("highway_e", "REAL"),
         ("atv_type", "TEXT"),
+        ("forced_induction", "TEXT"),
         ("t_charger", "TEXT"),
         ("s_charger", "TEXT"),
         ("source", "TEXT"),
