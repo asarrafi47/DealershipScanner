@@ -116,6 +116,7 @@ def prod_config_env(monkeypatch: pytest.MonkeyPatch):
     import backend.utils.production_security as ps
 
     monkeypatch.setenv("FLASK_ENV", "production")
+    monkeypatch.setenv("ADMIN_PASSWORD", "pytest-admin-password")
     for key in _P36_ENV_KEYS:
         monkeypatch.setenv(key, "")
     monkeypatch.setattr(ps, "assert_credential_db_encryption_config", lambda: None)

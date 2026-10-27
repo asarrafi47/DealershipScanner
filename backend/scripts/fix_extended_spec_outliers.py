@@ -142,15 +142,11 @@ def _load_rows(conn) -> list[dict[str, Any]]:
 
 
 def _backup_table(conn, ids: list[Any]) -> str:
-    ts = _dt.datetime.now().strftime("%Y%m%d_%H%M%S")
-    table = f"epa_extended_specs_bak_{ts}"
-    cur = conn.cursor()
-    cur.execute(
-        f"CREATE TABLE {table} AS "
-        "SELECT * FROM epa_extended_specs WHERE epa_master_id = ANY(%s)",
-        (ids,),
+    from backend.utils.db_snapshot import create_snapshot_table
+    return create_snapshot_table(
+        conn, "epa_extended_specs_bak",
+        "SELECT * FROM epa_extended_specs WHERE epa_master_id = ANY(%s)", (ids,),
     )
-    return table
 
 
 def main(argv: list[str] | None = None) -> int:

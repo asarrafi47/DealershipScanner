@@ -19,7 +19,8 @@ Every propagated fill records provenance in ``specs_json``
 (``{"<col>_source": "sibling_trim_2019"}`` / ``"sibling_same_ymm"``) because
 propagation is honest only if flagged.
 
-Maintenance: ``--repair-provenance-from <epa_extended_specs_bak_YYYYMMDD_HHMMSS>``
+Maintenance: ``--repair-provenance-from <backups.epa_extended_specs_bak_YYYYMMDD_HHMMSS>``
+(schema-qualified; see ``db_snapshot.parse_snapshot_name``)
 retroactively adds the missing ``sibling_same_ymm`` provenance flags for rows an
 earlier run of this script filled without writing them (identified precisely via the
 backup table: prior value NULL, live value non-NULL, no ``<col>_source`` flag).
@@ -288,12 +289,10 @@ def _snapshot_affected_rows(conn, ids: list, backup_dir: Path, ts: str) -> dict[
 
 
 def _create_backup_table(conn, ids: list, ts: str) -> str:
-    table = f"epa_extended_specs_bak_{ts}"
-    cur = conn.cursor()
-    cur.execute(
-        f"CREATE TABLE {table} AS "
-        "SELECT * FROM epa_extended_specs WHERE epa_master_id = ANY(%s)",
-        (list(ids),),
+    from backend.utils.db_snapshot import create_snapshot_table
+    table = create_snapshot_table(
+        conn, "epa_extended_specs_bak",
+        "SELECT * FROM epa_extended_specs WHERE epa_master_id = ANY(%s)", (list(ids),), ts=ts,
     )
     print(f"backup table: created {table} ({len(ids)} candidate rows)")
     return table

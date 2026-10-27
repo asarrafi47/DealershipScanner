@@ -577,9 +577,9 @@ def listings_geo_coords_maps() -> dict[str, Any]:
     )
     from backend.listings.dealer_registry_match import registry_id_by_dealer_host
 
-    # cars.zip_code was dropped (superseded by dealer_geo-based radius search, which is
-    # what the client actually uses); zip_coords is kept in the response for API-contract
-    # stability but is always empty now.
+    # cars.zip_code stays in the schema (D-DB8: kept, no migration) but nothing reads it;
+    # radius search uses dealer_geo, which is what the client actually uses. zip_coords
+    # is kept in the response for API-contract stability but is always empty.
     zip_coords: dict[str, list[float]] = {}
     registry_id_by_host: dict[str, int] = {}
     registry_coords: dict[str, list[float]] = {}

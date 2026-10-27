@@ -211,8 +211,6 @@ def find_contaminated_rows(conn, limit: int | None = None) -> list[HealPlan]:
 # --------------------------------------------------------------------------- backups
 
 def write_json_snapshot(plans: list[HealPlan], ts: str) -> str:
-    os.makedirs(BACKUP_DIR, exist_ok=True)
-    path = os.path.join(BACKUP_DIR, f"heal_stock_code_contamination_{ts}.json")
     payload = {
         "created_utc": datetime.now(timezone.utc).isoformat(),
         "script": "backend/scripts/heal_stock_code_contamination.py",
@@ -222,33 +220,24 @@ def write_json_snapshot(plans: list[HealPlan], ts: str) -> str:
             for p in plans
         ],
     }
-    with open(path, "w", encoding="utf-8") as f:
-        json.dump(payload, f, indent=2, default=str)
-    return path
+    from backend.utils.db_snapshot import write_json_snapshot
+    return write_json_snapshot(BACKUP_DIR, "heal_stock_code_contamination", payload, ts=ts)
 
 
 def create_backup_table(conn, plans: list[HealPlan], ts: str) -> str:
     """Timestamped in-DB backup of every affected row's prior values."""
-    table = f"cars_backup_stock_contam_{ts}"
-    if not re.fullmatch(r"[a-z0-9_]+", table):  # defensive; ts is digits/underscore only
-        raise ValueError(f"unsafe backup table name: {table!r}")
+    from backend.utils.db_snapshot import create_snapshot_table
     ids = [p.car_id for p in plans]
     ph = ", ".join(["%s"] * len(ids))
-    cur = conn.cursor()
-    cur.execute(
+    table = create_snapshot_table(
+        conn, "cars_stock_contam",
         f"""
-        CREATE TABLE {table} AS
         SELECT id, vin, stock_number, drivetrain, transmission, exterior_color, interior_color,
                mileage
         FROM cars WHERE id IN ({ph})
         """,
-        ids,
+        ids, ts=ts, expected_rows=len(ids),
     )
-    cur.execute(f"SELECT COUNT(*) FROM {table}")
-    row = cur.fetchone()
-    n = row[0] if not isinstance(row, dict) else next(iter(row.values()))
-    if int(n) != len(ids):
-        raise RuntimeError(f"backup table {table} has {n} rows, expected {len(ids)}")
     conn.commit()
     return table
 

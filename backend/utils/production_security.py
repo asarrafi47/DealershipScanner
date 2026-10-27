@@ -79,6 +79,13 @@ def assert_production_security_config() -> None:
             "Set a long random secret or disable DEV_CONSOLE."
         )
 
+    # Moved here from init_admin_db (P13A.5): an import or a bootstrap refuses a
+    # production config with no admin password before any database is touched.
+    if not (os.environ.get("ADMIN_PASSWORD") or "").strip():
+        raise RuntimeError(
+            "FLASK_ENV=production requires ADMIN_PASSWORD to be set for /dev admin bootstrap."
+        )
+
     if (os.environ.get("CAR_CHAT_WEB_RESEARCH_PUBLIC") or "").strip().lower() in (
         "1",
         "true",
