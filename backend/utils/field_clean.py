@@ -141,6 +141,29 @@ _CANONICAL_BODY_STYLE: dict[str, str] = {
     "cargo van": "Van",
     "passenger van": "Van",
     "roadster": "Roadster",
+    # vPIC BodyClass spellings (P8B.6b): the decode's own vocabulary maps to a preset
+    "sedan/saloon": "Sedan",
+    "hatchback/liftback/notchback": "Hatchback",
+    "convertible/cabriolet": "Convertible",
+    "coupe (2 door)": "Coupe",
+    "sport utility vehicle (suv)": "SUV",
+    "crossover utility vehicle": "Crossover",
+    "minivan (mpv)": "Minivan",
+    "extended cab": "Truck",
+    "king cab": "Truck",
+    "quad cab": "Truck",
+    "access cab": "Truck",
+    "crew max": "Truck",
+    "mega cab": "Truck",
+    "sport activity vehicle": "SUV",
+    "sav": "SUV",
+    "estate": "Wagon",
+    "shooting brake": "Wagon",
+    "sportback": "Hatchback",
+    "liftback": "Hatchback",
+    "notchback": "Hatchback",
+    "spyder": "Convertible",
+    "spider": "Convertible",
 }
 
 
@@ -284,6 +307,17 @@ def coerce_fuel_type_stored(val: Any) -> str | None:
     return s
 
 
+def is_canonical_body_style(val: Any) -> bool:
+    """True when *val* is exactly one of ``BODY_STYLE_PRESETS`` (empty is not canonical)."""
+    return not is_effectively_empty(val) and str(val).strip() in BODY_STYLE_PRESETS
+
+
+def canonical_body_style_or_none(val: Any) -> str | None:
+    """``coerce_body_style_stored`` when it lands on a preset, else None (never a free-text echo)."""
+    c = coerce_body_style_stored(val)
+    return c if c in BODY_STYLE_PRESETS else None
+
+
 def coerce_body_style_stored(val: Any) -> str | None:
     """
     Map free-text body style to a buyer-facing preset (see ``BODY_STYLE_PRESETS``).
@@ -297,7 +331,11 @@ def coerce_body_style_stored(val: Any) -> str | None:
         return _CANONICAL_BODY_STYLE[k]
     if s in BODY_STYLE_PRESETS:
         return s
-    if any(tok in k for tok in ("pickup", "crew cab", "double cab", "super cab", "chassis cab")):
+    if any(
+        tok in k
+        for tok in ("pickup", "crew cab", "double cab", "super cab", "chassis cab",
+                    "extended cab", "king cab", "quad cab", "access cab", "regular cab")
+    ):
         return "Truck"
     if "truck" in k:
         return "Truck"
@@ -319,11 +357,11 @@ def coerce_body_style_stored(val: Any) -> str | None:
         return "Minivan"
     if re.search(r"\bvan\b", k) and "suv" not in k:
         return "Van"
-    if "convertible" in k or "cabriolet" in k or "roadster" in k:
+    if "convertible" in k or "cabriolet" in k or "roadster" in k or "spyder" in k or "spider" in k:
         if "roadster" in k:
             return "Roadster"
         return "Convertible"
-    if "hatchback" in k or "hatch back" in k:
+    if "hatchback" in k or "hatch back" in k or "liftback" in k or "sportback" in k:
         return "Hatchback"
     if "wagon" in k:
         return "Wagon"
@@ -375,6 +413,11 @@ def body_styles_for_filter(canonical: str) -> list[str]:
     for leg in _legacy_by_preset.get(c, []):
         if leg not in out:
             out.append(leg)
+    # Every spelling the vocabulary folds into this preset, so a stored value the facet
+    # shows as ``c`` is also one the filter finds (the facet and the filter share a map).
+    for key, preset in _CANONICAL_BODY_STYLE.items():
+        if preset == c and key not in (o.lower() for o in out):
+            out.append(key)
     return out
 
 

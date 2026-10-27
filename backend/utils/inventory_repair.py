@@ -9,7 +9,12 @@ from typing import Any, NamedTuple
 
 from backend.enrichment.knowledge_engine import merge_verified_specs
 from backend.utils.car_serialize import DISPLAY_DASH, _dealer_spec_wins, infer_condition_for_storage, normalize_condition_for_storage
-from backend.utils.field_clean import clean_car_row_dict, is_effectively_empty
+from backend.utils.field_clean import (
+    canonical_body_style_or_none,
+    clean_car_row_dict,
+    is_canonical_body_style,
+    is_effectively_empty,
+)
 from backend.utils.spec_field_normalize import collect_raw_spec_heuristic_updates
 from backend.utils.interior_color_buckets import interior_color_buckets_json
 from backend.vehicle_facts import precedence as prec
@@ -108,10 +113,16 @@ def collect_merge_spec_storage_updates(raw: dict[str, Any]) -> dict[str, Any]:
         if ft and not is_effectively_empty(ft):
             out["fuel_type"] = str(ft).strip()
 
-    if is_effectively_empty(c.get("body_style")):
-        bs = vs.get("body_style_display")
+    cur_bs = c.get("body_style")
+    bs = vs.get("body_style_display")
+    if is_effectively_empty(cur_bs):
         if bs and not is_effectively_empty(bs):
             out["body_style"] = str(bs).strip()
+    elif not is_canonical_body_style(cur_bs):
+        # D-N32 normalize only: the catalog re-spells a noncanonical value, and only as a preset.
+        canon = canonical_body_style_or_none(bs)
+        if canon:
+            out["body_style"] = canon
 
     return out
 

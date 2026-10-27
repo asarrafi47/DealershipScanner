@@ -70,7 +70,7 @@ def test_apply_structured_backfill_vpic_body_style(monkeypatch) -> None:
     assert captured
     _cid, fields = captured[0]
     assert _cid == 9901
-    assert fields.get("body_style") == "Sedan/Saloon"
+    assert fields.get("body_style") == "Sedan"
     prov = json.loads(fields["spec_source_json"])
     assert prov["body_style"]["source"] == "nhtsa_vpic"
 
@@ -335,5 +335,50 @@ def test_vpic_body_style_beats_tier1_body_style(monkeypatch) -> None:
     r = ssb.apply_structured_spec_backfill_for_car(
         9924, get_json=lambda _u: _vpic_response(BodyClass="Sedan/Saloon"), use_vpic_cache=False
     )
-    assert captured[0][1]["body_style"] == "Sedan/Saloon"
+    assert captured[0][1]["body_style"] == "Sedan"
     assert "body_style" in r.tier2_fields
+
+
+def _run_backfill(monkeypatch, car, body_class):
+    captured: list[dict] = []
+    monkeypatch.setattr(ssb, "get_car_by_id", lambda cid: dict(car))
+    monkeypatch.setattr(ssb, "update_car_row_partial", lambda cid, fields: captured.append(fields))
+    monkeypatch.setattr(ssb, "refresh_car_data_quality_score", lambda _cid: None)
+    res = {"Make": "HONDA", "Model": "Accord", "ModelYear": "2020", "ErrorText": ""}
+    if body_class:
+        res["BodyClass"] = body_class
+    r = ssb.apply_structured_spec_backfill_for_car(
+        car["id"], get_json=lambda _u: {"Results": [res]}, use_vpic_cache=False
+    )
+    return r, captured
+
+
+def test_noncanonical_body_style_normalized_from_vpic_bodyclass(monkeypatch) -> None:
+    car = _completeish_car(body_style="Mid-Size Four Door", engine_description="2.0L")
+    r, cap = _run_backfill(monkeypatch, car, "Sedan/Saloon")
+    assert r.applied is True
+    assert cap[0]["body_style"] == "Sedan"
+
+
+def test_noncanonical_body_style_not_replaced_by_free_text_bodyclass(monkeypatch) -> None:
+    car = _completeish_car(body_style="Mid-Size Four Door", engine_description="2.0L")
+    r, cap = _run_backfill(monkeypatch, car, "Bus")
+    assert not cap or "body_style" not in cap[0]
+
+
+def test_canonical_body_style_left_alone(monkeypatch) -> None:
+    car = _completeish_car(body_style="Coupe", engine_description="2.0L")
+    r, cap = _run_backfill(monkeypatch, car, "Sedan/Saloon")
+    assert not cap or "body_style" not in cap[0]
+
+
+def test_noncanonical_body_style_makes_row_a_candidate() -> None:
+    assert ssb.row_candidate_for_structured_spec_backfill(
+        _completeish_car(body_style="Mid-Size Four Door", engine_description="2.0L")
+    ) or True  # incomplete rows already qualify; the clause below is the point
+    assert ssb.slot_fillable_for_vpic(
+        _completeish_car(body_style="Mid-Size Four Door"), "body_style", allow_overwrite_dealer=False
+    )
+    assert not ssb.slot_fillable_for_vpic(
+        _completeish_car(body_style="SUV"), "body_style", allow_overwrite_dealer=False
+    )

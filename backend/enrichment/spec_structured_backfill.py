@@ -37,7 +37,12 @@ from backend.enrichment.nhtsa_vpic import (
     flat_vpic_result_to_car_patch,
     looks_like_decode_vin,
 )
-from backend.utils.field_clean import is_effectively_empty
+from backend.utils.field_clean import (
+    canonical_body_style_or_none,
+    coerce_body_style_stored,
+    is_canonical_body_style,
+    is_effectively_empty,
+)
 from backend.utils.inventory_repair import collect_row_storage_proposals, storage_derived_columns
 from backend.utils.spec_field_normalize import split_trim_components, trim_named_in_listing
 from backend.utils.spec_provenance import merge_spec_source_json
@@ -126,6 +131,10 @@ def slot_fillable_for_vpic(car: dict[str, Any], key: str, *, allow_overwrite_dea
             return int(cur) <= 0
         except (TypeError, ValueError):
             return True
+    if key == "body_style":
+        # D-N32 (normalize only): a stored value that is not a preset is a slot the decode
+        # may re-spell; the write below accepts only a value that lands on a preset.
+        return is_effectively_empty(cur) or not is_canonical_body_style(cur)
     return is_effectively_empty(cur)
 
 
@@ -172,6 +181,9 @@ def row_candidate_for_structured_spec_backfill(car: dict[str, Any]) -> bool:
     ):
         if is_effectively_empty(car.get(k)):
             return True
+    bs = car.get("body_style")
+    if not is_effectively_empty(bs) and not is_canonical_body_style(bs):
+        return True  # noncanonical body style: normalized, not counted as missing (D-N32)
     cyl = car.get("cylinders")
     if cyl is None or str(cyl).strip() == "":
         return True
@@ -330,6 +342,16 @@ def apply_structured_spec_backfill_for_car(
                             "reason": reason,
                         }
                         continue
+                if k == "body_style":
+                    # BodyClass is vPIC vocabulary; store the preset it folds into. An empty
+                    # slot keeps the raw class when no preset fits; a noncanonical stored
+                    # value is replaced only by a preset (never by another free-text spelling).
+                    canon = canonical_body_style_or_none(v)
+                    if canon is None:
+                        if not is_effectively_empty(_view(k).get(k)):
+                            continue
+                        canon = coerce_body_style_stored(v)
+                    v = canon
                 if k in prec.FIELDS:
                     vpic_props.append((k, v, prec.NHTSA_VPIC))
                 else:
