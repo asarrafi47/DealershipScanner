@@ -8,7 +8,7 @@ Reference data for trim ladders, EPA specs, and Wikipedia/NHTSA option prose.
 |------|----------|
 | `epa/{Make}/` | `*_EPA.csv` — FuelEconomy.gov specs (authoritative) |
 | `options/raw/{Make}/` | Rich `*_Complete_Options.csv` (Wikipedia/NHTSA/brochure) |
-| `options/stubs/{Make}/` | Header-only placeholders (no rows yet) |
+| `options/stubs/` | Removed (P9.4); header-only placeholders are no longer kept (`OPTIONS_STUBS_DIR` stays as a constant) |
 | `curated/` | `trim_ladders.json`, `trim_ladders_*`, merged ladders |
 | `derived/trim_spec_sheets/` | Per-ladder structured spec JSON |
 | `index/manifest.json` | `(year, make, model)` → file paths + row counts (offline report only: no runtime reader) |
