@@ -4,10 +4,12 @@ Dealer Venom (WordPress + Typesense InstantSearch) inventory scraper.
 Sites like Toyota of Orange host inventory in Typesense. Config (host, apiKey,
 indexName) is embedded in SRP HTML via TypesenseInstantSearchAdapter. This
 scraper extracts that config and queries Typesense directly.
+
+The Playwright page half (scrape_dealer_venom_from_page) was retired with the
+browser path (P17B.5); these helpers stay as the HTTP parsing half.
 """
 from __future__ import annotations
 
-import json
 import logging
 import re
 from typing import Any
@@ -281,95 +283,3 @@ def _map_typesense_document(
     if mpg_hwy is not None:
         row["mpg_highway"] = mpg_hwy
     return row
-
-
-async def scrape_dealer_venom_from_page(
-    page: Any,
-    base_url: str,
-    dealer_id: str,
-    dealer_name: str,
-    dealer_url: str,
-) -> list[dict[str, Any]]:
-    """
-    Extract Typesense config from a loaded Playwright page and query inventory.
-    Returns mapped vehicle dicts (empty if Dealer Venom / Typesense is not detected).
-    """
-    try:
-        html = await page.content()
-    except Exception as e:
-        logger.debug("DealerVenom: could not get page content: %s", e)
-        return []
-
-    if not _is_dealer_venom_html(html):
-        return []
-
-    config = _extract_typesense_config_from_html(html)
-    if not config:
-        try:
-            config_js = await page.evaluate(
-                """() => {
-                    const idx = window.indexName || window.collectionName;
-                    const adapter = window.typesenseAdapter;
-                    const server = adapter && adapter.configuration && adapter.configuration.server;
-                    if (!server || !server.apiKey || !server.nodes || !server.nodes.length) return null;
-                    const host = server.nodes[0].host;
-                    if (!host || !idx) return null;
-                    return { host, apiKey: server.apiKey, indexName: idx };
-                }"""
-            )
-            if config_js and isinstance(config_js, dict):
-                config = config_js
-        except Exception as e:
-            logger.debug("DealerVenom: JS config extraction failed: %s", e)
-
-    if not config:
-        for srp_path in ("/inventory/", "/new-vehicles/", "/used-vehicles/", "/shop/new/", "/shop/used/"):
-            srp_url = base_url.rstrip("/") + srp_path
-            try:
-                await page.goto(srp_url, wait_until="domcontentloaded", timeout=20_000)
-                html = await page.content()
-                config = _extract_typesense_config_from_html(html)
-                if config:
-                    break
-            except Exception:
-                continue
-
-    if not config:
-        logger.debug("DealerVenom: no Typesense config found for %s", dealer_name)
-        return []
-
-    host = str(config.get("host") or "").strip()
-    api_key = str(config.get("apiKey") or "").strip()
-    index_name = str(config.get("indexName") or "").strip()
-    if not (host and api_key and index_name):
-        logger.debug("DealerVenom: incomplete Typesense config for %s: %s", dealer_name, config)
-        return []
-
-    logger.info(
-        "DealerVenom: querying Typesense host=%s index=%s for %s",
-        host,
-        index_name,
-        dealer_name,
-    )
-    try:
-        docs = _query_typesense_inventory(host, api_key, index_name)
-    except Exception as e:
-        logger.warning("DealerVenom: Typesense query failed for %s: %s", dealer_name, e)
-        return []
-
-    if not docs:
-        logger.info("DealerVenom: 0 documents from Typesense for %s", dealer_name)
-        return []
-
-    vehicles: list[dict[str, Any]] = []
-    for doc in docs:
-        v = _map_typesense_document(doc, base_url, dealer_id, dealer_name, dealer_url)
-        if v:
-            vehicles.append(v)
-    logger.info(
-        "DealerVenom: mapped %d vehicles from %d Typesense docs for %s",
-        len(vehicles),
-        len(docs),
-        dealer_name,
-    )
-    return vehicles

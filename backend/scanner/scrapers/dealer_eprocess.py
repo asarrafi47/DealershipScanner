@@ -1,6 +1,10 @@
 """
 DealerEProcess inventory scraper.
 
+Only the universal results API (below) is fetched from here now; the page-based
+fetchers for the three mechanisms listed first were retired with the browser path
+(P17B.5). Their row mappers stay as the HTTP parsing half.
+
 DealerEProcess sites host inventory via three mechanisms:
 
 **Legacy (v3) — static JSON datasets:**
@@ -178,28 +182,6 @@ def _map_vehicle(
     return out
 
 
-async def _browser_fetch_json(page: Any, url: str) -> Any:
-    """Fetch a URL using the browser's JS fetch (inherits session cookies and sec-* headers)."""
-    try:
-        result = await page.evaluate(
-            """async (url) => {
-                try {
-                    const r = await fetch(url, {credentials: 'include'});
-                    if (!r.ok) return {_error: r.status};
-                    return await r.json();
-                } catch(e) { return {_error: String(e)}; }
-            }""",
-            url,
-        )
-        if isinstance(result, dict) and "_error" in result:
-            raise RuntimeError(f"browser fetch error: {result['_error']}")
-        return result
-    except Exception as e:
-        raise RuntimeError(f"browser fetch failed for {url}: {e}") from e
-
-
-_SRP_PATHS = ["/inventory/", "/new-inventory/", "/used-inventory/", "/inventory/new/"]
-
 # ---------------------------------------------------------------------------
 # DealerEProcess v4 /resrc/inventory/ REST API
 # ---------------------------------------------------------------------------
@@ -331,173 +313,9 @@ def _extract_vehicles_from_resrc(data: Any) -> list[dict]:
     return []
 
 
-async def _fetch_resrc_inventory(
-    page: Any,
-    base_url: str,
-    dealer_name: str,
-) -> list[dict]:
-    """
-    Fetch inventory from the DealerEProcess v4 /resrc/inventory/ REST API.
-
-    Tries new + used + all inventory endpoints in turn.  Returns a flat list
-    of raw vehicle dicts (pre-mapping); empty list on failure.
-    """
-    base = base_url.rstrip("/")
-
-    # Param sets to try: (new, used, all-without-filter)
-    param_sets = [
-        "?flag_new=1&tp=new",
-        "?flag_used=1&tp=used",
-        "",  # all inventory
-    ]
-
-    all_vehicles: list[dict] = []
-    seen_vins: set[str] = set()
-
-    for params in param_sets:
-        url = f"{base}/resrc/inventory/{params}"
-        try:
-            data = await _browser_fetch_json(page, url)
-        except Exception as e:
-            logger.warning("DealerEProcess resrc: %s → %s", url, e)
-            continue
-
-        vehicles = _extract_vehicles_from_resrc(data)
-        if not vehicles:
-            logger.warning(
-                "DealerEProcess resrc: no vehicles in response from %s — raw type=%s preview=%s",
-                url, type(data).__name__, str(data)[:300],
-            )
-            continue
-
-        new_count = 0
-        for v in vehicles:
-            vin = str(v.get("vin") or "").strip().upper()
-            if vin and vin not in seen_vins:
-                seen_vins.add(vin)
-                all_vehicles.append(v)
-                new_count += 1
-
-        logger.info(
-            "DealerEProcess resrc: fetched %d vehicles from %s for %s",
-            new_count,
-            url,
-            dealer_name,
-        )
-        # If we got data from the first endpoint, don't also pull the "all" endpoint
-        # to avoid duplicates; stop after getting vehicles from both new + used.
-        if all_vehicles and params == "":
-            break  # all-inventory endpoint would duplicate new+used
-
-    return all_vehicles
-
-
-async def _fetch_facts_with_fallback(
-    page: Any,
-    primary_facts_url: str,
-    primary_lexicon_url: str,
-    base_url: str,
-    site_id: str,
-    dealer_name: str,
-) -> tuple[Any, str]:
-    """
-    Try to fetch vehicle-facts.json using three strategies in order:
-    1. Primary constructed path (/assets/{site_id}/datasets/vehicle-facts.json)
-    2. Alternate path without datasets/ subfolder (/assets/{site_id}/vehicle-facts.json)
-    3. SRP navigation + response interception to discover the real vehicle-facts.json URL
-
-    Returns (facts_data, lexicon_url) where facts_data is None on total failure.
-    For v4 /resrc/inventory/ sites use _fetch_resrc_inventory() separately.
-    """
-    # Strategy 1: primary path
-    try:
-        data = await _browser_fetch_json(page, primary_facts_url)
-        return data, primary_lexicon_url
-    except Exception as e:
-        logger.warning("DealerEProcess: primary vehicle-facts.json 404/error for %s: %s", dealer_name, e)
-
-    # Strategy 2: alternate path without datasets/ subfolder
-    alt_facts_url = f"{base_url.rstrip('/')}/assets/{site_id}/vehicle-facts.json"
-    alt_lexicon_url = f"{base_url.rstrip('/')}/assets/{site_id}/canonicallexicon.json"
-    try:
-        data = await _browser_fetch_json(page, alt_facts_url)
-        logger.info("DealerEProcess: alternate path succeeded for %s: %s", dealer_name, alt_facts_url)
-        return data, alt_lexicon_url
-    except Exception:
-        pass
-
-    # Strategy 3: navigate SRP pages and intercept the real vehicle-facts.json URL
-    captured_url: list[str] = []
-    done_evt = asyncio.Event()
-
-    def _on_response(resp: Any) -> None:
-        try:
-            url = str(getattr(resp, "url", "") or "")
-            if "vehicle-facts.json" in url and not captured_url:
-                captured_url.append(url)
-                done_evt.set()
-        except Exception:
-            pass
-
-    page.on("response", _on_response)
-    try:
-        for srp_path in _SRP_PATHS:
-            srp_url = base_url.rstrip("/") + srp_path
-            try:
-                await page.goto(srp_url, wait_until="domcontentloaded", timeout=15_000)
-            except Exception:
-                continue
-            try:
-                await asyncio.wait_for(done_evt.wait(), timeout=12.0)
-            except asyncio.TimeoutError:
-                pass
-            if captured_url:
-                break
-    finally:
-        try:
-            page.remove_listener("response", _on_response)
-        except Exception:
-            pass
-
-    if not captured_url:
-        logger.warning("DealerEProcess: could not discover vehicle-facts.json URL for %s", dealer_name)
-        return None, primary_lexicon_url
-
-    intercepted_facts_url = captured_url[0]
-    intercepted_lexicon_url = intercepted_facts_url.replace("vehicle-facts.json", "canonicallexicon.json")
-    logger.info(
-        "DealerEProcess: intercepted vehicle-facts.json URL for %s: %s",
-        dealer_name,
-        intercepted_facts_url,
-    )
-    try:
-        data = await _browser_fetch_json(page, intercepted_facts_url)
-        return data, intercepted_lexicon_url
-    except Exception as e:
-        logger.warning("DealerEProcess: intercepted URL fetch failed for %s: %s", dealer_name, e)
-        return None, primary_lexicon_url
-
-
-# ---------------------------------------------------------------------------
-# DealerEProcess v4+ JSON-LD in SRP HTML
-# ---------------------------------------------------------------------------
-# Newer eProcess sites embed schema.org Vehicle JSON-LD blocks directly in
-# the SRP HTML. These contain VIN, price, colors, transmission, gallery, etc.
-# The SRP URL typically has the form:
-#   /search/{make}-{city}-{state}/?cy={zip}&tp=new|used|cpo
-# and is reached via redirect from /new-inventory/index.htm.
-# ---------------------------------------------------------------------------
-
+# Newer eProcess sites embed schema.org Vehicle JSON-LD blocks directly in the
+# SRP HTML (VIN, price, colors, transmission, gallery, etc.).
 _JSONLD_VEH_TYPES = frozenset({"Vehicle", "Car", "BusOrCoach", "MotorizedBicycle"})
-
-_SRP_TYPE_PATHS = [
-    ("/new-inventory/index.htm", "new"),
-    ("/used-inventory/index.htm", "used"),
-    ("/certified-inventory/index.htm", "cpo"),
-    ("/new-inventory/", "new"),
-    ("/used-inventory/", "used"),
-    ("/certified-inventory/", "cpo"),
-]
 
 
 def _extract_jsonld_vehicles_from_html(html: str) -> list[dict]:
@@ -646,63 +464,6 @@ def _map_vehicle_jsonld(
     from backend.parsers.vdp_urls import apply_vehicle_source_url
     apply_vehicle_source_url(out)
     return out
-
-
-async def _fetch_jsonld_from_srp(
-    page: Any,
-    base_url: str,
-    dealer_id: str,
-    dealer_name: str,
-    dealer_url: str,
-) -> list[dict[str, Any]]:
-    """
-    Navigate the SRP pages and extract schema.org Vehicle JSON-LD.
-
-    Tries /new-inventory/index.htm, /used-inventory/index.htm, and
-    /certified-inventory/index.htm in sequence.  Each typically redirects
-    to a search URL that embeds 12–20 vehicles per load in JSON-LD.
-    """
-    seen_vins: set[str] = set()
-    vehicles: list[dict[str, Any]] = []
-
-    for srp_path, condition_hint in _SRP_TYPE_PATHS:
-        srp_url = base_url.rstrip("/") + srp_path
-        try:
-            await page.goto(srp_url, wait_until="domcontentloaded", timeout=20_000)
-        except Exception as e:
-            logger.debug("DealerEProcess jsonld: SRP nav failed %s: %s", srp_url, e)
-            continue
-
-        try:
-            html = await page.content()
-        except Exception:
-            continue
-
-        items = _extract_jsonld_vehicles_from_html(html)
-        if not items:
-            continue
-
-        count = 0
-        cond_map = {"new": "New", "used": "Used", "cpo": "Certified Pre-Owned"}
-        cond = cond_map.get(condition_hint, "")
-        for item in items:
-            v = _map_vehicle_jsonld(item, base_url, dealer_id, dealer_name, dealer_url, cond)
-            if v and v["vin"] not in seen_vins:
-                seen_vins.add(v["vin"])
-                vehicles.append(v)
-                count += 1
-
-        logger.info(
-            "DealerEProcess jsonld: %d vehicles from %s for %s",
-            count, srp_url, dealer_name,
-        )
-        # Only try paired new+used paths (not duplicate generic paths)
-        if srp_path.endswith("index.htm") and len(seen_vins) > 0:
-            continue  # keep going for new/used/cpo
-        elif not srp_path.endswith("index.htm"):
-            break  # fallback generic paths - stop after first hit
-
-    return vehicles
 
 
 def _map_vehicle_results(
@@ -879,120 +640,11 @@ async def scrape_dealer_eprocess_from_page(
     dealer_url: str,
 ) -> list[dict[str, Any]]:
     """
-    Extract DealerEProcess inventory by fetching static JSON datasets via browser JS fetch
-    (shares browser session, cookies, and sec-* headers to bypass 403).
-    Returns list of vehicle dicts (empty when DealerEProcess not detected).
-
-    Strategy order:
-      0.   Universal /resrc/inventory/results/ REST API (pure HTTP, no CF bypass needed)
-      1–3. Legacy vehicle-facts.json via _fetch_facts_with_fallback()
-      4.   v4 /resrc/inventory/ REST API via _fetch_resrc_inventory()
-      5.   JSON-LD in SRP HTML via _fetch_jsonld_from_srp()
+    Extract DealerEProcess inventory through the universal /resrc/inventory/results/
+    REST API (pure HTTP). ``page`` is ignored and kept only so the signature the
+    callers and tests use stays valid; the browser strategies (vehicle-facts.json
+    via page fetch, /resrc/inventory/ via page fetch, SRP JSON-LD) were retired
+    with the browser path (P17B.5). The site's own SRP recipes (recipe_synth
+    dealer_eprocess) cover what the results API does not.
     """
-    if page is None:
-        # HTTP-only scan: the universal results API is the only strategy; the
-        # site's own SRP recipes (recipe_synth dealer_eprocess) cover the rest.
-        return await _fetch_results_api(base_url, dealer_id, dealer_name, dealer_url)
-    try:
-        html = await page.content()
-    except Exception as e:
-        logger.debug("DealerEProcess: could not get page content: %s", e)
-        return []
-
-    html_lower = html.lower()
-    if "dealereprocess" not in html_lower:
-        return []
-
-    # Strategy 0: universal /resrc/inventory/results/ — pure HTTP, bypasses CF-gated SRP pages
-    results_vehicles = await _fetch_results_api(base_url, dealer_id, dealer_name, dealer_url)
-    if results_vehicles:
-        logger.info(
-            "DealerEProcess: scraped %d vehicles via results_api for %s",
-            len(results_vehicles), dealer_name,
-        )
-        return results_vehicles
-
-    logger.info(
-        "DealerEProcess: results_api returned nothing for %s — falling back to browser strategies",
-        dealer_name,
-    )
-
-    site_id = _extract_site_id(html)
-    if not site_id:
-        logger.debug("DealerEProcess: could not extract site_id for %s", dealer_name)
-        return []
-
-    logger.info("DealerEProcess: detected for %s — site_id=%s", dealer_name, site_id)
-
-    datasets_base = f"{base_url.rstrip('/')}/assets/{site_id}/datasets"
-    facts_url = f"{datasets_base}/vehicle-facts.json"
-    lexicon_url = f"{datasets_base}/canonicallexicon.json"
-
-    facts_data, lexicon_url = await _fetch_facts_with_fallback(
-        page, facts_url, lexicon_url, base_url, site_id, dealer_name
-    )
-
-    # Strategy 4: v4 /resrc/inventory/ REST API (newer eProcess sites without vehicle-facts.json)
-    if facts_data is None:
-        logger.info(
-            "DealerEProcess: vehicle-facts.json unavailable for %s — trying /resrc/inventory/ API",
-            dealer_name,
-        )
-        resrc_raws = await _fetch_resrc_inventory(page, base_url, dealer_name)
-        if resrc_raws:
-            vehicles: list[dict[str, Any]] = []
-            for raw in resrc_raws:
-                v = _map_vehicle_resrc(raw, base_url, dealer_id, dealer_name, dealer_url)
-                if v:
-                    vehicles.append(v)
-            logger.info(
-                "DealerEProcess: scraped %d vehicles via /resrc/inventory/ for %s",
-                len(vehicles),
-                dealer_name,
-            )
-            return vehicles
-
-        # Strategy 5: JSON-LD in SRP HTML (v4+ sites where API is unavailable)
-        logger.info(
-            "DealerEProcess: /resrc/inventory/ unavailable for %s — trying JSON-LD SRP extraction",
-            dealer_name,
-        )
-        jsonld_vehicles = await _fetch_jsonld_from_srp(
-            page, base_url, dealer_id, dealer_name, dealer_url
-        )
-        if not jsonld_vehicles:
-            logger.warning(
-                "DealerEProcess: all strategies failed for %s — no inventory returned",
-                dealer_name,
-            )
-            return []
-        logger.info(
-            "DealerEProcess: scraped %d vehicles via JSON-LD SRP for %s",
-            len(jsonld_vehicles),
-            dealer_name,
-        )
-        return jsonld_vehicles
-
-    # Legacy path: decode via lexicon
-    try:
-        lexicon_data = await _browser_fetch_json(page, lexicon_url)
-    except Exception as e:
-        logger.warning("DealerEProcess: failed to fetch canonicallexicon.json for %s: %s", dealer_name, e)
-        lexicon_data = []
-
-    if not isinstance(facts_data, dict):
-        logger.warning("DealerEProcess: vehicle-facts.json is not a dict for %s", dealer_name)
-        return []
-
-    lexicon = _build_lexicon(lexicon_data if isinstance(lexicon_data, list) else [])
-
-    vehicles = []
-    for _vid, vehicle in facts_data.items():
-        if not isinstance(vehicle, dict):
-            continue
-        v = _map_vehicle(vehicle, lexicon, base_url, dealer_id, dealer_name, dealer_url)
-        if v:
-            vehicles.append(v)
-
-    logger.info("DealerEProcess: scraped %d vehicles for %s", len(vehicles), dealer_name)
-    return vehicles
+    return await _fetch_results_api(base_url, dealer_id, dealer_name, dealer_url)
