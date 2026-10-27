@@ -248,7 +248,7 @@ SEED_PLATFORMS: list[PlatformEntry] = [
         notes="Overfuel (Next.js SSR SPA, meta generator=Overfuel). Browser-free via the SSR-HTML "
         "path: GET /inventory?page=N, full per-vehicle records in <script id=__NEXT_DATA__> at "
         "props.pageProps.inventory.results (25/page, meta.total). recipe_synth _synth_overfuel "
-        "(overfuel parser, reuses the html_next_data recovery strategy). Parameterized by domain only.",
+        "(overfuel parser). Parameterized by domain only.",
     ),
     PlatformEntry(
         name="nabthat",

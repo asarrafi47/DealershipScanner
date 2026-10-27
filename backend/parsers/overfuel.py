@@ -5,7 +5,7 @@ Overfuel embeds full per-vehicle records server-side in
 ``<script id="__NEXT_DATA__">`` at ``props.pageProps.inventory.results`` (25 per
 page, paginated via ``?page=N``). This parser accepts EITHER the raw SRP HTML
 string (it extracts ``__NEXT_DATA__`` itself, so it plugs into the html-page
-recipe replay and the ``html_next_data`` recovery strategy) OR an
+recipe replay) OR an
 already-parsed ``__NEXT_DATA__`` dict.
 
 Fields are Overfuel-native lowercase (vin, year, make, model, trim, price,
