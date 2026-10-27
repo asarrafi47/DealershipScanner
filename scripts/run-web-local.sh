@@ -20,5 +20,10 @@ if ! pg_isready -h 127.0.0.1 -p 5432 -U dealership -d dealership >/dev/null 2>&1
   exit 1
 fi
 
+"$ROOT/.venv/bin/python" -m backend.web.db_bootstrap || {
+  echo "ERROR: db_bootstrap failed." >&2
+  exit 1
+}
+
 exec "$ROOT/.venv/bin/gunicorn" -w 1 --threads 4 -b "0.0.0.0:${PORT}" \
   --timeout 120 backend.main:app

@@ -23,6 +23,16 @@ if [ "${MIGRATE_ON_BOOT:-1}" != "0" ]; then
     || echo "WARN: migration apply FAILED — booting on the existing schema" >&2
 fi
 
+# Boot-time DB init (D-DB4): users, admin, inventory check, dealer portal, job queue.
+# A failure in production refuses to serve; elsewhere it warns and boots.
+if ! python3 -m backend.web.db_bootstrap; then
+  if [ "${FLASK_ENV:-}" = "production" ]; then
+    echo "ERROR: db_bootstrap failed in production -- not serving" >&2
+    exit 1
+  fi
+  echo "WARN: db_bootstrap failed -- booting anyway (non-production)" >&2
+fi
+
 python3 scripts/bootstrap_site_admin.py \
   || echo "WARN: site admin bootstrap skipped" >&2
 

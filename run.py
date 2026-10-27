@@ -20,6 +20,10 @@ if __name__ == "__main__":
         )
         sys.exit(1)
 
+    from backend.web.db_bootstrap import run_bootstrap
+
+    run_bootstrap()
+
     try:
         from backend.scanner.window_sticker import pdf_text_extraction_available
 

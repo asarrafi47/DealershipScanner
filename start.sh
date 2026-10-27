@@ -60,6 +60,7 @@ _start_web_if_requested() {
         exit 1
     fi
     echo "[start] START_WEB=1 — launching gunicorn on port $PORT..."
+    python3 -m backend.web.db_bootstrap || { echo "[start] ERROR: db_bootstrap failed"; exit 1; }
     python3 -m gunicorn -w 1 --threads 4 -b "0.0.0.0:${PORT}" \
         --timeout 120 --graceful-timeout 30 \
         backend.main:app &
