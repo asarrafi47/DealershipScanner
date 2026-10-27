@@ -22,7 +22,13 @@ from backend.scanner.manifest import filter_oem_manufacturers, load_manifest
 from backend.scanner.inventory_write import InventoryWriteCoordinator, default_max_dealer_concurrency
 from backend.scanner.phases.dealer_run import run_dealer
 from backend.scanner.post_scan.coverage_report import aggregate_coverage_reports
-from backend.scanner.scan_lock import acquire_scan_lock, current_lock_holder, release_scan_lock
+from backend.scanner.scan_lock import (
+    ScanLockHeld,
+    acquire_scan_lock,
+    current_lock_holder,
+    default_lock_path,
+    release_scan_lock,
+)
 from backend.scanner.scan_efficiency import post_vpic_env_enabled
 from backend.scanner.post_pipeline import (
     aggregate_vins_from_dealer_results,
@@ -217,21 +223,22 @@ async def main(*args: Any, **kwargs: Any) -> None:
     Entry point used by cli.py / dev console. Wraps ``_main_impl`` with a
     file-PID lock so two full scanner runs never overlap on one host.
     """
-    if not acquire_scan_lock():
-        from backend.scanner.scan_lock import LOCK_PATH
-
-        holder = current_lock_holder()
+    # Resolve the path once: a mid-run SCANNER_LOCK_PATH change must not split
+    # acquire, release and the message.
+    lock_path = default_lock_path()
+    if not acquire_scan_lock(lock_path):
+        holder = current_lock_holder(lock_path)
         logger.error(
             "Scanner already running (lock held by pid %s; lock file %s) — refusing to start "
             "a second concurrent run. If that process is gone, delete the lock file.",
             holder,
-            LOCK_PATH,
+            lock_path,
         )
-        return
+        raise ScanLockHeld(holder, lock_path)
     try:
         await _main_impl(*args, **kwargs)
     finally:
-        release_scan_lock()
+        release_scan_lock(lock_path)
 
 
 async def _main_impl(

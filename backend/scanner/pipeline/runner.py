@@ -20,6 +20,7 @@ from backend.scanner.pipeline.db import chromium_process_count, wait_for_db
 # --------------------------------------------------------------------------
 
 from backend.scanner.scan_lock import default_lock_path as _default_lock_path
+from backend.scanner.scan_lock import lock_holder_alive
 
 # Per-shard lock (SCANNER_LOCK_PATH); the scanner subprocesses inherit the env,
 # so this pipeline and the scanners it spawns agree on the file.
@@ -28,21 +29,7 @@ LOCK_FILE = _default_lock_path()
 
 def _lock_holder_alive() -> int | None:
     """PID holding the scanner lock, or None when free / stale."""
-    try:
-        txt = LOCK_FILE.read_text(encoding="utf-8", errors="ignore")
-    except OSError:
-        return None
-    import re
-
-    m = re.search(r"\d+", txt)
-    if not m:
-        return None
-    pid = int(m.group(0))
-    try:
-        os.kill(pid, 0)
-    except OSError:
-        return None
-    return pid
+    return lock_holder_alive(LOCK_FILE)
 
 
 def run_discovery_capture(dealer_id: str, timeout_sec: int = 900) -> dict[str, Any]:
