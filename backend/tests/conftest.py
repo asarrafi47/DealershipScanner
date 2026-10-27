@@ -1284,7 +1284,18 @@ def app_factory(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Callable[...
             apply_production_credential_encryption_env(monkeypatch)
         import backend.main as main
 
-        importlib.reload(main)
+        try:
+            importlib.reload(main)
+        except BaseException:
+            # A refused import (production without ADMIN_PASSWORD, ...) dies halfway:
+            # backend.main is left holding a fresh Flask app with no routes, and every
+            # later test using main.app got 404s. Rebuild it under the clean dev env.
+            for key, value in app_env_defaults(tmp_path).items():
+                monkeypatch.setenv(key, value)
+            monkeypatch.delenv("ADMIN_PASSWORD", raising=False)
+            monkeypatch.delenv("ALLOW_DEFAULT_APP_USER", raising=False)
+            importlib.reload(main)
+            raise
         # Process caches that used to live on backend.main (and so were reset by
         # the reload) now live in their owning route modules; reset them too.
         from backend.routes import fuel_api, home_dashboard
