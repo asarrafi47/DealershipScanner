@@ -86,3 +86,11 @@ def test_match_nearest_values_and_leftovers():
     pairs, cu, du = match_rows(csv_rows, db)
     assert pairs == [(0, 1), (1, 0)]
     assert cu == [2] and du == []
+
+
+def test_db_surrogate_pk_is_not_the_epa_id():
+    row = dict(_no_vid(DB_ROW), id=777, epa_vehicle_id=None)
+    base = base_key(row)
+    assert natural_key(row) == base + "#1"
+    assert assign_natural_keys([row]) == [base + "#1"]
+    assert not natural_key(row).startswith("vid:")

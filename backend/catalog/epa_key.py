@@ -23,7 +23,7 @@ from typing import Any, Iterable, Mapping, Sequence
 
 # canonical field -> accepted spellings, first present wins
 _ALIASES: dict[str, tuple[str, ...]] = {
-    "vid": ("epa_vehicle_id", "epaId", "epa_id", "id"),
+    "vid": ("epa_vehicle_id", "epaId", "epa_id"),
     "year": ("year",),
     "make": ("make",),
     "model": ("model",),
@@ -83,6 +83,10 @@ def _norm_part(value: Any) -> str:
 
 def epa_vehicle_id(row: Mapping[str, Any]) -> int | None:
     v = _get(row, "vid")
+    # bare "id" is the EPA id only in the CSV shape; a DB row carries a surrogate PK
+    # there, so its NULL epa_vehicle_id must stay NULL
+    if v is None and not any(k in row for k in _ALIASES["vid"]):
+        v = row.get("id")
     if v is None or str(v).strip() == "":
         return None
     try:
