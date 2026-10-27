@@ -120,17 +120,22 @@ _R = {
 }
 for _t in _R.values():
     _t[STICKER_UNVERIFIED] = 5  # fill-only: ranks last, never overwrites
+# Title / trim heuristics (the sticker service's known-engine fallback) may fill
+# a blank engine, fuel or cylinder column and never replace a stated one (P8B.2).
+for _f in ("engine_description", "engine_l", "cylinders", "fuel_type", "transmission"):
+    _R[_f].setdefault(TRIM_HEURISTIC, 5)
 RANKS: dict[str, dict[str, int]] = _R
 FIELDS: tuple[str, ...] = tuple(_R)
 
 _FILL_ONLY_COMMON = frozenset({STICKER_UNVERIFIED})
+_FILL_ONLY_HEUR = _FILL_ONLY_COMMON | {TRIM_HEURISTIC}
 FILL_ONLY: dict[str, frozenset[str]] = {
     "drivetrain": _FILL_ONLY_COMMON,
-    "fuel_type": _FILL_ONLY_COMMON,
-    "cylinders": _FILL_ONLY_COMMON,
-    "engine_description": _FILL_ONLY_COMMON | {NHTSA_VPIC, EPA_CATALOG, MODEL_SPECS, WEB_SEARCH},
-    "engine_l": _FILL_ONLY_COMMON | {NHTSA_VPIC, EPA_CATALOG, MODEL_SPECS, WEB_SEARCH},
-    "transmission": _FILL_ONLY_COMMON | {NHTSA_VPIC, EPA_CATALOG, MODEL_SPECS, WEB_SEARCH},
+    "fuel_type": _FILL_ONLY_HEUR,
+    "cylinders": _FILL_ONLY_HEUR,
+    "engine_description": _FILL_ONLY_HEUR | {NHTSA_VPIC, EPA_CATALOG, MODEL_SPECS, WEB_SEARCH},
+    "engine_l": _FILL_ONLY_HEUR | {NHTSA_VPIC, EPA_CATALOG, MODEL_SPECS, WEB_SEARCH},
+    "transmission": _FILL_ONLY_HEUR | {NHTSA_VPIC, EPA_CATALOG, MODEL_SPECS, WEB_SEARCH},
     "body_type": frozenset(SOURCES),  # body is fill-only for every source
     "exterior_color": _FILL_ONLY_COMMON,
     "interior_color": _FILL_ONLY_COMMON,

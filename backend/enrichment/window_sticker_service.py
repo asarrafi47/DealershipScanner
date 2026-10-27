@@ -392,63 +392,124 @@ def _apply_parsed_sticker_to_patch(
         pkg_patch["sticker_seating"] = str(parsed["seating"]).strip()
 
 
+def _uncached_vpic_context(vin: str) -> dict[str, Any]:
+    """Precedence ctx from the stored VIN decode, read fresh from the table.
+
+    ``lookup_vpic_from_cache`` memoizes "no decode" for the life of the process
+    and this writer also runs in web workers, so the raw ``Results[0]`` row is
+    read straight from ``nhtsa_vpic_cache``. Empty when there is no decode."""
+    vin = (vin or "").strip().upper()
+    if not vin:
+        return {}
+    conn = None
+    try:
+        from backend.enrichment.knowledge_engine import _conn
+        from backend.enrichment.vpic_facts import _vpic_flat_rows
+
+        conn = _conn()
+        flat = _vpic_flat_rows(conn, [vin]).get(vin)
+    except Exception:
+        return {}
+    finally:
+        if conn is not None:
+            try:
+                conn.close()
+            except Exception:
+                pass
+    if not flat:
+        return {}
+    ctx: dict[str, Any] = {"vpic": flat}
+    if (flat.get("DriveType") or "").strip():
+        ctx["vpic_drive"] = flat["DriveType"].strip()
+    return ctx
+
+
 def _car_fields_from_parsed_sticker(
     car: dict[str, Any],
     parsed: dict[str, Any],
-) -> dict[str, Any]:
-    """Backfill listing columns when sticker data is authoritative."""
+) -> tuple[dict[str, Any], dict[str, dict]]:
+    """Listing columns the sticker may write, as ``(fields, fact_provenance)``.
+
+    Fact columns (drivetrain, fuel, cylinders, engine, transmission, colors) are
+    proposals decided by ``vehicle_facts.precedence`` against the stored row and
+    the uncached VIN decode: ``oem_window_sticker`` for authoritative OEMs,
+    ``oem_window_sticker_unverified`` (fill-only) for the rest, and
+    ``trim_heuristic`` (fill-only) for values that came from the title/trim
+    fallback ``known_oem_engine_from_car``. ``fact_provenance`` is the winners'
+    (and discrepancy) entries for the caller to merge into ``spec_source_json``
+    in the same UPDATE as the columns.
+    """
     from backend.scanner.window_sticker import (
+        known_oem_engine_from_car,
         oem_sticker_parsing_skip_claude,
         sticker_engine_display_is_valid,
     )
+    from backend.vehicle_facts import precedence as prec
+    from backend.vehicle_facts.apply import apply_fact_proposals
 
     fields: dict[str, Any] = {}
     vin = str(car.get("vin") or "")
     authoritative = oem_sticker_parsing_skip_claude(vin)
     is_ev = str(parsed.get("fuel_type") or "").strip().lower() == "electric"
+    # Keys parsed from the sticker text win over the fallback in the callers'
+    # merge, so a key that equals the fallback value came from the heuristic.
+    fallback = known_oem_engine_from_car(car) if parsed.get("engine_display") else {}
+    from_heuristic = bool(fallback) and parsed.get("engine_display") == fallback.get("engine_display")
 
-    def _set(key: str, val: Any, *, force: bool = False) -> None:
-        if val is None:
-            return
-        if force or is_effectively_empty(car.get(key)):
-            fields[key] = val
+    def _src(parsed_key: str) -> str:
+        if from_heuristic and fallback.get(parsed_key) and parsed.get(parsed_key) == fallback[parsed_key]:
+            return prec.TRIM_HEURISTIC
+        return prec.STICKER if authoritative else prec.STICKER_UNVERIFIED
 
-    if is_ev:
-        _set("fuel_type", "Electric", force=authoritative)
-        _set("cylinders", 0, force=authoritative)
-        _set("engine_l", "Electric", force=authoritative)
-    elif str(parsed.get("fuel_type") or "").strip().lower() == "hybrid":
-        _set("fuel_type", "Hybrid", force=authoritative)
-    if not is_ev and parsed.get("engine_l") is not None:
-        _set(
-            "engine_l",
-            _format_sticker_engine_l(float(parsed["engine_l"])),
-            force=authoritative,
-        )
-    if parsed.get("cylinders") is not None and not is_ev:
-        _set("cylinders", int(parsed["cylinders"]), force=authoritative)
+    proposals: list[tuple[str, Any, str]] = []
 
+    def _propose(key: str, val: Any, parsed_key: str) -> None:
+        if val is not None:
+            proposals.append((key, val, _src(parsed_key)))
+
+    # Engine text first: the cylinder rule reads it through plan_updates.
     engine_disp = parsed.get("engine_display")
     if isinstance(engine_disp, str) and sticker_engine_display_is_valid(engine_disp):
-        _set("engine_description", engine_disp.strip()[:200], force=authoritative)
+        _propose("engine_description", engine_disp.strip()[:200], "engine_display")
     elif parsed.get("engine_raw") and sticker_engine_display_is_valid(parsed.get("engine_raw")):
-        _set("engine_description", str(parsed["engine_raw"]).strip()[:200], force=authoritative)
+        _propose("engine_description", str(parsed["engine_raw"]).strip()[:200], "engine_raw")
 
+    if is_ev:
+        _propose("fuel_type", "Electric", "fuel_type")
+        _propose("engine_l", "Electric", "fuel_type")
+    elif str(parsed.get("fuel_type") or "").strip().lower() == "hybrid":
+        _propose("fuel_type", "Hybrid", "fuel_type")
+    if not is_ev and parsed.get("engine_l") is not None:
+        _propose("engine_l", _format_sticker_engine_l(float(parsed["engine_l"])), "engine_l")
+    if parsed.get("cylinders") is not None and not is_ev:
+        _propose("cylinders", int(parsed["cylinders"]), "cylinders")
     if parsed.get("transmission"):
-        _set("transmission", str(parsed["transmission"]).strip()[:120], force=authoritative)
+        _propose("transmission", str(parsed["transmission"]).strip()[:120], "transmission")
     if parsed.get("drivetrain"):
-        _set("drivetrain", str(parsed["drivetrain"]).strip()[:40], force=authoritative)
+        _propose("drivetrain", str(parsed["drivetrain"]).strip()[:40], "drivetrain")
     if parsed.get("exterior_color"):
-        _set("exterior_color", str(parsed["exterior_color"]).strip()[:120], force=authoritative)
+        _propose("exterior_color", str(parsed["exterior_color"]).strip()[:120], "exterior_color")
     if parsed.get("interior_color"):
-        _set("interior_color", str(parsed["interior_color"]).strip()[:120], force=authoritative)
+        _propose("interior_color", str(parsed["interior_color"]).strip()[:120], "interior_color")
+
+    prov: dict[str, dict] = {}
+    if proposals:
+        # dry_run: the caller folds columns and provenance into its own single
+        # UPDATE (with packages / sticker url), so the helper only decides.
+        res = apply_fact_proposals(None, car, proposals, dry_run=True, ctx=_uncached_vpic_context(vin))
+        fields.update(res.applied)
+        prov = dict(res.provenance)
+        if is_ev and authoritative and str(fields.get("fuel_type") or car.get("fuel_type") or "") == "Electric":
+            # An electric sticker on an electric row: no cylinders (kept from the
+            # pre-precedence writer; 0 is a junk candidate for the arbiter).
+            fields["cylinders"] = 0
 
     if is_ev and authoritative:
         if parsed.get("mpg_city") is not None:
             fields["mpg_city"] = int(parsed["mpg_city"])
         if parsed.get("mpg_highway") is not None:
             fields["mpg_highway"] = int(parsed["mpg_highway"])
-    return fields
+    return fields, prov
 
 
 def _format_sticker_engine_l(lit: float) -> str:
@@ -606,13 +667,15 @@ def _analyze_sticker_text_and_merge(
         "packages": merged_packages,
         "window_sticker_url": sticker_url or car.get("window_sticker_url") or "",
     }
-    fields.update(_car_fields_from_parsed_sticker(car, parsed))
+    sticker_fields, fact_prov = _car_fields_from_parsed_sticker(car, parsed)
+    fields.update(sticker_fields)
     if msrp and is_effectively_empty(car.get("msrp")):
         fields["msrp"] = msrp
 
     prov = merge_spec_source_json(
         car.get("spec_source_json"),
         {
+            **fact_prov,
             "window_sticker_pdf": {
                 "source": source_label,
                 "url": sticker_url or car.get("window_sticker_url") or "",
@@ -1175,7 +1238,8 @@ def ensure_window_sticker_for_car(car_id: int, *, allow_vision_fallback: bool = 
         "packages": merged_packages,
         "window_sticker_url": fetched.get("url") or sticker_url,
     }
-    fields.update(_car_fields_from_parsed_sticker(car, parsed))
+    sticker_fields, fact_prov = _car_fields_from_parsed_sticker(car, parsed)
+    fields.update(sticker_fields)
     msrp = fetched.get("msrp") or parsed.get("msrp")
     if msrp is None and claude and claude.get("msrp") is not None:
         try:
@@ -1188,6 +1252,7 @@ def ensure_window_sticker_for_car(car_id: int, *, allow_vision_fallback: bool = 
     prov = merge_spec_source_json(
         car.get("spec_source_json"),
         {
+            **fact_prov,
             "window_sticker_pdf": {
                 "source": "oem_window_sticker",
                 "url": fetched.get("url") or sticker_url,
