@@ -6,7 +6,7 @@
 #
 # Run after `build_db.sh --from-template cars_cleanroom cars_cr_conv` and `migrate --apply`.
 # Two steps, in one transaction each:
-#   1. Replace every COPY_TABLES reference table (the list is read from build_db.sh, so the
+#   1. Replace every COPY_TABLES reference table except schema_migrations (the list is read from build_db.sh, so the
 #      two scripts cannot drift; dealer_recipes is one of them) with the current rows of
 #      --source (read only), by the same data-only pg_dump pipe as build_db.sh. The template's
 #      10-13 recipes still hold mbbeverlyhills-com's byte copy of mbontario's listing and
@@ -25,7 +25,7 @@
 set -euo pipefail
 REPO=$(cd "$(dirname "$0")/../.." && pwd)
 DB= ART= SOURCE=cars SHIFT=20
-usage() { sed -n '2,24p' "$0" >&2; exit 2; }
+usage() { sed -n '2,25p' "$0" >&2; exit 2; }
 while [ $# -gt 0 ]; do
   case "$1" in
     --db) DB=${2:-}; shift 2;;
@@ -54,6 +54,10 @@ COPY_TABLES=$(awk '/^ *COPY_TABLES="/{f=1; sub(/^ *COPY_TABLES="/,"")} f{ if (su
   "$REPO/scripts/cleanroom/build_db.sh" | tr '\n' ' ')
 case " $COPY_TABLES " in *" dealer_recipes "*) ;; *) refuse "could not read COPY_TABLES (with dealer_recipes) from build_db.sh";; esac
 for t in $COPY_TABLES; do [[ "$t" =~ ^[a-z0-9_]+$ ]] || refuse "bad table name '$t' in COPY_TABLES"; done
+# schema_migrations is the migration ledger of $DB itself: build_db.sh copies it before migrate,
+# but this script runs after `migrate --apply`, so reloading it from --source would drop the
+# rows of the migrations just applied. It is never replaced here.
+COPY_TABLES=$(for t in $COPY_TABLES; do [ "$t" = schema_migrations ] || printf '%s ' "$t"; done)
 
 exists() { [ "$("${PSQL[@]}" -d postgres -Atc "SELECT count(*) FROM pg_database WHERE datname='$1'")" = "1" ]; }
 exists "$DB" || refuse "$DB does not exist; build it first (build_db.sh --from-template cars_cleanroom $DB)"

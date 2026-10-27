@@ -100,11 +100,15 @@ def test_happy_path_replaces_reference_tables_then_shifts_and_logs(sandbox):
     # the table list comes from build_db.sh, the replace is one stream with the dump of the source
     build = (SCRIPTS / "build_db.sh").read_text()
     block = re.search(r'COPY_TABLES="([^"]+)"', build).group(1).split()
-    assert "dealer_recipes" in block and len(block) > 10
+    assert "dealer_recipes" in block and "schema_migrations" in block and len(block) > 10
+    block = [t for t in block if t != "schema_migrations"]
     assert stdin.splitlines()[0] == "SET session_replication_role = replica;"
     for t in block:
         assert f"DELETE FROM public.{t};" in stdin
         assert f"-t public.{t}" in calls
+    # the migration ledger of the target (just migrated) is never deleted, dumped or counted
+    assert "schema_migrations" not in calls + stdin
+    assert "schema_migrations" not in (art / "build" / "prep_conv_db.json").read_text()
     assert "-d cars --data-only" in calls and "-- dump" in stdin
     # the shift: 20 days, once, and the finished prep is recorded on the DB
     assert calls.count("scraped_at - interval '20 days'") == 1
