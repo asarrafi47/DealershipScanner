@@ -533,6 +533,26 @@
   `postgres:16-alpine` has no pgvector. The compose Postgres now uses the pgvector image
   (P15B.6, D-TC3).
 
+### N23 (draft)
+- EPA catalog builder dry run now diffs the dictionary CSVs against the stored source='dictionary_epa' rows and prints a JSON report (insert / update / unchanged / missing, per-column update counts, bounded samples) (P10B.1).
+- build_epa_master_pg.py gains --apply (id-preserving INSERT/UPDATE by id in one transaction, guarded: CSV rows >= 90% of active dictionary_epa rows, updates <= 5% unless --allow-large-update, pre-commit assertions on extended-specs count, dangling links, duplicate (source, natural_key)) and --archive-missing (moves only unreferenced missing rows to epa_master_archive). Default mode is a dry run; --rebuild still exits 2 (P10B.2).
+- import_epa_master --append-years now follows the single ingestion path (vehicles.csv -> dictionary CSVs -> build_epa_master_pg --apply); dry run unless --apply, previewed against a scratch copy of the dictionary; appended rows carry source and natural_key and a re-run inserts nothing. --yes is the empty-catalog bootstrap only (P10B.3).
+- backfill_epa_master_provenance --check-quiescent, plus a local backup/rollback helper and runbook for the provenance backfill (P10B.4-script).
+- Added reresolve_legacy_catalog_links.py (D-ER3): re-resolves cars linked to legacy catalog rows with those rows excluded, per-make transactions, resumable, dry run by default, --undo <run_id> restores archived rows and links exactly; migration V037 (epa_relink_snapshot, epa_relink_archived); knowledge_engine.lookup_epa_by_trim accepts exclude_sources (P10B.6).
+- reresolve_legacy_catalog_links.py --source epa_vehicles_csv re-resolves cars linked to vehicles.csv-appended rows; refuses unless dictionary_epa rows cover every model year (P10B.5).
+- workspace/phase_runs/N23/p10b8_sample.py: read-only stratified before/after sample asserting engine, drivetrain, transmission and electrification fields do not move (P10B.8-script).
+- Data-quality invariants: four catalog checks (epa_master_missing_provenance, epa_extended_specs_orphan, epa_link_dangling_all_listings, epa_master_cross_source_twin); baselines recorded after the provenance run (P10B.7).
+
+### N32 (draft)
+- Removed the 10 flat backend.scanner alias shims (dealer_location, dealer_profile, dealer_site_url, dealer_sticker_provider, listing_gap_fill, post_pipeline, rooftop_match, vdp_html_recovery, vdp_spec_extract, window_sticker); importers use canonical dealer/, post_scan/, vdp/ and attribution modules. An AST guard test blocks re-adding them (P17A.1-P17A.3).
+- Removed the empty backend.intelligence.llm.providers package (P17A.9).
+- Removed the backend/scanner/vdp/core.py re-export and the vdp/__init__.py package re-exports (P17A.5).
+- Removed dead dealer_run timeout helpers and the stale 'Warmup: ... navigating to base URL' log line; golden fixture updated; cli.py docstring describes the HTTP-only flow (P17A.6).
+- Removed the dead nav.py failure-HAR and warmup chain, truncate_url and the SCANNER_FAILURE_HAR docs (P17A.7).
+- Recovery strategy names now live in dealer/profile.py. Behaviour change: shopperexpress_api wins are cached per dealer and moved to the front of the recovery chain (P17A.10).
+- sister.tv comment replaced with the neutral observed state (P17A.11).
+- Removed 22 functions that nothing referenced. ANTHROPIC_VISION_MAX_RETRIES is no longer read anywhere; add it to the owner's env cleanup list (P17A.8).
+
 ## [1.5.8] - 2026-10-23
 
 ### Added

@@ -2607,6 +2607,22 @@ Owner asks: sign off the 20-car before/after diff; confirm the deletions before 
 
 **Owner decisions / actions.** D-ER1, D-ER3; local apply OKs.
 
+**Draft status (integ/draft, merge a40ade275; branch phase/N23 head 135f0a059).**
+
+| Unit | sha | Acceptance met | Deferred |
+|---|---|---|---|
+| P10B.1 | 8242664a6 | builder dry run is an id-preserving diff report | real-data dry run (needs P10B.4 backfill) |
+| P10B.2 | c5c210c21 | no-op rerun, stable ids, guards, rollback on broken invariant, scratch apply = diff | `--apply` on any real DB (owner-gated) |
+| P10B.3 | 4b63ea5b5 | one ingestion path; `--append-years` dry run previews against scratch dictionary | PG-tier re-run test not run |
+| P10B.4-script | 4b63ea5b5 | `--check-quiescent`, backup/rollback helper, RUNBOOK_P10B4 | P10B.4 data run (MAIN, owner OK on counts) |
+| P10B.5 | 239cc0691 | `--source epa_vehicles_csv` mode, refuses without dictionary_epa year coverage | run waits for N25 10D steps and builder `--apply` |
+| P10B.6 | beb8c1a40 | undo round trip exact (V037 snapshot tables) | real dry run, owner review, `--apply` (P10B.8) |
+| P10B.7 | 135f0a059 | four catalog invariants, tests green | baselines in data_quality_invariants_baseline.json after P10B.4 |
+| P10B.8-script | 239cc0691 | read-only stratified sample tool, smoke-tested | P10B.8 MAIN sample (>=98% by VIN decode) |
+| P10B.4, P10B.8 | - | not drafted (data-local MAIN) | owner-gated |
+
+Note: V037 was taken for P10B.6 (plan assigns N23 no number). Label mismatch: plan says `dictionary_legacy_root`, backfill stamps `legacy`; re-resolve autodetects, decide one label before P10B.8.
+
 ---
 
 ### N24 Forced-induction resolution (10C)
@@ -2893,6 +2909,18 @@ ci.yml was edited by both N7 and N29; merged without conflict.
 **Release step.** Patch.
 
 **Owner decisions / actions.** None.
+
+**Draft status (integ/draft, merge 16003e806; branch phase/N32 head 0d3a68286).**
+
+| Unit | sha | Acceptance met | Deferred |
+|---|---|---|---|
+| P17A.1 | cf19e12ad | importers on canonical paths; golden asserts `A.match is match` | attribution owner confirmation of that golden edit |
+| P17A.2 | 02bdb0fc3 | zero importers/patch strings of the 3 sticker/gap-fill shims | none |
+| P17A.3, P17A.9 | e999ca885 | 10 shims and empty llm providers package deleted, AST guard test, import sweep clean | N1.7 archive and owner notice gate the merge to main |
+| P17A.5, P17A.6 | e06cce919 | vdp/core.py gone, dead timeout helpers removed, golden fixture updated | owner env cleanup of SCANNER_WARMUP_PHASE_TIMEOUT_SEC, SCANNER_VDP_PHASE_TIMEOUT_SEC |
+| P17A.7, P17A.10, P17A.11 | 1b00dc4fb | dead failure-HAR chain removed; recovery names single source (shopperexpress_api now cached) | SCANNER_FAILURE_HAR=0 lines in deploy/car-scanner/cronjob.yaml and scripts/cleanroom/run.env.template |
+| P17A.8 | 0d3a68286 | 22 unreferenced functions deleted with evidence | 4 singleton candidates left for a later sweep |
+| P17A.4 | - | not drafted | blocked on N19 (Wave C) |
 
 ---
 
