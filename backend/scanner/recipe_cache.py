@@ -14,6 +14,11 @@ uses for that, and nothing that knows what a recipe is:
   current store's fingerprint (written by ``backend/scripts/reconcile_recipe_store.py``),
   a cache file that differs from the store is copied to ``workspace/backups`` before
   the store's copy overwrites it, so cache-side evidence is never destroyed unseen.
+- ``oplog_*`` (N13 P7.3): the offline op-log, ``<cache>/_pending/<store fingerprint>/<slug>``,
+  one JSON object per line. A recipe mutation the store could not take is appended
+  here and replayed on the next load that reaches the store. The fingerprint
+  directory keeps an entry from ever being replayed against another store. Callers
+  hold ``cache_lock(oplog_path(...))`` around a read-modify-write.
 """
 from __future__ import annotations
 
@@ -33,6 +38,7 @@ except ImportError:  # pragma: no cover
     fcntl = None  # type: ignore[assignment]
 
 RECONCILED_MARKER = "_reconciled"
+PENDING_DIR = "_pending"
 BACKUP_SUBDIR = "recipe_cache_differing"
 
 
@@ -127,3 +133,63 @@ def backup_cache_file(path: Path) -> Path | None:
     dest = dest_dir / f"{path.stem}.{stamp}.json"
     shutil.copy2(path, dest)
     return dest
+
+
+def oplog_path(cache_dir: Path, fingerprint: str, slug: str) -> Path:
+    """The op-log file of ``slug`` for the store ``fingerprint``."""
+    return cache_dir / PENDING_DIR / fingerprint / slug
+
+
+def oplog_read(path: Path) -> list[dict]:
+    """The log's entries in order. A missing file is an empty log; a line that is not
+    a JSON object is skipped (a torn last line from a crash must not wedge the log)."""
+    try:
+        text = path.read_text(encoding="utf-8")
+    except OSError:
+        return []
+    out: list[dict] = []
+    for line in text.splitlines():
+        try:
+            entry = json.loads(line)
+        except ValueError:
+            continue
+        if isinstance(entry, dict):
+            out.append(entry)
+    return out
+
+
+def oplog_append(path: Path, entry: dict) -> None:
+    """Append one entry (a single ``write`` of one line, fsynced)."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with open(path, "a", encoding="utf-8") as fh:
+        fh.write(json.dumps(entry, ensure_ascii=False) + "\n")
+        fh.flush()
+        os.fsync(fh.fileno())
+
+
+def oplog_rewrite(path: Path, entries: list[dict]) -> None:
+    """Replace the log with ``entries`` atomically; remove the file (and the then-empty
+    fingerprint dir) when ``entries`` is empty."""
+    if not entries:
+        try:
+            path.unlink()
+        except FileNotFoundError:
+            pass
+        try:
+            path.parent.rmdir()
+        except OSError:
+            pass
+        return
+    tmp = path.with_name(f"{path.name}.tmp.{os.getpid()}.{threading.get_ident()}")
+    try:
+        with open(tmp, "w", encoding="utf-8") as fh:
+            fh.write("".join(json.dumps(e, ensure_ascii=False) + "\n" for e in entries))
+            fh.flush()
+            os.fsync(fh.fileno())
+        os.replace(tmp, path)
+    except BaseException:
+        try:
+            os.unlink(tmp)
+        except OSError:
+            pass
+        raise

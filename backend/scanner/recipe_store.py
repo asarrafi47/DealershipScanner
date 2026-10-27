@@ -48,7 +48,7 @@ import logging
 import os
 import threading
 import time
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from typing import Any, Callable
 
@@ -262,6 +262,8 @@ class StoreRow:
     updated_at: str | None
     max_saved_at: float
     recipes_written_at: float
+    # Archived replaced recipes (``{key, recipe, superseded_at, reason}``); [] before V034.
+    superseded: list[dict[str, Any]] = field(default_factory=list)
 
     @property
     def authoritative(self) -> bool:
@@ -303,7 +305,7 @@ def _snapshot(cur, dealer_id: str) -> StoreRow | None:
     """The row as stored (unreadable JSON reads as empty), or None when absent."""
     cols = "recipes_json, max_saved_at, scan_hints, updated_at"
     if _cas_columns:
-        cols += ", rev, recipes_written_at"
+        cols += ", rev, recipes_written_at, superseded_json"
     cur.execute(f"SELECT {cols} FROM dealer_recipes WHERE dealer_id = ?", (dealer_id,))
     row = cur.fetchone()
     if not row:
@@ -315,6 +317,7 @@ def _snapshot(cur, dealer_id: str) -> StoreRow | None:
         updated_at=row[3],
         max_saved_at=float(row[1] or 0.0),
         recipes_written_at=float(row[5] or 0.0) if _cas_columns else 0.0,
+        superseded=(_parse_json(row[6], list) or []) if _cas_columns else [],
     )
 
 
@@ -358,6 +361,7 @@ def _written(current: StoreRow | None, cols: dict[str, Any]) -> StoreRow:
         updated_at=cols.get("updated_at"),
         max_saved_at=cols.get("max_saved_at", current.max_saved_at if current else 0.0),
         recipes_written_at=cols.get("recipes_written_at", current.recipes_written_at if current else 0.0),
+        superseded=current.superseded if current else [],
     )
 
 

@@ -1,4 +1,5 @@
-"""N13 P7.2: store-authoritative ``load_recipes`` and the ``recipe_cache`` mechanics, ``pg`` tier.
+"""N13 P7.2 / P7.3: store-authoritative ``load_recipes``, the ``recipe_cache`` mechanics and the
+key-scoped mutation API with its offline op-log, ``pg`` tier.
 
 The ``dealer_recipes`` row is the authority; the cache file mirrors it and is rewritten only
 when its content differs. Real Postgres through ``pg_db`` (no sqlite3), RECIPES_DIR under
@@ -10,6 +11,7 @@ from __future__ import annotations
 import json
 import os
 import threading
+import time
 from dataclasses import asdict
 from pathlib import Path
 
@@ -235,3 +237,253 @@ def test_atomic_write_json_failure_leaves_the_old_bytes(env, monkeypatch) -> Non
         rcache.atomic_write_json(path, [{"a": 2}])
     assert path.read_bytes() == before
     assert [p.name for p in env.iterdir() if ".tmp." in p.name] == []
+
+
+# ── P7.3: key-scoped mutation API and offline op-log ─────────────────────────
+
+
+def _rec(url: str, dealer: str = D, **kw) -> EndpointRecipe:
+    return EndpointRecipe(dealer_id=dealer, url=url, method="GET", content_type="application/json",
+                          post_template=None, **kw)
+
+
+def _by_url(rows: list[dict]) -> dict[str, dict]:
+    return {r["url"]: r for r in rows}
+
+
+def _host(monkeypatch, tmp_path: Path, name: str) -> Path:
+    """Point this process at another host's cache dir (the store stays shared)."""
+    d = tmp_path / name / "recipes"
+    d.mkdir(parents=True, exist_ok=True)
+    monkeypatch.setattr(rec, "RECIPES_DIR", d)
+    return d
+
+
+def _log_file(cache: Path, dealer: str = D) -> Path:
+    return rcache.oplog_path(cache, rec.store_fingerprint(), rec._recipe_slug(dealer))
+
+
+def _store_down(monkeypatch):
+    def unreachable():
+        raise OSError("store down")
+
+    real = rs._conn
+    monkeypatch.setattr(rs, "_conn", unreachable)
+    return lambda: monkeypatch.setattr(rs, "_conn", real)
+
+
+def test_mark_stale_by_one_host_is_seen_by_another(env, monkeypatch, tmp_path) -> None:
+    rec.save_recipes(D, [_rec("https://a.example/x"), _rec("https://a.example/y")])
+    rx = [r for r in load_recipes(D) if r.url.endswith("/x")][0]
+    rec.mark_stale(D, rx, "403 seen")
+    _host(monkeypatch, tmp_path, "hostb")
+    got = {r.url: r for r in load_recipes(D)}
+    assert got["https://a.example/x"].stale and got["https://a.example/x"].stale_reason == "403 seen"
+    assert not got["https://a.example/y"].stale
+
+
+def test_ops_stamp_mutated_at_and_saved_at_on_their_key_only(env) -> None:
+    rec.save_recipes(D, [_rec("https://a.example/x"), _rec("https://a.example/y")])
+    before = _by_url(rs.db_read(D).rows)
+    rec.mark_stale(D, _rec("https://a.example/x"), "r")
+    after = _by_url(rs.db_read(D).rows)
+    assert after["https://a.example/x"]["mutated_at"] > before["https://a.example/x"]["mutated_at"]
+    assert after["https://a.example/x"]["saved_at"] == after["https://a.example/x"]["mutated_at"]
+    assert after["https://a.example/y"] == before["https://a.example/y"]
+    assert json.loads(_file(env).read_text()) == rs.db_read(D).rows, "the cache follows the store"
+
+
+def test_mark_stale_of_a_removed_key_does_nothing(env) -> None:
+    rec.save_recipes(D, [_rec("https://a.example/y")])
+    rev = rs.db_read(D).rev
+    rec.mark_stale(D, _rec("https://a.example/gone"), "r")
+    got = rs.db_read(D)
+    assert got.rev == rev and [r["url"] for r in got.rows] == ["https://a.example/y"]
+
+
+def test_mark_stale_older_than_another_hosts_success_is_ignored(env) -> None:
+    rec.save_recipes(D, [_rec("https://a.example/x", last_ok_at=200.0)])
+    rec.mark_stale(D, _rec("https://a.example/x"), "403", observed_at=100.0)
+    assert not rs.db_read(D).rows[0]["stale"]
+    rec.mark_stale(D, _rec("https://a.example/x"), "403", observed_at=300.0)
+    assert rs.db_read(D).rows[0]["stale"]
+
+
+def test_record_replay_ok_updates_its_key_and_the_learned_total_only(env) -> None:
+    x, y = _rec("https://a.example/x", stale=True, stale_reason="403", total_count=10), _rec("https://a.example/y", total_count=99)
+    rec.save_recipes(D, [x, y])
+    rec.record_replay_ok(D, x.key(), last_ok_at=500.0, field_coverage={"price": 0.9}, unstale=True, total_count=45)
+    got = _by_url(rs.db_read(D).rows)
+    gx, gy = got["https://a.example/x"], got["https://a.example/y"]
+    assert (gx["last_ok_at"], gx["field_coverage"], gx["stale"], gx["stale_reason"], gx["total_count"]) == (
+        500.0, {"price": 0.9}, False, "", 45)
+    assert gy["total_count"] == 99 and gy["last_ok_at"] == 0.0
+    rec.record_replay_ok(D, x.key(), last_ok_at=400.0, field_coverage={}, unstale=False)
+    assert _by_url(rs.db_read(D).rows)["https://a.example/x"]["last_ok_at"] == 500.0, "never moved back"
+
+
+def test_concurrent_mutations_on_different_keys_both_persist(env) -> None:
+    x, y = _rec("https://a.example/x"), _rec("https://a.example/y")
+    rec.save_recipes(D, [x, y])
+    barrier = threading.Barrier(2)
+
+    def stale_x():
+        barrier.wait()
+        for _ in range(10):
+            rec.mark_stale(D, x, "403")
+
+    def ok_y():
+        barrier.wait()
+        for i in range(10):
+            rec.record_replay_ok(D, y.key(), last_ok_at=1000.0 + i, field_coverage={"price": 1.0}, unstale=False)
+
+    ts = [threading.Thread(target=stale_x), threading.Thread(target=ok_y)]
+    [t.start() for t in ts]
+    [t.join() for t in ts]
+    got = _by_url(rs.db_read(D).rows)
+    assert got["https://a.example/x"]["stale"] is True
+    assert got["https://a.example/y"]["last_ok_at"] == 1009.0 and not got["https://a.example/y"]["stale"]
+
+
+def test_replaced_keys_are_not_brought_back_by_an_older_cache(env) -> None:
+    rec.save_recipes(D, [_rec("https://a.example/x"), _rec("https://a.example/old")])
+    stale_cache = _file(env).read_text()
+    rec.save_recipes(D, [_rec("https://a.example/x")])  # another host replaced the set
+    _file(env).write_text(stale_cache)  # this host still has the older cache
+    assert [r.url for r in load_recipes(D)] == ["https://a.example/x"]
+    rec.mark_stale(D, _rec("https://a.example/x"), "r")
+    assert [r["url"] for r in rs.db_read(D).rows] == ["https://a.example/x"]
+    assert [r["url"] for r in json.loads(_file(env).read_text())] == ["https://a.example/x"]
+
+
+def test_offline_mutation_goes_to_the_op_log_and_replays_when_the_store_is_back(env, monkeypatch, tmp_path) -> None:
+    rec.save_recipes(D, [_rec("https://a.example/x"), _rec("https://a.example/y")])
+    up = _store_down(monkeypatch)
+    rec.mark_stale(D, _rec("https://a.example/x"), "403 offline", observed_at=50.0)
+    log = _log_file(env)
+    (entry,) = rcache.oplog_read(log)
+    assert (entry["op"], entry["key"], entry["observed_at"], entry["payload"]) == (
+        "mark_stale", ["GET", "a.example/x"], 50.0, {"reason": "403 offline"})
+    assert "base_rev" in entry
+    cached = _by_url(json.loads(_file(env).read_text()))
+    assert cached["https://a.example/x"]["stale"], "applied to the cache file meanwhile"
+    assert [r.stale for r in load_recipes(D) if r.url.endswith("/x")] == [True], "served from the file"
+    assert log.exists(), "still pending while the store is down"
+
+    # another host changes y while this one is offline; the replay must not undo it
+    up()
+    rec.record_replay_ok(D, _rec("https://a.example/y").key(), last_ok_at=700.0, field_coverage={}, unstale=False)
+    got = {r.url: r for r in load_recipes(D)}
+    assert got["https://a.example/x"].stale and got["https://a.example/y"].last_ok_at == 700.0
+    assert _by_url(rs.db_read(D).rows)["https://a.example/x"]["stale"]
+    assert not log.exists(), "the log is removed once replayed"
+
+
+def test_offline_replay_keeps_order_and_stops_at_the_first_unreachable_entry(env, monkeypatch) -> None:
+    rec.save_recipes(D, [_rec("https://a.example/x")])
+    key = _rec("https://a.example/x").key()
+    up = _store_down(monkeypatch)
+    rec.mark_stale(D, _rec("https://a.example/x"), "403")
+    rec.record_replay_ok(D, key, last_ok_at=900.0, field_coverage={"price": 1.0}, unstale=True)
+    assert [e["op"] for e in rcache.oplog_read(_log_file(env))] == ["mark_stale", "record_replay_ok"]
+    load_recipes(D)  # still down: nothing is consumed
+    assert len(rcache.oplog_read(_log_file(env))) == 2
+    up()
+    load_recipes(D)
+    row = rs.db_read(D).rows[0]
+    assert row["stale"] is False and row["last_ok_at"] == 900.0, "replayed in order: stale, then un-stale"
+
+
+def test_a_pending_op_never_re_adds_a_key_removed_since_it_was_recorded(env, monkeypatch) -> None:
+    rec.save_recipes(D, [_rec("https://a.example/x"), _rec("https://a.example/y")])
+    load_recipes(D)  # the cache holds x and y
+    up = _store_down(monkeypatch)
+    rec.merge_recipes(D, [_rec("https://a.example/y", vehicle_rows=50), _rec("https://a.example/new", vehicle_rows=9)])
+    (entry,) = rcache.oplog_read(_log_file(env))
+    assert sorted(map(tuple, entry["base_keys"])) == [("GET", "a.example/x"), ("GET", "a.example/y")]
+    up()
+    rec.save_recipes(D, [_rec("https://a.example/x")])  # another host replaced the set without y
+    got = sorted(r.url for r in load_recipes(D))
+    assert got == ["https://a.example/new", "https://a.example/x"], "y stays gone; the never-seen key is added"
+
+
+def test_a_pending_op_never_un_supersedes(env, monkeypatch) -> None:
+    rec.save_recipes(D, [_rec("https://a.example/y")])
+    _file(env).unlink()  # no base keys: only the supersede guard can stop the re-add
+    up = _store_down(monkeypatch)
+    rec.merge_recipes(D, [_rec("https://a.example/y", vehicle_rows=50)])
+    assert rcache.oplog_read(_log_file(env))[0]["base_keys"] == []
+    up()
+    conn = rs._conn()
+    try:
+        cur = conn.cursor()
+        cur.execute("UPDATE dealer_recipes SET recipes_json='[]', rev=rev+1, superseded_json=? WHERE dealer_id=?",
+                    (json.dumps([{"key": ["GET", "a.example/y"], "recipe": {}, "superseded_at": time.time() + 5,
+                                  "reason": "synth:force"}]), D))
+        conn.commit()
+    finally:
+        conn.close()
+    assert load_recipes(D) == []
+    assert rs.db_read(D).rows == []
+    assert not _log_file(env).exists()
+
+
+def test_an_op_log_recorded_against_another_store_is_never_replayed_here(env) -> None:
+    rec.save_recipes(D, [_rec("https://a.example/x")])
+    other = rcache.oplog_path(env, "f" * 64, rec._recipe_slug(D))
+    rcache.oplog_append(other, {"op": "mark_stale", "key": ["GET", "a.example/x"], "observed_at": None,
+                                "payload": {"reason": "from elsewhere"}, "at": time.time(), "base_rev": 0})
+    load_recipes(D)
+    assert not rs.db_read(D).rows[0]["stale"]
+    assert other.exists() and len(rcache.oplog_read(other)) == 1
+
+
+def test_save_recipes_offline_is_logged_as_a_replace_and_skipped_when_the_store_moved_on(env, monkeypatch) -> None:
+    rec.save_recipes(D, [_rec("https://a.example/x")])
+    up = _store_down(monkeypatch)
+    rec.save_recipes(D, [_rec("https://a.example/offline")])
+    (entry,) = rcache.oplog_read(_log_file(env))
+    assert entry["op"] == "replace_recipes" and entry["payload"]["rows"][0]["url"] == "https://a.example/offline"
+    up()
+    rec.mark_stale(D, _rec("https://a.example/x"), "other host moved the store on")
+    load_recipes(D)
+    assert [r["url"] for r in rs.db_read(D).rows] == ["https://a.example/x"], "a snapshot is never merged over it"
+    assert not _log_file(env).exists()
+
+
+def test_merge_recipes_applies_promotions_rules_inside_the_cas(env) -> None:
+    rec.save_recipes(D, [_rec("https://a.example/a", vehicle_rows=30, last_ok_at=5.0),
+                         _rec("https://a.example/b", vehicle_rows=5, stale=True)])
+    out = rec.merge_recipes(D, [_rec("https://a.example/a", vehicle_rows=10),   # smaller than a live recipe: loses
+                                _rec("https://a.example/b", vehicle_rows=2),    # replaces the stale one
+                                _rec("https://a.example/c", vehicle_rows=7)], max_recipes=2)
+    got = _by_url(rs.db_read(D).rows)
+    assert [r.url for r in out] == [r["url"] for r in rs.db_read(D).rows]
+    assert len(got) == 2 and "https://a.example/a" in got
+    assert got["https://a.example/a"]["vehicle_rows"] == 30
+    assert all(r["mutated_at"] and r["saved_at"] for r in got.values())
+
+
+def test_a_recipe_another_host_adds_during_a_merge_survives(env, monkeypatch) -> None:
+    rec.save_recipes(D, [_rec("https://a.example/a")])
+    real = rs._cas_write
+    fired: list[int] = []
+
+    def racing(cur, dealer_id, current, cols):
+        if not fired:
+            fired.append(1)
+            rs.db_mutate(D, lambda c: c.rows + [asdict(_rec("https://a.example/theirs", saved_at=9.0))])
+        return real(cur, dealer_id, current, cols)
+
+    monkeypatch.setattr(rs, "_cas_write", racing)
+    rec.merge_recipes(D, [_rec("https://a.example/mine", vehicle_rows=4)])
+    assert sorted(r["url"] for r in rs.db_read(D).rows) == [
+        "https://a.example/a", "https://a.example/mine", "https://a.example/theirs"]
+
+
+def test_store_disabled_ops_edit_the_cache_file_and_log_nothing(env, monkeypatch) -> None:
+    monkeypatch.setenv("RECIPES_DB_DISABLED", "1")
+    rec.save_recipes(D, [_rec("https://a.example/x")])
+    rec.mark_stale(D, _rec("https://a.example/x"), "403")
+    assert json.loads(_file(env).read_text())[0]["stale"] is True
+    assert not (env / rcache.PENDING_DIR).exists()

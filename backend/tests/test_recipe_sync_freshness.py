@@ -277,10 +277,10 @@ def test_a_newer_file_never_overwrites_an_authoritative_row(store, caplog):
     assert json.loads(path.read_text(encoding="utf-8")) == db_copy, "the cache mirrors the store"
 
 
-def test_a_failed_write_through_is_not_pushed_up_on_the_next_load(store, monkeypatch):
-    """A save whose write-through failed leaves the file newer than the store. The store
-    stays the authority, so the next load serves the store's copy (P7.3's op-log is what
-    keeps such a write)."""
+def test_a_failed_write_through_is_replayed_from_the_op_log_on_the_next_load(store, monkeypatch):
+    """A mutation whose write-through failed leaves the file ahead of the store. The store
+    stays the authority and a whole-file push-up never happens; the op itself sits in the
+    op-log (P7.3) and the next load that reaches the store replays it."""
     clock = store.freeze_clock(T0)
     save_recipes(D, [_recipe()])
     (r,) = load_recipes(D)
@@ -297,9 +297,9 @@ def test_a_failed_write_through_is_not_pushed_up_on_the_next_load(store, monkeyp
     assert store.db_row(D)["stale_count"] == 0, "the write-through failed"
     assert store.file_rows("mbp", D)[0]["stale"], "the file took the write"
 
-    assert not load_recipes(D)[0].stale
-    assert store.db_row(D)["stale_count"] == 0
-    assert not store.file_rows("mbp", D)[0]["stale"], "the cache is back to the store's copy"
+    assert load_recipes(D)[0].stale, "the logged op was replayed against the store"
+    assert store.db_row(D)["stale_count"] == 1
+    assert store.file_rows("mbp", D)[0]["stale"]
 
 
 def test_a_dealer_with_no_db_row_seeds_the_store_from_its_cache_file(store, caplog):

@@ -161,6 +161,9 @@ class EndpointRecipe:
     # Last write of this dealer's set (epoch seconds): save_recipes stamps every
     # row on every save. A value set here before the save is overwritten.
     saved_at: float = 0.0
+    # Last mutation of THIS recipe (epoch seconds), stamped by every key-scoped op
+    # (mark_stale, record_replay_ok, merge_recipes) beside saved_at (N13 P7.3).
+    mutated_at: float = 0.0
     last_ok_at: float = 0.0
     stale: bool = False
     stale_reason: str = ""
@@ -531,6 +534,9 @@ def load_recipes(dealer_id: str) -> list[EndpointRecipe]:
       recipes) and is returned as it is.
     - The store unreachable (or disabled): the file rows, as before.
 
+    Before the read, a pending offline op-log of this dealer for this store is replayed
+    through ``db_mutate`` (``_replay_pending``), so the rows returned include it.
+
     ``saved_at`` stays the per-write stamp (``save_recipes``) because hosts running
     older code still compare it; the store keeps its max as ``max_saved_at``.
 
@@ -549,6 +555,7 @@ def load_recipes(dealer_id: str) -> list[EndpointRecipe]:
     landed).
     """
     store_check = check_cache_store()
+    _replay_pending(dealer_id)
     # Read may resolve through _aliases.json (URL-rekeyed dealer); any write
     # below targets the CURRENT slug so the content migrates forward.
     read_path = _recipe_read_path(dealer_id)
@@ -721,14 +728,18 @@ def _load_foreign(dealer_id: str, check: CacheStoreCheck, file_rows: list[dict])
 
 def save_recipes(dealer_id: str, recipes: list[EndpointRecipe]) -> None:
     """Write the dealer's whole recipe set: the cache file, then the
-    best-effort write-through to ``dealer_recipes``.
+    write-through to ``dealer_recipes`` through ``db_mutate``.
 
-    Every row's ``saved_at`` is stamped with one ``time.time()`` taken here,
-    before either write, so the file and the DB row carry the same stamp and
-    every write (mark_stale, a replay's last_ok / coverage / un-stale update,
-    promote, ensure_recipe, cascade, synthesize) outranks older copies on other
-    hosts (see ``load_recipes``). The caller's ``EndpointRecipe`` objects are
-    not modified.
+    This is the explicit REPLACE, for scripts and tests; scan code changes one recipe
+    with the key-scoped ops below (``mark_stale``, ``record_replay_ok``,
+    ``merge_recipes``) so concurrent hosts do not overwrite each other.
+
+    Every row's ``saved_at`` and ``mutated_at`` are stamped with one ``time.time()``
+    taken here, before either write, so the file and the DB row carry the same stamp
+    and every write outranks older copies on other hosts (see ``load_recipes``). The
+    caller's ``EndpointRecipe`` objects are not modified. A store write that did not
+    reach the store (unreachable) is appended to the offline op-log
+    (``_store_op``) and replayed by the next load that reaches the store.
 
     When the cache dir is tagged for another store (``check_cache_store``), the
     cache is read-only for this process: the file is left as it is and the set
@@ -743,6 +754,7 @@ def save_recipes(dealer_id: str, recipes: list[EndpointRecipe]) -> None:
     rows = [asdict(r) for r in recipes]
     for row in rows:
         row["saved_at"] = now
+        row["mutated_at"] = now
     if store_check.foreign:
         _save_to_store_only(dealer_id, rows, store_check)
         return
@@ -751,9 +763,8 @@ def save_recipes(dealer_id: str, recipes: list[EndpointRecipe]) -> None:
     with recipe_cache.cache_lock(path):
         _atomic_write_json(path, rows)
     try:
-        from backend.scanner.recipe_store import db_save_recipes
-
-        db_save_recipes(_recipe_slug(dealer_id), rows)
+        _store_op(dealer_id, {"op": OP_REPLACE, "key": None, "observed_at": None,
+                              "payload": {"rows": rows}, "at": now})
     except Exception:  # noqa: BLE001 — file write is the contract; DB is best-effort
         pass
 
@@ -808,12 +819,354 @@ def _save_to_store_only(dealer_id: str, rows: list[dict], check: CacheStoreCheck
     )
 
 
-def mark_stale(dealer_id: str, recipe: EndpointRecipe, reason: str) -> None:
-    recipes = load_recipes(dealer_id)
-    for r in recipes:
-        if r.key() == recipe.key():
-            r.stale = True
-            r.stale_reason = reason[:200]
+# ── Key-scoped mutation API (N13 P7.3) ───────────────────────────────────────
+#
+# A scan changes ONE recipe of a set other hosts also change, so it must not
+# load the whole set and save it back (the later save wins and drops the other
+# host's edit). Each op below is applied to the row's CURRENT content inside
+# ``db_mutate``'s compare-and-set, touches only its key, and stamps that recipe's
+# ``mutated_at`` and ``saved_at`` (``saved_at`` stays a per-write stamp because
+# hosts on older code still compare it).
+#
+# When the store cannot take an op, it is appended to the offline op-log
+# (``workspace/recipes/_pending/<store fingerprint>/<slug>``) and applied to the
+# cache file under its flock; the next ``load_recipes`` that reaches the store
+# replays the log op by op through ``db_mutate`` (``_replay_pending``): ops, never
+# a snapshot of the cache, so another host's newer edits are not overwritten.
+
+OP_MARK_STALE = "mark_stale"
+OP_REPLAY_OK = "record_replay_ok"
+OP_MERGE = "merge_recipes"
+OP_REPLACE = "replace_recipes"
+
+
+def _row_key(row: dict) -> tuple[str, str] | None:
+    """The key a recipe row has once ``load_recipes`` normalizes it."""
+    recs = _rows_to_recipes([row])
+    return recs[0].key() if recs else None
+
+
+def _merge_rank(
+    existing: list[EndpointRecipe], candidates: list[EndpointRecipe], max_recipes: int,
+) -> list[EndpointRecipe]:
+    """The merge, rank and cap rules of promotion: a fresh capture wins the slot of
+    the same key unless the recipe on file is live, has answered, and has more rows;
+    rich feeds (price + trim/colour) replay first, VIN-only endpoints stay on file for
+    delta VIN-set work but never outrank a real inventory feed. Mutates ``candidates``
+    that win (their ``last_ok_at`` and missing ``field_coverage`` carry over)."""
+    merged: dict[tuple[str, str], EndpointRecipe] = {r.key(): r for r in existing}
+    for c in candidates:
+        cur = merged.get(c.key())
+        # A fresh capture always wins: newer auth headers, un-stales the entry.
+        if cur is None or not cur.last_ok_at or cur.stale or c.vehicle_rows >= cur.vehicle_rows:
+            c.last_ok_at = cur.last_ok_at if cur else 0.0
+            if cur is not None and not c.field_coverage and cur.field_coverage:
+                c.field_coverage = dict(cur.field_coverage)
+            merged[c.key()] = c
+    ranked = sorted(
+        merged.values(),
+        key=lambda r: (
+            r.stale,
+            0 if recipe_coverage_is_rich(r.field_coverage) else 1,
+            -(r.total_count or 0),
+            -r.vehicle_rows,
+        ),
+    )
+    return ranked[:max_recipes]
+
+
+def _apply_op(
+    entry: dict, rows: list[dict], *, now: float, cur: Any = None, replaying: bool = False,
+) -> list[dict] | None:
+    """``entry``'s op applied to ``rows``: the new row list, or None when the op changes
+    nothing (key gone, stale mark older than a success, no candidate lands).
+
+    Pure on its inputs, so ``db_mutate`` can re-run it on a fresh row. ``cur`` is the
+    ``StoreRow`` being mutated (None: no row, or the cache file). ``replaying`` is an
+    op-log entry meeting the store later: its ``mutated_at`` is the time it was
+    recorded, and the guards that keep an old op from undoing newer work apply."""
+    op = entry["op"]
+    payload = entry.get("payload") or {}
+    stamp = float(entry.get("at") or now) if replaying else now
+    key = tuple(entry["key"]) if entry.get("key") else None
+    observed_at = entry.get("observed_at")
+
+    if op == OP_MARK_STALE:
+        out = [dict(r) for r in rows]
+        hit = False
+        for r in out:
+            if _row_key(r) != key:
+                continue
+            if observed_at is not None and float(r.get("last_ok_at") or 0.0) > float(observed_at):
+                continue  # another host's success is newer than the failure seen
+            r.update(stale=True, stale_reason=str(payload.get("reason") or "")[:200],
+                     mutated_at=stamp, saved_at=now)
+            hit = True
+        return out if hit else None
+
+    if op == OP_REPLAY_OK:
+        out = [dict(r) for r in rows]
+        hit = False
+        total = payload.get("total_count")
+        for r in out:
+            if _row_key(r) != key:
+                continue
+            r["last_ok_at"] = max(float(r.get("last_ok_at") or 0.0), float(payload.get("last_ok_at") or 0.0))
+            r["field_coverage"] = dict(payload.get("field_coverage") or {})
+            if payload.get("unstale"):
+                r["stale"] = False
+                r["stale_reason"] = ""
+            if total:
+                r["total_count"] = int(total)
+            r.update(mutated_at=stamp, saved_at=now)
+            hit = True
+        return out if hit else None
+
+    if op == OP_MERGE:
+        cands = _rows_to_recipes(payload.get("candidates") or [])
+        existing = _rows_to_recipes(rows)
+        if replaying and cur is not None:
+            present = {r.key() for r in existing}
+            base_keys = entry.get("base_keys")
+            base_rev = entry.get("base_rev")
+            moved = base_rev is None or cur.rev > base_rev
+            gone = {tuple(s.get("key") or ()): float(s.get("superseded_at") or 0.0)
+                    for s in (getattr(cur, "superseded", None) or [])}
+            kept = []
+            for c in cands:
+                k = c.key()
+                if k not in present and moved and (base_keys is None or list(k) in base_keys):
+                    continue  # the key was there when this op was recorded and has been removed since
+                if gone.get(k, 0.0) >= stamp:
+                    continue  # superseded after this op was recorded: never un-supersede
+                kept.append(c)
+            cands = kept
+        if not cands:
+            return None
+        landed = {id(c) for c in cands}
+        out = []
+        for r in _merge_rank(existing, cands, int(payload.get("max_recipes") or 8)):
+            row = asdict(r)
+            if id(r) in landed:
+                row.update(mutated_at=stamp, saved_at=now)
+            out.append(row)
+        return None if out == rows else out
+
+    if op == OP_REPLACE:
+        if replaying and cur is not None:
+            base_rev = entry.get("base_rev")
+            if base_rev is None or cur.rev > base_rev:
+                return None  # the store moved on: a snapshot is never merged over it
+        return list(payload.get("rows") or [])
+
+    raise ValueError(f"unknown recipe op {op!r}")
+
+
+def _store_op(dealer_id: str, entry: dict, *, foreign: bool = False) -> tuple[bool, Any, Any]:
+    """Run ``entry`` through ``db_mutate`` on this process's store.
+
+    Returns ``(took, written, prev)``: ``took`` is True when the store applied the op or
+    judged it a no-op, False when it could not be reached (disabled, down, or the CAS
+    gave up). ``written`` is the ``StoreRow`` as written (None for a no-op or a miss),
+    ``prev`` the row the op was planned on. A miss on an enabled store is appended to
+    the offline op-log with the rev it was planned against (None when never read)."""
+    from backend.scanner import recipe_store
+
+    slug = _recipe_slug(dealer_id)
+    seen: dict[str, Any] = {}
+    now = float(entry["at"])
+
+    def fn(cur):
+        seen["ran"] = True
+        seen["cur"] = cur
+        new = _apply_op(entry, cur.rows if cur else [], now=now, cur=cur)
+        seen["noop"] = new is None
+        return new
+
+    if not recipe_store._enabled():
+        return False, None, None
+    try:
+        written = recipe_store.db_mutate(slug, fn, file_written=not foreign)
+    except Exception:  # noqa: BLE001 — a store problem never fails a scan
+        written = None
+    took = written is not None or bool(seen.get("ran") and seen.get("noop"))
+    prev = seen.get("cur")
+    if written is not None and written is prev:
+        written = None  # the unchanged row of a no-op
+    if not took:
+        _oplog_append(slug, entry, base_rev=prev.rev if prev is not None else None)
+    return took, written, prev
+
+
+def _oplog_path(slug: str) -> Path | None:
+    fp = store_fingerprint()
+    return recipe_cache.oplog_path(RECIPES_DIR, fp, slug) if fp else None
+
+
+def _oplog_append(slug: str, entry: dict, *, base_rev: int | None) -> None:
+    path = _oplog_path(slug)
+    if path is None:
+        _warn_first("oplog-fp", "Recipes: the store's identity is unknown, so an op the store could "
+                    "not take is not logged for replay (the cache file has it).")
+        return
+    row = dict(entry, base_rev=base_rev)
+    if entry["op"] == OP_MERGE:
+        cached = recipe_cache.read_rows(_recipe_path(slug)) or []
+        row["base_keys"] = [list(k) for k in (_row_key(r) for r in cached) if k]
+    try:
+        with recipe_cache.cache_lock(path):
+            recipe_cache.oplog_append(path, row)
+    except OSError as exc:
+        logger.warning("Recipes [%s]: an op the store could not take could not be logged for replay: %s",
+                       slug, exc)
+
+
+def _replay_pending(dealer_id: str) -> None:
+    """Replay this dealer's offline op-log (for this process's store only) through
+    ``db_mutate``, oldest first. Entries the store took (applied or judged a no-op)
+    leave the log; at the first one the store cannot take, the rest stay. Cheap when
+    there is no log: one ``exists`` check."""
+    slug = _recipe_slug(dealer_id)
+    if not (RECIPES_DIR / recipe_cache.PENDING_DIR).is_dir():
+        return
+    from backend.scanner import recipe_store
+
+    if not recipe_store._enabled():
+        return
+    path = _oplog_path(slug)
+    if path is None or not path.exists():
+        return
+    try:
+        with recipe_cache.cache_lock(path):
+            entries = recipe_cache.oplog_read(path)
+            remaining = list(entries)
+            while remaining:
+                entry = remaining[0]
+                seen: dict[str, Any] = {}
+                now = time.time()
+
+                def fn(cur, entry=entry, seen=seen, now=now):
+                    seen["ran"] = True
+                    try:
+                        new = _apply_op(entry, cur.rows if cur else [], now=now, cur=cur, replaying=True)
+                    except Exception as exc:  # noqa: BLE001 — an unappliable entry must not wedge the log
+                        logger.warning("Recipes [%s]: dropped an unreplayable pending %s op: %s",
+                                       dealer_id, entry.get("op"), exc)
+                        new = None
+                    seen["noop"] = new is None
+                    return new
+
+                written = recipe_store.db_mutate(slug, fn)
+                if not (written is not None or (seen.get("ran") and seen.get("noop"))):
+                    break
+                remaining.pop(0)
+            if remaining != entries or not entries:
+                recipe_cache.oplog_rewrite(path, remaining)
+    except Exception as exc:  # noqa: BLE001
+        logger.debug("Recipes [%s]: pending-op replay skipped: %s", dealer_id, exc)
+
+
+def _cache_apply(dealer_id: str, entry: dict) -> list[dict] | None:
+    """Apply ``entry`` to the cache file under its flock; the resulting rows, or None
+    when nothing changed (or the file system refused)."""
+    path = _recipe_path(dealer_id)
+    try:
+        RECIPES_DIR.mkdir(parents=True, exist_ok=True)
+        with recipe_cache.cache_lock(path):
+            rows = recipe_cache.read_rows(_recipe_read_path(dealer_id)) or []
+            new = _apply_op(entry, rows, now=float(entry["at"]))
+            if new is None:
+                return None
+            _atomic_write_json(path, new)
+            return new
+    except OSError as exc:
+        logger.debug("Recipes [%s]: cache op skipped: %s", dealer_id, exc)
+        return None
+
+
+def _cache_follow(dealer_id: str, new_rows: list[dict], prev: Any, check: CacheStoreCheck) -> None:
+    """After the store took an op, make the cache file hold the store's rows. A file that
+    held neither the rows the op was planned on nor the new ones is backed up first
+    while the cache is not reconciled with this store."""
+    path = _recipe_path(dealer_id)
+    try:
+        RECIPES_DIR.mkdir(parents=True, exist_ok=True)
+        with recipe_cache.cache_lock(path):
+            have = recipe_cache.read_rows(path)
+            if have == new_rows:
+                return
+            if (path.exists() and have != (prev.rows if prev is not None else None)
+                    and not recipe_cache.is_reconciled(check.cache_dir, check.fingerprint)):
+                recipe_cache.backup_cache_file(path)
+            _atomic_write_json(path, new_rows)
+    except OSError as exc:
+        logger.debug("Recipes [%s]: cache follow skipped: %s", dealer_id, exc)
+
+
+def _mutate(dealer_id: str, entry: dict) -> list[dict]:
+    """Apply one key-scoped op: the store first (compare-and-set), then the cache file.
+
+    Returns the dealer's rows after the op as the store (or, when the store did not
+    take it, the cache file) holds them; an op that changed nothing returns the rows
+    as they were. Where the cache is tagged for another store the file is left alone
+    and the op goes to this process's store only."""
+    check = check_cache_store()
+    entry = dict(entry, at=time.time())
+    took, written, prev = _store_op(dealer_id, entry, foreign=check.foreign)
+    if took:
+        if written is not None:
+            if not check.foreign:
+                _cache_follow(dealer_id, written.rows, prev, check)
+            return written.rows
+        if prev is None or not prev.has_recipes:
+            # The store holds no recipes for the dealer (a cache file waiting to be seeded
+            # by the next load): the op belongs to the file.
+            new = _cache_apply(dealer_id, entry)
+            if new is not None:
+                return new
+        return list(prev.rows) if prev is not None else []
+    if check.foreign:
+        return []
+    new = _cache_apply(dealer_id, entry)
+    return new if new is not None else (recipe_cache.read_rows(_recipe_path(dealer_id)) or [])
+
+
+def mark_stale(dealer_id: str, recipe: EndpointRecipe, reason: str, *, observed_at: float | None = None) -> None:
+    """Flag ``recipe``'s key stale. Does nothing when that key is no longer in the set,
+    and, when ``observed_at`` (the time the failure was observed, taken before the
+    request) is given, when that recipe's ``last_ok_at`` is newer: another host's success
+    after the failure began outranks it."""
+    _mutate(dealer_id, {"op": OP_MARK_STALE, "key": list(recipe.key()), "observed_at": observed_at,
+                        "payload": {"reason": reason}})
+
+
+def record_replay_ok(
+    dealer_id: str, key: tuple[str, str], *, last_ok_at: float, field_coverage: dict[str, float],
+    unstale: bool, total_count: int | None = None,
+) -> None:
+    """Record a replay that answered with rows on the recipe ``key``: its ``last_ok_at``
+    (never moved back) and measured ``field_coverage``, un-stale when ``unstale``, and
+    the learned ``total_count`` for that key only."""
+    _mutate(dealer_id, {"op": OP_REPLAY_OK, "key": list(key), "observed_at": None,
+                        "payload": {"last_ok_at": last_ok_at, "field_coverage": dict(field_coverage),
+                                    "unstale": bool(unstale), "total_count": total_count}})
+
+
+def merge_recipes(
+    dealer_id: str, candidates: list[EndpointRecipe], *, max_recipes: int = 8,
+) -> list[EndpointRecipe]:
+    """Merge ``candidates`` into the stored set by promotion's rules (``_merge_rank``):
+    inside the compare-and-set, against the row as it is when the write lands, so a
+    recipe another host added meanwhile survives. Returns the set after the merge."""
+    rows = _mutate(dealer_id, {"op": OP_MERGE, "key": None, "observed_at": None,
+                               "payload": {"candidates": [asdict(c) for c in candidates],
+                                           "max_recipes": max_recipes}})
+    return _rows_to_recipes(rows)
+
+
+def replace_recipes(dealer_id: str, recipes: list[EndpointRecipe], *, reason: str = "") -> None:
+    """Make ``recipes`` the dealer's whole live set. A stub for ``save_recipes`` until
+    P7.5 archives the replaced recipes into ``superseded_json`` (``reason`` is for that)."""
     save_recipes(dealer_id, recipes)
 
 
@@ -963,27 +1316,7 @@ def promote_from_ledger(
     if not candidates:
         return 0
 
-    merged: dict[tuple[str, str], EndpointRecipe] = {r.key(): r for r in load_recipes(dealer_id)}
-    for c in candidates:
-        cur = merged.get(c.key())
-        # A fresh capture always wins: newer auth headers, un-stales the entry.
-        if cur is None or not cur.last_ok_at or cur.stale or c.vehicle_rows >= cur.vehicle_rows:
-            c.last_ok_at = cur.last_ok_at if cur else 0.0
-            if cur is not None and not c.field_coverage and cur.field_coverage:
-                c.field_coverage = dict(cur.field_coverage)
-            merged[c.key()] = c
-    # Rich feeds (price + trim/colour) replay first; VIN-only endpoints stay on
-    # file for delta VIN-set work but can never outrank a real inventory feed.
-    ranked = sorted(
-        merged.values(),
-        key=lambda r: (
-            r.stale,
-            0 if recipe_coverage_is_rich(r.field_coverage) else 1,
-            -(r.total_count or 0),
-            -r.vehicle_rows,
-        ),
-    )
-    keep = ranked[:max_recipes]
+    keep = _merge_rank(load_recipes(dealer_id), candidates, max_recipes)
     if validate:
         from backend.scanner.recipe_validation import gate_recipes
 

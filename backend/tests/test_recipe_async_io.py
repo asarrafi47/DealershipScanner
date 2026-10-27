@@ -156,6 +156,9 @@ def _store_spy(store: TwoHostRecipeStore, monkeypatch) -> ThreadSpy:
 
 _WRITE_BACK = {"recipes.load_recipes", "recipes.save_recipes", "recipes._atomic_write_json", "recipe_store._conn"}
 
+# mark_stale is key-scoped (P7.3): one compare-and-set on the store, no save of the whole set.
+_MARK_STALE = _WRITE_BACK - {"recipes.save_recipes"}
+
 REPLAY_CASES = {
     # name: (seeded recipe kwargs, replay status, union, store calls that must happen,
     #        "hit" or the stale_reason the replay leaves on file)
@@ -166,10 +169,10 @@ REPLAY_CASES = {
         _WRITE_BACK | {"recipes.clear_stale_status"}, "hit",
     ),
     "auth_dead_marks_stale": (
-        {}, 401, False, _WRITE_BACK | {"recipes.mark_stale", "recipes.record_stale_status"}, "http_401",
+        {}, 401, False, _MARK_STALE | {"recipes.mark_stale", "recipes.record_stale_status"}, "http_401",
     ),
     "unparseable_post_template": (
-        {"post_template": '{"page":1,"perPage":'}, 200, False, _WRITE_BACK | {"recipes.mark_stale"},
+        {"post_template": '{"page":1,"perPage":'}, 200, False, _MARK_STALE | {"recipes.mark_stale"},
         "unreplayable_post_template",
     ),
 }

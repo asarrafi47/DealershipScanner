@@ -397,6 +397,18 @@ def _raw_row(store: TwoHostRecipeStore, dealer_id: str) -> tuple | None:
                             (rec._recipe_slug(dealer_id),)).fetchone()
 
 
+def _whole_set_mark_stale(dealer_id: str, recipe: EndpointRecipe, reason: str) -> None:
+    """The load-then-save-everything flow ``mark_stale`` had before P7.3 (it is key-scoped
+    now and never writes a set it did not read); scripts still do this, and the foreign-cache
+    guards in ``load_recipes`` / ``save_recipes`` are what keep it from clobbering a store."""
+    recipes = load_recipes(dealer_id)
+    for r in recipes:
+        if r.key() == recipe.key():
+            r.stale = True
+            r.stale_reason = reason[:200]
+    rec.save_recipes(dealer_id, recipes)
+
+
 def _unread_warnings(caplog) -> list[str]:
     return [r.getMessage() for r in caplog.records
             if r.levelno == logging.WARNING and "could not be read" in r.getMessage()]
@@ -407,14 +419,14 @@ def _refused_warnings(caplog) -> list[str]:
             if r.levelno == logging.WARNING and "recipe(s) refused" in r.getMessage()]
 
 
-def test_a_failed_store_read_never_lets_mark_stale_write_the_cache_set_over_the_store(
+def test_a_failed_store_read_never_lets_a_whole_set_save_write_the_cache_set_over_the_store(
         store, monkeypatch, caplog):
     path, file_before, row_before = _foreign_with_prod_row(store, monkeypatch)
     calls = _store_fails(monkeypatch, store, times=1)
 
     with caplog.at_level(logging.DEBUG, logger="scanner"):
-        rec.mark_stale(D, EndpointRecipe(dealer_id=D, url=LOCAL_A, method="GET",
-                                         content_type="application/json", post_template=None), "HTTP 403")
+        _whole_set_mark_stale(D, EndpointRecipe(dealer_id=D, url=LOCAL_A, method="GET",
+                                                content_type="application/json", post_template=None), "HTTP 403")
 
     assert calls["failed"] == 1, "the load's store read is the one that failed"
     assert store.db_row(D) == row_before, "the store row is byte-identical: no foreign set was written"
@@ -456,7 +468,7 @@ def test_a_corrupt_store_row_is_not_proof_of_absence(store, monkeypatch, caplog)
 
     with caplog.at_level(logging.WARNING, logger="scanner"):
         served = load_recipes(D)
-        rec.mark_stale(D, served[0], "HTTP 403")
+        _whole_set_mark_stale(D, served[0], "HTTP 403")
 
     assert [r.url for r in served] == [LOCAL_A, LOCAL_B], "served for replay"
     assert _raw_row(store, D) == row_before, "the corrupt row is left for a person to look at"
@@ -516,8 +528,8 @@ def test_a_store_still_unreachable_at_save_time_refuses(store, monkeypatch, capl
     calls = _store_fails(monkeypatch, store, times=2)    # the load's read and the save's read
 
     with caplog.at_level(logging.WARNING, logger="scanner"):
-        rec.mark_stale(D, EndpointRecipe(dealer_id=D, url=LOCAL_A, method="GET",
-                                         content_type="application/json", post_template=None), "HTTP 403")
+        _whole_set_mark_stale(D, EndpointRecipe(dealer_id=D, url=LOCAL_A, method="GET",
+                                                content_type="application/json", post_template=None), "HTTP 403")
 
     assert calls["failed"] == 2
     assert store.db_row(D) is None, "no write was attempted"
