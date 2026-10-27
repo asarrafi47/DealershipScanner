@@ -36,11 +36,38 @@ def test_apply_writes_dictionary_then_runs_builder_apply(tmp_path, builder_calls
     assert "archive_missing" not in builder_calls[0]
 
 
-def test_dry_run_writes_no_dictionary_and_runs_builder_dry_run(tmp_path, builder_calls):
+def test_dry_run_writes_no_dictionary_and_runs_builder_dry_run(tmp_path, monkeypatch):
+    seen = []
+
+    def fake_build(**kw):
+        d = Path(kw["source_dir"])
+        seen.append((kw, sorted(p.name for p in d.rglob("*_EPA.csv"))))
+        return {"insert": 0, "mode": "dry_run"}
+
+    monkeypatch.setattr(bld, "build_epa_master", fake_build)
     out = imp.append_years({2019}, str(FIXTURE), dictionary_dir=tmp_path / "dict")
     assert out["mode"] == "dry_run" and out["dictionary_files"] > 0
     assert not (tmp_path / "dict").exists()
-    assert builder_calls == [{"dry_run": True, "source_dir": tmp_path / "dict"}]
+    assert seen[0][0]["dry_run"] is True and "apply" not in seen[0][0]
+    # the builder sees the new-year files even though the real dictionary lacks them
+    assert len(seen[0][1]) == out["dictionary_files"]
+
+
+def test_dry_run_builder_sees_existing_dictionary_plus_new_year(tmp_path, monkeypatch):
+    real = tmp_path / "dict"
+    real.mkdir()
+    (real / "2001_Acme_EPA.csv").write_text("x\n")
+    seen = []
+
+    def fake_build(**kw):
+        seen.append(sorted(p.name for p in Path(kw["source_dir"]).glob("*_EPA.csv")))
+        return {"insert": 0}
+
+    monkeypatch.setattr(bld, "build_epa_master", fake_build)
+    out = imp.append_years({2019}, str(FIXTURE), dictionary_dir=real)
+    assert "2001_Acme_EPA.csv" in seen[0]
+    assert len(seen[0]) == 1 + out["dictionary_files"]
+    assert [p.name for p in real.glob("*_EPA.csv")] == ["2001_Acme_EPA.csv"]
 
 
 def test_failed_rows_stop_before_the_builder(tmp_path, builder_calls, monkeypatch):

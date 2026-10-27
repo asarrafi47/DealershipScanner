@@ -249,8 +249,8 @@ def append_years(years: set[int], csv_path: str, *, apply: bool = False,
     """P10B.3: add model years through the single ingestion path.
 
     Dictionary CSVs for *years* are regenerated from *csv_path*, then the builder loads
-    them (``--apply`` only; the builder never archives here). A dry run writes the
-    dictionary files to a scratch folder and runs the builder as a dry run.
+    them (``--apply`` only; the builder never archives here). A dry run overlays the new
+    dictionary files on a scratch copy of the real dictionary and runs the builder dry run on it.
     """
     import tempfile
     from collections import Counter
@@ -264,9 +264,19 @@ def append_years(years: set[int], csv_path: str, *, apply: bool = False,
     # process_epa_csv nests under epa/<make>/ only for the real dictionary root.
     epa_dir = root / "epa" if root.resolve() == Path(dictionary_paths.DICTIONARY_ROOT).resolve() else root
     if not apply:
+        # Preview against a scratch copy of the real dictionary with the new-year files
+        # overlaid, so the builder diff counts the rows --apply would insert.
+        import shutil
+
         with tempfile.TemporaryDirectory(prefix="epa_append_dry_") as scratch:
-            written = to_dict.process_epa_csv(Path(csv_path), 1950, Path(scratch), years=set(years), stats=stats)
-        report = builder.build_epa_master(dry_run=True, source_dir=epa_dir)
+            scratch_root = Path(scratch) / "dictionary"
+            if root.is_dir():
+                shutil.copytree(root, scratch_root)
+            else:
+                scratch_root.mkdir()
+            written = to_dict.process_epa_csv(Path(csv_path), 1950, scratch_root, years=set(years), stats=stats)
+            scratch_epa = scratch_root / "epa" if epa_dir != root else scratch_root
+            report = builder.build_epa_master(dry_run=True, source_dir=scratch_epa)
         return {"mode": "dry_run", "years": sorted(years), "dictionary_files": written,
                 "failed_rows": stats["failed"], "builder": report}
     written = to_dict.process_epa_csv(Path(csv_path), 1950, root, years=set(years), stats=stats)
