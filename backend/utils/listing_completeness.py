@@ -21,6 +21,12 @@ from backend.utils.in_transit import vehicle_is_in_transit
 from backend.utils.price_floor import classify_price
 from backend.utils.placeholder_images import is_placeholder_image
 from backend.utils.mileage_display import is_used_or_certified, odometer_absent
+from backend.vehicle_facts.listing_classes import (
+    NON_ROAD_EXEMPT,
+    mercedes_model_is_designation,
+    model_is_single_trim,
+    non_road_class,
+)
 
 # Human labels for ``listing_missing_field_codes`` / ``incomplete_missing_fields`` (dev UI + summaries).
 INCOMPLETE_FIELD_LABELS: dict[str, str] = {
@@ -257,18 +263,13 @@ def listing_missing_field_codes(
     if _dash(car.get("model")):
         missing.append("model")
     if _dash(car.get("trim")) or junk_text_value(car_raw.get("trim")) or junk_text_value(car.get("trim")):
-        # A blank trim is only "missing" when the model actually has trim
-        # variants. Standalone models (BMW XM/M6/i8, base F-250) have no trim —
-        # the catalog shows a single trim equal to the model name — so a blank
-        # is correct, not a gap.
-        try:
-            from backend.enrichment.knowledge_engine import catalog_model_is_trimless
-
-            trimless = catalog_model_is_trimless(
-                car_raw.get("year"), car_raw.get("make") or "", car_raw.get("model") or ""
-            )
-        except Exception:
-            trimless = False
+        # A blank trim is only "missing" when the model has trim variants. The exemption
+        # is an explicit single-trim list (N21.8, M1): the catalog's "only trim equals
+        # the model name" hid about 201 real gaps. A Mercedes model that carries its
+        # designation ("C 300") already shows the buyer the trim (F1).
+        trimless = model_is_single_trim(car_raw.get("year"), car_raw.get("make"), car_raw.get("model")) or (
+            mercedes_model_is_designation(car_raw.get("make"), car_raw.get("model"))
+        )
         if not trimless:
             missing.append("trim")
     if _mileage_blank(car_raw):
@@ -324,9 +325,20 @@ def listing_missing_field_codes(
     if not include_non_actionable:
         missing = [m for m in missing if m not in _NON_ACTIONABLE]
 
+    # F3 (N21.8): trailers, motorcycles, carts and boats lack the fields that do not
+    # exist for them. The class is looked up only when such a gap is present.
+    if any(m in _ROAD_ONLY_CODES for m in missing):
+        cls = non_road_class(car_raw)
+        if cls:
+            missing = [m for m in missing if m not in NON_ROAD_EXEMPT[cls]]
+
     if for_public_filter:
         missing = [m for m in missing if m in _PUBLIC_INCOMPLETE_KEYS]
     return missing
+
+
+# Codes a non-road class may exempt (the union of ``NON_ROAD_EXEMPT``).
+_ROAD_ONLY_CODES = frozenset({"engine", "transmission", "drivetrain", "fuel_type", "cylinders"})
 
 
 # N6.4 (D-N13): a new arrival whose only gaps are price (photo gaps never queue a car,

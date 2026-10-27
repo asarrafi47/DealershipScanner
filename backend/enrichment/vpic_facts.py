@@ -94,6 +94,28 @@ def single_vpic_trim(vp: dict[str, Any] | None, flat: dict[str, str] | None = No
     return text[:80]
 
 
+def clean_vpic_make_model(flat: dict[str, str] | None) -> dict[str, str]:
+    """``{"make": ..., "model": ...}`` from a decode that is clean (ErrorCode exactly 0)
+    and names exactly one value (N21.8, 2.24). vPIC answers a list for some VINs
+    ("750i, Alpina B7") and a partial decode carries error codes; neither fills.
+    The listing cannot name a model it does not carry, so no trim-style corroboration
+    applies; the fill is blank-only (the caller checks)."""
+    flat = flat or {}
+    if str(flat.get("ErrorCode") or "").strip() != "0":
+        return {}
+    from backend.utils.field_clean import canonical_make
+
+    out: dict[str, str] = {}
+    for key, col in (("Make", "make"), ("Model", "model")):
+        text = re.sub(r"\s+", " ", str(flat.get(key) or "")).strip()
+        if not text or text.lower() in ("not applicable", "n/a", "none", "null", "0"):
+            continue
+        if re.search(r"[,;/|]", text):
+            continue
+        out[col] = canonical_make(text.title() if text.isupper() else text) if col == "make" else text[:80]
+    return out
+
+
 def vin_decode_inline_enabled() -> bool:
     """SCANNER_VIN_DECODE_INLINE (default on, D-PR5 a): decode uncached VINs on the
     scan write path. tests/conftest.py sets it to 0."""
@@ -587,7 +609,8 @@ def derived_fills(row: dict[str, Any], vp: dict[str, Any] | None, flat: dict[str
 _HEAL_FLAT_CHUNK = 500  # rows whose raw vPIC decodes are held at once in heal_rows
 
 
-HEAL_FIELDS = ("drivetrain", "fuel_type", "cylinders", "engine_description", "body_style", "transmission", "trim")
+HEAL_FIELDS = ("drivetrain", "fuel_type", "cylinders", "engine_description", "body_style", "transmission", "trim",
+               "make", "model")
 
 # P8B.4b (IL-20): heavy-duty / commercial families whose drive and gearbox the
 # decode often leaves blank or at "4x2" and the EPA catalog never covers (it
@@ -706,12 +729,13 @@ def heal_rows(conn, *, vins: Iterable[str] | None = None, dealers: Iterable[str]
         where += " AND dealer_id IN (" + ",".join("?" * len(dealer_list)) + ")"
         params += dealer_list
     cur.execute(f"SELECT c.id, c.vin, c.drivetrain, c.fuel_type, c.cylinders, c.spec_source_json, e.drive, "
-                f"c.engine_description, c.body_style, c.transmission, {'c.trim' if trim_set else 'NULL'}, c.dealer_id FROM cars c "
+                f"c.engine_description, c.body_style, c.transmission, {'c.trim' if trim_set else 'NULL'}, c.dealer_id, c.make, c.model FROM cars c "
                 f"LEFT JOIN epa_master e ON e.id = c.epa_master_id WHERE {where.replace('listing_active', 'c.listing_active').replace(' vin', ' c.vin').replace('dealer_id', 'c.dealer_id')}", tuple(params))
     rows = [dict(zip(("id", "vin", "drivetrain", "fuel_type", "cylinders", "spec_source_json", "catalog_drive",
-                      "engine_description", "body_style", "transmission", "trim", "dealer_id"), r)) for r in cur.fetchall()]
+                      "engine_description", "body_style", "transmission", "trim", "dealer_id", "make", "model"), r)) for r in cur.fetchall()]
     stats: dict[str, Any] = {"rows": len(rows), "decoded": 0, "drivetrain": 0, "fuel_type": 0, "cylinders": 0,
-                             "engine_description": 0, "body_style": 0, "transmission": 0, "trim": 0, "examples": []}
+                             "engine_description": 0, "body_style": 0, "transmission": 0, "trim": 0, "make": 0, "model": 0,
+                             "examples": []}
     pre = [r for r in rows if is_preassignment_vin(r["vin"])]
     if pre:
         rows = [r for r in rows if not is_preassignment_vin(r["vin"])]
@@ -730,7 +754,8 @@ def heal_rows(conn, *, vins: Iterable[str] | None = None, dealers: Iterable[str]
         need_flat = sorted({r["vin"] for r in chunk
                             if not str(r.get("engine_description") or "").strip() or not str(r.get("body_style") or "").strip()
                             or not str(r.get("transmission") or "").strip() or not _drive_bucket(r.get("drivetrain"))
-                            or (r.get("dealer_id") in trim_set and not str(r.get("trim") or "").strip())})
+                            or (r.get("dealer_id") in trim_set and not str(r.get("trim") or "").strip())
+                            or not str(r.get("make") or "").strip() or not str(r.get("model") or "").strip()})
         flats = _vpic_flat_rows(conn, need_flat)
         _heal_chunk(cur, chunk, flats, stats, dry_run, lookup_vpic_from_cache, merge_spec_source_json, only, trim_set)
         if not dry_run:
@@ -793,6 +818,10 @@ def _heal_chunk(cur, rows: list[dict[str, Any]], flats: dict[str, dict[str, str]
             if one:
                 ch["trim"] = (r.get("trim"), one)
                 sources["trim"] = "nhtsa_vpic"
+        for field, text in clean_vpic_make_model(flat).items():
+            if not str(r.get(field) or "").strip():
+                ch[field] = (r.get(field), text)
+                sources[field] = "nhtsa_vpic"
         for field, (old, text) in derived_fills(r, vp, flat).items():
             if field == "engine_description":
                 d = prec.decide(field, r.get(field), r.get("spec_source_json"), text, prec.NHTSA_VPIC)
