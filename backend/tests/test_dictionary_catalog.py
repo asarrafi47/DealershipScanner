@@ -259,3 +259,90 @@ def test_scratch_root_redirects_the_private_copies(scratch_dictionary_root: Path
     # And a writer aimed at it lands in the scratch tree, not the real one.
     dictionary_catalog.write_manifest([])
     assert (scratch_dictionary_root / "index" / "manifest.json").is_file()
+
+
+# --- P9.2: the in-memory options index is the sole options resolver ----------
+
+_BIG_ROW = "A Very Long Option Name That Keeps The File Above The Stub Size Limit"
+
+
+def _write_options(path: Path, year: int, make: str, model: str, rows: int = 6) -> Path:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", newline="", encoding="utf-8") as fh:
+        writer = csv.writer(fh)
+        writer.writerow(["Year", "Make", "Model", "Trim", "Options", "optionDetails"])
+        for i in range(rows):
+            writer.writerow([year, make, model, f"T{i}", f"{_BIG_ROW} {i}", _BIG_ROW])
+    return path
+
+
+def _find_options(make: str, model: str, year: int) -> Path | None:
+    from backend.enrichment import dictionary_catalog
+
+    dictionary_catalog.invalidate_catalog_cache()
+    return dictionary_catalog.find_complete_options_csv(make, model, year)
+
+
+def test_options_index_hyphenated_model(scratch_dictionary_root: Path) -> None:
+    raw = scratch_dictionary_root / "options" / "raw" / "Honda"
+    want = _write_options(raw / "2022_Honda_CR-V_Complete_Options.csv", 2022, "Honda", "CR-V")
+    assert _find_options("Honda", "CR V", 2022) == want
+    assert _find_options("Honda", "CR-V", 2022) == want
+
+
+def test_options_index_make_alias(scratch_dictionary_root: Path) -> None:
+    (scratch_dictionary_root / "index" / "make_aliases.json").write_text('{"chevy": "Chevrolet"}')
+    raw = scratch_dictionary_root / "options" / "raw" / "Chevrolet"
+    want = _write_options(raw / "2021_Chevrolet_Tahoe_Complete_Options.csv", 2021, "Chevrolet", "Tahoe")
+    assert _find_options("chevy", "Tahoe", 2021) == want
+
+
+def test_options_index_ignores_stale_catalog_row(scratch_dictionary_root: Path) -> None:
+    """A catalog row for a deleted 2020 file must not send 2020 to the 2019 file."""
+    root = scratch_dictionary_root
+    gone = _write_options(root / "options" / "raw" / "Buick" / "2020_Buick_Enclave_Complete_Options.csv", 2020, "Buick", "Enclave")
+    _write_options(root / "options" / "raw" / "Buick" / "2019_Buick_Enclave_Complete_Options.csv", 2019, "Buick", "Enclave")
+    rebuild_catalog(build_manifest_entries(), enrich_derived=False)
+    gone.unlink()
+    live = _write_options(root / "options" / "raw" / "Buick" / "2020_Buick_Enclave_Complete_Options.csv", 2020, "Buick", "Enclave")
+    assert _find_options("Buick", "Enclave", 2020) == live
+
+
+def test_options_index_prefers_raw_over_root_and_skips_stubs(scratch_dictionary_root: Path) -> None:
+    root = scratch_dictionary_root
+    name = "2020_Buick_Enclave_Complete_Options.csv"
+    raw = _write_options(root / "options" / "raw" / "Buick" / name, 2020, "Buick", "Enclave", rows=6)
+    _write_options(root / name, 2020, "Buick", "Enclave", rows=1)
+    assert _find_options("Buick", "Enclave", 2020) == raw
+    (root / "options" / "stubs").mkdir(exist_ok=True)
+    (root / "options" / "stubs" / "2024_Buick_Encore_Complete_Options.csv").write_text("Year,Make,Model\n")
+    assert _find_options("Buick", "Encore", 2024) is None
+
+
+def test_options_index_without_catalog_resolves_to_raw(scratch_dictionary_root: Path) -> None:
+    raw = scratch_dictionary_root / "options" / "raw" / "Toyota"
+    want = _write_options(raw / "2025_Toyota_Camry_Complete_Options.csv", 2025, "Toyota", "Camry")
+    assert not (scratch_dictionary_root / "index" / "dictionary_catalog.db").exists()
+    assert _find_options("Toyota", "Camry", 2025) == want
+
+
+def test_options_index_refuses_sibling_model(scratch_dictionary_root: Path) -> None:
+    raw = scratch_dictionary_root / "options" / "raw" / "Chevrolet"
+    _write_options(raw / "2025_Chevrolet_Blazer EV_Complete_Options.csv", 2025, "Chevrolet", "Blazer EV")
+    assert _find_options("Chevrolet", "Blazer", 2025) is None
+
+
+def test_pf1_epa_prefers_raw_model_over_family_label(scratch_dictionary_root: Path) -> None:
+    """Without a catalog DB the 2026 A5 must not resolve to the A4 family file (PF-1)."""
+    epa = scratch_dictionary_root / "epa" / "Audi"
+    epa.mkdir(parents=True)
+    for year, model in ((2025, "A4"), (2025, "A5")):
+        with (epa / f"{year}_Audi_{model}_EPA.csv").open("w", newline="", encoding="utf-8") as fh:
+            writer = csv.DictWriter(fh, fieldnames=list(CANONICAL_CSV_COLUMNS))
+            writer.writeheader()
+            writer.writerow({"Year": str(year), "Make": "Audi", "Model": model, "Trim": "Premium"})
+    from backend.enrichment import dictionary_catalog
+
+    dictionary_catalog.invalidate_catalog_cache()
+    found = find_epa_csv("Audi", "A5", 2026)
+    assert found is not None and found.name == "2025_Audi_A5_EPA.csv"

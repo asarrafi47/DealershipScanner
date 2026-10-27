@@ -97,6 +97,23 @@ logs/mfa*.jsonl
 # Comment out next line if you want EPA data in the image
 DICTIONARY/
 
+# Script-only dictionary trees (P9.7): read only by backend/scripts and the
+# brochure acquisition builders, never on a request path. Guarded by
+# backend/tests/test_brochure_text_runtime_gate.py. Never fence epa/,
+# options/raw/, curated/, trim_adds_by_year/, brochure_text_slim/,
+# trim_spec_sheets/, epa_ev_range_miles.json, index/make_aliases.json or
+# platform_registry.json: the request path reads them.
+backend/dictionary/derived/trim_candidates/
+backend/dictionary/derived/html_spec_text/
+backend/dictionary/derived/html_spec_overlays/
+backend/dictionary/derived/trim_overlay_validation.jsonl
+backend/dictionary/derived/brochure_content_index.json
+backend/dictionary/derived/trim_citation_verification.json
+backend/dictionary/index/manifest.json
+# brochure_text/ (149.6 MB) has a dormant reader (attach_rung_order); fenced only
+# because the gate test proves every brochure_text_quoted overlay carries order_basis.
+backend/dictionary/derived/brochure_text/
+
 # railway up-only: graphify output + template previews (never needed remotely)
 graphify-out/
 preview3/

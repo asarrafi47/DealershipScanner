@@ -727,9 +727,6 @@ def _csv_path(year: str, make: str, model: str) -> Path:
     make_dir = make.replace(" ", "_") or "Unknown"
     out_dir = OPTIONS_RAW_DIR / make_dir
     out_dir.mkdir(parents=True, exist_ok=True)
-    legacy = _DICTIONARY / f"{year}_{make}_{model_slug}_Complete_Options.csv"
-    if legacy.is_file() and not (out_dir / legacy.name).exists():
-        return legacy
     return out_dir / f"{year}_{make}_{model_slug}_Complete_Options.csv"
 
 

@@ -8,14 +8,22 @@ Reference data for trim ladders, EPA specs, and Wikipedia/NHTSA option prose.
 |------|----------|
 | `epa/{Make}/` | `*_EPA.csv` — FuelEconomy.gov specs (authoritative) |
 | `options/raw/{Make}/` | Rich `*_Complete_Options.csv` (Wikipedia/NHTSA/brochure) |
-| `options/stubs/{Make}/` | Header-only placeholders (no rows yet) |
+| `options/stubs/` | Removed (P9.4); header-only placeholders are no longer kept (`OPTIONS_STUBS_DIR` stays as a constant) |
 | `curated/` | `trim_ladders.json`, `trim_ladders_*`, merged ladders |
 | `derived/trim_spec_sheets/` | Per-ladder structured spec JSON |
-| `index/manifest.json` | `(year, make, model)` → file paths + row counts |
-| `index/dictionary_catalog.db` | SQLite lookup index (same data as manifest) |
+| `index/manifest.json` | `(year, make, model)` → file paths + row counts (offline report only: no runtime reader) |
+| `index/dictionary_catalog.db` | SQLite lookup index (same data as manifest); not consulted for Complete_Options and not baked into the images |
 | `index/make_aliases.json` | Make name normalization |
 
-Legacy flat CSVs at the dictionary root remain supported until migrated.
+The legacy flat `*_Complete_Options.csv` files at the dictionary root were removed (P9.3); nothing writes there.
+
+### In-image catalog: not needed (P9.6)
+
+`find_complete_options_csv` resolves from an in-memory index built from the CSV filenames, so the
+images ship no `dictionary_catalog.db` and `manifest.json` has no runtime reader. Measured 2026-10-26
+on 50 cars (25 raw-only, 25 root-duplicate YMMs): the index builds once per process in 0.78 s; options
+lookup median 0.21 ms (p95 0.87 ms) against 0.70 ms (p95 1.52 ms) with a catalog; `resolve_trim_ladder`
+median 40 ms (p95 279 ms) against 44 ms (p95 324 ms). Baking the catalog into the images buys nothing.
 
 Brochure PDFs: `backend/data/brochures/` (staging; kept by default — pass `--delete-after` to remove after success).
 
