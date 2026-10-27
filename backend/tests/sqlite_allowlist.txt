@@ -157,9 +157,8 @@ backend/dev/scan_lab.py  qmark_placeholder  3
 backend/dictionary/derived/dictionary_catalog.sqlite3  tracked_db_file  1
 backend/dictionary/enrich_from_dictionary.py  db_path_literal  2
 backend/dictionary/enrich_from_dictionary.py  env_db_path  2
-backend/dictionary/enrich_from_dictionary.py  ifnull  6
+backend/dictionary/enrich_from_dictionary.py  ifnull  5
 backend/dictionary/enrich_from_dictionary.py  import_sqlite3  1
-backend/dictionary/enrich_from_dictionary.py  qmark_placeholder  1
 backend/dictionary/enrich_from_dictionary.py  row_factory  1
 backend/dictionary/enrich_from_dictionary.py  sqlite3_attr  1
 backend/discovery/cli.py  db_path_literal  1
@@ -274,11 +273,11 @@ backend/scripts/fingerprint_timing.py  qmark_placeholder  1
 backend/scripts/fleet_scan.py  db_path_literal  1
 backend/scripts/geocode_dealers.py  insert_or  2
 backend/scripts/geocode_dealers.py  qmark_placeholder  2
-backend/scripts/harvest_carscommerce.py  qmark_placeholder  2
-backend/scripts/harvest_html_jsonld.py  qmark_placeholder  2
+backend/scripts/harvest_carscommerce.py  qmark_placeholder  1
+backend/scripts/harvest_html_jsonld.py  qmark_placeholder  1
 backend/scripts/heal_cylinders_from_vpic.py  qmark_placeholder  2
 backend/scripts/heal_ev_cylinders.py  qmark_placeholder  1
-backend/scripts/heal_from_recipes.py  qmark_placeholder  2
+backend/scripts/heal_from_recipes.py  qmark_placeholder  1
 backend/scripts/heal_matcher_trims.py  qmark_placeholder  2
 backend/scripts/heal_p8a7_driver.py  qmark_placeholder  1
 backend/scripts/heal_vdp_junk_values.py  qmark_placeholder  2
@@ -368,6 +367,7 @@ backend/tests/test_backfill_recipe_saved_at.py  qmark_placeholder  1
 backend/tests/test_backfill_recipe_saved_at.py  sqlite3_attr  3
 backend/tests/test_billing_portal.py  db_path_literal  2
 backend/tests/test_billing_portal.py  env_db_path  2
+backend/tests/test_body_style_filter_e2e.py  ifnull  1
 backend/tests/test_bootstrap_site_admin.py  db_path_literal  1
 backend/tests/test_bootstrap_site_admin.py  env_db_path  2
 backend/tests/test_bootstrap_site_admin.py  qmark_placeholder  1
@@ -558,6 +558,7 @@ backend/tests/test_mileage_zero_f12.py  db_path_literal  1
 backend/tests/test_mileage_zero_f12.py  env_db_path  1
 backend/tests/test_mileage_zero_f12.py  import_sqlite3  1
 backend/tests/test_mileage_zero_f12.py  sqlite3_attr  3
+backend/tests/test_model_specs_corrections_precedence.py  db_path_literal  1
 backend/tests/test_msrp_trust.py  executescript  1
 backend/tests/test_msrp_trust.py  import_sqlite3  1
 backend/tests/test_msrp_trust.py  qmark_placeholder  1
@@ -568,6 +569,7 @@ backend/tests/test_new_arrival_pending.py  db_path_literal  2
 backend/tests/test_new_arrival_pending.py  import_sqlite3  1
 backend/tests/test_new_arrival_pending.py  qmark_placeholder  1
 backend/tests/test_new_arrival_pending.py  sqlite3_attr  1
+backend/tests/test_no_raw_fact_updates_grep.py  qmark_placeholder  2
 backend/tests/test_paid_access_parity.py  db_path_literal  1
 backend/tests/test_paid_access_parity.py  qmark_placeholder  1
 backend/tests/test_partial_update_storage_vocabulary.py  db_path_literal  2
@@ -736,6 +738,7 @@ backend/tests/test_upsert_data_quality_score.py  env_db_path  1
 backend/tests/test_upsert_data_quality_score.py  import_sqlite3  1
 backend/tests/test_upsert_data_quality_score.py  qmark_placeholder  1
 backend/tests/test_upsert_data_quality_score.py  sqlite3_attr  1
+backend/tests/test_upsert_fact_precedence.py  qmark_placeholder  1
 backend/tests/test_upsert_keeps_vdp_only_fields.py  db_path_literal  1
 backend/tests/test_upsert_keeps_vdp_only_fields.py  env_db_path  1
 backend/tests/test_upsert_keeps_vdp_only_fields.py  import_sqlite3  1
@@ -793,6 +796,8 @@ backend/tests/test_vpic_heal_derived_fields_f06.py  executescript  1
 backend/tests/test_vpic_heal_derived_fields_f06.py  import_sqlite3  1
 backend/tests/test_vpic_heal_derived_fields_f06.py  qmark_placeholder  8
 backend/tests/test_vpic_heal_derived_fields_f06.py  sqlite3_attr  1
+backend/tests/test_vpic_inline_decode.py  import_sqlite3  1
+backend/tests/test_vpic_inline_decode.py  sqlite3_attr  1
 backend/tests/test_vpic_specs_cache.py  db_path_literal  2
 backend/tests/test_window_sticker_scan.py  db_path_literal  1
 backend/tests/trim_ladder/test_epa_file_identity.py  db_path_literal  1

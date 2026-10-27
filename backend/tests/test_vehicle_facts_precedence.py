@@ -1,6 +1,7 @@
 """P8A.2: write-time fact precedence (pure). Table-driven per rule."""
 from __future__ import annotations
 
+from pathlib import Path
 import subprocess
 import sys
 
@@ -233,5 +234,6 @@ def test_no_db_or_network_imports():
     code = ("import sys; import backend.vehicle_facts.precedence; "
             "bad=[m for m in sys.modules if m in ('requests','backend.db','psycopg','psycopg2','sqlite3')]; "
             "print(bad)")
-    out = subprocess.run([sys.executable, "-c", code], capture_output=True, text=True, timeout=60).stdout
-    assert out.strip() == "[]", out
+    out = subprocess.run([sys.executable, "-c", code], capture_output=True, text=True, timeout=60,
+                         cwd=Path(__file__).resolve().parents[2])
+    assert out.stdout.strip() == "[]", out.stdout + out.stderr
