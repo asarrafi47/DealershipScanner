@@ -32,6 +32,7 @@ Env:
   SCAN_FLEET=1            scan the fleet roster (active inventory, see step 1)
   SCAN_DEALERS=a,b,c      scan only these (wins over SCAN_FLEET)
   SCAN_SHARDS=8           parallel pipeline processes
+  SCAN_SHARD_ORDER        reverse | seed:<n>  (determinism passes; recorded in the summary)
   SCAN_BATCH=6            dealers per scanner process inside a shard
   SCAN_POST_STEPS=1       0 skips compute_market_stats + build_listings_grid_cards
   SCAN_PIPELINE_ARGS=...  extra dealer_pipeline flags (e.g. "--no-lifecycle")
@@ -63,6 +64,7 @@ from __future__ import annotations
 
 import json
 import os
+import random
 import re
 import shutil
 import subprocess
@@ -229,9 +231,19 @@ def active_rows(dealer_ids: list[str]) -> dict[str, int]:
         conn.close()
 
 
-def make_shards(dealer_ids: list[str], n: int, weights: dict[str, int]) -> list[list[str]]:
+def shard_order() -> str:
+    """SCAN_SHARD_ORDER: '' (default), 'reverse', or 'seed:<n>'. Anything else fails loudly."""
+    raw = (os.environ.get("SCAN_SHARD_ORDER") or "").strip().lower()
+    if raw in ("", "reverse") or (raw.startswith("seed:") and raw[5:].lstrip("-").isdigit()):
+        return raw
+    raise SystemExit(f"SCAN_SHARD_ORDER must be reverse or seed:<n>, got {raw!r}")
+
+
+def make_shards(dealer_ids: list[str], n: int, weights: dict[str, int], order: str = "") -> list[list[str]]:
     """Longest-processing-time-first: biggest lots first, each onto the lightest shard.
-    Scan time tracks row count (VDP prefetch per car), so shards finish together."""
+    Scan time tracks row count (VDP prefetch per car), so shards finish together.
+    `order` (N10.8, see shard_order) reverses or seed-shuffles both the dealer order inside
+    each shard and the shard assignment, so a determinism pass sees a different first writer."""
     n = max(1, min(n, len(dealer_ids)))
     shards: list[list[str]] = [[] for _ in range(n)]
     load = [0] * n
@@ -239,7 +251,15 @@ def make_shards(dealer_ids: list[str], n: int, weights: dict[str, int]) -> list[
         i = min(range(n), key=lambda k: load[k])
         shards[i].append(did)
         load[i] += max(20, weights.get(did, 50))
-    return [s for s in shards if s]
+    shards = [s for s in shards if s]
+    if order == "reverse":
+        shards = [s[::-1] for s in shards[::-1]]
+    elif order.startswith("seed:"):
+        rng = random.Random(int(order[5:]))
+        for s in shards:
+            rng.shuffle(s)
+        rng.shuffle(shards)
+    return shards
 
 
 # --------------------------------------------------------------------------
@@ -516,7 +536,7 @@ def run_fleet() -> int:
         (run_dir / "run_state.json").write_text(json.dumps({"started": started.isoformat()}))
         if ROSTER_REPORT:
             (run_dir / "roster_rule.json").write_text(json.dumps(ROSTER_REPORT, indent=1))
-        shards = make_shards(roster, _env_int("SCAN_SHARDS", 8), active_rows(roster))
+        shards = make_shards(roster, _env_int("SCAN_SHARDS", 8), active_rows(roster), shard_order())
     batch = _env_int("SCAN_BATCH", 6)
     extra = (os.environ.get("SCAN_PIPELINE_ARGS") or "").split()
     py = sys.executable
@@ -602,6 +622,7 @@ def run_fleet() -> int:
         "roster_rule": {k: (len(v) if isinstance(v, list) else v) for k, v in ROSTER_REPORT.items()},
         "assessed": len(results),
         "shards": len(shards),
+        "shard_order": shard_order() or "default",
         "batch": batch,
         "verdicts": dict(verdicts),
         # N9.12: the old "rows" summed the feed BEFORE the VIN-owner guard and read as rows
