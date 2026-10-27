@@ -66,6 +66,14 @@ def _drive_same(a: str, b: str) -> bool:
     return same_drive_wheels(a, b)
 
 
+def _vpic_plain_gasoline(fuel: Any) -> bool:
+    """True when the decode's FuelTypePrimary is gasoline with no electric secondary."""
+    from backend.utils.field_clean import coerce_fuel_type_stored
+
+    text = str(fuel or "").strip()
+    return bool(text) and "electric" not in text.lower() and coerce_fuel_type_stored(text) == "Gasoline"
+
+
 def _vin_decisions(row: dict[str, Any], vpic: dict[str, Any] | None) -> dict[str, Any]:
     """{field: precedence.Decision} for every decode value that wins on *row*.
 
@@ -109,6 +117,10 @@ def _vin_decisions(row: dict[str, Any], vpic: dict[str, Any] | None) -> dict[str
         cur = str(row.get("fuel_type") or "").strip()
         if _fuel_bucket(cur) in ("gas", ""):
             _take("fuel_type", "Diesel")
+    elif el is None and _vpic_plain_gasoline(vpic.get("fuel_type")):
+        # N15.5: fill a blank or non-canonical fuel ("F", "Direct Injection");
+        # precedence refuses to replace any stated fuel with it.
+        _take("fuel_type", "Gasoline")
     # EngineCylinders: the stored column is the weakest fact on the row (a 2027
     # Buick Enclave 2.5T carried 6, a 2026 Sierra 2.7L I4 carried 8 — both from a
     # model-level backfill; verified 2026-09-25 on hendrickbuickgmccary-com /

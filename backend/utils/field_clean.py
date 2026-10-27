@@ -56,6 +56,7 @@ _CANONICAL_FUEL_TYPE: dict[str, str] = {
     "e85": "Gasoline",
     # feed abbreviations (7 dealers send 'G', 1,054 rows; 'UNL' 94; F13 2026-09-28)
     "g": "Gasoline",
+    "f": "Gasoline",  # N15.5: 30 rows in the fresh scan; a flex-fuel code, mapped like "flex fuel"
     "unl": "Gasoline",
     "unleaded gas": "Gasoline",
     "unleaded gasoline": "Gasoline",

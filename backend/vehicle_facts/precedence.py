@@ -381,6 +381,18 @@ def _fuel_rule(stored, provenance, candidate, src, ctx):
     if src == NHTSA_VPIC:
         low = text.lower()
         decisive = cand_e in (BEV, PHEV, FCEV, HEV) or "diesel" in low
+        if low == "gasoline" and not decisive:
+            # N15.5: plain Gasoline only fills a blank / not-a-fuel / abbreviation
+            # of gasoline ("F", "G", "Direct Injection"); it never replaces a
+            # stated hybrid, diesel or electric label.
+            from backend.utils.field_clean import coerce_fuel_type_stored
+
+            stored_c = coerce_fuel_type_stored(stored)
+            if stored_c is None or stored_c == "Gasoline":
+                if str(stored or "").strip() == text:
+                    return _no(field, src, "unchanged", record=False)
+                return _yes(field, text, src, "vPIC gasoline fills a blank or non-canonical fuel (N15.5)")
+            return _no(field, src, "plain-gasoline decode never replaces a stated fuel", record=False)
         if "mild" in low or not decisive:
             return _no(field, src, "mild hybrid / silent / plain-gasoline decode changes nothing",
                        record=False)
