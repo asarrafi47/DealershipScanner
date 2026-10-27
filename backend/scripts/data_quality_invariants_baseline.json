@@ -198,6 +198,48 @@
       "denominator": 80600,
       "tier": "stored",
       "title": "cars.epa_master_id points at a row whose engine size contradicts the dealer's engine text"
+    },
+    "vpic_electrification_fuel_conflict": {
+      "count": 1509,
+      "denominator": 207903,
+      "tier": "stored",
+      "title": "a fuel label that disagrees with the VIN decode's electrification"
+    },
+    "vpic_drive_wheels_conflict": {
+      "count": 4881,
+      "denominator": 207903,
+      "tier": "stored",
+      "title": "a stored drivetrain that contradicts the VIN decode's driven wheels"
+    },
+    "vpic_cylinders_conflict": {
+      "count": 59,
+      "denominator": 200364,
+      "tier": "stored",
+      "title": "a stored cylinder count that differs from the VIN decode"
+    },
+    "provenance_stale_drivetrain": {
+      "count": 146,
+      "denominator": 56430,
+      "tier": "stored",
+      "title": "a drivetrain whose provenance label no longer describes its value"
+    },
+    "sticker_vs_vpic_conflict": {
+      "count": 0,
+      "denominator": 1336,
+      "tier": "stored",
+      "title": "a sticker-sourced fact that contradicts the VIN decode"
+    },
+    "engine_text_vs_vpic_displacement": {
+      "count": 250,
+      "denominator": 197418,
+      "tier": "stored",
+      "title": "engine text displacement more than 0.15 L from the VIN decode"
+    },
+    "catalog_tiebreak_over_explicit_end": {
+      "count": 139,
+      "denominator": 1473,
+      "tier": "stored",
+      "title": "the catalog tiebreak replaced a dealer's explicit FWD or RWD"
     }
   },
   "note": "Recorded 2026-08-02 from a full run (stored + rendered tiers, 14,606 active cohorts) on the live inventory. These are a KNOWN BACKLOG, not a clean state: every nonzero count here is an open data defect. Lower them deliberately and re-record; never raise one to make a run green.2026-08-07: selectively re-recorded epa_link_year_mismatch (prev_year fallback now excluded from the invariant) and the three rendered-tier entries the 93e5a5e08 merge gate drove to zero. Deliberately NOT re-recorded: car_trim_not_named_by_listing, electric_car_with_cylinders, cylinders_not_a_real_layout, mileage_out_of_range, rendered_fuel_type_card_vs_filter \u2014 those regressions are real and must keep alarming. 2026-08-07: added electric_label_with_combustion_engine_text (recorded at 10 from the live stored tier) alongside the fuel-label plausibility fix; these 10 are the gas/hybrid/PHEV rows still stored 'Electric' with contradicting engine text \u2014 read-time corrects their display, and the count drops as scans re-store them. 2026-08-07: added rooftop_gate_went_silent at 0 (binary: 1 = zero refusals in 3 days while scans ran; verified alive today \u2014 the ledger's first 40 rows landed 2026-08-07 with 77k cars scraped in the window). 2026-09-21: added epa_link_contradicts_engine_text, recorded at 241 AFTER the resolver learned to read displacement and cylinders from engine_description and the fleet was re-linked (was 2,811 before). The 241 are rows whose dealer text names a size the catalog has no candidate for; read-time now rejects such links (knowledge_engine_specs catalog_link_rejected) so they render from the fuzzy path instead."
