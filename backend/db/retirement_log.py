@@ -24,7 +24,10 @@ from backend.db.inventory_pg import is_inventory_postgres
 
 logger = logging.getLogger(__name__)
 
-WRITERS = ("scanner_reconcile", "delta_scan", "disown", "pipeline_w2", "portal_sync", "admin_delete")
+WRITERS = (
+    "scanner_reconcile", "delta_scan", "disown", "pipeline_w2", "portal_sync", "admin_delete",
+    "restore", "restore_rollback",  # backend.scripts.audit_retirements (P5B.6)
+)
 
 _CHUNK = 400
 
