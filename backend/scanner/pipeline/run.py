@@ -57,7 +57,8 @@ def _run(args) -> int:
     started = datetime.now(timezone.utc).replace(microsecond=0)
     baseline_since = (started - timedelta(days=BASELINE_DAYS)).isoformat()
     resume_since = getattr(args, "resume_since", "") or ""
-    since_iso = args.since or (resume_since if getattr(args, "resume", False) and resume_since else started.isoformat())
+    # 1 s margin: scraped_at is TEXT ('...12.3Z'); under a locale collation it sorts below '...12+00:00'.
+    since_iso = args.since or (resume_since if getattr(args, "resume", False) and resume_since else (started - timedelta(seconds=1)).isoformat())
 
     prior_results: list[dict[str, Any]] = []
     assess_only: set[str] = set()
