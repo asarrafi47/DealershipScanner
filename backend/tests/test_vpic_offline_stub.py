@@ -15,6 +15,7 @@ import urllib.request
 
 import pytest
 import requests
+import socket
 
 from backend.enrichment import nhtsa_vpic, vpic_facts
 
@@ -48,7 +49,7 @@ class _Resp(io.BytesIO):
 
 @pytest.mark.real_vpic_client
 def test_marker_restores_real_client(monkeypatch: pytest.MonkeyPatch) -> None:
-    assert nhtsa_vpic.urllib is urllib
+    assert nhtsa_vpic._http_get_json.__module__ == nhtsa_vpic.__name__
     seen: list[str] = []
 
     def fake_urlopen(req, timeout=None):
@@ -59,3 +60,16 @@ def test_marker_restores_real_client(monkeypatch: pytest.MonkeyPatch) -> None:
     _body, flat, err = nhtsa_vpic.fetch_decode_vin_values_extended(VIN)
     assert err is None and flat["Model"] == "Civic"
     assert seen and "vpic.nhtsa.dot.gov" in seen[0] and VIN in seen[0]
+
+
+def test_getter_is_module_level_and_stubbed() -> None:
+    assert nhtsa_vpic._http_get_json is not None
+    with pytest.raises(urllib.error.URLError):
+        nhtsa_vpic._http_get_json("https://vpic.nhtsa.dot.gov/x", 1.0)
+
+
+def test_default_decode_makes_no_socket_connection(monkeypatch: pytest.MonkeyPatch) -> None:
+    attempts: list[object] = []
+    monkeypatch.setattr(socket.socket, "connect", lambda self, addr: attempts.append(addr))
+    assert nhtsa_vpic.fetch_decode_vin_values_extended(VIN) == (None, None, "url_error")
+    assert attempts == []

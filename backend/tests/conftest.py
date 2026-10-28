@@ -105,16 +105,16 @@ def _inventory_sqlite_tests_mode(monkeypatch: pytest.MonkeyPatch) -> None:
 # ``upsert_vehicles`` -> ``post_write.sync_incomplete_and_backfill_specs`` ->
 # ``spec_structured_backfill.apply_structured_spec_backfill_for_car`` ->
 # ``nhtsa_vpic.fetch_decode_vin_values_extended`` decodes any well-formed VIN with
-# fillable slots, and without a ``get_json`` its ``_default_get`` closure calls
+# fillable slots, and without a ``get_json`` its ``_http_get_json`` calls
 # ``urllib.request.urlopen`` on vpic.nhtsa.dot.gov. ~20 upsert tests reached
 # NHTSA that way (2026-10-05, measured with a socket-blocking plugin): their
 # results depended on the network and on what vPIC returned that day.
 #
-# The stub swaps the ``urllib`` that ``nhtsa_vpic`` looks up at call time for a
-# namespace whose ``request.urlopen`` raises ``URLError``. Every caller, however
-# it imported ``fetch_decode_vin_values_extended``, then gets exactly what an
-# unreachable vPIC gives it: ``(None, None, "url_error")``. A ``get_json`` passed
-# by a test still wins (it never touches urllib). The batch decoder
+# The stub replaces the module-level ``nhtsa_vpic._http_get_json`` (looked up as a
+# module global at call time) with one that raises ``URLError``. Every caller,
+# however it imported ``fetch_decode_vin_values_extended``, then gets exactly what
+# an unreachable vPIC gives it: ``(None, None, "url_error")``. A ``get_json``
+# passed by a test still wins (it never touches the getter). The batch decoder
 # ``vpic_facts.fetch_vpic_batch`` (``requests.post``) raises ConnectionError the
 # same way. A test that drives the real HTTP client with its own mock of
 # ``urllib.request.urlopen`` / ``requests.post`` opts out with
@@ -127,7 +127,7 @@ class VpicOffline(urllib.error.URLError):
     """Raised in place of the vPIC HTTP call while tests run offline."""
 
 
-def _vpic_offline_urlopen(*_args: Any, **_kwargs: Any) -> Any:
+def _vpic_offline_get_json(*_args: Any, **_kwargs: Any) -> Any:
     raise VpicOffline("vPIC is stubbed offline in tests (mark real_vpic_client to opt out)")
 
 
@@ -139,15 +139,6 @@ def _vpic_offline_batch(vins: Any, timeout: Any = None) -> Any:
     )
 
 
-_VPIC_OFFLINE_URLLIB = types.SimpleNamespace(
-    request=types.SimpleNamespace(
-        Request=urllib.request.Request,
-        urlopen=_vpic_offline_urlopen,
-    ),
-    error=urllib.error,
-)
-
-
 @pytest.fixture(autouse=True)
 def _vpic_offline(request: pytest.FixtureRequest, monkeypatch: pytest.MonkeyPatch) -> None:
     # P8B.4: the inline scan-path decode is off by default under test (its own
@@ -157,7 +148,7 @@ def _vpic_offline(request: pytest.FixtureRequest, monkeypatch: pytest.MonkeyPatc
         return
     from backend.enrichment import nhtsa_vpic, vpic_facts
 
-    monkeypatch.setattr(nhtsa_vpic, "urllib", _VPIC_OFFLINE_URLLIB)
+    monkeypatch.setattr(nhtsa_vpic, "_http_get_json", _vpic_offline_get_json)
     monkeypatch.setattr(vpic_facts, "fetch_vpic_batch", _vpic_offline_batch)
 
 
