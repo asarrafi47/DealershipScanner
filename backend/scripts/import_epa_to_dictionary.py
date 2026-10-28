@@ -7,7 +7,7 @@ That directory is the canonical EPA-based reference for enrichment
 from ``car_data_scraper.py`` lives under ``csv_out*`` and is a different dataset.
 
 Downloads all make/model/trim/engine data for model years 1950+
-(default ``--min-year``) and writes one CSV per Year+Make+Model, matching the DICTIONARY format.
+(default ``--min-year``) and writes one CSV per Year+Make+Model, matching the ``backend/dictionary/epa`` CSV format.
 
 Usage:
   python import_epa_to_dictionary.py
@@ -746,11 +746,11 @@ def _parse_years(text: str | None) -> set[int] | None:
 
 
 def main(argv: list[str] | None = None) -> int:
-    ap = argparse.ArgumentParser(description="Import EPA vehicles.csv into DICTIONARY/")
+    ap = argparse.ArgumentParser(description="Import EPA vehicles.csv into backend/dictionary/")
     ap.add_argument("--epa-csv", default=str(DEFAULT_EPA_CSV), help="Path to EPA vehicles.csv")
     ap.add_argument("--min-year", type=int, default=1950, help="Minimum model year (default 1950)")
     ap.add_argument("--years", default=None, help="Only these model years, e.g. 2019,2020")
-    ap.add_argument("--dictionary", default=str(DICTIONARY), help="Output DICTIONARY directory")
+    ap.add_argument("--dictionary", default=str(DICTIONARY), help="Output dictionary directory (default backend/dictionary)")
     ap.add_argument("--patch-induction-only", action="store_true",
                     help="Patch forcedInduction/engineDisplay and the EPA columns in the existing CSVs "
                          "(dry run unless --apply)")
@@ -796,7 +796,7 @@ def main(argv: list[str] | None = None) -> int:
 
     stats: Counter = Counter()
     written = process_epa_csv(epa_csv, args.min_year, dictionary, years=years, stats=stats)
-    print(f"\nDone. {written} EPA files added to DICTIONARY.")
+    print(f"\nDone. {written} EPA files added to the dictionary.")
     if stats["failed"]:
         print(f"FAILED: {stats['failed']} rows could not be processed", file=sys.stderr)
         return 1

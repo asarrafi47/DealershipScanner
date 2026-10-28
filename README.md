@@ -31,7 +31,7 @@ Runtime databases (`inventory.db`, `users.db`, `dev_users.db`, `dealer_portal.db
 
 ### 4. EPA dictionary (`*_EPA.csv`) — **tracked / optional bulk**
 
-Vehicle EPA reference CSVs used by enrichment live under **`backend/dictionary/`** (and may also appear as a historical **`DICTIONARY/`** folder at the repo root in older clones). Per-file CSVs are small; large trees are the **listing/options scrapes** (see below), which are **not** committed.
+Vehicle EPA reference CSVs used by enrichment live under **`backend/dictionary/`**. Per-file CSVs are small; large trees are the **listing/options scrapes** (see below), which are **not** committed.
 
 To **rebuild or extend** EPA CSVs from fueleconomy.gov data:
 

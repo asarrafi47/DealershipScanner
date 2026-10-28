@@ -3,7 +3,7 @@
 Clean Wikipedia-scraped vehicle CSV files in csv_out_needs_cleaning/.
 
 This pipeline produces ``*Complete_Options.csv`` files. It is separate from
-``DICTIONARY/``, which holds EPA fueleconomy.gov exports (``*_EPA.csv``) used by
+``backend/dictionary/epa/``, which holds EPA fueleconomy.gov exports (``*_EPA.csv``) used by
 ``import_epa_to_dictionary.py`` and ``enrich_from_dictionary.py``. Do not mix the
 two directories without an explicit import step.
 
