@@ -3150,6 +3150,12 @@ Every remaining remediation unit not placed unconditionally in a phase is listed
 | D-OD12 brochure grid "P" marker | Deferred | Belongs to an enrichment follow-up |
 | `docker image prune` | Owner action | Section 6 item 14 |
 
+**Draft status (integ/draft, merge 409fa55b9; branch phase/N36 head 54bc96b66).**
+- P18B.1: DONE (64929e2ee). RESUME_HERE is a pointer page, master-todo.md retired into EXECUTION_PLAN_2026_09.md. P18B.4, P18B.6: DONE (banners, docstrings).
+- P18B.2, P18B.3: DONE (1436ace1d). README, SCANNER_NODE.md removal, CLOUD_RESTRUCTURE banner and dated D1-D5 outcomes. D2 "moot after SEC-014" unverified.
+- P18B.7a: DONE (ea79db097). NETWORK_SCAN_PROCESS location contract matches dealer_logs.py; CLAUDE.md untouched. P18B.5: DONE (54bc96b66); duplicate SEC IDs not renumbered.
+- Deferred: P18B.7b (owner approves CLAUDE.md wording), N36.8a (needs all N-units merged), N36.8b (owner-run read-only prod measurement), migration registry table rebuild (V026-V038). Nothing released, pushed or deployed.
+
 ### N37 Postgres-only cleanup (draft status only; no spec section in this plan)
 
 **Draft status (integ/draft, merge 518ebd4ce; branch phase/N37 head 850c530a0).**

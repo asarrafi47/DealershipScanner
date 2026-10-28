@@ -2,6 +2,15 @@
 
 ## [Unreleased]
 
+### N36 (draft)
+- P18B.1: RESUME_HERE.md is now a short pointer page (version read from VERSION, Railway prod, branch policy, links); master-todo.md retired into docs/EXECUTION_PLAN_2026_09.md.
+- P18B.4: historical banners on docs/scanner/SCANNER_CHANGES.md and docs/FULL_AUDIT_MAY2026.md.
+- P18B.6: discovery tier order and hybrid_search docstrings corrected.
+- P18B.2: README drops the Node scanner section and docs/SCANNER_NODE.md, trim ladder path corrected, database section matches reality; debug/README drops removed-tool rows.
+- P18B.3: CLOUD_RESTRUCTURE_PLAN.md gets a superseded banner, dated D1-D5 outcomes, k8s section marked not pursued, and struck-through dead paths.
+- P18B.7a: NETWORK_SCAN_PROCESS.md states where location evidence is written (discovery.md store-location line, scan_runs.md location line, per-run location.md block, _learning/location_patterns.md); contract test added (D-HY7 a).
+- P18B.5: SECURITY_MASTER_TODO re-scoped to the current module layout; a new test fails if a cited path disappears.
+
 ### N35 (draft)
 - P18A.1a: removed dead tracked junk (backend/debug captures, empty GUEST_USERS.txt, empty dictionary_catalog.sqlite3) and untracked .idea/, with ignore rules for both.
 - P18A.2: runtime state (scanner_run_counter.json, live_gas_prices.json) lives under backend/utils/runtime_state.state_path ($RUNTIME_STATE_DIR or workspace/state/), is untracked, and the scan counter is written with a per-process tmp file plus an fcntl lock so parallel shards both count.
