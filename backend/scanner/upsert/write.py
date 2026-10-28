@@ -6,6 +6,7 @@ from backend.scanner.upsert import ownership as _own
 from backend.scanner.upsert.guard import GuardWindow, backstop_owner
 from backend.scanner.upsert.rows import normalize_vehicle_row
 from backend.scanner.upsert.serialize import price_history_json
+from backend.scanner.upsert.timing import lap
 from backend.scanner.upsert.sql import (
     UPSERT_CARS_SQL,
     fetch_prev_price_row,
@@ -26,13 +27,16 @@ def write_rows(
     conflicts: dict[str, tuple[str, str]],
     commit_every: int,
     stored_facts: dict[str, dict] | None = None,
+    timing: dict | None = None,
 ) -> int:
     """Normalize and upsert each vehicle in the given (sorted-VIN) order.
 
     Commits every ``commit_every`` written rows (the caller commits the tail).
     A row the SQL backstop refuses (rowcount 0 with the guard on) is added to
     ``conflicts`` in place and not counted. ``stored_facts`` (from the prefetch) lets a
-    higher-ranked stored fact survive the feed (P8B.1). Returns the number of rows written.
+    higher-ranked stored fact survive the feed (P8B.1). ``timing`` (optional)
+    gets ``row_selects`` (per-row previous-price SELECTs) and the in-loop commits as
+    ``commit``. Returns the number of rows written.
     """
     count = 0
     pools = _own.load_pools()
@@ -47,6 +51,8 @@ def write_rows(
         _evidence = raw.get("_rooftop_evidence")
         # D-N17b: pre-assignment IDs (I/O/Q) are outside the VIN-owner guard, backstop too.
         _guard = window.on and not is_preassignment_vin(vin)
+        if timing is not None:
+            timing["row_selects"] = timing.get("row_selects", 0) + 1
         _prev_row = fetch_prev_price_row(cursor, vin)
         history_json = price_history_json(
             _prev_row[1] if _prev_row else None,
@@ -73,6 +79,7 @@ def write_rows(
             continue
         count += 1
         if count % commit_every == 0:
-            conn.commit()
+            with lap(timing, "commit"):
+                conn.commit()
         trace_vin_readback(cursor, vin, v)
     return count
