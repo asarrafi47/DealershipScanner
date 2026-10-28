@@ -17,11 +17,19 @@ Usage:
   python import_epa_to_dictionary.py --patch-induction-only            # dry run
   python import_epa_to_dictionary.py --patch-induction-only --apply
   python import_epa_to_dictionary.py --verify
+  python import_epa_to_dictionary.py --patch-options                         # dry run (Complete_Options)
+  python import_epa_to_dictionary.py --patch-options --apply
+  python import_epa_to_dictionary.py --column-diff /path/to/pre_patch_tree   # scope check
 
 ``--patch-induction-only`` rewrites forcedInduction and engineDisplay in the existing
 ``*_EPA.csv`` files from the pinned vehicles.csv and fills epaId/atvType/cityE/highwayE;
 every other cell stays byte-identical (D-EPA1). ``--verify`` re-reads the CSVs and exits
-non-zero on any label that disagrees with EPA's own flags.
+non-zero on any label that disagrees with EPA's own flags (and, when Complete_Options
+CSVs sit under the directory, on any label there not backed by a matched EPA row).
+``--patch-options`` (P10D.2) patches those labels where (Year, Make, Model, engineOptions)
+matches the source unambiguously and blanks forcedInduction/engineDisplay otherwise.
+``--column-diff BASELINE`` compares the directory with a pre-patch copy and exits non-zero
+if a column outside the declared set changed or a file/row count moved (P10D.1).
 """
 import argparse
 import csv
@@ -475,7 +483,12 @@ def verify_induction(
     shown = 0
     for path in _epa_files(dictionary_dir, min_year, years):
         with open(path, newline="", encoding="utf-8", errors="replace") as f:
-            rows = list(csv.DictReader(f))
+            reader = csv.DictReader(f)
+            rows = list(reader)
+            if rows and list(reader.fieldnames or []) != DICT_COLUMNS:
+                stats["bad_header"] += 1
+                if stats["bad_header"] <= 5:
+                    print(f"  HEADER {path.name}: not the {len(DICT_COLUMNS)}-column layout")
         for row in rows:
             matches = index.get(row_key(row), [])
             status = classify_match(matches)
@@ -493,7 +506,236 @@ def verify_induction(
                           f"label {have!r} want {want!r}; epaId {row.get('epaId')!r}")
     print(f"  matched: {stats['unique']}  unmatched: {stats['unmatched']}  "
           f"ambiguous: {stats['ambiguous_multi'] + stats['ambiguous_flags']}")
-    print(f"  label disagreements: {stats['disagreements']}")
+    print(f"  label disagreements: {stats['disagreements']}  bad headers: {stats['bad_header']}")
+    stats.update(verify_options(epa_csv, dictionary_dir, min_year=min_year, years=years))
+    return stats
+
+
+# --- column-diff checker (P10D.1/P10D.2) --------------------------------------------
+
+OWNED_EPA_COLUMNS = frozenset({"forcedInduction", "engineDisplay", "epaId", "atvType", "cityE", "highwayE"})
+OWNED_OPTIONS_COLUMNS = frozenset({"forcedInduction", "engineDisplay"})
+
+
+def _read_csv(path: Path) -> list[dict]:
+    with open(path, newline="", encoding="utf-8", errors="replace") as f:
+        return list(csv.DictReader(f))
+
+
+def column_diff(
+    baseline_dir: Path,
+    current_dir: Path,
+    *,
+    suffix: str = "_EPA.csv",
+    allowed: frozenset[str] = OWNED_EPA_COLUMNS,
+) -> Counter:
+    """Compare two trees of CSVs cell by cell; only ``allowed`` columns may differ.
+
+    Rows are paired by position inside same-named files, so a moved, added or dropped
+    file or row is a violation (the manifest's ``epa_row_count`` is the per-file row
+    count, so equal counts here keep it unchanged). A column absent from the baseline
+    header counts as added; its cells are compared against ''.
+
+    ``stats['changed:<col>']`` counts changed cells per column, ``stats['violations']``
+    everything outside the declared set, ``stats['base_display']`` the engineDisplay
+    changes that are more than a label suffix (the patch dry run lists them).
+    """
+    stats: Counter = Counter()
+
+    def files(root: Path) -> dict[str, Path]:
+        return {str(p.relative_to(root)): p for p in sorted(root.rglob(f"*{suffix}"))}
+
+    before, after = files(baseline_dir), files(current_dir)
+    for name in sorted(set(before) ^ set(after)):
+        stats["violations"] += 1
+        stats["file_set"] += 1
+        print(f"  FILE SET differs: {name} only in {'baseline' if name in before else 'current'}")
+    for name in sorted(set(before) & set(after)):
+        stats["files"] += 1
+        old_rows, new_rows = _read_csv(before[name]), _read_csv(after[name])
+        if len(old_rows) != len(new_rows):
+            stats["violations"] += 1
+            stats["row_count"] += 1
+            print(f"  ROW COUNT differs: {name} {len(old_rows)} -> {len(new_rows)}")
+            continue
+        stats["rows"] += len(new_rows)
+        cols = list(dict.fromkeys([*(old_rows[0].keys() if old_rows else ()),
+                                   *(new_rows[0].keys() if new_rows else ())]))
+        file_changed = False
+        for old, new in zip(old_rows, new_rows):
+            for col in cols:
+                a, b = old.get(col) or "", new.get(col) or ""
+                if a == b:
+                    continue
+                file_changed = True
+                stats[f"changed:{col}"] += 1
+                if col not in allowed:
+                    stats["violations"] += 1
+                    if stats["violations"] <= 20:
+                        print(f"  OUT OF SCOPE {name}: {col} {a!r} -> {b!r}")
+            if _strip_suffix((old.get("engineDisplay") or "").strip()) != \
+                    _strip_suffix((new.get("engineDisplay") or "").strip()):
+                stats["base_display"] += 1
+        if file_changed:
+            stats["files_changed"] += 1
+    print(f"  files: {stats['files']}  rows: {stats['rows']}  files changed: {stats['files_changed']}")
+    for key in sorted(k for k in stats if k.startswith("changed:")):
+        print(f"    {key[8:]}: {stats[key]} cells")
+    print(f"  base-display changes: {stats['base_display']}")
+    print(f"  out-of-scope violations: {stats['violations']}")
+    return stats
+
+
+# --- Complete_Options (P10D.2) ------------------------------------------------------
+
+_OPTIONS_SUFFIX = "_Complete_Options.csv"
+_BLANK_LABELS = {"forcedInduction": "", "engineDisplay": ""}
+
+
+def _options_files(dictionary_dir: Path, min_year: int, years: set[int] | None) -> list[Path]:
+    root = dictionary_dir
+    if root.resolve() == DICTIONARY_ROOT.resolve():
+        root = root / "options"
+    out = []
+    for path in sorted(root.rglob(f"*{_OPTIONS_SUFFIX}")):
+        if path.name.endswith("_DT" + _OPTIONS_SUFFIX):
+            continue
+        m = re.match(r"(\d{4})_", path.name)
+        year = int(m.group(1)) if m else None
+        if year is not None and (year < min_year or (years is not None and year not in years)):
+            continue
+        out.append(path)
+    return out
+
+
+def _options_key(row: dict) -> tuple[str, ...]:
+    return tuple(str(row.get(k) if row.get(k) is not None else "").strip()
+                 for k in ("Year", "Make", "Model", "engineOptions"))
+
+
+def load_options_index(epa_csv: Path) -> dict[tuple, list[tuple[dict, dict]]]:
+    """vehicles.csv grouped by (Year, Make, Model, engineOptions)."""
+    index: dict[tuple, list[tuple[dict, dict]]] = defaultdict(list)
+    with open(epa_csv, newline="", encoding="utf-8", errors="replace") as f:
+        for row in csv.DictReader(f):
+            dict_row = build_dict_row(row)
+            if dict_row is not None:
+                index[_options_key(dict_row)].append((dict_row, row))
+    return index
+
+
+def options_fields(row: dict, matches: list[tuple[dict, dict]]) -> tuple[dict[str, str], str]:
+    """``(forcedInduction/engineDisplay for an options row, status)``.
+
+    'matched' only when every source row under the key yields the same label; a key that
+    is missing or whose rows disagree blanks both columns (options rows carry no
+    evidence of their own).
+    """
+    if not matches:
+        return dict(_BLANK_LABELS), "unmatched"
+    existing = (row.get("forcedInduction") or "").strip()
+    labels = {epa_label(d, s, existing) for d, s in matches}
+    if len(labels) > 1:
+        return dict(_BLANK_LABELS), "ambiguous"
+    return engine_fields_for_label(matches[0][0], labels.pop()), "matched"
+
+
+def patch_options(
+    epa_csv: Path,
+    dictionary_dir: Path,
+    *,
+    min_year: int = 1950,
+    years: set[int] | None = None,
+    apply: bool = False,
+) -> Counter:
+    """Patch forcedInduction/engineDisplay in the Complete_Options CSVs; dry run unless ``apply``."""
+    stats: Counter = Counter()
+    print(f"Source: {epa_csv}")
+    print(f"  sha256: {sha256_of(epa_csv)}")
+    index = load_options_index(epa_csv)
+    transitions: Counter = Counter()
+    for path in _options_files(dictionary_dir, min_year, years):
+        try:
+            with open(path, newline="", encoding="utf-8", errors="replace") as f:
+                reader = csv.DictReader(f)
+                header = list(reader.fieldnames or [])
+                rows = list(reader)
+        except OSError as exc:
+            stats["failed"] += 1
+            print(f"  ERROR {path}: {exc!r}", file=sys.stderr)
+            continue
+        stats["files"] += 1
+        if "forcedInduction" not in header or "engineDisplay" not in header:
+            continue
+        changed = False
+        for row in rows:
+            stats["rows"] += 1
+            try:
+                fields, status = options_fields(row, index.get(_options_key(row), []))
+            except Exception as exc:
+                stats["failed"] += 1
+                print(f"  ERROR {path.name}: {exc!r}", file=sys.stderr)
+                continue
+            stats[status] += 1
+            if any((row.get(k) or "") != v for k, v in fields.items()):
+                old = (row.get("forcedInduction") or "").strip()
+                transitions[(old or "(blank)", fields["forcedInduction"] or "(blank)")] += 1
+                if status != "matched":
+                    stats["blanked"] += 1
+                row.update(fields)
+                changed = True
+        if changed:
+            stats["files_changed"] += 1
+            if apply:
+                tmp = path.with_suffix(".csv.tmp")
+                with open(tmp, "w", newline="", encoding="utf-8") as f:
+                    writer = csv.DictWriter(f, fieldnames=header, extrasaction="ignore")
+                    writer.writeheader()
+                    writer.writerows(rows)
+                tmp.replace(path)
+    print(f"  files: {stats['files']}  rows: {stats['rows']}  files to change: {stats['files_changed']}")
+    print(f"  matched: {stats['matched']}  ambiguous: {stats['ambiguous']}  unmatched: {stats['unmatched']}"
+          f"  blanked: {stats['blanked']}")
+    print("  label transitions:")
+    for (old, new), n in sorted(transitions.items(), key=lambda kv: (-kv[1], kv[0])):
+        print(f"    {old} -> {new}: {n}")
+    print("  APPLIED" if apply else "  DRY RUN: nothing written (pass --apply)")
+    return stats
+
+
+def verify_options(
+    epa_csv: Path,
+    dictionary_dir: Path,
+    *,
+    min_year: int = 1950,
+    years: set[int] | None = None,
+) -> Counter:
+    """Options rows: matched ones carry the EPA-flag label, every other row has blank labels."""
+    stats: Counter = Counter()
+    files = _options_files(dictionary_dir, min_year, years)
+    if not files:
+        return stats
+    index = load_options_index(epa_csv)
+    shown = 0
+    for path in files:
+        for row in _read_csv(path):
+            fields, status = options_fields(row, index.get(_options_key(row), []))
+            stats[f"options_{status}"] += 1
+            have = {k: (row.get(k) or "").strip() for k in fields}
+            if status == "matched":
+                bad = have["forcedInduction"] != fields["forcedInduction"]
+            else:
+                bad = bool(have["forcedInduction"] or have["engineDisplay"])
+            if bad:
+                stats["options_disagreements"] += 1
+                if shown < 20:
+                    shown += 1
+                    print(f"  OPTIONS DISAGREE {path.name} [{status}] {_options_key(row)}: "
+                          f"label {have['forcedInduction']!r} want {fields['forcedInduction']!r}; "
+                          f"display {have['engineDisplay']!r}")
+    print(f"  options rows: matched {stats['options_matched']}  ambiguous {stats['options_ambiguous']}  "
+          f"unmatched {stats['options_unmatched']}")
+    print(f"  options label disagreements: {stats['options_disagreements']}")
     return stats
 
 
@@ -512,7 +754,14 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--patch-induction-only", action="store_true",
                     help="Patch forcedInduction/engineDisplay and the EPA columns in the existing CSVs "
                          "(dry run unless --apply)")
-    ap.add_argument("--apply", action="store_true", help="Write the --patch-induction-only changes")
+    ap.add_argument("--patch-options", action="store_true",
+                    help="Patch forcedInduction/engineDisplay in the Complete_Options CSVs where the key "
+                         "matches the source, blank them otherwise (dry run unless --apply)")
+    ap.add_argument("--column-diff", default=None, metavar="BASELINE_DIR",
+                    help="Compare --dictionary with a pre-patch copy; non-zero if a column outside the "
+                         "declared set changed or a file/row count moved (with --patch-options: the "
+                         "Complete_Options files)")
+    ap.add_argument("--apply", action="store_true", help="Write the --patch-induction-only/--patch-options changes")
     ap.add_argument("--verify", action="store_true",
                     help="Check every matched CSV row's label against the EPA flags; non-zero on any miss")
     args = ap.parse_args(argv)
@@ -525,12 +774,22 @@ def main(argv: list[str] | None = None) -> int:
     years = _parse_years(args.years)
     dictionary = Path(args.dictionary)
 
-    if args.apply and not args.patch_induction_only:
-        print("ERROR: --apply only goes with --patch-induction-only", file=sys.stderr)
+    if args.apply and not (args.patch_induction_only or args.patch_options):
+        print("ERROR: --apply only goes with --patch-induction-only or --patch-options", file=sys.stderr)
         return 2
+    if args.column_diff:
+        baseline = Path(args.column_diff)
+        if args.patch_options:
+            stats = column_diff(baseline, dictionary, suffix=_OPTIONS_SUFFIX, allowed=OWNED_OPTIONS_COLUMNS)
+        else:
+            stats = column_diff(baseline, dictionary)
+        return 1 if stats["violations"] else 0
     if args.verify:
         stats = verify_induction(epa_csv, dictionary, min_year=args.min_year, years=years)
-        return 1 if stats["disagreements"] else 0
+        return 1 if (stats["disagreements"] or stats["bad_header"] or stats["options_disagreements"]) else 0
+    if args.patch_options:
+        stats = patch_options(epa_csv, dictionary, min_year=args.min_year, years=years, apply=args.apply)
+        return 1 if stats["failed"] else 0
     if args.patch_induction_only:
         stats = patch_induction(epa_csv, dictionary, min_year=args.min_year, years=years, apply=args.apply)
         return 1 if stats["failed"] else 0
