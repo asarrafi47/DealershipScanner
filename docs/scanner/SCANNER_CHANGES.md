@@ -1,5 +1,7 @@
 # Scanner Changes & Additions
 
+> **Historical, June 2026, browser-era scanner.** Current loop: [`docs/NETWORK_SCAN_PROCESS.md`](../NETWORK_SCAN_PROCESS.md).
+
 ## Scan Summary: Chattanooga 25mi (2026-06-15)
 
 | Metric | Value |

@@ -2,8 +2,9 @@
 """
 Root-level entry point for dealership discovery.
 
-Discovers dealerships near a ZIP code via DMV records, OpenStreetMap (Overpass),
-and DuckDuckGo URL gap-fill, then merges results into dealers.json.
+Discovers dealerships near a ZIP code via tiers in order: DMV records, Google Places,
+OpenStreetMap (Overpass), then DuckDuckGo URL gap-fill (backend/discovery/pipeline.py),
+and merges results into dealers.json.
 
 Run:
   python discovery.py --zip 28210 --radius 25 --dmv-state NC --merge-manifest -v

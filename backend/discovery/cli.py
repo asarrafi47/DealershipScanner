@@ -1,5 +1,5 @@
 """
-CLI for tiered dealership discovery (DMV → Google Places → DDG URL gap-fill).
+CLI for tiered dealership discovery (DMV → Google Places → OSM (Overpass) → DDG URL gap-fill).
 
 Run from repository root::
 

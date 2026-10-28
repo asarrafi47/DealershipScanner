@@ -25,9 +25,9 @@ Create a **`.env`** file in the repo root (it is gitignored). Copy variable name
 
 Never commit `.env` or API keys.
 
-### 3. SQLite databases (local, not in git)
+### 3. Databases (local, not in git)
 
-Runtime databases (`inventory.db`, `users.db`, `dev_users.db`, `dealer_portal.db`, `incomplete_listings.db`, …) are created when you run the app or scanner. Paths can be overridden with env vars such as `INVENTORY_DB_PATH`, `USERS_DB_PATH` (see security doc).
+Inventory lives in Postgres (`INVENTORY_DATABASE_URL`). Users, dev users and the dealer portal are still SQLite files (`users.db`, `dev_users.db`, `dealer_portal.db`), created when you run the app; `incomplete_listings.db` is a local SQLite helper. Paths can be overridden with env vars such as `INVENTORY_DB_PATH`, `USERS_DB_PATH` (see security doc).
 
 ### 4. EPA dictionary (`*_EPA.csv`) — **tracked / optional bulk**
 
@@ -60,7 +60,7 @@ python backend/scripts/car_data_scraper.py --batch-nhtsa --output-dir backend/di
 
 These are separate from EPA `*_EPA.csv` files (see `backend/scripts/import_epa_to_dictionary.py` header comment).
 
-**Trim ladders (premium VDP):** `backend/dictionary/trim_ladders.json` (hand-curated) and `trim_ladders_generated.json` (built from `*_Complete_Options.csv`). Regenerate after dictionary updates:
+**Trim ladders (premium VDP):** `backend/dictionary/curated/trim_ladders.json` (hand-curated) and `curated/trim_ladders_generated.json` (built from `*_Complete_Options.csv`). Regenerate after dictionary updates:
 
 ```bash
 python -m backend.scripts.build_trim_ladders
@@ -105,22 +105,14 @@ Details: `docs/LISTINGS_PGVECTOR_SEARCH.md`.
 python backend/scripts/rebuild_listings_index.py --fast
 ```
 
-### 8. Optional: Node (scanner JS / tooling)
-
-If you use the Node-side scanner (`backend/scanner/`):
-
-```bash
-cd backend/scanner && npm ci
-```
-
-### 9. Run the app
+### 8. Run the app
 
 ```bash
 PYTHONPATH=. flask --app backend.main run
 # or: python -c "from backend.main import app; app.run()" with the same PYTHONPATH
 ```
 
-### 10. Scanner CLI
+### 9. Scanner CLI
 
 ```bash
 python scanner.py --help
@@ -152,5 +144,4 @@ PYTHONPATH=. python backend/scripts/migrate_inventory_sqlite_to_postgres.py --dr
 - `ios/ARCHITECTURE.md` — iOS module boundaries (`App/`, `Features/`, `Networking/`, …)  
 - `docs/IOS_APP.md` — TestFlight / App Store signing  
 - `docs/DATA_QUALITY_ROLLOUT.md` — data quality and migrations  
-- `docs/SCANNER_NODE.md` — Node scanner notes  
 - `docs/SECURITY_MASTER_TODO.md` — security configuration and SEC items  
