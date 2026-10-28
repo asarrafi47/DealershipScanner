@@ -2,7 +2,7 @@
 """
 Sync regional gasoline and residential electricity rates from EIA API v2.
 
-Writes ``backend/dictionary/derived/live_gas_prices.json`` for ``/api/fuel/lookup``.
+Writes ``live_gas_prices.json`` under ``runtime_state.state_path`` for ``/api/fuel/lookup``.
 
 Usage:
   python backend/cron/sync_gas_prices.py
@@ -20,8 +20,10 @@ from typing import Any
 
 import requests
 
+from backend.utils.runtime_state import state_path, write_json_atomic
+
 ROOT = Path(__file__).resolve().parents[2]
-OUTPUT_PATH = ROOT / "backend" / "dictionary" / "derived" / "live_gas_prices.json"
+OUTPUT_PATH = state_path("live_gas_prices.json")
 EIA_API_BASE = "https://api.eia.gov/v2/"
 REQUEST_TIMEOUT_SEC = 30
 MAX_REQUEST_ATTEMPTS = 3
@@ -509,13 +511,7 @@ def build_payload() -> dict[str, Any]:
 
 
 def write_payload(payload: dict[str, Any]) -> Path:
-    OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
-    tmp_path = OUTPUT_PATH.with_suffix(".json.tmp")
-    tmp_path.write_text(
-        json.dumps(payload, indent=2, sort_keys=True) + "\n",
-        encoding="utf-8",
-    )
-    tmp_path.replace(OUTPUT_PATH)
+    write_json_atomic(OUTPUT_PATH, payload)
     return OUTPUT_PATH
 
 

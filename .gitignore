@@ -188,3 +188,7 @@ comment_uploads/
 # Precompressed static siblings (scripts/build_static_compressed.py); rebuilt at image build.
 frontend/static/**/*.gz
 frontend/static/**/*.br
+
+# Runtime state now lives under runtime_state.state_path (workspace/state/); keep any stray local copies untracked
+backend/dictionary/derived/live_gas_prices.json
+backend/dictionary/derived/scanner_run_counter.json

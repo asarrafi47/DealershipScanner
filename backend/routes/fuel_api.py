@@ -10,18 +10,16 @@ from __future__ import annotations
 import json
 import logging
 import re
-from pathlib import Path
 from typing import Any
 
 from flask import jsonify, request, session
 
 from backend.listings.geo_session import listings_geo_kwargs_from_session
+from backend.utils.runtime_state import state_path
 
 _logger = logging.getLogger(__name__)
 
-_LIVE_GAS_PRICES_PATH = (
-    Path(__file__).resolve().parent.parent / "dictionary" / "derived" / "live_gas_prices.json"
-)
+_LIVE_GAS_PRICES_PATH = state_path("live_gas_prices.json")
 _live_gas_prices_cache: dict[str, Any] | None = None
 _live_gas_prices_cache_mtime: float | None = None
 
