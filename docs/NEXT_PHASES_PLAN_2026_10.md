@@ -2733,6 +2733,11 @@ Note: V037 was taken for P10B.6 (plan assigns N23 no number). Label mismatch: pl
 
 ---
 
+**Draft status (integ/draft, merge 1ff7624d6; branch phase/N26).**
+- P11A.6, P11A.7: DONE (head fdb9d6872; utc_now_z, stats['timing'] breakdown copied to phase_secs.upsert_breakdown). PG golden not run (no TEST_PG_ADMIN_DSN).
+- P11A.8: DONE (head 3e75db0b7; connection-class retries 2/4/8 s, upsert_retries in stats['timing']).
+- Not done: P11B.1-P11B.4 (measurement-gated, owner), N26.8a (needs V033/V038 constraint names; note N25 shipped V038), N26.8b (prod migration, owner).
+
 ### N27 DB layer (13A)
 
 **Goal.** Portable SQL, a loud adapter, strict schema mode everywhere, no import-time init.
@@ -2800,6 +2805,11 @@ Owner asks: set ADMIN_PASSWORD wherever production security config is asserted b
 **Owner decisions / actions.** D-DB1; drop OKs.
 
 ---
+
+**Draft status (integ/draft, merge 35f3867e4; branch phase/N28).**
+- P13B.4a: DONE (head db2f2f94d; backup_tables_export.py census/dump/verify/plan, census Q18, restore doc; pg roundtrip passed on a throwaway DB). No dump taken, no drop run.
+- N28.5a: DONE (head a0dc2e749; retire_scratch_dbs.sh with per-DB verified dump, exact dump glob, marker db= check, row-count drift check).
+- Not done: P13B.1-P13B.3 (need N27), P13B.4b (V034 number to be confirmed vs N30; must not merge before verified dumps exist), P13B.4c and N28.5b (owner ops).
 
 ### N29 Dependencies and images (15B rest)
 
@@ -3056,6 +3066,12 @@ ci.yml was edited by both N7 and N29; merged without conflict.
 **Owner decisions / actions.** D-HY3, D-HY4, D-IF9, D-TC7; the 5+1 dealer ids.
 
 ---
+
+**Draft status (integ/draft, merge 7becf45df; branch phase/N35).**
+- P18A.1a: DONE (a0 hygiene removals, .idea untracked, ignore rules). P18A.2: DONE (state_path runtime state, fcntl-locked counter; 2-process test counts 30). Head 0a18429ca. Deferred: one-time copy of local counter into workspace/state; live git-status-clean check after a scan.
+- P18A.3, P18A.4: DONE (head f5d9f380f; workspace scratch untracked, manifest moved to backend/dev/fixtures, curated _learning allowlist). Deferred: git status clean after a local dealer_pipeline run.
+- P18A.8: DONE except full green (head d83a0e53a; F541 enforced, extend-exclude, inventory_db __all__ of 91 names). `ruff check .` still has 3 pre-existing errors in other files (inventory_recovery.py:116 F821, test_runner_pause_safe.py:126 F821, test_gallery_harvest.py:111 F811).
+- Not done: P18A.1b (owner decides drop vs discovery for dealer ids), P18A.5-P18A.7 (need N14), P18A.9-P18A.11 (serial, after all code phases), P18A.X (owner op).
 
 ### N36 Docs close-out (18B) and plan closure
 

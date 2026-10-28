@@ -2,6 +2,22 @@
 
 ## [Unreleased]
 
+### N35 (draft)
+- P18A.1a: removed dead tracked junk (backend/debug captures, empty GUEST_USERS.txt, empty dictionary_catalog.sqlite3) and untracked .idea/, with ignore rules for both.
+- P18A.2: runtime state (scanner_run_counter.json, live_gas_prices.json) lives under backend/utils/runtime_state.state_path ($RUNTIME_STATE_DIR or workspace/state/), is untracked, and the scan counter is written with a per-process tmp file plus an fcntl lock so parallel shards both count.
+- P18A.3: untracked force-added workspace/ scratch (investigate_*.py, chattanooga/92694 manifests, discovery dumps, result JSON, unclassified_platforms.json); dealers_backup.json and phase_runs files stay tracked. manifest_92694_25mi.json moved to backend/dev/fixtures/ and scan_lab, scanner CLI help and scan_irvinebmw_test.sh repointed.
+- P18A.4: workspace/ ignore replaced by a curated allowlist; only dealer_logs/_learning/platform_playbook.md and location_patterns.md are tracked.
+- P18A.8: ruff excludes vendored .agents/skills, enforces F541 (8 placeholder-less f-strings fixed), and inventory_db has an explicit __all__ (91 names).
+
+### N28 (draft)
+- P13B.4a: added backend/scripts/backup_tables_export.py (census, dump, verify, plan) for the D-DB1 backup tables. Dry-run only; never drops a table. Census Q18 and ledger notes on exporting and restoring them.
+- N28.5a: added scripts/cleanroom/retire_scratch_dbs.sh: lists scratch DBs (cars_cr_*, cars_rehearsal, cars_cleanroom) with sizes; dumps each to workspace/backups with a restore row-count check; drops only after a verified dump of that same DB, unchanged live row counts and a per-DB owner OK flag. Dry run by default.
+
+### N26 (draft)
+- P11A.6: datetime.utcnow() replaced by utc_now_z(), scraped_at format unchanged (microseconds, trailing Z).
+- P11A.7: upsert_vehicles records a wall and thread-CPU timing breakdown in stats['timing'] (setup, prefetch, write_rows, commit, moves, post_write steps, row counts, dealer concurrency, vPIC network fetches); persist copies it to phase_secs.upsert_breakdown in summary_json.
+- P11A.8: the upsert coordinator retries connection-class DB errors (SQLSTATE 08*, 53300, 57P01, lost or refused connection) with 2/4/8 s jittered backoff, up to 4 attempts; deadlocks and lock timeouts keep the old backoff and 3 attempts; 57014 is not retried. Retries are reported in stats['timing']['upsert_retries'] and ['upsert_conn_retries'].
+
 ### N25 (draft)
 - P10D.1-P10D.2: EPA importer `--column-diff BASELINE` scope checker for the dictionary CSV patch (only forcedInduction, engineDisplay and the D-EPA1 columns may change; row/file counts fixed).
 - P10D.2: `--verify` checks the 25-column header and Complete_Options labels; new `--patch-options` (dry run by default) patches matched Complete_Options labels and blanks unmatched ones.
