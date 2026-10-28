@@ -139,9 +139,17 @@ debug/*
 
 # Scan scratch: throwaway manifests, discovery/OSM dumps, scanlogs, one-off probe
 # scripts. Dozens of these appear per scan session and none are inputs to the app.
-# The ~47 manifests already tracked here stay tracked (gitignore doesn't untrack);
-# to add a new deliberate one: git add -f workspace/<file>
-workspace/
+# Tracked on purpose: workspace/dealers_backup.json, workspace/phase_runs/*/RESUME.md
+# (already tracked; gitignore doesn't untrack) and two curated dealer-log lessons.
+# errors_index.md and platform_candidates.md are machine-written on every pipeline
+# run, so they stay ignored. To add a new deliberate file: git add -f workspace/<file>
+workspace/*
+!workspace/dealer_logs/
+workspace/dealer_logs/*
+!workspace/dealer_logs/_learning/
+workspace/dealer_logs/_learning/*
+!workspace/dealer_logs/_learning/platform_playbook.md
+!workspace/dealer_logs/_learning/location_patterns.md
 
 # Generated knowledge-graph output (~36MB, rebuilt by the graphify skill)
 graphify-out/

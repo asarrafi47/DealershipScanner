@@ -20,7 +20,7 @@ esac
 export INVENTORY_DATABASE_URL="$LAB_DSN"
 
 # Force test-isolation values (do not inherit shell caps from partial scans).
-export DEALERS_MANIFEST_PATH="workspace/manifest_92694_25mi.json"
+export DEALERS_MANIFEST_PATH="backend/dev/fixtures/manifest_92694_25mi.json"
 export SCANNER_DEALER_COM_BULK_FETCH=1
 export SCANNER_VDP_COMPLETENESS_PASS=1
 export SCANNER_VDP_COMPLETENESS_MAX=529

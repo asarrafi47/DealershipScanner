@@ -154,7 +154,7 @@ def run_cli_entry() -> None:
         default=None,
         help=(
             "Dealer manifest JSON (default: dealers.json or DEALERS_MANIFEST_PATH). "
-            "Example: workspace/manifest_92694_25mi.json"
+            "Example: backend/dev/fixtures/manifest_92694_25mi.json"
         ),
     )
     ap.add_argument(
