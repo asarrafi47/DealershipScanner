@@ -72,7 +72,7 @@ def build_result(
         # above catalog / known-trim text (see car_serialize.engine).
         "vpic_engine_l": vpic.get("engine_l"),
         "body_style_display": body_style_display,
-        # Per-trim EPA fields (populated from DICTIONARY via build_epa_master.py)
+        # Per-trim EPA fields (populated from backend/dictionary via build_epa_master_pg.py)
         "epa_fuel_type": epa.get("fuel_type"),
         "epa_engine_description": epa_trim.get("engine_description"),
         "epa_city08": epa.get("city08"),

@@ -77,7 +77,7 @@ def _catalog_rows(car: dict[str, Any], y: int | None, make: str, model: str, tri
             epa_trim = {}
     linked_exact = bool(epa_trim)  # True only when the by-id row actually resolved
     if not epa_trim:
-        # Per-trim lookup (exact match from build_epa_master.py data), then aggregate fallback
+        # Per-trim lookup (exact match from epa_master, loaded by build_epa_master_pg.py), then aggregate fallback
         epa_trim = ke.lookup_epa_by_trim(y, make, model, trim) if trim else {}
     return epa_trim, catalog_link_rejected, linked_exact
 

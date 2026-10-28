@@ -397,6 +397,9 @@ apply_trim_ladder_diffs (76), fix_bmw_trims (140), apply_ai_spec_fill (130), app
   uses inventory_db.get_conn via compat — works on PG) and build_epa_master_pg.py (188; from in-repo DICTIONARY/*_EPA.csv,
   pg_connect) — plus import_epa_to_dictionary.py writes the *_EPA.csv the second one reads. Three EPA ingestion paths.
   [P3] pick one source of truth (vehicles.csv -> epa_master) and delete build_epa_master_pg or document the split.
+  RESOLVED (P10D.9, D-ER1 a): one path, vehicles.csv -> dictionary *_EPA.csv (import_epa_to_dictionary.py) ->
+  epa_master (build_epa_master_pg.py, dry run then --apply, ids kept, --rebuild refused); import_epa_master.py
+  --append-years is the year-append front end. Documented in docs/data_architecture_plan.md "Catalog id contract".
 - Attribution family (08-20): classify_attribution (311), apply_attribution_moves (400), attribution_batch (235),
   resolve_photo_attribution (346), attribute_feed_rooftops (341), add_dealership (154): private cross-imports (F9) and 3
   of them own _dsn copies (F8). Consolidate shared name logic into backend/enrichment/attribution/.

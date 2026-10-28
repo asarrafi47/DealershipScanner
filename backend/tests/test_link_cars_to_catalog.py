@@ -28,6 +28,8 @@ def env(pg_db, monkeypatch):
                 "'Four-Wheel Drive', 'Regular Gasoline', %s)",
                 (id_, source),
             )
+        # prod still holds dangling links until V038's FK is validated; model that state
+        conn.execute("ALTER TABLE cars DROP CONSTRAINT IF EXISTS cars_epa_master_id_fkey")
         conn.commit()
     tundra = dict(year=2026, make="Toyota", model="Tundra", trim="SR5", cylinders=6, engine_l=3.4,
                   engine_description="3.4L V6", drivetrain="4WD", fuel_type="Gasoline",

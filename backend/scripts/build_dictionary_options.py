@@ -7,6 +7,11 @@ Runtime code reads dictionary_options only — not CSV files.
 Usage:
   python -m backend.scripts.build_dictionary_options
   python -m backend.scripts.build_dictionary_options --rebuild
+  python -m backend.scripts.build_dictionary_options --keep-induction-labels
+
+forcedInduction/engineDisplay are not loaded by default: until P10D.2 patched them, the
+Complete_Options CSVs carried heuristic labels (pre-2016 rows with no marker). Pass
+--keep-induction-labels only after ``import_epa_to_dictionary.py --verify`` is clean.
 """
 from __future__ import annotations
 
@@ -46,7 +51,7 @@ def _safe_float(v: str) -> float | None:
         return None
 
 
-def _row_tuple(row: dict) -> tuple | None:
+def _row_tuple(row: dict, keep_induction_labels: bool = False) -> tuple | None:
     year = _safe_int(row.get("Year"))
     make = (row.get("Make") or "").strip()
     model = (row.get("Model") or "").strip()
@@ -58,8 +63,8 @@ def _row_tuple(row: dict) -> tuple | None:
         model,
         (row.get("Trim") or "").strip() or None,
         (row.get("engineOptions") or "").strip() or None,
-        (row.get("engineDisplay") or "").strip() or None,
-        (row.get("forcedInduction") or "").strip() or None,
+        ((row.get("engineDisplay") or "").strip() or None) if keep_induction_labels else None,
+        ((row.get("forcedInduction") or "").strip() or None) if keep_induction_labels else None,
         (row.get("transmissionOptions") or "").strip() or None,
         (row.get("drivetrainOptions") or "").strip() or None,
         (row.get("fuelType") or "").strip() or None,
@@ -89,6 +94,8 @@ def _load_csv(path: Path) -> list[dict]:
 def main(argv: list[str] | None = None) -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--rebuild", action="store_true", help="Clear dictionary_options before load")
+    parser.add_argument("--keep-induction-labels", action="store_true",
+                        help="Load engineDisplay/forcedInduction from the CSVs (only after a clean --verify)")
     args = parser.parse_args(argv)
 
     option_files = list(iter_dictionary_csv_paths("options"))
@@ -120,7 +127,7 @@ def main(argv: list[str] | None = None) -> None:
                 continue
             rows = _load_csv(path)
             for row in rows:
-                tup = _row_tuple(row)
+                tup = _row_tuple(row, args.keep_induction_labels)
                 if tup is None:
                     continue
                 cur.execute(

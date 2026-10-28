@@ -31,7 +31,7 @@ Runtime databases (`inventory.db`, `users.db`, `dev_users.db`, `dealer_portal.db
 
 ### 4. EPA dictionary (`*_EPA.csv`) — **tracked / optional bulk**
 
-Vehicle EPA reference CSVs used by enrichment live under **`backend/dictionary/`** (and may also appear as a historical **`DICTIONARY/`** folder at the repo root in older clones). Per-file CSVs are small; large trees are the **listing/options scrapes** (see below), which are **not** committed.
+Vehicle EPA reference CSVs used by enrichment live under **`backend/dictionary/`**. Per-file CSVs are small; large trees are the **listing/options scrapes** (see below), which are **not** committed.
 
 To **rebuild or extend** EPA CSVs from fueleconomy.gov data:
 
@@ -40,9 +40,14 @@ To **rebuild or extend** EPA CSVs from fueleconomy.gov data:
 curl -L -o /tmp/vehicles.csv.zip https://www.fueleconomy.gov/feg/epadata/vehicles.csv.zip
 unzip -o /tmp/vehicles.csv.zip -d /tmp/
 
-python backend/scripts/import_epa_to_dictionary.py --epa-csv /tmp/vehicles.csv --min-year 2000
+python backend/scripts/import_epa_to_dictionary.py --epa-csv /tmp/vehicles.csv --years 2027
 # Optional: --dictionary /absolute/path/to/backend/dictionary
+# Fix labels in the existing CSVs only (dry run, then --apply), then check them:
+python backend/scripts/import_epa_to_dictionary.py --epa-csv /tmp/vehicles.csv --patch-induction-only
+python backend/scripts/import_epa_to_dictionary.py --epa-csv /tmp/vehicles.csv --verify
 ```
+
+Keep the downloaded `vehicles.csv` with its sha256 and name that vintage in the commit that changes the CSVs; a patch always runs from the pinned file, never from a fresh download.
 
 ### 5. Listing / options CSVs (`*Complete_Options.csv`) — **not in git**
 
@@ -61,14 +66,16 @@ These are separate from EPA `*_EPA.csv` files (see `backend/scripts/import_epa_t
 python -m backend.scripts.build_trim_ladders
 ```
 
-**EPA master index (VDP efficiency + trim lookups):** `backend/enrichment/knowledge_engine.py` reads `epa_master` in `inventory.db` for fast MPG lookups. Populate it from dictionary `*_EPA.csv` files after imports or dictionary updates:
+**EPA master index (VDP efficiency + trim lookups):** `backend/enrichment/knowledge_engine.py` reads `epa_master` (Postgres) for fast MPG lookups. The CSVs above are the only source; load them with the Postgres builder, which keeps every row id. It is a dry run unless `--apply` is given, and writing is owner-gated:
 
 ```bash
-python -m backend.scripts.build_epa_master           # insert missing rows
-python -m backend.scripts.build_epa_master --rebuild # full reload
+python -m backend.scripts.build_epa_master_pg             # dry run: inserts, updates, rows the CSVs no longer carry
+python -m backend.scripts.build_epa_master_pg --apply     # one transaction, ids kept
 ```
 
-The knowledge engine falls back to dictionary CSVs when `epa_master` is empty, but the SQLite index is faster and should be rebuilt in any environment that serves vehicle detail pages.
+Never run a full reload: `--rebuild` is refused because deleting `epa_master` dangles every `cars.epa_master_id`. After a catalog load, relink with `python backend/scripts/link_cars_to_catalog.py --dry-run` and restart the web workers (see "Catalog id contract" in `docs/data_architecture_plan.md`).
+
+The knowledge engine falls back to dictionary CSVs when `epa_master` is empty.
 
 **Trim ladder audit (regression check):**
 

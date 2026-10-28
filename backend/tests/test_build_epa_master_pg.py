@@ -275,6 +275,9 @@ def test_apply_refuses_without_v036_columns_and_rolls_back_on_broken_invariant(p
 
     def _corrupt(conn, *a, **kw):
         real(conn, *a, **kw)
+        # V038's unique index would refuse the duplicate itself; drop it inside the transaction so
+        # the builder's own invariant (the second line of defense) is what is exercised.
+        conn.cursor().execute("DROP INDEX IF EXISTS public.ux_epa_master_source_natural_key")
         conn.cursor().execute("UPDATE public.epa_master SET natural_key = 'dup' WHERE id IN (1, 10)")
         return _dup(conn)
 

@@ -217,8 +217,10 @@ CSV_ROW, CSV_FREE, DICT_TWIN = 600, 601, 1002
 @pytest.fixture()
 def csv_env(env):
     with env.connect() as conn:
-        conn.execute("DELETE FROM epa_master WHERE source=%s", (SRC,))
         conn.execute("UPDATE cars SET epa_master_id=NULL, epa_match_confidence=NULL, epa_match_method=NULL")
+        conn.execute("DELETE FROM epa_extended_specs WHERE epa_master_id IN "
+                     "(SELECT id FROM epa_master WHERE source=%s)", (SRC,))
+        conn.execute("DELETE FROM epa_master WHERE source=%s", (SRC,))  # RESTRICT FK (V038): unlink first
         cols = "id, year, make, model, trim, cylinders, displacement, drive, fuel_type, source"
         for id_, src, trim in ((CSV_ROW, CSV_SRC, "4WD"), (CSV_FREE, CSV_SRC, "Unreferenced"),
                                (DICT_TWIN, "dictionary_epa", "4WD")):

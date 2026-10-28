@@ -11,12 +11,12 @@ Prerequisites — refresh EPA dictionary files::
 
     curl -L -o /tmp/vehicles.csv.zip https://www.fueleconomy.gov/feg/epadata/vehicles.csv.zip
     unzip -o /tmp/vehicles.csv.zip -d /tmp/
-    python backend/scripts/import_epa_to_dictionary.py --epa-csv /tmp/vehicles.csv --min-year 2000
+    python backend/scripts/import_epa_to_dictionary.py --epa-csv /tmp/vehicles.csv --years 2027
 
-Then build EPA ladders::
+Then build EPA ladders (and, owner-gated, load the catalog with the Postgres builder)::
 
     python -m backend.scripts.build_trim_ladders_from_epa
-    python -m backend.scripts.build_epa_master
+    python -m backend.scripts.build_epa_master_pg            # dry run; --apply is owner-gated
 
 Live API (no bulk download) serves the same data (fueleconomy.gov menu endpoints;
 client: backend/enrichment/epa_ws_client.py)::
