@@ -18,6 +18,7 @@ from backend.enrichment.brochure_extract import (
     load_brochure_trim_overlay,
     parse_brochure_filename,
 )
+from backend.enrichment.brochure_pdf import overlay_store, pdf_text
 from backend.enrichment.trim_ladder import resolve_trim_ladder
 
 _REPO = Path(__file__).resolve().parents[2]
@@ -239,7 +240,7 @@ def _synthetic_gc_overlay() -> dict:
 def test_load_brochure_overlay_synthetic_exact_year_hit(tmp_path, monkeypatch):
     from backend.enrichment import brochure_extract as be
 
-    monkeypatch.setattr(be, "TRIM_ADDS_BY_YEAR_DIR", tmp_path)
+    monkeypatch.setattr(overlay_store, "TRIM_ADDS_BY_YEAR_DIR", tmp_path)
     (tmp_path / "2016__jeep__grandcherokee.json").write_text(
         json.dumps(_synthetic_gc_overlay()), encoding="utf-8"
     )
@@ -605,15 +606,15 @@ def test_process_brochure_file_keeps_the_pdf_when_archiving_fails(tmp_path, monk
 
     pdf = _synthetic_brochure(tmp_path)
     ymm = parse_brochure_filename(pdf)
-    monkeypatch.setattr(be, "extract_brochure_pdf", lambda p: be.BrochureExtractResult(ymm=ymm))
-    monkeypatch.setattr(be, "persist_brochure_extract", lambda r: tmp_path / "overlay.json")
-    monkeypatch.setattr(be, "archive_source_pdf", lambda p, **kw: None)
+    monkeypatch.setattr(overlay_store, "extract_brochure_pdf", lambda p: be.BrochureExtractResult(ymm=ymm))
+    monkeypatch.setattr(overlay_store, "persist_brochure_extract", lambda r: tmp_path / "overlay.json")
+    monkeypatch.setattr(overlay_store, "archive_source_pdf", lambda p, **kw: None)
 
     result = be.process_brochure_file(pdf, delete_after=True)
     assert pdf.is_file()
     assert "delete_skipped_not_archived" in result.warnings
 
-    monkeypatch.setattr(be, "archive_source_pdf", lambda p, **kw: tmp_path / "archived.pdf")
+    monkeypatch.setattr(overlay_store, "archive_source_pdf", lambda p, **kw: tmp_path / "archived.pdf")
     be.process_brochure_file(pdf, delete_after=True)
     assert not pdf.exists()
 
@@ -761,7 +762,7 @@ def test_persist_brochure_text_writes_a_sound_capture_to_the_live_corpus(tmp_pat
     from backend.enrichment import brochure_extract as be
 
     live = tmp_path / "brochure_text"
-    monkeypatch.setattr(be, "BROCHURE_TEXT_DIR", live)
+    monkeypatch.setattr(pdf_text, "BROCHURE_TEXT_DIR", live)
     body = "The 3 Series Sedan. 2.0L 248 hp 258 lb-ft 26 city 36 highway mpg. " * 60
     out = be.persist_brochure_text(_capture([body, body]))
 
@@ -787,7 +788,7 @@ def test_persist_brochure_text_quarantines_a_capture_that_fails_a_corpus_gate(
 
     live = tmp_path / "brochure_text"
     quarantine = tmp_path / "brochure_text_quarantine"
-    monkeypatch.setattr(be, "BROCHURE_TEXT_DIR", live)
+    monkeypatch.setattr(pdf_text, "BROCHURE_TEXT_DIR", live)
     monkeypatch.setattr(bs, "BROCHURE_TEXT_QUARANTINE_DIR", quarantine)
 
     digits = [chr(0xEA01 + i) for i in range(10)]
@@ -822,7 +823,7 @@ def test_persist_brochure_text_quarantines_the_real_m3_book_filed_as_a_3_series(
 
     live = tmp_path / "brochure_text"
     quarantine = tmp_path / "brochure_text_quarantine"
-    monkeypatch.setattr(be, "BROCHURE_TEXT_DIR", live)
+    monkeypatch.setattr(pdf_text, "BROCHURE_TEXT_DIR", live)
     monkeypatch.setattr(bs, "BROCHURE_TEXT_QUARANTINE_DIR", quarantine)
 
     header = (

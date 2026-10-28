@@ -7,6 +7,7 @@ import logging
 from pathlib import Path
 
 from backend.enrichment import brochure_extract
+from backend.enrichment.brochure_pdf import overlay_store
 from backend.enrichment.dictionary_paths import TRIM_ADDS_BY_YEAR_DIR
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -68,8 +69,8 @@ def test_every_brochure_text_quoted_overlay_carries_order_basis():
 
 
 def test_fallback_branch_is_logged(monkeypatch, caplog):
-    monkeypatch.setattr(brochure_extract, "_rung_order_from_brochure_text", lambda *a: ((), "{}"))
+    monkeypatch.setattr(overlay_store, "_rung_order_from_brochure_text", lambda *a: ((), "{}"))
     overlay = {"source": "brochure_text_quoted", "catalog_key": "2024|x|y", "year": 2024, "make": "x", "model": "y"}
-    with caplog.at_level(logging.WARNING, logger=brochure_extract.logger.name):
+    with caplog.at_level(logging.WARNING, logger=overlay_store.logger.name):
         assert brochure_extract.attach_rung_order(overlay) == overlay
     assert any("no order_basis" in r.message for r in caplog.records)
