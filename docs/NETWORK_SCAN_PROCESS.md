@@ -40,6 +40,21 @@ presents where the car is — in the image carousel, as text on the VDP, in a fe
 in `workspace/dealer_logs/<dealer_id>/location.md` and roll the general patterns up into
 `workspace/dealer_logs/_learning/location_patterns.md`.
 
+Where location evidence is written (the contract; `backend/scanner/pipeline/dealer_logs.py`
+is the source of truth, D-HY7 decision (a), 2026-10-18):
+
+- `discovery.md`: the "store location for rooftop attribution" line (`log_discovery`).
+- `scan_runs.md`: every scan block carries a `- location:` line (`log_scan_run`): rows
+  refused as other rooftops, rows refused by the VIN-owner guard, the dealer names and zip
+  codes seen on the rows.
+- `location.md`: `log_location` appends a dated block on every run (`log_run_files`):
+  captured vs stamped rows, the two refusal counts, dealer names and zips, and a
+  `group_feed_unstamped` flag when a group feed is left unscoped. Beyond that automatic
+  block, write into `location.md` by hand only when the site has a location quirk (a field,
+  carousel image or VDP text that names the lot), with the evidence and how we read it.
+- `_learning/location_patterns.md`: the general lessons, each citing the dealer log that
+  shows the evidence.
+
 For the general data that comes from the scan (drivetrain, fuel, engine, cylinders,
 body, year/make/model), verify the data's accuracy with **NHTSA VIN decoding**
 (`backend/enrichment/vpic_facts.py`, cache `nhtsa_vpic_cache`). If NHTSA does not have
@@ -85,7 +100,7 @@ workspace/dealer_logs/
     errors_index.md           one line per distinct error class -> which dealer log shows the fix
   <dealer_id>/
     discovery.md              every discovery attempt: date, what was probed, what came back, verdict
-    location.md               where this site says the car is, and how we read it
+    location.md               per-run rooftop-gate block (automatic) plus hand-written location quirks: where this site says the car is, and how we read it
     scan_runs.md              one block per scan: rows new/used, coverage, NHTSA verification, discrepancies
     summary.md                issues faced and how each was fixed, in detail
     scan_instructions.md      how to scan this dealership (written after the first successful run)
