@@ -10,7 +10,7 @@ A pointer page. It holds no state of its own, so it cannot go stale the way the 
 
 | Need | Document |
 |------|----------|
-| What is next, in order, and what is done | [`docs/EXECUTION_PLAN_2026_09.md`](docs/EXECUTION_PLAN_2026_09.md) (includes the retired master-todo rows) |
+| What is next, in order, and what is done | [`docs/EXECUTION_PLAN_2026_09.md`](docs/EXECUTION_PLAN_2026_09.md) (includes the rows of the retired master to-do) |
 | Open work by phase and unit | [`docs/NEXT_PHASES_PLAN_2026_10.md`](docs/NEXT_PHASES_PLAN_2026_10.md), unit specs in [`docs/REMEDIATION_PLAN_2026_10.md`](docs/REMEDIATION_PLAN_2026_10.md) |
 | Owner decisions | [`docs/remediation/OWNER_DECISIONS_LOG.md`](docs/remediation/OWNER_DECISIONS_LOG.md) |
 | Scanning a dealership (the per-dealer loop and logs) | [`docs/NETWORK_SCAN_PROCESS.md`](docs/NETWORK_SCAN_PROCESS.md) |
