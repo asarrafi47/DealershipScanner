@@ -53,7 +53,7 @@ def main() -> int:
     print(f"  Username: {USERNAME}")
     print(f"  Email:    {EMAIL}")
     print(f"  Password: {PASSWORD}")
-    print(f"  Plan:     Free (not premium)")
+    print("  Plan:     Free (not premium)")
     return 0
 
 

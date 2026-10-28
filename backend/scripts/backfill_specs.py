@@ -336,7 +336,7 @@ def main():
             stats["skipped"] += 1
 
     logger.info("\n" + "=" * 60)
-    logger.info(f"Backfill Complete:")
+    logger.info("Backfill Complete:")
     logger.info(f"  Total processed: {stats['total']}")
     logger.info(f"  Updated: {stats['updated']}")
     logger.info(f"  Skipped: {stats['skipped']}")

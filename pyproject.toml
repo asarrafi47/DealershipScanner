@@ -12,6 +12,9 @@
 # older of the two so ruff never green-lights syntax the deploy image cannot run.
 target-version = "py312"
 
+# Vendored agent skills (.agents/skills) are third-party code, not ours to lint.
+extend-exclude = [".agents/skills"]
+
 # Measured, not guessed: the 99th percentile line in backend/ is 102 chars and
 # only 0.2% of lines exceed 120. E501 is not in the selected rule set, so this
 # documents the house width for formatter-adjacent rules rather than demanding a
@@ -30,8 +33,6 @@ ignore = [
     # 22 assigned-but-never-used locals. Each needs a human read -- several look
     # like half-finished code paths rather than dead stores.
     "F841",
-    # 14 f-strings with no placeholders. Cosmetic only.
-    "F541",
 ]
 
 [tool.ruff.lint.per-file-ignores]

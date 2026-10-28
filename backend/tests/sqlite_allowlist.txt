@@ -155,7 +155,6 @@ backend/dev/routes.py  import_sqlite3  1
 backend/dev/routes.py  row_factory  1
 backend/dev/routes.py  sqlite3_attr  2
 backend/dev/scan_lab.py  qmark_placeholder  3
-backend/dictionary/derived/dictionary_catalog.sqlite3  tracked_db_file  1
 backend/dictionary/enrich_from_dictionary.py  db_path_literal  2
 backend/dictionary/enrich_from_dictionary.py  env_db_path  2
 backend/dictionary/enrich_from_dictionary.py  ifnull  5

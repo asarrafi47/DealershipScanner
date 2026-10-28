@@ -86,6 +86,7 @@ railway api 'mutation { serviceInstanceUpdate(serviceId: "<svc>", environmentId:
 | `INVENTORY_DATABASE_URL` | `${{Postgres.DATABASE_URL}}` | private-network URL (`postgres.railway.internal`); no public proxy, no egress |
 | `SCAN_SHARDS` | `8` | parallel `dealer_pipeline` processes |
 | `SCAN_BATCH` | `6` | dealers per scanner process inside a shard |
+| `RUNTIME_STATE_DIR` | unset (`/app/workspace/state`, on the volume) | where `scanner_run_counter.json` and `live_gas_prices.json` are written (`backend/utils/runtime_state.py`); neither file is tracked in git. Without `live_gas_prices.json`, `/api/fuel/lookup` serves its built-in fallback rates |
 | `SCAN_DATA_DIR` | `/data` | volume root; `/app/workspace` is a symlink to `/data/workspace` |
 | `SCAN_IDLE_HOLD_SECONDS` | `1500` | an idle start stays up 25 min so the volume can be read (see logs) |
 | `PYTHONPATH` | `/app` | |

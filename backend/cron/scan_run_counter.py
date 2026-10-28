@@ -12,8 +12,10 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from backend.utils.runtime_state import file_lock, state_path, write_json_atomic
+
 ROOT = Path(__file__).resolve().parents[2]
-COUNTER_PATH = ROOT / "backend" / "dictionary" / "derived" / "scanner_run_counter.json"
+COUNTER_PATH = state_path("scanner_run_counter.json")
 
 
 def _rating_scan_interval() -> int:
@@ -35,10 +37,7 @@ def _load_state() -> dict[str, Any]:
 
 
 def _write_state(state: dict[str, Any]) -> None:
-    COUNTER_PATH.parent.mkdir(parents=True, exist_ok=True)
-    tmp = COUNTER_PATH.with_suffix(".json.tmp")
-    tmp.write_text(json.dumps(state, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    tmp.replace(COUNTER_PATH)
+    write_json_atomic(COUNTER_PATH, state)
 
 
 def record_scanner_batch_finished(*, ran_dealer_ratings: bool = False) -> dict[str, Any]:
@@ -47,6 +46,11 @@ def record_scanner_batch_finished(*, ran_dealer_ratings: bool = False) -> dict[s
 
     Returns summary with ``batch_count``, ``interval``, and ``run_dealer_ratings``.
     """
+    with file_lock(COUNTER_PATH):
+        return _record_batch_locked(ran_dealer_ratings)
+
+
+def _record_batch_locked(ran_dealer_ratings: bool) -> dict[str, Any]:
     state = _load_state()
     count = int(state.get("batch_count") or 0) + 1
     interval = _rating_scan_interval()
@@ -73,6 +77,7 @@ def record_scanner_batch_finished(*, ran_dealer_ratings: bool = False) -> dict[s
 
 def mark_dealer_ratings_synced() -> None:
     """Record that a dealer rating backfill completed (does not increment batch count)."""
-    state = _load_state()
-    state["last_rating_sync_at"] = datetime.now(timezone.utc).isoformat()
-    _write_state(state)
+    with file_lock(COUNTER_PATH):
+        state = _load_state()
+        state["last_rating_sync_at"] = datetime.now(timezone.utc).isoformat()
+        _write_state(state)

@@ -25,6 +25,10 @@ data/vectors/
 backend/data/chroma/
 data/chroma/
 
+# JetBrains project files; stale scanner captures (the live dir is root debug/)
+.idea/
+backend/debug/
+
 # Pipeline / scraper outputs under backend/data (regenerated locally)
 backend/data/oem/
 backend/data/dealer_group_results.json
@@ -135,9 +139,17 @@ debug/*
 
 # Scan scratch: throwaway manifests, discovery/OSM dumps, scanlogs, one-off probe
 # scripts. Dozens of these appear per scan session and none are inputs to the app.
-# The ~47 manifests already tracked here stay tracked (gitignore doesn't untrack);
-# to add a new deliberate one: git add -f workspace/<file>
-workspace/
+# Tracked on purpose: workspace/dealers_backup.json, workspace/phase_runs/*/RESUME.md
+# (already tracked; gitignore doesn't untrack) and two curated dealer-log lessons.
+# errors_index.md and platform_candidates.md are machine-written on every pipeline
+# run, so they stay ignored. To add a new deliberate file: git add -f workspace/<file>
+workspace/*
+!workspace/dealer_logs/
+workspace/dealer_logs/*
+!workspace/dealer_logs/_learning/
+workspace/dealer_logs/_learning/*
+!workspace/dealer_logs/_learning/platform_playbook.md
+!workspace/dealer_logs/_learning/location_patterns.md
 
 # Generated knowledge-graph output (~36MB, rebuilt by the graphify skill)
 graphify-out/
@@ -150,8 +162,7 @@ dump-*.sql
 # Dead weight since the pgvector migration — catalog_service.master_catalog_
 # persist_dir() resolves to data/vectors/ and nothing reads this directory.
 # NB it is only ~9MB of the 694MB .git, not the main cause: debug/ scanner
-# failure PNGs are 141MB and backend/dictionary 31MB. Untrack those first if
-# the goal is a smaller clone.
+# failure PNGs are 141MB and backend/dictionary 31MB.
 backend/vector/chroma_master_catalog/
 
 # Investigation / scratch outputs. These are run artifacts, not source, and one of
@@ -185,3 +196,7 @@ comment_uploads/
 # Precompressed static siblings (scripts/build_static_compressed.py); rebuilt at image build.
 frontend/static/**/*.gz
 frontend/static/**/*.br
+
+# Runtime state now lives under runtime_state.state_path (workspace/state/); keep any stray local copies untracked
+backend/dictionary/derived/live_gas_prices.json
+backend/dictionary/derived/scanner_run_counter.json

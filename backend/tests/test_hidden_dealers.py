@@ -323,7 +323,7 @@ def test_listings_page_ships_hidden_set_and_note(env):
     rv = client.get("/listings")
     assert rv.status_code == 200
     html = rv.get_data(as_text=True)
-    assert f'id="ds-listings-hidden-dealers" nonce=' in html
+    assert 'id="ds-listings-hidden-dealers" nonce=' in html
     assert f'["{DEALER_ID}"]' in html
     assert "1 dealership hidden" in html
     assert "/account/profile#hidden-dealers" in html

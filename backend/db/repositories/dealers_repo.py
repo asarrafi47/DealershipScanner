@@ -107,7 +107,7 @@ def list_scan_runs(*, dealer_id: str | None = None, limit: int = 50) -> list[dic
         ensure_scan_runs_table(cur)
         if dealer_id and str(dealer_id).strip():
             cur.execute(
-                f"""
+                """
                 SELECT * FROM scan_runs
                 WHERE dealer_id = ?
                 ORDER BY datetime(finished_at) DESC, id DESC
@@ -117,7 +117,7 @@ def list_scan_runs(*, dealer_id: str | None = None, limit: int = 50) -> list[dic
             )
         else:
             cur.execute(
-                f"""
+                """
                 SELECT * FROM scan_runs
                 ORDER BY datetime(finished_at) DESC, id DESC
                 LIMIT ?

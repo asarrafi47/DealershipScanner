@@ -700,7 +700,7 @@ def render_dealer(dealer_id: str, pre: dict[str, Any] | None, post: dict[str, An
         L += [
             "",
             f"- run `{r['id']}` provider `{r.get('provider')}` finished {r.get('finished_at')} in **{(r.get('duration_seconds') or 0) / 60:.1f} min**",
-            f"- phases (s): " + ", ".join(f"{k}={v}" for k, v in ph.items()),
+            "- phases (s): " + ", ".join(f"{k}={v}" for k, v in ph.items()),
             f"- inventory rows {r.get('inventory_rows')} → deduped {r.get('deduped_rows')} → upserted {r.get('upserted')}; "
             f"VDPs visited {r.get('vdps_visited')} (log shows {r.get('vdp_visits_log')}), VDP-enriched {r.get('vehicles_vdp_enriched')}",
             f"- reconcile: {json.dumps(rec)}",
