@@ -101,7 +101,7 @@ def main():
     complete = max(0, total_cars - incomplete)
 
     logger.info("=" * 60)
-    logger.info(f"✅ Rebuild complete!")
+    logger.info("✅ Rebuild complete!")
     logger.info(f"   Total cars (inventory): {total_cars}")
     logger.info(f"   Incomplete listings: {incomplete}")
     logger.info(f"   Complete listings: {complete}")

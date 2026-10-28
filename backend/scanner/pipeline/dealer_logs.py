@@ -159,7 +159,7 @@ def write_instructions_if_first_success(r: dict[str, Any], stamp: str) -> None:
         lines.append(f"  - {x.method} {x.url}  pagination={x.pagination} rows={x.vehicle_rows} total={x.total_count} coverage={json.dumps(x.field_coverage)}")
     lines += ["- run: `python -m backend.scripts.dealer_pipeline --dealers " + did + " --out workspace/pipeline/<run> --batch 1` (HTTP-only, no browser)",
               f"- expected rows: about {r.get('rows')} (new {r.get('rows_new')}, used {r.get('rows_used')})",
-              f"- feed carries: " + ", ".join(k for k, v in (r.get('coverage') or {}).items() if float(v or 0) >= 0.9),
+              "- feed carries: " + ", ".join(k for k, v in (r.get('coverage') or {}).items() if float(v or 0) >= 0.9),
               f"- detail page adds (HTTP-first): {json.dumps({k: v for k, v in (r.get('http_first') or {}).items() if k in ('fetched', 'candidates', 'descriptions_filled', 'galleries_extended', 'statuses')})}",
               "- quirks: see summary.md and discovery.md", ""]
     if _log_write_once(did, "scan_instructions.md", "\n".join(lines)):
