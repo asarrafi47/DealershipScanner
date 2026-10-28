@@ -355,7 +355,7 @@ def _sqlite_epa(cols: tuple[str, ...], rows: list[tuple]) -> sqlite3.Connection:
 
 def _full_row(id_: int, trim: str) -> tuple:
     return (id_, 2026, "Toyota", "Tundra", trim, 6, 3.4, None, "Four-Wheel Drive",
-            "Regular Gasoline", None, None, None)
+            "Regular Gasoline", None, None, None, None, None)
 
 
 def test_query_orders_candidates_by_id() -> None:

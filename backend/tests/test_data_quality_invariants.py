@@ -532,7 +532,8 @@ def test_every_sql_invariant_has_a_baseline_entry() -> None:
     # The catalog invariants wait for the P10B.4 provenance run: a baseline of 0 written before
     # the backfill would be a false clean. Remove each id from the exemption as its baseline lands.
     missing = [s.id for s in dq.SQL_INVARIANTS
-               if s.id not in baseline and s.id not in dq.CATALOG_INVARIANT_IDS]
+               if s.id not in baseline and s.id not in dq.CATALOG_INVARIANT_IDS
+               and s.id not in dq.INDUCTION_INVARIANT_IDS]
     assert missing == []
     assert set(_PRECEDENCE_IDS) <= {s.id for s in dq.SQL_INVARIANTS}
 
@@ -700,3 +701,74 @@ def test_catalog_invariants_count_seeded_defects(pg_db) -> None:
     assert got["epa_master_cross_source_twin"] == 1
     assert got["epa_extended_specs_orphan"] == 0
     assert got["epa_link_dangling_all_listings"] == 0
+
+
+def test_performance_badge_regex_uses_postgres_word_boundaries() -> None:
+    # P10C.8: \b is a backspace in Postgres, so RS / STI / ZL1 never matched before
+    sql = {s.id: s for s in dq.SQL_INVARIANTS}["zero_to_60_sub_four_no_badge"].count_sql
+    assert "\\b" not in sql
+    for badge in ("\\yRS\\y", "\\ySTI\\y", "\\yZL1\\y"):
+        assert badge in sql
+
+
+def test_induction_invariants_are_registered_read_only_and_awaiting_baseline() -> None:
+    import re
+
+    specs = {s.id: s for s in dq.SQL_INVARIANTS}
+    assert set(dq.INDUCTION_INVARIANT_IDS) <= set(specs)
+    baseline = dq.load_baseline(dq.DEFAULT_BASELINE_PATH)
+    for iid in dq.INDUCTION_INVARIANT_IDS:
+        spec = specs[iid]
+        assert not spec.informational, iid
+        assert spec.example_sql and spec.denominator_sql and "LIMIT 20" in spec.example_sql, iid
+        for sql in (spec.count_sql, spec.example_sql, spec.denominator_sql):
+            assert not re.search(r"\b(INSERT|UPDATE|DELETE|DROP|ALTER|TRUNCATE|CREATE)\b", sql, re.I), iid
+            assert "\\b" not in sql, iid
+        assert iid not in baseline or baseline[iid]["count"] >= 0
+    for iid in ("car_fi_boost_on_na_family", "car_fi_missing_on_boosted_family"):
+        assert "\\m\\d\\.\\dt\\M" in specs[iid].count_sql or iid == "car_fi_missing_on_boosted_family"
+
+
+def test_induction_invariant_without_baseline_fails_closed() -> None:
+    v = dq.compare([_result("car_fi_boost_on_na_family", 0)], {})[0]
+    assert v["status"] == "NO_BASELINE"
+    assert v["status"] in dq._FAIL_STATUSES
+
+
+@pytest.mark.pg
+def test_induction_invariants_count_seeded_defects(pg_db) -> None:
+    import psycopg
+
+    # epa_master: 1 turbo flag + 'Naturally Aspirated' label (contradicts); 2 clean turbo;
+    # 3 blank label on a non-EV row (contradicts); 4 EV blank label (fine); 5/6 NA family
+    # (2.0 and 2.1, within +-0.15 of each other); 7 boosted family.
+    with pg_db.connect() as c:
+        c.execute(
+            "INSERT INTO public.epa_master (id, year, make, model, cylinders, displacement, "
+            "t_charger, s_charger, forced_induction, atv_type) VALUES "
+            "(1, 2022, 'Ford', 'F150', 6, 3.5, 'T', '', 'Naturally Aspirated', NULL), "
+            "(2, 2022, 'Ford', 'Ranger', 4, 2.3, 'T', '', 'Turbocharged', NULL), "
+            "(3, 2022, 'Honda', 'Accord', 4, 1.5, '', '', '', NULL), "
+            "(4, 2022, 'Tesla', 'Model 3', 0, 0, '', '', '', 'EV'), "
+            "(5, 2019, 'Acura', 'RDX', 6, 3.5, '', '', 'Naturally Aspirated', NULL), "
+            "(6, 2019, 'Acura', 'RDX', 6, 3.5, '', '', 'Naturally Aspirated', NULL), "
+            "(7, 2022, 'Subaru', 'WRX', 4, 2.4, 'T', '', 'Turbocharged', NULL)"
+        )
+        # a: turbo label on the NA family, no text -> counts; b: same with '2.0T' text -> exempt;
+        # c: NA label on the boosted family -> counts; d: blank label on boosted family, EV fuel -> exempt
+        c.execute(
+            "INSERT INTO public.cars (id, vin, year, make, model, trim, title, engine_description, "
+            "forced_induction, fuel_type, listing_active, epa_master_id) VALUES "
+            "(1, 'A', 2019, 'Acura', 'RDX', 'Base', 'Acura RDX', '3.5L V6', 'Turbocharged', 'Gasoline', 1, 5), "
+            "(2, 'B', 2019, 'Acura', 'RDX', 'Base', 'Acura RDX', '3.5T V6 engine', 'Turbocharged', 'Gasoline', 1, 5), "
+            "(3, 'C', 2022, 'Subaru', 'WRX', 'Base', 'Subaru WRX', '2.4L', 'Naturally Aspirated', 'Gasoline', 1, 7), "
+            "(4, 'D', 2022, 'Subaru', 'WRX', 'Base', 'Subaru WRX', '2.4L', '', 'Electric', 1, 7)"
+        )
+    conn = psycopg.connect(dq._inventory_url())
+    try:
+        got = {r.id: r.count for r in dq.run_stored_tier(conn) if r.id in dq.INDUCTION_INVARIANT_IDS}
+    finally:
+        conn.close()
+    assert got["epa_master_fi_contradicts_flags"] == 2
+    assert got["car_fi_boost_on_na_family"] == 1
+    assert got["car_fi_missing_on_boosted_family"] == 1

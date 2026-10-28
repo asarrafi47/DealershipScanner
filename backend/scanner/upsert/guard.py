@@ -162,6 +162,32 @@ def arbitrate_feed_facts(
     return kept
 
 
+def keep_stored_forced_induction(
+    bound: dict, fi: str, stored: dict | None, prior_spec_src: str | None,
+) -> bool:
+    """True when the classifier-only label *fi* must not replace the stored one (P10C.7).
+
+    The feed carried no forced-induction value, so *fi* was derived here. Its source is
+    the resolver's (dealer engine text ranks as ``dealer_feed``; description markers and
+    the make/model heuristic rank below catalog and vPIC evidence). A stored label whose
+    non-stale provenance outranks that source stays; a label without provenance, with
+    stale provenance, or ranking at or below the candidate is replaced as before.
+    """
+    if not stored or not prior_spec_src:
+        return False
+    stored_val = stored.get("forced_induction")
+    if _prec.is_blank("forced_induction", stored_val) or _prec._same("forced_induction", stored_val, fi):
+        return False
+    stored_src = _prec.field_source("forced_induction", stored_val, prior_spec_src)
+    if stored_src == _prec.UNKNOWN:
+        return False
+    from backend.utils.forced_induction import resolve_car_forced_induction
+
+    label, src = resolve_car_forced_induction(bound)
+    cand_src = _prec.canonical_source(src) if label == fi else _prec.TRIM_HEURISTIC
+    return (_prec.rank_of("forced_induction", stored_src) or 0) > (_prec.rank_of("forced_induction", cand_src) or 0)
+
+
 def backstop_owner(cursor, vin: str) -> str:
     """dealer_id of the row the SQL backstop refused to move ('' if unreadable)."""
     try:

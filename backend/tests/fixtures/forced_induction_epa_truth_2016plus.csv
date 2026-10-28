@@ -1,0 +1,86 @@
+# year,make,model,trim,cylinders,engine_l,fuel_type,expected,note
+2017,Acura,RDX,Base,6,3.5,Gasoline,,RDX NA 3.5 V6 through 2018
+2018,Acura,RDX,Technology,6,3.5,Gasoline,,RDX NA 3.5 V6 through 2018
+2019,Acura,RDX,A-Spec,4,2.0,Gasoline,Turbocharged,2019 RDX 2.0T
+2019,Acura,TLX,Base,4,2.4,Gasoline,,TLX NA through 2020
+2020,Acura,TLX,V6,6,3.5,Gasoline,,TLX NA through 2020
+2021,Acura,TLX,Type S,6,3.0,Gasoline,Twin Turbocharged,TLX Type S 3.0TT
+2023,Acura,Integra,Base,4,1.5,Gasoline,Turbocharged,Integra 1.5T
+2022,Lamborghini,Huracan,EVO,10,5.2,Gasoline,,NA V10
+2018,Lamborghini,Aventador,S,12,6.5,Gasoline,,NA V12
+2022,Lamborghini,Urus,Base,8,4.0,Gasoline,Twin Turbocharged,Urus 4.0TT
+2019,Ferrari,812 Superfast,Base,12,6.5,Gasoline,,NA V12
+2017,Ferrari,F12berlinetta,Base,12,6.3,Gasoline,,NA V12
+2018,Ferrari,488 GTB,Base,8,3.9,Gasoline,Twin Turbocharged,V8 TT
+2016,Rolls-Royce,Phantom,Base,12,6.75,Gasoline,,Phantom VII NA V12
+2019,Rolls-Royce,Phantom,Base,12,6.75,Gasoline,Twin Turbocharged,Phantom VIII TT
+2017,Maserati,GranTurismo,Sport,8,4.7,Gasoline,,4.7 NA V8
+2018,Maserati,Levante,S,6,3.0,Gasoline,Twin Turbocharged,Levante TT
+2017,Lincoln,MKZ,Reserve,6,3.7,Gasoline,,3.7 NA V6
+2018,Lincoln,Continental,Select,6,3.7,Gasoline,,3.7 NA V6
+2018,Lincoln,Navigator,Reserve,6,3.5,Gasoline,Twin Turbocharged,3.5 EcoBoost
+2021,Lincoln,Corsair,Grand Touring,4,2.5,Gasoline / Electricity,,Atkinson PHEV
+2018,Genesis,G80,3.8,6,3.8,Gasoline,,3.8 NA
+2018,Genesis,G90,5.0,8,5.0,Gasoline,,5.0 NA
+2018,Genesis,G90,3.3 Sport,6,3.3,Gasoline,Twin Turbocharged,3.3TT
+2018,Infiniti,Q50,3.7 Premium,6,3.7,Gasoline,,3.7 NA
+2019,Infiniti,QX60,Pure,6,3.5,Gasoline,,3.5 NA
+2018,Infiniti,Q50,Red Sport 400,6,3.0,Gasoline,Twin Turbocharged,3.0t
+2019,Infiniti,QX50,Essential,4,2.0,Gasoline,Turbocharged,VC-Turbo
+2020,Hyundai,Accent,SE,4,1.6,Gasoline,,1.6 NA
+2020,Kia,Rio,LX,4,1.6,Gasoline,,1.6 NA
+2020,Kia,Soul,GT-Line,4,2.0,Gasoline,,2.0 NA GT-Line
+2020,Hyundai,Kona,N Line,4,1.6,Gasoline,Turbocharged,1.6T
+2019,Honda,Accord,Hybrid,4,2.0,Hybrid,,Atkinson hybrid
+2019,Honda,CR-V,Hybrid,4,2.0,Gasoline / Electricity,,Atkinson hybrid
+2020,Lexus,ES 300h,Base,4,2.5,Hybrid,,hybrid
+2019,Lexus,RX 450h,Base,6,3.5,Hybrid,,hybrid
+2018,Lexus,CT 200h,Base,4,1.8,Hybrid,,hybrid
+2018,Ford,F-150,XLT,8,5.0,Gasoline,,5.0 NA
+2017,Ford,Explorer,XLT,6,3.5,Gasoline,,3.5 NA
+2019,Ford,Escape,SE,4,2.5,Gasoline,,2.5 NA
+2018,Chevrolet,Malibu,LT,4,2.5,Gasoline,,2.5 Ecotec NA
+2019,GMC,Canyon,SLE,4,2.5,Gasoline,,2.5 NA
+2019,Chevrolet,Colorado,Z71,4,2.7,Gasoline,Turbocharged,2.7 TurboMax
+2018,Jeep,Compass,Latitude,4,2.4,Gasoline,,2.4 NA
+2018,Jeep,Compass,Sport,4,2.0,Gasoline,,2.0 NA
+2019,Jeep,Cherokee,Latitude,4,2.4,Gasoline,,2.4 NA
+2019,Jeep,Wrangler,Sport,4,2.0,Gasoline,Turbocharged,2.0T
+2020,Volkswagen,Atlas,SE,6,3.6,Gasoline,,VR6 NA
+2016,Volkswagen,Passat,SE,4,2.5,Gasoline,,2.5 NA
+2016,Porsche,911,Carrera,6,3.4,Gasoline,,991.1 Carrera NA
+2016,Porsche,Boxster,Base,6,2.7,Gasoline,,981 NA
+2018,Porsche,911,Carrera,6,3.0,Gasoline,Twin Turbocharged,991.2 3.0TT
+2017,Audi,A6,Premium Plus,6,3.0,Gasoline,Supercharged,3.0 TFSI SC
+2018,Audi,A7,Prestige,6,3.0,Gasoline,Supercharged,3.0 TFSI SC
+2017,Audi,Q7,Premium,6,3.0,Gasoline,Supercharged,3.0 TFSI SC
+2020,Audi,A6,Premium,6,3.0,Gasoline,Turbocharged,2019+ 3.0T turbo
+2017,Jaguar,F-Pace,35t,6,3.0,Gasoline,Supercharged,3.0 SC
+2018,Jaguar,F-Type,R,8,5.0,Gasoline,Supercharged,5.0 SC
+2022,Jaguar,F-Type,R,8,5.0,Gasoline,Supercharged,F-Type V8 stayed SC
+2018,Land Rover,Range Rover Sport,HSE,6,3.0,Gasoline,Supercharged,3.0 SC
+2018,Land Rover,Range Rover,Autobiography,8,5.0,Gasoline,Supercharged,5.0 SC
+2022,Cadillac,CT5,V-Series Blackwing,8,6.2,Gasoline,Supercharged,Blackwing SC
+2023,Cadillac,Escalade-V,Base,8,6.2,Gasoline,Supercharged,Escalade-V SC
+2023,Ford,F-150,Raptor R,8,5.2,Gasoline,Supercharged,Raptor R SC (shadowed rule)
+2021,Ford,F-150,Raptor,6,3.5,Gasoline,Twin Turbocharged,Raptor 3.5TT
+2020,Toyota,Prius,LE,4,1.8,Gasoline / Electricity,,PHEV is not EV and not boosted
+2023,Toyota,Tundra,SR5,6,3.4,Gasoline,Twin Turbocharged,Tundra 3.4TT
+2024,Toyota,Tacoma,TRD Sport,4,2.4,Gasoline,Turbocharged,Tacoma 2.4T
+2019,Toyota,Tacoma,SR5,6,3.5,Gasoline,,Tacoma V6 NA
+2019,Honda,Civic,EX,4,1.5,Gasoline,Turbocharged,1.5T with cylinders missing handled below
+2020,Honda,Fit,LX,4,1.5,Gasoline,,Fit 1.5 NA
+2022,Nissan,Rogue,SV,3,1.5,Gasoline,Turbocharged,VC-Turbo
+2020,Nissan,Altima,SR,4,2.0,Gasoline,Turbocharged,VC-Turbo
+2020,Nissan,Maxima,SV,6,3.5,Gasoline,,NA
+2020,Subaru,Ascent,Premium,4,2.4,Gasoline,Turbocharged,2.4T
+2024,Mazda,CX-90,Turbo,6,3.3,Gasoline,Turbocharged,3.3T
+2019,Mazda,CX-9,Touring,4,2.5,Gasoline,Turbocharged,2.5T
+2024,Mazda,CX-90,PHEV,4,2.5,Plug-In Hybrid,,CX-90 PHEV is NA 2.5
+2024,Mazda,CX-90,Turbo S,6,3.3,Gasoline,Turbocharged,3.3T
+2024,Toyota,Grand Highlander,Hybrid XLE,4,2.5,Gasoline / Electricity,,Grand Highlander Hybrid NA 2.5
+2024,Toyota,Grand Highlander,Hybrid Max Platinum,4,2.4,Gasoline / Electricity,Turbocharged,Hybrid Max 2.4T
+2024,Toyota,Grand Highlander,XLE,4,2.4,Gasoline,Turbocharged,2.4T
+2018,Kia,Stinger,GT-Line,4,2.0,Gasoline,Turbocharged,Stinger 2.0T
+2019,Porsche,911 GT3,,6,4.0,Gasoline,,GT3 NA with empty trim
+2024,Lexus,TX 350,Base,4,2.4,Gasoline,Turbocharged,TX 350 2.4T

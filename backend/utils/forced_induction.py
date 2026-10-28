@@ -108,6 +108,15 @@ def _ford_st(trim: str) -> bool:
     return bool(re.search(r"\bst\b(?!\s*-?\s*line)", trim))
 
 
+def _is_hybrid(ft: str, full: str) -> bool:
+    """Hybrid / plug-in by fuel string ('Gasoline / Electricity') or badge text."""
+    return bool(
+        "hybrid" in ft
+        or "electric" in ft
+        or re.search(r"hybrid|\b\d{3}h\b|\bhv\b|\bphev\b", full)
+    )
+
+
 def _classify_by_make_model(
     make: str,
     model: str,
@@ -135,7 +144,11 @@ def _classify_by_make_model(
     if re.search(r"\btrx\b|\bgt500\b|\bzl1\b|\bgt 500\b", full):
         return "Supercharged"
     if re.search(r"\braptor\b", full) and yr >= 2017:
-        # 2017+ Raptor = 3.5TT (2010-2014 was NA 6.2 V8, guarded below)
+        # Raptor R (2023+) is the 5.2 supercharged V8; the 3.5 / 3.0 Raptors are twin turbo
+        # (2010-2014 was NA 6.2 V8, guarded below). Decided here, not in the Ford
+        # branch, which this nameplate rule used to shadow.
+        if cyl == 8 or el >= 5.0 or re.search(r"raptor\s*r\b", full):
+            return "Supercharged"
         return "Twin Turbocharged"
 
     # Era inference below assumes the modern "everything is boosted" lineups.
@@ -178,6 +191,13 @@ def _classify_by_make_model(
             return None
         if re.search(r"\brs\s*[3-9]\b|\brs\s*q[0-9]\b", full):
             return "Twin Turbocharged"
+        # 3.0 TFSI V6 was supercharged until each line moved to the turbo EA839
+        # (A6/A7/A8/Q7 after 2018, S4/S5/Q5/SQ5 after 2017); EPA sCharger='S'.
+        if cyl in (0, 6) and (not el or 2.9 <= el <= 3.1):
+            if re.search(r"\ba[678]\b|\bq7\b", mo) and yr <= 2018 and (cyl == 6 or el):
+                return "Supercharged"
+            if re.search(r"\bs[45]\b|\bsq5\b|\bq5\b", mo) and yr <= 2017 and (cyl == 6 or el):
+                return "Supercharged"
         # S6/S7/S8 with V8
         if re.search(r"\bs[6-8]\b", mo) and (cyl == 8 or el >= 3.9):
             return "Twin Turbocharged"
@@ -203,11 +223,25 @@ def _classify_by_make_model(
             return None
         if _has(tr, "turbo"):
             return "Twin Turbocharged"
+        # 991.1 911 (2016), 981 Boxster/Cayman (<=2016) and the 3.6 V6 Panamera/Cayenne
+        # base cars are naturally aspirated; the boxer 718 turbo and 911 3.0TT start 2017.
+        if re.search(r"\b911\b|carrera", full) and yr <= 2016:
+            return None
+        if re.search(r"boxster|cayman", mo) and yr <= 2016:
+            return None
+        if re.search(r"\bgt4\b|spyder", full):
+            return None  # 4.0 flat-six NA
+        if re.search(r"cayenne|panamera", mo) and yr <= 2018 and cyl in (0, 6) \
+                and 3.4 <= (el or 3.6) <= 3.8 and not re.search(
+                    r"\bs\b|gts|e-hybrid|diesel|turbo|4s|\b4\b", tr + " " + ft):
+            return None
         # GT3, GT3 RS = naturally aspirated
-        if re.search(r"\bgt3\b", tr) and "gt2" not in tr:
+        if re.search(r"\bgt3\b", full) and "gt2" not in full:
             return None
         if re.search(r"\bgt2\b", tr):
             return "Twin Turbocharged"
+        if re.search(r"\b911\b|carrera", full) and yr >= 2017 and not re.search(r"\b911 r\b|\br\b", tr):
+            return "Twin Turbocharged"  # 991.2 / 992 3.0 flat-six twin turbo
         return "Turbocharged"
 
     # ── Ford ─────────────────────────────────────────────────────────────────
@@ -243,6 +277,8 @@ def _classify_by_make_model(
 
     # ── Lincoln ───────────────────────────────────────────────────────────────
     if m == "lincoln":
+        if _is_hybrid(ft, full) and cyl in (0, 4) and el <= 2.6:
+            return None  # Corsair / MKZ Atkinson 2.0-2.5 hybrid and plug-in hybrid
         if cyl == 6 and 2.9 <= el <= 3.6:
             return "Twin Turbocharged"  # 3.0T / 3.5T V6
         if cyl >= 6 or el >= 3.6:
@@ -267,8 +303,8 @@ def _classify_by_make_model(
             return "Supercharged"
         if _has(mo, "trailblazer", "trax", "encore", "envoy"):
             return "Turbocharged"
-        if cyl == 4 and el and 2.4 <= el <= 2.9:
-            return "Turbocharged"  # 2.7T 4-cyl
+        if cyl == 4 and el and 2.6 <= el <= 2.9:
+            return "Turbocharged"  # 2.7T 4-cyl (the 2.4 / 2.5 Ecotec I4 is NA)
         if _has(tr, "duramax", "diesel") or (cyl == 6 and el and 2.7 <= el <= 3.1 and _has(mo, "silverado", "sierra", "colorado", "canyon")):
             return "Turbocharged"
         if cyl >= 6:
@@ -285,10 +321,14 @@ def _classify_by_make_model(
     if m == "cadillac":
         if _has(mo, "lyriq", "celestiq"):
             return None
-        if _has(tr, "blackwing"):
+        if _has(full, "blackwing"):
             return "Twin Turbocharged" if _has(mo, "ct4") else "Supercharged"
-        if _has(mo, "escalade") and _has(tr, "-v", " v "):
+        if _has(mo, "escalade") and re.search(r"escalade[- ]v\b|(?:^|\s)-?v(?:[- ]series)?(?:\s|$)", full):
             return "Supercharged"
+        if re.search(r"\bcts[- ]v\b", full):
+            return "Supercharged"
+        if re.search(r"\bats[- ]v\b|\bct6[- ]v\b|\bct5[- ]v\b|\bct4[- ]v\b", full):
+            return "Twin Turbocharged"
         if re.search(r"\bct[45]\b", mo) or _has(mo, "xt4"):
             return "Turbocharged"
         if _has(mo, "xt5", "xt6") and el and el < 3.0:
@@ -317,8 +357,16 @@ def _classify_by_make_model(
             return "Supercharged"
         if _has(tr, "4xe"):
             return "Turbocharged"
-        if cyl == 4 and el and 1.8 <= el <= 2.2:
+        # The 2.0T is the Wrangler / 2019+ Cherokee / 2022+ Compass engine; the 2.0 and 2.4
+        # Tigershark I4 in other Jeeps (Compass/Patriot/Renegade/older Cherokee) is NA.
+        if cyl == 4 and el and 1.8 <= el <= 2.2 and (
+            _has(mo, "wrangler", "gladiator")
+            or (_has(mo, "cherokee") and "grand" not in mo and yr >= 2019)
+            or (_has(mo, "compass") and yr >= 2022)
+        ):
             return "Turbocharged"
+        if cyl in (0, 3, 4) and el and el <= 1.4 and _has(mo, "renegade") and yr >= 2019:
+            return "Turbocharged"  # 1.3T
         if _has(tr, "ecodiesel", "diesel"):
             return "Turbocharged"
         return None
@@ -331,6 +379,15 @@ def _classify_by_make_model(
     if m in ("honda", "acura"):
         if _has(mo, "nsx"):
             return "Twin Turbocharged"
+        if m == "acura" and re.search(r"type[- ]s\b", full) and "tlx" in mo:
+            return "Twin Turbocharged"  # 2021+ TLX Type S 3.0TT
+        # RDX was the NA 3.5 V6 through 2018 and TLX NA (2.4 / 3.5) through 2020.
+        if m == "acura" and _has(mo, "rdx") and yr <= 2018:
+            return None
+        if m == "acura" and _has(mo, "tlx") and yr <= 2020:
+            return None
+        if _is_hybrid(ft, full) and not _has(tr, "turbo", "type r", "type-r"):
+            return None  # Accord / CR-V / Insight Atkinson hybrids are NA
         if _has(tr, "type r", "type-r") or re.search(r"\bsi\b", tr) or _has(mo, "type r"):
             return "Turbocharged"
         if m == "acura" and _has(mo, "rdx", "tlx", "integra"):
@@ -338,7 +395,7 @@ def _classify_by_make_model(
         if _has(tr, "1.5t", "2.0t", "turbo"):
             return "Turbocharged"
         # Explicit small-displacement turbo: CR-V 1.5T, Civic 1.5T (not hybrids)
-        if cyl == 4 and el and el <= 1.6 and yr >= 2016 and not _has(ft, "hybrid") and not _has(mo, "fit"):
+        if cyl in (0, 4) and el and el <= 1.6 and not _has(mo, "fit"):
             return "Turbocharged"
         # 2.0L non-hybrid = could be turbo (Accord 2.0T Sport) or NA
         # Only flag if trim explicitly says turbo-related OR NOT a hybrid
@@ -355,9 +412,25 @@ def _classify_by_make_model(
     if m in ("toyota", "lexus"):
         if _has(mo, "supra") and yr >= 2020:
             return "Turbocharged"
+        # i-FORCE 3.4TT replaced the 5.7 V8 (Tundra 2022+, Sequoia 2023+); 2.4T for
+        # Tacoma / Land Cruiser 2024+; hybrid versions share the same turbo engines.
+        if m == "toyota" and _has(mo, "tundra", "sequoia") and yr >= (2022 if "tundra" in mo else 2023):
+            return "Twin Turbocharged"
+        # Grand Highlander Hybrid (non-Max) is the 2.5 Atkinson NA engine; Hybrid Max is 2.4T
+        if m == "toyota" and _has(mo, "grand highlander") and yr >= 2024 \
+                and not (_is_hybrid(ft, full) and el and el > 2.4):
+            return "Turbocharged"
+        if m == "toyota" and _has(mo, "tacoma", "land cruiser") and yr >= 2024 \
+                and not (_has(mo, "tacoma") and el and el > 2.5):
+            return "Turbocharged"
+        if m == "lexus" and re.search(r"\btx\b", mo) and "350" in full and yr >= 2024:
+            return "Turbocharged"  # TX 350 is the 2.4T
+        if m == "lexus" and re.search(r"\bgx\b|\blx\b|\btx\b", mo) and yr >= 2022 \
+                and re.search(r"550|600|\btx\b", full) and "350" not in full:
+            return "Twin Turbocharged"
         if _has(mo, "corolla") and _has(tr, "gr"):
             return "Turbocharged"
-        if m == "lexus" and cyl == 4 and el and el <= 2.1 and not _has(ft, "hybrid") and not re.search(r"\bux\b|\bct\b|\d{3}h\b", full):
+        if m == "lexus" and cyl == 4 and el and el <= 2.1 and not _is_hybrid(ft, full) and not re.search(r"\bux\b|\bct\b", full):
             return "Turbocharged"
         if m == "lexus" and re.search(r"\bnx\s*(?:200t|300)\b|200t\b", full):
             return "Turbocharged"
@@ -369,6 +442,9 @@ def _classify_by_make_model(
             return None
         # whole-word N badge ("Elantra N", "Kona N"); a bare "n " substring matched
         # "Nightfall Edition" / "Premium " style trims
+        if _has(tr, "gt-line") and not _has(tr, "turbo", "1.6t", "2.0t", "2.5t") and el >= 1.9 \
+                and "stinger" not in mo:
+            return None  # 2.0 / 2.5 NA GT-Line (Soul, Forte, K5 FWD); the 1.6T GT-Line is el < 1.9
         if _has(tr, "n line", "gt-line", "turbo", "1.6t", "2.0t", "2.5t") or _has(mo, "n-line") \
                 or re.search(r"\bn\b(?!\s*line)", f"{mo} {tr}"):
             return "Turbocharged"
@@ -396,15 +472,37 @@ def _classify_by_make_model(
             return "Twin Turbocharged"
         if _has(tr, "2.0t", "turbo"):
             return "Turbocharged"
-        if cyl == 6 and el >= 2.9:
-            return "Twin Turbocharged"
+        if cyl == 6 and 2.9 <= el <= 3.1:
+            return "Twin Turbocharged"  # 3.0t only; the 3.5 / 3.7 / 5.6 are NA
         if cyl == 4 and el and el <= 2.1:
             return "Turbocharged"
         return None
 
+    # ── Nissan ────────────────────────────────────────────────────────────────
+    if m == "nissan":
+        if re.search(r"gt-?r\b", full) or (re.search(r"\bz\b", mo) and yr >= 2023):
+            return "Twin Turbocharged"
+        # VC-Turbo: Rogue 1.5 3-cyl (2021+), Altima 2.0 (2019+ SR VC-Turbo / Platinum)
+        if cyl == 3 and yr >= 2021:
+            return "Turbocharged"
+        if _has(mo, "altima") and cyl == 4 and el and 1.9 <= el <= 2.1:
+            return "Turbocharged"
+        return None
+
+    # ── Mazda ─────────────────────────────────────────────────────────────────
+    if m == "mazda":
+        if re.search(r"cx-?9\b", mo):
+            return "Turbocharged"  # 2.5T was the only CX-9 engine from 2016
+        if _has(mo, "cx-90", "cx-70") and not _is_hybrid(ft, full):
+            return "Turbocharged"  # 3.3T / 3.3 Turbo S inline six
+        if _has(tr, "turbo", "signature") and cyl in (0, 4) and (not el or 2.4 <= el <= 2.6) \
+                and _has(mo, "cx-5", "mazda3", "mazda6", "cx-30"):
+            return "Turbocharged" if _has(tr, "turbo") else None
+        return None
+
     # ── Subaru ────────────────────────────────────────────────────────────────
     if m == "subaru":
-        if _has(mo, "wrx", "sti") or re.search(r"\bxt\b", tr):
+        if _has(mo, "wrx", "sti", "ascent") or re.search(r"\bxt\b", tr):
             return "Turbocharged"
         return None
 
@@ -432,7 +530,9 @@ def _classify_by_make_model(
 
     # ── Maserati ─────────────────────────────────────────────────────────────
     if m == "maserati":
-        if _has(tr, "trofeo") or (cyl == 8 and el >= 3.7):
+        if _has(mo, "granturismo") and yr <= 2019:
+            return None  # 4.7 NA V8
+        if _has(tr, "trofeo") or cyl in (6, 8):  # every Maserati V6 / V8 of the era is twin turbo
             return "Twin Turbocharged"
         return "Turbocharged"
 
@@ -440,18 +540,24 @@ def _classify_by_make_model(
     if m == "jaguar":
         if _has(mo, "i-pace"):
             return None
-        if _has(mo, "f-type", "f type") and cyl == 8:
-            return "Twin Turbocharged" if yr >= 2021 else "Supercharged"
-        if _has(tr, "svr"):
-            return "Twin Turbocharged" if yr >= 2021 else "Supercharged"
+        # Every gasoline V6 / V8 Jaguar of the era is supercharged (3.0 SC, 5.0 SC, F-Type to
+        # 2024); the 2.0 Ingenium and the diesels are turbo.
+        if cyl == 8 or el >= 4.9 or _has(tr, "svr"):
+            return "Supercharged"
+        if (cyl == 6 or 2.9 <= el <= 3.1) and "diesel" not in ft and not re.search(r"\b\d{2}d\b", full):
+            if _has(mo, "f-type", "f type") or yr <= 2020:
+                return "Supercharged"
         return "Turbocharged"
 
     # ── Land Rover ────────────────────────────────────────────────────────────
     if m == "land rover":
-        if cyl == 8 and yr < 2022:
-            return "Supercharged"
-        if cyl == 8 and yr >= 2022:
-            return "Twin Turbocharged"
+        if cyl == 8 and (el >= 4.9 or (not el and yr < 2022)):
+            return "Supercharged"  # 5.0 V8 SC (Defender V8 / SVR to 2022+)
+        if cyl == 8:
+            return "Twin Turbocharged"  # 4.4 BMW V8
+        if cyl == 6 and 2.9 <= el <= 3.1 and "diesel" not in ft and yr <= 2019 \
+                and not re.search(r"\b\d{2}d\b|\btd6\b|\bsd[v6]", full) and "defender" not in mo:
+            return "Supercharged"  # 3.0 V6 SC (Range Rover / Sport / Discovery)
         return "Turbocharged"
 
     # ── Tesla / EV brands ────────────────────────────────────────────────────
@@ -459,12 +565,33 @@ def _classify_by_make_model(
         return None
 
     # ── Ferrari / Lamborghini / McLaren / Bentley / Rolls-Royce ─────────────
-    if m in ("ferrari", "lamborghini", "mclaren", "bentley"):
+    if m == "lamborghini":
+        # Huracan / Aventador / Gallardo are NA; Urus (and the 2025+ V8 Temerario) are TT
+        return "Twin Turbocharged" if _has(mo, "urus", "temerario") else None
+    if m == "ferrari":
+        # NA V12s (F12, 812, GTC4Lusso, Purosangue, 12Cilindri); the V8 / 296 V6 are TT
+        if cyl == 12 or el >= 6.0 or re.search(r"f12|812|lusso|gtc4|purosangue|12\s*cilindri", mo):
+            return None
+        return "Twin Turbocharged"
+    if m in ("mclaren", "bentley"):
         return "Twin Turbocharged"
     if _has(m, "rolls"):
+        if _has(mo, "spectre"):
+            return None
+        if _has(mo, "phantom") and yr <= 2017:
+            return None  # Phantom VII, 6.75 NA V12 (Phantom VIII starts 2018)
         return "Twin Turbocharged"
 
     return None
+
+
+def _is_pure_ev_fuel(fuel_type: str | None) -> bool:
+    ft = _norm(fuel_type)
+    # 'Premium Gasoline / Electricity' is a plug-in hybrid, not an EV: only a fuel
+    # string with no combustion fuel in it is a pure EV.
+    return _has(ft, "electric") and not re.search(
+        r"plug|hybrid|gasoline|diesel|petrol|premium|regular|e85|flex", ft
+    )
 
 
 def classify_forced_induction(
@@ -485,8 +612,7 @@ def classify_forced_induction(
     Checks raw text first (most reliable), falls back to make/model lookup.
     Electric vehicles always return None.
     """
-    ft = _norm(fuel_type)
-    if _has(ft, "electric") and "plug" not in ft and "hybrid" not in ft:
+    if _is_pure_ev_fuel(fuel_type):
         return None
 
     identity_blob = " ".join(
@@ -651,3 +777,95 @@ def classify_forced_induction_from_car_row(car: dict[str, Any]) -> str | None:
         description=car.get("description"),
         title=car.get("title"),
     )
+
+
+# -- Evidence-ranked resolution (P10C.2) -------------------------------------
+# Source ids match backend.vehicle_facts.precedence (kept as literals: that module
+# stays free of imports from here, and this one from it).
+_SRC_DEALER_FEED = "dealer_feed"
+_SRC_VPIC = "nhtsa_vpic"
+_SRC_CATALOG = "epa_catalog"
+_SRC_DESCRIPTION = "dealer_text_heuristic"
+_SRC_HEURISTIC = "trim_heuristic"
+_SRC_NONE = "unknown"
+
+
+def _family_unanimous_label(family_flags: Any) -> str | None:
+    """The one label every non-blank catalog family row agrees on, else None.
+
+    *family_flags* is the forced-induction labels of the epa_master rows in the
+    car's (year, make, model, displacement, cylinders) family. NA_LABEL mixed
+    with a boost label, or two different boost labels, is not unanimous.
+    """
+    if not family_flags:
+        return None
+    labels = {str(x).strip() for x in family_flags if x is not None and str(x).strip()}
+    if len(labels) != 1:
+        return None
+    return next(iter(labels))
+
+
+def resolve_car_forced_induction(
+    car: dict[str, Any],
+    *,
+    vpic_boosted: bool | None = None,
+    family_flags: Any = None,
+) -> tuple[str | None, str]:
+    """Best forced-induction label for a car and the source that decided it.
+
+    Order (the precedence rank table mirrors it; the catalog never outranks the
+    dealer's own engine text or the VIN decode):
+
+    1. the dealer's engine text, trim or title (``dealer_feed``);
+    2. the vPIC Turbo flag (``nhtsa_vpic``): True is typed from the catalog
+       family or the heuristic and defaults to Turbocharged, False is
+       Naturally Aspirated;
+    3. a family-unanimous catalog label, NA included (``epa_catalog``);
+    4. boost markers in the description body (``dealer_text_heuristic``);
+    5. the make/model heuristic, last resort (``trim_heuristic``, D-ET4).
+
+    ``(None, "unknown")`` when nothing speaks, and for a pure EV.
+    """
+    if _is_pure_ev_fuel(car.get("fuel_type")):
+        return None, _SRC_NONE
+
+    identity = " ".join(
+        str(car.get(k)) for k in ("title", "model", "trim", "engine_description")
+        if car.get(k) and str(car.get(k)).strip()
+    )
+    text = (
+        _classify_from_trim_t_displacement(identity)
+        or extract_forced_induction_from_text(car.get("engine_description"))
+    )
+    if text:
+        return text, _SRC_DEALER_FEED
+
+    family = _family_unanimous_label(family_flags)
+    heuristic = None
+    heuristic_done = False
+
+    def _heuristic() -> str | None:
+        nonlocal heuristic, heuristic_done
+        if not heuristic_done:
+            heuristic = classify_forced_induction_from_car_row(car)
+            heuristic_done = True
+        return heuristic
+
+    if vpic_boosted is True:
+        if family and has_forced_induction(family):
+            return family, _SRC_VPIC
+        return (_heuristic() if has_forced_induction(_heuristic()) else TURBO), _SRC_VPIC
+    if vpic_boosted is False:
+        return NA_LABEL, _SRC_VPIC
+
+    if family:
+        return family, _SRC_CATALOG
+
+    from_desc = extract_forced_induction_from_text(car.get("description"))
+    if from_desc:
+        return from_desc, _SRC_DESCRIPTION
+
+    guess = _heuristic()
+    if guess:
+        return guess, _SRC_HEURISTIC
+    return None, _SRC_NONE

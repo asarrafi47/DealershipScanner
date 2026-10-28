@@ -604,6 +604,22 @@ def _refillable(field: str, car: dict) -> bool:
     return stored_rank is not None and catalog_rank is not None and stored_rank <= catalog_rank
 
 
+def _resolve_forced_induction(car: dict, flat: dict | None) -> tuple[str | None, str]:
+    """P10C.4: the P10C.2 resolver with the VIN decode and any catalog labels in hand.
+
+    The CSV forcedInduction labels are ~51% wrong, so they are not family flags;
+    the epa_master family is reconciled by the linker (P10C.3).
+    """
+    from backend.utils.forced_induction import resolve_car_forced_induction
+
+    turbo = str((flat or {}).get("Turbo") or "").strip().lower()
+    boosted = True if turbo == "yes" else False if turbo == "no" else None
+    try:
+        return resolve_car_forced_induction(car, vpic_boosted=boosted)
+    except Exception:
+        return None, "unknown"
+
+
 def enrich_car(
     car: dict,
     dry_run: bool = False,
@@ -726,7 +742,7 @@ def enrich_car(
             dict_engine = enrich_car_engine_from_dictionary({**car, **eng_corr}, overwrite=fill_all)
             for k, v in (dict_engine or {}).items():
                 if k == "forced_induction":
-                    continue  # CSV labels are ~51% wrong; P10C.4 wires the resolver
+                    continue  # CSV labels are ~51% wrong; the resolver below decides
                 if fill_all or _is_empty(car.get(k)):
                     cands[k] = (v, "epa_dictionary")
         except Exception:
@@ -773,6 +789,13 @@ def enrich_car(
                 except (ValueError, TypeError):
                     continue
             cands[db_col] = (epa_val, src)
+
+    fi_label, fi_src = _resolve_forced_induction(car, flat)
+    if fi_label and (fill_all or _is_empty(car.get("forced_induction"))):
+        cands["forced_induction"] = (fi_label, fi_src)
+        if fi_src == prec.DEALER_FEED and car.get("forced_induction") != fi_label:
+            # The dealer's own engine text states it; a stale stored label yields.
+            corr_fields.add("forced_induction")
 
     # A battery-electric vehicle has no engine displacement or cylinders to fill.
     if cands and electrification(car, flat) == BEV:

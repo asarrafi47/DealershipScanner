@@ -70,6 +70,17 @@ def _fmt_price(v: Any) -> str | None:
     return f"${n:,}"
 
 
+def _forced_induction_source(car: dict[str, Any]) -> str:
+    """Where the stored forced-induction label came from: its provenance, else 'listing'."""
+    try:
+        from backend.vehicle_facts.precedence import UNKNOWN, field_source
+
+        src = field_source("forced_induction", car.get("forced_induction"), car.get("spec_source_json"))
+        return "listing" if src == UNKNOWN else src
+    except Exception:
+        return "listing"
+
+
 def _row(
     label: str,
     value: Any,
@@ -1136,7 +1147,7 @@ def build_generated_spec_sheet(
                 _consistent_cylinders(vs, car, engine),
                 source="trim decoder / EPA dataset / listing",
             ),
-            _row("Forced induction", car.get("forced_induction"), source="listing"),
+            _row("Forced induction", car.get("forced_induction"), source=_forced_induction_source(car)),
             _row(
                 "Transmission",
                 _clean(vs.get("transmission_display")) or car.get("transmission"),

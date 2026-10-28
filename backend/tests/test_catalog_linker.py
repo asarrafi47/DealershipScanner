@@ -36,7 +36,7 @@ def _car(id_, vin, year, make, model, trim, cyl, engine, drive, fuel, link, conf
 
 
 def _epa(id_, year, make, model, trim, cyl, disp, drive, fuel, atv=None):
-    return (id_, year, make, model, trim, cyl, disp, None, drive, fuel, None, None, atv)
+    return (id_, year, make, model, trim, cyl, disp, None, drive, fuel, None, None, atv, None, None)
 
 
 @dataclass

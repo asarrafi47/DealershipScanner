@@ -8,7 +8,8 @@
    ``ALLOW_DICTIONARY_OVERWRITE=1`` guard. P8B.5 replaced that guard with fact precedence
    (tests/test_dictionary_enrich_precedence.py); only the CLI plumbing is checked here.
 3. ``heal_cylinders_from_vpic.py`` Phase B (forced_induction recompute) clears EPA- and
-   VIN-backed labels. It runs only with ``--phase-b``; Phase A (cylinders) is unchanged.
+   VIN-backed labels. P10C.6 limits it to heuristic-sourced labels and drops the
+   ``--phase-b`` opt-in (``--skip-fi`` turns it off); Phase A (cylinders) is unchanged.
 """
 from __future__ import annotations
 
@@ -133,7 +134,7 @@ def test_enrich_default_gap_fill_never_sets_fill_all(monkeypatch):
 
 
 # ---------------------------------------------------------------------------
-# 3. heal_cylinders_from_vpic: Phase B only with --phase-b
+# 3. heal_cylinders_from_vpic: Phase B skips backed labels (P10C.6)
 # ---------------------------------------------------------------------------
 
 
@@ -159,47 +160,31 @@ def heal_calls(monkeypatch, heal_mod):
     return calls
 
 
-@pytest.mark.parametrize("argv", [[], ["--dry-run"], ["--limit", "5"], ["--skip-fi"], ["--dry-run", "--skip-fi"]])
-def test_heal_phase_b_off_by_default(monkeypatch, capsys, heal_mod, heal_calls, argv):
-    monkeypatch.setattr(sys, "argv", ["heal_cylinders_from_vpic.py", *argv])
-
-    heal_mod.main()
-
-    assert [name for name, _ in heal_calls] == ["A"]
-    assert "--phase-b" in capsys.readouterr().out
-
-
-def test_heal_phase_a_defaults_unchanged(monkeypatch, heal_mod, heal_calls):
-    monkeypatch.setattr(sys, "argv", ["heal_cylinders_from_vpic.py", "--dry-run", "--limit", "7"])
-
-    heal_mod.main()
-
-    assert heal_calls == [("A", {"dry_run": True, "limit": 7})]
-
-
 @pytest.mark.parametrize("dry_run", [True, False])
-def test_heal_phase_b_runs_only_with_flag(monkeypatch, heal_mod, heal_calls, dry_run):
-    argv = ["heal_cylinders_from_vpic.py", "--phase-b"] + (["--dry-run"] if dry_run else [])
-    monkeypatch.setattr(sys, "argv", argv)
+def test_heal_phase_b_runs_by_default_and_flag_is_gone(monkeypatch, heal_mod, heal_calls, dry_run):
+    monkeypatch.setattr(sys, "argv", ["heal_cylinders_from_vpic.py"] + (["--dry-run"] if dry_run else []))
 
     heal_mod.main()
 
     assert heal_calls == [("A", {"dry_run": dry_run, "limit": None}), ("B", {"dry_run": dry_run})]
-
-
-def test_heal_phase_b_and_skip_fi_conflict_runs_nothing(monkeypatch, heal_mod, heal_calls):
-    monkeypatch.setattr(sys, "argv", ["heal_cylinders_from_vpic.py", "--phase-b", "--skip-fi"])
-
-    with pytest.raises(SystemExit) as exc:
+    monkeypatch.setattr(sys, "argv", ["heal_cylinders_from_vpic.py", "--phase-b"])
+    with pytest.raises(SystemExit):
         heal_mod.main()
 
-    assert exc.value.code == 2
-    assert heal_calls == []
+
+def test_heal_skip_fi_runs_phase_a_only(monkeypatch, capsys, heal_mod, heal_calls):
+    monkeypatch.setattr(sys, "argv", ["heal_cylinders_from_vpic.py", "--limit", "7", "--skip-fi"])
+
+    heal_mod.main()
+
+    assert heal_calls == [("A", {"dry_run": False, "limit": 7})]
+    assert "--skip-fi" in capsys.readouterr().out
 
 
 def test_heal_default_run_keeps_label_phase_b_would_clear(monkeypatch, sqlite_inventory, heal_mod):
     """SQLite end to end: a 2014 F-150 3.5L V6 (an EcoBoost) labelled Turbocharged by the
-    catalog has no turbo text, so Phase B would clear it. A default live run must not."""
+    catalog has no turbo text, so the classifier alone would clear it. The label has no
+    heuristic provenance, so a default live run (Phase B included) must keep it."""
     vin = "1FTFW1ET5EFA00001"
     sqlite_inventory.add_cars([{
         "vin": vin, "year": 2014, "make": "Ford", "model": "F-150", "trim": "Lariat",
@@ -207,8 +192,9 @@ def test_heal_default_run_keeps_label_phase_b_would_clear(monkeypatch, sqlite_in
         "fuel_type": "Gasoline", "title": "2014 Ford F-150 Lariat",
         "forced_induction": "Turbocharged", "listing_active": 1,
     }])
-    # Precondition: this row is one Phase B damages (dry run, no write).
-    assert heal_mod.heal_forced_induction(dry_run=True)["cleared"] == 1
+    # Phase B skips it as not heuristic-sourced (dry run, no write).
+    stats = heal_mod.heal_forced_induction(dry_run=True)
+    assert stats["backed"] == 1 and stats["cleared"] == 0
 
     # Phase A runs for real against the SQLite row; only the vPIC HTTP call is stubbed.
     monkeypatch.setattr(heal_mod, "_decode_batch", lambda vins: {v: 6 for v in vins})

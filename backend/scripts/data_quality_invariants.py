@@ -265,7 +265,7 @@ SQL_INVARIANTS: tuple[SqlInvariant, ...] = (
             SELECT COUNT(*) FROM epa_extended_specs
             WHERE zero_to_60_sec IS NOT NULL AND zero_to_60_sec < 4.0
               AND NOT (COALESCE(trim,'') || ' ' || COALESCE(model,'') ~*
-                   '(AMG|\\mM[2-8]\\M|Competition|\\bRS\\b|\\bGT[3RS]?\\b|Type ?R|\\bSRT\\b|Hellcat|TRX|Trackhawk|Raptor|Shelby|\\bZL1\\b|\\bZ06\\b|\\bZR1\\b|Blackwing|\\bV-?Series\\b|Redeye|Demon|Turbo ?S|Quadrifoglio|Nismo|\\bSTI\\b|Plaid|Performance|\\bN\\b Line|Polestar)')
+                   '(AMG|\\mM[2-8]\\M|Competition|\\yRS\\y|\\yGT[3RS]?\\y|Type ?R|\\ySRT\\y|Hellcat|TRX|Trackhawk|Raptor|Shelby|\\yZL1\\y|\\yZ06\\y|\\yZR1\\y|Blackwing|\\yV-?Series\\y|Redeye|Demon|Turbo ?S|Quadrifoglio|Nismo|\\ySTI\\y|Plaid|Performance|\\yN\\y Line|Polestar)')
               AND NOT (COALESCE(make,'') ~* '(Ferrari|Lamborghini|McLaren|Bugatti|Rimac|Koenigsegg|Lotus|Porsche|Tesla|Lucid|Rivian|Polestar)')
         """,
         example_sql="""
@@ -273,7 +273,7 @@ SQL_INVARIANTS: tuple[SqlInvariant, ...] = (
             FROM epa_extended_specs
             WHERE zero_to_60_sec IS NOT NULL AND zero_to_60_sec < 4.0
               AND NOT (COALESCE(trim,'') || ' ' || COALESCE(model,'') ~*
-                   '(AMG|\\mM[2-8]\\M|Competition|\\bRS\\b|\\bGT[3RS]?\\b|Type ?R|\\bSRT\\b|Hellcat|TRX|Trackhawk|Raptor|Shelby|\\bZL1\\b|\\bZ06\\b|\\bZR1\\b|Blackwing|\\bV-?Series\\b|Redeye|Demon|Turbo ?S|Quadrifoglio|Nismo|\\bSTI\\b|Plaid|Performance|\\bN\\b Line|Polestar)')
+                   '(AMG|\\mM[2-8]\\M|Competition|\\yRS\\y|\\yGT[3RS]?\\y|Type ?R|\\ySRT\\y|Hellcat|TRX|Trackhawk|Raptor|Shelby|\\yZL1\\y|\\yZ06\\y|\\yZR1\\y|Blackwing|\\yV-?Series\\y|Redeye|Demon|Turbo ?S|Quadrifoglio|Nismo|\\ySTI\\y|Plaid|Performance|\\yN\\y Line|Polestar)')
               AND NOT (COALESCE(make,'') ~* '(Ferrari|Lamborghini|McLaren|Bugatti|Rimac|Koenigsegg|Lotus|Porsche|Tesla|Lucid|Rivian|Polestar)')
             ORDER BY zero_to_60_sec LIMIT 20
         """,
@@ -992,6 +992,132 @@ def _catalog_invariants() -> tuple[SqlInvariant, ...]:
 
 
 SQL_INVARIANTS = SQL_INVARIANTS + _catalog_invariants()
+
+
+#: Induction invariants (N24 P10C.8). Baselines wait for the first run against a database that
+#: has the V036 EPA flag columns (t_charger, s_charger); a 0 recorded before then would be a
+#: false clean. Recorded by reviewed JSON edit plus a history line; until then compare() reports
+#: NO_BASELINE (fail closed), like the catalog ids.
+INDUCTION_INVARIANT_IDS = (
+    "epa_master_fi_contradicts_flags",
+    "car_fi_boost_on_na_family",
+    "car_fi_missing_on_boosted_family",
+)
+
+# EPA tCharger/sCharger flag values that mean boosted (forced_induction._EPA_FLAG_TRUE).
+_FLAG_T = "upper(btrim(COALESCE({a}.t_charger, ''))) IN ('T', 'S', 'Y', '1', 'TRUE')"
+_FLAG_S = "upper(btrim(COALESCE({a}.s_charger, ''))) IN ('T', 'S', 'Y', '1', 'TRUE')"
+# EV / fuel cell rows carry a blank label by design (forced_induction_from_epa rule 1).
+_NOT_EV = "COALESCE(lower({a}.atv_type), '') NOT IN ('ev', 'electric', 'fcv', 'fuel cell')"
+# Postgres word boundaries: \b is a backspace there, so '2.0T engine' ~* '\d\.\dt\b' is false.
+_FI_TEXT_MARKER = (
+    "(turbo|supercharg|kompressor|ecoboost|tfsi|tsi|tdi|\\m\\d\\.\\dt\\M)"
+)
+
+
+def _induction_invariants() -> tuple[SqlInvariant, ...]:
+    t_em, s_em = _FLAG_T.format(a="em"), _FLAG_S.format(a="em")
+    em_label = "COALESCE(em.forced_induction, '')"
+    # the label the flags imply; both flags -> turbo (D-ET3); a blank label on a non-EV row is wrong
+    em_ok = (
+        f"(CASE WHEN {t_em} THEN {em_label} IN ('Turbocharged', 'Twin Turbocharged') "
+        f"WHEN {s_em} THEN {em_label} = 'Supercharged' "
+        f"ELSE {em_label} = 'Naturally Aspirated' END)"
+    )
+    em_where = (
+        f"(em.t_charger IS NOT NULL OR em.s_charger IS NOT NULL) AND {_NOT_EV.format(a='em')} "
+        f"AND NOT {em_ok}"
+    )
+    # Family = the linked row's (year, make, model, cylinders, displacement +-0.15), over rows
+    # whose flags are known and that are not EV. cars.model ('F-150') differs from the EPA model
+    # ('F150'), so the family is read off the linked epa_master row, not off the car.
+    f_t, f_s = _FLAG_T.format(a="f"), _FLAG_S.format(a="f")
+    fam = f"""
+        WITH linked AS (
+            SELECT DISTINCT em.id, em.year, em.make, em.model, em.cylinders, em.displacement
+            FROM cars c JOIN epa_master em ON em.id = c.epa_master_id
+            WHERE c.listing_active = 1
+        ), fam AS (
+            SELECT l.id, COUNT(*) AS n,
+                   COUNT(*) FILTER (WHERE {f_t} OR {f_s}) AS n_boost
+            FROM linked l
+            JOIN epa_master f ON f.year = l.year AND f.make = l.make AND f.model = l.model
+                             AND f.cylinders = l.cylinders
+                             AND ABS(f.displacement - l.displacement) <= 0.15
+            WHERE (f.t_charger IS NOT NULL OR f.s_charger IS NOT NULL) AND {_NOT_EV.format(a='f')}
+            GROUP BY l.id
+        )
+    """
+    text = "COALESCE(c.engine_description, '') || ' ' || COALESCE(c.trim, '') || ' ' || COALESCE(c.title, '')"
+    boosted_label = (
+        "COALESCE(c.forced_induction, '') NOT IN ('', 'Naturally Aspirated', 'None')"
+    )
+    na_family = "fam.n > 0 AND fam.n_boost = 0"
+    boost_family = "fam.n > 0 AND fam.n_boost = fam.n"
+    boost_on_na = (
+        f"{fam} SELECT {{select}} FROM cars c JOIN fam ON fam.id = c.epa_master_id "
+        f"WHERE c.listing_active = 1 AND {boosted_label} AND {na_family} "
+        f"AND NOT (({text}) ~* '{_FI_TEXT_MARKER}')"
+    )
+    missing_on_boost = (
+        f"{fam} SELECT {{select}} FROM cars c JOIN fam ON fam.id = c.epa_master_id "
+        f"WHERE c.listing_active = 1 AND NOT ({boosted_label}) AND {boost_family} "
+        f"AND COALESCE(lower(c.fuel_type), '') NOT IN ('electric', 'ev')"
+    )
+    ex_cols = "c.id, c.vin, c.year, c.make, c.model, c.engine_description, c.forced_induction, c.epa_master_id"
+    denom = (
+        f"{fam} SELECT COUNT(*) FROM cars c JOIN fam ON fam.id = c.epa_master_id "
+        f"WHERE c.listing_active = 1 AND ({na_family} OR {boost_family})"
+    )
+    return (
+        SqlInvariant(
+            id="epa_master_fi_contradicts_flags",
+            title="an epa_master row whose induction label disagrees with its EPA tCharger/sCharger flags",
+            detects="a label written by the heuristic or an old import over the flags EPA published for the row",
+            impossible_because=(
+                "the flags are EPA's own statement of the engine; a refreshed row's label is derived "
+                "from them, so a flag of T with an 'NA' label, or no flag with a boost label, or a "
+                "blank label on a non-EV row, cannot come from the loader"
+            ),
+            count_sql=f"SELECT COUNT(*) FROM epa_master em WHERE {em_where}",
+            example_sql=f"""
+                SELECT em.id, em.year, em.make, em.model, em.t_charger, em.s_charger, em.forced_induction
+                FROM epa_master em WHERE {em_where}
+                ORDER BY em.id LIMIT 20
+            """,
+            denominator_sql=(
+                "SELECT COUNT(*) FROM epa_master em WHERE "
+                f"(em.t_charger IS NOT NULL OR em.s_charger IS NOT NULL) AND {_NOT_EV.format(a='em')}"
+            ),
+        ),
+        SqlInvariant(
+            id="car_fi_boost_on_na_family",
+            title="an active car labelled boosted whose linked EPA family is unanimously naturally aspirated",
+            detects="a heuristic turbo label written over a catalog family that has no boosted variant (about 1.7% of links land on the wrong engine: see the P10C.9 conflict sample)",
+            impossible_because=(
+                "no variant of the vehicle EPA lists is boosted and the dealer's own text names no "
+                "turbo, supercharger or boosted badge, so the label has no evidence behind it"
+            ),
+            count_sql=boost_on_na.format(select="COUNT(*)"),
+            example_sql=boost_on_na.format(select=ex_cols) + " ORDER BY c.id LIMIT 20",
+            denominator_sql=denom,
+        ),
+        SqlInvariant(
+            id="car_fi_missing_on_boosted_family",
+            title="an active non-EV car with no boost label whose linked EPA family is unanimously boosted",
+            detects="a boosted engine left labelled naturally aspirated or blank, so boost filters hide it",
+            impossible_because=(
+                "every EPA variant of the vehicle is boosted, so a naturally aspirated or blank "
+                "label can only come from a stale heuristic or a missing reconcile"
+            ),
+            count_sql=missing_on_boost.format(select="COUNT(*)"),
+            example_sql=missing_on_boost.format(select=ex_cols) + " ORDER BY c.id LIMIT 20",
+            denominator_sql=denom,
+        ),
+    )
+
+
+SQL_INVARIANTS = SQL_INVARIANTS + _induction_invariants()
 
 
 # --------------------------------------------------------------------------
