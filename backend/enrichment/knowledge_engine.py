@@ -508,7 +508,7 @@ def lookup_epa_by_trim(
     exclude_sources: tuple[str, ...] = (),
 ) -> dict[str, Any]:
     """
-    Exact per-trim row from epa_master (populated by build_epa_master.py).
+    Exact per-trim row from epa_master (populated by build_epa_master_pg.py).
 
     Returns the best-matching trim row, or an empty dict when no match found.
     Falls back to partial trim substring match when no exact match exists.
