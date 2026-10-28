@@ -146,7 +146,7 @@ def _update_via_temp_table(conn, changes: list[tuple]) -> None:
     cur.execute(
         "CREATE TEMP TABLE _fi_heal (id BIGINT PRIMARY KEY, forced_induction TEXT, spec_source_json TEXT)"
     )
-    cur.executemany("INSERT INTO _fi_heal (id, forced_induction, spec_source_json) VALUES (?, ?, ?)", changes)
+    cur.executemany("INSERT INTO _fi_heal (id, forced_induction, spec_source_json) VALUES (%s, %s, %s)", changes)
     cur.execute(
         "UPDATE cars SET forced_induction = _fi_heal.forced_induction, "
         "spec_source_json = _fi_heal.spec_source_json "
@@ -249,7 +249,7 @@ def restore(conn, backup_path: Path) -> int:
         return 0
     if "spec_source_json" not in rows[0]:
         cur = conn.cursor()
-        cur.executemany("UPDATE cars SET forced_induction = ? WHERE id = ?",
+        cur.executemany("UPDATE cars SET forced_induction = %s WHERE id = %s",
                         [(fi, i) for i, fi, _ in changes])
         conn.commit()
         return len(changes)
