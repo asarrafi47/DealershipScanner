@@ -1,5 +1,6 @@
 """
-Hybrid inventory search: semantic recall first (Postgres pgvector), then SQLite.
+Hybrid inventory search: semantic recall first (Postgres pgvector), then SQL filters on the
+inventory DB (Postgres in production).
 
 Flow when ``query_text`` is non-empty:
   1. ``query_cars(query_text, top_k)`` → candidate car ids (ranked by embedding similarity)

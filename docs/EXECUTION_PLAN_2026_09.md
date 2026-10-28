@@ -13,3 +13,19 @@ Owner-approved order. Update the status column as items land.
 Decisions recorded 2026-09-28:
 - Listings no longer ship the whole fleet: default to the shopper's ZIP + radius, no cars until a search starts, results must stay fast (measured: largest metro 0.99 s cold, 4 ms warm).
 - Production runs on Railway, web and scanning both; no k3s, no home cluster.
+
+## Rows retired from master-todo.md (2026-10)
+
+`master-todo.md` (last updated 2026-07-10) is retired into this plan (P18B.1, D-HY6 (a)). Its rows, with evidence:
+
+| Row | Task | Status |
+|---|---|---|
+| A1 | Migrate remaining `os.getenv` call sites to `Config` (`backend/config.py`) | open (see CLOUD_RESTRUCTURE_PLAN.md section 5.1) |
+| A2 | Extract routes from `backend/main.py` into blueprints | done: `backend/main.py` is 228 lines |
+| B1 | SQLite to Postgres consolidation | split: inventory done (SEC-102); users cutover pending (`docs/USERS_PG_CUTOVER.md`); `dealer_portal.db` still SQLite |
+| B2 | Versioned SQL migrations | done: `migrations/V001__baseline.sql` onward, applied by `backend/scripts/migrate.py` |
+| B3 | Extend `epa_extended_specs` coverage; dev availability | open |
+| B4 | Top-speed spec needs a data source | open |
+| C1 | Retire the Node scanner | done: ff76d4e58 (the leftover README section and `docs/SCANNER_NODE.md` go in P18B.2) |
+| C2 | Integrate `ScraperChain` at more call sites | open |
+| R1-R6 | 2026-07 structural rework | done (closed) |

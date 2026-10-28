@@ -1,5 +1,7 @@
 # Full audit — May 2026
 
+> **Snapshot 2026-05-22; not maintained.**
+
 **Date:** 2026-05-22 UTC  
 **Scope:** Registration UX, frontend/backend bugs, security review  
 **Status:** Fixes applied 2026-05-22 (see SEC-071–074 in `docs/SECURITY_MASTER_TODO.md`)

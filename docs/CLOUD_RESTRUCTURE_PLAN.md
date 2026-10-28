@@ -30,7 +30,7 @@ Cross-cutting: Redis for rate limit and small caches, S3-compatible blob store f
 
 ## Phase 0: delete dead weight
 
-### 0.1 Retire the Node scanner (master-todo C1)
+### 0.1 Retire the Node scanner (retired master-todo C1)
 
 **Status 2026-09-09: implemented on branch `tmp/phase0` in a scratch worktree, not yet merged.** The replacement is `backend/scanner/onboard.py` (`onboard_dealer(url, …)`): discovery via `infer_dealer_from_url` + `crawl4ai_discovery` subprocess + `classify_dealer`, manifest upsert (or a temp manifest for trial scans), `scanner.py --dealer-id --scan-only` streamed with cancel/timeout, registry insert + car linking on success. Both `backend/dev/routes.py` job runners and `scripts/scanner_worker_loop.py` onboard jobs call it. `orchestrator.py` now prints `SCAN_VEHICLE_COUNT:N`; `dealers.smart_import_scrape_succeeded` recognises the Python scanner's summary lines. Tests: `backend/tests/test_scanner_onboard.py` (9) + 1 new case in `test_dev_dealers_manifest.py`.
 
@@ -51,10 +51,10 @@ Evidence: `backend/scanner/node_modules/` is empty; no Python imports Node code;
 | `deploy/docker-compose.yml:88-92` (`scanner_node_modules` mount), `:129-131` (volume) | **Done (verified 2026-10-27).** Delete |
 | `scripts/docker-entrypoint-scanner-worker.sh:12-16` | **Done (verified 2026-10-27).** Delete the `npm ci` bind-mount workaround |
 | `README.md:101-108` ("8. Optional: Node"), `docs/SCANNER_NODE.md` | Delete section and file |
-| `docs/DATA_QUALITY_ROLLOUT.md:15,29,61,77`, `master-todo.md:34` (C1) | Update references; mark C1 done |
+| `docs/DATA_QUALITY_ROLLOUT.md:15,29,61,77`, `master-todo.md:34` (C1, retired in P18B.1) | Update references; mark C1 done |
 | Docstring-only mentions (`backend/oem/scraper/crawl4ai_*` deleted 2026-10-01, `backend/dev/dealers.py:29,74,249`, `backend/db/repositories/dealers_repo.py:116`, `backend/intelligence/dealer_score.py:426`, `backend/scanner/vdp/config.py:26`, `backend/scanner/scrape_confidence.py:14`, `backend/scanner/job_diagnosis.py:67,76`, `run_nationwide_discovery.py:8`) | Reword "parity with scanner.js" comments; no logic change |
 
-Rows above marked done were verified against the tree on 2026-10-27 (P17B.1). Still open: the README "Optional: Node" section and `docs/SCANNER_NODE.md` (P18B.2), the `master-todo.md` C1 row (P18B.2), and the docstring-only mentions in the last row. `job_diagnosis` no longer carries the Puppeteer action, the npm rule or `use_python_scanner` (P17B.1).
+Rows above marked done were verified against the tree on 2026-10-27 (P17B.1). Still open: the README "Optional: Node" section and `docs/SCANNER_NODE.md` (P18B.2), the `master-todo.md` C1 row (retired in P18B.1; see EXECUTION_PLAN_2026_09.md), and the docstring-only mentions in the last row. `job_diagnosis` no longer carries the Puppeteer action, the npm rule or `use_python_scanner` (P17B.1).
 
 ### 0.2 Remove Flask-SocketIO
 
@@ -307,7 +307,7 @@ New module `backend/storage/blob.py` with `put(key, bytes, content_type)`, `get(
 
 ## Phase 5: config, migrations, boot, auth blueprint
 
-### 5.1 Config (master-todo A1)
+### 5.1 Config (retired master-todo A1)
 
 414 direct env reads outside `backend/config.py`; `backend/scanner` alone has 166. Do it per file, highest count first, defaults unchanged:
 
@@ -315,7 +315,7 @@ New module `backend/storage/blob.py` with `put(key, bytes, content_type)`, `get(
 
 Add to `backend/config.py`: `users_db_backend()`, `blob_backend()`, `scan_lab_enabled()`, `job_queue_enabled()`, `listings_prewarm()`; keep the eager/lazy split at `:43-59` / `:66-101`.
 
-### 5.2 Migrations as the only schema authority (master-todo B2)
+### 5.2 Migrations as the only schema authority (retired master-todo B2)
 
 | File | Change |
 |---|---|
@@ -327,7 +327,7 @@ Add to `backend/config.py`: `users_db_backend()`, `blob_backend()`, `scan_lab_en
 | `deploy/up.sh:49-51` (schema init after health) | Replace with `docker compose run --rm web python -m backend.scripts.migrate --apply` before `up -d web` |
 | `backend/scripts/dump_baseline_schema.py:6` | Regenerate after the chain is trusted so the two stop drifting |
 
-### 5.3 Auth routes out of `backend/main.py` (master-todo A2)
+### 5.3 Auth routes out of `backend/main.py` (retired master-todo A2)
 
 Move `backend/main.py:740-1195` (18 routes) plus helpers `_account_profile_context` (`:899-920`), `_auth_user_payload` (`:1058-1068`), `_app_mfa_gone` (`:1163-1185`), `_finalize_app_session` (`:1196-1241`) to `backend/auth/routes.py` as `auth_bp` with no prefix. Endpoint names and URLs unchanged; register in the factory. `main.py` keeps the `after_request`/`before_request`/`context_processor` hooks (`:374,:404,:481,:486,:618,:690`) and the template filters. Expected size after 0.2, 2.2, 5.2, 5.3: roughly 500 lines.
 
