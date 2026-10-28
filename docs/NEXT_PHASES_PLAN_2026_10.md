@@ -2694,6 +2694,14 @@ Note: V037 was taken for P10B.6 (plan assigns N23 no number). Label mismatch: pl
 
 **Owner decisions / actions.** D-EPA1, D-ER4, D-ER5, D-ER6; stage approvals.
 
+**Draft status (integ/draft, merge 63e85b616; branch phase/N25 head 68d02156a).**
+- P10D.1-code, P10D.2-code (3c1cb5641): met on fixtures. `--column-diff`, `--patch-options`, `--verify` header/options checks. Deferred: real-data patch of the 12,126 EPA and 10,614 Complete_Options CSVs with the pinned vehicles.csv and sha256; spot checks (Integra, RDX, A6, XC90 T8, C230, Jetta); manifest.json comparison.
+- P10D.7 (5144e6ec3): met, pg tests passed on throwaway DBs. Migration ships as V038 (supersedes V033/V034); the VALIDATE migration becomes V039, N26.8, after a read-only prod check of 0 dangling links. Merge only after P10D.6. Rollback: drop both FKs before any pg_restore of epa_master.
+- P10D.8-code (68d02156a): code half met (audit script, reference rewording). Deferred, owner-gated (D-ER5): `git rm -r DICTIONARY`, removal of .dockerignore:88 / .railwayignore:98, final grep. Audit shows 255 Complete_Options files with root-unique rows (plan said 13); owner reads the JSON report first.
+- P10D.9 (f015e9c06): met (docs). Deferred: _learning notes (post-merge MAIN).
+- P10D.5-code: skipped, already shipped in N24 (P10C.9).
+- Deferred: P10D.3-P10D.6 and release are not in this chunk; pg-tier tests of the merge not run (no TEST_PG_ADMIN_DSN).
+
 ---
 
 ### N26 Scanner runtime remainder and upsert cost (11A rest, 11B gated)
@@ -3004,6 +3012,15 @@ ci.yml was edited by both N7 and N29; merged without conflict.
 **Release step.** Minor; owner env cleanup on Railway (web variables only after `web-source-clear`).
 
 **Owner decisions / actions.** D-OD9, D-OD10, D-OD11.
+
+**Draft status (integ/draft, merge b386980a3; branch phase/N34 head 61f9aaa9e).**
+- P17C.1, P17C.2 (d730ff130): met. Module-level `nhtsa_vpic._http_get_json` stubbed offline; `--probe-reachability` probes all `--brand`; bad `--user-agent both` exits 2. Not done: socket-count check over the ~20 upsert tests.
+- P17C.3 (9f28319ce): met. Surface golden, `provenance/ladder_stores.py`. Merge note: `test_ladder_stores_does_not_load_pdfplumber` failed in the integ merge check (module missing at that point); re-run now that P17C.3 is merged.
+- P17C.4 (e939bd5e8): met. `brochure_extract.py` is a 72-line facade over `brochure_pdf/`.
+- P17C.5 (0c88ee3e0): met. Attachments and ratings split out; lazy re-exports. PG tier not run.
+- P17C.6 (61f9aaa9e): met. 136-knob registry, lint test, generated doc.
+- Skipped: P17C.7a (needs P17C.6 plus owner env export), P17C.7b (owner op), P17C.8 (needs P17C.7a), P17C.9 (docs, release step).
+- Known: 2 order-dependent test_import_epa_master_append dry-run failures in a wide run (pass alone).
 
 ---
 

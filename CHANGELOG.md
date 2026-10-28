@@ -2,6 +2,23 @@
 
 ## [Unreleased]
 
+### N25 (draft)
+- P10D.1-P10D.2: EPA importer `--column-diff BASELINE` scope checker for the dictionary CSV patch (only forcedInduction, engineDisplay and the D-EPA1 columns may change; row/file counts fixed).
+- P10D.2: `--verify` checks the 25-column header and Complete_Options labels; new `--patch-options` (dry run by default) patches matched Complete_Options labels and blanks unmatched ones.
+- P10D.2: build_dictionary_options no longer loads engineDisplay/forcedInduction from Complete_Options CSVs unless `--keep-induction-labels` is passed.
+- P10D.7: Migration V038 adds unique index ux_epa_master_source_natural_key on epa_master(source, natural_key), plus RESTRICT foreign keys (NOT VALID) from cars.epa_master_id and epa_extended_specs.epa_master_id to epa_master(id). The old CASCADE foreign key on extended specs is replaced by RESTRICT; a linked catalog row or one with extended specs can no longer be deleted (archive it instead).
+- P10D.7: legacy runtime DDL in inventory_pg.py declares RESTRICT on the extended-specs foreign key; the SQLite-to-Postgres migrator copies epa_master before cars.
+- P10D.8: added scripts/audit_root_dictionary.py, a read-only audit of the legacy root DICTIONARY/ folder against backend/dictionary (`--strict` exits 1 when anything needs review). DICTIONARY/ references in docstrings, comments and README reworded to backend/dictionary; comments naming the nonexistent build_epa_master.py now name build_epa_master_pg.py.
+- P10D.9: docs for forced-induction precedence and the epa_master catalog id contract; README, backend/dictionary/README.md, NETWORK_SCAN_PROCESS.md and importer/trim-ladder docstrings name build_epa_master_pg and the `--years/--patch-induction-only/--verify` flow; datascripts P3 marked resolved.
+
+### N34 (draft)
+- P17C.1: the vPIC HTTP getter is module-level (`nhtsa_vpic._http_get_json`); the offline test stub patches it instead of swapping the module's urllib.
+- P17C.2: fetch_oem_brochures `--probe-reachability` probes every `--brand` given; `--user-agent both` outside `--probe-reachability` is an argparse error (exit 2); the `--quarantine-unidentified` help notes it also sweeps the derived stores.
+- P17C.3: brochure provenance-policy block moved verbatim into backend/enrichment/provenance/ladder_stores.py; brochure_extract re-exports every name. Added test_brochure_extract_surface.py (surface golden).
+- P17C.4: brochure_extract.py split into backend/enrichment/brochure_pdf/ (archive, pdf_text, matrix_parse, overlay_store); brochure_extract stays the import path as a re-export facade. No behavior change.
+- P17C.5: backend/db/comments_db.py split: photo attachments to comment_attachments_db.py, Google rating cache to dealer_ratings_db.py; comments_db re-exports all names.
+- P17C.6: added backend/scanner/env_knobs.py, one registry of the 136 environment variables backend/scanner reads or sets (type, default, category, readers, where set, doc), with an AST walker, generated table docs/monolith_audit_2026_10_01/scanner_env_knobs.md and test_scanner_env_knob_registry.py.
+
 ### N24 (draft)
 - P10C.1: vPIC decode exposes a `boosted` key (Turbo Yes -> True, No -> False, else None); named boosted because Turbo=Yes also appears on superchargers and twin-charged engines.
 - P10C.8: induction invariants epa_master_fi_contradicts_flags, car_fi_boost_on_na_family and car_fi_missing_on_boosted_family (read-only); baselines to be recorded after the EPA flag columns are loaded (NO_BASELINE fails closed until then).
