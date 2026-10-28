@@ -119,7 +119,7 @@ def test_statement_timeout_raises_without_retry(monkeypatch):
     assert "upsert_retries" not in stats.get("timing", {})
 
 
-# --- deadlock after the first 200-row commit, real (SQLite) upsert ------------------------
+# --- deadlock after the first 200-row commit, real (Postgres) upsert ------------------------
 
 N = 450
 
@@ -133,18 +133,27 @@ def _cars(price_base: int) -> list[dict]:
     ]
 
 
-def _fresh_db(tmp_path, monkeypatch, name):
-    db_path = tmp_path / name
-    monkeypatch.setenv("INVENTORY_DB_PATH", str(db_path))
-    from backend.db import inventory_db as inv
-
-    monkeypatch.setattr(inv, "DB_PATH", str(db_path))
+@pytest.fixture()
+def pg_env(pg_db, monkeypatch):
+    """Postgres clone; the network post-write steps stubbed (vPIC backfill, catalog linker)."""
+    monkeypatch.setattr("backend.utils.project_env.load_project_dotenv", lambda *a, **k: None)
     monkeypatch.setattr(sdb, "_vin_owner_table_ready", False)
     monkeypatch.delenv("SCANNER_VIN_OWNER_GUARD_HOURS", raising=False)
-    return str(db_path)
+    monkeypatch.setattr(
+        "backend.enrichment.spec_structured_backfill.apply_structured_spec_backfill_for_car",
+        lambda *a, **k: {},
+    )
+    monkeypatch.setattr("backend.catalog.linker.link_cars_by_vins", lambda vins: 0)
+    return pg_db
 
 
-def _dump(path):
+def _reset_cars(env):
+    with env.connect() as conn:
+        conn.execute("DELETE FROM cars")
+        conn.commit()
+
+
+def _dump():
     con = sdb.get_conn()
     try:
         rows = con.execute("SELECT vin, price, price_provenance_json FROM cars ORDER BY vin").fetchall()
@@ -153,16 +162,16 @@ def _dump(path):
     return [(v, p, [h["price"] for h in json.loads(ph or "[]")]) for v, p, ph in rows]
 
 
-def test_deadlock_after_first_batch_commit_matches_clean_run(tmp_path, monkeypatch):
+@pytest.mark.pg
+def test_deadlock_after_first_batch_commit_matches_clean_run(pg_env, monkeypatch):
     monkeypatch.setattr(iw, "scanner_parallel_upsert_enabled", lambda: False)
     # clean run: seed at 30000+i, then reprice to 31000+i
-    clean = _fresh_db(tmp_path, monkeypatch, "clean.db")
     sdb.upsert_vehicles(_cars(30000))
     sdb.upsert_vehicles(_cars(31000))
-    expected = _dump(clean)
+    expected = _dump()
 
     # faulted run: same seed, then the reprice deadlocks on row 250 (after the row-200 commit)
-    faulted = _fresh_db(tmp_path, monkeypatch, "faulted.db")
+    _reset_cars(pg_env)
     sdb.upsert_vehicles(_cars(30000))
     real = uw.fetch_prev_price_row
     seen = {"n": 0, "raised": False}
@@ -179,7 +188,7 @@ def test_deadlock_after_first_batch_commit_matches_clean_run(tmp_path, monkeypat
     stats: dict = {}
     assert asyncio.run(co.upsert_vehicles(_cars(31000), stats)) == N
     assert seen["raised"] and stats["timing"]["upsert_retries"] == 1
-    got = _dump(faulted)
+    got = _dump()
     assert got == expected
     # one history entry for the seed and exactly one for the reprice, per VIN
     assert all(len(h) == 2 for _v, _p, h in got)

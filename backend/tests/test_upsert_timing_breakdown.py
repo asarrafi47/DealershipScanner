@@ -11,15 +11,17 @@ N = 120
 
 
 @pytest.fixture()
-def db(tmp_path, monkeypatch):
-    db_path = tmp_path / "test.db"
-    monkeypatch.setenv("INVENTORY_DB_PATH", str(db_path))
-    from backend.db import inventory_db as inv
-
-    monkeypatch.setattr(inv, "DB_PATH", str(db_path))
+def db(pg_db, monkeypatch):
+    """Postgres clone; the network post-write steps stubbed (vPIC backfill, catalog linker)."""
+    monkeypatch.setattr("backend.utils.project_env.load_project_dotenv", lambda *a, **k: None)
     monkeypatch.setattr(sdb, "_vin_owner_table_ready", False)
     monkeypatch.delenv("SCANNER_VIN_OWNER_GUARD_HOURS", raising=False)
-    return str(db_path)
+    monkeypatch.setattr(
+        "backend.enrichment.spec_structured_backfill.apply_structured_spec_backfill_for_car",
+        lambda *a, **k: {},
+    )
+    monkeypatch.setattr("backend.catalog.linker.link_cars_by_vins", lambda vins: 0)
+    return pg_db
 
 
 def _cars(n: int) -> list[dict]:
@@ -31,6 +33,7 @@ def _cars(n: int) -> list[dict]:
     ]
 
 
+@pytest.mark.pg
 def test_every_key_filled_and_parts_sum_to_wall(db, monkeypatch):
     monkeypatch.setenv("SCANNER_MAX_DEALER_CONCURRENCY", "4")
     stats: dict = {}
@@ -53,6 +56,7 @@ def test_every_key_filled_and_parts_sum_to_wall(db, monkeypatch):
     assert t["other_s"] <= 0.10 * t["total_s"]
 
 
+@pytest.mark.pg
 def test_timing_is_reset_on_every_attempt(db):
     stats: dict = {}
     upsert_vehicles(_cars(3), stats)
@@ -62,6 +66,7 @@ def test_timing_is_reset_on_every_attempt(db):
     assert stats["timing"]["rows"] == 3
 
 
+@pytest.mark.pg
 def test_no_stats_no_timing_and_same_result(db):
     assert upsert_vehicles(_cars(2)) == 2
 

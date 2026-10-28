@@ -42,6 +42,7 @@ SQLITE_ONLY = {
 
 SNAPSHOT_AND_REPAIR_SCRIPTS = {
     "backend/scripts/apply_attribution_moves.py",
+    "backend/scripts/backup_tables_export.py",  # N28 P13B.4a prints the DROP TABLE plan for owner review; executes none
     "backend/scripts/dump_baseline_schema.py",
     "backend/scripts/feed_package_registry_from_vision.py",
     "backend/scripts/heal_forced_induction_from_evidence.py",  # N24 P10C.9 CREATE TEMP TABLE for the set-based apply

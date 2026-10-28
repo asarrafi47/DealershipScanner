@@ -334,9 +334,9 @@ below stands for its name. `V` is the new version, set in step 3.
    `sk-ant-api03-parity-test-...` test key, localhost DSNs in tests and in
    `docs/monolith_audit_2026_10_01/tests.md`, a `prod-db.example.net` DSN in a test,
    commented `user:pass@localhost` examples in `.env.example`, and the plan's own
-   `user:pw` example. Files: `backend/dictionary/derived/dictionary_catalog.sqlite3`, which
-   is empty (`git cat-file -s HEAD:backend/dictionary/derived/dictionary_catalog.sqlite3`
-   prints `0`). A real secret stops the release. Deleting it is not enough, because it
+   `user:pw` example. The empty tracked
+   `dictionary_catalog.sqlite3` that older ranges listed here was deleted (N35 P18A.1a);
+   the catalog moves to Postgres (N37.14), so no database file is expected in the hits. A real secret stops the release. Deleting it is not enough, because it
    stays in the history: it has to be rotated.
 
 5. **Lint and targeted tests.** The full offline suite runs in CI.
