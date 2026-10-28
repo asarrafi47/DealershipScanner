@@ -25,6 +25,10 @@ data/vectors/
 backend/data/chroma/
 data/chroma/
 
+# JetBrains project files; stale scanner captures (the live dir is root debug/)
+.idea/
+backend/debug/
+
 # Pipeline / scraper outputs under backend/data (regenerated locally)
 backend/data/oem/
 backend/data/dealer_group_results.json
@@ -150,8 +154,7 @@ dump-*.sql
 # Dead weight since the pgvector migration — catalog_service.master_catalog_
 # persist_dir() resolves to data/vectors/ and nothing reads this directory.
 # NB it is only ~9MB of the 694MB .git, not the main cause: debug/ scanner
-# failure PNGs are 141MB and backend/dictionary 31MB. Untrack those first if
-# the goal is a smaller clone.
+# failure PNGs are 141MB and backend/dictionary 31MB.
 backend/vector/chroma_master_catalog/
 
 # Investigation / scratch outputs. These are run artifacts, not source, and one of
