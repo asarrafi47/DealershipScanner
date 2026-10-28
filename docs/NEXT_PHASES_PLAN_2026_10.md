@@ -503,19 +503,24 @@ Run every command in a plain terminal from `/Users/asarrafi/Projects/DealershipS
   Every release before N11 is a 1.5.x patch; N11 cuts v1.6.0, the tag N12 deploys. After that, a phase that deploys scanner or schema changes uses minor; docs-only and test-only phases use patch. Deploys happen only through `deploy/railway/deploy_web.sh` or `deploy_scanner_nightly.sh`, from the tag, `--dry-run` first, after an owner-approved Docker smoke of the exact stage, asked per run (web: `deploy_web.sh --dry-run --keep-stage <dir>`, `Dockerfile.web`; scanner-nightly: `deploy_scanner_nightly.sh --dry-run --keep-stage <dir>`, `Dockerfile.scanner`, run against local PG; with `SCAN_FLEET` unset it must print idle). The web-source gate applies only to web **variable** changes; pushes and uploads are not gated.
 - **Migration check before every web deploy.** Every web deploy ships all of main at its tag: code and migrations merged by earlier no-deploy releases (N5 V026, N9 V027/V028, N8 V029) and the web-facing changes of N6/N8/N9 (pending class, completeness rules), even before v1.6.0. Web boot applies every pending migration (`scripts/docker-entrypoint-web.sh:21`, `MIGRATE_ON_BOOT` default 1), and RELEASING.md step 1 compares only against `origin/main`. So before every `deploy_web.sh`, the owner runs the RELEASING.md "Targeting prod" `migrate --dry-run` and requires `database is up to date`. If anything is pending, the D-DB6 protocol runs first (PG18 `pg_dump -Fc`, `pg_restore -l`, `migrate --apply --target <max>`), or the web deploy is postponed. The N2, N3 and N4.5 web deploys are sequenced before N9's release reaches main; a later web deploy before N12.2 either applies V027-V029 to prod first as owner steps with a dump (they are additive), or waits. The release-log row lists the web-facing changes a deploy carries. N1.9 changes RELEASING.md step 1 to compare against prod's applied max version.
 - **Web rollback.** RELEASING.md "Rollback → web" steps 1-5: `web_source_check` clear; GraphQL `deploymentRollback` with `User-Agent: railway-cli/<ver>` (the CLI has no rollback command); re-apply every web variable changed since the target deployment (each release-log row lists them) with `--skip-deploys`; `railway redeploy -s web -y`; check `/api/health`. A rollback never undoes a migration: roll back below a release only when its release-log row says schema-safe; otherwise fix forward or restore the pre-deploy dump. scanner-nightly is never rolled back.
-- **Migration numbers** (registry update, recorded by N1.9; numbers follow merge order, and only unmerged files renumber):
+- **Migration numbers** (registry rebuilt from `migrations/` on `integ/draft`, 2026-10-28). Numbers are provisional until each phase is released: they follow merge order on the integration branch, and every `Vxxx` named in the phase prose above (written before the draft series) means "the migration the unit owns", resolved through this table. Only unreleased files may be renumbered, and the schema checker rejects gaps, so renumber contiguously at release time.
 
   | Number | Content | Unit |
   |---|---|---|
   | V026 | chain completeness | P4.3 (N5) |
-  | V027 | `listing_retirements` | P5B.3 (N9) |
-  | V028 | `listing_miss_strikes` | P5B.4 (N9) |
-  | V029 | attribution evidence (rooftop tier) | N8.6 |
-  | V030 | dealer_recipes rev / CAS (plan's V029) | P7.1 (N13) |
-  | V031 | epa_master flags (plan's V030) | P10A.3 (N22) |
-  | V032 | unique key + RESTRICT NOT VALID | P10D.7 (N25) |
-  | V033 | VALIDATE | N26 |
-  | next | backup-table drops, `users.auth_epoch`, dead MFA columns | N28, N30 |
+  | V027 | incomplete_listings window columns (first_seen_at, last_scraped_at, scans_survived, pending) | N6.4 |
+  | V028 | attribution evidence (persisted rooftop tier) | N8.6 |
+  | V029 | `admin_users` (Postgres admin store, no TOTP columns) | N37.9 |
+  | V030 | `users.auth_epoch` (session revocation) | N30 |
+  | V031 | drop dead MFA columns from `users` | N30 |
+  | V032 | `listing_retirements` | P5B.3 (N9) |
+  | V033 | `listing_miss_strikes` | P5B.4 (N9) |
+  | V034 | `dealer_recipes` rev / compare-and-swap | P7.1 (N13) |
+  | V035 | `vdp_fetch_attempts` | P12A.5 (N18) |
+  | V036 | `epa_master` flags and provenance | P10A.3 (N22) |
+  | V037 | EPA re-link snapshot | P10B.6 (N23) |
+  | V038 | catalog constraints (unique key, RESTRICT, NOT VALID FK) | P10D.7 (N25) |
+  | next | VALIDATE of the NOT VALID constraints (N26), backup-table drops (N28, owner-gated) | |
 
 ---
 
