@@ -10,7 +10,7 @@ from __future__ import annotations
 
 import json
 import sqlite3
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 import pytest
 
@@ -86,7 +86,7 @@ def test_same_dealer_rewrites_normally(db):
 
 def test_stale_owner_row_can_be_taken(db):
     upsert_vehicles([_car("a-com")])
-    old = (datetime.utcnow() - timedelta(hours=49)).isoformat() + "Z"
+    old = (datetime.now(timezone.utc).replace(tzinfo=None) - timedelta(hours=49)).isoformat() + "Z"
     _set(db, "UPDATE cars SET scraped_at=? WHERE vin=?", (old, VIN))
     assert upsert_vehicles([_car("b-com")]) == 1
     assert _row(db)[0] == "b-com"
@@ -101,7 +101,7 @@ def test_inactive_owner_row_can_be_taken(db):
 
 def test_window_is_configurable_and_zero_disables(db, monkeypatch):
     upsert_vehicles([_car("a-com")])
-    old = (datetime.utcnow() - timedelta(hours=5)).isoformat() + "Z"
+    old = (datetime.now(timezone.utc).replace(tzinfo=None) - timedelta(hours=5)).isoformat() + "Z"
     _set(db, "UPDATE cars SET scraped_at=? WHERE vin=?", (old, VIN))
     monkeypatch.setenv("SCANNER_VIN_OWNER_GUARD_HOURS", "4")
     assert upsert_vehicles([_car("b-com")]) == 1  # 5 h old > 4 h window
@@ -195,7 +195,7 @@ def _tier(db_path: str, vin: str = VIN):
 
 
 def _age(db_path: str, hours: int = 100):
-    old = (datetime.utcnow() - timedelta(hours=hours)).isoformat() + "Z"
+    old = (datetime.now(timezone.utc).replace(tzinfo=None) - timedelta(hours=hours)).isoformat() + "Z"
     _set(db_path, "UPDATE cars SET scraped_at=? WHERE vin=?", (old, VIN))
 
 

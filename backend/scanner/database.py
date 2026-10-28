@@ -28,6 +28,7 @@ from backend.scanner.upsert import (
 )
 from backend.scanner.upsert.serialize import PRICE_HISTORY_MAX_ENTRIES as _PRICE_HISTORY_MAX_ENTRIES  # noqa: F401
 from backend.scanner.upsert.serialize import price_history_json as _build_price_history_json  # noqa: F401
+from backend.scanner.upsert.serialize import utc_now_z
 
 logger = logging.getLogger(__name__)
 
@@ -467,7 +468,7 @@ def upsert_vehicles(vehicles: list[dict], stats: dict | None = None) -> int:
     try:
         _ensure_schema(conn)
         cursor = conn.cursor()
-        now = datetime.utcnow().isoformat() + "Z"
+        now = utc_now_z()
         window = guard_window(vin_owner_guard_hours())
         moves: list = []
         reasons: dict[str, str] = {}

@@ -34,7 +34,6 @@ import json
 import logging
 import sys
 from collections import Counter
-from datetime import datetime
 from pathlib import Path
 from typing import Any
 from urllib.parse import urlparse
@@ -44,6 +43,7 @@ if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
 
 from backend.db.connect import connect as db_connect  # noqa: E402
+from backend.scanner.upsert.serialize import utc_now_z  # noqa: E402
 
 _log = logging.getLogger("photo_attr")
 
@@ -319,7 +319,7 @@ def main() -> int:
     for c in movable:
         cur.execute(
             "UPDATE cars SET dealer_id = %s, scraped_at = %s WHERE id = %s AND dealer_id = %s",
-            (c["resolved_dealer_id"], datetime.utcnow().isoformat() + "Z", c["car_id"], c["original_dealer_id"]),
+            (c["resolved_dealer_id"], utc_now_z(), c["car_id"], c["original_dealer_id"]),
         )
         if cur.rowcount:
             # A person-approved move: logged (not a scanner_guard row) so the VIN guard honours it.
