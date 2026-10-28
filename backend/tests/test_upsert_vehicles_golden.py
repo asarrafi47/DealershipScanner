@@ -204,6 +204,8 @@ def _run(calls: list, monkeypatch, caplog, *, pg: bool = False) -> dict:
             for r in caplog.records
             if r.name == "backend.scanner.database" and r.levelno >= logging.INFO
         ]
+        if isinstance(stats.get("timing"), dict):
+            stats["timing"] = _timing_shape(stats["timing"])
         out["phases"].append(
             {"name": name, "count": count, "stats": stats, "calls": list(calls), "logs": logs}
         )
@@ -222,6 +224,22 @@ def _run(calls: list, monkeypatch, caplog, *, pg: bool = False) -> dict:
     if pg:
         out = _pg_normalize(out)
     return _mask_timestamps(out, started)
+
+
+def _timing_shape(t: dict) -> dict:
+    """P11A.7 ``stats['timing']`` with the clock readings masked: seconds -> "<t>", the
+    environment's concurrency -> "<n>"; the counts (rows, selects, cars ...) stay exact."""
+    out: dict = {}
+    for k, v in t.items():
+        if isinstance(v, dict):
+            out[k] = _timing_shape(v)
+        elif k == "dealer_concurrency":
+            out[k] = "<n>"
+        elif k.endswith("_s"):
+            out[k] = "<t>"
+        else:
+            out[k] = v
+    return out
 
 
 def test_upsert_vehicles_golden(golden_env, monkeypatch, caplog):
