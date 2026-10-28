@@ -44,6 +44,7 @@ SNAPSHOT_AND_REPAIR_SCRIPTS = {
     "backend/scripts/apply_attribution_moves.py",
     "backend/scripts/dump_baseline_schema.py",
     "backend/scripts/feed_package_registry_from_vision.py",
+    "backend/scripts/heal_forced_induction_from_evidence.py",  # N24 P10C.9 CREATE TEMP TABLE for the set-based apply
     "backend/scripts/heal_matcher_trims.py",
     "backend/scripts/heal_p8a7_driver.py",
     "backend/scripts/heal_vdp_junk_values.py",

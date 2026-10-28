@@ -95,8 +95,7 @@ def _reconcile_forced_induction(conn, vins: list[str], cand_cache: dict[tuple, l
         from backend.utils.forced_induction import (
             TWIN_TURBO, classify_forced_induction_from_car_row, resolve_car_forced_induction,
         )
-        from backend.utils.spec_provenance import merge_spec_source_json
-        from backend.vehicle_facts import precedence as prec
+        from backend.vehicle_facts.apply import apply_fact_proposals
 
         cur = conn.cursor()
         cur.execute(
@@ -126,20 +125,11 @@ def _reconcile_forced_induction(conn, vins: list[str], cand_cache: dict[tuple, l
             )
             if not label:
                 continue
-            decision = prec.decide(
-                "forced_induction", car.get("forced_induction"), car.get("spec_source_json"),
-                label, src,
-            )
-            if not decision.write:
+            # Rank check, provenance merge and the write all go through the one
+            # fact-write path; this connection only reads, so the links stay committed.
+            res = apply_fact_proposals(None, car, [("forced_induction", label, src)])
+            if not res.written:
                 continue
-            prov = merge_spec_source_json(
-                car.get("spec_source_json"),
-                {"forced_induction": {"source": src, "value": label}},
-            )
-            cur.execute(
-                "UPDATE cars SET forced_induction=?, spec_source_json=? WHERE id=?",
-                (label, prov, car["id"]),
-            )
             changed += 1
         conn.commit()
         return changed

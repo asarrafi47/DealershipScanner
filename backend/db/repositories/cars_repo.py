@@ -612,6 +612,7 @@ _UPDATABLE_CAR_COLUMNS = frozenset(
         "body_style",
         "engine_description",
         "engine_l",
+        "forced_induction",  # P10C.3: linker reconcile writes it through apply_fact_proposals
         "condition",
         "description",
         "data_quality_score",

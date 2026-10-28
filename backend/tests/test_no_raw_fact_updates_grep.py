@@ -52,6 +52,10 @@ KNOWN_RAW_WRITERS: dict[str, str] = {
     "backend/parsers/team_velocity.py": "VDP image/carfax patch; no fact column",
     # Operator repair scripts: dry run by default, snapshot first, provenance written with the value.
     "backend/scripts/heal_cylinders_from_vpic.py": "vPIC-sourced cylinders / forced induction heal",
+    # N24 P10C.9: bulk heal; ranks every row with precedence.decide, writes value + provenance together
+    # through one temp-table UPDATE (per-row apply_fact_proposals would open a connection per row for
+    # the fleet), dry run by default, backup CSV required for --apply, restore command.
+    "backend/scripts/heal_forced_induction_from_evidence.py": "forced_induction heal: precedence.decide per row, backup-gated set-based UPDATE",
     "backend/scripts/heal_ev_cylinders.py": "vPIC-sourced EV cylinder NULLing heal",
     "backend/scripts/heal_p8a7_driver.py": "restores a prior value it wrote itself (revert of its own change)",
     "backend/scripts/heal_stock_code_contamination.py": "NULLs stock-code contamination (stock_number, mileage)",
