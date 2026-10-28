@@ -252,7 +252,8 @@ def main() -> int:
         help=(
             "Re-run the identity, subject (derived-nameplate) and quality "
             "(decode / length / digit-density) checks over derived/brochure_text "
-            "and move the failures to brochure_text_quarantine/. Dry run unless "
+            "and move the failures to brochure_text_quarantine/. Also sweeps the "
+            "derived stores, as --quarantine-derived does. Dry run unless "
             "--apply."
         ),
     )
@@ -308,6 +309,8 @@ def main() -> int:
         "--no-artifact", action="store_true", help="Do not write JSON artifacts."
     )
     args = parser.parse_args()
+    if args.user_agent == "both" and not args.probe_reachability:
+        parser.error("--user-agent both is only valid with --probe-reachability")
 
     delay = paced_delay(args)
 

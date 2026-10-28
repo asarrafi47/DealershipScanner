@@ -323,6 +323,18 @@ def decode_vpic_http_response(body: dict[str, Any]) -> dict[str, str] | None:
     return {str(k): str(v) if v is not None else "" for k, v in row0.items()}
 
 
+def _http_get_json(url: str, timeout_s: float = 25.0) -> dict[str, Any]:
+    """GET *url* and parse the JSON body (the only vPIC network call in this module)."""
+    req = urllib.request.Request(
+        url,
+        headers={"User-Agent": "SarrafiCollection-structured-spec-backfill/1.0"},
+        method="GET",
+    )
+    with urllib.request.urlopen(req, timeout=timeout_s) as resp:
+        raw = resp.read().decode("utf-8", errors="replace")
+    return json.loads(raw)
+
+
 def fetch_decode_vin_values_extended(
     vin: str,
     *,
@@ -339,17 +351,9 @@ def fetch_decode_vin_values_extended(
     if not looks_like_decode_vin(v):
         return None, None, "invalid_vin"
 
-    def _default_get(url: str) -> dict[str, Any]:
-        req = urllib.request.Request(
-            url,
-            headers={"User-Agent": "SarrafiCollection-structured-spec-backfill/1.0"},
-            method="GET",
-        )
-        with urllib.request.urlopen(req, timeout=timeout_s) as resp:
-            raw = resp.read().decode("utf-8", errors="replace")
-        return json.loads(raw)
-
-    getter = get_json or _default_get
+    # Resolved through the module global at call time so a test stub on
+    # ``_http_get_json`` reaches every caller.
+    getter = get_json or (lambda u: _http_get_json(u, timeout_s))
     url = _VPIC_BASE.format(vin=v)
     try:
         body = getter(url)

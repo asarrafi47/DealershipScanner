@@ -107,7 +107,8 @@ ARGPARSE_SURFACE = [
      None, None, None,
      "Re-run the identity, subject (derived-nameplate) and quality (decode / length / "
      "digit-density) checks over derived/brochure_text and move the failures to "
-     "brochure_text_quarantine/. Dry run unless --apply."),
+     "brochure_text_quarantine/. Also sweeps the derived stores, as --quarantine-derived "
+     "does. Dry run unless --apply."),
     (("--quarantine-derived",), "quarantine_derived", "_StoreTrueAction", False, None, None,
      None,
      "Only sweep the derived stores (brochure_text_slim, trim_candidates, "
@@ -246,8 +247,8 @@ def test_mode_dispatch_order(monkeypatch, argv, target, expected):
 def test_probe_reachability_mode(monkeypatch, capsys):
     calls: list[tuple] = []
 
-    def _probe(labels, delay, brand):
-        calls.append((labels, delay, brand))
+    def _probe(labels, delay, brands):
+        calls.append((labels, delay, brands))
         return []
 
     _patch_everywhere(monkeypatch, "probe_reachability", _probe)
@@ -259,11 +260,11 @@ def test_probe_reachability_mode(monkeypatch, capsys):
     monkeypatch.setattr(
         sys,
         "argv",
-        ["x", "--probe-reachability", "--user-agent", "both", "--brand", "Honda",
+        ["x", "--probe-reachability", "--user-agent", "both", "--brand", "Honda", "--brand", "Toyota",
          "--no-artifact", "--html-specs"],
     )
     assert fob.main() == 0
-    assert calls == [(["browser", "identified"], 4.0, "Honda")]
+    assert calls == [(["browser", "identified"], 4.0, ["Honda", "Toyota"])]
     out = capsys.readouterr().out
     assert "Per-brand reachability (paced 4s, sequential)" in out
     assert "Verdict counts:" in out and "Who declined:" in out
@@ -280,3 +281,32 @@ def test_default_mode_starts_with_the_gap_list(monkeypatch):
     monkeypatch.setattr(sys, "argv", ["x", "--html-specs", "--download"])
     with pytest.raises(_Reached):
         fob.main()
+
+
+def test_probe_reachability_filters_every_brand(monkeypatch):
+    from backend.enrichment.brochure_acquisition import reachability as r
+
+    seen: list[str] = []
+    monkeypatch.setattr(r, "PROBE_TARGETS", [("honda", "h", "u"), ("toyota", "t", "u"), ("ford", "f", "u")])
+    monkeypatch.setattr(r, "PacedFetcher", lambda **k: type("F", (), {"get_text": None, "robots_agent": "x"})())
+    monkeypatch.setattr(r, "RobotsPolicy", lambda *a, **k: None)
+
+    def _probe(make, host, url, fetcher, robots, label):
+        seen.append(make)
+        return type("R", (), {"host": host, "verdict": "v", "blocked_by": "", "robots_status": "", "page_status": 0, "detail": ""})()
+
+    monkeypatch.setattr(r, "probe_target", _probe)
+    r.probe_reachability(["browser"], 3.0, ["Honda", "Toyota"])
+    assert seen == ["honda", "toyota"]
+    seen.clear()
+    r.probe_reachability(["browser"], 3.0, None)
+    assert seen == ["honda", "toyota", "ford"]
+
+
+@pytest.mark.parametrize("extra", [[], ["--html-specs"], ["--audit-corpus"], ["--archive-verify-overlap", "2"]])
+def test_user_agent_both_outside_probe_is_argparse_error(monkeypatch, capsys, extra):
+    monkeypatch.setattr(sys, "argv", ["x", "--user-agent", "both", *extra])
+    with pytest.raises(SystemExit) as exc:
+        fob.main()
+    assert exc.value.code == 2
+    assert "--user-agent both is only valid with --probe-reachability" in capsys.readouterr().err

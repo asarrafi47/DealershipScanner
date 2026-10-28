@@ -126,7 +126,7 @@ def plan_and_download(args: argparse.Namespace) -> int:
         f" covering {sum(g['cars'] for g in selected)} active cars\n"
     )
 
-    user_agent = _UA_CHOICES["browser" if args.user_agent == "both" else args.user_agent]
+    user_agent = _UA_CHOICES[args.user_agent]
     fetcher = PacedFetcher.for_tier(TIER_OEM, delay=delay, user_agent=user_agent)
     robots = RobotsPolicy(fetcher.get_text, agent=fetcher.robots_agent)
 
@@ -253,9 +253,7 @@ def html_specs_mode(
         filtered,
         limit=args.limit,
         delay=delay,
-        user_agent=_UA_CHOICES[
-            "browser" if args.user_agent == "both" else args.user_agent
-        ],
+        user_agent=_UA_CHOICES[args.user_agent],
         download=args.download,
     )
     print(
