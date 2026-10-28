@@ -25,9 +25,13 @@ _UA_CHOICES = {"browser": BROWSER_USER_AGENT, "identified": IDENTIFIED_USER_AGEN
 
 
 def probe_reachability(
-    ua_labels: list[str], delay: float, brand: str | None
+    ua_labels: list[str], delay: float, brands: list[str] | str | None
 ) -> list[ReachabilityResult]:
-    targets = [t for t in PROBE_TARGETS if not brand or t[0] == brand.lower()]
+    """Probe every brand in *brands* (None or empty means all targets)."""
+    if isinstance(brands, str):
+        brands = [brands]
+    wanted = {b.lower() for b in (brands or [])}
+    targets = [t for t in PROBE_TARGETS if not wanted or t[0] in wanted]
     results: list[ReachabilityResult] = []
     for label in ua_labels:
         agent = _UA_CHOICES[label]
@@ -66,14 +70,15 @@ def write_reachability_artifact(
 def report_reachability(args: argparse.Namespace, delay: float) -> int:
     """``--probe-reachability``: probe, print the verdict tables, write the artifact.
 
-    The body of that branch of ``fetch_oem_brochures.main``, moved verbatim.
+    Every ``--brand`` is probed (none given means all); ``--user-agent both`` is
+    only accepted here (``fetch_oem_brochures.main`` rejects it elsewhere).
     """
     labels = ["browser", "identified"] if args.user_agent == "both" else [
         args.user_agent
     ]
-    brand = (args.brand or [None])[0]
+    brands = list(args.brand) if args.brand else None
     print(f"Per-brand reachability (paced {delay:g}s, sequential)\n")
-    results = probe_reachability(labels, delay, brand)
+    results = probe_reachability(labels, delay, brands)
     by_verdict: dict[str, int] = {}
     for result in results:
         by_verdict[result.verdict] = by_verdict.get(result.verdict, 0) + 1
