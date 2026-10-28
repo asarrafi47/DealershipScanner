@@ -21,6 +21,11 @@ Usage:
   python import_epa_to_dictionary.py --patch-options --apply
   python import_epa_to_dictionary.py --column-diff /path/to/pre_patch_tree   # scope check
 
+Pinned vintage: every patch or verify runs from one vehicles.csv kept with its sha256, and
+the commit that changes the CSVs names it. ``--years`` adds model years the tree lacks (new
+rows, never a rewrite of other years). The only way these CSVs reach ``epa_master`` is
+``python -m backend.scripts.build_epa_master_pg`` (dry run, then ``--apply``; D-ER1).
+
 ``--patch-induction-only`` rewrites forcedInduction and engineDisplay in the existing
 ``*_EPA.csv`` files from the pinned vehicles.csv and fills epaId/atvType/cityE/highwayE;
 every other cell stays byte-identical (D-EPA1). ``--verify`` re-reads the CSVs and exits

@@ -57,7 +57,9 @@ python -m backend.scripts.build_trim_spec_sheets --write-adds
 ## Import new data
 
 ```bash
-python backend/scripts/import_epa_to_dictionary.py --epa-csv /tmp/vehicles.csv
+python backend/scripts/import_epa_to_dictionary.py --epa-csv /tmp/vehicles.csv --years 2027   # new years only
+python backend/scripts/import_epa_to_dictionary.py --epa-csv /tmp/vehicles.csv --verify
+python -m backend.scripts.build_epa_master_pg            # dry run; --apply is owner-gated, --rebuild is refused
 python -m backend.scripts.import_brochures_to_dictionary --local-only
 python -m backend.scripts.build_dictionary_manifest
 ```

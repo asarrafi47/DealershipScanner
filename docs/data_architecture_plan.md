@@ -17,6 +17,28 @@ Precedence when sources disagree: **vPIC (VIN-decoded) > dealer-observed text >
 EPA by exact year > heuristics**, and heuristic values must never contradict
 dealer-observed engine text (`backend/utils/engine_consistency.py`).
 
+**Forced-induction precedence** (`resolve_car_forced_induction`, mirrored by the
+precedence rank table): the dealer's engine text, trim or title > the vPIC Turbo
+flag (True types from the family or heuristic, default Turbocharged; False is
+Naturally Aspirated) > a family-unanimous catalog label, NA included > boost
+markers in the description body > the make/model heuristic, last resort. The
+catalog never outranks the dealer's own engine text or the VIN decode. Catalog
+fields are copied from source columns (EPA's own turbo/supercharger flags), never
+synthesized from a name heuristic.
+
+**Catalog id contract** (`epa_master`):
+
+- Ids are permanent and never reassigned. A row still referenced by a car or by
+  `epa_extended_specs` is archived (`epa_master_archive`), never deleted; the FKs
+  are RESTRICT (V038; the validating migration ships after a 0-dangling prod check).
+- One ingestion path (D-ER1 a): pinned `vehicles.csv` -> dictionary `*_EPA.csv`
+  (`import_epa_to_dictionary.py`) -> `epa_master`
+  (`python -m backend.scripts.build_epa_master_pg`, dry run first, `--apply`
+  owner-gated, ids kept). `--rebuild` is refused.
+- Relink after a catalog load: `link_cars_to_catalog.py --dry-run`, review, then run
+  (`--dangling` for links whose row is gone).
+- Restart the web workers after a catalog load; they cache catalog reads.
+
 ## The seven stores
 
 | # | Store | Key | Status |

@@ -173,7 +173,9 @@ workspace/dealer_logs/
 - `.claude/workflows/dealer-discovery.js` — investigator / builder / verifier agents for
   the dealerships the pipeline could not scan or verify.
 - `backend/scripts/heal_from_vpic.py`, `backend/scripts/backfill_vpic_cache.py` — NHTSA.
-- `backend/scripts/import_epa_master.py --append-years` — catalog years from the internet.
+- `backend/scripts/import_epa_master.py --append-years` — catalog years from the internet (the one
+  ingestion path, D-ER1; dry run unless `--apply`). Then `build_epa_master_pg` (dry run, `--apply`
+  owner-gated) and `link_cars_to_catalog.py --dry-run`; ids are permanent and a full reload is refused.
 
 ## Browser policy (2026-09-26)
 
