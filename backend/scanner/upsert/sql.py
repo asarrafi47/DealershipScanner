@@ -17,7 +17,7 @@ from backend.utils.interior_color_buckets import interior_color_buckets_json
 from backend.utils.price_floor import classify_price
 
 from backend.scanner.upsert import rows as _rows
-from backend.scanner.upsert.guard import arbitrate_feed_facts
+from backend.scanner.upsert.guard import arbitrate_feed_facts, keep_stored_forced_induction
 from backend.scanner.upsert import serialize as _ser
 
 # Same logger name as before the split so log routing and captures are unchanged.
@@ -293,6 +293,8 @@ def prepare_row(v: dict, prior_spec_src: str | None, stored: dict | None = None)
     spec_src = _ser.spec_source_json(v, prior_spec_src, kept)
     packages_json = _ser.packages_json(v.get("packages"))
     fi = v.get("forced_induction") or classify_forced_induction_from_car_row(bound)
+    if fi and not v.get("forced_induction") and keep_stored_forced_induction(bound, fi, stored, prior_spec_src):
+        fi = None  # COALESCE keeps the evidence-backed stored label (P10C.7)
     return PreparedRow(
         v=v,
         vin=vin,
