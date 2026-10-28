@@ -148,3 +148,33 @@ def test_tampered_dump_blocks_drop(sb):
     next(sb["backups"].glob("scratch_cars_cr_x_*.dump")).write_text("changed")
     p = sb["run"]("drop", "--db", "cars_cr_x", "--execute")
     assert "verified dump" in p.stdout and _calls(sb, "dropdb") == []
+
+
+def test_prefix_named_db_dump_does_not_satisfy_gate(sb):
+    stubs = {"STUB_DBS": "cars_cr_a|1\ncars_cr_a_b|2"}
+    assert sb["run"]("dump", "--db", "cars_cr_a_b", "--execute", **stubs).returncode == 0
+    (sb["backups"] / "retire_ok").mkdir()
+    (sb["backups"] / "retire_ok" / "cars_cr_a").write_text("ok")
+    sb["log"].write_text("")
+    p = sb["run"]("drop", "--db", "cars_cr_a", "--execute", **stubs)
+    assert "verified dump" in p.stdout and _calls(sb, "dropdb") == []
+    assert "unverified" not in sb["run"]("list", **stubs).stdout.split("cars_cr_a ")[1].split("\n")[0]
+
+
+def test_marker_for_other_db_rejected(sb):
+    _verified_dump(sb)
+    d = next(sb["backups"].glob("scratch_cars_cr_x_*.dump"))
+    m = Path(str(d) + ".verified")
+    m.write_text(m.read_text().replace("db=cars_cr_x", "db=cars_cr_y"))
+    (sb["backups"] / "retire_ok").mkdir()
+    (sb["backups"] / "retire_ok" / "cars_cr_x").write_text("ok")
+    p = sb["run"]("drop", "--db", "cars_cr_x", "--execute")
+    assert "verified dump" in p.stdout and _calls(sb, "dropdb") == []
+
+
+def test_row_count_drift_blocks_drop(sb):
+    _verified_dump(sb)
+    (sb["backups"] / "retire_ok").mkdir()
+    (sb["backups"] / "retire_ok" / "cars_cr_x").write_text("ok")
+    p = sb["run"]("drop", "--db", "cars_cr_x", "--execute", STUB_COUNTS="cars=6\ndealerships=2")
+    assert "row counts differ" in p.stdout and _calls(sb, "dropdb") == []

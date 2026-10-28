@@ -11,7 +11,8 @@
 #   throwaway cars_draft_retire_chk DB, compare exact per-table row counts with the source,
 #   then write <dump>.verified (sha256 + counts). Without --execute it only prints the plan.
 # drop: dropdb, and only when ALL hold: --execute; the name passes the scratch guard; a
-#   <db> dump's .verified marker exists and its sha256 still matches the file; the owner
+#   <db> dump's .verified marker (db= line is this DB) exists, its sha256 still matches the
+#   file and the live row counts equal the marker's; the owner
 #   created the per-DB flag workspace/backups/retire_ok/<db>. Without --execute it prints
 #   the plan and the unmet gates and drops nothing. This draft is never run with --execute
 #   by the workflow; the owner runs it.
@@ -52,10 +53,13 @@ guard() {  # name guard; cars_cleanroom needs the logged decision
     *) [[ "$db" =~ ^(cars_cr_[a-z0-9_]+|cars_rehearsal)$ ]] || refuse "'$db' is not a scratch name (cars_cr_<name> or cars_rehearsal)";;
   esac
 }
-latest_dump() { ls -1 "$BACKUPS"/scratch_"$1"_*.dump 2>/dev/null | sort | tail -1 || true; }
+latest_dump() {  # exact date suffix, so cars_cr_a never picks up cars_cr_a_b's dumps
+  ls -1 "$BACKUPS"/scratch_"$1"_[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9].dump 2>/dev/null | sort | tail -1 || true
+}
 sha_of() { shasum -a 256 "$1" | cut -d' ' -f1; }
-verified() {  # 0 when the latest dump has a marker whose sha matches the file
+verified() {  # 0 when the latest dump has a marker for this DB whose sha matches the file
   local d; d=$(latest_dump "$1"); [ -n "$d" ] && [ -f "$d.verified" ] || return 1
+  [ "$(sed -n 's/^db=//p' "$d.verified")" = "$1" ] || return 1
   [ "$(sed -n 's/^sha256=//p' "$d.verified")" = "$(sha_of "$d")" ]
 }
 counts() {  # exact row count per public table of DB $1
@@ -101,6 +105,11 @@ drop_one() {
   local db=$1 missing=()
   guard "$db"
   verified "$db" || missing+=("verified dump (run dump --execute)")
+  if verified "$db"; then  # rows written after the dump would be lost
+    local d; d=$(latest_dump "$db")
+    [ "$(sed -n '/^tables=/,$p' "$d.verified" | tail -n +2)" = "$(counts "$db")" ] \
+      || missing+=("live row counts differ from the dump marker (re-run dump --execute)")
+  fi
   [ -f "$BACKUPS/retire_ok/$db" ] || missing+=("owner OK flag $BACKUPS/retire_ok/$db")
   [ "$EXECUTE" = 1 ] || missing+=("--execute")
   if [ ${#missing[@]} -gt 0 ]; then
