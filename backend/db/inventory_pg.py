@@ -590,7 +590,7 @@ def _legacy_postgres_inventory_ddl(conn: Any) -> None:
     cur.execute(
         """
         CREATE TABLE IF NOT EXISTS epa_extended_specs (
-            epa_master_id BIGINT PRIMARY KEY REFERENCES epa_master(id) ON DELETE CASCADE,
+            epa_master_id BIGINT PRIMARY KEY REFERENCES epa_master(id) ON DELETE RESTRICT,
             year INTEGER NOT NULL,
             make TEXT NOT NULL,
             model TEXT NOT NULL,

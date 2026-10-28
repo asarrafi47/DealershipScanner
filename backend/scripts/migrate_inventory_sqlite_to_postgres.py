@@ -35,8 +35,8 @@ logger = logging.getLogger(__name__)
 
 # Tables copied in order (respect FKs where present).
 _TABLES = (
-    "cars",
     "epa_master",
+    "cars",
     "model_specs",
     "dealer_scan_profile",
     "scan_runs",

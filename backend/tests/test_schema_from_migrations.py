@@ -904,7 +904,8 @@ def _snapshot(dsn: str) -> dict[str, Any]:
             "FROM pg_constraint WHERE connamespace='public'::regnamespace "
             "AND contype IN ('p','u','f','c')"
         )
-        cons = {(r[0], r[1], r[2]): r[3] for r in cur.fetchall()}
+        # NOT VALID (V038's FKs until the later VALIDATE) is a state, not a different constraint
+        cons = {(r[0], r[1], r[2].removesuffix(" NOT VALID")): r[3] for r in cur.fetchall()}
     return {"tables": tables, "cols": cols, "idx": idx, "cons": cons}
 
 
