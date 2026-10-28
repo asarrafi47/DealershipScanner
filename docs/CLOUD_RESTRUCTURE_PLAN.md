@@ -1,5 +1,7 @@
 # Cloud Restructure Plan
 
+> **Status 2026-10: superseded by `EXECUTION_PLAN_2026_09.md`, `RAILWAY_SCANNING.md` and `docs/REMEDIATION_PLAN_2026_10.md`.** Kept as the record of the original analysis. Struck-through paths no longer exist; the removal commit is beside each. Phase 0 (Node scanner) is done (ff76d4e58). The N-phase work that supersedes the rest lives on the draft integration branch `integ/draft`, which has not been released, pushed or deployed; nothing here was run against production.
+
 _Prepared 2026-09-09 against branch `feature/data-architecture-scan-reliability` (HEAD `da38f2dfe` + 116 uncommitted files). Every file:line below was read in this session; re-verify line numbers after the uncommitted work lands._
 
 ## Goal
@@ -38,8 +40,8 @@ Evidence: `backend/scanner/node_modules/` is empty; no Python imports Node code;
 
 | File | Change |
 |---|---|
-| `backend/scanner/scanner.js`, `backend/scanner/vdp_framework.js`, `backend/scanner/scanner_intercept.js`, `backend/scanner/package.json`, `backend/scanner/package-lock.json`, `backend/scanner/node_modules/` | **Done (verified 2026-10-27).** Delete |
-| `backend/artifacts/scanner_backups/scanner.js.bak`, `scanner.js.backup`, `backend/artifacts/scanner_backups/README.md`, `backend/artifacts/README.md:6,9` | **Done (verified 2026-10-27).** Delete backups; drop the two README lines |
+| ~~`backend/scanner/scanner.js`~~, ~~`backend/scanner/vdp_framework.js`~~, `backend/scanner/scanner_intercept.js`, `backend/scanner/package.json`, ~~`backend/scanner/package-lock.json`~~, `backend/scanner/node_modules/` | (removed ff76d4e58) **Done (verified 2026-10-27).** Delete |
+| `backend/artifacts/scanner_backups/scanner.js.bak`, `scanner.js.backup`, ~~`backend/artifacts/scanner_backups/README.md`~~ (removed f3116bb5b), `backend/artifacts/README.md:6,9` | **Done (verified 2026-10-27).** Delete backups; drop the two README lines |
 | `backend/scanner/config/scanner_intercept_policy.json:16` and `backend/config/scanner_intercept_policy.json:16` | **Done (verified 2026-10-27).** Remove the "consumed by scanner_intercept.js" note (both copies must stay in sync, see memory note on intercept policy) |
 | `scripts/scanner_worker_loop.py:39-58` (`_run_dealer_scan`) | **Done (verified 2026-10-27).** Delete the `node scanner.js --url ... --smart-import` branch (:44-51). `onboard` jobs run `scanner.py --dealer-id <id> --scan-only` after Phase 2.2 gives `scanner.py` a `--url` onboarding path |
 | `scripts/scanner_worker_loop.py:29-32` | **Done (verified 2026-10-27).** Delete `PUPPETEER_EXECUTABLE_PATH` discovery (Puppeteer goes with Node) |
@@ -49,12 +51,12 @@ Evidence: `backend/scanner/node_modules/` is empty; no Python imports Node code;
 | `frontend/templates/dev.html:86`, `frontend/templates/admin/scanner_ops.html:63` | **Done (verified 2026-10-27).** Replace `node scanner.js --url … --smart-import` copy with the Phase 2.2 job UI text |
 | `Dockerfile.scanner:4-7` (NodeSource + nodejs), `:29-33` (`npm ci`, puppeteer smoke check) | **Done (verified 2026-10-27).** Delete |
 | `deploy/docker-compose.yml:88-92` (`scanner_node_modules` mount), `:129-131` (volume) | **Done (verified 2026-10-27).** Delete |
-| `scripts/docker-entrypoint-scanner-worker.sh:12-16` | **Done (verified 2026-10-27).** Delete the `npm ci` bind-mount workaround |
-| `README.md:101-108` ("8. Optional: Node"), `docs/SCANNER_NODE.md` | Delete section and file |
+| ~~`scripts/docker-entrypoint-scanner-worker.sh:12-16`~~ (removed f4a808d52) | **Done (verified 2026-10-27).** Delete the `npm ci` bind-mount workaround |
+| `README.md:101-108` ("8. Optional: Node"), ~~`docs/SCANNER_NODE.md`~~ | **Done (N36 P18B.2, draft branch, unreleased).** Section and file deleted |
 | `docs/DATA_QUALITY_ROLLOUT.md:15,29,61,77`, `master-todo.md:34` (C1, retired in P18B.1) | Update references; mark C1 done |
 | Docstring-only mentions (`backend/oem/scraper/crawl4ai_*` deleted 2026-10-01, `backend/dev/dealers.py:29,74,249`, `backend/db/repositories/dealers_repo.py:116`, `backend/intelligence/dealer_score.py:426`, `backend/scanner/vdp/config.py:26`, `backend/scanner/scrape_confidence.py:14`, `backend/scanner/job_diagnosis.py:67,76`, `run_nationwide_discovery.py:8`) | Reword "parity with scanner.js" comments; no logic change |
 
-Rows above marked done were verified against the tree on 2026-10-27 (P17B.1). Still open: the README "Optional: Node" section and `docs/SCANNER_NODE.md` (P18B.2), the `master-todo.md` C1 row (retired in P18B.1; see EXECUTION_PLAN_2026_09.md), and the docstring-only mentions in the last row. `job_diagnosis` no longer carries the Puppeteer action, the npm rule or `use_python_scanner` (P17B.1).
+Rows above marked done were verified against the tree on 2026-10-27 (P17B.1). Still open: (draft, unreleased) the README "Optional: Node" section and `docs/SCANNER_NODE.md` were deleted in N36 P18B.2, the `master-todo.md` C1 row (retired in P18B.1; see EXECUTION_PLAN_2026_09.md), and the docstring-only mentions in the last row. `job_diagnosis` no longer carries the Puppeteer action, the npm rule or `use_python_scanner` (P17B.1).
 
 ### 0.2 Remove Flask-SocketIO
 
@@ -77,16 +79,16 @@ Evidence: instantiated at `backend/main.py:1325`, zero `@socketio.on`, zero `emi
 
 ### 0.4 What the Node scanner did that Python must keep doing
 
-Verified against `backend/scanner/scanner.js` and its Python consumer `backend/dev/routes.py:740-830`:
+Verified against ~~`backend/scanner/scanner.js`~~ (removed ff76d4e58) and its Python consumer `backend/dev/routes.py:740-830`:
 
 | Node capability | Python replacement (exists / to build) |
 |---|---|
-| `--smart-import` dealer metadata: name from JSON-LD `AutomotiveBusiness`/`AutoDealer`, `og:site_name`, `og:title`, address city/state (`scanner.js:2521-2620 discoverDealerMetadata`) | **Exists.** `scanner.js:2360 runCrawl4aiDiscoverySubprocess` already shells out to `backend/oem/scraper/crawl4ai_discovery.py` (`:167-203` parses the same JSON-LD/OG fields). Also `backend/dev/dealer_url_infer.py:321` (`og:site_name`) and `backend/discovery/address_enrich.py:28` (JSON-LD address; deleted 2026-10-01, unimported — `backend/scripts/backfill_dealership_addresses.py` is the live address filler). The new `scanner.py --url` path calls `crawl4ai_discovery` directly |
+| `--smart-import` dealer metadata: name from JSON-LD `AutomotiveBusiness`/`AutoDealer`, `og:site_name`, `og:title`, address city/state (`scanner.js:2521-2620 discoverDealerMetadata`) | **Exists.** `scanner.js:2360 runCrawl4aiDiscoverySubprocess` already shells out to ~~`backend/oem/scraper/crawl4ai_discovery.py`~~ (removed d17abb0d8) (`:167-203` parses the same JSON-LD/OG fields). Also `backend/dev/dealer_url_infer.py:321` (`og:site_name`) and `backend/discovery/address_enrich.py:28` (JSON-LD address; deleted 2026-10-01, unimported — `backend/scripts/backfill_dealership_addresses.py` is the live address filler). The new `scanner.py --url` path calls `crawl4ai_discovery` directly |
 | `DISCOVERY:` / `SMART_IMPORT_RESULT:` / `SMART_IMPORT_ERROR:` stdout protocol (`dev/routes.py:712-736`) | Replace with `set_progress(job_id, {...})` from 2.1; worker writes the same dict the UI reads today |
 | Post-scan persistence: `upsert_dealer_manifest_row`, `insert_dealership`, `link_cars_to_dealership_registry` (`dev/routes.py:782-798`, `backend/dev/dealers.py:61,247,264`) | **Exists.** Moves from the web thread into the worker's onboard handler unchanged |
 | `--profile default / resilient / bare` retry ladder (`dev/routes.py:292,681`) | **Exists** as the recovery chain: `backend/scanner/dealer/profile.py:92 prioritize_recovery_chain`, `:104 manifest_recovery_strategies`, plus per-dealer `scan_hints` in `dealer_recipes` |
 | `--headed` debugging | Drop. Headed Chromium cannot run in a pod; `SCAN_LAB_ENABLED` dev tooling covers local debugging |
-| `debug/last_scrape_samples.json` (`scanner.js:1368-1390`, read only for its path and `generated_at` at `dev/routes.py:295,1067-1068`) | Drop the file; `GET /dev/api/status` reports the latest `scan_runs.finished_at` instead |
+| ~~`debug/last_scrape_samples.json`~~ (removed b82f0a25b) (`scanner.js:1368-1390`, read only for its path and `generated_at` at `dev/routes.py:295,1067-1068`) | Drop the file; `GET /dev/api/status` reports the latest `scan_runs.finished_at` instead |
 | Puppeteer stealth + intercept policy (`backend/scanner/config/scanner_intercept_policy.json`) | **Exists.** `backend/scanner/scrapers/scanner_intercept_filter.py` consumes the same JSON; `playwright-stealth` in `orchestrator.py` / `chain.py` |
 
 Frontend contract to preserve for `GET /dev/api/scanner-job/<id>` and the import-queue endpoints (`frontend/static/dev.js:328,436,454,475`): `job_id`, `discovery`, `items`, `smart_error`, `log`, `insert_id`, `insert_error`, `cars_linked`, `exit_code`, `done`, `status`. The 2.2 mapping from `dealer_jobs` must emit exactly these keys.
@@ -197,6 +199,8 @@ The 25h step-1 runtime on 2026-08-03 means step 1 needs `SCANNER_DELTA_CONCURREN
 
 ### 3.2 Kubernetes manifests (`deploy/k8s/`)
 
+**Status 2026-10: not pursued (D-IF9; D1 chose Railway, no k3s).** The table below is kept as history only.
+
 | File | Change |
 |---|---|
 | `cronjob-scanner.yaml:30` | `["python","scanner.py","--delta"]`; env from 3.1 step 1 |
@@ -301,7 +305,7 @@ New module `backend/storage/blob.py` with `put(key, bytes, content_type)`, `get(
 | Locally downloaded car images | `backend/routes/site_misc.py:32,45` (`_CAR_IMAGES_DIR` served via `send_from_directory`), written when `SCANNER_VDP_DOWNLOAD_IMAGES=1` (`deploy/railway/sync-vault-to-railway.sh:91` sets it to 0 in prod) | Blob prefix `car_images/`; serving route streams from blob or redirects to a signed URL |
 | Serving routes that assume local files | `backend/routes/cars_pages.py:393,811` (sticker PDF / preview), `backend/dealer/routes.py:456` (vehicle uploads), `backend/routes/community_api.py:419` (comment images), `backend/routes/site_misc.py:32,45` | Each switches from `send_from_directory` / `send_file` to `blob.get` streaming (or a signed-URL redirect for public assets) |
 | Brochure PDFs and text index | `backend/enrichment/brochure_sources/storage.py:160-166,270,284-285,308-312,344-347`, `backend/dictionary/derived/brochure_content_index.json` (355 absolute `/Users/asarrafi` paths) | PDFs to blob; regenerate the index with repo-relative paths; `_tier_by_sha` resolves via `blob.exists` |
-| Manifests (`dealers.json`, `workspace/manifest_*.json`) | `backend/scanner/constants.py:10`, `backend/scanner/mac_mini_lite.py:21` | `DEALERS_FROM_ACTIVE_INVENTORY=1` is already the nightly roster source (memory: nightly delta roster staleness fix). Make it the default; manifests become a dev-only override |
+| Manifests (`dealers.json`, `workspace/manifest_*.json`) | `backend/scanner/constants.py:10`, ~~`backend/scanner/mac_mini_lite.py:21`~~ (removed 74c8e2566) | `DEALERS_FROM_ACTIVE_INVENTORY=1` is already the nightly roster source (memory: nightly delta roster staleness fix). Make it the default; manifests become a dev-only override |
 
 ---
 
@@ -341,7 +345,7 @@ Move `backend/main.py:740-1195` (18 routes) plus helpers `_account_profile_conte
 | `backend/enrichment/brochure_extract.py` | 2,402 | already has `brochure_sources/` (17 modules); move extraction stages there |
 | `backend/enrichment/brochure_trim_candidates.py` | 2,303 | candidates / scoring / output |
 | `backend/enrichment/knowledge_engine.py` + `knowledge_engine_specs.py` | 3,325 | lookups by store (epa, extended, engine, aggregate) mirroring the 7 `lru_cache` groups |
-| `backend/oem/scraper/oem/bmw_locator_discovery.py` | 1,890 | DELETED 2026-10-01 (unreachable; see docs/monolith_audit_2026_10_01/enrich.md #12) |
+| ~~`backend/oem/scraper/oem/bmw_locator_discovery.py`~~ (d17abb0d8) | 1,890 | DELETED 2026-10-01 (unreachable; see docs/monolith_audit_2026_10_01/enrich.md #12) |
 | `backend/scanner/recipe_synth.py` | 1,527 | synth / verify / persist (persist collapses into `recipe_store`) |
 | `backend/dev/routes.py` | 1,482 → much smaller after Phase 2.2 removes ~450 lines of job plumbing | status / dealers / imports / enrich blueprints |
 | `frontend/static/main.js` | 3,280 | continue the `listings_boot`/`market_intel`/`geo` extraction |
@@ -374,11 +378,11 @@ Not found: the `stack_up` fixture that `.github/workflows/ci.yml:51-55` describe
 
 ## Decisions the plan needs from you
 
-- **D1** Hosting target: all-Railway (web + worker + cron services) or Railway web + K8s scanners (`docs/PLATFORM_MASTER_PLAN.md:40`).
-- **D2** SEC-088: how `totp_secret` is protected once users live in the shared Postgres (recommend app-level encryption with the existing vault key).
-- **D3** Listings grid: precomputed `listings_grid` table (recommended) vs Redis-cached serialized blob. Table survives restarts and is queryable; Redis is faster to ship.
-- **D4** Blob backend: Cloudflare R2 (already behind Cloudflare, no egress fees) vs S3.
-- **D5** Scan Lab (`backend/dev/scan_lab.py`, `scanner_mac_mini.py`): keep as Mac-only dev tooling behind a flag, or port to the job queue later.
+- **D1** Hosting target: all-Railway (web + worker + cron services) or Railway web + K8s scanners (`docs/PLATFORM_MASTER_PLAN.md:40`). **Decided 2026-09-28: Railway, no k3s** (D-IF9 confirms the k8s manifests are not pursued).
+- **D2** SEC-088: how `totp_secret` is protected once users live in the shared Postgres (recommend app-level encryption with the existing vault key). **Open** as of 2026-10-27; moot if SEC-014 removes the stored secret (not verified on a released build).
+- **D3** Listings grid: precomputed `listings_grid` table (recommended) vs Redis-cached serialized blob. **Decided: persisted grid cards, migration V023** (`migrations/V023__listings_grid_cards.sql`).
+- **D4** Blob backend: Cloudflare R2 (already behind Cloudflare, no egress fees) vs S3. **Open** as of 2026-10-27.
+- **D5** Scan Lab (`backend/dev/scan_lab.py`, `scanner_mac_mini.py`): keep as Mac-only dev tooling behind a flag, or port to the job queue later. **Open** as of 2026-10-27.
 
 ## Verification per phase
 
