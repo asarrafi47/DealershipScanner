@@ -1,47 +1,16 @@
-"""Hybrid rule + LLM adjudication helpers and threshold merging."""
+"""Hybrid rule-merge helpers and thresholds (the LLM call was removed, D-DC6)."""
 from __future__ import annotations
-
-import logging
-from urllib.parse import urlparse
 
 from backend.scraping.models import SiteResult
 from backend.scraping.org_validation import finalize_status
-from backend.intelligence.agents.adjudicator_agent import adjudicate_evidence
-from backend.intelligence.llm.client import LLMClient, LLMResponseError
 from backend.schemas.adjudication_result import AdjudicationResult
-from backend.schemas.evidence_package import EvidencePackage
-
-logger = logging.getLogger("pipeline.adjudication")
 
 RULE_BYPASS_CONFIDENCE = 0.80
 
 
-def _distinct_domains(urls: list[str]) -> set[str]:
-    return {urlparse(u).netloc.lower() for u in urls if u}
-
-
-def should_invoke_adjudicator(sr: SiteResult) -> bool:
-    """Call LLM only when we have loaded pages and the case is not trivially resolved."""
-    if not sr.homepage_loaded:
-        return False
-    if sr.fetch_error and not sr.evidence_snippets:
-        return False
-    if sr.redirect_mismatch:
-        return False
-    if sr.confidence_score >= RULE_BYPASS_CONFIDENCE and sr.best_candidate_normalized:
-        return False
-    if not sr.candidate_group_names and not sr.evidence_snippets:
-        if len(_distinct_domains(sr.pages_checked or [])) > 1:
-            return True
-        if len(sr.pages_checked or []) > 1 and len(sr.rejected_candidates or []) >= 3:
-            return True
-        return False
-    return True
-
-
 def compute_adjudication_skip_reason(sr: SiteResult) -> str:
     """
-    Why the LLM was not invoked (debugging rules_only / skipped adjudication).
+    Why no adjudication ran (kept for the saved run format; debugging rules_only).
     """
     if not sr.homepage_loaded:
         return "insufficient_evidence"
@@ -148,15 +117,3 @@ def merge_rule_and_ai(
     st = finalize_status(conf, name)
     return name, conf, st, "ai"
 
-
-def run_llm_adjudication(
-    pkg: EvidencePackage,
-    client: LLMClient,
-    *,
-    model: str | None = None,
-) -> AdjudicationResult | None:
-    try:
-        return adjudicate_evidence(pkg, client, model=model, dealer_id=pkg.dealer_id)
-    except LLMResponseError as e:
-        logger.warning("LLM adjudication failed: %s", e)
-        return None

@@ -305,25 +305,13 @@ async def _main_impl(
     total_dealers = len(dealers)
     shutdown_skipped_dealer_ids: list[str] = []
 
-    async def run_dealers_with_browser(p) -> list[Any]:
-        from backend.scanner.browser_gate import browser_allowed, describe, require_browser
-        from backend.scanner.http_fetch import playwright_proxy_kwargs
-
-        logger.info("Scanner: %s", describe())
-        browser = None
-        if p is not None and browser_allowed():
-            require_browser("orchestrator.chromium.launch")
-            browser = await p.chromium.launch(
-                headless=True,
-                args=["--disable-blink-features=AutomationControlled"],
-                **playwright_proxy_kwargs(),
-            )
+    async def run_dealers() -> list[Any]:
+        logger.info("Scanner: HTTP-only (no browser)")
 
         async def one_dealer(dealer: dict) -> dict[str, Any]:
             did = dealer.get("dealer_id", "")
             try:
                 coro = run_dealer(
-                    browser,
                     dealer,
                     write_coordinator,
                     gallery_vision_filter=gallery_vision_filter,
@@ -351,16 +339,6 @@ async def _main_impl(
             except Exception as e:
                 logger.exception("Dealer %s failed: %s", did, e)
                 DEBUG_DIR.mkdir(parents=True, exist_ok=True)
-                if browser is not None:
-                    try:
-                        pg = await browser.new_page()
-                        try:
-                            await pg.goto(dealer.get("url", "about:blank"), timeout=10000)
-                            await pg.screenshot(path=str(DEBUG_DIR / f"fail_{did or 'unknown'}.png"))
-                        finally:
-                            await pg.close()
-                    except Exception:
-                        pass
                 result = {
                     "dealer_id": did,
                     "dealer_name": dealer.get("name", ""),
@@ -395,38 +373,16 @@ async def _main_impl(
             )
             return result
 
-        try:
-            loop = asyncio.get_running_loop()
-            for _sig in (signal.SIGTERM,):
-                with contextlib.suppress(Exception):
-                    loop.add_signal_handler(_sig, on_scanner_shutdown_signal)
-            return await asyncio.gather(
-                *[bounded(d) for d in dealers],
-                return_exceptions=True,
-            )
-        finally:
-            if browser is not None:
-                with contextlib.suppress(Exception):
-                    await asyncio.shield(asyncio.wait_for(browser.close(), timeout=6.0))
+        loop = asyncio.get_running_loop()
+        for _sig in (signal.SIGTERM,):
+            with contextlib.suppress(Exception):
+                loop.add_signal_handler(_sig, on_scanner_shutdown_signal)
+        return await asyncio.gather(
+            *[bounded(d) for d in dealers],
+            return_exceptions=True,
+        )
 
-    from backend.scanner.browser_gate import browser_allowed as _browser_allowed
-
-    if not _browser_allowed():
-        # HTTP-only scan: no Playwright import, no Chromium process for the run.
-        outcomes = await run_dealers_with_browser(None)
-    else:
-        try:
-            from playwright_stealth import Stealth
-            from playwright.async_api import async_playwright
-
-            async with Stealth().use_async(async_playwright()) as p:
-                outcomes = await run_dealers_with_browser(p)
-        except ImportError:
-            logger.warning("playwright_stealth not found, using plain playwright")
-            from playwright.async_api import async_playwright
-
-            async with async_playwright() as p:
-                outcomes = await run_dealers_with_browser(p)
+    outcomes = await run_dealers()
 
     dealer_coverage_reports: list[dict[str, Any]] = []
     for o in outcomes:

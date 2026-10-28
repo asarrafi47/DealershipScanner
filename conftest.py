@@ -128,7 +128,7 @@ def apply_production_credential_encryption_env(monkeypatch: pytest.MonkeyPatch) 
     monkeypatch.setenv("DEV_USERS_DB_ENCRYPTION_KEY", PROD_TEST_DEV_USERS_DB_KEY)
 
 # backend/ must be on sys.path so bare imports like ``from scraping.xxx`` and
-# ``from intelligence.llm.xxx`` resolve to the correct packages.
+# ``from intelligence.xxx`` resolve to the correct packages.
 _backend = str(Path(__file__).resolve().parent / "backend")
 if _backend not in sys.path:
     sys.path.insert(0, _backend)

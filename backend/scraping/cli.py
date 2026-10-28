@@ -116,11 +116,6 @@ def _run_adjudicate_mode(args: argparse.Namespace) -> int:
         rows = rows[: args.limit]
 
     session = fetch_requests_session(args.timeout, verify_ssl=not args.insecure_ssl)
-    # LLM adjudication client: OpenAICompatibleClient (Ollama) has been removed.
-    # Pass None to disable AI adjudication; supply a custom LLMClient subclass to re-enable.
-    llm = None
-    logger.info("LLM adjudication disabled (Ollama client removed; llm_client=None)")
-
     browser = None
     playwright = None
 
@@ -151,9 +146,6 @@ def _run_adjudicate_mode(args: argparse.Namespace) -> int:
         orch = run_hybrid_batch(
             crawl_one,
             rows,
-            use_adjudicator=True,
-            llm_client=llm,
-            llm_model=args.llm_model,
         )
     finally:
         if browser:
@@ -247,17 +239,7 @@ def main() -> int:
     ap.add_argument(
         "--adjudicate",
         action="store_true",
-        help="After crawl, run LLM adjudicator on ambiguous cases (OpenAI-compatible API).",
-    )
-    ap.add_argument(
-        "--llm-base-url",
-        default=os.environ.get("LLM_BASE_URL", "http://127.0.0.1:11434/v1"),
-        help="OpenAI-compatible base URL for dealership adjudicator (optional).",
-    )
-    ap.add_argument(
-        "--llm-model",
-        default=os.environ.get("LLM_MODEL", ""),
-        help="Model id for adjudicator /v1/chat/completions (optional).",
+        help="Run the rules-only hybrid batch (crawl, rules, merge, review queue); no LLM, no network beyond the crawl.",
     )
     ap.add_argument(
         "--known-group-aliases",

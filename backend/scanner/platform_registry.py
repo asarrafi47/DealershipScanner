@@ -59,7 +59,7 @@ import re
 import subprocess
 import urllib.error
 import urllib.request
-from dataclasses import asdict, dataclass, field
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 from urllib.parse import urlparse
@@ -248,7 +248,7 @@ SEED_PLATFORMS: list[PlatformEntry] = [
         notes="Overfuel (Next.js SSR SPA, meta generator=Overfuel). Browser-free via the SSR-HTML "
         "path: GET /inventory?page=N, full per-vehicle records in <script id=__NEXT_DATA__> at "
         "props.pageProps.inventory.results (25/page, meta.total). recipe_synth _synth_overfuel "
-        "(overfuel parser, reuses the html_next_data recovery strategy). Parameterized by domain only.",
+        "(overfuel parser). Parameterized by domain only.",
     ),
     PlatformEntry(
         name="nabthat",
@@ -306,6 +306,46 @@ SEED_PLATFORMS: list[PlatformEntry] = [
         "/page-data/index/ staticQueryHashes and emits a single GET recipe (dealermasters parser). "
         "Price is nested under Pricing.{Special,List}; the generic JSON walker missed it, leaving "
         "the lot price-less until this handler. Feed carries no trim/mileage/color — VDP heal gaps.",
+    ),
+    PlatformEntry(
+        name="autowall",
+        # Recognized by the synth template's detector (via fingerprint_platform),
+        # not by marker substrings.
+        cname_patterns=[],
+        html_markers=[],
+        strategy=STRATEGY_SYNTHESIZE,
+        synthesizable=True,
+        cloudflare=False,
+        notes="autoWALL. synth.platforms.autowall _synth_autowall; detected by the template.",
+    ),
+    PlatformEntry(
+        name="wp_vehicles_index",
+        cname_patterns=[],
+        html_markers=[],
+        strategy=STRATEGY_SYNTHESIZE,
+        synthesizable=True,
+        cloudflare=False,
+        notes="WordPress /wp-json vehicles index. synth.platforms.wp_vehicles "
+        "_synth_wp_vehicles_index; detected by the template.",
+    ),
+    PlatformEntry(
+        name="oneaudi",
+        cname_patterns=[],
+        html_markers=[],
+        strategy=STRATEGY_SYNTHESIZE,
+        synthesizable=True,
+        cloudflare=False,
+        notes="OneAudi. synth.platforms.oneaudi _synth_oneaudi; detected by the template.",
+    ),
+    PlatformEntry(
+        name="html_cards",
+        cname_patterns=[],
+        html_markers=[],
+        strategy=STRATEGY_SYNTHESIZE,
+        synthesizable=True,
+        cloudflare=False,
+        notes="Server-rendered HTML vehicle cards. synth.platforms.html_cards _synth_html_cards; "
+        "detected by the template.",
     ),
 ]
 
@@ -415,34 +455,18 @@ def cname_chain(host: str) -> list[str]:
 
 # ── HTTP probe (records signals even on a Cloudflare challenge) ─────────────────
 
-_BROWSER_UA = (
-    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
-    "(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
-)
-# Strong interstitial markers. "/cdn-cgi/challenge-platform" is deliberately NOT
-# here: Cloudflare injects that beacon into real pages too (see
-# recipe_synth.looks_like_challenge, which owns the thin-body rule).
-_CHALLENGE_MARKERS = (
-    "just a moment", "checking your browser", "cf-challenge", "__cf_chl",
-    "attention required", "enable javascript and cookies", "cf-browser-verification",
-    "px-captcha",
-)
 _HOST_RE = re.compile(r"https?://([a-z0-9.-]+)", re.I)
 
 
 def _looks_like_challenge(body: str) -> bool:
     """Strong markers decide alone; a passive Cloudflare beacon only with a thin body."""
-    try:
-        from backend.scanner.recipe_synth import looks_like_challenge
+    from backend.scanner.synth.http import looks_like_challenge
 
-        return looks_like_challenge(body)
-    except Exception:
-        low = body.lower()
-        return any(m in low for m in _CHALLENGE_MARKERS)
+    return looks_like_challenge(body)
 
 
 def _pace_http() -> None:
-    """Delegate to ``recipe_synth``'s global fetch pacing so a classification
+    """Delegate to ``synth.http``'s global fetch pacing so a classification
     HTTP probe shares ONE paced clock with every other browser-free fetch in a
     sweep (homepage/SRP/replay). This is what keeps our rate-limited egress IP
     out of the Cloudflare "Just a moment" challenge: consecutive fetches stay at
@@ -450,7 +474,7 @@ def _pace_http() -> None:
     No-op when the delay is unset (default 0), so unit tests and stubbed callers
     are unaffected. Never raises — pacing is best-effort, not correctness."""
     try:
-        from backend.scanner.recipe_synth import _pace
+        from backend.scanner.synth.http import _pace
 
         _pace()
     except Exception:
@@ -478,16 +502,9 @@ def _http_probe(url: str, *, timeout: float = 20.0) -> HttpProbe:
     # with only a UA get 403/429'd or served a "Just a moment" shell by these
     # dealer platforms; UA + Sec-Fetch-* (navigate/document) + text/html Accept
     # get the same HTML a browser navigation would.
-    headers = {
-        "User-Agent": _BROWSER_UA,
-        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-        "Accept-Language": "en-US,en;q=0.9",
-        "Accept-Encoding": "identity",
-        "Sec-Fetch-Dest": "document",
-        "Sec-Fetch-Mode": "navigate",
-        "Sec-Fetch-Site": "none",
-        "Upgrade-Insecure-Requests": "1",
-    }
+    from backend.scanner.synth.http import _browser_headers
+
+    headers = _browser_headers()
     body = ""
     _pace_http()  # sequential-with-delay so a classification sweep never bursts
     try:
@@ -635,6 +652,13 @@ def classify_dealer(
             by_name = {e.name: e for e in reg}
             if name and name in by_name:
                 return _result(by_name[name], "html", signals)
+            if name:
+                # A template fingerprinted it but the registry (seed + overrides)
+                # has no row: build the entry from the template itself so a
+                # synth platform never falls through to 'unknown'.
+                tmpl_entry = _entry_from_template(name)
+                if tmpl_entry is not None:
+                    return _result(tmpl_entry, "html", signals)
             for entry in reg:
                 if entry.matches_html(html_low):
                     return _result(entry, "html", signals)
@@ -676,11 +700,31 @@ def _result(entry: PlatformEntry, source: str, signals: dict[str, Any]) -> dict[
     }
 
 
+def _entry_from_template(name: str) -> PlatformEntry | None:
+    """Registry entry derived from the synth template named *name* (``None`` if
+    no such template). A template with a synth is ``synthesize``; a recognize-only
+    one stays ``browser`` as the seed does for sister_tv."""
+    try:
+        from backend.scanner.synth.registry import PLATFORM_TEMPLATES
+    except Exception:
+        return None
+    for t in PLATFORM_TEMPLATES:
+        if t.name == name:
+            synth = t.synth is not None
+            return PlatformEntry(
+                name=name,
+                strategy=STRATEGY_SYNTHESIZE if synth else STRATEGY_BROWSER,
+                synthesizable=synth,
+                notes="derived from the synth template (no registry row)",
+            )
+    return None
+
+
 def _recipe_synth_fingerprint(html: str, url: str) -> str | None:
     """Delegate to recipe_synth's fingerprint (imported lazily to avoid a hard
     import cycle and to keep this module importable if recipe_synth changes)."""
     try:
-        from backend.scanner.recipe_synth import fingerprint_platform
+        from backend.scanner.synth.registry import fingerprint_platform
 
         return fingerprint_platform(html, url)
     except Exception:
@@ -695,7 +739,7 @@ def _jsonld_vin_count(html: str) -> int:
     browser-free by the generic harvester. We count VINs on the HTML we ALREADY
     fetched — no extra network — so the HTTP fallback stays a single paced fetch."""
     try:
-        from backend.scanner.recipe_synth import harvest_html_vehicles
+        from backend.scanner.synth.registry import harvest_html_vehicles
 
         return len({v["vin"] for v in harvest_html_vehicles(html) if v.get("vin")})
     except Exception:
@@ -722,8 +766,3 @@ def _html_harvest_result(signals: dict[str, Any], vins: int) -> dict[str, Any]:
         f"({vins} VINs) -> browser-free via the generic HTML harvester",
         "logged_new": False,
     }
-
-
-def entry_to_dict(entry: PlatformEntry) -> dict[str, Any]:
-    """Serialize a :class:`PlatformEntry` (e.g. to append to the JSON overrides)."""
-    return asdict(entry)

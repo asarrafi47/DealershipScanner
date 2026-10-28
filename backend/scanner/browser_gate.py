@@ -3,6 +3,11 @@
 Policy (2026-09-26, docs/HTTP_ONLY_SCANS_PLAN.md): scans are HTTP-only, always.
 A browser may run only inside discovery (``discovery_probe --browser-capture``)
 to learn how an unknown site presents its inventory so a recipe can be written.
+Inside backend/scanner, discovery_capture is the only launcher (plus chain /
+gap_fill until P17B.6); the scan itself (orchestrator, run_dealer, open_session)
+has no browser path, even with ``SCANNER_ALLOW_BROWSER=1`` (``scanner.py
+--allow-browser`` is gone). Launch sites outside the scanner are gated in
+test_browser_gate_outside_scanner.py.
 
 ``SCANNER_ALLOW_BROWSER=1`` is the only way to allow a launch. ``SCANNER_HTTP_ONLY``
 is kept for the old callers and defaults to on; setting it to 0 does NOT allow a

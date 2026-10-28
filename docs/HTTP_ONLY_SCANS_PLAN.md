@@ -72,21 +72,23 @@ Exit criterion: one full fleet cycle (both machines) with `chromium_processes_se
 
 Rule from memory: grep every consumer (code, scripts, frontend, tests) before each deletion; rebuild better, never lose capability. Candidate list with the audit's consumer notes:
 
-| delete | consumers to move/rewrite first |
-|---|---|
-| `vdp/dispatch.py` worker pages, `vdp/visit.py`, `vdp/gallery.py`, `vdp/spin_capture.py`, `vdp/browser_js.py` | `dealer_run:828`; tests `test_vdp_dispatch_probe`, `test_vdp_gallery_hang_fix`, `test_scanner_vdp_gallery_js`, `test_vdp_spin_capture`, `test_vdp_helpers`; keep `vdp/prefetch.py`, `vdp/vdp_recipes.py`, `vdp/html_recovery.py`, `vdp/queue.py` |
-| `phases/inventory_scrape.py` browser SRP scrape, `phases/nav.py`, `inventory_card_location.py` | move the SRP-load + NetworkObserver part into `discovery_probe --browser-capture`; `test_network_observer` follows it |
-| `phases/site_profile.py` (browser DOM probes) | discovery only |
-| `phases/url_discovery.py` (DuckDuckGo via browser) | replace with an HTTP search or the registry; called from two `not _http_only()` branches |
-| `scrapers/dealer_on.py`, `scrapers/pixel_motion.py` (browser fetch), `scrapers/dealer_com_bulk_fetch.py` | recovery strategy map `inventory_recovery.py:704-713`; `test_dealer_on_parser`, `test_pixel_motion*`, `test_dealer_com_bulk_fetch`; keep their pure parsers |
-| browser halves of `scrapers/autowall.py`, `shopperexpress.py`, `dealer_eprocess.py`, `dealer_inspire.py`, `dealer_venom.py` | keep HTTP halves; `inventory_scrape.py:337-381` fallbacks go with the file |
-| `post_scan/gap_fill._playwright_fetch_html`, `chain.PlaywrightFetcher`, `vdp/spec_fetch.py`, `vdp_spec_extract.py` | `test_scraper_chain.py` fetcher-order tests; `deploy/nightly_http_refresh.sh` workaround (`SCANNER_LISTING_FETCH_CHAIN=0`) becomes unnecessary |
-| `dealer/bmw_enhancer.py` Page functions (5, no callers) | keep `enhance_scraping_for_bmw_dealerships` (2026-10-01: module, shim and orchestrator call deleted too — its flags had no readers) |
-| `--capture-only` mode, `mac_mini_lite.py` preset, `SCANNER_FAILURE_HAR`, warmup phase, DealerOn renderer-wedge handling | `cli.py:243-252`, `scan_efficiency.py`; memory notes on the wedge |
-| `Dockerfile.scanner` / `Dockerfile.scanner-worker`: `playwright install chromium`, `patchright`, Node + Puppeteer Chromium | build the scanner image from the `Dockerfile.scanner-scheduler` shape (python-slim, no browser); a separate `Dockerfile.discovery` keeps Chromium for `discovery_probe --browser-capture`; `job_diagnosis.py` Chromium checks move with it; `Dockerfile.web:34` browser install reviewed separately |
-| `requirements.txt` `playwright`, `playwright-stealth` | scanner image no; discovery image yes |
+| delete | consumers to move/rewrite first | status |
+|---|---|---|
+| `vdp/dispatch.py` worker pages, `vdp/visit.py`, `vdp/gallery.py`, `vdp/spin_capture.py`, `vdp/browser_js.py` | `dealer_run:828`; tests `test_vdp_dispatch_probe`, `test_vdp_gallery_hang_fix`, `test_scanner_vdp_gallery_js`, `test_vdp_spin_capture`, `test_vdp_helpers`; keep `vdp/prefetch.py`, `vdp/vdp_recipes.py`, `vdp/html_recovery.py`, `vdp/queue.py` | done 2026-09-26 (Phase 2, commit 74c8e2566); `vdp/spec_fetch.py` kept as the HTTP spec fetch |
+| `phases/inventory_scrape.py` browser SRP scrape, `phases/nav.py`, `inventory_card_location.py` | move the SRP-load + NetworkObserver part into `discovery_probe --browser-capture`; `test_network_observer` follows it | kept-for-discovery (P0B.6 table below); slimming is open as P17B.12 |
+| `phases/site_profile.py` (browser DOM probes) | discovery only | kept-for-discovery |
+| `phases/url_discovery.py` (DuckDuckGo via browser) | replace with an HTTP search or the registry; called from two `not _http_only()` branches | done 2026-09-26 (file deleted) |
+| `scrapers/dealer_on.py`, `scrapers/pixel_motion.py` (browser fetch), `scrapers/dealer_com_bulk_fetch.py` | recovery strategy map `inventory_recovery.py:704-713`; `test_dealer_on_parser`, `test_pixel_motion*`, `test_dealer_com_bulk_fetch`; keep their pure parsers | done, P17B.5: page functions deleted, parsers kept; `dealer_inspire.py` deleted whole; `dealer_com_bulk_fetch.py` and the pixel_motion cookie/parse helpers kept-for-discovery |
+| browser halves of `scrapers/autowall.py`, `shopperexpress.py`, `dealer_eprocess.py`, `dealer_inspire.py`, `dealer_venom.py` | keep HTTP halves; `inventory_scrape.py:337-381` fallbacks go with the file | dealer_inspire, dealer_venom, dealer_eprocess: done, P17B.5; autowall and shopperexpress browser halves kept-for-discovery behind `require_browser`, slimming open as P17B.12 |
+| `post_scan/gap_fill._playwright_fetch_html`, `chain.PlaywrightFetcher`, `vdp/spec_fetch.py`, `vdp_spec_extract.py` | `test_scraper_chain.py` fetcher-order tests; `deploy/nightly_http_refresh.sh` workaround (`SCANNER_LISTING_FETCH_CHAIN=0`) becomes unnecessary | done, P17B.6 (`PlaywrightFetcher` and the legacy fallback deleted; `vdp/spec_fetch.py` is HTTP since 2026-09-26) |
+| `dealer/bmw_enhancer.py` Page functions (5, no callers) | keep `enhance_scraping_for_bmw_dealerships` (2026-10-01: module, shim and orchestrator call deleted too — its flags had no readers) | done 2026-09-26 (Page helpers) and 2026-10-01 (module, shim, orchestrator call) |
+| `--capture-only` mode, `mac_mini_lite.py` preset, `SCANNER_FAILURE_HAR`, warmup phase, DealerOn renderer-wedge handling | `cli.py:243-252`, `scan_efficiency.py`; memory notes on the wedge | done 2026-09-26 (capture-only, mac_mini_lite); the full-scan `--allow-browser` path retired by P17B.3 (D-DC5 (a)); failure HAR and warmup chain by P17A.7 |
+| `Dockerfile.scanner` / `Dockerfile.scanner-worker`: `playwright install chromium`, `patchright`, Node + Puppeteer Chromium | build the scanner image from the `Dockerfile.scanner-scheduler` shape (python-slim, no browser); a separate `Dockerfile.discovery` keeps Chromium for `discovery_probe --browser-capture`; `job_diagnosis.py` Chromium checks move with it; `Dockerfile.web:34` browser install reviewed separately | done 2026-09-26 (python-slim scanner image, `Dockerfile.discovery` keeps Chromium); Node/Puppeteer leftovers in `job_diagnosis.py` by P17B.1; web image Chromium removed by P3.8 (D-SEC1 (a)); open: Docker smoke of the scanner-nightly stage (owner) |
+| `requirements.txt` `playwright`, `playwright-stealth` | scanner image no; discovery image yes | done (Playwright lives in `requirements-browser.txt`, discovery worker and dev only) |
 
-Also retire the `SCANNER_VDP_*` cap knobs that only shaped browser visits (`vdp/config.py`, ~43 vars) and the `requires_browser` recipe hint's skip in `delta_scan.py:156` (a dealer without an HTTP recipe goes to discovery, not to a browser).
+Also retire the `SCANNER_VDP_*` cap knobs that only shaped browser visits (`vdp/config.py`, ~43 vars; 19 browser-only knobs deleted 2026-09-26, the rest are kept caps for the HTTP VDP fetch, done) and the `requires_browser` recipe hint's skip in `delta_scan.py:156` (done, P17B.7, D-DC9 (c): a dealer without an HTTP recipe goes to discovery, not to a browser).
+
+**Phase 2 unit map (N33 / Phase 17B).** P17B.1 Node/Puppeteer leftovers; P17B.2 `platform_registry` reuses synth, seed drift guard; P17B.3 `--allow-browser` full-scan path retired; P17B.4 HTTP-only recovery chain (page strategies, `html_next_data`, `jsonld_listing_html` deleted); P17B.5 scrapers' page halves; P17B.6 Playwright out of `chain.py` and gap_fill; P17B.7 `requires_browser` skip branch; P17B.8 dead cached winning strategies (`clear_dead_winning_strategies.py`, dry run, optional, owner runs it); P17B.9 LLM adjudication branch deleted; P17B.10 EPA client moved to `enrichment/epa_ws_client.py`, `backend/oem` deleted; P17B.11 this document. Open follow-up: P17B.12 (slim discovery's `scrape_inventory_path`, from the P0B.6 table below).
 
 ## Phase 3 — keep it honest
 
@@ -96,12 +98,20 @@ Also retire the `SCANNER_VDP_*` cap knobs that only shaped browser visits (`vdp/
 - New-platform playbook: probe → synth template if the site is HTTP-describable (14 templates today) → else browser capture → recipe → template later if a second dealer appears.
 - Platform clustering by code (2026-09-28, `backend/scanner/platform_fingerprint.py` + `backend/scripts/platform_candidates.py`): the second dealer is noticed by the pipeline, not by a person. Each latest `discovery_<stamp>.json` becomes weighted features (third-party script hosts minus own host / CDNs / known widgets, API path patterns from synth candidates and browser captures, inventory-path outcomes, challenge markers, generator and inline-JSON hints, template detects); signature = strongest 3-5 features (max two per kind), Jaccard merge at 0.6. Dealers without a live recipe (or stale / rejected) cluster into `_learning/platform_candidates.md` with members, last verdicts, nearest template and a next step; `dealer_pipeline` prints `discovery: N dealers share unknown platform <signature> (a, b, c) → …` per cluster of 2+ of the run's needs_discovery dealers (`triage.json: platform_clusters`). First run over the 29 logged dealers: 12 behind the Cloudflare challenge (DI sites), 4 team_velocity / 3 wp_vehicles_index / 2 carscommerce where the template detects but the recipe failed.
 
-## Decisions needed
+## Decisions
 
-- **D1** Keep `Dockerfile.web`'s Chromium? (only needed if the web app runs any browser feature; audit separately.)
-- **D2** Discovery browser on which machine? Proposal: the mini (clean IP, always on); MBP only when the mini is off.
-- **D3** Delete `mac_mini_lite.py` / capture-only mode outright, or keep capture-only as the discovery capture's internal mode? Proposal: delete; discovery gets its own entry point.
-- **D4** Phase 2 timing: after one clean fleet cycle under Phase 0 (≈1 day) or after a week?
+All closed. D1-D4 were taken 2026-09-26; D-DC1 (2026-10-18) confirmed them as amended below. D-DC5 to D-DC9 were answered 2026-10-18 as recommended (`docs/remediation/OWNER_DECISIONS_LOG.md`).
+
+- **D1** Keep `Dockerfile.web`'s Chromium? Closed: it follows D-SEC1 (a); the web image carries no browser (P3.8; a static test refuses a browser install).
+- **D2** Discovery browser on which machine? Closed: the mini was the 2026-09-26 proposal; D-DC1 with D-N2 amends it to "MBP primary", the mini as fallback.
+- **D3** Delete `mac_mini_lite.py` / capture-only mode? Closed and verified done (2026-09-26): both deleted, discovery has its own entry point.
+- **D4** Phase 2 timing. Closed: superseded by D-DC5 (a), the retirement ran as Phase 17B (N33) once `SCANNER_ALLOW_BROWSER` was confirmed unset on web and scanner-nightly.
+- **D-DC1** Confirm D2-D4: confirmed 2026-10-18, as above (P17B.11).
+- **D-DC5** Retire `--allow-browser` and the Playwright fallbacks: (a) now. Done by P17B.3 to P17B.6.
+- **D-DC6** Dealer-group LLM adjudication: (b) delete. Done by P17B.9 (rules-only hybrid batch kept).
+- **D-DC7** `backend/oem/vehicle_reference`: (b) move the EPA web-service client, delete the rest. Done by P17B.10.
+- **D-DC9** `requires_browser` scan hint: (c) drop the skip branch. Done by P17B.7.
+- **Open (tagged):** P17B.12 slimming of discovery's `scrape_inventory_path`; P17B.8 owner run of `clear_dead_winning_strategies.py --apply`; owner Docker smoke and deploy of the scanner-nightly stage; the next-nightly row comparison (within 3%).
 
 ## Order of work
 
@@ -128,3 +138,31 @@ Also retire the `SCANNER_VDP_*` cap knobs that only shaped browser visits (`vdp/
 - **2026-09-28 rooftop scorer** (branch feature/discovery-lifecycle): the attribution gate's tier ladder is now also a scored matcher, `backend/scanner/rooftop_match.py` (`score_rows` / `score_row` → `{decision, tier, score, strong, signals}`; every legacy tier name is a signal, plus evidence-only `identity_feed`, `page_oem_code`, `location_facet_value`, `jsonld_street` and the corroboration keeps `same_source_feed` / `own_street_block` / `unstamped_under_own_source`). `parsers._resolve_rooftop_attribution_inner` calls it behind `SCANNER_ROOFTOP_SCORER` (default on; `0` = legacy ladder, kept one release) and stamps `_rooftop_tier` / `_rooftop_score` on every row. Locality (`city_state`, `zip_code`) and a bare store label are never sufficient: weak keeps (`strong=False`) refuse siblings with the weak marker and never let a feed source vouch. Proof: `backend/tests/fixtures/rooftop_corpus/` (15 dealers, 190 rows) via `test_rooftop_corpus.py` in both modes, `test_rooftop_match.py` for the signal contract. CarsCommerce rows now carry `_custom_facets` (custom_text_N) for the facet signal.
 - **2026-09-28 mid-morning**: batch 8 finished its first 8 dealers in 347 s (rc=0, no leak); MBP had 16 cores / 48 GB / Postgres idle, so the run was stopped between batches and relaunched at **batch 16** (`workspace/pipeline/fleet_2026_09_28_mbp16`, 442 dealers). Pipeline runs vPIC + assess + reconcile once after all batches, so the 16 dealers scanned by the two aborted runs (8 on the mini 09-27, 8 in the batch-8 run) have rows but no assess/logs: run `dealer_pipeline --skip-scan --since 2026-09-28T00:00:00Z --dealers <those 16> --out workspace/pipeline/fleet_2026_09_28_assess16` after the fleet. Images built and verified locally (memory rule): `dealership-scanner:http-only-20260928` (11.8 GB — requirements.txt still pulls torch/playwright/crawl4ai into it; slimming is a follow-up) replays a recipe against host Postgres with `browser_allowed()=False`, no `ms-playwright` dir, 0 Chromium processes; `dealership-discovery:20260928` (13.4 GB) has `SCANNER_ALLOW_BROWSER=1`, `SCANNER_WORKER_JOB_TYPES=onboard`, Chromium 153 launches. Not pushed to Railway.
 - **2026-09-28 afternoon — full cycle on the MBP**: one scanner process is CPU-bound (~1 dealer/min at any batch size), so the fleet ran as 8 pipeline shards under `SCANNER_LOCK_PATH` (commit 32146ac33): 458 dealers in ~1.5 h, 273 ok / 54 thin / 92 inaccurate / 37 no_rows / 2 error, zero 403s from the shared carscommerce host. Postgres over TCP exhausted ephemeral ports under 8 shards; `.env` now uses the unix socket. Bugs the cycle exposed, all fixed and tested: assess/reconcile rated group-feed stores on the raw feed count (fe553e6c6); the write-path vPIC override had raised `KeyError 'cylinders'` since 09-25 (0fac74c4e); the rooftop disown un-listed real cars on weak-tier identification and "… Service" rooftops, and the scanner reconcile retired the used half of one-condition replays (28173f712). 1,786 wrongly retired rows restored by hand. 12 "dealer.com" zero-row dealers had migrated platforms (8 Team Velocity, 3 carscommerce widget, 1 DealerOn); `--force-synth` recovered 12/12. `docs/DATA_COMPLETENESS_FINDINGS_2026_09_28.md` (13daa48dd) ranks the parser gaps; branch `feature/completeness-fixes` implements F01-F15. Open: Chapman Ford deadlock between shards (retry-on-deadlock in upsert); Camelback, Orange County Kia.
+
+## P0B.6 classification: inventory_scrape branches (2026-10-08)
+
+Source: `docs/monolith_audit_2026_10_01/measurements/inventory_scrape_branches_2026_10.md` (code at `dbdbf5cba`, line numbers re-anchor by symbol). Discovery uses only the NetworkObserver ledger and the record count `scrape_inventory_path` returns. Slimming is the open unit P17B.12; nothing below was deleted by P17B.11.
+
+| # | branch | where | ledger reach | verdict |
+|---|---|---|---|---|
+| 1a | dealer.com nudge (click Next once) | inventory_scrape.py:211-218 | direct | keep (rename generic) |
+| 1b | dealer.com bulk fetch | inventory_scrape.py:220-252 | direct for the first POST | keep first POST, slim pages 2..N |
+| 2a | autoWALL HTTP | inventory_scrape.py:328-340 | none | slim |
+| 2b | autoWALL Playwright fallback | inventory_scrape.py:341-348 | none | slim |
+| 3a | ShopperExpress API | inventory_scrape.py:358-377 | none (one endpoint, one dealer) | slim |
+| 3b | ShopperExpress page fallback | inventory_scrape.py:379-384 | navigations only | keep navigations, slim row building |
+| 4a | cookie banner | inventory_scrape.py:154-156, :281 | indirect | keep |
+| 4b | PixelMotion detection | inventory_scrape.py:272-275 | indirect | keep |
+| 4c | PixelMotion pagination clicks | inventory_scrape.py:292-310 | direct, proven (mcpeeks-com) | keep |
+| 4d | PixelMotion SSR row parse | inventory_scrape.py:276-324 | none | slim (parser stays) |
+| 5 | card-location scrape | inventory_scrape.py:101-107 | none | slim (delete) |
+| 6 | location filter | inventory_scrape.py:175-198 | none | slim (keep `sister_store_filter_enabled`) |
+
+## Progress log (Phase 17B / N33, draft on branch phase/N33)
+
+- **2026-10-27 P17B.1, P17B.7**: `job_diagnosis` drops Puppeteer, npm and `use_python_scanner`; the `requires_browser` skip branch is removed.
+- **2026-10-27 P17B.2, P17B.3**: `platform_registry` reuses `synth.http` / `synth.registry`, seeds autowall, wp_vehicles_index, oneaudi, html_cards, with a drift guard test; the `--allow-browser` full-scan path is retired.
+- **2026-10-27 P17B.4, P17B.5, P17B.8a**: recovery chain is HTTP-only (`shopperexpress_api`, `dealer_eprocess_json`); `html_next_data`, `jsonld_listing_html` and the page strategies are deleted; `RecoveryContext` drops `page` and `path_htmls`; scrapers' page halves removed with parsers kept (`dealer_inspire.py` deleted whole); `backend/scripts/clear_dead_winning_strategies.py` written (dry run, not run).
+- **2026-10-27 P17B.6**: Playwright removed from `chain.py` and gap_fill.
+- **2026-10-27 P17B.9, P17B.10**: LLM adjudication branch (`agents/`, `llm/`, `run_llm_adjudication`, `--llm-*` flags) deleted; EPA client now `enrichment/epa_ws_client.py` with a stubbed-HTTP test; `backend/oem` and `VEHICLE_REFERENCE_BMW.md` removed.
+- **2026-10-27 P17B.11**: decisions closed (D1-D4, D-DC1, D-DC5 to D-DC9), Phase 2 table statused, P0B.6 table appended. Still open: P17B.12, P17B.8 apply, scanner-nightly Docker smoke and deploy, next-nightly comparison.

@@ -18,7 +18,8 @@ Then build EPA ladders::
     python -m backend.scripts.build_trim_ladders_from_epa
     python -m backend.scripts.build_epa_master
 
-Live API (no bulk download) serves the same data (fueleconomy.gov menu endpoints)::
+Live API (no bulk download) serves the same data (fueleconomy.gov menu endpoints;
+client: backend/enrichment/epa_ws_client.py)::
     menu/model?year=2019&make=BMW  →  X5 xDrive40i, X5 xDrive50i, …
 """
 from __future__ import annotations

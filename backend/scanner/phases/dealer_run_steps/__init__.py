@@ -4,7 +4,7 @@
 order, all sharing one :class:`~.state.DealerRun`:
 
 * ``state``       — URL normalisation, the result-dict schema, the shared run state
-* ``session``     — the optional browser context (discovery only, ``SCANNER_ALLOW_BROWSER=1``)
+* ``session``     — the HTTP-only session start (no browser context)
 * ``feed``        — recipe replay, coverage verdict, provider hint
 * ``attribution`` — parse the captured payloads, the all-rows rooftop pass
 * ``recovery``    — feed sufficiency and the inventory recovery chain

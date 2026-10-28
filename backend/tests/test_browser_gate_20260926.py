@@ -27,13 +27,32 @@ def test_gate_opens_only_for_discovery(monkeypatch):
     assert "allowed" in bg.describe()
 
 
-def test_dealer_run_http_only_follows_the_gate(monkeypatch):
-    from backend.scanner.phases import dealer_run
+def test_run_dealer_opens_no_context_even_with_allow(monkeypatch):
+    """P17B.3: the scan has no browser path; SCANNER_ALLOW_BROWSER=1 (discovery) changes nothing."""
+    import inspect
 
-    monkeypatch.delenv("SCANNER_ALLOW_BROWSER", raising=False)
-    assert dealer_run._http_only()
+    from backend.scanner.phases import dealer_run
+    from backend.scanner.phases.dealer_run_steps import session
+    from backend.scanner.phases.dealer_run_steps.state import start_run
+
+    assert "browser" not in inspect.signature(dealer_run.run_dealer).parameters
+    assert list(inspect.signature(session.open_session).parameters) == ["run"]
     monkeypatch.setenv("SCANNER_ALLOW_BROWSER", "1")
-    assert not dealer_run._http_only()
+    run = start_run({"dealer_id": "x-example", "name": "X", "url": "https://x.example"}, None)
+    run.page = object()
+    asyncio.run(session.open_session(run))
+    assert run.page is None and getattr(run, "context", None) is None
+    assert run.result["http_only"] is True
+
+
+def test_cli_drops_allow_browser_but_keeps_http_only():
+    import inspect
+
+    from backend.scanner import cli
+
+    src = inspect.getsource(cli)
+    assert "--allow-browser" not in src
+    assert '"--http-only"' in src
 
 
 def test_fetch_chains_have_no_browser_stage_by_default(monkeypatch):
@@ -42,19 +61,31 @@ def test_fetch_chains_have_no_browser_stage_by_default(monkeypatch):
     from backend.scanner.post_scan import gap_fill
 
     assert [f.name for f in chain.default_fetchers()] == [chain.ImpersonatingFetcher().name, chain.RequestsFetcher().name]
-    assert gap_fill._playwright_fetch_html("https://example.com/x") is None
-    monkeypatch.setenv("SCANNER_ALLOW_BROWSER", "1")
-    assert chain.default_fetchers()[-1].name == chain.PlaywrightFetcher().name
+    monkeypatch.setenv("SCANNER_ALLOW_BROWSER", "1")  # discovery flag; no scan fetch chain grows a browser stage
+    assert [f.name for f in chain.default_fetchers()] == [chain.ImpersonatingFetcher().name, chain.RequestsFetcher().name]
+    assert not hasattr(chain, "PlaywrightFetcher") and not hasattr(gap_fill, "_playwright_fetch_html")
 
 
-def test_recovery_runs_only_http_safe_strategies_without_a_page(monkeypatch):
+def test_recovery_chain_runs_http_strategies_without_playwright(monkeypatch):
     from backend.scanner import inventory_recovery as ir
 
     monkeypatch.delenv("SCANNER_ALLOW_BROWSER", raising=False)
-    assert ir.HTTP_SAFE_STRATEGIES <= set(ir.RECOVERY_STRATEGY_ORDER)
-    ctx = ir.RecoveryContext(page=None, base_url="https://x.example", dealer_id="x-example", dealer_name="X", dealer_url="https://x.example",
-                             provider="dealer_dot_com", intercept_records=[], path_htmls=[], vehicles=[], parse_fn=lambda raw: [], dealer={})
-    assert asyncio.run(ir._html_and_next_data(ctx)) == []
+    calls: list[str] = []
+
+    async def fake_results(base_url, dealer_id, dealer_name, dealer_url):
+        calls.append(base_url)
+        return [{"vin": f"1HGBH41JXMN{i:06d}", "price": 20000} for i in range(10)]
+
+    from backend.scanner.scrapers import dealer_eprocess as dep
+
+    monkeypatch.setattr(dep, "_fetch_results_api", fake_results)
+    monkeypatch.setattr(ir, "get_cached_winning_strategy", lambda dealer_id: None)
+    monkeypatch.setattr(ir, "record_winning_strategy", lambda *a, **k: None)
+    ctx = ir.RecoveryContext(base_url="https://x.example", dealer_id="x-example", dealer_name="X", dealer_url="https://x.example",
+                             provider="dealer_eprocess", intercept_records=[], vehicles=[], parse_fn=lambda raw: [], dealer={})
+    res = asyncio.run(ir.recover_inventory(ctx))
+    assert calls == ["https://x.example"]
+    assert res.winning_strategy == "dealer_eprocess_json" and len(res.vehicles) == 10
 
 
 def test_eprocess_without_page_uses_results_api_only(monkeypatch):
@@ -71,9 +102,8 @@ def test_eprocess_without_page_uses_results_api_only(monkeypatch):
     assert rows and calls == ["https://d.example"]
 
 
-def test_launch_sites_refuse_without_the_gate(monkeypatch):
+def test_launch_site_refuses_without_the_gate(monkeypatch):
+    # chain/gap_fill no longer launch a browser (P17B.6); discovery_capture is the only launcher.
     monkeypatch.delenv("SCANNER_ALLOW_BROWSER", raising=False)
-    from backend.scanner import chain
-
     with pytest.raises(bg.BrowserForbidden):
-        chain.PlaywrightFetcher().fetch("https://example.com/")
+        bg.require_browser("test")

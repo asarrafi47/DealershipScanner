@@ -311,8 +311,10 @@ Blast radius: fan_in 2 (scanner.py root entry, tests). Low.
 - 302-400  nested closures run_dealers_with_browser -> one_dealer -> bounded: browser launch,
            per-dealer timeout, failure screenshot via browser.new_page (dead under HTTP-only),
            scan_runs row write, shutdown flag check, progress log
-- 408-424  Playwright/stealth import ladder — vestigial (scans are HTTP-only; browser only if
-           someone passes --allow-browser, and then run_dealer still does no browser scraping)
+- 408-424  Playwright/stealth import ladder — CORRECTION (P17B.11): this note was wrong. Under
+           SCANNER_ALLOW_BROWSER=1 the browser still ran on the scan path (session.py:33-38 launch
+           and inventory_recovery.py:657-692 page strategies). Addressed by P17B.3-P17B.5, which
+           retired the --allow-browser full-scan path and the page strategies.
 - 426-486  outcome aggregation, coverage aggregation, post-scan tail (duplicated, see F-10)
 Hidden global state: module-level `_scanner_shutdown_requested` (55-62) flipped by a SIGTERM
 handler; shutdown_skipped_dealer_ids list captured by closure.

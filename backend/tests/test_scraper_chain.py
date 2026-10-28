@@ -273,22 +273,15 @@ class TestDefaultChain:
     def test_default_chain_orders_cheap_to_heavy(self, monkeypatch):
         # Impersonation leads: it is still plain HTTP, but with a browser's TLS
         # fingerprint, so it clears the Cloudflare 403 that would otherwise fail the
-        # requests stage and escalate the chain all the way to a real browser.
-        # Since 2026-09-26 the browser stage exists only for discovery
-        # (SCANNER_ALLOW_BROWSER=1); scans get the two HTTP stages.
-        monkeypatch.delenv("SCANNER_ALLOW_BROWSER", raising=False)
-        chain = default_chain(extractors=[StubExtractor("e")])
-        assert [f.name for f in chain.fetchers] == ["impersonate", "requests"]
-        monkeypatch.setenv("SCANNER_ALLOW_BROWSER", "1")
-        chain = default_chain(extractors=[StubExtractor("e")])
-        assert [f.name for f in chain.fetchers] == ["impersonate", "requests", "playwright"]
-
-    def test_impersonating_fetcher_precedes_the_browser(self, monkeypatch):
-        """The browser must remain the last resort, never reached by a 403 alone."""
-        monkeypatch.setenv("SCANNER_ALLOW_BROWSER", "1")
-        chain = default_chain(extractors=[StubExtractor("e")])
-        names = [f.name for f in chain.fetchers]
-        assert names.index("impersonate") < names.index("playwright")
+        # requests stage. There is no browser stage (P17B.6), with or without
+        # SCANNER_ALLOW_BROWSER (that flag is discovery-only).
+        for allow in (None, "1"):
+            if allow is None:
+                monkeypatch.delenv("SCANNER_ALLOW_BROWSER", raising=False)
+            else:
+                monkeypatch.setenv("SCANNER_ALLOW_BROWSER", allow)
+            chain = default_chain(extractors=[StubExtractor("e")])
+            assert [f.name for f in chain.fetchers] == ["impersonate", "requests"]
 
     def test_default_chain_passes_filter(self):
         flt = lambda vs: vs  # noqa: E731
@@ -346,8 +339,8 @@ class _UnreachableCurlCffi:
     """Stands in for ``curl_cffi.requests``: every request fails like a dead host.
 
     The chain's lead stage, ``ImpersonatingFetcher``, sends through
-    ``client.import_curl_cffi()``. These tests stub the requests and Playwright
-    stages but not that one, so each of them used to send real curl_cffi
+    ``client.import_curl_cffi()``. These tests stub the requests stage but not
+    that one, so each of them used to send real curl_cffi
     requests to d.example (3 per test, one per impersonation profile; CI run
     37850535029 listed 15 refused connects in 5 tests). The fetcher still runs
     its real rotation over this object; only the transport is replaced, and
@@ -387,11 +380,6 @@ class TestFetchListingHtmlIntegration:
         from backend.scanner.post_scan import gap_fill
 
         monkeypatch.setattr(gap_fill, "_requests_fetch_html", lambda u, **kw: GOOD_HTML)
-        monkeypatch.setattr(
-            gap_fill,
-            "_playwright_fetch_html",
-            lambda u, **kw: pytest.fail("playwright must not run"),
-        )
         assert gap_fill.fetch_listing_html("https://d.example/vdp") == GOOD_HTML
         if ImpersonatingFetcher().available():
             # The impersonation stage still led, through the stub, once per profile.
@@ -400,31 +388,29 @@ class TestFetchListingHtmlIntegration:
             )
             assert [a[2] for a in unreachable_curl_cffi.attempts] == list(ImpersonatingFetcher.PROFILES)
 
-    def test_thin_requests_result_falls_through_to_playwright(self, monkeypatch):
+    @pytest.mark.parametrize("allow", [None, "1"])
+    def test_thin_requests_result_returns_none_with_or_without_allow(self, monkeypatch, allow):
         from backend.scanner.post_scan import gap_fill
 
-        monkeypatch.setenv("SCANNER_ALLOW_BROWSER", "1")  # discovery mode; scans never reach the browser stage
+        if allow is None:
+            monkeypatch.delenv("SCANNER_ALLOW_BROWSER", raising=False)
+        else:
+            monkeypatch.setenv("SCANNER_ALLOW_BROWSER", allow)  # discovery flag; never reaches a fetch stage
         monkeypatch.setattr(gap_fill, "_requests_fetch_html", lambda u, **kw: THIN_HTML)
-        monkeypatch.setattr(
-            gap_fill, "_playwright_fetch_html", lambda u, **kw: "<html>rendered</html>"
-        )
-        assert gap_fill.fetch_listing_html("https://d.example/vdp") == "<html>rendered</html>"
+        assert gap_fill.fetch_listing_html("https://d.example/vdp") is None
 
-    def test_thin_requests_result_stays_http_in_scans(self, monkeypatch):
+    def test_legacy_path_is_http_only(self, monkeypatch):
         from backend.scanner.post_scan import gap_fill
 
-        monkeypatch.delenv("SCANNER_ALLOW_BROWSER", raising=False)
         monkeypatch.setattr(gap_fill, "_requests_fetch_html", lambda u, **kw: THIN_HTML)
-        launched: list[str] = []
-        monkeypatch.setattr(gap_fill, "_playwright_fetch_html", lambda u, **kw: launched.append(u) or "<html>rendered</html>")
-        assert gap_fill.fetch_listing_html("https://d.example/vdp") in (None, THIN_HTML)
-        assert not launched
+        assert gap_fill._fetch_listing_html_legacy("https://d.example/vdp") is None
+        monkeypatch.setattr(gap_fill, "_requests_fetch_html", lambda u, **kw: GOOD_HTML)
+        assert gap_fill._fetch_listing_html_legacy("https://d.example/vdp") == GOOD_HTML
 
     def test_total_failure_returns_none(self, monkeypatch):
         from backend.scanner.post_scan import gap_fill
 
         monkeypatch.setattr(gap_fill, "_requests_fetch_html", lambda u, **kw: None)
-        monkeypatch.setattr(gap_fill, "_playwright_fetch_html", lambda u, **kw: None)
         assert gap_fill.fetch_listing_html("https://d.example/vdp") is None
 
     def test_non_http_url_returns_none_without_fetching(self, monkeypatch):
@@ -443,11 +429,6 @@ class TestFetchListingHtmlIntegration:
 
         monkeypatch.setenv("SCANNER_LISTING_FETCH_CHAIN", "0")
         monkeypatch.setattr(gap_fill, "_requests_fetch_html", lambda u, **kw: GOOD_HTML)
-        monkeypatch.setattr(
-            gap_fill,
-            "_playwright_fetch_html",
-            lambda u, **kw: pytest.fail("playwright must not run"),
-        )
         assert gap_fill.fetch_listing_html("https://d.example/vdp") == GOOD_HTML
 
     def test_chain_bug_falls_back_to_legacy(self, monkeypatch):
@@ -459,7 +440,6 @@ class TestFetchListingHtmlIntegration:
             lambda u: (_ for _ in ()).throw(RuntimeError("chain bug")),
         )
         monkeypatch.setattr(gap_fill, "_requests_fetch_html", lambda u, **kw: GOOD_HTML)
-        monkeypatch.setattr(gap_fill, "_playwright_fetch_html", lambda u, **kw: None)
         assert gap_fill.fetch_listing_html("https://d.example/vdp") == GOOD_HTML
 
     def test_works_inside_running_event_loop(self, monkeypatch):
@@ -468,50 +448,8 @@ class TestFetchListingHtmlIntegration:
         from backend.scanner.post_scan import gap_fill
 
         monkeypatch.setattr(gap_fill, "_requests_fetch_html", lambda u, **kw: GOOD_HTML)
-        monkeypatch.setattr(gap_fill, "_playwright_fetch_html", lambda u, **kw: None)
 
         async def go():
             return gap_fill.fetch_listing_html("https://d.example/vdp")
 
         assert asyncio.run(go()) == GOOD_HTML
-
-
-class TestPlaywrightFetcherAvailability:
-    def test_available_reflects_import(self):
-        from backend.scanner.chain import PlaywrightFetcher
-
-        try:
-            import playwright  # noqa: F401
-
-            expected = True
-        except ImportError:
-            expected = False
-        assert PlaywrightFetcher().available() is expected
-
-    def test_injected_page_factory_used(self):
-        from contextlib import contextmanager
-
-        from backend.scanner.chain import PlaywrightFetcher
-
-        class FakePage:
-            def __init__(self):
-                self.goto_calls = []
-
-            def goto(self, url, wait_until=None, timeout=None):
-                self.goto_calls.append((url, wait_until, timeout))
-
-            def content(self):
-                return "<html>fake</html>"
-
-        page = FakePage()
-        seen_ua = []
-
-        @contextmanager
-        def factory(ua):
-            seen_ua.append(ua)
-            yield page
-
-        f = PlaywrightFetcher(timeout_ms=1234, wait_until="domcontentloaded", page_factory=factory)
-        assert f.fetch("http://x") == "<html>fake</html>"
-        assert page.goto_calls == [("http://x", "domcontentloaded", 1234)]
-        assert seen_ua and "Mozilla" in seen_ua[0]

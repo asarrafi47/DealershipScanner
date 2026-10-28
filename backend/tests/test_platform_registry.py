@@ -323,3 +323,45 @@ def test_unknown_ws_inv_data_recipe_is_retagged_at_load(caplog):
     recs = _rows_to_recipes(rows)
     assert [r.provider_hint for r in recs] == ["dealer_dot_com", "dealer_dot_com", "unknown", "carscommerce"]
     assert sum("retagged dealer_dot_com" in m.getMessage() for m in caplog.records) == 2
+
+
+# ── drift guard: seed vs synth templates (P17B.2) ─────────────────────────────
+
+# Seed rows with no template of their own: dealer_alchemist fingerprints as
+# typesense; shopperexpress is scanned by its own scraper, not a recipe template.
+_SEED_WITHOUT_TEMPLATE = {"dealer_alchemist", "shopperexpress"}
+
+
+def test_seed_covers_every_synth_template():
+    from backend.scanner.synth.registry import PLATFORM_TEMPLATES
+
+    seed = {e.name: e for e in pr.SEED_PLATFORMS}
+    missing = [t.name for t in PLATFORM_TEMPLATES if t.name not in seed]
+    assert not missing, f"synth templates with no platform_registry seed: {missing}"
+    for t in PLATFORM_TEMPLATES:
+        assert seed[t.name].synthesizable is (t.synth is not None), t.name
+
+
+def test_seed_rows_without_template_are_known():
+    from backend.scanner.synth.registry import PLATFORM_TEMPLATES
+
+    tmpl = {t.name for t in PLATFORM_TEMPLATES}
+    extra = {e.name for e in pr.SEED_PLATFORMS} - tmpl
+    assert extra == _SEED_WITHOUT_TEMPLATE
+
+
+def test_classify_falls_back_to_template_when_registry_lacks_row(monkeypatch):
+    monkeypatch.setattr(pr, "cname_chain", lambda host: [])
+    html = "<html>" + "x" * 3000 + "</html>"
+    monkeypatch.setattr(pr, "_http_probe", lambda url, **k: _probe(html))
+    monkeypatch.setattr(pr, "_recipe_synth_fingerprint", lambda h, u: "oneaudi")
+    res = pr.classify_dealer("https://x.com", registry=[])
+    assert res["platform"] == "oneaudi"
+    assert res["strategy"] == pr.STRATEGY_SYNTHESIZE
+    assert res["synthesizable"] is True
+
+
+def test_registry_has_no_duplicated_http_constants():
+    assert not hasattr(pr, "_BROWSER_UA")
+    assert not hasattr(pr, "_CHALLENGE_MARKERS")
+    assert not hasattr(pr, "entry_to_dict")

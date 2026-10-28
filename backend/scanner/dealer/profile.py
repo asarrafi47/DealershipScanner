@@ -14,20 +14,13 @@ from backend.db.inventory_db import db_conn
 
 logger = logging.getLogger(__name__)
 
-# Full recovery chain order (platform-specific strategies before HTML fallback).
+# Full recovery chain order. Every strategy runs over plain HTTP; the page-driven and
+# captured-HTML ones were retired with the browser path (P17B.4).
 # Single source: inventory_recovery re-imports this, and _VALID_STRATEGIES derives from it.
 RECOVERY_STRATEGY_ORDER: tuple[str, ...] = (
     "shopperexpress_api",
-    "dealer_inspire_algolia",
-    "dealer_venom_typesense",
-    "pixel_motion_html",
-    "dealer_on_cosmos",
     "dealer_eprocess_json",
-    "html_next_data",
-    "jsonld_listing_html",
 )
-# Strategies that never need a browser page (docs/HTTP_ONLY_SCANS_PLAN.md).
-HTTP_SAFE_STRATEGIES = frozenset({"shopperexpress_api", "dealer_eprocess_json", "html_next_data", "jsonld_listing_html"})
 _VALID_STRATEGIES = frozenset(RECOVERY_STRATEGY_ORDER)
 
 
@@ -62,7 +55,10 @@ def get_cached_winning_strategy(dealer_id: str) -> str | None:
     if not val:
         return None
     strat = str(val).strip()
-    return strat if strat in _VALID_STRATEGIES else None
+    if strat not in _VALID_STRATEGIES:
+        logger.info("Dealer profile: cached recovery strategy %s for %s no longer exists; ignored", strat, did)
+        return None
+    return strat
 
 
 def record_winning_strategy(
@@ -120,10 +116,16 @@ def manifest_recovery_strategies(dealer: dict[str, Any] | None) -> list[str] | N
     if not isinstance(raw, list):
         return None
     out: list[str] = []
+    dropped: list[str] = []
     for item in raw:
         name = str(item or "").strip()
-        if name in _VALID_STRATEGIES and name not in out:
-            out.append(name)
+        if name in _VALID_STRATEGIES:
+            if name not in out:
+                out.append(name)
+        elif name:
+            dropped.append(name)
+    if dropped:
+        logger.info("Dealer profile: dropped retired/unknown recovery strategies %s", ", ".join(dropped))
     return out or None
 
 

@@ -168,14 +168,12 @@ async def delta_scan_dealer(dealer: dict[str, Any]) -> dict[str, Any]:
     if _replay:
         out["recipe_replay"] = _replay
     if not fetched:
-        if hints.get("requires_browser"):
-            out["skipped"] = "no_recipe (requires_browser hinted)"
-        elif hints.get("needs_http_proxy"):
+        if hints.get("needs_http_proxy"):
             out["skipped"] = "no_recipe (needs_http_proxy hinted — rerun with SCANNER_HTTP_PROXY)"
         else:
             out["skipped"] = "no_recipe_yield"
             await asyncio.to_thread(
-                _write_hint_note, dealer_id, "no recipe yield on delta replay; needs synth (full scan) or browser"
+                _write_hint_note, dealer_id, "no recipe yield on delta replay; needs synth (full scan)"
             )
         logger.info("Delta [%s]: skipped — %s", name, out["skipped"])
         return out

@@ -1,1618 +1,4 @@
 {
- "browser_allowed": {
-  "events": [
-   [
-    "browser.new_context",
-    {
-     "user_agent": "golden-UA/1.0",
-     "viewport": {
-      "height": 1080,
-      "width": 1920
-     }
-    }
-   ],
-   [
-    "context.new_page",
-    null
-   ],
-   [
-    "try_fetch_via_recipes",
-    [
-     "lexusofknoxville-com",
-     "dealer_eprocess",
-     "https://www.lexusofknoxville.com",
-     "Lexus of Knoxville",
-     true
-    ]
-   ],
-   [
-    "store_place",
-    [
-     "https://www.lexusofknoxville.com",
-     "lexusofknoxville-com"
-    ]
-   ],
-   [
-    "recover_inventory.ctx",
-    {
-     "base_url": "https://www.lexusofknoxville.com",
-     "dealer_id": "lexusofknoxville-com",
-     "dealer_keys": [
-      "city",
-      "dealer_id",
-      "dealership_registry_id",
-      "name",
-      "provider",
-      "state",
-      "url"
-     ],
-     "dealer_name": "Lexus of Knoxville",
-     "dealer_url": "https://www.lexusofknoxville.com",
-     "intercepts": [],
-     "page": "FakePage",
-     "path_htmls": [],
-     "provider": "dealer_eprocess",
-     "vins": []
-    }
-   ],
-   [
-    "recover_inventory.out",
-    {
-     "replaced": true,
-     "tried": [
-      "jsonld_listing_html"
-     ],
-     "vins": [
-      "2T2BAMBA0TC087326",
-      "2T2BAMBA2TC41D079",
-      "2T2BAMBA8TC086795",
-      "2T2BAMBA0TC087326"
-     ],
-     "winner": "jsonld_listing_html"
-    }
-   ],
-   [
-    "prefetch_before_vdp",
-    [
-     [
-      "2T2BAMBA0TC087326",
-      "2T2BAMBA2TC41D079",
-      "2T2BAMBA8TC086795"
-     ],
-     "lexusofknoxville-com",
-     "Lexus of Knoxville"
-    ]
-   ],
-   [
-    "override_vehicles",
-    [
-     "2T2BAMBA0TC087326",
-     "2T2BAMBA2TC41D079",
-     "2T2BAMBA8TC086795"
-    ]
-   ],
-   [
-    "auto_heal",
-    [
-     "lexusofknoxville-com",
-     "Lexus of Knoxville",
-     {
-      "count": 3,
-      "coverage": {
-       "body_style": {
-        "count": 3,
-        "pct": 100.0
-       },
-       "condition": {
-        "count": 3,
-        "pct": 100.0
-       },
-       "drivetrain": {
-        "count": 3,
-        "pct": 100.0
-       },
-       "engine_description": {
-        "count": 3,
-        "pct": 100.0
-       },
-       "exterior_color": {
-        "count": 3,
-        "pct": 100.0
-       },
-       "fuel_type": {
-        "count": 3,
-        "pct": 100.0
-       },
-       "gallery": {
-        "count": 3,
-        "pct": 100.0
-       },
-       "interior_color": {
-        "count": 3,
-        "pct": 100.0
-       },
-       "make": {
-        "count": 3,
-        "pct": 100.0
-       },
-       "mileage": {
-        "count": 3,
-        "pct": 100.0
-       },
-       "model": {
-        "count": 3,
-        "pct": 100.0
-       },
-       "mpg_city": {
-        "count": 0,
-        "pct": 0.0
-       },
-       "price": {
-        "count": 3,
-        "pct": 100.0
-       },
-       "transmission": {
-        "count": 3,
-        "pct": 100.0
-       },
-       "trim": {
-        "count": 3,
-        "pct": 100.0
-       },
-       "vin": {
-        "count": 3,
-        "pct": 100.0
-       },
-       "year": {
-        "count": 3,
-        "pct": 100.0
-       }
-      },
-      "dealer_id": "lexusofknoxville-com"
-     },
-     [
-      "2T2BAMBA0TC087326",
-      "2T2BAMBA2TC41D079",
-      "2T2BAMBA8TC086795"
-     ]
-    ]
-   ],
-   [
-    "link_cars_to_dealership_registry",
-    [
-     4242,
-     "https://www.lexusofknoxville.com",
-     "lexusofknoxville-com"
-    ]
-   ],
-   [
-    "reconcile",
-    [
-     "lexusofknoxville-com",
-     "https://www.lexusofknoxville.com",
-     [
-      "2T2BAMBA0TC087326",
-      "2T2BAMBA2TC41D079",
-      "2T2BAMBA8TC086795"
-     ],
-     {
-      "capture_coverage": {
-       "body_style": 1.0,
-       "carfax_url": 0.0,
-       "description": 1.0,
-       "drivetrain": 1.0,
-       "engine_description": 1.0,
-       "exterior_color": 1.0,
-       "fuel_type": 1.0,
-       "gallery_8plus": 0.0,
-       "image_url": 1.0,
-       "interior_color": 1.0,
-       "mileage": 0.0,
-       "missing_examples": {
-        "carfax_url": [
-         "2T2BAMBA0TC087326",
-         "2T2BAMBA2TC41D079",
-         "2T2BAMBA8TC086795"
-        ],
-        "gallery_8plus": [
-         "2T2BAMBA0TC087326",
-         "2T2BAMBA2TC41D079",
-         "2T2BAMBA8TC086795"
-        ],
-        "mileage": [
-         "2T2BAMBA0TC087326",
-         "2T2BAMBA2TC41D079",
-         "2T2BAMBA8TC086795"
-        ],
-        "msrp": [
-         "2T2BAMBA0TC087326",
-         "2T2BAMBA2TC41D079",
-         "2T2BAMBA8TC086795"
-        ]
-       },
-       "msrp": 0.0,
-       "n": 3,
-       "price": 1.0,
-       "stock_number": 1.0,
-       "transmission": 1.0,
-       "trim": 1.0,
-       "used_n": 0,
-       "used_zero_mi": 0,
-       "used_zero_mi_my2026": 0
-      },
-      "coverage": {
-       "count": 3,
-       "coverage": {
-        "body_style": {
-         "count": 3,
-         "pct": 100.0
-        },
-        "condition": {
-         "count": 3,
-         "pct": 100.0
-        },
-        "drivetrain": {
-         "count": 3,
-         "pct": 100.0
-        },
-        "engine_description": {
-         "count": 3,
-         "pct": 100.0
-        },
-        "exterior_color": {
-         "count": 3,
-         "pct": 100.0
-        },
-        "fuel_type": {
-         "count": 3,
-         "pct": 100.0
-        },
-        "gallery": {
-         "count": 3,
-         "pct": 100.0
-        },
-        "interior_color": {
-         "count": 3,
-         "pct": 100.0
-        },
-        "make": {
-         "count": 3,
-         "pct": 100.0
-        },
-        "mileage": {
-         "count": 3,
-         "pct": 100.0
-        },
-        "model": {
-         "count": 3,
-         "pct": 100.0
-        },
-        "mpg_city": {
-         "count": 0,
-         "pct": 0.0
-        },
-        "price": {
-         "count": 3,
-         "pct": 100.0
-        },
-        "transmission": {
-         "count": 3,
-         "pct": 100.0
-        },
-        "trim": {
-         "count": 3,
-         "pct": 100.0
-        },
-        "vin": {
-         "count": 3,
-         "pct": 100.0
-        },
-        "year": {
-         "count": 3,
-         "pct": 100.0
-        }
-       },
-       "dealer_id": "lexusofknoxville-com"
-      },
-      "dealer_id": "lexusofknoxville-com",
-      "dealer_name": "Lexus of Knoxville",
-      "deduped_rows": 3,
-      "error": null,
-      "filtered_count": 0,
-      "gallery_bins": {
-       "0": 0,
-       "1": 1,
-       "2_4": 0,
-       "5p": 2
-      },
-      "gallery_vdp_urls_added": 0,
-      "gallery_vision": null,
-      "http_only": true,
-      "intercept_count": 0,
-      "inventory_recovery": {
-       "replaced": true,
-       "strategies_tried": [
-        "jsonld_listing_html"
-       ],
-       "winning_strategy": "jsonld_listing_html"
-      },
-      "inventory_rows": 4,
-      "monroney_vision": {
-       "skipped": "monroney_vision_removed"
-      },
-      "phase_secs": {
-       "upsert": "<t>"
-      },
-      "provider": "dealer_eprocess",
-      "reconcile": null,
-      "seconds": "<t>",
-      "sister_store_inventory": {
-       "excluded": 0,
-       "input": 3,
-       "kept": 3,
-       "matched": 0,
-       "samples_excluded": [],
-       "source": "inventory",
-       "unknown_location": 3
-      },
-      "upserted": 3,
-      "vdp_phase_timed_out": false,
-      "vdps_visited": 0,
-      "vehicles_vdp_enriched": 0,
-      "vin_facts": {
-       "cached": 0,
-       "drivetrain": 0,
-       "fuel_type": 0
-      },
-      "vin_owner_conflicts": 0,
-      "vins": [
-       "2T2BAMBA0TC087326",
-       "2T2BAMBA2TC41D079",
-       "2T2BAMBA8TC086795"
-      ]
-     },
-     [
-      "new"
-     ]
-    ]
-   ],
-   [
-    "context.close",
-    null
-   ]
-  ],
-  "logs": [
-   [
-    "INFO",
-    "Inventory base URL: https://www.lexusofknoxville.com — using site origin (manifest pointed at document: https://www.lexusofknoxville.com/new-inventory/index.htm)"
-   ],
-   [
-    "INFO",
-    "Dealer start: Lexus of Knoxville"
-   ],
-   [
-    "INFO",
-    "Warmup UA [Lexus of Knoxville]: golden-UA/1.0"
-   ],
-   [
-    "INFO",
-    "Extraction backup: Lexus of Knoxville — no vehicles from 0 JSON intercept(s); running recovery chain"
-   ],
-   [
-    "INFO",
-    "Gallery bins [Lexus of Knoxville] after_inventory_merge: {'0': 0, '1': 1, '2_4': 0, '5p': 2}"
-   ],
-   [
-    "INFO",
-    "Gallery bins [Lexus of Knoxville] after_vdp: {'0': 0, '1': 1, '2_4': 0, '5p': 2}"
-   ],
-   [
-    "INFO",
-    "Monroney vision disabled — skipping sticker image parsing"
-   ],
-   [
-    "INFO",
-    "Monroney vision [Lexus of Knoxville]: rows_touched=None sticker_image_calls=None page_text_calls=None"
-   ],
-   [
-    "INFO",
-    "Coverage [lexusofknoxville-com] n=3: mpg_city=0.0%"
-   ],
-   [
-    "INFO",
-    "Parsing: Lexus of Knoxville — extracted 3 vehicles (deduped by VIN), upserted 3"
-   ],
-   [
-    "INFO",
-    "Dealer complete: Lexus of Knoxville (4 inventory rows, 3 deduped, 0 VDP visited, 0 VDP-enriched, 3 upserted, <t>s)"
-   ],
-   [
-    "INFO",
-    "dealer_run_summary {\"dealer_id\":\"lexusofknoxville-com\",\"intercept_count\":0,\"filtered_count\":0,\"inventory_rows\":4,\"deduped_rows\":3,\"vdps_visited\":0,\"gallery_bins\":{\"0\":0,\"1\":1,\"2_4\":0,\"5p\":2},\"gallery_vision\":null,\"monroney_vision\":{\"skipped\":\"monroney_vision_removed\"},\"seconds\":\"<t>\",\"upserted\":3,\"reconcile\":{\"ran\":true,\"scraped_candidates\":3,\"marked_inactive\":0,\"skipped_reason\":null},\"phase_secs\":{\"upsert\":\"<t>\"}}"
-   ]
-  ],
-  "raised": null,
-  "result": {
-   "capture_coverage": {
-    "body_style": 1.0,
-    "carfax_url": 0.0,
-    "description": 1.0,
-    "drivetrain": 1.0,
-    "engine_description": 1.0,
-    "exterior_color": 1.0,
-    "fuel_type": 1.0,
-    "gallery_8plus": 0.0,
-    "image_url": 1.0,
-    "interior_color": 1.0,
-    "mileage": 0.0,
-    "missing_examples": {
-     "carfax_url": [
-      "2T2BAMBA0TC087326",
-      "2T2BAMBA2TC41D079",
-      "2T2BAMBA8TC086795"
-     ],
-     "gallery_8plus": [
-      "2T2BAMBA0TC087326",
-      "2T2BAMBA2TC41D079",
-      "2T2BAMBA8TC086795"
-     ],
-     "mileage": [
-      "2T2BAMBA0TC087326",
-      "2T2BAMBA2TC41D079",
-      "2T2BAMBA8TC086795"
-     ],
-     "msrp": [
-      "2T2BAMBA0TC087326",
-      "2T2BAMBA2TC41D079",
-      "2T2BAMBA8TC086795"
-     ]
-    },
-    "msrp": 0.0,
-    "n": 3,
-    "price": 1.0,
-    "stock_number": 1.0,
-    "transmission": 1.0,
-    "trim": 1.0,
-    "used_n": 0,
-    "used_zero_mi": 0,
-    "used_zero_mi_my2026": 0
-   },
-   "coverage": {
-    "count": 3,
-    "coverage": {
-     "body_style": {
-      "count": 3,
-      "pct": 100.0
-     },
-     "condition": {
-      "count": 3,
-      "pct": 100.0
-     },
-     "drivetrain": {
-      "count": 3,
-      "pct": 100.0
-     },
-     "engine_description": {
-      "count": 3,
-      "pct": 100.0
-     },
-     "exterior_color": {
-      "count": 3,
-      "pct": 100.0
-     },
-     "fuel_type": {
-      "count": 3,
-      "pct": 100.0
-     },
-     "gallery": {
-      "count": 3,
-      "pct": 100.0
-     },
-     "interior_color": {
-      "count": 3,
-      "pct": 100.0
-     },
-     "make": {
-      "count": 3,
-      "pct": 100.0
-     },
-     "mileage": {
-      "count": 3,
-      "pct": 100.0
-     },
-     "model": {
-      "count": 3,
-      "pct": 100.0
-     },
-     "mpg_city": {
-      "count": 0,
-      "pct": 0.0
-     },
-     "price": {
-      "count": 3,
-      "pct": 100.0
-     },
-     "transmission": {
-      "count": 3,
-      "pct": 100.0
-     },
-     "trim": {
-      "count": 3,
-      "pct": 100.0
-     },
-     "vin": {
-      "count": 3,
-      "pct": 100.0
-     },
-     "year": {
-      "count": 3,
-      "pct": 100.0
-     }
-    },
-    "dealer_id": "lexusofknoxville-com"
-   },
-   "dealer_id": "lexusofknoxville-com",
-   "dealer_name": "Lexus of Knoxville",
-   "deduped_rows": 3,
-   "error": null,
-   "filtered_count": 0,
-   "gallery_bins": {
-    "0": 0,
-    "1": 1,
-    "2_4": 0,
-    "5p": 2
-   },
-   "gallery_vdp_urls_added": 0,
-   "gallery_vision": null,
-   "http_only": true,
-   "intercept_count": 0,
-   "inventory_recovery": {
-    "replaced": true,
-    "strategies_tried": [
-     "jsonld_listing_html"
-    ],
-    "winning_strategy": "jsonld_listing_html"
-   },
-   "inventory_rows": 4,
-   "monroney_vision": {
-    "skipped": "monroney_vision_removed"
-   },
-   "phase_secs": {
-    "upsert": "<t>"
-   },
-   "provider": "dealer_eprocess",
-   "reconcile": {
-    "marked_inactive": 0,
-    "ran": true,
-    "scraped_candidates": 3,
-    "skipped_reason": null
-   },
-   "seconds": "<t>",
-   "sister_store_inventory": {
-    "excluded": 0,
-    "input": 3,
-    "kept": 3,
-    "matched": 0,
-    "samples_excluded": [],
-    "source": "inventory",
-    "unknown_location": 3
-   },
-   "upserted": 3,
-   "vdp_phase_timed_out": false,
-   "vdps_visited": 0,
-   "vehicles_vdp_enriched": 0,
-   "vin_facts": {
-    "cached": 0,
-    "drivetrain": 0,
-    "fuel_type": 0
-   },
-   "vin_owner_conflicts": 0,
-   "vins": [
-    "2T2BAMBA0TC087326",
-    "2T2BAMBA2TC41D079",
-    "2T2BAMBA8TC086795"
-   ]
-  },
-  "scan_log": [
-   {
-    "condition": "New",
-    "dealer_id": "lexusofknoxville-com",
-    "dealer_name": "Lexus of Knoxville",
-    "exterior_color": "Caviar",
-    "interior_color": "Birch Nuluxe® And Black Open-pore Wood Trim",
-    "make": "Lexus",
-    "mileage": 0,
-    "model": "RX 350",
-    "price": 60701,
-    "provider": "dealer_eprocess",
-    "scan_ts": "<scan_ts>",
-    "stock_number": "4052",
-    "trim": "350 Premium",
-    "type": "vehicle",
-    "vin": "2T2BAMBA0TC087326",
-    "year": 2026
-   },
-   {
-    "condition": "New",
-    "dealer_id": "lexusofknoxville-com",
-    "dealer_name": "Lexus of Knoxville",
-    "exterior_color": "Eminent White Pearl",
-    "interior_color": "Black Nuluxe® And Black Open-pore Wood Trim",
-    "make": "Lexus",
-    "mileage": 0,
-    "model": "RX 350",
-    "price": 61026,
-    "provider": "dealer_eprocess",
-    "scan_ts": "<scan_ts>",
-    "stock_number": "2T2BAMBA2TC41D079",
-    "trim": "350 Premium",
-    "type": "vehicle",
-    "vin": "2T2BAMBA2TC41D079",
-    "year": 2026
-   },
-   {
-    "condition": "New",
-    "dealer_id": "lexusofknoxville-com",
-    "dealer_name": "Lexus of Knoxville",
-    "exterior_color": "Iridium",
-    "interior_color": "Birch Nuluxe® And Black Open-pore Wood Trim",
-    "make": "Lexus",
-    "mileage": 0,
-    "model": "RX 350",
-    "price": 60811,
-    "provider": "dealer_eprocess",
-    "scan_ts": "<scan_ts>",
-    "stock_number": "4029",
-    "trim": "350 Premium",
-    "type": "vehicle",
-    "vin": "2T2BAMBA8TC086795",
-    "year": 2026
-   },
-   {
-    "dealer_id": "lexusofknoxville-com",
-    "dealer_name": "Lexus of Knoxville",
-    "deduped_rows": 3,
-    "error": null,
-    "inventory_rows": 4,
-    "phase_secs": {
-     "upsert": "<t>"
-    },
-    "provider": "dealer_eprocess",
-    "recovery_strategy": "jsonld_listing_html",
-    "scan_ts": "<scan_ts>",
-    "seconds": "<t>",
-    "type": "dealer_summary",
-    "upserted": 3,
-    "vdps_visited": 0,
-    "vehicles_vdp_enriched": 0
-   }
-  ],
-  "upserts": [
-   {
-    "stats_in": {},
-    "vehicles": [
-     {
-      "_detail_url": "https://www.lexusofknoxville.com/auto/new-2026-lexus-rx-350-premium/125841588/",
-      "_rooftop_evidence": null,
-      "_rooftop_evidence_tier": "none",
-      "_rooftop_score": 0.0,
-      "_rooftop_strong": false,
-      "_rooftop_tier": "no_rooftop_evidence",
-      "body_style": "SUV",
-      "carfax_url": null,
-      "condition": "New",
-      "dealer_name": "lexusofknoxville-com",
-      "dealer_url": "https://www.lexusofknoxville.com",
-      "dealership_registry_id": 4242,
-      "description": "New 2026 Lexus RX 350 Caviar in Knoxville, TN at of Knoxville - Call us now 865-271-9059 for more information about this Premium Stock #4052",
-      "drivetrain": "FWD",
-      "engine_description": "Turbo in-line 4",
-      "exterior_color": "Caviar",
-      "fuel_type": "Gasoline",
-      "gallery": [
-       "https://cloudflareimages.dealereprocess.com/resrc/images/c_limit,fl_lossy,w_auto/v1/dvp/3958/55683530025/New-2026-Lexus-RX350-350Premium-ID55683530025-aHR0cDovL2ltYWdlcy51bml0c2ludmVudG9yeS5jb20vdXBsb2Fkcy9waG90b3MvMC8yMDI2LTA5LTIyLzEtMjk4OTA1OTAtNmFiMmVjN2Q2ZDVmYS5qcGc=",
-       "https://cdn.dealereprocess.org/cdn/img/makes/null_o.jpg",
-       "https://storage.googleapis.com/phalanx-media-library/1b8f1e37-128270-wb-aagi-service.jpg",
-       "https://storage.googleapis.com/phalanx-media-library/7c2c7799-128270-wb-aagi-tech.jpg",
-       "https://storage.googleapis.com/phalanx-media-library/553811c7-128270-wb-aagi-parts.jpg",
-       "https://storage.googleapis.com/phalanx-media-library/0b1ea9ca-128270-wb-aagi-recall.jpg",
-       "https://img.example/dup-1.jpg"
-      ],
-      "image_url": "https://cloudflareimages.dealereprocess.com/resrc/images/c_limit,fl_lossy,w_auto/v1/dvp/3958/55683530025/New-2026-Lexus-RX350-350Premium-ID55683530025-aHR0cDovL2ltYWdlcy51bml0c2ludmVudG9yeS5jb20vdXBsb2Fkcy9waG90b3MvMC8yMDI2LTA5LTIyLzEtMjk4OTA1OTAtNmFiMmVjN2Q2ZDVmYS5qcGc=",
-      "interior_color": "Birch Nuluxe® And Black Open-pore Wood Trim",
-      "make": "Lexus",
-      "mileage": 0,
-      "model": "RX 350",
-      "msrp": null,
-      "price": 60701,
-      "source_url": "https://www.lexusofknoxville.com/auto/new-2026-lexus-rx-350-premium/125841588/",
-      "stock_number": "4052",
-      "transmission": "8AT",
-      "trim": "350 Premium",
-      "vin": "2T2BAMBA0TC087326",
-      "year": 2026,
-      "zip_code": null
-     },
-     {
-      "_detail_url": "https://www.lexusofknoxville.com/auto/new-2026-lexus-rx-350-premium/125163423/",
-      "_rooftop_evidence": null,
-      "_rooftop_evidence_tier": "none",
-      "_rooftop_score": 0.0,
-      "_rooftop_strong": false,
-      "_rooftop_tier": "no_rooftop_evidence",
-      "body_style": "SUV",
-      "carfax_url": null,
-      "condition": "New",
-      "dealer_name": "lexusofknoxville-com",
-      "dealer_url": "https://www.lexusofknoxville.com",
-      "dealership_registry_id": 4242,
-      "description": "New 2026 Lexus RX 350 Eminent White Pearl in Knoxville, TN at of Knoxville - Call us now 865-271-9059 for more information about this Premium Stock #",
-      "drivetrain": "FWD",
-      "engine_description": "Turbo in-line 4",
-      "exterior_color": "Eminent White Pearl",
-      "fuel_type": "Gasoline",
-      "gallery": [
-       "https://cloudflareimages.dealereprocess.com/resrc/images/c_limit,fl_lossy,w_auto/v1/dvp/3958/53880917685/New-2026-Lexus-RX350-350Premium-ID53880917685-aHR0cDovL2ltYWdlcy51bml0c2ludmVudG9yeS5jb20vdXBsb2Fkcy9waG90b3MvMC8yMDI2LTA5LTA0LzEtMjk2NTg3NDQtNmE5YjE4ZmZmMGU3NC5qcGc=",
-       "https://cdn.dealereprocess.org/cdn/img/makes/null_o.jpg",
-       "https://storage.googleapis.com/phalanx-media-library/1b8f1e37-128270-wb-aagi-service.jpg",
-       "https://storage.googleapis.com/phalanx-media-library/7c2c7799-128270-wb-aagi-tech.jpg",
-       "https://storage.googleapis.com/phalanx-media-library/553811c7-128270-wb-aagi-parts.jpg",
-       "https://storage.googleapis.com/phalanx-media-library/0b1ea9ca-128270-wb-aagi-recall.jpg"
-      ],
-      "image_url": "https://cloudflareimages.dealereprocess.com/resrc/images/c_limit,fl_lossy,w_auto/v1/dvp/3958/53880917685/New-2026-Lexus-RX350-350Premium-ID53880917685-aHR0cDovL2ltYWdlcy51bml0c2ludmVudG9yeS5jb20vdXBsb2Fkcy9waG90b3MvMC8yMDI2LTA5LTA0LzEtMjk2NTg3NDQtNmE5YjE4ZmZmMGU3NC5qcGc=",
-      "interior_color": "Black Nuluxe® And Black Open-pore Wood Trim",
-      "make": "Lexus",
-      "mileage": 0,
-      "model": "RX 350",
-      "msrp": null,
-      "price": 61026,
-      "source_url": "https://www.lexusofknoxville.com/auto/new-2026-lexus-rx-350-premium/125163423/",
-      "stock_number": "2T2BAMBA2TC41D079",
-      "transmission": "8AT",
-      "trim": "350 Premium",
-      "vin": "2T2BAMBA2TC41D079",
-      "year": 2026,
-      "zip_code": null
-     },
-     {
-      "_detail_url": "https://www.lexusofknoxville.com/auto/new-2026-lexus-rx-350-premium/125531139/",
-      "_rooftop_evidence": null,
-      "_rooftop_evidence_tier": "none",
-      "_rooftop_score": 0.0,
-      "_rooftop_strong": false,
-      "_rooftop_tier": "no_rooftop_evidence",
-      "body_style": "SUV",
-      "carfax_url": null,
-      "condition": "New",
-      "dealer_name": "lexusofknoxville-com",
-      "dealer_url": "https://www.lexusofknoxville.com",
-      "dealership_registry_id": 4242,
-      "description": "New 2026 Lexus RX 350 Iridium in Knoxville, TN at of Knoxville - Call us now 865-271-9059 for more information about this Premium Stock #4029",
-      "drivetrain": "FWD",
-      "engine_description": "Turbo in-line 4",
-      "exterior_color": "Iridium",
-      "fuel_type": "Gasoline",
-      "gallery": [
-       "https://cloudflareimages.dealereprocess.com/resrc/images/c_limit,fl_lossy,w_auto/v1/dvp/3958/55155114168/New-2026-Lexus-RX350-350Premium-ID55155114168-aHR0cDovL2ltYWdlcy51bml0c2ludmVudG9yeS5jb20vdXBsb2Fkcy9waG90b3MvMC8yMDI2LTA5LTE1LzEtMjk3ODk2MzgtNmFhOWMzN2VjYzI3ZS5qcGc="
-      ],
-      "image_url": "https://cloudflareimages.dealereprocess.com/resrc/images/c_limit,fl_lossy,w_auto/v1/dvp/3958/55155114168/New-2026-Lexus-RX350-350Premium-ID55155114168-aHR0cDovL2ltYWdlcy51bml0c2ludmVudG9yeS5jb20vdXBsb2Fkcy9waG90b3MvMC8yMDI2LTA5LTE1LzEtMjk3ODk2MzgtNmFhOWMzN2VjYzI3ZS5qcGc=",
-      "interior_color": "Birch Nuluxe® And Black Open-pore Wood Trim",
-      "make": "Lexus",
-      "mileage": 0,
-      "model": "RX 350",
-      "msrp": null,
-      "price": 60811,
-      "source_url": "https://www.lexusofknoxville.com/auto/new-2026-lexus-rx-350-premium/125531139/",
-      "stock_number": "4029",
-      "transmission": "8AT",
-      "trim": "350 Premium",
-      "vin": "2T2BAMBA8TC086795",
-      "year": 2026,
-      "zip_code": null
-     }
-    ]
-   }
-  ]
- },
- "browser_given_but_http_only": {
-  "events": [
-   [
-    "try_fetch_via_recipes",
-    [
-     "lexusofknoxville-com",
-     "dealer_eprocess",
-     "https://www.lexusofknoxville.com",
-     "Lexus of Knoxville",
-     true
-    ]
-   ],
-   [
-    "store_place",
-    [
-     "https://www.lexusofknoxville.com",
-     "lexusofknoxville-com"
-    ]
-   ],
-   [
-    "recover_inventory.ctx",
-    {
-     "base_url": "https://www.lexusofknoxville.com",
-     "dealer_id": "lexusofknoxville-com",
-     "dealer_keys": [
-      "city",
-      "dealer_id",
-      "dealership_registry_id",
-      "name",
-      "provider",
-      "state",
-      "url"
-     ],
-     "dealer_name": "Lexus of Knoxville",
-     "dealer_url": "https://www.lexusofknoxville.com",
-     "intercepts": [],
-     "page": null,
-     "path_htmls": [],
-     "provider": "dealer_eprocess",
-     "vins": []
-    }
-   ],
-   [
-    "recover_inventory.out",
-    {
-     "replaced": true,
-     "tried": [
-      "jsonld_listing_html"
-     ],
-     "vins": [
-      "2T2BAMBA0TC087326",
-      "2T2BAMBA2TC41D079",
-      "2T2BAMBA8TC086795",
-      "2T2BAMBA0TC087326"
-     ],
-     "winner": "jsonld_listing_html"
-    }
-   ],
-   [
-    "prefetch_before_vdp",
-    [
-     [
-      "2T2BAMBA0TC087326",
-      "2T2BAMBA2TC41D079",
-      "2T2BAMBA8TC086795"
-     ],
-     "lexusofknoxville-com",
-     "Lexus of Knoxville"
-    ]
-   ],
-   [
-    "override_vehicles",
-    [
-     "2T2BAMBA0TC087326",
-     "2T2BAMBA2TC41D079",
-     "2T2BAMBA8TC086795"
-    ]
-   ],
-   [
-    "auto_heal",
-    [
-     "lexusofknoxville-com",
-     "Lexus of Knoxville",
-     {
-      "count": 3,
-      "coverage": {
-       "body_style": {
-        "count": 3,
-        "pct": 100.0
-       },
-       "condition": {
-        "count": 3,
-        "pct": 100.0
-       },
-       "drivetrain": {
-        "count": 3,
-        "pct": 100.0
-       },
-       "engine_description": {
-        "count": 3,
-        "pct": 100.0
-       },
-       "exterior_color": {
-        "count": 3,
-        "pct": 100.0
-       },
-       "fuel_type": {
-        "count": 3,
-        "pct": 100.0
-       },
-       "gallery": {
-        "count": 3,
-        "pct": 100.0
-       },
-       "interior_color": {
-        "count": 3,
-        "pct": 100.0
-       },
-       "make": {
-        "count": 3,
-        "pct": 100.0
-       },
-       "mileage": {
-        "count": 3,
-        "pct": 100.0
-       },
-       "model": {
-        "count": 3,
-        "pct": 100.0
-       },
-       "mpg_city": {
-        "count": 0,
-        "pct": 0.0
-       },
-       "price": {
-        "count": 3,
-        "pct": 100.0
-       },
-       "transmission": {
-        "count": 3,
-        "pct": 100.0
-       },
-       "trim": {
-        "count": 3,
-        "pct": 100.0
-       },
-       "vin": {
-        "count": 3,
-        "pct": 100.0
-       },
-       "year": {
-        "count": 3,
-        "pct": 100.0
-       }
-      },
-      "dealer_id": "lexusofknoxville-com"
-     },
-     [
-      "2T2BAMBA0TC087326",
-      "2T2BAMBA2TC41D079",
-      "2T2BAMBA8TC086795"
-     ]
-    ]
-   ],
-   [
-    "link_cars_to_dealership_registry",
-    [
-     4242,
-     "https://www.lexusofknoxville.com",
-     "lexusofknoxville-com"
-    ]
-   ],
-   [
-    "reconcile",
-    [
-     "lexusofknoxville-com",
-     "https://www.lexusofknoxville.com",
-     [
-      "2T2BAMBA0TC087326",
-      "2T2BAMBA2TC41D079",
-      "2T2BAMBA8TC086795"
-     ],
-     {
-      "capture_coverage": {
-       "body_style": 1.0,
-       "carfax_url": 0.0,
-       "description": 1.0,
-       "drivetrain": 1.0,
-       "engine_description": 1.0,
-       "exterior_color": 1.0,
-       "fuel_type": 1.0,
-       "gallery_8plus": 0.0,
-       "image_url": 1.0,
-       "interior_color": 1.0,
-       "mileage": 0.0,
-       "missing_examples": {
-        "carfax_url": [
-         "2T2BAMBA0TC087326",
-         "2T2BAMBA2TC41D079",
-         "2T2BAMBA8TC086795"
-        ],
-        "gallery_8plus": [
-         "2T2BAMBA0TC087326",
-         "2T2BAMBA2TC41D079",
-         "2T2BAMBA8TC086795"
-        ],
-        "mileage": [
-         "2T2BAMBA0TC087326",
-         "2T2BAMBA2TC41D079",
-         "2T2BAMBA8TC086795"
-        ],
-        "msrp": [
-         "2T2BAMBA0TC087326",
-         "2T2BAMBA2TC41D079",
-         "2T2BAMBA8TC086795"
-        ]
-       },
-       "msrp": 0.0,
-       "n": 3,
-       "price": 1.0,
-       "stock_number": 1.0,
-       "transmission": 1.0,
-       "trim": 1.0,
-       "used_n": 0,
-       "used_zero_mi": 0,
-       "used_zero_mi_my2026": 0
-      },
-      "coverage": {
-       "count": 3,
-       "coverage": {
-        "body_style": {
-         "count": 3,
-         "pct": 100.0
-        },
-        "condition": {
-         "count": 3,
-         "pct": 100.0
-        },
-        "drivetrain": {
-         "count": 3,
-         "pct": 100.0
-        },
-        "engine_description": {
-         "count": 3,
-         "pct": 100.0
-        },
-        "exterior_color": {
-         "count": 3,
-         "pct": 100.0
-        },
-        "fuel_type": {
-         "count": 3,
-         "pct": 100.0
-        },
-        "gallery": {
-         "count": 3,
-         "pct": 100.0
-        },
-        "interior_color": {
-         "count": 3,
-         "pct": 100.0
-        },
-        "make": {
-         "count": 3,
-         "pct": 100.0
-        },
-        "mileage": {
-         "count": 3,
-         "pct": 100.0
-        },
-        "model": {
-         "count": 3,
-         "pct": 100.0
-        },
-        "mpg_city": {
-         "count": 0,
-         "pct": 0.0
-        },
-        "price": {
-         "count": 3,
-         "pct": 100.0
-        },
-        "transmission": {
-         "count": 3,
-         "pct": 100.0
-        },
-        "trim": {
-         "count": 3,
-         "pct": 100.0
-        },
-        "vin": {
-         "count": 3,
-         "pct": 100.0
-        },
-        "year": {
-         "count": 3,
-         "pct": 100.0
-        }
-       },
-       "dealer_id": "lexusofknoxville-com"
-      },
-      "dealer_id": "lexusofknoxville-com",
-      "dealer_name": "Lexus of Knoxville",
-      "deduped_rows": 3,
-      "error": null,
-      "filtered_count": 0,
-      "gallery_bins": {
-       "0": 0,
-       "1": 1,
-       "2_4": 0,
-       "5p": 2
-      },
-      "gallery_vdp_urls_added": 0,
-      "gallery_vision": null,
-      "http_only": true,
-      "intercept_count": 0,
-      "inventory_recovery": {
-       "replaced": true,
-       "strategies_tried": [
-        "jsonld_listing_html"
-       ],
-       "winning_strategy": "jsonld_listing_html"
-      },
-      "inventory_rows": 4,
-      "monroney_vision": {
-       "skipped": "monroney_vision_removed"
-      },
-      "phase_secs": {
-       "upsert": "<t>"
-      },
-      "provider": "dealer_eprocess",
-      "recipe_fetch": "none+http_only",
-      "reconcile": null,
-      "seconds": "<t>",
-      "sister_store_inventory": {
-       "excluded": 0,
-       "input": 3,
-       "kept": 3,
-       "matched": 0,
-       "samples_excluded": [],
-       "source": "inventory",
-       "unknown_location": 3
-      },
-      "upserted": 3,
-      "vdp_phase_timed_out": false,
-      "vdps_visited": 0,
-      "vehicles_vdp_enriched": 0,
-      "vin_facts": {
-       "cached": 0,
-       "drivetrain": 0,
-       "fuel_type": 0
-      },
-      "vin_owner_conflicts": 0,
-      "vins": [
-       "2T2BAMBA0TC087326",
-       "2T2BAMBA2TC41D079",
-       "2T2BAMBA8TC086795"
-      ]
-     },
-     [
-      "new"
-     ]
-    ]
-   ]
-  ],
-  "logs": [
-   [
-    "INFO",
-    "Inventory base URL: https://www.lexusofknoxville.com — using site origin (manifest pointed at document: https://www.lexusofknoxville.com/new-inventory/index.htm)"
-   ],
-   [
-    "INFO",
-    "Dealer start: Lexus of Knoxville"
-   ],
-   [
-    "INFO",
-    "HTTP-only [Lexus of Knoxville]: NO RECIPE HIT: zero rows this run"
-   ],
-   [
-    "INFO",
-    "Extraction backup: Lexus of Knoxville — no vehicles from 0 JSON intercept(s); running recovery chain"
-   ],
-   [
-    "INFO",
-    "Gallery bins [Lexus of Knoxville] after_inventory_merge: {'0': 0, '1': 1, '2_4': 0, '5p': 2}"
-   ],
-   [
-    "INFO",
-    "Gallery bins [Lexus of Knoxville] after_vdp: {'0': 0, '1': 1, '2_4': 0, '5p': 2}"
-   ],
-   [
-    "INFO",
-    "Monroney vision disabled — skipping sticker image parsing"
-   ],
-   [
-    "INFO",
-    "Monroney vision [Lexus of Knoxville]: rows_touched=None sticker_image_calls=None page_text_calls=None"
-   ],
-   [
-    "INFO",
-    "Coverage [lexusofknoxville-com] n=3: mpg_city=0.0%"
-   ],
-   [
-    "INFO",
-    "Parsing: Lexus of Knoxville — extracted 3 vehicles (deduped by VIN), upserted 3"
-   ],
-   [
-    "INFO",
-    "Dealer complete: Lexus of Knoxville (4 inventory rows, 3 deduped, 0 VDP visited, 0 VDP-enriched, 3 upserted, <t>s)"
-   ],
-   [
-    "INFO",
-    "dealer_run_summary {\"dealer_id\":\"lexusofknoxville-com\",\"intercept_count\":0,\"filtered_count\":0,\"inventory_rows\":4,\"deduped_rows\":3,\"vdps_visited\":0,\"gallery_bins\":{\"0\":0,\"1\":1,\"2_4\":0,\"5p\":2},\"gallery_vision\":null,\"monroney_vision\":{\"skipped\":\"monroney_vision_removed\"},\"seconds\":\"<t>\",\"upserted\":3,\"reconcile\":{\"ran\":true,\"scraped_candidates\":3,\"marked_inactive\":0,\"skipped_reason\":null},\"phase_secs\":{\"upsert\":\"<t>\"}}"
-   ]
-  ],
-  "raised": null,
-  "result": {
-   "capture_coverage": {
-    "body_style": 1.0,
-    "carfax_url": 0.0,
-    "description": 1.0,
-    "drivetrain": 1.0,
-    "engine_description": 1.0,
-    "exterior_color": 1.0,
-    "fuel_type": 1.0,
-    "gallery_8plus": 0.0,
-    "image_url": 1.0,
-    "interior_color": 1.0,
-    "mileage": 0.0,
-    "missing_examples": {
-     "carfax_url": [
-      "2T2BAMBA0TC087326",
-      "2T2BAMBA2TC41D079",
-      "2T2BAMBA8TC086795"
-     ],
-     "gallery_8plus": [
-      "2T2BAMBA0TC087326",
-      "2T2BAMBA2TC41D079",
-      "2T2BAMBA8TC086795"
-     ],
-     "mileage": [
-      "2T2BAMBA0TC087326",
-      "2T2BAMBA2TC41D079",
-      "2T2BAMBA8TC086795"
-     ],
-     "msrp": [
-      "2T2BAMBA0TC087326",
-      "2T2BAMBA2TC41D079",
-      "2T2BAMBA8TC086795"
-     ]
-    },
-    "msrp": 0.0,
-    "n": 3,
-    "price": 1.0,
-    "stock_number": 1.0,
-    "transmission": 1.0,
-    "trim": 1.0,
-    "used_n": 0,
-    "used_zero_mi": 0,
-    "used_zero_mi_my2026": 0
-   },
-   "coverage": {
-    "count": 3,
-    "coverage": {
-     "body_style": {
-      "count": 3,
-      "pct": 100.0
-     },
-     "condition": {
-      "count": 3,
-      "pct": 100.0
-     },
-     "drivetrain": {
-      "count": 3,
-      "pct": 100.0
-     },
-     "engine_description": {
-      "count": 3,
-      "pct": 100.0
-     },
-     "exterior_color": {
-      "count": 3,
-      "pct": 100.0
-     },
-     "fuel_type": {
-      "count": 3,
-      "pct": 100.0
-     },
-     "gallery": {
-      "count": 3,
-      "pct": 100.0
-     },
-     "interior_color": {
-      "count": 3,
-      "pct": 100.0
-     },
-     "make": {
-      "count": 3,
-      "pct": 100.0
-     },
-     "mileage": {
-      "count": 3,
-      "pct": 100.0
-     },
-     "model": {
-      "count": 3,
-      "pct": 100.0
-     },
-     "mpg_city": {
-      "count": 0,
-      "pct": 0.0
-     },
-     "price": {
-      "count": 3,
-      "pct": 100.0
-     },
-     "transmission": {
-      "count": 3,
-      "pct": 100.0
-     },
-     "trim": {
-      "count": 3,
-      "pct": 100.0
-     },
-     "vin": {
-      "count": 3,
-      "pct": 100.0
-     },
-     "year": {
-      "count": 3,
-      "pct": 100.0
-     }
-    },
-    "dealer_id": "lexusofknoxville-com"
-   },
-   "dealer_id": "lexusofknoxville-com",
-   "dealer_name": "Lexus of Knoxville",
-   "deduped_rows": 3,
-   "error": null,
-   "filtered_count": 0,
-   "gallery_bins": {
-    "0": 0,
-    "1": 1,
-    "2_4": 0,
-    "5p": 2
-   },
-   "gallery_vdp_urls_added": 0,
-   "gallery_vision": null,
-   "http_only": true,
-   "intercept_count": 0,
-   "inventory_recovery": {
-    "replaced": true,
-    "strategies_tried": [
-     "jsonld_listing_html"
-    ],
-    "winning_strategy": "jsonld_listing_html"
-   },
-   "inventory_rows": 4,
-   "monroney_vision": {
-    "skipped": "monroney_vision_removed"
-   },
-   "phase_secs": {
-    "upsert": "<t>"
-   },
-   "provider": "dealer_eprocess",
-   "recipe_fetch": "none+http_only",
-   "reconcile": {
-    "marked_inactive": 0,
-    "ran": true,
-    "scraped_candidates": 3,
-    "skipped_reason": null
-   },
-   "seconds": "<t>",
-   "sister_store_inventory": {
-    "excluded": 0,
-    "input": 3,
-    "kept": 3,
-    "matched": 0,
-    "samples_excluded": [],
-    "source": "inventory",
-    "unknown_location": 3
-   },
-   "upserted": 3,
-   "vdp_phase_timed_out": false,
-   "vdps_visited": 0,
-   "vehicles_vdp_enriched": 0,
-   "vin_facts": {
-    "cached": 0,
-    "drivetrain": 0,
-    "fuel_type": 0
-   },
-   "vin_owner_conflicts": 0,
-   "vins": [
-    "2T2BAMBA0TC087326",
-    "2T2BAMBA2TC41D079",
-    "2T2BAMBA8TC086795"
-   ]
-  },
-  "scan_log": [
-   {
-    "condition": "New",
-    "dealer_id": "lexusofknoxville-com",
-    "dealer_name": "Lexus of Knoxville",
-    "exterior_color": "Caviar",
-    "interior_color": "Birch Nuluxe® And Black Open-pore Wood Trim",
-    "make": "Lexus",
-    "mileage": 0,
-    "model": "RX 350",
-    "price": 60701,
-    "provider": "dealer_eprocess",
-    "scan_ts": "<scan_ts>",
-    "stock_number": "4052",
-    "trim": "350 Premium",
-    "type": "vehicle",
-    "vin": "2T2BAMBA0TC087326",
-    "year": 2026
-   },
-   {
-    "condition": "New",
-    "dealer_id": "lexusofknoxville-com",
-    "dealer_name": "Lexus of Knoxville",
-    "exterior_color": "Eminent White Pearl",
-    "interior_color": "Black Nuluxe® And Black Open-pore Wood Trim",
-    "make": "Lexus",
-    "mileage": 0,
-    "model": "RX 350",
-    "price": 61026,
-    "provider": "dealer_eprocess",
-    "scan_ts": "<scan_ts>",
-    "stock_number": "2T2BAMBA2TC41D079",
-    "trim": "350 Premium",
-    "type": "vehicle",
-    "vin": "2T2BAMBA2TC41D079",
-    "year": 2026
-   },
-   {
-    "condition": "New",
-    "dealer_id": "lexusofknoxville-com",
-    "dealer_name": "Lexus of Knoxville",
-    "exterior_color": "Iridium",
-    "interior_color": "Birch Nuluxe® And Black Open-pore Wood Trim",
-    "make": "Lexus",
-    "mileage": 0,
-    "model": "RX 350",
-    "price": 60811,
-    "provider": "dealer_eprocess",
-    "scan_ts": "<scan_ts>",
-    "stock_number": "4029",
-    "trim": "350 Premium",
-    "type": "vehicle",
-    "vin": "2T2BAMBA8TC086795",
-    "year": 2026
-   },
-   {
-    "dealer_id": "lexusofknoxville-com",
-    "dealer_name": "Lexus of Knoxville",
-    "deduped_rows": 3,
-    "error": null,
-    "inventory_rows": 4,
-    "phase_secs": {
-     "upsert": "<t>"
-    },
-    "provider": "dealer_eprocess",
-    "recovery_strategy": "jsonld_listing_html",
-    "scan_ts": "<scan_ts>",
-    "seconds": "<t>",
-    "type": "dealer_summary",
-    "upserted": 3,
-    "vdps_visited": 0,
-    "vehicles_vdp_enriched": 0
-   }
-  ],
-  "upserts": [
-   {
-    "stats_in": {},
-    "vehicles": [
-     {
-      "_detail_url": "https://www.lexusofknoxville.com/auto/new-2026-lexus-rx-350-premium/125841588/",
-      "_rooftop_evidence": null,
-      "_rooftop_evidence_tier": "none",
-      "_rooftop_score": 0.0,
-      "_rooftop_strong": false,
-      "_rooftop_tier": "no_rooftop_evidence",
-      "body_style": "SUV",
-      "carfax_url": null,
-      "condition": "New",
-      "dealer_name": "lexusofknoxville-com",
-      "dealer_url": "https://www.lexusofknoxville.com",
-      "dealership_registry_id": 4242,
-      "description": "New 2026 Lexus RX 350 Caviar in Knoxville, TN at of Knoxville - Call us now 865-271-9059 for more information about this Premium Stock #4052",
-      "drivetrain": "FWD",
-      "engine_description": "Turbo in-line 4",
-      "exterior_color": "Caviar",
-      "fuel_type": "Gasoline",
-      "gallery": [
-       "https://cloudflareimages.dealereprocess.com/resrc/images/c_limit,fl_lossy,w_auto/v1/dvp/3958/55683530025/New-2026-Lexus-RX350-350Premium-ID55683530025-aHR0cDovL2ltYWdlcy51bml0c2ludmVudG9yeS5jb20vdXBsb2Fkcy9waG90b3MvMC8yMDI2LTA5LTIyLzEtMjk4OTA1OTAtNmFiMmVjN2Q2ZDVmYS5qcGc=",
-       "https://cdn.dealereprocess.org/cdn/img/makes/null_o.jpg",
-       "https://storage.googleapis.com/phalanx-media-library/1b8f1e37-128270-wb-aagi-service.jpg",
-       "https://storage.googleapis.com/phalanx-media-library/7c2c7799-128270-wb-aagi-tech.jpg",
-       "https://storage.googleapis.com/phalanx-media-library/553811c7-128270-wb-aagi-parts.jpg",
-       "https://storage.googleapis.com/phalanx-media-library/0b1ea9ca-128270-wb-aagi-recall.jpg",
-       "https://img.example/dup-1.jpg"
-      ],
-      "image_url": "https://cloudflareimages.dealereprocess.com/resrc/images/c_limit,fl_lossy,w_auto/v1/dvp/3958/55683530025/New-2026-Lexus-RX350-350Premium-ID55683530025-aHR0cDovL2ltYWdlcy51bml0c2ludmVudG9yeS5jb20vdXBsb2Fkcy9waG90b3MvMC8yMDI2LTA5LTIyLzEtMjk4OTA1OTAtNmFiMmVjN2Q2ZDVmYS5qcGc=",
-      "interior_color": "Birch Nuluxe® And Black Open-pore Wood Trim",
-      "make": "Lexus",
-      "mileage": 0,
-      "model": "RX 350",
-      "msrp": null,
-      "price": 60701,
-      "source_url": "https://www.lexusofknoxville.com/auto/new-2026-lexus-rx-350-premium/125841588/",
-      "stock_number": "4052",
-      "transmission": "8AT",
-      "trim": "350 Premium",
-      "vin": "2T2BAMBA0TC087326",
-      "year": 2026,
-      "zip_code": null
-     },
-     {
-      "_detail_url": "https://www.lexusofknoxville.com/auto/new-2026-lexus-rx-350-premium/125163423/",
-      "_rooftop_evidence": null,
-      "_rooftop_evidence_tier": "none",
-      "_rooftop_score": 0.0,
-      "_rooftop_strong": false,
-      "_rooftop_tier": "no_rooftop_evidence",
-      "body_style": "SUV",
-      "carfax_url": null,
-      "condition": "New",
-      "dealer_name": "lexusofknoxville-com",
-      "dealer_url": "https://www.lexusofknoxville.com",
-      "dealership_registry_id": 4242,
-      "description": "New 2026 Lexus RX 350 Eminent White Pearl in Knoxville, TN at of Knoxville - Call us now 865-271-9059 for more information about this Premium Stock #",
-      "drivetrain": "FWD",
-      "engine_description": "Turbo in-line 4",
-      "exterior_color": "Eminent White Pearl",
-      "fuel_type": "Gasoline",
-      "gallery": [
-       "https://cloudflareimages.dealereprocess.com/resrc/images/c_limit,fl_lossy,w_auto/v1/dvp/3958/53880917685/New-2026-Lexus-RX350-350Premium-ID53880917685-aHR0cDovL2ltYWdlcy51bml0c2ludmVudG9yeS5jb20vdXBsb2Fkcy9waG90b3MvMC8yMDI2LTA5LTA0LzEtMjk2NTg3NDQtNmE5YjE4ZmZmMGU3NC5qcGc=",
-       "https://cdn.dealereprocess.org/cdn/img/makes/null_o.jpg",
-       "https://storage.googleapis.com/phalanx-media-library/1b8f1e37-128270-wb-aagi-service.jpg",
-       "https://storage.googleapis.com/phalanx-media-library/7c2c7799-128270-wb-aagi-tech.jpg",
-       "https://storage.googleapis.com/phalanx-media-library/553811c7-128270-wb-aagi-parts.jpg",
-       "https://storage.googleapis.com/phalanx-media-library/0b1ea9ca-128270-wb-aagi-recall.jpg"
-      ],
-      "image_url": "https://cloudflareimages.dealereprocess.com/resrc/images/c_limit,fl_lossy,w_auto/v1/dvp/3958/53880917685/New-2026-Lexus-RX350-350Premium-ID53880917685-aHR0cDovL2ltYWdlcy51bml0c2ludmVudG9yeS5jb20vdXBsb2Fkcy9waG90b3MvMC8yMDI2LTA5LTA0LzEtMjk2NTg3NDQtNmE5YjE4ZmZmMGU3NC5qcGc=",
-      "interior_color": "Black Nuluxe® And Black Open-pore Wood Trim",
-      "make": "Lexus",
-      "mileage": 0,
-      "model": "RX 350",
-      "msrp": null,
-      "price": 61026,
-      "source_url": "https://www.lexusofknoxville.com/auto/new-2026-lexus-rx-350-premium/125163423/",
-      "stock_number": "2T2BAMBA2TC41D079",
-      "transmission": "8AT",
-      "trim": "350 Premium",
-      "vin": "2T2BAMBA2TC41D079",
-      "year": 2026,
-      "zip_code": null
-     },
-     {
-      "_detail_url": "https://www.lexusofknoxville.com/auto/new-2026-lexus-rx-350-premium/125531139/",
-      "_rooftop_evidence": null,
-      "_rooftop_evidence_tier": "none",
-      "_rooftop_score": 0.0,
-      "_rooftop_strong": false,
-      "_rooftop_tier": "no_rooftop_evidence",
-      "body_style": "SUV",
-      "carfax_url": null,
-      "condition": "New",
-      "dealer_name": "lexusofknoxville-com",
-      "dealer_url": "https://www.lexusofknoxville.com",
-      "dealership_registry_id": 4242,
-      "description": "New 2026 Lexus RX 350 Iridium in Knoxville, TN at of Knoxville - Call us now 865-271-9059 for more information about this Premium Stock #4029",
-      "drivetrain": "FWD",
-      "engine_description": "Turbo in-line 4",
-      "exterior_color": "Iridium",
-      "fuel_type": "Gasoline",
-      "gallery": [
-       "https://cloudflareimages.dealereprocess.com/resrc/images/c_limit,fl_lossy,w_auto/v1/dvp/3958/55155114168/New-2026-Lexus-RX350-350Premium-ID55155114168-aHR0cDovL2ltYWdlcy51bml0c2ludmVudG9yeS5jb20vdXBsb2Fkcy9waG90b3MvMC8yMDI2LTA5LTE1LzEtMjk3ODk2MzgtNmFhOWMzN2VjYzI3ZS5qcGc="
-      ],
-      "image_url": "https://cloudflareimages.dealereprocess.com/resrc/images/c_limit,fl_lossy,w_auto/v1/dvp/3958/55155114168/New-2026-Lexus-RX350-350Premium-ID55155114168-aHR0cDovL2ltYWdlcy51bml0c2ludmVudG9yeS5jb20vdXBsb2Fkcy9waG90b3MvMC8yMDI2LTA5LTE1LzEtMjk3ODk2MzgtNmFhOWMzN2VjYzI3ZS5qcGc=",
-      "interior_color": "Birch Nuluxe® And Black Open-pore Wood Trim",
-      "make": "Lexus",
-      "mileage": 0,
-      "model": "RX 350",
-      "msrp": null,
-      "price": 60811,
-      "source_url": "https://www.lexusofknoxville.com/auto/new-2026-lexus-rx-350-premium/125531139/",
-      "stock_number": "4029",
-      "transmission": "8AT",
-      "trim": "350 Premium",
-      "vin": "2T2BAMBA8TC086795",
-      "year": 2026,
-      "zip_code": null
-     }
-    ]
-   }
-  ]
- },
  "corpus|legacy|claremontcdjr-com": {
   "events": [
    [
@@ -1657,8 +43,6 @@
       "https://www.claremontcdjr.com/api/unstamped_account",
       "https://www.claremontcdjr.com/api/dup"
      ],
-     "page": null,
-     "path_htmls": [],
      "provider": "carscommerce",
      "vins": [
       "00KCN000000000001",
@@ -2678,8 +1062,6 @@
       "https://www.grandhyundaicanton.com/api/store_scoped_location_facet",
       "https://www.grandhyundaicanton.com/api/dup"
      ],
-     "page": null,
-     "path_htmls": [],
      "provider": "carscommerce",
      "vins": [
       "00GHC000000000001",
@@ -3660,8 +2042,6 @@
       "https://www.greenwaycdjrofrome.com/api/store_scoped_recipe",
       "https://www.greenwaycdjrofrome.com/api/dup"
      ],
-     "page": null,
-     "path_htmls": [],
      "provider": "carscommerce",
      "vins": [
       "00GWR000000000001",
@@ -4691,8 +3071,6 @@
       "https://www.group1fordofsouthaustin.com/api/store_scoped_location_facet",
       "https://www.group1fordofsouthaustin.com/api/dup"
      ],
-     "page": null,
-     "path_htmls": [],
      "provider": "carscommerce",
      "vins": [
       "00GFS000000000001",
@@ -5884,8 +4262,6 @@
       "https://www.group1toyotanorthaustin.com/api/store_scoped_location_facet",
       "https://www.group1toyotanorthaustin.com/api/dup"
      ],
-     "page": null,
-     "path_htmls": [],
      "provider": "carscommerce",
      "vins": [
       "00GTJ000000000001",
@@ -7409,8 +5785,6 @@
       "https://www.hendrickbuickgmccary.com/api/store_scoped_recipe",
       "https://www.hendrickbuickgmccary.com/api/dup"
      ],
-     "page": null,
-     "path_htmls": [],
      "provider": "carscommerce",
      "vins": [
       "00HBC000000000001",
@@ -8529,8 +6903,6 @@
       "https://www.hendrickhonda.com/api/union_pass_with_street",
       "https://www.hendrickhonda.com/api/dup"
      ],
-     "page": null,
-     "path_htmls": [],
      "provider": "carscommerce",
      "vins": [
       "00HHC000000000001",
@@ -8708,8 +7080,6 @@
       "https://www.hondahuntersville.com/api/group_wide_source_never_vouches",
       "https://www.hondahuntersville.com/api/dup"
      ],
-     "page": null,
-     "path_htmls": [],
      "provider": "carscommerce",
      "vins": [
       "00HHN000000000001",
@@ -9970,8 +8340,6 @@
       "https://www.machaikchevy.com/api/open_group_page_named",
       "https://www.machaikchevy.com/api/dup"
      ],
-     "page": null,
-     "path_htmls": [],
      "provider": "carscommerce",
      "vins": [
       "00MHC000000000001",
@@ -11002,8 +9370,6 @@
       "https://www.mallofgamazda.com/api/store_scoped_recipe",
       "https://www.mallofgamazda.com/api/dup"
      ],
-     "page": null,
-     "path_htmls": [],
      "provider": "carscommerce",
      "vins": [
       "00MZA000000000001",
@@ -12108,8 +10474,6 @@
       "https://www.rickhendrickchevynaples.com/api/store_scoped_recipe",
       "https://www.rickhendrickchevynaples.com/api/dup"
      ],
-     "page": null,
-     "path_htmls": [],
      "provider": "carscommerce",
      "vins": [
       "00NAP000000000001",
@@ -13153,8 +11517,6 @@
       "https://www.shottenkirkchrysler.com/api/sibling_with_locale",
       "https://www.shottenkirkchrysler.com/api/dup"
      ],
-     "page": null,
-     "path_htmls": [],
      "provider": "typesense",
      "vins": [
       "00SCC000000000001",
@@ -14148,8 +12510,6 @@
       "https://www.stevensonhendrickhonda.com/api/store_scoped_recipe",
       "https://www.stevensonhendrickhonda.com/api/dup"
      ],
-     "page": null,
-     "path_htmls": [],
      "provider": "carscommerce",
      "vins": [
       "00SHA000000000001",
@@ -15273,8 +13633,6 @@
       "https://www.tuttoncdjr.com/api/store_scoped_recipe",
       "https://www.tuttoncdjr.com/api/dup"
      ],
-     "page": null,
-     "path_htmls": [],
      "provider": "carscommerce",
      "vins": [
       "00TCA000000000001",
@@ -16467,8 +14825,6 @@
       "https://www.claremontcdjr.com/api/unstamped_account",
       "https://www.claremontcdjr.com/api/dup"
      ],
-     "page": null,
-     "path_htmls": [],
      "provider": "carscommerce",
      "vins": [
       "00KCN000000000001",
@@ -17503,8 +15859,6 @@
       "https://www.grandhyundaicanton.com/api/store_scoped_location_facet",
       "https://www.grandhyundaicanton.com/api/dup"
      ],
-     "page": null,
-     "path_htmls": [],
      "provider": "carscommerce",
      "vins": [
       "00GHC000000000001",
@@ -18485,8 +16839,6 @@
       "https://www.greenwaycdjrofrome.com/api/store_scoped_recipe",
       "https://www.greenwaycdjrofrome.com/api/dup"
      ],
-     "page": null,
-     "path_htmls": [],
      "provider": "carscommerce",
      "vins": [
       "00GWR000000000001",
@@ -19516,8 +17868,6 @@
       "https://www.group1fordofsouthaustin.com/api/store_scoped_location_facet",
       "https://www.group1fordofsouthaustin.com/api/dup"
      ],
-     "page": null,
-     "path_htmls": [],
      "provider": "carscommerce",
      "vins": [
       "00GFS000000000001",
@@ -20713,8 +19063,6 @@
       "https://www.group1toyotanorthaustin.com/api/store_scoped_location_facet",
       "https://www.group1toyotanorthaustin.com/api/dup"
      ],
-     "page": null,
-     "path_htmls": [],
      "provider": "carscommerce",
      "vins": [
       "00GTJ000000000001",
@@ -22241,8 +20589,6 @@
       "https://www.hendrickbuickgmccary.com/api/store_scoped_recipe",
       "https://www.hendrickbuickgmccary.com/api/dup"
      ],
-     "page": null,
-     "path_htmls": [],
      "provider": "carscommerce",
      "vins": [
       "00HBC000000000001",
@@ -23362,8 +21708,6 @@
       "https://www.hendrickhonda.com/api/union_pass_with_street",
       "https://www.hendrickhonda.com/api/dup"
      ],
-     "page": null,
-     "path_htmls": [],
      "provider": "carscommerce",
      "vins": [
       "00HHC000000000001",
@@ -23541,8 +21885,6 @@
       "https://www.hondahuntersville.com/api/group_wide_source_never_vouches",
       "https://www.hondahuntersville.com/api/dup"
      ],
-     "page": null,
-     "path_htmls": [],
      "provider": "carscommerce",
      "vins": [
       "00HHN000000000001",
@@ -24818,8 +23160,6 @@
       "https://www.machaikchevy.com/api/open_group_page_named",
       "https://www.machaikchevy.com/api/dup"
      ],
-     "page": null,
-     "path_htmls": [],
      "provider": "carscommerce",
      "vins": [
       "00MHC000000000001",
@@ -25850,8 +24190,6 @@
       "https://www.mallofgamazda.com/api/store_scoped_recipe",
       "https://www.mallofgamazda.com/api/dup"
      ],
-     "page": null,
-     "path_htmls": [],
      "provider": "carscommerce",
      "vins": [
       "00MZA000000000001",
@@ -26956,8 +25294,6 @@
       "https://www.rickhendrickchevynaples.com/api/store_scoped_recipe",
       "https://www.rickhendrickchevynaples.com/api/dup"
      ],
-     "page": null,
-     "path_htmls": [],
      "provider": "carscommerce",
      "vins": [
       "00NAP000000000001",
@@ -28001,8 +26337,6 @@
       "https://www.shottenkirkchrysler.com/api/sibling_with_locale",
       "https://www.shottenkirkchrysler.com/api/dup"
      ],
-     "page": null,
-     "path_htmls": [],
      "provider": "typesense",
      "vins": [
       "00SCC000000000001",
@@ -29000,8 +27334,6 @@
       "https://www.stevensonhendrickhonda.com/api/store_scoped_recipe",
       "https://www.stevensonhendrickhonda.com/api/dup"
      ],
-     "page": null,
-     "path_htmls": [],
      "provider": "carscommerce",
      "vins": [
       "00SHA000000000001",
@@ -30126,8 +28458,6 @@
       "https://www.tuttoncdjr.com/api/store_scoped_recipe",
       "https://www.tuttoncdjr.com/api/dup"
      ],
-     "page": null,
-     "path_htmls": [],
      "provider": "carscommerce",
      "vins": [
       "00TCA000000000001",
@@ -31365,8 +29695,6 @@
      "dealer_name": "Empty",
      "dealer_url": "https://www.empty.com",
      "intercepts": [],
-     "page": null,
-     "path_htmls": [],
      "provider": "dealer_dot_com",
      "vins": []
     }
@@ -31501,8 +29829,6 @@
      "intercepts": [
       "https://t/api"
      ],
-     "page": null,
-     "path_htmls": [],
      "provider": "dealer_eprocess",
      "vins": [
       "00TCA000000000001",
@@ -32611,8 +30937,6 @@
      "intercepts": [
       "https://www.lexusofknoxville.com/api/inv"
      ],
-     "page": null,
-     "path_htmls": [],
      "provider": "dealer_eprocess",
      "vins": []
     }
@@ -34106,8 +32430,6 @@
      "dealer_name": "Lexus of Knoxville",
      "dealer_url": "https://www.lexusofknoxville.com",
      "intercepts": [],
-     "page": null,
-     "path_htmls": [],
      "provider": "dealer_eprocess",
      "vins": []
     }
@@ -35626,8 +33948,6 @@
      "dealer_name": "Lexus of Knoxville",
      "dealer_url": "https://www.lexusofknoxville.com",
      "intercepts": [],
-     "page": null,
-     "path_htmls": [],
      "provider": "dealer_eprocess",
      "vins": []
     }
@@ -35962,8 +34282,6 @@
      "dealer_name": "Empty",
      "dealer_url": "https://www.empty.com",
      "intercepts": [],
-     "page": null,
-     "path_htmls": [],
      "provider": "dealer_dot_com",
      "vins": []
     }
@@ -36089,8 +34407,6 @@
      "dealer_name": "Lexus of Knoxville",
      "dealer_url": "https://www.lexusofknoxville.com",
      "intercepts": [],
-     "page": null,
-     "path_htmls": [],
      "provider": "dealer_eprocess",
      "vins": []
     }
@@ -36188,8 +34504,6 @@
       "https://www.tuttoncdjr.com/api/open_page_with_jsonld_street",
       "https://www.tuttoncdjr.com/api/store_scoped_recipe"
      ],
-     "page": null,
-     "path_htmls": [],
      "provider": "carscommerce",
      "vins": [
       "00TCA000000000001",
@@ -37426,8 +35740,6 @@
      "dealer_name": "Lexus of Knoxville",
      "dealer_url": "https://www.lexusofknoxville.com",
      "intercepts": [],
-     "page": null,
-     "path_htmls": [],
      "provider": "dealer_eprocess",
      "vins": []
     }

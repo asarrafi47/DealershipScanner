@@ -6,7 +6,6 @@ Uses deterministic rules for known infra failures, then optional Claude Haiku wh
 """
 from __future__ import annotations
 
-import glob
 import json
 import logging
 import os
@@ -24,7 +23,6 @@ _STRATEGIES = frozenset(
         "simple_retry",
         "retry_with_env",
         "retry_with_profile",
-        "retry_with_python_scanner",
         "needs_code_fix",
         "needs_manual",
         "no_retry",
@@ -32,16 +30,8 @@ _STRATEGIES = frozenset(
 )
 
 
-def _playwright_chromium_path() -> str | None:
-    home = os.path.expanduser("~")
-    pattern = os.path.join(home, ".cache", "ms-playwright", "chromium-*", "chrome-linux", "chrome")
-    matches = sorted(glob.glob(pattern))
-    return matches[-1] if matches else None
-
-
 def _rule_diagnosis(*, error: str, log_tail: str, job_type: str, payload: dict[str, Any]) -> dict[str, Any] | None:
     blob = f"{error}\n{log_tail}".lower()
-    pw = _playwright_chromium_path()
 
     if any(
         tok in blob
@@ -52,32 +42,16 @@ def _rule_diagnosis(*, error: str, log_tail: str, job_type: str, payload: dict[s
             "chrome-linux64/chrome",
         )
     ):
-        actions: list[dict[str, str]] = []
-        if pw:
-            actions.append({"type": "set_env", "key": "PUPPETEER_EXECUTABLE_PATH", "value": pw})
         return {
             "source": "rule",
-            "summary": "Puppeteer tried to run an x86_64 Chromium binary on ARM Docker (browser launch failed).",
+            "summary": "The browser binary is x86_64 inside an ARM container (browser launch failed).",
             "category": "infrastructure",
-            "root_cause": "Architecture mismatch: bundled Puppeteer Chrome is AMD64 inside an aarch64 container.",
-            "retry_recommended": bool(pw),
-            "retry_strategy": "retry_with_env" if pw else "needs_code_fix",
-            "retry_actions": actions,
-            "code_fix_hint": "Point Puppeteer at Playwright's native ARM Chromium (docker entrypoint + scanner.js).",
-            "confidence": 0.98,
-        }
-
-    if "module_not_found" in blob or "cannot find module" in blob:
-        return {
-            "source": "rule",
-            "summary": "Node scanner failed because a required npm package was missing in the worker container.",
-            "category": "infrastructure",
-            "root_cause": "backend/scanner/node_modules not installed (bind mount hid image deps).",
-            "retry_recommended": True,
-            "retry_strategy": "simple_retry",
+            "root_cause": "Architecture mismatch: an AMD64 Chromium is installed in an aarch64 container.",
+            "retry_recommended": False,
+            "retry_strategy": "needs_code_fix",
             "retry_actions": [],
-            "code_fix_hint": "Worker entrypoint runs npm ci when node_modules is empty.",
-            "confidence": 0.95,
+            "code_fix_hint": "Rebuild the scanner image for the host architecture so Playwright installs its native Chromium.",
+            "confidence": 0.98,
         }
 
     if "job_timeout" in error.lower() or "timeout" in blob:
@@ -167,9 +141,9 @@ def _llm_diagnosis(
         "confidence (0-1). "
         f"category must be one of: {sorted(_CATEGORIES)}. "
         f"retry_strategy must be one of: {sorted(_STRATEGIES)}. "
-        "retry_actions types: set_env, set_profile, use_python_scanner. "
-        "If the log shows qemu-x86_64 or ld-linux-x86-64.so.2, category=infrastructure and suggest set_env "
-        "PUPPETEER_EXECUTABLE_PATH to Playwright chromium. "
+        "retry_actions types: set_env, set_profile. "
+        "If the log shows qemu-x86_64 or ld-linux-x86-64.so.2, category=infrastructure and "
+        "needs_code_fix (the image must be rebuilt for the host architecture). "
         "If a code bug in our repo is likely, use code_bug and needs_code_fix."
     )
     try:
@@ -217,8 +191,6 @@ def _normalize_diagnosis(raw: dict[str, Any]) -> dict[str, Any]:
             )
         elif t == "set_profile" and a.get("value"):
             clean_actions.append({"type": "set_profile", "value": str(a["value"])})
-        elif t == "use_python_scanner":
-            clean_actions.append({"type": "use_python_scanner"})
     try:
         conf = float(raw.get("confidence", 0.5))
     except (TypeError, ValueError):
@@ -294,8 +266,6 @@ def apply_diagnosis_to_payload(
             retry_env[str(action["key"])] = str(action.get("value") or "")
         elif t == "set_profile" and action.get("value"):
             out["profile"] = str(action["value"])
-        elif t == "use_python_scanner":
-            out["use_python_scanner"] = True
     if retry_env:
         out["retry_env"] = retry_env
     out["ai_diagnosis"] = {

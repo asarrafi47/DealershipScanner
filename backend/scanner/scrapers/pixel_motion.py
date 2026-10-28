@@ -4,6 +4,9 @@ PixelMotion (WordPress pm-motors-plugin) inventory scraper.
 Sites like McPeek's CDJR render inventory server-side (``vlpm3VehicleRow`` cards) with
 optional API calls to ``pixelmotiondemo.com``. Inventory lives at ``/inventory/new/``,
 ``/inventory/used/``, etc. — not Dealer.com ``/new-inventory/index.htm`` paths.
+
+The Playwright page scraper and its pagination were retired with the browser path
+(P17B.5); discovery still uses the HTML parser, ``_PIXEL_PATHS`` and the cookie dismiss.
 """
 from __future__ import annotations
 
@@ -225,113 +228,3 @@ async def _dismiss_cookie_banner(page: Any) -> None:
                 return
         except Exception:
             continue
-
-
-async def _scrape_path_with_pagination(
-    page: Any,
-    inv_base: str,
-    path: str,
-    dealer_id: str,
-    dealer_name: str,
-    dealer_url: str,
-    by_vin: dict[str, dict[str, Any]],
-) -> int:
-    """Navigate one PixelMotion VLP path and paginate via ``.vlpm3Pages__next``."""
-    import asyncio
-
-    target = inv_base.rstrip("/") + path
-    added = 0
-    try:
-        await page.goto(target, wait_until="domcontentloaded", timeout=25000)
-        await _dismiss_cookie_banner(page)
-        try:
-            await page.locator(".vlpm3VehicleRow").first.wait_for(state="attached", timeout=12000)
-        except Exception:
-            pass
-    except Exception as e:
-        logger.debug("PixelMotion: nav %s failed: %s", target, e)
-        return 0
-
-    max_pages = 20
-    prev_total = len(by_vin)
-    for _pag in range(max_pages):
-        html = await page.content()
-        batch = parse_pixel_motion_inventory_html(html, inv_base, dealer_id, dealer_name, dealer_url)
-        for v in batch:
-            vin = (v.get("vin") or "").upper()
-            if vin and vin not in by_vin:
-                by_vin[vin] = v
-                added += 1
-        if len(by_vin) == prev_total and _pag > 0:
-            break
-        prev_total = len(by_vin)
-
-        next_btn = page.locator(".vlpm3Pages__next")
-        try:
-            if await next_btn.count() == 0:
-                break
-            first = next_btn.first
-            if not await first.is_visible():
-                break
-            await first.click(timeout=5000)
-            await asyncio.sleep(0.8)
-        except Exception:
-            break
-
-    return added
-
-
-async def scrape_pixel_motion_from_page(
-    page: Any,
-    base_url: str,
-    dealer_id: str,
-    dealer_name: str,
-    dealer_url: str,
-) -> list[dict[str, Any]]:
-    """
-    Extract PixelMotion inventory from the current page and standard VLP paths.
-    """
-    by_vin: dict[str, dict[str, Any]] = {}
-
-    try:
-        html = await page.content()
-    except Exception as e:
-        logger.debug("PixelMotion: could not read page content: %s", e)
-        html = ""
-
-    if _is_pixel_motion_html(html):
-        for v in parse_pixel_motion_inventory_html(html, base_url, dealer_id, dealer_name, dealer_url):
-            vin = (v.get("vin") or "").upper()
-            if vin:
-                by_vin[vin] = v
-
-    if not _is_pixel_motion_html(html) and not by_vin:
-        return []
-
-    # Resolve inventory host (McPeek redirects anaheim → mcpeeks.com).
-    inv_base = base_url.rstrip("/")
-    try:
-        cur = page.url or ""
-        if cur.startswith("http"):
-            from urllib.parse import urlparse
-
-            p = urlparse(cur)
-            inv_base = f"{p.scheme}://{p.netloc}"
-    except Exception:
-        pass
-
-    for path in _PIXEL_PATHS:
-        added = await _scrape_path_with_pagination(
-            page, inv_base, path, dealer_id, dealer_name, dealer_url, by_vin
-        )
-        logger.debug(
-            "PixelMotion: %s — +%d new (total %d) for %s",
-            path,
-            added,
-            len(by_vin),
-            dealer_name,
-        )
-
-    if by_vin:
-        logger.info("PixelMotion: scraped %d vehicles for %s", len(by_vin), dealer_name)
-    return list(by_vin.values())
