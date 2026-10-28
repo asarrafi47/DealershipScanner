@@ -4,6 +4,7 @@ Database layer for scanner: connection to inventory.db and vehicle upsert.
 import logging
 import os
 import re
+import time
 from datetime import datetime, timezone
 from typing import Any
 
@@ -28,6 +29,8 @@ from backend.scanner.upsert import (
 )
 from backend.scanner.upsert.serialize import PRICE_HISTORY_MAX_ENTRIES as _PRICE_HISTORY_MAX_ENTRIES  # noqa: F401
 from backend.scanner.upsert.serialize import price_history_json as _build_price_history_json  # noqa: F401
+from backend.scanner.upsert.serialize import utc_now_z
+from backend.scanner.upsert.timing import add_lap, lap
 
 logger = logging.getLogger(__name__)
 
@@ -447,6 +450,11 @@ def upsert_vehicles(vehicles: list[dict], stats: dict | None = None) -> int:
     ({owner_dealer_id: n}).
     """
     reset_stats(stats)
+    # Wall + thread-CPU breakdown (P11A.7); replaced on every attempt like the guard counters.
+    timing: dict | None = None
+    if stats is not None:
+        timing = stats["timing"] = {}
+    t0, c0 = time.perf_counter(), time.thread_time()
     if not vehicles:
         return 0
     vehicles, _refused, _dropped = drop_unattributable_vehicles(vehicles)
@@ -467,20 +475,25 @@ def upsert_vehicles(vehicles: list[dict], stats: dict | None = None) -> int:
     try:
         _ensure_schema(conn)
         cursor = conn.cursor()
-        now = datetime.utcnow().isoformat() + "Z"
+        now = utc_now_z()
         window = guard_window(vin_owner_guard_hours())
         moves: list = []
         reasons: dict[str, str] = {}
         stored_facts: dict[str, dict] = {}
-        existing_spec_src, conflicts = prefetch_existing(
-            cursor, by_vin, window, _vin_owned_elsewhere, moves=moves, reasons=reasons,
-            stored_facts=stored_facts,
-        )
+        add_lap(timing, "setup", time.perf_counter() - t0, time.thread_time() - c0)
+        with lap(timing, "prefetch"):
+            existing_spec_src, conflicts = prefetch_existing(
+                cursor, by_vin, window, _vin_owned_elsewhere, moves=moves, reasons=reasons,
+                stored_facts=stored_facts,
+            )
         if conflicts:
             vehicles = [v for v in vehicles if (v.get("vin") or "").strip() not in conflicts]
         # The prefetch opened a read transaction; it is fully materialized in
         # ``existing_spec_src`` now, so end it before the per-vehicle work starts.
-        conn.commit()
+        with lap(timing, "commit"):
+            conn.commit()
+        w0, c0w = time.perf_counter(), time.thread_time()
+        in_loop = (timing.get("commit_s", 0.0), timing.get("commit_cpu_s", 0.0)) if timing is not None else (0.0, 0.0)
         count = write_rows(
             conn,
             cursor,
@@ -491,9 +504,21 @@ def upsert_vehicles(vehicles: list[dict], stats: dict | None = None) -> int:
             window=window,
             conflicts=conflicts,
             commit_every=_UPSERT_COMMIT_BATCH,
+            timing=timing,
         )
-        conn.commit()
-        moves_logged = _log_owner_moves(conn, cursor, [m for m in moves if m.vin not in conflicts])
+        if timing is not None:
+            # write_rows_s excludes the loop's periodic commits, which land in commit_s.
+            add_lap(
+                timing, "write_rows",
+                time.perf_counter() - w0 - (timing.get("commit_s", 0.0) - in_loop[0]),
+                time.thread_time() - c0w - (timing.get("commit_cpu_s", 0.0) - in_loop[1]),
+            )
+            timing["rows"] = count
+            timing.setdefault("row_selects", 0)
+        with lap(timing, "commit"):
+            conn.commit()
+        with lap(timing, "moves"):
+            moves_logged = _log_owner_moves(conn, cursor, [m for m in moves if m.vin not in conflicts])
     finally:
         conn.close()
     logger.info("Upserted %d vehicles", count)
@@ -502,12 +527,33 @@ def upsert_vehicles(vehicles: list[dict], stats: dict | None = None) -> int:
     if conflicts:
         report_conflicts(conflicts, by_vin, window.hours, stats, record_vin_owner_conflicts, reasons)
     if count > 0:
+        post_write: dict | None = {} if timing is not None else None
         run_post_write_enrichment(
             list(by_vin.keys()),
             get_conn=get_conn,
             apply_model_specs_corrections=apply_model_specs_corrections,
+            **({"timing": post_write} if post_write is not None else {}),
         )
+        if timing is not None:
+            timing["post_write"] = post_write
+    if timing is not None:
+        _finish_timing(timing, time.perf_counter() - t0, time.thread_time() - c0)
     return count
+
+
+def _finish_timing(timing: dict, wall: float, cpu: float) -> None:
+    """Totals, the unaccounted remainder and the dealer concurrency in effect."""
+    parts = sum(timing.get(f"{k}_s", 0.0) for k in ("setup", "prefetch", "write_rows", "commit", "moves"))
+    parts += (timing.get("post_write") or {}).get("total_s", 0.0)
+    timing["total_s"] = round(wall, 4)
+    timing["total_cpu_s"] = round(cpu, 4)
+    timing["other_s"] = round(max(0.0, wall - parts), 4)
+    try:
+        from backend.scanner.inventory_write import default_max_dealer_concurrency
+
+        timing["dealer_concurrency"] = default_max_dealer_concurrency()
+    except Exception:
+        timing["dealer_concurrency"] = None
 
 
 # ---------------------------------------------------------------------------

@@ -14,6 +14,7 @@ from typing import Any, Callable, NamedTuple
 
 from backend.parsers.base import is_preassignment_vin
 from backend.scanner.upsert import ownership as _own
+from backend.scanner.upsert.serialize import utc_now_z
 from backend.vehicle_facts import precedence as _prec
 
 # Same logger name as before the split so log routing and captures are unchanged.
@@ -230,7 +231,7 @@ def report_conflicts(
     )
     record(
         [(vin, owner, claimant) for vin, (owner, claimant) in sorted(conflicts.items())],
-        datetime.utcnow().isoformat() + "Z",
+        utc_now_z(),
     )
     if stats is not None:
         stats["vin_owner_conflicts"] = len(conflicts)

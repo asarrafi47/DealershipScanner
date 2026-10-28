@@ -7,10 +7,23 @@ the stored value.
 from __future__ import annotations
 
 import json
+from datetime import datetime, timezone
 from typing import Any
 
 from backend.utils.in_transit import availability_spec_source_patch
 from backend.utils.spec_provenance import merge_spec_source_json
+
+
+def utc_now_z() -> str:
+    """Naive-UTC ISO string with a trailing ``Z``, e.g. ``2026-10-27T12:00:00.123456Z``.
+
+    Byte-identical to the former naive-UTC ``isoformat() + "Z"`` string:
+    ``cars.scraped_at`` is TEXT compared lexicographically against the guard
+    cutoff and ``since_iso``, so the format (no offset, microseconds dropped
+    only when zero) must not change. Not ``spec_provenance.utc_now_iso``,
+    which writes ``+00:00``.
+    """
+    return datetime.now(timezone.utc).replace(tzinfo=None).isoformat() + "Z"
 
 
 def gallery_json(gallery: Any) -> str:

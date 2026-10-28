@@ -58,11 +58,11 @@ def home():
     """Public marketing landing; signed-in users go to ``/home``."""
     if session.get("user_id"):
         return redirect(url_for("app_home"))
-    from datetime import datetime
+    from datetime import datetime, timezone
 
     return render_template(
         "landing.html",
-        now=datetime.utcnow(),
+        now=datetime.now(timezone.utc),
         inventory_count_display=_inventory_count_display(),
         featured_cars=_landing_featured_cars(),
     )

@@ -36,13 +36,13 @@ import re
 import sys
 from pathlib import Path
 from urllib.parse import urlparse
-from datetime import datetime
 
 _REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
 
 from backend.db.connect import connect as db_connect, inventory_dsn  # noqa: E402
+from backend.scanner.upsert.serialize import utc_now_z  # noqa: E402
 
 _log = logging.getLogger("attribution_moves")
 
@@ -417,7 +417,7 @@ def main() -> int:
 def _now_iso() -> str:
     """``scraped_at`` text shape of the scanner (utc isoformat + Z): a manual move refreshes it so
     the owner is fresh and the car_move_log row is what the VIN guard honours (N8.6)."""
-    return datetime.utcnow().isoformat() + "Z"
+    return utc_now_z()
 
 
 if __name__ == "__main__":

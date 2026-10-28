@@ -26,6 +26,7 @@ from __future__ import annotations
 import json
 import logging
 import os
+import threading
 from dataclasses import dataclass, field
 from typing import Any, Callable
 
@@ -50,6 +51,14 @@ from backend.vehicle_facts import precedence as prec
 from backend.vehicle_facts.apply import apply_fact_proposals
 
 log = logging.getLogger(__name__)
+
+# Per-thread count of live vPIC decode calls (cache misses) for the upsert timing breakdown (P11A.7).
+_vpic_net = threading.local()
+
+
+def vpic_network_fetch_count() -> int:
+    """Live vPIC decodes made by the calling thread so far; callers take a delta."""
+    return getattr(_vpic_net, "n", 0)
 
 # Columns vPIC is allowed to propose (subset of cars schema).
 _VPIC_TARGET_KEYS = frozenset(
@@ -307,6 +316,7 @@ def apply_structured_spec_backfill_for_car(
             finally:
                 conn.close()
         if body is None:
+            _vpic_net.n = getattr(_vpic_net, "n", 0) + 1
             api_body, flat, vpic_err = fetch_decode_vin_values_extended(vin, get_json=get_json)
             body = api_body
             if api_body is not None and use_vpic_cache and not dry_run:
