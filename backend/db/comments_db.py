@@ -397,186 +397,6 @@ def flag_comment(scope: str, comment_id: int, *, reporter_hash: str | None = Non
 
 
 # ---------------------------------------------------------------------------
-# Photo attachments
-#
-# The bytes are on local disk (backend/utils/comment_images.py); these rows are
-# what survives a restart and what the serving route resolves an id against.
-# ``storage_key`` stays inside the server -- backend/routes/community_api.py
-# turns a row into ``{"id", "url", "width", "height"}`` and nothing else, so the
-# on-disk layout is never a fact a client knows.
-# ---------------------------------------------------------------------------
-
-_ATTACHMENT_COLUMNS = (
-    "id, scope, comment_id, user_id, storage_key, mime_type, width, height, "
-    "byte_size, sort_order, created_at"
-)
-
-
-def _row_to_attachment(row: Any) -> dict[str, Any]:
-    d = dict(row)
-    return {
-        "id": int(d["id"]),
-        "scope": d["scope"],
-        "comment_id": int(d["comment_id"]),
-        "user_id": int(d["user_id"]),
-        "storage_key": d["storage_key"],
-        "mime_type": d["mime_type"],
-        "width": int(d["width"] or 0),
-        "height": int(d["height"] or 0),
-        "byte_size": int(d["byte_size"] or 0),
-        "sort_order": int(d["sort_order"] or 0),
-        "created_at": _iso(d.get("created_at")),
-    }
-
-
-def list_attachments(scope: str, comment_ids: list[int]) -> dict[int, list[dict[str, Any]]]:
-    """``{comment_id: [attachment, ...]}`` for a page of comments, in one query.
-
-    Batched because the alternative is a query per row on every thread render.
-    Returns ``{}`` rather than raising when the table does not exist yet, the
-    same way :func:`list_comments` treats a database that has never had a
-    comment: a car page is not an error just because nobody has uploaded a photo.
-    """
-    ids = [int(c) for c in comment_ids or []]
-    if not ids:
-        return {}
-    _scope_spec(scope)  # validate
-    placeholders = ", ".join("?" for _ in ids)
-    out: dict[int, list[dict[str, Any]]] = {}
-    conn = get_conn()
-    try:
-        cur = conn.cursor(row_factory=dict_row)
-        cur.execute(
-            f"""
-            SELECT {_ATTACHMENT_COLUMNS}
-            FROM comment_attachments
-            WHERE scope = ? AND deleted_at IS NULL AND comment_id IN ({placeholders})
-            ORDER BY comment_id ASC, sort_order ASC, id ASC
-            """,
-            (scope, *ids),
-        )
-        for row in cur.fetchall():
-            att = _row_to_attachment(row)
-            out.setdefault(att["comment_id"], []).append(att)
-        return out
-    except Exception:
-        return {}
-    finally:
-        conn.close()
-
-
-def attach_attachments(scope: str, comments: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    """Add an ``attachments`` list to each serialized comment (in place)."""
-    by_comment = list_attachments(scope, [c["id"] for c in comments])
-    for c in comments:
-        c["attachments"] = by_comment.get(c["id"], [])
-    return comments
-
-
-def get_attachment(attachment_id: int) -> dict[str, Any] | None:
-    """One live attachment by id -- what the serving route looks a URL up in.
-
-    Soft-deleted rows read as missing so a deleted comment's photos stop being
-    reachable by anyone who kept the URL.
-    """
-    conn = get_conn()
-    try:
-        cur = conn.cursor(row_factory=dict_row)
-        cur.execute(
-            f"SELECT {_ATTACHMENT_COLUMNS} FROM comment_attachments "
-            "WHERE id = ? AND deleted_at IS NULL",
-            (int(attachment_id),),
-        )
-        row = cur.fetchone()
-        return _row_to_attachment(row) if row else None
-    except Exception:
-        return None
-    finally:
-        conn.close()
-
-
-def add_attachments(
-    scope: str, comment_id: int, user_id: int, items: list[dict[str, Any]]
-) -> list[dict[str, Any]]:
-    """Record already-written files against a comment, in the order given.
-
-    ``items`` carry ``storage_key``/``mime_type``/``width``/``height``/
-    ``byte_size`` from :mod:`backend.utils.comment_images`. Every row commits
-    together: a half-attached comment would render with photos missing and no
-    way to tell that from the user having attached fewer.
-    """
-    _scope_spec(scope)  # validate
-    if not items:
-        return []
-    now = _now_iso()
-    conn = get_conn()
-    out: list[dict[str, Any]] = []
-    try:
-        cur = conn.cursor(row_factory=dict_row)
-        for order, item in enumerate(items):
-            cur.execute(
-                f"""
-                INSERT INTO comment_attachments (
-                    scope, comment_id, user_id, storage_key, mime_type,
-                    width, height, byte_size, sort_order, created_at
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                RETURNING {_ATTACHMENT_COLUMNS}
-                """,
-                (
-                    scope,
-                    int(comment_id),
-                    int(user_id),
-                    item["storage_key"],
-                    item["mime_type"],
-                    int(item["width"]),
-                    int(item["height"]),
-                    int(item["byte_size"]),
-                    order,
-                    now,
-                ),
-            )
-            out.append(_row_to_attachment(cur.fetchone()))
-        conn.commit()
-        return out
-    except Exception:
-        conn.rollback()
-        raise
-    finally:
-        conn.close()
-
-
-def delete_attachments_for_comment(scope: str, comment_id: int) -> list[str]:
-    """Soft-delete a comment's attachment rows; return the keys to unlink.
-
-    Rows are kept (the comment itself is only soft-deleted) but the files are
-    the caller's to remove -- returning the keys rather than deleting here keeps
-    this module free of filesystem concerns, and an unlink that fails must not
-    roll back the row that already stopped serving.
-    """
-    _scope_spec(scope)  # validate
-    now = _now_iso()
-    conn = get_conn()
-    try:
-        cur = conn.cursor()
-        cur.execute(
-            """
-            UPDATE comment_attachments SET deleted_at = ?
-            WHERE scope = ? AND comment_id = ? AND deleted_at IS NULL
-            RETURNING storage_key
-            """,
-            (now, scope, int(comment_id)),
-        )
-        keys = [str(r[0]) for r in cur.fetchall()]
-        conn.commit()
-        return keys
-    except Exception:
-        conn.rollback()
-        return []
-    finally:
-        conn.close()
-
-
-# ---------------------------------------------------------------------------
 # Subject existence (so routes 404 instead of writing orphan rows)
 # ---------------------------------------------------------------------------
 
@@ -611,149 +431,29 @@ def subject_exists(scope: str, subject_id: int) -> bool:
     return dealership_exists(subject_id)
 
 
-# ---------------------------------------------------------------------------
-# Dealer ratings (Google Places cache)
-# ---------------------------------------------------------------------------
-
-def upsert_dealer_rating(
-    dealership_id: int,
-    *,
-    place_id: str | None,
-    rating: float | None,
-    review_count: int | None,
-    source: str = "google_places",
-    fetched_at: str | None = None,
-) -> None:
-    """Store the current rating for a dealership (insert or replace in place)."""
-    now = fetched_at or _now_iso()
-    conn = get_conn()
-    try:
-        cur = conn.cursor()
-        cur.execute(
-            """
-            INSERT INTO dealer_ratings (
-                dealership_id, google_place_id, google_rating, google_review_count,
-                fetched_at, source
-            ) VALUES (?, ?, ?, ?, ?, ?)
-            ON CONFLICT (dealership_id) DO UPDATE SET
-                google_place_id = EXCLUDED.google_place_id,
-                google_rating = EXCLUDED.google_rating,
-                google_review_count = EXCLUDED.google_review_count,
-                fetched_at = EXCLUDED.fetched_at,
-                source = EXCLUDED.source
-            """,
-            (
-                int(dealership_id),
-                (place_id or "").strip() or None,
-                rating,
-                review_count,
-                now,
-                source,
-            ),
-        )
-        conn.commit()
-    finally:
-        conn.close()
+# Attachments and dealer ratings live in their own modules. Re-exported lazily
+# (they import helpers from here, so an eager import at module end would cycle
+# when one of them is imported first).
+_MOVED = {
+    "backend.db.comment_attachments_db": (
+        "list_attachments", "attach_attachments", "get_attachment",
+        "add_attachments", "delete_attachments_for_comment",
+        "_ATTACHMENT_COLUMNS", "_row_to_attachment",
+    ),
+    "backend.db.dealer_ratings_db": (
+        "upsert_dealer_rating", "get_dealer_rating",
+        "list_active_dealership_websites", "list_dealerships_needing_rating",
+    ),
+}
+_MOVED_BY_NAME = {n: m for m, names in _MOVED.items() for n in names}
 
 
-def get_dealer_rating(dealership_id: int) -> dict[str, Any] | None:
-    """Cached Google rating for one dealership, or ``None`` if never fetched."""
-    conn = get_conn()
-    try:
-        cur = conn.cursor(row_factory=dict_row)
-        cur.execute(
-            """
-            SELECT dealership_id, google_place_id, google_rating, google_review_count,
-                   fetched_at, source
-            FROM dealer_ratings WHERE dealership_id = ?
-            """,
-            (int(dealership_id),),
-        )
-        row = cur.fetchone()
-        if not row:
-            return None
-        d = dict(row)
-        raw_rating = d.get("google_rating")
-        return {
-            "dealership_id": int(d["dealership_id"]),
-            "google_place_id": d.get("google_place_id"),
-            "google_rating": float(raw_rating) if raw_rating is not None else None,
-            "google_review_count": (
-                int(d["google_review_count"]) if d.get("google_review_count") is not None else None
-            ),
-            "fetched_at": _iso(d.get("fetched_at")),
-            "source": d.get("source"),
-        }
-    except Exception:
-        return None
-    finally:
-        conn.close()
+def __getattr__(name: str) -> Any:
+    mod = _MOVED_BY_NAME.get(name)
+    if mod is None:
+        raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+    import importlib
 
-
-def list_active_dealership_websites() -> list[dict[str, Any]]:
-    """Every active rooftop's id, website columns and coordinates.
-
-    The rating importer folds this into "which domains does more than one
-    rooftop share" (echopark.com, carmax.com): on those, matching a website
-    proves only that Google found the right *group*, so it also needs each
-    sibling's position to work out which store a hit belongs to. Read once per
-    run, not once per dealer — it is a few hundred short rows.
-    """
-    conn = get_conn()
-    try:
-        cur = conn.cursor(row_factory=dict_row)
-        cur.execute(
-            """
-            SELECT id, website_url, dealer_website_url, latitude, longitude
-            FROM dealerships
-            WHERE is_active = 1 AND duplicate_of_id IS NULL
-            """
-        )
-        return [dict(r) for r in cur.fetchall()]
-    except Exception:
-        # No registry table (fresh test DB) means no shared domains to guard.
-        return []
-    finally:
-        conn.close()
-
-
-def list_dealerships_needing_rating(
-    *, limit: int = 25, refresh_after_days: int | None = None
-) -> list[dict[str, Any]]:
-    """The importer's work queue: active registry rows with no (or stale) rating.
-
-    ``refresh_after_days=None`` means "never refresh what we already have" --
-    the cheapest mode, and the default, because Google Places bills per call.
-    """
-    cap = max(1, int(limit))
-    conn = get_conn()
-    try:
-        cur = conn.cursor(row_factory=dict_row)
-        params: list[Any] = []
-        if refresh_after_days is None:
-            freshness = "r.dealership_id IS NULL"
-        else:
-            cutoff = (
-                datetime.now(timezone.utc) - timedelta(days=max(1, int(refresh_after_days)))
-            ).isoformat()
-            freshness = "(r.dealership_id IS NULL OR r.fetched_at < ?)"
-            params.append(cutoff)
-        params.append(cap)
-        cur.execute(
-            f"""
-            SELECT d.id, d.name, d.city, d.state, d.latitude, d.longitude,
-                   d.website_url, d.dealer_website_url,
-                   COALESCE(r.google_place_id, d.google_place_id) AS google_place_id
-            FROM dealerships d
-            LEFT JOIN dealer_ratings r ON r.dealership_id = d.id
-            WHERE d.is_active = 1
-              AND d.duplicate_of_id IS NULL
-              AND {freshness}
-            ORDER BY d.id ASC
-            LIMIT ?
-            """,
-            tuple(params),
-        )
-        return [dict(r) for r in cur.fetchall()]
-    finally:
-        conn.close()
+    value = getattr(importlib.import_module(mod), name)
+    globals()[name] = value
+    return value
