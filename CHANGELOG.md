@@ -2,6 +2,32 @@
 
 ## [Unreleased]
 
+### N24 (draft)
+- P10C.1: vPIC decode exposes a `boosted` key (Turbo Yes -> True, No -> False, else None); named boosted because Turbo=Yes also appears on superchargers and twin-charged engines.
+- P10C.8: induction invariants epa_master_fi_contradicts_flags, car_fi_boost_on_na_family and car_fi_missing_on_boosted_family (read-only); baselines to be recorded after the EPA flag columns are loaded (NO_BASELINE fails closed until then).
+- P10C.8: the zero_to_60_sub_four_no_badge invariant used \b (a backspace in Postgres) so RS, GT, SRT, ZL1, Z06, ZR1, V-Series, STI and N Line badges never matched; now \y. Baseline 2818 -> 2742, with a history line.
+- P10C.5: forced-induction heuristic (2016+) no longer labels naturally aspirated engines boosted (Acura RDX/TLX, non-Urus Lamborghini, Ferrari V12, Lincoln 3.7, Atkinson hybrids, Infiniti 3.5/3.7, GM 2.5 I4, 2016 911/Boxster/Cayman, 911 GT3, Mazda CX-90 PHEV, Grand Highlander Hybrid, NA GT-Line) and no longer labels supercharged engines turbo (Audi 3.0 TFSI, Jaguar/Land Rover S/C, CT5-V Blackwing, CTS-V, Escalade-V, Raptor R).
+- P10C.5: 'Premium Gasoline / Electricity' fuel strings are plug-in hybrids, not EVs, so they reach the heuristic; missed turbo engines added (Tundra/Sequoia 3.4TT, Tacoma/Land Cruiser/Grand Highlander 2.4T, Lexus TX 350, Honda 1.5T, Nissan VC-Turbo/GT-R/Z, Subaru Ascent, Mazda CX-9/CX-90 3.3T, 2017+ 911 3.0TT, Acura TLX Type S).
+- P10C.2: resolve_car_forced_induction(car, vpic_boosted=, family_flags=) returns (label, source): dealer engine text, vPIC Turbo typed by catalog family, family-unanimous EPA labels, description markers, then the make/model heuristic as last resort. The forced_induction precedence rule ranks sticker 90, dealer feed/VDP 80, vPIC 70, EPA catalog 60, description 50; the trim heuristic is fill-only.
+- P10C.3: the catalog linker reconciles forced_induction right after linking, in a separate transaction so an induction bug never undoes links; provenance goes to spec_source_json.
+- P10C.4: enrich_car takes forced_induction from the resolver (dealer text, vPIC Turbo flag, heuristic last resort) instead of the EPA CSV label; fill_all never overwrites a dealer-text-backed value.
+- P10C.6: Naturally Aspirated counts as not boosted in the 0-60 heavy-body guard; the serializer returns the stored label; the generated spec sheet shows the stored source; the Engine type facet lists Naturally Aspirated (D-ET2 a). heal_cylinders_from_vpic Phase B runs by default but touches only heuristic-sourced labels; --phase-b removed, --skip-fi turns it off.
+- P10C.7: scanner upsert no longer lets the heuristic or description markers overwrite a forced_induction label backed by catalog, vPIC or sticker provenance; dealer engine text still wins.
+- P10C.9: added backend/scripts/heal_forced_induction_from_evidence.py: dry run by default (CSV plus transition matrix), --sample N conflict sample, --apply refuses without a backup CSV and updates through a temp table in one transaction, --restore <csv> reverses it.
+
+### N33 (draft)
+- P17B.1: job diagnosis no longer suggests PUPPETEER_EXECUTABLE_PATH; the x86-emulation failure says to rebuild the scanner image for the host architecture. Removed the Node 'cannot find module' rule, retry_with_python_scanner and use_python_scanner, and the empty scanner_backups folder.
+- P17B.7: delta scan no longer special-cases the requires_browser hint; such dealers get the normal no_recipe_yield skip (D-DC9 c). The hint key stays, informational only.
+- P17B.2: platform_registry reuses the synth package (headers, pacing, challenge detection, fingerprinting); removed entry_to_dict; seeds autowall, wp_vehicles_index, oneaudi and html_cards; classify_dealer derives an entry from the synth template when the registry lacks a row; a drift-guard test keeps seeds and templates in step.
+- P17B.3: removed the `--allow-browser` flag and the Playwright launch in the orchestrator; `--http-only` stays as a no-op. run_dealer has no browser parameter, open_session no browser branch, and a failed dealer takes no screenshot.
+- P17B.4: inventory recovery is HTTP-only (shopperexpress_api, then dealer_eprocess_json). Page and captured-HTML strategies deleted; manifest or cached winners naming a retired strategy are dropped with a log line; recovery no longer force-runs for dealer_on.
+- P17B.5: removed the Playwright page halves of the DealerOn, Dealer Venom, PixelMotion and DealerEProcess scrapers and the unused Dealer Inspire module.
+- P17B.8a: added backend/scripts/clear_dead_winning_strategies.py: dry run by default, backup CSV, single transaction, verification.
+- P17B.6: removed the Playwright stage from the listing-fetch chain and post-scan gap fill; default_fetchers() is impersonate then requests; the on-demand web listing/sticker fetch loses its browser fallback (D-DC5). Merge waits for N18 (P12A.4) and N32.
+- P17B.9: removed the unreachable LLM adjudication branch (backend/intelligence/agents, llm, run_llm_adjudication, use_adjudicator/llm_client/llm_model params, scraping CLI --llm-base-url and --llm-model); rules-only --adjudicate unchanged (D-DC6 b).
+- P17B.10: the fueleconomy.gov client now lives at backend/enrichment/epa_ws_client.py with a stubbed-HTTP test; docs/VEHICLE_REFERENCE_BMW.md removed (D-DC7 b).
+- P17B.11: HTTP_ONLY_SCANS_PLAN closes D1-D4 and D-DC1/5/6/7/9 and statuses each Phase 2 row; monolith audit scanner.md note on --allow-browser corrected.
+
 ### N19 (draft)
 - Recipe validation now gates with the scan's own store place (attribution.store_place, read once per call, caller place wins) and parses through attribution.parse_page (P12B.1).
 - Recipe validation splits into check_all and judge; gate_recipes accepts pages= and checks=. The walk terminates and judges short_page on raw VINs, so a page of sibling-rooftop rows no longer reads as a short page (P12B.2).

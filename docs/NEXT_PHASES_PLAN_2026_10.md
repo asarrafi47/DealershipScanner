@@ -2653,6 +2653,17 @@ Note: V037 was taken for P10B.6 (plan assigns N23 no number). Label mismatch: pl
 
 **Owner decisions / actions.** D-ET2, D-ET4.
 
+**Draft status (integ/draft, merge d098da777; branch phase/N24 head 7d1c07799).**
+- P10C.1 (edecd14f9): met. vPIC `boosted` key.
+- P10C.8 (edecd14f9): partly met. Ids registered, `\y` fix with history line (2818 -> 2742); the 3 new induction invariants have NO baselines (no local DB has t_charger/s_charger), exempt via INDUCTION_INVARIANT_IDS and NO_BASELINE fails closed; seeded-PG test passes.
+- P10C.5: met on fixtures. Deferred: scratch measurement against pinned vehicles.csv (831 false positives to under 100; file not on this machine).
+- P10C.2 (a0923fa52): met. Resolver and precedence rule; doc table matches code.
+- P10C.4, P10C.6 (3ef138113): met. hybrid_search.py and listings.html needed no edit (NA already a pass-through facet value).
+- P10C.3 (f707264ff): met. Known issue: test_no_sqlite fails on backend/catalog/linker.py (qmark count 3, allowed 2) and test_catalog_linker_forced_induction.py (sqlite3 import); needs allowlist entry or PG-harness conversion.
+- P10C.7 (b845fbe59): met on pure tests; pg cycle test written, not run.
+- P10C.9 (7d1c07799): met; 4 pg tests pass on the harness DB.
+- Deferred: P10C.5m, P10C.8b, P10C.9b (data ops, owner review), P10C.rel (deploy). pg-tier tests otherwise not run in the merge (no TEST_PG_ADMIN_DSN).
+
 ---
 
 ### N25 EPA data repairs and prod rollout (10D)
@@ -2953,6 +2964,17 @@ ci.yml was edited by both N7 and N29; merged without conflict.
 **Release step.** Minor; the owner approves the Docker smoke of the scanner-nightly stage, then deploys scanner-nightly outside the window.
 
 **Owner decisions / actions.** D-DC1, D-DC5, D-DC6, D-DC7, D-DC9.
+
+**Draft status (integ/draft, merge 0de0388a7; branch phase/N33 head d739c2211).**
+- P17B.1, P17B.7 (f3116bb5b): met. README Node section, docs/SCANNER_NODE.md and master-todo C1 left to P18B.2.
+- P17B.2 (3e60586fc): met. Drift guard green.
+- P17B.3 (0474e6dbb): met on grep and golden. Deferred: 5-dealer browser-free scan within +-2% (no scans in draft).
+- P17B.4 (fb1909d9c): met. Chose delete over rebuild for html_next_data and jsonld_listing_html; dealer_on always-run gate removed.
+- P17B.5, P17B.8a (ee3fb7168): met. P17B.8 apply (real DB) not run.
+- P17B.6 (180293b20): met. Merge needs N18 (P12A.4) and N32.
+- P17B.9, P17B.10 (dc821e089): met. backend/oem was already gone (N37.15); client recovered from git history.
+- P17B.11 (d739c2211): met. Open: P17B.12 (slim discovery's scrape_inventory_path), P17B.8 apply, scanner-nightly Docker smoke and deploy, next-nightly comparison (+-3%).
+- Merge note: stale __pycache__-only dirs backend/intelligence/llm and agents had to be deleted after the merge so the removed packages are not importable.
 
 ---
 
