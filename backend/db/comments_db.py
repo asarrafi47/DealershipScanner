@@ -188,6 +188,8 @@ def list_comments(
         conn.close()
     # Outside the try: attachments open their own connection, and a thread whose
     # photos cannot be read is still a thread worth rendering.
+    from backend.db.comment_attachments_db import attach_attachments  # lazy: avoids an import cycle
+
     return attach_attachments(scope, rows)
 
 
@@ -227,6 +229,8 @@ def get_comment(scope: str, comment_id: int) -> dict[str, Any] | None:
         return None
     finally:
         conn.close()
+    from backend.db.comment_attachments_db import attach_attachments  # lazy: avoids an import cycle
+
     return attach_attachments(scope, [comment])[0] if comment else None
 
 
