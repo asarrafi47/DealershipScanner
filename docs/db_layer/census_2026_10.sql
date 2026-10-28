@@ -787,6 +787,41 @@ SELECT n.nspname AS schema, count(c.oid) AS relations
    AND n.nspname NOT LIKE 'pg\_temp\_%' ESCAPE '\' AND n.nspname NOT LIKE 'pg\_toast\_temp\_%' ESCAPE '\'
  GROUP BY 1 ORDER BY 1;
 
+\echo '=== Q18 P13B.4 drop candidates (D-DB1 extended list + plan snapshots + log tables) ==='
+-- Same lists as backend/scripts/backup_tables_export.py (CORE_TABLES, LOG_TABLES, PLAN_SNAPSHOT_RE);
+-- that script's `census` / `dump` / `verify` / `plan` steps do the export. Live quarantine tables
+-- (cars_trim_quarantine, package_values_msrp_quarantine) are NOT candidates and are listed as protected.
+WITH want(name, category) AS (VALUES
+  ('cars_backup_capacity_20260718', 'core'), ('cars_backup_mcpeek_prescan_20260712', 'core'),
+  ('cars_backup_mileage_contam_20260712', 'core'), ('cars_backup_modelname_20260712', 'core'),
+  ('cars_backup_stock_contam_20260711_171841', 'core'), ('cars_backup_stock_contam_20260711_171901', 'core'),
+  ('cars_backup_vinrepair_20260713', 'core'), ('epa_extended_specs_bak_20260711_101806', 'core'),
+  ('epa_extended_specs_bak_20260712_083724', 'core'), ('epa_extended_specs_bak_badhp_20260712', 'core'),
+  ('epa_extended_specs_bak_badratio_20260712', 'core'), ('epa_master_dump_id_map', 'core'),
+  ('cars_epa_link_backup_20260921', 'core'), ('cars_owner_backup_20260929', 'core'),
+  ('image_summary_restore_log', 'log'), ('make_canon_log', 'log'), ('model_canon_log', 'log'),
+  ('package_value_purge_log', 'log'))
+SELECT w.name, w.category, to_regclass(format('public.%I', w.name)) IS NOT NULL AS present,
+       CASE WHEN to_regclass(format('public.%I', w.name)) IS NULL THEN NULL
+            ELSE (xpath('/row/n/text()', query_to_xml(format('SELECT count(*) AS n FROM public.%I', w.name), false, true, '')))[1]::text::bigint END AS exact_rows,
+       pg_total_relation_size(to_regclass(format('public.%I', w.name))) AS total_bytes
+  FROM want w ORDER BY w.category, w.name;
+-- plan-owned snapshots (owner decides) and look-alikes in no list
+SELECT c.relname, CASE WHEN c.relname ~ '^(cars_retire_backup_|cars_precedence_backup_|cars_epa_link_snapshot_|cars_owner_backup_)'
+                       THEN 'plan_snapshot' ELSE 'UNLISTED' END AS category,
+       pg_total_relation_size(c.oid) AS total_bytes
+  FROM pg_class c JOIN pg_namespace n ON n.oid = c.relnamespace
+ WHERE n.nspname = 'public' AND c.relkind IN ('r', 'p')
+   AND c.relname ~ '(bak|backup|dump|snapshot|_log$)'
+   AND c.relname NOT IN ('cars_trim_quarantine', 'package_values_msrp_quarantine')
+   AND c.relname NOT IN ('cars_backup_capacity_20260718', 'cars_backup_mcpeek_prescan_20260712', 'cars_backup_mileage_contam_20260712',
+       'cars_backup_modelname_20260712', 'cars_backup_stock_contam_20260711_171841', 'cars_backup_stock_contam_20260711_171901',
+       'cars_backup_vinrepair_20260713', 'epa_extended_specs_bak_20260711_101806', 'epa_extended_specs_bak_20260712_083724',
+       'epa_extended_specs_bak_badhp_20260712', 'epa_extended_specs_bak_badratio_20260712', 'epa_master_dump_id_map',
+       'cars_epa_link_backup_20260921', 'cars_owner_backup_20260929', 'image_summary_restore_log', 'make_canon_log',
+       'model_canon_log', 'package_value_purge_log')
+ ORDER BY 2, 1;
+
 \echo '=== Q99 session proof at end (must still read on) ==='
 SELECT current_setting('transaction_read_only') AS txn_read_only,
        current_setting('default_transaction_read_only') AS default_txn_read_only;

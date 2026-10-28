@@ -5,7 +5,7 @@
 - Date: 2026-10-08. Census runs: local 14:57:41Z (first) and 15:03:03Z (final); prod 14:58:45Z (first) and 15:03:14Z (final). `migrate --dry-run`: local 14:58:30Z, prod 14:59:22Z. The tables below come from the final runs. The final run repeated the first and added exact row counts to Q3 and Q6. A spot check of Q2, Q5, Q8, Q10 and Q12-Q14 found the same numbers in both runs.
 - Run by: a Phase 0A workflow agent. The prod part was authorized by the owner (`docs/remediation/OWNER_DECISIONS_LOG.md`, 2026-10-07, "Phase 0A prod access": an agent runs the prod census in a READ ONLY session). The mini is not approved (no SSH), so its part is BLOCKED.
 - Revision: detached worktree at `afa063a22` (feature/http-only-scans). `migrations/` and `backend/scripts/migrate.py` are byte-identical to `dbdbf5cba`, where the plan was written.
-- Query file: `docs/db_layer/census_2026_10.sql` (Q0 to Q17 plus Q99). Its first two statements are `SET default_transaction_read_only = on; SET statement_timeout = '20s';`, and every session also ran with `PGOPTIONS='-c default_transaction_read_only=on -c statement_timeout=20000'`.
+- Query file: `docs/db_layer/census_2026_10.sql` (Q0 to Q18 plus Q99). Its first two statements are `SET default_transaction_read_only = on; SET statement_timeout = '20s';`, and every session also ran with `PGOPTIONS='-c default_transaction_read_only=on -c statement_timeout=20000'`.
 - 10-04 reference: `workspace/backups/prod_20261004_pre150.dump` (600,428,043 bytes, file mtime 2026-10-04T20:21:13Z, sha256 prefix `91c4fa2fc7ee262f`, pg_dump 18.6, dbname `railway`). Its numbers were read by streaming `pg_restore -a -t <table> -f -` into a counting script, so nothing was restored into any database. The schema came from `pg_restore -s`.
 - No secret appears in this file. Prod host and port are redacted, and so is every DSN. The users table appears as counts only. Dealer ids are dealership domains, not user data.
 
@@ -373,3 +373,13 @@ pg_restore -a -t dealer_recipes -f - workspace/backups/prod_20261004_pre150.dump
 ```
 
 For this run, the `migrate --dry-run` invocations went through a small wrapper. It first logged the connection's redacted host, port and db and read the read-only settings, then called `migrate.main(['--dry-run'])` unchanged. `migrate.py` itself does not log its target. Logging the target before `--apply` is P4.2 item 4.
+
+## Backup tables: export, verify, restore (P13B.4a)
+
+Tooling: `backend/scripts/backup_tables_export.py` (tests: `backend/tests/test_backup_tables_export.py`). It never drops. Census SQL: Q18 in `census_2026_10.sql`.
+
+- **List (D-DB1 (a), extended):** the 7 `cars_backup_*`, 4 `epa_extended_specs_bak_*`, `epa_master_dump_id_map`, `cars_epa_link_backup_20260921`, prod-only `cars_owner_backup_20260929` (6,961 rows), and the 4 log tables (D-N30: export and drop here). The plan's own snapshots (`cars_retire_backup_*`, `cars_precedence_backup_*`, `cars_epa_link_snapshot_*`, later `cars_owner_backup_*`) are dumped only with `--include-plan-snapshots`, because the owner decides. `cars_trim_quarantine` and `package_values_msrp_quarantine` are live and protected.
+- **Order per DB (prod, local, mini if live):** `census` -> `dump` (one `-Fc` file, `workspace/backups/backup_tables_<db>_<date>.dump`, plus a `.manifest.json` with row counts and sha256) -> `verify --scratch-db cars_draft_<x>` (restore into an empty scratch DB, compare row counts, set `verified`) -> `plan` (dry run, `to_regclass` per table, prints the exact `DROP TABLE IF EXISTS` list; a table that is unverified or whose rows changed since the dump is BLOCKED).
+- **Gate for P13B.4b:** the drop migration is written from the `plan` output of each DB and must not merge into any checkout before verified dumps exist for prod and local, because `MIGRATE_ON_BOOT` and `INVENTORY_AUTO_MIGRATE` apply it. The migration number is the one N28 is assigned at merge time.
+- **Restore one table:** `createdb cars_draft_restore && pg_restore --no-owner -d cars_draft_restore -t <table> <dump>`. To put it back in the live DB under its own name, restore with `-d "$INVENTORY_DATABASE_URL"` (the table must not exist). `backfill_extended_specs --repair-provenance-from <table>` reads an `epa_extended_specs_bak_*` table, so restore that one first. The backups are standalone snapshots with no foreign keys to live tables.
+- **Not done yet (owner-gated):** no dump has been taken and nothing was dropped. Prod access, the dumps, the drop migration and its apply are P13B.4b/c.
