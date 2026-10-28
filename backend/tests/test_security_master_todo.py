@@ -259,3 +259,29 @@ def test_sec_110_tracks_the_vault_sync_script() -> None:
         assert "unit/P3.7" not in sec110["fields"]["Scope"], (
             "the P3.7 guard is in the script: drop the unmerged-branch sentence from SEC-110 Scope"
         )
+
+
+_PATH_TOKEN = re.compile(
+    r"`([A-Za-z0-9_./\-]+\.(?:py|md|sh|html|js|sql|json|yml|yaml|toml|txt|css))(?::\d+)?`"
+)
+
+
+def test_scope_paths_exist_outside_changelog() -> None:
+    """P18B.5: a backticked file path before the Changelog exists in the repo,
+    unless its line says the file was removed or is a former integration."""
+    import subprocess
+
+    tracked = subprocess.run(
+        ["git", "ls-files"], cwd=ROOT, capture_output=True, text=True, check=True
+    ).stdout.split("\n")
+    lines = _lines()
+    stop = next(i for i, ln in enumerate(lines) if ln.startswith("## Changelog"))
+    dead = []
+    for n, ln in enumerate(lines[:stop], 1):
+        if "removed" in ln or "Former" in ln:
+            continue
+        for m in _PATH_TOKEN.finditer(ln):
+            p = m.group(1).removeprefix("./")
+            if not any(f == p or f.endswith("/" + p) for f in tracked):
+                dead.append(f"line {n}: {p}")
+    assert not dead, dead

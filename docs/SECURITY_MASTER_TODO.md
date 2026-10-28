@@ -12,7 +12,9 @@
 3. **After** work: update **Status**, **Last verified** (date), **Validation** notes if the procedure changed, and append **Changelog**.
 4. **New** risks or follow-ups: add a row under the right phase; do not rely on chat-only tracking. The row is a `### SEC-nnn — Title` heading (em dash) under a `## Phase N` heading, never under Future or Changelog, with the next unused ID and all five fields: **Status**, **Scope**, **Outcome**, **Validation** and **Last verified** (a date). For a `Not started` row, Outcome is the planned fix, Validation the planned check, and Last verified the date the row was written. Update the Summary table in the same change. `backend/tests/test_security_master_todo.py` enforces all of this.
 
-**Duplicated IDs (history):** five IDs each name two different rows: SEC-061 (Phase 2 and Phase 3), SEC-063, SEC-064 and SEC-089 (Phase 2 and Phase 6), and SEC-066 (Phase 4 and Phase 6). Renumbering is left to the re-scoping pass (remediation P18B.5); until then cite them with the phase or the row title, and never reuse an ID. The test fails on any other duplicate.
+**Re-scoped 2026-10-27 (remediation P18B.5, draft; not yet released).** Every file path in the Scope and Validation fields outside the Changelog now exists on `integ/draft`, except paths the same field marks as removed. Routes that lived in `backend/main.py` point to where they are defined today (`backend/auth/pages.py`, `backend/web/security.py`, `backend/routes/`, `backend/dealer/routes.py`); split monoliths point to their packages (`backend/db/users_db/`, `backend/utils/car_serialize/`); deleted modules say so with the removal date and commit. The Changelog is history and keeps its old paths. Row statuses were not changed by this pass.
+
+**Duplicated IDs (history):** five IDs each name two different rows: SEC-061 (Phase 2 and Phase 3), SEC-063, SEC-064 and SEC-089 (Phase 2 and Phase 6), and SEC-066 (Phase 4 and Phase 6). The 2026-10-27 re-scoping pass (P18B.5) did not renumber them, because commits and the Changelog cite the old IDs; cite them with the phase or the row title, and never reuse an ID. The test fails on any other duplicate.
 
 **Validation runbook (same PR as code):** When you change **auth / sessions**, **CSRF**, **CSP**, **LLM or chat APIs** (e.g. `POST /api/car/<id>/chat`, `POST /api/search/smart`), **rate limits**, **subprocess** (e.g. `scanner.py`, operator CLIs), or **templates/JS** that affect those surfaces, re-run the **Validation** column for every touched **SEC-xxx** row, set **Last verified** to the run date, and add a one-line **Changelog** entry. The document is the contract; chat-only “done” is not enough.
 
@@ -35,7 +37,7 @@
 | 5     | APIs, abuse, LLM surfaces    | 1          | SEC-113 (Not started) |
 | 6     | Dev / operator tooling       | 3          | SEC-096 (In progress), SEC-097 (In progress), SEC-112 (Not started) |
 
-SEC-096 (email verification) and SEC-097 (password reset) sit in the Phase 6 section for history, although they are identity work. Moving rows between phases is left to the re-scoping pass (remediation P18B.5).
+SEC-096 (email verification) and SEC-097 (password reset) sit in the Phase 6 section for history, although they are identity work. The 2026-10-27 re-scoping pass (P18B.5) left them there, because the Summary table and the test key on the phase headings.
 
 ---
 
@@ -179,7 +181,7 @@ SEC-096 (email verification) and SEC-097 (password reset) sit in the Phase 6 sec
 | Field | Content |
 |-------|---------|
 | **Status** | Done |
-| **Scope** | `backend/db/users_db.py` |
+| **Scope** | `backend/db/users_db/` (package) |
 | **Outcome** | Seeded `admin` / `password` row is **not** inserted unless `ALLOW_DEFAULT_APP_USER` is truthy (dev-only), and any legacy seeded `admin@admin.com` + `password` row is removed at init when the flag is off. |
 | **Validation** | App DB init: default row absent unless explicitly opted-in (and never in production). With an existing legacy `admin/password` row present, init removes it when `ALLOW_DEFAULT_APP_USER` is unset. |
 | **Last verified** | 2026-04-25 |
@@ -199,7 +201,7 @@ SEC-096 (email verification) and SEC-097 (password reset) sit in the Phase 6 sec
 | Field | Content |
 |-------|---------|
 | **Status** | Done |
-| **Scope** | `backend/utils/production_security.py`, `backend/main.py` (`assert_production_security_config`), `backend/dev/console.py` |
+| **Scope** | `backend/utils/production_security.py`, `backend/main.py` and `backend/web/db_bootstrap.py` (`assert_production_security_config` callers), `backend/dev/console.py` |
 | **Outcome** | `FLASK_ENV=production` raises at import if `DEV_CONSOLE=1` without `DEV_CONSOLE_SECRET`. Manifest console routes return **404** when console enabled in prod but secret unset (defense in depth). Logs warnings for `BILLING_STRIPE_ENABLED=0`, unset `RATE_LIMIT_SQLITE_PATH`, and `CAR_CHAT_WEB_RESEARCH_PUBLIC=1`. |
 | **Validation** | `python -m pytest backend/tests/test_production_security.py -q`. |
 | **Last verified** | 2026-05-26 |
@@ -244,7 +246,7 @@ SEC-096 (email verification) and SEC-097 (password reset) sit in the Phase 6 sec
 | Field | Content |
 |-------|---------|
 | **Status** | Done |
-| **Scope** | `backend/utils/csrf.py`, `backend/main.py` (incl. `POST /api/session/listings-geo`), `backend/dev/routes.py`, `backend/dev/console.py`, templates (incl. `car.html`), `frontend/static/{dev.js,listings.js,car_chat.js,dev_console.js,main.js}` |
+| **Scope** | `backend/utils/csrf.py`, `backend/web/security.py` (CSRF `before_request`), `backend/routes/listings_api.py` (incl. `POST /api/session/listings-geo`), `backend/dev/routes.py`, `backend/dev/console.py`, templates (incl. `car.html`), `frontend/static/{dev.js,listings.js,car_chat.js,dev_console.js,main.js}` |
 | **Outcome** | Form POSTs use hidden `csrf_token` (incl. `POST /logout`); JSON / DELETE use `X-CSRF-Token` (same session token). `POST /api/cars/<id>/save`, `POST /api/session/listings-geo`, `POST /api/auth/login`, and `POST /api/auth/logout` use the same header check in `_csrf_mutating_requests`; `validate_csrf_header` accepts ignored `*args`/`**kwargs` so legacy `validate_csrf_header(request)` cannot raise `TypeError`. |
 | **Validation** | Replay POST without token → 403; with token from same session → success; bad login CSRF → redirect `session_expired` (not authenticated); `python -m pytest backend/tests/test_app_security_basics.py backend/tests/test_mobile_auth_api.py -q`. |
 | **Last verified** | 2026-05-25 |
@@ -254,7 +256,7 @@ SEC-096 (email verification) and SEC-097 (password reset) sit in the Phase 6 sec
 | Field | Content |
 |-------|---------|
 | **Status** | Done |
-| **Scope** | `backend/main.py` (`logout_page`, `before_request` CSRF for `logout_page`); `frontend/templates/_app_logout.html` + nav includes; MFA (`mfa_choose`, `mfa_verify`, `mfa_setup`, `mfa_qr_wait`), billing (`billing_required`, `billing_success`), `inventory/base_inventory.html` — all use `POST` logout (no `GET` links). |
+| **Scope** | `backend/auth/pages.py` (`logout_page`), `backend/web/security.py` (`before_request` CSRF for `logout_page`); `frontend/templates/_app_logout.html` + nav includes; MFA (`mfa_choose`, `mfa_verify`, `mfa_setup`, `mfa_qr_wait`), billing (`billing_required` in `backend/billing/routes.py`, `billing_success`), `inventory/base_inventory.html` — all use `POST` logout (no `GET` links). |
 | **Outcome** | `POST /logout` only, with `csrf_token` in form. `GET /logout` returns **405**. Prevents cross-site “logout” image tricks. |
 | **Validation** | `GET /logout` → 405; `POST` without valid CSRF → 403. `python -m pytest tests/test_app_security_basics.py`. |
 | **Last verified** | 2026-04-28 |
@@ -264,7 +266,7 @@ SEC-096 (email verification) and SEC-097 (password reset) sit in the Phase 6 sec
 | Field | Content |
 |-------|---------|
 | **Status** | Done |
-| **Scope** | `backend/main.py`, `backend/utils/registration_validation.py`, `frontend/templates/register.html` |
+| **Scope** | `backend/auth/pages.py`, `backend/utils/registration_validation.py`, `frontend/templates/register.html` |
 | **Outcome** | Min password length (8+); duplicate username/email → friendly message; CSRF on POST. |
 | **Validation** | Duplicate register → 200 with error text, no 500; password `short` → validation error. |
 | **Last verified** | 2026-04-18 |
@@ -274,9 +276,9 @@ SEC-096 (email verification) and SEC-097 (password reset) sit in the Phase 6 sec
 | Field | Content |
 |-------|---------|
 | **Status** | Done |
-| **Scope** | This document — **Authorization model** table; `backend/main.py` + `backend/dealer_portal.py` for `/inventory` and `/dealer-uploads` enforcement. |
+| **Scope** | This document — **Authorization model** table; `backend/dealer/routes.py` for `/inventory` and `/dealer-uploads` enforcement. |
 | **Outcome** | Explicit matrix; code matches “public listings + locked-down `/dev`” + dealer **My inventory** when logged in; general vs dealer auth entry points (`/login` vs `/dealer/login`). |
-| **Validation** | Review table vs `backend/main.py`, `backend/dev/routes.py`, and `backend/dealer_portal.py` route list; `python -m pytest backend/tests/test_compare_and_stats.py backend/tests/test_compare_specs.py backend/tests/test_mobile_auth_api.py backend/tests/test_car_detail_api.py -q`. |
+| **Validation** | Review table vs the route modules (`backend/auth/pages.py`, `backend/routes/`, `backend/dev/routes.py`, `backend/dealer/routes.py`); `python -m pytest backend/tests/test_compare_and_stats.py backend/tests/test_compare_specs.py backend/tests/test_mobile_auth_api.py backend/tests/test_car_detail_api.py -q`. |
 | **Last verified** | 2026-05-25 |
 
 ### SEC-077 — Mobile JSON auth API (`/api/auth/*`)
@@ -284,7 +286,7 @@ SEC-096 (email verification) and SEC-097 (password reset) sit in the Phase 6 sec
 | Field | Content |
 |-------|---------|
 | **Status** | Done |
-| **Scope** | `backend/main.py` (`api_auth_csrf`, `api_auth_me`, `api_auth_login`, `api_auth_logout`); `_csrf_mutating_requests` |
+| **Scope** | `backend/auth/pages.py` (`api_auth_csrf`, `api_auth_me`, `api_auth_login`, `api_auth_logout`); `_csrf_mutating_requests` (`backend/web/security.py`) |
 | **Outcome** | Native clients obtain CSRF via `GET /api/auth/csrf`, then `POST /api/auth/login` with JSON credentials and `X-CSRF-Token`. Same bcrypt check and per-IP login rate limit as HTML `/login`. `GET /api/auth/me` returns user profile or 401. `POST /api/auth/logout` clears Flask session with CSRF header. No separate API keys; session cookie is the credential. |
 | **Validation** | `python -m pytest backend/tests/test_mobile_auth_api.py -q`; login without CSRF → 403; invalid credentials → 401; successful login → `GET /api/auth/me` 200. |
 | **Last verified** | 2026-05-25 |
@@ -294,7 +296,7 @@ SEC-096 (email verification) and SEC-097 (password reset) sit in the Phase 6 sec
 | Field | Content |
 |-------|---------|
 | **Status** | Done |
-| **Scope** | `backend/auth/app_registration.py`, `backend/main.py` (`register_page`, `api_auth_register`), `ios/.../APIClient.swift`, `AppState.swift`, `AuthHeaderBar.swift`, `SessionCookieBridge.swift`, `backend/mobile/contract.py`, `ios/docs/API_CONTRACT.md` |
+| **Scope** | `backend/auth/app_registration.py`, `backend/auth/pages.py` (`register_page`, `api_auth_register`), `ios/.../APIClient.swift`, `AppState.swift`, `AuthHeaderBar.swift`, `SessionCookieBridge.swift`, `backend/mobile/contract.py`, `ios/docs/API_CONTRACT.md` |
 | **Outcome** | iOS native sign-up calls `POST /api/auth/register`, which writes the same `users.db` row as HTML `/register` via shared `register_general_app_user`. Session established with `_finalize_app_session`; saved cars and profile work on web after login with same credentials. `SessionCookieBridge.syncFromWebView()` supports legacy WKWebView auth if needed. |
 | **Validation** | `python -m pytest backend/tests/test_mobile_auth_register.py backend/tests/test_registration_email.py backend/tests/test_mobile_auth_api.py -q`. |
 | **Last verified** | 2026-05-26 |
@@ -314,7 +316,7 @@ SEC-096 (email verification) and SEC-097 (password reset) sit in the Phase 6 sec
 | Field | Content |
 |-------|---------|
 | **Status** | Done |
-| **Scope** | `backend/utils/safe_listing_url.py`, `backend/utils/car_serialize.py` (`serialize_car_for_listings_grid`) |
+| **Scope** | `backend/utils/safe_listing_url.py`, `backend/utils/car_serialize/` (package) (`serialize_car_for_listings_grid`) |
 | **Outcome** | Grid `image_url` / `gallery` reject `javascript:`/`data:`/private-IP hosts; production allows HTTPS only (plus `/car-images/`). |
 | **Validation** | `pytest backend/tests/test_safe_listing_url.py -q` |
 | **Last verified** | 2026-05-26 |
@@ -324,7 +326,7 @@ SEC-096 (email verification) and SEC-097 (password reset) sit in the Phase 6 sec
 | Field | Content |
 |-------|---------|
 | **Status** | Done |
-| **Scope** | `backend/main.py`, `backend/dealer/routes.py`, `backend/dealer/admin/routes.py`, `backend/dev/routes.py`, `backend/db/users_db.py`, legacy `backend/auth/mfa.py` (unused by app routes) |
+| **Scope** | `backend/auth/pages.py`, `backend/web/security.py`, `backend/dealer/routes.py`, `backend/dealer/admin/routes.py`, `backend/dev/routes.py`, `backend/db/users_db/` (package), legacy `backend/auth/mfa.py` (removed 2026-07-07, 9215da854) |
 | **Outcome** | **App** and **dealer** sign-in: password → `_finalize_app_session` sets `session['mfa_ok']=True` and clears stale MFA keys; `_post_login_redirect()` handles billing. Legacy `/mfa/*` URLs redirect (no OTP/TOTP/QR enrollment). **`/dev`** remains password-only. DB columns (`totp_*`, `mfa_method`) may remain; env admin sync still clears TOTP for `APP_ADMIN_*`. |
 | **Validation** | `python -m pytest backend/tests/test_mfa_totp.py backend/tests/test_mfa_qr.py backend/tests/test_billing_gate.py backend/tests/test_mfa_action_log.py -q` |
 | **Last verified** | 2026-05-22 |
@@ -334,7 +336,7 @@ SEC-096 (email verification) and SEC-097 (password reset) sit in the Phase 6 sec
 | Field | Content |
 |-------|---------|
 | **Status** | Done |
-| **Scope** | `backend/db/password_hash.py` (`verify_or_legacy`), `backend/db/users_db.py`, `backend/db/admin_users_db.py` |
+| **Scope** | `backend/db/password_hash.py` (`verify_or_legacy`), `backend/db/users_db/` (package), `backend/db/admin_users_db.py` |
 | **Outcome** | Production accepts only bcrypt (`$2*`) hashes at login; legacy plaintext works in non-production only. New hashes use **bcrypt cost 13** (env `BCRYPT_ROUNDS`, 12–15). Successful login upgrades legacy plaintext and weaker bcrypt costs to the current work factor. |
 | **Validation** | `python -m pytest backend/tests/test_password_hash.py::test_plaintext_password_rejected_in_production backend/tests/test_password_hash.py::test_check_user_upgrades_weak_bcrypt_on_login backend/tests/test_incomplete_listings_index.py::test_rehash_does_not_overwrite_newer_password -q`. |
 | **Last verified** | 2026-06-02 |
@@ -354,7 +356,7 @@ SEC-096 (email verification) and SEC-097 (password reset) sit in the Phase 6 sec
 | Field | Content |
 |-------|---------|
 | **Status** | Done |
-| **Scope** | `backend/db/password_hash.py`, `backend/db/users_sqlite.py`, `backend/db/dev_users_sqlite.py`, `backend/utils/credential_db_encryption.py`, `backend/utils/production_security.py`, `backend/db/users_db.py`, `backend/db/admin_users_db.py`, `backend/main.py` (assert before DB init) |
+| **Scope** | `backend/db/password_hash.py`, `backend/db/users_sqlite.py`, `backend/db/dev_users_sqlite.py`, `backend/utils/credential_db_encryption.py`, `backend/utils/production_security.py`, `backend/db/users_db/` (package), `backend/db/admin_users_db.py`, `backend/main.py` and `backend/web/db_bootstrap.py` (assert before DB init) |
 | **Outcome** | **In production:** `USERS_DB_ENCRYPTION_KEY` and `DEV_USERS_DB_ENCRYPTION_KEY` (each ≥32 chars) required; `sqlcipher3` required; `ALLOW_UNENCRYPTED_USER_DB=1` forbidden. Dev/test may set `ALLOW_UNENCRYPTED_USER_DB=1` for plain SQLite. Password hashes use bcrypt cost 13 by default; login rehashes weak/legacy stored hashes. Sessions remain signed with `SECRET_KEY` (HttpOnly / Secure cookies per SEC-010). No 2FA. |
 | **Validation** | `python -m pytest backend/tests/test_password_hash.py backend/tests/test_production_security.py -q`; production import in `scripts/security_check.sh` with encryption keys. |
 | **Last verified** | 2026-05-30 |
@@ -364,8 +366,8 @@ SEC-096 (email verification) and SEC-097 (password reset) sit in the Phase 6 sec
 | Field | Content |
 |-------|---------|
 | **Status** | Won't do (superseded by SEC-014) |
-| **Scope** | `backend/auth/mfa.py`, `backend/utils/mfa_qr_store.py`, legacy templates `frontend/templates/mfa_qr_*.html` |
-| **Outcome** | QR MFA **not** registered on the app; legacy `/mfa/qr-*` URLs redirect per SEC-014. Utilities remain in tree for reference only. Socket.IO CORS helper in `backend/main.py` still applies to `run.py` if other events are added later. |
+| **Scope** | `backend/auth/mfa.py`, `backend/utils/mfa_qr_store.py` (both removed 2026-07-07, 9215da854), legacy templates `frontend/templates/mfa_qr_*.html` (removed) |
+| **Outcome** | QR MFA **not** registered on the app; legacy `/mfa/qr-*` URLs redirect per SEC-014. The utilities were removed from the tree on 2026-07-07 (9215da854). Socket.IO CORS helper (no longer present in `backend/main.py` after the module split) would apply to `run.py` if other events are added later. |
 | **Validation** | `python -m pytest backend/tests/test_mfa_qr.py -q` (legacy redirect smoke). |
 | **Last verified** | 2026-05-22 |
 
@@ -374,7 +376,7 @@ SEC-096 (email verification) and SEC-097 (password reset) sit in the Phase 6 sec
 | Field | Content |
 |-------|---------|
 | **Status** | Done |
-| **Scope** | `backend/utils/mfa_delivery.py`, `backend/main.py`, `backend/dev_routes.py`, `requirements.txt` |
+| **Scope** | `backend/utils/mfa_delivery.py`, `backend/dev/routes.py`, `requirements.txt` |
 | **Outcome** | **Resend** (or SMTP) for email codes only; **no SMS** MFA (Twilio / Verify / Programmable SMS code paths removed; `mfa_phone` column may remain unused in DB). |
 | **Validation** | `python -m pytest -q` |
 | **Last verified** | 2026-04-25 |
@@ -394,7 +396,7 @@ SEC-096 (email verification) and SEC-097 (password reset) sit in the Phase 6 sec
 | Field | Content |
 |-------|---------|
 | **Status** | Done |
-| **Scope** | `backend/main.py` (login/register session, `/logout`, CSRF branch), `backend/db/users_db.py` (`get_user_by_login`, `save_user` returns id), `backend/dealer_portal.py`, `backend/db/dealer_portal_db.py`, `backend/utils/dealer_vin_prefill.py`, `frontend/templates/dealer_inventory.html`, nav in `dashboard.html` / `listings.html` / `car.html` |
+| **Scope** | `backend/auth/pages.py` (login/register session, `/logout`), `backend/web/security.py` (CSRF branch), `backend/db/users_db/` (package) (`get_user_by_login`, `save_user` returns id), `backend/dealer/routes.py`, `backend/db/dealer_portal_db.py`, `backend/utils/dealer_vin_prefill.py`, `frontend/templates/inventory/` (`dealer_inventory.html` removed 2026-07-06, 0398f5977), nav in `dashboard.html` / `listings.html` / `car.html` |
 | **Outcome** | Successful `/login` and `/register` set `session['user_id']` + `session['username']`; `POST /logout` clears session (see SEC-060). Dealer inventory lives in `dealer_portal.db` (path `DEALER_PORTAL_DB_PATH`). Mutating dealer routes validate CSRF form token. VIN add is rate-limited per IP (`RATE_LIMIT_DEALER_VIN_PER_MIN`, default 20/min). Photo uploads: MIME allow-list, max bytes (`DEALER_UPLOAD_MAX_BYTES`), bounded file count; gallery URLs stored as JSON on the vehicle row; files on disk under `DEALER_UPLOAD_ROOT` (default `uploads/dealer/`). |
 | **Validation** | `python -m pytest tests/test_dealer_portal.py`; replay `POST /inventory/add-vin` without `csrf_token` → 403; logged-out `GET /inventory` → redirect to `/login`. |
 | **Last verified** | 2026-04-21 |
@@ -404,7 +406,7 @@ SEC-096 (email verification) and SEC-097 (password reset) sit in the Phase 6 sec
 | Field | Content |
 |-------|---------|
 | **Status** | Done |
-| **Scope** | `backend/main.py` (register/login gates), `backend/db/users_db.py` (org + role schema), `backend/billing/stripe_billing.py`, `backend/billing/routes.py`, templates (`register.html`, billing screens) |
+| **Scope** | `backend/auth/pages.py` (register/login gates), `backend/db/users_db/` (package) (org + role schema), `backend/billing/stripe_billing.py`, `backend/billing/routes.py`, templates (`register.html`, billing screens) |
 | **Outcome** | One Stripe subscription per org (dealership). New registrations either create an org (owner) or join via invite; non-admin users require an active org subscription to access paid surfaces. Stripe webhook is signature-verified and is the only source of truth for subscription activation. Admin users bypass Stripe and gates via env-driven bootstrap (no hard-coded accounts). Billing templates expose only org display name and navigation links — no Stripe secrets. |
 | **Validation** | `python -m pytest backend/tests/test_billing_gate.py -q` (gates + `test_stripe_webhook_rejects_invalid_signature` + disabled webhook 404). Manual spot-check: `rg -n 'STRIPE_SECRET|STRIPE_WEBHOOK|sk_live|sk_test' frontend/templates` → no secret literals in templates. |
 | **Last verified** | 2026-05-06 |
@@ -414,7 +416,7 @@ SEC-096 (email verification) and SEC-097 (password reset) sit in the Phase 6 sec
 | Field | Content |
 |-------|---------|
 | **Status** | Done |
-| **Scope** | `backend/utils/roles.py` (`admin_usernames`, `username_is_admin`, `account_has_env_admin_privilege`), `backend/db/users_db.py` (`_apply_env_admin_privileges`, `sync_env_admin_user_row`), `backend/main.py`, `backend/dealer/routes.py`, `backend/tests/test_billing_gate.py` |
+| **Scope** | `backend/utils/roles.py` (`admin_usernames`, `username_is_admin`, `account_has_env_admin_privilege`), `backend/db/users_db/` (package) (`_apply_env_admin_privileges`, `sync_env_admin_user_row`), `backend/auth/pages.py`, `backend/dealer/routes.py`, `backend/tests/test_billing_gate.py` |
 | **Outcome** | Operators set comma-separated usernames in `.env` only (`APP_ADMIN_USERNAMES`); matching `users` rows get `role=admin`, TOTP cleared, MFA skipped on login — same as `APP_ADMIN_EMAILS`. Startup migration + per-login sync cover accounts created before env updates. |
 | **Validation** | `python -m pytest backend/tests/test_billing_gate.py` |
 | **Last verified** | 2026-04-29 |
@@ -460,7 +462,7 @@ SEC-096 (email verification) and SEC-097 (password reset) sit in the Phase 6 sec
 | Field | Content |
 |-------|---------|
 | **Status** | Done |
-| **Scope** | `backend/hybrid_inventory_search.py` |
+| **Scope** | `backend/utils/hybrid_search.py` |
 | **Outcome** | Non-numeric `max_price`, `max_mileage`, `radius` → `None` filters, no exception. |
 | **Validation** | `/search?max_price=abc&max_mileage=xx` → 200, no traceback in logs. |
 | **Last verified** | 2026-04-18 |
@@ -470,7 +472,7 @@ SEC-096 (email verification) and SEC-097 (password reset) sit in the Phase 6 sec
 | Field | Content |
 |-------|---------|
 | **Status** | Done |
-| **Scope** | `backend/main.py` (`app.config["MAX_CONTENT_LENGTH"]`, `MAX_REQUEST_BODY_BYTES`); `api_search_smart` content-length check vs `CHAT_MAX_BODY_BYTES` |
+| **Scope** | `backend/main.py` (`app.config["MAX_CONTENT_LENGTH"]`, `MAX_REQUEST_BODY_BYTES`); `api_search_smart` (`backend/routes/listings_api.py`) content-length check vs `CHAT_MAX_BODY_BYTES` |
 | **Outcome** | Global Werkzeug cap (default max(9 MiB, 2× `CHAT_MAX_BODY_BYTES`)) to reduce oversized POST DoS. `/api/search/smart` returns 413 for bodies over `CHAT_MAX_BODY_BYTES` (aligned with chat). |
 | **Validation** | `python -m pytest tests/test_app_security_basics.py::test_smart_search_payload_too_large`. |
 | **Last verified** | 2026-04-22 |
@@ -480,7 +482,7 @@ SEC-096 (email verification) and SEC-097 (password reset) sit in the Phase 6 sec
 | Field | Content |
 |-------|---------|
 | **Status** | Done |
-| **Scope** | `backend/dev_routes.py` `_safe_dev_next_url` |
+| **Scope** | `backend/dev/routes.py` `_safe_dev_next_url` |
 | **Outcome** | Normalized path must be `/dev` or under `/dev/`; rejects `//`, `\`, and `..` escapes. |
 | **Validation** | `next=/dev/../../login` → dashboard; `next=/dev/api/status` → allowed. |
 | **Last verified** | 2026-04-18 |
@@ -524,7 +526,7 @@ SEC-096 (email verification) and SEC-097 (password reset) sit in the Phase 6 sec
 | Field | Content |
 |-------|---------|
 | **Status** | Done |
-| **Scope** | `backend/main.py` (`_require_premium_feature`, `api_car_chat`, `api_nearby_dealers`); `frontend/templates/listings.html` (403 hides dealer filter) |
+| **Scope** | `backend/routes/ai_chat_bp.py` (`api_car_chat`), `backend/routes/dealers_recalls.py` (`api_nearby_dealers`), `backend/billing/access.py` (premium gate; `_require_premium_feature` no longer exists); `frontend/templates/listings.html` (403 hides dealer filter) |
 | **Outcome** | When `BILLING_STRIPE_ENABLED=1`, car chat and dealership picker API require premium, active org subscription, or app admin. When billing disabled, features remain open (early access). |
 | **Validation** | `python -m pytest backend/tests/test_premium_checkout.py backend/tests/test_billing_gate.py -q`; unpaid session → `POST /api/car/1/chat` → 403 `premium_required`. |
 | **Last verified** | 2026-05-22 |
@@ -534,7 +536,7 @@ SEC-096 (email verification) and SEC-097 (password reset) sit in the Phase 6 sec
 | Field | Content |
 |-------|---------|
 | **Status** | Done |
-| **Scope** | `backend/db/users_db.py` (`save_user`, `user_exists_by_email`), `backend/main.py` (`register`), `backend/utils/registration_validation.py` |
+| **Scope** | `backend/db/users_db/` (package) (`save_user`, `user_exists_by_email`), `backend/auth/pages.py` (`register_page`), `backend/utils/registration_validation.py` |
 | **Outcome** | Store and compare emails case-insensitively (normalize to lowercase on insert/update). Prevent duplicate accounts differing only by case (`Test@x.com` vs `test@x.com`). |
 | **Validation** | `python -m pytest backend/tests/test_registration_email.py -q`; register `A@example.com`, attempt `a@example.com` → duplicate error. |
 | **Last verified** | 2026-05-22 |
@@ -544,7 +546,7 @@ SEC-096 (email verification) and SEC-097 (password reset) sit in the Phase 6 sec
 | Field | Content |
 |-------|---------|
 | **Status** | Done |
-| **Scope** | `backend/main.py` (`_serve_car_window_sticker_preview`, `car_detail` preview URL context) |
+| **Scope** | `backend/routes/cars_pages.py` (`_serve_car_window_sticker_preview`), `backend/routes/car_detail/` (`car_detail` preview URL context) |
 | **Outcome** | Window sticker PNG preview (`/car/<id>/window-sticker-preview.png`, legacy API path) uses `_require_premium_feature`: paid access when billing enabled; **login required in production when billing off** (same as SEC-073). OEM URLs in template context follow premium UI gates. |
 | **Validation** | `python -m pytest backend/tests/test_audit_fixes.py::test_sticker_preview_requires_premium_when_billing_on backend/tests/test_audit_fixes.py::test_sticker_preview_requires_login_in_production_when_billing_off -q`. |
 | **Last verified** | 2026-05-30 |
@@ -554,7 +556,7 @@ SEC-096 (email verification) and SEC-097 (password reset) sit in the Phase 6 sec
 | Field | Content |
 |-------|---------|
 | **Status** | Done |
-| **Scope** | `backend/main.py` (`_require_premium_feature`, `api_car_chat`, packages ensure routes, `_serve_car_window_sticker_preview`) |
+| **Scope** | `backend/routes/ai_chat_bp.py` (`api_car_chat`), `backend/routes/car_detail/packages_ensure.py` (packages ensure), `backend/routes/cars_pages.py` (`_serve_car_window_sticker_preview`), `backend/billing/access.py` (premium gate) |
 | **Outcome** | In production, car chat, packages APIs, and window sticker PNG preview require an authenticated session even when `BILLING_STRIPE_ENABLED=0`; billing-off early access remains dev-only. |
 | **Validation** | `python -m pytest backend/tests/test_audit_fixes.py::test_car_chat_requires_login_in_production_when_billing_off backend/tests/test_audit_fixes.py::test_sticker_preview_requires_login_in_production_when_billing_off -q`. |
 | **Last verified** | 2026-05-30 |
@@ -564,7 +566,7 @@ SEC-096 (email verification) and SEC-097 (password reset) sit in the Phase 6 sec
 | Field | Content |
 |-------|---------|
 | **Status** | Done |
-| **Scope** | `backend/main.py` (`register_page`), `backend/dealer/routes.py` (`dealer_register`), `backend/utils/roles.py` (`registration_blocked_by_env_admin`) |
+| **Scope** | `backend/auth/pages.py` (`register_page`), `backend/dealer/routes.py` (`dealer_register`), `backend/utils/roles.py` (`registration_blocked_by_env_admin`) |
 | **Outcome** | Public `/register` and `/dealer/register` reject emails/usernames in `APP_ADMIN_EMAILS` / `APP_ADMIN_USERNAMES`. Admin promotion happens on login via `sync_env_admin_user_row` only. |
 | **Validation** | `python -m pytest backend/tests/test_registration_email.py backend/tests/test_billing_gate.py -q`. |
 | **Last verified** | 2026-05-22 |
@@ -574,7 +576,7 @@ SEC-096 (email verification) and SEC-097 (password reset) sit in the Phase 6 sec
 | Field | Content |
 |-------|---------|
 | **Status** | Done |
-| **Scope** | `backend/auth/google_oauth.py`, `backend/db/users_db.py` (`google_sub`), `backend/main.py`, `frontend/templates/login.html` |
+| **Scope** | `backend/auth/google_oauth.py`, `backend/db/users_db/` (package) (`google_sub`), `backend/auth/pages.py`, `frontend/templates/login.html` |
 | **Outcome** | Server-side OAuth code flow when `GOOGLE_OAUTH_CLIENT_ID` + `GOOGLE_OAUTH_CLIENT_SECRET` set; `state` stored in session; callback rate-limited like login; verified Google email auto-links to existing app user by email (**changed 2026-10-18 by SEC-104:** only when that account's email is verified, otherwise after a password login); new users get `ROLE_GENERAL` + random password hash; UI hidden unless `GOOGLE_OAUTH_SHOW_BUTTON=1`. New Google sign-ups (non-premium) redirect to `/premium` with welcome banner; Stripe checkout uses existing `user_id` session (same account as Google). Optional `GOOGLE_OAUTH_OFFER_PREMIUM_ON_LOGIN=1` for returning users; `/auth/google?intent=premium` preserves upgrade intent through OAuth. |
 | **Validation** | `python -m pytest backend/tests/test_google_oauth.py -q`; unconfigured `/auth/google` → redirect `/login`; callback with bad `state` → login error. |
 | **Last verified** | 2026-10-18 |
@@ -584,7 +586,7 @@ SEC-096 (email verification) and SEC-097 (password reset) sit in the Phase 6 sec
 | Field | Content |
 |-------|---------|
 | **Status** | Done |
-| **Scope** | `backend/main.py` (`CSP_ENFORCE`, `CSP_REPORT_ONLY`, per-request nonce, `g.csp_nonce`), all app templates with `<script>` (listings, car, dashboard, auth, `dev*`, `dev_manifest`, `_app_logout.html` partial) |
+| **Scope** | `backend/web/security.py` (per-request nonce, `g.csp_nonce`), `backend/config.py` (`CSP_ENFORCE`, `CSP_REPORT_ONLY`), all app templates with `<script>` (listings, car, dashboard, auth, `dev*`, `dev_manifest`, `_app_logout.html` partial) |
 | **Outcome** | Enforced `Content-Security-Policy` in production by default; per-request `script-src` **nonce** on all script elements (incl. `type="application/json"` blobs). `style-src` includes `unsafe-inline` for existing `style=""` until migrated to classes. `CSP_ENFORCE=0` / `1` overrides env default; if enforcement is off, `CSP_REPORT_ONLY=1` still sends report-only policy. 2026-10-18: the unused `https://esm.sh` origin is gone from both policies (**SEC-107**). |
 | **Validation** | `CSP_ENFORCE=1` → `GET /login` includes `Content-Security-Policy` with `nonce-`; public pages and `/dev` load. `python -m pytest backend/tests/test_app_security_basics.py backend/tests/test_csp_policy.py -q`. |
 | **Last verified** | 2026-10-18 |
@@ -594,7 +596,7 @@ SEC-096 (email verification) and SEC-097 (password reset) sit in the Phase 6 sec
 | Field | Content |
 |-------|---------|
 | **Status** | Done |
-| **Scope** | `backend/main.py` (`_csp_headers` after_request) |
+| **Scope** | `backend/web/security.py` (`_csp_headers` after_request) |
 | **Outcome** | All responses: `X-Content-Type-Options: nosniff`, `X-Frame-Options: DENY`, `Referrer-Policy: strict-origin-when-cross-origin`. When secure session cookies are enabled: `Strict-Transport-Security` (1 year, includeSubDomains). CSP behavior unchanged (SEC-032). |
 | **Validation** | `python -m pytest backend/tests/test_production_security.py::test_security_headers_on_login -q`. |
 | **Last verified** | 2026-05-26 |
@@ -619,7 +621,7 @@ SEC-096 (email verification) and SEC-097 (password reset) sit in the Phase 6 sec
 | Field | Content |
 |-------|---------|
 | **Status** | Done |
-| **Scope** | `backend/main.py`, `backend/utils/ip_rate_limit.py` |
+| **Scope** | `backend/web/security.py`, `backend/utils/ip_rate_limit.py` |
 | **Outcome** | Per-IP sliding window (default 90/min, env-tunable). Optional `RATE_LIMIT_SQLITE_PATH` shares counters across gunicorn/uwsgi workers on the same host (SQLite WAL + busy timeout). For multi-node, use a reverse proxy or Redis. |
 | **Validation** | Burst > limit → HTTP 429 JSON `rate_limited`; with `RATE_LIMIT_SQLITE_PATH` set, `python -m pytest tests/test_app_security_basics.py::test_ip_rate_limit_sqlite_shared`. |
 | **Last verified** | 2026-04-22 |
@@ -629,7 +631,7 @@ SEC-096 (email verification) and SEC-097 (password reset) sit in the Phase 6 sec
 | Field | Content |
 |-------|---------|
 | **Status** | Done |
-| **Scope** | `backend/main.py`, `backend/utils/car_chat_policy.py`, `backend/intelligence/ai/agent.py`, `backend/utils/web_researcher.py`, `frontend/templates/car.html`, `frontend/templates/compare.html`, `frontend/static/car_page.js`, `frontend/static/compare_chat.js` (chat disclosure copy) |
+| **Scope** | `backend/routes/ai_chat_bp.py`, `backend/utils/car_chat_policy.py`, `backend/intelligence/ai/agent.py`, `backend/utils/web_researcher.py`, `frontend/templates/car.html`, `frontend/templates/compare.html`, `frontend/static/car_page.js`, `frontend/static/compare_chat.js` (chat disclosure copy) |
 | **Outcome** | **Layered rate limits:** optional deployment-wide key (`RATE_LIMIT_CAR_CHAT_GLOBAL_PER_MIN`, default off); per-IP (`RATE_LIMIT_CAR_CHAT_PER_IP_PER_MIN`, default 48/min); per IP+car (`RATE_LIMIT_CAR_CHAT_PER_MIN`, default 24/min); compare chat uses per-IP compare key. Max message length and JSON body bytes unchanged. **Web research** (`CAR_CHAT_WEB_RESEARCH`): production + `auto` allows live research only for **signed-in** users (`CAR_CHAT_WEB_RESEARCH_PUBLIC` has no effect: production ignores it, and non-production `auto` already allows everyone); since 2026-10-18 the research is HTTP-only and the web image has no browser (**SEC-111**); prod web has `CAR_CHAT_WEB_RESEARCH=0` since 2026-10-08; pgvector model-knowledge cache may still be read when keywords match. **Logging:** car chat no longer `print`s full user text; use DEBUG for operator detail. **Web research URLs:** `WEB_RESEARCH_ALLOWED_HOSTS` optional allowlist; blocklist + private/loopback host guard in `web_researcher.href_is_acceptable_result`. User messages remain **untrusted**; model output is advisory only. Car page states AI may be wrong; signed-out users see a line about signing in for full web research when the server allows it. Compare page includes the same advisory copy for side-by-side AI. |
 | **Validation** | `python -m pytest backend/tests/test_app_security_basics.py backend/tests/test_car_chat_policy.py backend/tests/test_compare_specs.py -q` (413/429 paths, global chat limit, policy + URL guard). Set `BILLING_STRIPE_ENABLED=0` in tests before `import backend.main` so `.env` does not re-enable billing. Oversized body → 413; long message → `message_too_long`; flood → 429. |
 | **Last verified** | 2026-10-18 |
@@ -639,9 +641,9 @@ SEC-096 (email verification) and SEC-097 (password reset) sit in the Phase 6 sec
 | Field | Content |
 |-------|---------|
 | **Status** | Done |
-| **Scope** | `backend/ai_agent.py`, `llm/` |
+| **Scope** | `backend/intelligence/ai/agent.py`, `llm/` |
 | **Outcome** | API keys read from environment only (e.g. `OPENAI_API_KEY`); no hardcoded secrets in repo from review. |
-| **Validation** | `rg` for key-like literals in `backend/ai_agent.py` / `llm/` — none committed. |
+| **Validation** | `rg` for key-like literals in `backend/intelligence/ai/agent.py` / `llm/` — none committed. |
 | **Last verified** | 2026-04-18 |
 
 ### SEC-085 — Dealer locator Google Places login gate (production)
@@ -649,7 +651,7 @@ SEC-096 (email verification) and SEC-097 (password reset) sit in the Phase 6 sec
 | Field | Content |
 |-------|---------|
 | **Status** | Done |
-| **Scope** | `backend/main.py` (`api_dealer_locator`) |
+| **Scope** | `backend/routes/dealers_recalls.py` (`api_dealer_locator`) |
 | **Outcome** | `GET /api/dealer-locator` is public by default (registry + Google when key set). Set `DEALER_LOCATOR_REQUIRE_LOGIN=1` in production to return **403** `login_required` for anonymous Google-tier requests. Per-IP rate limit unchanged (default 30/min). |
 | **Validation** | `python -m pytest backend/tests/test_production_security.py::test_dealer_locator_google_requires_login_in_production -q`. |
 | **Last verified** | 2026-06-12 |
@@ -659,7 +661,7 @@ SEC-096 (email verification) and SEC-097 (password reset) sit in the Phase 6 sec
 | Field | Content |
 |-------|---------|
 | **Status** | Done |
-| **Scope** | `backend/vision/ollama_llava.py` |
+| **Scope** | `backend/vision/vlm_ollama.py` |
 | **Outcome** | Vision calls go to operator-configured `OLLAMA_HOST` (default loopback). Listing image URLs are fetched with browser-like headers and the vehicle’s VDP URL as `Referer` when `_detail_url` is available (avoids many dealer CDN 403s on unauthenticated fetches). Gallery filter uses URL heuristics before LLM (F&I / VPP / plan-overview path substrings) and **lot-score demotion** for F&I-like URL tokens. **Thin bar** dimensions auto-drop as `marketing_strip` and override a bad `keep`. **No** auto pixel-triage of portrait “flyers” (that mis-tagged real 3:4/4:5 lot photos). `warranty_flyer_page` and technical rows are excluded from empty-set fallback. Prompts and per-image user triage text stress **landscape** and text-heavy F&I / VPP slides. No secrets in prompts. |
 | **Validation** | `python -m pytest tests/test_ollama_llava.py`. |
 | **Last verified** | 2026-04-22 |
@@ -669,7 +671,7 @@ SEC-096 (email verification) and SEC-097 (password reset) sit in the Phase 6 sec
 | Field | Content |
 |-------|---------|
 | **Status** | Done |
-| **Scope** | `backend/utils/client_ip.py`, `backend/main.py`, `backend/dev_routes.py` |
+| **Scope** | `backend/utils/client_ip.py`, `backend/web/security.py`, `backend/dev/routes.py` |
 | **Outcome** | `X-Forwarded-For` is honored only when `TRUST_PROXY_HEADERS` is truthy; otherwise `request.remote_addr` is used for smart search, car chat, `/login`, `/register`, and `/dev` auth rate limits. Hardened 2026-07-08: the client IP is taken `TRUSTED_PROXY_HOPS` entries from the **right** (not the first hop), so a client-supplied `X-Forwarded-For` can never become the rate-limit key. Entries are validated as IPs and ports stripped; a chain shorter than the hop count falls back to `remote_addr`. 2026-10-18: optional `TRUSTED_PROXY_CIDRS` mode closes the direct-to-origin spoof that hops=2 leaves open (**SEC-105**). |
 | **Validation** | `python -m pytest backend/tests/test_client_ip.py`. |
 | **Last verified** | 2026-10-18 |
@@ -679,7 +681,7 @@ SEC-096 (email verification) and SEC-097 (password reset) sit in the Phase 6 sec
 | Field | Content |
 |-------|---------|
 | **Status** | Retired |
-| **Scope** | Former: `backend/enrichment/kbb_idws.py`, `POST /dev/api/cars/<id>/kbb-refresh`, post-scan `--post-kbb`, `scripts/fetch_kbb_for_inventory.py` |
+| **Scope** | Former (all removed): `backend/enrichment/kbb_idws.py` (removed 2026-05-30, ad9b328c1), `POST /dev/api/cars/<id>/kbb-refresh`, post-scan `--post-kbb`, `scripts/fetch_kbb_for_inventory.py` (removed 2026-05-03, b82f0a25b) |
 | **Outcome** | KBB IDWS integration removed (no licensed API). Pricing insights use in-database similar-listing averages (`market_intel`) only. Legacy `kbb_*` DB columns may remain but are not populated or exposed in UI/API. |
 | **Validation** | `rg -i "kbb_idws|KBB_API_KEY|kbb-refresh|Kelley Blue" backend frontend/templates docs/SECURITY_MASTER_TODO.md` shows no active product integration (gallery URL junk filters for `kbb.com` / `kbb-widget` remain). |
 | **Last verified** | 2026-05-22 |
@@ -725,7 +727,7 @@ SEC-096 (email verification) and SEC-097 (password reset) sit in the Phase 6 sec
 | Field | Content |
 |-------|---------|
 | **Status** | Done |
-| **Scope** | `backend/dev_routes.py` |
+| **Scope** | `backend/dev/routes.py` |
 | **Outcome** | `logger.exception` on pgvector reindex failure (no silent `pass`). |
 | **Validation** | Force failure in `reindex_all` → stack trace in server logs. |
 | **Last verified** | 2026-04-18 |
@@ -735,7 +737,7 @@ SEC-096 (email verification) and SEC-097 (password reset) sit in the Phase 6 sec
 | Field | Content |
 |-------|---------|
 | **Status** | Done |
-| **Scope** | `backend/dev_routes.py` docstring |
+| **Scope** | `backend/dev/routes.py` docstring |
 | **Outcome** | Doc states admin session is required (matches `before_request`). |
 | **Validation** | Anonymous `GET /dev/api/audit-last-scrape` → 401 JSON or redirect to login. |
 | **Last verified** | 2026-04-18 |
@@ -745,7 +747,7 @@ SEC-096 (email verification) and SEC-097 (password reset) sit in the Phase 6 sec
 | Field | Content |
 |-------|---------|
 | **Status** | Done |
-| **Scope** | `backend/db/dev_users_sqlite.py`, `backend/db/admin_users_db.py`, `backend/main.py` (`init_admin_db` order unchanged) |
+| **Scope** | `backend/db/dev_users_sqlite.py`, `backend/db/admin_users_db.py`, `backend/main.py` and `backend/web/db_bootstrap.py` (`init_admin_db` order unchanged) |
 | **Outcome** | Table `admin_users` for `/dev` lives only in `dev_users.db` (path from `DEV_USERS_DB_PATH`). On first init, rows may be copied from a legacy plain-SQLite `users.db` `admin_users` table if the new DB is empty. Encrypted legacy DBs are skipped (operators re-bootstrap). |
 | **Validation** | `FLASK_ENV=production` with `SECRET_KEY` + `ADMIN_PASSWORD` imports `backend.main` without error; dashboard status shows resolved `dev_users_db_path`. |
 | **Last verified** | 2026-04-18 |
@@ -755,7 +757,7 @@ SEC-096 (email verification) and SEC-097 (password reset) sit in the Phase 6 sec
 | Field | Content |
 |-------|---------|
 | **Status** | Done |
-| **Scope** | `backend/dev_routes.py` (`DEV_IP_ALLOWLIST`, `_dev_client_ip_allowed`), `backend/db/admin_users_db.py` (`save_dev_admin_user`, `dev_public_registration_allowed`), `backend/utils/registration_validation.py`, `frontend/templates/{admin_login,dev_register,dev}.html`, `frontend/static/style.css` |
+| **Scope** | `backend/dev/routes.py` (`DEV_IP_ALLOWLIST`, `_dev_client_ip_allowed`), `backend/db/admin_users_db.py` (`save_dev_admin_user`, `dev_public_registration_allowed`), `backend/utils/registration_validation.py`, `frontend/templates/{admin_login,dev_register,dev}.html`, `frontend/static/css/06-dev.css` |
 | **Outcome** | Shared field validation for dev register; production self-register only if `ALLOW_DEV_PUBLIC_REGISTER`; non-production closed if `DEV_DISABLE_PUBLIC_REGISTER`; sliding-window limits on `/dev/login` and `/dev/register`; logout is POST with CSRF. Optional **`DEV_IP_ALLOWLIST`** (IPs / CIDRs, comma-separated) returns **403** for non-matching clients on all `/dev/*` (API JSON includes `reason: dev_ip_allowlist`). Operators should still use VPN, firewall, or separate admin ingress for `/dev` — this env is defense in depth. |
 | **Validation** | Register with duplicate username → friendly error; login flood → 429; `GET /dev/logout` → 405; `python -m pytest backend/tests/test_dev_ip_allowlist.py -q`. |
 | **Last verified** | 2026-05-06 |
@@ -775,7 +777,7 @@ SEC-096 (email verification) and SEC-097 (password reset) sit in the Phase 6 sec
 | Field | Content |
 |-------|---------|
 | **Status** | Done |
-| **Scope** | `backend/scanner/window_sticker.py` (`_fetch_url_as_sticker`) |
+| **Scope** | `backend/scanner/post_scan/window_sticker.py` (`_fetch_url_as_sticker`) |
 | **Outcome** | Outbound `requests.get` runs only when the URL is in `get_window_sticker_candidate_urls(vin)` for that VIN (OEM template URLs only). |
 | **Validation** | `python -m pytest backend/tests/test_window_sticker_urls.py::test_fetch_blocks_url_not_in_oem_candidates -q`. |
 | **Last verified** | 2026-05-22 |
@@ -785,7 +787,7 @@ SEC-096 (email verification) and SEC-097 (password reset) sit in the Phase 6 sec
 | Field | Content |
 |-------|---------|
 | **Status** | Done |
-| **Scope** | `backend/dev_console.py` |
+| **Scope** | `backend/dev/console.py` |
 | **Outcome** | After secret login, `next` must normalize to `/dev/manifest` or under `/dev/manifest/` (same pattern as SEC-021 for `/dev`). |
 | **Validation** | `next=//evil.com` redirects to manifest home. |
 | **Last verified** | 2026-04-18 |
@@ -795,7 +797,7 @@ SEC-096 (email verification) and SEC-097 (password reset) sit in the Phase 6 sec
 | Field | Content |
 |-------|---------|
 | **Status** | Done |
-| **Scope** | `backend/dealer_admin/*`, `backend/main.py`, `backend/db/users_db.py`, `backend/db/inventory_db.py` (`scan_runs`), `backend/database.py` (upsert timestamps), `scanner.py` (scan log), `frontend/templates/admin/*`, `tests/test_store_admin.py` |
+| **Scope** | `backend/dealer/admin/*`, `backend/web/security.py`, `backend/db/users_db/` (package), `backend/db/inventory_db.py` (`scan_runs`), `backend/scanner/database.py` (upsert timestamps), `scanner.py` (scan log), `frontend/templates/admin/*`, `backend/tests/test_store_admin.py` |
 | **Outcome** | Dealer-scoped read of scraped inventory; CSRF on mutations; `internal_notes` / `marked_for_review` excluded from public `serialize_car_for_api`. Re-scan from UI requires explicit `ALLOW_STORE_ADMIN_RESCAN=1` and **admin** role; subprocess uses repo-root `scanner.py` + `sys.executable` (no `shell=True`). |
 | **Validation** | `python -m pytest tests/test_store_admin.py`; anonymous `GET /admin/` → 302 to `/login`. |
 | **Last verified** | 2026-04-20 |
@@ -825,7 +827,7 @@ SEC-096 (email verification) and SEC-097 (password reset) sit in the Phase 6 sec
 | Field | Content |
 |-------|---------|
 | **Status** | Done |
-| **Scope** | `.gitignore`, `debug/README.md`, `backend/utils/hybrid_search.py` (`public_search_meta`), `backend/main.py` (`api_search_smart`), `backend/utils/car_serialize.py` (`redact_sensitive_car_row`), `backend/dev/routes.py` (`api_car_debug`, `api_audit_last_scrape`), `backend/scanner/cli.py` (`SCANNER_FAILURE_HAR` default), `deploy/always-on/systemd/sarraficars-web.service`, `deploy/always-on/launchd/com.sarraficars.web.plist` |
+| **Scope** | `.gitignore`, `debug/README.md`, `backend/utils/hybrid_search.py` (`public_search_meta`), `backend/routes/listings_api.py` (`api_search_smart`), `backend/utils/car_serialize/` (package) (`redact_sensitive_car_row`), `backend/dev/routes.py` (`api_car_debug`, `api_audit_last_scrape`), `backend/scanner/cli.py` (`SCANNER_FAILURE_HAR` default), `deploy/always-on/systemd/sarraficars-web.service`, `deploy/always-on/launchd/com.sarraficars.web.plist` |
 | **Outcome** | Repo-root `debug/` artifacts untracked (scanner PNGs, e2e screenshots). Public `POST /api/search/smart` returns trimmed `search_meta` (mode + counts only). `/dev/api/car-debug` and `/dev/api/audit-last-scrape` redact `internal_notes`, `price_provenance_json`, and related operator columns even for dev admins. Scanner HAR capture opt-in (`SCANNER_FAILURE_HAR=1`). Supervised always-on units use **gunicorn** (not Werkzeug `run.py`). |
 | **Validation** | `python -m pytest backend/tests/test_debug_audit.py backend/tests/test_production_security.py -q`; `git ls-files 'debug/*'` → only `debug/README.md`; `git check-ignore -v debug/fail_foo.png` confirms ignore. |
 | **Last verified** | 2026-05-30 |
@@ -835,7 +837,7 @@ SEC-096 (email verification) and SEC-097 (password reset) sit in the Phase 6 sec
 | Field | Content |
 |-------|---------|
 | **Status** | Done |
-| **Scope** | `backend/listing_gap_fill.py`, `backend/scanner_post_pipeline.py` (`run_listing_gap_fill_stage`), `scanner.py` (`--post-listing-gap-fill` / `SCANNER_POST_LISTING_GAP_FILL`), `backend/utils/vdp_spec_parse.py` (`parse_condition_from_listing_html`) |
+| **Scope** | `backend/scanner/post_scan/gap_fill.py`, `backend/scanner/post_scan/pipeline.py` (`run_listing_gap_fill_stage`), `backend/scanner/cli.py` (`--post-listing-gap-fill` / `SCANNER_POST_LISTING_GAP_FILL`), `backend/utils/vdp_spec_parse.py` (`parse_condition_from_listing_html`) |
 | **Outcome** | After a scan, optionally backfill incomplete listing rows for VINs touched in that run: tier 1 reuses existing EPA/vPIC structured backfill; tier 2 fetches each row’s stored HTTPS `source_url` via `requests` then optional **sync Playwright** Chromium when the HTML shell looks thin; **condition** is parsed only from page HTML/JSON-LD (never from DDG). Tier 3 uses **DuckDuckGo Instant Answer** (`api.duckduckgo.com`, bounded timeout) only for residual mechanical fields (transmission/drivetrain/fuel_type). Provenance merged into `cars.spec_source_json`. No new Flask routes; operator CLI / batch only. Max rows per run capped via `SCANNER_POST_LISTING_GAP_FILL_MAX` (default 400). DDG can be disabled with `LISTING_GAP_FILL_ALLOW_DDG=0`. |
 | **Validation** | `python -m pytest tests/test_listing_gap_fill.py`; manual: `SCANNER_POST_LISTING_GAP_FILL=1` or `--post-listing-gap-fill` after a scan with `SCANNER_POST_REPAIR=1` recommended so repair runs first. |
 | **Last verified** | 2026-04-29 |
@@ -925,7 +927,7 @@ SEC-096 (email verification) and SEC-097 (password reset) sit in the Phase 6 sec
 | Field | Content |
 |-------|---------|
 | **Status** | Done |
-| **Scope** | `backend/main.py` (`GET /api/search/smart/parse`, CSP `connect-src`, `object-src 'none'`), `backend/utils/web_researcher.py` (`_playwright_launch_args`, `PLAYWRIGHT_NO_SANDBOX`), `frontend/templates/car.html`, `frontend/templates/listings.html`, `frontend/static/listings.js`, `backend/auth/google_oauth.py` (constant-time `state`) |
+| **Scope** | `backend/routes/listings_api.py` (`GET /api/search/smart/parse`), `backend/web/security.py` (CSP `connect-src`, `object-src 'none'`), `backend/utils/web_researcher.py` (`_playwright_launch_args`, `PLAYWRIGHT_NO_SANDBOX`), `frontend/templates/car.html`, `frontend/templates/listings.html`, `frontend/static/listings.js`, `backend/auth/google_oauth.py` (constant-time `state`) |
 | **Outcome** | GET parse endpoint shares POST smart-search per-IP limit; CSP allows OpenStreetMap tiles; price history uses `\| tojson`; guest banner dismiss is nonce-safe; OAuth `state` uses `compare_digest`. **Correction (2026-10-18):** this row used to say Playwright runs Chromium without `--no-sandbox` unless `PLAYWRIGHT_NO_SANDBOX=1`. That was never true. Playwright adds `--no-sandbox` to every Chromium launch unless `chromium_sandbox=True` is passed (Playwright 1.60.0 driver: `if (options.chromiumSandbox !== true) chromeArguments.push("--no-sandbox")`), and `_LAUNCH_ARGS` passes `--disable-setuid-sandbox` as well. `PLAYWRIGHT_NO_SANDBOX` therefore changes nothing, and Chromium in the web image ran as root with no sandbox. The chosen remedy (D-SEC1 (a)) takes the browser out of the web process entirely (SEC-111). Browser mode remains only in the operator script `analyze_trim_adds_with_web.py` on a dev host, still unsandboxed; passing `chromium_sandbox=True` there is optional later hardening. |
 | **Validation** | `python -m pytest backend/tests/test_smart_search.py backend/tests/test_google_oauth.py backend/tests/test_app_security_basics.py backend/tests/test_web_researcher.py -q`. |
 | **Last verified** | 2026-10-18 |
@@ -935,7 +937,7 @@ SEC-096 (email verification) and SEC-097 (password reset) sit in the Phase 6 sec
 | Field | Content |
 |-------|---------|
 | **Status** | In progress |
-| **Scope** | `backend/auth/email_verification.py`, `backend/db/users_db.py` (`email_verified_at`, `email_verify_token_hash`), `backend/main.py` (`/verify-email`, `POST /resend-verification`), `backend/auth/app_registration.py`, Google/Apple OAuth create/link |
+| **Scope** | `backend/auth/email_verification.py`, `backend/db/users_db/` (package) (`email_verified_at`, `email_verify_token_hash`), `backend/auth/pages.py` (`/verify-email`, `POST /resend-verification`), `backend/auth/app_registration.py`, Google/Apple OAuth create/link |
 | **Outcome** | When `EMAIL_VERIFICATION_ENABLED=1`, password registration stores **hashed** verify tokens (SHA-256 + pepper); plain token only in email link; Resend/SMTP/log delivery via `send_transactional_email`; OAuth users marked verified on create/link; per-IP rate limit on resend (5/hour). Feature **off** by default until operator enables env. |
 | **Validation** | `python -m pytest backend/tests/test_email_verification.py -q`; manual: register with `EMAIL_VERIFICATION_ENABLED=1` + `MFA_DELIVERY_MODE=log` → link in logs; `/verify-email?token=…` sets `email_verified_at`. |
 | **Last verified** | 2026-06-11 |
@@ -945,7 +947,7 @@ SEC-096 (email verification) and SEC-097 (password reset) sit in the Phase 6 sec
 | Field | Content |
 |-------|---------|
 | **Status** | In progress |
-| **Scope** | `backend/auth/password_reset.py`, `backend/db/users_db.py` (`password_reset_token_hash`, `password_reset_expires_at`), `backend/main.py` (`/forgot-password`, `/reset-password`), `frontend/templates/login.html` |
+| **Scope** | `backend/auth/password_reset.py`, `backend/db/users_db/` (package) (`password_reset_token_hash`, `password_reset_expires_at`), `backend/auth/pages.py` (`/forgot-password`, `/reset-password`), `frontend/templates/login.html` |
 | **Outcome** | When `PASSWORD_RESET_ENABLED=1`, forgot-password stores **hashed** reset tokens with 1-hour expiry; plain token only in email link; generic success message (no email enumeration); OAuth-only accounts skipped; per-IP rate limit on forgot (10/hour); since 2026-10-18 also at most 3 reset emails per account per hour (**SEC-109**). Feature **off** by default (prod enables it only after remediation P16.1 ships). |
 | **Validation** | `python -m pytest backend/tests/test_password_reset.py -q`; manual: `PASSWORD_RESET_ENABLED=1` + `MFA_DELIVERY_MODE=log` → link in logs; reset updates password. |
 | **Last verified** | 2026-10-18 |
@@ -955,7 +957,7 @@ SEC-096 (email verification) and SEC-097 (password reset) sit in the Phase 6 sec
 | Field | Content |
 |-------|---------|
 | **Status** | Done |
-| **Scope** | `backend/dealer/admin/users_hub.py`, `backend/db/users_db.py` (`admin_create_user`, `admin_update_user`, `admin_reset_user_password`, `delete_user_by_id`, `is_active`), `frontend/templates/admin/users.html`, `frontend/templates/admin/user_form.html`, `frontend/templates/_icons.html` |
+| **Scope** | `backend/dealer/admin/users_hub.py`, `backend/db/users_db/` (package) (`admin_create_user`, `admin_update_user`, `admin_reset_user_password`, `delete_user_by_id`, `is_active`), `frontend/templates/admin/users.html`, `frontend/templates/admin/user_form.html`, `frontend/templates/_icons.html` |
 | **Outcome** | Site admin (`role=admin`) can list/search users at `/admin/users`; create at `/admin/users/new`; edit role/scope at `/admin/users/<id>/edit`; reset password; suspend/reactivate/delete via CSRF POST. Env-configured admins cannot be deleted or demoted; admins cannot suspend/delete themselves. Suspended users fail password login. Admin UI uses vector icons only (no emoji action buttons). |
 | **Validation** | `python -m pytest backend/tests/test_admin_users.py -q`; manual: login as site admin, create user, change role, reset password, suspend → login denied. |
 | **Last verified** | 2026-06-11 |
@@ -965,7 +967,7 @@ SEC-096 (email verification) and SEC-097 (password reset) sit in the Phase 6 sec
 | Field | Content |
 |-------|---------|
 | **Status** | Done |
-| **Scope** | `backend/dealer/admin/platform_stats.py`, `backend/db/search_analytics_db.py`, `backend/dealer/admin/routes.py` (`/admin/site`), `backend/listings/routes.py`, `backend/main.py` (`api_search_smart`), `frontend/templates/admin/site_hub.html`, `frontend/templates/_nav_sidebar.html` |
+| **Scope** | `backend/dealer/admin/platform_stats.py`, `backend/db/search_analytics_db.py`, `backend/dealer/admin/routes.py` (`/admin/site`), `backend/listings/routes.py`, `backend/routes/listings_api.py` (`api_search_smart`), `frontend/templates/admin/site_hub.html`, `frontend/templates/_nav_sidebar.html` |
 | **Outcome** | Site admin dashboard shows platform health, inventory/dealership/user scale (all three dealer counts), and aggregated search/usage metrics with audience toggle (all / logged-in / anonymous). Search events stored without blocking requests; dashboard shows aggregates only (top queries, makes, states, sources). Site-admin nav slimmed to Dashboard / Dealer jobs / Users; merchandising demoted to debug card. |
 | **Validation** | `python -m pytest backend/tests/test_platform_dashboard.py -q`; manual: login as site admin → `/admin/site`, run a listings search, refresh dashboard. |
 | **Last verified** | 2026-06-14 |
@@ -986,7 +988,7 @@ SEC-096 (email verification) and SEC-097 (password reset) sit in the Phase 6 sec
 | Field | Content |
 |-------|---------|
 | **Status** | Done |
-| **Scope** | `backend/db/inventory_pg.py`, `backend/db/inventory_compat.py`, `backend/db/inventory_db.py`, `backend/main.py`, `backend/utils/production_security.py`, `deploy/up.sh`, `deploy/docker-compose.yml`, `frontend/templates/admin/site_hub.html` |
+| **Scope** | `backend/db/inventory_pg.py`, `backend/db/inventory_compat.py`, `backend/db/inventory_db.py`, `backend/main.py`, `backend/web/db_bootstrap.py`, `backend/utils/production_security.py`, `deploy/up.sh`, `deploy/docker-compose.yml`, `frontend/templates/admin/site_hub.html` |
 | **Outcome** | Runtime requires `INVENTORY_DATABASE_URL` (postgresql://). SQLite inventory fallback disabled except `INVENTORY_SQLITE_TESTS=1` in pytest. `./deploy/up.sh` always starts Postgres + web + workers; dashboard shows **Postgres required** instead of SQLite when misconfigured. |
 | **Validation** | `python -m pytest backend/tests/test_inventory_postgres_required.py backend/tests/test_store_admin.py backend/tests/test_platform_dashboard.py -q`; app without `INVENTORY_DATABASE_URL` raises at startup. |
 | **Last verified** | 2026-06-14 |
