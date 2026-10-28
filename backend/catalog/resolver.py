@@ -33,7 +33,7 @@ MIN_CONFIDENCE = 0.45
 _CANDIDATE_COLS = (
     "id", "year", "make", "model", "trim", "cylinders", "displacement",
     "trany", "drive", "fuel_type", "engine_description", "forced_induction",
-    "atv_type",
+    "atv_type", "t_charger", "s_charger",
 )
 
 
