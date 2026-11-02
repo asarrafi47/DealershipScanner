@@ -1,0 +1,1360 @@
+{
+ "_about": "Schema that module-level runtime DDL builds on Postgres, captured by backend/scripts/capture_module_ddl_golden.py (never hand-edited; --check re-captures). 'empty' steps call each module's ensure_* on an empty database; 'v001_v014' steps run the scripts' DDL statements, read from their source, on a database holding migrations V001 and V014 (what they run on). test_schema_from_migrations asserts the chain creates all of it.",
+ "tables": {
+  "car_move_log": {
+   "car_id": [
+    "bigint",
+    "NO",
+    ""
+   ],
+   "evidence": [
+    "text",
+    "YES",
+    ""
+   ],
+   "from_dealer_id": [
+    "text",
+    "YES",
+    ""
+   ],
+   "from_dealer_name": [
+    "text",
+    "YES",
+    ""
+   ],
+   "from_registry_id": [
+    "bigint",
+    "YES",
+    ""
+   ],
+   "id": [
+    "bigint",
+    "NO",
+    "nextval('car_move_log_id_seq'::regclass)"
+   ],
+   "moved_at": [
+    "timestamp with time zone",
+    "NO",
+    "now()"
+   ],
+   "reverted_at": [
+    "timestamp with time zone",
+    "YES",
+    ""
+   ],
+   "to_dealer_id": [
+    "text",
+    "YES",
+    ""
+   ],
+   "to_dealer_name": [
+    "text",
+    "YES",
+    ""
+   ],
+   "to_registry_id": [
+    "bigint",
+    "YES",
+    ""
+   ]
+  },
+  "cars_trim_quarantine": {
+   "car_id": [
+    "integer",
+    "YES",
+    ""
+   ],
+   "old_trim": [
+    "text",
+    "YES",
+    ""
+   ],
+   "provenance_source": [
+    "text",
+    "YES",
+    ""
+   ],
+   "quarantined_at": [
+    "text",
+    "YES",
+    ""
+   ],
+   "title": [
+    "text",
+    "YES",
+    ""
+   ],
+   "trim_provenance_json": [
+    "text",
+    "YES",
+    ""
+   ],
+   "vin": [
+    "text",
+    "YES",
+    ""
+   ]
+  },
+  "dealer_catalog": {
+   "dealer_id": [
+    "text",
+    "NO",
+    ""
+   ],
+   "inventory_endpoint": [
+    "text",
+    "YES",
+    ""
+   ],
+   "inventory_mode": [
+    "text",
+    "YES",
+    ""
+   ],
+   "last_scan_at": [
+    "text",
+    "YES",
+    ""
+   ],
+   "last_vin_fingerprint": [
+    "text",
+    "YES",
+    ""
+   ],
+   "next_scan_at": [
+    "text",
+    "YES",
+    ""
+   ],
+   "onboarded_at": [
+    "text",
+    "YES",
+    ""
+   ],
+   "provider": [
+    "text",
+    "YES",
+    ""
+   ],
+   "registry_id": [
+    "bigint",
+    "YES",
+    ""
+   ],
+   "scan_interval_hours": [
+    "integer",
+    "NO",
+    "24"
+   ],
+   "site_config_json": [
+    "text",
+    "NO",
+    "'{}'::text"
+   ],
+   "updated_at": [
+    "text",
+    "NO",
+    ""
+   ]
+  },
+  "dealer_jobs": {
+   "created_at": [
+    "text",
+    "NO",
+    ""
+   ],
+   "dealer_id": [
+    "text",
+    "NO",
+    ""
+   ],
+   "error": [
+    "text",
+    "YES",
+    ""
+   ],
+   "finished_at": [
+    "text",
+    "YES",
+    ""
+   ],
+   "id": [
+    "bigint",
+    "NO",
+    "nextval('dealer_jobs_id_seq'::regclass)"
+   ],
+   "job_type": [
+    "text",
+    "NO",
+    ""
+   ],
+   "payload_json": [
+    "text",
+    "NO",
+    "'{}'::text"
+   ],
+   "result_json": [
+    "text",
+    "NO",
+    "'{}'::text"
+   ],
+   "started_at": [
+    "text",
+    "YES",
+    ""
+   ],
+   "status": [
+    "text",
+    "NO",
+    "'queued'::text"
+   ],
+   "worker_id": [
+    "text",
+    "YES",
+    ""
+   ]
+  },
+  "dealer_recipes": {
+   "dealer_id": [
+    "text",
+    "NO",
+    ""
+   ],
+   "last_ok_at": [
+    "double precision",
+    "NO",
+    "0"
+   ],
+   "max_saved_at": [
+    "double precision",
+    "NO",
+    "0"
+   ],
+   "provider_hint": [
+    "text",
+    "YES",
+    ""
+   ],
+   "recipe_count": [
+    "integer",
+    "NO",
+    "0"
+   ],
+   "recipes_json": [
+    "text",
+    "NO",
+    ""
+   ],
+   "scan_hints": [
+    "text",
+    "YES",
+    ""
+   ],
+   "stale_count": [
+    "integer",
+    "NO",
+    "0"
+   ],
+   "updated_at": [
+    "text",
+    "YES",
+    ""
+   ]
+  },
+  "dealer_reviews": {
+   "addon_fee_amount": [
+    "double precision",
+    "YES",
+    ""
+   ],
+   "addon_fee_desc": [
+    "text",
+    "YES",
+    ""
+   ],
+   "addon_fee_reported": [
+    "integer",
+    "NO",
+    "0"
+   ],
+   "body": [
+    "text",
+    "NO",
+    ""
+   ],
+   "created_at": [
+    "text",
+    "YES",
+    ""
+   ],
+   "dealer_id": [
+    "text",
+    "NO",
+    ""
+   ],
+   "display_name": [
+    "text",
+    "YES",
+    ""
+   ],
+   "id": [
+    "bigint",
+    "NO",
+    "nextval('dealer_reviews_id_seq'::regclass)"
+   ],
+   "ip_hash": [
+    "text",
+    "YES",
+    ""
+   ],
+   "is_anonymous": [
+    "integer",
+    "NO",
+    "0"
+   ],
+   "rating": [
+    "integer",
+    "NO",
+    ""
+   ],
+   "report_count": [
+    "integer",
+    "NO",
+    "0"
+   ],
+   "status": [
+    "text",
+    "NO",
+    "'published'::text"
+   ],
+   "updated_at": [
+    "text",
+    "YES",
+    ""
+   ],
+   "user_id": [
+    "integer",
+    "NO",
+    ""
+   ]
+  },
+  "dealer_scan_profile": {
+   "dealer_id": [
+    "text",
+    "NO",
+    ""
+   ],
+   "last_winning_strategy": [
+    "text",
+    "YES",
+    ""
+   ],
+   "platform_hints_json": [
+    "text",
+    "NO",
+    "'[]'::text"
+   ],
+   "updated_at": [
+    "text",
+    "NO",
+    ""
+   ]
+  },
+  "dealer_specials": {
+   "dealer_id": [
+    "text",
+    "NO",
+    ""
+   ],
+   "due_at_signing": [
+    "double precision",
+    "YES",
+    ""
+   ],
+   "expires": [
+    "text",
+    "YES",
+    ""
+   ],
+   "fine_print": [
+    "text",
+    "YES",
+    ""
+   ],
+   "id": [
+    "bigint",
+    "NO",
+    "nextval('dealer_specials_id_seq'::regclass)"
+   ],
+   "mileage_per_year": [
+    "integer",
+    "YES",
+    ""
+   ],
+   "msrp": [
+    "double precision",
+    "YES",
+    ""
+   ],
+   "offer_hash": [
+    "text",
+    "YES",
+    ""
+   ],
+   "payment": [
+    "double precision",
+    "YES",
+    ""
+   ],
+   "raw_html_snippet": [
+    "text",
+    "YES",
+    ""
+   ],
+   "scraped_at": [
+    "text",
+    "NO",
+    ""
+   ],
+   "source_url": [
+    "text",
+    "YES",
+    ""
+   ],
+   "term_months": [
+    "integer",
+    "YES",
+    ""
+   ],
+   "title": [
+    "text",
+    "YES",
+    ""
+   ],
+   "type": [
+    "text",
+    "YES",
+    ""
+   ],
+   "vehicle_make": [
+    "text",
+    "YES",
+    ""
+   ],
+   "vehicle_model": [
+    "text",
+    "YES",
+    ""
+   ],
+   "vehicle_trim": [
+    "text",
+    "YES",
+    ""
+   ],
+   "vehicle_year": [
+    "integer",
+    "YES",
+    ""
+   ]
+  },
+  "haiku_spec_cache": {
+   "cache_key": [
+    "text",
+    "NO",
+    ""
+   ],
+   "created_at": [
+    "text",
+    "YES",
+    "CURRENT_TIMESTAMP"
+   ],
+   "cylinders": [
+    "integer",
+    "YES",
+    ""
+   ],
+   "drivetrain": [
+    "text",
+    "YES",
+    ""
+   ],
+   "engine_l": [
+    "text",
+    "YES",
+    ""
+   ],
+   "fuel_type": [
+    "text",
+    "YES",
+    ""
+   ],
+   "make": [
+    "text",
+    "YES",
+    ""
+   ],
+   "model": [
+    "text",
+    "YES",
+    ""
+   ],
+   "mpg_city": [
+    "integer",
+    "YES",
+    ""
+   ],
+   "mpg_highway": [
+    "integer",
+    "YES",
+    ""
+   ],
+   "transmission": [
+    "text",
+    "YES",
+    ""
+   ],
+   "trim": [
+    "text",
+    "YES",
+    ""
+   ],
+   "year": [
+    "integer",
+    "YES",
+    ""
+   ]
+  },
+  "lease_offer_matches": {
+   "computed_at": [
+    "text",
+    "NO",
+    ""
+   ],
+   "confidence": [
+    "double precision",
+    "YES",
+    ""
+   ],
+   "dealer_id": [
+    "text",
+    "NO",
+    ""
+   ],
+   "extracted_json": [
+    "text",
+    "YES",
+    ""
+   ],
+   "id": [
+    "bigint",
+    "NO",
+    "nextval('lease_offer_matches_id_seq'::regclass)"
+   ],
+   "match_count": [
+    "integer",
+    "YES",
+    "0"
+   ],
+   "matches_json": [
+    "text",
+    "YES",
+    ""
+   ],
+   "offer_hash": [
+    "text",
+    "NO",
+    ""
+   ],
+   "offer_id": [
+    "bigint",
+    "YES",
+    ""
+   ],
+   "summary": [
+    "text",
+    "YES",
+    ""
+   ]
+  },
+  "market_price_stats": {
+   "computed_at": [
+    "timestamp with time zone",
+    "NO",
+    "now()"
+   ],
+   "condition": [
+    "text",
+    "NO",
+    ""
+   ],
+   "dealer_count": [
+    "integer",
+    "NO",
+    ""
+   ],
+   "make": [
+    "text",
+    "NO",
+    ""
+   ],
+   "median_price": [
+    "double precision",
+    "NO",
+    ""
+   ],
+   "mileage_band_high": [
+    "integer",
+    "YES",
+    ""
+   ],
+   "mileage_band_low": [
+    "integer",
+    "NO",
+    ""
+   ],
+   "model": [
+    "text",
+    "NO",
+    ""
+   ],
+   "p25_price": [
+    "double precision",
+    "NO",
+    ""
+   ],
+   "p75_price": [
+    "double precision",
+    "NO",
+    ""
+   ],
+   "sample_count": [
+    "integer",
+    "NO",
+    ""
+   ],
+   "trim": [
+    "text",
+    "NO",
+    ""
+   ],
+   "year": [
+    "integer",
+    "NO",
+    ""
+   ]
+  },
+  "model_generations": {
+   "generation": [
+    "text",
+    "NO",
+    ""
+   ],
+   "id": [
+    "bigint",
+    "NO",
+    "nextval('model_generations_id_seq'::regclass)"
+   ],
+   "make": [
+    "text",
+    "NO",
+    ""
+   ],
+   "model": [
+    "text",
+    "NO",
+    ""
+   ],
+   "notes": [
+    "text",
+    "YES",
+    ""
+   ],
+   "status": [
+    "text",
+    "NO",
+    "'estimated'::text"
+   ],
+   "year_end": [
+    "integer",
+    "YES",
+    ""
+   ],
+   "year_start": [
+    "integer",
+    "NO",
+    ""
+   ]
+  },
+  "package_values_msrp_quarantine": {
+   "category": [
+    "text",
+    "YES",
+    ""
+   ],
+   "code": [
+    "text",
+    "YES",
+    ""
+   ],
+   "confidence": [
+    "double precision",
+    "NO",
+    ""
+   ],
+   "first_seen_at": [
+    "text",
+    "YES",
+    ""
+   ],
+   "id": [
+    "bigint",
+    "NO",
+    ""
+   ],
+   "kind": [
+    "text",
+    "NO",
+    ""
+   ],
+   "label": [
+    "text",
+    "YES",
+    ""
+   ],
+   "last_seen_at": [
+    "text",
+    "YES",
+    ""
+   ],
+   "make": [
+    "text",
+    "NO",
+    ""
+   ],
+   "match_key": [
+    "text",
+    "NO",
+    ""
+   ],
+   "model": [
+    "text",
+    "NO",
+    ""
+   ],
+   "msrp": [
+    "double precision",
+    "YES",
+    ""
+   ],
+   "msrp_authority": [
+    "integer",
+    "NO",
+    ""
+   ],
+   "msrp_source": [
+    "text",
+    "YES",
+    ""
+   ],
+   "name_display": [
+    "text",
+    "NO",
+    ""
+   ],
+   "name_norm": [
+    "text",
+    "NO",
+    ""
+   ],
+   "observation_count": [
+    "integer",
+    "NO",
+    ""
+   ],
+   "quarantined_at": [
+    "timestamp with time zone",
+    "NO",
+    "now()"
+   ],
+   "reason": [
+    "text",
+    "YES",
+    ""
+   ],
+   "sticker_count": [
+    "integer",
+    "NO",
+    ""
+   ],
+   "trim": [
+    "text",
+    "NO",
+    ""
+   ],
+   "year": [
+    "integer",
+    "YES",
+    ""
+   ]
+  },
+  "review_reports": {
+   "created_at": [
+    "text",
+    "YES",
+    ""
+   ],
+   "ip_hash": [
+    "text",
+    "NO",
+    ""
+   ],
+   "review_id": [
+    "bigint",
+    "NO",
+    ""
+   ]
+  },
+  "vin_owner_conflicts": {
+   "claimant_dealer_id": [
+    "text",
+    "NO",
+    ""
+   ],
+   "owner_dealer_id": [
+    "text",
+    "NO",
+    ""
+   ],
+   "seen_at": [
+    "text",
+    "NO",
+    ""
+   ],
+   "vin": [
+    "text",
+    "NO",
+    ""
+   ]
+  }
+ },
+ "indexes": [
+  {
+   "name": "car_move_log_pkey",
+   "table": "car_move_log",
+   "def": "public.car_move_log USING btree (id)"
+  },
+  {
+   "name": "idx_car_move_log_car",
+   "table": "car_move_log",
+   "def": "public.car_move_log USING btree (car_id, moved_at DESC)"
+  },
+  {
+   "name": "dealer_catalog_pkey",
+   "table": "dealer_catalog",
+   "def": "public.dealer_catalog USING btree (dealer_id)"
+  },
+  {
+   "name": "idx_dealer_catalog_next_scan",
+   "table": "dealer_catalog",
+   "def": "public.dealer_catalog USING btree (next_scan_at)"
+  },
+  {
+   "name": "dealer_jobs_pkey",
+   "table": "dealer_jobs",
+   "def": "public.dealer_jobs USING btree (id)"
+  },
+  {
+   "name": "idx_dealer_jobs_status",
+   "table": "dealer_jobs",
+   "def": "public.dealer_jobs USING btree (status, created_at)"
+  },
+  {
+   "name": "dealer_recipes_pkey",
+   "table": "dealer_recipes",
+   "def": "public.dealer_recipes USING btree (dealer_id)"
+  },
+  {
+   "name": "dealer_reviews_dealer_id_user_id_key",
+   "table": "dealer_reviews",
+   "def": "public.dealer_reviews USING btree (dealer_id, user_id)"
+  },
+  {
+   "name": "dealer_reviews_pkey",
+   "table": "dealer_reviews",
+   "def": "public.dealer_reviews USING btree (id)"
+  },
+  {
+   "name": "idx_dealer_reviews_dealer",
+   "table": "dealer_reviews",
+   "def": "public.dealer_reviews USING btree (dealer_id, status)"
+  },
+  {
+   "name": "idx_dealer_reviews_user",
+   "table": "dealer_reviews",
+   "def": "public.dealer_reviews USING btree (user_id, created_at)"
+  },
+  {
+   "name": "dealer_scan_profile_pkey",
+   "table": "dealer_scan_profile",
+   "def": "public.dealer_scan_profile USING btree (dealer_id)"
+  },
+  {
+   "name": "dealer_specials_dealer_id_offer_hash_key",
+   "table": "dealer_specials",
+   "def": "public.dealer_specials USING btree (dealer_id, offer_hash)"
+  },
+  {
+   "name": "dealer_specials_pkey",
+   "table": "dealer_specials",
+   "def": "public.dealer_specials USING btree (id)"
+  },
+  {
+   "name": "idx_dealer_specials_dealer",
+   "table": "dealer_specials",
+   "def": "public.dealer_specials USING btree (dealer_id)"
+  },
+  {
+   "name": "haiku_spec_cache_pkey",
+   "table": "haiku_spec_cache",
+   "def": "public.haiku_spec_cache USING btree (cache_key)"
+  },
+  {
+   "name": "idx_lease_matches_dealer",
+   "table": "lease_offer_matches",
+   "def": "public.lease_offer_matches USING btree (dealer_id)"
+  },
+  {
+   "name": "lease_offer_matches_dealer_id_offer_hash_key",
+   "table": "lease_offer_matches",
+   "def": "public.lease_offer_matches USING btree (dealer_id, offer_hash)"
+  },
+  {
+   "name": "lease_offer_matches_pkey",
+   "table": "lease_offer_matches",
+   "def": "public.lease_offer_matches USING btree (id)"
+  },
+  {
+   "name": "market_price_stats_pkey",
+   "table": "market_price_stats",
+   "def": "public.market_price_stats USING btree (make, model, \"trim\", year, condition, mileage_band_low)"
+  },
+  {
+   "name": "model_generations_make_model_generation_key",
+   "table": "model_generations",
+   "def": "public.model_generations USING btree (make, model, generation)"
+  },
+  {
+   "name": "model_generations_pkey",
+   "table": "model_generations",
+   "def": "public.model_generations USING btree (id)"
+  },
+  {
+   "name": "uq_option_rejections_standing",
+   "table": "option_rejections",
+   "def": "public.option_rejections USING btree (car_id, option_name, price, reason)"
+  },
+  {
+   "name": "review_reports_review_id_ip_hash_key",
+   "table": "review_reports",
+   "def": "public.review_reports USING btree (review_id, ip_hash)"
+  },
+  {
+   "name": "vin_owner_conflicts_pkey",
+   "table": "vin_owner_conflicts",
+   "def": "public.vin_owner_conflicts USING btree (vin, owner_dealer_id, claimant_dealer_id)"
+  }
+ ],
+ "constraints": [
+  {
+   "name": "car_move_log_pkey",
+   "table": "car_move_log",
+   "type": "p",
+   "def": "PRIMARY KEY (id)"
+  },
+  {
+   "name": "dealer_catalog_pkey",
+   "table": "dealer_catalog",
+   "type": "p",
+   "def": "PRIMARY KEY (dealer_id)"
+  },
+  {
+   "name": "dealer_jobs_pkey",
+   "table": "dealer_jobs",
+   "type": "p",
+   "def": "PRIMARY KEY (id)"
+  },
+  {
+   "name": "dealer_recipes_pkey",
+   "table": "dealer_recipes",
+   "type": "p",
+   "def": "PRIMARY KEY (dealer_id)"
+  },
+  {
+   "name": "dealer_reviews_dealer_id_user_id_key",
+   "table": "dealer_reviews",
+   "type": "u",
+   "def": "UNIQUE (dealer_id, user_id)"
+  },
+  {
+   "name": "dealer_reviews_pkey",
+   "table": "dealer_reviews",
+   "type": "p",
+   "def": "PRIMARY KEY (id)"
+  },
+  {
+   "name": "dealer_scan_profile_pkey",
+   "table": "dealer_scan_profile",
+   "type": "p",
+   "def": "PRIMARY KEY (dealer_id)"
+  },
+  {
+   "name": "dealer_specials_dealer_id_offer_hash_key",
+   "table": "dealer_specials",
+   "type": "u",
+   "def": "UNIQUE (dealer_id, offer_hash)"
+  },
+  {
+   "name": "dealer_specials_pkey",
+   "table": "dealer_specials",
+   "type": "p",
+   "def": "PRIMARY KEY (id)"
+  },
+  {
+   "name": "haiku_spec_cache_pkey",
+   "table": "haiku_spec_cache",
+   "type": "p",
+   "def": "PRIMARY KEY (cache_key)"
+  },
+  {
+   "name": "lease_offer_matches_dealer_id_offer_hash_key",
+   "table": "lease_offer_matches",
+   "type": "u",
+   "def": "UNIQUE (dealer_id, offer_hash)"
+  },
+  {
+   "name": "lease_offer_matches_pkey",
+   "table": "lease_offer_matches",
+   "type": "p",
+   "def": "PRIMARY KEY (id)"
+  },
+  {
+   "name": "market_price_stats_pkey",
+   "table": "market_price_stats",
+   "type": "p",
+   "def": "PRIMARY KEY (make, model, \"trim\", year, condition, mileage_band_low)"
+  },
+  {
+   "name": "model_generations_make_model_generation_key",
+   "table": "model_generations",
+   "type": "u",
+   "def": "UNIQUE (make, model, generation)"
+  },
+  {
+   "name": "model_generations_pkey",
+   "table": "model_generations",
+   "type": "p",
+   "def": "PRIMARY KEY (id)"
+  },
+  {
+   "name": "review_reports_review_id_ip_hash_key",
+   "table": "review_reports",
+   "type": "u",
+   "def": "UNIQUE (review_id, ip_hash)"
+  },
+  {
+   "name": "vin_owner_conflicts_pkey",
+   "table": "vin_owner_conflicts",
+   "type": "p",
+   "def": "PRIMARY KEY (vin, owner_dealer_id, claimant_dealer_id)"
+  }
+ ],
+ "sequences": [
+  {
+   "name": "car_move_log_id_seq",
+   "owned_by": "car_move_log.id"
+  },
+  {
+   "name": "dealer_jobs_id_seq",
+   "owned_by": "dealer_jobs.id"
+  },
+  {
+   "name": "dealer_reviews_id_seq",
+   "owned_by": "dealer_reviews.id"
+  },
+  {
+   "name": "dealer_specials_id_seq",
+   "owned_by": "dealer_specials.id"
+  },
+  {
+   "name": "lease_offer_matches_id_seq",
+   "owned_by": "lease_offer_matches.id"
+  },
+  {
+   "name": "model_generations_id_seq",
+   "owned_by": "model_generations.id"
+  }
+ ],
+ "sources": [
+  {
+   "source": "backend/reviews/store.py",
+   "call": "ensure_reviews_table + ensure_review_reports_table",
+   "db": "empty",
+   "tables": [
+    "dealer_reviews",
+    "review_reports"
+   ],
+   "indexes": [
+    "dealer_reviews_dealer_id_user_id_key",
+    "dealer_reviews_pkey",
+    "idx_dealer_reviews_dealer",
+    "idx_dealer_reviews_user",
+    "review_reports_review_id_ip_hash_key"
+   ],
+   "constraints": [
+    "dealer_reviews_dealer_id_user_id_key",
+    "dealer_reviews_pkey",
+    "review_reports_review_id_ip_hash_key"
+   ],
+   "sequences": [
+    "dealer_reviews_id_seq"
+   ]
+  },
+  {
+   "source": "backend/enrichment/service.py",
+   "call": "ensure_enrichment_columns (Postgres: haiku_spec_cache)",
+   "db": "empty",
+   "tables": [
+    "haiku_spec_cache"
+   ],
+   "indexes": [
+    "haiku_spec_cache_pkey"
+   ],
+   "constraints": [
+    "haiku_spec_cache_pkey"
+   ],
+   "sequences": []
+  },
+  {
+   "source": "backend/scanner/job_queue.py",
+   "call": "ensure_job_tables",
+   "db": "empty",
+   "tables": [
+    "dealer_catalog",
+    "dealer_jobs"
+   ],
+   "indexes": [
+    "dealer_catalog_pkey",
+    "dealer_jobs_pkey",
+    "idx_dealer_catalog_next_scan",
+    "idx_dealer_jobs_status"
+   ],
+   "constraints": [
+    "dealer_catalog_pkey",
+    "dealer_jobs_pkey"
+   ],
+   "sequences": [
+    "dealer_jobs_id_seq"
+   ]
+  },
+  {
+   "source": "backend/scanner/recipe_store.py",
+   "call": "_ensure_table",
+   "db": "empty",
+   "tables": [
+    "dealer_recipes"
+   ],
+   "indexes": [
+    "dealer_recipes_pkey"
+   ],
+   "constraints": [
+    "dealer_recipes_pkey"
+   ],
+   "sequences": []
+  },
+  {
+   "source": "backend/scanner/specials/store.py",
+   "call": "ensure_dealer_specials_table",
+   "db": "empty",
+   "tables": [
+    "dealer_specials"
+   ],
+   "indexes": [
+    "dealer_specials_dealer_id_offer_hash_key",
+    "dealer_specials_pkey",
+    "idx_dealer_specials_dealer"
+   ],
+   "constraints": [
+    "dealer_specials_dealer_id_offer_hash_key",
+    "dealer_specials_pkey"
+   ],
+   "sequences": [
+    "dealer_specials_id_seq"
+   ]
+  },
+  {
+   "source": "backend/scanner/specials/lease_matches_store.py",
+   "call": "ensure_lease_matches_table",
+   "db": "empty",
+   "tables": [
+    "lease_offer_matches"
+   ],
+   "indexes": [
+    "idx_lease_matches_dealer",
+    "lease_offer_matches_dealer_id_offer_hash_key",
+    "lease_offer_matches_pkey"
+   ],
+   "constraints": [
+    "lease_offer_matches_dealer_id_offer_hash_key",
+    "lease_offer_matches_pkey"
+   ],
+   "sequences": [
+    "lease_offer_matches_id_seq"
+   ]
+  },
+  {
+   "source": "backend/scanner/dealer/profile.py",
+   "call": "ensure_dealer_scan_profile_table",
+   "db": "empty",
+   "tables": [
+    "dealer_scan_profile"
+   ],
+   "indexes": [
+    "dealer_scan_profile_pkey"
+   ],
+   "constraints": [
+    "dealer_scan_profile_pkey"
+   ],
+   "sequences": []
+  },
+  {
+   "source": "backend/catalog/generations.py",
+   "call": "ensure_model_generations_table",
+   "db": "empty",
+   "tables": [
+    "model_generations"
+   ],
+   "indexes": [
+    "model_generations_make_model_generation_key",
+    "model_generations_pkey"
+   ],
+   "constraints": [
+    "model_generations_make_model_generation_key",
+    "model_generations_pkey"
+   ],
+   "sequences": [
+    "model_generations_id_seq"
+   ]
+  },
+  {
+   "source": "backend/intelligence/market_pricing.py",
+   "call": "ensure_schema",
+   "db": "empty",
+   "tables": [
+    "market_price_stats"
+   ],
+   "indexes": [
+    "market_price_stats_pkey"
+   ],
+   "constraints": [
+    "market_price_stats_pkey"
+   ],
+   "sequences": []
+  },
+  {
+   "source": "backend/scanner/database.py",
+   "call": "_VIN_OWNER_CONFLICTS_DDL (record_vin_owner_conflicts)",
+   "db": "empty",
+   "tables": [
+    "vin_owner_conflicts"
+   ],
+   "indexes": [
+    "vin_owner_conflicts_pkey"
+   ],
+   "constraints": [
+    "vin_owner_conflicts_pkey"
+   ],
+   "sequences": []
+  },
+  {
+   "source": "backend/scripts/apply_attribution_moves.py",
+   "call": "_DDL",
+   "db": "v001_v014",
+   "tables": [
+    "car_move_log"
+   ],
+   "indexes": [
+    "car_move_log_pkey",
+    "idx_car_move_log_car"
+   ],
+   "constraints": [
+    "car_move_log_pkey"
+   ],
+   "sequences": [
+    "car_move_log_id_seq"
+   ]
+  },
+  {
+   "source": "backend/scripts/heal_matcher_trims.py",
+   "call": "_QUARANTINE_DDL",
+   "db": "v001_v014",
+   "tables": [
+    "cars_trim_quarantine"
+   ],
+   "indexes": [],
+   "constraints": [],
+   "sequences": []
+  },
+  {
+   "source": "backend/scripts/quarantine_package_value_msrps.py",
+   "call": "_ensure_quarantine_table",
+   "db": "v001_v014",
+   "tables": [
+    "package_values_msrp_quarantine"
+   ],
+   "indexes": [],
+   "constraints": [],
+   "sequences": []
+  },
+  {
+   "source": "backend/scripts/feed_package_registry_from_vision.py",
+   "call": "main: CREATE UNIQUE INDEX",
+   "db": "v001_v014",
+   "tables": [],
+   "indexes": [
+    "uq_option_rejections_standing"
+   ],
+   "constraints": [],
+   "sequences": []
+  }
+ ],
+ "excluded": [
+  {
+   "what": "backend/db/* runtime DDL (inventory_pg legacy DDL, dealerships_db, comments_db, dictionary_schema, incomplete_listings_db, dealer_portal_db, grid_cards_repo)",
+   "why": "captured in runtime_ddl_schema_golden.json (2026-10-01); backend/scanner/database.py _ensure_schema, schema_repo.init_inventory_db and import_epa_master.ensure_table reach Postgres only through init_postgres_inventory"
+  },
+  {
+   "what": "backend/vector/pgvector_service.py ensure_schema (*_embeddings tables)",
+   "why": "no *_embeddings table exists on prod or local (P0A.2), so D-DB7 adopts none; it connects through PGVECTOR_URL and vector(dim) depends on the embedding model"
+  },
+  {
+   "what": "backend/db/search_analytics_db.py, backend/db/user_history_db.py",
+   "why": "users database (get_users_conn: SQLite / SQLCipher), not the inventory Postgres"
+  },
+  {
+   "what": "backend/db/users_db, backend/db/admin_users_db.py, backend/utils/ip_rate_limit.py, backend/vector/bmw_store.py, backend/dev/routes.py, backend/enrichment/dictionary_catalog.py",
+   "why": "SQLite-only stores (REMEDIATION_PLAN P13A.3 allowlist)"
+  },
+  {
+   "what": "backend/scripts/link_cars_to_catalog.py ensure_link_columns",
+   "why": "ALTERs cars; epa_master_id, epa_match_confidence and epa_match_method are V001 columns"
+  },
+  {
+   "what": "backend/scripts/repair_vin_make_model.py",
+   "why": "one-off CREATE TABLE ... AS backup table (D-DB1), not schema"
+  },
+  {
+   "what": "backend/scripts/migrate.py schema_migrations",
+   "why": "runner-owned bookkeeping table"
+  }
+ ]
+}

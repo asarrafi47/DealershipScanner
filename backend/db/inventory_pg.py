@@ -114,51 +114,121 @@ def pg_connect():
     return psycopg.connect(inventory_postgres_dsn() or "", autocommit=False)
 
 
-def qmarks_to_percent_s(sql: str) -> str:
-    """Convert SQLite ``?`` placeholders to psycopg ``%s`` (quote-aware).
+# Lexical runs of one SQL statement, as Postgres reads them. Only what decides
+# whether a ``?`` is a placeholder matters here: a ``'`` string literal (``''``
+# escapes a quote), a ``"`` identifier (``""`` escapes a quote), a ``--`` line
+# comment (to the next newline) and a ``/* */`` block comment (nested, like the
+# Postgres lexer). Everything else is code. E'' strings and $$ bodies are
+# Postgres-only syntax that the SQLite-shaped call sites never use.
+_SQL_RUN_START_RE = re.compile(r"""'|"|--|/\*""")
+_SQL_LINE_END_RE = re.compile(r"[\n\r]")
+_SQL_BLOCK_EDGE_RE = re.compile(r"/\*|\*/")
 
-    Also escapes bare ``%`` inside single-quoted string literals to ``%%``
-    so psycopg3 does not misinterpret LIKE patterns such as ``LIKE 'http%'``
-    as invalid format-string placeholders.
+
+def _quoted_run_end(sql: str, start: int, quote: str) -> int:
+    """End offset of the ``quote``-delimited run opened at ``start`` (doubled quote = escape)."""
+    i = start + 1
+    while True:
+        j = sql.find(quote, i)
+        if j < 0:
+            return len(sql)  # unterminated: runs to the end, as the old adapter did
+        if sql.startswith(quote, j + 1):
+            i = j + 2
+            continue
+        return j + 1
+
+
+def _block_comment_end(sql: str, start: int) -> int:
+    """End offset of the ``/* */`` comment opened at ``start``; nested comments count."""
+    depth = 1
+    i = start + 2
+    while depth:
+        m = _SQL_BLOCK_EDGE_RE.search(sql, i)
+        if m is None:
+            return len(sql)
+        depth += 1 if m.group() == "/*" else -1
+        i = m.end()
+    return i
+
+
+def sql_lexical_runs(sql: str) -> list[tuple[str, str]]:
+    """Split ``sql`` into ``(kind, text)`` runs whose texts join back to ``sql``.
+
+    ``kind`` is ``"code"``, ``"string"`` (``'...'``), ``"ident"`` (``"..."``),
+    ``"line_comment"`` (``--`` up to, not including, the newline) or
+    ``"block_comment"`` (``/* ... */``). An unterminated run extends to the end.
     """
-    out: list[str] = []
+    runs: list[tuple[str, str]] = []
     i = 0
     n = len(sql)
-    in_single = False
     while i < n:
-        c = sql[i]
-        if not in_single:
-            if c == "'":
-                in_single = True
-                out.append(c)
-                i += 1
-                continue
-            if c == "?":
-                out.append("%s")
-                i += 1
-                continue
-            out.append(c)
-            i += 1
-            continue
-        # Inside single-quoted string literal
-        if c == "'":
-            if i + 1 < n and sql[i + 1] == "'":
-                out.append("''")
-                i += 2
-                continue
-            in_single = False
-            out.append(c)
-            i += 1
-            continue
-        if c == "%":
-            # Escape % inside string literals: psycopg3 would otherwise
-            # interpret e.g. LIKE 'http%' as an invalid placeholder.
-            out.append("%%")
-            i += 1
-            continue
-        out.append(c)
-        i += 1
+        m = _SQL_RUN_START_RE.search(sql, i)
+        if m is None:
+            runs.append(("code", sql[i:]))
+            break
+        start = m.start()
+        if start > i:
+            runs.append(("code", sql[i:start]))
+        tok = m.group()
+        if tok == "'":
+            kind, end = "string", _quoted_run_end(sql, start, "'")
+        elif tok == '"':
+            kind, end = "ident", _quoted_run_end(sql, start, '"')
+        elif tok == "--":
+            nl = _SQL_LINE_END_RE.search(sql, start)
+            kind, end = "line_comment", (nl.start() if nl else n)
+        else:
+            kind, end = "block_comment", _block_comment_end(sql, start)
+        runs.append((kind, sql[start:end]))
+        i = end
+    return runs
+
+
+def qmarks_to_percent_s(sql: str) -> str:
+    """Convert SQLite ``?`` placeholders to psycopg ``%s``, aware of quotes and comments.
+
+    A ``?`` is a placeholder only in code: inside a ``'`` literal, a ``"``
+    identifier, a ``--`` comment or a ``/* */`` comment it stays as written.
+    The old adapter knew only ``'`` literals, so an apostrophe in a comment
+    flipped every later ``?`` (UPSERT_CARS_SQL adapted correctly only because
+    the apostrophes in its comments happened to balance).
+
+    psycopg3 scans the WHOLE query text for ``%`` (it does not know SQL
+    comments or literals), so every bare ``%`` outside code is doubled to
+    ``%%``: ``LIKE 'http%'`` and a ``%`` in a comment or identifier would
+    otherwise be read as an invalid placeholder. A ``%`` in code is left
+    alone, as before (a call site may already have written ``%%`` or ``%s``).
+    """
+    out: list[str] = []
+    for kind, text in sql_lexical_runs(sql):
+        if kind == "code":
+            out.append(text.replace("?", "%s"))
+        else:
+            out.append(text.replace("%", "%%"))
     return "".join(out)
+
+
+def _strip_statement_terminator(sql: str) -> str:
+    """Drop trailing ``;`` terminators and comments so a clause can be appended.
+
+    ``INSERT ... VALUES (?);`` plus `` ON CONFLICT DO NOTHING`` is two statements,
+    and a trailing ``-- note`` would swallow the clause. Trailing whitespace
+    alone is kept, so a statement that already ends in code is returned as is.
+    """
+    keep = len(sql)
+    for kind, text in reversed(sql_lexical_runs(sql)):
+        if kind in ("line_comment", "block_comment"):
+            keep -= len(text)
+            continue
+        if kind != "code":
+            break
+        body = text.rstrip(" \t\r\n\f\v;")
+        keep -= len(text) - len(body)
+        if body:
+            break
+    if not sql[keep:].strip():
+        return sql
+    return sql[:keep]
 
 
 def adapt_sqlite_functions_to_pg(sql: str) -> str:
@@ -252,11 +322,15 @@ def adapt_sql_for_postgres_execute(sql: str) -> str | None:
         else:
             _log.warning("INSERT OR REPLACE without Postgres mapping; statement may fail: %s", stripped[:200])
     elif low.startswith("INSERT OR IGNORE"):
-        alt = adapt_insert_or_ignore_pg(sql)
+        # NOTE: ON CONFLICT DO NOTHING skips unique/exclusion conflicts only;
+        # SQLite OR IGNORE also skips NOT NULL and CHECK violations, which
+        # Postgres still raises (pinned in test_inventory_pg_adapter.py).
+        body = _strip_statement_terminator(sql)
+        alt = adapt_insert_or_ignore_pg(body)
         if alt:
             sql = alt
         else:
-            sql = re.sub(r"INSERT\s+OR\s+IGNORE\s+INTO", "INSERT INTO", sql, count=1, flags=re.IGNORECASE)
+            sql = re.sub(r"INSERT\s+OR\s+IGNORE\s+INTO", "INSERT INTO", body, count=1, flags=re.IGNORECASE)
             sql += " ON CONFLICT DO NOTHING"
     sql = adapt_sqlite_functions_to_pg(sql)
     sql = qmarks_to_percent_s(sql)
@@ -298,9 +372,12 @@ def init_postgres_inventory(conn: Any) -> None:
 
     * at the expected version -> no DDL at all;
     * behind, ``INVENTORY_SCHEMA_CHECK=warn`` (default) -> loud warning naming the
-      operator command, then the legacy DDL below runs exactly as before (prod's
-      ``schema_migrations`` is still at V018 until an operator baselines V019);
-    * behind, ``INVENTORY_SCHEMA_CHECK=strict`` -> ``SchemaNotMigratedError``;
+      operator command, then the legacy DDL below runs exactly as before (a live
+      database is behind whenever a new migration has merged but not yet been
+      applied to it; the P0A.2 census, 2026-10-08, found prod and local at V025);
+    * behind, ``INVENTORY_SCHEMA_CHECK=strict`` -> ``SchemaNotMigratedError``,
+      which ``schema_repo.init_inventory_db`` and the scanner's ``_ensure_schema``
+      re-raise;
     * ``INVENTORY_AUTO_MIGRATE=1`` -> applies ``migrations/`` first (dev).
 
     Per-process: after the first success it is a no-op.
@@ -328,14 +405,19 @@ def _legacy_postgres_inventory_ddl(conn: Any) -> None:
     Lock behaviour: ``CREATE INDEX`` takes a SHARE lock, so while a scanner holds open
     transactions on ``cars`` the statement queues -- and in PostgreSQL a waiting
     strong lock parks every later reader and writer behind it (2026-07-30 incident).
-    A short ``lock_timeout`` turns that from an outage into a no-op.
+    A short ``lock_timeout`` turns that from an outage into a no-op. It is
+    ``SET LOCAL``: it ends with this function's commit (or a rollback), so the
+    caller's connection (the scanner reuses its raw connection for every upsert)
+    does not keep a 3 s lock_timeout for the rest of its life.
     """
     global _PG_INV_SCHEMA_OK
     if _PG_INV_SCHEMA_OK:
         return
     cur = conn.cursor()
     try:
-        cur.execute("SET lock_timeout = '3s'")
+        # One transaction from here to the commit below (psycopg opens it on this
+        # first statement), so SET LOCAL covers every DDL statement.
+        cur.execute("SET LOCAL lock_timeout = '3s'")
     except Exception:
         # Non-PostgreSQL/compat cursors simply do not support it; the DDL below is
         # still correct, it just keeps the old blocking behaviour.

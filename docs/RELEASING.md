@@ -293,8 +293,8 @@ below stands for its name. `V` is the new version, set in step 3.
    release's own `migrations/`, 0 pending means prod has applied every file up to the
    version the command above prints. If it lists pending files, prod's applied max
    version is below the release's: run the [Migrations](#migrations) protocol first
-   (PG18 `pg_dump -Fc` by full path, `pg_restore -l`, then `migrate --apply`, with
-   `--target <max>` once P4.2 adds it), or skip the deploy and write "no deploy" in the
+   (PG18 `pg_dump -Fc` by full path, `pg_restore -l`, then
+   `migrate --apply --target <max>`), or skip the deploy and write "no deploy" in the
    release-log row. A plain `migrate --dry-run` in a checkout reads the local database
    and proves nothing about prod.
 
@@ -1046,22 +1046,40 @@ Every migration follows the D-DB6 protocol in Appendix C.1 of
    (`postgresql@17`), or to 16.14 where `/opt/homebrew/bin` comes first, and neither
    can dump a PG18 server. Then the owner runs
    `python -m backend.scripts.migrate --dry-run` and
-   `python -m backend.scripts.migrate --apply` against prod, in the form under
-   "Targeting prod" below.
+   `python -m backend.scripts.migrate --apply --target N` against prod, in the form
+   under "Targeting prod" below. N is the highest migration file the release carries
+   (release step 1).
 3. Only then deploy (release step 12).
 4. A migration that drops or constrains data merges only after its dumps or prerequisite
    repairs exist: every checkout's `--apply` and every web boot apply all pending files.
 5. A migration that locks `cars` (indexes, foreign keys) runs in a quiet window, after
    `pg_stat_activity` shows no idle-in-transaction session, with `SET LOCAL lock_timeout`.
 
-Appendix C.1 applies with `--apply --target N`. `migrate.py` has no `--target` until P4
-adds it, so until then `--apply` applies every pending file. Update the command above
-when P4 lands.
+**What `migrate.py` does (N5: P4.2, P4.3b).** The full rules are in `migrations/README.md`.
+- `--target N` handles pending files up to and including VN. Later files stay pending,
+  and the run lists them. When only files above the target are pending it logs
+  `nothing pending at or below --target N`, never `database is up to date`.
+- The first log line names the target: `target: host=... port=... db=...`, then
+  `(dry run, no writes)` or `(apply)`. The user, password and connection options are
+  never logged. Read that line before you trust a `database is up to date`.
+- Each file runs under `SET LOCAL lock_timeout`, 5 s by default. `--lock-timeout`
+  changes it (`0` means no limit). A file that waits longer for a lock rolls back, and
+  the run exits 1. A file that sets its own `SET LOCAL lock_timeout` overrides the
+  flag; `migrations/V026__chain_completeness.sql` sets none.
+- Every write transaction takes a Postgres advisory lock and re-reads `schema_migrations`
+  under it. A second `migrate` (a web boot during an operator run, say) waits up to
+  `--lock-wait` (default `10min`, `0` means no limit), then skips what the first one
+  applied. If the wait runs out it exits 1 and writes nothing.
+- It never writes to `cars_cleanroom`, the frozen clean-room baseline (D-N1). There,
+  `--apply` logs `REFUSE --apply: database cars_cleanroom is the frozen clean-room
+  baseline ...` and exits 2 before any lock or write, whatever the other flags
+  (`--baseline` and `--record-only` included). A dry run there still reports. Scratch
+  copies named `cars_cr_*` (`scripts/cleanroom/build_db.sh`) migrate as usual.
 
 **Targeting prod.** `migrate.py` reads `INVENTORY_DATABASE_URL` from the environment,
 and the checkout's `.env` fills it in when it is unset (a value set in the shell wins).
-It does not log the host. Run plainly in a checkout, it checks the local Postgres,
-which is also at V025, and prints `database is up to date` without proving anything
+Run plainly in a checkout, it checks the local Postgres: its first line shows
+`host=unix-socket:/tmp` or `localhost`, and its `database is up to date` proves nothing
 about prod. That matters because every web boot applies pending migrations
 (`MIGRATE_ON_BOOT`, default `1`, in `scripts/docker-entrypoint-web.sh`), so a false "up to
 date" ships the release's migrations at boot, without the dump. Point it at prod
@@ -1072,10 +1090,11 @@ printed:
 railway run -s Postgres -- sh -c 'export INVENTORY_DATABASE_URL="$DATABASE_PUBLIC_URL"; case "$INVENTORY_DATABASE_URL" in ""|*@localhost*|*@127.0.0.1*) echo "target: LOCAL, stopping"; exit 1 ;; *) echo "target: remote" ;; esac; .venv/bin/python -m backend.scripts.migrate --dry-run'
 ```
 
-Verify: it prints `target: remote`, then the migrate log. `railway run` loads the
-Postgres service's variables into this one local command, and the explicit
+Verify: it prints `target: remote`, then the migrate log, whose first line names the
+Railway proxy host and `db=railway`, never `unix-socket:` or `localhost`. `railway run`
+loads the Postgres service's variables into this one local command, and the explicit
 `INVENTORY_DATABASE_URL` wins over `.env`. For `--apply`, run the same command with
-`--apply` in place of `--dry-run`, and only after the dump. The first release (P2B.3)
+`--apply --target N` in place of `--dry-run`, and only after the dump. The first release (P2B.3)
 carries V001 to V025, which prod already has, so its dry run must log
 `database is up to date` and nothing needs applying. The first planned migration prod
 does not have is V026 (P4.8, which spells out its prod rollout).
