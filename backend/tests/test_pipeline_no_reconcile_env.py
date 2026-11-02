@@ -57,7 +57,15 @@ def _setup(monkeypatch, tmp_path, sqlite_inventory, *, flag: bool, lifecycle: bo
             return subprocess.CompletedProcess(cmd, 0)
         return subprocess.CompletedProcess(cmd, 0, stdout="", stderr="")
 
+    class _Popen:  # run_http_only_scan polls a Popen (pause-safe timeout, N9.13)
+        def __init__(self, cmd, **kw):
+            self.returncode = _run(cmd, **kw).returncode
+
+        def wait(self, timeout=None):
+            return self.returncode
+
     monkeypatch.setattr(subprocess, "run", _run)
+    monkeypatch.setattr(subprocess, "Popen", _Popen)
     patch_pipeline(monkeypatch, "ensure_recipe", lambda dealer, force=False: {"had_recipes": 1, "synth": None})
     patch_pipeline(monkeypatch, "wait_for_db", lambda *a, **k: True)
     patch_pipeline(monkeypatch, "wait_for_scanner_lock", lambda *a, **k: True)

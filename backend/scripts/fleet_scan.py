@@ -15,7 +15,7 @@ way on any machine:
               with its own SCANNER_LOCK_PATH and `--batch SCAN_BATCH` (default 6).
               vPIC heal, assess, reconcile, lifecycle and per-dealer logs run
               inside each pipeline.
-  3. post     compute_market_stats, then build_listings_grid_cards with
+  3. post     rebuild_incomplete_index, compute_market_stats, then build_listings_grid_cards with
               FLASK_ENV=production (listings_include_incomplete_cars() is part of
               the card key, so cards must be built the way the web serves them)
   4. summary  one `FLEET SUMMARY {...}` JSON line on stdout (dealers, verdict
@@ -354,6 +354,18 @@ def main() -> int:
     post: dict[str, dict[str, Any]] = {}
     if (os.environ.get("SCAN_POST_STEPS") or "1").strip() != "0":
         env = dict(os.environ)
+        # Before market stats and the grid cards: cards are keyed on each car's
+        # public-incomplete flag, so the index must be final first.
+        # Once per fleet, after every shard's vPIC heal and reconcile; per-car syncs run
+        # before backfill and leave complete cars flagged (N6.1). Forced: shards changed data.
+        env = dict(os.environ)
+        rc, secs = run_step(
+            "index",
+            [py, "-c", "from backend.db.incomplete_listings_db import rebuild_index_chunked as r;"
+                       "import json;res=r(force=True);print(json.dumps(res));"
+                       "raise SystemExit(0 if res['status'] in ('rebuilt','locked') else 1)"],
+            env, run_dir / "post.out")
+        post["rebuild_incomplete_index"] = {"rc": rc, "seconds": secs}
         rc, secs = run_step("market", [py, "-m", "backend.scripts.compute_market_stats"], env, run_dir / "post.out")
         post["compute_market_stats"] = {"rc": rc, "seconds": secs}
         env = dict(os.environ)

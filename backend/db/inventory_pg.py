@@ -7,6 +7,7 @@ Scanner + Flask share this connection via :func:`backend.db.inventory_db.get_con
 from __future__ import annotations
 
 import contextlib
+import functools
 import logging
 import os
 import re
@@ -108,10 +109,29 @@ def assert_inventory_backend_configured() -> None:
     raise RuntimeError(_INVENTORY_POSTGRES_REQUIRED_MSG)
 
 
+_PG_CONNECT_TIMEOUT_DEFAULT_S = 10
+
+
+def _pg_connect_timeout_s() -> int:
+    """``PG_CONNECT_TIMEOUT`` seconds (default 10); bad/<=0 values fall back to the default."""
+    try:
+        v = int(float((os.environ.get("PG_CONNECT_TIMEOUT") or "").strip()))
+    except ValueError:
+        return _PG_CONNECT_TIMEOUT_DEFAULT_S
+    return v if v > 0 else _PG_CONNECT_TIMEOUT_DEFAULT_S
+
+
 def pg_connect():
     import psycopg
 
-    return psycopg.connect(inventory_postgres_dsn() or "", autocommit=False)
+    dsn = inventory_postgres_dsn() or ""
+    kwargs: dict = {"autocommit": False}
+    # Without a bound a dead host hangs the caller at libpq's wait-forever
+    # default. A connect_timeout already in the DSN is the operator's choice
+    # and a kwarg would silently override it, so only add ours when absent.
+    if "connect_timeout" not in dsn.lower():
+        kwargs["connect_timeout"] = _pg_connect_timeout_s()
+    return psycopg.connect(dsn, **kwargs)
 
 
 # Lexical runs of one SQL statement, as Postgres reads them. Only what decides
@@ -307,9 +327,14 @@ def adapt_insert_or_replace_pg(sql: str) -> str | None:
     return None
 
 
+@functools.lru_cache(maxsize=512)
 def adapt_sql_for_postgres_execute(sql: str) -> str | None:
     """
     Return SQL suitable for psycopg3, or None if the statement should be skipped (no-op).
+
+    Pure function of ``sql`` (str in, str/None out), so results are memoized: the
+    scanner re-adapts the same few ~10 KB upsert statements per row (~0.8 ms each).
+    The "no Postgres mapping" warning below therefore logs once per distinct statement.
     """
     stripped = sql.strip()
     if stripped.upper().startswith("PRAGMA"):

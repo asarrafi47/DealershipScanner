@@ -24,6 +24,27 @@ _CAPTURE_FIELDS = (
 )
 
 
+def used_mileage_coverage(vehicles: list[dict[str, Any]]) -> dict[str, Any]:
+    """Mileage on used rows (N6.9). A used car at 0 mi is reported, not counted as
+    covered. Model year 2026+ at 0 mi is the F4 data question (D-N16): reported in
+    ``used_zero_mi_my2026`` and left out of the gated share, never "incomplete"."""
+    used = [v for v in vehicles if str(v.get("condition") or "").strip().lower() not in ("", "new")]
+    zero = [v for v in used if not (isinstance(v.get("mileage"), (int, float)) and v["mileage"] > 0)]
+
+    def _my(v: dict[str, Any]) -> int:
+        try:
+            return int(float(v.get("year") or 0))
+        except (TypeError, ValueError):
+            return 0
+
+    f4 = [v for v in zero if _my(v) >= 2026]
+    gated = len(used) - len(f4)
+    out: dict[str, Any] = {"used_n": len(used), "used_zero_mi": len(zero), "used_zero_mi_my2026": len(f4)}
+    if gated > 0:
+        out["used_mileage"] = round((gated - (len(zero) - len(f4))) / gated, 3)
+    return out
+
+
 def _capture_coverage(vehicles: list[dict[str, Any]]) -> dict[str, Any]:
     """Share of captured rows carrying each field, BEFORE the upsert's COALESCE can
     hide gaps behind values the DB already had. This is the honest measure of what
@@ -64,6 +85,7 @@ def _capture_coverage(vehicles: list[dict[str, Any]]) -> dict[str, Any]:
         elif len(examples.setdefault("gallery_8plus", [])) < 3:
             examples["gallery_8plus"].append(str(v.get("vin") or "")[:17])
     out["gallery_8plus"] = round(g8 / n, 3)
+    out.update(used_mileage_coverage(vehicles))
     out["missing_examples"] = {k: v for k, v in examples.items() if v}
     return out
 

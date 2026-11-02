@@ -87,7 +87,7 @@ def _map(node: dict, dealer_id: str, dealer_name: str, dealer_url: str) -> dict 
     info = node.get("VehicleInfo") if isinstance(node.get("VehicleInfo"), dict) else {}
     pricing = node.get("Pricing") if isinstance(node.get("Pricing"), dict) else {}
     vin = norm_str(node.get("VIN") or info.get("VIN") or "")
-    if not vin or len(vin) < 11:
+    if not vin or len(vin) != 17:
         return None
     gallery = _gallery(node)
     row = {

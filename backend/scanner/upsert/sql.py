@@ -14,12 +14,36 @@ from typing import Any
 from backend.utils.field_clean import compute_data_quality_score
 from backend.utils.forced_induction import classify_forced_induction_from_car_row
 from backend.utils.interior_color_buckets import interior_color_buckets_json
+from backend.utils.price_floor import classify_price
 
 from backend.scanner.upsert import rows as _rows
 from backend.scanner.upsert import serialize as _ser
 
 # Same logger name as before the split so log routing and captures are unchanged.
 logger = logging.getLogger("backend.scanner.database")
+
+
+def _stored_junk_sql(col: str, *, color: bool = False) -> str:
+    """SQL twin of ``vdp_extras_parse.junk_text_value`` for a stored column (N6.5)."""
+    # No negative SUBSTR start: Postgres returns '' for substr(s, -1, 1), SQLite the last char.
+    # The option-code arm is looser than _OPTION_CODE_RE (any <=3 char value with a digit, so
+    # '1-2' counts here); the difference is negligible and LIKE has no portable char class.
+    t = f"TRIM({col})"
+    parts = [f"SUBSTR({t}, 1, 1) = '{{'", f"(SUBSTR({t}, 1, 1) = '[' AND {t} LIKE '%]')", f"LOWER({t}) IN ('null', 'none', 'undefined')"]
+    if color:
+        digits = " OR ".join(f"{t} LIKE '%{d}%'" for d in "0123456789")
+        parts.append(f"(LENGTH({t}) <= 3 AND ({digits}))")
+    return "(" + " OR ".join(parts) + ")"
+
+
+def _overwritable(col: str, *, color: bool = False) -> str:
+    """Keep-if-nonempty, except a stored junk value is dropped to NULL when the
+    incoming value is empty: a rescan heals the row or leaves an honest gap."""
+    inc = f"NULLIF(TRIM(excluded.{col}), '')"
+    return (f"CASE WHEN {inc} IS NOT NULL THEN {inc} "
+            f"WHEN {_stored_junk_sql('cars.' + col, color=color)} THEN NULL "
+            f"ELSE cars.{col} END")
+
 
 UPSERT_CARS_SQL = """
                 INSERT INTO cars (
@@ -44,7 +68,7 @@ UPSERT_CARS_SQL = """
                     year=CASE WHEN IFNULL(excluded.year,0)!=0 THEN excluded.year ELSE COALESCE(cars.year,excluded.year) END,
                     make=COALESCE(NULLIF(TRIM(excluded.make),''), cars.make),
                     model=COALESCE(NULLIF(TRIM(excluded.model),''), cars.model),
-                    trim=COALESCE(excluded.trim, cars.trim),
+                    trim=__TRIM__,
                     price=CASE WHEN COALESCE(excluded.price, 0) > 0 THEN excluded.price ELSE cars.price END,
                     -- feed odometer > 0 wins; an explicit 0 keeps a prior real reading
                     -- (else 0: new cars are 0 mi); NULL (no odometer) keeps a prior
@@ -64,8 +88,8 @@ UPSERT_CARS_SQL = """
                     transmission=COALESCE(excluded.transmission, cars.transmission),
                     transmission_type=COALESCE(excluded.transmission_type, cars.transmission_type),
                     drivetrain=COALESCE(excluded.drivetrain, cars.drivetrain),
-                    exterior_color=COALESCE(NULLIF(TRIM(excluded.exterior_color), ''), cars.exterior_color),
-                    interior_color=COALESCE(NULLIF(TRIM(excluded.interior_color), ''), cars.interior_color),
+                    exterior_color=__EXT__,
+                    interior_color=__INT__,
                     interior_color_buckets=CASE
                         WHEN NULLIF(TRIM(excluded.interior_color), '') IS NOT NULL THEN excluded.interior_color_buckets
                         ELSE cars.interior_color_buckets
@@ -154,6 +178,11 @@ UPSERT_CARS_SQL = """
                    OR cars.scraped_at IS NULL
                    OR cars.scraped_at < ?
                 """
+UPSERT_CARS_SQL = (
+    UPSERT_CARS_SQL.replace("__TRIM__", _overwritable("trim"))
+    .replace("__EXT__", _overwritable("exterior_color", color=True))
+    .replace("__INT__", _overwritable("interior_color", color=True))
+)
 
 
 @dataclass
@@ -185,6 +214,14 @@ def prepare_row(v: dict, prior_spec_src: str | None) -> PreparedRow | None:
         return None
     title = _rows.row_title(v)
     price = _rows.coerce_price(v.get("price"))
+    if price is None:
+        _note = classify_price(v.get("price"))[1]
+        if _note:
+            # Provenance note for a withheld price (N6.7, D-N14): the feed value is
+            # kept on the in-memory row and the info log only (no notes column exists); the
+            # column stays NULL. The repeated-value rule is repair-only (repair_junk_prices).
+            v["price_withheld_note"] = _note
+            logger.info("price withheld vin=%s %s", vin, _note)
     mileage = _rows.coerce_mileage(v.get("mileage"))
     msrp = _rows.coerce_msrp(v.get("msrp"))
     gallery_json = _ser.gallery_json(v.get("gallery"))

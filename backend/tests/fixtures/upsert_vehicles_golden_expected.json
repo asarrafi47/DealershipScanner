@@ -1,69 +1,6 @@
 {
  "cars": [
   {
-   "body_style": "Compact Cars",
-   "carfax_url": null,
-   "condition": "New",
-   "cylinders": 4,
-   "data_quality_score": 84.26,
-   "dealer_id": "mymetrohonda-com",
-   "dealer_name": "Metro Honda",
-   "dealer_url": "https://www.mymetrohonda.com",
-   "dealership_registry_id": null,
-   "description": "New 2025 Honda Accord SE Meteorite Gray Metallic near Jersey City, NJ at Metro - Call us now 201-308-5478 for more information about this Stock #08-41048-00066",
-   "drivetrain": "FWD",
-   "engine_description": null,
-   "engine_l": null,
-   "epa_master_id": null,
-   "epa_match_confidence": null,
-   "epa_match_method": null,
-   "exterior_color": "Meteorite Gray Metallic",
-   "first_seen_at": "<TS0>",
-   "forced_induction": null,
-   "fuel_type": "Gasoline",
-   "gallery": "[\"https://dealerimages.dealereprocess.com/image/upload/c_limit,f_auto,fl_lossy,w_auto/v1/svp/dep/25hondaaccordsedanse/honda_25accordsedanse_angularfront_meteoritegraymetallic\", \"https://cdn.dealereprocess.org/cdn/img/makes/null_o.jpg\"]",
-   "history_highlights": "[]",
-   "image_url": "https://dealerimages.dealereprocess.com/image/upload/c_limit,f_auto,fl_lossy,w_auto/v1/svp/dep/25hondaaccordsedanse/honda_25accordsedanse_angularfront_meteoritegraymetallic",
-   "interior_color": "Black",
-   "interior_color_buckets": "[\"black\"]",
-   "interior_pano": null,
-   "internal_notes": null,
-   "is_cpo": 0,
-   "last_price_change_at": "<TS0>",
-   "listing_active": 1,
-   "listing_removed_at": null,
-   "make": "Honda",
-   "marked_for_review": null,
-   "mileage": 0,
-   "missing_field_count": null,
-   "model": "Accord",
-   "model_full_raw": null,
-   "mpg_city": null,
-   "mpg_highway": null,
-   "msrp": null,
-   "packages": null,
-   "price": null,
-   "price_provenance_json": null,
-   "recoverability_score": null,
-   "recovery_attempted_at": null,
-   "recovery_notes": null,
-   "recovery_source": null,
-   "recovery_status": null,
-   "scraped_at": "<TS0>",
-   "source_url": "https://www.mymetrohonda.com/auto/new-2025-honda-accord-se/107314609/",
-   "spec_source_json": "{\"cylinders\": {\"detail\": \"clean_car_row_dict + merge_verified_specs (spec_structured_backfill tier 1)\", \"fetched_at\": \"2026-09-24T14:05:37+00:00\", \"source\": \"inventory_repair\"}, \"transmission\": {\"detail\": \"clean_car_row_dict + merge_verified_specs (spec_structured_backfill tier 1)\", \"fetched_at\": \"2026-09-24T14:05:37+00:00\", \"source\": \"inventory_repair\"}, \"transmission_type\": {\"detail\": \"clean_car_row_dict + merge_verified_specs (spec_structured_backfill tier 1)\", \"fetched_at\": \"2026-09-24T14:05:37+00:00\", \"source\": \"inventory_repair\"}}",
-   "spin_frames": null,
-   "stock_number": "08-41048-00066",
-   "title": "2025 Honda Accord SE",
-   "transmission": "CVT",
-   "transmission_type": "CVT",
-   "trim": "SE",
-   "vin": "08-41048-00066",
-   "window_sticker_url": null,
-   "year": 2025,
-   "zip_code": null
-  },
-  {
    "body_style": "Sedan",
    "carfax_url": "https://www.carfax.com/vehiclehistory/ar20/zL4SW6GrG2TeWYA9Qadb5wheUiceGxT2alHW2suL-wA_xPWtT4977O8SxwMg9bNqiEeM8rft8OO3X6dGDwVyZ2wuKr77aQ2DSos",
    "condition": "Used",
@@ -690,7 +627,7 @@
    "trim": null,
    "vin": "1FTFW1E50NFA00012",
    "window_sticker_url": null,
-   "year": 2021,
+   "year": 2022,
    "zip_code": null
   },
   {
@@ -698,7 +635,7 @@
    "carfax_url": null,
    "condition": null,
    "cylinders": null,
-   "data_quality_score": 20.37,
+   "data_quality_score": 27.78,
    "dealer_id": "ford-com",
    "dealer_name": "",
    "dealer_url": null,
@@ -747,13 +684,13 @@
    "spec_source_json": "12",
    "spin_frames": "[\"https://spin.example.com/x.jpg\"]",
    "stock_number": "",
-   "title": "Unknown vehicle",
+   "title": "2022",
    "transmission": null,
    "transmission_type": null,
    "trim": null,
    "vin": "1FTFW1E50NFA00013",
    "window_sticker_url": null,
-   "year": null,
+   "year": 2022,
    "zip_code": null
   },
   {
@@ -1012,39 +949,67 @@
  "empty_call": 0,
  "incomplete_listings": [
   {
-   "missing_fields_json": "[\"price\", \"engine\"]",
-   "vin": "08-41048-00066"
-  },
-  {
+   "first_seen_at": "<TS0>",
+   "last_scraped_at": "<TS0>",
    "missing_fields_json": "[\"price\", \"exterior_color\"]",
+   "pending": 0,
+   "scans_survived": 1,
    "vin": "19UDE2F37GA021224"
   },
   {
+   "first_seen_at": "<TS0>",
+   "last_scraped_at": "<TS1>",
    "missing_fields_json": "[\"drivetrain\", \"fuel_type\", \"exterior_color\"]",
+   "pending": 0,
+   "scans_survived": 2,
    "vin": "1FTFW1E50NFA00011"
   },
   {
+   "first_seen_at": "<TS0>",
+   "last_scraped_at": "<TS1>",
    "missing_fields_json": "[\"trim\", \"engine\", \"transmission\", \"drivetrain\", \"fuel_type\", \"cylinders\", \"exterior_color\"]",
+   "pending": 0,
+   "scans_survived": 2,
    "vin": "1FTFW1E50NFA00012"
   },
   {
-   "missing_fields_json": "[\"price\", \"year\", \"make\", \"model\", \"trim\", \"engine\", \"transmission\", \"drivetrain\", \"body_style\", \"fuel_type\", \"condition\", \"cylinders\", \"exterior_color\"]",
+   "first_seen_at": "<TS0>",
+   "last_scraped_at": "<TS0>",
+   "missing_fields_json": "[\"price\", \"make\", \"model\", \"trim\", \"engine\", \"transmission\", \"drivetrain\", \"body_style\", \"fuel_type\", \"cylinders\", \"exterior_color\"]",
+   "pending": 0,
+   "scans_survived": 1,
    "vin": "1FTFW1E50NFA00013"
   },
   {
+   "first_seen_at": "<TS0>",
+   "last_scraped_at": "<TS3>",
    "missing_fields_json": "[\"engine\", \"transmission\", \"exterior_color\"]",
+   "pending": 0,
+   "scans_survived": 2,
    "vin": "2C3CDXCT0LH000015"
   },
   {
+   "first_seen_at": "<TS0>",
+   "last_scraped_at": "<TS0>",
    "missing_fields_json": "[\"trim\", \"drivetrain\", \"body_style\", \"exterior_color\"]",
+   "pending": 0,
+   "scans_survived": 1,
    "vin": "5YJ3E1EA7KF000001"
   },
   {
+   "first_seen_at": "<TS0>",
+   "last_scraped_at": "<TS1>",
    "missing_fields_json": "[\"trim\", \"engine\", \"transmission\", \"drivetrain\", \"body_style\", \"fuel_type\", \"cylinders\", \"exterior_color\"]",
+   "pending": 0,
+   "scans_survived": 2,
    "vin": "5YJ3E1EA7KF000002"
   },
   {
+   "first_seen_at": "<TS0>",
+   "last_scraped_at": "<TS0>",
    "missing_fields_json": "[\"trim\", \"engine\", \"transmission\", \"drivetrain\", \"body_style\", \"fuel_type\", \"cylinders\", \"exterior_color\"]",
+   "pending": 0,
+   "scans_survived": 1,
    "vin": "5YJ3E1EA7KF000003"
   }
  ],
@@ -1110,7 +1075,6 @@
       "1C6SRFFT0MN573743",
       "1C6RR7KG5ES363543",
       "19UDE4H31PA024497",
-      "08-41048-00066",
       "19UDE2F37GA021224",
       "5YJ3E1EA7KF000001",
       "5YJ3E1EA7KF000002",
@@ -1131,7 +1095,6 @@
       "1C6SRFFT0MN573743",
       "1C6RR7KG5ES363543",
       "19UDE4H31PA024497",
-      "08-41048-00066",
       "19UDE2F37GA021224",
       "5YJ3E1EA7KF000001",
       "5YJ3E1EA7KF000002",
@@ -1143,7 +1106,7 @@
      ]
     ]
    ],
-   "count": 16,
+   "count": 15,
    "logs": [
     [
      "WARNING",
@@ -1155,7 +1118,7 @@
     ],
     [
      "INFO",
-     "Upserted 16 vehicles"
+     "Upserted 15 vehicles"
     ],
     [
      "INFO",
@@ -1164,6 +1127,9 @@
    ],
    "name": "batch1",
    "stats": {
+    "identifier_gate_refused": {
+     "vin_length_not_17": 3
+    },
     "stale_key": "reset?",
     "vin_owner_conflict_owners": {},
     "vin_owner_conflict_vins": [],
@@ -1237,6 +1203,7 @@
    ],
    "name": "batch2",
    "stats": {
+    "identifier_gate_refused": {},
     "stale_key": "reset?",
     "vin_owner_conflict_owners": {
      "owner-com": 1
@@ -1273,6 +1240,10 @@
    "logs": [
     [
      "INFO",
+     "price withheld vin=5YJ3E1EA7KF000003 price_below_floor:2<1000"
+    ],
+    [
+     "INFO",
      "Upserted 1 vehicles"
     ],
     [
@@ -1282,6 +1253,7 @@
    ],
    "name": "batch3",
    "stats": {
+    "identifier_gate_refused": {},
     "stale_key": "reset?",
     "vin_owner_conflict_owners": {
      "owner-com": 1

@@ -87,6 +87,11 @@
         const incompletePill = c.public_incomplete
             ? `<span class="result-incomplete-note" title="Missing some public-listing fields">Incomplete</span>`
             : "";
+        // N6.4 (D-N13): a new arrival still waiting on price or photos. One muted line of
+        // text, deliberately not a badge, pill or box.
+        const pendingLine = c.details_pending
+            ? `<p class="result-meta">Details coming</p>`
+            : "";
         const cpoBadge = SC.cpoBadgeHtml(c);
         const mkt = c.market;
         // A payment-shaped "price" (either intel tier flagged it) renders as
@@ -164,7 +169,7 @@
                         ${dealBadge ? `<p class="result-deal-line">${dealBadge}</p>` : ""}
                         ${marketLine}
                         <p class="result-meta">${metaBits.join(" &middot; ")}</p>
-                        ${specLine}
+                        ${specLine}${pendingLine}
                     </div>
                 </a>
                 <p class="result-dealer-row">

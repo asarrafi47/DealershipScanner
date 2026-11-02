@@ -11,7 +11,8 @@ def resolve_drivetrain(src: SpecSources):
 
     NHTSA vPIC outranks the feed for drivetrain (policy 2026-09-23). AWD and 4WD
     are the same wheels driven, so only a real disagreement (RWD vs 4WD, FWD vs
-    AWD) is overridden; a blank decode leaves the cascade alone.
+    AWD) is overridden, whichever source supplied the losing value (trim decoder,
+    EPA or dealer); a blank or 4x2 decode leaves the cascade alone.
     """
     from backend.enrichment import knowledge_engine as ke
 
@@ -22,10 +23,18 @@ def resolve_drivetrain(src: SpecSources):
     if _vpic_drive:
         from backend.vehicle_facts.drivetrain import normalize_drivetrain, same_drive_wheels
 
-        _a = normalize_drivetrain(dealer_drive, "dealer")
+        # A stated vPIC end overrides whatever the cascade picked (trim decoder,
+        # EPA, dealer) when the driven wheels disagree (P8A.6, same rule as
+        # vehicle_facts.precedence). 4x2 / 2WD names no end: normalize gives None,
+        # so it never overrides and is never mapped to RWD.
         _b = normalize_drivetrain(_vpic_drive, "vpic")
-        if _a and _b and not same_drive_wheels(_a, _b):
-            drive_ver = _vpic_drive
+        if _b:
+            _cur = normalize_drivetrain(drive_ver, "dealer") if drive_ver else None
+            _a = normalize_drivetrain(dealer_drive, "dealer")
+            if (_cur and not same_drive_wheels(_cur, _b)) or (
+                _a and not same_drive_wheels(_a, _b)
+            ):
+                drive_ver = _vpic_drive
     if not drive_ver and dealer_drive and not ke._is_na_spec(dealer_drive):
         drive_ver = dealer_drive
     if not drive_ver and dict_specs and dict_specs.get("drivetrain"):

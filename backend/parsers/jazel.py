@@ -155,7 +155,7 @@ def _engine_liters(engine: str | None) -> float | None:
 
 def _map(doc: dict, base_url: str, dealer_id: str, dealer_name: str, dealer_url: str) -> dict | None:
     vin = norm_str(doc.get("vin") or "")
-    if not vin or len(vin) < 11:
+    if not vin or len(vin) != 17:
         return None
     gallery = _gallery(doc)
     hero = gallery[0] if gallery else ""

@@ -32,22 +32,18 @@ if [ "${FLASK_ENV:-}" = "development" ]; then
   # poll: reliable reload when /app is a Docker bind mount (inotify misses host edits on macOS)
   GUNICORN_RELOAD="--reload --reload-engine poll"
 fi
-# -w 1 used to mean every CPU-bound request (e.g. serializing the full
-# listings catalog to JSON, or a heavy Jinja render) held the GIL and blocked
-# every other request on the site, regardless of thread count — threads only
-# help I/O waits, they don't parallelize Python bytecode. Multiple worker
-# PROCESSES actually parallelize; true CPU-bound concurrency is capped at the
-# worker count, not worker*threads. Each worker duplicates this process's
-# in-memory caches (listings grid, filter options, etc.) — measured ~6GB RSS
-# warm per worker against this container's 24GB cgroup limit, so 3 workers
-# (~18GB warm) leaves ~6GB headroom. Verified with a concurrent load test
-# (8 parallel requests): at 2 workers, 8x /listings spread 0.4s-8.5s; at 3
-# workers, warm, the same load tightened to 0.5s-0.6s. /api/listings/cars
-# (full ~9MB catalog dump) is still slow under heavy concurrent load even at
-# 3 workers — that's a separate, real issue (needs server-side pagination,
-# not more workers) and shouldn't be "fixed" by scaling worker count further.
-# Go higher only after re-confirming the plan's memory ceiling with
-# `cat /sys/fs/cgroup/memory.max` in the container.
+# -w 1 means every CPU-bound request (e.g. serializing the full listings
+# catalog to JSON, or a heavy Jinja render) holds the GIL and blocks every
+# other request, regardless of thread count -- threads only help I/O waits.
+# More worker PROCESSES parallelize, but each duplicates this process's
+# in-memory caches (listings grid, filter options, etc.), and --preload does
+# not share them (refcounting breaks copy-on-write). Railway bills memory, so
+# PRODUCTION RUNS GUNICORN_WORKERS=1 (set in the service variables): 3 workers
+# held 13.7 GB flat, 1 worker 4.92 GB, and with the arbiter no longer
+# prewarming (gunicorn.conf.py) ~3.3 GB warm. The default below is only the
+# fallback for an unset variable (local/Docker runs); an earlier note here
+# sizing 3 workers at ~18 GB against a 24 GB limit predates that measurement.
+# Re-measure RSS before raising it, and check `cat /sys/fs/cgroup/memory.max`.
 GUNICORN_WORKERS="${GUNICORN_WORKERS:-3}"
 
 # Multi-worker fallout #1: the in-memory IP rate limiter (backend/utils/ip_rate_limit.py)

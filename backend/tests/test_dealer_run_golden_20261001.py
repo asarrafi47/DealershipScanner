@@ -79,6 +79,8 @@ def _patch_bound(monkeypatch, name: str, fn: Any) -> None:
 
 _T_PATTERNS = [
     (re.compile(r'"seconds":[0-9.eE+-]+'), '"seconds":"<t>"'),
+    # active/wall seconds (N9.13) postdate the recording; dropped, not masked
+    (re.compile(r',"active_seconds":[0-9.eE+-]+,"wall_seconds":[0-9.eE+-]+'), ""),
     (re.compile(r'"upsert":[0-9.eE+-]+'), '"upsert":"<t>"'),
     (re.compile(r"[0-9]+\.[0-9]s\)"), "<t>s)"),
 ]
@@ -92,6 +94,8 @@ def _mask(s: str) -> str:
 
 def _mask_result(res: dict) -> dict:
     out = _jsonable(res)
+    out.pop("active_seconds", None)
+    out.pop("wall_seconds", None)
     if "seconds" in out:
         out["seconds"] = "<t>"
     if isinstance(out.get("phase_secs"), dict):
@@ -251,6 +255,7 @@ class Harness:
             r = _jsonable(record)
             if "scan_ts" in r:
                 r["scan_ts"] = "<scan_ts>"
+            r.pop("wall_seconds", None)
             if "seconds" in r:
                 r["seconds"] = "<t>"
             if isinstance(r.get("phase_secs"), dict):

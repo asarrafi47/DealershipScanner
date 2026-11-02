@@ -10,8 +10,12 @@ module level. Under ``--preload`` that thread starts in the ARBITER; the arbiter
 forks its workers within milliseconds, the prewarm's 3 s head-start elapses
 after the fork, and threads do not survive fork. Net effect: the arbiter builds
 the entire ~2 GB listings grid that no request is ever served from, and each
-worker then builds its own on first hit. Two full copies for one worker's worth
-of serving. Railway bills memory.
+worker then builds its own. Two full copies for one worker's worth of serving.
+Railway bills memory. Measured on prod (GUNICORN_WORKERS=1): 4.92 GB before
+this file, ~3.3 GB warm after.
+
+Prod runs one worker; post_fork starts the prewarm in each worker, so with N
+workers the grid is built N times (``--preload`` does not share it).
 
 ORDERING MATTERS -- verified against gunicorn 26.0.0 source:
   Application.__init__ -> do_load_config()      <- THIS FILE is exec'd here

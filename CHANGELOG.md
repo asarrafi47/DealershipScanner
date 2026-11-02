@@ -2,6 +2,66 @@
 
 ## [Unreleased]
 
+### Efficiency quick wins (N6b)
+- Tests: bcrypt work factor drops to 4 under pytest only (BCRYPT_TEST_LOW_COST=1 set in root conftest.py); production floor 12 and default 13 unchanged; test_paid_access_parity 34s -> 4s.
+- Perf: memoize adapt_sql_for_postgres_execute with lru_cache(maxsize=512); repeated upsert statements no longer re-run the SQL adapter per row.
+- Facet options: background rebuilds are throttled to one per FACET_REBUILD_MIN_INTERVAL_S (default 300, 0 disables). The first build and clear_inventory_listings_cache() still rebuild immediately.
+- Paint-family facets: color inference is memoized per distinct color string within a rebuild.
+- Performance: the dealership registry backfill now runs in a background thread at process startup instead of inside the first /api/listings/geo-coords request (~210 s stall removed).
+- pg_connect now bounds connection setup with connect_timeout (env PG_CONNECT_TIMEOUT, default 10 s); a connect_timeout already present in the DSN is left alone.
+- Corrected stale worker-count and memory comments in docker-entrypoint-web.sh and gunicorn.conf.py (prod runs GUNICORN_WORKERS=1, ~3.3 GB warm).
+- Fleet runner: the batch scan timeout (--scan-timeout) now counts active time only, so a Mac sleep no longer kills batches and leaves dealers with a false error verdict (pipeline/active_time.py, run_http_only_scan polls a Popen).
+- Logs: scan batch lines print wall and active time; dealer_run_summary and the scan log carry wall_seconds beside seconds (active).
+- Ops: docs/NETWORK_SCAN_PROCESS.md says to launch fleets under caffeinate -dims; scripts/cleanroom/preflight.sh warns on macOS when it is not running.
+- Web image now bakes the pgeocode US postal cache at build time (PGEOCODE_DATA_DIR=/opt/pgeocode), removing the 5.6 MB GeoNames download on first import of geo.
+
+### N6.1 Index rebuild
+- Incomplete-listings index is rebuilt once per fleet scan, after every shard's vPIC heal and reconcile and before market stats and the grid cards, so the persisted cards match the final index.
+- Index rebuild runs in chunks of at most 20k cars into a staging table, swaps into `incomplete_listings` in one transaction (fixes the DELETE+INSERT race), logs per-chunk seconds, and takes a Postgres advisory lock so concurrent rebuilds skip.
+- `incomplete_listings_meta` now stores `rules_version` and `last_rebuilt_at`; bumping `INDEX_RULES_VERSION` forces a rebuild.
+
+### N6.2 Re-sync after late writers
+- Incomplete-listings index is re-synced for cars changed after the per-car sync: the structured spec backfill, the model_specs correction, the catalog link and the pipeline vPIC heal.
+
+### N6.3 Admin counts
+- Admin incomplete-listing count, per-dealer issue stats and the dev incomplete-cars list count active listings only. `get_cars_by_ids` gains an optional `active_only` flag.
+
+### N6.4 New-arrival window
+- Added: new-arrival pending class (D-N13). A car whose only gap is price or photos and whose latest scrape is within 3 days of its first sighting is classed pending, not incomplete. It stays visible and shows a plain "Details coming" line on the grid card and the car page, with no box.
+- Changed: the `incomplete_listings` index carries `first_seen_at`, `last_scraped_at`, `scans_survived` and `pending` (migration V027). `INDEX_RULES_VERSION` is bumped to `2026-10-n6.4`, so the next fleet post step rebuilds the index.
+- Added: `backend/scripts/incomplete_report.py --window N` prints inside-window and outside-window incomplete rates separately.
+
+### N6.5 Junk VDP values
+- Fixed: dealer.com VDP parser no longer stores junk as values; `_clean()` unwraps `{_type,en_US}` objects and treats `[[...]]`, `[token]`, null and (for colours) option codes like X9/21 as missing.
+- Fixed: the cars upsert drops a stored junk trim/colour to NULL when a rescan has no real value, and a junk incoming value never overwrites a real one (bracket detection is Postgres-safe).
+- Fixed: the completeness invariant no longer counts junk trim/colour values as filled.
+- Added: `backend/scripts/heal_vdp_junk_values.py` (dry run by default) to NULL existing junk trims/colours with quarantine and provenance.
+
+### N6.6 Scan-lab verifier
+- vPIC plug-in hybrids bucket as `phev` (and EPA plug-in rows too), so correct PHEV listings no longer raise `vpic_fuel`.
+- MINI vPIC models of just "2 Door"/"4 Door" no longer raise `vpic_model`.
+- A vPIC decode with ErrorCode other than 0 is no longer used to flag discrepancies; ErrorCode is read from the vPIC cache.
+
+### N6.7 Prices
+- Prices under $1,000 or over $1,000,000 are refused at write time (NULL, D-N14); the withheld value is noted in the info log and on the in-memory row (`price_withheld_note`).
+- Completeness counts a junk or read-time-withheld positive price as a missing price instead of trusting the stored column.
+- Added: `backend/scripts/repair_junk_prices.py`: dry run by default, lists junk active prices (below floor, above cap, same price on 5+ models at one dealer); `--apply` needs a backup file and `--expect-db`. The repeated-value rule is repair-only (not wired at write or read time).
+
+### N6.8 Placeholder images
+- Added: `backend/utils/placeholder_images.py`: one shared placeholder-image test (tokens `photo_unavailable`, `unavailable_stockphoto`, `photo-not-available`, `coming_soon`, `comingsoon`, `default.jpg`, `/static/placeholder.svg`, plus same-image-on-many-cars per dealer) and a per-dealer photo-coverage alarm (D-N15).
+- Parser URL filter and listing completeness use it: a placeholder-only car counts as having no photo.
+
+### N6.9 Identifier gate and mileage coverage
+- Rows whose VIN is not 17 characters are refused at parse (dealer_eprocess, chapman, overfuel, dealermasters, team_velocity, jazel, motive_ridemotive) and again at upsert (order numbers, Koons 8-character codes); 17-character IDs with I/O/Q are kept (D-N17b, N21).
+- Model year 0 or NULL is recovered from the VIN or the row is refused at upsert; upsert stats report `identifier_gate_refused` by reason.
+- Pipeline coverage: used-row mileage (`used_mileage`, `used_zero_mi`, `used_zero_mi_my2026`) joins the capture coverage and the assess gate; MY2026+ used cars at 0 mi are reported as a data question, not counted as incomplete (D-N16).
+
+### P8A.2 Fact precedence (pure module)
+- Added `backend/vehicle_facts/precedence.py`: a pure write-time arbiter with per-(field, source) ranks, a stale-provenance rule, the vPIC 4x2 constraint (never AWD or an end), the D-PR4 catalog tiebreak with a trim veto, the D-PR6 cannot_assess flag and the D-PR7 vPIC cylinder guard. Not wired into any writer yet (N15).
+
+### P8A.6 Read-time drivetrain
+- The displayed drivetrain follows NHTSA vPIC whenever vPIC states an end (FWD/RWD/AWD/4WD) that disagrees with the trim decoder, EPA or dealer value. 4x2/2WD never overrides and is never mapped to an end. Merge-specs golden re-recorded (drivetrain-only diff).
+
 ## [1.5.10] - 2026-11-02
 
 ### Added
