@@ -3,6 +3,8 @@ from __future__ import annotations
 
 import subprocess
 
+import pytest
+
 from backend.scanner.pipeline import runner
 from backend.scanner.pipeline.active_time import ActiveTimer
 
