@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [1.5.11] - 2026-11-02
+
 ### Efficiency quick wins (N6b)
 - Tests: bcrypt work factor drops to 4 under pytest only (BCRYPT_TEST_LOW_COST=1 set in root conftest.py); production floor 12 and default 13 unchanged; test_paid_access_parity 34s -> 4s.
 - Perf: memoize adapt_sql_for_postgres_execute with lru_cache(maxsize=512); repeated upsert statements no longer re-run the SQL adapter per row.
