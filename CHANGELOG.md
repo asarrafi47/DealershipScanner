@@ -30,6 +30,7 @@
 - Added: new-arrival pending class (D-N13). A car whose only gap is price or photos and whose latest scrape is within 3 days of its first sighting is classed pending, not incomplete. It stays visible and shows a plain "Details coming" line on the grid card and the car page, with no box.
 - Changed: the `incomplete_listings` index carries `first_seen_at`, `last_scraped_at`, `scans_survived` and `pending` (migration V027). `INDEX_RULES_VERSION` is bumped to `2026-10-n6.4`, so the next fleet post step rebuilds the index.
 - Added: `backend/scripts/incomplete_report.py --window N` prints inside-window and outside-window incomplete rates separately.
+- Fixed: the grid card read path (`grid_cards_repo._resolve`) computes `_aux_key` with the pending flag, like the writer, so a pending car's stored card is no longer rebuilt on every read (audit B-029, moved here from the audit-fix series so this release stands alone).
 
 ### N6.5 Junk VDP values
 - Fixed: dealer.com VDP parser no longer stores junk as values; `_clean()` unwraps `{_type,en_US}` objects and treats `[[...]]`, `[token]`, null and (for colours) option codes like X9/21 as missing.
