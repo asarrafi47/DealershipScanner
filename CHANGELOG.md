@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [1.5.9] - 2026-11-02
+
 ### Added
 - `deploy/railway/service_settings.json` and `deploy/railway/service_settings.py` (N4.1,
   D-N24): web's and scanner-nightly's Railway settings now live on the service instance,
