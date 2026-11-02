@@ -24,7 +24,7 @@ RUN playwright install chromium && playwright install-deps chromium
 
 COPY . .
 
-RUN chmod +x /app/scripts/docker-entrypoint-scanner-worker.sh
+RUN chmod +x /app/scripts/docker-entrypoint-jobs-worker.sh
 
 ENV SCANNER_WORKER_JOB_TYPES=onboard
-ENTRYPOINT ["/app/scripts/docker-entrypoint-scanner-worker.sh"]
+ENTRYPOINT ["/app/scripts/docker-entrypoint-jobs-worker.sh"]

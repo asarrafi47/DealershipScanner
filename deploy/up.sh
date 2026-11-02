@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# Build and start DealershipScanner locally in Docker (Postgres inventory required).
+# Build and start DealershipScanner locally in Docker: Postgres (pgvector) + web.
+# Scans do not run in this stack (backend/scripts/dealer_pipeline.py on a host).
 #
 #   ./deploy/up.sh
 #   WEB_PORT=8000 ./deploy/up.sh
@@ -9,7 +10,6 @@ ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT/deploy"
 
 export WEB_PORT="${WEB_PORT:-18000}"
-export WORKER_REPLICAS="${WORKER_REPLICAS:-2}"
 export INVENTORY_DATABASE_URL="postgresql://dealership:dealership@postgres:5432/dealership"
 export COMPOSE_PROFILES=full
 
@@ -27,11 +27,10 @@ cat > "$ROOT/deploy/.env" <<EOF
 INVENTORY_DATABASE_URL=${INVENTORY_DATABASE_URL}
 COMPOSE_PROFILES=full
 WEB_PORT=${WEB_PORT}
-WORKER_REPLICAS=${WORKER_REPLICAS}
 EOF
 
-echo "==> Stack: postgres + web + ${WORKER_REPLICAS} scanner-workers + scheduler"
-docker compose -f docker-compose.yml build web scanner-worker scanner-scheduler
+echo "==> Stack: postgres + web"
+docker compose -f docker-compose.yml build web
 docker compose -f docker-compose.yml up -d postgres
 echo "==> Waiting for Postgres"
 for i in $(seq 1 40); do
@@ -40,8 +39,7 @@ for i in $(seq 1 40); do
   fi
   sleep 1
 done
-docker compose -f docker-compose.yml up -d web scanner-scheduler
-docker compose -f docker-compose.yml up -d --scale "scanner-worker=${WORKER_REPLICAS}" scanner-worker
+docker compose -f docker-compose.yml up -d web
 
 echo "==> Waiting for /health"
 for i in $(seq 1 45); do

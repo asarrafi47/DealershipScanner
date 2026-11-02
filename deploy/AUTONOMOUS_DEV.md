@@ -4,8 +4,8 @@ Rules for unattended agent development:
 
 - **No git push** until local stack tests pass
 - **Secrets:** `deploy/load-vault-env.sh` → kmac vault; scaffold if key missing
-- **Stack:** `./deploy/up.sh` → postgres + web + workers + scheduler (Postgres required)
-- **Verify:** health, `/billing/plans`, `docker compose ps`, worker logs; pytest gate below
+- **Stack:** `./deploy/up.sh` → postgres (pgvector) + web; scans run on a host via `backend/scripts/dealer_pipeline.py`, not in this stack
+- **Verify:** health, `/billing/plans`, `docker compose ps`, web logs; pytest gate below
 - **Full-stack env:** `deploy/up.sh` writes `deploy/.env` with `INVENTORY_DATABASE_URL`
 
 ## Local verify (after sprint chunks)
@@ -38,7 +38,7 @@ Site admin (`asarrafi`): `/admin/dealers`, `/admin/users`. Signed-in users: `/ac
 
 ```bash
 ./deploy/up.sh
-# WEB_PORT=8000 WORKER_REPLICAS=2
+# WEB_PORT=8000
 ```
 
 ## Loop commands (paste in Cursor)
@@ -54,7 +54,7 @@ Sentinel: `AGENT_LOOP_TICK_master_plan`
 ### Sprint 1 verify (fixed 10m)
 
 ```text
-/loop 10m Verify Docker stack: docker compose -f deploy/docker-compose.yml ps; curl -sf http://127.0.0.1:8000/health; check scanner-worker and scanner-scheduler logs; if down run ./deploy/up.sh; report changes.
+/loop 10m Verify Docker stack: docker compose -f deploy/docker-compose.yml ps; curl -sf http://127.0.0.1:8000/health; check the web logs; if down run ./deploy/up.sh; report changes.
 ```
 
 ### Test gate (fixed 5m)
@@ -79,11 +79,12 @@ stop the loop
 | `GOOGLE_OAUTH_*` | `Dealer:google_oauth_*` |
 | `APPLE_OAUTH_*` | `Dealer:apple_oauth_*` |
 
-## Services (full profile)
+## Services
 
 | Container | Role |
 |-----------|------|
 | `dealership-scanner-postgres` | Inventory + `dealer_jobs` + `dealer_catalog` |
 | `dealership-scanner-web` | Flask |
-| `dealership-scanner-scanner-worker-N` | Job claim loop |
-| `dealership-scanner-scanner-scheduler-1` | Refresh enqueue |
+
+The dealer_jobs worker and scheduler containers were removed in P15B.6 (their Railway
+services were deleted on 2026-10-08, D-REL1).
