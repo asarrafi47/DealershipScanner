@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [1.5.10] - 2026-11-02
+
 ### Added
 - `migrations/V026__chain_completeness.sql` (P4.3; D-DB7 (a), D-PR8 (a), D-N30). After it, a
   fresh `migrate --apply` builds every object that prod and local `cars` hold, except the
