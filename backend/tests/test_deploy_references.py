@@ -55,6 +55,9 @@ EXIT_GATE_ALLOWED = {
     # A Kubernetes node label (nodeSelector scanner-worker=true), not the deleted service.
     # The whole k8s-era deploy/car-scanner/ directory is deleted by P18A.7 (D-IF9).
     "deploy/car-scanner/cronjob.yaml",
+    # History: the "Retired:" note (added by P3.7, b8364d6d6) says the legacy services were
+    # deleted in the Railway dashboard on 2026-10-08 (D-REL1 (a)).
+    "deploy/railway/README.md",
 }
 # Prod runs PG 18.6 with pgvector 0.8.6 (NEXT_PHASES_PLAN Section 2.5); D-TC3 = match prod.
 PROD_PG_MAJOR = 18
