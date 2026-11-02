@@ -136,7 +136,7 @@ The DB started empty: recipes, the VIN-decode cache and the EPA/catalog referenc
    - a fourth pass at least 20 h later, so two-strike retirement really retires and can be live-checked.
    Then v1.6.0 is tagged.
 10. **N12 refreshes prod without wiping it:**
-    - migrate V028-V030 and deploy idle;
+    - migrate to V033 (registry numbering) and deploy idle;
     - repair prod recipes from the home IP;
     - run a home verification scan and a 20-dealer smoke;
     - fleet #1 writes first strikes only, and the strike list is live-checked;
@@ -239,7 +239,7 @@ Sizes: S = up to half a day of agent work, M = 1-3 days, L = 3-5 days. "Touches 
 | N9 | Retirement single writer, provenance, two-strike, accounting, pause safety | One fail-closed policy; V028/V029; triage counts captured/refused/written; pause-proof batches; fleet resume; targeted retirement re-run | N1, N5, N6.9 | N6, N7, N8, N10 wave 1 | D-RC1/2/3/7, D-SR4, D-N10/11/21 | No | L |
 | N10 | Scan controls and pre-fleet tooling | Run window, leases, per-dealer locks, kill switches, recipe hygiene, gap cover, shard-order knob, pre-fleet check, audit tool | N5; N8, N9 for wave 3 | N8, N9 (wave 1) | D-IF5, D-IF10, D-SR2 | No | M |
 | N11 | Release-candidate rehearsal, v1.6.0 | Prove counts, determinism, convergence and retirement on the exact candidate | N6, N8, N9, N10 | none on the scanner | Fleet runs, restore, live checks, sign-off | No | M |
-| N12 | Prod refresh (6B) | Fresh prod: V028-V030, idle deploy, recipe repair, smoke, fleet #1 (strikes), fleet #2 (retire), residue repair, cron | N11, N4, N5 | N3 release, N13 code | Every prod step, go/no-go gates | Yes | L |
+| N12 | Prod refresh (6B) | Fresh prod: V026-V033, idle deploy, recipe repair, smoke, fleet #1 (strikes), fleet #2 (retire), residue repair, cron | N11, N4, N5 | N3 release, N13 code | Every prod step, go/no-go gates | Yes | L |
 | N13 | Recipe store authority (Phase 7) | CAS so the home lane and Railway cannot clobber recipes | N12 | N15, N17-N20 code | D-RS1..D-RS4, V031 | Yes | L |
 | N14 | Home-IP lane (Phase 15A) | Permanent nightly lane for the Railway-blocked dealers; D-IF6 by desk review | N12, N13 | N15-N18 | D-IF1/3/6, `home_lane.env` | Yes | M |
 | N15 | Fact precedence foundation (8A) | vPIC decides drivetrain and electrification on every write (read-time display shipped in N6); Gasoline fill | N12, N6 (P8A.2, P8A.6) | N13, N14, N18, N20 | none new (D-PR1/4/6/7 answered for N6) | Yes (deploy) | M |
@@ -1956,7 +1956,9 @@ Owner asks: approve the clean-room run on the conv DB, Docker use, and any prod 
 ### N12 Prod refresh (Phase 6B): fresh, correct data without wiping prod
 
 **Goal.**
-- Deploy the rehearsed tag idle, and apply V028-V030.
+- Deploy the rehearsed tag idle, and apply the migrations the tag adds beyond prod (V025 today): V026-V033 in the registry numbering of Section 7.0 (V026 N5, V027 N6.4, V028 N8.6, V029 N37.9, V030-V031 N30, V032-V033 N9). Any of these the owner already applied at an earlier release drop out of the list.
+
+Renumbering needed: N12.1 and N12.2 apply with `--target 33` and the exit check expects `max(version)` 33 on prod (the plan text below says V028-V030, `--target 30`, top 29). N13's V034 and later ship with their own phases after N12.
 - Repair prod recipes.
 - Verify from home, smoke on Railway.
 - Fleet #1 writes first strikes only; its strike list is live-checked.
@@ -1975,7 +1977,7 @@ Owner asks: approve the clean-room run on the conv DB, Docker use, and any prod 
 | ID | Source | What | Kind | Depends | Acceptance |
 |---|---|---|---|---|---|
 | N12.1 | P6B.1 (part) | PG18 `pg_dump -Fc` of prod, verified with `pg_restore -l`; `\copy` ownership snapshot; re-run the N1.6 census | prod-owner | entry | dump size and TOC count logged; snapshot rows = prod `cars` count |
-| N12.2 | P6B.1 | Step 0: owner-approved Docker smoke of both v1.6.0 stages; `migrate --dry-run`, then `--apply --target 30`; the N4.1 scanner-nightly settings pack if not applied earlier; `deploy_scanner_nightly.sh --dry-run`, then the real deploy from v1.6.0; then `deploy_web.sh` v1.6.0 | prod-owner | N12.1 | smoke passed; top = 29; scanner logs print idle; health 1.6.0 |
+| N12.2 | P6B.1 | Step 0: owner-approved Docker smoke of both v1.6.0 stages; `migrate --dry-run`, then `--apply --target 33` (registry numbering; the draft text said 30); the N4.1 scanner-nightly settings pack if not applied earlier; `deploy_scanner_nightly.sh --dry-run`, then the real deploy from v1.6.0; then `deploy_web.sh` v1.6.0 | prod-owner | N12.1 | smoke passed; top = 33; scanner logs print idle; health 1.6.0 |
 | N12.3 | P6A.7 | `prefleet_check.sh --target prod`, plus one verification that a redeploy with `SCAN_FLEET=1` outside the window idles | prod-owner | N12.2 | PREFLEET OK; "outside run window" verified (LE-1 class closed) |
 | P6B.2 | plan + N8.9 | Home-IP prod recipe repairs: `saved_at` backfill (235 rows), un-stale the 31, stale the 13 hygiene recipes, apply the N8.9 repair set, coastline account check, after a `dealer_recipes` backup | prod-owner | N12.3 | backup file named; 0 rows with `max_saved_at=0`; repair-set re-apply is a no-op |
 | P6B.3 | plan | Home verification scan of the un-staled dealers, the 6 contested VIN owners first, after a `\copy` backup, with `SCANNER_RECONCILE=dry` exported in the command | scan (owner) | P6B.2 | every dealer has a verdict and logs; strikes written = 0 |
@@ -1990,8 +1992,8 @@ Owner asks: approve the clean-room run on the conv DB, Docker use, and any prod 
 **N-unit specs.**
 
 **N12.1 / N12.2 / N12.3 (ordered).**
-- Backups go to `workspace/backups/prod_<stamp>_preV030.dump` and `ownership_prod_before_<stamp>.csv`.
-- **Step 0 (N12.2), owner-approved Docker smoke of both stages from v1.6.0.** This is the first scanner image deployed since 1.4.1. `deploy_scanner_nightly.sh --dry-run --keep-stage <dir>` (`Dockerfile.scanner`), built and run against local PG at V030: with `SCAN_FLEET` unset it prints idle; with `SCAN_FLEET=1` and a closed window it prints "outside run window"; with `SCAN_DEALERS=<1 dealer>` against a scratch DB it completes. `deploy_web.sh --dry-run --keep-stage <dir>`: health 200 with the tag.
+- Backups go to `workspace/backups/prod_<stamp>_preV033.dump` and `ownership_prod_before_<stamp>.csv`.
+- **Step 0 (N12.2), owner-approved Docker smoke of both stages from v1.6.0.** This is the first scanner image deployed since 1.4.1. `deploy_scanner_nightly.sh --dry-run --keep-stage <dir>` (`Dockerfile.scanner`), built and run against local PG at V033: with `SCAN_FLEET` unset it prints idle; with `SCAN_FLEET=1` and a closed window it prints "outside run window"; with `SCAN_DEALERS=<1 dealer>` against a scratch DB it completes. `deploy_web.sh --dry-run --keep-stage <dir>`: health 200 with the tag.
 - Set `SCAN_FLEET_WINDOW_UTC`, `SCANNER_RECONCILE=dry` and `SCANNER_EGRESS_TAG=railway` on scanner-nightly with `--skip-deploys` (dry until N12.7, so the P6B.4 smoke writes no strike), apply the N4.1 scanner-nightly settings pack if it was not applied earlier, confirm `SCAN_FLEET=0` and no `SCAN_DEALERS`, then run `deploy_scanner_nightly.sh` (dry run, then real). `INVENTORY_DATABASE_URL` stays on the private network.
 - Confirm `BUILD_COMMIT` in the idle hold (`railway ssh`), or from the build log if SSH is blocked.
 - **N12.3 redeploy test.** Stage `SCAN_FLEET=1` and `SCAN_FLEET_WINDOW_UTC` at least 2 h from now, both with `--skip-deploys`. The owner stands ready with `railway down -s scanner-nightly -y` (a misconfigured window would start a full fleet before the P6B.2 recipe repairs). `railway redeploy -s scanner-nightly -y`, then expect "fleet outside run window" in the log within 2 min. Afterwards `SCAN_FLEET=0` with `--skip-deploys`. (With `SCAN_FLEET=0` a redeploy idles whatever the window, so that would prove nothing.)
@@ -3129,7 +3131,7 @@ Every remaining remediation unit not placed unconditionally in a phase is listed
 | P5B.8, P5B.9 | Moved to N11 | Local repair rehearsal and docs travel with the rehearsal |
 | P6A.1-P6A.7 (6A as a phase) | Moved to N10 | The N12 cron and bridge need them |
 | P6A.3 as written (default 72 h, gap cover from the oldest owner) | Replaced by P6A.3' | A longer window entrenches first-writer misattribution under nightly rescans. Gap cover applies only to owners with a persisted strong tier; the default stays 48 h |
-| P6B.1 as one unit | Split | N12.1/N12.2 apply V028-V030 and deploy v1.6.0 idle |
+| P6B.1 as one unit | Split | N12.1/N12.2 apply the migrations through V033 and deploy v1.6.0 idle |
 | P11A.1-P11A.4 placement in 11A | Moved to N10 | Per-dealer locks must exist before a second host writes prod (Phase 15A gate; N12 bridge) |
 | P14A.9 recipe CAS PG test | Moved to N13 | Needs P7.1 |
 | P15B.1, P15B.6 | Moved to N3 and N4 | Security advisory (lxml PYSEC-2026-87); dead deploy files |
