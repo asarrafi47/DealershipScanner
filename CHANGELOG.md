@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [1.5.14] - 2026-11-03
+
 ### N29 (Dockerfiles and requirements)
 - Requirements split per image: requirements-web.txt (web image, no Playwright), requirements-browser.txt (Playwright, discovery/dev), requirements.txt now includes both; every Dockerfile copies requirements*.txt (P15B.2).
 - scripts/scanner_import_sweep.py gains --profile scanner|web|discovery (P15B.2).
