@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [1.5.15] - 2026-11-03
+
 ### N8 (rooftop evidence)
 - Fixed: DealerOn cosmos cards now stamp the per-car rooftop (DealerLocatedAtId / VehicleLocation / DealerLocatedAtCity,State) so the attribution gate refuses sister-lot cars on group sites (cleveland-nissan keeps only Cleveland; bentleycadillac page 1 keeps 0 of 24) (N8.1).
 - Fixed: Dealer.com ws-inv-data payloads route to the dealer_dot_com parser whatever the recipe's provider_hint says, the generic JSON parser no longer claims them, and recipes tagged unknown with a ws-inv-data URL are retagged at load, so accountId rooftop evidence is no longer lost (N8.2).
