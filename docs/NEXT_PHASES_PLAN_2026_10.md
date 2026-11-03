@@ -2911,6 +2911,24 @@ Every remaining remediation unit not placed unconditionally in a phase is listed
 | D-OD12 brochure grid "P" marker | Deferred | Belongs to an enrichment follow-up |
 | `docker image prune` | Owner action | Section 6 item 14 |
 
+### N37 Postgres-only cleanup (release status only; no spec section in this plan)
+
+**Release status (1.5.16; draft merge 518ebd4ce, branch phase/N37 head 850c530a0).**
+
+| Unit | sha | Acceptance met | Deferred |
+|---|---|---|---|
+| N37.0 | a64c7d405 | test_no_sqlite guard plus shrink-only allowlist (regenerated on the 1.5.16 base: 813 entries) | none |
+| N37.1 | a64c7d405 | scripts/pg_test_up.sh ephemeral cluster, refuses prod names | clone-median measurement, pg_harness.py edit |
+| N37.9 | 850c530a0 | V029 admin_users (drafted as V035), pg backend behind DEV_USERS_DB_BACKEND, break-glass admin | cutover (N37.21), dev_users.db copier |
+| N37.11 | 6c2e4597b | in-process rate limiter, RATE_LIMIT_SQLITE_PATH removed | set GUNICORN_WORKERS=1 on Railway |
+| N37.12 | 6c2e4597b | dev job store process-local | none |
+| N37.13 | b8b8cab90 | scan lab on scratch PG cars_lab with DSN refusal | create and migrate cars_lab; rescan per D-PG7 |
+| N37.15 | ce9f0b5b6 | dead BMW/oem stores deleted | optional drop of existing bmw_*_embeddings tables |
+
+Not started: N37.2-N37.8, N37.10, N37.14, N37.16-N37.25.
+
+The allowlist predated SQLite constructs that N8 added, so it was regenerated on the release base with `python backend/tests/test_no_sqlite.py --write` (the guard is an exact snapshot). With `GUNICORN_WORKERS` above 1 the in-process rate limiter multiplies every limit by the worker count; prod runs 1.
+
 ## 9. Risks and open questions
 
 ### 9.1 Risks

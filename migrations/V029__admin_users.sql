@@ -1,4 +1,4 @@
--- V035__admin_users.sql
+-- V029__admin_users.sql
 --
 -- N37.9 (D-PG9): /dev operator accounts move from the SQLCipher dev_users.db to
 -- Postgres. Shape follows backend/db/admin_users_db.py; the dead mfa_method /

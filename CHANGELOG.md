@@ -2,6 +2,17 @@
 
 ## [Unreleased]
 
+### N37 (Postgres-only cleanup, first slice)
+- Tests: backend/tests/test_no_sqlite.py guards against new SQLite use. The existing offenders are frozen in sqlite_allowlist.txt, which can only shrink (N37.0).
+- Tooling: scripts/pg_test_up.sh starts an ephemeral unix-socket Postgres 18 cluster with pgvector for the pg test tier, runs a command against it, and refuses cars, cars_cleanroom, the 15432 tunnel and non-local targets (N37.1).
+- Migration V029: public.admin_users (case-insensitive unique username and email). admin_users_db.py gains a Postgres backend behind DEV_USERS_DB_BACKEND=pg (default sqlite). An env-seeded break-glass admin (ADMIN_USERNAME/ADMIN_PASSWORD) can log in on an empty table. save_dev_admin_user raises AdminUserExists on both backends (N37.9).
+- IP rate limiter is in-process only; RATE_LIMIT_SQLITE_PATH removed (module, docker entrypoint, k8s configmap, tests). With GUNICORN_WORKERS>1 (or unset, which defaults to 3) limits are per worker; production_security warns on that (N37.11).
+- Dev job/queue store is process-local only; DEV_JOB_STORE_SQLITE_PATH and the dev_job_store SQLite table removed (N37.12).
+- Scan lab runs on a scratch Postgres database (cars_lab, SCAN_LAB_DATABASE_URL); the SQLite lab file and SCAN_LAB_INVENTORY_DB_PATH are gone, and the lab refuses any DSN that names cars, cars_cleanroom, cars_cr_* or the inventory DSN. scan_lab_report gains --lab; scan_irvinebmw_test.sh refuses real inventory database names (N37.13).
+- Removed: dead SQLite stores backend/vector/bmw_store.py and backend/oem/vehicle_reference (no consumers); pgvector reindex_all no longer rebuilds the bmw_normalized/bmw_partial embedding tables and ensure_schema no longer creates them (N37.15).
+- **Deploy note.** The rate limiter is now in-process only and `scripts/docker-entrypoint-web.sh` no longer defaults `RATE_LIMIT_SQLITE_PATH`, so with `GUNICORN_WORKERS` above 1 every limit is multiplied by the worker count; prod runs `GUNICORN_WORKERS=1` (checked 2026-11-02). V029 creates `public.admin_users` and stays unused until `DEV_USERS_DB_BACKEND=pg` is set. `backend/tests/sqlite_allowlist.txt` is regenerated on this release base (`python backend/tests/test_no_sqlite.py --write`).
+
+
 ## [1.5.15] - 2026-11-03
 
 ### N8 (rooftop evidence)
