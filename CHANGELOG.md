@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [1.5.16] - 2026-11-03
+
 ### N37 (Postgres-only cleanup, first slice)
 - Tests: backend/tests/test_no_sqlite.py guards against new SQLite use. The existing offenders are frozen in sqlite_allowlist.txt, which can only shrink (N37.0).
 - Tooling: scripts/pg_test_up.sh starts an ephemeral unix-socket Postgres 18 cluster with pgvector for the pg test tier, runs a command against it, and refuses cars, cars_cleanroom, the 15432 tunnel and non-local targets (N37.1).
