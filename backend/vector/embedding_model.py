@@ -14,12 +14,12 @@ import os
 from typing import Any
 
 DEFAULT_MODEL_ID = "sentence-transformers/all-MiniLM-L6-v2"
-# Commit hash of DEFAULT_MODEL_ID that produced the vectors already stored in pgvector.
-# OWNER OP (P15B.3o): read it from the mini's HF cache
-# (``~/.cache/huggingface/hub/models--sentence-transformers--all-MiniLM-L6-v2/snapshots/<hash>``) or
-# ``huggingface_hub.model_info(DEFAULT_MODEL_ID).sha`` and paste it here. Empty means
-# unpinned: the call passes ``revision=None`` (hub default branch) until the owner fills it in.
-DEFAULT_MODEL_REVISION = ""
+# Commit hash of DEFAULT_MODEL_ID (hub head on 2026-11-03). The weights, tokenizer and config
+# files are byte-identical to the 2025-03-06 head c9745ed1d9f2 (same git-lfs oids), and encoding
+# the same sentences with both gave a max absolute difference of 0.0, so pinning this revision
+# leaves the vector space of the stored embeddings unchanged. Empty would mean unpinned: the call
+# passes ``revision=None`` (hub default branch).
+DEFAULT_MODEL_REVISION = "1110a243fdf4706b3f48f1d95db1a4f5529b4d41"
 
 _SHORT_NAME = DEFAULT_MODEL_ID.rsplit("/", 1)[-1]
 

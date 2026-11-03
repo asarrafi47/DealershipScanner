@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 import sys
 import types
 from pathlib import Path
@@ -103,3 +104,8 @@ def test_web_image_bakes_model_offline():
     # Offline flags come after the bake, or the bake itself could not download.
     assert body.index("snapshot_download") < body.index("HF_HUB_OFFLINE=1")
     assert body.index("embedding_model.py") < body.index("COPY . .")
+
+
+def test_default_model_revision_is_a_full_commit_hash():
+    # P15B.3o: pinned, so the baked snapshot and the stored vectors share one revision.
+    assert re.fullmatch(r"[0-9a-f]{40}", em.DEFAULT_MODEL_REVISION)

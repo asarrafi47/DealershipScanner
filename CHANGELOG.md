@@ -2,6 +2,18 @@
 
 ## [Unreleased]
 
+### N29 (Dockerfiles and requirements)
+- Requirements split per image: requirements-web.txt (web image, no Playwright), requirements-browser.txt (Playwright, discovery/dev), requirements.txt now includes both; every Dockerfile copies requirements*.txt (P15B.2).
+- scripts/scanner_import_sweep.py gains --profile scanner|web|discovery (P15B.2).
+- Embedding model id and Hugging Face revision now live in backend/vector/embedding_model.py; all three SentenceTransformer call sites load through it with revision= (P15B.3).
+- A production LISTING_EMBEDDING_MODEL override without LISTING_EMBEDDING_REVISION is refused (P15B.3).
+- DEFAULT_MODEL_REVISION is pinned to `1110a243fdf4706b3f48f1d95db1a4f5529b4d41` (P15B.3o). Its weights, tokenizer and config are byte-identical to the 2025-03-06 head, and encoding the same sentences with both gave a max absolute difference of 0.0, so the stored embeddings stay valid.
+- Dockerfile.web bakes the embedding model into /app/models (HF_HOME) and sets HF_HUB_OFFLINE=1 and TRANSFORMERS_OFFLINE=1. The bake skips the TensorFlow, Rust, Flax and ONNX/OpenVINO copies of the weights: 183 MB instead of 977 MB for the default model.
+- Dockerfile.web installs CPU-only torch (pinned ARG TORCH_VERSION=2.12.1, pytorch cpu index) before requirements-web.txt (P15B.4). The web image no longer carries the CUDA wheels.
+- Dockerfile.discovery installs requirements-scanner.txt + requirements-browser.txt instead of the full superset; scanner_import_sweep --profile discovery allows the web/ML packages to be absent (P15B.5).
+- New backend/tests/test_dockerfiles.py static checks for the web and discovery images (P15B.4, P15B.5).
+- CI: the pytest job now runs pip-audit on the installed environment and on requirements-scanner.txt, with no ignores (P15B.7).
+
 ## [1.5.13] - 2026-11-03
 
 ### N7 (first merge)

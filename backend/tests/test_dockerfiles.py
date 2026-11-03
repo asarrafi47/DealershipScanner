@@ -51,3 +51,13 @@ def test_discovery_keeps_browser_install_and_worker_env():
     assert re.search(r"^ENV SCANNER_WORKER_JOB_TYPES=onboard$", body, re.M)
     # The browser install comes after the pip install that provides the playwright CLI.
     assert body.index("playwright install chromium") > body.index("requirements-browser.txt")
+
+
+def test_web_model_bake_skips_the_bulk_weight_copies():
+    # all-MiniLM-L6-v2 is 977 MB with its TF/Rust/ONNX/OpenVINO copies and 183 MB without.
+    body = _instructions("Dockerfile.web")
+    m = re.search(r"snapshot_download\([^\n]*\)", body)
+    assert m, "model bake line missing"
+    for pattern in ("*.h5", "*.ot", "*.msgpack", "*.onnx", "onnx/*", "openvino/*"):
+        assert f"'{pattern}'" in m.group(0), pattern
+    assert "ignore_patterns" in m.group(0) and "revision=m.model_revision()" in m.group(0)

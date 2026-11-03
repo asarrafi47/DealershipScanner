@@ -37,9 +37,11 @@ RUN python -c "import pgeocode; pgeocode.Nominatim('us')" \
 # path here (the app is not copied yet) so the id and revision live in one place. HF_HOME is
 # world-readable for whatever user the entrypoint runs as. The offline flags are set after
 # the bake: from then on the cache is the only source, and a missing file fails loudly.
+# ignore_patterns skips the TensorFlow, Rust, Flax and ONNX/OpenVINO copies of the weights:
+# the default model's snapshot is 977 MB with them and 183 MB without (torch loads safetensors).
 ENV HF_HOME=/app/models
 COPY backend/vector/embedding_model.py /tmp/embedding_model.py
-RUN python -c "import importlib.util as u; s = u.spec_from_file_location('embedding_model', '/tmp/embedding_model.py'); m = u.module_from_spec(s); s.loader.exec_module(m); from huggingface_hub import snapshot_download; snapshot_download(m.model_id(), revision=m.model_revision())" \
+RUN python -c "import importlib.util as u; s = u.spec_from_file_location('embedding_model', '/tmp/embedding_model.py'); m = u.module_from_spec(s); s.loader.exec_module(m); from huggingface_hub import snapshot_download; snapshot_download(m.model_id(), revision=m.model_revision(), ignore_patterns=['*.h5', '*.ot', '*.msgpack', '*.onnx', '*.tflite', 'onnx/*', 'openvino/*'])" \
     && chmod -R a+rX /app/models && rm /tmp/embedding_model.py
 ENV HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1
 

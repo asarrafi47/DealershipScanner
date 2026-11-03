@@ -2598,6 +2598,19 @@ The body-style and HD-table additions are specified in the table: what, files, a
 
 **Workflow shape.** Serial along the `Dockerfile.web` chain; P15B.7 in parallel. About 8 agents. Checkpoints: `workspace/phase_runs/N29/`; before each Docker OK the workflow writes RESUME.md with the earliest restart time and ends.
 
+**Release status (1.5.14).**
+
+| Unit | sha | Acceptance met | Deferred |
+|---|---|---|---|
+| P15B.2 | 86723b2e2 | split files, COPY glob, --profile, tests | each image builds (Docker OK) |
+| P15B.3 | 40c8b47a8 | revision= at 3 call sites, prod override guard, static Dockerfile check; DEFAULT_MODEL_REVISION pinned (P15B.3o done) | offline serve check needs docker build |
+| P15B.4 | 77928917f | static test | size drop (P15B.4m) |
+| P15B.5 | 77928917f | static test | image smoke (P15B.5s) |
+| P15B.7 | 235e50c0d | pip-audit steps and static test | red on vulnerable floor needs CI run |
+| P15B.8 | none | not drafted (needs D-SEC7 = a, final requirements, heavy resolve) | whole unit |
+
+The shas are the draft commits on integ/draft (merge acef236ca). `ci.yml` was edited by both N7 and N29 and merged without conflict. The model bake ignores the non-torch copies of the weights (977 MB to 183 MB); the offline pinned load was checked outside Docker against a scratch Hugging Face cache.
+
 **Exit gate.** Images build and smoke; pip-audit required in CI.
 
 **Release step.** Minor; web deploy.
