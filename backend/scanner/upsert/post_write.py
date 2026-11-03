@@ -35,7 +35,7 @@ def resolve_car_ids(get_conn: Callable[[], Any], vins: list[str]) -> list[int]:
         for i in range(0, len(vins), _ID_CHUNK):
             chunk = vins[i : i + _ID_CHUNK]
             placeholders = ",".join("?" * len(chunk))
-            cur2.execute(f"SELECT id FROM cars WHERE vin IN ({placeholders})", chunk)
+            cur2.execute(f"SELECT id FROM cars WHERE vin IN ({placeholders}) ORDER BY id", chunk)
             for row_id in cur2.fetchall():
                 try:
                     car_ids.append(int(row_id[0]))

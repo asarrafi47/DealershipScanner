@@ -35,9 +35,7 @@ from backend.tests.pipeline_patch import patch_pipeline
 from backend.tests.test_cleanroom_shapes_2026_10 import (
     _CHAP,
     _COND_CODE,
-    _FEED_REASON,
     _FIVE,
-    _GUARD_REASON,
     _IDENT,
     _IDENTITY_REASON,
     _LIFECYCLE_REASON,
@@ -247,7 +245,6 @@ def test_lifecycle_retry_with_known_zero_baseline_retires_nothing(inv, log_root,
 
 # -- 6. VIN-owner guard: the owner depends on which store wrote first -----------
 
-@pytest.mark.xfail(strict=True, reason=_GUARD_REASON)
 def test_guard_scan_order_gives_the_same_owner(inv):
     """Postgres twin: both scan orders file every Chapman Dodge car under chapmandodge-com (D-N3)."""
     scans = _chapman_scans()
@@ -269,7 +266,6 @@ def test_guard_scan_order_gives_the_same_owner(inv):
 
 # -- 7. an unstamped group feed files sister and off-roster cars under the store -
 
-@pytest.mark.xfail(strict=True, reason=_FEED_REASON)
 def test_unstamped_group_feed_files_no_sister_or_offroster_cars_under_the_store(inv):
     """Postgres twin: only the 810 North Richland Hills cars are filed under 5starford-com, Dallas's own
     land under fivestarforddallas-com, and off-roster rooftops' cars are held (D-N4)."""

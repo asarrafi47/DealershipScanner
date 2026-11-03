@@ -1,4 +1,4 @@
-"""V030 (N8.6a): persisted rooftop tier + evidence record on ``cars``.
+"""V028 (N8.6a): persisted rooftop tier + evidence record on ``cars``.
 
 Static checks on the migration text, plus the SQLite runtime copy in
 ``schema_repo.ensure_cars_table_columns``. The PG apply path is exercised by the
@@ -13,11 +13,11 @@ from pathlib import Path
 
 from backend.db.repositories.schema_repo import ensure_cars_table_columns
 
-V030 = Path(__file__).resolve().parents[2] / "migrations" / "V030__rooftop_evidence_tier.sql"
+V028 = Path(__file__).resolve().parents[2] / "migrations" / "V028__rooftop_evidence_tier.sql"
 
 
 def _sql() -> str:
-    return re.sub(r"--[^\n]*", "", V030.read_text(encoding="utf-8"))
+    return re.sub(r"--[^\n]*", "", V028.read_text(encoding="utf-8"))
 
 
 def test_v030_adds_exactly_the_two_columns_additively():

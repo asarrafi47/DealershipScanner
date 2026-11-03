@@ -178,7 +178,7 @@ UPSERT_CARS_SQL = """
                     price_provenance_json=COALESCE(excluded.price_provenance_json, cars.price_provenance_json),
                     spin_frames=COALESCE(NULLIF(NULLIF(TRIM(excluded.spin_frames), ''), '[]'), cars.spin_frames),
                     interior_pano=COALESCE(NULLIF(TRIM(excluded.interior_pano), ''), cars.interior_pano),
-                    -- Evidence persisted for the ownership guard (V030, N8.6). Under the
+                    -- Evidence persisted for the ownership guard (V028, N8.6). Under the
                     -- same dealer the stronger of stored and incoming stands (a rescan of
                     -- an unstamped page must not forget an earlier stamp); a new owner
                     -- carries only its own evidence.

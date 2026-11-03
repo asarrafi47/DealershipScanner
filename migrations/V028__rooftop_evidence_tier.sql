@@ -1,4 +1,4 @@
--- V030__rooftop_evidence_tier.sql
+-- V028__rooftop_evidence_tier.sql
 --
 -- N8.6a (CF-4, WI-6): persist the rooftop attribution tier and a short evidence
 -- record per car. backend/attribution/rooftop.py computes both for every row

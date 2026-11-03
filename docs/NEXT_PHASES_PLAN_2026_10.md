@@ -1355,8 +1355,8 @@ P14A.9 (recipe CAS) moves to N13, because it needs P7.1.
 | P14A.5 | 63f37e5ac | adapted SQL plans and executes | none |
 | P14A.6 | 63f37e5ac | golden parity, zero divergences | P8B.1 NULL binding only sparse (N16) |
 | P14A.7 | 2b9740fbf | real 40P01/55P03, one VIN owner, 20/20 | CI repeat job (owner approval) |
-| P14A.8 | none | BLOCKED, builder returned nothing | whole unit |
-| N7.9 | none | BLOCKED, builder returned nothing | whole unit |
+| P14A.8 | 8573c1a56 | W1-W3 and portal retire path pinned, rowcounts asserted; 14 passed on local PG | none |
+| N7.9 | 8573c1a56 | N1.4 shapes on PG (strict xfails removed because N8.6 ships in 1.5.15) | none |
 
 The shas are the draft commits on integ/draft (merge 0037f5518). The release carries the audit-fix harness entries for the dealer_locator and vPIC caches, so `test_pg_harness.py::test_every_module_level_ready_flag_is_reset_or_reviewed` passes.
 
@@ -1555,6 +1555,30 @@ The shas are the draft commits on integ/draft (merge 0037f5518). The release car
 - Each code unit also runs a mini re-run of 3-10 dealers into `cars_cr_n8_<unit>` (MAIN, through the N1.3 scripts, on the unit's merged code) and records the numbers in its checkpoint.
 - About 30 agents.
 - Checkpoints: `workspace/phase_runs/N8/`; re-run state in its run dir (`fleet_scan --resume`, N9.15). Before the wait for N9's release, before the owner's repair-set and N8.12 OKs, and before N8.10 if the owner has not approved the `git switch`, the workflow writes RESUME.md with the earliest restart time and ends.
+
+**Release status (1.5.15; draft merge 0b3058214, branch phase/N8 head 6ad8d71c9).**
+
+| Unit | sha | Acceptance met | Deferred |
+|---|---|---|---|
+| N8.1 | e5b39584d | DealerOn per-car rooftop stamp; cleveland-nissan keeps 4 of 16, bentleycadillac 0 of 24 (fixtures) | N8.10 re-run counts |
+| N8.2 | e5b39584d | ws-inv-data routes to dealer_dot_com; 24/24 rows stamped (synthetic fixture); retag at load | N8.10 re-run counts |
+| N8.3 | 73971577b | Jazel accountName/_rooftop/colour swap, Chapman lot stamp, OneAudi cannot_assess | live re-run; Chapman store map (CAE/CAW) unconfirmed; Jazel swap unverified on a saved payload |
+| N8.4 | 48d9f3744 | Motive per-car stamp, shape routing, body mapping (fixtures) | Lexus split within 5%, trim >=95% (N8.10) |
+| N8.5 | f61d64bd3 | vdp_host_other_store, guessed-URL flag, weak-tier rule (with street-or-town deviation), identity-check tool | 12 shared endpoints listing, re-run counts; HOST_ALIASES empty |
+| N8.6a | 2b9d5a62d | V028 (rooftop_tier, rooftop_evidence; drafted as V030) and SQLite copy | PG apply of V028 (prod gets it in N12.2) |
+| N8.6b | a16ebd032 | evidence-aware guard and backstop, car_move_log, manual hold (SQLite); N1.4 scan-order shape passes | PG acceptance and race test (run in this release on the pg harness: V028 is in the chain); strike of third_rooftop/sibling refusals (P5A.5, with N9); group_pools.json pool entries |
+| N8.7 | b578a3d1a | ownership pre-check before prefetch, 403/429 per attempt, gap-first order (unit level) | N8.10 live check |
+| N8.8 | 73971577b | rooftop_of label chain, _feed_ccid, Location-facet union | 2309549 gate line, terrylabontechevy 13 cars, 5 FP01 dealers (saved payloads or live replay) |
+| N8.9a | 48d9f3744 | apply_recipe_repairs tool: dry run, backup, apply, verify, idempotent | repair content files; owner approves dry-run diff; no --restore; run import_recipes_to_db after apply |
+| N8.9b | none | SKIPPED, data_op (paced live fetches, owner approval) | whole unit |
+| N8.10 | none | SKIPPED, MAIN scan needing owner approval and N9.15 | whole unit |
+| N8.11 | 6326e2048 | DEP per-car _rooftop from location_id (parksidekia fixture: 8 of 48 kept) | N8.10 DEP pair drop; results-API path unstamped; feed_self_location tier in match.py/rooftop.py not applied |
+| N8.12 | none | SKIPPED, data_op (local DB apply needing owner OK after N8.6 merges) | whole unit |
+| N8.13 | b578a3d1a | unrostered-rooftop queue, CLI, fleet summary section | prefleet_check hook (P6A.7) |
+| N8.14 | 6ad8d71c9 | shared-host identity by dealer_id and registry id across roster, gate, upsert, search, dealership page, apply tool | N8.10 check of 22 AutoSavvy rows; PG case not run |
+
+The pg harness resets `backend.attribution.place._host_index_cache` (via `reset_host_owner_index`), so `test_every_module_level_ready_flag_is_reset_or_reviewed` passes. Not in this release: N8.9b, N8.10 and N8.12 (live fetches, the MAIN scan and the local DB apply need owner approval).
+
 
 **Exit gate.**
 - N8.10 targets met; reviewers passed.

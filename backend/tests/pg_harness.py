@@ -416,6 +416,7 @@ _SWEEP_REVIEWED: dict[str, str] = {
     "backend.db.repositories.grid_cards_repo._attr_cache": "reset by reset_grid_cards_state",
     "backend.db.repositories.grid_cards_repo._market_gen_cache": "reset by reset_grid_cards_state",
     "backend.db.repositories.grid_cards_repo._fallback_urls_cache": "reset by reset_grid_cards_state",
+    "backend.attribution.place._host_index_cache": "reset by reset_host_owner_index (_RESET_FUNCTIONS)",
     "backend.dev.scan_lab._SUMMARY_CACHE_TTL_S": "constant",
     "backend.dev.scan_lab._summary_cache": "dev page, 45 s TTL, reads files",
     "backend.db.repositories.listings_repo._facet_options_cache_token": "reset by clear_inventory_listings_cache",
@@ -539,6 +540,7 @@ _RESET_FUNCTIONS: tuple[tuple[str, str], ...] = (
     ("backend.db.repositories.listings_repo", "_clear_grid_serialize_memo"),
     ("backend.utils.query_parser", "clear_query_parser_caches"),
     ("backend.enrichment.knowledge_engine", "clear_vpic_lookup_cache"),
+    ("backend.attribution.place", "reset_host_owner_index"),  # registry host index (N8)
 )
 
 
