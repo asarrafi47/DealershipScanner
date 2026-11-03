@@ -91,6 +91,7 @@ DECLARED_NOT_IMPORTED: dict[str, str] = {
     "idna": "security floor (SEC-076): requests, httpx, anyio and yarl require it",
     "pygments": "security floor (SEC-076): rich (transformers -> typer) and pytest require it",
     "lxml": "requirements-scanner.txt floor >=6.1.0 (PYSEC-2026-87); every BeautifulSoup call names html.parser",
+    "setuptools": "security floor >=78.1.1 (PYSEC-2025-49); torch requires it (capped <82), nothing here imports it",
 }
 
 # D-DEP1 orphans that P15B.1 removed (2026-10-18): nothing imports them, and
@@ -639,18 +640,59 @@ def _ci_pytest_runs() -> list[str]:
     return [s["run"] for s in wf["jobs"]["pytest"]["steps"] if "run" in s]
 
 
-def test_ci_pytest_job_runs_pip_audit_after_install_without_ignores():
+# Advisories the CI environment audit ignores, by id. The rule stays "a finding is fixed by raising
+# the floor": an entry is allowed only when no floor can fix it. Both fixes (setuptools 83.0.0 and
+# 84.1.0) are blocked by torch's ``setuptools<82`` requirement, and neither advisory applies to
+# Linux CI or the Linux images. Drop an entry once torch lifts its cap; every id used in ci.yml must
+# be listed here and every entry must still be used.
+AUDIT_IGNORES: dict[str, str] = {
+    "PYSEC-2026-3447": "setuptools <83.0.0: sdist MANIFEST.in exclusion bypass on macOS file systems (build time)",
+    "GHSA-xmj3-9gf7-h52w": "setuptools <84.1.0: Windows-only path escape in legacy wheel install",
+}
+
+
+def _audit_ignored_ids(run: str) -> list[str]:
+    tokens = run.split()
+    return [tokens[i + 1] for i, t in enumerate(tokens[:-1]) if t == "--ignore-vuln"]
+
+
+def _is_audit_run(run: str) -> bool:
+    return run.split()[:1] == ["pip-audit"]
+
+
+def test_ci_pytest_job_runs_pip_audit_after_install_with_only_the_named_ignores():
     runs = _ci_pytest_runs()
     install = next(i for i, r in enumerate(runs) if "-r requirements.txt" in r)
-    env_audit = [i for i, r in enumerate(runs) if r.split() == ["pip-audit"]]
-    scanner_audit = [
-        i for i, r in enumerate(runs) if r.split() == ["pip-audit", "-r", "requirements-scanner.txt"]
-    ]
+    audits = [(i, r) for i, r in enumerate(runs) if _is_audit_run(r)]
+    env_audit = [i for i, r in audits if "-r" not in r.split()]
+    scanner_audit = [i for i, r in audits if r.split()[-2:] == ["-r", "requirements-scanner.txt"]]
     assert env_audit and scanner_audit, runs
     assert min(env_audit + scanner_audit) > install
-    for r in runs:
-        if "pip-audit" in r and "pip install" not in r:
-            assert "--ignore-vuln" not in r and "--ignore" not in r, r
+    for _i, r in audits:
+        # every ignore is the named form, and the scanner audit ignores nothing
+        assert "--ignore " not in r + " " and "--ignore=" not in r, r
+        assert all(vid in AUDIT_IGNORES for vid in _audit_ignored_ids(r)), r
+        if "-r" in r.split():
+            assert not _audit_ignored_ids(r), r
+
+
+def test_audit_ignores_are_exactly_the_ones_ci_uses():
+    used = {vid for r in _ci_pytest_runs() if _is_audit_run(r) for vid in _audit_ignored_ids(r)}
+    assert used == set(AUDIT_IGNORES), f"ci.yml ignores {sorted(used)}; AUDIT_IGNORES lists {sorted(AUDIT_IGNORES)}"
+
+
+def test_setuptools_floor_closes_the_one_fixable_advisory():
+    # PYSEC-2025-49 is fixed in 78.1.1, inside torch's <82 cap, so it gets a floor, not an ignore.
+    line = declared_distributions().get("setuptools")
+    assert line is not None, "setuptools floor missing from requirements-web.txt"
+    assert (_floor(line) or (0,)) >= _release("78.1.1"), line
+
+
+def test_audit_ignore_helpers():
+    assert _audit_ignored_ids("pip-audit --ignore-vuln A-1 --ignore-vuln B-2") == ["A-1", "B-2"]
+    assert _audit_ignored_ids("pip-audit") == []
+    assert _is_audit_run("pip-audit -r requirements-scanner.txt")
+    assert not _is_audit_run("pip install pip-audit==2.9.0")
 
 
 def test_pip_audit_is_pinned_in_ci_and_not_in_any_requirements_file():

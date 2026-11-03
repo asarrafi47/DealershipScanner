@@ -12,7 +12,7 @@
 - Dockerfile.web installs CPU-only torch (pinned ARG TORCH_VERSION=2.12.1, pytorch cpu index) before requirements-web.txt (P15B.4). The web image no longer carries the CUDA wheels.
 - Dockerfile.discovery installs requirements-scanner.txt + requirements-browser.txt instead of the full superset; scanner_import_sweep --profile discovery allows the web/ML packages to be absent (P15B.5).
 - New backend/tests/test_dockerfiles.py static checks for the web and discovery images (P15B.4, P15B.5).
-- CI: the pytest job now runs pip-audit on the installed environment and on requirements-scanner.txt, with no ignores (P15B.7).
+- CI: the pytest job now runs pip-audit on the installed environment and on requirements-scanner.txt (P15B.7). Its first run found setuptools 78.1.0 on the runner: requirements-web.txt gains a `setuptools>=78.1.1` floor (PYSEC-2025-49, a PackageIndex path traversal). Two later setuptools advisories, PYSEC-2026-3447 (macOS sdist MANIFEST.in exclusion) and GHSA-xmj3-9gf7-h52w (Windows-only legacy wheel install), need setuptools 83.0.0 and 84.1.0, which torch's `setuptools<82` requirement rules out, so the environment audit ignores those two ids and nothing else. `AUDIT_IGNORES` in test_requirements_hygiene.py pins the list; drop the ids once torch lifts its cap.
 
 ## [1.5.13] - 2026-11-03
 

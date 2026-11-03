@@ -2606,7 +2606,7 @@ The body-style and HD-table additions are specified in the table: what, files, a
 | P15B.3 | 40c8b47a8 | revision= at 3 call sites, prod override guard, static Dockerfile check; DEFAULT_MODEL_REVISION pinned (P15B.3o done) | offline serve check needs docker build |
 | P15B.4 | 77928917f | static test | size drop (P15B.4m) |
 | P15B.5 | 77928917f | static test | image smoke (P15B.5s) |
-| P15B.7 | 235e50c0d | pip-audit steps and static test | red on vulnerable floor needs CI run |
+| P15B.7 | 235e50c0d | pip-audit steps and static test; first CI run red on setuptools, fixed by a 78.1.1 floor plus two named ignores (torch caps setuptools below 82) | drop the ignores when torch lifts the cap |
 | P15B.8 | none | not drafted (needs D-SEC7 = a, final requirements, heavy resolve) | whole unit |
 
 The shas are the draft commits on integ/draft (merge acef236ca). `ci.yml` was edited by both N7 and N29 and merged without conflict. The model bake ignores the non-torch copies of the weights (977 MB to 183 MB); the offline pinned load was checked outside Docker against a scratch Hugging Face cache.

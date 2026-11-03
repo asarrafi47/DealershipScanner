@@ -79,8 +79,9 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt -r requirements-test.txt
 
-      # P15B.7 (security-17): known-vulnerable pins fail the build. No ignore
-      # flags: a finding is fixed by raising the floor, not waved through.
+      # P15B.7 (security-17): known-vulnerable pins fail the build. A finding is
+      # fixed by raising the floor, not waved through; the only ignores are the
+      # two named below, which no floor can fix.
       # The environment audit covers what the job just installed (web side);
       # the scanner file is a light -r audit, because a separate job would
       # rebuild torch for nothing. pip-audit is installed AFTER the project
@@ -90,8 +91,14 @@ jobs:
       - name: Install pip-audit
         run: pip install pip-audit==2.9.0
 
+      # Two setuptools advisories are ignored by id, because torch requires
+      # setuptools<82 and their fixes are 83.0.0 and 84.1.0: PYSEC-2026-3447
+      # (sdist MANIFEST.in exclusion on macOS file systems, a build-time issue)
+      # and GHSA-xmj3-9gf7-h52w (Windows-only legacy wheel install path). Neither
+      # applies to Linux CI or the Linux images. Drop the ids once torch lifts
+      # its cap; AUDIT_IGNORES in test_requirements_hygiene.py pins this list.
       - name: Audit installed packages
-        run: pip-audit
+        run: pip-audit --ignore-vuln PYSEC-2026-3447 --ignore-vuln GHSA-xmj3-9gf7-h52w
 
       - name: Audit scanner requirements
         run: pip-audit -r requirements-scanner.txt

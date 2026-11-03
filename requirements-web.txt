@@ -46,4 +46,8 @@ sqlcipher3>=0.5.4
 urllib3>=2.7.0
 idna>=3.15
 pygments>=2.20.0
+# setuptools (torch requires it, and caps it below 82): the 78.1.1 floor closes PYSEC-2025-49 (PackageIndex
+# path traversal). The two later advisories need 83.0.0 / 84.1.0, which torch's cap rules out; CI ignores
+# them by id (see .github/workflows/ci.yml and AUDIT_IGNORES in backend/tests/test_requirements_hygiene.py).
+setuptools>=78.1.1
 curl_cffi>=0.7  # TLS-fingerprint impersonation: clears the Cloudflare 403 that blocks 112 rooftops
