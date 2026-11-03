@@ -1344,6 +1344,22 @@ P14A.9 (recipe CAS) moves to N13, because it needs P7.1.
 - About 14 agents.
 - Checkpoints: `workspace/phase_runs/N7/`; before the owner's ruleset-context PUT the workflow writes RESUME.md with the earliest restart time and ends.
 
+**Release status (1.5.13, first merge).**
+
+| Unit | sha | Acceptance met | Deferred |
+|---|---|---|---|
+| P14A.1 | 733f11c32 | harness, guards, no-DSN counted skip, REQUIRE_PG, isolation; clone+drop 0.314 s | none |
+| P14A.2 | 53cb18036 | seed helpers | none |
+| P14A.3 | 53cb18036 | ci.yml `pytest-pg` job in code | CI green / 8 min / broken migration red need a push; owner ruleset context PUT |
+| P14A.4 | 3366fb507 | parity, migrate and DQ tests on pg harness | none |
+| P14A.5 | 63f37e5ac | adapted SQL plans and executes | none |
+| P14A.6 | 63f37e5ac | golden parity, zero divergences | P8B.1 NULL binding only sparse (N16) |
+| P14A.7 | 2b9740fbf | real 40P01/55P03, one VIN owner, 20/20 | CI repeat job (owner approval) |
+| P14A.8 | none | BLOCKED, builder returned nothing | whole unit |
+| N7.9 | none | BLOCKED, builder returned nothing | whole unit |
+
+The shas are the draft commits on integ/draft (merge 0037f5518). The release carries the audit-fix harness entries for the dealer_locator and vPIC caches, so `test_pg_harness.py::test_every_module_level_ready_flag_is_reset_or_reviewed` passes.
+
 **Exit gate.**
 - CI `pytest-pg` green on `phase/N7`.
 - `gh api repos/asarrafi47/DealershipScanner/rules/branches/main` lists `pytest-pg`.

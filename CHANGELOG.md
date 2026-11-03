@@ -2,6 +2,19 @@
 
 ## [Unreleased]
 
+### N7 (first merge)
+- Test infrastructure: Postgres test tier (pg marker, backend/tests/pg_harness.py). Each pg test gets a throwaway database cloned (STRATEGY WAL_LOG) from a template built by the migration chain; TEST_PG_ADMIN_DSN is the only input and the harness refuses cars, cars_cleanroom, Railway hosts, non-local hosts and port 15432 (P14A.1).
+- pytest.ini registers the pg marker and enables --strict-markers (P14A.1).
+- conftest: pg_template (session) and pg_db (function) fixtures; the no-DSN skip is counted and REQUIRE_PG=1 turns it into a failure (P14A.1).
+- CI: the `pytest-pg` job replaces `pytest-integration`. It runs `-m pg` against a pgvector 0.8.1 / Postgres 18 service container with REQUIRE_PG=1, fails if nothing is collected, and uploads reports/pg.xml. The `integration` marker stays but no CI job runs it. The required-check context on main changes to `pytest-pg` (P14A.3).
+- Tests: pg_harness seed helpers add_dealerships, add_dealer_geopoints, add_dealer_catalog, add_jobs and add_recipes (P14A.2).
+- Tests: the live-Postgres schema parity, migrate lock and record-only tests and the seeded data-quality regression now run on the pg harness; new pg tests prove migrate --apply reaches the chain head, reruns are idempotent, edited applied files exit 1 with CHECKSUM DRIFT, and V001's search_path reset does not break later files (P14A.4).
+- Tests: Postgres tier executes the adapted UPSERT_CARS_SQL and one statement per adapter rule on a migration-built database (P14A.5).
+- Tests: upsert_vehicles golden replays on Postgres with zero divergences from the SQLite golden, plus test_upsert_pg.py write-path cases (P14A.6).
+- Tests: Postgres concurrency tests for InventoryWriteCoordinator (real deadlock and lock_timeout retries, VIN-owner backstop single owner) in test_inventory_write_pg.py (P14A.7).
+- Tests: the pg harness's module-level flag sweep reviews the dealer_locator Google cache globals, and resets the vPIC `_cached_hit` and `family_trim_count` caches between pg tests.
+- Release note: CI's required-check context on main moves from `pytest-integration` to `pytest-pg`. If a GitHub ruleset requires the old name, update it before opening PRs to main.
+
 ## [1.5.12] - 2026-11-02
 
 ### Audit fixes 2026-10-26
