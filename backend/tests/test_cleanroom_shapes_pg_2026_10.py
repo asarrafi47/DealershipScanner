@@ -379,12 +379,6 @@ def test_triage_identity_replay_rows_written_equals_active(inv, monkeypatch):
 
 # -- 9. the SQL backstop under two concurrent connections ------------------------
 
-_BACKSTOP_REASON = (
-    "defect: the SQL backstop (upsert/sql.py:150-155) lets the row's current owner stand against any claimant "
-    "inside the guard window, whatever evidence the claimant has: a claimant whose feed stamps its own rooftop "
-    "loses the VIN to an unstamped owner that wrote moments earlier on another connection; fixed by N8.6 "
-    "(V029 persisted rooftop tier, evidence-aware guard and backstop, D-N3)"
-)
 _VIN = "1N4BL4DV0PN300001"
 
 
@@ -397,7 +391,6 @@ def _claim(dealer_id: str, **fields) -> dict[str, Any]:
     return row
 
 
-@pytest.mark.xfail(strict=True, reason=_BACKSTOP_REASON)
 def test_backstop_evidence_claimant_beats_unstamped_owner_on_concurrent_connections(inv, monkeypatch):
     """Two writers read 'no owner' before either writes (both prefetches meet at a barrier), so the SQL
     backstop alone decides. The unstamped store writes and commits first; the store whose own feed names
@@ -416,7 +409,9 @@ def test_backstop_evidence_claimant_beats_unstamped_owner_on_concurrent_connecti
         return result
 
     monkeypatch.setattr(sdb, "prefetch_existing", prefetch_then_meet)
-    stamped = _claim("stamped-store", _rooftop={"key": "acct-1", "name": "Stamped Store", "site": "https://stamped-store.example.test"})
+    # The attribution gate stamps the tier on rows it keeps (N8.6b); the upsert only reads it.
+    stamped = _claim("stamped-store", _rooftop={"key": "acct-1", "name": "Stamped Store", "site": "https://stamped-store.example.test"},
+                     _rooftop_evidence_tier="strong", _rooftop_evidence={"feed": "stamped-store", "key": "acct-1"})
 
     async def run():
         co = iw.InventoryWriteCoordinator()

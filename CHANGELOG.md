@@ -27,9 +27,13 @@
 - The upsert no longer lets an unstamped bare-host write replace a shared-host store's page URL; the geo index drops the host: key of a shared host; radius ranking, search radius and market-price comps place a car by its registry row before its dealer_url host. /dealership/<id> resolves each shared-host store to its own address and inventory; apply_attribution_moves files a move under the destination row's own dealer_id on a shared host; apply_recipe_repairs matches registry rows by host plus street or store page, never host alone (N8.14).
 - Tests: removed the strict xfail on test_unstamped_group_feed_files_no_sister_or_offroster_cars_under_the_store (Jazel group feed), which N8.3 now fixes.
 
+- Scanner: `post_write.resolve_car_ids` orders by id, so the spec-backfill call order is deterministic on Postgres (heap order moved updated rows and flipped the PG twin of the upsert golden).
+- Tests: the pg harness resets `attribution.place._host_index_cache` (via `reset_host_owner_index`) between pg tests.
+- **Deploy note.** The scanner upsert reads and writes `cars.rooftop_tier` and `cars.rooftop_evidence` unconditionally, so any scanner or web process running this release against a database without V028 fails every upsert (`column "rooftop_tier" does not exist`). Web applies pending migrations at boot (`MIGRATE_ON_BOOT=1`), which for prod means V026, V027 and V028 together; apply them first with a dump and `migrate --dry-run --target 28` (docs/RELEASING.md). Do not restart scanner-nightly from this release before N12.2.
+
 ### N7 (second merge)
 - Tests: Postgres tests pin the reconcile/retire write paths (W1-W3 and the portal retire path) with rowcounts asserted (P14A.8).
-- Tests: Postgres versions of the clean-room failure shapes (N7.9). They were written as strict xfails to flip when N8.6 lands; N8.6 is in this release, so the markers are removed and the tests run (the feed and guard reasons import is gone with them).
+- Tests: Postgres versions of the clean-room failure shapes (N7.9). They were written as strict xfails to flip when N8.6 lands; N8.6 is in this release, so the guard and feed markers are removed and the tests run (the feed and guard reasons import is gone with them). The concurrent-connection backstop test now gives the claimant the strong tier the attribution gate would stamp (the N7.9 draft gave it only `_rooftop`, which the upsert reads no tier from), loses its xfail, and passes: the ON CONFLICT backstop hands the VIN to the evidence-backed claimant under two real connections on Postgres.
 
 ## [1.5.14] - 2026-11-03
 

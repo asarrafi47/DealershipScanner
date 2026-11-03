@@ -20,7 +20,7 @@ def _sql() -> str:
     return re.sub(r"--[^\n]*", "", V028.read_text(encoding="utf-8"))
 
 
-def test_v030_adds_exactly_the_two_columns_additively():
+def test_v028_adds_exactly_the_two_columns_additively():
     sql = _sql().lower()
     stmts = [s.strip() for s in sql.split(";") if s.strip()]
     assert len(stmts) == 2
