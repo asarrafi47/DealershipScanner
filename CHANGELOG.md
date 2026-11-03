@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [1.5.13] - 2026-11-03
+
 ### N7 (first merge)
 - Test infrastructure: Postgres test tier (pg marker, backend/tests/pg_harness.py). Each pg test gets a throwaway database cloned (STRATEGY WAL_LOG) from a template built by the migration chain; TEST_PG_ADMIN_DSN is the only input and the harness refuses cars, cars_cleanroom, Railway hosts, non-local hosts and port 15432 (P14A.1).
 - pytest.ini registers the pg marker and enables --strict-markers (P14A.1).
