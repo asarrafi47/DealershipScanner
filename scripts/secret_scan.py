@@ -352,7 +352,9 @@ def _short(text: str) -> str:
         return f"{text[:6]}...{text[-3:]}"
     if len(text) >= 12:
         return f"{text[:3]}..."
-    return f"{text[:1]}..."
+    if len(text) >= 4:
+        return f"{text[:1]}..."
+    return "..."
 
 
 def mask_emails(text: str) -> str:

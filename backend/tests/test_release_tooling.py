@@ -2,9 +2,11 @@
 
 Everything runs against throwaway git repositories under ``tmp_path``: a work
 clone holding copies of the real ``scripts/bump_version.sh``,
-``scripts/git-hooks/pre-push`` and ``scripts/release_guard.py`` (the layout the
-real repo has, so the hook finds the guard the same way), plus a bare
-"origin" reached over ``file://``. No network, no real remote.
+``scripts/git-hooks/pre-push``, ``scripts/release_guard.py`` and
+``scripts/secret_scan.py`` (the layout the real repo has, so the hook finds the
+guard and the secret scan the same way; the hook refuses a push when the scan
+is missing), plus a bare "origin" reached over ``file://``. No network, no real
+remote. The secret scan itself is covered by backend/tests/test_secret_scan.py.
 
 git runs with an empty global/system config (``GIT_CONFIG_GLOBAL=/dev/null``,
 ``GIT_CONFIG_NOSYSTEM=1``) and a local ``user.name``/``user.email``: the CI
@@ -48,6 +50,7 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 BUMP = REPO_ROOT / "scripts" / "bump_version.sh"
 HOOK = REPO_ROOT / "scripts" / "git-hooks" / "pre-push"
 GUARD = REPO_ROOT / "scripts" / "release_guard.py"
+SECRET_SCAN = REPO_ROOT / "scripts" / "secret_scan.py"
 CI_YML = REPO_ROOT / ".github" / "workflows" / "ci.yml"
 
 ZERO = "0" * 40
@@ -155,6 +158,7 @@ def init_repo(path: Path, env: dict, version: str = "1.5.3", notes: str = "- Fir
     shutil.copy2(BUMP, path / "scripts" / "bump_version.sh")
     shutil.copy2(HOOK, path / "scripts" / "git-hooks" / "pre-push")
     shutil.copy2(GUARD, path / "scripts" / "release_guard.py")
+    shutil.copy2(SECRET_SCAN, path / "scripts" / "secret_scan.py")
     repo.commit(
         "initial",
         {
