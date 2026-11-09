@@ -9,7 +9,8 @@ name: CI
 # backend/tests/test_ci_workflow.py pins the triggers, permissions, job ids,
 # `needs: lint`, timeouts, install order and the offline selection. Change both
 # together. The release-guard job (P2A.4) runs only for pushes and PRs to main;
-# backend/tests/test_release_tooling.py pins it.
+# backend/tests/test_release_tooling.py pins it. The secret-scan job runs on
+# every event; backend/tests/test_secret_scan.py pins it.
 on:
   push:
     branches: ["**"]
@@ -253,3 +254,58 @@ jobs:
             git fetch --no-tags --depth=1 origin "$base"
           fi
           python3 scripts/release_guard.py --base "$base"
+
+  # Secret scan: scripts/secret_scan.py, the same scanner the pre-push hook runs
+  # for every pushed ref, on what this event publishes. It refuses provider keys,
+  # private keys, JWTs, password hashes, password-bearing DB URLs, secret
+  # assignments and sensitive paths (SQLite files, workspace/, HAR, env files),
+  # minus the fixtures in scripts/secret_scan_allowlist.txt. It runs on every
+  # event (no `if:`), so a `git push --no-verify` past the hook still goes red
+  # here. Not a required check yet: the owner adds `secret-scan` to the main
+  # ruleset when ready.
+  #
+  # The range is what the event adds:
+  #   - pull_request: the PR's own commits, base.sha..head.sha;
+  #   - push: github.event.before..github.sha. A new branch (before is all
+  #     zeros) or a force push whose old tip cannot be fetched any more is
+  #     scanned as origin/main..github.sha, a superset of what it publishes;
+  #   - workflow_dispatch: the whole tree (--all).
+  # The checkout is the full history without blobs (fetch-depth 0, filter
+  # blob:none): commits and trees for the range, the checked-out tree's blobs,
+  # and every other blob fetched on demand. A blob that cannot be read fails the
+  # job (exit 2); it is never skipped. python3 is the runner's own: the script
+  # is stdlib-only and 3.9-compatible.
+  #
+  # backend/tests/test_secret_scan.py pins this job (id, no if/needs, checkout,
+  # range selection) and replays its run step. Change both together.
+  secret-scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          filter: blob:none
+
+      - name: Scan what this push or pull request adds
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BEFORE_SHA: ${{ github.event.before }}
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          zero=0000000000000000000000000000000000000000
+          case "$EVENT_NAME" in
+            pull_request)
+              python3 scripts/secret_scan.py --range "$PR_BASE_SHA..$PR_HEAD_SHA" ;;
+            push)
+              if [ -n "$BEFORE_SHA" ] && [ "$BEFORE_SHA" != "$zero" ] && {
+                git cat-file -e "$BEFORE_SHA^{commit}" 2>/dev/null ||
+                git fetch --no-tags -q origin "$BEFORE_SHA"; }; then
+                python3 scripts/secret_scan.py --range "$BEFORE_SHA..$GITHUB_SHA"
+              else
+                python3 scripts/secret_scan.py --range "origin/main..$GITHUB_SHA"
+              fi ;;
+            *)
+              python3 scripts/secret_scan.py --all ;;
+          esac

@@ -11,14 +11,49 @@
 # is the sha the remote itself reported for main ($remote_sha), never the local
 # origin/main, which may be stale. CI's release-guard job runs the same script.
 #
+# Every pushed ref, main and tags included, first gets the secret scan:
+# scripts/secret_scan.py --range <remote sha>..<local sha> refuses when a blob
+# the pushed commits add holds a provider key, a private key, a JWT, a password
+# hash, a database URL with a real password or a secret assignment, when it
+# holds a value of this clone's own .env files (--local-env), or when its path
+# is a SQLite file, a run artifact under workspace/, a HAR, an env file, a key
+# or credential file, a dump or a bundle. A new ref, or a remote sha this clone
+# has not fetched, is scanned as "the commits on no remote-tracking ref".
+# Deletions publish nothing and are skipped. Benign fixtures are allowlisted in
+# scripts/secret_scan_allowlist.txt. CI's secret-scan job scans the pushed range
+# again.
+#
+# git push --no-verify is the only bypass, and it skips every check in this hook.
+#
 # Install once per clone:  git config core.hooksPath scripts/git-hooks
 # Bump:                     scripts/bump_version.sh patch|minor|major
 remote="$1"
 zero=0000000000000000000000000000000000000000
-guard="$(git rev-parse --show-toplevel 2>/dev/null)/scripts/release_guard.py"
+top="$(git rev-parse --show-toplevel 2>/dev/null)"
+guard="$top/scripts/release_guard.py"
+scan="$top/scripts/secret_scan.py"
 
 while read -r local_ref local_sha remote_ref remote_sha; do
   [ "$local_sha" = "$zero" ] && continue            # deleting a remote ref
+
+  # Secret scan, for every ref that publishes commits.
+  if ! command -v python3 >/dev/null 2>&1; then
+    echo "pre-push: python3 not found; cannot run $scan." >&2
+    exit 1
+  fi
+  if [ ! -f "$scan" ]; then
+    echo "pre-push: $scan is missing; refusing the push." >&2
+    exit 1
+  fi
+  old="$remote_sha"
+  if [ "$old" != "$zero" ] && ! git cat-file -e "$old^{commit}" 2>/dev/null; then
+    old="$zero"                                     # remote moved since our last fetch
+  fi
+  # </dev/null: the ref list on stdin belongs to this loop, not to the scan.
+  if ! python3 "$scan" --range "$old..$local_sha" --local-env </dev/null; then
+    echo "pre-push: refused the push of $local_ref to $remote (secret scan above)." >&2
+    exit 1
+  fi
 
   # Main: VERSION must rise and CHANGELOG.md needs the section. Checked before
   # the tag skip, so `git push origin <tag>:main` is judged too.
