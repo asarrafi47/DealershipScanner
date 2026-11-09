@@ -571,7 +571,7 @@ def read_blobs(shas: Iterable[str]) -> Iterator[Tuple[str, Optional[bytes]]]:
 # --- env values -------------------------------------------------------------------------
 
 _ENV_SECRET_KEY = re.compile(
-    r"(?i)secret|token|passw|pwd|api_?key|private_?key|access_?key|signing_?key|encryption_?key|credential|dsn"
+    r"(?i)secret|token|passw|pwd|api_?key|private_?key|access_?key|signing_?key|encryption_?key|credential"
     r"|salt|pepper"
 )
 
@@ -605,7 +605,9 @@ def load_env_values(paths: Sequence[str]) -> List[Tuple[str, bytes]]:
             elif b" #" in val:  # an inline comment after an unquoted value
                 val = val.split(b" #", 1)[0].rstrip()
             name = key.decode("utf-8", "replace")
-            url_with_password = b"://" in val and b"@" in val.split(b"://", 1)[1].split(b"/", 1)[0]
+            # user:password@ in the authority; a bare user@ (a Sentry DSN's public key) is not one.
+            authority = val.split(b"://", 1)[1].split(b"/", 1)[0] if b"://" in val else b""
+            url_with_password = b"@" in authority and b":" in authority.rsplit(b"@", 1)[0]
             if not (_ENV_SECRET_KEY.search(name) or url_with_password):
                 continue
             if len(val) < 12 or val.isdigit() or template_value(val):
