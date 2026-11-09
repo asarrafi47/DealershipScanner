@@ -21,7 +21,8 @@ git config core.hooksPath scripts/git-hooks
 Verify: `git config --get core.hooksPath` prints `scripts/git-hooks`. Every clone needs
 this (the MBP, the mini, any fresh checkout). Worktrees share their clone's config.
 Without it the pre-push hook never runs, and nothing on your machine stops an unbumped
-push or an unreleasable push to `main`.
+push, an unreleasable push to `main`, or a push that carries a secret
+([Secret scan](#secret-scan)).
 
 For Railway: `railway whoami` shows the owner's account, and `railway status` in the
 checkout shows project `dealership-scanner`, environment `production`. The CLI acts on
@@ -240,6 +241,72 @@ tracking `origin/main`.
 Verify the rule: `python -m pytest backend/tests/test_release_tooling.py -q -p no:cacheprovider`
 passes. It drives the real hook and guard in scratch repositories.
 
+## Secret scan
+
+The repo is public (D-REL5), so whatever a push carries is published. `scripts/secret_scan.py`
+refuses a push that would publish a secret or a run artifact. It runs in two places:
+
+- **The pre-push hook**, for every pushed ref (branches, tags and `main`), before the bump
+  rule and the release guard: `--range <remote sha>..<local sha> --local-env`. A new ref,
+  or a remote sha this clone has not fetched, is scanned as the commits on no
+  remote-tracking ref. Branch deletions publish nothing and are skipped.
+- **CI's `secret-scan` job**, on every push, PR and manual run: the push's
+  `before..sha` (`origin/main..sha` for a new branch), the PR's `base..head`, and the
+  whole tree on `workflow_dispatch`. It is not a required check yet; the owner adds
+  `secret-scan` to the `main` ruleset when ready.
+
+What it blocks (exit 1), in the blobs the pushed commits add (a file added and deleted
+inside the range still counts, because its blob is in the published history):
+
+| Rule | Blocks |
+|---|---|
+| provider keys | Google, Anthropic, OpenAI, Stripe, AWS, GitHub, Slack, SendGrid, Twilio, Resend, Hugging Face, npm, PyPI, Postman, Railway, Algolia and Typesense key shapes |
+| `private_key`, `jwt`, `bcrypt_hash`, `password_hash` | PEM private-key blocks, JWT-shaped tokens, bcrypt/argon2/Werkzeug password hashes |
+| `db_url_password` | a database URL whose password is not a placeholder |
+| `generic_secret_assignment`, `generic_secret_env` | `api_key = "..."`, `"password": "..."`, `SECRET_KEY=...` with a 12+ character value that is not placeholder-like |
+| `env:<KEY>` | a verbatim value of a secret-named key in this clone's own `.env` files (hook only) |
+| `path:*` | SQLite files, anything under `workspace/`, `*.har`, env files other than templates (`.env.example`), key and keystore files, credential files, database dumps, git bundles |
+
+Placeholders pass: template spellings (`example`, `changeme`, `your-`, `xxxx`, `${VAR}`,
+`<value>`), env var names, paths, a value whose words name its own kind or call it a test
+value (`long-enough-password`, `test-api-key`), and for database URLs a default password,
+the user name, 3 characters or fewer, or an `example.com`/`.invalid`/`.test` host. Three
+`workspace/` files stay tracked on purpose and skip the path rule only (their content is
+scanned): `dealers_backup.json` (D-HY4 (a)), the curated `dealer_logs/_learning` lessons
+(D-HY3 (a)) and the phase checkpoints `phase_runs/<phase>/RESUME.md`.
+
+Known benign fixtures (test passwords, made-up DSNs, public third-party search keys) are
+listed in `scripts/secret_scan_allowlist.txt` as `<rule>  sha256:<digest>  <path>`: the
+digest of the value, never the value. An entry passes exactly that value at that path.
+The allowlist is read from the commit being judged, so a push cannot be waved through by
+an uncommitted edit. Output is masked (first 6 and last 3 characters of a long value,
+`<N characters>` for an env value, never a database password or a whole email address).
+
+```bash
+python3 scripts/secret_scan.py --staged                     # what the next commit adds
+python3 scripts/secret_scan.py --range origin/main..HEAD    # what a release publishes
+python3 scripts/secret_scan.py --all                        # the whole tree at HEAD
+python3 scripts/secret_scan.py --all --print-allowlist      # allowlist lines (local only, refused in CI)
+```
+
+When it blocks:
+
+- **A real secret**: take it out of every listed commit (rewrite the unpushed commits)
+  and rotate it. It is in your local history even when the push is refused. Never
+  allowlist it.
+- **A run artifact or a local database**: `git rm --cached <path>` (the file stays on
+  disk; `workspace/` and `*.db` are ignored), then rewrite the unpushed commits.
+- **A benign fixture**: run the command the refusal prints with `--print-allowlist`,
+  review every line, and commit the lines you keep to the allowlist with the change.
+
+**Bypass.** `git push --no-verify` is the only way past the hook, and it skips every
+pre-push check (bump rule, release guard, secret scan). CI's `secret-scan` job still
+scans the pushed range and goes red.
+
+Verify: `python -m pytest backend/tests/test_secret_scan.py -q -p no:cacheprovider` passes
+(scratch repositories, no network), and `python3 scripts/secret_scan.py --all` prints
+`secret_scan: OK`.
+
 ## CI runs per release
 
 A branch with an open PR to `main` runs CI twice per push: once as `push` (concurrency
@@ -316,28 +383,26 @@ below stands for its name. `V` is the new version, set in step 3.
    Verify: `python3 scripts/release_guard.py --base origin/main` prints
    `release_guard: OK: ...`.
 
-4. **Secrets scan.** Everything in `origin/main..HEAD` becomes public on `main`. GitHub
-   push protection is on, but scan anyway.
+4. **Secrets scan.** Everything in `origin/main..HEAD` becomes public on `main`. The
+   pre-push hook and CI's `secret-scan` job run the same scan, and GitHub push protection
+   is on, but scan anyway before the push ([Secret scan](#secret-scan)).
 
    ```bash
-   git log -p origin/main..HEAD | grep -nE 'AIza[0-9A-Za-z_-]{35}|sk-ant-[0-9A-Za-z_-]{20,}|sk_live_[0-9A-Za-z]{16,}|AKIA[0-9A-Z]{16}|gh[pousr]_[0-9A-Za-z]{36}|-----BEGIN [A-Z ]*PRIVATE KEY-----|postgres(ql)?://[^:/@ ]+:[^@/ ]+@|eyJ[0-9A-Za-z_-]{10,}\.eyJ[0-9A-Za-z_-]{10,}'
-   git diff --no-renames --diff-filter=AM --name-only origin/main..HEAD | grep -E '(^|/)\.env$|\.(db|sqlite3?|pem|key)$'
+   python3 scripts/secret_scan.py --range origin/main..HEAD
    ```
 
-   The second command lists files the range adds or changes (`--no-renames`, so a file
-   that git pairs with an unrelated deleted file still shows as added). A deleted file
-   was already public on `main`.
+   It scans every blob the range adds or changes, a file added and deleted inside the
+   range included (`--no-renames`, so a renamed file is judged too). A deleted file was
+   already public on `main`.
 
-   Verify: look at every hit of both commands before going on. Each one must be a
-   placeholder or an empty file, so the output is reviewed, not expected to be empty. On
-   2026-10-08 the range up to 1.5.3 held only these. Content: an
-   `sk-ant-api03-parity-test-...` test key, localhost DSNs in tests and in
-   `docs/monolith_audit_2026_10_01/tests.md`, a `prod-db.example.net` DSN in a test,
-   commented `user:pass@localhost` examples in `.env.example`, and the plan's own
-   `user:pw` example. Files: `backend/dictionary/derived/dictionary_catalog.sqlite3`, which
-   is empty (`git cat-file -s HEAD:backend/dictionary/derived/dictionary_catalog.sqlite3`
-   prints `0`). A real secret stops the release. Deleting it is not enough, because it
-   stays in the history: it has to be rotated.
+   Verify: it prints `secret_scan: OK: range ...`. Each finding is a real secret, a run
+   artifact or a benign fixture ([Secret scan](#secret-scan), "When it blocks"). The benign
+   hits of the grep this step used until 1.5.16 (the `sk-ant-api03-parity-test-...` test
+   key, the localhost and `example.net` DSNs in tests and docs, the `.env.example`
+   examples, the empty `backend/dictionary/derived/dictionary_catalog.sqlite3`) pass as
+   placeholders or are in `scripts/secret_scan_allowlist.txt`. A real secret stops the
+   release. Deleting it is not enough, because it stays in the history: it has to be
+   rotated.
 
 5. **Lint and targeted tests.** The full offline suite runs in CI.
 

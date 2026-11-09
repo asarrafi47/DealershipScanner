@@ -2,6 +2,15 @@
 
 ## [Unreleased]
 
+### Secret scan (sec/secret-scan-hook)
+- Tooling: scripts/secret_scan.py (stdlib only, Python 3.9) refuses what a push would publish: provider keys, private-key blocks, JWTs, bcrypt/argon2/Werkzeug password hashes, database URLs with a real password, secret assignments that are not placeholder-like, and the paths SQLite files, workspace/, *.har, env files other than templates, key/credential files, dumps and bundles. Modes: --range OLD..NEW (all-zero OLD: the commits on no remote-tracking ref), --staged, --all. Output is masked; benign fixtures are listed in scripts/secret_scan_allowlist.txt by rule, sha256 of the value and path (13 entries today). docs/RELEASING.md "Secret scan".
+- The pre-push hook runs the scan (with --local-env, so a value of the clone's own .env blocks too) for every pushed ref, tags and main included, before the bump rule and the release guard, which are unchanged. git push --no-verify is the only bypass.
+- CI: new secret-scan job on every push, PR and dispatch (blobless full-history checkout; before..sha, origin/main..sha for a new branch, PR base..head, --all on dispatch). Not a required check yet.
+- Release checklist step 4 runs the scanner instead of the grep.
+- Untracked 45 workspace/ run artifacts (git rm --cached; the files stay on disk), among them the third-party Google Maps key of chattanooga_zero_row_investigation.json and the Algolia keys of investigate_algolia_direct.py / investigate_lr_only.py (they stay in history). manifest_92694_25mi.json moves to backend/dev/fixtures/ with its consumers (scan_lab.py, the cli.py --manifest help, scan_irvinebmw_test.sh), the same change as N35's P18A.3. workspace/dealers_backup.json (D-HY4 (a)) and the phase_runs RESUME.md checkpoints stay tracked.
+- Tests: backend/tests/test_secret_scan.py (rules, masking, modes, the hook and a replay of the CI job in scratch repos; the repo's allowlist is current); test_release_tooling.py scratch repos now carry the scanner.
+- **Deploy note.** Merging this into another working tree deletes the 45 untracked files from that tree's disk (git removes files a commit stops tracking). To keep local copies as ignored files, run right after the merge: `git restore --source=ORIG_HEAD --worktree -- $(git diff --name-only --diff-filter=D ORIG_HEAD HEAD -- workspace/)`. Run `git config core.hooksPath scripts/git-hooks` on every clone, or the hook never runs.
+
 ## [1.5.16] - 2026-11-03
 
 ### N37 (Postgres-only cleanup, first slice)
