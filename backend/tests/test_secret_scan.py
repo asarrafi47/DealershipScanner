@@ -270,6 +270,24 @@ def test_private_keys_are_found_and_stubs_let_through():
     assert content_rules(f'if text.startswith("{begin}"):\n') == []  # a mention, no body
 
 
+def test_a_private_key_inside_json_is_found_and_its_mask_is_the_header_only():
+    # Service-account files carry the PEM with literal \n escapes, all on one line.
+    escaped = pem(1600, "sa").replace("\n", "\\n")
+    doc = '{"type": "service_account", "private_key": "' + escaped + '", "client_id": "1"}\n'
+    hits = ss.scan_content(doc.encode())
+    assert [h.rule for h in hits] == ["private_key"]
+    shown = ss.mask("private_key", hits[0].value)
+    assert shown.startswith("-----BEGIN " + "PRIVATE KEY----- (") and shown.endswith(" bytes)")
+    body = pem(1600, "sa").split("\n")[1]
+    assert body[:20] not in shown
+
+
+def test_an_all_caps_base32_seed_is_not_taken_for_an_env_var_name():
+    seed = rand("totp", 32, string.ascii_uppercase + "234567")
+    assert content_rules(f'TOTP_SECRET = "{seed}"\n', "backend/mfa.py") == ["generic_secret_assignment"]
+    assert content_rules('secret = "TOTP_SEED_FROM_ENV"\n', "backend/mfa.py") == []
+
+
 def test_jwts_and_password_hashes_are_found():
     jwt = "eyJ" + rand("h", 30, ALNUM + "_-") + ".eyJ" + rand("p", 40, ALNUM + "_-") + "." + rand("s", 43, ALNUM + "_-")
     assert content_rules(f"Authorization: Bearer {jwt}\n") == ["jwt"]

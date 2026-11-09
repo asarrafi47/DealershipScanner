@@ -204,8 +204,7 @@ RULES = (
     # YAML/INI/TOML). Never applied to code files (see filter_hits), where an
     # unquoted right-hand side is an expression; outside config files only
     # UPPER_CASE names count, so prose like "Token: see below" stays quiet.
-    Rule("generic_secret_env", (b"secret", b"token", b"passw", b"api_key", b"api-key", b"apikey", b"private_key",
-                                b"access_key", b"signing_key"),
+    Rule("generic_secret_env", (b"secret", b"token", b"passw", b"key"),
          re.compile(rb"(?im)^[ \t]*(?:-[ \t]+)?[\"']?(?:(?:export|env|arg)[ \t]+)?"
                     rb"([A-Za-z0-9_.\-]{0,60}" + _ENV_WORDS + rb"[A-Za-z0-9_.\-]{0,60})[ \t]*[=:][ \t]*"
                     rb"([^\s\"'#$`{<\[|>(][^\s\"'#`]{11,})"),
@@ -283,7 +282,9 @@ _LABEL_WORDS = frozenset((
     b"apikey", b"credential", b"credentials", b"test", b"testing", b"fake", b"wrong", b"invalid", b"expired",
     b"todo", b"tbd", b"dummy", b"sample", b"example", b"placeholder", b"changeme",
 ))
-_ENV_REFERENCE = re.compile(rb"^[A-Z][A-Z0-9_]{3,}$")  # names an env var, holds no value
+# Names an env var and holds no value. The underscore is required: an all-caps
+# token without one is as likely a base32 secret (a TOTP seed) as a name.
+_ENV_REFERENCE = re.compile(rb"^[A-Z][A-Z0-9]*(?:_[A-Z0-9]+)+$")
 _INTERPOLATION = re.compile(rb"^(?:\$|%|\{|\[|<|\(|@)")
 _DB_PASSWORD_DEFAULTS = frozenset((
     b"postgres", b"password", b"passwd", b"pass", b"pw", b"pwd", b"secret", b"test", b"testing", b"dev", b"local",
@@ -335,7 +336,8 @@ def private_key_stub(block: bytes) -> bool:
     64-character body. Nothing else counts: real bodies run "AAAAAA" and may spell
     any short word, so the provider-key markers do not apply here.
     """
-    lines = block.split(b"\n")
+    # A key inside JSON or a code string (a service-account file) has "\n" escapes.
+    lines = block.replace(b"\\r", b"").replace(b"\\n", b"\n").split(b"\n")
     body = b"".join(line for line in lines[1:] if not line.strip().startswith(b"-----"))
     if b"..." in body or b"<" in body or b">" in body:
         return True
@@ -368,9 +370,9 @@ def mask_emails(text: str) -> str:
 def mask(rule: str, value: bytes) -> str:
     """A form of ``value`` safe to print: never the whole value."""
     text = value.decode("utf-8", "replace")
-    if rule == "private_key":
-        first = text.split("\n", 1)[0]
-        return f"{first} ({len(value)} bytes)"
+    if rule == "private_key":  # the BEGIN line only: a JSON-escaped key is all one line
+        header = re.match(r"-----BEGIN [A-Z0-9 ]{0,40}PRIVATE KEY(?: BLOCK)?-----", text)
+        return f"{header.group(0) if header else '-----BEGIN ... PRIVATE KEY-----'} ({len(value)} bytes)"
     if rule == "db_url_password":
         m = re.match(r"([A-Za-z0-9+]+)://([^:]*):[^@]*@(.*)", text, re.S)
         if m:
@@ -405,6 +407,8 @@ def is_zero(sha: str) -> bool:
 
 
 def resolve_commit(ref: str) -> str:
+    if not ref or ref.startswith("-"):
+        raise ScanError(f"not a ref: {ref!r}")
     proc = subprocess.run(["git", "rev-parse", "--verify", "--quiet", ref + "^{commit}"], capture_output=True)
     sha = proc.stdout.decode().strip()
     if proc.returncode != 0 or not sha:
