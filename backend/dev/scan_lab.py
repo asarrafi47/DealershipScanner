@@ -34,7 +34,7 @@ logger = logging.getLogger(__name__)
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
-DEFAULT_MANIFEST_REL = "workspace/manifest_92694_25mi.json"
+DEFAULT_MANIFEST_REL = "backend/dev/fixtures/manifest_92694_25mi.json"
 DEFAULT_ZIP = "92694"
 DEFAULT_RADIUS_MI = 25
 
