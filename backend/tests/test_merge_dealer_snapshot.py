@@ -743,6 +743,18 @@ def test_source_wins_turns_the_keep_rule_off(world: World) -> None:
 
 
 @pytest.mark.pg
+def test_an_unseen_row_scraped_after_the_snapshot_began_is_never_retired(world: World) -> None:
+    scope = world.scope()
+    world.tgt.run("UPDATE cars SET scraped_at = %s WHERE vin = 'N18'", (NEWER,))  # the target saw it after the scan
+    plan = world.plan(scope)
+    assert plan["totals"]["retire"] == 6 and plan["totals"]["retire_new"] == 3 and plan["totals"]["kept_newer"] == 1
+    assert world.apply(scope) == 0
+    row = world.tgt.cars()
+    assert (row["N18"]["listing_active"], row["N18"]["scraped_at"]) == (1, NEWER)
+    assert row["N17"]["listing_active"] == 0
+
+
+@pytest.mark.pg
 def test_a_target_row_scraped_after_the_source_row_is_never_overwritten(world: World) -> None:
     scope = world.scope()
     world.tgt.run("UPDATE cars SET scraped_at = %s, price = 1 WHERE vin = 'N03'", (NEWER,))

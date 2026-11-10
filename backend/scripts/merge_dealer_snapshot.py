@@ -83,8 +83,9 @@ Semantics (``cars``)
 * Retirement: an ACTIVE target row of in-scope dealer C that C was not seen holding gets
   ``listing_active = 0, listing_removed_at = <apply time>`` only when the scope says
   retire_unseen for C and the row's condition bucket. A row whose VIN has a fresh row at ANY
-  other dealer is never retired (the scan saw the car; it is moved or left where it is).
-  Otherwise the row stays listed (``kept_unseen``) for the next real scan to decide.
+  other dealer is never retired (the scan saw the car; it is moved or left where it is), nor
+  is a row scraped at or after ``since`` (``kept_newer``: the target saw it after the snapshot
+  began). Otherwise the row stays listed (``kept_unseen``) for the next real scan to decide.
   No row is ever deleted.
 * Out-of-scope dealers' rows (both sides) and every user table (car_comments,
   dealer_comments, comment_attachments, user_search_history, user_hidden_dealers, saved_*,
@@ -1051,6 +1052,7 @@ class Plan:
 def build_plan(*, scope: dict[str, Any], run: set[str], fresh: dict[str, SrcRow], claims: dict[str, set[str]],
                tgt: dict[str, TgtRow], safe: list[set[Any]], cols: ColumnPlan) -> Plan:
     retire = {d: scope["dealers"][d]["retire_unseen_buckets"] for d in run}
+    since = scope["since"]
     counts: dict[str, Counter] = defaultdict(Counter)
     actions: list[Action] = []
     kept: Counter = Counter()
@@ -1120,6 +1122,9 @@ def build_plan(*, scope: dict[str, Any], run: set[str], fresh: dict[str, SrcRow]
         s = fresh.get(vin)
         if s is not None:
             continue  # seen: at C (updated or unchanged above) or at another dealer (moved or left alone)
+        if t.scraped and t.scraped >= since:
+            counts[c_id]["kept_newer"] += 1  # scraped after the snapshot began: newer evidence than the snapshot
+            continue
         if vin in claims.get(c_id, ()):
             counts[c_id]["seen_by_claim"] += 1
             continue
@@ -1176,7 +1181,8 @@ def print_plan(plan: Plan, *, label: str) -> None:
           f"contested_in_run={tot.get('skip_contested_in_run', 0)} "
           f"target_owner_capture_weak={tot.get('skip_target_owner_capture_weak', 0)} "
           f"target_row_newer={tot.get('skip_target_row_newer', 0)}) "
-          f"seen_by_claim={tot.get('seen_by_claim', 0)} unchanged={tot.get('unchanged', 0)} "
+          f"kept_newer={tot.get('kept_newer', 0)} seen_by_claim={tot.get('seen_by_claim', 0)} "
+          f"unchanged={tot.get('unchanged', 0)} "
           f"vpic_inserts={tot['vpic_inserts']} grid_cards_deleted={tot['grid_cards_deleted']}", flush=True)
     guarded = {k: v for k, v in tot.items() if k.startswith("ref_guarded_")}
     if guarded:
