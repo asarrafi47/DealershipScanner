@@ -56,8 +56,9 @@ Semantics (``cars``)
     row must lose its ``listing_removed_at``). Measured on the 2026-11-09 copy of production,
     a plain copy would have blanked 4,852 stored values in 3,814 of the 90,854 updated rows
     (1,253 descriptions, 977 spec_source_json, 948 msrp, 240 mileage, 232 window-sticker URLs,
-    231 packages, 63 prices, ... 26 columns) while filling more than it blanks; the dry run and
-    the apply print the count per column, and the apply aborts unless its count equals the plan's.
+    231 packages, 63 prices, ... 26 columns) while filling more than it blanks. The plan file
+    lists the count per column (the dry run and the apply print the largest), and the apply
+    aborts unless its count equals the plan's.
   - ADMIN EDITS. ``internal_notes`` and ``marked_for_review`` (written on the website by
     backend/dealer/admin/routes.py, and kept by the scanner upsert too) keep the target's values.
   - REFERENCES. ``dealership_registry_id``, and ``epa_master_id`` with ``epa_match_confidence``
@@ -119,13 +120,14 @@ Why 0.7. The scanner retires every unseen row of a bucket once 50% of it was re-
 2026-11-03 encinitasford-com re-saw 89 of its 171 pre-scan New cars (52%) with a capture of
 normal size (164 rows, ratio 0.96) and the scanner retired the rest; the review of that run
 counts it as a false retirement. Measured against Railway's own rows the same bucket is 101
-of 170 (59.4%), so a 0.6 rule would clear it by 0.006. Coverage cannot tell a partial capture from turnover (36
-days passed since Railway's last scan; median coverage is 0.56 for New and 0.33 for Used
-buckets), so the rule limits the exposure instead: at 0.7 one merge can retire at most 30%
-of a bucket, and the known bad case sits 2.8 binomial standard errors below the line
-(sqrt(0.25 / 170) = 0.038) where the scanner's floor sits above it. Measured on the copy of
-production, retirement by threshold (size ratio and the triage conditions held at their
-defaults; rows = unseen rows retired, the rest stay listed for the next real scan):
+of 170 (59.4%), so a 0.6 rule would clear it by 0.006. Coverage cannot tell a partial
+capture from turnover (35 days passed since Railway's last scan; median coverage is 0.56
+for New and 0.33 for Used buckets), so the rule limits the exposure instead: at 0.7 one
+merge can retire at most 30% of a bucket, and the known bad case sits 2.8 binomial standard
+errors below the line (sqrt(0.25 / 170) = 0.038) where the scanner's floor sits above it.
+Measured on the copy of production, retirement by threshold (size ratio and the triage
+conditions held at their defaults; rows = unseen rows retired, the rest stay listed for the
+next real scan):
 
     coverage >=   0.5      0.6      0.7      0.8
     new buckets   243      176      86       22
@@ -427,11 +429,14 @@ def open_db(env_name: str | None, role: str, *, read_only: bool) -> Db:
         # unqualified name (cars, the run tables) is public's, whatever the role's default.
         conn.execute("SET extra_float_digits = 1")
         conn.execute("SET search_path = public")
+        # The planner thinks between queries inside one transaction: a server-wide idle-in-
+        # transaction timeout must not kill it. Reads are bounded, the one write transaction is not.
+        conn.execute("SET idle_in_transaction_session_timeout = 0")
         if read_only:
             conn.execute("SET SESSION CHARACTERISTICS AS TRANSACTION READ ONLY")
+            conn.execute("SET statement_timeout = '30min'")
         else:
             conn.execute("SET statement_timeout = 0")
-            conn.execute("SET idle_in_transaction_session_timeout = 0")
             conn.execute("SET lock_timeout = '15s'")
         name, version = conn.execute(
             "SELECT current_database(), current_setting('server_version')").fetchone()
@@ -852,7 +857,7 @@ def _dealer_stats(fresh: dict[str, SrcRow], claims: dict[str, set[str]], tgt: di
 def build_scope(*, src: Db, tgt: Db, fresh: dict[str, SrcRow], claims: dict[str, set[str]],
                 tgt_rows: dict[str, TgtRow], src_dealers: dict[str, dict[str, Any]],
                 triage: dict[str, list[dict[str, Any]]], triage_meta: list[dict[str, Any]], since: str,
-                rule: Rule, excluded: set[str]) -> dict[str, Any]:
+                rule: Rule, excluded: set[str], verdicts: Sequence[str] = VERDICTS_IN_SCOPE) -> dict[str, Any]:
     stats = _dealer_stats(fresh, claims, tgt_rows, since)
     all_ids = sorted(set(stats) | set(src_dealers) | set(triage))
     dealers: dict[str, Any] = {}
@@ -874,7 +879,7 @@ def build_scope(*, src: Db, tgt: Db, fresh: dict[str, SrcRow], claims: dict[str,
             reason = "not_in_triage"
         elif len(entries) > 1:
             reason = "duplicate_triage_entries"
-        elif verdict not in VERDICTS_IN_SCOPE:
+        elif verdict not in verdicts:
             reason = f"verdict_{verdict}"
         elif st["fresh"] == 0:
             reason = "no_fresh_rows"
@@ -938,7 +943,7 @@ def build_scope(*, src: Db, tgt: Db, fresh: dict[str, SrcRow], claims: dict[str,
         "created_at": _now_iso(),
         "since": since,
         "rule": {
-            "verdicts_in_scope": list(VERDICTS_IN_SCOPE),
+            "verdicts_in_scope": list(verdicts),
             "min_coverage": rule.min_coverage,
             "min_size_ratio": rule.min_size_ratio,
             "min_bucket_rows": rule.min_bucket_rows,
@@ -1566,6 +1571,10 @@ def compute_scope(args: argparse.Namespace) -> int:
             raise MergeRefused("no triage file has 'started'; pass --since")
         since = min(normalize_since(s) for s in started)
     rule = Rule(args.min_coverage, args.min_size_ratio, args.min_bucket_rows)
+    verdicts = tuple(v.strip() for v in args.verdicts.split(",") if v.strip())
+    if not verdicts or not set(verdicts) <= set(VERDICTS_IN_SCOPE):
+        raise MergeRefused(f"--verdicts must be a comma list from {list(VERDICTS_IN_SCOPE)} (no_rows and error "
+                           "dealers kept their stale rows and can never be merged)")
     src = tgt = None
     try:
         src = open_db(args.source_dsn_env, "source", read_only=True)
@@ -1580,7 +1589,7 @@ def compute_scope(args: argparse.Namespace) -> int:
         tgt_rows = load_target(tgt, cols)
         scope = build_scope(src=src, tgt=tgt, fresh=fresh, claims=claims, tgt_rows=tgt_rows, src_dealers=src_dealers,
                             triage=triage, triage_meta=meta, since=since, rule=rule,
-                            excluded={d.strip() for d in args.exclude_dealer if d.strip()})
+                            excluded={d.strip() for d in args.exclude_dealer if d.strip()}, verdicts=verdicts)
     finally:
         _close(src)
         _close(tgt)
@@ -1764,6 +1773,8 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--triage", action="append", metavar="GLOB", help="triage.json file or glob (repeatable)")
     p.add_argument("--since", help="scan start (ISO-8601); default: earliest triage 'started'")
     p.add_argument("--exclude-dealer", action="append", default=[], metavar="ID", help="keep this dealer out of scope")
+    p.add_argument("--verdicts", default=",".join(VERDICTS_IN_SCOPE), metavar="A,B",
+                   help="triage verdicts that put a dealer in scope (default %(default)s; a subset only)")
     p.add_argument("--min-coverage", type=float, default=DEFAULT_MIN_COVERAGE,
                    help="share of a bucket's target rows the scan must re-see before unseen rows retire "
                         f"(default {DEFAULT_MIN_COVERAGE}; must exceed the scanner's {SCANNER_COVERAGE_FLOOR})")

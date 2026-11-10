@@ -571,6 +571,13 @@ def test_scope_rules(world: World, capsys) -> None:
     assert mds.main(world.args("--compute-scope", "--scope", str(path), "--triage", world.triage)) == mds.EXIT_REFUSED
     excluded = json.loads(world.scope("scope2.json", "--exclude-dealer", "small-com").read_text())
     assert excluded["dealers"]["small-com"]["reason"] == "excluded_by_operator"
+    narrow = json.loads(world.scope("scope4.json", "--verdicts", "ok").read_text())
+    assert narrow["rule"]["verdicts_in_scope"] == ["ok"]
+    assert narrow["dealers"]["partial-com"]["reason"] == "verdict_thin"
+    assert narrow["dealers"]["keptbucket-com"]["reason"] == "verdict_inaccurate"
+    assert {k for k, v in narrow["dealers"].items() if v["in_scope"]} == IN_SCOPE - {"partial-com", "keptbucket-com"}
+    assert mds.main(world.args("--compute-scope", "--scope", str(world.tmp / "s5.json"), "--triage", world.triage,
+                               "--verdicts", "ok,no_rows")) == mds.EXIT_REFUSED
     looser = json.loads(world.scope("scope3.json", "--min-coverage", "0.6").read_text())
     assert looser["dealers"]["border-com"]["retire_unseen"] is True
     assert looser["dealers"]["border-com"]["retire_unseen_buckets"] == {"new": True, "used": False, "unknown": False}
