@@ -54,10 +54,10 @@ Semantics (``cars``)
     one"). The state columns ``dealer_id``, ``dealer_name``, ``dealer_url``, ``scraped_at``,
     ``listing_active`` and ``listing_removed_at`` always take the source value (a reactivated
     row must lose its ``listing_removed_at``). Measured on the 2026-11-09 copy of production,
-    a plain copy would have blanked a stored value in about 7,000 cells of the 90,877 matched
-    rows (63 prices, 232 window-sticker URLs, 975 spec_source_json, 1,253 descriptions, 945
-    msrp, ...) while filling far more than it blanks; the dry run and the apply print the
-    exact count per column.
+    a plain copy would have blanked 4,852 stored values in 3,814 of the 90,854 updated rows
+    (1,253 descriptions, 977 spec_source_json, 948 msrp, 240 mileage, 232 window-sticker URLs,
+    231 packages, 63 prices, ... 26 columns) while filling more than it blanks; the dry run and
+    the apply print the count per column, and the apply aborts unless its count equals the plan's.
   - ADMIN EDITS. ``internal_notes`` and ``marked_for_review`` (written on the website by
     backend/dealer/admin/routes.py, and kept by the scanner upsert too) keep the target's values.
   - REFERENCES. ``dealership_registry_id``, and ``epa_master_id`` with ``epa_match_confidence``
@@ -99,7 +99,8 @@ not named by --exclude-dealer; exactly one triage entry, with verdict ok, thin o
 (no_rows and error dealers kept their stale rows and stay out); at least one fresh source
 row; and no target row scraped at or after ``since`` (the target has not scanned it since).
 Each dealer entry carries ``in_scope``, ``reason``, ``retire_unseen`` (yes when any bucket
-retires) and ``retire_unseen_buckets`` with the numbers behind every bucket.
+retires), ``retire_unseen_buckets`` (the yes/no per bucket the apply reads) and ``buckets``
+(target rows, fresh rows, re-seen rows, coverage, size ratio and the reason of every bucket).
 
 Retirement is decided per condition bucket (``new`` / ``used`` by the scanner's
 ``condition_bucket`` rule; ``unknown`` = blank condition retires only when new and used
@@ -116,9 +117,9 @@ both do) and is yes only when ALL of these hold:
 
 Why 0.7. The scanner retires every unseen row of a bucket once 50% of it was re-seen. On
 2026-11-03 encinitasford-com re-saw 89 of its 171 pre-scan New cars (52%) with a capture of
-normal size (164 rows, ratio 0.96) and the scanner retired the rest; that retirement was a
-false one. Measured against Railway's own rows the same bucket is 101 of 170 (59.4%), so a
-0.6 rule would clear it by 0.006. Coverage cannot tell a partial capture from turnover (36
+normal size (164 rows, ratio 0.96) and the scanner retired the rest; the review of that run
+counts it as a false retirement. Measured against Railway's own rows the same bucket is 101
+of 170 (59.4%), so a 0.6 rule would clear it by 0.006. Coverage cannot tell a partial capture from turnover (36
 days passed since Railway's last scan; median coverage is 0.56 for New and 0.33 for Used
 buckets), so the rule limits the exposure instead: at 0.7 one merge can retire at most 30%
 of a bucket, and the known bad case sits 2.8 binomial standard errors below the line
@@ -1748,6 +1749,7 @@ def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(
         prog="merge_dealer_snapshot",
         description="Dealer-scoped merge of one inventory snapshot into another (module docstring).",
+        allow_abbrev=False,  # a destructive tool takes full flag names only
     )
     p.add_argument("--source-dsn-env", metavar="NAME", help="environment variable holding the source DSN")
     p.add_argument("--target-dsn-env", metavar="NAME", help="environment variable holding the target DSN")

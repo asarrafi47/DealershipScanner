@@ -753,6 +753,18 @@ def test_a_sequence_behind_the_table_refuses_the_apply(world: World) -> None:
 
 
 @pytest.mark.pg
+def test_the_advisory_lock_serialises_applies(world: World) -> None:
+    scope = world.scope()
+    snap, tables = world.tgt.snapshot(), world.tgt.tables()
+    with world.tgt.connect() as holder:
+        holder.execute("SELECT pg_advisory_lock(%s)", (mds.ADVISORY_LOCK_KEY,))
+        assert world.apply(scope) == mds.EXIT_REFUSED
+        assert world.rollback("20261109153000_a1b2c3") == mds.EXIT_REFUSED
+    assert world.tgt.snapshot() == snap and world.tgt.tables() == tables
+    assert world.apply(scope) == 0  # the lock died with the other session
+
+
+@pytest.mark.pg
 def test_a_failure_midway_leaves_no_trace(world: World) -> None:
     scope = world.scope()
     world.tgt.run("CREATE FUNCTION merge_test_boom() RETURNS trigger LANGUAGE plpgsql AS "

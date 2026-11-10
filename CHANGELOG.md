@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+- Tooling: backend/scripts/merge_dealer_snapshot.py merges one inventory database snapshot into another dealer by dealer (owner decision 2026-11-09, Railway production): a frozen scope file from the triage verdicts and per-bucket coverage, an exact read-only dry run, one-transaction apply with a pre-image backup table and --rollback, a separate --cleanup step. It never moves a VIN out of an out-of-scope dealer, retires an unseen row only for a strong capture, and never blanks a non-empty target value with an empty source one. Tests: backend/tests/test_merge_dealer_snapshot.py (pg tier).
+
 ## [1.5.16] - 2026-11-03
 
 ### N37 (Postgres-only cleanup, first slice)
