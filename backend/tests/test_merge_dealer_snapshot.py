@@ -188,6 +188,8 @@ def test_local_hosts_are_sockets_and_loopback_only() -> None:
     for host, addr in (("roundhouse.proxy.rlwy.net", None), ("10.0.0.5", None), ("db.internal", "10.1.2.3"),
                        ("/tmp/x,db.example.com", None), (None, "203.0.113.9")):
         assert not mds.is_local_host(host, addr), (host, addr)
+    assert mds.is_local_host("127.0.0.1", None, 5432) and mds.is_local_host("/tmp/x", None, "55433")
+    assert not mds.is_local_host("127.0.0.1", None, 15432) and not mds.is_local_host("localhost", "::1", "15432")
 
 
 def test_writing_modes_refuse_protected_and_remote_targets() -> None:
@@ -224,6 +226,9 @@ def test_column_classes() -> None:
     assert "vin" not in cp.update_set and "internal_notes" not in cp.update_set and "marked_for_review" not in cp.update_set
     assert {"first_seen_at", "dealership_registry_id", "epa_master_id", "price"} <= set(cp.update_set)
     assert cp.text_cols >= {"condition", "description"} and "price" not in cp.text_cols
+    plain = mds.plan_columns([c for c in _CARS if c[0] != "only_in_target"], _CARS, keep_rule=False)
+    assert plain.keepable == [] and set(plain.always) >= {"price", "description", "condition", "dealer_id"}
+    assert plain.update_set == cp.update_set and plain.copied == cp.copied
     with pytest.raises(mds.MergeRefused, match="types differ"):
         mds.plan_columns([("id", "bigint"), ("vin", "text"), ("dealer_id", "text"), ("condition", "text"),
                           ("listing_active", "integer"), ("scraped_at", "text"), ("first_seen_at", "text"),
@@ -716,6 +721,25 @@ def test_second_apply_is_a_no_op(world: World, capsys) -> None:
     assert second.get("update", 0) == second.get("insert", 0) == second["retire"] == second["vpic_inserts"] == 0
     assert second.get("keep_rows", 0) == 0
     assert second["unchanged"] == 99 + 1 + 24
+
+
+@pytest.mark.pg
+def test_source_wins_turns_the_keep_rule_off(world: World) -> None:
+    scope = world.scope()
+    plan = world.plan(scope, "--source-wins")
+    assert plan["kept_target_cells"] == {} and plan["totals"].get("keep_rows", 0) == 0
+    assert plan["totals"]["update"] == 99 and plan["totals"]["insert"] == 24
+    reviewed = world.tmp / "reviewed.json"
+    assert mds.main(world.args("--dry-run", "--scope", str(scope), "--plan-out", str(reviewed))) == 0
+    # the reviewed plan kept four cells, so an apply that keeps none is not the reviewed apply
+    assert world.apply(scope, "--source-wins", "--expect-plan", str(reviewed)) == mds.EXIT_REFUSED
+    assert world.run_ids() == []
+    assert world.apply(scope, "--source-wins") == 0
+    after = world.tgt.cars()
+    assert after["N07"]["window_sticker_url"] is None and after["N10"]["price"] is None
+    assert after["N08"]["description"] == "" and after["N09"]["packages"] == "[]"
+    assert after["N02"]["internal_notes"] == "keep me"  # admin edits are not part of the keep rule
+    assert world.plan(scope)["totals"]["unchanged"] == 99 + 1 + 24  # and a re-apply still writes nothing
 
 
 @pytest.mark.pg

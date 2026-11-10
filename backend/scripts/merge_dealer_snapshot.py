@@ -27,8 +27,11 @@ Connection strings come only from the environment variables NAMED by --source-ds
 ``railway run --service Postgres -- sh -c 'MERGE_TARGET_DSN="$DATABASE_PUBLIC_URL" python -m ...'``.
 The source is always opened READ ONLY, and so is the target for --compute-scope and --dry-run
 (the server refuses writes in those sessions). Every writing mode (--apply, --rollback,
---cleanup) additionally refuses a target that is not on this machine unless --allow-remote-target
-is given, so a stray environment variable cannot aim a rehearsal command at production.
+--cleanup) additionally refuses a target that is not on this machine (a unix socket or loopback,
+and not the 15432 tunnel) unless --allow-remote-target is given, so a stray environment
+variable cannot aim a rehearsal command at production. Exit codes: 0 done (or nothing to do),
+1 database error (rolled back), 2 refused before any write, 3 a check inside the write
+transaction failed (rolled back).
 
 Semantics (``cars``)
 --------------------
@@ -49,9 +52,9 @@ Semantics (``cars``)
   Three refinements keep the merge from destroying target data:
   - KEEP RULE. A column's value is empty when it is NULL, or text that is blank or one of
     ``[]``, ``{}``, ``null`` (the empties the repo's own partial indexes use). An empty source
-    value never replaces a non-empty target value, exactly the contract of the scanner's own
-    upsert (backend/scanner/upsert/sql.py: "an empty incoming value never overwrites a stored
-    one"). The state columns ``dealer_id``, ``dealer_name``, ``dealer_url``, ``scraped_at``,
+    value never replaces a non-empty target value, the contract of the scanner's own upsert
+    (backend/scanner/upsert/sql.py: "an empty incoming value never overwrites a stored one");
+    ``--source-wins`` turns the rule off (the plain "target row takes the source row's values"). The state columns ``dealer_id``, ``dealer_name``, ``dealer_url``, ``scraped_at``,
     ``listing_active`` and ``listing_removed_at`` always take the source value (a reactivated
     row must lose its ``listing_removed_at``). Measured on the 2026-11-09 copy of production,
     a plain copy would have blanked 4,852 stored values in 3,814 of the 90,854 updated rows
@@ -239,6 +242,7 @@ REF_GUARDS: tuple[RefGuard, ...] = (
 PROTECTED_TARGETS = frozenset({"cars", "cars_cleanroom", "postgres", "template0", "template1"})
 PROTECTED_TARGET_RE = re.compile(r"^cars_scan_")
 LOCAL_HOSTS = frozenset({"", "localhost", "127.0.0.1", "::1"})
+TUNNEL_PORT = "15432"  # the mini -> MBP tunnel to the inventory server: loopback, but not a local database
 
 RUNS_TABLE = "merge_snapshot_runs"
 RUN_ID_RE = re.compile(r"^[0-9]{14}_[0-9a-f]{6}$")
@@ -368,8 +372,13 @@ def _conninfo(dsn: str) -> dict[str, str]:
         return {}
 
 
-def is_local_host(host: str | None, hostaddr: str | None = None) -> bool:
-    """True for a unix socket directory or a loopback name/address (not a remote server)."""
+def is_local_host(host: str | None, hostaddr: str | None = None, port: Any = None) -> bool:
+    """True for a unix socket directory or a loopback name/address (not a remote server).
+
+    Loopback on the tunnel port 15432 is a remote server in disguise and does not count.
+    """
+    if str(port or "") == TUNNEL_PORT:
+        return False
     names = [h.strip() for h in (host or "").split(",")] + [h.strip() for h in (hostaddr or "").split(",")]
     return all(h in LOCAL_HOSTS or h.startswith("/") for h in names)
 
@@ -447,7 +456,7 @@ def open_db(env_name: str | None, role: str, *, read_only: bool) -> Db:
         except Exception:  # noqa: BLE001 - needs a privileged role; autocommit keeps the session clean
             system_id = None
         # The host the session really reached (PGHOST and service files included), not the DSN text.
-        local = is_local_host(conn.info.host, conn.info.hostaddr)
+        local = is_local_host(conn.info.host, conn.info.hostaddr, conn.info.port)
         conn.autocommit = False
         conn.isolation_level = psycopg.IsolationLevel.REPEATABLE_READ
         if read_only:
@@ -555,7 +564,9 @@ class ColumnPlan:
     target_all: list[str]
 
 
-def plan_columns(src_cols: list[tuple[str, str]], tgt_cols: list[tuple[str, str]]) -> ColumnPlan:
+def plan_columns(src_cols: list[tuple[str, str]], tgt_cols: list[tuple[str, str]], *,
+                 keep_rule: bool = True) -> ColumnPlan:
+    """Classify the shared columns; ``keep_rule=False`` makes every copied column source-wins."""
     s, t = dict(src_cols), dict(tgt_cols)
     if not s or not t:
         raise MergeRefused("both databases need a public.cars table")
@@ -576,14 +587,14 @@ def plan_columns(src_cols: list[tuple[str, str]], tgt_cols: list[tuple[str, str]
     special = {"id", "vin", "first_seen_at", *TARGET_OWNED_COLUMNS, *ref_cols}
     stage = [c for c in common if c != "id"]
     copied = [c for c in common if c not in special]
-    always = [c for c in copied if c in ALWAYS_SOURCE_COLUMNS]
+    always = [c for c in copied if c in ALWAYS_SOURCE_COLUMNS or not keep_rule]
     return ColumnPlan(
         common=common,
         stage=stage,
         update_set=[c for c in stage if c != "vin" and c not in TARGET_OWNED_COLUMNS],
         copied=copied,
         always=always,
-        keepable=[c for c in copied if c not in ALWAYS_SOURCE_COLUMNS],
+        keepable=[c for c in copied if keep_rule and c not in ALWAYS_SOURCE_COLUMNS],
         text_cols={c for c in common if _is_text_type(t[c])},
         groups=groups,
         ref_cols=ref_cols,
@@ -1219,10 +1230,11 @@ def scope_drift(scope: dict[str, Any], run: set[str], fresh: dict[str, SrcRow], 
     return out
 
 
-def _plan_for(src: Db, tgt: Db, scope: dict[str, Any], run: set[str], *, with_cards: bool) -> tuple[
+def _plan_for(src: Db, tgt: Db, scope: dict[str, Any], run: set[str], *, with_cards: bool,
+              source_wins: bool = False) -> tuple[
         Plan, ColumnPlan, dict[str, SrcRow], dict[str, set[str]], dict[str, TgtRow]]:
     since = scope["since"]
-    cols = plan_columns(table_columns(src, "cars"), table_columns(tgt, "cars"))
+    cols = plan_columns(table_columns(src, "cars"), table_columns(tgt, "cars"), keep_rule=not source_wins)
     if cols.source_only or cols.target_only:
         _say(f"columns: {len(cols.common)} shared; source-only {cols.source_only}; target-only {cols.target_only}")
     _say("reading fresh source rows")
@@ -1522,7 +1534,10 @@ def run_merge(args: argparse.Namespace, *, apply: bool) -> int:
         if scope.get("target", {}).get("database") != tgt.name:
             _say(f"NOTE: the scope was computed against target {scope.get('target', {}).get('database')!r}; "
                  "its dealer decisions are applied as frozen, the bucket numbers below are re-checked")
-        plan, cols, fresh, claims, tgt_rows = _plan_for(src, tgt, scope, run, with_cards=True)
+        plan, cols, fresh, claims, tgt_rows = _plan_for(src, tgt, scope, run, with_cards=True,
+                                                        source_wins=args.source_wins)
+        if args.source_wins:
+            _say("NOTE: --source-wins: an empty source value DOES overwrite a stored target value (no keep rule)")
         drift = scope_drift(scope, run, fresh, claims, tgt_rows, scope["since"])
         if drift:
             _say(f"NOTE: {len(drift)} bucket(s) differ from the frozen scope numbers (decisions stay frozen): "
@@ -1581,7 +1596,7 @@ def compute_scope(args: argparse.Namespace) -> int:
         tgt = open_db(args.target_dsn_env, "target", read_only=True)
         check_pair(src, tgt)
         check_expect_db(tgt, args.expect_db, required=False, what="--compute-scope")
-        cols = plan_columns(table_columns(src, "cars"), table_columns(tgt, "cars"))
+        cols = plan_columns(table_columns(src, "cars"), table_columns(tgt, "cars"))  # the masks are not used here
         _say(f"SCOPE: source {src.name} -> target {tgt.name}; since {since}; {len(triage)} triage dealers")
         fresh = load_source_fresh(src, cols, since, with_md5=False)
         claims = load_claims(src, since)
@@ -1786,6 +1801,9 @@ def build_parser() -> argparse.ArgumentParser:
                    help="write every move, retirement and skipped conflict (vin, dealers, bucket) as CSV")
     p.add_argument("--expect-plan", metavar="PATH", help="--apply refuses unless its counts equal this plan file")
     p.add_argument("--expect-db", metavar="NAME", help="the target's current_database(); required to write")
+    p.add_argument("--source-wins", action="store_true",
+                   help="turn the keep rule off: a source row's empty values overwrite stored target values "
+                        "(the plain reading of 'the target row takes the source row's values')")
     p.add_argument("--allow-remote-target", action="store_true",
                    help="allow a writing mode (--apply, --rollback, --cleanup) on a target that is not on this machine")
     p.add_argument("--allow-drift", action="store_true", help="--rollback: restore rows changed since the run")
