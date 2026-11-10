@@ -10,6 +10,7 @@ rehearsed on a local copy first; production changes only after the owner approve
         --triage '<repo>/workspace/pipeline/scan_2026_11_03_s*/triage.json'
     # 2. exact counts, read-only (the default mode)
     python -m backend.scripts.merge_dealer_snapshot --dry-run --scope scope.json --plan-out plan.json \\
+        --detail-out moves_retirements_skips.csv \\
         --source-dsn-env MERGE_SOURCE_DSN --target-dsn-env MERGE_TARGET_DSN
     # 3. one transaction, pre-image backup first
     python -m backend.scripts.merge_dealer_snapshot --apply --scope scope.json --expect-db <db> \\
@@ -413,6 +414,9 @@ def open_db(env_name: str | None, role: str, *, read_only: bool) -> Db:
     kwargs: dict[str, Any] = {"autocommit": True, "application_name": f"merge_dealer_snapshot_{role}"}
     if "connect_timeout" not in dsn.lower():
         kwargs["connect_timeout"] = 20
+    if "keepalives" not in dsn.lower():
+        # A long write transaction over a proxy must not look idle to it.
+        kwargs.update(keepalives=1, keepalives_idle=30, keepalives_interval=10, keepalives_count=6)
     try:
         conn = psycopg.connect(dsn, **kwargs)
     except Exception as exc:  # noqa: BLE001
@@ -1008,6 +1012,9 @@ class Plan:
     kept: Counter
     grid_cards: int = 0
     disk: dict[str, int] | None = None
+    # (kind, vin, car_id, dealer, other_dealer, bucket) of every move, retirement and skipped
+    # conflict: the rows a person should be able to read before an apply (--detail-out).
+    detail: list[tuple] | None = None
 
     def totals(self) -> dict[str, int]:
         tot: Counter = Counter()
@@ -1030,6 +1037,11 @@ def build_plan(*, scope: dict[str, Any], run: set[str], fresh: dict[str, SrcRow]
     counts: dict[str, Counter] = defaultdict(Counter)
     actions: list[Action] = []
     kept: Counter = Counter()
+    detail: list[tuple] = []
+
+    def skip(reason: str, ca: Counter, vin: str, t: TgtRow, a_id: str) -> None:
+        ca[f"skip_{reason}"] += 1
+        detail.append((f"skip_{reason}", vin, t.id, a_id, t.dealer, t.bucket))
 
     def write(kind: str, vin: str, s: SrcRow, t: TgtRow, ca: Counter, **extra: Any) -> None:
         first = least_first_seen(t.first_seen, s.first_seen)
@@ -1068,18 +1080,19 @@ def build_plan(*, scope: dict[str, Any], run: set[str], fresh: dict[str, SrcRow]
             continue
         c_id = t.dealer
         if c_id not in run:
-            ca["skip_target_owner_out_of_scope"] += 1
+            skip("target_owner_out_of_scope", ca, vin, t, a_id)
             continue
         if t.active and vin in claims.get(c_id, ()):
-            ca["skip_contested_in_run"] += 1
+            skip("contested_in_run", ca, vin, t, a_id)
             continue
         if t.active and not retire[c_id][t.bucket]:
-            ca["skip_target_owner_capture_weak"] += 1
+            skip("target_owner_capture_weak", ca, vin, t, a_id)
             continue
         if at_least_as_fresh(t.scraped, s.scraped):
-            ca["skip_target_row_newer"] += 1
+            skip("target_row_newer", ca, vin, t, a_id)
             continue
         write("move", vin, s, t, ca, from_dealer=c_id)
+        detail.append(("move", vin, t.id, a_id, c_id, t.bucket))
         ca["move_in"] += 1
         counts[c_id]["move_out"] += 1
     for vin in sorted(tgt):
@@ -1095,12 +1108,13 @@ def build_plan(*, scope: dict[str, Any], run: set[str], fresh: dict[str, SrcRow]
             continue
         if retire[c_id][t.bucket]:
             actions.append(Action("retire", vin, t.id, c_id, bucket=t.bucket))
+            detail.append(("retire", vin, t.id, c_id, None, t.bucket))
             counts[c_id][f"retire_{t.bucket}"] += 1
         else:
             counts[c_id][f"kept_unseen_{t.bucket}"] += 1
     for d in run:
         counts[d]  # every dealer of the run gets a line, even an idle one
-    return Plan(actions=actions, dealers=dict(counts), vpic_missing=[], kept=kept)
+    return Plan(actions=actions, dealers=dict(counts), vpic_missing=[], kept=kept, detail=detail)
 
 
 def plan_document(plan: Plan, scope_sha: str, src: Db, tgt: Db) -> dict[str, Any]:
@@ -1160,6 +1174,16 @@ def print_plan(plan: Plan, *, label: str) -> None:
               f"vpic rows about {_mb(d['vpic'])}; cars is {_mb(d['cars'])} today. Estimates from the average row "
               f"size; indexes and WAL come on top and VACUUM does not shrink files: check the volume first.",
               flush=True)
+
+
+def write_detail(path: str, plan: Plan) -> None:
+    """CSV of every move, retirement and skipped conflict (updates and inserts are too many to read)."""
+    import csv
+
+    with open(path, "w", newline="", encoding="utf-8") as fh:
+        w = csv.writer(fh)
+        w.writerow(["kind", "vin", "car_id", "dealer", "other_dealer", "bucket"])
+        w.writerows(sorted(plan.detail or [], key=lambda r: (r[0], r[3], r[1])))
 
 
 def estimate_disk(tgt: Db, plan: Plan, n_rows: int) -> dict[str, int]:
@@ -1502,6 +1526,9 @@ def run_merge(args: argparse.Namespace, *, apply: bool) -> int:
         if args.plan_out:
             Path(args.plan_out).write_text(json.dumps(doc, indent=1, sort_keys=True) + "\n", encoding="utf-8")
             _say(f"plan written to {args.plan_out}")
+        if args.detail_out:
+            write_detail(args.detail_out, plan)
+            _say(f"moves, retirements and skipped conflicts written to {args.detail_out}")
         if not apply:
             return EXIT_OK
         if plan.writes() == 0:
@@ -1742,6 +1769,8 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--min-bucket-rows", type=int, default=DEFAULT_MIN_BUCKET_ROWS)
     p.add_argument("--only-dealers", metavar="A,B", help="merge only these in-scope dealers (a pilot)")
     p.add_argument("--plan-out", metavar="PATH", help="write the plan's counts as JSON")
+    p.add_argument("--detail-out", metavar="PATH",
+                   help="write every move, retirement and skipped conflict (vin, dealers, bucket) as CSV")
     p.add_argument("--expect-plan", metavar="PATH", help="--apply refuses unless its counts equal this plan file")
     p.add_argument("--expect-db", metavar="NAME", help="the target's current_database(); required to write")
     p.add_argument("--allow-remote-target", action="store_true",
