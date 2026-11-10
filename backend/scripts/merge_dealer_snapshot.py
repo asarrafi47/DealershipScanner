@@ -17,14 +17,17 @@ rehearsed on a local copy first; production changes only after the owner approve
     # 4. undo exactly one run
     python -m backend.scripts.merge_dealer_snapshot --rollback <run id> --expect-db <db> \\
         --target-dsn-env MERGE_TARGET_DSN
-    # 5. separate step: drop verified old backup tables, VACUUM (ANALYZE) cars + listings_grid_cards
+    # 5. separate step: drop verified old backup tables (none today), VACUUM (ANALYZE) cars + grid cards
     python -m backend.scripts.merge_dealer_snapshot --cleanup --expect-db <db> --target-dsn-env MERGE_TARGET_DSN
 
 Connection strings come only from the environment variables NAMED by --source-dsn-env and
 --target-dsn-env, so no URL is in argv, ps, a log line, the scope file or the plan file
 (connection errors print with host, user and password redacted). Against Railway:
 ``railway run --service Postgres -- sh -c 'MERGE_TARGET_DSN="$DATABASE_PUBLIC_URL" python -m ...'``.
-The source is always opened READ ONLY, and so is the target for --compute-scope and --dry-run.
+The source is always opened READ ONLY, and so is the target for --compute-scope and --dry-run
+(the server refuses writes in those sessions). Every writing mode (--apply, --rollback,
+--cleanup) additionally refuses a target that is not on this machine unless --allow-remote-target
+is given, so a stray environment variable cannot aim a rehearsal command at production.
 
 Semantics (``cars``)
 --------------------
@@ -38,30 +41,46 @@ Semantics (``cars``)
 * A dealer is SEEN holding a VIN when its fresh row has that VIN, or when the run's
   ``vin_owner_conflicts`` name it as the claimant (its feed listed the VIN and the VIN
   ownership guard refused the write).
-* Matched VIN, fresh at in-scope dealer A, target row filed under A: the target row takes
-  the source row's values; its ``cars.id`` never changes; ``first_seen_at`` becomes the
-  earlier of the two; ``internal_notes`` and ``marked_for_review`` (admin edits on the
-  website, which the scanner upsert never overwrites either) keep the target's values; a
-  reference column (``dealership_registry_id``, and ``epa_master_id`` with
-  ``epa_match_confidence``/``epa_match_method``) is copied only when its id names the same
-  row in both databases' ``dealerships`` / ``epa_master`` (identity columns compared, see
-  REF_GUARDS), otherwise the target's values stay. A row that would not change is not
-  written, so a second apply of the same scope is a no-op.
-* New VIN (absent from the target): inserted with a target id from ``cars_id_seq``; an
-  unverifiable reference column is written NULL.
+* Matched VIN, fresh at in-scope dealer A, target row filed under A: the target row takes the
+  source row's values and its ``cars.id`` never changes. ``first_seen_at`` becomes the earlier of
+  the two. A target row scraped at or after the source row is never overwritten (a row never
+  regresses), which is also why a second apply of the same scope writes nothing.
+  Three refinements keep the merge from destroying target data:
+  - KEEP RULE. A column's value is empty when it is NULL, or text that is blank or one of
+    ``[]``, ``{}``, ``null`` (the empties the repo's own partial indexes use). An empty source
+    value never replaces a non-empty target value, exactly the contract of the scanner's own
+    upsert (backend/scanner/upsert/sql.py: "an empty incoming value never overwrites a stored
+    one"). The state columns ``dealer_id``, ``dealer_name``, ``dealer_url``, ``scraped_at``,
+    ``listing_active`` and ``listing_removed_at`` always take the source value (a reactivated
+    row must lose its ``listing_removed_at``). Measured on the 2026-11-09 copy of production,
+    a plain copy would have blanked a stored value in about 7,000 cells of the 90,877 matched
+    rows (63 prices, 232 window-sticker URLs, 975 spec_source_json, 1,253 descriptions, 945
+    msrp, ...) while filling far more than it blanks; the dry run and the apply print the
+    exact count per column.
+  - ADMIN EDITS. ``internal_notes`` and ``marked_for_review`` (written on the website by
+    backend/dealer/admin/routes.py, and kept by the scanner upsert too) keep the target's values.
+  - REFERENCES. ``dealership_registry_id``, and ``epa_master_id`` with ``epa_match_confidence``
+    and ``epa_match_method``, are ids into tables whose numbering is per database. The source
+    value is copied only when its id names the same row in both databases' ``dealerships`` /
+    ``epa_master`` (identity columns compared, see REF_GUARDS); otherwise the target's values
+    stay. A NULL source reference keeps the target's.
+* New VIN (absent from the target): inserted with a target id from ``cars_id_seq`` (the apply
+  refuses when the sequence is behind ``max(id)``); an unverifiable reference column is NULL.
 * VIN ownership: a VIN the target files under a dealer OUTSIDE the scope (or under a blank
   dealer id) is never moved; it is counted as a skipped conflict
-  (``target_owner_out_of_scope``). Between two in-scope dealers, a VIN the target lists
+  (``target_owner_out_of_scope``). So is a VIN whose target owner is in scope but not part of
+  this run (``--only-dealers``). Between two dealers of the run, a VIN the target lists
   ACTIVE under C moves to the source's owner A (same id, A's values) only when C's capture
   was strong enough to retire it (C's retire_unseen for the row's bucket) and C did not
   claim it in the run; otherwise it is skipped (``target_owner_capture_weak`` /
   ``contested_in_run``), because the source's owner of a group-feed VIN is whichever store
-  wrote it first. A target row that is already inactive under an in-scope C moves.
-* Retirement: an ACTIVE target row of in-scope dealer C that C was not seen holding (and
-  that no in-scope dealer's fresh row takes over) gets ``listing_active = 0,
-  listing_removed_at = <apply time>`` only when the scope says retire_unseen for C and the
-  row's condition bucket. Otherwise it stays listed (``kept_unseen``) for the next real scan
-  to decide. No row is ever deleted.
+  wrote it first. A target row that is already inactive under C moves.
+* Retirement: an ACTIVE target row of in-scope dealer C that C was not seen holding gets
+  ``listing_active = 0, listing_removed_at = <apply time>`` only when the scope says
+  retire_unseen for C and the row's condition bucket. A row whose VIN has a fresh row at ANY
+  other dealer is never retired (the scan saw the car; it is moved or left where it is).
+  Otherwise the row stays listed (``kept_unseen``) for the next real scan to decide.
+  No row is ever deleted.
 * Out-of-scope dealers' rows (both sides) and every user table (car_comments,
   dealer_comments, comment_attachments, user_search_history, user_hidden_dealers, saved_*,
   users, ...) are never written; ``car_comments`` reference ``cars.id`` and ids never change.
@@ -78,8 +97,10 @@ A dealer is in scope only when ALL of these hold: a non-blank id; rows in both d
 not named by --exclude-dealer; exactly one triage entry, with verdict ok, thin or inaccurate
 (no_rows and error dealers kept their stale rows and stay out); at least one fresh source
 row; and no target row scraped at or after ``since`` (the target has not scanned it since).
+Each dealer entry carries ``in_scope``, ``reason``, ``retire_unseen`` (yes when any bucket
+retires) and ``retire_unseen_buckets`` with the numbers behind every bucket.
 
-retire_unseen is decided per condition bucket (``new`` / ``used`` by the scanner's
+Retirement is decided per condition bucket (``new`` / ``used`` by the scanner's
 ``condition_bucket`` rule; ``unknown`` = blank condition retires only when new and used
 both do) and is yes only when ALL of these hold:
 
@@ -87,22 +108,29 @@ both do) and is yes only when ALL of these hold:
    (``reconcile.buckets.<bucket>.kept`` empty);
 2. the target lists at least --min-bucket-rows (10) active cars in the bucket and the scan
    returned at least that many fresh rows of it;
-3. size ratio = fresh rows / target active rows >= --min-size-ratio (0.8): a partial
-   capture (missing pages, one section, one condition) fails even when what it did see
-   overlaps the target;
+3. size ratio = fresh rows / target active rows >= --min-size-ratio (0.8): a capture that is
+   smaller than the lot Railway holds is not trusted to speak for the whole lot;
 4. coverage = target active rows the dealer was seen holding / target active rows >=
-   --min-coverage (0.6; it must be stricter than the scanner's 0.5 floor).
+   --min-coverage (0.7; it must be stricter than the scanner's 0.5 floor).
 
-Why 0.6: the scanner retires at a 0.5 coverage floor, and on 2026-11-03 encinitasford-com
-re-saw 52% of its New cars and the scanner retired the rest; the 150-listing spot check
-found one of them still on the lot. 0.6 is that case plus two standard errors of a
-170-car bucket's share (sqrt(0.25 / 170) = 0.04). Measured with the source's
-``scan_before`` table (the pre-scan state; within 10% of Railway's active count for 437 of
-461 dealers) standing in for Railway: median coverage was 0.54 (new) and 0.31 (used) after
-36 days of turnover, and this rule lets 174 of 430 new and 33 of 437 used buckets retire
-(about 16k + 3k rows) while about 98k unseen rows stay listed for the next real scan,
-rather than risking more encinitasford cases. Every threshold is a flag and is written
-into the scope file next to each bucket's numbers.
+Why 0.7. The scanner retires every unseen row of a bucket once 50% of it was re-seen. On
+2026-11-03 encinitasford-com re-saw 89 of its 171 pre-scan New cars (52%) with a capture of
+normal size (164 rows, ratio 0.96) and the scanner retired the rest; that retirement was a
+false one. Measured against Railway's own rows the same bucket is 101 of 170 (59.4%), so a
+0.6 rule would clear it by 0.006. Coverage cannot tell a partial capture from turnover (36
+days passed since Railway's last scan; median coverage is 0.56 for New and 0.33 for Used
+buckets), so the rule limits the exposure instead: at 0.7 one merge can retire at most 30%
+of a bucket, and the known bad case sits 2.8 binomial standard errors below the line
+(sqrt(0.25 / 170) = 0.038) where the scanner's floor sits above it. Measured on the copy of
+production, retirement by threshold (size ratio and the triage conditions held at their
+defaults; rows = unseen rows retired, the rest stay listed for the next real scan):
+
+    coverage >=   0.5      0.6      0.7      0.8
+    new buckets   243      176      86       22
+    used buckets  91       38       11       2
+    rows retired  31,610   19,197   6,195    986
+
+Every threshold is a flag and is written into the scope file next to each bucket's numbers.
 
 Writes, backups and rollback
 ----------------------------
@@ -112,12 +140,14 @@ database itself. It runs in ONE REPEATABLE READ transaction under an advisory lo
 first writes ``merge_backup_<run id>`` (the full pre-image row of every car it will update,
 move or retire), ``merge_inserted_<run id>`` (the ids it inserts), ``merge_vpic_<run id>``
 (the VINs it adds to nhtsa_vpic_cache), ``merge_touched_<run id>`` (every car id it wrote,
-with the md5 of the row after the write) and a ``merge_snapshot_runs`` row, then writes,
-then verifies before COMMIT: row counts equal the plan, every written row's copied columns
-hash equal to the source row's, the rows the transaction wrote (``xmin``) are exactly the
-planned ids, and target-owned and target-only columns are unchanged. Any mismatch rolls the
-whole transaction back. With --expect-plan <the --plan-out of a dry run> the apply also
-refuses unless its live counts equal the reviewed ones.
+with the md5 of the row after the write) and a ``merge_snapshot_runs`` row, then writes in
+chunks, each chunk verified against the merged image it was built from, then verifies before
+COMMIT: row counts equal the plan, the cells kept from the target equal the plan's, the rows
+the transaction wrote (``xmin``) are exactly the planned ids, and target-owned and target-only
+columns are unchanged. Any mismatch rolls the whole transaction back. With --expect-plan <the
+--plan-out of a dry run> the apply also refuses unless its live counts equal the reviewed ones.
+Disk: the backup table holds a full copy of every touched row and the merge writes a new
+version of each, so the dry run prints an estimate of the extra space (check the volume first).
 
 --rollback <run id> (one transaction) refuses when a row the run wrote has changed since
 (md5 against merge_touched; --allow-drift restores anyway) or when a foreign key
@@ -128,14 +158,19 @@ rewound (ids are never reused). The run's tables stay as evidence until the owne
 
 --cleanup (separate flag, separate transaction) drops only the names in
 CLEANUP_DROP_TABLES, each re-verified at run time to have no ``git grep -F`` hit outside this
-file (it fails closed without git), never with CASCADE, then runs VACUUM (ANALYZE) on cars
-and listings_grid_cards. The list is EMPTY: on 2026-11-09 every old backup table on Railway
-was referenced in the repo. The eleven ``cars_backup_*`` / ``epa_extended_specs_bak_*``
-tables are created by migrations/V001__baseline.sql (dropping them diverges the database
-from the chain), ``cars_epa_link_backup_20260921`` and ``cars_owner_backup_20260929`` are
-explained live-only objects in backend/scripts/schema_drift_report.py, and owner decision
-D-DB1 (docs/NEXT_PHASES_PLAN_2026_10.md) already settles them: export, then drop through a
-migration (P13B.4), with epa_extended_specs_bak_* and cars_epa_link_backup_20260921 kept as
+file and its test (it fails closed without git), never with CASCADE, then runs VACUUM
+(ANALYZE) on cars and listings_grid_cards. The list is EMPTY: on 2026-11-09 all 13 old backup
+tables on Railway (cars_backup_capacity_20260718, cars_backup_mcpeek_prescan_20260712,
+cars_backup_mileage_contam_20260712, cars_backup_modelname_20260712,
+cars_backup_stock_contam_20260711_171841, cars_backup_stock_contam_20260711_171901,
+cars_backup_vinrepair_20260713, cars_epa_link_backup_20260921, cars_owner_backup_20260929,
+epa_extended_specs_bak_20260711_101806, epa_extended_specs_bak_20260712_083724,
+epa_extended_specs_bak_badhp_20260712, epa_extended_specs_bak_badratio_20260712) had a git
+grep hit. Eleven are created by migrations/V001__baseline.sql (dropping them diverges the
+database from the chain), ``cars_epa_link_backup_20260921`` and ``cars_owner_backup_20260929``
+are explained live-only objects in backend/scripts/schema_drift_report.py, and owner decision
+D-DB1 (docs/NEXT_PHASES_PLAN_2026_10.md) already settles all of them: export, then drop through
+a migration (P13B.4), with epa_extended_specs_bak_* and cars_epa_link_backup_20260921 kept as
 EPA recovery sources until P10D.
 """
 
@@ -159,6 +194,7 @@ from typing import Any, Iterable, Iterator, Sequence
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 SELF_REL = "backend/scripts/merge_dealer_snapshot.py"
+TEST_REL = "backend/tests/test_merge_dealer_snapshot.py"
 
 SCOPE_FORMAT = "merge_dealer_snapshot.scope/1"
 PLAN_FORMAT = "merge_dealer_snapshot.plan/1"
@@ -166,13 +202,18 @@ PLAN_FORMAT = "merge_dealer_snapshot.plan/1"
 VERDICTS_IN_SCOPE = ("ok", "thin", "inaccurate")
 BUCKETS = ("new", "used", "unknown")
 SCANNER_COVERAGE_FLOOR = 0.5
-DEFAULT_MIN_COVERAGE = 0.6
+DEFAULT_MIN_COVERAGE = 0.7
 DEFAULT_MIN_SIZE_RATIO = 0.8
 DEFAULT_MIN_BUCKET_ROWS = 10
 
 REQUIRED_CAR_COLUMNS = ("id", "vin", "dealer_id", "condition", "listing_active", "scraped_at", "first_seen_at")
 # Admin edits on the website; the scanner upsert keeps cars.* for them too (upsert/sql.py).
 TARGET_OWNED_COLUMNS = ("internal_notes", "marked_for_review")
+# State of the listing and of the scrape: the source value wins even when it is empty.
+ALWAYS_SOURCE_COLUMNS = ("dealer_id", "dealer_name", "dealer_url", "scraped_at", "listing_active",
+                         "listing_removed_at")
+# What "empty" means for a text value besides NULL and blank (idx_cars_active_packages uses the same set).
+EMPTY_TEXT_VALUES = ("", "[]", "{}", "null")
 
 
 @dataclass(frozen=True)
@@ -193,6 +234,7 @@ REF_GUARDS: tuple[RefGuard, ...] = (
 
 PROTECTED_TARGETS = frozenset({"cars", "cars_cleanroom", "postgres", "template0", "template1"})
 PROTECTED_TARGET_RE = re.compile(r"^cars_scan_")
+LOCAL_HOSTS = frozenset({"", "localhost", "127.0.0.1", "::1"})
 
 RUNS_TABLE = "merge_snapshot_runs"
 RUN_ID_RE = re.compile(r"^[0-9]{14}_[0-9a-f]{6}$")
@@ -245,6 +287,10 @@ def _now_iso() -> str:
     return datetime.now(timezone.utc).replace(microsecond=0).isoformat()
 
 
+def _mb(n: float) -> str:
+    return f"{n / 1_048_576:,.0f} MB"
+
+
 def condition_bucket(value: Any) -> str:
     """The scanner's bucket rule (backend/scanner/inventory_reconcile.condition_bucket).
 
@@ -291,6 +337,16 @@ def least_first_seen(target: Any, source: Any) -> Any:
     return source if str(source) < str(target) else target
 
 
+def at_least_as_fresh(target_scraped: Any, source_scraped: Any) -> bool:
+    """True when the target row was scraped at or after the source row: it is never overwritten."""
+    t, s = _parse_ts(target_scraped), _parse_ts(source_scraped)
+    if s is None:
+        return True  # nothing trustworthy to write over it
+    if t is None:
+        return False
+    return t >= s
+
+
 def normalize_since(value: str) -> str:
     """``2026-11-03T17:59:55+00:00`` -> ``2026-11-03T17:59:55`` (UTC), the text scraped_at sorts against."""
     dt = _parse_ts(value)
@@ -299,19 +355,28 @@ def normalize_since(value: str) -> str:
     return dt.astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S")
 
 
-def _redact(text: str, dsn: str) -> str:
-    """*text* without the DSN or its host, user and password."""
-    hide = {dsn}
+def _conninfo(dsn: str) -> dict[str, str]:
     try:
         from psycopg.conninfo import conninfo_to_dict
 
-        info = conninfo_to_dict(dsn)
-        for key in ("password", "host", "hostaddr", "user"):
-            val = info.get(key)
-            if val:
-                hide.update(str(val).split(","))
-    except Exception:  # noqa: BLE001 - an unparseable DSN still gets the whole-string redaction
-        pass
+        return {k: str(v) for k, v in conninfo_to_dict(dsn).items() if v is not None}
+    except Exception:  # noqa: BLE001 - an unparseable DSN has no host we can vouch for
+        return {}
+
+
+def is_local_host(host: str | None, hostaddr: str | None = None) -> bool:
+    """True for a unix socket directory or a loopback name/address (not a remote server)."""
+    names = [h.strip() for h in (host or "").split(",")] + [h.strip() for h in (hostaddr or "").split(",")]
+    return all(h in LOCAL_HOSTS or h.startswith("/") for h in names)
+
+
+def _redact(text: str, dsn: str) -> str:
+    """*text* without the DSN or its host, user and password."""
+    hide = {dsn}
+    for key in ("password", "host", "hostaddr", "user"):
+        val = _conninfo(dsn).get(key)
+        if val:
+            hide.update(str(val).split(","))
     for s in sorted((h for h in hide if h and len(h) >= 3), key=len, reverse=True):
         text = text.replace(s, "***")
     return text
@@ -330,6 +395,7 @@ class Db:
     version: str
     system_id: str | None
     read_only: bool
+    local: bool
 
 
 def open_db(env_name: str | None, role: str, *, read_only: bool) -> Db:
@@ -370,6 +436,8 @@ def open_db(env_name: str | None, role: str, *, read_only: bool) -> Db:
             system_id = row[0] if row else None
         except Exception:  # noqa: BLE001 - needs a privileged role; autocommit keeps the session clean
             system_id = None
+        # The host the session really reached (PGHOST and service files included), not the DSN text.
+        local = is_local_host(conn.info.host, conn.info.hostaddr)
         conn.autocommit = False
         conn.isolation_level = psycopg.IsolationLevel.REPEATABLE_READ
         if read_only:
@@ -377,7 +445,7 @@ def open_db(env_name: str | None, role: str, *, read_only: bool) -> Db:
     except Exception:
         conn.close()
         raise
-    return Db(conn, role, name, version, system_id, read_only)
+    return Db(conn, role, name, version, system_id, read_only, local)
 
 
 def _close(db: Db | None) -> None:
@@ -416,11 +484,14 @@ def check_expect_db(tgt: Db, expect: str | None, *, required: bool, what: str) -
         raise MergeRefused(f"--expect-db {expect!r} does not match the target database {tgt.name!r}; nothing written")
 
 
-def check_writable_target(tgt: Db, src: Db | None = None) -> None:
+def check_writable_target(tgt: Db, src: Db | None = None, *, allow_remote: bool = False) -> None:
     if tgt.name in PROTECTED_TARGETS or PROTECTED_TARGET_RE.match(tgt.name):
         raise MergeRefused(f"refusing to write to protected database {tgt.name!r}")
     if src is not None and src.name == tgt.name:
         raise MergeRefused(f"refusing to write to a database named like the source ({tgt.name!r})")
+    if not tgt.local and not allow_remote:
+        raise MergeRefused(f"the target database {tgt.name!r} is not on this machine; writing to it needs "
+                           "--allow-remote-target (and the owner's approval of the runbook)")
 
 
 def advisory_lock(db: Db) -> None:
@@ -428,17 +499,45 @@ def advisory_lock(db: Db) -> None:
         raise MergeRefused("another merge_dealer_snapshot apply/rollback holds the advisory lock")
 
 
+def check_id_sequence(tgt: Db) -> None:
+    """Inserts take ids from cars' own sequence; refuse when it is behind the table."""
+    seq = tgt.conn.execute("SELECT pg_get_serial_sequence('public.cars', 'id')").fetchone()[0]
+    if not seq:
+        raise MergeRefused("cars.id has no owned sequence; inserted rows could not get a target id")
+    last, called = tgt.conn.execute(f"SELECT last_value, is_called FROM {seq}").fetchone()
+    top = tgt.conn.execute("SELECT COALESCE(max(id), 0) FROM cars").fetchone()[0]
+    if (last if not called else last + 1) <= top:
+        raise MergeRefused(f"{seq} (last_value {last}) is not ahead of max(cars.id) {top}; "
+                           "inserting would collide with existing ids")
+
+
 # ---------------------------------------------------------------------------
 # Columns
 # ---------------------------------------------------------------------------
 
 
+def _is_text_type(typ: str) -> bool:
+    t = typ.lower()
+    return t == "text" or t.startswith(("character", "varchar", "citext"))
+
+
+def empty_sql(expr: str, text: bool) -> str:
+    """SQL test for the module's notion of an empty value."""
+    if not text:
+        return f"({expr} IS NULL)"
+    values = ", ".join("'" + v + "'" for v in EMPTY_TEXT_VALUES)
+    return f"({expr} IS NULL OR btrim({expr}) IN ({values}))"
+
+
 @dataclass
 class ColumnPlan:
-    common: list[str]
-    copied: list[str]
-    stage: list[str]
-    update_set: list[str]
+    common: list[str]  # shared columns in the target's order, id included
+    stage: list[str]  # common minus id: what an insert carries
+    update_set: list[str]  # stage minus vin and the target-owned columns: what an update writes
+    copied: list[str]  # source values moved unmodified (always + keepable), hashed for transport
+    always: list[str]  # the source value always wins
+    keepable: list[str]  # an empty source value keeps a non-empty target value
+    text_cols: set[str]
     groups: list[tuple[RefGuard, list[str], int]]
     ref_cols: list[str]
     source_only: list[str]
@@ -466,17 +565,31 @@ def plan_columns(src_cols: list[tuple[str, str]], tgt_cols: list[tuple[str, str]
             ref_cols.extend(gcols)
     special = {"id", "vin", "first_seen_at", *TARGET_OWNED_COLUMNS, *ref_cols}
     stage = [c for c in common if c != "id"]
+    copied = [c for c in common if c not in special]
+    always = [c for c in copied if c in ALWAYS_SOURCE_COLUMNS]
     return ColumnPlan(
         common=common,
-        copied=[c for c in common if c not in special],
         stage=stage,
         update_set=[c for c in stage if c != "vin" and c not in TARGET_OWNED_COLUMNS],
+        copied=copied,
+        always=always,
+        keepable=[c for c in copied if c not in ALWAYS_SOURCE_COLUMNS],
+        text_cols={c for c in common if _is_text_type(t[c])},
         groups=groups,
         ref_cols=ref_cols,
         source_only=[c for c, _ in src_cols if c not in t],
         target_only=[c for c, _ in tgt_cols if c not in s],
         target_all=[c for c, _ in tgt_cols],
     )
+
+
+def mask_expr(cols: ColumnPlan, alias: str = "c") -> str:
+    """One character per keepable column: 1 when the row's value is non-empty, 0 when empty."""
+    if not cols.keepable:
+        return "''::text"
+    parts = [f"CASE WHEN {empty_sql(f'{alias}.{_qi(c)}', c in cols.text_cols)} THEN '0' ELSE '1' END"
+             for c in cols.keepable]
+    return "concat(" + ", ".join(parts) + ")"
 
 
 # ---------------------------------------------------------------------------
@@ -489,7 +602,9 @@ class SrcRow:
     dealer: str
     bucket: str
     first_seen: Any
+    scraped: Any
     refs: tuple
+    mask: str
     md5: str | None
 
 
@@ -500,12 +615,15 @@ class TgtRow:
     active: bool
     bucket: str
     first_seen: Any
+    scraped: Any
     refs: tuple
-    scraped: str | None
+    mask: str
 
 
 def load_source_fresh(db: Db, cols: ColumnPlan, since: str, *, with_md5: bool) -> dict[str, SrcRow]:
-    sel = ["c.vin", "c.dealer_id", "c.condition", "c.first_seen_at"] + [f"c.{_qi(x)}" for x in cols.ref_cols]
+    sel = ["c.vin", "c.dealer_id", "c.condition", "c.first_seen_at", "replace(c.scraped_at, ' ', 'T')"]
+    sel += [f"c.{_qi(x)}" for x in cols.ref_cols]
+    sel.append(mask_expr(cols))
     if with_md5:
         sel.append(_md5_expr(cols.copied))
     n = len(cols.ref_cols)
@@ -514,29 +632,24 @@ def load_source_fresh(db: Db, cols: ColumnPlan, since: str, *, with_md5: bool) -
         cur.itersize = 5000
         cur.execute(f"SELECT {', '.join(sel)} FROM cars c WHERE {FRESH_SQL}", {"since": since})
         for row in cur:
-            out[row[0]] = SrcRow((row[1] or "").strip(), condition_bucket(row[2]), row[3],
-                                 tuple(row[4:4 + n]), row[4 + n] if with_md5 else None)
+            out[row[0]] = SrcRow((row[1] or "").strip(), condition_bucket(row[2]), row[3], row[4],
+                                 tuple(row[5:5 + n]), row[5 + n], row[6 + n] if with_md5 else None)
     return out
 
 
 def load_target(db: Db, cols: ColumnPlan) -> dict[str, TgtRow]:
     sel = ["c.id", "c.vin", "c.dealer_id", "c.condition", "COALESCE(c.listing_active, 1) = 1",
-           "replace(c.scraped_at, ' ', 'T')", "c.first_seen_at"] + [f"c.{_qi(x)}" for x in cols.ref_cols]
+           "replace(c.scraped_at, ' ', 'T')", "c.first_seen_at"]
+    sel += [f"c.{_qi(x)}" for x in cols.ref_cols]
+    sel.append(mask_expr(cols))
+    n = len(cols.ref_cols)
     out: dict[str, TgtRow] = {}
     with db.conn.cursor(name="merge_target_rows") as cur:
         cur.itersize = 5000
         cur.execute(f"SELECT {', '.join(sel)} FROM cars c")
         for row in cur:
             out[row[1]] = TgtRow(int(row[0]), (row[2] or "").strip(), bool(row[4]), condition_bucket(row[3]),
-                                 row[6], tuple(row[7:]), row[5])
-    return out
-
-
-def load_target_md5(db: Db, cols: ColumnPlan, ids: Iterable[int]) -> dict[int, str]:
-    out: dict[int, str] = {}
-    q = f"SELECT c.id, {_md5_expr(cols.copied)} FROM cars c WHERE c.id = ANY(%s::bigint[])"
-    for chunk in _chunks(sorted(set(ids)), MD5_CHUNK):
-        out.update({int(i): h for i, h in db.conn.execute(q, (chunk,)).fetchall()})
+                                 row[6], row[5], tuple(row[7:7 + n]), row[7 + n])
     return out
 
 
@@ -616,13 +729,21 @@ def safe_reference_ids(src: Db, tgt: Db, cols: ColumnPlan, fresh: dict[str, SrcR
 
 
 def final_refs(src_refs: tuple, tgt_refs: tuple | None, cols: ColumnPlan, safe: list[set[Any]]) -> tuple:
+    """The reference columns a written row ends with (module docstring, REFERENCES).
+
+    An update keeps the target's group unless the source's id is non-NULL and names the same row
+    in both databases. An insert has no target group: the source's stands when its id is NULL or
+    verified, and is NULL otherwise.
+    """
     out = list(src_refs)
     for gi, (_guard, gcols, start) in enumerate(cols.groups):
         sid = src_refs[start]
-        if sid is None or sid in safe[gi]:
-            continue
         n = len(gcols)
-        out[start:start + n] = list(tgt_refs[start:start + n]) if tgt_refs is not None else [None] * n
+        if tgt_refs is None:
+            if sid is not None and sid not in safe[gi]:
+                out[start:start + n] = [None] * n
+        elif sid is None or sid not in safe[gi]:
+            out[start:start + n] = list(tgt_refs[start:start + n])
     return tuple(out)
 
 
@@ -758,6 +879,7 @@ def build_scope(*, src: Db, tgt: Db, fresh: dict[str, SrcRow], claims: dict[str,
             reason = "in_scope"
         in_scope = reason == "in_scope"
         reasons[reason] += 1
+        rec = tri.get("reconcile") if isinstance(tri.get("reconcile"), dict) else {}
         buckets: dict[str, Any] = {}
         retire: dict[str, bool] = {}
         for b in BUCKETS:
@@ -766,7 +888,6 @@ def build_scope(*, src: Db, tgt: Db, fresh: dict[str, SrcRow], claims: dict[str,
             bs["unseen"] = ta - bs["reseen"] - bs["moved_elsewhere"]
             bs["coverage"] = round(bs["reseen"] / ta, 4) if ta else None
             bs["size_ratio"] = round(bs["fresh"] / ta, 4) if ta else None
-            rec = tri.get("reconcile") if isinstance(tri.get("reconcile"), dict) else {}
             bs["triage_kept"] = ((rec.get("buckets") or {}).get(b) or {}).get("kept")
             buckets[b] = bs
         for b in ("new", "used"):
@@ -777,7 +898,6 @@ def build_scope(*, src: Db, tgt: Db, fresh: dict[str, SrcRow], claims: dict[str,
         buckets["unknown"]["retire_unseen"] = retire["unknown"]
         buckets["unknown"]["why"] = ("new and used both retire" if retire["unknown"]
                                      else "blank condition retires only when new and used both do")
-        rec = tri.get("reconcile") if isinstance(tri.get("reconcile"), dict) else {}
         dealers[d] = {
             "in_scope": in_scope,
             "reason": reason,
@@ -791,7 +911,8 @@ def build_scope(*, src: Db, tgt: Db, fresh: dict[str, SrcRow], claims: dict[str,
             "target": {"rows": st["target_rows"], "active": st["target_active"], "newest": st["target_newest"],
                        "rows_since_scan": st["target_rows_since"]},
             "buckets": buckets,
-            "retire_unseen": retire,
+            "retire_unseen": any(retire.values()),
+            "retire_unseen_buckets": retire,
         }
     in_ids = [d for d, e in dealers.items() if e["in_scope"]]
     totals = {
@@ -800,11 +921,12 @@ def build_scope(*, src: Db, tgt: Db, fresh: dict[str, SrcRow], claims: dict[str,
         "out_of_scope_by_reason": dict(sorted((k, v) for k, v in reasons.items() if k != "in_scope")),
         "in_scope_target_active": sum(dealers[d]["target"]["active"] for d in in_ids),
         "in_scope_fresh": sum(dealers[d]["source"]["fresh"] for d in in_ids),
-        "retire_buckets": {b: sum(1 for d in in_ids if dealers[d]["retire_unseen"][b]) for b in BUCKETS},
+        "retire_unseen_dealers": sum(1 for d in in_ids if dealers[d]["retire_unseen"]),
+        "retire_buckets": {b: sum(1 for d in in_ids if dealers[d]["retire_unseen_buckets"][b]) for b in BUCKETS},
         "unseen_in_retire_buckets": sum(dealers[d]["buckets"][b]["unseen"] for d in in_ids for b in BUCKETS
-                                        if dealers[d]["retire_unseen"][b]),
+                                        if dealers[d]["retire_unseen_buckets"][b]),
         "unseen_kept": sum(dealers[d]["buckets"][b]["unseen"] for d in in_ids for b in BUCKETS
-                           if not dealers[d]["retire_unseen"][b]),
+                           if not dealers[d]["retire_unseen_buckets"][b]),
     }
     return {
         "format": SCOPE_FORMAT,
@@ -843,6 +965,9 @@ def read_scope(path: str | None) -> tuple[dict[str, Any], str]:
         raise MergeRefused(f"scope file is not JSON: {exc}") from None
     if not isinstance(scope, dict) or scope.get("format") != SCOPE_FORMAT or not isinstance(scope.get("dealers"), dict):
         raise MergeRefused(f"scope file is not a {SCOPE_FORMAT} file")
+    for d, e in scope["dealers"].items():
+        if e.get("in_scope") and not isinstance(e.get("retire_unseen_buckets"), dict):
+            raise MergeRefused(f"scope entry {d!r} has no retire_unseen_buckets")
     return scope, hashlib.sha256(raw).hexdigest()
 
 
@@ -880,7 +1005,9 @@ class Plan:
     actions: list[Action]
     dealers: dict[str, Counter]
     vpic_missing: list[str]
+    kept: Counter
     grid_cards: int = 0
+    disk: dict[str, int] | None = None
 
     def totals(self) -> dict[str, int]:
         tot: Counter = Counter()
@@ -898,10 +1025,26 @@ class Plan:
 
 
 def build_plan(*, scope: dict[str, Any], run: set[str], fresh: dict[str, SrcRow], claims: dict[str, set[str]],
-               tgt: dict[str, TgtRow], tgt_md5: dict[int, str], safe: list[set[Any]], cols: ColumnPlan) -> Plan:
-    retire = {d: scope["dealers"][d]["retire_unseen"] for d in run}
+               tgt: dict[str, TgtRow], safe: list[set[Any]], cols: ColumnPlan) -> Plan:
+    retire = {d: scope["dealers"][d]["retire_unseen_buckets"] for d in run}
     counts: dict[str, Counter] = defaultdict(Counter)
     actions: list[Action] = []
+    kept: Counter = Counter()
+
+    def write(kind: str, vin: str, s: SrcRow, t: TgtRow, ca: Counter, **extra: Any) -> None:
+        first = least_first_seen(t.first_seen, s.first_seen)
+        refs = final_refs(s.refs, t.refs, cols, safe)
+        for col in _guarded(s.refs, cols, safe):
+            ca[f"ref_guarded_{col}"] += 1
+        cells = [c for i, c in enumerate(cols.keepable) if s.mask[i] == "0" and t.mask[i] == "1"]
+        if cells:
+            ca["keep_rows"] += 1
+            kept.update(cells)
+        actions.append(Action(kind, vin, t.id, s.dealer, bucket=s.bucket, first_seen=first, refs=refs,
+                              md5=s.md5, **extra))
+        if not t.active:
+            ca["reactivate"] += 1
+
     for vin in sorted(fresh):
         s = fresh[vin]
         a_id = s.dealer
@@ -910,25 +1053,18 @@ def build_plan(*, scope: dict[str, Any], run: set[str], fresh: dict[str, SrcRow]
         t = tgt.get(vin)
         ca = counts[a_id]
         if t is None:
-            refs = final_refs(s.refs, None, cols, safe)
             for col in _guarded(s.refs, cols, safe):
                 ca[f"ref_guarded_{col}"] += 1
             actions.append(Action("insert", vin, None, a_id, bucket=s.bucket, first_seen=s.first_seen,
-                                  refs=refs, md5=s.md5))
+                                  refs=final_refs(s.refs, None, cols, safe), md5=s.md5))
             ca["insert"] += 1
             continue
         if t.dealer == a_id:
-            first = least_first_seen(t.first_seen, s.first_seen)
-            refs = final_refs(s.refs, t.refs, cols, safe)
-            if s.md5 == tgt_md5.get(t.id) and first == t.first_seen and refs == t.refs:
+            if at_least_as_fresh(t.scraped, s.scraped):
                 ca["unchanged"] += 1
                 continue
-            for col in _guarded(s.refs, cols, safe):
-                ca[f"ref_guarded_{col}"] += 1
-            actions.append(Action("update", vin, t.id, a_id, bucket=s.bucket, first_seen=first, refs=refs, md5=s.md5))
+            write("update", vin, s, t, ca)
             ca["update"] += 1
-            if not t.active:
-                ca["reactivate"] += 1
             continue
         c_id = t.dealer
         if c_id not in run:
@@ -940,26 +1076,20 @@ def build_plan(*, scope: dict[str, Any], run: set[str], fresh: dict[str, SrcRow]
         if t.active and not retire[c_id][t.bucket]:
             ca["skip_target_owner_capture_weak"] += 1
             continue
-        first = least_first_seen(t.first_seen, s.first_seen)
-        refs = final_refs(s.refs, t.refs, cols, safe)
-        for col in _guarded(s.refs, cols, safe):
-            ca[f"ref_guarded_{col}"] += 1
-        actions.append(Action("move", vin, t.id, a_id, from_dealer=c_id, bucket=s.bucket, first_seen=first,
-                              refs=refs, md5=s.md5))
+        if at_least_as_fresh(t.scraped, s.scraped):
+            ca["skip_target_row_newer"] += 1
+            continue
+        write("move", vin, s, t, ca, from_dealer=c_id)
         ca["move_in"] += 1
         counts[c_id]["move_out"] += 1
-        if not t.active:
-            ca["reactivate"] += 1
     for vin in sorted(tgt):
         t = tgt[vin]
         c_id = t.dealer
         if c_id not in run or not t.active:
             continue
         s = fresh.get(vin)
-        if s is not None and s.dealer == c_id:
-            continue  # seen: update or unchanged above
-        if s is not None and s.dealer in run:
-            continue  # another in-scope dealer's fresh row: moved or skipped above
+        if s is not None:
+            continue  # seen: at C (updated or unchanged above) or at another dealer (moved or left alone)
         if vin in claims.get(c_id, ()):
             counts[c_id]["seen_by_claim"] += 1
             continue
@@ -970,7 +1100,7 @@ def build_plan(*, scope: dict[str, Any], run: set[str], fresh: dict[str, SrcRow]
             counts[c_id][f"kept_unseen_{t.bucket}"] += 1
     for d in run:
         counts[d]  # every dealer of the run gets a line, even an idle one
-    return Plan(actions=actions, dealers=dict(counts), vpic_missing=[])
+    return Plan(actions=actions, dealers=dict(counts), vpic_missing=[], kept=kept)
 
 
 def plan_document(plan: Plan, scope_sha: str, src: Db, tgt: Db) -> dict[str, Any]:
@@ -981,6 +1111,8 @@ def plan_document(plan: Plan, scope_sha: str, src: Db, tgt: Db) -> dict[str, Any
         "source_database": src.name,
         "target_database": tgt.name,
         "totals": plan.totals(),
+        "kept_target_cells": dict(sorted(plan.kept.items())),
+        "disk_estimate_bytes": plan.disk,
         "dealers": {d: dict(sorted(c.items())) for d, c in sorted(plan.dealers.items())},
     }
 
@@ -1011,12 +1143,36 @@ def print_plan(plan: Plan, *, label: str) -> None:
           f"kept_unseen={tot['kept_unseen']} skipped_conflicts={tot['skipped_conflicts']} "
           f"(target_owner_out_of_scope={tot.get('skip_target_owner_out_of_scope', 0)} "
           f"contested_in_run={tot.get('skip_contested_in_run', 0)} "
-          f"target_owner_capture_weak={tot.get('skip_target_owner_capture_weak', 0)}) "
+          f"target_owner_capture_weak={tot.get('skip_target_owner_capture_weak', 0)} "
+          f"target_row_newer={tot.get('skip_target_row_newer', 0)}) "
           f"seen_by_claim={tot.get('seen_by_claim', 0)} unchanged={tot.get('unchanged', 0)} "
           f"vpic_inserts={tot['vpic_inserts']} grid_cards_deleted={tot['grid_cards_deleted']}", flush=True)
     guarded = {k: v for k, v in tot.items() if k.startswith("ref_guarded_")}
     if guarded:
         print(f"{label} reference columns kept from the target (or NULL on insert): {guarded}", flush=True)
+    if plan.kept:
+        top = ", ".join(f"{c}={n}" for c, n in plan.kept.most_common(12))
+        print(f"{label} KEEP RULE: {tot.get('keep_rows', 0)} updated rows keep a non-empty target value where "
+              f"the source is empty ({sum(plan.kept.values())} cells); most: {top}", flush=True)
+    if plan.disk:
+        d = plan.disk
+        print(f"{label} DISK: backup table about {_mb(d['backup'])}, new row versions about {_mb(d['versions'])}, "
+              f"vpic rows about {_mb(d['vpic'])}; cars is {_mb(d['cars'])} today. Estimates from the average row "
+              f"size; indexes and WAL come on top and VACUUM does not shrink files: check the volume first.",
+              flush=True)
+
+
+def estimate_disk(tgt: Db, plan: Plan, n_rows: int) -> dict[str, int]:
+    cars = tgt.conn.execute("SELECT pg_table_size('public.cars')").fetchone()[0]
+    avg = cars / max(n_rows, 1)
+    kinds = Counter(a.action for a in plan.actions)
+    vpic = 0
+    if plan.vpic_missing and table_exists(tgt, "nhtsa_vpic_cache"):
+        size, n = tgt.conn.execute("SELECT pg_table_size('public.nhtsa_vpic_cache'), "
+                                   "(SELECT count(*) FROM nhtsa_vpic_cache)").fetchone()
+        vpic = int(size / max(n, 1) * len(plan.vpic_missing))
+    return {"cars": int(cars), "backup": int(avg * (kinds["update"] + kinds["move"] + kinds["retire"])),
+            "versions": int(avg * (kinds["update"] + kinds["move"] + kinds["insert"])), "vpic": vpic}
 
 
 def scope_drift(scope: dict[str, Any], run: set[str], fresh: dict[str, SrcRow], claims: dict[str, set[str]],
@@ -1045,12 +1201,9 @@ def _plan_for(src: Db, tgt: Db, scope: dict[str, Any], run: set[str], *, with_ca
     _say(f"source: {len(fresh)} fresh rows since {since}, {sum(len(v) for v in claims.values())} run claims; "
          "reading target rows")
     tgt_rows = load_target(tgt, cols)
-    same = [t.id for vin, s in fresh.items() if s.dealer in run and (t := tgt_rows.get(vin)) and t.dealer == s.dealer]
-    _say(f"target: {len(tgt_rows)} rows; hashing {len(same)} matched rows")
-    tgt_md5 = load_target_md5(tgt, cols, same)
+    _say(f"target: {len(tgt_rows)} rows; planning")
     safe = safe_reference_ids(src, tgt, cols, fresh, run)
-    plan = build_plan(scope=scope, run=run, fresh=fresh, claims=claims, tgt=tgt_rows, tgt_md5=tgt_md5,
-                      safe=safe, cols=cols)
+    plan = build_plan(scope=scope, run=run, fresh=fresh, claims=claims, tgt=tgt_rows, safe=safe, cols=cols)
     plan.vpic_missing = vpic_missing(src, tgt)
     if with_cards and table_exists(tgt, "listings_grid_cards"):
         ids = [a.car_id for a in plan.actions if a.action != "insert"]
@@ -1059,10 +1212,12 @@ def _plan_for(src: Db, tgt: Db, scope: dict[str, Any], run: set[str], *, with_ca
             n += tgt.conn.execute("SELECT count(*) FROM listings_grid_cards WHERE car_id = ANY(%s::bigint[])",
                                   (chunk,)).fetchone()[0]
         plan.grid_cards = int(n)
+    plan.disk = estimate_disk(tgt, plan, len(tgt_rows))
     return plan, cols, fresh, claims, tgt_rows
 
 
-# A derived cache the web refills while people browse; its count is reported, not pinned.
+# Derived or advisory numbers a reviewed plan does not pin: the web refills grid cards while
+# people browse, and the disk estimate is a rough size.
 _UNPINNED_TOTALS = ("grid_cards_deleted",)
 
 
@@ -1081,6 +1236,8 @@ def compare_expected_plan(path: str, doc: dict[str, Any]) -> None:
     if w_tot != d_tot:
         keys = sorted(set(w_tot) | set(d_tot))
         diffs += [f"total {k}: reviewed {w_tot.get(k)} now {d_tot.get(k)}" for k in keys if w_tot.get(k) != d_tot.get(k)]
+    if (want.get("kept_target_cells") or {}) != doc["kept_target_cells"]:
+        diffs.append("cells kept from the target differ from the reviewed plan")
     if want.get("dealers") != doc["dealers"]:
         ids = sorted(set(want.get("dealers") or {}) | set(doc["dealers"]))
         diffs += [f"dealer {d}: reviewed {(want.get('dealers') or {}).get(d)} now {doc['dealers'].get(d)}"
@@ -1131,6 +1288,38 @@ def _expect(n: int, want: int, what: str) -> None:
         raise MergeAborted(f"{what}: wrote {n}, plan says {want}")
 
 
+def merged_stage_sql(cols: ColumnPlan) -> str:
+    """INSERT that turns the raw source rows into the images the target rows must end with.
+
+    ``c`` is the current target row. For a keepable column the target's value survives only when
+    the source's is empty and the target's is not (the module docstring's KEEP RULE).
+    """
+    exprs = []
+    for col in cols.stage:
+        r, c = f"r.{_qi(col)}", f"c.{_qi(col)}"
+        if col in cols.keepable:
+            text = col in cols.text_cols
+            exprs.append(f"CASE WHEN r.target_id IS NOT NULL AND {empty_sql(r, text)} "
+                         f"AND NOT {empty_sql(c, text)} THEN {c} ELSE {r} END")
+        else:
+            exprs.append(r)
+    return (f"INSERT INTO _merge_stage (target_id, action, {_cols(cols.stage)}) "
+            f"SELECT r.target_id, r.action, {', '.join(exprs)} "
+            "FROM _merge_raw r LEFT JOIN cars c ON c.id = r.target_id")
+
+
+def kept_cells_sql(cols: ColumnPlan) -> str:
+    """Per keepable column, how many updated/moved rows ended with the target's value."""
+    if not cols.keepable:
+        return "SELECT 1 WHERE false"
+    parts = []
+    for col in cols.keepable:
+        r, s = f"r.{_qi(col)}", f"s.{_qi(col)}"
+        parts.append(f"count(*) FILTER (WHERE {r} IS DISTINCT FROM {s})")
+    return (f"SELECT {', '.join(parts)} FROM _merge_raw r JOIN _merge_stage s ON s.target_id = r.target_id "
+            "WHERE r.action IN ('update', 'move')")
+
+
 def apply_plan(src: Db, tgt: Db, cols: ColumnPlan, plan: Plan, scope: dict[str, Any], scope_sha: str) -> str:
     since = scope["since"]
     run_id = new_run_id()
@@ -1156,9 +1345,13 @@ def apply_plan(src: Db, tgt: Db, cols: ColumnPlan, plan: Plan, scope: dict[str, 
     cur.execute(f"CREATE TABLE {_qi(tb['touched'])} (car_id bigint PRIMARY KEY, vin text NOT NULL, "
                 "action text NOT NULL, post_md5 text NOT NULL)")
 
-    # Source rows for update / move / insert, staged chunk by chunk and applied set-based.
-    cur.execute("CREATE TEMP TABLE _merge_stage ON COMMIT DROP AS SELECT NULL::bigint AS target_id, "
-                f"NULL::text AS action, NULL::text AS src_md5, {_cols(cols.stage, 'c')} FROM cars c WITH NO DATA")
+    # Source rows for update / move / insert, staged chunk by chunk and applied set-based:
+    # _merge_raw holds them as the source has them, _merge_stage the images the rows end with.
+    head = "NULL::bigint AS target_id, NULL::text AS action"
+    cur.execute(f"CREATE TEMP TABLE _merge_raw ON COMMIT DROP AS SELECT {head}, NULL::text AS src_md5, "
+                f"{_cols(cols.stage, 'c')} FROM cars c WITH NO DATA")
+    cur.execute(f"CREATE TEMP TABLE _merge_stage ON COMMIT DROP AS SELECT {head}, "
+                f"{_cols(cols.stage, 'c')} FROM cars c WITH NO DATA")
     pos = {c: i for i, c in enumerate(cols.stage)}
     fs_pos = pos["first_seen_at"]
     ref_pos = [pos[c] for c in cols.ref_cols]
@@ -1170,22 +1363,23 @@ def apply_plan(src: Db, tgt: Db, cols: ColumnPlan, plan: Plan, scope: dict[str, 
     ins_sql = (f"WITH ins AS (INSERT INTO cars ({_cols(cols.stage)}) SELECT {_cols(cols.stage)} FROM _merge_stage "
                f"WHERE action = 'insert' RETURNING id, vin) INSERT INTO {_qi(tb['inserted'])} (car_id, vin) "
                "SELECT id, vin FROM ins")
-    special = ["first_seen_at", *cols.ref_cols]
-    differs = " OR ".join([f"{_md5_expr(cols.copied, 'c')} IS DISTINCT FROM s.src_md5"]
-                          + [f"c.{_qi(x)} IS DISTINCT FROM s.{_qi(x)}" for x in special])
-    differs_ins = " OR ".join([differs] + [f"c.{_qi(x)} IS DISTINCT FROM s.{_qi(x)}"
-                                           for x in TARGET_OWNED_COLUMNS if x in pos])
+    chk_raw = f"SELECT count(*) FROM _merge_raw r WHERE {_md5_expr(cols.copied, 'r')} IS DISTINCT FROM r.src_md5"
     chk_upd = (f"SELECT count(*) FROM cars c JOIN _merge_stage s ON c.id = s.target_id "
-               f"WHERE s.action IN ('update', 'move') AND ({differs})")
-    chk_ins = f"SELECT count(*) FROM cars c JOIN _merge_stage s ON c.vin = s.vin WHERE s.action = 'insert' AND ({differs_ins})"
+               f"WHERE s.action IN ('update', 'move') AND "
+               f"{_md5_expr(cols.update_set, 'c')} IS DISTINCT FROM {_md5_expr(cols.update_set, 's')}")
+    chk_ins = (f"SELECT count(*) FROM cars c JOIN _merge_stage s ON c.vin = s.vin WHERE s.action = 'insert' AND "
+               f"{_md5_expr(cols.stage, 'c')} IS DISTINCT FROM {_md5_expr(cols.stage, 's')}")
+    merge_sql = merged_stage_sql(cols)
+    kept_sql = kept_cells_sql(cols)
     done = Counter()
+    kept_done: Counter = Counter()
     for i, chunk in enumerate(_chunks(writes, STAGE_CHUNK)):
         want = {a.vin: a for a in chunk}
-        cur.execute("TRUNCATE _merge_stage")
+        cur.execute("TRUNCATE _merge_raw, _merge_stage")
         rows = src.conn.execute(fetch, {"vins": list(want), "since": since}).fetchall()
         if len(rows) != len(want):
             raise MergeAborted(f"source returned {len(rows)} of {len(want)} planned fresh rows: it changed since planning")
-        with cur.copy(f"COPY _merge_stage (target_id, action, src_md5, {_cols(cols.stage)}) FROM STDIN") as cp:
+        with cur.copy(f"COPY _merge_raw (target_id, action, src_md5, {_cols(cols.stage)}) FROM STDIN") as cp:
             for row in rows:
                 vals = list(row[:-1])
                 a = want[vals[pos["vin"]]]
@@ -1194,21 +1388,31 @@ def apply_plan(src: Db, tgt: Db, cols: ColumnPlan, plan: Plan, scope: dict[str, 
                 vals[fs_pos] = a.first_seen
                 for p, v in zip(ref_pos, a.refs or ()):
                     vals[p] = v
-                cp.write_row([a.car_id, a.action, a.md5, *vals])
+                cp.write_row([a.car_id, a.action, row[-1], *vals])
+        bad = cur.execute(chk_raw).fetchone()[0]
+        if bad:
+            raise MergeAborted(f"{bad} staged row(s) differ from the source rows they were copied from")
         n_upd = sum(1 for a in chunk if a.action in ("update", "move"))
         n_ins = len(chunk) - n_upd
+        cur.execute(merge_sql)
+        _expect(cur.rowcount, len(chunk), "merged images")
+        if cols.keepable and n_upd:
+            kept_done.update({c: int(n) for c, n in zip(cols.keepable, cur.execute(kept_sql).fetchone()) if n})
         cur.execute(upd_sql)
         _expect(cur.rowcount, n_upd, "updated rows")
         cur.execute(ins_sql)
         _expect(cur.rowcount, n_ins, "inserted rows")
         bad = cur.execute(chk_upd).fetchone()[0] + cur.execute(chk_ins).fetchone()[0]
         if bad:
-            raise MergeAborted(f"{bad} written row(s) do not match the source row they were copied from")
+            raise MergeAborted(f"{bad} written row(s) do not match the merged image they were built from")
         done["update"] += n_upd
         done["insert"] += n_ins
         if (i + 1) % 25 == 0:
             _say(f"  staged {done['update'] + done['insert']} of {len(writes)} rows")
     _say(f"updated/moved {done['update']}, inserted {done['insert']}")
+    if +kept_done != +plan.kept:
+        raise MergeAborted(f"cells kept from the target differ from the plan: wrote {dict(kept_done)}, "
+                           f"plan says {dict(plan.kept)}")
 
     cur.execute("UPDATE cars AS c SET listing_active = 0, listing_removed_at = %s FROM _merge_plan p "
                 "WHERE p.action = 'retire' AND c.id = p.car_id AND COALESCE(c.listing_active, 1) = 1", (now,))
@@ -1256,12 +1460,14 @@ def apply_plan(src: Db, tgt: Db, cols: ColumnPlan, plan: Plan, scope: dict[str, 
     cur.execute(f"INSERT INTO {_qi(tb['touched'])} (car_id, vin, action, post_md5) "
                 f"SELECT c.id, c.vin, 'insert', md5(c::text) FROM cars c JOIN {_qi(tb['inserted'])} i ON i.car_id = c.id")
     totals = plan.totals()
+    totals["kept_target_cells"] = dict(sorted(kept_done.items()))
     cur.execute(f"INSERT INTO {RUNS_TABLE} (run_id, applied_at, source_database, target_database, scope_sha256, since, "
                 "totals_json, status) VALUES (%s, %s, %s, %s, %s, %s, %s, 'applied')",
                 (run_id, now, src.name, tgt.name, scope_sha, since, json.dumps(totals, sort_keys=True)))
     tgt.conn.commit()
     _say(f"COMMITTED run {run_id}: {done['update']} updated/moved, {done['insert']} inserted, "
-         f"{by_kind['retire']} retired, {n_vpic} vpic rows, {n_cards} grid cards deleted")
+         f"{by_kind['retire']} retired, {n_vpic} vpic rows, {n_cards} grid cards deleted, "
+         f"{sum(kept_done.values())} target cells kept ({dict(kept_done.most_common(8))})")
     _say(f"undo with: --rollback {run_id} --expect-db {tgt.name}; rebuild cards with build_listings_grid_cards")
     return run_id
 
@@ -1275,7 +1481,7 @@ def run_merge(args: argparse.Namespace, *, apply: bool) -> int:
         check_pair(src, tgt)
         check_expect_db(tgt, args.expect_db, required=apply, what="--apply")
         if apply:
-            check_writable_target(tgt, src)
+            check_writable_target(tgt, src, allow_remote=args.allow_remote_target)
             advisory_lock(tgt)
         if scope.get("source", {}).get("database") != src.name:
             raise MergeRefused(f"the scope was computed from source {scope.get('source', {}).get('database')!r}, "
@@ -1303,6 +1509,8 @@ def run_merge(args: argparse.Namespace, *, apply: bool) -> int:
             return EXIT_OK
         if args.expect_plan:
             compare_expected_plan(args.expect_plan, doc)
+        if any(a.action == "insert" for a in plan.actions):
+            check_id_sequence(tgt)
         apply_plan(src, tgt, cols, plan, scope, scope_sha)
         return EXIT_OK
     finally:
@@ -1353,8 +1561,8 @@ def compute_scope(args: argparse.Namespace) -> int:
         fh.write(json.dumps(scope, indent=1, sort_keys=True) + "\n")
     t = scope["totals"]
     _say(f"scope written to {out}: {t['in_scope']} of {t['dealers']} dealers in scope; out: {t['out_of_scope_by_reason']}")
-    _say(f"retire buckets {t['retire_buckets']}; unseen rows in retire buckets {t['unseen_in_retire_buckets']}, "
-         f"kept listed {t['unseen_kept']}")
+    _say(f"retire_unseen: {t['retire_unseen_dealers']} dealers, buckets {t['retire_buckets']}; unseen rows in "
+         f"retire buckets {t['unseen_in_retire_buckets']}, kept listed {t['unseen_kept']}")
     return EXIT_OK
 
 
@@ -1369,7 +1577,7 @@ def rollback(args: argparse.Namespace) -> int:
     try:
         tgt = open_db(args.target_dsn_env, "target", read_only=False)
         check_expect_db(tgt, args.expect_db, required=True, what="--rollback")
-        check_writable_target(tgt)
+        check_writable_target(tgt, allow_remote=args.allow_remote_target)
         advisory_lock(tgt)
         cur = tgt.conn.cursor()
         missing = [t for t in tb.values() if not table_exists(tgt, t)]
@@ -1448,10 +1656,11 @@ def rollback(args: argparse.Namespace) -> int:
 
 
 def repo_references(name: str) -> list[str]:
-    """Tracked files (other than this script) that contain *name*; raises when git cannot answer."""
+    """Tracked files (other than this script and its test) that contain *name*; raises when git cannot answer."""
     try:
         res = subprocess.run(
-            ["git", "-C", str(REPO_ROOT), "grep", "-l", "-I", "-F", "-e", name, "--", ".", f":(exclude){SELF_REL}"],
+            ["git", "-C", str(REPO_ROOT), "grep", "-l", "-I", "-F", "-e", name, "--", ".",
+             f":(exclude){SELF_REL}", f":(exclude){TEST_REL}"],
             capture_output=True, text=True, check=False, timeout=60,
         )
     except (OSError, subprocess.SubprocessError) as exc:
@@ -1476,7 +1685,7 @@ def cleanup(args: argparse.Namespace) -> int:
     try:
         tgt = open_db(args.target_dsn_env, "target", read_only=False)
         check_expect_db(tgt, args.expect_db, required=True, what="--cleanup")
-        check_writable_target(tgt)
+        check_writable_target(tgt, allow_remote=args.allow_remote_target)
         cur = tgt.conn.cursor()
         dropped = []
         for n in names:
@@ -1526,13 +1735,17 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--triage", action="append", metavar="GLOB", help="triage.json file or glob (repeatable)")
     p.add_argument("--since", help="scan start (ISO-8601); default: earliest triage 'started'")
     p.add_argument("--exclude-dealer", action="append", default=[], metavar="ID", help="keep this dealer out of scope")
-    p.add_argument("--min-coverage", type=float, default=DEFAULT_MIN_COVERAGE)
+    p.add_argument("--min-coverage", type=float, default=DEFAULT_MIN_COVERAGE,
+                   help="share of a bucket's target rows the scan must re-see before unseen rows retire "
+                        f"(default {DEFAULT_MIN_COVERAGE}; must exceed the scanner's {SCANNER_COVERAGE_FLOOR})")
     p.add_argument("--min-size-ratio", type=float, default=DEFAULT_MIN_SIZE_RATIO)
     p.add_argument("--min-bucket-rows", type=int, default=DEFAULT_MIN_BUCKET_ROWS)
     p.add_argument("--only-dealers", metavar="A,B", help="merge only these in-scope dealers (a pilot)")
     p.add_argument("--plan-out", metavar="PATH", help="write the plan's counts as JSON")
     p.add_argument("--expect-plan", metavar="PATH", help="--apply refuses unless its counts equal this plan file")
     p.add_argument("--expect-db", metavar="NAME", help="the target's current_database(); required to write")
+    p.add_argument("--allow-remote-target", action="store_true",
+                   help="allow a writing mode (--apply, --rollback, --cleanup) on a target that is not on this machine")
     p.add_argument("--allow-drift", action="store_true", help="--rollback: restore rows changed since the run")
     return p
 
