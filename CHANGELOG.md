@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+### Cloud sessions (Claude Code on the web)
+- Tooling: scripts/cloud/setup.sh makes a Linux cloud VM match CI and is safe to re-run (a warm VM finishes in about a second). It builds a Python 3.12 venv outside the clone, installs CPU-only torch first and then requirements.txt and requirements-test.txt (the CI order, D-TC5), installs the ruff version pinned in ci.yml, seeds the pgeocode US postal table (backend/db/geo.py loads it at import and the default cloud network blocks the download), checks for Node 20, installs Postgres 18 with pgvector from the PGDG apt repository (the signing key's fingerprint is pinned), and sets core.hooksPath=scripts/git-hooks and a local origin/main so the pre-push VERSION rule runs in a fresh clone. It refuses to install the requirements without CPU torch, because the default torch wheel is the multi-GB CUDA stack. `--check` only reports what is missing; `--skip` and `--only` pick steps; it never connects to a database.
+- Tooling: scripts/cloud/with_pg.sh runs a command against the throwaway cluster of scripts/pg_test_up.sh, also as root: initdb refuses root and a cloud session is root. pg_test_up.sh is unchanged and keeps its refusals.
+- Tooling: .claude/settings.json adds one SessionStart hook that runs the setup only when CLAUDE_CODE_REMOTE=true, which the cloud VM sets and the Mac never does. It carries no env, permission or other hook settings, so local sessions are unaffected.
+- Docs: docs/CLOUD.md is the owner's guide: GitHub connection, environment name, network hosts, the variable names to set and the ones that must never be set, the setup script line, which branch to start from, the VERSION rule for cloud pushes, what cloud sessions cannot do, handing work back to the Mac, and the pending history rewrite. It names no host, address, id or secret of the owner's.
+- Tests: backend/tests/test_cloud_setup.py pins the Python minor, the torch index, the ruff pin, the Postgres major and the Node major against .github/workflows/ci.yml, the hook's remote-only guard, a read-only `--check`, and that the guide names no address, id, private host or secret.
+- Not released. VERSION stays 1.5.16: units add their lines here and the release step bumps (docs/RELEASING.md). Nothing here reaches an image: the Dockerfiles exclude .claude and the scripts are not run by the app.
+
 ## [1.5.16] - 2026-11-03
 
 ### N37 (Postgres-only cleanup, first slice)
