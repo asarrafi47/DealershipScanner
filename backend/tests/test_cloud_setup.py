@@ -3,10 +3,11 @@
 docs/CLOUD.md is the owner's guide to running Claude Code on the web against this repo. What
 it relies on fails quietly: a CPU torch install that falls back to the multi-GB CUDA wheel, a
 venv that is not Python 3.12, a hook that also fires on the owner's Mac, a pgeocode cache that
-is cold when the first test imports backend.db.geo. This module pins what must match CI
-(.github/workflows/ci.yml is read, not copied) and what must stay true of the hook and the
-guide, and runs only what is safe to run: ``--help``, ``--check`` (read-only), the hook's own
-guard and the argument errors. It never runs an install.
+is cold when the first test imports backend.db.geo, a Postgres that is not the one CI runs. This
+module pins what must match CI (.github/workflows/ci.yml is read, not copied) and what must stay
+true of the hook and the guide. It runs only what is safe to run: ``--help``, ``--check``
+(read-only), the hook's own guard, the argument errors, and single functions of setup.sh against
+fake trees and stub commands. It never runs an install.
 
 The guide goes to a public repository, so it is scanned for addresses, private host names and
 secret shapes the way a release scans its diff (docs/RELEASING.md, release checklist step 4).
@@ -18,7 +19,9 @@ import json
 import os
 import re
 import shutil
+import stat
 import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -27,6 +30,7 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 SETUP = REPO_ROOT / "scripts" / "cloud" / "setup.sh"
 WITH_PG = REPO_ROOT / "scripts" / "cloud" / "with_pg.sh"
 PG_TEST_UP = REPO_ROOT / "scripts" / "pg_test_up.sh"
+PG_HARNESS = REPO_ROOT / "backend" / "tests" / "pg_harness.py"
 PRE_PUSH = REPO_ROOT / "scripts" / "git-hooks" / "pre-push"
 SETTINGS = REPO_ROOT / ".claude" / "settings.json"
 DOC = REPO_ROOT / "docs" / "CLOUD.md"
@@ -68,8 +72,8 @@ def _ci_runs() -> str:
     return "\n".join(re.findall(r"^\s+run:\s*(.+)$", _text(CI_YML), re.M))
 
 
-def _run(argv, env, cwd=None, timeout=60):
-    return subprocess.run(argv, env=env, cwd=cwd, capture_output=True, text=True, timeout=timeout)
+def _run(argv, env, cwd=None, timeout=60, input=None):
+    return subprocess.run(argv, env=env, cwd=cwd, capture_output=True, text=True, timeout=timeout, input=input)
 
 
 def _clean_env(tmp_path: Path, **extra: str) -> dict:
@@ -100,6 +104,25 @@ def _tree(path: Path) -> list[str]:
     return sorted(r for r in rels if not r.startswith("home/.cache/rosetta/"))
 
 
+def _sourced(tmp_path: Path, body: str, *args: str, **env_extra: str) -> subprocess.CompletedProcess:
+    """Run *body* in a bash that has sourced setup.sh (so its functions exist and nothing has run).
+
+    setup.sh turns on ``set -euo pipefail``, which the sourcing shell keeps: start *body* with
+    ``set +e`` when it calls a function that is meant to fail.
+    """
+    return _run(
+        ["bash", "-c", f'source "$1"; shift; {body}', "caller", str(SETUP), *args],
+        env=_clean_env(tmp_path, **env_extra),
+    )
+
+
+def _executable(path: Path, text: str) -> Path:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(text, encoding="utf-8")
+    path.chmod(path.stat().st_mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
+    return path
+
+
 # --- the scripts exist and are well formed -----------------------------------------
 
 
@@ -116,6 +139,14 @@ def test_scripts_are_executable_strict_bash(script):
 @pytest.mark.parametrize("script", [SETUP, WITH_PG], ids=lambda p: p.name)
 def test_scripts_parse(script):
     r = _run(["bash", "-n", str(script)], env=os.environ.copy())
+    assert r.returncode == 0, r.stderr
+
+
+@pytest.mark.skipif(not Path("/bin/bash").exists(), reason="no /bin/bash")
+@pytest.mark.parametrize("script", [SETUP, WITH_PG], ids=lambda p: p.name)
+def test_scripts_parse_with_the_system_bash(script):
+    # macOS ships bash 3.2, the oldest the header promises (--check and --help run on the Mac).
+    r = _run(["/bin/bash", "-n", str(script)], env=os.environ.copy())
     assert r.returncode == 0, r.stderr
 
 
@@ -185,8 +216,10 @@ def test_pgeocode_is_seeded_from_geonames_then_the_github_mirror():
     assert urls[1].startswith("https://raw.githubusercontent.com/")
     assert all("{country}" in u for u in urls)
     body = _function("pgeocode_seed")
-    # One source per try, with a timeout: pgeocode's own fallback only catches HTTP errors.
-    assert "pgeocode.DOWNLOAD_URL = [url]" in body and "setdefaulttimeout" in body
+    # One source per try, fetched by curl and handed to pgeocode as a file: pgeocode's own fallback
+    # only catches HTTP errors, and urllib has its own CA setup behind a cloud proxy.
+    assert "curl -fsSL" in body and "--connect-timeout" in body
+    assert "as_uri()" in body and "pgeocode.DOWNLOAD_URL" in body
     # The cache is the library's default, so no environment variable is needed in a session.
     assert "PGEOCODE_DATA_DIR" not in _code(SETUP)
 
@@ -200,29 +233,45 @@ def test_git_wiring_matches_the_release_rules():
     assert "+refs/heads/main:refs/remotes/origin/main" in code
 
 
-def test_postgres_matches_ci_and_the_pg_test_up_helper():
+def test_postgres_matches_ci_and_the_harness():
     major = _const("PG_MAJOR")
     assert major == "18"
     image = re.search(r"image:\s*pgvector/pgvector:\S+-pg(\d+)", _text(CI_YML))
     assert image and image.group(1) == major, "CI's pg major moved: move PG_MAJOR and the doc with it"
-    assert _const("PG_BIN").replace("${PG_MAJOR}", major) == f"/usr/lib/postgresql/{major}/bin"
-    assert _const("PG_EXT").replace("${PG_MAJOR}", major) == f"/usr/share/postgresql/{major}/extension"
+    assert _const("PG_LIB_ROOT") == "/usr/lib/postgresql" and _const("PG_SHARE_ROOT") == "/usr/share/postgresql"
+    # The fallback majors are ones the harness accepts, and the one installed is among them.
+    floor = re.search(r"< (\d+)000:\s*\n\s*raise PgUnavailable\(\"CREATE DATABASE", _text(PG_HARNESS))
+    assert floor, "the harness no longer states a minimum server version"
+    fallback = _const("PG_FALLBACK_MAJORS").split()
+    assert fallback and all(int(m) >= int(floor.group(1)) // 10 and int(m) < int(major) for m in fallback)
+    assert _const("PG_FALLBACK_INSTALL") in fallback
+    # with_pg.sh walks the same majors in the same order (it does not source setup.sh).
+    loop = re.search(r"for m in ([0-9 ]+); do", _text(WITH_PG))
+    assert loop and loop.group(1).split() == [major, *fallback]
     helper = _text(PG_TEST_UP)
     assert "PG_TEST_BIN" in helper and "PG_TEST_EXT" in helper
     env_lines = _function("env_file_write")
-    assert 'PG_TEST_BIN="%s"' in env_lines and 'PG_TEST_EXT="%s"' in env_lines
+    assert "export PG_TEST_BIN=" in env_lines and "export PG_TEST_EXT=" in env_lines
     body = _function("pg_install")
     for package in ('"postgresql-$PG_MAJOR"', '"postgresql-client-$PG_MAJOR"', '"postgresql-$PG_MAJOR-pgvector"'):
         assert package in body, package
-    assert "create_main_cluster = false" in body
+    assert "create_main_cluster = false" in _function("pg_no_default_cluster")
+    assert "pg_no_default_cluster" in body and "pg_no_default_cluster" in _function("pgfb_install")
 
 
-def test_pgdg_source_is_https_signed_and_the_key_fingerprint_is_pinned():
+def test_pgdg_source_is_signed_and_the_key_fingerprint_is_pinned():
     assert re.fullmatch(r"[0-9A-F]{40}", _const("PGDG_KEY_FPR"))
-    assert _const("PGDG_URL").startswith("https://apt.postgresql.org/")
+    # Plain http on purpose (see the comment on the constant): apt verifies every file against the key.
+    assert _const("PGDG_URL").startswith("http://apt.postgresql.org/")
     assert _const("PGDG_KEY_URL").startswith("https://www.postgresql.org/")
-    assert "signed-by=$PGDG_KEY" in _function("pg_install")
-    assert '"$fpr" != "$PGDG_KEY_FPR"' in _function("pg_install")
+    # The key normally comes with Ubuntu's postgresql-common, so the allowed domains need no key host.
+    assert _const("PGDG_KEY") == "/usr/share/postgresql-common/pgdg/apt.postgresql.org.asc"
+    body = _function("pg_install")
+    assert "signed-by=$PGDG_KEY" in body
+    assert '"$fpr" != "$PGDG_KEY_FPR"' in body
+    assert "postgresql-common" in body
+    # Reachability is checked before apt's sources are touched, so a blocked host leaves apt healthy.
+    assert body.index("InRelease") < body.index('"$PGDG_LIST"')
 
 
 # --- nothing here touches data or secrets ---------------------------------------------
@@ -244,11 +293,14 @@ def test_with_pg_hands_the_dsn_only_to_the_command_after_the_cluster_is_up():
     assert "pg_test_up.sh" in code
     # The one assignment is the line that runs the command; the holder only echoes what pg_test_up.sh exported.
     assigns = re.findall(r"^.*TEST_PG_ADMIN_DSN=.*$", code, re.M)
-    assert len(assigns) == 1 and 'TEST_PG_ADMIN_DSN="$dsn" REQUIRE_PG=1 "$@"' in assigns[0], assigns
+    assert len(assigns) == 1, assigns
+    assert 'TEST_PG_ADMIN_DSN="$dsn" SCHEMA_PARITY_PG_DSN="$dsn" REQUIRE_PG=1 "$@"' in assigns[0], assigns
     assert "runuser -u postgres" in code  # initdb and pg_ctl refuse root
     # The cluster ends through pg_test_up.sh's own exit path (`--` mode plus a stop file), never by a signal:
     # bash defers a trap until the foreground `sleep 3600` of the no-command mode ends.
     assert 'pg_test_up.sh" -- bash -c' in code and '"$STOP"' in code
+    # The postgres user gets the Postgres paths spelled out; nothing else of this environment.
+    assert '"PG_TEST_BIN=$PG_TEST_BIN"' in code and '"PG_TEST_EXT=$PG_TEST_EXT"' in code
 
 
 @pytest.mark.parametrize("path", CLOUD_FILES, ids=lambda p: p.name)
@@ -270,7 +322,7 @@ def test_no_secret_shapes_in_the_cloud_files(path):
 def test_help_names_the_modes_and_exits_zero(tmp_path):
     r = _run(["bash", str(SETUP), "--help"], env=_clean_env(tmp_path))
     assert r.returncode == 0, r.stderr
-    for needle in ("--check", "--hook", "--skip", "--only", "docs/CLOUD.md"):
+    for needle in ("--check", "--hook", "--skip", "--only", "docs/CLOUD.md", "exit 1 when a required", "item is missing"):
         assert needle in r.stdout, needle
 
 
@@ -290,6 +342,18 @@ def test_hook_mode_does_nothing_outside_a_cloud_session(tmp_path):
     assert r.returncode == 0
     assert r.stdout == "" and r.stderr == ""  # a hook's stdout is added to the session's context
     assert _tree(tmp_path) == before
+
+
+@needs_bash
+def test_hook_mode_never_fails_the_session(tmp_path):
+    # In a cloud session (the variable is set) with a log directory that cannot be created, the setup
+    # stops before any step runs. A SessionStart hook must still exit 0, and say what happened.
+    # (Off Linux it only reports that there is nothing to install; the exit code is the same.)
+    env = _clean_env(tmp_path, CLAUDE_CODE_REMOTE="true", DS_CLOUD_LOG_DIR="/dev/null/cannot-exist")
+    r = _run(["bash", str(SETUP), "--hook"], env=env)
+    assert r.returncode == 0, (r.stdout, r.stderr)
+    assert r.stdout.startswith("cloud-setup: "), r.stdout
+    assert not (tmp_path / "venv").exists()
 
 
 @needs_bash
@@ -339,11 +403,6 @@ def test_sourcing_defines_the_functions_and_runs_nothing(tmp_path):
     assert _tree(tmp_path) == before
 
 
-def _sourced(tmp_path: Path, body: str, *args: str) -> subprocess.CompletedProcess:
-    """Run *body* in a bash that has sourced setup.sh (so its functions exist and nothing has run)."""
-    return _run(["bash", "-c", f'source "$1"; shift; {body}', "caller", str(SETUP), *args], env=_clean_env(tmp_path))
-
-
 @needs_bash
 def test_requirements_digest_decides_when_pip_runs_again(tmp_path):
     root = tmp_path / "repo"
@@ -390,6 +449,186 @@ def test_with_pg_needs_a_command_after_double_dash(tmp_path):
         assert r.returncode == 2 and "usage" in r.stderr, (argv, r.stderr)
 
 
+# --- the Postgres choice: CI's major first, then the image's own ----------------------------
+
+
+def _fake_pg(root: Path, major: int, *, pgvector=True, dblink=True, binaries=True, version="16.15") -> None:
+    """A Debian-layout PostgreSQL <major> under *root*: lib/<major>/bin and share/<major>/extension."""
+    bindir = root / "lib" / str(major) / "bin"
+    extdir = root / "share" / str(major) / "extension"
+    bindir.mkdir(parents=True, exist_ok=True)
+    extdir.mkdir(parents=True, exist_ok=True)
+    if binaries:
+        for name in ("initdb", "pg_ctl", "pg_isready", "psql"):
+            _executable(bindir / name, "#!/bin/sh\n")
+        _executable(bindir / "postgres", f"#!/bin/sh\necho 'postgres (PostgreSQL) {version} (Test build)'\n")
+    if pgvector:
+        (extdir / "vector.control").write_text("", encoding="utf-8")
+    if dblink:
+        (extdir / "dblink.control").write_text("", encoding="utf-8")
+
+
+_PG_PRELUDE = 'set +e; PG_LIB_ROOT="$1/lib"; PG_SHARE_ROOT="$1/share"; '
+
+
+@needs_bash
+def test_pg_is_not_ok_on_an_empty_machine(tmp_path):
+    root = tmp_path / "pg"
+    root.mkdir()
+    r = _sourced(tmp_path, _PG_PRELUDE + 'pg_ok; echo "rc=$? detail=$DETAIL"; pg_pick_major; echo "pick=$?"', str(root))
+    assert "rc=1 detail=no PostgreSQL 18 server and client binaries" in r.stdout, r.stdout
+    assert "pick=1" in r.stdout
+
+
+@needs_bash
+def test_pg_18_wins_over_a_fallback_major(tmp_path):
+    root = tmp_path / "pg"
+    _fake_pg(root, 18, version="18.6")
+    _fake_pg(root, 16)
+    r = _sourced(tmp_path, _PG_PRELUDE + 'pg_ok; echo "rc=$? detail=$DETAIL"; echo "pick=$(pg_pick_major)"', str(root))
+    assert "rc=0 detail=PostgreSQL 18.6 with pgvector and dblink" in r.stdout, r.stdout
+    assert "pick=18" in r.stdout
+
+
+@needs_bash
+def test_pg_18_without_pgvector_does_not_count_and_the_first_fallback_is_picked(tmp_path):
+    root = tmp_path / "pg"
+    _fake_pg(root, 18, pgvector=False)
+    _fake_pg(root, 15)
+    _fake_pg(root, 16, version="16.15")
+    r = _sourced(
+        tmp_path,
+        _PG_PRELUDE + 'pg_ok; echo "rc=$? detail=$DETAIL"; pgfb_ok; echo "fb=$? detail=$DETAIL"; echo "pick=$(pg_pick_major)"',
+        str(root),
+    )
+    assert "rc=1 detail=pgvector is missing from" in r.stdout, r.stdout
+    # 17 is absent, so 16 is the first complete fallback, ahead of 15; the report says it is not parity.
+    assert "fb=0 detail=PostgreSQL 16.15 with pgvector and dblink; NOT CI parity (CI and production run 18)" in r.stdout
+    assert "pick=16" in r.stdout
+
+
+@needs_bash
+def test_a_fallback_major_without_dblink_is_not_usable(tmp_path):
+    root = tmp_path / "pg"
+    _fake_pg(root, 16, dblink=False)
+    r = _sourced(tmp_path, _PG_PRELUDE + 'pgfb_ok; echo "fb=$? detail=$DETAIL"', str(root))
+    assert "fb=1 detail=no PostgreSQL 17, 16, 15 with pgvector either" in r.stdout, r.stdout
+
+
+@needs_bash
+def test_check_mode_reports_the_fallback_only_when_18_is_missing(tmp_path):
+    body = _PG_PRELUDE + 'CHECK_ONLY=1; REPORT="$(mktemp)"; step_pg; sort "$REPORT" | cut -d"|" -f2-3; rm -f "$REPORT"'
+    only16 = tmp_path / "only16"
+    _fake_pg(only16, 16)
+    r = _sourced(tmp_path, body, str(only16))
+    assert r.stdout.splitlines() == ["optional|postgres 18 + pgvector", "ok|postgres fallback"], r.stdout
+
+    both = tmp_path / "both"
+    _fake_pg(both, 18, version="18.6")
+    _fake_pg(both, 16)
+    r = _sourced(tmp_path, body, str(both))
+    assert r.stdout.splitlines() == ["ok|postgres 18 + pgvector"], r.stdout  # the fallback is not even looked at
+
+    none = tmp_path / "none"
+    none.mkdir()
+    r = _sourced(tmp_path, body, str(none))
+    assert r.stdout.splitlines() == ["optional|postgres 18 + pgvector", "optional|postgres fallback"], r.stdout
+
+
+@needs_bash
+def test_session_env_file_gets_each_line_once_and_names_the_picked_postgres(tmp_path):
+    root = tmp_path / "pg"
+    _fake_pg(root, 16)
+    envfile = tmp_path / "envfile"
+    envfile.write_text("export OTHER_HOOK=1\n", encoding="utf-8")  # another hook's line stays
+    body = (
+        _PG_PRELUDE
+        + f'VENV=/opt/ds-venv; NODE_DIR={tmp_path}/no-node; CLAUDE_ENV_FILE="{envfile}"; env_file_write; env_file_write'
+    )
+    r = _sourced(tmp_path, body, str(root))
+    assert r.returncode == 0, r.stderr
+    assert envfile.read_text(encoding="utf-8").splitlines() == [
+        "export OTHER_HOOK=1",
+        'export PATH="/opt/ds-venv/bin:$PATH"',  # $PATH stays literal: expanded when the file is run
+        f'export PG_TEST_BIN="{root}/lib/16/bin"',
+        f'export PG_TEST_EXT="{root}/share/16/extension"',
+    ]
+    # With Node 20 on the image it comes right after the venv.
+    node = tmp_path / "node" / "bin"
+    node.mkdir(parents=True)
+    envfile2 = tmp_path / "envfile2"
+    r = _sourced(
+        tmp_path,
+        _PG_PRELUDE + f'VENV=/opt/ds-venv; NODE_DIR={node}; CLAUDE_ENV_FILE="{envfile2}"; env_file_write',
+        str(tmp_path / "empty"),
+    )
+    assert r.returncode == 0, r.stderr
+    assert envfile2.read_text(encoding="utf-8").splitlines() == [f'export PATH="/opt/ds-venv/bin:{node}:$PATH"']
+
+
+# --- the pgeocode cache is seeded from a reachable source --------------------------------------
+
+_GEONAMES_ROWS = (
+    "US\t28173\tWaxhaw\tNorth Carolina\tNC\tUnion\t179\t\t\t34.8847\t-80.7574\t4\n"
+    "US\t28202\tCharlotte\tNorth Carolina\tNC\tMecklenburg\t119\t\t\t35.2271\t-80.8431\t4\n"
+)
+
+_STUB_CURL = """#!/bin/bash
+# Stand-in for curl: the GeoNames host is "blocked", the GitHub mirror serves the fixture.
+args=("$@")
+url="${args[$# - 1]}"
+out=""
+for ((i = 0; i < $#; i++)); do [ "${args[i]}" = "-o" ] && out="${args[i + 1]}"; done
+echo "$url" >> "$STUB_CURL_LOG"
+case "$url" in
+  *download.geonames.org*) exit 22 ;;
+  *raw.githubusercontent.com*) [ "$STUB_MIRROR_UP" = 1 ] || exit 22; cp "$STUB_FIXTURE" "$out" ;;
+  *) exit 22 ;;
+esac
+"""
+
+
+def _seed(tmp_path: Path, mirror_up: bool) -> tuple[subprocess.CompletedProcess, Path, Path]:
+    pytest.importorskip("pgeocode")
+    fixture = tmp_path / "US.txt"
+    fixture.write_text(_GEONAMES_ROWS, encoding="utf-8")
+    stubs = tmp_path / "stubs"
+    _executable(stubs / "curl", _STUB_CURL)
+    # A wrapper, not a symlink: a symlinked interpreter outside its venv loses the venv's packages.
+    _executable(tmp_path / "venv" / "bin" / "python", f'#!/bin/sh\nexec "{sys.executable}" "$@"\n')
+    curl_log = tmp_path / "curl.log"
+    step_log = tmp_path / "step.log"
+    r = _sourced(
+        tmp_path,
+        f'set +e; VENV="{tmp_path / "venv"}"; STEP_LOG="{step_log}"; pgeocode_seed; echo "rc=$? fixerr=${{FIXERR:-}}"',
+        PATH=f"{stubs}{os.pathsep}{os.environ.get('PATH', '')}",
+        STUB_CURL_LOG=str(curl_log),
+        STUB_MIRROR_UP="1" if mirror_up else "0",
+        STUB_FIXTURE=str(fixture),
+    )
+    return r, curl_log, tmp_path / "pgeocode"
+
+
+@needs_bash
+def test_pgeocode_seed_falls_back_to_the_mirror_when_geonames_is_blocked(tmp_path):
+    r, curl_log, cache = _seed(tmp_path, mirror_up=True)
+    assert "rc=0" in r.stdout, (r.stdout, r.stderr)
+    tried = curl_log.read_text(encoding="utf-8").split()
+    assert tried[0] == "https://download.geonames.org/export/zip/US.zip"  # the CI source comes first
+    assert tried[1] == "https://raw.githubusercontent.com/symerio/postal-codes-data/master/data/geonames/US.txt"
+    # pgeocode itself parsed the downloaded file and wrote the cache the library reloads offline.
+    assert (cache / "US.txt").is_file() and (cache / "US-index.txt").is_file()
+    assert "Waxhaw" in (cache / "US.txt").read_text(encoding="utf-8")
+
+
+@needs_bash
+def test_pgeocode_seed_names_the_hosts_when_every_source_fails(tmp_path):
+    r, curl_log, cache = _seed(tmp_path, mirror_up=False)
+    assert "rc=1" in r.stdout and "download.geonames.org" in r.stdout, r.stdout
+    assert len(curl_log.read_text(encoding="utf-8").split()) == 2
+    assert not cache.exists()  # nothing half-written for a later import to trust
+
+
 # --- the SessionStart hook ---------------------------------------------------------------
 
 
@@ -408,11 +647,14 @@ def test_settings_wire_only_the_remote_session_start_hook(settings):
     # Project settings apply to local sessions too: nothing else (env, permissions, other hooks) may ride along.
     assert set(settings) == {"hooks"}
     assert set(settings["hooks"]) == {"SessionStart"}
+    # No matcher: the hook also runs on /clear, compaction and a fork. Each of them can bring a fresh
+    # CLAUDE_ENV_FILE, and the venv has to be on that session's PATH again (the script is quiet and quick).
+    assert set(settings["hooks"]["SessionStart"][0]) == {"hooks"}
     hook = _hook(settings)
     assert hook["type"] == "command"
     assert "CLAUDE_CODE_REMOTE" in hook["command"] and "scripts/cloud/setup.sh" in hook["command"]
     assert hook["command"].rstrip().endswith("--hook")
-    # A cold first session installs for minutes; the default timeout would cut it off.
+    # A cold first session installs for minutes; the default timeout (600 s) would cut it off.
     assert isinstance(hook["timeout"], int) and hook["timeout"] >= 600
 
 
@@ -461,11 +703,34 @@ def test_doc_covers_the_owner_steps(doc):
         "Claude GitHub App", "/web-setup", "Network access", "Setup script", "Environment variables",
         "phase/N37a", "chore/cloud-setup", "scripts/bump_version.sh", "claude/", "CLAUDE_CODE_REMOTE",
         "scripts/cloud/setup.sh", "scripts/cloud/with_pg.sh", "History rewrite", "download.pytorch.org",
-        "download-r2.pytorch.org", "apt.postgresql.org", "Not confirmed",
+        "download-r2.pytorch.org", "apt.postgresql.org", "download.geonames.org", "Not confirmed",
     ):
         assert needle in doc, needle
     # Start branch: never main.
     assert re.search(r"never `?main`?", doc, re.I)
+
+
+def test_doc_uses_the_current_network_access_names_and_says_what_the_image_has(doc):
+    section = _section(doc, "## 2. Create the environment")
+    # The environment dialog's levels today are None, Limited and Full, with Allow package managers
+    # and an Allowed domains list. "Custom" survives only as the parenthetical naming the old wording.
+    for needle in ("Limited", "Allow package managers", "Allowed domains", "None of the hosts below is on it"):
+        assert needle in section, needle
+    assert section.count("Custom") == 1 and "Older versions" in section
+    # The image already has PostgreSQL 16 and Redis 7, and the guide says why neither is used as is.
+    assert "PostgreSQL 16 and Redis 7.0" in section
+    # Each host the setup needs is in the table, and the table says what happens without it.
+    table = [line for line in section.splitlines() if line.startswith("| `")]
+    hosts = {h for line in table for h in re.findall(r"`([a-z*][a-z0-9.*-]+\.[a-z]+)`", line.split("|")[1])}
+    assert {"download.pytorch.org", "download-r2.pytorch.org", "apt.postgresql.org", "download.geonames.org"} <= hosts
+    assert all(line.count("|") == 4 for line in table)
+
+
+def test_doc_warns_that_cloud_flag_uploads_a_bundle_without_the_app(doc):
+    section = _section(doc, "## 1. Connect GitHub")
+    assert "bundle" in section and "Claude GitHub App" in section
+    assert "Auto-fix" in section and "per pull request" in section
+    assert "bundle" in _section(doc, "## 9. History rewrite")
 
 
 def _slug(heading: str) -> str:
@@ -513,6 +778,7 @@ def test_the_setup_script_block_parses_and_never_fails_the_session(doc):
     assert re.search(r"^REF=\S+", block, re.M)
     assert '--branch "$REF"' in block and "--skip git,env" in block
     assert block.rstrip().endswith("exit 0")  # a non-zero setup script stops the session from starting
+    assert "set -e" not in block  # one failed step must not end the script early
     if shutil.which("bash"):
         r = subprocess.run(["bash", "-n"], input=block, capture_output=True, text=True, timeout=30)
         assert r.returncode == 0, r.stderr
@@ -522,6 +788,69 @@ def test_the_setup_script_block_clones_a_branch_the_doc_names_as_a_start_branch(
     ref = re.search(r"^REF=(\S+)", _setup_script_block(doc), re.M).group(1)
     assert ref in {"chore/cloud-setup", "phase/N37a"}
     assert f"`{ref}`" in doc
+
+
+def _run_block(tmp_path: Path, clone_works: bool, inside_a_checkout: bool) -> tuple[subprocess.CompletedProcess, Path, Path]:
+    """Run the pasted setup script with a stub git and a stub setup.sh; its /opt path is redirected."""
+    block = _setup_script_block(_text(DOC))
+    block = block.replace("/opt/ds-cloud-src", str(tmp_path / "src"))  # never touch the real path
+    ran = tmp_path / "ran"
+    clone_dir = tmp_path / "checkout"
+    git_log = tmp_path / "git.log"
+    if inside_a_checkout:
+        _executable(clone_dir / "scripts" / "cloud" / "setup.sh", f'#!/usr/bin/env bash\necho "$@" > "{ran}"\n')
+    stub_git = """#!/bin/bash
+echo "$@" >> "@LOG@"
+case "$1" in
+  rev-parse) @TOPLEVEL@ ;;
+  clone) @CLONE@ ;;
+  -C) if [ "$3" = sparse-checkout ]; then
+        mkdir -p "$2/scripts/cloud"
+        printf '#!/usr/bin/env bash\\necho "$@" > "@RAN@"\\n' > "$2/scripts/cloud/setup.sh"
+        exit 0
+      fi
+      exit 1 ;;
+esac
+"""
+    stub_git = (
+        stub_git.replace("@LOG@", str(git_log))
+        .replace("@RAN@", str(ran))
+        .replace("@TOPLEVEL@", f'echo "{clone_dir}"' if inside_a_checkout else "exit 128")
+        .replace("@CLONE@", 'mkdir -p "${@: -1}"; exit 0' if clone_works else "exit 128")
+    )
+    stubs = tmp_path / "stubs"
+    _executable(stubs / "git", stub_git)
+    r = _run(
+        ["bash"], env={"PATH": f"{stubs}{os.pathsep}{os.environ.get('PATH', '/usr/bin:/bin')}", "HOME": str(tmp_path)},
+        cwd=tmp_path, input=block,
+    )
+    return r, ran, git_log
+
+
+@needs_bash
+def test_the_setup_script_block_uses_the_session_clone_when_there_is_one(tmp_path):
+    r, ran, git_log = _run_block(tmp_path, clone_works=True, inside_a_checkout=True)
+    assert r.returncode == 0, r.stderr
+    assert ran.read_text(encoding="utf-8").strip() == "--skip git,env"
+    assert "clone" not in git_log.read_text(encoding="utf-8")  # nothing was fetched
+
+
+@needs_bash
+def test_the_setup_script_block_fetches_the_scripts_when_there_is_no_clone(tmp_path):
+    r, ran, git_log = _run_block(tmp_path, clone_works=True, inside_a_checkout=False)
+    assert r.returncode == 0, r.stderr
+    assert ran.read_text(encoding="utf-8").strip() == "--skip git,env"
+    log = git_log.read_text(encoding="utf-8")
+    assert "--branch chore/cloud-setup" in log and "https://github.com/asarrafi47/DealershipScanner.git" in log
+    assert "sparse-checkout set scripts" in log
+
+
+@needs_bash
+def test_the_setup_script_block_exits_zero_when_nothing_can_be_fetched(tmp_path):
+    r, ran, _ = _run_block(tmp_path, clone_works=False, inside_a_checkout=False)
+    assert r.returncode == 0, r.stderr
+    assert "the SessionStart hook will do the setup" in r.stdout
+    assert not ran.exists()
 
 
 def test_variables_the_doc_sets_are_read_by_the_code(doc):

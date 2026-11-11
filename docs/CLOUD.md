@@ -1,9 +1,11 @@
 # Cloud sessions (Claude Code on the web)
 
 How to run Claude Code sessions on this repository in Anthropic's cloud, so a long run does not
-die when the Mac sleeps or loses its network. A cloud session is a fresh Ubuntu VM with the
-repository cloned into it. It keeps working after you close the tab or the laptop, until Claude
-finishes the task in front of it.
+die when the Mac sleeps or loses its network. A cloud session is a fresh Ubuntu 24.04 VM (x86_64,
+about 4 CPUs, 16 GB of memory and 30 GB of disk) with the repository cloned into it. It runs as
+root and keeps working after you close the tab or the laptop, until Claude finishes the task in
+front of it. (Remote Control is not a substitute: it only steers a session that still runs on
+the Mac, so a sleeping Mac still stops the work.)
 
 This repository is public. Nothing in this guide, in `.claude/settings.json` or in `scripts/cloud/`
 may carry a secret, a private host name, an address or an id. Keys belong in the claude.ai
@@ -19,7 +21,9 @@ The setup lives in the repository: `scripts/cloud/setup.sh` (idempotent; `--chec
 `.claude/settings.json` that runs the setup only when `CLAUDE_CODE_REMOTE=true`, which the cloud VM
 sets and your Mac never does. A local Claude Code session in this repository is not affected.
 
-Every step has a **Verify** line. Do not go on until it shows what it says.
+Every step has a **Verify** line. Do not go on until it shows what it says. The UI names below are
+the ones in Anthropic's documentation on 2026-11-10; the places where the documentation is silent
+are collected in [section 10](#10-not-confirmed-yet).
 
 ## 0. Before the first session
 
@@ -27,21 +31,24 @@ Every step has a **Verify** line. Do not go on until it shows what it says.
    do it before any cloud session pushes, or rebuild its branches afterwards
    ([section 9](#9-history-rewrite)). A branch pushed now carries the old commit ids.
 2. **Protect `main` on GitHub.** Today `main` has no branch protection and no ruleset, and the
-   cloud's GitHub proxy does not restrict which branch a session may update. In the repository:
-   Settings, Rules, Rulesets, New branch ruleset. Target `main`. Turn on Restrict updates,
-   Restrict deletions and Block force pushes, and put the Repository admin role on the bypass
-   list so your own release push (`git push origin <branch>:main`, docs/RELEASING.md) still works.
+   cloud's GitHub proxy does not restrict which branch a session may update (it only refuses tags
+   and branch deletions). In the repository: Settings, Rules, Rulesets, New branch ruleset.
+   Target `main`. Turn on Restrict updates, Restrict deletions and Block force pushes, and put the
+   Repository admin role on the bypass list so your own release push
+   (`git push origin <branch>:main`, docs/RELEASING.md) still works. If a ruleset for `main`
+   exists by the time you read this, add Restrict updates to it and run the test below against it.
 
-   Whether a push made through the Claude GitHub App counts as you for that bypass is not
-   documented. Find out on a throwaway name before relying on it:
+   Whether a push made from a cloud session counts as you for that bypass is not documented. A
+   session pushes with your GitHub credentials, through a proxy, so it may. Find out on a
+   throwaway name before relying on it:
 
    1. Make a second ruleset that targets the branch name `cloud-ruleset-test`, with Restrict
       updates and the same bypass list. Create that branch on GitHub.
    2. In a cloud session ([section 3](#3-start-a-session)) ask for an empty commit pushed to
       `cloud-ruleset-test`.
-   3. The push must be refused. If it goes through, your bypass covers the session (the token
-      route in [section 1](#1-connect-github) does that): do not give yourself bypass on `main`,
-      and switch the ruleset off for the minute a release takes.
+   3. The push must be refused. If it goes through, your bypass covers the session: do not give
+      yourself bypass on `main`, and switch the ruleset's enforcement off for the minute a
+      release push takes.
    4. Delete the test ruleset and branch (a session cannot delete branches).
 
    Verify: `gh api repos/asarrafi47/DealershipScanner/rules/branches/main` no longer prints `[]`.
@@ -61,20 +68,30 @@ Every step has a **Verify** line. Do not go on until it shows what it says.
 
 Cloud sessions need a claude.ai account on Pro, Max, Ultra, Team or Enterprise (not an API key,
 and not Bedrock, Vertex or Foundry). They count toward the plan's usage limits like any other use,
-and parallel sessions use the limits in proportion.
+and parallel sessions use the limits in proportion. On Team and Enterprise an Owner may first have
+to turn on the GitHub connector (Organization settings, Connectors).
 
-**Option A, recommended: the Claude GitHub App.** At claude.ai/code, connect GitHub and authorize
-the Claude GitHub App. On GitHub choose Only select repositories and pick
+**Option A, recommended: the Claude GitHub App.** At claude.ai/code, sign in, choose Sign in with
+GitHub and approve the authorization. Then install the Claude GitHub App
+(github.com/apps/claude/installations/new): on GitHub choose Only select repositories and pick
 `asarrafi47/DealershipScanner`. A session can clone a public repository without the App, but
-pushing needs push access, and the docs do not say whether the App alone gives a session push
-access to a public repository you own (not confirmed, see [section 10](#10-not-confirmed-yet)). The
-push test below settles it. Installing the App also turns on Auto-fix for pull requests in that
-repository, per the docs: leave it off until you want sessions pushing fixes on their own.
+`claude --cloud` from the Mac clones from GitHub only when the App is installed on the repository.
+Without it, Claude Code uploads your local repository as a bundle instead (all branches' history,
+plus uncommitted changes to tracked files), and that applies even with `/web-setup`. With the
+history rewrite pending, you do not want that upload. The documentation does not say whether the
+App alone gives a session push access to a public repository you own (not confirmed, see
+[section 10](#10-not-confirmed-yet)); the push test below settles it. Installing the App makes
+Auto-fix available for pull requests in the repository. It is turned on per pull request, so leave
+it off: it replies on GitHub under your name.
 
 **Option B, only if A cannot push: `/web-setup`.** In the Claude Code CLI, signed in with
 `claude auth login`, run `/web-setup`. It sends the token from `gh auth token` to Anthropic, which
-stores it encrypted. Sessions can then reach every repository that token reaches, and their pushes
-are made as you. Remove it at claude.ai/customize/connectors.
+stores it encrypted. Sessions can then reach every repository that token reaches, not just this
+one, and their pushes are made as you. A narrower token is safer: a fine-grained token limited to
+this repository (contents and pull requests, read and write) in `gh` before you run `/web-setup`
+(whether `/web-setup` accepts one is not confirmed). If the CLI warns that the token lacks the
+`workflow` scope, `gh auth refresh -s workflow` adds it; without it GitHub can refuse a push that
+changes `.github/workflows/`. Remove the connection at claude.ai/customize/connectors.
 
 **Push test** (once the environment of [section 2](#2-create-the-environment) exists): start a
 session on `chore/cloud-setup`, and ask it to create a branch, make an empty commit and push it.
@@ -85,20 +102,27 @@ Mac, because the proxy rejects branch deletions: `git push origin --delete <bran
 ## 2. Create the environment
 
 At claude.ai/code, the first control in the row under the message box is the environment
-selector. Add an environment and fill in its rows.
+selector. Choose New environment at the bottom of its menu, fill in the rows below, and save with
+Add environment. (Edit one later from the same menu: hover over its row and use the settings icon.)
 
 **Name:** `dealership-code`.
 
-**Network access:** Custom, with the checkbox that also includes the default list ticked, and
-these hosts added. The default (Trusted) list already covers PyPI, npm, the Ubuntu archives,
-GitHub, Docker Hub and the raw GitHub content host.
+**Network access:** Limited, with Allow package managers left checked, and these hosts in the
+Allowed domains field, one per line. Limited with Allow package managers is the default list: it
+covers PyPI, npm, the Ubuntu archives, GitHub (including `raw.githubusercontent.com`) and Docker
+Hub. None of the hosts below is on it. (Older versions of the dialog and of the documentation
+called these levels Trusted and Custom; an environment saved that way opens as Limited.)
 
 | Host | Why | Without it |
 |---|---|---|
-| `download.pytorch.org`, `download-r2.pytorch.org` | CPU-only torch, installed first the way CI does | pip would take PyPI's default torch, the multi-GB CUDA stack. The setup refuses to install the requirements and says so |
-| `apt.postgresql.org`, `www.postgresql.org` | Postgres 18 and pgvector for the pg tier (the apt repository and its signing key) | The pg tier is unavailable; everything else works |
-| `download.geonames.org` | The US postal table, from the source CI uses | The setup falls back to a GitHub mirror that is about 450 rows older |
-| `huggingface.co`, `*.hf.co` | The embedding model for the web app's smart search | Only needed to run that search; leave it out for code work |
+| `download.pytorch.org`, `download-r2.pytorch.org` | CPU-only torch, installed first the way CI does. The index lists its wheels on the second host | The setup refuses to install the requirements and says so: pip would take PyPI's default torch, a multi-GB CUDA stack. The Python side is not ready |
+| `apt.postgresql.org` | PostgreSQL 18 and pgvector for the pg tier, from the PGDG repository (its signing key comes with the image's `postgresql-common` package) | The pg tier runs on the image's PostgreSQL 16 with the Ubuntu archive's pgvector instead. That works, but it is not parity with CI and production, and the setup says so |
+| `download.geonames.org` | The US postal table from GeoNames, the source CI uses. `backend/db/geo.py` loads it when any test imports it | The setup falls back to a mirror on `raw.githubusercontent.com` (already allowed) that can lag GeoNames slightly |
+| `huggingface.co`, `*.hf.co` | The embedding model for the web app's smart search | Leave both out for code work |
+
+The image ships PostgreSQL 16 and Redis 7.0 (installed, not running). The tests need neither as
+they are: the pg tier starts its own throwaway cluster, and Redis is only an optional readiness
+probe. Do not point any test or script at the image's own cluster.
 
 Do not run live dealer scans in the cloud ([section 7](#7-what-cloud-sessions-cannot-do)). If you
 want a throwaway session to look at a dealer's site, make a second environment with Full network
@@ -117,10 +141,11 @@ SMART_SEARCH_SKIP_VECTOR_RERANK=1
 ```
 
 The two `BASH_` values let a command run for 10 minutes by default and up to 30, so the 7 to 12
-minute offline test tier fits. `LOCAL_LLM_AUTOSTART=0` stops `run.py` from looking for a local model
-runner the VM does not have. `KMAC_VAULT_DISABLE=1` is a safeguard: no secrets vault is reachable
-from the cloud. `SMART_SEARCH_SKIP_VECTOR_RERANK=1` skips the embedding rerank until the model host
-above is allowed.
+minute offline test tier fits. (A command that reaches its timeout is moved to the background and
+may run up to 30 more minutes.) `LOCAL_LLM_AUTOSTART=0` stops `run.py` from looking for a local
+model runner the VM does not have. `KMAC_VAULT_DISABLE=1` is a safeguard: no secrets vault is
+reachable from the cloud. `SMART_SEARCH_SKIP_VECTOR_RERANK=1` skips the embedding rerank until the
+model host above is allowed.
 
 Do not set any of these in a cloud environment (or anywhere a session can read):
 
@@ -146,46 +171,57 @@ Do not set any of these in a cloud environment (or anywhere a session can read):
 Paste this into the Setup script row. It is optional: it pre-warms the cached environment, so a
 new session starts in seconds instead of minutes. The repo's SessionStart hook runs the same
 script at every session start and finishes whatever this leaves undone, so this one never fails
-the session (a non-zero setup script stops the session from starting).
+the session (a non-zero setup script stops the session from starting, or starts it without what the
+script failed to install).
 
 ```bash
 #!/bin/bash
-# DealershipScanner: pre-warm the cached cloud environment (docs/CLOUD.md).
+# DealershipScanner: pre-warm the cached cloud environment (docs/CLOUD.md). It never fails the session.
 REF=chore/cloud-setup
-SRC=/opt/ds-cloud-src
-rm -rf "$SRC"
-if git clone --quiet --depth 1 --filter=blob:none --sparse --branch "$REF" \
-     https://github.com/asarrafi47/DealershipScanner.git "$SRC" \
-   && git -C "$SRC" sparse-checkout set scripts; then
+SRC=""
+top="$(git rev-parse --show-toplevel 2>/dev/null)"
+if [ -n "$top" ] && [ -f "$top/scripts/cloud/setup.sh" ]; then
+  SRC="$top"
+else
+  SRC=/opt/ds-cloud-src
+  rm -rf "$SRC"
+  if ! git clone --quiet --depth 1 --filter=blob:none --sparse --branch "$REF" \
+         https://github.com/asarrafi47/DealershipScanner.git "$SRC" \
+     || ! git -C "$SRC" sparse-checkout set scripts; then
+    echo "could not fetch $REF: the SessionStart hook will do the setup"
+    SRC=""
+  fi
+fi
+if [ -n "$SRC" ]; then
   bash "$SRC/scripts/cloud/setup.sh" --skip git,env \
     || echo "pre-warm incomplete: the SessionStart hook will finish it"
-else
-  echo "could not fetch $REF: the SessionStart hook will do the setup"
 fi
 exit 0
 ```
 
-`REF` is the branch the pre-warm reads the scripts and the requirements from. Keep it equal to the
-branch you start sessions from ([section 6](#6-branches-pushes-and-version)) and edit it when that
-changes. The docs do not say whether the repository is checked out when a setup script runs, so the
-script fetches what it needs itself (`scripts/` and the requirements files at the repository root).
+Per the documentation the repository is cloned before the setup script runs, but the script's
+working directory is not stated, so the script uses the session's clone when it finds one and
+fetches `scripts/` and the requirements files itself when it does not. `REF` is the branch it
+fetches from then. Keep it equal to the branch you start sessions from
+([section 6](#6-branches-pushes-and-version)) and edit it when that changes. The script runs before
+the environment's variables are set, so it relies on none.
 
-How the cache behaves (from the docs): the script runs as root before Claude starts, on the first
-session in an environment. If it finishes in about five minutes the filesystem is snapshotted and
-reused. The snapshot is rebuilt when the script or the allowed hosts change, and after about a
-week. A script change reaches an existing session only when its VM is rebuilt. The pre-warm
-overlaps the Postgres install with the Python install to stay inside that budget. If it does not,
-every new session runs it again and the hook finds nothing left to do, so the result is the same,
-only slower.
+How the cache behaves (from the documentation): the script runs as root before Claude starts, on
+the first session in an environment. If it finishes in about five minutes the filesystem is
+snapshotted and reused, and the script is skipped for later sessions. The snapshot is rebuilt when
+the script or the allowed hosts change, and after about a week. A script change reaches an existing
+session only when its VM is rebuilt. The pre-warm overlaps the Postgres install with the Python
+install to stay inside that budget. If it does not, every new session runs the install again in the
+hook, so the result is the same, only slower (a few minutes).
 
 The hook installs into `/opt/ds-venv` (a venv outside the clone, with a `.venv` link inside it),
 puts the venv and Node 20 first on the session's `PATH`, and exports `PG_TEST_BIN` and
 `PG_TEST_EXT` for `scripts/pg_test_up.sh`.
 
 **Personal instructions (optional).** A setup script can write `~/.claude/CLAUDE.md` inside the VM
-(the docs describe this pattern; `/context` lists it under Memory files). Put your own preferences
-there, in this environment's script only. Do not commit them: the repo is public, and your
-auto-memory holds private details of your infrastructure.
+(the documentation describes this pattern; `/context` lists `/root/.claude/CLAUDE.md` under Memory
+files). Put your own preferences there, in this environment's script only. Do not commit them: the
+repo is public, and your auto-memory holds private details of your infrastructure.
 
 Verify: the environment is saved, and a session started in it shows `cloud-setup: environment
 ready` ([section 4](#4-first-session-checks)).
@@ -193,10 +229,12 @@ ready` ([section 4](#4-first-session-checks)).
 ## 3. Start a session
 
 At claude.ai/code choose the repository `asarrafi47/DealershipScanner`, the branch (the control
-after the repository selector) and the environment `dealership-code`. Use one repository per
-session, started from claude.ai/code or `claude --cloud`: per the docs, repo hooks do not run in a
-cloud thread inside a Claude project or in a session with several repositories, so the setup would
-not run there.
+after the repository selector) and the environment `dealership-code`. This link preselects the
+repository and the environment (the branch is still yours to pick):
+`https://claude.ai/code?repositories=asarrafi47/DealershipScanner&environment=dealership-code`.
+Use one repository per session, started from claude.ai/code or `claude --cloud`: per the
+documentation, repo hooks do not run in a cloud thread inside a Claude project or in a session
+with several repositories, so the setup would not run there.
 
 | Start from | When |
 |---|---|
@@ -204,33 +242,35 @@ not run there.
 | `phase/N37a`, or the newest tip of the release line | After `chore/cloud-setup` is merged into it |
 | never `main` | `main` is release 1.5.10, behind the staged 1.5.11 to 1.5.16, and moves only by fast-forward to a tagged release (docs/RELEASING.md) |
 
-Permission modes in the cloud are Auto, Accept edits and Plan. Accept edits pushes without
-stopping to ask, and the cloud's proxy would let a push to `main` through. So finish
-[section 0](#0-before-the-first-session) first, and use Plan for any session started before the
-ruleset exists. The commit-and-push checks of [section 4](#4-first-session-checks) need Auto or
-Accept edits, so they come after it.
+Each task gets its own session and its own branch. Permission modes in the cloud are Auto, Accept
+edits and Plan. Accept edits pushes without stopping to ask, and the cloud's proxy would let a push
+to `main` through. So finish [section 0](#0-before-the-first-session) first, and use Plan for any
+session started before the ruleset exists. The commit-and-push checks of
+[section 4](#4-first-session-checks) need Auto or Accept edits, so they come after it.
 
 From the terminal: `git switch chore/cloud-setup && claude --cloud "<task>"` starts a session on
-the pushed branch (push it first; if it is not on GitHub the CLI says so and starts from an
-ancestor). `claude -p "<message>" --cloud <session id>` queues a follow-up into a running session
+the pushed branch, once the Claude GitHub App is installed on the repository (see
+[section 1](#1-connect-github)); otherwise it uploads a bundle. Push first: if the branch is not on
+GitHub the CLI says so and starts from an ancestor. `/remote-env` picks the default environment for
+`--cloud`. `claude -p "<message>" --cloud <session id>` queues a follow-up into a running session
 from any machine you are signed in on.
 
 ## 4. First-session checks
 
 Start the first session with: "Run `scripts/cloud/setup.sh --check` and answer the checks in
-section 4 of docs/CLOUD.md." Each answer settles something the docs leave open.
+section 4 of docs/CLOUD.md." Each answer settles something the documentation leaves open.
 
 | Check | Expect |
 |---|---|
-| The session's first context lines | `cloud-setup: environment ready in ...s` (a first session takes several minutes) |
+| The session's first context lines | `cloud-setup: environment ready in ...s` (a first session takes several minutes), then the rules line |
 | `python --version`; `which python` | `Python 3.12.x`; `/opt/ds-venv/bin/python` |
 | `node --version` | `v20.x` |
 | `git config core.hooksPath`; `git rev-parse --verify origin/main` | `scripts/git-hooks`; a commit id |
 | `env \| grep -i _proxy` | Note what is set. If lowercase `http_proxy`, `https_proxy` or `all_proxy` appear, use the `env -u` form in [section 5](#5-commands) |
 | `check-tools` | Records the image's Python minor and the other preinstalled versions |
 | `python -c "import backend.db.geo"` | No output and no download (the US postal table is cached) |
-| `scripts/cloud/with_pg.sh -- python -m pytest backend/tests/test_pg_harness.py -q -p no:cacheprovider` | Passes: Postgres 18 and pgvector work as root |
-| Make a commit on a new branch and push it | The branch appears on GitHub; note its name; the pre-push hook ran (unchanged VERSION on a second push is refused) |
+| `scripts/cloud/with_pg.sh -- python -m pytest backend/tests/test_pg_harness.py -q -p no:cacheprovider` | Passes, with no "not parity" line on stderr: PostgreSQL 18 and pgvector work as root |
+| Make a commit on a new branch and push it | The branch appears on GitHub; note its name; the pre-push hook ran (a second push with an unchanged VERSION is refused) |
 
 Write what you learn into [section 10](#10-not-confirmed-yet).
 
@@ -246,7 +286,7 @@ ruff check .
 TESTS_BLOCK_NETWORK=1 python -m pytest backend/tests \
   -m "not integration and not slow and not pg" -q -p no:cacheprovider --timeout=300 --durations=40
 
-# Postgres tier, the CI `pytest-pg` job. 5 to 6 minutes. REQUIRE_PG=1 and the DSN are set for you.
+# Postgres tier, the CI `pytest-pg` job. 5 to 6 minutes. REQUIRE_PG=1 and the DSNs are set for you.
 scripts/cloud/with_pg.sh -- python -m pytest backend/tests -m pg -q -p no:cacheprovider --timeout=300 -rs
 ```
 
@@ -266,7 +306,12 @@ When you change requirements: `pip install pip-audit==2.9.0` then
 `scripts/cloud/with_pg.sh` exists because `initdb` and `pg_ctl` refuse to run as root and a cloud
 session is root. It starts the cluster of `scripts/pg_test_up.sh` as the `postgres` user, runs your
 command as you, and removes the cluster afterwards. `scripts/pg_test_up.sh` keeps refusing any real
-database. If `apt.postgresql.org` cannot be allowed, the CI image
+database. It uses PostgreSQL 18 when it is installed; otherwise the first of 17, 16 and 15 that has
+pgvector (the pg harness needs 15 or newer), and then it prints a "not parity" line. If a run is
+killed hard (SIGKILL), its cluster can outlive it: `pkill -u postgres postgres; rm -rf /tmp/pgtu.*`
+clears it.
+
+If neither `apt.postgresql.org` nor the Ubuntu archive route works, the CI image
 `pgvector/pgvector:0.8.1-pg18` could run in the VM's Docker instead (Docker Hub is on the default
 list): start `dockerd`, run it with `-p 5432:5432` and the same `POSTGRES_PASSWORD` the `pytest-pg`
 job in `.github/workflows/ci.yml` uses, and give the pytest command that job's `TEST_PG_ADMIN_DSN`
@@ -279,9 +324,10 @@ command that Claude polls), make it resumable in chunks, and commit results as i
 
 ## 6. Branches, pushes and VERSION
 
-- **A session pushes to a branch it names.** The docs state no prefix (not confirmed); expect
-  `claude/...`. It must never be `main`, and never a `phase/*` branch. If the first session pushes to
-  the branch it started from instead of a new one, stop and tell the session.
+- **A session pushes to a branch it names.** The documentation says each task gets its own branch
+  and states no prefix (not confirmed); expect `claude/...`. It must never be `main`, and never a
+  `phase/*` branch. If the first session pushes to the branch it started from instead of a new one,
+  stop and tell the session.
 - **Never `main`.** Not even a fast-forward. Tags cannot be pushed from the cloud (the proxy rejects
   them), so releases, tags and `main` stay on the Mac (docs/RELEASING.md). The ruleset of section 0
   is the enforcement. The pre-push hook refuses a push to `main` whose VERSION does not rise or
@@ -293,11 +339,16 @@ command that Claude polls), make it resumable in chunks, and commit results as i
   several points, so expect a bump each time. The numbers are provisional: parallel sessions all
   pick 1.5.17. You renumber at release, as the 1.5.11 to 1.5.16 split already needed. Work units
   never release (docs/RELEASING.md), so drop their bumps when you merge them.
-- **CHANGELOG.** A session adds its lines under `## [Unreleased]` and nowhere else.
+- **CHANGELOG.** A session adds its lines under `## [Unreleased]` and nowhere else; the bump moves
+  them under the new version.
 - **Pull requests.** GitHub's GraphQL is blocked in the cloud, so `gh pr create` and `gh issue`
   fail. Use the session's Create PR button, or the REST form:
   `gh api repos/asarrafi47/DealershipScanner/pulls -f title=... -f head=<branch> -f base=<phase branch>`.
   Base a PR on the release line, never on `main`: a PR to `main` runs the release guard.
+- **Setup files are code that runs as root.** The setup script block above, `scripts/cloud/` and
+  `.claude/settings.json` run in every later session of the environment, with whatever the
+  environment holds. Review a diff to them like a deploy script before you merge it or point `REF`
+  at a branch that changed them.
 - **Workflow files.** A `/web-setup` token without the `workflow` scope may be refused when a push
   changes `.github/workflows/`. Refresh it with `gh auth refresh -s workflow` on the Mac.
 - **Session links in commits.** Commits made in the cloud carry a `Claude-Session:` trailer with the
@@ -334,12 +385,15 @@ command that Claude polls), make it resumable in chunks, and commit results as i
 ## 9. History rewrite
 
 A rewrite changes every commit id from the first rewritten commit onward, and publishing it is a
-force-push. Cloud sessions interact with that in two ways:
+force-push. Cloud sessions interact with that in three ways:
 
 - A session started after the force-push clones the new history and is unaffected.
 - A branch a session cut before it is based on old ids. Pushing it uploads the old commits again,
   including whatever the rewrite is meant to remove from the public repository. The pre-push hook
   does not notice.
+- `claude --cloud` without the Claude GitHub App on the repository uploads your whole local
+  repository, every branch's history included, as a bundle (section 1). Do not use it before the
+  rewrite is done on the Mac.
 
 So, in this order: finish or park every cloud session; do the rewrite; rebuild and push
 `chore/cloud-setup` on the new history; only then start sessions. If cloud work already exists,
@@ -354,18 +408,27 @@ let a session push a branch that still has old ids in its history.
 
 ## 10. Not confirmed yet
 
-As of 2026-11-09 these are not documented, or not tested here. The first session settles them.
+As of 2026-11-10 these are not documented, or not tested here. The first session settles them.
+(The scripts were run end to end in a cold Ubuntu 24.04 x86_64 container with direct network
+access, as root, with PostgreSQL 16 preinstalled like the cloud image: the pasted setup script, then
+the hook command, then the checks of section 4. That shows the install paths work. It cannot show
+what the cloud's proxy and allowed domains do to them. The pg tier passed in full on PostgreSQL 17
+(82 passed, 6 xfailed, the numbers CI gets on 18), and its fast part, built on the whole migration
+chain, passed on the image's PostgreSQL 16 with pgvector 0.6.0 (30 tests). The heavy scanner tests
+were not run on 16.)
 
 | Question | How to find out |
 |---|---|
 | What cloud sessions name the branches they push, and whether they ever push to the start branch | Section 4, last row |
 | Whether the Claude GitHub App alone can push to this public repository | The push test in section 1 |
+| Whether a session's push counts as you for a ruleset's bypass list | The test in section 0 |
 | Whether repo git hooks (`core.hooksPath`) run in a cloud session | Section 4: push twice without a bump |
 | The image's Python minor version | `check-tools`; the setup builds its own 3.12 venv either way |
 | Whether the VM exports lowercase proxy variables | `env \| grep -i _proxy` |
 | The clone's depth, and whether `origin/main` exists | `git rev-parse --is-shallow-repository`; the setup fetches `origin/main` when it is missing |
-| Whether the Postgres install fits the five minute cache budget through the cloud's proxy | `time scripts/cloud/setup.sh --force` on a warm VM, or watch the first Setup script run |
-| Whether Postgres 18 from the PGDG repository installs and starts cleanly on the image | Section 4: the pg harness row |
+| Whether the setup script's working directory is the clone, and whether its `git clone` of the repository works | The first setup run's output, or `ls /opt/ds-cloud-src` in a session |
+| Whether the pre-warm fits the five minute cache budget through the cloud's proxy | Watch the first session start; `time scripts/cloud/setup.sh --force` on a warm VM |
+| Whether PostgreSQL 18 from the PGDG repository installs and starts cleanly on the image, and the proxy lets apt reach it | Section 4: the pg harness row |
 | Whether `dockerd` starts in a session (only needed for the Docker alternative in section 5) | `docker info` after `service docker start` |
 | Whether the Workflow tool, `/effort ultracode` and `.claude/workflows/` work in the cloud | Try one workflow |
 | Whether auto-memory exists in the cloud (assume not) | `/context` |
@@ -378,14 +441,18 @@ As of 2026-11-09 these are not documented, or not tested here. The first session
   required item is missing. `scripts/cloud/setup.sh` with no option repairs, and `--force` redoes the
   pip install. `--skip` and `--only` take the step names `git python pgeocode node pg env`.
 - **Logs:** `/tmp/ds-cloud-setup/<step>.log`, one per step.
+- **`which python` is not `/opt/ds-venv/bin/python`:** the hook's `PATH` line did not reach the
+  session's commands (it relies on `CLAUDE_ENV_FILE`). Use `/opt/ds-venv/bin/python` directly, or the
+  `.venv/bin/python` link in the repository root, and note it in [section 10](#10-not-confirmed-yet).
 - **"cpu torch" fails:** `download.pytorch.org` and `download-r2.pytorch.org` are not in the
-  environment's allowed hosts. The setup stops there on purpose, because the requirements install
+  environment's allowed domains. The setup stops there on purpose, because the requirements install
   would otherwise pull the multi-GB CUDA torch and blow the time budget.
 - **"pgeocode table" fails:** allow `download.geonames.org`, or check that the raw GitHub content host
   is reachable. Without the table every test errors at collection, because `backend/db/geo.py`
   loads it at import.
-- **"postgres 18" unavailable:** allow `apt.postgresql.org` and `www.postgresql.org`, then re-run the
-  setup. Everything else keeps working without it.
+- **"postgres 18" unavailable:** allow `apt.postgresql.org`, then re-run the setup (or start a new
+  session after the cache rebuilds). Until then the "postgres fallback" line says whether the
+  image's PostgreSQL 16 stands in for it. Everything else keeps working without Postgres.
 - **A changed setup script** reaches a session only when its VM is rebuilt. Start a new session, or
   run `scripts/cloud/setup.sh` by hand in the old one.
 - **Requirements changed on a branch:** the hook notices (the digest of `requirements*.txt`

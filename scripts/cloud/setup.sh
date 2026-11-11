@@ -3,7 +3,7 @@
 #
 # Makes a fresh Ubuntu cloud VM match this repo's CI, and keeps it that way: the repo's
 # SessionStart hook (.claude/settings.json) runs this on every session start, and a VM that
-# is already set up finishes in about a second. Steps (--skip / --only take these names):
+# is already set up finishes in a second or two. Steps (--skip / --only take these names):
 #
 #   git       core.hooksPath=scripts/git-hooks, so the pre-push VERSION rule runs in a fresh
 #             clone, and a local origin/main, which that hook needs for a new branch
@@ -12,7 +12,10 @@
 #   pgeocode  the US postal table; backend/db/geo.py loads it at import, and a cold cache
 #             downloads from hosts the default cloud network policy blocks
 #   node      check only: Node 20 at /opt/node20 (CI's version; the VM puts 22 first on PATH)
-#   pg        Postgres 18 + pgvector from the PGDG apt repository, for the pg test tier
+#   pg        Postgres 18 + pgvector from the PGDG apt repository, for the pg test tier. If
+#             that host is not allowed, the image's own PostgreSQL 16 gets pgvector from the
+#             Ubuntu archive instead: it runs the tier, but it is not CI parity, and the
+#             report says so
 #   env       .venv link, and PATH / PG_TEST_BIN / PG_TEST_EXT into $CLAUDE_ENV_FILE
 #
 # It never connects to a database and never reads or writes a secret. The only cluster this
@@ -26,11 +29,19 @@ PYTHON_MINOR="3.12"
 TORCH_INDEX="https://download.pytorch.org/whl/cpu"
 RUFF_PIN="ruff==0.15.22"
 PG_MAJOR="18"
-PG_BIN="/usr/lib/postgresql/${PG_MAJOR}/bin"
-PG_EXT="/usr/share/postgresql/${PG_MAJOR}/extension"
-PGDG_URL="https://apt.postgresql.org/pub/repos/apt"
+# Used only when PG_MAJOR cannot be installed. backend/tests/pg_harness.py needs 15 or newer;
+# the cloud image ships 16 (and Ubuntu 24.04's archive has pgvector for it).
+PG_FALLBACK_MAJORS="17 16 15"
+PG_FALLBACK_INSTALL="16"
+# Debian and Ubuntu package layout (scripts/pg_test_up.sh takes PG_TEST_BIN and PG_TEST_EXT).
+PG_LIB_ROOT="/usr/lib/postgresql"
+PG_SHARE_ROOT="/usr/share/postgresql"
+# Plain http on purpose: apt checks every file against the pinned key, and a cloud network
+# proxy that re-signs https traffic would otherwise need its CA in apt's trust store.
+PGDG_URL="http://apt.postgresql.org/pub/repos/apt"
 PGDG_KEY_URL="https://www.postgresql.org/media/keys/ACCC4CF8.asc"
 PGDG_KEY_FPR="B97B0AFCAA1A47F044F244A07FCC7D46ACCC4CF8"
+# Shipped by Ubuntu's postgresql-common, so no download is needed on the cloud image.
 PGDG_KEY="/usr/share/postgresql-common/pgdg/apt.postgresql.org.asc"
 PGDG_LIST="/etc/apt/sources.list.d/pgdg.list"
 NODE_DIR="/opt/node20/bin"
@@ -68,7 +79,8 @@ usage() {
 Usage: scripts/cloud/setup.sh [options]
 
   (no options)  install or repair whatever is missing (Linux only; root for apt and /opt)
-  --check       only report what is missing; change nothing; exit 1 if a required item is
+  --check       only report what is missing and change nothing; exit 1 when a required
+                item is missing (Postgres and Node are optional)
   --hook        SessionStart mode: acts only when CLAUDE_CODE_REMOTE=true, prints a short
                 summary for the session, always exits 0
   --force       redo the pip install even when the requirements digest matches
@@ -395,29 +407,42 @@ pgeocode_ok() {
 }
 
 pgeocode_seed() {
-  # One source per try, with a socket timeout, so a blocked host fails fast.
-  if DS_PGEOCODE_URLS="$PGEOCODE_URLS" "$VENV/bin/python" - >>"$STEP_LOG" 2>&1 <<'PY'
+  # Each source is fetched with curl (it uses the system CA store and the VM's proxy variables,
+  # and has a connect timeout), then handed to pgeocode as a file:// URL, so pgeocode's own
+  # parser builds its cache. pgeocode alone would try the second source only after an HTTP
+  # error, not after a blocked connection, and Python's urllib needs its own CA setup behind a
+  # cloud proxy.
+  local dir url src ext file
+  if ! have curl && have apt-get && [ "$(id -u)" -eq 0 ]; then apt_install ca-certificates curl || true; fi
+  if ! have curl; then FIXERR="curl is not installed, so the US postal table cannot be downloaded"; return 1; fi
+  dir="$(mktemp -d)"
+  for src in $PGEOCODE_URLS; do
+    url="${src//\{country\}/US}"
+    ext=".txt"
+    case "$url" in *.zip) ext=".zip" ;; esac
+    file="$dir/US$ext"
+    if ! curl -fsSL --connect-timeout 15 --max-time 180 --retry 2 -o "$file" "$url" >>"$STEP_LOG" 2>&1; then
+      printf 'pgeocode: %s could not be downloaded\n' "$url" >>"$STEP_LOG"
+      continue
+    fi
+    if DS_PGEOCODE_FILE="$file" "$VENV/bin/python" - >>"$STEP_LOG" 2>&1 <<'PY'
 import os
-import socket
-import sys
+import pathlib
 
 import pgeocode
 
-socket.setdefaulttimeout(30)
-for url in os.environ["DS_PGEOCODE_URLS"].split():
-    pgeocode.DOWNLOAD_URL = [url]
-    try:
-        pgeocode.Nominatim("us")
-        print("pgeocode: US table cached from", url)
-        sys.exit(0)
-    except Exception as exc:
-        print("pgeocode: %s failed: %s: %s" % (url, type(exc).__name__, exc))
-sys.exit(1)
+pgeocode.DOWNLOAD_URL = [pathlib.Path(os.environ["DS_PGEOCODE_FILE"]).as_uri()]
+data = pgeocode.Nominatim("us")._data
+print("pgeocode: cached %d US postal codes" % len(data))
 PY
-  then
-    return 0
-  fi
-  FIXERR="could not download the US postal table: allow download.geonames.org, or raw.githubusercontent.com for the mirror (docs/CLOUD.md); see $STEP_LOG"
+    then
+      printf 'pgeocode: US table cached from %s\n' "$url" >>"$STEP_LOG"
+      rm -rf "$dir"
+      return 0
+    fi
+  done
+  rm -rf "$dir"
+  FIXERR="could not download the US postal table: allow download.geonames.org, or check raw.githubusercontent.com for the mirror (docs/CLOUD.md); see $STEP_LOG"
   return 1
 }
 
@@ -448,16 +473,61 @@ node_ok() {
 step_node() { ensure optional "node 20" node_ok ""; }
 
 # --- step: pg ---------------------------------------------------------------------------
-pg_ok() {
+# Debian and Ubuntu layout. Two routes lead to a usable server, in this order:
+#   1. PostgreSQL $PG_MAJOR + pgvector from the PGDG apt repository (CI parity). Needs the
+#      environment to allow apt.postgresql.org.
+#   2. The image's own PostgreSQL (16 on the cloud image) + pgvector from the Ubuntu archive.
+#      The harness accepts 15 or newer, but this is NOT CI parity and the report says so.
+pg_bin() { printf '%s/%s/bin' "$PG_LIB_ROOT" "$1"; }
+pg_ext() { printf '%s/%s/extension' "$PG_SHARE_ROOT" "$1"; }
+
+# pg_lacks <major>: print what that major is missing and return 0, or print nothing and return 1.
+pg_lacks() {
+  local b e
+  b="$(pg_bin "$1")"
+  e="$(pg_ext "$1")"
+  if [ ! -x "$b/initdb" ] || [ ! -x "$b/pg_ctl" ] || [ ! -x "$b/pg_isready" ] || [ ! -x "$b/psql" ]; then
+    printf 'no PostgreSQL %s server and client binaries in %s' "$1" "$b"
+    return 0
+  fi
+  if [ ! -f "$e/vector.control" ]; then printf 'pgvector is missing from %s' "$e"; return 0; fi
+  if [ ! -f "$e/dblink.control" ]; then printf 'dblink (contrib) is missing from %s' "$e"; return 0; fi
+  return 1
+}
+
+pg_describe() {  # pg_describe <major>: "PostgreSQL 18.6", from the server binary itself
   local v
-  if [ ! -x "$PG_BIN/initdb" ] || [ ! -x "$PG_BIN/pg_ctl" ] || [ ! -x "$PG_BIN/psql" ]; then
-    DETAIL="no PostgreSQL $PG_MAJOR server binaries in $PG_BIN"
+  # "postgres (PostgreSQL) 18.6 (Ubuntu 18.6-1.pgdg24.04+2)": the third word is the version.
+  v="$("$(pg_bin "$1")/postgres" --version 2>/dev/null | awk '{print $3}')" || v=""
+  printf 'PostgreSQL %s' "${v:-$1}"
+}
+
+pg_fallback_major() {  # print the first fallback major that is complete; return 1 when none is
+  local m
+  for m in $PG_FALLBACK_MAJORS; do
+    if ! pg_lacks "$m" >/dev/null; then printf '%s' "$m"; return 0; fi
+  done
+  return 1
+}
+
+pg_pick_major() {  # the major the session should use: CI's, else the first complete fallback
+  if ! pg_lacks "$PG_MAJOR" >/dev/null; then printf '%s' "$PG_MAJOR"; return 0; fi
+  pg_fallback_major
+}
+
+pg_ok() {
+  local why
+  if why="$(pg_lacks "$PG_MAJOR")"; then DETAIL="$why"; return 1; fi
+  DETAIL="$(pg_describe "$PG_MAJOR") with pgvector and dblink"
+}
+
+pgfb_ok() {
+  local m
+  if ! m="$(pg_fallback_major)"; then
+    DETAIL="no PostgreSQL ${PG_FALLBACK_MAJORS// /, } with pgvector either, so the pg tier cannot run"
     return 1
   fi
-  [ -f "$PG_EXT/vector.control" ] || { DETAIL="pgvector is missing from $PG_EXT"; return 1; }
-  [ -f "$PG_EXT/dblink.control" ] || { DETAIL="dblink (contrib) is missing from $PG_EXT"; return 1; }
-  v="$("$PG_BIN/postgres" --version 2>/dev/null || true)"
-  DETAIL="${v:-PostgreSQL $PG_MAJOR} with pgvector and dblink"
+  DETAIL="$(pg_describe "$m") with pgvector and dblink; NOT CI parity (CI and production run $PG_MAJOR)"
 }
 
 # Fingerprint of the first key in an armored key file. awk reads all of gpg's output (no early
@@ -476,23 +546,55 @@ pgdg_key_ok() {
   [ "$(key_fingerprint "$PGDG_KEY")" = "$PGDG_KEY_FPR" ]
 }
 
-pg_install() {
-  local id codename tmp fpr line conf policy
+pg_root_apt() {  # the checks both installers share
   if [ "$(id -u)" -ne 0 ]; then FIXERR="installing PostgreSQL needs root"; return 1; fi
   if ! have apt-get; then FIXERR="no apt-get here; the pg tier needs a Debian or Ubuntu VM (docs/CLOUD.md)"; return 1; fi
+}
+
+# No default cluster: the package would create and start <major>/main on a port the tests do not use.
+pg_no_default_cluster() {
+  local conf=/etc/postgresql-common/createcluster.conf
+  mkdir -p /etc/postgresql-common
+  if [ -f "$conf" ] && grep -qE '^[#[:space:]]*create_main_cluster' "$conf"; then
+    sed -i -E 's/^[#[:space:]]*create_main_cluster[[:space:]]*=.*/create_main_cluster = false/' "$conf"
+  elif [ -f "$conf" ]; then
+    printf 'create_main_cluster = false\n' >>"$conf"
+  else
+    printf 'create_main_cluster = false\n' >"$conf"
+  fi
+}
+
+# pg_selftest <major>: end to end. Start the throwaway cluster the way the tests do, load both
+# extensions, stop and delete it again. The single quotes are deliberate: the inner shell
+# expands $0 (the bin dir) and the DSN.
+pg_selftest() {
+  local b e
+  b="$(pg_bin "$1")"
+  e="$(pg_ext "$1")"
+  # shellcheck disable=SC2016
+  PG_TEST_BIN="$b" PG_TEST_EXT="$e" "$ROOT/scripts/cloud/with_pg.sh" -- \
+    bash -c '"$0/psql" "$TEST_PG_ADMIN_DSN" -qAtX -c "create extension vector; create extension dblink; select 1"' "$b" >>"$STEP_LOG" 2>&1
+}
+
+pg_install() {
+  local id codename tmp fpr line policy
+  pg_root_apt || return 1
   # shellcheck source=/dev/null
   id="$(. /etc/os-release && printf '%s' "${ID:-}")"
   # shellcheck source=/dev/null
   codename="$(. /etc/os-release && printf '%s' "${VERSION_CODENAME:-}")"
   case "$id" in ubuntu|debian) ;; *) FIXERR="PGDG packages are set up here for Ubuntu and Debian only, not '$id'"; return 1 ;; esac
   [ -n "$codename" ] || { FIXERR="no VERSION_CODENAME in /etc/os-release"; return 1; }
-  if ! have gpg || ! have curl; then
-    apt_install ca-certificates curl gnupg || { FIXERR="could not install curl and gnupg; see $STEP_LOG"; return 1; }
+  # From the distribution's own archive (allowed by default): the tools below, and
+  # postgresql-common, which ships the PGDG signing key and the pg_wrapper the clients use.
+  if ! have gpg || ! have curl || [ ! -s "$PGDG_KEY" ]; then
+    apt_install ca-certificates curl gnupg postgresql-common \
+      || { FIXERR="could not install curl, gnupg and postgresql-common; see $STEP_LOG"; return 1; }
   fi
 
   # Fail early, before touching apt's sources, with the fix that matters in a restricted cloud network.
-  if ! curl -fsS -o /dev/null --max-time 15 --retry 1 "$PGDG_URL/dists/${codename}-pgdg/Release" 2>>"$STEP_LOG"; then
-    FIXERR="apt.postgresql.org is not reachable: add apt.postgresql.org and www.postgresql.org to the environment's allowed hosts (docs/CLOUD.md)"
+  if ! curl -fsS -o /dev/null --max-time 10 "$PGDG_URL/dists/${codename}-pgdg/InRelease" 2>>"$STEP_LOG"; then
+    FIXERR="apt.postgresql.org is not reachable: add it to the environment's allowed domains (docs/CLOUD.md)"
     return 1
   fi
 
@@ -501,7 +603,7 @@ pg_install() {
     tmp="$(mktemp)"
     if ! curl -fsSL --max-time 60 --retry 2 -o "$tmp" "$PGDG_KEY_URL" 2>>"$STEP_LOG"; then
       rm -f "$tmp"
-      FIXERR="could not download the PGDG signing key from www.postgresql.org (allow it in the environment's network settings)"
+      FIXERR="the PGDG signing key is not on this image and could not be downloaded from www.postgresql.org (allow it in the environment's network settings)"
       return 1
     fi
     fpr="$(key_fingerprint "$tmp")"
@@ -516,17 +618,7 @@ pg_install() {
   line="deb [signed-by=$PGDG_KEY] $PGDG_URL ${codename}-pgdg main"
   if ! grep -qxF "$line" "$PGDG_LIST" 2>/dev/null; then printf '%s\n' "$line" >"$PGDG_LIST"; fi
 
-  # No default cluster: the package would create and start 18/main on a port the tests do not use.
-  conf=/etc/postgresql-common/createcluster.conf
-  mkdir -p /etc/postgresql-common
-  if [ -f "$conf" ] && grep -qE '^[#[:space:]]*create_main_cluster' "$conf"; then
-    sed -i -E 's/^[#[:space:]]*create_main_cluster[[:space:]]*=.*/create_main_cluster = false/' "$conf"
-  elif [ -f "$conf" ]; then
-    printf 'create_main_cluster = false\n' >>"$conf"
-  else
-    printf 'create_main_cluster = false\n' >"$conf"
-  fi
-
+  pg_no_default_cluster
   apt_run update -qq || true
   # Read into a variable and match with `case`: `apt-cache | grep -q` can take SIGPIPE, which
   # `set -o pipefail` turns into a failure even though the candidate is there.
@@ -538,17 +630,24 @@ pg_install() {
   apt_run install -y --no-install-recommends \
     "postgresql-$PG_MAJOR" "postgresql-client-$PG_MAJOR" "postgresql-$PG_MAJOR-pgvector" \
     || { FIXERR="apt-get install postgresql-$PG_MAJOR failed; see $STEP_LOG"; return 1; }
-
-  # End to end: start the throwaway cluster the way the tests do and load both extensions.
-  # The single quotes are deliberate: the inner shell expands $0 (the bin dir) and the DSN.
-  # shellcheck disable=SC2016
-  if ! "$ROOT/scripts/cloud/with_pg.sh" -- bash -c '"$0/psql" "$TEST_PG_ADMIN_DSN" -qAtX -c "create extension vector; create extension dblink; select 1"' "$PG_BIN" >>"$STEP_LOG" 2>&1; then
-    FIXERR="PostgreSQL $PG_MAJOR installed, but a throwaway cluster with pgvector and dblink did not start; see $STEP_LOG"
-    return 1
-  fi
+  pg_selftest "$PG_MAJOR" \
+    || { FIXERR="PostgreSQL $PG_MAJOR installed, but a throwaway cluster with pgvector and dblink did not start; see $STEP_LOG"; return 1; }
 }
 
-step_pg() { ensure optional "postgres $PG_MAJOR + pgvector" pg_ok pg_install; }
+pgfb_install() {
+  local m="$PG_FALLBACK_INSTALL"
+  pg_root_apt || return 1
+  pg_no_default_cluster
+  apt_install "postgresql-$m" "postgresql-client-$m" "postgresql-$m-pgvector" \
+    || { FIXERR="apt-get install postgresql-$m and its pgvector failed; see $STEP_LOG"; return 1; }
+  pg_selftest "$m" \
+    || { FIXERR="PostgreSQL $m installed, but a throwaway cluster with pgvector and dblink did not start; see $STEP_LOG"; return 1; }
+}
+
+step_pg() {
+  ensure optional "postgres $PG_MAJOR + pgvector" pg_ok pg_install
+  if [ "$ENSURED" = 0 ]; then ensure optional "postgres fallback" pgfb_ok pgfb_install; fi
+}
 
 # --- step: env ------------------------------------------------------------------------------
 venvlink_ok() {
@@ -570,23 +669,24 @@ venvlink_make() {
   fi
 }
 
+env_line() {  # env_line <line>: append to $CLAUDE_ENV_FILE unless that exact line is already in it
+  grep -qxF -- "$1" "$CLAUDE_ENV_FILE" 2>/dev/null || printf '%s\n' "$1" >>"$CLAUDE_ENV_FILE"
+}
+
+# Claude Code runs the contents of $CLAUDE_ENV_FILE as shell code before each command it runs in
+# the session. Lines are appended (other hooks share the file) and never repeated, so a /clear or
+# a compaction, which run this hook again, adds nothing.
 env_file_write() {
-  local mark="# ds-cloud-setup"
+  local path m
   [ -n "${CLAUDE_ENV_FILE:-}" ] || return 0
-  if grep -qxF "$mark" "$CLAUDE_ENV_FILE" 2>/dev/null; then return 0; fi
-  {
-    printf '%s\n' "$mark"
-    # $PATH stays literal on purpose: the env file is sourced before each command, and expands it then.
-    # shellcheck disable=SC2016
-    if [ -d "$NODE_DIR" ]; then
-      printf 'export PATH="%s/bin:%s:$PATH"\n' "$VENV" "$NODE_DIR"
-    else
-      printf 'export PATH="%s/bin:$PATH"\n' "$VENV"
-    fi
-    if pg_ok; then
-      printf 'export PG_TEST_BIN="%s"\nexport PG_TEST_EXT="%s"\n' "$PG_BIN" "$PG_EXT"
-    fi
-  } >>"$CLAUDE_ENV_FILE"
+  path="$VENV/bin"
+  if [ -d "$NODE_DIR" ]; then path="$path:$NODE_DIR"; fi
+  # \$PATH stays literal on purpose: the file is run before each command, and expands it then.
+  env_line "export PATH=\"$path:\$PATH\""
+  if m="$(pg_pick_major)"; then
+    env_line "export PG_TEST_BIN=\"$(pg_bin "$m")\""
+    env_line "export PG_TEST_EXT=\"$(pg_ext "$m")\""
+  fi
 }
 
 step_env() {
@@ -632,8 +732,8 @@ hook_summary() {
     printf 'cloud-setup: run scripts/cloud/setup.sh in a shell to see why; logs are in %s. Guide: docs/CLOUD.md\n' "$LOG_DIR"
   else
     printf 'cloud-setup: environment ready in %ss. %s\n' "$SECONDS" "$facts"
-    printf 'cloud-setup: commands and rules are in docs/CLOUD.md. Never push main; each push after a branch'"'"'s first needs scripts/bump_version.sh patch.\n'
   fi
+  printf 'cloud-setup: rules for this VM (docs/CLOUD.md): never push main or a tag; every push after a branch'"'"'s first needs scripts/bump_version.sh patch; no live dealer scans, deploys or real databases here.\n'
   sort "$REPORT" | awk -F'|' '$2=="optional" {printf "cloud-setup: not available: %s (%s)\n", $3, $4}'
 }
 
@@ -667,16 +767,30 @@ acquire_lock() {
   DS_CLOUD_LOCKED=1 exec flock -o -w 1800 "$LOCK_FILE" bash "${BASH_SOURCE[0]}" "$@"
 }
 
+# A SessionStart hook must not fail the session: whatever goes wrong, say so and exit 0.
+# Runs from the EXIT trap in main.
+# shellcheck disable=SC2329
+hook_exit() {
+  local rc=$?
+  rm -f "$REPORT"
+  if [ "$rc" -ne 0 ]; then
+    printf 'cloud-setup: setup.sh stopped early (exit %s); run scripts/cloud/setup.sh in a shell to see why. Guide: docs/CLOUD.md\n' "$rc"
+  fi
+  exit 0
+}
+
 main() {
   local pg_pid=""
   parse_args "$@"
-  if [ "$HOOK" = 1 ] && [ "${CLAUDE_CODE_REMOTE:-}" != "true" ]; then exit 0; fi  # a local session: nothing to do
-  if [ "$CHECK_ONLY" = 0 ] && [ "$(uname -s)" != Linux ]; then
+  if [ "$HOOK" = 1 ]; then
+    if [ "${CLAUDE_CODE_REMOTE:-}" != "true" ]; then exit 0; fi  # a local session: nothing to do, nothing printed
+    if [ "$(uname -s)" != Linux ]; then printf 'cloud-setup: not a Linux VM, so there is nothing to install.\n'; exit 0; fi
+  elif [ "$CHECK_ONLY" = 0 ] && [ "$(uname -s)" != Linux ]; then
     die "this installs system packages and belongs on the Linux cloud VM; use --check to inspect this machine"
   fi
   if [ "$CHECK_ONLY" = 0 ]; then acquire_lock "$@"; fi  # may re-exec, so before anything that needs cleanup
+  if [ "$HOOK" = 1 ]; then trap hook_exit EXIT; else trap 'rm -f "$REPORT"' EXIT; fi
   REPORT="$(mktemp "$TMP_ROOT/ds-cloud-report.XXXXXX")"
-  trap 'rm -f "$REPORT"' EXIT
   if [ "$CHECK_ONLY" = 0 ]; then mkdir -p "$LOG_DIR"; fi
 
   # The two slow downloads (apt for Postgres, pip for the Python side) overlap.
