@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+### Cloud-first scan loop
+- Scan loop L4: backend/scanner/loop/config.py holds the loop defaults, the ceilings, the fixed request limits and load_loop_config(), which clamps config/loop.json and idles the loop when the file is missing or invalid. Standard library only; no behavior change.
+
 ## [1.5.19] - 2026-11-12
 
 ### Cloud-first scan loop
