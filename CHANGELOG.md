@@ -8,6 +8,11 @@
 ### Tests
 - `test_py311_syntax.py`: guard that no tracked `.py` uses 3.12-only f-string syntax (backslash, comment or reused quote in a replacement field).
 
+## [1.5.19] - 2026-11-12
+
+### Cloud-first scan loop
+- Docs: docs/scan_loop/ is the specification and the work queue for the Claude cloud sessions that build the scan loop (SCAN on Railway, ANALYZE and IMPROVE in cloud sessions, VALIDATE and RESCAN on Railway, VERIFY). README: the loop, the roles and the safety rules; GATES: the functional, accuracy and fleet gates with the 2026-11-03 backtest (285 ok, 42 needs_recipe_work, 131 needs_code_work over 458 dealers); BUNDLE: the run bundle, the private data repository used as a mailbox, the request, proposal and status formats, the publisher and the scrubber; TASKS: cards L1 to L25 in dependency order, each started with "Do task L<N> of docs/scan_loop/TASKS.md". Documentation only: no code and no behavior change, nothing released.
+
 ## [1.5.18] - 2026-11-12
 
 ### Cloud-first scan loop
