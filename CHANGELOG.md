@@ -8,6 +8,11 @@
 ### Tests
 - `test_py311_syntax.py`: guard that no tracked `.py` uses 3.12-only f-string syntax (backslash, comment or reused quote in a replacement field).
 
+## [1.5.18] - 2026-11-12
+
+### Cloud-first scan loop
+- Tests: backend/tests/fixtures/ops_publish/ holds three real shards of the 2026-11-03 fleet scan (172 dealers, gzip triage.json plus needs_discovery and slow_dealers lists, scanned for secrets) as input for the scan-bundle, accuracy-gate and improvement-queue golden tests.
+
 ## [1.5.17] - 2026-11-12
 
 ### Cloud sessions (Claude Code on the web)

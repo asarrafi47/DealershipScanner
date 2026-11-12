@@ -1,0 +1,1 @@
+autosavvy-com  no_rows  failed:capture_validation_rejected:zero_rows  recipe replay yielded 0 rows
