@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [1.5.17] - 2026-11-12
+
 ### Cloud sessions (Claude Code on the web)
 - Tooling: scripts/cloud/setup.sh makes a Linux cloud VM match CI and is safe to re-run (a VM that is set up finishes in a second or two; `--check` only reports what is missing; `--skip` and `--only` pick steps). It builds a Python 3.12 venv outside the clone, installs CPU-only torch first and then requirements.txt and requirements-test.txt (the CI order, D-TC5), installs the ruff version pinned in ci.yml, seeds the pgeocode US postal table (backend/db/geo.py loads it at import and the default cloud network blocks the download; curl fetches it from GeoNames, or from a GitHub mirror when that host is blocked), checks for Node 20, and sets core.hooksPath=scripts/git-hooks and a local origin/main so the pre-push VERSION rule runs in a fresh clone. It refuses to install the requirements without CPU torch, because the default torch wheel is the multi-GB CUDA stack. For the pg test tier it installs Postgres 18 with pgvector from the PGDG apt repository (signing key fingerprint pinned; needs apt.postgresql.org in the environment's allowed domains). When that host is blocked it gives the image's own PostgreSQL 16 pgvector from the Ubuntu archive instead and reports it as not CI parity. It never connects to a database and never reads a secret.
 - Tooling: scripts/cloud/with_pg.sh runs a command against the throwaway cluster of scripts/pg_test_up.sh, also as root (initdb refuses root and a cloud session is root). It sets TEST_PG_ADMIN_DSN, SCHEMA_PARITY_PG_DSN and REQUIRE_PG=1 the way the CI pg job does, prefers Postgres 18 and warns when it has to use an older major. pg_test_up.sh is unchanged and keeps its refusals.
