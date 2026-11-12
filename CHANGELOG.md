@@ -5,6 +5,7 @@
 ### Cloud-first scan loop
 - Scan loop L4: backend/scanner/loop/config.py holds the loop defaults, the ceilings, the fixed request limits and load_loop_config(), which clamps config/loop.json and idles the loop when the file is missing or invalid. Standard library only; no behavior change.
 - Scan loop L5: backend/scanner/loop/scrub.py is the publisher scrubber (secret_values, scrub_text, clean_line, scrub_json, assert_clean): pure functions that redact environment secrets, key-like URL parameters, header-like pairs and control characters. Not wired into anything yet.
+- Scan loop L6: backend/scanner/loop/bundle.py gains load_shard() and merge_shards(), which read shard directories (triage.json or .json.gz plus the two text lists) and merge them into one order-independent fleet dict; shards that share a dealer are refused.
 
 ## [1.5.19] - 2026-11-12
 

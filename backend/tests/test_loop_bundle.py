@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import copy
 import gzip
+import itertools
 import json
 import secrets
 import string
@@ -13,6 +14,7 @@ from pathlib import Path
 import pytest
 
 from backend.scanner.loop import scrub
+from backend.scanner.loop.bundle import load_shard, merge_shards
 from backend.scanner.loop.scrub import assert_clean, clean_line, scrub_json, scrub_text, secret_values
 
 FIXTURES = Path(__file__).resolve().parent / "fixtures" / "ops_publish"
@@ -379,3 +381,227 @@ def test_fixture_shards_produce_zero_redactions(shard: str, env) -> None:
     parsed, counts = scrub_json(json.loads(texts["triage"]), env)
     assert sum(counts.values()) == 0
     assert_clean([t.encode() for t in texts.values()], env)
+
+
+# =================================================================================================
+# Shard merge (card L6)
+# =================================================================================================
+
+
+def _load_fixture_shards() -> list:
+    return [load_shard(FIXTURES / name) for name in SHARD_NAMES]
+
+
+def _write_shard(directory: Path, triage: dict, *, gz: bool, indent=None) -> Path:
+    directory.mkdir(parents=True, exist_ok=True)
+    data = json.dumps(triage, indent=indent, sort_keys=True, separators=(",", ": ") if indent else (",", ":"))
+    if gz:
+        (directory / "triage.json.gz").write_bytes(gzip.compress(data.encode("utf-8")))
+    else:
+        (directory / "triage.json").write_text(data, encoding="utf-8")
+    return directory
+
+
+def _fixture_triage(name: str) -> dict:
+    with gzip.open(FIXTURES / name / "triage.json.gz", "rt", encoding="utf-8") as handle:
+        return json.load(handle)
+
+
+def test_merge_three_fixture_shards() -> None:
+    merged = merge_shards(_load_fixture_shards())
+    assert len(merged["dealers"]) == 172
+    assert merged["counts"] == {"ok": 101, "thin": 13, "inaccurate": 55, "no_rows": 3, "error": 0, "no_recipe": 0}
+    assert merged["needs_discovery"] == ["autosavvy-com", "mckennasubaru-com", "overdrive-usa-com"]
+    ids = [row["dealer_id"] for row in merged["dealers"]]
+    assert ids == sorted(ids) and len(set(ids)) == 172
+    assert len(merged["thin"]) == 13 and len(merged["inaccurate"]) == 55
+    assert merged["thin"] == sorted(merged["thin"]) and merged["inaccurate"] == sorted(merged["inaccurate"])
+    assert merged["recipe_coverage"] == {"dealers": 172, "with_recipe": 172}
+    assert merged["started"] == "2026-11-03T17:59:55+00:00"
+    assert merged["platform_clusters"] == []
+
+
+def test_merge_counts_agree_with_dealer_verdicts_in_fixtures() -> None:
+    merged = merge_shards(_load_fixture_shards())
+    by_verdict: dict = {}
+    for row in merged["dealers"]:
+        by_verdict[row["verdict"]] = by_verdict.get(row["verdict"], 0) + 1
+    for key in ("ok", "thin", "inaccurate", "no_rows"):
+        assert by_verdict.get(key, 0) == merged["counts"][key]
+
+
+def test_merge_lifecycle_and_text_lists() -> None:
+    shards = _load_fixture_shards()
+    merged = merge_shards(shards)
+    life = merged["lifecycle"]
+    assert life["routed"] == 9 and life["resynth_ok"] == 7 and life["capture_ok"] == 1
+    assert life["failed"] == 1 and life["resynth_failed"] == 0
+    assert len(life["retried"]) == 8 and list(life["retried"]) == sorted(life["retried"])
+    assert len(life["by_dealer"]) == 172
+    assert merged["needs_discovery_lines"] == sorted(merged["needs_discovery_lines"])
+    assert len(merged["needs_discovery_lines"]) == 3
+    assert merged["slow_dealers_lines"] == sorted(merged["slow_dealers_lines"])
+    assert len(merged["slow_dealers_lines"]) == sum(len(s["slow_dealers_lines"]) for s in shards)
+
+
+def test_merge_drops_chromium_leaks_and_shard_specific_file_name() -> None:
+    merged = merge_shards(_load_fixture_shards())
+    text = json.dumps(merged)
+    assert "chromium_leaks" not in text and "needs_discovery_file" not in text
+    assert "chromium_leaks" not in merged and "chromium_leaks" not in merged["lifecycle"]
+    assert "needs_discovery_file" not in merged["lifecycle"]
+
+
+def test_merge_drops_chromium_leaks_from_indent_one_triage(tmp_path: Path) -> None:
+    triage = _fixture_triage(SHARD_NAMES[0])
+    triage["chromium_leaks"] = [{"dealer_id": "x"}]
+    triage["lifecycle"]["chromium_leaks"] = ["leak"]
+    directory = _write_shard(tmp_path / "real", triage, gz=False, indent=1)
+    merged = merge_shards([load_shard(directory)])
+    assert "chromium_leaks" not in json.dumps(merged)
+
+
+def test_merge_all_shard_orders_give_equal_output() -> None:
+    shards = _load_fixture_shards()
+    reference = json.dumps(merge_shards(shards), sort_keys=False)
+    for order in itertools.permutations(shards):
+        assert json.dumps(merge_shards(list(order)), sort_keys=False) == reference
+
+
+def test_merge_same_shard_twice_raises_naming_the_ids() -> None:
+    shards = _load_fixture_shards()
+    with pytest.raises(ValueError) as excinfo:
+        merge_shards([shards[0], shards[0]])
+    message = str(excinfo.value)
+    assert "5starford-com" in message and "mckennasubaru-com" in message
+
+
+def test_merge_one_dealer_in_two_shards_raises_naming_it() -> None:
+    first = _load_fixture_shards()
+    clash = copy.deepcopy(first[1])
+    clash["triage"]["dealers"].append(copy.deepcopy(first[0]["triage"]["dealers"][0]))
+    with pytest.raises(ValueError) as excinfo:
+        merge_shards([first[0], clash])
+    assert "5starford-com" in str(excinfo.value)
+    assert "autosavvy-com" not in str(excinfo.value)
+
+
+def test_load_shard_missing_triage_raises_with_path(tmp_path: Path) -> None:
+    empty = tmp_path / "nothing_here"
+    empty.mkdir()
+    with pytest.raises(FileNotFoundError) as excinfo:
+        load_shard(empty)
+    assert str(empty) in str(excinfo.value)
+    with pytest.raises(FileNotFoundError):
+        load_shard(tmp_path / "does_not_exist")
+
+
+@pytest.mark.parametrize(
+    "payload",
+    [b"{not json", b"", b"[1, 2, 3]", b'{"dealers": "nope"}', b'{"counts": {}}', b"\xff\xfe\x00"],
+)
+def test_load_shard_malformed_triage_raises_with_path(tmp_path: Path, payload: bytes) -> None:
+    directory = tmp_path / "bad"
+    directory.mkdir()
+    (directory / "triage.json").write_bytes(payload)
+    with pytest.raises(ValueError) as excinfo:
+        load_shard(directory)
+    assert str(directory / "triage.json") in str(excinfo.value)
+
+
+def test_load_shard_malformed_gzip_raises_with_path(tmp_path: Path) -> None:
+    directory = tmp_path / "badgz"
+    directory.mkdir()
+    (directory / "triage.json.gz").write_bytes(b"this is not gzip data")
+    with pytest.raises(ValueError) as excinfo:
+        load_shard(directory)
+    assert str(directory / "triage.json.gz") in str(excinfo.value)
+    (directory / "triage.json.gz").write_bytes(gzip.compress(b'{"dealers": []}')[:-6])
+    with pytest.raises(ValueError):
+        load_shard(directory)
+
+
+def test_merge_rejects_rows_without_dealer_id_and_unloaded_input() -> None:
+    shard = _load_fixture_shards()[0]
+    broken = copy.deepcopy(shard)
+    del broken["triage"]["dealers"][0]["dealer_id"]
+    with pytest.raises(ValueError):
+        merge_shards([broken])
+    with pytest.raises(ValueError):
+        merge_shards([])
+    with pytest.raises(ValueError):
+        merge_shards([{"not": "a shard"}])
+
+
+def test_json_and_json_gz_give_identical_results(tmp_path: Path) -> None:
+    gz_dirs = []
+    plain_dirs = []
+    for name in SHARD_NAMES:
+        triage = _fixture_triage(name)
+        gz_dirs.append(_write_shard(tmp_path / "gz" / name, triage, gz=True))
+        plain_dirs.append(_write_shard(tmp_path / "plain" / name, triage, gz=False, indent=1))
+    from_gz = merge_shards([load_shard(d) for d in gz_dirs])
+    from_plain = merge_shards([load_shard(d) for d in plain_dirs])
+    from_fixture = merge_shards(_load_fixture_shards())
+    assert from_gz == from_plain == {**from_fixture, "needs_discovery_lines": [], "slow_dealers_lines": []}
+
+
+def test_merge_does_not_mutate_inputs() -> None:
+    shards = _load_fixture_shards()
+    snapshot = copy.deepcopy(shards)
+    merged = merge_shards(shards)
+    assert shards == snapshot
+    merged["dealers"][0]["verdict"] = "changed"
+    merged["lifecycle"]["retried"]["x"] = "y"
+    merged["counts"]["ok"] = -1
+    assert shards == snapshot
+
+
+def test_merge_keeps_dealer_rows_verbatim_including_absent_rows_stamped() -> None:
+    shards = _load_fixture_shards()
+    originals = {r["dealer_id"]: r for s in shards for r in s["triage"]["dealers"]}
+    merged = merge_shards(shards)
+    missing = [r["dealer_id"] for r in merged["dealers"] if "rows_stamped" not in r]
+    assert len(missing) == 2
+    for row in merged["dealers"]:
+        assert row == originals[row["dealer_id"]]
+        assert isinstance(row["run_id"], int)
+
+
+def test_merge_without_optional_files_or_log_files(tmp_path: Path) -> None:
+    directory = _write_shard(tmp_path / "only_triage", _fixture_triage(SHARD_NAMES[0]), gz=True)
+    shard = load_shard(directory)
+    assert shard["needs_discovery_lines"] == [] and shard["slow_dealers_lines"] == []
+    merged = merge_shards([shard])
+    assert len(merged["dealers"]) == 58 and merged["needs_discovery_lines"] == []
+
+
+def test_merge_started_is_the_earliest_instant() -> None:
+    a = {"name": "a", "triage": {"started": "2026-11-03T20:00:00+00:00", "dealers": []}}
+    b = {"name": "b", "triage": {"started": "2026-11-03T14:30:00-05:00", "dealers": []}}  # 19:30 UTC
+    c = {"name": "c", "triage": {"dealers": []}}
+    assert merge_shards([a, b, c])["started"] == "2026-11-03T14:30:00-05:00"
+    assert merge_shards([c])["started"] is None
+
+
+def test_merge_platform_clusters_are_deduplicated_and_ordered() -> None:
+    one = {"name": "a", "triage": {"dealers": [], "platform_clusters": [{"platform": "p1", "dealers": ["x"]}, "solo"]}}
+    two = {"name": "b", "triage": {"dealers": [], "platform_clusters": ["solo", {"dealers": ["x"], "platform": "p1"}]}}
+    merged = merge_shards([one, two])
+    assert len(merged["platform_clusters"]) == 2
+    assert merged["platform_clusters"] == merge_shards([two, one])["platform_clusters"]
+
+
+def test_loader_and_merger_module_is_standard_library_only() -> None:
+    import ast
+
+    from backend.scanner.loop import bundle
+
+    tree = ast.parse(Path(bundle.__file__).read_text(encoding="utf-8"))
+    imported = set()
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Import):
+            imported.update(a.name.split(".")[0] for a in node.names)
+        elif isinstance(node, ast.ImportFrom):
+            imported.add((node.module or "").split(".")[0])
+    assert imported <= {"__future__", "copy", "gzip", "json", "datetime", "pathlib"}
