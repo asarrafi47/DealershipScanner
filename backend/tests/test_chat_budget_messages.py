@@ -66,3 +66,12 @@ def test_noon_and_pm_formatting():
     noon = datetime(2026, 11, 13, 17, 0, tzinfo=UTC)
     assert m.clock_text(noon, NY) == "12:00 PM Eastern"
     assert m.clock_text(datetime(2026, 7, 4, 13, 0, tzinfo=UTC), NY) == "9:00 AM Eastern"
+
+
+def test_one_question_is_not_written_as_1_questions():
+    assert "1 question for this hour" in m.hour_limit_text(1, TOP, NOW, NY)
+    assert "1 questions" not in m.hour_limit_text(1, TOP, NOW, NY)
+    assert "1 question for today" in m.day_limit_text(1, MIDNIGHT, NOW, NY)
+    assert "1 question about this car" in m.listing_limit_text(1, MIDNIGHT, NY)
+    assert "2 questions about this car" in m.listing_limit_text(2, MIDNIGHT, NY)
+    assert m.questions(0) == "0 questions" and m.questions(1) == "1 question" and m.questions(12) == "12 questions"

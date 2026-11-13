@@ -11,10 +11,17 @@ Usage, the same way on every chat route::
 On entry the guard reserves an estimate against the account, phone, device, address,
 account-and-car and whole-site rows in one transaction (all or nothing). The strictest
 limit that would be passed wins. On exit it replaces the estimate with the real tokens and
-cost of every model call made inside; if the block raised, or every model call was refused,
-or the caller called :meth:`Guard.fail`, the message is given back (the tokens really spent
-still count). If the database cannot be reached chat fails closed. No Flask here: callers
-pass plain values (hashes are made by ``backend.utils.device_id``).
+cost of every model call made inside. The message is given back only when NO answer text was
+produced (a call counts as answered when its text is non-empty, whatever its stop reason: a
+reply cut short by the token limit that returned text stays counted), only up to
+``chat.giveback_per_hour`` (default 3) per account per hour, and tokens are never given back
+(the tokens really spent always count). For a multi-call route (web research, weight 3) it is
+given back only if no call produced text. A streamed reply is wrapped whole: the guard stays
+open until the last chunk is sent, the route calls :meth:`Guard.note_text` when the first text
+goes out, and a ``GeneratorExit`` (the browser left) after that never gives a message back.
+Admins skip the per-subject limits and the new-account tiers, never the site budget. If the
+database cannot be reached chat fails closed. No Flask here: callers pass plain values
+(hashes are made by ``backend.utils.device_id``).
 """
 
 from __future__ import annotations
@@ -129,6 +136,7 @@ class Guard:
         *,
         is_admin: bool = False,
         new_account: bool = False,
+        account_age_s: float | None = None,
         now: datetime | None = None,
     ):
         self.kind = kind
@@ -140,11 +148,12 @@ class Guard:
         self.weight = max(1, int(weight or 1))
         self.is_admin = is_admin
         self.new_account = new_account
+        self.account_age_s = account_age_s
         self._now = now
+        self._text_seen = False
         self._failed = False
         self._no_model = False
         self._calls = 0
-        self._ok_calls = 0
         self._tin = 0
         self._tout = 0
         self._res: repo.Reservation | None = None
@@ -164,23 +173,63 @@ class Guard:
         """
         self._no_model = True
 
+    def note_text(self) -> None:
+        """A streaming route calls this when the first piece of answer text goes out: from then on the
+        message is never given back, even if the browser disconnects (``GeneratorExit``)."""
+        self._text_seen = True
+
     def _on_result(self, result: Any) -> None:
         tin, tout = _tokens_of(getattr(result, "usage", None))
         self._tin += tin
         self._tout += tout
         self._calls += 1
-        if getattr(result, "ok", True):
-            self._ok_calls += 1
+        text = getattr(result, "text", None)
+        if isinstance(text, str) and text.strip():
+            self._text_seen = True  # answered, even when the reply was cut at max_tokens
 
     @property
     def tokens(self) -> tuple[int, int]:
         return self._tin, self._tout
 
     # -- context manager -----------------------------------------------------
+    def tier(self) -> str:
+        """``new`` (under 24 hours old or no account), ``mid`` (1 to 7 days, or age unknown) or ``established``
+        (over 7 days). Admins are ``admin``: only the site budget applies to them."""
+        if self.is_admin:
+            return "admin"
+        if self.user_id in (None, "") or self.new_account:
+            return "new"
+        age = self.account_age_s
+        if age is None:
+            return "mid"
+        if age < 24 * 3600:
+            return "new"
+        return "established" if age >= 7 * 24 * 3600 else "mid"
+
+    def _tier_charges(self) -> list[Charge]:
+        """Sub-budgets of the day's budget: new accounts share a slice, newer-than-a-week accounts cannot
+        reach the reserve kept for established ones."""
+        tier = self.tier()
+        if tier in ("admin", "established"):
+            return []
+        cents = ss.get_int("chat.budget_usd_per_day_cents")
+        tokens = ss.get_int("chat.budget_tokens_per_day")
+        out: list[Charge] = []
+        reserve = min(100, ss.get_int("chat.established_reserve_pct"))
+        if reserve > 0:
+            open_pct = 100 - reserve
+            out.append(Charge("global", "open", tokens_limit=max(1, tokens * open_pct // 100) if open_pct else 1,
+                              cost_limit_micro=max(1, cents * 10_000 * open_pct // 100) if open_pct else 1))
+        if tier == "new":
+            pct = ss.get_int("chat.new_account_budget_pct")
+            out.append(Charge("global", "new", tokens_limit=max(1, tokens * pct // 100),
+                              cost_limit_micro=max(1, cents * 10_000 * pct // 100)))
+        return out
+
     def _charges(self) -> list[Charge]:
         tz = ss.get_str("chat.reset_tz")
         pct = ss.get_int("chat.new_account_factor_pct")
-        free = self.is_admin  # admins skip per-subject limits, never the site budget
+        free = self.is_admin  # admins skip per-subject limits (and the new-account tiers), never the site budget
         charges: list[Charge] = []
         if self.user_id not in (None, ""):
             uid = str(self.user_id)
@@ -215,6 +264,7 @@ class Guard:
                 cost_limit_micro=ss.get_int("chat.budget_usd_per_day_cents") * 10_000,
             )
         )
+        charges.extend(self._tier_charges())
         return charges
 
     def __enter__(self) -> "Guard":
@@ -261,6 +311,20 @@ class Guard:
         self._token = llm_client.set_usage_sink(self._on_result)
         return self
 
+    def _claim_give_back(self) -> bool:
+        """One of the account's give-backs for this hour. No account, a spent cap or a database error
+        means no give-back: the message stays counted (the safe side)."""
+        if self.user_id in (None, ""):
+            return False
+        cap = ss.get_int("chat.giveback_per_hour")
+        try:
+            return repo.claim_give_back(
+                str(self.user_id), now=self._now or _utcnow(), cap=cap, tz_name=ss.get_str("chat.reset_tz")
+            )
+        except Exception as exc:
+            _log.error("chat_budget: could not take a give-back slot (%s)", type(exc).__name__)
+            return False
+
     def __exit__(self, exc_type, exc, tb) -> bool:
         if self._token is not None:
             from backend.llm import client as llm_client
@@ -274,14 +338,16 @@ class Guard:
             # estimate charged (the model may have been called outside complete()).
             self._res = None
             return False
-        no_answer = exc_type is not None or self._failed or (self._calls > 0 and self._ok_calls == 0)
+        # Give the message back only when no answer text was shown (see the module docstring).
+        no_answer = (exc_type is not None or self._failed or self._calls > 0) and not self._text_seen
+        back = no_answer and self._claim_give_back()
         try:
             repo.true_up(
                 self._res,
                 tokens_in=self._tin,
                 tokens_out=self._tout,
                 cost_micro=cost_micro(self._tin, self._tout),
-                messages_back=no_answer,
+                messages_back=back,
             )
         except Exception as exc2:  # the estimate stays counted: safe for the budget
             _log.error("chat_budget: true-up failed (%s)", type(exc2).__name__)

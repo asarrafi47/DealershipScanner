@@ -61,23 +61,28 @@ def away_text(when: datetime, now: datetime) -> str:
     return f"{hours} hour" + ("" if hours == 1 else "s")
 
 
+def questions(n: int) -> str:
+    """'1 question' / '5 questions'."""
+    return f"{n} question" + ("" if n == 1 else "s")
+
+
 def hour_limit_text(limit: int, resets_at: datetime, now: datetime, tz_name: str) -> str:
     return (
-        f"You have used your {limit} questions for this hour. You can ask again at "
+        f"You have used your {questions(limit)} for this hour. You can ask again at "
         f"{clock_text(resets_at, tz_name)}, in about {away_text(resets_at, now)}."
     )
 
 
 def day_limit_text(limit: int, resets_at: datetime, now: datetime, tz_name: str) -> str:
     return (
-        f"You have used your {limit} questions for today. They come back at "
+        f"You have used your {questions(limit)} for today. They come back at "
         f"{clock_text(resets_at, tz_name)}, in about {away_text(resets_at, now)}."
     )
 
 
 def listing_limit_text(limit: int, resets_at: datetime, tz_name: str) -> str:
     return (
-        f"You have asked {limit} questions about this car today. You can ask about other "
+        f"You have asked {questions(limit)} about this car today. You can ask about other "
         f"cars, or come back tomorrow at {clock_text(resets_at, tz_name)}."
     )
 

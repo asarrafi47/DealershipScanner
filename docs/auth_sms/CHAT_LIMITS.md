@@ -43,11 +43,11 @@ All model calls go through one function, `complete()` in `B/llm/client.py:422-51
 | New accounts (under 24 hours old) | half of the account numbers | slows throw-away accounts |
 | Site-wide per day | **$5 and 2,000,000 tokens** (whichever comes first), alert at 50% and 80% | a guess; I do not have this site's real cost per message |
 | Web research inside a chat answer | counts as 3 messages | it is the expensive path (`B/utils/car_chat_policy.py:18-36`) |
-| Admins | exempt from per-account numbers (owner decision 2026-11-13), not from the site-wide cap | |
+| Admins | exempt from every per-subject number (account, account and car, phone, device, address) and from the new-account and reserve tiers (owner decision 2026-11-13); never from the site-wide cap | the code (`gate.py`, `Guard._charges`) does exactly this |
 | New accounts' share of the budget | at most 25% of the day's budget (`chat.new_account_budget_pct`); established accounts (over 7 days) keep a reserve of 50% (`chat.established_reserve_pct`) | a few fresh accounts cannot drain the day |
 | Per /24 (IPv4) or /48 (IPv6) | 150 a day | back-stop against address farms |
 
-About the dollar figure: I could not measure what one chat message costs here (no network, no production data). Card C2 records real token counts from the first day, and the admin page shows dollars per day and per message; then set the cap from real numbers. Until then the token cap works without any price list. Prices per million tokens are settings (`chat.price_in_micro_per_mtok`, `chat.price_out_micro_per_mtok`) that the owner or a session fills from the current Anthropic price page for the model in `ROLE_MODELS["chat"]` (`B/llm/client.py:57-80`); they are not hard-coded.
+About the dollar figure: I could not measure what one chat message costs here (no network, no production data). Card C2 records real token counts from the first day, and the admin page shows dollars per day and per message; then set the cap from real numbers. Until then the dollar cap runs on shipped fallback prices, so it is live from day one: 3 dollars in and 15 dollars out per million tokens (Sonnet-class, above the Haiku-class chat model, so the estimate errs towards denying early) and 15,000 millionths of a dollar (1.5 cents) estimated per message. They are settings (`chat.price_in_micro_per_mtok`, `chat.price_out_micro_per_mtok`, `chat.est_cost_micro_per_message`; a value of 0 is ignored, so no row can switch the dollar cap off) that the owner or a session sets from the current Anthropic price page for the model in `ROLE_MODELS["chat"]` (`B/llm/client.py:57-80`).
 
 ## 4. Data (new Postgres migration, next free number when built)
 
@@ -98,7 +98,7 @@ Order of precedence: row in `app_settings` > environment variable > code default
 | `chat.reset_tz` | `CHAT_RESET_TZ` | `America/New_York` |
 | `chat.alert_pcts` | `CHAT_ALERT_PCTS` | `50,80` |
 
-Money and token budgets are clamped to env-only hard ceilings (`CHAT_BUDGET_HARD_MAX_CENTS` default 2000, `CHAT_BUDGET_HARD_MAX_TOKENS` default 8,000,000) that no settings row can exceed. A zero means "no limit" for the per-subject numbers, as it does today (the admin form refuses it unless an "unlimited" box is ticked); a zero budget means "chat off". Bad values (not a number, negative, absurdly large) are ignored with a log line and the next level is used. Every change through the admin page records who and when.
+Give-backs: a message is given back only when no answer text was shown (a reply cut short by the token limit that returned text stays counted), at most 3 per account per hour (`chat.giveback_per_hour`), and tokens are never given back. Money and token budgets are clamped to env-only hard ceilings (`CHAT_BUDGET_HARD_MAX_CENTS` default 2000, `CHAT_BUDGET_HARD_MAX_TOKENS` default 8,000,000) that no settings row can exceed. A zero means "no limit" for the per-subject numbers, as it does today (the admin form refuses it unless an "unlimited" box is ticked); a zero budget means "chat off". Bad values (not a number, negative, absurdly large) are ignored with a log line and the next level is used. Every change through the admin page records who and when.
 
 ## 6. How a message is checked
 

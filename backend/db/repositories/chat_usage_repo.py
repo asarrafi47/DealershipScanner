@@ -285,6 +285,49 @@ def give_back(res: Reservation, *, conn: Any = None) -> None:
     _adjust(res, -res.weight, -res.est_tokens_in, -res.est_tokens_out, -res.est_cost_micro, conn)
 
 
+_CLAIM_GIVE_BACK = """
+INSERT INTO public.chat_usage_buckets (period, bucket_start, subject_kind, subject_key, messages)
+VALUES ('hour', %s, 'user', %s, 1)
+ON CONFLICT (period, bucket_start, subject_kind, subject_key) DO UPDATE SET
+    messages = chat_usage_buckets.messages + 1
+    WHERE chat_usage_buckets.messages < %s
+RETURNING messages
+"""
+
+
+def claim_give_back(
+    user_id: str,
+    *,
+    now: datetime,
+    cap: int,
+    tz_name: str | None = None,
+    conn: Any = None,
+) -> bool:
+    """Take one of an account's ``cap`` message give-backs for this clock hour (atomic).
+
+    True when the give-back may be made; False once the hour's cap is used up (the row stays at
+    ``cap``). Kept on a row of its own (``user`` kind, key ``giveback:<id>``) so it never mixes with
+    the account's message counters. A cap of 0 or less never gives back.
+    """
+    if cap <= 0:
+        return False
+    own = conn is None
+    c = conn or _connect()
+    try:
+        row = c.execute(_CLAIM_GIVE_BACK, (hour_start(now, tz_name), f"giveback:{user_id}", int(cap))).fetchone()
+        c.commit()
+        return row is not None
+    except Exception:
+        try:
+            c.rollback()
+        except Exception:
+            pass
+        raise
+    finally:
+        if own:
+            c.close()
+
+
 def add_denied(
     kind: str,
     key: str,

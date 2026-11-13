@@ -38,8 +38,12 @@ def put(rows, **kw):
         rows["chat." + k] = str(v)
 
 
+ESTABLISHED = 10 * 24 * 3600.0  # seconds: an account over 7 days old keeps the full site budget in these tests
+
+
 def _enter(**kw):
-    args = dict(kind="car", user_id=1, phone_hash="ph", device_hash="dh", ip_hash="ih", listing_id=None, weight=1, now=NOW)
+    args = dict(kind="car", user_id=1, phone_hash="ph", device_hash="dh", ip_hash="ih", listing_id=None, weight=1, now=NOW,
+                account_age_s=ESTABLISHED)
     args.update(kw)
     kind = args.pop("kind")
     return guard(kind, args.pop("user_id"), args.pop("phone_hash"), args.pop("device_hash"), args.pop("ip_hash"),
@@ -121,17 +125,31 @@ def test_denial_json_shape():
 
 def test_hook_inactive_outside_a_guard(model):
     model([_api_result()])
-    assert _call().ok  # no sink installed: nothing recorded, nothing raised
+    assert llm._usage_sink.get() is None  # no guard is open: no sink is installed
+    assert _call().ok  # nothing raised
+    assert llm._usage_sink.get() is None
 
 
 class _FakeRepo:
     """Stands in for the database: records the reserve and the true-up."""
 
-    def __init__(self, monkeypatch):
+    def __init__(self, monkeypatch, *, give_backs=True):
         self.trued = []
+        self.reserved = []
+        self.claims = []
         res = repo.Reservation(weight=1, est_tokens_in=1000, est_tokens_out=500, est_cost_micro=7)
-        monkeypatch.setattr(repo, "reserve", lambda charges, **kw: repo.ReserveResult(ok=True, violations=[], reservation=res))
+
+        def reserve(charges, **kw):
+            self.reserved.append((charges, kw))
+            return repo.ReserveResult(ok=True, violations=[], reservation=res)
+
+        def claim(user_id, **kw):
+            self.claims.append((user_id, kw))
+            return give_backs
+
+        monkeypatch.setattr(repo, "reserve", reserve)
         monkeypatch.setattr(repo, "true_up", lambda r, **kw: self.trued.append(kw))
+        monkeypatch.setattr(repo, "claim_give_back", claim)
 
 
 def test_no_reported_usage_keeps_the_estimate_charged(monkeypatch):
@@ -156,16 +174,159 @@ def test_exception_with_no_usage_still_gives_the_message_back(monkeypatch):
     assert [k["messages_back"] for k in fake.trued] == [True]
 
 
+def test_no_settings_rows_and_no_environment_still_reserve_a_non_zero_cost(monkeypatch):
+    fake = _FakeRepo(monkeypatch)
+    _ask()
+    charges, kw = fake.reserved[0]
+    assert kw["est_cost_micro"] > 0 and kw["est_tokens_in"] > 0
+    glob = [c for c in charges if c.kind == "global" and c.key == repo.GLOBAL_KEY][0]
+    assert glob.cost_limit_micro == 500 * 10_000 and glob.tokens_limit == 2_000_000  # the 500 cent cap is live
+
+
+def test_a_row_asking_for_more_than_the_hard_ceiling_is_clamped_in_the_charge(monkeypatch, settings):
+    fake = _FakeRepo(monkeypatch)
+    put(settings, budget_usd_per_day_cents=999_999, budget_tokens_per_day=999_999_999)
+    _ask()
+    glob = [c for c in fake.reserved[0][0] if c.key == repo.GLOBAL_KEY][0]
+    assert glob.cost_limit_micro == 2000 * 10_000 and glob.tokens_limit == 8_000_000
+
+
+def test_an_answer_cut_short_by_the_token_limit_stays_counted_and_keeps_real_tokens(monkeypatch, model):
+    fake = _FakeRepo(monkeypatch)
+    model([_api_result(text="A half answer that was cut", stop="max_tokens", tin=90, tout=500)])
+    with _enter():
+        _call()
+    assert len(fake.trued) == 1 and fake.trued[0]["messages_back"] is False
+    assert (fake.trued[0]["tokens_in"], fake.trued[0]["tokens_out"]) == (90, 500)  # tokens are never given back
+    assert fake.claims == []  # nothing to give back, so no give-back slot was used
+
+
+def test_an_empty_text_refusal_gives_the_message_back_through_a_give_back_slot(monkeypatch, model):
+    fake = _FakeRepo(monkeypatch)
+    model([_api_result(text="", stop="refusal", tin=80, tout=0)])
+    with _enter():
+        _call()
+    assert fake.trued[0]["messages_back"] is True and fake.trued[0]["tokens_in"] == 80
+    assert len(fake.claims) == 1 and fake.claims[0][0] == "1" and fake.claims[0][1]["cap"] == 3
+
+
+def test_a_spent_give_back_cap_keeps_the_message_counted(monkeypatch, model):
+    fake = _FakeRepo(monkeypatch, give_backs=False)
+    model([_api_result(text="", stop="end_turn", tin=80, tout=0)])
+    with _enter():
+        _call()
+    assert fake.trued[0]["messages_back"] is False and fake.trued[0]["tokens_in"] == 80
+
+
+def test_a_signed_out_caller_gets_no_give_back(monkeypatch):
+    fake = _FakeRepo(monkeypatch)
+    with pytest.raises(RuntimeError):
+        with _enter(user_id=None):
+            raise RuntimeError("boom")
+    assert fake.trued[0]["messages_back"] is False and fake.claims == []
+
+
+def test_a_database_error_while_taking_the_give_back_slot_keeps_the_message_counted(monkeypatch):
+    fake = _FakeRepo(monkeypatch)
+    monkeypatch.setattr(repo, "claim_give_back", lambda *a, **k: (_ for _ in ()).throw(OSError("down")))
+    with pytest.raises(RuntimeError):
+        with _enter():
+            raise RuntimeError("boom")
+    assert fake.trued[0]["messages_back"] is False
+
+
+def test_web_research_gives_back_only_if_no_call_produced_text(monkeypatch, model):
+    fake = _FakeRepo(monkeypatch)
+    model([_api_result(text="found it", tin=50, tout=20), _api_result(text="", stop="refusal", tin=30, tout=0)])
+    with _enter(weight=3):
+        _call(); _call()  # call one answered, call two came back empty
+    assert fake.trued[0]["messages_back"] is False
+    model([_api_result(text="", stop="refusal"), _api_result(text="  ", stop="refusal")])
+    with _enter(weight=3):
+        _call(); _call()
+    assert fake.trued[1]["messages_back"] is True
+
+
+def test_a_failed_request_after_text_was_produced_is_not_given_back(monkeypatch, model):
+    fake = _FakeRepo(monkeypatch)
+    model([_api_result(text="the answer", tin=10, tout=5)])
+    with _enter() as g:
+        _call()
+        g.fail()  # even a route that says "failed" cannot give back a message that produced text
+    assert fake.trued[0]["messages_back"] is False
+
+
+def test_closing_a_stream_after_the_first_text_never_gives_the_message_back(monkeypatch):
+    fake = _FakeRepo(monkeypatch)
+
+    def stream(g):
+        with g:
+            g.note_text()  # the first chunk went to the browser
+            yield "chunk"
+            yield "more"
+
+    g = _enter()
+    gen = stream(g)
+    assert next(gen) == "chunk"
+    gen.close()  # the browser left: GeneratorExit inside the with block
+    assert fake.trued[0]["messages_back"] is False and fake.claims == []
+
+
+def test_closing_a_stream_before_any_text_gives_the_message_back(monkeypatch):
+    fake = _FakeRepo(monkeypatch)
+
+    def stream(g):
+        with g:
+            yield "nothing sent yet"
+
+    gen = stream(_enter())
+    next(gen)
+    gen.close()
+    assert fake.trued[0]["messages_back"] is True
+
+
+def test_account_tiers_follow_the_age(monkeypatch):
+    day = 24 * 3600
+    tiers = {a: _enter(account_age_s=a).tier() for a in (0, 23 * 3600, day, 6 * day, 7 * day, 40 * day)}
+    assert tiers == {0: "new", 23 * 3600: "new", day: "mid", 6 * day: "mid", 7 * day: "established", 40 * day: "established"}
+    assert _enter(account_age_s=None).tier() == "mid"
+    assert _enter(user_id=None).tier() == "new"
+    assert _enter(new_account=True).tier() == "new"
+    assert _enter(is_admin=True, account_age_s=0).tier() == "admin"
+
+
+def test_new_and_mid_accounts_carry_sub_budget_rows_established_and_admin_do_not(monkeypatch):
+    fake = _FakeRepo(monkeypatch)
+
+    def sub_rows(**kw):
+        fake.reserved.clear()
+        _ask(**kw)
+        return {c.key: c for c in fake.reserved[0][0] if c.kind == "global"}
+
+    total = 500 * 10_000
+    new = sub_rows(account_age_s=3600)
+    assert set(new) == {"all", "open", "new"}
+    assert new["new"].cost_limit_micro == total * 25 // 100 and new["new"].tokens_limit == 2_000_000 * 25 // 100
+    assert new["open"].cost_limit_micro == total * 50 // 100
+    mid = sub_rows(account_age_s=3 * 24 * 3600)
+    assert set(mid) == {"all", "open"}
+    assert set(sub_rows(account_age_s=ESTABLISHED)) == {"all"}
+    assert set(sub_rows(is_admin=True, account_age_s=0)) == {"all"}  # admins: the site budget only
+
+
+def test_a_zero_reserve_setting_means_no_open_row(monkeypatch, settings):
+    fake = _FakeRepo(monkeypatch)
+    put(settings, established_reserve_pct=0)
+    _ask(account_age_s=3 * 24 * 3600)
+    assert {c.key for c in fake.reserved[0][0] if c.kind == "global"} == {"all"}
+
+
 def test_missing_pepper_fails_closed_with_unavailable_and_logs_once(monkeypatch, caplog):
     from backend.chat_budget import gate
 
     monkeypatch.setattr(gate, "_PEPPER_LOGGED", False)
-    monkeypatch.setenv("APP_ENV", "production")
-    monkeypatch.setenv("RAILWAY_ENVIRONMENT", "production")
     monkeypatch.delenv("PHONE_HASH_PEPPER", raising=False)
-    from backend.utils import device_id
-
-    monkeypatch.setattr(device_id, "is_production_env", lambda: True)
+    monkeypatch.delenv("ALLOW_DEV_PHONE_PEPPER", raising=False)  # a missing pepper is never a default, in any environment
     reserved = []
     monkeypatch.setattr(repo, "reserve", lambda *a, **k: reserved.append(1))
     caplog.set_level("ERROR")
@@ -379,3 +540,122 @@ def test_no_message_text_or_hash_in_logs(pg_db, settings, caplog):
         _ask(phone_hash="secret-phone-hash")
         _denial(phone_hash="secret-phone-hash")
     assert "secret-phone-hash" not in caplog.text
+
+
+# ---------------------------------------------------------------- wave 1 review follow-ups, Postgres tier
+
+
+@pg
+def test_a_truncated_answer_keeps_the_message_counted_and_records_real_tokens(pg_db, settings, model):
+    model([_api_result(text="half an answer", stop="max_tokens", tin=90, tout=500)])
+    with _enter():
+        _call()
+    row = _day_row(pg_db, "user", "1")
+    assert (row["messages"], row["tokens_in"], row["tokens_out"]) == (1, 90, 500)
+
+
+@pg
+def test_an_empty_text_refusal_gives_the_message_back_and_the_fourth_give_back_in_an_hour_is_not_given(pg_db, settings, model):
+    put(settings, user_per_hour=0, user_per_day=0)
+    model([_api_result(text="", stop="refusal", tin=10, tout=0) for _ in range(4)])
+    for n in range(1, 5):
+        with _enter():
+            _call()
+        row = _day_row(pg_db, "user", "1")
+        assert row["messages"] == (0 if n <= 3 else 1), n  # the 4th stays counted
+        assert row["tokens_in"] == 10 * n  # tokens are never given back
+    rows = repo.read_hour_totals(now=NOW, tz_name=NY, kind="user", key="giveback:1")
+    assert rows[0]["messages"] == 3  # the cap row stops at the cap
+
+
+@pg
+def test_give_backs_are_counted_per_account_and_per_clock_hour(pg_db, settings, model):
+    model([_api_result(text="", stop="refusal") for _ in range(5)])
+    for uid in (1, 1, 1, 2):
+        with _enter(user_id=uid):
+            _call()
+    assert _day_row(pg_db, "user", "1")["messages"] == 0 and _day_row(pg_db, "user", "2")["messages"] == 0
+    with _enter(user_id=1, now=TOP):  # a new clock hour: the account has its three again
+        _call()
+    assert repo.read_day_totals(now=TOP, tz_name=NY, kind="user", key="1")[0]["messages"] == 0
+
+
+@pg
+def test_claim_give_back_is_atomic_at_the_cap(pg_db):
+    got = [repo.claim_give_back("7", now=NOW, cap=3) for _ in range(5)]
+    assert got == [True, True, True, False, False]
+    assert repo.claim_give_back("7", now=NOW, cap=0) is False
+    assert repo.claim_give_back("8", now=NOW, cap=1) is True
+
+
+@pg
+def test_web_research_with_text_from_one_call_keeps_all_three_messages(pg_db, settings, model):
+    model([_api_result(text="found", tin=5, tout=5), _api_result(text="", stop="refusal", tin=5, tout=0)])
+    with _enter(weight=3):
+        _call(); _call()
+    assert _day_row(pg_db, "user", "1")["messages"] == 3
+
+
+@pg
+def test_with_the_new_account_sub_budget_used_up_an_established_account_still_gets_an_answer(pg_db, settings, model):
+    put(settings, budget_tokens_per_day=1000, est_tokens_in_per_message=100, est_tokens_out_per_message=0,
+        user_per_hour=0, user_per_day=0, new_account_budget_pct=25)  # a quarter of 1000 is 250 tokens
+    model([_api_result(tin=100, tout=0) for _ in range(5)])
+    with _enter(user_id=1, account_age_s=3600):
+        _call()
+    with _enter(user_id=2, account_age_s=3600):
+        _call()
+    d = _denial(user_id=3, account_age_s=3600)  # 200 used, the next estimate (100) passes 250
+    assert d.error == "chat_budget_reached" and d.message == msg.budget_text(MIDNIGHT, NY)
+    with _enter(user_id=9, account_age_s=ESTABLISHED):  # established: the site budget still has room
+        _call()
+    assert _day_row(pg_db, "global", "all")["tokens_in"] == 300
+
+
+@pg
+def test_accounts_under_a_week_old_cannot_use_the_reserve_kept_for_established_ones(pg_db, settings, model):
+    put(settings, budget_tokens_per_day=1000, est_tokens_in_per_message=250, est_tokens_out_per_message=0,
+        user_per_hour=0, user_per_day=0, established_reserve_pct=50)
+    model([_api_result(tin=250, tout=0) for _ in range(4)])
+    for uid in (1, 2):
+        with _enter(user_id=uid, account_age_s=3 * 24 * 3600):
+            _call()  # 500 of 1000: exactly the open half
+    assert _denial(user_id=3, account_age_s=3 * 24 * 3600).error == "chat_budget_reached"
+    for uid in (4, 5):
+        with _enter(user_id=uid, account_age_s=ESTABLISHED):
+            _call()  # the reserve is theirs
+    assert _day_row(pg_db, "global", "all")["tokens_in"] == 1000
+
+
+@pg
+def test_admins_skip_the_tiers_but_the_site_budget_still_stops_them(pg_db, settings, model):
+    put(settings, budget_tokens_per_day=1000, est_tokens_in_per_message=300, est_tokens_out_per_message=0,
+        user_per_hour=0, user_per_day=0)
+    model([_api_result(tin=300, tout=0) for _ in range(4)])
+    for _ in range(3):
+        with _enter(is_admin=True, account_age_s=0):  # a brand new admin account: 900 tokens, over a new account's 250
+            _call()
+    assert _denial(is_admin=True, account_age_s=0).error == "chat_budget_reached"
+
+
+@pg
+def test_with_no_settings_and_no_environment_the_default_dollar_cap_can_trip(pg_db, settings):
+    n = 0
+    while True:
+        try:
+            _ask(user_id=1000 + n, phone_hash=None, device_hash=None, ip_hash=None)
+        except ChatDenied as denied:
+            assert denied.denial.error == "chat_budget_reached"
+            break
+        n += 1
+        assert n < 1000, "the default budget never tripped: the dollar cap is not live"
+    row = _day_row(pg_db, "global", "all")
+    assert 0 < row["cost_micro"] <= 500 * 10_000 and n == 500 * 10_000 // ss.get_int("chat.est_cost_micro_per_message")
+
+
+@pg
+def test_the_hard_ceiling_beats_a_settings_row_in_a_real_reserve(pg_db, settings):
+    put(settings, budget_usd_per_day_cents=999_999, est_cost_micro_per_message=1_000_000, user_per_hour=0, user_per_day=0)
+    for n in range(20):  # 20 dollars: the 2000 cent ceiling
+        _ask(user_id=500 + n, phone_hash=None, device_hash=None, ip_hash=None)
+    assert _denial(user_id=999, phone_hash=None, device_hash=None, ip_hash=None).error == "chat_budget_reached"
