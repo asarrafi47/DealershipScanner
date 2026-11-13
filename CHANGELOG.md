@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+### Scanner safety (scan loop card L14)
+- `fleet_scan.py`: with `SCAN_FLEET=1` a run starts only inside `SCAN_FLEET_WINDOW_UTC` (`HH:MM-HH:MM`, start inclusive, end exclusive, midnight wrap; an unreadable window prints idle and exits 0), and holds a Postgres advisory lock as the fleet lease for the whole run, so a second fleet on the same database exits 3 instead of scanning. Explicit `SCAN_DEALERS` runs ignore both. Exit codes are now 0 clean, 1 infrastructure, 2 data-quality hold (reserved), 3 lease busy, and `fleet_summary.json` carries `build{commit, tag, version}` (from the `BUILD_COMMIT`/`BUILD_TAG` files the deploy stage writes, `unknown` on a dev checkout), `schema_version` and `window`.
+- One-condition allowlist: `deploy/railway/one_condition_ok.txt` is the tracked twin of the untracked workspace file (`workspace/` is not in the Railway image), and `assess._one_condition_ok()` and `recipe_validation.one_condition_ok_ids()` read the union of both, as `manifest.py` does for `do_not_scan`.
+
+### Cloud-first scan loop
 - Scan loop L9: backend/scanner/loop/gates.py gains the fleet gate (evaluate_fleet, fleet_metrics, FG1 to FG8, PASS / HOLD-PROD-WRITES / FAIL) and the write predicates can_retire (WR, per condition bucket, two strikes 20 h apart), can_move (WM) and can_promote (WP), with their thresholds in the frozen GateConfig. Pure standard-library code, not wired into the scanner's write path: production stays reconcile-off.
 
 ## [1.5.21] - 2026-11-13
