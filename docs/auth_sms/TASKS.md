@@ -6,7 +6,7 @@ Status 2026-11-13: cards F1, D1, C1 and C2 are built in open PR 15 (branch `clau
 
 ## Order of work
 
-Built in open PRs (in review, not yet on `dev`): **PR 15** = F1, D1, C1 (migration V030), C2. **PR 16** = S1, S2, S3, S4. Merge both before the next wave; the findings that change them are listed under "Changes the open PRs must take" at the end of this file.
+Built in open PRs (in review, not yet on `dev`): **PR 15** = F1, D1, C1 (migration V030), C2. **PR 16** = S1, S2, S3, S4. **PR 18 integrates 15, 16 and 17 and already takes the review changes listed under "Changes the open PRs must take"** (the chat tiers, give-back rules, `CF_ORIGIN_SECRET`, one pepper reader, the Verify status table, the inert webhook); what PR 18 did not do is named in its comment. Merge both before the next wave; the findings that change them are listed under "Changes the open PRs must take" at the end of this file.
 
 Next waves (one wave at a time; inside a wave the cards may run as parallel sessions; never two cards that edit the same file, see the overlap notes):
 
