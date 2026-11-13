@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 - Scan loop L9: backend/scanner/loop/gates.py gains the fleet gate (evaluate_fleet, fleet_metrics, FG1 to FG8, PASS / HOLD-PROD-WRITES / FAIL) and the write predicates can_retire (WR, per condition bucket, two strikes 20 h apart), can_move (WM) and can_promote (WP), with their thresholds in the frozen GateConfig. Pure standard-library code, not wired into the scanner's write path: production stays reconcile-off.
+- Scan loop L10: backend/scanner/loop/queue.py (score_dealers, fix_units, select_cycle, learned_tractability, frozen QueueConfig) ranks the dealers that need work by cars affected x severity x tractability and groups them by fix unit; gates.py gains verify_fix (fixed / fixed_pending / fixed_unverifiable / not_fixed, thresholds in GateConfig); backend/scripts/ops_gates.py runs the gates and the queue over triage files and writes gate_report.json and queue.json. Pure standard-library code, nothing wired into the scanner.
 
 ## [1.5.21] - 2026-11-13
 
