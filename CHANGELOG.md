@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [1.5.21] - 2026-11-13
+
 - Scan loop L8: backend/scanner/loop/gates.py holds the dealer gates GF1 to GF7 and GA1 to GA4, the dealer state (evaluate_dealer, evaluate_run), the frozen GateConfig, INPUT_FIELDS and legacy_inputs (adapter for the 2026-11-03 triage files); deploy/railway/accepted_gaps.json is the accepted-gap registry (seeded with quantumautosales-com and honestcardeal-com for GF5). Pure standard-library code, not wired into anything yet. Golden over the three fixture shards: ok 106, needs_recipe_work 18, needs_code_work 48, blocked 0.
 
 ## [1.5.20] - 2026-11-13
