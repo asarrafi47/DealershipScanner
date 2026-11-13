@@ -22,7 +22,7 @@ R = X / F, T = the site total, W = raw VINs walked::
     GF3   walk complete: stopped before its cap and (T unknown or W >= 0.95 T); the cap is   hard
           the report's (min(150, ceil(T / page size) + 2) with T known, else 40); no
           pagination means one page, only the W test applies; no report: cannot_assess
-    GF4   fail if R >= 0.10, or F >= 50 and S / F < 0.9                                     hard
+    GF4   fail if R >= 0.10, or F >= 50 and S / F < 0.9; a pass with R >= 0.07 flags watch   hard
     GF5   C = min(rows_new, rows_used); fail if S >= 20, C = 0 and no unexpired accepted     hard
           gap; info note if S >= 100 and C / S < 0.02
     GF6   fail if no live recipe, or last ok run older than 30 days and Y < 0.9             hard
@@ -82,6 +82,7 @@ class GateConfig:
     walk_cap_max: int = 150  # GF3 cap ceiling when T is known
     walk_cap_slack_pages: int = 2  # GF3 cap = ceil(T / page size) + 2
     refused_share: float = 0.10  # GF4 R
+    refused_watch: float = 0.07  # GF4 passes but R at or above this marks watch (a flag, not a gate result)
     stamped_min_feed: int = 50  # GF4 second clause: F at least this
     stamped_share_min: float = 0.9  # GF4 second clause: P below this fails
     condition_min_rows: int = 20  # GF5 S at least this
@@ -615,6 +616,9 @@ def evaluate_dealer(entry, extras, history, registry, cfg, now) -> dict:
         notes += ["watch:band:" + g for g, b in (("GA1", band1), ("GA2", band2), ("GA3", band3)) if b]
         if gf2.get("warn") is True and gf2["result"] == PASS:
             notes.append("watch:warn:GF2")
+        gf4 = gates["GF4"]
+        if gf4["result"] == PASS and gf4["value"] is not None and gf4["value"] >= cfg.refused_watch:
+            notes.append("watch:near:GF4")
         watch = bool(notes)
         reasons += notes
 

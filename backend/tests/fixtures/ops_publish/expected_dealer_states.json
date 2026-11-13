@@ -1611,9 +1611,11 @@
     "GF7"
    ],
    "failing": [],
-   "reasons": [],
+   "reasons": [
+    "watch:near:GF4"
+   ],
    "state": "ok",
-   "watch": false
+   "watch": true
   },
   "longolexus-com": {
    "cannot_assess": [

@@ -453,6 +453,17 @@ def test_gf4_refused_share_and_stamped_share() -> None:
     assert gate(run(entry(rows=0, rows_stamped=0)), "GF4") == G.CANNOT
 
 
+def test_gf4_near_the_limit_flags_watch_without_changing_the_state() -> None:
+    def refused(n):
+        return run(entry(rows=1000, rows_stamped=1000, vin_owner_conflicts=n))
+
+    assert refused(69)["watch"] is False
+    near = refused(70)
+    assert near["watch"] is True and near["state"] == "ok" and "watch:near:GF4" in near["reasons"]
+    assert refused(99)["watch"] is True and gate(refused(99), "GF4") == G.PASS
+    assert refused(100)["watch"] is False and refused(100)["state"] == "needs_code_work"
+
+
 def test_gf4_counts_parser_refused_rows_in_x_and_f() -> None:
     r = run(entry(rows=900, rows_stamped=900), extras(refused={"parse_time": 100, "owner_guard": 0}))
     assert r["gates"]["GF4"]["value"] == 0.1 and gate(r, "GF4") == G.FAIL
