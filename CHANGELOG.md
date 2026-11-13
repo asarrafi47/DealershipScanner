@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [1.5.20] - 2026-11-13
+
 ### Fixed
 - `window_sticker.py`: hoisted the whitespace regex out of an f-string replacement field (a backslash there is a SyntaxError before Python 3.12).
 
