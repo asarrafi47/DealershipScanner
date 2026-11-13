@@ -250,3 +250,30 @@ def test_a_hand_made_premium_plan_is_ignored_with_billing_off(free_app):
     assert not r.headers["Location"].rstrip("/").endswith("/premium")
     with client.session_transaction() as sess:
         assert "post_auth_intent" not in sess
+
+
+def test_a_premium_login_intent_goes_to_the_app_home_with_billing_off(free_app):
+    from backend.auth.session import post_login_redirect
+
+    with free_app.test_request_context("/"):
+        from flask import session
+
+        session["post_auth_intent"] = "premium"
+        r = post_login_redirect()
+        assert "/premium" not in r.headers["Location"]
+        assert "post_auth_intent" not in session
+
+
+def test_a_new_google_or_apple_user_is_not_offered_premium_with_billing_off(free_app, monkeypatch):
+    from backend.auth import apple_oauth, google_oauth
+
+    for mod, fn in ((google_oauth, "_complete_login"), (apple_oauth, "_complete_login")):
+        monkeypatch.setattr("backend.auth.session.finalize_app_session", lambda uid: True)
+        monkeypatch.setattr(mod, "sync_env_admin_user_row", lambda uid: None, raising=False)
+        with free_app.test_request_context("/"):
+            from flask import session
+
+            kwargs = {"is_new_user": True}
+            r = getattr(mod, fn)(5, **kwargs)
+            assert "/premium" not in r.headers["Location"], mod.__name__
+            assert "auth_welcome_source" not in session

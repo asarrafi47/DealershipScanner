@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+- Part C review blocker: with billing off, a new Google or Apple user (or any premium login intent) is no longer sent to /premium after sign-in.
+
 ## [1.5.31] - 2026-11-13
 
 - Wave 1 integration review follow-ups (PR 18). F1: with billing off `/account/billing` redirects to the profile, the profile has no Plan or Billing row, the car page has no "Premium only." text or hidden upgrade dialog, an anonymous visitor's trim panel says "Sign in to see what this trim adds" instead of an empty panel, the register page hides the Premium choice (a hand-made plan=premium is ignored), `deploy/AUTONOMOUS_DEV.md` no longer curls the dead `/billing/plans`; signed-in general users are tested against a route of each of the eight feature ids.

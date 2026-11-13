@@ -198,8 +198,8 @@ def _complete_login(user_id: int, *, is_new_user: bool = False):
     if is_admin_role(session.get("user_role")) or bool(session.get("user_is_premium")):
         return _post_login_redirect()
 
-    wants_premium = oauth_post_intent == "premium" or _should_offer_premium_after_google_login(
-        is_new_user=is_new_user
+    wants_premium = Config.billing_stripe_enabled() and (
+        oauth_post_intent == "premium" or _should_offer_premium_after_google_login(is_new_user=is_new_user)
     )
     if wants_premium:
         session["post_auth_intent"] = "premium"

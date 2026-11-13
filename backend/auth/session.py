@@ -59,7 +59,7 @@ def post_login_redirect():
         and (not require_paid_org_session())
     ):
         return redirect(url_for("billing.billing_required"))
-    if post_intent == "premium":
+    if post_intent == "premium" and billing_enabled():  # the site is free: nothing to offer
         return redirect(url_for("premium_page"))
     return redirect(url_for("app_home"))
 
