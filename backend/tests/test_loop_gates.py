@@ -722,3 +722,477 @@ def test_input_fields_lists_every_field_the_gates_read(dealers, side, registry) 
     assert uncovered == []
     for fields in G.INPUT_FIELDS.values():
         assert all(p.startswith(("entry.", "extras.")) for p in fields)
+
+
+# === fleet gate and write gates (card L9) ============================================================
+
+from backend.scanner.loop.gates import (  # noqa: E402
+    can_move,
+    can_promote,
+    can_retire,
+    evaluate_fleet,
+    fleet_metrics,
+    retire_share_limit,
+)
+
+START = "2026-11-03T18:00:00+00:00"
+PREV_START = "2026-10-27T18:00:00+00:00"  # seven days earlier: GF2 warn level 0.95 - 0.028 = 0.922
+
+
+def synth_entries(n=1000, ok=None, **verdict_counts):
+    """n dealers with 100 stamped rows each; ``verdict_counts`` gives the non-ok verdicts, the rest are ok."""
+    verdicts = []
+    for name, count in verdict_counts.items():
+        verdicts += [name] * count
+    verdicts += ["ok"] * (n - len(verdicts))
+    return [
+        entry(dealer_id="d%04d-com" % i, verdict=v, rows=100, rows_stamped=100, rows_new=50, rows_used=50, active_after=100)
+        for i, v in enumerate(verdicts)
+    ]
+
+
+def fleet_run(entries=None, **over):
+    run = {"entries": entries if entries is not None else synth_entries(), "started": START}
+    run.update(over)
+    return run
+
+
+def prior(run=None, outcome="PASS", **over):
+    metrics = fleet_metrics(run or fleet_run())
+    metrics.update(over)
+    return {"outcome": outcome, "metrics": metrics}
+
+
+def fleet(run=None, priors=None, summary=None):
+    return evaluate_fleet(run or fleet_run(), priors if priors is not None else [prior()], summary, CFG)
+
+
+def fg(result, name):
+    return result["gates"][name]["result"]
+
+
+GOOD_SUMMARY = {"dealers": 1000, "assessed": 1000, "shards": 2, "shard_rc": {"s0": 0, "s1": 0},
+                "post": {"market": {"rc": 0, "seconds": 3}}, "total_seconds": 1000.0}
+
+
+def test_fleet_pass_against_an_identical_trailing_run() -> None:
+    result = fleet(summary=GOOD_SUMMARY)
+    assert result["outcome"] == "PASS" and result["reasons"] == []
+    assert result["writes"] == {"retire": True, "moves": True, "promote": "gated"}
+    assert [fg(result, n) for n in G.FLEET_GATE_NAMES][:6] == ["pass", "pass", "pass", "pass", "pass", "pass"]
+
+
+def test_fg1_assessed_share_boundary() -> None:
+    ok = {"dealers": 1000, "assessed": 980, "shards": 1, "shard_rc": {"s0": 0}, "post": {}}
+    assert fg(fleet(summary=ok), "FG1") == "pass"
+    assert fg(fleet(summary=dict(ok, assessed=979)), "FG1") == "fail"
+
+
+def test_fg1_shard_return_code_post_step_and_missing_shard() -> None:
+    base = dict(GOOD_SUMMARY)
+    assert fg(fleet(summary=dict(base, shard_rc={"s0": 0, "s1": 1})), "FG1") == "fail"
+    assert fg(fleet(summary=dict(base, post={"market": {"rc": 2, "seconds": 1}})), "FG1") == "fail"
+    assert fg(fleet(summary=dict(base, shards=3)), "FG1") == "fail"  # a shard without a return code
+
+
+def test_fg1_error_share_boundary() -> None:
+    assert fg(fleet(fleet_run(synth_entries(error=19)), [], GOOD_SUMMARY), "FG1") == "pass"
+    assert fg(fleet(fleet_run(synth_entries(error=20)), [], GOOD_SUMMARY), "FG1") == "fail"
+
+
+def test_fg1_without_summary_assesses_only_the_error_share() -> None:
+    g = fleet()["gates"]["FG1"]
+    assert g["result"] == "pass" and set(g["unassessed"]) >= {"shard_rc", "post"}
+
+
+def test_fg2_ok_share_floor_boundary() -> None:
+    held = fleet(fleet_run(synth_entries(thin=551)), [])
+    assert held["gates"]["FG2"]["value"]["ok_share"] == 0.449 and held["gates"]["FG2"]["result"] == "hold"
+    passing = fleet(fleet_run(synth_entries(thin=550)), [])
+    assert passing["gates"]["FG2"]["value"]["ok_share"] == 0.45 and passing["gates"]["FG2"]["result"] == "pass"
+
+
+def test_fg2_ok_share_drop_against_trailing() -> None:
+    trailing = [prior(fleet_run(synth_entries(inaccurate=300)))]  # ok 0.70
+    assert fg(fleet(fleet_run(synth_entries(inaccurate=380)), trailing), "FG2") == "pass"  # 0.62: exactly 0.08 below
+    assert fg(fleet(fleet_run(synth_entries(inaccurate=381)), trailing), "FG2") == "hold"
+
+
+def test_fg2_bad_share_boundary_and_trailing_rise() -> None:
+    assert fg(fleet(fleet_run(synth_entries(no_rows=30)), []), "FG2") == "pass"  # 3 % without trailing
+    assert fg(fleet(fleet_run(synth_entries(no_rows=31)), []), "FG2") == "hold"
+    trailing = [prior(fleet_run(synth_entries(no_rows=20)))]  # 2 %: limit 3.5 %
+    assert fg(fleet(fleet_run(synth_entries(no_rows=35)), trailing), "FG2") == "pass"
+    assert fg(fleet(fleet_run(synth_entries(no_rows=36)), trailing), "FG2") == "hold"
+    assert fg(fleet(fleet_run(synth_entries(error=1, no_recipe=1, no_rows=28)), []), "FG2") == "pass"  # the bad share counts all three
+
+
+def test_fg3_volume_ratio_boundaries() -> None:
+    ratio = lambda stamped: fleet(fleet_run([dict(e, rows_stamped=stamped) for e in synth_entries()]))["gates"]["FG3"]
+    assert ratio(89.9)["result"] == "hold"
+    assert ratio(90)["result"] == "pass" and ratio(112)["result"] == "pass"
+    assert ratio(112.1)["result"] == "hold"
+
+
+def test_fg3_without_a_previous_run_is_cannot_assess() -> None:
+    assert fg(fleet(priors=[]), "FG3") == "cannot_assess"
+    assert fg(fleet(priors=[prior(outcome="FAIL")]), "FG3") == "cannot_assess"  # only PASS runs count
+
+
+def test_fg4_shrink_breadth_boundary() -> None:
+    def shrunk(count):
+        entries = synth_entries()
+        for e in entries[:count]:
+            e["rows_stamped"] = 90  # 0.90 of 100: under the warn level 0.922 at seven days
+        return fleet(fleet_run(entries), [prior(fleet_run(started=PREV_START))])["gates"]["FG4"]
+
+    assert shrunk(80)["result"] == "pass" and shrunk(81)["result"] == "hold"
+    assert shrunk(80)["threshold"]["warn_level"] == 0.922
+
+
+def test_fg4_needs_the_run_dates() -> None:
+    assert fg(fleet(priors=[prior(fleet_run(started=None))]), "FG4") == "cannot_assess"
+
+
+def test_fg5_attribution_share_boundary() -> None:
+    def refused(n):
+        entries = synth_entries()
+        entries[0]["vin_owner_conflicts"] = n
+        run = fleet_run(entries)
+        for e in run["entries"]:
+            e["rows"] = 100
+        return fleet(run, [])["gates"]["FG5"]
+
+    # sum F = 100,000: 6,000 refused is exactly 6 %
+    assert refused(6000)["result"] == "pass" and refused(6001)["result"] == "hold"
+
+
+def test_fg5_new_pair_over_100_vins_is_a_second_trigger() -> None:
+    def with_pair(n, before):
+        entries = synth_entries(10)
+        entries[0]["vin_owner_conflict_owners"] = {"owner-com": n}
+        entries[0]["vin_owner_conflicts"] = 0
+        old = prior(fleet_run(synth_entries(10)))
+        if before:
+            old["metrics"]["pairs"] = {"owner-com>" + entries[0]["dealer_id"]: before}
+        return fleet(fleet_run(entries), [old])
+
+    assert fg(with_pair(100, 0), "FG5") == "pass" and fg(with_pair(101, 0), "FG5") == "hold"
+    assert fg(with_pair(500, 1), "FG5") == "pass"  # present last run: not new
+    result = with_pair(101, 0)
+    assert result["stops_retire_and_moves"] == ["FG5"] and result["outcome"] == "HOLD-PROD-WRITES"
+
+
+def test_fg6_retirement_limit_by_age() -> None:
+    assert retire_share_limit(36) == 0.6 and retire_share_limit(10) == pytest.approx(0.25) and retire_share_limit(None) is None
+    assert retire_share_limit(0) == 0.1
+
+    def load(retired, g, prior_active=1000):
+        entries = synth_entries(1)
+        entries[0]["reconcile"] = {"retired": retired}
+        entries[0]["active_after"] = prior_active - retired
+        return fleet(fleet_run(entries, retire_g_days=g), [])
+
+    assert fg(load(600, 36), "FG6") == "pass" and fg(load(601, 36), "FG6") == "hold"
+    assert fg(load(250, 10), "FG6") == "pass" and fg(load(251, 10), "FG6") == "hold"
+    assert load(251, 10)["stops_retire_and_moves"] == ["FG6"]
+    assert fg(load(100, None), "FG6") == "cannot_assess"
+    assert fg(load(0, None), "FG6") == "pass"
+
+
+def test_fg6_age_comes_from_the_oldest_retired_row() -> None:
+    entries = synth_entries(2)
+    for e in entries:
+        e["reconcile"] = {"retired": 10, "oldest": "2026-09-28T18:00:00Z"}
+    assert fleet_metrics(fleet_run(entries))["retire_g_days"] == pytest.approx(36.0)
+
+
+def test_fg7_blocked_share_boundaries() -> None:
+    def blocked(count, n=10000):
+        entries = synth_entries(n)
+        states = {e["dealer_id"]: {"state": "blocked" if i < count else "ok"} for i, e in enumerate(entries)}
+        return fleet(fleet_run(entries, results={"dealers": states}), [])["gates"]["FG7"]["result"]
+
+    assert blocked(600) == "pass" and blocked(601) == "hold"
+    assert blocked(1500) == "hold" and blocked(1501) == "fail"
+
+
+def test_fg7_without_states_is_cannot_assess() -> None:
+    assert fg(fleet(), "FG7") == "cannot_assess"
+
+
+def test_fg8_killed_shard_and_duration() -> None:
+    assert fg(fleet(summary=dict(GOOD_SUMMARY, shard_rc={"s0": -9, "s1": 0})), "FG8") == "fail"
+    assert fg(fleet(summary=dict(GOOD_SUMMARY, shard_rc={"s0": 137})), "FG8") == "fail"
+    trailing = [prior(seconds=1000.0)]
+    assert fg(fleet(priors=trailing, summary=dict(GOOD_SUMMARY, total_seconds=2000.0)), "FG8") == "pass"
+    assert fg(fleet(priors=trailing, summary=dict(GOOD_SUMMARY, total_seconds=2000.1)), "FG8") == "hold"
+    assert fg(fleet(summary=None), "FG8") == "cannot_assess"
+
+
+def test_outcome_precedence_fail_beats_hold_beats_pass() -> None:
+    held = fleet(fleet_run(synth_entries(thin=600)), [prior()])
+    assert held["outcome"] == "HOLD-PROD-WRITES" and held["writes"]["promote"] == "ok_without_watch"
+    both = fleet(fleet_run(synth_entries(thin=600)), [prior()], dict(GOOD_SUMMARY, shard_rc={"s0": 1}))
+    assert both["outcome"] == "FAIL" and both["writes"] == {"retire": False, "moves": False, "promote": "none"}
+
+
+def test_trailing_is_the_mean_of_the_previous_three_pass_runs() -> None:
+    runs = [prior(fleet_run(synth_entries(thin=100 * k))) for k in (1, 2, 3, 8)]  # ok 0.9 0.8 0.7 0.2
+    runs.insert(0, prior(fleet_run(synth_entries(thin=900)), outcome="FAIL"))
+    result = fleet(priors=runs)
+    assert result["trailing"]["runs"] == 3 and result["trailing"]["ok_share"] == pytest.approx(0.8)
+
+
+def test_first_run_has_only_absolute_limits() -> None:
+    result = fleet(priors=[])
+    assert result["outcome"] == "PASS"
+    for name in ("FG3", "FG4"):
+        assert fg(result, name) == "cannot_assess"
+    assert fg(result, "FG5") == "pass" and result["gates"]["FG5"]["unassessed"] == ["new_pair"]
+
+
+# --- the three fixture shards as a fleet -----------------------------------------------------------------
+
+
+@pytest.fixture(scope="module")
+def fixture_run(dealers, legacy) -> dict:
+    return {"entries": dealers, "results": legacy, "started": START}
+
+
+def test_fixture_shards_against_themselves_give_pass(fixture_run) -> None:
+    mine = fleet_metrics(fixture_run)
+    result = evaluate_fleet(fixture_run, [{"outcome": "PASS", "metrics": mine}], None, CFG)
+    assert result["outcome"] == "PASS", result["reasons"]
+    native = fleet_metrics({"entries": fixture_run["entries"], "started": START})
+    assert native["sum_X"] == 3404 and native["sum_F"] == 77225
+    assert native["sum_X"] / native["sum_F"] == pytest.approx(0.044, abs=0.0005)
+    assert result["gates"]["FG5"]["value"]["new_pairs"] == []
+    big = [k for k, v in mine["pairs"].items() if v > 100]
+    assert len(big) == 8
+
+
+def test_fixture_shards_against_a_run_without_the_lexus_pair_hold_through_fg5(fixture_run) -> None:
+    older = fleet_metrics(fixture_run)
+    assert older["pairs"]["lexuscarlsbad-com>lexusescondido-com"] == 577
+    del older["pairs"]["lexuscarlsbad-com>lexusescondido-com"]
+    result = evaluate_fleet(fixture_run, [{"outcome": "PASS", "metrics": older}], None, CFG)
+    assert result["outcome"] == "HOLD-PROD-WRITES" and result["reasons"] == ["FG5:new_pair"]
+    assert result["gates"]["FG5"]["value"]["new_pairs"] == ["lexuscarlsbad-com>lexusescondido-com"]
+    assert result["stops_retire_and_moves"] == ["FG5"]
+
+
+def test_21_errors_of_458_dealers_fail_through_fg1_even_with_an_fg3_hold() -> None:
+    entries = synth_entries(458, error=21)
+    result = evaluate_fleet(fleet_run(entries, roster=458), [prior(fleet_run(synth_entries(458)), sum_S=1.0)], None, CFG)
+    assert result["gates"]["FG3"]["result"] == "hold"
+    assert result["gates"]["FG1"]["result"] == "fail" and result["outcome"] == "FAIL"
+    assert result["gates"]["FG1"]["value"]["error_share"] == pytest.approx(21 / 458, abs=1e-4)
+
+
+def test_fleet_evaluation_does_not_mutate_and_is_repeatable(fixture_run) -> None:
+    frozen = copy.deepcopy(fixture_run)
+    priors = [{"outcome": "PASS", "metrics": fleet_metrics(fixture_run)}]
+    frozen_priors = copy.deepcopy(priors)
+    a = evaluate_fleet(fixture_run, priors, copy.deepcopy(GOOD_SUMMARY), CFG)
+    b = evaluate_fleet(fixture_run, priors, copy.deepcopy(GOOD_SUMMARY), CFG)
+    assert a == b and fixture_run == frozen and priors == frozen_priors
+    assert json.dumps(a, sort_keys=True) == json.dumps(b, sort_keys=True)
+
+
+def test_fleet_fields_are_declared_in_input_fields(dealers, legacy, side) -> None:
+    declared = set(G.INPUT_FIELDS["fleet"])
+    reads = set()
+    wrapped = [_wrap(d, reads, "entry") for d in dealers]
+    extras_map = {d["dealer_id"]: _wrap(legacy_inputs(d, side), reads, "extras") for d in dealers}
+    fleet_metrics({"entries": wrapped, "extras": extras_map, "started": START})
+    assert sorted(p for p in reads if not _covered(p, declared)) == []
+
+
+# --- WR: can_retire ----------------------------------------------------------------------------------
+
+
+def good_dealer(**over):
+    return run(**over)
+
+
+PASS_FLEET = {"outcome": "PASS", "writes": {"retire": True, "moves": True, "promote": "gated"}}
+HOLD_FLEET = {"outcome": "HOLD-PROD-WRITES", "writes": {"retire": False, "moves": False, "promote": "ok_without_watch"}}
+FAIL_FLEET = {"outcome": "FAIL", "writes": {"retire": False, "moves": False, "promote": "none"}}
+BUCKET = {"name": "used", "active_before": 100, "stamped": 90, "seen_again": 80}
+
+
+def misses(count, hours=30, scraped_days=30):
+    first = (NOW - timedelta(hours=hours)).isoformat()
+    scraped = (NOW - timedelta(days=scraped_days)).isoformat()
+    return [{"vin": "VIN%05d" % i, "first_miss_at": first, "scraped_at": scraped} for i in range(count)]
+
+
+def retire(dealer=None, bucket=None, candidates=None, prior_active=1000, fleet_=PASS_FLEET):
+    return can_retire(dealer if dealer is not None else good_dealer(), bucket if bucket is not None else BUCKET,
+                      candidates if candidates is not None else misses(5), prior_active, fleet_, CFG, NOW)
+
+
+def test_can_retire_allows_a_clean_dealer() -> None:
+    out = retire()
+    assert out["allowed"] is True and len(out["retire"]) == 5 and out["strike"] == [] and out["reasons"] == []
+
+
+def test_can_retire_two_strikes_19_hours_stay_a_first_strike_and_20_hours_allow() -> None:
+    soon = retire(candidates=misses(3, hours=19))
+    assert soon["allowed"] is True and soon["retire"] == [] and len(soon["strike"]) == 3
+    assert len(retire(candidates=misses(3, hours=20))["retire"]) == 3
+    first = [{"vin": "A", "first_miss_at": None, "scraped_at": NOW.isoformat()}]
+    assert retire(candidates=first)["strike"] == ["A"]
+
+
+def test_can_retire_blocked_when_the_run_is_not_eligible_records_no_strike() -> None:
+    out = retire(fleet_=HOLD_FLEET, candidates=misses(2, hours=5))
+    assert out["allowed"] is False and out["strike"] == [] and out["retire"] == []
+
+
+def test_can_retire_fleet_verdict() -> None:
+    assert "fleet:HOLD-PROD-WRITES" in retire(fleet_=HOLD_FLEET)["reasons"]
+    assert "fleet:FAIL" in retire(fleet_=FAIL_FLEET)["reasons"]
+    assert "no_fleet_verdict" in retire(fleet_=None)["reasons"]
+
+
+def test_can_retire_walk_must_be_complete_and_known() -> None:
+    assert "GF3:cannot_assess" in retire(good_dealer(x=extras(walk=None)))["reasons"]
+    capped = extras()
+    capped["walk"]["cap_hit"] = True
+    assert "GF3:walk_incomplete" in retire(good_dealer(x=capped))["reasons"]
+
+
+def test_can_retire_dealer_state_and_gates() -> None:
+    blocked = good_dealer(e=entry(recipe={"recipe_status": "blocked:t:x"}))
+    assert "dealer_state:blocked" in retire(blocked)["reasons"]
+    assert "verdict:no_rows" in retire(good_dealer(e=entry(verdict="no_rows")))["reasons"]
+    assert "GF1:failed" in retire(good_dealer(e=entry(rows_stamped=10)))["reasons"]
+    assert "GF1:cannot_assess" in retire(good_dealer(x=extras(baseline=None)))["reasons"]
+    low = good_dealer(e=entry(rows_stamped=250), x=extras(baseline={"source": "accepted_run", "B": 400, "run_id": 1, "date": "2026-11-06"}))
+    assert "GF2:yield_low" in retire(low)["reasons"]
+    refused = good_dealer(e=entry(vin_owner_conflicts=45))
+    assert "GF4:refused_share" in retire(refused)["reasons"]
+    assert "no_dealer_result" in retire(dealer={})["reasons"]
+
+
+def test_can_retire_unassessed_dealer_is_denied() -> None:
+    assert "dealer_state:unassessed" in retire(good_dealer(e=entry(verdict="error")))["reasons"]
+
+
+def test_can_retire_bucket_thresholds() -> None:
+    def with_bucket(**over):
+        return retire(bucket=dict(BUCKET, **over))["reasons"]
+
+    assert with_bucket(stamped=9, active_before=10, seen_again=9) == ["bucket:rows_below_minimum"]
+    assert with_bucket(stamped=10, active_before=10, seen_again=8) == []
+    assert "bucket:stamped_share" in with_bucket(stamped=79, seen_again=79)
+    assert with_bucket(stamped=80, seen_again=80) == []
+    assert "bucket:seen_share" in with_bucket(seen_again=69)
+    assert with_bucket(seen_again=70) == []
+    assert "bucket:not_judged" in with_bucket(name="unknown")
+    assert "bucket:data_missing" in retire(bucket={"name": "new"})["reasons"]
+    assert "bucket:data_missing" in with_bucket(active_before=0)
+
+
+def test_can_retire_share_limit_by_the_age_of_the_rows() -> None:
+    # rows scraped 36 days ago: limit 0.60 of 1,000 prior active rows
+    assert retire(candidates=misses(600, scraped_days=36))["allowed"] is True
+    over = retire(candidates=misses(601, scraped_days=36))
+    assert over["allowed"] is False and over["reasons"] == ["retire_share_exceeded"] and over["retire"] == []
+    # rows scraped 10 days ago: limit 0.25
+    assert retire(candidates=misses(250, scraped_days=10))["allowed"] is True
+    assert "retire_share_exceeded" in retire(candidates=misses(251, scraped_days=10))["reasons"]
+    assert retire(candidates=misses(5, scraped_days=10))["limit"] == pytest.approx(0.25)
+
+
+def test_can_retire_missing_inputs_deny() -> None:
+    assert "prior_active:missing" in retire(prior_active=None)["reasons"]
+    no_date = [{"vin": "A", "first_miss_at": (NOW - timedelta(hours=30)).isoformat()}]
+    assert "scraped_at:missing" in retire(candidates=no_date)["reasons"]
+
+
+# --- WM: can_move --------------------------------------------------------------------------------------
+
+EVIDENCE = {"rooftop_evidence": True, "owner_listed": False, "owner_capture_ok": True, "moves_in_run": 0}
+
+
+def move(claimant=None, evidence=None, fleet_=PASS_FLEET):
+    return can_move(claimant if claimant is not None else good_dealer(), dict(EVIDENCE, **(evidence or {})), fleet_, CFG)
+
+
+def test_can_move_allows_when_every_rule_holds() -> None:
+    out = move()
+    assert out["allowed"] is True and out["reasons"] == [] and out["limit"] == 5.0
+
+
+def test_can_move_each_rule_denies() -> None:
+    assert move(evidence={"rooftop_evidence": False})["reasons"] == ["no_rooftop_evidence"]
+    assert move(evidence={"rooftop_evidence": None})["reasons"] == ["no_rooftop_evidence"]
+    assert move(evidence={"owner_listed": True})["reasons"] == ["owner_lists_vin"]
+    assert move(evidence={"owner_listed": None})["reasons"] == ["owner_listing_unknown"]
+    assert move(evidence={"owner_capture_ok": False})["reasons"] == ["owner_capture_weak"]
+    assert "GF4:refused_share" in move(good_dealer(e=entry(vin_owner_conflicts=45)))["reasons"]
+    thin_feed = good_dealer(e=entry(rows=100, rows_stamped=80, rows_new=40, rows_used=40),
+                            x=extras(baseline={"source": "accepted_run", "B": 80, "run_id": 1, "date": "2026-11-06"}))
+    assert move(thin_feed)["reasons"] == ["GF4:failed"]  # the stamped-share clause, R under the limit
+    assert "GF3:cannot_assess" in move(good_dealer(x=extras(walk=None)))["reasons"]
+    assert "fleet:HOLD-PROD-WRITES" in move(fleet_=HOLD_FLEET)["reasons"]
+    assert "no_fleet_verdict" in move(fleet_=None)["reasons"]
+    assert move(claimant={})["allowed"] is False
+
+
+def test_can_move_limit_is_the_larger_of_5_and_one_percent_of_s() -> None:
+    assert move(evidence={"moves_in_run": 4})["allowed"] is True
+    assert move(evidence={"moves_in_run": 5})["reasons"] == ["moves:per_run_limit"]
+    big = good_dealer(e=entry(rows=2000, rows_stamped=2000, rows_new=1000, rows_used=1000),
+                      x=extras(baseline={"source": "accepted_run", "B": 2000, "run_id": 1, "date": "2026-11-06"}))
+    assert move(big, {"moves_in_run": 19})["allowed"] is True and move(big, {"moves_in_run": 20})["allowed"] is False
+    assert move(evidence={"moves_in_run": None})["reasons"] == ["moves:data_missing"]
+
+
+# --- WP: can_promote ------------------------------------------------------------------------------------
+
+
+def test_can_promote_pass_by_verdict() -> None:
+    for verdict in ("ok", "thin", "inaccurate"):
+        assert can_promote(good_dealer(e=entry(verdict=verdict)), PASS_FLEET, CFG)["allowed"] is True, verdict
+    for verdict in ("no_rows", "error", "no_recipe"):
+        out = can_promote(good_dealer(e=entry(verdict=verdict)), PASS_FLEET, CFG)
+        assert out["allowed"] is False and "dealer:carry_forward" in out["reasons"], verdict
+    flagged = good_dealer(e=entry(verdict="inaccurate", rows=100, rows_stamped=100, vin_owner_conflicts=20))
+    assert can_promote(flagged, PASS_FLEET, CFG)["allowed"] is False
+    blocked = good_dealer(e=entry(recipe={"recipe_status": "blocked:t:x"}))
+    assert can_promote(blocked, PASS_FLEET, CFG)["allowed"] is False
+
+
+def test_can_promote_hold_allows_only_ok_dealers_without_watch() -> None:
+    assert can_promote(good_dealer(), HOLD_FLEET, CFG)["allowed"] is True
+    watching = good_dealer(e=entry(accuracy=acc(incomplete_rows=40)))
+    assert watching["watch"] is True and can_promote(watching, HOLD_FLEET, CFG)["allowed"] is False
+    code = good_dealer(e=entry(verdict="inaccurate", accuracy=acc(rows=100, vpic_cached=100, hard={"vpic_make": 9})))
+    assert can_promote(code, HOLD_FLEET, CFG)["allowed"] is False
+    assert can_promote(good_dealer(), FAIL_FLEET, CFG)["reasons"] == ["fleet:FAIL"]
+    assert "no_fleet_verdict" in can_promote(good_dealer(), None, CFG)["reasons"]
+    assert can_promote(None, PASS_FLEET, CFG)["allowed"] is False
+
+
+# --- the fixtures through the write gates ----------------------------------------------------------------------
+
+
+def test_fixture_retirements_are_blocked_for_dealers_with_unknown_walks(dealers, legacy) -> None:
+    retiring = [d for d in dealers if (d.get("reconcile") or {}).get("retired")]
+    assert len(retiring) == 22 and sum(d["reconcile"]["retired"] for d in retiring) == 3507
+    would_retire, unknown_walk = 0, 0
+    for d in retiring:
+        result = legacy["dealers"][d["dealer_id"]]
+        count = d["reconcile"]["retired"]
+        # every other condition is made perfect, so only the dealer gates can deny
+        bucket = {"name": "new", "active_before": 100, "stamped": 100, "seen_again": 100}
+        out = can_retire(result, bucket, misses(count), d["reconcile"]["retired"] * 2 + 1000, PASS_FLEET, CFG, NOW)
+        would_retire += len(out["retire"])
+        if result["gates"]["GF3"]["result"] == "cannot_assess":
+            unknown_walk += 1
+            assert out["allowed"] is False and "GF3:cannot_assess" in out["reasons"], d["dealer_id"]
+    assert unknown_walk == 22 and would_retire == 0

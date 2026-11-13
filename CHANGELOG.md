@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+- Scan loop L9: backend/scanner/loop/gates.py gains the fleet gate (evaluate_fleet, fleet_metrics, FG1 to FG8, PASS / HOLD-PROD-WRITES / FAIL) and the write predicates can_retire (WR, per condition bucket, two strikes 20 h apart), can_move (WM) and can_promote (WP), with their thresholds in the frozen GateConfig. Pure standard-library code, not wired into the scanner's write path: production stays reconcile-off.
+
 ## [1.5.21] - 2026-11-13
 
 - Scan loop L8: backend/scanner/loop/gates.py holds the dealer gates GF1 to GF7 and GA1 to GA4, the dealer state (evaluate_dealer, evaluate_run), the frozen GateConfig, INPUT_FIELDS and legacy_inputs (adapter for the 2026-11-03 triage files); deploy/railway/accepted_gaps.json is the accepted-gap registry (seeded with quantumautosales-com and honestcardeal-com for GF5). Pure standard-library code, not wired into anything yet. Golden over the three fixture shards: ok 106, needs_recipe_work 18, needs_code_work 48, blocked 0.
