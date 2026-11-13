@@ -3,6 +3,10 @@
 Efficiency review 2026-09-28, recommendation 3: keyed by the grid write
 fingerprint with a 300 s TTL; a moving fingerprint (scan in progress) still
 keeps the last count for 60 s.
+
+Web speed P6: past the TTL (or a moved fingerprint) the old count is returned at once and
+one background recount replaces it; these tests wait for that recount with
+``_count_refresher.join``. The new behavior tests are in test_swr_aggregates.py.
 """
 from __future__ import annotations
 
@@ -38,6 +42,9 @@ def test_count_is_served_from_cache_within_ttl(counted, monkeypatch):
     assert listings_repo.public_listings_count() == 1001
     assert counted["n"] == 1
     now["t"] += listings_repo._PUBLIC_COUNT_TTL_S
+    # P6: the expired count is served at once; the recount runs in the background.
+    assert listings_repo.public_listings_count() == 1001
+    assert listings_repo._count_refresher.join(5)
     assert listings_repo.public_listings_count() == 1002
     assert counted["n"] == 2
 
@@ -53,6 +60,8 @@ def test_fingerprint_change_recounts_after_the_min_interval(counted, monkeypatch
     assert listings_repo.public_listings_count() == 1001
     assert counted["n"] == 1
     now["t"] += listings_repo._PUBLIC_COUNT_MIN_RECOUNT_S
+    assert listings_repo.public_listings_count() == 1001  # P6: stale value now, recount off-request
+    assert listings_repo._count_refresher.join(5)
     assert listings_repo.public_listings_count() == 1002
     assert counted["n"] == 2
 

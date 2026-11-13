@@ -382,6 +382,7 @@ _FLAG_RESETS: tuple[tuple[str, str, str], ...] = (
     ("backend.utils.price_plausibility", "_trim_year_medians", "none"),
     ("backend.utils.price_plausibility", "_model_medians", "none"),
     ("backend.utils.price_plausibility", "_loaded_at", "zero"),
+    ("backend.utils.rarity_score", "_counts_cache", "none"),
     ("backend.intelligence.deal_score_cache", "_bands", "none"),
     ("backend.intelligence.deal_score_cache", "_loaded_at", "zero"),
     ("backend.utils.market_price", "_cohort_cache", "clear"),

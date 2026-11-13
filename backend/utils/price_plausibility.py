@@ -49,6 +49,8 @@ import threading
 import time
 from typing import Any
 
+from backend.utils.swr_refresh import RETRY_AFTER_S, BackgroundRefresher
+
 logger = logging.getLogger(__name__)
 
 _CACHE_TTL_SEC = 300.0
@@ -116,19 +118,49 @@ def _load() -> tuple[
     return trim_year, by_model
 
 
-def _ensure_loaded(force: bool = False) -> None:
+_refresher = BackgroundRefresher("price-plausibility")
+
+
+def _reload_in_background() -> None:
     global _trim_year_medians, _model_medians, _loaded_at
-    now = time.monotonic()
+    try:
+        trim_year, by_model = _load()
+    except Exception:
+        # Keep the old medians; retry after RETRY_AFTER_S instead of on every request.
+        with _lock:
+            _loaded_at = time.monotonic() - _CACHE_TTL_SEC + RETRY_AFTER_S
+        raise
     with _lock:
-        stale = _trim_year_medians is None or (now - _loaded_at) > _CACHE_TTL_SEC
-        if force or stale:
-            try:
-                _trim_year_medians, _model_medians = _load()
-                _loaded_at = now
-            except Exception:
-                logger.warning("price-plausibility cache load failed", exc_info=True)
-                if _trim_year_medians is None:
-                    _trim_year_medians, _model_medians = {}, {}
+        _trim_year_medians, _model_medians = trim_year, by_model
+        _loaded_at = time.monotonic()
+
+
+def _ensure_loaded(force: bool = False) -> None:
+    """Cold (or forced): load inline under the lock. Past the TTL: return at once and
+    reload once in the background; a failed reload keeps the old medians (P6)."""
+    global _trim_year_medians, _model_medians, _loaded_at
+    if not force and _trim_year_medians is not None:
+        if (time.monotonic() - _loaded_at) > _CACHE_TTL_SEC:
+            _refresher.kick(_reload_in_background)
+        return
+    with _lock:
+        # Another caller may have finished the cold load while this one waited.
+        if not force and _trim_year_medians is not None:
+            return
+        try:
+            _trim_year_medians, _model_medians = _load()
+            _loaded_at = time.monotonic()
+        except Exception:
+            logger.warning("price-plausibility cache load failed", exc_info=True)
+            if _trim_year_medians is None:
+                _trim_year_medians, _model_medians = {}, {}
+                # Empty and cold-failed: look again soon, not after a whole TTL.
+                _loaded_at = time.monotonic() - _CACHE_TTL_SEC + RETRY_AFTER_S
+
+
+def warm() -> None:
+    """Load the medians now (process start); a no-op when they are already loaded."""
+    _ensure_loaded()
 
 
 def refresh_cache() -> None:
@@ -151,18 +183,19 @@ def implausible_price(car: dict[str, Any], price: float) -> bool:
         return False
 
     _ensure_loaded()
-    assert _trim_year_medians is not None and _model_medians is not None
+    trim_year_medians, model_medians = _trim_year_medians, _model_medians
+    assert trim_year_medians is not None and model_medians is not None
 
     median: float | None = None
     year = car.get("year")
     if isinstance(year, int):
         trim = str(car.get("trim") or "").strip().lower()
-        hit = _trim_year_medians.get((make, model, trim, year))
+        hit = trim_year_medians.get((make, model, trim, year))
         if hit and hit[1] - 1 >= _MIN_PEERS:
             median = hit[0]
 
     if median is None:
-        hit = _model_medians.get((make, model))
+        hit = model_medians.get((make, model))
         if hit and hit[1] - 1 >= _MIN_PEERS:
             median = hit[0]
 

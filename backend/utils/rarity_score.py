@@ -15,10 +15,12 @@ from __future__ import annotations
 
 import json
 import logging
+import threading
 import time
 from collections import Counter
-from functools import lru_cache
 from typing import Any
+
+from backend.utils.swr_refresh import RETRY_AFTER_S, BackgroundRefresher
 
 logger = logging.getLogger(__name__)
 
@@ -55,34 +57,43 @@ def _color_family(color: Any, make: Any) -> str | None:
         return None
 
 
-def _load_inventory_counts() -> dict[str, Counter]:
-    """One pass over active cars → the frequency maps every score reads."""
-    from backend.db.inventory_db import db_conn
+# One row per distinct (make, model, trim, exterior_color): the database counts, Python
+# only normalizes the ~50k groups. The old loop fetched every active car (214k rows) and
+# held the interpreter for 700 to 900 ms in a background thread, which stalled the request
+# threads for the same time (web speed P6, server-causes 4.7).
+_COUNTS_SQL = """
+    SELECT make, model, trim, exterior_color, COUNT(*)
+    FROM cars
+    WHERE COALESCE(listing_active, 1) = 1
+      AND TRIM(COALESCE(make, '')) != ''
+      AND TRIM(COALESCE(model, '')) != ''
+    GROUP BY make, model, trim, exterior_color
+"""
 
+
+def _counts_from_groups(groups) -> dict[str, Counter]:
+    """Frequency maps from ``(make, model, trim, exterior_color, n)`` rows.
+
+    The same four Counters the per-car loop produced: a group of ``n`` identical
+    cars adds ``n`` where the loop added 1 ``n`` times.
+    """
     model_c: Counter = Counter()
     trim_c: Counter = Counter()
     color_c: Counter = Counter()
     color_known_c: Counter = Counter()
-    with db_conn() as conn:
-        cur = conn.execute(
-            """
-            SELECT make, model, trim, exterior_color
-            FROM cars
-            WHERE COALESCE(listing_active, 1) = 1
-              AND TRIM(COALESCE(make, '')) != ''
-              AND TRIM(COALESCE(model, '')) != ''
-            """
-        )
-        for make, model, trim, color in cur.fetchall():
-            mk_md = (_norm(make), _norm(model))
-            model_c[mk_md] += 1
-            t = _norm(trim)
-            if t:
-                trim_c[(*mk_md, t)] += 1
-            fam = _color_family(color, make)
-            if fam:
-                color_known_c[mk_md] += 1
-                color_c[(*mk_md, fam)] += 1
+    for make, model, trim, color, n in groups:
+        n = int(n or 0)
+        if n <= 0:
+            continue
+        mk_md = (_norm(make), _norm(model))
+        model_c[mk_md] += n
+        t = _norm(trim)
+        if t:
+            trim_c[(*mk_md, t)] += n
+        fam = _color_family(color, make)
+        if fam:
+            color_known_c[mk_md] += n
+            color_c[(*mk_md, fam)] += n
     return {
         "model": model_c,
         "trim": trim_c,
@@ -91,13 +102,67 @@ def _load_inventory_counts() -> dict[str, Counter]:
     }
 
 
-@lru_cache(maxsize=2)
-def _counts_cached(bucket: int) -> dict[str, Counter]:
-    return _load_inventory_counts()
+def _load_inventory_counts() -> dict[str, Counter]:
+    """Counted in SQL, then normalized per group -> the frequency maps every score reads."""
+    from backend.db.inventory_db import db_conn
+
+    with db_conn() as conn:
+        groups = conn.execute(_COUNTS_SQL).fetchall()
+    return _counts_from_groups(groups)
+
+
+# (loaded_at on the monotonic clock, counts) or None before the first load. Read without
+# a lock (one reference); written under ``_counts_lock``.
+_counts_cache: tuple[float, dict[str, Counter]] | None = None
+_counts_lock = threading.Lock()
+_counts_load_lock = threading.Lock()  # held for the whole cold load
+_counts_refresher = BackgroundRefresher("rarity-counts")
+
+
+def _store_counts(counts: dict[str, Counter]) -> None:
+    global _counts_cache
+    with _counts_lock:
+        _counts_cache = (time.monotonic(), counts)
+
+
+def _refresh_counts_in_background() -> None:
+    global _counts_cache
+    try:
+        counts = _load_inventory_counts()
+    except Exception:
+        # Keep serving the old counts; try again after RETRY_AFTER_S, not on every call.
+        with _counts_lock:
+            hit = _counts_cache
+            if hit is not None:
+                _counts_cache = (time.monotonic() - _CACHE_TTL_S + RETRY_AFTER_S, hit[1])
+        raise
+    _store_counts(counts)
 
 
 def get_inventory_counts() -> dict[str, Counter]:
-    return _counts_cached(int(time.time() // _CACHE_TTL_S))
+    """Rarity frequency maps; never waits for a reload once a value exists.
+
+    Cold: loaded inline under a lock (concurrent first callers share one load). After
+    ``_CACHE_TTL_S`` the old maps are returned and ONE background reload starts.
+    """
+    hit = _counts_cache
+    if hit is None:
+        with _counts_load_lock:
+            hit = _counts_cache
+            if hit is None:
+                counts = _load_inventory_counts()
+                _store_counts(counts)
+                return counts
+        return hit[1]
+    if (time.monotonic() - hit[0]) >= _CACHE_TTL_S:
+        _counts_refresher.kick(_refresh_counts_in_background)
+    return hit[1]
+
+
+def warm_inventory_counts() -> None:
+    """Load the maps now (process start); a no-op when they are already loaded."""
+    if _counts_cache is None:
+        get_inventory_counts()
 
 
 def _vision_blob(vision_summary: Any) -> str:
