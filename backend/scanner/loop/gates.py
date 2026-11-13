@@ -55,6 +55,11 @@ Fleet gate (GATES.md section 7; ``evaluate_fleet``): FAIL beats HOLD beats PASS.
 Write gates (GATES.md section 6): ``can_retire`` (WR, per condition bucket), ``can_move`` (WM), ``can_promote``
 (WP). Each returns ``allowed`` and every reason that denies it; a missing input denies, never allows.
 
+Fix verification (GATES.md section 9; ``verify_fix``): a dealer is ``fixed`` when the gates that failed before
+clear with margin on a scan and on a second scan at least 20 h later, the NHTSA checks hold and both conditions
+are present where the site sells both; ``fixed_pending`` until the second scan, ``fixed_unverifiable`` without
+NHTSA evidence, else ``not_fixed``. Its thresholds are the ``fix_*`` fields of ``GateConfig``.
+
 State, first match wins (GATES.md section 5): ``blocked`` (GF7); ``needs_code_work`` for a hard code
 condition (GF3, GF4, GA4, a GA3 invariant breach, a single-page widget); ``needs_recipe_work`` (GF1, GF5,
 GF6, GF2 below 0.70, verdict no_recipe); ``needs_code_work`` for a soft gate that counts (two consecutive
@@ -143,6 +148,16 @@ class GateConfig:
     wr_strike_hours: float = 20.0  # WR a VIN must have been missing this long before
     wm_moves_floor: int = 5  # WM moves per run <= max(floor, share * S)
     wm_moves_share: float = 0.01
+    # Fix verification (GATES.md section 9, ``verify_fix``)
+    fix_key_coverage: float = 0.93  # key-field capture needed to call GA1 cleared
+    fix_share_max: float = 0.035  # incomplete, trim-gap and hard share needed to call GA2 / GA3 cleared
+    fix_yield_min: float = 0.90  # Y against the baseline, or ...
+    fix_walk_share: float = 0.95  # ... W / T
+    fix_refused_max: float = 0.03  # R must stay under this
+    fix_decode_min: float = 0.98  # share of rows with a cached vPIC decode
+    fix_identity_min: int = 2  # identity mismatches at most max(2, 0.3 % of rows)
+    fix_identity_share: float = 0.003
+    fix_second_scan_hours: float = 20.0  # the confirming scan comes at least this long after the first
 
 
 DEFAULT_CONFIG = GateConfig()
@@ -1299,3 +1314,151 @@ def can_promote(dealer, fleet, cfg) -> dict:
     if dealer["permissions"].get("promotion") is not True:
         reasons.append("dealer:carry_forward")
     return {"allowed": not reasons, "reasons": reasons}
+
+
+# --- fix verification (GATES.md section 9) ---------------------------------------------------------
+
+FIX_STATUSES = ("fixed", "fixed_pending", "fixed_unverifiable", "not_fixed")
+
+
+def _scan_record(record):
+    """``(dealer result, triage row, extras, scan time)`` of a scan record, tolerating missing parts."""
+    record = record if isinstance(record, dict) else {}
+    dealer = record.get("dealer") if isinstance(record.get("dealer"), dict) else {}
+    entry = record.get("entry") if isinstance(record.get("entry"), dict) else {}
+    extras = record.get("extras") if isinstance(record.get("extras"), dict) else {}
+    return dealer, entry, extras, _as_dt(record.get("at"))
+
+
+def _check_scan(record, targets, cfg):
+    """Judge one scan: ``(status, failures, unverifiable)`` with status ``pass``, ``fail`` or ``unverifiable``.
+
+    ``targets`` are the gates that failed before the fix. A failing gate in this scan, a target that is not
+    ``pass``, or a target without its margin is a failure; missing NHTSA evidence only makes the scan
+    unverifiable.
+    """
+    dealer, entry, extras, _ = _scan_record(record)
+    gates = dealer.get("gates") if isinstance(dealer.get("gates"), dict) else {}
+    failures, unverifiable = [], []
+
+    def result(name):
+        return _get(gates, name, "result")
+
+    if not gates:
+        return "fail", ["no_dealer_result"], []
+    if dealer.get("state") in ("blocked", "unassessed"):
+        failures.append("state:" + str(dealer.get("state")))
+    failures += [g + ":failing" for g in (dealer.get("failing") or ()) if g not in targets]
+    for name in targets:
+        if name != "GF2" and result(name) != PASS:
+            failures.append(name + (":cannot_assess" if result(name) == CANNOT else ":not_cleared"))
+
+    if {"GF1", "GF2", "GF6"} & set(targets):
+        y = _num(_get(gates, "GF2", "value"))
+        total, walked = _num(_get(extras, "walk", "site_total")), _num(_get(extras, "walk", "raw_vins"))
+        ratio = walked / total if total and walked is not None else None
+        if (y is None or _lt(y, cfg.fix_yield_min)) and (ratio is None or _lt(ratio, cfg.fix_walk_share)):
+            failures.append("yield:below_margin" if y is not None or ratio is not None else "yield:no_evidence")
+    if "GF4" in targets:
+        r = _num(_get(gates, "GF4", "value"))
+        if r is None or _ge(r, cfg.fix_refused_max):
+            failures.append("refused_share:above_margin")
+    if "GA1" in targets:
+        values = _get(gates, "GA1", "value")
+        values = values if isinstance(values, dict) else {}
+        for name in ("price", "exterior_color", "used_mileage", "trim"):
+            v = _num(values.get(name))
+            if name in values and (v is None or _lt(v, cfg.fix_key_coverage)):
+                failures.append("coverage:" + name)
+        gap = _num(values.get("trim_gap"))
+        if "trim_gap" in values and (gap is None or _gt(gap, cfg.fix_share_max)):
+            failures.append("coverage:trim_gap")
+    if "GA2" in targets:
+        share = _num(_get(gates, "GA2", "value"))
+        if share is None or _gt(share, cfg.fix_share_max):
+            failures.append("incomplete_share:above_margin")
+    if "GF5" in targets or (_get(extras, "site_census", "new") and _get(extras, "site_census", "used")):
+        if min(_num(entry.get("rows_new")) or 0.0, _num(entry.get("rows_used")) or 0.0) <= 0:
+            failures.append("condition:one_side_missing")
+
+    acc = entry.get("accuracy") if isinstance(entry.get("accuracy"), dict) else None
+    rows = _num(acc.get("rows")) if acc else None
+    cached = _num(acc.get("vpic_cached")) if acc else None
+    if not rows or rows <= 0 or cached is None:
+        unverifiable.append("nhtsa:no_accuracy")
+    else:
+        if _lt(cached / rows, cfg.fix_decode_min):
+            failures.append("nhtsa:decode_cached_share")
+        if _lt((cached - (_num(extras.get("vpic_gated")) or 0.0)) / rows, cfg.assessable_min):
+            unverifiable.append("nhtsa:assessable_share")
+        inv = extras.get("nhtsa_invariants")
+        if isinstance(inv, dict):
+            violations = (_num(inv.get("drivetrain")) or 0.0) + (_num(inv.get("electrification")) or 0.0)
+            if _gt(violations / rows, cfg.invariant_max):
+                failures.append("nhtsa:invariants")
+        else:
+            unverifiable.append("nhtsa:no_invariants")
+        hard = acc.get("hard") if isinstance(acc.get("hard"), dict) else {}
+        mismatches = (_num(hard.get("vpic_make")) or 0.0) + (_num(hard.get("vpic_year")) or 0.0)
+        if _gt(mismatches, max(float(cfg.fix_identity_min), cfg.fix_identity_share * rows)):
+            failures.append("nhtsa:identity")
+        share = _num(_get(gates, "GA3", "value"))
+        if result("GA3") in (PASS, FAIL) and share is not None and _gt(share, cfg.fix_share_max):
+            failures.append("nhtsa:hard_share")
+    failures = sorted(set(failures))
+    return ("fail" if failures else "unverifiable" if unverifiable else "pass"), failures, sorted(set(unverifiable))
+
+
+def verify_fix(before, after, second_after, cfg=None) -> dict:
+    """Is a dealer fixed? (GATES.md section 9; the log files and the 10-VIN write audit stay with the analysis session.)
+
+    Each argument is a scan record ``{"dealer": evaluate_dealer result, "entry": triage row, "extras": extras,
+    "at": scan time}``; ``second_after`` may be ``None``. The gates that failed in ``before`` are the targets.
+    A scan passes when no gate fails, every target is ``pass`` with its margin (key coverage >= 0.93, incomplete,
+    trim-gap and hard share <= 3.5 %, Y >= 0.90 or W >= 0.95 T, R < 0.03), both conditions are present where
+    the site sells both (``extras.site_census`` with ``new`` and ``used`` counts, or a failing GF5 before), and
+    the NHTSA checks hold (decode cached for >= 98 % of rows, invariant violations <= 0.2 %, identity
+    mismatches <= max(2, 0.3 % of rows)). Missing evidence for the NHTSA part (no accuracy block, assessable
+    share under 75 %, no invariant counters) makes the scan ``unverifiable`` instead of failing it.
+
+    Returns ``{status, targets, hours_between, after, second_after, reasons}`` where ``status`` is
+    ``not_fixed`` (a check failed), ``fixed_pending`` (``after`` passes but the second scan is missing, less
+    than 20 h later or has no time), ``fixed_unverifiable`` (both scans pass but NHTSA evidence is missing) or
+    ``fixed``. Nothing is mutated.
+    """
+    cfg = cfg or DEFAULT_CONFIG
+    before_dealer = _scan_record(before)[0]
+    targets = sorted(g for g in (before_dealer.get("failing") or ()) if g in GATE_NAMES)
+    status1, failures1, unverified1 = _check_scan(after, targets, cfg)
+    out = {
+        "status": "not_fixed",
+        "targets": targets,
+        "hours_between": None,
+        "after": {"status": status1, "failures": failures1, "unverifiable": unverified1},
+        "second_after": None,
+        "reasons": [],
+    }
+    if status1 == "fail":
+        out["reasons"] = failures1
+        return out
+    first, second = _scan_record(after)[3], _scan_record(second_after)[3] if second_after is not None else None
+    hours = None if first is None or second is None else (second - first).total_seconds() / 3600.0
+    out["hours_between"] = _r(hours)
+    if second_after is None:
+        out.update(status="fixed_pending", reasons=["second_scan_missing"])
+        return out
+    if hours is None:
+        out.update(status="fixed_pending", reasons=["scan_time_missing"])
+        return out
+    if _lt(hours, cfg.fix_second_scan_hours):
+        out.update(status="fixed_pending", reasons=["second_scan_too_soon"])
+        return out
+    status2, failures2, unverified2 = _check_scan(second_after, targets, cfg)
+    out["second_after"] = {"status": status2, "failures": failures2, "unverifiable": unverified2}
+    if status2 == "fail":
+        out["reasons"] = ["second_scan:" + f for f in failures2]
+    elif "unverifiable" in (status1, status2):
+        out.update(status="fixed_unverifiable", reasons=unverified1 + unverified2)
+    else:
+        out["status"] = "fixed"
+    return out

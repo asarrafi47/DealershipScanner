@@ -2,8 +2,14 @@
 
 ## [Unreleased]
 
+### Scanner safety (scan loop card L14)
+- `fleet_scan.py`: with `SCAN_FLEET=1` a run starts only inside `SCAN_FLEET_WINDOW_UTC` (`HH:MM-HH:MM`, start inclusive, end exclusive, midnight wrap; an unreadable window prints idle and exits 0), and holds a Postgres advisory lock as the fleet lease for the whole run, so a second fleet on the same database exits 3 instead of scanning. Explicit `SCAN_DEALERS` runs ignore both. Exit codes are now 0 clean, 1 infrastructure, 2 data-quality hold (reserved), 3 lease busy, and `fleet_summary.json` carries `build{commit, tag, version}` (from the `BUILD_COMMIT`/`BUILD_TAG` files the deploy stage writes, `unknown` on a dev checkout), `schema_version` and `window`.
+- One-condition allowlist: `deploy/railway/one_condition_ok.txt` is the tracked twin of the untracked workspace file (`workspace/` is not in the Railway image), and `assess._one_condition_ok()` and `recipe_validation.one_condition_ok_ids()` read the union of both, as `manifest.py` does for `do_not_scan`.
+
+### Cloud-first scan loop
 - Scan loop L7: backend/scanner/loop/bundle.py gains build_bundle and its builders (dealers_tsv, digest_md, triage_gz, manifest, latest_json, summary_from_shards), which turn loaded shards into the run bundle of BUNDLE.md section 4 (MANIFEST.json, digest.md within 6,144 bytes, dealers.tsv, triage.json.gz, the two text lists) with scrubbed, capped dealer text and byte-identical output; backend/scripts/ops_publish.py build is the offline CLI (`--dry-run` prints path, bytes and sha256 and writes nothing). Golden files under backend/tests/fixtures/ops_publish/expected_bundle/. Not wired into the scanner yet.
 - Scan loop L9: backend/scanner/loop/gates.py gains the fleet gate (evaluate_fleet, fleet_metrics, FG1 to FG8, PASS / HOLD-PROD-WRITES / FAIL) and the write predicates can_retire (WR, per condition bucket, two strikes 20 h apart), can_move (WM) and can_promote (WP), with their thresholds in the frozen GateConfig. Pure standard-library code, not wired into the scanner's write path: production stays reconcile-off.
+- Scan loop L10: backend/scanner/loop/queue.py (score_dealers, fix_units, select_cycle, learned_tractability, frozen QueueConfig) ranks the dealers that need work by cars affected x severity x tractability and groups them by fix unit; gates.py gains verify_fix (fixed / fixed_pending / fixed_unverifiable / not_fixed, thresholds in GateConfig); backend/scripts/ops_gates.py runs the gates and the queue over triage files and writes gate_report.json and queue.json. Pure standard-library code, nothing wired into the scanner.
 
 ## [1.5.21] - 2026-11-13
 
