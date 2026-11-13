@@ -78,6 +78,7 @@ DIST_IMPORT_NAMES: dict[str, set[str]] = {
     "pillow": {"PIL"},
     "python-dotenv": {"dotenv"},
     "pyjwt": {"jwt"},
+    "phonenumberslite": {"phonenumbers"},  # the lite build keeps the import name
     "pymupdf": {"fitz", "pymupdf"},
     "pyyaml": {"yaml"},
 }
