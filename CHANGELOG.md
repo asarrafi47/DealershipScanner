@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+## [1.5.30] - 2026-11-13
+
+- Docs only: design review of phone login and chat limits (2026-11-13). `docs/auth_sms/TASKS.md`, `DESIGN.md`, `CHAT_LIMITS.md`, `SURVEY.md` and `PAY_AND_STRIPE_AUDIT.md` now carry 18 must-fix and 15 should-fix findings from a four-lens review: session lifetimes by role (shopper 30 days, admin 12 hours, dealers and staff 14 days), no Twilio callbacks at launch, reserve-first send caps with a prepaid-balance guard, phone eligibility and claim hardening, deletion purge, legal-approval gate, wider chat gate (narrate, vision), migration numbering, wave order, a decisions log and a next-session prompt per card.
+
 ## [1.5.29] - 2026-11-13
 ### Changed (PR 16 review fixes)
 - Phone login: a Lookup that reports no line type is now refused (reason `no_line_type`) and not cached, so a VoIP number that reports nothing no longer passes.
