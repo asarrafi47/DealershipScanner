@@ -8,13 +8,13 @@ from __future__ import annotations
 
 import hashlib
 import hmac
-import ipaddress
 import re
 
 import phonenumbers
 from phonenumbers import PhoneNumberType
 
 from backend.auth.phone import config
+from backend.utils.client_ip import canonical_ip  # noqa: F401  (the one /64 form; re-exported)
 from backend.utils.runtime_env import is_production_env
 
 # Reason codes of a refusal (never the input).
@@ -25,8 +25,10 @@ COUNTRY_NOT_ALLOWED = "country_not_allowed"
 
 _MAX_INPUT_LEN = 40
 _REFUSED_TYPES = (PhoneNumberType.PREMIUM_RATE, PhoneNumberType.SHARED_COST)
-# Used only outside production when no pepper is set, so dev and tests work without a variable.
-_DEV_PEPPER = "dev-only-pepper-not-a-secret-0000"
+# The development pepper: used only when ``ALLOW_DEV_PHONE_PEPPER`` opts in, never in production, never
+# because ``PHONE_HASH_PEPPER`` happens to be unset. Longer than the minimum length (32 characters).
+DEV_PEPPER = "dev-only-pepper-not-a-secret-000000"
+PEPPER_MIN_LENGTH = config.PEPPER_MIN_LENGTH
 
 
 class PhoneNumberRefused(ValueError):
@@ -38,7 +40,8 @@ class PhoneNumberRefused(ValueError):
 
 
 class PepperMissing(RuntimeError):
-    """Production has no ``PHONE_HASH_PEPPER``."""
+    """No usable ``PHONE_HASH_PEPPER`` (unset, or shorter than the minimum, and no dev opt-in).
+    The message names the variable only, never a value."""
 
 
 def normalize(
@@ -92,21 +95,38 @@ def country_of(e164: str) -> str | None:
 
 def mask(value: str | None) -> str:
     """``ending 23``: the last two digits only. Two asterisks when there are fewer than two digits."""
-    digits = re.sub(r"\D", "", value or "")
+    digits = re.sub(r"[^0-9]", "", value or "")  # ASCII digits only (\d would also match Arabic-Indic ones)
     return "ending " + (digits[-2:] if len(digits) >= 2 else "**")
 
 
-def _key() -> bytes:
-    pepper = config.pepper()
-    if not pepper:
-        if is_production_env():
-            raise PepperMissing("PHONE_HASH_PEPPER is not set")
-        pepper = _DEV_PEPPER
-    return pepper.encode("utf-8")
+def pepper_bytes() -> bytes:
+    """THE pepper reader (the device cookie and the chat gate use it too).
+
+    ``PHONE_HASH_PEPPER`` of at least 32 characters. Unset or too short raises :class:`PepperMissing`,
+    except outside production with ``ALLOW_DEV_PHONE_PEPPER`` on, which gives the fixed development pepper.
+    """
+    value = config.pepper()
+    if value:
+        if len(value) < PEPPER_MIN_LENGTH:
+            raise PepperMissing("PHONE_HASH_PEPPER is shorter than %d characters" % PEPPER_MIN_LENGTH)
+        return value.encode("utf-8")
+    if not is_production_env() and config.dev_pepper_allowed():
+        return DEV_PEPPER.encode("utf-8")
+    raise PepperMissing("PHONE_HASH_PEPPER is not set")
+
+
+def _subkey(domain: str) -> bytes:
+    """Per-domain key: HMAC(pepper, domain). A hash of one kind never matches another kind."""
+    return hmac.new(pepper_bytes(), domain.encode("utf-8"), hashlib.sha256).digest()
 
 
 def _hmac(domain: str, value: str) -> str:
-    return hmac.new(_key(), (domain + ":" + value).encode("utf-8"), hashlib.sha256).hexdigest()
+    return hmac.new(_subkey(domain), (domain + ":" + value).encode("utf-8"), hashlib.sha256).hexdigest()
+
+
+def hash_value(domain: str, value: str) -> str:
+    """Keyed hash of ``value`` in the namespace ``domain`` (``kind:value`` format, hex SHA-256 HMAC)."""
+    return _hmac(domain, value)
 
 
 def hash_phone(e164: str) -> str:
@@ -114,23 +134,14 @@ def hash_phone(e164: str) -> str:
     return _hmac("phone", e164)
 
 
-def canonical_ip(ip: str | None) -> str:
-    """The text counted for an address: IPv4 as is, IPv6 reduced to its /64, junk as stripped text."""
-    text = (ip or "").strip()
-    try:
-        addr = ipaddress.ip_address(text)
-    except ValueError:
-        return text
-    if isinstance(addr, ipaddress.IPv6Address):
-        if addr.ipv4_mapped is not None:
-            return str(addr.ipv4_mapped)
-        return str(ipaddress.ip_network((addr, 64), strict=False).network_address)
-    return str(addr)
-
-
 def hash_ip(ip: str | None) -> str:
     """HMAC-SHA256 of the counted form of an address (IPv6 by /64), same pepper, own domain."""
     return _hmac("ip", canonical_ip(ip))
+
+
+def hash_device(device_id: str) -> str:
+    """HMAC-SHA256 of a device cookie id, own domain, same pepper."""
+    return _hmac("device", device_id)
 
 
 def short_hash(value: str) -> str:

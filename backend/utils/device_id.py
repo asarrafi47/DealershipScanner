@@ -4,6 +4,13 @@
 days. It is set only on phone and chat routes (not on every page). Clearing cookies gives a
 new device, which is why IP, phone and the site-wide cap exist too. Hashes are
 HMAC-SHA256 with ``PHONE_HASH_PEPPER``; the pepper's value is never logged.
+
+``sc_dev`` is a rate-limit key ONLY: it never skips a code, never marks a browser trusted and
+never enters a session or authorization decision. Missing or tampered means "new device" and
+the phone, address and site caps still apply.
+
+The pepper, the dev pepper, the minimum length, ``PepperMissing`` and every hash live in
+``backend/auth/phone/numbers.py`` (card S1); this module only delegates to them.
 """
 
 from __future__ import annotations
@@ -16,15 +23,18 @@ import secrets
 
 from flask import Flask, Request, Response, g, request
 
-from backend.utils.runtime_env import is_production_env, session_cookie_secure_default
+from backend.auth.phone import numbers
+from backend.utils.runtime_env import session_cookie_secure_default
 
 COOKIE_NAME = "sc_dev"
 COOKIE_MAX_AGE_SECONDS = 400 * 24 * 60 * 60
 _SALT = "sc-dev-cookie-v1"
-_DEV_PEPPER = "dev-only-pepper-not-for-production"
 
 # Paths that get the cookie: the phone login pages and the four chat routes.
 _PATH_PATTERNS = (
+    re.compile(r"^/login(/|$)"),  # includes /login/phone and /login/claim
+    re.compile(r"^/staff/login/?$"),
+    re.compile(r"^/account/phone(/|$)"),
     re.compile(r"^/auth/phone(/|$)"),
     re.compile(r"^/api/auth/phone(/|$)"),
     re.compile(r"^/api/car/[^/]+/chat/?$"),
@@ -36,8 +46,7 @@ _PATH_PATTERNS = (
 _TRUTHY = ("1", "true", "yes", "on")
 
 
-class PepperMissing(RuntimeError):
-    """PHONE_HASH_PEPPER is unset in production."""
+PepperMissing = numbers.PepperMissing  # the one class (backend/auth/phone/numbers.py)
 
 
 def wants_device_cookie(path: str) -> bool:
@@ -45,13 +54,8 @@ def wants_device_cookie(path: str) -> bool:
 
 
 def pepper() -> bytes:
-    """The hash pepper. Production without it raises; development uses a fixed dev value."""
-    value = (os.environ.get("PHONE_HASH_PEPPER") or "").strip()
-    if value:
-        return value.encode("utf-8")
-    if is_production_env():
-        raise PepperMissing("PHONE_HASH_PEPPER must be set in production")
-    return _DEV_PEPPER.encode("utf-8")
+    """The hash pepper (delegates to the S1 reader: production without it raises)."""
+    return numbers.pepper_bytes()
 
 
 def assert_pepper_if_needed() -> None:
@@ -66,13 +70,12 @@ def assert_pepper_if_needed() -> None:
 
 
 def hmac_hash(kind: str, value: str) -> str:
-    """Keyed hash of ``value`` in the namespace ``kind`` (hex SHA-256 HMAC)."""
-    msg = f"{kind}:{value}".encode("utf-8")
-    return hmac.new(pepper(), msg, hashlib.sha256).hexdigest()
+    """Keyed hash of ``value`` in the namespace ``kind`` (the S1 helper)."""
+    return numbers.hash_value(kind, value)
 
 
 def device_hash(device_id: str) -> str:
-    return hmac_hash("device", device_id)
+    return numbers.hash_device(device_id)
 
 
 def _sign(device_id: str) -> str:

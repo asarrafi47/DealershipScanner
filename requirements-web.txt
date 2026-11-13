@@ -22,10 +22,12 @@ bcrypt>=4.1
 resend>=2.0.0
 redis>=8.0.1
 stripe>=8
-# Phone sign-in (docs/auth_sms): number parsing and validation (backend/auth/phone/numbers.py).
-phonenumbers>=9.0
+# Phone sign-in (docs/auth_sms): number parsing and validation (backend/auth/phone/numbers.py). The lite
+# build has the same parsing, validity and number-type data; it drops only geocoding, carrier and time-zone
+# names, which nothing here uses.
+phonenumberslite>=9.0,<10
 # Twilio Verify adapter and callback signature check (backend/auth/phone/twilio_verify.py, webhook.py).
-twilio>=9.0
+twilio>=9.0,<10
 PyJWT[crypto]>=2.8
 pypdf>=4.0
 pymupdf>=1.24

@@ -6,13 +6,20 @@ Nothing here logs a value.
 
 from __future__ import annotations
 
+import logging
 import os
 from dataclasses import dataclass, field
 
 from backend.utils.runtime_env import is_production_env
 
+_log = logging.getLogger("auth_phone")
+_warned: set[str] = set()
+
 _TRUE = ("1", "true", "yes", "on")
 PEPPER_MIN_LENGTH = 32
+# Version of the consent text the phone page shows. The legal pages (card S14) are approved by the owner
+# by setting LEGAL_PAGES_APPROVED_VERSION to this same value; until then the flag may not be on in production.
+CONSENT_TEXT_VERSION = "1"
 PROVIDER_FAKE = "fake"
 PROVIDER_TWILIO = "twilio_verify"
 KNOWN_PROVIDERS = (PROVIDER_FAKE, PROVIDER_TWILIO)
@@ -22,15 +29,32 @@ def _env(name: str) -> str:
     return (os.environ.get(name) or "").strip()
 
 
+def _warn_once(name: str) -> None:
+    """One warning per variable name when its value is unusable. Never the value."""
+    if name in _warned:
+        return
+    _warned.add(name)
+    _log.warning("event=config_malformed var=%s using_default=1", name)
+
+
+def reset_warnings() -> None:
+    """Forget which malformed variables were already reported (tests)."""
+    _warned.clear()
+
+
 def _int(name: str, default: int, *, minimum: int = 0) -> int:
     raw = _env(name)
     if not raw:
         return default
-    try:
-        value = int(raw)
-    except ValueError:
+    # ASCII digits only: int() would also take "٣" (Arabic-Indic), "1_0" and "+5".
+    if not (raw.isascii() and raw.isdigit()):
+        _warn_once(name)
         return default
-    return value if value >= minimum else default
+    value = int(raw)
+    if value < minimum:
+        _warn_once(name)
+        return default
+    return value
 
 
 def enabled() -> bool:
@@ -39,18 +63,21 @@ def enabled() -> bool:
 
 
 def provider_name() -> str:
-    """``AUTH_PHONE_PROVIDER``. Unset means the fake outside production and Twilio Verify in it."""
-    raw = _env("AUTH_PHONE_PROVIDER").lower()
-    if raw:
-        return raw
-    return PROVIDER_TWILIO if is_production_env() else PROVIDER_FAKE
+    """``AUTH_PHONE_PROVIDER``. Unset means Twilio Verify, everywhere: the fake provider is opt-in
+    (``AUTH_PHONE_PROVIDER=fake``, refused in production) and is never chosen because a variable is missing."""
+    return _env("AUTH_PHONE_PROVIDER").lower() or PROVIDER_TWILIO
 
 
 def allowed_countries() -> frozenset[str]:
     """``SMS_ALLOWED_COUNTRIES``: comma-separated ISO region codes, default ``US``."""
     raw = _env("SMS_ALLOWED_COUNTRIES")
+    if not raw:
+        return frozenset({"US"})
     parts = {p.strip().upper() for p in raw.split(",") if p.strip()}
-    return frozenset(parts) if parts else frozenset({"US"})
+    if not parts or any(not (len(p) == 2 and p.isascii() and p.isalpha()) for p in parts):
+        _warn_once("SMS_ALLOWED_COUNTRIES")
+        return frozenset({"US"})
+    return frozenset(parts)
 
 
 def allowed_numbers() -> frozenset[str]:
@@ -99,6 +126,17 @@ def pepper() -> str:
     return _env("PHONE_HASH_PEPPER")
 
 
+def dev_pepper_allowed() -> bool:
+    """``ALLOW_DEV_PHONE_PEPPER``: opt-in to the fixed development pepper. Never true in production,
+    and never implied by an unset ``PHONE_HASH_PEPPER``."""
+    return _env("ALLOW_DEV_PHONE_PEPPER").lower() in _TRUE and not is_production_env()
+
+
+def legal_pages_approved_version() -> str:
+    """``LEGAL_PAGES_APPROVED_VERSION``: the consent text version the owner approved (empty when unset)."""
+    return _env("LEGAL_PAGES_APPROVED_VERSION")
+
+
 def turnstile_site_key() -> str:
     return _env("TURNSTILE_SITE_KEY")
 
@@ -140,12 +178,19 @@ def twilio_credentials() -> TwilioCredentials | None:
 
 def twilio_webhook_token() -> str:
     """The account auth token, the only secret Twilio signs callbacks with (an API key secret never
-    matches). Empty means callbacks are not set up: the webhook route answers 404. Never required at boot."""
+    matches). Never required at boot: callbacks are not used at launch."""
     return _env("TWILIO_AUTH_TOKEN")
 
 
+def webhook_enabled() -> bool:
+    """``TWILIO_WEBHOOK_ENABLED``: callbacks are NOT used at launch, so this is off unless set."""
+    return _env("TWILIO_WEBHOOK_ENABLED").lower() in _TRUE
+
+
 def webhook_active() -> bool:
-    return enabled() and bool(twilio_webhook_token())
+    """The webhook route is live only when ``TWILIO_WEBHOOK_ENABLED`` and ``TWILIO_AUTH_TOKEN`` are both set;
+    otherwise it answers 404 and does nothing."""
+    return webhook_enabled() and bool(twilio_webhook_token())
 
 
 def twilio_ready() -> bool:
@@ -164,6 +209,8 @@ def missing_for_production() -> list[str]:
         problems.append("AUTH_PHONE_PROVIDER (the fake provider is not allowed in production)")
     if len(pepper()) < PEPPER_MIN_LENGTH:
         problems.append("PHONE_HASH_PEPPER (missing or shorter than %d characters)" % PEPPER_MIN_LENGTH)
+    if legal_pages_approved_version() != CONSENT_TEXT_VERSION:
+        problems.append("LEGAL_PAGES_APPROVED_VERSION (must equal the consent text version)")
     if not turnstile_secret_key():
         problems.append("TURNSTILE_SECRET_KEY")
     if not turnstile_site_key():

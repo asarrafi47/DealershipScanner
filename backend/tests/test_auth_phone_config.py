@@ -13,7 +13,8 @@ _NAMES = (
     "SMS_DAILY_SPEND_CAP_CENTS", "SMS_ALERT_SEND_THRESHOLD", "SMS_EST_COST_CENTS", "SMS_ALLOWED_COUNTRIES",
     "PHONE_HASH_PEPPER", "TURNSTILE_SITE_KEY", "TURNSTILE_SECRET_KEY", "TWILIO_ACCOUNT_SID", "TWILIO_AUTH_TOKEN",
     "TWILIO_API_KEY_SID", "TWILIO_API_KEY_SECRET", "TWILIO_VERIFY_SERVICE_SID", "FLASK_ENV", "ENV",
-    "RAILWAY_PROJECT_ID", "RAILWAY_ENVIRONMENT_NAME", "RAILWAY_ENVIRONMENT",
+    "RAILWAY_PROJECT_ID", "RAILWAY_ENVIRONMENT_NAME", "RAILWAY_ENVIRONMENT", "LEGAL_PAGES_APPROVED_VERSION",
+    "ALLOW_DEV_PHONE_PEPPER", "TWILIO_WEBHOOK_ENABLED",
 )
 
 
@@ -21,6 +22,7 @@ _NAMES = (
 def _clean(monkeypatch):
     for name in _NAMES:
         monkeypatch.delenv(name, raising=False)
+    config.reset_warnings()
 
 
 def _full_production(mp, **override):
@@ -29,6 +31,7 @@ def _full_production(mp, **override):
         "AUTH_PHONE_LOGIN_ENABLED": "1",
         "AUTH_PHONE_PROVIDER": "twilio_verify",
         "PHONE_HASH_PEPPER": "p" * 40,
+        "LEGAL_PAGES_APPROVED_VERSION": config.CONSENT_TEXT_VERSION,
         "TURNSTILE_SITE_KEY": "site-x",
         "TURNSTILE_SECRET_KEY": "secret-x",
         "TWILIO_ACCOUNT_SID": "ACtest",
@@ -76,7 +79,7 @@ def test_defaults_match_the_design():
     assert config.resend_wait_s() == 60
     assert config.allowed_countries() == frozenset({"US"})
     assert config.allowed_numbers() == frozenset()
-    assert config.provider_name() == "fake"
+    assert config.provider_name() == "twilio_verify"  # the fake is never the default
 
 
 def test_values_are_read_and_bad_values_fall_back(monkeypatch):
@@ -92,11 +95,12 @@ def test_values_are_read_and_bad_values_fall_back(monkeypatch):
     assert config.allowed_numbers() == frozenset({"+12025550123", "+12025550124"})
 
 
-def test_provider_default_is_twilio_in_production(monkeypatch):
+def test_provider_default_is_twilio_in_production_and_outside_it(monkeypatch):
+    assert config.provider_name() == "twilio_verify"  # development: unset is NOT the fake
     monkeypatch.setenv("FLASK_ENV", "production")
     assert config.provider_name() == "twilio_verify"
     monkeypatch.setenv("AUTH_PHONE_PROVIDER", "Fake")
-    assert config.provider_name() == "fake"
+    assert config.provider_name() == "fake"  # only on purpose
 
 
 def test_twilio_credentials_api_key_style(monkeypatch):
@@ -187,3 +191,99 @@ def test_the_auth_token_is_never_required_at_boot(prod):
     assert_production_security_config()  # no error: callbacks are optional
     assert config.webhook_active() is False
     assert config.twilio_webhook_token() == ""
+
+
+# ---------------------------------------------------------------- wave 1 review follow-ups
+
+
+def test_the_fake_provider_is_opt_in_the_registry_refuses_when_unset(monkeypatch):
+    from backend.auth.phone import registry
+
+    registry.reset()
+    with pytest.raises(registry.ProviderUnavailable):
+        registry.get_provider()  # unset in development: Twilio is not configured, nothing falls back to the fake
+    monkeypatch.setenv("AUTH_PHONE_PROVIDER", "fake")
+    registry.reset()
+    assert registry.get_provider().name == "fake"
+    registry.reset()
+
+
+def test_boot_check_requires_the_legal_approval_version(prod):
+    _full_production(prod, LEGAL_PAGES_APPROVED_VERSION=None)
+    with pytest.raises(RuntimeError, match="LEGAL_PAGES_APPROVED_VERSION"):
+        assert_production_security_config()
+    _full_production(prod, LEGAL_PAGES_APPROVED_VERSION="999")
+    with pytest.raises(RuntimeError, match="LEGAL_PAGES_APPROVED_VERSION"):
+        assert_production_security_config()
+    _full_production(prod)
+    assert_production_security_config()
+
+
+def test_the_legal_check_names_the_variable_and_never_a_value(prod):
+    _full_production(prod, LEGAL_PAGES_APPROVED_VERSION="secret-looking-9")
+    with pytest.raises(RuntimeError) as exc:
+        assert_production_security_config()
+    assert "secret-looking-9" not in str(exc.value)
+
+
+def test_a_malformed_send_cap_logs_one_warning_without_the_value_and_falls_back(monkeypatch, caplog):
+    monkeypatch.setenv("SMS_DAILY_SEND_CAP", "3x1")
+    with caplog.at_level("WARNING", logger="auth_phone"):
+        assert [config.daily_send_cap() for _ in range(3)] == [300, 300, 300]
+    lines = [r.getMessage() for r in caplog.records if "SMS_DAILY_SEND_CAP" in r.getMessage()]
+    assert len(lines) == 1 and "3x1" not in lines[0]
+
+
+@pytest.mark.parametrize("bad", ["USA", "U1", ",,", "U S", "\u00dcS", "US;CA"])
+def test_a_malformed_country_list_logs_one_warning_and_falls_back_to_us(monkeypatch, caplog, bad):
+    monkeypatch.setenv("SMS_ALLOWED_COUNTRIES", bad)
+    with caplog.at_level("WARNING", logger="auth_phone"):
+        assert config.allowed_countries() == frozenset({"US"})
+        assert config.allowed_countries() == frozenset({"US"})
+    lines = [r.getMessage() for r in caplog.records if "SMS_ALLOWED_COUNTRIES" in r.getMessage()]
+    assert len(lines) == 1 and bad not in lines[0]
+
+
+def test_a_blank_country_list_means_not_set_and_says_nothing(monkeypatch, caplog):
+    monkeypatch.setenv("SMS_ALLOWED_COUNTRIES", "  ")
+    with caplog.at_level("WARNING", logger="auth_phone"):
+        assert config.allowed_countries() == frozenset({"US"})
+    assert caplog.records == []
+
+
+def test_a_non_ascii_digit_is_malformed_not_a_number(monkeypatch, caplog):
+    monkeypatch.setenv("SMS_DAILY_SEND_CAP", "\u0663\u0660")  # Arabic-Indic 30
+    with caplog.at_level("WARNING", logger="auth_phone"):
+        assert config.daily_send_cap() == 300
+
+
+def test_the_webhook_is_inert_unless_the_flag_and_the_token_are_both_set(monkeypatch):
+    assert config.webhook_active() is False
+    monkeypatch.setenv("TWILIO_AUTH_TOKEN", "tok-test")
+    assert config.webhook_active() is False  # token alone
+    monkeypatch.delenv("TWILIO_AUTH_TOKEN")
+    monkeypatch.setenv("TWILIO_WEBHOOK_ENABLED", "1")
+    assert config.webhook_active() is False  # flag alone
+    monkeypatch.setenv("TWILIO_AUTH_TOKEN", "tok-test")
+    assert config.webhook_active() is True
+
+
+def test_dev_pepper_is_never_allowed_in_production(monkeypatch):
+    monkeypatch.setenv("ALLOW_DEV_PHONE_PEPPER", "1")
+    assert config.dev_pepper_allowed() is True
+    monkeypatch.setenv("FLASK_ENV", "production")
+    assert config.dev_pepper_allowed() is False
+
+
+def test_phone_libraries_are_pinned_with_upper_bounds_and_the_lite_phone_build():
+    from pathlib import Path
+
+    lines = (Path(__file__).resolve().parents[2] / "requirements-web.txt").read_text(encoding="utf-8").splitlines()
+    pins = {ln.split(">=")[0].strip(): ln for ln in lines if ln.strip() and not ln.startswith("#") and ">=" in ln}
+    assert "phonenumbers" not in pins and "phonenumberslite" in pins  # same import name, no geocoder or carrier data
+    for name in ("phonenumberslite", "twilio"):
+        assert "<" in pins[name], f"{name} has no upper bound"
+    # the code only needs parsing, validity, number type and region: nothing from the geocoder, carrier or timezone modules
+    src = Path(__file__).resolve().parents[2].joinpath("backend/auth/phone/numbers.py").read_text(encoding="utf-8")
+    for heavy in ("phonenumbers.geocoder", "phonenumbers.carrier", "phonenumbers.timezone"):
+        assert heavy not in src

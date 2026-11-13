@@ -17,7 +17,7 @@ TEST_NUMBER = "+12025550123"
 @pytest.fixture(autouse=True)
 def _clean(monkeypatch):
     for name in ("PHONE_HASH_PEPPER", "SMS_ALLOWED_COUNTRIES", "FLASK_ENV", "ENV", "RAILWAY_PROJECT_ID",
-                 "RAILWAY_ENVIRONMENT_NAME", "RAILWAY_ENVIRONMENT"):
+                 "RAILWAY_ENVIRONMENT_NAME", "RAILWAY_ENVIRONMENT", "ALLOW_DEV_PHONE_PEPPER"):
         monkeypatch.delenv(name, raising=False)
 
 
@@ -122,13 +122,64 @@ def test_ip_hash_counts_ipv6_by_64(monkeypatch):
     assert numbers.hash_ip(None) == numbers.hash_ip("")
 
 
-def test_hashing_without_pepper_works_outside_production_and_fails_closed_in_production(monkeypatch):
-    assert numbers.hash_phone(TEST_NUMBER)  # development fallback
+def test_hashing_without_pepper_fails_closed_everywhere_unless_the_dev_opt_in_is_set(monkeypatch):
+    with pytest.raises(numbers.PepperMissing):
+        numbers.hash_phone(TEST_NUMBER)  # development, no opt-in: a missing variable is never a default
+    monkeypatch.setenv("ALLOW_DEV_PHONE_PEPPER", "1")
+    assert numbers.hash_phone(TEST_NUMBER)  # opted in on purpose
     monkeypatch.setenv("FLASK_ENV", "production")
     with pytest.raises(numbers.PepperMissing):
-        numbers.hash_phone(TEST_NUMBER)
+        numbers.hash_phone(TEST_NUMBER)  # production never uses it, opt-in or not
     with pytest.raises(numbers.PepperMissing):
         numbers.hash_ip("203.0.113.9")
+
+
+def test_a_pepper_shorter_than_32_characters_is_refused_in_every_environment(monkeypatch):
+    monkeypatch.setenv("PHONE_HASH_PEPPER", "x" * 31)
+    with pytest.raises(numbers.PepperMissing):
+        numbers.hash_phone(TEST_NUMBER)
+    monkeypatch.setenv("PHONE_HASH_PEPPER", "x" * 32)
+    assert numbers.hash_phone(TEST_NUMBER)
+
+
+def test_the_dev_pepper_meets_the_minimum_length():
+    assert len(numbers.DEV_PEPPER) >= numbers.PEPPER_MIN_LENGTH == 32
+
+
+def test_pepper_errors_name_the_variable_and_never_a_value(monkeypatch):
+    monkeypatch.setenv("PHONE_HASH_PEPPER", "short-secret-value")
+    with pytest.raises(numbers.PepperMissing) as exc:
+        numbers.pepper_bytes()
+    assert "PHONE_HASH_PEPPER" in str(exc.value) and "short-secret-value" not in str(exc.value)
+
+
+def test_each_hash_domain_has_its_own_key_derived_from_the_pepper(monkeypatch):
+    monkeypatch.setenv("PHONE_HASH_PEPPER", PEPPER_A)
+    same = "x"
+    assert len({numbers.hash_phone(same), numbers.hash_ip(same), numbers.hash_device(same)}) == 3
+    import hashlib
+    import hmac
+
+    key = hmac.new(PEPPER_A.encode(), b"phone", hashlib.sha256).digest()
+    assert numbers.hash_phone(TEST_NUMBER) == hmac.new(key, b"phone:" + TEST_NUMBER.encode(), hashlib.sha256).hexdigest()
+
+
+def test_mask_counts_ascii_digits_only():
+    assert numbers.mask("+1 (202) 555-0123") == "ending 23"
+    assert numbers.mask("\u0661\u0662\u0663\u0664") == "ending **"  # Arabic-Indic digits are not digits here
+    assert numbers.mask("\u0663") == "ending **"
+    assert numbers.mask("55\u0663") == "ending 55"
+    assert numbers.mask("\u00b2\u00b3 5 7") == "ending 57"  # superscripts are ignored too
+
+
+def test_canonical_ip_is_one_form_and_accepts_its_own_output(monkeypatch):
+    from backend.utils.client_ip import canonical_ip
+
+    monkeypatch.setenv("PHONE_HASH_PEPPER", PEPPER_A)
+    assert canonical_ip("2001:db8:1:2:aaaa::1") == "2001:db8:1:2::"
+    assert canonical_ip(canonical_ip("2001:db8:1:2:aaaa::1")) == "2001:db8:1:2::"  # no re-masking drift
+    assert numbers.canonical_ip is canonical_ip  # numbers and the client address share one function
+    assert numbers.hash_ip("2001:db8:1:2:aaaa::1") == numbers.hash_ip(canonical_ip("2001:db8:1:2:aaaa::1"))
 
 
 def test_short_hash_is_eight_characters():
