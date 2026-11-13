@@ -2,12 +2,15 @@
 
 ## [Unreleased]
 
+## [1.5.27] - 2026-11-13
+
+- Review fixes for the fast home page (PR 14): removed scripts/profile_home.py (it carried SQLite path handling the repo forbids; the measured table stays in the PR text); the deferred recommendations fetch treats a login redirect, a non-HTML answer or a body without the section as failure and drops the placeholder; hiding or unhiding a dealership bumps a per-user generation so a rebuild already running cannot store rows built with the old hidden set; prefetches send X-DS-Prefetch: 1 and car pages do not count them as views.
+
 ## [1.5.26] - 2026-11-13
 
 - Signed-in home page (/home) is fast: the saved, recently viewed and recently compared lists now come from one history open, one inventory read and one photo-caveat read (was 8 connections), cached for a minute and dropped on the shopper's own save, view, compare or hide. The recommendation block no longer holds up the page: a cached or stale value renders inline, and an uncached one is fetched after first paint from /home?part=reco (empty or failed answer simply removes the placeholder).
 - Recommendation cache: a new view or compare now marks the entry stale and rebuilds it once in the background instead of deleting it (the old delete made every /home visit after a car page a cold 1 to 2 s build); hiding or unhiding a dealership still drops it; concurrent cold visits share one build.
 - Car-page prefetch: /home and /dashboard no longer warm car pages (each warmed page counted as a view and reset the recommendations); /listings warms at most 3 in-view cars once the browser is idle (3 s).
-- scripts/profile_home.py times every part of /home on throwaway Postgres with fake data.
 
 ## [1.5.25] - 2026-11-13
 
