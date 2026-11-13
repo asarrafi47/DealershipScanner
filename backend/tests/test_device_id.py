@@ -88,3 +88,14 @@ def test_production_without_pepper_fails_only_when_feature_on(monkeypatch):
     monkeypatch.setenv("AUTH_PHONE_LOGIN_ENABLED", "1")
     with pytest.raises(dev.PepperMissing):
         dev.assert_pepper_if_needed()
+
+
+def test_non_ascii_cookie_is_a_new_device_not_a_500(app):
+    good = "a" * 32
+    for bad in (good + ".é" + "b" * 63, good + "." + "b" * 63 + "²", good):
+        with app.test_request_context("/", environ_overrides={"HTTP_COOKIE": "sc_dev=" + bad}):
+            assert dev.read_device_id(dev.request) is None
+    c = app.test_client()
+    r = c.get("/api/car/1/narrate", environ_overrides={"HTTP_COOKIE": "sc_dev=" + good + ".é" + "b" * 63})
+    assert r.status_code != 500
+    assert _cookie_header(r)

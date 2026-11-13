@@ -30,6 +30,7 @@ from backend.db.repositories import chat_usage_repo as repo
 from backend.db.repositories.chat_usage_repo import Charge, Violation
 
 _log = logging.getLogger(__name__)
+_PEPPER_LOGGED = False
 
 # Rank when several limits are hit with the same reset time (lower wins).
 _KIND_RANK = {"budget": 0, "user": 1, "listing": 2, "phone": 3, "device": 4, "ip": 5}
@@ -141,6 +142,7 @@ class Guard:
         self.new_account = new_account
         self._now = now
         self._failed = False
+        self._no_model = False
         self._calls = 0
         self._ok_calls = 0
         self._tin = 0
@@ -153,6 +155,14 @@ class Guard:
     def fail(self) -> None:
         """The request ended without an answer for the shopper: give the message back."""
         self._failed = True
+
+    def no_model_call(self) -> None:
+        """The route answered without any model (a canned reply): the estimate is replaced by 0.
+
+        Without this call, a block that reported no model usage keeps the estimate charged, so
+        spend made outside complete() (another thread, a stream) can never go uncounted.
+        """
+        self._no_model = True
 
     def _on_result(self, result: Any) -> None:
         tin, tout = _tokens_of(getattr(result, "usage", None))
@@ -214,6 +224,9 @@ class Guard:
                 or ss.get_int("chat.budget_tokens_per_day") == 0:
             self.denial = Denial("paused", msg.ERR_PAUSED, msg.PAUSED_TEXT, 429, None)
             raise ChatDenied(self.denial)
+        if not _pepper_ready():
+            self.denial = Denial("unavailable", msg.ERR_UNAVAILABLE, msg.UNAVAILABLE_TEXT, 503, None)
+            raise ChatDenied(self.denial)
         est_in = ss.get_int("chat.est_tokens_in_per_message") * self.weight
         est_out = ss.get_int("chat.est_tokens_out_per_message") * self.weight
         est_cost = ss.get_int("chat.est_cost_micro_per_message") * self.weight or cost_micro(est_in, est_out)
@@ -256,6 +269,11 @@ class Guard:
             self._token = None
         if self._res is None:
             return False
+        if exc_type is None and not self._failed and self._calls == 0 and not self._no_model:
+            # No usage was reported and the route did not say "no model needed": keep the
+            # estimate charged (the model may have been called outside complete()).
+            self._res = None
+            return False
         no_answer = exc_type is not None or self._failed or (self._calls > 0 and self._ok_calls == 0)
         try:
             repo.true_up(
@@ -269,6 +287,21 @@ class Guard:
             _log.error("chat_budget: true-up failed (%s)", type(exc2).__name__)
         self._res = None
         return False  # never swallow the caller's exception
+
+
+def _pepper_ready() -> bool:
+    """False (logged once) when the hash pepper is missing in production: chat then fails closed."""
+    global _PEPPER_LOGGED
+    from backend.utils import device_id
+
+    try:
+        device_id.pepper()
+    except device_id.PepperMissing:
+        if not _PEPPER_LOGGED:
+            _PEPPER_LOGGED = True
+            _log.error("chat_budget: PHONE_HASH_PEPPER is not set; chat is closed until it is set")
+        return False
+    return True
 
 
 def _user_day_shown(g: Guard) -> int:

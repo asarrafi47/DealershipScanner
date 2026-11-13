@@ -55,7 +55,12 @@ def pepper() -> bytes:
 
 
 def assert_pepper_if_needed() -> None:
-    """Boot check: fail only when a feature that needs the pepper is on (phone login)."""
+    """Boot check: fail only when a feature that needs the pepper is on (phone login).
+
+    The chat gate also needs the pepper but does not stop the boot: it fails closed (chat
+    answers "unavailable", the rest of the site runs) while the variable is unset, so
+    production keeps booting until the owner sets it.
+    """
     if (os.environ.get("AUTH_PHONE_LOGIN_ENABLED") or "").strip().lower() in _TRUTHY:
         pepper()
 
@@ -81,9 +86,9 @@ def _sign(device_id: str) -> str:
 def read_device_id(req: Request) -> str | None:
     """The device id in a valid signed cookie, or None (missing, malformed or tampered)."""
     raw = req.cookies.get(COOKIE_NAME) or ""
-    device_id, _, _mac = raw.partition(".")
-    if not re.fullmatch(r"[0-9a-f]{32}", device_id):
-        return None
+    if not re.fullmatch(r"[0-9a-f]{32}\.[0-9a-f]{64}", raw):
+        return None  # also keeps non-ASCII text away from compare_digest (it raises TypeError)
+    device_id = raw.partition(".")[0]
     if not hmac.compare_digest(_sign(device_id), raw):
         return None
     return device_id

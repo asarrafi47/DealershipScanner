@@ -124,6 +124,59 @@ def test_hook_inactive_outside_a_guard(model):
     assert _call().ok  # no sink installed: nothing recorded, nothing raised
 
 
+class _FakeRepo:
+    """Stands in for the database: records the reserve and the true-up."""
+
+    def __init__(self, monkeypatch):
+        self.trued = []
+        res = repo.Reservation(weight=1, est_tokens_in=1000, est_tokens_out=500, est_cost_micro=7)
+        monkeypatch.setattr(repo, "reserve", lambda charges, **kw: repo.ReserveResult(ok=True, violations=[], reservation=res))
+        monkeypatch.setattr(repo, "true_up", lambda r, **kw: self.trued.append(kw))
+
+
+def test_no_reported_usage_keeps_the_estimate_charged(monkeypatch):
+    fake = _FakeRepo(monkeypatch)
+    with _enter():
+        pass  # a model call from another thread or a stream would look exactly like this
+    assert fake.trued == []
+
+
+def test_explicit_no_model_call_replaces_the_estimate_with_zero(monkeypatch):
+    fake = _FakeRepo(monkeypatch)
+    with _enter() as g:
+        g.no_model_call()
+    assert [(k["tokens_in"], k["tokens_out"], k["cost_micro"], k["messages_back"]) for k in fake.trued] == [(0, 0, 0, False)]
+
+
+def test_exception_with_no_usage_still_gives_the_message_back(monkeypatch):
+    fake = _FakeRepo(monkeypatch)
+    with pytest.raises(RuntimeError):
+        with _enter():
+            raise RuntimeError("boom")
+    assert [k["messages_back"] for k in fake.trued] == [True]
+
+
+def test_missing_pepper_fails_closed_with_unavailable_and_logs_once(monkeypatch, caplog):
+    from backend.chat_budget import gate
+
+    monkeypatch.setattr(gate, "_PEPPER_LOGGED", False)
+    monkeypatch.setenv("APP_ENV", "production")
+    monkeypatch.setenv("RAILWAY_ENVIRONMENT", "production")
+    monkeypatch.delenv("PHONE_HASH_PEPPER", raising=False)
+    from backend.utils import device_id
+
+    monkeypatch.setattr(device_id, "is_production_env", lambda: True)
+    reserved = []
+    monkeypatch.setattr(repo, "reserve", lambda *a, **k: reserved.append(1))
+    caplog.set_level("ERROR")
+    for _ in range(3):
+        d = _denial()
+        assert (d.error, d.status) == ("chat_unavailable", 503)
+    assert reserved == []  # never opened the gate, never touched the database
+    assert sum("PHONE_HASH_PEPPER" in r.getMessage() for r in caplog.records) == 1
+    assert "dev-only" not in caplog.text
+
+
 # ---------------------------------------------------------------- Postgres tier
 
 

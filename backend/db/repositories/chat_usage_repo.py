@@ -242,7 +242,7 @@ def _adjust(res: Reservation, d_msgs: int, d_in: int, d_out: int, d_cost: int, c
     own = conn is None
     c = conn or _connect()
     try:
-        for period, start, kind, key in sorted(res.rows, key=lambda r: (r[2], r[3], r[0])):
+        for period, start, kind, key in sorted(res.rows, key=lambda r: (r[2], r[3], 0 if r[0] == "hour" else 1)):
             c.execute(_ADJUST, (d_msgs, d_in, d_out, d_cost, period, start, kind, key))
         c.commit()
     except Exception:
