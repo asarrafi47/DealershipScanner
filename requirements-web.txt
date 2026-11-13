@@ -22,6 +22,8 @@ bcrypt>=4.1
 resend>=2.0.0
 redis>=8.0.1
 stripe>=8
+# Phone sign-in (docs/auth_sms): number parsing and validation (backend/auth/phone/numbers.py).
+phonenumbers>=9.0
 PyJWT[crypto]>=2.8
 pypdf>=4.0
 pymupdf>=1.24

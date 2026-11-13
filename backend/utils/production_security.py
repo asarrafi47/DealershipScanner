@@ -66,6 +66,10 @@ def assert_production_security_config() -> None:
 
     assert_credential_db_encryption_config()
 
+    from backend.auth.phone.config import assert_phone_login_config_for_production
+
+    assert_phone_login_config_for_production()
+
     dev_console = (os.environ.get("DEV_CONSOLE") or "").strip().lower() in (
         "1",
         "true",

@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+- Phone sign-in foundation, S1 (inert; `AUTH_PHONE_LOGIN_ENABLED` unset): `backend/auth/phone/numbers.py` (`normalize` to E.164 with the `phonenumbers` library, refusing invalid, premium-rate, shared-cost and non-allowed-country numbers; `mask`; `hash_phone` and `hash_ip` with `PHONE_HASH_PEPPER`) and `config.py` (every phone variable with its default, `enabled()`). Production start refuses when the flag is on with the fake provider or a missing pepper, Turnstile or Twilio value (`production_security.py`). `phonenumbers` added to `requirements-web.txt`.
+
 ## [1.5.25] - 2026-11-13
 
 - Docs only: docs/auth_sms/ holds a survey of the user structure, a pay and Stripe audit (billing dormant, site free), the design for phone-number login with Twilio Verify text codes, the design for AI chat limits, and the task cards for them (no code change).
