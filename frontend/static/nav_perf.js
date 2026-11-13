@@ -100,7 +100,7 @@
     function send(url) {
         var ctrl = typeof AbortController === "function" ? new AbortController() : null;
         if (ctrl) controllers.add(ctrl);
-        var opts = { credentials: "same-origin", headers: { Accept: "text/html" } };
+        var opts = { credentials: "same-origin", headers: { Accept: "text/html", "X-DS-Prefetch": "1" } };
         if (ctrl) opts.signal = ctrl.signal;
         // Chromium honours this and schedules the prefetch beneath anything the
         // user is actually waiting on, including a navigation they just started.

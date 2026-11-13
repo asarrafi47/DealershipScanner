@@ -245,9 +245,14 @@
   if (src && !slot.children.length) {
     var drop = function () { if (slot.parentNode && !slot.children.length) slot.parentNode.removeChild(slot); };
     fetch(src, { credentials: "same-origin", headers: { Accept: "text/html" } })
-      .then(function (r) { return r.ok && r.status === 200 ? r.text() : ""; })
+      .then(function (r) {
+        // A redirect (expired session sends us to the login page), a non-HTML answer or
+        // a non-200 is a failure, never content.
+        var type = r.headers.get("Content-Type") || "";
+        return !r.redirected && r.ok && r.status === 200 && type.indexOf("text/html") === 0 ? r.text() : "";
+      })
       .then(function (html) {
-        if (!html) { drop(); return; }
+        if (!html || html.indexOf('id="reco-section"') === -1) { drop(); return; }
         slot.outerHTML = html;
         initReco();
       })

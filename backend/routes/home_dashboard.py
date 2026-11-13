@@ -43,6 +43,10 @@ _reco_cache: dict[tuple, tuple[float, list, dict]] = {}
 _reco_refreshers: dict[tuple, BackgroundRefresher] = {}
 _reco_build_locks: dict[tuple, threading.Lock] = {}
 _reco_guard = threading.Lock()
+# Per-user generation, bumped by every hard drop (hide / unhide a dealership). A build
+# reads it BEFORE it reads the hidden dealerships and stores only if it is unchanged, so a
+# rebuild that was already running cannot put rows built with the old hidden set back.
+_reco_generation: dict[int, int] = {}
 
 # The cheap part of /home (saved, recently viewed, recently compared) is cached per
 # user for a minute and DROPPED (not served stale) on the user's own save, view,
@@ -144,13 +148,20 @@ def _invalidate_reco_cache(user_id: int, *, hard: bool = False) -> None:
     lists are always dropped, so the shopper's own action shows at once.
     """
     uid = int(user_id)
-    _lists_cache.pop(uid, None)
-    for key in [k for k in _reco_cache if k[0] == uid]:
+    with _reco_guard:
         if hard:
-            _reco_cache.pop(key, None)
-        else:
-            _, rows, heading = _reco_cache[key]
-            _reco_cache[key] = (time.monotonic() - 0.001, rows, heading)
+            _reco_generation[uid] = _reco_generation.get(uid, 0) + 1
+            if len(_reco_generation) > 5000:
+                _reco_generation.clear()
+        _lists_cache.pop(uid, None)
+        for key in [k for k in list(_reco_cache) if k[0] == uid]:
+            hit = _reco_cache.get(key)
+            if hit is None:
+                continue
+            if hard:
+                _reco_cache.pop(key, None)
+            else:
+                _reco_cache[key] = (time.monotonic() - 0.001, hit[1], hit[2])
 
 
 def _reco_key(user_id: int, limit: int, geo_kw: dict) -> tuple:
@@ -173,6 +184,8 @@ def _reco_lookup(key: tuple) -> tuple[str, list, dict]:
 def _reco_build_and_store(user_id: int, limit: int, geo_kw: dict, key: tuple) -> tuple[list, dict]:
     """Run the real build (hidden dealerships included) and store it under *key*."""
     kw = dict(geo_kw)
+    with _reco_guard:
+        generation = _reco_generation.get(int(user_id), 0)
     try:
         hidden = hidden_dealer_ids_for_user(user_id)
     except Exception:
@@ -181,6 +194,10 @@ def _reco_build_and_store(user_id: int, limit: int, geo_kw: dict, key: tuple) ->
         kw["exclude_dealer_ids"] = tuple(sorted(hidden))
     rows, heading = _recommendations_for_user_uncached(user_id, limit, serialize=True, **kw)
     with _reco_guard:
+        if _reco_generation.get(int(user_id), 0) != generation:
+            # A hide or unhide landed while this build ran: its rows may show a hidden
+            # dealer. Serve them to this caller only, never store them.
+            return rows, heading
         if len(_reco_cache) >= 500:
             _reco_cache.clear()
         _reco_cache[key] = (time.monotonic() + _RECO_CACHE_TTL_S, rows, heading)

@@ -206,3 +206,71 @@ def test_prefetch_never_fires_on_home_and_is_small():
     m = re.search(r"var WARM_IDLE_TIMEOUT_MS = (\d+);", js)
     assert m and int(m.group(1)) >= 2000
     assert "Math.min(limit || WARM_LIMIT, WARM_LIMIT)" in js
+
+
+def test_hide_during_running_rebuild_does_not_store_old_rows(home, monkeypatch):
+    _c, uid, _car, hd = home
+    started, release = threading.Event(), threading.Event()
+
+    def build(user_id, limit, serialize=True, **kw):
+        started.set()
+        release.wait(5)
+        return [{"id": 7}], dict(HEADING)
+
+    monkeypatch.setattr(hd, "_recommendations_for_user_uncached", build)
+    hd._reco_cache.clear()
+    key = hd._reco_key(uid, 20, {})
+    t = threading.Thread(target=lambda: hd._reco_build_and_store(uid, 20, {}, key))
+    t.start()
+    assert started.wait(5)
+    hd._invalidate_reco_cache(uid, hard=True)  # dealer hidden while the build runs
+    release.set()
+    t.join(5)
+    assert key not in hd._reco_cache  # the old-hidden-set rows were not stored
+    # A build that starts after the hide is stored as usual.
+    release.set()
+    hd._reco_build_and_store(uid, 20, {}, key)
+    assert key in hd._reco_cache
+
+
+def test_soft_invalidation_does_not_bump_generation(home):
+    _c, uid, _car, hd = home
+    before = hd._reco_generation.get(uid, 0)
+    hd._invalidate_reco_cache(uid)
+    assert hd._reco_generation.get(uid, 0) == before
+    hd._invalidate_reco_cache(uid, hard=True)
+    assert hd._reco_generation.get(uid, 0) == before + 1
+
+
+def test_prefetch_request_is_not_a_view(home, monkeypatch):
+    import time
+
+    from backend.routes.car_detail import viewer
+
+    c, uid, car_id, hd = home
+    views = []
+    real = viewer.record_car_view
+    monkeypatch.setattr(viewer, "record_car_view", lambda u, cid: (views.append(cid), real(u, cid))[1])
+    monkeypatch.setattr(hd, "_recommendations_for_user_uncached", lambda *a, **k: (list(ROWS), dict(HEADING)))
+    hd._recommendations_for_user(uid)
+    key = hd._reco_key(uid, 20, {})
+    r = c.get(f"/car/{car_id}", headers={"X-DS-Prefetch": "1"})
+    assert r.status_code == 200
+    assert views == []  # not recorded
+    assert hd._reco_cache[key][0] > time.monotonic()  # still fresh, not marked stale
+    r = c.get(f"/car/{car_id}")  # a real visit still counts
+    assert r.status_code == 200
+    assert views == [car_id]
+    assert hd._reco_cache[key][0] <= time.monotonic()  # marked stale
+
+
+def test_nav_perf_prefetch_sends_the_prefetch_header():
+    js = (ROOT / "frontend" / "static" / "nav_perf.js").read_text()
+    assert '"X-DS-Prefetch": "1"' in js
+
+
+def test_deferred_fetch_rejects_redirects_and_foreign_pages():
+    html = (ROOT / "frontend" / "templates" / "home.html").read_text()
+    assert "r.redirected" in html
+    assert "text/html" in html
+    assert "html.indexOf('id=\"reco-section\"') === -1" in html
