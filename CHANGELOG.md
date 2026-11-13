@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+### Fixed
+- `window_sticker.py`: hoisted the whitespace regex out of an f-string replacement field (a backslash there is a SyntaxError before Python 3.12).
+
+### Tests
+- `test_py311_syntax.py`: guard that no tracked `.py` uses 3.12-only f-string syntax (backslash, comment or reused quote in a replacement field).
+
 ## [1.5.19] - 2026-11-12
 
 ### Cloud-first scan loop
