@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [1.5.32] - 2026-11-13
+
 - Part C review blocker: with billing off, a new Google or Apple user (or any premium login intent) is no longer sent to /premium after sign-in.
 
 ## [1.5.31] - 2026-11-13
