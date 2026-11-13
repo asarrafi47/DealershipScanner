@@ -1441,14 +1441,16 @@
    "None": [
     "_per_request_csp_nonce",
     "_csrf_mutating_requests",
-    "_billing_gate_paid_routes"
+    "_billing_gate_paid_routes",
+    "_device_cookie_before"
    ]
   },
   "after_request_funcs": {
    "None": [
     "_static_cache_headers",
     "_gzip_large_json",
-    "_csp_headers"
+    "_csp_headers",
+    "_device_cookie_after"
    ]
   },
   "teardown_request_funcs": {},

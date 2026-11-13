@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+- D1, device cookie and real client address: `backend/utils/device_id.py` (`ensure_device_cookie`, `device_hash`, signed HttpOnly `sc_dev` cookie kept 400 days, set only on phone and chat routes; keyed hashes use `PHONE_HASH_PEPPER`, required in production only when `AUTH_PHONE_LOGIN_ENABLED` is on) and `phone_client_ip()` in `backend/utils/client_ip.py` (`CF-Connecting-IP` only when the last trusted hop is a Cloudflare address, IPv6 counted by /64). Tests `test_device_id.py`, `test_client_ip_cf.py`; app surface golden gets the two hooks.
+
 - F1, the site is free: with billing off (the shipped default) no shopper page shows a price, plan name or upgrade link (listings guest banner, dealer picker hint and car trim ladder text are hidden; `/premium` no longer prints prices), `GET /billing/plans` answers 404, and a production boot with `BILLING_STRIPE_ENABLED` on logs that billing is dormant by owner decision. No billing code, column or test removed. Test `backend/tests/test_billing_frozen.py`.
 
 ## [1.5.25] - 2026-11-13

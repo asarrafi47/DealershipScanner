@@ -79,6 +79,10 @@ def assert_production_security_config() -> None:
             "Set a long random secret or disable DEV_CONSOLE."
         )
 
+    from backend.utils.device_id import assert_pepper_if_needed
+
+    assert_pepper_if_needed()
+
     if (os.environ.get("CAR_CHAT_WEB_RESEARCH_PUBLIC") or "").strip().lower() in (
         "1",
         "true",
