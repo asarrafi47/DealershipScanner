@@ -282,3 +282,56 @@ def client_ip(request: Request) -> str:
         if candidate:
             return candidate
     return request.remote_addr or _UNKNOWN
+
+
+def _bucket_ip(ip: str) -> str:
+    """IPv6 addresses count by their /64 (one home or phone gets a whole /64); IPv4 as is."""
+    try:
+        addr = ipaddress.ip_address(ip)
+    except ValueError:
+        return ip
+    if isinstance(addr, ipaddress.IPv6Address):
+        if addr.ipv4_mapped is not None:
+            return str(addr.ipv4_mapped)
+        return str(ipaddress.ip_network(f"{addr}/64", strict=False))
+    return str(addr)
+
+
+def _came_through_cloudflare(request: Request) -> bool:
+    """True when the request's last trusted hop is a Cloudflare address.
+
+    Needs ``TRUST_PROXY_HEADERS`` and ``TRUSTED_PROXY_CIDRS`` (the same settings
+    :func:`client_ip` uses). With a proxy chain (Cloudflare -> Railway edge) the rightmost
+    X-Forwarded-For entry is the address the edge saw, so it must lie in the ranges; a
+    request sent straight to the origin has its own address there and fails the check.
+    Without the proxy switch the socket peer itself must lie in the ranges.
+    """
+    networks = trusted_proxy_cidrs()
+    if not networks:
+        return False
+    if trust_proxy_headers():
+        forwarded = request.headers.get("X-Forwarded-For") or ""
+        parts = [p for p in (piece.strip() for piece in forwarded.split(",")) if p]
+        if not parts:
+            return False
+        peer = _normalize_ip(parts[-1])
+    else:
+        peer = _normalize_ip(request.remote_addr or "")
+    return peer is not None and _in_networks(peer, networks)
+
+
+def phone_client_ip(request: Request) -> str:
+    """The real client address for phone login and chat limits.
+
+    Returns ``CF-Connecting-IP`` only when the request came through Cloudflare's ranges
+    (:func:`_came_through_cloudflare`); anything else falls back to :func:`client_ip`, which
+    a forged ``X-Forwarded-For`` cannot move. IPv6 is returned as its /64.
+    A direct hit on the Railway address can still forge headers until that address is
+    removed and the origin locked (see the module docstring); this function does not weaken
+    that and does not trust the header in that case.
+    """
+    if _came_through_cloudflare(request):
+        header = _normalize_ip(request.headers.get("CF-Connecting-IP") or "")
+        if header:
+            return _bucket_ip(header)
+    return _bucket_ip(client_ip(request))

@@ -310,7 +310,9 @@ def premium_webhook():
 
 @bp.route("/plans")
 def billing_plans_api():
-    """JSON catalog for pricing UI (no secrets)."""
+    """JSON catalog for pricing UI (no secrets). 404 while billing is off (the site is free)."""
+    if not billing_enabled():
+        abort(404)
     return jsonify({"plans": plan_display_list(), "billing_enabled": billing_enabled()})
 
 

@@ -219,6 +219,10 @@ _admin_dealer_api_routes.register(app)
 register_templating(app)
 register_security(app)
 
+from backend.utils.device_id import register_device_cookie  # noqa: E402
+
+register_device_cookie(app)
+
 
 # Auth pages + /api/auth/* + MFA stubs, then account pages (bare endpoint names kept).
 from backend.auth import pages as _auth_pages  # noqa: E402

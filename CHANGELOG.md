@@ -2,6 +2,18 @@
 
 ## [Unreleased]
 
+## [1.5.28] - 2026-11-13
+
+- Review of PR 15: a device cookie with non-ASCII text in its signature part no longer causes a 500 on phone and chat routes (the cookie is checked whole before it is compared; the bad cookie is replaced). The gate keeps the estimate charged when no model usage was reported unless the route calls `Guard.no_model_call()` (a model call from another thread or a stream can no longer go uncounted). The gate fails closed with the "unavailable" answer (logged once, never an open gate, never a 500) when `PHONE_HASH_PEPPER` is unset in production; the boot still only requires the pepper when phone login is on, so production keeps booting until it is set. True-up locks rows in the same order as reserve (no deadlock). Tests added.
+
+- C2, chat budget gate: `backend/chat_budget` (`guard(kind, user_id, phone_hash, device_hash, ip_hash, listing_id, weight)` reserves an estimate against account, phone, device, address, account-and-car and the whole-site day budget in one transaction, strictest limit wins, true-up with the real tokens and cost, message given back on failure or refusal, fails closed when Postgres is down; plain sentences with the reset time in `messages.py`). `backend/llm/client.py` `complete()` reports each finished call to an active guard through a context variable (no effect without one). Not wired into the chat routes yet (card C3). Tests `test_chat_budget_gate.py`, `test_chat_budget_messages.py`, `test_llm_usage_hook.py`.
+
+- C1, chat limits storage: migration `V030__chat_usage.sql` (tables `chat_usage_buckets` and `app_settings`; the owner applies it on deploy), `backend/db/repositories/chat_usage_repo.py` (reserve across several subjects in one transaction, true-up, give back, add denied, read day and hour totals, delete rows older than 35 days; hour and day buckets in the reset time zone) and `backend/settings_store.py` (row, then environment, then default, 30-second cache, bad values ignored with one log line). Nothing calls them yet (cards C2 and C3). Tests `test_chat_usage_repo.py` (Postgres tier, plus offline time-bucket tests) and `test_settings_store.py`.
+
+- D1, device cookie and real client address: `backend/utils/device_id.py` (`ensure_device_cookie`, `device_hash`, signed HttpOnly `sc_dev` cookie kept 400 days, set only on phone and chat routes; keyed hashes use `PHONE_HASH_PEPPER`, required in production only when `AUTH_PHONE_LOGIN_ENABLED` is on) and `phone_client_ip()` in `backend/utils/client_ip.py` (`CF-Connecting-IP` only when the last trusted hop is a Cloudflare address, IPv6 counted by /64). Tests `test_device_id.py`, `test_client_ip_cf.py`; app surface golden gets the two hooks.
+
+- F1, the site is free: with billing off (the shipped default) no shopper page shows a price, plan name or upgrade link (listings guest banner, dealer picker hint and car trim ladder text are hidden; `/premium` no longer prints prices), `GET /billing/plans` answers 404, and a production boot with `BILLING_STRIPE_ENABLED` on logs that billing is dormant by owner decision. No billing code, column or test removed. Test `backend/tests/test_billing_frozen.py`.
+
 ## [1.5.27] - 2026-11-13
 
 - Review fixes for the fast home page (PR 14): removed scripts/profile_home.py (it carried SQLite path handling the repo forbids; the measured table stays in the PR text); the deferred recommendations fetch treats a login redirect, a non-HTML answer or a body without the section as failure and drops the placeholder; hiding or unhiding a dealership bumps a per-user generation so a rebuild already running cannot store rows built with the old hidden set; prefetches send X-DS-Prefetch: 1 and car pages do not count them as views.

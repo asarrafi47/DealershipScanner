@@ -1000,9 +1000,9 @@
                             {% endif %}
                             {% if not show_premium_features and trim_ladder.steps | length > 3 %}
                                 {% if trim_ladder.matched %}
-                            <p class="car-trim-ladder__confidence car-trim-ladder__confidence--low">Showing this trim and its nearest neighbors — <a href="{{ url_for('premium_page') }}">Premium</a> shows the full lineup and what each rung adds.</p>
+                            <p class="car-trim-ladder__confidence car-trim-ladder__confidence--low">Showing this trim and its nearest neighbors{% if billing_stripe_enabled %} — <a href="{{ url_for('premium_page') }}">Premium</a> shows the full lineup and what each rung adds{% endif %}.</p>
                                 {% else %}
-                            <p class="car-trim-ladder__confidence car-trim-ladder__confidence--low">Couldn't match this listing to an exact trim rung, so we're showing the full lineup — <a href="{{ url_for('premium_page') }}">Premium</a> shows what each rung adds.</p>
+                            <p class="car-trim-ladder__confidence car-trim-ladder__confidence--low">Couldn't match this listing to an exact trim rung, so we're showing the full lineup{% if billing_stripe_enabled %} — <a href="{{ url_for('premium_page') }}">Premium</a> shows what each rung adds{% endif %}.</p>
                                 {% endif %}
                             {% endif %}
                             <ol class="car-trim-ladder__timeline" role="list">
@@ -1031,7 +1031,7 @@
                                             {# The equipment diff itself is the Premium feature — the
                                                ladder position above is free on every listing. #}
                                             <p class="car-trim-ladder__panel-label">What this trim adds</p>
-                                            <p class="car-trim-ladder__provenance">See the full equipment diff for every rung with <a href="{{ url_for('premium_page') }}">Premium</a>.</p>
+                                            {% if billing_stripe_enabled %}<p class="car-trim-ladder__provenance">See the full equipment diff for every rung with <a href="{{ url_for('premium_page') }}">Premium</a>.</p>{% endif %}
                                             {% elif step.adds %}
                                             <p class="car-trim-ladder__panel-label">What this trim adds</p>
                                             <ul class="car-trim-ladder__adds">
