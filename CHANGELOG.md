@@ -2,7 +2,7 @@
 
 ## [Unreleased]
 
-- Docs only: docs/auth_sms/ holds a survey of the user structure, a pay and Stripe audit, the design for phone-number login with text-message codes, and the task cards for it (no code change).
+- Docs only: docs/auth_sms/ holds a survey of the user structure, a pay and Stripe audit (billing dormant, site free), the design for phone-number login with Twilio Verify text codes, the design for AI chat limits, and the task cards for them (no code change).
 
 ## [1.5.24] - 2026-11-13
 

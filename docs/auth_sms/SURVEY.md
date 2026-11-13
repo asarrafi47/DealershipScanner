@@ -1,5 +1,7 @@
 # Users and sign-in today: a survey of the code
 
+> **Update 2026-11-13.** This survey describes the code as it is on `dev` 1.5.24 and has not been rewritten. Owner decisions since then change what is planned, not what exists: the site becomes free (billing stays dormant); shoppers will sign in by phone and text code only; admin and dealer accounts keep passwords (admins get an authenticator step); Twilio Verify is the provider. See `DESIGN.md`, `CHAT_LIMITS.md` and `TASKS.md`. Where this survey says "billing is off", that is now permanent for the time being.
+
 Survey of `dev` at VERSION 1.5.24 (2026-11-13). Documentation only; no behavior was changed. Paths are relative to the repo root; `B/` means `backend/`. Line numbers were read from the tree on that date. Environment variable NAMES appear below; no values were read or printed.
 
 Read this if you are the owner deciding about phone-number login, or a cloud session taking a card from `TASKS.md`. Companion files: `PAY_AND_STRIPE_AUDIT.md`, `DESIGN.md`, `TASKS.md`.
