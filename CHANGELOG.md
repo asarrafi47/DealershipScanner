@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 
+- Scan loop L7: backend/scanner/loop/bundle.py gains build_bundle and its builders (dealers_tsv, digest_md, triage_gz, manifest, latest_json, summary_from_shards), which turn loaded shards into the run bundle of BUNDLE.md section 4 (MANIFEST.json, digest.md within 6,144 bytes, dealers.tsv, triage.json.gz, the two text lists) with scrubbed, capped dealer text and byte-identical output; backend/scripts/ops_publish.py build is the offline CLI (`--dry-run` prints path, bytes and sha256 and writes nothing). Golden files under backend/tests/fixtures/ops_publish/expected_bundle/. Not wired into the scanner yet.
 - Scan loop L9: backend/scanner/loop/gates.py gains the fleet gate (evaluate_fleet, fleet_metrics, FG1 to FG8, PASS / HOLD-PROD-WRITES / FAIL) and the write predicates can_retire (WR, per condition bucket, two strikes 20 h apart), can_move (WM) and can_promote (WP), with their thresholds in the frozen GateConfig. Pure standard-library code, not wired into the scanner's write path: production stays reconcile-off.
 
 ## [1.5.21] - 2026-11-13
