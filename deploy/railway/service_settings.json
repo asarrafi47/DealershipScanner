@@ -1,5 +1,5 @@
 {
-  "_doc": "Expected Railway service-instance settings (N4.1, D-N24). They replace the config-as-code files (root railway.toml for web, deploy/railway/railway.scanner-nightly.json for scanner-nightly), which Railway stops reading on 2026-12-01. deploy_web.sh and deploy_scanner_nightly.sh read the live settings with one read-only `railway api` query (deploy/railway/service_settings.py) and refuse to deploy on any difference. Keys under serviceInstance are ServiceInstance field names; null means the setting must be unset. limits is compared with the serviceInstanceLimits query. The old files' build.builder = DOCKERFILE is carried by dockerfilePath: the instance builder field reads RAILPACK on services that built from a Dockerfile (P0A.3, docs/SCANNING_OPS_LOG.md), and on 2026-09-28 setting dockerfilePath through the API is what made scanner-nightly build its Dockerfile (docs/RAILWAY_SCANNING.md). Change a value only together with the owner settings pack that applies it (docs/RELEASING.md, Service settings).",
+  "_doc": "Expected Railway service-instance settings (N4.1, D-N24). They replace the config-as-code files (root railway.toml for web, deploy/railway/railway.scanner-nightly.json for scanner-nightly), which Railway stops reading on 2026-12-01. deploy_web.sh and deploy_scanner_nightly.sh read the live settings with one read-only `railway api` query (deploy/railway/service_settings.py) and refuse to deploy on any difference. Keys under serviceInstance are ServiceInstance field names; null means the setting must be unset. limits is compared with the serviceInstanceLimits query. The old files' build.builder = DOCKERFILE is carried by dockerfilePath: the instance builder field reads RAILPACK on services that built from a Dockerfile (P0A.3, docs/SCANNING_OPS_LOG.md), and on 2026-09-28 setting dockerfilePath through the API is what made scanner-nightly build its Dockerfile (docs/RAILWAY_SCANNING.md). Change a value only together with the owner settings pack that applies it (docs/RELEASING.md, Service settings). web-cards (docs/RELEASING.md, web-cards) is the nightly listings-card builder: its serviceId is not stored here (no Railway id in the repository); the deploy script and the check read it from the environment variable named by serviceIdEnv. deploy/railway/railway.web-cards.json holds the same values as a reference copy; Railway stops reading config files on 2026-12-01, so the settings below are what the guard compares.",
   "environmentId": "abe0fc9d-2dd5-4217-b303-12c6c4ac498a",
   "services": {
     "web": {
@@ -30,6 +30,19 @@
       "limits": {
         "cpu": 16,
         "memoryBytes": 17179869184
+      }
+    },
+    "web-cards": {
+      "serviceIdEnv": "RAILWAY_WEB_CARDS_SERVICE_ID",
+      "replaces": "deploy/railway/railway.web-cards.json",
+      "serviceInstance": {
+        "dockerfilePath": "Dockerfile.web",
+        "startCommand": "python -m backend.scripts.build_listings_grid_cards",
+        "cronSchedule": "30 8 * * *",
+        "healthcheckPath": null,
+        "restartPolicyType": "NEVER",
+        "numReplicas": 1,
+        "railwayConfigFile": null
       }
     }
   }

@@ -8,12 +8,13 @@ see the note under the service table.
 ## Services
 
 As recorded in `docs/SCANNING_OPS_LOG.md` (P0A.1 per-service table, the 2026-10-08 owner
-block and the 2026-10-16 N1.5 block). The project has three services:
+block and the 2026-10-16 N1.5 block). The project has three services, and a fourth (`web-cards`) is planned:
 
 | Service | What it runs | How code reaches it | State and hazards |
 |---|---|---|---|
 | `web` | The site: `Dockerfile.web`, gunicorn, healthcheck `/health` | `deploy/railway/deploy_web.sh` from a release tag (section 1) | Volume `web-volume` at `/data` for the user-account SQLite files (section 4). Domains: `sarraficars.com`, proxied by Cloudflare, and `web-production-26b11.up.railway.app`, which also serves the site until N3.13 step 6 removes it (D-SEC6). GitHub source disconnected 2026-10-16. Proxy settings: section 7. |
 | `scanner-nightly` | The fleet scan job: `Dockerfile.scanner`, restart policy NEVER, cron off | `deploy/railway/deploy_scanner_nightly.sh` from a release tag, and not before P6B.1 (D-REL8 (b)) | `SCAN_FLEET=0` staged 2026-10-16 (N1.5). The 2026-09-29 deployment `90a3d2a0` keeps its own `SCAN_FLEET=1`, so a restart or rollback of it runs a full fleet against prod Postgres. Do not restart, roll back or redeploy scanner-nightly until N12.2. Volume `scanner-nightly-volume` at `/data`. |
+| `web-cards` | The nightly listings-card builder: `Dockerfile.web`, start command `python -m backend.scripts.build_listings_grid_cards`, cron `30 8 * * *` (UTC), no healthcheck, restart NEVER | `deploy/railway/deploy_web_cards.sh` from the SAME release tag as web, right after `deploy_web.sh` | Planned, owner steps in [`docs/RELEASING.md`](../../docs/RELEASING.md#the-card-builder-and-the-web-cards-service); reads the same database as web through reference variables. Its service id is not stored in the repository (`RAILWAY_WEB_CARDS_SERVICE_ID`). |
 | `Postgres` | The inventory database, Railway's `postgres-ssl:18` image | Railway image updates only | web and scanner-nightly reach it through `INVENTORY_DATABASE_URL=${{Postgres.DATABASE_URL}}` (section 4). A public TCP proxy on 5432 exists. |
 
 **Retired:** the legacy `scanner-worker` and `scanner-scheduler` services were deleted in

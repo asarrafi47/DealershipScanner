@@ -147,10 +147,13 @@ def test_ids_are_the_audited_ones(settings) -> None:
     assert settings["environmentId"] == env.group(1)
     assert settings["services"]["web"]["serviceId"] == row.group(1)
     assert settings["services"]["scanner-nightly"]["serviceId"] == row.group(3)
-    assert set(settings["services"]) == {"web", "scanner-nightly"}
+    # web-cards (the nightly card builder) is a third service; its id is deliberately not in the repository.
+    assert set(settings["services"]) == {"web", "scanner-nightly", "web-cards"}
+    assert "serviceId" not in settings["services"]["web-cards"]
 
 
-def test_every_expected_field_is_readable(helper, settings) -> None:
+def test_every_expected_field_is_readable(helper, settings, monkeypatch) -> None:
+    monkeypatch.setenv("RAILWAY_WEB_CARDS_SERVICE_ID", "00000000-0000-4000-8000-0000000000c1")
     for service in settings["services"]:
         entry = helper.service_entry(settings, service)
         assert set(entry["serviceInstance"]) <= helper.READABLE_FIELDS

@@ -1,4 +1,4 @@
-"""Guarded Railway deploys: deploy_web.sh and deploy_scanner_nightly.sh (P2B.2, D-REL10).
+"""Guarded Railway deploys: deploy_web.sh, deploy_scanner_nightly.sh and deploy_web_cards.sh (P2B.2, D-REL10).
 
 Every test drives the real scripts, copied into a throwaway git repository
 under ``tmp_path`` with a bare "origin" reached over ``file://``. No network,
@@ -45,13 +45,17 @@ DEPLOY_DIR = REPO_ROOT / "deploy" / "railway"
 LIB = DEPLOY_DIR / "_guarded_deploy.sh"
 WEB = "deploy_web.sh"
 NIGHTLY = "deploy_scanner_nightly.sh"
-SCRIPTS = (WEB, NIGHTLY)
-SERVICE = {WEB: "web", NIGHTLY: "scanner-nightly"}
+WEB_CARDS = "deploy_web_cards.sh"
+SCRIPTS = (WEB, NIGHTLY, WEB_CARDS)
+SERVICE = {WEB: "web", NIGHTLY: "scanner-nightly", WEB_CARDS: "web-cards"}
 VERSION = "1.6.0"
 TAG = f"v{VERSION}"
 BUILD_FILES = {"BUILD_COMMIT", "BUILD_TAG"}
 SETTINGS_JSON = DEPLOY_DIR / "service_settings.json"
 SETTINGS_PY = DEPLOY_DIR / "service_settings.py"
+# web-cards keeps its service id out of the repository (serviceIdEnv); the tests export a
+# made-up one, so no real Railway id is involved.
+WEB_CARDS_TEST_ID = "00000000-0000-4000-8000-0000000000c1"
 
 FAKE_RAILWAY = """#!/bin/sh
 # Fake railway CLI for test_deploy_guard.py: record argv (newlines folded), cwd
@@ -174,7 +178,12 @@ def assert_only_the_settings_query(log: Path, service: str) -> None:
     variables = json.loads(calls[0][calls[0].index("--variables") + 1])
     settings = json.loads(SETTINGS_JSON.read_text(encoding="utf-8"))
     assert variables["environmentId"] == settings["environmentId"]
-    assert variables["serviceId"] == settings["services"][service]["serviceId"]
+    assert variables["serviceId"] == service_id(settings, service)
+
+
+def service_id(settings: dict, service: str) -> str:
+    entry = settings["services"][service]
+    return entry.get("serviceId") or WEB_CARDS_TEST_ID
 
 
 def live_answer(service: str, settings: dict | None = None, **overrides) -> dict:
@@ -197,7 +206,7 @@ def set_answer(env: dict, service: str, body: dict | str | None = None, *, stder
                exit_code: int | None = None, settings: dict | None = None) -> None:
     """Make the fake `railway api` answer *body* for *service* (default: matching settings)."""
     settings = settings or json.loads(SETTINGS_JSON.read_text(encoding="utf-8"))
-    sid = settings["services"][service]["serviceId"]
+    sid = service_id(settings, service)
     base = Path(env["FAKE_RAILWAY_API_DIR"]) / sid
     if body is None:
         body = live_answer(service, settings)
@@ -251,6 +260,7 @@ def env(tmp_path: Path) -> dict:
         FAKE_RAILWAY_LOG=str(tmp_path / "railway.log"),
         FAKE_RAILWAY_API_DIR=str(tmp_path / "api"),
         DEPLOY_PYTHON=sys.executable,
+        RAILWAY_WEB_CARDS_SERVICE_ID=WEB_CARDS_TEST_ID,
         LC_ALL="C",
         LANG="C",
     )
@@ -285,7 +295,7 @@ def make_repo(tmp_path: Path, env: dict, allowlist: tuple[str, ...] = ()) -> Rep
 
     dest = work / "deploy" / "railway"
     dest.mkdir(parents=True)
-    for name in (WEB, NIGHTLY, SETTINGS_JSON.name, SETTINGS_PY.name):
+    for name in (WEB, NIGHTLY, WEB_CARDS, SETTINGS_JSON.name, SETTINGS_PY.name):
         shutil.copy2(DEPLOY_DIR / name, dest / name)
     lib = LIB.read_text(encoding="utf-8")
     if allowlist:

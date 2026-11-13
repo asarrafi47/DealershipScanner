@@ -2,6 +2,19 @@
 
 ## [Unreleased]
 
+### Web speed (P6, P19 of docs/web_speed_search_2026_11/README.md)
+- P6, aggregates refreshed off the request: the rarity counts, price-plausibility medians, deal-score bands, public listings count, landing featured cars and the dealer fallback URLs are loaded once at the cold start, then served stale past their TTL while ONE background run reloads them (`backend/utils/swr_refresh.py`); a failing reload keeps the old value and is retried after 30 s; inline compute stays as the cold fallback and concurrent cold callers share one load. The rarity table is counted in SQL (`GROUP BY make, model, trim, exterior_color`), same Counters as the per-car loop.
+- P6, warm at start: `gunicorn.conf.py` `post_fork` loads the six aggregates before the worker accepts a connection (`backend/utils/aggregate_warmup.py`; `AGGREGATE_WARM=0` turns it off, `AGGREGATE_WARM_CAP_S`, default 45 s and at most 90 s, caps the wait). Never fatal.
+- P19, `grid_cards_repo`: a stored card that is only aged but still matches its row is served as a complete card and is no longer queued for re-serialization or marked partial; the date-dependent "price dropped N days ago" is moved to today at serve time from the card's `built_day` (no JS change). The web worker re-serializes at most `GRID_CARDS_BG_STALE_MAX` (3000) stale cards per scope in the background; a bigger invalidation (card revision, market stats) is served stale and left to `python -m backend.scripts.build_listings_grid_cards`, with a warning that names it. Cars with no stored card are queued nearest first, up to `GRID_CARDS_BG_OMITTED_MAX` (5000) per request.
+- P19, `GET /api/listings/cars`: a cached scope body whose data token moved (Postgres only) or whose UTC day rolled is served at once and rebuilt once in the background (`LISTINGS_MAX_STALE_S` 120 s, `LISTINGS_MAX_STALE_DAYROLL_S` 1800 s, then a build on the request as before). The body is gzipped piece by piece (`backend/utils/stream_gzip.py`) instead of joined; the gzip header carries no clock any more, so an unchanged area keeps its ETag.
+- This release changes `CARD_REV` (`price_plausibility.py` and `deal_score_cache.py` are serializer sources): run the card builder after deploying it (docs/RELEASING.md, "The card builder and the web-cards service").
+
+### Deploy
+- web-cards: a Railway cron service that runs `python -m backend.scripts.build_listings_grid_cards` daily at 08:30 UTC from `Dockerfile.web` (`deploy/railway/railway.web-cards.json`, the `web-cards` entry of `service_settings.json`, `deploy/railway/deploy_web_cards.sh`). Code and docs only: nothing is deployed. `service_settings.py` reads this service's id from `RAILWAY_WEB_CARDS_SERVICE_ID` (no Railway id in the repository). `scripts/docker-entrypoint-web.sh` runs a command given to the container instead of the web server. docs/RELEASING.md gains the builder section with the owner steps.
+
+### Tests
+- `test_swr_aggregates.py`, `test_cards_dayroll_streaming.py`, `test_web_cards_service.py`; `test_deploy_guard.py` also drives `deploy_web_cards.sh`; `test_public_listings_count_cache.py` waits for the background recount; the Postgres harness resets the rarity cache between tests.
+
 ## [1.5.23] - 2026-11-13
 
 ### Web speed and search

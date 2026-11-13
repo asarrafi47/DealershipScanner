@@ -20,8 +20,12 @@ Freshness, per car:
   store holds too little of this scope to serve), that happens inline; otherwise
   the stored (stale) cards are served and a background thread refreshes them --
   the same stale-while-revalidate contract the old whole-fleet cache had.
-* Cards older than :data:`CARD_MAX_AGE_DAYS`, and cards whose output depends on
-  today's date (``price_drop_days_ago``), are served and refreshed in background.
+* Cards older than :data:`CARD_MAX_AGE_DAYS` that still match their row (and cards whose
+  output depends on today's date, ``price_drop_days_ago``) are served as complete cards:
+  the request path never queues them (P19). The date label is moved to today at serve
+  time (:func:`_shift_price_drop_days`); the offline builder re-serializes aged cards.
+* The web process refreshes at most :data:`_BG_STALE_MAX` stale cards per scope in the
+  background; a bigger invalidation (card revision, market stats) waits for the builder.
 
 ``backend/scripts/build_listings_grid_cards.py`` fills the whole store offline (its
 own process, never the web worker); run it after deploys that change the serializer
@@ -34,7 +38,9 @@ import hashlib
 import json
 import logging
 import math
+import os
 import queue
+import re
 import sqlite3
 import threading
 import time
@@ -44,6 +50,7 @@ from typing import Any, Iterable
 from backend.db.inventory_pg import is_inventory_postgres
 from backend.db.repositories.base_repo import db_conn
 from backend.db.repositories.schema_repo import LISTINGS_GRID_CAR_COLUMNS
+from backend.utils.swr_refresh import RETRY_AFTER_S, BackgroundRefresher
 
 _log = logging.getLogger(__name__)
 
@@ -657,6 +664,82 @@ def _is_aged(cand: dict[str, Any], today: int) -> bool:
     return bool(int(cand.get("day_dep") or 0)) and bd != today
 
 
+def _int_or(value: Any, default: int) -> int:
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return default
+
+
+# The one date-dependent field of a card (serialize._latest_price_drop_for_grid): the
+# amount and the whole days since the drop, kept only inside the recent window.
+_PRICE_DROP_RE = re.compile(r'"price_drop_amount":([^,}]*),"price_drop_days_ago":(\d+)')
+
+
+def _shift_price_drop_days(card: str, days_since_built: int) -> str:
+    """Move a stored card's "price dropped N days ago" forward by the days since it was
+    built, so an old card reads as it would if it had been built today (P19).
+
+    Whole-day granularity, like the serializer's own ``.days``: it can differ by one
+    day from a fresh serialization within the hours around the roll, the "one-day
+    staleness of date labels" the README accepts. Past the serializer's recent window
+    (``PRICE_DROP_RECENT_DAYS``) the badge disappears, as it would on a rebuilt card.
+    Anything that does not look like a stored card is returned unchanged.
+    """
+    if days_since_built <= 0:
+        return card
+    m = _PRICE_DROP_RE.search(card)
+    if m is None:
+        return card
+    from backend.utils.car_serialize.serialize import _PRICE_DROP_RECENT_DAYS
+
+    days = int(m.group(2)) + days_since_built
+    if days > _PRICE_DROP_RECENT_DAYS:
+        repl = '"price_drop_amount":null,"price_drop_days_ago":null'
+    else:
+        repl = f'"price_drop_amount":{m.group(1)},"price_drop_days_ago":{days}'
+    return card[:m.start()] + repl + card[m.end():]
+
+
+# A web worker never re-serializes a storm. Stale cards that can still be served are
+# refreshed in the background only up to this many per scope; a bigger batch (a card
+# revision change, a market-stats recompute, a long gap since the builder) is left to
+# ``python -m backend.scripts.build_listings_grid_cards`` (own process, nightly job).
+_BG_STALE_MAX = int(os.environ.get("GRID_CARDS_BG_STALE_MAX", "3000"))
+# Cars with no stored card at all (not served until built) are queued nearest first, up
+# to this many per request; the client's refetch queues the next ones.
+_BG_OMITTED_MAX = int(os.environ.get("GRID_CARDS_BG_OMITTED_MAX", "5000"))
+_storm_warned_at = 0.0
+_STORM_WARN_EVERY_S = 300.0
+
+
+def _limit_background(
+    deferred: list[tuple[dict[str, Any], float | None, dict[str, Any] | None]],
+    stats: dict[str, int],
+) -> list[int]:
+    """Ids of the deferred cards the web process may re-serialize in the background."""
+    global _storm_warned_at
+    omitted = [x for x in deferred if not x[0].get("card_json")]
+    stale_ids = [int(x[0]["id"]) for x in deferred if x[0].get("card_json")]
+    keep: list[int] = []
+    if len(stale_ids) <= _BG_STALE_MAX:
+        keep.extend(stale_ids)
+    else:
+        stats["bg_skipped_stale"] = len(stale_ids)
+        now = time.monotonic()
+        if now - _storm_warned_at >= _STORM_WARN_EVERY_S:
+            _storm_warned_at = now
+            _log.warning(
+                "%d stored grid cards are stale (card revision, market stats or content); "
+                "serving them and NOT re-serializing in the web process. Run "
+                "python -m backend.scripts.build_listings_grid_cards (docs/RELEASING.md).",
+                len(stale_ids),
+            )
+    omitted.sort(key=lambda x: (x[1] if x[1] is not None else float("inf"), int(x[0]["id"])))
+    keep.extend(int(x[0]["id"]) for x in omitted[:_BG_OMITTED_MAX])
+    return keep
+
+
 def _resolve(
     candidates: list[tuple[dict[str, Any], float | None]],
     ctx: _Ctx,
@@ -794,9 +877,12 @@ def _resolve(
         _touch_versions(touch)
 
     for cand, dist in served:
-        if allow_background and cand.get("built_day") != ctx.today and _is_aged(cand, ctx.today):
-            background.append(int(cand["id"]))
+        # P19: a card that matches its row is complete however old it is. It is NOT
+        # queued for re-serialization (that was 20,888 cards x ~1 ms of web-process CPU
+        # for one metro); the only date-dependent field is moved to today in place.
         card = cand["card_json"]
+        if cand.get("day_dep"):
+            card = _shift_price_drop_days(card, ctx.today - _int_or(cand.get("built_day"), ctx.today))
         if dist is not None:
             card = f'{card[:-1]},"distance_miles":{round(dist, 1)}}}'
         sp = cand.get("sort_price")
@@ -809,8 +895,10 @@ def _resolve(
     res.entries.sort(key=lambda e: e[0])
 
     if background and allow_background:
-        res.partial = True
-        _enqueue_refresh(background)
+        background = _limit_background(deferred, res.stats)
+        if background:
+            res.partial = True
+            _enqueue_refresh(background)
     return res
 
 
@@ -824,14 +912,11 @@ def _no_registry_coords_clause() -> str:
     return "(c.dealership_registry_id IS NULL OR d.id IS NULL OR d.latitude IS NULL OR d.longitude IS NULL)"
 
 
-def _fallback_dealer_urls() -> list[tuple[str, str, int, tuple[float, float] | None]]:
-    """(dealer_url, dealer_id, active car count, coords-or-None) for active cars that
-    have no registry coordinates. Cached; the set moves on the order of scans."""
-    global _fallback_urls_cache
-    now = time.monotonic()
-    hit = _fallback_urls_cache
-    if hit is not None and (now - hit[0]) < _FALLBACK_TTL_S:
-        return hit[1]
+_fallback_refresher = BackgroundRefresher("fallback-dealer-urls")
+_fallback_cold_lock = threading.Lock()
+
+
+def _load_fallback_dealer_urls() -> list[tuple[str, str, int, tuple[float, float] | None]]:
     from backend.db.dealer_geo import load_dealer_geo_index, lookup_dealer_coords
 
     out: list[tuple[str, str, int, tuple[float, float] | None]] = []
@@ -848,8 +933,48 @@ def _fallback_dealer_urls() -> list[tuple[str, str, int, tuple[float, float] | N
         # No dealer_url, nothing to locate the car by: it is counted in missing_coords.
         coords = lookup_dealer_coords(u, geo) if u else None
         out.append((str(url or ""), str(did or ""), int(n or 0), coords))
-    _fallback_urls_cache = (now, out)
     return out
+
+
+def _refresh_fallback_in_background() -> None:
+    global _fallback_urls_cache
+    try:
+        out = _load_fallback_dealer_urls()
+    except Exception:
+        # Keep the old list; look again after RETRY_AFTER_S, not on every request.
+        hit = _fallback_urls_cache
+        if hit is not None:
+            _fallback_urls_cache = (time.monotonic() - _FALLBACK_TTL_S + RETRY_AFTER_S, hit[1])
+        raise
+    _fallback_urls_cache = (time.monotonic(), out)
+
+
+def _fallback_dealer_urls() -> list[tuple[str, str, int, tuple[float, float] | None]]:
+    """(dealer_url, dealer_id, active car count, coords-or-None) for active cars that
+    have no registry coordinates. Cached; the set moves on the order of scans.
+
+    Web speed P6: once a list exists, an expired TTL returns it at once and reloads in
+    one background run (a failing reload keeps it); the first load is inline."""
+    global _fallback_urls_cache
+    now = time.monotonic()
+    hit = _fallback_urls_cache
+    if hit is not None:
+        if (now - hit[0]) >= _FALLBACK_TTL_S:
+            _fallback_refresher.kick(_refresh_fallback_in_background)
+        return hit[1]
+    with _fallback_cold_lock:  # concurrent first callers share one load
+        hit = _fallback_urls_cache
+        if hit is not None:
+            return hit[1]
+        out = _load_fallback_dealer_urls()
+        _fallback_urls_cache = (time.monotonic(), out)
+        return out
+
+
+def warm_fallback_dealer_urls() -> None:
+    """Load the list now (process start); a no-op when it exists."""
+    if _fallback_urls_cache is None:
+        _fallback_dealer_urls()
 
 
 def missing_coords_count() -> int:

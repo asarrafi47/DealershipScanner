@@ -23,6 +23,8 @@ import threading
 import time
 from typing import Any
 
+from backend.utils.swr_refresh import RETRY_AFTER_S, BackgroundRefresher
+
 from backend.intelligence.market_pricing import (
     LABEL_INSUFFICIENT,
     STATS_TABLE,
@@ -116,20 +118,50 @@ def _load_bands() -> dict[tuple[int, str, str, str, str, int], dict[str, Any]]:
     return out
 
 
-def _bands_map(force: bool = False) -> dict[tuple[int, str, str, str, str, int], dict[str, Any]]:
+_refresher = BackgroundRefresher("deal-score-bands")
+
+
+def _reload_in_background() -> None:
     global _bands, _loaded_at
-    now = time.monotonic()
+    try:
+        bands = _load_bands()
+    except Exception:
+        # Keep the old bands; retry after RETRY_AFTER_S instead of on every request.
+        with _lock:
+            _loaded_at = time.monotonic() - _CACHE_TTL_SEC + RETRY_AFTER_S
+        raise
     with _lock:
-        stale = _bands is None or (now - _loaded_at) > _CACHE_TTL_SEC
-        if force or stale:
-            try:
-                _bands = _load_bands()
-                _loaded_at = now
-            except Exception:
-                logger.warning("deal-score band cache load failed", exc_info=True)
-                if _bands is None:
-                    _bands = {}
+        _bands = bands
+        _loaded_at = time.monotonic()
+
+
+def _bands_map(force: bool = False) -> dict[tuple[int, str, str, str, str, int], dict[str, Any]]:
+    """Cold (or forced): load inline under the lock. Past the TTL: return the old bands
+    at once and reload once in the background; a failed reload keeps them (P6)."""
+    global _bands, _loaded_at
+    hit = _bands
+    if not force and hit is not None:
+        if (time.monotonic() - _loaded_at) > _CACHE_TTL_SEC:
+            _refresher.kick(_reload_in_background)
+        return hit
+    with _lock:
+        if not force and _bands is not None:
+            return _bands
+        try:
+            _bands = _load_bands()
+            _loaded_at = time.monotonic()
+        except Exception:
+            logger.warning("deal-score band cache load failed", exc_info=True)
+            if _bands is None:
+                _bands = {}
+                # Empty and cold-failed: look again soon, not after a whole TTL.
+                _loaded_at = time.monotonic() - _CACHE_TTL_SEC + RETRY_AFTER_S
         return _bands
+
+
+def warm() -> None:
+    """Load the bands now (process start); a no-op when they are already loaded."""
+    _bands_map()
 
 
 def band_for_car(car: dict[str, Any]) -> dict[str, Any] | None:

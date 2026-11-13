@@ -525,6 +525,10 @@ below stands for its name. `V` is the new version, set in step 3.
     successful deployment): `railway logs -s web --build --lines 200 <deployment id>`, or
     `--deployment` for the runtime log. Then fix forward.
 
+    **Card builder.** If this release changes the card revision `CARD_REV`, also deploy
+    `web-cards` at this tag and run the builder (150 to 170 s), away from 00:00 UTC. See
+    [The card builder and the web-cards service](#the-card-builder-and-the-web-cards-service).
+
 14. **Record the deployment.** Take the id of the new SUCCESS deployment from
     `railway deployment list -s web --limit 3` (newest first). Add a row to the
     [Release log](#release-log) on the next phase branch, so it ships with the next
@@ -1032,6 +1036,128 @@ deployment's variables or the service's current ones, so treat it like a restart
 deployment's own variables, [scanner-nightly](#scanner-nightly)). Set the schedule only
 when the latest deployment carries the intended `SCAN_FLEET` and `SCAN_FLEET_WINDOW_UTC`.
 Remove the schedule by setting `cronSchedule` to `null` the same way, then revert the file.
+
+## The card builder and the web-cards service
+
+The radius search (`GET /api/listings/cars`) answers from stored cards in the table
+`listings_grid_cards`. Each card carries a revision, `CARD_REV`: a hash of the serializer
+source files (`_REV_SOURCES` in `backend/db/repositories/grid_cards_repo.py`), folded
+into every card's key together with the market-stats generation and the attribution
+state. A deploy that edits one of those files, or a market-stats recompute, makes every
+stored card stale until
+
+```bash
+python -m backend.scripts.build_listings_grid_cards
+```
+
+has run. It takes 150 to 170 s for the whole fleet (0.6 ms per card, 268,868 active cars
+when it was timed), runs in its own process, and a re-run on a current store is a
+read-only pass. Since web speed P19 the web worker no longer re-serializes a large stale
+batch itself (it serves the stale cards and logs a warning that names this command), so
+the builder is what brings the store current. Cards that only aged (older than a day) but
+still match their row are served as complete cards; the builder rewrites them nightly so
+the date-dependent "price dropped N days ago" label is rebuilt from source.
+
+**After any deploy that changes the card revision, run the builder** (it does no harm
+after any other deploy). To know whether this release changes it, print the revision of
+the old and the new tag; different values mean the builder must run:
+
+```bash
+for t in "v$OLD" "v$V"; do
+  git worktree add -q "/tmp/rev-$t" "$t" &&
+    (cd "/tmp/rev-$t" && python3 -c 'from backend.db.repositories.grid_cards_repo import CARD_REV; print(CARD_REV)')
+  git worktree remove --force "/tmp/rev-$t"
+done
+```
+
+Run it away from the UTC day roll (00:00 UTC, 19:00 Eastern in winter), while the site
+serves stale cards without waiting. The nightly job below also runs it at 08:30 UTC.
+
+### The web-cards service
+
+`web-cards` is a Railway cron service that runs the builder every day at **08:30 UTC**.
+It is built from `Dockerfile.web` (the same image as `web`, so the same serializer code and
+the same `CARD_REV`), with the start command
+`python -m backend.scripts.build_listings_grid_cards`, no health check (it exits when it is
+done), restart policy `NEVER` (a failed run waits for the next day instead of looping) and
+one replica. The expected settings are the `web-cards` entry of
+`deploy/railway/service_settings.json`; `deploy/railway/railway.web-cards.json` holds the
+same values as a reference copy (Railway stops reading config files on 2026-12-01, so the
+service settings are what counts, as for `web` and `scanner-nightly`).
+
+`scripts/docker-entrypoint-web.sh` runs a command given to the container instead of the web
+server, so the start command skips the vault check, the migrations and gunicorn.
+
+`deploy/railway/deploy_web_cards.sh` deploys `git archive v$(cat VERSION)`, exactly like
+`deploy_web.sh` and with the same guard (clean tree, HEAD is `main` on origin, annotated
+tag on origin) and the same settings check. Deploy it **at the same tag as web, right after
+`deploy_web.sh`**: a builder from another tag would write cards for a revision the site does
+not serve. Cron runs use the latest deployment, so redeploy it with every release.
+
+**Owner steps, once** (nothing here is done by a script or a session):
+
+1. **Create the service.** Railway dashboard, project `dealership-scanner`, environment
+   `production`: New, Empty Service, name it exactly `web-cards`. Do not connect a GitHub
+   repository ([Railway source policy](#railway-source-policy)). Copy its service id
+   (Settings, Copy Service ID) and export it where you run the scripts; the id is not
+   stored in the repository:
+
+   ```bash
+   export RAILWAY_WEB_CARDS_SERVICE_ID=<the service id>
+   ```
+
+2. **Copy the database variables from web with reference variables.** In `web-cards`,
+   Variables, add every database variable web has as a reference to the `Postgres` service,
+   for example `INVENTORY_DATABASE_URL=${{Postgres.DATABASE_URL}}` (web's own definition;
+   read the names with `railway variable list -s web --kv | cut -d= -f1`, which prints
+   names only, never values). A reference keeps the cron service on the same database when
+   the database password rotates. Never paste a value. Also give it the variables that
+   change what a card says, with the same values as web, or the builder writes cards the
+   site then treats as changed: `LISTINGS_INCLUDE_INCOMPLETE_CARS`, `LISTINGS_GRID_GALLERY_MAX`,
+   `PRICE_DROP_RECENT_DAYS`, `FLASK_ENV`/`ENV` and the `MARKET_PRICE_*` ones, whichever web sets.
+
+3. **Apply the service settings** in the dashboard (Settings): Dockerfile path
+   `Dockerfile.web`, Custom Start Command `python -m backend.scripts.build_listings_grid_cards`,
+   Cron Schedule `30 8 * * *`, Restart Policy Never, no Healthcheck Path, one replica, no
+   config file path. Deploy the staged changes. Then confirm them read-only (exit 0 and
+   `all 8 checked settings match`):
+
+   ```bash
+   python3 -I deploy/railway/service_settings.py check web-cards
+   ```
+
+4. **Deploy with the script**, from the release checkout that deployed web (tag `v$V`):
+
+   ```bash
+   deploy/railway/deploy_web_cards.sh --dry-run
+   deploy/railway/deploy_web_cards.sh
+   ```
+
+   Verify: the dry run ends `dry run: nothing was uploaded; railway ran only the read-only
+   settings query.` and the second command ends `deployed <sha> (v$V) to web-cards`.
+
+5. **Trigger the first run** instead of waiting for 08:30 UTC (a deploy may already have
+   started one): `railway redeploy -s web-cards` (dashboard: the latest deployment, Redeploy).
+   Run it away from 00:00 UTC. This redeploys only `web-cards`. It does not touch `web` (so
+   `web_source_check` does not apply to it) or `scanner-nightly` (whose `SCAN_FLEET` setting
+   is what makes a redeploy there dangerous); the builder never scans.
+
+6. **Check the log** for the line that starts with `done in`:
+
+   ```bash
+   railway logs -s web-cards --lines 50 | grep '^done in'
+   ```
+
+   Verify: it prints `done in 1xx.xs: {...}` with `active`, `fresh`, `rebuilt` and `pruned`
+   counts; the first run after a revision change shows `rebuilt` close to `active`, a run
+   on a current store shows `rebuilt` of a few hundred at most. No `done in` line, or a
+   traceback, means the run failed: nothing was half-applied (the builder stores in
+   batches), and the next run continues. Then open a search for a large metro on the site
+   and check the response header: no `X-Listings-Partial: 1`.
+
+Read the runs with `railway cron list --service web-cards`. Remove the schedule by setting
+`cronSchedule` to `null` the same way, and change `service_settings.json` in the same
+release as the pack that applies the change.
 
 ## Migrations
 
