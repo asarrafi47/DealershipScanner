@@ -6,11 +6,25 @@
 - `fleet_scan.py`: with `SCAN_FLEET=1` a run starts only inside `SCAN_FLEET_WINDOW_UTC` (`HH:MM-HH:MM`, start inclusive, end exclusive, midnight wrap; an unreadable window prints idle and exits 0), and holds a Postgres advisory lock as the fleet lease for the whole run, so a second fleet on the same database exits 3 instead of scanning. Explicit `SCAN_DEALERS` runs ignore both. Exit codes are now 0 clean, 1 infrastructure, 2 data-quality hold (reserved), 3 lease busy, and `fleet_summary.json` carries `build{commit, tag, version}` (from the `BUILD_COMMIT`/`BUILD_TAG` files the deploy stage writes, `unknown` on a dev checkout), `schema_version` and `window`.
 - One-condition allowlist: `deploy/railway/one_condition_ok.txt` is the tracked twin of the untracked workspace file (`workspace/` is not in the Railway image), and `assess._one_condition_ok()` and `recipe_validation.one_condition_ok_ids()` read the union of both, as `manifest.py` does for `do_not_scan`.
 
+### Cloud-first scan loop
+- Scan loop L9: backend/scanner/loop/gates.py gains the fleet gate (evaluate_fleet, fleet_metrics, FG1 to FG8, PASS / HOLD-PROD-WRITES / FAIL) and the write predicates can_retire (WR, per condition bucket, two strikes 20 h apart), can_move (WM) and can_promote (WP), with their thresholds in the frozen GateConfig. Pure standard-library code, not wired into the scanner's write path: production stays reconcile-off.
+
+## [1.5.21] - 2026-11-13
+
+- Scan loop L8: backend/scanner/loop/gates.py holds the dealer gates GF1 to GF7 and GA1 to GA4, the dealer state (evaluate_dealer, evaluate_run), the frozen GateConfig, INPUT_FIELDS and legacy_inputs (adapter for the 2026-11-03 triage files); deploy/railway/accepted_gaps.json is the accepted-gap registry (seeded with quantumautosales-com and honestcardeal-com for GF5). Pure standard-library code, not wired into anything yet. Golden over the three fixture shards: ok 106, needs_recipe_work 18, needs_code_work 48, blocked 0.
+
+## [1.5.20] - 2026-11-13
+
 ### Fixed
 - `window_sticker.py`: hoisted the whitespace regex out of an f-string replacement field (a backslash there is a SyntaxError before Python 3.12).
 
 ### Tests
 - `test_py311_syntax.py`: guard that no tracked `.py` uses 3.12-only f-string syntax (backslash, comment or reused quote in a replacement field).
+
+### Cloud-first scan loop
+- Scan loop L4: backend/scanner/loop/config.py holds the loop defaults, the ceilings, the fixed request limits and load_loop_config(), which clamps config/loop.json and idles the loop when the file is missing or invalid. Standard library only; no behavior change.
+- Scan loop L5: backend/scanner/loop/scrub.py is the publisher scrubber (secret_values, scrub_text, clean_line, scrub_json, assert_clean): pure functions that redact environment secrets, key-like URL parameters, header-like pairs and control characters. Not wired into anything yet.
+- Scan loop L6: backend/scanner/loop/bundle.py gains load_shard() and merge_shards(), which read shard directories (triage.json or .json.gz plus the two text lists) and merge them into one order-independent fleet dict; shards that share a dealer are refused.
 
 ## [1.5.19] - 2026-11-12
 
