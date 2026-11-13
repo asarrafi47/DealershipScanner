@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+## [1.5.23] - 2026-11-13
+
+### Web speed and search
+- Docs: docs/web_speed_search_2026_11/ holds the speed, search, phone-spacing and Redis investigation of 2026-11-12 (README: the five causes of the slow site, the search-quality score, the phases P0 to P23 with files, proofs and the owner decisions; the six reports behind it). Documentation only, nothing released. Measured 2026-11-13 on the live site: the first search in an area took 5 to 20 s because the stored listing cards were stale (fixed on production by running backend/scripts/build_listings_grid_cards.py, 150 s); the nightly rebuild and the stale-card and car-page stalls are phases P19 and P6.
+
 ## [1.5.22] - 2026-11-13
 
 ### Scanner safety (scan loop card L14)
