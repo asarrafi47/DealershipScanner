@@ -2,6 +2,13 @@
 
 ## [Unreleased]
 
+## [1.5.26] - 2026-11-13
+
+- Signed-in home page (/home) is fast: the saved, recently viewed and recently compared lists now come from one history open, one inventory read and one photo-caveat read (was 8 connections), cached for a minute and dropped on the shopper's own save, view, compare or hide. The recommendation block no longer holds up the page: a cached or stale value renders inline, and an uncached one is fetched after first paint from /home?part=reco (empty or failed answer simply removes the placeholder).
+- Recommendation cache: a new view or compare now marks the entry stale and rebuilds it once in the background instead of deleting it (the old delete made every /home visit after a car page a cold 1 to 2 s build); hiding or unhiding a dealership still drops it; concurrent cold visits share one build.
+- Car-page prefetch: /home and /dashboard no longer warm car pages (each warmed page counted as a view and reset the recommendations); /listings warms at most 3 in-view cars once the browser is idle (3 s).
+- scripts/profile_home.py times every part of /home on throwaway Postgres with fake data.
+
 ## [1.5.25] - 2026-11-13
 
 - Docs only: docs/auth_sms/ holds a survey of the user structure, a pay and Stripe audit (billing dormant, site free), the design for phone-number login with Twilio Verify text codes, the design for AI chat limits, and the task cards for them (no code change).

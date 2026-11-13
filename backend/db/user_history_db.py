@@ -80,15 +80,34 @@ def record_car_view(user_id: int, car_id: int) -> None:
         conn.close()
 
 
+def _viewed_ids(conn, user_id: int, limit: int) -> list[int]:
+    rows = conn.execute(
+        "SELECT car_id FROM car_view_history "
+        "WHERE user_id = ? ORDER BY viewed_at DESC LIMIT ?",
+        (int(user_id), int(limit)),
+    ).fetchall()
+    return [int(r[0]) for r in rows]
+
+
 def get_recent_viewed_car_ids(user_id: int, limit: int = 30) -> list[int]:
     conn = get_users_conn()
     try:
-        rows = conn.execute(
-            "SELECT car_id FROM car_view_history "
-            "WHERE user_id = ? ORDER BY viewed_at DESC LIMIT ?",
-            (int(user_id), int(limit)),
-        ).fetchall()
-        return [int(r[0]) for r in rows]
+        return _viewed_ids(conn, user_id, limit)
+    finally:
+        conn.close()
+
+
+def get_recent_history_ids(
+    user_id: int, viewed_limit: int = 12, compared_limit: int = 12
+) -> tuple[list[int], list[int]]:
+    """Recent viewed and compared car ids from ONE users-store open.
+
+    The encrypted users store costs about 50 ms of key derivation per open, so the home
+    page asks for both lists here instead of opening it twice.
+    """
+    conn = get_users_conn()
+    try:
+        return _viewed_ids(conn, user_id, viewed_limit), _compared_ids(conn, user_id, compared_limit)
     finally:
         conn.close()
 
@@ -152,15 +171,19 @@ def record_compare_session(user_id: int, car_ids: list[int]) -> None:
         conn.close()
 
 
+def _compared_ids(conn, user_id: int, limit: int) -> list[int]:
+    rows = conn.execute(
+        "SELECT car_id FROM car_compare_history "
+        "WHERE user_id = ? ORDER BY compared_at DESC LIMIT ?",
+        (int(user_id), int(limit)),
+    ).fetchall()
+    return [int(r[0]) for r in rows]
+
+
 def get_recent_compared_car_ids(user_id: int, limit: int = 30) -> list[int]:
     conn = get_users_conn()
     try:
-        rows = conn.execute(
-            "SELECT car_id FROM car_compare_history "
-            "WHERE user_id = ? ORDER BY compared_at DESC LIMIT ?",
-            (int(user_id), int(limit)),
-        ).fetchall()
-        return [int(r[0]) for r in rows]
+        return _compared_ids(conn, user_id, limit)
     finally:
         conn.close()
 

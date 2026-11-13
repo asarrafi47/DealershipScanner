@@ -824,6 +824,7 @@ def api_toggle_save(car_id):
         unsave_car(uid, car_id)
     else:
         save_car(uid, car_id)
+    _home_cache_drop(uid)
     return jsonify({"ok": True, "saved": not currently_saved})
 
 
@@ -966,6 +967,7 @@ def api_hidden_dealers_add():
         added = hide_dealer(int(uid), dealer_id, name)
     except ValueError:
         return jsonify({"ok": False, "error": "list_full"}), 400
+    _home_cache_drop(int(uid), hard=True)
     return jsonify(
         {
             "ok": True,
@@ -974,6 +976,13 @@ def api_hidden_dealers_add():
             "dealer": {"dealer_id": dealer_id, "dealer_name": name},
         }
     )
+
+
+def _home_cache_drop(uid: int, *, hard: bool = False) -> None:
+    """The signed-in home page caches per user; tell it this user's data changed."""
+    from backend.routes.home_dashboard import _invalidate_reco_cache
+
+    _invalidate_reco_cache(uid, hard=hard)
 
 
 def api_hidden_dealers_remove(dealer_id):
@@ -987,6 +996,7 @@ def api_hidden_dealers_remove(dealer_id):
     removed = unhide_dealer(int(uid), key)
     if not removed:
         return jsonify({"ok": False, "error": "not_found"}), 404
+    _home_cache_drop(int(uid), hard=True)
     return jsonify({"ok": True, "hidden": False, "dealer_id": key})
 
 

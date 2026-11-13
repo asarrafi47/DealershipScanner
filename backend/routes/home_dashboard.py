@@ -7,9 +7,11 @@ their owning modules; tests patch them on this module.
 
 from __future__ import annotations
 
+import logging
+import threading
 import time
 
-from flask import redirect, render_template, session, url_for
+from flask import make_response, redirect, render_template, request, session, url_for
 
 from backend.db.inventory_db import (
     get_cars_by_ids,
@@ -21,15 +23,32 @@ from backend.db.inventory_db import (
 from backend.db.user_history_db import (
     count_viewed_cars,
     get_recent_compared_car_ids,
+    get_recent_history_ids,
     get_recent_viewed_car_ids,
 )
 from backend.listings.geo_session import listings_geo_kwargs_from_session
+from backend.utils.swr_refresh import BackgroundRefresher
 
 # Recommendation scoring walks recent views/compares against live inventory
 # (~1s+); Home and Dashboard both need it on every visit, so cache per
-# (user, geo) briefly and invalidate on new view/compare signals.
+# (user, geo) briefly. A new view/compare signal marks the entry STALE instead of
+# deleting it (2026-11-13): the old rows are served at once and ONE background
+# rebuild replaces them. Deleting it made every /home visit after a car page (and the
+# prefetched car pages each count as a view) pay the whole 1-2 s build on the request.
 _RECO_CACHE_TTL_S = 120.0
+# A stale entry is still served for this long after it went stale; older than that the
+# request rebuilds inline (single flight).
+_RECO_STALE_MAX_S = 3600.0
 _reco_cache: dict[tuple, tuple[float, list, dict]] = {}
+_reco_refreshers: dict[tuple, BackgroundRefresher] = {}
+_reco_build_locks: dict[tuple, threading.Lock] = {}
+_reco_guard = threading.Lock()
+
+# The cheap part of /home (saved, recently viewed, recently compared) is cached per
+# user for a minute and DROPPED (not served stale) on the user's own save, view,
+# compare or hide, so the shopper never sees their own action missing.
+_LISTS_CACHE_TTL_S = 60.0
+_lists_cache: dict[int, tuple[float, dict]] = {}
 
 
 def _inventory_count_display() -> str:
@@ -72,6 +91,8 @@ def app_home():
     """Signed-in feed: recommendations, saved cars, browsing history."""
     if not session.get("user_id"):
         return redirect(url_for("login_page"))
+    if request.args.get("part") == "reco":
+        return _render_reco_fragment()
     return _render_personal_home()
 
 
@@ -115,10 +136,77 @@ def _make_model_pairs_from_cars(cars: list[dict]) -> list[tuple[str, str]]:
     return seen_mm
 
 
-def _invalidate_reco_cache(user_id: int) -> None:
-    cache = _reco_cache
-    for key in [k for k in cache if k[0] == int(user_id)]:
-        cache.pop(key, None)
+def _invalidate_reco_cache(user_id: int, *, hard: bool = False) -> None:
+    """The user's history changed: refresh recommendations in the background.
+
+    Default: keep serving the old rows (marked stale). ``hard=True`` (a hidden dealership
+    changed, so old rows could show a hidden dealer) deletes them instead. The cheap
+    lists are always dropped, so the shopper's own action shows at once.
+    """
+    uid = int(user_id)
+    _lists_cache.pop(uid, None)
+    for key in [k for k in _reco_cache if k[0] == uid]:
+        if hard:
+            _reco_cache.pop(key, None)
+        else:
+            _, rows, heading = _reco_cache[key]
+            _reco_cache[key] = (time.monotonic() - 0.001, rows, heading)
+
+
+def _reco_key(user_id: int, limit: int, geo_kw: dict) -> tuple:
+    return (int(user_id), int(limit), tuple(sorted((k, str(v)) for k, v in geo_kw.items())))
+
+
+def _reco_lookup(key: tuple) -> tuple[str, list, dict]:
+    """("fresh" | "stale" | "miss", rows, heading) for one cache key; never builds."""
+    hit = _reco_cache.get(key)
+    if hit is None:
+        return "miss", [], {}
+    now = time.monotonic()
+    if hit[0] > now:
+        return "fresh", hit[1], hit[2]
+    if hit[0] + _RECO_STALE_MAX_S > now:
+        return "stale", hit[1], hit[2]
+    return "miss", [], {}
+
+
+def _reco_build_and_store(user_id: int, limit: int, geo_kw: dict, key: tuple) -> tuple[list, dict]:
+    """Run the real build (hidden dealerships included) and store it under *key*."""
+    kw = dict(geo_kw)
+    try:
+        hidden = hidden_dealer_ids_for_user(user_id)
+    except Exception:
+        hidden = set()
+    if hidden:
+        kw["exclude_dealer_ids"] = tuple(sorted(hidden))
+    rows, heading = _recommendations_for_user_uncached(user_id, limit, serialize=True, **kw)
+    with _reco_guard:
+        if len(_reco_cache) >= 500:
+            _reco_cache.clear()
+        _reco_cache[key] = (time.monotonic() + _RECO_CACHE_TTL_S, rows, heading)
+    return rows, heading
+
+
+def _reco_refresh_async(user_id: int, limit: int, geo_kw: dict, key: tuple) -> bool:
+    """Start ONE background rebuild for *key* (no-op while one runs). True if started."""
+    with _reco_guard:
+        if len(_reco_refreshers) >= 500:
+            _reco_refreshers.clear()
+        refresher = _reco_refreshers.setdefault(key, BackgroundRefresher(f"home-reco-{key[0]}"))
+    return refresher.kick(lambda: _reco_build_and_store(user_id, limit, geo_kw, key))
+
+
+def _reco_peek_or_refresh(user_id: int, limit: int, geo_kw: dict) -> tuple[bool, list, dict]:
+    """Never builds on the caller's thread: (have_value, rows, heading).
+
+    A stale value comes back at once and starts the background rebuild; a miss returns
+    ``have_value=False`` (the page then defers the block to a small follow-up request).
+    """
+    key = _reco_key(user_id, limit, geo_kw)
+    state, rows, heading = _reco_lookup(key)
+    if state == "stale":
+        _reco_refresh_async(user_id, limit, geo_kw, key)
+    return state != "miss", rows, heading
 
 
 def _recommendations_for_user(
@@ -128,25 +216,22 @@ def _recommendations_for_user(
     serialize: bool = True,
     **geo_kw: object,
 ) -> tuple[list[dict] | int, dict[str, str]]:
-    """Cached wrapper: serialized rows (or their count) + heading copy."""
-    # The user's hidden dealerships ride along in the kwargs so they reach
-    # search_cars_by_make_model_pairs AND take part in the cache key.
-    try:
-        hidden = hidden_dealer_ids_for_user(user_id)
-    except Exception:
-        hidden = set()
-    if hidden:
-        geo_kw = {**geo_kw, "exclude_dealer_ids": tuple(sorted(hidden))}
-    key = (int(user_id), int(limit), tuple(sorted((k, str(v)) for k, v in geo_kw.items())))
-    now = time.monotonic()
-    hit = _reco_cache.get(key)
-    if hit is not None and hit[0] > now:
-        rows, heading = hit[1], hit[2]
-        return (list(rows) if serialize else len(rows)), dict(heading)
-    rows, heading = _recommendations_for_user_uncached(user_id, limit, serialize=True, **geo_kw)
-    if len(_reco_cache) >= 500:
-        _reco_cache.clear()
-    _reco_cache[key] = (now + _RECO_CACHE_TTL_S, rows, heading)
+    """Cached wrapper: serialized rows (or their count) + heading copy.
+
+    fresh: served; stale: served at once and rebuilt once in the background; miss: built
+    inline, one build at a time per key (concurrent callers wait for it, not repeat it).
+    """
+    key = _reco_key(user_id, limit, geo_kw)
+    state, rows, heading = _reco_lookup(key)
+    if state == "stale":
+        _reco_refresh_async(user_id, limit, geo_kw, key)
+    if state == "miss":
+        with _reco_guard:
+            lock = _reco_build_locks.setdefault(key, threading.Lock())
+        with lock:
+            state, rows, heading = _reco_lookup(key)
+            if state == "miss":
+                rows, heading = _reco_build_and_store(user_id, limit, geo_kw, key)
     return (list(rows) if serialize else len(rows)), dict(heading)
 
 
@@ -311,38 +396,103 @@ def _browse_trends_for_user(user_id: int, limit: int = 6) -> list[tuple[str, int
     return counts.most_common(limit)
 
 
+def _home_lists_for_user(uid: int) -> dict:
+    """Saved, recently viewed and recently compared cars on few connections.
+
+    One users-store open for both history lists, ONE inventory read for every car,
+    ONE attribution read for the lot (it used to be three of each).
+    """
+    hit = _lists_cache.get(uid)
+    now = time.monotonic()
+    if hit is not None and hit[0] > now:
+        return hit[1]
+    viewed_ids, compared_ids = get_recent_history_ids(uid, 12, 12)
+    saved_ids = get_saved_car_ids(uid)
+    wanted: list[int] = []
+    for cid in [*saved_ids, *viewed_ids, *compared_ids]:
+        if cid not in wanted:
+            wanted.append(cid)
+    rows = serialize_cars_for_listings_grid(get_cars_by_ids(wanted))
+    by_id = {int(r["id"]): r for r in rows if r.get("id") is not None}
+
+    def pick(ids: list[int]) -> list[dict]:
+        return [by_id[i] for i in ids if i in by_id]
+
+    out = {
+        "saved": pick(saved_ids),
+        "viewed": pick(viewed_ids),
+        "compared": pick(compared_ids),
+        "has_history": bool(viewed_ids or compared_ids),
+    }
+    if len(_lists_cache) >= 500:
+        _lists_cache.clear()
+    _lists_cache[uid] = (now + _LISTS_CACHE_TTL_S, out)
+    return out
+
+
+def _reco_template_vars(recommendations: list, heading: dict) -> dict:
+    return {
+        "recommendations": recommendations,
+        "recommendations_eyebrow": heading.get("eyebrow") or "",
+        "recommendations_title": heading.get("title") or "Recommended for You",
+        "recommendations_hint": heading.get("hint") or "",
+    }
+
+
+def _render_reco_fragment():
+    """``/home?part=reco``: just the recommendation section, for the deferred fetch."""
+    uid = int(session["user_id"])
+    try:
+        rows, heading = _recommendations_for_user(uid, **listings_geo_kwargs_from_session(session))
+    except Exception:
+        # The section is an extra: on any failure answer "nothing to show" and let the
+        # page drop its placeholder, never an error page.
+        logging.getLogger(__name__).warning("home recommendations failed", exc_info=True)
+        rows, heading = [], {}
+    if rows:
+        resp = make_response(
+            render_template("_home_reco_section.html", **_reco_template_vars(rows, heading))
+        )
+    else:
+        resp = make_response("", 204)
+    resp.headers["Cache-Control"] = "private, no-store"
+    return resp
+
+
 def _render_personal_home():
-    """Logged-in landing: recommendations, saved cars, browsing history."""
+    """Logged-in landing: saved cars and history at once; recommendations from the cache.
+
+    The recommendation block is the slow part (a scan over live inventory). When it is
+    cached (even stale) it renders inline; when it is not, the page leaves a placeholder
+    and the browser asks ``/home?part=reco`` after first paint, so the shell never waits.
+    """
     user_id = session.get("user_id")
-    recommendations = []
-    saved_cars_list = []
-    recently_compared = []
-    recently_viewed = []
-    recommendations_eyebrow = ""
-    recommendations_title = ""
-    recommendations_hint = ""
+    saved_cars_list: list = []
+    recently_compared: list = []
+    recently_viewed: list = []
+    reco_vars = _reco_template_vars([], {})
+    reco_deferred = False
     if user_id:
         uid = int(user_id)
-        recommendations, rec_heading = _recommendations_for_user(
-            uid, **listings_geo_kwargs_from_session(session)
-        )
-        recommendations_eyebrow = rec_heading.get("eyebrow") or ""
-        recommendations_title = rec_heading.get("title") or "Recommended for You"
-        recommendations_hint = rec_heading.get("hint") or ""
-        saved_ids = get_saved_car_ids(uid)
-        raw_saved = get_cars_by_ids(saved_ids)
-        saved_cars_list = serialize_cars_for_listings_grid(raw_saved)
-        recently_compared = _recently_compared_for_user(uid)
-        recently_viewed = _recently_viewed_for_user(uid)
+        lists = _home_lists_for_user(uid)
+        saved_cars_list = lists["saved"]
+        recently_viewed = lists["viewed"]
+        recently_compared = lists["compared"]
+        if lists["has_history"]:
+            have, rows, heading = _reco_peek_or_refresh(
+                uid, 20, listings_geo_kwargs_from_session(session)
+            )
+            if have:
+                reco_vars = _reco_template_vars(rows, heading)
+            else:
+                reco_deferred = True
     return render_template(
         "home.html",
         saved_cars=saved_cars_list,
-        recommendations=recommendations,
         recently_compared=recently_compared,
         recently_viewed=recently_viewed,
-        recommendations_eyebrow=recommendations_eyebrow,
-        recommendations_title=recommendations_title,
-        recommendations_hint=recommendations_hint,
+        reco_deferred=reco_deferred,
+        **reco_vars,
     )
 
 

@@ -67,44 +67,10 @@
         </section>
 
         {% if recommendations %}
-        <section class="db-panel db-reveal" id="reco-section">
-            <div class="db-panel-header">
-                <div>
-                    <p class="db-eyebrow">{{ recommendations_eyebrow or "Based on your history" }}</p>
-                    <h2 class="db-section-title">{{ recommendations_title or "Recommended for you" }}</h2>
-                    {% if recommendations_hint %}
-                    <p class="db-section-hint">{{ recommendations_hint }}</p>
-                    {% endif %}
-                </div>
-                <div class="reco-nav">
-                    <button type="button" class="reco-nav-btn" id="reco-prev" aria-label="Previous" disabled>
-                        <svg viewBox="0 0 16 16" width="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M10 3L5 8l5 5"/></svg>
-                    </button>
-                    <button type="button" class="reco-nav-btn" id="reco-next" aria-label="Next">
-                        <svg viewBox="0 0 16 16" width="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 3l5 5-5 5"/></svg>
-                    </button>
-                </div>
-            </div>
-            <div class="reco-carousel-wrap">
-                <div class="reco-track-outer">
-                    <div class="reco-track" id="reco-track">
-                        {% for car in recommendations %}
-                        <a href="/car/{{ car.id }}" class="reco-card">
-                            {% set img = car.gallery[0] if car.gallery else (car.image_url or '') %}
-                            <div class="reco-card-image" style="background-image:url('{{ img | css_url }}')"></div>
-                            <div class="reco-card-body">
-                                <p class="reco-card-title">{{ car.title }}</p>
-                                {% if car.trim %}<p class="reco-card-trim">{{ car.trim }}</p>{% endif %}
-                                <p class="reco-card-price">{% if car.price %}${{ "{:,.0f}".format(car.price) }}{% else %}Call for Price{% endif %}</p>
-                                {# D-N12: no mileage text on a New car with no odometer value (here and on the saved / history cards). #}
-                                <p class="reco-card-meta">{% if not car.mileage_line_hidden %}{{ "{:,}".format(car.mileage) if car.mileage else '—' }} mi &middot; {% endif %}{{ car.fuel_type or '' }}</p>
-                            </div>
-                        </a>
-                        {% endfor %}
-                    </div>
-                </div>
-            </div>
-        </section>
+        {% include "_home_reco_section.html" %}
+        {% elif reco_deferred %}
+        {# Not cached yet: keep the room, fetch the section after first paint (script below). #}
+        <section class="db-panel db-reveal" id="reco-section" data-reco-src="{{ url_for('app_home', part='reco') }}" style="min-height:19rem" aria-busy="true"></section>
         {% endif %}
 
         {% if recently_viewed %}
@@ -218,6 +184,7 @@
 
 <script nonce="{{ csp_nonce }}">
 (function () {
+  function initReco() {
     const track = document.getElementById("reco-track");
     const prevBtn = document.getElementById("reco-prev");
     const nextBtn = document.getElementById("reco-next");
@@ -267,6 +234,25 @@
 
     goTo(0);
     startAuto();
+  }
+
+  initReco();
+
+  // The recommendation block was not cached when the page was built: fetch it now.
+  // Any failure just removes the empty placeholder; the rest of the page is untouched.
+  var slot = document.getElementById("reco-section");
+  var src = slot && slot.getAttribute("data-reco-src");
+  if (src && !slot.children.length) {
+    var drop = function () { if (slot.parentNode && !slot.children.length) slot.parentNode.removeChild(slot); };
+    fetch(src, { credentials: "same-origin", headers: { Accept: "text/html" } })
+      .then(function (r) { return r.ok && r.status === 200 ? r.text() : ""; })
+      .then(function (html) {
+        if (!html) { drop(); return; }
+        slot.outerHTML = html;
+        initReco();
+      })
+      .catch(drop);
+  }
 })();
 </script>
 {% include "_footer_version.html" %}

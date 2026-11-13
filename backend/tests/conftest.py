@@ -1278,6 +1278,9 @@ def app_factory(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Callable[...
         from backend.routes import fuel_api, home_dashboard
 
         home_dashboard._reco_cache.clear()
+        home_dashboard._lists_cache.clear()
+        home_dashboard._reco_refreshers.clear()
+        home_dashboard._reco_build_locks.clear()
         fuel_api._live_gas_prices_cache = None
         fuel_api._live_gas_prices_cache_mtime = None
         return main
