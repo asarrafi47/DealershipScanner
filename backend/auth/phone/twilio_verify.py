@@ -30,6 +30,24 @@ _silent_http_log = logging.getLogger("auth_phone.twilio_http_silenced")
 _silent_http_log.disabled = True
 _silent_http_log.propagate = False
 
+
+class _DropEverything(logging.Filter):
+    def filter(self, record: logging.LogRecord) -> bool:  # noqa: A003 - logging API name
+        return False
+
+
+_DROP_ALL = _DropEverything()
+
+
+def silence_vendor_http_logs() -> None:
+    """Drop every record of the HTTP libraries under the Twilio client. ``urllib3.connectionpool`` logs
+    the request path at DEBUG (a Lookup path holds the number) and at WARNING on a retry, so it is
+    silenced as well as Twilio's own client logger. Idempotent."""
+    for name in ("urllib3.connectionpool", "twilio.http_client"):
+        lg = logging.getLogger(name)
+        if _DROP_ALL not in lg.filters:
+            lg.addFilter(_DROP_ALL)
+
 TIMEOUT_S = 5
 LOOKUP_CACHE_TTL_S = 30 * 24 * 3600
 
@@ -39,6 +57,19 @@ _START_INVALID_CODES = frozenset({60200, 60205, 21211, 21614})
 _START_BLOCKED_CODES = frozenset({60410})  # delivery attempt blocked (fraud protection)
 _CHECK_TOO_MANY_CODES = frozenset({60202})  # max check attempts reached
 _CHECK_WRONG_CODES = frozenset({60200})  # a code that is not even well formed
+_START_UNAVAILABLE_CODES = frozenset({20003, 20005})  # bad login, account not active (suspended)
+_START_OPTED_OUT_CODES = frozenset({21610})  # recipient replied STOP
+_UNAVAILABLE_HTTP = frozenset({401, 402, 403})  # login refused, balance empty, forbidden
+
+# Verify's ``status`` of a check, one row per value Twilio documents.
+_CHECK_STATUS_REASONS = {
+    "pending": p.CHECK_WRONG_CODE,  # the code did not match and the verification is still open
+    "canceled": p.CHECK_UNKNOWN,
+    "max_attempts_reached": p.CHECK_TOO_MANY,
+    "deleted": p.CHECK_EXPIRED,
+    "failed": p.CHECK_EXPIRED,
+    "expired": p.CHECK_EXPIRED,
+}
 
 _NETWORK_ERRORS: tuple[type[BaseException], ...] = (requests.RequestException, OSError)
 
@@ -92,17 +123,17 @@ class TwilioVerifyProvider:
 
     # --- start ---------------------------------------------------------------------------
     def start(self, e164: str, *, locale: str) -> p.StartResult:
-        result = self._start_once(e164, locale)
-        if result.reason == p.START_NETWORK_ERROR and self._never_reached_vendor:
+        result, never_reached_vendor = self._start_once(e164, locale)
+        if never_reached_vendor:
             # One retry, only when the request cannot have reached Twilio (connect failed). A read
             # timeout or reset after sending may already have produced a paid text: never retry that.
-            return dataclasses.replace(self._start_once(e164, locale), attempts=2)
+            # The decision travels in the return value: this object is shared by request threads.
+            second, _ = self._start_once(e164, locale)
+            return dataclasses.replace(second, attempts=2)
         return result
 
-    _never_reached_vendor = False
-
-    def _start_once(self, e164: str, locale: str) -> p.StartResult:
-        self._never_reached_vendor = False
+    def _start_once(self, e164: str, locale: str) -> tuple[p.StartResult, bool]:
+        """(result, True when the request provably never reached the vendor). No instance state."""
         kwargs: dict[str, Any] = {"to": e164, "channel": "sms"}
         if locale:
             kwargs["locale"] = locale
@@ -110,11 +141,10 @@ class TwilioVerifyProvider:
             verification = self._client.verify.v2.services(self._service_sid).verifications.create(**kwargs)
         except Exception as exc:  # noqa: BLE001 - every failure becomes a reason code
             reason = self._start_reason(exc)
-            self._never_reached_vendor = _is_connect_failure(exc)
             _log_failure("start", reason, exc)
-            return p.StartResult(False, None, None, reason)
+            return p.StartResult(False, None, None, reason), _is_connect_failure(exc)
         ref = getattr(verification, "sid", None)
-        return p.StartResult(True, ref if isinstance(ref, str) and ref else None, None, p.START_SENT)
+        return p.StartResult(True, ref if isinstance(ref, str) and ref else None, None, p.START_SENT), False
 
     @staticmethod
     def _start_reason(exc: BaseException) -> str:
@@ -123,11 +153,17 @@ class TwilioVerifyProvider:
             status, code = vendor
             if status == 429 or code in _START_THROTTLED_CODES:
                 return p.START_THROTTLED
+            if code in _START_OPTED_OUT_CODES:
+                return p.START_OPTED_OUT
             if code in _START_BLOCKED_CODES:
                 return p.START_BLOCKED
             if code in _START_INVALID_CODES:
                 return p.START_INVALID_NUMBER
+            if status in _UNAVAILABLE_HTTP or (status is not None and status >= 500) or code in _START_UNAVAILABLE_CODES:
+                return p.START_UNAVAILABLE
             return p.START_PROVIDER_ERROR
+        if isinstance(exc, requests.Timeout):
+            return p.START_UNAVAILABLE
         if isinstance(exc, _NETWORK_ERRORS):
             return p.START_NETWORK_ERROR
         return p.START_PROVIDER_ERROR
@@ -148,11 +184,8 @@ class TwilioVerifyProvider:
         status = getattr(check, "status", None)
         if status == "approved":
             return p.CheckResult(True, p.CHECK_APPROVED)
-        if status == "pending":
-            return p.CheckResult(False, p.CHECK_WRONG_CODE)
-        if status == "canceled":
-            return p.CheckResult(False, p.CHECK_EXPIRED)
-        return p.CheckResult(False, p.CHECK_UNKNOWN)
+        return p.CheckResult(False, _CHECK_STATUS_REASONS.get(status, p.CHECK_UNKNOWN)
+                             if isinstance(status, str) else p.CHECK_UNKNOWN)
 
     @staticmethod
     def _check_reason(exc: BaseException) -> str:
@@ -209,6 +242,8 @@ def _build_client(creds: config.TwilioCredentials) -> Any:
     """The real Twilio client: API-key login, 5-second timeout, its request logging switched off."""
     from twilio.http.http_client import TwilioHttpClient
     from twilio.rest import Client
+
+    silence_vendor_http_logs()
 
     http = TwilioHttpClient(timeout=TIMEOUT_S, logger=_silent_http_log)
     if creds.style == "api_key":

@@ -16,8 +16,11 @@ START_INVALID_NUMBER = "invalid_number"
 START_BLOCKED = "blocked"  # the vendor's fraud protection refused this send
 START_NETWORK_ERROR = "network_error"
 START_PROVIDER_ERROR = "provider_error"
+START_UNAVAILABLE = "unavailable"  # provider down, balance empty, account suspended, bad login or timeout
+START_OPTED_OUT = "opted_out"  # the recipient blocked texts from us (STOP)
 START_REASONS = (
     START_SENT, START_THROTTLED, START_INVALID_NUMBER, START_BLOCKED, START_NETWORK_ERROR, START_PROVIDER_ERROR,
+    START_UNAVAILABLE, START_OPTED_OUT,
 )
 
 # CheckResult.reason

@@ -135,7 +135,8 @@ def test_fake_provider_refuses_to_load_in_production(monkeypatch):
         FakePhoneProvider()
 
 
-def test_registry_returns_the_fake_outside_production_and_caches_it():
+def test_registry_returns_the_fake_outside_production_only_when_asked_for_and_caches_it(monkeypatch):
+    monkeypatch.setenv("AUTH_PHONE_PROVIDER", "fake")
     first = registry.get_provider()
     assert isinstance(first, FakePhoneProvider)
     assert registry.get_provider() is first
@@ -221,3 +222,27 @@ def test_fake_flow_writes_nothing_to_logs(caplog):
 
 def test_fake_module_constant_is_not_a_real_secret():
     assert fake_provider.FAKE_CODE == "000000"
+
+
+# ---------------------------------------------------------------- wave 1 review follow-ups (S2)
+
+
+def test_start_reasons_include_unavailable_and_opted_out_apart_from_the_blocked_codes():
+    assert "unavailable" in p.START_REASONS and "opted_out" in p.START_REASONS
+    assert (p.START_UNAVAILABLE, p.START_OPTED_OUT) == ("unavailable", "opted_out")
+    assert not {p.START_UNAVAILABLE, p.START_OPTED_OUT} & {p.START_BLOCKED, p.START_INVALID_NUMBER, p.START_THROTTLED}
+    assert len(set(p.START_REASONS)) == len(p.START_REASONS)
+
+
+@pytest.mark.parametrize("reason", ["unavailable", "opted_out"])
+def test_the_fake_can_return_the_two_new_start_reasons_without_vendor_text(reason):
+    fake = FakePhoneProvider()
+    fake.fail_next_start(reason)
+    result = fake.start("+12025550123", locale="en")
+    assert (result.ok, result.reason, result.provider_ref) == (False, reason, None)
+    assert fake.outbox == []
+
+
+def test_check_reasons_are_unchanged():
+    assert set(p.CHECK_REASONS) >= {"approved", "wrong_code", "expired", "too_many", "unknown"}
+    assert "unavailable" not in p.CHECK_REASONS and "opted_out" not in p.CHECK_REASONS

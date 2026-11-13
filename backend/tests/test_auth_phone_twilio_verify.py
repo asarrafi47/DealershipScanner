@@ -113,7 +113,9 @@ def test_start_throttled_by_max_send_attempts():
 
 @pytest.mark.parametrize("status,code,reason", [
     (400, 60200, p.START_INVALID_NUMBER), (400, 21211, p.START_INVALID_NUMBER),
-    (403, 60410, p.START_BLOCKED), (500, None, p.START_PROVIDER_ERROR), (401, 20003, p.START_PROVIDER_ERROR),
+    (403, 60410, p.START_BLOCKED), (500, None, p.START_UNAVAILABLE), (401, 20003, p.START_UNAVAILABLE),
+    (402, None, p.START_UNAVAILABLE), (403, None, p.START_UNAVAILABLE), (503, None, p.START_UNAVAILABLE),
+    (400, 20005, p.START_UNAVAILABLE), (400, 21610, p.START_OPTED_OUT), (400, 9999, p.START_PROVIDER_ERROR),
 ])
 def test_start_maps_vendor_errors(status, code, reason):
     fc, prov = make()
@@ -126,7 +128,7 @@ def test_connect_failure_on_start_is_retried_once_then_reported():
     fc, prov = make()
     _queue(fc, "verifications", requests.ConnectTimeout("down"), requests.ConnectTimeout("slow"))
     result = prov.start(NUMBER, locale="en")
-    assert (result.ok, result.reason) == (False, p.START_NETWORK_ERROR)
+    assert (result.ok, result.reason) == (False, p.START_UNAVAILABLE)  # a timeout: the provider is not answering
     assert [c for c in fc.calls if c[0] == "start"].__len__() == 2
 
 
@@ -141,7 +143,8 @@ def test_a_failure_that_may_have_sent_the_text_is_never_retried(exc):
     fc, prov = make()
     _queue(fc, "verifications", exc, SimpleNamespace(sid="VEdup", status="pending"))
     result = prov.start(NUMBER, locale="en")
-    assert (result.ok, result.reason, result.attempts) == (False, p.START_NETWORK_ERROR, 1)
+    assert (result.ok, result.attempts) == (False, 1)
+    assert result.reason == (p.START_UNAVAILABLE if isinstance(exc, requests.Timeout) else p.START_NETWORK_ERROR)
     assert len([c for c in fc.calls if c[0] == "start"]) == 1
 
 
@@ -188,10 +191,27 @@ def test_check_expired_when_the_vendor_has_no_open_verification():
     assert prov.check(NUMBER, code=CODE, provider_ref="VEabc").reason == p.CHECK_EXPIRED
 
 
-def test_check_canceled_counts_as_expired():
+@pytest.mark.parametrize("status,reason", [
+    ("pending", p.CHECK_WRONG_CODE),
+    ("approved", p.CHECK_APPROVED),
+    ("canceled", p.CHECK_UNKNOWN),
+    ("max_attempts_reached", p.CHECK_TOO_MANY),
+    ("deleted", p.CHECK_EXPIRED),
+    ("failed", p.CHECK_EXPIRED),
+    ("expired", p.CHECK_EXPIRED),
+    ("something-new", p.CHECK_UNKNOWN),
+])
+def test_one_row_per_verify_status(status, reason):
     fc, prov = make()
-    _queue(fc, "checks", SimpleNamespace(status="canceled"))
-    assert prov.check(NUMBER, code=CODE, provider_ref="VEabc").reason == p.CHECK_EXPIRED
+    _queue(fc, "checks", SimpleNamespace(status=status))
+    result = prov.check(NUMBER, code=CODE, provider_ref="VEabc")
+    assert result.reason == reason and result.approved is (status == "approved")
+
+
+def test_a_check_without_a_status_is_unknown():
+    fc, prov = make()
+    _queue(fc, "checks", SimpleNamespace())
+    assert prov.check(NUMBER, code=CODE, provider_ref="VEabc").reason == p.CHECK_UNKNOWN
 
 
 def test_check_max_attempts():
@@ -402,3 +422,51 @@ def test_building_the_adapter_makes_no_network_call(monkeypatch):
     monkeypatch.setattr(socket, "create_connection", _boom)
     _set_api_key_env(monkeypatch)
     assert registry.get_provider().name == "twilio_verify"
+
+
+# ---- wave 1 review follow-ups ---------------------------------------------------------------
+
+def test_the_retry_decision_is_not_kept_on_the_shared_provider_object():
+    fc, prov = make()
+    assert not hasattr(prov, "_never_reached_vendor")
+    _queue(fc, "verifications", requests.ConnectTimeout("down"))
+    result, never_reached = prov._start_once(NUMBER, "en")
+    assert (result.ok, never_reached) == (False, True)
+    assert not hasattr(prov, "_never_reached_vendor")  # nothing left behind for another thread to read
+
+
+def test_another_request_failing_in_between_cannot_make_a_sent_text_retry(monkeypatch):
+    """Request A times out after sending (must NOT be retried); while it is being logged request B fails to
+    connect. With the decision in instance state B's flag would leak into A and send a second paid text."""
+    fc, prov = make()
+    _queue(fc, "verifications", requests.ReadTimeout("slow"),          # A, may have been sent
+           requests.ConnectTimeout("down"), SimpleNamespace(sid="VEb", status="pending"))  # B, retried once
+    real_log, nested, started = tv._log_failure, [], []
+
+    def log_then_run_b(op, reason, exc):
+        real_log(op, reason, exc)
+        if not started:
+            started.append(1)
+            nested.append(prov.start(NUMBER, locale="en"))
+
+    monkeypatch.setattr(tv, "_log_failure", log_then_run_b)
+    a = prov.start(NUMBER, locale="en")
+    assert a.attempts == 1 and a.ok is False
+    assert nested[0].ok is True and nested[0].attempts == 2
+    assert len([c for c in fc.calls if c[0] == "start"]) == 3  # A once, B twice: A was not retried
+
+
+def test_the_urllib3_connection_pool_logger_is_silenced_too(monkeypatch, caplog):
+    _set_api_key_env(monkeypatch)
+    caplog.set_level(logging.DEBUG)
+    tv._build_client(config.twilio_credentials())
+    pool = logging.getLogger("urllib3.connectionpool")
+    pool.debug('https://lookups.twilio.test:443 "GET /v2/PhoneNumbers/%s HTTP/1.1" 200', NUMBER)
+    pool.warning("Retrying (Retry(total=2)) after connection broken: /v2/PhoneNumbers/%s", NUMBER)
+    assert "2025550123" not in caplog.text and "PhoneNumbers" not in caplog.text
+
+
+def test_a_timeout_on_start_is_reported_as_unavailable_not_as_a_retry_loop():
+    fc, prov = make()
+    _queue(fc, "verifications", requests.ReadTimeout("slow"))
+    assert prov.start(NUMBER, locale="en").reason == p.START_UNAVAILABLE
