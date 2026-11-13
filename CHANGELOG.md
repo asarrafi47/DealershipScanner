@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+- Phone sign-in foundation, S2 (inert): `backend/auth/phone/provider.py` (`StartResult`, `CheckResult`, `LineInfo`, `PhoneVerifyProvider`, `LookupCache`, short reason codes, line-type classification), `fake_provider.py` (approves `000000`, keeps an outbox, can fail, throttle, report a VoIP line or stall; refuses to load in production), `lookup_cache.py` (in-process cache for tests), `registry.py` (picks the provider from `AUTH_PHONE_PROVIDER`, never the fake in production). No vendor or Flask imports in those modules.
+
 - Phone sign-in foundation, S1 (inert; `AUTH_PHONE_LOGIN_ENABLED` unset): `backend/auth/phone/numbers.py` (`normalize` to E.164 with the `phonenumbers` library, refusing invalid, premium-rate, shared-cost and non-allowed-country numbers; `mask`; `hash_phone` and `hash_ip` with `PHONE_HASH_PEPPER`) and `config.py` (every phone variable with its default, `enabled()`). Production start refuses when the flag is on with the fake provider or a missing pepper, Turnstile or Twilio value (`production_security.py`). `phonenumbers` added to `requirements-web.txt`.
 
 ## [1.5.25] - 2026-11-13
