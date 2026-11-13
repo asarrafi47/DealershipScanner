@@ -404,6 +404,7 @@ _SWEEP_REVIEWED: dict[str, str] = {
     "backend.listings.dealer_locator._GOOGLE_CACHE_TTL_SECONDS": "constant",
     "backend.listings.dealer_locator._google_cache": "Google Places responses, no DB",
     "backend.listings.dealer_locator._google_cache_lock": "lock",
+    "backend.settings_store._cache": "app_settings rows; cleared by settings_store.reset_cache (_RESET_FUNCTIONS)",
     "backend.parsers.rooftop_aliases._hint_cache": "dealer-name hints, no DB",
     "backend.web.static._static_cache_ver_memo": "static asset hash",
     "backend.utils.market_price._DEFAULT_CACHE_TTL_SEC": "constant",
@@ -542,6 +543,7 @@ _RESET_FUNCTIONS: tuple[tuple[str, str], ...] = (
     ("backend.utils.query_parser", "clear_query_parser_caches"),
     ("backend.enrichment.knowledge_engine", "clear_vpic_lookup_cache"),
     ("backend.attribution.place", "reset_host_owner_index"),  # registry host index (N8)
+    ("backend.settings_store", "reset_cache"),  # app_settings rows (chat limits, C1)
 )
 
 
