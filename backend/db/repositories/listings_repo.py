@@ -48,6 +48,7 @@ from backend.utils.car_serialize import (
     serialize_car_for_listings_grid as _serialize_car_for_listings_grid,
 )
 from backend.utils.field_clean import sort_body_style_presets
+from backend.utils.swr_refresh import RETRY_AFTER_S, BackgroundRefresher
 
 _log = logging.getLogger(__name__)
 
@@ -231,6 +232,23 @@ def _count_public_listings_uncached() -> int:
         return 0
 
 
+_count_refresher = BackgroundRefresher("public-listings-count")
+_count_cold_lock = threading.Lock()
+
+
+def _recount_in_background(token: Any) -> None:
+    global _public_count_cache
+    try:
+        value = _count_public_listings_uncached()
+    except Exception:
+        # Keep the old count; look again after RETRY_AFTER_S, not on every request.
+        hit = _public_count_cache
+        if hit is not None:
+            _public_count_cache = (hit[0], time.time() - _PUBLIC_COUNT_TTL_S + RETRY_AFTER_S, hit[2])
+        raise
+    _public_count_cache = (token, time.time(), value)
+
+
 def public_listings_count() -> int:
     """Approximate count of active inventory rows for marketing/stats.
 
@@ -238,6 +256,11 @@ def public_listings_count() -> int:
     (:func:`_pg_grid_write_fingerprint`, a cheap ``pg_stat_user_tables`` read) so a
     finished scan shows up without waiting out the TTL; off Postgres the key is the
     legacy mtime token. :func:`clear_inventory_listings_cache` drops it.
+
+    Web speed P6: on Postgres, once a count exists a request never waits for a recount.
+    A moved fingerprint or an expired TTL returns the last count at once and starts ONE
+    background recount (a failing recount keeps the old value). The first count of the
+    process, and a legacy-token change (another database), are computed inline.
     """
     global _public_count_cache
     now = time.time()
@@ -250,9 +273,27 @@ def public_listings_count() -> int:
             return hit[2]
         if fp is not None and age < _PUBLIC_COUNT_MIN_RECOUNT_S:
             return hit[2]
+        if fp is not None:
+            _count_refresher.kick(lambda: _recount_in_background(token))
+            return hit[2]
+    if hit is None:
+        # Cold: concurrent first callers share one count instead of running it each.
+        with _count_cold_lock:
+            again = _public_count_cache
+            if again is not None:
+                return again[2]
+            value = _count_public_listings_uncached()
+            _public_count_cache = (token, time.time(), value)
+            return value
     value = _count_public_listings_uncached()
     _public_count_cache = (token, now, value)
     return value
+
+
+def warm_public_listings_count() -> None:
+    """Compute the count now (process start); a no-op when one exists."""
+    if _public_count_cache is None:
+        public_listings_count()
 
 
 def listings_grid_serialized_cars() -> list[dict[str, Any]]:
@@ -475,20 +516,55 @@ _featured_cars_cache: tuple[float, list[dict[str, Any]]] | None = None
 _FEATURED_CARS_TTL_S = 300.0
 
 
+_featured_refresher = BackgroundRefresher("featured-cars")
+_featured_cold_lock = threading.Lock()
+
+
+def _refresh_featured_in_background() -> None:
+    global _featured_cars_cache
+    try:
+        _build_featured_cars()
+    except Exception:
+        # Keep the old cards; look again after RETRY_AFTER_S, not on every request.
+        hit = _featured_cars_cache
+        if hit is not None:
+            _featured_cars_cache = (time.time() - _FEATURED_CARS_TTL_S + RETRY_AFTER_S, hit[1])
+        raise
+
+
 def landing_featured_cars(limit: int = 4) -> list[dict[str, Any]]:
     """
     A few photo+price cards for the marketing landing. Deliberately a tiny direct
     query — must never trigger the full grid build (the landing page is the first
     thing a guest sees).
+
+    Web speed P6: once cards exist, an expired TTL returns the old cards at once and
+    refreshes them in one background run; the first load of the process is inline.
     """
-    global _featured_cars_cache
     try:
         lim = max(1, min(int(limit), 12))
     except (TypeError, ValueError):
         lim = 4
-    if _featured_cars_cache is not None and time.time() - _featured_cars_cache[0] < _FEATURED_CARS_TTL_S:
-        return _featured_cars_cache[1][:lim]
+    hit = _featured_cars_cache
+    if hit is not None:
+        if time.time() - hit[0] >= _FEATURED_CARS_TTL_S:
+            _featured_refresher.kick(_refresh_featured_in_background)
+        return hit[1][:lim]
+    with _featured_cold_lock:  # concurrent first callers share one load
+        hit = _featured_cars_cache
+        if hit is not None:
+            return hit[1][:lim]
+        return _build_featured_cars()[:lim]
 
+
+def warm_featured_cars() -> None:
+    """Load the landing cards now (process start); a no-op when they exist."""
+    if _featured_cars_cache is None:
+        _build_featured_cars()
+
+
+def _build_featured_cars() -> list[dict[str, Any]]:
+    global _featured_cars_cache
     active = "(COALESCE(listing_active, 1) = 1) AND COALESCE(marked_for_review, 0) = 0"
     cols = ", ".join(LISTINGS_GRID_CAR_COLUMNS)
     with db_conn(row_factory=sqlite3.Row) as conn:
@@ -527,7 +603,7 @@ def landing_featured_cars(limit: int = 4) -> list[dict[str, Any]]:
         if isinstance(gal, list):
             car["gallery"] = [g for g in gal if _css_url_safe(g)]
     _featured_cars_cache = (time.time(), out)
-    return out[:lim]
+    return out
 
 
 def _css_url_safe(url: Any) -> bool:

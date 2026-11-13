@@ -2,8 +2,21 @@
 # Web container entrypoint: optional vault preload, then gunicorn on Railway/Docker PORT.
 set -eu
 
-export KMAC_VAULT_AUTO="${KMAC_VAULT_AUTO:-1}"
 export PYTHONPATH="${PYTHONPATH:-/app}"
+
+# A command on the container (a Railway start command, `docker run IMAGE cmd`) runs
+# instead of the web server and skips the vault check, migrations and admin bootstrap
+# below: the web-cards cron service starts `python -m
+# backend.scripts.build_listings_grid_cards` this way (docs/RELEASING.md, web-cards).
+# The web service has no start command, so it never gets here.
+if [ "$#" -gt 0 ]; then
+  if [ "$#" -eq 1 ]; then
+    exec sh -c "$1"
+  fi
+  exec "$@"
+fi
+
+export KMAC_VAULT_AUTO="${KMAC_VAULT_AUTO:-1}"
 
 # Fail-fast reachability check only: this subprocess's env writes die with it
 # and are never inherited by the gunicorn process below, so it exists purely

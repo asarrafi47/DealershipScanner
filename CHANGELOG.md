@@ -2,6 +2,24 @@
 
 ## [Unreleased]
 
+## [1.5.11] - 2026-11-13
+
+### Fixed
+- Speed hotfix (PR 11 of the dev line, taken alone onto 1.5.10):
+  - A stored listing card that is stale never blocks a visitor: it is served at once (the
+    "price dropped N days ago" label is moved to today) and refreshed in the background, at most
+    a bounded number per request. The first search in an area no longer waits 5 to 20 s.
+  - The shared aggregates (rarity counts, price plausibility, deal-score bands) are refreshed
+    off the request, so the first car page after a quiet spell no longer reloads them (3 to 8 s).
+    They are also warmed at worker start.
+  - New nightly card job: `deploy/railway/deploy_web_cards.sh` and the `web-cards` service
+    (docs/RELEASING.md) run `python -m backend.scripts.build_listings_grid_cards`.
+  - The cards list response is gzipped as a stream.
+- **This release also carries 1.5.9 and 1.5.10**, because production still runs 1.5.8. That
+  includes migration V026, which the web entrypoint applies on boot unless `MIGRATE_ON_BOOT=0`.
+- **Run the card builder once right after deploying**: the card contents change (rarity and
+  price plausibility), so every stored card reads as stale until rebuilt.
+
 ## [1.5.10] - 2026-11-02
 
 ### Added

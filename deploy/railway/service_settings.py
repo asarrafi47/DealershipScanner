@@ -34,6 +34,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import shlex
 import subprocess
@@ -124,6 +125,18 @@ def service_entry(settings: dict, service: str) -> dict:
             f"no expected settings for service '{service}' in deploy/railway/service_settings.json "
             f"(known: {known}); add an entry with its serviceId before deploying to it"
         )
+    env_name = entry.get("serviceIdEnv")
+    if env_name is not None and "serviceId" not in entry:
+        # A service whose id is not kept in the repository (web-cards): the owner exports it.
+        if not isinstance(env_name, str) or not re.fullmatch(r"[A-Z][A-Z0-9_]*", env_name):
+            raise SettingsError(f"expected settings: services.{service}.serviceIdEnv is not a variable name")
+        value = os.environ.get(env_name, "").strip().lower()
+        if not _UUID.match(value):
+            raise SettingsError(
+                f"services.{service}: export {env_name}=<the service id from the Railway dashboard, "
+                "Settings, Copy service ID>; the id is not stored in the repository"
+            )
+        entry = {**entry, "serviceId": value}
     if not _UUID.match(str(entry.get("serviceId", ""))):
         raise SettingsError(f"expected settings: services.{service}.serviceId is not a UUID")
     fields = entry.get("serviceInstance")

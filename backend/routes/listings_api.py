@@ -22,6 +22,7 @@ from backend.db.inventory_db import (
     get_filter_options,
     listings_geo_coords_maps,
 )
+from backend.db.inventory_pg import is_inventory_postgres
 from backend.listings.geo_session import apply_listings_geo_to_session
 from backend.listings.routes import listings_page
 from backend.billing import access as paid_access
@@ -49,6 +50,7 @@ from backend.db.inventory_db import (
 from backend.routes._shared import _client_ip
 from backend.utils.ip_rate_limit import allow_request
 from backend.utils.query_parser import parse_natural_query
+from backend.utils.stream_gzip import gzip_stream
 
 # Hard bound on free-text search input. The parser fans out over every distinct
 # make/model/trim in inventory and the remainder feeds the embedding model, so
@@ -228,6 +230,9 @@ class _CarsScopeEntry(NamedTuple):
     etag: str
     gz_body: bytes
     count: int
+    # monotonic time at which this body was first found behind the current token (set by
+    # the request that noticed); None while it is current. Bounds how long it is served.
+    stale_since: float | None = None
 
 
 # Gzipped scoped bodies, keyed by (zip, radius, hidden-dealer set). Bounded by entry
@@ -282,6 +287,7 @@ def clear_cars_scope_cache() -> None:
     with _cars_scope_lock:
         _cars_scope_cache.clear()
         _cars_scope_bytes = 0
+    _cars_scope_rebuild_failed_at.clear()
 
 
 def _cars_scope_entry_valid(entry: _CarsScopeEntry | None, token: Any) -> bool:
@@ -291,6 +297,129 @@ def _cars_scope_entry_valid(entry: _CarsScopeEntry | None, token: Any) -> bool:
         from backend.db.repositories.grid_cards_repo import store_generation
 
         return entry.store_gen == store_generation()
+    return True
+
+
+_BODY_PIECE_CARDS = 256
+
+
+def _scope_body_parts(head: str, cards: list[str]):
+    """The scope body as encoded pieces (never one joined string): the JSON head, then
+    the stored cards in groups, then the closing brackets. Concatenated they equal
+    ``head[:-1] + ',"cars":[' + ",".join(cards) + "]}"``."""
+    yield (head[:-1] + ',"cars":[').encode("utf-8")
+    for start in range(0, len(cards), _BODY_PIECE_CARDS):
+        piece = ",".join(cards[start:start + _BODY_PIECE_CARDS])
+        yield (("," + piece) if start else piece).encode("utf-8")
+    yield b"]}"
+
+
+# Stale-while-revalidate for scope bodies (web speed P19). When the data token moves (a
+# scan wrote, a card revision changed) or the UTC day rolls, the cached body for an area
+# is still a complete, correct page of cars; the next shopper gets it at once and ONE
+# background build replaces it. Without this the first visitor of every area waited for
+# the whole rebuild (SQL, concatenation, gzip: 1 to 13 s for a large metro).
+#
+# LISTINGS_MAX_STALE_S bounds how long a body is served after the token moved (a scan
+# writing minutes at a time, or a failing rebuild, must not pin old data);
+# LISTINGS_MAX_STALE_DAYROLL_S is the longer bound when ONLY the UTC day changed, since
+# the day only moves date labels (cards carry them shifted to today at serve time).
+def _env_seconds(name: str, default: float) -> float:
+    try:
+        return max(0.0, float(os.environ.get(name, default)))
+    except (TypeError, ValueError):
+        return default
+
+
+LISTINGS_MAX_STALE_S = _env_seconds("LISTINGS_MAX_STALE_S", 120.0)
+LISTINGS_MAX_STALE_DAYROLL_S = _env_seconds("LISTINGS_MAX_STALE_DAYROLL_S", 1800.0)
+_SCOPE_REBUILD_RETRY_S = 30.0
+_DAY_INDEX = 1  # position of _today() inside grid_scope_token()
+
+_cars_scope_rebuilding: set = set()
+_cars_scope_rebuild_failed_at: dict = {}
+_cars_scope_rebuild_lock = threading.Lock()
+# One background scope build at a time for the whole process: they share the interpreter
+# with the request threads, and a burst of areas must queue, not fan out.
+_cars_scope_rebuild_slot = threading.Semaphore(1)
+
+
+def _token_differs_only_by_day(old: Any, new: Any) -> bool:
+    if not (isinstance(old, tuple) and isinstance(new, tuple)) or len(old) != len(new) or len(old) <= _DAY_INDEX:
+        return False
+    return old != new and old[:_DAY_INDEX] == new[:_DAY_INDEX] and old[_DAY_INDEX + 1:] == new[_DAY_INDEX + 1:]
+
+
+def _stale_entry_to_serve(key: tuple, entry: _CarsScopeEntry | None, token: Any, now: float) -> _CarsScopeEntry | None:
+    """The cached body to serve now although its token is behind, or None to build inline.
+
+    Only a body whose cards are all current for its own token (not one waiting on the
+    card refresher: ``store_gen`` set) and whose token simply moved on qualifies, and only
+    for the bounded time above, counted from the first request that noticed.
+    """
+    if entry is None or entry.store_gen is not None or entry.token == token:
+        return None
+    day_only = _token_differs_only_by_day(entry.token, token)
+    if not day_only and not is_inventory_postgres():
+        # Off Postgres (dev, tests) the data token is the database file's mtime pair: a
+        # write must show at once, there is no shared fleet to protect.
+        return None
+    since = entry.stale_since
+    if since is None:
+        since = now
+        entry = entry._replace(stale_since=since)
+        _cars_scope_put(key, entry)
+    limit = LISTINGS_MAX_STALE_DAYROLL_S if day_only else LISTINGS_MAX_STALE_S
+    return entry if (now - since) <= limit else None
+
+
+def _rebuild_scope_in_background(key: tuple, zip_code: str, origin: tuple[float, float], radius: float, hidden: tuple) -> None:
+    import time as _time
+
+    try:
+        with _cars_scope_rebuild_slot:
+            from backend.db.repositories.grid_cards_repo import grid_scope_token
+
+            with _cars_scope_build_lock(key):  # an inline build of the same area waits on this
+                token = grid_scope_token()
+                if _cars_scope_entry_valid(_cars_scope_get(key), token):
+                    return
+                _cars_scope_put(key, _build_cars_scope_entry(zip_code, origin, radius, hidden, token))
+    except Exception:
+        if len(_cars_scope_rebuild_failed_at) > 256:
+            _cars_scope_rebuild_failed_at.clear()
+        _cars_scope_rebuild_failed_at[key] = _time.monotonic()
+        logging.getLogger(__name__).warning(
+            "background rebuild of listings scope %s/%s failed; serving the old body", zip_code, radius, exc_info=True
+        )
+    finally:
+        with _cars_scope_rebuild_lock:
+            _cars_scope_rebuilding.discard(key)
+
+
+def _kick_scope_rebuild(key: tuple, zip_code: str, origin: tuple[float, float], radius: float, hidden: tuple) -> bool:
+    """Start the one background rebuild for *key* (False when one is running or failed lately)."""
+    import time as _time
+
+    with _cars_scope_rebuild_lock:
+        if key in _cars_scope_rebuilding:
+            return False
+        failed = _cars_scope_rebuild_failed_at.get(key)
+        if failed is not None and (_time.monotonic() - failed) < _SCOPE_REBUILD_RETRY_S:
+            return False
+        _cars_scope_rebuilding.add(key)
+    t = threading.Thread(
+        target=_rebuild_scope_in_background,
+        args=(key, zip_code, origin, radius, hidden),
+        name="listings-scope-rebuild",
+        daemon=True,
+    )
+    try:
+        t.start()
+    except RuntimeError:
+        with _cars_scope_rebuild_lock:
+            _cars_scope_rebuilding.discard(key)
+        return False
     return True
 
 
@@ -318,8 +447,7 @@ def _build_cars_scope_entry(
         },
         separators=(",", ":"),
     )
-    body = (head[:-1] + ',"cars":[' + ",".join(res.cards_json()) + "]}").encode("utf-8")
-    gz_body = gzip.compress(body, compresslevel=6)
+    gz_body = gzip_stream(_scope_body_parts(head, res.cards_json()), level=6)
     digest = hashlib.blake2b(gz_body, digest_size=10).hexdigest()
     etag = f'W/"lc-{zip_code}-{int(radius)}-{digest}"'
     return _CarsScopeEntry(
@@ -413,6 +541,14 @@ def api_listings_cars():
     token = grid_scope_token()
     key = (zip_code, radius, hidden)
     entry = _cars_scope_get(key)
+    if not _cars_scope_entry_valid(entry, token):
+        import time as _time
+
+        stale = _stale_entry_to_serve(key, entry, token, _time.monotonic())
+        if stale is not None:
+            # P19: serve the body we have, rebuild once off the request.
+            _kick_scope_rebuild(key, zip_code, (float(origin[0]), float(origin[1])), radius, hidden)
+            return _cars_json_response(stale, private=bool(hidden) or from_session)
     if not _cars_scope_entry_valid(entry, token):
         with _cars_scope_build_lock(key):
             entry = _cars_scope_get(key)
