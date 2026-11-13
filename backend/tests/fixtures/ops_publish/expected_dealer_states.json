@@ -1,0 +1,2444 @@
+{
+ "counts": {
+  "blocked": 0,
+  "needs_code_work": 48,
+  "needs_recipe_work": 18,
+  "ok": 106,
+  "unassessed": 0
+ },
+ "dealers": {
+  "5starford-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [
+    "GF3"
+   ],
+   "reasons": [
+    "hard:GF3"
+   ],
+   "state": "needs_code_work",
+   "watch": false
+  },
+  "albanysubaru-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "arlingtontoyota-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [
+    "GF5"
+   ],
+   "reasons": [
+    "recipe:GF5"
+   ],
+   "state": "needs_recipe_work",
+   "watch": false
+  },
+  "audihuntsville-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [
+    "watch:band:GA3"
+   ],
+   "state": "ok",
+   "watch": true
+  },
+  "audisouthaustin-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "autoboutiqueohio-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7",
+    "GA2",
+    "GA3",
+    "GA4"
+   ],
+   "failing": [
+    "GF5",
+    "GA1"
+   ],
+   "reasons": [
+    "recipe:GF5"
+   ],
+   "state": "needs_recipe_work",
+   "watch": false
+  },
+  "autonationfordtustin-com": {
+   "cannot_assess": [
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [
+    "GF1",
+    "GF2",
+    "GF5"
+   ],
+   "reasons": [
+    "recipe:GF1",
+    "recipe:GF5",
+    "recipe:GF2"
+   ],
+   "state": "needs_recipe_work",
+   "watch": false
+  },
+  "autonationhondawestknoxville-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "autonationsubaruwest-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "autonationtoyotacerritos-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [
+    "GF3"
+   ],
+   "reasons": [
+    "hard:GF3"
+   ],
+   "state": "needs_code_work",
+   "watch": false
+  },
+  "autosavvy-com": {
+   "cannot_assess": [
+    "GF3",
+    "GF6",
+    "GF7",
+    "GA1",
+    "GA2",
+    "GA3",
+    "GA4"
+   ],
+   "failing": [
+    "GF1",
+    "GF2",
+    "GF4"
+   ],
+   "reasons": [
+    "hard:GF4"
+   ],
+   "state": "needs_code_work",
+   "watch": false
+  },
+  "beamancdjr-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "bellhonda-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "bentleygmc-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [
+    "GF4",
+    "GF5"
+   ],
+   "reasons": [
+    "hard:GF4"
+   ],
+   "state": "needs_code_work",
+   "watch": false
+  },
+  "billestestoyota-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "billluke-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "bmwbellevue-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "bmwnorthscottsdale-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [
+    "GA2"
+   ],
+   "reasons": [
+    "soft:GA2"
+   ],
+   "state": "needs_code_work",
+   "watch": false
+  },
+  "bmwofarlington-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "bmwofbloomfield-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7",
+    "GA2",
+    "GA3",
+    "GA4"
+   ],
+   "failing": [
+    "GA1"
+   ],
+   "reasons": [
+    "soft:GA1"
+   ],
+   "state": "needs_code_work",
+   "watch": false
+  },
+  "bmwoffairfax-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "bmwoffremont-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "bmwofmurrieta-com": {
+   "cannot_assess": [
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [
+    "GF1",
+    "GF2"
+   ],
+   "reasons": [
+    "recipe:GF1",
+    "recipe:GF2"
+   ],
+   "state": "needs_recipe_work",
+   "watch": false
+  },
+  "bmwofsanantonio-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "bmwofsouthaustin-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "bmwseattle-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [
+    "GA2"
+   ],
+   "reasons": [
+    "soft:GA2"
+   ],
+   "state": "needs_code_work",
+   "watch": false
+  },
+  "burnschevycadillac-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [
+    "GA2"
+   ],
+   "reasons": [
+    "soft:GA2"
+   ],
+   "state": "needs_code_work",
+   "watch": false
+  },
+  "butlertoyotajacksonville-com": {
+   "cannot_assess": [
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [
+    "GF1",
+    "GF2"
+   ],
+   "reasons": [
+    "recipe:GF1",
+    "recipe:GF2"
+   ],
+   "state": "needs_recipe_work",
+   "watch": false
+  },
+  "cadillacoflagunaniguel-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "camelbacktoyota-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [
+    "GF5"
+   ],
+   "reasons": [
+    "recipe:GF5"
+   ],
+   "state": "needs_recipe_work",
+   "watch": false
+  },
+  "capitaltoyota-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [
+    "watch:band:GA3"
+   ],
+   "state": "ok",
+   "watch": true
+  },
+  "capomazda-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "carproshonda-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "cartersubaruballard-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "cdjrofalbertville-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "centurybmwhuntsville-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7",
+    "GA2",
+    "GA3",
+    "GA4"
+   ],
+   "failing": [
+    "GA1"
+   ],
+   "reasons": [
+    "soft:GA1"
+   ],
+   "state": "needs_code_work",
+   "watch": false
+  },
+  "chapmanbmwchandler-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "cherokeecountynissan-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7",
+    "GA2",
+    "GA3",
+    "GA4"
+   ],
+   "failing": [
+    "GA1"
+   ],
+   "reasons": [
+    "soft:GA1"
+   ],
+   "state": "needs_code_work",
+   "watch": false
+  },
+  "chevroletofboaz-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7",
+    "GA2",
+    "GA3",
+    "GA4"
+   ],
+   "failing": [
+    "GA1"
+   ],
+   "reasons": [
+    "soft:GA1"
+   ],
+   "state": "needs_code_work",
+   "watch": false
+  },
+  "chicagotoyota-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "citytoyota-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [
+    "watch:band:GA2"
+   ],
+   "state": "ok",
+   "watch": true
+  },
+  "cleveland-nissan-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "coastlinecdjr-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "conicellihonda-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [
+    "watch:band:GA2"
+   ],
+   "state": "ok",
+   "watch": true
+  },
+  "cookevillehonda-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [
+    "GA2"
+   ],
+   "reasons": [
+    "soft:GA2"
+   ],
+   "state": "needs_code_work",
+   "watch": false
+  },
+  "courtesychev-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "crevierbmw-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7",
+    "GA2",
+    "GA3",
+    "GA4"
+   ],
+   "failing": [
+    "GA1"
+   ],
+   "reasons": [
+    "soft:GA1"
+   ],
+   "state": "needs_code_work",
+   "watch": false
+  },
+  "crownlexus-com": {
+   "cannot_assess": [
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [
+    "GF1",
+    "GF2",
+    "GF4",
+    "GA2"
+   ],
+   "reasons": [
+    "hard:GF4"
+   ],
+   "state": "needs_code_work",
+   "watch": false
+  },
+  "crowntoyota-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "cumberlandkia-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "davekirk-com": {
+   "cannot_assess": [
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [
+    "GF1",
+    "GF2",
+    "GF4"
+   ],
+   "reasons": [
+    "hard:GF4"
+   ],
+   "state": "needs_code_work",
+   "watch": false
+  },
+  "dchhondaofmissionvalley-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "doggetthondamedcenter-com": {
+   "cannot_assess": [
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [
+    "GF1",
+    "GF2"
+   ],
+   "reasons": [
+    "recipe:GF1",
+    "recipe:GF2"
+   ],
+   "state": "needs_recipe_work",
+   "watch": false
+  },
+  "donohoochevrolet-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7",
+    "GA2",
+    "GA3",
+    "GA4"
+   ],
+   "failing": [
+    "GA1"
+   ],
+   "reasons": [
+    "soft:GA1"
+   ],
+   "state": "needs_code_work",
+   "watch": false
+  },
+  "dreyerreinboldbmwnorth-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF6",
+    "GF7",
+    "GA2",
+    "GA3",
+    "GA4"
+   ],
+   "failing": [
+    "GF5",
+    "GA1"
+   ],
+   "reasons": [
+    "hard:single_page_widget"
+   ],
+   "state": "needs_code_work",
+   "watch": false
+  },
+  "dthondachicago-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "eastsidesubaru-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "easttennesseeford-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [
+    "GA2"
+   ],
+   "reasons": [
+    "soft:GA2"
+   ],
+   "state": "needs_code_work",
+   "watch": false
+  },
+  "eddrogersvalleyford-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "familytoyotaofarlington-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "fjmercedes-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [
+    "GF5"
+   ],
+   "reasons": [
+    "recipe:GF5"
+   ],
+   "state": "needs_recipe_work",
+   "watch": false
+  },
+  "fordlincolnofcookeville-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [
+    "GA2"
+   ],
+   "reasons": [
+    "soft:GA2"
+   ],
+   "state": "needs_code_work",
+   "watch": false
+  },
+  "freemantoyota-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "fremonttoyota-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [
+    "GF5"
+   ],
+   "reasons": [
+    "recipe:GF5"
+   ],
+   "state": "needs_recipe_work",
+   "watch": false
+  },
+  "germainford-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [
+    "GA2"
+   ],
+   "reasons": [
+    "soft:GA2"
+   ],
+   "state": "needs_code_work",
+   "watch": false
+  },
+  "gilbertbaughford-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "glakeshyundaiofdublin-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "gphonda-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "greenwaycdjrofrome-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "groovetoyota-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "group1hondagreenbelt-com": {
+   "cannot_assess": [
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [
+    "GF1",
+    "GF2",
+    "GF5",
+    "GA2"
+   ],
+   "reasons": [
+    "recipe:GF1",
+    "recipe:GF5",
+    "recipe:GF2"
+   ],
+   "state": "needs_recipe_work",
+   "watch": false
+  },
+  "gunnhonda-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "guntersvillechevrolet-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [
+    "GA2"
+   ],
+   "reasons": [
+    "soft:GA2"
+   ],
+   "state": "needs_code_work",
+   "watch": false
+  },
+  "harehonda-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "hemborgford-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "hendrickbuickgmccary-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [
+    "GA2"
+   ],
+   "reasons": [
+    "soft:GA2"
+   ],
+   "state": "needs_code_work",
+   "watch": false
+  },
+  "hendrickhondasc-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "hendricklexusnorthlake-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "hendricktoyotaconcord-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "highcountrytoyota-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "hileyvwhuntsville-com": {
+   "cannot_assess": [
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [
+    "GF1",
+    "GF2",
+    "GF4"
+   ],
+   "reasons": [
+    "hard:GF4"
+   ],
+   "state": "needs_code_work",
+   "watch": false
+  },
+  "hillsidehonda-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "holmantoyota-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [
+    "watch:band:GA2"
+   ],
+   "state": "ok",
+   "watch": true
+  },
+  "hondaofcleveland-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "hondaoffortworth-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "hondaofserramonte-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "howardbentleyauto-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [
+    "GA2"
+   ],
+   "reasons": [
+    "soft:GA2"
+   ],
+   "state": "needs_code_work",
+   "watch": false
+  },
+  "howdyhonda-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "hudsontoyota-com": {
+   "cannot_assess": [
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [
+    "GF1",
+    "GF2"
+   ],
+   "reasons": [
+    "recipe:GF1",
+    "recipe:GF2"
+   ],
+   "state": "needs_recipe_work",
+   "watch": false
+  },
+  "hyundaiofcarmel-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "hyundaiofsanbruno-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "infinitiofcharlotte-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [
+    "GA2"
+   ],
+   "reasons": [
+    "soft:GA2"
+   ],
+   "state": "needs_code_work",
+   "watch": false
+  },
+  "integrityofchattanooga-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [
+    "watch:band:GA2"
+   ],
+   "state": "ok",
+   "watch": true
+  },
+  "irvinesubaru-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [
+    "watch:band:GA2"
+   ],
+   "state": "ok",
+   "watch": true
+  },
+  "jasonlewisautomotive-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [
+    "watch:band:GA2"
+   ],
+   "state": "ok",
+   "watch": true
+  },
+  "jimelliscdjrwoodstock-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "johnrobertstoyota-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "kearnymesasubaru-com": {
+   "cannot_assess": [
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [
+    "GF1",
+    "GF2",
+    "GA2"
+   ],
+   "reasons": [
+    "recipe:GF1",
+    "recipe:GF2"
+   ],
+   "state": "needs_recipe_work",
+   "watch": false
+  },
+  "keithpiersontoyota-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [
+    "watch:band:GA2"
+   ],
+   "state": "ok",
+   "watch": true
+  },
+  "kianorthaustin-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "kiaofcleveland-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "kingfordsales-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7",
+    "GA2",
+    "GA3",
+    "GA4"
+   ],
+   "failing": [
+    "GA1"
+   ],
+   "reasons": [
+    "soft:GA1"
+   ],
+   "state": "needs_code_work",
+   "watch": false
+  },
+  "koonstoyotaarlington-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [
+    "GA2"
+   ],
+   "reasons": [
+    "soft:GA2"
+   ],
+   "state": "needs_code_work",
+   "watch": false
+  },
+  "lambonb-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "landersmclartyfordfortpayne-net": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "landersmclartysubaru-net": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [
+    "GF4"
+   ],
+   "reasons": [
+    "hard:GF4"
+   ],
+   "state": "needs_code_work",
+   "watch": false
+  },
+  "lbmboaz-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [
+    "GF5",
+    "GA1",
+    "GA2"
+   ],
+   "reasons": [
+    "recipe:GF5"
+   ],
+   "state": "needs_recipe_work",
+   "watch": false
+  },
+  "lexusescondido-com": {
+   "cannot_assess": [
+    "GF3",
+    "GF6"
+   ],
+   "failing": [
+    "GF1",
+    "GF2",
+    "GF4",
+    "GF5",
+    "GA2"
+   ],
+   "reasons": [
+    "hard:GF4"
+   ],
+   "state": "needs_code_work",
+   "watch": false
+  },
+  "lexusofbellevue-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "lexusofgreenwoodvillage-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [
+    "watch:band:GA2"
+   ],
+   "state": "ok",
+   "watch": true
+  },
+  "lexusofknoxville-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [
+    "GF5"
+   ],
+   "reasons": [
+    "recipe:GF5"
+   ],
+   "state": "needs_recipe_work",
+   "watch": false
+  },
+  "lexusserramonte-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "lifetimekia-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "longbeachbmw-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "longolexus-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "machaikchevy-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "marinochryslerjeepdodge-net": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "marshalmizeford-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [
+    "GA2"
+   ],
+   "reasons": [
+    "soft:GA2"
+   ],
+   "state": "needs_code_work",
+   "watch": false
+  },
+  "mazdaoflodi-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "mbbeverlyhills-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [
+    "GF4"
+   ],
+   "reasons": [
+    "hard:GF4"
+   ],
+   "state": "needs_code_work",
+   "watch": false
+  },
+  "mbhsv-com": {
+   "cannot_assess": [
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [
+    "GF1",
+    "GF2",
+    "GF4",
+    "GA3"
+   ],
+   "reasons": [
+    "hard:GF4"
+   ],
+   "state": "needs_code_work",
+   "watch": false
+  },
+  "mbnorthlake-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "mbofstevenscreek-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [
+    "GF3",
+    "GA3"
+   ],
+   "reasons": [
+    "hard:GF3"
+   ],
+   "state": "needs_code_work",
+   "watch": false
+  },
+  "mbsd-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [
+    "GA2",
+    "GA3"
+   ],
+   "reasons": [
+    "soft:GA2",
+    "soft:GA3"
+   ],
+   "state": "needs_code_work",
+   "watch": false
+  },
+  "mbzla-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "mcgrathcityhonda-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "mckennasubaru-com": {
+   "cannot_assess": [
+    "GF3",
+    "GF4",
+    "GF6",
+    "GF7",
+    "GA1",
+    "GA2",
+    "GA3",
+    "GA4"
+   ],
+   "failing": [
+    "GF1",
+    "GF2"
+   ],
+   "reasons": [
+    "recipe:GF1",
+    "recipe:GF2"
+   ],
+   "state": "needs_recipe_work",
+   "watch": false
+  },
+  "mercedesbenzofaustin-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [
+    "watch:band:GA3"
+   ],
+   "state": "ok",
+   "watch": true
+  },
+  "mercedesfortworth-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [
+    "GA3"
+   ],
+   "reasons": [
+    "soft:GA3"
+   ],
+   "state": "needs_code_work",
+   "watch": false
+  },
+  "mikecalverttoyota-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "miniofcharleston-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [
+    "GA2",
+    "GA3"
+   ],
+   "reasons": [
+    "soft:GA2",
+    "soft:GA3"
+   ],
+   "state": "needs_code_work",
+   "watch": false
+  },
+  "mossbroshondamorenovalley-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "mountainstatestoyota-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [
+    "GF3"
+   ],
+   "reasons": [
+    "hard:GF3"
+   ],
+   "state": "needs_code_work",
+   "watch": false
+  },
+  "mtnviewford-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [
+    "GA2"
+   ],
+   "reasons": [
+    "soft:GA2"
+   ],
+   "state": "needs_code_work",
+   "watch": false
+  },
+  "murgadofordchicago-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "napletonhondamortongrove-com": {
+   "cannot_assess": [
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [
+    "GF1",
+    "GF2",
+    "GF5",
+    "GA3"
+   ],
+   "reasons": [
+    "recipe:GF1",
+    "recipe:GF5",
+    "recipe:GF2"
+   ],
+   "state": "needs_recipe_work",
+   "watch": false
+  },
+  "newtonnissansouth-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "nissanofalbertville-net": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "nissanofcostamesa-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "normreeveshondairvine-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [
+    "GA2"
+   ],
+   "reasons": [
+    "soft:GA2"
+   ],
+   "state": "needs_code_work",
+   "watch": false
+  },
+  "normreevestoyotadallas-com": {
+   "cannot_assess": [
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [
+    "GF1",
+    "GF2"
+   ],
+   "reasons": [
+    "recipe:GF1",
+    "recipe:GF2"
+   ],
+   "state": "needs_recipe_work",
+   "watch": false
+  },
+  "northcountrycjdr-cars": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "northhollywoodtoyota-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "oakridgenissan-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "ocauto-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "orangecountykia-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "overdrive-usa-com": {
+   "cannot_assess": [
+    "GF3",
+    "GF6",
+    "GA2",
+    "GA3",
+    "GA4"
+   ],
+   "failing": [
+    "GF1",
+    "GF2",
+    "GF4"
+   ],
+   "reasons": [
+    "hard:GF4"
+   ],
+   "state": "needs_code_work",
+   "watch": false
+  },
+  "paradiseautos-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "parksidekia-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [
+    "GF4"
+   ],
+   "reasons": [
+    "hard:GF4"
+   ],
+   "state": "needs_code_work",
+   "watch": false
+  },
+  "praterford-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [
+    "GA2"
+   ],
+   "reasons": [
+    "soft:GA2"
+   ],
+   "state": "needs_code_work",
+   "watch": false
+  },
+  "premiumautosinc-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF6",
+    "GF7",
+    "GA2",
+    "GA3",
+    "GA4"
+   ],
+   "failing": [
+    "GF3",
+    "GF5",
+    "GA1"
+   ],
+   "reasons": [
+    "hard:GF3"
+   ],
+   "state": "needs_code_work",
+   "watch": false
+  },
+  "quantumautosales-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "righthonda-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "robinsford-com": {
+   "cannot_assess": [
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [
+    "GF1",
+    "GF2"
+   ],
+   "reasons": [
+    "recipe:GF1",
+    "recipe:GF2"
+   ],
+   "state": "needs_recipe_work",
+   "watch": false
+  },
+  "sandmountaintoyota-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [
+    "GA2"
+   ],
+   "reasons": [
+    "soft:GA2"
+   ],
+   "state": "needs_code_work",
+   "watch": false
+  },
+  "secretcitycdjr-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "shottenkirkacurahuntsville-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "shottenkirkhondarome-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "southcoasttoyota-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [
+    "GA2"
+   ],
+   "reasons": [
+    "soft:GA2"
+   ],
+   "state": "needs_code_work",
+   "watch": false
+  },
+  "sterlingbmw-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7",
+    "GA2",
+    "GA3",
+    "GA4"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "sutherlinsubaru-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "toyotacarlsbad-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF6",
+    "GF7",
+    "GA2",
+    "GA3",
+    "GA4"
+   ],
+   "failing": [
+    "GF3",
+    "GA1"
+   ],
+   "reasons": [
+    "hard:GF3"
+   ],
+   "state": "needs_code_work",
+   "watch": false
+  },
+  "toyotaescondido-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "toyotaofcleveland-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "toyotaofredlands-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "toyotaplace-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "tustinlexus-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7",
+    "GA2",
+    "GA3",
+    "GA4"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "tuttleclickstustinjeep-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "tvtoyota-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [],
+   "state": "ok",
+   "watch": false
+  },
+  "villagevw-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [],
+   "reasons": [
+    "watch:band:GA3"
+   ],
+   "state": "ok",
+   "watch": true
+  },
+  "welbornchevroletofrome-com": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [
+    "GA2"
+   ],
+   "reasons": [
+    "soft:GA2"
+   ],
+   "state": "needs_code_work",
+   "watch": false
+  },
+  "wisimonson-net": {
+   "cannot_assess": [
+    "GF2",
+    "GF3",
+    "GF6",
+    "GF7"
+   ],
+   "failing": [
+    "GA3"
+   ],
+   "reasons": [
+    "soft:GA3"
+   ],
+   "state": "needs_code_work",
+   "watch": false
+  }
+ }
+}
