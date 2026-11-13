@@ -262,12 +262,17 @@ def true_up(
     tokens_in: int,
     tokens_out: int,
     cost_micro: int,
+    messages_back: bool = False,
     conn: Any = None,
 ) -> None:
-    """Replace the estimate with the real numbers on every row the reserve counted."""
+    """Replace the estimate with the real numbers on every row the reserve counted.
+
+    ``messages_back=True`` also gives the message(s) back (the model failed or refused),
+    while still recording whatever tokens were really spent.
+    """
     _adjust(
         res,
-        0,
+        -res.weight if messages_back else 0,
         max(0, int(tokens_in)) - res.est_tokens_in,
         max(0, int(tokens_out)) - res.est_tokens_out,
         max(0, int(cost_micro)) - res.est_cost_micro,
