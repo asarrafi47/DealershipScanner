@@ -42,6 +42,8 @@
 
     var MAX_INFLIGHT = 3;      // concurrent prefetches
     var MAX_PER_PAGE = 12;     // total documents prefetched per page view
+    var WARM_LIMIT = 3;        // in-view cars warmed by themselves, once the browser is idle
+    var WARM_IDLE_TIMEOUT_MS = 3000;
     var HOVER_DELAY_MS = 65;   // ignore pointers merely sweeping across a grid
 
     var prefetched = new Set();
@@ -98,7 +100,7 @@
     function send(url) {
         var ctrl = typeof AbortController === "function" ? new AbortController() : null;
         if (ctrl) controllers.add(ctrl);
-        var opts = { credentials: "same-origin", headers: { Accept: "text/html" } };
+        var opts = { credentials: "same-origin", headers: { Accept: "text/html", "X-DS-Prefetch": "1" } };
         if (ctrl) opts.signal = ctrl.signal;
         // Chromium honours this and schedules the prefetch beneath anything the
         // user is actually waiting on, including a navigation they just started.
@@ -248,14 +250,18 @@
 
         var warm = function () {
             var p = window.location.pathname;
-            if (p === "/home" || p === "/listings" || p === "/dashboard") {
-                observeCarLinks(null, 8);
+            // Only the results page warms cars on its own, and only a few of the ones in
+            // view. /home and /dashboard never do: each warmed car page counts as a "view"
+            // for the shopper, and six of them right after first paint cost the server
+            // six renders and reset the home recommendations (2026-11-13).
+            if (p === "/listings") {
+                observeCarLinks(null, WARM_LIMIT);
             }
         };
         if (typeof requestIdleCallback === "function") {
-            requestIdleCallback(warm, { timeout: 1500 });
+            requestIdleCallback(warm, { timeout: WARM_IDLE_TIMEOUT_MS });
         } else {
-            window.setTimeout(warm, 250);
+            window.setTimeout(warm, WARM_IDLE_TIMEOUT_MS);
         }
     }
 
@@ -267,9 +273,9 @@
 
     // Public surface. main.js calls __DS_wirePrefetchLinks and
     // __DS_prefetchVisibleCarLinks after it re-renders the results grid.
-    window.__DS_wirePrefetchLinks = function (root) { observeCarLinks(root, 8); };
+    window.__DS_wirePrefetchLinks = function (root) { observeCarLinks(root, WARM_LIMIT); };
     window.__DS_prefetchVisibleCarLinks = function (root, limit) {
-        observeCarLinks(root, limit || 8);
+        observeCarLinks(root, Math.min(limit || WARM_LIMIT, WARM_LIMIT));
     };
     window.__DS_warmCarDetail = function (carId) {
         if (carId) prefetchDocument("/car/" + carId);
