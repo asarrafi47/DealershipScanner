@@ -18,14 +18,28 @@ from backend.scanner.pipeline.constants import (
 from backend.scanner.pipeline.db import _rows
 
 
+# workspace/ is not in the Railway image, so the allowlist has a tracked twin; both are read.
+ONE_CONDITION_OK_PATHS = (
+    ROOT / "workspace" / "pipeline" / "one_condition_ok.txt",
+    ROOT / "deploy" / "railway" / "one_condition_ok.txt",
+)
+
+
 def _one_condition_ok() -> set[str]:
     """Dealer ids whose lot legitimately carries a single condition (used-only
-    independents, new-only fleet/RV sellers). One id per line, `#` comments."""
-    try:
-        text = (ROOT / "workspace" / "pipeline" / "one_condition_ok.txt").read_text()
-    except OSError:
-        return set()
-    return {ln.split("#", 1)[0].strip() for ln in text.splitlines() if ln.split("#", 1)[0].strip()}
+    independents, new-only fleet/RV sellers). One id per line, `#` comments. The union
+    of the workspace file and its tracked twin (the do_not_scan pattern of manifest.py)."""
+    out: set[str] = set()
+    for path in ONE_CONDITION_OK_PATHS:
+        try:
+            text = path.read_text(encoding="utf-8")
+        except OSError:
+            continue
+        for ln in text.splitlines():
+            did = ln.split("#", 1)[0].strip()
+            if did:
+                out.add(did)
+    return out
 
 
 # --------------------------------------------------------------------------
