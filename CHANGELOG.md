@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+- Docs only: docs/auth_sms/ holds a survey of the user structure, a pay and Stripe audit, the design for phone-number login with text-message codes, and the task cards for it (no code change).
+
 ## [1.5.24] - 2026-11-13
 
 ### Web speed (P6, P19 of docs/web_speed_search_2026_11/README.md)
