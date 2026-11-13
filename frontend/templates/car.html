@@ -1031,7 +1031,7 @@
                                             {# The equipment diff itself is the Premium feature — the
                                                ladder position above is free on every listing. #}
                                             <p class="car-trim-ladder__panel-label">What this trim adds</p>
-                                            {% if billing_stripe_enabled %}<p class="car-trim-ladder__provenance">See the full equipment diff for every rung with <a href="{{ url_for('premium_page') }}">Premium</a>.</p>{% endif %}
+                                            {% if billing_stripe_enabled %}<p class="car-trim-ladder__provenance">See the full equipment diff for every rung with <a href="{{ url_for('premium_page') }}">Premium</a>.</p>{% else %}<p class="car-trim-ladder__provenance"><a href="{{ url_for('login_page', next=request.path) }}">Sign in</a> to see what this trim adds.</p>{% endif %}
                                             {% elif step.adds %}
                                             <p class="car-trim-ladder__panel-label">What this trim adds</p>
                                             <ul class="car-trim-ladder__adds">
@@ -1358,13 +1358,15 @@
                             <div class="vehicle-history-actions-row">
                                 <button type="button" id="btn-premium-history-decode" class="vehicle-history-premium-btn">Scan national salvage databases</button>
                             </div>
-                            <p class="vehicle-history-tools-note">Salvage scan uses NHTSA recalls, government VIN validation, and title-risk signals. Premium only.</p>
+                            <p class="vehicle-history-tools-note">Salvage scan uses NHTSA recalls, government VIN validation, and title-risk signals.{% if billing_stripe_enabled %} Premium only.{% endif %}</p>
+                            {% if billing_stripe_enabled %}
                             <div id="premium-history-upsell" class="premium-history-upsell car-premium-upsell" hidden role="dialog" aria-labelledby="premium-history-upsell-title" aria-modal="true">
                                 <h3 id="premium-history-upsell-title" class="premium-history-upsell__title">Premium title &amp; salvage intelligence</h3>
                                 <p class="car-packages-hint">Scan NHTSA recalls, government VIN validation, and national title-risk signals without leaving Sarrafi Cars — included with <a href="{{ url_for('premium_page') }}">Premium</a>.</p>
                                 <p><a href="{{ url_for('premium_page') }}" class="primary-button">View Premium plans</a></p>
                                 <button type="button" class="premium-history-upsell__dismiss" id="premium-history-upsell-dismiss">Not now</button>
                             </div>
+                            {% endif %}
                             <div id="vehicle-history-intelligence-results" class="vehicle-history-intelligence-results" hidden aria-live="polite"></div>
                         </div>
                         {% endif %}

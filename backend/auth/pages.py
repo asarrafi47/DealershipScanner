@@ -122,6 +122,8 @@ def register_page():
         from backend.auth.app_registration import register_general_app_user
 
         plan = request.form.get("plan", "free").strip().lower()
+        if not Config.billing_stripe_enabled():
+            plan = "free"  # the site is free: a hand-made "premium" choice is ignored
         uid, err_code, err_msg, wants_premium = register_general_app_user(
             request.form.get("username", ""),
             request.form.get("email", ""),
@@ -302,6 +304,8 @@ def api_auth_register():
     from backend.auth.app_registration import register_general_app_user
 
     plan = (data.get("plan") or "free").strip().lower()
+    if not Config.billing_stripe_enabled():
+        plan = "free"
     uid, err_code, err_msg, wants_premium = register_general_app_user(
         (data.get("username") or "").strip(),
         (data.get("email") or "").strip(),

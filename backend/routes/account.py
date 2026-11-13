@@ -41,6 +41,7 @@ def _account_profile_context(uid: int, **extra):
         "role": role,
         "role_label": role_labels.get(role, role.replace("_", " ").title()),
         "is_premium": bool(u.get("is_premium")),
+        "billing_on": Config.billing_stripe_enabled(),
         "min_password_len": Config.MIN_PASSWORD_LENGTH,
         "hidden_dealers": _hidden_dealers_for_profile(uid),
         "recent_searches": _recent_searches_for_profile(uid),
@@ -171,9 +172,13 @@ def account_billing_page():
     if not uid:
         return redirect(url_for("login_page", next="/account/billing"))
     uid = int(uid)
+    from backend.billing.stripe_billing import billing_enabled
+
+    if not billing_enabled():
+        # The site is free: no plan, price or portal to show. (Everything below is for billing on.)
+        return redirect(url_for("account_profile_page"))
     from backend.billing.catalog import get_plan
     from backend.billing.entitlements import FEATURE_LABELS
-    from backend.billing.stripe_billing import billing_enabled
     from backend.db.users_db import get_user_billing_snapshot
 
     billing = get_user_billing_snapshot(uid) or {}
