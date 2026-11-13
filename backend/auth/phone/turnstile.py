@@ -74,16 +74,30 @@ class _SeenTokens:
         self._seen: OrderedDict[str, float] = OrderedDict()
         self._lock = threading.Lock()
 
-    def first_use(self, token: str) -> bool:
-        key = hashlib.sha256(token.encode("utf-8")).hexdigest()
+    @staticmethod
+    def _key(token: str) -> str:
+        return hashlib.sha256(token.encode("utf-8")).hexdigest()
+
+    def _expire(self, now: float) -> None:
+        while self._seen and (len(self._seen) >= self._max or next(iter(self._seen.values())) <= now):
+            self._seen.popitem(last=False)
+
+    def is_used(self, token: str) -> bool:
+        """True when this token already got a definitive answer from Cloudflare."""
+        key = self._key(token)
         now = self._clock()
         with self._lock:
-            while self._seen and (len(self._seen) >= self._max or next(iter(self._seen.values())) <= now):
-                self._seen.popitem(last=False)
-            if key in self._seen:
-                return False
+            self._expire(now)
+            return key in self._seen
+
+    def mark_used(self, token: str) -> None:
+        """Remember a token after Cloudflare answered definitively (accepted or rejected it). Never called
+        for a timeout or an unreadable answer: a good token must survive a slow Cloudflare."""
+        key = self._key(token)
+        now = self._clock()
+        with self._lock:
+            self._expire(now)
             self._seen[key] = now + REPLAY_WINDOW_S
-            return True
 
 
 class CloudflareTurnstile:
@@ -111,7 +125,7 @@ class CloudflareTurnstile:
             return TurnstileResult(False, MISSING_TOKEN)
         if not secret:
             return TurnstileResult(False, NOT_CONFIGURED)
-        if not self._seen.first_use(text):
+        if self._seen.is_used(text):
             return TurnstileResult(False, REPLAYED)
         data = {"secret": secret, "response": text}
         if ip:
@@ -124,6 +138,7 @@ class CloudflareTurnstile:
             return TurnstileResult(False, UNREACHABLE)
         if status != 200 or not isinstance(body, dict) or not isinstance(body.get("success"), bool):
             return TurnstileResult(False, BAD_RESPONSE)
+        self._seen.mark_used(text)  # a definitive answer: single use from here on
         if body["success"]:
             return TurnstileResult(True, OK)
         codes = body.get("error-codes")

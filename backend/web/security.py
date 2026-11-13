@@ -91,13 +91,8 @@ _CSRF_HEADER_POST_ENDPOINTS = (
 #   billing.stripe_webhook, billing.premium_webhook  (Stripe-Signature, backend/billing/routes.py)
 #   twilio_webhook.twilio_verify_webhook  (X-Twilio-Signature checked against the public URL,
 #       backend/auth/phone/webhook.py; 403 on a bad or missing signature, 404 while the phone
-#       flag is off). backend/tests/test_csrf_coverage.py classifies each as ``exempt`` and
-#       checks the view's source for its signature check.
-_CSRF_SIGNATURE_VERIFIED_ENDPOINTS = frozenset({
-    "billing.stripe_webhook",
-    "billing.premium_webhook",
-    "twilio_webhook.twilio_verify_webhook",
-})
+#       callbacks are off). backend/tests/test_csrf_coverage.py (EXEMPT) is the one list of them: it
+#       classifies each as ``exempt`` and checks the view's source for its signature check.
 
 # Endpoint-name prefixes whose POST forms carry the csrf_token field.
 _CSRF_FORM_POST_PREFIXES = ("dealer_portal.", "store_admin.")

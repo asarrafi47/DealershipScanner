@@ -1,7 +1,7 @@
 """``POST /webhooks/twilio/verify``: Twilio's delivery-status callbacks (DESIGN.md section 17).
 
-* Answers 404 while ``AUTH_PHONE_LOGIN_ENABLED`` is off or ``TWILIO_AUTH_TOKEN`` is unset (callbacks are
-  not needed for launch; Twilio signs them with the account auth token only).
+* Answers 404 unless ``TWILIO_WEBHOOK_ENABLED`` and ``TWILIO_AUTH_TOKEN`` are both set: callbacks are not
+  used at launch, so the route is inert (Twilio signs callbacks with the account auth token only).
 * Verifies ``X-Twilio-Signature`` with the ``twilio`` request validator against the **public** URL
   (``PUBLIC_BASE_URL`` + path + query), not the URL this server saw behind its proxies. A missing or
   bad signature (or no public URL configured) gets 403 and nothing changes. CSRF does not apply:
@@ -183,7 +183,7 @@ def _short(value: str | None) -> str:
 @bp.route("/webhooks/twilio/verify", methods=["POST"])
 def twilio_verify_webhook():
     global bad_signature_count
-    if not config.webhook_active():  # flag off, or no account auth token: callbacks are not set up
+    if not config.webhook_active():  # TWILIO_WEBHOOK_ENABLED or TWILIO_AUTH_TOKEN missing: inert
         abort(404)
     if request.content_length is not None and request.content_length > MAX_BODY_BYTES:
         return jsonify({"ok": False}), 413

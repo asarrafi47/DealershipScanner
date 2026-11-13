@@ -162,3 +162,30 @@ def test_every_reason_is_a_short_code_and_logs_hold_no_token_secret_or_address(c
     assert "event=blocked_turnstile" in text
     for reason in t.REASONS:
         assert reason == reason.lower() and " " not in reason
+
+
+# ---------------------------------------------------------------- wave 1 review follow-ups
+
+
+@pytest.mark.parametrize("failure", [requests.Timeout("slow"), requests.ConnectionError("down"), RuntimeError("boom"),
+                                      (500, None), (200, "not-json"), (200, {"no": "success"})])
+def test_a_timeout_or_unreadable_answer_does_not_burn_the_token(failure):
+    http, v = make(failure, (200, {"success": True}))
+    first = v.verify("tok-keep", IP)
+    assert first.ok is False and first.reason in (t.TIMEOUT, t.UNREACHABLE, t.BAD_RESPONSE)
+    assert v.verify("tok-keep", IP) == t.TurnstileResult(True, t.OK)  # the same good token still works once
+    assert len(http.calls) == 2
+
+
+def test_a_token_is_used_up_once_cloudflare_answered_definitively():
+    http, v = make((200, {"success": True}))
+    assert v.verify("tok-once", IP).ok
+    assert v.verify("tok-once", IP) == t.TurnstileResult(False, t.REPLAYED)
+    assert len(http.calls) == 1  # the replay is refused without paying for a second call
+
+
+def test_a_token_cloudflare_rejected_is_also_used_up():
+    http, v = make((200, {"success": False, "error-codes": ["invalid-input-response"]}))
+    assert v.verify("tok-bad", IP) == t.TurnstileResult(False, t.REJECTED)
+    assert v.verify("tok-bad", IP) == t.TurnstileResult(False, t.REPLAYED)
+    assert len(http.calls) == 1

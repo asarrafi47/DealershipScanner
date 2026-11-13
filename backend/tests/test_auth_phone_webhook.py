@@ -23,7 +23,7 @@ def client(app_factory, monkeypatch):
     for name in ("TWILIO_AUTH_TOKEN", "TWILIO_API_KEY_SECRET"):
         monkeypatch.delenv(name, raising=False)
     main = app_factory(
-        DEV_IP_ALLOWLIST="", AUTH_PHONE_LOGIN_ENABLED="1", PUBLIC_BASE_URL=BASE, TWILIO_AUTH_TOKEN=TOKEN,
+        DEV_IP_ALLOWLIST="", TWILIO_WEBHOOK_ENABLED="1", PUBLIC_BASE_URL=BASE, TWILIO_AUTH_TOKEN=TOKEN,
     )
     sink = wh.MemorySendEventSink()
     wh.set_sink(sink)
@@ -108,8 +108,9 @@ def test_no_public_url_configured_fails_closed(client, monkeypatch):
     assert client.sink.events == {}
 
 
-def test_route_is_404_while_the_flag_is_off(app_factory, monkeypatch):
-    main = app_factory(DEV_IP_ALLOWLIST="", AUTH_PHONE_LOGIN_ENABLED=None, PUBLIC_BASE_URL=BASE, TWILIO_AUTH_TOKEN=TOKEN)
+def test_route_is_404_while_the_webhook_flag_is_off(app_factory, monkeypatch):
+    main = app_factory(DEV_IP_ALLOWLIST="", TWILIO_WEBHOOK_ENABLED=None, AUTH_PHONE_LOGIN_ENABLED="1",
+                       PUBLIC_BASE_URL=BASE, TWILIO_AUTH_TOKEN=TOKEN)
     wh.set_sink(wh.MemorySendEventSink())
     try:
         c = main.app.test_client()
@@ -122,10 +123,22 @@ def test_route_is_404_while_the_flag_is_off(app_factory, monkeypatch):
 
 
 def test_flag_toggles_at_request_time(client, monkeypatch):
-    monkeypatch.setenv("AUTH_PHONE_LOGIN_ENABLED", "0")
+    monkeypatch.setenv("TWILIO_WEBHOOK_ENABLED", "0")
     assert post(client, form()).status_code == 404
-    monkeypatch.setenv("AUTH_PHONE_LOGIN_ENABLED", "1")
+    monkeypatch.setenv("TWILIO_WEBHOOK_ENABLED", "1")
     assert post(client, form()).status_code == 200
+
+
+def test_the_phone_login_flag_alone_does_not_switch_the_webhook_on(client, monkeypatch):
+    monkeypatch.delenv("TWILIO_WEBHOOK_ENABLED")
+    monkeypatch.setenv("AUTH_PHONE_LOGIN_ENABLED", "1")
+    assert post(client, form(event="EVlogin")).status_code == 404
+    assert client.sink.events == {}
+
+
+def test_the_webhook_works_without_the_phone_login_flag_once_enabled(client, monkeypatch):
+    monkeypatch.delenv("AUTH_PHONE_LOGIN_ENABLED", raising=False)
+    assert post(client, form(event="EVnologin")).status_code == 200
 
 
 def test_same_event_id_applies_once(client):
@@ -170,7 +183,7 @@ def test_the_api_key_secret_never_validates_a_callback(client, monkeypatch):
     assert post(client, form(event="EVkey2")).status_code == 200  # the auth token still works
 
 
-def test_route_is_404_without_the_auth_token_even_with_the_flag_on(client, monkeypatch):
+def test_route_is_404_without_the_auth_token_even_with_the_webhook_flag_on(client, monkeypatch):
     monkeypatch.delenv("TWILIO_AUTH_TOKEN", raising=False)
     monkeypatch.setenv("TWILIO_API_KEY_SECRET", KEY_SECRET)
     params = form(event="EVnone")
@@ -225,9 +238,12 @@ def test_captured_logs_hold_no_number_code_body_or_signature(client, caplog):
     assert "event=webhook_bad_signature" in text and "event=webhook_event" in text
 
 
-def test_the_webhook_is_listed_as_signature_verified_in_the_csrf_module():
+def test_the_webhook_is_in_no_csrf_list_and_is_classified_exempt_by_the_coverage_test():
     from backend.web import security
 
-    assert "twilio_webhook.twilio_verify_webhook" in security._CSRF_SIGNATURE_VERIFIED_ENDPOINTS
-    for ep in security._CSRF_SIGNATURE_VERIFIED_ENDPOINTS:
-        assert ep not in security._CSRF_FORM_POST_ENDPOINTS and ep not in security._CSRF_HEADER_POST_ENDPOINTS
+    ep = "twilio_webhook.twilio_verify_webhook"
+    assert ep not in security._CSRF_FORM_POST_ENDPOINTS and ep not in security._CSRF_HEADER_POST_ENDPOINTS
+    assert not hasattr(security, "_CSRF_SIGNATURE_VERIFIED_ENDPOINTS")  # no dead constant
+    from backend.tests import test_csrf_coverage as cov
+
+    assert (ep, "POST") in cov.EXEMPT
