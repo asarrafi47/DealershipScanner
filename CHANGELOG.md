@@ -1,6 +1,11 @@
 # Changelog
 
 ## [Unreleased]
+### Changed (PR 16 review fixes)
+- Phone login: a Lookup that reports no line type is now refused (reason `no_line_type`) and not cached, so a VoIP number that reports nothing no longer passes.
+- Twilio start: the one retry now happens only when the connection could not be made; a read timeout or reset is never retried (it could send and bill a second text). `StartResult.attempts` records it.
+- Twilio callbacks: only `TWILIO_AUTH_TOKEN` validates a signature (an API key secret never can); the webhook answers 404 unless the flag is on and the token is set. The token is never required at boot; callbacks are not needed for launch.
+
 
 - Phone sign-in foundation, S4 (inert): `backend/auth/phone/turnstile.py` (`verify_turnstile(token, ip)` posts to Cloudflare siteverify with `TURNSTILE_SECRET_KEY`, 3-second timeout, fails closed, a token works once; injectable HTTP layer and a fake verifier for tests) and `backend/auth/phone/webhook.py` (`POST /webhooks/twilio/verify`: 404 while `AUTH_PHONE_LOGIN_ENABLED` is off, `X-Twilio-Signature` checked with the `twilio` request validator against `PUBLIC_BASE_URL`, 403 on a bad or missing signature, unknown events get 200, repeats by event id apply once, no bodies, numbers or codes in logs). Delivery events go to a `SendEventSink`; the send table arrives with S5 and its sink with S6, so until then events are acknowledged and dropped. The route is registered in `backend/main.py`, listed as signature-verified in `backend/web/security.py`, and classified in `test_csrf_coverage.py`.
 

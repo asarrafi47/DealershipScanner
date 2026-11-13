@@ -122,9 +122,9 @@ def test_start_maps_vendor_errors(status, code, reason):
     assert (result.ok, result.reason, result.provider_ref) == (False, reason, None)
 
 
-def test_network_error_on_start_is_retried_once_then_reported():
+def test_connect_failure_on_start_is_retried_once_then_reported():
     fc, prov = make()
-    _queue(fc, "verifications", requests.ConnectionError("down"), requests.Timeout("slow"))
+    _queue(fc, "verifications", requests.ConnectTimeout("down"), requests.ConnectTimeout("slow"))
     result = prov.start(NUMBER, locale="en")
     assert (result.ok, result.reason) == (False, p.START_NETWORK_ERROR)
     assert [c for c in fc.calls if c[0] == "start"].__len__() == 2
@@ -132,8 +132,17 @@ def test_network_error_on_start_is_retried_once_then_reported():
 
 def test_network_error_on_start_then_success_sends_once():
     fc, prov = make()
-    _queue(fc, "verifications", requests.ConnectionError("down"), SimpleNamespace(sid="VEok", status="pending"))
-    assert prov.start(NUMBER, locale="en") == p.StartResult(True, "VEok", None, p.START_SENT)
+    _queue(fc, "verifications", requests.ConnectTimeout("down"), SimpleNamespace(sid="VEok", status="pending"))
+    assert prov.start(NUMBER, locale="en") == p.StartResult(True, "VEok", None, p.START_SENT, attempts=2)
+
+
+@pytest.mark.parametrize("exc", [requests.ReadTimeout("slow"), requests.ConnectionError("reset"), requests.Timeout("t")])
+def test_a_failure_that_may_have_sent_the_text_is_never_retried(exc):
+    fc, prov = make()
+    _queue(fc, "verifications", exc, SimpleNamespace(sid="VEdup", status="pending"))
+    result = prov.start(NUMBER, locale="en")
+    assert (result.ok, result.reason, result.attempts) == (False, p.START_NETWORK_ERROR, 1)
+    assert len([c for c in fc.calls if c[0] == "start"]) == 1
 
 
 def test_a_vendor_error_on_start_is_not_retried():
@@ -232,11 +241,13 @@ def test_lookup_maps_line_types(line_type, ok, reason):
     assert ("lookup", {"number": NUMBER, "fields": "line_type_intelligence"}) in fc.calls
 
 
-def test_lookup_with_no_type_is_allowed_and_marked_unknown():
+def test_lookup_with_no_type_is_refused_and_not_cached():
     fc, prov = make()
     _queue(fc, "lookup", _line(None, intel=False))
     info = prov.lookup(NUMBER)
-    assert (info.ok, info.line_type) == (True, None)
+    assert (info.ok, info.line_type, info.reason) == (False, None, p.LINE_UNKNOWN)
+    cache = p.MemoryLookupCache() if hasattr(p, "MemoryLookupCache") else None
+    assert cache is None or cache.get("x") is None
 
 
 def test_lookup_invalid_number():

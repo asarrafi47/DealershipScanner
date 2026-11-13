@@ -138,10 +138,14 @@ def twilio_credentials() -> TwilioCredentials | None:
     return None
 
 
-def twilio_webhook_secrets() -> tuple[str, ...]:
-    """Secrets that may sign a Twilio callback: the auth token, then the API key secret."""
-    out = [_env("TWILIO_AUTH_TOKEN"), _env("TWILIO_API_KEY_SECRET")]
-    return tuple(s for s in out if s)
+def twilio_webhook_token() -> str:
+    """The account auth token, the only secret Twilio signs callbacks with (an API key secret never
+    matches). Empty means callbacks are not set up: the webhook route answers 404. Never required at boot."""
+    return _env("TWILIO_AUTH_TOKEN")
+
+
+def webhook_active() -> bool:
+    return enabled() and bool(twilio_webhook_token())
 
 
 def twilio_ready() -> bool:

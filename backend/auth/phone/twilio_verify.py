@@ -14,6 +14,7 @@ given a disabled logger.
 
 from __future__ import annotations
 
+import dataclasses
 import logging
 from collections.abc import Callable
 from typing import Any
@@ -40,6 +41,16 @@ _CHECK_TOO_MANY_CODES = frozenset({60202})  # max check attempts reached
 _CHECK_WRONG_CODES = frozenset({60200})  # a code that is not even well formed
 
 _NETWORK_ERRORS: tuple[type[BaseException], ...] = (requests.RequestException, OSError)
+
+
+def _is_connect_failure(exc: BaseException) -> bool:
+    """True only when the request provably never reached the vendor (TCP connect failed or timed out)."""
+    if isinstance(exc, requests.ConnectTimeout):
+        return True
+    if isinstance(exc, requests.ConnectionError) and not isinstance(exc, requests.ReadTimeout):
+        first = exc.args[0] if exc.args else None
+        return type(first).__name__ in ("NewConnectionError", "ConnectTimeoutError")
+    return False
 
 
 def _vendor_error(exc: BaseException) -> tuple[int | None, int | None] | None:
@@ -82,11 +93,16 @@ class TwilioVerifyProvider:
     # --- start ---------------------------------------------------------------------------
     def start(self, e164: str, *, locale: str) -> p.StartResult:
         result = self._start_once(e164, locale)
-        if result.reason == p.START_NETWORK_ERROR:
-            result = self._start_once(e164, locale)  # one retry, and only for a network error
+        if result.reason == p.START_NETWORK_ERROR and self._never_reached_vendor:
+            # One retry, only when the request cannot have reached Twilio (connect failed). A read
+            # timeout or reset after sending may already have produced a paid text: never retry that.
+            return dataclasses.replace(self._start_once(e164, locale), attempts=2)
         return result
 
+    _never_reached_vendor = False
+
     def _start_once(self, e164: str, locale: str) -> p.StartResult:
+        self._never_reached_vendor = False
         kwargs: dict[str, Any] = {"to": e164, "channel": "sms"}
         if locale:
             kwargs["locale"] = locale
@@ -94,6 +110,7 @@ class TwilioVerifyProvider:
             verification = self._client.verify.v2.services(self._service_sid).verifications.create(**kwargs)
         except Exception as exc:  # noqa: BLE001 - every failure becomes a reason code
             reason = self._start_reason(exc)
+            self._never_reached_vendor = _is_connect_failure(exc)
             _log_failure("start", reason, exc)
             return p.StartResult(False, None, None, reason)
         ref = getattr(verification, "sid", None)
@@ -171,7 +188,7 @@ class TwilioVerifyProvider:
             _log_failure("lookup", reason, exc)
             return p.LineInfo(False, None, None, reason)
         info = self._line_info(data)
-        if self._cache is not None and key is not None:
+        if self._cache is not None and key is not None and info.reason != p.LINE_UNKNOWN:
             self._cache.put(key, info, LOOKUP_CACHE_TTL_S)
         return info
 

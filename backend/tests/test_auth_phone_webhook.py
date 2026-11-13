@@ -163,11 +163,19 @@ def test_json_body_is_verified_over_the_raw_body_and_parsed(client):
     assert bad.status_code == 403
 
 
-def test_the_api_key_secret_may_also_sign(client, monkeypatch):
+def test_the_api_key_secret_never_validates_a_callback(client, monkeypatch):
     monkeypatch.setenv("TWILIO_API_KEY_SECRET", KEY_SECRET)
     params = form(event="EVkey1")
-    assert post(client, params, signature=sign(params, secret=KEY_SECRET)).status_code == 200
+    assert post(client, params, signature=sign(params, secret=KEY_SECRET)).status_code == 403
     assert post(client, form(event="EVkey2")).status_code == 200  # the auth token still works
+
+
+def test_route_is_404_without_the_auth_token_even_with_the_flag_on(client, monkeypatch):
+    monkeypatch.delenv("TWILIO_AUTH_TOKEN", raising=False)
+    monkeypatch.setenv("TWILIO_API_KEY_SECRET", KEY_SECRET)
+    params = form(event="EVnone")
+    assert post(client, params, signature=sign(params, secret=KEY_SECRET)).status_code == 404
+    assert client.sink.events == {}
 
 
 def test_sink_failure_returns_500_so_the_vendor_retries_and_the_retry_applies(client):

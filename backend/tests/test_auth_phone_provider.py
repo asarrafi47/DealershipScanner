@@ -165,8 +165,8 @@ def test_fake_satisfies_the_interface():
 @pytest.mark.parametrize(
     "line_type,allowed,reason",
     [
-        ("mobile", True, p.LINE_OK), ("personal", True, p.LINE_OK), (None, True, p.LINE_OK),
-        ("unknown", True, p.LINE_OK), ("fixedVoip", False, p.LINE_VOIP), ("nonFixedVoip", False, p.LINE_VOIP),
+        ("mobile", True, p.LINE_OK), ("personal", True, p.LINE_OK), (None, False, p.LINE_UNKNOWN),
+        ("unknown", False, p.LINE_UNKNOWN), ("fixedVoip", False, p.LINE_VOIP), ("nonFixedVoip", False, p.LINE_VOIP),
         ("landline", False, p.LINE_LANDLINE), ("tollFree", False, p.LINE_NOT_MOBILE),
         ("premium", False, p.LINE_NOT_MOBILE), ("somethingNew", False, p.LINE_NOT_MOBILE),
     ],

@@ -180,3 +180,10 @@ def test_boot_check_refuses_an_unknown_provider(prod):
 def test_boot_check_accepts_the_auth_token_style(prod):
     _full_production(prod, TWILIO_API_KEY_SID=None, TWILIO_API_KEY_SECRET=None, TWILIO_AUTH_TOKEN="tok-test")
     assert_production_security_config()
+
+
+def test_the_auth_token_is_never_required_at_boot(prod):
+    _full_production(prod, TWILIO_AUTH_TOKEN=None)
+    assert_production_security_config()  # no error: callbacks are optional
+    assert config.webhook_active() is False
+    assert config.twilio_webhook_token() == ""

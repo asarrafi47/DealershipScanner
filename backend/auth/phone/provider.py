@@ -39,11 +39,12 @@ LINE_VOIP = "voip"
 LINE_LANDLINE = "landline"
 LINE_NOT_MOBILE = "not_mobile"  # toll-free, premium, pager and other lines that cannot take a login text
 LINE_INVALID_NUMBER = "invalid_number"
+LINE_UNKNOWN = "no_line_type"  # the vendor reported no line type: refused (a VoIP number may report none)
 LINE_LOOKUP_FAILED = "lookup_failed"  # the vendor could not be asked: the caller fails closed
-LINE_REASONS = (LINE_OK, LINE_VOIP, LINE_LANDLINE, LINE_NOT_MOBILE, LINE_INVALID_NUMBER, LINE_LOOKUP_FAILED)
+LINE_REASONS = (LINE_OK, LINE_VOIP, LINE_LANDLINE, LINE_NOT_MOBILE, LINE_INVALID_NUMBER, LINE_UNKNOWN, LINE_LOOKUP_FAILED)
 
 # Lookup line types (Twilio's spelling) and what we do with them. Anything not listed in
-# ALLOWED_LINE_TYPES is refused; a lookup that gives no type at all is allowed (line_type None).
+# ALLOWED_LINE_TYPES is refused, and so is a lookup that gives no type at all (it fails closed).
 VOIP_LINE_TYPES = frozenset({"fixedVoip", "nonFixedVoip"})
 ALLOWED_LINE_TYPES = frozenset({"mobile", "personal"})
 
@@ -54,6 +55,7 @@ class StartResult:
     provider_ref: str | None  # the vendor's verification id
     retry_after_s: int | None
     reason: str  # one of START_REASONS
+    attempts: int = 1  # vendor create calls made: 2 means a second text may have gone out
 
 
 @dataclass(frozen=True)
@@ -73,7 +75,7 @@ class LineInfo:
 def classify_line_type(line_type: str | None) -> tuple[bool, str]:
     """(allowed, reason) for a lookup line type. VoIP, landline and non-mobile lines are refused."""
     if line_type is None or line_type in ("", "unknown"):
-        return True, LINE_OK
+        return False, LINE_UNKNOWN
     if line_type in ALLOWED_LINE_TYPES:
         return True, LINE_OK
     if line_type in VOIP_LINE_TYPES:
