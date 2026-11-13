@@ -36,8 +36,11 @@ def _build(name: str) -> PhoneVerifyProvider:
 
         return FakePhoneProvider()
     if name == config.PROVIDER_TWILIO:
-        # The Twilio Verify adapter arrives with card S3.
-        raise ProviderUnavailable("twilio_adapter_not_available")
+        if not config.twilio_ready():
+            raise ProviderUnavailable("twilio_not_configured")
+        from backend.auth.phone.twilio_verify import build_twilio_verify
+
+        return build_twilio_verify()
     raise ProviderUnavailable("unknown_provider")
 
 

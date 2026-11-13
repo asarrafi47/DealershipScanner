@@ -406,6 +406,7 @@ _SWEEP_REVIEWED: dict[str, str] = {
     "backend.listings.dealer_locator._google_cache_lock": "lock",
     "backend.parsers.rooftop_aliases._hint_cache": "dealer-name hints, no DB",
     "backend.web.static._static_cache_ver_memo": "static asset hash",
+    "backend.auth.phone.twilio_verify._default_cache": "installed line-type cache object (S6 wires the database one); holds no inventory data",
     "backend.utils.market_price._DEFAULT_CACHE_TTL_SEC": "constant",
     "backend.utils.market_price._DEFAULT_CACHE_MAX_ENTRIES": "constant",
     "backend.utils.market_price._cohort_cache_lock": "lock",

@@ -24,6 +24,8 @@ redis>=8.0.1
 stripe>=8
 # Phone sign-in (docs/auth_sms): number parsing and validation (backend/auth/phone/numbers.py).
 phonenumbers>=9.0
+# Twilio Verify adapter and callback signature check (backend/auth/phone/twilio_verify.py, webhook.py).
+twilio>=9.0
 PyJWT[crypto]>=2.8
 pypdf>=4.0
 pymupdf>=1.24
