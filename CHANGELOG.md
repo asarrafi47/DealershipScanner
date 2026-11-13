@@ -1,6 +1,8 @@
 # Changelog
 
 ## [Unreleased]
+
+## [1.5.26] - 2026-11-13
 ### Changed (PR 16 review fixes)
 - Phone login: a Lookup that reports no line type is now refused (reason `no_line_type`) and not cached, so a VoIP number that reports nothing no longer passes.
 - Twilio start: the one retry now happens only when the connection could not be made; a read timeout or reset is never retried (it could send and bill a second text). `StartResult.attempts` records it.
