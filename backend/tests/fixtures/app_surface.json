@@ -1425,6 +1425,13 @@
    [
     "GET"
    ]
+  ],
+  [
+   "/webhooks/twilio/verify",
+   "twilio_webhook.twilio_verify_webhook",
+   [
+    "POST"
+   ]
   ]
  ],
  "hooks": {
@@ -1468,6 +1475,9 @@
     "_default_template_ctx_processor"
    ],
    "billing": [
+    "_default_template_ctx_processor"
+   ],
+   "twilio_webhook": [
     "_default_template_ctx_processor"
    ],
    "google_oauth": [
