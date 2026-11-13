@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [1.5.31] - 2026-11-13
+
 - Wave 1 integration review follow-ups (PR 18). F1: with billing off `/account/billing` redirects to the profile, the profile has no Plan or Billing row, the car page has no "Premium only." text or hidden upgrade dialog, an anonymous visitor's trim panel says "Sign in to see what this trim adds" instead of an empty panel, the register page hides the Premium choice (a hand-made plan=premium is ignored), `deploy/AUTONOMOUS_DEV.md` no longer curls the dead `/billing/plans`; signed-in general users are tested against a route of each of the eight feature ids.
 - D1: `sc_dev` is also set on `/login`, `/staff/login`, `/account/phone` and `/api/auth/phone` (a test walks the route table of DESIGN.md section 15); `phone_client_ip` trusts `CF-Connecting-IP` only from Cloudflare's ranges and with the `CF_ORIGIN_SECRET` header (`X-Origin-Secret`, constant-time compare; production without the variable never trusts the header); `device_id` delegates the pepper and every hash to `backend/auth/phone/numbers.py` (one dev pepper, one 32 character minimum, one `PepperMissing`, per-domain sub-keys); one canonical IPv6 /64 form (`canonical_ip`, the network address) shared by the client address and the hash.
 - C1: the dollar cap is live from day one (shipped prices of 3 and 15 dollars per million tokens, 1.5 cents estimated per message; a price of 0 is ignored); budgets are clamped to the env-only `CHAT_BUDGET_HARD_MAX_CENTS` (2000) and `CHAT_BUDGET_HARD_MAX_TOKENS` (8000000); a setting with a non-ASCII digit is ignored instead of crashing; a failed settings read is not cached; the migration registry claims V030 for chat usage and moves the queued numbers up by three.
