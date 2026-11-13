@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+### Fixed
+- `window_sticker.py`: hoisted the whitespace regex out of an f-string replacement field (a backslash there is a SyntaxError before Python 3.12).
+
+### Tests
+- `test_py311_syntax.py`: guard that no tracked `.py` uses 3.12-only f-string syntax (backslash, comment or reused quote in a replacement field).
+
 ### Cloud-first scan loop
 - Scan loop L4: backend/scanner/loop/config.py holds the loop defaults, the ceilings, the fixed request limits and load_loop_config(), which clamps config/loop.json and idles the loop when the file is missing or invalid. Standard library only; no behavior change.
 - Scan loop L5: backend/scanner/loop/scrub.py is the publisher scrubber (secret_values, scrub_text, clean_line, scrub_json, assert_clean): pure functions that redact environment secrets, key-like URL parameters, header-like pairs and control characters. Not wired into anything yet.

@@ -778,12 +778,15 @@ def _is_sticker_package_header(item: dict[str, Any]) -> bool:
     return bool(code and len(code) <= 4 and price > 0 and len(name) > len(code) + 3)
 
 
+_WS_RUN_RE = re.compile(r"\s+")
+
+
 def _package_feature_dedupe_key(name: str, code: str | None = None) -> str:
     """Dedupe key for package header vs included lines (keep factory codes distinct)."""
     n = _repair_sticker_credit_name(name).strip().lower()
     c = str(code or "").strip().lower()
     if c:
-        return f"{c}|{re.sub(r'\s+', ' ', n)}"
+        return f"{c}|{_WS_RUN_RE.sub(' ', n)}"
     return normalize_option_dedupe_key(name)
 
 
